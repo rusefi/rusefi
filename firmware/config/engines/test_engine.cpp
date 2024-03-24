@@ -19,6 +19,11 @@ void setTestEngineBoschQuickStart() {
 	engineConfiguration->trigger.type = trigger_type_e::TT_VVT_BOSCH_QUICK_START;
 }
 
+void setTestEngineWithBoschQuickStartCam() {
+  engineConfiguration->trigger.type = trigger_type_e::TT_HALF_MOON;
+  engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
+}
+
 // TEST_ENGINE
 void setTestCamEngineConfiguration() {
 	engineConfiguration->trigger.type = trigger_type_e::TT_ONE_PLUS_ONE;

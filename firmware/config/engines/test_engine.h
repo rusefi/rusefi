@@ -13,6 +13,7 @@ void setTestCamEngineConfiguration();
 void setTestCrankEngineConfiguration();
 void setTestVVTEngineConfiguration();
 void setTestDcWastegateConfiguration();
+void setTestEngineWithBoschQuickStartCam();
 
 void setTestEngineIssue366both();
 void setTestEngineIssue366rise();

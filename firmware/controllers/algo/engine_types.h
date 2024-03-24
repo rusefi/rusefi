@@ -71,7 +71,7 @@ enum class engine_type_e : uint16_t {
 	 * microRusEFI used as Body Control Module BCM BCU
 	 */
 	MRE_BODY_CONTROL = 23,
-	UNUSED24 = 24,
+	ET_TEST_WITH_BOSCH_QUICK_START = 24,
 
 	/**
 	 * See also MRE_SECONDARY_CAN
