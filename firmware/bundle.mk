@@ -185,11 +185,22 @@ $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_obfuscated_public.zip:  $(OBFUSCATED_OUT) $(BUN
 $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_autoupdate.zip: $(UPDATE_BUNDLE_FILES) | $(ARTIFACTS)
 	cd $(FOLDER) &&	zip -r ../$@ $(subst $(FOLDER)/,,$(UPDATE_BUNDLE_FILES))
 
-.PHONY: bundle obfuscated-bundle
+.PHONY: bundle bundles autoupdate obfuscated bin hex dfu map elf list srec bootloader
 
-bundle: $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_autoupdate.zip $(ARTIFACTS)/$(BUNDLE_FULL_NAME).zip all
+bundle: $(ARTIFACTS)/$(BUNDLE_FULL_NAME).zip
+autoupdate: $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_autoupdate.zip
+obfuscated: $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_obfuscated_public.zip
+bundles: bundle autoupdate
 
-obfuscated-bundle: $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_obfuscated_public.zip
+bootloader: $(BOOTLOADER_BIN)
+
+bin: $(DBIN)
+hex: $(BUILDDIR)/$(PROJECT).hex
+dfu: $(DFU)
+srec: $(BUILDDIR)/rusefi.srec
+elf: $(BUILDDIR)/$(PROJECT).elf
+map: $(BUILDDIR)/$(PROJECT).map
+list: $(BUILDDIR)/$(PROJECT).list
 
 CLEAN_BUNDLE_HOOK:
 	@echo Cleaning Bundle

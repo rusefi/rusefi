@@ -69,6 +69,8 @@ else
 endif
 	@touch $@
 
-.PHONY: config
+.PHONY: config ini
+
+ini: $(INI_FILE)
 
 config: .config-sentinel

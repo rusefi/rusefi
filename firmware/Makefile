@@ -25,14 +25,11 @@
 # make docs-enums	Generate docs and enums
 # make config			Generate docs, enums, and configs
 # make						Generate docs, enums, configs, and build firmware
-# make bundle			Generate docs, enums, configs, built bootloader, build firmware, and package both full and autoupdate bundles
+# make bundle			Generate docs, enums, configs, build bootloader, build firmware, and package full bundle
+# make autoupdate	Generate docs, enums, configs, build bootloader, build firmware, and package autoupdate bundle
+# make bundles		Generate docs, enums, configs, build bootloader, build firmware, and package both full and autoupdate bundles
+# make bootloader Generate docs, enums, configs, and build bootloader
 #
-# You can make a single bundle by passing the target bundle path, for example:
-# make ../artifacts/rusefi_bundle_f407-discovery.zip
-# make ../artifacts/rusefi_bundle_f407-discovery_autoupdate.zip
-#
-# You can make the bootloader either by going in to the bootloader subdirectory and running make, or by passing a bootloader target:
-# make bootloader/blbuild/openblt_f407-discovery.bin
 
 CHIBIOS = ChibiOS
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk
