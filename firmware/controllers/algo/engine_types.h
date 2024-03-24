@@ -62,7 +62,7 @@ enum class engine_type_e : uint16_t {
 	// Frankenso board
 	FRANKENSO_MIATA_NA6_MAP = 41,
 	MAZDA_MIATA_NC = 20,
-	UNUSED_21 = 21,
+	ET_BOSCH_QUICK_START = 21,
 
   // BMW e36 etc
 	BMW_M52 = 22,
