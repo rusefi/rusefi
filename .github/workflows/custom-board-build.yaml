@@ -161,10 +161,10 @@ jobs:
           fi
           echo "[$OUT]"
 
-      - name: Push
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ github.token }}
+#      - name: Push
+#        uses: ad-m/github-push-action@master
+#        with:
+#          github_token: ${{ github.token }}
 
       - name: Upload .ini files to server
         working-directory: generated/tunerstudio/generated
