@@ -65,7 +65,7 @@ jobs:
 
     - name: Set run condition variables
       run: |
-        if [ "${{github.event_name}}" = "schedule" ] && [ "${{github.repository}}" = "rusefi/rusefi" ]; then
+        if [ "${{github.event_name}}" = "schedule" ] && [ "${{github.repository}}" = "chuckwagoncomputing/rusefi" ]; then
           echo "full=true" >> $GITHUB_ENV
           echo "upload=release" >> $GITHUB_ENV
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
