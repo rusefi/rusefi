@@ -116,18 +116,18 @@ BUNDLE_FILES = \
   $(FOLDER_TARGETS) \
   $(CONSOLE_FOLDER_TARGETS)
 
-$(SIMULATOR_OUT): $(CONFIG_FILES)
+$(SIMULATOR_OUT): $(CONFIG_FILES) .FORCE
 	$(MAKE) -C ../simulator -r OS="Windows_NT" SUBMAKE=yes
 
 # make Windows simulator a prerequisite so that we don't try compiling them concurrently
-../simulator/build/rusefi_simulator: $(CONFIG_FILES) | $(SIMULATOR_OUT)
+../simulator/build/rusefi_simulator: $(CONFIG_FILES) .FORCE | $(SIMULATOR_OUT)
 	$(MAKE) -C ../simulator -r OS="Linux" SUBMAKE=yes
 
 $(BOOTLOADER_HEX) $(BOOTLOADER_BIN): .bootloader-sentinel ;
 
 # We pass SUBMAKE=yes to the bootloader Make instance so it knows not to try to build configs,
 #  as that would result in two simultaneous config generations, which causes issues.
-.bootloader-sentinel: $(CONFIG_FILES)
+.bootloader-sentinel: $(CONFIG_FILES) .FORCE
 	BOARD_DIR=../$(BOARD_DIR) BOARD_META_PATH=../$(BOARD_META_PATH) TGT_SENTINEL=../$(TGT_SENTINEL) $(MAKE) -C bootloader -r SUBMAKE=yes
 	@touch $@
 
