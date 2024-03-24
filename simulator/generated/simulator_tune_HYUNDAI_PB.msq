@@ -1602,9 +1602,8 @@
         <constant name="spi6SckMode">"default"</constant>
         <constant name="spi6MosiMode">"default"</constant>
         <constant digits="0" name="tunerStudioSerialSpeed" units="BPs">38400.0</constant>
-        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="236">
-         0.0
-         0.0
+        <constant name="camSimulatorPin">"NONE"</constant>
+        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="234">
          0.0
          0.0
          0.0
@@ -4740,7 +4739,7 @@ end</constant>
          1.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240227" nPages="1" signature="rusEFI master.2024.03.24.f407-discovery.2559104953" version="5.0"/>
+    <versionInfo firmwareInfo="20240227" nPages="1" signature="rusEFI master.2024.03.24.f407-discovery.2466976589" version="5.0"/>
     <bibliography author="rusEFI 20240227" writeDate="date"/>
     <settings/>
     <userComments/>
