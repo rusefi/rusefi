@@ -37,17 +37,15 @@ TEST(OddFire, hd) {
 //	ASSERT_NEAR(-200.0, eth.timeToAngle(-66.66666), EPS3D);
 //	ASSERT_NEAR(160.0, eth.timeToAngle(53.333333), EPS3D);
 //	ASSERT_NEAR(-168.0, eth.timeToAngle(-56.0), EPS3D);
-//	ASSERT_NEAR(-194, eth.timeToAngle(-64.666666), EPS3D);
-//	ASSERT_NEAR(-201.0, eth.timeToAngle(-67.0), EPS3D);
-//	ASSERT_NEAR(-522.0, eth.timeToAngle(-174.0), EPS3D);
-//	ASSERT_NEAR(354.0, eth.timeToAngle(118.0), EPS3D);
-//	ASSERT_NEAR(127.0, eth.timeToAngle(42.3333333), EPS3D);
 //	ASSERT_NEAR(32, eth.timeToAngle(10.66666666), EPS3D);
 
-	angle_t expectedAngle3 = -180 - cylinderTwo - timing;
+	angle_t expectedAngle3 = -180 + cylinderTwo - timing;
 
-	ASSERT_EQ( 6,  engine->executor.size());
+	ASSERT_EQ( 8,  engine->executor.size());
 	eth.assertEvent5("spark down#3", 3, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(expectedAngle3));
+
+	angle_t expectedAngle7 = 180 - cylinderOne - timing;
+	eth.assertEvent5("spark down#7", 7, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(expectedAngle7));
 
 	eth.assertRpm( 500, "spinning-RPM#1");
 
@@ -58,8 +56,8 @@ TEST(OddFire, hd) {
 	ASSERT_NEAR(0.0069257142022, getInjectionMass(200), EPS3D);
 
 	ASSERT_EQ( 8,  engine->executor.size());
-	eth.assertEvent5("spark down2#1", 1, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(-540 + cylinderOne - timing));
-	eth.assertEvent5("fuel down2#4", 4, (void*)turnInjectionPinLow, eth.angleToTimeUs(PORT_INJECTION_OFFSET + 180 + cylinderOne));
-	eth.assertEvent5("spark down2#5", 5, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(-180 - cylinderTwo - timing));
-	eth.assertEvent5("fuel down2#7", 7, (void*)turnInjectionPinLow, eth.angleToTimeUs(PORT_INJECTION_OFFSET + 540 - cylinderTwo));
+	eth.assertEvent5("fuel down2#1", 1, (void*)turnInjectionPinLow, eth.angleToTimeUs(180 + PORT_INJECTION_OFFSET));
+	eth.assertEvent5("spark down2#3", 3, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(-180 + cylinderTwo - timing));
+	eth.assertEvent5("fuel down2#5", 5, (void*)turnInjectionPinLow, eth.angleToTimeUs(540 + PORT_INJECTION_OFFSET));
+	eth.assertEvent5("spark down2#7", 7, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(180 - cylinderOne - timing));
 }
