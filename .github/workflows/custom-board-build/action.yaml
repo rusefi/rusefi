@@ -38,7 +38,7 @@ inputs:
     default: 'true'
   artifacts:
     required: false
-    default: bin hex dfu map elf list srec bundle autoupdate
+    default: bin hex dfu map elf list srec bootloader bundle autoupdate
   uploads:
     required: false
     default: ini bundles
@@ -135,6 +135,8 @@ runs:
         echo "BOARD_DIR=$BOARD_DIR" >> $GITHUB_ENV
         echo "BOARD_META_PATH=$BOARD_META_PATH" >> $GITHUB_ENV
         echo "SHORT_BOARD_NAME=$SHORT_BOARD_NAME" >> $GITHUB_ENV
+        PROJECT_BOARD=${PROJECT_BOARD:-$SHORT_BOARD_NAME}
+        echo "PROJECT_BOARD=$PROJECT_BOARD" >> $GITHUB_ENV
         echo "BUNDLE_NAME=$BUNDLE_NAME" >> $GITHUB_ENV
 
     - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
@@ -208,6 +210,7 @@ runs:
         if ac 'elf'; then TARGETS+=("build/rusefi.elf"); fi
         if ac 'list'; then TARGETS+=("build/rusefi.list"); fi
         if ac 'srec'; then TARGETS+=("build/rusefi.srec"); fi
+        if ac 'bootloader'; then TARGETS+=("bootloader/blbuild/openblt_${PROJECT_BOARD}.bin"); fi
         if ac 'bundles' || ac 'bundle'; then TARGETS+=("../artifacts/rusefi_bundle_${SHORT_BOARD_NAME}.zip"); fi
         if ac 'bundles' || ac 'autoupdate'; then TARGETS+=("../artifacts/rusefi_bundle_${SHORT_BOARD_NAME}_autoupdate.zip"); fi
         if ac 'obfuscated'; then TARGETS+=("../artifacts/rusefi_bundle_${SHORT_BOARD_NAME}_obfuscated_public.zip"); fi
@@ -335,6 +338,13 @@ runs:
       with:
         name: rusefi.elf
         path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.elf
+
+    - name: Upload github action bootloader bin artifact
+      if: ${{ contains(inputs.artifacts, 'bootloader') }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: openblt_${{env.PROJECT_BOARD}}.bin
+        path: ${{inputs.rusefi_dir}}/firmware/bootloader/blbuild/openblt_${{env.PROJECT_BOARD}}.bin
 
     - name: Upload github action bundle artifact
       if: ${{ contains(inputs.artifacts, 'bundle') }}
