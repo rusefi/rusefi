@@ -1674,7 +1674,9 @@ float brakeMeanEffectivePressureDifferential
 	pin_mode_e spi6SckMode;
 	pin_mode_e spi6MosiMode;
 
-uint8_t[120] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
+Gpio camSimulatorPin
+
+uint8_t[118] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
