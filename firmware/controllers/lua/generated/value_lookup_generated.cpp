@@ -1792,6 +1792,9 @@ float getConfigValueByName(const char *name) {
 // tunerStudioSerialSpeed
 		case 1467553180:
 			return engineConfiguration->tunerStudioSerialSpeed;
+// testField
+		case -1695972695:
+			return engineConfiguration->testField;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -4776,6 +4779,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1467553180:
 	{
 		engineConfiguration->tunerStudioSerialSpeed = (int)value;
+		return 1;
+	}
+		case -1695972695:
+	{
+		engineConfiguration->testField = (int)value;
 		return 1;
 	}
 	}
