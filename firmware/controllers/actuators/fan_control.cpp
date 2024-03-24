@@ -4,6 +4,10 @@
 
 #include "bench_test.h"
 
+__attribute__((weak)) boolean fansDisabledByBoardStatus() {
+  return false;
+}
+
 bool FanController::getState(bool acActive, bool lastState) {
 	auto clt = Sensor::get(SensorType::Clt);
 	auto vss = Sensor::get(SensorType::VehicleSpeed);
@@ -31,6 +35,8 @@ bool FanController::getState(bool acActive, bool lastState) {
 		return false;
 	} else if (disabledBySpeed) {
 		// Inhibit while driving fast
+		return false;
+  } else if (fansDisabledByBoardStatus()) {
 		return false;
 	} else if (brokenClt) {
 		// If CLT is broken, turn the fan on
