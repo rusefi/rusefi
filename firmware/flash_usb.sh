@@ -4,7 +4,7 @@
 
 echo "This script may need root privileges for accessing USB device or special udev rules (TODO)"
 
-BootCommander -t=xcp_usb deliver/rusefi_update.srec
+BootCommander -t=xcp_usb build/rusefi.srec
 
 # OR
 # You can build it from sources with:
@@ -12,4 +12,4 @@ BootCommander -t=xcp_usb deliver/rusefi_update.srec
 # and
 # (cd ext/openblt/Host/Source/BootCommander/ ; mkdir build ; cd build ; cmake .. ; make -j )
 # And run:
-# ext/openblt/Host/BootCommander -t=xcp_usb deliver/rusefi_update.srec
+# ext/openblt/Host/BootCommander -t=xcp_usb build/rusefi.srec
