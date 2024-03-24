@@ -1628,7 +1628,9 @@ float brakeMeanEffectivePressureDifferential
 
 	uint32_t tunerStudioSerialSpeed;Secondary TTL channel baud rate;"BPs", 1, 0, 0, 1000000, 0
 
-uint8_t[236] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
+Gpio camSimulatorPin
+
+uint8_t[234] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
