@@ -104,15 +104,16 @@ angle_t getRunningAdvance(int rpm, float engineLoad) {
 #endif
 
 #if EFI_LAUNCH_CONTROL
-	if (engine->launchController.isLaunchCondition && engineConfiguration->enableLaunchRetard) {
-		if (engineConfiguration->launchSmoothRetard) {
+	if (engineConfiguration->enableLaunchRetard) {
+		if (engine->launchController.isLaunchPreCondition && engineConfiguration->launchSmoothRetard) {
 			float launchAngle = engineConfiguration->launchTimingRetard;
 			int launchRpm = engineConfiguration->launchRpm;
-			int launchRpmWithTimingRange = launchRpm + engineConfiguration->launchRpmWindow;
-			 // interpolate timing from rpm at launch triggered to full retard at launch launchRpm + launchTimingRpmRange
-			return interpolateClamped(launchRpm, advanceAngle, launchRpmWithTimingRange, launchAngle, rpm);
-		} else {
-			return engineConfiguration->launchTimingRetard;
+			int launchRpmWithTimingWindow = launchRpm - engineConfiguration->launchRpmWindow;
+			// interpolate timing from rpm at launch triggered to full retard at launch launchRpm
+			float launchTimingInterpolated = interpolateClamped(launchRpmWithTimingWindow, advanceAngle, launchRpm, advanceAngle - launchAngle, rpm);
+			return launchTimingInterpolated;
+		} else if (engine->launchController.isLaunchCondition) {
+			return advanceAngle - engineConfiguration->launchTimingRetard;
 		}
 	}
 #endif /* EFI_LAUNCH_CONTROL */
