@@ -198,26 +198,10 @@ runs:
       working-directory: ${{inputs.rusefi_dir}}/firmware
       shell: bash
       run: |
-        ARTIFACTS=(${{inputs.artifacts}} ${{inputs.uploads}})
-        TARGETS=()
-        shopt -s expand_aliases
-        alias ac="printf '%s\0' "${ARTIFACTS[@]}" | grep -F -x -z --"
-        if ac 'ini'; then TARGETS+=("config"); fi
-        if ac 'bin'; then TARGETS+=("deliver/rusefi.bin"); fi
-        if ac 'dfu'; then TARGETS+=("deliver/rusefi.dfu"); fi
-        if ac 'hex'; then TARGETS+=("build/rusefi.hex"); fi
-        if ac 'map'; then TARGETS+=("build/rusefi.map"); fi
-        if ac 'elf'; then TARGETS+=("build/rusefi.elf"); fi
-        if ac 'list'; then TARGETS+=("build/rusefi.list"); fi
-        if ac 'srec'; then TARGETS+=("build/rusefi.srec"); fi
-        if ac 'bootloader'; then TARGETS+=("bootloader/blbuild/openblt_${PROJECT_BOARD}.bin"); fi
-        if ac 'bundles' || ac 'bundle'; then TARGETS+=("../artifacts/rusefi_bundle_${SHORT_BOARD_NAME}.zip"); fi
-        if ac 'bundles' || ac 'autoupdate'; then TARGETS+=("../artifacts/rusefi_bundle_${SHORT_BOARD_NAME}_autoupdate.zip"); fi
-        if ac 'obfuscated'; then TARGETS+=("../artifacts/rusefi_bundle_${SHORT_BOARD_NAME}_obfuscated_public.zip"); fi
         if [ "$RUN_SIMULATOR" == "true" ]; then
-          TARGETS+=("../simulator/build/rusefi_simulator" "../java_tools/tune-tools/build/libs/tune-tools-all.jar")
+          TARGETS=("../simulator/build/rusefi_simulator" "../java_tools/tune-tools/build/libs/tune-tools-all.jar")
         fi
-        bash bin/compile.sh $BOARD_META_PATH ${TARGETS[@]}
+        bash bin/compile.sh $BOARD_META_PATH ${{inputs.artifacts}} ${{inputs.uploads}} ${TARGETS[@]}
 
     - name: Upload Bundle
       if: ${{ contains(inputs.uploads, 'bundles') }}
