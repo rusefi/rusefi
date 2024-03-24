@@ -30,3 +30,35 @@ TEST(realBQS, readAsPrimarySensor) {
   ASSERT_FLOAT_EQ(Sensor::get(SensorType::Rpm).Value, 2035.53467);
 
 }
+
+TEST(realBQS, readAsCam) {
+	EngineTestHelper eth(engine_type_e::ET_TEST_WITH_BOSCH_QUICK_START);
+
+	hwHandleShaftSignal(0, true,  0);
+	hwHandleShaftSignal(0, false, 1000000);
+	hwHandleShaftSignal(0, true, 2000000);
+	hwHandleShaftSignal(0, false, 3000000);
+	eth.assertRpm(3000);
+
+	int eventCount = 0;
+	  CsvReader reader(/*triggerCount*/0, /* vvtCount */ 1);
+	  reader.open("tests/trigger/resources/BQS-longer.csv");
+	  reader.flipVvtOnRead = true;
+
+	TriggerCentral *tc = getTriggerCentral();
+	ASSERT_TRUE(tc->triggerState.getShaftSynchronized());
+	TriggerDecoderBase& vvtDecoder = tc->vvtState[0][0];
+
+	bool gotVvt = false;
+	while (reader.haveMore()) {
+ 		reader.processLine(&eth);
+		eventCount++;
+
+		if (!gotVvt && vvtDecoder.getShaftSynchronized()) {
+			gotVvt = true;
+			EXPECT_EQ(eventCount, 13);
+		}
+	}
+	ASSERT_DOUBLE_EQ(-247.03125, tc->getVVTPosition(0, 0));
+	ASSERT_TRUE(vvtDecoder.getShaftSynchronized());
+}
