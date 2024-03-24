@@ -29,6 +29,9 @@
 /****************************************************************************************
 * Include files
 ****************************************************************************************/
+// To know CORTEX_MODEL
+#include "cmparams.h"
+
 #include <stddef.h>                                    /* Standard definitions (NULL). */
 #include "shared_params.h"                             /* Shared parameters header.    */
 
@@ -153,6 +156,10 @@ bool SharedParamsWriteByIndex(uint32_t idx, uint8_t value)
     SharedParamsWriteChecksum();
     /* Update the result. */
     result = true;
+    #if CORTEX_MODEL == 7
+      // If we have a cache, drop the relevant cache lines.
+      SCB_CleanDCache_by_Addr((uint32_t*)&sharedParamsBuffer, sizeof(sharedParamsBuffer));
+    #endif
   }
   /* Give the result back to the caller. */
   return result;
