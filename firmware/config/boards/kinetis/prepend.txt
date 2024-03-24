@@ -21,3 +21,4 @@
 #define TABLE_2_LOAD_SIZE 2
 
 #define FUEL_RPM_COUNT 8
+#define FUEL_LOAD_COUNT 4

@@ -190,10 +190,12 @@ static void setMazdaMiataNbTpsTps() {
 }
 
 static void setDefaultLambdaTable() {
+#if (FUEL_LOAD_COUNT == DEFAULT_FUEL_LOAD_COUNT)
 	static constexpr float mapBins[] = {
 		30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 150, 175, 200, 225, 250
 	};
 	copyArray(config->lambdaLoadBins, mapBins);
+#endif
 
 	setRpmTableBin(config->lambdaRpmBins);
 
