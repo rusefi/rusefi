@@ -119,7 +119,8 @@ BUNDLE_FILES = \
 $(SIMULATOR_OUT): $(CONFIG_FILES)
 	$(MAKE) -C ../simulator -r OS="Windows_NT" SUBMAKE=yes
 
-../simulator/build/rusefi_simulator: $(CONFIG_FILES)
+# make Windows simulator a prerequisite so that we don't try compiling them concurrently
+../simulator/build/rusefi_simulator: $(CONFIG_FILES) | $(SIMULATOR_OUT)
 	$(MAKE) -C ../simulator -r OS="Linux" SUBMAKE=yes
 
 $(BOOTLOADER_HEX) $(BOOTLOADER_BIN): .bootloader-sentinel ;
