@@ -8,7 +8,9 @@ on:
   push:
   pull_request:
   schedule:
-    - cron: '0 0 * * *'
+    # this produces GitHub nightly releases https://github.com/rusefi/rusefi/releases
+    # by the way GitHub actions use UTC https://www.utctime.net/ which matches GMT time
+    - cron: '50 22 * * *'
   workflow_dispatch:
     inputs:
       lts:
@@ -81,7 +83,7 @@ jobs:
       id: tag
       uses: mathieudutour/github-tag-action@v6.2
       with:
-        github_token: ${{ secrets.ACCESS_TOKEN }}
+        github_token: ${{ secrets.NIGHTLY_RELEASE_ACCESS_TOKEN }}
         custom_tag: ${{ env.date }}
         tag_prefix: ''
 
@@ -93,7 +95,7 @@ jobs:
         name: "Nightly ${{ env.date }}"
         artifacts: "artifacts/rusefi_bundle_*.zip"
         replacesArtifacts: false
-        token: ${{ secrets.ACCESS_TOKEN }}
+        token: ${{ secrets.NIGHTLY_RELEASE_ACCESS_TOKEN }}
         allowUpdates: true
         prerelease: true
 
@@ -272,7 +274,7 @@ jobs:
         name: "Nightly ${{ env.date }}"
         artifacts: "artifacts/rusefi_bundle_*.zip"
         replacesArtifacts: false
-        token: ${{ secrets.ACCESS_TOKEN }}
+        token: ${{ secrets.NIGHTLY_RELEASE_ACCESS_TOKEN }}
         allowUpdates: true
         prerelease: true
 
