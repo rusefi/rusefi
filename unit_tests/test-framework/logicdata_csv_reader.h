@@ -31,6 +31,7 @@ public:
 	double readTimestampAndValues(double *v);
 
 	bool flipOnRead = false;
+	bool flipVvtOnRead = false;
 
 	int lineIndex() const {
 		return m_lineIndex;
