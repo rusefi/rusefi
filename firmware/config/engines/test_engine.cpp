@@ -15,6 +15,10 @@
 #include "test_engine.h"
 #include "proteus_meta.h"
 
+void setTestEngineBoschQuickStart() {
+	engineConfiguration->trigger.type = trigger_type_e::TT_VVT_BOSCH_QUICK_START;
+}
+
 // TEST_ENGINE
 void setTestCamEngineConfiguration() {
 	engineConfiguration->trigger.type = trigger_type_e::TT_ONE_PLUS_ONE;

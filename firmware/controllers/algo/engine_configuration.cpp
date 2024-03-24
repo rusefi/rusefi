@@ -712,6 +712,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::TEST_ISSUE_366_RISE:
 		setTestEngineIssue366rise();
 		break;
+	case engine_type_e::ET_BOSCH_QUICK_START:
+	  setTestEngineBoschQuickStart();
+	  break;
 #endif // EFI_UNIT_TEST
 #if HW_MICRO_RUSEFI
 	case engine_type_e::MRE_VW_B6:
@@ -733,7 +736,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::BMW_M73_MRE_SLAVE:
 		setEngineBMW_M73_microRusEfi();
 		break;
-	case engine_type_e::UNUSED_20:
 	case engine_type_e::MRE_BODY_CONTROL:
 		mreBCM();
 		break;

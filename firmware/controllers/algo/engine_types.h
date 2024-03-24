@@ -61,7 +61,7 @@ enum class engine_type_e : uint16_t {
 	TEST_ROTARY = 19,
 	// Frankenso board
 	FRANKENSO_MIATA_NA6_MAP = 41,
-	UNUSED_20 = 20,
+	ET_BOSCH_QUICK_START = 20,
 	UNUSED_21 = 21,
 
 	UNUSED_22 = 22,
