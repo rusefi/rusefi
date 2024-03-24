@@ -7,6 +7,7 @@ SIG_FILE = $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)tunerstudio/generated/signat
 CONFIG_INPUTS = \
   $(SIG_FILE) \
   $(PROJECT_DIR)/integration/rusefi_config.txt \
+  $(PROJECT_DIR)/tunerstudio/rusefi.input \
   $(PROJECT_DIR)/console/binary/generated/output_channels.ini \
   $(PROJECT_DIR)/console/binary/generated/data_logs.ini \
   $(PROJECT_DIR)/console/binary/generated/fancy_content.ini \
