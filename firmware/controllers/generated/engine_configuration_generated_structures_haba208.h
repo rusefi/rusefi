@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Mar 21 03:05:09 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 24 01:51:46 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4496,10 +4496,14 @@ struct engine_configuration_s {
 	 */
 	uint32_t tunerStudioSerialSpeed;
 	/**
-	 * units: units
 	 * offset 3984
 	 */
-	uint8_t unusedOftenChangesDuringFirmwareUpdate[236];
+	Gpio camSimulatorPin;
+	/**
+	 * units: units
+	 * offset 3986
+	 */
+	uint8_t unusedOftenChangesDuringFirmwareUpdate[234];
 };
 static_assert(sizeof(engine_configuration_s) == 4220);
 
@@ -5523,4 +5527,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22400);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Mar 21 03:05:09 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 24 01:51:46 UTC 2024
