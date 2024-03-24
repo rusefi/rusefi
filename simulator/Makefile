@@ -304,6 +304,14 @@ endif
 # Enable precompiled header
 include $(PROJECT_DIR)/rusefi_pch.mk
 
+$(OBJS): .os-sentinel
+
+.os-sentinel: .FORCE
+	if [ "$$(cat $@ 2>/dev/null)" != $(OS) ]; then \
+	echo $(OS) >$@; fi
+
+.FORCE:
+
 .PHONY: CLEAN_RULE_HOOK CLEAN_PCH_HOOK
 
 CLEAN_RULE_HOOK: CLEAN_PCH_HOOK
