@@ -7,7 +7,7 @@
 #include "logicdata_csv_reader.h"
 
 TEST(realCas24Plus1, spinningOnBench) {
-	CsvReader reader(1, /* vvtCount */ 1);
+	CsvReader reader(/*triggerCount*/1, /* vvtCount */ 1);
 
 	reader.open("tests/trigger/resources/cas_nissan_24_plus_1.csv");
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
