@@ -4,7 +4,7 @@
 
 #include "bench_test.h"
 
-__attribute__((weak)) bool fansDisabledByBoardStatus() {
+PUBLIC_API_WEAK bool fansDisabledByBoardStatus() {
   return false;
 }
 

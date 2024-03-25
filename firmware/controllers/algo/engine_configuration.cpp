@@ -165,12 +165,12 @@ void onBurnRequest() {
  * this hook is about https://github.com/rusefi/rusefi/wiki/Custom-Firmware and https://github.com/rusefi/rusefi/wiki/Canned-Tune-Process
  *
  */
-__attribute__((weak)) void boardTuneDefaults() { }
+PUBLIC_API_WEAK void boardTuneDefaults() { }
 
-__attribute__((weak)) void boardEngineTypeTune(engine_type_e engineType) { }
+PUBLIC_API_WEAK void boardEngineTypeTune(engine_type_e engineType) { }
 
 // Weak link a stub so that every board doesn't have to implement this function
-__attribute__((weak)) void boardOnConfigurationChange(engine_configuration_s* /*previousConfiguration*/) { }
+PUBLIC_API_WEAK void boardOnConfigurationChange(engine_configuration_s* /*previousConfiguration*/) { }
 
 /**
  * this is the top-level method which should be called in case of any changes to engine configuration

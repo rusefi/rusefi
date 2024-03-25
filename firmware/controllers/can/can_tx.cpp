@@ -26,7 +26,7 @@ CanWrite::CanWrite()
 {
 }
 
-__attribute__((weak)) bool boardEnableSendWidebandInfo() { return true; }
+PUBLIC_API_WEAK bool boardEnableSendWidebandInfo() { return true; }
 
 void CanWrite::PeriodicTask(efitick_t nowNt) {
 	UNUSED(nowNt);

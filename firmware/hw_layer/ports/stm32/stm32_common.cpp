@@ -228,7 +228,7 @@ bool isStm32F42x() {
 
 
 // Stubs for per-board low power helpers
-__attribute__((weak)) void boardPrepareForStop() {
+PUBLIC_API_WEAK void boardPrepareForStop() {
 	// Default implementation - wake up on PA0 - boards should override this
 	palEnableLineEvent(PAL_LINE(GPIOA, 0), PAL_EVENT_MODE_RISING_EDGE);
 }
@@ -261,7 +261,7 @@ void boardPreparePA0ForStandby() {
 #endif
 }
 
-__attribute__((weak)) void boardPrepareForStandby() {
+PUBLIC_API_WEAK void boardPrepareForStandby() {
 	boardPreparePA0ForStandby();
 }
 

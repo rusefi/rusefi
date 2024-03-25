@@ -44,3 +44,6 @@
 
 // see also validateStack
 #define hasLotsOfRemainingStack() (getCurrentRemainingStack() > EXPECTED_REMAINING_STACK)
+
+// this macro helps locate all board API methods
+#define PUBLIC_API_WEAK __attribute__((weak))

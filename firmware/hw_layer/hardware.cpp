@@ -561,10 +561,10 @@ void startHardware() {
 }
 
 // Weak link a stub so that every board doesn't have to implement this function
-__attribute__((weak)) void boardInitHardware() { }
-__attribute__((weak)) void boardInitHardwareExtra() { }
+PUBLIC_API_WEAK void boardInitHardware() { }
+PUBLIC_API_WEAK void boardInitHardwareExtra() { }
 
-__attribute__((weak)) void setPinConfigurationOverrides() { }
+PUBLIC_API_WEAK void setPinConfigurationOverrides() { }
 
 #if HAL_USE_I2C
 const I2CConfig i2cfg = {
