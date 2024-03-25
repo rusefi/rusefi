@@ -1132,6 +1132,9 @@ float getConfigValueByName(const char *name) {
 // enableAemXSeriesEgt
 		case -1196188030:
 			return engineConfiguration->enableAemXSeriesEgt;
+// skipBoardCanDash
+		case 1878649142:
+			return engineConfiguration->skipBoardCanDash;
 // afterCrankingIACtaperDuration
 		case 671504531:
 			return engineConfiguration->afterCrankingIACtaperDuration;
@@ -3679,6 +3682,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1196188030:
 	{
 		engineConfiguration->enableAemXSeriesEgt = (int)value;
+		return 1;
+	}
+		case 1878649142:
+	{
+		engineConfiguration->skipBoardCanDash = (int)value;
 		return 1;
 	}
 		case 671504531:

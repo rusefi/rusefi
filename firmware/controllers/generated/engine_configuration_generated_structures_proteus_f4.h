@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 24 22:08:17 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Mar 25 02:12:44 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2825,46 +2825,46 @@ struct engine_configuration_s {
 	bool unusedBit_503_17 : 1 {};
 	/**
 	offset 1496 bit 18 */
-	bool unusedBit_502_18 : 1 {};
+	bool skipBoardCanDash : 1 {};
 	/**
 	offset 1496 bit 19 */
-	bool unusedBit_502_19 : 1 {};
+	bool unusedBit_503_19 : 1 {};
 	/**
 	offset 1496 bit 20 */
-	bool unusedBit_502_20 : 1 {};
+	bool unusedBit_503_20 : 1 {};
 	/**
 	offset 1496 bit 21 */
-	bool unusedBit_502_21 : 1 {};
+	bool unusedBit_503_21 : 1 {};
 	/**
 	offset 1496 bit 22 */
-	bool unusedBit_502_22 : 1 {};
+	bool unusedBit_503_22 : 1 {};
 	/**
 	offset 1496 bit 23 */
-	bool unusedBit_502_23 : 1 {};
+	bool unusedBit_503_23 : 1 {};
 	/**
 	offset 1496 bit 24 */
-	bool unusedBit_502_24 : 1 {};
+	bool unusedBit_503_24 : 1 {};
 	/**
 	offset 1496 bit 25 */
-	bool unusedBit_502_25 : 1 {};
+	bool unusedBit_503_25 : 1 {};
 	/**
 	offset 1496 bit 26 */
-	bool unusedBit_502_26 : 1 {};
+	bool unusedBit_503_26 : 1 {};
 	/**
 	offset 1496 bit 27 */
-	bool unusedBit_502_27 : 1 {};
+	bool unusedBit_503_27 : 1 {};
 	/**
 	offset 1496 bit 28 */
-	bool unusedBit_502_28 : 1 {};
+	bool unusedBit_503_28 : 1 {};
 	/**
 	offset 1496 bit 29 */
-	bool unusedBit_502_29 : 1 {};
+	bool unusedBit_503_29 : 1 {};
 	/**
 	offset 1496 bit 30 */
-	bool unusedBit_502_30 : 1 {};
+	bool unusedBit_503_30 : 1 {};
 	/**
 	offset 1496 bit 31 */
-	bool unusedBit_502_31 : 1 {};
+	bool unusedBit_503_31 : 1 {};
 	/**
 	 * This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.\Should be 100 once tune is better
 	 * units: cycles
@@ -5543,4 +5543,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 27904);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Mar 24 22:08:17 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Mar 25 02:12:44 UTC 2024
