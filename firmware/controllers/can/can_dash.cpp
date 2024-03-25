@@ -1236,7 +1236,12 @@ void canDashboardAim(CanCycle cycle) {
 	// transmitStruct<Aim5fd>(0x5fd, false);
 }
 
+PUBLIC_API_WEAK void boardUpdateDash(CanCycle cycle) {}
+
 void updateDash(CanCycle cycle) {
+  if (!engineConfiguration->skipBoardCanDash) {
+    boardUpdateDash(cycle);
+  }
 
 	// Transmit dash data, if enabled
 	switch (engineConfiguration->canNbcType) {

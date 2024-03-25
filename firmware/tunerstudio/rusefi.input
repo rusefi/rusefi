@@ -4783,6 +4783,7 @@ dialog = tcuControls, "Transmission Settings"
     dialog = parkingLot2, "Experimental 2"
         field = dacOutputPins1,         dacOutputPins1
         field = dacOutputPins2,         dacOutputPins2
+        field = skipBoardCanDash,       skipBoardCanDash
         field = luaCanRxWorkaround,     luaCanRxWorkaround
         field = "Read RPM matching VSS profile",    canInputBCM
         field = auxSpeed1Multiplier,    auxSpeed1Multiplier
