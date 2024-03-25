@@ -61,8 +61,8 @@ TEST(OddFireRunningMode, hd) {
 	ASSERT_NEAR(0.0069257142022, getInjectionMass(200), EPS3D);
 
 	ASSERT_EQ( 8,  engine->executor.size());
-	eth.assertEvent5("fuel down2#1", 1, (void*)turnInjectionPinLow, eth.angleToTimeUs(180 + PORT_INJECTION_OFFSET));
+	eth.assertEvent5("fuel down2#1", 1, (void*)turnInjectionPinLow, eth.angleToTimeUs(180 + PORT_INJECTION_OFFSET + cylinderOne));
 	eth.assertEvent5("spark down2#3", 3, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(-180 + cylinderTwo - timing));
-	eth.assertEvent5("fuel down2#5", 5, (void*)turnInjectionPinLow, eth.angleToTimeUs(540 + PORT_INJECTION_OFFSET));
+	eth.assertEvent5("fuel down2#6", 6, (void*)turnInjectionPinLow, eth.angleToTimeUs(540 + PORT_INJECTION_OFFSET + cylinderTwo));
 	eth.assertEvent5("spark down2#7", 7, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(180 + cylinderOne - timing));
 }
