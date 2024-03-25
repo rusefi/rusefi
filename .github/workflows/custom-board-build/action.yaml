@@ -170,6 +170,7 @@ runs:
       run: |
         git status
 
+
     - name: rusefi_dir Status
       working-directory: ${{inputs.rusefi_dir}}
       shell: bash
