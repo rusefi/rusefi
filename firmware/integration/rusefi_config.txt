@@ -4,8 +4,8 @@
 !
 ! The format is unique to rusEFI but there is a guide to the format available in java_tools/config_definition/RusefiConfigGrammar.g4
 !
-! This file is used in combination with tunerstudio/rusefi.input to generate the .ini files used by turner TunerStudio.
-! The easiest way to find a specific variable within this config is to search within rusefi.input for the on screen text from tuner studio
+! This file is used in combination with tunerstudio/tunerstudio.template.ini to generate the .ini files used by turner TunerStudio.
+! The easiest way to find a specific variable within this config is to search within tunerstudio.template.ini for the on screen text from tuner studio
 ! this should provide the actual variable name, for example searching for "Number of Cylinders" will provide the variable "cylindersCount".
 ! Then you can search for "cylindersCount" in this file to find the definition.
 !

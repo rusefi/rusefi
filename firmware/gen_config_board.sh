@@ -51,7 +51,7 @@ java \
 	-initialize_to_zero false \
 	-signature tunerstudio/generated/signature_${SHORT_BOARDNAME}.txt \
 	-signature_destination generated/signature_${SHORT_BOARDNAME}.h \
-	-ts_template ./tunerstudio/rusefi.input \
+	-ts_template ./tunerstudio/tunerstudio.template.ini \
 	-ts_output_name ./tunerstudio/generated/${INI} \
 	-board ${BOARD_DIR} \
 	-prepend generated/total_live_data_generated.h \

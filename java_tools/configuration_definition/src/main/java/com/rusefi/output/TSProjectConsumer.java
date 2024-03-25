@@ -63,7 +63,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
     }
 
     /**
-     * rusefi.input has all the content of the future .ini file with the exception of data page
+     * tunerstudio.template.ini has all the content of the future .ini file with the exception of data page
      * TODO: start generating [outputs] section as well
      */
     private TsFileContent readTsTemplateInputFile(String fileName) throws IOException {

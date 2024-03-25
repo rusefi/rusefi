@@ -4,7 +4,7 @@
 
 #include <cstdint>
 
-// Keep this list in sync with fuelIgnCutCodeList in rusefi.input!
+// Keep this list in sync with fuelIgnCutCodeList in tunerstudio.template.ini!
 enum class ClearReason : uint8_t {
 	None, // 0
 	Fatal,
@@ -25,8 +25,8 @@ enum class ClearReason : uint8_t {
 	ACR, // 16 - Harley Automatic Compression Release
 	LambdaProtection, // 17
 
-	// Keep this list in sync with fuelIgnCutCodeList in rusefi.input!
-	// todo: add a code generator between ClearReason and fuelIgnCutCodeList in rusefi.input
+	// Keep this list in sync with fuelIgnCutCodeList in tunerstudio.template.ini!
+	// todo: add a code generator between ClearReason and fuelIgnCutCodeList in tunerstudio.template.ini
 };
 
 enum class TpsState : uint8_t {
@@ -41,7 +41,7 @@ enum class TpsState : uint8_t {
 	NotConfigured,
 	Redundancy, // 9
 	IntermittentPps,
-	// keep this list in sync with etbCutCodeList in rusefi.input!
+	// keep this list in sync with etbCutCodeList in tunerstudio.template.ini!
 };
 
 // Only allows clearing the value, but never resetting it.
