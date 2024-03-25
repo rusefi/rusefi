@@ -217,10 +217,13 @@ runs:
         ./build/rusefi_simulator 10
         ./write_tune.sh
         cd $OLDPWD
+        echo "Current directory: $PWD"
         if [ ! "${{inputs.sim_output}}" -ef "${{inputs.rusefi_dir}}/simulator/generated" ]; then
+          ls ${{inputs.rusefi_dir}}/simulator/generated/
           mkdir -p ${{inputs.sim_output}}canned-tunes
-          cp ${{inputs.rusefi_dir}}/simulator/generated/*.msq ${{inputs.sim_output}}
-          cp ${{inputs.rusefi_dir}}/simulator/generated/canned-tunes/*.md ${{inputs.sim_output}}canned-tunes
+          cp -v ${{inputs.rusefi_dir}}/simulator/generated/*.msq ${{inputs.sim_output}}
+          cp -v ${{inputs.rusefi_dir}}/simulator/generated/canned-tunes/*.md ${{inputs.sim_output}}canned-tunes
+          ls ${{inputs.sim_output}}
         fi
 
     - name: Git Config
