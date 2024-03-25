@@ -11,26 +11,8 @@
 		<Configurations>
 			<!-- JTAG_SWD Interface -->
 			<Interface name="JTAG_SWD">
-				<!-- 2MB Single Bank-->
-				<Configuration number="0x0"> 
-					<DualBank>
-						<ReadRegister address="0x40023C14" mask="0x20000000" value="0x20000000"/>
-					</DualBank>
-					<FlashSize>
-						<ReadRegister address="0x1FF0F442" mask="0x0000FFFF" value="0x0800"/>
-					</FlashSize>
-				</Configuration>
-				<!-- 2MB Dual Bank-->
-				<Configuration number="0x1"> 
-					<DualBank>
-						<ReadRegister address="0x40023C14" mask="0x20000000" value="0x0"/>
-					</DualBank>
-					<FlashSize>
-						<ReadRegister address="0x1FF0F442" mask="0x0000FFFF" value="0x0800"/>
-					</FlashSize>
-				</Configuration>
 				<!-- 1MB Single Bank-->
-				<Configuration number="0x2"> 
+				<Configuration number="0x0"> 
 					<DualBank>
 						<ReadRegister address="0x40023C14" mask="0x20000000" value="0x20000000"/>
 					</DualBank>
@@ -39,12 +21,30 @@
 					</FlashSize>
 				</Configuration>
 				<!-- 1MB Dual Bank-->
-				<Configuration number="0x3"> 
+				<Configuration number="0x1"> 
 					<DualBank>
 						<ReadRegister address="0x40023C14" mask="0x20000000" value="0x0"/>
 					</DualBank>
 					<FlashSize>
 						<ReadRegister address="0x1FF0F442" mask="0x0000FFFF" value="0x0400"/>
+					</FlashSize>
+				</Configuration>
+				<!-- 2MB Single Bank-->
+				<Configuration number="0x2"> 
+					<DualBank>
+						<ReadRegister address="0x40023C14" mask="0x20000000" value="0x20000000"/>
+					</DualBank>
+					<FlashSize>
+						<ReadRegister address="0x1FF0F442" mask="0x0000FFFF" value="0x0800"/>
+					</FlashSize>
+				</Configuration>
+				<!-- 2MB Dual Bank-->
+				<Configuration number="0x3"> 
+					<DualBank>
+						<ReadRegister address="0x40023C14" mask="0x20000000" value="0x0"/>
+					</DualBank>
+					<FlashSize>
+						<ReadRegister address="0x1FF0F442" mask="0x0000FFFF" value="0x0800"/>
 					</FlashSize>
 				</Configuration>
 				<!-- Dummy Config Dual bank-->
@@ -62,13 +62,23 @@
 			</Interface>
 			<!-- Bootloader Interface -->
 			<Interface name="Bootloader">
-				<Configuration number="0x0"> <!-- 2MB Single Bank-->
+				<Configuration number="0x0"> <!-- 1MB Single Bank-->
+					<DualBank reference="0x1">
+						<ReadRegister address="0x1FFF0008" mask="1000EFFF" value="1000EFFF"/>
+					</DualBank>
+				</Configuration>
+				<Configuration number="0x1"> <!-- 1MB Dual Bank-->
+					<DualBank reference="0x0">
+						<ReadRegister address="0x1FFF0008" mask="3000CFFF" value="3000CFFF"/>
+					</DualBank>
+				</Configuration>
+				<Configuration number="0x2"> <!-- 2MB Single Bank-->
 					<DualBank reference="0x1">
 						<ReadRegister address="0x1FFF0008" mask="0x2000" value="0x2000"/>
 					</DualBank>
 				</Configuration>
-				<Configuration number="0x1"> <!-- 2MB Dual Bank-->
-					<DualBank reference="0x0">
+				<Configuration number="0x3"> <!-- 2MB Single Bank-->
+					<DualBank reference="0x1">
 						<ReadRegister address="0x1FFF0008" mask="0x2000" value="0x0"/>
 					</DualBank>
 				</Configuration>
@@ -105,7 +115,7 @@
 				<FlashSize address="0x1FF0F442" default="0x200000"/>
 				<BootloaderVersion address="0x1FF0EDBE"/>
 				<!-- 2MB Single Bank -->
-				<Configuration config="0,5">
+				<Configuration config="2,5">
 					<Parameters address="0x08000000" name=" 2 Mbytes single bank Embedded Flash" size="0x200000"/>
 					<Description/>
 					<Organization>Single</Organization>
@@ -123,7 +133,7 @@
 					</Bank>
 				</Configuration>
 				<!-- 2MB Dual Bank -->
-				<Configuration config="1,4">
+				<Configuration config="3,4">
 					<Parameters address="0x08000000" name=" 2 Mbytes dual bank Embedded Flash" size="0x200000"/>
 					<Description/>
 					<Organization>Dual</Organization>
@@ -152,7 +162,7 @@
 					</Bank>
 				</Configuration>
 				<!-- 1MB Single Bank -->
-				<Configuration config="2">
+				<Configuration config="0">
 					<Parameters address="0x08000000" name=" 1 Mbyte single bank Embedded Flash" size="0x100000"/>
 					<Description/>
 					<Organization>Single</Organization>
@@ -170,7 +180,7 @@
 					</Bank>
 				</Configuration>
 				<!-- 1MB Dual Bank -->
-				<Configuration config="3">
+				<Configuration config="1">
 					<Parameters address="0x08000000" name=" 1 Mbyte dual bank Embedded Flash" size="0x100000"/>
 					<Description/>
 					<Organization>Dual</Organization>
@@ -207,7 +217,7 @@
 				<ErasedValue>0xFF</ErasedValue>
 				<Access>RWE</Access>
 				<!-- 2MB Single Bank -->
-				<Configuration config="0,5">
+				<Configuration config="0,2,5">
 					<Parameters address="0x00200000" name=" 2 Mbytes single bank Embedded Flash" size="0x200000"/>
 					<Description/>
 					<Organization>Single</Organization>
@@ -225,7 +235,7 @@
 					</Bank>
 				</Configuration>
 				<!-- 2MB Dual Bank -->
-				<Configuration config="1,4">
+				<Configuration config="1,3,4">
 					<Parameters address="0x00200000" name=" 2 Mbytes dual bank Embedded Flash" size="0x200000"/>
 					<Description/>
 					<Organization>Dual</Organization>
