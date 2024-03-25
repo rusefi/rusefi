@@ -6,7 +6,8 @@
 
 using ::testing::_;
 
-TEST(OddFire, hd) {
+TEST(OddFireRunningMode, hd) {
+  // basic engine setup
 	EngineTestHelper eth(engine_type_e::HARLEY);
 	engineConfiguration->cranking.rpm = 100;
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH; // need to avoid engine phase sync requirement
@@ -15,16 +16,19 @@ TEST(OddFire, hd) {
 	engineConfiguration->timing_offset_cylinder[0] = cylinderOne;
 	engineConfiguration->timing_offset_cylinder[1] = -cylinderTwo;
 	angle_t timing = 1;
-	setTable(config->ignitionTable, timing);
+	setTable(config->ignitionTable, timing); // run mode timing
 
+  // we need some fuel duration so let's mock airmass just to have legit fuel, we do not care for amount here at all
 	EXPECT_CALL(*eth.mockAirmass, getAirmass(/*any rpm*/_, _))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
 	engineConfiguration->crankingTimingAngle = timing;
-	engine->tdcMarkEnabled = false;
+	engine->tdcMarkEnabled = false; // reduce event queue noise TODO extract helper method
 	engineConfiguration->camInputs[0] = Gpio::Unassigned;
 	eth.setTriggerType(trigger_type_e::TT_HALF_MOON);
+	// end of configuration
 
+  // send fake crank signal events so that trigger handler schedules actuators
 	eth.fireTriggerEvents2(2 /* count */ , 60 /* ms */);
 	LimpState limitedSparkState = getLimpManager()->allowIgnition();
 	ASSERT_TRUE(limitedSparkState.value);
@@ -60,4 +64,12 @@ TEST(OddFire, hd) {
 	eth.assertEvent5("spark down2#3", 3, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(-180 + cylinderTwo - timing));
 	eth.assertEvent5("fuel down2#5", 5, (void*)turnInjectionPinLow, eth.angleToTimeUs(540 + PORT_INJECTION_OFFSET));
 	eth.assertEvent5("spark down2#7", 7, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(180 - cylinderOne - timing));
+}
+
+TEST(OddFireCrankingMode, hd) {
+  // TODO!!!
+  // basic engine setup
+	EngineTestHelper eth(engine_type_e::HARLEY);
+	engineConfiguration->cranking.rpm = 1000;
+	// see DEFAULT_CRANKING_ANGLE
 }
