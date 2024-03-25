@@ -734,7 +734,11 @@ static int lua_vincpy(lua_State* l) {
 	return 0;
 }
 
+BOARD_WEAK void boardConfigureLuaHooks(lua_State* lState) { }
+
 void configureRusefiLuaHooks(lua_State* lState) {
+  boardConfigureLuaHooks(lState);
+
 	LuaClass<Timer> luaTimer(lState, "Timer");
 	luaTimer
 		.ctor()
