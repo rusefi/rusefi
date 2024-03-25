@@ -125,7 +125,10 @@ jobs:
       run: |
         export EVENT_NAME="${{github.event_name}}"
         export RUN_ATTEMPT="${{github.run_attempt}}"
-        export COMMIT_MESSAGE="${{github.event.head_commit.message}}"
+        read -d '' COMMIT_MESSAGE << EOM || true
+        ${{ github.event.head_commit.message }}
+        EOM
+        export COMMIT_MESSAGE
         echo "matrix=$(bash firmware/bin/generate_matrix.sh)" >> $GITHUB_OUTPUT
 
   build-firmware:
