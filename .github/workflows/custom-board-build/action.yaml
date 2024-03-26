@@ -237,8 +237,8 @@ runs:
       if: ${{ inputs.run_simulator == 'true' && inputs.push == 'true' }}
       shell: bash
       run: |
-        git add "${{inputs.sim_output}}*msq"
-        git add "${{inputs.sim_output}}canned-tunes/*md"
+        git add ${{inputs.sim_output}}*msq
+        git add ${{inputs.sim_output}}canned-tunes/*md
         OUT=$(git commit -m "Auto-generated Default Tune" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
           echo "Tune: looks like nothing to commit"
