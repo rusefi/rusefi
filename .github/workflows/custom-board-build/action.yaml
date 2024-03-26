@@ -237,6 +237,8 @@ runs:
       if: ${{ inputs.run_simulator == 'true' && inputs.push == 'true' }}
       shell: bash
       run: |
+        echo "Current directory: $PWD"
+        ls ${{inputs.sim_output}}
         git add ${{inputs.sim_output}}*msq
         git add ${{inputs.sim_output}}canned-tunes/*md
         OUT=$(git commit -m "Auto-generated Default Tune" 2>&1) || echo "commit failed, finding out why"
