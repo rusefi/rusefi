@@ -10,7 +10,7 @@ on:
   schedule:
     # this produces GitHub nightly releases https://github.com/rusefi/rusefi/releases
     # by the way GitHub actions use UTC https://www.utctime.net/ which matches GMT time
-    - cron: '10 23 * * *'
+    - cron: '37 13 * * *'
   workflow_dispatch:
     inputs:
       lts:
@@ -83,7 +83,7 @@ jobs:
       id: tag
       uses: mathieudutour/github-tag-action@v6.2
       with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
+        github_token: ${{ secrets.NIGHTLY_RELEASE_ACCESS_TOKEN }}
         custom_tag: ${{ env.date }}
         tag_prefix: ''
 
