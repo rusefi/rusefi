@@ -35,24 +35,24 @@ struct ExtiChannel
 static ExtiChannel channels[16];
 
 // EXT is not able to give you the front direction but you could read the pin in the callback.
-int efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, ExtiCallback cb, void *cb_data) {
+void efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, ExtiCallback cb, void *cb_data) {
 	/* paranoid check, in case of Gpio::Unassigned getHwPort will return NULL
 	 * and we will fail on next check */
 	if (!isBrainPinValid(brainPin)) {
-		return -1;
+		return;
 	}
 
-	criticalAssert(msg, "efiExtiEnablePin msg must not be null", -1);
+	criticalAssertVoid(msg, "efiExtiEnablePin msg must not be null");
 
 	ioportid_t port = getHwPort(msg, brainPin);
 	if (port == NULL) {
-		return -1;
+		return;
 	}
 
 	bool wasUsed = brain_pin_markUsed(brainPin, msg);
 	if (wasUsed) {
 		// error condition we shall bail
-		return -1;
+		return;
 	}
 
 	int index = getHwPin(msg, brainPin);
@@ -62,11 +62,11 @@ int efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, ExtiC
 	/* is this index already used? */
 	if (channel.Callback) {
 		firmwareError(ObdCode::CUSTOM_ERR_PIN_ALREADY_USED_2, "%s: pin %s/index %d: exti index already used by %s",
-			msg,
-			hwPortname(brainPin),
-			index,
-			channel.Name);
-		return -1;
+		msg,
+		hwPortname(brainPin),
+		index,
+		channel.Name);
+		return;
 	}
 
 	channel.Callback = cb;
@@ -75,8 +75,6 @@ int efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, ExtiC
 
 	ioline_t line = PAL_LINE(port, index);
 	palEnableLineEvent(line, mode);
-
-	return 0;
 }
 
 void efiExtiDisablePin(brain_pin_e brainPin)
@@ -258,10 +256,7 @@ void efiExtiInit() {
 	criticalError("exti not supported");
 }
 
-int efiExtiEnablePin(const char *, brain_pin_e, uint32_t, ExtiCallback, void *)
-{
-	return 0;
-}
+void efiExtiEnablePin(const char *, brain_pin_e, uint32_t, ExtiCallback, void *) { }
 void efiExtiDisablePin(brain_pin_e) { }
 
 uint8_t getExtiOverflowCounter() {
