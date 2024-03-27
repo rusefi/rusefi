@@ -58,14 +58,13 @@ int extiTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 
 	efiPrintf("extiTriggerTurnOnInputPin %s %s", msg, hwPortname(brainPin));
 
-	/* TODO:
-	 * * do not set to both edges if we need only one
-	 * * simplify callback in case of one edge */
 	if (efiExtiEnablePin(msg, brainPin, PAL_EVENT_MODE_BOTH_EDGES,
 		isTriggerShaft ? shaft_callback : cam_callback, (void *)index) < 0) {
 		return -1;
 	}
-
+	/* TODO:
+	 * * do not set to both edges if we need only one
+	 * * simplify callback in case of one edge */
 	ioline_t pal_line = PAL_LINE(getHwPort("trg", brainPin), getHwPin("trg", brainPin));
 	if (isTriggerShaft) {
 		shaftLines[index] = pal_line;
