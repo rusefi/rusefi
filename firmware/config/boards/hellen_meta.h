@@ -167,13 +167,13 @@ void detectHellenBoardType();
 // AIN22 PC5
 #define H144_IN_AUX4 EFI_ADC_15
 
-// A1 AIN1 no code to use ADC3 as analog
+// A1 AIN1 no code to use ADC3 as analog, ADC3_IN9 for knock
 #define H144_IN_SENS1 F3
-// A2 AIN2 no code to use ADC3 as analog
+// A2 AIN2 no code to use ADC3 as analog, ADC3_IN14 for knock
 #define H144_IN_SENS2 F4
-// A3 AIN3 no code to use ADC3 as analog
+// A3 AIN3 no code to use ADC3 as analog, ADC3_IN15 for knock
 #define H144_IN_SENS3 F5
-// A4 AIN4 no code to use ADC3 as analog
+// A4 AIN4 no code to use ADC3 as analog, ADC3_IN4 for knock
 #define H144_IN_SENS4 F6
 
 // IN_O2S AIN13 A13 PA0
