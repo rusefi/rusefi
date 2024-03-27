@@ -121,10 +121,7 @@ int adcTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 	ioline_t pal_line = PAL_LINE(triggerInputPort, triggerInputPin);
 	efiPrintf("turnOnTriggerInputPin %s l=%d", hwPortname(brainPin), pal_line);
 
-	if (efiExtiEnablePin(msg, brainPin, PAL_EVENT_MODE_BOTH_EDGES,
-		isTriggerShaft ? shaft_callback : cam_callback, (void *)pal_line) < 0) {
-		return -1;
-	}
+	efiExtiEnablePin(msg, brainPin, PAL_EVENT_MODE_BOTH_EDGES, isTriggerShaft ? shaft_callback : cam_callback, (void *)pal_line);
 
 	// ADC mode is default, because we don't know if the wheel is already spinning
 	setTriggerAdcMode(TRIGGER_ADC_ADC);
