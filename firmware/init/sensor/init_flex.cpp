@@ -61,19 +61,20 @@ static void flexExtiCallback(void*, efitick_t nowNt) {
 // https://rusefi.com/forum/viewtopic.php?p=37452#p37452
 
 void initFlexSensor(bool isFirstTime) {
-#if EFI_PROD_CODE
-	if (efiExtiEnablePin("flex", engineConfiguration->flexSensorPin,
-		PAL_EVENT_MODE_BOTH_EDGES, flexExtiCallback, nullptr) < 0) {
+	flexPin = engineConfiguration->flexSensorPin;
+	if (!isBrainPinValid(flexPin)) {
 		return;
 	}
-#endif
-	flexPin = engineConfiguration->flexSensorPin;
 
 	// 0.01 means filter bandwidth of ~1hz with ~100hz sensor
 	flexTempFilter.configureLowpass(1, 0.01f);
 	flexSensor.setFunction(converter);
 
 #if EFI_PROD_CODE
+	efiExtiEnablePin("flex", flexPin,
+		PAL_EVENT_MODE_BOTH_EDGES,
+		flexExtiCallback, nullptr);
+
     if (isFirstTime) {
 	    addConsoleAction("flexinfo", []() {
 	        efiPrintf("flex counter %d", flexCallbackCounter);
