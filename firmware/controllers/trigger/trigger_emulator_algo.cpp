@@ -239,12 +239,16 @@ void startTriggerEmulatorPins() {
 		for (size_t i = 0; i < efi::size(emulatorOutputs[channel]); i++) {
 			triggerEmulatorSignals[channel].outputPins[i] = &emulatorOutputs[channel][i];
 
+#if EFI_PROD_CODE
       brain_pin_e pin;
 
+      pin_output_mode_e outputMode;
 			if (channel == 0) {
   			pin = engineConfiguration->triggerSimulatorPins[i];
+  			outputMode = engineConfiguration->triggerSimulatorPinModes[i];
   		} else if (channel == 1 && i == 0) {
   		  pin = engineConfiguration->camSimulatorPin;
+  		  outputMode = engineConfiguration->camSimulatorPinMode;
   		} else {
 			  // todo: add pin configs for cam simulator channels
   		  continue;
@@ -255,10 +259,9 @@ void startTriggerEmulatorPins() {
 				hasStimPins = true;
 			}
 
-#if EFI_PROD_CODE
 			if (isConfigurationChanged(triggerSimulatorPins[i])) {
 				triggerEmulatorSignals[channel].outputPins[i]->initPin("Trigger emulator", pin,
-					engineConfiguration->triggerSimulatorPinModes[i]);
+					outputMode);
 			}
 #endif // EFI_PROD_CODE
 		}
