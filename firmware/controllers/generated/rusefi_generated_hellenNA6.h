@@ -123,6 +123,8 @@
 #define brain_pin_diag_e_PIN_SHORT_TO_GND 0x02
 #define brain_pin_diag_e_PIN_UNKNOWN 0x80
 #define C_MC33810_COUNT 1
+#define CAM_1_MODE_NAME "Cam mode (intake)"
+#define CAM_2_MODE_NAME "Cam mode (exhaust)"
 #define CAM_INPUTS_COUNT 4
 #define CAMS_PER_BANK 2
 #define can_baudrate_e_auto_enum 0="B50KBPS",2="B100KBPS",3="B125KBPS",6="B1MBPS",4="B250KBPS",5="B500KBPS",1="B83KBPS"
@@ -1187,7 +1189,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 1463095671
+#define SIGNATURE_HASH 2264339419
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1480,6 +1482,9 @@
 #define ts_show_air_conditioning true
 #define ts_show_analog_divider false
 #define ts_show_auxserial_pins true
+#define ts_show_bank2_cam1 true
+#define ts_show_bank2_cam2 true
+#define ts_show_cam2 true
 #define ts_show_can2 false
 #define ts_show_can_pins false
 #define ts_show_check_engine true
@@ -1545,6 +1550,7 @@
 #define ts_show_spi3_pins true
 #define ts_show_starter_disable true
 #define ts_show_status_leds true
+#define ts_show_sync_cam true
 #define ts_show_tcu false
 #define ts_show_tle8888 false
 #define ts_show_tps2 true
@@ -1557,7 +1563,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.03.27.hellenNA6.1463095671"
+#define TS_SIGNATURE "rusEFI master.2024.03.27.hellenNA6.2264339419"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
