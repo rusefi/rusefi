@@ -132,7 +132,7 @@ struct cranking_parameters_s {
 	 */
 	float baseFuel;
 	/**
-	 * This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. 
+	 * This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm.
 	 * set cranking_rpm X
 	 * units: RPM
 	 * offset 4
@@ -710,7 +710,7 @@ struct engine_configuration_s {
 	/**
 	 * Shall we display real life signal or just the part consumed by trigger decoder.
 	 * Applies to both trigger and cam/vvt input.
-	 * 
+	 *
 	 * enable logic_level_trigger
 	offset 188 bit 20 */
 	bool displayLogicLevelsInEngineSniffer : 1 {};
@@ -4701,11 +4701,18 @@ struct engine_configuration_s {
 	 * offset 4585
 	 */
 	pin_mode_e spi6MosiMode;
+	Gpio camSimulatorPin;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 3986
+	 */
+	uint8_t alignmentFill_at_3986[2];
 	/**
 	 * units: units
 	 * offset 4586
 	 */
-	uint8_t unusedOftenChangesDuringFirmwareUpdate[120];
+	uint8_t unusedOftenChangesDuringFirmwareUpdate[116];
 	/**
 	 * need 4 byte alignment
 	 * units: units
