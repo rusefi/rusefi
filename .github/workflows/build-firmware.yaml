@@ -304,7 +304,6 @@ jobs:
         path: ./firmware/deliver/rusefi*.dfu
 
     - name: Upload bundle artifact
-      if: ${{ env.full == 'true' }}
       uses: actions/upload-artifact@v4
       with:
         name: rusefi_bundle_${{matrix.build-target}}.zip
