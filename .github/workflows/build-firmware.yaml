@@ -257,11 +257,7 @@ jobs:
     - name: Build Firmware
       working-directory: ./firmware/
       run: |
-        if [ "$full" == "true" ]; then
-          bash bin/compile.sh ${{env.BOARD_META_PATH}} bundles --output-sync=recurse
-        else
-          bash bin/compile.sh ${{env.BOARD_META_PATH}} --output-sync=recurse all deliver/rusefi.dfu deliver/rusefi.bin
-        fi
+        bash bin/compile.sh ${{env.BOARD_META_PATH}} bundles --output-sync=recurse
 
     - name: Upload Bundle
       if: ${{ env.full == 'true' }}
@@ -328,14 +324,12 @@ jobs:
         path: ./firmware/deliver/rusefi*.dfu
 
     - name: Upload bundle artifact
-      if: ${{ env.full == 'true' }}
       uses: actions/upload-artifact@v4
       with:
         name: rusefi_bundle_${{matrix.build-target}}.zip
         path: ./artifacts/rusefi_bundle_${{matrix.build-target}}.zip
 
     - name: Upload github action autoupdate artifact
-      if: ${{ env.full == 'true' }}
       uses: actions/upload-artifact@v4
       with:
         name: rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
