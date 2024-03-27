@@ -70,33 +70,32 @@ jobs:
       run: ./write_tune.sh
 
     - name: Commit fresh generated default simulator tune
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master'}}
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub gen-default-tune Action"
         git add "simulator/generated/*msq"
         git add "simulator/generated/canned-tunes/*md"
         OUT=$(git commit -m "Auto-generated default tune" 2>&1) || echo "commit failed, finding out why"
-        if echo "$OUT" | grep 'nothing to commit'; then
+        if echo "$OUT" | grep 'nothing to commit\|no changes added'; then
           echo "default tune: looks like nothing to commit"
-          echo "NOCOMMIT=true" >> $GITHUB_ENV
           exit 0
         elif echo "$OUT" | grep 'changed'; then
+          echo "COMMIT=true" >> $GITHUB_ENV
           echo "default tune: looks like something has changed"
           exit 0
         else
           echo "default tune: looks like something unexpected"
           exit 1
         fi
+        git pull --rebase
 
     - name: Push fresh default tune
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && env.NOCOMMIT != 'true'}}
+      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && env.COMMIT == 'true'}}
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ github.token }}
-        branch: ${{ steps.extract_branch.outputs.branch }}
+        branch: ${{ github.ref }}
 
     - name: Upload Linux built simulator
       uses: actions/upload-artifact@v4

@@ -58,8 +58,6 @@ jobs:
 
     # Commit changes and catch the error that occurs if nothing has been changed (without catching other errors)
     - name: Commit fresh generated headers and TS project
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub gen-configs Action"
@@ -70,34 +68,19 @@ jobs:
         git add 'firmware/config/boards/*/generated_ts_name_by_pin.cpp'
         git add *.java
         git add *_generated.h
-        # get the original ramdisk images back in order to not overwrite the default placeholder
-        git checkout -- firmware/hw_layer/mass_storage/ramdisk_image.h firmware/hw_layer/mass_storage/ramdisk_image_compressed.h
         git status
-        OUT=$(git commit -am "Auto-generated configs and docs" 2>&1) || echo "commit failed, finding out why"
-        if echo "$OUT" | grep 'nothing to commit'; then
+        OUT=$(git commit -m "Auto-generated configs and docs" 2>&1) || echo "commit failed, finding out why"
+        if echo "$OUT" | grep 'nothing to commit\|no changes added'; then
           echo "headers: looks like nothing to commit"
-          echo "NOCOMMIT=true" >> $GITHUB_ENV
           exit 0
         elif echo "$OUT" | grep 'changed'; then
+          echo "COMMIT=true" >> $GITHUB_ENV
           echo "headers: looks like something has changed"
           exit 0
         else
           echo "headers: looks like something unexpected"
           exit 1
         fi
-
-    # We need to know what branch this is in order to push to the correct branch
-    - name: Extract branch name
-      shell: bash
-      run: echo "branch=${GITHUB_REF#refs/heads/}" >> $GITHUB_OUTPUT
-      id: extract_branch
-
-    - name: Push configs
-      if: ${{env.NOCOMMIT != 'true'}}
-      uses: ad-m/github-push-action@master
-      with:
-        github_token: ${{ github.token }}
-        branch: ${{ steps.extract_branch.outputs.branch }}
 
     - name: Print Compiler version
       # NOTE: on mac, this is actually symlink'd to clang, not gcc, but that's ok - we want to build on both
@@ -114,31 +97,19 @@ jobs:
 
       # Commit changes and catch the error that occurs if nothing has been changed (without catching other errors)
     - name: Commit fresh triggers.txt
-      if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
-      #
-      # we have minor drama - looks like unit_tests are invoked from root folder while a more natural is to invoke those
-      # from 'unit_tests' folder
-      # as a work-around to leverage unit_tests/.gitignore we move those files into expected folder for now
-      #
       run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub build-unit-tests Action"
         git status
         git remote -v
         echo See https://github.com/rusefi/rusefi/issues/2446
-        git pull https://github.com/rusefi/rusefi master
         git add unit_tests/triggers.txt
         git status
         OUT=$(git commit -m "Trigger wheel definitions" unit_tests/triggers.txt 2>&1) || echo "commit failed, finding out why"
         echo "$OUT"
-        if echo "$OUT" | grep -E 'nothing to commit|no changes added'; then
+        if echo "$OUT" | grep 'nothing to commit\|no changes added'; then
           echo "triggers: looks like nothing to commit"
-          echo "NOCOMMIT=true" >> $GITHUB_ENV
           exit 0
         elif echo "$OUT" | grep 'changed'; then
-          echo "NOCOMMIT=false" >> $GITHUB_ENV
+          echo "COMMIT=true" >> $GITHUB_ENV
           echo "triggers: looks like something has changed"
           exit 0
         else
@@ -146,9 +117,13 @@ jobs:
           exit 1
         fi
 
+    - name: Git Pull
+      if: ${{env.COMMIT == 'true'}}
+      run: git pull --rebase
+
     - name: Push fresh triggers.txt
-      if: ${{env.NOCOMMIT != 'true'}}
+      if: ${{env.COMMIT == 'true'}}
       uses: ad-m/github-push-action@master
       with:
         github_token: ${{ github.token }}
-        branch: ${{ steps.extract_branch.outputs.branch }}
+        branch: ${{ github.ref }}
