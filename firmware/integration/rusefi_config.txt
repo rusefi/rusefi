@@ -1631,7 +1631,7 @@ float brakeMeanEffectivePressureDifferential
 
 Gpio camSimulatorPin
 
-int testField
+pin_output_mode_e camSimulatorPinMode
 
 uint8_t[230] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
