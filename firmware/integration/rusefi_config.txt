@@ -1950,6 +1950,12 @@ end_struct
 #define GAUGE_NAME_TRG_ERR "Trigger Error Counter"
 #define GAUGE_NAME_TRG_GAP "Sync: Trigger Latest Ratio"
 
+#define CAM_1_MODE_NAME "Cam mode (intake)"
+#define CAM_2_MODE_NAME "Cam mode (exhaust)"
+#define ts_show_cam2 true
+#define ts_show_bank2_cam1 true
+#define ts_show_bank2_cam2 true
+#define ts_show_sync_cam true
 #define INJECTOR_1_NAME "Injector #1"
 #define INJECTOR_2_NAME "Injector #2"
 
