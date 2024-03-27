@@ -110,6 +110,9 @@ int adcTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 	brain_pin_e brainPin = isTriggerShaft ?
 		engineConfiguration->triggerInputPins[index] : engineConfiguration->camInputs[index];
 
+	if (!isBrainPinValid(brainPin))
+		return 0;
+
 	trigAdcState.init();
 
 	triggerInputPort = getHwPort("trg", brainPin);
