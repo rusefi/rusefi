@@ -238,6 +238,7 @@ void startTriggerEmulatorPins() {
 	for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
 		for (size_t i = 0; i < efi::size(emulatorOutputs[channel]); i++) {
 			triggerEmulatorSignals[channel].outputPins[i] = &emulatorOutputs[channel][i];
+#if EFI_PROD_CODE
 
       brain_pin_e pin;
 
@@ -255,7 +256,6 @@ void startTriggerEmulatorPins() {
 				hasStimPins = true;
 			}
 
-#if EFI_PROD_CODE
 			if (isConfigurationChanged(triggerSimulatorPins[i])) {
 				triggerEmulatorSignals[channel].outputPins[i]->initPin("Trigger emulator", pin,
 					engineConfiguration->triggerSimulatorPinModes[i]);
