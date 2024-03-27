@@ -11,7 +11,6 @@ static StoredValueSensor flexFuelTemp(SensorType::FuelTemperature, MS2NT(500));
 static FlexConverter converter;
 
 static Biquad flexTempFilter;
-#if EFI_PROD_CODE
 
 static Timer flexFreq, flexPulse;
 
@@ -54,9 +53,10 @@ static void flexCallback(efitick_t nowNt, bool value) {
 static Gpio flexPin = Gpio::Unassigned;
 
 static void flexExtiCallback(void*, efitick_t nowNt) {
+#if EFI_PROD_CODE
 	flexCallback(nowNt, efiReadPin(flexPin) ^ engineConfiguration->flexSensorInverted);
-}
 #endif
+}
 
 // https://rusefi.com/forum/viewtopic.php?p=37452#p37452
 
@@ -66,8 +66,8 @@ void initFlexSensor(bool isFirstTime) {
 		PAL_EVENT_MODE_BOTH_EDGES, flexExtiCallback, nullptr) < 0) {
 		return;
 	}
-	flexPin = engineConfiguration->flexSensorPin;
 #endif
+	flexPin = engineConfiguration->flexSensorPin;
 
 	// 0.01 means filter bandwidth of ~1hz with ~100hz sensor
 	flexTempFilter.configureLowpass(1, 0.01f);
@@ -98,13 +98,13 @@ void deInitFlexSensor() {
 	flexSensor.unregister();
 	flexFuelTemp.unregister();
 
-#if EFI_PROD_CODE
 	if (!isBrainPinValid(flexPin)) {
 		return;
 	}
 
+#if EFI_PROD_CODE
 	efiExtiDisablePin(flexPin);
+#endif
 
 	flexPin = Gpio::Unassigned;
-#endif
 }
