@@ -7,7 +7,6 @@ public:
 	HellaOilLevelSensor(SensorType type) : StoredValueSensor(type, MS2NT(2000)) {}
 
 	void init(brain_pin_e pin);
-	void deInit();
 
 	void onEdge(efitick_t nowNt);
 

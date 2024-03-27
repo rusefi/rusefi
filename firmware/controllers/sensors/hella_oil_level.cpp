@@ -15,28 +15,15 @@ void HellaOilLevelSensor::init(brain_pin_e pin) {
 		return;
 	}
 
-#if EFI_PROD_CODE
-	if (efiExtiEnablePin(getSensorName(), pin, PAL_EVENT_MODE_BOTH_EDGES,
-		hellaSensorExtiCallback, reinterpret_cast<void*>(this)) < 0) {
-		return;
-	}
-#endif // EFI_PROD_CODE
-
 	m_pin = pin;
 
-	Register();
-}
-
-void HellaOilLevelSensor::deInit() {
-	if (!isBrainPinValid(m_pin)) {
-		return;
-	}
-
 #if EFI_PROD_CODE
-	efiExtiDisablePin(m_pin);
-#endif
+	efiExtiEnablePin(getSensorName(), pin, 
+		PAL_EVENT_MODE_BOTH_EDGES,
+		hellaSensorExtiCallback, reinterpret_cast<void*>(this));
+#endif // EFI_PROD_CODE
 
-	m_pin = Gpio::Unassigned;
+	Register();
 }
 
 void HellaOilLevelSensor::onEdge(efitick_t nowNt) {
