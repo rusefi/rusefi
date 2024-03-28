@@ -41,6 +41,12 @@
     engineConfiguration->tpsMin = 124;
     // default 1000.0
     engineConfiguration->tpsMax = 919;
+    // default "Normal"
+    engineConfiguration->clutchDownPinInverted = false;
+    // default "Normal"
+    engineConfiguration->clutchUpPinInverted = false;
+    // default "Normal"
+    engineConfiguration->flexSensorInverted = false;
     // default 0.0
     engineConfiguration->mapLowValueVoltage = 2.91;
     // default 410.0

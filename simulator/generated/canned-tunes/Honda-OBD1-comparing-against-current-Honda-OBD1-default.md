@@ -31,6 +31,12 @@
     engineConfiguration->cylinderBankSelect[10] = 1;
     // default 0.0
     engineConfiguration->cylinderBankSelect[11] = 1;
+    // default "Normal"
+    engineConfiguration->clutchDownPinInverted = false;
+    // default "Normal"
+    engineConfiguration->clutchUpPinInverted = false;
+    // default "Normal"
+    engineConfiguration->flexSensorInverted = false;
     // default 0.0
     engineConfiguration->mapLowValueVoltage = 2.91;
     // default "false"

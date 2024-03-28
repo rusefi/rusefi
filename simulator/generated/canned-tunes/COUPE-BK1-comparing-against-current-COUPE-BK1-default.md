@@ -35,6 +35,10 @@
     engineConfiguration->tps1SecondaryMin = 874;
     // default 69.0
     engineConfiguration->tps1SecondaryMax = 63;
+    // default "Normal"
+    engineConfiguration->clutchDownPinInverted = false;
+    // default "Normal"
+    engineConfiguration->clutchUpPinInverted = false;
     // default 300.0
     engineConfiguration->idle.solenoidFrequency = 200;
     // default "false"

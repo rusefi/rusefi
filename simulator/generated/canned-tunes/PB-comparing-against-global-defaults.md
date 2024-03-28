@@ -61,6 +61,12 @@
     engineConfiguration->throttlePedalSecondaryUpVoltage = 0.74;
     // default 0.0
     engineConfiguration->throttlePedalSecondaryWOTVoltage = 2.28;
+    // default "Normal"
+    engineConfiguration->clutchDownPinInverted = false;
+    // default "Normal"
+    engineConfiguration->clutchUpPinInverted = false;
+    // default "Normal"
+    engineConfiguration->flexSensorInverted = false;
     // default 0.0
     engineConfiguration->highPressureFuel.v1 = 0.5;
     // default 0.0

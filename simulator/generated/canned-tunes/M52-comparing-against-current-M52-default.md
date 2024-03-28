@@ -55,6 +55,10 @@
     engineConfiguration->tpsMin = 120;
     // default 1000.0
     engineConfiguration->tpsMax = 791;
+    // default "Normal"
+    engineConfiguration->clutchDownPinInverted = false;
+    // default "Normal"
+    engineConfiguration->clutchUpPinInverted = false;
     // default 300.0
     engineConfiguration->idle.solenoidFrequency = 200;
     // default 3.0

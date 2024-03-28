@@ -31,6 +31,12 @@
     engineConfiguration->throttlePedalSecondaryUpVoltage = 0.74;
     // default 1.86
     engineConfiguration->throttlePedalSecondaryWOTVoltage = 2.28;
+    // default "Normal"
+    engineConfiguration->clutchDownPinInverted = false;
+    // default "Normal"
+    engineConfiguration->clutchUpPinInverted = false;
+    // default "Normal"
+    engineConfiguration->flexSensorInverted = false;
     // default 0.05
     engineConfiguration->idleRpmPid.pFactor = 0.03;
     // default 0.0

@@ -444,8 +444,8 @@
         <constant name="consoleUartDevice">"Off"</constant>
         <constant name="sensorChartMode">"none"</constant>
         <constant name="mafSensorType">"v1"</constant>
-        <constant name="clutchUpPinInverted">"false"</constant>
-        <constant name="clutchDownPinInverted">"false"</constant>
+        <constant name="clutchUpPinInverted">"Normal"</constant>
+        <constant name="clutchDownPinInverted">"Normal"</constant>
         <constant name="useHbridgesToDriveIdleStepper">"false"</constant>
         <constant name="multisparkEnable">"false"</constant>
         <constant name="enableLaunchRetard">"false"</constant>
@@ -743,7 +743,7 @@
         <constant name="mc33810Gpgd3Mode">"false"</constant>
         <constant name="enableExtendedCanBroadcast">"true"</constant>
         <constant name="luaCanRxWorkaround">"false"</constant>
-        <constant name="flexSensorInverted">"false"</constant>
+        <constant name="flexSensorInverted">"Normal"</constant>
         <constant name="useHardSkipInTraction">"false"</constant>
         <constant name="fancySmartS">"false"</constant>
         <constant name="fancySmartL">"false"</constant>
@@ -4718,7 +4718,7 @@ end</constant>
          1.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240227" nPages="1" signature="rusEFI master.2024.03.28.f407-discovery.1663780708" version="5.0"/>
+    <versionInfo firmwareInfo="20240227" nPages="1" signature="rusEFI master.2024.03.28.f407-discovery.3647210988" version="5.0"/>
     <bibliography author="rusEFI 20240227" writeDate="date"/>
     <settings/>
     <userComments/>

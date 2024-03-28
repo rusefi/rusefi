@@ -71,8 +71,10 @@
     engineConfiguration->mc33_t_hold_off = 0;
     // default 10000.0
     engineConfiguration->mc33_t_hold_tot = 0;
-    // default "false"
+    // default "Normal"
     engineConfiguration->clutchDownPinInverted = true;
+    // default "Normal"
+    engineConfiguration->clutchUpPinInverted = false;
     // default 1.0
     engineConfiguration->turboSpeedSensorMultiplier = 0;
     // default 410.0
