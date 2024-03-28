@@ -42,6 +42,7 @@ jobs:
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub set-date Action"
         git commit -m "Update date" -a 2>&1 | grep -E '(nothing to commit|changed)'
+        git stash
         git pull --rebase
 
     - name: Push changed date file
