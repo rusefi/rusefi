@@ -13,17 +13,9 @@
 #include <math.h>
 #include "datalogging.h"
 
-// also known as bool2string and boolean2string
 const char * boolToString(bool value) {
 	return value ? "Yes" : "No";
 }
-
-/*
-float efiFloor(float value, float precision) {
-	int a = (int) (value / precision);
-	return a * precision;
-}
-*/
 
 /**
  *
@@ -212,14 +204,19 @@ float atoff(const char *param) {
 }
 
 bool strEqualCaseInsensitive(const char *str1, const char *str2) {
-	int len1 = strlen(str1);
-	int len2 = strlen(str2);
+	size_t len1 = strlen(str1);
+	size_t len2 = strlen(str2);
+
 	if (len1 != len2) {
 		return false;
 	}
-	for (int i = 0; i < len1; i++)
-		if (TO_LOWER(str1[i]) != TO_LOWER(str2[i]))
+
+	for (size_t i = 0; i < len1; i++) {
+		if (mytolower(str1[i]) != mytolower(str2[i])) {
 			return false;
+		}
+	}
+
 	return true;
 }
 
@@ -227,17 +224,18 @@ bool strEqualCaseInsensitive(const char *str1, const char *str2) {
 ** return lower-case of c if upper-case, else c
 */
 int mytolower(const char c) {
-  return TO_LOWER(c);
+	if (c >= 'A' && c <= 'Z') {
+		return c - 'A' + 'a';
+	} else {
+		return c;
+	}
 }
-
 
 int djb2lowerCase(const char *str) {
 	unsigned long hash = 5381;
-	int c;
 
-	while ( (c = *str++) ) {
-		c = TO_LOWER(c);
-		hash = ((hash << 5) + hash) + c; /* hash * 33 + c */
+	while (char c = *str++) {
+		hash = 32 * hash + mytolower(c);
 	}
 
 	return hash;
@@ -245,20 +243,27 @@ int djb2lowerCase(const char *str) {
 
 bool strEqual(const char *str1, const char *str2) {
 	// todo: there must be a standard function?!
-	int len1 = strlen(str1);
-	int len2 = strlen(str2);
+	size_t len1 = strlen(str1);
+	size_t len2 = strlen(str2);
+
 	if (len1 != len2) {
 		return false;
 	}
-	for (int i = 0; i < len1; i++)
-		if (str1[i] != str2[i])
+
+	for (size_t i = 0; i < len1; i++) {
+		if (str1[i] != str2[i]) {
 			return false;
+		}
+	}
+
 	return true;
 }
 
 float limitRateOfChange(float newValue, float oldValue, float incrLimitPerSec, float decrLimitPerSec, float secsPassed) {
-	if (newValue >= oldValue)
+	if (newValue >= oldValue) {
 		return (incrLimitPerSec <= 0.0f) ? newValue : oldValue + minF(newValue - oldValue, incrLimitPerSec * secsPassed);
+	}
+
 	return (decrLimitPerSec <= 0.0f) ? newValue : oldValue - minF(oldValue - newValue, decrLimitPerSec * secsPassed);
 }
 

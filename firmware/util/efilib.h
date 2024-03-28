@@ -10,7 +10,6 @@
 #include <stdint.h>
 #include <rusefi/arrays.h>
 
-#define TO_LOWER(x) (((x)>='A' && (x)<='Z') ? (x) - 'A' + 'a' : (x))
 int djb2lowerCase(const char *str);
 
 #define _MAX_FILLER 11
