@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Mar 27 04:55:12 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Mar 28 18:44:36 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4504,16 +4504,26 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e camSimulatorPinMode;
 	/**
+	 * need 4 byte alignment
 	 * units: units
 	 * offset 3987
 	 */
-	uint8_t unusedOftenChangesDuringFirmwareUpdate[230];
+	uint8_t alignmentFill_at_3987[1];
+	/**
+	 * offset 3988
+	 */
+	int anotherCiTest;
+	/**
+	 * units: units
+	 * offset 3992
+	 */
+	uint8_t unusedOftenChangesDuringFirmwareUpdate[226];
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 4217
+	 * offset 4218
 	 */
-	uint8_t alignmentFill_at_4217[3];
+	uint8_t alignmentFill_at_4218[2];
 };
 static_assert(sizeof(engine_configuration_s) == 4220);
 
@@ -5537,4 +5547,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 27900);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Mar 27 04:55:12 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Mar 28 18:44:36 UTC 2024
