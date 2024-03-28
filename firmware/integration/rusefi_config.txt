@@ -892,8 +892,8 @@ custom maf_sensor_type_e 1 bits, S08, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 
 	custom warning_message_t @@WARNING_BUFFER_SIZE@@ string, ASCII, @OFFSET@, @@WARNING_BUFFER_SIZE@@
 
-	bit clutchUpPinInverted
-	bit clutchDownPinInverted
+	bit clutchUpPinInverted,"Inverted","Normal"
+	bit clutchDownPinInverted,"Inverted","Normal"
 	bit useHbridgesToDriveIdleStepper;If enabled we use two H-bridges to drive stepper idle air valve
 	bit multisparkEnable
 	bit enableLaunchRetard
@@ -1151,7 +1151,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	bit enableExtendedCanBroadcast
 ! temporary for too much CAN RX processing kills Lua script #5841
 	bit luaCanRxWorkaround
-	bit flexSensorInverted
+	bit flexSensorInverted,"Inverted","Normal"
 	bit useHardSkipInTraction
 	bit fancySmartS
 	bit fancySmartL
