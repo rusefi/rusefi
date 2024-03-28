@@ -119,7 +119,9 @@ jobs:
 
     - name: Git Pull
       if: ${{env.COMMIT == 'true'}}
-      run: git pull --rebase
+      run: |
+        git stash
+        git pull --rebase
 
     - name: Push fresh triggers.txt
       if: ${{env.COMMIT == 'true'}}
