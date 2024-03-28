@@ -1605,11 +1605,8 @@
         <constant digits="0" name="tunerStudioSerialSpeed" units="BPs">38400.0</constant>
         <constant name="camSimulatorPin">"NONE"</constant>
         <constant name="camSimulatorPinMode">"default"</constant>
-        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="230">
-         0.0
-         0.0
-         0.0
-         0.0
+        <constant digits="0" name="anotherCiTest" units="">0.0</constant>
+        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="226">
          0.0
          0.0
          0.0
@@ -4644,7 +4641,7 @@ end</constant>
          0.8
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240227" nPages="1" signature="rusEFI master.2024.03.28.f407-discovery.1380158593" version="5.0"/>
+    <versionInfo firmwareInfo="20240227" nPages="1" signature="rusEFI master.2024.03.28.f407-discovery.1663780708" version="5.0"/>
     <bibliography author="rusEFI 20240227" writeDate="date"/>
     <settings/>
     <userComments/>
