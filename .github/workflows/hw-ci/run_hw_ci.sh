@@ -20,4 +20,4 @@ if [ -n "$HARDWARE_CI_SERIAL" ]; then
 	done
 fi
 
-java -cp java_console/autotest/build/libs/autotest-all.jar $HW_SUITE
+java -DHARDWARE_CI_SERIAL_DEVICE=$HARDWARE_CI_SERIAL_DEVICE -cp java_console/autotest/build/libs/autotest-all.jar $HW_SUITE
