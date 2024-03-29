@@ -742,6 +742,8 @@ bool TriggerCentral::isToothExpectedNow(efitick_t timestamp) {
 	return true;
 }
 
+BOARD_WEAK bool boardAllowTriggerAcrIntegration() { return true; }
+
 /**
  * This method is NOT invoked for VR falls.
  */
