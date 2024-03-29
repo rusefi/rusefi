@@ -43,13 +43,17 @@ void setHellen64Can() {
 
 static OutputPin megaEn;
 
+bool getHellenBoardEnabled() {
+  return megaEn.getLogicValue();
+}
+
 bool boardEnableSendWidebandInfo() {
   // when board is powered down we should be more CANbus silent
-    return megaEn.getLogicValue();
+    return getHellenBoardEnabled();
 }
 
 bool fansDisabledByBoardStatus() {
-  return !megaEn.getLogicValue();
+  return !getHellenBoardEnabled();
 }
 
 void hellenEnableEn() {
