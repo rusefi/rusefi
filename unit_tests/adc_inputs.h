@@ -9,7 +9,7 @@
 
 #include "rusefi_hw_enums.h"
 
-static inline bool isAdcChannelValid(adc_channel_e hwChannel) {
+inline bool isAdcChannelValid(adc_channel_e hwChannel) {
 	if (hwChannel <= EFI_ADC_NONE) {
 		return false;
 	} else if (hwChannel >= EFI_ADC_LAST_CHANNEL) {
