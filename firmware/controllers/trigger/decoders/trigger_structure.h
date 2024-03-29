@@ -29,7 +29,7 @@
 
 // Shifts angle into the [0..720) range for four stroke and [0..360) for two stroke
 // See also wrapVvt
-static inline void wrapAngle(angle_t& angle, const char* msg, ObdCode code) {
+inline void wrapAngle(angle_t& angle, const char* msg, ObdCode code) {
 	if (cisnan(angle)) {
 		firmwareError(ObdCode::CUSTOM_ERR_ANGLE, "a NaN %s", msg);
 		angle = 0;
@@ -48,7 +48,7 @@ static inline void wrapAngle(angle_t& angle, const char* msg, ObdCode code) {
 }
 
 // proper method avoids un-wrapped state of variables
-static inline angle_t wrapAngleMethod(angle_t param, const char *msg = "", ObdCode code = ObdCode::OBD_PCM_Processor_Fault) {
+inline angle_t wrapAngleMethod(angle_t param, const char *msg = "", ObdCode code = ObdCode::OBD_PCM_Processor_Fault) {
 	wrapAngle(param, msg, code);
 	return param;
 }
