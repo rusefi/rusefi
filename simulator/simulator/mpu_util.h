@@ -4,7 +4,7 @@
 CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx);
 inline bool isValidCanTxPin(brain_pin_e) { return true; }
 inline bool isValidCanRxPin(brain_pin_e) { return true; }
- void canHwInfo(CANDriver*);
+inline void canHwInfo(CANDriver*) { return; }
 #endif // HAL_USE_CAN
 
  bool allowFlashWhileRunning() ;
