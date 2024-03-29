@@ -16,6 +16,7 @@ void hellenWbo();
 void setHellenMegaEnPin();
 void setHellenEnPin(Gpio pin);
 void setHellen64MegaEnPin();
+bool getHellenBoardEnabled();
 void hellenEnableEn();
 void hellenDisableEn();
 
