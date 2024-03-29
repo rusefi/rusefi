@@ -303,10 +303,10 @@ public class LiveDataProcessor {
     }
 
     public static int tempLimit(String[] outputs) {
-        return 1;
+        return outputs.length;
     }
 
     public static boolean needComment(int index) {
-        return index > 0;
+        return false;
     }
 }
