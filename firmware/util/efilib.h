@@ -16,12 +16,12 @@ int djb2lowerCase(const char *str);
 
 // http://en.wikipedia.org/wiki/Endianness
 
-static inline uint16_t SWAP_UINT16(uint16_t x)
+inline uint16_t SWAP_UINT16(uint16_t x)
 {
 	return ((x << 8) | (x >> 8));
 }
 
-static inline uint32_t SWAP_UINT32(uint32_t x)
+inline uint32_t SWAP_UINT32(uint32_t x)
 {
 	return (((x >> 24) & 0x000000ff) | ((x <<  8) & 0x00ff0000) |
 			((x >>  8) & 0x0000ff00) | ((x << 24) & 0xff000000));
@@ -103,19 +103,19 @@ bool isInRange(T min, T val, T max) {
 	return val >= min && val <= max;
 }
 
-static constexpr size_t operator-(Gpio a, Gpio b) {
+inline constexpr size_t operator-(Gpio a, Gpio b) {
 	return (size_t)a - (size_t)b;
 }
 
-static constexpr Gpio operator-(Gpio a, size_t b) {
+inline constexpr Gpio operator-(Gpio a, size_t b) {
 	return (Gpio)((size_t)a - b);
 }
 
-static constexpr Gpio operator+(Gpio a, size_t b) {
+inline constexpr Gpio operator+(Gpio a, size_t b) {
 	return (Gpio)((size_t)a + b);
 }
 
-static constexpr Gpio operator+(size_t a, Gpio b) {
+inline constexpr Gpio operator+(size_t a, Gpio b) {
 	// addition is commutative, just use the other operator
 	return b + a;
 }
