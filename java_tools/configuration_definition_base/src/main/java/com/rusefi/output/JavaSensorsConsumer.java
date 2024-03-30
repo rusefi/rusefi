@@ -6,6 +6,9 @@ import com.rusefi.VariableRegistry;
 
 import java.io.IOException;
 
+/**
+ * One day this generator should generate what is still manually maintained Sensor.java
+ */
 public class JavaSensorsConsumer implements ConfigurationConsumer {
     public int sensorTsPosition;
 
