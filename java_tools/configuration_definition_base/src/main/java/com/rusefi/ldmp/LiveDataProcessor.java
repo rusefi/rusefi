@@ -124,11 +124,16 @@ public class LiveDataProcessor {
                 dataLogConsumer.outputNames = outputNames;
                 gaugeConsumer.outputNames = outputNames;
 
-                JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer(startingPosition.get());
+                List<JavaSensorsConsumer> javaSensorsConsumers = new ArrayList<>();
+                for (int i = 0; i < tempLimit(outputNames); i++) {
+                    JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer(startingPosition.get());
+                    state.addDestination(javaSensorsConsumer);
+                    javaSensorsConsumers.add(javaSensorsConsumer);
+                }
 
-                state.addDestination(javaSensorsConsumer,
-                        outputsSections,
-                        dataLogConsumer
+                state.addDestination(
+                    outputsSections,
+                    dataLogConsumer
                 );
 
                 List<FragmentDialogConsumer> fragmentConsumers = new ArrayList<>();
@@ -182,8 +187,10 @@ public class LiveDataProcessor {
                     fancyNewMenu.append(fragmentDialogConsumer.menuLine());
                 }
 
-                totalSensors.append(javaSensorsConsumer.getContent());
-                startingPosition.set(javaSensorsConsumer.getSensorTsPosition());
+                for (JavaSensorsConsumer javaSensorsConsumer : javaSensorsConsumers)
+                    totalSensors.append(javaSensorsConsumer.getContent());
+
+                startingPosition.set(javaSensorsConsumers.get(javaSensorsConsumers.size() - 1).getSensorTsPosition());
 
                 log.info("Done with " + name + " at " + startingPosition);
             }
