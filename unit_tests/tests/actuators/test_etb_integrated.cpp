@@ -2,6 +2,7 @@
 #include "init.h"
 #include "electronic_throttle_impl.h"
 #include "live_data.h"
+#include "live_data_ids.h"
 
 static EtbController * initEtbIntegratedTest() {
 	etbPidReset(); // ETB controlles are global shared instances :(
