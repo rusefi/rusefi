@@ -38,7 +38,7 @@ public class JavaSensorsConsumerTest {
                         "internalMcuTemperature(\"mcu\", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 17, 1.0, 0.0, 0.0, \"deg C\"),\n" +
                         "alignmentFill_at_18(\"need 4 byte alignment\", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 18, 1.0, -20.0, 100.0, \"units\"),\n",
                 javaSensorsConsumer.getContent());
-        assertEquals(20, javaSensorsConsumer.getSensorTsPosition());
+        assertEquals(20, javaSensorsConsumer.getStructSize());
     }
 
     @Test
@@ -51,6 +51,6 @@ public class JavaSensorsConsumerTest {
         JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer(0);
         state.readBufferedReader(outputChannels, javaSensorsConsumer);
 
-        assertEquals(4, javaSensorsConsumer.getSensorTsPosition());
+        assertEquals(4, javaSensorsConsumer.getStructSize());
     }
 }

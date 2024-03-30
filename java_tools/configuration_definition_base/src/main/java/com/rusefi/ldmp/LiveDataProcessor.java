@@ -188,10 +188,10 @@ public class LiveDataProcessor {
                     fancyNewMenu.append(fragmentDialogConsumer.menuLine());
                 }
 
-                for (JavaSensorsConsumer javaSensorsConsumer : javaSensorsConsumers)
+                for (JavaSensorsConsumer javaSensorsConsumer : javaSensorsConsumers) {
                     totalSensors.append(javaSensorsConsumer.getContent());
-
-                startingPosition.set(javaSensorsConsumers.get(javaSensorsConsumers.size() - 1).getSensorTsPosition());
+                    startingPosition.addAndGet(javaSensorsConsumer.getStructSize());
+                }
 
                 log.info("Done with " + name + " at " + startingPosition);
             }
