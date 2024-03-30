@@ -119,6 +119,7 @@ public class LiveDataProcessorTest {
             "// this generated C header is mostly used as input for java code generation\n" +
             "typedef enum {\n" +
             "LDS_wbo_channels0,\n" +
+            "LDS_wbo_channels1,\n" +
             "LDS_output_channels,\n" +
             "} live_data_e;\n" +
             "#define WBO_CHANNELS_BASE_ADDRESS 0\n" +
