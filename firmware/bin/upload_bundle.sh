@@ -10,19 +10,17 @@ FULL_BUNDLE_FILE="rusefi_bundle_${BUNDLE_NAME}.zip"
 UPDATE_BUNDLE_FILE="rusefi_bundle_${BUNDLE_NAME}_autoupdate.zip"
 
 if [ -n "${USER}" -a -n "$PASS" -a -n "${HOST}" ]; then
- echo "$SCRIPT_NAME: Uploading full bundle"
+ echo "$SCRIPT_NAME: Uploading both bundles"
  RET=0
  if [ "$LTS" == "true" -a -n "$REF" ]; then
-   tar -czf - $FULL_BUNDLE_FILE  | sshpass -p $PASS ssh -o StrictHostKeyChecking=no ${USER}@${HOST} "mkdir -p build_server/lts/${REF}; tar -xzf - -C build_server/lts/${REF}"
-	 RET=$((RET+$?+PIPESTATUS))
-   tar -czf - $UPDATE_BUNDLE_FILE  | sshpass -p $PASS ssh -o StrictHostKeyChecking=no ${USER}@${HOST} "mkdir -p build_server/lts/${REF}/autoupdate; tar -xzf - -C build_server/lts/${REF}/autoupdate"
-	 RET=$((RET+$?+PIPESTATUS))
+   DESRINATION_FOLDER="build_server/lts/${REF}"
  else
-   tar -czf - $FULL_BUNDLE_FILE  | sshpass -p $PASS ssh -o StrictHostKeyChecking=no ${USER}@${HOST} "tar -xzf - -C build_server"
-	 RET=$((RET+$?+PIPESTATUS))
-   tar -czf - $UPDATE_BUNDLE_FILE  | sshpass -p $PASS ssh -o StrictHostKeyChecking=no ${USER}@${HOST} "mkdir -p build_server/autoupdate; tar -xzf - -C build_server/autoupdate"
-	 RET=$((RET+$?+PIPESTATUS))
+   DESRINATION_FOLDER="build_server"
  fi
+ tar -czf - $FULL_BUNDLE_FILE    | sshpass -p $PASS ssh -o StrictHostKeyChecking=no ${USER}@${SERVER} "mkdir -p ${DESTINATION_FOLDER};            tar -xzf - -C ${DESTINATION_FOLDER}"
+ RET=$((RET+$?+PIPESTATUS))
+ tar -czf - $UPDATE_BUNDLE_FILE  | sshpass -p $PASS ssh -o StrictHostKeyChecking=no ${USER}@${SERVER} "mkdir -p ${DESTINATION_FOLDER}/autoupdate; tar -xzf - -C ${DESTINATION_FOLDER}/autoupdate"
+ RET=$((RET+$?+PIPESTATUS))
  if [ $RET -ne 0 ]; then
   echo "$SCRIPT_NAME: Bundle upload failed"
   exit 1
