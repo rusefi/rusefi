@@ -8,6 +8,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class LiveDataProcessor {
     private final static Logging log = Logging.getLogging(LiveDataProcessor.class);
@@ -93,7 +94,7 @@ public class LiveDataProcessor {
     }
 
     public int handleYaml(Map<String, Object> data) throws IOException {
-        JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer();
+        AtomicInteger startingPosition = new AtomicInteger();
 
         OutputsSectionConsumer outputsSections = new OutputsSectionConsumer(OUTPUTS_SECTION_FILE_NAME,
                 fileFactory);
@@ -111,7 +112,6 @@ public class LiveDataProcessor {
 
                 stateDictionaryGenerator.onEntry(name, javaName, folder, prepend, withCDefines, outputNames, constexpr, conditional, engineModule, isPtr, cppFileName);
 
-                int startingPosition = javaSensorsConsumer.sensorTsPosition;
                 log.info("Starting " + name + " at " + startingPosition + " with [" + conditional + "]");
 
                 baseAddressCHeader.append("#define " + name.toUpperCase() + "_BASE_ADDRESS " + startingPosition + "\n");
@@ -123,6 +123,8 @@ public class LiveDataProcessor {
                 outputsSections.outputNames = outputNames;
                 dataLogConsumer.outputNames = outputNames;
                 gaugeConsumer.outputNames = outputNames;
+
+                JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer(startingPosition.get());
 
                 state.addDestination(javaSensorsConsumer,
                         outputsSections,
@@ -180,7 +182,10 @@ public class LiveDataProcessor {
                     fancyNewMenu.append(fragmentDialogConsumer.menuLine());
                 }
 
-                log.info("Done with " + name + " at " + javaSensorsConsumer.sensorTsPosition);
+                totalSensors.append(javaSensorsConsumer.getContent());
+                startingPosition.set(javaSensorsConsumer.getSensorTsPosition());
+
+                log.info("Done with " + name + " at " + startingPosition);
             }
         };
 
@@ -268,11 +273,9 @@ public class LiveDataProcessor {
 
         GetConfigValueConsumer.writeStringToFile(STATE_DICTIONARY_FACTORY_JAVA, stateDictionaryGenerator.getCompleteClass(), fileFactory);
 
-        totalSensors.append(javaSensorsConsumer.getContent());
-
         writeFiles();
 
-        return javaSensorsConsumer.sensorTsPosition;
+        return startingPosition.get();
     }
 
     private void writeFiles() throws IOException {

@@ -10,9 +10,13 @@ import java.io.IOException;
  * One day this generator should generate what is still manually maintained Sensor.java
  */
 public class JavaSensorsConsumer implements ConfigurationConsumer {
-    public int sensorTsPosition;
+    private int sensorTsPosition;
 
     private final StringBuilder sb = new StringBuilder();
+
+    public JavaSensorsConsumer(int sensorTsPosition) {
+        this.sensorTsPosition = sensorTsPosition;
+    }
 
     @Override
     public void startFile() {
@@ -74,5 +78,9 @@ public class JavaSensorsConsumer implements ConfigurationConsumer {
 
     public String getContent() {
         return sb.toString();
+    }
+
+    public int getSensorTsPosition() {
+        return sensorTsPosition;
     }
 }
