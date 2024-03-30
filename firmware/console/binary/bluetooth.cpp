@@ -48,7 +48,7 @@ static const struct {
 	{57600, 7}
 };
 
-static const int btModuleTimeout = TIME_MS2I(500);
+static const int btModuleTimeout = TIME_MS2I(2500);
 
 static void btWrite(TsChannelBase* tsChannel, const char *str)
 {
@@ -59,18 +59,17 @@ static void btWrite(TsChannelBase* tsChannel, const char *str)
 	tsChannel->write((uint8_t *)str, strlen(str));
 }
 
-static int btReadLine(TsChannelBase* tsChannel, char *str, size_t max_len)
-{
+static int btReadLine(TsChannelBase* tsChannel, char *str, size_t max_len) {
 	size_t len = 0;
 
 	/* read until end of line */
 	do {
 		if (len >= max_len) {
-			efiPrintf("Too long reply from BT");
+			efiPrintf("BT reply is unexpectedly long");
 			return -1;
 		}
 		if (tsChannel->readTimeout((uint8_t *)&str[len], 1, btModuleTimeout) != 1) {
-			efiPrintf("Timeout waiting for BT reply");
+			efiPrintf("Timeout waiting for BT reply after %d byte(s)", len);
 			return -1;
 		}
 	} while (str[len++] != '\n');
@@ -90,8 +89,7 @@ static int btReadLine(TsChannelBase* tsChannel, char *str, size_t max_len)
 	return len;
 }
 
-static int btWaitOk(SerialTsChannelBase* tsChannel)
-{
+static int btWaitOk(SerialTsChannelBase* tsChannel) {
 	int len;
 	int ret = -1;
 	char tmp[16];
@@ -133,7 +131,7 @@ static void runCommands(SerialTsChannelBase* tsChannel) {
 		if (btWaitOk(tsChannel) == 0) {
 			baudFound = true;
 		} else if (btModuleType == BLUETOOTH_JDY_3x) {
-			/* try to diconnect in case device already configured and in silence mode */
+			/* try to disconnect in case device already configured and in silence mode */
 			btWrite(tsChannel, "AT+DISC\r\n");
 			if (btWaitOk(tsChannel) == 0) {
 				efiPrintf("JDY33 disconnected");
