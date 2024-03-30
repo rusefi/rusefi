@@ -28,7 +28,6 @@ public class StateDictionaryGenerator implements LiveDataProcessor.EntryHandler 
                 append(name, javaName, cppFileName, Integer.toString(i));
             }
         }
-        content.append(");\n");
     }
 
     private void append(String name, String javaName, String cppFileName, String suffix) {
@@ -37,6 +36,7 @@ public class StateDictionaryGenerator implements LiveDataProcessor.EntryHandler 
 
         content.append(FileJavaFieldsConsumer.remoteExtension(javaName)).append(".VALUES, ");
         content.append(quote(cppFileName));
+        content.append(");\n");
     }
 
     public String getCompleteClass() {
