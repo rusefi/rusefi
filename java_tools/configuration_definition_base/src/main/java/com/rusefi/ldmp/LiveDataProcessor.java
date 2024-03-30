@@ -33,6 +33,7 @@ public class LiveDataProcessor {
     private final StringBuilder enumContent = new StringBuilder(header +
             "#pragma once\n" +
             "\n" +
+            "// this generated C header is mostly used as input for java code generation\n" +
             "typedef enum {\n");
 
     private final StringBuilder baseAddressCHeader = new StringBuilder();
@@ -221,14 +222,18 @@ public class LiveDataProcessor {
 
             String enumName = "LDS_" + name;
             String type = name + "_s"; // convention
-            enumContent.append(enumName + ",\n");
 
             if (outputNamesArr.length < 2) {
+                enumContent.append(enumName + ",\n");
                 fragmentsContent
                         .append("decl_frag<")
                         .append(type)
                         .append(">{},\n");
             } else {
+                for (int i = 0; i < tempLimit(outputNamesArr); i++) {
+                    enumContent.append(enumName + i + ",\n");
+                }
+
                 for (int i = 0; i < outputNamesArr.length; i++) {
                     if (needComment(i)) {
                         // TODO: remove once the rest of the handling for multiple copies of one struct is in place.
