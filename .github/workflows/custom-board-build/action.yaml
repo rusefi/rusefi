@@ -57,6 +57,12 @@ inputs:
     required: false
   RUSEFI_SSH_PASS:
     required: false
+  RUSEFI_OBFUSCATED_PUBLIC_SSH_SERVER:
+    required: false
+  RUSEFI_OBFUSCATED_PUBLIC_SSH_USER:
+    required: false
+  RUSEFI_OBFUSCATED_PUBLIC_SSH_PASS:
+    required: false
   ADDITIONAL_ENV:
     required: false
 
@@ -73,6 +79,9 @@ runs:
         [ -z "${{inputs.RUSEFI_SSH_SERVER}}" ] || echo "::add-mask::${{inputs.RUSEFI_SSH_SERVER}}"
         [ -z "${{inputs.RUSEFI_SSH_USER}}" ] || echo "::add-mask::${{inputs.RUSEFI_SSH_USER}}"
         [ -z "${{inputs.RUSEFI_SSH_PASS}}" ] || echo "::add-mask::${{inputs.RUSEFI_SSH_PASS}}"
+        [ -z "${{inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_SERVER}}" ] || echo "::add-mask::${{inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_SERVER}}"
+        [ -z "${{inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_USER}}" ] || echo "::add-mask::${{inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_USER}}"
+        [ -z "${{inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_PASS}}" ] || echo "::add-mask::${{inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_PASS}}"
         [ -z "${{inputs.ADDITIONAL_ENV}}" ] || echo "::add-mask::${{inputs.ADDITIONAL_ENV}}"
 
     - name: Set Token
@@ -207,7 +216,7 @@ runs:
       if: ${{ contains(inputs.uploads, 'bundles') }}
       working-directory: ${{inputs.rusefi_dir}}/artifacts
       shell: bash
-      run: bash ../firmware/bin/upload_bundle.sh ${{ secrets.RUSEFI_SSH_USER }} ${{ secrets.RUSEFI_SSH_PASS }} ${{ secrets.RUSEFI_SSH_SERVER }} ${{ env.BUNDLE_NAME }}
+      run: bash ../firmware/bin/upload_bundle.sh ${{ env.RUSEFI_SSH_USER }} ${{ env.RUSEFI_SSH_PASS }} ${{ env.RUSEFI_SSH_SERVER }} ${{ env.BUNDLE_NAME }}
 
     - name: Run Simulator
       if: ${{ inputs.run_simulator == 'true' }}
