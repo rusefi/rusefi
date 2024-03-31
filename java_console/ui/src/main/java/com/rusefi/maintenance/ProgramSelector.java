@@ -223,7 +223,9 @@ public class ProgramSelector {
         OpenbltJni.OpenbltCallbacks cb = makeOpenbltCallbacks(callbacks);
 
         try {
-            OpenbltJni.flashSerial("../rusefi_update.srec", port, cb);
+            String fileName = "../rusefi_update.srec";
+            callbacks.log("flashSerial " + fileName);
+            OpenbltJni.flashSerial(fileName, port, cb);
 
             callbacks.log("Update completed successfully!");
             callbacks.done();
