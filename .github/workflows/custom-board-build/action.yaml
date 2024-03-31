@@ -250,7 +250,7 @@ runs:
         ls ${{inputs.sim_output}}
         git add ${{inputs.sim_output}}*msq
         git add ${{inputs.sim_output}}canned-tunes/*md
-        OUT=$(git commit -m "Auto-generated Default Tune" 2>&1) || echo "commit failed, finding out why"
+        OUT=$(git commit -m "Auto-generated Default Tune" -m "[no ci]" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
           echo "Tune: looks like nothing to commit"
           exit 0
@@ -262,7 +262,7 @@ runs:
       shell: bash
       run: |
         git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*
-        OUT=$(git commit -m "Auto-generated Configs" 2>&1) || echo "commit failed, finding out why"
+        OUT=$(git commit -m "Auto-generated Configs" -m "[no ci]" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
           echo "Configs: looks like nothing to commit"
           exit 0
@@ -276,7 +276,7 @@ runs:
         if [ -d $BOARD_DIR/connectors ]; then
           git add $BOARD_DIR/connectors/*
         fi
-        OUT=$(git commit -m "Auto-generated Connectors" 2>&1) || echo "commit failed, finding out why"
+        OUT=$(git commit -m "Auto-generated Connectors" -m "[no ci]" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
           echo "Connectors: looks like nothing to commit"
           exit 0
