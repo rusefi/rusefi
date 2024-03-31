@@ -12,24 +12,24 @@ decl_frag<antilag_system_state_s>{},
 decl_frag<boost_control_s>{},
 decl_frag<ac_control_s>{},
 decl_frag<fan_control_s, 0>{},	// fan1
-// decl_frag<fan_control_s, 1>{},	// fan2
+decl_frag<fan_control_s, 1>{},	// fan2
 decl_frag<fuel_pump_control_s>{},
 decl_frag<main_relay_s>{},
 decl_frag<engine_state_s>{},
 decl_frag<tps_accel_state_s>{},
 decl_frag<trigger_central_s>{},
 decl_frag<trigger_state_s, 0>{},	// trg
-// decl_frag<trigger_state_s, 1>{},	// vvt1i
-// decl_frag<trigger_state_s, 2>{},	// vvt1e
-// decl_frag<trigger_state_s, 3>{},	// vvt2i
-// decl_frag<trigger_state_s, 4>{},	// vvt2e
+decl_frag<trigger_state_s, 1>{},	// vvt1i
+decl_frag<trigger_state_s, 2>{},	// vvt1e
+decl_frag<trigger_state_s, 3>{},	// vvt2i
+decl_frag<trigger_state_s, 4>{},	// vvt2e
 decl_frag<trigger_state_primary_s>{},
 decl_frag<wall_fuel_state_s>{},
 decl_frag<idle_state_s>{},
 decl_frag<electronic_throttle_s, 0>{},	// etb1
-// decl_frag<electronic_throttle_s, 1>{},	// etb2
+decl_frag<electronic_throttle_s, 1>{},	// etb2
 decl_frag<wideband_state_s, 0>{},	// wb1
-// decl_frag<wideband_state_s, 1>{},	// wb2
+decl_frag<wideband_state_s, 1>{},	// wb2
 decl_frag<dc_motors_s>{},
 decl_frag<sent_state_s>{},
 decl_frag<vvt_s>{},
