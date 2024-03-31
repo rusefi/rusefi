@@ -158,10 +158,12 @@ else
 endif
 	@touch $@
 
+OBFUSCATED_SREC = $(FOLDER)/rusefi-obfuscated.srec
+
 OBFUSCATED_OUT = \
   $(FOLDER)/rusefi-obfuscated.bin \
   $(FOLDER)/rusefi-obfuscated.hex \
-  $(FOLDER)/rusefi-obfuscated.srec
+  $(OBFUSCATED_SREC)
 
 $(OBFUSCATED_OUT): .obfuscated-sentinel
 
@@ -179,7 +181,7 @@ $(ARTIFACTS)/$(BUNDLE_FULL_NAME).zip: $(BUNDLE_FILES) | $(ARTIFACTS)
 	zip -r $@ $(BUNDLE_FILES)
 
 $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_obfuscated_public.zip:  $(OBFUSCATED_OUT) $(BUNDLE_FILES) | $(ARTIFACTS)
-	zip -r $@ $(filter-out $(OUTS) $(BOUTS) $(OUTBIN) $(SREC_TARGET),$(BUNDLE_FILES)) $(OBFUSCATED_OUT)
+	zip -r $@ $(filter-out $(OUTS) $(BOUTS) $(OUTBIN) $(SREC_TARGET),$(BUNDLE_FILES)) $(OBFUSCATED_SREC)
 
 # The autopdate zip doesn't have a folder with the bundle contents
 $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_autoupdate.zip: $(UPDATE_BUNDLE_FILES) | $(ARTIFACTS)
