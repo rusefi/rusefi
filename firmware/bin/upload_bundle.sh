@@ -3,6 +3,13 @@
 USER=$1
 PASS=$2
 HOST=$3
+BUNDLE_FILE_NAME=$4
+
+if [ -n "${BUNDLE_FILE_NAME}" ]; then
+  echo "BUNDLE_FILE_NAME is ${BUNDLE_FILE_NAME}"
+else
+  echo "BUNDLE_FILE_NAME argument not specified"
+fi
 
 SCRIPT_NAME=$(basename "$0")
 # technical debt: more than one file uses magic 'rusefi_bundle_' constant, can we extract constant?
