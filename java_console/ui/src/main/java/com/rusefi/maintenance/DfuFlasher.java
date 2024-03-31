@@ -98,6 +98,13 @@ public class DfuFlasher {
                 }
             });
             if (signature.get() == null) {
+                callbacks.append("");
+                callbacks.append("");
+                callbacks.append("");
+                callbacks.append("Make sure TUNERSTUDIO IS DISCONNECTED FROM ECU");
+                callbacks.append("");
+                callbacks.append("");
+                callbacks.append("");
               callbacks.append("*** ERROR *** rusEFI has not responded on selected " + port + "\n" +
                         "Maybe try automatic serial port detection?");
                 callbacks.error();

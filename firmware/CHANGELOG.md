@@ -32,6 +32,7 @@ Release template (copy/paste this for new release):
  - Boost Open Loop gear-based modifier takes negative values #6189
  - "12 tooth crank" renamed to "12crank/24cam" #6192
  - second CAN WBO channel detailed logging #6306
+ - Make sure TUNERSTUDIO IS DISCONNECTED FROM ECU #6325
 
 ### Fixed
  - ETB traction control drop is affected by not-highlighted cell #5952
