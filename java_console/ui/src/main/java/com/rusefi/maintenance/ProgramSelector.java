@@ -1,5 +1,6 @@
 package com.rusefi.maintenance;
 
+import com.opensr5.ini.IniFileModel;
 import com.rusefi.FileLog;
 import com.rusefi.Launcher;
 import com.rusefi.SerialPortScanner;
@@ -223,7 +224,7 @@ public class ProgramSelector {
         OpenbltJni.OpenbltCallbacks cb = makeOpenbltCallbacks(callbacks);
 
         try {
-            String fileName = "../rusefi_update.srec";
+            String fileName = IniFileModel.findFile("..", "rusefi", "srec");
             callbacks.log("flashSerial " + fileName);
             OpenbltJni.flashSerial(fileName, port, cb);
 

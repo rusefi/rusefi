@@ -84,7 +84,7 @@ public class IniFileModel {
     }
 
     @Nullable
-    private static String findFile(String fileDirectory, String prefix, String suffix) {
+    public static String findFile(String fileDirectory, String prefix, String suffix) {
         File dir = new File(fileDirectory);
         if (!dir.isDirectory())
             return null;
