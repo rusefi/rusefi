@@ -187,6 +187,8 @@ static void processCanRxImu(const CANRxFrame& frame) {
 
 extern bool verboseRxCan;
 
+BOARD_WEAK void boardProcessCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick_t nowNt) { }
+
 void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick_t nowNt) {
 	if ((engineConfiguration->verboseCan && busIndex == 0) || verboseRxCan) {
 		printPacket(busIndex, frame);
