@@ -43,6 +43,7 @@ Release template (copy/paste this for new release):
  - Base map values for Open Loop Boost Duty should be 0% #6188
  - HPFP control on cam with variable timing #6245
  - Negative timing is not displayed correctly fix #5250
+ - update-ts-cacerts work-around is no longer needed #6327
 
 ### Breaking Changes
  - wrong trigger naming for missing teeth #6258

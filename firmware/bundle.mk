@@ -36,7 +36,6 @@ BUNDLE_FULL_NAME = rusefi_bundle_$(BUNDLE_NAME)
 
 CONSOLE_FOLDER = $(FOLDER)/console
 DRIVERS_FOLDER = $(FOLDER)/drivers
-CACERTS_FOLDER = $(FOLDER)/update-ts-cacerts
 
 UPDATE_FOLDER_SOURCES = \
   $(RUSEFI_CONSOLE_SETTINGS) \
@@ -71,8 +70,6 @@ CONSOLE_FOLDER_SOURCES = \
   ../firmware/ext/openblt/Host/libopenblt_jni.dylib \
   $(SIMULATOR_OUT)
 
-CACERTS_FOLDER_SOURCES = $(wildcard ../misc/console_launcher/update-ts-cacerts/*)
-
 BOOTLOADER_BIN = bootloader/blbuild/openblt_$(PROJECT_BOARD).bin
 BOOTLOADER_HEX = bootloader/blbuild/openblt_$(PROJECT_BOARD).hex
 
@@ -96,7 +93,6 @@ ST_DRIVERS = $(DRIVERS_FOLDER)/silent_st_drivers2.exe
 # and these commands turn them into their destination path within the bundle.
 UPDATE_FOLDER_TARGETS = $(addprefix $(FOLDER)/,$(notdir $(UPDATE_FOLDER_SOURCES)))
 UPDATE_CONSOLE_FOLDER_TARGETS = $(addprefix $(CONSOLE_FOLDER)/,$(notdir $(UPDATE_CONSOLE_FOLDER_SOURCES)))
-CACERTS_FOLDER_TARGETS = $(addprefix $(CACERTS_FOLDER)/,$(notdir $(CACERTS_FOLDER_SOURCES)))
 
 UPDATE_BUNDLE_FILES = \
   $(OUTS) \
@@ -104,8 +100,7 @@ UPDATE_BUNDLE_FILES = \
   $(OUTBIN) \
   $(SREC_TARGET) \
   $(UPDATE_FOLDER_TARGETS) \
-  $(UPDATE_CONSOLE_FOLDER_TARGETS) \
-  $(CACERTS_FOLDER_TARGETS)
+  $(UPDATE_CONSOLE_FOLDER_TARGETS)
 
 FOLDER_TARGETS = $(addprefix $(FOLDER)/,$(notdir $(FOLDER_SOURCES)))
 CONSOLE_FOLDER_TARGETS = $(addprefix $(CONSOLE_FOLDER)/,$(notdir $(CONSOLE_FOLDER_SOURCES)))
@@ -174,7 +169,7 @@ $(OBFUSCATED_OUT): .obfuscated-sentinel
 $(ST_DRIVERS): | $(DRIVERS_FOLDER)
 	wget https://rusefi.com/build_server/st_files/silent_st_drivers2.exe -P $(dir $@)
 
-$(DELIVER) $(ARTIFACTS) $(FOLDER) $(CONSOLE_FOLDER) $(DRIVERS_FOLDER) $(CACERTS_FOLDER):
+$(DELIVER) $(ARTIFACTS) $(FOLDER) $(CONSOLE_FOLDER) $(DRIVERS_FOLDER):
 	mkdir -p $@
 
 $(ARTIFACTS)/$(BUNDLE_FULL_NAME).zip: $(BUNDLE_FILES) | $(ARTIFACTS)
@@ -221,7 +216,4 @@ $(FOLDER_TARGETS) $(UPDATE_FOLDER_TARGETS): $(FOLDER)/%: $$(filter $$(PERCENT)$$
 	ln -rfs $< $@
 
 $(CONSOLE_FOLDER_TARGETS) $(UPDATE_CONSOLE_FOLDER_TARGETS): $(CONSOLE_FOLDER)/%: $$(filter $$(PERCENT)$$*,$(CONSOLE_FOLDER_SOURCES) $(UPDATE_CONSOLE_FOLDER_SOURCES)) | $(CONSOLE_FOLDER)
-	ln -rfs $< $@
-
-$(CACERTS_FOLDER_TARGETS): $(CACERTS_FOLDER)/%: $$(filter $$(PERCENT)$$*,$(CACERTS_FOLDER_SOURCES)) | $(CACERTS_FOLDER)
 	ln -rfs $< $@
