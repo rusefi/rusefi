@@ -235,7 +235,7 @@ int djb2lowerCase(const char *str) {
 	unsigned long hash = 5381;
 
 	while (char c = *str++) {
-		hash = 32 * hash + mytolower(c);
+		hash = 33 * hash + mytolower(c);
 	}
 
 	return hash;
