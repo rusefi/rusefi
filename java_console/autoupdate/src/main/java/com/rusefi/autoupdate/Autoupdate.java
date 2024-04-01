@@ -33,7 +33,7 @@ public class Autoupdate {
 
         if (args.length > 0 && args[0].equalsIgnoreCase("release")) {
             System.out.println("Release update requested");
-            handleBundle(bundleFullName, UpdateMode.ALWAYS, ConnectionAndMeta.BASE_URL_RELEASE);
+            downloadAndUnzipAutoupdate(bundleFullName, UpdateMode.ALWAYS, ConnectionAndMeta.BASE_URL_RELEASE);
         } else {
             UpdateMode mode = getMode();
             if (mode != UpdateMode.NEVER) {
@@ -42,9 +42,9 @@ public class Autoupdate {
                     System.out.println("Handling " + bundleFullName);
                     String branchName = bundleFullName.split("\\.")[1];
                     if ( branchName.equals("snapshot") ) {
-                        handleBundle(bundleFullName, mode, ConnectionAndMeta.BASE_URL_LATEST);
+                        downloadAndUnzipAutoupdate(bundleFullName, mode, ConnectionAndMeta.BASE_URL_LATEST);
                     } else {
-                        handleBundle(bundleFullName, mode, String.format(ConnectionAndMeta.BASE_URL_LTS, branchName));
+                        downloadAndUnzipAutoupdate(bundleFullName, mode, String.format(ConnectionAndMeta.BASE_URL_LTS, branchName));
                     }
                 } else {
                     System.err.println("ERROR: Autoupdate: unable to perform without bundleFullName");
@@ -80,7 +80,7 @@ public class Autoupdate {
         }
     }
 
-    private static void handleBundle(String bundleFullName, UpdateMode mode, String baseUrl) {
+    private static void downloadAndUnzipAutoupdate(String bundleFullName, UpdateMode mode, String baseUrl) {
         try {
             String boardName = bundleFullName.split("\\.")[2];
             String zipFileName = "rusefi_bundle_" + boardName + "_autoupdate" + ".zip";
