@@ -2,7 +2,7 @@ package com.opensr5.ini;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.field.*;
-import org.jetbrains.annotations.Nullable;
+import com.rusefi.core.FindFileHelper;
 
 import java.io.*;
 import java.util.*;
@@ -80,22 +80,7 @@ public class IniFileModel {
     }
 
     private static String findMetaInfoFile(String iniFilePath) {
-        return findFile(iniFilePath, RUSEFI_INI_PREFIX, RUSEFI_INI_SUFFIX);
-    }
-
-    @Nullable
-    public static String findFile(String fileDirectory, String prefix, String suffix) {
-        File dir = new File(fileDirectory);
-        if (!dir.isDirectory())
-            return null;
-        log.info("Searching for " + prefix + "*" + suffix + " in " + fileDirectory);
-        for (String file : Objects.requireNonNull(dir.list())) {
-            if (file.contains(" "))
-                continue; // spaces not acceptable
-            if (file.startsWith(prefix) && file.endsWith(suffix))
-                return fileDirectory + File.separator + file;
-        }
-        return null;
+        return FindFileHelper.findFile(iniFilePath, RUSEFI_INI_PREFIX, RUSEFI_INI_SUFFIX);
     }
 
     private void finishDialog() {

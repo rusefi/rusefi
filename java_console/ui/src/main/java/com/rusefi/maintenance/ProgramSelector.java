@@ -1,6 +1,6 @@
 package com.rusefi.maintenance;
 
-import com.opensr5.ini.IniFileModel;
+import com.rusefi.core.FindFileHelper;
 import com.rusefi.FileLog;
 import com.rusefi.Launcher;
 import com.rusefi.SerialPortScanner;
@@ -12,7 +12,6 @@ import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ui.util.URLLabel;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
@@ -140,7 +139,7 @@ public class ProgramSelector {
         OpenbltJni.OpenbltCallbacks cb = makeOpenbltCallbacks(callbacks);
 
         try {
-            OpenbltJni.flashCan(findSrecFile(), cb);
+            OpenbltJni.flashCan(FindFileHelper.findSrecFile(), cb);
 
             callbacks.log("Update completed successfully!");
             callbacks.done();
@@ -225,7 +224,7 @@ public class ProgramSelector {
         OpenbltJni.OpenbltCallbacks cb = makeOpenbltCallbacks(callbacks);
 
         try {
-            String fileName = findSrecFile();
+            String fileName = FindFileHelper.findSrecFile();
             callbacks.log("flashSerial " + fileName);
             OpenbltJni.flashSerial(fileName, port, cb);
 
@@ -237,11 +236,6 @@ public class ProgramSelector {
         } finally {
             OpenbltJni.stop(cb);
         }
-    }
-
-    @Nullable
-    private static String findSrecFile() {
-        return IniFileModel.findFile("..", "rusefi", "srec");
     }
 
     @NotNull
