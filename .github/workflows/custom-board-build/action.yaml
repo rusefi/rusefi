@@ -364,9 +364,16 @@ runs:
       shell: bash
       run: bash ../firmware/bin/upload_bundle.sh ${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_USER }} ${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_PASS }} ${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_SERVER }} "${{env.SHORT_BOARD_NAME}}_obfuscated_public"
 
-    - name: Upload github action bundle obfuscated artifact
+    - name: Upload github action bundle obfuscated_public artifact
       if: ${{ contains(inputs.artifacts, 'obfuscated') }}
       uses: actions/upload-artifact@v4
       with:
         name: rusefi_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public.zip
         path: ${{inputs.rusefi_dir}}/artifacts/rusefi_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public.zip
+
+    - name: Upload github action bundle obfuscated_public_autoupdate artifact
+      if: ${{ contains(inputs.artifacts, 'obfuscated') }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: rusefi_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public_autoupdate.zip
+        path: ${{inputs.rusefi_dir}}/artifacts/rusefi_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public_autoupdate.zip
