@@ -15,7 +15,7 @@ endif
 #  than to try uploading them from the rusefi.snapshot.<BUNDLE_NAME> directory
 DFU = $(DELIVER)/$(PROJECT).dfu
 DBIN = $(DELIVER)/$(PROJECT).bin
-OUTBIN = $(FOLDER)/$(PROJECT).bin
+FIRMWARE_BIN_OUT = $(FOLDER)/$(PROJECT).bin
 
 # If provided with a git reference and the LTS flag, use a folder name including the ref
 # This weird if statement structure is because Make doesn't have &&
@@ -97,7 +97,7 @@ UPDATE_CONSOLE_FOLDER_TARGETS = $(addprefix $(CONSOLE_FOLDER)/,$(notdir $(UPDATE
 UPDATE_BUNDLE_FILES = \
   $(OUTS) \
   $(BOOTLOADER_BIN_OUT) \
-  $(OUTBIN) \
+  $(FIRMWARE_BIN_OUT) \
   $(SREC_TARGET) \
   $(UPDATE_FOLDER_TARGETS) \
   $(UPDATE_CONSOLE_FOLDER_TARGETS)
@@ -137,7 +137,7 @@ $(OUTS): $(FOLDER)/%: $(BUILDDIR)/% | $(FOLDER)
 $(BOOTLOADER_BIN_OUT): $(FOLDER)/openblt%: bootloader/blbuild/openblt_$(PROJECT_BOARD)% | $(FOLDER)
 	ln -rfs $< $@
 
-$(OUTBIN) $(FOLDER)/$(PROJECT).dfu: $(FOLDER)/%: $(DELIVER)/% | $(FOLDER)
+$(FIRMWARE_BIN_OUT) $(FOLDER)/$(PROJECT).dfu: $(FOLDER)/%: $(DELIVER)/% | $(FOLDER)
 	ln -rfs $< $@
 
 # The DFU is currenly not included in the bundle, so these prerequisites are listed as order-only to avoid building it.
@@ -176,7 +176,7 @@ $(ARTIFACTS)/$(BUNDLE_FULL_NAME).zip: $(BUNDLE_FILES) | $(ARTIFACTS)
 	zip -r $@ $(BUNDLE_FILES)
 
 $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_obfuscated_public.zip:  $(OBFUSCATED_OUT) $(BUNDLE_FILES) | $(ARTIFACTS)
-	zip -r $@ $(filter-out $(OUTS) $(BOOTLOADER_BIN_OUT) $(OUTBIN) $(SREC_TARGET),$(BUNDLE_FILES)) $(OBFUSCATED_SREC)
+	zip -r $@ $(filter-out $(OUTS) $(BOOTLOADER_BIN_OUT) $(FIRMWARE_BIN_OUT) $(SREC_TARGET),$(BUNDLE_FILES)) $(OBFUSCATED_SREC)
 
 # The autopdate zip doesn't have a folder with the bundle contents
 $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_autoupdate.zip: $(UPDATE_BUNDLE_FILES) | $(ARTIFACTS)
