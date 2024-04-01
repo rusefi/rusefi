@@ -245,7 +245,7 @@ void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const c
 	}
 
 	if (getBluetoothChannel() == nullptr) {
-		efiPrintf("No Bluetooth channel configured! Check your board config [%s]", getTsSignature());
+		efiPrintf("This firmware does not support bluetooth [%s]", getTsSignature());
 		return;
 	}
 
