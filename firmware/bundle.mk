@@ -75,8 +75,8 @@ BOOTLOADER_HEX = bootloader/blbuild/openblt_$(PROJECT_BOARD).hex
 
 # We need to put different things in the bundle depending on some meta-info flags
 ifeq ($(USE_OPENBLT),yes)
-  BOOTLOADER_OUT = $(BOOTLOADER_HEX)
-  BOUTS = $(FOLDER)/openblt.bin
+  BOOTLOADER_HEX_OUT = $(BOOTLOADER_HEX)
+  BOOTLOADER_BIN_OUT = $(FOLDER)/openblt.bin
   SREC_TARGET = $(FOLDER)/rusefi_update.srec
 else
   OUTS = $(FOLDER)/$(PROJECT).hex
@@ -96,7 +96,7 @@ UPDATE_CONSOLE_FOLDER_TARGETS = $(addprefix $(CONSOLE_FOLDER)/,$(notdir $(UPDATE
 
 UPDATE_BUNDLE_FILES = \
   $(OUTS) \
-  $(BOUTS) \
+  $(BOOTLOADER_BIN_OUT) \
   $(OUTBIN) \
   $(SREC_TARGET) \
   $(UPDATE_FOLDER_TARGETS) \
@@ -134,7 +134,7 @@ $(SREC_TARGET): $(BUILDDIR)/rusefi.srec
 $(OUTS): $(FOLDER)/%: $(BUILDDIR)/% | $(FOLDER)
 	ln -rfs $< $@
 
-$(BOUTS): $(FOLDER)/openblt%: bootloader/blbuild/openblt_$(PROJECT_BOARD)% | $(FOLDER)
+$(BOOTLOADER_BIN_OUT): $(FOLDER)/openblt%: bootloader/blbuild/openblt_$(PROJECT_BOARD)% | $(FOLDER)
 	ln -rfs $< $@
 
 $(OUTBIN) $(FOLDER)/$(PROJECT).dfu: $(FOLDER)/%: $(DELIVER)/% | $(FOLDER)
@@ -144,7 +144,7 @@ $(OUTBIN) $(FOLDER)/$(PROJECT).dfu: $(FOLDER)/%: $(DELIVER)/% | $(FOLDER)
 # If you want it, you can build it with `make rusefi.snapshot.$BUNDLE_NAME/rusefi.dfu`
 $(DFU) $(DBIN): .h2d-sentinel ;
 
-.h2d-sentinel: $(BUILDDIR)/$(PROJECT).hex $(BOOTLOADER_OUT) $(BINSRC) | $(DELIVER)
+.h2d-sentinel: $(BUILDDIR)/$(PROJECT).hex $(BOOTLOADER_HEX_OUT) $(BINSRC) | $(DELIVER)
 ifeq ($(USE_OPENBLT),yes)
 	$(H2D) -i $(BOOTLOADER_HEX) -i $(BUILDDIR)/$(PROJECT).hex -C 0x1C -o $(DFU) -b $(DBIN)
 else
@@ -176,7 +176,7 @@ $(ARTIFACTS)/$(BUNDLE_FULL_NAME).zip: $(BUNDLE_FILES) | $(ARTIFACTS)
 	zip -r $@ $(BUNDLE_FILES)
 
 $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_obfuscated_public.zip:  $(OBFUSCATED_OUT) $(BUNDLE_FILES) | $(ARTIFACTS)
-	zip -r $@ $(filter-out $(OUTS) $(BOUTS) $(OUTBIN) $(SREC_TARGET),$(BUNDLE_FILES)) $(OBFUSCATED_SREC)
+	zip -r $@ $(filter-out $(OUTS) $(BOOTLOADER_BIN_OUT) $(OUTBIN) $(SREC_TARGET),$(BUNDLE_FILES)) $(OBFUSCATED_SREC)
 
 # The autopdate zip doesn't have a folder with the bundle contents
 $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_autoupdate.zip: $(UPDATE_BUNDLE_FILES) | $(ARTIFACTS)
