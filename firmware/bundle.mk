@@ -188,6 +188,9 @@ $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_obfuscated_public.zip:  $(OBFUSCATED_OUT) $(BUN
 $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_autoupdate.zip: $(UPDATE_BUNDLE_FILES) | $(ARTIFACTS)
 	cd $(FOLDER) &&	zip -r ../$@ $(subst $(FOLDER)/,,$(UPDATE_BUNDLE_FILES))
 
+$(ARTIFACTS)/$(BUNDLE_FULL_NAME)_obfuscated_public_autoupdate.zip:  $(OBFUSCATED_OUT) $(BUNDLE_FILES) | $(ARTIFACTS)
+	cd $(FOLDER) &&	zip -r ../$@ $(subst $(FOLDER)/,,$(MOST_COMMON_BUNDLE_FILES)) $(subst $(FOLDER)/,,$(OBFUSCATED_SREC))
+
 .PHONY: bundle bundles autoupdate obfuscated bin hex dfu map elf list srec bootloader
 
 bundle: $(ARTIFACTS)/$(BUNDLE_FULL_NAME).zip
