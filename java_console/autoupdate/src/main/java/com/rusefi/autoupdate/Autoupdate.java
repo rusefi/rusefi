@@ -1,5 +1,6 @@
 package com.rusefi.autoupdate;
 
+import com.rusefi.core.FindFileHelper;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.FileUtil;
@@ -41,7 +42,7 @@ public class Autoupdate {
                 if (bundleFullName != null) {
                     System.out.println("Handling " + bundleFullName);
                     String branchName = bundleFullName.split("\\.")[1];
-                    if ( branchName.equals("snapshot") ) {
+                    if (branchName.equals("snapshot")) {
                         downloadAndUnzipAutoupdate(bundleFullName, mode, ConnectionAndMeta.BASE_URL_LATEST);
                     } else {
                         downloadAndUnzipAutoupdate(bundleFullName, mode, String.format(ConnectionAndMeta.BASE_URL_LTS, branchName));
@@ -66,7 +67,8 @@ public class Autoupdate {
             Class mainClass = Class.forName(COM_RUSEFI_LAUNCHER, true, jarClassLoader);
             Method mainMethod = mainClass.getMethod("main", args.getClass());
             mainMethod.invoke(null, new Object[]{args});
-        } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException | MalformedURLException e) {
+        } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException |
+                 MalformedURLException e) {
             System.out.println(e);
         }
     }
@@ -83,7 +85,8 @@ public class Autoupdate {
     private static void downloadAndUnzipAutoupdate(String bundleFullName, UpdateMode mode, String baseUrl) {
         try {
             String boardName = bundleFullName.split("\\.")[2];
-            String zipFileName = "rusefi_bundle_" + boardName + "_autoupdate" + ".zip";
+            String suffix = isObfuscated() ? "_obfuscated_public" : "";
+            String zipFileName = "rusefi_bundle_" + boardName + suffix + "_autoupdate" + ".zip";
             ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(zipFileName).invoke(baseUrl);
             System.out.println("Remote file " + zipFileName);
             System.out.println("Server has " + connectionAndMeta.getCompleteFileSize() + " from " + new Date(connectionAndMeta.getLastModified()));
@@ -121,9 +124,14 @@ public class Autoupdate {
             System.err.println("Error downloading bundle: " + e);
             if (!AutoupdateUtil.runHeadless) {
                 JOptionPane.showMessageDialog(null, "Error downloading " + e, "Error",
-                        JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.ERROR_MESSAGE);
             }
         }
+    }
+
+    private static boolean isObfuscated() {
+        String srecFile = FindFileHelper.findSrecFile();
+        return srecFile != null && srecFile.contains("obfuscated");
     }
 
     private static boolean askUserIfUpdateIsDesired() {
