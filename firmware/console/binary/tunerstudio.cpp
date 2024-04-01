@@ -83,8 +83,6 @@
 #include "status_loop.h"
 #include "mmc_card.h"
 
-#include "signature.h"
-
 #if EFI_SIMULATOR
 #include "rusEfiFunctionalTest.h"
 #endif /* EFI_SIMULATOR */

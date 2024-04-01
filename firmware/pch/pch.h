@@ -37,6 +37,7 @@
 #include "hardware.h"
 #include "thread_priority.h"
 #include "tooth_logger.h"
+#include "signature.h"
 
 #if EFI_UNIT_TEST
 #include <gtest/gtest.h>
