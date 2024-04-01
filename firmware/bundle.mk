@@ -182,7 +182,7 @@ $(ARTIFACTS)/$(BUNDLE_FULL_NAME).zip: $(BUNDLE_FILES) | $(ARTIFACTS)
 	zip -r $@ $(BUNDLE_FILES)
 
 $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_obfuscated_public.zip:  $(OBFUSCATED_OUT) $(BUNDLE_FILES) | $(ARTIFACTS)
-	zip -r $@ $(filter-out $(FIRMWARE_OUTPUTS) $(BOOTLOADER_BIN_OUT) $(FIRMWARE_BIN_OUT) $(SREC_TARGET),$(BUNDLE_FILES)) $(OBFUSCATED_SREC)
+	zip -r $@ $(FULL_BUNDLE_CONTENT) $(MOST_COMMON_BUNDLE_FILES) $(OBFUSCATED_SREC)
 
 # The autopdate zip doesn't have a folder with the bundle contents
 $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_autoupdate.zip: $(UPDATE_BUNDLE_FILES) | $(ARTIFACTS)
