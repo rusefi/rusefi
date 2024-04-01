@@ -150,6 +150,7 @@ static const uint8_t order_1_2_3_4_5_6_7_8_9[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
 // 10 cylinder
 static const uint8_t order_1_10_9_4_3_6_5_8_7_2[] = {1, 10, 9, 4, 3, 6, 5, 8, 7, 2};
+static const uint8_t order_1_6_5_10_2_7_3_8_4_9[] = {1, 6, 5, 10, 2, 7, 3, 8, 4, 9};
 
 // 12 cyliner
 static const uint8_t order_1_7_5_11_3_9_6_12_2_8_4_10[] = {1, 7, 5, 11, 3, 9, 6, 12, 2, 8, 4, 10};
@@ -211,6 +212,7 @@ static size_t getFiringOrderLength() {
 
 // 10 cylinder
 	case FO_1_10_9_4_3_6_5_8_7_2:
+	case FO_1_6_5_10_2_7_3_8_4_9:
 		return 10;
 
 // 12 cylinder
@@ -300,6 +302,8 @@ static const uint8_t* getFiringOrderTable() {
 // 10 cylinder
 	case FO_1_10_9_4_3_6_5_8_7_2:
 		return order_1_10_9_4_3_6_5_8_7_2;
+	case FO_1_6_5_10_2_7_3_8_4_9:
+		return order_1_6_5_10_2_7_3_8_4_9;
 
 // 12 cylinder
 	case FO_1_7_5_11_3_9_6_12_2_8_4_10:
