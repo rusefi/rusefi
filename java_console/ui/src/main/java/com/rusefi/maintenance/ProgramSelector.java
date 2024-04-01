@@ -215,7 +215,7 @@ public class ProgramSelector {
 
             @Override
             public void setPhase(String title, boolean hasProgress) {
-                callbacks.log("Begin phase: " + title);
+                callbacks.log("Phase: " + title);
             }
         };
     }
