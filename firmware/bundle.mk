@@ -163,7 +163,6 @@ OBFUSCATED_SREC = $(FOLDER)/rusefi-obfuscated.srec
 
 OBFUSCATED_OUT = \
   $(FOLDER)/rusefi-obfuscated.bin \
-  $(FOLDER)/rusefi-obfuscated.hex \
   $(OBFUSCATED_SREC)
 
 $(OBFUSCATED_OUT): .obfuscated-sentinel
