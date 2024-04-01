@@ -9,7 +9,6 @@
 #include "pch.h"
 
 #include "tcu.h"
-#include "engine.h"
 
 #if EFI_TCU
 void TransmissionControllerBase::init() {
