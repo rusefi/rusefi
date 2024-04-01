@@ -195,7 +195,7 @@ $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_obfuscated_public_autoupdate.zip:  $(OBFUSCATED
 
 bundle: $(ARTIFACTS)/$(BUNDLE_FULL_NAME).zip
 autoupdate: $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_autoupdate.zip
-obfuscated: $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_obfuscated_public.zip
+obfuscated: $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_obfuscated_public.zip $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_obfuscated_public_autoupdate.zip
 bundles: bundle autoupdate
 
 bootloader: $(BOOTLOADER_BIN)
