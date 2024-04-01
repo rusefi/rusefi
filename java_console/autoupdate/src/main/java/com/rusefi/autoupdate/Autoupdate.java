@@ -31,24 +31,28 @@ public class Autoupdate {
 
     public static void main(String[] args) {
         String bundleFullName = BundleUtil.readBundleFullName();
+        if (bundleFullName == null) {
+            System.err.println("ERROR: Autoupdate: unable to perform without bundleFullName (parent folder name)");
+            System.exit(-1);
+        }
+        System.out.println("Handling parent folder name" + bundleFullName);
+
+        String[] bundleFullNameSplit = bundleFullName.split("\\.");
+        if (bundleFullNameSplit.length != 3)
+            throw new IllegalStateException("Unexpected parent folder name/bundleFullName [" + bundleFullName + "] exactly two dots expected");
+        String branchName = bundleFullNameSplit[1];
 
         if (args.length > 0 && args[0].equalsIgnoreCase("release")) {
             System.out.println("Release update requested");
-            downloadAndUnzipAutoupdate(bundleFullName, UpdateMode.ALWAYS, ConnectionAndMeta.BASE_URL_RELEASE);
+            downloadAndUnzipAutoupdate(bundleFullNameSplit, UpdateMode.ALWAYS, ConnectionAndMeta.BASE_URL_RELEASE);
         } else {
             UpdateMode mode = getMode();
             if (mode != UpdateMode.NEVER) {
                 System.out.println("Snapshot requested");
-                if (bundleFullName != null) {
-                    System.out.println("Handling " + bundleFullName);
-                    String branchName = bundleFullName.split("\\.")[1];
-                    if (branchName.equals("snapshot")) {
-                        downloadAndUnzipAutoupdate(bundleFullName, mode, ConnectionAndMeta.BASE_URL_LATEST);
-                    } else {
-                        downloadAndUnzipAutoupdate(bundleFullName, mode, String.format(ConnectionAndMeta.BASE_URL_LTS, branchName));
-                    }
+                if (branchName.equals("snapshot")) {
+                    downloadAndUnzipAutoupdate(bundleFullNameSplit, mode, ConnectionAndMeta.BASE_URL_LATEST);
                 } else {
-                    System.err.println("ERROR: Autoupdate: unable to perform without bundleFullName");
+                    downloadAndUnzipAutoupdate(bundleFullNameSplit, mode, String.format(ConnectionAndMeta.BASE_URL_LTS, branchName));
                 }
             } else {
                 System.out.println("Update mode: NEVER");
@@ -82,9 +86,9 @@ public class Autoupdate {
         }
     }
 
-    private static void downloadAndUnzipAutoupdate(String bundleFullName, UpdateMode mode, String baseUrl) {
+    private static void downloadAndUnzipAutoupdate(String[] bundleFullNameSplit, UpdateMode mode, String baseUrl) {
         try {
-            String boardName = bundleFullName.split("\\.")[2];
+            String boardName = bundleFullNameSplit[2];
             String suffix = isObfuscated() ? "_obfuscated_public" : "";
             String zipFileName = "rusefi_bundle_" + boardName + suffix + "_autoupdate" + ".zip";
             ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(zipFileName).invoke(baseUrl);
@@ -106,7 +110,7 @@ public class Autoupdate {
             long completeFileSize = connectionAndMeta.getCompleteFileSize();
             long lastModified = connectionAndMeta.getLastModified();
 
-            System.out.println(bundleFullName + " " + completeFileSize + " bytes, last modified " + new Date(lastModified));
+            System.out.println(Arrays.toString(bundleFullNameSplit) + " " + completeFileSize + " bytes, last modified " + new Date(lastModified));
 
             AutoupdateUtil.downloadAutoupdateFile(zipFileName, connectionAndMeta, TITLE);
 

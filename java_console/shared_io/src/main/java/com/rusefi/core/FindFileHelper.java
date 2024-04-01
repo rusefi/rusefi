@@ -13,7 +13,7 @@ public class FindFileHelper {
         File dir = new File(fileDirectory);
         if (!dir.isDirectory())
             return null;
-        System.out.println("Searching for " + prefix + "*" + suffix + " in " + fileDirectory);
+        System.out.println("Searching for " + prefix + "*" + suffix + " in " + dir.getAbsolutePath());
         for (String file : Objects.requireNonNull(dir.list())) {
             if (file.contains(" "))
                 continue; // spaces not acceptable
