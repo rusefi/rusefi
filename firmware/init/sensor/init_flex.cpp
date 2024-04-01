@@ -15,7 +15,7 @@ static Biquad flexTempFilter;
 static Timer flexFreq, flexPulse;
 
 static void flexCallback(efitick_t nowNt, bool value) {
-	if (value) {
+	if (!value) {
 		float frequency = 1 / flexFreq.getElapsedSecondsAndReset(nowNt);
 		flexSensor.postRawValue(frequency, nowNt);
 
