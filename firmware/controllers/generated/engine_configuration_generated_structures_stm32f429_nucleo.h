@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Apr 02 23:20:14 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Apr 02 23:33:05 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1057,7 +1057,8 @@ struct engine_configuration_s {
 	 * .Knowing this angle allows us to control timing and other angles in reference to TDC.
 	 * HOWTO:
 	 * 1: Switch to fixed timing mode on 'ignition setting' dialog
-	 * 2: use an actual timing light to calibrate!'
+	 * 2: use an actual timing light to calibrate
+	 * 3: add/subtract until timing light confirms desired fixed timing value!'
 	 * units: deg btdc
 	 * offset 472
 	 */
@@ -5546,4 +5547,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22400);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Apr 02 23:20:14 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Apr 02 23:33:05 UTC 2024
