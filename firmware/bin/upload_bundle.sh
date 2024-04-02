@@ -11,9 +11,9 @@ if [ -n "${USER}" -a -n "$PASS" -a -n "${HOST}" ]; then
  echo "$SCRIPT_NAME: Uploading both bundles"
 
  if [ -n "${BUNDLE_FILE_NAME}" ]; then
-   echo "BUNDLE_FILE_NAME is ${BUNDLE_FILE_NAME}"
+   echo "$SCRIPT_NAME: BUNDLE_FILE_NAME is ${BUNDLE_FILE_NAME}"
  else
-   echo "BUNDLE_FILE_NAME argument not specified"
+   echo "$SCRIPT_NAME: BUNDLE_FILE_NAME argument not specified"
    exit 1
  fi
  # technical debt: more than one file uses magic 'rusefi_bundle_' constant, can we extract constant?
