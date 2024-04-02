@@ -64,18 +64,20 @@ void hellenDisableEn() {
 	    megaEn.setValue(0);
 }
 
-void setHellenEnPin(Gpio pin) {
+void setHellenEnPin(Gpio pin, bool enableBoardOnStartUp) {
     static bool initialized = false;
     if (!initialized) {
         initialized = true;
 	    megaEn.initPin("EN", pin);
-	    hellenEnableEn();
+	    if (enableBoardOnStartUp) {
+	      hellenEnableEn();
+	    }
 	}
 }
 
-void setHellenMegaEnPin() {
+void setHellenMegaEnPin(bool enableBoardOnStartUp) {
     // H144_GP8 matches MM100_GP8 is used as PWR_EN on early mm100
-    setHellenEnPin(H144_GP8); // OUT_PWR_EN
+    setHellenEnPin(H144_GP8, enableBoardOnStartUp); // OUT_PWR_EN
 }
 
 void setHellen64MegaEnPin() {

@@ -13,8 +13,8 @@
 
 void hellenWbo();
 
-void setHellenMegaEnPin();
-void setHellenEnPin(Gpio pin);
+void setHellenMegaEnPin(bool enableBoardOnStartUp = true);
+void setHellenEnPin(Gpio pin, bool enableBoardOnStartUp = true);
 void setHellen64MegaEnPin();
 bool getHellenBoardEnabled();
 void hellenEnableEn();
