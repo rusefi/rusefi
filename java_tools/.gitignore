@@ -4,3 +4,4 @@ downloaded_tunes
 log
 # PTrace files
 *.json
+triggers
