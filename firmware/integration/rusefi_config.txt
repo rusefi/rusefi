@@ -563,7 +563,7 @@ can_nbc_e canNbcType;set can_mode X
 
 angle_t fixedModeTiming;This value is the ignition timing used when in 'fixed timing' mode, i.e. constant timing\nThis mode is useful when adjusting distributor location.;"RPM", 1, 0, 0, 3000, 0
 
-angle_t globalTriggerAngleOffset;Angle between Top Dead Center (TDC) and the first trigger event.\nPositive value in case of synchronization point before TDC and negative in case of synchronization point after TDC\n.Knowing this angle allows us to control timing and other angles in reference to TDC.\nHOWTO:\n1: Switch to fixed timing mode on 'ignition setting' dialog\n2: use an actual timing light to calibrate!';"deg btdc", 1, 0, -720, 720, 0
+angle_t globalTriggerAngleOffset;Angle between Top Dead Center (TDC) and the first trigger event.\nPositive value in case of synchronization point before TDC and negative in case of synchronization point after TDC\n.Knowing this angle allows us to control timing and other angles in reference to TDC.\nHOWTO:\n1: Switch to fixed timing mode on 'ignition setting' dialog\n2: use an actual timing light to calibrate\n3: add/subtract until timing light confirms desired fixed timing value!';"deg btdc", 1, 0, -720, 720, 0
 
 
 
