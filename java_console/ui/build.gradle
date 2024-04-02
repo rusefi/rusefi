@@ -9,12 +9,11 @@ configurations {
 }
 
 dependencies {
-    implementation project(':shared_ui')
     implementation project(':trigger-ui')
     implementation project(':autotest')
     implementation project(':luaformatter')
     implementation project(':config_definition_base')
-    // todo: should this be enough? implementation project(':trigger-image')
+
     implementation global_libs.antlr
     implementation 'com.miglayout:miglayout-swing:4.1'
     implementation files('../lib/dfu/dfu_java.jar')
