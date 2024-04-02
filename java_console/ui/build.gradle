@@ -16,11 +16,12 @@ dependencies {
 
     implementation global_libs.antlr
     implementation 'com.miglayout:miglayout-swing:4.1'
-    implementation files('../lib/dfu/dfu_java.jar')
     implementation files('../lib/SteelSeries-3.9.30.jar')
+/*
+    implementation files('../lib/dfu/dfu_java.jar')
     implementation files('../lib/trident-6.2.jar')
     implementation files('../lib/dfu/IntelHexParser.jar')
-
+*/
     testImplementation global_libs.mockito
     testImplementation testFixtures(project(':ecu_io'))
 }

@@ -1,5 +1,6 @@
 package com.rusefi.tools;
 
+/*
 import com.rusefi.dfu.BinaryImage;
 import com.rusefi.dfu.DfuImage;
 import com.rusefi.dfu.DfuLogic;
@@ -9,10 +10,12 @@ import com.rusefi.dfu.usb4java.USBDfuConnection;
 import cz.jaybee.intelhex.IntelHexException;
 
 import java.io.IOException;
+*/
 
 /**
  * prototype of our own DFU frontend, not used in real life
  */
+/*
 public class DfuTool {
     public static void run(String[] args) throws IOException, IntelHexException {
         if (args.length < 2) {
@@ -35,3 +38,4 @@ public class DfuTool {
         logger.info("DfuSe DFU " + device);
     }
 }
+*/
