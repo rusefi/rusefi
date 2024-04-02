@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Mar 28 18:44:06 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Apr 02 17:49:22 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2801,10 +2801,11 @@ struct engine_configuration_s {
 	offset 1496 bit 10 */
 	bool fancySmartL : 1 {};
 	/**
+	 * Use Aux Speed 1 as one of speeds for wheel slip ratio?
 	offset 1496 bit 11 */
 	bool useAuxSpeedForSlipRatio : 1 {};
 	/**
-	 * VSS and auxSpeed1 or auxSpeed1 with auxSpeed2?
+	 * VSS and Aux Speed 1 or Aux Speed 1 with Aux Speed 2?
 	offset 1496 bit 12 */
 	bool useVssAsSecondWheelSpeed : 1 {};
 	/**
@@ -5547,4 +5548,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22400);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Mar 28 18:44:06 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Apr 02 17:49:22 UTC 2024
