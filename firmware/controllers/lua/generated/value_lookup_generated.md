@@ -296,7 +296,7 @@ Expected oil pressure after starting the engine. If oil pressure does not reach 
 This value is the ignition timing used when in 'fixed timing' mode, i.e. constant timing\nThis mode is useful when adjusting distributor location.
 
 ### globalTriggerAngleOffset
-Angle between Top Dead Center (TDC) and the first trigger event.\nPositive value in case of synchronization point before TDC and negative in case of synchronization point after TDC\n.Knowing this angle allows us to control timing and other angles in reference to TDC.\nset global_trigger_offset_angle X
+Angle between Top Dead Center (TDC) and the first trigger event.\nPositive value in case of synchronization point before TDC and negative in case of synchronization point after TDC\n.Knowing this angle allows us to control timing and other angles in reference to TDC.\nHOWTO:\n1: Switch to fixed timing mode on 'ignition setting' dialog\n2: use an actual timing light to calibrate\n3: add/subtract until timing light confirms desired fixed timing value!'
 
 ### analogInputDividerCoefficient
 Ratio/coefficient of input voltage dividers on your PCB. For example, use '2' if your board divides 5v into 2.5v. Use '1.66' if your board divides 5v into 3v.
@@ -1019,10 +1019,10 @@ Output Max Duty Cycle
 RPM range above upper limit for extra air taper
 
 ### tps2Min
-Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel\nset tps2_min X
+Closed throttle#2. todo: extract these two fields into a structure\nSee also tps2_1AdcChannel
 
 ### tps2Max
-Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel\nset tps2_max X
+Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\nSee also tps1_1AdcChannel
 
 ### tachPulsePerRev
 
@@ -1112,10 +1112,10 @@ See Over/Undervoltage Shutdown/Retry bit in documentation
 
 
 ### useAuxSpeedForSlipRatio
-
+Use Aux Speed 1 as one of speeds for wheel slip ratio?
 
 ### useVssAsSecondWheelSpeed
-VSS and auxSpeed1 or auxSpeed1 with auxSpeed2?
+VSS and Aux Speed 1 or Aux Speed 1 with Aux Speed 2?
 
 ### is_enabled_spi_5
 
@@ -1788,4 +1788,7 @@ null
 
 ### tunerStudioSerialSpeed
 Secondary TTL channel baud rate
+
+### anotherCiTest
+null
 
