@@ -1941,6 +1941,14 @@ uint8_t[FUEL_LEVEL_TABLE_COUNT] fuelLevelValues;;"%", 1, 0, 0, 100, 0
 uint8_t[DWELL_CURVE_SIZE] autoscale dwellVoltageCorrVoltBins;;"volts", 0.1, 0, 0, 20, 1
 uint8_t[DWELL_CURVE_SIZE] autoscale dwellVoltageCorrValues;;"multiplier", 0.02, 0, 0, 5, 2
 
+uint8_t[TCU_TABLE_WIDTH] autoscale tcu_shiftTpsBins;;"%", 1, 0, 0, 255, 2
+uint8_t[TCU_TABLE_WIDTH] tcu_shiftSpeed12;;"MPH", 1, 0, 0, 255, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_shiftSpeed23;;"MPH", 1, 0, 0, 255, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_shiftSpeed34;;"MPH", 1, 0, 0, 255, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_shiftSpeed21;;"MPH", 1, 0, 0, 255, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_shiftSpeed32;;"MPH", 1, 0, 0, 255, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_shiftSpeed43;;"MPH", 1, 0, 0, 255, 0
+
 end_struct
 
 #define CMD_SET_SENSOR_MOCK "set_sensor_mock"
