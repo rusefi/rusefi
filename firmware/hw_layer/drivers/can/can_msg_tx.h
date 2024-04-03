@@ -73,6 +73,13 @@ public:
 	const CANTxFrame *getFrame() const {
 		return &m_frame;
 	}
+
+void setArray(uint8_t *data, size_t len) {
+    for (size_t i = 0; i < len; i++) {
+        m_frame.data8[i] = data[i];
+    }
+}
+
 #endif // HAL_USE_CAN || EFI_UNIT_TEST
 
 protected:
