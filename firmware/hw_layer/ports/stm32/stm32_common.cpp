@@ -45,6 +45,7 @@ static void reset_and_jump(void) {
 	NVIC_SystemReset();
 }
 
+#if EFI_DFU_JUMP
 void jump_to_bootloader() {
 	// leave DFU breadcrumb which assembly startup code would check, see [rusefi][DFU] section in assembly code
 
@@ -52,6 +53,7 @@ void jump_to_bootloader() {
 
 	reset_and_jump();
 }
+#endif
 
 void jump_to_openblt() {
 #if EFI_USE_OPENBLT
