@@ -798,6 +798,12 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif
 
+#if HW_PROTEUS || HW_HELLEN
+	case engine_type_e::HARLEY:
+		setHarley();
+		break;
+#endif
+
 #if HW_PROTEUS
 	case engine_type_e::POLARIS_RZR:
 	case engine_type_e::MAVERICK_X3:
@@ -823,9 +829,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 	case engine_type_e::PROTEUS_LUA_DEMO:
 		proteusLuaDemo();
-		break;
-	case engine_type_e::HARLEY:
-		setHarley();
 		break;
 	case engine_type_e::PROTEUS_BMW_M73:
 		setEngineBMW_M73_Proteus();
