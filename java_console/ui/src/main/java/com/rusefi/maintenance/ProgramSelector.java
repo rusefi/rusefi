@@ -256,7 +256,8 @@ public class ProgramSelector {
 
         mode.removeAllItems();
         if (FileLog.isWindows()) {
-            if (hasSerialPorts) {
+            boolean requireBlt = FindFileHelper.isObfuscated();
+            if (hasSerialPorts && !requireBlt) {
                 mode.addItem(AUTO_DFU);
             }
 
@@ -267,6 +268,9 @@ public class ProgramSelector {
                     mode.addItem(INSTALL_OPENBLT);
                 }
             }
+            if (!requireBlt) {
+                mode.addItem(DFU_SWITCH);
+            }
             if (currentHardware.isStLinkConnected())
                 mode.addItem(ST_LINK);
             if (currentHardware.isPCANConnected())
@@ -276,7 +280,6 @@ public class ProgramSelector {
 
         if (hasSerialPorts) {
             mode.addItem(OPENBLT_AUTO);
-            mode.addItem(DFU_SWITCH);
             mode.addItem(OPENBLT_SWITCH);
             mode.addItem(OPENBLT_MANUAL);
         }

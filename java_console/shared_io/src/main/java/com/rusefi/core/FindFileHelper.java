@@ -27,4 +27,9 @@ public class FindFileHelper {
     public static String findSrecFile() {
         return findFile("..", BINARY_PREFIX, "srec");
     }
+
+    public static boolean isObfuscated() {
+        String srecFile = findSrecFile();
+        return srecFile != null && srecFile.contains("obfuscated");
+    }
 }

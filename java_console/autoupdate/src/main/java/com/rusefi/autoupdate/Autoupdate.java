@@ -89,7 +89,7 @@ public class Autoupdate {
     private static void downloadAndUnzipAutoupdate(String[] bundleFullNameSplit, UpdateMode mode, String baseUrl) {
         try {
             String boardName = bundleFullNameSplit[2];
-            String suffix = isObfuscated() ? "_obfuscated_public" : "";
+            String suffix = FindFileHelper.isObfuscated() ? "_obfuscated_public" : "";
             String zipFileName = "rusefi_bundle_" + boardName + suffix + "_autoupdate" + ".zip";
             ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(zipFileName).invoke(baseUrl);
             System.out.println("Remote file " + zipFileName);
@@ -131,11 +131,6 @@ public class Autoupdate {
                     JOptionPane.ERROR_MESSAGE);
             }
         }
-    }
-
-    private static boolean isObfuscated() {
-        String srecFile = FindFileHelper.findSrecFile();
-        return srecFile != null && srecFile.contains("obfuscated");
     }
 
     private static boolean askUserIfUpdateIsDesired() {
