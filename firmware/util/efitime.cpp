@@ -1,5 +1,12 @@
 #include "pch.h"
 
+/**
+ * problem: we have three files with bits and pieces of time API and documentation
+ * 1) this implementation class
+ * 2) rusEFI header efitime.h
+ * 3) libfirmware header rusefi_time_types.h
+ */
+
 #if !EFI_UNIT_TEST
 
 #include <rusefi/rusefi_time_wraparound.h>
@@ -29,7 +36,7 @@ efitimems_t getTimeNowMs() {
 }
 
 /**
- * Integer number of seconds since ECU boot.
+ * 32 bit integer number of seconds since ECU boot.
  * 31,710 years - would not overflow during our life span.
  */
 efitimesec_t getTimeNowS() {

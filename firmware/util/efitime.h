@@ -33,15 +33,18 @@
  * Get a monotonically increasing (but wrapping) 32-bit timer value
  * Implemented at port level, based on timer or CPU tick counter
  * Main source of EFI clock, SW-extended to 64bits
+ *
+ * 2147483648 / ~168MHz = ~12 seconds to overflow
+ *
  */
 uint32_t getTimeNowLowerNt();
 
 /**
- * @brief   Returns the number of milliseconds since the board initialization.
+ * @brief   Returns the 32 bit number of milliseconds since the board initialization.
  */
 efitimems_t getTimeNowMs();
 
 /**
- * @brief   Current system time in seconds.
+ * @brief   Current system time in seconds (32 bits)
  */
 efitimesec_t getTimeNowS();
