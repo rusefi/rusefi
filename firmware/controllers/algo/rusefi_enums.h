@@ -699,7 +699,8 @@ enum class TsCalMode : uint8_t {
 enum class GearControllerMode : uint8_t {
 	None = 0,
 	ButtonShift = 1,
-	Generic = 2,
+	Automatic = 2,
+	Generic = 3,
 };
 
 enum class TransmissionControllerMode : uint8_t {

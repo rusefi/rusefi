@@ -63,6 +63,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/tcu/tcu.cpp \
 	$(CONTROLLERS_DIR)/tcu/gear_controller.cpp \
 	$(CONTROLLERS_DIR)/tcu/gc_generic.cpp \
+	$(CONTROLLERS_DIR)/tcu/gc_auto.cpp \
 	$(CONTROLLERS_DIR)/tcu/simple_tcu.cpp \
 	$(CONTROLLERS_DIR)/tcu/tc_4l6x.cpp \
 	$(CONTROLLERS_DIR)/shutdown_controller.cpp \

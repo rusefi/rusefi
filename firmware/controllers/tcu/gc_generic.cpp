@@ -126,9 +126,8 @@ void GenericGearController::update() {
 			}
 			break;
 		case SelectedGear::Drive :
-			// TODO
-			//  for Drive, need shift tables etc.
-			break;
+			AutomaticGearController::update();
+			return;
 		default:
 			break;
 		}
