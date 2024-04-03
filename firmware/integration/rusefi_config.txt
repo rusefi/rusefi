@@ -1819,7 +1819,7 @@ uint16_t[CRANKING_CURVE_SIZE] autoscale crankingFuelCoefE100;;"ratio", 0.01, 0, 
 
 #define TCU_TABLE_WIDTH 8
 
-uint8_t[TCU_TABLE_WIDTH] autoscale tcu_pcAirmassBins;;"Airmass", 0.02, 0, 0, 255, 2
+uint8_t[TCU_TABLE_WIDTH] autoscale tcu_pcAirmassBins;;"Airmass", 5, 0, 0, 1200, 0
 uint8_t[TCU_TABLE_WIDTH] tcu_pcValsR;;"%", 1, 0, 0, 255, 0
 uint8_t[TCU_TABLE_WIDTH] tcu_pcValsN;;"%", 1, 0, 0, 255, 0
 uint8_t[TCU_TABLE_WIDTH] tcu_pcVals1;;"%", 1, 0, 0, 255, 0
