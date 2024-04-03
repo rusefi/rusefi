@@ -66,6 +66,8 @@ jobs:
         git add 'firmware/*/*generated*.cpp'
         git add 'firmware/*/*generated*.h'
         git add 'firmware/config/boards/*/generated_ts_name_by_pin.cpp'
+        git add 'console/binary/generated/*.ini'
+        git add 'controllers/lua/generated/*.md'
         git add *.java
         git add *_generated.h
         git status
