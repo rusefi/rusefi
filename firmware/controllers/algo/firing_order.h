@@ -55,6 +55,7 @@ typedef enum __attribute__ ((__packed__)) {
 	FO_1_3_7_2_6_5_4_8 = 20, // Ford 5.0 HO and 351W
 	FO_1_2_3_4_5_6_7_8 = 25, // linearly incrementing, for V8 testing
 	FO_1_5_4_8_6_3_7_2 = 26, // Audi 4.2 40v V8
+	FO_1_5_4_8_3_7_2_6 = 32, // Ford Voodoo
 	FO_1_8_7_3_6_5_4_2 = 28, // VH41DE (Japaneese Y32 Variant)
 
 	// 9 cylinder - for instance radial :)
@@ -63,7 +64,7 @@ typedef enum __attribute__ ((__packed__)) {
 
 	// 10 cylinder
 	FO_1_10_9_4_3_6_5_8_7_2 = 14, // dodge and viper ram v10
-	// 1-6-5-10-2-7-3-8-4-9 BMW S85
+	FO_1_6_5_10_2_7_3_8_4_9 = 33, // BMW, Lamborghini, etc
 
 	// 12 cylinder
 	FO_1_7_5_11_3_9_6_12_2_8_4_10 = 15, // bmw M70 & M73, Ferrari 456M GT V12
@@ -78,6 +79,6 @@ typedef enum __attribute__ ((__packed__)) {
 	// unfortunately not supported by default firmware because MAX_CYLINDER_COUNT=12 by default
 	FO_1_14_9_4_7_12_15_6_13_8_3_16_11_2_5_10 = 22, // WR16
 
-	// next value to use: 32
+	// next value to use: 34
 
 } firing_order_e;
