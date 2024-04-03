@@ -44,6 +44,7 @@ or
  - Improve performance with Lua CAN reception of a high volume of frames
  - Displayed units in TunerStudio change when switching between volume vs. mass injector flow modes #42
  - Make Toyota "3 Tooth Cam" decoder more robust #382
+ - Flex sensor-derived fuel temperature indication works properly
 
 ## December 2023 Release
 
