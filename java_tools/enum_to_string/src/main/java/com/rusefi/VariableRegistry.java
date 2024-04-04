@@ -59,11 +59,11 @@ public class VariableRegistry {
         return token;
     }
 
-    public void readPrependValues(String prependFile) throws IOException {
-        readPrependValues(new FileReader(RootHolder.ROOT + prependFile));
+    public void readPrependValues(String prependFile, boolean ignoreUnexpectedLined) throws IOException {
+        readPrependValues(new FileReader(RootHolder.ROOT + prependFile), ignoreUnexpectedLined);
     }
 
-    public void readPrependValues(Reader fileReader) throws IOException {
+    public void readPrependValues(Reader fileReader, boolean ignoreUnexpectedLined) throws IOException {
         BufferedReader definitionReader = new BufferedReader(fileReader);
         String line;
         while ((line = definitionReader.readLine()) != null) {
@@ -75,7 +75,7 @@ public class VariableRegistry {
                 continue;
             if (ToolUtil.startsWithToken(line, DEFINE)) {
                 processDefine(line.substring(DEFINE.length()).trim());
-            } else {
+            } else if (!ignoreUnexpectedLined) {
                 throw new IllegalStateException("Unexpected line while prepending: " + line);
             }
         }

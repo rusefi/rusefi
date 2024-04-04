@@ -110,7 +110,7 @@ public class ReaderStateImpl implements ReaderState {
     public void doJob() throws IOException {
 
         for (String prependFile : prependFiles)
-            variableRegistry.readPrependValues(prependFile);
+            variableRegistry.readPrependValues(prependFile, false);
 
         /*
          * this is the most important invocation - here we read the primary input file and generated code into all

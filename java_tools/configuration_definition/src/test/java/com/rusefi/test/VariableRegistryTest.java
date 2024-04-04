@@ -77,7 +77,7 @@ public class VariableRegistryTest {
     public void testDefineAndQuotes() throws IOException {
         VariableRegistry registry = new VariableRegistry();
         registry.readPrependValues(new StringReader("#define SINGLE 'L'\n" +
-                "#define DOUBLE \"R\""));
+                "#define DOUBLE \"R\""), false);
         assertEquals("hello L R 'L' \"R\"", registry.applyVariables("hello @#SINGLE#@ @#DOUBLE#@ @@SINGLE@@ @@DOUBLE@@"));
     }
 }

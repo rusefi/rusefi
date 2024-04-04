@@ -34,7 +34,7 @@ public class ConfigDefinitionTest {
     public static VariableRegistry readRealConfig() throws IOException {
         VariableRegistry variableRegistry = new VariableRegistry();
 
-        variableRegistry.readPrependValues(FIRMWARE + File.separator + "integration/rusefi_config.txt");
+        variableRegistry.readPrependValues(FIRMWARE + File.separator + "integration/rusefi_config.txt", true);
         return variableRegistry;
     }
 }
