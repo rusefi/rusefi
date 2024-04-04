@@ -1027,8 +1027,9 @@ void onConfigurationChangeTriggerCallback() {
 
 	for (size_t i = 0; i < efi::size(engineConfiguration->triggerInputPins); i++) {
 		changed |= isConfigurationChanged(triggerInputPins[i]);
-		if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN && isBrainPinValid(engineConfiguration->camInputs[i])) {
-		    criticalError("Please no physical sensors in CAM by MAP mode");
+		Gpio pin = engineConfiguration->camInputs[i];
+		if (engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN && isBrainPinValid(pin)) {
+		    criticalError("Please no physical sensors in CAM by MAP mode index=%d %s", i, hwPortname(pin));
 		}
 	}
 

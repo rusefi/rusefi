@@ -38,8 +38,6 @@ void setHarley() {
 	engineConfiguration->maximumIgnitionTiming = 90;
   engineConfiguration->minimumIgnitionTiming = -90;
 
-	// for now we need non wired camInput to keep TS field enable/disable logic happy
-	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_6;
 	engineConfiguration->vvtMode[0] = VVT_MAP_V_TWIN;
 
   engineConfiguration->oddFireEngine = true;
@@ -53,7 +51,12 @@ void setHarley() {
     engineConfiguration->acrPin2 = Gpio::PROTEUS_IGN_9;
 
     engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;
-    engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_3;
+	// for now we need non wired camInput to keep TS field enable/disable logic happy
+#if EFI_PROD_CODE
+	  engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_6;
+#else
+    engineConfiguration->camInputs[0] = Gpio::Unassigned;
+#endif
 
 	engineConfiguration->luaOutputPins[0] = Gpio::PROTEUS_LS_12;
 
