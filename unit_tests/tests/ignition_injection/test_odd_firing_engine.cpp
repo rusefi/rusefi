@@ -11,6 +11,7 @@ TEST(OddFireRunningMode, hd) {
 	EngineTestHelper eth(engine_type_e::HARLEY);
 	engineConfiguration->cranking.rpm = 100;
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH; // need to avoid engine phase sync requirement
+	// let's pretend to have a 32 degree V odd fire engine.
 	float cylinderOne = 19;
 	float cylinderTwo = 13;
 	engineConfiguration->timing_offset_cylinder[0] = cylinderOne;
