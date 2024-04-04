@@ -1816,21 +1816,21 @@ cyl_trim_s[12 iterate] fuelTrims
 
 uint16_t[CRANKING_CURVE_SIZE] autoscale crankingFuelCoefE100;;"ratio", 0.01, 0, 0, 50, 2
 
-#define TCU_MAGIC_SIZE 8
+#define TCU_TABLE_WIDTH 8
 
-uint8_t[TCU_MAGIC_SIZE] autoscale tcu_pcAirmassBins;;"Airmass", 0.02, 0, 0, 255, 2
-uint8_t[TCU_MAGIC_SIZE] tcu_pcValsR;;"%", 1, 0, 0, 255, 0
-uint8_t[TCU_MAGIC_SIZE] tcu_pcValsN;;"%", 1, 0, 0, 255, 0
-uint8_t[TCU_MAGIC_SIZE] tcu_pcVals1;;"%", 1, 0, 0, 255, 0
-uint8_t[TCU_MAGIC_SIZE] tcu_pcVals2;;"%", 1, 0, 0, 255, 0
-uint8_t[TCU_MAGIC_SIZE] tcu_pcVals3;;"%", 1, 0, 0, 255, 0
-uint8_t[TCU_MAGIC_SIZE] tcu_pcVals4;;"%", 1, 0, 0, 255, 0
-uint8_t[TCU_MAGIC_SIZE] tcu_pcVals12;;"%", 1, 0, 0, 255, 0
-uint8_t[TCU_MAGIC_SIZE] tcu_pcVals23;;"%", 1, 0, 0, 255, 0
-uint8_t[TCU_MAGIC_SIZE] tcu_pcVals34;;"%", 1, 0, 0, 255, 0
-uint8_t[TCU_MAGIC_SIZE] tcu_pcVals21;;"%", 1, 0, 0, 255, 0
-uint8_t[TCU_MAGIC_SIZE] tcu_pcVals32;;"%", 1, 0, 0, 255, 0
-uint8_t[TCU_MAGIC_SIZE] tcu_pcVals43;;"%", 1, 0, 0, 255, 0
+uint8_t[TCU_TABLE_WIDTH] autoscale tcu_pcAirmassBins;;"Airmass", 0.02, 0, 0, 255, 2
+uint8_t[TCU_TABLE_WIDTH] tcu_pcValsR;;"%", 1, 0, 0, 255, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_pcValsN;;"%", 1, 0, 0, 255, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_pcVals1;;"%", 1, 0, 0, 255, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_pcVals2;;"%", 1, 0, 0, 255, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_pcVals3;;"%", 1, 0, 0, 255, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_pcVals4;;"%", 1, 0, 0, 255, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_pcVals12;;"%", 1, 0, 0, 255, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_pcVals23;;"%", 1, 0, 0, 255, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_pcVals34;;"%", 1, 0, 0, 255, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_pcVals21;;"%", 1, 0, 0, 255, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_pcVals32;;"%", 1, 0, 0, 255, 0
+uint8_t[TCU_TABLE_WIDTH] tcu_pcVals43;;"%", 1, 0, 0, 255, 0
 
 uint8_t[8] tcu_tccTpsBins;;"TPS", 1, 0, 0, 255, 0
 uint8_t[8] tcu_tccLockSpeed;;"MPH", 1, 0, 0, 255, 0
