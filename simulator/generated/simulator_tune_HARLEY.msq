@@ -226,7 +226,7 @@
         <constant digits="0" name="calibrationBirthday" units="">2.0240404E7</constant>
         <constant digits="3" name="adcVcc" units="volts">3.0</constant>
         <constant digits="0" name="mapCamDetectionAnglePosition" units="Deg">50.0</constant>
-        <constant name="camInputs1">"PE12"</constant>
+        <constant name="camInputs1">"NONE"</constant>
         <constant name="camInputs2">"NONE"</constant>
         <constant name="camInputs3">"NONE"</constant>
         <constant name="camInputs4">"NONE"</constant>
