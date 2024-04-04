@@ -75,6 +75,8 @@ public class VariableRegistry {
                 continue;
             if (ToolUtil.startsWithToken(line, DEFINE)) {
                 processDefine(line.substring(DEFINE.length()).trim());
+            } else {
+                throw new IllegalStateException("Unexpected line while prepending: " + line);
             }
         }
     }
