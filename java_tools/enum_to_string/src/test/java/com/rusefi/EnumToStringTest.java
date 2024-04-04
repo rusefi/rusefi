@@ -187,7 +187,7 @@ public class EnumToStringTest {
                         "}brain_pin_e; // hello");
 
         VariableRegistry registry = new VariableRegistry();
-        registry.readPrependValues(new StringReader("#define XXXX 0"));
+        registry.readPrependValues(new StringReader("#define XXXX 0"), false);
 
         EnumsReader enumsReader = new EnumsReader().read(reader);
         for (Map.Entry<String /*enum name*/, EnumsReader.EnumState> e : enumsReader.getEnums().entrySet()) {
@@ -212,7 +212,7 @@ public class EnumToStringTest {
             "}brain_pin_e; // hello");
 
         VariableRegistry registry = new VariableRegistry();
-        registry.readPrependValues(new StringReader("#define XXXX 12"));
+        registry.readPrependValues(new StringReader("#define XXXX 12"), false);
 
         EnumsReader enumsReader = new EnumsReader().read(reader);
         for (Map.Entry<String /*enum name*/, EnumsReader.EnumState> e : enumsReader.getEnums().entrySet()) {

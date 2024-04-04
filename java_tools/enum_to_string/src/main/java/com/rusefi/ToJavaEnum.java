@@ -28,7 +28,7 @@ public class ToJavaEnum {
 
         VariableRegistry registry = new VariableRegistry();
         for (String fileName : invokeReader.getDefinitionInputFiles())
-            registry.readPrependValues(fileName);
+            registry.readPrependValues(fileName, true);
 
         StringBuilder sb = new StringBuilder();
 
