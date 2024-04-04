@@ -45,9 +45,14 @@ void TransmissionControllerBase::measureShiftTime(gear_e gear) {
 }
 
 float TransmissionControllerBase::isShiftCompleted() {
-	if (m_shiftTime &&  m_shiftTimeGear == Sensor::getOrZero(SensorType::DetectedGear)) {
+	auto detected = Sensor::get(SensorType::DetectedGear);
+	auto iss = Sensor::get(SensorType::InputShaftSpeed);
+	if (detected.Valid && m_shiftTime && m_shiftTimeGear == detected.Value) {
 		m_shiftTime = false;
 		return m_shiftTimer.getElapsedSeconds();
+	} else if (!iss.Valid && m_shiftTime && m_shiftTimer.hasElapsedMs(config->tcu_shiftTime)) {
+		m_shiftTime = false;
+		return config->tcu_shiftTime * 0.001;
 	} else {
 		return 0;
 	}
