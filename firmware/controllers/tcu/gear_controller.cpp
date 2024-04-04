@@ -12,6 +12,9 @@ void GearControllerBase::initTransmissionController() {
 	case TransmissionControllerMode::SimpleTransmissionController :
 		transmissionController = getSimpleTransmissionController();
 		break;
+	case TransmissionControllerMode::Generic4 :
+		transmissionController = getGeneric4TransmissionController();
+		break;
 	case TransmissionControllerMode::Gm4l6x :
 		transmissionController = getGm4l6xTransmissionController();
 		break;

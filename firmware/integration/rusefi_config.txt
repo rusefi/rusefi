@@ -1498,7 +1498,7 @@ uint8_t[TORQUE_CURVE_SIZE x TORQUE_CURVE_SIZE] autoscale torqueTable;;"Nm", 10, 
 		custom GearControllerMode 1 bits, U08, @OFFSET@, [0:1], @@gear_controller_e_enum@@
 		GearControllerMode gearControllerMode
 
-#define transmission_controller_e_enum "None", "Simple Transmission", "GM 4L6X"
+#define transmission_controller_e_enum "None", "Simple Transmission", "Generic 4-Speed", "GM 4L6X"
 		custom TransmissionControllerMode 1 bits, U08, @OFFSET@, [0:1], @@transmission_controller_e_enum@@
 		TransmissionControllerMode transmissionControllerMode
 

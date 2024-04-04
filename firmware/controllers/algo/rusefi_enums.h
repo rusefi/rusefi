@@ -706,7 +706,8 @@ enum class GearControllerMode : uint8_t {
 enum class TransmissionControllerMode : uint8_t {
 	None = 0,
 	SimpleTransmissionController = 1,
-	Gm4l6x = 2,
+	Generic4 = 2,
+	Gm4l6x = 3,
 };
 
 enum class InjectionTimingMode : uint8_t {
