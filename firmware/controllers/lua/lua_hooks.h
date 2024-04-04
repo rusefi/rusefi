@@ -35,3 +35,6 @@ struct LuaOverrideSensor final : public Sensor {
   float overrideValue = -1;
   SensorType m_underlyingType;
 };
+
+void startPwm(int index, float freq, float duty);
+void setPwmDuty(int index, float duty);

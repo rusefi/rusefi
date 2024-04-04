@@ -268,6 +268,23 @@ static P luaL_checkPwmIndex(lua_State* l, int pos) {
 #define PWM_FREQ_PWM 1000
 #endif
 
+void startPwm(int index, float freq, float duty) {
+	// clamp to 1..1000 hz, this line would turn 0hz on/off PWM into 1hz behind the scenes
+	freq = clampF(1, freq, 1000);
+
+  brain_pin_e pwmPin = engineConfiguration->luaOutputPins[index];
+
+	startSimplePwmExt(
+		&pwms[index], "lua", &engine->executor,
+		pwmPin, &enginePins.luaOutputPins[index],
+		freq, duty
+	);
+
+	efiPrintf("LUA PWM on %s at %f initial duty",
+	  hwPortname(pwmPin),
+	  PERCENT_MULT * duty);
+}
+
 static int lua_startPwm(lua_State* l) {
 	auto p = luaL_checkPwmIndex(l, 1);
 	auto freq = luaL_checknumber(l, 2);
@@ -278,20 +295,7 @@ static int lua_startPwm(lua_State* l) {
         return 0;
     }
 
-	// clamp to 1..1000 hz, this line would turn 0hz on/off PWM into 1hz behind the scenes
-	freq = clampF(1, freq, 1000);
-
-  brain_pin_e pwmPin = engineConfiguration->luaOutputPins[p.idx];
-
-	startSimplePwmExt(
-		&p.pwm, "lua", &engine->executor,
-		pwmPin, &enginePins.luaOutputPins[p.idx],
-		freq, duty
-	);
-
-	efiPrintf("LUA PWM on %s at %f initial duty",
-	  hwPortname(pwmPin),
-	  PERCENT_MULT * duty);
+  startPwm(p.idx, freq, duty);
 
 	return 0;
 }
@@ -303,14 +307,17 @@ void luaDeInitPins() {
 	}
 }
 
-static int lua_setPwmDuty(lua_State* l) {
-	auto p = luaL_checkPwmIndex(l, 1);
-	auto duty = luaL_checknumber(l, 2);
-
+void setPwmDuty(int index, float duty) {
 	// clamp to 0..1
 	duty = clampF(0, duty, 1);
 
-	p.pwm.setSimplePwmDutyCycle(duty);
+	pwms[index].setSimplePwmDutyCycle(duty);
+}
+
+static int lua_setPwmDuty(lua_State* l) {
+	auto p = luaL_checkPwmIndex(l, 1);
+	auto duty = luaL_checknumber(l, 2);
+	setPwmDuty(p.idx, duty);
 
 	return 0;
 }
