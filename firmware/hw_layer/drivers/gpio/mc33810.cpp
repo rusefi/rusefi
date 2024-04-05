@@ -402,7 +402,7 @@ int Mc33810::chip_init()
 	  float vBatt = Sensor::getOrZero(SensorType::BatteryVoltage);
 	  if (vBatt > 6 || needBatteryMessage.getElapsedSeconds() > 7) {
 	    needBatteryMessage.reset();
-		  efiPrintf(DRIVER_NAME " spi loopback test failed [%d]", rx);
+		  efiPrintf(DRIVER_NAME " spi loopback test failed [%d] vBatt=%f", rx, vBatt);
 		}
 		ret = -2;
 		goto err_exit;
