@@ -96,13 +96,13 @@
 ! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
 ! todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
 ! rusEFI console from TS_FILE_VERSION to TS_SIGNATURE :(
-#define TS_FILE_VERSION 20240101
+#define TS_FILE_VERSION 20240404
 
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date! It is required to also update TS_SIGNATURE above
 ! when this happens.
-#define FLASH_DATA_VERSION 20015
+#define FLASH_DATA_VERSION 20016
 
 ! this offset is part of console compatibility mechanism, please DO NOT change this offset
 #define TS_FILE_VERSION_OFFSET 124
@@ -1892,17 +1892,17 @@ uint16_t[12] autoscale throttleEstimateEffectiveAreaValues;In units of g/s norma
 blend_table_s[BOOST_BLEND_COUNT iterate] boostOpenLoopBlends
 blend_table_s[BOOST_BLEND_COUNT iterate] boostClosedLoopBlends
 
-uint8_t[6] tcu_rangeP;;"level", 1, 0, 0, 3, 0
-uint8_t[6] tcu_rangeR;;"level", 1, 0, 0, 3, 0
-uint8_t[6] tcu_rangeN;;"level", 1, 0, 0, 3, 0
-uint8_t[6] tcu_rangeD;;"level", 1, 0, 0, 3, 0
-uint8_t[6] tcu_rangeM;;"level", 1, 0, 0, 3, 0
-uint8_t[6] tcu_rangeM3;;"level", 1, 0, 0, 3, 0
-uint8_t[6] tcu_rangeM2;;"level", 1, 0, 0, 3, 0
-uint8_t[6] tcu_rangeM1;;"level", 1, 0, 0, 3, 0
-uint8_t[6] tcu_rangePlus;;"level", 1, 0, 0, 3, 0
-uint8_t[6] tcu_rangeMinus;;"level", 1, 0, 0, 3, 0
-uint8_t[6] tcu_rangeLow;;"level", 1, 0, 0, 3, 0
+float[RANGE_INPUT_COUNT] tcu_rangeP;;"level", 1, 0, 0, 200000, 0
+float[RANGE_INPUT_COUNT] tcu_rangeR;;"level", 1, 0, 0, 200000, 0
+float[RANGE_INPUT_COUNT] tcu_rangeN;;"level", 1, 0, 0, 200000, 0
+float[RANGE_INPUT_COUNT] tcu_rangeD;;"level", 1, 0, 0, 200000, 0
+float[RANGE_INPUT_COUNT] tcu_rangeM;;"level", 1, 0, 0, 200000, 0
+float[RANGE_INPUT_COUNT] tcu_rangeM3;;"level", 1, 0, 0, 200000, 0
+float[RANGE_INPUT_COUNT] tcu_rangeM2;;"level", 1, 0, 0, 200000, 0
+float[RANGE_INPUT_COUNT] tcu_rangeM1;;"level", 1, 0, 0, 200000, 0
+float[RANGE_INPUT_COUNT] tcu_rangePlus;;"level", 1, 0, 0, 200000, 0
+float[RANGE_INPUT_COUNT] tcu_rangeMinus;;"level", 1, 0, 0, 200000, 0
+float[RANGE_INPUT_COUNT] tcu_rangeLow;;"level", 1, 0, 0, 200000, 0
 
 uint8_t[4 x 4] autoscale lambdaMaxDeviationTable;;"lambda", 0.01, 0, 0, 1, 2
 uint16_t[4] lambdaMaxDeviationLoadBins;;"", 1, 0, 0, 1000, 0

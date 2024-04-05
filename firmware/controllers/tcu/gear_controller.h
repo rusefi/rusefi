@@ -20,7 +20,7 @@ public:
 protected:
 	virtual gear_e setDesiredGear(gear_e);
 	void initTransmissionController();
-	uint8_t* getRangeStateArray(int);
+	float* getRangeStateArray(int);
 private:
 	gear_e desiredGear = NEUTRAL;
 	void postState();
