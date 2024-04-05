@@ -143,7 +143,7 @@ void detectHellenBoardType();
 #define H144_IN_MAP1 EFI_ADC_10
 // AIN10 PC1
 #define H144_IN_MAP2 EFI_ADC_11
-// AIN15 A15 PA2
+// AIN15 A15 PA2. Also ADC3#2 for knock
 #define H144_IN_MAP3 EFI_ADC_2
 #define H144_IN_MAP3_DIGITAL A2
 
@@ -180,7 +180,7 @@ void detectHellenBoardType();
 // IN_O2S AIN13 A13 PA0
 #define H144_IN_O2S EFI_ADC_0
 #define H144_IN_O2S_DIGITAL A0
-// IN_O2S2 AIN12 PA1
+// IN_O2S2 AIN12 PA1, also ADC3#1
 #define H144_IN_O2S2 EFI_ADC_1
 #define H144_IN_O2S2_DIGITAL A1
 
