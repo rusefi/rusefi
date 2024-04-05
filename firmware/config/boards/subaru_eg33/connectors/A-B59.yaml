@@ -120,9 +120,9 @@ pins:
     ts_name: A20 - Torque Ctrl Din
     type: av
 
-  - pin: 11
-    function: Sensors GND
-    type: sgnd
+#  - pin: 21
+#    function: Sensors GND
+#    type: sgnd
 
   - pin: 22
     function: Power GND
