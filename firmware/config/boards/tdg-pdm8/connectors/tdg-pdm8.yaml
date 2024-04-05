@@ -71,49 +71,49 @@ pins:
   - pin: 12
     function: CAN High
 
-  - pin: 3/13
+  - pin: 3/13b
     id: EFI_ADC_9
     class: analog_inputs
     function: Current Sense
     type: av
     ts_name: Sense 8
 
-  - pin: 4/14
+  - pin: 4/14b
     id: EFI_ADC_8
     class: analog_inputs
     function: Current Sense
     type: av
     ts_name: Sense 7
 
-  - pin: 5/15
+  - pin: 5/15b
     id: EFI_ADC_15
     class: analog_inputs
     function: Current Sense
     type: av
     ts_name: Sense 6
 
-  - pin: 6/16
+  - pin: 6/16b
     id: EFI_ADC_14
     class: analog_inputs
     function: Current Sense
     type: av
     ts_name: Sense 5
 
-  - pin: 7/17
+  - pin: 7/17b
     id: EFI_ADC_13
     class: analog_inputs
     function: Current Sense
     type: av
     ts_name: Sense 4
 
-  - pin: 8/18
+  - pin: 8/18b
     id: EFI_ADC_12
     class: analog_inputs
     function: Current Sense
     type: av
     ts_name: Sense 3
 
-  - pin: 9/19
+  - pin: 9/19b
     id: EFI_ADC_11
     class: analog_inputs
     function: Current Sense
