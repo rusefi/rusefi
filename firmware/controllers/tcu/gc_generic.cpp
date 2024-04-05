@@ -23,10 +23,10 @@ void GenericGearController::update() {
 	// Loop through possible range states
 	// 1-9 because 0 is SelectedGear::Invalid
 	for (int i = 1; i <= 9; i++) {
-		uint8_t *rangeStates = getRangeStateArray(i);
+		float *rangeStates = getRangeStateArray(i);
 		// Loop through inputs
 		for (size_t p = 0; p < efi::size(engineConfiguration->tcu_rangeInput); p++) {
-			int cellState = rangeStates[p];
+			float cellState = rangeStates[p];
 			// If the pin isn't configured and it matters, or if we've locked out this range with 3 in a cell
 			if ((!isBrainPinValid(engineConfiguration->tcu_rangeInput[p]) && cellState != 2) || cellState == 3) {
 				gear = SelectedGear::Invalid;

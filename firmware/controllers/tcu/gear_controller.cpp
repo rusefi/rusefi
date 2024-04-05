@@ -71,7 +71,7 @@ void initGearController() {
 	engine->gearController->init();
 }
 
-uint8_t* GearControllerBase::getRangeStateArray(int i) {
+float* GearControllerBase::getRangeStateArray(int i) {
 	switch (i) {
 	case 1 :
 		return config->tcu_rangePlus;
