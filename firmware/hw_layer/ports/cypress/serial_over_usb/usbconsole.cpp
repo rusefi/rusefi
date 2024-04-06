@@ -29,14 +29,14 @@ static bool isUsbSerialInitStarted = false;
 // called from the USB IRQ handler
 static void onUsbDataReceived(uint8_t* pu8Data, uint32_t u32ReceviedSize) {
 	osalSysLockFromISR();
- 
+
 	// copy the data to the FIFO buffer
 	for (int i = 0; i < u32ReceviedSize; i++) {
 		if (iqPutI(&usbBuf.fifoRxQueue, *pu8Data++) != Q_OK) {
 			break; // todo: ignore overflow?
 		}
 	}
-		
+
 	// tell the reader thread to wake up
 #if 0
 	if (threadrx != NULL) {
@@ -112,7 +112,7 @@ static const struct BaseChannelVMT usbChannelVmt = {
 
 BaseChannel SDU1 = { .vmt = &usbChannelVmt };
 
- 
+
 static void usb_VBus_handler(uint8_t channel) {
 	// call it only if the USB driver is already initialized
 	if (isUsbSerialInitialized)
@@ -149,7 +149,7 @@ void usb_serial_start(void) {
 
 }
 
-bool is_usb_serial_ready(void) {
+bool is_usb_serial_ready() {
 	return isUsbSerialInitialized /*&& SDU1.config->usbp->state == USB_ACTIVE*/;
 }
 
