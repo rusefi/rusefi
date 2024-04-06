@@ -86,6 +86,22 @@ void initOverrideSensors() {
 	  overrideBatteryVoltage.Register();
 }
 
+// todo: closer alignment with 'stopSensors'
+static void sensorStartUpOrReconfiguration(bool isFirstTime) {
+	initVbatt();
+	initMap();
+	initTps();
+	initFluidPressure();
+	initThermistors();
+	initVehicleSpeedSensor();
+	initTurbochargerSpeedSensor();
+	initAuxSensors();
+	initAuxSpeedSensors();
+	initInputShaftSpeedSensor();
+	initFlexSensor(isFirstTime);
+}
+
+
 // one-time start-up
 // see also 'reconfigureSensors'
 void initNewSensors() {
@@ -95,20 +111,12 @@ void initNewSensors() {
 
 	initOverrideSensors();
 
-	initVbatt();
-	initMap();
-	initTps();
-	initFluidPressure();
-	initThermistors();
+  sensorStartUpOrReconfiguration(true);
+  // todo:
 	initLambda();
+	// todo: 'isFirstTime' approach for initEgt vs startEgt
 	initEgt();
-	initFlexSensor(true);
 	initBaro();
-	initAuxSensors();
-	initVehicleSpeedSensor();
-	initTurbochargerSpeedSensor();
-	initAuxSpeedSensors();
-	initInputShaftSpeedSensor();
 
 	#if !EFI_UNIT_TEST
 		initFuelLevel();
@@ -140,9 +148,9 @@ void stopSensors() {
 	deInitAuxDigital();
 	deInitOldAnalogInputs();
 
+	deinitVbatt();
 	deinitTps();
 	deinitFluidPressure();
-	deinitVbatt();
 	deinitThermistors();
 	deInitFlexSensor();
 	deinitAuxSensors();
@@ -155,17 +163,7 @@ void stopSensors() {
 }
 
 void reconfigureSensors() {
-	initMap();
-	initTps();
-	initFluidPressure();
-	initVbatt();
-	initThermistors();
-	initFlexSensor(false);
-	initAuxSensors();
-	initVehicleSpeedSensor();
-	initTurbochargerSpeedSensor();
-	initAuxSpeedSensors();
-	initInputShaftSpeedSensor();
+	sensorStartUpOrReconfiguration(false);
 	startEgt();
 
 	initOldAnalogInputs();
