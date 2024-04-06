@@ -276,11 +276,11 @@ expected<percent_t> EtbController::getSetpointIdleValve() const {
 #if EFI_TUNER_STUDIO && (EFI_PROD_CODE || EFI_SIMULATOR)
 	engine->outputChannels.etbTarget = m_idlePosition;
 #endif // EFI_TUNER_STUDIO
-	return clampF(0, m_idlePosition, 100);
+	return clampPercentValue(m_idlePosition);
 }
 
 expected<percent_t> EtbController::getSetpointWastegate() const {
-	return clampF(0, m_wastegatePosition, 100);
+	return clampPercentValue(m_wastegatePosition);
 }
 
 expected<percent_t> EtbController::getSetpointEtb() {
@@ -304,12 +304,12 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	// If the pedal has failed, just use 0 position.
 	// This is safer than disabling throttle control - we can at least push the throttle closed
 	// and let the engine idle.
-	float sanitizedPedal = clampF(0, pedalPosition.value_or(0), 100);
+	float sanitizedPedal = clampPercentValue(pedalPosition.value_or(0));
 
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	etbCurrentTarget = m_pedalMap->getValue(rpm, sanitizedPedal);
 
-	percent_t etbIdlePosition = clampF(0, m_idlePosition, 100);
+	percent_t etbIdlePosition = clampPercentValue(m_idlePosition);
 	percent_t etbIdleAddition = PERCENT_DIV * engineConfiguration->etbIdleThrottleRange * etbIdlePosition;
 
 	// Interpolate so that the idle adder just "compresses" the throttle's range upward.
@@ -336,7 +336,7 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	targetPosition += trim + tcEtbDrop;
 
 	// Clamp before rev limiter to avoid ineffective rev limit due to crazy out of range position target
-	targetPosition = clampF(0, targetPosition, 100);
+	targetPosition = clampPercentValue(targetPosition);
 
 	// Lastly, apply ETB rev limiter
 	auto etbRpmLimit = engineConfiguration->etbRevLimitStart;

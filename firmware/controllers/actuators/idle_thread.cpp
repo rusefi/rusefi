@@ -113,7 +113,7 @@ percent_t IdleController::getRunningOpenLoop(IIdleController::Phase phase, float
 
 	running += luaAdd;
 
-#if EFI_ANTILAG_SYSTEM 
+#if EFI_ANTILAG_SYSTEM
 if (engine->antilagController.isAntilagCondition) {
 	running += engineConfiguration->ALSIdleAdd;
 }
@@ -147,12 +147,13 @@ if (engine->antilagController.isAntilagCondition) {
 	float airTaperRpmUpperLimit = engineConfiguration->idlePidRpmUpperLimit + engineConfiguration->airTaperRpmRange;
 	iacByRpmTaper = interpolateClamped(
 		engineConfiguration->idlePidRpmUpperLimit, 0,
-		airTaperRpmUpperLimit, engineConfiguration->airByRpmTaper, 
+		airTaperRpmUpperLimit, engineConfiguration->airByRpmTaper,
 		rpm);
 
 	running += iacByRpmTaper;
 
-	return clampF(0, running, 100);
+  // are we clamping open loop part separately? should not we clamp once we have total value?
+	return clampPercentValue(running);
 }
 
 percent_t IdleController::getOpenLoop(Phase phase, float rpm, float clt, SensorResult tps, float crankingTaperFraction) {
@@ -194,7 +195,7 @@ float IdleController::getIdleTimingAdjustment(int rpm, int targetRpm, Phase phas
 		m_timingPid.reset();
 		return 0;
 	}
-	
+
 	if (engineConfiguration->idleTimingSoftEntryTime > 0.0f) {
 		// Use interpolation for correction taper
 		m_timingPid.setErrorAmplification(interpolateClamped(m_crankTaperEndTime, 0.0f, m_idleTimingSoftEntryEndTime, 1.0f, engine->fuelComputer.running.timeSinceCrankingInSecs));
@@ -301,7 +302,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 		// PID can be completely disabled of multCoef==0, or it just works as usual if multCoef==1
 		newValue = interpolateClamped(0, 0, 1, newValue, multCoef);
 	}
-	
+
 	// Apply PID Deactivation Threshold as a smooth taper for TPS transients.
 	// if tps==0 then PID just works as usual, or we completely disable it if tps>=threshold
 	// TODO: should we just remove this? It reduces the gain if your zero throttle stop isn't perfect,
