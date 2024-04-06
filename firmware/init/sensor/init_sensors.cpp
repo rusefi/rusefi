@@ -100,6 +100,9 @@ static void sensorStartUpOrReconfiguration(bool isFirstTime) {
 	initAuxSensors();
 	initAuxSpeedSensors();
 	initInputShaftSpeedSensor();
+#if EFI_TCU
+	initRangeSensors();
+#endif
 	initFlexSensor(isFirstTime);
 }
 

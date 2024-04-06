@@ -37,6 +37,7 @@ void initVehicleSpeedSensor();
 void initTurbochargerSpeedSensor();
 void initAuxSpeedSensors();
 void initInputShaftSpeedSensor();
+void initRangeSensors();
 
 // Sensor reconfiguration
 void deinitVbatt();
