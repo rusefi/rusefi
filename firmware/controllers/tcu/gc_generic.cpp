@@ -21,8 +21,8 @@ void GenericGearController::init() {
 void GenericGearController::update() {
 	SelectedGear gear = SelectedGear::Invalid;
 	// Loop through possible range states
-	// 1-9 because 0 is SelectedGear::Invalid
-	for (int i = 1; i <= 9; i++) {
+	// 1 based because 0 is SelectedGear::Invalid
+	for (int i = 1; i <= TCU_RANGE_COUNT; i++) {
 		float *rangeStates = getRangeStateArray(i);
 		// Loop through inputs
 		for (size_t p = 0; p < efi::size(engineConfiguration->tcu_rangeInput); p++) {
