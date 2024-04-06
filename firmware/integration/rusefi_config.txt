@@ -164,6 +164,7 @@ struct_no_prefix engine_configuration_s
 #define TCU_SOLENOID_COUNT 6
 
 #define RANGE_INPUT_COUNT 6
+#define TCU_RANGE_COUNT 11
 
 ! Matt says: The problem is the driver chip. Tle9201 can't do 20k. The drivers are too slow. On purpose to reduce EMI
 ! https://rusefi.com/forum/viewtopic.php?p=47307#p47307
