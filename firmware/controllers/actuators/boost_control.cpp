@@ -106,7 +106,7 @@ expected<percent_t> BoostController::getOpenLoop(float target) {
 
 	efiAssert(ObdCode::OBD_PCM_Processor_Fault, m_openLoopMap != nullptr, "boost open loop", unexpected);
 
-	float openLoop = luaOpenLoopAdd + m_openLoopMap->getValue(rpm, driverIntent.Value);
+	percent_t openLoop = luaOpenLoopAdd + m_openLoopMap->getValue(rpm, driverIntent.Value);
 
 #if EFI_ENGINE_CONTROL
 	// Add any blends if configured
