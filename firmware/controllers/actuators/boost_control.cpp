@@ -171,7 +171,8 @@ expected<percent_t> BoostController::getClosedLoop(float target, float manifoldP
 }
 
 void BoostController::setOutput(expected<float> output) {
-	boostOutput = output.value_or(engineConfiguration->boostControlSafeDutyCycle);
+	// this clamping is just for happier gauge #6339
+	boostOutput = clampPercentValue(output.value_or(engineConfiguration->boostControlSafeDutyCycle));
 
 	if (!engineConfiguration->isBoostControlEnabled) {
 		// If not enabled, force 0% output

@@ -34,6 +34,7 @@ Release template (copy/paste this for new release):
  - second CAN WBO channel detailed logging #6306
  - Make sure TUNERSTUDIO IS DISCONNECTED FROM ECU #6325
  - 1_6_5_10_2_7_3_8_4_9 firing order BMW S85, also Audi 5.2 R8 and huracan GDI
+ - boost duty gauge is now clamped to match actuator #6339
 
 ### Fixed
  - ETB traction control drop is affected by not-highlighted cell #5952
