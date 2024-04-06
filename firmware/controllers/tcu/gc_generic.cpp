@@ -1,5 +1,6 @@
 #include "pch.h"
 
+#include "math.h"
 #include "gc_generic.h"
 
 #if EFI_TCU
@@ -18,6 +19,21 @@ void GenericGearController::init() {
 	GearControllerBase::init();
 }
 
+SensorType GenericGearController::getAnalogSensorType(int zeroBasedSensorIndex) {
+	return static_cast<SensorType>(zeroBasedSensorIndex + static_cast<int>(SensorType::RangeInput1));
+}
+
+bool GenericGearController::isNearest(float value, int pinIndex, float* rangeStates) {
+	float distance = fabs(rangeStates[pinIndex] - value);
+	for (int i = 1; i <= TCU_RANGE_COUNT; i++) {
+		float pinDistance = fabs(getRangeStateArray(i)[pinIndex] - value);
+		if (pinDistance < distance) {
+			return false;
+		}
+	}
+	return true;
+}
+
 void GenericGearController::update() {
 	SelectedGear gear = SelectedGear::Invalid;
 	// Loop through possible range states
@@ -27,19 +43,30 @@ void GenericGearController::update() {
 		// Loop through inputs
 		for (size_t p = 0; p < efi::size(engineConfiguration->tcu_rangeInput); p++) {
 			float cellState = rangeStates[p];
-			// If the pin isn't configured and it matters, or if we've locked out this range with 3 in a cell
-			if ((!isBrainPinValid(engineConfiguration->tcu_rangeInput[p]) && cellState != 2) || cellState == 3) {
-				gear = SelectedGear::Invalid;
-				break;
-			}
-			bool pinState = efiReadPin(engineConfiguration->tcu_rangeInput[p]);
-			// If the pin doesn't matter, and it matches the cellState
-			if (cellState == 2 || (pinState && cellState == 1) || (!pinState && cellState == 0)) {
-			        // Set the gear to the one we're checking, and continue to the next pin
-				gear = static_cast<SelectedGear>(i);
-			} else {
-				// This possibility doesn't match, set to invalid
-				gear = SelectedGear::Invalid;
+			if (isAdcChannelValid(engineConfiguration->tcu_rangeAnalogInput[p])) {
+				float pinState = Sensor::getOrZero(getAnalogSensorType(p));
+				if (isNearest(pinState, p, rangeStates)) {
+					// Set the gear to the one we're checking, and continue to the next pin
+					gear = static_cast<SelectedGear>(i);
+				} else {
+					// This possibility doesn't match, set to invalid
+					gear = SelectedGear::Invalid;
+				}
+			} else if (isBrainPinValid(engineConfiguration->tcu_rangeInput[p])) {
+				// If we've locked out this range with 3 in a cell
+				if (cellState == 3) {
+					gear = SelectedGear::Invalid;
+					break;
+				}
+				bool pinState = efiReadPin(engineConfiguration->tcu_rangeInput[p]);
+				// If the pin doesn't matter, or if it matches the cellState
+				if (cellState == 2 || (pinState && cellState == 1) || (!pinState && cellState == 0)) {
+					// Set the gear to the one we're checking, and continue to the next pin
+					gear = static_cast<SelectedGear>(i);
+				} else {
+					// This possibility doesn't match, set to invalid
+					gear = SelectedGear::Invalid;
+				}
 			}
 		}
 		// If we didn't find it, try the next range

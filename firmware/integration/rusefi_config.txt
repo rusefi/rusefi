@@ -1162,7 +1162,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	bit is_enabled_spi_6
 	bit enableAemXSeriesEgt;AEM X-Series EGT gauge kit or rusEFI EGT sensor from Wideband controller
 	bit startRequestPinInverted,"Inverted","Normal"
-	bit unusedBit_503_17
+	bit tcu_rangeSensorPulldown
 	bit skipBoardCanDash
 	bit unusedBit_503_19
 	bit devBit0
@@ -1646,7 +1646,10 @@ pin_output_mode_e camSimulatorPinMode
 int anotherCiTest
   uint32_t[3 iterate] device_uid
 
-uint8_t[214] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
+	adc_channel_e[RANGE_INPUT_COUNT iterate] tcu_rangeAnalogInput;
+	float tcu_rangeSensorBiasResistor;;"Ohm", 1, 0, 0, 200000, 1
+
+uint8_t[204] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct

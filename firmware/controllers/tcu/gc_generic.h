@@ -12,6 +12,9 @@ public:
 	GearControllerMode getMode() const {
 		return GearControllerMode::Generic;
 	}
+private:
+	bool isNearest(float value, int pinIndex, float* rangeStates);
+	SensorType getAnalogSensorType(int zeroBasedSensorIndex);
 };
 
 GenericGearController* getGenericGearController();
