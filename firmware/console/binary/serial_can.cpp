@@ -39,8 +39,8 @@ static CanTsListener listener;
 
 int CanStreamerState::sendFrame(const IsoTpFrameHeader & header, const uint8_t *data, int num, can_sysinterval_t timeout) {
 	int dlc = 8; // standard 8 bytes
-	CanTxMessage txmsg(CanCategory::SERIAL, CAN_ECU_SERIAL_TX_ID, dlc, 0, false);
-	
+	CanTxMessage txmsg(CanCategory::SERIAL, CAN_ECU_SERIAL_TX_ID, dlc, /*bus*/0, IS_EXT_RANGE_ID(CAN_ECU_SERIAL_TX_ID));
+
 	// fill the frame data according to the CAN-TP protocol (ISO 15765-2)
 	txmsg[0] = (uint8_t)((header.frameType & 0xf) << 4);
 	int offset, maxNumBytes;
@@ -73,7 +73,7 @@ int CanStreamerState::sendFrame(const IsoTpFrameHeader & header, const uint8_t *
 		// bad frame type
 		return 0;
 	}
-	
+
 	int numBytes = minI(maxNumBytes, num);
 	// copy the contents
 	if (data != nullptr) {
@@ -141,7 +141,7 @@ int CanStreamerState::receiveFrame(CANRxFrame *rxmsg, uint8_t *buf, int num, can
 			memcpy(tmpRxBuf + sizeof(uint16_t), srcBuf, numBytesAvailable);
 		// copy the crc to the end
 		memcpy(tmpRxBuf + sizeof(uint16_t) + numBytesAvailable, crcBuffer, sizeof(crcBuffer));
-		
+
 		// use the reconstructed tmp buffer as a source buffer
 		srcBuf = tmpRxBuf;
 		// we added the 16-bit size & 32-bit crc bytes
@@ -296,7 +296,7 @@ can_msg_t CanStreamerState::streamAddToTxTimeout(size_t *np, const uint8_t *txbu
 		offset += numBytesToAdd;
 		numBytes -= numBytesToAdd;
 	}
-	
+
 	if (engineConfiguration->verboseIsoTp) {
 		PRINT("*** INFO: streamAddToTxTimeout remaining goes to buffer %d" PRINT_EOL, numBytes);
 	}
@@ -318,7 +318,7 @@ can_msg_t CanStreamerState::streamFlushTx(can_sysinterval_t timeout) {
 		//warning(ObdCode::CUSTOM_ERR_CAN_COMMUNICATION, "CAN sendDataTimeout() problems");
 	}
 	txFifoBuf.clear();
-	
+
 	return CAN_MSG_OK;
 }
 

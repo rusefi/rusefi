@@ -2,7 +2,8 @@
 
 
 
-
+#define CAN_ECU_SERIAL_RX_ID 0x300100
+#define CAN_ECU_SERIAL_TX_ID 0x300102
 
 #define ts_show_egt false
 #define ts_show_engine_control false

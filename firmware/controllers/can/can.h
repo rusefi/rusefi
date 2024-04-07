@@ -43,6 +43,9 @@ enum class CanInterval : uint16_t {
 	_MAX_Cycle = _1000ms,
 };
 
+// 11 bit (CAN 2.0A)
+#define IS_EXT_RANGE_ID(id) ((id) >= 2048)
+
 class CanListener;
 class CanSensorBase;
 
