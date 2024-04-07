@@ -71,10 +71,10 @@
     engineConfiguration->disableFan2WhenStopped = true;
     // default 4.0
     engineConfiguration->startUpFuelPumpDuration = 2;
-    // default 87.5
-    engineConfiguration->cylinderBore = 77;
     // default 0.0
     engineConfiguration->knockBandCustom = 14.8;
+    // default 87.5
+    engineConfiguration->cylinderBore = 77;
     // default "false"
     engineConfiguration->fuelClosedLoopCorrectionEnabled = true;
     // default 60.0

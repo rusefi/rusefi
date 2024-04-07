@@ -117,10 +117,10 @@
     engineConfiguration->startUpFuelPumpDuration = 2;
     // default "false"
     engineConfiguration->enableSoftwareKnock = true;
-    // default 87.5
-    engineConfiguration->cylinderBore = 77;
     // default 0.0
     engineConfiguration->knockBandCustom = 14.8;
+    // default 87.5
+    engineConfiguration->cylinderBore = 77;
     // default "false"
     engineConfiguration->fuelClosedLoopCorrectionEnabled = true;
     // default 60.0
