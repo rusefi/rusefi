@@ -229,6 +229,7 @@ static bool getClutchUpState() {
 	if (isBrainPinValid(engineConfiguration->clutchUpPin)) {
 		return engineConfiguration->clutchUpPinInverted ^ efiReadPin(engineConfiguration->clutchUpPin);
 	}
+	// todo: boolean sensors should leverage sensor framework #6342
 	return engine->engineState.lua.clutchUpState;
 }
 
@@ -236,6 +237,7 @@ static bool getBrakePedalState() {
 	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
 		return efiReadPin(engineConfiguration->brakePedalPin);
 	}
+	// todo: boolean sensors should leverage sensor framework #6342
 	return engine->engineState.lua.brakePedalState;
 }
 #endif // EFI_GPIO_HARDWARE

@@ -177,6 +177,7 @@ public:
 	GearControllerBase *gearController;
 #endif
 
+	// todo: boolean sensors should leverage sensor framework #6342
 	SwitchedState clutchUpSwitchedState;
    	SwitchedState brakePedalSwitchedState;
    	SwitchedState acButtonSwitchedState;
