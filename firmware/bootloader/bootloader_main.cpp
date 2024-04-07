@@ -17,10 +17,12 @@ protected:
 		Gpio yellow = getWarningLedPin();
 		Gpio blue = getCommsLedPin();
 		Gpio green = getRunningLedPin();
+		Gpio red = LED_CRITICAL_ERROR_BRAIN_PIN;
 
 		efiSetPadMode("yellow", yellow, PAL_MODE_OUTPUT_PUSHPULL);
 		efiSetPadMode("blue", blue, PAL_MODE_OUTPUT_PUSHPULL);
 		efiSetPadMode("green", green, PAL_MODE_OUTPUT_PUSHPULL);
+		efiSetPadMode("red", red, PAL_MODE_OUTPUT_PUSHPULL);
 
 		auto yellowPort = getBrainPinPort(yellow);
 		auto yellowPin = getBrainPinIndex(yellow);
@@ -28,6 +30,8 @@ protected:
 		auto bluePin = getBrainPinIndex(blue);
 		auto greenPort = getBrainPinPort(green);
 		auto greenPin = getBrainPinIndex(green);
+		auto redPort = getBrainPinPort(red);
+		auto redPin = getBrainPinIndex(red);
 
 		if (yellowPort) {
 			palSetPad(yellowPort, yellowPin);
@@ -37,6 +41,9 @@ protected:
 		}
 		if (greenPort) {
 			palSetPad(greenPort, greenPin);
+		}
+		if (redPort) {
+			palSetPad(redPort, redPin);
 		}
 
 		while (true) {
@@ -48,6 +55,9 @@ protected:
 			}
 			if (greenPort) {
 				palTogglePad(greenPort, greenPin);
+			}
+			if (redPort) {
+				palTogglePad(redPort, redPin);
 			}
 			// blink 3 times faster if Dual Bank is not enabled
 			auto delay = isFlashDualBank() ? 125 : 40;
