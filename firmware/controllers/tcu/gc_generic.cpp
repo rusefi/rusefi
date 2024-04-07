@@ -96,6 +96,10 @@ void GenericGearController::update() {
 			setDesiredGear(NEUTRAL);
 			break;
 		case SelectedGear::ManualPlus :
+			if (!shiftTimer.hasElapsedMs(500)) {
+				break;
+			}
+			shiftTimer.reset();
 			switch (getDesiredGear()) {
 			case GEAR_1 :
 				setDesiredGear(GEAR_2);
@@ -111,6 +115,10 @@ void GenericGearController::update() {
 			}
 			break;
 		case SelectedGear::ManualMinus :
+			if (!shiftTimer.hasElapsedMs(500)) {
+				break;
+			}
+			shiftTimer.reset();
 			switch (getDesiredGear()) {
 			case GEAR_2 :
 				setDesiredGear(GEAR_1);

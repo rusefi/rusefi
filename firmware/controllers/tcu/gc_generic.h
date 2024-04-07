@@ -14,6 +14,7 @@ public:
 		return GearControllerMode::Generic;
 	}
 private:
+	Timer shiftTimer;
 	bool isNearest(float value, int pinIndex, float* rangeStates);
 	SensorType getAnalogSensorType(int zeroBasedSensorIndex);
 };
