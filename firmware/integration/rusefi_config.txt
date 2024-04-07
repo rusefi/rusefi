@@ -2316,6 +2316,7 @@ end_struct
 #define ts_show_inj_diag false
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_2 false
+#define ts_show_experimental true
 #define ts_show_main_relay true
 #define ts_show_main_relay_microRusEFI_message false
 #define ts_show_etb true
