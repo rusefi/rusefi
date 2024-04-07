@@ -211,14 +211,23 @@ bool isPhaseInRange(float test, float current, float next) {
 	}
 }
 
-// see also getBitRange in lua_lib.h
-int getBitRangeLsb(const uint8_t data[], int bitIndex, int bitWidth) {
+static int getBitRangeCommon(const uint8_t data[], int bitIndex, int bitWidth, int secondByteOffset) {
 	int byteIndex = bitIndex >> 3;
 	int shift = bitIndex - byteIndex * 8;
 	int value = data[byteIndex];
 	if (shift + bitWidth > 8) {
-		value = value + data[1 + byteIndex] * 256;
+		value = value + data[secondByteOffset + byteIndex] * 256;
 	}
 	int mask = (1 << bitWidth) - 1;
 	return (value >> shift) & mask;
+}
+
+// see also getBitRange in lua_lib.h
+int getBitRangeLsb(const uint8_t data[], int bitIndex, int bitWidth) {
+  return getBitRangeCommon(data, bitIndex, bitWidth, 1);
+}
+
+// see also getBitRangeMsb in lua_lib.h
+int getBitRangeMsb(const uint8_t data[], int bitIndex, int bitWidth) {
+  return getBitRangeCommon(data, bitIndex, bitWidth, -1);
 }
