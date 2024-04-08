@@ -1605,19 +1605,10 @@
         <constant name="camSimulatorPin">"NONE"</constant>
         <constant name="camSimulatorPinMode">"default"</constant>
         <constant digits="0" name="anotherCiTest" units="">0.0</constant>
-        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="226">
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+        <constant digits="0" name="device_uid1" units="">0.0</constant>
+        <constant digits="0" name="device_uid2" units="">0.0</constant>
+        <constant digits="0" name="device_uid3" units="">0.0</constant>
+        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="214">
          0.0
          0.0
          0.0
@@ -4643,7 +4634,7 @@ end</constant>
          1.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240402" nPages="1" signature="rusEFI master.2024.04.08.f407-discovery.950598987" version="5.0"/>
+    <versionInfo firmwareInfo="20240402" nPages="1" signature="rusEFI master.2024.04.08.f407-discovery.4088641124" version="5.0"/>
     <bibliography author="rusEFI 20240402" writeDate="date"/>
     <settings/>
     <userComments/>
