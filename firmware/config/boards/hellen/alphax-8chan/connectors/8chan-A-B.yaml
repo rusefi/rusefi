@@ -155,7 +155,7 @@ pins:
     color: orange
 
   - pin: 23A
-    function: Hall Input 2
+    function: Hall Input 2 (cannot be used simultaneously with VR3)
     meta: MM176_IN_D2
     class: event_inputs
     ts_name: ___ - Hall Input 2
@@ -269,7 +269,7 @@ pins:
     function: VR3+
 
   - pin: 5B6B
-    function: VR3
+    function: VR3 (cannot be used simultaneously with Hall2)
     meta: MM176_GP14
     class: event_inputs
     ts_name: 5B/6B - VR3
