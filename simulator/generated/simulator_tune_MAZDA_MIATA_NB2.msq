@@ -3283,7 +3283,7 @@ end</constant>
          1.0
          1.0
 </constant>
-        <constant cols="1" digits="2" name="tcu_pcAirmassBins" rows="8">
+        <constant cols="1" digits="0" name="tcu_pcAirmassBins" rows="8">
          0.0
          0.0
          0.0
@@ -4636,7 +4636,7 @@ end</constant>
          1.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240402" nPages="1" signature="rusEFI master.2024.04.08.f407-discovery.916600033" version="5.0"/>
+    <versionInfo firmwareInfo="20240402" nPages="1" signature="rusEFI master.2024.04.09.f407-discovery.1752715143" version="5.0"/>
     <bibliography author="rusEFI 20240402" writeDate="date"/>
     <settings/>
     <userComments/>
