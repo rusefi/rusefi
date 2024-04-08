@@ -1634,8 +1634,9 @@ Gpio camSimulatorPin
 pin_output_mode_e camSimulatorPinMode
 
 int anotherCiTest
+  uint32_t[3 iterate] device_uid
 
-uint8_t[226] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
+uint8_t[214] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
