@@ -602,7 +602,7 @@
 #define GAUGE_NAME_WARNING_COUNTER "Warning: counter"
 #define GAUGE_NAME_WARNING_LAST "Warning: last"
 #define GAUGE_NAME_WG_POSITION "Wastegate position sensor"
-#define gear_controller_e_enum "None", "Button Shift"
+#define gear_controller_e_enum "None", "Button Shift", "Generic"
 #define gear_e_GEAR_1 1
 #define gear_e_GEAR_2 2
 #define gear_e_GEAR_3 3
@@ -1189,7 +1189,7 @@
 #define show_microRusEFI_presets true
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 3840308650
+#define SIGNATURE_HASH 3464707743
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1228,8 +1228,8 @@
 #define tChargeMode_e_TCHARGE_MODE_AIR_INTERP_TABLE 2
 #define tChargeMode_e_TCHARGE_MODE_RPM_TPS 0
 #define TCU_GEAR_COUNT 10
-#define TCU_MAGIC_SIZE 8
 #define TCU_SOLENOID_COUNT 6
+#define TCU_TABLE_WIDTH 8
 #define thermistor_conf_s_size 28
 #define ThermistorConf_size 32
 #define timing_mode_e_auto_enum 0="TM_DYNAMIC",1="TM_FIXED"
@@ -1564,7 +1564,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.04.07.mre_f7.3840308650"
+#define TS_SIGNATURE "rusEFI master.2024.04.08.mre_f7.3464707743"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
