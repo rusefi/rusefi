@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Apr 08 20:46:52 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Apr 08 23:05:20 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1125,7 +1125,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 916600033;
+	public static final int SIGNATURE_HASH = 1752715143;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1376,7 +1376,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.04.08.f407-discovery.916600033";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.04.09.f407-discovery.1752715143";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2935,7 +2935,7 @@ public class Fields {
 	public static final Field FUELTRIMS11_TABLE = Field.create("FUELTRIMS11_TABLE", 18932, FieldType.INT8).setScale(0.2).setBaseOffset(0);
 	public static final Field FUELTRIMS12_TABLE = Field.create("FUELTRIMS12_TABLE", 18948, FieldType.INT8).setScale(0.2).setBaseOffset(0);
 	public static final Field CRANKINGFUELCOEFE100 = Field.create("CRANKINGFUELCOEFE100", 18964, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field TCU_PCAIRMASSBINS = Field.create("TCU_PCAIRMASSBINS", 18980, FieldType.INT8).setScale(0.02).setBaseOffset(0);
+	public static final Field TCU_PCAIRMASSBINS = Field.create("TCU_PCAIRMASSBINS", 18980, FieldType.INT8).setScale(5.0).setBaseOffset(0);
 	public static final Field TCU_PCVALSR = Field.create("TCU_PCVALSR", 18988, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field TCU_PCVALSN = Field.create("TCU_PCVALSN", 18996, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field TCU_PCVALS1 = Field.create("TCU_PCVALS1", 19004, FieldType.INT8).setScale(1.0).setBaseOffset(0);

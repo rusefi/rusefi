@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Apr 08 20:31:50 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Apr 08 23:04:02 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -5143,7 +5143,7 @@ struct persistent_config_s {
 	 * units: Airmass
 	 * offset 24480
 	 */
-	scaled_channel<uint8_t, 50, 1> tcu_pcAirmassBins[TCU_TABLE_WIDTH];
+	scaled_channel<uint8_t, 1, 5> tcu_pcAirmassBins[TCU_TABLE_WIDTH];
 	/**
 	 * units: %
 	 * offset 24488
@@ -5551,4 +5551,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 27900);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Apr 08 20:31:50 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Apr 08 23:04:02 UTC 2024
