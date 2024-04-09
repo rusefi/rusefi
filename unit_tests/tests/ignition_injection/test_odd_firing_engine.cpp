@@ -66,11 +66,3 @@ TEST(OddFireRunningMode, hd) {
 	eth.assertEvent5("fuel down2#5", 5, (void*)turnInjectionPinLow, eth.angleToTimeUs(540 + PORT_INJECTION_OFFSET));
 	eth.assertEvent5("spark down2#7", 7, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(180 + cylinderOne - timing));
 }
-
-TEST(OddFireCrankingMode, hd) {
-  // TODO!!!
-  // basic engine setup
-	EngineTestHelper eth(engine_type_e::HARLEY);
-	engineConfiguration->cranking.rpm = 1000;
-	// see DEFAULT_CRANKING_ANGLE
-}
