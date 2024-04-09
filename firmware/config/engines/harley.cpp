@@ -31,8 +31,8 @@ void setHarley() {
 	engineConfiguration->enableAemXSeries = true;
 
   // total 45 degree odd fire, split across two cylinders mostly for fun
-	engineConfiguration->timing_offset_cylinder[0] = HARLEY_V_TWIN / 2;
-	engineConfiguration->timing_offset_cylinder[1] = -HARLEY_V_TWIN / 2;
+	engineConfiguration->timing_offset_cylinder[0] = -HARLEY_V_TWIN / 2;
+	engineConfiguration->timing_offset_cylinder[1] = +HARLEY_V_TWIN / 2;
 
   // work-around for https://github.com/rusefi/rusefi/issues/5894 todo: fix it!
 	engineConfiguration->maximumIgnitionTiming = 90;
