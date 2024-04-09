@@ -13,9 +13,9 @@ TEST(OddFireRunningMode, hd) {
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH; // need to avoid engine phase sync requirement
 	// let's pretend to have a 32 degree V odd fire engine.
 	float cylinderOne = 19;
-	float cylinderTwo = 13;
+	float cylinderTwo = -13;
 	engineConfiguration->timing_offset_cylinder[0] = cylinderOne;
-	engineConfiguration->timing_offset_cylinder[1] = -cylinderTwo;
+	engineConfiguration->timing_offset_cylinder[1] = cylinderTwo;
 	angle_t timing = 1;
 	setTable(config->ignitionTable, timing); // run mode timing
 
@@ -44,7 +44,7 @@ TEST(OddFireRunningMode, hd) {
 //	ASSERT_NEAR(-168.0, eth.timeToAngle(-56.0), EPS3D);
 //	ASSERT_NEAR(32, eth.timeToAngle(10.66666666), EPS3D);
 
-	angle_t expectedAngle3 = -180 + cylinderTwo - timing;
+	angle_t expectedAngle3 = -180 - cylinderTwo - timing;
 
 	ASSERT_EQ( 8,  engine->executor.size());
 	eth.assertEvent5("spark down#3", 3, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(expectedAngle3));
@@ -62,7 +62,7 @@ TEST(OddFireRunningMode, hd) {
 
 	ASSERT_EQ( 8,  engine->executor.size());
 	eth.assertEvent5("fuel down2#1", 1, (void*)turnInjectionPinLow, eth.angleToTimeUs(180 + PORT_INJECTION_OFFSET));
-	eth.assertEvent5("spark down2#3", 3, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(-180 + cylinderTwo - timing));
+	eth.assertEvent5("spark down2#3", 3, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(-180 - cylinderTwo - timing));
 	eth.assertEvent5("fuel down2#5", 5, (void*)turnInjectionPinLow, eth.angleToTimeUs(540 + PORT_INJECTION_OFFSET));
 	eth.assertEvent5("spark down2#7", 7, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(180 - cylinderOne - timing));
 }
