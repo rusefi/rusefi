@@ -939,8 +939,8 @@
         <constant digits="0" name="stepperMinDutyCycle" units="%">0.0</constant>
         <constant digits="0" name="stepperMaxDutyCycle" units="%">0.0</constant>
         <constant name="sdCardSpiDevice">"Off"</constant>
-        <constant digits="1" name="timing_offset_cylinder1" units="deg">22.5</constant>
-        <constant digits="1" name="timing_offset_cylinder2" units="deg">-22.5</constant>
+        <constant digits="1" name="timing_offset_cylinder1" units="deg">-22.5</constant>
+        <constant digits="1" name="timing_offset_cylinder2" units="deg">22.5</constant>
         <constant digits="1" name="timing_offset_cylinder3" units="deg">0.0</constant>
         <constant digits="1" name="timing_offset_cylinder4" units="deg">0.0</constant>
         <constant digits="1" name="timing_offset_cylinder5" units="deg">0.0</constant>
