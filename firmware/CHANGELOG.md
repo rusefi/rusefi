@@ -51,6 +51,7 @@ Release template (copy/paste this for new release):
 
 ### Breaking Changes
  - wrong trigger naming for missing teeth #6258
+ - flipping timing_offset_cylinder direction #6095
 
 ## March 2024 "Day 740"
 

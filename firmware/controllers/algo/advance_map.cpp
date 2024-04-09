@@ -213,7 +213,7 @@ angle_t getCylinderIgnitionTrim(size_t cylinderNumber, int rpm, float ignitionLo
 	// Plus or minus any adjustment if this is an odd-fire engine
 	auto adjustment = engineConfiguration->timing_offset_cylinder[cylinderNumber];
 
-	return adjustment + interpolate3d(
+	return -adjustment + interpolate3d(
 		config->ignTrims[cylinderNumber].table,
 		config->ignTrimLoadBins, ignitionLoad,
 		config->ignTrimRpmBins, rpm

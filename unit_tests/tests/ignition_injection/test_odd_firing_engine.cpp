@@ -14,8 +14,8 @@ TEST(OddFireRunningMode, hd) {
 	// let's pretend to have a 32 degree V odd fire engine.
 	float cylinderOne = -19;
 	float cylinderTwo = 13;
-	engineConfiguration->timing_offset_cylinder[0] = -cylinderOne;
-	engineConfiguration->timing_offset_cylinder[1] = -cylinderTwo;
+	engineConfiguration->timing_offset_cylinder[0] = cylinderOne;
+	engineConfiguration->timing_offset_cylinder[1] = cylinderTwo;
 	angle_t timing = 1;
 	setTable(config->ignitionTable, timing); // run mode timing
 
