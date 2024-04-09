@@ -112,8 +112,8 @@ void Generic4TransmissionController::setPcState(gear_e gear) {
 	}
 
 	if (pcts) {
-		float duty = 0.01f * interpolate2d(engine->fuelComputer.sdAirMassInOneCylinder, config->tcu_pcAirmassBins, *pcts);
-		pcPwm.setSimplePwmDutyCycle(duty);
+		pressureControlDuty = interpolate2d(engine->engineState.airflowEstimate, config->tcu_pcAirmassBins, *pcts);
+		pcPwm.setSimplePwmDutyCycle(0.01f * pressureControlDuty);
 	}
 }
 

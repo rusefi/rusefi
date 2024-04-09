@@ -3,4 +3,5 @@ struct_no_prefix tcu_controller_s
 	uint16_t autoscale tcRatio;@@GAUGE_NAME_TC_RATIO@@;"value",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 	float lastShiftTime
 	uint8_t tcu_currentRange;"TCU: Current Range";"", 1, 0, 0, 0, 0
+	int8_t pressureControlDuty;"TCU: EPC Duty";"%",1,0,0,100,0
 end_struct
