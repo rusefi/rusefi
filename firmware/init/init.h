@@ -42,6 +42,7 @@ void deinitThermistors();
 void deinitFluidPressure();
 void deinitLambda();
 void deInitFlexSensor();
+void deinitAuxSensors();
 void deInitVehicleSpeedSensor();
 void deinitTurbochargerSpeedSensor();
 void deinitMap();

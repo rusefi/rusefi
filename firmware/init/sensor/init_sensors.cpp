@@ -63,26 +63,16 @@ static void deInitAuxDigital() {
 }
 
 void initNewSensors() {
-	initVbatt();
-	initMap();
-	initTps();
-	initFluidPressure();
-	initThermistors();
-	initLambda();
-	initFlexSensor();
+	reconfigureSensors();
+
 	initBaro();
-	initAuxSensors();
-	initVehicleSpeedSensor();
-	initTurbochargerSpeedSensor();
 	initAuxSpeedSensors();
-	initInputShaftSpeedSensor();
 
 	#if !EFI_UNIT_TEST
 		initFuelLevel();
 		initMaf();
 	#endif
 
-	initOldAnalogInputs();
 	initAuxDigital();
 
 	// Init CLI functionality for sensors (mocking)
@@ -113,6 +103,7 @@ void stopSensors() {
 	deinitThermistors();
 	deinitLambda();
 	deInitFlexSensor();
+	deinitAuxSensors();
 	deInitVehicleSpeedSensor();
 	deinitTurbochargerSpeedSensor();
 	deinitAuxSpeedSensors();
@@ -121,13 +112,14 @@ void stopSensors() {
 }
 
 void reconfigureSensors() {
+	initVbatt();
 	initMap();
 	initTps();
 	initFluidPressure();
-	initVbatt();
 	initThermistors();
 	initLambda();
 	initFlexSensor();
+	initAuxSensors();
 	initVehicleSpeedSensor();
 	initTurbochargerSpeedSensor();
 	initInputShaftSpeedSensor();
