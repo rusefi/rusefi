@@ -443,7 +443,7 @@
 #define ETB_COUNT 2
 #define ETB_HW_MAX_FREQUENCY 3000
 #define FANCY_OPTIONS_COUNT 16
-#define FLASH_DATA_VERSION 20015
+#define FLASH_DATA_VERSION 20016
 #define FUEL_LEVEL_TABLE_COUNT 8
 #define FUEL_LOAD_COUNT 16
 #define fuel_pressure_sensor_mode_e_auto_enum 0="FPM_Absolute",2="FPM_Differential",1="FPM_Gauge"
@@ -1108,7 +1108,7 @@
 #define PACK_PERCENT_BYTE_MULT 100.0
 #define PEDAL_TO_TPS_SIZE 8
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 27900
+#define persistent_config_s_size 28156
 #define pid_s_size 20
 #define pin_input_mode_e_auto_enum 0="PI_DEFAULT",2="PI_PULLDOWN",1="PI_PULLUP"
 #define pin_input_mode_e_enum "DEFAULT", "PULLUP", "PULLDOWN"
@@ -1188,7 +1188,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets true
 #define show_test_presets false
-#define SIGNATURE_HASH 932195904
+#define SIGNATURE_HASH 18415375
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1227,6 +1227,7 @@
 #define tChargeMode_e_TCHARGE_MODE_AIR_INTERP_TABLE 2
 #define tChargeMode_e_TCHARGE_MODE_RPM_TPS 0
 #define TCU_GEAR_COUNT 10
+#define TCU_RANGE_COUNT 11
 #define TCU_SOLENOID_COUNT 6
 #define TCU_TABLE_WIDTH 8
 #define thermistor_conf_s_size 28
@@ -1244,7 +1245,7 @@
 #define TOOTH_PACKET_SIZE 2
 #define TOP_DEAD_CENTER_MESSAGE "r"
 #define TORQUE_CURVE_SIZE 6
-#define TOTAL_CONFIG_SIZE 27900
+#define TOTAL_CONFIG_SIZE 28156
 #define TPS_2_BYTE_PACKING_MULT 100
 #define TPS_TPS_ACCEL_CLT_CORR_TABLE 4
 #define TPS_TPS_ACCEL_TABLE 8
@@ -1429,7 +1430,7 @@
 #define TS_CRC_CHECK_COMMAND_char k
 #define TS_EXECUTE 'E'
 #define TS_EXECUTE_char E
-#define TS_FILE_VERSION 20240101
+#define TS_FILE_VERSION 20240404
 #define TS_FILE_VERSION_OFFSET 124
 #define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY '8'
 #define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY_char 8
@@ -1563,7 +1564,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.04.10.proteus_f7.932195904"
+#define TS_SIGNATURE "rusEFI master.2024.04.10.proteus_f7.18415375"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

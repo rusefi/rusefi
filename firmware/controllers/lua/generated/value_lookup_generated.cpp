@@ -1822,6 +1822,9 @@ float getConfigValueByName(const char *name) {
 // anotherCiTest
 		case -283215870:
 			return engineConfiguration->anotherCiTest;
+// tcu_shiftTime
+		case -1658957891:
+			return config->tcu_shiftTime;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -4856,6 +4859,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -283215870:
 	{
 		engineConfiguration->anotherCiTest = (int)value;
+		return 1;
+	}
+		case -1658957891:
+	{
+		config->tcu_shiftTime = value;
 		return 1;
 	}
 	}
