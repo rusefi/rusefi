@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Mon Mar 11 20:56:12 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Wed Apr 10 04:48:31 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -382,13 +382,15 @@ struct engine_state_s {
 	 */
 	scaled_channel<uint16_t, 100, 1> veTableYAxis = (uint16_t)0;
 	/**
-	 * need 4 byte alignment
-	 * units: units
 	 * offset 94
 	 */
-	uint8_t alignmentFill_at_94[2];
+	uint8_t overDwellCounter = (uint8_t)0;
+	/**
+	 * offset 95
+	 */
+	uint8_t overDwellNotScheduledCounter = (uint8_t)0;
 };
 static_assert(sizeof(engine_state_s) == 96);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Mon Mar 11 20:56:12 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Wed Apr 10 04:48:31 UTC 2024

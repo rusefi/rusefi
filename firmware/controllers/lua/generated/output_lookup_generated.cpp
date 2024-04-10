@@ -1227,6 +1227,12 @@ float getOutputValueByName(const char *name) {
 // veTableYAxis
 		case 1568071542:
 			return engine->engineState.veTableYAxis;
+// overDwellCounter
+		case 1513852665:
+			return engine->engineState.overDwellCounter;
+// overDwellNotScheduledCounter
+		case 1629214715:
+			return engine->engineState.overDwellNotScheduledCounter;
 // vvtCamCounter
 #if EFI_SHAFT_POSITION_INPUT
 		case 477303734:
