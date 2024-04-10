@@ -56,11 +56,14 @@ void Generic4TransmissionController::setTccState(gear_e gear) {
 		int lockSpeed = interpolate2d(tps.Value, config->tcu_tccTpsBins, config->tcu_tccLockSpeed);
 		int unlockSpeed = interpolate2d(tps.Value, config->tcu_tccTpsBins, config->tcu_tccUnlockSpeed);
 		if (vss.Value > lockSpeed) {
+			torqueConverterDuty = 100;
 			enginePins.tcuTccOnoffSolenoid.setValue(1);
 		} else if (vss.Value < unlockSpeed) {
+			torqueConverterDuty = 0;
 			enginePins.tcuTccOnoffSolenoid.setValue(1);
 		}
 	} else {
+		torqueConverterDuty = 0;
 		enginePins.tcuTccOnoffSolenoid.setValue(0);
 	}
 }
