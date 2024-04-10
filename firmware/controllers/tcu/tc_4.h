@@ -13,7 +13,6 @@ public:
 private:
 	void setTccState(gear_e gear);
 	void setPcState(gear_e gear);
-	bool isShifting = false;
 	gear_e shiftingFrom;
 };
 
