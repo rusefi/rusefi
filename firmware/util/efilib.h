@@ -130,4 +130,7 @@ constexpr remove_reference_t<_Ty>&& move(_Ty&& _Arg) noexcept {
 }
 
 int getBitRangeLsb(const uint8_t data[], int bitIndex, int bitWidth);
+/**
+ for instance DBC 8|16@0
+ */
 int getBitRangeMsb(const uint8_t data[], int bitIndex, int bitWidth);

@@ -57,7 +57,10 @@ public:
 	 */
 	void setShortValue(uint16_t value, size_t offset);
 
-	// Same as above but big endian
+	/**
+	 Same as above but big endian
+	 * for instance DBC 8|16@0
+	 */
 	void setShortValueMsb(uint16_t value, size_t offset);
 
 	/**
