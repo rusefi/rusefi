@@ -4,5 +4,6 @@ struct_no_prefix tcu_controller_s
 	float lastShiftTime
 	uint8_t tcu_currentRange;"TCU: Current Range";"", 1, 0, 0, 0, 0
 	int8_t pressureControlDuty;"TCU: EPC Duty";"%",1,0,0,100,0
+	int8_t torqueConverterDuty;"TCU: TC Duty";"%",1,0,0,100,0
 	bit isShifting;
 end_struct
