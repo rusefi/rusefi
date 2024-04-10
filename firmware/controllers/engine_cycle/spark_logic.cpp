@@ -383,17 +383,19 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6591, !cisnan(sparkAngle), "findAngle#4");
 	assertAngleRange(sparkAngle, "findAngle#a5", ObdCode::CUSTOM_ERR_6549);
 
-	bool scheduled = engine->module<TriggerScheduler>()->scheduleOrQueue(
+	bool isTimeScheduled = engine->module<TriggerScheduler>()->scheduleOrQueue(
 			"spark",
 		&event->sparkEvent, edgeTimestamp, sparkAngle,
 		{ fireSparkAndPrepareNextSchedule, event },
 		currentPhase, nextPhase);
 
-	if (scheduled) {
+	if (isTimeScheduled) {
+	  // event was scheduled by time, we expect it to happen reliably
 #if SPARK_EXTREME_LOGGING
 		efiPrintf("scheduling sparkDown %d %s now=%d later id=%d", getRevolutionCounter(), event->getOutputForLoggins()->getName(), (int)getTimeNowUs(), event->sparkCounter);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 	} else {
+	  // event was queued in relation to some expected tooth event in the future which might just never come so we shall protect from over-dwell
 #if SPARK_EXTREME_LOGGING
 		efiPrintf("to queue sparkDown %d %s now=%d for id=%d angle=%.1f", getRevolutionCounter(), event->getOutputForLoggins()->getName(), (int)getTimeNowUs(), event->sparkCounter, sparkAngle);
 #endif /* SPARK_EXTREME_LOGGING */
