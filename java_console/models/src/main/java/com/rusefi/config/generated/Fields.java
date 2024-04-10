@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Apr 10 04:49:58 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Apr 10 19:07:06 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1125,7 +1125,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1926827709;
+	public static final int SIGNATURE_HASH = 2044358403;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1376,7 +1376,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.04.10.f407-discovery.1926827709";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.04.10.f407-discovery.2044358403";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2142,6 +2142,14 @@ public class Fields {
 	public static final Field IS_ENABLED_SPI_6 = Field.create("IS_ENABLED_SPI_6", 1496, FieldType.BIT, 14).setBaseOffset(0);
 	public static final Field ENABLEAEMXSERIESEGT = Field.create("ENABLEAEMXSERIESEGT", 1496, FieldType.BIT, 15).setBaseOffset(0);
 	public static final Field SKIPBOARDCANDASH = Field.create("SKIPBOARDCANDASH", 1496, FieldType.BIT, 18).setBaseOffset(0);
+	public static final Field DEVBIT0 = Field.create("DEVBIT0", 1496, FieldType.BIT, 20).setBaseOffset(0);
+	public static final Field DEVBIT1 = Field.create("DEVBIT1", 1496, FieldType.BIT, 21).setBaseOffset(0);
+	public static final Field DEVBIT2 = Field.create("DEVBIT2", 1496, FieldType.BIT, 22).setBaseOffset(0);
+	public static final Field DEVBIT3 = Field.create("DEVBIT3", 1496, FieldType.BIT, 23).setBaseOffset(0);
+	public static final Field DEVBIT4 = Field.create("DEVBIT4", 1496, FieldType.BIT, 24).setBaseOffset(0);
+	public static final Field DEVBIT5 = Field.create("DEVBIT5", 1496, FieldType.BIT, 25).setBaseOffset(0);
+	public static final Field DEVBIT6 = Field.create("DEVBIT6", 1496, FieldType.BIT, 26).setBaseOffset(0);
+	public static final Field DEVBIT7 = Field.create("DEVBIT7", 1496, FieldType.BIT, 27).setBaseOffset(0);
 	public static final Field AFTERCRANKINGIACTAPERDURATION = Field.create("AFTERCRANKINGIACTAPERDURATION", 1500, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field IACBYTPSTAPER = Field.create("IACBYTPSTAPER", 1502, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field AUXSERIALTXPIN = Field.create("AUXSERIALTXPIN", 1504, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
@@ -3794,6 +3802,14 @@ public class Fields {
 	IS_ENABLED_SPI_6,
 	ENABLEAEMXSERIESEGT,
 	SKIPBOARDCANDASH,
+	DEVBIT0,
+	DEVBIT1,
+	DEVBIT2,
+	DEVBIT3,
+	DEVBIT4,
+	DEVBIT5,
+	DEVBIT6,
+	DEVBIT7,
 	AFTERCRANKINGIACTAPERDURATION,
 	IACBYTPSTAPER,
 	AUXSERIALTXPIN,
