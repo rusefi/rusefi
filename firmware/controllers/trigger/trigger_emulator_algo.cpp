@@ -95,6 +95,8 @@ static float getRpmMultiplier(operation_mode_e mode) {
 }
 
 void setTriggerEmulatorRPM(int rpm) {
+  criticalAssertVoid(rpm >= 0 && rpm <= 30000, "emulator RPM out of range");
+
 	engineConfiguration->triggerSimulatorRpm = rpm;
 	/**
 	 * All we need to do here is to change the periodMs
