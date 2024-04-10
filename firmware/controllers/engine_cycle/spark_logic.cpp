@@ -447,7 +447,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 		efiPrintf("to queue sparkDown revolution=%d [%s] now=%d for id=%d angle=%.1f", getRevolutionCounter(), event->getOutputForLoggins()->getName(), (int)getTimeNowUs(), event->sparkCounter, sparkAngle);
 #endif /* SPARK_EXTREME_LOGGING */
 
-		if (!limitedSpark && ENABLE_OVERDWELL_PROTECTION) {
+		if (ENABLE_OVERDWELL_PROTECTION) {
 			// auto fire spark at 1.5x nominal dwell
 			efitick_t fireTime = chargeTime + MSF2NT(1.5f * dwellMs);
 
