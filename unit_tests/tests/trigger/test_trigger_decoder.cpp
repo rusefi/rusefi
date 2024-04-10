@@ -249,7 +249,7 @@ TEST(misc, testRpmCalculator) {
 	{
 	scheduling_s *ev0 = engine->executor.getForUnitTest(0);
 
-	assertREqualsM("Call@0", (void*)ev0->action.getCallback(), (void*)turnSparkPinHigh);
+	assertREqualsM("Call@0", (void*)ev0->action.getCallback(), (void*)turnSparkPinHighStartCharging);
 	assertEqualsM("ev 0", start + 944, ev0->momentX);
 	assertEqualsLM("coil 0", (uintptr_t)&enginePins.coils[0], (uintptr_t)((IgnitionEvent*)ev0->action.getArgument())->outputs[0]);
 

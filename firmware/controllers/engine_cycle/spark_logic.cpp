@@ -242,7 +242,7 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 #endif /* SPARK_EXTREME_LOGGING */
 
 		// We can schedule both of these right away, since we're going for "asap" not "particular angle"
-		engine->executor.scheduleByTimestampNt("dwell", &event->dwellStartTimer, nextDwellStart, { &turnSparkPinHigh, event });
+		engine->executor.scheduleByTimestampNt("dwell", &event->dwellStartTimer, nextDwellStart, { &turnSparkPinHighStartCharging, event });
 		engine->executor.scheduleByTimestampNt("firing", &event->sparkEvent.scheduling, nextFiring, { fireSparkAndPrepareNextSchedule, event });
 	} else {
 		if (engineConfiguration->enableTrailingSparks) {
@@ -294,7 +294,7 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 	output->setHigh();
 }
 
-void turnSparkPinHigh(IgnitionEvent *event) {
+void turnSparkPinHighStartCharging(IgnitionEvent *event) {
 	event->actualStartOfDwellNt = getTimeNowLowerNt();
 
 	efitick_t nowNt = getTimeNowNt();
@@ -362,7 +362,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 		 * This way we make sure that coil dwell started while spark was enabled would fire and not burn
 		 * the coil.
 		 */
-		chargeTime = scheduleByAngle(&event->dwellStartTimer, edgeTimestamp, angleOffset, { &turnSparkPinHigh, event });
+		chargeTime = scheduleByAngle(&event->dwellStartTimer, edgeTimestamp, angleOffset, { &turnSparkPinHighStartCharging, event });
 
 		event->sparksRemaining = engine->engineState.multispark.count;
 	} else {

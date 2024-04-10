@@ -44,6 +44,6 @@ TEST(trigger, map_cam_by_magic_point) {
 
 	// We have "VVT" sync, things should be scheduled!
 	ASSERT_EQ(2, engine->executor.size());
-	eth.assertEvent5("spark down#0", 0, (void*)turnSparkPinHigh, 185333);
+	eth.assertEvent5("spark down#0", 0, (void*)turnSparkPinHighStartCharging, 185333);
 	eth.assertEvent5("spark down#1", 1, (void*)fireSparkAndPrepareNextSchedule, 188333);
 }
