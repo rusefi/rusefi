@@ -754,6 +754,14 @@
         <constant name="is_enabled_spi_6">"false"</constant>
         <constant name="enableAemXSeriesEgt">"false"</constant>
         <constant name="skipBoardCanDash">"false"</constant>
+        <constant name="devBit0">"false"</constant>
+        <constant name="devBit1">"false"</constant>
+        <constant name="devBit2">"false"</constant>
+        <constant name="devBit3">"false"</constant>
+        <constant name="devBit4">"false"</constant>
+        <constant name="devBit5">"false"</constant>
+        <constant name="devBit6">"false"</constant>
+        <constant name="devBit7">"false"</constant>
         <constant digits="0" name="afterCrankingIACtaperDuration" units="cycles">250.0</constant>
         <constant digits="0" name="iacByTpsTaper" units="percent">6.0</constant>
         <constant name="auxSerialTxPin">"NONE"</constant>
@@ -4635,7 +4643,7 @@ end</constant>
          1.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240402" nPages="1" signature="rusEFI master.2024.04.10.f407-discovery.1926827709" version="5.0"/>
+    <versionInfo firmwareInfo="20240402" nPages="1" signature="rusEFI master.2024.04.10.f407-discovery.2044358403" version="5.0"/>
     <bibliography author="rusEFI 20240402" writeDate="date"/>
     <settings/>
     <userComments/>
