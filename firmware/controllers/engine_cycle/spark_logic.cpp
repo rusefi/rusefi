@@ -176,6 +176,7 @@ static void overFireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 #if SPARK_EXTREME_LOGGING
 	efiPrintf("overFireSparkAndPrepareNextSchedule %s", event->outputs[0]->getName());
 #endif /* SPARK_EXTREME_LOGGING */
+  engine->engineState.overDwellCounter++;
 	fireSparkAndPrepareNextSchedule(event);
 }
 
@@ -404,6 +405,8 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 			// auto fire spark at 1.5x nominal dwell
 			efitick_t fireTime = chargeTime + MSF2NT(1.5f * dwellMs);
 			engine->executor.scheduleByTimestampNt("overdwell", &event->sparkEvent.scheduling, fireTime, { overFireSparkAndPrepareNextSchedule, event });
+		} else {
+		  engine->engineState.overDwellNotScheduledCounter++;
 		}
 	}
 
