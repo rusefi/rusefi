@@ -98,7 +98,7 @@ TEST(trigger, test1995FordInline6TriggerDecoder) {
 
 	engine->periodicFastCallback();
 	eth.fireTriggerEvents(48);
-	eth.assertRpm(2000, "rpm");
+	eth.assertRpm(2000);
 	engine->periodicFastCallback();
 	eth.fireTriggerEvents(48);
 

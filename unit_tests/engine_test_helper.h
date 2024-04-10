@@ -90,7 +90,7 @@ public:
 	void assertInjectorUpEvent(const char *msg, int eventIndex, efitimeus_t momentX, long injectorIndex);
 	void assertInjectorDownEvent(const char *msg, int eventIndex, efitimeus_t momentX, long injectorIndex);
 	// todo: open question if this is worth a helper method or should be inlined?
-	void assertRpm(int expectedRpm, const char *msg);
+	void assertRpm(int expectedRpm, const char *msg = "RPM");
 
 	int executeActions();
 	void moveTimeForwardMs(float deltaTimeMs);
