@@ -26,6 +26,7 @@ void GearControllerBase::update() {
 	if (transmissionController == NULL) {
 		initTransmissionController();
 	} else if (transmissionController->getMode() != engineConfiguration->transmissionControllerMode) {
+		// TODO de-init here
 		initTransmissionController();
 	}
 
