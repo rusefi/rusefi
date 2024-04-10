@@ -361,7 +361,7 @@ static void onTdcCallback(void *) {
  * This trigger callback schedules the actual physical TDC callback in relation to trigger synchronization point.
  */
 void tdcMarkCallback(
-		uint32_t trgEventIndex, efitick_t edgeTimestamp) {
+		uint32_t trgEventIndex, efitick_t nowNt) {
 	bool isTriggerSynchronizationPoint = trgEventIndex == 0;
 	if (isTriggerSynchronizationPoint && getTriggerCentral()->isEngineSnifferEnabled) {
 
@@ -380,7 +380,7 @@ void tdcMarkCallback(
 			angle_t tdcPosition = tdcPosition();
 			// we need a positive angle offset here
 			wrapAngle(tdcPosition, "tdcPosition", ObdCode::CUSTOM_ERR_6553);
-			scheduleByAngle(&engine->tdcScheduler[revIndex2], edgeTimestamp, tdcPosition, onTdcCallback);
+			scheduleByAngle(&engine->tdcScheduler[revIndex2], nowNt, tdcPosition, onTdcCallback);
 		}
 	}
 }
@@ -389,18 +389,20 @@ void tdcMarkCallback(
  * Schedules a callback 'angle' degree of crankshaft from now.
  * The callback would be executed once after the duration of time which
  * it takes the crankshaft to rotate to the specified angle.
+ *
+ * @return tick time of scheduled action
  */
-efitick_t scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t angle,
+efitick_t scheduleByAngle(scheduling_s *timer, efitick_t nowNt, angle_t angle,
 		action_s action) {
 	float delayUs = engine->rpmCalculator.oneDegreeUs * angle;
 
     // 'delayNt' is below 10 seconds here so we use 32 bit type for performance reasons
 	int32_t delayNt = USF2NT(delayUs);
-	efitick_t delayedTime = edgeTimestamp + delayNt;
+	efitick_t actionTimeNt = nowNt + delayNt;
 
-	engine->executor.scheduleByTimestampNt("angle", timer, delayedTime, action);
+	engine->executor.scheduleByTimestampNt("angle", timer, actionTimeNt, action);
 
-	return delayedTime;
+	return actionTimeNt;
 }
 
 #else

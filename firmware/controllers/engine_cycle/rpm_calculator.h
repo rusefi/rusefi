@@ -178,5 +178,7 @@ operation_mode_e lookupOperationMode();
 
 #define getRevolutionCounter() (engine->rpmCalculator.getRevolutionCounterM())
 
-efitick_t scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t angle, action_s action);
-
+/**
+  * @return tick time of scheduled action
+  */
+efitick_t scheduleByAngle(scheduling_s *timer, efitick_t nowNt, angle_t angle, action_s action);
