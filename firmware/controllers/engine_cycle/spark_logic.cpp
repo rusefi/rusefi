@@ -320,6 +320,12 @@ void turnSparkPinHighStartCharging(IgnitionEvent *event) {
 	}
 }
 
+#if EFI_PROD_CODE
+  #define ENABLE_OVERDWELL_PROTECTION (true)
+#else
+  #define ENABLE_OVERDWELL_PROTECTION (engine->enableOverdwellProtection)
+#endif
+
 static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 		int rpm, efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
 
@@ -392,7 +398,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 		efiPrintf("to queue sparkDown %d %s now=%d for id=%d angle=%.1f", getRevolutionCounter(), event->getOutputForLoggins()->getName(), (int)getTimeNowUs(), event->sparkCounter, sparkAngle);
 #endif /* SPARK_EXTREME_LOGGING */
 
-		if (!limitedSpark && engine->enableOverdwellProtection) {
+		if (!limitedSpark && ENABLE_OVERDWELL_PROTECTION) {
 			// auto fire spark at 1.5x nominal dwell
 			efitick_t fireTime = chargeTime + MSF2NT(1.5f * dwellMs);
 			engine->executor.scheduleByTimestampNt("overdwell", &event->sparkEvent.scheduling, fireTime, { overFireSparkAndPrepareNextSchedule, event });
