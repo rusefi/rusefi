@@ -28,9 +28,14 @@ void GearControllerBase::update() {
 	} else if (transmissionController->getMode() != engineConfiguration->transmissionControllerMode) {
 		initTransmissionController();
 	}
-	// We are responsible for telling the transmission controller
-	//  what gear we want.
-	transmissionController->update(getDesiredGear());
+
+	// check if it was init'd (it wouldn't be if set to NONE)
+	if (transmissionController != NULL) {
+		// We are responsible for telling the transmission controller
+		//  what gear we want.
+		transmissionController->update(getDesiredGear());
+	}
+
 	// Post state to TS
 	postState();
 }
