@@ -115,8 +115,11 @@ struct idle_state_s {
 	// Idle: Lua Adder
 	// offset 44
 	float luaAdd = (float)0;
+	// IdleRpm: Lua Adder
+	// offset 48
+	float luaAddRpm = (float)0;
 };
-static_assert(sizeof(idle_state_s) == 48);
+static_assert(sizeof(idle_state_s) == 52);
 static_assert(offsetof(idle_state_s, currentIdlePosition) == 4);
 static_assert(offsetof(idle_state_s, baseIdlePosition) == 8);
 static_assert(offsetof(idle_state_s, idleClosedLoop) == 12);
@@ -127,4 +130,5 @@ static_assert(offsetof(idle_state_s, targetRpmByClt) == 32);
 static_assert(offsetof(idle_state_s, targetRpmAcBump) == 36);
 static_assert(offsetof(idle_state_s, iacByRpmTaper) == 40);
 static_assert(offsetof(idle_state_s, luaAdd) == 44);
+static_assert(offsetof(idle_state_s, luaAddRpm) == 48);
 
