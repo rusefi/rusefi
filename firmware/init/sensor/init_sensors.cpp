@@ -145,6 +145,7 @@ void stopSensors() {
 	deinitVbatt();
 	deinitThermistors();
 	deInitFlexSensor();
+	deinitAuxSensors();
 	deInitVehicleSpeedSensor();
 	deinitTurbochargerSpeedSensor();
 	deinitAuxSpeedSensors();
@@ -160,6 +161,7 @@ void reconfigureSensors() {
 	initVbatt();
 	initThermistors();
 	initFlexSensor(false);
+	initAuxSensors();
 	initVehicleSpeedSensor();
 	initTurbochargerSpeedSensor();
 	initAuxSpeedSensors();

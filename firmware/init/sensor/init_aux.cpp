@@ -54,3 +54,10 @@ void initAuxSensors() {
 		sensor.Register();
 	}
 }
+
+void deinitAuxSensors() {
+	for (size_t i = 0; i < efi::size(engineConfiguration->auxAnalogInputs); i++) {
+		AdcSubscription::UnsubscribeSensor(auxSensors[i]);
+		auxSensors[i].unregister();
+	}
+}
