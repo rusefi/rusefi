@@ -35,6 +35,7 @@ custom idle_state_e 4 bits, S32, @OFFSET@, [0:2], "not important"
 	percent_t iacByRpmTaper;Idle: iacByRpmTaper portion
 
 	percent_t luaAdd;Idle: Lua Adder
+	percent_t luaAddRpm;IdleRpm: Lua Adder
 
 ! end of idle_state_s structure definition
 end_struct

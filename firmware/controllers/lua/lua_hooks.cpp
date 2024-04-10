@@ -780,6 +780,10 @@ void configureRusefiLuaHooks(lua_State* l) {
 		engine->module<IdleController>().unmock().luaAdd = luaL_checknumber(l2, 1);
 		return 0;
 	});
+	lua_register(l, "setIdleAddRpm", [](lua_State* l2) {
+		engine->module<IdleController>().unmock().luaAddRpm = luaL_checknumber(l2, 1);
+		return 0;
+	});
 #endif
 	lua_register(l, "setTimingAdd", [](lua_State* l2) {
 		engine->ignitionState.luaTimingAdd = luaL_checknumber(l2, 1);

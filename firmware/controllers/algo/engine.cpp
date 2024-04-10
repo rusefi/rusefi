@@ -257,6 +257,7 @@ void Engine::resetLua() {
 	ignitionState.luaTimingMult = 1;
 #if EFI_IDLE_CONTROL
 	module<IdleController>().unmock().luaAdd = 0;
+	module<IdleController>().unmock().luaAddRpm = 0;
 #endif // EFI_IDLE_CONTROL
 }
 
