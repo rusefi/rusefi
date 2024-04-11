@@ -57,7 +57,7 @@ void StepperMotorBase::changeCurrentPosition(bool positive) {
 	postCurrentPosition();
 }
 
-void StepperMotorBase::postCurrentPosition(void) {
+void StepperMotorBase::postCurrentPosition() {
 	if (engineConfiguration->debugMode == DBG_STEPPER_IDLE_CONTROL) {
 #if EFI_TUNER_STUDIO
 		engine->outputChannels.debugIntField5 = m_currentPosition;
@@ -65,7 +65,7 @@ void StepperMotorBase::postCurrentPosition(void) {
 	}
 }
 
-void StepperMotorBase::setInitialPosition(void) {
+void StepperMotorBase::setInitialPosition() {
 	// try to get saved stepper position (-1 for no data)
 	m_currentPosition = loadStepperPos();
 
@@ -87,7 +87,7 @@ void StepperMotorBase::setInitialPosition(void) {
 	efiPrintf("Stepper: savedStepperPos=%d forceStepperParking=%d (tps=%.2f)", m_currentPosition, (forceStepperParking ? 1 : 0), tpsPos);
 
 	if (m_currentPosition < 0 || forceStepperParking) {
-		efiPrintf("Stepper: starting parking...");
+		efiPrintf("Stepper: starting parking time=%dms", getTimeNowMs());
 		// reset saved value
 		saveStepperPos(-1);
 
@@ -111,7 +111,8 @@ void StepperMotorBase::setInitialPosition(void) {
 		// set & save zero stepper position after the parking completion
 		m_currentPosition = 0;
 		saveStepperPos(m_currentPosition);
-		efiPrintf("Stepper: parking finished!");
+		// todo: is this a slow operation on the start-up path?
+		efiPrintf("Stepper: parking finished time=%dms", getTimeNowMs());
 	} else {
 		// The initial target position should correspond to the saved stepper position.
 		// Idle thread starts later and sets a new target position.
