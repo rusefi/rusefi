@@ -35,7 +35,8 @@ Release template (copy/paste this for new release):
  - Make sure TUNERSTUDIO IS DISCONNECTED FROM ECU #6325
  - 1_6_5_10_2_7_3_8_4_9 firing order BMW S85, also Audi 5.2 R8 and huracan GDI
  - boost duty gauge is now clamped to match actuator #6339
-- "MAP estimate table" is only available in speed density mode #6344
+ - "MAP estimate table" is only available in speed density mode #6344
+ - 1-8-6-2-7-3-4-5 Ferrari-Maserati F136 firing order
 
 ### Fixed
  - ETB traction control drop is affected by not-highlighted cell #5952

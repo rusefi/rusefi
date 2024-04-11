@@ -144,6 +144,7 @@ static const uint8_t order_1_2_3_4_5_6_7_8[] = { 1, 2, 3, 4, 5, 6, 7, 8 };
 static const uint8_t order_1_5_4_8_6_3_7_2[] = { 1, 5, 4, 8, 6, 3, 7, 2 };
 static const uint8_t order_1_8_7_3_6_5_4_2[] = { 1, 8, 7, 3, 6, 5, 4, 2 };
 static const uint8_t order_1_5_4_8_3_7_2_6[] = { 1, 5, 4, 8, 3, 7, 2, 6 };
+static const uint8_t order_1_8_6_2_7_3_4_5[] = { 1, 8, 6, 2, 7, 3, 4, 5 };
 
 // 9 cylinder
 static const uint8_t order_1_2_3_4_5_6_7_8_9[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
@@ -204,6 +205,7 @@ static size_t getFiringOrderLength() {
 	case FO_1_5_4_8_6_3_7_2:
 	case FO_1_8_7_3_6_5_4_2:
 	case FO_1_5_4_8_3_7_2_6:
+	case FO_1_8_6_2_7_3_4_5:
 		return 8;
 
 // 9 cylinder radial
@@ -292,6 +294,8 @@ static const uint8_t* getFiringOrderTable() {
 	case FO_1_8_7_3_6_5_4_2:
 		return order_1_8_7_3_6_5_4_2;
 	case FO_1_5_4_8_3_7_2_6:
+		return order_1_5_4_8_3_7_2_6;
+	case FO_1_8_6_2_7_3_4_5:
 		return order_1_5_4_8_3_7_2_6;
 
 // 9 cylinder
