@@ -35,6 +35,7 @@ TESTS_SRC_CPP = \
 	tests/ignition_injection/test_fuelCut.cpp \
 	tests/ignition_injection/test_fuel_computer.cpp \
 	tests/ignition_injection/test_injector_model.cpp \
+	tests/ignition_injection/test_odd_firing_engine.cpp \
 	tests/lua/test_lua_basic.cpp \
 	tests/lua/test_lookup.cpp \
 	tests/lua/test_lua_e38.cpp \
