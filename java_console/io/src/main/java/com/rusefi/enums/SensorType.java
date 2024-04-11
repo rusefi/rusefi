@@ -78,6 +78,7 @@ public enum SensorType {
 	LuaGauge8,
 	IgnKeyVoltage,
 	DashOverrideRpm,
+	DashOverrideVehicleSpeed,
 	DashOverrideClt,
 	DashOverrideBatteryVoltage,
 	AuxLinear1,
