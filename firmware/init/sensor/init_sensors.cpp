@@ -77,11 +77,13 @@ static void deInitAuxDigital() {
 }
 
 static LuaOverrideSensor overrideRpm(SensorType::DashOverrideRpm, SensorType::Rpm);
+static LuaOverrideSensor overrideVehicleSpeed(SensorType::DashOverrideVehicleSpeed, SensorType::VehicleSpeed);
 static LuaOverrideSensor overrideClt(SensorType::DashOverrideClt, SensorType::Clt);
 static LuaOverrideSensor overrideBatteryVoltage(SensorType::DashOverrideBatteryVoltage, SensorType::BatteryVoltage);
 
 void initOverrideSensors() {
 	  overrideRpm.Register();
+	  overrideVehicleSpeed.Register();
 	  overrideClt.Register();
 	  overrideBatteryVoltage.Register();
 }
