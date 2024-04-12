@@ -57,7 +57,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	eth.assertEvent5("inj end#1", 1, (void*)endSimultaneousInjection, 100000);
 
 	// skip the rest of the cycle
-	eth.fireFall(200);
+	eth.moveTimeForwardUs(MS2US(200));
 
 	// now clear and advance more
 	eth.executeActions();
