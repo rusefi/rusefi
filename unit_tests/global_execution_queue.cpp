@@ -25,7 +25,7 @@ void TestExecutor::scheduleForLater(const char *msg, scheduling_s *scheduling, i
 		return;
 	}
 
-	scheduleByTimestamp("test", scheduling, getTimeNowUs() + delayUs, action);
+	scheduleByTimestamp(msg, scheduling, getTimeNowUs() + delayUs, action);
 }
 
 int TestExecutor::executeAll(efitick_t now) {
@@ -54,7 +54,7 @@ void TestExecutor::scheduleByTimestamp(const char *msg, scheduling_s *scheduling
 	}
 
 	if (m_mockExecutor) {
-		m_mockExecutor->scheduleByTimestamp("test", scheduling, timeUs, action);
+		m_mockExecutor->scheduleByTimestamp(msg, scheduling, timeUs, action);
 		return;
 	}
 
@@ -67,7 +67,7 @@ void TestExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* scheduli
 		return;
 	}
 
-	scheduleByTimestamp("test", scheduling, NT2US(timeNt), action);
+	scheduleByTimestamp(msg, scheduling, NT2US(timeNt), action);
 }
 
 void TestExecutor::cancel(scheduling_s* s) {
