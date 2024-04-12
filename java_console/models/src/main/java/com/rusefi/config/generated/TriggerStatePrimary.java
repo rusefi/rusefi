@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Sun Mar 31 03:19:31 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Fri Apr 12 16:51:56 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -173,9 +173,9 @@ public class TriggerStatePrimary {
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field CAMRESYNCCOUNTER = Field.create("CAMRESYNCCOUNTER", 0, FieldType.INT8).setScale(1.0).setBaseOffset(1492);
-	public static final Field ALIGNMENTFILL_AT_1 = Field.create("ALIGNMENTFILL_AT_1", 1, FieldType.INT8).setScale(1.0).setBaseOffset(1492);
-	public static final Field M_HASSYNCHRONIZEDPHASE = Field.create("M_HASSYNCHRONIZEDPHASE", 4, FieldType.BIT, 0).setBaseOffset(1492);
+	public static final Field CAMRESYNCCOUNTER = Field.create("CAMRESYNCCOUNTER", 0, FieldType.INT8).setScale(1.0).setBaseOffset(1500);
+	public static final Field ALIGNMENTFILL_AT_1 = Field.create("ALIGNMENTFILL_AT_1", 1, FieldType.INT8).setScale(1.0).setBaseOffset(1500);
+	public static final Field M_HASSYNCHRONIZEDPHASE = Field.create("M_HASSYNCHRONIZEDPHASE", 4, FieldType.BIT, 0).setBaseOffset(1500);
 	public static final Field[] VALUES = {
 	CAMRESYNCCOUNTER,
 	ALIGNMENTFILL_AT_1,
