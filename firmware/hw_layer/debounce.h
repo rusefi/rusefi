@@ -15,7 +15,7 @@
 class ButtonDebounce {
 public:
 	explicit ButtonDebounce(const char* name);
-    void init(efitimems_t threshold, brain_pin_e &pin, pin_input_mode_e &mode);
+    void init(efitimems_t threshold, brain_pin_e &pin, pin_input_mode_e &mode, bool inverted = false);
     void stopConfiguration();
     void startConfiguration();
     bool readPinEvent();
@@ -34,6 +34,7 @@ private:
     pin_input_mode_e *m_mode;
     pin_input_mode_e active_mode = PI_DEFAULT;
     bool storedValue = false;
+    bool m_inverted = false;
     bool isInstanceRegisteredInGlobalList = false;
     bool needsPinInitialization = true;
     ButtonDebounce *nextDebounce = nullptr;
