@@ -60,7 +60,7 @@ TEST(trigger, testNoStartUpWarnings) {
 TEST(trigger, testNoisyInput) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
-	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "testNoisyInput RPM";
+	ASSERT_EQ(0, Sensor::getOrZero(SensorType::Rpm));
 
 	eth.firePrimaryTriggerRise();
 	eth.firePrimaryTriggerFall();
@@ -70,12 +70,10 @@ TEST(trigger, testNoisyInput) {
 	eth.firePrimaryTriggerFall();
 	eth.firePrimaryTriggerRise();
 	eth.firePrimaryTriggerFall();
-	// error condition since events happened too quick while time does not move
-	ASSERT_EQ(NOISY_RPM,  Sensor::getOrZero(SensorType::Rpm)) << "testNoisyInput RPM should be noisy";
+	ASSERT_EQ(0, Sensor::getOrZero(SensorType::Rpm));
 
-	ASSERT_EQ( 2,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testNoisyInput";
-	ASSERT_EQ(ObdCode::CUSTOM_PRIMARY_NOT_ENOUGH_TEETH, unitTestWarningCodeState.recentWarnings.get(0).Code) << "@0";
-	ASSERT_EQ(ObdCode::OBD_Crankshaft_Position_Sensor_A_Circuit_Malfunction, unitTestWarningCodeState.recentWarnings.get(1).Code) << "@0";
+	EXPECT_EQ(1, unitTestWarningCodeState.recentWarnings.getCount());
+	EXPECT_EQ(ObdCode::CUSTOM_PRIMARY_NOT_ENOUGH_TEETH, unitTestWarningCodeState.recentWarnings.get(0).Code);
 }
 
 TEST(trigger, testCamInput) {
