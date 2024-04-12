@@ -243,6 +243,7 @@ void PrimaryTriggerDecoder::onTriggerError() {
 		if (engine) {
 			// Instant RPM data is now also probably trash, discard it
 			engine->triggerCentral.instantRpm.resetInstantRpm();
+			engine->rpmCalculator.lastTdcTimer.init();
 		}
 	#pragma GCC diagnostic pop
 }
