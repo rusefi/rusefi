@@ -32,11 +32,11 @@ static void testNoOverdwell(const char* file, bool instantRpm) {
 
 	engine->onIgnitionEvent = [&](IgnitionEvent* event, bool state) {
 		if (state) {
-			coilStartTimes[event->cylinderNumber] = getTimeNowNt();
+			coilStartTimes[event->coilIndex] = getTimeNowNt();
 		} else {
-			auto actualDwell = 1e-3 * NT2USF(getTimeNowNt() - coilStartTimes[event->cylinderNumber]);
+			auto actualDwell = 1e-3 * NT2USF(getTimeNowNt() - coilStartTimes[event->coilIndex]);
 
-			EXPECT_LT(actualDwell, 50) << "Overdwell on cylinder " << (int)event->cylinderNumber << " of " << actualDwell << " ms";
+			EXPECT_LT(actualDwell, 50) << "Overdwell on cylinder " << (int)event->coilIndex << " of " << actualDwell << " ms";
 		}
 	};
 
