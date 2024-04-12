@@ -62,3 +62,11 @@ TEST(RealNoisyTrigger, AvoidOverdwell2NoInstant) {
 TEST(RealNoisyTrigger, AvoidOverdwell2WithInstant) {
 	testNoOverdwell("tests/trigger/resources/noisy-trigger-2.csv", true);
 }
+
+TEST(RealNoisyTrigger, AvoidOverdwell3NoInstant) {
+	testNoOverdwell("tests/trigger/resources/noisy-trigger-3.csv", false);
+}
+
+TEST(RealNoisyTrigger, AvoidOverdwell3WithInstant) {
+	testNoOverdwell("tests/trigger/resources/noisy-trigger-3.csv", true);
+}
