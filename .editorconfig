@@ -15,3 +15,6 @@ indent_size = 2
 # 4 space indentation
 [*.java]
 indent_size = 4
+
+[*.16txt]
+charset = utf-16be
