@@ -155,6 +155,12 @@ static void overFireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 }
 
 void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
+#if EFI_UNIT_TEST
+	if (engine->onIgnitionEvent) {
+		engine->onIgnitionEvent(event, false);
+	}
+#endif
+
 	for (int i = 0; i< MAX_OUTPUTS_FOR_IGNITION;i++) {
 		IgnitionOutputPin *output = event->outputs[i];
 
@@ -273,6 +279,12 @@ void turnSparkPinHigh(IgnitionEvent *event) {
 	event->actualStartOfDwellNt = getTimeNowLowerNt();
 
 	efitick_t nowNt = getTimeNowNt();
+
+#if EFI_UNIT_TEST
+	if (engine->onIgnitionEvent) {
+		engine->onIgnitionEvent(event, true);
+	}
+#endif
 
 #if EFI_TOOTH_LOGGER
 	LogTriggerCoilState(nowNt, true);
