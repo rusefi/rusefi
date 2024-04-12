@@ -52,8 +52,10 @@ bool boardEnableSendWidebandInfo() {
     return getHellenBoardEnabled();
 }
 
+static bool hellenEnPinInitialized = false;
+
 bool fansDisabledByBoardStatus() {
-  return !getHellenBoardEnabled();
+  return hellenEnPinInitialized && !getHellenBoardEnabled();
 }
 
 void hellenEnableEn() {
@@ -65,9 +67,8 @@ void hellenDisableEn() {
 }
 
 void setHellenEnPin(Gpio pin, bool enableBoardOnStartUp) {
-    static bool initialized = false;
-    if (!initialized) {
-        initialized = true;
+    if (!hellenEnPinInitialized) {
+        hellenEnPinInitialized = true;
 	    megaEn.initPin("EN", pin);
 	    if (enableBoardOnStartUp) {
 	      hellenEnableEn();
