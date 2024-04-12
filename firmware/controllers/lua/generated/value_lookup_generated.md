@@ -1126,6 +1126,9 @@ VSS and Aux Speed 1 or Aux Speed 1 with Aux Speed 2?
 ### enableAemXSeriesEgt
 AEM X-Series EGT gauge kit or rusEFI EGT sensor from Wideband controller
 
+### startRequestPinInverted
+
+
 ### skipBoardCanDash
 
 

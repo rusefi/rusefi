@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Apr 10 21:48:01 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Apr 12 04:16:55 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2819,7 +2819,7 @@ struct engine_configuration_s {
 	bool enableAemXSeriesEgt : 1 {};
 	/**
 	offset 1496 bit 16 */
-	bool unusedBit_503_16 : 1 {};
+	bool startRequestPinInverted : 1 {};
 	/**
 	offset 1496 bit 17 */
 	bool unusedBit_503_17 : 1 {};
@@ -5585,4 +5585,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22656);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Apr 10 21:48:01 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Apr 12 04:16:55 UTC 2024

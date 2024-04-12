@@ -1132,6 +1132,9 @@ float getConfigValueByName(const char *name) {
 // enableAemXSeriesEgt
 		case -1196188030:
 			return engineConfiguration->enableAemXSeriesEgt;
+// startRequestPinInverted
+		case 747573348:
+			return engineConfiguration->startRequestPinInverted;
 // skipBoardCanDash
 		case 1878649142:
 			return engineConfiguration->skipBoardCanDash;
@@ -3709,6 +3712,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1196188030:
 	{
 		engineConfiguration->enableAemXSeriesEgt = (int)value;
+		return 1;
+	}
+		case 747573348:
+	{
+		engineConfiguration->startRequestPinInverted = (int)value;
 		return 1;
 	}
 		case 1878649142:
