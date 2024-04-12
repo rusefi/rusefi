@@ -25,6 +25,8 @@ void setSlingshot() {
 	setCustomMap(/*lowValue*/ 20, 0.3, 250, 4.65);
 
 #if HW_PROTEUS
+  engineConfiguration->starterControlPin = Gpio::PROTEUS_LS_15;
+
 	setProteusEtbIO();
 	engineConfiguration->invertCamVVTSignal = true;
 #endif // HW_PROTEUS
