@@ -22,24 +22,11 @@
  * If not, see <http://www.gnu.org/licenses/>.
  */
 
-#include <rusefi/isnan.h>
-#include <rusefi/math.h>
+#include "pch.h"
 
 #include "global_shared.h"
-#include "loggingcentral.h"
-#include "error_handling.h"
-#include "perf_trace.h"
-
 #include "engine_configuration.h"
 
-#include "trigger_central.h"
-#include "trigger_decoder.h"
-/**
- * decoder depends on current RPM for error condition logic
- */
-#include "sensor.h"
-#include "engine_state.h"
-#include "engine_math.h"
 /**
  * decoder uses TriggerStimulatorHelper in findTriggerZeroEventIndex
  */
@@ -249,6 +236,15 @@ void TriggerDecoderBase::incrementShaftSynchronizationCounter() {
 void PrimaryTriggerDecoder::onTriggerError() {
 	// On trigger error, we've lost full sync
 	resetHasFullSync();
+
+	// Ignore the warning that engine is never null - it might be in unit tests
+	#pragma GCC diagnostic push
+	#pragma GCC diagnostic ignored "-Waddress"
+		if (engine) {
+			// Instant RPM data is now also probably trash, discard it
+			engine->triggerCentral.instantRpm.resetInstantRpm();
+		}
+	#pragma GCC diagnostic pop
 }
 
 void PrimaryTriggerDecoder::onNotEnoughTeeth(int /*actual*/, int /*expected*/) {

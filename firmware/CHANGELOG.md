@@ -49,6 +49,7 @@ Release template (copy/paste this for new release):
  - Negative timing is not displayed correctly fix #5250
  - update-ts-cacerts work-around is no longer needed #6327
  - uaEFI board knock configuration #6338
+ - Fix a scenario where noisy trigger can cause overdwell #6349
 
 ### Breaking Changes
  - wrong trigger naming for missing teeth #6258
