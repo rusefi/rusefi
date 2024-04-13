@@ -56,6 +56,8 @@ UPDATE_CONSOLE_FOLDER_SOURCES = \
   $(CONSOLE_OUT) \
   $(AUTOUPDATE_OUT)
 
+# todo: remove BootCommander.exe once https://github.com/rusefi/rusefi/issues/6358 is done
+
 CONSOLE_FOLDER_SOURCES = \
   ../misc/console_launcher/rusefi_autoupdate.exe \
   ../misc/console_launcher/rusefi_console.exe \
@@ -63,6 +65,7 @@ CONSOLE_FOLDER_SOURCES = \
   ../misc/install/STM32_Programmer_CLI \
   $(wildcard ../java_console/*.dll) \
   ../firmware/ext/openblt/Host/libopenblt.dll \
+  ../firmware/ext/openblt/Host/BootCommander.exe \
   ../firmware/ext/openblt/Host/libopenblt.so \
   ../firmware/ext/openblt/Host/libopenblt.dylib \
   ../firmware/ext/openblt/Host/openblt_jni.dll \
