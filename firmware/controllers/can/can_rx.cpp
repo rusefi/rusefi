@@ -238,7 +238,8 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 	}
 #endif
 #if EFI_USE_OPENBLT
-	if ((CAN_SID(frame) == 0x667) && (frame.DLC == 2)) {
+#include "openblt/efi_blt_ids.h"
+	if ((CAN_SID(frame) == BOOT_COM_CAN_RX_MSG_ID) && (frame.DLC == 2)) {
 		/* TODO: gracefull shutdown? */
 		if (((busIndex == 0) && (engineConfiguration->canOpenBLT)) ||
 			((busIndex == 1) && (engineConfiguration->can2OpenBLT))) {
