@@ -1,9 +1,13 @@
 #include "pch.h"
 
+bool isIgnVoltage() {
+  return Sensor::getOrZero(SensorType::BatteryVoltage) > 5;
+}
+
 void IgnitionController::onSlowCallback() {
 	// default to 0 if failed sensor to prevent accidental ign-on if battery
 	// input misconfigured (or the ADC hasn't started yet)
-	auto hasIgnVoltage = Sensor::getOrZero(SensorType::BatteryVoltage) > 5;
+	auto hasIgnVoltage = isIgnVoltage();
 
 	if (hasIgnVoltage) {
 		m_timeSinceIgnVoltage.reset();
@@ -15,7 +19,7 @@ void IgnitionController::onSlowCallback() {
 	}
 
 	// Ignore low voltage transients - we may see this at the start of cranking
-	// and we don't want to 
+	// and we don't want to
 	if (!hasIgnVoltage && !m_timeSinceIgnVoltage.hasElapsedSec(0.2f)) {
 		return;
 	}

@@ -1,3 +1,5 @@
+// file ignition_controller.h
+
 #pragma once
 
 #include "engine_module.h"
@@ -12,3 +14,6 @@ private:
 	Timer m_timeSinceIgnVoltage;
 	bool m_lastState = false;
 };
+
+// USB power or vehicle power?
+bool isIgnVoltage();

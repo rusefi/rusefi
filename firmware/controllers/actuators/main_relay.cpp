@@ -1,12 +1,13 @@
 #include "pch.h"
 
 #include "main_relay.h"
+#include "ignition_controller.h"
 
 void MainRelayController::onSlowCallback() {
 #if EFI_MAIN_RELAY_CONTROL
 #if defined(IGN_KEY_DIVIDER)
     if (isAdcChannelValid(engineConfiguration->ignKeyAdcChannel)) {
-      hasIgnitionVoltage = Sensor::getOrZero(SensorType::IgnKeyVoltage) > 5;
+      hasIgnitionVoltage = isIgnVoltage();
     } else
 #endif // IGN_KEY_DIVIDER
     if (engineConfiguration->ignitionKeyDigitalPin != Gpio::Unassigned) {
