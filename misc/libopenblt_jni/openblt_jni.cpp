@@ -4,6 +4,7 @@
 
 // OpenBLT host library
 #include "openblt.h"
+#include "../../firmware/hw_layer/openblt/efi_blt_ids.h"
 
 #include <cstring>
 
@@ -127,9 +128,9 @@ static bool setupCan(JNIEnv* env, jobject jCallbacks) {
   canSettings.deviceName = "can0";
 #endif
   canSettings.deviceChannel = 0;
-  canSettings.baudrate = 500000;
-  canSettings.transmitId = 0x667;
-  canSettings.receiveId = 0x7E1;
+  canSettings.baudrate = BOOT_COM_CAN_BAUDRATE;
+  canSettings.transmitId = BOOT_COM_CAN_RX_MSG_ID;
+  canSettings.receiveId = BOOT_COM_CAN_TX_MSG_ID;
   canSettings.useExtended = false;
 
   BltSessionInit(BLT_SESSION_XCP_V10, &xcpSettings, BLT_TRANSPORT_XCP_V10_USB, &canSettings);
