@@ -61,6 +61,10 @@ public class TuneCanTool implements TuneCanToolConstants {
 
         TuneCanToolRunner.initialize();
 
+//        writeDiffBetweenLocalTuneFileAndDefaultTune("harley", "C:\\stuff\\fw\\fw-\\generated\\simulator_tune_HARLEY.msq",
+//            "c:\\stuff\\hd-\\tunes\\pnp-april-8-inverted-offsets.msq","comment", "");
+
+
 //        writeDiffBetweenLocalTuneFileAndDefaultTune("vehicleName", getDefaultTuneName(engine_type_e.HONDA_OBD1),
 //            "C:\\stuff\\\\2024-03-09-CurrentTune.msq", "comment", "");
 
