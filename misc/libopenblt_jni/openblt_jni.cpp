@@ -79,12 +79,9 @@ static bool loadFirmware(JNIEnv* env, jstring jFilename, jobject jCallbacks) {
 }
 
 static tBltSessionSettingsXcpV10 xcpSettings;
-static tBltTransportSettingsXcpV10Rs232 transportSettings;
 static char s_portName[256];
 
-static bool setupSerial(JNIEnv* env, jstring jSerialPort, jobject jCallbacks) {
-	Callbacks cb(env, jCallbacks, "Start session", false);
-
+static void setXcpSettings() {
 	xcpSettings.timeoutT1 = 1000;
 	xcpSettings.timeoutT3 = 2000;
 	xcpSettings.timeoutT4 = 10000;
@@ -93,6 +90,13 @@ static bool setupSerial(JNIEnv* env, jstring jSerialPort, jobject jCallbacks) {
 	xcpSettings.timeoutT7 = 2000;
 	xcpSettings.seedKeyFile = nullptr;
 	xcpSettings.connectMode = 0;
+}
+
+static bool setupSerial(JNIEnv* env, jstring jSerialPort, jobject jCallbacks) {
+  static tBltTransportSettingsXcpV10Rs232 transportSettings;
+	Callbacks cb(env, jCallbacks, "Start session", false);
+
+  setXcpSettings();
 
 	const char* portName = env->GetStringUTFChars(jSerialPort, 0);
 	strncpy(s_portName, portName, sizeof(s_portName));
@@ -112,10 +116,31 @@ static bool setupSerial(JNIEnv* env, jstring jSerialPort, jobject jCallbacks) {
 }
 
 static bool setupCan(JNIEnv* env, jobject jCallbacks) {
-	Callbacks cb(env, jCallbacks, "Setup CAN", false);
+  static tBltTransportSettingsXcpV10Can canSettings;
+	Callbacks cb(env, jCallbacks, "Start CAN session", false);
 
-	cb.error("CAN not supported yet!");
-	return false;
+  setXcpSettings();
+
+#if defined(_WIN32)
+  canSettings.deviceName = "peak_pcanusb";
+#else
+  canSettings.deviceName = "can0";
+#endif
+  canSettings.deviceChannel = 0;
+  canSettings.baudrate = 500000;
+  canSettings.transmitId = 0x667;
+  canSettings.receiveId = 0x7E1;
+  canSettings.useExtended = false;
+
+  BltSessionInit(BLT_SESSION_XCP_V10, &xcpSettings, BLT_TRANSPORT_XCP_V10_USB, &canSettings);
+
+	if (BltSessionStart() != BLT_RESULT_OK) {
+		cb.error("BltSessionStart() failed");
+		cb.error(canSettings.deviceName);
+		return false;
+	}
+
+	return true;
 }
 
 static bool erase(JNIEnv* env, jobject jCallbacks) {
@@ -129,7 +154,7 @@ static bool erase(JNIEnv* env, jobject jCallbacks) {
 	uint8_t const * segmentData;
 
 	/* Erase the memory segments on the target that are covered by the firmwware data. */
-	for (segmentIdx = 0; segmentIdx < BltFirmwareGetSegmentCount(); segmentIdx++) 
+	for (segmentIdx = 0; segmentIdx < BltFirmwareGetSegmentCount(); segmentIdx++)
 	{
 		/* Extract segment info. */
 		segmentData = BltFirmwareGetSegment(segmentIdx, &segmentBase, &segmentLen);
@@ -195,7 +220,7 @@ static bool program(JNIEnv* env, jobject jCallbacks) {
 	int lastPercent = -1;
 
 	/* Program the memory segments on the target with the firmware data. */
-	for (segmentIdx = 0; segmentIdx < BltFirmwareGetSegmentCount(); segmentIdx++) 
+	for (segmentIdx = 0; segmentIdx < BltFirmwareGetSegmentCount(); segmentIdx++)
 	{
 		/* Extract segment info. */
 		segmentData = BltFirmwareGetSegment(segmentIdx, &segmentBase, &segmentLen);
