@@ -28,6 +28,8 @@
 #ifndef BLT_CONF_H
 #define BLT_CONF_H
 
+#include "efi_blt_ids.h"
+
 /****************************************************************************************
 *   C P U   D R I V E R   C O N F I G U R A T I O N
 ****************************************************************************************/
@@ -85,14 +87,9 @@
  */
 /** \brief Enable/disable CAN transport layer. */
 #define BOOT_COM_CAN_ENABLE             (1)
-/** \brief Configure the desired CAN baudrate. */
-#define BOOT_COM_CAN_BAUDRATE           (500000)
-/** \brief Configure CAN message ID target->host. */
-#define BOOT_COM_CAN_TX_MSG_ID          (0x7E1 /*| 0x80000000*/)
 /** \brief Configure number of bytes in the target->host CAN message. */
 #define BOOT_COM_CAN_TX_MAX_DATA        (8)
-/** \brief Configure CAN message ID host->target. */
-#define BOOT_COM_CAN_RX_MSG_ID          (0x667 /*| 0x80000000*/)
+
 /** \brief Configure number of bytes in the host->target CAN message. */
 #define BOOT_COM_CAN_RX_MAX_DATA        (8)
 /** \brief Select the desired CAN peripheral as a zero based index. */
