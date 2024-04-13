@@ -1,3 +1,4 @@
+(follwing steps produce a DLL which fails in runtime see https://github.com/rusefi/rusefi/issues/6358)
 
 add into path:
 
