@@ -43,8 +43,13 @@ void setHellen64Can() {
 
 static OutputPin megaEn;
 
+// newer Hellen boards with megamodule have power management for SD cards etc, older Hellen board do not have that
+PUBLIC_API_WEAK bool isBoardWithPowerManagement() {
+  return false;
+}
+
 bool getHellenBoardEnabled() {
-  return megaEn.getLogicValue();
+  return !isBoardWithPowerManagement() || megaEn.getLogicValue();
 }
 
 bool boardEnableSendWidebandInfo() {
@@ -54,8 +59,8 @@ bool boardEnableSendWidebandInfo() {
 
 static bool hellenEnPinInitialized = false;
 
-bool fansDisabledByBoardStatus() {
-  return hellenEnPinInitialized && !getHellenBoardEnabled();
+/*PUBLIC_API_WEAK*/ bool fansDisabledByBoardStatus() {
+  return !getHellenBoardEnabled();
 }
 
 void hellenEnableEn() {
