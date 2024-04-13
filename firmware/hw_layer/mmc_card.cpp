@@ -533,6 +533,12 @@ static THD_FUNCTION(MMCmonThread, arg) {
   while (!getHellenBoardEnabled()) {
     // wait until board enables peripheral
     chThdSleepMilliseconds(100);
+    if (getTimeNowS() > 4 && !isIgnVoltage()) {
+      // looks like vehicle is OFF and we are hooked to USB - turn on peripheral to get Mass Storage Device USB profile
+      efiPrintf("    *** turning board ON to power SD card ***");
+      hellenEnableEn();
+      break;
+    }
   }
   chThdSleepMilliseconds(300);
 #endif
