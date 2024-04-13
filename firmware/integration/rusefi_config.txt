@@ -2334,6 +2334,7 @@ end_struct
 #define ts_show_mc33810 false
 #define ts_show_hip9011 false
 #define ts_show_tps_sent false
+#define ts_show_fan2_settings true
 #define ts_show_inj_diag false
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_2 false
