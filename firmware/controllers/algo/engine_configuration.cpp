@@ -937,6 +937,9 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::FRANKENSO_TEST_33810:
 		setDiscovery33810Test();
 		break;
+	case engine_type_e::FRANKENSO_TEST_TLE9104:
+		setDiscoveryTLE9104Test();
+		break;
 	case engine_type_e::TEST_ENGINE:
 		setTestCamEngineConfiguration();
 		break;
