@@ -21,16 +21,32 @@ blt_addr FlashGetUserProgBaseAddress() {
 }
 
 blt_bool FlashWrite(blt_addr addr, blt_int32u len, blt_int8u *data) {
-	return (FLASH_RETURN_SUCCESS == intFlashWrite(addr, (const char*)data, len)) ? BLT_TRUE : BLT_FALSE;
+	// don't allow overwriting the bootloader
+	if (addr < FlashGetUserProgBaseAddress()) {
+		return BLT_FALSE;
+	}
+
+	return
+		(FLASH_RETURN_SUCCESS == intFlashWrite(addr, (const char*)data, len))
+		? BLT_TRUE
+		: BLT_FALSE;
 }
 
 blt_bool FlashErase(blt_addr addr, blt_int32u len) {
+	// don't allow erasing the bootloader
+	if (addr < FlashGetUserProgBaseAddress()) {
+		return BLT_FALSE;
+	}
+
 	if (intFlashIsErased(addr, len)) {
 		// Already blank, we can skip the expensive erase operation
 		return BLT_TRUE;
 	}
 
-	return (FLASH_RETURN_SUCCESS == intFlashErase(addr, len)) ? BLT_TRUE : BLT_FALSE;
+	return
+		(FLASH_RETURN_SUCCESS == intFlashErase(addr, len))
+		? BLT_TRUE
+		: BLT_FALSE;
 }
 
 blt_bool FlashDone() {
@@ -66,5 +82,5 @@ blt_bool FlashVerifyChecksum() {
 
 	uint32_t storedChecksum = *reinterpret_cast<uint32_t*>(start + checksumOffset);
 
-	return calcChecksum == storedChecksum ? BLT_TRUE : BLT_FALSE;
+	return (calcChecksum == storedChecksum) ? BLT_TRUE : BLT_FALSE;
 }
