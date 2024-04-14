@@ -14,8 +14,13 @@
 
 #define ts_show_trigger_comparator true
 
-#define IGN_RPM_COUNT 8
-#define IGN_LOAD_COUNT 8
+#define IGN_RPM_COUNT 4
+#define IGN_LOAD_COUNT 4
+
+#define SCRIPT_CURVE_16 2
+#define SCRIPT_TABLE_8 2
+
+#define INJ_STAGING_COUNT 2
 
 #define TABLE_2_RPM_SIZE 2
 #define TABLE_2_LOAD_SIZE 2
