@@ -17,7 +17,7 @@
 #include "drivers/gpio/drv8860.h"
 #include "drivers/gpio/l9779.h"
 #include "drivers/gpio/tle9104.h"
-#include "drivers/gpio/can_gpio.h"
+#include "drivers/gpio/can_gpio_msiobox.h"
 
 #if EFI_PROD_CODE
 
@@ -288,7 +288,7 @@ void initSmartGpio() {
 #endif /* (BOARD_DRV8860_COUNT > 0) */
 
 #if EFI_CAN_GPIO
-    initCanGpio();
+    initCanGpioMsiobox();
 #endif // EFI_CAN_GPIO
 
 #if (BOARD_MC33810_COUNT > 0)
