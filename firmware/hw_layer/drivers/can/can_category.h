@@ -13,4 +13,5 @@ enum class CanCategory : uint16_t {
 	WBO_SERVICE = 5,
 	OBD = 6,
 	BENCH_TEST = 7,
+	MEGASQUIRT = 8,
 };
