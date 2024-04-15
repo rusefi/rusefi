@@ -2,7 +2,7 @@
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
     <page number="0" size="22656">
-        <constant name="engineType">"MINIMAL_PINS"</constant>
+        <constant name="engineType">"HELLEN_121_NISSAN_6_CYL"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">0.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
         <constant digits="0" name="launchRpm" units="rpm">3000.0</constant>
@@ -30,7 +30,7 @@
         <constant digits="0" name="manIdlePosition" units="%">50.0</constant>
         <constant digits="0" name="multisparkMaxSparkingAngle" units="deg">30.0</constant>
         <constant digits="0" name="multisparkMaxExtraSparkCount" units="count">2.0</constant>
-        <constant digits="0" name="vvtControlMinRpm" units="RPM">550.0</constant>
+        <constant digits="0" name="vvtControlMinRpm" units="RPM">500.0</constant>
         <constant digits="2" name="injector_flow" units="cm3/min">200.0</constant>
         <constant cols="1" digits="2" name="injector_battLagCorrBins" rows="8">
          6.0
@@ -109,7 +109,7 @@
         <constant digits="0" name="tpsMax" units="ADC">1000.0</constant>
         <constant digits="0" name="tpsErrorDetectionTooLow" units="%">-10.0</constant>
         <constant digits="0" name="tpsErrorDetectionTooHigh" units="%">110.0</constant>
-        <constant digits="1" name="cranking_baseFuel" units="mg">27.0</constant>
+        <constant digits="1" name="cranking_baseFuel" units="mg">35.0</constant>
         <constant digits="0" name="cranking_rpm" units="RPM">550.0</constant>
         <constant digits="1" name="ignitionDwellForCrankingMs" units="ms">6.0</constant>
         <constant digits="0" name="etbRevLimitStart" units="rpm">0.0</constant>
@@ -177,10 +177,10 @@
         <constant digits="2" name="launchTimingRetard" units="deg">0.0</constant>
         <constant digits="0" name="hip9011PrescalerAndSDO" units="integer">0.0</constant>
         <constant digits="2" name="knockBandCustom" units="kHz">0.0</constant>
-        <constant digits="3" name="displacement" units="L">2.0</constant>
+        <constant digits="3" name="displacement" units="L">4.0</constant>
         <constant digits="0" name="triggerSimulatorRpm" units="RPM">1200.0</constant>
-        <constant digits="0" name="cylindersCount" units="">4.0</constant>
-        <constant name="firingOrder">"1-3-4-2"</constant>
+        <constant digits="0" name="cylindersCount" units="">6.0</constant>
+        <constant name="firingOrder">"1-2-3-4-5-6"</constant>
         <constant digits="0" name="justATempTest" units="">0.0</constant>
         <constant name="communityCommsLedPid">"NONE"</constant>
         <constant digits="2" name="cylinderBore" units="mm">87.5</constant>
@@ -208,14 +208,14 @@
         <constant name="acrPin">"NONE"</constant>
         <constant digits="1" name="driveWheelRevPerKm" units="revs/km">1000.0</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
-        <constant digits="0" name="byFirmwareVersion" units="index">2.0240415E7</constant>
+        <constant digits="0" name="byFirmwareVersion" units="index">0.0</constant>
         <constant name="tps1_1AdcChannel">"Disabled"</constant>
         <constant name="vbattAdcChannel">"Disabled"</constant>
         <constant name="fuelLevelSensor">"Disabled"</constant>
         <constant name="tps2_1AdcChannel">"Disabled"</constant>
         <constant digits="4" name="idle_derivativeFilterLoss" units="x">0.0</constant>
         <constant digits="0" name="trailingSparkAngle" units="angle">10.0</constant>
-        <constant name="trigger_type">"60-2"</constant>
+        <constant name="trigger_type">"Nissan VQ35"</constant>
         <constant digits="0" name="trigger_customTotalToothCount" units="number">0.0</constant>
         <constant digits="0" name="trigger_customSkippedToothCount" units="number">0.0</constant>
         <constant digits="1" name="airByRpmTaper" units="%">0.0</constant>
@@ -458,7 +458,7 @@
         <constant name="vvtBooleanForVerySpecialCases">"false"</constant>
         <constant name="enableSoftwareKnock">"false"</constant>
         <constant name="verboseVVTDecoding">"false"</constant>
-        <constant name="invertCamVVTSignal">"Rising"</constant>
+        <constant name="invertCamVVTSignal">"Falling"</constant>
         <constant name="alphaNUseIat">"false"</constant>
         <constant name="knockBankCyl1">"Channel 1"</constant>
         <constant name="knockBankCyl2">"Channel 1"</constant>
@@ -539,6 +539,7 @@
         <constant name="stepperDcIo2_directionPin2">"NONE"</constant>
         <constant name="stepperDcIo2_controlPin">"NONE"</constant>
         <constant name="stepperDcIo2_disablePin">"NONE"</constant>
+        <constant name="engineCode">VQ</constant>
         <constant name="tcu_solenoid1">"NONE"</constant>
         <constant name="tcu_solenoid2">"NONE"</constant>
         <constant name="tcu_solenoid3">"NONE"</constant>
@@ -559,9 +560,9 @@
         <constant name="luaOutputPins6">"NONE"</constant>
         <constant name="luaOutputPins7">"NONE"</constant>
         <constant name="luaOutputPins8">"NONE"</constant>
-        <constant digits="1" name="vvtOffsets1" units="value">450.0</constant>
+        <constant digits="1" name="vvtOffsets1" units="value">157.0</constant>
         <constant digits="1" name="vvtOffsets2" units="value">0.0</constant>
-        <constant digits="1" name="vvtOffsets3" units="value">0.0</constant>
+        <constant digits="1" name="vvtOffsets3" units="value">-203.0</constant>
         <constant digits="1" name="vvtOffsets4" units="value">0.0</constant>
         <constant cols="1" digits="0" name="vrThreshold1_rpmBins" rows="6">
          650.0
@@ -853,9 +854,9 @@
         <constant digits="2" name="mapLowValueVoltage" units="v">0.0</constant>
         <constant digits="2" name="mapHighValueVoltage" units="v">5.0</constant>
         <constant digits="2" name="egoValueShift" units="value">0.0</constant>
-        <constant name="vvtPins1">"PI0"</constant>
+        <constant name="vvtPins1">"PF13"</constant>
         <constant name="vvtPins2">"NONE"</constant>
-        <constant name="vvtPins3">"NONE"</constant>
+        <constant name="vvtPins3">"PF14"</constant>
         <constant name="vvtPins4">"NONE"</constant>
         <constant digits="0" name="crankingIACposition" units="percent">50.0</constant>
         <constant digits="4" name="tChargeMinRpmMinTps" units="">0.25</constant>
@@ -866,7 +867,7 @@
         <constant digits="0" name="minimumIgnitionTiming" units="deg BTDC">-10.0</constant>
         <constant digits="0" name="maximumIgnitionTiming" units="deg BTDC">60.0</constant>
         <constant digits="0" name="alternatorPwmFrequency" units="Hz">300.0</constant>
-        <constant name="vvtMode1">"Single Tooth"</constant>
+        <constant name="vvtMode1">"Nissan VQ"</constant>
         <constant name="vvtMode2">"Inactive"</constant>
         <constant digits="0" name="fan2ExtraIdle" units="%">2.0</constant>
         <constant digits="2" name="primingDelay" units="sec">0.5</constant>
@@ -975,9 +976,9 @@
         <constant name="mc33816_driven">"NONE"</constant>
         <constant name="brakePedalPin">"NONE"</constant>
         <constant digits="4" name="auxPid1_pFactor" units="">2.0</constant>
-        <constant digits="4" name="auxPid1_iFactor" units="">0.005</constant>
-        <constant digits="4" name="auxPid1_dFactor" units="">0.0</constant>
-        <constant digits="0" name="auxPid1_offset" units="">33.0</constant>
+        <constant digits="4" name="auxPid1_iFactor" units="">0.5</constant>
+        <constant digits="4" name="auxPid1_dFactor" units="">0.05</constant>
+        <constant digits="0" name="auxPid1_offset" units="">50.0</constant>
         <constant digits="0" name="auxPid1_periodMs" units="ms">0.0</constant>
         <constant digits="0" name="auxPid1_minValue" units="">10.0</constant>
         <constant digits="0" name="auxPid1_maxValue" units="">90.0</constant>
@@ -2338,41 +2339,128 @@
          0.0 0.0 0.0 0.0
          0.0 0.0 0.0 0.0
 </constant>
-        <constant name="luaScript">hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F" }
+        <constant name="luaScript">IN_284 = 0x284 -- 644
+IN_285 = 0x285 -- 645
+IN_285 = 0x285
+IN_35D = 0x35d
 
-function toHexString(num)
-	if num == 0 then
-		return '0'
-	end
+OUT_1F9 = 0x1F9 -- 505
+OUT_233 = 0x233 -- 563
+OUT_23D = 0x23D -- 573
+OUT_23E = 0x23E -- 574
 
-	local result = ""
-	while num &gt; 0 do
-		local n = num % 16
-		result = hexstr[n + 1] ..result
-		num = math.floor(num / 16)
-	end
-	return result
-end
+setTickRate(100)
+t = Timer.new()
+t : reset()
 
-function arrayToString(arr)
-	local str = ""
-	local index = 1
-	while arr[index] ~= nil do
-		str = str.." "..toHexString(arr[index])
-		index = index + 1
-	end
-	return str
-end
+HEATER_OUTOUT_INDEX = 1
+startPwm(HEATER_OUTOUT_INDEX, 1, 0)
 
-function printPacket(bus, id, dlc, data)
-    print('Received ' .. arrayToString(data))
-end
+globalAcOut = 0
 
-function onCanRx(bus, id, dlc, data)
+function getTwoBytesMSB(data, offset, factor)
+	return (data[offset + 1] * 256 + data[offset + 2]) * factor
 end
 
 function onTick()
-end</constant>
+    local MAF = getSensor("MAF")
+    MAF = (MAF == nil and 0 or MAF)
+    local TPS = getSensor("Tps1")
+    TPS = (TPS == nil and 0 or TPS)
+    local PPS = getSensor("AcceleratorPedal")
+    PPS = (PPS == nil and 0 or PPS)
+    -- print ("MAF " .. MAF .. " TPS " .. TPS .. " PPS " .. PPS)
+    local rpmValue = math.floor(getSensor("RPM") + 0.5)
+	local RPMread = rpmValue / 3.125
+	local RPMhi = RPMread / 256
+	local RPMlo = RPMread
+	cltValue = getSensor("CLT")
+	cltValue = (cltValue == nil and 0 or cltValue)
+
+	--print('ac out = ' ..globalAcOut)
+	if globalAcOut == 1 and rpmValue &gt; 250 then
+		fanPayloadOff = { 0x88, 0x00 }
+		fanPayloadLo = { 0x88, 0x00 }
+		fanPayloadHi = { 0x88, 0x00 }
+	else
+		--print('ac off payload')
+		fanPayloadOff = { 0x00, 0x00 }
+		fanPayloadLo = { 0x40, 0x00 }
+		fanPayloadHi = { 0x80, 0x00 }
+	end
+
+	cltGauge = 0x00
+
+	-- clt gauge stuff
+	if cltValue &lt; 115 then
+		cltGauge = math.floor(cltValue * 1.5 + 0.5)
+	else
+		cltGauge = 0xF0
+	end
+	-- print('clt gauge = '..cltGauge)
+	-- rpm fun stuff
+	PPS256 = PPS * 256 / 100
+	TPScapped = (TPS &gt; 0.5 and 0.5 or TPS)
+	if t : getElapsedSeconds() &lt; 2 then
+		CLTandRPM_D = { 0x00, PPS256, 0x0C, 0x01, 0x0A, 0x87, 0xFF, 0xFF }
+	else
+		CLTandRPM_D = { 0x00, PPS256, 0x0c, RPMlo, RPMhi, 0x87, 0xFF, cltGauge }
+	end
+
+    state_233 = rpmValue &gt; 250 and 0x10 or 0x18
+	CLTandRPM_3     = { cltGauge, 0x8C, 0x20, state_233, RPMlo, 0x00, 0x00, RPMhi }
+
+	txCan(1, OUT_233, 0, CLTandRPM_3) -- transmit CLT and RPM for who knows whom
+	txCan(1, OUT_23D, 0, CLTandRPM_D) -- transmit CLT and RPM for gauge cluster
+
+
+	if rpmValue &gt; 250 then
+	    setPwmDuty(HEATER_OUTOUT_INDEX, 1)
+		if cltValue &lt;= 80 then
+			txCan(1, OUT_1F9, 0, fanPayloadOff)
+		elseif cltValue &lt; 85 then
+		    -- send nothing
+		elseif cltValue &lt; 90 then
+			txCan(1, OUT_1F9, 0, fanPayloadLo)
+		else
+			txCan(1, OUT_1F9, 0, fanPayloadHi)
+		end
+	else
+	    setPwmDuty(HEATER_OUTOUT_INDEX, 0)
+		txCan(1, OUT_1F9, 0, fanPayloadOff)
+	end
+	-- print('CLT temp' ..cltValue)
+end
+
+function onCanRxAbs1(bus, id, dlc, data)
+    kph = getTwoBytesMSB(data, 0, 0.005)
+end
+
+function onCanRxAc(bus, id, dlc, data)
+	--print('got CAN id=' ..id ..' dlc=' ..dlc)
+	--print('ac value is= '..data[1])
+	if data[1] == 193 then
+		setAcRequestState(true)
+		globalAcOut = 1
+		--print('ac is on')
+	else
+		setAcRequestState(false)
+		globalAcOut = 0
+		--print('ac is off')
+	end
+
+end
+
+function onCanRxWheelSpeed1(bus, id, dlc, data)
+end
+
+function onCanRxWheelSpeed2(bus, id, dlc, data)
+end
+
+canRxAdd(IN_284, onCanRxWheelSpeed1)
+canRxAdd(IN_285, onCanRxWheelSpeed2)
+canRxAdd(IN_35D, onCanRxAbs1)
+canRxAdd(IN_35D, onCanRxAc)</constant>
         <constant cols="1" digits="2" name="cltFuelCorrBins" rows="16">
          -40.0
          -30.0
@@ -2522,23 +2610,23 @@ end</constant>
          1.0
 </constant>
         <constant cols="1" digits="2" name="mafDecoding" rows="32">
-         -34.5
-         -6.0
-         10.5
-         105.3
-         387.5
-         738.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
-         3000.0
+         3.176884
+         3.698775
+         5.801311
+         11.1849
+         24.56467
+         41.45305
+         61.58479
+         79.79245
+         110.961
+         208.1987
+         260.1031
+         387.1504
+         486.5364
+         566.628
+         722.3486
+         913.0848
+         1137.875
          3000.0
          3000.0
          3000.0
@@ -2556,23 +2644,23 @@ end</constant>
          3000.0
 </constant>
         <constant cols="1" digits="2" name="mafDecodingBins" rows="32">
-         0.0
-         0.78125
-         1.386719
-         2.910156
-         4.257813
-         4.980469
-         2016.0
-         2017.0
-         2018.0
-         2019.0
-         2020.0
-         2021.0
-         2022.0
-         2023.0
-         2024.0
-         2025.0
-         2026.0
+         0.29
+         0.49
+         0.72
+         1.0
+         1.37
+         1.66
+         1.91
+         2.09
+         2.34
+         2.89
+         3.11
+         3.54
+         3.81
+         4.0
+         4.32
+         4.65
+         4.98
          2027.0
          2028.0
          2029.0
