@@ -131,7 +131,7 @@ static bool setupCan(JNIEnv* env, jobject jCallbacks) {
   canSettings.baudrate = BOOT_COM_CAN_BAUDRATE;
   canSettings.transmitId = BOOT_COM_CAN_RX_MSG_ID;
   canSettings.receiveId = BOOT_COM_CAN_TX_MSG_ID;
-  canSettings.useExtended = false;
+  canSettings.useExtended = BOOT_COM_CAN_EXT;
 
   BltSessionInit(BLT_SESSION_XCP_V10, &xcpSettings, BLT_TRANSPORT_XCP_V10_USB, &canSettings);
 

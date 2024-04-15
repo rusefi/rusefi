@@ -18,3 +18,7 @@
 /** \brief Configure CAN message ID target->host. */
 #define BOOT_COM_CAN_TX_MSG_ID          (0x107E1 | 0x80000000)
 #endif
+
+#ifndef BOOT_COM_CAN_EXT
+#define BOOT_COM_CAN_EXT true
+#endif
