@@ -42,6 +42,7 @@ public class WriteSimulatorConfiguration {
                     engine_type_e.MAZDA_MIATA_NB2,
                     engine_type_e.HONDA_K,
                     engine_type_e.HONDA_OBD1,
+                    engine_type_e.HELLEN_121_NISSAN_6_CYL,
                     engine_type_e.HELLEN_154_HYUNDAI_COUPE_BK1,
                     engine_type_e.HELLEN_154_HYUNDAI_COUPE_BK2,
                     engine_type_e.HYUNDAI_PB,
