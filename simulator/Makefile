@@ -60,6 +60,7 @@ endif
 # Pretend we are all different hardware so that all canned engine configs are included
 # [CannedTunes]
 USE_OPT += -DHW_HELLEN_HYUNDAI=1
+USE_OPT += -DHW_HELLEN_NISSAN=1
 USE_OPT += -DHW_HELLEN_NB1=1
 USE_OPT += -DHW_HELLEN_NB2=1
 USE_OPT += -DHW_HELLEN=1
