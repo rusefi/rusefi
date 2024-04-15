@@ -70,6 +70,7 @@ static const float injectorLagCorrection[VBAT_INJECTOR_CURVE_SIZE] = {
         1.5 ,        1.35,        1.25 ,        1.20
 };
 
+#if SCRIPT_TABLE_8 == 8
 static const float vvt18fsioRpmBins[SCRIPT_TABLE_8] =
 {700.0, 1000.0, 2000.0, 3000.0, 3500.0, 4500.0, 5500.0, 6500.0}
 ;
@@ -89,6 +90,7 @@ static const uint8_t SCRIPT_TABLE_vvt_target[SCRIPT_TABLE_8][SCRIPT_TABLE_8] = {
 		{/* 6 82	*//* 0 700.0*/17,	/* 1 1000.0*/28,	/* 2 2000.0*/33,	/* 3 3000.0*/28,	/* 4 3500.0*/30,	/* 5 4500.0*/28,	/* 6 5500.0*/11,	/* 7 6500.0*/5,	},
 		{/* 7 85	*//* 0 700.0*/17,	/* 1 1000.0*/28,	/* 2 2000.0*/33,	/* 3 3000.0*/28,	/* 4 3500.0*/30,	/* 5 4500.0*/28,	/* 6 5500.0*/11,	/* 7 6500.0*/5,	},
 };
+#endif
 
 #if (FUEL_LOAD_COUNT == DEFAULT_FUEL_LOAD_COUNT) && (FUEL_RPM_COUNT == DEFAULT_FUEL_LOAD_COUNT)
 const float mazda_miata_nb2_RpmBins[FUEL_RPM_COUNT] = {700.0, 820.0, 950.0, 1100.0,
@@ -364,9 +366,11 @@ static void setMazdaMiataEngineNB2Defaults() {
 
 	setCommonMazdaNB();
 
+#if SCRIPT_TABLE_8 == 8
 	copyArray(config->vvtTable1RpmBins, vvt18fsioRpmBins);
 	copyArray(config->vvtTable1LoadBins, vvt18fsioLoadBins);
 	copyTable(config->vvtTable1, SCRIPT_TABLE_vvt_target);
+#endif
 
 	// VVT closed loop
 	engineConfiguration->auxPid[0].pFactor = 2;
