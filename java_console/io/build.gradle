@@ -22,7 +22,7 @@ dependencies {
     api project(':core_io')
     api project(':logging')
 
-    implementation group: 'com.fazecast', name: 'jSerialComm', version: '2.10.3'
+    implementation group: 'com.fazecast', name: 'jSerialComm', version: '2.10.4'
     implementation group: 'tel.schich', name: 'javacan-core', version: "$javaCanVersion"
     implementation group: 'tel.schich', name: 'javacan-core', version: "$javaCanVersion", classifier: 'x86_64'
     implementation global_libs.json
