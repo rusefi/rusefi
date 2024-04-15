@@ -41,6 +41,16 @@ static void testHardFault() {
 	causeHardFault();
 }
 
+#if defined(STM32F4) || defined(STM32F7) || defined(STM32H7)
+static void printUid() {
+	uint32_t *uid = ((uint32_t *)UID_BASE);
+	efiPrintf("UID=%x:%x:%x", uid[0], uid[1], uid[2]);
+	engineConfiguration->device_uid[0] = uid[0];
+	engineConfiguration->device_uid[1] = uid[1];
+	engineConfiguration->device_uid[2] = uid[2];
+}
+#endif
+
 static void sayHello() {
 	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI LLC (c) 2012-2024. All rights reserved.");
 	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI v%d@%s now=%d", getRusEfiVersion(), VCS_VERSION, getTimeNowMs());
@@ -60,11 +70,7 @@ static void sayHello() {
 	efiPrintf("hellenBoardId=%d", engine->engineState.hellenBoardId);
 
 #if defined(STM32F4) || defined(STM32F7) || defined(STM32H7)
-	uint32_t *uid = ((uint32_t *)UID_BASE);
-	efiPrintf("UID=%x %x %x", uid[0], uid[1], uid[2]);
-	engineConfiguration->device_uid[0] = uid[0];
-	engineConfiguration->device_uid[1] = uid[1];
-	engineConfiguration->device_uid[2] = uid[2];
+  printUid();
 
 #if defined(STM32F4) && !defined(AT32F4XX)
 	efiPrintf("can read 0x20000010 %d", ramReadProbe((const char *)0x20000010));
@@ -234,6 +240,10 @@ void initializeConsole() {
 	initConsoleLogic();
 
 	startConsole(&handleConsoleLine);
+
+#if defined(STM32F4) || defined(STM32F7) || defined(STM32H7)
+	addConsoleAction("uid", printUid);
+#endif
 
 	sayHello();
 	addConsoleAction("test", [](){ /* do nothing */});
