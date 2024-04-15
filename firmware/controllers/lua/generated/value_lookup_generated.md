@@ -1129,6 +1129,9 @@ AEM X-Series EGT gauge kit or rusEFI EGT sensor from Wideband controller
 ### startRequestPinInverted
 
 
+### tcu_rangeSensorPulldown
+
+
 ### skipBoardCanDash
 
 
@@ -1818,6 +1821,9 @@ Secondary TTL channel baud rate
 
 ### anotherCiTest
 null
+
+### tcu_rangeSensorBiasResistor
+
 
 ### tcu_shiftTime
 

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Apr 12 04:16:33 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Apr 15 00:16:55 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2822,7 +2822,7 @@ struct engine_configuration_s {
 	bool startRequestPinInverted : 1 {};
 	/**
 	offset 1496 bit 17 */
-	bool unusedBit_503_17 : 1 {};
+	bool tcu_rangeSensorPulldown : 1 {};
 	/**
 	offset 1496 bit 18 */
 	bool skipBoardCanDash : 1 {};
@@ -4518,16 +4518,25 @@ struct engine_configuration_s {
 	 */
 	uint32_t device_uid[3];
 	/**
-	 * units: units
 	 * offset 4004
 	 */
-	uint8_t unusedOftenChangesDuringFirmwareUpdate[214];
+	adc_channel_e tcu_rangeAnalogInput[RANGE_INPUT_COUNT];
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 4218
+	 * offset 4010
 	 */
-	uint8_t alignmentFill_at_4218[2];
+	uint8_t alignmentFill_at_4010[2];
+	/**
+	 * units: Ohm
+	 * offset 4012
+	 */
+	float tcu_rangeSensorBiasResistor;
+	/**
+	 * units: units
+	 * offset 4016
+	 */
+	uint8_t unusedOftenChangesDuringFirmwareUpdate[204];
 };
 static_assert(sizeof(engine_configuration_s) == 4220);
 
@@ -5585,4 +5594,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22656);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Apr 12 04:16:33 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Apr 15 00:16:55 UTC 2024

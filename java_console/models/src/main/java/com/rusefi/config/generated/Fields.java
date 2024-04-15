@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Apr 14 23:12:02 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Apr 15 00:17:59 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1125,7 +1125,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1516312782;
+	public static final int SIGNATURE_HASH = 2014754836;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1377,7 +1377,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.04.15.f407-discovery.1516312782";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.04.15.f407-discovery.2014754836";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2143,6 +2143,7 @@ public class Fields {
 	public static final Field IS_ENABLED_SPI_6 = Field.create("IS_ENABLED_SPI_6", 1496, FieldType.BIT, 14).setBaseOffset(0);
 	public static final Field ENABLEAEMXSERIESEGT = Field.create("ENABLEAEMXSERIESEGT", 1496, FieldType.BIT, 15).setBaseOffset(0);
 	public static final Field STARTREQUESTPININVERTED = Field.create("STARTREQUESTPININVERTED", 1496, FieldType.BIT, 16).setBaseOffset(0);
+	public static final Field TCU_RANGESENSORPULLDOWN = Field.create("TCU_RANGESENSORPULLDOWN", 1496, FieldType.BIT, 17).setBaseOffset(0);
 	public static final Field SKIPBOARDCANDASH = Field.create("SKIPBOARDCANDASH", 1496, FieldType.BIT, 18).setBaseOffset(0);
 	public static final Field DEVBIT0 = Field.create("DEVBIT0", 1496, FieldType.BIT, 20).setBaseOffset(0);
 	public static final Field DEVBIT1 = Field.create("DEVBIT1", 1496, FieldType.BIT, 21).setBaseOffset(0);
@@ -2798,8 +2799,15 @@ public class Fields {
 	public static final Field DEVICE_UID1 = Field.create("DEVICE_UID1", 3992, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field DEVICE_UID2 = Field.create("DEVICE_UID2", 3996, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field DEVICE_UID3 = Field.create("DEVICE_UID3", 4000, FieldType.INT).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE = Field.create("UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE", 4004, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_4218 = Field.create("ALIGNMENTFILL_AT_4218", 4218, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field TCU_RANGEANALOGINPUT1 = Field.create("TCU_RANGEANALOGINPUT1", 4004, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
+	public static final Field TCU_RANGEANALOGINPUT2 = Field.create("TCU_RANGEANALOGINPUT2", 4005, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
+	public static final Field TCU_RANGEANALOGINPUT3 = Field.create("TCU_RANGEANALOGINPUT3", 4006, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
+	public static final Field TCU_RANGEANALOGINPUT4 = Field.create("TCU_RANGEANALOGINPUT4", 4007, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
+	public static final Field TCU_RANGEANALOGINPUT5 = Field.create("TCU_RANGEANALOGINPUT5", 4008, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
+	public static final Field TCU_RANGEANALOGINPUT6 = Field.create("TCU_RANGEANALOGINPUT6", 4009, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_4010 = Field.create("ALIGNMENTFILL_AT_4010", 4010, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field TCU_RANGESENSORBIASRESISTOR = Field.create("TCU_RANGESENSORBIASRESISTOR", 4012, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE = Field.create("UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE", 4016, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 4220, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4252, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4284, FieldType.INT8).setScale(0.05).setBaseOffset(0);
@@ -3811,6 +3819,7 @@ public class Fields {
 	IS_ENABLED_SPI_6,
 	ENABLEAEMXSERIESEGT,
 	STARTREQUESTPININVERTED,
+	TCU_RANGESENSORPULLDOWN,
 	SKIPBOARDCANDASH,
 	DEVBIT0,
 	DEVBIT1,
@@ -4452,8 +4461,15 @@ public class Fields {
 	DEVICE_UID1,
 	DEVICE_UID2,
 	DEVICE_UID3,
+	TCU_RANGEANALOGINPUT1,
+	TCU_RANGEANALOGINPUT2,
+	TCU_RANGEANALOGINPUT3,
+	TCU_RANGEANALOGINPUT4,
+	TCU_RANGEANALOGINPUT5,
+	TCU_RANGEANALOGINPUT6,
+	ALIGNMENTFILL_AT_4010,
+	TCU_RANGESENSORBIASRESISTOR,
 	UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE,
-	ALIGNMENTFILL_AT_4218,
 	ETBBIASBINS,
 	ETBBIASVALUES,
 	IACPIDMULTTABLE,

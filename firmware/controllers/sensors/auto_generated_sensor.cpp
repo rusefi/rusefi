@@ -1,6 +1,6 @@
 #include "global.h"
 #include "sensor_type.h"
-// was generated automatically by rusEFI tool  from sensor_type.h // by enum_to_string.jar tool on Thu Apr 11 21:34:07 UTC 2024
+// was generated automatically by rusEFI tool  from sensor_type.h // by enum_to_string.jar tool on Mon Apr 15 00:16:37 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -145,6 +145,18 @@ case SensorType::OilTemperature:
   return "OilTemperature";
 case SensorType::PlaceholderLast:
   return "PlaceholderLast";
+case SensorType::RangeInput1:
+  return "RangeInput1";
+case SensorType::RangeInput2:
+  return "RangeInput2";
+case SensorType::RangeInput3:
+  return "RangeInput3";
+case SensorType::RangeInput4:
+  return "RangeInput4";
+case SensorType::RangeInput5:
+  return "RangeInput5";
+case SensorType::RangeInput6:
+  return "RangeInput6";
 case SensorType::Rpm:
   return "Rpm";
 case SensorType::ThrottleInletPressure:

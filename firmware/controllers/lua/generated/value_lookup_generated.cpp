@@ -1135,6 +1135,9 @@ float getConfigValueByName(const char *name) {
 // startRequestPinInverted
 		case 747573348:
 			return engineConfiguration->startRequestPinInverted;
+// tcu_rangeSensorPulldown
+		case -2079591860:
+			return engineConfiguration->tcu_rangeSensorPulldown;
 // skipBoardCanDash
 		case 1878649142:
 			return engineConfiguration->skipBoardCanDash;
@@ -1825,6 +1828,9 @@ float getConfigValueByName(const char *name) {
 // anotherCiTest
 		case -283215870:
 			return engineConfiguration->anotherCiTest;
+// tcu_rangeSensorBiasResistor
+		case -1480283119:
+			return engineConfiguration->tcu_rangeSensorBiasResistor;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -3719,6 +3725,11 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->startRequestPinInverted = (int)value;
 		return 1;
 	}
+		case -2079591860:
+	{
+		engineConfiguration->tcu_rangeSensorPulldown = (int)value;
+		return 1;
+	}
 		case 1878649142:
 	{
 		engineConfiguration->skipBoardCanDash = (int)value;
@@ -4867,6 +4878,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -283215870:
 	{
 		engineConfiguration->anotherCiTest = (int)value;
+		return 1;
+	}
+		case -1480283119:
+	{
+		engineConfiguration->tcu_rangeSensorBiasResistor = value;
 		return 1;
 	}
 		case -1658957891:
