@@ -5,10 +5,7 @@ import com.rusefi.enum_reader.Value;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
+import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -59,8 +56,13 @@ public class VariableRegistry {
         return token;
     }
 
-    public void readPrependValues(String prependFile, boolean ignoreUnexpectedLined) throws IOException {
-        readPrependValues(new FileReader(RootHolder.ROOT + prependFile), ignoreUnexpectedLined);
+    public void readPrependValues(String prependFile, boolean ignoreUnexpectedLined) {
+        File file = new File(RootHolder.ROOT + prependFile);
+        try {
+            readPrependValues(new FileReader(file), ignoreUnexpectedLined);
+        } catch (Throwable e) {
+            throw new IllegalStateException("While reading from " + file.getAbsolutePath(), e);
+        }
     }
 
     public void readPrependValues(Reader fileReader, boolean ignoreUnexpectedLined) throws IOException {
