@@ -8,6 +8,7 @@ COMMON_GEN_CONFIG="
  -readfile LIVE_DATA_MENU_FROM_FILE console/binary/generated/fancy_menu.ini \
  -readfile LIVE_DATA_PANELS_FROM_FILE console/binary/generated/fancy_content.ini \
  -readfile LIVE_DATA_GAUGES_FROM_FILE console/binary/generated/gauges.ini \
+ -readfile BOARD_OPTIONS_FROM_FILE ${BOARD_DIR}/board_options.ini \
  -ts_destination tunerstudio \
  -triggerInputFolder ../unit_tests \
  -with_c_defines false \
