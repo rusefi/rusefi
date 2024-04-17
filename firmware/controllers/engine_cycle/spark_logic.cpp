@@ -444,6 +444,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 #endif /* SPARK_EXTREME_LOGGING */
 
 		if (!limitedSpark && ENABLE_OVERDWELL_PROTECTION) {
+/*
 			// auto fire spark at 1.5x nominal dwell
 			efitick_t fireTime = chargeTime + MSF2NT(1.5f * dwellMs);
 
@@ -456,7 +457,9 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
        * todo two: can we please comprehend/document how this even works? we seem to be reusing 'sparkEvent.scheduling' instance
        * and it looks like current (smart?) re-queuing is effectively cancelling out the overdwell? is that the way this was intended to work?
        */
+/*
 			engine->executor.scheduleByTimestampNt("overdwell", &event->sparkEvent.scheduling, fireTime, { overFireSparkAndPrepareNextSchedule, event });
+*/
 		} else {
 		  engine->engineState.overDwellNotScheduledCounter++;
 		}
