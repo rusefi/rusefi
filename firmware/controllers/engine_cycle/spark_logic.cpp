@@ -28,7 +28,7 @@ static const char *prevSparkName = nullptr;
 
 static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *output) {
 #if SPARK_EXTREME_LOGGING
-	efiPrintf("spark goes low  %d %s %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->getName(), (int)getTimeNowUs(),
+	efiPrintf("spark goes low  revolution=%d [%s] %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->getName(), (int)getTimeNowUs(),
 			output->currentLogicValue, output->outOfOrder, event->sparkCounter);
 #endif /* SPARK_EXTREME_LOGGING */
 
@@ -278,7 +278,7 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 	if (Sensor::getOrZero(SensorType::Rpm) > 2 * engineConfiguration->cranking.rpm) {
 		const char *outputName = output->getName();
 		if (prevSparkName == outputName && getCurrentIgnitionMode() != IM_ONE_COIL) {
-			warning(ObdCode::CUSTOM_OBD_SKIPPED_SPARK, "looks like skipped spark event %d %s", getRevolutionCounter(), outputName);
+			warning(ObdCode::CUSTOM_OBD_SKIPPED_SPARK, "looks like skipped spark event revolution=%d [%s]", getRevolutionCounter(), outputName);
 		}
 		prevSparkName = outputName;
 	}
@@ -286,7 +286,7 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 
 
 #if SPARK_EXTREME_LOGGING
-	efiPrintf("spark goes high %d %s %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->getName(), (int)getTimeNowUs(),
+	efiPrintf("spark goes high revolution=%d [%s] %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->getName(), (int)getTimeNowUs(),
 			output->currentLogicValue, output->outOfOrder, event->sparkCounter);
 #endif /* SPARK_EXTREME_LOGGING */
 
@@ -371,7 +371,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 	 */
 	if (!limitedSpark) {
 #if SPARK_EXTREME_LOGGING
-		efiPrintf("scheduling sparkUp %d %s now=%d %d later id=%d", getRevolutionCounter(), event->getOutputForLoggins()->getName(), (int)getTimeNowUs(), (int)angleOffset,
+		efiPrintf("scheduling sparkUp revolution=%d [%s] now=%d %d later id=%d", getRevolutionCounter(), event->getOutputForLoggins()->getName(), (int)getTimeNowUs(), (int)angleOffset,
 				event->sparkCounter);
 #endif /* SPARK_EXTREME_LOGGING */
 
@@ -429,8 +429,9 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 
 #if EFI_UNIT_TEST
 	if (verboseMode) {
-		printf("spark dwell@ %.1f spark@ %.2f id=%d\r\n", event->dwellAngle,
+		printf("spark dwell@ %.1f spark@ %.2f id=%d sparkCounter=%d\r\n", event->dwellAngle,
 			event->sparkEvent.getAngle(),
+			event->coilIndex,
 			event->sparkCounter);
 	}
 #endif
