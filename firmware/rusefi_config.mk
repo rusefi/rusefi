@@ -12,8 +12,11 @@ CONFIG_INPUTS = \
   $(PROJECT_DIR)/console/binary/generated/data_logs.ini \
   $(PROJECT_DIR)/console/binary/generated/fancy_content.ini \
   $(PROJECT_DIR)/console/binary/generated/gauges.ini \
-  $(BOARD_DIR)/board_options.ini \
   $(BOARD_DIR)/prepend.txt
+
+ifneq ("$(wildcard $(BOARD_DIR)/board_options.ini)","")
+  CONFIG_INPUTS += $(BOARD_DIR)/board_options.ini
+endif
 
 # Build the generated pin code only if the connector directory exists
 ifneq ("$(wildcard $(BOARD_DIR)/connectors)","")
