@@ -11,6 +11,10 @@
  */
 #include "engine_state.h"
 
+#if EFI_UNIT_TEST
+extern bool printTriggerDebug;
+#endif
+
 #if EFI_SHAFT_POSITION_INPUT
 
 InstantRpmCalculator::InstantRpmCalculator() :
@@ -124,6 +128,11 @@ void InstantRpmCalculator::updateInstantRpm(
 
 	m_instantRpm = calculateInstantRpm(triggerShape, triggerFormDetails, index,
 					   nowNt);
+#if EFI_UNIT_TEST
+  if (printTriggerDebug) {
+		 printf("instantRpm = %f\n", m_instantRpm);
+	}
+#endif
 
 #if EFI_SENSOR_CHART
 	if (getEngineState()->sensorChartMode == SC_RPM_ACCEL || getEngineState()->sensorChartMode == SC_DETAILED_RPM) {
