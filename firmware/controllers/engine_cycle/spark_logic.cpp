@@ -229,7 +229,7 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 
 	}
 #endif /* EFI_UNIT_TEST */
-	// now that we've jdwellAngleDurationust fired a coil let's prepare the new schedule for the next engine revolution
+	// now that we've just fired a coil let's prepare the new schedule for the next engine revolution
 
 	angle_t dwellAngleDuration = engine->ignitionState.dwellDurationAngle;
 	floatms_t sparkDwell = engine->ignitionState.sparkDwell;
