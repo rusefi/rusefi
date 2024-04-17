@@ -34,7 +34,7 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 
 	/**
 	 * there are two kinds of 'out-of-order'
-	 * 1) low goes before high, everything is fine after words
+	 * 1) low goes before high, everything is fine afterwards
 	 *
 	 * 2) we have an un-matched low followed by legit pairs
 	 */
