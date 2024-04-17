@@ -69,6 +69,7 @@ struct_no_prefix engine_state_s
 	uint16_t autoscale veTableYAxis;;"%",{1/100}, 0, 0, 0, 0
 	uint8_t overDwellCounter
 	uint8_t overDwellNotScheduledCounter
+	uint8_t sparkOutOfOrderCounter
 
 ! engine_state_s
 end_struct
