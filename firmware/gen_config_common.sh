@@ -2,12 +2,18 @@
 COMMON_GEN_CONFIG_PREFIX=" -DSystemOut.name=logs/gen_config_${SHORT_BOARD_NAME} \
  -jar ../java_tools/configuration_definition/build/libs/config_definition-all.jar"
 
+BOARD_OPTIONS_FILE="${BOARD_DIR}/board_options.ini"
+if [ ! -f $BOARD_OPTIONS_FILE ]; then
+    BOARD_OPTIONS_FILE="/dev/null"
+fi
+
 COMMON_GEN_CONFIG="
  -readfile OUTPUTS_SECTION_FROM_FILE console/binary/generated/output_channels.ini \
  -readfile DATALOG_SECTION_FROM_FILE console/binary/generated/data_logs.ini \
  -readfile LIVE_DATA_MENU_FROM_FILE console/binary/generated/fancy_menu.ini \
  -readfile LIVE_DATA_PANELS_FROM_FILE console/binary/generated/fancy_content.ini \
  -readfile LIVE_DATA_GAUGES_FROM_FILE console/binary/generated/gauges.ini \
+ -readfile BOARD_OPTIONS_FROM_FILE ${BOARD_OPTIONS_FILE} \
  -ts_destination tunerstudio \
  -triggerInputFolder ../unit_tests \
  -with_c_defines false \
@@ -20,7 +26,3 @@ COMMON_GEN_CONFIG="
  -prepend integration/rusefi_config_trigger.txt \
  -prepend ${BOARD_DIR}/prepend.txt \
  -board ${BOARD_DIR}"
-
-if [ -f "${BOARD_DIR}/board_options.ini" ]; then
-    COMMON_GEN_CONFIG="$COMMON_GEN_CONFIG -readfile BOARD_OPTIONS_FROM_FILE ${BOARD_DIR}/board_options.ini"
-fi
