@@ -114,6 +114,13 @@ void initDataStructures() {
 #if EFI_ENGINE_CONTROL
 	initFuelMap();
 	initSpeedDensity();
+	IgnitionEventList &events = engine->ignitionEvents;
+	for (size_t i=0;i<efi::size(events.elements);i++) {
+	  // above-zero value helps distinguish events
+	  events.elements[i].sparkCounter = 1;
+	}
+  // above-zero value helps distinguish events
+	engine->engineState.globalSparkCounter = 1;
 #endif // EFI_ENGINE_CONTROL
 }
 
