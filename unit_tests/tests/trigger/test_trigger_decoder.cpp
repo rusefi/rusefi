@@ -1036,6 +1036,7 @@ TEST(big, testSparkReverseOrderBug319) {
 	ASSERT_EQ( 8,  engine->executor.size()) << "testSparkReverseOrderBug319: queue size";
 	eth.executeActions();
 	printf("***************************************************\r\n");
+	ASSERT_EQ( 0,  engine->engineState.sparkOutOfOrderCounter) << "out-of-order #1";
 
 
 	eth.fireRise(20);
@@ -1047,13 +1048,12 @@ TEST(big, testSparkReverseOrderBug319) {
 	eth.fireFall(0.1); // executing new signal too early
 	eth.executeActions();
 
-	ASSERT_EQ( 1,  enginePins.coils[3].outOfOrder) << "out-of-order #1";
 
 
 	eth.moveTimeForwardUs(MS2US(200)); // moving time forward to execute all pending actions
 	eth.executeActions();
 
-	ASSERT_EQ( 0,  enginePins.coils[3].outOfOrder) << "out-of-order #2";
+	ASSERT_EQ( 1,  engine->engineState.sparkOutOfOrderCounter) << "out-of-order #2";
 
 	printf("*************************************************** now let's have a good engine cycle and confirm things work\r\n");
 
@@ -1063,12 +1063,12 @@ TEST(big, testSparkReverseOrderBug319) {
 
 	ASSERT_EQ( 545,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM#2";
 
-	ASSERT_EQ( 0,  enginePins.coils[3].outOfOrder) << "out-of-order #3";
+	ASSERT_EQ( 1,  engine->engineState.sparkOutOfOrderCounter) << "out-of-order #3";
 
 
 	eth.fireFall(20);
 	eth.executeActions();
-	ASSERT_EQ( 1,  enginePins.coils[3].outOfOrder) << "out-of-order #4";
+	ASSERT_EQ( 1,  engine->engineState.sparkOutOfOrderCounter) << "out-of-order #4";
 
 	printf("*************************************************** (rpm is back) now let's have a good engine cycle and confirm things work\r\n");
 
@@ -1077,12 +1077,12 @@ TEST(big, testSparkReverseOrderBug319) {
 
 	ASSERT_EQ( 3000,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM#3";
 
-	ASSERT_EQ( 1,  enginePins.coils[3].outOfOrder) << "out-of-order #5 on c4";
+	ASSERT_EQ( 1,  engine->engineState.sparkOutOfOrderCounter) << "out-of-order #5 on c4";
 
 
 	eth.fireFall(20);
 	eth.executeActions();
-	ASSERT_EQ( 1,  enginePins.coils[3].outOfOrder) << "out-of-order #6 on c4";
+	ASSERT_EQ( 1,  engine->engineState.sparkOutOfOrderCounter) << "out-of-order #6 on c4";
 
 	printf("*************************************************** (rpm is back 2) now let's have a good engine cycle and confirm things work\r\n");
 
@@ -1091,12 +1091,12 @@ TEST(big, testSparkReverseOrderBug319) {
 
 	ASSERT_EQ( 3000,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM#4";
 
-	ASSERT_EQ( 1,  enginePins.coils[3].outOfOrder) << "out-of-order #7";
+	ASSERT_EQ( 1,  engine->engineState.sparkOutOfOrderCounter) << "out-of-order #7";
 
 
 	eth.fireFall(20);
 	eth.executeActions();
-	ASSERT_EQ( 0,  enginePins.coils[3].outOfOrder) << "out-of-order #8";
+	ASSERT_EQ( 1,  engine->engineState.sparkOutOfOrderCounter) << "out-of-order #8";
 	ASSERT_EQ( 2,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#SparkReverseOrderBug319";
 	ASSERT_EQ(ObdCode::CUSTOM_DWELL_TOO_LONG, unitTestWarningCodeState.recentWarnings.get(0).Code) << "warning @0";
 	ASSERT_EQ(ObdCode::CUSTOM_OUT_OF_ORDER_COIL, unitTestWarningCodeState.recentWarnings.get(1).Code);

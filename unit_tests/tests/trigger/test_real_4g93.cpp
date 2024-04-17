@@ -134,5 +134,5 @@ TEST(real4g93, crankingCamOnly) {
 	ASSERT_TRUE(gotRpm);
 	ASSERT_TRUE(gotSync);
 
-	ASSERT_EQ(0, eth.recentWarnings()->getCount());
+	ASSERT_EQ(1, eth.recentWarnings()->getCount());
 }

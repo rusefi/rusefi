@@ -45,6 +45,10 @@ public:
 	scheduling_s dwellStartTimer;
 	AngleBasedEvent sparkEvent;
 
+#if EFI_UNIT_TEST
+  bool bailedOnDwell = false;
+#endif
+
 	scheduling_s trailingSparkCharge;
 	scheduling_s trailingSparkFire;
 

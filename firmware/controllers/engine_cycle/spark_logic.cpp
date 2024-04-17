@@ -42,7 +42,11 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 	output->signalFallSparkId = event->sparkCounter;
 
 	if (!output->currentLogicValue && !event->wasSparkLimited) {
+#if SPARK_EXTREME_LOGGING
+		printf("out-of-order coil off %s", output->getName());
+#endif /* SPARK_EXTREME_LOGGING */
 		warning(ObdCode::CUSTOM_OUT_OF_ORDER_COIL, "out-of-order coil off %s", output->getName());
+		// todo: drop this year 2016 outOfOrder in favor of 2024 [tag] #6349 handling?
 		output->outOfOrder = true;
 	}
 	output->setLow();
@@ -271,7 +275,7 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 	engine->onSparkFireKnockSense(event->coilIndex, nowNt);
 }
 
-static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutputPin *output) {
+static bool startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutputPin *output) {
 	// todo: no reason for this to be disabled in unit_test mode?!
 #if ! EFI_UNIT_TEST
 
@@ -290,15 +294,35 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 			output->currentLogicValue, output->outOfOrder, event->sparkCounter);
 #endif /* SPARK_EXTREME_LOGGING */
 
+		if (output->signalFallSparkId >= event->sparkCounter) {
+		  /**
+		   * fact: we schedule both start of dwell and spark firing using a combination of time and trigger event domain
+		   * in case of bad/noisy signal we can get unexpected trigger events and a small time delay for spark firing before
+		   * we even start dwell if it scheduled with a longer time-only delay with fewer trigger events
+		   *
+		   * here we are detecting such out-of-order processing and choose the safer route of not even starting dwell
+		   * [tag] #6349
+		   */
+
+#if SPARK_EXTREME_LOGGING
+			efiPrintf("[%s] bail spark dwell\n", output->getName());
+#endif /* SPARK_EXTREME_LOGGING */
+			// let's save this coil if things do not look right
+			engine->engineState.sparkOutOfOrderCounter++;
+			return true;
+		}
+
 	if (output->outOfOrder) {
 		output->outOfOrder = false;
 		if (output->signalFallSparkId == event->sparkCounter) {
 			// let's save this coil if things do not look right
-			return;
+			engine->engineState.sparkOutOfOrderCounter++;
+			return true;
 		}
 	}
 
 	output->setHigh();
+	return false;
 }
 
 void turnSparkPinHighStartCharging(IgnitionEvent *event) {
@@ -306,22 +330,32 @@ void turnSparkPinHighStartCharging(IgnitionEvent *event) {
 
 	efitick_t nowNt = getTimeNowNt();
 
-#if EFI_UNIT_TEST
-	if (engine->onIgnitionEvent) {
-		engine->onIgnitionEvent(event, true);
-	}
-#endif
-
-#if EFI_TOOTH_LOGGER
-	LogTriggerCoilState(nowNt, true);
-#endif // EFI_TOOTH_LOGGER
-
+  bool skippedDwellDueToTriggerNoised = false;
 	for (int i = 0; i< MAX_OUTPUTS_FOR_IGNITION;i++) {
 		IgnitionOutputPin *output = event->outputs[i];
 		if (output != NULL) {
-			startDwellByTurningSparkPinHigh(event, output);
+			skippedDwellDueToTriggerNoised |= startDwellByTurningSparkPinHigh(event, output);
 		}
 	}
+
+#if EFI_UNIT_TEST
+  event->bailedOnDwell = skippedDwellDueToTriggerNoised;
+#endif
+
+
+  if (!skippedDwellDueToTriggerNoised) {
+
+#if EFI_UNIT_TEST
+  	if (engine->onIgnitionEvent) {
+  		engine->onIgnitionEvent(event, true);
+	  }
+#endif
+
+#if EFI_TOOTH_LOGGER
+	  LogTriggerCoilState(nowNt, true);
+#endif // EFI_TOOTH_LOGGER
+  }
+
 
 	if (engineConfiguration->enableTrailingSparks) {
 		IgnitionOutputPin *output = &enginePins.trailingCoils[event->coilIndex];
