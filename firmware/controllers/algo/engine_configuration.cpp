@@ -804,10 +804,13 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif
 
-#if HW_PROTEUS
+#if HW_PROTEUS || HW_HELLEN
 	case engine_type_e::POLARIS_RZR:
 	case engine_type_e::MAVERICK_X3:
 	    setMaverickX3();
+#endif
+
+#if HW_PROTEUS
 		break;
 	case engine_type_e::ME17_9_MISC:
 	    setSlingshot();
