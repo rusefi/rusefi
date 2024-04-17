@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Wed Apr 10 04:48:31 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Wed Apr 17 22:33:58 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -389,8 +389,18 @@ struct engine_state_s {
 	 * offset 95
 	 */
 	uint8_t overDwellNotScheduledCounter = (uint8_t)0;
+	/**
+	 * offset 96
+	 */
+	uint8_t sparkOutOfOrderCounter = (uint8_t)0;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 97
+	 */
+	uint8_t alignmentFill_at_97[3];
 };
-static_assert(sizeof(engine_state_s) == 96);
+static_assert(sizeof(engine_state_s) == 100);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Wed Apr 10 04:48:31 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Wed Apr 17 22:33:58 UTC 2024

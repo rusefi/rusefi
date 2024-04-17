@@ -1239,6 +1239,9 @@ float getOutputValueByName(const char *name) {
 // overDwellNotScheduledCounter
 		case 1629214715:
 			return engine->engineState.overDwellNotScheduledCounter;
+// sparkOutOfOrderCounter
+		case -1595596945:
+			return engine->engineState.sparkOutOfOrderCounter;
 // vvtCamCounter
 #if EFI_SHAFT_POSITION_INPUT
 		case 477303734:

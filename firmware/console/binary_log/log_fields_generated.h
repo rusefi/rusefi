@@ -450,6 +450,7 @@ static const LogField fields[] = {
 	{engine->engineState.veTableYAxis, "veTableYAxis", "%", 0},
 	{engine->engineState.overDwellCounter, "overDwellCounter", "", 0},
 	{engine->engineState.overDwellNotScheduledCounter, "overDwellNotScheduledCounter", "", 0},
+	{engine->engineState.sparkOutOfOrderCounter, "sparkOutOfOrderCounter", "", 0},
 #if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.hwEventCounters[0], "Hardware events since boot 1", "", 0},
 #endif

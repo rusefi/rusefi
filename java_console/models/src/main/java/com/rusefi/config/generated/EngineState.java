@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Fri Apr 12 16:51:56 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Wed Apr 17 22:33:58 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -219,6 +219,8 @@ public class EngineState {
 	public static final Field VETABLEYAXIS = Field.create("VETABLEYAXIS", 92, FieldType.INT16).setScale(0.01).setBaseOffset(1096);
 	public static final Field OVERDWELLCOUNTER = Field.create("OVERDWELLCOUNTER", 94, FieldType.INT8).setScale(1.0).setBaseOffset(1096);
 	public static final Field OVERDWELLNOTSCHEDULEDCOUNTER = Field.create("OVERDWELLNOTSCHEDULEDCOUNTER", 95, FieldType.INT8).setScale(1.0).setBaseOffset(1096);
+	public static final Field SPARKOUTOFORDERCOUNTER = Field.create("SPARKOUTOFORDERCOUNTER", 96, FieldType.INT8).setScale(1.0).setBaseOffset(1096);
+	public static final Field ALIGNMENTFILL_AT_97 = Field.create("ALIGNMENTFILL_AT_97", 97, FieldType.INT8).setScale(1.0).setBaseOffset(1096);
 	public static final Field[] VALUES = {
 	LUA_FUELADD,
 	LUA_FUELMULT,
@@ -266,5 +268,7 @@ public class EngineState {
 	VETABLEYAXIS,
 	OVERDWELLCOUNTER,
 	OVERDWELLNOTSCHEDULEDCOUNTER,
+	SPARKOUTOFORDERCOUNTER,
+	ALIGNMENTFILL_AT_97,
 	};
 }
