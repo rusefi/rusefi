@@ -14,7 +14,7 @@ public class SimulatorExecHelper {
     private final static NamedThreadFactory THREAD_FACTORY = new NamedThreadFactory("SimulatorExecHelper", true);
 
     private static final String SIMULATOR_BINARY_NAME = "fome_simulator";
-    private static final String SIMULATOR_BINARY_PATH = "../simulator/build";
+    private static final String SIMULATOR_BINARY_PATH = "../simulator/build/";
     static Process simulatorProcess;
 
     /**
@@ -99,10 +99,10 @@ public class SimulatorExecHelper {
     }
 
     public static File getSimulatorBinary(String binaryPath) {
-        File binary = new File(binaryPath + SIMULATOR_BINARY_NAME);
+        File binary = new File(binaryPath, SIMULATOR_BINARY_NAME);
 
         if (!binary.exists()) { // try also for Windows/PE executable
-            binary = new File(binaryPath + ".exe");
+            binary = new File(binaryPath, SIMULATOR_BINARY_NAME + ".exe");
         }
 
         if (!binary.exists() || binary.isDirectory() || !binary.canExecute()) {
