@@ -405,17 +405,22 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 	if (isTimeScheduled) {
 	  // event was scheduled by time, we expect it to happen reliably
 #if SPARK_EXTREME_LOGGING
-		efiPrintf("scheduling sparkDown %d %s now=%d later id=%d", getRevolutionCounter(), event->getOutputForLoggins()->getName(), (int)getTimeNowUs(), event->sparkCounter);
+		efiPrintf("scheduling sparkDown revolution=%d [%s] now=%d later id=%d", getRevolutionCounter(), event->getOutputForLoggins()->getName(), (int)getTimeNowUs(), event->sparkCounter);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 	} else {
 	  // event was queued in relation to some expected tooth event in the future which might just never come so we shall protect from over-dwell
 #if SPARK_EXTREME_LOGGING
-		efiPrintf("to queue sparkDown %d %s now=%d for id=%d angle=%.1f", getRevolutionCounter(), event->getOutputForLoggins()->getName(), (int)getTimeNowUs(), event->sparkCounter, sparkAngle);
+		efiPrintf("to queue sparkDown revolution=%d [%s] now=%d for id=%d angle=%.1f", getRevolutionCounter(), event->getOutputForLoggins()->getName(), (int)getTimeNowUs(), event->sparkCounter, sparkAngle);
 #endif /* SPARK_EXTREME_LOGGING */
 
 		if (!limitedSpark && ENABLE_OVERDWELL_PROTECTION) {
 			// auto fire spark at 1.5x nominal dwell
 			efitick_t fireTime = chargeTime + MSF2NT(1.5f * dwellMs);
+
+#if SPARK_EXTREME_LOGGING
+		efiPrintf("scheduling overdwell sparkDown revolution=%d [%s] for %d", getRevolutionCounter(), event->getOutputForLoggins()->getName(), fireTime);
+#endif /* SPARK_EXTREME_LOGGING */
+
 			engine->executor.scheduleByTimestampNt("overdwell", &event->sparkEvent.scheduling, fireTime, { overFireSparkAndPrepareNextSchedule, event });
 		} else {
 		  engine->engineState.overDwellNotScheduledCounter++;
