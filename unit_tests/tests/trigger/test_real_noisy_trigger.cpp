@@ -31,10 +31,15 @@ static void testNoOverdwell(const char* file, bool instantRpm) {
 	std::vector<efitick_t> coilStartTimes(12);
 
 	engine->onIgnitionEvent = [&](IgnitionEvent* event, bool state) {
+    efitick_t startTime = coilStartTimes[event->coilIndex];
+
 		if (state) {
 			coilStartTimes[event->coilIndex] = getTimeNowNt();
+		} else if (startTime == 0) {
+		  printf("Interesting: goes LOW without ever going HIGH %d\n", event->coilIndex);
 		} else {
-			auto actualDwell = 1e-3 * NT2USF(getTimeNowNt() - coilStartTimes[event->coilIndex]);
+			auto actualDwell = 1e-3 * NT2USF(getTimeNowNt() - startTime);
+			coilStartTimes[event->coilIndex] = 0;
 
 			EXPECT_LT(actualDwell, 50) << "Overdwell on cylinder " << (int)event->coilIndex << " of " << actualDwell << " ms";
 		}
