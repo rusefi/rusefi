@@ -4,7 +4,7 @@ COMMON_GEN_CONFIG_PREFIX=" -DSystemOut.name=logs/gen_config_${SHORT_BOARD_NAME} 
 
 BOARD_OPTIONS_FILE="${BOARD_DIR}/board_options.ini"
 if [ ! -f $BOARD_OPTIONS_FILE ]; then
-    BOARD_OPTIONS_FILE="/dev/null"
+    BOARD_OPTIONS_FILE="tunerstudio/empty_board_options.ini"
 fi
 
 COMMON_GEN_CONFIG="
