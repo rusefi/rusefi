@@ -1,3 +1,5 @@
+// file lua_hooks.h
+
 #pragma once
 
 struct lua_State;
