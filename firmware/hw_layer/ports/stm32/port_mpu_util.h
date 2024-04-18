@@ -34,6 +34,8 @@
 #include "stm32h7xx_hal_flash_ex.h"
 #endif
 
+#define 	TM_ID_GetFlashSize()    (*(__IO uint16_t *) (FLASHSIZE_BASE))
+
 #ifdef AT32F4XX
 /* TODO: Artery */
 typedef enum {

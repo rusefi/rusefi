@@ -80,8 +80,6 @@ static void sayHello() {
 	efiPrintf("isStm32F42x %s", boolToString(isStm32F42x()));
 #endif // STM32F4
 
-#define 	TM_ID_GetFlashSize()    (*(__IO uint16_t *) (FLASHSIZE_BASE))
-
 #ifndef MIN_FLASH_SIZE
 #define MIN_FLASH_SIZE 1024
 #endif // MIN_FLASH_SIZE
