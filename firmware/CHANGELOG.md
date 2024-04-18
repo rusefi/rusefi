@@ -50,6 +50,7 @@ Release template (copy/paste this for new release):
  - update-ts-cacerts work-around is no longer needed #6327
  - uaEFI board knock configuration #6338
  - Fix a scenario where noisy trigger can cause overdwell #6349
+ - knock retard calibration lookup #6370
 
 ### Breaking Changes
  - wrong trigger naming for missing teeth #6258

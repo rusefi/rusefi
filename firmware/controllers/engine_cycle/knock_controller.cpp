@@ -14,7 +14,7 @@
 void KnockController::onConfigurationChange(engine_configuration_s const * previousConfig) {
 	KnockControllerBase::onConfigurationChange(previousConfig);
 
-	m_maxRetardTable.initTable(config->maxKnockRetardTable, config->maxKnockRetardLoadBins, config->maxKnockRetardRpmBins);
+	m_maxRetardTable.initTable(config->maxKnockRetardTable, config->maxKnockRetardRpmBins, config->maxKnockRetardLoadBins);
 }
 
 int getCylinderKnockBank(uint8_t cylinderNumber) {
