@@ -1,0 +1,43 @@
+#define MAIN_HELP_URL "https://rusefi.com/s/hellen154hyuindai"
+
+
+
+
+#define ts_show_vbatt false
+#define ts_show_clt_iat_pullup false
+#define ts_show_egt false
+
+#define ts_show_etb_pins false
+#define ts_show_analog_divider false
+#define ts_show_spi false
+#define ts_show_sd_card true
+#define ts_show_can_pins false
+#define ts_show_tunerstudio_port false
+#define ts_show_can2 false
+#define ts_show_software_knock true
+#define ts_show_hardware_simulator false
+#define ts_show_sd_pins false
+#define ts_show_ignitionPinMode false
+#define ts_show_tps2 false
+#define ts_show_speedo_settings false
+
+#define ts_show_bank2_cam1 false
+#define ts_show_bank2_cam2 false
+
+
+#define ts_show_starter_disable false
+#define ts_show_fuel_pump false
+#define ts_show_status_leds false
+#define ts_show_idle_hardware false
+#define ts_show_hd false
+#define ts_show_odd_fire false
+#define ts_show_rotary false
+#define ts_show_cylinder_bank false
+#define ts_show_maf false
+
+#define ts_show_cylinder_9 false
+#define ts_show_cylinder_10 false
+#define ts_show_cylinder_11 false
+#define ts_show_cylinder_12 false
+
+#define show_Hellen_hyundai_154 true
