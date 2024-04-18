@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Apr 15 00:17:50 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Apr 18 20:30:26 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4540,14 +4540,23 @@ struct engine_configuration_s {
 };
 static_assert(sizeof(engine_configuration_s) == 4220);
 
-// start of cyl_trim_s
-struct cyl_trim_s {
+// start of ign_cyl_trim_s
+struct ign_cyl_trim_s {
 	/**
 	 * offset 0
 	 */
-	scaled_channel<int8_t, 5, 1> table[TRIM_SIZE][TRIM_SIZE];
+	scaled_channel<int8_t, 5, 1> table[IGN_TRIM_SIZE][IGN_TRIM_SIZE];
 };
-static_assert(sizeof(cyl_trim_s) == 16);
+static_assert(sizeof(ign_cyl_trim_s) == 16);
+
+// start of fuel_cyl_trim_s
+struct fuel_cyl_trim_s {
+	/**
+	 * offset 0
+	 */
+	scaled_channel<int8_t, 5, 1> table[FUEL_TRIM_SIZE][FUEL_TRIM_SIZE];
+};
+static_assert(sizeof(fuel_cyl_trim_s) == 16);
 
 // start of blend_table_s
 struct blend_table_s {
@@ -5120,29 +5129,29 @@ struct persistent_config_s {
 	/**
 	 * offset 18548
 	 */
-	uint16_t ignTrimLoadBins[TRIM_SIZE];
+	uint16_t ignTrimLoadBins[IGN_TRIM_SIZE];
 	/**
 	 * units: rpm
 	 * offset 18556
 	 */
-	uint16_t ignTrimRpmBins[TRIM_SIZE];
+	uint16_t ignTrimRpmBins[IGN_TRIM_SIZE];
 	/**
 	 * offset 18564
 	 */
-	cyl_trim_s ignTrims[12];
+	ign_cyl_trim_s ignTrims[12];
 	/**
 	 * offset 18756
 	 */
-	uint16_t fuelTrimLoadBins[TRIM_SIZE];
+	uint16_t fuelTrimLoadBins[FUEL_TRIM_SIZE];
 	/**
 	 * units: rpm
 	 * offset 18764
 	 */
-	uint16_t fuelTrimRpmBins[TRIM_SIZE];
+	uint16_t fuelTrimRpmBins[FUEL_TRIM_SIZE];
 	/**
 	 * offset 18772
 	 */
-	cyl_trim_s fuelTrims[12];
+	fuel_cyl_trim_s fuelTrims[12];
 	/**
 	 * units: ratio
 	 * offset 18964
@@ -5594,4 +5603,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22656);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Apr 15 00:17:50 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Apr 18 20:30:26 UTC 2024

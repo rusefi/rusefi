@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Apr 18 03:09:45 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Apr 18 20:31:41 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -220,7 +220,6 @@ public class Fields {
 	public static final int cranking_parameters_s_size = 8;
 	public static final int CRITICAL_BUFFER_SIZE = 120;
 	public static final String CRITICAL_PREFIX = "CRITICAL";
-	public static final int cyl_trim_s_size = 16;
 	public static final int DAC_OUTPUT_COUNT = 2;
 	public static final int dc_function_e_DC_IdleValve = 3;
 	public static final int dc_function_e_DC_None = 0;
@@ -424,12 +423,14 @@ public class Fields {
 	public static final int ETB_HW_MAX_FREQUENCY = 3000;
 	public static final int FANCY_OPTIONS_COUNT = 16;
 	public static final int FLASH_DATA_VERSION = 20016;
+	public static final int fuel_cyl_trim_s_size = 16;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
 	public static final int FUEL_LOAD_COUNT = 16;
 	public static final int fuel_pressure_sensor_mode_e_FPM_Absolute = 0;
 	public static final int fuel_pressure_sensor_mode_e_FPM_Differential = 2;
 	public static final int fuel_pressure_sensor_mode_e_FPM_Gauge = 1;
 	public static final int FUEL_RPM_COUNT = 16;
+	public static final int FUEL_TRIM_SIZE = 4;
 	public static final int GAP_TRACKING_LENGTH = 18;
 	public static final String GAUGE_CATEGORY_BOOST_CONTROL = "Boost Control";
 	public static final String GAUGE_CATEGORY_ETB = "ETB more";
@@ -961,8 +962,10 @@ public class Fields {
 	public static final int idle_state_e_TPS_THRESHOLD = 1;
 	public static final int IDLE_VE_SIZE = 4;
 	public static final int IGN_BLEND_COUNT = 4;
+	public static final int ign_cyl_trim_s_size = 16;
 	public static final int IGN_LOAD_COUNT = 16;
 	public static final int IGN_RPM_COUNT = 16;
+	public static final int IGN_TRIM_SIZE = 4;
 	public static final int ignition_mode_e_IM_INDIVIDUAL_COILS = 1;
 	public static final int ignition_mode_e_IM_ONE_COIL = 0;
 	public static final int ignition_mode_e_IM_TWO_COILS = 3;
@@ -1125,7 +1128,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1427205336;
+	public static final int SIGNATURE_HASH = 1378508940;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1281,7 +1284,6 @@ public class Fields {
 	public static final String TRIGGERS_FILE_NAME = "triggers.txt";
 	public static final int TriggerWheel_T_PRIMARY = 0;
 	public static final int TriggerWheel_T_SECONDARY = 1;
-	public static final int TRIM_SIZE = 4;
 	public static final int ts_14_command_TS_14_0 = 0;
 	public static final int ts_14_command_TS_14_1 = 1;
 	public static final int ts_14_command_TS_14_4 = 4;
@@ -1377,7 +1379,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.04.18.f407-discovery.1427205336";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.04.18.f407-discovery.1378508940";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';

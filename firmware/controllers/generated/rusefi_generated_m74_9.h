@@ -232,7 +232,6 @@
 #define cranking_parameters_s_size 8
 #define CRITICAL_BUFFER_SIZE 120
 #define CRITICAL_PREFIX "CRITICAL"
-#define cyl_trim_s_size 16
 #define DAC_OUTPUT_COUNT 2
 #define dc_function_e_auto_enum 0="DC_None",3="DC_IdleValve",1="DC_Throttle1",2="DC_Throttle2",4="DC_Wastegate"
 #define dc_function_e_DC_IdleValve 3
@@ -445,6 +444,7 @@
 #define ETB_HW_MAX_FREQUENCY 3000
 #define FANCY_OPTIONS_COUNT 16
 #define FLASH_DATA_VERSION 20016
+#define fuel_cyl_trim_s_size 16
 #define FUEL_LEVEL_TABLE_COUNT 8
 #define FUEL_LOAD_COUNT 16
 #define fuel_pressure_sensor_mode_e_auto_enum 0="FPM_Absolute",2="FPM_Differential",1="FPM_Gauge"
@@ -453,6 +453,7 @@
 #define fuel_pressure_sensor_mode_e_FPM_Differential 2
 #define fuel_pressure_sensor_mode_e_FPM_Gauge 1
 #define FUEL_RPM_COUNT 16
+#define FUEL_TRIM_SIZE 4
 #define GAP_TRACKING_LENGTH 18
 #define GAUGE_CATEGORY_BOOST_CONTROL "Boost Control"
 #define GAUGE_CATEGORY_ETB "ETB more"
@@ -993,8 +994,10 @@
 #define idle_state_e_TPS_THRESHOLD 1
 #define IDLE_VE_SIZE 4
 #define IGN_BLEND_COUNT 4
+#define ign_cyl_trim_s_size 16
 #define IGN_LOAD_COUNT 16
 #define IGN_RPM_COUNT 16
+#define IGN_TRIM_SIZE 4
 #define ignition_mode_e_auto_enum 0="IM_ONE_COIL",1="IM_INDIVIDUAL_COILS",3="IM_TWO_COILS",2="IM_WASTED_SPARK"
 #define ignition_mode_e_IM_INDIVIDUAL_COILS 1
 #define ignition_mode_e_IM_ONE_COIL 0
@@ -1189,7 +1192,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 1174056806
+#define SIGNATURE_HASH 1119986482
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1361,7 +1364,6 @@
 #define TRIGGERS_FILE_NAME "triggers.txt"
 #define TriggerWheel_T_PRIMARY 0
 #define TriggerWheel_T_SECONDARY 1
-#define TRIM_SIZE 4
 #define ts_14_command_TS_14_0 0
 #define ts_14_command_TS_14_1 1
 #define ts_14_command_TS_14_4 4
@@ -1567,7 +1569,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.04.18.m74_9.1174056806"
+#define TS_SIGNATURE "rusEFI master.2024.04.18.m74_9.1119986482"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
