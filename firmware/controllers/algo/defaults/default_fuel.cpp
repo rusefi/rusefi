@@ -110,8 +110,13 @@ static void setDefaultVETable() {
 	setTable(config->baroCorrTable, 1);
 
 	// Give default axes for cylinder trim tables
+#if FUEL_TRIM_SIZE == 4
 	copyArray(config->fuelTrimRpmBins, { 1000, 3000, 5000, 7000 });
 	copyArray(config->fuelTrimLoadBins, { 20, 50, 80, 100 });
+#else
+  setRpmTableBin(config->fuelTrimRpmBins);
+  setLinearCurve(config->fuelTrimLoadBins, 20, 100);
+#endif
 
 	// Default axes for VE blends
 	for (size_t i = 0; i < efi::size(config->veBlends); i++) {
