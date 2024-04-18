@@ -1812,21 +1812,26 @@ uint8_t[SCRIPT_TABLE_8 x TABLE_4_RPM] scriptTable4;;"value", 1, 0, 0, 255, 0
 int16_t[SCRIPT_TABLE_8] scriptTable4LoadBins;;"L", 1, 0, -32000, 32000, 0
 int16_t[TABLE_4_RPM] scriptTable4RpmBins;;"RPM", 1, 0, -32000, 32000, 0
 
-#define TRIM_SIZE 4
+#define IGN_TRIM_SIZE 4
+#define FUEL_TRIM_SIZE 4
 
-struct cyl_trim_s
-	int8_t[TRIM_SIZE x TRIM_SIZE] autoscale table;;"", 0.2, 0, -25, 25, 1
+struct ign_cyl_trim_s
+	int8_t[IGN_TRIM_SIZE x IGN_TRIM_SIZE] autoscale table;;"", 0.2, 0, -25, 25, 1
+end_struct
+
+struct fuel_cyl_trim_s
+	int8_t[FUEL_TRIM_SIZE x FUEL_TRIM_SIZE] autoscale table;;"", 0.2, 0, -25, 25, 1
 end_struct
 
 ! All ign trim tables share axes
-uint16_t[TRIM_SIZE] ignTrimLoadBins;;"", 1, 0, 0, 1000, 0
-uint16_t[TRIM_SIZE] ignTrimRpmBins;;"rpm", 1, 0, 0, 20000, 0
-cyl_trim_s[12 iterate] ignTrims
+uint16_t[IGN_TRIM_SIZE] ignTrimLoadBins;;"", 1, 0, 0, 1000, 0
+uint16_t[IGN_TRIM_SIZE] ignTrimRpmBins;;"rpm", 1, 0, 0, 20000, 0
+ign_cyl_trim_s[12 iterate] ignTrims
 
 ! All fuel trim tables share axes
-uint16_t[TRIM_SIZE] fuelTrimLoadBins;;"", 1, 0, 0, 1000, 0
-uint16_t[TRIM_SIZE] fuelTrimRpmBins;;"rpm", 1, 0, 0, 20000, 0
-cyl_trim_s[12 iterate] fuelTrims
+uint16_t[FUEL_TRIM_SIZE] fuelTrimLoadBins;;"", 1, 0, 0, 1000, 0
+uint16_t[FUEL_TRIM_SIZE] fuelTrimRpmBins;;"rpm", 1, 0, 0, 20000, 0
+fuel_cyl_trim_s[12 iterate] fuelTrims
 
 uint16_t[CRANKING_CURVE_SIZE] autoscale crankingFuelCoefE100;;"ratio", 0.01, 0, 0, 50, 2
 
