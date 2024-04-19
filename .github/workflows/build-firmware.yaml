@@ -264,7 +264,7 @@ jobs:
       working-directory: ./artifacts
       run: |
         source ../firmware/config/boards/common_script_read_meta_env.inc ../firmware/${{ env.BOARD_META_PATH }}
-        bash ../firmware/bin/upload_bundle.sh ${{ secrets.RUSEFI_SSH_USER }} ${{ secrets.RUSEFI_SSH_PASS }} ${{ secrets.RUSEFI_SSH_SERVER }} ${BUNDLE_NAME}
+        bash ../firmware/bin/upload_bundle.sh ${{ secrets.RUSEFI_SSH_USER }} "${{ secrets.RUSEFI_SSH_PASS }}" ${{ secrets.RUSEFI_SSH_SERVER }} ${BUNDLE_NAME}
 
     - name: Add Bundles to Release
       if: ${{ env.full == 'true' && env.upload == 'release' }}
@@ -284,7 +284,7 @@ jobs:
       run: |
         source config/boards/common_script_read_meta_env.inc ${{ env.BOARD_META_PATH }}
         cd ${META_OUTPUT_ROOT_FOLDER}tunerstudio/generated
-        ${OLDPWD}/tunerstudio/upload_ini.sh ${{ secrets.RUSEFI_ONLINE_FTP_USER }} ${{ secrets.RUSEFI_ONLINE_FTP_PASS }} ${{ secrets.RUSEFI_FTP_SERVER }}
+        ${OLDPWD}/tunerstudio/upload_ini.sh ${{ secrets.RUSEFI_ONLINE_FTP_USER }} "${{ secrets.RUSEFI_ONLINE_FTP_PASS }}" ${{ secrets.RUSEFI_FTP_SERVER }}
 
     - name: Upload github action elf artifact
       if: ${{ env.partial == 'true' }}
