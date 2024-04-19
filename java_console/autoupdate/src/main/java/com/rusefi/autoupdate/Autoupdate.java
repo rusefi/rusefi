@@ -50,7 +50,7 @@ public class Autoupdate {
             if (mode != UpdateMode.NEVER) {
                 System.out.println("Snapshot requested");
                 if (branchName.equals("snapshot")) {
-                    downloadAndUnzipAutoupdate(bundleFullNameSplit, mode, ConnectionAndMeta.BASE_URL_LATEST);
+                    downloadAndUnzipAutoupdate(bundleFullNameSplit, mode, ConnectionAndMeta.getBaseUrl());
                 } else {
                     downloadAndUnzipAutoupdate(bundleFullNameSplit, mode, String.format(ConnectionAndMeta.BASE_URL_LTS, branchName));
                 }

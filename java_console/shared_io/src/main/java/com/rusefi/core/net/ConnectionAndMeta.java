@@ -12,7 +12,8 @@ import java.util.Objects;
 
 public class ConnectionAndMeta {
     public static final String BASE_URL_RELEASE = "https://github.com/rusefi/rusefi/releases/latest/download/";
-    public static final String BASE_URL_LATEST = "https://rusefi.com/build_server/autoupdate/";
+    private static final String AUTOUPDATE = "/autoupdate/";
+    private static final String BASE_URL_LATEST = "https://rusefi.com/build_server" + AUTOUPDATE;
     public static final String BASE_URL_LTS = "https://rusefi.com/build_server/lts/%s/autoupdate/";
 
     private static final int BUFFER_SIZE = 32 * 1024;
@@ -24,6 +25,10 @@ public class ConnectionAndMeta {
 
     public ConnectionAndMeta(String zipFileName) {
         this.zipFileName = zipFileName;
+    }
+
+    public static String getBaseUrl() {
+        return BASE_URL_LATEST;
     }
 
     public static void downloadFile(String localTargetFileName, ConnectionAndMeta connectionAndMeta, DownloadProgressListener listener) throws IOException {

@@ -22,7 +22,7 @@ import static com.rusefi.ts_plugin.TsPluginLauncher.VERSION;
 
 /**
  * Download fresh copy of {@link #PLUGIN_BODY_JAR} and launch {@link #PLUGIN_ENTRY_CLASS} via reflection.
- * @see ConnectionAndMeta#BASE_URL_LATEST
+ * @see ConnectionAndMeta#getBaseUrl
  */
 public class Updater {
     private static final String PLUGIN_ENTRY_CLASS = "com.rusefi.ts_plugin.PluginEntry";
@@ -77,7 +77,7 @@ public class Updater {
             public void run() {
                 ConnectionAndMeta connectionAndMeta;
                 try {
-                    connectionAndMeta = new ConnectionAndMeta(PLUGIN_BODY_JAR).invoke(ConnectionAndMeta.BASE_URL_LATEST);
+                    connectionAndMeta = new ConnectionAndMeta(PLUGIN_BODY_JAR).invoke(ConnectionAndMeta.getBaseUrl());
                 } catch (Exception e) {
                     e.printStackTrace();
                     return;
@@ -159,7 +159,7 @@ public class Updater {
         });
 
         try {
-            ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(PLUGIN_BODY_JAR).invoke(ConnectionAndMeta.BASE_URL_LATEST);
+            ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(PLUGIN_BODY_JAR).invoke(ConnectionAndMeta.getBaseUrl());
 
             AutoupdateUtil.downloadAutoupdateFile(LOCAL_JAR_FILE_NAME, connectionAndMeta,
                     TITLE);
