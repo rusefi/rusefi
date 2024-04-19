@@ -9,11 +9,11 @@ import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
 import java.util.Objects;
+import java.util.Properties;
 
 public class ConnectionAndMeta {
     public static final String BASE_URL_RELEASE = "https://github.com/rusefi/rusefi/releases/latest/download/";
     private static final String AUTOUPDATE = "/autoupdate/";
-    private static final String BASE_URL_LATEST = "https://rusefi.com/build_server" + AUTOUPDATE;
     public static final String BASE_URL_LTS = "https://rusefi.com/build_server/lts/%s/autoupdate/";
 
     private static final int BUFFER_SIZE = 32 * 1024;
@@ -28,7 +28,15 @@ public class ConnectionAndMeta {
     }
 
     public static String getBaseUrl() {
-        return BASE_URL_LATEST;
+        Properties props = new Properties();
+        try {
+            props.load(ConnectionAndMeta.class.getResourceAsStream("shared_io.properties"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        String result = props.getProperty("auto_update_root_url");
+        System.out.println(ConnectionAndMeta.class + ": got [" + result + "]");
+        return result + AUTOUPDATE;
     }
 
     public static void downloadFile(String localTargetFileName, ConnectionAndMeta connectionAndMeta, DownloadProgressListener listener) throws IOException {
