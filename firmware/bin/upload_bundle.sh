@@ -52,19 +52,6 @@ mkdir autoupdate
 cd autoupdate
 put $UPDATE_BUNDLE_FILE
 SSHCMD
-
- tar -czf - $FULL_BUNDLE_FILE    | sshpass -p "$PASS" ssh -o StrictHostKeyChecking=no ${USER}@${HOST} "mkdir -p ${DESTINATION_FOLDER};            tar -xzf - -C ${DESTINATION_FOLDER}"
- RET=$((RET+$?+PIPESTATUS))
- if [ -f $UPDATE_BUNDLE_FILE ]; then
-   tar -czf - $UPDATE_BUNDLE_FILE  | sshpass -p "$PASS" ssh -o StrictHostKeyChecking=no ${USER}@${HOST} "mkdir -p ${DESTINATION_FOLDER}/autoupdate; tar -xzf - -C ${DESTINATION_FOLDER}/autoupdate"
-   RET=$((RET+$?+PIPESTATUS))
- else
-    echo "File $UPDATE_BUNDLE_FILE does not exist."
- fi
- if [ $RET -ne 0 ]; then
-  echo "$SCRIPT_NAME: Bundle upload failed"
-  exit 1
- fi
  echo "$SCRIPT_NAME: DONE $FULL_BUNDLE_FILE"
 else
  echo "$SCRIPT_NAME: Upload not configured"
