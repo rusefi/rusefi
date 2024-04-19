@@ -19,7 +19,7 @@ if [ -n "${USER}" -a -n "$PASS" -a -n "${HOST}" ]; then
  if [ -n "${bundle_upload_folder}" ]; then
    echo "$SCRIPT_NAME: bundle_upload_folder is ${bundle_upload_folder}"
  else
-   bundle_upload_folder="rusefi_bundle"
+   bundle_upload_folder="build_server"
    echo "$SCRIPT_NAME: bundle_upload_folder env variable was not specified using default ${bundle_upload_folder}"
  fi
 
