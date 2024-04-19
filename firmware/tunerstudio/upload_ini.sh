@@ -42,6 +42,7 @@ if [ ! -z "$sig" -a "$sig" != " " ]; then
     # we do not have ssh for this user
     # sftp does not support -p flag on mkdir :(
     sshpass -p $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
+mkdir rusefi
 cd rusefi
 mkdir $branch
 mkdir $branch/$year

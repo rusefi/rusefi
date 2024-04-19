@@ -27,12 +27,32 @@ if [ -n "${USER}" -a -n "$PASS" -a -n "${HOST}" ]; then
  FULL_BUNDLE_FILE="rusefi_bundle_${BUNDLE_FILE_NAME}.zip"
  UPDATE_BUNDLE_FILE="rusefi_bundle_${BUNDLE_FILE_NAME}_autoupdate.zip"
 
+     # sftp does not support -p flag on mkdir :(
+     sshpass -p $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
+mkdir ${bundle_upload_folder}
+SSHCMD
+
  RET=0
  if [ "$LTS" == "true" -a -n "$REF" ]; then
    DESTINATION_FOLDER="${bundle_upload_folder}/lts/${REF}"
+     # sftp does not support -p flag on mkdir :(
+     sshpass -p $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
+mkdir ${bundle_upload_folder}/lts
+mkdir ${DESTINATION_FOLDER}
+SSHCMD
  else
    DESTINATION_FOLDER="${bundle_upload_folder}"
  fi
+
+     # sftp does not support -p flag on mkdir :(
+     sshpass -p $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
+cd ${DESTINATION_FOLDER}
+put $FULL_BUNDLE_FILE
+mkdir autoupdate
+cd autoupdate
+put $UPDATE_BUNDLE_FILE
+SSHCMD
+
  tar -czf - $FULL_BUNDLE_FILE    | sshpass -p "$PASS" ssh -o StrictHostKeyChecking=no ${USER}@${HOST} "mkdir -p ${DESTINATION_FOLDER};            tar -xzf - -C ${DESTINATION_FOLDER}"
  RET=$((RET+$?+PIPESTATUS))
  if [ -f $UPDATE_BUNDLE_FILE ]; then
