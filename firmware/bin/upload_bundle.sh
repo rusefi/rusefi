@@ -45,6 +45,7 @@ if [ -n "${USER}" -a -n "$PASS" -a -n "${HOST}" ]; then
   echo "$SCRIPT_NAME: Bundle upload failed"
   exit 1
  fi
+ echo "$SCRIPT_NAME: DONE $FULL_BUNDLE_FILE"
 else
  echo "$SCRIPT_NAME: Upload not configured"
 fi

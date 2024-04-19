@@ -5,6 +5,8 @@ USER=$1
 PASS=$2
 HOST=$3
 
+SCRIPT_NAME=$(basename "$0")
+
 if [ ! "$SHORT_BOARD_NAME" ]; then
  echo "No SHORT_BOARD_NAME"
  exit 1
@@ -50,12 +52,12 @@ put $fileName $path
 SSHCMD
     retVal=$?
     if [ $retVal -ne 0 ]; then
-      echo "Upload failed"
+      echo "${SCRIPT_NAME} Upload failed"
       exit 1
     fi
-    echo "* upload done!"
+    echo "${SCRIPT_NAME} * upload done!"
   else
-    echo "[upload_ini] Unexpected Signature: [$sig]"
+    echo "${SCRIPT_NAME} Unexpected Signature: [$sig]"
   fi
 else
   echo "Signature not found in $fileName"
