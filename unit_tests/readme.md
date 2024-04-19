@@ -18,7 +18,7 @@ See also [https://github.com/rusefi/rusefi/wiki/Build-Server-and-Automation](htt
 
 # Triggers Images
 
-Trigger images generation is still a two-step manual process:
+[Trigger images](https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers) generation is still a two-step manual process:
 
 Step 1: Invoke unit_tests. One of the unit_tests artifacts is triggers.txt
 
