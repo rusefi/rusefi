@@ -42,6 +42,9 @@ inputs:
   uploads:
     required: false
     default: ini bundles
+  bundle_upload_folder:
+    required: false
+    default: 'build_server'
   MY_REPO_PAT:
     description: 'Token for accessing private repos'
     required: false
@@ -129,6 +132,7 @@ runs:
         echo "RUSEFI_SSH_SERVER=${{inputs.RUSEFI_SSH_SERVER}}" >> $GITHUB_ENV
         echo "RUSEFI_SSH_USER=${{inputs.RUSEFI_SSH_USER}}" >> $GITHUB_ENV
         echo "RUSEFI_SSH_PASS=${{inputs.RUSEFI_SSH_PASS}}" >> $GITHUB_ENV
+        echo "bundle_upload_folder=${{inputs.bundle_upload_folder}}" >> $GITHUB_ENV
         echo "LTS=${{toJSON(inputs.lts)}}" >> $GITHUB_ENV
         echo "BUNDLE_SIMULATOR=${{toJSON(inputs.bundle_simulator)}}" >> $GITHUB_ENV
         echo "RUN_SIMULATOR=${{toJSON(inputs.run_simulator)}}" >> $GITHUB_ENV

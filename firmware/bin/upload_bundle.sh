@@ -16,15 +16,22 @@ if [ -n "${USER}" -a -n "$PASS" -a -n "${HOST}" ]; then
    echo "$SCRIPT_NAME: BUNDLE_FILE_NAME argument not specified"
    exit 1
  fi
+ if [ -n "${bundle_upload_folder}" ]; then
+   echo "$SCRIPT_NAME: bundle_upload_folder is ${bundle_upload_folder}"
+ else
+   bundle_upload_folder="rusefi_bundle"
+   echo "$SCRIPT_NAME: bundle_upload_folder env variable was not specified using default ${bundle_upload_folder}"
+ fi
+
  # technical debt: more than one file uses magic 'rusefi_bundle_' constant, can we extract constant?
  FULL_BUNDLE_FILE="rusefi_bundle_${BUNDLE_FILE_NAME}.zip"
  UPDATE_BUNDLE_FILE="rusefi_bundle_${BUNDLE_FILE_NAME}_autoupdate.zip"
 
  RET=0
  if [ "$LTS" == "true" -a -n "$REF" ]; then
-   DESTINATION_FOLDER="build_server/lts/${REF}"
+   DESTINATION_FOLDER="${bundle_upload_folder}/lts/${REF}"
  else
-   DESTINATION_FOLDER="build_server"
+   DESTINATION_FOLDER="${bundle_upload_folder}"
  fi
  tar -czf - $FULL_BUNDLE_FILE    | sshpass -p $PASS ssh -o StrictHostKeyChecking=no ${USER}@${HOST} "mkdir -p ${DESTINATION_FOLDER};            tar -xzf - -C ${DESTINATION_FOLDER}"
  RET=$((RET+$?+PIPESTATUS))
