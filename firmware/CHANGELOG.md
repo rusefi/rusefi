@@ -28,6 +28,8 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+## April 2024 "Day 785"
+
 ### Added
  - Boost Open Loop gear-based modifier takes negative values #6189
  - "12 tooth crank" renamed to "12crank/24cam" #6192
