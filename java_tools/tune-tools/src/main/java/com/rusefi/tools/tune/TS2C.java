@@ -153,7 +153,7 @@ public class TS2C {
         String line;
         while ((line = br.readLine()) != null) {
             if (line.contains(magicStringKey)) {
-                System.out.println("Found " + line);
+//                System.out.println("Found " + line);
                 break;
             }
         }

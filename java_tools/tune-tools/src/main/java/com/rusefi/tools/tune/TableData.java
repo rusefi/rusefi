@@ -79,7 +79,7 @@ public class TableData implements HoHo {
                     throw new IllegalStateException("While reading " + str, e);
                 }
             }
-            System.out.println("Got line " + rowIndex + ": " + Arrays.toString(table[rowIndex]));
+//            System.out.println("Got line " + rowIndex + ": " + Arrays.toString(table[rowIndex]));
             rowIndex++;
         }
     }

@@ -26,7 +26,7 @@ public class CurveData implements HoHo {
                 break;
             countOfEqualElementsAtTheEnd++;
         }
-        System.out.println(countOfEqualElementsAtTheEnd + " equal elements at the end of the curve");
+//        System.out.println(countOfEqualElementsAtTheEnd + " equal elements at the end of the curve");
     }
 
     static CurveData processCurve(String msqFileName, String curveName, IniFileModel model, BufferedWriter w) throws IOException {
@@ -81,7 +81,7 @@ public class CurveData implements HoHo {
             curve[index++] = Float.parseFloat(line);
         }
 
-        System.out.println("Got bins " + Arrays.toString(curve));
+//        System.out.println("Got bins " + Arrays.toString(curve));
     }
 
     @NotNull
