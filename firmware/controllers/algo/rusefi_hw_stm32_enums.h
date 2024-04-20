@@ -341,10 +341,26 @@ enum class Gpio : uint16_t {
 	TLE9104_5_OUT_2 = 322,
 	TLE9104_5_OUT_3 = 323,
 
+	MSIOBOX_0_OUT_1 = 324,
+	MSIOBOX_0_OUT_2 = 325,
+	MSIOBOX_0_OUT_3 = 326,
+	MSIOBOX_0_OUT_4 = 327,
+	MSIOBOX_0_OUT_5 = 328,
+	MSIOBOX_0_OUT_6 = 329,
+	MSIOBOX_0_OUT_7 = 330,
+	MSIOBOX_0_OUT_8 = 331,	/* actually not exist, keep for aligment, label NONE in rusefi_config.txt */
+	MSIOBOX_0_VSS_1  = 332,
+	MSIOBOX_0_VSS_2  = 333,
+	MSIOBOX_0_VSS_3  = 334,
+	MSIOBOX_0_VSS_4  = 335,
+	MSIOBOX_0_SW_1  = 336,
+	MSIOBOX_0_SW_2  = 337,
+	MSIOBOX_0_SW_3  = 338,
+	MSIOBOX_0_SW_4  = 339,	/* actually not exist, keep for aligment, label NONE in rusefi_config.txt */
 };
 
 /* Please keep updating these defines */
 #define BRAIN_PIN_ONCHIP_LAST	Gpio::I15
 #define BRAIN_PIN_ONCHIP_PINS	(BRAIN_PIN_ONCHIP_LAST - Gpio::A0 + 1)
-#define BRAIN_PIN_LAST 			Gpio::TLE9104_5_OUT_3
+#define BRAIN_PIN_LAST 			Gpio::MSIOBOX_0_SW_4
 #define BRAIN_PIN_TOTAL_PINS	(BRAIN_PIN_LAST - Gpio::A0 + 1)
