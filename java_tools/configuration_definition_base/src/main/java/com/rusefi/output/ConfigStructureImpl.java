@@ -55,6 +55,7 @@ public class ConfigStructureImpl implements ConfigStructure {
         return name;
     }
 
+    @Override
     public void addAlignmentFill(ReaderState state, int alignment) {
         if (alignment == 0)
             return;
@@ -121,6 +122,7 @@ public class ConfigStructureImpl implements ConfigStructure {
         return tsFieldsMap.get(name);
     }
 
+    @Override
     public void addBitPadding(ReaderState readerState) {
         if (readingBitState.get() == 0)
             return;

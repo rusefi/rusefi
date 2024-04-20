@@ -1,6 +1,7 @@
 package com.rusefi.output;
 
 import com.rusefi.ConfigField;
+import com.rusefi.ReaderState;
 
 import java.util.List;
 
@@ -11,7 +12,11 @@ public interface ConfigStructure {
 
     String getName();
 
+    void addAlignmentFill(ReaderState state, int alignment);
+
     ConfigField getTsFieldByName(String name);
+
+    void addBitPadding(ReaderState readerState);
 
     int getTotalSize();
 

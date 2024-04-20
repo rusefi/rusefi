@@ -99,7 +99,7 @@ public class ReaderStateImpl implements ReaderState {
         String falseName = bitNameParts.length > 2 ? bitNameParts[2].replaceAll("\"", "") : null;
 
         ConfigFieldImpl bitField = new ConfigFieldImpl(state, bitNameParts[0], comment, null, BOOLEAN_T, new int[0], null, false, false, trueName, falseName);
-        if (state.stack.isEmpty())
+        if (state.isStackEmpty())
             throw new IllegalStateException("Parent structure expected");
         ConfigStructureImpl structure = state.stack.peek();
         structure.addBitField(bitField);
@@ -224,7 +224,7 @@ public class ReaderStateImpl implements ReaderState {
     }
 
     private void handleEndStruct(List<ConfigurationConsumer> consumers) throws IOException {
-        if (stack.isEmpty())
+        if (isStackEmpty())
             throw new IllegalStateException("Unexpected end_struct");
         ConfigStructureImpl structure = stack.pop();
         if (log.debugEnabled())
@@ -280,7 +280,7 @@ public class ReaderStateImpl implements ReaderState {
                  */
                 variableRegistry.processDefine(line.substring(VariableRegistry.DEFINE.length()).trim());
             } else {
-                if (stack.isEmpty())
+                if (isStackEmpty())
                     throw new IllegalStateException("Expected to be within structure at line " + lineIndex + ": " + line);
                 addBitPadding();
                 processField(this, line);
@@ -292,13 +292,13 @@ public class ReaderStateImpl implements ReaderState {
     }
 
     private void addBitPadding() {
-        ConfigStructureImpl structure = stack.peek();
+        ConfigStructure structure = peek();
         structure.addBitPadding(this);
     }
 
     public void ensureEmptyAfterProcessing() {
-        if (!stack.isEmpty())
-            throw new IllegalStateException("Unclosed structure: " + stack.peek().getName());
+        if (!isStackEmpty())
+            throw new IllegalStateException("Unclosed structure: " + peek().getName());
     }
 
     private static void handleStartStructure(ReaderStateImpl state, String line, boolean withPrefix) {
@@ -312,7 +312,7 @@ public class ReaderStateImpl implements ReaderState {
             name = line;
             comment = null;
         }
-        ConfigStructure parent = state.stack.isEmpty() ? null : state.stack.peek();
+        ConfigStructure parent = state.isStackEmpty() ? null : state.peek();
         ConfigStructureImpl structure = new ConfigStructureImpl(name, comment, withPrefix, parent);
         state.stack.push(structure);
         if (log.debugEnabled())
@@ -333,7 +333,7 @@ public class ReaderStateImpl implements ReaderState {
             }
         }
 
-        if (state.stack.isEmpty())
+        if (state.isStackEmpty())
             throw new IllegalStateException(cf.getName() + ": Not enclosed in a struct");
         ConfigStructureImpl structure = state.stack.peek();
 

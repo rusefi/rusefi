@@ -50,7 +50,7 @@ public class ConfigFieldImpl implements ConfigField {
     private final boolean hasAutoscale;
     private final String trueName;
     private final String falseName;
-    private final ConfigStructure parent;
+    private final ConfigStructure parentType;
     private boolean isFromIterate;
     private String iterateOriginalName;
     private int iterateIndex;
@@ -79,7 +79,7 @@ public class ConfigFieldImpl implements ConfigField {
         if (!isVoid())
             Objects.requireNonNull(state);
         this.state = state;
-        this.parent = state == null ? null : (state.isStackEmpty() ? null : state.peek());
+        this.parentType = state == null ? null : (state.isStackEmpty() ? null : state.peek());
         this.comment = comment;
 
         if (!isVoid())
@@ -108,7 +108,7 @@ public class ConfigFieldImpl implements ConfigField {
 
     @Override
     public ConfigStructure getParentStructureType() {
-        return parent;
+        return parentType;
     }
 
     private static int getSize(VariableRegistry variableRegistry, String s) {
