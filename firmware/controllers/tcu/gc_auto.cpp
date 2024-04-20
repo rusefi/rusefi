@@ -8,16 +8,6 @@ AutomaticGearController automaticGearController;
 AutomaticGearController::AutomaticGearController() {
 }
 
-void AutomaticGearController::init() {
-	for (size_t i = 0; i < efi::size(engineConfiguration->tcu_rangeInput); i++) {
-		if (isBrainPinValid(engineConfiguration->tcu_rangeInput[i])) {
-			efiSetPadMode("Range Input", engineConfiguration->tcu_rangeInput[i], getInputMode(engineConfiguration->tcu_rangeInputMode[i]));
-		}
-	}
-
-	GearControllerBase::init();
-}
-
 void AutomaticGearController::update() {
 	auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 	auto vss = Sensor::get(SensorType::VehicleSpeed);
