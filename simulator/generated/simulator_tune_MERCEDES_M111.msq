@@ -1626,11 +1626,9 @@
         <constant name="tcu_rangeAnalogInput5">"Disabled"</constant>
         <constant name="tcu_rangeAnalogInput6">"Disabled"</constant>
         <constant digits="1" name="tcu_rangeSensorBiasResistor" units="Ohm">0.0</constant>
-        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="204">
-         0.0
-         0.0
-         0.0
-         0.0
+        <constant name="msIoBox0_id">"Off"</constant>
+        <constant name="msIoBox0_vss">"Off"</constant>
+        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="200">
          0.0
          0.0
          0.0
@@ -4713,7 +4711,7 @@ end</constant>
 </constant>
         <constant digits="0" name="tcu_shiftTime" units="ms">0.0</constant>
     </page>
-    <versionInfo firmwareInfo="20240402" nPages="1" signature="rusEFI master.2024.04.20.f407-discovery.1195752310" version="5.0"/>
+    <versionInfo firmwareInfo="20240402" nPages="1" signature="rusEFI master.2024.04.20.f407-discovery.455146772" version="5.0"/>
     <bibliography author="rusEFI 20240402" writeDate="date"/>
     <settings/>
     <userComments/>
