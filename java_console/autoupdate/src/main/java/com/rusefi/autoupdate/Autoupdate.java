@@ -24,18 +24,36 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class Autoupdate {
     private static final String LOGO_PATH = "/com/rusefi/";
     private static final String LOGO = LOGO_PATH + "logo.png";
-    private static final String TITLE = "rusEFI Bundle Updater 20230130";
+    private static final String TITLE = "rusEFI Bundle Updater 20240401";
     private static final String AUTOUPDATE_MODE = "autoupdate";
     private static final String RUSEFI_CONSOLE_JAR = "rusefi_console.jar";
     private static final String COM_RUSEFI_LAUNCHER = "com.rusefi.Launcher";
 
     public static void main(String[] args) {
+        try {
+            autoupdate(args);
+        } catch (Throwable e) {
+            String stackTrace = extracted(e);
+            JOptionPane.showMessageDialog(null, stackTrace, "Autoupdate Error " + TITLE, JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private static String extracted(Throwable e) {
+        StringBuilder sb = new StringBuilder(e.toString());
+        for (StackTraceElement ste : e.getStackTrace()) {
+            sb.append("\n\tat ");
+            sb.append(ste);
+        }
+        return sb.toString();
+    }
+
+    private static void autoupdate(String[] args) {
         String bundleFullName = BundleUtil.readBundleFullName();
         if (bundleFullName == null) {
             System.err.println("ERROR: Autoupdate: unable to perform without bundleFullName (parent folder name)");
             System.exit(-1);
         }
-        System.out.println("Handling parent folder name" + bundleFullName);
+        System.out.println("Handling parent folder name [" + bundleFullName + "]");
 
         String[] bundleFullNameSplit = bundleFullName.split("\\.");
         if (bundleFullNameSplit.length != 3)
