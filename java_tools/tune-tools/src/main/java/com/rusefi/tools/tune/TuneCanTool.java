@@ -254,9 +254,11 @@ public class TuneCanTool implements TuneCanToolConstants {
                     }
                     log.info("Handling table " + fieldName + " with " + cf.autoscaleSpecPair());
 
+                    String customContent = tableData.getCsourceMethod(parentReference, methodNamePrefix);
                     if (defaultTuneFileName != null) {
                         TableData defaultTableData = TableData.readTable(defaultTuneFileName, fieldName, ini);
-                        if (defaultTableData.getCsourceMethod(parentReference, methodNamePrefix).equals(tableData.getCsourceMethod(parentReference, methodNamePrefix))) {
+                        String defaultContent = defaultTableData.getCsourceMethod(parentReference, methodNamePrefix);
+                        if (defaultContent.equals(customContent)) {
                             log.info("Table " + fieldName + " matches default content");
                             continue;
                         }
@@ -264,7 +266,7 @@ public class TuneCanTool implements TuneCanToolConstants {
                     log.info("Custom content in table " + fieldName);
 
 
-                    methods.append(tableData.getCsourceMethod(parentReference, methodNamePrefix));
+                    methods.append(customContent);
                     invokeMethods.append(tableData.getCinvokeMethod(methodNamePrefix));
                     continue;
                 }
@@ -273,16 +275,18 @@ public class TuneCanTool implements TuneCanToolConstants {
                 if (data == null)
                     continue;
 
+                String customContent = data.getCsourceMethod(parentReference, methodNamePrefix);
                 if (defaultTuneFileName != null) {
                     CurveData defaultCurveData = CurveData.valueOf(defaultTuneFileName, fieldName, ini);
-                    if (defaultCurveData.getCinvokeMethod(methodNamePrefix).equals(data.getCinvokeMethod(methodNamePrefix))) {
+                    String defaultContent = defaultCurveData.getCsourceMethod(parentReference, methodNamePrefix);
+                    if (defaultContent.equals(customContent)) {
                         log.info("Curve " + fieldName + " matches default content");
                         continue;
                     }
                 }
                 log.info("Custom content in curve " + fieldName);
 
-                methods.append(data.getCsourceMethod(parentReference, methodNamePrefix));
+                methods.append(customContent);
                 invokeMethods.append(data.getCinvokeMethod(methodNamePrefix));
 
                 continue;
