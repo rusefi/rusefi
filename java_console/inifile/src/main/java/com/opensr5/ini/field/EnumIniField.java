@@ -10,10 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.management.ObjectName;
 import java.nio.ByteBuffer;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.regex.Pattern;
 
 public class EnumIniField extends IniField {
@@ -182,8 +179,11 @@ public class EnumIniField extends IniField {
 
             } else {
                 String firstValue = tokens[offset];
-                if (firstValue.trim().startsWith("$")) {
-                    List<String> elements = iniFileModel.defines.get(firstValue.substring(1));
+                String trimmed = firstValue.trim();
+                if (trimmed.startsWith("$")) {
+                    String key = trimmed.substring(1);
+                    List<String> elements = iniFileModel.defines.get(key);
+                    Objects.requireNonNull(elements, "Elements for " + key);
                     for (int i = 0; i < elements.size(); i++) {
                         keyValues.put(i, elements.get(i));
                     }
