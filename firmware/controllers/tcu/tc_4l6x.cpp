@@ -39,7 +39,7 @@ void Gm4l6xTransmissionController::set32State(gear_e gear) {
 		if (!vss.Valid) {
 			return;
 		}
-		//huh?uint8_t (*pcts)[sizeof(config->tcu_32SpeedBins)/sizeof(config->tcu_32SpeedBins[0])];
+
 		int pct = interpolate2d(vss.Value, config->tcu_32SpeedBins, config->tcu_32Vals);
 		shift32Pwm.setSimplePwmDutyCycle(pct*0.01);
 	} else {

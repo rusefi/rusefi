@@ -43,6 +43,8 @@ void GenericGearController::update() {
 		// Loop through inputs
 		for (size_t p = 0; p < efi::size(engineConfiguration->tcu_rangeInput); p++) {
 			float cellState = rangeStates[p];
+			// We allow the user to configure either a digital input or an analog input for each pin,
+			//  so we need to check which is valid.
 			if (isAdcChannelValid(engineConfiguration->tcu_rangeAnalogInput[p])) {
 				float pinState = Sensor::getOrZero(getAnalogSensorType(p));
 				if (isNearest(pinState, p, rangeStates)) {
@@ -96,6 +98,8 @@ void GenericGearController::update() {
 			setDesiredGear(NEUTRAL);
 			break;
 		case SelectedGear::ManualPlus :
+			// Only allow manual shift once per 500 ms,
+			// and if the selected range was Manual prior to this update
 			if (!shiftTimer.hasElapsedMs(500) || lastRange != SelectedGear::Manual) {
 				break;
 			}
@@ -115,6 +119,8 @@ void GenericGearController::update() {
 			}
 			break;
 		case SelectedGear::ManualMinus :
+			// Only allow manual shift once per 500 ms,
+			// and if the selected range was Manual prior to this update
 			if (!shiftTimer.hasElapsedMs(500) || lastRange != SelectedGear::Manual) {
 				break;
 			}
@@ -134,6 +140,8 @@ void GenericGearController::update() {
 			}
 			break;
 		case SelectedGear::Drive :
+			// If the gear selector is in drive, let AutomaticGearController,
+			// which this class inherits from, decide what gear the transmission should be in.
 			AutomaticGearController::update();
 			return;
 		default:

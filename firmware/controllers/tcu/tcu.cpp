@@ -38,6 +38,7 @@ void TransmissionControllerBase::postState() {
 #endif
 }
 
+// call to mark the start of the shift
 void TransmissionControllerBase::measureShiftTime(gear_e gear) {
 	m_shiftTime = true;
 	m_shiftTimer.reset();
@@ -47,13 +48,17 @@ void TransmissionControllerBase::measureShiftTime(gear_e gear) {
 float TransmissionControllerBase::isShiftCompleted() {
 	auto detected = Sensor::get(SensorType::DetectedGear);
 	auto iss = Sensor::get(SensorType::InputShaftSpeed);
+	// If gear detection is set up and the gear we are trying to shift into has been detected
 	if (detected.Valid && m_shiftTime && m_shiftTimeGear == detected.Value) {
 		m_shiftTime = false;
 		return m_shiftTimer.getElapsedSeconds();
+		// If ISS isn't configured, we want to use a fixed value.
 	} else if (!iss.Valid && m_shiftTime && m_shiftTimer.hasElapsedMs(config->tcu_shiftTime)) {
 		m_shiftTime = false;
+		// convert ms to seconds for gauge
 		return config->tcu_shiftTime * 0.001;
 	} else {
+		// a return value of 0 means the shift is not completed yet
 		return 0;
 	}
 }

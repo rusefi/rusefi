@@ -27,6 +27,7 @@ void Generic4TransmissionController::update(gear_e gear) {
 		measureShiftTime(gear);
 	}
 
+	// set torque converter and pressure control state
 	setTccState(gear);
 	setPcState(gear);
 
@@ -35,6 +36,7 @@ void Generic4TransmissionController::update(gear_e gear) {
 	SimpleTransmissionController::update(gear);
 
 	float time = isShiftCompleted();
+	// 0 means shift is not completed
 	if (time != 0) {
 		lastShiftTime = time;
 		isShifting = false;
@@ -42,6 +44,7 @@ void Generic4TransmissionController::update(gear_e gear) {
 }
 
 void Generic4TransmissionController::setTccState(gear_e gear) {
+	// disable if shifting
 	if (isShifting) {
 		enginePins.tcuTccOnoffSolenoid.setValue(0);
 		return;
@@ -52,10 +55,12 @@ void Generic4TransmissionController::setTccState(gear_e gear) {
 	if (!tps.Valid || !vss.Valid) {
 		return;
 	}
+	// only enable TC in gear 4
 	if (gear == GEAR_4) {
 		int lockSpeed = interpolate2d(tps.Value, config->tcu_tccTpsBins, config->tcu_tccLockSpeed);
 		int unlockSpeed = interpolate2d(tps.Value, config->tcu_tccTpsBins, config->tcu_tccUnlockSpeed);
 		if (vss.Value > lockSpeed) {
+			// torqueConverterDuty is only used for a gauge
 			torqueConverterDuty = 100;
 			enginePins.tcuTccOnoffSolenoid.setValue(1);
 		} else if (vss.Value < unlockSpeed) {
