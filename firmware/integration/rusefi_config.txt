@@ -283,6 +283,17 @@ custom SentEtbType 1 bits, S08, @OFFSET@, [0:1], @@SentEtbType_enum@@
 #define CanGpioType_enum "None", "DRT protocol", "MS protocol"
 custom CanGpioType 1 bits, S08, @OFFSET@, [0:1], @@CanGpioType_enum@@
 
+#define MsIoBoxId_enum "Off", "ID1 (0x200)", "ID2 (0x220)", "ID3 (0x240)"
+custom MsIoBoxId 1 bits, U08, @OFFSET@, [0:1], @@MsIoBoxId_enum@@
+
+#define MsIoBoxVss_enum "Off", "VR speed in (1, 2)", "Hall speed in (3, 4)", "All (1, 2, 3, 4)"
+custom MsIoBoxVss 1 bits, U08, @OFFSET@, [0:1], @@MsIoBoxVss_enum@@
+
+struct MsIoBox_config_s
+	MsIoBoxId id
+	MsIoBoxVss vss
+end_struct
+
 #define UiMode_enum "Full", "Installation", "Tuning"
 custom UiMode 1 bits, S08, @OFFSET@, [0:1], @@UiMode_enum@@
 
@@ -1650,7 +1661,9 @@ int anotherCiTest
 	adc_channel_e[RANGE_INPUT_COUNT iterate] tcu_rangeAnalogInput;
 	float tcu_rangeSensorBiasResistor;;"Ohm", 1, 0, 0, 200000, 1
 
-uint8_t[204] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
+	MsIoBox_config_s msIoBox0
+
+uint8_t[200] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct

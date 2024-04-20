@@ -197,6 +197,20 @@ enum class CanGpioType : uint8_t {
 	MS = 2,
 };
 
+enum class MsIoBoxId : uint8_t {
+	OFF = 0,
+	ID200 = 1,
+	ID220 = 2,
+	ID240 = 3
+};
+
+enum class MsIoBoxVss : uint8_t {
+	OFF = 0,
+	VR12 = 1,
+	HALL34 = 2,
+	ALL1234 = 3
+};
+
 enum class UiMode : uint8_t {
 	FULL = 0,
 	INSTALLATION = 1,
