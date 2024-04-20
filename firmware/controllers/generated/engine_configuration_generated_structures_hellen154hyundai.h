@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Apr 18 20:31:00 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Apr 20 12:21:56 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -120,6 +120,25 @@ struct pid_s {
 	int16_t maxValue;
 };
 static_assert(sizeof(pid_s) == 20);
+
+// start of MsIoBox_config_s
+struct MsIoBox_config_s {
+	/**
+	 * offset 0
+	 */
+	MsIoBoxId id;
+	/**
+	 * offset 1
+	 */
+	MsIoBoxVss vss;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 2
+	 */
+	uint8_t alignmentFill_at_2[2];
+};
+static_assert(sizeof(MsIoBox_config_s) == 4);
 
 // start of cranking_parameters_s
 struct cranking_parameters_s {
@@ -4533,10 +4552,14 @@ struct engine_configuration_s {
 	 */
 	float tcu_rangeSensorBiasResistor;
 	/**
-	 * units: units
 	 * offset 4016
 	 */
-	uint8_t unusedOftenChangesDuringFirmwareUpdate[204];
+	MsIoBox_config_s msIoBox0;
+	/**
+	 * units: units
+	 * offset 4020
+	 */
+	uint8_t unusedOftenChangesDuringFirmwareUpdate[200];
 };
 static_assert(sizeof(engine_configuration_s) == 4220);
 
@@ -5603,4 +5626,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22656);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Apr 18 20:31:00 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Apr 20 12:21:56 UTC 2024

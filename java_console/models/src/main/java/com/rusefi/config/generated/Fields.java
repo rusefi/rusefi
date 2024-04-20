@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Apr 20 03:44:16 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Apr 20 12:22:38 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1036,6 +1036,15 @@ public class Fields {
 	public static final int mc33810maxDwellTimer_e_DWELL_8MS = 2;
 	public static final int MLQ_FIELD_HEADER_SIZE = 89;
 	public static final int MLQ_HEADER_SIZE = 24;
+	public static final int MsIoBox_config_s_size = 4;
+	public static final int MsIoBoxId_ID200 = 1;
+	public static final int MsIoBoxId_ID220 = 2;
+	public static final int MsIoBoxId_ID240 = 3;
+	public static final int MsIoBoxId_OFF = 0;
+	public static final int MsIoBoxVss_ALL1234 = 3;
+	public static final int MsIoBoxVss_HALL34 = 2;
+	public static final int MsIoBoxVss_OFF = 0;
+	public static final int MsIoBoxVss_VR12 = 1;
 	public static final int operation_mode_e_FOUR_STROKE_CAM_SENSOR = 2;
 	public static final int operation_mode_e_FOUR_STROKE_CRANK_SENSOR = 1;
 	public static final int operation_mode_e_FOUR_STROKE_SIX_TIMES_CRANK_SENSOR = 7;
@@ -1129,7 +1138,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1195752310;
+	public static final int SIGNATURE_HASH = 455146772;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1381,7 +1390,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.04.20.f407-discovery.1195752310";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.04.20.f407-discovery.455146772";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2811,7 +2820,12 @@ public class Fields {
 	public static final Field TCU_RANGEANALOGINPUT6 = Field.create("TCU_RANGEANALOGINPUT6", 4009, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_4010 = Field.create("ALIGNMENTFILL_AT_4010", 4010, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field TCU_RANGESENSORBIASRESISTOR = Field.create("TCU_RANGESENSORBIASRESISTOR", 4012, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE = Field.create("UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE", 4016, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final String[] MsIoBoxId = {"Off", "ID1 (0x200)", "ID2 (0x220)", "ID3 (0x240)"};
+	public static final Field MSIOBOX0_ID = Field.create("MSIOBOX0_ID", 4016, FieldType.INT8, MsIoBoxId).setScale(1.0).setBaseOffset(0);
+	public static final String[] MsIoBoxVss = {"Off", "VR speed in (1, 2)", "Hall speed in (3, 4)", "All (1, 2, 3, 4)"};
+	public static final Field MSIOBOX0_VSS = Field.create("MSIOBOX0_VSS", 4017, FieldType.INT8, MsIoBoxVss).setScale(1.0).setBaseOffset(0);
+	public static final Field MSIOBOX0_ALIGNMENTFILL_AT_2 = Field.create("MSIOBOX0_ALIGNMENTFILL_AT_2", 4018, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE = Field.create("UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE", 4020, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 4220, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4252, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4284, FieldType.INT8).setScale(0.05).setBaseOffset(0);
@@ -4473,6 +4487,9 @@ public class Fields {
 	TCU_RANGEANALOGINPUT6,
 	ALIGNMENTFILL_AT_4010,
 	TCU_RANGESENSORBIASRESISTOR,
+	MSIOBOX0_ID,
+	MSIOBOX0_VSS,
+	MSIOBOX0_ALIGNMENTFILL_AT_2,
 	UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE,
 	ETBBIASBINS,
 	ETBBIASVALUES,

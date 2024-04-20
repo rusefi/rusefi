@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sat Apr 20 03:14:37 UTC 2024
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sat Apr 20 12:21:12 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -48,6 +48,32 @@ case INJ_None:
   return "INJ_None";
 case INJ_PolynomialAdder:
   return "INJ_PolynomialAdder";
+  }
+ return NULL;
+}
+const char *getMsIoBoxId(MsIoBoxId value){
+switch(value) {
+case MsIoBoxId::ID200:
+  return "ID200";
+case MsIoBoxId::ID220:
+  return "ID220";
+case MsIoBoxId::ID240:
+  return "ID240";
+case MsIoBoxId::OFF:
+  return "OFF";
+  }
+ return NULL;
+}
+const char *getMsIoBoxVss(MsIoBoxVss value){
+switch(value) {
+case MsIoBoxVss::ALL1234:
+  return "ALL1234";
+case MsIoBoxVss::HALL34:
+  return "HALL34";
+case MsIoBoxVss::OFF:
+  return "OFF";
+case MsIoBoxVss::VR12:
+  return "VR12";
   }
  return NULL;
 }

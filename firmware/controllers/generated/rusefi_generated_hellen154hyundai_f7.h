@@ -1082,6 +1082,19 @@
 #define mc33810maxDwellTimer_e_DWELL_8MS 2
 #define MLQ_FIELD_HEADER_SIZE 89
 #define MLQ_HEADER_SIZE 24
+#define MsIoBox_config_s_size 4
+#define MsIoBoxId_auto_enum 0="OFF",1="ID200",2="ID220",3="ID240"
+#define MsIoBoxId_enum "Off", "ID1 (0x200)", "ID2 (0x220)", "ID3 (0x240)"
+#define MsIoBoxId_ID200 1
+#define MsIoBoxId_ID220 2
+#define MsIoBoxId_ID240 3
+#define MsIoBoxId_OFF 0
+#define MsIoBoxVss_ALL1234 3
+#define MsIoBoxVss_auto_enum 0="OFF",3="ALL1234",2="HALL34",1="VR12"
+#define MsIoBoxVss_enum "Off", "VR speed in (1, 2)", "Hall speed in (3, 4)", "All (1, 2, 3, 4)"
+#define MsIoBoxVss_HALL34 2
+#define MsIoBoxVss_OFF 0
+#define MsIoBoxVss_VR12 1
 #define operation_mode_e_FOUR_STROKE_CAM_SENSOR 2
 #define operation_mode_e_FOUR_STROKE_CRANK_SENSOR 1
 #define operation_mode_e_FOUR_STROKE_SIX_TIMES_CRANK_SENSOR 7
@@ -1194,7 +1207,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 573471202
+#define SIGNATURE_HASH 2118860672
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1571,7 +1584,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.04.20.hellen154hyundai_f7.573471202"
+#define TS_SIGNATURE "rusEFI master.2024.04.20.hellen154hyundai_f7.2118860672"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

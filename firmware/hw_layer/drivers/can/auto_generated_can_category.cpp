@@ -1,6 +1,6 @@
 #include "global.h"
 #include "can_category.h"
-// was generated automatically by rusEFI tool  from can_category.h // by enum2string.jar tool on Fri Sep 30 03:14:34 UTC 2022
+// was generated automatically by rusEFI tool  from can_category.h // by enum_to_string.jar tool on Sat Apr 20 12:21:13 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -13,6 +13,8 @@ case CanCategory::DOWNSTREAM_FLASHING:
   return "DOWNSTREAM_FLASHING";
 case CanCategory::LUA:
   return "LUA";
+case CanCategory::MEGASQUIRT:
+  return "MEGASQUIRT";
 case CanCategory::NBC:
   return "NBC";
 case CanCategory::OBD:

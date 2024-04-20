@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Wed Jan 03 19:47:48 UTC 2024
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sat Apr 20 12:21:12 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -15,6 +15,12 @@ const char *getGearControllerMode(GearControllerMode value);
 const char *getInjectionTimingMode(InjectionTimingMode value);
 #endif //__cplusplus
 const char *getInjectorNonlinearMode(InjectorNonlinearMode value);
+#if __cplusplus
+const char *getMsIoBoxId(MsIoBoxId value);
+#endif //__cplusplus
+#if __cplusplus
+const char *getMsIoBoxVss(MsIoBoxVss value);
+#endif //__cplusplus
 #if __cplusplus
 const char *getSelectedGear(SelectedGear value);
 #endif //__cplusplus
