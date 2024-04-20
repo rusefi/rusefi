@@ -31,17 +31,18 @@
 ! things only being able to be added at the end of the structure or where other things were removed previously.
 ! TODO: technically we can clean this every once in a while and maybe we should
 !
-! Find a "padding" field (usually the huge mainUnusedEnd[] array at the end of the structure)
+! Find a "padding" field (usually the huge unusedOftenChangesDuringFirmwareUpdate[] array at the end of the structure)
 ! The standard practice is to name these "unusedSomething", so you can find them easily
 ! by searching for "unused" within this file.
 !
 ! Rename or substitute the field with any new fields that total to the same size.
-! If you're adding a field to the end of the file, add it just before mainUnusedEnd[],
-! and subtract the size of the field you added from mainUnusedEnd[].
-! For example, if you added a uint8_t field, and mainUnusedEnd was `uint8_t[100]`,
+! If you're adding a field to the end of the file, add it just before unusedOftenChangesDuringFirmwareUpdate[],
+! and subtract the size of the field you added from unusedOftenChangesDuringFirmwareUpdate[].
+! For example, if you added a uint8_t field, and unusedOftenChangesDuringFirmwareUpdate was `uint8_t[100]`,
 ! it should now be `uint8_t[99]`
 !
-! When we run out of mainUnusedEnd space we have to bump FLASH_DATA_VERSION and add extra mainUnusedEnd
+! When we run out of unusedOftenChangesDuringFirmwareUpdate space we have to bump FLASH_DATA_VERSION and add
+! extra unusedOftenChangesDuringFirmwareUpdate
 !
 ! At this point it's a good idea to save your changes in version control, i.e. with `git commit`,
 !	so that you can roll back to the current state after you generate the config files.
