@@ -59,7 +59,7 @@ public class MetaHelper {
                     log.info("Not located " + substring + " in " + s);
                 } else {
                     context.append(cf.getOriginalArrayName()).append(".");
-                    log.info("Located " + tsFieldByName + " in " + s);
+                    log.info(name + ": Located " + tsFieldByName + " in " + s);
                 }
                 return tsFieldByName;
             }
