@@ -1,5 +1,7 @@
 #pragma once
 
+// file tc_4l6x.h
+
 #include "tcu.h"
 
 #if EFI_TCU
@@ -20,4 +22,7 @@ private:
 };
 
 Gm4l6xTransmissionController* getGm4l6xTransmissionController();
+
+void configureTcu4R70W();
+
 #endif // EFI_TCU

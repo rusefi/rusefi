@@ -54,7 +54,7 @@ enum class engine_type_e : uint16_t {
 	FORD_ESCORT_GT = 14,
 	FUEL_BENCH = 15,
 	MITSUBISHI_4G93 = 16,
-	UNUSED17 = 17,
+	TCU_4R70W = 17,
 
 	TEST_33816 = 18,
 

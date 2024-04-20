@@ -164,4 +164,8 @@ void Gm4l6xTransmissionController::set32State(gear_e gear) {
 Gm4l6xTransmissionController* getGm4l6xTransmissionController() {
 	return &gm4l6xTransmissionController;
 }
+
+// here we have default 4R70W calibration
+void configureTcu4R70W() {
+}
 #endif // EFI_TCU
