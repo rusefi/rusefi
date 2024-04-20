@@ -1,8 +1,25 @@
 plugins {
-    id 'java'
+  id 'java'
 }
 
 apply from: '../../android/dependencies.gradle'
+
+java {
+  var boardDir = System.getenv("ABSOLUTE_BOARD_DIR")
+  println("gradle says: ABSOLUTE_BOARD_DIR=" + boardDir)
+  if (boardDir != null) {
+    var customResourcesFolder = boardDir + "/shared_io.resources"
+    if (new File(customResourcesFolder).exists()) {
+      println(customResourcesFolder + " found!")
+      processResources {
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+        from(customResourcesFolder)
+      }
+    } else {
+      println(customResourcesFolder + " not found.")
+    }
+  }
+}
 
 // TODO: rename folder to core_io
 // this CORE module cannot depend on model/ini!
