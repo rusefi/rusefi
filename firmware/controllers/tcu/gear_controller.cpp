@@ -29,7 +29,7 @@ void GearControllerBase::update() {
 	if (transmissionController == NULL) {
 		initTransmissionController();
 	} else if (transmissionController->getMode() != engineConfiguration->transmissionControllerMode) {
-		// TODO de-init here
+		// TODO de-init here to allow change without power cycling
 		initTransmissionController();
 	}
 
@@ -75,6 +75,10 @@ void initGearController() {
 }
 
 float* GearControllerBase::getRangeStateArray(int i) {
+	// I don't remember why I put manual +/- first.
+	// I think maybe I had some concern about them needing to override under-specified ranges?
+	// e.g. with it this way, you could put 2 in the cells for +/- pins in everything else.
+	// So this way might make it a little easier/foolproof to configure, but not necessary.
 	switch (i) {
 	case 1 :
 		return config->tcu_rangePlus;
