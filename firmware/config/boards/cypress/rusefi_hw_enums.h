@@ -232,7 +232,7 @@ enum class Gpio : uint16_t {
 /* Please keep updating this defines */
 #define BRAIN_PIN_ONCHIP_LAST	Gpio::K15
 #define BRAIN_PIN_ONCHIP_PINS	(BRAIN_PIN_ONCHIP_LAST - Gpio::A0 + 1)
-#define BRAIN_PIN_LAST 			Gpio::DRV8860_PIN_16
+#define BRAIN_PIN_LAST 			Gpio::CAN_PIN_7
 #define BRAIN_PIN_TOTAL_PINS	(BRAIN_PIN_LAST - Gpio::A0 + 1)
 
 #include "rusefi_hw_adc_enums.h"
