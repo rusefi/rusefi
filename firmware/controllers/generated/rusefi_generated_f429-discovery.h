@@ -604,16 +604,17 @@
 #define GAUGE_NAME_WARNING_COUNTER "Warning: counter"
 #define GAUGE_NAME_WARNING_LAST "Warning: last"
 #define GAUGE_NAME_WG_POSITION "Wastegate position sensor"
-#define gear_controller_e_enum "None", "Button Shift", "Generic"
+#define gear_controller_e_enum "None", "Button Shift", "Automatic", "Generic"
 #define gear_e_GEAR_1 1
 #define gear_e_GEAR_2 2
 #define gear_e_GEAR_3 3
 #define gear_e_GEAR_4 4
 #define gear_e_NEUTRAL 0
 #define gear_e_REVERSE -1
-#define GearControllerMode_auto_enum 0="None",1="ButtonShift",2="Generic"
+#define GearControllerMode_auto_enum 0="None",2="Automatic",1="ButtonShift",3="Generic"
+#define GearControllerMode_Automatic 2
 #define GearControllerMode_ButtonShift 1
-#define GearControllerMode_Generic 2
+#define GearControllerMode_Generic 3
 #define GearControllerMode_None 0
 #define Gpio_A0 2
 #define Gpio_A1 3
@@ -1192,7 +1193,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 4135295981
+#define SIGNATURE_HASH 1567878702
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1568,7 +1569,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.04.20.f429-discovery.4135295981"
+#define TS_SIGNATURE "rusEFI master.2024.04.20.f429-discovery.1567878702"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

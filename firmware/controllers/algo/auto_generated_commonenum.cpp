@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Fri Mar 15 21:50:40 UTC 2024
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sat Apr 20 02:37:00 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -18,6 +18,8 @@ case CanGpioType::NONE:
 }
 const char *getGearControllerMode(GearControllerMode value){
 switch(value) {
+case GearControllerMode::Automatic:
+  return "Automatic";
 case GearControllerMode::ButtonShift:
   return "ButtonShift";
 case GearControllerMode::Generic:
