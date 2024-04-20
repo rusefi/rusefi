@@ -8,7 +8,6 @@ public:
   AutomaticGearController();
 
 	void update();
-  void init();
 	void findDesiredGear();
 	GearControllerMode getMode() const {
 		return GearControllerMode::Automatic;
