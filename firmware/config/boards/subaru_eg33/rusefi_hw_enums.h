@@ -259,6 +259,9 @@ enum class Gpio : uint16_t {
 	TLE9104_5_OUT_1 = 279,
 	TLE9104_5_OUT_2 = 280,
 	TLE9104_5_OUT_3 = 281,
+
+	/* TODO: add pins for MS IOBox */
+	/* TODO: Sync with STM32 reference and delete this file */
 };
 
 /* Please keep updating these defines */
