@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Apr 18 23:31:51 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Apr 20 00:17:50 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -395,6 +395,7 @@ public class Fields {
 	public static final int engine_type_e_SACHS = 29;
 	public static final int engine_type_e_SIMULATOR_CONFIG = 92;
 	public static final int engine_type_e_SUBARU_EG33 = 70;
+	public static final int engine_type_e_TCU_4R70W = 17;
 	public static final int engine_type_e_TEST_100 = 100;
 	public static final int engine_type_e_TEST_101 = 101;
 	public static final int engine_type_e_TEST_33816 = 18;
@@ -408,7 +409,6 @@ public class Fields {
 	public static final int engine_type_e_TOYOTA_1NZ_FE = 13;
 	public static final int engine_type_e_TOYOTA_2JZ_GTE_VVTi = 44;
 	public static final int engine_type_e_UNUSED102 = 102;
-	public static final int engine_type_e_UNUSED17 = 17;
 	public static final int engine_type_e_UNUSED47 = 47;
 	public static final int engine_type_e_UNUSED67 = 67;
 	public static final int engine_type_e_UNUSED93 = 93;
@@ -1379,7 +1379,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.04.19.f407-discovery.1378508940";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.04.20.f407-discovery.1378508940";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';

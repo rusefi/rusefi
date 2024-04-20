@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sat Apr 13 13:38:24 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sat Apr 20 00:16:26 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -343,6 +343,8 @@ case engine_type_e::SIMULATOR_CONFIG:
   return "SIMULATOR_CONFIG";
 case engine_type_e::SUBARU_EG33:
   return "SUBARU_EG33";
+case engine_type_e::TCU_4R70W:
+  return "TCU_4R70W";
 case engine_type_e::TEST_100:
   return "TEST_100";
 case engine_type_e::TEST_101:
@@ -369,8 +371,6 @@ case engine_type_e::TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
 case engine_type_e::UNUSED102:
   return "UNUSED102";
-case engine_type_e::UNUSED17:
-  return "UNUSED17";
 case engine_type_e::UNUSED47:
   return "UNUSED47";
 case engine_type_e::UNUSED67:
