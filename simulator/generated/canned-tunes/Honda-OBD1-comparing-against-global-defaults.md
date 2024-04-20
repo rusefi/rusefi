@@ -83,6 +83,8 @@
     engineConfiguration->gppwm[0].loadAxis = GPPWM_Map;
 
 
+	cannedmafDecodingBins();
+	cannedcltIdleCorr();
 	cannedboostTableOpenLoop();
 	cannedscriptTable4();
 	cannedignitionTable();

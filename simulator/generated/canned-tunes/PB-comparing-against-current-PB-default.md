@@ -121,11 +121,24 @@
     engineConfiguration->hpfpPeakPos = -30;
 
 
+	pbcannedknockBaseNoise();
+	pbcannedmafDecodingBins();
+	pbcannedcltTimingBins();
+	pbcannedcltTimingExtra();
+	pbcannedcltIdleCorrBins();
+	pbcannedcltIdleCorr();
+	pbcannedcltIdleRpm();
+	pbcannedidleAdvanceBins();
+	pbcannedidleAdvance();
 	pbcannedvvtTable2();
 	pbcannedscriptTable4();
+	pbcannedignitionRpmBins();
 	pbcannedignitionTable();
 	pbcannedveTable();
+	pbcannedmaxKnockRetardRpmBins();
+	pbcannedmaxKnockRetardLoadBins();
 	pbcannedmaxKnockRetardTable();
 	pbcannedlambdaTable();
 	pbcannedtcuSolenoidTable();
+	pbcannedhpfpTargetLoadBins();
 ```

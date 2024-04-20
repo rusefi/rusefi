@@ -1,4 +1,49 @@
 ```
+static void pbcannedknockBaseNoise() {
+	static const float hardCodedknockBaseNoise[16] = {-28.0, -28.0, -24.0, -20.0, -20.0, -20.0, -20.0, -20.0, -20.0, -17.0, -17.0, -17.0, -17.0, -17.0, -17.0, -17.0};
+	copyArray(config->knockBaseNoise, hardCodedknockBaseNoise);
+}
+
+static void pbcannedmafDecodingBins() {
+	static const float hardCodedmafDecodingBins[32] = {0.0, 0.78125, 1.3867188, 2.9101562, 4.2578125, 4.9804688, 2016.0, 2017.0, 2018.0, 2019.0, 2020.0, 2021.0, 2022.0, 2023.0, 2024.0, 2025.0, 2026.0, 2027.0, 2028.0, 2029.0, 2030.0, 2031.0, 2032.0, 2033.0, 2034.0, 2035.0, 2036.0, 2037.0, 2038.0, 2039.0, 2040.0, 2041.0};
+	copyArray(config->mafDecodingBins, hardCodedmafDecodingBins);
+}
+
+static void pbcannedcltTimingBins() {
+	static const float hardCodedcltTimingBins[8] = {-40.0, -17.0, 6.0, 30.0, 40.0, 50.0, 97.0, 120.0};
+	copyArray(config->cltTimingBins, hardCodedcltTimingBins);
+}
+
+static void pbcannedcltTimingExtra() {
+	static const float hardCodedcltTimingExtra[8] = {0.0, 0.0, -30.0, -30.0, -30.0, 0.0, 0.0, 0.0};
+	copyArray(config->cltTimingExtra, hardCodedcltTimingExtra);
+}
+
+static void pbcannedcltIdleCorrBins() {
+	static const float hardCodedcltIdleCorrBins[16] = {-40.0, -30.0, -20.0, -10.0, 0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 110.0, 120.0};
+	copyArray(config->cltIdleCorrBins, hardCodedcltIdleCorrBins);
+}
+
+static void pbcannedcltIdleCorr() {
+	static const float hardCodedcltIdleCorr[16] = {1.5, 1.5, 1.3333334, 1.3333334, 1.3333334, 1.3333334, 1.3333334, 1.3333334, 1.2, 1.0, 1.0, 1.0, 0.8, 0.8, 0.8, 1.0};
+	copyArray(config->cltIdleCorr, hardCodedcltIdleCorr);
+}
+
+static void pbcannedcltIdleRpm() {
+	static const float hardCodedcltIdleRpm[16] = {1360.0, 1360.0, 1300.0, 1200.0, 1160.0, 1100.0, 1060.0, 1000.0, 1000.0, 960.0, 960.0, 740.0, 740.0, 740.0, 860.0, 1100.0};
+	copyArray(config->cltIdleRpm, hardCodedcltIdleRpm);
+}
+
+static void pbcannedidleAdvanceBins() {
+	static const float hardCodedidleAdvanceBins[8] = {500.0, 650.0, 800.0, 950.0, 1050.0, 1200.0, 1350.0, 1500.0};
+	copyArray(config->idleAdvanceBins, hardCodedidleAdvanceBins);
+}
+
+static void pbcannedidleAdvance() {
+	static const float hardCodedidleAdvance[8] = {12.0, 12.571428, 13.142858, 13.714286, 14.285714, 14.857142, 15.428572, 16.0};
+	copyArray(config->idleAdvance, hardCodedidleAdvance);
+}
+
 static void pbcannedvvtTable1() {
 	static const float hardCodedvvtTable1[8][8] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
@@ -39,6 +84,11 @@ static void pbcannedscriptTable4() {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 };
 	copyTable(config->scriptTable4, hardCodedscriptTable4);
+}
+
+static void pbcannedignitionRpmBins() {
+	static const float hardCodedignitionRpmBins[16] = {650.0, 800.0, 1100.0, 1400.0, 2000.0, 2500.0, 3000.0, 3500.0, 4000.0, 4500.0, 5000.0, 5500.0, 6000.0, 6500.0, 7000.0, 7500.0};
+	copyArray(config->ignitionRpmBins, hardCodedignitionRpmBins);
 }
 
 static void pbcannedignitionTable() {
@@ -107,6 +157,16 @@ static void pbcannedinjectionPhase() {
 	copyTable(config->injectionPhase, hardCodedinjectionPhase);
 }
 
+static void pbcannedmaxKnockRetardRpmBins() {
+	static const float hardCodedmaxKnockRetardRpmBins[6] = {1000.0, 2000.0, 3000.0, 4000.0, 5000.0, 7000.0};
+	copyArray(config->maxKnockRetardRpmBins, hardCodedmaxKnockRetardRpmBins);
+}
+
+static void pbcannedmaxKnockRetardLoadBins() {
+	static const float hardCodedmaxKnockRetardLoadBins[6] = {20.0, 40.0, 50.0, 60.0, 80.0, 100.0};
+	copyArray(config->maxKnockRetardLoadBins, hardCodedmaxKnockRetardLoadBins);
+}
+
 static void pbcannedmaxKnockRetardTable() {
 	static const float hardCodedmaxKnockRetardTable[6][6] = {
 {5.000,	5.000,	5.000,	5.000,	5.000,	5.000,	},
@@ -151,6 +211,11 @@ static void pbcannedtcuSolenoidTable() {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 };
 	copyTable(config->tcuSolenoidTable, hardCodedtcuSolenoidTable);
+}
+
+static void pbcannedhpfpTargetLoadBins() {
+	static const float hardCodedhpfpTargetLoadBins[10] = {20.0, 40.0, 50.0, 60.0, 80.0, 100.0, 120.0, 140.0, 160.0, 180.0};
+	copyArray(config->hpfpTargetLoadBins, hardCodedhpfpTargetLoadBins);
 }
 
 ```

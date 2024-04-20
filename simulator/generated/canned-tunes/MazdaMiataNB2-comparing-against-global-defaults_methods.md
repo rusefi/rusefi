@@ -1,4 +1,149 @@
 ```
+static void nb2cannedknockNoiseRpmBins() {
+	static const float hardCodedknockNoiseRpmBins[16] = {650.0, 700.0, 800.0, 1150.0, 1600.0, 2000.0, 2400.0, 2850.0, 3250.0, 3700.0, 4100.0, 4500.0, 4950.0, 5400.0, 6200.0, 7000.0};
+	copyArray(config->knockNoiseRpmBins, hardCodedknockNoiseRpmBins);
+}
+
+static void nb2cannedknockBaseNoise() {
+	static const float hardCodedknockBaseNoise[16] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(config->knockBaseNoise, hardCodedknockBaseNoise);
+}
+
+static void nb2cannedscriptCurve5Bins() {
+	static const float hardCodedscriptCurve5Bins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(config->scriptCurve5Bins, hardCodedscriptCurve5Bins);
+}
+
+static void nb2cannedscriptCurve6Bins() {
+	static const float hardCodedscriptCurve6Bins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(config->scriptCurve6Bins, hardCodedscriptCurve6Bins);
+}
+
+static void nb2cannedsparkDwellRpmBins() {
+	static const float hardCodedsparkDwellRpmBins[8] = {500.0, 1200.0, 2000.0, 3000.0, 4000.0, 5000.0, 6000.0, 7200.0};
+	copyArray(config->sparkDwellRpmBins, hardCodedsparkDwellRpmBins);
+}
+
+static void nb2cannedsparkDwellValues() {
+	static const float hardCodedsparkDwellValues[8] = {2.5, 2.4, 2.3, 2.2, 2.1, 2.1, 2.0, 1.9};
+	copyArray(config->sparkDwellValues, hardCodedsparkDwellValues);
+}
+
+static void nb2canneddwellVoltageCorrVoltBins() {
+	static const float hardCodeddwellVoltageCorrVoltBins[8] = {8.0, 9.0, 10.0, 11.0, 12.0, 14.0, 16.0, 18.0};
+	copyArray(config->dwellVoltageCorrVoltBins, hardCodeddwellVoltageCorrVoltBins);
+}
+
+static void nb2canneddwellVoltageCorrValues() {
+	static const float hardCodeddwellVoltageCorrValues[8] = {2.28, 2.0, 1.7, 1.54, 1.36, 1.0, 0.86, 0.8};
+	copyArray(config->dwellVoltageCorrValues, hardCodeddwellVoltageCorrValues);
+}
+
+static void nb2cannedprimeBins() {
+	static const float hardCodedprimeBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->primeBins, hardCodedprimeBins);
+}
+
+static void nb2cannedprimeValues() {
+	static const float hardCodedprimeValues[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->primeValues, hardCodedprimeValues);
+}
+
+static void nb2cannedmafDecodingBins() {
+	static const float hardCodedmafDecodingBins[32] = {0.5, 0.86999893, 1.0699997, 1.5299988, 1.8499985, 2.1099854, 2.4599915, 3.0, 3.5100098, 4.5, 4.5999756, 4.6099854, 4.619995, 4.630005, 4.6400146, 4.6500244, 4.659973, 4.669983, 4.6799927, 4.6900024, 4.700012, 4.710022, 4.7199707, 4.7299805, 4.73999, 4.75, 4.76001, 4.7700195, 4.7800293, 4.789978, 4.799988, 4.8099976};
+	copyArray(config->mafDecodingBins, hardCodedmafDecodingBins);
+}
+
+static void nb2cannedmafDecoding() {
+	static const float hardCodedmafDecoding[32] = {0.0, 0.0, 1.0, 3.0, 8.0, 19.0, 45.0, 100.0, 175.0, 350.0, 350.0, 350.0, 350.0, 350.0, 350.0, 350.0, 350.0, 350.0, 350.0, 350.0, 350.0, 350.0, 350.0, 350.0, 350.0, 350.0, 350.0, 350.0, 350.0, 350.0, 350.0, 350.0};
+	copyArray(config->mafDecoding, hardCodedmafDecoding);
+}
+
+static void nb2cannedcltFuelCorr() {
+	static const float hardCodedcltFuelCorr[16] = {1.5, 1.5, 1.4199982, 1.3600006, 1.2799988, 1.199997, 1.1800003, 1.1500015, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1};
+	copyArray(config->cltFuelCorr, hardCodedcltFuelCorr);
+}
+
+static void nb2cannedcrankingFuelCoef() {
+	static const float hardCodedcrankingFuelCoef[8] = {2.7999878, 2.2000122, 1.800003, 1.550003, 1.199997, 1.1, 1.1, 1.1};
+	copyArray(config->crankingFuelCoef, hardCodedcrankingFuelCoef);
+}
+
+static void nb2cannedcrankingFuelCoefE100() {
+	static const float hardCodedcrankingFuelCoefE100[8] = {0.02, 0.02, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01};
+	copyArray(config->crankingFuelCoefE100, hardCodedcrankingFuelCoefE100);
+}
+
+static void nb2cannedcltRevLimitRpmBins() {
+	static const float hardCodedcltRevLimitRpmBins[4] = {0.0, 0.0, 0.0, 0.0};
+	copyArray(config->cltRevLimitRpmBins, hardCodedcltRevLimitRpmBins);
+}
+
+static void nb2cannedcrankingCycleCoef() {
+	static const float hardCodedcrankingCycleCoef[8] = {2.0, 1.300003, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0};
+	copyArray(config->crankingCycleCoef, hardCodedcrankingCycleCoef);
+}
+
+static void nb2cannedcltIdleCorrBins() {
+	static const float hardCodedcltIdleCorrBins[16] = {-40.0, -30.0, -20.0, -10.0, 0.0, 9.439941, 19.120117, 30.810059, 42.509766, 54.529785, 64.21973, 71.90039, 80.0, 90.0, 100.0, 110.0};
+	copyArray(config->cltIdleCorrBins, hardCodedcltIdleCorrBins);
+}
+
+static void nb2cannedcltIdleCorr() {
+	static const float hardCodedcltIdleCorr[16] = {1.300003, 1.25, 1.2200012, 1.1900024, 1.1399994, 1.1, 1.08, 1.08, 1.08, 1.08, 1.08, 1.08, 1.08, 1.08, 1.08, 1.08};
+	copyArray(config->cltIdleCorr, hardCodedcltIdleCorr);
+}
+
+static void nb2cannediacCoasting() {
+	static const float hardCodediacCoasting[16] = {40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0};
+	copyArray(config->iacCoasting, hardCodediacCoasting);
+}
+
+static void nb2cannedcltCrankingCorr() {
+	static const float hardCodedcltCrankingCorr[8] = {1.4000015, 1.35, 1.28, 1.25, 1.2, 1.15, 1.1, 1.1};
+	copyArray(config->cltCrankingCorr, hardCodedcltCrankingCorr);
+}
+
+static void nb2cannedcltIdleRpmBins() {
+	static const float hardCodedcltIdleRpmBins[16] = {-40.0, -30.0, -20.0, 0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0, 110.0, 130.0};
+	copyArray(config->cltIdleRpmBins, hardCodedcltIdleRpmBins);
+}
+
+static void nb2cannedcltIdleRpm() {
+	static const float hardCodedcltIdleRpm[16] = {1400.0, 1400.0, 1400.0, 1400.0, 1400.0, 1350.0, 1350.0, 1250.0, 1150.0, 1000.0, 950.0, 950.0, 950.0, 950.0, 950.0, 950.0};
+	copyArray(config->cltIdleRpm, hardCodedcltIdleRpm);
+}
+
+static void nb2cannedidleAdvanceBins() {
+	static const float hardCodedidleAdvanceBins[8] = {500.0, 700.0, 800.0, 900.0, 1000.0, 1100.0, 1200.0, 1300.0};
+	copyArray(config->idleAdvanceBins, hardCodedidleAdvanceBins);
+}
+
+static void nb2cannedidleAdvance() {
+	static const float hardCodedidleAdvance[8] = {12.0, 12.0, 11.0, 10.0, 10.0, 10.0, 10.0, 10.0};
+	copyArray(config->idleAdvance, hardCodedidleAdvance);
+}
+
+static void nb2cannedfuelLevelBins() {
+	static const float hardCodedfuelLevelBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(config->fuelLevelBins, hardCodedfuelLevelBins);
+}
+
+static void nb2cannedhpfpLobeProfileQuantityBins() {
+	static const float hardCodedhpfpLobeProfileQuantityBins[16] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(config->hpfpLobeProfileQuantityBins, hardCodedhpfpLobeProfileQuantityBins);
+}
+
+static void nb2cannedhpfpLobeProfileAngle() {
+	static const float hardCodedhpfpLobeProfileAngle[16] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(config->hpfpLobeProfileAngle, hardCodedhpfpLobeProfileAngle);
+}
+
+static void nb2cannedhpfpDeadtimeVoltsBins() {
+	static const float hardCodedhpfpDeadtimeVoltsBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(config->hpfpDeadtimeVoltsBins, hardCodedhpfpDeadtimeVoltsBins);
+}
+
 static void nb2cannedtpsTpsAccelTable() {
 	static const float hardCodedtpsTpsAccelTable[8][8] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
@@ -11,6 +156,16 @@ static void nb2cannedtpsTpsAccelTable() {
 {2.586,	2.467,	2.380,	2.257,	2.103,	1.822,	1.484,	0.000,	},
 };
 	copyTable(config->tpsTpsAccelTable, hardCodedtpsTpsAccelTable);
+}
+
+static void nb2cannedboostRpmBins() {
+	static const float hardCodedboostRpmBins[8] = {0.0, 1150.0, 2300.0, 3450.0, 4550.0, 5700.0, 6850.0, 8000.0};
+	copyArray(config->boostRpmBins, hardCodedboostRpmBins);
+}
+
+static void nb2cannedboostTpsBins() {
+	static const float hardCodedboostTpsBins[8] = {0.0, 14.0, 28.0, 42.0, 58.0, 72.0, 86.0, 100.0};
+	copyArray(config->boostTpsBins, hardCodedboostTpsBins);
 }
 
 static void nb2cannedboostTableOpenLoop() {
@@ -41,6 +196,16 @@ static void nb2cannedboostTableClosedLoop() {
 	copyTable(config->boostTableClosedLoop, hardCodedboostTableClosedLoop);
 }
 
+static void nb2cannedvvtTable1RpmBins() {
+	static const float hardCodedvvtTable1RpmBins[8] = {950.0, 1800.0, 2500.0, 3300.0, 4200.0, 5000.0, 6000.0, 7200.0};
+	copyArray(config->vvtTable1RpmBins, hardCodedvvtTable1RpmBins);
+}
+
+static void nb2cannedvvtTable1LoadBins() {
+	static const float hardCodedvvtTable1LoadBins[8] = {30.0, 40.0, 50.0, 60.0, 70.0, 75.0, 82.0, 85.0};
+	copyArray(config->vvtTable1LoadBins, hardCodedvvtTable1LoadBins);
+}
+
 static void nb2cannedvvtTable1() {
 	static const float hardCodedvvtTable1[8][8] = {
 {0.000,	0.000,	10.000,	10.000,	10.000,	10.000,	0.000,	0.000,	},
@@ -55,6 +220,11 @@ static void nb2cannedvvtTable1() {
 	copyTable(config->vvtTable1, hardCodedvvtTable1);
 }
 
+static void nb2cannedscriptTable4RpmBins() {
+	static const float hardCodedscriptTable4RpmBins[10] = {650.0, 800.0, 1700.0, 2600.0, 3500.0, 4400.0, 5300.0, 7000.0, 0.0, 0.0};
+	copyArray(config->scriptTable4RpmBins, hardCodedscriptTable4RpmBins);
+}
+
 static void nb2cannedscriptTable4() {
 	static const float hardCodedscriptTable4[8][10] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
@@ -67,6 +237,16 @@ static void nb2cannedscriptTable4() {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 };
 	copyTable(config->scriptTable4, hardCodedscriptTable4);
+}
+
+static void nb2cannedignitionRpmBins() {
+	static const float hardCodedignitionRpmBins[16] = {700.0, 900.0, 1100.0, 1500.0, 1800.0, 2300.0, 2800.0, 3200.0, 3700.0, 4200.0, 4700.0, 5000.0, 5250.0, 5800.0, 6200.0, 7200.0};
+	copyArray(config->ignitionRpmBins, hardCodedignitionRpmBins);
+}
+
+static void nb2cannedignitionLoadBins() {
+	static const float hardCodedignitionLoadBins[16] = {25.0, 35.0, 45.0, 55.0, 65.0, 75.0, 85.0, 95.0, 100.0, 110.0, 130.0, 150.0, 170.0, 190.0, 205.0, 220.0};
+	copyArray(config->ignitionLoadBins, hardCodedignitionLoadBins);
 }
 
 static void nb2cannedignitionTable() {
@@ -91,6 +271,11 @@ static void nb2cannedignitionTable() {
 	copyTable(config->ignitionTable, hardCodedignitionTable);
 }
 
+static void nb2cannedignitionIatCorrLoadBins() {
+	static const float hardCodedignitionIatCorrLoadBins[8] = {-40.0, -30.0, -20.0, -10.0, 0.0, 10.0, 20.0, 30.0};
+	copyArray(config->ignitionIatCorrLoadBins, hardCodedignitionIatCorrLoadBins);
+}
+
 static void nb2cannedignitionIatCorrTable() {
 	static const float hardCodedignitionIatCorrTable[8][8] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
@@ -103,6 +288,16 @@ static void nb2cannedignitionIatCorrTable() {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 };
 	copyTable(config->ignitionIatCorrTable, hardCodedignitionIatCorrTable);
+}
+
+static void nb2cannedveRpmBins() {
+	static const float hardCodedveRpmBins[16] = {700.0, 900.0, 1100.0, 1500.0, 1800.0, 2300.0, 2800.0, 3200.0, 3700.0, 4200.0, 4700.0, 5250.0, 5700.0, 6200.0, 6700.0, 7200.0};
+	copyArray(config->veRpmBins, hardCodedveRpmBins);
+}
+
+static void nb2cannedveLoadBins() {
+	static const float hardCodedveLoadBins[16] = {20.0, 25.0, 32.0, 36.0, 40.0, 45.0, 50.0, 55.0, 65.0, 75.0, 85.0, 90.0, 95.0, 100.0, 105.0, 110.0};
+	copyArray(config->veLoadBins, hardCodedveLoadBins);
 }
 
 static void nb2cannedveTable() {
@@ -127,6 +322,16 @@ static void nb2cannedveTable() {
 	copyTable(config->veTable, hardCodedveTable);
 }
 
+static void nb2cannedidleVeRpmBins() {
+	static const float hardCodedidleVeRpmBins[4] = {800.0, 900.0, 1100.0, 1200.0};
+	copyArray(config->idleVeRpmBins, hardCodedidleVeRpmBins);
+}
+
+static void nb2cannedidleVeLoadBins() {
+	static const float hardCodedidleVeLoadBins[4] = {30.0, 35.0, 40.0, 45.0};
+	copyArray(config->idleVeLoadBins, hardCodedidleVeLoadBins);
+}
+
 static void nb2cannedidleVeTable() {
 	static const float hardCodedidleVeTable[4][4] = {
 {41.000,	41.000,	41.000,	43.000,	},
@@ -135,6 +340,36 @@ static void nb2cannedidleVeTable() {
 {47.000,	45.000,	47.000,	47.000,	},
 };
 	copyTable(config->idleVeTable, hardCodedidleVeTable);
+}
+
+static void nb2cannedfuelTrimRpmBins() {
+	static const float hardCodedfuelTrimRpmBins[4] = {0.0, 0.0, 0.0, 0.0};
+	copyArray(config->fuelTrimRpmBins, hardCodedfuelTrimRpmBins);
+}
+
+static void nb2cannedfuelTrimLoadBins() {
+	static const float hardCodedfuelTrimLoadBins[4] = {0.0, 0.0, 0.0, 0.0};
+	copyArray(config->fuelTrimLoadBins, hardCodedfuelTrimLoadBins);
+}
+
+static void nb2cannedignTrimRpmBins() {
+	static const float hardCodedignTrimRpmBins[4] = {0.0, 0.0, 0.0, 0.0};
+	copyArray(config->ignTrimRpmBins, hardCodedignTrimRpmBins);
+}
+
+static void nb2cannedignTrimLoadBins() {
+	static const float hardCodedignTrimLoadBins[4] = {0.0, 0.0, 0.0, 0.0};
+	copyArray(config->ignTrimLoadBins, hardCodedignTrimLoadBins);
+}
+
+static void nb2cannedmapEstimateRpmBins() {
+	static const float hardCodedmapEstimateRpmBins[16] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(config->mapEstimateRpmBins, hardCodedmapEstimateRpmBins);
+}
+
+static void nb2cannedmapEstimateTpsBins() {
+	static const float hardCodedmapEstimateTpsBins[16] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(config->mapEstimateTpsBins, hardCodedmapEstimateTpsBins);
 }
 
 static void nb2cannedmapEstimateTable() {
@@ -181,6 +416,21 @@ static void nb2cannedinjectionPhase() {
 	copyTable(config->injectionPhase, hardCodedinjectionPhase);
 }
 
+static void nb2cannedpedalToTpsRpmBins() {
+	static const float hardCodedpedalToTpsRpmBins[8] = {0.0, 1150.0, 2300.0, 3450.0, 4550.0, 5700.0, 6850.0, 8000.0};
+	copyArray(config->pedalToTpsRpmBins, hardCodedpedalToTpsRpmBins);
+}
+
+static void nb2cannedlambdaRpmBins() {
+	static const float hardCodedlambdaRpmBins[16] = {700.0, 900.0, 1100.0, 1500.0, 1700.0, 2300.0, 2800.0, 3200.0, 3700.0, 4200.0, 4700.0, 5250.0, 5700.0, 6200.0, 6700.0, 7200.0};
+	copyArray(config->lambdaRpmBins, hardCodedlambdaRpmBins);
+}
+
+static void nb2cannedlambdaLoadBins() {
+	static const float hardCodedlambdaLoadBins[16] = {20.0, 35.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0, 110.0, 120.0, 130.0, 150.0, 175.0, 200.0, 225.0, 250.0};
+	copyArray(config->lambdaLoadBins, hardCodedlambdaLoadBins);
+}
+
 static void nb2cannedlambdaTable() {
 	static const float hardCodedlambdaTable[16][16] = {
 {14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	15.400,	15.400,	15.400,	15.400,	14.700,	14.700,	14.700,	14.700,	14.700,	14.700,	},
@@ -213,6 +463,26 @@ static void nb2cannedtcuSolenoidTable() {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 };
 	copyTable(config->tcuSolenoidTable, hardCodedtcuSolenoidTable);
+}
+
+static void nb2cannedhpfpTargetRpmBins() {
+	static const float hardCodedhpfpTargetRpmBins[10] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(config->hpfpTargetRpmBins, hardCodedhpfpTargetRpmBins);
+}
+
+static void nb2cannedhpfpTargetLoadBins() {
+	static const float hardCodedhpfpTargetLoadBins[10] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(config->hpfpTargetLoadBins, hardCodedhpfpTargetLoadBins);
+}
+
+static void nb2cannedhpfpCompensationRpmBins() {
+	static const float hardCodedhpfpCompensationRpmBins[10] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(config->hpfpCompensationRpmBins, hardCodedhpfpCompensationRpmBins);
+}
+
+static void nb2cannedhpfpCompensationLoadBins() {
+	static const float hardCodedhpfpCompensationLoadBins[10] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(config->hpfpCompensationLoadBins, hardCodedhpfpCompensationLoadBins);
 }
 
 static void nb2cannedpostCrankingFactor() {

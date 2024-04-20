@@ -63,6 +63,8 @@
     engineConfiguration->gppwm[0].offBelowDuty = 10;
 
 
+	cannedmafDecodingBins();
+	cannedcltIdleCorr();
 	cannedboostTableOpenLoop();
 	cannedscriptTable4();
 	cannedignitionTable();

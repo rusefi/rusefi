@@ -195,13 +195,47 @@
     engineConfiguration->hpfpPidI = 0;
 
 
+	cannedsparkDwellRpmBins();
+	cannedsparkDwellValues();
+	canneddwellVoltageCorrVoltBins();
+	canneddwellVoltageCorrValues();
+	cannedtpsTspCorrValuesBins();
+	cannedtpsTspCorrValues();
+	cannedprimeBins();
+	cannedprimeValues();
+	cannedmafDecodingBins();
+	cannedcltFuelCorr();
+	cannedcrankingFuelCoef();
+	cannedcltRevLimitRpmBins();
+	cannedcrankingCycleCoef();
+	cannedcltIdleCorr();
+	cannedcltCrankingCorr();
+	cannedcltIdleRpm();
+	cannedidleAdvanceBins();
+	cannedidleAdvance();
+	cannedfuelLevelBins();
 	cannedtpsTpsAccelTable();
+	cannedboostRpmBins();
 	cannedboostTableOpenLoop();
+	cannedscriptTable4RpmBins();
 	cannedscriptTable4();
+	cannedignitionRpmBins();
+	cannedignitionLoadBins();
 	cannedignitionTable();
+	cannedveRpmBins();
+	cannedveLoadBins();
 	cannedveTable();
+	cannedfuelTrimRpmBins();
+	cannedfuelTrimLoadBins();
+	cannedignTrimRpmBins();
+	cannedignTrimLoadBins();
+	cannedmapEstimateRpmBins();
+	cannedmapEstimateTpsBins();
 	cannedmapEstimateTable();
+	cannedpedalToTpsRpmBins();
 	cannedlambdaTable();
 	cannedtcuSolenoidTable();
+	cannedhpfpTargetRpmBins();
+	cannedhpfpCompensationRpmBins();
 	cannedpostCrankingFactor();
 ```

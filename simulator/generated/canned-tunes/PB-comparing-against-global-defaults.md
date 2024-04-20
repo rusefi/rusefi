@@ -187,13 +187,26 @@
     engineConfiguration->mc33_hpfp_i_hold = 4;
 
 
+	pbcannedknockBaseNoise();
+	pbcannedmafDecodingBins();
+	pbcannedcltTimingBins();
+	pbcannedcltTimingExtra();
+	pbcannedcltIdleCorrBins();
+	pbcannedcltIdleCorr();
+	pbcannedcltIdleRpm();
+	pbcannedidleAdvanceBins();
+	pbcannedidleAdvance();
 	pbcannedvvtTable1();
 	pbcannedvvtTable2();
 	pbcannedscriptTable4();
+	pbcannedignitionRpmBins();
 	pbcannedignitionTable();
 	pbcannedveTable();
 	pbcannedinjectionPhase();
+	pbcannedmaxKnockRetardRpmBins();
+	pbcannedmaxKnockRetardLoadBins();
 	pbcannedmaxKnockRetardTable();
 	pbcannedlambdaTable();
 	pbcannedtcuSolenoidTable();
+	pbcannedhpfpTargetLoadBins();
 ```

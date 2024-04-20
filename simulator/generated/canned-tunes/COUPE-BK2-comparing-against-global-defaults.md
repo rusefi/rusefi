@@ -147,13 +147,38 @@
     engineConfiguration->etb.dFactor = 0.1855;
 
 
+	coupleBK2cannedtpsTspCorrValuesBins();
+	coupleBK2cannedtpsTspCorrValues();
+	coupleBK2cannedprimeBins();
+	coupleBK2cannedprimeValues();
+	coupleBK2cannedmafDecodingBins();
+	coupleBK2cannedcltRevLimitRpmBins();
+	coupleBK2cannedcltIdleCorrBins();
+	coupleBK2cannedcltIdleCorr();
+	coupleBK2cannedcltCrankingCorr();
+	coupleBK2cannedcltIdleRpm();
+	coupleBK2cannedidleAdvanceBins();
+	coupleBK2cannedidleAdvance();
 	coupleBK2cannedtpsTpsAccelTable();
+	coupleBK2cannedboostRpmBins();
 	coupleBK2cannedboostTableOpenLoop();
+	coupleBK2cannedscriptTable4RpmBins();
 	coupleBK2cannedscriptTable4();
+	coupleBK2cannedignitionRpmBins();
+	coupleBK2cannedignitionLoadBins();
 	coupleBK2cannedignitionTable();
+	coupleBK2cannedveRpmBins();
+	coupleBK2cannedveLoadBins();
 	coupleBK2cannedveTable();
+	coupleBK2cannedfuelTrimRpmBins();
+	coupleBK2cannedfuelTrimLoadBins();
+	coupleBK2cannedignTrimRpmBins();
+	coupleBK2cannedignTrimLoadBins();
+	coupleBK2cannedpedalToTpsRpmBins();
 	coupleBK2cannedpedalToTpsTable();
 	coupleBK2cannedlambdaTable();
 	coupleBK2cannedtcuSolenoidTable();
+	coupleBK2cannedhpfpTargetRpmBins();
+	coupleBK2cannedhpfpCompensationRpmBins();
 	coupleBK2cannedpostCrankingFactor();
 ```
