@@ -30,7 +30,7 @@ class PerFieldWithStructuresIterator extends FieldIterator {
 
     @Override
     public void end() {
-        ConfigStructure cs = cf.getState().getStructures().get(cf.getType());
+        ConfigStructure cs = cf.getState().getStructures().get(cf.getTypeName());
         String content;
         if (cs != null) {
             if (strategy.skip(cf)) {

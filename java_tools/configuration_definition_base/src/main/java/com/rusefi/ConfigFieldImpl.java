@@ -107,7 +107,7 @@ public class ConfigFieldImpl implements ConfigField {
     }
 
     @Override
-    public ConfigStructure getParent() {
+    public ConfigStructure getParentStructureType() {
         return parent;
     }
 
@@ -120,7 +120,7 @@ public class ConfigFieldImpl implements ConfigField {
 
     @Override
     public ConfigStructure getStructureType() {
-        return getState().getStructures().get(getType());
+        return getState().getStructures().get(getTypeName());
     }
 
     @Override
@@ -282,7 +282,7 @@ public class ConfigFieldImpl implements ConfigField {
      * @see TypesHelper
      */
     @Override
-    public String getType() {
+    public String getTypeName() {
         return type;
     }
 

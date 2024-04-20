@@ -213,7 +213,7 @@ public class TuneCanTool implements TuneCanToolConstants {
                 log.info("Not found " + fieldName);
                 continue;
             }
-            if (TypesHelper.isFloat(cf.getType()) && !cf.isArray()) {
+            if (TypesHelper.isFloat(cf.getTypeName()) && !cf.isArray()) {
                 float floatDefaultValue = Float.parseFloat(defaultValue.getValue());
                 float floatCustomValue = Float.parseFloat(customValue.getValue());
                 if (floatCustomValue != 0 && Math.abs(floatDefaultValue / floatCustomValue - 1) < 0.001) {
@@ -227,21 +227,21 @@ public class TuneCanTool implements TuneCanToolConstants {
                 continue;
             }
 
-            if (cf.getType().equals("boolean")) {
+            if (cf.getTypeName().equals("boolean")) {
                 sb.append(TuneTools.getAssignmentCode(defaultValue, cName, unquote(customValue.getValue())));
                 continue;
             }
 
             if (cf.isArray()) {
                 String parentReference;
-                if (cf.getParent().getName().equals("engine_configuration_s")) {
+                if (cf.getParentStructureType().getName().equals("engine_configuration_s")) {
                     parentReference = "engineConfiguration->";
-                } else if (cf.getParent().getName().equals("persistent_config_s")) {
+                } else if (cf.getParentStructureType().getName().equals("persistent_config_s")) {
                     parentReference = "config->";
                 } else {
                     // todo: for instance map.samplingAngle
                     //throw new IllegalStateException("Unexpected " + cf.getParent());
-                    log.info(" " + cf);
+                    log.info("Unable to locate parent: " + cf + " / parent=" + cf.getParentStructureType());
                     continue;
                 }
 
@@ -295,7 +295,7 @@ public class TuneCanTool implements TuneCanToolConstants {
             if (!Node.isNumeric(customValue.getValue())) {
                 // todo: smarter logic for enums
 
-                String type = cf.getType();
+                String type = cf.getTypeName();
                 if (isHardwareEnum(type)) {
                     continue;
                 }

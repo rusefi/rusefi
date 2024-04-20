@@ -11,7 +11,7 @@ public interface ConfigField {
         }
 
         @Override
-        public ConfigStructure getParent() {
+        public ConfigStructure getParentStructureType() {
             return null;
         }
 
@@ -66,7 +66,7 @@ public interface ConfigField {
         }
 
         @Override
-        public String getType() {
+        public String getTypeName() {
             return null;
         }
 
@@ -163,7 +163,9 @@ public interface ConfigField {
         }
     }
 
-    ConfigStructure getParent();
+    ConfigStructure getParentStructureType();
+
+    String getTypeName();
 
     ConfigStructure getStructureType();
 
@@ -187,7 +189,6 @@ public interface ConfigField {
 
     String getName();
 
-    String getType();
 
     int getElementSize();
 

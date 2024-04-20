@@ -71,7 +71,7 @@ public class SdCardFieldsContent {
             categoryStr = ", " + categoryStr;
         }
 
-        boolean isEnum = configField.getType().contains("_e");
+        boolean isEnum = configField.getTypeName().contains("_e");
         if (isEnum)
             return "";
 

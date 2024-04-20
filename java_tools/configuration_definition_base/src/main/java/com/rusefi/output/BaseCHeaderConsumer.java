@@ -27,7 +27,7 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
 
         String cEntry = getComment(configField.getComment(), iterator.currentOffset, configField.getUnits());
 
-        String typeName = configField.getType();
+        String typeName = configField.getTypeName();
 
         String autoscaleSpec = configField.autoscaleSpec();
         if (autoscaleSpec != null) {
@@ -37,9 +37,9 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
         if (!configField.isArray()) {
             // not an array
             cEntry += "\t" + typeName + " " + configField.getName();
-            if (needZeroInit && TypesHelper.isPrimitive(configField.getType())) {
+            if (needZeroInit && TypesHelper.isPrimitive(configField.getTypeName())) {
                 // we need this cast in case of enums
-                cEntry += " = (" + configField.getType() + ")0";
+                cEntry += " = (" + configField.getTypeName() + ")0";
             }
             cEntry += ";" + EOL;
         } else {

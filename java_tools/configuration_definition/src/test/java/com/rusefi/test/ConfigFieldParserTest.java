@@ -18,7 +18,7 @@ public class ConfigFieldParserTest {
         ReaderStateImpl state = new ReaderStateImpl();
         {
             ConfigFieldImpl cf = ConfigFieldImpl.parse(state, "uint8_t[8] field");
-            assertEquals(cf.getType(), "uint8_t");
+            assertEquals(cf.getTypeName(), "uint8_t");
             assertEquals(cf.getArraySizes().length, 1);
             assertEquals(cf.getArraySizes()[0], 8);
             assertEquals(cf.getSize(null), 8);
@@ -31,7 +31,7 @@ public class ConfigFieldParserTest {
         ReaderStateImpl state = new ReaderStateImpl();
         {
             ConfigFieldImpl cf = ConfigFieldImpl.parse(state, "uint8_t[8 x 16] field");
-            assertEquals(cf.getType(), "uint8_t");
+            assertEquals(cf.getTypeName(), "uint8_t");
             assertEquals(cf.getArraySizes().length, 2);
             assertEquals(cf.getArraySizes()[0], 8);
             assertEquals(cf.getArraySizes()[1], 16);
@@ -383,7 +383,7 @@ public class ConfigFieldParserTest {
         {
             ReaderStateImpl state = new ReaderStateImpl();
             ConfigFieldImpl cf = ConfigFieldImpl.parse(state, "int field");
-            assertEquals(cf.getType(), "int");
+            assertEquals(cf.getTypeName(), "int");
 
             assertEquals(cf.getName(), "field", "Unexpected Field Name");
         }
@@ -691,24 +691,24 @@ public class ConfigFieldParserTest {
         assertNull(ConfigFieldImpl.parse(state, "int"));
         {
             ConfigFieldImpl cf = ConfigFieldImpl.parse(state, "int field");
-            assertEquals(cf.getType(), "int");
+            assertEquals(cf.getTypeName(), "int");
             assertEquals(cf.getName(), "field", "Name");
         }
         {
             ConfigFieldImpl cf = ConfigFieldImpl.parse(state, "int_4 fie4_ld");
-            assertEquals(cf.getType(), "int_4");
+            assertEquals(cf.getTypeName(), "int_4");
             assertEquals(cf.getName(), "fie4_ld");
         }
         {
             ConfigFieldImpl cf = ConfigFieldImpl.parse(state, "int_8 fi_eld;comm_;ts,1,1");
-            assertEquals(cf.getType(), "int_8");
+            assertEquals(cf.getTypeName(), "int_8");
             assertEquals(cf.getName(), "fi_eld");
             assertEquals(cf.getComment(), "comm_", "Comment");
             assertEquals(cf.getTsInfo(), "ts,1,1");
         }
         {
             ConfigFieldImpl cf = ConfigFieldImpl.parse(state, "int[3 iterate] field");
-            assertEquals(cf.getType(), "int");
+            assertEquals(cf.getTypeName(), "int");
             assertEquals(cf.getArraySizes().length, 1);
             assertEquals(cf.getArraySizes()[0], 3);
             assertTrue(cf.isIterate(), "isIterate");
@@ -717,19 +717,19 @@ public class ConfigFieldParserTest {
             ConfigFieldImpl cf = ConfigFieldImpl.parse(state, "int16_t crankingRpm;This,. value controls what RPM values we consider 'cranking' (any RPM below 'crankingRpm')\\nAnything above 'crankingRpm' would be 'running'");
             assertEquals(cf.getName(), "crankingRpm");
             assertEquals(cf.getArraySizes().length, 0);
-            assertEquals(cf.getType(), "int16_t");
+            assertEquals(cf.getTypeName(), "int16_t");
         }
         {
             ConfigFieldImpl cf = ConfigFieldImpl.parse(state, "MAP_sensor_config_s map");
             assertEquals(cf.getName(), "map");
             assertEquals(cf.getArraySizes().length, 0);
-            assertEquals(cf.getType(), "MAP_sensor_config_s");
+            assertEquals(cf.getTypeName(), "MAP_sensor_config_s");
         }
         {
             ConfigFieldImpl cf = ConfigFieldImpl.parse(state, "MAP_sensor_config_s map;@see hasMapSensor\\n@see isMapAveragingEnabled");
             assertEquals(cf.getName(), "map");
             assertEquals(cf.getArraySizes().length, 0);
-            assertEquals(cf.getType(), "MAP_sensor_config_s");
+            assertEquals(cf.getTypeName(), "MAP_sensor_config_s");
             assertEquals(cf.getComment(), "@see hasMapSensor\\n@see isMapAveragingEnabled");
         }
     }

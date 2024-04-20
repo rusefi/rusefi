@@ -8,7 +8,6 @@ import com.rusefi.util.LazyFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -97,7 +96,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
 
         if (cf.isArray() || cf.isFromIterate() || cf.isDirective())
             return "";
-        if (!TypesHelper.isPrimitive(cf.getType()) && !TypesHelper.isBoolean(cf.getType())) {
+        if (!TypesHelper.isPrimitive(cf.getTypeName()) && !TypesHelper.isBoolean(cf.getTypeName())) {
             return "";
         }
 
@@ -109,7 +108,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
         if (javaName.startsWith(CONFIG_ENGINE_CONFIGURATION))
             javaName = "engineConfiguration->" + javaName.substring(CONFIG_ENGINE_CONFIGURATION.length());
 
-        variables.add(new VariableRecord(userName, javaName + cf.getName(), cf.getType(), null));
+        variables.add(new VariableRecord(userName, javaName + cf.getName(), cf.getTypeName(), null));
 
         mdContent.append("### " + userName + "\n");
         mdContent.append(cf.getComment() + "\n\n");

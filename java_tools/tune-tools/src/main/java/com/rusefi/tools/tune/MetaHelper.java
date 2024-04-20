@@ -49,7 +49,7 @@ public class MetaHelper {
             fromIndex++; // skip underscore
             if (cf == null)
                 continue;
-            String type = cf.getType();
+            String type = cf.getTypeName();
             s = state.getStructures().get(type);
 
             if (s != null) {

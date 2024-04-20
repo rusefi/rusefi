@@ -337,13 +337,13 @@ public class ReaderStateImpl implements ReaderState {
             throw new IllegalStateException(cf.getName() + ": Not enclosed in a struct");
         ConfigStructureImpl structure = state.stack.peek();
 
-        Integer getPrimitiveSize = TypesHelper.getPrimitiveSize(cf.getType());
-        Integer customTypeSize = state.tsCustomSize.get(cf.getType());
+        Integer getPrimitiveSize = TypesHelper.getPrimitiveSize(cf.getTypeName());
+        Integer customTypeSize = state.tsCustomSize.get(cf.getTypeName());
         if (getPrimitiveSize != null && getPrimitiveSize > 1) {
             if (log.debugEnabled())
                 log.debug("Need to align before " + cf.getName());
             structure.addAlignmentFill(state, getPrimitiveSize);
-        } else if (state.structures.containsKey(cf.getType())) {
+        } else if (state.structures.containsKey(cf.getTypeName())) {
             // we are here for struct members
             structure.addAlignmentFill(state, 4);
         } else if (customTypeSize != null) {
@@ -355,7 +355,7 @@ public class ReaderStateImpl implements ReaderState {
             for (int i = 1; i <= cf.getArraySizes()[0]; i++) {
                 String commentWithIndex = getCommentWithIndex(cf, i);
                 ConfigFieldImpl element = new ConfigFieldImpl(state, cf.getName() + i, commentWithIndex, null,
-                        cf.getType(), new int[0], cf.getTsInfo(), false, cf.isHasAutoscale(), null, null);
+                        cf.getTypeName(), new int[0], cf.getTsInfo(), false, cf.isHasAutoscale(), null, null);
                 element.setFromIterate(cf.getName(), i);
                 structure.addTs(element);
             }

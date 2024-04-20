@@ -94,7 +94,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
 
         String typeString;
         String autoscaleSpec = configField.autoscaleSpec();
-        if (TypesHelper.isFloat(configField.getType()) || (autoscaleSpec != null && !autoscaleSpec.equals("1, 1"))) {
+        if (TypesHelper.isFloat(configField.getTypeName()) || (autoscaleSpec != null && !autoscaleSpec.equals("1, 1"))) {
             typeString = "float,  \"%.3f\"";
         } else {
             typeString = "int,    \"%d\"";
