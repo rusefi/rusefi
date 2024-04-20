@@ -346,5 +346,5 @@ enum class Gpio : uint16_t {
 /* Please keep updating these defines */
 #define BRAIN_PIN_ONCHIP_LAST	Gpio::I15
 #define BRAIN_PIN_ONCHIP_PINS	(BRAIN_PIN_ONCHIP_LAST - Gpio::A0 + 1)
-#define BRAIN_PIN_LAST 			Gpio::MC33810_1_GD_3
+#define BRAIN_PIN_LAST 			Gpio::TLE9104_5_OUT_3
 #define BRAIN_PIN_TOTAL_PINS	(BRAIN_PIN_LAST - Gpio::A0 + 1)
