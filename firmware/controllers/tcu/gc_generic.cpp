@@ -96,7 +96,7 @@ void GenericGearController::update() {
 			setDesiredGear(NEUTRAL);
 			break;
 		case SelectedGear::ManualPlus :
-			if (!shiftTimer.hasElapsedMs(500)) {
+			if (!shiftTimer.hasElapsedMs(500) || lastRange != SelectedGear::Manual) {
 				break;
 			}
 			shiftTimer.reset();
@@ -115,7 +115,7 @@ void GenericGearController::update() {
 			}
 			break;
 		case SelectedGear::ManualMinus :
-			if (!shiftTimer.hasElapsedMs(500)) {
+			if (!shiftTimer.hasElapsedMs(500) || lastRange != SelectedGear::Manual) {
 				break;
 			}
 			shiftTimer.reset();
@@ -139,6 +139,8 @@ void GenericGearController::update() {
 		default:
 			break;
 		}
+
+		lastRange = gear;
 	}
 
 	GearControllerBase::update();

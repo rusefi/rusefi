@@ -15,6 +15,7 @@ public:
 	}
 private:
 	Timer shiftTimer;
+	SelectedGear lastRange;
 	bool isNearest(float value, int pinIndex, float* rangeStates);
 	SensorType getAnalogSensorType(int zeroBasedSensorIndex);
 };
