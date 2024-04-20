@@ -26,6 +26,8 @@ public class ConfigStructureImpl implements ConfigStructure {
 
     private final Map<String, ConfigField> tsFieldsMap = new TreeMap<>();
 
+    private final Map</*type name*/String, ConfigField> currentInstance = new TreeMap<>();
+
     private int totalSize;
 
     private final BitState readingBitState = new BitState();
@@ -38,6 +40,11 @@ public class ConfigStructureImpl implements ConfigStructure {
         this.comment = comment;
         this.withPrefix = withPrefix;
         this.parent = parent;
+    }
+
+    @Override
+    public Map<String, ConfigField> getCurrentInstance() {
+        return currentInstance;
     }
 
     public void addBitField(ConfigFieldImpl bitField) {
@@ -115,6 +122,7 @@ public class ConfigStructureImpl implements ConfigStructure {
     public void addTs(ConfigFieldImpl cf) {
         tsFields.add(cf);
         tsFieldsMap.put(cf.getName(), cf);
+        currentInstance.put(cf.getTypeName(), cf);
     }
 
     @Override

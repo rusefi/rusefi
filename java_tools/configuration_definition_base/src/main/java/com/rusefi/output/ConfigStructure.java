@@ -4,9 +4,12 @@ import com.rusefi.ConfigField;
 import com.rusefi.ReaderState;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ConfigStructure {
     String UNUSED_ANYTHING_PREFIX = "unused";
+
+    Map<String, ConfigField> getCurrentInstance();
 
     ConfigStructure getParent();
 

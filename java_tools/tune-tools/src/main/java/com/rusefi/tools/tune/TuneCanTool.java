@@ -6,6 +6,7 @@ import com.opensr5.ini.IniFileModel;
 import com.rusefi.*;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.enums.engine_type_e;
+import com.rusefi.output.ConfigStructure;
 import com.rusefi.parse.TypesHelper;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
@@ -239,12 +240,10 @@ public class TuneCanTool implements TuneCanToolConstants {
                 } else if (cf.getParentStructureType().getName().equals("persistent_config_s")) {
                     parentReference = "config->";
                 } else {
-                    // todo: for instance map.samplingAngle
-                    //throw new IllegalStateException("Unexpected " + cf.getParent());
-                    log.info("Unable to locate parent: " + cf + " / parent=" + cf.getParentStructureType());
-                    continue;
+                    // todo: unit test?
+                    String path = getPath(cf.getParentStructureType());
+                    parentReference = "engineConfiguration->" + path + ".";
                 }
-
 
                 if (cf.getArraySizes().length == 2) {
                     TableData tableData = TableData.readTable(customTuneFileName, fieldName, ini);
@@ -334,6 +333,11 @@ public class TuneCanTool implements TuneCanToolConstants {
         sb.append("\n\n").append(invokeMethods);
 
         return sb;
+    }
+
+    private static String getPath(ConfigStructure parentType) {
+        String parentTypeName = parentType.getName();
+        return parentType.getParent().getCurrentInstance().get(parentTypeName).getName();
     }
 
     private final static Set<String> HARDWARE_PROPERTIES = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
