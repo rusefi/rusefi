@@ -18,6 +18,7 @@ public class ConnectionAndMeta {
 
     private static final int BUFFER_SIZE = 32 * 1024;
     public static final int CENTUM = 100;
+    public static final String IO_PROPERTIES = "/shared_io.properties";
     private final String zipFileName;
     private HttpsURLConnection httpConnection;
     private long completeFileSize;
@@ -30,7 +31,9 @@ public class ConnectionAndMeta {
     public static String getBaseUrl() {
         Properties props = new Properties();
         try {
-            props.load(ConnectionAndMeta.class.getResourceAsStream("shared_io.properties"));
+            InputStream stream = ConnectionAndMeta.class.getResourceAsStream(IO_PROPERTIES);
+            Objects.requireNonNull(stream, "Error reading " + IO_PROPERTIES);
+            props.load(stream);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
