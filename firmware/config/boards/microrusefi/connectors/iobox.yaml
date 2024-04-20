@@ -1,0 +1,81 @@
+# see https://www.msextra.com/doc/pdf/Microsquirt-IObox-1.pdf
+
+pins:
+  - pin: 9
+    id: MSIOBOX_0_OUT_1
+    class: outputs
+    function: low side, high current
+    ts_name: MS IO-Box 0 OUT 1
+
+  - pin: 10
+    id: MSIOBOX_0_OUT_2
+    class: outputs
+    function: low side, high current
+    ts_name: MS IO-Box 0 OUT 2
+
+  - pin: 7
+    id: MSIOBOX_0_OUT_3
+    class: outputs
+    function: low side, mid current
+    ts_name: MS IO-Box 0 OUT 3
+
+  - pin: 8
+    id: MSIOBOX_0_OUT_4
+    class: outputs
+    function: low side, mid current
+    ts_name: MS IO-Box 0 OUT 4
+
+  - pin: 16
+    id: MSIOBOX_0_OUT_5
+    class: outputs
+    function: low side, mid current
+    ts_name: MS IO-Box 0 OUT 5
+
+  - pin: 17
+    id: MSIOBOX_0_OUT_6
+    class: outputs
+    function: low side, mid current
+    ts_name: MS IO-Box 0 OUT 6
+
+  - pin: 35
+    id: MSIOBOX_0_OUT_7
+    class: outputs
+    function: low side, mid current
+    ts_name: MS IO-Box 0 OUT 7
+
+# MSIOBOX_0_OUT_8 is not exist
+
+  - pin: 32
+    id: [MSIOBOX_0_VSS_1, MSIOBOX_0_VSS_1]
+    class: [event_inputs, switch_inputs]
+    function: VR+
+    ts_name: MS IO-Box 0 VSS1 (VR)
+
+  - pin: 4
+    id: [MSIOBOX_0_VSS_2, MSIOBOX_0_VSS_2]
+    class: [event_inputs, switch_inputs]
+    function: VR+
+    ts_name: MS IO-Box 0 VSS2 (VR)
+
+  - pin: 11
+    id: [MSIOBOX_0_VSS_3, MSIOBOX_0_VSS_3]
+    class: [event_inputs, switch_inputs]
+    function: VR+
+    ts_name: MS IO-Box 0 VSS2 (Hall)
+
+  - pin: 12
+    id: [MSIOBOX_0_VSS_4, MSIOBOX_0_VSS_4]
+    class: [event_inputs, switch_inputs]
+    function: VR+
+    ts_name: MS IO-Box 0 VSS3 (Hall)
+
+  - pin: 6
+    id: MSIOBOX_0_SW_1
+    class: switch_inputs
+    function: VR+
+    ts_name: MS IO-Box 0 SW1
+
+# MSIOBOX_0_SW_2 and MSIOBOX_0_SW_3 are multiplexed with VSS2, VSS3
+# MSIOBOX_0_SW_4 is not exist
+
+# TODO: add ADC inputs
