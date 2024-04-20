@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sat Apr 20 02:37:00 UTC 2024
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sat Apr 20 03:14:37 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -95,6 +95,8 @@ case SentEtbType::NONE:
 }
 const char *getTransmissionControllerMode(TransmissionControllerMode value){
 switch(value) {
+case TransmissionControllerMode::Generic4:
+  return "Generic4";
 case TransmissionControllerMode::Gm4l6x:
   return "Gm4l6x";
 case TransmissionControllerMode::None:

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Apr 20 02:38:24 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Apr 20 03:16:05 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1181,7 +1181,8 @@ public class Fields {
 	public static final int TPS_TPS_ACCEL_CLT_CORR_TABLE = 4;
 	public static final int TPS_TPS_ACCEL_TABLE = 8;
 	public static final int TRACTION_CONTROL_ETB_DROP_SIZE = 6;
-	public static final int TransmissionControllerMode_Gm4l6x = 2;
+	public static final int TransmissionControllerMode_Generic4 = 2;
+	public static final int TransmissionControllerMode_Gm4l6x = 3;
 	public static final int TransmissionControllerMode_None = 0;
 	public static final int TransmissionControllerMode_SimpleTransmissionController = 1;
 	public static final String TRIGGER_COMMENT = "#";
@@ -1379,7 +1380,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.04.20.f407-discovery.4179760463";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.04.20.f407-discovery.2443836636";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
