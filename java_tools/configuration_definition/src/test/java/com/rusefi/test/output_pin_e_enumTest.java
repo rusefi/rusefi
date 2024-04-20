@@ -13,8 +13,11 @@ public class output_pin_e_enumTest {
     @Test
     public void test() throws IOException {
         VariableRegistry r = ConfigDefinitionTest.readRealConfig();
-        String packed = r.get("output_pin_e_enum");
+        String packed = r.get("Gpio_enum");
         String[] array = packed.split("\\s+");
-        assertEquals(unquote(array[287]), "MC33810_0_GD_3");
+        assertEquals(unquote(array[0]), "NONE");
+        assertEquals(unquote(array[1]), "INVALID");
+        assertEquals(unquote(array[49]), "PC15");
+        assertEquals(unquote(array[81]), "PE15");
     }
 }
