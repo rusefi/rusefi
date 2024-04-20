@@ -49,6 +49,46 @@ static void nb2cannedprimeValues() {
 	copyArray(engineConfiguration->primeValues, hardCodedprimeValues);
 }
 
+static void nb2cannedmap_samplingAngleBins() {
+	static const float hardCodedmap_samplingAngleBins[8] = {800.0, 1686.0, 2571.0, 3457.0, 4343.0, 5229.0, 6114.0, 7200.0};
+	copyArray(engineConfiguration->map.map_samplingAngleBins, hardCodedmap_samplingAngleBins);
+}
+
+static void nb2cannedmap_samplingWindowBins() {
+	static const float hardCodedmap_samplingWindowBins[8] = {800.0, 1686.0, 2571.0, 3457.0, 4343.0, 5229.0, 6114.0, 7200.0};
+	copyArray(engineConfiguration->map.map_samplingWindowBins, hardCodedmap_samplingWindowBins);
+}
+
+static void nb2cannedinjector_battLagCorrBins() {
+	static const float hardCodedinjector_battLagCorrBins[8] = {6.0, 8.0, 10.0, 11.0, 12.0, 13.0, 14.0, 16.0};
+	copyArray(engineConfiguration->injectorSecondary.injector_battLagCorrBins, hardCodedinjector_battLagCorrBins);
+}
+
+static void nb2cannedinjector_battLagCorr() {
+	static const float hardCodedinjector_battLagCorr[8] = {3.0, 2.5, 2.0, 1.699997, 1.5, 1.3499985, 1.25, 0.8499985};
+	copyArray(engineConfiguration->injectorSecondary.injector_battLagCorr, hardCodedinjector_battLagCorr);
+}
+
+static void nb2cannedvrThreshold1_rpmBins() {
+	static const float hardCodedvrThreshold1_rpmBins[6] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->vrThreshold2.vrThreshold1_rpmBins, hardCodedvrThreshold1_rpmBins);
+}
+
+static void nb2cannedvrThreshold1_values() {
+	static const float hardCodedvrThreshold1_values[6] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->vrThreshold2.vrThreshold1_values, hardCodedvrThreshold1_values);
+}
+
+static void nb2cannedvrThreshold2_rpmBins() {
+	static const float hardCodedvrThreshold2_rpmBins[6] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->vrThreshold2.vrThreshold2_rpmBins, hardCodedvrThreshold2_rpmBins);
+}
+
+static void nb2cannedvrThreshold2_values() {
+	static const float hardCodedvrThreshold2_values[6] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->vrThreshold2.vrThreshold2_values, hardCodedvrThreshold2_values);
+}
+
 static void nb2cannedmafDecodingBins() {
 	static const float hardCodedmafDecodingBins[32] = {0.5, 0.86999893, 1.0699997, 1.5299988, 1.8499985, 2.1099854, 2.4599915, 3.0, 3.5100098, 4.5, 4.5999756, 4.6099854, 4.619995, 4.630005, 4.6400146, 4.6500244, 4.659973, 4.669983, 4.6799927, 4.6900024, 4.700012, 4.710022, 4.7199707, 4.7299805, 4.73999, 4.75, 4.76001, 4.7700195, 4.7800293, 4.789978, 4.799988, 4.8099976};
 	copyArray(config->mafDecodingBins, hardCodedmafDecodingBins);

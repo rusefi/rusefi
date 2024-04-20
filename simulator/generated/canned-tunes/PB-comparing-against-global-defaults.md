@@ -188,6 +188,7 @@
 
 
 	pbcannedknockBaseNoise();
+	pbcannedinjector_battLagCorr();
 	pbcannedmafDecodingBins();
 	pbcannedcltTimingBins();
 	pbcannedcltTimingExtra();
@@ -201,6 +202,14 @@
 	pbcannedscriptTable4();
 	pbcannedignitionRpmBins();
 	pbcannedignitionTable();
+	pbcannedignBlends1_rpmBins();
+	pbcannedignBlends2_rpmBins();
+	pbcannedignBlends3_rpmBins();
+	pbcannedignBlends4_rpmBins();
+	pbcannedveBlends1_rpmBins();
+	pbcannedveBlends2_rpmBins();
+	pbcannedveBlends3_rpmBins();
+	pbcannedveBlends4_rpmBins();
 	pbcannedveTable();
 	pbcannedinjectionPhase();
 	pbcannedmaxKnockRetardRpmBins();

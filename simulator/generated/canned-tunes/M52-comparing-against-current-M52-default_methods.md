@@ -39,6 +39,36 @@ static void cannedprimeValues() {
 	copyArray(engineConfiguration->primeValues, hardCodedprimeValues);
 }
 
+static void cannedmap_samplingAngleBins() {
+	static const float hardCodedmap_samplingAngleBins[8] = {800.0, 1686.0, 2571.0, 3457.0, 4343.0, 5229.0, 6114.0, 7000.0};
+	copyArray(engineConfiguration->map.map_samplingAngleBins, hardCodedmap_samplingAngleBins);
+}
+
+static void cannedmap_samplingAngle() {
+	static const float hardCodedmap_samplingAngle[8] = {400.0, 400.0, 400.0, 400.0, 400.0, 400.0, 400.0, 400.0};
+	copyArray(engineConfiguration->map.map_samplingAngle, hardCodedmap_samplingAngle);
+}
+
+static void cannedmap_samplingWindowBins() {
+	static const float hardCodedmap_samplingWindowBins[8] = {800.0, 1686.0, 2571.0, 3457.0, 4343.0, 5229.0, 6114.0, 7000.0};
+	copyArray(engineConfiguration->map.map_samplingWindowBins, hardCodedmap_samplingWindowBins);
+}
+
+static void cannedmap_samplingWindow() {
+	static const float hardCodedmap_samplingWindow[8] = {150.0, 150.0, 150.0, 50.0, 50.0, 50.0, 50.0, 50.0};
+	copyArray(engineConfiguration->map.map_samplingWindow, hardCodedmap_samplingWindow);
+}
+
+static void cannedvrThreshold1_rpmBins() {
+	static const float hardCodedvrThreshold1_rpmBins[6] = {600.0, 1900.0, 3200.0, 4400.0, 5700.0, 7000.0};
+	copyArray(engineConfiguration->vrThreshold2.vrThreshold1_rpmBins, hardCodedvrThreshold1_rpmBins);
+}
+
+static void cannedvrThreshold2_rpmBins() {
+	static const float hardCodedvrThreshold2_rpmBins[6] = {600.0, 1900.0, 3200.0, 4400.0, 5700.0, 7000.0};
+	copyArray(engineConfiguration->vrThreshold2.vrThreshold2_rpmBins, hardCodedvrThreshold2_rpmBins);
+}
+
 static void cannedmafDecodingBins() {
 	static const float hardCodedmafDecodingBins[32] = {0.0, 0.78125, 1.3867188, 2.9101562, 4.2578125, 4.9804688, 2016.0, 2017.0, 2018.0, 2019.0, 2020.0, 2021.0, 2022.0, 2023.0, 2024.0, 2025.0, 2026.0, 2027.0, 2028.0, 2029.0, 2030.0, 2031.0, 2032.0, 2033.0, 2034.0, 2035.0, 2036.0, 2037.0, 2038.0, 2039.0, 2040.0, 2041.0};
 	copyArray(config->mafDecodingBins, hardCodedmafDecodingBins);
@@ -92,6 +122,86 @@ static void cannedidleAdvance() {
 static void cannedfuelLevelBins() {
 	static const float hardCodedfuelLevelBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 	copyArray(config->fuelLevelBins, hardCodedfuelLevelBins);
+}
+
+static void cannedignBlends1_blendBins() {
+	static const float hardCodedignBlends1_blendBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.ignBlends1_blendBins, hardCodedignBlends1_blendBins);
+}
+
+static void cannedignBlends1_blendValues() {
+	static const float hardCodedignBlends1_blendValues[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.ignBlends1_blendValues, hardCodedignBlends1_blendValues);
+}
+
+static void cannedignBlends2_blendBins() {
+	static const float hardCodedignBlends2_blendBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.ignBlends2_blendBins, hardCodedignBlends2_blendBins);
+}
+
+static void cannedignBlends2_blendValues() {
+	static const float hardCodedignBlends2_blendValues[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.ignBlends2_blendValues, hardCodedignBlends2_blendValues);
+}
+
+static void cannedignBlends3_blendBins() {
+	static const float hardCodedignBlends3_blendBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.ignBlends3_blendBins, hardCodedignBlends3_blendBins);
+}
+
+static void cannedignBlends3_blendValues() {
+	static const float hardCodedignBlends3_blendValues[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.ignBlends3_blendValues, hardCodedignBlends3_blendValues);
+}
+
+static void cannedignBlends4_blendBins() {
+	static const float hardCodedignBlends4_blendBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.ignBlends4_blendBins, hardCodedignBlends4_blendBins);
+}
+
+static void cannedignBlends4_blendValues() {
+	static const float hardCodedignBlends4_blendValues[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.ignBlends4_blendValues, hardCodedignBlends4_blendValues);
+}
+
+static void cannedveBlends1_blendBins() {
+	static const float hardCodedveBlends1_blendBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.veBlends1_blendBins, hardCodedveBlends1_blendBins);
+}
+
+static void cannedveBlends1_blendValues() {
+	static const float hardCodedveBlends1_blendValues[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.veBlends1_blendValues, hardCodedveBlends1_blendValues);
+}
+
+static void cannedveBlends2_blendBins() {
+	static const float hardCodedveBlends2_blendBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.veBlends2_blendBins, hardCodedveBlends2_blendBins);
+}
+
+static void cannedveBlends2_blendValues() {
+	static const float hardCodedveBlends2_blendValues[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.veBlends2_blendValues, hardCodedveBlends2_blendValues);
+}
+
+static void cannedveBlends3_blendBins() {
+	static const float hardCodedveBlends3_blendBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.veBlends3_blendBins, hardCodedveBlends3_blendBins);
+}
+
+static void cannedveBlends3_blendValues() {
+	static const float hardCodedveBlends3_blendValues[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.veBlends3_blendValues, hardCodedveBlends3_blendValues);
+}
+
+static void cannedveBlends4_blendBins() {
+	static const float hardCodedveBlends4_blendBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.veBlends4_blendBins, hardCodedveBlends4_blendBins);
+}
+
+static void cannedveBlends4_blendValues() {
+	static const float hardCodedveBlends4_blendValues[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.veBlends4_blendValues, hardCodedveBlends4_blendValues);
 }
 
 static void cannedtpsTpsAccelTable() {
@@ -176,6 +286,86 @@ static void cannedignitionTable() {
 {14.300,	11.400,	19.700,	25.300,	26.000,	26.000,	26.000,	26.000,	26.000,	26.000,	26.400,	26.800,	27.000,	27.000,	27.000,	27.000,	},
 };
 	copyTable(config->ignitionTable, hardCodedignitionTable);
+}
+
+static void cannedignBlends1_rpmBins() {
+	static const float hardCodedignBlends1_rpmBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.ignBlends1_rpmBins, hardCodedignBlends1_rpmBins);
+}
+
+static void cannedignBlends1_loadBins() {
+	static const float hardCodedignBlends1_loadBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.ignBlends1_loadBins, hardCodedignBlends1_loadBins);
+}
+
+static void cannedignBlends2_rpmBins() {
+	static const float hardCodedignBlends2_rpmBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.ignBlends2_rpmBins, hardCodedignBlends2_rpmBins);
+}
+
+static void cannedignBlends2_loadBins() {
+	static const float hardCodedignBlends2_loadBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.ignBlends2_loadBins, hardCodedignBlends2_loadBins);
+}
+
+static void cannedignBlends3_rpmBins() {
+	static const float hardCodedignBlends3_rpmBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.ignBlends3_rpmBins, hardCodedignBlends3_rpmBins);
+}
+
+static void cannedignBlends3_loadBins() {
+	static const float hardCodedignBlends3_loadBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.ignBlends3_loadBins, hardCodedignBlends3_loadBins);
+}
+
+static void cannedignBlends4_rpmBins() {
+	static const float hardCodedignBlends4_rpmBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.ignBlends4_rpmBins, hardCodedignBlends4_rpmBins);
+}
+
+static void cannedignBlends4_loadBins() {
+	static const float hardCodedignBlends4_loadBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.ignBlends4_loadBins, hardCodedignBlends4_loadBins);
+}
+
+static void cannedveBlends1_rpmBins() {
+	static const float hardCodedveBlends1_rpmBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.veBlends1_rpmBins, hardCodedveBlends1_rpmBins);
+}
+
+static void cannedveBlends1_loadBins() {
+	static const float hardCodedveBlends1_loadBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.veBlends1_loadBins, hardCodedveBlends1_loadBins);
+}
+
+static void cannedveBlends2_rpmBins() {
+	static const float hardCodedveBlends2_rpmBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.veBlends2_rpmBins, hardCodedveBlends2_rpmBins);
+}
+
+static void cannedveBlends2_loadBins() {
+	static const float hardCodedveBlends2_loadBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.veBlends2_loadBins, hardCodedveBlends2_loadBins);
+}
+
+static void cannedveBlends3_rpmBins() {
+	static const float hardCodedveBlends3_rpmBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.veBlends3_rpmBins, hardCodedveBlends3_rpmBins);
+}
+
+static void cannedveBlends3_loadBins() {
+	static const float hardCodedveBlends3_loadBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.veBlends3_loadBins, hardCodedveBlends3_loadBins);
+}
+
+static void cannedveBlends4_rpmBins() {
+	static const float hardCodedveBlends4_rpmBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.veBlends4_rpmBins, hardCodedveBlends4_rpmBins);
+}
+
+static void cannedveBlends4_loadBins() {
+	static const float hardCodedveBlends4_loadBins[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
+	copyArray(engineConfiguration->boostClosedLoopBlends2.veBlends4_loadBins, hardCodedveBlends4_loadBins);
 }
 
 static void cannedveRpmBins() {
@@ -287,6 +477,20 @@ static void cannedlambdaTable() {
 {10.700,	10.700,	10.700,	10.700,	10.700,	10.700,	10.700,	10.700,	10.700,	10.700,	10.700,	10.700,	10.700,	10.700,	10.700,	10.700,	},
 };
 	copyTable(config->lambdaTable, hardCodedlambdaTable);
+}
+
+static void cannedgppwm4_table() {
+	static const float hardCodedgppwm4_table[8][8] = {
+{50.000,	50.000,	50.000,	50.000,	50.000,	50.000,	50.000,	50.000,	},
+{50.000,	50.000,	50.000,	50.000,	50.000,	50.000,	50.000,	50.000,	},
+{50.000,	50.000,	50.000,	50.000,	50.000,	50.000,	50.000,	50.000,	},
+{50.000,	50.000,	50.000,	50.000,	50.000,	50.000,	50.000,	50.000,	},
+{50.000,	50.000,	50.000,	50.000,	50.000,	50.000,	50.000,	50.000,	},
+{50.000,	50.000,	50.000,	50.000,	50.000,	50.000,	50.000,	50.000,	},
+{50.000,	50.000,	50.000,	50.000,	50.000,	50.000,	50.000,	50.000,	},
+{50.000,	50.000,	50.000,	50.000,	50.000,	50.000,	50.000,	50.000,	},
+};
+	copyTable(engineConfiguration->gppwm4.gppwm4_table, hardCodedgppwm4_table);
 }
 
 static void cannedtcuSolenoidTable() {

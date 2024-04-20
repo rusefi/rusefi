@@ -337,6 +337,14 @@
 	nb2canneddwellVoltageCorrValues();
 	nb2cannedprimeBins();
 	nb2cannedprimeValues();
+	nb2cannedmap_samplingAngleBins();
+	nb2cannedmap_samplingWindowBins();
+	nb2cannedinjector_battLagCorrBins();
+	nb2cannedinjector_battLagCorr();
+	nb2cannedvrThreshold1_rpmBins();
+	nb2cannedvrThreshold1_values();
+	nb2cannedvrThreshold2_rpmBins();
+	nb2cannedvrThreshold2_values();
 	nb2cannedmafDecodingBins();
 	nb2cannedmafDecoding();
 	nb2cannedcltFuelCorr();
