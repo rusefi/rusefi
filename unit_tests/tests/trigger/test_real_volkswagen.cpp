@@ -15,7 +15,7 @@ TEST(crankingVW, vwRealCrankingFromFile) {
 	reader.open("tests/trigger/resources/nick_1.csv");
 	EngineTestHelper eth (engine_type_e::VW_ABA);
 	engineConfiguration->alwaysInstantRpm = true;
-	eth.setTriggerType(trigger_type_e::TT_60_2_VW);
+	eth.setTriggerType(trigger_type_e::TT_60_2_WRONG_POLARITY);
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
@@ -28,13 +28,13 @@ TEST(crankingVW, vwRealCrankingFromFile) {
 TEST(crankingVW, crankingTwiceWithGap) {
 	EngineTestHelper eth (engine_type_e::VW_ABA);
 	engineConfiguration->alwaysInstantRpm = true;
-	eth.setTriggerType(trigger_type_e::TT_60_2_VW);
+	eth.setTriggerType(trigger_type_e::TT_60_2_WRONG_POLARITY);
 
 	{
 		CsvReader reader(1, /* vvtCount */ 0);
 
 		reader.open("tests/trigger/resources/nick_1.csv");
-		
+
 		while (reader.haveMore()) {
 			reader.processLine(&eth);
 		}
@@ -50,7 +50,7 @@ TEST(crankingVW, crankingTwiceWithGap) {
 		CsvReader reader(1, /* vvtCount */ 0, 10);
 
 		reader.open("tests/trigger/resources/nick_1.csv");
-		
+
 		while (reader.haveMore()) {
 			reader.processLine(&eth);
 		}
@@ -64,7 +64,7 @@ TEST(crankingVW, crankingTwiceWithGap) {
 		CsvReader reader(1, /* vvtCount */ 0, 314.159);
 
 		reader.open("tests/trigger/resources/nick_1.csv");
-		
+
 		while (reader.haveMore()) {
 			reader.processLine(&eth);
 		}

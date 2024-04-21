@@ -616,7 +616,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		setTriggerSynchronizationGap3(/*gapIndex*/1, /*from*/0.7, 1.3); // second gap is not required to synch on perfect signal but is needed to handle to reject cranking transition noise
 		break;
 
-	case trigger_type_e::TT_60_2_VW:
+	case trigger_type_e::TT_60_2_WRONG_POLARITY:
 		setVwConfiguration(this);
 		break;
 

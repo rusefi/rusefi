@@ -26,6 +26,10 @@ Release template (copy/paste this for new release):
 
 # Changelog
 
+### Breaking Changes
+ - "60/2 VW" trigger wheel renamed to "60-2 Wrong Polarity" #988
+
+
 ## Unreleased
 
 ## April 2024 "Day 785"

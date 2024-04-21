@@ -102,8 +102,7 @@ void m73engine() {
 
 	engineConfiguration->globalTriggerAngleOffset = 90;
 	setCrankOperationMode();
-	// todo: that's not right, should be 60/2 without VW
-	engineConfiguration->trigger.type = trigger_type_e::TT_60_2_VW;
+	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_60_2;
 
 	// this large engine seems to crank at around only 150 RPM? And happily idle at 400RPM?
 	engineConfiguration->cranking.rpm = 350;
