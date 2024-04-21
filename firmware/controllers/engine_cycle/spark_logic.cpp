@@ -314,11 +314,6 @@ static bool startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 
 	if (output->outOfOrder) {
 		output->outOfOrder = false;
-		if (output->signalFallSparkId == event->sparkCounter) {
-			// let's save this coil if things do not look right
-			engine->engineState.sparkOutOfOrderCounter++;
-			return true;
-		}
 	}
 
 	output->setHigh();
