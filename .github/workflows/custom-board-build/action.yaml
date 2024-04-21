@@ -395,11 +395,11 @@ runs:
       with:
         tag: ${{ env.release_date }}
 
-    - name: Create Release Tag
-      if: ${{ steps.checkTag.outputs.exists == 'false' }}
-      id: tag
-      uses: mathieudutour/github-tag-action@v6.2
-      with:
-        github_token: ${{env.TOKEN}}
-        custom_tag: ${{ env.release_date }}
-        tag_prefix: ''
+#    - name: Create Release Tag
+#      if: ${{ steps.checkTag.outputs.exists == 'false' }}
+#      id: tag
+#      uses: mathieudutour/github-tag-action@v6.2
+#      with:
+#        github_token: ${{env.TOKEN}}
+#        custom_tag: ${{ env.release_date }}
+#        tag_prefix: ''
