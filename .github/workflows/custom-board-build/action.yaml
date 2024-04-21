@@ -24,6 +24,9 @@ inputs:
     description: 'LTS Build'
     required: false
     default: 'false'
+  release_date:
+    description: 'Date for nightly releases'
+    required: false
   bundle_simulator:
     description: 'Include Simulator in Bundle'
     required: false
@@ -134,6 +137,7 @@ runs:
         echo "RUSEFI_SSH_PASS=${{inputs.RUSEFI_SSH_PASS}}" >> $GITHUB_ENV
         echo "bundle_upload_folder=${{inputs.bundle_upload_folder}}" >> $GITHUB_ENV
         echo "LTS=${{toJSON(inputs.lts)}}" >> $GITHUB_ENV
+        echo "release_date=${{toJSON(inputs.release_date)}}" >> $GITHUB_ENV
         echo "BUNDLE_SIMULATOR=${{toJSON(inputs.bundle_simulator)}}" >> $GITHUB_ENV
         echo "RUN_SIMULATOR=${{toJSON(inputs.run_simulator)}}" >> $GITHUB_ENV
         echo "REF=${{github.ref_name}}" >> $GITHUB_ENV
@@ -385,3 +389,17 @@ runs:
       with:
         name: rusefi_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public_autoupdate.zip
         path: ${{inputs.rusefi_dir}}/artifacts/rusefi_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public_autoupdate.zip
+
+    - uses: mukunku/tag-exists-action@v1.6.0
+      id: checkTag
+      with:
+        tag: ${{ env.release_date }}
+
+    - name: Create Release Tag
+      if: ${{ steps.checkTag.outputs.exists == 'false' }}
+      id: tag
+      uses: mathieudutour/github-tag-action@v6.2
+      with:
+        github_token: ${{env.TOKEN}}
+        custom_tag: ${{ env.release_date }}
+        tag_prefix: ''
