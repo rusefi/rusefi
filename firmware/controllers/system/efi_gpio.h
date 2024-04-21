@@ -30,7 +30,6 @@ public:
 	void setLow() override;
 	void reset();
 	int signalFallSparkId;
-	bool outOfOrder; // https://sourceforge.net/p/rusefi/tickets/319/
 	int8_t coilIndex;
 };
 
