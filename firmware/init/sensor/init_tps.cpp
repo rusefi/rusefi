@@ -33,7 +33,8 @@ public:
 			return false;
 		}
 
-		AdcSubscription::SubscribeSensor(m_sens, cfg.channel, 200);
+    float lowpassCutoffHz = engineConfiguration->magicNumberAvailableForDevTricks > 3 ? engineConfiguration->magicNumberAvailableForDevTricks : 200;
+		AdcSubscription::SubscribeSensor(m_sens, cfg.channel, lowpassCutoffHz);
 
 		return m_sens.Register();
 	}
