@@ -100,6 +100,15 @@
 #define GAUGE_NAME_FUEL_PRESSURE_LOW "Fuel pressure (low)"
 #define GAUGE_NAME_FUEL_PRESSURE_LOW_UNITS "kPa"
 
+#define GAUGE_NAME_LUA_0 "Lua Gauge 1"
+#define GAUGE_NAME_LUA_1 "Lua Gauge 2"
+#define GAUGE_NAME_LUA_2 "Lua Gauge 3"
+#define GAUGE_NAME_LUA_3 "Lua Gauge 4"
+#define GAUGE_NAME_LUA_4 "Lua Gauge 5"
+#define GAUGE_NAME_LUA_5 "Lua Gauge 6"
+#define GAUGE_NAME_LUA_6 "Lua Gauge 7"
+#define GAUGE_NAME_LUA_7 "Lua Gauge 8"
+
 #define GAUGE_NAME_RAW_FUEL_PRESSURE_HIGH "Fuel pressure raw (high)"
 #define GAUGE_NAME_FUEL_PRESSURE_HIGH "Fuel pressure (high)"
 #define GAUGE_NAME_FUEL_PRESSURE_HIGH_UNITS "bar"
