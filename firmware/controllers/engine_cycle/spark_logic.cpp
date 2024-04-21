@@ -28,8 +28,8 @@ static const char *prevSparkName = nullptr;
 
 static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *output) {
 #if SPARK_EXTREME_LOGGING
-	efiPrintf("spark goes low  revolution=%d [%s] %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->getName(), (int)getTimeNowUs(),
-			output->currentLogicValue, output->outOfOrder, event->sparkCounter);
+	efiPrintf("spark goes low  revolution=%d [%s] %d current=%d id=%d", getRevolutionCounter(), output->getName(), (int)getTimeNowUs(),
+			output->currentLogicValue, event->sparkCounter);
 #endif /* SPARK_EXTREME_LOGGING */
 
 	/**
@@ -46,8 +46,6 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 		printf("out-of-order coil off %s", output->getName());
 #endif /* SPARK_EXTREME_LOGGING */
 		warning(ObdCode::CUSTOM_OUT_OF_ORDER_COIL, "out-of-order coil off %s", output->getName());
-		// todo: drop this year 2016 outOfOrder in favor of 2024 [tag] #6349 handling?
-		output->outOfOrder = true;
 	}
 	output->setLow();
 }
@@ -290,8 +288,8 @@ static bool startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 
 
 #if SPARK_EXTREME_LOGGING
-	efiPrintf("spark goes high revolution=%d [%s] %d current=%d cnt=%d id=%d", getRevolutionCounter(), output->getName(), (int)getTimeNowUs(),
-			output->currentLogicValue, output->outOfOrder, event->sparkCounter);
+	efiPrintf("spark goes high revolution=%d [%s] %d current=%d id=%d", getRevolutionCounter(), output->getName(), (int)getTimeNowUs(),
+			output->currentLogicValue, event->sparkCounter);
 #endif /* SPARK_EXTREME_LOGGING */
 
 	if (output->signalFallSparkId >= event->sparkCounter) {
@@ -310,10 +308,6 @@ static bool startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 		// let's save this coil if things do not look right
 		engine->engineState.sparkOutOfOrderCounter++;
 		return true;
-	}
-
-	if (output->outOfOrder) {
-		output->outOfOrder = false;
 	}
 
 	output->setHigh();
