@@ -771,7 +771,7 @@ event 30 1 1 647.30 nan
 event 31 1 0 650.00 nan
 event 32 1 1 692.30 nan
 event 33 1 0 695.00 nan
-TRIGGERTYPE 20 232 TT_60_2_VW 0.00
+TRIGGERTYPE 20 232 TT_60_2_WRONG_POLARITY 0.00
 knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
