@@ -9,7 +9,7 @@
 
 class AdcSubscription {
 public:
-	static void SubscribeSensor(FunctionalSensor &sensor, adc_channel_e channel, float lowpassCutoff, float voltsPerAdcVolt = 0.0f);
+	static void SubscribeSensor(FunctionalSensor &sensor, adc_channel_e channel, float lowpassCutoffHZ, float voltsPerAdcVolt = 0.0f);
 	static void UnsubscribeSensor(FunctionalSensor& sensor);
 	static void UnsubscribeSensor(FunctionalSensor& sensor, adc_channel_e newChannel);
 	static void UpdateSubscribers(efitick_t nowNt);
