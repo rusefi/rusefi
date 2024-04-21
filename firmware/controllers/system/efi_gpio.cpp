@@ -530,7 +530,6 @@ void IgnitionOutputPin::setLow() {
 }
 
 void IgnitionOutputPin::reset() {
-	outOfOrder = false;
 	signalFallSparkId = 0;
 }
 
