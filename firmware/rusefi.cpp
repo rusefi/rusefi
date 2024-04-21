@@ -72,13 +72,13 @@
  * at 700 degrees, we need to charge the ignition coil, for example this dwell time is 4ms - that
  * means we need to turn on the coil at '4 ms before 700 degrees'. Let's  assume that the engine is
  * current at 600 RPM - that means 360 degrees would take 100ms so 4ms is 14.4 degrees at current RPM which
- * means we need to start charting the coil at 685.6 degrees.
+ * means we need to start charging the coil at 685.6 degrees.
  *
  * The position sensors at our disposal are not providing us the current position at any moment of time -
  * all we've got is a set of events which are happening at the knows positions. For instance, let's assume that
  * our sensor sends as an event at 0 degrees, at 90 degrees, at 600 degrees and and 690 degrees.
  *
- * So, for this particular sensor the most precise scheduling would be possible if we schedule coil charting
+ * So, for this particular sensor the most precise scheduling would be possible if we schedule coil charging
  * as '85.6 degrees after the 600 degrees position sensor event', and spark firing as
  * '10 degrees after the 690 position sensor event'. Considering current RPM, we calculate that '10 degress after' is
  * 2.777ms, so we schedule spark firing at '2.777ms after the 690 position sensor event', thus combining trigger events
