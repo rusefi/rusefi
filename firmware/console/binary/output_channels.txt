@@ -156,7 +156,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 	uint16_t warningCounter;@@GAUGE_NAME_WARNING_COUNTER@@;"count",1, 0, 0, 0, 0
 	uint16_t lastErrorCode;@@GAUGE_NAME_WARNING_LAST@@;"error",1, 0, 0, 0, 0
 
-	uint16_t[8 iterate] recentErrorCode;;"error", 1, 0, 0, 0, 0
+	uint16_t[8 iterate] recentErrorCode;Warning code;"error", 1, 0, 0, 0, 0
 
 ! todo: re-implement enableLogDebugChannels
 	float debugFloatField1;;"val", 1, 0, 0, 0, 3
