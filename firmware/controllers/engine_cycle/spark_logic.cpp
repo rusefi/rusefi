@@ -294,23 +294,23 @@ static bool startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 			output->currentLogicValue, output->outOfOrder, event->sparkCounter);
 #endif /* SPARK_EXTREME_LOGGING */
 
-		if (output->signalFallSparkId >= event->sparkCounter) {
-		  /**
-		   * fact: we schedule both start of dwell and spark firing using a combination of time and trigger event domain
-		   * in case of bad/noisy signal we can get unexpected trigger events and a small time delay for spark firing before
-		   * we even start dwell if it scheduled with a longer time-only delay with fewer trigger events
-		   *
-		   * here we are detecting such out-of-order processing and choose the safer route of not even starting dwell
-		   * [tag] #6349
-		   */
+	if (output->signalFallSparkId >= event->sparkCounter) {
+	  /**
+	   * fact: we schedule both start of dwell and spark firing using a combination of time and trigger event domain
+	   * in case of bad/noisy signal we can get unexpected trigger events and a small time delay for spark firing before
+	   * we even start dwell if it scheduled with a longer time-only delay with fewer trigger events
+	   *
+	   * here we are detecting such out-of-order processing and choose the safer route of not even starting dwell
+	   * [tag] #6349
+	   */
 
 #if SPARK_EXTREME_LOGGING
-			efiPrintf("[%s] bail spark dwell\n", output->getName());
+		efiPrintf("[%s] bail spark dwell\n", output->getName());
 #endif /* SPARK_EXTREME_LOGGING */
-			// let's save this coil if things do not look right
-			engine->engineState.sparkOutOfOrderCounter++;
-			return true;
-		}
+		// let's save this coil if things do not look right
+		engine->engineState.sparkOutOfOrderCounter++;
+		return true;
+	}
 
 	if (output->outOfOrder) {
 		output->outOfOrder = false;
@@ -410,7 +410,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 #endif /* SPARK_EXTREME_LOGGING */
 
 
-	/**
+		/**
 		 * Note how we do not check if spark is limited or not while scheduling 'spark down'
 		 * This way we make sure that coil dwell started while spark was enabled would fire and not burn
 		 * the coil.
