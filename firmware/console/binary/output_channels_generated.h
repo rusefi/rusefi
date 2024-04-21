@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sat Mar 23 22:06:33 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sun Apr 21 22:24:14 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -527,6 +527,7 @@ struct output_channels_s {
 	 */
 	uint16_t lastErrorCode = (uint16_t)0;
 	/**
+	 * Warning code
 	 * units: error
 	 * offset 140
 	 */
@@ -1277,4 +1278,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 824);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sat Mar 23 22:06:33 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sun Apr 21 22:24:14 UTC 2024
