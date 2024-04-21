@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Apr 21 22:25:44 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Apr 21 22:36:31 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -545,6 +545,14 @@ public class Fields {
 	public static final String GAUGE_NAME_LAMBDA = "Lambda";
 	public static final String GAUGE_NAME_LAMBDA2 = "Lambda 2";
 	public static final String GAUGE_NAME_LAST_ERROR = "Warning: last";
+	public static final String GAUGE_NAME_LUA_0 = "Lua Gauge 1";
+	public static final String GAUGE_NAME_LUA_1 = "Lua Gauge 2";
+	public static final String GAUGE_NAME_LUA_2 = "Lua Gauge 3";
+	public static final String GAUGE_NAME_LUA_3 = "Lua Gauge 4";
+	public static final String GAUGE_NAME_LUA_4 = "Lua Gauge 5";
+	public static final String GAUGE_NAME_LUA_5 = "Lua Gauge 6";
+	public static final String GAUGE_NAME_LUA_6 = "Lua Gauge 7";
+	public static final String GAUGE_NAME_LUA_7 = "Lua Gauge 8";
 	public static final String GAUGE_NAME_MAF = "MAF";
 	public static final String GAUGE_NAME_MAP = "MAP";
 	public static final String GAUGE_NAME_OIL_PRESSURE = "Oil Pressure";
@@ -1389,7 +1397,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.04.21.f407-discovery.3551047174";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.04.21.f407-discovery.3430025340";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';

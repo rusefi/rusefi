@@ -568,6 +568,14 @@
 #define GAUGE_NAME_LAMBDA "Lambda"
 #define GAUGE_NAME_LAMBDA2 "Lambda 2"
 #define GAUGE_NAME_LAST_ERROR "Warning: last"
+#define GAUGE_NAME_LUA_0 "Lua Gauge 1"
+#define GAUGE_NAME_LUA_1 "Lua Gauge 2"
+#define GAUGE_NAME_LUA_2 "Lua Gauge 3"
+#define GAUGE_NAME_LUA_3 "Lua Gauge 4"
+#define GAUGE_NAME_LUA_4 "Lua Gauge 5"
+#define GAUGE_NAME_LUA_5 "Lua Gauge 6"
+#define GAUGE_NAME_LUA_6 "Lua Gauge 7"
+#define GAUGE_NAME_LUA_7 "Lua Gauge 8"
 #define GAUGE_NAME_MAF "MAF"
 #define GAUGE_NAME_MAP "MAP"
 #define GAUGE_NAME_OIL_PRESSURE "Oil Pressure"
@@ -1207,7 +1215,7 @@
 #define show_Proteus_presets false
 #define show_small_can_board_presets true
 #define show_test_presets false
-#define SIGNATURE_HASH 3507779397
+#define SIGNATURE_HASH 3469660479
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1585,7 +1593,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.04.21.small-can-board.3507779397"
+#define TS_SIGNATURE "rusEFI master.2024.04.21.small-can-board.3469660479"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
