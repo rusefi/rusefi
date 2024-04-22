@@ -314,9 +314,6 @@ float getOutputValueByName(const char *name) {
 // rawTps1Primary
 		case -1051397637:
 			return engine->outputChannels.rawTps1Primary;
-// rawPpsPrimary
-		case -347083354:
-			return engine->outputChannels.rawPpsPrimary;
 // rawClt
 		case 417946098:
 			return engine->outputChannels.rawClt;
@@ -329,6 +326,9 @@ float getOutputValueByName(const char *name) {
 // fuelClosedLoopBinIdx
 		case 1342844099:
 			return engine->outputChannels.fuelClosedLoopBinIdx;
+// rawPpsPrimary
+		case -347083354:
+			return engine->outputChannels.rawPpsPrimary;
 // rawPpsSecondary
 		case -1798336054:
 			return engine->outputChannels.rawPpsSecondary;
