@@ -86,10 +86,12 @@ static adcsample_t getAvgAdcValue(int index, adcsample_t *samples, int bufDepth,
 	uint32_t result = 0;
 	for (int i = 0; i < bufDepth; i++) {
 	  adcsample_t sample = samples[index];
-	  if (sample > 0x1FFF) {
-	    // 12bit ADC expected right now, make this configurable one day
-	    criticalError("fast ADC unexpected sample %d", sample);
-	  } else if (sample > 0xFFF) {
+//	  if (sample > 0x1FFF) {
+//	    // 12bit ADC expected right now, make this configurable one day
+//	    criticalError("fast ADC unexpected sample %d", sample);
+//	  } else
+	  if (sample > 0xFFF) {
+	    sample = sample & 0xFFF; // sad hack which works around https://github.com/rusefi/rusefi/issues/6376 which we do not understand
 	    engine->outputChannels.adc13bitCounter++;
 	  }
 		result += sample;
