@@ -1159,6 +1159,9 @@ AEM X-Series EGT gauge kit or rusEFI EGT sensor from Wideband controller
 ### devBit7
 
 
+### skipADC12bitAssert
+
+
 ### afterCrankingIACtaperDuration
 This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.\Should be 100 once tune is better
 

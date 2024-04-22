@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Apr 20 12:21:51 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Apr 22 23:54:21 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2874,16 +2874,16 @@ struct engine_configuration_s {
 	bool devBit7 : 1 {};
 	/**
 	offset 1512 bit 28 */
-	bool unusedBit_512_28 : 1 {};
+	bool skipADC12bitAssert : 1 {};
 	/**
 	offset 1512 bit 29 */
-	bool unusedBit_512_29 : 1 {};
+	bool unusedBit_513_29 : 1 {};
 	/**
 	offset 1512 bit 30 */
-	bool unusedBit_512_30 : 1 {};
+	bool unusedBit_513_30 : 1 {};
 	/**
 	offset 1512 bit 31 */
-	bool unusedBit_512_31 : 1 {};
+	bool unusedBit_513_31 : 1 {};
 	/**
 	 * This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.\Should be 100 once tune is better
 	 * units: cycles
@@ -5626,4 +5626,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22672);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Apr 20 12:21:51 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Apr 22 23:54:21 UTC 2024

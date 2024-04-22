@@ -1165,6 +1165,9 @@ float getConfigValueByName(const char *name) {
 // devBit7
 		case 161953466:
 			return engineConfiguration->devBit7;
+// skipADC12bitAssert
+		case 583380344:
+			return engineConfiguration->skipADC12bitAssert;
 // afterCrankingIACtaperDuration
 		case 671504531:
 			return engineConfiguration->afterCrankingIACtaperDuration;
@@ -3773,6 +3776,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 161953466:
 	{
 		engineConfiguration->devBit7 = (int)value;
+		return 1;
+	}
+		case 583380344:
+	{
+		engineConfiguration->skipADC12bitAssert = (int)value;
 		return 1;
 	}
 		case 671504531:
