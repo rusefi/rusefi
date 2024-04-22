@@ -743,6 +743,9 @@ float getOutputValueByName(const char *name) {
 // adc13bitCounter
 		case 1866067408:
 			return engine->outputChannels.adc13bitCounter;
+// fastAdcErrorsCount
+		case -805019103:
+			return engine->outputChannels.fastAdcErrorsCount;
 // totalFuelCorrection
 #if EFI_ENGINE_CONTROL
 		case -1779658835:

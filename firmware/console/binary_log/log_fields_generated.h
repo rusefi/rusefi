@@ -312,6 +312,7 @@ static const LogField fields[] = {
 	{engine->outputChannels.actualLastInjectionStage2, "Fuel: Last inj pulse width stg 2", "ms", 3},
 	{engine->outputChannels.injectorDutyCycleStage2, "Fuel: injector duty cycle stage 2", "%", 0},
 	{engine->outputChannels.adc13bitCounter, "adc13bitCounter", "", 0},
+	{engine->outputChannels.fastAdcErrorsCount, "fastAdcErrorsCount", "", 0},
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},
 #endif
