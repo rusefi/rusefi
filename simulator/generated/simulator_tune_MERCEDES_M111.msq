@@ -764,6 +764,7 @@
         <constant name="devBit5">"false"</constant>
         <constant name="devBit6">"false"</constant>
         <constant name="devBit7">"false"</constant>
+        <constant name="skipADC12bitAssert">"false"</constant>
         <constant digits="0" name="afterCrankingIACtaperDuration" units="cycles">200.0</constant>
         <constant digits="0" name="iacByTpsTaper" units="percent">2.0</constant>
         <constant name="auxSerialTxPin">"NONE"</constant>
@@ -4711,7 +4712,7 @@ end</constant>
 </constant>
         <constant digits="0" name="tcu_shiftTime" units="ms">0.0</constant>
     </page>
-    <versionInfo firmwareInfo="20240402" nPages="1" signature="rusEFI master.2024.04.22.f407-discovery.4256779106" version="5.0"/>
+    <versionInfo firmwareInfo="20240402" nPages="1" signature="rusEFI master.2024.04.23.f407-discovery.935540476" version="5.0"/>
     <bibliography author="rusEFI 20240402" writeDate="date"/>
     <settings/>
     <userComments/>
