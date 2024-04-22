@@ -385,5 +385,7 @@ float mapFast
 	uint16_t autoscale actualLastInjectionStage2;@@GAUGE_NAME_FUEL_LAST_INJECTION_STAGE_2@@;"ms",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 3
 	uint8_t autoscale injectorDutyCycleStage2;@@GAUGE_NAME_FUEL_INJ_DUTY_STAGE_2@@;"%",{1/2}, 0, 0, 0, 0
 
-	uint8_t[88 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t adc13bitCounter
+
+	uint8_t[76 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct
