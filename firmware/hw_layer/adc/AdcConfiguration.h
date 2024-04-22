@@ -36,7 +36,6 @@ public:
 	int size() const;
 	void init(void);
 	uint32_t conversionCount = 0;
-	uint32_t errorsCount = 0;
 	int getAdcValueByIndex(int internalIndex) const;
 
 	adcsample_t *samples;

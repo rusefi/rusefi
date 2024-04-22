@@ -172,7 +172,7 @@ static void fast_adc_callback(GPTDriver*) {
 	if (ADC_FAST_DEVICE.state != ADC_READY &&
 	ADC_FAST_DEVICE.state != ADC_COMPLETE &&
 	ADC_FAST_DEVICE.state != ADC_ERROR) {
-		fastAdc.errorsCount++;
+		engine->outputChannels.fastAdcErrorsCount++;
 		// todo: when? why? criticalError("ADC fast not ready?");
 		chSysUnlockFromISR();
 		return;
