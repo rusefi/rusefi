@@ -391,6 +391,8 @@ static void updateTempSensors() {
 	engine->outputChannels.compressorDischargeTemp = compressorDischargeTemp.value_or(0);
 }
 
+void updateUnfilteredRawPedal();
+
 static void updateThrottles() {
 	SensorResult tps1 = Sensor::get(SensorType::Tps1);
 	engine->outputChannels.TPSValue = tps1.value_or(0);
@@ -415,6 +417,7 @@ static void updateThrottles() {
 	engine->outputChannels.tps12Split = Sensor::getOrZero(SensorType::Tps1) - Sensor::getOrZero(SensorType::Tps2);
 	// Pedal pri/sec split
 	engine->outputChannels.accPedalSplit = Sensor::getOrZero(SensorType::AcceleratorPedalPrimary) - Sensor::getOrZero(SensorType::AcceleratorPedalSecondary);
+	updateUnfilteredRawPedal();
 }
 
 static void updateLambda() {

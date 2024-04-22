@@ -184,6 +184,8 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 	uint8_t fuelClosedLoopBinIdx;;"", 1, 0, 0, 0, 0
 
 	int16_t autoscale rawPpsSecondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+	int16_t autoscale rawRawPpsPrimary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+	int16_t autoscale rawRawPpsSecondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
 	int16_t autoscale idlePositionSensor;@@GAUGE_NAME_IDLE_POSITION@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 

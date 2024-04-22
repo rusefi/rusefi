@@ -11,6 +11,7 @@
 struct AdcSubscriptionEntry {
 	FunctionalSensor *Sensor;
 	float VoltsPerAdcVolt;
+	// raw voltage before we apply biquad filter
 	float sensorVolts;
 	Biquad Filter;
 	adc_channel_e Channel;
