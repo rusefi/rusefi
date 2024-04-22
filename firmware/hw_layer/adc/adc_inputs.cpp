@@ -95,7 +95,9 @@ static adcsample_t getAvgAdcValue(int index, adcsample_t *samples, int bufDepth,
 
 
 // See https://github.com/rusefi/rusefi/issues/976 for discussion on this value
+#ifndef ADC_SAMPLING_FAST
 #define ADC_SAMPLING_FAST ADC_SAMPLE_28
+#endif
 
 static void adc_callback_fast(ADCDriver *adcp) {
 	// State may not be complete if we get a callback for "half done"
