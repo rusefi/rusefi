@@ -85,7 +85,12 @@ static int adcDebugReporting = false;
 static adcsample_t getAvgAdcValue(int index, adcsample_t *samples, int bufDepth, int numChannels) {
 	uint32_t result = 0;
 	for (int i = 0; i < bufDepth; i++) {
-		result += samples[index];
+	  adcsample_t sample = samples[index];
+	  if (sample > 0xFFF) {
+	    // 12bit ADC expected right now, make this configurable one day
+	    criticalError("fast ADC unexpected sample %d", sample);
+	  }
+		result += sample;
 		index += numChannels;
 	}
 
