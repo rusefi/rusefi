@@ -99,6 +99,8 @@ static const LogField fields[] = {
 	{engine->outputChannels.rawOilPressure, "rawOilPressure", "V", 3},
 	{engine->outputChannels.fuelClosedLoopBinIdx, "fuelClosedLoopBinIdx", "", 0},
 	{engine->outputChannels.rawPpsSecondary, "rawPpsSecondary", "V", 3},
+	{engine->outputChannels.rawRawPpsPrimary, "rawRawPpsPrimary", "V", 3},
+	{engine->outputChannels.rawRawPpsSecondary, "rawRawPpsSecondary", "V", 3},
 	{engine->outputChannels.idlePositionSensor, "Idle: Position sensor", "%", 2},
 	{engine->outputChannels.AFRValue, "Air/Fuel Ratio", "AFR", 2},
 	{engine->outputChannels.VssAcceleration, "Vss Accel", "m/s2", 2},

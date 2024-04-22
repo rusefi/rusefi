@@ -332,6 +332,12 @@ float getOutputValueByName(const char *name) {
 // rawPpsSecondary
 		case -1798336054:
 			return engine->outputChannels.rawPpsSecondary;
+// rawRawPpsPrimary
+		case 347493808:
+			return engine->outputChannels.rawRawPpsPrimary;
+// rawRawPpsSecondary
+		case -1318050732:
+			return engine->outputChannels.rawRawPpsSecondary;
 // idlePositionSensor
 		case 782384530:
 			return engine->outputChannels.idlePositionSensor;
