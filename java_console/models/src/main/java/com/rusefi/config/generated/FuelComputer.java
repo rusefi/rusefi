@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Mon Apr 22 17:34:45 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Mon Apr 22 18:28:37 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -109,14 +109,6 @@ public class FuelComputer {
 	public static final String GAUGE_NAME_LAMBDA = "Lambda";
 	public static final String GAUGE_NAME_LAMBDA2 = "Lambda 2";
 	public static final String GAUGE_NAME_LAST_ERROR = "Warning: last";
-	public static final String GAUGE_NAME_LUA_0 = "Lua Gauge 1";
-	public static final String GAUGE_NAME_LUA_1 = "Lua Gauge 2";
-	public static final String GAUGE_NAME_LUA_2 = "Lua Gauge 3";
-	public static final String GAUGE_NAME_LUA_3 = "Lua Gauge 4";
-	public static final String GAUGE_NAME_LUA_4 = "Lua Gauge 5";
-	public static final String GAUGE_NAME_LUA_5 = "Lua Gauge 6";
-	public static final String GAUGE_NAME_LUA_6 = "Lua Gauge 7";
-	public static final String GAUGE_NAME_LUA_7 = "Lua Gauge 8";
 	public static final String GAUGE_NAME_MAF = "MAF";
 	public static final String GAUGE_NAME_MAP = "MAP";
 	public static final String GAUGE_NAME_OIL_PRESSURE = "Oil Pressure";
