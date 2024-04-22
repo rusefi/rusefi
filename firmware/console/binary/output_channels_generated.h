@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Mon Apr 22 14:55:32 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Mon Apr 22 16:46:42 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1283,15 +1283,13 @@ struct output_channels_s {
 	/**
 	 * offset 751
 	 */
-	uint8_t unusedAtTheEnd[88];
+	uint8_t adc13bitCounter = (uint8_t)0;
 	/**
-	 * need 4 byte alignment
-	 * units: units
-	 * offset 839
+	 * offset 752
 	 */
-	uint8_t alignmentFill_at_839[1];
+	uint8_t unusedAtTheEnd[76];
 };
-static_assert(sizeof(output_channels_s) == 840);
+static_assert(sizeof(output_channels_s) == 828);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Mon Apr 22 14:55:32 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Mon Apr 22 16:46:42 UTC 2024

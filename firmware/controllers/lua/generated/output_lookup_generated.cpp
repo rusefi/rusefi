@@ -740,6 +740,9 @@ float getOutputValueByName(const char *name) {
 // injectorDutyCycleStage2
 		case -1337459841:
 			return engine->outputChannels.injectorDutyCycleStage2;
+// adc13bitCounter
+		case 1866067408:
+			return engine->outputChannels.adc13bitCounter;
 // totalFuelCorrection
 #if EFI_ENGINE_CONTROL
 		case -1779658835:
