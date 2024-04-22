@@ -114,7 +114,7 @@ float getMcuTemperature() {
 
 // See https://github.com/rusefi/rusefi/issues/976 for discussion on these values
 #define ADC_SAMPLING_SLOW ADC_SAMPLE_56
-#define ADC_SAMPLING_FAST ADC_SAMPLE_28
+// see also ADC_SAMPLING_FAST in adc_inputs.cpp
 
 // Slow ADC has 16 channels we can sample, or 32 if ADC mux mode is enabled.
 constexpr size_t adcChannelCount = 16;
