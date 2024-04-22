@@ -91,6 +91,10 @@ static adcsample_t getAvgAdcValue(int index, adcsample_t *samples, int bufDepth,
 //	    criticalError("fast ADC unexpected sample %d", sample);
 //	  } else
 	  if (sample > 0xFFF) {
+	    if (!engineConfiguration->skipADC12bitAssert) {
+	      criticalError("fast ADC unexpected sample %d. Please report and use skipADC12bitAssert to disable", sample);
+	    }
+	    engine->outputChannels.unexpectedAdcSample = sample;
 	    sample = sample & 0xFFF; // sad hack which works around https://github.com/rusefi/rusefi/issues/6376 which we do not understand
 	    engine->outputChannels.adc13bitCounter++;
 	  }
