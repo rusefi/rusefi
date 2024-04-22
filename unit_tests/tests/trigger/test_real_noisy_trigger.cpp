@@ -31,7 +31,7 @@ static void testNoOverdwell(const char* file, bool instantRpm) {
 	std::vector<efitick_t> coilStartTimes(12);
 
 	engine->onIgnitionEvent = [&](IgnitionEvent* event, bool state) {
-    efitick_t startTime = coilStartTimes[event->coilIndex];
+	    efitick_t startTime = coilStartTimes[event->coilIndex];
 
 		if (state) {
 			coilStartTimes[event->coilIndex] = getTimeNowNt();

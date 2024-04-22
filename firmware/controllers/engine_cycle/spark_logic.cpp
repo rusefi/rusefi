@@ -343,11 +343,11 @@ void turnSparkPinHighStartCharging(IgnitionEvent *event) {
 #if EFI_UNIT_TEST
   	if (engine->onIgnitionEvent) {
   		engine->onIgnitionEvent(event, true);
-	  }
+  	}
 #endif
 
 #if EFI_TOOTH_LOGGER
-	  LogTriggerCoilState(nowNt, true);
+  	LogTriggerCoilState(nowNt, true);
 #endif // EFI_TOOTH_LOGGER
   }
 
