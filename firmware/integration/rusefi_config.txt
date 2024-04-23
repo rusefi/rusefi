@@ -503,8 +503,11 @@ bit enableStagedInjection
 int16_t tpsMin;Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel\nset tps_min X;"ADC", 1, 0, 0, 1023, 0
 int16_t tpsMax;Full throttle.\nSee also tps1_1AdcChannel\nset tps_max X;"ADC", 1, 0, 0, 1023, 0
 
-int16_t tpsErrorDetectionTooLow;TPS error detection: what throttle % is unrealistically low?\nAlso used for accelerator pedal error detection if so equipped.;"%", 1, 0, -10, 0, 0
-int16_t tpsErrorDetectionTooHigh;TPS error detection: what throttle % is unrealistically high?\nAlso used for accelerator pedal error detection if so equipped.;"%", 1, 0, 100, 110, 0
+#define TPS_PPS_TOO_LOW_THRESHOLD -10
+#define TPS_PPS_TOO_HIGH_THRESHOLD 110
+
+int16_t tpsErrorDetectionTooLow;TPS error detection: what throttle % is unrealistically low?\nAlso used for accelerator pedal error detection if so equipped.;"%", 1, 0, @@TPS_PPS_TOO_LOW_THRESHOLD@@, 0, 0
+int16_t tpsErrorDetectionTooHigh;TPS error detection: what throttle % is unrealistically high?\nAlso used for accelerator pedal error detection if so equipped.;"%", 1, 0, 100, @@TPS_PPS_TOO_HIGH_THRESHOLD@@, 0
 
 cranking_parameters_s cranking
 	float ignitionDwellForCrankingMs;Dwell duration while cranking;"ms", 1, 0, 0, 200, 1
