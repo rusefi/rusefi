@@ -1215,7 +1215,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 2046147999
+#define SIGNATURE_HASH 1015757517
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1274,6 +1274,8 @@
 #define TORQUE_CURVE_SIZE 6
 #define TOTAL_CONFIG_SIZE 23328
 #define TPS_2_BYTE_PACKING_MULT 100
+#define TPS_PPS_TOO_HIGH_THRESHOLD 110
+#define TPS_PPS_TOO_LOW_THRESHOLD -10
 #define TPS_TPS_ACCEL_CLT_CORR_TABLE 4
 #define TPS_TPS_ACCEL_TABLE 8
 #define TRACTION_CONTROL_ETB_DROP_SIZE 6
@@ -1594,7 +1596,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.04.23.hellen-honda-k.2046147999"
+#define TS_SIGNATURE "rusEFI master.2024.04.23.hellen-honda-k.1015757517"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

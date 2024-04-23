@@ -749,6 +749,9 @@ float getOutputValueByName(const char *name) {
 // unexpectedAdcSample
 		case 605344036:
 			return engine->outputChannels.unexpectedAdcSample;
+// deviceUid
+		case 540029591:
+			return engine->outputChannels.deviceUid;
 // totalFuelCorrection
 #if EFI_ENGINE_CONTROL
 		case -1779658835:

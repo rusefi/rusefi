@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Mon Apr 22 23:53:41 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Tue Apr 23 04:12:41 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1295,15 +1295,19 @@ struct output_channels_s {
 	/**
 	 * offset 754
 	 */
+	uint8_t deviceUid = (uint8_t)0;
+	/**
+	 * offset 755
+	 */
 	uint8_t unusedAtTheEnd[76];
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 830
+	 * offset 831
 	 */
-	uint8_t alignmentFill_at_830[2];
+	uint8_t alignmentFill_at_831[1];
 };
 static_assert(sizeof(output_channels_s) == 832);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Mon Apr 22 23:53:41 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Tue Apr 23 04:12:41 UTC 2024
