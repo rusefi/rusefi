@@ -48,6 +48,7 @@ static void printUid() {
 	engineConfiguration->device_uid[0] = uid[0];
 	engineConfiguration->device_uid[1] = uid[1];
 	engineConfiguration->device_uid[2] = uid[2];
+	engine->outputChannels.deviceUid = crc8((const uint8_t*)uid, 12);
 }
 #endif
 

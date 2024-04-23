@@ -388,6 +388,7 @@ float mapFast
 	uint8_t adc13bitCounter
 	uint8_t fastAdcErrorsCount
 	uint8_t unexpectedAdcSample
+	uint8_t deviceUid
 
 	uint8_t[76 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct
