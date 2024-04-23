@@ -600,14 +600,18 @@ bool EtbController::checkStatus() {
 		etbPpsErrorCounter = 0;
 	}
 
+#ifndef ETB_INTERMITTENT_LIMIT
+#define ETB_INTERMITTENT_LIMIT 50
+#endif
+
 	TpsState localReason = TpsState::None;
-	if (etbTpsErrorCounter > 50) {
+	if (etbTpsErrorCounter > ETB_INTERMITTENT_LIMIT) {
 		localReason = TpsState::IntermittentTps;
 #if EFI_SHAFT_POSITION_INPUT
 	} else if (engineConfiguration->disableEtbWhenEngineStopped && !engine->triggerCentral.engineMovedRecently()) {
 		localReason = TpsState::EngineStopped;
 #endif // EFI_SHAFT_POSITION_INPUT
-	} else if (etbPpsErrorCounter > 50) {
+	} else if (etbPpsErrorCounter > ETB_INTERMITTENT_LIMIT) {
 		localReason = TpsState::IntermittentPps;
 	} else if (engine->engineState.lua.luaDisableEtb) {
 		localReason = TpsState::Lua;
