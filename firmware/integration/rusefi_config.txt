@@ -2115,7 +2115,7 @@ end_struct
 #define GAUGE_NAME_KNOCK_12 "knock 12"
 
 #define GAUGE_NAME_FUEL_BARO_CORR "Fuel: Barometric pressure mult"
-#define GAUGE_NAME_THROTTLE_PEDAL "Throttle pedal position"
+#define GAUGE_NAME_THROTTLE_PEDAL "Throttle pedal position PPS"
 #define GAUGE_NAME_FUEL_TPS_ROC "Fuel: TPS change"
 #define GAUGE_NAME_FUEL_CHARGE_TEMP "Fuel: Estimated charge temperature"
 #define GAUGE_NAME_FUEL_TPS_EXTRA "Fuel: TPS acceleration add fuel ms"
