@@ -218,6 +218,8 @@ static void resetPinStats(bench_mode_e benchModePinIdx) {
 #endif // EFI_SIMULATOR
 }
 
+/*board public API*/bool withHwQcActivity = false;
+
 void processCanQcBenchTest(const CANRxFrame& frame) {
 	if (CAN_EID(frame) != (int)bench_test_packet_ids_e::IO_CONTROL) {
 		return;
@@ -225,6 +227,7 @@ void processCanQcBenchTest(const CANRxFrame& frame) {
 	if (frame.data8[0] != (int)bench_test_magic_numbers_e::BENCH_HEADER) {
 		return;
 	}
+  withHwQcActivity = true;
 	bench_test_io_control_e command = (bench_test_io_control_e)frame.data8[1];
 	if (command == bench_test_io_control_e::CAN_BENCH_GET_COUNT) {
 	    sendOutBoardMeta();
