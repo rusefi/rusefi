@@ -1103,11 +1103,11 @@ void configureRusefiLuaHooks(lua_State* lState) {
 
 #if EFI_PROD_CODE && HW_HELLEN
 	lua_register(lState, "hellenEnablePower", [](lua_State*) {
-		hellenEnableEn();
+		hellenEnableEn("Lua");
 		return 0;
 	});
 	lua_register(lState, "hellenDisablePower", [](lua_State*) {
-		hellenDisableEn();
+		hellenDisableEn("Lua");
 		return 0;
 	});
 #endif // HW_HELLEN

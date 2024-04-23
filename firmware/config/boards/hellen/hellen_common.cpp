@@ -63,12 +63,14 @@ static bool hellenEnPinInitialized = false;
   return !getHellenBoardEnabled();
 }
 
-void hellenEnableEn() {
-	    megaEn.setValue(1);
+void hellenEnableEn(const char *msg) {
+  efiPrintf("Turning board ON [%s]", msg);
+	    megaEn.setValue(1, /*isForce*/ true);
 }
 
-void hellenDisableEn() {
-	    megaEn.setValue(0);
+void hellenDisableEn(const char *msg) {
+  efiPrintf("Turning board off [%s]", msg);
+	    megaEn.setValue(0, /*isForce*/ true);
 }
 
 void setHellenEnPin(Gpio pin, bool enableBoardOnStartUp) {
@@ -76,7 +78,7 @@ void setHellenEnPin(Gpio pin, bool enableBoardOnStartUp) {
         hellenEnPinInitialized = true;
 	    megaEn.initPin("EN", pin);
 	    if (enableBoardOnStartUp) {
-	      hellenEnableEn();
+	      hellenEnableEn("start-up");
 	    }
 	}
 }

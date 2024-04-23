@@ -18,8 +18,8 @@ void setHellenEnPin(Gpio pin, bool enableBoardOnStartUp = true);
 void setHellen64MegaEnPin();
 bool isBoardWithPowerManagement();
 bool getHellenBoardEnabled();
-void hellenEnableEn();
-void hellenDisableEn();
+void hellenEnableEn(const char *msg = "");
+void hellenDisableEn(const char *msg = "");
 
 void hellenBoardStandBy();
 void hellenMegaAccelerometerPreInitCS2Pin();
