@@ -44,11 +44,11 @@ static void testHardFault() {
 #if defined(STM32F4) || defined(STM32F7) || defined(STM32H7)
 static void printUid() {
 	uint32_t *uid = ((uint32_t *)UID_BASE);
-	efiPrintf("UID=%x:%x:%x", uid[0], uid[1], uid[2]);
+	engine->outputChannels.deviceUid = crc8((const uint8_t*)uid, 12);
+	efiPrintf("********************** UID=%x:%x:%x crc=%d ******************************", uid[0], uid[1], uid[2], engine->outputChannels.deviceUid);
 	engineConfiguration->device_uid[0] = uid[0];
 	engineConfiguration->device_uid[1] = uid[1];
 	engineConfiguration->device_uid[2] = uid[2];
-	engine->outputChannels.deviceUid = crc8((const uint8_t*)uid, 12);
 }
 #endif
 
