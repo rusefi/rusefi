@@ -38,7 +38,6 @@ static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *ou
 	 *
 	 * 2) we have an un-matched low followed by legit pairs
 	 */
-
 	output->signalFallSparkId = event->sparkCounter;
 
 	if (!output->currentLogicValue && !event->wasSparkLimited) {
@@ -182,6 +181,9 @@ static void overFireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	fireSparkAndPrepareNextSchedule(event);
 }
 
+/**
+ * TL,DR: each IgnitionEvent is in charge of it's own scheduling forever, we plant next event while finishing handling of the current one
+ */
 void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 #if EFI_UNIT_TEST
 	if (engine->onIgnitionEvent) {
@@ -323,6 +325,10 @@ void turnSparkPinHighStartCharging(IgnitionEvent *event) {
 	for (int i = 0; i< MAX_OUTPUTS_FOR_IGNITION;i++) {
 		IgnitionOutputPin *output = event->outputs[i];
 		if (output != NULL) {
+		  // at the moment we have a funny xor as if outputs could have different destiny. That's probably an over exaggeration,
+		  // realistically it should be enough to check the sequencing of only the first output but that would be less elegant
+		  //
+		  // maybe it would have need nicer if instead of an array of outputs we had a linked list of outputs? but that's just daydreaming.
 			skippedDwellDueToTriggerNoised |= startDwellByTurningSparkPinHigh(event, output);
 		}
 	}
