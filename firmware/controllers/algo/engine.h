@@ -223,6 +223,7 @@ public:
 
 #if EFI_UNIT_TEST
 	bool needTdcCallback = true;
+	int bailedOnDwell = 0;
 #endif /* EFI_UNIT_TEST */
 
 
