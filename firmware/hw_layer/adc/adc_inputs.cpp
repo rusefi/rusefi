@@ -180,6 +180,7 @@ static void fast_adc_callback(GPTDriver*) {
 	ADC_FAST_DEVICE.state != ADC_ERROR) {
 		engine->outputChannels.fastAdcErrorsCount++;
 		// todo: when? why? criticalError("ADC fast not ready?");
+		// see notes at https://github.com/rusefi/rusefi/issues/6399
 		chSysUnlockFromISR();
 		return;
 	}
