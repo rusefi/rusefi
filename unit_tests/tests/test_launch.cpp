@@ -159,7 +159,7 @@ static void setDefaultLaunchParameters() {
 	engineConfiguration->launchFuelCutEnable = false;
 	engineConfiguration->launchSpeedThreshold = 10; //maximum speed allowed before disable launch
 	engineConfiguration->launchFuelAdderPercent = 10; // Extra fuel in % when launch are triggered
-	engineConfiguration->launchBoostDuty = 70; // boost valve duty cycle at launch
+//	engineConfiguration->launchBoostDuty = 70; // boost valve duty cycle at launch
 	engineConfiguration->launchActivateDelay = 3; // Delay in seconds for launch to kick in
 //	engineConfiguration->enableLaunchRetard = true;
 // dead code todo	engineConfiguration->enableLaunchBoost = true;
