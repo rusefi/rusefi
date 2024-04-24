@@ -788,7 +788,7 @@ bit is_enabled_spi_2
 	bit disableEtbWhenEngineStopped;Allows disabling the ETB when the engine is stopped. You may not like the power draw or PWM noise from the motor, so this lets you turn it off until it's necessary.
 	bit is_enabled_spi_4
 	bit pauseEtbControl;Disable the electronic throttle motor and DC idle motor for testing.\nThis mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
-	bit alignEngineSnifferAtTDC
+	bit unusedAlign
 	bit verboseKLine
 	bit idleIncrementalPidCic
 	bit enableAemXSeries;AEM X-Series or rusEFI Wideband
@@ -806,8 +806,8 @@ pin_output_mode_e hip9011IntHoldPinMode;
 	uint8_t mc33_hvolt;Boost Voltage;"v", 1, 0, 40, 70, 0
 	uint8_t minimumBoostClosedLoopMap;Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon entering boost.;"kPa", 1, 0, 0, 255, 0
 
-output_pin_e acFanPin;Optional Radiator Fan used with A/C
-	pin_output_mode_e acFanPinMode;
+uint16_t unusedacFanPin
+	uint8_t unusedAcFanPinMode;
 
 
 	spi_device_e l9779spiDevice;
@@ -841,7 +841,7 @@ output_pin_e acFanPin;Optional Radiator Fan used with A/C
 custom uart_device_e 1 bits, U08, @OFFSET@, [0:1], "Off", "UART1", "UART2", "UART3"
 	uint16_t sdCardLogFrequency;Rate the ECU will log to the SD card, in hz (log lines per second).;"hz", 1, 0, 1, 250, 0
 	adc_channel_e idlePositionChannel;
-	Gpio debugMapAveraging;
+	uint16_t unusedHere;
 	output_pin_e starterRelayDisablePin;
 	pin_output_mode_e starterRelayDisablePinMode;On some vehicles we can disable starter once engine is already running
 	output_pin_e secondSolenoidPin;Some Subaru and some Mazda use double-solenoid idle air valve
@@ -970,8 +970,8 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
 
     int launchSpeedThreshold;Launch disabled above this speed if setting is above zero;"Kph", 1, 0, 0, 300, 0
     int launchRpmWindow;Starting Launch RPM window to activate (subtracts from Launch RPM);"RPM", 1, 0, 0, 8000, 0
-    int launchSparkSkipPercent;Spark Skip Transition Target;"%", 1, 0, 0, 100, 0
-    int launchBoostDuty;Duty Cycle for the Boost Solenoid;"%", 1, 0, 0, 100, 0
+    int unusedHere12
+    int unusedHere13
 	float magicNumberAvailableForDevTricks
 	float turbochargerFilter
 	int launchTpsThreshold;;"", 1, 0, 0, 20000, 0
@@ -1565,7 +1565,7 @@ uint8_t alsEtbPosition;;"", 1, 0, 0, 20000, 0
 	int ALSIdleAdd;;"%", 1, 0, 0, 100, 2
 	int ALSEtbAdd;;"%", 1, 0, 0, 100, 2
 	float ALSSkipRatio;;"", 1, 0, 0, 1, 1
-	uint8_t ALSMaxDriverThrottleIntent;;"%", 1, 0, 0, 10, 0
+	uint8_t unusedSorry11
 	pin_input_mode_e ALSActivatePinMode;
 
 	uint8_t autoscale tpsSecondaryMaximum;For Ford TPS, use 53%. For Toyota ETCS-i, use ~65%;"%", 0.5, 0, 0, 100, 1
