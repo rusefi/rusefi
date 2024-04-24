@@ -6,6 +6,8 @@ import com.rusefi.enums.engine_type_e;
 
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
+import java.util.Set;
+import java.util.TreeSet;
 
 import static com.rusefi.tools.tune.WriteSimulatorConfiguration.INI_FILE_FOR_SIMULATOR;
 
@@ -18,6 +20,13 @@ public class TuneCanToolRunner extends TuneCanTool {
         ini = new IniFileModel().readIniFile(INI_FILE_FOR_SIMULATOR);
         if (ini == null)
             throw new IllegalStateException("Not found " + INI_FILE_FOR_SIMULATOR);
+/*
+        Set<String> allFields = new TreeSet<>();
+        allFields.addAll(ini.allIniFields.keySet());
+        allFields.removeAll(ini.fieldsInUiOrder.keySet());
+        if (!allFields.isEmpty())
+            throw new IllegalStateException("What about all these fields not mentioned on the UI: " + allFields);
+*/
         RootHolder.ROOT = "../firmware/";
     }
 
