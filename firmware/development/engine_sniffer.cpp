@@ -169,8 +169,6 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 	if (skipUntilEngineCycle != 0 && getRevolutionCounter() < skipUntilEngineCycle)
 		return;
 #if EFI_SIMULATOR
-	// todo: add UI control to enable this for firmware if desired
-	// engineConfiguration->alignEngineSnifferAtTDC &&
 	if (!collectingData) {
 		return;
 	}
