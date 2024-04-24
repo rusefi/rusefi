@@ -53,6 +53,8 @@
     engineConfiguration->mapErrorDetectionTooHigh = 250;
     // default "false"
     engineConfiguration->enableAemXSeries = true;
+    // default 50.0
+    engineConfiguration->manIdlePosition = 29;
     // default 2.0
     engineConfiguration->fan1ExtraIdle = 10;
     // default 92.0

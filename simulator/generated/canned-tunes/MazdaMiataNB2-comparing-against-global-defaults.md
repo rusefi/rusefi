@@ -129,6 +129,8 @@
     engineConfiguration->idlerpmpid_iTermMin = -15;
     // default 20.0
     engineConfiguration->idlerpmpid_iTermMax = 30;
+    // default 50.0
+    engineConfiguration->manIdlePosition = 20;
     // default 2.0
     engineConfiguration->fan1ExtraIdle = 0;
     // default 2.0

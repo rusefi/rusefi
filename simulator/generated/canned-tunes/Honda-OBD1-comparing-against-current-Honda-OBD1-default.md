@@ -41,6 +41,8 @@
     engineConfiguration->mapLowValueVoltage = 2.91;
     // default "false"
     engineConfiguration->enableAemXSeries = true;
+    // default 50.0
+    engineConfiguration->manIdlePosition = 29;
     // default 92.0
     engineConfiguration->fanOnTemperature = 95;
     // default 88.0

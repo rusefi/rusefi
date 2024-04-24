@@ -133,6 +133,8 @@
     engineConfiguration->pidExtraForLowRpm = 45;
     // default "false"
     engineConfiguration->useIacPidMultTable = true;
+    // default 50.0
+    engineConfiguration->manIdlePosition = 32;
     // default 15.0
     engineConfiguration->acIdleExtraOffset = 2;
     // default 2.0
