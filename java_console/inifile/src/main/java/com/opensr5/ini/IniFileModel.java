@@ -159,6 +159,9 @@ public class IniFileModel {
                 case "field":
                     handleField(list);
                     break;
+                case "slider":
+                    handleSlider(list);
+                    break;
                 case "dialog":
                     handleDialog(list);
                     break;
@@ -247,6 +250,17 @@ public class IniFileModel {
         if (allIniFields.containsKey(field.getName()))
             return;
         allIniFields.put(field.getName(), field);
+    }
+
+    private void handleSlider(LinkedList<String> list) {
+        list.removeFirst(); // "slider"
+
+        String uiFieldName = list.isEmpty() ? "" : list.removeFirst();
+
+        String key = list.isEmpty() ? null : list.removeFirst();
+
+        registerUiField(key, uiFieldName);
+        log.debug("IniFileModel: Slider label=[" + uiFieldName + "] : key=[" + key + "]");
     }
 
     private void handleField(LinkedList<String> list) {
