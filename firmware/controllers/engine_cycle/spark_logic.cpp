@@ -334,7 +334,7 @@ void turnSparkPinHighStartCharging(IgnitionEvent *event) {
 	}
 
 #if EFI_UNIT_TEST
-  event->bailedOnDwell = skippedDwellDueToTriggerNoised;
+  engine->incrementBailedOnDwellCount();
 #endif
 
 
