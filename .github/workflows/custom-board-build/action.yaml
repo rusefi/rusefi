@@ -142,7 +142,8 @@ runs:
         echo "RUN_SIMULATOR=${{toJSON(inputs.run_simulator)}}" >> $GITHUB_ENV
         echo "REF=${{github.ref_name}}" >> $GITHUB_ENV
         echo "${{ inputs.ADDITIONAL_ENV }}" >> $GITHUB_ENV
-        which realpath >/dev/null 2>&1 || (which grealpath >/dev/null 2>&1 && alias realpath='grealpath')
+        shopt -s expand_aliases
+        if which grealpath >/dev/null 2>&1; then alias realpath='grealpath'; fi
         echo "META_OUTPUT_ROOT_FOLDER=$(realpath --relative-to=${{inputs.rusefi_dir}}/firmware ${{inputs.meta_output}})/" >> $GITHUB_ENV
         echo "SIM_OUTPUT_ROOT_FOLDER=$(realpath --relative-to=${{inputs.rusefi_dir}}/firmware ${{inputs.sim_output}})/" >> $GITHUB_ENV
         source ${{inputs.rusefi_dir}}/firmware/config/boards/common_script_read_meta_env.inc "${{inputs.meta_info}}"
