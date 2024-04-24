@@ -31,8 +31,14 @@ fi
 
 echo "BOARD_DIR=${BOARD_DIR} SHORT_BOARD_NAME=${SHORT_BOARD_NAME}"
 
+echo "rp1: $(which realpath)"
 if which grealpath >/dev/null 2>&1; then alias realpath='grealpath'; fi
+echo "path: $0"
+echo "dirname: $(dirname $0)"
 FDIR=$(realpath $(dirname "$0"))
+echo "fdir: $FDIR"
+echo "rp: $(which realpath)"
+echo "grp: $(which grealpath)"
 BOARD_DIR=$(realpath --relative-to "$FDIR" "$BOARD_DIR")
 
 cd "$FDIR"
