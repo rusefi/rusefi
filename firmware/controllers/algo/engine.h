@@ -233,9 +233,11 @@ public:
 	// a pointer with interface type would make this code nicer but would carry extra runtime
 	// cost to resolve pointer, we use instances as a micro optimization
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
+  // while theoretically PROD could be using EFI_SIGNAL_EXECUTOR_SLEEP, as of 2024 all PROD uses SingleTimerExecutor
 	SingleTimerExecutor executor;
 #endif
 #if EFI_SIGNAL_EXECUTOR_SLEEP
+  // at the moment this one is used exclusively by x86 simulator it should theoretically be possible to make it available in embedded if needed
 	SleepExecutor executor;
 #endif
 #if EFI_UNIT_TEST
