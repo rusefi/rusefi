@@ -31,7 +31,8 @@ fi
 
 echo "BOARD_DIR=${BOARD_DIR} SHORT_BOARD_NAME=${SHORT_BOARD_NAME}"
 
-which realpath >/dev/null 2>&1 || (which grealpath >/dev/null 2>&1 && alias realpath='grealpath')
+shopt -s expand_aliases
+if which grealpath >/dev/null 2>&1; then alias realpath='grealpath'; fi
 FDIR=$(realpath $(dirname "$0"))
 BOARD_DIR=$(realpath --relative-to "$FDIR" "$BOARD_DIR")
 
