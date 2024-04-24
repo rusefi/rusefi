@@ -3,3 +3,4 @@ build*/
 gcov_working_area
 triggers
 unittest*.logicdata
+/.idea/
