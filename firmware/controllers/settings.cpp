@@ -126,10 +126,6 @@ void printConfiguration() {
 			boolToString(engineConfiguration->isMapAveragingEnabled),
 			boolToString(engineConfiguration->isWaveAnalyzerEnabled));
 
-	efiPrintf("isManualSpinningMode=%s/isCylinderCleanupEnabled=%s",
-			boolToString(engineConfiguration->isManualSpinningMode),
-			boolToString(engineConfiguration->isCylinderCleanupEnabled));
-
 	efiPrintf("clutchUp@%s: %s", hwPortname(engineConfiguration->clutchUpPin),
 			boolToString(engine->engineState.clutchUpState));
 	efiPrintf("clutchDown@%s: %s", hwPortname(engineConfiguration->clutchDownPin),
