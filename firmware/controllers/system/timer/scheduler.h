@@ -69,6 +69,7 @@ struct scheduling_s {
 	/**
 	 * timestamp represented as 64-bit value of ticks since MCU start
 	 */
+	// actually looks like this is ALWAYS or sometimes us these days?
 	volatile efitick_t momentX = 0;
 
 	/**
