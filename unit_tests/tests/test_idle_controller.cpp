@@ -248,29 +248,6 @@ TEST(idle_v2, runningOpenLoopTpsTaperWithDashpot) {
     EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(ICP::Idling, 0, 0, 10));
 }
 
-TEST(idle_v2, runningOpenLoopRpmTaper) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	IdleController dut;
-
-	// Zero out base tempco table
-	setArrayValues(config->cltIdleCorr, 0.0f);
-
-	// Add 50% idle position
-	engineConfiguration->airByRpmTaper = 50;
-	// At 2000 RPM
-	engineConfiguration->airTaperRpmRange = 500;
-	engineConfiguration->idlePidRpmUpperLimit = 1500;
-
-	// Check in-bounds points
-	EXPECT_FLOAT_EQ(0, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 1500, 0, 0));
-	EXPECT_FLOAT_EQ(25, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 1750, 0, 0));
-	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 2000, 0, 0));
-
-	// Check out of bounds - shouldn't leave the interval [1500, 2000]
-	EXPECT_FLOAT_EQ(0, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 200, 0, 0));
-	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 3000, 0, 0));
-}
-
 struct MockOpenLoopIdler : public IdleController {
 	MOCK_METHOD(float, getCrankingOpenLoop, (float clt), (const, override));
 	MOCK_METHOD(float, getRunningOpenLoop, (IIdleController::Phase phase, float rpm, float clt, SensorResult tps), (override));

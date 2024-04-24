@@ -144,7 +144,7 @@ if (engine->antilagController.isAntilagCondition) {
 
 	running += iacByTpsTaper;
 
-	float airTaperRpmUpperLimit = engineConfiguration->idlePidRpmUpperLimit + engineConfiguration->airTaperRpmRange;
+	float airTaperRpmUpperLimit = engineConfiguration->idlePidRpmUpperLimit;
 	iacByRpmTaper = interpolateClamped(
 		engineConfiguration->idlePidRpmUpperLimit, 0,
 		airTaperRpmUpperLimit, engineConfiguration->airByRpmTaper,
