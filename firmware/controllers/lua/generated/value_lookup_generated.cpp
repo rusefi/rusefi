@@ -499,9 +499,6 @@ float getConfigValueByName(const char *name) {
 // pauseEtbControl
 		case -24313313:
 			return engineConfiguration->pauseEtbControl;
-// alignEngineSnifferAtTDC
-		case 1836072195:
-			return engineConfiguration->alignEngineSnifferAtTDC;
 // verboseKLine
 		case -485091122:
 			return engineConfiguration->verboseKLine;
@@ -700,12 +697,6 @@ float getConfigValueByName(const char *name) {
 // launchRpmWindow
 		case -1798887513:
 			return engineConfiguration->launchRpmWindow;
-// launchSparkSkipPercent
-		case -146687863:
-			return engineConfiguration->launchSparkSkipPercent;
-// launchBoostDuty
-		case -232786835:
-			return engineConfiguration->launchBoostDuty;
 // magicNumberAvailableForDevTricks
 		case -2071167002:
 			return engineConfiguration->magicNumberAvailableForDevTricks;
@@ -1672,9 +1663,6 @@ float getConfigValueByName(const char *name) {
 // ALSSkipRatio
 		case -1404414917:
 			return engineConfiguration->ALSSkipRatio;
-// ALSMaxDriverThrottleIntent
-		case 612659807:
-			return engineConfiguration->ALSMaxDriverThrottleIntent;
 // tpsSecondaryMaximum
 		case -1744146782:
 			return engineConfiguration->tpsSecondaryMaximum;
@@ -2668,11 +2656,6 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->pauseEtbControl = (int)value;
 		return 1;
 	}
-		case 1836072195:
-	{
-		engineConfiguration->alignEngineSnifferAtTDC = (int)value;
-		return 1;
-	}
 		case -485091122:
 	{
 		engineConfiguration->verboseKLine = (int)value;
@@ -3001,16 +2984,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1798887513:
 	{
 		engineConfiguration->launchRpmWindow = (int)value;
-		return 1;
-	}
-		case -146687863:
-	{
-		engineConfiguration->launchSparkSkipPercent = (int)value;
-		return 1;
-	}
-		case -232786835:
-	{
-		engineConfiguration->launchBoostDuty = (int)value;
 		return 1;
 	}
 		case -2071167002:
@@ -4621,11 +4594,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1404414917:
 	{
 		engineConfiguration->ALSSkipRatio = value;
-		return 1;
-	}
-		case 612659807:
-	{
-		engineConfiguration->ALSMaxDriverThrottleIntent = (int)value;
 		return 1;
 	}
 		case -1744146782:

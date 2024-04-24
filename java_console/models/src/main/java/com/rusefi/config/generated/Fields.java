@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Apr 23 23:02:39 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Apr 24 03:40:22 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1146,7 +1146,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 434150034;
+	public static final int SIGNATURE_HASH = 601436302;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1400,7 +1400,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.04.24.f407-discovery.434150034";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.04.24.f407-discovery.601436302";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1778,7 +1778,6 @@ public class Fields {
 	public static final Field DISABLEETBWHENENGINESTOPPED = Field.create("DISABLEETBWHENENGINESTOPPED", 752, FieldType.BIT, 24).setBaseOffset(0);
 	public static final Field IS_ENABLED_SPI_4 = Field.create("IS_ENABLED_SPI_4", 752, FieldType.BIT, 25).setBaseOffset(0);
 	public static final Field PAUSEETBCONTROL = Field.create("PAUSEETBCONTROL", 752, FieldType.BIT, 26).setBaseOffset(0);
-	public static final Field ALIGNENGINESNIFFERATTDC = Field.create("ALIGNENGINESNIFFERATTDC", 752, FieldType.BIT, 27).setBaseOffset(0);
 	public static final Field VERBOSEKLINE = Field.create("VERBOSEKLINE", 752, FieldType.BIT, 28).setBaseOffset(0);
 	public static final Field IDLEINCREMENTALPIDCIC = Field.create("IDLEINCREMENTALPIDCIC", 752, FieldType.BIT, 29).setBaseOffset(0);
 	public static final Field ENABLEAEMXSERIES = Field.create("ENABLEAEMXSERIES", 752, FieldType.BIT, 30).setBaseOffset(0);
@@ -1795,8 +1794,8 @@ public class Fields {
 	public static final Field VERBOSECANBASEADDRESS = Field.create("VERBOSECANBASEADDRESS", 772, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field MC33_HVOLT = Field.create("MC33_HVOLT", 776, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field MINIMUMBOOSTCLOSEDLOOPMAP = Field.create("MINIMUMBOOSTCLOSEDLOOPMAP", 777, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field ACFANPIN = Field.create("ACFANPIN", 778, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
-	public static final Field ACFANPINMODE = Field.create("ACFANPINMODE", 780, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDACFANPIN = Field.create("UNUSEDACFANPIN", 778, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDACFANPINMODE = Field.create("UNUSEDACFANPINMODE", 780, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field L9779SPIDEVICE = Field.create("L9779SPIDEVICE", 781, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field IMUTYPE = Field.create("IMUTYPE", 782, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_783 = Field.create("ALIGNMENTFILL_AT_783", 783, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -1826,7 +1825,7 @@ public class Fields {
 	public static final Field SDCARDLOGFREQUENCY = Field.create("SDCARDLOGFREQUENCY", 824, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field IDLEPOSITIONCHANNEL = Field.create("IDLEPOSITIONCHANNEL", 826, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_827 = Field.create("ALIGNMENTFILL_AT_827", 827, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field DEBUGMAPAVERAGING = Field.create("DEBUGMAPAVERAGING", 828, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDHERE = Field.create("UNUSEDHERE", 828, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field STARTERRELAYDISABLEPIN = Field.create("STARTERRELAYDISABLEPIN", 830, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field STARTERRELAYDISABLEPINMODE = Field.create("STARTERRELAYDISABLEPINMODE", 832, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_833 = Field.create("ALIGNMENTFILL_AT_833", 833, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -1935,8 +1934,8 @@ public class Fields {
 	public static final Field NOFUELTRIMAFTERDFCOTIME = Field.create("NOFUELTRIMAFTERDFCOTIME", 979, FieldType.INT8).setScale(0.1).setBaseOffset(0);
 	public static final Field LAUNCHSPEEDTHRESHOLD = Field.create("LAUNCHSPEEDTHRESHOLD", 980, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field LAUNCHRPMWINDOW = Field.create("LAUNCHRPMWINDOW", 984, FieldType.INT).setScale(1.0).setBaseOffset(0);
-	public static final Field LAUNCHSPARKSKIPPERCENT = Field.create("LAUNCHSPARKSKIPPERCENT", 988, FieldType.INT).setScale(1.0).setBaseOffset(0);
-	public static final Field LAUNCHBOOSTDUTY = Field.create("LAUNCHBOOSTDUTY", 992, FieldType.INT).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDHERE12 = Field.create("UNUSEDHERE12", 988, FieldType.INT).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDHERE13 = Field.create("UNUSEDHERE13", 992, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field MAGICNUMBERAVAILABLEFORDEVTRICKS = Field.create("MAGICNUMBERAVAILABLEFORDEVTRICKS", 996, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field TURBOCHARGERFILTER = Field.create("TURBOCHARGERFILTER", 1000, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field LAUNCHTPSTHRESHOLD = Field.create("LAUNCHTPSTHRESHOLD", 1004, FieldType.INT).setScale(1.0).setBaseOffset(0);
@@ -2675,7 +2674,7 @@ public class Fields {
 	public static final Field ALSIDLEADD = Field.create("ALSIDLEADD", 3552, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSETBADD = Field.create("ALSETBADD", 3556, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSSKIPRATIO = Field.create("ALSSKIPRATIO", 3560, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field ALSMAXDRIVERTHROTTLEINTENT = Field.create("ALSMAXDRIVERTHROTTLEINTENT", 3564, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDSORRY11 = Field.create("UNUSEDSORRY11", 3564, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSACTIVATEPINMODE = Field.create("ALSACTIVATEPINMODE", 3565, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSSECONDARYMAXIMUM = Field.create("TPSSECONDARYMAXIMUM", 3566, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field PPSSECONDARYMAXIMUM = Field.create("PPSSECONDARYMAXIMUM", 3567, FieldType.INT8).setScale(0.5).setBaseOffset(0);
@@ -3464,7 +3463,6 @@ public class Fields {
 	DISABLEETBWHENENGINESTOPPED,
 	IS_ENABLED_SPI_4,
 	PAUSEETBCONTROL,
-	ALIGNENGINESNIFFERATTDC,
 	VERBOSEKLINE,
 	IDLEINCREMENTALPIDCIC,
 	ENABLEAEMXSERIES,
@@ -3481,8 +3479,8 @@ public class Fields {
 	VERBOSECANBASEADDRESS,
 	MC33_HVOLT,
 	MINIMUMBOOSTCLOSEDLOOPMAP,
-	ACFANPIN,
-	ACFANPINMODE,
+	UNUSEDACFANPIN,
+	UNUSEDACFANPINMODE,
 	L9779SPIDEVICE,
 	IMUTYPE,
 	ALIGNMENTFILL_AT_783,
@@ -3512,7 +3510,7 @@ public class Fields {
 	SDCARDLOGFREQUENCY,
 	IDLEPOSITIONCHANNEL,
 	ALIGNMENTFILL_AT_827,
-	DEBUGMAPAVERAGING,
+	UNUSEDHERE,
 	STARTERRELAYDISABLEPIN,
 	STARTERRELAYDISABLEPINMODE,
 	ALIGNMENTFILL_AT_833,
@@ -3617,8 +3615,8 @@ public class Fields {
 	NOFUELTRIMAFTERDFCOTIME,
 	LAUNCHSPEEDTHRESHOLD,
 	LAUNCHRPMWINDOW,
-	LAUNCHSPARKSKIPPERCENT,
-	LAUNCHBOOSTDUTY,
+	UNUSEDHERE12,
+	UNUSEDHERE13,
 	MAGICNUMBERAVAILABLEFORDEVTRICKS,
 	TURBOCHARGERFILTER,
 	LAUNCHTPSTHRESHOLD,
@@ -4345,7 +4343,7 @@ public class Fields {
 	ALSIDLEADD,
 	ALSETBADD,
 	ALSSKIPRATIO,
-	ALSMAXDRIVERTHROTTLEINTENT,
+	UNUSEDSORRY11,
 	ALSACTIVATEPINMODE,
 	TPSSECONDARYMAXIMUM,
 	PPSSECONDARYMAXIMUM,

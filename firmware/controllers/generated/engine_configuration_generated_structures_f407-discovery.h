@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Apr 22 23:54:55 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Apr 24 03:40:09 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1635,7 +1635,7 @@ struct engine_configuration_s {
 	bool pauseEtbControl : 1 {};
 	/**
 	offset 752 bit 27 */
-	bool alignEngineSnifferAtTDC : 1 {};
+	bool unusedAlign : 1 {};
 	/**
 	offset 752 bit 28 */
 	bool verboseKLine : 1 {};
@@ -1698,14 +1698,13 @@ struct engine_configuration_s {
 	 */
 	uint8_t minimumBoostClosedLoopMap;
 	/**
-	 * Optional Radiator Fan used with A/C
 	 * offset 778
 	 */
-	output_pin_e acFanPin;
+	uint16_t unusedacFanPin;
 	/**
 	 * offset 780
 	 */
-	pin_output_mode_e acFanPinMode;
+	uint8_t unusedAcFanPinMode;
 	/**
 	 * offset 781
 	 */
@@ -1815,7 +1814,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 828
 	 */
-	Gpio debugMapAveraging;
+	uint16_t unusedHere;
 	/**
 	 * offset 830
 	 */
@@ -2170,17 +2169,13 @@ struct engine_configuration_s {
 	 */
 	int launchRpmWindow;
 	/**
-	 * Spark Skip Transition Target
-	 * units: %
 	 * offset 988
 	 */
-	int launchSparkSkipPercent;
+	int unusedHere12;
 	/**
-	 * Duty Cycle for the Boost Solenoid
-	 * units: %
 	 * offset 992
 	 */
-	int launchBoostDuty;
+	int unusedHere13;
 	/**
 	 * offset 996
 	 */
@@ -4186,10 +4181,9 @@ struct engine_configuration_s {
 	 */
 	float ALSSkipRatio;
 	/**
-	 * units: %
 	 * offset 3564
 	 */
-	uint8_t ALSMaxDriverThrottleIntent;
+	uint8_t unusedSorry11;
 	/**
 	 * offset 3565
 	 */
@@ -5626,4 +5620,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22656);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Apr 22 23:54:55 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Apr 24 03:40:09 UTC 2024

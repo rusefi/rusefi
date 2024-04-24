@@ -493,9 +493,6 @@ Allows disabling the ETB when the engine is stopped. You may not like the power 
 ### pauseEtbControl
 Disable the electronic throttle motor and DC idle motor for testing.\nThis mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
 
-### alignEngineSnifferAtTDC
-
-
 ### verboseKLine
 
 
@@ -693,12 +690,6 @@ Launch disabled above this speed if setting is above zero
 
 ### launchRpmWindow
 Starting Launch RPM window to activate (subtracts from Launch RPM)
-
-### launchSparkSkipPercent
-Spark Skip Transition Target
-
-### launchBoostDuty
-Duty Cycle for the Boost Solenoid
 
 ### magicNumberAvailableForDevTricks
 null
@@ -1664,9 +1655,6 @@ null
 
 
 ### ALSSkipRatio
-
-
-### ALSMaxDriverThrottleIntent
 
 
 ### tpsSecondaryMaximum
