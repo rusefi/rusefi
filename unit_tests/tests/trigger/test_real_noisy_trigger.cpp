@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "logicdata_csv_reader.h"
 
-static void testNoOverdwell(const char* file, bool instantRpm) {
+static void testNoOverdwell(const char* file, bool instantRpm, const int expectedBailedOnDwellCount) {
 	CsvReader reader(1, /* vvtCount */ 0);
 
 	reader.open(file);
@@ -49,29 +49,30 @@ static void testNoOverdwell(const char* file, bool instantRpm) {
 		reader.processLine(&eth);
 	}
 
-	// nothing to check here, just that no coils got stuck on
+	ASSERT_EQ(expectedBailedOnDwellCount, engine->getBailedOnDwellCount())
+		<< "Please check if our dwell algorithm have really got better.";
 }
 
 TEST(RealNoisyTrigger, AvoidOverdwell1NoInstant) {
-	testNoOverdwell("tests/trigger/resources/noisy-trigger-1.csv", false);
+	testNoOverdwell("tests/trigger/resources/noisy-trigger-1.csv", false, 25);
 }
 
 TEST(RealNoisyTrigger, AvoidOverdwell1WithInstant) {
-	testNoOverdwell("tests/trigger/resources/noisy-trigger-1.csv", true);
+	testNoOverdwell("tests/trigger/resources/noisy-trigger-1.csv", true, 23);
 }
 
 TEST(RealNoisyTrigger, AvoidOverdwell2NoInstant) {
-	testNoOverdwell("tests/trigger/resources/noisy-trigger-2.csv", false);
+	testNoOverdwell("tests/trigger/resources/noisy-trigger-2.csv", false, 89);
 }
 
 TEST(RealNoisyTrigger, AvoidOverdwell2WithInstant) {
-	testNoOverdwell("tests/trigger/resources/noisy-trigger-2.csv", true);
+	testNoOverdwell("tests/trigger/resources/noisy-trigger-2.csv", true, 85);
 }
 
 TEST(RealNoisyTrigger, AvoidOverdwell3NoInstant) {
-	testNoOverdwell("tests/trigger/resources/noisy-trigger-3.csv", false);
+	testNoOverdwell("tests/trigger/resources/noisy-trigger-3.csv", false, 25);
 }
 
 TEST(RealNoisyTrigger, AvoidOverdwell3WithInstant) {
-	testNoOverdwell("tests/trigger/resources/noisy-trigger-3.csv", true);
+	testNoOverdwell("tests/trigger/resources/noisy-trigger-3.csv", true, 22);
 }

@@ -223,9 +223,12 @@ public:
 
 #if EFI_UNIT_TEST
 	bool needTdcCallback = true;
-	int bailedOnDwell = 0;
+private:
+	int bailedOnDwellCount = 0;
+public:
+	int getBailedOnDwellCount() const { return bailedOnDwellCount; }
+	void incrementBailedOnDwellCount() { bailedOnDwellCount++; }
 #endif /* EFI_UNIT_TEST */
-
 
 	int getGlobalConfigurationVersion(void) const;
 
