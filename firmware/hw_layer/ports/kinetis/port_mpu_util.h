@@ -11,7 +11,7 @@
 // This is the radical departure from STM32
 #define PORT_SIZE 18
 
-// 168 ticks in microsecond in case of 168MHz 407
+// todo: stm32 ticks are based on 4MHz timer I wonder if these CORE_CLOCK-based clocks are broken here?!
 #define US_TO_NT_MULTIPLIER (CORE_CLOCK / 1000000)
 
 // Scheduler queue GPT device
