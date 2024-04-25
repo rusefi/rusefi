@@ -38,10 +38,6 @@ using time_t = uint32_t;
 #define STOICH_RATIO 14.7f
 #define CONST_PI 3.14159265358979323846
 
-
-// time in seconds
-using efitimesec_t = time_t;
-
 /**
  * We use a signed type here so that subtraction result is a proper negative value.
  * A typical use-case negative result is when we do 'timeNow() - timeOfEvent' where timeOfEvent

@@ -23,7 +23,7 @@ efitimeus_t getTimeNowUs() {
  * Integer number of seconds since ECU boot.
  * 31,710 years - would not overflow during our life span.
  */
-efitimesec_t getTimeNowS(void) {
+int64_t getTimeNowS() {
 	return getTimeNowUs() / US_PER_SECOND;
 }
 

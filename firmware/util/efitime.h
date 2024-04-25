@@ -108,6 +108,6 @@ efitimeus_t getTimeNowUs();
 /**
  * @brief   Current system time in seconds.
  */
-efitimesec_t getTimeNowS();
+int64_t getTimeNowS();
 
 #endif /* __cplusplus */
