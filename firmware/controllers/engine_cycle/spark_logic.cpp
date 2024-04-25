@@ -277,9 +277,9 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 }
 
 void turnSparkPinHigh(IgnitionEvent *event) {
-	event->actualStartOfDwellNt = getTimeNowLowerNt();
-
 	efitick_t nowNt = getTimeNowNt();
+
+	event->actualDwellTimer.reset(nowNt);
 
 #if EFI_UNIT_TEST
 	if (engine->onIgnitionEvent) {
