@@ -406,7 +406,7 @@ todo: move to shutdown_controller.cpp
 }
 
 bool Engine::isInMainRelayBench() {
-	return mainRelayBenchTimer.hasElapsedSec(1);
+	return !mainRelayBenchTimer.hasElapsedSec(1);
 }
 
 bool Engine::isInShutdownMode() const {
