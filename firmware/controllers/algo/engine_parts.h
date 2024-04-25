@@ -70,7 +70,7 @@ public:
 
 struct multispark_state
 {
-	efidur_t delay = 0;
-	efidur_t dwell = 0;
+	efidur_t delay;
+	efidur_t dwell;
 	uint8_t count = 0;
 };

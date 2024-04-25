@@ -55,13 +55,18 @@ using time_t = uint32_t;
 
 struct efidur_t {
 	constexpr efidur_t() = default;
-	constexpr efidur_t(int64_t c) : count(c) { }
+	constexpr efidur_t(int64_t c) : m_count(c) { }
 
 	constexpr operator int64_t() const {
-		return count;
+		return m_count;
 	}
 
-	int64_t count = 0;
+	constexpr int64_t count() const {
+		return m_count;
+	}
+
+private:
+	int64_t m_count = 0;
 };
 
 struct efitick_t {
@@ -73,7 +78,7 @@ struct efitick_t {
 	}
 
 	efitick_t& operator+=(const efidur_t &s) {
-		count += s.count;
+		count += s.count();
 		return *this;
 	}
 

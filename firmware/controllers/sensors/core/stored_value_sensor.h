@@ -42,7 +42,7 @@ public:
 			return result;
 		}
 
-		if (m_timeoutPeriod != 0) { // zero m_timeoutPeriod means value lasts forever
+		if (m_timeoutPeriod.count() != 0) { // zero m_timeoutPeriod means value lasts forever
 			if (getTimeNowNt() - m_timeoutPeriod > m_lastUpdate) {
 				return UnexpectedCode::Timeout;
 			}
