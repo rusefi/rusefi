@@ -51,10 +51,15 @@ float InstantRpmCalculator::calculateInstantRpm(
 	TriggerWaveform const & triggerShape, TriggerFormDetails *triggerFormDetails,
 	uint32_t current_index, efitick_t nowNt) {
 
+	// It's OK to truncate from 64b to 32b, ARM with single precision FPU uses an expensive
+	// software function to convert 64b int -> float, while 32b int -> float is very cheap hardware conversion
+	// The difference is guaranteed to be short (it's 90 degrees of engine rotation!), so it won't overflow.
+	uint32_t nowNt32 = nowNt;
+
 	assertIsInBoundsWithResult(current_index, timeOfLastEvent, "calc timeOfLastEvent", 0);
 
 	// Record the time of this event so we can calculate RPM from it later
-	timeOfLastEvent[current_index] = nowNt;
+	timeOfLastEvent[current_index] = nowNt32;
 
 	// Determine where we currently are in the revolution
 	angle_t currentAngle = triggerFormDetails->eventAngles[current_index];
@@ -74,10 +79,7 @@ float InstantRpmCalculator::calculateInstantRpm(
 		return prevInstantRpmValue;
 	}
 
-	// It's OK to truncate from 64b to 32b, ARM with single precision FPU uses an expensive
-	// software function to convert 64b int -> float, while 32b int -> float is very cheap hardware conversion
-	// The difference is guaranteed to be short (it's 90 degrees of engine rotation!), so it won't overflow.
-	uint32_t time = nowNt - time90ago;
+	uint32_t time = nowNt32 - time90ago;
 	angle_t angleDiff = currentAngle - prevIndexAngle;
 
 	// Wrap the angle in to the correct range (ie, could be -630 when we want +90)
@@ -113,7 +115,8 @@ void InstantRpmCalculator::setLastEventTimeForInstantRpm(efitick_t nowNt) {
 		return;
 	}
 
-	spinningEvents[spinningEventIndex] = nowNt;
+	uint32_t nowNt32 = nowNt;
+	spinningEvents[spinningEventIndex] = nowNt32;
 
 	// If we are using only rising edges, we never write in to the odd-index slots that
 	// would be used by falling edges
