@@ -685,8 +685,7 @@ void updateTunerStudioState() {
 	tsOutputChannels->injectorDutyCycleStage2 = getInjectorDutyCycleStage2(rpm);
 #endif
 
-	efitimesec_t timeSeconds = getTimeNowS();
-	tsOutputChannels->seconds = timeSeconds;
+	tsOutputChannels->seconds = getTimeNowS();
 
 	tsOutputChannels->engineMode = packEngineMode();
 	tsOutputChannels->firmwareVersion = getRusEfiVersion();
