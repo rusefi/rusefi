@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Apr 24 03:39:30 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Apr 25 01:10:27 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2031,7 +2031,6 @@ struct engine_configuration_s {
 	offset 920 bit 13 */
 	bool verboseVVTDecoding : 1 {};
 	/**
-	 * get invertCamVVTSignal
 	offset 920 bit 14 */
 	bool invertCamVVTSignal : 1 {};
 	/**
@@ -2872,13 +2871,13 @@ struct engine_configuration_s {
 	bool skipADC12bitAssert : 1 {};
 	/**
 	offset 1496 bit 29 */
-	bool unusedBit_513_29 : 1 {};
+	bool invertExhaustCamVVTSignal : 1 {};
 	/**
 	offset 1496 bit 30 */
-	bool unusedBit_513_30 : 1 {};
+	bool unusedBit_514_30 : 1 {};
 	/**
 	offset 1496 bit 31 */
-	bool unusedBit_513_31 : 1 {};
+	bool unusedBit_514_31 : 1 {};
 	/**
 	 * This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.\Should be 100 once tune is better
 	 * units: cycles
@@ -5620,4 +5619,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 23328);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Apr 24 03:39:30 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Apr 25 01:10:27 UTC 2024

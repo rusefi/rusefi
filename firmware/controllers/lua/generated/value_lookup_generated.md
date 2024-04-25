@@ -602,7 +602,7 @@ If enabled, adjust at a constant rate instead of a rate proportional to the curr
 Verbose info in console below engineSnifferRpmThreshold\nenable vvt_details
 
 ### invertCamVVTSignal
-get invertCamVVTSignal
+
 
 ### alphaNUseIat
 In Alpha-N mode, compensate for air temperature.
@@ -1151,6 +1151,9 @@ AEM X-Series EGT gauge kit or rusEFI EGT sensor from Wideband controller
 
 
 ### skipADC12bitAssert
+
+
+### invertExhaustCamVVTSignal
 
 
 ### afterCrankingIACtaperDuration

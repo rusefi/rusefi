@@ -1159,6 +1159,9 @@ float getConfigValueByName(const char *name) {
 // skipADC12bitAssert
 		case 583380344:
 			return engineConfiguration->skipADC12bitAssert;
+// invertExhaustCamVVTSignal
+		case -60727986:
+			return engineConfiguration->invertExhaustCamVVTSignal;
 // afterCrankingIACtaperDuration
 		case 671504531:
 			return engineConfiguration->afterCrankingIACtaperDuration;
@@ -3754,6 +3757,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 583380344:
 	{
 		engineConfiguration->skipADC12bitAssert = (int)value;
+		return 1;
+	}
+		case -60727986:
+	{
+		engineConfiguration->invertExhaustCamVVTSignal = (int)value;
 		return 1;
 	}
 		case 671504531:
