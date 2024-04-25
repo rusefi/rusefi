@@ -45,11 +45,11 @@ public:
 
 	// these thresholds allow to switch from ADC mode (low-rpm) to EXTI mode (fast-rpm), indicating the clamping of the signal 
 	triggerAdcSample_t switchingThresholdLow = 0, switchingThresholdHigh = 0;
-	efidur_t minDeltaTimeForStableAdcDetectionNt = 0;
-	efidur_t stampCorrectionForAdc = 0;
+	efidur_t minDeltaTimeForStableAdcDetectionNt;
+	efidur_t stampCorrectionForAdc;
 	int switchingCnt = 0, switchingTeethCnt = 0;
 	int prevValue = 0;	// not set
-	efitick_t prevStamp = 0;
+	efitick_t prevStamp;
 
 	// we need to distinguish between weak and strong signals because of different SNR and thresholds.
 	bool isSignalWeak = true;

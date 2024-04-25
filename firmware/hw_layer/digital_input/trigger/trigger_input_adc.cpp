@@ -229,7 +229,7 @@ void TriggerAdcDetector::reset() {
 	integralSum = 0;
 	transitionCooldownCnt = 0;
 	prevValue = 0;	// not set
-	prevStamp = 0;
+	prevStamp = {};
 	minDeltaThresholdCntPos = 0;
 	minDeltaThresholdCntNeg = 0;
 }
