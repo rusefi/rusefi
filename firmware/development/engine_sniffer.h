@@ -39,7 +39,7 @@ public:
 	bool isFull() const;
 	bool isStartedTooLongAgo() const;
 	// looks like this is only used by functional tests on real hardware
-	efitick_t pauseEngineSnifferUntilNt = 0;
+	efitick_t pauseEngineSnifferUntilNt;
 	int getSize();
 
 private:
@@ -52,7 +52,7 @@ private:
 	 * https://github.com/rusefi/rusefi/issues/780
 	 */
 	bool collectingData = false;
-	efitick_t startTimeNt = 0;
+	efitick_t startTimeNt;
 	volatile int isInitialized = false;
 };
 

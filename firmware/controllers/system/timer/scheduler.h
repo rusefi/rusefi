@@ -68,7 +68,7 @@ struct scheduling_s {
 	/**
 	 * timestamp represented as 64-bit value of ticks since MCU start
 	 */
-	efitick_t momentX = 0;
+	efitick_t momentX;
 
 	/**
 	 * Scheduler implementation uses a sorted linked list of these scheduling records.

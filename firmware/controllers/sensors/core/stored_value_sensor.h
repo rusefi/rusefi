@@ -85,5 +85,5 @@ private:
 	SensorResult m_result;
 
 	efidur_t m_timeoutPeriod;
-	efitick_t m_lastUpdate = 0;
+	efitick_t m_lastUpdate;
 };

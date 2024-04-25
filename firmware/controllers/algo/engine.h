@@ -201,7 +201,7 @@ public:
 	IgnitionState ignitionState;
 	void resetLua();
 
-	efitick_t startStopStateLastPushTime = 0;
+	efitick_t startStopStateLastPushTime;
 
 #if EFI_SHAFT_POSITION_INPUT
 	void OnTriggerStateProperState(efitick_t nowNt) override;
@@ -303,7 +303,7 @@ public:
 
 
 	SensorsState sensors;
-	efitick_t mainRelayBenchStartNt = 0;
+	efitick_t mainRelayBenchStartNt;
 
 
 	void preCalculate();
