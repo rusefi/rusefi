@@ -35,11 +35,6 @@
 #define CONST_PI 3.14159265358979323846
 
 /**
- * 64 bit time in milliseconds (1/1_000 of a second), since boot
- */
-using efitimems64_t = int64_t;
-
-/**
  * integer time in milliseconds (1/1_000 of a second)
  * 32 bit 4B / 1000 = 4M seconds = 1111.11 hours = 23(or46?) days.
  * Please restart your ECU every 23(or46?) days? :) See issue https://github.com/rusefi/rusefi/issues/4554 tag#4554
