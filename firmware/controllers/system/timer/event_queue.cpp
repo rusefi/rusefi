@@ -178,7 +178,7 @@ expected<efitick_t> EventQueue::getNextEventTime(efitick_t nowX) const {
 			 * looks like we end up here after 'writeconfig' (which freezes the firmware) - we are late
 			 * for the next scheduled event
 			 */
-			return nowX + m_lateDelay;
+			return efitick_t{nowX + m_lateDelay};
 		} else {
 			return m_head->momentX;
 		}

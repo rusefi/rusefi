@@ -22,7 +22,7 @@ TEST(CanListener, FrameAccepted) {
 	EXPECT_CALL(dut, acceptFrame(_)).WillOnce(Return(true));
 
 	// Because accept returns true, decode is called
-	EXPECT_CALL(dut, decodeFrame(_, 1234));
+	EXPECT_CALL(dut, decodeFrame(_, efitick_t{1234}));
 
 	dut.processFrame(frame, 1234);
 }

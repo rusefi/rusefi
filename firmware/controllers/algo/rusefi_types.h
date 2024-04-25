@@ -52,8 +52,33 @@ using time_t = uint32_t;
  * platform-dependent tick since boot
  * in case of stm32f4 that's 32-bit timer ticks (SCHEDULER_TIMER_DEVICE == TIM5) extended to 64 bits
  */
-using efitick_t = int64_t;
-using efidur_t = efitick_t;
+
+struct efidur_t {
+	constexpr efidur_t() = default;
+	constexpr efidur_t(int64_t c) : count(c) { }
+
+	constexpr operator int64_t() const {
+		return count;
+	}
+
+	int64_t count = 0;
+};
+
+struct efitick_t {
+	constexpr efitick_t() = default;
+	constexpr efitick_t(int64_t c) : count(c) { }
+
+	constexpr operator int64_t() const {
+		return count;
+	}
+
+	efitick_t& operator+=(const efidur_t &s) {
+		count += s.count;
+		return *this;
+	}
+
+	int64_t count = 0;
+};
 
 /**
  * 64 bit time in microseconds (1/1_000_000 of a second), since boot

@@ -44,7 +44,8 @@ TEST(injectionScheduling, InjectionIsScheduled) {
 		efitick_t startTime = nowNt + nt5deg;
 		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime, Not(Truly(ActionArgumentHasLowBitSet))));
 		// falling edge 20ms later
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime + MS2NT(20), Property(&action_s::getArgument, Eq(&event))));
+		efitick_t endTime = startTime + MS2NT(20);
+		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, endTime, Property(&action_s::getArgument, Eq(&event))));
 	}
 
 	// Event scheduled at 125 degrees
@@ -93,9 +94,11 @@ TEST(injectionScheduling, InjectionIsScheduledDualStage) {
 		efitick_t startTime = nowNt + nt5deg;
 		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime, Truly(ActionArgumentHasLowBitSet)));
 		// falling edge (primary) 20ms later
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime + MS2NT(20), Truly(ActionArgumentHasLowBitSet)));
+		efitick_t endTime1 = startTime + MS2NT(20);
+		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, endTime1, Truly(ActionArgumentHasLowBitSet)));
 		// falling edge (secondary) 10ms later
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime + MS2NT(10), Property(&action_s::getArgument, Eq(&event))));
+		efitick_t endTime2 = startTime + MS2NT(10);
+		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, endTime2, Property(&action_s::getArgument, Eq(&event))));
 	}
 
 	// Event scheduled at 125 degrees
@@ -134,7 +137,8 @@ TEST(injectionScheduling, InjectionIsScheduledBeforeWraparound) {
 		efitick_t startTime = nowNt + nt5deg;
 		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime, Not(Truly(ActionArgumentHasLowBitSet))));
 		// falling edge 20ms later
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime + MS2NT(20), Property(&action_s::getArgument, Eq(&event))));
+		efitick_t endTime = startTime + MS2NT(20);
+		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, endTime, Property(&action_s::getArgument, Eq(&event))));
 	}
 
 	// Event scheduled at 715 degrees
@@ -173,7 +177,8 @@ TEST(injectionScheduling, InjectionIsScheduledAfterWraparound) {
 		efitick_t startTime = nowNt + nt5deg;
 		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime, Not(Truly(ActionArgumentHasLowBitSet))));
 		// falling edge 20ms later
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime + MS2NT(20), Property(&action_s::getArgument, Eq(&event))));
+		efitick_t endTime = startTime + MS2NT(20);
+		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, endTime, Property(&action_s::getArgument, Eq(&event))));
 	}
 
 	// Event scheduled at 5 degrees

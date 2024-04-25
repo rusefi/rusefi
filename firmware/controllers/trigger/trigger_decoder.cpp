@@ -415,7 +415,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 	 * 10 seconds since previous trigger event we do not really care.
 	 */
 	toothDurations[0] =
-			currentDurationLong > 10 * NT_PER_SECOND ? 10 * NT_PER_SECOND : currentDurationLong;
+			currentDurationLong > 10 * NT_PER_SECOND ? efidur_t{10 * NT_PER_SECOND} : currentDurationLong;
 
 	if (!shouldConsiderEdge(triggerShape, triggerWheel, isRising)) {
 #if EFI_UNIT_TEST
