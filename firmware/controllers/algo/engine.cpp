@@ -406,10 +406,7 @@ todo: move to shutdown_controller.cpp
 }
 
 bool Engine::isInMainRelayBench() {
-	if (mainRelayBenchStartNt == 0) {
-		return false;
-	}
-	return (getTimeNowNt() - mainRelayBenchStartNt) < NT_PER_SECOND;
+	return mainRelayBenchTimer.hasElapsedSec(1);
 }
 
 bool Engine::isInShutdownMode() const {
