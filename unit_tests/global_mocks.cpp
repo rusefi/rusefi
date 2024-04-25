@@ -15,7 +15,7 @@ efitimeus_t getTimeNowUs() {
 	return timeNowUs;
 }
 
-efitimesec_t getTimeNowS() {
+int64_t getTimeNowS() {
 	return getTimeNowUs() / 1000 / 1000;
 }
 
