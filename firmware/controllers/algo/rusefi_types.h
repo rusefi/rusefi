@@ -60,11 +60,6 @@ using efidur_t = efitick_t;
  */
 using efitimeus_t = int64_t;
 
-/**
- * 64 bit time in milliseconds (1/1_000 of a second), since boot
- */
-using efitimems64_t = int64_t;
-
 // date-time struct a la ctime struct tm
 typedef struct {
 	uint32_t year;
