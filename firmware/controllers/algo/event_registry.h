@@ -53,10 +53,9 @@ public:
 	 */
 	angle_t sparkAngle = NAN;
 	floatms_t sparkDwell = 0;
-	/**
-	 * this timestamp allows us to measure actual dwell time
-	 */
-	uint32_t actualStartOfDwellNt = 0;
+
+	// this timer allows us to measure actual dwell time
+	Timer actualDwellTimer;
 
 	float dwellAngle = 0;
 
