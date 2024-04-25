@@ -22,8 +22,8 @@ ButtonShiftController::ButtonShiftController() :
 
 void ButtonShiftController::init() {
 	// 500 millisecond is maybe a little long?
-	debounceUp.init(500, engineConfiguration->tcuUpshiftButtonPin, engineConfiguration->tcuUpshiftButtonPinMode);
-	debounceDown.init(500, engineConfiguration->tcuDownshiftButtonPin, engineConfiguration->tcuDownshiftButtonPinMode);
+	debounceUp.init(MS2NT(500), engineConfiguration->tcuUpshiftButtonPin, engineConfiguration->tcuUpshiftButtonPinMode);
+	debounceDown.init(MS2NT(500), engineConfiguration->tcuDownshiftButtonPin, engineConfiguration->tcuDownshiftButtonPinMode);
 
 	GearControllerBase::init();
 }

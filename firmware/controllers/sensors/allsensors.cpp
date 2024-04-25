@@ -13,7 +13,7 @@ ButtonDebounce acDebounce("ac_switch");
 
 void initSensors() {
 	initMapDecoder();
-	acDebounce.init(15, engineConfiguration->acSwitch, engineConfiguration->acSwitchMode);
+	acDebounce.init(MS2NT(15), engineConfiguration->acSwitch, engineConfiguration->acSwitchMode);
 }
 
 bool getAcToggle() {

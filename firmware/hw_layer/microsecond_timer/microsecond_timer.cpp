@@ -138,7 +138,7 @@ static Timer testScheduling;
 
 static void timerValidationCallback(void*) {
 	testSchedulingHappened = true;
-	efitimems_t actualTimeSinceScheduling = 1e3 * testScheduling.getElapsedSeconds();
+	float actualTimeSinceScheduling = 1e3 * testScheduling.getElapsedSeconds();
 	
 	if (absI(actualTimeSinceScheduling - TEST_CALLBACK_DELAY) > TEST_CALLBACK_DELAY * TIMER_PRECISION_THRESHOLD) {
 		firmwareError(ObdCode::CUSTOM_ERR_TIMER_TEST_CALLBACK_WRONG_TIME, "hwTimer broken precision: %ld ms", actualTimeSinceScheduling);
