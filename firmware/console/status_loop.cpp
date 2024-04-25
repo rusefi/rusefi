@@ -614,8 +614,7 @@ void updateTunerStudioState() {
 #endif
 
 	// 224
-	efitimesec_t timeSeconds = getTimeNowS();
-	tsOutputChannels->seconds = timeSeconds;
+	tsOutputChannels->seconds = getTimeNowS();
 
 	// 252
 	tsOutputChannels->engineMode = packEngineMode();
