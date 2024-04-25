@@ -39,8 +39,6 @@ static bool isTimerPending = false;
 static int timerCallbackCounter = 0;
 static int timerRestartCounter = 0;
 
-static const char * msg;
-
 static int timerFreezeCounter = 0;
 static int setHwTimerCounter = 0;
 static bool hwStarted = false;
@@ -112,7 +110,7 @@ class MicrosecondTimerWatchdogController : public PeriodicTimerController {
 			return;
 		}
 
-		msg = isTimerPending ? "No_cb too long" : "Timer not awhile";
+		const char* msg = isTimerPending ? "No_cb too long" : "Timer not awhile";
 		// 2 seconds of inactivity would not look right
 		efiAssertVoid(ObdCode::CUSTOM_TIMER_WATCHDOG, nowNt < lastSetTimerTimeNt + 2 * CORE_CLOCK, msg);
 	}

@@ -5,7 +5,7 @@
 /**
  * Stores the recent peak value, preventing loss of intermittent peaks in a signal.
  */
-template <typename TValue, efitick_t TTimeoutPeriod>
+template <typename TValue, efidur_t TTimeoutPeriod>
 class PeakDetect {
 public:
 	TValue detect(TValue currentValue, efitick_t nowNt) {

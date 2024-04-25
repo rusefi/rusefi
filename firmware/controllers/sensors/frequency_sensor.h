@@ -7,7 +7,7 @@
 
 class FrequencySensor : public FunctionalSensor {
 public:
-	FrequencySensor(SensorType type, efitick_t timeoutPeriod)
+	FrequencySensor(SensorType type, efidur_t timeoutPeriod)
 		: FunctionalSensor(type, timeoutPeriod)
 	{ }
 

@@ -25,7 +25,7 @@ public:
     static void debug();
 private:
     const char* const m_name;
-    efitick_t m_threshold;
+    efidur_t m_threshold;
     efitick_t timeLast;
     brain_pin_e *m_pin;
     brain_pin_e active_pin = Gpio::Unassigned;

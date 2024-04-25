@@ -67,7 +67,7 @@ void SingleTimerExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* s
 	ScopePerf perf(PE::SingleTimerExecutorScheduleByTimestamp);
 
 #if EFI_ENABLE_ASSERTS
-	efitick_t deltaTimeNt = nt - getTimeNowNt();
+	efidur_t deltaTimeNt = nt - getTimeNowNt();
 
 	if (deltaTimeNt >= TOO_FAR_INTO_FUTURE_NT) {
 		// we are trying to set callback for too far into the future. This does not look right at all

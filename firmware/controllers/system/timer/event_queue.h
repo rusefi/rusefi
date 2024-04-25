@@ -44,7 +44,7 @@ public:
 	// See comment in EventQueue::executeAll for info about lateDelay - it sets the 
 	// time gap between events for which we will wait instead of rescheduling the next
 	// event in a group of events near one another.
-	explicit EventQueue(efitick_t lateDelay = 0);
+	explicit EventQueue(efidur_t lateDelay = 0);
 
 	/**
 	 * O(size) - linear search in sorted linked list
@@ -69,7 +69,7 @@ private:
 	 * this list is sorted
 	 */
 	scheduling_s *m_head = nullptr;
-	const efitick_t m_lateDelay;
+	const efidur_t m_lateDelay;
 
 	scheduling_s* m_freelist = nullptr; 
 	scheduling_s m_pool[64];

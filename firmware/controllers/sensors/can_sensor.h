@@ -19,7 +19,7 @@
  */
 class CanSensorBase : public StoredValueSensor, public CanListener {
 public:
-	CanSensorBase(uint32_t eid, SensorType type, efitick_t timeout)
+	CanSensorBase(uint32_t eid, SensorType type, efidur_t timeout)
 		: StoredValueSensor(type, timeout)
 		, CanListener(eid)
 	{
@@ -31,7 +31,7 @@ public:
 template <typename TStorage, int TScale>
 class CanSensor : public CanSensorBase {
 public:
-	CanSensor(uint32_t eid, uint8_t offset, SensorType type, efitick_t timeout)
+	CanSensor(uint32_t eid, uint8_t offset, SensorType type, efidur_t timeout)
 		: CanSensorBase(eid, type, timeout)
 		, m_offset(offset)
 	{

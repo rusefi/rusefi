@@ -57,6 +57,7 @@ using efitimesec_t = time_t;
  * in case of stm32f4 that's 32-bit timer ticks (SCHEDULER_TIMER_DEVICE == TIM5) extended to 64 bits
  */
 using efitick_t = int64_t;
+using efidur_t = efitick_t;
 
 /**
  * 64 bit time in microseconds (1/1_000_000 of a second), since boot
