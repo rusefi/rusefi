@@ -676,8 +676,6 @@ static void getValue(const char *paramStr) {
 		efiPrintf("is_enabled_spi_2=%s", boolToString(engineConfiguration->is_enabled_spi_2));
 	} else if (strEqualCaseInsensitive(paramStr, "is_enabled_spi_3")) {
 		efiPrintf("is_enabled_spi_3=%s", boolToString(engineConfiguration->is_enabled_spi_3));
-	} else if (strEqualCaseInsensitive(paramStr, "invertCamVVTSignal")) {
-		efiPrintf("invertCamVVTSignal=%s", boolToString(engineConfiguration->invertCamVVTSignal));
 	} else if (strEqualCaseInsensitive(paramStr, "isHip9011Enabled")) {
 		efiPrintf("isHip9011Enabled=%d", engineConfiguration->isHip9011Enabled);
 	} else if (strEqualCaseInsensitive(paramStr, CMD_DATE)) {
