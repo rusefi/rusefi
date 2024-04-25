@@ -116,7 +116,7 @@ private:
 
 	// Autotune helpers
 	bool m_lastIsPositive = false;
-	efitick_t m_cycleStartTime = 0;
+	Timer m_autotuneCycleStart;
 	float m_minCycleTps = 0;
 	float m_maxCycleTps = 0;
 	// Autotune measured parameters: gain and ultimate period

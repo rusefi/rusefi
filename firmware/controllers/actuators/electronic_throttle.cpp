@@ -383,8 +383,7 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 		efitick_t now = getTimeNowNt();
 
 		// Determine period
-		float tu = NT2US((float)(now - m_cycleStartTime)) / 1e6;
-		m_cycleStartTime = now;
+		float tu = m_autotuneCycleStart.getElapsedSecondsAndReset(now);
 
 		// Determine amplitude
 		float a = m_maxCycleTps - m_minCycleTps;
