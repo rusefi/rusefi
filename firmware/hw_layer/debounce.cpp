@@ -29,7 +29,7 @@ void ButtonDebounce::init(efidur_t threshold, brain_pin_e &pin, pin_input_mode_e
         s_firstDebounce = this;
     }
     m_threshold = threshold;
-    timeLast = 0;
+    timeLast = {};
     m_pin = &pin;
     m_mode = &mode;
     startConfiguration();
