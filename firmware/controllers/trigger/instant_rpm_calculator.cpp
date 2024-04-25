@@ -72,7 +72,7 @@ float InstantRpmCalculator::calculateInstantRpm(
 
 	// now let's get precise angle for that event
 	angle_t prevIndexAngle = triggerFormDetails->eventAngles[prevIndex];
-	efitick_t time90ago = timeOfLastEvent[prevIndex];
+	auto time90ago = timeOfLastEvent[prevIndex];
 
 	// No previous timestamp, instant RPM isn't ready yet
 	if (time90ago == 0) {
