@@ -12,7 +12,7 @@
 
 static NO_CACHE adcsample_t sampleBuffer[2000];
 static int8_t currentCylinderNumber = 0;
-static efitick_t lastKnockSampleTime = 0;
+static efitick_t lastKnockSampleTime;
 static Biquad knockFilter;
 
 static volatile bool knockIsSampling = false;
