@@ -293,7 +293,8 @@ void initSmartGpio() {
 }
 
 void tle8888startup() {
-	static efitick_t tle8888CrankingResetTime = 0;
+	// TODO: use a timer instead
+	static efitick_t tle8888CrankingResetTime;
 
 	if (engineConfiguration->useTLE8888_cranking_hack && engine->rpmCalculator.isCranking()) {
 		efitick_t nowNt = getTimeNowNt();
