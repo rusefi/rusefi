@@ -70,7 +70,7 @@ public:
 static WaveReader readers[LOGIC_ANALYZER_CHANNEL_COUNT];
 
 static void riseCallback(WaveReader *reader) {
-	efitick_t nowUs = getTimeNowUs();
+	efitimeus_t nowUs = getTimeNowUs();
 	reader->riseEventCounter++;
 	reader->lastActivityTimeUs = nowUs;
 	assertIsrContext(ObdCode::CUSTOM_ERR_6670);
@@ -84,13 +84,13 @@ static void riseCallback(WaveReader *reader) {
 }
 
 void WaveReader::onFallEvent() {
-	efitick_t nowUs = getTimeNowUs();
+	efitimeus_t nowUs = getTimeNowUs();
 	fallEventCounter++;
 	lastActivityTimeUs = nowUs;
 	assertIsrContext(ObdCode::CUSTOM_ERR_6670);
 	addEngineSnifferLogicAnalyzerEvent(laIndex, false);
 
-	efitick_t width = nowUs - widthEventTimeUs;
+	efitimeus_t width = nowUs - widthEventTimeUs;
 	last_wave_high_widthUs = width;
 
 #if EFI_SHAFT_POSITION_INPUT
