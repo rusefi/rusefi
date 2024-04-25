@@ -52,14 +52,14 @@ void TriggerDecoderBase::setShaftSynchronized(bool value) {
 		}
 	} else {
 		// sync loss
-		mostRecentSyncTime = 0;
+		mostRecentSyncTime = {};
 	}
 	shaft_is_synchronized = value;
 }
 
 void TriggerDecoderBase::resetState() {
 	setShaftSynchronized(false);
-	toothed_previous_time = 0;
+	toothed_previous_time = {};
 
 	memset(toothDurations, 0, sizeof(toothDurations));
 
