@@ -78,7 +78,7 @@ bool WarningCodeState::isWarningNow(ObdCode code) const {
 }
 
 EngineState::EngineState() {
-	timeSinceLastTChargeK = getTimeNowNt();
+	timeSinceLastTChargeK.reset(getTimeNowNt());
 }
 
 void EngineState::updateSlowSensors() {
@@ -188,14 +188,13 @@ void EngineState::periodicFastCallback() {
 void EngineState::updateTChargeK(int rpm, float tps) {
 #if EFI_ENGINE_CONTROL
 	float newTCharge = engine->fuelComputer.getTCharge(rpm, tps);
-	// convert to microsecs and then to seconds
-	efitick_t curTime = getTimeNowNt();
-	float secsPassed = (float)NT2US(curTime - timeSinceLastTChargeK) / US_PER_SECOND_F;
 	if (!cisnan(newTCharge)) {
 		// control the rate of change or just fill with the initial value
+		efitick_t nowNt = getTimeNowNt();
+		float secsPassed = timeSinceLastTChargeK.getElapsedSeconds(nowNt);
 		sd.tCharge = (sd.tChargeK == 0) ? newTCharge : limitRateOfChange(newTCharge, sd.tCharge, engineConfiguration->tChargeAirIncrLimit, engineConfiguration->tChargeAirDecrLimit, secsPassed);
 		sd.tChargeK = convertCelsiusToKelvin(sd.tCharge);
-		timeSinceLastTChargeK = curTime;
+		timeSinceLastTChargeK.reset(nowNt);
 	}
 #endif
 }

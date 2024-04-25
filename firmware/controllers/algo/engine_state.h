@@ -58,7 +58,7 @@ public:
 	// Angle between firing the main (primary) spark and the secondary (trailing) spark
 	angle_t trailingSparkAngle = 0;
 
-	efitick_t timeSinceLastTChargeK;
+	Timer timeSinceLastTChargeK;
 
 	float currentVe = 0;
 
