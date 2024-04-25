@@ -42,6 +42,8 @@
  */
 using efitimems_t = uint32_t;
 
+using efidur_t = efitick_t;
+
 // date-time struct a la ctime struct tm
 typedef struct {
 	uint32_t year = 0;

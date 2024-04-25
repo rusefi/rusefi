@@ -32,7 +32,7 @@ void postMapState(TunerStudioOutputChannels *tsOutputChannels);
 
 class MapAverager : public StoredValueSensor {
 public:
-	MapAverager(SensorType type, efitick_t timeout)
+	MapAverager(SensorType type, efidur_t timeout)
 		: StoredValueSensor(type, timeout)
 	{
 	}

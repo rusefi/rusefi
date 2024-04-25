@@ -21,7 +21,7 @@ extern int timeNowUs;
 extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */
 
-EventQueue::EventQueue(efitick_t lateDelay)
+EventQueue::EventQueue(efidur_t lateDelay)
 	: m_lateDelay(lateDelay)
 {
 	for (size_t i = 0; i < efi::size(m_pool); i++) {
