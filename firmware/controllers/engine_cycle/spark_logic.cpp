@@ -318,9 +318,9 @@ static bool startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 }
 
 void turnSparkPinHighStartCharging(IgnitionEvent *event) {
-	event->actualStartOfDwellNt = getTimeNowLowerNt();
-
 	efitick_t nowNt = getTimeNowNt();
+
+	event->actualDwellTimer.reset(nowNt);
 
   bool skippedDwellDueToTriggerNoised = false;
 	for (int i = 0; i< MAX_OUTPUTS_FOR_IGNITION;i++) {
