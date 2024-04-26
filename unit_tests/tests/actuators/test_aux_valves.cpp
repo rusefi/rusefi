@@ -31,7 +31,7 @@ TEST(Actuators, AuxValves) {
 	eth.assertTriggerEvent("a3", 2, &engine->auxValves[1][1].open, (void*)&auxPlainPinTurnOn, 540);
 
 	// Execute the action it put on the regular scheduler
-	eth.executeUntil(999999);
+	eth.setTimeAndInvokeEventsUs(999999);
 
 	eth.assertTriggerEvent("a1", 0, &engine->auxValves[0][1].open, (void*)&auxPlainPinTurnOn, 360);
 	eth.assertTriggerEvent("a2", 1, &engine->auxValves[1][0].open, (void*)&auxPlainPinTurnOn, 180);
