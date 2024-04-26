@@ -52,8 +52,6 @@ void chDbgAssert(int c, char *msg, void *arg);
 #define US_TO_NT_MULTIPLIER 100
 #define RUS_EFI_VERSION_TAG "rusEfiVersion"
 
-#define INLINE inline
-
 #define EFI_ERROR_CODE 0xffffffff
 
 #define CCM_OPTIONAL
