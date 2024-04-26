@@ -38,12 +38,9 @@ extern "C"
 #define CH_FREQUENCY 1000
 #define NO_CACHE
 
-typedef int bool_t;
 typedef uint32_t systime_t;
 
 void chDbgAssert(int c, char *msg, void *arg);
-
-#define TICKS_IN_MS 100
 
 #define chDbgCheck(x, y) chDbgAssert(x, y, NULL)
 

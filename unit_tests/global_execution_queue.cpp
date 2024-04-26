@@ -8,7 +8,7 @@
 #include "pch.h"
 #include "global_execution_queue.h"
 
-bool_t debugSignalExecutor = false;
+bool debugSignalExecutor = false;
 
 TestExecutor::~TestExecutor() {
 	// Flush the queue and reset all scheduling_s at the end of a test's execution
