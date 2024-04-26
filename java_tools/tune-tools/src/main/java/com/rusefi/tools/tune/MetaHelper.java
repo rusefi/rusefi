@@ -21,6 +21,9 @@ public class MetaHelper {
     @NotNull
     static ReaderStateImpl getReaderState() throws IOException {
         List<String> options = Files.readAllLines(Paths.get(RootHolder.ROOT + "../" + ConfigDefinition.CONFIG_PATH));
+        // add default (empty) board config
+        options.add("-readfile BOARD_CONFIG_FROM_FILE firmware/tunerstudio/empty_board_options.ini");
+
         String[] totalArgs = options.toArray(new String[0]);
 
 
