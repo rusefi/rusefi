@@ -34,6 +34,7 @@ public class ConfigDefinition {
     private static final String KEY_ZERO_INIT = "-initialize_to_zero";
     private static final String KEY_BOARD_NAME = "-board";
     public static final String CONFIG_PATH = "java_tools/configuration_definition/src/main/resources/config_definition.options";
+    public static final String READFILE_OPTION = "-readfile";
 
     public static void main(String[] args) {
         try {
@@ -106,7 +107,7 @@ public class ConfigDefinition {
                     state.addDestination(new GetConfigValueConsumer(cppFile, mdFile, LazyFile.REAL));
                 }
                     break;
-                case "-readfile":
+                case READFILE_OPTION:
                     String keyName = args[i + 1];
                     // yes, we take three parameters here thus pre-increment!
                     String fileName = args[++i + 1];
