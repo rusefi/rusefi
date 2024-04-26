@@ -771,6 +771,14 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		warning(ObdCode::CUSTOM_ERR_NO_SHAPE, "initializeTriggerWaveform() not implemented: %d", triggerType.type);
 	}
 
+	if (!needSecondTriggerInput &&
+#if EFI_UNIT_TEST
+ 	engineConfiguration != nullptr &&
+#endif
+	engineConfiguration->triggerInputPins[1] != Gpio::Unassigned) {
+	  criticalError("Single-channel trigger %s selected while two inputs were configured", getTrigger_type_e(triggerType.type));
+	}
+
 	/**
 	 * Feb 2019 suggestion: it would be an improvement to remove 'expectedEventCount' logic from 'addEvent'
 	 * and move it here, after all events were added.

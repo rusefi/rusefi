@@ -87,5 +87,5 @@ void setFordInline6() {
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
 
 	engineConfiguration->triggerInputPins[0] = Gpio::A8;
-	engineConfiguration->triggerInputPins[1] = Gpio::A5;
+  engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
 }
