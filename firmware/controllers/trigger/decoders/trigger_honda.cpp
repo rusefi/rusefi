@@ -16,14 +16,14 @@ void configureHondaCbr600(TriggerWaveform *s) {
   s->tdcPosition = 0; // todo: hard-code TDC position once we know it
   s->setTriggerSynchronizationGap2(/*from*/3.9, /*to*/8);
 
-	s->addEvent720(350.0f, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	s->addEvent720(360.0f, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(350.0f, TriggerValue::FALL);
+	s->addEvent720(360.0f, TriggerValue::RISE);
 
-	s->addEvent720(650.0f, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	s->addEvent720(660.0f, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(650.0f, TriggerValue::FALL);
+	s->addEvent720(660.0f, TriggerValue::RISE);
 
-	s->addEvent720(710.0f, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	s->addEvent720(720.0f, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent720(710.0f, TriggerValue::FALL);
+	s->addEvent720(720.0f, TriggerValue::RISE);
 }
 
 // todo: what is this 1+16 trigger about? should it have been defined as skipped + cam or else?
