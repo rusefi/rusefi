@@ -11,12 +11,8 @@ bool verboseMode = false;
 
 int timeNowUs = 0;
 
-efitimeus_t getTimeNowUs() {
-	return timeNowUs;
-}
-
 efitick_t getTimeNowNt() {
-	return getTimeNowUs() * US_TO_NT_MULTIPLIER;
+	return (efitimeus_t)timeNowUs * US_TO_NT_MULTIPLIER;
 }
 
 void initLogging(LoggingWithStorage *logging, const char *name) {
