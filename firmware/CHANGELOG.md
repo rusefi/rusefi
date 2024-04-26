@@ -29,7 +29,7 @@ Release template (copy/paste this for new release):
 ### Breaking Changes
  - "60/2 VW" trigger wheel renamed to "60-2 Wrong Polarity" #988
  - exhaust VVTs now use it's onw Edge Select setting
-
+ - removing weird 1+16 trigger wheel #6418
 
 ## Unreleased
 

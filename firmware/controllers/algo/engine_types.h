@@ -367,7 +367,7 @@ enum class trigger_type_e : uint32_t {
 	TT_VVT_BOSCH_QUICK_START = 47,
 	TT_TOOTHED_WHEEL_36_2 = 48,
 	TT_SUBARU_SVX = 49,
-	TT_1_16 = 50,
+	TT_UNUSED_50 = 50,
 	// todo: remove this trigger once we have https://github.com/rusefi/rusefi/issues/2073
 	TT_SUBARU_7_WITHOUT_6 = 51,
 	TT_NISSAN_MR18_CAM_VVT = 52,

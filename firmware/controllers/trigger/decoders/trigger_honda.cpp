@@ -26,24 +26,6 @@ void configureHondaCbr600(TriggerWaveform *s) {
 	s->addEvent720(720.0f, TriggerValue::RISE);
 }
 
-// todo: what is this 1+16 trigger about? should it have been defined as skipped + cam or else?
-void configureOnePlus16(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
-
-	int count = 16;
-	float tooth = s->getCycleDuration() / 2 / count;
-	float width = tooth / 2; // for VR we only handle rises so width does not matter much
-
-	s->addEventAngle(1, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-	s->addEventAngle(5, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-
-	for (int i = 1; i <= count; i++) {
-		s->addToothRiseFall(tooth * i, width, TriggerWheel::T_SECONDARY);
-	}
-
-	s->isSynchronizationNeeded = false;
-}
-
 // TT_HONDA_K_CRANK_12_1
 void configureHondaK_12_1(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
