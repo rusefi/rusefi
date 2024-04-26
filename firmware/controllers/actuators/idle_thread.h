@@ -92,9 +92,9 @@ private:
 	// These are stored by getIdlePosition() and used by getIdleTimingAdjustment()
 	Phase m_lastPhase = Phase::Cranking;
 	int m_lastTargetRpm = 0;
-	efitimeus_t restoreAfterPidResetTimeUs = 0;
+	efitimeus_t restoreAfterPidResetTimeUs;
 	// used by 'dashpot' (hold+decay) logic for iacByTpsTaper
-	efitimeus_t lastTimeRunningUs = 0;
+	efitimeus_t lastTimeRunningUs;
 	// used by "soft" idle entry
 	float m_crankTaperEndTime = 0.0f;
 	float m_idleTimingSoftEntryEndTime = 0.0f;

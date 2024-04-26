@@ -47,24 +47,24 @@ TEST(OddFireRunningMode, hd) {
 	angle_t expectedAngle3 = -180 + cylinderTwo - timing;
 
 	ASSERT_EQ( 8,  engine->executor.size());
-	eth.assertEvent5("spark down#3", 3, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(expectedAngle3));
+	eth.assertEvent5("spark down#3", 3, (void*)fireSparkAndPrepareNextSchedule, USOF(static_cast<efitimeus_t::rep>(eth.angleToTimeUs(expectedAngle3))));
 
 	angle_t expectedAngle7 = 180 + cylinderOne - timing;
-	eth.assertEvent5("spark down#7", 7, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(expectedAngle7));
+	eth.assertEvent5("spark down#7", 7, (void*)fireSparkAndPrepareNextSchedule, USOF(static_cast<efitimeus_t::rep>(eth.angleToTimeUs(expectedAngle7))));
 
 	eth.assertRpm( 500, "spinning-RPM#1");
 
-	engine->executor.executeAll(getTimeNowUs() + MS2US(1000000));
+	engine->executor.executeAll(static_cast<efitick_t>(COUNTOF(getTimeNowUs()) + MS2US(1000000)));
 
 	eth.fireTriggerEvents2(2 /* count */ , 60 /* ms */);
 	ASSERT_EQ(IM_SEQUENTIAL, getCurrentInjectionMode());
 	ASSERT_NEAR(0.0069257142022, getInjectionMass(200), EPS3D);
 
 	ASSERT_EQ( 8,  engine->executor.size());
-	eth.assertEvent5("fuel down2#1", 1, (void*)turnInjectionPinLow, eth.angleToTimeUs(180 + PORT_INJECTION_OFFSET + cylinderOne));
-	eth.assertEvent5("spark down2#3", 3, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(-180 + cylinderTwo - timing));
-	eth.assertEvent5("fuel down2#6", 6, (void*)turnInjectionPinLow, eth.angleToTimeUs(540 + PORT_INJECTION_OFFSET + cylinderTwo));
-	eth.assertEvent5("spark down2#7", 7, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(180 + cylinderOne - timing));
+	eth.assertEvent5("fuel down2#1", 1, (void*)turnInjectionPinLow, USOF(static_cast<efitimeus_t::rep>(eth.angleToTimeUs(180 + PORT_INJECTION_OFFSET + cylinderOne))));
+	eth.assertEvent5("spark down2#3", 3, (void*)fireSparkAndPrepareNextSchedule, USOF(static_cast<efitimeus_t::rep>(eth.angleToTimeUs(-180 + cylinderTwo - timing))));
+	eth.assertEvent5("fuel down2#6", 6, (void*)turnInjectionPinLow, USOF(static_cast<efitimeus_t::rep>(eth.angleToTimeUs(540 + PORT_INJECTION_OFFSET + cylinderTwo))));
+	eth.assertEvent5("spark down2#7", 7, (void*)fireSparkAndPrepareNextSchedule, USOF(static_cast<efitimeus_t::rep>(eth.angleToTimeUs(180 + cylinderOne - timing))));
 
 	ASSERT_EQ(2, engine->getBailedOnDwellCount()) << "Please check if our dwell algorithm have really got better.";
 }

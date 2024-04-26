@@ -22,7 +22,7 @@ private:
 static TestPeriodicController instance;
 
 systime_t chVTGetSystemTime(void) {
-	return getTimeNowUs();
+	return COUNTOF(getTimeNowUs());
 }
 
 systime_t chThdSleepUntilWindowed(systime_t prev, systime_t next) {

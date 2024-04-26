@@ -37,8 +37,8 @@ TEST(issues, issueOneCylinderSpecialCase968) {
   int expectedDeltaTimeUs = eth.angleToTimeUs(expectedAngle);
 
 	ASSERT_EQ( 2,  engine->executor.size()) << "first revolution(s)";
-	eth.assertEvent5("spark up#0", 0, (void*)turnSparkPinHighStartCharging, -expectedDeltaTimeUs - MS2US(DEFAULT_CRANKING_DWELL_MS));
-	eth.assertEvent5("spark down#0", 1, (void*)fireSparkAndPrepareNextSchedule, -expectedDeltaTimeUs);
+	eth.assertEvent5("spark up#0", 0, (void*)turnSparkPinHighStartCharging, USOF(-expectedDeltaTimeUs - MS2US(DEFAULT_CRANKING_DWELL_MS)));
+	eth.assertEvent5("spark down#0", 1, (void*)fireSparkAndPrepareNextSchedule, USOF(-expectedDeltaTimeUs));
 
 
 	eth.fireTriggerEvents2(/* count */ 1, 50 /* ms */);
