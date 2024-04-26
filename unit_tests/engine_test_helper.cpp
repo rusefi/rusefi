@@ -370,16 +370,6 @@ void EngineTestHelper::setTriggerType(trigger_type_e trigger) {
 	applyTriggerWaveform();
 }
 
-void EngineTestHelper::executeUntil(int timeUs) {
-	scheduling_s *head;
-	while ((head = engine.executor.getHead()) != nullptr) {
-		if (head->momentX > timeUs) {
-			break;
-		}
-		setTimeAndInvokeEventsUs(head->momentX);
-	}
-}
-
 void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, injection_mode_e injectionMode) {
 	setCamOperationMode();
 	setupSimpleTestEngineWithMaf(eth, injectionMode, trigger_type_e::TT_ONE);

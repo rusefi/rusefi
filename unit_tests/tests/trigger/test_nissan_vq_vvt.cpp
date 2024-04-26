@@ -113,14 +113,14 @@ TEST(nissan, vq_vvt) {
 				ptrs);
 	}
 
-	eth.executeUntil(1473000);
+	eth.setTimeAndInvokeEventsUs(1473000);
 	ASSERT_EQ(167, round(Sensor::getOrZero(SensorType::Rpm)));
 
-	eth.executeUntil(1475000);
+	eth.setTimeAndInvokeEventsUs(1475000);
 	ASSERT_EQ(167, round(Sensor::getOrZero(SensorType::Rpm)));
 	TriggerCentral *tc = &engine->triggerCentral;
 
-	eth.executeUntil(3593000);
+	eth.setTimeAndInvokeEventsUs(3593000);
 	ASSERT_TRUE(tc->vvtState[0][0].getShaftSynchronized());
 
 	scheduling_s *head;
