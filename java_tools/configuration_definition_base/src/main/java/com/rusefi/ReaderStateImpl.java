@@ -33,6 +33,7 @@ public class ReaderStateImpl implements ReaderState {
     private static final String END_STRUCT = "end_struct";
     private static final String STRUCT_NO_PREFIX = "struct_no_prefix ";
     private static final String STRUCT = "struct ";
+    private static final String VARIABLE_PREFIX = "@@";
     // used to update other files
     private final List<String> inputFiles = new ArrayList<>();
     private final Stack<ConfigStructureImpl> stack = new Stack<>();
@@ -249,11 +250,22 @@ public class ReaderStateImpl implements ReaderState {
         for (ConfigurationConsumer consumer : consumers)
             consumer.startFile();
 
+        List<String> lines = new ArrayList<>();
+        String lineReaded;
+        while ((lineReaded = definitionReader.readLine()) != null) {
+            lineReaded = ToolUtil.trimLine(lineReaded);
+            if (lineReaded.startsWith(VARIABLE_PREFIX)) {
+                String lineExpanded = variableRegistry.applyVariables(lineReaded);
+                String sublines[] = lineExpanded.split("\\r?\\n");
+                lines.addAll(Arrays.asList(sublines));
+            } else {
+                lines.add(lineReaded);
+	        }
+        }
+
         int lineIndex = 0;
-        String line;
-        while ((line = definitionReader.readLine()) != null) {
+        for (final String line : lines) {
             lineIndex++;
-            line = ToolUtil.trimLine(line);
             /**
              * we should ignore empty lines and comments
              */
