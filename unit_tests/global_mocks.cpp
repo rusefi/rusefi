@@ -15,10 +15,6 @@ efitimeus_t getTimeNowUs() {
 	return timeNowUs;
 }
 
-int64_t getTimeNowS() {
-	return getTimeNowUs() / 1000 / 1000;
-}
-
 efitick_t getTimeNowNt() {
 	return getTimeNowUs() * US_TO_NT_MULTIPLIER;
 }

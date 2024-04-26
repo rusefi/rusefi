@@ -19,6 +19,8 @@ efitimeus_t getTimeNowUs() {
 	return NT2US(getTimeNowNt());
 }
 
+#endif /* !EFI_UNIT_TEST */
+
 /**
  * Integer number of seconds since ECU boot.
  * 31,710 years - would not overflow during our life span.
@@ -26,5 +28,3 @@ efitimeus_t getTimeNowUs() {
 int64_t getTimeNowS() {
 	return getTimeNowUs() / US_PER_SECOND;
 }
-
-#endif /* !EFI_UNIT_TEST */
