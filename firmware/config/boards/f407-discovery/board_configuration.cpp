@@ -111,7 +111,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->triggerSimulatorPins[1] = Gpio::D2;
 
 	engineConfiguration->triggerInputPins[0] = Gpio::C6;
-	engineConfiguration->triggerInputPins[1] = Gpio::A5;
+//	engineConfiguration->triggerInputPins[1] = Gpio::A5;
 
 	// set this to SPI_DEVICE_3 to enable stimulation
 	//engineConfiguration->digitalPotentiometerSpiDevice = SPI_DEVICE_3;
