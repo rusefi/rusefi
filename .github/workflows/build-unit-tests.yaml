@@ -8,7 +8,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [ubuntu-latest, macos-12]
+        os: [ubuntu-latest, macos-latest]
 
     steps:
     - uses: actions/checkout@v4
@@ -23,17 +23,17 @@ jobs:
         git submodule update --init --depth=1 java_console/peak-can-basic
 
     - name: Discover cores
-      if: ${{ matrix.os != 'macos-12' }}
+      if: ${{ matrix.os != 'macos-latest' }}
       run: lscpu | egrep 'Model name|Socket|Thread|NUMA|CPU\(s\)'
 
     - name: Install required software (ubuntu)
-      if: ${{ matrix.os != 'macos-12' }}
+      if: ${{ matrix.os != 'macos-latest' }}
       run: |
         sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
         sudo apt-get install mtools zip dosfstools sshpass lcov valgrind
 
     - name: Install required software (macos)
-      if: ${{ matrix.os == 'macos-12' }}
+      if: ${{ matrix.os == 'macos-latest' }}
       run: |
         brew install mtools zip dosfstools flock coreutils
 
@@ -74,7 +74,7 @@ jobs:
         fi
 
     - name: Generate Code Coverage
-      if: ${{ matrix.os != 'macos-12' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+      if: ${{ matrix.os != 'macos-latest' && github.event_name == 'push' && github.ref == 'refs/heads/master' }}
       working-directory: ./unit_tests/
       run: ./ci_gcov.sh ${{ secrets.RUSEFI_SSH_USER }} ${{ secrets.RUSEFI_SSH_PASS }} ${{ secrets.RUSEFI_SSH_SERVER }}
 
@@ -85,13 +85,13 @@ jobs:
 
     - name: Rebuild Tests For Valgrind
       # Valgrind isn't compatible with address sanitizer, so we have to rebuild the code
-      if: ${{ matrix.os != 'macos-12' }}
+      if: ${{ matrix.os != 'macos-latest' }}
       working-directory: ./unit_tests/
       run: |
         make clean
         make -j4 SANITIZE=no
 
     - name: Run Tests (Valgrind)
-      if: ${{ matrix.os != 'macos-12' }}
+      if: ${{ matrix.os != 'macos-latest' }}
       working-directory: ./unit_tests/
       run: valgrind --error-exitcode=1 --exit-on-first-error=yes --leak-check=no --show-error-list=yes build/rusefi_test
