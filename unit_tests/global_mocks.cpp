@@ -9,18 +9,18 @@
 
 bool verboseMode = false;
 
-static int timeNowUs = 0;
+static efitick_t timeNowNt;
 
 efitick_t getTimeNowNt() {
-	return (efitimeus_t)timeNowUs * US_TO_NT_MULTIPLIER;
+	return timeNowNt;
 }
 
 void setTimeNowUs(int us) {
-	timeNowUs = us;
+	timeNowNt = US2NT(us).count();
 }
 
 void advanceTimeUs(int us) {
-	timeNowUs += us;
+	timeNowNt += US2NT(us);
 }
 
 void initLogging(LoggingWithStorage *logging, const char *name) {

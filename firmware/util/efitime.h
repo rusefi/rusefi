@@ -111,6 +111,7 @@ efitimeus_t getTimeNowUs();
 int64_t getTimeNowS();
 
 #if EFI_UNIT_TEST
+// In unit tests, we can time travel...
 void setTimeNowUs(int us);
 void advanceTimeUs(int us);
 #endif
