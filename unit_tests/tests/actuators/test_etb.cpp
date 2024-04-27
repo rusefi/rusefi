@@ -521,20 +521,19 @@ TEST(etb, setpointLuaAdder) {
 	etb.setLuaAdjustment(-1000);
 	EXPECT_EQ(1, etb.getSetpoint().value_or(-1));
 
-	extern int timeNowUs;
 	int startTime = 1e6;
-	timeNowUs = startTime;
+	setTimeNowUs(startTime);
 
 	// Adjustment works immediately after setting
 	etb.setLuaAdjustment(10);
 	EXPECT_EQ(60, etb.getSetpoint().value_or(-1));
 
 	// Adjustment works 0.19 second after setting
-	timeNowUs = startTime + 0.19 * 1e6;
+	setTimeNowUs(startTime + 0.19 * 1e6);
 	EXPECT_EQ(60, etb.getSetpoint().value_or(-1));
 
 	// Adjustment resets to 0 after 0.21 second
-	timeNowUs = startTime + 0.21 * 1e6;
+	setTimeNowUs(startTime + 0.21 * 1e6);
 	EXPECT_EQ(50, etb.getSetpoint().value_or(-1));
 }
 
@@ -739,8 +738,6 @@ TEST(etb, closedLoopPid) {
 	EXPECT_FLOAT_EQ(etb.getClosedLoop(50, 30).value_or(-1), 75);
 }
 
-extern int timeNowUs;
-
 TEST(etb, jamDetection) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
@@ -765,7 +762,7 @@ TEST(etb, jamDetection) {
 	EtbController etb;
 	etb.init(DC_Throttle1, nullptr, &pid, nullptr, true);
 
-	timeNowUs = 0;
+	setTimeNowUs(0);
 
 	// Reset timer while under integrator limit
 	EXPECT_EQ(etb.getPidState().iTerm, 0);
@@ -781,13 +778,13 @@ TEST(etb, jamDetection) {
 	EXPECT_NEAR(etb.getPidState().iTerm, 10.0f, 1e-3);
 
 	// Just under time limit, no jam yet
-	timeNowUs = 0.9e6;
+	setTimeNowUs(0.9e6);
 	etb.checkOutput(0);
 	EXPECT_NEAR(etb.jamTimer, 0.9f, 1e-3);
 	EXPECT_FALSE(etb.jamDetected);
 
 	// Above the time limit, jam detected!
-	timeNowUs = 1.1e6;
+	setTimeNowUs(1.1e6);
 	etb.checkOutput(0);
 	EXPECT_TRUE(etb.jamDetected);
 }

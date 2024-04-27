@@ -364,8 +364,6 @@ TEST(idle_v2, openLoopCoastingTable) {
 	EXPECT_FLOAT_EQ(75, dut.getOpenLoop(ICP::Coasting, 1500, 0, 0, 2));
 }
 
-extern int timeNowUs;
-
 TEST(idle_v2, closedLoopBasic) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	IdleController dut;
@@ -384,7 +382,7 @@ TEST(idle_v2, closedLoopBasic) {
 
 	// burn one update then advance time 5 seconds to avoid difficulty from wasResetPid
 	dut.getClosedLoop(ICP::Idling, 0, 900, 900);
-	timeNowUs += 5'000'000;
+	advanceTimeUs(5'000'000);
 
 	// Test above target, should return negative
 	EXPECT_FLOAT_EQ(-25, dut.getClosedLoop(ICP::Idling, 0, /*rpm*/ 950, /*tgt*/ 900));
@@ -412,7 +410,7 @@ TEST(idle_v2, closedLoopDeadzone) {
 
 	// burn one then advance time 5 seconds to avoid difficulty from wasResetPid
 	dut.getClosedLoop(ICP::Idling, 0, 900, 900);
-	timeNowUs += 5'000'000;
+	advanceTimeUs(5'000'000);
 
 	// Test above target, should return negative
 	EXPECT_FLOAT_EQ(-25, dut.getClosedLoop(ICP::Idling, 0, /*rpm*/ 950, /*tgt*/ 900));

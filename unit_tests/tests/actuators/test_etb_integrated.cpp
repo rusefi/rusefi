@@ -47,8 +47,6 @@ TEST(etb, integrated) {
 	ASSERT_NEAR(destination, 130.2554, EPS3D);
 }
 
-extern int timeNowUs;
-
 // TEST(etb, intermittentTps) {
 // 	EngineTestHelper eth(engine_type_e::TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
 // 	EtbController *etb = initEtbIntegratedTest();

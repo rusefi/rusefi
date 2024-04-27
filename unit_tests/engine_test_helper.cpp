@@ -20,8 +20,6 @@
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
-
-extern int timeNowUs;
 extern WarningCodeState unitTestWarningCodeState;
 extern engine_configuration_s & activeConfiguration;
 extern bool printTriggerDebug;
@@ -31,7 +29,7 @@ extern int minCrankingRpm;
 
 EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s * econfig, persistent_config_s * pers) {
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
-	timeNowUs = 0; 
+	setTimeNowUs(0);
 	minCrankingRpm = 0;
 	EnableToothLogger();
 	if (engine || engineConfiguration || config) {
@@ -226,7 +224,7 @@ void EngineTestHelper::clearQueue() {
 }
 
 int EngineTestHelper::executeActions() {
-	return engine.executor.executeAll(timeNowUs);
+	return engine.executor.executeAll(getTimeNowUs());
 }
 
 void EngineTestHelper::moveTimeForwardMs(float deltaTimeMs) {
@@ -241,7 +239,7 @@ void EngineTestHelper::moveTimeForwardUs(int deltaTimeUs) {
 	if (printTriggerDebug || printFuelDebug) {
 		printf("moveTimeForwardUs %.1fms\r\n", deltaTimeUs / 1000.0);
 	}
-	timeNowUs += deltaTimeUs;
+	advanceTimeUs(deltaTimeUs);
 }
 
 void EngineTestHelper::moveTimeForwardAndInvokeEventsSec(int deltaTimeSeconds) {
@@ -255,7 +253,7 @@ void EngineTestHelper::moveTimeForwardAndInvokeEventsUs(int deltaTimeUs) {
 	if (printTriggerDebug || printFuelDebug) {
 		printf("moveTimeForwardAndInvokeEventsUs %.1fms\r\n", deltaTimeUs / 1000.0);
 	}
-	setTimeAndInvokeEventsUs(timeNowUs + deltaTimeUs);
+	setTimeAndInvokeEventsUs(getTimeNowUs() + deltaTimeUs);
 }
 
 void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTime) {
@@ -270,11 +268,11 @@ void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTime) {
 			// next event is too far in the future
 			break;
 		}
-		timeNowUs = nextEventTime;
-		engine.executor.executeAll(timeNowUs);
+		setTimeNowUs(nextEventTime);
+		engine.executor.executeAll(getTimeNowUs());
 	}
 
-	timeNowUs = targetTime;
+	setTimeNowUs(targetTime);
 }
 
 void EngineTestHelper::fireTriggerEvents(int count) {

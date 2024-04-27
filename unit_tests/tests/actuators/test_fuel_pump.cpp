@@ -9,8 +9,6 @@
 
 #include "pch.h"
 
-extern int timeNowUs;
-
 TEST(Actuators, FuelPump) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
@@ -22,7 +20,7 @@ TEST(Actuators, FuelPump) {
 	enginePins.fuelPumpRelay.init();
 
 	// ECU just started, haven't seen trigger yet
-	timeNowUs = 0.5e6;
+	setTimeNowUs(0.5e6);
 	dut.onIgnitionStateChanged(true);
 	dut.onSlowCallback();
 	// Pump should be on!
@@ -30,22 +28,22 @@ TEST(Actuators, FuelPump) {
 
 	// Long time since ecu start, haven't seen trigger yet
 	dut.onIgnitionStateChanged(true);
-	timeNowUs += 10e6;
+	advanceTimeUs(10e6);
 	dut.onSlowCallback();
 	// Pump should be off!
 	EXPECT_FALSE(efiReadPin(Gpio::A0));
 
 	// Long time since ecu start, just saw a trigger!
 	dut.onIgnitionStateChanged(true);
-	timeNowUs += 10e6;
-	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, timeNowUs * US_TO_NT_MULTIPLIER);
+	advanceTimeUs(10e6);
+	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, getTimeNowNt());
 	dut.onSlowCallback();
 	// Pump should be on!
 	EXPECT_TRUE(efiReadPin(Gpio::A0));
 
 	// ECU just started, and we just saw a trigger!
 	dut.onIgnitionStateChanged(true);
-	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, timeNowUs * US_TO_NT_MULTIPLIER);
+	engine->triggerCentral.handleShaftSignal(SHAFT_PRIMARY_FALLING, getTimeNowNt());
 	dut.onSlowCallback();
 	// Pump should be on!
 	EXPECT_TRUE(efiReadPin(Gpio::A0));

@@ -110,4 +110,9 @@ efitimeus_t getTimeNowUs();
  */
 int64_t getTimeNowS();
 
+#if EFI_UNIT_TEST
+void setTimeNowUs(int us);
+void advanceTimeUs(int us);
+#endif
+
 #endif /* __cplusplus */

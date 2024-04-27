@@ -69,7 +69,7 @@ namespace chibios_rt {
 
 struct virtual_timer_t;
 
-#define UNIT_TEST_BUSY_WAIT_CALLBACK() { 	timeNowUs++; }
+#define UNIT_TEST_BUSY_WAIT_CALLBACK() { advanceTimeUs(1); }
 
 #define chsnprintf snprintf
 #define chvsnprintf vsnprintf

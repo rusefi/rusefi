@@ -9,7 +9,6 @@
 
 #include "logicdata_csv_reader.h"
 
-extern int timeNowUs;
 extern WarningCodeState unitTestWarningCodeState;
 
 static void fireTriggerEvent(EngineTestHelper*eth, double timestampS, TriggerWheel channel, bool isFall) {
@@ -27,8 +26,8 @@ static void fireTriggerEvent(EngineTestHelper*eth, double timestampS, TriggerWhe
 		event = SHAFT_SECONDARY_FALLING;
 	}
 
-	timeNowUs = 1'000'000 * timestampS;
-	printf("MIATANA: posting time=%d event=%d\n", timeNowUs, event);
+	setTimeNowUs(1'000'000 * timestampS);
+	printf("MIATANA: posting time=%d event=%d\n", getTimeNowUs(), event);
 	hwHandleShaftSignal((int)channel, !isFall, getTimeNowNt());
 }
 
