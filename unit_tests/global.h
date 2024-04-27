@@ -73,7 +73,7 @@ namespace chibios_rt {
 }
 #endif
 
-#define UNIT_TEST_BUSY_WAIT_CALLBACK() { 	timeNowUs++; }
+#define UNIT_TEST_BUSY_WAIT_CALLBACK() { advanceTimeUs(1); }
 
 #define chsnprintf snprintf
 #define chvsnprintf vsnprintf

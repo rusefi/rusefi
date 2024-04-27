@@ -48,3 +48,8 @@ efitimems_t getTimeNowMs();
  * @brief   Current system time in seconds (32 bits)
  */
 efitimesec_t getTimeNowS();
+
+#if EFI_UNIT_TEST
+void setTimeNowUs(int us);
+void advanceTimeUs(int us);
+#endif

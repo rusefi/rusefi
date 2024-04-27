@@ -12,6 +12,16 @@ efitimems_t getTimeNowMs() {
 	return US2MS(getTimeNowUs());
 }
 
+extern int timeNowUs;
+
+void setTimeNowUs(int us) {
+	timeNowUs = us;
+}
+
+void advanceTimeUs(int us) {
+	timeNowUs += us;
+}
+
 void initLogging(LoggingWithStorage *logging, const char *name) {
 }
 
