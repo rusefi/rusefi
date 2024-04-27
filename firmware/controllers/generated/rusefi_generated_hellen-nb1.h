@@ -464,6 +464,22 @@
 #define GAUGE_CATEGORY_SYNC "Sync"
 #define GAUGE_CATEGORY_TIMING "Timing"
 #define GAUGE_COIL_DWELL_TIME "Ignition: coil charge time"
+#define GAUGE_LUA_FROM_0 -30000
+#define GAUGE_LUA_FROM_1 -30000
+#define GAUGE_LUA_FROM_2 -30000
+#define GAUGE_LUA_FROM_3 -30000
+#define GAUGE_LUA_FROM_4 -30000
+#define GAUGE_LUA_FROM_5 -30000
+#define GAUGE_LUA_FROM_6 -30000
+#define GAUGE_LUA_FROM_7 -30000
+#define GAUGE_LUA_TO_0 30000
+#define GAUGE_LUA_TO_1 30000
+#define GAUGE_LUA_TO_2 30000
+#define GAUGE_LUA_TO_3 30000
+#define GAUGE_LUA_TO_4 30000
+#define GAUGE_LUA_TO_5 30000
+#define GAUGE_LUA_TO_6 30000
+#define GAUGE_LUA_TO_7 30000
 #define GAUGE_NAME_ACCEL_LAT "Accel: Lateral"
 #define GAUGE_NAME_ACCEL_LON "Accel: Longitudinal"
 #define GAUGE_NAME_ACCEL_ROLL "Acceleration: Roll"
@@ -1218,7 +1234,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 495388316
+#define SIGNATURE_HASH 1725039870
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1597,7 +1613,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.04.27.hellen-nb1.495388316"
+#define TS_SIGNATURE "rusEFI master.2024.04.27.hellen-nb1.1725039870"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

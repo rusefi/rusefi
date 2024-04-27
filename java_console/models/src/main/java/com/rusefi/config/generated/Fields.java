@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Apr 27 01:54:32 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Apr 27 15:59:06 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -438,6 +438,22 @@ public class Fields {
 	public static final String GAUGE_CATEGORY_SYNC = "Sync";
 	public static final String GAUGE_CATEGORY_TIMING = "Timing";
 	public static final String GAUGE_COIL_DWELL_TIME = "Ignition: coil charge time";
+	public static final int GAUGE_LUA_FROM_0 = -30000;
+	public static final int GAUGE_LUA_FROM_1 = -30000;
+	public static final int GAUGE_LUA_FROM_2 = -30000;
+	public static final int GAUGE_LUA_FROM_3 = -30000;
+	public static final int GAUGE_LUA_FROM_4 = -30000;
+	public static final int GAUGE_LUA_FROM_5 = -30000;
+	public static final int GAUGE_LUA_FROM_6 = -30000;
+	public static final int GAUGE_LUA_FROM_7 = -30000;
+	public static final int GAUGE_LUA_TO_0 = 30000;
+	public static final int GAUGE_LUA_TO_1 = 30000;
+	public static final int GAUGE_LUA_TO_2 = 30000;
+	public static final int GAUGE_LUA_TO_3 = 30000;
+	public static final int GAUGE_LUA_TO_4 = 30000;
+	public static final int GAUGE_LUA_TO_5 = 30000;
+	public static final int GAUGE_LUA_TO_6 = 30000;
+	public static final int GAUGE_LUA_TO_7 = 30000;
 	public static final String GAUGE_NAME_ACCEL_LAT = "Accel: Lateral";
 	public static final String GAUGE_NAME_ACCEL_LON = "Accel: Longitudinal";
 	public static final String GAUGE_NAME_ACCEL_ROLL = "Acceleration: Roll";
@@ -1146,7 +1162,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1355680733;
+	public static final int SIGNATURE_HASH = 731580863;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1400,7 +1416,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.04.27.f407-discovery.1355680733";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.04.27.f407-discovery.731580863";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
