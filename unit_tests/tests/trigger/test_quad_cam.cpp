@@ -8,6 +8,7 @@
 TEST(trigger, testQuadCamInput) {
 	// setting some weird engine
 	EngineTestHelper eth(engine_type_e::FORD_ESCORT_GT);
+	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engineConfiguration->alwaysInstantRpm = true;
 

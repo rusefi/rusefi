@@ -44,6 +44,7 @@ static auto makeTriggerShape(operation_mode_e mode, const TriggerConfiguration& 
 TEST(TriggerDecoder, FindsFirstSyncPoint) {
 	MockTriggerConfiguration cfg({trigger_type_e::TT_TOOTHED_WHEEL, 4, 1});
 	cfg.update();
+	engineConfiguration = nullptr;
 
 	auto shape = makeTriggerShape(FOUR_STROKE_CAM_SENSOR, cfg);
 

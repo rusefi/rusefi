@@ -174,6 +174,7 @@ extern bool debugSignalExecutor;
 
 TEST(misc, testRpmCalculator) {
 	EngineTestHelper eth(engine_type_e::FORD_INLINE_6_1995);
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6670, engineConfiguration!=NULL, "null config in engine");
 
 	setTable(config->injectionPhase, -180.0f);
 
@@ -189,8 +190,6 @@ TEST(misc, testRpmCalculator) {
 	ASSERT_EQ( 0,  ilist->isReady) << "size #1";
 
 	ASSERT_EQ( 720,  engine->engineState.engineCycle) << "engineCycle";
-
-	efiAssertVoid(ObdCode::CUSTOM_ERR_6670, engineConfiguration!=NULL, "null config in engine");
 
 	engineConfiguration->minimumIgnitionTiming = -15;
 	float timingAdvance = -13;
