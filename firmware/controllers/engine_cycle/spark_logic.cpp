@@ -333,7 +333,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 	event->sparkId = engine->engineState.sparkCounter++;
 	event->wasSparkLimited = limitedSpark;
 
-	efitick_t chargeTime = 0;
+	efitick_t chargeTime;
 
 	/**
 	 * The start of charge is always within the current trigger event range, so just plain time-based scheduling

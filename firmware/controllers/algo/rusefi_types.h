@@ -65,6 +65,10 @@ struct efidur_t {
 		return m_count;
 	}
 
+	static constexpr efidur_t zero() {
+		return {};
+	}
+
 private:
 	int64_t m_count = 0;
 };

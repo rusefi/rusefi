@@ -33,8 +33,8 @@ void turnInjectionPinLow(uintptr_t arg) {
 	}
 
 	efidur_t nextSplitDuration = event->splitInjectionDuration;
-	if (nextSplitDuration > 0) {
-		event->splitInjectionDuration = 0;
+	if (nextSplitDuration > efidur_t::zero()) {
+		event->splitInjectionDuration = {};
 
 		efitick_t openTime = getTimeNowNt() + MS2NT(2);
 		efitick_t closeTime = openTime + nextSplitDuration;
@@ -211,7 +211,7 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 	if (doSplitInjection) {
 		this->splitInjectionDuration = durationStage1Nt;
 	} else {
-		this->splitInjectionDuration = 0;
+		this->splitInjectionDuration = {};
 	}
 
 	getExecutorInterface()->scheduleByTimestampNt("inj", nullptr, turnOffTimeStage1, endActionStage1);

@@ -307,7 +307,7 @@ void EventQueue::clear(void) {
 		m_head = x->nextScheduling_s;
 
 		// Reset this element
-		x->momentX = 0;
+		x->momentX = {};
 		x->nextScheduling_s = nullptr;
 		x->action = {};
 	}

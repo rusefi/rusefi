@@ -102,7 +102,7 @@ operation_mode_e RpmCalculator::getOperationMode() const {
 #if EFI_SHAFT_POSITION_INPUT
 
 RpmCalculator::RpmCalculator() :
-		StoredValueSensor(SensorType::Rpm, 0)
+		StoredValueSensor(SensorType::Rpm, efidur_t::zero())
 	{
 	assignRpmValue(0);
 }
@@ -142,7 +142,7 @@ void RpmCalculator::assignRpmValue(float floatRpmValue) {
 
 	cachedRpmValue = floatRpmValue;
 
-	setValidValue(floatRpmValue, 0);	// 0 for current time since RPM sensor never times out
+	setValidValue(floatRpmValue, {});	// 0 for current time since RPM sensor never times out
 	if (cachedRpmValue <= 0) {
 		oneDegreeUs = NAN;
 	} else {
@@ -391,7 +391,7 @@ efitick_t scheduleByAngle(scheduling_s *timer, efitick_t edgeTimestamp, angle_t 
 
     // 'delayNt' is below 10 seconds here so we use 32 bit type for performance reasons
 	int32_t delayNt = USF2NT(delayUs);
-	efitick_t delayedTime = edgeTimestamp + delayNt;
+	efitick_t delayedTime = edgeTimestamp + efidur_t{delayNt};
 
 	engine->executor.scheduleByTimestampNt("angle", timer, delayedTime, action);
 
