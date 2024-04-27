@@ -2020,6 +2020,24 @@ end_struct
 #define GAUGE_NAME_LUA_6 "Lua Gauge 7"
 #define GAUGE_NAME_LUA_7 "Lua Gauge 8"
 
+#define GAUGE_LUA_FROM_0 -30000
+#define GAUGE_LUA_FROM_1 -30000
+#define GAUGE_LUA_FROM_2 -30000
+#define GAUGE_LUA_FROM_3 -30000
+#define GAUGE_LUA_FROM_4 -30000
+#define GAUGE_LUA_FROM_5 -30000
+#define GAUGE_LUA_FROM_6 -30000
+#define GAUGE_LUA_FROM_7 -30000
+
+#define GAUGE_LUA_TO_0 30000
+#define GAUGE_LUA_TO_1 30000
+#define GAUGE_LUA_TO_2 30000
+#define GAUGE_LUA_TO_3 30000
+#define GAUGE_LUA_TO_4 30000
+#define GAUGE_LUA_TO_5 30000
+#define GAUGE_LUA_TO_6 30000
+#define GAUGE_LUA_TO_7 30000
+
 #define COIL_1_NAME "Spark #1"
 #define COIL_2_NAME "Spark #2"
 
