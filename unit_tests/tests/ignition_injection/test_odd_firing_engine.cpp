@@ -54,7 +54,7 @@ TEST(OddFireRunningMode, hd) {
 
 	eth.assertRpm( 500, "spinning-RPM#1");
 
-	engine->executor.executeAll(eth.getTimeNowUs() + MS2US(1000000));
+	engine->executor.executeAll(getTimeNowUs() + MS2US(1000000));
 
 	eth.fireTriggerEvents2(2 /* count */ , 60 /* ms */);
 	ASSERT_EQ(IM_SEQUENTIAL, getCurrentInjectionMode());

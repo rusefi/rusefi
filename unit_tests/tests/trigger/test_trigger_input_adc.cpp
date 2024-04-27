@@ -48,7 +48,7 @@ static void simulateTrigger(EngineTestHelper &eth, TriggerAdcDetector &trigAdcSt
 	static const float Vil = 0.3f * adcMaxVoltage;
 	static const float Vih = 0.7f * adcMaxVoltage;
 
-	efitimeus_t startUs = eth.getTimeNowUs();
+	efitimeus_t startUs = getTimeNowUs();
 
 	int prevLogicValue = -1;
 	while (reader.haveMore()) {

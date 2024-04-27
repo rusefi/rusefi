@@ -222,7 +222,7 @@ TEST(misc, testRpmCalculator) {
 
 	eth.moveTimeForwardMs(5 /*ms*/);
 
-	int start = eth.getTimeNowUs();
+	int start = getTimeNowUs();
 	ASSERT_EQ( 485000,  start) << "start value";
 
 	engine->periodicFastCallback();
@@ -928,11 +928,11 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 //	assertInjectorDownEvent("L04@8", 8, MS2US(50.0), 0);
 
 
-	engine->executor.executeAll(eth.getTimeNowUs() + 1);
+	engine->executor.executeAll(getTimeNowUs() + 1);
 	// injector goes high...
 	ASSERT_FALSE(enginePins.injectors[0].currentLogicValue) << "injector@1";
 
-	engine->executor.executeAll(eth.getTimeNowUs() + MS2US(17.5) + 1);
+	engine->executor.executeAll(getTimeNowUs() + MS2US(17.5) + 1);
 	// injector does not go low too soon, that's a feature :)
 	ASSERT_TRUE(enginePins.injectors[0].currentLogicValue) << "injector@2";
 
@@ -948,7 +948,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 //todo	assertInjectorDownEvent("L015@5", 5, MS2US(30), 0);
 
 
-	engine->executor.executeAll(eth.getTimeNowUs() + MS2US(10) + 1);
+	engine->executor.executeAll(getTimeNowUs() + MS2US(10) + 1);
 	// end of combined injection
 	ASSERT_FALSE(enginePins.injectors[0].currentLogicValue) << "injector@3";
 

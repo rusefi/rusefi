@@ -278,10 +278,6 @@ void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTime) {
 	timeNowUs = targetTime;
 }
 
-efitimeus_t EngineTestHelper::getTimeNowUs() {
-	return timeNowUs;
-}
-
 void EngineTestHelper::fireTriggerEvents(int count) {
 	fireTriggerEvents2(count, 5); // 5ms
 }
