@@ -1206,7 +1206,7 @@ bool TriggerCentral::isTriggerConfigChanged() {
 
 void validateTriggerInputs() {
 	if (!isBrainPinValid(engineConfiguration->triggerInputPins[0]) && isBrainPinValid(engineConfiguration->triggerInputPins[1])) {
-		criticalError("First trigger channel is missing");
+		criticalError("First trigger channel not configured while second one is.");
 	}
 
 	if (!isBrainPinValid(engineConfiguration->camInputs[0]) && isBrainPinValid(engineConfiguration->camInputs[2])) {
