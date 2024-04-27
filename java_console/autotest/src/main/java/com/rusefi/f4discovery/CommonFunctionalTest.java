@@ -196,13 +196,11 @@ public class CommonFunctionalTest extends RusefiTestBase {
         EcuTestHelper.assertSomewhatClose("VBatt", 12, SensorCentral.getInstance().getValue(Sensor.VBATT));
 
         chart = nextChart();
-        double x = 100;
         assertWaveNotNull(msg, chart, EngineChart.SPARK_1);
         assertWaveNull(msg, chart, EngineChart.SPARK_2);
         assertWaveNotNull(msg, chart, EngineChart.SPARK_3);
         assertWaveNull(msg, chart, EngineChart.SPARK_4);
 
-        x = 176.856;
         // todo: why is width precision so low here? is that because of loaded Windows with 1ms precision?
         double widthRatio = 0.25;
         // WAT? this was just 0.009733333333333387?
@@ -216,14 +214,12 @@ public class CommonFunctionalTest extends RusefiTestBase {
         ecu.changeRpm(2700);
         ecu.changeRpm(2000);
         chart = nextChart();
-        x = 104.0;
         assertWaveNotNull(msg, chart, EngineChart.SPARK_1);
         assertWaveNull(msg, chart, EngineChart.SPARK_2);
         assertWaveNotNull(msg, chart, EngineChart.SPARK_3);
         assertWaveNull(msg, chart, EngineChart.SPARK_4);
 
         chart = nextChart();
-        x = 74;
         assertWaveNotNull(msg, chart, EngineChart.INJECTOR_1);
         assertWaveNotNull(msg, chart, EngineChart.INJECTOR_2);
         assertWaveNotNull(msg, chart, EngineChart.INJECTOR_3);
@@ -238,12 +234,10 @@ public class CommonFunctionalTest extends RusefiTestBase {
 
         ecu.sendCommand("set_whole_timing_map 520");
         chart = nextChart();
-        x = 328;
         assertWaveNotNull(msg, chart, EngineChart.SPARK_1);
 
         ecu.sendCommand("set_whole_timing_map 0");
         chart = nextChart();
-        x = 128;
         assertWaveNotNull(msg, chart, EngineChart.SPARK_1);
     }
 
