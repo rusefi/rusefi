@@ -17,7 +17,6 @@
 #include "efitime.h"
 
 #if EFI_UNIT_TEST
-extern int timeNowUs;
 extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */
 

@@ -209,8 +209,6 @@ TEST(limp, boostCut) {
 	EXPECT_TRUE(dut.allowInjection());
 }
 
-extern int timeNowUs;
-
 TEST(limp, oilPressureFailureCase) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->minOilPressureAfterStart = 200;
@@ -228,12 +226,12 @@ TEST(limp, oilPressureFailureCase) {
 	EXPECT_TRUE(dut.allowInjection());
 
 	// 4.5 seconds later, should still be allowed (even though pressure is low)
-	timeNowUs += 4.5e6;
+	advanceTimeUs(4.5e6);
 	dut.updateState(1000, getTimeNowNt());
 	EXPECT_TRUE(dut.allowInjection());
 
 	// 1 second later (5.5 since start), injection should cut
-	timeNowUs += 1.0e6;
+	advanceTimeUs(1.0e6);
 	dut.updateState(1000, getTimeNowNt());
 	ASSERT_FALSE(dut.allowInjection());
 
@@ -261,7 +259,7 @@ TEST(limp, oilPressureSuccessCase) {
 	EXPECT_TRUE(dut.allowInjection());
 
 	// 4.5 seconds later, should still be allowed (even though pressure is low)
-	timeNowUs += 4.5e6;
+	advanceTimeUs(4.5e6);
 	dut.updateState(1000, getTimeNowNt());
 	EXPECT_TRUE(dut.allowInjection());
 
@@ -271,12 +269,12 @@ TEST(limp, oilPressureSuccessCase) {
 	ASSERT_TRUE(dut.allowInjection());
 
 	// 1 second later (5.5 since start), injection should be allowed since we saw pressure before the timeout
-	timeNowUs += 1.0e6;
+	advanceTimeUs(1.0e6);
 	dut.updateState(1000, getTimeNowNt());
 	ASSERT_TRUE(dut.allowInjection());
 
 	// Later, we lose oil pressure, but engine should stay running
-	timeNowUs += 10e6;
+	advanceTimeUs(10e6);
 	Sensor::setMockValue(SensorType::OilPressure, 10);
 	dut.updateState(1000, getTimeNowNt());
 	ASSERT_TRUE(dut.allowInjection());

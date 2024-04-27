@@ -22,9 +22,8 @@ struct MockLambdaMonitor : public LambdaMonitorBase {
 TEST(LambdaMonitor, Response) {
 	MockLambdaMonitor mlm;
 
-	extern int timeNowUs;
 	int startTime = 1e6;
-	timeNowUs = startTime;
+	setTimeNowUs(startTime);
 
 	mlm.isGood = true;
 	mlm.isRestore = false;
@@ -39,13 +38,13 @@ TEST(LambdaMonitor, Response) {
 	EXPECT_FALSE(mlm.isCut());
 
 	// 0.9 second later, still not cut
-	timeNowUs = startTime + 0.9e6;
+	setTimeNowUs(startTime + 0.9e6);
 	mlm.update(2000, 50);
 	EXPECT_FALSE(mlm.lambdaCurrentlyGood);
 	EXPECT_FALSE(mlm.isCut());
 
 	// 1.1 second later, cut!
-	timeNowUs = startTime + 1.1e6;
+	setTimeNowUs(startTime + 1.1e6);
 	mlm.update(2000, 50);
 	EXPECT_FALSE(mlm.lambdaCurrentlyGood);
 	EXPECT_TRUE(mlm.isCut());
