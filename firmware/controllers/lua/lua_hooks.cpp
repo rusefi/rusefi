@@ -586,9 +586,8 @@ struct LuaIndustrialPid final {
 
 	float get(float target, float input) {
 #if EFI_UNIT_TEST
-		extern int timeNowUs;
 		// this is how we avoid zero dt
-		timeNowUs += 1000;
+		advanceTimeUs(1000);
 #endif
 
 		float dt = m_lastUpdate.getElapsedSecondsAndReset(getTimeNowNt());

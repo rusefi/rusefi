@@ -48,7 +48,6 @@ TEST(etb, integrated) {
 	ASSERT_NEAR(destination, 130.2554, EPS3D);
 }
 
-extern int timeNowUs;
 extern WarningCodeState unitTestWarningCodeState;
 
 TEST(etb, intermittentTps) {
@@ -60,7 +59,7 @@ TEST(etb, intermittentTps) {
 	// Tell the sensor checker that the ignition is on
 	engine->module<SensorChecker>()->onIgnitionStateChanged(true);
 	engine->module<SensorChecker>()->onSlowCallback();
-	timeNowUs += MS2US(1000);
+	advanceTimeUs(MS2US(1000));
 	engine->module<SensorChecker>()->onSlowCallback();
 	// todo: fix me https://github.com/rusefi/rusefi/issues/5233
 	// EXPECT_EQ( 3,  recentWarnings.getCount()) << "intermittentTps";
@@ -117,7 +116,7 @@ TEST(etb, intermittentPps) {
 	// Tell the sensor checker that the ignition is on
 	engine->module<SensorChecker>()->onIgnitionStateChanged(true);
 	engine->module<SensorChecker>()->onSlowCallback();
-	timeNowUs += 10e6;
+	advanceTimeUs(10e6);
 	engine->module<SensorChecker>()->onSlowCallback();
 
 	ASSERT_TRUE(engine->module<SensorChecker>()->analogSensorsShouldWork());

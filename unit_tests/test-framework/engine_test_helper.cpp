@@ -21,8 +21,6 @@
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
-
-extern int timeNowUs;
 extern WarningCodeState unitTestWarningCodeState;
 extern engine_configuration_s & activeConfiguration;
 extern bool printTriggerDebug;
@@ -256,10 +254,10 @@ void EngineTestHelper::moveTimeForwardAndInvokeEventsUs(int deltaTimeUs) {
 	if (printTriggerDebug || printFuelDebug) {
 		printf("moveTimeForwardAndInvokeEventsUs %.1fms\r\n", deltaTimeUs / 1000.0);
 	}
-	setTimeAndInvokeEventsUs(timeNowUs + deltaTimeUs);
+	setTimeAndInvokeEventsUs(getTimeNowUs() + deltaTimeUs);
 }
 
-void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTime) {
+void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTimeUs) {
 	while (true) {
 		scheduling_s* nextScheduledEvent = engine.executor.getHead();
 		if (nextScheduledEvent == nullptr) {
@@ -267,15 +265,15 @@ void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTime) {
 			break;
 		}
 		int nextEventTime = nextScheduledEvent->momentX;
-		if (nextEventTime > targetTime) {
+		if (nextEventTime > targetTimeUs) {
 			// next event is too far in the future
 			break;
 		}
-		timeNowUs = nextEventTime;
-		engine.executor.executeAll(timeNowUs);
+		setTimeNowUs(nextEventTime);
+		engine.executor.executeAll(getTimeNowUs());
 	}
 
-	timeNowUs = targetTime;
+	setTimeNowUs(targetTimeUs);
 }
 
 void EngineTestHelper::fireTriggerEvents(int count) {
