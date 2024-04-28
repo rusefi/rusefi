@@ -155,7 +155,7 @@ static void runCommands(SerialTsChannelBase* tsChannel) {
 			}
 		} else if (btModuleType == BLUETOOTH_JDY_31) {
 			/* try to disconnect in case device already configured and in silence mode */
-			btWrite(tsChannel, "AT+DISC\r\n");
+			btWrite(tsChannel, "AT+VERSION\r\n");
 			if (btVerOk(tsChannel) == 0) {
 				efiPrintf("JDY31 disconnected");
 				chThdSleepMilliseconds(10);	// safety
