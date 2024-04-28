@@ -223,7 +223,7 @@
         <constant digits="0" name="boostControlSafeDutyCycle" units="%">0.0</constant>
         <constant name="mafAdcChannel">"Disabled"</constant>
         <constant digits="0" name="acrRevolutions" units="">5.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0240427E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0240428E7</constant>
         <constant digits="3" name="adcVcc" units="volts">3.0</constant>
         <constant digits="0" name="mapCamDetectionAnglePosition" units="Deg">0.0</constant>
         <constant name="camInputs1">"PE15"</constant>
@@ -766,6 +766,7 @@
         <constant name="devBit7">"false"</constant>
         <constant name="skipADC12bitAssert">"false"</constant>
         <constant name="invertExhaustCamVVTSignal">"Rising"</constant>
+        <constant name="enableKnockSpectrogram">"false"</constant>
         <constant digits="0" name="afterCrankingIACtaperDuration" units="cycles">200.0</constant>
         <constant digits="0" name="iacByTpsTaper" units="percent">5.0</constant>
         <constant name="auxSerialTxPin">"NONE"</constant>
@@ -4710,7 +4711,7 @@ end</constant>
 </constant>
         <constant digits="0" name="tcu_shiftTime" units="ms">0.0</constant>
     </page>
-    <versionInfo firmwareInfo="20240402" nPages="1" signature="rusEFI master.2024.04.27.f407-discovery.1355680733" version="5.0"/>
+    <versionInfo firmwareInfo="20240402" nPages="1" signature="rusEFI master.2024.04.28.f407-discovery.1055910979" version="5.0"/>
     <bibliography author="rusEFI 20240402" writeDate="date"/>
     <settings/>
     <userComments/>
