@@ -273,7 +273,15 @@ static void runCommands(SerialTsChannelBase* tsChannel) {
 		goto cmdFailed;
 	}
 
-	if (btModuleType == BLUETOOTH_JDY_3x || BLUETOOTH_JDY_31 ) {
+	if (btModuleType == BLUETOOTH_JDY_3x ) {
+		/* Now reset module to apply new settings */
+		btWrite(tsChannel, "AT+RESET\r\n");
+		if (btWaitOk(tsChannel) != 0) {
+			efiPrintf("JDY3x failed to reset");
+		}
+	}
+
+  if (btModuleType == BLUETOOTH_JDY_31 ) {
 		/* Now reset module to apply new settings */
 		btWrite(tsChannel, "AT+RESET\r\n");
 		if (btWaitOk(tsChannel) != 0) {
@@ -356,7 +364,14 @@ void bluetoothSoftwareDisconnectNotify(SerialTsChannelBase* tsChannel) {
 		efiPrintf("*** Bluetooth module setup procedure ***");
 
 		/* JDY33 supports disconnect on request */
-		if (btModuleType != BLUETOOTH_JDY_3x || BLUETOOTH_JDY_31) {
+		if (btModuleType != BLUETOOTH_JDY_3x ) {
+			efiPrintf("!Warning! Please make sure you're not currently using the BT module for communication (not paired)!");
+			efiPrintf("TO START THE PROCEDURE: PLEASE DISCONNECT YOUR PC COM-PORT FROM THE BOARD NOW!");
+			efiPrintf("After that please don't turn off the board power and wait for ~15 seconds to complete. Then reconnect to the board!");
+		}
+
+    /* JDY31 supports disconnect on request */
+		if (btModuleType != BLUETOOTH_JDY_31 ) {
 			efiPrintf("!Warning! Please make sure you're not currently using the BT module for communication (not paired)!");
 			efiPrintf("TO START THE PROCEDURE: PLEASE DISCONNECT YOUR PC COM-PORT FROM THE BOARD NOW!");
 			efiPrintf("After that please don't turn off the board power and wait for ~15 seconds to complete. Then reconnect to the board!");
