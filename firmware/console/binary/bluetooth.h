@@ -27,6 +27,7 @@ typedef enum {
 	BLUETOOTH_BK3231,
 	// fun fact: those use BK3232 see above
 	BLUETOOTH_JDY_3x,
+  BLUETOOTH_JDY_31,
 } bluetooth_module_e;
 
 /**
