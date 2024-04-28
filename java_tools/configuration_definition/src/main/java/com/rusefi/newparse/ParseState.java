@@ -365,7 +365,7 @@ public class ParseState implements DefinitionsState {
 
         // First check if this is an instance of a struct
         if (structs.containsKey(type)) {
-            scope.structFields.add(new StructField(structs.get(type), name));
+            scope.addField(new StructField(structs.get(type), name));
             return;
         }
 
@@ -388,14 +388,14 @@ public class ParseState implements DefinitionsState {
                 // Merge the read-in options list with the default from the typedef (if exists)
                 handleFieldOptionsList(options, ctx.fieldOptionsList());
 
-                scope.structFields.add(new EnumField(bTypedef.type, type, name, bTypedef.endBit, bTypedef.values, options));
+                scope.addField(new EnumField(bTypedef.type, type, name, bTypedef.endBit, bTypedef.values, options));
                 return;
             } else if (typedef instanceof StringTypedef) {
                 options = new FieldOptions();
                 handleFieldOptionsList(options, ctx.fieldOptionsList());
 
                 StringTypedef sTypedef = (StringTypedef) typedef;
-                scope.structFields.add(new StringField(name, sTypedef.size, options.comment));
+                scope.addField(new StringField(name, sTypedef.size, options.comment));
                 return;
             } else {
                 // TODO: throw
@@ -413,7 +413,7 @@ public class ParseState implements DefinitionsState {
         // Merge the read-in options list with the default from the typedef (if exists)
         handleFieldOptionsList(options, ctx.fieldOptionsList());
 
-        scope.structFields.add(new ScalarField(Type.findByCtype(type).get(), name, options, autoscale));
+        scope.addField(new ScalarField(Type.findByCtype(type).get(), name, options, autoscale));
     }
 
     @Override
@@ -438,7 +438,7 @@ public class ParseState implements DefinitionsState {
         // there was no group, create and add it
         if (group == null) {
             group = new BitGroup();
-            scope.structFields.add(group);
+            scope.addField(group);
         }
 
         String comment = ctx.SemicolonedSuffix() == null ? null : ctx.SemicolonedSuffix().getText().substring(1).trim();
@@ -499,7 +499,7 @@ public class ParseState implements DefinitionsState {
             // iterate required for structs
             assert(iterate);
 
-            scope.structFields.add(new ArrayField<>(new StructField(structs.get(type), name), length, iterate));
+            scope.addField(new ArrayField<>(new StructField(structs.get(type), name), length, iterate));
             return;
         }
 
@@ -522,7 +522,7 @@ public class ParseState implements DefinitionsState {
 
                 EnumField prototype = new EnumField(bTypedef.type, type, name, bTypedef.endBit, bTypedef.values, options);
 
-                scope.structFields.add(new ArrayField<>(prototype, length, iterate));
+                scope.addField(new ArrayField<>(prototype, length, iterate));
                 return;
             } else if (typedef instanceof StringTypedef) {
                 StringTypedef sTypedef = (StringTypedef) typedef;
@@ -534,7 +534,7 @@ public class ParseState implements DefinitionsState {
                 handleFieldOptionsList(options, ctx.fieldOptionsList());
 
                 StringField prototype = new StringField(name, sTypedef.size, options.comment);
-                scope.structFields.add(new ArrayField<>(prototype, length, iterate));
+                scope.addField(new ArrayField<>(prototype, length, iterate));
                 return;
             } else {
                 throw new RuntimeException("didn't understand type " + type + " for element " + name);
@@ -554,7 +554,7 @@ public class ParseState implements DefinitionsState {
 
         ScalarField prototype = new ScalarField(Type.findByCtype(type).get(), name, options, autoscale);
 
-        scope.structFields.add(new ArrayField<>(prototype, length, iterate));
+        scope.addField(new ArrayField<>(prototype, length, iterate));
     }
 
     private int[] arrayDim = null;
@@ -572,7 +572,7 @@ public class ParseState implements DefinitionsState {
 
     @Override
     public void enterUnusedField(RusefiConfigGrammarParser.UnusedFieldContext ctx) {
-        scope.structFields.add(new UnusedField(Integer.parseInt(ctx.integer().getText())));
+        scope.addField(new UnusedField(Integer.parseInt(ctx.integer().getText())));
     }
 
     @Override
@@ -609,7 +609,7 @@ public class ParseState implements DefinitionsState {
         scope = scopes.pop();
 
         // Lastly, add the union to the scope
-        scope.structFields.add(u);
+        scope.addField(u);
     }
 
     private final Stack<Double> evalStack = new Stack<>();
@@ -681,5 +681,11 @@ public class ParseState implements DefinitionsState {
 
     static class Scope {
         public final List<Field> structFields = new ArrayList<>();
+
+        public void addField(Field f) {
+            // TODO: check for duplicate fields
+
+            structFields.add(f);
+        }
     }
 }
