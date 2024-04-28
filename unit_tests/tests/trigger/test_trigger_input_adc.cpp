@@ -48,15 +48,15 @@ static void simulateTrigger(EngineTestHelper &eth, TriggerAdcDetector &trigAdcSt
 	static const float Vil = 0.3f * adcMaxVoltage;
 	static const float Vih = 0.7f * adcMaxVoltage;
 
-	efitimeus_t startUs = getTimeNowUs();
+	const efitimeus_t startUs = getTimeNowUs();
 
 	int prevLogicValue = -1;
 	while (reader.haveMore()) {
 		double value = 0;
 		double stamp = reader.readTimestampAndValues(&value);
-		efitimeus_t stampUs = (efitick_t)(stamp * 1'000'000) + startUs;
-		eth.setTimeAndInvokeEventsUs(stampUs);
-		efitick_t stampNt = US2NT(stampUs);
+		efitimeus_t stampUs = startUs + efidurus_t(static_cast<efidurus_t::rep>(stamp * 1'000'000));
+		eth.setTimeAndInvokeEventsUs(COUNTOF(stampUs));
+		efitick_t stampNt = US2NT(COUNTOF(stampUs));
 
 		// convert into mcu-adc voltage
 		value = minF(maxF(value / voltageDiv, 0), adcMaxVoltage);

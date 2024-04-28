@@ -128,7 +128,7 @@ if (engine->antilagController.isAntilagCondition) {
 	// imitate a slow pedal release for TPS taper (to avoid engine stalls)
 	if (tpsForTaper <= engineConfiguration->idlePidDeactivationTpsThreshold) {
 		// make sure the time is not zero
-		float timeSinceRunningPhaseSecs = (float)(nowUs - lastTimeRunningUs + 1) / US_PER_SECOND_F;
+		float timeSinceRunningPhaseSecs = static_cast<float>((nowUs - lastTimeRunningUs).count() + 1) / US_PER_SECOND_F;
 		// we shift the time to implement the hold correction (time can be negative)
 		float timeSinceRunningAfterHoldSecs = timeSinceRunningPhaseSecs - engineConfiguration->iacByTpsHoldTime;
 		// implement the decay correction (from tpsForTaper to 0)
@@ -206,13 +206,13 @@ float IdleController::getIdleTimingAdjustment(int rpm, int targetRpm, Phase phas
 }
 
 static void finishIdleTestIfNeeded() {
-	if (engine->timeToStopIdleTest != 0 && getTimeNowUs() > engine->timeToStopIdleTest)
-		engine->timeToStopIdleTest = 0;
+	if (COUNTOF(engine->timeToStopIdleTest) != 0 && getTimeNowUs() > engine->timeToStopIdleTest)
+		engine->timeToStopIdleTest = efitimeus_t();
 }
 
 static void undoIdleBlipIfNeeded() {
-	if (engine->timeToStopBlip != 0 && getTimeNowUs() > engine->timeToStopBlip) {
-		engine->timeToStopBlip = 0;
+	if (COUNTOF(engine->timeToStopBlip) != 0 && getTimeNowUs() > engine->timeToStopBlip) {
+		engine->timeToStopBlip = efitimeus_t();
 	}
 }
 
@@ -279,9 +279,9 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	}
 	// increase the errorAmpCoef slowly to restore the process correctly after the PID reset
 	// todo: move restoreAfterPidResetTimeUs to idle?
-	efitimeus_t timeSincePidResetUs = nowUs - restoreAfterPidResetTimeUs;
+	efidurus_t timeSincePidResetUs = nowUs - restoreAfterPidResetTimeUs;
 	// todo: add 'pidAfterResetDampingPeriodMs' setting
-	errorAmpCoef = interpolateClamped(0, 0, MS2US(/*engineConfiguration->pidAfterResetDampingPeriodMs*/1000), errorAmpCoef, timeSincePidResetUs);
+	errorAmpCoef = interpolateClamped(0, 0, MS2US(/*engineConfiguration->pidAfterResetDampingPeriodMs*/1000), errorAmpCoef, timeSincePidResetUs.count());
 	// If errorAmpCoef > 1.0, then PID thinks that RPM is lower than it is, and controls IAC more aggressively
 	idlePid->setErrorAmplification(errorAmpCoef);
 
@@ -350,7 +350,7 @@ float IdleController::getIdlePosition(float rpm) {
 
 		percent_t iacPosition;
 
-		isBlipping = engine->timeToStopBlip != 0;
+		isBlipping = COUNTOF(engine->timeToStopBlip) != 0;
 		if (isBlipping) {
 			iacPosition = engine->blipIdlePosition;
 			idleState = BLIP;

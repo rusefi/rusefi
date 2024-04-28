@@ -225,7 +225,7 @@ void EngineTestHelper::clearQueue() {
 }
 
 int EngineTestHelper::executeActions() {
-	return engine.executor.executeAll(getTimeNowUs());
+	return engine.executor.executeAll(COUNTOF(getTimeNowUs()));
 }
 
 void EngineTestHelper::moveTimeForwardMs(float deltaTimeMs) {
@@ -254,7 +254,7 @@ void EngineTestHelper::moveTimeForwardAndInvokeEventsUs(int deltaTimeUs) {
 	if (printTriggerDebug || printFuelDebug) {
 		printf("moveTimeForwardAndInvokeEventsUs %.1fms\r\n", deltaTimeUs / 1000.0);
 	}
-	setTimeAndInvokeEventsUs(getTimeNowUs() + deltaTimeUs);
+	setTimeAndInvokeEventsUs(COUNTOF(getTimeNowUs()) + deltaTimeUs);
 }
 
 void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTimeUs) {
@@ -270,7 +270,7 @@ void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTimeUs) {
 			break;
 		}
 		setTimeNowUs(nextEventTime);
-		engine.executor.executeAll(getTimeNowUs());
+		engine.executor.executeAll(COUNTOF(getTimeNowUs()));
 	}
 
 	setTimeNowUs(targetTimeUs);
@@ -296,7 +296,7 @@ scheduling_s * EngineTestHelper::assertEvent5(const char *msg, int index, void *
 	scheduling_s *event = executor->getForUnitTest(index);
 	assertEqualsM4(msg, " callback up/down", (void*)event->action.getCallback() == (void*) callback, 1);
 	efitimeus_t start = getTimeNowUs();
-	assertEqualsM2(msg, expectedTimestamp, event->momentX - start, /*3us precision to address rounding etc*/3);
+	assertEqualsM2(msg, COUNTOF(expectedTimestamp), event->momentX - COUNTOF(start), /*3us precision to address rounding etc*/3);
 	return event;
 }
 

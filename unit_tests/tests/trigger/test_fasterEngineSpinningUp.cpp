@@ -59,8 +59,8 @@ TEST(cranking, testFasterEngineSpinningUp) {
 
 	float expectedSimultaneousTimestamp = eth.angleToTimeUs(360 - phase);
 
-	eth.assertEvent5("inj start#1", 0, (void*)startSimultaneousInjection, expectedSimultaneousTimestamp - MS2US(engine->engineState.injectionDuration));
-	eth.assertEvent5("inj end#1", 1, (void*)endSimultaneousInjection, expectedSimultaneousTimestamp);
+	eth.assertEvent5("inj start#1", 0, (void*)startSimultaneousInjection, USOF(static_cast<efitimeus_t::rep>(expectedSimultaneousTimestamp - MS2US(engine->engineState.injectionDuration))));
+	eth.assertEvent5("inj end#1", 1, (void*)endSimultaneousInjection, USOF(static_cast<efitimeus_t::rep>(expectedSimultaneousTimestamp)));
 
 	// skip the rest of the cycle
 	eth.moveTimeForwardUs(MS2US(200));
@@ -83,8 +83,8 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// check real events
 	expectedSimultaneousTimestamp = eth.angleToTimeUs(360 - phase);
 
-	eth.assertEvent5("inj start#2", 0, (void*)startSimultaneousInjection, expectedSimultaneousTimestamp - 1625);
-	eth.assertEvent5("inj end#2", 1, (void*)endSimultaneousInjection, expectedSimultaneousTimestamp);
+	eth.assertEvent5("inj start#2", 0, (void*)startSimultaneousInjection, USOF(static_cast<efitimeus_t::rep>(expectedSimultaneousTimestamp - 1625)));
+	eth.assertEvent5("inj end#2", 1, (void*)endSimultaneousInjection, USOF(static_cast<efitimeus_t::rep>(expectedSimultaneousTimestamp)));
 
 	// Now perform a fake VVT sync and check that ignition mode changes to sequential
 	engine->triggerCentral.syncAndReport(2, 0);
@@ -112,8 +112,8 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// Note: See addFuelEvents() fix inside setRpmValue()!
 	expectedSimultaneousTimestamp = eth.angleToTimeUs(phase);
 	ASSERT_EQ(180, eth.timeToAngle(30.000));
-	eth.assertEvent5("inj start#3", 0, (void*)turnInjectionPinHigh, -expectedSimultaneousTimestamp - 1625);
-	eth.assertEvent5("inj end#3", 1, (void*)turnInjectionPinLow, -expectedSimultaneousTimestamp);
+	eth.assertEvent5("inj start#3", 0, (void*)turnInjectionPinHigh, USOF(static_cast<efitimeus_t::rep>(-expectedSimultaneousTimestamp - 1625)));
+	eth.assertEvent5("inj end#3", 1, (void*)turnInjectionPinLow, USOF(static_cast<efitimeus_t::rep>(-expectedSimultaneousTimestamp)));
 }
 
 static void doTestFasterEngineSpinningUp60_2(int startUpDelayMs, int rpm1, int expectedRpm) {

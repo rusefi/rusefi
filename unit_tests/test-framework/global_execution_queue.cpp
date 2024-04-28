@@ -25,7 +25,7 @@ void TestExecutor::scheduleForLater(const char *msg, scheduling_s *scheduling, i
 		return;
 	}
 
-	scheduleByTimestamp(msg, scheduling, getTimeNowUs() + delayUs, action);
+	scheduleByTimestamp(msg, scheduling, getTimeNowUs() + efidurus_t(delayUs), action);
 }
 
 int TestExecutor::executeAll(efitick_t now) {
@@ -58,7 +58,7 @@ void TestExecutor::scheduleByTimestamp(const char *msg, scheduling_s *scheduling
 		return;
 	}
 
-	schedulingQueue.insertTask(scheduling, timeUs, action);
+	schedulingQueue.insertTask(scheduling, COUNTOF(timeUs), action);
 }
 
 void TestExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* scheduling, efitick_t timeNt, action_s action) {
@@ -67,7 +67,7 @@ void TestExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* scheduli
 		return;
 	}
 
-	scheduleByTimestamp(msg, scheduling, NT2US(timeNt), action);
+	scheduleByTimestamp(msg, scheduling, USOF(NT2US(timeNt)), action);
 }
 
 void TestExecutor::cancel(scheduling_s* s) {

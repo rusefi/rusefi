@@ -14,9 +14,9 @@ static DynoView dynoInstance;
 
 void DynoView::update(vssSrc src) {
 
-    efitimeus_t timeNow, deltaTime = 0.0;
+    efidurus_t deltaTime;
     float speed,deltaSpeed = 0.0;
-    timeNow = getTimeNowUs();
+    const efitimeus_t timeNow = getTimeNowUs();
     speed = Sensor::getOrZero(SensorType::VehicleSpeed);
     if (src == ICU) {
         speed = efiRound(speed,1.0);
@@ -25,7 +25,7 @@ void DynoView::update(vssSrc src) {
         speed = efiRound(speed,0.001);
     }
 
-    if(timeStamp != 0) {
+    if(COUNTOF(timeStamp) != 0) {
 
         if (vss != speed) {
             deltaTime = timeNow - timeStamp;
@@ -46,7 +46,7 @@ void DynoView::update(vssSrc src) {
         updateAcceleration(deltaTime, deltaSpeed);
 #if EFI_TUNER_STUDIO
 	    if (engineConfiguration->debugMode == DBG_LOGIC_ANALYZER) {
-		    engine->outputChannels.debugIntField1 = deltaTime;
+		    engine->outputChannels.debugIntField1 = deltaTime.count();
 		    engine->outputChannels.debugFloatField1 = vss;
 		    engine->outputChannels.debugFloatField2 = speed;
 		    engine->outputChannels.debugFloatField3 = deltaSpeed;
@@ -66,9 +66,9 @@ void DynoView::update(vssSrc src) {
  * input units: deltaSpeed in km/h
  *              deltaTime in uS
  */
-void DynoView::updateAcceleration(efitimeus_t deltaTime, float deltaSpeed) {
+void DynoView::updateAcceleration(efidurus_t deltaTime, float deltaSpeed) {
     if (deltaSpeed != 0.0) {
-        acceleration = ((deltaSpeed / 3.6) / (deltaTime / US_PER_SECOND_F));
+        acceleration = ((deltaSpeed / 3.6) / (deltaTime.count() / US_PER_SECOND_F));
         if (direction) {
             //decceleration
             acceleration *= -1;

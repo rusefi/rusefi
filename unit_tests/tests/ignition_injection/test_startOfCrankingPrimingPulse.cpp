@@ -27,9 +27,9 @@ TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 	// two simultaneous injections
 	ASSERT_EQ( 4,  engine->executor.size()) << "plain#2";
 
-	eth.assertEvent5("sim start", 0, (void*)startSimultaneousInjection, 100000 - 1625);
+	eth.assertEvent5("sim start", 0, (void*)startSimultaneousInjection, USOF(100000 - 1625));
 	// -1 because ugh floating point math
-	eth.assertEvent5("sim end", 1, (void*)endSimultaneousInjection, 100000 - 1);
+	eth.assertEvent5("sim end", 1, (void*)endSimultaneousInjection, USOF(100000 - 1));
 }
 
 

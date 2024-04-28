@@ -22,7 +22,7 @@ class DynoView {
 public:
 	// Update the state of the launch control system
 	void update(vssSrc src);
-    void updateAcceleration(efitimeus_t deltaTime, float deltaSpeed);
+    void updateAcceleration(efidurus_t deltaTime, float deltaSpeed);
     void updateHP();
     float getAcceleration();
     int getEngineForce();
@@ -36,7 +36,7 @@ public:
     void setAcceleration(float a);
 #endif
 private:
-	efitimeus_t timeStamp = 0;
+	efitimeus_t timeStamp;
     //km/h unit
     float vss = 0;
     //m/s/s unit

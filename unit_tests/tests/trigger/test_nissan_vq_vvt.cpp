@@ -60,7 +60,8 @@ static void scheduleTriggerEvents(TriggerWaveform *shape,
 			param->isVvt = isVvt;
 			param->vvtBankIndex = vvtBankIndex;
 
-			engine->executor.scheduleByTimestamp("test", &param->sched, timeScale * 1000 * angle, { func, param.get() });
+			engine->executor.scheduleByTimestamp("test", &param->sched,
+				USOF(static_cast<efitimeus_t::rep>(timeScale * 1000 * angle)), { func, param.get() });
 			totalIndex++;
 		}
 	}
