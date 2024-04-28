@@ -6,4 +6,5 @@ struct_no_prefix knock_controller_s
 	float m_knockThreshold;Knock: Threshold
 	uint32_t m_knockCount;@@GAUGE_NAME_KNOCK_COUNTER@@;"",1, 0, 0, 0, 0
 	float m_maximumRetard;Knock: Max retard
+	uint32_t m_knockFrequency;@@GAUGE_NAME_KNOCK_FREQ@@;"Hz", 1, 0, 0, 0, 2
 end_struct

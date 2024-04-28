@@ -1190,6 +1190,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	bit devBit7
 	bit skipADC12bitAssert
 	bit invertExhaustCamVVTSignal,"Falling","Rising"
+	bit enableKnockSpectrogram
 
 	int16_t afterCrankingIACtaperDuration;This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.\Should be 100 once tune is better;"cycles", 1, 0, 0, 5000, 0
 	int16_t iacByTpsTaper;IAC Value added when coasting and transitioning into idle.;"percent", 1, 0, 0, 500, 0
@@ -2125,6 +2126,7 @@ end_struct
 #define GAUGE_NAME_KNOCK_LEVEL "knock: current level"
 #define GAUGE_NAME_KNOCK_COUNTER "knock: count"
 #define GAUGE_NAME_KNOCK_RETARD "knock: retard"
+#define GAUGE_NAME_KNOCK_FREQ "knock: frequency"
 #define GAUGE_NAME_KNOCK_1 "knock 1"
 #define GAUGE_NAME_KNOCK_2 "knock 2"
 #define GAUGE_NAME_KNOCK_3 "knock 3"
@@ -2264,6 +2266,7 @@ end_struct
 #define PROTOCOL_OUTPIN "outpin"
 #define PROTOCOL_ANALOG_CHART "analog_chart"
 #define PROTOCOL_ENGINE_SNIFFER "wave_chart"
+#define PROTOCOL_KNOCK_SPECTROGRAMM "knock_spectrogram"
 #define PROTOCOL_VERSION_TAG "rusEfiVersion"
 #define PROTOCOL_TEST_RESPONSE_TAG "ts_p_alive"
 #define PROTOCOL_SIGNATURE_PREFIX "rusEFI "
@@ -2325,6 +2328,10 @@ end_struct
 ! Performance tracing
 #define TS_PERF_TRACE_BEGIN '_'
 #define TS_PERF_TRACE_GET_BUFFER 'b'
+
+! knock analyzer
+#define TS_KNOCK_SPECTROGRAM_ENABLE 'm'
+#define TS_KNOCK_SPECTROGRAM_DISABLE 'n'
 
 ! 0x50 80
 #define TS_PAGE_COMMAND 'P'

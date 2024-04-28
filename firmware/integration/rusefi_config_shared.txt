@@ -143,6 +143,7 @@
 #define GAUGE_NAME_KNOCK_LEVEL "Knock: Current level"
 #define GAUGE_NAME_KNOCK_COUNTER "Knock: Count"
 #define GAUGE_NAME_KNOCK_RETARD "Knock: Retard"
+#define GAUGE_NAME_KNOCK_FREQ "knock: frequency"
 
 #define GAUGE_NAME_INJECTION_MODE "Fuel: Injection mode"
 #define GAUGE_NAME_FUEL_BARO_CORR "Fuel: Barometric pressure mult"
