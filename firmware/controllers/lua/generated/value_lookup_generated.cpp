@@ -1162,6 +1162,9 @@ float getConfigValueByName(const char *name) {
 // invertExhaustCamVVTSignal
 		case -60727986:
 			return engineConfiguration->invertExhaustCamVVTSignal;
+// enableKnockSpectrogram
+		case -556893719:
+			return engineConfiguration->enableKnockSpectrogram;
 // afterCrankingIACtaperDuration
 		case 671504531:
 			return engineConfiguration->afterCrankingIACtaperDuration;
@@ -3762,6 +3765,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -60727986:
 	{
 		engineConfiguration->invertExhaustCamVVTSignal = (int)value;
+		return 1;
+	}
+		case -556893719:
+	{
+		engineConfiguration->enableKnockSpectrogram = (int)value;
 		return 1;
 	}
 		case 671504531:

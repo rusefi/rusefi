@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Apr 25 01:11:06 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Apr 28 13:43:56 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2874,10 +2874,10 @@ struct engine_configuration_s {
 	bool invertExhaustCamVVTSignal : 1 {};
 	/**
 	offset 1496 bit 30 */
-	bool unusedBit_514_30 : 1 {};
+	bool enableKnockSpectrogram : 1 {};
 	/**
 	offset 1496 bit 31 */
-	bool unusedBit_514_31 : 1 {};
+	bool unusedBit_515_31 : 1 {};
 	/**
 	 * This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.\Should be 100 once tune is better
 	 * units: cycles
@@ -5619,4 +5619,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22656);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Apr 25 01:11:06 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Apr 28 13:43:56 UTC 2024

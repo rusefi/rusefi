@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/engine_cycle/knock_controller.txt Mon Apr 22 18:28:37 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/engine_cycle/knock_controller.txt Sun Apr 28 13:42:38 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -104,6 +104,7 @@ public class KnockController {
 	public static final String GAUGE_NAME_INJECTOR_LAG = "Fuel: injector lag";
 	public static final String GAUGE_NAME_ISS = "TCU: Input Shaft Speed";
 	public static final String GAUGE_NAME_KNOCK_COUNTER = "Knock: Count";
+	public static final String GAUGE_NAME_KNOCK_FREQ = "knock: frequency";
 	public static final String GAUGE_NAME_KNOCK_LEVEL = "Knock: Current level";
 	public static final String GAUGE_NAME_KNOCK_RETARD = "Knock: Retard";
 	public static final String GAUGE_NAME_LAMBDA = "Lambda";
@@ -190,6 +191,7 @@ public class KnockController {
 	public static final Field M_KNOCKTHRESHOLD = Field.create("M_KNOCKTHRESHOLD", 20, FieldType.FLOAT).setBaseOffset(924);
 	public static final Field M_KNOCKCOUNT = Field.create("M_KNOCKCOUNT", 24, FieldType.INT).setScale(1.0).setBaseOffset(924);
 	public static final Field M_MAXIMUMRETARD = Field.create("M_MAXIMUMRETARD", 28, FieldType.FLOAT).setBaseOffset(924);
+	public static final Field M_KNOCKFREQUENCY = Field.create("M_KNOCKFREQUENCY", 32, FieldType.INT).setScale(1.0).setBaseOffset(924);
 	public static final Field[] VALUES = {
 	M_KNOCKLEVEL,
 	M_KNOCKCYL1,
@@ -208,5 +210,6 @@ public class KnockController {
 	M_KNOCKTHRESHOLD,
 	M_KNOCKCOUNT,
 	M_MAXIMUMRETARD,
+	M_KNOCKFREQUENCY,
 	};
 }

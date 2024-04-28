@@ -891,6 +891,9 @@ float getOutputValueByName(const char *name) {
 // m_maximumRetard
 		case 164334513:
 			return ___engine.module<KnockController>()->m_maximumRetard;
+// m_knockFrequency
+		case -249826215:
+			return ___engine.module<KnockController>()->m_knockFrequency;
 // m_deadtime
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case -1167844818:

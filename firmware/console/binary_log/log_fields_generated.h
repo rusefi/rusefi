@@ -392,6 +392,7 @@ static const LogField fields[] = {
 	{___engine.module<KnockController>()->m_knockThreshold, "Knock: Threshold", "", 0},
 	{___engine.module<KnockController>()->m_knockCount, "Knock: Count", "", 0},
 	{___engine.module<KnockController>()->m_maximumRetard, "Knock: Max retard", "", 0},
+	{___engine.module<KnockController>()->m_knockFrequency, "knock: frequency", "Hz", 2},
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{___engine.module<InjectorModelPrimary>()->m_deadtime, "Fuel: injector lag", "ms", 3},
 #endif

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Apr 27 15:59:06 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Apr 28 13:44:07 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -556,6 +556,7 @@ public class Fields {
 	public static final String GAUGE_NAME_KNOCK_8 = "knock 8";
 	public static final String GAUGE_NAME_KNOCK_9 = "knock 9";
 	public static final String GAUGE_NAME_KNOCK_COUNTER = "Knock: Count";
+	public static final String GAUGE_NAME_KNOCK_FREQ = "knock: frequency";
 	public static final String GAUGE_NAME_KNOCK_LEVEL = "Knock: Current level";
 	public static final String GAUGE_NAME_KNOCK_RETARD = "Knock: Retard";
 	public static final String GAUGE_NAME_LAMBDA = "Lambda";
@@ -1119,6 +1120,7 @@ public class Fields {
 	public static final String PROTOCOL_HPFP_NAME = "hpfp";
 	public static final String PROTOCOL_INJ1_SHORT_NAME = "i1";
 	public static final String PROTOCOL_INJ1_STAGE2_SHORT_NAME = "j1";
+	public static final String PROTOCOL_KNOCK_SPECTROGRAMM = "knock_spectrogram";
 	public static final String PROTOCOL_MSG = "msg";
 	public static final String PROTOCOL_OUTPIN = "outpin";
 	public static final String PROTOCOL_SIGNATURE_PREFIX = "rusEFI ";
@@ -1162,7 +1164,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 731580863;
+	public static final int SIGNATURE_HASH = 1055910979;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1396,6 +1398,8 @@ public class Fields {
 	public static final char TS_GET_TEXT = 'G';
 	public static final char TS_HELLO_COMMAND = 'S';
 	public static final char TS_IO_TEST_COMMAND = 'Z';
+	public static final char TS_KNOCK_SPECTROGRAM_DISABLE = 'n';
+	public static final char TS_KNOCK_SPECTROGRAM_ENABLE = 'm';
 	public static final char TS_ONLINE_PROTOCOL = 'z';
 	public static final char TS_OUTPUT_COMMAND = 'O';
 	public static final char TS_PAGE_COMMAND = 'P';
@@ -1416,11 +1420,11 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.04.27.f407-discovery.731580863";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.04.28.f407-discovery.1055910979";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1740;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1744;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_2_NAME = "Channel 2";
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;
@@ -2193,6 +2197,7 @@ public class Fields {
 	public static final Field DEVBIT7 = Field.create("DEVBIT7", 1496, FieldType.BIT, 27).setBaseOffset(0);
 	public static final Field SKIPADC12BITASSERT = Field.create("SKIPADC12BITASSERT", 1496, FieldType.BIT, 28).setBaseOffset(0);
 	public static final Field INVERTEXHAUSTCAMVVTSIGNAL = Field.create("INVERTEXHAUSTCAMVVTSIGNAL", 1496, FieldType.BIT, 29).setBaseOffset(0);
+	public static final Field ENABLEKNOCKSPECTROGRAM = Field.create("ENABLEKNOCKSPECTROGRAM", 1496, FieldType.BIT, 30).setBaseOffset(0);
 	public static final Field AFTERCRANKINGIACTAPERDURATION = Field.create("AFTERCRANKINGIACTAPERDURATION", 1500, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field IACBYTPSTAPER = Field.create("IACBYTPSTAPER", 1502, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field AUXSERIALTXPIN = Field.create("AUXSERIALTXPIN", 1504, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
@@ -3875,6 +3880,7 @@ public class Fields {
 	DEVBIT7,
 	SKIPADC12BITASSERT,
 	INVERTEXHAUSTCAMVVTSIGNAL,
+	ENABLEKNOCKSPECTROGRAM,
 	AFTERCRANKINGIACTAPERDURATION,
 	IACBYTPSTAPER,
 	AUXSERIALTXPIN,

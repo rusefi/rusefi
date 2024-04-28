@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/engine_cycle/knock_controller.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/engine_cycle/knock_controller.txt Sun Apr 28 13:42:38 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -38,8 +38,14 @@ struct knock_controller_s {
 	 * offset 28
 	 */
 	float m_maximumRetard = (float)0;
+	/**
+	 * @@GAUGE_NAME_KNOCK_FREQ@@
+	 * units: Hz
+	 * offset 32
+	 */
+	uint32_t m_knockFrequency = (uint32_t)0;
 };
-static_assert(sizeof(knock_controller_s) == 32);
+static_assert(sizeof(knock_controller_s) == 36);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/engine_cycle/knock_controller.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/engine_cycle/knock_controller.txt Sun Apr 28 13:42:38 UTC 2024
