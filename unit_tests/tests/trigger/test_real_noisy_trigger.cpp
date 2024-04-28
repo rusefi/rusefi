@@ -53,6 +53,16 @@ static void testNoOverdwell(const char* file, bool instantRpm, const int expecte
 		<< "Please check if our dwell algorithm have really got better.";
 }
 
+// noisy-trigger-min.csv contains lines 53-61 from noisy-trigger-1.csv - minimal subset to reproduce the single
+// bailed-on dwell
+TEST(RealNoisyTrigger, AvoidOverdwellMinNoInstant) {
+	testNoOverdwell("tests/trigger/resources/noisy-trigger-min.csv", false, 1);
+}
+
+TEST(RealNoisyTrigger, AvoidOverdwellMinWithInstant) {
+	testNoOverdwell("tests/trigger/resources/noisy-trigger-min.csv", true, 1);
+}
+
 TEST(RealNoisyTrigger, AvoidOverdwell1NoInstant) {
 	testNoOverdwell("tests/trigger/resources/noisy-trigger-1.csv", false, 25);
 }
