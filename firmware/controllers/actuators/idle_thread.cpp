@@ -128,7 +128,7 @@ if (engine->antilagController.isAntilagCondition) {
 	// imitate a slow pedal release for TPS taper (to avoid engine stalls)
 	if (tpsForTaper <= engineConfiguration->idlePidDeactivationTpsThreshold) {
 		// make sure the time is not zero
-		float timeSinceRunningPhaseSecs = (float)(nowUs - lastTimeRunningUs + 1) / US_PER_SECOND_F;
+		float timeSinceRunningPhaseSecs = (nowUs - lastTimeRunningUs + 1) / US_PER_SECOND_F;
 		// we shift the time to implement the hold correction (time can be negative)
 		float timeSinceRunningAfterHoldSecs = timeSinceRunningPhaseSecs - engineConfiguration->iacByTpsHoldTime;
 		// implement the decay correction (from tpsForTaper to 0)
