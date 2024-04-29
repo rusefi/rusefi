@@ -218,9 +218,10 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 
 #if EFI_USE_FAST_ADC
 static GPTConfig fast_adc_config = {
-	GPT_FREQ_FAST,
-	fast_adc_callback,
-	0, 0
+	.frequency = GPT_FREQ_FAST,
+	.callback = fast_adc_callback,
+	.cr2 = 0,
+	.dier = 0,
 };
 #endif /* EFI_USE_FAST_ADC */
 
