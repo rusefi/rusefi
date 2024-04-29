@@ -49,7 +49,7 @@ static void timerCallback(CallbackContext* ctx) {
 	if (printSchedulerDebug) {
 		if (ctx->scheduling->action.getCallback() == (schfunc_t)&turnInjectionPinLow) {
 			printf("executing cb=turnInjectionPinLow p=%d sch=%d now=%d\r\n", (int)ctx->scheduling->action.getArgument(), (int)scheduling,
-				(int)getTimeNowUs());
+				time2print(getTimeNowUs()));
 		} else {
 //		printf("exec cb=%d p=%d\r\n", (int)scheduling->callback, (int)scheduling->param);
 		}

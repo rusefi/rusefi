@@ -103,7 +103,7 @@ void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(int rpm,
 
 #if SPARK_EXTREME_LOGGING
 			efiPrintf("time to invoke [%.1f, %.1f) %d %d",
-				  currentPhase, nextPhase, getRevolutionCounter(), (int)getTimeNowUs());
+				  currentPhase, nextPhase, getRevolutionCounter(), time2print(getTimeNowUs()));
 #endif /* SPARK_EXTREME_LOGGING */
 
 			// In case this event was scheduled by overdwell protection, cancel it so
