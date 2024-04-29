@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Apr 29 03:24:52 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Apr 29 11:01:50 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -841,6 +841,20 @@ public class Fields {
 	public static final int Gpio_MC33972_PIN_7 = 152;
 	public static final int Gpio_MC33972_PIN_8 = 153;
 	public static final int Gpio_MC33972_PIN_9 = 154;
+	public static final int Gpio_MSIOBOX_0_OUT_1 = 324;
+	public static final int Gpio_MSIOBOX_0_OUT_2 = 325;
+	public static final int Gpio_MSIOBOX_0_OUT_3 = 326;
+	public static final int Gpio_MSIOBOX_0_OUT_4 = 327;
+	public static final int Gpio_MSIOBOX_0_OUT_5 = 328;
+	public static final int Gpio_MSIOBOX_0_OUT_6 = 329;
+	public static final int Gpio_MSIOBOX_0_OUT_7 = 330;
+	public static final int Gpio_MSIOBOX_0_SW_1 = 336;
+	public static final int Gpio_MSIOBOX_0_SW_2 = 337;
+	public static final int Gpio_MSIOBOX_0_SW_3 = 338;
+	public static final int Gpio_MSIOBOX_0_VSS_1 = 332;
+	public static final int Gpio_MSIOBOX_0_VSS_2 = 333;
+	public static final int Gpio_MSIOBOX_0_VSS_3 = 334;
+	public static final int Gpio_MSIOBOX_0_VSS_4 = 335;
 	public static final int Gpio_PROTECTED_PIN_0 = 257;
 	public static final int Gpio_PROTECTED_PIN_1 = 258;
 	public static final int Gpio_PROTECTED_PIN_10 = 267;
@@ -1164,7 +1178,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1055910979;
+	public static final int SIGNATURE_HASH = 1150238684;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1420,7 +1434,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.04.29.f407-discovery.1055910979";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.04.29.f407-discovery.1150238684";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
