@@ -1149,6 +1149,7 @@ TEST(big, testAssertWeAreNotMissingASpark299) {
 
 	ASSERT_EQ(3000, Sensor::getOrZero(SensorType::Rpm));
 
+  // positive advance scenario which is the typical case
 	setWholeTimingTable(3);
 	eth.engine.periodicFastCallback();
 
@@ -1166,6 +1167,7 @@ TEST(big, testAssertWeAreNotMissingASpark299) {
 	eth.fireFall(20);
 	eth.executeActions();
 
+  // negative advance is rarely used but worth testing considering all out angleWrap.
 	setWholeTimingTable(-5);
 	eth.engine.periodicFastCallback();
 
