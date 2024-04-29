@@ -399,6 +399,7 @@ static void assertInjectionEventBatch(const char *msg, InjectionEvent *ev, int i
 	EXPECT_EQ(secondInjectorIndex, ev->outputs[1]->injectorIndex);
 }
 
+// https://sourceforge.net/p/rusefi/tickets/299/
 static void setTestBug299(EngineTestHelper *eth) {
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(eth);
 	EXPECT_CALL(*eth->mockAirmass, getAirmass(_, _))
@@ -1101,7 +1102,9 @@ TEST(big, testSparkReverseOrderBug319) {
 	ASSERT_EQ(ObdCode::CUSTOM_OUT_OF_ORDER_COIL, unitTestWarningCodeState.recentWarnings.get(1).Code);
 }
 
-TEST(big, testMissedSpark299) {
+// https://sourceforge.net/p/rusefi/tickets/299/
+// this is not a test of wasted spark!
+TEST(big, testAssertWeAreNotMissingASpark299) {
 	printf("*************************************************** testMissedSpark299\r\n");
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
