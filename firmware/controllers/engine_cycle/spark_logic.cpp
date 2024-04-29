@@ -28,7 +28,7 @@ static const char *prevSparkName = nullptr;
 
 static void fireSparkBySettingPinLow(IgnitionEvent *event, IgnitionOutputPin *output) {
 #if SPARK_EXTREME_LOGGING
-	efiPrintf("spark goes low  revolution=%d [%s] %d current=%d id=%d", getRevolutionCounter(), output->getName(), (int)getTimeNowUs(),
+	efiPrintf("spark goes low  revolution=%d [%s] %d current=%d id=%d", getRevolutionCounter(), output->getName(), time2print(getTimeNowUs()),
 			output->currentLogicValue, event->sparkCounter);
 #endif /* SPARK_EXTREME_LOGGING */
 
