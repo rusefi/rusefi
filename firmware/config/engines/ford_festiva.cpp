@@ -134,7 +134,7 @@ void setFordEscortGt() {
 	engineConfiguration->crankingTimingAngle = 3;
 
 	setLinearCurve(config->ignitionLoadBins, 20, 105, 5);
-	setWholeTimingTable_d(10);
+	setWholeTimingTable(10);
 	setTable(config->lambdaTable, 0.92f);
 
 	setSingleCoilDwell();

@@ -18,7 +18,7 @@
 void setVwAba() {
 	setFrankensoConfiguration();
 
-	setWholeTimingTable_d(20);
+	setWholeTimingTable(20);
 	// set cranking_timing_angle 10
 	engineConfiguration->crankingTimingAngle = 10;
 

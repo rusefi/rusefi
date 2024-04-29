@@ -36,8 +36,7 @@ void setTargetRpmCurve(int rpm);
 void setWholeIgnitionIatCorr(float value);
 void setFuelTablesLoadBin(float minValue, float maxValue);
 void setWholeIatCorrTimingTable(float value);
-void setWholeTimingTable_d(angle_t value);
-#define setWholeTimingTable(x) setWholeTimingTable_d(x);
+void setWholeTimingTable(angle_t value);
 void setConstantDwell(floatms_t dwellMs);
 
 // needed by bootloader

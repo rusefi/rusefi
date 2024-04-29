@@ -1115,7 +1115,7 @@ TEST(big, testAssertWeAreNotMissingASpark299) {
 
 	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#0";
 
-
+  // todo: migrate to 'smartFireRise' see header which explains the difference
 	eth.fireRise(20);
 	eth.executeActions();
 	ASSERT_EQ( 0,  engine->triggerCentral.triggerState.currentCycle.current_index) << "ci#0";

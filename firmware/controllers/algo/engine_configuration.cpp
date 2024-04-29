@@ -244,7 +244,7 @@ void setWholeIatCorrTimingTable(float value) {
 /**
  * See also crankingTimingAngle
  */
-void setWholeTimingTable_d(angle_t value) {
+void setWholeTimingTable(angle_t value) {
 	setTable(config->ignitionTable, value);
 }
 
