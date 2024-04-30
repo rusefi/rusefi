@@ -1669,7 +1669,8 @@ int anotherCiTest
 
 	MsIoBox_config_s msIoBox0
 
-uint8_t[200] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
+#define END_OF_CALIBRATION_PADDING 200
+uint8_t[END_OF_CALIBRATION_PADDING] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
 end_struct
