@@ -232,32 +232,53 @@ public class LayoutTest {
 
     @Test
     public void arrayOfStructsIterate() throws IOException {
-        String ts = parseToTs(
+        String input =
                 "struct s1\n" +
                 "uint8_t var1\n" +
                 "uint16_t var2\n" +
                 "end_struct\n" +
                 "struct_no_prefix rootStruct\n" +
+                "int spacer\n" +
+                "s1 non_arr\n" +
                 "s1[4 iterate] arr\n" +
-                "end_struct");
+                "end_struct";
 
         Assert.assertEquals(
-                "pageSize            = 16\n" +
+                "pageSize            = 24\n" +
                         "page = 1\n" +
-                        "arr1_var1 = scalar, U08, 0, \"\", 1, 0, 0, 0, 0\n" +
-                        "; unused 1 bytes at offset 1\n" +
-                        "arr1_var2 = scalar, U16, 2, \"\", 1, 0, 0, 0, 0\n" +
-                        "arr2_var1 = scalar, U08, 4, \"\", 1, 0, 0, 0, 0\n" +
+                        "spacer = scalar, S32, 0, \"\", 1, 0, 0, 0, 0\n" +
+                        "non_arr_var1 = scalar, U08, 4, \"\", 1, 0, 0, 0, 0\n" +
                         "; unused 1 bytes at offset 5\n" +
-                        "arr2_var2 = scalar, U16, 6, \"\", 1, 0, 0, 0, 0\n" +
-                        "arr3_var1 = scalar, U08, 8, \"\", 1, 0, 0, 0, 0\n" +
+                        "non_arr_var2 = scalar, U16, 6, \"\", 1, 0, 0, 0, 0\n" +
+                        "arr1_var1 = scalar, U08, 8, \"\", 1, 0, 0, 0, 0\n" +
                         "; unused 1 bytes at offset 9\n" +
-                        "arr3_var2 = scalar, U16, 10, \"\", 1, 0, 0, 0, 0\n" +
-                        "arr4_var1 = scalar, U08, 12, \"\", 1, 0, 0, 0, 0\n" +
+                        "arr1_var2 = scalar, U16, 10, \"\", 1, 0, 0, 0, 0\n" +
+                        "arr2_var1 = scalar, U08, 12, \"\", 1, 0, 0, 0, 0\n" +
                         "; unused 1 bytes at offset 13\n" +
-                        "arr4_var2 = scalar, U16, 14, \"\", 1, 0, 0, 0, 0\n" +
-                        "; total TS size = 16\n" +
-                        "[SettingContextHelp]\n", ts);
+                        "arr2_var2 = scalar, U16, 14, \"\", 1, 0, 0, 0, 0\n" +
+                        "arr3_var1 = scalar, U08, 16, \"\", 1, 0, 0, 0, 0\n" +
+                        "; unused 1 bytes at offset 17\n" +
+                        "arr3_var2 = scalar, U16, 18, \"\", 1, 0, 0, 0, 0\n" +
+                        "arr4_var1 = scalar, U08, 20, \"\", 1, 0, 0, 0, 0\n" +
+                        "; unused 1 bytes at offset 21\n" +
+                        "arr4_var2 = scalar, U16, 22, \"\", 1, 0, 0, 0, 0\n" +
+                        "; total TS size = 24\n" +
+                        "[SettingContextHelp]\n", parseToTs(input));
+
+        Assert.assertEquals(
+                "spacer = scalar, S32, 0, \"\", 1, 0\n" +
+                "non_arr_var1 = scalar, U08, 4, \"\", 1, 0\n" +
+                "non_arr_var2 = scalar, U16, 6, \"\", 1, 0\n" +
+                "arr1_var1 = scalar, U08, 8, \"\", 1, 0\n" +
+                "arr1_var2 = scalar, U16, 10, \"\", 1, 0\n" +
+                "arr2_var1 = scalar, U08, 12, \"\", 1, 0\n" +
+                "arr2_var2 = scalar, U16, 14, \"\", 1, 0\n" +
+                "arr3_var1 = scalar, U08, 16, \"\", 1, 0\n" +
+                "arr3_var2 = scalar, U16, 18, \"\", 1, 0\n" +
+                "arr4_var1 = scalar, U08, 20, \"\", 1, 0\n" +
+                "arr4_var2 = scalar, U16, 22, \"\", 1, 0\n" +
+                "; total TS size = 24\n",
+                    parseToOutputChannels(input));
     }
 
     @Test
