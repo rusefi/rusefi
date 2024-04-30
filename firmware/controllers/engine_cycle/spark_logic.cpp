@@ -401,7 +401,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 	 */
 	if (!limitedSpark) {
 #if SPARK_EXTREME_LOGGING
-		efiPrintf("scheduling sparkUp revolution=%d [%s] now=%d %d later id=%d", getRevolutionCounter(), event->getOutputForLoggins()->getName(), time2print(getTimeNowUs()), (int)angleOffset,
+		efiPrintf("scheduling sparkUp revolution=%d [%s] %d later id=%d", getRevolutionCounter(), event->getOutputForLoggins()->getName(), (int)angleOffset,
 				event->sparkCounter);
 #endif /* SPARK_EXTREME_LOGGING */
 
@@ -412,6 +412,12 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 		 * the coil.
 		 */
 		chargeTime = scheduleByAngle(&event->dwellStartTimer, edgeTimestamp, angleOffset, { &turnSparkPinHighStartCharging, event });
+
+#if SPARK_EXTREME_LOGGING
+		efiPrintf("sparkUp revolution scheduled=%d for %d ticks [%s] %d later id=%d", getRevolutionCounter(), time2print(chargeTime), event->getOutputForLoggins()->getName(), (int)angleOffset,
+				event->sparkCounter);
+#endif /* SPARK_EXTREME_LOGGING */
+
 
 		event->sparksRemaining = engine->engineState.multispark.count;
 	} else {
@@ -435,12 +441,12 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 	if (isTimeScheduled) {
 	  // event was scheduled by time, we expect it to happen reliably
 #if SPARK_EXTREME_LOGGING
-		efiPrintf("scheduling sparkDown revolution=%d [%s] now=%d later id=%d", getRevolutionCounter(), event->getOutputForLoggins()->getName(), time2print(getTimeNowUs()), event->sparkCounter);
+		efiPrintf("scheduling sparkDown revolution=%d [%s] later id=%d", getRevolutionCounter(), event->getOutputForLoggins()->getName(), event->sparkCounter);
 #endif /* FUEL_MATH_EXTREME_LOGGING */
 	} else {
 	  // event was queued in relation to some expected tooth event in the future which might just never come so we shall protect from over-dwell
 #if SPARK_EXTREME_LOGGING
-		efiPrintf("to queue sparkDown revolution=%d [%s] now=%d for id=%d angle=%.1f", getRevolutionCounter(), event->getOutputForLoggins()->getName(), time2print(getTimeNowUs()), event->sparkCounter, sparkAngle);
+		efiPrintf("to queue sparkDown revolution=%d [%s] for id=%d angle=%.1f", getRevolutionCounter(), event->getOutputForLoggins()->getName(), event->sparkCounter, sparkAngle);
 #endif /* SPARK_EXTREME_LOGGING */
 
 		if (!limitedSpark && ENABLE_OVERDWELL_PROTECTION) {
@@ -448,7 +454,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 			efitick_t fireTime = chargeTime + MSF2NT(1.5f * dwellMs);
 
 #if SPARK_EXTREME_LOGGING
-		efiPrintf("scheduling overdwell sparkDown revolution=%d [%s] for %d", getRevolutionCounter(), event->getOutputForLoggins()->getName(), fireTime);
+		efiPrintf("scheduling overdwell sparkDown revolution=%d [%s] for id=%d for %d", getRevolutionCounter(), event->getOutputForLoggins()->getName(), event->sparkCounter, fireTime);
 #endif /* SPARK_EXTREME_LOGGING */
 
       /**
