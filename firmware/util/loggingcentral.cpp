@@ -177,7 +177,7 @@ namespace priv
 void efiPrintfInternal(const char *format, ...) {
 #if EFI_UNIT_TEST || EFI_SIMULATOR
 	if (verboseMode) {
-		printf("efiPrintfInternal:");
+		printf("[%dus]efiPrintfInternal:", time2print(getTimeNowUs()));
 		va_list ap;
 		va_start(ap, format);
 		vprintf(format, ap);
