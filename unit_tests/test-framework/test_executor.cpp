@@ -29,7 +29,7 @@ void TestExecutor::scheduleForLater(const char *msg, scheduling_s *scheduling, i
 }
 
 int TestExecutor::executeAll(efitimeus_t nowUs) {
-	return schedulingQueue.executeAll(nowUs);
+	return schedulingQueue.executeAll(US2NT(nowUs));
 }
 
 void TestExecutor::clear() {
@@ -62,7 +62,7 @@ void TestExecutor::scheduleByTimestamp(const char *msg, scheduling_s *scheduling
 		return;
 	}
 
-	schedulingQueue.insertTask(scheduling, timeUs, action);
+	schedulingQueue.insertTask(scheduling, US2NT(timeUs), action);
 }
 
 void TestExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* scheduling, efitick_t timeNt, action_s action) {
