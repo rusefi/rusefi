@@ -258,7 +258,9 @@ void EngineTestHelper::moveTimeForwardAndInvokeEventsUs(int deltaTimeUs) {
 }
 
 void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTimeUs) {
+	int counter = 0;
 	while (true) {
+	  criticalAssertVoid(counter++ < 100'000, "EngineTestHelper: failing to setTimeAndInvokeEventsUs");
 		scheduling_s* nextScheduledEvent = engine.executor.getHead();
 		if (nextScheduledEvent == nullptr) {
 			// nothing pending - we are done here

@@ -272,10 +272,13 @@ int EventQueue::size(void) const {
 
 void EventQueue::assertListIsSorted() const {
 #if EFI_UNIT_TEST || EFI_SIMULATOR
+	int counter = 0;
 	scheduling_s *current = m_head;
 	while (current != NULL && current->nextScheduling_s != NULL) {
 		efiAssertVoid(ObdCode::CUSTOM_ERR_6623, current->momentX <= current->nextScheduling_s->momentX, "list order");
 		current = current->nextScheduling_s;
+		if (counter++ > 1'000'000'000)
+			criticalError("EventQueue: looks like a loop?!");
 	}
 #endif // EFI_UNIT_TEST || EFI_SIMULATOR
 }
