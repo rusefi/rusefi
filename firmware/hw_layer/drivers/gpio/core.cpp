@@ -28,7 +28,7 @@
 /* Local variables and types.												*/
 /*==========================================================================*/
 
-/* TODO: chnage array to list? */
+/* TODO: change array to list? */
 struct gpiochip {
 	brain_pin_e			base;
 	size_t				size;
@@ -39,6 +39,47 @@ struct gpiochip {
 };
 
 static gpiochip chips[BOARD_EXT_GPIOCHIPS];
+
+/* TODO: move inside gpio chip driver? */
+class external_hardware_pwm : public hardware_pwm {
+public:
+	bool hasInit() const {
+		return m_chip != nullptr;
+	}
+
+	int start(const char* msg, gpiochip* chip, size_t pin, float frequency, float duty) {
+		int ret;
+
+		ret = chip->chip->setPadPWM(pin, frequency, duty);
+		if (ret >= 0) {
+			m_chip = chip;
+			m_pin = pin;
+			m_frequency = frequency;
+		} else {
+			/* This is not an error, will fallback to SW PWM */
+			//firmwareError(ObdCode::CUSTOM_GPIO_CHIP_FAILED_PWM, "Faield to enable PWM mode for chip %s on pin \"%s\"", msg, chip->name, pin);
+			return -1;
+		}
+		return 0;
+	}
+
+	void setDuty(float duty) override {
+		if (!m_chip) {
+			criticalError("Attempted to set duty on null external PWM device");
+			return;
+		}
+
+		m_chip->chip->setPadPWM(m_pin, m_frequency, duty);
+	}
+
+private:
+	gpiochip* m_chip = nullptr;
+	size_t m_pin = 0;
+	float m_frequency = 0;
+};
+
+/* TODO: is 5 enought? */
+static external_hardware_pwm extPwms[5];
 
 /*==========================================================================*/
 /* Local functions.															*/
@@ -56,6 +97,17 @@ static gpiochip *gpiochip_find(brain_pin_e pin)
 			return chip;
 	}
 
+	return nullptr;
+}
+
+static external_hardware_pwm* gpiochip_getNextPwmDevice() {
+	for (size_t i = 0; i < efi::size(extPwms); i++) {
+		if (!extPwms[i].hasInit()) {
+			return &extPwms[i];
+		}
+	}
+
+	criticalError("Run out of gpiochip PWM devices!");
 	return nullptr;
 }
 
@@ -276,8 +328,8 @@ int gpiochips_writePad(brain_pin_e pin, int value) {
 	gpiochip *chip = gpiochip_find(pin);
 
 	if (!chip) {
-  // todo: make readPad fail in a similar way?
-	  criticalError("gpiochip not found for pin %d", pin);
+		// todo: make readPad fail in a similar way?
+		criticalError("gpiochip not found for pin %d", pin);
 		return -108;
 	}
 
@@ -300,6 +352,33 @@ int gpiochips_readPad(brain_pin_e pin)
 		return -109;
 
 	return chip->chip->readPad(pin - chip->base);
+}
+
+/**
+ * @brief Try to init PWM on given pin
+ * @details success of call depends on chip capabilities
+ * returns nullptr in case there is no chip for given pin
+ * returns nullptr in case of pin is not PWM capable
+ * returns nullptr in case all extPwms are already used
+ * returns hardware_pwm if succes, later user can call ->setDuty to change duty
+ */
+
+hardware_pwm* gpiochip_tryInitPwm(const char* msg, brain_pin_e pin, float frequency, float duty)
+{
+	gpiochip *chip = gpiochip_find(pin);
+
+	if (!chip) {
+		return nullptr;
+	}
+
+	/* TODO: implement reintialization of same pin with different settings reusing same external_hardware_pwm */
+	if (external_hardware_pwm *device = gpiochip_getNextPwmDevice()) {
+		if (device->start(msg, chip, pin - chip->base, frequency, duty) >= 0) {
+			return device;
+		}
+	}
+
+	return nullptr;
 }
 
 /**
