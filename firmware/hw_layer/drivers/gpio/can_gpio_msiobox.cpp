@@ -419,7 +419,7 @@ int MsIoBox::readPad(size_t pin) {
 
 	pin -= MSIOBOX_OUTPUTS;
 
-	if (OutMode & BIT(pin)) {
+	if (InMode & BIT(pin)) {
 		/* pin is configured for VSS */
 		return -1;
 	}
