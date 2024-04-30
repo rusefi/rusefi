@@ -225,7 +225,7 @@ void EngineTestHelper::clearQueue() {
 }
 
 int EngineTestHelper::executeActions() {
-	return engine.executor.executeAll(getTimeNowUs());
+	return engine.executor.executeAll(US2NT(getTimeNowUs()));
 }
 
 void EngineTestHelper::moveTimeForwardMs(float deltaTimeMs) {
