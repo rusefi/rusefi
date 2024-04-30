@@ -66,7 +66,7 @@ void TestExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* scheduli
 		m_mockExecutor->scheduleByTimestampNt(msg, scheduling, timeNt, action);
 		return;
 	}
-
+  // by the way we have loss of precision while converting NT to integer US
 	scheduleByTimestamp(msg, scheduling, NT2US(timeNt), action);
 }
 
