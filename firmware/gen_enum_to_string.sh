@@ -80,5 +80,3 @@ cd ../../../..
 cd config/boards/cypress/config
 ./hellen_cypress_gen_enum_to_string.sh
 cd ../../../..
-
-bash config/boards/subaru_eg33/config/gen_enum_to_string.sh
