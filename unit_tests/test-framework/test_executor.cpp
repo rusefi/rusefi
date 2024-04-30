@@ -28,8 +28,8 @@ void TestExecutor::scheduleForLater(const char *msg, scheduling_s *scheduling, i
 	scheduleByTimestamp(msg, scheduling, getTimeNowUs() + delayUs, action);
 }
 
-int TestExecutor::executeAll(efitick_t now) {
-	return schedulingQueue.executeAll(now);
+int TestExecutor::executeAll(efitimeus_t nowUs) {
+	return schedulingQueue.executeAll(nowUs);
 }
 
 void TestExecutor::clear() {
