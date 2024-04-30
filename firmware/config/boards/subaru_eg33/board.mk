@@ -4,9 +4,6 @@ BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp \
 
 # board.c from this directory
 BOARD_C = $(BOARD_DIR)/board.c
-# Required include directories
-BOARDINC += $(BOARD_DIR)/config/controllers/generated \
-  $(BOARD_DIR)/config/controllers/algo
 
 #LED
 DDEFS +=  -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::G7
