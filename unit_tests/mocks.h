@@ -9,7 +9,7 @@
 #include "stepper.h"
 #include "tunerstudio_io.h"
 #include "idle_thread.h"
-#include "global_execution_queue.h"
+#include "test_executor.h"
 
 #include "gmock/gmock.h"
 

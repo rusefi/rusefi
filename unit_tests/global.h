@@ -13,7 +13,7 @@
 #include <time.h>
 
 #include "common_headers.h"
-#include "global_execution_queue.h"
+#include "test_executor.h"
 
 #define EFU_UNIT_TESTS fail("typo please EFU_UNIT_TEST");
 
