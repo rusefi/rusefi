@@ -2168,4 +2168,8 @@ enum class ObdCode : uint16_t {
 	 * Commanded fuel exceeds your fuel injector flow
 	 */
 	CUSTOM_TOO_LONG_FUEL_INJECTION = 9013,
+	/**
+	 * GPIO chip errors
+	 */
+	CUSTOM_GPIO_CHIP_FAILED_PWM = 9014,
 };
