@@ -41,6 +41,14 @@ jobs:
     - name: Print make version
       run: make -v
 
+    - name: Handle docs-enums separately just to make github logs more readable
+      working-directory: ./unit_tests/
+      run: make -j4 docs-enums
+
+    - name: Handle configs separately just to make github logs more readable
+      working-directory: ./unit_tests/
+      run: make -j4 config
+
     - name: Compile
       working-directory: unit_tests
       run: make -j4
