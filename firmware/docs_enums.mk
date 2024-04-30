@@ -12,8 +12,7 @@ DOCS_ENUMS_INPUTS = \
   $(PROJECT_DIR)/controllers/algo/rusefi_hw_enums.h \
   $(PROJECT_DIR)/controllers/sensors/sensor_type.h \
   $(PROJECT_DIR)/config/boards/cypress/rusefi_hw_enums.h \
-  $(PROJECT_DIR)/config/boards/kinetis/rusefi_hw_enums.h \
-  $(PROJECT_DIR)/config/boards/subaru_eg33/rusefi_hw_enums.h
+  $(PROJECT_DIR)/config/boards/kinetis/rusefi_hw_enums.h
 
 .docsenums-sentinel: $(DOCS_ENUMS_INPUTS) $(CONFIG_DEFINITION_BASE) $(ENUM_TO_STRING)
 	META_OUTPUT_ROOT_FOLDER="" bash $(PROJECT_DIR)/gen_live_documentation.sh
