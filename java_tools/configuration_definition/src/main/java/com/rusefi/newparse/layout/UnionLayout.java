@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UnionLayout extends Layout {
-    private final List<Layout> children = new ArrayList<>();
+    public final List<Layout> children = new ArrayList<>();
 
     public UnionLayout(Union u) {
         for (Field f : u.fields) {

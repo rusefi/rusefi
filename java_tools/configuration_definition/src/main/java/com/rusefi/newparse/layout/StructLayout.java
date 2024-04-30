@@ -11,9 +11,9 @@ public class StructLayout extends Layout {
     /*private*/public final List<Layout> children = new ArrayList<>();
 
     public final String typeName;
-    private final String name;
-    private final Boolean noPrefix;
-    private final int size;
+    public final String name;
+    public final Boolean noPrefix;
+    public final int size;
 
     private static int getAlignedOffset(int offset, int alignment) {
         // Align each element to its own size

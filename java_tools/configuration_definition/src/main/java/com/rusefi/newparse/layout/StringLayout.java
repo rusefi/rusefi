@@ -6,9 +6,9 @@ import com.rusefi.newparse.parsing.StringField;
 import java.io.PrintStream;
 
 public class StringLayout extends Layout {
-    private final String name;
-    private final int size;
-    private final String comment;
+    public final String name;
+    public final int size;
+    public final String comment;
 
     public StringLayout(StringField field) {
         this.name = field.name;

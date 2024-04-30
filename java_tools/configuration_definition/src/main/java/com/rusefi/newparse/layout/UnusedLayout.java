@@ -6,7 +6,7 @@ import com.rusefi.newparse.parsing.UnusedField;
 import java.io.PrintStream;
 
 public class UnusedLayout extends Layout {
-    private final int size;
+    public final int size;
 
     public UnusedLayout(int size) {
         this.size = size;

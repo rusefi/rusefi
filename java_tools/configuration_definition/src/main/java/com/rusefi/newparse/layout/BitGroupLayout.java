@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class BitGroupLayout extends Layout {
-    private static class BitLayout {
+    public static class BitLayout {
         public final String name;
         public final String comment;
         public final String trueValue;
@@ -22,7 +22,7 @@ public class BitGroupLayout extends Layout {
         }
     }
 
-    private final List<BitLayout> bits;
+    public final List<BitLayout> bits;
 
     public BitGroupLayout(BitGroup bitGroup) {
         int size = bitGroup.bitFields.size();

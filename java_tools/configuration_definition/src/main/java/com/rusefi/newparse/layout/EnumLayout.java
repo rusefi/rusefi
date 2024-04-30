@@ -8,12 +8,12 @@ import com.rusefi.newparse.parsing.Type;
 import java.io.PrintStream;
 
 public class EnumLayout extends Layout {
-    private final String name;
-    private final Type type;
-    private final String enumType;
-    private final int endBit;
-    private final String[] values;
-    private final FieldOptions options;
+    public final String name;
+    public final Type type;
+    public final String enumType;
+    public final int endBit;
+    public final String[] values;
+    public final FieldOptions options;
 
     public EnumLayout(EnumField field) {
         this.name = field.name;

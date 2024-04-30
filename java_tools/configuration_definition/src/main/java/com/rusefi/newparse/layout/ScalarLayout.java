@@ -10,9 +10,9 @@ import java.io.PrintStream;
 
 public class ScalarLayout extends Layout {
     public final String name;
-    private final Type type;
-    private final FieldOptions options;
-    private final boolean autoscale;
+    public final Type type;
+    public final FieldOptions options;
+    public final boolean autoscale;
 
     public ScalarLayout(ScalarField field) {
         this.name = field.name;
