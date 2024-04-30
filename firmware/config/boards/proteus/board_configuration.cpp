@@ -214,6 +214,19 @@ static Gpio PROTEUS_SBC_OUTPUTS[] = {
 
 };
 
+static Gpio PROTEUS_M73_OUTPUTS[] = {
+    Gpio::PROTEUS_LS_1, // inj 1
+    Gpio::PROTEUS_LS_2, // inj 2
+    Gpio::PROTEUS_LS_3,
+    Gpio::PROTEUS_LS_4,
+    Gpio::PROTEUS_LS_5,
+    Gpio::PROTEUS_LS_6,
+    Gpio::PROTEUS_LS_7,
+    Gpio::PROTEUS_LS_8,
+    Gpio::PROTEUS_LS_9, // inj 9
+    Gpio::PROTEUS_LS_10, // inj 3
+};
+
 static Gpio PROTEUS_CANAM_OUTPUTS[] = {
     Gpio::PROTEUS_LS_1, // inj 1
     Gpio::PROTEUS_LS_2, // inj 2
@@ -297,6 +310,9 @@ int getBoardMetaOutputsCount() {
     if (engineConfiguration->engineType == engine_type_e::GM_SBC) {
         return efi::size(PROTEUS_SBC_OUTPUTS);
     }
+    if (engineConfiguration->engineType == engine_type_e::PROTEUS_BMW_M73) {
+        return efi::size(PROTEUS_M73_OUTPUTS);
+    }
     return efi::size(PROTEUS_OUTPUTS);
 }
 
@@ -320,6 +336,9 @@ Gpio* getBoardMetaOutputs() {
     }
     if (engineConfiguration->engineType == engine_type_e::GM_SBC) {
         return PROTEUS_SBC_OUTPUTS;
+    }
+    if (engineConfiguration->engineType == engine_type_e::PROTEUS_BMW_M73) {
+        return PROTEUS_M73_OUTPUTS;
     }
     return PROTEUS_OUTPUTS;
 }
