@@ -1,5 +1,6 @@
 /*
  * @file test_executor.h
+ * implementation of ExecutorInterface used by unit tests
  *
  *  Created on: Jan 9, 2019
  * @author Andrey Belomutskiy, (c) 2012-2020

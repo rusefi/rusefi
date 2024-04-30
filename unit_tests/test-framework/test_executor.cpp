@@ -1,5 +1,5 @@
 /*
- * global_execution_queue.cpp
+ * test_executor.cpp
  *
  * @date Dec 8, 2018
  * @author Andrey Belomutskiy, (c) 2012-2020
