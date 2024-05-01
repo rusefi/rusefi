@@ -194,8 +194,7 @@ private:
 	void checkState();
 
 	/* PWM output helpers */
-	int CalcOnPeriod(int ch);
-	int CalcOffPeriod(int ch);
+	void CalcOnOffPeriod(int ch, pwm_settings &pwm);
 
 	/* Output states */
 	uint8_t OutMode;	// on/off (0) vs pwm (1) bitfield
@@ -306,26 +305,17 @@ int MsIoBox::setup() {
 	return 0;
 }
 
-int MsIoBox::CalcOnPeriod(int ch)
+void MsIoBox::CalcOnOffPeriod(int ch, pwm_settings &pwm)
 {
 	if ((OutMode & BIT(ch)) == 0) {
-		return 0;
+		pwm.on = pwm.off = 0;
+		return;
 	}
 
 	int period = (pwmBaseFreq + (OutPwm[ch].frequency / 2)) / OutPwm[ch].frequency;
 
-	return period * OutPwm[ch].duty;
-}
-
-int MsIoBox::CalcOffPeriod(int ch)
-{
-	if ((OutMode & BIT(ch)) == 0) {
-		return 0;
-	}
-
-	int period = (pwmBaseFreq + (OutPwm[ch].frequency / 2)) / OutPwm[ch].frequency;
-
-	return period * (1.0 - OutPwm[ch].duty);
+	pwm.on = period * OutPwm[ch].duty;
+	pwm.off = period - pwm.on;
 }
 
 /* Send current gpio and pwm states */
@@ -340,8 +330,7 @@ int MsIoBox::update() {
 
 		CanTxTyped<iobox_pwm> pwm(CanCategory::MEGASQUIRT, base + CAN_IOBOX_SET_PWM(i), false, 0);
 		for (size_t j = 0; j < 2; j++) {
-			pwm->ch[j].on = CalcOnPeriod(i + j);
-			pwm->ch[j].off = CalcOffPeriod(i + j);
+			CalcOnOffPeriod(i + j, pwm->ch[j]);
 		}
 	}
 
@@ -349,8 +338,7 @@ int MsIoBox::update() {
 	{
 		CanTxTyped<iobox_pwm_last> pwm(CanCategory::MEGASQUIRT, base + CAN_IOBOX_SET_PWM(3), false, 0);
 
-		pwm->ch[0].on = CalcOnPeriod(MSIOBOX_OUT_COUNT - 1);
-		pwm->ch[0].off = CalcOffPeriod(MSIOBOX_OUT_COUNT - 1);
+		CalcOnOffPeriod(MSIOBOX_OUT_COUNT - 1, pwm->ch[0]);
 
 		pwm->out_state = OutVal;
 	}
@@ -462,6 +450,8 @@ int MsIoBox::setPadPWM(size_t pin, float frequency, float duty)
 {
 	if (pin >= MSIOBOX_OUT_COUNT)
 		return -1;
+
+	/* TODO: validate frequency? Validate duty? */
 
 	/* Just save values.
 	 * Do calculation in update() as at this point we may not receive
