@@ -61,6 +61,12 @@ private:
  */
 #pragma pack(push, 4)
 struct scheduling_s {
+#if EFI_UNIT_TEST
+  efitick_t getMomentUs() {
+    return momentX;
+  }
+#endif
+
 #if EFI_SIMULATOR
   // used by signal_executor_sleep executor implementation
 	virtual_timer_t timer;
@@ -70,6 +76,7 @@ struct scheduling_s {
 	 * timestamp represented as 64-bit value of ticks since MCU start
 	 */
 	// actually looks like this is ALWAYS or sometimes us these days?
+	// todo: make private with explicit getter/setter?
 	volatile efitick_t momentX = 0;
 
 	/**

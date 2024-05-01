@@ -249,12 +249,12 @@ TEST(misc, testRpmCalculator) {
 	scheduling_s *ev0 = engine->executor.getForUnitTest(0);
 
 	assertREqualsM("Call@0", (void*)ev0->action.getCallback(), (void*)turnSparkPinHighStartCharging);
-	ASSERT_EQ(US2NT(start + 944), ev0->momentX) << "ev 0";
+	ASSERT_EQ(start + 944, ev0->getMomentUs()) << "ev 0";
 	assertEqualsLM("coil 0", (uintptr_t)&enginePins.coils[0], (uintptr_t)((IgnitionEvent*)ev0->action.getArgument())->outputs[0]);
 
 	scheduling_s *ev1 = engine->executor.getForUnitTest(1);
 	assertREqualsM("Call@1", (void*)ev1->action.getCallback(), (void*)fireSparkAndPrepareNextSchedule);
-	ASSERT_EQ(US2NT(start + 944 + 1000 * FORD_INLINE_DWELL), ev1->momentX) << "ev 1";
+	ASSERT_EQ(start + 944 + 1000 * FORD_INLINE_DWELL, ev1->getMomentUs()) << "ev 1";
 	assertEqualsLM("coil 1", (uintptr_t)&enginePins.coils[0], (uintptr_t)((IgnitionEvent*)ev1->action.getArgument())->outputs[0]);
 
 	}
@@ -267,9 +267,9 @@ TEST(misc, testRpmCalculator) {
 	ASSERT_EQ( 2,  engine->triggerCentral.triggerState.getCurrentIndex()) << "index #3";
 	ASSERT_EQ( 4,  engine->executor.size()) << "queue size 3";
 
-	ASSERT_EQ(US2NT(start + 13333 - 1515 + 2459), engine->executor.getForUnitTest(0)->momentX) << "ev 3";
-	ASSERT_EQ(US2NT(start + 14277 + 500), engine->executor.getForUnitTest(1)->momentX) << "ev 5";
-	ASSERT_EQ(US2NT(start + 14777 + 677), engine->executor.getForUnitTest(2)->momentX) << "3/3";
+	ASSERT_EQ(start + 13333 - 1515 + 2459, engine->executor.getForUnitTest(0)->getMomentUs()) << "ev 3";
+	ASSERT_EQ(start + 14277 + 500, engine->executor.getForUnitTest(1)->getMomentUs()) << "ev 5";
+	ASSERT_EQ(start + 14777 + 677, engine->executor.getForUnitTest(2)->getMomentUs()) << "3/3";
 	engine->executor.clear();
 
 	ASSERT_EQ(4, engine->triggerCentral.triggerShape.findAngleIndex(&engine->triggerCentral.triggerFormDetails, 240));
@@ -304,8 +304,8 @@ TEST(misc, testRpmCalculator) {
 
 	eth.fireRise(5);
 	ASSERT_EQ( 4,  engine->executor.size()) << "queue size 6";
-	ASSERT_EQ(US2NT(start + 40944), engine->executor.getForUnitTest(0)->momentX) << "6/0";
-	ASSERT_EQ(US2NT(start + 41444), engine->executor.getForUnitTest(1)->momentX) << "6/1";
+	ASSERT_EQ(start + 40944, engine->executor.getForUnitTest(0)->getMomentUs()) << "6/0";
+	ASSERT_EQ(start + 41444, engine->executor.getForUnitTest(1)->getMomentUs()) << "6/1";
 	engine->executor.clear();
 
 	eth.fireFall(5);
@@ -316,8 +316,8 @@ TEST(misc, testRpmCalculator) {
 	eth.fireFall(5);
 
 	ASSERT_EQ( 4,  engine->executor.size()) << "queue size 8";
-	ASSERT_EQ(US2NT(start + 53333 - 1515 + 2459), engine->executor.getForUnitTest(0)->momentX) << "8/0";
-	ASSERT_EQ(US2NT(start + 54277 + 2459 - 1959), engine->executor.getForUnitTest(1)->momentX) << "8/1";
+	ASSERT_EQ(start + 53333 - 1515 + 2459, engine->executor.getForUnitTest(0)->getMomentUs()) << "8/0";
+	ASSERT_EQ(start + 54277 + 2459 - 1959, engine->executor.getForUnitTest(1)->getMomentUs()) << "8/1";
 	engine->executor.clear();
 }
 
