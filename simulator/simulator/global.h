@@ -28,8 +28,6 @@
 
 #define hasOsPanicError() (FALSE)
 
-#define US_TO_NT_MULTIPLIER 100
-
 // need to fight 32bit int overflow
 
 #define MY_US2ST(x) ((x) / 10)
