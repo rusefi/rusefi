@@ -31,8 +31,3 @@ void setTPS1Calibration(uint16_t tpsMin, uint16_t tpsMax, uint16_t tps1Secondary
 void setCustomMap(float lowValue, float mapLowValueVoltage, float highValue, float mapHighValueVoltage);
 
 void setEtbPID(float p, float i, float d);
-
-// split threshold
-#ifndef MAX_TPS_PPS_DISCREPANCY
-#define MAX_TPS_PPS_DISCREPANCY 5.0f
-#endif

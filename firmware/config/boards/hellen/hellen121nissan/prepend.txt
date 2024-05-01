@@ -20,7 +20,7 @@
 #define ts_show_ignitionPinMode false
 #define ts_show_tps2 false
 
-
+#define MAX_TPS_PPS_DISCREPANCY 10
 
 #define CLT_UPPER_LIMIT 125
 
