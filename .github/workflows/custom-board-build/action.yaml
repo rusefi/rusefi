@@ -160,6 +160,7 @@ runs:
         PROJECT_BOARD=${PROJECT_BOARD:-$SHORT_BOARD_NAME}
         echo "PROJECT_BOARD=$PROJECT_BOARD" >> $GITHUB_ENV
         echo "BUNDLE_NAME=$BUNDLE_NAME" >> $GITHUB_ENV
+        echo "current_date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
 
     - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
       uses: carlosperate/arm-none-eabi-gcc-action@v1
@@ -388,7 +389,7 @@ runs:
       if: ${{ contains(inputs.artifacts, 'obfuscated') }}
       uses: actions/upload-artifact@v4
       with:
-        name: rusefi_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public_autoupdate.zip
+        name: rusefi_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public_autoupdate_${{env.current_date}}.zip
         path: ${{inputs.rusefi_dir}}/artifacts/rusefi_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public_autoupdate.zip
 
     - uses: mukunku/tag-exists-action@v1.6.0
