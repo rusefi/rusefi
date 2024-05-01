@@ -61,11 +61,21 @@ private:
  */
 #pragma pack(push, 4)
 struct scheduling_s {
-#if EFI_UNIT_TEST
+  efitick_t getMomentNt() {
+    return momentX;
+  }
+
   efitick_t getMomentUs() {
     return momentX;
   }
-#endif
+
+  efitick_t getMomentRaw() {
+    return momentX;
+  }
+
+  void setMomentX(efitick_t p_moment) {
+    momentX = p_moment;
+  }
 
 #if EFI_SIMULATOR
   // used by signal_executor_sleep executor implementation
@@ -73,18 +83,18 @@ struct scheduling_s {
 #endif /* EFI_SIMULATOR */
 
 	/**
-	 * timestamp represented as 64-bit value of ticks since MCU start
-	 */
-	// actually looks like this is ALWAYS or sometimes us these days?
-	// todo: make private with explicit getter/setter?
-	volatile efitick_t momentX = 0;
-
-	/**
 	 * Scheduler implementation uses a sorted linked list of these scheduling records.
 	 */
 	scheduling_s *nextScheduling_s = nullptr;
 
 	action_s action;
+	/**
+	 * timestamp represented as 64-bit value of ticks since MCU start
+	 */
+	// actually looks like this is ALWAYS or sometimes us these days?
+	// todo: make private with explicit getter/setter?
+private:
+	volatile efitick_t momentX = 0;
 };
 #pragma pack(pop)
 

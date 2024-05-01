@@ -84,17 +84,17 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitick_t timeX, action_s 
 	if (scheduling->action) {
 #if EFI_UNIT_TEST
 		if (verboseMode) {
-			printf("Already scheduled was %d\r\n", (int)scheduling->momentX);
+			printf("Already scheduled was %d\r\n", (int)scheduling->getMomentRaw());
 			printf("Already scheduled now %d\r\n", (int)timeX);
 		}
 #endif /* EFI_UNIT_TEST */
 		return false;
 	}
 
-	scheduling->momentX = timeX;
+	scheduling->setMomentX(timeX);
 	scheduling->action = action;
 
-	if (!m_head || timeX < m_head->momentX) {
+	if (!m_head || timeX < m_head->getMomentNt()) {
 		// here we insert into head of the linked list
 		LL_PREPEND2(m_head, scheduling, nextScheduling_s);
 		assertListIsSorted();
@@ -102,7 +102,7 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitick_t timeX, action_s 
 	} else {
 		// here we know we are not in the head of the list, let's find the position - linear search
 		scheduling_s *insertPosition = m_head;
-		while (insertPosition->nextScheduling_s != NULL && insertPosition->nextScheduling_s->momentX < timeX) {
+		while (insertPosition->nextScheduling_s != NULL && insertPosition->nextScheduling_s->getMomentNt() < timeX) {
 			insertPosition = insertPosition->nextScheduling_s;
 		}
 
@@ -168,7 +168,7 @@ void EventQueue::remove(scheduling_s* scheduling) {
  */
 expected<efitick_t> EventQueue::getNextEventTime(efitick_t nowX) const {
 	if (m_head) {
-		if (m_head->momentX <= nowX) {
+		if (m_head->getMomentUs() <= nowX) {
 			/**
 			 * We are here if action timestamp is in the past. We should rarely be here since this 'getNextEventTime()' is
 			 * always invoked by 'scheduleTimerCallback' which is always invoked right after 'executeAllPendingActions' - but still,
@@ -179,7 +179,7 @@ expected<efitick_t> EventQueue::getNextEventTime(efitick_t nowX) const {
 			 */
 			return nowX + m_lateDelay;
 		} else {
-			return m_head->momentX;
+			return m_head->getMomentUs();
 		}
 	}
 
@@ -227,14 +227,14 @@ bool EventQueue::executeOne(efitick_t now) {
 	// resetting the timer and scheduling an new interrupt is greater than just
 	// waiting for the time to arrive.  On current CPUs, this is reasonable to set
 	// around 10 microseconds.
-	if (current->momentX > now + m_lateDelay) {
+	if (current->getMomentNt() > now + m_lateDelay) {
 		return false;
 	}
 
 	// near future - spin wait for the event to happen and avoid the
 	// overhead of rescheduling the timer.
 	// yes, that's a busy wait but that's what we need here
-	while (current->momentX > getTimeNowNt()) {
+	while (current->getMomentNt() > getTimeNowNt()) {
 		UNIT_TEST_BUSY_WAIT_CALLBACK();
 	}
 
@@ -275,7 +275,7 @@ void EventQueue::assertListIsSorted() const {
 	int counter = 0;
 	scheduling_s *current = m_head;
 	while (current != NULL && current->nextScheduling_s != NULL) {
-		efiAssertVoid(ObdCode::CUSTOM_ERR_6623, current->momentX <= current->nextScheduling_s->momentX, "list order");
+		efiAssertVoid(ObdCode::CUSTOM_ERR_6623, current->getMomentNt() <= current->nextScheduling_s->getMomentNt(), "list order");
 		current = current->nextScheduling_s;
 		if (counter++ > 1'000'000'000)
 			criticalError("EventQueue: looks like a loop?!");
@@ -309,7 +309,7 @@ void EventQueue::clear(void) {
 		m_head = x->nextScheduling_s;
 
 		// Reset this element
-		x->momentX = 0;
+		x->setMomentX(0);
 		x->nextScheduling_s = nullptr;
 		x->action = {};
 	}
