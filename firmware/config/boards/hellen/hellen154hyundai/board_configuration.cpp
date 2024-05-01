@@ -51,7 +51,7 @@ static void setupDefaultSensorInputs() {
 
 static bool isFirstInvocation = true;
 
-int hackHellenBoardId(int detectedId) {
+/*BOARD_WEAK*/ int hackHellenBoardId(int detectedId) {
   if (detectedId == BOARD_ID_VAG121_D) {
     // wow something bad has happened to that batch of boards?!
     return BOARD_ID_154HYUNDAI_C;
