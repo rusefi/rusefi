@@ -55,8 +55,11 @@ int gpiochips_init(void);
 int gpiochips_setPadMode(brain_pin_e pin, iomode_t mode);
 int gpiochips_writePad(brain_pin_e pin, int value);
 int gpiochips_readPad(brain_pin_e pin);
-hardware_pwm* gpiochip_tryInitPwm(const char* msg, brain_pin_e pin, float frequency, float duty);
 brain_pin_diag_e gpiochips_getDiag(brain_pin_e pin);
+
+#if EFI_PROD_CODE
+hardware_pwm* gpiochip_tryInitPwm(const char* msg, brain_pin_e pin, float frequency, float duty);
+#endif
 
 /* return total number of external gpios */
 int gpiochips_get_total_pins(void);
