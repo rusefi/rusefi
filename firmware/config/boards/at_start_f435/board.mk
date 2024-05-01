@@ -21,7 +21,8 @@ BOARDINC = $(CHIBIOS)/os/hal/boards/AT_START_F435/
 CONFDIR = $(PROJECT_DIR)/hw_layer/ports/at32/at32f4/cfg
 
 # This board uses ChibiOS MFS driver on internal flash
-DDEFS += -DEFI_STORAGE_INT_FLASH=FLASE -DHAL_USE_EFL=TRUE -DEFI_STORAGE_MFS=TRUE
+DDEFS += -DHAL_USE_EFL=TRUE
+include $(PROJECT_DIR)/hw_layer/ports/stm32/calibrations_on_flash.mk
 # This board has chip with dual-bank flash, bank 2 can be flashed in background
 DDEFS += -DEFI_FLASH_WRITE_THREAD=TRUE
 

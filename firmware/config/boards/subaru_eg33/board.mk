@@ -27,6 +27,11 @@ DDEFS += -DEFI_EMBED_INI_MSD=TRUE
 # Shared variables
 ALLINC    += $(BOARDINC)
 
+# this board has external QSPI NOR flash
+# see also *STM32_WSPI*
+DDEFS += -DHAL_USE_WSPI=TRUE
+DDEFS += -DSNOR_SHARED_BUS=FALSE
+DDEFS += -DWSPI_USE_MUTUAL_EXCLUSION=FALSE
 
 # This board uses ChibiOS MFS driver on internal flash
 include $(PROJECT_DIR)/hw_layer/ports/stm32/calibrations_on_flash.mk
