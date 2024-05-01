@@ -9,7 +9,7 @@
 
 #include "pch.h"
 
-#if EFI_STORAGE_INT_FLASH
+#if defined(EFI_BOOTLOADER) || EFI_STORAGE_INT_FLASH
 
 #include "flash_int.h"
 #include <string.h>
@@ -218,7 +218,7 @@ int intFlashErase(flashaddr_t address, size_t size) {
 bool intFlashIsErased(flashaddr_t address, size_t size) {
 #if CORTEX_MODEL == 7
 	// If we have a cache, invalidate the relevant cache lines.
-	// They may still contain old data, leading us to believe that the 
+	// They may still contain old data, leading us to believe that the
 	// flash erase failed.
 	SCB_InvalidateDCache_by_Addr((uint32_t*)address, size);
 #endif
@@ -306,7 +306,7 @@ int intFlashWrite(flashaddr_t address, const char* buffer, size_t size) {
 		for (size_t i = 0; i < 8; i++) {
 			*pWrite++ = *pRead++;
 		}
-		
+
 		// Flush pipelines
 		__ISB();
 		__DSB();
