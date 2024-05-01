@@ -96,10 +96,10 @@ TEST(EventQueue, complex) {
 	eq.insertTask(&s2, 11, callback);
 
 	ASSERT_EQ(4, eq.size());
-	ASSERT_EQ(10, eq.getHead()->momentX);
-	ASSERT_EQ(10, eq.getHead()->nextScheduling_s->momentX);
-	ASSERT_EQ(11, eq.getHead()->nextScheduling_s->nextScheduling_s->momentX);
-	ASSERT_EQ(12, eq.getHead()->nextScheduling_s->nextScheduling_s->nextScheduling_s->momentX);
+	ASSERT_EQ(10, eq.getHead()->getMomentRaw());
+	ASSERT_EQ(10, eq.getHead()->nextScheduling_s->getMomentRaw());
+	ASSERT_EQ(11, eq.getHead()->nextScheduling_s->nextScheduling_s->getMomentRaw());
+	ASSERT_EQ(12, eq.getHead()->nextScheduling_s->nextScheduling_s->nextScheduling_s->getMomentRaw());
 
 	callbackCounter = 0;
 	eq.executeAll(10);
