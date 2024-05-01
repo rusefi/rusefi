@@ -16,6 +16,8 @@ CHIBIOS = ../firmware/ChibiOS
 CHIBIOS_CONTRIB = ../firmware/ChibiOS-Contrib
 RULESPATH = $(CHIBIOS)/os/common/startup/SIMIA32/compilers/GCC
 
+US_TO_NT_MULTIPLIER = 100
+
 PROJECT_CPU=simulator
 
 ifneq ($(BOARD_DIR),)
@@ -49,6 +51,7 @@ endif
 # Compiler options here.
 ifeq ($(USE_OPT),)
   USE_OPT = -Wall -Wno-error=implicit-fallthrough -Wno-error=write-strings -Wno-error=strict-aliasing -Werror=nonnull
+  USE_OPT += -D US_TO_NT_MULTIPLIER=$(US_TO_NT_MULTIPLIER)
 
   ifeq ($(OS),Windows_NT)
     USE_OPT += -DEFI_SIM_IS_WINDOWS=1
