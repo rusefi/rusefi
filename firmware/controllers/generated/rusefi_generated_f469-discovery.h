@@ -1121,6 +1121,7 @@
 #define MAP_sensor_config_s_size 140
 #define MAP_WINDOW_SIZE 8
 #define MAX_CYLINDER_COUNT 12
+#define MAX_TPS_PPS_DISCREPANCY 5
 #define mc33810maxDwellTimer_e_auto_enum 0="DWELL_2MS",3="DWELL_16MS",4="DWELL_32MS",1="DWELL_4MS",5="DWELL_64MS",2="DWELL_8MS"
 #define mc33810maxDwellTimer_e_DWELL_16MS 3
 #define mc33810maxDwellTimer_e_DWELL_2MS 0
@@ -1255,7 +1256,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 3374302086
+#define SIGNATURE_HASH 2109610824
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1638,7 +1639,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.05.01.f469-discovery.3374302086"
+#define TS_SIGNATURE "rusEFI master.2024.05.01.f469-discovery.2109610824"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
