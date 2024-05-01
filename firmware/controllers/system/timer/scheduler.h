@@ -65,7 +65,6 @@ struct scheduling_s {
     return momentX;
   }
 
-#if EFI_UNIT_TEST
   efitick_t getMomentUs() {
     return momentX;
   }
@@ -73,7 +72,7 @@ struct scheduling_s {
   efitick_t getMomentRaw() {
     return momentX;
   }
-#endif
+
   void setMomentX(efitick_t p_moment) {
     momentX = p_moment;
   }

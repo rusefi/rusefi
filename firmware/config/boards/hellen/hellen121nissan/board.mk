@@ -13,8 +13,6 @@ DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 DDEFS += -DFIRMWARE_ID=\"hellen121nissan\" $(VAR_DEF_ENGINE_TYPE)
 DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
 
-# bad temporary solution of hardware issue https://github.com/rusefi/rusefi/issues/4821
-DDEFS += -DMAX_TPS_PPS_DISCREPANCY=10.0f
 DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_HELLEN_121NISSAN
 
 include $(BOARDS_DIR)/hellen/hellen-common144.mk

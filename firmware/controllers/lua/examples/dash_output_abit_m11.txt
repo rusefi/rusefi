@@ -1,0 +1,29 @@
+-- sending data out for dash screens which understand Abit M11 protocol
+-- for instance TDG Dashboard v2.0
+
+ABIT_1 = 0x281
+
+setTickRate(100)
+
+t = Timer.new()
+t : reset()
+
+
+-- Little-endian System, "Intel"
+function setTwoBytesLsb(data, offset, value)
+	value = math.floor(value)
+	data[offset + 2] = value >> 8
+	data[offset + 1] = value & 0xff
+end
+
+out1 = { 0x1D, 0xE1, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 }
+
+function onTick()
+  rpm = math.floor(4000 * t : getElapsedSeconds())
+   if t : getElapsedSeconds() > 5 then
+   t : reset()
+   end
+  setTwoBytesLsb(out1, 0, rpm)
+  txCan(1, ABIT_1, 0, out1)
+end
+

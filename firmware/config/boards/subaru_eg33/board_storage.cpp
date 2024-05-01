@@ -10,7 +10,7 @@
 #include "pch.h"
 
 /* This board stores settings in external QSPI flash */
-#if EFI_STORAGE_MFS == TRUE
+#if !defined(EFI_BOOTLOADER) && (EFI_STORAGE_MFS == TRUE)
 
 #include "hal_serial_nor.h"
 #include "hal_mfs.h"

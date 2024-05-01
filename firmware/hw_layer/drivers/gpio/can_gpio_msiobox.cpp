@@ -163,6 +163,7 @@ class MsIoBox final : public GpioChip, public CanListener {
 	/* gpio stuff */
 	int writePad(size_t pin, int value) override;
 	int readPad(size_t pin) override;
+	int setPadPWM(size_t pin, float frequency, float duty) override;
 	brain_pin_diag_e getDiag(size_t pin) override;
 
 public:
@@ -192,12 +193,15 @@ private:
 	int update();
 	void checkState();
 
+	/* PWM output helpers */
+	void CalcOnOffPeriod(int ch, pwm_settings &pwm);
+
 	/* Output states */
 	uint8_t OutMode;	// on/off (0) vs pwm (1) bitfield
 	uint8_t OutVal;		// for on/off outputs
 	struct {
-		uint16_t OnPeriod;
-		uint16_t OffPeriod;
+		float frequency;
+		float duty;
 	} OutPwm[MSIOBOX_OUT_COUNT];
 	/* ADC inputs */
 	uint16_t AdcValue[MSIOBOX_ADC_IN_COUNT];
@@ -216,8 +220,10 @@ private:
 	uint32_t base;
 	uint32_t period;
 	/* IOBox timebase */
-	uint32_t pwmPeriodNs;
-	uint32_t tachinPeriodNs;
+	/* PWM clock period in 0.01 uS units, default is 5000 */
+	uint32_t pwmBaseFreq = 1000 * 1000 * 100 / 5000;	/* Hz */
+	/* Tach-in clock period in 0.01 uS units, default is 66 */
+	uint32_t tachinBaseFreq = 1000 * 1000 * 100 / 66;	/* Hz */
 	/* Misc */
 	uint8_t version;
 	/* Flags */
@@ -299,33 +305,41 @@ int MsIoBox::setup() {
 	return 0;
 }
 
+void MsIoBox::CalcOnOffPeriod(int ch, pwm_settings &pwm)
+{
+	if ((OutMode & BIT(ch)) == 0) {
+		pwm.on = pwm.off = 0;
+		return;
+	}
+
+	int period = (pwmBaseFreq + (OutPwm[ch].frequency / 2)) / OutPwm[ch].frequency;
+
+	pwm.on = period * OutPwm[ch].duty;
+	pwm.off = period - pwm.on;
+}
+
 /* Send current gpio and pwm states */
 int MsIoBox::update() {
 	/* TODO: protect against OutPwm/OutVal change while we are here */
 
 	/* PWM1 .. PWM6 */
 	for (size_t i = 0; i < 3; i++) {
-		/* sent if PWMs in use */
+		/* sent only if PWMs is in use */
 		if ((OutMode & (BIT(i) | BIT(i + 1))) == 0)
 			continue;
 
 		CanTxTyped<iobox_pwm> pwm(CanCategory::MEGASQUIRT, base + CAN_IOBOX_SET_PWM(i), false, 0);
-		pwm->ch[0].on = OutPwm[i * 2].OnPeriod;
-		pwm->ch[0].off = OutPwm[i * 2].OffPeriod;
-		pwm->ch[1].on = OutPwm[i * 2 + 1].OnPeriod;
-		pwm->ch[1].off = OutPwm[i * 2 + 1].OffPeriod;
+		for (size_t j = 0; j < 2; j++) {
+			CalcOnOffPeriod(i + j, pwm->ch[j]);
+		}
 	}
 
 	/* PWM7 periods and on/off outputs bitfield - sent always */
 	{
 		CanTxTyped<iobox_pwm_last> pwm(CanCategory::MEGASQUIRT, base + CAN_IOBOX_SET_PWM(3), false, 0);
 
-		if (OutMode & BIT(MSIOBOX_OUT_COUNT - 1)) {
-			pwm->ch[0].on = OutPwm[MSIOBOX_OUT_COUNT - 1].OnPeriod;
-			pwm->ch[0].off = OutPwm[MSIOBOX_OUT_COUNT - 1].OffPeriod;
-		} else {
-			pwm->ch[0].on = pwm->ch[0].off = 0;
-		}
+		CalcOnOffPeriod(MSIOBOX_OUT_COUNT - 1, pwm->ch[0]);
+
 		pwm->out_state = OutVal;
 	}
 
@@ -368,9 +382,9 @@ void MsIoBox::decodeFrame(const CANRxFrame& frame, efitick_t) {
 			auto data = reinterpret_cast<const iobox_whoami*>(&frame.data8[0]);
 
 			version = data->version;
-			/* convert from 0.01 uS units to nS */
-			pwmPeriodNs = data->pwm_period * 10;
-			tachinPeriodNs = data->tachin_period * 10;
+			/* convert from 0.01 uS units to Hz */
+			pwmBaseFreq = 1000 * 1000 * 100 / data->pwm_period;
+			tachinBaseFreq = 1000 * 1000 * 100 / data->tachin_period;
 
 			/* apply settings and set sync output states */
 			setup();
@@ -398,6 +412,7 @@ int MsIoBox::writePad(unsigned int pin, int value) {
 	if (pin >= MSIOBOX_OUTPUTS)
 		return -1;
 
+	uint8_t OutModeNew = OutMode & (~BIT(pin));
 	uint8_t OutValNew = OutVal;
 	if (value) {
 		OutValNew |= BIT(pin);
@@ -409,6 +424,10 @@ int MsIoBox::writePad(unsigned int pin, int value) {
 		OutVal = OutValNew;
 		needUpdate = true;
 	}
+	if (OutModeNew != OutMode) {
+		OutMode = OutModeNew;
+		needUpdateConfig = true;
+	}
 
 	return 0;
 }
@@ -419,12 +438,36 @@ int MsIoBox::readPad(size_t pin) {
 
 	pin -= MSIOBOX_OUTPUTS;
 
-	if (OutMode & BIT(pin)) {
+	if (InMode & BIT(pin)) {
 		/* pin is configured for VSS */
 		return -1;
 	}
 
 	return !!(InVal & BIT(pin));
+}
+
+int MsIoBox::setPadPWM(size_t pin, float frequency, float duty)
+{
+	if (pin >= MSIOBOX_OUT_COUNT)
+		return -1;
+
+	/* TODO: validate frequency? Validate duty? */
+
+	/* Just save values.
+	 * Do calculation in update() as at this point we may not receive
+	 * iobox_whoami packet with pwmPeriodNs */
+	OutPwm[pin].frequency = frequency;
+	OutPwm[pin].duty = duty;
+
+	if ((OutMode & BIT(pin)) == 0) {
+		OutMode |= BIT(pin);
+		needUpdateConfig = true;
+	}
+
+	/* TODO: chech if updated? */
+	needUpdate = true;
+
+	return 0;
 }
 
 brain_pin_diag_e MsIoBox::getDiag(size_t pin)

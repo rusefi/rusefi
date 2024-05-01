@@ -27,5 +27,9 @@ DDEFS += -DEFI_EMBED_INI_MSD=TRUE
 # Shared variables
 ALLINC    += $(BOARDINC)
 
-#Serial flash support
+
+# This board uses ChibiOS MFS driver on internal flash
+include $(PROJECT_DIR)/hw_layer/ports/stm32/calibrations_on_flash.mk
+
+#Serial flash driver
 include $(PROJECT_DIR)/hw_layer/drivers/flash/sst26f_jedec.mk

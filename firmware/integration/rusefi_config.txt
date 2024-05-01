@@ -200,6 +200,11 @@ struct_no_prefix engine_configuration_s
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
 #define SCRIPT_SETTING_COUNT 8
 
+#define GPPWM_1_NAME "General Purpose PWM 1"
+#define GPPWM_2_NAME "General Purpose PWM 2"
+#define GPPWM_3_NAME "General Purpose PWM 3"
+#define GPPWM_4_NAME "General Purpose PWM 4"
+
 #define VEHICLE_INFO_SIZE 32
 
 #define FUEL_RPM_COUNT 16
@@ -649,8 +654,10 @@ end_struct
 
 afr_sensor_s afr
 
+#define MAX_TPS_PPS_DISCREPANCY 5
+
 adc_channel_e throttlePedalPositionAdcChannel;Electronic throttle pedal position first channel\nSee throttlePedalPositionSecondAdcChannel for second channel\nSee also tps1_1AdcChannel\nset_analog_input_pin pps X\nSee throttlePedalUpVoltage and throttlePedalWOTVoltage
-    uint8_t autoscale etbSplit;TPS/PPS error threshold;"%", 0.1, 0, 0, 20, 1
+    uint8_t autoscale etbSplit;TPS/PPS error threshold;"%", 0.1, 0, 0, @@MAX_TPS_PPS_DISCREPANCY@@, 1
 	Gpio tle6240_cs;
 	pin_output_mode_e tle6240_csPinMode;
 	pin_output_mode_e mc33810_csPinMode;
