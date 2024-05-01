@@ -27,6 +27,6 @@ TEST(miata, miata_na_tdc) {
 	}
 
 	ASSERT_EQ(167,  round(Sensor::getOrZero(SensorType::Rpm))) << "miata_na_tdc RPM";
-	ASSERT_EQ(293999, engine->tdcScheduler[0].momentX % SIMULATION_CYCLE_PERIOD); // let's assert TDC position and sync point
-	ASSERT_EQ(293999, engine->tdcScheduler[1].momentX % SIMULATION_CYCLE_PERIOD); // let's assert TDC position and sync point
+	ASSERT_EQ(293999, engine->tdcScheduler[0].getMomentUs() % SIMULATION_CYCLE_PERIOD); // let's assert TDC position and sync point
+	ASSERT_EQ(293999, engine->tdcScheduler[1].getMomentUs() % SIMULATION_CYCLE_PERIOD); // let's assert TDC position and sync point
 }

@@ -266,7 +266,7 @@ void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTimeUs) {
 			// nothing pending - we are done here
 			break;
 		}
-		int nextEventTime = nextScheduledEvent->momentX;
+		int nextEventTime = nextScheduledEvent->getMomentUs();
 		if (nextEventTime > targetTimeUs) {
 			// next event is too far in the future
 			break;
@@ -298,7 +298,7 @@ scheduling_s * EngineTestHelper::assertEvent5(const char *msg, int index, void *
 	scheduling_s *event = executor->getForUnitTest(index);
 	assertEqualsM4(msg, " callback up/down", (void*)event->action.getCallback() == (void*) callback, 1);
 	efitimeus_t start = getTimeNowUs();
-	assertEqualsM2(msg, expectedTimestamp, event->momentX - start, /*3us precision to address rounding etc*/3);
+	assertEqualsM2(msg, expectedTimestamp, event->getMomentUs() - start, /*3us precision to address rounding etc*/3);
 	return event;
 }
 
