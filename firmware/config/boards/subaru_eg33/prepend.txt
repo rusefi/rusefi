@@ -13,6 +13,6 @@
 #define ts_show_output_diag true
 #define ts_show_mc33810 true
 
-
+#define CLT_UPPER_LIMIT 125
 
 #define TS_BLOCK_READ_TIMEOUT 300

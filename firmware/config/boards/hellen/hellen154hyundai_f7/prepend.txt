@@ -41,3 +41,5 @@
 #define ts_show_cylinder_12 false
 
 #define show_Hellen_hyundai_154 true
+
+#define CLT_UPPER_LIMIT 125
