@@ -20,7 +20,7 @@
 #define ts_show_ignitionPinMode false
 #define ts_show_tps2 false
 
-# bad temporary solution of hardware issue https://github.com/rusefi/rusefi/issues/4821
+! bad temporary solution of hardware issue https://github.com/rusefi/rusefi/issues/4821
 #define MAX_TPS_PPS_DISCREPANCY 10
 
 #define CLT_UPPER_LIMIT 125
