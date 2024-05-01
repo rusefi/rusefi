@@ -40,6 +40,8 @@ struct gpiochip {
 
 static gpiochip chips[BOARD_EXT_GPIOCHIPS];
 
+#if EFI_PROD_CODE
+
 /* TODO: move inside gpio chip driver? */
 class external_hardware_pwm : public hardware_pwm {
 public:
@@ -81,6 +83,8 @@ private:
 /* TODO: is 5 enought? */
 static external_hardware_pwm extPwms[5];
 
+#endif
+
 /*==========================================================================*/
 /* Local functions.															*/
 /*==========================================================================*/
@@ -100,6 +104,8 @@ static gpiochip *gpiochip_find(brain_pin_e pin)
 	return nullptr;
 }
 
+#if EFI_PROD_CODE
+
 static external_hardware_pwm* gpiochip_getNextPwmDevice() {
 	for (size_t i = 0; i < efi::size(extPwms); i++) {
 		if (!extPwms[i].hasInit()) {
@@ -110,6 +116,8 @@ static external_hardware_pwm* gpiochip_getNextPwmDevice() {
 	criticalError("Run out of gpiochip PWM devices!");
 	return nullptr;
 }
+
+#endif
 
 /*==========================================================================*/
 /* Exported functions.														*/
@@ -355,33 +363,6 @@ int gpiochips_readPad(brain_pin_e pin)
 }
 
 /**
- * @brief Try to init PWM on given pin
- * @details success of call depends on chip capabilities
- * returns nullptr in case there is no chip for given pin
- * returns nullptr in case of pin is not PWM capable
- * returns nullptr in case all extPwms are already used
- * returns hardware_pwm if succes, later user can call ->setDuty to change duty
- */
-
-hardware_pwm* gpiochip_tryInitPwm(const char* msg, brain_pin_e pin, float frequency, float duty)
-{
-	gpiochip *chip = gpiochip_find(pin);
-
-	if (!chip) {
-		return nullptr;
-	}
-
-	/* TODO: implement reintialization of same pin with different settings reusing same external_hardware_pwm */
-	if (external_hardware_pwm *device = gpiochip_getNextPwmDevice()) {
-		if (device->start(msg, chip, pin - chip->base, frequency, duty) >= 0) {
-			return device;
-		}
-	}
-
-	return nullptr;
-}
-
-/**
  * @brief Get diagnostic for given gpio
  * @details actual output value depend on gpiochip capabilities
  * returns PIN_UNKNOWN in case of pin not belong to any gpio chip
@@ -420,6 +401,37 @@ int gpiochips_get_total_pins(void)
 
 	return cnt;
 }
+
+#if EFI_PROD_CODE
+
+/**
+ * @brief Try to init PWM on given pin
+ * @details success of call depends on chip capabilities
+ * returns nullptr in case there is no chip for given pin
+ * returns nullptr in case of pin is not PWM capable
+ * returns nullptr in case all extPwms are already used
+ * returns hardware_pwm if succes, later user can call ->setDuty to change duty
+ */
+
+hardware_pwm* gpiochip_tryInitPwm(const char* msg, brain_pin_e pin, float frequency, float duty)
+{
+	gpiochip *chip = gpiochip_find(pin);
+
+	if (!chip) {
+		return nullptr;
+	}
+
+	/* TODO: implement reintialization of same pin with different settings reusing same external_hardware_pwm */
+	if (external_hardware_pwm *device = gpiochip_getNextPwmDevice()) {
+		if (device->start(msg, chip, pin - chip->base, frequency, duty) >= 0) {
+			return device;
+		}
+	}
+
+	return nullptr;
+}
+
+#endif
 
 #else /* BOARD_EXT_GPIOCHIPS > 0 */
 
