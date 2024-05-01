@@ -174,10 +174,13 @@
 #define TRIGGER_EXTREME_LOGGING FALSE
 
 #ifndef EFI_STORAGE_INT_FLASH
+// historically we've started with low-level flash access with our own redundancy logic
+// todo: migrate to EFI_STORAGE_MFS which provides same functionality and more!
 #define EFI_STORAGE_INT_FLASH   TRUE
 #endif
 
 #ifndef EFI_STORAGE_MFS
+// todo: this higher level API should replace EFI_STORAGE_INT_FLASH legacy implementation
 #define EFI_STORAGE_MFS         FALSE
 #endif
 
