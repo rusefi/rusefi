@@ -200,6 +200,11 @@ struct_no_prefix engine_configuration_s
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
 #define SCRIPT_SETTING_COUNT 8
 
+#define GPPWM_1_NAME "General Purpose PWM 1"
+#define GPPWM_2_NAME "General Purpose PWM 2"
+#define GPPWM_3_NAME "General Purpose PWM 3"
+#define GPPWM_4_NAME "General Purpose PWM 4"
+
 #define VEHICLE_INFO_SIZE 32
 
 #define FUEL_RPM_COUNT 16
