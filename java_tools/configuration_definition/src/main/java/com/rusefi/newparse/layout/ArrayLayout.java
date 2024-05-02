@@ -67,11 +67,6 @@ public class ArrayLayout extends Layout {
     }
 
     @Override
-    protected void writeSdLogLayout(PrintStream ps, StructNamePrefixer prefixer, String sourceName) {
-        this.prototypeLayout.writeSdLogLayout(ps, prefixer, sourceName, this.length);
-    }
-
-    @Override
     protected void doVisit(ILayoutVisitor v, PrintStream ps, StructNamePrefixer pfx, int offsetAdd, int[] arrayDims) {
         if (arrayDims.length != 0) {
             throw new IllegalStateException("ArrayLayout got called with array dims?");

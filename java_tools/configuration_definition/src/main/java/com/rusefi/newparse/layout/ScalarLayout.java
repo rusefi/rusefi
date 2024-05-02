@@ -64,53 +64,6 @@ public class ScalarLayout extends Layout {
     }
 
     @Override
-    protected void writeSdLogLayout(PrintStream ps, StructNamePrefixer prefixer, String sourceName) {
-        writeSdLogLayout(ps, prefixer, "", "", sourceName);
-    }
-
-    @Override
-    protected void writeSdLogLayout(PrintStream ps, StructNamePrefixer prefixer, String sourceName, int[] arrayLength) {
-        if (arrayLength.length != 1) {
-            throw new IllegalStateException("Output channels don't support multi dimension arrays");
-        }
-
-        for (int i = 0; i < arrayLength[0]; i++) {
-            writeSdLogLayout(ps, prefixer, "[" + i + "]", " " + (i + 1), sourceName);
-        }
-    }
-
-    private void writeSdLogLayout(PrintStream ps, StructNamePrefixer prefixer, String arraySub, String commentSuffix, String sourceName) {
-        if (this.name.startsWith("unused")) {
-            return;
-        }
-        
-        // {engine->outputChannels.mafMeasured, "MAF", "kg/h", 1},
-
-        final String prefixedName = prefixer.get(this.name);
-
-        ps.print("\t{");
-        ps.print(sourceName);
-        ps.print(prefixedName);
-        ps.print(arraySub);
-        ps.print(", \"");
-
-        String comment = this.options.comment;
-
-        // default to name in case of no comment
-        if (comment == null || comment.length() == 0) {
-            comment = prefixedName;
-        }
-
-        ps.print(comment);
-        ps.print(commentSuffix);
-        ps.print("\", ");
-        ps.print(this.options.units);
-        ps.print(", ");
-        ps.print(this.options.digits);
-        ps.println("},");
-    }
-
-    @Override
     protected void doVisit(ILayoutVisitor v, PrintStream ps, StructNamePrefixer pfx, int offsetAdd, int[] arrayDims) {
         v.visit(this, ps, pfx, offsetAdd, arrayDims);
     }

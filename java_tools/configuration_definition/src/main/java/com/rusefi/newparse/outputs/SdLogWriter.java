@@ -2,6 +2,7 @@ package com.rusefi.newparse.outputs;
 
 import com.rusefi.newparse.ParseState;
 import com.rusefi.newparse.layout.StructLayout;
+import com.rusefi.newparse.layout.StructNamePrefixer;
 import com.rusefi.newparse.parsing.Struct;
 
 import java.io.FileNotFoundException;
@@ -31,6 +32,10 @@ public class SdLogWriter {
         Struct s = parser.getStructs().get(parser.getStructs().size() - 1);
 
         StructLayout sl = new StructLayout(0, "root", s);
-        sl.writeSdLogLayout(ps, sourceName);
+
+        SdLogVisitor v = new SdLogVisitor(sourceName);
+        StructNamePrefixer prefixer = new StructNamePrefixer('.');
+
+        v.visit(sl, ps, prefixer, 0, new int[0]);
     }
 }

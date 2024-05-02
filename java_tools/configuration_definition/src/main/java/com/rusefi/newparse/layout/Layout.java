@@ -51,25 +51,6 @@ public abstract class Layout {
 
     public void writeCOffsetCheck(PrintStream ps, String parentTypeName) { }
 
-    public void writeSdLogLayout(PrintStream ps, String sourceName) {
-        // TODO
-        final String prefix = null;
-
-        StructNamePrefixer prefixer = new StructNamePrefixer('.');
-
-        if (prefix != null) {
-            prefixer.push(prefix);
-        }
-
-        writeSdLogLayout(ps, prefixer, sourceName);
-    }
-
-    protected void writeSdLogLayout(PrintStream ps, StructNamePrefixer prefixer, String sourceName) { }
-
-    protected void writeSdLogLayout(PrintStream ps, StructNamePrefixer prefixer, String sourceName, int[] arrayLength) {
-        throw new IllegalStateException("This type can't be in an array!");
-    }
-
     protected void doVisit(ILayoutVisitor v, PrintStream ps, StructNamePrefixer pfx, int offsetAdd, int[] arrayDims)
     {
         throw new IllegalStateException("This type is missing its visitor");
