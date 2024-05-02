@@ -322,6 +322,7 @@ void startSimplePwm(SimplePwm *state, const char *msg,
 	}
 
 #if EFI_PROD_CODE
+#if (BOARD_EXT_GPIOCHIPS > 0)
 	if (!callback) {
 		/* No specific executor, we can try enabling HW PWM */
 		if (brain_pin_is_ext(output->brainPin)) {
@@ -336,6 +337,7 @@ void startSimplePwm(SimplePwm *state, const char *msg,
 	if (state->hardPwm) {
 		return;
 	}
+#endif
 #endif
 
 	/* Set default executor for SW PWM */
