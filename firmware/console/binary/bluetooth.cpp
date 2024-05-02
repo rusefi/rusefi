@@ -112,7 +112,7 @@ static int btVerOk(SerialTsChannelBase* tsChannel)
 
 	/* wait for resposne  */
 	len = btReadLine(tsChannel, tmp, sizeof(tmp));
-	if (len == 38) {
+	if ((len >= 36) && (len <= 40)) {
 			ret = 0;
 	}
 
@@ -232,14 +232,6 @@ static void runCommands(SerialTsChannelBase* tsChannel) {
 
 	}
 
-	if (btModuleType == BLUETOOTH_HC_05)
-		chsnprintf(tmp, sizeof(tmp), "AT+UART=%d,0,0\r\n", baudRates[setBaudIdx].rate);	// baud rate, 0=(1 stop bit), 0=(no parity bits)
-	else
-		chsnprintf(tmp, sizeof(tmp), "AT+BAUD%d\r\n", baudRates[setBaudIdx].code);
-	btWrite(tsChannel, tmp);
-	if (btWaitOk(tsChannel) != 0) {
-		goto cmdFailed;
-	}
 
 	/* restart with new baud */
 	tsChannel->stop();
@@ -273,6 +265,15 @@ static void runCommands(SerialTsChannelBase* tsChannel) {
 		goto cmdFailed;
 	}
 
+  if (btModuleType == BLUETOOTH_HC_05)
+		chsnprintf(tmp, sizeof(tmp), "AT+UART=%d,0,0\r\n", baudRates[setBaudIdx].rate);	// baud rate, 0=(1 stop bit), 0=(no parity bits)
+	else
+		chsnprintf(tmp, sizeof(tmp), "AT+BAUD%d\r\n", baudRates[setBaudIdx].code);
+	btWrite(tsChannel, tmp);
+	if (btWaitOk(tsChannel) != 0) {
+		goto cmdFailed;
+	}
+  
 	if (btModuleType == BLUETOOTH_JDY_3x ) {
 		/* Now reset module to apply new settings */
 		btWrite(tsChannel, "AT+RESET\r\n");
