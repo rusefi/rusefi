@@ -65,9 +65,7 @@ struct scheduling_s {
     return momentX;
   }
 
-  efitick_t getMomentUs() {
-    return NT2US(momentX);
-  }
+  efitick_t getMomentUs();
 
   efitick_t getMomentRaw() {
     return momentX;

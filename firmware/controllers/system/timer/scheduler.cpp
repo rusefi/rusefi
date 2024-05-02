@@ -19,3 +19,7 @@ schfunc_t action_s::getCallback() const {
 void * action_s::getArgument() const {
 	return m_param;
 }
+
+efitick_t scheduling_s::getMomentUs() {
+	return NT2US(momentX);
+}
