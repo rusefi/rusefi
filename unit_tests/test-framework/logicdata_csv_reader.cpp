@@ -30,6 +30,9 @@ void CsvReader::open(const char *fileName, const int* triggerColumnIndeces, cons
 }
 
 bool CsvReader::haveMore() {
+	if (fp == nullptr) {
+		throw std::runtime_error("No file");
+	}
 	bool result = fgets(buffer, sizeof(buffer), fp) != nullptr;
 	m_lineIndex++;
 	if (m_lineIndex == 0) {
