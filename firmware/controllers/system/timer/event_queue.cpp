@@ -168,7 +168,7 @@ void EventQueue::remove(scheduling_s* scheduling) {
  */
 expected<efitick_t> EventQueue::getNextEventTime(efitick_t nowX) const {
 	if (m_head) {
-		if (m_head->getMomentUs() <= nowX) {
+		if (m_head->getMomentRaw() <= nowX) {
 			/**
 			 * We are here if action timestamp is in the past. We should rarely be here since this 'getNextEventTime()' is
 			 * always invoked by 'scheduleTimerCallback' which is always invoked right after 'executeAllPendingActions' - but still,
@@ -179,7 +179,7 @@ expected<efitick_t> EventQueue::getNextEventTime(efitick_t nowX) const {
 			 */
 			return nowX + m_lateDelay;
 		} else {
-			return m_head->getMomentUs();
+			return m_head->getMomentRaw();
 		}
 	}
 
