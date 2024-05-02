@@ -65,11 +65,7 @@ struct scheduling_s {
     return momentX;
   }
 
-#if EFI_UNIT_TEST
-  efitick_t getMomentUs() {
-    return momentX;
-  }
-#endif
+  efitick_t getMomentUs();
 
 // todo: get rid of this 'I am not sure what's the proper type' method once we are done cleaning things up in unit tests
   efitick_t getMomentRaw() {
