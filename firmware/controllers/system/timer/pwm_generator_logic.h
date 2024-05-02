@@ -137,7 +137,7 @@ void applyPinState(int stateIndex, PwmConfig* state) /* pwm_gen_callback */;
 void startSimplePwm(SimplePwm *state, const char *msg,
 		ExecutorInterface *executor,
 		OutputPin *output,
-		float frequency, float dutyCycle, pwm_gen_callback *callback = applyPinState);
+		float frequency, float dutyCycle, pwm_gen_callback *callback = NULL);
 
 /**
  * initialize GPIO pin and start a one-channel software PWM driver.
@@ -148,7 +148,7 @@ void startSimplePwmExt(SimplePwm *state,
 		const char *msg,
 		ExecutorInterface *executor,
 		brain_pin_e brainPin, OutputPin *output,
-		float frequency, float dutyCycle, pwm_gen_callback *callback = applyPinState);
+		float frequency, float dutyCycle, pwm_gen_callback *callback = NULL);
 
 void startSimplePwmHard(SimplePwm *state, const char *msg,
 		ExecutorInterface *executor,

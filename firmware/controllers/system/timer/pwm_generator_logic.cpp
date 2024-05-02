@@ -13,6 +13,7 @@
 
 #if EFI_PROD_CODE
 #include "mpu_util.h"
+#include "gpio_ext.h"
 #endif // EFI_PROD_CODE
 
 // 1% duty cycle
@@ -310,13 +311,38 @@ void PwmConfig::weComplexInit(ExecutorInterface *executor,
 	timerCallback(this);
 }
 
-void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *executor,
+void startSimplePwm(SimplePwm *state, const char *msg,
+		ExecutorInterface *executor,
 		OutputPin *output, float frequency, float dutyCycle, pwm_gen_callback *callback) {
 	efiAssertVoid(ObdCode::CUSTOM_ERR_PWM_STATE_ASSERT, state != NULL, "state");
 	efiAssertVoid(ObdCode::CUSTOM_ERR_PWM_DUTY_ASSERT, dutyCycle >= 0 && dutyCycle <= PWM_MAX_DUTY, "dutyCycle");
 	if (frequency < 1) {
 		warning(ObdCode::CUSTOM_OBD_LOW_FREQUENCY, "low frequency %.2f %s", frequency, msg);
 		return;
+	}
+
+#if EFI_PROD_CODE
+#if (BOARD_EXT_GPIOCHIPS > 0)
+	if (!callback) {
+		/* No specific executor, we can try enabling HW PWM */
+		if (brain_pin_is_ext(output->brainPin)) {
+			/* this pin is driven by external gpio chip, let's see if it can PWM */
+			state->hardPwm = gpiochip_tryInitPwm(msg, output->brainPin, frequency, dutyCycle);
+		}
+		/* TODO: sohuld we try to init MCU PWM on on-chip brainPin?
+		 * Or this should be done only on startSimplePwmHard() call? */
+	}
+
+	/* We have succesufully started HW PWM on this output, no need to continue with SW */
+	if (state->hardPwm) {
+		return;
+	}
+#endif
+#endif
+
+	/* Set default executor for SW PWM */
+	if (!callback) {
+		callback = applyPinState;
 	}
 
 	state->seq.setSwitchTime(0, dutyCycle);
@@ -361,6 +387,10 @@ void startSimplePwmHard(SimplePwm *state, const char *msg,
 #endif
 }
 
+/**
+ * default implementation of pwm_gen_callback which simply toggles the pins
+ *
+ */
 void PwmConfig::applyPwmValue(OutputPin *output, int stateIndex, /* weird argument order to facilitate default parameter value */int channelIndex) {
 	TriggerValue value = multiChannelStateSequence->getChannelState(channelIndex, stateIndex);
 	output->setValue(value == TriggerValue::RISE);
