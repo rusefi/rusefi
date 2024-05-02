@@ -21,27 +21,27 @@ public abstract class ILayoutVisitor {
         throw new IllegalStateException("StructLayout not supported");
     }
 
-    public void visit(EnumLayout struct, PrintStream ps, StructNamePrefixer prefixer, int offsetAdd, int[] arrayDims) {
+    public void visit(EnumLayout e, PrintStream ps, StructNamePrefixer prefixer, int offsetAdd, int[] arrayDims) {
         throw new IllegalStateException("EnumLayout not supported");
     }
 
-    public void visit(StringLayout struct, PrintStream ps, StructNamePrefixer prefixer, int offsetAdd, int[] arrayDims) {
+    public void visit(StringLayout str, PrintStream ps, StructNamePrefixer prefixer, int offsetAdd, int[] arrayDims) {
         throw new IllegalStateException("StringLayout not supported");
     }
 
-    public void visit(ScalarLayout struct, PrintStream ps, StructNamePrefixer prefixer, int offsetAdd, int[] arrayDims) {
+    public void visit(ScalarLayout scalar, PrintStream ps, StructNamePrefixer prefixer, int offsetAdd, int[] arrayDims) {
         throw new IllegalStateException("ScalarLayout not supported");
     }
 
-    public void visit(BitGroupLayout struct, PrintStream ps, StructNamePrefixer prefixer, int offsetAdd, int[] arrayDims) {
+    public void visit(BitGroupLayout bitGroup, PrintStream ps, StructNamePrefixer prefixer, int offsetAdd, int[] arrayDims) {
         throw new IllegalStateException("BitGroupLayout not supported");
     }
 
-    public void visit(UnionLayout struct, PrintStream ps, StructNamePrefixer prefixer, int offsetAdd, int[] arrayDims) {
+    public void visit(UnionLayout union, PrintStream ps, StructNamePrefixer prefixer, int offsetAdd, int[] arrayDims) {
         throw new IllegalStateException("UnionLayout not supported");
     }
 
-    public void visit(UnusedLayout struct, PrintStream ps, StructNamePrefixer prefixer, int offsetAdd, int[] arrayDims) {
+    public void visit(UnusedLayout unused, PrintStream ps, StructNamePrefixer prefixer, int offsetAdd, int[] arrayDims) {
         // throw new IllegalStateException("UnusedLayout not supported");
         // I guess we allow unusedlayout, it is unused, after all
     }
