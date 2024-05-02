@@ -2404,6 +2404,7 @@ end_struct
 #define ts_show_ign_key_switch false
 #define ts_show_ign_key_analog_input false
 #define ts_show_output_diag false
+#define ts_show_top_level_can_menu true
 #define ts_show_tle8888 false
 #define ts_show_l9779 false
 #define ts_show_mc33810 false
