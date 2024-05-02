@@ -1,14 +1,14 @@
 package com.rusefi.newparse.layout;
 
-import com.rusefi.newparse.outputs.TsMetadata;
+import com.rusefi.newparse.outputs.ILayoutVisitor;
 import com.rusefi.newparse.parsing.*;
 
 import java.io.PrintStream;
 
 public class ArrayLayout extends Layout {
-    protected final int[] length;
+    public final int[] length;
 
-    protected final Layout prototypeLayout;
+    public final Layout prototypeLayout;
 
     public ArrayLayout(PrototypeField prototype, int[] length) {
         this.length = length;
@@ -62,30 +62,21 @@ public class ArrayLayout extends Layout {
     }
 
     @Override
-    protected void writeTunerstudioLayout(PrintStream ps, TsMetadata meta, StructNamePrefixer prefixer, int offsetAdd) {
-        this.prototypeLayout.writeTunerstudioLayout(ps, meta, prefixer, offsetAdd, this.length);
-    }
-
-    @Override
-    public void writeCLayout(PrintStream ps) {
-        // Skip zero length arrays, they may be used for padding
-        if (this.length[0] > 0) {
-            this.prototypeLayout.writeCLayout(ps, this.length);
-        }
-    }
-
-    @Override
     public void writeCOffsetCheck(PrintStream ps, String parentTypeName) {
         this.prototypeLayout.writeCOffsetCheck(ps, parentTypeName);
     }
 
     @Override
-    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd) {
-        this.prototypeLayout.writeOutputChannelLayout(ps, psDatalog, prefixer, offsetAdd, this.length);
+    protected void writeSdLogLayout(PrintStream ps, StructNamePrefixer prefixer, String sourceName) {
+        this.prototypeLayout.writeSdLogLayout(ps, prefixer, sourceName, this.length);
     }
 
     @Override
-    protected void writeSdLogLayout(PrintStream ps, StructNamePrefixer prefixer, String sourceName) {
-        this.prototypeLayout.writeSdLogLayout(ps, prefixer, sourceName, this.length);
+    protected void doVisit(ILayoutVisitor v, PrintStream ps, StructNamePrefixer pfx, int offsetAdd, int[] arrayDims) {
+        if (arrayDims.length != 0) {
+            throw new IllegalStateException("ArrayLayout got called with array dims?");
+        }
+
+        v.visit(this, ps, pfx, offsetAdd, arrayDims);
     }
 }

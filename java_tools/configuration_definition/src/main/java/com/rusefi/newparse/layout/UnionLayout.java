@@ -1,6 +1,6 @@
 package com.rusefi.newparse.layout;
 
-import com.rusefi.newparse.outputs.TsMetadata;
+import com.rusefi.newparse.outputs.ILayoutVisitor;
 import com.rusefi.newparse.parsing.ArrayField;
 import com.rusefi.newparse.parsing.Field;
 import com.rusefi.newparse.parsing.ScalarField;
@@ -56,18 +56,7 @@ public class UnionLayout extends Layout {
     }
 
     @Override
-    protected void writeTunerstudioLayout(PrintStream ps, TsMetadata meta, StructNamePrefixer prefixer, int offsetAdd) {
-        // Simply write out all children - no container necessary as fields can overlap in TS
-        this.children.forEach(c -> c.writeTunerstudioLayout(ps, meta, prefixer, offsetAdd));
-    }
-
-    @Override
-    public void writeCLayout(PrintStream ps) {
-        this.writeCOffsetHeader(ps, "union size " + this.getSize() + ", " + this.children.size() + " members", null);
-
-        // emit an anonymous union that contains all our members
-        ps.println("\tunion {");
-        this.children.forEach(c -> c.writeCLayout(ps));
-        ps.println("\t};");
+    protected void doVisit(ILayoutVisitor v, PrintStream ps, StructNamePrefixer pfx, int offsetAdd, int[] arrayDims) {
+        v.visit(this, ps, pfx, offsetAdd, arrayDims);
     }
 }

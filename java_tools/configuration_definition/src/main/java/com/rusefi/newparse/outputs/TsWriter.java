@@ -2,6 +2,7 @@ package com.rusefi.newparse.outputs;
 
 import com.rusefi.newparse.ParseState;
 import com.rusefi.newparse.layout.StructLayout;
+import com.rusefi.newparse.layout.StructNamePrefixer;
 import com.rusefi.newparse.parsing.Definition;
 
 import java.io.*;
@@ -95,7 +96,12 @@ public class TsWriter {
         int size = root.getSize();
         ps.println("pageSize            = " + size);
         ps.println("page = 1");
-        root.writeTunerstudioLayout(ps, meta);
+
+        StructNamePrefixer prefixer = new StructNamePrefixer('_');
+
+        TsLayoutVisitor v = new TsLayoutVisitor(meta);
+        root.visit(v, ps, prefixer, 0, new int[0]);
+
         ps.println("; total TS size = " + size);
 
         // Print context help

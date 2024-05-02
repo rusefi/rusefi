@@ -26,7 +26,7 @@ public class StructNamePrefixer {
         stack.push(name + this.prefixChar);
     }
 
-    void setIndex(int idx) {
+    public void setIndex(int idx) {
         if (idx >= 0) {
             this.idx = idx + 1;
         } else {
@@ -34,11 +34,11 @@ public class StructNamePrefixer {
         }
     }
 
-    void clearIndex() {
+    public void clearIndex() {
         this.idx = -1;
     }
 
-    String get(String name) {
+    public String get(String name) {
         if (name == null || name.isEmpty()) {
             return name;
         }

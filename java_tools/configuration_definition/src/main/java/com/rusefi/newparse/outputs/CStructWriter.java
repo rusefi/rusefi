@@ -19,9 +19,12 @@ public class CStructWriter {
                 "#include \"rusefi_types.h\""
         );
 
+        CStructsVisitor v = new CStructsVisitor();
+
         for (Struct s : parser.getStructs()) {
             StructLayout sl = new StructLayout(0, "root", s);
-            sl.writeCLayoutRoot(ps);
+
+            v.visitRoot(sl, ps);
         }
 
         ps.close();

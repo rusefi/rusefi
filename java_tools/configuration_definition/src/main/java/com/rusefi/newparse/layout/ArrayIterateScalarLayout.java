@@ -1,6 +1,6 @@
 package com.rusefi.newparse.layout;
 
-import com.rusefi.newparse.outputs.TsMetadata;
+import com.rusefi.newparse.outputs.ILayoutVisitor;
 import com.rusefi.newparse.parsing.*;
 
 import java.io.PrintStream;
@@ -10,24 +10,12 @@ public class ArrayIterateScalarLayout extends ArrayLayout {
         super(prototype, length);
     }
 
-    private void emitOne(PrintStream ps, TsMetadata meta, StructNamePrefixer prefixer, int offset, int idx) {
-        // Set element's position within the array
-        this.prototypeLayout.setOffset(offset + this.prototypeLayout.getSize() * idx);
-
-        // Put a 1-based index on the end of the name to distinguish in TS
-        prefixer.setIndex(idx);
-        this.prototypeLayout.writeTunerstudioLayout(ps, meta, prefixer, 0);
-        prefixer.clearIndex();
-    }
-
     @Override
-    protected void writeTunerstudioLayout(PrintStream ps, TsMetadata meta, StructNamePrefixer prefixer, int offsetAdd) {
-        // Time to iterate: emit one scalar per array element, with the name modified accordingly
-
-        for (int i = 0; i < this.length[0]; i++) {
-            emitOne(ps, meta, prefixer, this.offset + offsetAdd, i);
+    protected void doVisit(ILayoutVisitor v, PrintStream ps, StructNamePrefixer pfx, int offsetAdd, int[] arrayDims) {
+        if (arrayDims.length != 0) {
+            throw new IllegalStateException("ArrayIterateScalarLayout got called with array dims?");
         }
-    }
 
-    // C layout is the same if iterated or not, use default implementation
+        v.visit(this, ps, pfx, offsetAdd, this.length);
+    }
 }

@@ -1,6 +1,6 @@
 package com.rusefi.newparse.layout;
 
-import com.rusefi.newparse.outputs.TsMetadata;
+import com.rusefi.newparse.outputs.ILayoutVisitor;
 import com.rusefi.newparse.parsing.*;
 
 import java.io.PrintStream;
@@ -10,34 +10,12 @@ public class ArrayIterateStructLayout extends ArrayLayout {
         super(prototype, length);
     }
 
-    private void emitOne(PrintStream ps, TsMetadata meta, StructNamePrefixer prefixer, int offset, int idx) {
-        // Set element's position within the array
-        int offsetAdd = offset + this.prototypeLayout.getSize() * idx;
-
-        // Put a 1-based index on the end of the name to distinguish in TS
-        prefixer.setIndex(idx);
-        this.prototypeLayout.writeTunerstudioLayout(ps, meta, prefixer, offsetAdd);
-        prefixer.clearIndex();
-    }
-
     @Override
-    protected void writeTunerstudioLayout(PrintStream ps, TsMetadata meta, StructNamePrefixer prefixer, int offsetAdd) {
-        // Time to iterate: emit one scalar per array element, with the name modified accordingly
-
-        for (int i = 0; i < this.length[0]; i++) {
-            emitOne(ps, meta, prefixer, this.offset + offsetAdd, i);
+    protected void doVisit(ILayoutVisitor v, PrintStream ps, StructNamePrefixer pfx, int offsetAdd, int[] arrayDims) {
+        if (arrayDims.length != 0) {
+            throw new IllegalStateException("ArrayIterateStructLayout got called with array dims?");
         }
-    }
 
-    @Override
-    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd) {
-        for (int i = 0; i < this.length[0]; i++) {
-            // Put a 1-based index on the end of the name to distinguish in TS
-            prefixer.setIndex(i);
-            this.prototypeLayout.writeOutputChannelLayout(ps, psDatalog, prefixer, this.offset + offsetAdd + this.prototypeLayout.getSize() * i);
-            prefixer.clearIndex();
-        }
+        v.visit(this, ps, pfx, offsetAdd, this.length);
     }
-
-    // C layout is the same if iterated or not, use default implementation
 }

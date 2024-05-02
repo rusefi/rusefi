@@ -1,6 +1,6 @@
 package com.rusefi.newparse.layout;
 
-import com.rusefi.newparse.outputs.TsMetadata;
+import com.rusefi.newparse.outputs.ILayoutVisitor;
 import com.rusefi.newparse.parsing.BitGroup;
 
 import java.io.PrintStream;
@@ -44,77 +44,7 @@ public class BitGroupLayout extends Layout {
     }
 
     @Override
-    protected void writeTunerstudioLayout(PrintStream ps, TsMetadata meta, StructNamePrefixer prefixer, int offsetAdd) {
-        int actualOffset = this.offset + offsetAdd;
-
-        for (int i = 0; i < bits.size(); i++) {
-            BitLayout bit = bits.get(i);
-
-            String name = prefixer.get(bit.name);
-
-            ps.print(name);
-            ps.print(" = bits, U32, ");
-            ps.print(actualOffset);
-            ps.print(", [");
-            ps.print(i + ":" + i);
-
-            ps.print("], " + bit.falseValue + ", " + bit.trueValue);
-
-            ps.println();
-
-            meta.addComment(name, bit.comment);
-        }
-    }
-
-    @Override
-    public void writeCLayout(PrintStream ps) {
-        // always emit all 32 bits
-        for (int i = 0; i < 32; i++) {
-            if (i < bits.size()) {
-                BitLayout bit = this.bits.get(i);
-
-                if (bit.comment != null) {
-                    ps.println("\t// " + bit.comment.replaceAll("[+]", "").replaceAll(";", "").replace("\\n", "\n\t// "));
-                }
-
-                ps.println("\t// offset " + this.offsetWithinStruct + " bit " + i);
-                ps.println("\tbool " + bit.name + " : 1 {};");
-            } else {
-                // Force pad out all bit groups to a full 32b/4B
-                ps.println("\t// offset " + this.offsetWithinStruct + " bit " + i);
-                ps.println("\tbool unusedBit_" + this.offsetWithinStruct + "_" + i + " : 1 {};");
-            }
-        }
-    }
-
-    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd) {
-        int actualOffset = this.offset + offsetAdd;
-
-        for (int i = 0; i < bits.size(); i++) {
-            BitLayout bit = bits.get(i);
-
-            String name = prefixer.get(bit.name);
-            ps.print(name);
-            ps.print(" = bits, U32, ");
-            ps.print(actualOffset);
-            ps.print(", [");
-            ps.print(i + ":" + i);
-
-            ps.print("]");
-
-            ps.println();
-
-            if (bit.name.startsWith("unused")) {
-                continue;
-            }
-
-            psDatalog.print("entry = ");
-            psDatalog.print(name);
-            psDatalog.print(", \"");
-            writeDatalogName(psDatalog, name, bit.comment);
-            psDatalog.print("\", int,    \"%d\"");
-
-            psDatalog.println();
-        }
+    protected void doVisit(ILayoutVisitor v, PrintStream ps, StructNamePrefixer pfx, int offsetAdd, int[] arrayDims) {
+        v.visit(this, ps, pfx, offsetAdd, arrayDims);
     }
 }

@@ -1,6 +1,6 @@
 package com.rusefi.newparse.layout;
 
-import com.rusefi.newparse.outputs.TsMetadata;
+import com.rusefi.newparse.outputs.ILayoutVisitor;
 import com.rusefi.newparse.parsing.*;
 
 import java.io.PrintStream;
@@ -155,78 +155,6 @@ public class StructLayout extends Layout {
         return "Struct " + this.typeName + " " + super.toString();
     }
 
-
-    @Override
-    protected void writeTunerstudioLayout(PrintStream ps, TsMetadata meta, StructNamePrefixer prefixer, int offsetAdd) {
-        if (!this.noPrefix) {
-            prefixer.push(this.name);
-        }
-
-        // print all children in sequence
-        this.children.forEach(c -> c.writeTunerstudioLayout(ps, meta, prefixer, offsetAdd));
-
-        if (!this.noPrefix) {
-            prefixer.pop();
-        }
-    }
-
-    @Override
-    public void writeCLayout(PrintStream ps) {
-        this.writeCOffsetHeader(ps, null, null);
-        ps.println("\t" + this.typeName + " " + this.name + ";");
-    }
-
-    @Override
-    public void writeCLayout(PrintStream ps, int[] arrayLength) {
-        this.writeCOffsetHeader(ps, null, null);
-        ps.println("\t" + this.typeName + " " + this.name + "[" + arrayLength[0] + "];");
-    }
-
-    public void writeCLayoutRoot(PrintStream ps) {
-        ps.println("struct " + this.typeName + " {");
-
-        this.children.forEach(c -> c.writeCLayout(ps));
-
-        ps.println("};");
-        ps.println("static_assert(sizeof(" + this.typeName + ") == " + getSize() + ");");
-
-        // Emit assertions to check that the offset of each child is correct according to the C++ compiler
-        this.children.forEach(c -> c.writeCOffsetCheck(ps, this.typeName));
-
-        ps.println();
-    }
-
-    private void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd, String name) {
-        if (!this.noPrefix) {
-            prefixer.push(name);
-        }
-
-        this.children.forEach(c -> c.writeOutputChannelLayout(ps, psDatalog, prefixer, offsetAdd));
-
-        if (!this.noPrefix) {
-            prefixer.pop();
-        }
-    }
-
-    @Override
-    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd) {
-        writeOutputChannelLayout(ps, psDatalog, prefixer, offsetAdd, this.name);
-    }
-
-    @Override
-    protected void writeOutputChannelLayout(PrintStream ps, PrintStream psDatalog, StructNamePrefixer prefixer, int offsetAdd, int[] arrayLength) {
-        if (arrayLength.length != 1) {
-            throw new IllegalStateException("Output channels don't support multi dimension arrays");
-        }
-
-        int elementOffset = offsetAdd;
-
-        for (int i = 0; i < arrayLength[0]; i++) {
-            writeOutputChannelLayout(ps, psDatalog, prefixer, elementOffset, this.name + (i + 1));
-            elementOffset += this.size;
-        }
-    }
-
     private void writeSdLogLayout(PrintStream ps, StructNamePrefixer prefixer, String sourceName, String name) {
         if (!this.noPrefix) {
             prefixer.push(name);
@@ -254,5 +182,10 @@ public class StructLayout extends Layout {
         // for (int i = 0; i < arrayLength[0]; i++) {
         //     writeSdLogLayout(ps, prefixer, sourceName, this.name + "[" + i + "]");
         // }
+    }
+
+    @Override
+    protected void doVisit(ILayoutVisitor v, PrintStream ps, StructNamePrefixer pfx, int offsetAdd, int[] arrayDims) {
+        v.visit(this, ps, pfx, offsetAdd, arrayDims);
     }
 }
