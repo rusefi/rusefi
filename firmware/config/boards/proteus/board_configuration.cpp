@@ -317,6 +317,9 @@ int getBoardMetaOutputsCount() {
 }
 
 int getBoardMetaDcOutputsCount() {
+    if (engineConfiguration->engineType == engine_type_e::PROTEUS_BMW_M73) {
+        return 2;
+    }
     if (engineConfiguration->engineType == engine_type_e::ME17_9_MISC ||
         engineConfiguration->engineType == engine_type_e::HARLEY ||
         engineConfiguration->engineType == engine_type_e::MAVERICK_X3
