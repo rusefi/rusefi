@@ -19,3 +19,9 @@ schfunc_t action_s::getCallback() const {
 void * action_s::getArgument() const {
 	return m_param;
 }
+
+#if EFI_UNIT_TEST
+efitick_t scheduling_s::getMomentUs() {
+	return momentX;
+}
+#endif
