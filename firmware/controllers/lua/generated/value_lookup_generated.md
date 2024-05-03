@@ -878,7 +878,7 @@ Usually if we have no trigger events that means engine is stopped\nUnless we are
 This is needed if your coils are individually wired (COP) and you wish to use batch ignition (Wasted Spark).
 
 ### useFixedBaroCorrFromMap
-
+Read MAP sensor on ECU start-up to use as baro value.
 
 ### useSeparateAdvanceForCranking
 In Constant mode, timing is automatically tapered to running as RPM increases.\nIn Table mode, the "Cranking ignition advance" table is used directly.
