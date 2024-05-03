@@ -61,16 +61,18 @@ private:
  */
 #pragma pack(push, 4)
 struct scheduling_s {
-  efitick_t getMomentNt() {
+  efitick_t getMomentNt() const {
     return momentX;
   }
 
-  efitick_t getMomentUs();
+#if EFI_UNIT_TEST
+  efitick_t getMomentUs() const;
 
 // todo: get rid of this 'I am not sure what's the proper type' method once we are done cleaning things up in unit tests
-  efitick_t getMomentRaw() {
+  efitick_t getMomentRaw() const {
     return momentX;
   }
+#endif
 
   void setMomentX(efitick_t p_moment) {
     momentX = p_moment;

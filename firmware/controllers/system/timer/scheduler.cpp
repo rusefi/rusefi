@@ -21,7 +21,7 @@ void * action_s::getArgument() const {
 }
 
 #if EFI_UNIT_TEST
-efitick_t scheduling_s::getMomentUs() {
+efitick_t scheduling_s::getMomentUs() const {
 	return NT2US(momentX);
 }
 #endif
