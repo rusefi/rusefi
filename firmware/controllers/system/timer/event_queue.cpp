@@ -231,9 +231,18 @@ bool EventQueue::executeOne(efitick_t now) {
 		return false;
 	}
 
+#if EFI_UNIT_TEST
+  // problem: we have a defect - tests are using US not NT so we are comparing apples to oranges here!
+//	efitick_t spinDuration = current->getMomentNt() - getTimeNowNt();
+//	if (spinDuration > 0) {
+//		throw std::runtime_error("Time Spin in unit test");
+//	}
+#endif
+
 	// near future - spin wait for the event to happen and avoid the
 	// overhead of rescheduling the timer.
 	// yes, that's a busy wait but that's what we need here
+  // todo: problem: we have a defect - tests are using US not NT so we are comparing apples to oranges here!
 	while (current->getMomentNt() > getTimeNowNt()) {
 		UNIT_TEST_BUSY_WAIT_CALLBACK();
 	}
