@@ -16,6 +16,8 @@
 #include "logicdata.h"
 #include "hardware.h"
 
+bool unitTestBusyWaitHack;
+
 #if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
 extern WaveChart waveChart;
@@ -32,6 +34,7 @@ EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s 
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
 	setTimeNowUs(0);
 	minCrankingRpm = 0;
+	unitTestBusyWaitHack = false;
 	EnableToothLogger();
 	if (engine || engineConfiguration || config) {
 		firmwareError(ObdCode::OBD_PCM_Processor_Fault,

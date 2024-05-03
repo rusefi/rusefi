@@ -9,6 +9,8 @@ using ::testing::_;
 TEST(OddFireRunningMode, hd) {
   // basic engine setup
 	EngineTestHelper eth(engine_type_e::HARLEY);
+	extern bool unitTestBusyWaitHack;
+	unitTestBusyWaitHack = true;
 	engineConfiguration->cranking.rpm = 100;
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH; // need to avoid engine phase sync requirement
 	// let's pretend to have a 32 degree V odd fire engine.

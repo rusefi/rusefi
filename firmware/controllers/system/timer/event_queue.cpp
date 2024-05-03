@@ -244,6 +244,12 @@ bool EventQueue::executeOne(efitick_t now) {
 	// yes, that's a busy wait but that's what we need here
   // todo: problem: we have a defect - tests are using US not NT so we are comparing apples to oranges here!
 	while (current->getMomentNt() > getTimeNowNt()) {
+#if EFI_UNIT_TEST
+extern bool unitTestBusyWaitHack;
+    if (unitTestBusyWaitHack) {
+	    break;
+	  }
+#endif
 		UNIT_TEST_BUSY_WAIT_CALLBACK();
 	}
 

@@ -528,6 +528,8 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	printf("*************************************************** testFuelSchedulerBug299 small to medium\r\n");
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	extern bool unitTestBusyWaitHack;
+	unitTestBusyWaitHack = true;
 	setTable(config->injectionPhase, -180.0f);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
@@ -885,6 +887,8 @@ TEST(big, testSinglePoint) {
 
 TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	extern bool unitTestBusyWaitHack;
+	unitTestBusyWaitHack = true;
 	engineConfiguration->hpfpCamLobes = 0;
 	setTable(config->injectionPhase, -180.0f);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;

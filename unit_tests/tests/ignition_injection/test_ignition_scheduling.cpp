@@ -46,6 +46,8 @@ TEST(ignition, twoCoils) {
 TEST(ignition, trailingSpark) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
+	extern bool unitTestBusyWaitHack;
+	unitTestBusyWaitHack = true;
 
 	/**
 	// TODO #3220: this feature makes this test sad, eventually remove this line (and the ability to disable it altogether)
