@@ -166,9 +166,9 @@ void EventQueue::remove(scheduling_s* scheduling) {
  * This method is always invoked under a lock
  * @return Get the timestamp of the soonest pending action, skipping all the actions in the past
  */
-expected<efitick_t> EventQueue::getNextEventTime(efitick_t nowX) const {
+expected<efitick_t> EventQueue::getNextEventTime(efitick_t nowNt) const {
 	if (m_head) {
-		if (m_head->getMomentRaw() <= nowX) {
+		if (m_head->getMomentNt() <= nowNt) {
 			/**
 			 * We are here if action timestamp is in the past. We should rarely be here since this 'getNextEventTime()' is
 			 * always invoked by 'scheduleTimerCallback' which is always invoked right after 'executeAllPendingActions' - but still,
@@ -177,9 +177,9 @@ expected<efitick_t> EventQueue::getNextEventTime(efitick_t nowX) const {
 			 * looks like we end up here after 'writeconfig' (which freezes the firmware) - we are late
 			 * for the next scheduled event
 			 */
-			return nowX + m_lateDelay;
+			return nowNt + m_lateDelay;
 		} else {
-			return m_head->getMomentRaw();
+			return m_head->getMomentNt();
 		}
 	}
 
