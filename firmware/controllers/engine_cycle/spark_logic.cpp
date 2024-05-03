@@ -454,7 +454,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 			efitick_t fireTime = chargeTime + MSF2NT(1.5f * dwellMs);
 
 #if SPARK_EXTREME_LOGGING
-		efiPrintf("scheduling overdwell sparkDown revolution=%d [%s] for id=%d for %d", getRevolutionCounter(), event->getOutputForLoggins()->getName(), event->sparkCounter, fireTime);
+		efiPrintf("scheduling overdwell sparkDown revolution=%d [%s] for id=%d for %d ticks", getRevolutionCounter(), event->getOutputForLoggins()->getName(), event->sparkCounter, fireTime);
 #endif /* SPARK_EXTREME_LOGGING */
 
       /**
