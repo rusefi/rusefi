@@ -19,7 +19,7 @@ board_id_t getBoardId() {
     }
     if (engineConfiguration->engineType == engine_type_e::PROTEUS_BMW_M73) {
         // a way to test harness patch cord
-        return (STATIC_BOARD_ID_BASE + 52);
+        return STATIC_BOARD_ID_PROTEUS_M73;
     }
     if (engineConfiguration->engineType == engine_type_e::HARLEY) {
         // a way to test harness patch cord
