@@ -1192,3 +1192,69 @@ TEST(big, testAssertWeAreNotMissingASpark299) {
 
 	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#1";
 }
+
+TEST(big, testSparkDwell) {
+	printf("*************************************************** testSparkDwell\r\n");
+
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
+	engineConfiguration->isIgnitionEnabled = true;
+	engineConfiguration->isInjectionEnabled = false;
+
+	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#0";
+
+	eth.smartFireRise(20);
+	ASSERT_EQ( 0,  engine->triggerCentral.triggerState.currentCycle.current_index) << "ci#0";
+
+	eth.smartFireFall(20);
+	ASSERT_EQ( 1,  engine->triggerCentral.triggerState.currentCycle.current_index) << "ci#1";
+
+	eth.smartFireRise(20);
+	ASSERT_EQ( 0,  engine->triggerCentral.triggerState.currentCycle.current_index) << "ci#2";
+
+	eth.smartFireFall(20);
+	ASSERT_EQ( 1,  engine->triggerCentral.triggerState.currentCycle.current_index) << "ci#3";
+
+	eth.smartFireRise(20);
+
+	eth.smartFireFall(20);
+	ASSERT_EQ( 1,  eth.engine.triggerCentral.triggerState.currentCycle.current_index) << "ci#5";
+
+	ASSERT_EQ(3000, Sensor::getOrZero(SensorType::Rpm));
+
+    // negative advance is rarely used but worth testing considering all out angleWrap.
+	setWholeTimingTable(-5);
+	eth.engine.periodicFastCallback();
+
+	eth.smartFireRise(20);
+
+	eth.smartFireFall(20);
+
+	printf("*************************************************** testSparkDwell start\r\n");
+
+	// Magic above is the simpliest way to schedule overdwell sparkDown that I found in
+	// testAssertWeAreNotMissingASpark299. May be later we will be able to simplify this spell.
+
+	const efitimeus_t expectedSparkUpTimestampUs = NT2US(17727777); // magic constant from debugger
+
+	const efitimeus_t sparkDownOverdwellDurationUs = MS2US(1.5f * engine->ignitionState.sparkDwell);
+	EXPECT_EQ(4500, sparkDownOverdwellDurationUs);
+
+	const efitimeus_t expectedSparkDownOverdwellTimestampUs = expectedSparkUpTimestampUs + sparkDownOverdwellDurationUs;
+	EXPECT_EQ(expectedSparkDownOverdwellTimestampUs, NT2US(18177776));  // magic constant from debugger
+
+	EXPECT_EQ(enginePins.coils[0].getLogicValue(), false);
+
+	eth.setTimeAndInvokeEventsUs(expectedSparkUpTimestampUs - 1);
+	EXPECT_EQ(enginePins.coils[0].getLogicValue(), false);
+
+	eth.setTimeAndInvokeEventsUs(expectedSparkUpTimestampUs);
+	EXPECT_EQ(enginePins.coils[0].getLogicValue(), true);
+
+	eth.setTimeAndInvokeEventsUs(expectedSparkDownOverdwellTimestampUs - 1);
+	EXPECT_EQ(enginePins.coils[0].getLogicValue(), true);
+
+	eth.setTimeAndInvokeEventsUs(expectedSparkDownOverdwellTimestampUs);
+	EXPECT_EQ(enginePins.coils[0].getLogicValue(), false);
+}
