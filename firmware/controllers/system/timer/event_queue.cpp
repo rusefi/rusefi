@@ -232,7 +232,6 @@ bool EventQueue::executeOne(efitick_t now) {
 	}
 
 #if EFI_UNIT_TEST
-  // problem: we have a defect - tests are using US not NT so we are comparing apples to oranges here!
 //	efitick_t spinDuration = current->getMomentNt() - getTimeNowNt();
 //	if (spinDuration > 0) {
 //		throw std::runtime_error("Time Spin in unit test");
@@ -242,9 +241,9 @@ bool EventQueue::executeOne(efitick_t now) {
 	// near future - spin wait for the event to happen and avoid the
 	// overhead of rescheduling the timer.
 	// yes, that's a busy wait but that's what we need here
-  // todo: problem: we have a defect - tests are using US not NT so we are comparing apples to oranges here!
 	while (current->getMomentNt() > getTimeNowNt()) {
 #if EFI_UNIT_TEST
+  // todo: remove this hack see https://github.com/rusefi/rusefi/issues/6457
 extern bool unitTestBusyWaitHack;
     if (unitTestBusyWaitHack) {
 	    break;
