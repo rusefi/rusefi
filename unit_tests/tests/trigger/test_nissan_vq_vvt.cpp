@@ -110,7 +110,7 @@ TEST(nissan, vq_vvt) {
 				/* timeScale */ vvtTimeScale,
 				cyclesCount / 6, true,
 				/* vvtBankIndex */1,
-				/* vvtOffset */ testVvtOffset + NISSAN_VQ_CAM_OFFSET,
+				/* vvtOffset, making it positive */ 720 + testVvtOffset + NISSAN_VQ_CAM_OFFSET,
 				ptrs);
 	}
 
@@ -136,7 +136,7 @@ TEST(nissan, vq_vvt) {
 		ASSERT_NEAR(34, tc->vvtPosition[0][0], EPS2D) << "queueIndex=" << queueIndex;
     	queueIndex++;
 	}
-	ASSERT_TRUE(queueIndex == 422) << "Total queueIndex=" << queueIndex;
+	ASSERT_EQ(queueIndex, 432) << "Total queueIndex=" << queueIndex;
 
 	ASSERT_TRUE(tc->vvtState[1][0].getShaftSynchronized());
 

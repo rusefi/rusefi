@@ -49,6 +49,10 @@ scheduling_s* TestExecutor::getForUnitTest(int index) {
 }
 
 void TestExecutor::scheduleByTimestamp(const char *msg, scheduling_s *scheduling, efitimeus_t timeUs, action_s action) {
+	if (timeUs < 0) {
+		throw std::runtime_error("Negative timeUs not expected.");
+	}
+
 	if (debugSignalExecutor) {
 		printf("scheduleByTime %d\r\n", timeUs);
 	}
