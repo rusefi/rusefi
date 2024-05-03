@@ -9,6 +9,8 @@
 
 TEST(cranking, testFasterEngineSpinningUp) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	extern bool unitTestBusyWaitHack;
+	unitTestBusyWaitHack = true;
 	float phase = 181;
 	setTable(config->injectionPhase, -phase);
 	engine->tdcMarkEnabled = false;
