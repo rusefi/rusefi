@@ -185,7 +185,8 @@ void setEngineBMW_M73_Proteus() {
 
 
 	// no idea why https://github.com/rusefi/rusefi/wiki/HOWTO-M73-v12-on-Proteus uses non default CLT pin
-	engineConfiguration->clt.adcChannel = PROTEUS_IN_ANALOG_TEMP_4;
+//	engineConfiguration->clt.adcChannel = PROTEUS_IN_ANALOG_TEMP_4;
+  // newer https://github.com/rusefi/rusefi/wiki/HOWTO-custom-harness-lazyharnezz-M73 uses default pin
 
 
 	engineConfiguration->starterControlPin = Gpio::PROTEUS_LS_14;
