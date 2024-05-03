@@ -299,7 +299,7 @@ TEST(HPFP, Schedule) {
 
 	// Since we have a mock scheduler, lets insert the correct timestamp in the scheduling
 	// struct.
-	hpfp.m_event.scheduling.setMomentX(nt1);
+	hpfp.m_event.scheduling.setMomentNt(nt1);
 
 	HpfpController::pinTurnOn(&hpfp);
 

@@ -62,7 +62,7 @@ void EventQueue::tryReturnScheduling(scheduling_s* sched) {
 /**
  * @return true if inserted into the head of the list
  */
-bool EventQueue::insertTask(scheduling_s *scheduling, efitick_t timeX, action_s action) {
+bool EventQueue::insertTask(scheduling_s *scheduling, efitick_t timeNt, action_s action) {
 	ScopePerf perf(PE::EventQueueInsertTask);
 
 	if (!scheduling) {
@@ -84,17 +84,17 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitick_t timeX, action_s 
 	if (scheduling->action) {
 #if EFI_UNIT_TEST
 		if (verboseMode) {
-			printf("Already scheduled was %d\r\n", (int)scheduling->getMomentRaw());
-			printf("Already scheduled now %d\r\n", (int)timeX);
+			printf("Already scheduled was %d\r\n", (int)scheduling->getMomentNt());
+			printf("Already scheduled now %d\r\n", (int)timeNt);
 		}
 #endif /* EFI_UNIT_TEST */
 		return false;
 	}
 
-	scheduling->setMomentX(timeX);
+	scheduling->setMomentNt(timeNt);
 	scheduling->action = action;
 
-	if (!m_head || timeX < m_head->getMomentNt()) {
+	if (!m_head || timeNt < m_head->getMomentNt()) {
 		// here we insert into head of the linked list
 		LL_PREPEND2(m_head, scheduling, nextScheduling_s);
 		assertListIsSorted();
@@ -102,7 +102,7 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitick_t timeX, action_s 
 	} else {
 		// here we know we are not in the head of the list, let's find the position - linear search
 		scheduling_s *insertPosition = m_head;
-		while (insertPosition->nextScheduling_s != NULL && insertPosition->nextScheduling_s->getMomentNt() < timeX) {
+		while (insertPosition->nextScheduling_s != NULL && insertPosition->nextScheduling_s->getMomentNt() < timeNt) {
 			insertPosition = insertPosition->nextScheduling_s;
 		}
 
@@ -323,7 +323,7 @@ void EventQueue::clear(void) {
 		m_head = x->nextScheduling_s;
 
 		// Reset this element
-		x->setMomentX(0);
+		x->setMomentNt(0);
 		x->nextScheduling_s = nullptr;
 		x->action = {};
 	}

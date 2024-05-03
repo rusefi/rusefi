@@ -96,8 +96,8 @@ public:
 	const AngleBasedEvent* assertTriggerEvent(const char *msg, int index, AngleBasedEvent *expected, void *callback, angle_t enginePhase);
 
 	void assertEvent(const char *msg, int index, void *callback, efitimeus_t momentUs, InjectionEvent *event);
-	void assertInjectorUpEvent(const char *msg, int eventIndex, efitimeus_t momentX, long injectorIndex);
-	void assertInjectorDownEvent(const char *msg, int eventIndex, efitimeus_t momentX, long injectorIndex);
+	void assertInjectorUpEvent(const char *msg, int eventIndex, efitimeus_t momentUs, long injectorIndex);
+	void assertInjectorDownEvent(const char *msg, int eventIndex, efitimeus_t momentUs, long injectorIndex);
 	// todo: open question if this is worth a helper method or should be inlined?
 	void assertRpm(int expectedRpm, const char *msg = "RPM");
 

@@ -62,20 +62,15 @@ private:
 #pragma pack(push, 4)
 struct scheduling_s {
   efitick_t getMomentNt() const {
-    return momentX;
+    return momentNt;
   }
 
 #if EFI_UNIT_TEST
   efitick_t getMomentUs() const;
-
-// todo: get rid of this 'I am not sure what's the proper type' method once we are done cleaning things up in unit tests
-  efitick_t getMomentRaw() const {
-    return momentX;
-  }
 #endif
 
-  void setMomentX(efitick_t p_moment) {
-    momentX = p_moment;
+  void setMomentNt(efitick_t p_moment) {
+    momentNt = p_moment;
   }
 
 #if EFI_SIMULATOR
@@ -92,10 +87,8 @@ struct scheduling_s {
 	/**
 	 * timestamp represented as 64-bit value of ticks since MCU start
 	 */
-	// actually looks like this is ALWAYS or sometimes us these days?
-	// todo: make private with explicit getter/setter?
 private:
-	volatile efitick_t momentX = 0;
+	volatile efitick_t momentNt = 0;
 };
 #pragma pack(pop)
 
