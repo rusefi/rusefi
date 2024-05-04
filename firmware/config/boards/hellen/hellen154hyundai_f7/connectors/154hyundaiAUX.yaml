@@ -1,0 +1,118 @@
+meta: config/boards/hellen_meta.h
+
+pins:
+  - pin: X1
+    function: GND
+    type: gnd
+
+  - pin: X2
+    # H_SPI1_CS2 rev C, else on rev D
+    meta: H_SPI1_CS2
+    class: outputs
+    type: ls
+    ts_name: X2 AuxLS3
+    function: AuxLS3
+
+  - pin: X3
+    # H144_OUT_PWM6
+    id: D14
+    class: outputs
+    type: ls
+    ts_name: X3 AuxLS2
+    function: AuxLS2
+
+  - pin: X4
+    # H144_IN_D_3
+    id: [E14, E14]
+    class: [event_inputs, switch_inputs]
+    ts_name: X4 Digital3
+
+#  - pin: X5
+#    # H144_IN_VSS
+#    id:
+#    class: analog_inputs
+#    ts_name: X5 AIN3
+#    function: NOT POPULATED BY DEFAULT, SHARED WITH A/C PRESSURE
+
+  - pin: X6
+    function: 12v raw
+
+  - pin: X7
+    # H144_IN_D_2
+    id: [E13, E13]
+    class: [event_inputs, switch_inputs]
+    ts_name: X7 Digital2
+
+  - pin: X8
+    # H_SPI1_SCK on rev C and XXX on rev D?
+    meta: H_SPI1_SCK
+    class: outputs
+    type: ls
+    ts_name: X8 AuxLS1
+    function: AuxLS1, also K48 on main connector
+
+  - pin: X9
+    # H144_IN_D_1
+    id: [E12, E12]
+    class: [event_inputs, switch_inputs]
+    ts_name: X9 Digital1
+
+  - pin: X10
+    # H144_IN_CAM_ANALOG
+    id: EFI_ADC_6
+    class: analog_inputs
+    ts_name: X10 AIN2
+
+  - pin: X11
+    # H144_IN_CRANK_ANALOG
+    id: EFI_ADC_9
+    class: analog_inputs
+    ts_name: X11 AIN1
+
+
+  - pin: X12
+    function: 5v
+
+info:
+  directory: hellen/hellen154hyundai_revD
+  title: Hellen 154 Hyundai
+  image:
+    file: 154hyundaiAUX.jpg
+  pins:
+    - pin: X1
+      x: 77
+      y: 75
+    - pin: X2
+      x: 147
+      y: 75
+    - pin: X3
+      x: 214
+      y: 75
+    - pin: X4
+      x: 284
+      y: 75
+    - pin: X5
+      x: 351
+      y: 75
+    - pin: X6
+      x: 418
+      y: 75
+
+    - pin: X7
+      x: 77
+      y: 141
+    - pin: X8
+      x: 147
+      y: 141
+    - pin: X9
+      x: 214
+      y: 141
+    - pin: X10
+      x: 284
+      y: 141
+    - pin: X11
+      x: 351
+      y: 141
+    - pin: X12
+      x: 418
+      y: 141
