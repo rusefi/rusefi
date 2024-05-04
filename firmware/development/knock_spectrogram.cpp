@@ -7,7 +7,7 @@
 
 #include "pch.h"
 
-#if KNOCK_SPECTROGRAM
+#ifdef KNOCK_SPECTROGRAM
 
 #include "knock_spectrogram.h"
 #include <climits>

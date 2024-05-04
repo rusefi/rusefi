@@ -263,7 +263,7 @@ void setDefaultBaseEngine() {
 	engineConfiguration->issFilterReciprocal = 2;
 
 	//knock
-#if KNOCK_SPECTROGRAM
+#ifdef KNOCK_SPECTROGRAM
 	engineConfiguration->enableKnockSpectrogram = false;
 #endif
 

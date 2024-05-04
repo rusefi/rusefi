@@ -392,7 +392,7 @@ static bool isKnownCommand(char command) {
 			|| command == TS_GET_TEXT
 			|| command == TS_CRC_CHECK_COMMAND
 			|| command == TS_GET_FIRMWARE_VERSION
-#if KNOCK_SPECTROGRAM
+#ifdef KNOCK_SPECTROGRAM
 			|| command == TS_KNOCK_SPECTROGRAM_ENABLE
 			|| command == TS_KNOCK_SPECTROGRAM_DISABLE
 #endif
@@ -838,7 +838,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
 		break;
 #endif /* EFI_TOOTH_LOGGER */
-#if KNOCK_SPECTROGRAM
+#ifdef KNOCK_SPECTROGRAM
 	case TS_KNOCK_SPECTROGRAM_ENABLE:
 		knockSpectrogramEnable();
 		sendOkResponse(tsChannel, TS_CRC);
