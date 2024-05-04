@@ -490,8 +490,6 @@ void commonInitEngineController() {
 
 	initTachometer();
 	initSpeedometer();
-
-	engine->module<KnockController>().unmock().onConfigurationChange(nullptr);
 }
 
 // Returns false if there's an obvious problem with the loaded configuration
