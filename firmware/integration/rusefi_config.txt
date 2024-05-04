@@ -2405,6 +2405,7 @@ end_struct
 
 ! some board files override this value using prepend file
 #define ts_show_ign_key_switch false
+#define ts_show_ford_toyota_tps_pps true
 #define ts_show_ign_key_analog_input false
 #define ts_show_output_diag false
 #define ts_show_top_level_can_menu true

@@ -19,6 +19,7 @@
 #define ts_show_sd_pins false
 #define ts_show_ignitionPinMode false
 #define ts_show_tps2 false
+#define ts_show_ford_toyota_tps_pps false
 
 ! bad temporary solution of hardware issue https://github.com/rusefi/rusefi/issues/4821
 #define MAX_TPS_PPS_DISCREPANCY 10
