@@ -26,6 +26,9 @@ Release template (copy/paste this for new release):
 
 # Changelog
 
+### Added
+ - new rusEFI console tab: Knock analyzer #6467
+
 ### Fixed
  - knock logic not activated until any configuration change via TS #6462
 
