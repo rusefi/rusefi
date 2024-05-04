@@ -376,7 +376,7 @@ void IdleController::onSlowCallback() {
 
 void IdleController::onConfigurationChange(engine_configuration_s const * previousConfiguration) {
 #if ! EFI_UNIT_TEST
-	shouldResetPid = !getIdlePid()->isSame(&previousConfiguration->idleRpmPid);
+	shouldResetPid = !previousConfig || !getIdlePid()->isSame(&previousConfiguration->idleRpmPid);
 	mustResetPid = shouldResetPid;
 #endif
 }

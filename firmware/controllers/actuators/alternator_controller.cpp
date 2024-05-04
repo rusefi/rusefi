@@ -77,7 +77,7 @@ void AlternatorController::setOutput(expected<percent_t> outputValue) {
 }
 
 void AlternatorController::onConfigurationChange(engine_configuration_s const * previousConfiguration) {
-	if(!alternatorPid.isSame(&previousConfiguration->alternatorControl)) {
+	if(!previousConfiguration || !alternatorPid.isSame(&previousConfiguration->alternatorControl)) {
 		alternatorPid.reset();
 	}
 }
