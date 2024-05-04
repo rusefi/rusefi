@@ -8,17 +8,7 @@
 #include "pch.h"
 #include "knock_logic.h"
 
-
 #include "hip9011.h"
-
-void KnockController::init() {
-	m_maxRetardTable.initTable(config->maxKnockRetardTable, config->maxKnockRetardRpmBins, config->maxKnockRetardLoadBins);
-}
-
-void KnockController::onConfigurationChange(engine_configuration_s const * previousConfig) {
-	KnockControllerBase::onConfigurationChange(previousConfig);
-  init();
-}
 
 int getCylinderKnockBank(uint8_t cylinderNumber) {
 	// C/C++ can't index in to bit fields, we have to provide lookup ourselves
@@ -128,7 +118,12 @@ float KnockController::getKnockThreshold() const {
 }
 
 float KnockController::getMaximumRetard() const {
-	return m_maxRetardTable.getValue(Sensor::getOrZero(SensorType::Rpm), getIgnitionLoad());
+	return
+		interpolate3d(
+			config->maxKnockRetardTable,
+			config->maxKnockRetardLoadBins, getIgnitionLoad(),
+			config->maxKnockRetardRpmBins, Sensor::getOrZero(SensorType::Rpm)
+		);
 }
 
 // This callback is to be implemented by the knock sense driver
@@ -174,8 +169,4 @@ void Engine::onSparkFireKnockSense(uint8_t cylinderNumber, efitick_t nowNt) {
 #if EFI_HIP_9011
 	hip9011_onFireEvent(cylinderNumber, nowNt);
 #endif
-}
-
-void initKnockCtrl() {
-	engine->module<KnockController>().unmock().init();
 }
