@@ -14,6 +14,7 @@
 # You can set these as environment variables like this:
 # source config/boards/common_script_read_meta_env.inc config/boards/f407-discovery/meta-info.env
 # source config/boards/common_script_read_meta_env.inc config/boards/subaru_eg33/meta-info-subaru_eg33_f7.env
+# source config/boards/common_script_read_meta_env.inc firmware/config/boards/hellen/hellen154hyundai_f7/meta-info-hellen154hyundai_f7.env
 #
 # There is also a script to compile the firmware to avoid messing with your environment variables.
 # ./bin/compile.sh config/boards/f407-discovery/meta-info.env
