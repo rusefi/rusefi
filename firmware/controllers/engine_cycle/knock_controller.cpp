@@ -11,10 +11,13 @@
 
 #include "hip9011.h"
 
+void KnockController::init() {
+	m_maxRetardTable.initTable(config->maxKnockRetardTable, config->maxKnockRetardRpmBins, config->maxKnockRetardLoadBins);
+}
+
 void KnockController::onConfigurationChange(engine_configuration_s const * previousConfig) {
 	KnockControllerBase::onConfigurationChange(previousConfig);
-
-	m_maxRetardTable.initTable(config->maxKnockRetardTable, config->maxKnockRetardRpmBins, config->maxKnockRetardLoadBins);
+  init();
 }
 
 int getCylinderKnockBank(uint8_t cylinderNumber) {
@@ -171,4 +174,8 @@ void Engine::onSparkFireKnockSense(uint8_t cylinderNumber, efitick_t nowNt) {
 #if EFI_HIP_9011
 	hip9011_onFireEvent(cylinderNumber, nowNt);
 #endif
+}
+
+void initKnockCtrl() {
+	engine->module<KnockController>().unmock().init();
 }

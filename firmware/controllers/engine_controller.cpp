@@ -527,6 +527,8 @@ void commonInitEngineController() {
 
 	initTachometer();
 	initSpeedometer();
+
+	initKnockCtrl();
 }
 
 // Returns false if there's an obvious problem with the loaded configuration

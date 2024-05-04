@@ -26,6 +26,9 @@ Release template (copy/paste this for new release):
 
 # Changelog
 
+### Fixed
+ - knock logic not activated until any configuration change via TS #6462
+
 ### Breaking Changes
  - "60/2 VW" trigger wheel renamed to "60-2 Wrong Polarity" #988
  - exhaust VVTs now use it's onw Edge Select setting
