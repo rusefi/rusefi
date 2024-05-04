@@ -336,18 +336,19 @@ TEST(etb, setpointSecondThrottleTrim) {
 			return y;
 		});
 
-	// Should get called with the un-adjusted setpoint
-	StrictMock<MockVp3d> throttleTrimTable;
-	EXPECT_CALL(throttleTrimTable, getValue(0, 47))
-		.WillOnce(Return(4));
+	struct MockEtb2 : EtbController2 {
+		MOCK_METHOD(percent_t, getThrottleTrim, (float rpm, percent_t targetPosition), (const, override));
+	};
 
 	// Must have TPS & PPS initialized for ETB setup
 	Sensor::setMockValue(SensorType::Tps1Primary, 0);
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
-	EtbController2 etb(throttleTrimTable);
+	StrictMock<MockEtb2> etb;
 	etb.init(DC_Throttle1, nullptr, nullptr, &pedalMap, true);
+	// Should get called with the un-adjusted setpoint
+	EXPECT_CALL(etb, getThrottleTrim(0, 47)).WillOnce(Return(4));
 
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 47, true);
 	EXPECT_EQ(51, etb.getSetpoint().value_or(-1));
