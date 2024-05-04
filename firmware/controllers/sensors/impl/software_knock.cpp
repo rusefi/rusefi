@@ -192,10 +192,12 @@ static void processLastKnockEvent() {
 		return;
 	}
 
+    #ifdef KNOCK_SPECTROGRAM
 	{
 		chibios_rt::CriticalSectionLocker csl;
 		enableKnockSpectrogram = engineConfiguration->enableKnockSpectrogram;
 	}
+    #endif
 
 	float sumSq = 0;
 
