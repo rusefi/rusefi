@@ -49,10 +49,7 @@ public:
   // RPM is usually X/Column
 	float getValue(float xColumn, float yRow) const final {
 		if (!m_values) {
-#if EFI_UNIT_TEST
-      throw std::runtime_error("Access to uninitialized table");
-#endif
-			// not initialized, return 0
+			criticalError("Access to uninitialized table: %s", m_name);
 			return 0;
 		}
 
