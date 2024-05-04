@@ -234,10 +234,10 @@ bool HellenBoardIdFinder<NumPins>::measureChargingTimes(int i, float & Tc1_us, f
 	}
 
 	// 4. calculate the first charging time
-	efitick_t Tc1_nt = t2 - t1;
+	efidur_t Tc1_nt = t2 - t1;
 	Tc1_us = NT2USF(Tc1_nt);
 	// We use the same 'charging time' to discharge the capacitor to some random voltage below the threshold voltage.
-	efitick_t Td_nt = Tc1_nt;
+	efidur_t Td_nt = Tc1_nt;
 
 	// 5. And now just wait for the rest of the discharge process...
 	// Spin wait since chThdSleepMicroseconds() lacks the resolution we need
