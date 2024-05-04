@@ -74,6 +74,7 @@
 #include "bluetooth.h"
 #include "tunerstudio_io.h"
 #include "trigger_scope.h"
+#include "software_knock.h"
 #include "electronic_throttle.h"
 #include "live_data.h"
 
@@ -391,6 +392,10 @@ static bool isKnownCommand(char command) {
 			|| command == TS_GET_TEXT
 			|| command == TS_CRC_CHECK_COMMAND
 			|| command == TS_GET_FIRMWARE_VERSION
+#if KNOCK_SPECTROGRAM
+			|| command == TS_KNOCK_SPECTROGRAM_ENABLE
+			|| command == TS_KNOCK_SPECTROGRAM_DISABLE
+#endif
 			|| command == TS_PERF_TRACE_BEGIN
 			|| command == TS_PERF_TRACE_GET_BUFFER
 			|| command == TS_GET_CONFIG_ERROR
@@ -833,6 +838,16 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
 		break;
 #endif /* EFI_TOOTH_LOGGER */
+#if KNOCK_SPECTROGRAM
+	case TS_KNOCK_SPECTROGRAM_ENABLE:
+		knockSpectrogramEnable();
+		sendOkResponse(tsChannel, TS_CRC);
+		break;
+	case TS_KNOCK_SPECTROGRAM_DISABLE:
+		knockSpectrogramDisable();
+		sendOkResponse(tsChannel, TS_CRC);
+		break;
+#endif /* KNOCK_SPECTROGRAM */
 #if ENABLE_PERF_TRACE
 	case TS_PERF_TRACE_BEGIN:
 		perfTraceEnable();
