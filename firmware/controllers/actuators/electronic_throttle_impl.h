@@ -97,7 +97,7 @@ private:
 	 * @return true if OK, false if should be disabled
 	 */
 	bool checkStatus();
-	bool isEtbMode() {
+	bool isEtbMode() const override {
 		return m_function == DC_Throttle1 || m_function == DC_Throttle2;
 	}
 
