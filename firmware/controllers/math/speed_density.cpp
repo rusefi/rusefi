@@ -25,7 +25,7 @@
 #define rpmMin 500
 #define rpmMax 8000
 
-fuel_Map3D_t veMap;
+fuel_Map3D_t veMap{"ve"};
 
 #define tpMin 0
 #define tpMax 100

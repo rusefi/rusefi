@@ -78,9 +78,9 @@
 #define ETB_MAX_COUNT 2
 #endif /* ETB_MAX_COUNT */
 
-static pedal2tps_t pedal2tpsMap;
-static Map3D<ETB2_TRIM_SIZE, ETB2_TRIM_SIZE, int8_t, uint8_t, uint8_t> throttle2TrimTable;
-static Map3D<TRACTION_CONTROL_ETB_DROP_SIZE, TRACTION_CONTROL_ETB_DROP_SIZE, int8_t, uint16_t, uint8_t> tcEtbDropTable;
+static pedal2tps_t pedal2tpsMap{"p2t"};
+static Map3D<ETB2_TRIM_SIZE, ETB2_TRIM_SIZE, int8_t, uint8_t, uint8_t> throttle2TrimTable{"t2t"};
+static Map3D<TRACTION_CONTROL_ETB_DROP_SIZE, TRACTION_CONTROL_ETB_DROP_SIZE, int8_t, uint16_t, uint8_t> tcEtbDropTable{"tce"};
 
 constexpr float etbPeriodSeconds = 1.0f / ETB_LOOP_FREQUENCY;
 

@@ -33,6 +33,9 @@ public:
 template<int TColNum, int TRowNum, typename TValue, typename TXColumn, typename TRow>
 class Map3D : public ValueProvider3D {
 public:
+  Map3D(const char *name) {
+    m_name = name;
+  }
 	template <typename TValueInit, typename TXColumnInit, typename TRowInit>
 	void initTable(TValueInit (&table)[TRowNum][TColNum],
 				  const TXColumnInit (&columnBins)[TColNum], const TRowInit (&rowBins)[TRowNum]) {
@@ -124,6 +127,7 @@ private:
 	float m_rowMult = 1;
 	float m_colMult = 1;
 	float m_valueMult = 1;
+	const char *m_name;
 };
 
 typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint8_t, uint16_t, uint16_t> lambda_Map3D_t;
