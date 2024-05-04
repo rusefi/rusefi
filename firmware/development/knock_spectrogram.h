@@ -9,6 +9,6 @@
 
 #include "global.h"
 
-#if KNOCK_SPECTROGRAM
+#ifdef KNOCK_SPECTROGRAM
 void knockSpectorgramAddLine(float main_freq, float* data, size_t size);
 #endif

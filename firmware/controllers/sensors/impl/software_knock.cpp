@@ -10,7 +10,7 @@
 #include "knock_config.h"
 #include "ch.hpp"
 
-#if KNOCK_SPECTROGRAM
+#ifdef KNOCK_SPECTROGRAM
 #include "development/knock_spectrogram.h"
 #include "fft/fft.h"
 
@@ -174,7 +174,7 @@ void initSoftwareKnock() {
 		knockFilter.configureBandpass(KNOCK_SAMPLE_RATE, 1000 * engineConfiguration->knockBandCustom, 3);
 		adcStart(&KNOCK_ADC, nullptr);
 
-	#if KNOCK_SPECTROGRAM
+	#ifdef KNOCK_SPECTROGRAM
 		engineConfiguration->enableKnockSpectrogram = false;
 	#endif
 
@@ -230,7 +230,7 @@ static void processLastKnockEvent() {
 
 	float mainFreq = 0.f;
 
-#if KNOCK_SPECTROGRAM
+#ifdef KNOCK_SPECTROGRAM
 	if(enableKnockSpectrogram) {
 		//ScopePerf perf(PE::KnockAnalyzer);
 		constexpr float ratio = 3.3f / 4095.0f;
@@ -269,7 +269,7 @@ void KnockThread::ThreadTask() {
 	}
 }
 
-#if KNOCK_SPECTROGRAM
+#ifdef KNOCK_SPECTROGRAM
 void knockSpectrogramEnable() {
 	chibios_rt::CriticalSectionLocker csl;
 
