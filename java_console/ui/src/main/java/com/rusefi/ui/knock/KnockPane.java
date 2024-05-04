@@ -160,7 +160,8 @@ public class KnockPane {
 
         private BufferedImage bufferedImage;
         private Graphics2D bufferedGraphics;
-        static int SPECTROGRAM_X_AXIS_SIZE = 1024;
+
+        int SPECTROGRAM_X_AXIS_SIZE = 1024;
         float[][] specrtogram;
         float mainFrequency = 0;
         Color[] colorspace;
@@ -328,7 +329,7 @@ public class KnockPane {
             return start * (1 - t) + end * t;
         }
 
-        private static int searchHZ(double[] a, int fromIndex, int toIndex, double key) {
+        private int searchHZ(double[] a, int fromIndex, int toIndex, double key) {
             int low = fromIndex;
             int high = toIndex - 1;
 
