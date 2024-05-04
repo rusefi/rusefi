@@ -117,12 +117,12 @@ void setAltPFactor(float p) {
 }
 
 void AlternatorController::onConfigurationChange(engine_configuration_s const * previousConfiguration) {
-	shouldResetPid = !alternatorPid.isSame(&previousConfiguration->alternatorControl);
+	shouldResetPid = !previousConfiguration || !alternatorPid.isSame(&previousConfiguration->alternatorControl);
 }
 
 void initAlternatorCtrl() {
 	addConsoleAction("altinfo", showAltInfo);
-	
+
 	engine->module<AlternatorController>()->init();
 
 	if (!isBrainPinValid(engineConfiguration->alternatorControlPin))
