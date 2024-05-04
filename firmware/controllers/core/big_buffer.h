@@ -11,6 +11,7 @@ enum class BigBufferUser {
 	ToothLogger,
 	PerfTrace,
 	TriggerScope,
+	// todo: actually start using this!
 	KnockSpectrogram,
 };
 
