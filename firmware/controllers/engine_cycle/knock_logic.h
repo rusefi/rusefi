@@ -38,9 +38,6 @@ private:
 
 class KnockController : public KnockControllerBase {
 public:
-	KnockController()
-	{
-	}
 	void init();
 
 	void onConfigurationChange(engine_configuration_s const * /*previousConfig*/) override;
