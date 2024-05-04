@@ -14,6 +14,10 @@
 #include "efi_scaled_channel.h"
 #include <rusefi/interpolation.h>
 
+#if EFI_UNIT_TEST
+#include <stdexcept>
+#endif
+
 // popular left edge of CLT-based correction curves
 #define CLT_CURVE_RANGE_FROM -40
 
@@ -42,6 +46,9 @@ public:
   // RPM is usually X/Column
 	float getValue(float xColumn, float yRow) const final {
 		if (!m_values) {
+#if EFI_UNIT_TEST
+      throw std::runtime_error("Access to uninitialized table");
+#endif
 			// not initialized, return 0
 			return 0;
 		}
