@@ -176,11 +176,11 @@ static const struct mc33810_config mc33810 = {
 
 /*BOARD_WEAK*/ void boardInitHardware() {
     #if (BOARD_MC33810_COUNT > 0)
-      gpio_pin_markUsed(mc33810.spi_config.ssport, mc33810.spi_config.sspad, "IWS MC CS");
-      palSetPadMode(mc33810.spi_config.ssport, mc33810.spi_config.sspad, PAL_MODE_OUTPUT_PUSHPULL);
-      auto voltage = Sensor::get(SensorType::BatteryVoltage);
-      int ret = mc33810_add(Gpio::MC33810_0_OUT_0, 0, &mc33810);
-      efiPrintf("*****************+ mc33810_add %d +******************* %f", ret, voltage);
+//      gpio_pin_markUsed(mc33810.spi_config.ssport, mc33810.spi_config.sspad, "IWS MC CS");
+//      palSetPadMode(mc33810.spi_config.ssport, mc33810.spi_config.sspad, PAL_MODE_OUTPUT_PUSHPULL);
+//      auto voltage = Sensor::get(SensorType::BatteryVoltage);
+//      int ret = mc33810_add(Gpio::MC33810_0_OUT_0, 0, &mc33810);
+//      efiPrintf("*****************+ mc33810_add %d +******************* %f", ret, voltage);
     #else
       efiPrintf("**********------------- mc33810 not configured yet ------------************");
     #endif
