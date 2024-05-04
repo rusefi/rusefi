@@ -41,6 +41,7 @@ public:
 	KnockController()
 	{
 	}
+	void init();
 
 	void onConfigurationChange(engine_configuration_s const * /*previousConfig*/) override;
 
@@ -50,3 +51,5 @@ public:
 private:
 	Map3D<6, 6, uint8_t, uint8_t, uint8_t> m_maxRetardTable;
 };
+
+void initKnockCtrl();
