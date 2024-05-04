@@ -24,7 +24,7 @@
 #include "pch.h"
 #include "accel_enrichment.h"
 
-static tps_tps_Map3D_t tpsTpsMap;
+static tps_tps_Map3D_t tpsTpsMap{"tps"};
 
 floatms_t TpsAccelEnrichment::getTpsEnrichment() {
 	ScopePerf perf(PE::GetTpsEnrichment);

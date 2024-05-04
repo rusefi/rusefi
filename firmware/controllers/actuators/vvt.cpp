@@ -15,8 +15,8 @@
 
 using vvt_map_t = Map3D<SCRIPT_TABLE_8, SCRIPT_TABLE_8, int8_t, uint16_t, uint16_t>;
 
-static vvt_map_t vvtTable1;
-static vvt_map_t vvtTable2;
+static vvt_map_t vvtTable1{"vvt1"};
+static vvt_map_t vvtTable2{"vvt2"};
 
 VvtController::VvtController(int p_index)
 	: index(p_index)

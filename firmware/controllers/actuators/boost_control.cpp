@@ -17,8 +17,8 @@
 #error "Unexpected OS ACCESS HERE"
 #endif
 
-static boostOpenLoop_Map3D_t boostMapOpen;
-static boostOpenLoop_Map3D_t boostMapClosed;
+static boostOpenLoop_Map3D_t boostMapOpen{"bo"};
+static boostOpenLoop_Map3D_t boostMapClosed{"bc"};
 static SimplePwm boostPwmControl("boost");
 
 void BoostController::init(IPwm* pwm, const ValueProvider3D* openLoopMap, const ValueProvider3D* closedLoopTargetMap, pid_s* pidParams) {
