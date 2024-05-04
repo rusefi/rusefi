@@ -20,6 +20,7 @@
 #define ts_show_ignitionPinMode false
 #define ts_show_tps2 false
 #define ts_show_speedo_settings false
+#define ts_show_ford_toyota_tps_pps false
 
 #define ts_show_bank2_cam1 false
 #define ts_show_bank2_cam2 false
