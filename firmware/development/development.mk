@@ -9,4 +9,5 @@ DEV_SRC_CPP = $(DEVELOPMENT_DIR)/hw_layer/poten.cpp \
 	$(DEVELOPMENT_DIR)/engine_emulator.cpp \
 	$(DEVELOPMENT_DIR)/engine_sniffer.cpp \
 	$(DEVELOPMENT_DIR)/logic_analyzer.cpp \
+	$(DEVELOPMENT_DIR)/knock_spectrogram.cpp \
 	$(DEVELOPMENT_DIR)/development/perf_trace.cpp

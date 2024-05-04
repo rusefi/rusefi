@@ -67,6 +67,7 @@ enum class PE : uint8_t {
 	GlobalLock,
 	GlobalUnlock,
 	SoftwareKnockProcess,
+	KnockAnalyzer,
 	LogTriggerTooth,
 	LuaTickFunction,
 	LuaOneCanRxFunction,

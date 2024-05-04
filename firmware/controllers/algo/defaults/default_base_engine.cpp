@@ -262,6 +262,11 @@ void setDefaultBaseEngine() {
 	engineConfiguration->tcuInputSpeedSensorTeeth = 1;
 	engineConfiguration->issFilterReciprocal = 2;
 
+	//knock
+#if KNOCK_SPECTROGRAM
+	engineConfiguration->enableKnockSpectrogram = false;
+#endif
+
 	// Check engine light
 #if EFI_PROD_CODE
 	engineConfiguration->warningPeriod = 10;
