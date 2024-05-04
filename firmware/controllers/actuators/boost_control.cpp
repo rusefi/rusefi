@@ -39,7 +39,7 @@ void BoostController::resetLua() {
 }
 
 void BoostController::onConfigurationChange(engine_configuration_s const * previousConfig) {
-	if (!m_pid.isSame(&previousConfig->boostPid)) {
+	if (!previousConfig || !m_pid.isSame(&previousConfig->boostPid)) {
 		m_shouldResetPid = true;
 	}
 }

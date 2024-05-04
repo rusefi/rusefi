@@ -43,7 +43,7 @@ void VvtController::onFastCallback() {
 }
 
 void VvtController::onConfigurationChange(engine_configuration_s const * previousConfig) {
-	if (!m_pid.isSame(&previousConfig->auxPid[m_cam])) {
+	if (!previousConfig || !m_pid.isSame(&previousConfig->auxPid[m_cam])) {
 		m_pid.reset();
 	}
 }
