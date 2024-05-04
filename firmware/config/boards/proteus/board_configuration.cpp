@@ -224,7 +224,15 @@ static Gpio PROTEUS_M73_OUTPUTS[] = {
     Gpio::PROTEUS_LS_7,
     Gpio::PROTEUS_LS_8,
     Gpio::PROTEUS_LS_9, // inj 9
-    Gpio::PROTEUS_LS_10, // inj 3
+    Gpio::PROTEUS_LS_10, // inj 10
+    Gpio::PROTEUS_LS_11, // inj 11
+    Gpio::PROTEUS_LS_12, // inj 12
+    Gpio::PROTEUS_LS_14, // starter control or aux output
+    Gpio::PROTEUS_LS_15, // radiator fan relay output white
+
+
+    //Gpio::PROTEUS_LS_13, // main relay
+    //Gpio::PROTEUS_LS_16, // main relay
 };
 
 static Gpio PROTEUS_CANAM_OUTPUTS[] = {
