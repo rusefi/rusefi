@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri May 03 19:12:47 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat May 04 01:03:08 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -5283,17 +5283,17 @@ struct persistent_config_s {
 	 * units: deg
 	 * offset 24672
 	 */
-	scaled_channel<uint8_t, 4, 1> maxKnockRetardTable[6][6];
+	scaled_channel<uint8_t, 4, 1> maxKnockRetardTable[KNOCK_TABLE_SIZE][KNOCK_TABLE_SIZE];
 	/**
 	 * units: %
 	 * offset 24708
 	 */
-	uint8_t maxKnockRetardLoadBins[6];
+	uint8_t maxKnockRetardLoadBins[KNOCK_TABLE_SIZE];
 	/**
 	 * units: RPM
 	 * offset 24714
 	 */
-	scaled_channel<uint8_t, 1, 100> maxKnockRetardRpmBins[6];
+	scaled_channel<uint8_t, 1, 100> maxKnockRetardRpmBins[KNOCK_TABLE_SIZE];
 	/**
 	 * units: deg
 	 * offset 24720
@@ -5620,4 +5620,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 28156);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri May 03 19:12:47 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat May 04 01:03:08 UTC 2024
