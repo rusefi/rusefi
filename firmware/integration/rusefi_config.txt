@@ -1897,9 +1897,11 @@ int8_t[ETB2_TRIM_SIZE x ETB2_TRIM_SIZE] autoscale throttle2TrimTable;;"%", 0.1, 
 uint8_t[ETB2_TRIM_SIZE] throttle2TrimTpsBins;;"%", 1, 0, 0, 120, 0
 uint8_t[ETB2_TRIM_SIZE] autoscale throttle2TrimRpmBins;;"RPM", 100, 0, 0, 25000, 0
 
-uint8_t[6 x 6] autoscale maxKnockRetardTable;;"deg", 0.25, 0, 0, 30, 2
-uint8_t[6] maxKnockRetardLoadBins;;"%", 1, 0, 0, 250, 0
-uint8_t[6] autoscale maxKnockRetardRpmBins;;"RPM", 100, 0, 0, 25000, 0
+#define KNOCK_TABLE_SIZE 6
+
+uint8_t[KNOCK_TABLE_SIZE x KNOCK_TABLE_SIZE] autoscale maxKnockRetardTable;;"deg", 0.25, 0, 0, 30, 2
+uint8_t[KNOCK_TABLE_SIZE] maxKnockRetardLoadBins;;"%", 1, 0, 0, 250, 0
+uint8_t[KNOCK_TABLE_SIZE] autoscale maxKnockRetardRpmBins;;"RPM", 100, 0, 0, 25000, 0
 
 int16_t[4 x 4] autoscale ALSTimingRetardTable;;"deg", 0.1, 0, -60, 0, 1
 uint16_t[4] alsIgnRetardLoadBins;;"TPS", 1, 0, 0, 100, 0
