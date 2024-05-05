@@ -18,18 +18,16 @@
 float getAnalogInputDividerCoefficient(adc_channel_e);
 
 inline bool isAdcChannelValid(adc_channel_e hwChannel) {
-	if (hwChannel <= EFI_ADC_NONE) {
-		return false;
-	} else if (hwChannel >= EFI_ADC_TOTAL_CHANNELS) {
+	/* Compiler will optimize, keep following if as a reminder */
+	if (hwChannel >= EFI_ADC_TOTAL_CHANNELS) {
 		/* this should not happen!
 		 * if we have enum out of range somewhere in settings
 		 * that means something goes terribly wrong
 		 * TODO: should we say something?
 		 */
 		return false;
-	} else {
-		return true;
 	}
+	return ((hwChannel > EFI_ADC_NONE) && (hwChannel < EFI_ADC_TOTAL_CHANNELS));
 }
 
 #if !defined(GPT_FREQ_FAST) || !defined(GPT_PERIOD_FAST)
