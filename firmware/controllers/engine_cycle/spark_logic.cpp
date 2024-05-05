@@ -413,6 +413,10 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 		 */
 		chargeTime = scheduleByAngle(&event->dwellStartTimer, edgeTimestamp, angleOffset, { &turnSparkPinHighStartCharging, event });
 
+#if EFI_UNIT_TEST
+		engine->onScheduleTurnSparkPinHighStartCharging(*event, edgeTimestamp, angleOffset, chargeTime);
+#endif
+
 #if SPARK_EXTREME_LOGGING
 		efiPrintf("sparkUp revolution scheduled=%d for %d ticks [%s] %d later id=%d", getRevolutionCounter(), time2print(chargeTime), event->getOutputForLoggins()->getName(), (int)angleOffset,
 				event->sparkCounter);
@@ -463,6 +467,10 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
        * and it looks like current (smart?) re-queuing is effectively cancelling out the overdwell? is that the way this was intended to work?
        */
 			engine->executor.scheduleByTimestampNt("overdwell", &event->sparkEvent.scheduling, fireTime, { overFireSparkAndPrepareNextSchedule, event });
+
+#if EFI_UNIT_TEST
+			engine->onScheduleOverFireSparkAndPrepareNextSchedule(*event, fireTime);
+#endif
 		} else {
 		  engine->engineState.overDwellNotScheduledCounter++;
 		}

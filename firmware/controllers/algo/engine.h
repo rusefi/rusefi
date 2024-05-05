@@ -247,6 +247,10 @@ public:
 	TestExecutor executor;
 
 	std::function<void(IgnitionEvent*, bool)> onIgnitionEvent;
+	std::function<void(const IgnitionEvent&, efitick_t, angle_t, efitick_t)> onScheduleTurnSparkPinHighStartCharging
+			= [](const IgnitionEvent&, efitick_t, angle_t, efitick_t) -> void {};
+	std::function<void(const IgnitionEvent&, efitick_t)> onScheduleOverFireSparkAndPrepareNextSchedule
+			= [](const IgnitionEvent&, efitick_t) -> void {};
 #endif // EFI_UNIT_TEST
 
 #if EFI_ENGINE_CONTROL
