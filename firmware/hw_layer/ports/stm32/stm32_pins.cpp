@@ -12,7 +12,7 @@
 
 #if EFI_GPIO_HARDWARE
 
-static ioportid_t ports[] = {GPIOA,
+static const ioportid_t ports[] = {GPIOA,
 		GPIOB,
 		GPIOC,
 		GPIOD,
@@ -53,16 +53,12 @@ static ioportid_t ports[] = {GPIOA,
 #endif /* STM32_HAS_GPIOK */
 };
 
-ioportid_t * getGpioPorts() {
-    return ports;
-}
-
 int getBrainPinIndex(brain_pin_e brainPin) {
 	return (brainPin - Gpio::A0) % PORT_SIZE;
 }
 
 ioportid_t getBrainPinPort(brain_pin_e brainPin) {
-	return getGpioPorts()[(brainPin - Gpio::A0) / PORT_SIZE];
+	return ports[(brainPin - Gpio::A0) / PORT_SIZE];
 }
 
 /**
@@ -165,7 +161,7 @@ ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
  */
 		return GPIO_NULL;
 	}
-	return getGpioPorts()[(brainPin - Gpio::A0) / PORT_SIZE];
+	return ports[(brainPin - Gpio::A0) / PORT_SIZE];
 }
 
 /**
