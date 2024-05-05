@@ -463,9 +463,9 @@ static void handleCommandX14(uint16_t index) {
 		return;
 	case TS_WRITE_FLASH:
 		// cmd_write_config
-		#if (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
+		#if EFI_CONFIGURATION_STORAGE
 			writeToFlashNow();
-		#endif /* (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE) */
+		#endif /* EFI_CONFIGURATION_STORAGE */
 		return;
 	case TS_TRIGGER_STIMULATOR_ENABLE:
 		#if EFI_EMULATE_POSITION_SENSORS == TRUE
@@ -517,12 +517,10 @@ static void handleCommandX14(uint16_t index) {
 		benchSemaphore.signal();
 		return;
 	case TS_BURN_WITHOUT_FLASH:
-		#if EFI_PROD_CODE
-		#if (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
+		#if EFI_PROD_CODE && EFI_CONFIGURATION_STORAGE
 			extern bool burnWithoutFlash;
 			burnWithoutFlash = true;
-		#endif /* (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE) */
-		#endif // EFI_PROD_CODE
+		#endif /* EFI_PROD_CODE && EFI_CONFIGURATION_STORAGE */
 		return;
 	default:
 		criticalError("Unexpected bench x14 %d", index);

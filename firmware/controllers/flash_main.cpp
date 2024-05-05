@@ -10,7 +10,7 @@
 #include "pch.h"
 
 /* If any setting storage is exist */
-#if (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
+#if EFI_CONFIGURATION_STORAGE
 
 #include "mpu_util.h"
 #include "flash_main.h"
@@ -367,4 +367,4 @@ void initFlash() {
 #endif
 }
 
-#endif /* (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE) */
+#endif /* EFI_CONFIGURATION_STORAGE */

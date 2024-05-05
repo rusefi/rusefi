@@ -217,9 +217,9 @@ static void doPeriodicSlowCallback() {
 #endif /* EFI_CONFIGURATION_STORAGE */
 	}
 #else /* if EFI_SHAFT_POSITION_INPUT */
-	#if (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
+	#if EFI_CONFIGURATION_STORAGE
 		writeToFlashIfPending();
-	#endif /* (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE) */
+	#endif /* EFI_CONFIGURATION_STORAGE */
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
 #if EFI_TCU
