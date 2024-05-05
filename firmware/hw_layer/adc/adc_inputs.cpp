@@ -40,7 +40,7 @@ float __attribute__((weak)) getAnalogInputDividerCoefficient(adc_channel_e) {
 
 static NO_CACHE adcsample_t slowAdcSamples[SLOW_ADC_CHANNEL_COUNT];
 
-static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
+static adc_channel_mode_e adcHwChannelMode[HW_MAX_ADC_INDEX];
 
 // Board voltage, with divider coefficient accounted for
 float getVoltageDivided(const char *msg, adc_channel_e hwChannel) {
@@ -204,7 +204,7 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 	}
 
 #if EFI_USE_FAST_ADC
-	if (adcHwChannelEnabled[hwChannel] == ADC_FAST) {
+	if (adcHwChannelMode[hwChannel] == ADC_FAST) {
 		int internalIndex = fastAdc.internalAdcIndexByHardwareIndex[hwChannel];
 // todo if ADC_BUF_DEPTH_FAST EQ 1
 //		return fastAdc.samples[internalIndex];
@@ -226,13 +226,7 @@ static GPTConfig fast_adc_config = {
 #endif /* EFI_USE_FAST_ADC */
 
 adc_channel_mode_e getAdcMode(adc_channel_e hwChannel) {
-#if EFI_USE_FAST_ADC
-	if (fastAdc.isHwUsed(hwChannel)) {
-		return ADC_FAST;
-	}
-#endif // EFI_USE_FAST_ADC
-
-	return ADC_SLOW;
+	return adcHwChannelMode[hwChannel];
 }
 
 #if EFI_USE_FAST_ADC
@@ -254,15 +248,6 @@ void AdcDevice::init(void) {
 	hwConfig->num_channels = size();
 	/* driver does this internally */
 	//hwConfig->sqr1 += ADC_SQR1_NUM_CH(size());
-}
-
-bool AdcDevice::isHwUsed(adc_channel_e hwChannel) const {
-	for (size_t i = 0; i < channelCount; i++) {
-		if (hardwareIndexByIndernalAdcIndex[i] == hwChannel) {
-			return true;
-		}
-	}
-	return false;
 }
 
 void AdcDevice::enableChannel(adc_channel_e hwChannel) {
@@ -399,36 +384,40 @@ public:
 	}
 };
 
-void addChannel(const char* /*name*/, adc_channel_e hwChannel, adc_channel_mode_e mode) {
+void addChannel(const char*, adc_channel_e hwChannel, adc_channel_mode_e mode) {
 	if (!isAdcChannelValid(hwChannel)) {
 		return;
 	}
-
-	adcHwChannelEnabled[hwChannel] = mode;
 
 #if EFI_USE_FAST_ADC
 	if (mode == ADC_FAST) {
 		fastAdc.enableChannel(hwChannel);
-		return;
 	}
 #endif
 
+	adcHwChannelMode[hwChannel] = mode;
 	// Nothing to do for slow channels, input is mapped to analog in init_sensors.cpp
 }
 
-void removeChannel(const char *name, adc_channel_e hwChannel) {
-	(void)name;
+void removeChannel(const char*, adc_channel_e hwChannel) {
 	if (!isAdcChannelValid(hwChannel)) {
 		return;
 	}
-	adcHwChannelEnabled[hwChannel] = ADC_OFF;
+#if EFI_USE_FAST_ADC
+	if (adcHwChannelMode[hwChannel] == ADC_FAST) {
+		/* TODO: */
+		//fastAdc.disableChannel(hwChannel);
+	}
+#endif
+
+	adcHwChannelMode[hwChannel] = ADC_OFF;
 }
 
 // Weak link a stub so that every board doesn't have to implement this function
 __attribute__((weak)) void setAdcChannelOverrides() { }
 
 static void configureInputs() {
-	memset(adcHwChannelEnabled, 0, sizeof(adcHwChannelEnabled));
+	memset(adcHwChannelMode, 0, sizeof(adcHwChannelMode));
 
 	/**
 	 * order of analog channels here is totally random and has no meaning
