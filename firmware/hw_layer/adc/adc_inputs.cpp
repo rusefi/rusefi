@@ -256,9 +256,9 @@ void AdcDevice::init(void) {
 	//hwConfig->sqr1 += ADC_SQR1_NUM_CH(size());
 }
 
-bool AdcDevice::isHwUsed(adc_channel_e hwChannelIndex) const {
+bool AdcDevice::isHwUsed(adc_channel_e hwChannel) const {
 	for (size_t i = 0; i < channelCount; i++) {
-		if (hardwareIndexByIndernalAdcIndex[i] == hwChannelIndex) {
+		if (hardwareIndexByIndernalAdcIndex[i] == hwChannel) {
 			return true;
 		}
 	}
@@ -297,8 +297,8 @@ void AdcDevice::enableChannel(adc_channel_e hwChannel) {
 #endif /* ADC_MAX_CHANNELS_COUNT */
 }
 
-adc_channel_e AdcDevice::getAdcHardwareIndexByInternalIndex(int index) const {
-	return hardwareIndexByIndernalAdcIndex[index];
+adc_channel_e AdcDevice::getAdcHardwareIndexByInternalIndex(int hwChannel) const {
+	return hardwareIndexByIndernalAdcIndex[hwChannel];
 }
 
 #endif // EFI_USE_FAST_ADC
@@ -317,16 +317,16 @@ void printFullAdcReport(void) {
 	efiPrintf("fast %d samples", fastAdc.conversionCount);
 
 	for (int internalIndex = 0; internalIndex < fastAdc.size(); internalIndex++) {
-		adc_channel_e hwIndex = fastAdc.getAdcHardwareIndexByInternalIndex(internalIndex);
+		adc_channel_e hwChannel = fastAdc.getAdcHardwareIndexByInternalIndex(internalIndex);
 
-		if (isAdcChannelValid(hwIndex)) {
-			ioportid_t port = getAdcChannelPort("print", hwIndex);
-			int pin = getAdcChannelPin(hwIndex);
+		if (isAdcChannelValid(hwChannel)) {
+			ioportid_t port = getAdcChannelPort("print", hwChannel);
+			int pin = getAdcChannelPin(hwChannel);
 			int adcValue = getAvgAdcValue(internalIndex, fastAdc.samples, ADC_BUF_DEPTH_FAST, fastAdc.size());
 			float volts = adcToVolts(adcValue);
 			/* Human index starts from 1 */
 			efiPrintf(" F ch[%2d] @ %s%d ADC%d 12bit=%4d %.2fV",
-				internalIndex, portname(port), pin, hwIndex - EFI_ADC_0 + 1, adcValue, volts);
+				internalIndex, portname(port), pin, hwChannel - EFI_ADC_0 + 1, adcValue, volts);
 		}
 	}
 #endif // EFI_USE_FAST_ADC
@@ -334,16 +334,16 @@ void printFullAdcReport(void) {
 
 	/* we assume that all slow ADC channels are enabled */
 	for (int internalIndex = 0; internalIndex < ADC_MAX_CHANNELS_COUNT; internalIndex++) {
-		adc_channel_e hwIndex = static_cast<adc_channel_e>(internalIndex + EFI_ADC_0);
+		adc_channel_e hwChannel = static_cast<adc_channel_e>(internalIndex + EFI_ADC_0);
 
-		if (isAdcChannelValid(hwIndex)) {
-			ioportid_t port = getAdcChannelPort("print", hwIndex);
-			int pin = getAdcChannelPin(hwIndex);
+		if (isAdcChannelValid(hwChannel)) {
+			ioportid_t port = getAdcChannelPort("print", hwChannel);
+			int pin = getAdcChannelPin(hwChannel);
 			int adcValue = slowAdcSamples[internalIndex];
 			float volts = adcToVolts(adcValue);
 			/* Human index starts from 1 */
 			efiPrintf(" S ch[%2d] @ %s%d ADC%d 12bit=%4d %.2fV",
-				internalIndex, portname(port), pin, hwIndex - EFI_ADC_0 + 1, adcValue, volts);
+				internalIndex, portname(port), pin, hwChannel - EFI_ADC_0 + 1, adcValue, volts);
 		}
 	}
 }
@@ -399,16 +399,16 @@ public:
 	}
 };
 
-void addChannel(const char* /*name*/, adc_channel_e setting, adc_channel_mode_e mode) {
-	if (!isAdcChannelValid(setting)) {
+void addChannel(const char* /*name*/, adc_channel_e hwChannel, adc_channel_mode_e mode) {
+	if (!isAdcChannelValid(hwChannel)) {
 		return;
 	}
 
-	adcHwChannelEnabled[setting] = mode;
+	adcHwChannelEnabled[hwChannel] = mode;
 
 #if EFI_USE_FAST_ADC
 	if (mode == ADC_FAST) {
-		fastAdc.enableChannel(setting);
+		fastAdc.enableChannel(hwChannel);
 		return;
 	}
 #endif
@@ -416,12 +416,12 @@ void addChannel(const char* /*name*/, adc_channel_e setting, adc_channel_mode_e 
 	// Nothing to do for slow channels, input is mapped to analog in init_sensors.cpp
 }
 
-void removeChannel(const char *name, adc_channel_e setting) {
+void removeChannel(const char *name, adc_channel_e hwChannel) {
 	(void)name;
-	if (!isAdcChannelValid(setting)) {
+	if (!isAdcChannelValid(hwChannel)) {
 		return;
 	}
-	adcHwChannelEnabled[setting] = ADC_OFF;
+	adcHwChannelEnabled[hwChannel] = ADC_OFF;
 }
 
 // Weak link a stub so that every board doesn't have to implement this function
