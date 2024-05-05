@@ -4,6 +4,7 @@ TESTS_SRC_CPP = \
 	tests/trigger/test_symmetrical_crank.cpp \
 	tests/trigger/test_trigger_decoder.cpp \
 	tests/trigger/test_trigger_decoder_2.cpp \
+	tests/trigger/test_coil.cpp \
 	tests/trigger/test_trigger_noiseless.cpp \
 	tests/trigger/test_trigger_multi_sync.cpp \
 	tests/trigger/test_trigger_input_adc.cpp \
