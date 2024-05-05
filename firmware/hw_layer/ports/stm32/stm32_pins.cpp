@@ -12,44 +12,34 @@
 
 #if EFI_GPIO_HARDWARE
 
-static const ioportid_t ports[] = {GPIOA,
-		GPIOB,
-		GPIOC,
-		GPIOD,
+static const struct port_io {
+	const ioportid_t port;
+	const char *name;
+} ports[] = {
+	{ GPIOA, "PA" },
+	{ GPIOB, "PB" },
+	{ GPIOC, "PC" },
+	{ GPIOD, "PD" },
 #if STM32_HAS_GPIOE
-		GPIOE,
-#else
-		nullptr,
+	{ GPIOE, "PE" },
 #endif /* STM32_HAS_GPIOE */
 #if STM32_HAS_GPIOF
-		GPIOF,
-#else
-		nullptr,
+	{ GPIOF, "PF" },
 #endif /* STM32_HAS_GPIOF */
 #if STM32_HAS_GPIOG
-		GPIOG,
-#else
-		nullptr,
+	{ GPIOG, "PG" },
 #endif /* STM32_HAS_GPIOG */
 #if STM32_HAS_GPIOH
-		GPIOH,
-#else
-		nullptr,
+	{ GPIOH, "PH" },
 #endif /* STM32_HAS_GPIOH */
 #if STM32_HAS_GPIOI
-		GPIOI,
-#else
-		nullptr,
+	{ GPIOI, "PI" },
 #endif /* STM32_HAS_GPIOI */
 #if STM32_HAS_GPIOJ
-		GPIOJ,
-#else
-		nullptr,
+	{ GPIOJ, "PJ" },
 #endif /* STM32_HAS_GPIOJ */
 #if STM32_HAS_GPIOK
-		GPIOK,
-#else
-		nullptr,
+	{ GPIOK, "PK" },
 #endif /* STM32_HAS_GPIOK */
 };
 
@@ -58,90 +48,31 @@ int getBrainPinIndex(brain_pin_e brainPin) {
 }
 
 ioportid_t getBrainPinPort(brain_pin_e brainPin) {
-	return ports[(brainPin - Gpio::A0) / PORT_SIZE];
+	size_t idx = (brainPin - Gpio::A0) / PORT_SIZE;
+	if (idx < efi::size(ports)) {
+		return ports[idx].port;
+	}
+
+	return nullptr;
 }
 
-/**
- * @deprecated - use hwPortname() instead
- */
-const char *portname(ioportid_t GPIOx) {
-	if (GPIOx == GPIOA)
-		return "PA";
-	if (GPIOx == GPIOB)
-		return "PB";
-	if (GPIOx == GPIOC)
-		return "PC";
-	if (GPIOx == GPIOD)
-		return "PD";
-#if defined(GPIOF)
-	if (GPIOx == GPIOE)
-		return "PE";
-#endif /* GPIOE */
-#if defined(GPIOF)
-	if (GPIOx == GPIOF)
-		return "PF";
-#endif /* GPIOF */
-#if defined(GPIOG)
-	if (GPIOx == GPIOG)
-		return "PG";
-#endif /* GPIOG */
-#if defined(GPIOH)
-	if (GPIOx == GPIOH)
-		return "PH";
-#endif /* GPIOH */
-#if defined(GPIOI)
-	if (GPIOx == GPIOI)
-		return "PI";
-#endif /* GPIOI */
-#if defined(GPIOJ_BASE)
-	if (GPIOx == GPIOJ)
-		return "PJ";
-#endif /* GPIOJ_BASE */
-#if defined(GPIOK_BASE)
-	if (GPIOx == GPIOK)
-		return "PK";
-#endif /* GPIOK_BASE */
-	return "unknown";
+const char *portname(ioportid_t port) {
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, port != NULL, "null port", nullptr);
+	for (size_t idx = 0; idx < efi::size(ports); idx++) {
+		if (ports[idx].port == port) {
+			return ports[idx].name;
+		}
+	}
+	return nullptr;
 }
 
 static int getPortIndex(ioportid_t port) {
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, port != NULL, "null port", -1);
-	if (port == GPIOA)
-		return 0;
-	if (port == GPIOB)
-		return 1;
-	if (port == GPIOC)
-		return 2;
-	if (port == GPIOD)
-		return 3;
-#if defined(GPIOF)
-	if (port == GPIOE)
-		return 4;
-#endif /* GPIOE */
-#if defined(GPIOF)
-	if (port == GPIOF)
-		return 5;
-#endif /* GPIOF */
-#if defined(GPIOG)
-	if (port == GPIOG)
-		return 6;
-#endif /* GPIOG */
-#if defined(GPIOH)
-	if (port == GPIOH)
-		return 7;
-#endif /* GPIOH */
-#if defined(GPIOI)
-	if (port == GPIOI)
-		return 8;
-#endif /* STM32_HAS_GPIOI */
-#if defined(GPIOJ_BASE)
-	if (port == GPIOJ)
-		return 9;
-#endif /* GPIOJ_BASE */
-#if defined(GPIOK_BASE)
-	if (port == GPIOK)
-		return 10;
-#endif /* GPIOK_BASE */
+	for (size_t idx = 0; idx < efi::size(ports); idx++) {
+		if (ports[idx].port == port) {
+			return idx;
+		}
+	}
 	firmwareError(ObdCode::CUSTOM_ERR_UNKNOWN_PORT, "unknown port");
 	return -1;
 }
@@ -161,7 +92,13 @@ ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
  */
 		return GPIO_NULL;
 	}
-	return ports[(brainPin - Gpio::A0) / PORT_SIZE];
+	size_t idx = (brainPin - Gpio::A0) / PORT_SIZE;
+	if (idx < efi::size(ports)) {
+		return ports[idx].port;
+	}
+
+	firmwareError(ObdCode::CUSTOM_ERR_UNKNOWN_PORT, "unknown port");
+	return nullptr;
 }
 
 /**
