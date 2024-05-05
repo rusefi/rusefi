@@ -341,9 +341,9 @@ void requestBurn() {
 #if !EFI_UNIT_TEST
 	onBurnRequest();
 
-#if (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
+#if EFI_CONFIGURATION_STORAGE
 	setNeedToWriteConfiguration();
-#endif /* (EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE) */
+#endif /* EFI_CONFIGURATION_STORAGE */
 #endif // !EFI_UNIT_TEST
 }
 
