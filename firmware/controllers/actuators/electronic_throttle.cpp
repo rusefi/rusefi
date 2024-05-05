@@ -939,6 +939,10 @@ static pid_s* getPidForDcFunction(dc_function_e function) {
 	}
 }
 
+BOARD_WEAK ValueProvider3D* pedal2TpsProvider() {
+  return &pedal2tpsMap;
+}
+
 void doInitElectronicThrottle() {
 	bool hasPedal = Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
 
@@ -966,7 +970,7 @@ void doInitElectronicThrottle() {
 
 		auto pid = getPidForDcFunction(func);
 
-		bool dcConfigured = controller->init(func, motor, pid, &pedal2tpsMap, hasPedal);
+		bool dcConfigured = controller->init(func, motor, pid, pedal2TpsProvider(), hasPedal);
 		bool etbConfigured = dcConfigured && controller->isEtbMode();
 		if (i == 0) {
 		    engineConfiguration->etb1configured = etbConfigured;
