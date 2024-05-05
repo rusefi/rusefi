@@ -8,18 +8,18 @@ using ::testing::_;
 
 extern WarningCodeState unitTestWarningCodeState;
 
-TEST(coil, testOverdwellProtection) {
-	printf("*************************************************** testOverdwellProtection\r\n");
-
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+// Magic below is the simpliest way to schedule overdwell sparkDown that I found in
+// testAssertWeAreNotMissingASpark299.
+//
+// eth.smartFireFall(20);
+//
+// after this method will schedule over fire spark.
+// P.S. May be later we will be able to simplify this spell.
+static void prepareToScheduleOverdwellSparkDown(EngineTestHelper& eth) {
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 	engineConfiguration->isIgnitionEnabled = true;
 	engineConfiguration->isInjectionEnabled = false;
-
-	engine->onScheduleOverFireSparkAndPrepareNextSchedule = [&](const IgnitionEvent&, efitick_t) -> void {
-		FAIL() << "Unexpected scheduling of overFireSparkAndPrepareNextSchedule";
-	};
 
 	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#0";
 
@@ -47,6 +47,17 @@ TEST(coil, testOverdwellProtection) {
 	eth.engine.periodicFastCallback();
 
 	eth.smartFireRise(20);
+}
+
+TEST(coil, testOverdwellProtection) {
+	printf("*************************************************** testOverdwellProtection\r\n");
+
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engine->onScheduleOverFireSparkAndPrepareNextSchedule = [&](const IgnitionEvent&, efitick_t) -> void {
+		FAIL() << "Unexpected scheduling of overFireSparkAndPrepareNextSchedule";
+	};
+
+	prepareToScheduleOverdwellSparkDown(eth);
 
 	printf("*************************************************** testOverdwellProtection start\r\n");
 
@@ -135,4 +146,3 @@ TEST(coil, testOverdwellProtection) {
 	ASSERT_TRUE(testIgnitionEventState.has_value()) << "Missed ignition event";
 	EXPECT_FALSE(testIgnitionEventState.value()) << "Unexpected state in ignition event";
 }
-
