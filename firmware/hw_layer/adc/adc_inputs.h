@@ -72,8 +72,8 @@ void printFullAdcReportIfNeeded(void);
 int getInternalAdcValue(const char *msg, adc_channel_e index);
 float getMCUInternalTemperature(void);
 
-void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode);
-void removeChannel(const char *name, adc_channel_e setting);
+void addChannel(const char *name, adc_channel_e hwChannel, adc_channel_mode_e mode);
+void removeChannel(const char *name, adc_channel_e hwChannel);
 
 #define getAdcValue(msg, hwChannel) getInternalAdcValue(msg, hwChannel)
 
