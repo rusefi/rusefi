@@ -173,11 +173,10 @@ static void fast_adc_callback(GPTDriver*) {
 	 * will be executed in parallel to the current PWM cycle and will
 	 * terminate before the next PWM cycle.
 	 */
-	chSysLockFromISR()
-	;
-	if (ADC_FAST_DEVICE.state != ADC_READY &&
-	ADC_FAST_DEVICE.state != ADC_COMPLETE &&
-	ADC_FAST_DEVICE.state != ADC_ERROR) {
+	chSysLockFromISR();
+	if ((ADC_FAST_DEVICE.state != ADC_READY) &&
+		(ADC_FAST_DEVICE.state != ADC_COMPLETE) &&
+		(ADC_FAST_DEVICE.state != ADC_ERROR)) {
 		engine->outputChannels.fastAdcErrorsCount++;
 		// todo: when? why? criticalError("ADC fast not ready?");
 		// see notes at https://github.com/rusefi/rusefi/issues/6399
