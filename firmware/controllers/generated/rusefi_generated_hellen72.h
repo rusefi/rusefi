@@ -2,7 +2,7 @@
 // was generated automatically by rusEFI tool config_definition-all.jar based on gen_config.sh integration/rusefi_config.txt
 //
 
-#define adc_channel_e_auto_enum 0="EFI_ADC_NONE",1="EFI_ADC_0",2="EFI_ADC_1",11="EFI_ADC_10",12="EFI_ADC_11",13="EFI_ADC_12",14="EFI_ADC_13",15="EFI_ADC_14",16="EFI_ADC_15",17="EFI_ADC_16",18="EFI_ADC_17",19="EFI_ADC_18",20="EFI_ADC_19",3="EFI_ADC_2",21="EFI_ADC_20",22="EFI_ADC_21",23="EFI_ADC_22",24="EFI_ADC_23",25="EFI_ADC_24",26="EFI_ADC_25",27="EFI_ADC_26",28="EFI_ADC_27",29="EFI_ADC_28",30="EFI_ADC_29",4="EFI_ADC_3",31="EFI_ADC_30",32="EFI_ADC_31",5="EFI_ADC_4",6="EFI_ADC_5",7="EFI_ADC_6",8="EFI_ADC_7",9="EFI_ADC_8",10="EFI_ADC_9",50="EFI_ADC_ERROR",33="EFI_ADC_LAST_CHANNEL"
+#define adc_channel_e_auto_enum 0="EFI_ADC_NONE",1="EFI_ADC_0",2="EFI_ADC_1",11="EFI_ADC_10",12="EFI_ADC_11",13="EFI_ADC_12",14="EFI_ADC_13",15="EFI_ADC_14",16="EFI_ADC_15",17="EFI_ADC_16",18="EFI_ADC_17",19="EFI_ADC_18",20="EFI_ADC_19",3="EFI_ADC_2",21="EFI_ADC_20",22="EFI_ADC_21",23="EFI_ADC_22",24="EFI_ADC_23",25="EFI_ADC_24",26="EFI_ADC_25",27="EFI_ADC_26",28="EFI_ADC_27",29="EFI_ADC_28",30="EFI_ADC_29",4="EFI_ADC_3",31="EFI_ADC_30",32="EFI_ADC_31",33="EFI_ADC_32",34="EFI_ADC_33",35="EFI_ADC_34",36="EFI_ADC_35",37="EFI_ADC_36",38="EFI_ADC_37",39="EFI_ADC_38",40="EFI_ADC_39",5="EFI_ADC_4",6="EFI_ADC_5",7="EFI_ADC_6",8="EFI_ADC_7",9="EFI_ADC_8",10="EFI_ADC_9",50="EFI_ADC_ERROR",41="EFI_ADC_TOTAL_CHANNELS"
 #define adc_channel_e_EFI_ADC_0 1
 #define adc_channel_e_EFI_ADC_1 2
 #define adc_channel_e_EFI_ADC_10 11
@@ -29,6 +29,14 @@
 #define adc_channel_e_EFI_ADC_3 4
 #define adc_channel_e_EFI_ADC_30 31
 #define adc_channel_e_EFI_ADC_31 32
+#define adc_channel_e_EFI_ADC_32 33
+#define adc_channel_e_EFI_ADC_33 34
+#define adc_channel_e_EFI_ADC_34 35
+#define adc_channel_e_EFI_ADC_35 36
+#define adc_channel_e_EFI_ADC_36 37
+#define adc_channel_e_EFI_ADC_37 38
+#define adc_channel_e_EFI_ADC_38 39
+#define adc_channel_e_EFI_ADC_39 40
 #define adc_channel_e_EFI_ADC_4 5
 #define adc_channel_e_EFI_ADC_5 6
 #define adc_channel_e_EFI_ADC_6 7
@@ -36,8 +44,8 @@
 #define adc_channel_e_EFI_ADC_8 9
 #define adc_channel_e_EFI_ADC_9 10
 #define adc_channel_e_EFI_ADC_ERROR 50
-#define adc_channel_e_EFI_ADC_LAST_CHANNEL 33
 #define adc_channel_e_EFI_ADC_NONE 0
+#define adc_channel_e_EFI_ADC_TOTAL_CHANNELS 41
 #define adc_channel_e_enum 0="NONE",2="3L - IGN_7 / AFR",7="3V - CAM (A19)",10="3Y - CRANK (A24)",16="4AE - EGR/MAP4 (A22)",9="4F - AC_PRES/AUX1 (A23)",8="4J - VTCS/AUX4 (A20)",14="4N - IAT (A14)",13="4P - CLT (A11)",6="4S/4T - Alternator voltage",12="4U - MAP2/Ign8 (A10)",5="4V - TPS (A17)",11="4X - MAF (A9)",15="5M - PPS2 OR TEMPERATURE SENSOR",1="5N - TPS2",4="5P - PPS1",3="intMAP (A15)"
 #define adc_channel_e_fullenum "NONE","5N - TPS2","3L - IGN_7 / AFR","intMAP (A15)","5P - PPS1","4V - TPS (A17)","4S/4T - Alternator voltage","3V - CAM (A19)","4J - VTCS/AUX4 (A20)","4F - AC_PRES/AUX1 (A23)","3Y - CRANK (A24)","4X - MAF (A9)","4U - MAP2/Ign8 (A10)","4P - CLT (A11)","4N - IAT (A14)","5M - PPS2 OR TEMPERATURE SENSOR","4AE - EGR/MAP4 (A22)"
 #define ADC_CHANNEL_NONE 0

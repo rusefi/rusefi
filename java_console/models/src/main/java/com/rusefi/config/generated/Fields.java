@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun May 05 04:40:20 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun May 05 17:29:10 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -32,6 +32,14 @@ public class Fields {
 	public static final int adc_channel_e_EFI_ADC_3 = 4;
 	public static final int adc_channel_e_EFI_ADC_30 = 31;
 	public static final int adc_channel_e_EFI_ADC_31 = 32;
+	public static final int adc_channel_e_EFI_ADC_32 = 33;
+	public static final int adc_channel_e_EFI_ADC_33 = 34;
+	public static final int adc_channel_e_EFI_ADC_34 = 35;
+	public static final int adc_channel_e_EFI_ADC_35 = 36;
+	public static final int adc_channel_e_EFI_ADC_36 = 37;
+	public static final int adc_channel_e_EFI_ADC_37 = 38;
+	public static final int adc_channel_e_EFI_ADC_38 = 39;
+	public static final int adc_channel_e_EFI_ADC_39 = 40;
 	public static final int adc_channel_e_EFI_ADC_4 = 5;
 	public static final int adc_channel_e_EFI_ADC_5 = 6;
 	public static final int adc_channel_e_EFI_ADC_6 = 7;
@@ -39,8 +47,8 @@ public class Fields {
 	public static final int adc_channel_e_EFI_ADC_8 = 9;
 	public static final int adc_channel_e_EFI_ADC_9 = 10;
 	public static final int adc_channel_e_EFI_ADC_ERROR = 50;
-	public static final int adc_channel_e_EFI_ADC_LAST_CHANNEL = 33;
 	public static final int adc_channel_e_EFI_ADC_NONE = 0;
+	public static final int adc_channel_e_EFI_ADC_TOTAL_CHANNELS = 41;
 	public static final int ADC_CHANNEL_NONE = 0;
 	public static final int afr_sensor_s_size = 20;
 	public static final int air_pressure_sensor_config_s_size = 12;

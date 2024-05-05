@@ -2,7 +2,7 @@
 // was generated automatically by rusEFI tool config_definition-all.jar based on gen_config.sh integration/rusefi_config.txt
 //
 
-#define adc_channel_e_auto_enum 0="EFI_ADC_NONE",1="EFI_ADC_0",2="EFI_ADC_1",11="EFI_ADC_10",12="EFI_ADC_11",13="EFI_ADC_12",14="EFI_ADC_13",15="EFI_ADC_14",16="EFI_ADC_15",17="EFI_ADC_16",18="EFI_ADC_17",19="EFI_ADC_18",20="EFI_ADC_19",3="EFI_ADC_2",21="EFI_ADC_20",22="EFI_ADC_21",23="EFI_ADC_22",24="EFI_ADC_23",25="EFI_ADC_24",26="EFI_ADC_25",27="EFI_ADC_26",28="EFI_ADC_27",29="EFI_ADC_28",30="EFI_ADC_29",4="EFI_ADC_3",31="EFI_ADC_30",32="EFI_ADC_31",5="EFI_ADC_4",6="EFI_ADC_5",7="EFI_ADC_6",8="EFI_ADC_7",9="EFI_ADC_8",10="EFI_ADC_9",50="EFI_ADC_ERROR",33="EFI_ADC_LAST_CHANNEL"
+#define adc_channel_e_auto_enum 0="EFI_ADC_NONE",1="EFI_ADC_0",2="EFI_ADC_1",11="EFI_ADC_10",12="EFI_ADC_11",13="EFI_ADC_12",14="EFI_ADC_13",15="EFI_ADC_14",16="EFI_ADC_15",17="EFI_ADC_16",18="EFI_ADC_17",19="EFI_ADC_18",20="EFI_ADC_19",3="EFI_ADC_2",21="EFI_ADC_20",22="EFI_ADC_21",23="EFI_ADC_22",24="EFI_ADC_23",25="EFI_ADC_24",26="EFI_ADC_25",27="EFI_ADC_26",28="EFI_ADC_27",29="EFI_ADC_28",30="EFI_ADC_29",4="EFI_ADC_3",31="EFI_ADC_30",32="EFI_ADC_31",33="EFI_ADC_32",34="EFI_ADC_33",35="EFI_ADC_34",36="EFI_ADC_35",37="EFI_ADC_36",38="EFI_ADC_37",39="EFI_ADC_38",40="EFI_ADC_39",5="EFI_ADC_4",6="EFI_ADC_5",7="EFI_ADC_6",8="EFI_ADC_7",9="EFI_ADC_8",10="EFI_ADC_9",50="EFI_ADC_ERROR",41="EFI_ADC_TOTAL_CHANNELS"
 #define adc_channel_e_EFI_ADC_0 1
 #define adc_channel_e_EFI_ADC_1 2
 #define adc_channel_e_EFI_ADC_10 11
@@ -29,6 +29,14 @@
 #define adc_channel_e_EFI_ADC_3 4
 #define adc_channel_e_EFI_ADC_30 31
 #define adc_channel_e_EFI_ADC_31 32
+#define adc_channel_e_EFI_ADC_32 33
+#define adc_channel_e_EFI_ADC_33 34
+#define adc_channel_e_EFI_ADC_34 35
+#define adc_channel_e_EFI_ADC_35 36
+#define adc_channel_e_EFI_ADC_36 37
+#define adc_channel_e_EFI_ADC_37 38
+#define adc_channel_e_EFI_ADC_38 39
+#define adc_channel_e_EFI_ADC_39 40
 #define adc_channel_e_EFI_ADC_4 5
 #define adc_channel_e_EFI_ADC_5 6
 #define adc_channel_e_EFI_ADC_6 7
@@ -36,8 +44,8 @@
 #define adc_channel_e_EFI_ADC_8 9
 #define adc_channel_e_EFI_ADC_9 10
 #define adc_channel_e_EFI_ADC_ERROR 50
-#define adc_channel_e_EFI_ADC_LAST_CHANNEL 33
 #define adc_channel_e_EFI_ADC_NONE 0
+#define adc_channel_e_EFI_ADC_TOTAL_CHANNELS 41
 #define adc_channel_e_enum 0="NONE",27="10A - Aux Analog 5",18="11A - Aux Analog 3",16="12A - Aux Analog 8",9="19A - Aux Analog 6",10="1A - Aux Analog 1",32="20A - Aux Analog 9",6="24 - Ignition Key Voltage",14="27A - IAT Sensor Input",30="28A - Aux Temp 1",29="28A - Aux Temp 2",13="29A - CLT Sensor Input",11="2A - Aux Analog 4",5="31A - TPS Sensor Input",4="32A - PPS Sensor Input",21="33A - TPS2 Sensor Input",20="34A - PPS2 Sensor Input",2="3A - Aux Analog 2",25="4A - Aux Analog 7",3="On-board MAP"
 #define adc_channel_e_fullenum "NONE","INVALID","3A - Aux Analog 2","On-board MAP","32A - PPS Sensor Input","31A - TPS Sensor Input","24 - Ignition Key Voltage","INVALID","INVALID","19A - Aux Analog 6","1A - Aux Analog 1","2A - Aux Analog 4","INVALID","29A - CLT Sensor Input","27A - IAT Sensor Input","INVALID","12A - Aux Analog 8","INVALID","11A - Aux Analog 3","INVALID","34A - PPS2 Sensor Input","33A - TPS2 Sensor Input","INVALID","INVALID","INVALID","4A - Aux Analog 7","INVALID","10A - Aux Analog 5","INVALID","28A - Aux Temp 2","28A - Aux Temp 1","INVALID","20A - Aux Analog 9"
 #define ADC_CHANNEL_NONE 0
