@@ -160,7 +160,6 @@ private:
 
 ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin);
 ioportid_t getHwPort(const char *msg, brain_pin_e brainPin);
-ioportid_t * getGpioPorts();
 const char *portname(ioportid_t GPIOx);
 
 #endif /* EFI_GPIO_HARDWARE */
