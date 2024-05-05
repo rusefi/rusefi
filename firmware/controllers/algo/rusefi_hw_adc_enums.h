@@ -34,7 +34,20 @@ typedef enum __attribute__ ((__packed__)) {
 	EFI_ADC_30 = 31,
 	EFI_ADC_31 = 32,
 
-	EFI_ADC_TOTAL_CHANNELS = 33,	// Please keep this in sync with the last valid channel index!
+	// External ADC channels
+	EFI_ADC_32 = 33,
+	EFI_ADC_33 = 34,
+	EFI_ADC_34 = 35,
+	EFI_ADC_35 = 36,
+	EFI_ADC_36 = 37,
+	EFI_ADC_37 = 38,
+	EFI_ADC_38 = 39,
+	EFI_ADC_39 = 40,
+
+	EFI_ADC_TOTAL_CHANNELS = 41,	// Please keep this in sync with the last valid channel index!
 
 	EFI_ADC_ERROR = 50,
 } adc_channel_e;
+
+/* Please keep updating these define(s) */
+#define EFI_ADC_ONCHIP_LAST	EFI_ADC_31
