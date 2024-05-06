@@ -248,7 +248,7 @@ Pull-up resistor value on your board
 value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into two bit fields
 
 ### knockBandCustom
-We calculate knock band based of cylinderBore\n Use this to override - kHz knock band override\nRequires power cycling to effect
+Use any online calculator and input your bore.\nReminder that in some cases double frequency works better!
 
 ### displacement
 Engine displacement in litres

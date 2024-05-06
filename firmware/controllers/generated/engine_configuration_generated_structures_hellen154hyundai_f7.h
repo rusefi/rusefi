@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat May 04 01:02:50 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon May 06 20:27:38 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -934,9 +934,8 @@ struct engine_configuration_s {
 	 */
 	int hip9011PrescalerAndSDO;
 	/**
-	 * We calculate knock band based of cylinderBore
-	 *  Use this to override - kHz knock band override
-	 * Requires power cycling to effect
+	 * Use any online calculator and input your bore.
+	 * Reminder that in some cases double frequency works better!
 	 * units: kHz
 	 * offset 428
 	 */
@@ -5620,4 +5619,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22656);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat May 04 01:02:50 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon May 06 20:27:38 UTC 2024
