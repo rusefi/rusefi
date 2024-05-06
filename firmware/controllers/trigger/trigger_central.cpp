@@ -131,7 +131,7 @@ static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 			&& vvtMode != VVT_SINGLE_TOOTH;
 }
 
-angle_t TriggerCentral::syncAndReport(int divider, int remainder) {
+angle_t TriggerCentral::syncEnginePhaseAndReport(int divider, int remainder) {
 	angle_t engineCycle = getEngineCycle(getEngineRotationState()->getOperationMode());
 
 	angle_t totalShift = triggerState.syncEnginePhase(divider, remainder, engineCycle);
@@ -183,7 +183,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_MAP_V_TWIN:
 	case VVT_MITSUBISHI_4G63:
 	case VVT_MITSUBISHI_4G9x:
-		return tc->syncAndReport(crankDivider, 1);
+		return tc->syncEnginePhaseAndReport(crankDivider, 1);
 	case VVT_SINGLE_TOOTH:
 	case VVT_NISSAN_VQ:
 	case VVT_BOSCH_QUICK_START:
@@ -201,7 +201,7 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_MITSUBISHI_6G75:
 	case VVT_HONDA_K_EXHAUST:
 	case VVT_HONDA_CBR_600:
-		return tc->syncAndReport(crankDivider, 0);
+		return tc->syncEnginePhaseAndReport(crankDivider, 0);
 	case VVT_HONDA_K_INTAKE:
 	    // with 4 evenly spaced tooth we cannot use this wheel for engine sync
         criticalError("Honda K Intake is not suitable for engine sync");

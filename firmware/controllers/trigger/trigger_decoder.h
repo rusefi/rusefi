@@ -197,6 +197,9 @@ public:
 		m_hasSynchronizedPhase = !m_needsDisambiguation;
 	}
 
+	/**
+	  * returns zero if we were lucky to have correct engine phase, otherwise angle of engine phase correction which was applied.
+	  */
 	angle_t syncEnginePhase(int divider, int remainder, angle_t engineCycle);
 
 	// Returns true if syncEnginePhase has been called,

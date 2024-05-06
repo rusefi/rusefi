@@ -49,7 +49,12 @@ public:
 class TriggerCentral final : public trigger_central_s {
 public:
 	TriggerCentral();
-	angle_t syncAndReport(int divider, int remainder);
+	/**
+	 * we have two kinds of sync:
+	 * this method is about detecting of exact engine phase with 720 degree precision usually based on cam wheel decoding
+	 * not to be confused with a totally different trigger _wheel_ sync which could be either crank wheel sync or cam wheel sync
+	 */
+	angle_t syncEnginePhaseAndReport(int divider, int remainder);
 	void handleShaftSignal(trigger_event_e signal, efitick_t timestamp);
 	int getHwEventCounter(int index) const;
 	void resetCounters();
