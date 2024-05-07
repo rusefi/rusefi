@@ -235,9 +235,9 @@ public class TuneCanTool implements TuneCanToolConstants {
 
             if (cf.isArray()) {
                 String parentReference;
-                if (cf.getParentStructureType().getName().equals("engine_configuration_s")) {
+                if (cf.getParentStructureType().getName().equals(MetaHelper.ENGINE_CONFIGURATION_S)) {
                     parentReference = "engineConfiguration->";
-                } else if (cf.getParentStructureType().getName().equals("persistent_config_s")) {
+                } else if (cf.getParentStructureType().getName().equals(MetaHelper.PERSISTENT_CONFIG_S)) {
                     parentReference = "config->";
                 } else {
                     // todo: unit test?
