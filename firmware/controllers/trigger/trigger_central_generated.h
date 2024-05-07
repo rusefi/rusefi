@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_central.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/trigger/trigger_central.txt Tue May 07 17:41:25 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -162,8 +162,12 @@ struct trigger_central_s {
 	/**
 	offset 56 bit 31 */
 	bool unusedBit_13_31 : 1 {};
+	/**
+	 * offset 60
+	 */
+	uint32_t triggerElapsedUs = (uint32_t)0;
 };
-static_assert(sizeof(trigger_central_s) == 60);
+static_assert(sizeof(trigger_central_s) == 64);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_central.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/trigger/trigger_central.txt Tue May 07 17:41:25 UTC 2024

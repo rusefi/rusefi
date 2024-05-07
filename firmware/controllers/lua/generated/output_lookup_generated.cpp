@@ -1316,6 +1316,11 @@ float getOutputValueByName(const char *name) {
 		case 756216589:
 			return engine->triggerCentral.isDecodingMapCam;
 #endif
+// triggerElapsedUs
+#if EFI_SHAFT_POSITION_INPUT
+		case 767689023:
+			return engine->triggerCentral.triggerElapsedUs;
+#endif
 // idleState
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case 1886060228:

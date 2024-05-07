@@ -504,6 +504,9 @@ static const LogField fields[] = {
 #if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.mapCamPrevToothAngle, "Sync: MAP: prev angle", "deg", 2},
 #endif
+#if EFI_SHAFT_POSITION_INPUT
+	{engine->triggerCentral.triggerElapsedUs, "triggerElapsedUs", "", 0},
+#endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{___engine.module<IdleController>().unmock().currentIdlePosition, "Idle: Position", "%", 1},
 #endif
