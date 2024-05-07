@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue May 07 14:13:29 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue May 07 14:33:54 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -431,7 +431,6 @@ public class Fields {
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
 	public static final int ETB_HW_MAX_FREQUENCY = 3000;
-	public static final int FANCY_OPTIONS_COUNT = 16;
 	public static final int FLASH_DATA_VERSION = 20016;
 	public static final int fuel_cyl_trim_s_size = 16;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
@@ -1194,7 +1193,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1299134974;
+	public static final int SIGNATURE_HASH = 660307237;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1450,7 +1449,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.05.07.f407-discovery.1299134974";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.05.07.f407-discovery.660307237";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2921,22 +2920,7 @@ public class Fields {
 	public static final Field IACCOASTINGRPMBINS = Field.create("IACCOASTINGRPMBINS", 5180, FieldType.INT8).setScale(100.0).setBaseOffset(0);
 	public static final Field IACCOASTING = Field.create("IACCOASTING", 5196, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field WARNING_MESSAGE = Field.create("WARNING_MESSAGE", 5212, 120, FieldType.STRING).setScale(1.0).setBaseOffset(0);
-	public static final Field FANCYOPTIONS1 = Field.create("FANCYOPTIONS1", 5332, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field FANCYOPTIONS2 = Field.create("FANCYOPTIONS2", 5333, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field FANCYOPTIONS3 = Field.create("FANCYOPTIONS3", 5334, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field FANCYOPTIONS4 = Field.create("FANCYOPTIONS4", 5335, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field FANCYOPTIONS5 = Field.create("FANCYOPTIONS5", 5336, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field FANCYOPTIONS6 = Field.create("FANCYOPTIONS6", 5337, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field FANCYOPTIONS7 = Field.create("FANCYOPTIONS7", 5338, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field FANCYOPTIONS8 = Field.create("FANCYOPTIONS8", 5339, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field FANCYOPTIONS9 = Field.create("FANCYOPTIONS9", 5340, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field FANCYOPTIONS10 = Field.create("FANCYOPTIONS10", 5341, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field FANCYOPTIONS11 = Field.create("FANCYOPTIONS11", 5342, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field FANCYOPTIONS12 = Field.create("FANCYOPTIONS12", 5343, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field FANCYOPTIONS13 = Field.create("FANCYOPTIONS13", 5344, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field FANCYOPTIONS14 = Field.create("FANCYOPTIONS14", 5345, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field FANCYOPTIONS15 = Field.create("FANCYOPTIONS15", 5346, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field FANCYOPTIONS16 = Field.create("FANCYOPTIONS16", 5347, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDGAPHERE = Field.create("UNUSEDGAPHERE", 5332, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field BOOSTTABLEOPENLOOP = Field.create("BOOSTTABLEOPENLOOP", 5348, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field BOOSTRPMBINS = Field.create("BOOSTRPMBINS", 5412, FieldType.INT8).setScale(100.0).setBaseOffset(0);
 	public static final Field BOOSTTABLECLOSEDLOOP = Field.create("BOOSTTABLECLOSEDLOOP", 5420, FieldType.INT8).setScale(2.0).setBaseOffset(0);
@@ -4588,22 +4572,7 @@ public class Fields {
 	IACCOASTINGRPMBINS,
 	IACCOASTING,
 	WARNING_MESSAGE,
-	FANCYOPTIONS1,
-	FANCYOPTIONS2,
-	FANCYOPTIONS3,
-	FANCYOPTIONS4,
-	FANCYOPTIONS5,
-	FANCYOPTIONS6,
-	FANCYOPTIONS7,
-	FANCYOPTIONS8,
-	FANCYOPTIONS9,
-	FANCYOPTIONS10,
-	FANCYOPTIONS11,
-	FANCYOPTIONS12,
-	FANCYOPTIONS13,
-	FANCYOPTIONS14,
-	FANCYOPTIONS15,
-	FANCYOPTIONS16,
+	UNUSEDGAPHERE,
 	BOOSTTABLEOPENLOOP,
 	BOOSTRPMBINS,
 	BOOSTTABLECLOSEDLOOP,

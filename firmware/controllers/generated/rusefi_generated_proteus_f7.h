@@ -117,6 +117,7 @@
 #define BOARD_CONFIG_FROM_FILE 
 #define BOARD_MENU_FROM_FILE 
 #define BOARD_OPTIONS_FROM_FILE 
+#define BOARD_PANELS_FROM_FILE 
 #define BOARD_TABLES_FROM_FILE 
 #define BOOST_BLEND_COUNT 2
 #define BOOST_LOAD_COUNT 8
@@ -455,7 +456,6 @@
 #define ETB_BIAS_CURVE_LENGTH 8
 #define ETB_COUNT 2
 #define ETB_HW_MAX_FREQUENCY 3000
-#define FANCY_OPTIONS_COUNT 16
 #define FLASH_DATA_VERSION 20016
 #define fuel_cyl_trim_s_size 16
 #define FUEL_LEVEL_TABLE_COUNT 8
@@ -1265,7 +1265,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets true
 #define show_test_presets false
-#define SIGNATURE_HASH 52787389
+#define SIGNATURE_HASH 1762737254
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1651,7 +1651,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.05.07.proteus_f7.52787389"
+#define TS_SIGNATURE "rusEFI master.2024.05.07.proteus_f7.1762737254"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
