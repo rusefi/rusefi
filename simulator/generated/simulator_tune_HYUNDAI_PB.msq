@@ -2197,22 +2197,24 @@
          0.0
          0.0
 </constant>
-        <constant digits="0" name="fancyOptions1" units="">0.0</constant>
-        <constant digits="0" name="fancyOptions2" units="">0.0</constant>
-        <constant digits="0" name="fancyOptions3" units="">0.0</constant>
-        <constant digits="0" name="fancyOptions4" units="">0.0</constant>
-        <constant digits="0" name="fancyOptions5" units="">0.0</constant>
-        <constant digits="0" name="fancyOptions6" units="">0.0</constant>
-        <constant digits="0" name="fancyOptions7" units="">0.0</constant>
-        <constant digits="0" name="fancyOptions8" units="">0.0</constant>
-        <constant digits="0" name="fancyOptions9" units="">0.0</constant>
-        <constant digits="0" name="fancyOptions10" units="">0.0</constant>
-        <constant digits="0" name="fancyOptions11" units="">0.0</constant>
-        <constant digits="0" name="fancyOptions12" units="">0.0</constant>
-        <constant digits="0" name="fancyOptions13" units="">0.0</constant>
-        <constant digits="0" name="fancyOptions14" units="">0.0</constant>
-        <constant digits="0" name="fancyOptions15" units="">0.0</constant>
-        <constant digits="0" name="fancyOptions16" units="">0.0</constant>
+        <constant cols="1" digits="0" name="unusedGapHere" rows="16">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
         <constant cols="8" digits="1" name="boostTableOpenLoop" rows="8">
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
@@ -4804,7 +4806,7 @@ end</constant>
 </constant>
         <constant digits="0" name="tcu_shiftTime" units="ms">0.0</constant>
     </page>
-    <versionInfo firmwareInfo="20240402" nPages="1" signature="rusEFI master.2024.05.07.f407-discovery.1299134974" version="5.0"/>
+    <versionInfo firmwareInfo="20240402" nPages="1" signature="rusEFI master.2024.05.07.f407-discovery.660307237" version="5.0"/>
     <bibliography author="rusEFI 20240402" writeDate="date"/>
     <settings/>
     <userComments/>
