@@ -744,6 +744,24 @@ bool TriggerCentral::isToothExpectedNow(efitick_t timestamp) {
 
 BOARD_WEAK bool boardAllowTriggerActions() { return true; }
 
+angle_t TriggerCentral::findNextTriggerToothAngle(int p_currentToothIndex) {
+  int currentToothIndex = p_currentToothIndex;
+		// TODO: is this logic to compute next trigger tooth angle correct?
+		angle_t nextPhase = 0;
+
+		int loopAllowance = 2 * engineCycleEventCount + 1000;
+		do {
+			// I don't love this.
+			currentToothIndex = (currentToothIndex + 1) % engineCycleEventCount;
+			nextPhase = getTriggerCentral()->triggerFormDetails.eventAngles[currentToothIndex] - tdcPosition();
+			wrapAngle(nextPhase, "nextEnginePhase", ObdCode::CUSTOM_ERR_6555);
+		} while (nextPhase == currentEngineDecodedPhase && --loopAllowance > 0);
+		if (nextPhase != 0 && loopAllowance == 0) {
+			firmwareError(ObdCode::CUSTOM_ERR_TRIGGER_ZERO, "handleShaftSignal unexpected loop end %d %d %f", p_currentToothIndex, engineCycleEventCount, nextPhase);
+		}
+		return nextPhase;
+}
+
 /**
  * This method is NOT invoked for VR falls.
  */
@@ -847,20 +865,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		waTriggerEventListener(signal, triggerIndexForListeners, timestamp);
 #endif
 
-		// TODO: is this logic to compute next trigger tooth angle correct?
-		auto nextToothIndex = triggerIndexForListeners;
-		angle_t nextPhase = 0;
-
-		int loopAllowance = 2 * engineCycleEventCount + 1000;
-		do {
-			// I don't love this.
-			nextToothIndex = (nextToothIndex + 1) % engineCycleEventCount;
-			nextPhase = getTriggerCentral()->triggerFormDetails.eventAngles[nextToothIndex] - tdcPosition();
-			wrapAngle(nextPhase, "nextEnginePhase", ObdCode::CUSTOM_ERR_6555);
-		} while (nextPhase == currentEngineDecodedPhase && --loopAllowance > 0);
-		if (nextPhase != 0 && loopAllowance == 0) {
-			firmwareError(ObdCode::CUSTOM_ERR_TRIGGER_ZERO, "handleShaftSignal unexpected loop end");
-		}
+		angle_t nextPhase = findNextTriggerToothAngle(triggerIndexForListeners);
 
 		float expectNextPhase = nextPhase + tdcPosition();
 		wrapAngle(expectNextPhase, "nextEnginePhase", ObdCode::CUSTOM_ERR_6555);

@@ -61,6 +61,8 @@ public:
 	void validateCamVvtCounters();
 	void updateWaveform();
 
+  angle_t findNextTriggerToothAngle(int nextToothIndex);
+
 	InstantRpmCalculator instantRpm;
 
 	void prepareTriggerShape() {
