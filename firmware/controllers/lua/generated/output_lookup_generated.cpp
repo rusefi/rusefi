@@ -752,6 +752,9 @@ float getOutputValueByName(const char *name) {
 // unexpectedAdcSample
 		case 605344036:
 			return engine->outputChannels.unexpectedAdcSample;
+// sadDwellRatioCounter
+		case -2146292012:
+			return engine->outputChannels.sadDwellRatioCounter;
 // totalFuelCorrection
 #if EFI_ENGINE_CONTROL
 		case -1779658835:

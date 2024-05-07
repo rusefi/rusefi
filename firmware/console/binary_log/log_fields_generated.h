@@ -315,6 +315,7 @@ static const LogField fields[] = {
 	{engine->outputChannels.fastAdcErrorsCount, "fastAdcErrorsCount", "", 0},
 	{engine->outputChannels.deviceUid, "deviceUid", "", 0},
 	{engine->outputChannels.unexpectedAdcSample, "unexpectedAdcSample", "", 0},
+	{engine->outputChannels.sadDwellRatioCounter, "sadDwellRatioCounter", "", 0},
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},
 #endif
