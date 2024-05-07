@@ -12,7 +12,7 @@ import java.io.Reader;
 import java.util.Arrays;
 import java.util.function.Function;
 
-public class TableData implements HoHo {
+public class TableData implements CannableEntity {
     private final int rows;
     private final int columns;
     public final float[][] floats;

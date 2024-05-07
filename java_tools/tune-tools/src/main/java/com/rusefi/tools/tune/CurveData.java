@@ -9,9 +9,8 @@ import org.jetbrains.annotations.Nullable;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.Arrays;
 
-public class CurveData implements HoHo {
+public class CurveData implements CannableEntity {
     private final String curveName;
     private final float[] rawData;
 

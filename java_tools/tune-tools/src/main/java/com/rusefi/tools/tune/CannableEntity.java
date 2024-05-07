@@ -1,6 +1,6 @@
 package com.rusefi.tools.tune;
 
-public interface HoHo {
+public interface CannableEntity {
     String getCsourceMethod(String reference, String methodNamePrefix);
 
     String getCinvokeMethod(String methodNamePrefix);
