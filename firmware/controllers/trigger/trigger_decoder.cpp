@@ -375,6 +375,10 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 		const efitick_t nowNt) {
 	ScopePerf perf(PE::DecodeTriggerEvent);
 
+#if EFI_PROD_CODE
+  getTriggerCentral()->triggerElapsedUs = previousEventTimer.getElapsedUs();
+#endif
+
 	if (previousEventTimer.getElapsedSecondsAndReset(nowNt) > 1) {
 		/**
 		 * We are here if there is a time gap between now and previous shaft event - that means the engine is not running.

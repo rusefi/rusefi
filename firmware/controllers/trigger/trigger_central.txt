@@ -19,5 +19,7 @@ uint32_t vvtCamCounter;Sync: total cams front counter
     angle_t mapCamPrevToothAngle;Sync: MAP: prev angle;"deg", 1, 0, -3000, 3000, 2
 	bit isDecodingMapCam
 
+	uint32_t triggerElapsedUs
+
 end_struct
 
