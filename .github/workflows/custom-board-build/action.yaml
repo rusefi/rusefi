@@ -203,11 +203,36 @@ runs:
           echo "Not a repository"
         fi
 
+    - name: Git Config
+      if: ${{ inputs.push == 'true' }}
+      shell: bash
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub git update Action"
+
     - name: Handle configs separately just to make github logs more readable
       working-directory: ${{inputs.rusefi_dir}}/firmware
       shell: bash
       run: |
         bash bin/compile.sh $BOARD_META_PATH config
+
+    - name: Add Config to Commit Regardless of firmware build status
+      if: ${{ inputs.push == 'true' }}
+      shell: bash
+      run: |
+        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*
+        OUT=$(git commit -m "Auto-generated Configs" -m "[no ci]" 2>&1) || echo "commit failed, finding out why"
+        if echo "$OUT" | grep 'nothing to commit'; then
+          echo "Configs: looks like nothing to commit"
+          exit 0
+        fi
+        git status
+
+    - name: Push Configs
+      if: ${{ inputs.push == 'true' }}
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{env.TOKEN}}
 
     - name: Building simulator separately just to make github logs more readable
       working-directory: ${{inputs.rusefi_dir}}/firmware
@@ -248,13 +273,6 @@ runs:
           cp -v ${{inputs.rusefi_dir}}/simulator/generated/canned-tunes/*.md ${{inputs.sim_output}}canned-tunes
           ls ${{inputs.sim_output}}
         fi
-
-    - name: Git Config
-      if: ${{ inputs.push == 'true' }}
-      shell: bash
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub git update Action"
 
     - name: Add Tune to Commit
       if: ${{ inputs.run_simulator == 'true' && inputs.push == 'true' }}
