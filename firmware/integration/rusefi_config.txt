@@ -1734,9 +1734,7 @@ uint8_t[CLT_CURVE_SIZE] autoscale iacCoasting;    RPM-based idle position for co
 
 warning_message_t warning_message;
 
-#define FANCY_OPTIONS_COUNT 16
-
-uint8_t[FANCY_OPTIONS_COUNT iterate] fancyOptions;;"", 1, 0, 0, 255, 0
+uint8_t[16] unusedGapHere
 
 uint8_t[BOOST_LOAD_COUNT x BOOST_RPM_COUNT] autoscale boostTableOpenLoop;;"", {1/2}, 0, 0, 100, 1
 uint8_t[BOOST_RPM_COUNT] autoscale boostRpmBins;;"RPM", 100, 0, 0, 25000, 0
