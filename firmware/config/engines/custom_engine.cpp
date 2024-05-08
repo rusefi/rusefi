@@ -1002,6 +1002,8 @@ void alphax4chanStimQc() {
 
 // set engine_type 93
 void testEngine6451() {
+  engineConfiguration->trigger.type = trigger_type_e::TT_HALF_MOON;
+
 	engineConfiguration->cylindersCount = 6;
 	engineConfiguration->firingOrder = FO_1_5_3_6_2_4;
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;

@@ -308,7 +308,7 @@ enum class trigger_type_e : uint32_t {
 	TT_MAZDA_DOHC_1_4 = 15,
 	//  * "1+1" - one tooth on primary channel, one tooth on secondary channel
 	//  * Note: this trigger is used only by unit tests
-	//  * see also TT_ONE a bit below
+	//  * see also TT_HALF_MOON a bit below
 	TT_ONE_PLUS_ONE = 16,
 	/**
 	 * VVT for 2JZ
