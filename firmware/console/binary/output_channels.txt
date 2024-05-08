@@ -393,5 +393,8 @@ float mapFast
 
 	uint8_t sadDwellRatioCounter
 
-	uint8_t[72 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	float[POOR_MAN_MAX_CYLINDER_COUNT iterate] startOfDwellAngle
+	float[POOR_MAN_MAX_CYLINDER_COUNT iterate] endOfDwellAngle
+
+	uint8_t[24 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct

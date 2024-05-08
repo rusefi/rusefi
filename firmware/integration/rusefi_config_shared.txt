@@ -25,6 +25,7 @@
 #define EGT_CHANNEL_COUNT 8
 
 #define MAX_CYLINDER_COUNT 12
+#define POOR_MAN_MAX_CYLINDER_COUNT 6
 
 ! V engines or flat engines would have pairs of shafts with same trigger shape and target position
 #define BANKS_COUNT 2
