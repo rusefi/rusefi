@@ -44,3 +44,4 @@ void setVrThresholdTest();
 void detectBoardType();
 
 void alphax4chanStimQc();
+void testEngine6451();

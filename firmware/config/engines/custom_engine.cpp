@@ -999,3 +999,11 @@ void alphax4chanStimQc() {
    	engineConfiguration->camInputs[3] = Gpio::H144_IN_SENS3; // E4
 }
 #endif // HW_HELLEN_4CHAN
+
+// set engine_type 93
+void testEngine6451() {
+	engineConfiguration->cylindersCount = 6;
+	engineConfiguration->firingOrder = FO_1_5_3_6_2_4;
+	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
+	engineConfiguration->triggerSimulatorRpm = 2400;
+}

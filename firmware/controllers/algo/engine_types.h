@@ -191,7 +191,7 @@ enum class engine_type_e : uint16_t {
 
 	SIMULATOR_CONFIG = 92,
 
-	UNUSED93 = 93,
+	TEST_ISSUE_6451 = 93,
 
   UNUSED94 = 94,
 

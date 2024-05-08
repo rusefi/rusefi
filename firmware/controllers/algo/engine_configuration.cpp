@@ -940,6 +940,11 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setBMW_M73_TwoCoilUnitTest();
 		break;
 #endif // HW_FRANKENSO || HW_PROTEUS
+
+	case engine_type_e::TEST_ISSUE_6451:
+		testEngine6451();
+		break;
+
 #if defined(HW_FRANKENSO)
 	case engine_type_e::DEFAULT_FRANKENSO:
 		setFrankensoConfiguration();
