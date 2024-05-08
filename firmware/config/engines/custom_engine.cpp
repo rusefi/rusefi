@@ -1002,6 +1002,9 @@ void alphax4chanStimQc() {
 
 // set engine_type 93
 void testEngine6451() {
+#ifdef HW_FRANKENSO
+  setFrankensoConfiguration();
+#endif
   engineConfiguration->trigger.type = trigger_type_e::TT_HALF_MOON;
 
 	engineConfiguration->cylindersCount = 6;
