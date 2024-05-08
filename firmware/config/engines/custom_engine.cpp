@@ -1005,7 +1005,7 @@ void testEngine6451() {
 #ifdef HW_FRANKENSO
   setFrankensoConfiguration();
 #endif
-  engineConfiguration->trigger.type = trigger_type_e::TT_HALF_MOON;
+  engineConfiguration->trigger.type = trigger_type_e::TT_NARROW_SINGLE_TOOTH;
 
 	engineConfiguration->cylindersCount = 6;
 	engineConfiguration->firingOrder = FO_1_5_3_6_2_4;
