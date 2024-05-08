@@ -283,6 +283,14 @@ expected<percent_t> EtbController::getSetpointWastegate() const {
 	return clampPercentValue(m_wastegatePosition);
 }
 
+float getSanitizedPedal() {
+	auto pedalPosition = Sensor::get(SensorType::AcceleratorPedal);
+	// If the pedal has failed, just use 0 position.
+	// This is safer than disabling throttle control - we can at least push the throttle closed
+	// and let the engine idle.
+	return clampPercentValue(pedalPosition.value_or(0));
+}
+
 expected<percent_t> EtbController::getSetpointEtb() {
 	// Autotune runs with 50% target position
 	if (m_isAutotune) {
@@ -299,12 +307,7 @@ expected<percent_t> EtbController::getSetpointEtb() {
 		return unexpected;
 	}
 
-	auto pedalPosition = Sensor::get(SensorType::AcceleratorPedal);
-
-	// If the pedal has failed, just use 0 position.
-	// This is safer than disabling throttle control - we can at least push the throttle closed
-	// and let the engine idle.
-	float sanitizedPedal = clampPercentValue(pedalPosition.value_or(0));
+  float sanitizedPedal = getSanitizedPedal();
 
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	etbCurrentTarget = m_pedalMap->getValue(rpm, sanitizedPedal);

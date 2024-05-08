@@ -35,6 +35,8 @@ void setProteusHitachiEtbDefaults();
 
 void etbAutocal(size_t throttleIndex);
 
+float getSanitizedPedal();
+
 class DcMotor;
 struct pid_s;
 class ValueProvider3D;
