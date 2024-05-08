@@ -1007,6 +1007,8 @@ void testEngine6451() {
 #endif
   engineConfiguration->trigger.type = trigger_type_e::TT_NARROW_SINGLE_TOOTH;
 
+	setWholeTimingTable(30);
+	setWholeIgnitionIatCorr(0);
 	engineConfiguration->cylindersCount = 6;
 	engineConfiguration->firingOrder = FO_1_5_3_6_2_4;
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
