@@ -33,3 +33,7 @@ void initializeSuzukiG13B(TriggerWaveform *s) {
 	s->setTriggerSynchronizationGap(0.22);
 	s->setSecondTriggerSynchronizationGap(1);
 }
+
+void initializeSuzukiK6A(TriggerWaveform *s) {
+
+}

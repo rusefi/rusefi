@@ -10,3 +10,4 @@
 class TriggerWaveform;
 
 void initializeSuzukiG13B(TriggerWaveform *s);
+void initializeSuzukiK6A(TriggerWaveform *s);

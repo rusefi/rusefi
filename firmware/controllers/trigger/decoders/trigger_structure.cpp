@@ -442,6 +442,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		initializeMazdaMiataVVtTestShape(this);
 		break;
 
+	case trigger_type_e::TT_SUZUKI_K6A:
 	case trigger_type_e::TT_SUZUKI_G13B:
 		initializeSuzukiG13B(this);
 		break;
@@ -681,7 +682,6 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 	    initializeMitsubishi4g9xCam(this);
         break;
 
-	case trigger_type_e::TT_UNUSED_50:
 	case trigger_type_e::TT_HONDA_CBR_600:
 		configureHondaCbr600(this);
 		break;
