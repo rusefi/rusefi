@@ -119,11 +119,18 @@ static void adc_callback_fast(ADCDriver *adcp) {
 	}
 }
 
+static volatile adcerror_t fastAdcLastError;
+
+static void fastAdcErrorCB(ADCDriver *, adcerror_t err)
+{
+	fastAdcLastError = err;
+}
+
 static ADCConversionGroup adcgrpcfgFast = {
 	.circular			= FALSE,
 	.num_channels		= 0,
 	.end_cb				= adc_callback_fast,
-	.error_cb			= nullptr,
+	.error_cb			= fastAdcErrorCB,
 	/* HW dependent part.*/
 	.cr1				= 0,
 	.cr2				= ADC_CR2_SWSTART,
@@ -180,13 +187,11 @@ static void fast_adc_callback(GPTDriver*) {
 		engine->outputChannels.fastAdcErrorsCount++;
 		// todo: when? why? criticalError("ADC fast not ready?");
 		// see notes at https://github.com/rusefi/rusefi/issues/6399
-		chSysUnlockFromISR();
-		return;
+	} else {
+		adcStartConversionI(&ADC_FAST_DEVICE, &adcgrpcfgFast, fastAdc.samples, ADC_BUF_DEPTH_FAST);
+		fastAdc.conversionCount++;
 	}
-
-	adcStartConversionI(&ADC_FAST_DEVICE, &adcgrpcfgFast, fastAdc.samples, ADC_BUF_DEPTH_FAST);
 	chSysUnlockFromISR();
-	fastAdc.conversionCount++;
 #endif /* EFI_INTERNAL_ADC */
 }
 #endif // EFI_USE_FAST_ADC
