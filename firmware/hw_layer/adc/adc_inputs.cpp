@@ -79,8 +79,6 @@ AdcDevice::AdcDevice(ADCConversionGroup* p_hwConfig, adcsample_t *p_buf) {
 #define ADC_FAST_DEVICE ADCD2
 #endif /* ADC_FAST_DEVICE */
 
-static uint32_t slowAdcCounter = 0;
-
 // todo: move this flag to Engine god object
 static int adcDebugReporting = false;
 
@@ -91,19 +89,8 @@ static int adcDebugReporting = false;
 #define ADC_SAMPLING_FAST ADC_SAMPLE_28
 #endif
 
-static void fastAdcDoneCB(ADCDriver *adcp) {
-	// State may not be complete if we get a callback for "half done"
-	if (adcp->state == ADC_COMPLETE) {
-		onFastAdcComplete(adcp->samples);
-	}
-}
-
-static volatile adcerror_t fastAdcLastError;
-
-static void fastAdcErrorCB(ADCDriver *, adcerror_t err)
-{
-	fastAdcLastError = err;
-}
+static void fastAdcDoneCB(ADCDriver *adcp);
+static void fastAdcErrorCB(ADCDriver *, adcerror_t err);
 
 static ADCConversionGroup adcgrpcfgFast = {
 	.circular			= FALSE,
@@ -150,7 +137,23 @@ static ADCConversionGroup adcgrpcfgFast = {
 };
 
 static NO_CACHE adcsample_t fastAdcSampleBuf[ADC_BUF_DEPTH_FAST * ADC_MAX_CHANNELS_COUNT];
+
 AdcDevice fastAdc(&adcgrpcfgFast, fastAdcSampleBuf);
+
+static void fastAdcDoneCB(ADCDriver *adcp) {
+	// State may not be complete if we get a callback for "half done"
+	if (adcp->state == ADC_COMPLETE) {
+		fastAdc.conversionCount++;
+		onFastAdcComplete(adcp->samples);
+	}
+}
+
+static volatile adcerror_t fastAdcLastError;
+
+static void fastAdcErrorCB(ADCDriver *, adcerror_t err)
+{
+	fastAdcLastError = err;
+}
 
 static void fastAdcTrigger(GPTDriver*) {
 #if EFI_INTERNAL_ADC
@@ -168,7 +171,6 @@ static void fastAdcTrigger(GPTDriver*) {
 		// see notes at https://github.com/rusefi/rusefi/issues/6399
 	} else {
 		adcStartConversionI(&ADC_FAST_DEVICE, &adcgrpcfgFast, fastAdc.samples, ADC_BUF_DEPTH_FAST);
-		fastAdc.conversionCount++;
 	}
 	chSysUnlockFromISR();
 #endif /* EFI_INTERNAL_ADC */
@@ -290,6 +292,9 @@ FastAdcToken AdcDevice::getAdcChannelToken(adc_channel_e hwChannel) {
 
 #endif // EFI_USE_FAST_ADC
 
+static uint32_t slowAdcConversionCount = 0;
+static uint32_t slowAdcErrorsCount = 0;
+
 static void printAdcValue(int channel) {
 	/* Do this check before conversion to adc_channel_e that is uint8_t based */
 	if ((channel < EFI_ADC_NONE) || (channel >= EFI_ADC_TOTAL_CHANNELS)) {
@@ -300,9 +305,6 @@ static void printAdcValue(int channel) {
 	float volts = adcToVoltsDivided(value, (adc_channel_e)channel);
 	efiPrintf("adc %d voltage : %.3f", channel, volts);
 }
-
-static uint32_t slowAdcConversionCount = 0;
-static uint32_t slowAdcErrorsCount = 0;
 
 static void printAdcChannedReport(const char *prefix, int internalIndex, adc_channel_e hwChannel)
 {
@@ -346,9 +348,8 @@ static void setAdcDebugReporting(int value) {
 }
 
 void waitForSlowAdc(uint32_t lastAdcCounter) {
-	// we use slowAdcCounter instead of slowAdc.conversionCount because we need ADC_COMPLETE state
 	// todo: use sync.objects?
-	while (slowAdcCounter <= lastAdcCounter) {
+	while (slowAdcConversionCount <= lastAdcCounter) {
 		chThdSleepMilliseconds(1);
 	}
 }
@@ -364,7 +365,6 @@ public:
 		{
 			ScopePerf perf(PE::AdcConversionSlow);
 
-			slowAdcConversionCount++;
 			if (!readSlowAnalogInputs(slowAdcSamples)) {
 				slowAdcErrorsCount++;
 				return;
@@ -377,7 +377,7 @@ public:
 		{
 			ScopePerf perf(PE::AdcProcessSlow);
 
-			slowAdcCounter++;
+			slowAdcConversionCount++;
 
 			AdcSubscription::UpdateSubscribers(nowNt);
 
