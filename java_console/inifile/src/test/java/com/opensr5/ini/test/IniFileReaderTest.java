@@ -61,10 +61,15 @@ public class IniFileReaderTest {
     }
 
     @Test
-    public void testQuotedTokens() {
+    public void testBraces() {
         {
-            String[] result = IniFileReader.splitTokens("\"hel  lo\"");
-            assertArrayEquals(new String[] { "hel  lo" }, result);
+            String[] result = IniFileReader.splitTokens(
+                "veLoadBins = array, U16, 17056, [16], {bitStringValue(fuelUnits, fuelAlgorithm) }, 1, 0, 0, 1000, 0"
+            );
+            assertArrayEquals(new String[] {
+                "veLoadBins", "array", "U16", "17056", "[16]", "{bitStringValue(fuelUnits, fuelAlgorithm) }", "1", "0",
+                "0", "1000", "0"
+            }, result);
         }
     }
 
@@ -73,6 +78,14 @@ public class IniFileReaderTest {
         String[] result = IniFileReader.splitTokens("\tdialog = engineChars,\t\"Base Engine Settings\"");
         assertArrayEquals(new String[] { "dialog", "engineChars", "Base Engine Settings" }, result);
         assertEquals(result.length, 3);
+    }
+
+    @Test
+    public void testQuotedTokens() {
+        {
+            String[] result = IniFileReader.splitTokens("\"hel  lo\"");
+            assertArrayEquals(new String[] { "hel  lo" }, result);
+        }
     }
 
     @Test
