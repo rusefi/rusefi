@@ -51,13 +51,16 @@ static void disengageStarterIfNeeded() {
 
 void slowStartStopButtonCallback() {
   if (!isIgnVoltage()) {
+    // nothing to crank if we are powered only via USB
     engine->startStopState.timeSinceIgnitionPower.reset();
     return;
   } else if (engine->startStopState.isFirstTime) {
+    // initialize when first time with proper power
+    engine->startStopState.timeSinceIgnitionPower.reset();
     engine->startStopState.isFirstTime = false;
   }
 
-    if (getTimeNowMs() < engineConfiguration->startButtonSuppressOnStartUpMs) {
+    if (engine->startStopState.timeSinceIgnitionPower.getElapsedUs() < MS2US(engineConfiguration->startButtonSuppressOnStartUpMs)) {
         // where are odd cases of start button combined with ECU power source button we do not want to crank right on start
         return;
     }
