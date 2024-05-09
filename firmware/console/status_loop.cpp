@@ -274,8 +274,6 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 	void PeriodicTask() override {
 		counter++;
 
-		bool lowVBatt = Sensor::getOrZero(SensorType::BatteryVoltage) < LOW_VBATT;
-
 		if (counter == 1) {
 			// first invocation of BlinkingTask
 			setAllLeds(1);
@@ -291,9 +289,7 @@ extern int totalLoggedBytes;
 			}
 #endif // HW_CHECK_SD
 
-			if (!lowVBatt) {
-				enginePins.warningLedPin.setValue(0);
-			}
+			enginePins.warningLedPin.setValue(0);
 		} else {
 #define BLINKING_PERIOD_MS 33
 
@@ -327,7 +323,7 @@ extern int totalLoggedBytes;
 //#endif // HW_CHECK_MODE
 
 	#if EFI_ENGINE_CONTROL
-			if (lowVBatt || isTriggerErrorNow()) {
+			if (isTriggerErrorNow()) {
 				// todo: at the moment warning codes do not affect warning LED?!
 				enginePins.warningLedPin.setValue(1);
 			}
