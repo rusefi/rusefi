@@ -80,30 +80,6 @@ static uint32_t slowAdcCounter = 0;
 static int adcDebugReporting = false;
 
 #if EFI_USE_FAST_ADC
-static adcsample_t getAvgAdcValue(int index, adcsample_t *samples, int bufDepth, int numChannels) {
-	uint32_t result = 0;
-	for (int i = 0; i < bufDepth; i++) {
-	  adcsample_t sample = samples[index];
-//	  if (sample > 0x1FFF) {
-//	    // 12bit ADC expected right now, make this configurable one day
-//	    criticalError("fast ADC unexpected sample %d", sample);
-//	  } else
-	  if (sample > 0xFFF) {
-	    if (!engineConfiguration->skipADC12bitAssert) {
-	      criticalError("fast ADC unexpected sample %d. Please report and use skipADC12bitAssert to disable", sample);
-	    }
-	    engine->outputChannels.unexpectedAdcSample = sample;
-	    sample = sample & 0xFFF; // sad hack which works around https://github.com/rusefi/rusefi/issues/6376 which we do not understand
-	    engine->outputChannels.adc13bitCounter++;
-	  }
-		result += sample;
-		index += numChannels;
-	}
-
-	// this truncation is guaranteed to not be lossy - the average can't be larger than adcsample_t
-	return static_cast<adcsample_t>(result / bufDepth);
-}
-
 
 // See https://github.com/rusefi/rusefi/issues/976 for discussion on this value
 #ifndef ADC_SAMPLING_FAST
@@ -208,11 +184,9 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 
 #if EFI_USE_FAST_ADC
 	if (adcHwChannelMode[hwChannel] == ADC_FAST) {
-		int internalIndex = fastAdc.internalAdcIndexByHardwareIndex[hwChannel];
-// todo if ADC_BUF_DEPTH_FAST EQ 1
-//		return fastAdc.samples[internalIndex];
-		int value = getAvgAdcValue(internalIndex, fastAdc.samples, ADC_BUF_DEPTH_FAST, fastAdc.size());
-		return value;
+		/* todo if ADC_BUF_DEPTH_FAST EQ 1
+		 * return fastAdc.samples[internalIndex]; */
+		return fastAdc.getAvgAdcValue(hwChannel, ADC_BUF_DEPTH_FAST);
 	}
 #endif // EFI_USE_FAST_ADC
 
@@ -275,6 +249,33 @@ void AdcDevice::enableChannel(adc_channel_e hwChannel) {
 #endif /* ADC_MAX_CHANNELS_COUNT */
 }
 
+adcsample_t AdcDevice::getAvgAdcValue(adc_channel_e hwChannel, size_t bufDepth) {
+	uint32_t result = 0;
+	int numChannels = size();
+	int index = fastAdc.internalAdcIndexByHardwareIndex[hwChannel];
+
+	for (size_t i = 0; i < bufDepth; i++) {
+		adcsample_t sample = samples[index];
+//		if (sample > 0x1FFF) {
+//			// 12bit ADC expected right now, make this configurable one day
+//			criticalError("fast ADC unexpected sample %d", sample);
+//		} else
+		if (sample > 0xFFF) {
+			if (!engineConfiguration->skipADC12bitAssert) {
+				criticalError("fast ADC unexpected sample %d. Please report and use skipADC12bitAssert to disable", sample);
+			}
+			engine->outputChannels.unexpectedAdcSample = sample;
+			sample = sample & 0xFFF; // sad hack which works around https://github.com/rusefi/rusefi/issues/6376 which we do not understand
+			engine->outputChannels.adc13bitCounter++;
+		}
+		result += sample;
+		index += numChannels;
+	}
+
+	// this truncation is guaranteed to not be lossy - the average can't be larger than adcsample_t
+	return static_cast<adcsample_t>(result / bufDepth);
+}
+
 adc_channel_e AdcDevice::getAdcChannelByInternalIndex(int hwChannel) const {
 	for (size_t idx = EFI_ADC_0; idx < EFI_ADC_TOTAL_CHANNELS; idx++) {
 		if (internalAdcIndexByHardwareIndex[idx] == hwChannel) {
@@ -282,6 +283,10 @@ adc_channel_e AdcDevice::getAdcChannelByInternalIndex(int hwChannel) const {
 		}
 	}
 	return EFI_ADC_NONE;
+}
+
+FastAdcToken AdcDevice::getAdcChannelToken(adc_channel_e hwChannel) {
+	return fastAdc.internalAdcIndexByHardwareIndex[hwChannel];
 }
 
 #endif // EFI_USE_FAST_ADC
