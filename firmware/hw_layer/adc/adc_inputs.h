@@ -63,8 +63,6 @@ void initAdcInputs();
 
 // wait until at least 1 slowADC sampling is complete
 void waitForSlowAdc(uint32_t lastAdcCounter = 0);
-// get a number of completed slowADC samples
-int getSlowAdcCounter();
 
 void printFullAdcReportIfNeeded(void);
 int getInternalAdcValue(const char *msg, adc_channel_e index);

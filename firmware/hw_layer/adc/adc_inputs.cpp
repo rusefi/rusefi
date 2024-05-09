@@ -355,11 +355,6 @@ void waitForSlowAdc(uint32_t lastAdcCounter) {
 	}
 }
 
-int getSlowAdcCounter() {
-	return slowAdcCounter;
-}
-
-
 class SlowAdcController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
 public:
 	SlowAdcController()
