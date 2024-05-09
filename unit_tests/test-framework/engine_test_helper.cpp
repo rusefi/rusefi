@@ -34,6 +34,7 @@ EngineTestHelperBase::EngineTestHelperBase(Engine * eng, engine_configuration_s 
 	// todo: make this not a global variable, we need currentTimeProvider interface on engine
 	setTimeNowUs(0);
 	minCrankingRpm = 0;
+	ButtonDebounce::resetForUnitTests();
 	unitTestBusyWaitHack = false;
 	EnableToothLogger();
 	if (engine || engineConfiguration || config) {

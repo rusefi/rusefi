@@ -25,6 +25,11 @@ public:
     static void startConfigurationList();
     static void debug();
     bool getPhysicalState();
+#if EFI_UNIT_TEST
+    static void resetForUnitTests() {
+      s_firstDebounce = nullptr;
+    }
+#endif
 private:
     const char* const m_name;
     efidur_t m_threshold;
