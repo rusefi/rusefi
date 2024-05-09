@@ -25,6 +25,7 @@ void setSlingshot() {
 	setCustomMap(/*lowValue*/ 20, 0.3, 250, 4.65);
 
 #if HW_PROTEUS
+  engineConfiguration->auxAnalogInputs[0] = PROTEUS_IN_ANALOG_VOLT_4; // gear position signal
   engineConfiguration->starterControlPin = Gpio::PROTEUS_LS_15;
  	engineConfiguration->startStopButtonPin = PROTEUS_DIGITAL_5;
  	engineConfiguration->startRequestPinInverted = true;
