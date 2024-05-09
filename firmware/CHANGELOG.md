@@ -31,6 +31,7 @@ Release template (copy/paste this for new release):
 
 ### Fixed
  - knock logic not activated until any configuration change via TS #6462
+ - VE Table have wrong units on Y-Axis #6479
 
 ### Breaking Changes
  - "60/2 VW" trigger wheel renamed to "60-2 Wrong Polarity" #988
