@@ -34,8 +34,7 @@ public class IniFileReader {
         boolean hadQuote = false;
         int openedBraceCount = 0;
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < str.length(); i++) {
-            char c = str.charAt(i);
+        for (final char c: str.toCharArray()) {
             if (c == '\"' || (isTokenSeparator(c) && !inQuote && (openedBraceCount == 0))) {
                 if (c == '\"') {
                     inQuote = !inQuote;
