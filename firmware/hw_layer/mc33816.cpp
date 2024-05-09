@@ -22,6 +22,7 @@
 
 #include "hardware.h"
 #include "mpu_util.h"
+#include "ignition_controller.h"
 
 static SPIConfig spiCfg = { .circular = false,
 		.end_cb = NULL,
@@ -199,6 +200,7 @@ void Pt2001::init() {
 static bool isInitialized = false;
 
 void Pt2001::initIfNeeded() {
+// see also: isIgnVoltage()
 	if (Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) < LOW_VBATT) {
 		isInitialized = false;
 	  efiPrintf("unhappy mc33 due to battery voltage");
