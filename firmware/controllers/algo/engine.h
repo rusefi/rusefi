@@ -31,6 +31,7 @@
 #include "injector_model.h"
 #include "launch_control.h"
 #include "antilag_system.h"
+#include "start_stop.h"
 #include "trigger_scheduler.h"
 #include "fuel_pump.h"
 #include "main_relay.h"
@@ -89,6 +90,8 @@ class IEtbController;
 class Engine final : public TriggerStateListener {
 public:
 	Engine();
+
+	StartStopState startStopState;
 
 	// todo: technical debt: enableOverdwellProtection #3553
 	bool enableOverdwellProtection = true;
@@ -206,8 +209,6 @@ public:
 
 	IgnitionState ignitionState;
 	void resetLua();
-
-	Timer startStopStateLastPush;
 
 #if EFI_SHAFT_POSITION_INPUT
 	void OnTriggerStateProperState(efitick_t nowNt) override;

@@ -7,21 +7,19 @@
 
 #include "pch.h"
 
-extern ButtonDebounce startStopButtonDebounce;
-
 TEST(start, startStop) {
 	std::unordered_map<SensorType, float> sensorVals = {{ SensorType::AcceleratorPedal, 0 }};
 	EngineTestHelper eth(engine_type_e::PROTEUS_BMW_M73, sensorVals);
 	eth.moveTimeForwardAndInvokeEventsSec(1); // '0' time has special meaning for implementation so let's move forward
 
 	// pull-up means inverted value
-	ASSERT_TRUE(startStopButtonDebounce.readPinState());
+	ASSERT_TRUE(engine->startStopState.startStopButtonDebounce.readPinState());
 	// this is a pull-up, so 'true' on start-up
 	setMockState(engineConfiguration->startStopButtonPin, true);
 	// remember about debounce?
-	ASSERT_TRUE(startStopButtonDebounce.readPinState());
+	ASSERT_TRUE(engine->startStopState.startStopButtonDebounce.readPinState());
 	eth.moveTimeForwardAndInvokeEventsSec(10);
-	ASSERT_FALSE(startStopButtonDebounce.readPinState());
+	ASSERT_FALSE(engine->startStopState.startStopButtonDebounce.readPinState());
 
 	ASSERT_FALSE(efiReadPin(engineConfiguration->starterControlPin));
 
