@@ -38,7 +38,9 @@ void ButtonDebounce::init (efitimems_t threshold, brain_pin_e &pin, pin_input_mo
 
 void ButtonDebounce::stopConfigurationList() {
     ButtonDebounce *listItem = s_firstDebounce;
+    int loopLimitCounter = 0;
     while (listItem != nullptr) {
+    	criticalAssertVoid(loopLimitCounter++ < 10000, "dead stopConfigurationList?");
         listItem->stopConfiguration();
         listItem = listItem->nextDebounce;
     }
@@ -46,7 +48,9 @@ void ButtonDebounce::stopConfigurationList() {
 
 void ButtonDebounce::startConfigurationList() {
     ButtonDebounce *listItem = s_firstDebounce;
+    int loopLimitCounter = 0;
     while (listItem != nullptr) {
+    	criticalAssertVoid(loopLimitCounter++ < 10000, "dead startConfigurationList?");
         listItem->startConfiguration();
         listItem = listItem->nextDebounce;
     }
