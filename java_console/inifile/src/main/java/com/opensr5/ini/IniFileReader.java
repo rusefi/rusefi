@@ -32,10 +32,11 @@ public class IniFileReader {
         ArrayList<String> strings = new ArrayList<>();
         boolean inQuote = false;
         boolean hadQuote = false;
+        int openedBraceCount = 0;
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < str.length(); i++) {
             char c = str.charAt(i);
-            if (c == '\"' || isTokenSeparator(c) && !inQuote) {
+            if (c == '\"' || (isTokenSeparator(c) && !inQuote && (openedBraceCount == 0))) {
                 if (c == '\"') {
                     inQuote = !inQuote;
                     if (!inQuote) {
@@ -51,8 +52,23 @@ public class IniFileReader {
                     strings.add("");
                     hadQuote = false;
                 }
-            } else
+            } else {
                 sb.append(c);
+                switch (c) {
+                    case '{': {
+                        openedBraceCount++;
+                        break;
+                    }
+                    case '}': {
+                        if (0 < openedBraceCount) {
+                            openedBraceCount--;
+                        } else {
+                            throw new IllegalArgumentException(String.format("Unexpected closing brace: %s", str));
+                        }
+                        break;
+                    }
+                }
+            }
         }
         if (sb.length() > 0)
             strings.add(sb.toString());
