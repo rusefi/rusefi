@@ -212,7 +212,7 @@ FastAdcToken enableFastAdcChannel(const char*, adc_channel_e channel) {
 		return invalidToken;
 	}
 
-	return fastAdc.internalAdcIndexByHardwareIndex[static_cast<size_t>(channel)];
+	return fastAdc.getAdcChannelToken(channel);
 }
 
 adcsample_t getFastAdc(FastAdcToken token) {
