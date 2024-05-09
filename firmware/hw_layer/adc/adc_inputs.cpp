@@ -293,9 +293,14 @@ FastAdcToken AdcDevice::getAdcChannelToken(adc_channel_e hwChannel) {
 #endif // EFI_USE_FAST_ADC
 
 static void printAdcValue(int channel) {
+	/* Do this check before conversion to adc_channel_e that is uint8_t based */
+	if ((channel < EFI_ADC_NONE) || (channel >= EFI_ADC_TOTAL_CHANNELS)) {
+		efiPrintf("Invalid ADC channel %d", channel);
+		return;
+	}
 	int value = getAdcValue("print", (adc_channel_e)channel);
 	float volts = adcToVoltsDivided(value, (adc_channel_e)channel);
-	efiPrintf("adc voltage : %.2f", volts);
+	efiPrintf("adc %d voltage : %.3f", channel, volts);
 }
 
 static uint32_t slowAdcConversionCount = 0;
