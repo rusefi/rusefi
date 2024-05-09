@@ -35,12 +35,9 @@ public:
 	int size() const;
 	void init(void);
 	uint32_t conversionCount = 0;
-	int getAdcValueByIndex(int internalIndex) const;
 
 	adcsample_t *samples;
 	size_t buf_len;
-
-	int getAdcValueByHwChannel(adc_channel_e hwChannel) const;
 
 	adc_state values;
 private:

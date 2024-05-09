@@ -240,15 +240,6 @@ int AdcDevice::size() const {
 	return channelCount;
 }
 
-int AdcDevice::getAdcValueByHwChannel(adc_channel_e hwChannel) const {
-	int internalIndex = internalAdcIndexByHardwareIndex[hwChannel];
-	return values.adc_data[internalIndex];
-}
-
-int AdcDevice::getAdcValueByIndex(int internalIndex) const {
-	return values.adc_data[internalIndex];
-}
-
 void AdcDevice::init(void) {
 	hwConfig->num_channels = size();
 	/* driver does this internally */
