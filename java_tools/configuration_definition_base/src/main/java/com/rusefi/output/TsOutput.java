@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import static com.rusefi.TokenUtils.tokenizeWithBraces;
 import static com.rusefi.ToolUtil.EOL;
 import static com.rusefi.output.JavaSensorsConsumer.quote;
 
@@ -164,7 +165,7 @@ public class TsOutput {
             return quote("") + ", 1, 0";
         }
         try {
-            String[] fields = tsInfo.split(",");
+            String[] fields = tokenizeWithBraces(tsInfo);
             if (fields.length > multiplierIndex) {
                 /**
                  * Evaluate static math on .ini layer to simplify rusEFI java and rusEFI PHP project consumers

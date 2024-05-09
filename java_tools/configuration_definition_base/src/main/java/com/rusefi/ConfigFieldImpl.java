@@ -12,6 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.devexperts.logging.Logging.getLogging;
+import static com.rusefi.TokenUtils.tokenizeWithBraces;
 
 import com.rusefi.parse.TypesHelper;
 import org.jetbrains.annotations.Nullable;
@@ -373,9 +374,7 @@ public class ConfigFieldImpl implements ConfigField {
     }
 
     private String[] getTokens() {
-        if (tsInfo == null)
-            return new String[0];
-        return tsInfo.split(",");
+        return tokenizeWithBraces(tsInfo);
     }
 
     @Override
