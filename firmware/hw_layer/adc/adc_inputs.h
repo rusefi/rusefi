@@ -66,8 +66,6 @@ void waitForSlowAdc(uint32_t lastAdcCounter = 0);
 // get a number of completed slowADC samples
 int getSlowAdcCounter();
 
-int getAdcHardwareIndexByInternalIndex(int index);
-
 void printFullAdcReportIfNeeded(void);
 int getInternalAdcValue(const char *msg, adc_channel_e index);
 float getMCUInternalTemperature(void);

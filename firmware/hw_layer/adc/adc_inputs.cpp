@@ -65,7 +65,6 @@ AdcDevice::AdcDevice(ADCConversionGroup* p_hwConfig, adcsample_t *p_buf, size_t 
 	hwConfig->sqr4 = 0;
 	hwConfig->sqr5 = 0;
 #endif /* ADC_MAX_CHANNELS_COUNT */
-	memset(hardwareIndexByIndernalAdcIndex, EFI_ADC_NONE, sizeof(hardwareIndexByIndernalAdcIndex));
 	memset(internalAdcIndexByHardwareIndex, 0xFF, sizeof(internalAdcIndexByHardwareIndex));
 }
 
@@ -260,7 +259,6 @@ void AdcDevice::enableChannel(adc_channel_e hwChannel) {
 	size_t channelAdcIndex = hwChannel - EFI_ADC_0;
 
 	internalAdcIndexByHardwareIndex[hwChannel] = logicChannel;
-	hardwareIndexByIndernalAdcIndex[logicChannel] = hwChannel;
 	if (logicChannel < 6) {
 		hwConfig->sqr3 |= channelAdcIndex << (5 * logicChannel);
 	} else if (logicChannel < 12) {
@@ -278,8 +276,13 @@ void AdcDevice::enableChannel(adc_channel_e hwChannel) {
 #endif /* ADC_MAX_CHANNELS_COUNT */
 }
 
-adc_channel_e AdcDevice::getAdcHardwareIndexByInternalIndex(int hwChannel) const {
-	return hardwareIndexByIndernalAdcIndex[hwChannel];
+adc_channel_e AdcDevice::getAdcChannelByInternalIndex(int hwChannel) const {
+	for (size_t idx = EFI_ADC_0; idx < EFI_ADC_TOTAL_CHANNELS; idx++) {
+		if (internalAdcIndexByHardwareIndex[idx] == hwChannel) {
+			return (adc_channel_e)idx;
+		}
+	}
+	return EFI_ADC_NONE;
 }
 
 #endif // EFI_USE_FAST_ADC
@@ -298,7 +301,7 @@ void printFullAdcReport(void) {
 	efiPrintf("fast %d samples", fastAdc.conversionCount);
 
 	for (int internalIndex = 0; internalIndex < fastAdc.size(); internalIndex++) {
-		adc_channel_e hwChannel = fastAdc.getAdcHardwareIndexByInternalIndex(internalIndex);
+		adc_channel_e hwChannel = fastAdc.getAdcChannelByInternalIndex(internalIndex);
 
 		if (isAdcChannelValid(hwChannel)) {
 			ioportid_t port = getAdcChannelPort("print", hwChannel);

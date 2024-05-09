@@ -30,7 +30,7 @@ class AdcDevice {
 public:
 	explicit AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf, size_t buf_len);
 	void enableChannel(adc_channel_e hwChannelIndex);
-	adc_channel_e getAdcHardwareIndexByInternalIndex(int index) const;
+	adc_channel_e getAdcChannelByInternalIndex(int index) const;
 	uint8_t internalAdcIndexByHardwareIndex[EFI_ADC_TOTAL_CHANNELS];
 	int size() const;
 	void init(void);
@@ -46,9 +46,6 @@ private:
 	 * Number of ADC channels in use
 	 */
 	size_t channelCount = 0;
-
-	/* STM32 has up-to 4 additional channels routed to internal voltage sources */
-	adc_channel_e hardwareIndexByIndernalAdcIndex[ADC_MAX_CHANNELS_COUNT + 4];
 };
 
 #endif /* HAL_USE_ADC */
