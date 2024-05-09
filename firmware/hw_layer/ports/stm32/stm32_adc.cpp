@@ -7,112 +7,64 @@
  */
 
 #include "pch.h"
+#include "efilib.h"
 
 #if HAL_USE_ADC
 
-// ADC_CHANNEL_IN0 // PA0
-// ADC_CHANNEL_IN1 // PA1
-// ADC_CHANNEL_IN2 // PA2
-// ADC_CHANNEL_IN3 // PA3
-// ADC_CHANNEL_IN4 // PA4
-// ADC_CHANNEL_IN5 // PA5 - this is also TIM2_CH1
-// ADC_CHANNEL_IN6 // PA6
-// ADC_CHANNEL_IN7 // PA7
-// ADC_CHANNEL_IN8 // PB0
-// ADC_CHANNEL_IN9 // PB1
-// ADC_CHANNEL_IN10 // PC0
-// ADC_CHANNEL_IN11 // PC1
-// ADC_CHANNEL_IN12 // PC2
-// ADC_CHANNEL_IN13 // PC3
-// ADC_CHANNEL_IN14 // PC4
-// ADC_CHANNEL_IN15 // PC5
+static const struct {
+    brain_pin_e pin;
+    adc_channel_e ch;
+    uint8_t adc;    /* bitmask of ADC available on this pin */
+} adcChannels[] = {
+    { Gpio::A0, EFI_ADC_0, BIT(0) | BIT(1) },
+    { Gpio::A1, EFI_ADC_1, BIT(0) | BIT(1) },
+    { Gpio::A2, EFI_ADC_2, BIT(0) | BIT(1) },
+    { Gpio::A3, EFI_ADC_3, BIT(0) | BIT(1) },
+    { Gpio::A4, EFI_ADC_4, BIT(0) | BIT(1) },
+    { Gpio::A5, EFI_ADC_5, BIT(0) | BIT(1) },
+    { Gpio::A6, EFI_ADC_6, BIT(0) | BIT(1) },
+    { Gpio::A7, EFI_ADC_7, BIT(0) | BIT(1) },
+    { Gpio::B0, EFI_ADC_8, BIT(0) | BIT(1) },
+    { Gpio::B1, EFI_ADC_9, BIT(0) | BIT(1) },
+    { Gpio::C0, EFI_ADC_10, BIT(0) | BIT(1) },
+    { Gpio::C1, EFI_ADC_11, BIT(0) | BIT(1) },
+    { Gpio::C2, EFI_ADC_12, BIT(0) | BIT(1) },
+    { Gpio::C3, EFI_ADC_13, BIT(0) | BIT(1) },
+    { Gpio::C4, EFI_ADC_14, BIT(0) | BIT(1) },
+    { Gpio::C5, EFI_ADC_15, BIT(0) | BIT(1) },
+    /* TODO: add ADC3 channels */
+};
 
 brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel) {
     static_assert(EFI_ADC_NONE == ADC_CHANNEL_NONE);
 
-    // todo: replace this with an array :)
-    switch (hwChannel) {
-    case EFI_ADC_0:
-        return Gpio::A0;
-    case EFI_ADC_1:
-        return Gpio::A1;
-    case EFI_ADC_2:
-        return Gpio::A2;
-    case EFI_ADC_3:
-        return Gpio::A3;
-    case EFI_ADC_4:
-        return Gpio::A4;
-    case EFI_ADC_5:
-        return Gpio::A5;
-    case EFI_ADC_6:
-        return Gpio::A6;
-    case EFI_ADC_7:
-        return Gpio::A7;
-    case EFI_ADC_8:
-        return Gpio::B0;
-    case EFI_ADC_9:
-        return Gpio::B1;
-    case EFI_ADC_10:
-        return Gpio::C0;
-    case EFI_ADC_11:
-        return Gpio::C1;
-    case EFI_ADC_12:
-        return Gpio::C2;
-    case EFI_ADC_13:
-        return Gpio::C3;
-    case EFI_ADC_14:
-        return Gpio::C4;
-    case EFI_ADC_15:
-        return Gpio::C5;
-    default:
-/* todo: what is upper range ADC is used while lower range ADC is not used? how do we still mark pin used?
-external muxes for internal ADC #3350
-        firmwareError(ObdCode::CUSTOM_ERR_ADC_UNKNOWN_CHANNEL, "Unknown hw channel %d [%s]", hwChannel, msg);
-*/
-        return Gpio::Invalid;
+    for (size_t idx = 0; idx < efi::size(adcChannels); idx++) {
+        if (adcChannels[idx].ch == hwChannel) {
+            return adcChannels[idx].pin;
+        }
     }
+
+    /* todo: what is upper range ADC is used while lower range ADC is not used? how do we still mark pin used?
+     * external muxes for internal ADC #3350
+     * firmwareError(ObdCode::CUSTOM_ERR_ADC_UNKNOWN_CHANNEL, "Unknown hw channel %d [%s]", hwChannel, msg);
+     */
+    (void)msg;
+
+    return Gpio::Invalid;
 }
 
 adc_channel_e getAdcChannel(brain_pin_e pin) {
-    switch (pin) {
-    case Gpio::A0:
-        return EFI_ADC_0;
-    case Gpio::A1:
-        return EFI_ADC_1;
-    case Gpio::A2:
-        return EFI_ADC_2;
-    case Gpio::A3:
-        return EFI_ADC_3;
-    case Gpio::A4:
-        return EFI_ADC_4;
-    case Gpio::A5:
-        return EFI_ADC_5;
-    case Gpio::A6:
-        return EFI_ADC_6;
-    case Gpio::A7:
-        return EFI_ADC_7;
-    case Gpio::B0:
-        return EFI_ADC_8;
-    case Gpio::B1:
-        return EFI_ADC_9;
-    case Gpio::C0:
-        return EFI_ADC_10;
-    case Gpio::C1:
-        return EFI_ADC_11;
-    case Gpio::C2:
-        return EFI_ADC_12;
-    case Gpio::C3:
-        return EFI_ADC_13;
-    case Gpio::C4:
-        return EFI_ADC_14;
-    case Gpio::C5:
-        return EFI_ADC_15;
-    case Gpio::Unassigned:
+    if (pin == Gpio::Unassigned)
         return EFI_ADC_NONE;
-    default:
-        criticalError("getAdcChannel %d", pin);
-        return EFI_ADC_ERROR;
+
+    for (size_t idx = 0; idx < efi::size(adcChannels); idx++) {
+        if (adcChannels[idx].pin == pin) {
+            return adcChannels[idx].ch;
+        }
     }
+
+    criticalError("getAdcChannel %d", pin);
+    return EFI_ADC_ERROR;
 }
 
 // deprecated - inline?
