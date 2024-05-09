@@ -296,6 +296,22 @@ static void printAdcValue(int channel) {
 static uint32_t slowAdcConversionCount = 0;
 static uint32_t slowAdcErrorsCount = 0;
 
+static void printAdcChannedReport(const char *prefix, int internalIndex, adc_channel_e hwChannel)
+{
+	if (isAdcChannelValid(hwChannel)) {
+		ioportid_t port = getAdcChannelPort("print", hwChannel);
+		int pin = getAdcChannelPin(hwChannel);
+		int adcValue = getAdcValue("print", hwChannel);
+		float volts = getVoltage("print", hwChannel);
+		float voltsDivided = getVoltageDivided("print", hwChannel);
+		/* Human index starts from 1 */
+		efiPrintf(" %s ch[%2d] @ %s%d ADC%d 12bit=%4d %.3fV (input %.3fV)",
+			prefix, internalIndex, portname(port), pin,
+			/* TODO: */ hwChannel - EFI_ADC_0 + 1,
+			adcValue, volts, voltsDivided);
+	}
+}
+
 void printFullAdcReport(void) {
 #if EFI_USE_FAST_ADC
 	efiPrintf("fast %d samples", fastAdc.conversionCount);
@@ -303,15 +319,7 @@ void printFullAdcReport(void) {
 	for (int internalIndex = 0; internalIndex < fastAdc.size(); internalIndex++) {
 		adc_channel_e hwChannel = fastAdc.getAdcChannelByInternalIndex(internalIndex);
 
-		if (isAdcChannelValid(hwChannel)) {
-			ioportid_t port = getAdcChannelPort("print", hwChannel);
-			int pin = getAdcChannelPin(hwChannel);
-			int adcValue = getAvgAdcValue(internalIndex, fastAdc.samples, ADC_BUF_DEPTH_FAST, fastAdc.size());
-			float volts = adcToVolts(adcValue);
-			/* Human index starts from 1 */
-			efiPrintf(" F ch[%2d] @ %s%d ADC%d 12bit=%4d %.2fV",
-				internalIndex, portname(port), pin, hwChannel - EFI_ADC_0 + 1, adcValue, volts);
-		}
+		printAdcChannedReport("F", internalIndex, hwChannel);
 	}
 #endif // EFI_USE_FAST_ADC
 	efiPrintf("slow %d samples", slowAdcConversionCount);
@@ -320,15 +328,7 @@ void printFullAdcReport(void) {
 	for (int internalIndex = 0; internalIndex < ADC_MAX_CHANNELS_COUNT; internalIndex++) {
 		adc_channel_e hwChannel = static_cast<adc_channel_e>(internalIndex + EFI_ADC_0);
 
-		if (isAdcChannelValid(hwChannel)) {
-			ioportid_t port = getAdcChannelPort("print", hwChannel);
-			int pin = getAdcChannelPin(hwChannel);
-			int adcValue = slowAdcSamples[internalIndex];
-			float volts = adcToVolts(adcValue);
-			/* Human index starts from 1 */
-			efiPrintf(" S ch[%2d] @ %s%d ADC%d 12bit=%4d %.2fV",
-				internalIndex, portname(port), pin, hwChannel - EFI_ADC_0 + 1, adcValue, volts);
-		}
+		printAdcChannedReport("S", internalIndex, hwChannel);
 	}
 }
 
