@@ -80,8 +80,8 @@ void removeChannel(const char *name, adc_channel_e hwChannel);
 // This callback is called by the ADC driver when a new fast ADC sample is ready
 void onFastAdcComplete(adcsample_t* samples);
 
-
 using FastAdcToken = size_t;
+static constexpr FastAdcToken invalidAdcToken = (FastAdcToken)(-1);
 
 FastAdcToken enableFastAdcChannel(const char* msg, adc_channel_e channel);
 adcsample_t getFastAdc(FastAdcToken token);
