@@ -53,10 +53,9 @@ float getVoltage(const char *msg, adc_channel_e hwChannel) {
 }
 
 #if EFI_USE_FAST_ADC
-AdcDevice::AdcDevice(ADCConversionGroup* p_hwConfig, adcsample_t *p_buf, size_t p_buf_len) {
+AdcDevice::AdcDevice(ADCConversionGroup* p_hwConfig, adcsample_t *p_buf) {
 	this->hwConfig = p_hwConfig;
 	this->samples = p_buf;
-	this->buf_len = p_buf_len;
 
 	hwConfig->sqr1 = 0;
 	hwConfig->sqr2 = 0;
@@ -170,7 +169,7 @@ static ADCConversionGroup adcgrpcfgFast = {
 };
 
 static NO_CACHE adcsample_t fastAdcSampleBuf[ADC_BUF_DEPTH_FAST * ADC_MAX_CHANNELS_COUNT];
-AdcDevice fastAdc(&adcgrpcfgFast, fastAdcSampleBuf, efi::size(fastAdcSampleBuf));
+AdcDevice fastAdc(&adcgrpcfgFast, fastAdcSampleBuf);
 
 static void fast_adc_callback(GPTDriver*) {
 #if EFI_INTERNAL_ADC
