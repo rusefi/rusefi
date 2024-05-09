@@ -260,12 +260,13 @@ adcsample_t AdcDevice::getAvgAdcValue(adc_channel_e hwChannel, size_t bufDepth) 
 //			// 12bit ADC expected right now, make this configurable one day
 //			criticalError("fast ADC unexpected sample %d", sample);
 //		} else
-		if (sample > 0xFFF) {
+		if (sample > ADC_MAX_VALUE) {
 			if (!engineConfiguration->skipADC12bitAssert) {
 				criticalError("fast ADC unexpected sample %d. Please report and use skipADC12bitAssert to disable", sample);
 			}
 			engine->outputChannels.unexpectedAdcSample = sample;
-			sample = sample & 0xFFF; // sad hack which works around https://github.com/rusefi/rusefi/issues/6376 which we do not understand
+			// sad hack which works around https://github.com/rusefi/rusefi/issues/6376 which we do not understand
+			sample = sample & ADC_MAX_VALUE;
 			engine->outputChannels.adc13bitCounter++;
 		}
 		result += sample;
