@@ -32,12 +32,11 @@ public class IniFileReaderTest {
     public void testSplitWithEmptyUnits() {
         {
             String[] s = IniFileReader.splitTokens("\tverboseCanBaseAddress\t\t\t= \"\", 1");
-            assertEquals(3, s.length);
-            assertEquals("", s[1]);
+            assertArrayEquals(new String[] { "verboseCanBaseAddress", "", "1" }, s);
         }
         {
             String[] s = IniFileReader.splitTokens("\tverboseCanBaseAddress\t\t\t= scalar, U32,\t756,\t\"\", 1, 0, 0, 536870911, 0");
-            assertEquals(10, s.length);
+            assertArrayEquals(new String[] { "verboseCanBaseAddress", "scalar", "U32", "756", "", "1", "0", "0", "536870911", "0" }, s);
         }
     }
 
@@ -45,24 +44,19 @@ public class IniFileReaderTest {
     public void testSplit() {
         {
             String[] s = IniFileReader.splitTokens("1");
-            assertEquals(s.length, 1);
-            assertEquals("1", s[0]);
+            assertArrayEquals(new String[] { "1" }, s);
         }
         {
             String[] s = IniFileReader.splitTokens("hello");
-            assertEquals(s.length, 1);
-            assertEquals("hello", s[0]);
+            assertArrayEquals(new String[] { "hello" }, s);
         }
         {
             String[] s = IniFileReader.splitTokens("\"hello\"");
-            assertEquals(s.length, 1);
-            assertEquals("hello", s[0]);
+            assertArrayEquals(new String[] { "hello" }, s);
         }
         {
             String[] s = IniFileReader.splitTokens("\"hello\",\"w\"");
-            assertEquals(s.length, 2);
-            assertEquals("hello", s[0]);
-            assertEquals("w", s[1]);
+            assertArrayEquals(new String[] { "hello", "w" }, s);
         }
     }
 
@@ -70,19 +64,15 @@ public class IniFileReaderTest {
     public void testQuotedTokens() {
         {
             String[] result = IniFileReader.splitTokens("\"hel  lo\"");
-            assertEquals(result.length, 1);
-            assertEquals("hel  lo", result[0]);
+            assertArrayEquals(new String[] { "hel  lo" }, result);
         }
     }
 
     @Test
     public void testRealLine() {
         String[] result = IniFileReader.splitTokens("\tdialog = engineChars,\t\"Base Engine Settings\"");
+        assertArrayEquals(new String[] { "dialog", "engineChars", "Base Engine Settings" }, result);
         assertEquals(result.length, 3);
-
-        assertEquals("dialog", result[0]);
-        assertEquals("engineChars", result[1]);
-        assertEquals("Base Engine Settings", result[2]);
     }
 
     @Test
