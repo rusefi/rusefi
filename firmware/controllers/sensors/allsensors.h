@@ -19,6 +19,7 @@
 #include "thermistors.h"
 #include "adc_inputs.h"
 
+// see also: isIgnVoltage()
 #define LOW_VBATT 7
 
 void initSensors();

@@ -15,7 +15,7 @@ void MainRelayController::onSlowCallback() {
         // key-on is usually a bit smaller voltage than main relay but sometimes even 1v off!
         hasIgnitionVoltage = efiReadPin(engineConfiguration->ignitionKeyDigitalPin);
     } else {
-	    hasIgnitionVoltage = Sensor::getOrZero(SensorType::BatteryVoltage) > 5;
+	    hasIgnitionVoltage = isIgnVoltage();
 	}
 
 	if (hasIgnitionVoltage) {
