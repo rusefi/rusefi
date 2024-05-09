@@ -10,6 +10,7 @@
 TEST(start, startStop) {
 	std::unordered_map<SensorType, float> sensorVals = {{ SensorType::AcceleratorPedal, 0 }};
 	EngineTestHelper eth(engine_type_e::PROTEUS_BMW_M73, sensorVals);
+	Sensor::setMockValue(SensorType::BatteryVoltage, 15);
 	eth.moveTimeForwardAndInvokeEventsSec(1); // '0' time has special meaning for implementation so let's move forward
 
 	// pull-up means inverted value

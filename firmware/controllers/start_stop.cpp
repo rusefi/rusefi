@@ -52,7 +52,7 @@ static void disengageStarterIfNeeded() {
 void slowStartStopButtonCallback() {
   if (!isIgnVoltage()) {
     engine->startStopState.timeSinceIgnitionPower.reset();
-//    return;
+    return;
   } else if (engine->startStopState.isFirstTime) {
     engine->startStopState.isFirstTime = false;
   }
