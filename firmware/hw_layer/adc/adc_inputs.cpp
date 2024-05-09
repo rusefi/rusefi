@@ -110,7 +110,7 @@ static adcsample_t getAvgAdcValue(int index, adcsample_t *samples, int bufDepth,
 #define ADC_SAMPLING_FAST ADC_SAMPLE_28
 #endif
 
-static void adc_callback_fast(ADCDriver *adcp) {
+static void fastAdcDoneCB(ADCDriver *adcp) {
 	// State may not be complete if we get a callback for "half done"
 	if (adcp->state == ADC_COMPLETE) {
 		onFastAdcComplete(adcp->samples);
@@ -127,7 +127,7 @@ static void fastAdcErrorCB(ADCDriver *, adcerror_t err)
 static ADCConversionGroup adcgrpcfgFast = {
 	.circular			= FALSE,
 	.num_channels		= 0,
-	.end_cb				= adc_callback_fast,
+	.end_cb				= fastAdcDoneCB,
 	.error_cb			= fastAdcErrorCB,
 	/* HW dependent part.*/
 	.cr1				= 0,
@@ -171,7 +171,7 @@ static ADCConversionGroup adcgrpcfgFast = {
 static NO_CACHE adcsample_t fastAdcSampleBuf[ADC_BUF_DEPTH_FAST * ADC_MAX_CHANNELS_COUNT];
 AdcDevice fastAdc(&adcgrpcfgFast, fastAdcSampleBuf);
 
-static void fast_adc_callback(GPTDriver*) {
+static void fastAdcTrigger(GPTDriver*) {
 #if EFI_INTERNAL_ADC
 	/*
 	 * Starts an asynchronous ADC conversion operation, the conversion
@@ -222,7 +222,7 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 #if EFI_USE_FAST_ADC
 static GPTConfig fast_adc_config = {
 	.frequency = GPT_FREQ_FAST,
-	.callback = fast_adc_callback,
+	.callback = fastAdcTrigger,
 	.cr2 = 0,
 	.dier = 0,
 };
