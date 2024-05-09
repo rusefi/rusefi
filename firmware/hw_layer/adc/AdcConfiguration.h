@@ -29,7 +29,7 @@ typedef struct {
 class AdcDevice {
 public:
 	explicit AdcDevice(ADCConversionGroup* p_hwConfig, adcsample_t *p_buf);
-	void enableChannel(adc_channel_e hwChannelIndex);
+	void enableChannel(adc_channel_e hwChannel);
 	adc_channel_e getAdcChannelByInternalIndex(int index) const;
 	uint8_t internalAdcIndexByHardwareIndex[EFI_ADC_TOTAL_CHANNELS];
 	int size() const;
