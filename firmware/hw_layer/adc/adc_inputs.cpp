@@ -33,14 +33,13 @@ float __attribute__((weak)) getAnalogInputDividerCoefficient(adc_channel_e) {
 #include "periodic_thread_controller.h"
 #include "protected_gpio.h"
 
-/* Depth of the conversion buffer, channels are sampled X times each.*/
-#ifndef ADC_BUF_DEPTH_FAST
-#define ADC_BUF_DEPTH_FAST      4
-#endif
-
 static NO_CACHE adcsample_t slowAdcSamples[SLOW_ADC_CHANNEL_COUNT];
 
 static adc_channel_mode_e adcHwChannelMode[HW_MAX_ADC_INDEX];
+
+adc_channel_mode_e getAdcMode(adc_channel_e hwChannel) {
+	return adcHwChannelMode[hwChannel];
+}
 
 // Board voltage, with divider coefficient accounted for
 float getVoltageDivided(const char *msg, adc_channel_e hwChannel) {
@@ -53,9 +52,15 @@ float getVoltage(const char *msg, adc_channel_e hwChannel) {
 }
 
 #if EFI_USE_FAST_ADC
+
+/* Depth of the conversion buffer, channels are sampled X times each.*/
+#ifndef ADC_BUF_DEPTH_FAST
+#define ADC_BUF_DEPTH_FAST      4
+#endif
+
 AdcDevice::AdcDevice(ADCConversionGroup* p_hwConfig, adcsample_t *p_buf) {
-	this->hwConfig = p_hwConfig;
-	this->samples = p_buf;
+	hwConfig = p_hwConfig;
+	samples = p_buf;
 
 	hwConfig->sqr1 = 0;
 	hwConfig->sqr2 = 0;
@@ -200,13 +205,6 @@ static GPTConfig fast_adc_config = {
 	.cr2 = 0,
 	.dier = 0,
 };
-#endif /* EFI_USE_FAST_ADC */
-
-adc_channel_mode_e getAdcMode(adc_channel_e hwChannel) {
-	return adcHwChannelMode[hwChannel];
-}
-
-#if EFI_USE_FAST_ADC
 
 int AdcDevice::size() const {
 	return channelCount;
@@ -421,7 +419,7 @@ void removeChannel(const char*, adc_channel_e hwChannel) {
 __attribute__((weak)) void setAdcChannelOverrides() { }
 
 static void configureInputs() {
-	memset(adcHwChannelMode, 0, sizeof(adcHwChannelMode));
+	memset(adcHwChannelMode, ADC_OFF, sizeof(adcHwChannelMode));
 
 	/**
 	 * order of analog channels here is totally random and has no meaning
