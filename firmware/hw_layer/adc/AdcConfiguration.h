@@ -28,7 +28,7 @@ typedef struct {
 
 class AdcDevice {
 public:
-	explicit AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf, size_t buf_len);
+	explicit AdcDevice(ADCConversionGroup* p_hwConfig, adcsample_t *p_buf);
 	void enableChannel(adc_channel_e hwChannelIndex);
 	adc_channel_e getAdcChannelByInternalIndex(int index) const;
 	uint8_t internalAdcIndexByHardwareIndex[EFI_ADC_TOTAL_CHANNELS];
@@ -37,7 +37,6 @@ public:
 	uint32_t conversionCount = 0;
 
 	adcsample_t *samples;
-	size_t buf_len;
 
 	adc_state values;
 private:
