@@ -67,13 +67,16 @@ const char *portname(ioportid_t port) {
 }
 
 static int getPortIndex(ioportid_t port) {
-	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, port != NULL, "null port", -1);
 	for (size_t idx = 0; idx < efi::size(ports); idx++) {
 		if (ports[idx].port == port) {
 			return idx;
 		}
 	}
+
+#if ! EFI_BOOTLOADER
 	firmwareError(ObdCode::CUSTOM_ERR_UNKNOWN_PORT, "unknown port");
+#endif
+
 	return -1;
 }
 
@@ -97,7 +100,10 @@ ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
 		return ports[idx].port;
 	}
 
+#if ! EFI_BOOTLOADER
 	firmwareError(ObdCode::CUSTOM_ERR_UNKNOWN_PORT, "unknown port");
+#endif
+
 	return nullptr;
 }
 
