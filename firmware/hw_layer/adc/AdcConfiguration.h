@@ -37,8 +37,6 @@ public:
 	uint32_t conversionCount = 0;
 
 	adcsample_t *samples;
-
-	adc_state values;
 private:
 	ADCConversionGroup* hwConfig;
 	/**
