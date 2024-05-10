@@ -39,6 +39,10 @@ function getTwoBytesLSB(data, offset, factor)
 end
 
 function setTwoBytesLsb(data, offset, value)
+  if value > 1000000000 then
+    print(value .. " looks like NA EFI_LUA_LOOKUP missing?")
+    return
+  end
 	value = math.floor(value)
 	data[offset + 2] = value >> 8
 	data[offset + 1] = value & 0xff
