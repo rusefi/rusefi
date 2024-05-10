@@ -523,6 +523,8 @@ typedef enum __attribute__ ((__packed__)) {
 	GPPWM_Rpm = 24,
 	GPPWM_DetectedGear = 25,
 	GPPWM_BaroPressure = 26,
+	GPPWM_Egt1 = 27,
+	GPPWM_Egt2 = 28,
 } gppwm_channel_e;
 
 typedef enum __attribute__ ((__packed__)) {
