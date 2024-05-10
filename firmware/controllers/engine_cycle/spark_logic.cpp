@@ -366,7 +366,7 @@ void turnSparkPinHighStartCharging(IgnitionEvent *event) {
 }
 
 #if EFI_PROD_CODE
-  #define ENABLE_OVERDWELL_PROTECTION (true)
+  #define ENABLE_OVERDWELL_PROTECTION (!engineConfiguration->doNotUse1x5_overdwell_protection)
 #else
   #define ENABLE_OVERDWELL_PROTECTION (engine->enableOverdwellProtection)
 #endif
