@@ -169,6 +169,8 @@ function onTick()
 --	print('Will be sending ' ..arrayToString(data_set_settings))
 	  txCan(1, GDI_CHANGE_ADDRESS + 4, 1, data_set_settings)
 	end
+
+	-- selfStimulateRPM(3000)
 end
 
 
