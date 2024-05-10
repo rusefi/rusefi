@@ -233,6 +233,8 @@ void sendCanVerbose() {
 	transmitStruct<Fueling2>	(CanCategory::VERBOSE, base + 6, isExt, canChannel);
 	transmitStruct<Fueling3>	(CanCategory::VERBOSE, base + 7, isExt, canChannel);
 	transmitStruct<Cams>		(CanCategory::VERBOSE, base + 8, isExt, canChannel);
+
+	transmitStruct<Egts>	(CanCategory::VERBOSE, base + 9, isExt, canChannel);
 }
 
 #endif // EFI_CAN_SUPPORT
