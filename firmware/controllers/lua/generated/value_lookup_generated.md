@@ -502,6 +502,9 @@ Disable the electronic throttle motor and DC idle motor for testing.\nThis mode 
 ### enableAemXSeries
 AEM X-Series or rusEFI Wideband
 
+### doNotUse1x5_overdwell_protection
+
+
 ### verboseCanBaseAddress
 
 

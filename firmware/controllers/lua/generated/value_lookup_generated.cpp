@@ -508,6 +508,9 @@ float getConfigValueByName(const char *name) {
 // enableAemXSeries
 		case 259909218:
 			return engineConfiguration->enableAemXSeries;
+// doNotUse1x5_overdwell_protection
+		case 2143409165:
+			return engineConfiguration->doNotUse1x5_overdwell_protection;
 // verboseCanBaseAddress
 		case 6238478:
 			return engineConfiguration->verboseCanBaseAddress;
@@ -2675,6 +2678,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 259909218:
 	{
 		engineConfiguration->enableAemXSeries = (int)value;
+		return 1;
+	}
+		case 2143409165:
+	{
+		engineConfiguration->doNotUse1x5_overdwell_protection = (int)value;
 		return 1;
 	}
 		case 6238478:

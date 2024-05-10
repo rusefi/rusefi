@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri May 10 14:48:38 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri May 10 19:27:24 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1196,7 +1196,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1930399049;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1452,7 +1451,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.05.10.f407-discovery.1930399049";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.05.10.f407-discovery.2667877826";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1833,6 +1832,7 @@ public class Fields {
 	public static final Field VERBOSEKLINE = Field.create("VERBOSEKLINE", 752, FieldType.BIT, 28).setBaseOffset(0);
 	public static final Field IDLEINCREMENTALPIDCIC = Field.create("IDLEINCREMENTALPIDCIC", 752, FieldType.BIT, 29).setBaseOffset(0);
 	public static final Field ENABLEAEMXSERIES = Field.create("ENABLEAEMXSERIES", 752, FieldType.BIT, 30).setBaseOffset(0);
+	public static final Field DONOTUSE1X5_OVERDWELL_PROTECTION = Field.create("DONOTUSE1X5_OVERDWELL_PROTECTION", 752, FieldType.BIT, 31).setBaseOffset(0);
 	public static final Field LOGICANALYZERPINS1 = Field.create("LOGICANALYZERPINS1", 756, FieldType.INT16, brain_input_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field LOGICANALYZERPINS2 = Field.create("LOGICANALYZERPINS2", 758, FieldType.INT16, brain_input_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field LOGICANALYZERPINS3 = Field.create("LOGICANALYZERPINS3", 760, FieldType.INT16, brain_input_pin_e).setScale(1.0).setBaseOffset(0);
@@ -3505,6 +3505,7 @@ public class Fields {
 	VERBOSEKLINE,
 	IDLEINCREMENTALPIDCIC,
 	ENABLEAEMXSERIES,
+	DONOTUSE1X5_OVERDWELL_PROTECTION,
 	LOGICANALYZERPINS1,
 	LOGICANALYZERPINS2,
 	LOGICANALYZERPINS3,
