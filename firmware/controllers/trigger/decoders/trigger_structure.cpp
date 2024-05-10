@@ -443,6 +443,9 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case trigger_type_e::TT_SUZUKI_K6A:
+		initializeSuzukiK6A(this);
+		break;
+
 	case trigger_type_e::TT_SUZUKI_G13B:
 		initializeSuzukiG13B(this);
 		break;
