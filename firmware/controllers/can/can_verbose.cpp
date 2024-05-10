@@ -211,8 +211,8 @@ struct Egts {
 };
 
 static void populateFrame(Egts& msg) {
-	msg.egt[0] = Sensor::getOrZero(SensorType::EGT1);
-	msg.egt[1] = Sensor::getOrZero(SensorType::EGT2);
+	msg.egt[0] = 5 * Sensor::getOrZero(SensorType::EGT1);
+	msg.egt[1] = 5 * Sensor::getOrZero(SensorType::EGT2);
 }
 
 void sendCanVerbose() {
