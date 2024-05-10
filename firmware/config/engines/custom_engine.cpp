@@ -507,7 +507,7 @@ void proteusBoardTest() {
 }
 #endif // HW_PROTEUS
 
-void setBodyControlUnit() {
+static void setBasicNotECUmode() {
     engineConfiguration->trigger.type = trigger_type_e::TT_HALF_MOON;
 
 	engineConfiguration->mapAveragingSchedulingAtIndex = 999; // this should disable map averaging right?
@@ -515,10 +515,6 @@ void setBodyControlUnit() {
 	engineConfiguration->wwaeTau = 0.0;
 	engineConfiguration->wwaeBeta = 0.0;
 
-	for (int i = 0; i < MAX_CYLINDER_COUNT;i++) {
-		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
-		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
-	}
 	engineConfiguration->fanPin = Gpio::Unassigned;
 	engineConfiguration->triggerInputPins[0] = Gpio::Unassigned;
 
@@ -529,6 +525,13 @@ void setBodyControlUnit() {
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_NONE;
 }
 
+void setBodyControlUnit() {
+	for (int i = 0; i < MAX_CYLINDER_COUNT;i++) {
+		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
+		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
+	}
+  setBasicNotECUmode();
+}
 
 void mreSecondaryCan() {
 	setBodyControlUnit();
@@ -939,7 +942,7 @@ void fuelBenchMode() {
 	setTable(engineConfiguration->postCrankingFactor, 1.0f);
 	setArrayValues(config->crankingFuelCoef, 1.0f);
 	setArrayValues(config->crankingCycleCoef, 1.0f);
-    setBodyControlUnit();
+	setBasicNotECUmode();
 }
 
 #if HW_PROTEUS
