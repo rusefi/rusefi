@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri May 10 19:26:20 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri May 10 21:13:51 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1703,7 +1703,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 780
 	 */
-	uint8_t unusedAcFanPinMode;
+	gppwm_channel_e boostOpenLoopYAxis;
 	/**
 	 * offset 781
 	 */
@@ -5619,4 +5619,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22656);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri May 10 19:26:20 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri May 10 21:13:51 UTC 2024

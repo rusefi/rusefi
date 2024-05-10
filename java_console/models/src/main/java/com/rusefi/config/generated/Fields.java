@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri May 10 19:27:24 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri May 10 21:14:56 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1451,7 +1451,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.05.10.f407-discovery.2667877826";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.05.10.f407-discovery.3238900561";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1847,7 +1847,8 @@ public class Fields {
 	public static final Field MC33_HVOLT = Field.create("MC33_HVOLT", 776, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field MINIMUMBOOSTCLOSEDLOOPMAP = Field.create("MINIMUMBOOSTCLOSEDLOOPMAP", 777, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field UNUSEDACFANPIN = Field.create("UNUSEDACFANPIN", 778, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSEDACFANPINMODE = Field.create("UNUSEDACFANPINMODE", 780, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final String[] gppwm_channel_e = {"Zero", "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Accel Pedal", "Battery Voltage", "VVT 1 I", "VVT 1 E", "VVT 2 I", "VVT 2 E", "Ethanol (Flex) %", "Aux Linear 1", "Aux Linear 2", "GPPWM Output 1", "GPPWM Output 2", "GPPWM Output 3", "GPPWM Output 4", "Lua Gauge 1", "Lua Gauge 2", "RPM", "Gear (detected)", "Baro pressure", "EGT 1", "EGT 2"};
+	public static final Field BOOSTOPENLOOPYAXIS = Field.create("BOOSTOPENLOOPYAXIS", 780, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field L9779SPIDEVICE = Field.create("L9779SPIDEVICE", 781, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field IMUTYPE = Field.create("IMUTYPE", 782, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_783 = Field.create("ALIGNMENTFILL_AT_783", 783, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -2532,7 +2533,6 @@ public class Fields {
 	public static final Field GPPWM1_PWMFREQUENCY = Field.create("GPPWM1_PWMFREQUENCY", 2652, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field GPPWM1_ONABOVEDUTY = Field.create("GPPWM1_ONABOVEDUTY", 2654, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field GPPWM1_OFFBELOWDUTY = Field.create("GPPWM1_OFFBELOWDUTY", 2655, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final String[] gppwm_channel_e = {"Zero", "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Accel Pedal", "Battery Voltage", "VVT 1 I", "VVT 1 E", "VVT 2 I", "VVT 2 E", "Ethanol (Flex) %", "Aux Linear 1", "Aux Linear 2", "GPPWM Output 1", "GPPWM Output 2", "GPPWM Output 3", "GPPWM Output 4", "Lua Gauge 1", "Lua Gauge 2", "RPM", "Gear (detected)", "Baro pressure", "EGT 1", "EGT 2"};
 	public static final Field GPPWM1_LOADAXIS = Field.create("GPPWM1_LOADAXIS", 2656, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field GPPWM1_RPMAXIS = Field.create("GPPWM1_RPMAXIS", 2657, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field GPPWM1_LOADBINS = Field.create("GPPWM1_LOADBINS", 2658, FieldType.INT16).setScale(0.5).setBaseOffset(0);
@@ -3520,7 +3520,7 @@ public class Fields {
 	MC33_HVOLT,
 	MINIMUMBOOSTCLOSEDLOOPMAP,
 	UNUSEDACFANPIN,
-	UNUSEDACFANPINMODE,
+	BOOSTOPENLOOPYAXIS,
 	L9779SPIDEVICE,
 	IMUTYPE,
 	ALIGNMENTFILL_AT_783,
