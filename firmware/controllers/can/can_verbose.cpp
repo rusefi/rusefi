@@ -210,8 +210,9 @@ struct Egts {
 	uint8_t egt[8];
 };
 
-static void populateFrame(Egts&) {
-	// TODO: https://github.com/FOME-Tech/fome-fw/issues/398
+static void populateFrame(Egts& msg) {
+	msg.egt[0] = Sensor::getOrZero(SensorType::EGT1);
+	msg.egt[1] = Sensor::getOrZero(SensorType::EGT2);
 }
 
 void sendCanVerbose() {
