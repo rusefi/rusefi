@@ -28,6 +28,7 @@ Release template (copy/paste this for new release):
 
 ### Added
  - new rusEFI console tab: Knock analyzer #6467
+ - Suzuki K6A (NON VVTI Trigger) #6490
 
 ### Fixed
  - knock logic not activated until any configuration change via TS #6462
