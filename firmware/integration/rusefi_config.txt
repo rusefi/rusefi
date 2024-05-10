@@ -820,7 +820,7 @@ pin_output_mode_e hip9011IntHoldPinMode;
 	uint8_t minimumBoostClosedLoopMap;Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon entering boost.;"kPa", 1, 0, 0, 255, 0
 
 uint16_t unusedacFanPin
-	uint8_t unusedAcFanPinMode;
+	gppwm_channel_e boostOpenLoopYAxis
 
 
 	spi_device_e l9779spiDevice;
