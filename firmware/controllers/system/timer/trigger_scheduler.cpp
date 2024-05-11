@@ -108,6 +108,7 @@ void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(int rpm,
 
 			// In case this event was scheduled by overdwell protection, cancel it so
 			// we can re-schedule at the correct time
+			// [tag:overdwell]
 			engine->executor.cancel(sDown);
 
 			scheduleByAngle(

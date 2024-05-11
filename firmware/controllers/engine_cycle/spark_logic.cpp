@@ -465,9 +465,9 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 #endif /* SPARK_EXTREME_LOGGING */
 
       /**
-       * todo one: explicit unit test for this mechanism see https://github.com/rusefi/rusefi/issues/6373
-       * todo two: can we please comprehend/document how this even works? we seem to be reusing 'sparkEvent.scheduling' instance
+       * todo: can we please comprehend/document how this even works? we seem to be reusing 'sparkEvent.scheduling' instance
        * and it looks like current (smart?) re-queuing is effectively cancelling out the overdwell? is that the way this was intended to work?
+       * [tag:overdwell]
        */
 			engine->executor.scheduleByTimestampNt("overdwell", &event->sparkEvent.scheduling, fireTime, { overFireSparkAndPrepareNextSchedule, event });
 
