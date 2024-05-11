@@ -396,9 +396,7 @@ efitick_t scheduleByAngle(scheduling_s *timer, efitick_t nowNt, angle_t angle,
 		action_s action) {
 	float delayUs = engine->rpmCalculator.oneDegreeUs * angle;
 
-    // 'delayNt' is below 10 seconds here so we use 32 bit type for performance reasons
-	int32_t delayNt = USF2NT(delayUs);
-	efitick_t actionTimeNt = nowNt + delayNt;
+	efitick_t actionTimeNt = sumTickAndFloat(nowNt, USF2NT(delayUs));
 
 	engine->executor.scheduleByTimestampNt("angle", timer, actionTimeNt, action);
 
