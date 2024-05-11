@@ -458,7 +458,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 
 		if (!limitedSpark && ENABLE_OVERDWELL_PROTECTION) {
 			// auto fire spark at 1.5x nominal dwell
-			efitick_t fireTime = chargeTime + MSF2NT(1.5f * dwellMs);
+			efitick_t fireTime = sumTickAndFloat(chargeTime, MSF2NT(1.5f * dwellMs));
 
 #if SPARK_EXTREME_LOGGING
 		efiPrintf("scheduling overdwell sparkDown revolution=%d [%s] for id=%d for %d ticks", getRevolutionCounter(), event->getOutputForLoggins()->getName(), event->sparkCounter, fireTime);
