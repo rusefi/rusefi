@@ -106,6 +106,7 @@ static efitick_t getNextSwitchTimeNt(PwmConfig *state) {
 	/**
 	 * Once 'iteration' gets relatively high, we might lose calculation precision here.
 	 * This is addressed by iterationLimit below, using any many cycles as possible without overflowing timeToSwitchNt
+	 * Shall we reuse 'sumTickAndFloat' here?
 	 */
 	uint32_t timeToSwitchNt = (uint32_t)((iteration + switchTime) * periodNt);
 

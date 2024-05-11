@@ -38,7 +38,7 @@ inline /*64bit*/ efitick_t sumTickAndFloat(/*64bit*/efitick_t ticks, /*32it*/flo
 
 // milliseconds to ticks
 #define MS2NT(msTime) US2NT(MS2US(msTime))
-// See USF2NT above for when to use MSF2NT
+// See USF2NT above for when to use MSF2NT. ***WARNING*** please be aware of sumTickAndFloat
 #define MSF2NT(msTimeFloat) USF2NT(MS2US(msTimeFloat))
 
 /**
