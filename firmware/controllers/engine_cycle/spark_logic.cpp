@@ -511,13 +511,6 @@ void initializeIgnitionActions() {
 static void prepareIgnitionSchedule() {
 	ScopePerf perf(PE::PrepareIgnitionSchedule);
 
-	/**
-	 * TODO: warning. there is a bit of a hack here, todo: improve.
-	 * currently output signals/times dwellStartTimer from the previous revolutions could be
-	 * still used because they have crossed the revolution boundary
-	 * but we are already re-purposing the output signals, but everything works because we
-	 * are not affecting that space in memory. todo: use two instances of 'ignitionSignals'
-	 */
 	operation_mode_e operationMode = getEngineRotationState()->getOperationMode();
 	float maxAllowedDwellAngle;
 
