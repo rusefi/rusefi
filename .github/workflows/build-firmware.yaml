@@ -259,6 +259,10 @@ jobs:
       run: |
         bash bin/compile.sh ${{env.BOARD_META_PATH}} bundles --output-sync=recurse
 
+    - name: Check for illegal time conversions
+      working-directory: ./firmware/
+      run: bash check_illegal_conversion.sh
+
     - name: Upload Bundle
       if: ${{ env.full == 'true' }}
       working-directory: ./artifacts
