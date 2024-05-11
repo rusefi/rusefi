@@ -47,8 +47,7 @@ void setBoardConfigOverrides() {
 	setHellenMegaEnPin();
 	setHellenVbatt();
 
-	setHellenSdCardSpi1();
-	hellenMegaAccelerometerPreInitCS2Pin();
+	hellenMegaSdWithAccelerometer();
 	configureHellenCanTerminator();
 	setHellenCan();
 

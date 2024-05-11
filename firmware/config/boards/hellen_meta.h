@@ -22,6 +22,7 @@ void hellenEnableEn(const char *msg = "");
 void hellenDisableEn(const char *msg = "");
 
 void hellenBoardStandBy();
+void hellenMegaSdWithAccelerometer();
 void hellenMegaAccelerometerPreInitCS2Pin();
 void configureHellenCanTerminator();
 

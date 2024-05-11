@@ -53,8 +53,7 @@ void setBoardConfigOverrides() {
 	setHellenMegaEnPin();
 	setHellenVbatt();
 
-	setHellenSdCardSpi1();
-	hellenMegaAccelerometerPreInitCS2Pin();
+	hellenMegaSdWithAccelerometer();
 
   engineConfiguration->vrThreshold[0].pin = Gpio::MM100_OUT_PWM6;
 

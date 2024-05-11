@@ -109,6 +109,12 @@ void hellenBoardStandBy() {
  */
 extern OutputPin accelerometerChipSelect;
 
+void hellenMegaSdWithAccelerometer() {
+		setHellenSdCardSpi1();
+		// weird order of operations? i guess it does not really matter
+		hellenMegaAccelerometerPreInitCS2Pin();
+}
+
 void hellenMegaAccelerometerPreInitCS2Pin() {
 #if EFI_ONBOARD_MEMS
     if (!accelerometerChipSelect.isInitialized()) {
