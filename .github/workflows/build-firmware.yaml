@@ -303,6 +303,10 @@ jobs:
     - name: Build Firmware
       run: bash misc/jenkins/compile_other_versions/compile.sh ${{matrix.folder}} ${{matrix.build-target}}
 
+    - name: Check for illegal time conversions
+      working-directory: ./firmware/
+      run: bash check_illegal_conversion.sh
+
     # Build rusEFI console
     - name: Build console
       if: ${{ env.full == 'true' }}
