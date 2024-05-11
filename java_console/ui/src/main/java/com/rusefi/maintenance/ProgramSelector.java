@@ -136,6 +136,10 @@ public class ProgramSelector {
     }
 
     private void flashOpenBltCan(UpdateOperationCallbacks callbacks) {
+        if (FileLog.is32bitJava()) {
+            showError32bitJava();
+            return;
+        }
         OpenbltJni.OpenbltCallbacks cb = makeOpenbltCallbacks(callbacks);
 
         try {
@@ -220,7 +224,17 @@ public class ProgramSelector {
         };
     }
 
+    private void showError32bitJava() {
+        JOptionPane.showMessageDialog(content, "64 bit java required. 32 bit java not supported!",
+            "Error", JOptionPane.ERROR_MESSAGE);
+    }
+
     private void flashOpenbltSerialJni(String port, UpdateOperationCallbacks callbacks) {
+        if (FileLog.is32bitJava()) {
+            showError32bitJava();
+            return;
+        }
+
         OpenbltJni.OpenbltCallbacks cb = makeOpenbltCallbacks(callbacks);
 
         try {

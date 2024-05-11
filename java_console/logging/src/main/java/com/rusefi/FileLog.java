@@ -68,6 +68,10 @@ public enum FileLog {
         return System.getProperty("os.name");
     }
 
+    public static boolean is32bitJava() {
+        return System.getProperty("os.arch").contains("86");
+    }
+
     public static boolean isWindows() {
         return getOsName().contains("Windows");
     }
