@@ -381,7 +381,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 
 		if (!limitedSpark && engine->enableOverdwellProtection) {
 			// auto fire spark at 1.5x nominal dwell
-			efitick_t fireTime = chargeTime + MSF2NT(1.5f * dwellMs);
+			efitick_t fireTime = chargeTime + (uint32_t)MSF2NT(1.5f * dwellMs);
 			engine->executor.scheduleByTimestampNt("overdwell", &event->sparkEvent.scheduling, fireTime, { overFireSparkAndPrepareNextSchedule, event });
 		}
 	}
