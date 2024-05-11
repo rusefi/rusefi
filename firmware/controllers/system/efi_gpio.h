@@ -29,6 +29,9 @@ public:
 	void setHigh() override;
 	void setLow() override;
 	void reset();
+	// 6000 RPM is 100Hz we can fit a few years worth of sparks into 32 bits, right?
+	// 2_000_000_000 / 100 = 20_000_000 seconds = 231 days?
+	// [tag:duration_limit]
 	int signalFallSparkId;
 	int8_t coilIndex;
 };
