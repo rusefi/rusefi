@@ -60,7 +60,7 @@ void DynoView::update(vssSrc src) {
  */
 void DynoView::updateAcceleration(efitimeus_t deltaTime, float deltaSpeed) {
     if (deltaSpeed != 0.0) {
-        acceleration = ((deltaSpeed / 3.6) / (deltaTime / US_PER_SECOND_F));
+        acceleration = ((deltaSpeed / 3.6) / ((uint32_t)deltaTime / US_PER_SECOND_F));
         if (direction) {
             //decceleration
             acceleration *= -1;
