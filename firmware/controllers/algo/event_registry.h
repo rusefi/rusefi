@@ -14,7 +14,7 @@
 #include "trigger_structure.h"
 
 struct AngleBasedEvent {
-	scheduling_s scheduling;
+	scheduling_s eventScheduling;
 	action_s action;
 	/**
 	 * Trigger-based scheduler maintains a linked list of all pending tooth-based events.

@@ -195,8 +195,8 @@ void HpfpController::pinTurnOn(HpfpController *self) {
 
 	// By scheduling the close after we already open, we don't have to worry if the engine
 	// stops, the valve will be turned off in a certain amount of time regardless.
-	scheduleByAngle(&self->m_event.scheduling,
-			self->m_event.scheduling.getMomentNt(),
+	scheduleByAngle(&self->m_event.eventScheduling,
+			self->m_event.eventScheduling.getMomentNt(),
 			self->m_deadtime + engineConfiguration->hpfpActivationAngle,
 			{ pinTurnOff, self });
 }

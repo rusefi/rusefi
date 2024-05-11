@@ -262,13 +262,13 @@ TEST(HPFP, Schedule) {
 
 		// First call to setRpmValue will cause a dummy call to fast periodic timer.
 		// Injection Mass will be 0 so expect a no-op.
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), &hpfp.m_event.scheduling, nt0, action_s(HpfpController::pinTurnOff, &hpfp)));
+		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), &hpfp.m_event.eventScheduling, nt0, action_s(HpfpController::pinTurnOff, &hpfp)));
 
 		// Second call will be the start of a real pump event.
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), &hpfp.m_event.scheduling, nt1, action_s(HpfpController::pinTurnOn, &hpfp)));
+		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), &hpfp.m_event.eventScheduling, nt1, action_s(HpfpController::pinTurnOn, &hpfp)));
 
 		// Third call will be off event
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), &hpfp.m_event.scheduling, nt2, action_s(HpfpController::pinTurnOff, &hpfp)));
+		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), &hpfp.m_event.eventScheduling, nt2, action_s(HpfpController::pinTurnOff, &hpfp)));
 	}
 	EXPECT_CALL(mockExec, cancel(_)).Times(2);
 
@@ -299,7 +299,7 @@ TEST(HPFP, Schedule) {
 
 	// Since we have a mock scheduler, lets insert the correct timestamp in the scheduling
 	// struct.
-	hpfp.m_event.scheduling.setMomentNt(nt1);
+	hpfp.m_event.eventScheduling.setMomentNt(nt1);
 
 	HpfpController::pinTurnOn(&hpfp);
 

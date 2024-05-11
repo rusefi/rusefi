@@ -29,7 +29,7 @@ bool TriggerScheduler::scheduleOrQueue(const char *msg, AngleBasedEvent *event,
 	if (event->shouldSchedule(currentPhase, nextPhase)) {
 		// if we're due now, just schedule the event
 		scheduleByAngle(
-			&event->scheduling,
+			&event->eventScheduling,
 			edgeTimestamp,
 			event->getAngleFromNow(currentPhase),
 			action
@@ -99,7 +99,7 @@ void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(int rpm,
 			// one also fired and thus the call to LL_DELETE2 is closer to O(1).
 			LL_DELETE2(keephead, current, nextToothEvent);
 
-			scheduling_s * sDown = &current->scheduling;
+			scheduling_s * sDown = &current->eventScheduling;
 
 #if SPARK_EXTREME_LOGGING
 			efiPrintf("time to invoke [%.1f, %.1f) %d %d",
