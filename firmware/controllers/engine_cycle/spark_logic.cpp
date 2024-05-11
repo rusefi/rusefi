@@ -392,6 +392,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 
 	/**
 	 * By the way 32-bit value should hold at least 400 hours of events at 6K RPM x 12 events per revolution
+	 * [tag:duration_limit]
 	 */
 	event->sparkCounter = engine->engineState.globalSparkCounter++;
 	event->wasSparkLimited = limitedSpark;
@@ -518,10 +519,12 @@ static void prepareIgnitionSchedule() {
 	 * are not affecting that space in memory. todo: use two instances of 'ignitionSignals'
 	 */
 	operation_mode_e operationMode = getEngineRotationState()->getOperationMode();
-	float maxAllowedDwellAngle = (int) (getEngineCycle(operationMode) / 2); // the cast is about making Coverity happy
+	float maxAllowedDwellAngle;
 
 	if (getCurrentIgnitionMode() == IM_ONE_COIL) {
 		maxAllowedDwellAngle = getEngineCycle(operationMode) / engineConfiguration->cylindersCount / 1.1;
+	} else {
+	  maxAllowedDwellAngle = (int) (getEngineCycle(operationMode) / 2); // the cast is about making Coverity happy
 	}
 
 	if (engine->ignitionState.dwellDurationAngle == 0) {
