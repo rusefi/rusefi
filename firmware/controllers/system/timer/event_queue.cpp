@@ -71,7 +71,10 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitick_t timeNt, action_s
 		// If still null, the free list is empty and all schedulings in the pool have been expended.
 		if (!scheduling) {
 			// TODO: should we warn or error here?
-
+// todo: look into why units tests fail here
+#if EFI_PROD_CODE
+      criticalError("No slots in scheduling pool");
+#endif
 			return false;
 		}
 	}
