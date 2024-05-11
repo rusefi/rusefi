@@ -7,6 +7,7 @@
 #include "injection_gpio.h"
 #include "sensor.h"
 #include "backup_ram.h"
+#include <limits.h>
 
 floatms_t PrimeController::getPrimeDuration() const {
 	auto clt = Sensor::get(SensorType::Clt);
@@ -34,6 +35,13 @@ static bool isPrimeInjectionPulseSkipped() {
 	return engineConfiguration->isCylinderCleanupEnabled && (Sensor::getOrZero(SensorType::Tps1) > CLEANUP_MODE_TPS);
 }
 
+inline int32_t assertFloatFitsInto32BitsAndCast(const char *msg, float value) {
+  if (value < INT_MIN || value > INT_MAX) {
+    criticalError("%s value out of range: %f", msg, value);
+  }
+  return (int32_t)value;
+}
+
 void PrimeController::onIgnitionStateChanged(bool ignitionOn) {
 	if (!ignitionOn) {
 		// don't prime on ignition-off
@@ -57,9 +65,9 @@ void PrimeController::onIgnitionStateChanged(bool ignitionOn) {
 
 	// start prime injection if this is a 'fresh start'
 	if (ignSwitchCounter == 0) {
-		auto primeDelayMs = engineConfiguration->primingDelay * 1000;
+		int32_t primeDelayNt = assertFloatFitsInto32BitsAndCast("primingDelay", MSF2NT(engineConfiguration->primingDelay * 1000));
 
-		auto startTime = getTimeNowNt() + MS2NT(primeDelayMs);
+		auto startTime = getTimeNowNt() + primeDelayNt;
 		getExecutorInterface()->scheduleByTimestampNt("prime", nullptr, startTime, { PrimeController::onPrimeStartAdapter, this });
 	} else {
 		efiPrintf("Skipped priming pulse since ignSwitchCounter = %d", ignSwitchCounter);
@@ -94,7 +102,7 @@ void PrimeController::onPrimeStart() {
 
 	efiPrintf("Firing priming pulse of %.2f ms", durationMs);
 
-	auto endTime = getTimeNowNt() + MS2NT(durationMs);
+	auto endTime = sumTickAndFloat(getTimeNowNt(), MSF2NT(durationMs));
 
 	// Open all injectors, schedule closing later
 	m_isPriming = true;
