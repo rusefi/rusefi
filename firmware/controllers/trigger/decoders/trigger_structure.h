@@ -22,7 +22,7 @@
 #define TRIGGER_GAP_DEVIATION_HIGH (1.0f + TRIGGER_GAP_DEVIATION)
 
 #if EFI_ENABLE_ASSERTS
-#define assertAngleRange(angle, msg, code) if (angle > 10000000 || angle < -10000000) { firmwareError(code, "angle range %s %.2f", msg, angle);angle = 0;}
+#define assertAngleRange(angle, msg, code) if (angle > 10000000 || angle < -10000000) { firmwareError(code, "angle range %s %d", msg, (int)angle);angle = 0;}
 #else
 #define assertAngleRange(angle, msg, code) {}
 #endif
