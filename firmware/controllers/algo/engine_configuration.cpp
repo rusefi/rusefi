@@ -360,6 +360,10 @@ static void setDefaultGppwmParameters() {
 	}
 }
 
+static void setDefaultBoostOpenLoopParameters() {
+	engineConfiguration->boostOpenLoopYAxis = GPPWM_Tps;
+}
+
 #if EFI_ENGINE_CONTROL
 static void setDefaultEngineNoiseTable() {
 	setRpmTableBin(config->knockNoiseRpmBins);
@@ -426,6 +430,7 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->sdCardLogFrequency = 50;
 
 	setDefaultGppwmParameters();
+	setDefaultBoostOpenLoopParameters();
 	setDefaultScriptParameters();
 
 #if EFI_ENGINE_CONTROL
