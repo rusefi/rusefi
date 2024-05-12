@@ -177,4 +177,9 @@ unsigned int getBrainPinOnchipNum(void) {
 	return BRAIN_PIN_ONCHIP_PINS;
 }
 
+void debugBrainPin(char *buffer, size_t, brain_pin_e)
+{
+	buffer[0] = '\0';
+}
+
 #endif /* EFI_GPIO_HARDWARE */

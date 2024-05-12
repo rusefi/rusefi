@@ -155,4 +155,31 @@ unsigned int getBrainPinOnchipNum(void) {
 	return BRAIN_PIN_ONCHIP_PINS;
 }
 
+static const char *mode_names[4] = { "Input", "GP out", "Alt", "Analog" };
+static const char *od_names[2] = { "Push-Pull", "Open-Drain" };
+static const char *speed_names[4] = { "Low", "Medium", "High", "Very High" };
+static const char *pull_names[4] = { "No pull", "Pull-up", "Pull-down", "Reserved" };
+
+void debugBrainPin(char *buffer, size_t size, brain_pin_e brainPin) {
+	ioportid_t port = getBrainPinPort(brainPin);
+	int pin = getBrainPinIndex(brainPin);
+
+	if (port == nullptr) {
+		buffer[0] = '\0';
+		return;
+	}
+
+	uint32_t af = (pin < 8) ? port->AFRL : port->AFRH;
+	af = (af >> (4 * (pin & 0x07))) & 0x0f;
+
+	chsnprintf(buffer, size, "Mode %s AF%d %s %s Speed %s IN %d OUT %d",
+			mode_names[(port->MODER >> (pin * 2)) & 0x03],
+			af,
+			od_names[(port->OTYPER >> pin) & 0x01],
+			pull_names[(port->PUPDR >> (pin * 2)) & 0x03],
+			speed_names[(port->OSPEEDR >> (pin * 2)) & 0x03],
+			(port->IDR >> pin) & 0x01,
+			(port->ODR >> pin) & 0x01);
+}
+
 #endif /* EFI_GPIO_HARDWARE */
