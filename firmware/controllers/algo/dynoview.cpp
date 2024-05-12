@@ -67,7 +67,21 @@ void DynoView::update(vssSrc src) {
  *              deltaTime in uS
  */
 void DynoView::updateAcceleration(efitimeus_t deltaTime, float deltaSpeed) {
+    // do we really want to compare float with double zero without threshold?
     if (deltaSpeed != 0.0) {
+        // In the code below the following type conversions will be performed:
+        // 1. (deltaSpeed / 3.6)
+        //     a. the second operand is a double literal, so before division the first operand will be converted float->double
+        //     b. result of expression will be double
+        // 2. ((uint32_t)deltaTime / US_PER_SECOND_F)
+        //     a. first operand is narrowed int64_t (efitimeus_t) -> uint32_t
+        //     b. the second operand US_PER_SECOND_F (1000000.0) is a double literal, so before division the first operand will be converted int32_t->double
+        //     c. result of expression will be double
+        // 3. (deltaSpeed / 3.6) / ((uint32_t)deltaTime / US_PER_SECOND_F)
+        //     a. both operands are double, so result of expression will be double as well
+        //     b. double result of the expression will be narrowed double->float to store it infloat acceleration field
+        //
+        // What is the purpose of narrowing deltaTime on step 2a?
         acceleration = ((deltaSpeed / 3.6) / ((uint32_t)deltaTime / US_PER_SECOND_F));
         if (direction) {
             //decceleration
