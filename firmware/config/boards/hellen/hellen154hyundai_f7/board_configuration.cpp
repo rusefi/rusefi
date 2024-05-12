@@ -172,12 +172,12 @@ static const struct mc33810_config mc33810 = {
 
 /*BOARD_WEAK*/ void boardInitHardware() {
 	static OutputPin spi3CsEtb;
-	static OutputPin spi3CsWastgate;
+	static OutputPin spi3CsWastegate;
 
 	spi3CsEtb.initPin("spi3-cs-etb", H_SPI3_CS);
 	spi3CsEtb.setValue(1);
-	spi3CsWastgate.initPin("spi3-cs-wg", Gpio::H144_GP_IO6);
-	spi3CsWastgate.setValue(1);
+	spi3CsWastegate.initPin("spi3-cs-wg", Gpio::H144_GP_IO6);
+	spi3CsWastegate.setValue(1);
 	// mc33810 takes care of the CS on it's own
 //	static OutputPin spi3CsMc33810;
 //	spi3CsMc33810.initPin("spi3-cs-mc33810", Gpio::H144_OUT_PWM1);
