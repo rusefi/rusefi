@@ -23,7 +23,7 @@
 
 class AdcDevice {
 public:
-	explicit AdcDevice(ADCConversionGroup* p_hwConfig, adcsample_t *p_buf);
+	explicit AdcDevice(ADCConversionGroup* p_hwConfig, volatile adcsample_t *p_buf);
 	void enableChannel(adc_channel_e hwChannel);
 	adc_channel_e getAdcChannelByInternalIndex(int index) const;
 	adcsample_t getAvgAdcValue(adc_channel_e hwChannel, size_t bufDepth);
@@ -32,7 +32,7 @@ public:
 	void init(void);
 	uint32_t conversionCount = 0;
 
-	adcsample_t *samples;
+	volatile adcsample_t *samples;
 private:
 	ADCConversionGroup* hwConfig;
 	uint8_t internalAdcIndexByHardwareIndex[EFI_ADC_TOTAL_CHANNELS];
