@@ -41,7 +41,7 @@ void DynoView::update(vssSrc src) {
             timeStamp = timeNow;
             vss = speed;
         }
-        
+
         //updating here would display acceleration = 0 at constant speed
         updateAcceleration(deltaTime, deltaSpeed);
 #if EFI_TUNER_STUDIO
@@ -52,7 +52,7 @@ void DynoView::update(vssSrc src) {
 		    engine->outputChannels.debugFloatField3 = deltaSpeed;
             engine->outputChannels.debugFloatField4 = acceleration;
 	    }
-#endif /* EFI_TUNER_STUDIO */        
+#endif /* EFI_TUNER_STUDIO */
         updateHP();
 
     } else {
@@ -67,6 +67,7 @@ void DynoView::update(vssSrc src) {
  *              deltaTime in uS
  */
 void DynoView::updateAcceleration(efitimeus_t deltaTime, float deltaSpeed) {
+    // todo: explain why do we compare float with zero without threshold?
     if (deltaSpeed != 0.0) {
         acceleration = ((deltaSpeed / 3.6) / ((uint32_t)deltaTime / US_PER_SECOND_F));
         if (direction) {
@@ -153,12 +154,12 @@ void updateDynoView() {
 /**
  * This function is called after every CAN msg received, we process it
  * as soon as we can to be more acurate.
- */ 
+ */
 void updateDynoViewCan() {
     if (!engineConfiguration->enableCanVss) {
         return;
     }
-    
+
     dynoInstance.update(CAN);
 }
 
