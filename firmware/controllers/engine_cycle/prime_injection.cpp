@@ -7,7 +7,6 @@
 #include "injection_gpio.h"
 #include "sensor.h"
 #include "backup_ram.h"
-#include <limits.h>
 
 floatms_t PrimeController::getPrimeDuration() const {
 	auto clt = Sensor::get(SensorType::Clt);
@@ -33,13 +32,6 @@ static bool isPrimeInjectionPulseSkipped() {
 
 	// Skip if cylinder cleanup is active
 	return engineConfiguration->isCylinderCleanupEnabled && (Sensor::getOrZero(SensorType::Tps1) > CLEANUP_MODE_TPS);
-}
-
-inline int32_t assertFloatFitsInto32BitsAndCast(const char *msg, float value) {
-  if (value < INT_MIN || value > INT_MAX) {
-    criticalError("%s value out of range: %f", msg, value);
-  }
-  return (int32_t)value;
 }
 
 void PrimeController::onIgnitionStateChanged(bool ignitionOn) {
