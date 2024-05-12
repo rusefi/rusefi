@@ -279,7 +279,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	}
 	// increase the errorAmpCoef slowly to restore the process correctly after the PID reset
 	// todo: move restoreAfterPidResetTimeUs to idle?
-	int32_t timeSincePidResetUs = nowUs - restoreAfterPidResetTimeUs;
+	efitimeus_t timeSincePidResetUs = nowUs - restoreAfterPidResetTimeUs;
 	// todo: add 'pidAfterResetDampingPeriodMs' setting
 	errorAmpCoef = interpolateClamped(0, 0, MS2US(/*engineConfiguration->pidAfterResetDampingPeriodMs*/1000), errorAmpCoef, timeSincePidResetUs);
 	// If errorAmpCoef > 1.0, then PID thinks that RPM is lower than it is, and controls IAC more aggressively
