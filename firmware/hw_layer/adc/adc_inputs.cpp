@@ -289,7 +289,7 @@ adc_channel_e AdcDevice::getAdcChannelByInternalIndex(int hwChannel) const {
 	return EFI_ADC_NONE;
 }
 
-FastAdcToken AdcDevice::getAdcChannelToken(adc_channel_e hwChannel) {
+AdcToken AdcDevice::getAdcChannelToken(adc_channel_e hwChannel) {
 	return fastAdc.internalAdcIndexByHardwareIndex[hwChannel];
 }
 

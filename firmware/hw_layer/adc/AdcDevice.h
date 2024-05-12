@@ -27,7 +27,7 @@ public:
 	int enableChannel(adc_channel_e hwChannel);
 	adc_channel_e getAdcChannelByInternalIndex(int index) const;
 	adcsample_t getAvgAdcValue(adc_channel_e hwChannel, size_t bufDepth);
-	FastAdcToken getAdcChannelToken(adc_channel_e hwChannel);
+	AdcToken getAdcChannelToken(adc_channel_e hwChannel);
 	int size() const;
 	void init(void);
 	uint32_t conversionCount = 0;
