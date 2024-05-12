@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun May 12 00:36:15 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun May 12 17:58:02 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1196,7 +1196,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1815847406;
+	public static final int SIGNATURE_HASH = 280172875;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1452,7 +1452,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.05.12.f407-discovery.1815847406";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.05.12.f407-discovery.280172875";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2220,6 +2220,7 @@ public class Fields {
 	public static final Field STARTREQUESTPININVERTED = Field.create("STARTREQUESTPININVERTED", 1496, FieldType.BIT, 16).setBaseOffset(0);
 	public static final Field TCU_RANGESENSORPULLDOWN = Field.create("TCU_RANGESENSORPULLDOWN", 1496, FieldType.BIT, 17).setBaseOffset(0);
 	public static final Field SKIPBOARDCANDASH = Field.create("SKIPBOARDCANDASH", 1496, FieldType.BIT, 18).setBaseOffset(0);
+	public static final Field BRAKEPEDALPININVERTED = Field.create("BRAKEPEDALPININVERTED", 1496, FieldType.BIT, 19).setBaseOffset(0);
 	public static final Field DEVBIT0 = Field.create("DEVBIT0", 1496, FieldType.BIT, 20).setBaseOffset(0);
 	public static final Field DEVBIT1 = Field.create("DEVBIT1", 1496, FieldType.BIT, 21).setBaseOffset(0);
 	public static final Field DEVBIT2 = Field.create("DEVBIT2", 1496, FieldType.BIT, 22).setBaseOffset(0);
@@ -3887,6 +3888,7 @@ public class Fields {
 	STARTREQUESTPININVERTED,
 	TCU_RANGESENSORPULLDOWN,
 	SKIPBOARDCANDASH,
+	BRAKEPEDALPININVERTED,
 	DEVBIT0,
 	DEVBIT1,
 	DEVBIT2,

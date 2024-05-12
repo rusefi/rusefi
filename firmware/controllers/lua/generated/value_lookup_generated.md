@@ -1126,6 +1126,9 @@ AEM X-Series EGT gauge kit or rusEFI EGT sensor from Wideband controller
 ### skipBoardCanDash
 
 
+### brakePedalPinInverted
+
+
 ### devBit0
 
 

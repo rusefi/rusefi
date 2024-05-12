@@ -1132,6 +1132,9 @@ float getConfigValueByName(const char *name) {
 // skipBoardCanDash
 		case 1878649142:
 			return engineConfiguration->skipBoardCanDash;
+// brakePedalPinInverted
+		case -1969589096:
+			return engineConfiguration->brakePedalPinInverted;
 // devBit0
 		case 161953459:
 			return engineConfiguration->devBit0;
@@ -3715,6 +3718,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1878649142:
 	{
 		engineConfiguration->skipBoardCanDash = (int)value;
+		return 1;
+	}
+		case -1969589096:
+	{
+		engineConfiguration->brakePedalPinInverted = (int)value;
 		return 1;
 	}
 		case 161953459:

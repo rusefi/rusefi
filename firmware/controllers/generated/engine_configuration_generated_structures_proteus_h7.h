@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun May 12 00:35:34 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun May 12 17:57:22 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2841,7 +2841,7 @@ struct engine_configuration_s {
 	bool skipBoardCanDash : 1 {};
 	/**
 	offset 1496 bit 19 */
-	bool unusedBit_503_19 : 1 {};
+	bool brakePedalPinInverted : 1 {};
 	/**
 	offset 1496 bit 20 */
 	bool devBit0 : 1 {};
@@ -5619,4 +5619,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 28156);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun May 12 00:35:34 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun May 12 17:57:22 UTC 2024
