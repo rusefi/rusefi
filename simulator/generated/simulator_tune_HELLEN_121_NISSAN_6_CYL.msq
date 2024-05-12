@@ -364,7 +364,7 @@
         <constant name="verboseKLine">"false"</constant>
         <constant name="idleIncrementalPidCic">"false"</constant>
         <constant name="enableAemXSeries">"false"</constant>
-        <constant name="doNotUse1x5_overdwell_protection">"false"</constant>
+        <constant name="unused32nd">"false"</constant>
         <constant name="logicAnalyzerPins1">"NONE"</constant>
         <constant name="logicAnalyzerPins2">"NONE"</constant>
         <constant name="logicAnalyzerPins3">"NONE"</constant>
@@ -4803,7 +4803,7 @@ canRxAdd(IN_35D, onCanRxAc)</constant>
 </constant>
         <constant digits="0" name="tcu_shiftTime" units="ms">0.0</constant>
     </page>
-    <versionInfo firmwareInfo="20240511" nPages="1" signature="rusEFI master.2024.05.12.f407-discovery.3238900561" version="5.0"/>
+    <versionInfo firmwareInfo="20240511" nPages="1" signature="rusEFI master.2024.05.12.f407-discovery.1815847406" version="5.0"/>
     <bibliography author="rusEFI 20240511" writeDate="date"/>
     <settings/>
     <userComments/>
