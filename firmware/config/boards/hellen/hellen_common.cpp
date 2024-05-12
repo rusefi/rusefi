@@ -84,7 +84,7 @@ void setHellenEnPin(Gpio pin, bool enableBoardOnStartUp) {
 }
 
 void setHellenMegaEnPin(bool enableBoardOnStartUp) {
-    // H144_GP8 matches MM100_GP8 is used as PWR_EN on early mm100
+    // H144_GP8 matches MM100_GP8 which is used as PWR_EN on early mm100
     setHellenEnPin(H144_GP8, enableBoardOnStartUp); // OUT_PWR_EN
 }
 

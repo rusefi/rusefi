@@ -49,7 +49,7 @@ static void setupDefaultSensorInputs() {
 
 void setBoardConfigOverrides() {
 	/* Force 3.3V PWR_EN as MC33810 is powered from this power line */
-	setHellenMegaEnPin(true);
+	setHellenMegaEnPin();
 	setHellenVbatt();
 
 	hellenMegaSdWithAccelerometer();
