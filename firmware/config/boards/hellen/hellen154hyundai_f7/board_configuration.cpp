@@ -32,7 +32,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
 	engineConfiguration->vvtMode[1] = VVT_SINGLE_TOOTH;
 
-    engineConfiguration->vehicleSpeedSensorInputPin = Gpio::H144_IN_VSS;
+    engineConfiguration->vehicleSpeedSensorInputPin = Gpio::H144_IN_D_4;
 
 	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1);
 
@@ -50,36 +50,18 @@ static void setupDefaultSensorInputs() {
 void setBoardConfigOverrides() {
 	setHellenVbatt();
 
-	setHellenSdCardSpi2();
+	hellenMegaSdWithAccelerometer();
 
 	/* MC33810, ETB1 and WASTGATE1 */
 	enableHellenSpi3();
 
-	static OutputPin spi3CsEtb;
-	static OutputPin spi3CsWastgate;
-	static OutputPin spi3CsMc33810;
-
-	spi3CsEtb.initPin("spi3-cs-etb", H_SPI3_CS);
-	spi3CsEtb.setValue(1);
-	spi3CsWastgate.initPin("spi3-cs-wg", H144_GP6);
-	spi3CsWastgate.setValue(1);
-	spi3CsMc33810.initPin("spi3-cs-mc33810", H176_OUT_PWM1);
-	spi3CsMc33810.setValue(1);
-
     setDefaultHellenAtPullUps();
 
 	// trigger inputs
-	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
+	engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_D_1;
 	// Direct hall-only cam input
-	// exhaust input same on both revisions
-//	engineConfiguration->camInputs[1] = Gpio::H144_IN_D_AUX4;
-
-  //  int16_t hellenBoardId = engine->engineState.hellenBoardId;
-
-//  hellenBoardId == BOARD_ID_154HYUNDAI_C || hellenBoardId == BOARD_ID_154HYUNDAI_D
-//		engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_SENS2;
-//		engineConfiguration->camInputs[0] = Gpio::H144_IN_SENS3;
-
+	engineConfiguration->camInputs[0] = Gpio::H144_IN_D_2;
+	engineConfiguration->camInputs[1] = Gpio::H144_IN_D_3;
 
 		// todo You would not believe how you invert TLE9201 #4579
 		engineConfiguration->stepperDcInvertedPins = true;
@@ -189,6 +171,17 @@ static const struct mc33810_config mc33810 = {
 };
 
 /*BOARD_WEAK*/ void boardInitHardware() {
+	static OutputPin spi3CsEtb;
+	static OutputPin spi3CsWastgate;
+	static OutputPin spi3CsMc33810;
+
+	spi3CsEtb.initPin("spi3-cs-etb", H_SPI3_CS);
+	spi3CsEtb.setValue(1);
+	spi3CsWastgate.initPin("spi3-cs-wg", H144_GP6);
+	spi3CsWastgate.setValue(1);
+	spi3CsMc33810.initPin("spi3-cs-mc33810", H176_OUT_PWM1);
+	spi3CsMc33810.setValue(1);
+
     #if (BOARD_MC33810_COUNT > 0)
       gpio_pin_markUsed(mc33810.spi_config.ssport, mc33810.spi_config.sspad, "mc33810 CS");
       palSetPadMode(mc33810.spi_config.ssport, mc33810.spi_config.sspad, PAL_MODE_OUTPUT_PUSHPULL);
