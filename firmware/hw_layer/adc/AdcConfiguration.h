@@ -21,11 +21,6 @@
 #endif // def ADC_MUX_PIN
 #endif // SLOW_ADC_CHANNEL_COUNT
 
-// this structure contains one multi-channel ADC state snapshot
-typedef struct {
-	volatile adcsample_t adc_data[ADC_MAX_CHANNELS_COUNT];
-} adc_state;
-
 class AdcDevice {
 public:
 	explicit AdcDevice(ADCConversionGroup* p_hwConfig, adcsample_t *p_buf);
