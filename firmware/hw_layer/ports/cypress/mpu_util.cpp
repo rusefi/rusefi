@@ -259,7 +259,7 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 	return true;
 }
 
-FastAdcToken enableFastAdcChannel(const char*, adc_channel_e channel) {
+AdcToken enableFastAdcChannel(const char*, adc_channel_e channel) {
 	if (!isAdcChannelValid(channel)) {
 		return invalidAdcToken;
 	}
@@ -268,7 +268,7 @@ FastAdcToken enableFastAdcChannel(const char*, adc_channel_e channel) {
 	return invalidAdcToken;
 }
 
-adcsample_t getFastAdc(FastAdcToken token) {
+adcsample_t getFastAdc(AdcToken token) {
 	if (token == invalidAdcToken) {
 		return 0;
 	}

@@ -257,11 +257,11 @@ void printSpiConfig(const char *msg, spi_device_e device) {
 
 #if HAL_USE_ADC
 
-static FastAdcToken fastMapSampleIndex;
-static FastAdcToken hipSampleIndex;
+static AdcToken fastMapSampleIndex;
+static AdcToken hipSampleIndex;
 
 #if HAL_TRIGGER_USE_ADC
-static FastAdcToken triggerSampleIndex;
+static AdcToken triggerSampleIndex;
 #endif // HAL_TRIGGER_USE_ADC
 
 extern AdcDevice fastAdc;
