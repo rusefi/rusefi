@@ -235,7 +235,7 @@ static bool getClutchUpState() {
 
 static bool getBrakePedalState() {
 	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
-		return efiReadPin(engineConfiguration->brakePedalPin);
+		return engineConfiguration->brakePedalPinInverted ^ efiReadPin(engineConfiguration->brakePedalPin);
 	}
 	// todo: boolean sensors should leverage sensor framework #6342
 	return engine->engineState.lua.brakePedalState;

@@ -1192,7 +1192,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	bit startRequestPinInverted,"Inverted","Normal"
 	bit tcu_rangeSensorPulldown
 	bit skipBoardCanDash
-	bit unusedBit_503_19
+	bit brakePedalPinInverted,"Inverted","Normal"
 	bit devBit0
 	bit devBit1
 	bit devBit2
