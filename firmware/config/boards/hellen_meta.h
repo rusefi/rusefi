@@ -93,8 +93,8 @@ void detectHellenBoardType();
 #define H144_GP_IO3 G10
 #define H144_GP_IO4 G9
 #define H144_GP_IO5 G15
-#define H144_GP6 Gpio::D8
-#define H144_GP7 Gpio::F15
+#define H144_GP_IO6 D8
+#define H144_GP_IO7 F15
 #define H144_GP8 Gpio::E10
 #define H144_GP9 Gpio::F2
 

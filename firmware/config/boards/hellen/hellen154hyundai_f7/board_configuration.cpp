@@ -140,7 +140,7 @@ static const struct mc33810_config mc33810 = {
 	.spi_config = {
 		.circular = false,
 		.end_cb = NULL,
-		// SPI3_CS_33810 OUT_PWM1
+		// SPI3_CS_33810 OUT_PWM1 H144_OUT_PWM1
 		.ssport = GPIOD,
 		.sspad = 13,
 		.cr1 =
@@ -162,10 +162,10 @@ static const struct mc33810_config mc33810 = {
 		[2] = {.port = GPIOD, .pad = 11},	/* H144_LS_3 inj 3 */
 		[3] = {.port = GPIOD, .pad = 10},	/* H144_LS_4 inj 4 */
 		/* ignition pre-drivers */
-		[4] = {.port = GPIOC, .pad = 13},	/* H144_IGN_1 */
-		[5] = {.port = GPIOE, .pad = 5},	/* H144_IGN_2 */
-		[6] = {.port = GPIOE, .pad = 4},	/* H144_IGN_3 */
-		[7] = {.port = GPIOE, .pad = 3},	/* H144_IGN_4 */
+		[4] = {.port = GPIOG, .pad = 5},	/* H144_OUT_IO4 */
+		[5] = {.port = GPIOD, .pad = 2},	/* H144_OUT_IO5 */
+		[6] = {.port = GPIOG, .pad = 11},	/* H144_OUT_IO6 */
+		[7] = {.port = GPIOG, .pad = 2},	/* H144_OUT_IO11 */
 	},
 	.en = {.port = GPIOG, .pad = 9} // H144_GP_IO4 hopefully
 };
@@ -176,11 +176,11 @@ static const struct mc33810_config mc33810 = {
 
 	spi3CsEtb.initPin("spi3-cs-etb", H_SPI3_CS);
 	spi3CsEtb.setValue(1);
-	spi3CsWastgate.initPin("spi3-cs-wg", H144_GP6);
+	spi3CsWastgate.initPin("spi3-cs-wg", Gpio::H144_GP_IO6);
 	spi3CsWastgate.setValue(1);
 	// mc33810 takes care of the CS on it's own
 //	static OutputPin spi3CsMc33810;
-//	spi3CsMc33810.initPin("spi3-cs-mc33810", H176_OUT_PWM1);
+//	spi3CsMc33810.initPin("spi3-cs-mc33810", Gpio::H144_OUT_PWM1);
 //	spi3CsMc33810.setValue(1);
 
     #if (BOARD_MC33810_COUNT > 0)
