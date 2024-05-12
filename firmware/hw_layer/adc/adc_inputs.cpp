@@ -33,7 +33,7 @@ float __attribute__((weak)) getAnalogInputDividerCoefficient(adc_channel_e) {
 #include "periodic_thread_controller.h"
 #include "protected_gpio.h"
 
-static NO_CACHE adcsample_t slowAdcSamples[SLOW_ADC_CHANNEL_COUNT];
+static volatile NO_CACHE adcsample_t slowAdcSamples[SLOW_ADC_CHANNEL_COUNT];
 
 static adc_channel_mode_e adcHwChannelMode[HW_MAX_ADC_INDEX];
 
@@ -58,7 +58,7 @@ float getVoltage(const char *msg, adc_channel_e hwChannel) {
 #define ADC_BUF_DEPTH_FAST      4
 #endif
 
-AdcDevice::AdcDevice(ADCConversionGroup* p_hwConfig, adcsample_t *p_buf) {
+AdcDevice::AdcDevice(ADCConversionGroup* p_hwConfig, volatile adcsample_t *p_buf) {
 	hwConfig = p_hwConfig;
 	samples = p_buf;
 
@@ -136,7 +136,7 @@ static ADCConversionGroup adcgrpcfgFast = {
 #endif /* ADC_MAX_CHANNELS_COUNT */
 };
 
-static NO_CACHE adcsample_t fastAdcSampleBuf[ADC_BUF_DEPTH_FAST * ADC_MAX_CHANNELS_COUNT];
+static volatile NO_CACHE adcsample_t fastAdcSampleBuf[ADC_BUF_DEPTH_FAST * ADC_MAX_CHANNELS_COUNT];
 
 AdcDevice fastAdc(&adcgrpcfgFast, fastAdcSampleBuf);
 
@@ -170,7 +170,8 @@ static void fastAdcTrigger(GPTDriver*) {
 		// todo: when? why? criticalError("ADC fast not ready?");
 		// see notes at https://github.com/rusefi/rusefi/issues/6399
 	} else {
-		adcStartConversionI(&ADC_FAST_DEVICE, &adcgrpcfgFast, fastAdc.samples, ADC_BUF_DEPTH_FAST);
+		/* drop volatile type qualifier - this is safe */
+		adcStartConversionI(&ADC_FAST_DEVICE, &adcgrpcfgFast, (adcsample_t *)fastAdc.samples, ADC_BUF_DEPTH_FAST);
 	}
 	chSysUnlockFromISR();
 #endif /* EFI_INTERNAL_ADC */
@@ -365,7 +366,8 @@ public:
 		{
 			ScopePerf perf(PE::AdcConversionSlow);
 
-			if (!readSlowAnalogInputs(slowAdcSamples)) {
+			/* drop volatile type qualifier - this is safe */
+			if (!readSlowAnalogInputs((adcsample_t *)slowAdcSamples)) {
 				slowAdcErrorsCount++;
 				return;
 			}
