@@ -756,6 +756,7 @@
         <constant name="startRequestPinInverted">"Normal"</constant>
         <constant name="tcu_rangeSensorPulldown">"false"</constant>
         <constant name="skipBoardCanDash">"false"</constant>
+        <constant name="brakePedalPinInverted">"Normal"</constant>
         <constant name="devBit0">"false"</constant>
         <constant name="devBit1">"false"</constant>
         <constant name="devBit2">"false"</constant>
@@ -4716,7 +4717,7 @@ end</constant>
 </constant>
         <constant digits="0" name="tcu_shiftTime" units="ms">0.0</constant>
     </page>
-    <versionInfo firmwareInfo="20240511" nPages="1" signature="rusEFI master.2024.05.12.f407-discovery.1815847406" version="5.0"/>
+    <versionInfo firmwareInfo="20240511" nPages="1" signature="rusEFI master.2024.05.12.f407-discovery.280172875" version="5.0"/>
     <bibliography author="rusEFI 20240511" writeDate="date"/>
     <settings/>
     <userComments/>
