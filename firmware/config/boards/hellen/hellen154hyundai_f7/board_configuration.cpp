@@ -15,17 +15,17 @@
 #include "hellen_meta.h"
 
 static void setInjectorPins() {
-//	engineConfiguration->injectionPins[0] = Gpio::MC33810_0_OUT_0;
-//	engineConfiguration->injectionPins[1] = Gpio::MC33810_0_OUT_1;
-//	engineConfiguration->injectionPins[2] = Gpio::MC33810_0_OUT_2;
-//	engineConfiguration->injectionPins[3] = Gpio::MC33810_0_OUT_3;
+	engineConfiguration->injectionPins[0] = Gpio::MC33810_0_OUT_0;
+	engineConfiguration->injectionPins[1] = Gpio::MC33810_0_OUT_1;
+	engineConfiguration->injectionPins[2] = Gpio::MC33810_0_OUT_2;
+	engineConfiguration->injectionPins[3] = Gpio::MC33810_0_OUT_3;
 }
 
 static void setIgnitionPins() {
-//	engineConfiguration->ignitionPins[0] = Gpio::MC33810_0_GD_0;
-//	engineConfiguration->ignitionPins[1] = Gpio::MC33810_0_GD_1;
-//	engineConfiguration->ignitionPins[2] = Gpio::MC33810_0_GD_2;
-//	engineConfiguration->ignitionPins[3] = Gpio::MC33810_0_GD_3;
+	engineConfiguration->ignitionPins[0] = Gpio::MC33810_0_GD_0;
+	engineConfiguration->ignitionPins[1] = Gpio::MC33810_0_GD_1;
+	engineConfiguration->ignitionPins[2] = Gpio::MC33810_0_GD_2;
+	engineConfiguration->ignitionPins[3] = Gpio::MC33810_0_GD_3;
 }
 
 static void setupDefaultSensorInputs() {
@@ -115,15 +115,15 @@ void setBoardDefaultConfiguration() {
 
 	setHellenCan();
 
-//	engineConfiguration->fuelPumpPin = Gpio::H144_OUT_IO9;
-//	engineConfiguration->fanPin = Gpio::H144_OUT_IO7;
-//	engineConfiguration->mainRelayPin = Gpio::H144_OUT_IO3;	// pin: 111a
-//	// BK1 uses wire, BK2 uses CANbus
-//	engineConfiguration->malfunctionIndicatorPin = Gpio::H144_OUT_PWM8;
-//
-//	engineConfiguration->brakePedalPin = Gpio::H144_IN_RES3;
-//	engineConfiguration->clutchUpPin = Gpio::H144_IN_RES2;
-//	engineConfiguration->acSwitch = Gpio::H144_IN_RES1;
+	engineConfiguration->fuelPumpPin = Gpio::H144_OUT_IO9;
+	engineConfiguration->fanPin = Gpio::H144_OUT_IO7;
+	engineConfiguration->mainRelayPin = Gpio::H144_OUT_IO3;	// pin: 111a
+	// BK1 uses wire, BK2 uses CANbus
+	engineConfiguration->malfunctionIndicatorPin = Gpio::H144_OUT_PWM8;
+
+	engineConfiguration->brakePedalPin = Gpio::H144_IN_RES3;
+	engineConfiguration->clutchUpPin = Gpio::H144_IN_RES2;
+	engineConfiguration->acSwitch = Gpio::H144_IN_RES1;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
@@ -193,9 +193,6 @@ static const struct mc33810_config mc33810 = {
       gpio_pin_markUsed(mc33810.spi_config.ssport, mc33810.spi_config.sspad, "mc33810 CS");
       palSetPadMode(mc33810.spi_config.ssport, mc33810.spi_config.sspad, PAL_MODE_OUTPUT_PUSHPULL);
 
-//      addConsoleAction("mc33810", [](){
-//        mc33810_add(Gpio::MC33810_0_OUT_0, 0, &mc33810);
-//      });
       auto voltage = Sensor::get(SensorType::BatteryVoltage);
       int ret = mc33810_add(Gpio::MC33810_0_OUT_0, 0, &mc33810);
       efiPrintf("*****************+ mc33810_add %d +******************* %f", ret, voltage);
