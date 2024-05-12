@@ -143,12 +143,14 @@ static void reportPins() {
 
 		/* show used pins */
 		if (pin_user != NULL) {
+			static char pin_state[64];
 			brain_pin_e brainPin = index_to_brainPin(i);
 			int pin = getBrainPinIndex(brainPin);
 			ioportid_t port = getBrainPinPort(brainPin);
+			debugBrainPin(pin_state, sizeof(pin_state), brainPin);
 
             const char *boardPinName = getBoardSpecificPinName(brainPin);
-			efiPrintf("pin %s%d (%s): %s", portname(port), pin, boardPinName, pin_user);
+			efiPrintf("pin %s%d (%s): %s %s", portname(port), pin, boardPinName, pin_user, pin_state);
 			totalPinsUsed++;
 		}
 	}
