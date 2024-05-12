@@ -14,7 +14,11 @@ public class RusefiTestBase {
 
     @Before
     public void startUp() {
-        ecu = EcuTestHelper.createInstance(needsHardwareTriggerInput());
+        try {
+            ecu = EcuTestHelper.createInstance(needsHardwareTriggerInput());
+        } catch (Throwable e) {
+            throw new IllegalStateException("During start-up", e);
+        }
     }
 
     @After

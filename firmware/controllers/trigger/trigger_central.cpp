@@ -747,19 +747,20 @@ BOARD_WEAK bool boardAllowTriggerActions() { return true; }
 angle_t TriggerCentral::findNextTriggerToothAngle(int p_currentToothIndex) {
   int currentToothIndex = p_currentToothIndex;
 		// TODO: is this logic to compute next trigger tooth angle correct?
-		angle_t nextPhase = 0;
+		angle_t nextToothAngle = 0;
 
 		int loopAllowance = 2 * engineCycleEventCount + 1000;
 		do {
 			// I don't love this.
 			currentToothIndex = (currentToothIndex + 1) % engineCycleEventCount;
-			nextPhase = getTriggerCentral()->triggerFormDetails.eventAngles[currentToothIndex] - tdcPosition();
-			wrapAngle(nextPhase, "nextEnginePhase", ObdCode::CUSTOM_ERR_6555);
-		} while (nextPhase == currentEngineDecodedPhase && --loopAllowance > 0);
-		if (nextPhase != 0 && loopAllowance == 0) {
-			firmwareError(ObdCode::CUSTOM_ERR_TRIGGER_ZERO, "handleShaftSignal unexpected loop end %d %d %f", p_currentToothIndex, engineCycleEventCount, nextPhase);
+			nextToothAngle = getTriggerCentral()->triggerFormDetails.eventAngles[currentToothIndex] - tdcPosition();
+			wrapAngle(nextToothAngle, "nextEnginePhase", ObdCode::CUSTOM_ERR_6555);
+		} while (nextToothAngle == currentEngineDecodedPhase && --loopAllowance > 0); // '==' for float works here since both values come from 'eventAngles' array
+		if (nextToothAngle != 0 && loopAllowance == 0) {
+		  // HW CI fails here, looks like we sometimes change trigger while still handling it?
+			firmwareError(ObdCode::CUSTOM_ERR_TRIGGER_ZERO, "handleShaftSignal unexpected loop end %d %d %f %f", p_currentToothIndex, engineCycleEventCount, nextToothAngle, currentEngineDecodedPhase);
 		}
-		return nextPhase;
+		return nextToothAngle;
 }
 
 /**
