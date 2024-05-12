@@ -1016,5 +1016,4 @@ void testEngine6451() {
 	engineConfiguration->firingOrder = FO_1_5_3_6_2_4;
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 	engineConfiguration->triggerSimulatorRpm = 4800;
-	engineConfiguration->doNotUse1x5_overdwell_protection = true;
 }
