@@ -3,6 +3,8 @@
  *
  * SENT protocol decoder
  *
+ * TODO support MAF sensors like 04E906051 see https://github.com/rusefi/rusefi-hardware/issues/146
+ *
  * @date Oct 01, 2022
  * @author Andrey Gusakov <dron0gus@gmail.com>, (c) 2022
  */
