@@ -1269,7 +1269,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 541524426
+#define SIGNATURE_HASH 2702011955
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1650,12 +1650,13 @@
 #define ts_show_trigger_comparator false
 #define ts_show_tunerstudio_port true
 #define ts_show_vbatt true
+#define ts_show_vehicle_speed_sensor true
 #define ts_show_vehicle_weight false
 #define ts_show_vr_threshold_2 false
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.05.13.hellenNA6.541524426"
+#define TS_SIGNATURE "rusEFI master.2024.05.13.hellenNA6.2702011955"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
