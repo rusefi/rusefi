@@ -2406,6 +2406,7 @@ end_struct
 #define ts_show_ign_key_switch false
 #define ts_show_ford_toyota_tps_pps true
 #define ts_show_ign_key_analog_input false
+#define ts_show_vehicle_speed_sensor true
 #define ts_show_output_diag false
 #define ts_show_top_level_can_menu true
 #define ts_show_tle8888 false
