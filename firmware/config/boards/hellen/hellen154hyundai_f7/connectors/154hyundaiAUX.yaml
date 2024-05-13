@@ -6,8 +6,7 @@ pins:
     type: gnd
 
   - pin: X2
-    # H_SPI1_CS2 rev C, else on rev D
-    meta: H_SPI1_CS2
+    meta: H144_OUT_IO2
     class: outputs
     type: ls
     ts_name: X2 AuxLS3
@@ -22,8 +21,7 @@ pins:
     function: AuxLS2
 
   - pin: X4
-    # H144_IN_D_3
-    id: [E14, E14]
+    id: [H144_IN_SENS4, H144_IN_SENS4]
     class: [event_inputs, switch_inputs]
     ts_name: X4 Digital3
 
@@ -38,22 +36,19 @@ pins:
     function: 12v raw
 
   - pin: X7
-    # H144_IN_D_2
-    id: [E13, E13]
-    class: [event_inputs, switch_inputs]
+    id: [H144_IN_SENS3, H144_IN_SENS3]
+    class: [event_input, switch_inputs]
     ts_name: X7 Digital2
 
   - pin: X8
-    # H_SPI1_SCK on rev C and XXX on rev D?
-    meta: H_SPI1_SCK
+    meta: H144_OUT_IO1
     class: outputs
     type: ls
     ts_name: X8 AuxLS1
     function: AuxLS1, also K48 on main connector
 
   - pin: X9
-    # H144_IN_D_1
-    id: [E12, E12]
+    id: [H144_IN_SENS2, H144_IN_SENS2]
     class: [event_inputs, switch_inputs]
     ts_name: X9 Digital1
 

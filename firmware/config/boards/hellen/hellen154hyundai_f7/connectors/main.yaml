@@ -1,21 +1,6 @@
 meta: config/boards/hellen_meta.h
 
 pins:
-  - pin: P66
-    meta: H144_OUT_IO1
-    class: outputs
-    ts_name: Aux ___
-
-  - pin: P67
-    meta: H144_OUT_IO2
-    class: outputs
-    ts_name: Aux ___
-
-  - pin: P68
-    meta: H144_OUT_IO4
-    class: outputs
-    ts_name: Aux ___
-
   - pin: K1
     function: GND
     type: gnd
@@ -74,12 +59,6 @@ pins:
     meta: H144_IN_CRANK
     class: event_inputs
     ts_name: Crank - K17 rev B
-
-  - pin: K17c
-    function: "Crank Sensor (2014: pink)"
-    meta: H144_IN_SENS2
-    class: event_inputs
-    ts_name: Crank - K17 rev C
 
   - pin: K18
     function: BK2 WBO IP

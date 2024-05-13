@@ -34,9 +34,8 @@ static void setupDefaultSensorInputs() {
 
     engineConfiguration->vehicleSpeedSensorInputPin = Gpio::H144_IN_D_4;
 
-	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1);
-
-	setPPSInputs(EFI_ADC_3, EFI_ADC_14);
+	setTPS1Inputs(H144_IN_TPS, H144_IN_TPS2);
+	setPPSInputs(H144_IN_PPS, H144_IN_PPS2);
 
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP1;
 
