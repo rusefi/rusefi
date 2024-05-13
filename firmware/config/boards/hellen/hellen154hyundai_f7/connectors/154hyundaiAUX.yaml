@@ -37,7 +37,7 @@ pins:
 
   - pin: X7
     id: [H144_IN_SENS3, H144_IN_SENS3]
-    class: [event_input, switch_inputs]
+    class: [event_inputs, switch_inputs]
     ts_name: X7 Digital2
 
   - pin: X8

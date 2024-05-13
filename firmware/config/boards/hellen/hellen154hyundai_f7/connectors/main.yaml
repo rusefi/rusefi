@@ -205,12 +205,6 @@ pins:
     class: event_inputs
     ts_name: Cam - K62 rev B
 
-  - pin: K62c
-    meta: H144_IN_SENS3
-    function: "Cam Sensor (2014: white)"
-    class: event_inputs
-    ts_name: Cam - K62 rev C
-
   - pin: K63
     function: sensor +5v feed
     type: 5v
