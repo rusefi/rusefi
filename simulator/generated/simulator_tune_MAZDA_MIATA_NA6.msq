@@ -1070,10 +1070,10 @@
         <constant digits="1" name="stoichRatioPrimary" units=":1">14.7</constant>
         <constant digits="0" name="idlerpmpid_iTermMax" units="">20.0</constant>
         <constant digits="0" name="etbIdleThrottleRange" units="%">15.0</constant>
-        <constant digits="0" name="cylinderBankSelect1" units="">1.0</constant>
-        <constant digits="0" name="cylinderBankSelect2" units="">1.0</constant>
-        <constant digits="0" name="cylinderBankSelect3" units="">1.0</constant>
-        <constant digits="0" name="cylinderBankSelect4" units="">1.0</constant>
+        <constant digits="0" name="cylinderBankSelect1" units="">0.0</constant>
+        <constant digits="0" name="cylinderBankSelect2" units="">0.0</constant>
+        <constant digits="0" name="cylinderBankSelect3" units="">0.0</constant>
+        <constant digits="0" name="cylinderBankSelect4" units="">0.0</constant>
         <constant digits="0" name="cylinderBankSelect5" units="">0.0</constant>
         <constant digits="0" name="cylinderBankSelect6" units="">0.0</constant>
         <constant digits="0" name="cylinderBankSelect7" units="">0.0</constant>

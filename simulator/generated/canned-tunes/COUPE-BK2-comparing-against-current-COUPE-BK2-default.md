@@ -4,6 +4,14 @@
 
 ```
     // default 0.0
+    engineConfiguration->cylinderBankSelect[0] = 1;
+    // default 0.0
+    engineConfiguration->cylinderBankSelect[1] = 1;
+    // default 0.0
+    engineConfiguration->cylinderBankSelect[2] = 1;
+    // default 0.0
+    engineConfiguration->cylinderBankSelect[3] = 1;
+    // default 0.0
     engineConfiguration->cylinderBankSelect[4] = 1;
     // default 0.0
     engineConfiguration->cylinderBankSelect[5] = 1;
