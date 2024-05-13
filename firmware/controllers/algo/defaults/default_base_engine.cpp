@@ -37,6 +37,7 @@ void setGDIFueling() {
 /* Cylinder to bank mapping */
 void setLeftRightBanksNeedBetterName() {
     for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
+      // zero-based index
 	    engineConfiguration->cylinderBankSelect[i] = i % 2;
     }
 }
@@ -66,7 +67,8 @@ void setDefaultBaseEngine() {
 
   for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
     // one knock sensor by default. See also 'setLeftRightBanksNeedBetterName()'
-    engineConfiguration->cylinderBankSelect[i] = 1;
+    // zero-based index
+    engineConfiguration->cylinderBankSelect[i] = 0;
   }
 
 	engineConfiguration->compressionRatio = 9;
