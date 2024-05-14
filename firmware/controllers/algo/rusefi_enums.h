@@ -613,6 +613,8 @@ typedef enum __attribute__ ((__packed__)) {
 	GPPWM_BaroPressure = 26,
 	GPPWM_Egt1 = 27,
 	GPPWM_Egt2 = 28,
+	// remember to manually sync 'pwmAxisLabels' in tunerstudio.template.ini
+	// todo: rename 'pwmAxisLabels' and maybe even gppwm_channel_e since we now use wider than just 'gppwm'?
 } gppwm_channel_e;
 
 typedef enum __attribute__ ((__packed__)) {
