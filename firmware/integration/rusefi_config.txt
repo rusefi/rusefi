@@ -372,8 +372,8 @@ struct gppwm_channel
 	gppwm_channel_e loadAxis;Selects the Y axis to use for the table.;
 	gppwm_channel_e rpmAxis;Selects the X axis to use for the table.;
 
-	int16_t[GPPWM_LOAD_COUNT] autoscale loadBins;;"load", 0.5, 0, -1000, 10000, 1
-	int16_t[GPPWM_RPM_COUNT] rpmBins;;"RPM", 1, 0, -30000, 30000, 0
+	int16_t[GPPWM_LOAD_COUNT] autoscale loadBins;;"", 0.5, 0, -1000, 10000, 1
+	int16_t[GPPWM_RPM_COUNT] rpmBins;;"", 1, 0, -30000, 30000, 0
 	uint8_t[GPPWM_LOAD_COUNT x GPPWM_RPM_COUNT] autoscale table;;"duty", 0.5, 0, 0, 100, 1
 end_struct
 
