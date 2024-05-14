@@ -34,6 +34,7 @@ Release template (copy/paste this for new release):
 ### Fixed
  - knock logic not activated until any configuration change via TS #6462
  - VE Table have wrong units on Y-Axis #6479
+ - Ignition scheduling errors after 40+ hours of uptime #6451
 
 ### Breaking Changes
  - "60/2 VW" trigger wheel renamed to "60-2 Wrong Polarity" #988
