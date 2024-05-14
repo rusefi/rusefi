@@ -1,6 +1,5 @@
 <div align="center">
 
-
 <img src="https://raw.githubusercontent.com/wiki/rusefi/rusefi/Images/logo_new.png" alt="rusEFI" width="600" />
 
 <b>GPL open-source ECU</b>
@@ -29,7 +28,7 @@ Important note - we now use submodules:
  * [Firmware](/firmware) Source code for open source engine control unit for stm32 chips incuding [implementation overview](https://github.com/rusefi/rusefi/blob/master/firmware/readme.md)
  * [Hardware](/hardware) KiCAD files for our older PCBs
  * [rusEFI console](/java_console) rusEFI own naive tuning software
- * [Simulator](/simulator) win32 or posix version of firmware allows to explore without any hardware 
+ * [Simulator](/simulator) win32 or posix version of firmware allows to explore without any hardware
  * [Unit Tests](/unit_tests) Unit tests of firmware pieces
  * [Misc tools](/java_tools) Misc development utilities
  * [Software Development process](misc/SoftwareDevelopmentProcess.md)
