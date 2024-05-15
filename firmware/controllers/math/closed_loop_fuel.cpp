@@ -22,7 +22,7 @@ static SensorType getSensorForBankIndex(size_t index) {
 	}
 }
 
-size_t computeStftBin(int rpm, float load, stft_s& cfg) {
+size_t computeStftBin(float rpm, float load, stft_s& cfg) {
 	// Low RPM -> idle
 	if (idleDeadband.lt(rpm, cfg.maxIdleRegionRpm))
 	{
