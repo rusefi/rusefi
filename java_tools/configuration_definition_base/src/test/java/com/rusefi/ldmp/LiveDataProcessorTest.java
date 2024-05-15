@@ -4,7 +4,8 @@ import com.rusefi.ReaderProvider;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 import static com.rusefi.AssertCompatibility.assertEquals;
 
@@ -27,7 +28,7 @@ public class LiveDataProcessorTest {
                 ;
 
 
-        Map<String, Object> data = LiveDataProcessor.getStringObjectMap(new StringReader(testYaml));
+        ArrayList<LinkedHashMap> data = LiveDataProcessor.getStringObjectMap(new StringReader(testYaml));
 
         TestFileCaptor captor = new TestFileCaptor();
         LiveDataProcessor liveDataProcessor = new LiveDataProcessor("test", new ReaderProvider() {

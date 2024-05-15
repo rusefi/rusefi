@@ -63,23 +63,30 @@ public class LiveDataProcessor {
             System.err.println("Four arguments expected: name of live data yaml input file and else but got " + Arrays.toString(args));
             System.exit(-1);
         }
-        String yamlFileName = args[0];
+        String yamlFileNames = args[0];
         String definitionInputFileName = args[1];
         String headerFileName = args[2];
         String javaDestinationFileName = args[3];
         TriggerMetaGenerator.doJob(definitionInputFileName, headerFileName, javaDestinationFileName);
-        Map<String, Object> data = getStringObjectMap(new FileReader(yamlFileName));
+        ArrayList<LinkedHashMap> totalContent = new ArrayList<>();
+        for (String fileName : yamlFileNames.split(",")) {
+            ArrayList<LinkedHashMap> yamlContent = getStringObjectMap(new FileReader(fileName));
+            totalContent.addAll(yamlContent);
+        }
 
-
-        LiveDataProcessor liveDataProcessor = new LiveDataProcessor(yamlFileName, ReaderProvider.REAL, LazyFile.REAL);
-        int sensorTsPosition = liveDataProcessor.handleYaml(data);
+        LiveDataProcessor liveDataProcessor = new LiveDataProcessor(yamlFileNames, ReaderProvider.REAL, LazyFile.REAL);
+        int sensorTsPosition = liveDataProcessor.handleYaml(totalContent);
 
         liveDataProcessor.end(sensorTsPosition);
     }
 
-    public static Map<String, Object> getStringObjectMap(Reader reader) {
+    public static ArrayList<LinkedHashMap> getStringObjectMap(Reader reader) {
         Yaml yaml = new Yaml();
-        return yaml.load(reader);
+        Map<String, Object> objectMap = yaml.load(reader);
+        if (objectMap.size() != 1)
+            throw new IllegalStateException("Exactly one top level key expected");
+        String key = objectMap.keySet().iterator().next();
+        return (ArrayList<LinkedHashMap>) objectMap.get(key);
     }
 
     private void end(int sensorTsPosition) throws IOException {
@@ -94,11 +101,11 @@ public class LiveDataProcessor {
         void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, String engineModule, Boolean isPtr, String cppFileName) throws IOException;
     }
 
-    public int handleYaml(Map<String, Object> data) throws IOException {
+    public int handleYaml(ArrayList<LinkedHashMap> liveDocs) throws IOException {
         AtomicInteger startingPosition = new AtomicInteger();
 
         OutputsSectionConsumer outputsSections = new OutputsSectionConsumer(OUTPUTS_SECTION_FILE_NAME,
-                fileFactory);
+            fileFactory);
 
         DataLogConsumer dataLogConsumer = new DataLogConsumer(DATA_LOG_FILE_NAME, fileFactory);
 
@@ -197,9 +204,6 @@ public class LiveDataProcessor {
             }
         };
 
-
-        ArrayList<LinkedHashMap> liveDocs = (ArrayList<LinkedHashMap>) data.get("Usages");
-
         for (LinkedHashMap entry : liveDocs) {
             String name = (String) entry.get("name");
             String java = (String) entry.get("java");
@@ -238,9 +242,9 @@ public class LiveDataProcessor {
             if (outputNamesArr.length < 2) {
                 enumContent.append(enumName + ",\n");
                 fragmentsContent
-                        .append("decl_frag<")
-                        .append(type)
-                        .append(">{},\n");
+                    .append("decl_frag<")
+                    .append(type)
+                    .append(">{},\n");
             } else {
                 for (int i = 0; i < tempLimit(outputNamesArr); i++) {
                     enumContent.append(enumName + i + ",\n");
@@ -253,13 +257,13 @@ public class LiveDataProcessor {
                     }
 
                     fragmentsContent
-                            .append("decl_frag<")
-                            .append(type)
-                            .append(", ")
-                            .append(i)
-                            .append(">{},\t// ")
-                            .append(outputNamesArr[i])
-                            .append("\n");
+                        .append("decl_frag<")
+                        .append(type)
+                        .append(", ")
+                        .append(i)
+                        .append(">{},\t// ")
+                        .append(outputNamesArr[i])
+                        .append("\n");
                 }
             }
         }
