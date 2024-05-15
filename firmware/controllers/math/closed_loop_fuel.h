@@ -14,5 +14,5 @@ struct ClosedLoopFuelResult {
 };
 
 ClosedLoopFuelResult fuelClosedLoopCorrection();
-size_t computeStftBin(int rpm, float load, stft_s& cfg);
+size_t computeStftBin(float rpm, float load, stft_s& cfg);
 bool shouldUpdateCorrection(SensorType sensor);
