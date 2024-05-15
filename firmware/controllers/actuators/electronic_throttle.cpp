@@ -378,6 +378,9 @@ void EtbController::setLuaAdjustment(float adjustment) {
 	m_luaAdjustmentTimer.reset();
 }
 
+/**
+ * positive adjustment opens TPS, negative closes TPS
+ */
 float EtbController::getLuaAdjustment() const {
 	// If the lua position hasn't been set in 0.2 second, don't adjust!
 	// This avoids a stuck throttle due to hung/rogue/etc Lua script
