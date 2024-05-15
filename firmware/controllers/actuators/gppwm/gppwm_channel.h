@@ -35,5 +35,3 @@ private:
 	OutputPin* m_output = nullptr;
 	const ValueProvider3D* m_table = nullptr;
 };
-
-expected<float> readGppwmChannel(gppwm_channel_e channel);

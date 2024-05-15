@@ -24,7 +24,7 @@
 #include "event_registry.h"
 #include "fuel_math.h"
 #include "advance_map.h"
-#include "gppwm_channel.h"
+#include "gppwm_channel_reader.h"
 
 #if EFI_UNIT_TEST
 extern bool verboseMode;
