@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Wed May 08 14:36:46 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Wed May 15 02:20:29 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1301,25 +1301,17 @@ struct output_channels_s {
 	 */
 	uint8_t sadDwellRatioCounter = (uint8_t)0;
 	/**
-	 * need 4 byte alignment
-	 * units: units
 	 * offset 757
 	 */
-	uint8_t alignmentFill_at_757[3];
+	uint8_t unusedAtTheEnd[72];
 	/**
-	 * offset 760
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 829
 	 */
-	float startOfDwellAngle[POOR_MAN_MAX_CYLINDER_COUNT];
-	/**
-	 * offset 784
-	 */
-	float endOfDwellAngle[POOR_MAN_MAX_CYLINDER_COUNT];
-	/**
-	 * offset 808
-	 */
-	uint8_t unusedAtTheEnd[24];
+	uint8_t alignmentFill_at_829[3];
 };
 static_assert(sizeof(output_channels_s) == 832);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Wed May 08 14:36:46 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Wed May 15 02:20:29 UTC 2024

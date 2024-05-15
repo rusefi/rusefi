@@ -316,18 +316,6 @@ static const LogField fields[] = {
 	{engine->outputChannels.deviceUid, "deviceUid", "", 0},
 	{engine->outputChannels.unexpectedAdcSample, "unexpectedAdcSample", "", 0},
 	{engine->outputChannels.sadDwellRatioCounter, "sadDwellRatioCounter", "", 0},
-	{engine->outputChannels.startOfDwellAngle[0], "startOfDwellAngle 1", "", 0},
-	{engine->outputChannels.startOfDwellAngle[1], "startOfDwellAngle 2", "", 0},
-	{engine->outputChannels.startOfDwellAngle[2], "startOfDwellAngle 3", "", 0},
-	{engine->outputChannels.startOfDwellAngle[3], "startOfDwellAngle 4", "", 0},
-	{engine->outputChannels.startOfDwellAngle[4], "startOfDwellAngle 5", "", 0},
-	{engine->outputChannels.startOfDwellAngle[5], "startOfDwellAngle 6", "", 0},
-	{engine->outputChannels.endOfDwellAngle[0], "endOfDwellAngle 1", "", 0},
-	{engine->outputChannels.endOfDwellAngle[1], "endOfDwellAngle 2", "", 0},
-	{engine->outputChannels.endOfDwellAngle[2], "endOfDwellAngle 3", "", 0},
-	{engine->outputChannels.endOfDwellAngle[3], "endOfDwellAngle 4", "", 0},
-	{engine->outputChannels.endOfDwellAngle[4], "endOfDwellAngle 5", "", 0},
-	{engine->outputChannels.endOfDwellAngle[5], "endOfDwellAngle 6", "", 0},
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},
 #endif
