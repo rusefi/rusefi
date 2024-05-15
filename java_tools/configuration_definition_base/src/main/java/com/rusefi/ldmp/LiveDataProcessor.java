@@ -83,6 +83,7 @@ public class LiveDataProcessor {
     public static ArrayList<LinkedHashMap> getStringObjectMap(Reader reader) {
         Yaml yaml = new Yaml();
         Map<String, Object> objectMap = yaml.load(reader);
+        Objects.requireNonNull(objectMap, "content of " + reader);
         if (objectMap.size() != 1)
             throw new IllegalStateException("Exactly one top level key expected");
         String key = objectMap.keySet().iterator().next();
