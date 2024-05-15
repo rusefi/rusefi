@@ -41,6 +41,7 @@ Release template (copy/paste this for new release):
  - exhaust VVTs now use it's onw Edge Select setting
  - removing weird 1+16 trigger wheel #6418
  - critical error in case of unneeded second channel #6419
+ - Open Loop Boost vertical axis needs to be configured #4778
 
 ## Unreleased
 
