@@ -115,6 +115,7 @@
 #define blend_table_s_size 188
 #define BLOCKING_FACTOR 750
 #define BOARD_CONFIG_FROM_FILE 
+#define BOARD_GAUGES_FROM_FILE 
 #define BOARD_INDICATORS_FROM_FILE 
 #define BOARD_MENU_FROM_FILE 
 #define BOARD_OPTIONS_FROM_FILE 
@@ -1270,7 +1271,7 @@
 #define show_Proteus_presets false
 #define show_small_can_board_presets true
 #define show_test_presets false
-#define SIGNATURE_HASH 423576631
+#define SIGNATURE_HASH 2388782317
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1658,7 +1659,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.05.14.small-can-board.423576631"
+#define TS_SIGNATURE "rusEFI master.2024.05.15.small-can-board.2388782317"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
