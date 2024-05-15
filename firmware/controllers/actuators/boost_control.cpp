@@ -10,6 +10,7 @@
 
 #include "boost_control.h"
 #include "electronic_throttle.h"
+#include "gppwm_channel_reader.h"
 
 #define NO_PIN_PERIOD 500
 
@@ -96,7 +97,7 @@ expected<percent_t> BoostController::getOpenLoop(float target) {
 	UNUSED(target);
 
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
-	auto driverIntent = Sensor::get(SensorType::DriverThrottleIntent);
+	auto driverIntent = readGppwmChannel(engineConfiguration->boostOpenLoopYAxis);
 
 	isTpsInvalid = !driverIntent.Valid;
 

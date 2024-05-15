@@ -64,7 +64,7 @@ TEST(BoostControl, OpenLoop) {
 	bc.init(nullptr, &openMap, nullptr, nullptr);
 
 	// Should pass TPS value thru
-	Sensor::setMockValue(SensorType::DriverThrottleIntent, 47.0f);
+	Sensor::setMockValue(SensorType::Tps1, 47.0f);
 	EXPECT_FLOAT_EQ(bc.getOpenLoop(0).value_or(-1), 47.0f);
 }
 
