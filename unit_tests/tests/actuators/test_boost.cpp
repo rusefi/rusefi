@@ -114,13 +114,14 @@ TEST(BoostControl, BoostOpenLoopYAxis)
 	/*
 	constexpr float DETECTED_GEAR_TEST_VALUE = 43.4f;
 	Sensor::setMockValue(SensorType::DetectedGear, DETECTED_GEAR_TEST_VALUE);
+	*/
+
 	constexpr float BAROMETRIC_PRESSURE_TEST_VALUE = 43.5f;
 	Sensor::setMockValue(SensorType::BarometricPressure, BAROMETRIC_PRESSURE_TEST_VALUE);
 	constexpr float EGT1_TEST_VALUE = 43.6f;
 	Sensor::setMockValue(SensorType::EGT1, EGT1_TEST_VALUE);
 	constexpr float EGT2_TEST_VALUE = 43.7f;
 	Sensor::setMockValue(SensorType::EGT2, EGT2_TEST_VALUE);
-	*/
 
 	EXPECT_EQ(engineConfiguration->boostOpenLoopYAxis, gppwm_channel_e::GPPWM_Tps); // default value
 	EXPECT_FLOAT_EQ(bc.getOpenLoop(0).value_or(-1), TPS1_TEST_VALUE);
@@ -215,6 +216,7 @@ TEST(BoostControl, BoostOpenLoopYAxis)
 	/*
 	engineConfiguration->boostOpenLoopYAxis = GPPWM_DetectedGear;
 	EXPECT_FLOAT_EQ(bc.getOpenLoop(0).value_or(-1), DETECTED_GEAR_TEST_VALUE);
+	*/
 
 	engineConfiguration->boostOpenLoopYAxis = GPPWM_BaroPressure;
 	EXPECT_FLOAT_EQ(bc.getOpenLoop(0).value_or(-1), BAROMETRIC_PRESSURE_TEST_VALUE);
@@ -224,7 +226,6 @@ TEST(BoostControl, BoostOpenLoopYAxis)
 
 	engineConfiguration->boostOpenLoopYAxis = GPPWM_Egt2;
 	EXPECT_FLOAT_EQ(bc.getOpenLoop(0).value_or(-1), EGT2_TEST_VALUE);
-	*/
 }
 
 TEST(BoostControl, TestClosedLoop) {
