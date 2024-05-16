@@ -243,7 +243,9 @@ runs:
       shell: bash
       run: |
         if [ "$RUN_SIMULATOR" == "true" ]; then
+          echo Building simulator...
           bash bin/compile.sh $BOARD_META_PATH ../simulator/build/rusefi_simulator
+          echo DONE: simulator
         fi
 
     - name: Build Firmware
