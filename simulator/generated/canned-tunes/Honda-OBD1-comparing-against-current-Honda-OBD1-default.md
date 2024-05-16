@@ -77,6 +77,7 @@
 	cannedinjector_battLagCorr();
 	cannedmafDecodingBins();
 	cannedcltIdleCorr();
+	cannedtractionControlSlipBins();
 	cannedboostTableOpenLoop();
 	cannedscriptTable4();
 	cannedignitionTable();

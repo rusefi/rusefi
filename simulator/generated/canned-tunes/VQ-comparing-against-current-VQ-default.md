@@ -299,6 +299,7 @@
 	cannedveBlends4_blendBins();
 	cannedveBlends4_blendValues();
 	cannedtpsTpsAccelTable();
+	cannedtractionControlSlipBins();
 	cannedboostRpmBins();
 	cannedboostTableOpenLoop();
 	cannedvvtTable1RpmBins();

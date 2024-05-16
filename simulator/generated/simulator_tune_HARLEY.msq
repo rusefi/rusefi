@@ -1098,11 +1098,11 @@
         <constant digits="2" name="triggerCompHystMax" units="V">0.0</constant>
         <constant digits="0" name="triggerCompSensorSatRpm" units="RPM">0.0</constant>
         <constant cols="1" digits="2" name="tractionControlSlipBins" rows="6">
-         0.8
          0.9
          0.95
-         1.05
+         1.0
          1.1
+         1.15
          1.2
 </constant>
         <constant cols="1" digits="0" name="tractionControlSpeedBins" rows="6">

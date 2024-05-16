@@ -49,6 +49,11 @@ static void pbcannedidleAdvance() {
 	copyArray(config->idleAdvance, hardCodedidleAdvance);
 }
 
+static void pbcannedtractionControlSlipBins() {
+	static const float hardCodedtractionControlSlipBins[6] = {0.8, 0.9, 0.95, 1.05, 1.1, 1.2};
+	copyArray(engineConfiguration->tractionControlSlipBins, hardCodedtractionControlSlipBins);
+}
+
 static void pbcannedvvtTable1() {
 	static const float hardCodedvvtTable1[8][8] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},

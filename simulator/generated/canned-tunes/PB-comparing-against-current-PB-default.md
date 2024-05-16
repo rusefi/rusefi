@@ -138,6 +138,7 @@
 	pbcannedcltIdleRpm();
 	pbcannedidleAdvanceBins();
 	pbcannedidleAdvance();
+	pbcannedtractionControlSlipBins();
 	pbcannedvvtTable2();
 	pbcannedscriptTable4();
 	pbcannedignitionRpmBins();
