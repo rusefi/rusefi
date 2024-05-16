@@ -30,10 +30,12 @@ Release template (copy/paste this for new release):
  - new rusEFI console tab: Knock analyzer #6467
  - Suzuki K6A (NON VVTI Trigger) #6490
  - explicit error if 32 bit java is used #6497
+ - configurable Open Loop Boost vertical axis #4778
 
 ### Fixed
  - knock logic not activated until any configuration change via TS #6462
  - VE Table have wrong units on Y-Axis #6479
+ - General Purpose PWM tables have wrong names on X-axis and Y-axis #6491
  - Ignition scheduling errors after 40+ hours of uptime #6451
 
 ### Breaking Changes
