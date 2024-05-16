@@ -31,6 +31,7 @@
 # make autoupdate	Generate docs, enums, configs, build bootloader, build firmware, and package autoupdate bundle
 # make bundles		Generate docs, enums, configs, build bootloader, build firmware, and package both full and autoupdate bundles
 # make bootloader Generate docs, enums, configs, and build bootloader
+# make ../simulator/build/rusefi_simulator build Windows simulator [huh, do we build Windows .exe even on linux?]
 #
 
 CHIBIOS = ChibiOS
