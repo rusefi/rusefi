@@ -163,7 +163,7 @@ runs:
         echo "PROJECT_BOARD=$PROJECT_BOARD" >> $GITHUB_ENV
         echo "BUNDLE_NAME=$BUNDLE_NAME" >> $GITHUB_ENV
         echo "current_date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
-        echo "EXTRA_LIVE_DATA_FILE=$EXTRA_LIVE_DATA_FILE" >> $GITHUB_ENV
+        echo "EXTRA_LIVE_DATA_FILE=${{inputs.EXTRA_LIVE_DATA_FILE}}" >> $GITHUB_ENV
 
 
     - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
