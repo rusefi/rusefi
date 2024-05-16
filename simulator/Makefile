@@ -213,6 +213,11 @@ INCDIR = . \
   simulator/can \
   simulator
 
+ifneq ($(BOARD_DIR),)
+  # used by custom board custom live data
+  INCDIR += $(BOARD_DIR)/firmware
+endif
+
 # List ASM source files here
 ASMSRC =
 ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
