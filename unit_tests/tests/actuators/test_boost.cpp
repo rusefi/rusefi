@@ -108,14 +108,9 @@ TEST(BoostControl, BoostOpenLoopYAxis)
 	Sensor::setMockValue(SensorType::AuxLinear1, AUX_LINEAR1_TEST_VALUE);
 	constexpr float AUX_LINEAR2_TEST_VALUE = 43.3f;
 	Sensor::setMockValue(SensorType::AuxLinear2, AUX_LINEAR2_TEST_VALUE);
-
-	// need to investigate why the following mocked sensors cause
-	// ../firmware/controllers/actuators/boost_control.cpp:127:95: runtime error: index 44 out of bounds for type 'scaled_channel [10]'
-	/*
-	constexpr float DETECTED_GEAR_TEST_VALUE = 43.4f;
+	// we cannot use value 43.4f for the DetectedGear sensor  because gear should be less then TCU_GEAR_COUNT
+	constexpr float DETECTED_GEAR_TEST_VALUE = TCU_GEAR_COUNT - 1;
 	Sensor::setMockValue(SensorType::DetectedGear, DETECTED_GEAR_TEST_VALUE);
-	*/
-
 	constexpr float BAROMETRIC_PRESSURE_TEST_VALUE = 43.5f;
 	Sensor::setMockValue(SensorType::BarometricPressure, BAROMETRIC_PRESSURE_TEST_VALUE);
 	constexpr float EGT1_TEST_VALUE = 43.6f;
@@ -213,10 +208,8 @@ TEST(BoostControl, BoostOpenLoopYAxis)
 	engineConfiguration->boostOpenLoopYAxis = GPPWM_GppwmOutput4;
 	EXPECT_FLOAT_EQ(bc.getOpenLoop(0).value_or(-1), (float)engine->outputChannels.gppwmOutput[3]);
 
-	/*
 	engineConfiguration->boostOpenLoopYAxis = GPPWM_DetectedGear;
 	EXPECT_FLOAT_EQ(bc.getOpenLoop(0).value_or(-1), DETECTED_GEAR_TEST_VALUE);
-	*/
 
 	engineConfiguration->boostOpenLoopYAxis = GPPWM_BaroPressure;
 	EXPECT_FLOAT_EQ(bc.getOpenLoop(0).value_or(-1), BAROMETRIC_PRESSURE_TEST_VALUE);
