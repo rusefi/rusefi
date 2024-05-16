@@ -10,6 +10,7 @@
 #include "fuel_computer.h"
 #include "antilag_system_state_generated.h"
 #include "vvt_generated.h"
+#include <livedata_board_extra.h>
 
 template<>
 const output_channels_s* getLiveData(size_t) {
