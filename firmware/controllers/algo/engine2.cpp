@@ -90,6 +90,11 @@ void EngineState::updateSlowSensors() {
 
 void EngineState::updateSparkSkip() {
 #if EFI_LAUNCH_CONTROL
+		/*
+		 * Is the following code in use? In C++ binary "+" operator has higher priority higher then ternary "?:"
+		 * operator. It means that below we check if (luaSoftSparkSkip + engineConfiguration->useHardSkipInTraction)
+		 * expression (sum of float and bool values) is zero or not. It's pretty weird :(
+		 */
 		engine->softSparkLimiter.setTargetSkipRatio(luaSoftSparkSkip + engineConfiguration->useHardSkipInTraction ? 0 : tractionControlSparkSkip);
 		engine->hardSparkLimiter.setTargetSkipRatio(luaHardSparkSkip + engineConfiguration->useHardSkipInTraction ? tractionControlSparkSkip : 0);
 #endif // EFI_LAUNCH_CONTROL
