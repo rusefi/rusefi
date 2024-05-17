@@ -37,6 +37,7 @@ Release template (copy/paste this for new release):
  - VE Table have wrong units on Y-Axis #6479
  - General Purpose PWM tables have wrong names on X-axis and Y-axis #6491
  - Ignition scheduling errors after 40+ hours of uptime #6451
+ - luaSoftSparkSkip/luaHardSparkSkip probably bug #6528
 
 ### Breaking Changes
  - "60/2 VW" trigger wheel renamed to "60-2 Wrong Polarity" #988
