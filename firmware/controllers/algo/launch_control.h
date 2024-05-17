@@ -49,6 +49,7 @@ public:
 	 * targetSkipRatio of '0' means 'do not skip', would always return false
 	 */
 	void setTargetSkipRatio(float targetSkipRatio);
+	[[nodiscard]] float getTargetSkipRatio() const { return targetSkipRatio; }
 
 	bool shouldSkip();
 private:
