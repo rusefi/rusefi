@@ -20,7 +20,7 @@ set_board_file BOARD_MENU_FILE "${BOARD_DIR}/board_menu.ini"
 set_board_file BOARD_TABLES_FILE "${BOARD_DIR}/board_tables.ini"
 set_board_file BOARD_PANELS_FILE "${BOARD_DIR}/board_panels.ini"
 set_board_file BOARD_INDICATORS_FILE "${BOARD_DIR}/board_indicators.ini"
-set_board_file BOARD_GAUGES_FILE "${BOARD_DIR}/board_indicators.ini"
+set_board_file BOARD_GAUGES_FILE "${BOARD_DIR}/board_gauges.ini"
 
 COMMON_GEN_CONFIG="
  -readfile OUTPUTS_SECTION_FROM_FILE console/binary/generated/output_channels.ini \
