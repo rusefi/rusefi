@@ -2026,6 +2026,10 @@ end_struct
 #define INJECTOR_1_NAME "Injector #1"
 #define INJECTOR_2_NAME "Injector #2"
 
+#define ts_show_tps2_error true
+#define ts_show_clutch_up true
+#define ts_show_clutch_down true
+
 #define GAUGE_NAME_LUA_0 "Lua Gauge 1"
 #define GAUGE_NAME_LUA_1 "Lua Gauge 2"
 #define GAUGE_NAME_LUA_2 "Lua Gauge 3"
