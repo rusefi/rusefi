@@ -37,7 +37,7 @@ void ensureArrayIsAscending(const char* msg, const TValue (&values)[TSize]) {
 		float cur = values[i];
 		float next = values[i + 1];
 		if (next <= cur) {
-			firmwareError(ObdCode::CUSTOM_ERR_AXIS_ORDER, "Invalid table axis (must be ascending!): %s %f %f at %d", msg, cur, next, i);
+			firmwareError(ObdCode::CUSTOM_ERR_AXIS_ORDER, "Invalid table axis (must be ascending!): %s %f should be below %f at %d", msg, cur, next, i);
 		}
 	}
 }
