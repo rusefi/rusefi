@@ -37,4 +37,4 @@ DDEFS += -DWSPI_USE_MUTUAL_EXCLUSION=FALSE
 include $(PROJECT_DIR)/hw_layer/ports/stm32/use_higher_level_flash_api.mk
 
 #Serial flash driver
-include $(PROJECT_DIR)/hw_layer/drivers/flash/sst26f_jedec.mk
+include $(PROJECT_DIR)/hw_layer/drivers/flash/sst26f/sst26f_jedec.mk
