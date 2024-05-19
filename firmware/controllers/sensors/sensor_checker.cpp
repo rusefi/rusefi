@@ -165,6 +165,9 @@ static uint8_t getTSErrorCode(brain_pin_diag_e diag)
 }
 #endif // BOARD_EXT_GPIOCHIPS > 0 && EFI_PROD_CODE
 
+PUBLIC_API_WEAK void boardSensorChecker() {
+}
+
 void SensorChecker::onSlowCallback() {
 	// Don't check when the ignition is off, or when it was just turned on (let things stabilize)
 	// TODO: also inhibit checking if we just did a flash burn, since that blocks the ECU for a few seconds.
@@ -245,6 +248,7 @@ void SensorChecker::onSlowCallback() {
 		state->ignitorDiagnostic[i] = getTSErrorCode(diag);
 	}
 #endif // BOARD_EXT_GPIOCHIPS > 0
+  boardSensorChecker();
 }
 
 void SensorChecker::onIgnitionStateChanged(bool ignitionOn) {
