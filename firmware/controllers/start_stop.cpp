@@ -49,6 +49,10 @@ static void disengageStarterIfNeeded() {
     }
 }
 
+PUBLIC_API_WEAK bool isCrankingSuppressed() {
+  return false;
+}
+
 void slowStartStopButtonCallback() {
   if (!isIgnVoltage()) {
     // nothing to crank if we are powered only via USB
@@ -63,6 +67,14 @@ void slowStartStopButtonCallback() {
     if (engine->startStopState.timeSinceIgnitionPower.getElapsedUs() < MS2US(engineConfiguration->startButtonSuppressOnStartUpMs)) {
         // where are odd cases of start button combined with ECU power source button we do not want to crank right on start
         return;
+    }
+
+    if (engineConfiguration->requireFootOnBrakeToCrank && !engine->brakePedalSwitchedState) {
+      return;
+    }
+
+    if (isCrankingSuppressed()) {
+      return;
     }
 
 	bool startStopState = engine->startStopState.startStopButtonDebounce.readPinEvent();
