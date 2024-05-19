@@ -54,12 +54,14 @@ public:
 	/**
 	 * See 'blockingFactor' in rusefi.ini
 	 */
-	char scratchBuffer[BLOCKING_FACTOR + 30];
+	char scratchBuffer[256];
 	const char *name;
 
 	void assertPacketSize(size_t size, bool allowLongPackets);
 	uint32_t writePacketHeader(const uint8_t responseCode, const size_t size);
-	void crcAndWriteBuffer(const uint8_t responseCode, const size_t size);
+	uint32_t writePacketBody(const uint8_t* buf, const size_t size, uint32_t crc);
+	void writeCrcPacketTail(uint32_t crc);
+
 	void copyAndWriteSmallCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size);
 
 	/* When TsChannel is in "not in sync" state tsProcessOne will silently try to find
