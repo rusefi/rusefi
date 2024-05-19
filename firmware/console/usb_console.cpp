@@ -6,10 +6,11 @@
 #include "thread_controller.h"
 #include "tunerstudio.h"
 
-
-// TODO: remove someday
-// Assert that the USB TX buffers are large enough to fit one full packet
-static_assert(SERIAL_USB_BUFFERS_TX_SIZE >= BLOCKING_FACTOR + 10);
+// Assert that the USB tx/rx buffers are large enough to fit one full packet
+// Lets don't care about underlaying driver. If driver has no enought free
+// space in buffers it will block chnWriteTimeout() until buffers available
+// or timeout happens.
+//static_assert(SERIAL_USB_BUFFERS_TX_SIZE >= BLOCKING_FACTOR + 10);
 
 extern SerialUSBDriver EFI_CONSOLE_USB_DEVICE;
 
