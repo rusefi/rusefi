@@ -57,11 +57,7 @@ public:
 #else
   #define scratchBuffer_SIZE BLOCKING_FACTOR
 #endif // CUSTOM_TS_BUFFER
-
-	/**
-	 * See 'blockingFactor' in rusefi.ini
-	 */
-	char scratchBuffer[scratchBuffer_SIZE + 30];
+	char scratchBuffer[256];
 #if EFI_TS_SCATTER
 	page1_s page1;
 #endif
@@ -69,7 +65,9 @@ public:
 
 	void assertPacketSize(size_t size, bool allowLongPackets);
 	uint32_t writePacketHeader(const uint8_t responseCode, const size_t size);
-	void crcAndWriteBuffer(const uint8_t responseCode, const size_t size);
+	uint32_t writePacketBody(const uint8_t* buf, const size_t size, uint32_t crc);
+	void writeCrcPacketTail(uint32_t crc);
+
 	void copyAndWriteSmallCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size);
 
 	// Write a response code with no data
