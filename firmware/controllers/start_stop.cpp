@@ -69,6 +69,7 @@ void slowStartStopButtonCallback() {
         return;
     }
 
+  if (engine->rpmCalculator.isStopped()) {
     if (engineConfiguration->requireFootOnBrakeToCrank && !engine->brakePedalSwitchedState) {
       return;
     }
@@ -76,12 +77,12 @@ void slowStartStopButtonCallback() {
     if (isCrankingSuppressed()) {
       return;
     }
+  }
 
 	bool startStopState = engine->startStopState.startStopButtonDebounce.readPinEvent();
 
 	if (startStopState && !engine->engineState.startStopState) {
 		// we are here on transition from 0 to 1
-		// TODO: huh? looks like 'stop engine' feature is broken?! we invoke 'toggle' method under "from off to on" condition?!
 		onStartStopButtonToggle();
 	}
 	// todo: we shall extract start_stop.txt from engine_state.txt
