@@ -93,6 +93,7 @@ void PrimeController::onPrimeStart() {
 	}
 
 	efiPrintf("Firing priming pulse of %.2f ms", durationMs);
+	engine->outputChannels.injectionPrimingCounter++;
 
 	auto endTime = sumTickAndFloat(getTimeNowNt(), MSF2NT(durationMs));
 

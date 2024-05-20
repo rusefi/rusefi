@@ -392,6 +392,7 @@ float mapFast
 	uint16_t unexpectedAdcSample
 
 	uint8_t sadDwellRatioCounter
+	uint8_t injectionPrimingCounter
 
 	uint8_t[72 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct
