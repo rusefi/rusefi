@@ -755,6 +755,9 @@ float getOutputValueByName(const char *name) {
 // sadDwellRatioCounter
 		case -2146292012:
 			return engine->outputChannels.sadDwellRatioCounter;
+// injectionPrimingCounter
+		case 1526237246:
+			return engine->outputChannels.injectionPrimingCounter;
 // totalFuelCorrection
 #if EFI_ENGINE_CONTROL
 		case -1779658835:
