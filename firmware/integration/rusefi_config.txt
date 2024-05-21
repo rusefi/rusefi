@@ -118,7 +118,7 @@ struct_no_prefix persistent_config_s
 struct_no_prefix engine_configuration_s
 
 ! see 'blockingFactor' in rusefi.ini
-#define BLOCKING_FACTOR 750
+#define BLOCKING_FACTOR 32768
 
 #define SENT_INPUT_COUNT 1
 
