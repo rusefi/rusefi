@@ -39,7 +39,6 @@ private:
 	bool isLaunchRpmRetardCondition() const;
 
 	Timer m_launchTimer;
-	bool m_afterLaunch = false;
 };
 
 /**
