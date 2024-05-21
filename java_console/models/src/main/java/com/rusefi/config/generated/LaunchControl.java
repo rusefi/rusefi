@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/launch_control_state.txt Sun Apr 28 13:42:38 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/launch_control_state.txt Tue May 21 14:10:03 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -14,10 +14,11 @@ public class LaunchControl {
 	public static final Field ISSWITCHACTIVATED = Field.create("ISSWITCHACTIVATED", 4, FieldType.BIT, 4).setBaseOffset(1028);
 	public static final Field ISCLUTCHACTIVATED = Field.create("ISCLUTCHACTIVATED", 4, FieldType.BIT, 5).setBaseOffset(1028);
 	public static final Field ISVALIDINPUTPIN = Field.create("ISVALIDINPUTPIN", 4, FieldType.BIT, 6).setBaseOffset(1028);
-	public static final Field ACTIVATESWITCHCONDITION = Field.create("ACTIVATESWITCHCONDITION", 4, FieldType.BIT, 7).setBaseOffset(1028);
-	public static final Field RPMCONDITION = Field.create("RPMCONDITION", 4, FieldType.BIT, 8).setBaseOffset(1028);
-	public static final Field SPEEDCONDITION = Field.create("SPEEDCONDITION", 4, FieldType.BIT, 9).setBaseOffset(1028);
-	public static final Field TPSCONDITION = Field.create("TPSCONDITION", 4, FieldType.BIT, 10).setBaseOffset(1028);
+	public static final Field ISAFTERLAUNCH = Field.create("ISAFTERLAUNCH", 4, FieldType.BIT, 7).setBaseOffset(1028);
+	public static final Field ACTIVATESWITCHCONDITION = Field.create("ACTIVATESWITCHCONDITION", 4, FieldType.BIT, 8).setBaseOffset(1028);
+	public static final Field RPMCONDITION = Field.create("RPMCONDITION", 4, FieldType.BIT, 9).setBaseOffset(1028);
+	public static final Field SPEEDCONDITION = Field.create("SPEEDCONDITION", 4, FieldType.BIT, 10).setBaseOffset(1028);
+	public static final Field TPSCONDITION = Field.create("TPSCONDITION", 4, FieldType.BIT, 11).setBaseOffset(1028);
 	public static final Field[] VALUES = {
 	RETARDTHRESHOLDRPM,
 	COMBINEDCONDITIONS,
@@ -27,6 +28,7 @@ public class LaunchControl {
 	ISSWITCHACTIVATED,
 	ISCLUTCHACTIVATED,
 	ISVALIDINPUTPIN,
+	ISAFTERLAUNCH,
 	ACTIVATESWITCHCONDITION,
 	RPMCONDITION,
 	SPEEDCONDITION,
