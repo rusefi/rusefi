@@ -78,8 +78,13 @@ TEST(LaunchControl, RPMCondition) {
 
 	engineConfiguration->launchRpm = 3000;
 
-	EXPECT_EQ(dut.calculateRPMLaunchCondition(2900), LaunchCondition::NotMet);
+	EXPECT_EQ(engineConfiguration->launchRpmWindow, 500);
 
+	EXPECT_EQ(dut.calculateRPMLaunchCondition(2499), LaunchCondition::NotMet);
+	EXPECT_EQ(dut.calculateRPMLaunchCondition(2500), LaunchCondition::PreLaunch);
+	EXPECT_EQ(dut.calculateRPMLaunchCondition(2900), LaunchCondition::PreLaunch);
+	EXPECT_EQ(dut.calculateRPMLaunchCondition(2999), LaunchCondition::PreLaunch);
+	EXPECT_EQ(dut.calculateRPMLaunchCondition(3000), LaunchCondition::Launch);
 	EXPECT_EQ(dut.calculateRPMLaunchCondition(3100), LaunchCondition::Launch);
 }
 

@@ -73,21 +73,37 @@ bool LaunchControlBase::isInsideTpsCondition() const {
 	return engineConfiguration->launchTpsThreshold < tps.Value;
 }
 
-LaunchCondition LaunchControlBase::calculateRPMLaunchCondition(const int rpm) const {
+LaunchCondition LaunchControlBase::calculateRPMLaunchCondition(const int rpm) {
 	const int launchRpm = engineConfiguration->launchRpm;
-	if (rpm < launchRpm) {
+	const int preLaunchRpm = launchRpm - engineConfiguration->launchRpmWindow;
+	if (rpm < preLaunchRpm) {
 		return LaunchCondition::NotMet;
-	} else {
+	} else if (launchRpm <= rpm) {
 		return LaunchCondition::Launch;
+	} else {
+		return LaunchCondition::PreLaunch;
 	}
 }
 
-/**
- * Condition is true as soon as we are above LaunchRpm
- */
-bool LaunchControlBase::isInsideRPMCondition(const int rpm) const {
+bool LaunchControlBase::isInsideRPMCondition(const int rpm) {
 	const LaunchCondition rpmLaunchCondition = calculateRPMLaunchCondition(rpm);
-	return rpmLaunchCondition == LaunchCondition::Launch;
+	bool result = false;
+	switch (rpmLaunchCondition) {
+		case LaunchCondition::NotMet: {
+			m_afterLaunch = false;
+			break;
+		}
+		case LaunchCondition::PreLaunch: {
+			result = m_afterLaunch;
+			break;
+		}
+		case LaunchCondition::Launch: {
+			m_afterLaunch = true;
+			result = true;
+			break;
+		}
+	}
+	return result;
 }
 
 bool LaunchControlBase::isLaunchConditionMet(const int rpm) {
