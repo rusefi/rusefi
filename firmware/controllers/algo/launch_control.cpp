@@ -90,15 +90,15 @@ bool LaunchControlBase::isInsideRPMCondition(const int rpm) {
 	bool result = false;
 	switch (rpmLaunchCondition) {
 		case LaunchCondition::NotMet: {
-			m_afterLaunch = false;
+			isAfterLaunch = false;
 			break;
 		}
 		case LaunchCondition::PreLaunch: {
-			result = m_afterLaunch;
+			result = isAfterLaunch;
 			break;
 		}
 		case LaunchCondition::Launch: {
-			m_afterLaunch = true;
+			isAfterLaunch = true;
 			result = true;
 			break;
 		}
