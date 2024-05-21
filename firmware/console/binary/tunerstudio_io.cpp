@@ -107,22 +107,14 @@ TsChannelBase::TsChannelBase(const char *p_name) {
 	this->name = p_name;
 }
 
-void TsChannelBase::assertPacketSize(size_t size, bool allowLongPackets) {
-	if (isBigPacket(size) && !allowLongPackets) {
-		criticalError("[USE PROPER CONSOLE VERSION ] disallowed long packet of size %d", size);
-	}
-}
-
 /**
  * Adds size to the beginning of a packet and a crc32 at the end. Then send the packet.
  */
-void TsChannelBase::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size, bool allowLongPackets) {
+void TsChannelBase::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size) {
 	// don't transmit a null buffer...
 	if (!buf) {
 		size = 0;
 	}
-
-	assertPacketSize(size, allowLongPackets);
 
 	if (isBigPacket(size)) {
 		// For larger packets we also use a buffer for CRC calculation
@@ -135,9 +127,9 @@ void TsChannelBase::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, siz
 	}
 }
 
-void TsChannelBase::sendResponse(ts_response_format_e mode, const uint8_t * buffer, int size, bool allowLongPackets /* = false */) {
+void TsChannelBase::sendResponse(ts_response_format_e mode, const uint8_t * buffer, int size) {
 	if (mode == TS_CRC) {
-		writeCrcPacket(TS_RESPONSE_OK, buffer, size, allowLongPackets);
+		writeCrcPacket(TS_RESPONSE_OK, buffer, size);
 	} else {
 		if (size > 0) {
 			write(buffer, size, true);

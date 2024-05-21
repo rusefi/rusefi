@@ -49,8 +49,8 @@ public:
 #ifdef EFI_CAN_SERIAL
 	virtual	// CAN device needs this function to be virtual for small-packet optimization
 #endif
-	void writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size, bool allowLongPackets = false);
-	void sendResponse(ts_response_format_e mode, const uint8_t * buffer, int size, bool allowLongPackets = false);
+	void writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size);
+	void sendResponse(ts_response_format_e mode, const uint8_t * buffer, int size);
 
 #ifdef CUSTOM_TS_BUFFER_SIZE
   #define scratchBuffer_SIZE CUSTOM_TS_BUFFER_SIZE
@@ -63,7 +63,6 @@ public:
 #endif
 	const char *name;
 
-	void assertPacketSize(size_t size, bool allowLongPackets);
 	uint32_t writePacketHeader(const uint8_t responseCode, const size_t size);
 	uint32_t writePacketBody(const uint8_t* buf, const size_t size, uint32_t crc);
 	void writeCrcPacketTail(uint32_t crc);
