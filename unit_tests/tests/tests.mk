@@ -45,6 +45,7 @@ TESTS_SRC_CPP = \
 	tests/ignition_injection/test_injector_model.cpp \
 	tests/ignition_injection/test_odd_firing_engine.cpp \
 	tests/launch/test_target_skip_ratio.cpp \
+	tests/launch/test_rpm_condition.cpp \
 	tests/lua/test_lua_basic.cpp \
 	tests/lua/test_lookup.cpp \
 	tests/lua/test_lua_e38.cpp \
