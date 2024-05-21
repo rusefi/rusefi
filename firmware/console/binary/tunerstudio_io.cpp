@@ -30,7 +30,7 @@ void TsChannelBase::copyAndWriteSmallCrcPacket(uint8_t responseCode, const uint8
 	// tsOutputChannels) during the CRC computation.  Instead compute the CRC on our
 	// local buffer that nobody else will write.
 	if (size) {
-		memcpy(scratchBuffer + SCRATCH_BUFFER_PREFIX_SIZE, buf, size);
+		memcpy(scratchBuffer + TS_PACKET_HEADER_SIZE, buf, size);
 	}
 
 	crcAndWriteBuffer(responseCode, size);
@@ -49,7 +49,7 @@ void TsChannelBase::crcAndWriteBuffer(uint8_t responseCode, size_t size) {
 
 	// Place the CRC at the end
 	crc = SWAP_UINT32(crc);
-	memcpy(scratchBuffer + size + SCRATCH_BUFFER_PREFIX_SIZE, &crc, sizeof(crc));
+	memcpy(scratchBuffer + size + TS_PACKET_HEADER_SIZE, &crc, sizeof(crc));
 
 	// Write to the underlying stream
 	write(reinterpret_cast<uint8_t*>(scratchBuffer), size + 7, true);
