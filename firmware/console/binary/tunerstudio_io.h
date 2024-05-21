@@ -24,6 +24,7 @@
 #endif
 
 #define TS_PACKET_HEADER_SIZE	3
+#define TS_PACKET_TAIL_SIZE		4
 
 class TsChannelBase {
 public:
