@@ -46,16 +46,22 @@ typedef enum {
 #define MC_CMD_READ_REG(reg)			(0x0a00 | (((reg) & 0x0f) << 4))
 #define MC_CMD_SPI_CHECK				(0x0f00)
 #define MC_CMD_MODE_SELECT(mode)		(0x1000 | ((mode) & 0x0fff))
+/* unused
 #define MC_CMD_LSD_FAULT(en)			(0x2000 | ((en) & 0x0fff))
+*/
 #define MC_CMD_DRIVER_EN(en)			(0x3000 | ((en) & 0x00ff))
 #define MC_CMD_SPARK(spark)				(0x4000 | ((spark) & 0x0fff))
+/* unused
 #define MC_CMD_END_SPARK_FILTER(filt)	(0x5000 | ((filt) & 0x0003))
 #define MC_CMD_DAC(dac)					(0x6000 | ((dac) & 0x0fff))
 #define MC_CMD_GPGD_SHORT_THRES(sh)		(0x7000 | ((sh) & 0x0fff))
 #define MC_CMD_GPGD_SHORT_DUR(dur)		(0x8000 | ((dur) & 0x0fff))
 #define MC_CMD_GPGD_FAULT_OP(op)		(0x9000 | ((op) & 0x0f0f))
+*/
 #define MC_CMD_PWM(pwm)					(0xa000 | ((pwm) & 0x0fff))
+/* unused
 #define MC_CMD_CLK_CALIB				(0xe000)
+*/
 
 #define MC_CMD_INVALID					(0xf000)
 
@@ -385,6 +391,7 @@ int Mc33810::chip_init()
 {
 	int ret;
 	uint16_t rx;
+	uint16_t rxSpiCheck;
 
 	init_cnt++;
 
@@ -393,7 +400,7 @@ int Mc33810::chip_init()
 
 	/* check SPI communication */
 	/* 0. set echo mode, chip number - don't care */
-	ret  = spi_rw(MC_CMD_SPI_CHECK, NULL);
+	ret  = spi_rw(MC_CMD_SPI_CHECK, &rxSpiCheck);
 	/* 1. check loopback */
 	ret |= spi_rw(MC_CMD_READ_REG(REG_REV), &rx);
 	if (ret) {
@@ -414,7 +421,7 @@ int Mc33810::chip_init()
 	    } else {
 	      msg = "unexpected";
 	    }
-		  efiPrintf(DRIVER_NAME " spi loopback test failed [%d][%s] vBatt=%f", rx, msg, vBatt);
+		  efiPrintf(DRIVER_NAME " spi loopback test failed [%d][%d][%s] vBatt=%f", rxSpiCheck, rx, msg, vBatt);
 		}
 		ret = -2;
 		goto err_exit;
