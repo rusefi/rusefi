@@ -23,9 +23,9 @@ bool TsChannelBase::isBigPacket(size_t size) {
 	return ((TS_PACKET_HEADER_SIZE + size + TS_PACKET_TAIL_SIZE) > sizeof(scratchBuffer));
 }
 
-void TsChannelBase::copyAndWriteSmallCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size) {
+void TsChannelBase::writeCrcPacketSmall(uint8_t responseCode, const uint8_t* buf, size_t size) {
 	// don't transmit too large a buffer
-	criticalAssertVoid(!isBigPacket(size), "copyAndWriteSmallCrcPacket tried to transmit too large a packet")
+	criticalAssertVoid(!isBigPacket(size), "writeCrcPacketSmall tried to transmit too large a packet")
 
 	// Index 0/1 = packet size (big endian)
 	*(uint16_t*)scratchBuffer = SWAP_UINT16(size + 1);
@@ -123,7 +123,7 @@ void TsChannelBase::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, siz
 		writeCrcPacketLarge(responseCode, buf, size);
 	} else {
 		// for small packets we use a buffer for CRC calculation
-		copyAndWriteSmallCrcPacket(responseCode, buf, size);
+		writeCrcPacketSmall(responseCode, buf, size);
 	}
 }
 
