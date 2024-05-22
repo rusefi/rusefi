@@ -75,6 +75,7 @@ public:
 	bool in_sync = false;
 
 private:
+	bool isBigPacket(size_t size);
 	void writeCrcPacketLarge(uint8_t responseCode, const uint8_t* buf, size_t size);
 };
 

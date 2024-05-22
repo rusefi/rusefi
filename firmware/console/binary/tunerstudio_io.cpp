@@ -19,7 +19,9 @@ size_t TsChannelBase::read(uint8_t* buffer, size_t size) {
 }
 #endif
 
-#define isBigPacket(size) ((TS_PACKET_HEADER_SIZE + size + TS_PACKET_TAIL_SIZE) > sizeof(scratchBuffer))
+bool TsChannelBase::isBigPacket(size_t size) {
+	return ((TS_PACKET_HEADER_SIZE + size + TS_PACKET_TAIL_SIZE) > sizeof(scratchBuffer));
+}
 
 void TsChannelBase::copyAndWriteSmallCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size) {
 	// don't transmit too large a buffer
