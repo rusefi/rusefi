@@ -22,6 +22,8 @@ public interface ReaderState {
 
     void addPrepend(String fileName);
 
+    void addPrependNotInput(String fileName);
+
     void addDestination(ConfigurationConsumer... consumers);
 
     VariableRegistry getVariableRegistry();
@@ -37,8 +39,6 @@ public interface ReaderState {
     String getTsFileOutputName();
 
     void setTsFileOutputName(String tsFileOutputName);
-
-    List<String> getPrependFiles();
 
     boolean isStackEmpty();
 

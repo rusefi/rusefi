@@ -414,8 +414,13 @@ public class ReaderStateImpl implements ReaderState {
             // see LiveDataProcessor use-case with dynamic prepend usage
             return;
         }
-        prependFiles.add(fileName);
         inputFiles.add(fileName);
+        addPrependNotInput(fileName);
+    }
+
+    @Override
+    public void addPrependNotInput(String fileName) {
+        prependFiles.add(fileName);
     }
 
     @Override
@@ -460,11 +465,6 @@ public class ReaderStateImpl implements ReaderState {
     @Override
     public void setTsFileOutputName(String tsFileOutputName) {
         this.tsFileOutputName = tsFileOutputName;
-    }
-
-    @Override
-    public List<String> getPrependFiles() {
-        return prependFiles;
     }
 
     @Override
