@@ -4,7 +4,6 @@ import com.rusefi.output.ConfigStructure;
 import com.rusefi.output.ConfigurationConsumer;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
 public interface ReaderState {
@@ -22,7 +21,7 @@ public interface ReaderState {
 
     void addPrepend(String fileName);
 
-    void addPrependNotInput(String fileName);
+    void addPostponedPrependNotInput(String fileName);
 
     void addDestination(ConfigurationConsumer... consumers);
 

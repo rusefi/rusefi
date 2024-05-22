@@ -133,7 +133,7 @@ public class ConfigDefinition {
                     break;
                 case KEY_SIGNATURE:
                     signaturePrependFile = args[i + 1];
-                    state.addPrependNotInput(signaturePrependFile);
+                    state.addPostponedPrependNotInput(signaturePrependFile);
                     // don't add this file to the 'inputFiles'
                     break;
                 case KEY_SIGNATURE_DESTINATION:
