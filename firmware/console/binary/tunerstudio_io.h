@@ -51,9 +51,6 @@ public:
 	void writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size);
 	void sendResponse(ts_response_format_e mode, const uint8_t * buffer, int size);
 
-	/**
-	 * See 'blockingFactor' in rusefi.ini
-	 */
 	char scratchBuffer[256];
 	const char *name;
 
