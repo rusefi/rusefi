@@ -51,8 +51,7 @@ public class DfuFlasher {
         if (bundle.contains("alphax") && bundle.contains("f7")) {
             int result = JOptionPane.showConfirmDialog(parent, "Firmware update requires a full erase of the ECU. If your tune is not saved in TunerStudio, it will be lost.\nEnsure that TunerStudio has your current tune saved!\n\nAfter updating, re-connect TunerStudio to restore your tune.\n\nPress OK to continue with the update, or Cancel to abort so you can save your tune.", "WARNING", JOptionPane.OK_CANCEL_OPTION);
 
-            // 0 means they clicked "OK", 1 means they clicked "Cancel"
-            if (result != 0) {
+            if (result != JOptionPane.YES_OPTION) {
                 return;
             }
 
