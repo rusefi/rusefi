@@ -529,7 +529,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 	}
 
 	uint16_t incomingPacketSize = firstByte << 8 | secondByte;
-	size_t expectedSize = incomingPacketSize + CRC_VALUE_SIZE;
+	size_t expectedSize = incomingPacketSize + TS_PACKET_TAIL_SIZE;
 
 	if (incomingPacketSize == 0 || expectedSize > sizeof(tsChannel->scratchBuffer)) {
 		if (tsChannel->in_sync) {
