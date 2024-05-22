@@ -1,6 +1,9 @@
 package com.rusefi.maintenance;
 
+import com.rusefi.core.FindFileHelper;
 import com.rusefi.io.UpdateOperationCallbacks;
+
+import java.io.File;
 
 import static com.rusefi.Launcher.INPUT_FILES_PATH;
 
@@ -26,5 +29,10 @@ public class MaintenanceUtil {
 
     public static boolean detectPcan(UpdateOperationCallbacks wnd) {
         return detectDevice(wnd, WMIC_PCAN_QUERY_COMMAND, "PCAN");
+    }
+
+    public static long getBinaryModificationTimestamp() {
+        String fileName = FindFileHelper.isObfuscated() ? FindFileHelper.findSrecFile() : FIRMWARE_BIN_FILE;
+        return new File(fileName).lastModified();
     }
 }

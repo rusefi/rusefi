@@ -7,6 +7,7 @@ import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.DriverInstall;
+import com.rusefi.maintenance.MaintenanceUtil;
 import com.rusefi.maintenance.StLinkFlasher;
 import com.rusefi.maintenance.ProgramSelector;
 import com.rusefi.ui.LogoHelper;
@@ -23,6 +24,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Date;
 import java.util.List;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -156,6 +158,8 @@ public class StartupFrame {
 //            realHardwarePanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_FILE, "ST-LINK Program Firmware", "Default firmware version for most users").getButton());
             JComponent updateHelp = ProgramSelector.createHelpButton();
 
+            JLabel comp = binaryModificationControl();
+            realHardwarePanel.add(comp, "right, wrap");
             realHardwarePanel.add(updateHelp, "right, wrap");
 
             // st-link is pretty advanced use-case, real humans do not have st-link as of 2021
@@ -221,6 +225,12 @@ public class StartupFrame {
         for (Component component : getAllComponents(frame)) {
             component.addKeyListener(hwTestEasterEgg);
         }
+    }
+
+    private static @NotNull JLabel binaryModificationControl() {
+        long binaryModificationTimestamp = MaintenanceUtil.getBinaryModificationTimestamp();
+        String fileTimestampText = binaryModificationTimestamp == 0 ? "firmware file not found" : new Date(binaryModificationTimestamp).toString();
+        return new JLabel(fileTimestampText);
     }
 
     private void applyKnownPorts(SerialPortScanner.AvailableHardware currentHardware) {
