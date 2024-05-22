@@ -69,7 +69,7 @@ public class StartupFrame {
     private final JLabel noPortsMessage = new JLabel("Scanning ports...");
 
     public StartupFrame() {
-        String title = "rusEFI console version " + Launcher.CONSOLE_VERSION;
+        String title = "rusEFI console " + Launcher.CONSOLE_VERSION;
         log.info(title);
         noPortsMessage.setForeground(Color.red);
         frame = FrameHelper.createFrame(title).getFrame();
@@ -208,7 +208,7 @@ public class StartupFrame {
         if (logo != null)
             rightPanel.add(logo);
         rightPanel.add(LogoHelper.createUrlLabel());
-        rightPanel.add(new JLabel("Version " + Launcher.CONSOLE_VERSION));
+        rightPanel.add(new JLabel("Console " + Launcher.CONSOLE_VERSION));
 
         JPanel content = new JPanel(new BorderLayout());
         content.add(leftPanel, BorderLayout.WEST);
@@ -229,7 +229,7 @@ public class StartupFrame {
 
     private static @NotNull JLabel binaryModificationControl() {
         long binaryModificationTimestamp = MaintenanceUtil.getBinaryModificationTimestamp();
-        String fileTimestampText = binaryModificationTimestamp == 0 ? "firmware file not found" : new Date(binaryModificationTimestamp).toString();
+        String fileTimestampText = binaryModificationTimestamp == 0 ? "firmware file not found" : ("Files " + new Date(binaryModificationTimestamp).toString());
         return new JLabel(fileTimestampText);
     }
 
