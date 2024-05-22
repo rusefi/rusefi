@@ -170,6 +170,10 @@ static const char* mc33810_pin_names[MC33810_OUTPUTS] = {
 /* Driver local functions.													*/
 /*==========================================================================*/
 
+inline bool isCor(uint16_t rx) {
+  return rx & REP_FLAG_COR;
+}
+
 /**
  * @brief MC33810 send and receive routine.
  * @details Sends and receives 16 bits. CS asserted before and released
@@ -203,7 +207,7 @@ int Mc33810::spi_rw(uint16_t tx, uint16_t *rx_ptr)
 		/* update statistic counters - common flags */
 		if (rx & REP_FLAG_RESET)
 			rst_cnt++;
-		if (rx & REP_FLAG_COR)
+		if (isCor(rx))
 			cor_cnt++;
 
 		if (((TX_GET_CMD(recentTx) >= 0x1) && (TX_GET_CMD(recentTx) <= 0xa)) ||
@@ -402,7 +406,15 @@ int Mc33810::chip_init()
 	  float vBatt = Sensor::getOrZero(SensorType::BatteryVoltage);
 	  if (vBatt > 6 || needBatteryMessage.getElapsedSeconds() > 7) {
 	    needBatteryMessage.reset();
-		  efiPrintf(DRIVER_NAME " spi loopback test failed [%d] vBatt=%f", rx, vBatt);
+	    const char *msg;
+	    if (rx == 0xffff) {
+	      msg = "No power?";
+	    } else if (isCor(rx)) {
+	      msg = "COR";
+	    } else {
+	      msg = "unexpected";
+	    }
+		  efiPrintf(DRIVER_NAME " spi loopback test failed [%d][%s] vBatt=%f", rx, msg, vBatt);
 		}
 		ret = -2;
 		goto err_exit;
