@@ -125,7 +125,9 @@ void TsChannelBase::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, siz
 	assertPacketSize(size, allowLongPackets);
 
 	if (isBigPacket(size)) {
-		// for larger packets we do not use a buffer for CRC calculation meaning data is now allowed to modify while pending
+		// For larger packets we also use a buffer for CRC calculation
+		// but we do it in buffer sized blocks. Therefore, the overall CRC will
+		// be valid, but the data may be partially updated during the sending process
 		writeCrcPacketLarge(responseCode, buf, size);
 	} else {
 		// for small packets we use a buffer for CRC calculation
