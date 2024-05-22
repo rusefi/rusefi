@@ -139,8 +139,7 @@ void LaunchControlBase::update() {
 	we never had UI for 'launchAdvanceRpmRange' so it was always zero. are we supposed to forget about this dead line
 	or it is supposed to be referencing 'launchTimingRpmRange'?
 	         + (engineConfiguration->enableLaunchRetard ? engineConfiguration->launchAdvanceRpmRange : 0)
-*/
-		- (engineConfiguration->enableLaunchRetard ? engineConfiguration->launchRpmWindow : 0);
+	*/;
 
 	if (!combinedConditions) {
 		// conditions not met, reset timer
