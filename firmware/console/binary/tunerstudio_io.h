@@ -52,11 +52,6 @@ public:
 	void writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size);
 	void sendResponse(ts_response_format_e mode, const uint8_t * buffer, int size);
 
-#ifdef CUSTOM_TS_BUFFER_SIZE
-  #define scratchBuffer_SIZE CUSTOM_TS_BUFFER_SIZE
-#else
-  #define scratchBuffer_SIZE BLOCKING_FACTOR
-#endif // CUSTOM_TS_BUFFER
 	char scratchBuffer[256];
 #if EFI_TS_SCATTER
 	page1_s page1;
