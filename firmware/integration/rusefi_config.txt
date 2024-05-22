@@ -1182,8 +1182,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	bit luaCanRxWorkaround
 	bit flexSensorInverted,"Inverted","Normal"
 	bit useHardSkipInTraction
-	bit fancySmartS
-	bit fancySmartL
+	bit unusedHere1212
+	bit unusedHere1213
 	bit useAuxSpeedForSlipRatio;Use Aux Speed 1 as one of speeds for wheel slip ratio?
 	bit useVssAsSecondWheelSpeed;VSS and Aux Speed 1 or Aux Speed 1 with Aux Speed 2?
 	bit is_enabled_spi_5

@@ -21,7 +21,7 @@
 #define ts_show_gdi true
 #define ts_show_fancy_hardware true
 
-#define show_4chan_presets true
+
 #define ts_show_ign_key_analog_input true
 ! todo: insert actual value here!
 #define IGN_KEY_DIVIDER 3
