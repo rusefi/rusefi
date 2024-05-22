@@ -31,6 +31,7 @@ set_board_file BOARD_DIAG_PANEL1_FILE "${BOARD_DIR}/board_diag_panel1.ini"
 set_board_file BOARD_DIAG_PANEL2_FILE "${BOARD_DIR}/board_diag_panel2.ini"
 
 COMMON_GEN_CONFIG="
+ -prepend integration/ts_protocol.txt \
  -readfile OUTPUTS_SECTION_FROM_FILE ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/output_channels.ini \
  -readfile DATALOG_SECTION_FROM_FILE ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/data_logs.ini \
  -readfile LIVE_DATA_MENU_FROM_FILE ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/fancy_menu.ini \
@@ -60,7 +61,6 @@ COMMON_GEN_CONFIG="
  -signature tunerstudio/generated/signature_${SHORT_BOARD_NAME}.txt \
  -signature_destination controllers/generated/signature_${SHORT_BOARD_NAME}.h \
  -ts_output_name generated/${INI} \
- -prepend integration/ts_protocol.txt \
  -prepend integration/rusefi_config_trigger.txt \
  -prepend ${BOARD_DIR}/prepend.txt \
  -board ${BOARD_DIR}"
