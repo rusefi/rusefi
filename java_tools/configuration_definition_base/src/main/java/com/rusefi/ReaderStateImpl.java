@@ -414,12 +414,12 @@ public class ReaderStateImpl implements ReaderState {
             // see LiveDataProcessor use-case with dynamic prepend usage
             return;
         }
+        variableRegistry.readPrependValues(fileName, false);
         inputFiles.add(fileName);
-        addPrependNotInput(fileName);
     }
 
     @Override
-    public void addPrependNotInput(String fileName) {
+    public void addPostponedPrependNotInput(String fileName) {
         prependFiles.add(fileName);
     }
 
