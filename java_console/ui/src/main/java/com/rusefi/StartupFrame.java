@@ -69,6 +69,7 @@ public class StartupFrame {
     public StartupFrame() {
         String title = "rusEFI console version " + Launcher.CONSOLE_VERSION;
         log.info(title);
+        noPortsMessage.setForeground(Color.red);
         frame = FrameHelper.createFrame(title).getFrame();
         frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -226,10 +227,18 @@ public class StartupFrame {
         List<SerialPortScanner.PortResult> ports = currentHardware.getKnownPorts();
         log.info("Rendering available ports: " + ports);
         connectPanel.setVisible(!ports.isEmpty());
-        noPortsMessage.setText(NO_PORTS_FOUND);
-        noPortsMessage.setVisible(ports.isEmpty());
 
-        applyPortSelectionToUIcontrol(ports);
+
+        boolean hasEcuOrBootloader = applyPortSelectionToUIcontrol(ports);
+        if (ports.isEmpty()) {
+            noPortsMessage.setText(NO_PORTS_FOUND);
+        } else {
+            noPortsMessage.setText("Make sure you are disconnected from TunerStudio");
+        }
+
+        noPortsMessage.setVisible(ports.isEmpty() || !hasEcuOrBootloader);
+
+
         UiUtils.trueLayout(connectPanel);
     }
 
@@ -282,10 +291,16 @@ public class StartupFrame {
         SerialPortScanner.INSTANCE.stopTimer();
     }
 
-    private void applyPortSelectionToUIcontrol(List<SerialPortScanner.PortResult> ports) {
+    private boolean applyPortSelectionToUIcontrol(List<SerialPortScanner.PortResult> ports) {
         comboPorts.removeAllItems();
+        boolean hasEcuOrBootloader = false;
         for (final SerialPortScanner.PortResult port : ports) {
             comboPorts.addItem(port);
+            if (port.type == SerialPortScanner.SerialPortType.Ecu ||
+                port.type == SerialPortScanner.SerialPortType.EcuWithOpenblt ||
+                port.type == SerialPortScanner.SerialPortType.OpenBlt) {
+                hasEcuOrBootloader = true;
+            }
         }
         String defaultPort = getConfig().getRoot().getProperty(ConsoleUI.PORT_KEY);
         if (!PersistentConfiguration.getBoolProperty(ALWAYS_AUTO_PORT)) {
@@ -293,6 +308,7 @@ public class StartupFrame {
         }
 
         trueLayout(comboPorts);
+        return hasEcuOrBootloader;
     }
 
     private static JComboBox<String> createSpeedCombo() {
