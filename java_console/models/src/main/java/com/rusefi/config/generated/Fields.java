@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed May 22 11:32:38 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed May 22 14:35:55 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1195,7 +1195,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 2060260705;
+	public static final int SIGNATURE_HASH = 1978704930;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1451,7 +1451,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.05.22.f407-discovery.2060260705";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.05.22.f407-discovery.1978704930";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2209,8 +2209,6 @@ public class Fields {
 	public static final Field LUACANRXWORKAROUND = Field.create("LUACANRXWORKAROUND", 1496, FieldType.BIT, 6).setBaseOffset(0);
 	public static final Field FLEXSENSORINVERTED = Field.create("FLEXSENSORINVERTED", 1496, FieldType.BIT, 7).setBaseOffset(0);
 	public static final Field USEHARDSKIPINTRACTION = Field.create("USEHARDSKIPINTRACTION", 1496, FieldType.BIT, 8).setBaseOffset(0);
-	public static final Field FANCYSMARTS = Field.create("FANCYSMARTS", 1496, FieldType.BIT, 9).setBaseOffset(0);
-	public static final Field FANCYSMARTL = Field.create("FANCYSMARTL", 1496, FieldType.BIT, 10).setBaseOffset(0);
 	public static final Field USEAUXSPEEDFORSLIPRATIO = Field.create("USEAUXSPEEDFORSLIPRATIO", 1496, FieldType.BIT, 11).setBaseOffset(0);
 	public static final Field USEVSSASSECONDWHEELSPEED = Field.create("USEVSSASSECONDWHEELSPEED", 1496, FieldType.BIT, 12).setBaseOffset(0);
 	public static final Field IS_ENABLED_SPI_5 = Field.create("IS_ENABLED_SPI_5", 1496, FieldType.BIT, 13).setBaseOffset(0);
@@ -3877,8 +3875,6 @@ public class Fields {
 	LUACANRXWORKAROUND,
 	FLEXSENSORINVERTED,
 	USEHARDSKIPINTRACTION,
-	FANCYSMARTS,
-	FANCYSMARTL,
 	USEAUXSPEEDFORSLIPRATIO,
 	USEVSSASSECONDWHEELSPEED,
 	IS_ENABLED_SPI_5,

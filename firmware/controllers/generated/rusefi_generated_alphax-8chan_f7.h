@@ -120,7 +120,6 @@
 #define BOARD_GAUGES_FROM_FILE 
 #define BOARD_INDICATORS_FROM_FILE 
 #define BOARD_MENU_FROM_FILE 
-#define BOARD_OPTIONS_FROM_FILE 
 #define BOARD_PANELS_FROM_FILE 
 #define BOARD_TABLES_FROM_FILE 
 #define BOOST_BLEND_COUNT 2
@@ -1267,12 +1266,11 @@
 #define SentEtbType_FORD_TYPE_1 2
 #define SentEtbType_GM_TYPE_1 1
 #define SentEtbType_NONE 0
-#define show_8chan_presets true
 #define show_Frankenso_presets false
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 3000654791
+#define SIGNATURE_HASH 3121713794
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1662,7 +1660,7 @@
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins false
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.05.22.alphax-8chan_f7.3000654791"
+#define TS_SIGNATURE "rusEFI master.2024.05.22.alphax-8chan_f7.3121713794"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

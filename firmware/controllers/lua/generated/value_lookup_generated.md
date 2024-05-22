@@ -1096,12 +1096,6 @@ See Over/Undervoltage Shutdown/Retry bit in documentation
 ### useHardSkipInTraction
 
 
-### fancySmartS
-
-
-### fancySmartL
-
-
 ### useAuxSpeedForSlipRatio
 Use Aux Speed 1 as one of speeds for wheel slip ratio?
 
