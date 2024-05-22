@@ -134,12 +134,7 @@ void LaunchControlBase::update() {
 	combinedConditions = isLaunchConditionMet(rpm);
 
 	//and still recalculate in case user changed the values
-	retardThresholdRpm = engineConfiguration->launchRpm
-	/*
-	we never had UI for 'launchAdvanceRpmRange' so it was always zero. are we supposed to forget about this dead line
-	or it is supposed to be referencing 'launchTimingRpmRange'?
-	         + (engineConfiguration->enableLaunchRetard ? engineConfiguration->launchAdvanceRpmRange : 0)
-	*/;
+	retardThresholdRpm = engineConfiguration->launchRpm;
 
 	if (!combinedConditions) {
 		// conditions not met, reset timer
