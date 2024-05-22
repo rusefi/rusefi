@@ -2369,8 +2369,7 @@ end_struct
 #define TS_CHUNK_WRITE_COMMAND 'C'
 ! 0x42 burnCommand
 #define TS_BURN_COMMAND 'B'
-! 0x77
-#define TS_IO_TEST_COMMAND 'Z'
+! see also rusefi_config_protocol.txt
 
 #define TS_RESPONSE_OK 0
 #define TS_RESPONSE_BURN_OK 4

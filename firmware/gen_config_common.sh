@@ -40,6 +40,7 @@ COMMON_GEN_CONFIG="
  -readfile BOARD_PANELS_FROM_FILE ${BOARD_PANELS_FILE} \
  -readfile BOARD_INDICATORS_FROM_FILE ${BOARD_INDICATORS_FILE} \
  -readfile BOARD_GAUGES_FROM_FILE ${BOARD_GAUGES_FILE} \
+ -prepend integration/rusefi_config_protocol.txt \
  -readfile COMMANDS_FROM_FILE ${BOARD_COMMANDS_FILE} \
   -ts_destination tunerstudio \
  -triggerInputFolder ../unit_tests \

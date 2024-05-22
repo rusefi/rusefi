@@ -1,0 +1,6 @@
+!
+! board_commands.ini is one of consumers thus order of includes matters
+!
+
+! 0x77
+#define TS_IO_TEST_COMMAND 'Z'
