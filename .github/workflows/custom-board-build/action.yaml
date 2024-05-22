@@ -221,7 +221,9 @@ runs:
         bash bin/compile.sh $BOARD_META_PATH config
 
     - name: Add Config to Commit Regardless of firmware build status
-      if: ${{ inputs.push == 'true' }}
+#      if: ${{ inputs.push == 'true' }}
+# looks like gen_live_data is either not invoked or not working right here?
+      if: "false"
       shell: bash
       run: |
         git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*
