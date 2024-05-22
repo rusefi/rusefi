@@ -67,11 +67,9 @@ public:
 	uint32_t writePacketBody(const uint8_t* buf, const size_t size, uint32_t crc);
 	void writeCrcPacketTail(uint32_t crc);
 
-	void copyAndWriteSmallCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size);
-
 	// Write a response code with no data
 	void writeCrcResponse(uint8_t responseCode) {
-		writeCrcPacketLarge(responseCode, nullptr, 0);
+		writeCrcPacketSmall(responseCode, nullptr, 0);
 	}
 
 	/* When TsChannel is in "not in sync" state tsProcessOne will silently try to find
@@ -89,6 +87,7 @@ public:
 private:
 	bool isBigPacket(size_t size);
 	void writeCrcPacketLarge(uint8_t responseCode, const uint8_t* buf, size_t size);
+	void writeCrcPacketSmall(uint8_t responseCode, const uint8_t* buf, size_t size);
 };
 
 // This class represents a channel for a physical async serial poart
