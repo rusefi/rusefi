@@ -747,8 +747,8 @@
         <constant name="luaCanRxWorkaround">"false"</constant>
         <constant name="flexSensorInverted">"Normal"</constant>
         <constant name="useHardSkipInTraction">"false"</constant>
-        <constant name="fancySmartS">"false"</constant>
-        <constant name="fancySmartL">"false"</constant>
+        <constant name="unusedHere1212">"false"</constant>
+        <constant name="unusedHere1213">"false"</constant>
         <constant name="useAuxSpeedForSlipRatio">"false"</constant>
         <constant name="useVssAsSecondWheelSpeed">"false"</constant>
         <constant name="is_enabled_spi_5">"false"</constant>
@@ -4715,7 +4715,7 @@ end</constant>
 </constant>
         <constant digits="0" name="tcu_shiftTime" units="ms">0.0</constant>
     </page>
-    <versionInfo firmwareInfo="20240511" nPages="1" signature="rusEFI master.2024.05.22.f407-discovery.2060260705" version="5.0"/>
+    <versionInfo firmwareInfo="20240511" nPages="1" signature="rusEFI master.2024.05.22.f407-discovery.1978704930" version="5.0"/>
     <bibliography author="rusEFI 20240511" writeDate="date"/>
     <settings/>
     <userComments/>
