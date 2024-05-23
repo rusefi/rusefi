@@ -10,6 +10,8 @@
 
 #pragma once
 
+#include <rusefi/true_false.h>
+
 #define EFI_GPIO_HARDWARE TRUE
 
 #ifndef SENT_CHANNELS_NUM
@@ -34,6 +36,10 @@
 
 #ifndef EFI_BACKUP_SRAM
 #define EFI_BACKUP_SRAM TRUE
+#endif
+
+#ifndef EFI_HELLA_OIL
+#define EFI_HELLA_OIL FALSE
 #endif
 
 #ifndef EFI_USE_OPENBLT
