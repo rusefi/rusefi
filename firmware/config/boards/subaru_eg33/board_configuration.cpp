@@ -240,7 +240,10 @@ static const struct mc33810_config mc33810_odd = {
 			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	/* div = 16 */
 			SPI_CR1_MSTR |
 			/* SPI_CR1_CPOL | */ // = 0
+			/*
+			https://github.com/rusefi/rusefi/issues/6538 says that should be zero
 			SPI_CR1_CPHA | // = 1
+			*/
 			0,
 		.cr2 = //SPI_CR2_16BIT_MODE |
 			SPI_CR2_DS_3 | SPI_CR2_DS_2 | SPI_CR2_DS_1 | SPI_CR2_DS_0
@@ -276,7 +279,10 @@ static const struct mc33810_config mc33810_even = {
 			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	/* div = 16 */
 			SPI_CR1_MSTR |
 			/* SPI_CR1_CPOL | */ // = 0
+			/*
+			https://github.com/rusefi/rusefi/issues/6538 says that should be zero
 			SPI_CR1_CPHA | // = 1
+			*/
 			0,
 		.cr2 = SPI_CR2_16BIT_MODE
 	},

@@ -151,8 +151,6 @@ static const struct mc33810_config mc33810 = {
 //			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	/* div = 16 */
 			((0b110 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	/* div = 128 */
 			SPI_CR1_MSTR |
-			/* SPI_CR1_CPOL | */ // = 0
-			SPI_CR1_CPHA | // = 1
 			0,
 		.cr2 = SPI_CR2_16BIT_MODE
 	},
