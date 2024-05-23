@@ -235,7 +235,6 @@ static void processLastKnockEvent() {
 #ifdef KNOCK_SPECTROGRAM
 	if(enableKnockSpectrogram) {
 		//ScopePerf perf(PE::KnockAnalyzer);
-		constexpr float ratio = 3.3f / 4095.0f;
 
 		fft::fft_adc_sample(spectrogramData->window, ratio, sampleBuffer, spectrogramData->fftBuffer, SIZE);
 		fft::fft_freq(spectrogramData->frequencies, SIZE, KNOCK_SAMPLE_RATE); //samples per sec 218750
