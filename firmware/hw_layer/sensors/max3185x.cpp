@@ -217,9 +217,9 @@ private:
 		}
 	}
 
-	int spi_txrx(size_t ch, uint8_t tx[], uint8_t rx[], size_t n)
+	int spi_txrx(size_t channel, uint8_t tx[], uint8_t rx[], size_t n)
 	{
-		brain_pin_e cs = m_cs[ch];
+		brain_pin_e cs = m_cs[channel];
 
 		if ((!isBrainPinValid(cs)) || (driver == NULL)) {
 			return -1;
@@ -246,14 +246,14 @@ private:
 		return 0;
 	}
 
-	int spi_rx32(size_t ch, uint32_t *data)
+	int spi_rx32(size_t channel, uint32_t *data)
 	{
 		int ret;
 		/* dummy */
 		uint8_t tx[4] = {0};
 		uint8_t rx[4];
 
-		ret = spi_txrx(ch, tx, rx, 4);
+		ret = spi_txrx(channel, tx, rx, 4);
 		if (ret) {
 			return ret;
 		}
@@ -267,7 +267,7 @@ private:
 		return 0;
 	}
 
-	Max3185xType detect(size_t ch)
+	Max3185xType detect(size_t channel)
 	{
 		int ret;
 		uint8_t rx[4];
@@ -279,7 +279,7 @@ private:
 		// CR0: 50Hz mode
 		// Change the notch frequency only while in the "Normally Off" mode - not in the Automatic
 		tx[1] = 0x01;
-		ret = spi_txrx(ch, tx, rx, 2);
+		ret = spi_txrx(channel, tx, rx, 2);
 		if (ret) {
 			return UNKNOWN_TYPE;
 		}
@@ -288,14 +288,14 @@ private:
 		tx[1] = BIT(7) | BIT(0) | (2 << 4);
 		// CR1: 4 samples average, K type
 		tx[2] = (2 << 4) | (3 << 0);
-		ret = spi_txrx(ch, tx, rx, 3);
+		ret = spi_txrx(channel, tx, rx, 3);
 		if (ret) {
 			return UNKNOWN_TYPE;
 		}
 
 		/* Now readback settings */
 		tx[0] = 0x00;
-		ret = spi_txrx(ch, tx, rx, 4);
+		ret = spi_txrx(channel, tx, rx, 4);
 		if ((rx[1] == tx[1]) && (rx[2] == tx[2])) {
 			return MAX31856_TYPE;
 		}
@@ -339,12 +339,12 @@ private:
 		}
 	}
 
-	Max3185xState getMax31855EgtValues(size_t ch, float *temp, float *coldJunctionTemp) {
+	Max3185xState getMax31855EgtValues(size_t channel, float *temp, float *coldJunctionTemp) {
 		uint32_t packet;
 		Max3185xState code = MAX3185X_NO_REPLY;
 		int ret;
 
-		ret = spi_rx32(ch, &packet);
+		ret = spi_rx32(channel, &packet);
 		if (ret == 0) {
 			code = getMax31855ErrorCode(packet);
 		}
@@ -373,13 +373,13 @@ private:
 		return code;
 	}
 
-	Max3185xState getMax31856EgtValues(size_t ch, float *temp, float *coldJunctionTemp)
+	Max3185xState getMax31856EgtValues(size_t channel, float *temp, float *coldJunctionTemp)
 	{
 		uint8_t rx[7];
 		/* read Cold-Junction temperature MSB, LSB, Linearized TC temperature 3 bytes and Fault Status */
 		uint8_t tx[7] = {0x0a};
 
-		int ret = spi_txrx(ch, tx, rx, 7);
+		int ret = spi_txrx(channel, tx, rx, 7);
 		if (ret) {
 			return MAX3185X_NO_REPLY;
 		}
@@ -411,31 +411,31 @@ private:
 		return MAX3185X_OK;
 	}
 
-	Max3185xState getMax3185xEgtValues(size_t ch, float *temp, float *coldJunctionTemp) {
+	Max3185xState getMax3185xEgtValues(size_t channel, float *temp, float *coldJunctionTemp) {
 		Max3185xState ret;
 
-		if ((!isBrainPinValid(m_cs[ch])) || (!driver)) {
+		if ((!isBrainPinValid(m_cs[channel])) || (!driver)) {
 			return MAX3185X_NOT_ENABLED;
 		}
 
 		/* if chip type is not detected yet try to detect */
-		if (types[ch] == UNKNOWN_TYPE) {
-			types[ch] = detect(ch);
+		if (types[channel] == UNKNOWN_TYPE) {
+			types[channel] = detect(channel);
 		}
 
 		/* failed? bail out */
-		if (types[ch] == UNKNOWN_TYPE) {
+		if (types[channel] == UNKNOWN_TYPE) {
 			return MAX3185X_NO_REPLY;
 		}
 
-		if (types[ch] == MAX31855_TYPE) {
-			ret = getMax31855EgtValues(ch, temp, coldJunctionTemp);
+		if (types[channel] == MAX31855_TYPE) {
+			ret = getMax31855EgtValues(channel, temp, coldJunctionTemp);
 		} else {
-			ret = getMax31856EgtValues(ch, temp, coldJunctionTemp);
+			ret = getMax31856EgtValues(channel, temp, coldJunctionTemp);
 		}
 
 		if (ret == MAX3185X_NO_REPLY) {
-			types[ch] = UNKNOWN_TYPE;
+			types[channel] = UNKNOWN_TYPE;
 		}
 
 		return ret;

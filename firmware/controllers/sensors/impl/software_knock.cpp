@@ -230,12 +230,11 @@ static void processLastKnockEvent() {
 	// We're done with inspecting the buffer, another sample can be taken
 	knockNeedsProcess = false;
 
-	float mainFreq = 0.f;
+	// looks like we have a defect float mainFreq = 0.f;
 
 #ifdef KNOCK_SPECTROGRAM
 	if(enableKnockSpectrogram) {
 		//ScopePerf perf(PE::KnockAnalyzer);
-		constexpr float ratio = 3.3f / 4095.0f;
 
 		fft::fft_adc_sample(spectrogramData->window, ratio, sampleBuffer, spectrogramData->fftBuffer, SIZE);
 		fft::fft_freq(spectrogramData->frequencies, SIZE, KNOCK_SAMPLE_RATE); //samples per sec 218750
@@ -259,7 +258,7 @@ static void processLastKnockEvent() {
 	// clamp to reasonable range
 	db = clampF(-100, db, 100);
 
-	engine->module<KnockController>()->onKnockSenseCompleted(currentCylinderNumber, db, mainFreq, lastKnockTime);
+	engine->module<KnockController>()->onKnockSenseCompleted(currentCylinderNumber, db, 0/* looks like we have a defect mainFreq*/, lastKnockTime);
 }
 
 void KnockThread::ThreadTask() {

@@ -216,9 +216,9 @@ private:
 		uint16_t totalTooth;
 	} Tach[MSIOBOX_TACH_IN_COUNT];
 	/* Can settings */
-	uint32_t bus;
-	uint32_t base;
-	uint32_t period;
+	uint32_t m_bus;
+	uint32_t m_base;
+	uint32_t m_period;
 	/* IOBox timebase */
 	/* PWM clock period in 0.01 uS units, default is 5000 */
 	uint32_t pwmBaseFreq = 1000 * 1000 * 100 / 5000;	/* Hz */
@@ -236,11 +236,11 @@ private:
 };
 
 MsIoBox::MsIoBox()
-	: CanListener(0), bus(0), base(0), period(20) {
+	: CanListener(0), m_bus(0), m_base(0), m_period(20) {
 }
 
 MsIoBox::MsIoBox(uint32_t bus, uint32_t base, uint16_t period)
-	: CanListener(0), bus(bus), base(base), period(period) {
+	: CanListener(0), m_bus(bus), m_base(base), m_period(period) {
 	/* init state */
 	state = MSIOBOX_WAIT_INIT;
 	stateTimer.reset();
@@ -252,12 +252,12 @@ int MsIoBox::init()
 	return 0;
 }
 
-int MsIoBox::config(uint32_t _bus, uint32_t _base, uint16_t _period)
+int MsIoBox::config(uint32_t bus, uint32_t base, uint16_t period)
 {
 	/* TODO: sanity checks? */
-	bus = _bus;
-	base = _base;
-	period = _period;
+	m_bus = bus;
+	m_base = base;
+	m_period = period;
 
 	/* Force init */
 	state = MSIOBOX_WAIT_INIT;
@@ -279,7 +279,7 @@ bool MsIoBox::acceptFrame(const CANRxFrame& frame) const {
 
 	/* packets with ID (base + 0) to (base + 5) are received by MSIOBox
 	 * (base + 8) to (base + 14) are emited by MSIOBox */
-	if ((id >= base + 8) && (id <= base + 14)) {
+	if ((id >= m_base + 8) && (id <= m_base + 14)) {
 		return true;
 	}
 
@@ -288,33 +288,33 @@ bool MsIoBox::acceptFrame(const CANRxFrame& frame) const {
 
 /* Ping iobox */
 int MsIoBox::ping() {
-	CanTxTyped<iobox_ping> frame(CanCategory::MEGASQUIRT, base + CAN_IOBOX_PING, false, 0);
+	CanTxTyped<iobox_ping> frame(CanCategory::MEGASQUIRT, m_base + CAN_IOBOX_PING, false, 0);
 
 	return 0;
 }
 
 /* Send init settings */
 int MsIoBox::setup() {
-	CanTxTyped<iobox_cfg> cfg(CanCategory::MEGASQUIRT, base + CAN_IOBOX_CONFIG, false, 0);
+	CanTxTyped<iobox_cfg> cfg(CanCategory::MEGASQUIRT, m_base + CAN_IOBOX_CONFIG, false, 0);
 
 	cfg->pwm_mask = OutMode;
 	cfg->tachin_mask = InMode;
-	cfg->adc_broadcast_interval = period;
-	cfg->tach_broadcast_interval = period;
+	cfg->adc_broadcast_interval = m_period;
+	cfg->tach_broadcast_interval = m_period;
 
 	return 0;
 }
 
-void MsIoBox::CalcOnOffPeriod(int ch, pwm_settings &pwm)
+void MsIoBox::CalcOnOffPeriod(int channel, pwm_settings &pwm)
 {
-	if ((OutMode & BIT(ch)) == 0) {
+	if ((OutMode & BIT(channel)) == 0) {
 		pwm.on = pwm.off = 0;
 		return;
 	}
 
-	int period = (pwmBaseFreq + (OutPwm[ch].frequency / 2)) / OutPwm[ch].frequency;
+	int period = (pwmBaseFreq + (OutPwm[channel].frequency / 2)) / OutPwm[channel].frequency;
 
-	pwm.on = period * OutPwm[ch].duty;
+	pwm.on = period * OutPwm[channel].duty;
 	pwm.off = period - pwm.on;
 }
 
@@ -328,7 +328,7 @@ int MsIoBox::update() {
 		if ((OutMode & (BIT(i) | BIT(i + 1))) == 0)
 			continue;
 
-		CanTxTyped<iobox_pwm> pwm(CanCategory::MEGASQUIRT, base + CAN_IOBOX_SET_PWM(i), false, 0);
+		CanTxTyped<iobox_pwm> pwm(CanCategory::MEGASQUIRT, m_base + CAN_IOBOX_SET_PWM(i), false, 0);
 		for (size_t j = 0; j < 2; j++) {
 			CalcOnOffPeriod(i + j, pwm->ch[j]);
 		}
@@ -336,7 +336,7 @@ int MsIoBox::update() {
 
 	/* PWM7 periods and on/off outputs bitfield - sent always */
 	{
-		CanTxTyped<iobox_pwm_last> pwm(CanCategory::MEGASQUIRT, base + CAN_IOBOX_SET_PWM(3), false, 0);
+		CanTxTyped<iobox_pwm_last> pwm(CanCategory::MEGASQUIRT, m_base + CAN_IOBOX_SET_PWM(3), false, 0);
 
 		CalcOnOffPeriod(MSIOBOX_OUT_COUNT - 1, pwm->ch[0]);
 
@@ -348,7 +348,7 @@ int MsIoBox::update() {
 
 void MsIoBox::decodeFrame(const CANRxFrame& frame, efitick_t) {
 	uint32_t id = CAN_ID(frame);
-	uint32_t offset = id - base;
+	uint32_t offset = id - m_base;
 	bool handled = true;
 
 	if (state == MSIOBOX_READY) {
@@ -475,7 +475,7 @@ brain_pin_diag_e MsIoBox::getDiag(size_t pin)
 	if (pin >= MSIOBOX_SIGNALS)
 		return PIN_UNKNOWN;
 
-	if ((state == MSIOBOX_READY) && (!stateTimer.hasElapsedMs(period * 3)))
+	if ((state == MSIOBOX_READY) && (!stateTimer.hasElapsedMs(m_period * 3)))
 		return PIN_OK;
 
 	/* find better state  */
@@ -502,7 +502,7 @@ void MsIoBox::checkState(void)
 		}
 		break;
 	case MSIOBOX_READY:
-		if (stateTimer.hasElapsedMs(period * 3)) {
+		if (stateTimer.hasElapsedMs(m_period * 3)) {
 			state = MSIOBOX_FAILED;
 			stateTimer.reset();
 		} else {

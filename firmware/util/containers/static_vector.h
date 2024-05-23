@@ -41,6 +41,7 @@ struct static_vector {
 	}
 
 private:
-	size_t m_size = 0;
 	T m_storage[TSlots];
+	// wow: order of field declaration matters here, gcc glitch?
+	size_t m_size = 0;
 };

@@ -2,6 +2,7 @@
  * @file efifeatures.h
  *
  * @brief In this header we can configure which firmware modules are used.
+ * See config/boards which are often overriding some of the defaults via .mk and/or .env files
  *
  * @date Aug 29, 2013
  * @author Andrey Belomutskiy, (c) 2012-2020

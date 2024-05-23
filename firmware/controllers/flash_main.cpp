@@ -336,11 +336,11 @@ static void rewriteConfig() {
 void initFlash() {
 #if EFI_STORAGE_MFS == TRUE
 	boardInitMfs();
-	const MFSConfig *config = boardGetMfsConfig();
+	const MFSConfig *mfsConfig = boardGetMfsConfig();
 
 	/* MFS */
 	mfsObjectInit(&mfsd);
-	mfs_error_t err = mfsStart(&mfsd, config);
+	mfs_error_t err = mfsStart(&mfsd, mfsConfig);
 	if (err < MFS_NO_ERROR) {
 		/* hm...? */
 	}

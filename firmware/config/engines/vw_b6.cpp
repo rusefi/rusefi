@@ -142,6 +142,7 @@ static const float hardCodedGperSValues[] {
 void setProteusVwPassatB6() {
 #if HW_PROTEUS
 	static_assert(sizeof(hardCodedFreqBins) == sizeof(hardCodedGperSValues));
+#if SCRIPT_CURVE_16 == 16
 	{
 		size_t mi = 0;
 		for (; mi < efi::size(hardCodedFreqBins); mi++) {
@@ -155,7 +156,7 @@ void setProteusVwPassatB6() {
 		}
 	}
 	strcpy(engineConfiguration->scriptCurveName[0], "MAFcurve");
-
+#endif
 
 	commonPassatB6();
 	engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;
