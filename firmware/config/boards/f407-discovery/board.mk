@@ -17,9 +17,6 @@ endif
 
 DDEFS += -DEFI_SENT_SUPPORT=TRUE
 
-# temporary solution for variable shadowing should be avoided #5676
-DDEFS += -Werror=shadow
-
 # User can configure LIN/K-line interface
 DDEFS += -DEFI_KLINE=TRUE
 DDEFS += -DKLINE_SERIAL_DEVICE_RX=Gpio::C11 -DKLINE_SERIAL_DEVICE_TX=Gpio::C10
