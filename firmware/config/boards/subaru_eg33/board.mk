@@ -17,6 +17,9 @@ DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_SUBARU_EG33_F7
 # Override DEFAULT_ENGINE_TYPE
 DDEFS += -DDEFAULT_ENGINE_TYPE=engine_type_e::SUBARU_EG33
 
+# temporary solution for variable shadowing should be avoided #5676
+DDEFS += -Werror=shadow
+
 #Some options override
 DDEFS += -DHAL_USE_UART=FALSE
 DDEFS += -DUART_USE_WAIT=FALSE

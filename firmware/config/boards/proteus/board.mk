@@ -16,6 +16,9 @@ DDEFS += -DEFI_MAX_31855=TRUE
 DDEFS += -DSTM32_SPI_USE_SPI5=TRUE
 DDEFS += -DEFI_TCU=TRUE
 
+# temporary solution for variable shadowing should be avoided #5676
+DDEFS += -Werror=shadow
+
 # Any Proteus-based adapter boards with discrete-VR decoder are controlled via a 5v ignition output
 DDEFS += -DVR_SUPPLY_VOLTAGE=5
 
