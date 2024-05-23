@@ -42,8 +42,6 @@ ifneq ("$(wildcard $(../.git))","")
 $(error "../.git not found. We expect source code to be cloned not downloaded as zip file.")
 endif
 
-include rusefi_rules.mk
-
 # Define project name here
 PROJECT = rusefi
 PROJECT_DIR = .
@@ -200,6 +198,9 @@ $(error SHORT_BOARD_NAME not set, something wrong with your meta-info.env file)
 endif
 endif
 DDEFS += -DSHORT_BOARD_NAME=$(SHORT_BOARD_NAME)
+
+# should be after 'board.mk'
+include rusefi_rules.mk
 
 # Include various ChibiOS mk files
 # Licensing files.
