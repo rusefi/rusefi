@@ -743,13 +743,13 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif //EFI_TCU
 
-#if HW_MICRO_RUSEFI || HW_PROTEUS
+#if defined(HW_MICRO_RUSEFI) || HW_PROTEUS
 	case engine_type_e::MERCEDES_M111:
 		setMercedesM111EngineConfiguration();
 		break;
 #endif
 
-#if HW_MICRO_RUSEFI
+#if defined(HW_MICRO_RUSEFI)
 	case engine_type_e::MRE_VW_B6:
 		setMreVwPassatB6();
 		break;
@@ -789,7 +789,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif
 
-#if HW_HELLEN
+#if defined(HW_HELLEN)
 	case engine_type_e::MAZDA_MIATA_NA96:
 		setMazdaMiata96();
 		break;

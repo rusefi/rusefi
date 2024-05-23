@@ -927,7 +927,7 @@ end
 }
 
 void detectBoardType() {
-#if HW_HELLEN && EFI_PROD_CODE
+#if defined(HW_HELLEN) && EFI_PROD_CODE
 	detectHellenBoardType();
 #endif //HW_HELLEN EFI_PROD_CODE
 	// todo: add board ID detection?

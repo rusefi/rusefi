@@ -12,7 +12,7 @@
 
 #include "drivers/gpio/gpio_ext.h"
 
-#if HW_HELLEN
+#if defined(HW_HELLEN)
 #include "hellen_meta.h"
 #endif // HW_HELLEN
 

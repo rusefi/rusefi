@@ -31,7 +31,7 @@ board_id_t getBoardId() {
     }
 #endif
 
-#if HW_MICRO_RUSEFI
+#if defined(HW_MICRO_RUSEFI)
     if (engineConfiguration->engineType == engine_type_e::MERCEDES_M111) {
         return STATIC_BOARD_ID_MRE_M111;
     }

@@ -1,4 +1,4 @@
-#if HW_HELLEN_HYUNDAI
+#if defined(HW_HELLEN_HYUNDAI)
 static void cannedprimeBins() {
 	static const float hardCodedprimeBins[8] = {-40.0, -20.0, 0.0, 20.0, 40.0, 60.0, 80.0, 100.0};
 	copyArray(engineConfiguration->primeBins, hardCodedprimeBins);

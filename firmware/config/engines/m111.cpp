@@ -14,7 +14,7 @@
 #include "proteus_meta.h"
 #endif // HW_PROTEUS
 
-#if HW_MICRO_RUSEFI
+#if defined(HW_MICRO_RUSEFI)
 #include "mre_meta.h"
 #endif // HW_MICRO_RUSEFI
 
@@ -29,7 +29,7 @@ void setMercedesM111EngineConfiguration() {
 	engineConfiguration->canVssNbcType = W202;
 	engineConfiguration->canNbcType = CAN_BUS_W202_C180;
 
-#if HW_HELLEN
+#if defined(HW_HELLEN)
 	engineConfiguration->enableSoftwareKnock = true;
 #endif
 
@@ -57,12 +57,12 @@ void setMercedesM111EngineConfiguration() {
 	engineConfiguration->etb.offset = 0;
 
     strcpy(engineConfiguration->gpPwmNote[0], "SC Bypass");
-#if HW_MICRO_RUSEFI && EFI_PROD_CODE
+#if defined(HW_MICRO_RUSEFI) && EFI_PROD_CODE
 	gppwm_channel *scBypass = &engineConfiguration->gppwm[0];
     scBypass->pin = MRE_GPOUT_3;
 #endif // HW_MICRO_RUSEFI
 
-#if HW_MICRO_RUSEFI
+#if defined(HW_MICRO_RUSEFI)
 	gppwm_channel *scClutch = &engineConfiguration->gppwm[1];
     scClutch->pin = MRE_LS_2;
     engineConfiguration->vvtPins[0] = MRE_LS_1;
@@ -71,7 +71,7 @@ void setMercedesM111EngineConfiguration() {
 
 
 
-#if HW_MICRO_RUSEFI
+#if defined(HW_MICRO_RUSEFI)
 	engineConfiguration->fuelPumpPin = MRE_GPOUT_1; // more or less MRE default
 	engineConfiguration->fanPin = MRE_GPOUT_2; // more or less MRE default
     setPPSInputs(MRE_IN_PPS, MRE_IN_PPS2);

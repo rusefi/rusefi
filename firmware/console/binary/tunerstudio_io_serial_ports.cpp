@@ -10,7 +10,7 @@
 #include "tunerstudio.h"
 #include "tunerstudio_io.h"
 #include "connector_uart_dma.h"
-#if HW_HELLEN
+#if defined(HW_HELLEN)
 #include "hellen_meta.h"
 #endif // HW_HELLEN
 

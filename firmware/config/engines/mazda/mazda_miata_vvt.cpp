@@ -59,7 +59,7 @@
 
 #include "mre_meta.h"
 
-#if HW_HELLEN
+#if defined(HW_HELLEN)
 static const float injectorLagBins[VBAT_INJECTOR_CURVE_SIZE] = {
         6.0,         8.0,        10.0,        11.0,
         12.0,        13.0,  14.0,        15.0
@@ -454,7 +454,7 @@ void setMiataNB2_Proteus_TCU() {
 }
 #endif // HW_PROTEUS
 
-#if HW_HELLEN
+#if defined(HW_HELLEN)
 void setMazdaMiataNB1() {
 	setCommonMazdaNB();
 	strcpy(engineConfiguration->engineCode, "NB1");

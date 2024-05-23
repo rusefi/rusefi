@@ -1099,7 +1099,7 @@ void configureRusefiLuaHooks(lua_State* lState) {
 	});
 #endif // EFI_VEHICLE_SPEED
 
-#if EFI_PROD_CODE && HW_HELLEN
+#if EFI_PROD_CODE && defined(HW_HELLEN)
 	lua_register(lState, "hellenEnablePower", [](lua_State*) {
 		hellenEnableEn("Lua");
 		return 0;

@@ -528,7 +528,7 @@ static THD_FUNCTION(MMCmonThread, arg) {
 	(void)arg;
 	chRegSetThreadName("MMC Card Logger");
 
-#if HW_HELLEN && EFI_PROD_CODE
+#if defined(HW_HELLEN) && EFI_PROD_CODE
   // on mega-module we manage SD card power supply
   while (!getHellenBoardEnabled()) {
     // wait until board enables peripheral
