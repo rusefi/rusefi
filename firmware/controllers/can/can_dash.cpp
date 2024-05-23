@@ -308,8 +308,10 @@ static int rollingId = 0;
 
 void canDashboardGenesisCoupe(CanCycle cycle) {
 	if (cycle.isInterval(CI::_50ms)) {
+    {
 			CanTxMessage msg(CanCategory::NBC, GENESIS_COUPLE_RPM_316, 8);
 			msg.setShortValueMsb(Sensor::getOrZero(SensorType::Rpm) * 4, /*offset*/ 3);
+	  }
 		{
 			CanTxMessage msg(CanCategory::NBC, GENESIS_COUPLE_COOLANT_329, 8);
 			int clt = Sensor::getOrZero(SensorType::Clt) * 2;
