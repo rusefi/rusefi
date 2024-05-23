@@ -4,7 +4,7 @@ RUSEFI_OPT = -Werror
 RUSEFI_OPT += -Werror=stringop-truncation
 
 ifneq ($(ALLOW_SHADOW),yes)
-#     RUSEFI_OPT += -Werror=shadow
+     RUSEFI_OPT += -Werror=shadow
 endif
 
 # ...except these few
