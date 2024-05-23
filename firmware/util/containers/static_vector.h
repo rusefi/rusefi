@@ -41,6 +41,6 @@ struct static_vector {
 	}
 
 private:
-	size_t m_size = 0;
 	T m_storage[TSlots];
+	size_t m_size = 0;
 };
