@@ -286,7 +286,7 @@ static FlashState readConfiguration() {
 }
 
 void readFromFlash() {
-#if HW_CHECK_MODE
+#ifdef HW_CHECK_MODE
 	/*
 	 * getFlashAddr does device validation, we want validation to be invoked even while we are
 	 * HW_CHECK_MODE mode where we would not need actual address
