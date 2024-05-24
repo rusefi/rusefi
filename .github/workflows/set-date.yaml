@@ -22,7 +22,11 @@ jobs:
         fetch-depth: 2
 
     - name: Check last date
-      run: if [ "$(git log -1 --pretty=%B)" = "Update date" ]; then echo "skip=true" >> $GITHUB_ENV; fi
+      run: |
+        export RECENT_GIT_MESSAGE="$(git log -1 --pretty=%B)"
+        export RECENT_GIT_MESSAGE_11="${RECENT_GIT_MESSAGE:0:11}
+        echo "RECENT_GIT_MESSAGE=[$RECENT_GIT_MESSAGE] RECENT_GIT_MESSAGE_11=[${RECENT_GIT_MESSAGE_11}]"
+        if [ "$(RECENT_GIT_MESSAGE_11)" = "Update date" ]; then echo "skip=true" >> $GITHUB_ENV; fi
 
     - name: Install Tools
       if: ${{ env.skip != 'true' }}
