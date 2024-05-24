@@ -15,9 +15,7 @@
  *
  */
 
-
-#ifndef CONFIG_CHCONF_COMMON_H_
-#define CONFIG_CHCONF_COMMON_H_
+#pragma once
 
 #define _CHIBIOS_RT_CONF_
 #define _CHIBIOS_RT_CONF_VER_6_1_
@@ -129,5 +127,3 @@ extern "C" {
  #endif // __cplusplus
  void chDbgPanic3(const char *msg, const char * file, int line);
 #endif // __ASSEMBLER__
-
-#endif /* CONFIG_CHCONF_COMMON_H_ */
