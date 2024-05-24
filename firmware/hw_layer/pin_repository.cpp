@@ -49,7 +49,7 @@ int brainPin_to_index(Gpio brainPin) {
  */
 
 bool brain_pin_markUsed(Gpio brainPin, const char *msg) {
-#if ! EFI_BOOTLOADER
+#ifndef EFI_BOOTLOADER
 	efiPrintf("pin_markUsed: %s on %s", msg, hwPortname(brainPin));
 #endif
 
@@ -79,7 +79,7 @@ bool brain_pin_markUsed(Gpio brainPin, const char *msg) {
  */
 
 void brain_pin_markUnused(brain_pin_e brainPin) {
-#if ! EFI_BOOTLOADER
+#ifndef EFI_BOOTLOADER
 	efiPrintf("pin_markUnused: %s", hwPortname(brainPin));
 #endif
 	int index = brainPin_to_index(brainPin);
