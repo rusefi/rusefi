@@ -10,7 +10,7 @@
 #include "can_filter.h"
 #include "tunerstudio.h"
 
-#if EFI_PROD_CODE && HW_HELLEN
+#if EFI_PROD_CODE && defined(HW_HELLEN)
 #include "hellen_meta.h"
 #endif
 
