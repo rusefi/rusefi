@@ -112,7 +112,7 @@ extern "C" {
 }
 
 #ifndef CH_DBG_SYSTEM_STATE_CHECK
-#define CH_DBG_SYSTEM_STATE_CHECK FALSE
+#define CH_DBG_SYSTEM_STATE_CHECK TRUE
 #endif
 
 /**

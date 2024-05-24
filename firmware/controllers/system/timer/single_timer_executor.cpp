@@ -144,10 +144,12 @@ void SingleTimerExecutor::executeAllPendingActions() {
 
 	maxExecuteCounter = maxI(maxExecuteCounter, executeCounter);
 
+#if (CH_DBG_SYSTEM_STATE_CHECK == TRUE)
 	if (!isLocked()) {
 		firmwareError(ObdCode::CUSTOM_ERR_LOCK_ISSUE, "Someone has stolen my lock");
 		return;
 	}
+#endif
 	reentrantFlag = false;
 }
 

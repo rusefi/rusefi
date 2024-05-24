@@ -12,7 +12,7 @@
 
 
 board_id_t getBoardId() {
-#if HW_PROTEUS
+#ifdef HW_PROTEUS
     if (engineConfiguration->engineType == engine_type_e::MAVERICK_X3) {
         // a way to test harness patch cord
         return STATIC_BOARD_ID_PROTEUS_CANAM;
@@ -39,7 +39,7 @@ board_id_t getBoardId() {
 
 #if defined(HW_HELLEN_SKIP_BOARD_TYPE)
 	return (board_id_t)STATIC_BOARD_ID;
-#elif HW_HELLEN
+#elif defined(HW_HELLEN)
 	return (board_id_t)engine->engineState.hellenBoardId;
 #elif STATIC_BOARD_ID
 // should STATIC_BOARD_ID simply have priority over hellen board id? what's the use-case of HW_HELLEN with STATIC_BOARD_ID?

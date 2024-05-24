@@ -102,7 +102,7 @@ static void setupEtb() {
 
 static void setupDefaultSensorInputs() {
 	// trigger inputs
-#if VR_HW_CHECK_MODE
+#ifdef VR_HW_CHECK_MODE
 	// set_trigger_input_pin 0 PE7
 	engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;
 	engineConfiguration->camInputs[0] = PROTEUS_VR_2;
