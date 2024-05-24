@@ -73,7 +73,7 @@ static int getPortIndex(ioportid_t port) {
 		}
 	}
 
-#if ! EFI_BOOTLOADER
+#ifndef EFI_BOOTLOADER
 	firmwareError(ObdCode::CUSTOM_ERR_UNKNOWN_PORT, "unknown port");
 #endif
 
@@ -100,7 +100,7 @@ ioportid_t getHwPort(const char *msg, brain_pin_e brainPin) {
 		return ports[idx].port;
 	}
 
-#if ! EFI_BOOTLOADER
+#ifndef EFI_BOOTLOADER
 	firmwareError(ObdCode::CUSTOM_ERR_UNKNOWN_PORT, "unknown port");
 #endif
 
@@ -119,7 +119,7 @@ ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin) {
 
 
 // huh why conditional on EFI_BOOTLOADER? some weird technical debt while does it fail only with debug options?
-#if ! EFI_BOOTLOADER
+#ifndef EFI_BOOTLOADER
 	criticalError("%s: Invalid on-chip Gpio: %d", msg, brainPin);
 #endif // EFI_BOOTLOADER
 	return EFI_ERROR_CODE;

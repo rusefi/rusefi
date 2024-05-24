@@ -22,6 +22,18 @@
 #define EFI_BOOST_CONTROL TRUE
 #endif
 
+#ifndef EFI_BOSCH_YAW
+#define EFI_BOSCH_YAW FALSE
+#endif
+
+#ifndef EFI_WIFI
+#define EFI_WIFI FALSE
+#endif
+
+#ifndef EFI_WS2812
+#define EFI_WS2812 FALSE
+#endif
+
 #ifndef EFI_DAC
 #define EFI_DAC FALSE
 #endif
