@@ -53,8 +53,6 @@ static void printPacket(const size_t busIndex, const CANRxFrame &rx) {
 	}
 }
 
-volatile float canMap = 0;
-
 struct CanListenerTailSentinel : public CanListener {
 	CanListenerTailSentinel()
 		: CanListener(0)
@@ -214,12 +212,6 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 
 	processLuaCan(busIndex, frame);
 
-#if EFI_CANBUS_SLAVE
-	if (CAN_EID(frame) == engineConfiguration->verboseCanBaseAddress + CAN_SENSOR_1_OFFSET) {
-		int16_t mapScaled = *reinterpret_cast<const int16_t*>(&frame.data8[0]);
-		canMap = mapScaled / (1.0 * PACK_MULT_PRESSURE);
-	} else
-#endif
 	{
 		obdOnCanPacketRx(frame, busIndex);
 	}
