@@ -517,6 +517,9 @@ float getConfigValueByName(const char *name) {
 // minimumBoostClosedLoopMap
 		case 596585178:
 			return engineConfiguration->minimumBoostClosedLoopMap;
+// smoothRetardStartRpm
+		case 300652254:
+			return engineConfiguration->smoothRetardStartRpm;
 // vehicleWeight
 		case 1549866701:
 			return engineConfiguration->vehicleWeight;
@@ -535,6 +538,9 @@ float getConfigValueByName(const char *name) {
 // sdCardLogFrequency
 		case -773841334:
 			return engineConfiguration->sdCardLogFrequency;
+// smoothRetardEndRpm
+		case -1532728185:
+			return engineConfiguration->smoothRetardEndRpm;
 // lambdaProtectionRestoreRpm
 		case 872435040:
 			return engineConfiguration->lambdaProtectionRestoreRpm;
@@ -2689,6 +2695,11 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->minimumBoostClosedLoopMap = (int)value;
 		return 1;
 	}
+		case 300652254:
+	{
+		engineConfiguration->smoothRetardStartRpm = (int)value;
+		return 1;
+	}
 		case 1549866701:
 	{
 		engineConfiguration->vehicleWeight = (int)value;
@@ -2717,6 +2728,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -773841334:
 	{
 		engineConfiguration->sdCardLogFrequency = (int)value;
+		return 1;
+	}
+		case -1532728185:
+	{
+		engineConfiguration->smoothRetardEndRpm = (int)value;
 		return 1;
 	}
 		case 872435040:

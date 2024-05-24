@@ -511,6 +511,9 @@ Boost Voltage
 ### minimumBoostClosedLoopMap
 Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon entering boost.
 
+### smoothRetardStartRpm
+null
+
 ### vehicleWeight
 
 
@@ -528,6 +531,9 @@ Maximum allowed ETB position. Some throttles go past fully open, so this allows 
 
 ### sdCardLogFrequency
 Rate the ECU will log to the SD card, in hz (log lines per second).
+
+### smoothRetardEndRpm
+
 
 ### lambdaProtectionRestoreRpm
 
