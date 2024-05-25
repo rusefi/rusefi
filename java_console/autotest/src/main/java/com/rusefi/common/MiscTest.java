@@ -6,9 +6,11 @@ import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import org.junit.Test;
 
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+
 import static com.devexperts.util.TimeUtil.SECOND;
 import static com.rusefi.IoUtil.sleepSeconds;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class MiscTest extends RusefiTestBase {
@@ -17,6 +19,17 @@ public class MiscTest extends RusefiTestBase {
         BinaryProtocol bp = ecu.getLinkManager().getCurrentStreamState();
         // let's make sure 'burn' command works since sometimes it does not
         bp.burn();
+    }
+
+    @Test
+    public void testGetAllOutputs() throws InterruptedException {
+        CountDownLatch responseLatch = new CountDownLatch(1);
+        ecu.getLinkManager().execute(() -> {
+            boolean result = ecu.getLinkManager().getBinaryProtocol().requestOutputChannels();
+            System.out.println("requestOutputChannels=" + result);
+            responseLatch.countDown();
+        });
+        responseLatch.await(1, TimeUnit.MINUTES);
     }
 
     @Test
