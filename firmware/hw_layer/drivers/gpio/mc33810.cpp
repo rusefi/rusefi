@@ -177,7 +177,7 @@ static const char* mc33810_pin_names[MC33810_OUTPUTS] = {
 /*==========================================================================*/
 
 inline bool isCor(uint16_t rx) {
-  return rx & REP_FLAG_COR;
+	return rx & REP_FLAG_COR;
 }
 
 /**
@@ -312,7 +312,7 @@ int Mc33810::update_output_and_diag()
 	} else {
 		gp_fault = 0;
 	}
-	/* check IGN  */
+	/* check IGN */
 	if (all_status_value & 0x0f00) {
 		/* request diagnostic of IGN */
 		ret = spi_rw(MC_CMD_READ_REG(REG_IGN_FAULT), NULL);
@@ -409,19 +409,19 @@ int Mc33810::chip_init()
 		goto err_exit;
 	}
 	if (rx != SPI_CHECK_ACK) {
-	  static Timer needBatteryMessage;
-	  float vBatt = Sensor::getOrZero(SensorType::BatteryVoltage);
-	  if (vBatt > 6 || needBatteryMessage.getElapsedSeconds() > 7) {
-	    needBatteryMessage.reset();
-	    const char *msg;
-	    if (rx == 0xffff) {
-	      msg = "No power?";
-	    } else if (isCor(rx)) {
-	      msg = "COR";
-	    } else {
-	      msg = "unexpected";
-	    }
-		  efiPrintf(DRIVER_NAME " spi loopback test failed [%d][%d][%s] vBatt=%f", rxSpiCheck, rx, msg, vBatt);
+		static Timer needBatteryMessage;
+		float vBatt = Sensor::getOrZero(SensorType::BatteryVoltage);
+		if (vBatt > 6 || needBatteryMessage.getElapsedSeconds() > 7) {
+			needBatteryMessage.reset();
+			const char *msg;
+			if (rx == 0xffff) {
+				msg = "No power?";
+			} else if (isCor(rx)) {
+				msg = "COR";
+			} else {
+				msg = "unexpected";
+			}
+			efiPrintf(DRIVER_NAME " spi loopback test failed [%d][%d][%s] vBatt=%f", rxSpiCheck, rx, msg, vBatt);
 		}
 		ret = -2;
 		goto err_exit;
@@ -469,7 +469,7 @@ int Mc33810::chip_init()
 
 		uint16_t mode_select_cmd =
 			/* set IGN/GP mode for GPx outputs: [7:4] to [11:8] */
-			((o_gpgd_mask & 0xf0) <<  4) |
+			((o_gpgd_mask & 0xf0) << 4) |
 			/* disable/enable retry after recovering from under/overvoltage */
 			(engineConfiguration->mc33810DisableRecoveryMode << 6) |
 			0;
