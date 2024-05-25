@@ -1751,7 +1751,7 @@ isSynchronizationNeeded=1
 gapFrom.0=2.000000
 gapTo.0=5.000000
 gapFrom.1=0.200000
-gapTo.1=0.800000
+gapTo.1=0.950000
 # end of meta section
 event 0 0 1 0.00 3.000000
 event 1 0 0 180.00 0.666667
@@ -1955,7 +1955,7 @@ isSynchronizationNeeded=1
 gapFrom.0=2.000000
 gapTo.0=5.000000
 gapFrom.1=0.200000
-gapTo.1=0.800000
+gapTo.1=0.950000
 # end of meta section
 event 0 0 1 0.00 3.000000
 event 1 0 0 180.00 0.666667
