@@ -10,7 +10,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 public class SerialSandbox {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         boolean textPull = false;
         long startTime = System.currentTimeMillis();
 
@@ -32,5 +32,15 @@ public class SerialSandbox {
         } catch (InterruptedException e) {
             throw new IllegalStateException("Not connected in time");
         }
+        CountDownLatch latch = new CountDownLatch(1);
+        linkManager.execute(new Runnable() {
+            @Override
+            public void run() {
+                boolean result = linkManager.getBinaryProtocol().requestOutputChannels();
+                System.out.println("requestOutputChannels=" + result);
+                latch.countDown();
+            }
+        });
+        latch.await(1, TimeUnit.MINUTES);
     }
 }
