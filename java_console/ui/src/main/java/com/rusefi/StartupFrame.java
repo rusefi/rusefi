@@ -23,6 +23,7 @@ import org.putgemin.VerticalFlowLayout;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
 import java.util.Date;
 import java.util.List;
@@ -230,7 +231,16 @@ public class StartupFrame {
     private static @NotNull JLabel binaryModificationControl() {
         long binaryModificationTimestamp = MaintenanceUtil.getBinaryModificationTimestamp();
         String fileTimestampText = binaryModificationTimestamp == 0 ? "firmware file not found" : ("Files " + new Date(binaryModificationTimestamp).toString());
-        return new JLabel(fileTimestampText);
+        JLabel jLabel = new JLabel(fileTimestampText);
+        jLabel.setToolTipText("Click to copy");
+        jLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                Toolkit.getDefaultToolkit().getSystemClipboard()
+                    .setContents(new StringSelection(fileTimestampText), null);
+            }
+        });
+        return jLabel;
     }
 
     private void applyKnownPorts(SerialPortScanner.AvailableHardware currentHardware) {
