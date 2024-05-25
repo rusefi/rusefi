@@ -59,7 +59,7 @@ void initializeMitsubishi4g9xCam(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Both);
 
 	// nominal gap 0.5
-	s->setSecondTriggerSynchronizationGap2(0.2, 0.8);
+	s->setSecondTriggerSynchronizationGap2(0.2, 0.95);
 
 	// nominal gap 3.0
 	s->setTriggerSynchronizationGap2(2.0f, 5.0f);

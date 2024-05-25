@@ -38,6 +38,7 @@ Release template (copy/paste this for new release):
  - General Purpose PWM tables have wrong names on X-axis and Y-axis #6491
  - Ignition scheduling errors after 40+ hours of uptime #6451
  - luaSoftSparkSkip/luaHardSparkSkip probably bug #6528
+ - improved 4G63/4G9x cam wheel definition #6544
 
 ### Breaking Changes
  - "60/2 VW" trigger wheel renamed to "60-2 Wrong Polarity" #988
