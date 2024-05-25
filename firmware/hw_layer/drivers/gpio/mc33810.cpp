@@ -434,7 +434,7 @@ int Mc33810::chip_init()
 		efiPrintf(DRIVER_NAME " revision failed");
 		goto err_exit;
 	}
-	if (rx & REP_FLAG_COR) {
+	if (isCor(rx)) {
 		efiPrintf(DRIVER_NAME " spi COR status");
 		ret = -3;
 		goto err_exit;
