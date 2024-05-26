@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun May 26 02:45:11 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun May 26 14:02:32 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -301,7 +301,7 @@ public class Fields {
 	public static final int ego_sensor_e_ES_Innovate_MTX_L = 1;
 	public static final int ego_sensor_e_ES_PLX = 4;
 	public static final int EGT_CHANNEL_COUNT = 8;
-	public static final int END_OF_CALIBRATION_PADDING = 200;
+	public static final int END_OF_CALIBRATION_PADDING = 198;
 	public static final int engine_configuration_s_size = 4220;
 	public static final int engine_load_mode_e_LM_ALPHA_N = 2;
 	public static final int engine_load_mode_e_LM_LUA = 3;
@@ -1195,7 +1195,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1949493180;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1451,7 +1450,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.05.26.f407-discovery.1949493180";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.05.26.f407-discovery.2827731956";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2887,7 +2886,9 @@ public class Fields {
 	public static final String[] MsIoBoxVss = {"Off", "VR speed in (1, 2)", "Hall speed in (3, 4)", "All (1, 2, 3, 4)"};
 	public static final Field MSIOBOX0_VSS = Field.create("MSIOBOX0_VSS", 4017, FieldType.INT8, MsIoBoxVss).setScale(1.0).setBaseOffset(0);
 	public static final Field MSIOBOX0_ALIGNMENTFILL_AT_2 = Field.create("MSIOBOX0_ALIGNMENTFILL_AT_2", 4018, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE = Field.create("UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE", 4020, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field MC33810NOMI = Field.create("MC33810NOMI", 4020, FieldType.INT8).setScale(0.25).setBaseOffset(0);
+	public static final Field MC33810MAXI = Field.create("MC33810MAXI", 4021, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE = Field.create("UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE", 4022, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 4220, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4252, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field IACPIDMULTTABLE = Field.create("IACPIDMULTTABLE", 4284, FieldType.INT8).setScale(0.05).setBaseOffset(0);
@@ -4538,6 +4539,8 @@ public class Fields {
 	MSIOBOX0_ID,
 	MSIOBOX0_VSS,
 	MSIOBOX0_ALIGNMENTFILL_AT_2,
+	MC33810NOMI,
+	MC33810MAXI,
 	UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE,
 	ETBBIASBINS,
 	ETBBIASVALUES,

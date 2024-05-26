@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun May 26 02:44:22 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun May 26 14:01:45 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4547,8 +4547,20 @@ struct engine_configuration_s {
 	 */
 	MsIoBox_config_s msIoBox0;
 	/**
-	 * units: units
+	 * Nominal coil charge current, 0.25A step
+	 * units: A
 	 * offset 4020
+	 */
+	scaled_channel<uint8_t, 4, 1> mc33810Nomi;
+	/**
+	 * Maximum coil charge current, 1A step
+	 * units: A
+	 * offset 4021
+	 */
+	uint8_t mc33810Maxi;
+	/**
+	 * units: units
+	 * offset 4022
 	 */
 	uint8_t unusedOftenChangesDuringFirmwareUpdate[END_OF_CALIBRATION_PADDING];
 };
@@ -5616,4 +5628,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22656);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun May 26 02:44:22 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun May 26 14:01:45 UTC 2024

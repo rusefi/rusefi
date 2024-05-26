@@ -1822,6 +1822,12 @@ null
 ### tcu_rangeSensorBiasResistor
 
 
+### mc33810Nomi
+Nominal coil charge current, 0.25A step
+
+### mc33810Maxi
+Maximum coil charge current, 1A step
+
 ### tcu_shiftTime
 
 
