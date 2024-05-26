@@ -125,6 +125,7 @@ struct Mc33810 : public GpioChip {
 
 	// internal functions
 	int spi_rw(uint16_t tx, uint16_t* rx);
+	int spi_rw_array(const uint16_t *tx, uint16_t *rx, int n);
 	int update_output_and_diag();
 
 	int chip_init();
@@ -246,6 +247,75 @@ int Mc33810::spi_rw(uint16_t tx, uint16_t *rx_ptr)
 }
 
 /**
+ * @return <0 in case of communication error or invalid argument
+ */
+int Mc33810::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
+{
+	int ret = 0;
+	SPIDriver *spi = cfg->spi_bus;
+
+	if (n <= 0) {
+		return -2;
+	}
+
+	/* Acquire ownership of the bus. */
+	spiAcquireBus(spi);
+	/* Setup transfer parameters. */
+	spiStart(spi, &cfg->spi_config);
+
+	for (int i = 0; i < n; i++) {
+		/* Slave Select assertion. */
+		spiSelect(spi);
+		/* data transfer */
+		uint16_t rxdata = spiPolledExchange(spi, tx[i]);
+
+		if (rx)
+			rx[i] = rxdata;
+		/* Slave Select de-assertion. */
+		spiUnselect(spi);
+
+		/* Parse reply */
+		if (recentTx != MC_CMD_INVALID) {
+			/* update statistic counters - common flags */
+			if (rxdata & REP_FLAG_RESET)
+				rst_cnt++;
+			if (isCor(rxdata))
+				cor_cnt++;
+
+			if (((TX_GET_CMD(recentTx) >= 0x1) && (TX_GET_CMD(recentTx) <= 0xa)) ||
+				 (recentTx == MC_CMD_READ_REG(REG_ALL_STAT))) {
+				/* if reply on previous command is ALL STATUS RESPONSE */
+				all_status_value = rxdata;
+				all_status_updated = true;
+				/* update statistic counters - ALL STATUS flags */
+				if (rxdata & REP_FLAG_SOR)
+					sor_cnt++;
+				/* ignore NFM */
+			} else {
+				/* Some READ REGISTER reply with address != REG_ALL_STAT */
+				if (rxdata & REP_FLAG_OV)
+					ov_cnt++;
+				if (rxdata & REP_FLAG_LV)
+					lv_cnt++;
+			}
+		}
+
+		/* store currently tx'ed value to know what to expect on next rx */
+		recentTx = tx[i];
+
+		if (ret < 0) {
+			recentTx = MC_CMD_INVALID;
+			break;
+		}
+	}
+	/* Ownership release. */
+	spiReleaseBus(spi);
+
+	/* no errors for now */
+	return ret;
+}
+
+/**
  * @brief MC33810 send output state data.
  * @details Sends ORed data to register, also receive diagnostic.
  */
@@ -254,82 +324,38 @@ int Mc33810::update_output_and_diag()
 {
 	int ret = 0;
 
-	/* TODO: lock? */
+	uint16_t out_data = o_state & (~o_direct_mask);
+	const uint16_t tx[] = {
+		// we will get ALL STATUS RESPONSE as reply on following commad
+		// value will be stored inside spi_rw_array() call, no need to care
+		// TODO: WTF?
+		(uint16_t)MC_CMD_DRIVER_EN(out_data),
+		MC_CMD_READ_REG(REG_OUT10_FAULT),
+		MC_CMD_READ_REG(REG_OUT32_FAULT),
+		MC_CMD_READ_REG(REG_GPGD_FAULT),
+		MC_CMD_READ_REG(REG_IGN_FAULT),
+		MC_CMD_READ_REG(REG_ALL_STAT)
+	};
+	uint16_t rx[efi::size(tx)];
 
 	/* we need to get updated status */
 	all_status_updated = false;
 
-	/* if any pin is driven over SPI */
-	if (o_direct_mask != 0xff) {
-		uint16_t out_data;
+	ret = spi_rw_array(tx, rx, efi::size(tx));
 
-		out_data = o_state & (~o_direct_mask);
-		ret = spi_rw(MC_CMD_DRIVER_EN(out_data), NULL);
-		if (ret)
-			return ret;
-		o_state_cached = o_state;
-	}
+	if (ret == 0) {
+		/* the content of the requested register is transmitted with the
+		 * next SPI transmission */
 
-	/* this complicated logic to save few spi transfers in case we will receive status as reply on other command */
-	if (!all_status_updated) {
-		ret = spi_rw(MC_CMD_READ_REG(REG_ALL_STAT), NULL);
-		if (ret)
-			return ret;
-	}
-	/* get reply */
-	if (!all_status_updated) {
-		ret = spi_rw(MC_CMD_READ_REG(REG_ALL_STAT), NULL);
-		if (ret)
-			return ret;
-	}
-	/* now we have updated ALL STATUS register in chip data */
+		/* TODO: lock? */
+		out_fault[0] = rx[1 + 1];
+		out_fault[1] = rx[2 + 1];
+		gp_fault = rx[3 + 1];
+		ign_fault = rx[4 + 1];
 
-	/* check OUTx (injectors) first */
-	if (all_status_value & 0x000f) {
-		/* request diagnostic of OUT0 and OUT1 */
-		ret = spi_rw(MC_CMD_READ_REG(REG_OUT10_FAULT), NULL);
-		if (ret)
-			return ret;
-		/* get diagnostic for OUT0 and OUT1 and request diagnostic for OUT2 and OUT3 */
-		ret = spi_rw(MC_CMD_READ_REG(REG_OUT32_FAULT), &out_fault[0]);
-		if (ret)
-			return ret;
-		/* get diagnostic for OUT2 and OUT2 and request ALL STATUS */
-		ret = spi_rw(MC_CMD_READ_REG(REG_ALL_STAT), &out_fault[1]);
-		if (ret)
-			return ret;
-	} else {
-		out_fault[0] = out_fault[1] = 0;
+		alive_cnt++;
+		/* TODO: unlock? */
 	}
-	/* check outputs in GPGD mode */
-	if (all_status_value & 0x00f0) {
-		/* request diagnostic of GPGD */
-		ret = spi_rw(MC_CMD_READ_REG(REG_GPGD_FAULT), NULL);
-		if (ret)
-			return ret;
-		/* get diagnostic for GPGD and request ALL STATUS */
-		ret = spi_rw(MC_CMD_READ_REG(REG_ALL_STAT), &gp_fault);
-		if (ret)
-			return ret;
-	} else {
-		gp_fault = 0;
-	}
-	/* check IGN */
-	if (all_status_value & 0x0f00) {
-		/* request diagnostic of IGN */
-		ret = spi_rw(MC_CMD_READ_REG(REG_IGN_FAULT), NULL);
-		if (ret)
-			return ret;
-		/* get diagnostic for IGN and request ALL STATUS */
-		ret = spi_rw(MC_CMD_READ_REG(REG_ALL_STAT), &ign_fault);
-		if (ret)
-			return ret;
-	} else {
-		ign_fault = 0;
-	}
-
-	alive_cnt++;
-	/* TODO: unlock? */
 
 	return ret;
 }
