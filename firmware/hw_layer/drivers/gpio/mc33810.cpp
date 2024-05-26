@@ -15,7 +15,7 @@
  * Masks bits/inputs numbers:
  * 0..3   - OUT1 .. 3 - Low-Side Injector drivers, 4.5A max
  *						driven through DIN0 .. 3 or SPI (not supported)
- * 4..7   -  GD0 .. 3 - Gate Driver outputs - IGBT of MOSFET pre-drivers,
+ * 4..7   -  GD0 .. 3 - Gate Driver outputs - IGBT or MOSFET pre-drivers,
  *						driven throug GIN0 .. 3 or SPI in GPGD mode (not supported)
  */
 
@@ -399,7 +399,8 @@ int Mc33810::chip_init()
 	recentTx = MC_CMD_INVALID;
 
 	/* check SPI communication */
-	/* 0. set echo mode, chip number - don't care */
+	/* 0. set echo mode, chip number - don't care,
+	 * NOTE: chip replyes on NEXT spi transaction */
 	ret  = spi_rw(MC_CMD_SPI_CHECK, &rxSpiCheck);
 	/* 1. check loopback */
 	ret |= spi_rw(MC_CMD_READ_REG(REG_REV), &rx);
@@ -421,7 +422,7 @@ int Mc33810::chip_init()
 			} else {
 				msg = "unexpected";
 			}
-			efiPrintf(DRIVER_NAME " spi loopback test failed [%d][%d][%s] vBatt=%f", rxSpiCheck, rx, msg, vBatt);
+			efiPrintf(DRIVER_NAME " spi loopback test failed [first 0x%04x][spi check 0x%04x][%s] vBatt=%f", rxSpiCheck, rx, msg, vBatt);
 		}
 		ret = -2;
 		goto err_exit;
@@ -613,7 +614,7 @@ int Mc33810::writePad(size_t pin, int value)
 
 brain_pin_diag_e Mc33810::getDiag(size_t pin)
 {
-	int val;
+	uint16_t val;
 	int diag = PIN_OK;
 
 	if (pin >= MC33810_DIRECT_OUTPUTS)
