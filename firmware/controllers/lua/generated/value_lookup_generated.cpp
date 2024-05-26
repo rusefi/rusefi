@@ -1576,9 +1576,6 @@ float getConfigValueByName(const char *name) {
 // hpfpCamLobes
 		case -1256141959:
 			return engineConfiguration->hpfpCamLobes;
-// auxiliarySetting1
-		case 298385452:
-			return engineConfiguration->auxiliarySetting1;
 // hpfpMinAngle
 		case 1494394654:
 			return engineConfiguration->hpfpMinAngle;
@@ -4458,11 +4455,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1256141959:
 	{
 		engineConfiguration->hpfpCamLobes = (int)value;
-		return 1;
-	}
-		case 298385452:
-	{
-		engineConfiguration->auxiliarySetting1 = (int)value;
 		return 1;
 	}
 		case 1494394654:

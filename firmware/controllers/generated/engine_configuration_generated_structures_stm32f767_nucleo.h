@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri May 24 12:23:02 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun May 26 02:43:44 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3912,7 +3912,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 3261
 	 */
-	uint8_t auxiliarySetting1;
+	uint8_t unusedByteHere;
 	/**
 	 * If the requested activation time is below this angle, don't bother running the pump
 	 * units: deg
@@ -5616,4 +5616,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22656);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri May 24 12:23:02 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun May 26 02:43:44 UTC 2024

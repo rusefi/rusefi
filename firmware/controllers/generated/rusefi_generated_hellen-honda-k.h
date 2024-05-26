@@ -114,14 +114,11 @@
 #define BENCH_VVT_DURATION 300
 #define blend_table_s_size 188
 #define BLOCKING_FACTOR 750
-#define BOARD_CONFIG_FROM_FILE 
 #define BOARD_DIAG_PANEL1_FROM_FILE 
 #define BOARD_DIAG_PANEL2_FROM_FILE 
 #define BOARD_GAUGES_FROM_FILE 
 #define BOARD_INDICATORS_FROM_FILE 
-#define BOARD_MENU_FROM_FILE 
 #define BOARD_OPTIONS_FROM_FILE 
-#define BOARD_PANELS_FROM_FILE 
 #define BOARD_TABLES_FROM_FILE 
 #define BOOST_BLEND_COUNT 2
 #define BOOST_LOAD_COUNT 8
@@ -129,6 +126,7 @@
 #define boostType_e_auto_enum 0="OPEN_LOOP",1="CLOSED_LOOP"
 #define boostType_e_CLOSED_LOOP 1
 #define boostType_e_OPEN_LOOP 0
+#define BOTTOM_PADDING 36
 #define brain_input_pin_e_enum 0="NONE",93="A18 - VSS",90="A25 VTT CAM",92="A26 Cam Sync",91="A7 Crankshaft Sensor",87="C18 Aux Digital 3",86="C19 Aux Digital 2",85="C21 Aux Digital 1"
 #define brain_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C21 Aux Digital 1","C19 Aux Digital 2","C18 Aux Digital 3","INVALID","INVALID","A25 VTT CAM","A7 Crankshaft Sensor","A26 Cam Sync","A18 - VSS"
 #define brain_pin_diag_e_PIN_DRIVER_OFF 0x20
@@ -1190,7 +1188,7 @@
 #define PACK_PERCENT_BYTE_MULT 100.0
 #define PEDAL_TO_TPS_SIZE 8
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 23328
+#define persistent_config_s_size 23368
 #define pid_s_size 20
 #define pin_input_mode_e_auto_enum 0="PI_DEFAULT",2="PI_PULLDOWN",1="PI_PULLUP"
 #define pin_input_mode_e_enum "DEFAULT", "PULLUP", "PULLDOWN"
@@ -1272,7 +1270,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 3346876566
+#define SIGNATURE_HASH 3053248765
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1329,7 +1327,7 @@
 #define TOOTH_PACKET_SIZE 2
 #define TOP_DEAD_CENTER_MESSAGE "r"
 #define TORQUE_CURVE_SIZE 6
-#define TOTAL_CONFIG_SIZE 23328
+#define TOTAL_CONFIG_SIZE 23368
 #define TPS_2_BYTE_PACKING_MULT 100
 #define TPS_PPS_TOO_HIGH_THRESHOLD 110
 #define TPS_PPS_TOO_LOW_THRESHOLD -10
@@ -1664,7 +1662,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.05.25.hellen-honda-k.3346876566"
+#define TS_SIGNATURE "rusEFI master.2024.05.26.hellen-honda-k.3053248765"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

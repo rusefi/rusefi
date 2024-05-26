@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri May 24 12:23:33 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun May 26 02:44:15 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -3912,7 +3912,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 3261
 	 */
-	uint8_t auxiliarySetting1;
+	uint8_t unusedByteHere;
 	/**
 	 * If the requested activation time is below this angle, don't bother running the pump
 	 * units: deg
@@ -5612,8 +5612,22 @@ struct persistent_config_s {
 	 * offset 23324
 	 */
 	float tcu_shiftTime;
+	/**
+	 * offset 23328
+	 */
+	uint8_t hondaKcltGaugeAdder;
+	/**
+	 * offset 23329
+	 */
+	uint8_t unusedConfigPadding[BOTTOM_PADDING];
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 23365
+	 */
+	uint8_t alignmentFill_at_23365[3];
 };
-static_assert(sizeof(persistent_config_s) == 23328);
+static_assert(sizeof(persistent_config_s) == 23368);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri May 24 12:23:33 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun May 26 02:44:15 UTC 2024
