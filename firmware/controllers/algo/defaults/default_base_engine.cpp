@@ -60,6 +60,11 @@ static void setDefaultHPFP() {
 	engineConfiguration->hpfpPeakPos = 10;
 }
 
+static void mc33810defaults() {
+  engineConfiguration->mc33810Nomi = 5.5;
+  engineConfiguration->mc33810Maxi = 14;
+}
+
 void setDefaultBaseEngine() {
 	// Base Engine Settings
 	engineConfiguration->displacement = 2;
@@ -101,6 +106,8 @@ void setDefaultBaseEngine() {
 	setLinearCurve(engineConfiguration->tractionControlSpeedBins, /*from*/10, /*to*/120, 5);
 
 	engineConfiguration->turbochargerFilter = 0.01f;
+
+	mc33810defaults();
 
 	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
 	// let's have valid default while we still have the field
