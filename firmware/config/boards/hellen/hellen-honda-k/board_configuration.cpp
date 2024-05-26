@@ -114,6 +114,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->mapHighValueVoltage = 4.8;
 
     engineConfiguration->enableKline = true;
+    config->hondaKcltGaugeAdder = 50;
     engineConfiguration->kLineBaudRate = 9600;
 	engineConfiguration->hondaK = true;
 	engineConfiguration->verboseKLine = true;

@@ -1,0 +1,4 @@
+uint8_t hondaKcltGaugeAdder
+
+#define BOTTOM_PADDING 36
+uint8_t[BOTTOM_PADDING] unusedConfigPadding

@@ -75,6 +75,11 @@ void setDefaultBaseEngine() {
 	engineConfiguration->vssFilterReciprocal = VSS_FILTER_MIN;
 	engineConfiguration->boardUseCanTerminator = true;
 
+#ifdef EFI_KLINE
+  engineConfiguration->kLinePeriodUs = 300 /* us*/;
+  engineConfiguration->kLineDoHondaSend = true;
+#endif
+
   setDefaultHPFP();
 
   // it's useful to know what starting point is given tune based on

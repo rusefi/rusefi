@@ -1505,7 +1505,7 @@ tChargeMode_e tChargeMode;
 
         uint8_t hpfpCamLobes;;"lobes/cam", 1, 0, 0, 255, 0
         hpfp_cam_e hpfpCam;
-        uint8_t auxiliarySetting1
+        uint8_t unusedByteHere
         uint8_t hpfpMinAngle;If the requested activation time is below this angle, don't bother running the pump;"deg", 1, 0, 0, 255, 0
         uint16_t autoscale hpfpPumpVolume;Size of the pump chamber in cc.  Typical Bosch HDP5 has a 9.0mm diameter, typical BMW N* stroke is 4.4mm.;"cc", 0.001, 0, 0, 65, 3
         uint8_t hpfpActivationAngle;How long to keep the valve activated (in order to allow the pump to build pressure and keep the valve open on its own);"deg", 1, 0, 0, 255, 0
