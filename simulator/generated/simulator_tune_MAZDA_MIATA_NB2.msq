@@ -1634,8 +1634,8 @@
         <constant digits="1" name="tcu_rangeSensorBiasResistor" units="Ohm">0.0</constant>
         <constant name="msIoBox0_id">"Off"</constant>
         <constant name="msIoBox0_vss">"Off"</constant>
-        <constant digits="2" name="mc33810Nomi" units="A">0.0</constant>
-        <constant digits="0" name="mc33810Maxi" units="A">0.0</constant>
+        <constant digits="2" name="mc33810Nomi" units="A">5.5</constant>
+        <constant digits="0" name="mc33810Maxi" units="A">14.0</constant>
         <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="198">
          0.0
          0.0
