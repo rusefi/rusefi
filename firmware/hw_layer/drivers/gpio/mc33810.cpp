@@ -53,7 +53,9 @@ typedef enum {
 #define MC_CMD_SPARK(spark)				(0x4000 | ((spark) & 0x0fff))
 /* unused
 #define MC_CMD_END_SPARK_FILTER(filt)	(0x5000 | ((filt) & 0x0003))
+*/
 #define MC_CMD_DAC(dac)					(0x6000 | ((dac) & 0x0fff))
+/* unused
 #define MC_CMD_GPGD_SHORT_THRES(sh)		(0x7000 | ((sh) & 0x0fff))
 #define MC_CMD_GPGD_SHORT_DUR(dur)		(0x8000 | ((dur) & 0x0fff))
 #define MC_CMD_GPGD_FAULT_OP(op)		(0x9000 | ((op) & 0x0f0f))
@@ -458,6 +460,31 @@ int Mc33810::chip_init()
 		ret = spi_rw(MC_CMD_SPARK(spark_cmd), NULL);
 		if (ret) {
 			efiPrintf(DRIVER_NAME " cmd spark");
+			goto err_exit;
+		}
+
+		uint16_t nomi_current = 0x0a;	// default = 5.5 A
+		float nomi = engineConfiguration->mc33810Nomi;
+		if ((nomi >= 3.0) && (nomi <= 10.75)) {
+			nomi_current = (nomi - 3.0) / 0.25;
+		}
+
+		uint16_t maxi_current = 0x08;	// default = 14.0 A
+		float maxi = engineConfiguration->mc33810Maxi;
+		if ((maxi >= 6.0) && (maxi <= 21.0)) {
+			maxi_current = maxi - 6.0;
+		}
+		uint16_t dac_cmd =
+			// Table 12. Nominal Current DAC Select
+			((nomi_current & 0x1f) << 0) |
+			// Table 10. Overlapping Dwell Compensation, defaul 35%
+			(0x4 << 5) |
+			// Table 13. Maximum Current DAC Select
+			((maxi_current & 0xf) << 8) |
+			0;
+		ret = spi_rw(MC_CMD_DAC(dac_cmd), NULL);
+		if (ret) {
+			efiPrintf(DRIVER_NAME " cmd dac");
 			goto err_exit;
 		}
 
