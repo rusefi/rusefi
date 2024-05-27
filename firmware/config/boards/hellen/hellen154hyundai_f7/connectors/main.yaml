@@ -78,28 +78,28 @@ pins:
     ts_name: BK2 Wastegate Position - 22
 
   - pin: K25
-    meta: H144_LS_1
+    id: MC33810_0_OUT_0
     class: outputs
     ts_name: INJ_1 k25
     function: Injector 1
     type: inj
 
   - pin: K26
-    meta: H144_LS_2
+    id: MC33810_0_OUT_1
     class: outputs
     ts_name: INJ_2 k26
     function: Injector 2
     type: inj
 
   - pin: K27
-    meta: H144_LS_3
+    id: MC33810_0_OUT_2
     class: outputs
     ts_name: INJ_3 k27
     function: Injector 3
     type: inj
 
   - pin: K28
-    meta: H144_LS_4
+    id: MC33810_0_OUT_3
     class: outputs
     ts_name: INJ_4 k28
     function: Injector 4
@@ -306,7 +306,7 @@ pins:
     function: BK2 WBO Heater
 
   - pin: A1
-    meta: H144_IGN_4
+    id: MC33810_0_GD_3
     class: outputs
     ts_name: Coil 4
     function: Coil 4
@@ -319,7 +319,7 @@ pins:
     function: Ground
 
   - pin: A16
-    meta: H144_IGN_2
+    id: MC33810_0_GD_1
     class: outputs
     ts_name: Coil 2
     function: Coil 2
@@ -333,7 +333,7 @@ pins:
 
 
   - pin: A31
-    meta: H144_IGN_1
+    id: MC33810_0_GD_0
     class: outputs
     ts_name: Coil 1
     function: Coil 1
@@ -349,7 +349,7 @@ pins:
     function: BK2 DC Wastegate Pos
 
   - pin: A46
-    meta: H144_IGN_3
+    id: MC33810_0_GD_2
     class: outputs
     ts_name: Coil 3
     function: Coil 3
