@@ -56,3 +56,21 @@ else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 else
 $(error Unsupported PROJECT_CPU [$(PROJECT_CPU)])
 endif
+
+ifeq ($(BOARD_HAS_EXT_FLASH),yes)
+    # MRE has optional external SPI flash that uses ChibiOS MFS driver
+    include $(PROJECT_DIR)/hw_layer/ports/stm32/use_higher_level_flash_api.mk
+    include $(PROJECT_DIR)/hw_layer/drivers/flash/w25q/w25q.mk
+    # Standart SPI
+    DDEFS += -DSNOR_BUS_DRIVER=SNOR_BUS_DRIVER_SPI
+    DDEFS += -DW25Q_BUS_MODE=W25Q_BUS_MODE_WSPI1L
+    DDEFS += -DW25Q_SWITCH_WIDTH=FALSE
+    # Otherwise writeToFlashNow() is called from ISR context (slow timer callback)
+    DDEFS += -DEFI_FLASH_WRITE_THREAD=TRUE
+    DDEFS += -DEFI_STORAGE_MFS_EXTERNAL=TRUE
+    # Move persistentState out of CCM as it should be accessable by DMA
+    DDEFS += -DPERSISTENT_LOCATION=""
+    # Move LUA heap to CCM
+    DDEFS += -DLUA_HEAD_RAM_SECTION=CCM_OPTIONAL
+    BOARDCPPSRC += $(BOARD_DIR)/board_storage.cpp
+endif
