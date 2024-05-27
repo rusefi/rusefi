@@ -31,6 +31,11 @@
 #define EFI_CONSOLE_RX_BRAIN_PIN Gpio::D9
 #endif
 
+// see also EFI_EMBED_INI_MSD which is disabled above
+#ifndef EFI_USE_COMPRESSED_INI_MSD
+#define EFI_USE_COMPRESSED_INI_MSD TRUE
+#endif
+
 // note order of include - first we set F7 defaults (above) and only later we apply F4 defaults
 #include "../stm32f4ems/efifeatures.h"
 
@@ -47,9 +52,6 @@
 // UART driver not implemented on F7
 
 #define AUX_SERIAL_DEVICE (&SD6)
-
-// see also EFI_EMBED_INI_MSD which is disabled above
-#define EFI_USE_COMPRESSED_INI_MSD
 
 // F7 may have dual bank, so flash on its own (low priority) thread so as to not block any other operations
 #define EFI_FLASH_WRITE_THREAD TRUE

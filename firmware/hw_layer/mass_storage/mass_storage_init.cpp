@@ -7,7 +7,7 @@
 #if HAL_USE_USB_MSD
 
 #if EFI_EMBED_INI_MSD
-	#ifdef EFI_USE_COMPRESSED_INI_MSD
+	#if EFI_USE_COMPRESSED_INI_MSD
 		#include "compressed_block_device.h"
 		#include "ramdisk_image_compressed.h"
 	#else
@@ -23,9 +23,12 @@
 #endif
 
 #if EFI_EMBED_INI_MSD
-	#ifdef EFI_USE_COMPRESSED_INI_MSD
+	#if EFI_USE_COMPRESSED_INI_MSD
+		/* WARNING: CompressedBlockDevice will consume ~34Kb RAM! */
+		/* Enabling this option will also consume (2048-256) additional RAM bytes for increased USB_MSD_THREAD_WA_SIZE */
 		static CompressedBlockDevice cbd;
 	#else
+		/* WARNING: this will add 128K of ROM data */
 		static RamDisk ramdisk;
 	#endif
 #endif
@@ -83,7 +86,7 @@ void attachMsdSdCard(BaseBlockDevice* blkdev) {
 
 static BaseBlockDevice* getRamdiskDevice() {
 #if EFI_EMBED_INI_MSD
-#ifdef EFI_USE_COMPRESSED_INI_MSD
+#if EFI_USE_COMPRESSED_INI_MSD
 	uzlib_init();
 	compressedBlockDeviceObjectInit(&cbd);
 	compressedBlockDeviceStart(&cbd, ramdisk_image_gz, sizeof(ramdisk_image_gz));
