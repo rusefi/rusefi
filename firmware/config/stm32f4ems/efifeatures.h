@@ -347,23 +347,23 @@
 #define EFI_CONSOLE_USB_DEVICE SDU1
 
 #if defined(EFI_HAS_EXT_SDRAM)
-    #ifndef ENABLE_PERF_TRACE
-    #define ENABLE_PERF_TRACE TRUE
-    #endif // ENABLE_PERF_TRACE
-    #define LUA_USER_HEAP (1 * 1024 * 1024)
+	#ifndef ENABLE_PERF_TRACE
+	#define ENABLE_PERF_TRACE TRUE
+	#endif // ENABLE_PERF_TRACE
+	#define LUA_USER_HEAP (1 * 1024 * 1024)
 #elif defined(EFI_IS_F42x)
-    // F42x has more memory, so we can:
-    //  - use compressed USB MSD image (requires 32k of memory)
-    //  - use perf trace (requires ~16k of memory)
+	// F42x has more memory, so we can:
+	//  - use compressed USB MSD image (requires 32k of memory)
+	//  - use perf trace (requires ~16k of memory)
 	#define EFI_USE_COMPRESSED_INI_MSD TRUE
 	#define ENABLE_PERF_TRACE TRUE
 
 	#define LUA_USER_HEAP 25000
 #else
-    #ifndef ENABLE_PERF_TRACE
+	#ifndef ENABLE_PERF_TRACE
 	// small memory F40x can't fit perf trace
 	#define ENABLE_PERF_TRACE FALSE
-    #endif // ENABLE_PERF_TRACE
+	#endif // ENABLE_PERF_TRACE
 
 	#ifndef LUA_USER_HEAP
 	#define LUA_USER_HEAP 25000
