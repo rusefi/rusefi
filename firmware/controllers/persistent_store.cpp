@@ -27,13 +27,18 @@
 #include "sensor_chart.h"
 #include "trigger_central.h"
 
-#ifndef PERSISTENT_LOCATION_TODO
+#ifndef PERSISTENT_LOCATION
 #define PERSISTENT_LOCATION CCM_OPTIONAL
 #else
-#pragma message(PERSISTENT_LOCATION_VALUE)
-#define PERSISTENT_LOCATION CCM_OPTIONAL
-//#define PERSISTENT_LOCATION __attribute__((section(".ram1")))
+/* nothing */
 #endif
+
+// Magic from https://stackoverflow.com/questions/1562074/how-do-i-show-the-value-of-a-define-at-compile-time
+/* definition to expand macro then apply to pragma message */
+#define VALUE_TO_STRING(x) #x
+#define VALUE(x) VALUE_TO_STRING(x)
+#define VAR_NAME_VALUE(var) #var "="  VALUE(var)
+#pragma message(VAR_NAME_VALUE(PERSISTENT_LOCATION))
 
 persistent_config_container_s persistentState PERSISTENT_LOCATION;
 
