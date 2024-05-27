@@ -58,7 +58,7 @@ pins:
     function: Crank Sensor
     meta: H144_IN_CRANK
     class: event_inputs
-    ts_name: Crank - K17 rev B
+    ts_name: Crank - K17
 
   - pin: K18
     function: BK2 WBO IP
@@ -203,7 +203,7 @@ pins:
     meta: H144_IN_CAM
     function: Cam Sensor
     class: event_inputs
-    ts_name: Cam - K62 rev B
+    ts_name: Cam - K62
 
   - pin: K63
     function: sensor +5v feed
