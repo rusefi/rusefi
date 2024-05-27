@@ -37,6 +37,7 @@ public:
 
 private:
 	bool isLaunchRpmRetardCondition() const;
+	bool isSmoothRetardRpmCondition(int rpm) const;
 
 	Timer m_launchTimer;
 };

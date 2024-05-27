@@ -104,15 +104,16 @@ angle_t getRunningAdvance(int rpm, float engineLoad) {
 #endif
 
 #if EFI_LAUNCH_CONTROL
-	if (engine->launchController.isLaunchCondition && engineConfiguration->enableLaunchRetard) {
+	if (engine->launchController.isSmoothRetardCondition && engineConfiguration->enableLaunchRetard) {
+		const float launchAngle = engineConfiguration->launchTimingRetard;
 		if (engineConfiguration->launchSmoothRetard) {
-			float launchAngle = engineConfiguration->launchTimingRetard;
-			int launchRpm = engineConfiguration->launchRpm;
-			int launchRpmWithTimingRange = launchRpm + engineConfiguration->launchRpmWindow;
-			 // interpolate timing from rpm at launch triggered to full retard at launch launchRpm + launchTimingRpmRange
-			return interpolateClamped(launchRpm, advanceAngle, launchRpmWithTimingRange, launchAngle, rpm);
+			const int launchRpm = engineConfiguration->launchRpm;
+			const int smoothRetardStartRpm = (launchRpm - engineConfiguration->launchRpmWindow);
+			const int smoothRetardEndRpm = (launchRpm - engineConfiguration->smoothRetardEndRpm);
+			// https://github.com/rusefi/rusefi/issues/5611#issuecomment-2130431696
+			return interpolateClamped(smoothRetardStartRpm, advanceAngle, smoothRetardEndRpm, launchAngle, rpm);
 		} else {
-			return engineConfiguration->launchTimingRetard;
+			return launchAngle;
 		}
 	}
 #endif /* EFI_LAUNCH_CONTROL */
