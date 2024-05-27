@@ -376,7 +376,7 @@
         <constant digits="0" name="verboseCanBaseAddress" units="">512.0</constant>
         <constant digits="0" name="mc33_hvolt" units="v">65.0</constant>
         <constant digits="0" name="minimumBoostClosedLoopMap" units="kPa">0.0</constant>
-        <constant digits="0" name="smoothRetardStartRpm" units="">0.0</constant>
+        <constant digits="0" name="unusedacFanPin" units="">0.0</constant>
         <constant name="boostOpenLoopYAxis">"TPS"</constant>
         <constant name="l9779spiDevice">"Off"</constant>
         <constant name="imuType">"None"</constant>
@@ -4716,7 +4716,7 @@ end</constant>
 </constant>
         <constant digits="0" name="tcu_shiftTime" units="ms">0.0</constant>
     </page>
-    <versionInfo firmwareInfo="20240522" nPages="1" signature="rusEFI master.2024.05.27.f407-discovery.2827731956" version="5.0"/>
+    <versionInfo firmwareInfo="20240522" nPages="1" signature="rusEFI master.2024.05.27.f407-discovery.3345378415" version="5.0"/>
     <bibliography author="rusEFI 20240522" writeDate="date"/>
     <settings/>
     <userComments/>
