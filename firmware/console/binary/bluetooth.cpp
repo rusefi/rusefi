@@ -167,7 +167,8 @@ static void runCommands(SerialTsChannelBase* tsChannel) {
 		baudIdx++;
 	}
 
-	if (btModuleType == BLUETOOTH_JDY_3x) {
+	if ((btModuleType == BLUETOOTH_JDY_3x) ||
+		(btModuleType == BLUETOOTH_JDY_31))  {
 #if EFI_BLUETOOTH_SETUP_DEBUG
 		/* Debug, get version, current settings */
 		btWrite(tsChannel, "AT+VERSION\r\n");
@@ -176,8 +177,10 @@ static void runCommands(SerialTsChannelBase* tsChannel) {
 		btWrite(tsChannel, "AT+BAUD\r\n");
 		btReadLine(tsChannel, tmp, sizeof(tmp));
 
-		btWrite(tsChannel, "AT+TYPE\r\n");
-		btReadLine(tsChannel, tmp, sizeof(tmp));
+		if (btModuleType == BLUETOOTH_JDY_3x) {
+			btWrite(tsChannel, "AT+TYPE\r\n");
+			btReadLine(tsChannel, tmp, sizeof(tmp));
+		}
 
 		btWrite(tsChannel, "AT+PIN\r\n");
 		btReadLine(tsChannel, tmp, sizeof(tmp));
@@ -185,11 +188,13 @@ static void runCommands(SerialTsChannelBase* tsChannel) {
 		btWrite(tsChannel, "AT+LADDR\r\n");
 		btReadLine(tsChannel, tmp, sizeof(tmp));
 
-		btWrite(tsChannel, "AT+STAT\r\n");
-		btReadLine(tsChannel, tmp, sizeof(tmp));
+		if (btModuleType == BLUETOOTH_JDY_3x) {
+			btWrite(tsChannel, "AT+STAT\r\n");
+			btReadLine(tsChannel, tmp, sizeof(tmp));
+		}
 #endif
 
-		/* JDY33 specific settings */
+		/* JDY33/JDY31 specific settings */
 		/* Reset to defaults */
 		btWrite(tsChannel, "AT+DEFAULT\r\n");
 		btWaitOk(tsChannel);
@@ -198,40 +203,12 @@ static void runCommands(SerialTsChannelBase* tsChannel) {
 		btWrite(tsChannel, "AT+ENLOG0\r\n");
 		btWaitOk(tsChannel);
 
-		/* SPP connection with no password */
-		btWrite(tsChannel, "AT+TYPE0\r\n");
-		btWaitOk(tsChannel);
+		if (btModuleType == BLUETOOTH_JDY_3x) {
+			/* SPP connection with no password */
+			btWrite(tsChannel, "AT+TYPE0\r\n");
+			btWaitOk(tsChannel);
+		}
 	}
-
-  if (btModuleType == BLUETOOTH_JDY_31) {
-#if EFI_BLUETOOTH_SETUP_DEBUG
-		/* Debug, get version, current settings */
-		btWrite(tsChannel, "AT+VERSION\r\n");
-		btReadLine(tsChannel, tmp, sizeof(tmp));
-
-		btWrite(tsChannel, "AT+BAUD\r\n");
-		btReadLine(tsChannel, tmp, sizeof(tmp));
-
-		btWrite(tsChannel, "AT+PIN\r\n");
-		btReadLine(tsChannel, tmp, sizeof(tmp));
-
-		btWrite(tsChannel, "AT+LADDR\r\n");
-		btReadLine(tsChannel, tmp, sizeof(tmp));
-
-
-#endif
-
-		/* JDY31 specific settings */
-		/* Reset to defaults */
-		btWrite(tsChannel, "AT+DEFAULT\r\n");
-		btWaitOk(tsChannel);
-
-		/* No serial port status output */
-		btWrite(tsChannel, "AT+ENLOG0\r\n");
-		btWaitOk(tsChannel);
-
-	}
-
 
 	/* restart with new baud */
 	tsChannel->stop();
@@ -265,7 +242,7 @@ static void runCommands(SerialTsChannelBase* tsChannel) {
 		goto cmdFailed;
 	}
 
-  if (btModuleType == BLUETOOTH_HC_05)
+	if (btModuleType == BLUETOOTH_HC_05)
 		chsnprintf(tmp, sizeof(tmp), "AT+UART=%d,0,0\r\n", baudRates[setBaudIdx].rate);	// baud rate, 0=(1 stop bit), 0=(no parity bits)
 	else
 		chsnprintf(tmp, sizeof(tmp), "AT+BAUD%d\r\n", baudRates[setBaudIdx].code);
@@ -274,15 +251,8 @@ static void runCommands(SerialTsChannelBase* tsChannel) {
 		goto cmdFailed;
 	}
   
-	if (btModuleType == BLUETOOTH_JDY_3x ) {
-		/* Now reset module to apply new settings */
-		btWrite(tsChannel, "AT+RESET\r\n");
-		if (btWaitOk(tsChannel) != 0) {
-			efiPrintf("JDY3x failed to reset");
-		}
-	}
-
-  if (btModuleType == BLUETOOTH_JDY_31 ) {
+	if ((btModuleType == BLUETOOTH_JDY_3x) ||
+		(btModuleType == BLUETOOTH_JDY_31)) {
 		/* Now reset module to apply new settings */
 		btWrite(tsChannel, "AT+RESET\r\n");
 		if (btWaitOk(tsChannel) != 0) {
@@ -364,15 +334,9 @@ void bluetoothSoftwareDisconnectNotify(SerialTsChannelBase* tsChannel) {
 	if (btSetupIsRequested) {
 		efiPrintf("*** Bluetooth module setup procedure ***");
 
-		/* JDY33 supports disconnect on request */
-		if (btModuleType != BLUETOOTH_JDY_3x ) {
-			efiPrintf("!Warning! Please make sure you're not currently using the BT module for communication (not paired)!");
-			efiPrintf("TO START THE PROCEDURE: PLEASE DISCONNECT YOUR PC COM-PORT FROM THE BOARD NOW!");
-			efiPrintf("After that please don't turn off the board power and wait for ~15 seconds to complete. Then reconnect to the board!");
-		}
-
-    /* JDY31 supports disconnect on request */
-		if (btModuleType != BLUETOOTH_JDY_31 ) {
+		/* JDY33 & JDY31 supports disconnect on request */
+		if ((btModuleType != BLUETOOTH_JDY_3x) &&
+			(btModuleType != BLUETOOTH_JDY_31)) {
 			efiPrintf("!Warning! Please make sure you're not currently using the BT module for communication (not paired)!");
 			efiPrintf("TO START THE PROCEDURE: PLEASE DISCONNECT YOUR PC COM-PORT FROM THE BOARD NOW!");
 			efiPrintf("After that please don't turn off the board power and wait for ~15 seconds to complete. Then reconnect to the board!");
