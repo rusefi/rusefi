@@ -10,6 +10,7 @@ name: Set Date
 on:
   schedule:
     - cron: '0 0 * * *'
+  workflow_dispatch:
 
 jobs:
   update-date:
@@ -24,7 +25,7 @@ jobs:
     - name: Check last date
       run: |
         export RECENT_GIT_MESSAGE="$(git log -1 --pretty=%B)"
-        export RECENT_GIT_MESSAGE_11="${RECENT_GIT_MESSAGE:0:11}
+        export RECENT_GIT_MESSAGE_11="${RECENT_GIT_MESSAGE:0:11}"
         echo "RECENT_GIT_MESSAGE=[$RECENT_GIT_MESSAGE] RECENT_GIT_MESSAGE_11=[${RECENT_GIT_MESSAGE_11}]"
         if [ "$(RECENT_GIT_MESSAGE_11)" = "Update date" ]; then echo "skip=true" >> $GITHUB_ENV; fi
 
