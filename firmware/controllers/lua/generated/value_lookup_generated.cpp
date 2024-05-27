@@ -517,9 +517,6 @@ float getConfigValueByName(const char *name) {
 // minimumBoostClosedLoopMap
 		case 596585178:
 			return engineConfiguration->minimumBoostClosedLoopMap;
-// smoothRetardStartRpm
-		case 300652254:
-			return engineConfiguration->smoothRetardStartRpm;
 // vehicleWeight
 		case 1549866701:
 			return engineConfiguration->vehicleWeight;
@@ -2696,11 +2693,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case 596585178:
 	{
 		engineConfiguration->minimumBoostClosedLoopMap = (int)value;
-		return 1;
-	}
-		case 300652254:
-	{
-		engineConfiguration->smoothRetardStartRpm = (int)value;
 		return 1;
 	}
 		case 1549866701:

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun May 26 14:01:31 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon May 27 13:08:22 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1697,7 +1697,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 778
 	 */
-	uint16_t smoothRetardStartRpm;
+	uint16_t unusedacFanPin;
 	/**
 	 * offset 780
 	 */
@@ -5628,4 +5628,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22656);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun May 26 14:01:31 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon May 27 13:08:22 UTC 2024
