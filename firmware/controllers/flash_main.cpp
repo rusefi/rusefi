@@ -81,7 +81,7 @@ void setNeedToWriteConfiguration() {
 	needToWriteConfiguration = true;
 
 #if EFI_FLASH_WRITE_THREAD
-	if (allowFlashWhileRunning() || (EFI_STORAGE_MFS == TRUE)) {
+	if (allowFlashWhileRunning() || (EFI_STORAGE_MFS_EXTERNAL == TRUE)) {
 		// Signal the flash writer thread to wake up and write at its leisure
 		flashWriteSemaphore.signal();
 	}
@@ -364,7 +364,7 @@ void initFlash() {
 	addConsoleAction("rewriteconfig", rewriteConfig);
 
 #if EFI_FLASH_WRITE_THREAD
-	if (allowFlashWhileRunning()) {
+	if (allowFlashWhileRunning() || (EFI_STORAGE_MFS_EXTERNAL == TRUE)) {
 		chThdCreateStatic(flashWriteStack, sizeof(flashWriteStack), PRIO_FLASH_WRITE, flashWriteThread, nullptr);
 	}
 #endif
