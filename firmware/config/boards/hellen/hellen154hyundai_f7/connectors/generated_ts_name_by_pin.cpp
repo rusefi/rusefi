@@ -11,17 +11,11 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::A7: return "Cam - K15";
 		case Gpio::A9: return "X2 AuxLS3";
 		case Gpio::B1: return "Crank - K17 rev B";
-		case Gpio::C13: return "Coil 1";
-		case Gpio::D10: return "INJ_4 k28";
-		case Gpio::D11: return "INJ_3 k27";
 		case Gpio::D12: return "MIL";
 		case Gpio::D14: return "X3 AuxLS2";
 		case Gpio::D15: return "Tacho";
 		case Gpio::D3: return "X8 AuxLS1";
 		case Gpio::D9: return "VVT1";
-		case Gpio::E3: return "Coil 4";
-		case Gpio::E4: return "Coil 3";
-		case Gpio::E5: return "Coil 2";
 		case Gpio::F10: return "A43 Clutch Input";
 		case Gpio::F11: return "K40 VSS";
 		case Gpio::F12: return "VVT2";
@@ -36,8 +30,14 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::G14: return "Main Relay K64";
 		case Gpio::G3: return "Fan Relay Low";
 		case Gpio::G4: return "Fan Relay HI";
-		case Gpio::G7: return "INJ_1 k25";
-		case Gpio::G8: return "INJ_2 k26";
+		case Gpio::MC33810_0_GD_0: return "Coil 1";
+		case Gpio::MC33810_0_GD_1: return "Coil 2";
+		case Gpio::MC33810_0_GD_2: return "Coil 3";
+		case Gpio::MC33810_0_GD_3: return "Coil 4";
+		case Gpio::MC33810_0_OUT_0: return "INJ_1 k25";
+		case Gpio::MC33810_0_OUT_1: return "INJ_2 k26";
+		case Gpio::MC33810_0_OUT_2: return "INJ_3 k27";
+		case Gpio::MC33810_0_OUT_3: return "INJ_4 k28";
 		default: return nullptr;
 	}
 	return nullptr;

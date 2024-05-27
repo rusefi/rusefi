@@ -8,10 +8,10 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::H144_OUT_IO2, // X2 AuxLS3
 	Gpio::D14, // X3 AuxLS2
 	Gpio::H144_OUT_IO1, // X8 AuxLS1
-	Gpio::H144_LS_1, // INJ_1 k25
-	Gpio::H144_LS_2, // INJ_2 k26
-	Gpio::H144_LS_3, // INJ_3 k27
-	Gpio::H144_LS_4, // INJ_4 k28
+	Gpio::MC33810_0_OUT_0, // INJ_1 k25
+	Gpio::MC33810_0_OUT_1, // INJ_2 k26
+	Gpio::MC33810_0_OUT_2, // INJ_3 k27
+	Gpio::MC33810_0_OUT_3, // INJ_4 k28
 	Gpio::H144_OUT_IO3, // Main Relay K64
 	Gpio::H144_OUT_IO9, // Fuel Pump K70
 	Gpio::H144_OUT_IO10, // K87 AC Relay
@@ -22,10 +22,10 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::H144_LS_6, // VVT2
 	Gpio::H144_OUT_PWM7, // Tacho
 	Gpio::H144_OUT_IO8, // Fan Relay HI
-	Gpio::H144_IGN_4, // Coil 4
-	Gpio::H144_IGN_2, // Coil 2
-	Gpio::H144_IGN_1, // Coil 1
-	Gpio::H144_IGN_3, // Coil 3
+	Gpio::MC33810_0_GD_3, // Coil 4
+	Gpio::MC33810_0_GD_1, // Coil 2
+	Gpio::MC33810_0_GD_0, // Coil 1
+	Gpio::MC33810_0_GD_2, // Coil 3
 // "X2 AuxLS3",
 // "X3 AuxLS2",
 // "X8 AuxLS1",
