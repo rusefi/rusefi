@@ -99,6 +99,8 @@ typedef enum  __attribute__ ((__packed__)) {
 	VVT_MITSUBISHI_4G9x = 17,
 	VVT_MITSUBISHI_4G63 = 18,
 
+	VVT_MAZDA_L = 19,
+
 } vvt_mode_e;
 
 /**

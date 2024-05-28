@@ -218,3 +218,39 @@ void initializeMazdaSkyactivCam(TriggerWaveform *s) {
 	s->setSecondTriggerSynchronizationGap(0.78);
 	s->setThirdTriggerSynchronizationGap(1.12); // 3rd gap is not required but let's have it for some resiliency
 }
+
+void initializeMazdaLCam(TriggerWaveform* s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
+
+	// 6 teeth:
+	// 0, 60, 90, 150, 180, 270
+	// Tooth at 0 is just before #1 TDC
+
+	// 60
+	s->addEvent360(50, true, TriggerWheel::T_PRIMARY);
+	s->addEvent360(60, false, TriggerWheel::T_PRIMARY);
+
+	// 90
+	s->addEvent360(80, true, TriggerWheel::T_PRIMARY);
+	s->addEvent360(90, false, TriggerWheel::T_PRIMARY);
+
+	// 150
+	s->addEvent360(140, true, TriggerWheel::T_PRIMARY);
+	s->addEvent360(150, false, TriggerWheel::T_PRIMARY);
+
+	// 180
+	s->addEvent360(170, true, TriggerWheel::T_PRIMARY);
+	s->addEvent360(180, false, TriggerWheel::T_PRIMARY);
+
+	// 270
+	s->addEvent360(260, true, TriggerWheel::T_PRIMARY);
+	s->addEvent360(270, false, TriggerWheel::T_PRIMARY);
+
+	// 0 (aka 360)
+	s->addEvent360(350, true, TriggerWheel::T_PRIMARY);
+	s->addEvent360(360, false, TriggerWheel::T_PRIMARY);
+
+	s->setTriggerSynchronizationGap(0.5);
+	s->setSecondTriggerSynchronizationGap(2);
+	s->setThirdTriggerSynchronizationGap(0.5);
+}
