@@ -9,6 +9,7 @@
 #include "pch.h"
 #include "defaults.h"
 #include "hellen_meta.h"
+#include "hellen_leds_100.cpp"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = Gpio::MM100_INJ1;
@@ -46,8 +47,6 @@ static void setupDefaultSensorInputs() {
 
   engineConfiguration->vehicleSpeedSensorInputPin = Gpio::MM100_IN_D3;
 }
-
-#include "hellen_leds_100.cpp"
 
 void setBoardConfigOverrides() {
 	setHellenMegaEnPin();
