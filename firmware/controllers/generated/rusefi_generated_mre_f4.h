@@ -1123,7 +1123,7 @@
 #define LUA_DIGITAL_INPUT_COUNT 8
 #define LUA_GAUGE_COUNT 8
 #define LUA_PWM_COUNT 8
-#define LUA_SCRIPT_SIZE 8000
+#define LUA_SCRIPT_SIZE 10000
 #define MAF_DECODING_COUNT 32
 #define maf_sensor_type_e_auto_enum 0="CUSTOM",2="Bosch0280218004",1="Bosch0280218037",3="DensoTODO"
 #define maf_sensor_type_e_Bosch0280218004 2
@@ -1190,7 +1190,7 @@
 #define PACK_PERCENT_BYTE_MULT 100.0
 #define PEDAL_TO_TPS_SIZE 8
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 22656
+#define persistent_config_s_size 24656
 #define pid_s_size 20
 #define pin_input_mode_e_auto_enum 0="PI_DEFAULT",2="PI_PULLDOWN",1="PI_PULLUP"
 #define pin_input_mode_e_enum "DEFAULT", "PULLUP", "PULLDOWN"
@@ -1272,7 +1272,7 @@
 #define show_microRusEFI_presets true
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 762244896
+#define SIGNATURE_HASH 3620637360
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1329,7 +1329,7 @@
 #define TOOTH_PACKET_SIZE 2
 #define TOP_DEAD_CENTER_MESSAGE "r"
 #define TORQUE_CURVE_SIZE 6
-#define TOTAL_CONFIG_SIZE 22656
+#define TOTAL_CONFIG_SIZE 24656
 #define TPS_2_BYTE_PACKING_MULT 100
 #define TPS_PPS_TOO_HIGH_THRESHOLD 110
 #define TPS_PPS_TOO_LOW_THRESHOLD -10
@@ -1662,7 +1662,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.05.27.mre_f4.762244896"
+#define TS_SIGNATURE "rusEFI master.2024.05.28.mre_f4.3620637360"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
