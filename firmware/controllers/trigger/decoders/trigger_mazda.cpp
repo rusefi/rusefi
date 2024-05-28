@@ -232,7 +232,7 @@ void initializeMazdaLCam(TriggerWaveform* s) {
 	s->addEvent360(350, TriggerValue::RISE);
 	s->addEvent360(360, TriggerValue::FALL);
 
-	s->setTriggerSynchronizationGap(0.5);
-	s->setSecondTriggerSynchronizationGap(2);
-	s->setThirdTriggerSynchronizationGap(0.5);
+	s->setTriggerSynchronizationGap3(0, 0.32, 0.8);
+	s->setTriggerSynchronizationGap3(1, 1.5, 2.5);
+	s->setTriggerSynchronizationGap3(2, 0.32, 0.8);
 }
