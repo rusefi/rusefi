@@ -78,7 +78,7 @@
 ! A: let's look at
 !  #define can_baudrate_e_enum "100kbps", "250kbps", "500kbps", "1Mbps"
 !   custom can_baudrate_e 1 bits, U08, @OFFSET@, [0:1], @@can_baudrate_e_enum@@
-!   can_baudrate_e canBaudRate; set can_baudrate
+!   can_baudrate_e canBaudRate
 !
 ! here #define XXX_enum defines enum options in a reusable way
 ! @@XXX_e_enum@@ is using the enum options defined above
@@ -449,8 +449,8 @@ uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this r
 
 	output_pin_e mainRelayPin;
 	Gpio sdCardCsPin;
-	Gpio canTxPin;set_can_tx_pin X
-	Gpio canRxPin;set_can_rx_pin X
+	Gpio canTxPin
+	Gpio canRxPin
 
 	uint16_t etbExpAverageLength;By the way ETB PID runs at 500hz, length in 1/500 of second here.
 	int8_t launchFuelAdderPercent;;"%", 1, 0, 0, 100, 0
@@ -657,7 +657,7 @@ afr_sensor_s afr
 
 #define MAX_TPS_PPS_DISCREPANCY 5
 
-adc_channel_e throttlePedalPositionAdcChannel;Electronic throttle pedal position first channel\nSee throttlePedalPositionSecondAdcChannel for second channel\nSee also tps1_1AdcChannel\nset_analog_input_pin pps X\nSee throttlePedalUpVoltage and throttlePedalWOTVoltage
+adc_channel_e throttlePedalPositionAdcChannel;Electronic throttle pedal position first channel\nSee throttlePedalPositionSecondAdcChannel for second channel\nSee also tps1_1AdcChannel\nSee throttlePedalUpVoltage and throttlePedalWOTVoltage
     uint8_t autoscale etbSplit;TPS/PPS error threshold;"%", 0.1, 0, 0, @@MAX_TPS_PPS_DISCREPANCY@@, 1
 	Gpio tle6240_cs;
 	pin_output_mode_e tle6240_csPinMode;
@@ -1238,7 +1238,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 
 	#define can_baudrate_e_enum "50kbps", "83.33kbps", "100kbps", "125kbps", "250kbps", "500kbps", "1Mbps"
 	custom can_baudrate_e 1 bits, U08, @OFFSET@, [0:2], @@can_baudrate_e_enum@@
-	can_baudrate_e canBaudRate; set can_baudrate
+	can_baudrate_e canBaudRate
 
 	ve_override_e veOverrideMode;Override the Y axis (load) value used for the VE table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
 
@@ -1270,8 +1270,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	uint8_t autoscale lambdaProtectionRestoreLoad;;"%", 10, 0, 0, 1000, 0
 
 	pin_input_mode_e launchActivatePinMode;
-	Gpio can2TxPin;set_can2_tx_pin X
-	Gpio can2RxPin;set_can2_rx_pin X
+	Gpio can2TxPin
+	Gpio can2RxPin
 	pin_output_mode_e starterControlPinMode;
 	adc_channel_e wastegatePositionSensor;
 	load_override_e ignOverrideMode;Override the Y axis (load) value used for the ignition table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
