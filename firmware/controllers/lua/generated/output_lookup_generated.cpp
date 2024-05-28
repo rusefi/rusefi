@@ -980,11 +980,6 @@ float getOutputValueByName(const char *name) {
 		case 827982787:
 			return engine->launchController.tpsCondition;
 #endif
-// isSmoothRetardCondition
-#if EFI_LAUNCH_CONTROL
-		case -1530149372:
-			return engine->launchController.isSmoothRetardCondition;
-#endif
 // isTpsInvalid
 #if EFI_BOOST_CONTROL
 		case -575666209:

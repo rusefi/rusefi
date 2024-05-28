@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/launch_control_state.txt Fri May 24 13:57:00 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/launch_control_state.txt Tue May 28 23:10:13 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -19,7 +19,6 @@ public class LaunchControl {
 	public static final Field RPMCONDITION = Field.create("RPMCONDITION", 4, FieldType.BIT, 9).setBaseOffset(1028);
 	public static final Field SPEEDCONDITION = Field.create("SPEEDCONDITION", 4, FieldType.BIT, 10).setBaseOffset(1028);
 	public static final Field TPSCONDITION = Field.create("TPSCONDITION", 4, FieldType.BIT, 11).setBaseOffset(1028);
-	public static final Field ISSMOOTHRETARDCONDITION = Field.create("ISSMOOTHRETARDCONDITION", 4, FieldType.BIT, 12).setBaseOffset(1028);
 	public static final Field[] VALUES = {
 	RETARDTHRESHOLDRPM,
 	COMBINEDCONDITIONS,
@@ -34,6 +33,5 @@ public class LaunchControl {
 	RPMCONDITION,
 	SPEEDCONDITION,
 	TPSCONDITION,
-	ISSMOOTHRETARDCONDITION,
 	};
 }
