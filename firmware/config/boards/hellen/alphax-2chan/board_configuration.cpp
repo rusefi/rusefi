@@ -51,7 +51,6 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->afr.hwChannel = EFI_ADC_1;
 
 	engineConfiguration->clt.adcChannel = H144_IN_CLT;
-
 	engineConfiguration->iat.adcChannel = H144_IN_IAT;
 }
 
