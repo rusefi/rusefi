@@ -87,5 +87,6 @@ public enum trigger_type_e {
 	TT_VVT_MITSU_6G72,
 	TT_6_TOOTH_CRANK,
 	TT_DAIHATSU_4_CYL,
+	TT_VVT_MAZDA_L,
 	TT_UNUSED,
 }

@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Thu May 09 23:56:36 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue May 28 21:05:44 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -542,6 +542,8 @@ case trigger_type_e::TT_VVT_BOSCH_QUICK_START:
   return "TT_VVT_BOSCH_QUICK_START";
 case trigger_type_e::TT_VVT_FORD_COYOTE:
   return "TT_VVT_FORD_COYOTE";
+case trigger_type_e::TT_VVT_MAZDA_L:
+  return "TT_VVT_MAZDA_L";
 case trigger_type_e::TT_VVT_MAZDA_SKYACTIV:
   return "TT_VVT_MAZDA_SKYACTIV";
 case trigger_type_e::TT_VVT_MIATA_NB:
