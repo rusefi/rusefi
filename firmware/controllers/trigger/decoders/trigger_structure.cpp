@@ -652,6 +652,10 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 	    initializeMazdaSkyactivCam(this);
         break;
 
+	case trigger_type_e::TT_VVT_MAZDA_L:
+		initializeMazdaLCam(this);
+		break;
+
 	case trigger_type_e::TT_BENELLI_TRE:
 	    configureBenelli(this);
         break;

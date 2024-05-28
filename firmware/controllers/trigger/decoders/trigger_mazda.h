@@ -25,3 +25,5 @@ void configureMazdaProtegeLx(TriggerWaveform *s);
 void initializeMazdaMiataVVtCamShape(TriggerWaveform *s);
 
 void initializeMazdaSkyactivCam(TriggerWaveform *s);
+
+void initializeMazdaLCam(TriggerWaveform* s);
