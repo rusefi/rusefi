@@ -33,7 +33,7 @@ public class IniFileModel {
     public Map<String, IniField> allIniFields = new LinkedHashMap<>();
     public final Map<String, DialogModel.Field> fieldsInUiOrder = new LinkedHashMap<>();
 
-    public Map<String, String> tooltips = new TreeMap<>();
+    public Map</*field name*/String, String> tooltips = new TreeMap<>();
     public Map<String, String> protocolMeta = new TreeMap<>();
     private boolean isConstantsSection;
     private String currentYBins;
