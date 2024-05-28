@@ -16,6 +16,4 @@ bit     rpmCondition;
 bit     speedCondition;
 bit     tpsCondition;
 
-bit isSmoothRetardCondition
-
 end_struct
