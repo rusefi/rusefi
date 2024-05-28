@@ -119,7 +119,6 @@ LaunchControlBase::LaunchControlBase() {
 	launchActivatePinState = false;
 	isLaunchPreCondition = false;
 	isLaunchCondition = false;
-	isSmoothRetardCondition = false;
 }
 
 float LaunchControlBase::getFuelCoefficient() const {
@@ -145,8 +144,6 @@ void LaunchControlBase::update() {
 		// If conditions are met...
 		isLaunchCondition = m_launchTimer.hasElapsedSec(engineConfiguration->launchActivateDelay);
 	}
-
-	isSmoothRetardCondition = isSmoothRetardRpmCondition(rpm);
 }
 
 bool LaunchControlBase::isLaunchRpmRetardCondition() const {
@@ -155,12 +152,6 @@ bool LaunchControlBase::isLaunchRpmRetardCondition() const {
 
 bool LaunchControlBase::isLaunchSparkRpmRetardCondition() const {
 	return isLaunchRpmRetardCondition() && engineConfiguration->launchSparkCutEnable;
-}
-
-bool LaunchControlBase::isSmoothRetardRpmCondition(const int rpm) const {
-	const int smoothRetardStartRpm = engineConfiguration->launchRpm - engineConfiguration->launchRpmWindow;
-	const int smoothRetardEndRpm = engineConfiguration->launchRpm - engineConfiguration->smoothRetardEndRpm;
-	return (smoothRetardStartRpm <= rpm) && (rpm <= smoothRetardEndRpm);
 }
 
 bool LaunchControlBase::isLaunchFuelRpmRetardCondition() const {

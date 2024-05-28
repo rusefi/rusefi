@@ -68,10 +68,6 @@ static void updateRpm(const int rpm) {
     Sensor::setMockValue(SensorType::Rpm, rpm);
     // run the ignition math
     engine->periodicFastCallback();
-    EXPECT_EQ(
-        engine->launchController.isSmoothRetardCondition,
-        (TEST_SMOOTH_RETARD_RPM_WINDOW_START <= rpm) && (rpm <= TEST_SMOOTH_RETARD_RPM_WINDOW_END)
-    );
 }
 
 TEST(ignitionAngleAdvance, withoutLaunchRetard) {
@@ -81,7 +77,6 @@ TEST(ignitionAngleAdvance, withoutLaunchRetard) {
 
     ASSERT_FALSE(engineConfiguration->enableLaunchRetard);
     ASSERT_FALSE(engineConfiguration->launchSmoothRetard);
-    ASSERT_FALSE(engine->launchController.isSmoothRetardCondition);
 
     updateRpm(650);
     EXPECT_NEAR(TEST_IGNITION_650, engine->ignitionState.baseIgnitionAdvance, EPS5D);
@@ -97,12 +92,10 @@ TEST(ignitionAngleAdvance, withoutLaunchRetard) {
 
     updateRpm(1700);
     EXPECT_NEAR(TEST_IGNITION_1700, engine->ignitionState.baseIgnitionAdvance, EPS5D);
-    EXPECT_FALSE(engine->launchController.isSmoothRetardCondition);
 
     updateRpm(2000);
     /* We've entered smooth retard RPM window: */
     EXPECT_NEAR(TEST_IGNITION_2000, engine->ignitionState.baseIgnitionAdvance, EPS5D);
-    EXPECT_TRUE(engine->launchController.isSmoothRetardCondition);
 
     updateRpm(2300);
     EXPECT_NEAR(TEST_IGNITION_2300, engine->ignitionState.baseIgnitionAdvance, EPS5D);
@@ -112,12 +105,10 @@ TEST(ignitionAngleAdvance, withoutLaunchRetard) {
 
     updateRpm(2900);
     EXPECT_NEAR(TEST_IGNITION_2900, engine->ignitionState.baseIgnitionAdvance, EPS5D);
-    EXPECT_TRUE(engine->launchController.isSmoothRetardCondition);
 
     updateRpm(3200);
     /* We've left smooth retard RPM window: */
     EXPECT_NEAR(TEST_IGNITION_3200, engine->ignitionState.baseIgnitionAdvance, EPS5D);
-    EXPECT_FALSE(engine->launchController.isSmoothRetardCondition);
 
     updateRpm(3500);
     EXPECT_NEAR(TEST_IGNITION_3500, engine->ignitionState.baseIgnitionAdvance, EPS5D);
@@ -137,7 +128,6 @@ TEST(ignitionAngleAdvance, withoutLaunchRetard) {
 
     updateRpm(7000);
     EXPECT_NEAR(TEST_IGNITION_7000, engine->ignitionState.baseIgnitionAdvance, EPS5D);
-    EXPECT_FALSE(engine->launchController.isSmoothRetardCondition);
 }
 
 TEST(ignitionAngleAdvance, launchRetardWithoutSmooth) {
@@ -150,7 +140,6 @@ TEST(ignitionAngleAdvance, launchRetardWithoutSmooth) {
 
     updateRpm(650);
     EXPECT_NEAR(TEST_IGNITION_650, engine->ignitionState.baseIgnitionAdvance, EPS5D);
-    EXPECT_FALSE(engine->launchController.isSmoothRetardCondition);
 
     updateRpm(800);
     EXPECT_NEAR(TEST_IGNITION_800, engine->ignitionState.baseIgnitionAdvance, EPS5D);
@@ -163,12 +152,10 @@ TEST(ignitionAngleAdvance, launchRetardWithoutSmooth) {
 
     updateRpm(1700);
     EXPECT_NEAR(TEST_IGNITION_1700, engine->ignitionState.baseIgnitionAdvance, EPS5D);
-    EXPECT_FALSE(engine->launchController.isSmoothRetardCondition);
 
     updateRpm(2000);
     /* We've entered smooth retard RPM window: */
-    EXPECT_NEAR(TEST_IGNITION_2000, engine->ignitionState.baseIgnitionAdvance, EPS5D);
-    EXPECT_TRUE(engine->launchController.isSmoothRetardCondition);
+    EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
 
     updateRpm(2300);
     EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
@@ -178,32 +165,29 @@ TEST(ignitionAngleAdvance, launchRetardWithoutSmooth) {
 
     updateRpm(2900);
     EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
-    EXPECT_TRUE(engine->launchController.isSmoothRetardCondition);
 
     updateRpm(3200);
     /* We've left smooth retard RPM window: */
     EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
-    EXPECT_FALSE(engine->launchController.isSmoothRetardCondition);
 
     updateRpm(3500);
-    EXPECT_NEAR(TEST_IGNITION_3500, engine->ignitionState.baseIgnitionAdvance, EPS5D);
+    EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
 
     updateRpm(3800);
     /* We've reached TEST_LAUNCH_RPM: */
-    EXPECT_NEAR(TEST_IGNITION_3800, engine->ignitionState.baseIgnitionAdvance, EPS5D);
+    EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
 
     updateRpm(4100);
-    EXPECT_NEAR(TEST_IGNITION_4100, engine->ignitionState.baseIgnitionAdvance, EPS5D);
+    EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
 
     updateRpm(4400);
-    EXPECT_NEAR(TEST_IGNITION_4400, engine->ignitionState.baseIgnitionAdvance, EPS5D);
+    EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
 
     updateRpm(4700);
-    EXPECT_NEAR(TEST_IGNITION_4700, engine->ignitionState.baseIgnitionAdvance, EPS5D);
+    EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
 
     updateRpm(7000);
-    EXPECT_NEAR(TEST_IGNITION_7000, engine->ignitionState.baseIgnitionAdvance, EPS5D);
-    EXPECT_FALSE(engine->launchController.isSmoothRetardCondition);
+    EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
 }
 
 
@@ -217,7 +201,6 @@ TEST(ignitionAngleAdvance, launchSmoothRetard) {
 
     updateRpm(650);
     EXPECT_NEAR(TEST_IGNITION_650, engine->ignitionState.baseIgnitionAdvance, EPS5D);
-    EXPECT_FALSE(engine->launchController.isSmoothRetardCondition);
 
     updateRpm(800);
     EXPECT_NEAR(TEST_IGNITION_800, engine->ignitionState.baseIgnitionAdvance, EPS5D);
@@ -230,12 +213,10 @@ TEST(ignitionAngleAdvance, launchSmoothRetard) {
 
     updateRpm(1700);
     EXPECT_NEAR(TEST_IGNITION_1700, engine->ignitionState.baseIgnitionAdvance, EPS5D);
-    EXPECT_FALSE(engine->launchController.isSmoothRetardCondition);
 
     updateRpm(2000);
     /* We've entered smooth retard RPM window: */
     EXPECT_NEAR(TEST_IGNITION_2000, engine->ignitionState.baseIgnitionAdvance, EPS5D);
-    EXPECT_TRUE(engine->launchController.isSmoothRetardCondition);
 
     updateRpm(2300);
     EXPECT_NEAR(
@@ -257,30 +238,27 @@ TEST(ignitionAngleAdvance, launchSmoothRetard) {
 
     updateRpm(2900);
     EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
-    EXPECT_TRUE(engine->launchController.isSmoothRetardCondition);
 
     updateRpm(3200);
     /* We've left smooth retard RPM window: */
     EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
-    EXPECT_FALSE(engine->launchController.isSmoothRetardCondition);
 
     updateRpm(3500);
-    EXPECT_NEAR(TEST_IGNITION_3500, engine->ignitionState.baseIgnitionAdvance, EPS5D);
+    EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
 
     updateRpm(3800);
     /* We've reached TEST_LAUNCH_RPM: */
-    EXPECT_NEAR(TEST_IGNITION_3800, engine->ignitionState.baseIgnitionAdvance, EPS5D);
+    EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
 
     updateRpm(4100);
-    EXPECT_NEAR(TEST_IGNITION_4100, engine->ignitionState.baseIgnitionAdvance, EPS5D);
+    EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
 
     updateRpm(4400);
-    EXPECT_NEAR(TEST_IGNITION_4400, engine->ignitionState.baseIgnitionAdvance, EPS5D);
+    EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
 
     updateRpm(4700);
-    EXPECT_NEAR(TEST_IGNITION_4700, engine->ignitionState.baseIgnitionAdvance, EPS5D);
+    EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
 
     updateRpm(7000);
-    EXPECT_NEAR(TEST_IGNITION_7000, engine->ignitionState.baseIgnitionAdvance, EPS5D);
-    EXPECT_FALSE(engine->launchController.isSmoothRetardCondition);
+    EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
 }
