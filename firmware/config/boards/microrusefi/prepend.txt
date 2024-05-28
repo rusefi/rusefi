@@ -32,3 +32,5 @@
 #define ts_show_spi3_pins false
 
 #define show_microRusEFI_presets true
+
+#define LUA_SCRIPT_SIZE 10000
