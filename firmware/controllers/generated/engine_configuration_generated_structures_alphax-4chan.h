@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon May 27 13:08:25 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue May 28 02:53:29 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -664,12 +664,10 @@ struct engine_configuration_s {
 	 */
 	Gpio sdCardCsPin;
 	/**
-	 * set_can_tx_pin X
 	 * offset 32
 	 */
 	Gpio canTxPin;
 	/**
-	 * set_can_rx_pin X
 	 * offset 34
 	 */
 	Gpio canRxPin;
@@ -1217,7 +1215,6 @@ struct engine_configuration_s {
 	 * Electronic throttle pedal position first channel
 	 * See throttlePedalPositionSecondAdcChannel for second channel
 	 * See also tps1_1AdcChannel
-	 * set_analog_input_pin pps X
 	 * See throttlePedalUpVoltage and throttlePedalWOTVoltage
 	 * offset 580
 	 */
@@ -2979,7 +2976,6 @@ struct engine_configuration_s {
 	 */
 	float throttlePedalSecondaryWOTVoltage;
 	/**
-	 * set can_baudrate
 	 * offset 1548
 	 */
 	can_baudrate_e canBaudRate;
@@ -3157,12 +3153,10 @@ struct engine_configuration_s {
 	 */
 	uint8_t alignmentFill_at_1567[1];
 	/**
-	 * set_can2_tx_pin X
 	 * offset 1568
 	 */
 	Gpio can2TxPin;
 	/**
-	 * set_can2_rx_pin X
 	 * offset 1570
 	 */
 	Gpio can2RxPin;
@@ -5628,4 +5622,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22656);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon May 27 13:08:25 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue May 28 02:53:29 UTC 2024
