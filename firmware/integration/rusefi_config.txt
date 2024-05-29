@@ -819,7 +819,9 @@ pin_output_mode_e hip9011IntHoldPinMode;
 	uint8_t mc33_hvolt;Boost Voltage;"v", 1, 0, 40, 70, 0
 	uint8_t minimumBoostClosedLoopMap;Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon entering boost.;"kPa", 1, 0, 0, 255, 0
 
-    uint16_t unusedacFanPin
+    int8_t initialIgnitionCutPercent;;"%", 1, 0, 0, 100, 0
+    int8_t finalIgnitionCutPercentBeforeLaunch;;"%", 1, 0, 0, 100, 0
+
 	gppwm_channel_e boostOpenLoopYAxis
 
 
