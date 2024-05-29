@@ -856,7 +856,7 @@ pin_output_mode_e hip9011IntHoldPinMode;
 custom uart_device_e 1 bits, U08, @OFFSET@, [0:1], "Off", "UART1", "UART2", "UART3"
 	uint16_t sdCardLogFrequency;Rate the ECU will log to the SD card, in hz (log lines per second).;"hz", 1, 0, 1, 250, 0
 	adc_channel_e idlePositionChannel;
-	uint16_t smoothRetardEndRpm;
+	uint16_t launchCorrectionsEndRpm;
 	output_pin_e starterRelayDisablePin;
 	pin_output_mode_e starterRelayDisablePinMode;On some vehicles we can disable starter once engine is already running
 	output_pin_e secondSolenoidPin;Some Subaru and some Mazda use double-solenoid idle air valve
