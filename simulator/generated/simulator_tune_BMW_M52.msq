@@ -406,7 +406,7 @@
         <constant digits="0" name="etbMaximumPosition" units="%">100.0</constant>
         <constant digits="0" name="sdCardLogFrequency" units="hz">50.0</constant>
         <constant name="idlePositionChannel">"Disabled"</constant>
-        <constant digits="0" name="smoothRetardEndRpm" units="">0.0</constant>
+        <constant digits="0" name="launchCorrectionsEndRpm" units="">0.0</constant>
         <constant name="starterRelayDisablePin">"NONE"</constant>
         <constant name="starterRelayDisablePinMode">"default"</constant>
         <constant name="secondSolenoidPin">"NONE"</constant>
@@ -4717,7 +4717,7 @@ end</constant>
 </constant>
         <constant digits="0" name="tcu_shiftTime" units="ms">0.0</constant>
     </page>
-    <versionInfo firmwareInfo="20240522" nPages="1" signature="rusEFI master.2024.05.29.f407-discovery.1416978117" version="5.0"/>
+    <versionInfo firmwareInfo="20240522" nPages="1" signature="rusEFI master.2024.05.29.f407-discovery.229849641" version="5.0"/>
     <bibliography author="rusEFI 20240522" writeDate="date"/>
     <settings/>
     <userComments/>
