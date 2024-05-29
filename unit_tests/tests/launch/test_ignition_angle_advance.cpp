@@ -167,7 +167,9 @@ TEST(ignitionAngleAdvance, launchRetardWithoutSmooth) {
     EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
 
     updateRpm(3200);
-    /* We've left smooth retard RPM window: */
+    /* See https://github.com/rusefi/rusefi/issues/5611#issuecomment-2137028838
+     * We've left smooth retard RPM window:
+     */
     EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
 
     updateRpm(3500);
@@ -240,14 +242,18 @@ TEST(ignitionAngleAdvance, launchSmoothRetard) {
     EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
 
     updateRpm(3200);
-    /* We've left smooth retard RPM window: */
+    /* See https://github.com/rusefi/rusefi/issues/5611#issuecomment-2136956050
+     * We've left smooth retard RPM window:
+     */
     EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
 
     updateRpm(3500);
     EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
 
     updateRpm(3800);
-    /* We've reached TEST_LAUNCH_RPM: */
+    /* See https://github.com/rusefi/rusefi/issues/5611#issuecomment-2136958259
+     * We've reached TEST_LAUNCH_RPM:
+     */
     EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
 
     updateRpm(4100);
