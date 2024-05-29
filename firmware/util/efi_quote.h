@@ -1,3 +1,5 @@
+// efi_quote.h
+
 #pragma once
 
 #define Q(x) #x
