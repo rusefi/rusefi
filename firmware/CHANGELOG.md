@@ -39,6 +39,7 @@ Release template (copy/paste this for new release):
  - Ignition scheduling errors after 40+ hours of uptime #6451
  - luaSoftSparkSkip/luaHardSparkSkip probably bug #6528
  - improved 4G63/4G9x cam wheel definition #6544
+ - Launch RPM + Launch Control window is not correct #6533
 
 ### Breaking Changes
  - "60/2 VW" trigger wheel renamed to "60-2 Wrong Polarity" #988
