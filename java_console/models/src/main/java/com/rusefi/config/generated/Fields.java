@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed May 29 18:44:55 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed May 29 19:12:49 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1195,7 +1195,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1416978117;
+	public static final int SIGNATURE_HASH = 229849641;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1452,7 +1452,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.05.29.f407-discovery.1416978117";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.05.29.f407-discovery.229849641";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1880,7 +1880,7 @@ public class Fields {
 	public static final Field SDCARDLOGFREQUENCY = Field.create("SDCARDLOGFREQUENCY", 824, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field IDLEPOSITIONCHANNEL = Field.create("IDLEPOSITIONCHANNEL", 826, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_827 = Field.create("ALIGNMENTFILL_AT_827", 827, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field SMOOTHRETARDENDRPM = Field.create("SMOOTHRETARDENDRPM", 828, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field LAUNCHCORRECTIONSENDRPM = Field.create("LAUNCHCORRECTIONSENDRPM", 828, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field STARTERRELAYDISABLEPIN = Field.create("STARTERRELAYDISABLEPIN", 830, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field STARTERRELAYDISABLEPINMODE = Field.create("STARTERRELAYDISABLEPINMODE", 832, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_833 = Field.create("ALIGNMENTFILL_AT_833", 833, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -3553,7 +3553,7 @@ public class Fields {
 	SDCARDLOGFREQUENCY,
 	IDLEPOSITIONCHANNEL,
 	ALIGNMENTFILL_AT_827,
-	SMOOTHRETARDENDRPM,
+	LAUNCHCORRECTIONSENDRPM,
 	STARTERRELAYDISABLEPIN,
 	STARTERRELAYDISABLEPINMODE,
 	ALIGNMENTFILL_AT_833,

@@ -541,9 +541,9 @@ float getConfigValueByName(const char *name) {
 // sdCardLogFrequency
 		case -773841334:
 			return engineConfiguration->sdCardLogFrequency;
-// smoothRetardEndRpm
-		case -1532728185:
-			return engineConfiguration->smoothRetardEndRpm;
+// launchCorrectionsEndRpm
+		case 223926129:
+			return engineConfiguration->launchCorrectionsEndRpm;
 // lambdaProtectionRestoreRpm
 		case 872435040:
 			return engineConfiguration->lambdaProtectionRestoreRpm;
@@ -2741,9 +2741,9 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->sdCardLogFrequency = (int)value;
 		return 1;
 	}
-		case -1532728185:
+		case 223926129:
 	{
-		engineConfiguration->smoothRetardEndRpm = (int)value;
+		engineConfiguration->launchCorrectionsEndRpm = (int)value;
 		return 1;
 	}
 		case 872435040:

@@ -535,7 +535,7 @@ Maximum allowed ETB position. Some throttles go past fully open, so this allows 
 ### sdCardLogFrequency
 Rate the ECU will log to the SD card, in hz (log lines per second).
 
-### smoothRetardEndRpm
+### launchCorrectionsEndRpm
 
 
 ### lambdaProtectionRestoreRpm

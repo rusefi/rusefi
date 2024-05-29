@@ -2,5 +2,5 @@
 // was generated automatically by rusEFI tool config_definition-all.jar based on gen_config.sh by SignatureConsumer
 //
 
-#define SIGNATURE_HASH 939019750
-#define TS_SIGNATURE "rusEFI master.2024.05.29.alphax-silver.939019750"
+#define SIGNATURE_HASH 1849567498
+#define TS_SIGNATURE "rusEFI master.2024.05.29.alphax-silver.1849567498"
