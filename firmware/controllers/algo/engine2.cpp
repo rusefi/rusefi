@@ -19,10 +19,6 @@
 #include "injector_model.h"
 #include "tunerstudio.h"
 
-#if EFI_PROD_CODE
-#include "svnversion.h"
-#endif
-
 #if ! EFI_UNIT_TEST
 #include "status_loop.h"
 #endif
@@ -224,10 +220,6 @@ void EngineState::updateTChargeK(int rpm, float tps) {
 		timeSinceLastTChargeK.reset(nowNt);
 	}
 }
-#endif
-
-#if EFI_SIMULATOR
-#define VCS_VERSION "123"
 #endif
 
 void TriggerConfiguration::update() {

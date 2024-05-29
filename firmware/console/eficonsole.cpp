@@ -27,7 +27,6 @@
 #include "eficonsole.h"
 #include "console_io.h"
 #include "mpu_util.h"
-#include "svnversion.h"
 
 static void testCritical() {
 	chDbgCheck(0);
@@ -54,7 +53,7 @@ static void printUid() {
 
 static void sayHello() {
 	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI LLC (c) 2012-2024. All rights reserved.");
-	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI v%d@%s now=%d", getRusEfiVersion(), VCS_VERSION, getTimeNowMs());
+	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI v%d@%d now=%d", getRusEfiVersion(), SIGNATURE_HASH, getTimeNowMs());
 	efiPrintf(PROTOCOL_HELLO_PREFIX " Chibios Kernel:       %s", CH_KERNEL_VERSION);
 	efiPrintf(PROTOCOL_HELLO_PREFIX " Compiled:     " __DATE__ " - " __TIME__ "");
 	efiPrintf(PROTOCOL_HELLO_PREFIX " COMPILER=%s", __VERSION__);

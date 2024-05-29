@@ -750,7 +750,7 @@ static volatile char UNUSED_RAM_SIZE[RAM_UNUSED_SIZE];
 static volatile char UNUSED_CCM_SIZE[CCM_UNUSED_SIZE] CCM_OPTIONAL;
 
 /**
- * See also VCS_VERSION
+ * See also SIGNATURE_HASH
  */
 int getRusEfiVersion(void) {
 	if (UNUSED_RAM_SIZE[0] != 0)

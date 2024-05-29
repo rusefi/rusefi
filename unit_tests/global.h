@@ -53,7 +53,6 @@ void chDbgAssert(int c, char *msg, void *arg);
 }
 #endif /* __cplusplus */
 
-#define VCS_VERSION "321"
 #define RUS_EFI_VERSION_TAG "rusEfiVersion"
 
 #define EFI_ERROR_CODE 0xffffffff

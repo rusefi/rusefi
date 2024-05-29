@@ -45,7 +45,6 @@
 #include "main_trigger_callback.h"
 #include "spark_logic.h"
 #include "idle_thread.h"
-#include "svnversion.h"
 #include "can_hw.h"
 #include "periodic_thread_controller.h"
 #include "cdm_ion_sense.h"
@@ -96,8 +95,8 @@ static Timer printVersionTimer;
 
 static void printRusefiVersion(const char *engineTypeName, const char *firmwareBuildId) {
 	// VersionChecker in rusEFI console is parsing these version string, please follow the expected format
-	efiPrintfProto(PROTOCOL_VERSION_TAG, "%d@%s %s %s %d",
-			getRusEfiVersion(), VCS_VERSION,
+	efiPrintfProto(PROTOCOL_VERSION_TAG, "%d@%d %s %s %d",
+			getRusEfiVersion(), SIGNATURE_HASH,
 			firmwareBuildId,
 			engineTypeName,
 			getTimeNowS());

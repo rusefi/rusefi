@@ -43,7 +43,6 @@
 #include "sent.h"
 #include "cdm_ion_sense.h"
 #include "trigger_central.h"
-#include "svnversion.h"
 #include "vvt.h"
 #include "trigger_emulator_algo.h"
 #include "boost_control.h"
