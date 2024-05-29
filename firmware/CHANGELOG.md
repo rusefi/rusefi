@@ -31,6 +31,7 @@ Release template (copy/paste this for new release):
  - Suzuki K6A (NON VVTI Trigger) #6490
  - explicit error if 32 bit java is used #6497
  - configurable Open Loop Boost vertical axis #4778
+ - In Launch Control, add RPM Hysterisis #5610
 
 ### Fixed
  - knock logic not activated until any configuration change via TS #6462
