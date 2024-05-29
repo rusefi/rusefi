@@ -517,6 +517,12 @@ float getConfigValueByName(const char *name) {
 // minimumBoostClosedLoopMap
 		case 596585178:
 			return engineConfiguration->minimumBoostClosedLoopMap;
+// initialIgnitionCutPercent
+		case -360834835:
+			return engineConfiguration->initialIgnitionCutPercent;
+// finalIgnitionCutPercentBeforeLaunch
+		case 47348059:
+			return engineConfiguration->finalIgnitionCutPercentBeforeLaunch;
 // vehicleWeight
 		case 1549866701:
 			return engineConfiguration->vehicleWeight;
@@ -2693,6 +2699,16 @@ bool setConfigValueByName(const char *name, float value) {
 		case 596585178:
 	{
 		engineConfiguration->minimumBoostClosedLoopMap = (int)value;
+		return 1;
+	}
+		case -360834835:
+	{
+		engineConfiguration->initialIgnitionCutPercent = (int)value;
+		return 1;
+	}
+		case 47348059:
+	{
+		engineConfiguration->finalIgnitionCutPercentBeforeLaunch = (int)value;
 		return 1;
 	}
 		case 1549866701:

@@ -511,6 +511,12 @@ Boost Voltage
 ### minimumBoostClosedLoopMap
 Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon entering boost.
 
+### initialIgnitionCutPercent
+
+
+### finalIgnitionCutPercentBeforeLaunch
+
+
 ### vehicleWeight
 
 
