@@ -55,7 +55,7 @@ static void setUpTestParameters() {
     engineConfiguration->launchControlEnabled = true;
     engineConfiguration->launchRpm = TEST_LAUNCH_RPM;
     engineConfiguration->launchRpmWindow = TEST_LAUNCH_RPM_WINDOW;
-    engineConfiguration->smoothRetardEndRpm = TEST_SMOOTH_RETARD_END_RPM;
+    engineConfiguration->launchCorrectionsEndRpm = TEST_SMOOTH_RETARD_END_RPM;
     engineConfiguration->launchSparkCutEnable = true;
     engineConfiguration->launchTimingRetard = TEST_LAUNCH_TIMING_RETARD;
 }
