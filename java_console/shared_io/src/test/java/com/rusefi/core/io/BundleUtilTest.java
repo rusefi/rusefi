@@ -7,5 +7,7 @@ public class BundleUtilTest {
     @Test
     public void testExtractBundleTarget() {
         Assertions.assertEquals("proteus_f7", BundleUtil.getBundleTarget("rusefi.snapshot.proteus_f7"));
+        Assertions.assertEquals("snapshot", BundleUtil.parse("rusefi.snapshot.proteus_f7").getBranchName());
     }
 }
+

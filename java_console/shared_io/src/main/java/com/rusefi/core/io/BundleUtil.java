@@ -12,6 +12,8 @@ import java.nio.file.InvalidPathException;
 import java.util.Date;
 
 public class BundleUtil {
+    private static final char BUNDLE_TOKEN_SEPARATOR = '.';
+
     /**
      * @return null in case of error
      */
@@ -40,12 +42,42 @@ public class BundleUtil {
         return getBundleTarget(readBundleFullName());
     }
 
+    public static BundleInfo parse(String bundleFullName) {
+        String[] bundleFullNameSplit = bundleFullName.split("\\" + BundleUtil.BUNDLE_TOKEN_SEPARATOR);
+        if (bundleFullNameSplit.length != 3)
+            throw new IllegalStateException("Unexpected parent folder name/bundleFullName [" + bundleFullName + "] exactly two dots expected");
+        String branchName = bundleFullNameSplit[1];
+        String target = bundleFullNameSplit[2];
+        return new BundleInfo(branchName, target);
+    }
+
     public static String getBundleTarget(String s) {
-        if (s == null)
-            return null;
-        int lastDot = s.lastIndexOf('.');
-        if (lastDot == -1)
-            throw new IllegalStateException("Dot expected somewhere in [" + s + "]");
-        return s.substring(lastDot + 1);
+        return parse(s).getTarget();
+    }
+
+    public static class BundleInfo {
+        private final String branchName;
+        private final String target;
+
+        public BundleInfo(String branchName, String target) {
+            this.branchName = branchName;
+            this.target = target;
+        }
+
+        public String getBranchName() {
+            return branchName;
+        }
+
+        public String getTarget() {
+            return target;
+        }
+
+        @Override
+        public String toString() {
+            return "BundleInfo{" +
+                "branchName='" + branchName + '\'' +
+                ", target='" + target + '\'' +
+                '}';
+        }
     }
 }
