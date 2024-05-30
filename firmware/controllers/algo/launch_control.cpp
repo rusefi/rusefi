@@ -147,7 +147,7 @@ void LaunchControlBase::update() {
 }
 
 bool LaunchControlBase::isLaunchRpmRetardCondition() const {
-	return isLaunchCondition && (retardThresholdRpm < Sensor::getOrZero(SensorType::Rpm));
+	return isLaunchCondition && engineConfiguration->launchControlEnabled && (retardThresholdRpm < Sensor::getOrZero(SensorType::Rpm));
 }
 
 bool LaunchControlBase::isLaunchSparkRpmRetardCondition() const {
