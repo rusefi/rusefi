@@ -32,7 +32,11 @@ constexpr int TEST_SMOOTH_RETARD_RPM_WINDOW = TEST_SMOOTH_RETARD_RPM_WINDOW_END 
 
 constexpr float TEST_LAUNCH_TIMING_RETARD = 17.0f;
 
-static void setUpTestParameters() {
+static void setUpTestParameters(
+    const std::optional<bool> launchControlEnabled,
+    const std::optional<bool> enableLaunchRetard,
+    const std::optional<bool> launchSmoothRetard
+) {
     for (int loadIdx = 0; loadIdx < IGN_LOAD_COUNT; loadIdx++) {
         config->ignitionTable[loadIdx][0] = TEST_IGNITION_650;
         config->ignitionTable[loadIdx][1] = TEST_IGNITION_800;
@@ -52,12 +56,38 @@ static void setUpTestParameters() {
         config->ignitionTable[loadIdx][15] = TEST_IGNITION_7000;
     }
 
-    engineConfiguration->launchControlEnabled = true;
+    if (launchControlEnabled.has_value()) {
+        engineConfiguration->launchControlEnabled = launchControlEnabled.value();
+    } else {
+        ASSERT_FALSE(engineConfiguration->launchControlEnabled); // check default value
+    }
     engineConfiguration->launchRpm = TEST_LAUNCH_RPM;
     engineConfiguration->launchRpmWindow = TEST_LAUNCH_RPM_WINDOW;
     engineConfiguration->launchCorrectionsEndRpm = TEST_SMOOTH_RETARD_END_RPM;
     engineConfiguration->launchSparkCutEnable = true;
     engineConfiguration->launchTimingRetard = TEST_LAUNCH_TIMING_RETARD;
+
+    if (enableLaunchRetard.has_value()) {
+        engineConfiguration->enableLaunchRetard = enableLaunchRetard.value();
+    } else {
+        ASSERT_FALSE(engineConfiguration->enableLaunchRetard); // check default value
+    }
+    if (launchSmoothRetard.has_value()) {
+        engineConfiguration->launchSmoothRetard = launchSmoothRetard.value();
+    } else {
+        ASSERT_FALSE(engineConfiguration->launchSmoothRetard); // check default value
+    }
+}
+
+static void setUpTestParametersWithEnabledLaunchControl(
+    const std::optional<bool> enableLaunchRetard = {},
+    const std::optional<bool> launchSmoothRetard = {}
+) {
+    setUpTestParameters(
+        /* launchControlEnabled = */ { true },
+        /* enableLaunchRetard = */ enableLaunchRetard,
+        /* launchSmoothRetard = */ launchSmoothRetard
+    );
 }
 
 static float getTestAdvance(const float rpm) {
@@ -70,13 +100,19 @@ static void updateRpm(const int rpm) {
     engine->periodicFastCallback();
 }
 
-TEST(ignitionAngleAdvance, withoutLaunchRetard) {
+/* Checks that angle advance is not affected by `Launch Control` functionality: */
+static void checkAngleAdvanceWithoutLaunchControl(
+    const std::optional<bool> launchControlEnabled = {},
+    const std::optional<bool> enableLaunchRetard = {},
+    const std::optional<bool> launchSmoothRetard = {}
+) {
     EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
-    setUpTestParameters();
-
-    ASSERT_FALSE(engineConfiguration->enableLaunchRetard);
-    ASSERT_FALSE(engineConfiguration->launchSmoothRetard);
+    setUpTestParameters(
+        /* launchControlEnabled = */ launchControlEnabled,
+        /* enableLaunchRetard = */ enableLaunchRetard,
+        /* launchSmoothRetard = */ launchSmoothRetard
+    );
 
     updateRpm(650);
     EXPECT_NEAR(TEST_IGNITION_650, engine->ignitionState.baseIgnitionAdvance, EPS5D);
@@ -130,13 +166,16 @@ TEST(ignitionAngleAdvance, withoutLaunchRetard) {
     EXPECT_NEAR(TEST_IGNITION_7000, engine->ignitionState.baseIgnitionAdvance, EPS5D);
 }
 
-TEST(ignitionAngleAdvance, launchRetardWithoutSmooth) {
+TEST(ignitionAngleAdvance, withEnabledLaunchControlAndWithoutLaunchRetard) {
+    checkAngleAdvanceWithoutLaunchControl();
+}
+
+TEST(ignitionAngleAdvance, withEnabledLaunchControlAndLaunchRetardWithoutSmooth) {
     EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
-    setUpTestParameters();
-
-    engineConfiguration->enableLaunchRetard = true;
-    ASSERT_FALSE(engineConfiguration->launchSmoothRetard);
+    setUpTestParametersWithEnabledLaunchControl(
+        /* enableLaunchRetard = */ std::make_optional<bool>(true)
+    );
 
     updateRpm(650);
     EXPECT_NEAR(TEST_IGNITION_650, engine->ignitionState.baseIgnitionAdvance, EPS5D);
@@ -192,14 +231,13 @@ TEST(ignitionAngleAdvance, launchRetardWithoutSmooth) {
     EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
 }
 
-
-TEST(ignitionAngleAdvance, launchSmoothRetard) {
+TEST(ignitionAngleAdvance, withEnabledLaunchControlAndLaunchRetardAndLaunchSmoothRetard) {
     EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
-    setUpTestParameters();
-
-    engineConfiguration->enableLaunchRetard = true;
-    engineConfiguration->launchSmoothRetard = true;
+    setUpTestParametersWithEnabledLaunchControl(
+        /* enableLaunchRetard = */ std::make_optional<bool>(true),
+        /* launchSmoothRetard = */ std::make_optional<bool>(true)
+    );
 
     updateRpm(650);
     EXPECT_NEAR(TEST_IGNITION_650, engine->ignitionState.baseIgnitionAdvance, EPS5D);
@@ -267,4 +305,22 @@ TEST(ignitionAngleAdvance, launchSmoothRetard) {
 
     updateRpm(7000);
     EXPECT_NEAR(TEST_LAUNCH_TIMING_RETARD, engine->ignitionState.baseIgnitionAdvance, EPS5D);
+}
+
+/* Tests for https://github.com/rusefi/rusefi/issues/6571: */
+
+TEST(ignitionAngleAdvance, withDisabledLaunchControlAndLaunchRetardWithoutSmooth) {
+    checkAngleAdvanceWithoutLaunchControl(
+        /* launchControlEnabled = */ { false },
+        /* enableLaunchRetard = */ { true },
+        /* launchSmoothRetard = */ { false }
+    );
+}
+
+TEST(ignitionAngleAdvance, withDisabledLaunchControlAndLaunchRetardAndSmooth) {
+    checkAngleAdvanceWithoutLaunchControl(
+        /* launchControlEnabled = */ { false },
+        /* enableLaunchRetard = */ { true },
+        /* launchSmoothRetard = */ { true }
+    );
 }
