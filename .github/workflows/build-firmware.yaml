@@ -154,19 +154,19 @@ jobs:
     - name: Set run condition variables
       run: |
         if [ "${{github.event_name}}" = "schedule" ] && [ "${{github.repository}}" = "rusefi/rusefi" ]; then
-          echo "Scheduled mode"
+          echo "Creating nightly build"
           echo "full=true" >> $GITHUB_ENV
           echo "upload=release" >> $GITHUB_ENV
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
         elif [ "${{github.event_name}}" = "push" ]\
         && [ "${{github.ref}}" = "refs/heads/master" ]\
         || [ "${{toJSON(inputs.lts)}}" = "true" ]; then
-          echo "Full mode"
+          echo "Server upload mode"
           echo "full=true" >> $GITHUB_ENV
           echo "upload=server" >> $GITHUB_ENV
         else
-          echo "Partial mode"
-          echo "partial=true" >> $GITHUB_ENV
+          echo "GHA artifact mode"
+          echo "upload=gha_artifact" >> $GITHUB_ENV
         fi
 
     - uses: actions/checkout@v4
@@ -291,28 +291,28 @@ jobs:
         ${OLDPWD}/tunerstudio/upload_ini.sh ${{ secrets.RUSEFI_ONLINE_FTP_USER }} "${{ secrets.RUSEFI_ONLINE_FTP_PASS }}" ${{ secrets.RUSEFI_FTP_SERVER }}
 
     - name: Upload github action elf artifact
-      if: ${{ env.partial == 'true' }}
+      if: ${{ env.upload == 'gha_artifact' }}
       uses: actions/upload-artifact@v4
       with:
         name: rusefi_${{matrix.build-target}}.elf
         path: ./firmware/build/rusefi.elf
 
     - name: Upload github action map artifact
-      if: ${{ env.partial == 'true' }}
+      if: ${{ env.upload == 'gha_artifact' }}
       uses: actions/upload-artifact@v4
       with:
         name: rusefi_${{matrix.build-target}}.map
         path: ./firmware/build/rusefi.map
 
     - name: Upload github action bin artifact
-      if: ${{ env.partial == 'true' }}
+      if: ${{ env.upload == 'gha_artifact' }}
       uses: actions/upload-artifact@v4
       with:
         name: rusefi_${{matrix.build-target}}.bin
         path: ./firmware/deliver/rusefi*.bin
 
     - name: Upload github action hex artifact
-      if: ${{ env.partial == 'true' }}
+      if: ${{ env.upload == 'gha_artifact' }}
       uses: actions/upload-artifact@v4
       with:
         name: rusefi_${{matrix.build-target}}.hex
@@ -321,7 +321,7 @@ jobs:
         path: ./firmware/build/rusefi*.hex
 
     - name: Upload github action dfu artifact
-      if: ${{ env.partial == 'true' }}
+      if: ${{ env.upload == 'gha_artifact' }}
       uses: actions/upload-artifact@v4
       with:
         name: rusefi_${{matrix.build-target}}.dfu
