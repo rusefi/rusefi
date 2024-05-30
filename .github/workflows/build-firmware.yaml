@@ -190,8 +190,8 @@ jobs:
     - name: Set Build Env Variables
       working-directory: ./firmware/
       run: |
-        echo LTS=${{toJSON(inputs.lts)}} >> $GITHUB_ENV
-        echo REF=${{github.ref_name}} >> $GITHUB_ENV
+        echo AUTOMATION_LTS=${{toJSON(inputs.lts)}} >> $GITHUB_ENV
+        echo AUTOMATION_REF=${{github.ref_name}} >> $GITHUB_ENV
         echo BOARD_META_PATH=${{matrix.meta-info}} >> $GITHUB_ENV
 
     - name: Git Status

@@ -33,8 +33,8 @@ mkdir ${bundle_upload_folder}
 SSHCMD
 
  RET=0
- if [ "$LTS" == "true" -a -n "$REF" ]; then
-   DESTINATION_FOLDER="${bundle_upload_folder}/lts/${REF}"
+ if [ "$AUTOMATION_LTS" == "true" -a -n "$AUTOMATION_REF" ]; then
+   DESTINATION_FOLDER="${bundle_upload_folder}/lts/${AUTOMATION_REF}"
      # sftp does not support -p flag on mkdir :(
      sshpass -p $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
 mkdir ${bundle_upload_folder}/lts
