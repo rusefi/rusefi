@@ -67,11 +67,22 @@ jobs:
       run: echo "$GITHUB_CONTEXT"
 
     - name: Set run condition variables
+      # at this point 'full' means 'release' or 'server'
       run: |
         if [ "${{github.event_name}}" = "schedule" ] && [ "${{github.repository}}" = "rusefi/rusefi" ]; then
+          echo "Creating nightly build"
           echo "full=true" >> $GITHUB_ENV
           echo "upload=release" >> $GITHUB_ENV
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+        elif [ "${{github.event_name}}" = "push" ]\
+        && [ "${{github.ref}}" = "refs/heads/master" ]\
+        || [ "${{toJSON(inputs.lts)}}" = "true" ]; then
+          echo "Server upload mode"
+          echo "full=true" >> $GITHUB_ENV
+          echo "upload=server" >> $GITHUB_ENV
+        else
+          echo "GHA artifact mode"
+          echo "upload=gha_artifact" >> $GITHUB_ENV
         fi
 
     - uses: mukunku/tag-exists-action@v1.6.0
@@ -80,7 +91,7 @@ jobs:
         tag: ${{ env.date }}
 
     - name: Create Release Tag
-      if: ${{ env.full == 'true' && env.upload == 'release' && steps.checkTag.outputs.exists == 'false' }}
+      if: ${{ env.upload == 'release' && steps.checkTag.outputs.exists == 'false' }}
       id: tag
       uses: mathieudutour/github-tag-action@v6.2
       with:
@@ -89,7 +100,7 @@ jobs:
         tag_prefix: ''
 
     - name: Create Release
-      if: ${{ env.full == 'true' && env.upload == 'release' }}
+      if: ${{ env.upload == 'release' }}
       uses: ncipollo/release-action@v1.14.0
       with:
         tag: ${{ env.date }}
@@ -151,24 +162,6 @@ jobs:
       if: ${{ contains(github.ref_name, '.') }}
       run: echo '::error::Branch names must not contain ".", this breaks firmware autoupdates.' && exit 1
 
-    - name: Set run condition variables
-      run: |
-        if [ "${{github.event_name}}" = "schedule" ] && [ "${{github.repository}}" = "rusefi/rusefi" ]; then
-          echo "Creating nightly build"
-          echo "full=true" >> $GITHUB_ENV
-          echo "upload=release" >> $GITHUB_ENV
-          echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
-        elif [ "${{github.event_name}}" = "push" ]\
-        && [ "${{github.ref}}" = "refs/heads/master" ]\
-        || [ "${{toJSON(inputs.lts)}}" = "true" ]; then
-          echo "Server upload mode"
-          echo "full=true" >> $GITHUB_ENV
-          echo "upload=server" >> $GITHUB_ENV
-        else
-          echo "GHA artifact mode"
-          echo "upload=gha_artifact" >> $GITHUB_ENV
-        fi
-
     - uses: actions/checkout@v4
 
     - name: Checkout Submodules
@@ -218,7 +211,7 @@ jobs:
       run: arm-none-eabi-gcc -v
 
     - name: Configs build_server upload SSH variables
-      if: ${{ env.full == 'true' && env.upload == 'server' }}
+      if: ${{ env.upload == 'server' }}
       env:
         ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
       run: |
@@ -271,7 +264,7 @@ jobs:
         bash ../firmware/bin/upload_bundle.sh ${{ secrets.RUSEFI_SSH_USER }} "${{ secrets.RUSEFI_SSH_PASS }}" ${{ secrets.RUSEFI_SSH_SERVER }} ${BUNDLE_NAME}
 
     - name: Add Bundles to Release
-      if: ${{ env.full == 'true' && env.upload == 'release' }}
+      if: ${{ env.upload == 'release' }}
       uses: ncipollo/release-action@v1.14.0
       with:
         tag: ${{ env.date }}
