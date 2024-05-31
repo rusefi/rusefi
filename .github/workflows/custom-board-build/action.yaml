@@ -57,6 +57,12 @@ inputs:
     required: false
   RUSEFI_FTP_SERVER:
     required: false
+  RUSEFI_ONLINE2_USER:
+    required: false
+  RUSEFI_ONLINE2_PASS:
+    required: false
+  RUSEFI_ONLINE2_SERVER:
+    required: false
   RUSEFI_SSH_SERVER:
     required: false
   RUSEFI_SSH_USER:
@@ -89,6 +95,9 @@ runs:
         [ -z "${{inputs.RUSEFI_ONLINE_FTP_USER}}" ] || echo "::add-mask::${{inputs.RUSEFI_ONLINE_FTP_USER}}"
         [ -z "${{inputs.RUSEFI_ONLINE_FTP_PASS}}" ] || echo "::add-mask::${{inputs.RUSEFI_ONLINE_FTP_PASS}}"
         [ -z "${{inputs.RUSEFI_FTP_SERVER}}" ] || echo "::add-mask::${{inputs.RUSEFI_FTP_SERVER}}"
+        [ -z "${{inputs.RUSEFI_ONLINE2_USER}}" ] || echo "::add-mask::${{inputs.RUSEFI_ONLINE2_USER}}"
+        [ -z "${{inputs.RUSEFI_ONLINE2_PASS}}" ] || echo "::add-mask::${{inputs.RUSEFI_ONLINE2_PASS}}"
+        [ -z "${{inputs.RUSEFI_ONLINE2_SERVER}}" ] || echo "::add-mask::${{inputs.RUSEFI_ONLINE2_SERVER}}"
         [ -z "${{inputs.RUSEFI_SSH_SERVER}}" ] || echo "::add-mask::${{inputs.RUSEFI_SSH_SERVER}}"
         [ -z "${{inputs.RUSEFI_SSH_USER}}" ] || echo "::add-mask::${{inputs.RUSEFI_SSH_USER}}"
         [ -z "${{inputs.RUSEFI_SSH_PASS}}" ] || echo "::add-mask::${{inputs.RUSEFI_SSH_PASS}}"
@@ -350,6 +359,12 @@ runs:
       working-directory: ${{inputs.rusefi_dir}}/firmware/${{env.META_OUTPUT_ROOT_FOLDER}}tunerstudio/generated
       shell: bash
       run: ${{github.workspace}}/${{inputs.rusefi_dir}}/firmware/tunerstudio/upload_ini.sh ${{ inputs.RUSEFI_ONLINE_FTP_USER }} "${{ inputs.RUSEFI_ONLINE_FTP_PASS }}" ${{ inputs.RUSEFI_FTP_SERVER }}
+
+    - name: Upload .ini files to secondary Online server
+      if: ${{ contains(inputs.uploads, 'ini') }}
+      working-directory: ${{inputs.rusefi_dir}}/firmware/${{env.META_OUTPUT_ROOT_FOLDER}}tunerstudio/generated
+      shell: bash
+      run: ${{github.workspace}}/${{inputs.rusefi_dir}}/firmware/tunerstudio/upload_ini.sh ${{ inputs.RUSEFI_ONLINE2_USER }} "${{ inputs.RUSEFI_ONLINE2_PASS }}" ${{ inputs.RUSEFI_ONLINE2_SERVER }}
 
     - name: Upload github action bin artifact
       if: ${{ contains(inputs.artifacts, 'bin') }}
