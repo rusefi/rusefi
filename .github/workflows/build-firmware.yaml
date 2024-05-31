@@ -66,23 +66,13 @@ jobs:
         GITHUB_CONTEXT: ${{ toJson(github) }}
       run: echo "$GITHUB_CONTEXT"
 
-    - name: Set run condition variables
+    - name: Set run condition variables 1
       # at this point 'full' means 'release' or 'server'
       run: |
         if [ "${{github.event_name}}" = "schedule" ] && [ "${{github.repository}}" = "rusefi/rusefi" ]; then
-          echo "Creating nightly build"
           echo "full=true" >> $GITHUB_ENV
           echo "upload=release" >> $GITHUB_ENV
           echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
-        elif [ "${{github.event_name}}" = "push" ]\
-        && [ "${{github.ref}}" = "refs/heads/master" ]\
-        || [ "${{toJSON(inputs.lts)}}" = "true" ]; then
-          echo "Server upload mode"
-          echo "full=true" >> $GITHUB_ENV
-          echo "upload=server" >> $GITHUB_ENV
-        else
-          echo "GHA artifact mode"
-          echo "upload=gha_artifact" >> $GITHUB_ENV
         fi
 
     - uses: mukunku/tag-exists-action@v1.6.0
@@ -161,6 +151,24 @@ jobs:
     - name: Check branch name
       if: ${{ contains(github.ref_name, '.') }}
       run: echo '::error::Branch names must not contain ".", this breaks firmware autoupdates.' && exit 1
+
+    - name: Set run condition variables 2
+      run: |
+        if [ "${{github.event_name}}" = "schedule" ] && [ "${{github.repository}}" = "rusefi/rusefi" ]; then
+          echo "Creating nightly build"
+          echo "full=true" >> $GITHUB_ENV
+          echo "upload=release" >> $GITHUB_ENV
+          echo "date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+        elif [ "${{github.event_name}}" = "push" ]\
+        && [ "${{github.ref}}" = "refs/heads/master" ]\
+        || [ "${{toJSON(inputs.lts)}}" = "true" ]; then
+          echo "Server upload mode"
+          echo "full=true" >> $GITHUB_ENV
+          echo "upload=server" >> $GITHUB_ENV
+        else
+          echo "GHA artifact mode"
+          echo "upload=gha_artifact" >> $GITHUB_ENV
+        fi
 
     - uses: actions/checkout@v4
 
