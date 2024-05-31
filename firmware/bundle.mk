@@ -19,11 +19,11 @@ FIRMWARE_BIN_OUT = $(FOLDER)/$(PROJECT).bin
 
 # If provided with a git reference and the LTS flag, use a folder name including the ref
 # This weird if statement structure is because Make doesn't have &&
-ifeq ($(LTS),true)
-ifneq (,$(REF))
-  FOLDER = rusefi.$(REF).$(BUNDLE_NAME)
+ifeq ($(AUTOMATION_LTS),true)
+ifneq (,$(AUTOMATION_REF))
+  FOLDER = rusefi.$(AUTOMATION_REF).$(BUNDLE_NAME)
 else
-  FOLDER = rusefi.snapshot.$(BUNDLE_NAME)
+  FOLDER = rusefi.lts_unknown.$(BUNDLE_NAME)
 endif
 else
   FOLDER = rusefi.snapshot.$(BUNDLE_NAME)

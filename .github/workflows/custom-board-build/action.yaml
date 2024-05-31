@@ -152,13 +152,11 @@ runs:
         echo "RUSEFI_SSH_USER=${{inputs.RUSEFI_SSH_USER}}" >> $GITHUB_ENV
         echo "RUSEFI_SSH_PASS=${{inputs.RUSEFI_SSH_PASS}}" >> $GITHUB_ENV
         echo "bundle_upload_folder=${{inputs.bundle_upload_folder}}" >> $GITHUB_ENV
-        echo "LTS=${{toJSON(inputs.lts)}}" >> $GITHUB_ENV
+        echo "AUTOMATION_LTS=${{toJSON(inputs.lts)}}" >> $GITHUB_ENV
         echo "release_date=${{toJSON(inputs.release_date)}}" >> $GITHUB_ENV
         echo "BUNDLE_SIMULATOR=${{toJSON(inputs.bundle_simulator)}}" >> $GITHUB_ENV
         echo "RUN_SIMULATOR=${{toJSON(inputs.run_simulator)}}" >> $GITHUB_ENV
-        # TODO: are there any usages of this 'REF' short thus hard to search variable?! see below for longer safer name
-        echo "REF=${{github.ref_name}}" >> $GITHUB_ENV
-        echo "GITHUB_REF_NAME=${{github.ref_name}}" >> $GITHUB_ENV
+        echo "AUTOMATION_REF=${{github.ref_name}}" >> $GITHUB_ENV
         echo "${{ inputs.ADDITIONAL_ENV }}" >> $GITHUB_ENV
         shopt -s expand_aliases
         if which grealpath >/dev/null 2>&1; then alias realpath='grealpath'; fi
@@ -181,6 +179,17 @@ runs:
         echo "current_date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
         echo "EXTRA_LIVE_DATA_FILE=${{inputs.EXTRA_LIVE_DATA_FILE}}" >> $GITHUB_ENV
 
+
+    - name: Set Build Env Variables
+      shell: bash
+      run: |
+        if [[ ${{github.ref_name}} == "lts"* ]]; then
+          echo AUTOMATION_LTS=true >> $GITHUB_ENV
+          echo AUTOMATION_REF=${{github.ref_name}} >> $GITHUB_ENV
+          echo "On LTS branch [${{github.ref}}]"
+        else
+          echo "Not LTS branch [${{github.ref}}]"
+        fi
 
     - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
       uses: carlosperate/arm-none-eabi-gcc-action@v1
@@ -284,8 +293,6 @@ runs:
           echo "On master branch"
         elif [[ ${{github.ref_name}} == "lts"* ]]; then
           echo "On LTS branch [${{github.ref}}]"
-          export AUTOMATION_LTS=true
-          export AUTOMATION_REF=${{github.ref_name}}
         else
           echo "Not uploading [${{github.ref}}]"
           exit 0
@@ -442,9 +449,7 @@ runs:
         if [ "${{github.ref}}" = "refs/heads/master" ]; then
           echo "obfuscated: On master branch"
         elif [[ ${{github.ref_name}} == "lts"* ]]; then
-          echo "obfuscated: On LTS branch [${{github.ref}}]"
-          export AUTOMATION_LTS=true
-          export AUTOMATION_REF=${{github.ref_name}}
+          echo "obfuscated: On LTS branch [$AUTOMATION_LTS][$AUTOMATION_REF]"
         else
           echo "obfuscated: Not uploading [${{github.ref}}]"
           exit 0
