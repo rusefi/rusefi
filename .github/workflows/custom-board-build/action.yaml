@@ -77,6 +77,11 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Check branch name
+      shell: bash
+      if: ${{ contains(github.ref_name, '.') }}
+      run: echo '::error::Branch names must not contain ".", this breaks firmware autoupdates.' && exit 1
+
     - name: Mask Secrets
       shell: bash
       run: |
