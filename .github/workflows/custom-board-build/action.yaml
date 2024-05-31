@@ -358,13 +358,16 @@ runs:
       if: ${{ contains(inputs.uploads, 'ini') }}
       working-directory: ${{inputs.rusefi_dir}}/firmware/${{env.META_OUTPUT_ROOT_FOLDER}}tunerstudio/generated
       shell: bash
-      run: ${{github.workspace}}/${{inputs.rusefi_dir}}/firmware/tunerstudio/upload_ini.sh ${{ inputs.RUSEFI_ONLINE_FTP_USER }} "${{ inputs.RUSEFI_ONLINE_FTP_PASS }}" ${{ inputs.RUSEFI_FTP_SERVER }}
+      run:
+        ${{github.workspace}}/${{inputs.rusefi_dir}}/firmware/tunerstudio/upload_ini.sh ${{ inputs.RUSEFI_ONLINE_FTP_USER }} "${{ inputs.RUSEFI_ONLINE_FTP_PASS }}" ${{ inputs.RUSEFI_FTP_SERVER }}
 
     - name: Upload .ini files to secondary Online server
       if: ${{ contains(inputs.uploads, 'ini') }}
       working-directory: ${{inputs.rusefi_dir}}/firmware/${{env.META_OUTPUT_ROOT_FOLDER}}tunerstudio/generated
       shell: bash
-      run: ${{github.workspace}}/${{inputs.rusefi_dir}}/firmware/tunerstudio/upload_ini.sh ${{ inputs.RUSEFI_ONLINE2_USER }} "${{ inputs.RUSEFI_ONLINE2_PASS }}" ${{ inputs.RUSEFI_ONLINE2_SERVER }}
+      run: |
+        export INI_DESTINATION_FOLDER=html/ini/
+        ${{github.workspace}}/${{inputs.rusefi_dir}}/firmware/tunerstudio/upload_ini.sh ${{ inputs.RUSEFI_ONLINE2_USER }} "${{ inputs.RUSEFI_ONLINE2_PASS }}" ${{ inputs.RUSEFI_ONLINE2_SERVER }}
 
     - name: Upload github action bin artifact
       if: ${{ contains(inputs.artifacts, 'bin') }}

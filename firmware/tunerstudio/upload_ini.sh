@@ -18,7 +18,7 @@ if [ ! "$USER" ] || [ ! "$PASS" ] || [ ! "$HOST" ]; then
 fi
 
 pwd
-echo -e "\nUploading all .ini files"
+echo -e "\nUploading all .ini files into [$INI_DESTINATION_FOLDER] subfolder"
 ls -l .
 
 if [ "$fileName" == "no" ]; then
@@ -42,8 +42,8 @@ if [ ! -z "$sig" -a "$sig" != " " ]; then
     # we do not have ssh for this user
     # sftp does not support -p flag on mkdir :(
     sshpass -p $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
-mkdir rusefi
-cd rusefi
+mkdir $INI_DESTINATION_FOLDER/rusefi
+cd $INI_DESTINATION_FOLDER/rusefi
 mkdir $branch
 mkdir $branch/$year
 mkdir $branch/$year/$month
