@@ -156,7 +156,9 @@ runs:
         echo "release_date=${{toJSON(inputs.release_date)}}" >> $GITHUB_ENV
         echo "BUNDLE_SIMULATOR=${{toJSON(inputs.bundle_simulator)}}" >> $GITHUB_ENV
         echo "RUN_SIMULATOR=${{toJSON(inputs.run_simulator)}}" >> $GITHUB_ENV
+        # TODO: are there any usages of this 'REF' short thus hard to search variable?! see below for longer safer name
         echo "REF=${{github.ref_name}}" >> $GITHUB_ENV
+        echo "GITHUB_REF_NAME=${{github.ref_name}}" >> $GITHUB_ENV
         echo "${{ inputs.ADDITIONAL_ENV }}" >> $GITHUB_ENV
         shopt -s expand_aliases
         if which grealpath >/dev/null 2>&1; then alias realpath='grealpath'; fi
