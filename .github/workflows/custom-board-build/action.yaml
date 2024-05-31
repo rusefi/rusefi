@@ -268,7 +268,18 @@ runs:
       if: ${{ contains(inputs.uploads, 'bundles') }}
       working-directory: ${{inputs.rusefi_dir}}/artifacts
       shell: bash
-      run: bash ../firmware/bin/upload_bundle.sh ${{ env.RUSEFI_SSH_USER }} ${{ env.RUSEFI_SSH_PASS }} ${{ env.RUSEFI_SSH_SERVER }} ${{ env.BUNDLE_NAME }}
+      run: |
+        if [ "${{github.ref}}" = "refs/heads/master" ]; then
+          echo "On master branch"
+        elif [[ ${{github.ref}} == "lts"* ]]; then
+          echo "On LTS branch [${{github.ref}}]
+          echo AUTOMATION_LTS=true >> $GITHUB_ENV
+          echo AUTOMATION_REF=${{github.ref_name}} >> $GITHUB_ENV
+        else
+          echo "Not uploading [${{github.ref}}]"
+          exit 0
+        fi
+        bash ../firmware/bin/upload_bundle.sh ${{ env.RUSEFI_SSH_USER }} ${{ env.RUSEFI_SSH_PASS }} ${{ env.RUSEFI_SSH_SERVER }} ${{ env.BUNDLE_NAME }}
 
     - name: Run Simulator
       if: ${{ inputs.run_simulator == 'true' }}
