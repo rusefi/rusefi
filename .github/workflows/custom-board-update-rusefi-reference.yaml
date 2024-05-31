@@ -18,6 +18,12 @@ jobs:
         run: |
           git submodule update --init --depth=1 ext/rusefi
 
+      - name: Fetch remote branches of rusefi submodule
+        working-directory: ext/rusefi
+        run: |
+          git fetch origin '+refs/heads/*:refs/remotes/origin/*'
+          git branch -r
+
       - name: Git Update Submodules
         run: |
           git submodule update --remote
