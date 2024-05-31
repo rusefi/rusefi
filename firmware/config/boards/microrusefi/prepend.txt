@@ -27,6 +27,11 @@
 #define ts_show_tcu true
 #define ts_show_gdi true
 
+#define ts_show_cylinder_9 false
+#define ts_show_cylinder_10 false
+#define ts_show_cylinder_11 false
+#define ts_show_cylinder_12 false
+
 #define ts_show_spi2_enable false
 #define ts_show_spi2_pins false
 #define ts_show_spi3_pins false
