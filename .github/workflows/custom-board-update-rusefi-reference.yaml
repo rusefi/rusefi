@@ -18,6 +18,11 @@ jobs:
         run: |
           git submodule update --init --depth=1 ext/rusefi
 
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
       - name: Fetch remote branches of rusefi submodule
         working-directory: ext/rusefi
         run: |
