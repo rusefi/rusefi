@@ -33,7 +33,7 @@ jobs:
         run: |
           git submodule update --remote
 
-      - name: Commit fresh submodules
+      - name: Commit fresh 'ext/rusefi' submodule
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: |
