@@ -47,7 +47,6 @@ jobs:
             exit 0
           elif echo "$OUT" | grep 'changed'; then
             echo "submodule: looks like something has changed"
-            exit 0
           else
             echo "submodule: looks like something unexpected"
             exit 1
@@ -59,3 +58,4 @@ jobs:
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ github.token }}
+          branch: ${{ github.ref }}
