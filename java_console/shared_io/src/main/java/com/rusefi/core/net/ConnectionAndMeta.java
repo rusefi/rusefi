@@ -13,8 +13,7 @@ import java.util.Properties;
 
 public class ConnectionAndMeta {
     public static final String BASE_URL_RELEASE = "https://github.com/rusefi/rusefi/releases/latest/download/";
-    private static final String AUTOUPDATE = "/autoupdate/";
-    public static final String BASE_URL_LTS = "https://rusefi.com/build_server/lts/%s/autoupdate/";
+    public static final String AUTOUPDATE = "/autoupdate/";
 
     private static final int BUFFER_SIZE = 32 * 1024;
     public static final int CENTUM = 100;
@@ -39,7 +38,11 @@ public class ConnectionAndMeta {
         }
         String result = props.getProperty("auto_update_root_url");
         System.out.println(ConnectionAndMeta.class + ": got [" + result + "]");
-        return result + AUTOUPDATE;
+        return result;
+    }
+
+    public static String getDefaultAutoUpdateUrl() {
+        return getBaseUrl() + AUTOUPDATE;
     }
 
     public static void downloadFile(String localTargetFileName, ConnectionAndMeta connectionAndMeta, DownloadProgressListener listener) throws IOException {

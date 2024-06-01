@@ -22,9 +22,11 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Autoupdate {
+    private static final int VERSION = 20240531;
+
     private static final String LOGO_PATH = "/com/rusefi/";
     private static final String LOGO = LOGO_PATH + "logo.png";
-    private static final String TITLE = "rusEFI Bundle Updater 20240401";
+    private static final String TITLE = "rusEFI Bundle Updater " + VERSION;
     private static final String AUTOUPDATE_MODE = "autoupdate";
     private static final String RUSEFI_CONSOLE_JAR = "rusefi_console.jar";
     private static final String COM_RUSEFI_LAUNCHER = "com.rusefi.Launcher";
@@ -66,9 +68,9 @@ public class Autoupdate {
             if (mode != UpdateMode.NEVER) {
                 System.out.println("Snapshot requested");
                 if (branchName.equals("snapshot")) {
-                    downloadAndUnzipAutoupdate(bundleInfo, mode, ConnectionAndMeta.getBaseUrl());
+                    downloadAndUnzipAutoupdate(bundleInfo, mode, ConnectionAndMeta.getBaseUrl()+ ConnectionAndMeta.AUTOUPDATE);
                 } else {
-                    downloadAndUnzipAutoupdate(bundleInfo, mode, String.format(ConnectionAndMeta.BASE_URL_LTS, branchName));
+                    downloadAndUnzipAutoupdate(bundleInfo, mode, ConnectionAndMeta.getBaseUrl() + "/lts/" + branchName + ConnectionAndMeta.AUTOUPDATE);
                 }
             } else {
                 System.out.println("Update mode: NEVER");
