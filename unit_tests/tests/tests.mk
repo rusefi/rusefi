@@ -65,8 +65,6 @@ TESTS_SRC_CPP = \
 	tests/lua/test_can_filter.cpp \
 	tests/lua/test_lua_vin.cpp \
 	tests/test_change_engine_type.cpp \
-	tests/util/test_scaled_channel.cpp \
-	tests/util/test_timer.cpp \
 	tests/test_big_buffer.cpp \
 	tests/system/test_periodic_thread_controller.cpp \
 	tests/test_util.cpp \
@@ -109,7 +107,6 @@ TESTS_SRC_CPP = \
 	tests/sensor/redundant.cpp \
 	tests/sensor/test_sensor_init.cpp \
 	tests/sensor/table_func.cpp \
-	tests/util/test_closed_loop_controller.cpp \
 	tests/test_stft.cpp \
 	tests/test_hpfp.cpp \
 	tests/test_hpfp_integrated.cpp \
