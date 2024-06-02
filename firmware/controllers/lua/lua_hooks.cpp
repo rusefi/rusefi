@@ -3,6 +3,7 @@
 #include "rusefi_lua.h"
 #include "lua_hooks.h"
 
+#include "lua_biquad.h"
 #include "fuel_math.h"
 #include "airmass.h"
 #include "lua_airmass.h"
@@ -743,6 +744,12 @@ BOARD_WEAK void boardConfigureLuaHooks(lua_State* lState) { }
 
 void configureRusefiLuaHooks(lua_State* lState) {
   boardConfigureLuaHooks(lState);
+
+  LuaClass<LuaBiQuad> biQuard(lState, "Biquad");
+  biQuard
+    .ctor()
+		.fun("filter", &LuaBiQuad::filter)
+		.fun("configureLowpass", &LuaBiQuad::configureLowpass);
 
 	LuaClass<Timer> luaTimer(lState, "Timer");
 	luaTimer
