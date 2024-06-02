@@ -33,6 +33,7 @@ Release template (copy/paste this for new release):
  - configurable Open Loop Boost vertical axis #4778
  - In Launch Control, add RPM Hysterisis #5610
  - reduce JRE download complexity #6569
+ - simpler basic firmware updater #5577
 
 ### Fixed
  - knock logic not activated until any configuration change via TS #6462

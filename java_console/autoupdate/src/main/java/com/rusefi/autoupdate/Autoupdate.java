@@ -7,6 +7,7 @@ import com.rusefi.core.FileUtil;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.FrameHelper;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -22,7 +23,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class Autoupdate {
-    private static final int VERSION = 20240531;
+    private static final int VERSION = 20240603;
 
     private static final String LOGO_PATH = "/com/rusefi/";
     private static final String LOGO = LOGO_PATH + "logo.png";
@@ -60,23 +61,32 @@ public class Autoupdate {
         BundleUtil.BundleInfo bundleInfo = BundleUtil.parse(bundleFullName);
         String branchName = bundleInfo.getBranchName();
 
-        if (args.length > 0 && args[0].equalsIgnoreCase("release")) {
+        @NotNull String firstArgument = args.length > 0 ? args[0] : "";
+
+        if (firstArgument.equalsIgnoreCase("basic-ui")) {
+            doDownload(bundleInfo, UpdateMode.ALWAYS);
+        } else if (args.length > 0 && args[0].equalsIgnoreCase("release")) {
+            // this branch needs progress for custom boards!
             System.out.println("Release update requested");
             downloadAndUnzipAutoupdate(bundleInfo, UpdateMode.ALWAYS, ConnectionAndMeta.BASE_URL_RELEASE);
         } else {
             UpdateMode mode = getMode();
             if (mode != UpdateMode.NEVER) {
-                System.out.println("Snapshot requested");
-                if (branchName.equals("snapshot")) {
-                    downloadAndUnzipAutoupdate(bundleInfo, mode, ConnectionAndMeta.getBaseUrl()+ ConnectionAndMeta.AUTOUPDATE);
-                } else {
-                    downloadAndUnzipAutoupdate(bundleInfo, mode, ConnectionAndMeta.getBaseUrl() + "/lts/" + branchName + ConnectionAndMeta.AUTOUPDATE);
-                }
+                doDownload(bundleInfo, mode);
             } else {
                 System.out.println("Update mode: NEVER");
             }
         }
         startConsole(args);
+    }
+
+    private static void doDownload(BundleUtil.BundleInfo bundleInfo, UpdateMode mode) {
+        if (bundleInfo.getBranchName().equals("snapshot")) {
+            System.out.println("Snapshot requested");
+            downloadAndUnzipAutoupdate(bundleInfo, mode, ConnectionAndMeta.getBaseUrl()+ ConnectionAndMeta.AUTOUPDATE);
+        } else {
+            downloadAndUnzipAutoupdate(bundleInfo, mode, ConnectionAndMeta.getBaseUrl() + "/lts/" + bundleInfo.getBranchName() + ConnectionAndMeta.AUTOUPDATE);
+        }
     }
 
     private static void startConsole(String[] args) {
