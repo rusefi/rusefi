@@ -223,7 +223,7 @@ void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t offse
 	}
 
 #if EFI_TUNER_STUDIO_VERBOSE
-	efiPrintf("READ mode=%d offset=%d size=%d", mode, offset, count);
+	efiPrintf("READ offset=%d size=%d", offset, count);
 #endif
 
 	if (validateOffsetCount(offset, count, tsChannel)) {
