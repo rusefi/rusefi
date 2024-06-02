@@ -152,8 +152,8 @@ uint8_t* getWorkingPageAddr() {
 	return (uint8_t*)engineConfiguration;
 }
 
-void sendOkResponse(TsChannelBase *tsChannel, ts_response_format_e mode) {
-	tsChannel->sendResponse(mode, NULL, 0);
+static void sendOkResponse(TsChannelBase *tsChannel) {
+	tsChannel->sendResponse(TS_CRC, NULL, 0);
 }
 
 void sendErrorCode(TsChannelBase *tsChannel, uint8_t code) {
@@ -164,10 +164,10 @@ void TunerStudio::sendErrorCode(TsChannelBase* tsChannel, uint8_t code) {
 	::sendErrorCode(tsChannel, code);
 }
 
-void TunerStudio::handlePageSelectCommand(TsChannelBase *tsChannel, ts_response_format_e mode) {
+void TunerStudio::handlePageSelectCommand(TsChannelBase *tsChannel) {
 	tsState.pageCommandCounter++;
 
-	sendOkResponse(tsChannel, mode);
+	sendOkResponse(tsChannel);
 }
 
 bool validateOffsetCount(size_t offset, size_t count, TsChannelBase* tsChannel);
@@ -178,7 +178,7 @@ extern bool rebootForPresetPending;
  * This command is needed to make the whole transfer a bit faster
  * @note See also handleWriteValueCommand
  */
-void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count,
+void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t offset, uint16_t count,
 		void *content) {
 	tsState.writeChunkCommandCounter++;
 	if (isLockedFromUser()) {
@@ -186,7 +186,7 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_
 		return;
 	}
 
-	efiPrintf("WRITE CHUNK mode=%d o=%d s=%d", mode, offset, count);
+	efiPrintf("WRITE CHUNK o=%d s=%d", offset, count);
 
 	if (validateOffsetCount(offset, count, tsChannel)) {
 		return;
@@ -200,10 +200,10 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, ts_response_
 	// Force any board configuration options that humans shouldn't be able to change
 	setBoardConfigOverrides();
 
-	sendOkResponse(tsChannel, mode);
+	sendOkResponse(tsChannel);
 }
 
-void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
+void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint16_t offset, uint16_t count) {
 	tsState.crc32CheckCommandCounter++;
 
 	// Ensure we are reading from in bounds
@@ -229,7 +229,7 @@ void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, ts_response_format_
 	const uint8_t* start = getWorkingPageAddr() + offset;
 
 	uint32_t crc = SWAP_UINT32(crc32(start, count));
-	tsChannel->sendResponse(mode, (const uint8_t *) &crc, 4);
+	tsChannel->sendResponse(TS_CRC, (const uint8_t *) &crc, 4);
 }
 
 #if EFI_TS_SCATTER
@@ -282,9 +282,8 @@ void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
  * 'Write' command receives a single value at a given offset
  * @note Writing values one by one is pretty slow
  */
-void TunerStudio::handleWriteValueCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint8_t value) {
+void TunerStudio::handleWriteValueCommand(TsChannelBase* tsChannel, uint16_t offset, uint8_t value) {
 	UNUSED(tsChannel);
-	UNUSED(mode);
 
 	tsState.writeValueCommandCounter++;
 	if (isLockedFromUser()) {
@@ -306,7 +305,7 @@ void TunerStudio::handleWriteValueCommand(TsChannelBase* tsChannel, ts_response_
 	setBoardConfigOverrides();
 }
 
-void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, ts_response_format_e mode, uint16_t offset, uint16_t count) {
+void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t offset, uint16_t count) {
 	tsState.readPageCommandsCounter++;
 
 	if (rebootForPresetPending) {
@@ -315,7 +314,7 @@ void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, ts_response_fo
 	}
 
 #if EFI_TUNER_STUDIO_VERBOSE
-	efiPrintf("READ mode=%d offset=%d size=%d", mode, offset, count);
+	efiPrintf("READ offset=%d size=%d", offset, count);
 #endif
 
 	if (validateOffsetCount(offset, count, tsChannel)) {
@@ -330,7 +329,7 @@ void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, ts_response_fo
 	} else {
 		addr = getWorkingPageAddr() + offset;
 	}
-	tsChannel->sendResponse(mode, addr, count);
+	tsChannel->sendResponse(TS_CRC, addr, count);
 #if EFI_TUNER_STUDIO_VERBOSE
 //	efiPrintf("Sending %d done", count);
 #endif
@@ -357,20 +356,20 @@ static void sendResponseCode(ts_response_format_e mode, TsChannelBase *tsChannel
 /**
  * 'Burn' command is a command to commit the changes
  */
-static void handleBurnCommand(TsChannelBase* tsChannel, ts_response_format_e mode) {
+static void handleBurnCommand(TsChannelBase* tsChannel) {
 	Timer t;
 	t.reset();
 
 	tsState.burnCommandCounter++;
 
-	efiPrintf("got B (Burn) %s", mode == TS_PLAIN ? "plain" : "CRC");
+	efiPrintf("got B (Burn)");
 
 	// Skip the burn if a preset was just loaded - we don't want to overwrite it
 	if (!rebootForPresetPending) {
 		requestBurn();
 	}
 
-	sendResponseCode(mode, tsChannel, TS_RESPONSE_BURN_OK);
+	sendResponseCode(TS_CRC, tsChannel, TS_RESPONSE_BURN_OK);
 	efiPrintf("BURN in %dms", (int)(t.getElapsedSeconds() * 1e3));
 }
 
@@ -716,15 +715,15 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		handleExecuteCommand(tsChannel, data, incomingPacketSize - 1);
 		break;
 	case TS_PAGE_COMMAND:
-		handlePageSelectCommand(tsChannel, TS_CRC);
+		handlePageSelectCommand(tsChannel);
 		break;
 	case TS_CHUNK_WRITE_COMMAND:
-		handleWriteChunkCommand(tsChannel, TS_CRC, offset, count, data + sizeof(TunerStudioWriteChunkRequest));
+		handleWriteChunkCommand(tsChannel, offset, count, data + sizeof(TunerStudioWriteChunkRequest));
 		break;
 	case TS_SINGLE_WRITE_COMMAND:
 		{
 			uint8_t value = data[4];
-			handleWriteValueCommand(tsChannel, TS_CRC, offset, value);
+			handleWriteValueCommand(tsChannel, offset, value);
 		}
 		break;
 	case TS_GET_SCATTERED_GET_COMMAND:
@@ -735,13 +734,13 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 #endif // EFI_TS_SCATTER
 		break;
 	case TS_CRC_CHECK_COMMAND:
-		handleCrc32Check(tsChannel, TS_CRC, offset, count);
+		handleCrc32Check(tsChannel, offset, count);
 		break;
 	case TS_BURN_COMMAND:
-		handleBurnCommand(tsChannel, TS_CRC);
+		handleBurnCommand(tsChannel);
 		break;
 	case TS_READ_COMMAND:
-		handlePageReadCommand(tsChannel, TS_CRC, offset, count);
+		handlePageReadCommand(tsChannel, offset, count);
 		break;
 	case TS_TEST_COMMAND:
 		[[fallthrough]];
@@ -762,7 +761,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 
 			executeTSCommand(subsystem, index);
 #endif /* EFI_PROD_CODE */
-			sendOkResponse(tsChannel, TS_CRC);
+			sendOkResponse(tsChannel);
 		}
 		break;
 #if EFI_TOOTH_LOGGER
@@ -813,7 +812,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 			return false;
 		}
 
-		sendOkResponse(tsChannel, TS_CRC);
+		sendOkResponse(tsChannel);
 
 		break;
 	case TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY:
@@ -841,17 +840,17 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 #ifdef KNOCK_SPECTROGRAM
 	case TS_KNOCK_SPECTROGRAM_ENABLE:
 		knockSpectrogramEnable();
-		sendOkResponse(tsChannel, TS_CRC);
+		sendOkResponse(tsChannel);
 		break;
 	case TS_KNOCK_SPECTROGRAM_DISABLE:
 		knockSpectrogramDisable();
-		sendOkResponse(tsChannel, TS_CRC);
+		sendOkResponse(tsChannel);
 		break;
 #endif /* KNOCK_SPECTROGRAM */
 #if ENABLE_PERF_TRACE
 	case TS_PERF_TRACE_BEGIN:
 		perfTraceEnable();
-		sendOkResponse(tsChannel, TS_CRC);
+		sendOkResponse(tsChannel);
 		break;
 	case TS_PERF_TRACE_GET_BUFFER:
 		{
