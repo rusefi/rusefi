@@ -130,5 +130,3 @@ void startSerialChannels();
 SerialTsChannelBase* getBluetoothChannel();
 
 void startCanConsole();
-
-void sendOkResponse(TsChannelBase *tsChannel, ts_response_format_e mode);
