@@ -153,7 +153,7 @@ uint8_t* getWorkingPageAddr() {
 }
 
 static void sendOkResponse(TsChannelBase *tsChannel) {
-	tsChannel->sendResponse(TS_CRC, NULL, 0);
+	tsChannel->sendResponse(TS_CRC, nullptr, 0);
 }
 
 void sendErrorCode(TsChannelBase *tsChannel, uint8_t code) {
