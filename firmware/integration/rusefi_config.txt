@@ -416,9 +416,9 @@ end_struct
 struct linear_sensor_s
 	adc_channel_e hwChannel;
 	float v1;;"volts", 1, 0, 0, 10, 2
-	float value1;;"", 1, 0, 0, 1000000, 2
+	float value1;;"", 1, 0, -100000, 1000000, 2
 	float v2;;"volts", 1, 0, 0, 10, 2
-	float value2;;"", 1, 0, 0, 1000000, 2
+	float value2;;"", 1, 0, -100000, 1000000, 2
 end_struct
 
 struct ThermistorConf
