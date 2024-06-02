@@ -28,6 +28,8 @@ CanWrite::CanWrite()
 
 PUBLIC_API_WEAK bool boardEnableSendWidebandInfo() { return true; }
 
+extern bool withHwQcActivity;
+
 void CanWrite::PeriodicTask(efitick_t nowNt) {
 	UNUSED(nowNt);
 	static uint16_t cycleCount = 0;
@@ -57,7 +59,7 @@ void CanWrite::PeriodicTask(efitick_t nowNt) {
 
 	updateDash(cycle);
 
-  if (engineConfiguration->enableExtendedCanBroadcast) {
+  if (engineConfiguration->enableExtendedCanBroadcast || withHwQcActivity) {
 	  if (cycle.isInterval(CI::_100ms)) {
   		sendQcBenchEventCounters();
   		sendQcBenchRawAnalogValues();
