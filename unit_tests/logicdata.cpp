@@ -409,7 +409,7 @@ static void writeEvents(const std::vector<CompositeEvent>& events) {
 		uint32_t prevTs = 0;
 		int deltaCount = 0;
 
-		for (int i = 0; i < count; i++) {
+		for (size_t i = 0; i < count; i++) {
 			const CompositeEvent* event = &events[i];
 
 			int chState = getChannelState(ch, event);
