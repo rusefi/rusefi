@@ -23,10 +23,10 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
 
-      - name: Fetch remote branches of rusefi submodule
+      - name: Fetch remote lts-* branches of rusefi submodule
         working-directory: ext/rusefi
         run: |
-          git fetch origin '+refs/heads/*:refs/remotes/origin/*'
+          git fetch --depth=1 origin '+refs/heads/lts-*:refs/remotes/origin/lts-*'
           git branch -r
 
       - name: Git Update Submodules
