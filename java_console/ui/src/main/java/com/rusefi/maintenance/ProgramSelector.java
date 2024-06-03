@@ -19,8 +19,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 import static com.rusefi.core.ui.FrameHelper.appendBundleName;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
@@ -301,6 +304,11 @@ public class ProgramSelector {
             updateModeComboBox.addItem(OPENBLT_AUTO);
             updateModeComboBox.addItem(OPENBLT_SWITCH);
             updateModeComboBox.addItem(OPENBLT_MANUAL);
+
+            List<SerialPortScanner.PortResult> listOfBootloaders = currentHardware.getKnownPorts().stream().filter(portResult -> portResult.type == SerialPortScanner.SerialPortType.OpenBlt).collect(Collectors.toList());
+            if (!listOfBootloaders.isEmpty()) {
+                updateModeComboBox.setSelectedItem(OPENBLT_MANUAL);
+            }
         }
 
         trueLayout(updateModeComboBox);
