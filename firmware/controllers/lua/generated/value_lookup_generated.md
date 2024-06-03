@@ -374,7 +374,7 @@ kPa value at high volts
 
 
 ### knockRetardAggression
-Ignition timing to remove when a knock event occurs.
+Ignition timing to remove when a knock event occurs. Advice: 5% (mild), 10% (turbo/high comp.), 15% (high knock, e.g. GDI), 20% (spicy lump),
 
 ### knockRetardReapplyRate
 After a knock event, reapply timing at this rate.
