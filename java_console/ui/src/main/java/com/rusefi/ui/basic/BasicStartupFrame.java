@@ -17,6 +17,7 @@ import javax.swing.*;
 import static com.rusefi.FileLog.isWindows;
 
 /**
+ * Focuses on firmware updater
  * Much simpler than {@link com.rusefi.StartupFrame}
  */
 public class BasicStartupFrame {
