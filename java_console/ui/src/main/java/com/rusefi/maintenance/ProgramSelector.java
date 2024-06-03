@@ -67,7 +67,12 @@ public class ProgramSelector {
                 final SerialPortScanner.PortResult selectedPort = ((SerialPortScanner.PortResult) comboPorts.getSelectedItem());
 
                 getConfig().getRoot().setProperty(getClass().getSimpleName(), selectedMode);
+                executeJob(comboPorts, selectedMode, selectedPort);
+            }
+        });
+    }
 
+    private void executeJob(JComponent parent, String selectedMode, SerialPortScanner.PortResult selectedPort) {
                 String jobName = null;
                 Consumer<UpdateOperationCallbacks> job;
 
@@ -75,7 +80,7 @@ public class ProgramSelector {
                 switch (selectedMode) {
                     case AUTO_DFU:
                         jobName = "DFU update";
-                        job = (callbacks) -> DfuFlasher.doAutoDfu(comboPorts, selectedPort.port, callbacks);
+                        job = (callbacks) -> DfuFlasher.doAutoDfu(parent, selectedPort.port, callbacks);
                         break;
                     case MANUAL_DFU:
                       jobName = "DFU update";
@@ -88,16 +93,16 @@ public class ProgramSelector {
                     case ST_LINK:
                         job = updateOperationCallbacks -> {
                             // todo: add ST-LINK no-assert mode? or not?
-                            StLinkFlasher.doUpdateFirmware(MaintenanceUtil.FIRMWARE_BIN_FILE, updateFirmwareButton);
+                            StLinkFlasher.doUpdateFirmware(MaintenanceUtil.FIRMWARE_BIN_FILE, parent);
                         };
                         break;
                     case DFU_SWITCH:
                         jobName = "DFU switch";
-                        job = (callbacks) -> rebootToDfu(comboPorts, selectedPort.port, callbacks);
+                        job = (callbacks) -> rebootToDfu(parent, selectedPort.port, callbacks);
                         break;
                     case OPENBLT_SWITCH:
                         jobName = "OpenBLT switch";
-                        job = (callbacks) -> rebootToOpenblt(comboPorts, selectedPort.port, callbacks);
+                        job = (callbacks) -> rebootToOpenblt(parent, selectedPort.port, callbacks);
                         break;
                     case OPENBLT_CAN:
                         jobName = "OpenBLT via CAN";
@@ -105,11 +110,11 @@ public class ProgramSelector {
                         break;
                     case OPENBLT_MANUAL:
                         jobName = "OpenBLT via Serial";
-                        job = (callbacks) -> flashOpenbltSerialJni(selectedPort.port, callbacks);
+                        job = (callbacks) -> flashOpenbltSerialJni(parent, selectedPort.port, callbacks);
                         break;
                     case OPENBLT_AUTO:
                         jobName = "OpenBLT via Serial";
-                        job = (callbacks) -> flashOpenbltSerialAutomatic(comboPorts, selectedPort.port, callbacks);
+                        job = (callbacks) -> flashOpenbltSerialAutomatic(parent, selectedPort.port, callbacks);
                         break;
                     case DFU_ERASE:
                         jobName = "DFU erase";
@@ -122,8 +127,6 @@ public class ProgramSelector {
                 final UpdateOperationCallbacks callbacks = new UpdateStatusWindow(appendBundleName(jobName + " " + Launcher.CONSOLE_VERSION));
                 final Consumer<UpdateOperationCallbacks> job2 = job;
                 ExecHelper.submitAction(() -> job2.accept(callbacks), "mx");
-            }
-        });
     }
 
     private static void rebootToDfu(JComponent parent, String selectedPort, UpdateOperationCallbacks callbacks) {
@@ -138,7 +141,7 @@ public class ProgramSelector {
 
     private void flashOpenBltCan(UpdateOperationCallbacks callbacks) {
         if (FileLog.is32bitJava()) {
-            showError32bitJava();
+            showError32bitJava(content);
             return;
         }
         OpenbltJni.OpenbltCallbacks cb = makeOpenbltCallbacks(callbacks);
@@ -156,7 +159,7 @@ public class ProgramSelector {
         }
     }
 
-    private void flashOpenbltSerialAutomatic(JComponent parent, String ecuPort, UpdateOperationCallbacks callbacks) {
+    private static void flashOpenbltSerialAutomatic(JComponent parent, String ecuPort, UpdateOperationCallbacks callbacks) {
         String[] portsBefore = LinkManager.getCommPorts();
         rebootToOpenblt(parent, ecuPort, callbacks);
 
@@ -198,10 +201,10 @@ public class ProgramSelector {
 
         callbacks.log("Serial port " + openbltPort + " appeared, programming firmware...");
 
-        flashOpenbltSerialJni(openbltPort, callbacks);
+        flashOpenbltSerialJni(parent, openbltPort, callbacks);
     }
 
-    private OpenbltJni.OpenbltCallbacks makeOpenbltCallbacks(UpdateOperationCallbacks callbacks) {
+    private static OpenbltJni.OpenbltCallbacks makeOpenbltCallbacks(UpdateOperationCallbacks callbacks) {
         return new OpenbltJni.OpenbltCallbacks() {
             @Override
             public void log(String line) {
@@ -225,14 +228,14 @@ public class ProgramSelector {
         };
     }
 
-    private void showError32bitJava() {
-        JOptionPane.showMessageDialog(content, "64 bit java required. 32 bit java not supported!",
+    private static void showError32bitJava(JComponent parent) {
+        JOptionPane.showMessageDialog(parent, "64 bit java required. 32 bit java not supported!",
             "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    private void flashOpenbltSerialJni(String port, UpdateOperationCallbacks callbacks) {
+    private static void flashOpenbltSerialJni(JComponent parent, String port, UpdateOperationCallbacks callbacks) {
         if (FileLog.is32bitJava()) {
-            showError32bitJava();
+            showError32bitJava(parent);
             return;
         }
 

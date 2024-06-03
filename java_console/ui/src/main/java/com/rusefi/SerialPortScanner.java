@@ -307,7 +307,7 @@ public enum SerialPortScanner {
         isRunning = false;
     }
 
-    interface Listener {
+    public interface Listener {
         void onChange(AvailableHardware currentHardware);
     }
 
