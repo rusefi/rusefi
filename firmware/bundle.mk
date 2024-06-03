@@ -40,9 +40,8 @@ DRIVERS_FOLDER = $(FOLDER)/drivers
 UPDATE_FOLDER_SOURCES = \
   $(RUSEFI_CONSOLE_SETTINGS) \
   $(INI_FILE) \
-  ../misc/console_launcher/readme.html
-#  ../misc/console_launcher/rusefi_updater.exe
-# Uncomment and put a backslash after readme.html to put rusefi_updater.exe in the bundle
+  ../misc/console_launcher/readme.html \
+  ../misc/console_launcher/rusefi_updater.exe
 
 FOLDER_SOURCES = \
   ../java_console/bin
