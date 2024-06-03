@@ -45,7 +45,7 @@ public:
 	/**
 	 * See 'blockingFactor' in rusefi.ini
 	 */
-	char scratchBuffer[BLOCKING_FACTOR + 30];
+	uint8_t scratchBuffer[BLOCKING_FACTOR + 30];
 
 	const char* getName() const {
 		return m_name;

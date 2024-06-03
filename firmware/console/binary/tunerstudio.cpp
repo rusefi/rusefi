@@ -578,7 +578,7 @@ void TunerStudio::handleExecuteCommand(TsChannelBase* tsChannel, char *data, int
 	tsChannel->writeCrcResponse(TS_RESPONSE_COMMAND_OK);
 }
 
-int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int incomingPacketSize) {
+int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, uint8_t* data, int incomingPacketSize) {
 	ScopePerf perf(PE::TunerStudioHandleCrcCommand);
 
 	char command = data[0];
@@ -607,7 +607,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		break;
 #endif // EFI_TEXT_LOGGING
 	case TS_EXECUTE:
-		handleExecuteCommand(tsChannel, data, incomingPacketSize - 1);
+		handleExecuteCommand(tsChannel, reinterpret_cast<char*>(data), incomingPacketSize - 1);
 		break;
 	case TS_PAGE_COMMAND:
 		handlePageSelectCommand(tsChannel);
