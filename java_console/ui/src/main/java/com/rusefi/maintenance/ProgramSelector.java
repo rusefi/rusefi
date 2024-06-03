@@ -167,6 +167,7 @@ public class ProgramSelector {
         String[] portsBefore = LinkManager.getCommPorts();
         rebootToOpenblt(parent, ecuPort, callbacks);
 
+        // todo: we need a longer but smarter loop instead of just sleep
         // Give the bootloader a sec to enumerate
         BinaryProtocol.sleep(3000);
 
@@ -174,7 +175,10 @@ public class ProgramSelector {
 
         // Check that the ECU disappeared from the "after" list
         if (!PortDetector.AUTO.equals(ecuPort) && Arrays.stream(portsAfter).anyMatch(ecuPort::equals)) {
-            callbacks.log("Looks like your ECU didn't reboot to OpenBLT");
+            callbacks.log("Looks like your ECU didn't reboot to OpenBLT fast enough");
+            callbacks.log("");
+            callbacks.log("Try closing and opening console again");
+            callbacks.log("");
             callbacks.error();
             return;
         }
