@@ -28,12 +28,13 @@ import static com.rusefi.ui.util.UiUtils.trueLayout;
 
 public class ProgramSelector {
 
+    // todo: migrate to enum?
     private static final String AUTO_DFU = "Auto Update";
     private static final String MANUAL_DFU = "Manual DFU Update";
     private static final String DFU_SWITCH = "Switch to DFU Mode";
     private static final String OPENBLT_SWITCH = "Switch to OpenBLT Mode";
-    private static final String OPENBLT_MANUAL = "Manual OpenBLT Update";
-    private static final String OPENBLT_AUTO = "Auto OpenBLT Update";
+    public static final String OPENBLT_MANUAL = "Manual OpenBLT Update";
+    public static final String OPENBLT_AUTO = "Auto OpenBLT Update";
     private static final String DFU_ERASE = "Full Chip Erase";
     private static final String INSTALL_OPENBLT = "Install OpenBLT";
     private static final String ST_LINK = "ST-LINK Update";
@@ -72,7 +73,7 @@ public class ProgramSelector {
         });
     }
 
-    private void executeJob(JComponent parent, String selectedMode, SerialPortScanner.PortResult selectedPort) {
+    public static void executeJob(JComponent parent, String selectedMode, SerialPortScanner.PortResult selectedPort) {
                 String jobName = null;
                 Consumer<UpdateOperationCallbacks> job;
 
@@ -106,7 +107,7 @@ public class ProgramSelector {
                         break;
                     case OPENBLT_CAN:
                         jobName = "OpenBLT via CAN";
-                        job = ProgramSelector.this::flashOpenBltCan;
+                        job = (callbacks) -> flashOpenBltCan(parent, callbacks);
                         break;
                     case OPENBLT_MANUAL:
                         jobName = "OpenBLT via Serial";
@@ -139,9 +140,9 @@ public class ProgramSelector {
         DfuFlasher.rebootToDfu(parent, port, callbacks, Fields.CMD_REBOOT_OPENBLT);
     }
 
-    private void flashOpenBltCan(UpdateOperationCallbacks callbacks) {
+    private static void flashOpenBltCan(JComponent parent, UpdateOperationCallbacks callbacks) {
         if (FileLog.is32bitJava()) {
-            showError32bitJava(content);
+            showError32bitJava(parent);
             return;
         }
         OpenbltJni.OpenbltCallbacks cb = makeOpenbltCallbacks(callbacks);

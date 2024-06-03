@@ -6,10 +6,7 @@ import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
-import com.rusefi.maintenance.DriverInstall;
-import com.rusefi.maintenance.MaintenanceUtil;
-import com.rusefi.maintenance.StLinkFlasher;
-import com.rusefi.maintenance.ProgramSelector;
+import com.rusefi.maintenance.*;
 import com.rusefi.ui.LogoHelper;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.URLLabel;
@@ -46,6 +43,7 @@ public class StartupFrame {
     private static final Logging log = getLogging(Launcher.class);
     public static final String ALWAYS_AUTO_PORT = "always_auto_port";
     private static final String NO_PORTS_FOUND = "<html>No ports found!<br>Confirm blue LED is blinking</html>";
+    public static final String SCANNING_PORTS = "Scanning ports";
 
     private final JFrame frame;
     private final JPanel connectPanel = new JPanel(new FlowLayout());
@@ -67,12 +65,20 @@ public class StartupFrame {
      * closing the application.
      */
     private boolean isProceeding;
-    private final JLabel noPortsMessage = new JLabel("Scanning ports...");
+    private final JLabel noPortsMessage = new JLabel();
+    private final StatusAnimation status;
 
     public StartupFrame() {
         String title = "rusEFI console " + Launcher.CONSOLE_VERSION;
         log.info(title);
         noPortsMessage.setForeground(Color.red);
+        status = new StatusAnimation(new StatusAnimation.StatusConsumer() {
+            @Override
+            public void onStatus(String niceStatus) {
+                noPortsMessage.setText(niceStatus);
+            }
+        }, SCANNING_PORTS);
+
         frame = FrameHelper.createFrame(title).getFrame();
         frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -161,6 +167,7 @@ public class StartupFrame {
         }
 
         SerialPortScanner.INSTANCE.addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
+            status.stop();
             selector.apply(currentHardware);
             applyKnownPorts(currentHardware);
             frame.pack();
@@ -221,7 +228,7 @@ public class StartupFrame {
         }
     }
 
-    private static @NotNull JLabel binaryModificationControl() {
+    public static @NotNull JLabel binaryModificationControl() {
         long binaryModificationTimestamp = MaintenanceUtil.getBinaryModificationTimestamp();
         String fileTimestampText = binaryModificationTimestamp == 0 ? "firmware file not found" : ("Files " + new Date(binaryModificationTimestamp).toString());
         JLabel jLabel = new JLabel(fileTimestampText);
@@ -301,6 +308,7 @@ public class StartupFrame {
     public void disposeFrameAndProceed() {
         isProceeding = true;
         frame.dispose();
+        status.stop();
         SerialPortScanner.INSTANCE.stopTimer();
     }
 
