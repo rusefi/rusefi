@@ -2,8 +2,7 @@
 
 #include "sensor.h"
 
-class RedundantSensor final : public Sensor
-{
+class RedundantSensor final : public Sensor {
 public:
 	RedundantSensor(
 		SensorType outputType,
@@ -11,7 +10,7 @@ public:
 		SensorType secondSensor
 	);
 
-	void configure(float maxDifference, bool ignoreSecondSensor);
+	void configure(float maxDifference, bool ignoreSecondSensor, float secondaryMaximum);
 
 	SensorResult get() const override;
 
@@ -32,4 +31,7 @@ private:
 
 	// Should we ignore the second sensor? (disable redundancy)
 	bool m_ignoreSecond = false;
+
+	// How much to scale the second sensor to proportion to the first? (partial redundancy)
+	float m_secondMaximum = 100;
 };

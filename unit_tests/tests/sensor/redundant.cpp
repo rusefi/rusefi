@@ -1,7 +1,6 @@
 #include "pch.h"
 
 #include "redundant_sensor.h"
-#include "redundant_ford_tps.h"
 
 class SensorRedundant : public ::testing::Test
 {
@@ -25,7 +24,7 @@ protected:
 		ASSERT_TRUE(m1.Register());
 		ASSERT_TRUE(m2.Register());
 
-		dut.configure(5.0f, false);
+		dut.configure(5.0f, false, 100);
 	}
 
 	void TearDown() override
@@ -48,6 +47,7 @@ TEST_F(SensorRedundant, SetOnlyOneSensor)
 	{
 		auto result = dut.get();
 		EXPECT_FALSE(result.Valid);
+		EXPECT_EQ(result.Code, UnexpectedCode::Inconsistent);
 	}
 
 	// Set one sensor
@@ -66,6 +66,7 @@ TEST_F(SensorRedundant, SetTwoSensors)
 	{
 		auto result = dut.get();
 		EXPECT_FALSE(result.Valid);
+		EXPECT_EQ(result.Code, UnexpectedCode::Inconsistent);
 	}
 
 	// Set one sensor
@@ -158,7 +159,7 @@ protected:
 		ASSERT_TRUE(m1.Register());
 		ASSERT_TRUE(m2.Register());
 
-		dut.configure(5.0f, true);
+		dut.configure(5.0f, true, 100);
 	}
 
 	void TearDown() override
@@ -180,6 +181,7 @@ TEST_F(SensorRedundantIgnoreSecond, OnlyFirst)
 	{
 		auto result = dut.get();
 		EXPECT_FALSE(result.Valid);
+		EXPECT_EQ(result.Code, UnexpectedCode::Unknown);
 	}
 
 	// Set one sensor
@@ -199,6 +201,7 @@ TEST_F(SensorRedundantIgnoreSecond, OnlySecond)
 	{
 		auto result = dut.get();
 		EXPECT_FALSE(result.Valid);
+		EXPECT_EQ(result.Code, UnexpectedCode::Unknown);
 	}
 
 	// Set second sensor only
@@ -217,6 +220,7 @@ TEST_F(SensorRedundantIgnoreSecond, SetBothIgnoreSecond)
 	{
 		auto result = dut.get();
 		EXPECT_FALSE(result.Valid);
+		EXPECT_EQ(result.Code, UnexpectedCode::Unknown);
 	}
 
 	// Set both sensors
@@ -231,13 +235,13 @@ TEST_F(SensorRedundantIgnoreSecond, SetBothIgnoreSecond)
 	}
 }
 
-class SensorFordRedundantTps : public ::testing::Test
+class SensorRedundantPartialSecond : public ::testing::Test
 {
 protected:
-	RedundantFordTps dut;
+	RedundantSensor dut;
 	MockSensor m1, m2;
 
-	SensorFordRedundantTps()
+	SensorRedundantPartialSecond()
 		: dut(SensorType::Tps1, SensorType::Tps1Primary, SensorType::Tps1Secondary)
 		, m1(SensorType::Tps1Primary)
 		, m2(SensorType::Tps1Secondary)
@@ -253,7 +257,7 @@ protected:
 		ASSERT_TRUE(m1.Register());
 		ASSERT_TRUE(m2.Register());
 
-		dut.configure(5.0f, 50);
+		dut.configure(5.0f, false, 50);
 	}
 
 	void TearDown() override
@@ -262,15 +266,23 @@ protected:
 	}
 };
 
-TEST_F(SensorFordRedundantTps, SetOnlyOneSensor)
+TEST_F(SensorRedundantPartialSecond, CheckIsRedundant)
+{
+	{
+		EXPECT_TRUE(dut.isRedundant());
+	}
+}
+
+TEST_F(SensorRedundantPartialSecond, SetOnlyOneSensor)
 {
 	// Don't set any sensors - expect invalid
 	{
 		auto result = dut.get();
 		EXPECT_FALSE(result.Valid);
+		EXPECT_EQ(result.Code, UnexpectedCode::Inconsistent);
 	}
 
-	// Set one sensor
+	// Set first sensor
 	m1.set(24.0f);
 
 	// Should still be invalid - only one is set!
@@ -280,17 +292,18 @@ TEST_F(SensorFordRedundantTps, SetOnlyOneSensor)
 	}
 }
 
-TEST_F(SensorFordRedundantTps, SetTwoSensors)
+TEST_F(SensorRedundantPartialSecond, SetTwoSensors)
 {
 	// Don't set any sensors - expect invalid
 	{
 		auto result = dut.get();
 		EXPECT_FALSE(result.Valid);
+		EXPECT_EQ(result.Code, UnexpectedCode::Inconsistent);
 	}
 
-	// Set one sensor
+	// Set first sensor
 	m1.set(12.0f);
-	// Set the other sensor at double the first
+	// Set second sensor at double the first
 	m2.set(28.0f);
 
 	// Should now be valid - and the average of the two input
@@ -298,12 +311,10 @@ TEST_F(SensorFordRedundantTps, SetTwoSensors)
 		auto result = dut.get();
 		EXPECT_TRUE(result.Valid);
 		EXPECT_FLOAT_EQ(result.Value, 13.0f);
-
-		EXPECT_TRUE(dut.isRedundant());
 	}
 }
 
-TEST_F(SensorFordRedundantTps, DifferenceNone)
+TEST_F(SensorRedundantPartialSecond, DifferenceNone)
 {
 	// Set both sensors to the same value
 	m1.set(10);
@@ -317,7 +328,7 @@ TEST_F(SensorFordRedundantTps, DifferenceNone)
 	}
 }
 
-TEST_F(SensorFordRedundantTps, DifferenceNearLimit)
+TEST_F(SensorRedundantPartialSecond, DifferenceNearLimit)
 {
 	// Set both sensors to nearly the limit (4.998 apart)
 	m1.set(7.501f);
@@ -331,7 +342,7 @@ TEST_F(SensorFordRedundantTps, DifferenceNearLimit)
 	}
 }
 
-TEST_F(SensorFordRedundantTps, DifferenceOverLimit)
+TEST_F(SensorRedundantPartialSecond, DifferenceOverLimit)
 {
 	// Set both sensors barely over the limit (5.002 apart)
 	m1.set(7.499f);
@@ -344,7 +355,7 @@ TEST_F(SensorFordRedundantTps, DifferenceOverLimit)
 	}
 }
 
-TEST_F(SensorFordRedundantTps, DifferenceOverLimitSwapped)
+TEST_F(SensorRedundantPartialSecond, DifferenceOverLimitSwapped)
 {
 	// Now try it the other way (m1 > m2)
 	m1.set(12.501f);
@@ -357,9 +368,9 @@ TEST_F(SensorFordRedundantTps, DifferenceOverLimitSwapped)
 	}
 }
 
-TEST_F(SensorFordRedundantTps, HighRange)
+TEST_F(SensorRedundantPartialSecond, PartialRedundancyRange)
 {
-	// Set the throttle like it's at 75%
+	// Set the value like it's at 75%
 	m1.set(75);
 	m2.set(100);
 

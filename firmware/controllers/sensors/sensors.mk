@@ -14,7 +14,6 @@ CONTROLLERS_SENSORS_SRC_CPP = \
 	$(PROJECT_DIR)/controllers/sensors/sensor_info_printing.cpp \
 	$(PROJECT_DIR)/controllers/sensors/sensor_checker.cpp \
 	$(PROJECT_DIR)/controllers/sensors/redundant_sensor.cpp \
-	$(PROJECT_DIR)/controllers/sensors/redundant_ford_tps.cpp \
 	$(PROJECT_DIR)/controllers/sensors/frequency_sensor.cpp \
 	$(PROJECT_DIR)/controllers/sensors/hella_oil_level.cpp \
 	$(PROJECT_DIR)/controllers/sensors/impl/software_knock.cpp \
