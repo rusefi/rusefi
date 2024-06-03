@@ -15,27 +15,27 @@ void RedundantSensor::configure(float /*split threshold*/maxDifference, bool ign
 }
 
 SensorResult RedundantSensor::get() const {
-	auto result1 = Sensor::get(m_first);
+	auto sensor1 = Sensor::get(m_first);
 
 	// If we're set to disable redundancy, just pass thru the first sensor
 	if (m_ignoreSecond) {
-		return result1;
+		return sensor1;
 	}
 
-	auto result2 = Sensor::get(m_second);
+	auto sensor2 = Sensor::get(m_second);
 
 	// If either result is invalid, return invalid.
-	if (!result1.Valid || !result2.Valid) {
+	if (!sensor1.Valid || !sensor2.Valid) {
 		return UnexpectedCode::Inconsistent;
 	}
 
 	// If both are valid, check that they're near one another
-	float delta = absF(result1.Value - result2.Value);
+	float delta = absF(sensor1.Value - sensor2.Value);
 	if (delta > m_maxDifference) {
 		return UnexpectedCode::Inconsistent;
 	}
 
 	// Both sensors are valid, and their readings are close. All is well.
 	// Return the average
-	return (result1.Value + result2.Value) / 2;
+	return (sensor1.Value + sensor2.Value) / 2;
 }
