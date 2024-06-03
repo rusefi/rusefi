@@ -50,7 +50,7 @@ public class StartupFrame {
     private final JFrame frame;
     private final JPanel connectPanel = new JPanel(new FlowLayout());
     // todo: move this line to the connectPanel
-    private final JComboBox<SerialPortScanner.PortResult> comboPorts = new JComboBox<>();
+    private final PortsComboBox portsComboBox = new PortsComboBox();
     private final JPanel leftPanel = new JPanel(new VerticalFlowLayout());
 
     private final JPanel realHardwarePanel = new JPanel(new MigLayout());
@@ -89,14 +89,7 @@ public class StartupFrame {
         realHardwarePanel.setBorder(new TitledBorder(BorderFactory.createLineBorder(Color.darkGray), "Real stm32"));
         miscPanel.setBorder(new TitledBorder(BorderFactory.createLineBorder(Color.darkGray), "Miscellaneous"));
 
-        if (FileLog.isWindows()) {
-            setToolTip(comboPorts, "Use 'Device Manager' icon above to launch Device Manager",
-                    "In 'Ports' section look for ",
-                    "'STMicroelectronics Virtual COM Port' for USB port",
-                    "'USB Serial Port' for TTL port");
-        }
-
-        connectPanel.add(comboPorts);
+        connectPanel.add(portsComboBox.getComboPorts());
         final JComboBox<String> comboSpeeds = createSpeedCombo();
         comboSpeeds.setToolTipText("For 'STMicroelectronics Virtual COM Port' device any speed setting would work the same");
         connectPanel.add(comboSpeeds);
@@ -148,7 +141,7 @@ public class StartupFrame {
         realHardwarePanel.add(noPortsMessage, "right, wrap");
         noPortsMessage.setToolTipText("Check you cables. Check your drivers. Do you want to start simulator maybe?");
 
-        ProgramSelector selector = new ProgramSelector(comboPorts);
+        ProgramSelector selector = new ProgramSelector(portsComboBox.getComboPorts());
 
         if (FileLog.isWindows()) {
             realHardwarePanel.add(new HorizontalLine(), "right, wrap");
@@ -249,7 +242,7 @@ public class StartupFrame {
         connectPanel.setVisible(!ports.isEmpty());
 
 
-        boolean hasEcuOrBootloader = applyPortSelectionToUIcontrol(ports);
+        boolean hasEcuOrBootloader = applyPortSelectionToUIcontrol(portsComboBox.getComboPorts(), ports);
         if (ports.isEmpty()) {
             noPortsMessage.setText(NO_PORTS_FOUND);
         } else {
@@ -270,7 +263,7 @@ public class StartupFrame {
 
     private void connectButtonAction(JComboBox<String> comboSpeeds) {
         BaudRateHolder.INSTANCE.baudRate = Integer.parseInt((String) comboSpeeds.getSelectedItem());
-        SerialPortScanner.PortResult selectedPort = ((SerialPortScanner.PortResult)comboPorts.getSelectedItem());
+        SerialPortScanner.PortResult selectedPort = ((SerialPortScanner.PortResult)portsComboBox.getComboPorts().getSelectedItem());
         disposeFrameAndProceed();
         new ConsoleUI(selectedPort.port);
     }
@@ -311,7 +304,7 @@ public class StartupFrame {
         SerialPortScanner.INSTANCE.stopTimer();
     }
 
-    private boolean applyPortSelectionToUIcontrol(List<SerialPortScanner.PortResult> ports) {
+    private static boolean applyPortSelectionToUIcontrol(JComboBox<SerialPortScanner.PortResult> comboPorts, List<SerialPortScanner.PortResult> ports) {
         comboPorts.removeAllItems();
         boolean hasEcuOrBootloader = false;
         for (final SerialPortScanner.PortResult port : ports) {

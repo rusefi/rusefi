@@ -43,26 +43,27 @@ public class ProgramSelector {
 
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel noHardware = new JLabel("Nothing detected");
-    private final JPanel controls = new JPanel(new FlowLayout());
-    private final JComboBox<String> mode = new JComboBox<>();
+    private final JPanel updateModeAndButton = new JPanel(new FlowLayout());
+    private final JComboBox<String> updateModeComboBox = new JComboBox<>();
 
     public ProgramSelector(JComboBox<SerialPortScanner.PortResult> comboPorts) {
-        content.add(controls, BorderLayout.NORTH);
+        content.add(updateModeAndButton, BorderLayout.NORTH);
         content.add(noHardware, BorderLayout.SOUTH);
-        controls.setVisible(false);
-        controls.add(mode);
 
         String persistedMode = getConfig().getRoot().getProperty(getClass().getSimpleName());
         if (Arrays.asList(AUTO_DFU, MANUAL_DFU, OPENBLT_CAN, OPENBLT_SWITCH, OPENBLT_MANUAL, OPENBLT_AUTO, DFU_ERASE, DFU_SWITCH).contains(persistedMode))
-            mode.setSelectedItem(persistedMode);
+            updateModeComboBox.setSelectedItem(persistedMode);
 
-        JButton updateFirmware = createUpdateFirmwareButton();
-        controls.add(updateFirmware);
+        JButton updateFirmwareButton = createUpdateFirmwareButton();
 
-        updateFirmware.addActionListener(new ActionListener() {
+        updateModeAndButton.setVisible(false);
+        updateModeAndButton.add(updateModeComboBox);
+        updateModeAndButton.add(updateFirmwareButton);
+
+        updateFirmwareButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                final String selectedMode = (String) mode.getSelectedItem();
+                final String selectedMode = (String) updateModeComboBox.getSelectedItem();
                 final SerialPortScanner.PortResult selectedPort = ((SerialPortScanner.PortResult) comboPorts.getSelectedItem());
 
                 getConfig().getRoot().setProperty(getClass().getSimpleName(), selectedMode);
@@ -87,7 +88,7 @@ public class ProgramSelector {
                     case ST_LINK:
                         job = updateOperationCallbacks -> {
                             // todo: add ST-LINK no-assert mode? or not?
-                            StLinkFlasher.doUpdateFirmware(MaintenanceUtil.FIRMWARE_BIN_FILE, updateFirmware);
+                            StLinkFlasher.doUpdateFirmware(MaintenanceUtil.FIRMWARE_BIN_FILE, updateFirmwareButton);
                         };
                         break;
                     case DFU_SWITCH:
@@ -263,42 +264,42 @@ public class ProgramSelector {
 
     public void apply(SerialPortScanner.AvailableHardware currentHardware) {
         noHardware.setVisible(currentHardware.isEmpty());
-        controls.setVisible(!currentHardware.isEmpty());
+        updateModeAndButton.setVisible(!currentHardware.isEmpty());
 
         boolean hasSerialPorts = !currentHardware.getKnownPorts().isEmpty();
         boolean hasDfuDevice = currentHardware.isDfuFound();
 
-        mode.removeAllItems();
+        updateModeComboBox.removeAllItems();
         if (FileLog.isWindows()) {
             boolean requireBlt = FindFileHelper.isObfuscated();
             if (hasSerialPorts && !requireBlt) {
-                mode.addItem(AUTO_DFU);
+                updateModeComboBox.addItem(AUTO_DFU);
             }
 
             if (hasDfuDevice) {
-                mode.addItem(MANUAL_DFU);
-                mode.addItem(DFU_ERASE);
+                updateModeComboBox.addItem(MANUAL_DFU);
+                updateModeComboBox.addItem(DFU_ERASE);
                 if (DfuFlasher.haveBootloaderBinFile()) {
-                    mode.addItem(INSTALL_OPENBLT);
+                    updateModeComboBox.addItem(INSTALL_OPENBLT);
                 }
             }
             if (!requireBlt) {
-                mode.addItem(DFU_SWITCH);
+                updateModeComboBox.addItem(DFU_SWITCH);
             }
             if (currentHardware.isStLinkConnected())
-                mode.addItem(ST_LINK);
+                updateModeComboBox.addItem(ST_LINK);
             if (currentHardware.isPCANConnected())
-                mode.addItem(OPENBLT_CAN);
+                updateModeComboBox.addItem(OPENBLT_CAN);
             // todo: detect PCAN mode.addItem(OPENBLT_CAN);
         }
 
         if (hasSerialPorts) {
-            mode.addItem(OPENBLT_AUTO);
-            mode.addItem(OPENBLT_SWITCH);
-            mode.addItem(OPENBLT_MANUAL);
+            updateModeComboBox.addItem(OPENBLT_AUTO);
+            updateModeComboBox.addItem(OPENBLT_SWITCH);
+            updateModeComboBox.addItem(OPENBLT_MANUAL);
         }
 
-        trueLayout(mode);
+        trueLayout(updateModeComboBox);
         trueLayout(content);
     }
 
