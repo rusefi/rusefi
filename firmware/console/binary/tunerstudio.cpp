@@ -157,7 +157,7 @@ static void sendOkResponse(TsChannelBase *tsChannel) {
 }
 
 void sendErrorCode(TsChannelBase *tsChannel, uint8_t code) {
-	tsChannel->writeCrcPacket(code, nullptr, 0);
+	tsChannel->writeCrcResponse(code);
 }
 
 void TunerStudio::sendErrorCode(TsChannelBase* tsChannel, uint8_t code) {
@@ -347,11 +347,6 @@ void requestBurn() {
 }
 
 #if EFI_TUNER_STUDIO
-static void sendResponseCode(ts_response_format_e mode, TsChannelBase *tsChannel, const uint8_t responseCode) {
-	if (mode == TS_CRC) {
-		tsChannel->writeCrcPacket(responseCode, nullptr, 0);
-	}
-}
 
 /**
  * 'Burn' command is a command to commit the changes
@@ -369,7 +364,7 @@ static void handleBurnCommand(TsChannelBase* tsChannel) {
 		requestBurn();
 	}
 
-	sendResponseCode(TS_CRC, tsChannel, TS_RESPONSE_BURN_OK);
+	tsChannel->writeCrcResponse(TS_RESPONSE_BURN_OK);
 	efiPrintf("BURN in %dms", (int)(t.getElapsedSeconds() * 1e3));
 }
 
@@ -680,7 +675,7 @@ void TunerStudio::handleExecuteCommand(TsChannelBase* tsChannel, char *data, int
 #endif // EFI_SIMULATOR
 	(console_line_callback)(trimmed);
 
-	tsChannel->writeCrcPacket(TS_RESPONSE_COMMAND_OK, nullptr, 0);
+	tsChannel->writeCrcResponse(TS_RESPONSE_COMMAND_OK);
 }
 
 int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int incomingPacketSize) {

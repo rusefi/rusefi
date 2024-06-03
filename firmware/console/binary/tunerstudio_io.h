@@ -62,6 +62,11 @@ public:
 	void crcAndWriteBuffer(const uint8_t responseCode, const size_t size);
 	void copyAndWriteSmallCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size);
 
+	// Write a response code with no data
+	void writeCrcResponse(uint8_t responseCode) {
+		writeCrcPacketLarge(responseCode, nullptr, 0);
+	}
+
 	/* When TsChannel is in "not in sync" state tsProcessOne will silently try to find
 	 * begining of packet.
 	 * As soon as tsProcessOne was able to receive valid packet with valid size and crc
