@@ -80,7 +80,7 @@ TEST(TunerstudioCommands, writeChunkEngineConfig) {
 	// two step - writes to the engineConfiguration section require a burn
 	uint8_t val = 50;
 	TunerStudio instance;
-	instance.handleWriteChunkCommand(&channel, TS_CRC, 100, 1, &val);
+	instance.handleWriteChunkCommand(&channel, 100, 1, &val);
 
 	EXPECT_EQ(configBytes[100], 50);
 }
