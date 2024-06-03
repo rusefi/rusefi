@@ -1,20 +1,11 @@
 package com.rusefi.maintenance;
 
-import com.rusefi.core.ui.AutoupdateUtil;
-import com.rusefi.ui.StatusWindow;
-import org.jetbrains.annotations.NotNull;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.io.FileNotFoundException;
-
-import static com.rusefi.maintenance.StLinkFlasher.TITLE;
-
 /**
  * DEAD?!
  *
  * Andrey Belomutskiy, (c) 2013-2020
  */
+/*
 public class EraseChip {
     private static final String FLASH_SIZE = "0x0100000";
     private static final String ERASE_COMMAND_SUFFIX = " -c init -c targets -c \"halt\" -c \"flash erase_address 0x08000000 " + FLASH_SIZE + "\" -c shutdown";
@@ -31,7 +22,7 @@ public class EraseChip {
                 if (dialogResult != JOptionPane.YES_OPTION)
                     return;
                 wnd.showFrame(TITLE);
-                StatusAnimation sa = new StatusAnimation(wnd);
+                StatusWindowAnimation sa = new StatusWindowAnimation(wnd);
                 ExecHelper.submitAction(() -> {
                   try {
                     StLinkFlasher.executeOpenOCDCommand(getEraseCommand(), wnd);
@@ -55,3 +46,4 @@ public class EraseChip {
         return button;
     }
 }
+*/

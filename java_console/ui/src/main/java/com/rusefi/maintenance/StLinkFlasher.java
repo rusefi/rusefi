@@ -69,7 +69,7 @@ public class StLinkFlasher {
             wnd.setStatus("ERROR");
             return;
         }
-        StatusAnimation sa = new StatusAnimation(wnd);
+        StatusWindowAnimation sa = new StatusWindowAnimation(wnd);
       String error = null;
       try {
         error = executeOpenOCDCommand(getOpenocdCommand() + " -c \"program " +
