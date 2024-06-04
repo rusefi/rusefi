@@ -560,7 +560,7 @@ static void handleGetText(TsChannelBase* tsChannel) {
 			logMsg("get test sending [%d]\r\n", outputSize);
 #endif
 
-	tsChannel->writeCrcPacket(TS_RESPONSE_COMMAND_OK, reinterpret_cast<const uint8_t*>(output), outputSize, true);
+	tsChannel->writeCrcPacket(TS_RESPONSE_OK, reinterpret_cast<const uint8_t*>(output), outputSize, true);
 #if EFI_SIMULATOR
 			logMsg("sent [%d]\r\n", outputSize);
 #endif
@@ -575,7 +575,7 @@ void TunerStudio::handleExecuteCommand(TsChannelBase* tsChannel, char *data, int
 #endif
 	(console_line_callback)(trimmed);
 
-	tsChannel->writeCrcResponse(TS_RESPONSE_COMMAND_OK);
+	tsChannel->writeCrcResponse(TS_RESPONSE_OK);
 }
 
 int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, uint8_t* data, int incomingPacketSize) {

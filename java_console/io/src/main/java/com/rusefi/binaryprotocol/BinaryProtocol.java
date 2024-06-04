@@ -432,7 +432,7 @@ public class BinaryProtocol {
         long start = System.currentTimeMillis();
         while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
             byte[] response = executeCommand(Fields.TS_EXECUTE, command, "execute");
-            if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_COMMAND_OK) || response.length != 1) {
+            if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) || response.length != 1) {
                 continue;
             }
             return false;
