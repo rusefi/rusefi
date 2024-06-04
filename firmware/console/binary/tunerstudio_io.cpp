@@ -116,14 +116,3 @@ void TsChannelBase::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, siz
 		copyAndWriteSmallCrcPacket(responseCode, buf, size);
 	}
 }
-
-void TsChannelBase::sendResponse(ts_response_format_e mode, const uint8_t * buffer, int size, bool allowLongPackets /* = false */) {
-	if (mode == TS_CRC) {
-		writeCrcPacket(TS_RESPONSE_OK, buffer, size, allowLongPackets);
-	} else {
-		if (size > 0) {
-			write(buffer, size, true);
-			flush();
-		}
-	}
-}
