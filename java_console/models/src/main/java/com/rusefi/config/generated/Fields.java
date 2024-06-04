@@ -974,6 +974,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 55972692;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1173,7 +1174,6 @@ public class Fields {
 	public static final char TS_QUERY_COMMAND = 'Q';
 	public static final char TS_READ_COMMAND = 'R';
 	public static final int TS_RESPONSE_BURN_OK = 4;
-	public static final int TS_RESPONSE_COMMAND_OK = 7;
 	public static final int TS_RESPONSE_CRC_FAILURE = 0x82;
 	public static final int TS_RESPONSE_FRAMING_ERROR = 0x8D;
 	public static final int TS_RESPONSE_OK = 0;
@@ -1181,7 +1181,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2024.06.04.f407-discovery.2993610383";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2024.06.04.f407-discovery.55972692";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1388;
