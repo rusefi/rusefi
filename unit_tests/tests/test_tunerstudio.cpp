@@ -25,7 +25,6 @@ public:
 	size_t writeIdx = 0;
 };
 
-#define CODE 2
 #define PAYLOAD "123"
 #define SIZE strlen(PAYLOAD)
 
@@ -36,16 +35,16 @@ static void assertCrcPacket(BufferTsChannel& dut) {
 	ASSERT_EQ(st5TestBuffer[0], 0);
 	ASSERT_EQ(st5TestBuffer[1], SIZE + 1);
 
-	ASSERT_EQ(st5TestBuffer[2], CODE);
+	ASSERT_EQ(st5TestBuffer[2], TS_RESPONSE_OK);
 
 	ASSERT_EQ(memcmp(&st5TestBuffer[3], PAYLOAD, SIZE), 0);
 
 
 	// todo: proper uint32 comparison
-	ASSERT_EQ(st5TestBuffer[6], 252);
-	ASSERT_EQ(st5TestBuffer[7], 68);
-	ASSERT_EQ(st5TestBuffer[8], 173);
-	ASSERT_EQ(st5TestBuffer[9], 87);
+	ASSERT_EQ(st5TestBuffer[6], 86);
+	EXPECT_EQ(st5TestBuffer[7], 77);
+	EXPECT_EQ(st5TestBuffer[8], 101);
+	EXPECT_EQ(st5TestBuffer[9], 220);
 }
 
 TEST(binary, testWriteCrc) {
@@ -53,17 +52,17 @@ TEST(binary, testWriteCrc) {
 
 	// Let it pick which impl (small vs large) to use
 	test.reset();
-	test.writeCrcPacket(CODE, (const uint8_t*)PAYLOAD, SIZE);
+	test.writeCrcPacket((const uint8_t*)PAYLOAD, SIZE);
 	assertCrcPacket(test);
 
 	// Force the large impl
 	test.reset();
-	test.writeCrcPacket(CODE, (const uint8_t*)PAYLOAD, SIZE);
+	test.writeCrcPacket((const uint8_t*)PAYLOAD, SIZE);
 	assertCrcPacket(test);
 
 	// Force the small impl
 	test.reset();
-	test.writeCrcPacket(CODE, (const uint8_t*)PAYLOAD, SIZE);
+	test.writeCrcPacket((const uint8_t*)PAYLOAD, SIZE);
 	assertCrcPacket(test);
 }
 
