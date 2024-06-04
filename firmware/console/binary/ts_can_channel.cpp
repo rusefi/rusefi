@@ -34,7 +34,7 @@ public:
 	void stop() override;
 
 	// Special override for writeCrcPacket for small packets
-	void writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size, bool allowLongPackets = false) override;
+	void writeCrcPacket(const uint8_t* buf, size_t size, bool allowLongPackets = false) override;
 };
 
 
@@ -52,11 +52,12 @@ void CanTsChannel::start() {
 void CanTsChannel::stop() {
 }
 
-void CanTsChannel::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size, bool allowLongPackets) {
+void CanTsChannel::writeCrcPacket(const uint8_t* buf, size_t size, bool allowLongPackets) {
 #ifdef TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME
 	// a special case for short packets: we can send them in 1 frame, without CRC & size,
 	// because the CAN protocol is already protected by its own checksum.
 	if ((size + 1) <= 7) {
+		uint8_t responseCode = TS_RESPONSE_OK;
 		write(&responseCode, 1, false);      // header without size
 		if (size > 0) {
 			write(buf, size, false);      // body
@@ -67,7 +68,7 @@ void CanTsChannel::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size
 #endif /* TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME */
 
 	// Packet too large, use default implementation
-	TsChannelBase::writeCrcPacket(responseCode, buf, size, allowLongPackets);
+	TsChannelBase::writeCrcPacket(buf, size, allowLongPackets);
 }
 
 void CanTsChannel::write(const uint8_t* buffer, size_t size, bool) {

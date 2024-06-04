@@ -100,7 +100,7 @@ void TsChannelBase::assertPacketSize(size_t size, bool allowLongPackets) {
 /**
  * Adds size to the beginning of a packet and a crc32 at the end. Then send the packet.
  */
-void TsChannelBase::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size, bool allowLongPackets) {
+void TsChannelBase::writeCrcPacket(const uint8_t* buf, size_t size, bool allowLongPackets) {
 	// don't transmit a null buffer...
 	if (!buf) {
 		size = 0;
@@ -110,9 +110,9 @@ void TsChannelBase::writeCrcPacket(uint8_t responseCode, const uint8_t* buf, siz
 
 	if (isBigPacket(size)) {
 		// for larger packets we do not use a buffer for CRC calculation meaning data is now allowed to modify while pending
-		writeCrcPacketLarge(responseCode, buf, size);
+		writeCrcPacketLarge(TS_RESPONSE_OK, buf, size);
 	} else {
 		// for small packets we use a buffer for CRC calculation
-		copyAndWriteSmallCrcPacket(responseCode, buf, size);
+		copyAndWriteSmallCrcPacket(TS_RESPONSE_OK, buf, size);
 	}
 }

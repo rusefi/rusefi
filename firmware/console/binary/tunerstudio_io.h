@@ -39,7 +39,7 @@ public:
 #ifdef EFI_CAN_SERIAL
 	virtual	// CAN device needs this function to be virtual for small-packet optimization
 #endif
-	void writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size, bool allowLongPackets = false);
+	void writeCrcPacket(const uint8_t* buf, size_t size, bool allowLongPackets = false);
 
 	/**
 	 * See 'blockingFactor' in rusefi.ini
