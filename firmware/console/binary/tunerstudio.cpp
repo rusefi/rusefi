@@ -153,7 +153,7 @@ uint8_t* getWorkingPageAddr() {
 }
 
 static void sendOkResponse(TsChannelBase *tsChannel) {
-	tsChannel->sendResponse(TS_CRC, nullptr, 0);
+	tsChannel->writeCrcResponse(TS_RESPONSE_OK);
 }
 
 void sendErrorCode(TsChannelBase *tsChannel, uint8_t code) {
@@ -229,7 +229,7 @@ void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint16_t offset, ui
 	const uint8_t* start = getWorkingPageAddr() + offset;
 
 	uint32_t crc = SWAP_UINT32(crc32(start, count));
-	tsChannel->sendResponse(TS_CRC, (const uint8_t *) &crc, 4);
+	tsChannel->writeCrcPacket(TS_RESPONSE_OK, (const uint8_t *) &crc, 4);
 }
 
 #if EFI_TS_SCATTER
@@ -329,7 +329,7 @@ void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t offse
 	} else {
 		addr = getWorkingPageAddr() + offset;
 	}
-	tsChannel->sendResponse(TS_CRC, addr, count);
+	tsChannel->writeCrcPacket(TS_RESPONSE_OK, addr, count);
 #if EFI_TUNER_STUDIO_VERBOSE
 //	efiPrintf("Sending %d done", count);
 #endif
@@ -439,7 +439,16 @@ void TunerStudio::handleQueryCommand(TsChannelBase* tsChannel, ts_response_forma
 	printTsStats();
 #endif // EFI_TUNER_STUDIO_VERBOSE
 	const char *signature = getTsSignature();
-	tsChannel->sendResponse(mode, (const uint8_t *)signature, strlen(signature) + 1);
+
+	auto buffer = (const uint8_t *)signature;
+	size_t size = strlen(signature) + 1;
+
+	if (mode == TS_CRC) {
+		tsChannel->writeCrcPacket(TS_RESPONSE_OK, buffer, size);
+	} else {
+		tsChannel->write(buffer, size, true);
+		tsChannel->flush();
+	}
 }
 
 /**
@@ -645,7 +654,7 @@ extern CommandHandler console_line_callback;
 static void handleGetVersion(TsChannelBase* tsChannel) {
 	char versionBuffer[32];
 	chsnprintf(versionBuffer, sizeof(versionBuffer), "rusEFI v%d@%s", getRusEfiVersion(), QUOTE(SIGNATURE_HASH));
-	tsChannel->sendResponse(TS_CRC, (const uint8_t *) versionBuffer, strlen(versionBuffer) + 1);
+	tsChannel->writeCrcPacket(TS_RESPONSE_OK, (const uint8_t *) versionBuffer, strlen(versionBuffer) + 1);
 }
 
 #if EFI_TEXT_LOGGING
@@ -773,7 +782,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 				auto toothBuffer = GetToothLoggerBufferNonblocking();
 
 				if (toothBuffer) {
-					tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(toothBuffer->buffer), toothBuffer->nextIdx * sizeof(composite_logger_s), true);
+					tsChannel->writeCrcPacket(TS_RESPONSE_OK, reinterpret_cast<const uint8_t*>(toothBuffer->buffer), toothBuffer->nextIdx * sizeof(composite_logger_s), true);
 
 					ReturnToothLoggerBuffer(toothBuffer);
 				} else {
@@ -794,7 +803,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 				const auto& buffer = triggerScopeGetBuffer();
 
 				if (buffer) {
-					tsChannel->sendResponse(TS_CRC, buffer.get<uint8_t>(), buffer.size(), true);
+					tsChannel->writeCrcPacket(TS_RESPONSE_OK, buffer.get<uint8_t>(), buffer.size(), true);
 				} else {
 					// TS asked for a tooth logger buffer, but we don't have one to give it.
 					sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
@@ -817,7 +826,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 			auto toothBuffer = GetToothLoggerBufferNonblocking();
 
 			if (toothBuffer) {
-				tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(toothBuffer->buffer), toothBuffer->nextIdx * sizeof(composite_logger_s), true);
+				tsChannel->writeCrcResponse(TS_RESPONSE_OK, reinterpret_cast<const uint8_t*>(toothBuffer->buffer), toothBuffer->nextIdx * sizeof(composite_logger_s), true);
 
 				ReturnToothLoggerBuffer(toothBuffer);
 			} else {
@@ -850,20 +859,14 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 	case TS_PERF_TRACE_GET_BUFFER:
 		{
 			auto trace = perfTraceGetBuffer();
-			tsChannel->sendResponse(TS_CRC, trace.get<uint8_t>(), trace.size(), true);
+			tsChannel->writeCrcPacket(TS_RESPONSE_OK, trace.get<uint8_t>(), trace.size(), true);
 		}
 
 		break;
 #endif /* ENABLE_PERF_TRACE */
 	case TS_GET_CONFIG_ERROR: {
 		const char* configError = getCriticalErrorMessage();
-#if HW_CHECK_MODE
-		// analog input errors are returned as firmware error in QC mode
-		if (!hasFirmwareError()) {
-			strcpy((char*)configError, "FACTORY_MODE_PLEASE_CONTACT_SUPPORT");
-		}
-#endif // HW_CHECK_MODE
-		tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(configError), strlen(configError), true);
+		tsChannel->writeCrcPacket(TS_RESPONSE_OK, reinterpret_cast<const uint8_t*>(configError), strlen(configError), true);
 		break;
 	}
 	case TS_QUERY_BOOTLOADER: {
@@ -872,7 +875,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		bldata = TS_QUERY_BOOTLOADER_OPENBLT;
 #endif
 
-		tsChannel->sendResponse(TS_CRC, &bldata, 1, false);
+		tsChannel->writeCrcPacket(TS_RESPONSE_OK, &bldata, 1, false);
 		break;
 	}
 	default:
