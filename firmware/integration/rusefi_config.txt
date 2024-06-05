@@ -216,7 +216,6 @@ struct_no_prefix engine_configuration_s
 #define FUEL_LEVEL_TABLE_COUNT 8
 
 #define STFT_CELL_COUNT 4
-#define STFT_BANK_COUNT 2
 
 #define CAN_DEFAULT_BASE 0x200
 

@@ -21,6 +21,8 @@
 #define PACK_MULT_FUEL_FLOW 200
 #define PACK_MULT_VSS 100
 
+#define STFT_BANK_COUNT 2
+
 #define TCU_GEAR_COUNT 10
 #define EGT_CHANNEL_COUNT 8
 

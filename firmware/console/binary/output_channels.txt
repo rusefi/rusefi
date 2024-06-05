@@ -205,7 +205,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 	int16_t autoscale vvtPositionB2I;@@GAUGE_NAME_VVT_B2I@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 1
 	int16_t autoscale vvtPositionB2E;@@GAUGE_NAME_VVT_B2E@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 1
 
-	int16_t[2 iterate] autoscale fuelPidCorrection;Fuel: Trim bank;"%",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
+	int16_t[STFT_BANK_COUNT iterate] autoscale fuelPidCorrection;Fuel: Trim bank;"%",{1/@@PACK_MULT_PERCENT@@}, 0, -20, 20, 2
 
 	int16_t autoscale rawTps1Secondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	int16_t autoscale rawTps2Primary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
