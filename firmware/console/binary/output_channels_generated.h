@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Mon May 20 17:19:06 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Wed Jun 05 18:56:13 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -700,7 +700,7 @@ struct output_channels_s {
 	 * units: %
 	 * offset 260
 	 */
-	scaled_channel<int16_t, 100, 1> fuelPidCorrection[2];
+	scaled_channel<int16_t, 100, 1> fuelPidCorrection[STFT_BANK_COUNT];
 	/**
 	 * units: V
 	 * offset 264
@@ -1318,4 +1318,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 832);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Mon May 20 17:19:06 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Wed Jun 05 18:56:13 UTC 2024
