@@ -153,7 +153,7 @@ runs:
         echo "RUSEFI_SSH_PASS=${{inputs.RUSEFI_SSH_PASS}}" >> $GITHUB_ENV
         echo "bundle_upload_folder=${{inputs.bundle_upload_folder}}" >> $GITHUB_ENV
         echo "AUTOMATION_LTS=${{toJSON(inputs.lts)}}" >> $GITHUB_ENV
-        echo "release_date=${{toJSON(inputs.release_date)}}" >> $GITHUB_ENV
+        echo "release_date=${{toJSON(env.release_date)}}" >> $GITHUB_ENV
         echo "BUNDLE_SIMULATOR=${{toJSON(inputs.bundle_simulator)}}" >> $GITHUB_ENV
         echo "RUN_SIMULATOR=${{toJSON(inputs.run_simulator)}}" >> $GITHUB_ENV
         echo "AUTOMATION_REF=${{github.ref_name}}" >> $GITHUB_ENV
