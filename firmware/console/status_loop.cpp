@@ -553,9 +553,10 @@ static void updateSensors() {
 }
 
 static void updateFuelCorrections() {
-	engine->outputChannels.fuelPidCorrection[0] = 100.0f * (engine->stftCorrection[0] - 1.0f);
-	engine->outputChannels.fuelPidCorrection[1] = 100.0f * (engine->stftCorrection[1] - 1.0f);
-	engine->outputChannels.Gego = 100.0f * engine->stftCorrection[0];
+	for (size_t i = 0; i < STFT_BANK_COUNT; i++) {
+		engine->outputChannels.fuelPidCorrection[i] = 100.0f * (engine->engineState.stftCorrection[i] - 1.0f);
+	}
+	engine->outputChannels.Gego = 100.0f * engine->engineState.stftCorrection[0];
 }
 
 static void updateFuelResults() {

@@ -287,9 +287,6 @@ public:
 #endif // EFI_SHAFT_POSITION_INPUT
 
 
-	float stftCorrection[STFT_BANK_COUNT] = {0};
-
-
     /**
       * See FAST_CALLBACK_PERIOD_MS
       */

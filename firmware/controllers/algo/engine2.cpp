@@ -176,13 +176,14 @@ void EngineState::periodicFastCallback() {
 	// compute per-bank fueling
 	for (size_t i = 0; i < STFT_BANK_COUNT; i++) {
 		float corr = clResult.banks[i];
-		engine->stftCorrection[i] = corr;
+		// todo: move to engine_state.txt and get rid of fuelPidCorrection in output_channels.txt?
+		engine->engineState.stftCorrection[i] = corr;
 	}
 
 	// Now apply that to per-cylinder fueling and timing
 	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
 		uint8_t bankIndex = engineConfiguration->cylinderBankSelect[i];
-		auto bankTrim = engine->stftCorrection[bankIndex];
+		auto bankTrim = engine->engineState.stftCorrection[bankIndex];
 		auto cylinderTrim = getCylinderFuelTrim(i, rpm, fuelLoad);
 
 		// Apply both per-bank and per-cylinder trims

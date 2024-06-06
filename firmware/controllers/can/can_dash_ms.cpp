@@ -72,7 +72,7 @@ static void populateFrame(ms1514& msg)
 	msg.afrtgt1 = (float)engine->fuelComputer.targetLambda * STOICH_RATIO;
 	msg.AFR1 = Sensor::getOrZero(SensorType::Lambda1) * STOICH_RATIO;
 	/* TODO: banks? */
-	msg.EGOcor1 = engine->stftCorrection[0];
+	msg.EGOcor1 = engine->engineState.stftCorrection[0];
 	/* TODO */
 	msg.egt1 = 0;
 	msg.pwseq1 = engine->engineState.injectionDuration;
