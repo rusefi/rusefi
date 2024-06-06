@@ -24,8 +24,8 @@ void setDefaultCranking() {
 	// After start enrichment
 #if !EFI_UNIT_TEST
 	// don't set this for unit tests, as it makes things more complicated to test
-	static const float defaultPostCrankingCLTBins[] = {
-		-20.0f, 0.0f, 20.0f, 40.0f, 60.0f, 80.0f
+	static const int16_t defaultPostCrankingCLTBins[] = {
+		-20, 0, 20, 40, 60, 80
 	};
 	static const uint16_t defaultPostCrankinDurationBins[] = {
 		0, 15, 35, 65, 100, 150

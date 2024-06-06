@@ -1330,7 +1330,7 @@ tle8888_mode_e tle8888mode;
 
 	float[CRANKING_ENRICH_COUNT x CRANKING_ENRICH_COUNT] postCrankingFactor;;"mult", 1, 0, 1, 3, 2
 	float[CRANKING_ENRICH_COUNT] postCrankingDurationBins;;"count", 1, 0, 0, 1000, 0
-	float[CRANKING_ENRICH_COUNT] postCrankingCLTBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 0
+	int16_t[CRANKING_ENRICH_COUNT] postCrankingCLTBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 0
 
 	ThermistorConf auxTempSensor1
 	ThermistorConf auxTempSensor2
