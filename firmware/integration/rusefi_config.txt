@@ -159,6 +159,7 @@ struct_no_prefix engine_configuration_s
 #define CLT_LIMITER_CURVE_SIZE 4
 #define CRANKING_CLT_IDLE_CURVE_SIZE 8
 #define CLT_CRANKING_CURVE_SIZE 8
+#define CRANKING_CYCLE_CLT_SIZE 4
 #define IDLE_ADVANCE_CURVE_SIZE 8
 #define CRANKING_ADVANCE_CURVE_SIZE 4
 
@@ -1775,6 +1776,9 @@ float[IAT_CURVE_SIZE] iatFuelCorr;;"ratio", 1, 0, 0, 5, 2
 
 	float[CRANKING_CURVE_SIZE] crankingCycleCoef;;"ratio", 1, 0, 0, 5, 2
 	float[CRANKING_CURVE_SIZE] crankingCycleBins;;"counter", 1, 0, -80, 170, 0
+  int16_t[CRANKING_CYCLE_CLT_SIZE] crankingCycleFuelCltBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
+	float[CRANKING_ENRICH_COUNT x CRANKING_CYCLE_CLT_SIZE] crankingCycleFuelCoef;;"mult", 1, 0, 1, 3, 2
+
 
 float[CLT_CURVE_SIZE] cltIdleCorrBins;CLT-based idle position multiplier for simple manual idle controller;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
 float[CLT_CURVE_SIZE] cltIdleCorr;    CLT-based idle position multiplier for simple manual idle controller;"ratio", 1, 0, 0, 10, 2
