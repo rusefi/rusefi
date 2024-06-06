@@ -447,6 +447,7 @@ float getCylinderFuelTrim(size_t cylinderNumber, int rpm, float fuelLoad) {
 
 	// Convert from percent +- to multiplier
 	// 5% -> 1.05
+	// possible optimization: remove division by moving this scaling to TS level
 	return (100 + trimPercent) / 100;
 }
 
