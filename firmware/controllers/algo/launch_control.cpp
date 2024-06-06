@@ -158,8 +158,8 @@ bool LaunchControlBase::isLaunchFuelRpmRetardCondition() const {
 	return isLaunchRpmRetardCondition() && engineConfiguration->launchFuelCutEnable;
 }
 
-SoftSparkLimiter::SoftSparkLimiter(bool p_allowHardCut) {
-    this->allowHardCut = p_allowHardCut;
+SoftSparkLimiter::SoftSparkLimiter(const bool p_allowHardCut)
+	: allowHardCut(p_allowHardCut) {
 #if EFI_UNIT_TEST
     initLaunchControl();
 #endif // EFI_UNIT_TEST
