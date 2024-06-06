@@ -169,6 +169,17 @@ void SoftSparkLimiter::setTargetSkipRatio(float p_targetSkipRatio) {
 	this->targetSkipRatio = p_targetSkipRatio;
 }
 
+void SoftSparkLimiter::updateTargetSkipRatio(const float luaSparkSkip, const float tractionControlSparkSkip) {
+	targetSkipRatio = luaSparkSkip;
+	if (engineConfiguration->useHardSkipInTraction) {
+		if (allowHardCut) {
+			targetSkipRatio += tractionControlSparkSkip;
+		}
+	} else if (!allowHardCut) {
+		targetSkipRatio += tractionControlSparkSkip;
+	}
+}
+
 static tinymt32_t tinymt;
 
 bool SoftSparkLimiter::shouldSkip()  {
