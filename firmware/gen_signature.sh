@@ -30,7 +30,9 @@ else
  echo "! Current branch is: $branchname" >> ${TEMP_FILE}
 fi
 
+if [ -z "${WHITELABEL}"  ]; then
 WHITELABEL=rusEFI
+fi
 
 echo "#define TS_SIGNATURE \"${WHITELABEL} $branchname.$date.${SHORT_BOARD_NAME}.@@SIGNATURE_HASH@@\"" >> ${TEMP_FILE}
 

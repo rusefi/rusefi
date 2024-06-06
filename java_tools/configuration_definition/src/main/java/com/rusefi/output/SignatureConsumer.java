@@ -9,6 +9,8 @@ import java.io.IOException;
 
 /**
  * Configuration consumer which writes Signature header file
+ *
+ * See also gen_signature.sh
  */
 public class SignatureConsumer implements ConfigurationConsumer {
     private final String destHeader;
