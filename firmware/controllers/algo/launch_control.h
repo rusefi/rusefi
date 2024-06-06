@@ -46,7 +46,7 @@ private:
  */
 class SoftSparkLimiter {
 public:
-    SoftSparkLimiter(bool allowHardCut);
+    SoftSparkLimiter(bool p_allowHardCut);
 	/**
 	 * targetSkipRatio of '0' means 'do not skip', would always return false
 	 */
@@ -55,7 +55,7 @@ public:
 
 	bool shouldSkip();
 private:
-    bool allowHardCut;
+    const bool allowHardCut;
 	bool wasJustSkipped = false;
 	float targetSkipRatio = 0;
 };
