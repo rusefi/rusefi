@@ -87,7 +87,15 @@ void EngineState::updateSlowSensors() {
 void EngineState::updateSparkSkip() {
 #if EFI_LAUNCH_CONTROL
 		engine->softSparkLimiter.updateTargetSkipRatio(luaSoftSparkSkip, tractionControlSparkSkip);
-		engine->hardSparkLimiter.updateTargetSkipRatio(luaHardSparkSkip, tractionControlSparkSkip);
+		engine->hardSparkLimiter.updateTargetSkipRatio(
+			luaHardSparkSkip,
+			tractionControlSparkSkip,
+			/*
+			 * We are applying launch controller spark skip ratio only for hard skip limiter (see
+			 * https://github.com/rusefi/rusefi/issues/6566#issuecomment-2153149902).
+			 */
+			engine->launchController.getSparkSkipRatio()
+		);
 #endif // EFI_LAUNCH_CONTROL
 }
 

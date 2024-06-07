@@ -144,6 +144,8 @@ void LaunchControlBase::update() {
 		// If conditions are met...
 		isLaunchCondition = m_launchTimer.hasElapsedSec(engineConfiguration->launchActivateDelay);
 	}
+
+	sparkSkipRatio = calculateSparkSkipRatio(rpm);
 }
 
 bool LaunchControlBase::isLaunchRpmRetardCondition() const {
@@ -158,6 +160,25 @@ bool LaunchControlBase::isLaunchFuelRpmRetardCondition() const {
 	return isLaunchRpmRetardCondition() && engineConfiguration->launchFuelCutEnable;
 }
 
+float LaunchControlBase::calculateSparkSkipRatio(const int rpm) const {
+	float result = 0.0f;
+	if (engineConfiguration->launchControlEnabled && engineConfiguration->launchSparkCutEnable) {
+		if (isLaunchCondition) {
+			result = 1.0f;
+		} else {
+			const int launchRpm = engineConfiguration->launchRpm;
+			const int sparkSkipStartRpm = launchRpm - engineConfiguration->launchRpmWindow;
+			if (sparkSkipStartRpm <= rpm) {
+				const float initialIgnitionCutRatio = engineConfiguration->initialIgnitionCutPercent / 100.0f;
+				const int sparkSkipEndRpm = launchRpm - engineConfiguration->launchCorrectionsEndRpm;
+				const float finalIgnitionCutRatio = engineConfiguration->finalIgnitionCutPercentBeforeLaunch / 100.0f;
+				result = interpolateClamped(sparkSkipStartRpm, initialIgnitionCutRatio, sparkSkipEndRpm, finalIgnitionCutRatio, rpm);
+			}
+		}
+	}
+	return result;
+}
+
 SoftSparkLimiter::SoftSparkLimiter(const bool p_allowHardCut)
 	: allowHardCut(p_allowHardCut) {
 #if EFI_UNIT_TEST
@@ -165,7 +186,11 @@ SoftSparkLimiter::SoftSparkLimiter(const bool p_allowHardCut)
 #endif // EFI_UNIT_TEST
 }
 
-void SoftSparkLimiter::updateTargetSkipRatio(const float luaSparkSkip, const float tractionControlSparkSkip) {
+void SoftSparkLimiter::updateTargetSkipRatio(
+	const float luaSparkSkip,
+	const float tractionControlSparkSkip,
+	const float launchControllerSparkSkipRatio
+) {
 	targetSkipRatio = luaSparkSkip;
 	if (engineConfiguration->useHardSkipInTraction) {
 		if (allowHardCut) {
@@ -173,6 +198,14 @@ void SoftSparkLimiter::updateTargetSkipRatio(const float luaSparkSkip, const flo
 		}
 	} else if (!allowHardCut) {
 		targetSkipRatio += tractionControlSparkSkip;
+	}
+
+	if (allowHardCut) {
+		/*
+		 * We are applying launch controller spark skip ratio only for hard skip limiter (see
+		 * https://github.com/rusefi/rusefi/issues/6566#issuecomment-2153149902).
+		 */
+		targetSkipRatio += launchControllerSparkSkipRatio;
 	}
 }
 

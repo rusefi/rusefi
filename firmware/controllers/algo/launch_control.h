@@ -35,10 +35,16 @@ public:
 	bool isLaunchSparkRpmRetardCondition() const;
 	bool isLaunchFuelRpmRetardCondition() const;
 
+	float getSparkSkipRatio() const { return sparkSkipRatio; }
+
 private:
 	bool isLaunchRpmRetardCondition() const;
 
+	float calculateSparkSkipRatio(int rpm) const;
+
+
 	Timer m_launchTimer;
+	float sparkSkipRatio = 0.0f;
 };
 
 /**
@@ -50,7 +56,11 @@ public:
 	/**
 	 * targetSkipRatio of '0' means 'do not skip', would always return false
 	 */
-	void updateTargetSkipRatio(float luaSoftSparkSkip, float tractionControlSparkSkip);
+	void updateTargetSkipRatio(
+		float luaSoftSparkSkip,
+		float tractionControlSparkSkip,
+		float launchControllerSparkSkipRatio = 0.0f
+	);
 	[[nodiscard]] float getTargetSkipRatio() const { return targetSkipRatio; }
 
 	bool shouldSkip();
