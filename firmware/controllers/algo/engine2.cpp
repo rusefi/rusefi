@@ -169,6 +169,10 @@ void EngineState::periodicFastCallback() {
 	injectionOffset = getInjectionOffset(rpm, fuelLoad);
 	engine->lambdaMonitor.update(rpm, fuelLoad);
 
+#if EFI_LAUNCH_CONTROL
+	engine->launchController.update();
+#endif //EFI_LAUNCH_CONTROL
+
 	float l_ignitionLoad = getIgnitionLoad();
 	float baseAdvance = getAdvance(rpm, l_ignitionLoad) * engine->ignitionState.luaTimingMult + engine->ignitionState.luaTimingAdd;
 	float correctedIgnitionAdvance = baseAdvance
@@ -206,10 +210,6 @@ void EngineState::periodicFastCallback() {
 	trailingSparkAngle = engineConfiguration->trailingSparkAngle;
 
 	multispark.count = getMultiSparkCount(rpm);
-
-#if EFI_LAUNCH_CONTROL
-	engine->launchController.update();
-#endif //EFI_LAUNCH_CONTROL
 
 #if EFI_ANTILAG_SYSTEM
 	engine->antilagController.update();

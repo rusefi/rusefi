@@ -45,15 +45,9 @@ static void setUpTestParameters(
 
 static void updateRpm(const int rpm, EngineTestHelper& eth) {
     Sensor::setMockValue(SensorType::Rpm, rpm);
-    for (int i = 0; i < 2; i++) {\
-        /*
-         * We need to repeat the following code twice because method EngineState::periodicFastCallback updates launch
-         * controller after updating spark skip - can we fix it safely?
-         */
-        eth.moveTimeForwardSec(1);
-        // run the ignition math
-        engine->periodicFastCallback();
-    }
+    eth.moveTimeForwardSec(1);
+    // run the ignition math
+    engine->periodicFastCallback();
 }
 
 TEST(skipSparkRatio, raisingRpm) {
