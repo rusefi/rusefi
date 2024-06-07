@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22748">
+    <page number="0" size="22780">
         <constant name="engineType">"MAVERICK_X3"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">1000.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
@@ -2491,18 +2491,16 @@ end</constant>
          8.0
 </constant>
         <constant cols="1" digits="2" name="crankingCycleFuelCltBins" rows="4">
-         -40.0
-         7.0
-         53.0
-         100.0
+         0.0
+         20.0
+         40.0
+         60.0
 </constant>
-        <constant cols="4" digits="2" name="crankingCycleFuelCoef" rows="6">
-         2.0 1.3 1.0 1.0
-         1.0 1.0 1.0 1.0
-         1.0 1.0 1.0 1.0
-         1.0 1.0 1.0 1.0
-         1.0 1.0 1.0 1.0
-         1.0 1.0 1.0 1.0
+        <constant cols="8" digits="2" name="crankingCycleFuelCoef" rows="4">
+         2.0 1.3 1.0 1.0 1.0 1.0 1.0 1.0
+         1.8 1.2 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
 </constant>
         <constant cols="1" digits="2" name="cltIdleCorrBins" rows="16">
          -40.0
@@ -4730,7 +4728,7 @@ end</constant>
 </constant>
         <constant digits="0" name="tcu_shiftTime" units="ms">0.0</constant>
     </page>
-    <versionInfo firmwareInfo="20240607" nPages="1" signature="rusEFI master.2024.06.07.f407-discovery.2938096957" version="5.0"/>
+    <versionInfo firmwareInfo="20240607" nPages="1" signature="rusEFI master.2024.06.08.f407-discovery.813881653" version="5.0"/>
     <bibliography author="rusEFI 20240607" writeDate="date"/>
     <settings/>
     <userComments/>
