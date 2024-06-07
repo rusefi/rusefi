@@ -7,6 +7,9 @@
 #include "injection_gpio.h"
 #include "sensor.h"
 #include "backup_ram.h"
+#if EFI_PROD_CODE
+#include "microsecond_timer.h"
+#endif
 
 floatms_t PrimeController::getPrimeDuration() const {
 	auto clt = Sensor::get(SensorType::Clt);
@@ -60,7 +63,7 @@ void PrimeController::onIgnitionStateChanged(bool ignitionOn) {
 		int32_t primeDelayNt = assertFloatFitsInto32BitsAndCast("primingDelay", MSF2NT(engineConfiguration->primingDelay * 1000));
 
 		auto startTime = getTimeNowNt() + primeDelayNt;
-		getExecutorInterface()->scheduleByTimestampNt("prime", nullptr, startTime, { PrimeController::onPrimeStartAdapter, this });
+		getExecutorInterface()->scheduleByTimestampNt("primingDelay", nullptr, startTime, { PrimeController::onPrimeStartAdapter, this });
 	} else {
 		efiPrintf("Skipped priming pulse since ignSwitchCounter = %d", ignSwitchCounter);
 	}
@@ -91,6 +94,11 @@ void PrimeController::onPrimeStart() {
 		efiPrintf("Skipped zero-duration priming pulse.");
 		return;
 	}
+#if EFI_PROD_CODE
+	if (durationMs >= TOO_FAR_INTO_FUTURE_MS) {
+	  criticalError("Priming duration too long %dms", durationMs);
+	}
+#endif
 
 	efiPrintf("Firing priming pulse of %.2f ms", durationMs);
 	engine->outputChannels.injectionPrimingCounter++;
@@ -100,7 +108,7 @@ void PrimeController::onPrimeStart() {
 	// Open all injectors, schedule closing later
 	m_isPriming = true;
 	startSimultaneousInjection();
-	getExecutorInterface()->scheduleByTimestampNt("prime", nullptr, endTime, { onPrimeEndAdapter, this });
+	getExecutorInterface()->scheduleByTimestampNt("onPrimeStart", nullptr, endTime, { onPrimeEndAdapter, this });
 }
 
 void PrimeController::onPrimeEnd() {
