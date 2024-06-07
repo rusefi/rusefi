@@ -77,8 +77,10 @@ void setDefaultCranking() {
 
 	setTable(config->crankingCycleFuelCoef, 1.0f);
 	config->crankingCycleFuelCoef[0][0] = 2;
-	config->crankingCycleFuelCoef[0][1] = 1.3f;
-	setLinearCurve(config->crankingCycleFuelCltBins, -40, 100, 1);
+	config->crankingCycleFuelCoef[0][/*x - cycles*/1] = 1.3f;
+	config->crankingCycleFuelCoef[/*y - clt*/1][0] = 1.8f;
+	config->crankingCycleFuelCoef[1][1] = 1.2f;
+	setLinearCurve(config->crankingCycleFuelCltBins, 0, 60, 1);
 
 	// X values are simply counting up cycle number starting at 1
 	for (size_t i = 0; i < efi::size(config->crankingCycleBins); i++) {
