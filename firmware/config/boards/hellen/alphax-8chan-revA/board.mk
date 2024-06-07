@@ -12,7 +12,6 @@ DDEFS += -DADC_MUX_PIN=Gpio::B3
 include $(BOARDS_DIR)/hellen/hellen-common144.mk
 
 ifeq ($(PROJECT_CPU),ARCH_STM32F7)
-	# TODO: why do I struggle to fit into flash? compare with Proteus
 	DDEFS += -DCH_DBG_ENABLE_ASSERTS=FALSE
 	DDEFS += -DENABLE_PERF_TRACE=FALSE
 else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
