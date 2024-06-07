@@ -50,7 +50,6 @@ public:
 	/**
 	 * targetSkipRatio of '0' means 'do not skip', would always return false
 	 */
-	void setTargetSkipRatio(float targetSkipRatio);
 	void updateTargetSkipRatio(float luaSoftSparkSkip, float tractionControlSparkSkip);
 	[[nodiscard]] float getTargetSkipRatio() const { return targetSkipRatio; }
 

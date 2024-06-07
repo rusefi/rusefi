@@ -165,10 +165,6 @@ SoftSparkLimiter::SoftSparkLimiter(const bool p_allowHardCut)
 #endif // EFI_UNIT_TEST
 }
 
-void SoftSparkLimiter::setTargetSkipRatio(float p_targetSkipRatio) {
-	this->targetSkipRatio = p_targetSkipRatio;
-}
-
 void SoftSparkLimiter::updateTargetSkipRatio(const float luaSparkSkip, const float tractionControlSparkSkip) {
 	targetSkipRatio = luaSparkSkip;
 	if (engineConfiguration->useHardSkipInTraction) {
