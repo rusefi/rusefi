@@ -148,44 +148,10 @@ static void stm32f7_flash_mass_erase_dual_block()
     FLASH_CR &= ~(FLASH_CR_MER1 | FLASH_CR_MER2);
 }
 */
+
 /*
-STOP mode for F7 is needed for wakeup from multiple EXTI pins. For example PD0, which is CAN rx.
-However, for F40X & F42X this may be useless. STOP in itself eats more current than standby. 
-With F4 only having PA0 available for wakeup, this negates its need.
-*/
-/*
-void stm32_stop() {
-	SysTick->CTRL = 0;
-	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-
-	// Turn off the LEDs, those use some power
-	enginePins.errorLedPin.setValue(0);
-	enginePins.runningLedPin.setValue(0);
-	enginePins.communicationLedPin.setValue(0);
-	enginePins.warningLedPin.setValue(0);
-
-	// Do anything the board wants to prepare for stop mode - enabling wakeup sources!
-	boardPrepareForStop();
-
-	PWR->CSR1 |= PWR_CSR1_WUIF;
-	PWR->CR1 &= ~PWR_CR1_PDDS;	// cleared PDDS means stop mode (not standby) 
-	PWR->CR1 |= PWR_CR1_FPDS;	// turn off flash in stop mode
-	PWR->CR1 |= PWR_CR1_UDEN;	// regulator underdrive in stop mode
-	PWR->CR1 |= PWR_CR1_LPUDS;	// low power regulator in under drive mode
-	PWR->CR1 |= PWR_CR1_LPDS;	// regulator in low power mode
-
-	// enable Deepsleep mode
-	__disable_irq();
-	__WFI();
-
-	// Lastly, reboot
-	NVIC_SystemReset();
-}
-*/
-
-/* 
-Standby for both F4 & F7 works perfectly, with very little curent consumption. Downside is that theres a limited amount of pins that can wakeup F7, and only PA0 for F4XX.
-Cannot be used for CAN wakeup without hardware modificatinos.
+Standby for both F4 & F7 works perfectly, with very little current consumption. Downside is that theres a limited amount of pins that can wakeup F7, and only PA0 for F4XX.
+Cannot be used for CAN wakeup without hardware modifications.
 */
 void stm32_standby() {
 	SysTick->CTRL = 0;
