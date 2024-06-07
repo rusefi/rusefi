@@ -209,16 +209,24 @@ static const uint8_t vcom_string1[] = {
   'L', 0, 'C', 0
 };
 
+#ifndef USB_DESCRIPTOR_B_LENGTH
+#define USB_DESCRIPTOR_B_LENGTH 58
+#endif
+
+#ifndef USB_DESCRIPTOR_STRING_CONTENT
+#define USB_DESCRIPTOR_STRING_CONTENT 'r', 0, 'u', 0, 's', 0, 'E', 0, 'F', 0, 'I', 0, ' ', 0, 'E', 0, \
+  'n', 0, 'g', 0, 'i', 0, 'n', 0, 'e', 0, ' ', 0, 'M', 0, 'a', 0, \
+  'n', 0, 'a', 0, 'g', 0, 'e', 0, 'm', 0, 'e', 0, 'n', 0, 't', 0, \
+  ' ', 0, 'E', 0, 'C', 0, 'U', 0
+#endif
+
 /*
  * Device Description string.
  */
 static const uint8_t vcom_string2[] = {
-  USB_DESC_BYTE(58),                    /* bLength.                         */
+  USB_DESC_BYTE(USB_DESCRIPTOR_B_LENGTH),                    /* bLength.                         */
   USB_DESC_BYTE(USB_DESCRIPTOR_STRING), /* bDescriptorType.                 */
-  'r', 0, 'u', 0, 's', 0, 'E', 0, 'F', 0, 'I', 0, ' ', 0, 'E', 0,
-  'n', 0, 'g', 0, 'i', 0, 'n', 0, 'e', 0, ' ', 0, 'M', 0, 'a', 0,
-  'n', 0, 'a', 0, 'g', 0, 'e', 0, 'm', 0, 'e', 0, 'n', 0, 't', 0,
-  ' ', 0, 'E', 0, 'C', 0, 'U', 0, 0
+  USB_DESCRIPTOR_STRING_CONTENT, 0
 };
 
 /*
