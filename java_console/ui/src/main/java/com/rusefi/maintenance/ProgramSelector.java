@@ -287,7 +287,7 @@ public class ProgramSelector {
                 updateModeComboBox.addItem(AUTO_DFU);
             }
 
-            if (hasDfuDevice) {
+            if (hasDfuDevice && !requireBlt) {
                 updateModeComboBox.addItem(MANUAL_DFU);
                 updateModeComboBox.addItem(DFU_ERASE);
                 if (DfuFlasher.haveBootloaderBinFile()) {
