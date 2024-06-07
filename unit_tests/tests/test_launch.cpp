@@ -228,16 +228,18 @@ TEST(LaunchControl, CompleteRun) {
 }
 
 TEST(LaunchControl, hardSkip) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
 	SoftSparkLimiter hardSparkLimiter(true);
 	ASSERT_FALSE(hardSparkLimiter.shouldSkip());
 
 
-	hardSparkLimiter.setTargetSkipRatio(1);
+	hardSparkLimiter.updateTargetSkipRatio(1.0f, 0.0f);
 	// open question if we need special handling of '1' or random would just work?
 	ASSERT_TRUE(hardSparkLimiter.shouldSkip());
 
 	int counter = 0;
-	hardSparkLimiter.setTargetSkipRatio(0.5);
+	hardSparkLimiter.updateTargetSkipRatio(0.5f, 0.0f);
 	for (int i =0;i<1000;i++) {
 		if (hardSparkLimiter.shouldSkip()) {
 			counter++;
