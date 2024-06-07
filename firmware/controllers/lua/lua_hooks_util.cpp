@@ -80,8 +80,16 @@ void configureRusefiLuaUtilHooks(lua_State* lState) {
 			return 1;
 	});
 
+#ifndef STARTUP_STANDBY_PROHIBITED_PERIOD_SEC
+#define STARTUP_STANDBY_PROHIBITED_PERIOD_SEC 3
+#endif
+
 #if defined(STM32F4) || defined(STM32F7)
 	lua_register(lState, "mcu_standby", [](lua_State*) {
+	  if (getTimeNowS() < STARTUP_STANDBY_PROHIBITED_PERIOD_SEC) {
+	    criticalError("mcu_standby invoked right on start");
+	    return 0;
+	  }
 	    onBoardStandBy();
 		stm32_standby();
 		return 0;

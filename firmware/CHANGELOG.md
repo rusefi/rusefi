@@ -34,6 +34,7 @@ Release template (copy/paste this for new release):
  - In Launch Control, add RPM Hysterisis #5610
  - reduce JRE download complexity #6569
  - simpler basic firmware updater #5577
+ - prohibit mcu_standby on ECU start-up #6589
 
 ### Fixed
  - knock logic not activated until any configuration change via TS #6462
