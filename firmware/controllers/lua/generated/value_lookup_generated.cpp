@@ -706,6 +706,9 @@ float getConfigValueByName(const char *name) {
 // launchRpmWindow
 		case -1798887513:
 			return engineConfiguration->launchRpmWindow;
+// triggerEventsTimeoutMs
+		case 665024981:
+			return engineConfiguration->triggerEventsTimeoutMs;
 // magicNumberAvailableForDevTricks
 		case -2071167002:
 			return engineConfiguration->magicNumberAvailableForDevTricks;
@@ -3014,6 +3017,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1798887513:
 	{
 		engineConfiguration->launchRpmWindow = (int)value;
+		return 1;
+	}
+		case 665024981:
+	{
+		engineConfiguration->triggerEventsTimeoutMs = value;
 		return 1;
 	}
 		case -2071167002:
