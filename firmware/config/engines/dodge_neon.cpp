@@ -23,9 +23,6 @@ void setDodgeNeon1995EngineConfiguration() {
 
 	engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
 
-	// set_rpm_hard_limit 4000
-	engineConfiguration->rpmHardLimit = 4000; // yes, 4k. let's play it safe for now
-
 	setWholeTimingTable(12);
 
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;

@@ -47,7 +47,6 @@ void setFordAspireEngineConfiguration() {
 	engineConfiguration->tpsMin = 100;
 	engineConfiguration->tpsMax = 750;
 
-	engineConfiguration->rpmHardLimit = 7000;
 #if EFI_PROD_CODE && defined(HW_FRANKENSO)
   engineConfiguration->triggerInputPins[1] = Gpio::A5;
 #endif

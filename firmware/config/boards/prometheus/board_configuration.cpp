@@ -43,8 +43,6 @@ static void setPrometheusDefaults() {
 	engineConfiguration->cranking.baseFuel = 25;
 	engineConfiguration->cranking.rpm = 600;
 
-	engineConfiguration->rpmHardLimit = 8500;
-
 	engineConfiguration->map.sensor.type = MT_MPX4250;
 
 	engineConfiguration->idleStepperReactionTime = 10;

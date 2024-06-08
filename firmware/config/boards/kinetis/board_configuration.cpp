@@ -57,8 +57,6 @@ void setBoardOverrides() {
 	engineConfiguration->cranking.baseFuel = 25;		// ???
 	engineConfiguration->cranking.rpm = 600;
 
-	engineConfiguration->rpmHardLimit = 3000; // yes, 3k. let's play it safe for now
-
 	engineConfiguration->map.sensor.type = MT_MPX4250A;
 
 	engineConfiguration->idleStepperReactionTime = 10;

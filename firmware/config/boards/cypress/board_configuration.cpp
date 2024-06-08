@@ -42,12 +42,10 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->displacement = 1.645;
 	engineConfiguration->injector.flow = 200;
-	
+
 	engineConfiguration->cranking.baseFuel = 25;		// ???
 	engineConfiguration->cranking.rpm = 600;
 
-	engineConfiguration->rpmHardLimit = 3000; // yes, 3k. let's play it safe for now
-	
 	engineConfiguration->map.sensor.type = MT_MPX4250A;
 
 	engineConfiguration->idleStepperReactionTime = 10;
@@ -90,7 +88,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->tps1_2AdcChannel = EFI_ADC_NONE;
 	engineConfiguration->tps2_2AdcChannel = EFI_ADC_NONE;
 	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_NONE;
-	
+
 
 	engineConfiguration->hipOutputChannel = EFI_ADC_NONE;
 	engineConfiguration->fuelLevelSensor = EFI_ADC_NONE;
@@ -100,7 +98,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->triggerInputPins[0] = Gpio::B0;
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
 
-#if 0	
+#if 0
 
 	// todo:
 	int i;
@@ -108,7 +106,7 @@ void setBoardDefaultConfiguration() {
 		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
 	for (i = 0; i < MAX_CYLINDER_COUNT; i++)
 		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
-	
+
 	engineConfiguration->adcVcc = 5.0f;
 	engineConfiguration->analogInputDividerCoefficient = 1;
 #endif
