@@ -46,7 +46,8 @@ TEST(fuelControl, transitionIssue1592) {
 
 	setTable(config->injectionPhase, 0.0f);
 	setArrayValues(config->crankingFuelCoef, 1.0f);
-	setArrayValues(config->crankingCycleCoef, 1.0f);
+	setTable(config->crankingCycleFuelCoef, 1.0f);
+
 
 	engineConfiguration->globalTriggerAngleOffset = 20;
 

@@ -70,16 +70,13 @@ void setDefaultCranking() {
 
 	// Cranking cycle compensation
 
-	// Whole table is 1.0, except first two values are steeper
-	setArrayValues(config->crankingCycleCoef, 1.0f);
-	config->crankingCycleCoef[0] = 2.0f;
-	config->crankingCycleCoef[1] = 1.3f;
-
+	// Whole table is 1.0, except first two columns which are steeper
 	setTable(config->crankingCycleFuelCoef, 1.0f);
-	config->crankingCycleFuelCoef[0][0] = 2;
-	config->crankingCycleFuelCoef[0][/*x - cycles*/1] = 1.3f;
-	config->crankingCycleFuelCoef[/*y - clt*/1][0] = 1.8f;
-	config->crankingCycleFuelCoef[1][1] = 1.2f;
+	for (int cltIndex = 0;cltIndex<CRANKING_CYCLE_CLT_SIZE;cltIndex++) {
+	  // kludge: we have a few unit tests which depend on these magic numbers
+	  config->crankingCycleFuelCoef[cltIndex][0] = 2;
+	  config->crankingCycleFuelCoef[cltIndex][/*x - cycles*/1] = 1.3f;
+	}
 	setLinearCurve(config->crankingCycleFuelCltBins, 0, 60, 1);
 
 	// X values are simply counting up cycle number starting at 1

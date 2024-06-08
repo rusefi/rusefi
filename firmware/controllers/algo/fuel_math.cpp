@@ -50,8 +50,11 @@ float getCrankingFuel3(float baseFuel, uint32_t revolutionCounterSinceStart) {
 	}
 
 	// Cranking fuel changes over time
-	engine->engineState.crankingFuel.durationCoefficient = interpolate2d(revolutionCounterSinceStart, config->crankingCycleBins,
-			config->crankingCycleCoef);
+	engine->engineState.crankingFuel.durationCoefficient = interpolate3d(
+      		config->crankingCycleFuelCoef,
+      		config->crankingCycleFuelCltBins, Sensor::getOrZero(SensorType::Clt),
+      		config->crankingCycleBins, revolutionCounterSinceStart
+      	);
 
 	/**
 	 * Cranking fuel is different depending on engine coolant temperature
