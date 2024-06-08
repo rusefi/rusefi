@@ -276,7 +276,6 @@
 	cannedcltFuelCorr();
 	cannedcrankingFuelCoef();
 	cannedcltRevLimitRpmBins();
-	cannedcrankingCycleCoef();
 	cannedcltIdleCorr();
 	cannedcltCrankingCorr();
 	cannedcltIdleRpm();

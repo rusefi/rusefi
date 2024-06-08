@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22780">
+    <page number="0" size="22748">
         <constant name="engineType">"MAZDA_MIATA_NA94"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">0.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
@@ -223,7 +223,7 @@
         <constant digits="0" name="boostControlSafeDutyCycle" units="%">0.0</constant>
         <constant name="mafAdcChannel">"Disabled"</constant>
         <constant digits="0" name="acrRevolutions" units="">5.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0240607E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0240608E7</constant>
         <constant digits="3" name="adcVcc" units="volts">3.0</constant>
         <constant digits="0" name="mapCamDetectionAnglePosition" units="Deg">0.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -507,7 +507,7 @@
         <constant digits="1" name="noFuelTrimAfterDfcoTime" units="sec">0.0</constant>
         <constant digits="0" name="launchSpeedThreshold" units="Kph">30.0</constant>
         <constant digits="0" name="launchRpmWindow" units="RPM">500.0</constant>
-        <constant digits="0" name="unusedHere12" units="">0.0</constant>
+        <constant digits="3" name="triggerEventsTimeoutMs" units="ms">0.0</constant>
         <constant digits="0" name="unusedHere13" units="">0.0</constant>
         <constant digits="0" name="magicNumberAvailableForDevTricks" units="">1.0</constant>
         <constant digits="0" name="turbochargerFilter" units="">0.01</constant>
@@ -2473,16 +2473,6 @@ end</constant>
          65.0
          90.0
 </constant>
-        <constant cols="1" digits="2" name="crankingCycleCoef" rows="8">
-         2.0
-         1.3
-         1.0
-         1.0
-         1.0
-         1.0
-         1.0
-         1.0
-</constant>
         <constant cols="1" digits="0" name="crankingCycleBins" rows="8">
          1.0
          2.0
@@ -2501,9 +2491,9 @@ end</constant>
 </constant>
         <constant cols="8" digits="2" name="crankingCycleFuelCoef" rows="4">
          2.0 1.3 1.0 1.0 1.0 1.0 1.0 1.0
-         1.8 1.2 1.0 1.0 1.0 1.0 1.0 1.0
-         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
-         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         2.0 1.3 1.0 1.0 1.0 1.0 1.0 1.0
+         2.0 1.3 1.0 1.0 1.0 1.0 1.0 1.0
+         2.0 1.3 1.0 1.0 1.0 1.0 1.0 1.0
 </constant>
         <constant cols="1" digits="2" name="cltIdleCorrBins" rows="16">
          -40.0
@@ -4731,7 +4721,7 @@ end</constant>
 </constant>
         <constant digits="0" name="tcu_shiftTime" units="ms">0.0</constant>
     </page>
-    <versionInfo firmwareInfo="20240607" nPages="1" signature="rusEFI master.2024.06.08.f407-discovery.813881653" version="5.0"/>
+    <versionInfo firmwareInfo="20240607" nPages="1" signature="rusEFI master.2024.06.08.f407-discovery.1379733891" version="5.0"/>
     <bibliography author="rusEFI 20240607" writeDate="date"/>
     <settings/>
     <userComments/>

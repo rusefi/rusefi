@@ -367,7 +367,6 @@
 	cannedcltRevLimitRpmBins();
 	cannedetbBiasBins();
 	cannedetbBiasValues();
-	cannedcrankingCycleCoef();
 	cannedcltIdleCorrBins();
 	cannedcltIdleCorr();
 	cannedcltCrankingCorrBins();

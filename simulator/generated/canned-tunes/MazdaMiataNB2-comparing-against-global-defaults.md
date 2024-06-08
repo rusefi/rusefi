@@ -361,7 +361,6 @@
 	nb2cannedcrankingFuelCoef();
 	nb2cannedcrankingFuelCoefE100();
 	nb2cannedcltRevLimitRpmBins();
-	nb2cannedcrankingCycleCoef();
 	nb2cannedcltIdleCorrBins();
 	nb2cannedcltIdleCorr();
 	nb2cannediacCoasting();

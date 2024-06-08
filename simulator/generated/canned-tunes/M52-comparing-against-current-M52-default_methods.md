@@ -89,11 +89,6 @@ static void cannedcltRevLimitRpmBins() {
 	copyArray(config->cltRevLimitRpmBins, hardCodedcltRevLimitRpmBins);
 }
 
-static void cannedcrankingCycleCoef() {
-	static const float hardCodedcrankingCycleCoef[8] = {2.5, 1.8, 1.5, 1.0, 1.0, 1.0, 1.0, 1.0};
-	copyArray(config->crankingCycleCoef, hardCodedcrankingCycleCoef);
-}
-
 static void cannedcltIdleCorr() {
 	static const float hardCodedcltIdleCorr[16] = {1.2, 1.2, 1.2, 2.0, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 1.2, 1.2, 1.0, 1.0, 1.2};
 	copyArray(config->cltIdleCorr, hardCodedcltIdleCorr);
