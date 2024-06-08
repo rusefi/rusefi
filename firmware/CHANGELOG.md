@@ -51,6 +51,7 @@ Release template (copy/paste this for new release):
  - removing weird 1+16 trigger wheel #6418
  - critical error in case of unneeded second channel #6419
  - Open Loop Boost vertical axis needs to be configured #4778
+ - Cranking Cycle Multiplier is now a Map with Coolant Temp as the additional axis. #6584
 
 ## Unreleased
 
