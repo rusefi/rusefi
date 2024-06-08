@@ -19,7 +19,8 @@ constexpr float TEST_FINAL_IGNITION_CUT_RATIO = 0.42f;
 
 static void setUpTestParameters(
     const std::optional<bool> launchControlEnabled,
-    const std::optional<bool> enableIgnitionCut
+    const std::optional<bool> enableIgnitionCut,
+    const bool satifySwitchSpeedThresholdAndTpsConditions = true
 ) {
     if (launchControlEnabled.has_value()) {
         engineConfiguration->launchControlEnabled = launchControlEnabled.value();
@@ -38,9 +39,11 @@ static void setUpTestParameters(
     engineConfiguration->initialIgnitionCutPercent = TEST_INITIAL_IGNITION_CUT_PERCENT;
     engineConfiguration->finalIgnitionCutPercentBeforeLaunch = TEST_FINAL_IGNITION_CUT_PERCENT;
 
-    engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH; // to satisfy activateSwitchCondition
-    engineConfiguration->launchSpeedThreshold = 0; // to satisfy speedCondition
-    Sensor::setMockValue(SensorType::DriverThrottleIntent, 1.7); // to satisfy tpsCondition
+    if (satifySwitchSpeedThresholdAndTpsConditions) {
+        engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH; // to satisfy activateSwitchCondition
+        engineConfiguration->launchSpeedThreshold = 0; // to satisfy speedCondition
+        Sensor::setMockValue(SensorType::DriverThrottleIntent, 1.7); // to satisfy tpsCondition
+    }
 }
 
 static void updateRpm(const int rpm, EngineTestHelper& eth) {
@@ -50,7 +53,7 @@ static void updateRpm(const int rpm, EngineTestHelper& eth) {
     engine->periodicFastCallback();
 }
 
-TEST(skipSparkRatio, raisingRpm) {
+TEST(skipSparkRatio, raisingRpmToLaunchCondition) {
     EngineTestHelper eth(engine_type_e::TEST_ENGINE);
     setUpTestParameters({ true }, { true });
 
@@ -87,4 +90,94 @@ TEST(skipSparkRatio, raisingRpm) {
     updateRpm(TEST_LAUNCH_RPM, eth);
     EXPECT_TRUE(engine->launchController.isLaunchCondition);
     EXPECT_EQ(engine->hardSparkLimiter.getTargetSkipRatio(), 1.0);
+}
+
+TEST(skipSparkRatio, raisingRpmWithoutLaunchCondition) {
+    EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+    setUpTestParameters({ true }, { true }, false);
+
+    updateRpm(TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START - 1, eth);
+    EXPECT_FALSE(engine->launchController.isLaunchCondition);
+    EXPECT_EQ(engine->hardSparkLimiter.getTargetSkipRatio(), 0.0f);
+
+    updateRpm(TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START, eth);
+    /* We've entered spark skip RPM window: */
+    EXPECT_FALSE(engine->launchController.isLaunchCondition);
+    EXPECT_EQ(engine->hardSparkLimiter.getTargetSkipRatio(), TEST_INITIAL_IGNITION_CUT_RATIO);
+
+    updateRpm(TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END, eth);
+    EXPECT_FALSE(engine->launchController.isLaunchCondition);
+    EXPECT_EQ(engine->hardSparkLimiter.getTargetSkipRatio(), TEST_FINAL_IGNITION_CUT_RATIO);
+
+    updateRpm((TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END - TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START) / 2, eth);
+    EXPECT_FALSE(engine->launchController.isLaunchCondition);
+    EXPECT_EQ(
+        engine->hardSparkLimiter.getTargetSkipRatio(),
+        (TEST_FINAL_IGNITION_CUT_RATIO - TEST_FINAL_IGNITION_CUT_RATIO) / 2
+    );
+
+    updateRpm(TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END + 1, eth);
+    /* We've left spark skip RPM window: */
+    EXPECT_FALSE(engine->launchController.isLaunchCondition);
+    EXPECT_EQ(engine->hardSparkLimiter.getTargetSkipRatio(), TEST_FINAL_IGNITION_CUT_RATIO);
+
+    updateRpm(TEST_LAUNCH_RPM - 1, eth);
+    EXPECT_FALSE(engine->launchController.isLaunchCondition);
+    EXPECT_EQ(engine->hardSparkLimiter.getTargetSkipRatio(), TEST_FINAL_IGNITION_CUT_RATIO);
+
+    /* We've reached TEST_LAUNCH_RPM: */
+    updateRpm(TEST_LAUNCH_RPM, eth);
+    EXPECT_FALSE(engine->launchController.isLaunchCondition);
+    EXPECT_EQ(engine->hardSparkLimiter.getTargetSkipRatio(), TEST_FINAL_IGNITION_CUT_RATIO);
+}
+
+static void checkNoLaunchSparkSkip(
+    const std::optional<bool> launchControlEnabled,
+    const std::optional<bool> enableIgnitionCut,
+    const bool satifySwitchSpeedThresholdAndTpsConditions = true
+) {
+    EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+    setUpTestParameters({ launchControlEnabled }, enableIgnitionCut, satifySwitchSpeedThresholdAndTpsConditions);
+
+    updateRpm(TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START - 1, eth);
+    EXPECT_FALSE(engine->launchController.isLaunchCondition);
+    EXPECT_EQ(engine->hardSparkLimiter.getTargetSkipRatio(), 0.0f);
+
+    updateRpm(TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START, eth);
+    /* We've entered spark skip RPM window: */
+    EXPECT_FALSE(engine->launchController.isLaunchCondition);
+    EXPECT_EQ(engine->hardSparkLimiter.getTargetSkipRatio(), 0.0f);
+
+    updateRpm(TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END, eth);
+    EXPECT_FALSE(engine->launchController.isLaunchCondition);
+    EXPECT_EQ(engine->hardSparkLimiter.getTargetSkipRatio(), 0.0f);
+
+    updateRpm((TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END - TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START) / 2, eth);
+    EXPECT_FALSE(engine->launchController.isLaunchCondition);
+    EXPECT_EQ(engine->hardSparkLimiter.getTargetSkipRatio(), 0.0f);
+
+    updateRpm(TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END + 1, eth);
+    /* We've left spark skip RPM window: */
+    EXPECT_FALSE(engine->launchController.isLaunchCondition);
+    EXPECT_EQ(engine->hardSparkLimiter.getTargetSkipRatio(), 0.0f);
+
+    updateRpm(TEST_LAUNCH_RPM - 1, eth);
+    EXPECT_FALSE(engine->launchController.isLaunchCondition);
+    EXPECT_EQ(engine->hardSparkLimiter.getTargetSkipRatio(), 0.0f);
+
+    /* We've reached TEST_LAUNCH_RPM: */
+    updateRpm(TEST_LAUNCH_RPM, eth);
+    EXPECT_EQ(engine->hardSparkLimiter.getTargetSkipRatio(), 0.0f);
+}
+
+TEST(skipSparkRatio, disabledLaunchControl) {
+    checkNoLaunchSparkSkip({ false }, { true }, true);
+    checkNoLaunchSparkSkip({ false }, { true }, false);
+    checkNoLaunchSparkSkip({ false }, { false }, true);
+    checkNoLaunchSparkSkip({ false }, { false }, false);
+}
+
+TEST(skipSparkRatio, disabledIgnitionCut) {
+    checkNoLaunchSparkSkip({ true }, { false }, true);
+    checkNoLaunchSparkSkip({ true }, { false }, false);
 }
