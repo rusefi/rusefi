@@ -1582,6 +1582,9 @@ float getConfigValueByName(const char *name) {
 // hpfpCamLobes
 		case -1256141959:
 			return engineConfiguration->hpfpCamLobes;
+// acLowRpmLimit
+		case -2138018615:
+			return engineConfiguration->acLowRpmLimit;
 // hpfpMinAngle
 		case 1494394654:
 			return engineConfiguration->hpfpMinAngle;
@@ -4477,6 +4480,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1256141959:
 	{
 		engineConfiguration->hpfpCamLobes = (int)value;
+		return 1;
+	}
+		case -2138018615:
+	{
+		engineConfiguration->acLowRpmLimit = (int)value;
 		return 1;
 	}
 		case 1494394654:
