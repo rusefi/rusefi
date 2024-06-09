@@ -3,12 +3,14 @@
 SUBMODULE=$1
 BRANCH=$2
 
+SCRIPT_NAME=$(basename "$0")
+
 if [[ -z "$SUBMODULE" || -z "$BRANCH" ]]; then
-  echo "Two arguments expected: submodule path and branch"
+  echo "${SCRIPT_NAME}: Two arguments expected: submodule path and branch"
   exit -1
 fi
 
-echo "Switching SUBMODULE=[$SUBMODULE] to BRANCH=[$BRANCH]"
+echo "${SCRIPT_NAME}: Switching SUBMODULE=[$SUBMODULE] to BRANCH=[$BRANCH]"
 git submodule set-branch -b $BRANCH $SUBMODULE
 git submodule sync
 
