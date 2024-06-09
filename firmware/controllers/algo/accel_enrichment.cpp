@@ -26,7 +26,8 @@
 
 static tps_tps_Map3D_t tpsTpsMap{"tps"};
 
-floatms_t TpsAccelEnrichment::getTpsEnrichment() {
+// on this level we do not distinguish between multiplier and 'ms adder' modes
+float TpsAccelEnrichment::getTpsEnrichment() {
 	ScopePerf perf(PE::GetTpsEnrichment);
 
 	if (engineConfiguration->tpsAccelLookback == 0) {

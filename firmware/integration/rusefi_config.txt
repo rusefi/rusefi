@@ -802,7 +802,7 @@ bit is_enabled_spi_2
 	bit disableEtbWhenEngineStopped;Allows disabling the ETB when the engine is stopped. You may not like the power draw or PWM noise from the motor, so this lets you turn it off until it's necessary.
 	bit is_enabled_spi_4
 	bit pauseEtbControl;Disable the electronic throttle motor and DC idle motor for testing.\nThis mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
-	bit unusedAlign
+	bit tpsTpsPercentMode,"percent adder","ms adder"
 	bit verboseKLine
 	bit idleIncrementalPidCic
 	bit enableAemXSeries;AEM X-Series or rusEFI Wideband

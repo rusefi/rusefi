@@ -328,16 +328,19 @@ float getInjectionMass(int rpm) {
 		engine->module<InjectorModelSecondary>()->prepare();
 	}
 
-	floatms_t tpsAccelEnrich = engine->tpsAccelEnrichment.getTpsEnrichment();
+	float tpsAccelEnrich = engine->tpsAccelEnrichment.getTpsEnrichment();
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(tpsAccelEnrich), "NaN tpsAccelEnrich", 0);
 	engine->engineState.tpsAccelEnrich = tpsAccelEnrich;
 
-	// For legacy reasons, the TPS accel table is in units of milliseconds, so we have to convert BACK to mass
 	float tpsAccelPerInjection = durationMultiplier * tpsAccelEnrich;
 
-	float tpsFuelMass = engine->module<InjectorModelPrimary>()->getFuelMassForDuration(tpsAccelPerInjection);
-
-	return injectionFuelMass + tpsFuelMass;
+  if (engineConfiguration->tpsTpsPercentMode) {
+  	return injectionFuelMass * (1 + tpsAccelPerInjection);
+  } else {
+	  // For legacy reasons, the TPS accel table is in units of milliseconds, so we have to convert BACK to mass
+	  float tpsFuelMass = engine->module<InjectorModelPrimary>()->getFuelMassForDuration(tpsAccelPerInjection);
+	  return injectionFuelMass + tpsFuelMass;
+	}
 }
 #endif
 
