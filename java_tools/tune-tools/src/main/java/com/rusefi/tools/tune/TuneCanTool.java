@@ -114,7 +114,7 @@ public class TuneCanTool implements TuneCanToolConstants {
 //            localFileName,  cannedComment);
 //    }
 
-    private static void writeDiffBetweenLocalTuneFileAndDefaultTune(String vehicleName, String defaultTuneFileName, String customTuneFileName, String cannedComment, String methodNamePrefix) throws JAXBException, IOException {
+    public static void writeDiffBetweenLocalTuneFileAndDefaultTune(String vehicleName, String defaultTuneFileName, String customTuneFileName, String cannedComment, String methodNamePrefix) throws JAXBException, IOException {
         new File(REPORTS_OUTPUT_FOLDER).mkdir();
 
         Msq customTune = Msq.readTune(customTuneFileName);
