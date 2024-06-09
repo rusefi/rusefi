@@ -602,6 +602,7 @@ bool validateConfig() {
 	// Cranking tables
 	ensureArrayIsAscending("Cranking fuel mult", config->crankingFuelBins);
 	ensureArrayIsAscending("Cranking duration", config->crankingCycleBins);
+	ensureArrayIsAscending("Cranking Fuel CLT", config->crankingCycleFuelCltBins);
 	ensureArrayIsAscending("Cranking TPS", config->crankingTpsBins);
 
 	// Idle tables
