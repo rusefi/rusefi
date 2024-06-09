@@ -1273,7 +1273,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets true
-#define SIGNATURE_HASH 3181115195
+#define SIGNATURE_HASH 3269344140
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1663,7 +1663,7 @@
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.06.09.f407-discovery.3181115195"
+#define TS_SIGNATURE "rusEFI master.2024.06.09.f407-discovery.3269344140"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
