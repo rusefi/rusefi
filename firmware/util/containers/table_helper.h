@@ -197,5 +197,5 @@ void setRpmBin(kType array[], int size, float idleRpm, float topRpm) {
  */
 template<typename TValue, int TSize>
 void setRpmTableBin(TValue (&array)[TSize]) {
-	setRpmBin(array, TSize, 800, 7000);
+	setRpmBin(array, TSize, 800, DEFAULT_RPM_AXIS_HIGH_VALUE);
 }

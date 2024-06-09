@@ -187,6 +187,8 @@ struct_no_prefix engine_configuration_s
 
 #define DWELL_CURVE_SIZE 8
 
+#define DEFAULT_RPM_AXIS_HIGH_VALUE 7000
+
 #define CRANKING_CURVE_SIZE 8
 
 #define CRANKING_ENRICH_COUNT 6
