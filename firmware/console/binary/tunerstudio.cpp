@@ -601,6 +601,12 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, uint8_t* data, int i
 	switch(command)
 	{
 	case TS_OUTPUT_COMMAND:
+		if (incomingPacketSize == 1) {
+			// Read command with no offset/count, read the whole thing
+			offset = 0;
+			count = TS_TOTAL_OUTPUT_SIZE;
+		}
+
 		cmdOutputChannels(tsChannel, offset, count);
 		break;
 	case TS_HELLO_COMMAND:
