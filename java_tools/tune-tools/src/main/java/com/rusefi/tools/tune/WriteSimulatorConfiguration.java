@@ -6,6 +6,7 @@ import com.opensr5.ini.IniFileModel;
 import com.rusefi.binaryprotocol.MsqFactory;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.enums.engine_type_e;
+import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 
 import javax.xml.bind.JAXBException;
@@ -83,6 +84,10 @@ public class WriteSimulatorConfiguration {
         if (ini == null)
             throw new IllegalStateException("Not found " + INI_FILE_FOR_SIMULATOR);
         Msq m = MsqFactory.valueOf(configuration, ini);
+        String name = Fields.KNOCKNOISERPMBINS.getName();
+        Constant noiseRpmBins = m.page.get(1).getConstantsAsMap().get(name);
+        if (!noiseRpmBins.getValue().contains(Fields.DEFAULT_RPM_AXIS_HIGH_VALUE + ".0"))
+            throw new IllegalStateException(name + " canary wonders if everything is fine?");
         m.writeXmlFile(ROOT_FOLDER + outputXmlFileName);
 
         Msq newTuneJustToValidate = Msq.readTune(ROOT_FOLDER + outputXmlFileName);
