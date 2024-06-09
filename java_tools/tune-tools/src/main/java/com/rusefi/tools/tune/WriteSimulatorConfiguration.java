@@ -28,9 +28,13 @@ public class WriteSimulatorConfiguration {
     public static String ROOT_FOLDER = System.getProperty("ROOT_FOLDER", "../simulator/");
 
     public static void main(String[] args) throws IOException, InterruptedException, JAXBException {
+        if (args.length != 1)
+            throw new IllegalArgumentException("One argument expected: .ini file name");
+        String iniFileName = args[0];
+
         System.out.println("ROOT_FOLDER=" + ROOT_FOLDER);
         try {
-            readBinaryWriteXmlTune(Fields.SIMULATOR_TUNE_BIN_FILE_NAME, TuneCanTool.DEFAULT_TUNE);
+            readBinaryWriteXmlTune(iniFileName, Fields.SIMULATOR_TUNE_BIN_FILE_NAME, TuneCanTool.DEFAULT_TUNE);
             for (engine_type_e type : new engine_type_e[]{
                     // [CannedTunes] see 'rusEfiFunctionalTest.cpp' which exports default tunes into binary files for us
                 // [CannedTunes] TuneCanToolRunner for last third step
@@ -51,7 +55,7 @@ public class WriteSimulatorConfiguration {
                     engine_type_e.POLARIS_RZR,
                     engine_type_e.HARLEY,
             }) {
-                writeSpecificEngineType(type);
+                writeSpecificEngineType(iniFileName, type);
             }
             TuneCanToolRunner.runPopular();
         } catch (Throwable e) {
@@ -63,26 +67,28 @@ public class WriteSimulatorConfiguration {
         }
     }
 
-    private static void writeSpecificEngineType(engine_type_e engineType) {
+    private static void writeSpecificEngineType(String iniFileName, engine_type_e engineType) {
         try {
             String in = Fields.SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX + "_" + engineType.ordinal() + Fields.SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX;
-            readBinaryWriteXmlTune(in,
+            readBinaryWriteXmlTune(iniFileName, in,
                     TuneCanTool.getDefaultTuneName(engineType));
         } catch (Throwable e) {
             throw new IllegalStateException("With " + engineType, e);
         }
     }
 
-    private static void readBinaryWriteXmlTune(String inputBinaryTuneFileName, String outputXmlFileName) throws JAXBException, IOException {
+    private static void readBinaryWriteXmlTune(String iniFileName, String inputBinaryTuneFileName, String outputXmlFileName) throws JAXBException, IOException {
         byte[] fileContent = Files.readAllBytes(new File(ROOT_FOLDER + inputBinaryTuneFileName).toPath());
         System.out.println("Got " + fileContent.length + " from " + inputBinaryTuneFileName + " while expecting " + Fields.TOTAL_CONFIG_SIZE);
         if (fileContent.length != Fields.TOTAL_CONFIG_SIZE)
             throw new IllegalStateException("Unexpected image size " + fileContent.length + " while expecting " + Fields.TOTAL_CONFIG_SIZE);
         ConfigurationImage configuration = new ConfigurationImage(fileContent);
         System.out.println("Got " + Objects.requireNonNull(configuration, "configuration"));
-        IniFileModel ini = new IniFileModel().readIniFile(INI_FILE_FOR_SIMULATOR);
+        // we have to use board-specific .ini to account for all the board-specific offsets
+        // INI_FILE_FOR_SIMULATOR is just not universal enough
+        IniFileModel ini = new IniFileModel().readIniFile(iniFileName);
         if (ini == null)
-            throw new IllegalStateException("Not found " + INI_FILE_FOR_SIMULATOR);
+            throw new IllegalStateException("Not found " + iniFileName);
         Msq m = MsqFactory.valueOf(configuration, ini);
         String name = Fields.KNOCKNOISERPMBINS.getName();
         Constant noiseRpmBins = m.page.get(1).getConstantsAsMap().get(name);

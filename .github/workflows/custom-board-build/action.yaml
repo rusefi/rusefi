@@ -305,7 +305,7 @@ runs:
       run: |
         cd ${{inputs.rusefi_dir}}/simulator/
         ./build/rusefi_simulator 10
-        ./write_tune.sh
+        ./write_tune.sh ${ABSOLUTE_BOARD_DIR}/generated/tunerstudio/generated/rusefi_${SHORT_BOARD_NAME}.ini
         cd $OLDPWD
         echo "Current directory: $PWD"
         if [ ! "${{inputs.sim_output}}" -ef "${{inputs.rusefi_dir}}/simulator/generated" ]; then

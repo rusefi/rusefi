@@ -67,7 +67,7 @@ jobs:
 
     - name: Convert .bin from Linux Simulator into .xml
       working-directory: ./simulator/
-      run: ./write_tune.sh
+      run: ./write_tune.sh ../firmware/tunerstudio/generated/rusefi_f407-discovery.ini
 
     - name: Commit fresh generated default simulator tune
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master'}}
