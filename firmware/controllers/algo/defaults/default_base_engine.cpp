@@ -79,6 +79,7 @@ void setDefaultBaseEngine() {
 	engineConfiguration->compressionRatio = 9;
 	engineConfiguration->vssFilterReciprocal = VSS_FILTER_MIN;
 	engineConfiguration->boardUseCanTerminator = true;
+	engineConfiguration->acLowRpmLimit = 500;
 
 #ifdef EFI_KLINE
   engineConfiguration->kLinePeriodUs = 300 /* us*/;

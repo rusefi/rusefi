@@ -35,6 +35,7 @@ Release template (copy/paste this for new release):
  - reduce JRE download complexity #6569
  - simpler basic firmware updater #5577
  - prohibit mcu_standby on ECU start-up #6589
+ - Allow to choose lower RPM cutoff for AC Compressor #6597
 
 ### Fixed
  - knock logic not activated until any configuration change via TS #6462

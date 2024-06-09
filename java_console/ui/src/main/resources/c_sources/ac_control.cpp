@@ -12,7 +12,12 @@ bool AcController::getAcState() {
 	latest_usage_ac_control = getTimeNowS();
 	auto rpm = Sensor::getOrZero(SensorType::Rpm);
 
-	engineTooSlow = rpm < 500;
+	if (engineConfiguration->acLowRpmLimit == 0) {
+	// todo: remove this config compatibility trick in May of 2025
+	  engineConfiguration->acLowRpmLimit = 500;
+	}
+
+	engineTooSlow = rpm < engineConfiguration->acLowRpmLimit;
 
 	auto maxRpm = engineConfiguration->maxAcRpm;
 	engineTooFast = maxRpm != 0 && maxRpmDeadband.gt(rpm, maxRpm);
