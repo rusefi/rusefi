@@ -534,8 +534,7 @@ PUBLIC_API_WEAK bool validateBoardConfig() {
 }
 
 // Returns false if there's an obvious problem with the loaded configuration
-// todo: shall we also invoke this from 'burn'?
-bool validateConfigOnStartUp() {
+bool validateConfigOnStartUpOrBurn() {
   if (!validateBoardConfig()) {
     return false;
   }

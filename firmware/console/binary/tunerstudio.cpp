@@ -358,6 +358,7 @@ static void handleBurnCommand(TsChannelBase* tsChannel) {
 	tsState.burnCommandCounter++;
 
 	efiPrintf("got B (Burn)");
+	validateConfigOnStartUpOrBurn();
 
 	// Skip the burn if a preset was just loaded - we don't want to overwrite it
 	if (!rebootForPresetPending) {
