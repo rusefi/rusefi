@@ -493,6 +493,9 @@ Allows disabling the ETB when the engine is stopped. You may not like the power 
 ### pauseEtbControl
 Disable the electronic throttle motor and DC idle motor for testing.\nThis mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
 
+### tpsTpsPercentMode
+
+
 ### verboseKLine
 
 

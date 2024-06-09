@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Jun 09 19:11:25 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Jun 09 23:34:01 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1629,7 +1629,7 @@ struct engine_configuration_s {
 	bool pauseEtbControl : 1 {};
 	/**
 	offset 752 bit 27 */
-	bool unusedAlign : 1 {};
+	bool tpsTpsPercentMode : 1 {};
 	/**
 	offset 752 bit 28 */
 	bool verboseKLine : 1 {};
@@ -5637,4 +5637,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22748);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Jun 09 19:11:25 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Jun 09 23:34:01 UTC 2024
