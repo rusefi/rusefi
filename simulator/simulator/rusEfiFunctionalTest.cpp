@@ -165,7 +165,7 @@ static void writeEngineTypeDefaultConfig(engine_type_e type) {
 	writeSimulatorTune(fileName);
 }
 
-void rusEfiFunctionalTest(void) {
+void rusEfiFunctionalTest() {
 	printToConsole("Running rusEFI simulator version:");
 	static char versionBuffer[20];
 	itoa10(versionBuffer, (int)getRusEfiVersion());
@@ -243,7 +243,7 @@ void rusEfiFunctionalTest(void) {
 	main_loop_started = true;
 }
 
-void printPendingMessages(void) {
+void printPendingMessages() {
 	updateDevConsoleState();
 #if EFI_ENGINE_SNIFFER
 	waveChart.publishIfFull();
@@ -252,11 +252,11 @@ void printPendingMessages(void) {
 
 int isSerialOverTcpReady;
 
-bool isCommandLineConsoleReady(void) {
+bool isCommandLineConsoleReady() {
 	return isSerialOverTcpReady;
 }
 
-void applyNewConfiguration(void) {
+void applyNewConfiguration() {
 }
 
 void onFatalError(const char *msg, const char * file, int line) {
