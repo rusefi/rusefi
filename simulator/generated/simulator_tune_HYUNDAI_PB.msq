@@ -360,7 +360,7 @@
         <constant name="disableEtbWhenEngineStopped">"true"</constant>
         <constant name="is_enabled_spi_4">"false"</constant>
         <constant name="pauseEtbControl">"false"</constant>
-        <constant name="unusedAlign">"false"</constant>
+        <constant name="tpsTpsPercentMode">"ms adder"</constant>
         <constant name="verboseKLine">"false"</constant>
         <constant name="idleIncrementalPidCic">"false"</constant>
         <constant name="enableAemXSeries">"true"</constant>
@@ -4811,7 +4811,7 @@ end</constant>
 </constant>
         <constant digits="0" name="tcu_shiftTime" units="ms">0.0</constant>
     </page>
-    <versionInfo firmwareInfo="20240607" nPages="1" signature="rusEFI master.2024.06.09.f407-discovery.2059686586" version="5.0"/>
+    <versionInfo firmwareInfo="20240607" nPages="1" signature="rusEFI master.2024.06.10.f407-discovery.3648913621" version="5.0"/>
     <bibliography author="rusEFI 20240607" writeDate="date"/>
     <settings/>
     <userComments/>
