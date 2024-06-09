@@ -308,6 +308,7 @@
 #define debug_mode_e_DBG_UNUSED_42 42
 #define debug_mode_e_enum "INVALID", "TPS acceleration enrichment", "INVALID", "Stepper Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "INVALID", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "Composite Log", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "INVALID", "TCU", "Lua"
 #define debug_mode_e_UNUSED23 23
+#define DEFAULT_RPM_AXIS_HIGH_VALUE 7000
 #define DEFAULT_SELT_STIM_RPM 1200
 #define DEFAULT_SELT_STIM_VVT0 23
 #define DEFAULT_SOLENOID_FREQUENCY 300
@@ -1271,7 +1272,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 858656979
+#define SIGNATURE_HASH 2474801940
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1661,7 +1662,7 @@
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins false
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.06.09.alphax-2chan.858656979"
+#define TS_SIGNATURE "rusEFI master.2024.06.09.alphax-2chan.2474801940"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
