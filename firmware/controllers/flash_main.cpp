@@ -326,6 +326,7 @@ void readFromFlash() {
 	engineConfiguration->byFirmwareVersion = getRusEfiVersion();
 	memset(persistentState.persistentConfiguration.warning_message , 0, sizeof(persistentState.persistentConfiguration.warning_message));
 	validateConfiguration();
+	engine->preCalculate();
 }
 
 static void rewriteConfig() {
