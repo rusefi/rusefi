@@ -529,9 +529,16 @@ void commonInitEngineController() {
 	initSpeedometer();
 }
 
+PUBLIC_API_WEAK bool validateBoardConfig() {
+  return true;
+}
+
 // Returns false if there's an obvious problem with the loaded configuration
 // todo: shall we also invoke this from 'burn'?
 bool validateConfigOnStartUp() {
+  if (!validateBoardConfig()) {
+    return false;
+  }
 	if (engineConfiguration->cylindersCount > MAX_CYLINDER_COUNT) {
 		criticalError("Invalid cylinder count: %d", engineConfiguration->cylindersCount);
 		return false;
