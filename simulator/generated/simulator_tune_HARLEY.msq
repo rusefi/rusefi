@@ -1327,7 +1327,7 @@
         <constant digits="0" name="etbJamIntegratorLimit" units="%">0.0</constant>
         <constant digits="0" name="hpfpCamLobes" units="lobes/cam">3.0</constant>
         <constant name="hpfpCam">"NONE"</constant>
-        <constant digits="0" name="unusedByteHere" units="">0.0</constant>
+        <constant digits="0" name="acLowRpmLimit" units="RPM">500.0</constant>
         <constant digits="0" name="hpfpMinAngle" units="deg">10.0</constant>
         <constant digits="3" name="hpfpPumpVolume" units="cc">0.29</constant>
         <constant digits="0" name="hpfpActivationAngle" units="deg">30.0</constant>
@@ -4795,7 +4795,7 @@ end</constant>
 </constant>
         <constant digits="0" name="tcu_shiftTime" units="ms">0.0</constant>
     </page>
-    <versionInfo firmwareInfo="20240607" nPages="1" signature="rusEFI master.2024.06.09.f407-discovery.3269344140" version="5.0"/>
+    <versionInfo firmwareInfo="20240607" nPages="1" signature="rusEFI master.2024.06.09.f407-discovery.2059686586" version="5.0"/>
     <bibliography author="rusEFI 20240607" writeDate="date"/>
     <settings/>
     <userComments/>
