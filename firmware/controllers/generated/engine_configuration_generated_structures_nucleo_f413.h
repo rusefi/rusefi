@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Jun 08 00:37:03 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Jun 09 00:16:51 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2797,6 +2797,7 @@ struct engine_configuration_s {
 	offset 1496 bit 4 */
 	bool mc33810Gpgd3Mode : 1 {};
 	/**
+	 * Send out board statistics
 	offset 1496 bit 5 */
 	bool enableExtendedCanBroadcast : 1 {};
 	/**
@@ -5634,4 +5635,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22748);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Jun 08 00:37:03 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Jun 09 00:16:51 UTC 2024

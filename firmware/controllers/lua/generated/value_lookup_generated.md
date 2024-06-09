@@ -1097,7 +1097,7 @@ See Over/Undervoltage Shutdown/Retry bit in documentation
 
 
 ### enableExtendedCanBroadcast
-
+Send out board statistics
 
 ### luaCanRxWorkaround
 
