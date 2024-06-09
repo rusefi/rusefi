@@ -715,12 +715,23 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 
 	const uint16_t* data16 = reinterpret_cast<uint16_t*>(data);
 
-	uint16_t offset = data16[0];
-	uint16_t count = data16[1];
+	uint16_t offset = 0;
+	uint16_t count = 0;
+
+	if (incomingPacketSize >= 3) {
+		offset = data16[0];
+	}
+	if (incomingPacketSize >= 5) {
+		count = data16[1];
+	}
 
 	switch(command)
 	{
 	case TS_OUTPUT_COMMAND:
+		if (incomingPacketSize == 1) {
+			/* Read command with no offset and size - read whole livedata */
+			count = TS_TOTAL_OUTPUT_SIZE;
+		}
 		cmdOutputChannels(tsChannel, offset, count);
 		break;
 	case TS_HELLO_COMMAND:
