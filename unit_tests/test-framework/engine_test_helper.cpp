@@ -110,7 +110,7 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 
 	resetConfigurationExt(configurationCallback, engineType);
 
-	validateConfig();
+	validateConfigOnStartUp();
 
 	enginePins.startPins();
 

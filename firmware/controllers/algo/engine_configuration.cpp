@@ -1058,13 +1058,6 @@ void resetConfigurationExt(engine_type_e engineType) {
 	resetConfigurationExt(&emptyCallbackWithConfiguration, engineType);
 }
 
-void validateConfiguration() {
-	if (engineConfiguration->adcVcc > 5.0f || engineConfiguration->adcVcc < 1.0f) {
-		engineConfiguration->adcVcc = 3.0f;
-	}
-
-}
-
 void applyNonPersistentConfiguration() {
 #if EFI_PROD_CODE
 	efiAssertVoid(ObdCode::CUSTOM_APPLY_STACK, hasLotsOfRemainingStack(), "apply c");

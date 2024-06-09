@@ -530,9 +530,14 @@ void commonInitEngineController() {
 }
 
 // Returns false if there's an obvious problem with the loaded configuration
-bool validateConfig() {
+// todo: shall we also invoke this from 'burn'?
+bool validateConfigOnStartUp() {
 	if (engineConfiguration->cylindersCount > MAX_CYLINDER_COUNT) {
 		criticalError("Invalid cylinder count: %d", engineConfiguration->cylindersCount);
+		return false;
+	}
+	if (engineConfiguration->adcVcc > 5.0f || engineConfiguration->adcVcc < 1.0f) {
+    criticalError("Invalid adcVcc: %f", engineConfiguration->adcVcc);
 		return false;
 	}
 
