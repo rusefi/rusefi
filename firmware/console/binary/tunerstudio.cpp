@@ -718,9 +718,11 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 	uint16_t offset = 0;
 	uint16_t count = 0;
 
+	// command may not have offset field - keep safe default value
 	if (incomingPacketSize >= 3) {
 		offset = data16[0];
 	}
+	// command may not have count/size filed - keep safe default value
 	if (incomingPacketSize >= 5) {
 		count = data16[1];
 	}
@@ -729,7 +731,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 	{
 	case TS_OUTPUT_COMMAND:
 		if (incomingPacketSize == 1) {
-			/* Read command with no offset and size - read whole livedata */
+			// Read command with no offset and size - read whole livedata
 			count = TS_TOTAL_OUTPUT_SIZE;
 		}
 		cmdOutputChannels(tsChannel, offset, count);
