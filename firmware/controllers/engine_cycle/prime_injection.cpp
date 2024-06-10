@@ -23,6 +23,8 @@ floatms_t PrimeController::getPrimeDuration() const {
 		0.001f *	// convert milligram to gram
 		interpolate2d(clt.Value, engineConfiguration->primeBins, engineConfiguration->primeValues);
 
+	efiPrintf("Priming pulse mass: %.4f g", primeMass);
+
 	return engine->module<InjectorModelPrimary>()->getInjectionDuration(primeMass);
 }
 
