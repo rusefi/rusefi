@@ -21,7 +21,11 @@ public:
 
 	void append(const char *text);
 	void appendFast(const char *text);
-	void appendPrintf(const char *fmt, ...) __attribute__ ((format (printf, 2, 3)));
+	void appendPrintf(const char *fmt, ...)
+		#if EFI_PROD_CODE
+			__attribute__ ((format (printf, 2, 3)))
+		#endif
+			;
 	void appendFloat(float value, int precision);
 
 	void terminate() {

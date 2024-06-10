@@ -269,7 +269,7 @@ bool gpio_pin_markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
 		 * connected, so the warning is never displayed on the console and that's quite a problem!
 		 */
 //		warning(ObdCode::OBD_PCM_Processor_Fault, "%s%d req by %s used by %s", portname(port), pin, msg, getBrainUsedPin(index));
-		firmwareError(ObdCode::CUSTOM_ERR_PIN_ALREADY_USED_1, "%s%d req by %s used by %s", portname(port), pin, msg, getBrainUsedPin(index));
+		firmwareError(ObdCode::CUSTOM_ERR_PIN_ALREADY_USED_1, "%s%d req by %s used by %s", portname(port), (int)pin, msg, getBrainUsedPin(index));
 		return true;
 	}
 	getBrainUsedPin(index) = msg;

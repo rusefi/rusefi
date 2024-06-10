@@ -18,7 +18,11 @@ const char* swapOutputBuffers(size_t *actualOutputBufferSize);
 namespace priv
 {
 	// internal implementation, use efiPrintf below
-	void efiPrintfInternal(const char *fmt, ...) __attribute__ ((format (printf, 1, 2)));
+	void efiPrintfInternal(const char *fmt, ...) 
+		#if EFI_PROD_CODE
+			__attribute__ ((format (printf, 1, 2)))
+		#endif
+			;
 }
 
 // "normal" logging messages need a header and footer, so put them in
