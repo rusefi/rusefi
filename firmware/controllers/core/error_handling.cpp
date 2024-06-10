@@ -80,7 +80,7 @@ void checkLastBootError() {
 		sramState->Err.BootCount = 0;
 	}
 
-	efiPrintf("Power cycle count: %d", sramState->Err.BootCount);
+	efiPrintf("Power cycle count: %lu", sramState->Err.BootCount);
 	sramState->Err.BootCount++;
 #endif // EFI_BACKUP_SRAM
 }

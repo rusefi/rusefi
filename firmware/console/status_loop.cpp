@@ -99,7 +99,7 @@ static void printRusefiVersion(const char *engineTypeName, const char *firmwareB
 			getRusEfiVersion(), SIGNATURE_HASH,
 			firmwareBuildId,
 			engineTypeName,
-			getTimeNowS());
+			(uint32_t)getTimeNowS());
 }
 
 #if EFI_PROD_CODE

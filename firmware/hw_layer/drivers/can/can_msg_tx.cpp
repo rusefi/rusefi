@@ -81,9 +81,9 @@ CanTxMessage::~CanTxMessage() {
 		        getCanCategory(category),
 				busIndex,
 #ifndef STM32H7XX
-				(m_frame.IDE == CAN_IDE_EXT) ? CAN_EID(m_frame) : CAN_SID(m_frame),
+				(unsigned int)((m_frame.IDE == CAN_IDE_EXT) ? CAN_EID(m_frame) : CAN_SID(m_frame)),
 #else
-						  m_frame.common.XTD ? CAN_EID(m_frame) : CAN_SID(m_frame),
+				(unsigned int)(m_frame.common.XTD ? CAN_EID(m_frame) : CAN_SID(m_frame)),
 #endif
 				m_frame.DLC,
 				m_frame.data8[0], m_frame.data8[1],

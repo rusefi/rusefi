@@ -67,7 +67,7 @@ void PrimeController::onIgnitionStateChanged(bool ignitionOn) {
 		auto startTime = getTimeNowNt() + primeDelayNt;
 		getExecutorInterface()->scheduleByTimestampNt("primingDelay", nullptr, startTime, { PrimeController::onPrimeStartAdapter, this });
 	} else {
-		efiPrintf("Skipped priming pulse since ignSwitchCounter = %d", ignSwitchCounter);
+		efiPrintf("Skipped priming pulse since ignSwitchCounter = %lu", ignSwitchCounter);
 	}
 
 	// we'll reset it later when the engine starts

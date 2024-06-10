@@ -949,11 +949,11 @@ void triggerInfo(void) {
 			TRIGGER_WAVEFORM(getExpectedEventCount(TriggerWheel::T_PRIMARY)),
 			TRIGGER_WAVEFORM(getExpectedEventCount(TriggerWheel::T_SECONDARY)));
 
-	efiPrintf("trigger type=%d/need2ndChannel=%s", engineConfiguration->trigger.type,
+	efiPrintf("trigger type=%d/need2ndChannel=%s", (int)engineConfiguration->trigger.type,
 			boolToString(TRIGGER_WAVEFORM(needSecondTriggerInput)));
 
 
-	efiPrintf("synchronizationNeeded=%s/isError=%s/total errors=%d ord_err=%d/total revolutions=%d/self=%s",
+	efiPrintf("synchronizationNeeded=%s/isError=%s/total errors=%lu ord_err=%lu/total revolutions=%d/self=%s",
 			boolToString(ts->isSynchronizationNeeded),
 			boolToString(tc->isTriggerDecoderError()),
 			tc->triggerState.totalTriggerErrorCounter,
@@ -1000,7 +1000,7 @@ void triggerInfo(void) {
 	efiPrintf("secondary logic input: %s", hwPortname(engineConfiguration->logicAnalyzerPins[1]));
 
 
-	efiPrintf("totalTriggerHandlerMaxTime=%d", triggerMaxDuration);
+	efiPrintf("totalTriggerHandlerMaxTime=%lu", triggerMaxDuration);
 
 #endif /* EFI_PROD_CODE */
 

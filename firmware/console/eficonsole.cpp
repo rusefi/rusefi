@@ -191,7 +191,7 @@ static void cmd_threads() {
 
 	while (tp) {
 		int freeBytes = CountFreeStackSpace(tp->wabase);
-		efiPrintf("%s\t%08x\t%lu\t%d", tp->name, tp->wabase, tp->time, freeBytes);
+		efiPrintf("%s\t%08x\t%lu\t%d", tp->name, (unsigned int)tp->wabase, tp->time, freeBytes);
 
 		if (freeBytes < 100) {
 			criticalError("Ran out of stack on thread %s, %d bytes remain", tp->name, freeBytes);

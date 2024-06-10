@@ -325,7 +325,7 @@ static void printAdcChannedReport(const char *prefix, int internalIndex, adc_cha
 
 void printFullAdcReport(void) {
 #if EFI_USE_FAST_ADC
-	efiPrintf("fast %d samples", fastAdc.conversionCount);
+	efiPrintf("fast %lu samples", fastAdc.conversionCount);
 
 	for (int internalIndex = 0; internalIndex < fastAdc.size(); internalIndex++) {
 		adc_channel_e hwChannel = fastAdc.getAdcChannelByInternalIndex(internalIndex);
@@ -333,7 +333,7 @@ void printFullAdcReport(void) {
 		printAdcChannedReport("F", internalIndex, hwChannel);
 	}
 #endif // EFI_USE_FAST_ADC
-	efiPrintf("slow %d samples", slowAdcConversionCount);
+	efiPrintf("slow %lu samples", slowAdcConversionCount);
 
 	/* we assume that all slow ADC channels are enabled */
 	for (int internalIndex = 0; internalIndex < ADC_MAX_CHANNELS_COUNT; internalIndex++) {

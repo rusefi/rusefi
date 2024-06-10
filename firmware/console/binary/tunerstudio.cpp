@@ -230,6 +230,7 @@ void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint16_t offset, ui
 
 	uint32_t crc = SWAP_UINT32(crc32(start, count));
 	tsChannel->sendResponse(TS_CRC, (const uint8_t *) &crc, 4);
+	efiPrintf("TS <- Get CRC offset %d count %d result %08x", offset, count, (unsigned int)crc);
 }
 
 #if EFI_TS_SCATTER
@@ -591,7 +592,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 		/* send error only if previously we were in sync */
 		if (tsChannel->in_sync) {
 			efiPrintf("TunerStudio: command %c actual CRC %x/expected %x", tsChannel->scratchBuffer[0],
-					actualCrc, expectedCrc);
+					(unsigned int)actualCrc, (unsigned int)expectedCrc);
 			tunerStudioError(tsChannel, "ERROR: CRC issue");
 			sendErrorCode(tsChannel, TS_RESPONSE_CRC_FAILURE);
 			tsChannel->in_sync = false;

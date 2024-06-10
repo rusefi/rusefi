@@ -40,11 +40,11 @@ void resetMaxValues() {
 }
 
 void printRuntimeStats(void) {
-	efiPrintf("maxSchedulingPrecisionLoss=%d", maxSchedulingPrecisionLoss);
+	efiPrintf("maxSchedulingPrecisionLoss=%lu", maxSchedulingPrecisionLoss);
 
 #if EFI_CLOCK_LOCKS
-	efiPrintf("maxLockedDuration=%d / maxTriggerReentrant=%d", maxLockedDuration, maxTriggerReentrant);
+	efiPrintf("maxLockedDuration=%lu / maxTriggerReentrant=%d", maxLockedDuration, maxTriggerReentrant);
 #endif // EFI_CLOCK_LOCKS
 
-	efiPrintf("maxEventCallbackDuration=%d", maxEventCallbackDuration);
+	efiPrintf("maxEventCallbackDuration=%lu", maxEventCallbackDuration);
 }

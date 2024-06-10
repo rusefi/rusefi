@@ -376,7 +376,7 @@ void Engine::OnTriggerSynchronization(bool wasSynchronized, bool isDecodingError
 		if (isDecodingError) {
 #if EFI_PROD_CODE
 			if (engineConfiguration->verboseTriggerSynchDetails || (triggerCentral.triggerState.someSortOfTriggerError() && !engineConfiguration->silentTriggerError)) {
-				efiPrintf("error: synchronizationPoint @ index %d expected %d/%d got %d/%d",
+				efiPrintf("error: synchronizationPoint @ index %lu expected %d/%d got %d/%d",
 						triggerCentral.triggerState.currentCycle.current_index,
 						triggerCentral.triggerShape.getExpectedEventCount(TriggerWheel::T_PRIMARY),
 						triggerCentral.triggerShape.getExpectedEventCount(TriggerWheel::T_SECONDARY),

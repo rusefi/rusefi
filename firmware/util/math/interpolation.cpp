@@ -47,14 +47,14 @@ static void testBinary() {
 			}
 			timeNew = getTimeNowLowerNt() - start;
 		}
-		efiPrintf("for v=%d old=%d ticks", v, timeOld);
-		efiPrintf("for v=%d new=%d ticks", v, timeNew);
+		efiPrintf("for v=%d old=%lu ticks", v, timeOld);
+		efiPrintf("for v=%d new=%lu ticks", v, timeNew);
 
 		totalOld += timeOld;
 		totalNew += timeNew;
 	}
-	efiPrintf("totalOld=%d ticks", totalOld);
-	efiPrintf("totalNew=%d ticks", totalNew);
+	efiPrintf("totalOld=%lu ticks", totalOld);
+	efiPrintf("totalNew=%lu ticks", totalNew);
 
 }
 
