@@ -2467,6 +2467,7 @@ end_struct
 #define ts_show_rotary true
 #define ts_show_tcu false
 #define ts_show_gdi false
+#define ts_show_fuel_level_sensor true
 #define ts_show_popular_vehicles true
 #define ts_show_reset_calibrations false
 #define ts_show_air_conditioning true
