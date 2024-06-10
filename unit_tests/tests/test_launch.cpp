@@ -146,14 +146,13 @@ TEST(LaunchControl, CombinedCondition) {
 	Sensor::setMockValue(SensorType::VehicleSpeed, 10.0);
 	Sensor::setMockValue(SensorType::Rpm,  1200);
 
-	EXPECT_FALSE(dut.isLaunchConditionMet(1200));
+	EXPECT_EQ(dut.calculateLaunchCondition(1200), LaunchCondition::NotMet);
 
 	Sensor::setMockValue(SensorType::Rpm,  3200);
-	EXPECT_TRUE(dut.isLaunchConditionMet(3200));
+	EXPECT_EQ(dut.calculateLaunchCondition(3200), LaunchCondition::Launch);
 
 	Sensor::setMockValue(SensorType::VehicleSpeed, 40.0);
-	EXPECT_FALSE(dut.isLaunchConditionMet(3200));
-
+	EXPECT_EQ(dut.calculateLaunchCondition(3200), LaunchCondition::NotMet);
 }
 
 static void setDefaultLaunchParameters() {
