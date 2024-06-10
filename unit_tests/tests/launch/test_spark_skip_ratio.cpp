@@ -156,7 +156,6 @@ void SparkSkipRatioTest::setUpTestParameters(const SparkSkipRatioTestConfig& con
 
 void SparkSkipRatioTest::updateRpm(const int rpm) {
     Sensor::setMockValue(SensorType::Rpm, rpm);
-    eth->moveTimeForwardSec(1);
     // run the ignition math
     engine->periodicFastCallback();
 }
