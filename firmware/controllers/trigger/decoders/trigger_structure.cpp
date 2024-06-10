@@ -275,7 +275,7 @@ void TriggerWaveform::addEvent(angle_t angle, TriggerValue const state, TriggerW
 	}
 
 	if (angle <= 0 || angle > 1) {
-		firmwareError(ObdCode::CUSTOM_ERR_6599, "angle should be positive not above 1: index=%d angle %f", channelIndex, angle);
+		firmwareError(ObdCode::CUSTOM_ERR_6599, "angle should be positive not above 1: index=%d angle %f", (int)channelIndex, angle);
 		return;
 	}
 	if (wave.phaseCount > 0) {
