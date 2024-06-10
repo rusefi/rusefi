@@ -485,7 +485,7 @@ static void nb2cannedlambdaTable() {
 {11.500,	11.500,	11.500,	11.500,	11.500,	11.500,	11.500,	11.500,	11.500,	11.500,	11.500,	11.500,	11.500,	11.500,	11.500,	11.500,	},
 {11.000,	11.000,	11.000,	11.000,	11.000,	11.000,	11.000,	11.000,	11.000,	11.000,	11.000,	11.000,	11.000,	11.000,	11.000,	11.000,	},
 };
-	copyTable(config->lambdaTable, hardCodedlambdaTable);
+	copyTable(config->lambdaTable, hardCodedlambdaTable, 1.0 / 14.7);
 }
 
 static void nb2cannedtcuSolenoidTable() {

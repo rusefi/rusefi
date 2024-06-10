@@ -413,7 +413,7 @@ static void coupleBK2cannedlambdaTable() {
 {11.000,	11.000,	11.000,	11.000,	11.000,	11.000,	11.000,	11.000,	11.000,	11.000,	11.000,	11.000,	11.000,	11.000,	11.000,	11.000,	},
 {10.700,	10.700,	10.700,	10.700,	10.700,	10.700,	10.700,	10.700,	10.700,	10.700,	10.700,	10.700,	10.700,	10.700,	10.700,	10.700,	},
 };
-	copyTable(config->lambdaTable, hardCodedlambdaTable);
+	copyTable(config->lambdaTable, hardCodedlambdaTable, 1.0 / 14.7);
 }
 
 static void coupleBK2cannedtcuSolenoidTable() {

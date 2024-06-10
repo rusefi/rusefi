@@ -721,7 +721,7 @@ static void cannedlambdaTable() {
 {14.000,	14.000,	14.000,	14.000,	14.000,	14.000,	14.000,	14.000,	14.000,	14.000,	14.000,	14.000,	14.000,	14.000,	14.000,	14.000,	},
 {13.900,	13.900,	13.900,	13.900,	13.900,	13.900,	13.900,	13.900,	13.900,	13.900,	13.900,	13.900,	13.900,	13.900,	13.900,	13.900,	},
 };
-	copyTable(config->lambdaTable, hardCodedlambdaTable);
+	copyTable(config->lambdaTable, hardCodedlambdaTable, 1.0 / 14.7);
 }
 
 static void cannediacPidMultRpmBins() {
