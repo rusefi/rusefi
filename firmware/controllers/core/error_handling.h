@@ -22,7 +22,7 @@ extern "C"
  *
  * see also firmwareError()
  */
-bool warning(ObdCode code, const char *fmt, ...);
+bool warning(ObdCode code, const char *fmt, ...) __attribute__ ((format (printf, 2, 3)));
 
 using critical_msg_t = char[ERROR_BUFFER_SIZE];
 

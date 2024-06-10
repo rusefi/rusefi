@@ -45,7 +45,7 @@
 bool Logging::validateBuffer(uint32_t extraLen) {
 	if (remainingSize() < extraLen + 1) {
 #if EFI_PROD_CODE
-		warning(ObdCode::CUSTOM_LOGGING_BUFFER_OVERFLOW, "output overflow %s %d", m_name, extraLen);
+		warning(ObdCode::CUSTOM_LOGGING_BUFFER_OVERFLOW, "output overflow %s %lu", m_name, extraLen);
 #endif /* EFI_PROD_CODE */
 		return true;
 	}

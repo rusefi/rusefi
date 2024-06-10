@@ -253,7 +253,7 @@ static void startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutput
 	if (Sensor::getOrZero(SensorType::Rpm) > 2 * engineConfiguration->cranking.rpm) {
 		const char *outputName = output->getName();
 		if (prevSparkName == outputName && getCurrentIgnitionMode() != IM_ONE_COIL) {
-			warning(ObdCode::CUSTOM_OBD_SKIPPED_SPARK, "looks like skipped spark event %d %s", getRevolutionCounter(), outputName);
+			warning(ObdCode::CUSTOM_OBD_SKIPPED_SPARK, "looks like skipped spark event %lu %s", getRevolutionCounter(), outputName);
 		}
 		prevSparkName = outputName;
 	}
@@ -481,7 +481,7 @@ void onTriggerEventSparkLogic(int rpm, efitick_t edgeTimestamp, float currentPha
 				// artificial misfire on cylinder #1 for testing purposes
 				// enable artificialMisfire
 				// set_fsio_setting 6 20
-				warning(ObdCode::CUSTOM_ARTIFICIAL_MISFIRE, "artificial misfire on cylinder #1 for testing purposes %d", engine->engineState.sparkCounter);
+				warning(ObdCode::CUSTOM_ARTIFICIAL_MISFIRE, "artificial misfire on cylinder #1 for testing purposes %lu", engine->engineState.sparkCounter);
 				continue;
 			}
 #if EFI_LAUNCH_CONTROL

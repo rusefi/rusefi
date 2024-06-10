@@ -547,7 +547,7 @@ bool TriggerCentral::isToothExpectedNow(efitick_t timestamp) {
 				//     #2 will be ignored
 				// We're not sure which edge was the "real" one, but they were close enough
 				// together that it doesn't really matter.
-				warning(ObdCode::CUSTOM_PRIMARY_DOUBLED_EDGE, "doubled trigger edge after %.2f deg at #%d", angleSinceLastTooth, triggerState.currentCycle.current_index);
+				warning(ObdCode::CUSTOM_PRIMARY_DOUBLED_EDGE, "doubled trigger edge after %.2f deg at #%lu", angleSinceLastTooth, triggerState.currentCycle.current_index);
 
 				return false;
 			}
@@ -558,7 +558,7 @@ bool TriggerCentral::isToothExpectedNow(efitick_t timestamp) {
 			// TODO: configurable threshold
 			if (isRpmEnough && absError > 10 && absError < 180) {
 				// This tooth came at a very unexpected time, ignore it
-				warning(ObdCode::CUSTOM_PRIMARY_BAD_TOOTH_TIMING, "tooth #%d error of %.1f", triggerState.currentCycle.current_index, angleError);
+				warning(ObdCode::CUSTOM_PRIMARY_BAD_TOOTH_TIMING, "tooth #%lu error of %.1f", triggerState.currentCycle.current_index, angleError);
 
 				// TODO: this causes issues with some real engine logs, should it?
 				// return false;
