@@ -424,7 +424,7 @@ void startLua() {
 	addConsoleAction("luamemory", [](){
 	  efiPrintf("rx total/recent %d %d", totalRxCount,
 	    recentRxCount);
-	  efiPrintf("luaCycle %dus including luaRxTime %dus", NT2US(engine->outputChannels.luaLastCycleDuration),
+	  efiPrintf("luaCycle %luus including luaRxTime %dus", NT2US(engine->outputChannels.luaLastCycleDuration),
 	    NT2US(rxTime));
 
      printLuaMemoryInfo();
