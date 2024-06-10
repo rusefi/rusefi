@@ -247,9 +247,9 @@ void canHwInfo(CANDriver* cand)
    }
 
    uint32_t esr = cand->can->ESR;
-   efiPrintf("Receive error counter %d", (esr >> 24) & 0xff);
-   efiPrintf("Transmit error counter %d", (esr >> 16) & 0xff);
-   efiPrintf("Last error %d", (esr >> 4) & 0x7);
+   efiPrintf("Receive error counter %ld", (esr >> 24) & 0xff);
+   efiPrintf("Transmit error counter %ld", (esr >> 16) & 0xff);
+   efiPrintf("Last error %ld", (esr >> 4) & 0x7);
    efiPrintf("Flags: %s %s %s",
       (esr & 0x4) ? "BOFF" : "",
       (esr & 0x2) ? "EPVF" : "",

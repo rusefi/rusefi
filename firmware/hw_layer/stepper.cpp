@@ -87,7 +87,7 @@ void StepperMotorBase::setInitialPosition() {
 	efiPrintf("Stepper: savedStepperPos=%d forceStepperParking=%d (tps=%.2f)", m_currentPosition, (forceStepperParking ? 1 : 0), tpsPos);
 
 	if (m_currentPosition < 0 || forceStepperParking) {
-		efiPrintf("Stepper: starting parking time=%dms", getTimeNowMs());
+		efiPrintf("Stepper: starting parking time=%lums", getTimeNowMs());
 		// reset saved value
 		saveStepperPos(-1);
 

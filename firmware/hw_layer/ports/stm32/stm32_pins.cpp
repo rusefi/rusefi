@@ -120,7 +120,7 @@ ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin) {
 
 // huh why conditional on EFI_BOOTLOADER? some weird technical debt while does it fail only with debug options?
 #ifndef EFI_BOOTLOADER
-	criticalError("%s: Invalid on-chip Gpio: %d", msg, brainPin);
+	criticalError("%s: Invalid on-chip Gpio: %d", msg, (int)brainPin);
 #endif // EFI_BOOTLOADER
 	return EFI_ERROR_CODE;
 }

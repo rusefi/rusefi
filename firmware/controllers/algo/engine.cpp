@@ -419,7 +419,7 @@ static void assertTimeIsLinear() {
 			efitimems_t gapInMs = msNow - mostRecentMs;
 			// todo: lower gapInMs threshold?
 			if (gapInMs > 200) {
-				firmwareError(ObdCode::WATCH_DOG_SECONDS, "gap in time: mostRecentMs %dmS, now=%dmS, gap=%dmS",
+				firmwareError(ObdCode::WATCH_DOG_SECONDS, "gap in time: mostRecentMs %lumS, now=%lumS, gap=%lumS",
 					mostRecentMs, msNow, gapInMs);
 			}
 		}

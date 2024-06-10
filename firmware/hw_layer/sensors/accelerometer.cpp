@@ -293,7 +293,7 @@ void initAccelerometer() {
 		instance.start();
 		efiPrintf("accelerometer init OK");
 	} else {
-		efiPrintf("accelerometer init failed %d", ret);
+		efiPrintf("accelerometer init failed %d", (int)ret);
 	}
 #endif /* HAL_USE_SPI */
 }
