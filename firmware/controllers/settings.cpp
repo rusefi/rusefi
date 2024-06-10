@@ -709,9 +709,6 @@ const command_f_s commandsF[] = {
 		{"cranking_fuel", setCrankingFuel},
 		{"cranking_iac", setCrankingIACExtra},
 		{"cranking_timing_angle", setCrankingTimingAngle},
-		{"tps_accel_threshold", setTpsAccelThr},
-		{"tps_decel_threshold", setTpsDecelThr},
-		{"tps_decel_multiplier", setTpsDecelMult},
 		{"flat_injector_lag", setFlatInjectorLag},
 #endif // EFI_ENGINE_CONTROL
 		{"script_curve_1_value", setScriptCurve1Value},
@@ -737,7 +734,6 @@ const command_i_s commandsI[] = {
 		{"debug_mode", setDebugMode},
 		{"trigger_type", setTriggerType},
 		{"idle_solenoid_freq", setIdleSolenoidFrequency},
-		{"tps_accel_len", setTpsAccelLen},
 #endif // EFI_ENGINE_CONTROL
 #if EFI_PROD_CODE
 #if EFI_BOR_LEVEL

@@ -39,9 +39,4 @@ public:
 
 void initAccelEnrichment();
 
-void setTpsAccelThr(float value);
-void setTpsDecelThr(float value);
-void setTpsDecelMult(float value);
-void setTpsAccelLen(int length);
-
 void updateAccelParameters();
