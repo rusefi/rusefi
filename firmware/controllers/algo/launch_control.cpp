@@ -144,7 +144,7 @@ float LaunchControlBase::calculateSparkSkipRatio(const int rpm) const {
 	if (engineConfiguration->launchControlEnabled && engineConfiguration->launchSparkCutEnable) {
 		if (isLaunchCondition) {
 			result = 1.0f;
-		} else {
+		} else if (isLaunchPreCondition) {
 			const int launchRpm = engineConfiguration->launchRpm;
 			const int sparkSkipStartRpm = launchRpm - engineConfiguration->launchRpmWindow;
 			if (sparkSkipStartRpm <= rpm) {

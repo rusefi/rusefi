@@ -27,7 +27,7 @@ struct RpmTestData {
     const std::string context;
     const int rpm;
     const double expectedTargetSkipRatio;
-    const std::optional<bool> expectedLaunchCondition;
+    const std::optional<LaunchCondition> expectedLaunchCondition;
 };
 
 class SparkSkipRatioTest : public testing::Test {
@@ -61,51 +61,51 @@ void SparkSkipRatioTest::TearDown() {
 
 std::vector<RpmTestData> SparkSkipRatioTest::generateNoLaunchSparkSkipTestData(const double expectedTargetSkipRatio) {
     return std::vector<RpmTestData> {
-                {
-                    "rpm = TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START - 1 (before entering spark skip RPM window)",
-                    TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START - 1,
-                    expectedTargetSkipRatio,
-                    { false }
-                },
-                /* We've entered spark skip RPM window: */
-                {
-                    "rpm = TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START (entering spark skip RPM window)",
-                    TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START,
-                    expectedTargetSkipRatio,
-                    { false }
-                },
-                {
-                    "rpm = (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START + TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END) / 2 (inside spark skip RPM window)",
-                    (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START + TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END) / 2,
-                    expectedTargetSkipRatio,
-                    { false }
-                },
-                {
-                    "rpm = TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END (leaving spark skip RPM window)",
-                    TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END,
-                    expectedTargetSkipRatio,
-                    { false }
-                },
-                /* We've left spark skip RPM window: */
-                {
-                    "rpm = TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END + 1 (after spark skip RPM window)",
-                    TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END + 1,
-                    expectedTargetSkipRatio,
-                    { false }
-                },
-                {
-                    "rpm = TEST_LAUNCH_RPM - 1 (before launch)",
-                    TEST_LAUNCH_RPM - 1,
-                    expectedTargetSkipRatio,
-                    { false }
-                },
-                /* We've reached TEST_LAUNCH_RPM: */
-                {
-                    "rpm = TEST_LAUNCH_RPM (launch condition is still not satisfied)",
-                    TEST_LAUNCH_RPM,
-                    expectedTargetSkipRatio,
-                    { false }
-                }
+        {
+            "rpm = TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START - 1 (before entering spark skip RPM window)",
+            TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START - 1,
+            expectedTargetSkipRatio,
+            { LaunchCondition::NotMet }
+        },
+        /* We've entered spark skip RPM window: */
+        {
+            "rpm = TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START (entering spark skip RPM window)",
+            TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START,
+            expectedTargetSkipRatio,
+            { LaunchCondition::NotMet }
+        },
+        {
+            "rpm = (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START + TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END) / 2 (inside spark skip RPM window)",
+            (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START + TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END) / 2,
+            expectedTargetSkipRatio,
+            { LaunchCondition::NotMet }
+        },
+        {
+            "rpm = TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END (leaving spark skip RPM window)",
+            TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END,
+            expectedTargetSkipRatio,
+            { LaunchCondition::NotMet }
+        },
+        /* We've left spark skip RPM window: */
+        {
+            "rpm = TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END + 1 (after spark skip RPM window)",
+            TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END + 1,
+            expectedTargetSkipRatio,
+            { LaunchCondition::NotMet }
+        },
+        {
+            "rpm = TEST_LAUNCH_RPM - 1 (before launch)",
+            TEST_LAUNCH_RPM - 1,
+            expectedTargetSkipRatio,
+            { LaunchCondition::NotMet }
+        },
+        /* We've reached TEST_LAUNCH_RPM: */
+        {
+            "rpm = TEST_LAUNCH_RPM (launch condition is still not satisfied)",
+            TEST_LAUNCH_RPM,
+            expectedTargetSkipRatio,
+            { LaunchCondition::NotMet }
+        }
     };
 }
 
@@ -121,8 +121,23 @@ void SparkSkipRatioTest::doTest(
     for (const RpmTestData& testDataItem: testData) {
         updateRpm(testDataItem.rpm);
         if (testDataItem.expectedLaunchCondition.has_value()) {
-            EXPECT_EQ(engine->launchController.isLaunchCondition, testDataItem.expectedLaunchCondition.value())
-                << testDataItem.context;
+			switch (testDataItem.expectedLaunchCondition.value()) {
+				case LaunchCondition::NotMet: {
+					EXPECT_FALSE(engine->launchController.isLaunchPreCondition) << testDataItem.context;
+					EXPECT_FALSE(engine->launchController.isLaunchCondition) << testDataItem.context;
+					break;
+				}
+				case LaunchCondition::PreLaunch: {
+					EXPECT_TRUE(engine->launchController.isLaunchPreCondition) << testDataItem.context;
+					EXPECT_FALSE(engine->launchController.isLaunchCondition) << testDataItem.context;
+					break;
+				}
+				case LaunchCondition::Launch: {
+					EXPECT_FALSE(engine->launchController.isLaunchPreCondition) << testDataItem.context;
+					EXPECT_TRUE(engine->launchController.isLaunchCondition) << testDataItem.context;
+					break;
+				}
+			}
         }
         EXPECT_NEAR(engine->hardSparkLimiter.getTargetSkipRatio(), testDataItem.expectedTargetSkipRatio, EPS5D)
             << testDataItem.context;
@@ -172,46 +187,46 @@ TEST_F(SparkSkipRatioTest, raisingRpmToLaunchCondition) {
                 "rpm = TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START - 1 (before entering spark skip RPM window)",
                 TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START - 1,
                 0.0f,
-                { false }
+                { LaunchCondition::NotMet }
             },
             /* We've entered spark skip RPM window: */
             {
                 "rpm = TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START (entering spark skip RPM window)",
                 TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START,
                 TEST_INITIAL_IGNITION_CUT_RATIO,
-                { false }
+                { LaunchCondition::PreLaunch }
             },
             {
                 "rpm = (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START + TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END) / 2 (inside spark skip RPM window)",
                 (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START + TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END) / 2,
                 (TEST_INITIAL_IGNITION_CUT_RATIO + TEST_FINAL_IGNITION_CUT_RATIO) / 2,
-                { false }
+                { LaunchCondition::PreLaunch }
             },
             {
                 "rpm = TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END (leaving spark skip RPM window)",
                 TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END,
                 TEST_FINAL_IGNITION_CUT_RATIO,
-                { false }
+                { LaunchCondition::PreLaunch }
             },
             /* We've left spark skip RPM window: */
             {
                 "rpm = TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END + 1 (after spark skip RPM window)",
                 TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END + 1,
                 TEST_FINAL_IGNITION_CUT_RATIO,
-                { false }
+                { LaunchCondition::PreLaunch }
             },
             {
                 "rpm = TEST_LAUNCH_RPM - 1 (before launch)",
                 TEST_LAUNCH_RPM - 1,
                 TEST_FINAL_IGNITION_CUT_RATIO,
-                { false }
+                { LaunchCondition::PreLaunch }
             },
             /* We've reached TEST_LAUNCH_RPM: */
             {
                 "rpm = TEST_LAUNCH_RPM (launching)",
                 TEST_LAUNCH_RPM,
                 1.0f,
-                { true }
+                { LaunchCondition::Launch }
             }
         }
     );
@@ -224,53 +239,7 @@ TEST_F(SparkSkipRatioTest, raisingRpmWithoutLaunchCondition) {
             /* enableIgnitionCut = */ { true },
             /* satifySwitchSpeedThresholdAndTpsConditions = */ false
         },
-        /* testData = */ {
-            {
-                "rpm = TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START - 1 (before entering spark skip RPM window)",
-                TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START - 1,
-                0.0f,
-                { false }
-            },
-            /* We've entered spark skip RPM window: */
-            {
-                "rpm = TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START (entering spark skip RPM window)",
-                TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START,
-                TEST_INITIAL_IGNITION_CUT_RATIO,
-                { false }
-            },
-            {
-                "rpm = (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START + TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END) / 2 (inside spark skip RPM window)",
-                (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START + TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END) / 2,
-                (TEST_INITIAL_IGNITION_CUT_RATIO + TEST_FINAL_IGNITION_CUT_RATIO) / 2,
-                { false }
-            },
-            {
-                "rpm = TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END (leaving spark skip RPM window)",
-                TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END,
-                TEST_FINAL_IGNITION_CUT_RATIO,
-                { false }
-            },
-            /* We've left spark skip RPM window: */
-            {
-                "rpm = TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END + 1 (after spark skip RPM window)",
-                TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END + 1,
-                TEST_FINAL_IGNITION_CUT_RATIO,
-                { false }
-            },
-            {
-                "rpm = TEST_LAUNCH_RPM - 1 (before launch)",
-                TEST_LAUNCH_RPM - 1,
-                TEST_FINAL_IGNITION_CUT_RATIO,
-                { false }
-            },
-            /* We've reached TEST_LAUNCH_RPM: */
-            {
-                "rpm = TEST_LAUNCH_RPM (launch condition is still not satisfied)",
-                TEST_LAUNCH_RPM,
-                TEST_FINAL_IGNITION_CUT_RATIO,
-                { false }
-            }
-        }
+        /* testData = */ DEFAULT_NO_LAUNCH_SPARK_SKIP_TEST_DATA
     );
 }
 
@@ -286,46 +255,46 @@ TEST_F(SparkSkipRatioTest, raisingRpmWithDisabledIgnitionCut) {
                 "rpm = TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START - 1 (before entering spark skip RPM window)",
                 TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START - 1,
                 0.0f,
-                { false }
+                { LaunchCondition::NotMet }
             },
             /* We've entered spark skip RPM window: */
             {
                 "rpm = TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START (entering spark skip RPM window)",
                 TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START,
                 0.0f,
-                { false }
+                { LaunchCondition::PreLaunch }
             },
             {
                 "rpm = (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START + TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END) / 2 (inside spark skip RPM window)",
                 (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START + TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END) / 2,
                 0.0f,
-                { false }
+                { LaunchCondition::PreLaunch }
             },
             {
                 "rpm = TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END (leaving spark skip RPM window)",
                 TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END,
                 0.0f,
-                { false }
+                { LaunchCondition::PreLaunch }
             },
             /* We've left spark skip RPM window: */
             {
                 "rpm = TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END + 1 (after spark skip RPM window)",
                 TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END + 1,
                 0.0f,
-                { false }
+                { LaunchCondition::PreLaunch }
             },
             {
                 "rpm = TEST_LAUNCH_RPM - 1 (before launch)",
                 TEST_LAUNCH_RPM - 1,
                 0.0f,
-                { false }
+                { LaunchCondition::PreLaunch }
             },
             /* We've reached TEST_LAUNCH_RPM: */
             {
-                "rpm = TEST_LAUNCH_RPM (launching)",
+                "rpm = TEST_LAUNCH_RPM (launch condition is still not satisfied)",
                 TEST_LAUNCH_RPM,
                 0.0f,
-                { true }
+                { LaunchCondition::Launch }
             }
         }
     );
