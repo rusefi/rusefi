@@ -346,6 +346,7 @@ bool TunerStudio::handlePlainCommand(TsChannelBase* tsChannel, uint8_t command) 
 		return true;
 	} else {
 		// This wasn't a valid command
+		efiPrintf("TS: didn't understand single byte comamnd %d (char '%c')", command, command);
 		return false;
 	}
 }
@@ -381,16 +382,17 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 		return -1;
 	}
 
-	if (tsInstance.handlePlainCommand(tsChannel, firstByte)) {
-		return -1;
-	}
-
 	uint8_t secondByte;
 	/* second byte should be received within minimal delay */
 	received = tsChannel->readTimeout(&secondByte, 1, TS_COMMUNICATION_TIMEOUT_SHORT);
 	if (received != 1) {
-		tunerStudioError(tsChannel, "TS: ERROR: no second byte");
-		tsChannel->in_sync = false;
+		// Second byte timed out: it may be a single-byte "plain" command
+		if (!tsInstance.handlePlainCommand(tsChannel, firstByte)) {
+			// This wasn't understood as a plain command, so it's an error
+			tunerStudioError(tsChannel, "TS: ERROR: no second byte");
+			tsChannel->in_sync = false;
+		}
+
 		return -1;
 	}
 
