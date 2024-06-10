@@ -28,8 +28,7 @@ public:
 	bool isInsideTpsCondition() const;
 	bool isInsideSwitchCondition();
 	LaunchCondition calculateRPMLaunchCondition(int rpm);
-	bool isInsideRPMCondition(int rpm);
-	bool isLaunchConditionMet(int rpm);
+	LaunchCondition calculateLaunchCondition(int rpm);
 
 	bool isLaunchSparkRpmRetardCondition() const;
 	bool isLaunchFuelRpmRetardCondition() const;
