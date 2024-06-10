@@ -1044,7 +1044,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif //HW_SUBARU_EG33
 	default:
-		firmwareError(ObdCode::CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", engineType);
+		firmwareError(ObdCode::CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", (int)engineType);
 	}
 	boardEngineTypeTune(engineType);
 	applyNonPersistentConfiguration();
