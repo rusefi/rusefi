@@ -32,7 +32,8 @@
 # make bundles		Generate docs, enums, configs, build bootloader, build firmware, and package both full and autoupdate bundles
 # make bootloader Generate docs, enums, configs, and build bootloader
 # make ../simulator/build/rusefi_simulator.exe build Windows simulator (even if invoked on Linux)
-# make ../simulator/build/rusefi_simulator build Windows simulator [huh, do we build Windows .exe even on linux?]
+# bin/compile.sh config/boards/f407-discovery/meta-info.env ../simulator/build/rusefi_simulator.linux build Linux simulator
+# make ../simulator/build/rusefi_simulator.both build _both_ Windows and Linux simulator (do we need that? shall we drop that?)
 #
 
 CHIBIOS = ChibiOS
