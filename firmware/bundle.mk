@@ -48,7 +48,7 @@ FOLDER_SOURCES = \
 
 # Custom board builds don't include the simulator
 ifneq ($(BUNDLE_SIMULATOR),false)
-  SIMULATOR_OUT = ../simulator/build/rusefi_simulator.exe
+  SIMULATOR_EXE = ../simulator/build/rusefi_simulator.exe
 endif
 
 UPDATE_CONSOLE_FOLDER_SOURCES = \
@@ -70,7 +70,7 @@ CONSOLE_FOLDER_SOURCES = \
   ../firmware/ext/openblt/Host/openblt_jni.dll \
   ../firmware/ext/openblt/Host/libopenblt_jni.so \
   ../firmware/ext/openblt/Host/libopenblt_jni.dylib \
-  $(SIMULATOR_OUT)
+  $(SIMULATOR_EXE)
 
 BOOTLOADER_BIN = bootloader/blbuild/openblt_$(PROJECT_BOARD).bin
 BOOTLOADER_HEX = bootloader/blbuild/openblt_$(PROJECT_BOARD).hex
@@ -119,11 +119,11 @@ BUNDLE_FILES = \
   $(UPDATE_BUNDLE_FILES) \
   $(FULL_BUNDLE_CONTENT)
 
-$(SIMULATOR_OUT): $(CONFIG_FILES) .FORCE
+$(SIMULATOR_EXE): $(CONFIG_FILES) .FORCE
 	$(MAKE) -C ../simulator -r OS="Windows_NT" SUBMAKE=yes
 
 # make Windows simulator a prerequisite so that we don't try compiling them concurrently
-../simulator/build/rusefi_simulator: $(CONFIG_FILES) .FORCE | $(SIMULATOR_OUT)
+../simulator/build/rusefi_simulator: $(CONFIG_FILES) .FORCE | $(SIMULATOR_EXE)
 	$(MAKE) -C ../simulator -r OS="Linux" SUBMAKE=yes
 
 $(BOOTLOADER_HEX) $(BOOTLOADER_BIN): .bootloader-sentinel ;
