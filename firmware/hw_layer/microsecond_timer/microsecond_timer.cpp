@@ -50,10 +50,10 @@ static bool hwStarted = false;
 void setHardwareSchedulerTimer(efitick_t nowNt, efitick_t setTimeNt) {
 	criticalAssertVoid(hwStarted, "HW.started");
 
-	// How many ticks in the future is this event?
-	auto timeDeltaNt = setTimeNt - nowNt;
-
 	setHwTimerCounter++;
+
+	// How many ticks in the future is this event?
+	const auto timeDeltaNt = setTimeNt - nowNt;
 
 	/**
 	 * #259 BUG error: not positive deltaTimeNt
@@ -64,12 +64,10 @@ void setHardwareSchedulerTimer(efitick_t nowNt, efitick_t setTimeNt) {
 		warning(ObdCode::CUSTOM_OBD_LOCAL_FREEZE, "local freeze cnt=%d", timerFreezeCounter);
 	}
 
-	// We need the timer to fire after we return - 1 doesn't work as it may actually schedule in the past
+	// We need the timer to fire after we return - too close to now may actually schedule in the past
 	if (timeDeltaNt < US2NT(2)) {
-		timeDeltaNt = US2NT(2);
-	}
-
-	if (timeDeltaNt >= TOO_FAR_INTO_FUTURE_NT) {
+		setTimeNt = nowNt + US2NT(2);
+	} else if (timeDeltaNt >= TOO_FAR_INTO_FUTURE_NT) {
 		uint32_t delta32;
 		if (timeDeltaNt > UINT32_MAX) {
 			delta32 = UINT32_MAX;
