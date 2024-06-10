@@ -34,7 +34,7 @@ public:
 	void stop() override;
 
 	// Special override for writeCrcPacket for small packets
-	void writeCrcPacket(const uint8_t* buf, size_t size, bool allowLongPackets = false) override;
+	void copyAndWriteSmallCrcPacket(const uint8_t* buf, size_t size) override;
 };
 
 
@@ -52,7 +52,7 @@ void CanTsChannel::start() {
 void CanTsChannel::stop() {
 }
 
-void CanTsChannel::writeCrcPacket(const uint8_t* buf, size_t size, bool allowLongPackets) {
+void CanTsChannel::copyAndWriteSmallCrcPacket(const uint8_t* buf, size_t size) {
 #ifdef TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME
 	// a special case for short packets: we can send them in 1 frame, without CRC & size,
 	// because the CAN protocol is already protected by its own checksum.
@@ -68,7 +68,7 @@ void CanTsChannel::writeCrcPacket(const uint8_t* buf, size_t size, bool allowLon
 #endif /* TS_CAN_DEVICE_SHORT_PACKETS_IN_ONE_FRAME */
 
 	// Packet too large, use default implementation
-	TsChannelBase::writeCrcPacket(buf, size, allowLongPackets);
+	TsChannelBase::copyAndWriteSmallCrcPacket(buf, size);
 }
 
 void CanTsChannel::write(const uint8_t* buffer, size_t size, bool) {

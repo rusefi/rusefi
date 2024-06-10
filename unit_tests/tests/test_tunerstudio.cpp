@@ -50,19 +50,14 @@ static void assertCrcPacket(BufferTsChannel& dut) {
 TEST(binary, testWriteCrc) {
 	BufferTsChannel test;
 
-	// Let it pick which impl (small vs large) to use
+	// Small impl
 	test.reset();
-	test.writeCrcPacket((const uint8_t*)PAYLOAD, SIZE);
+	test.copyAndWriteSmallCrcPacket((const uint8_t*)PAYLOAD, SIZE);
 	assertCrcPacket(test);
 
-	// Force the large impl
+	// Large impl
 	test.reset();
-	test.writeCrcPacket((const uint8_t*)PAYLOAD, SIZE);
-	assertCrcPacket(test);
-
-	// Force the small impl
-	test.reset();
-	test.writeCrcPacket((const uint8_t*)PAYLOAD, SIZE);
+	test.writeCrcPacketLocked((const uint8_t*)PAYLOAD, SIZE);
 	assertCrcPacket(test);
 }
 

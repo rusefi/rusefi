@@ -86,7 +86,7 @@
 ! so not forget to change fileVersion in rusefi.ini
 ! todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
 ! rusEFI console from TS_FILE_VERSION to TS_SIGNATURE :(
-#define TS_FILE_VERSION 20210312
+#define TS_FILE_VERSION 20240610
 
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
@@ -1892,10 +1892,6 @@ end_struct
 
 ! Engine Sniffer time stamp unit, in microseconds
 #define ENGINE_SNIFFER_UNIT_US 10
-
-! These commands are used exclusively by the FOME console
-! 0x74
-#define TS_TEST_COMMAND 't'
 
 ! High speed logger commands
 #define TS_SET_LOGGER_SWITCH  'l'
