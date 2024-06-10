@@ -7,7 +7,6 @@
 
 #pragma once
 
-#include <rusefi/timer.h>
 #include "launch_control_state_generated.h"
 
 void initLaunchControl();
@@ -43,7 +42,6 @@ private:
 	float calculateSparkSkipRatio(int rpm) const;
 
 
-	Timer m_launchTimer;
 	float sparkSkipRatio = 0.0f;
 };
 

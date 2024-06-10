@@ -136,14 +136,7 @@ void LaunchControlBase::update() {
 	//and still recalculate in case user changed the values
 	retardThresholdRpm = engineConfiguration->launchRpm;
 
-	if (!combinedConditions) {
-		// conditions not met, reset timer
-		m_launchTimer.reset();
-		isLaunchCondition = false;
-	} else {
-		// If conditions are met...
-		isLaunchCondition = m_launchTimer.hasElapsedSec(engineConfiguration->launchActivateDelay);
-	}
+	isLaunchCondition = combinedConditions;
 
 	sparkSkipRatio = calculateSparkSkipRatio(rpm);
 }

@@ -165,7 +165,6 @@ static void setDefaultLaunchParameters() {
 	engineConfiguration->launchSpeedThreshold = 10; //maximum speed allowed before disable launch
 	engineConfiguration->launchFuelAdderPercent = 10; // Extra fuel in % when launch are triggered
 //	engineConfiguration->launchBoostDuty = 70; // boost valve duty cycle at launch
-	engineConfiguration->launchActivateDelay = 3; // Delay in seconds for launch to kick in
 //	engineConfiguration->enableLaunchRetard = true;
 // dead code todo	engineConfiguration->enableLaunchBoost = true;
 	engineConfiguration->launchSmoothRetard = true; //interpolates the advance linear from launchrpm to fully retarded at launchtimingrpmrange
@@ -203,13 +202,6 @@ TEST(LaunchControl, CompleteRun) {
 	//update condition check
 	engine->launchController.update();
 
-
-	//we have a 3 seconds delay to actually enable it!
-	eth.moveTimeForwardAndInvokeEventsSec(1);
-	engine->launchController.update();
-
-	EXPECT_FALSE(engine->launchController.isLaunchSparkRpmRetardCondition());
-	EXPECT_FALSE(engine->launchController.isLaunchFuelRpmRetardCondition());
 
 	eth.moveTimeForwardAndInvokeEventsSec(3);
 	engine->launchController.update();
