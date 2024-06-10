@@ -193,7 +193,7 @@ static LuaHandle setupLuaState(lua_Alloc alloc) {
 }
 
 static bool loadScript(LuaHandle& ls, const char* scriptStr) {
-	efiPrintf(TAG "loading script length: %d...", efiStrlen(scriptStr));
+	efiPrintf(TAG "loading script length: %lu...", efiStrlen(scriptStr));
 
 	if (0 != luaL_dostring(ls, scriptStr)) {
 		efiPrintf(TAG "ERROR loading script: %s", lua_tostring(ls, -1));
