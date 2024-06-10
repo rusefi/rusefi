@@ -128,14 +128,14 @@ static void egtRead() {
 
 	max_32855_code code = getResultCode(egtPacket);
 
-	efiPrintf("egt %x code=%d %s", egtPacket, code, getMcCode(code));
+	efiPrintf("egt %x code=%d %s", (unsigned int)egtPacket, (unsigned int)code, getMcCode(code));
 
 	if (code != MC_INVALID) {
 		int refBits = ((egtPacket & 0xFFFF) / 16); // bits 15:4
 		float refTemp = refBits / 16.0;
 		efiPrintf("reference temperature %.2f", refTemp);
 
-		efiPrintf("EGT temperature %d", GET_TEMPERATURE_C(egtPacket));
+		efiPrintf("EGT temperature %lu", GET_TEMPERATURE_C(egtPacket));
 	}
 }
 

@@ -42,7 +42,7 @@ static const char * const monthAbbrs[] = {
 void printRtcDateTime() {
 	efidatetime_t dateTime = getRtcDateTime();
 	// prints the date like: 19 sep 2022 21:19:55
-	efiPrintf("Current RTC time: %02u %s %04u %02u:%02u:%02u",
+	efiPrintf("Current RTC time: %02u %s %04lu %02u:%02u:%02u",
 			dateTime.day, monthAbbrs[dateTime.month - 1], dateTime.year,
 			dateTime.hour, dateTime.minute, dateTime.second);
 }

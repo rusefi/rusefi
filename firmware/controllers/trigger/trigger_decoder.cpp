@@ -476,16 +476,13 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 
 					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
 					if (cisnan(gap)) {
-						efiPrintf("%s index=%d NaN gap, you have noise issues?",
-								i,
-							    prefix
-                        );
+						efiPrintf("%s index=%d NaN gap, you have noise issues?", prefix, i);
 					} else {
 						float ratioTo = triggerShape.syncronizationRatioTo[i];
 
 						bool gapOk = isInRange(ratioFrom, gap, ratioTo);
 
-						efiPrintf("%s %srpm=%d time=%d eventIndex=%d gapIndex=%d: %s gap=%.3f expected from %.3f to %.3f error=%s",
+						efiPrintf("%s %srpm=%d time=%d eventIndex=%lu gapIndex=%d: %s gap=%.3f expected from %.3f to %.3f error=%s",
 								prefix,
 								triggerConfiguration.PrintPrefix,
 								(int)Sensor::getOrZero(SensorType::Rpm),

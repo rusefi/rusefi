@@ -306,7 +306,7 @@ void readFromFlash() {
 			break;
 		case FlashState::IncompatibleVersion:
 			// Preserve engine type from old config
-			efiPrintf("Resetting due to version mismatch but preserving engine type [%d]", engineConfiguration->engineType);
+			efiPrintf("Resetting due to version mismatch but preserving engine type [%d]", (int)engineConfiguration->engineType);
 			resetConfigurationExt(engineConfiguration->engineType);
 			break;
 		case FlashState::Ok:

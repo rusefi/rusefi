@@ -275,7 +275,7 @@ static void listDirectory(const char *path) {
 		if ((fno.fattrib & AM_DIR) || mystrncasecmp(RUSEFI_LOG_PREFIX, fno.fname, sizeof(RUSEFI_LOG_PREFIX) - 1)) {
 			continue;
 		}
-		efiPrintf("logfile%lu:%s", fno.fsize, fno.fname);
+		efiPrintf("logfile %lu:%s", (uint32_t)fno.fsize, fno.fname);
 		count++;
 
 //			efiPrintf("%c%c%c%c%c %u/%02u/%02u %02u:%02u %9lu  %-12s", (fno.fattrib & AM_DIR) ? 'D' : '-',

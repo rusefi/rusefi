@@ -300,7 +300,7 @@ static uint32_t slowAdcErrorsCount = 0;
 
 void printFullAdcReport(void) {
 #if EFI_USE_FAST_ADC
-	efiPrintf("fast %d samples", fastAdc.conversionCount);
+	efiPrintf("fast %lu samples", fastAdc.conversionCount);
 
 	for (int internalIndex = 0; internalIndex < fastAdc.size(); internalIndex++) {
 		adc_channel_e hwIndex = fastAdc.getAdcHardwareIndexByInternalIndex(internalIndex);
@@ -316,7 +316,7 @@ void printFullAdcReport(void) {
 		}
 	}
 #endif // EFI_USE_FAST_ADC
-	efiPrintf("slow %d samples", slowAdcConversionCount);
+	efiPrintf("slow %lu samples", slowAdcConversionCount);
 
 	/* we assume that all slow ADC channels are enabled */
 	for (int internalIndex = 0; internalIndex < ADC_MAX_CHANNELS_COUNT; internalIndex++) {

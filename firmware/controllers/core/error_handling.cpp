@@ -30,7 +30,7 @@ void checkLastBootError() {
 		efiPrintf("Last boot had firmware error: %s", sramState->Err.ErrorString);
 		break;
 	case ErrorCookie::HardFault: {
-		efiPrintf("Last boot had hard fault type: %x addr: %x CSFR: %x", sramState->Err.FaultType, sramState->Err.FaultAddress, sramState->Err.Csfr);
+		efiPrintf("Last boot had hard fault type: %x addr: %x CSFR: %x", (unsigned int)sramState->Err.FaultType, (unsigned int)sramState->Err.FaultAddress, (unsigned int)sramState->Err.Csfr);
 
 		// Print out the context as a sequence of uintptr
 		uintptr_t* data = reinterpret_cast<uintptr_t*>(&sramState->Err.FaultCtx);
@@ -53,7 +53,7 @@ void checkLastBootError() {
 		sramState->Err.BootCount = 0;
 	}
 
-	efiPrintf("Power cycle count: %d", sramState->Err.BootCount);
+	efiPrintf("Power cycle count: %lu", sramState->Err.BootCount);
 	sramState->Err.BootCount++;
 }
 

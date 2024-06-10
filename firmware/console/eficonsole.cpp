@@ -57,7 +57,7 @@ static void sayHello() {
 
 #if defined(STM32F4) || defined(STM32F7) || defined(STM32H7)
 	uint32_t *uid = ((uint32_t *)UID_BASE);
-	efiPrintf("UID=%x %x %x", uid[0], uid[1], uid[2]);
+	efiPrintf("UID=%x %x %x", (unsigned int)uid[0], (unsigned int)uid[1], (unsigned int)uid[2]);
 
 	efiPrintf("can read 0x20000010 %d", ramReadProbe((const char *)0x20000010));
 	efiPrintf("can read 0x20020010 %d", ramReadProbe((const char *)0x20020010));
@@ -129,7 +129,7 @@ static void cmd_threads() {
 
 	while (tp) {
 		int freeBytes = CountFreeStackSpace(tp->wabase);
-		efiPrintf("%s\t%08x\t%lu\t%d", tp->name, tp->wabase, tp->time, freeBytes);
+		efiPrintf("%s\t%08x\t%lu\t%d", tp->name, (unsigned int)tp->wabase, tp->time, freeBytes);
 
 		if (freeBytes < 100) {
 			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Ran out of stack on thread %s, %d bytes remain", tp->name, freeBytes);

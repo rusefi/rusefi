@@ -106,11 +106,11 @@ static Timer printVersionTimer;
 
 static void printRusefiVersion(const char *engineTypeName, const char *firmwareBuildId) {
 	// VersionChecker in rusEFI console is parsing these version string, please follow the expected format
-	efiPrintfProto(PROTOCOL_VERSION_TAG, "%d@%s %s %s %d",
+	efiPrintfProto(PROTOCOL_VERSION_TAG, "%d@%s %s %s %lu",
 			getRusEfiVersion(), GIT_HASH_SHORT,
 			firmwareBuildId,
 			engineTypeName,
-			getTimeNowS());
+			(uint32_t)getTimeNowS());
 }
 
 // Inform the console about the mapping between a pin's logical name (for example, injector 3)

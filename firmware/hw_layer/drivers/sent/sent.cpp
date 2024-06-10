@@ -506,8 +506,8 @@ void sent_channel::Info(void) {
 	uint8_t stat;
 	uint16_t sig0, sig1;
 
-	efiPrintf("Unit time %d CPU ticks %f uS", tickPerUnit, TicksToUs(getTickTime()));
-	efiPrintf("Total pulses %d", pulseCounter);
+	efiPrintf("Unit time %lu CPU ticks %f uS", tickPerUnit, TicksToUs(getTickTime()));
+	efiPrintf("Total pulses %lu", pulseCounter);
 
 	if (GetSignals(&stat, &sig0, &sig1) == 0) {
 		efiPrintf("Last valid fast msg Status 0x%01x Sig0 0x%03x Sig1 0x%03x", stat, sig0, sig1);
@@ -523,11 +523,11 @@ void sent_channel::Info(void) {
 	}
 
 	#if SENT_STATISTIC_COUNTERS
-		efiPrintf("Restarts %d", statistic.RestartCnt);
-		efiPrintf("Interval errors %d short, %d long", statistic.ShortIntervalErr, statistic.LongIntervalErr);
-		efiPrintf("Total frames %d with CRC error %d (%f%%)", statistic.FrameCnt, statistic.CrcErrCnt, statistic.CrcErrCnt * 100.0 / statistic.FrameCnt);
-		efiPrintf("Total slow channel messages %d with crc6 errors %d (%f%%)", statistic.sc, statistic.scCrcErr, statistic.scCrcErr * 100.0 / statistic.sc);
-		efiPrintf("Sync errors %d", statistic.SyncErr);
+		efiPrintf("Restarts %lu", statistic.RestartCnt);
+		efiPrintf("Interval errors %lu short, %lu long", statistic.ShortIntervalErr, statistic.LongIntervalErr);
+		efiPrintf("Total frames %lu with CRC error %lu (%f%%)", statistic.FrameCnt, statistic.CrcErrCnt, statistic.CrcErrCnt * 100.0 / statistic.FrameCnt);
+		efiPrintf("Total slow channel messages %lu with crc6 errors %lu (%f%%)", statistic.sc, statistic.scCrcErr, statistic.scCrcErr * 100.0 / statistic.sc);
+		efiPrintf("Sync errors %lu", statistic.SyncErr);
 	#endif
 }
 
