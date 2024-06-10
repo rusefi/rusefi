@@ -177,7 +177,7 @@ ioportmask_t getHwPin(const char *msg, brain_pin_e brainPin)
 	if (brain_pin_is_onchip(brainPin))
 		return getBrainPinIndex(brainPin);
 
-	firmwareError(ObdCode::CUSTOM_ERR_INVALID_PIN, "%s: Invalid on-chip Gpio: %d", msg, brainPin);
+	firmwareError(ObdCode::CUSTOM_ERR_INVALID_PIN, "%s: Invalid on-chip Gpio: %d", msg, (int)brainPin);
 	return EFI_ERROR_CODE;
 }
 

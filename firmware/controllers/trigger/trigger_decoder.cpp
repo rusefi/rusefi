@@ -405,7 +405,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 	currentCycle.eventCount[(int)triggerWheel]++;
 
 	if (toothed_previous_time > nowNt) {
-		firmwareError(ObdCode::CUSTOM_OBD_93, "[%s] toothed_previous_time after nowNt prev=%d now=%d", msg, toothed_previous_time, nowNt);
+		firmwareError(ObdCode::CUSTOM_OBD_93, "[%s] toothed_previous_time after nowNt prev=%lu now=%lu", msg, (uint32_t)toothed_previous_time, (uint32_t)nowNt);
 	}
 
 	efidur_t currentDurationLong = isFirstEvent ? 0 : (nowNt - toothed_previous_time);

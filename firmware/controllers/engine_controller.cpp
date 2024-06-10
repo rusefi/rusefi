@@ -495,7 +495,7 @@ void commonInitEngineController() {
 // Returns false if there's an obvious problem with the loaded configuration
 bool validateConfig() {
 	if (engineConfiguration->cylindersCount > MAX_CYLINDER_COUNT) {
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Invalid cylinder count: %d", engineConfiguration->cylindersCount);
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Invalid cylinder count: %lu", engineConfiguration->cylindersCount);
 		return false;
 	}
 

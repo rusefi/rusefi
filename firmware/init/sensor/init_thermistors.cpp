@@ -33,9 +33,9 @@ static void validateThermistorConfig(const char *msg, thermistor_conf_s& cfg) {
 		cfg.tempC_2 >= cfg.tempC_3) {
 		firmwareError(ObdCode::OBD_ThermistorConfig, "Invalid thermistor %s configuration: please check that temperatures are in the ascending order %f %f %f",
 				msg,
-				cfg.tempC_1,
-				cfg.tempC_2,
-				cfg.tempC_3);
+				(float)cfg.tempC_1,
+				(float)cfg.tempC_2,
+				(float)cfg.tempC_3);
 	}
 }
 
