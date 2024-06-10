@@ -35,11 +35,6 @@ jobs:
         sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
         sudo apt-get install subversion
 
-    - name: Update version header in git
-      if: ${{ env.skip != 'true' }}
-      working-directory: ./firmware/
-      run: bash update_version.sh
-
     - name: Write Date File
       if: ${{ env.skip != 'true' }}
       run: |
