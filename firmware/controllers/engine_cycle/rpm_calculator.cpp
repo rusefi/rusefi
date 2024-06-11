@@ -124,11 +124,6 @@ bool RpmCalculator::checkIfSpinning(efitick_t nowNt) const {
 		return false;
 	}
 
-  // todo: this user-defined property is a quick solution, proper fix https://github.com/rusefi/rusefi/issues/6593 is needed
-	if (engineConfiguration->triggerEventsTimeoutMs != 0 && engine->triggerCentral.m_lastEventTimer.hasElapsedMs(engineConfiguration->triggerEventsTimeoutMs)) {
-	  return false;
-	}
-
 	// Anything below 60 rpm is not running
 	bool noRpmEventsForTooLong = lastTdcTimer.getElapsedSeconds(nowNt) > NO_RPM_EVENTS_TIMEOUT_SECS;
 
