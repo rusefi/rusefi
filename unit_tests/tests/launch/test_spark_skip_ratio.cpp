@@ -123,17 +123,17 @@ void SparkSkipRatioTest::doTest(
         if (testDataItem.expectedLaunchCondition.has_value()) {
 			switch (testDataItem.expectedLaunchCondition.value()) {
 				case LaunchCondition::NotMet: {
-					EXPECT_FALSE(engine->launchController.isLaunchPreCondition) << testDataItem.context;
+					EXPECT_FALSE(engine->launchController.isPreLaunchCondition) << testDataItem.context;
 					EXPECT_FALSE(engine->launchController.isLaunchCondition) << testDataItem.context;
 					break;
 				}
 				case LaunchCondition::PreLaunch: {
-					EXPECT_TRUE(engine->launchController.isLaunchPreCondition) << testDataItem.context;
+					EXPECT_TRUE(engine->launchController.isPreLaunchCondition) << testDataItem.context;
 					EXPECT_FALSE(engine->launchController.isLaunchCondition) << testDataItem.context;
 					break;
 				}
 				case LaunchCondition::Launch: {
-					EXPECT_FALSE(engine->launchController.isLaunchPreCondition) << testDataItem.context;
+					EXPECT_FALSE(engine->launchController.isPreLaunchCondition) << testDataItem.context;
 					EXPECT_TRUE(engine->launchController.isLaunchCondition) << testDataItem.context;
 					break;
 				}

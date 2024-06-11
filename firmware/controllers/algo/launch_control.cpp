@@ -103,7 +103,7 @@ LaunchCondition LaunchControlBase::calculateLaunchCondition(const int rpm) {
 
 LaunchControlBase::LaunchControlBase() {
 	launchActivatePinState = false;
-	isLaunchPreCondition = false;
+	isPreLaunchCondition = false;
 	isLaunchCondition = false;
 }
 
@@ -119,7 +119,7 @@ void LaunchControlBase::update() {
 	const int rpm = Sensor::getOrZero(SensorType::Rpm);
 	const LaunchCondition launchCondition = calculateLaunchCondition(rpm);
 	isLaunchCondition = combinedConditions = (launchCondition == LaunchCondition::Launch);
-	isLaunchPreCondition = (launchCondition == LaunchCondition::PreLaunch);
+	isPreLaunchCondition = (launchCondition == LaunchCondition::PreLaunch);
 
 	//and still recalculate in case user changed the values
 	retardThresholdRpm = engineConfiguration->launchRpm;
@@ -144,7 +144,7 @@ float LaunchControlBase::calculateSparkSkipRatio(const int rpm) const {
 	if (engineConfiguration->launchControlEnabled && engineConfiguration->launchSparkCutEnable) {
 		if (isLaunchCondition) {
 			result = 1.0f;
-		} else if (isLaunchPreCondition) {
+		} else if (isPreLaunchCondition) {
 			const int launchRpm = engineConfiguration->launchRpm;
 			const int sparkSkipStartRpm = launchRpm - engineConfiguration->launchRpmWindow;
 			if (sparkSkipStartRpm <= rpm) {
