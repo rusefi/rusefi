@@ -124,7 +124,7 @@ static void updateTriggerWaveformIfNeeded(PwmConfig *state) {
 
     if (atTriggerVersions[channel] < triggerEmulatorWaveforms[channel]->version) {
 			atTriggerVersions[channel] = triggerEmulatorWaveforms[channel]->version;
-			efiPrintf("Stimulator: updating trigger shape for ch%d: %d/%d %d", channel, atTriggerVersions[channel],
+			efiPrintf("Stimulator: updating trigger shape for ch%d: %d/%d %ld", channel, atTriggerVersions[channel],
 				engine->getGlobalConfigurationVersion(), getTimeNowMs());
 
 			copyPwmParameters(state, &triggerEmulatorWaveforms[channel]->wave);

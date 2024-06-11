@@ -928,8 +928,10 @@ void triggerInfo(void) {
 #endif /* HAL_TRIGGER_USE_PAL */
 
 	efiPrintf("Template %s (%d) trigger %s (%d) syncEdge=%s tdcOffset=%.2f",
-			getEngine_type_e(engineConfiguration->engineType), engineConfiguration->engineType,
-			getTrigger_type_e(engineConfiguration->trigger.type), engineConfiguration->trigger.type,
+			getEngine_type_e(engineConfiguration->engineType),
+			(int)engineConfiguration->engineType,
+			getTrigger_type_e(engineConfiguration->trigger.type),
+			(int)engineConfiguration->trigger.type,
 			getSyncEdge(TRIGGER_WAVEFORM(syncEdge)), TRIGGER_WAVEFORM(tdcPosition));
 
 	if (engineConfiguration->trigger.type == trigger_type_e::TT_TOOTHED_WHEEL) {

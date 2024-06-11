@@ -95,7 +95,7 @@ static Timer printVersionTimer;
 
 static void printRusefiVersion(const char *engineTypeName, const char *firmwareBuildId) {
 	// VersionChecker in rusEFI console is parsing these version string, please follow the expected format
-	efiPrintfProto(PROTOCOL_VERSION_TAG, "%d@%d %s %s %d",
+	efiPrintfProto(PROTOCOL_VERSION_TAG, "%d@%ld %s %s %ld",
 			getRusEfiVersion(), SIGNATURE_HASH,
 			firmwareBuildId,
 			engineTypeName,

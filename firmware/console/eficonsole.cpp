@@ -44,7 +44,7 @@ static void testHardFault() {
 static void printUid() {
 	uint32_t *uid = ((uint32_t *)UID_BASE);
 	engine->outputChannels.deviceUid = crc8((const uint8_t*)uid, 12);
-	efiPrintf("********************** UID=%x:%x:%x crc=%d ******************************", uid[0], uid[1], uid[2], engine->outputChannels.deviceUid);
+	efiPrintf("********************** UID=%lx:%lx:%lx crc=%d ******************************", uid[0], uid[1], uid[2], engine->outputChannels.deviceUid);
 	engineConfiguration->device_uid[0] = uid[0];
 	engineConfiguration->device_uid[1] = uid[1];
 	engineConfiguration->device_uid[2] = uid[2];
@@ -53,7 +53,7 @@ static void printUid() {
 
 static void sayHello() {
 	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI LLC (c) 2012-2024. All rights reserved.");
-	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI v%d@%d now=%d", getRusEfiVersion(), SIGNATURE_HASH, getTimeNowMs());
+	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI v%d@%lld now=%ld", getRusEfiVersion(), SIGNATURE_HASH, getTimeNowMs());
 	efiPrintf(PROTOCOL_HELLO_PREFIX " Chibios Kernel:       %s", CH_KERNEL_VERSION);
 	efiPrintf(PROTOCOL_HELLO_PREFIX " Compiled:     " __DATE__ " - " __TIME__ "");
 	efiPrintf(PROTOCOL_HELLO_PREFIX " COMPILER=%s", __VERSION__);
