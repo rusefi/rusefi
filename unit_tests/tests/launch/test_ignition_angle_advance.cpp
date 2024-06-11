@@ -77,6 +77,10 @@ static void setUpTestParameters(
     } else {
         ASSERT_FALSE(engineConfiguration->launchSmoothRetard); // check default value
     }
+
+    engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH; // to satisfy activateSwitchCondition
+    engineConfiguration->launchSpeedThreshold = 0; // to satisfy speedCondition
+    Sensor::setMockValue(SensorType::DriverThrottleIntent, 1.7); // to satisfy tpsCondition
 }
 
 static void setUpTestParametersWithEnabledLaunchControl(

@@ -106,16 +106,20 @@ angle_t getRunningAdvance(int rpm, float engineLoad) {
 #if EFI_LAUNCH_CONTROL
 	if (engineConfiguration->launchControlEnabled && engineConfiguration->enableLaunchRetard) {
 		const float launchAngle = engineConfiguration->launchTimingRetard;
-		const int launchRpm = engineConfiguration->launchRpm;
-		const int smoothRetardStartRpm = (launchRpm - engineConfiguration->launchRpmWindow);
-		const int smoothRetardEndRpm = (launchRpm - engineConfiguration->launchCorrectionsEndRpm);
-		if (smoothRetardStartRpm <= rpm) {
-			if (engineConfiguration->launchSmoothRetard && (rpm <= smoothRetardEndRpm)) {
-				// https://github.com/rusefi/rusefi/issues/5611#issuecomment-2130431696
-				return interpolateClamped(smoothRetardStartRpm, advanceAngle, smoothRetardEndRpm, launchAngle, rpm);
-			} else {
-				return launchAngle;
+		if (engine->launchController.isPreLaunchCondition) {
+			const int launchRpm = engineConfiguration->launchRpm;
+			const int smoothRetardStartRpm = (launchRpm - engineConfiguration->launchRpmWindow);
+			const int smoothRetardEndRpm = (launchRpm - engineConfiguration->launchCorrectionsEndRpm);
+			if (smoothRetardStartRpm <= rpm) {
+				if (engineConfiguration->launchSmoothRetard && (rpm <= smoothRetardEndRpm)) {
+					// https://github.com/rusefi/rusefi/issues/5611#issuecomment-2130431696
+					return interpolateClamped(smoothRetardStartRpm, advanceAngle, smoothRetardEndRpm, launchAngle, rpm);
+				} else {
+					return launchAngle;
+				}
 			}
+		} else if (engine->launchController.isLaunchCondition) {
+			return launchAngle;
 		}
 	}
 #endif /* EFI_LAUNCH_CONTROL */
