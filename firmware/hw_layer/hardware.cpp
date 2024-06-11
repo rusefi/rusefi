@@ -535,7 +535,9 @@ void stopHardware() {
  * TODO: move move hardware code here
  */
 void startHardware() {
+#if EFI_SHAFT_POSITION_INPUT
 	initStartStopButton();
+#endif
 
 #if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
 	startTriggerInputPins();
