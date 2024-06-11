@@ -133,7 +133,7 @@ void ButtonDebounce::debug() {
     ButtonDebounce *listItem = s_firstDebounce;
     while (listItem != nullptr) {
 #if EFI_PROD_CODE || EFI_UNIT_TEST
-        efiPrintf("%s timeLast %d", listItem->m_name, listItem->timeLast);
+        efiPrintf("%s timeLast %f", listItem->m_name, listItem->timeLast.getElapsedSeconds());
         efiPrintf("physical pin state %d", listItem->getPhysicalState());
         efiPrintf("state %d", listItem->storedValue);
         efiPrintf("mode %d", listItem->active_mode);

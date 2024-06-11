@@ -80,7 +80,7 @@ void initFlexSensor(bool isFirstTime) {
 	        efiPrintf("lowFlexCallbackCounter counter %d", lowFlexCallbackCounter);
 	        efiPrintf("flex freq %f", frequency);
 	        efiPrintf("pulseWidthUs %f", pulseWidthUs);
-	        efiPrintf("latestCallbackTime %d", latestCallbackTime);
+	        efiPrintf("latestCallbackTime %lld", latestCallbackTime);
 	    });
 	}
 

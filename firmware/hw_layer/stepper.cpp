@@ -112,7 +112,7 @@ void StepperMotorBase::setInitialPosition() {
 		m_currentPosition = 0;
 		saveStepperPos(m_currentPosition);
 		// todo: is this a slow operation on the start-up path?
-		efiPrintf("Stepper: parking finished time=%dms", getTimeNowMs());
+		efiPrintf("Stepper: parking finished time=%lums", getTimeNowMs());
 	} else {
 		// The initial target position should correspond to the saved stepper position.
 		// Idle thread starts later and sets a new target position.
