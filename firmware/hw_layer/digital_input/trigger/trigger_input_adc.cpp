@@ -116,7 +116,7 @@ int adcTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
 	triggerInputPin = getHwPin("trg", brainPin);
 
 	ioline_t pal_line = PAL_LINE(triggerInputPort, triggerInputPin);
-	efiPrintf("turnOnTriggerInputPin %s l=%d", hwPortname(brainPin), pal_line);
+	efiPrintf("turnOnTriggerInputPin %s l=%ld", hwPortname(brainPin), pal_line);
 
 	if (efiExtiEnablePin(msg, brainPin, PAL_EVENT_MODE_BOTH_EDGES,
 		isTriggerShaft ? shaft_callback : cam_callback, (void *)pal_line) < 0) {
