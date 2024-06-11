@@ -157,9 +157,9 @@ static void sendOkResponse(TsChannelBase *tsChannel) {
 }
 
 void sendErrorCode(TsChannelBase *tsChannel, uint8_t code, const char *msg) {
-  if (msg != DO_NOT_LOG) {
-	  efiPrintf("TS <- Err: %d [%s]", code, msg);
-  }
+//TODO uncomment once I have test it myself  if (msg != DO_NOT_LOG) {
+//	  efiPrintf("TS <- Err: %d [%s]", code, msg);
+//  }
 
 	tsChannel->writeCrcResponse(code);
 }
