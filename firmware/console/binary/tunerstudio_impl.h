@@ -41,5 +41,5 @@ public:
 	void handleScatteredReadCommand(TsChannelBase* tsChannel);
 
 private:
-	void sendErrorCode(TsChannelBase* tsChannel, uint8_t code);
+	void sendErrorCode(TsChannelBase* tsChannel, uint8_t code, /*empty line by default, use nullptr not to log*/const char *msg="");
 };

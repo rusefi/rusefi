@@ -156,13 +156,15 @@ static void sendOkResponse(TsChannelBase *tsChannel) {
 	tsChannel->sendResponse(TS_CRC, nullptr, 0);
 }
 
-void sendErrorCode(TsChannelBase *tsChannel, uint8_t code) {
-	efiPrintf("TS <- Err: %d", code);
+void sendErrorCode(TsChannelBase *tsChannel, uint8_t code, const char *msg) {
+  if (msg != DO_NOT_LOG) {
+	  efiPrintf("TS <- Err: %d [%s]", code, msg);
+  }
 
 	tsChannel->writeCrcResponse(code);
 }
 
-void TunerStudio::sendErrorCode(TsChannelBase* tsChannel, uint8_t code) {
+void TunerStudio::sendErrorCode(TsChannelBase* tsChannel, uint8_t code, const char *msg) {
 	::sendErrorCode(tsChannel, code);
 }
 
@@ -780,7 +782,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 					ReturnToothLoggerBuffer(toothBuffer);
 				} else {
 					// TS asked for a tooth logger buffer, but we don't have one to give it.
-					sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+					sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, DO_NOT_LOG);
 				}
 			}
 			break;
@@ -799,7 +801,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 					tsChannel->sendResponse(TS_CRC, buffer.get<uint8_t>(), buffer.size(), true);
 				} else {
 					// TS asked for a tooth logger buffer, but we don't have one to give it.
-					sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+					sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, DO_NOT_LOG);
 				}
 			}
 			break;
@@ -824,14 +826,14 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 				ReturnToothLoggerBuffer(toothBuffer);
 			} else {
 				// TS asked for a tooth logger buffer, but we don't have one to give it.
-				sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+				sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, DO_NOT_LOG);
 			}
 		}
 
 		break;
 #else // EFI_TOOTH_LOGGER
 	case TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY:
-		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, DO_NOT_LOG);
 		break;
 #endif /* EFI_TOOTH_LOGGER */
 #ifdef KNOCK_SPECTROGRAM

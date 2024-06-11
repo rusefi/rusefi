@@ -20,7 +20,7 @@ bool validateOffsetCount(size_t offset, size_t count, TsChannelBase* tsChannel) 
 	if (offset + count > getTunerStudioPageSize()) {
 		efiPrintf("TS: Project mismatch? Too much configuration requested %d/%d", offset, count);
 		tunerStudioError(tsChannel, "ERROR: out of range");
-		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "bad_offset");
 		return true;
 	}
 
@@ -47,7 +47,7 @@ void TunerStudio::cmdOutputChannels(TsChannelBase* tsChannel, uint16_t offset, u
 	if (offset + count > TS_TOTAL_OUTPUT_SIZE) {
 		efiPrintf("TS: Version Mismatch? Too much outputs requested offset=%d + count=%d/total=%d", offset, count,
 				sizeof(TunerStudioOutputChannels));
-		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "cmd_size");
 		return;
 	}
 
