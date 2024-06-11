@@ -12,6 +12,7 @@ bit isAfterLaunch
 
 bit     activateSwitchCondition;
 bit     rpmLaunchCondition;
+bit     rpmPreLaunchCondition;
 bit     speedCondition;
 bit     tpsCondition;
 

@@ -91,6 +91,7 @@ LaunchCondition LaunchControlBase::calculateLaunchCondition(const int rpm) {
 	const LaunchCondition currentRpmLaunchCondition = calculateRPMLaunchCondition(rpm);
 	activateSwitchCondition = isInsideSwitchCondition();
 	rpmLaunchCondition = (currentRpmLaunchCondition == LaunchCondition::Launch);
+	rpmPreLaunchCondition = (currentRpmLaunchCondition == LaunchCondition::PreLaunch);
 	speedCondition = isInsideSpeedCondition();
 	tpsCondition = isInsideTpsCondition();
 
