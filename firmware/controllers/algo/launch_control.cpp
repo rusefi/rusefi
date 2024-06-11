@@ -118,7 +118,7 @@ void LaunchControlBase::update() {
 
 	const int rpm = Sensor::getOrZero(SensorType::Rpm);
 	const LaunchCondition launchCondition = calculateLaunchCondition(rpm);
-	isLaunchCondition = combinedConditions = (launchCondition == LaunchCondition::Launch);
+	isLaunchCondition = (launchCondition == LaunchCondition::Launch);
 	isPreLaunchCondition = (launchCondition == LaunchCondition::PreLaunch);
 
 	//and still recalculate in case user changed the values
