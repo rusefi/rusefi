@@ -4,7 +4,7 @@ int retardThresholdRpm
 
 bit combinedConditions
 bit launchActivatePinState
-bit isLaunchPreCondition
+bit isPreLaunchCondition
 bit isLaunchCondition
 bit isSwitchActivated
 bit isClutchActivated
