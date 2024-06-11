@@ -920,20 +920,15 @@ float getOutputValueByName(const char *name) {
 		case -1374156957:
 			return engine->launchController.retardThresholdRpm;
 #endif
-// combinedConditions
-#if EFI_LAUNCH_CONTROL
-		case 1199675808:
-			return engine->launchController.combinedConditions;
-#endif
 // launchActivatePinState
 #if EFI_LAUNCH_CONTROL
 		case 1928406809:
 			return engine->launchController.launchActivatePinState;
 #endif
-// isLaunchPreCondition
+// isPreLaunchCondition
 #if EFI_LAUNCH_CONTROL
-		case -1235396182:
-			return engine->launchController.isLaunchPreCondition;
+		case -1872098102:
+			return engine->launchController.isPreLaunchCondition;
 #endif
 // isLaunchCondition
 #if EFI_LAUNCH_CONTROL
