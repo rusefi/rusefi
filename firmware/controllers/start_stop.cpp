@@ -7,6 +7,7 @@
 #include "start_stop.h"
 #include "ignition_controller.h"
 
+#if EFI_SHAFT_POSITION_INPUT
 void initStartStopButton() {
 	/* startCrankingDuration is efitimesec_t, so we need to multiply it by 1000 to get milliseconds*/
 	engine->startStopState.startStopButtonDebounce.init((engineConfiguration->startCrankingDuration*1000),
@@ -27,7 +28,6 @@ static void onStartStopButtonToggle() {
 					hwPortname(engineConfiguration->starterControlPin));
 		}
 	} else if (engine->rpmCalculator.isRunning()) {
-		efiPrintf("Let's stop this engine!");
 		doScheduleStopEngine();
 	}
 }
@@ -95,3 +95,4 @@ void slowStartStopButtonCallback() {
 	    disengageStarterIfNeeded();
    	}
 }
+#endif // EFI_SHAFT_POSITION_INPUT

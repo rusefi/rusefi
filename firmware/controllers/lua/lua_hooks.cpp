@@ -1077,11 +1077,11 @@ void configureRusefiLuaHooks(lua_State* lState) {
 	lua_register(lState, "setAirmass", lua_setAirmass);
 #endif // EFI_ENGINE_CONTROL
 
+#if EFI_SHAFT_POSITION_INPUT
 	lua_register(lState, "stopEngine", [](lua_State*) {
 		doScheduleStopEngine();
 		return 0;
 	});
-#if EFI_SHAFT_POSITION_INPUT
 	lua_register(lState, "getTimeSinceTriggerEventMs", [](lua_State* l) {
 		int result = engine->triggerCentral.m_lastEventTimer.getElapsedUs() / 1000;
 		lua_pushnumber(l, result);
