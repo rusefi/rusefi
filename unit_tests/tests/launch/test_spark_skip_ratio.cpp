@@ -75,8 +75,8 @@ std::vector<RpmTestData> SparkSkipRatioTest::generateNoLaunchSparkSkipTestData(c
                     { false }
                 },
                 {
-                    "rpm = (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END - TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START) / 2 (inside spark skip RPM window)",
-                    (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END - TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START) / 2,
+                    "rpm = (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START + TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END) / 2 (inside spark skip RPM window)",
+                    (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START + TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END) / 2,
                     expectedTargetSkipRatio,
                     { false }
                 },
@@ -183,9 +183,9 @@ TEST_F(SparkSkipRatioTest, raisingRpmToLaunchCondition) {
                 { false }
             },
             {
-                "rpm = (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END - TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START) / 2 (inside spark skip RPM window)",
-                (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END - TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START) / 2,
-                (TEST_FINAL_IGNITION_CUT_RATIO - TEST_FINAL_IGNITION_CUT_RATIO) / 2,
+                "rpm = (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START + TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END) / 2 (inside spark skip RPM window)",
+                (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START + TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END) / 2,
+                (TEST_INITIAL_IGNITION_CUT_RATIO + TEST_FINAL_IGNITION_CUT_RATIO) / 2,
                 { false }
             },
             {
@@ -240,9 +240,9 @@ TEST_F(SparkSkipRatioTest, raisingRpmWithoutLaunchCondition) {
                 { false }
             },
             {
-                "rpm = (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END - TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START) / 2 (inside spark skip RPM window)",
-                (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END - TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START) / 2,
-                (TEST_FINAL_IGNITION_CUT_RATIO - TEST_FINAL_IGNITION_CUT_RATIO) / 2,
+                "rpm = (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START + TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END) / 2 (inside spark skip RPM window)",
+                (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START + TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END) / 2,
+                (TEST_INITIAL_IGNITION_CUT_RATIO + TEST_FINAL_IGNITION_CUT_RATIO) / 2,
                 { false }
             },
             {
@@ -297,8 +297,8 @@ TEST_F(SparkSkipRatioTest, raisingRpmWithDisabledIgnitionCut) {
                 { false }
             },
             {
-                "rpm = (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END - TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START) / 2 (inside spark skip RPM window)",
-                (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END - TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START) / 2,
+                "rpm = (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START + TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END) / 2 (inside spark skip RPM window)",
+                (TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_START + TEST_LAUNCH_SPARK_SKIP_RPM_WINDOW_END) / 2,
                 0.0f,
                 { false }
             },
