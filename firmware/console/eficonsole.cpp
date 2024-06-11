@@ -97,10 +97,10 @@ static void sayHello() {
 	uint32_t pnFlashSize;
 	int ret = at32GetMcuType(DBGMCU->IDCODE, &partNumber, &package, &pnFlashSize);
 	if (ret == 0) {
-		efiPrintf("MCU IDCODE %s in %s with %d KB flash",
+		efiPrintf("MCU IDCODE %s in %s with %ld KB flash",
 			partNumber, package, pnFlashSize);
 	} else {
-		efiPrintf("MCU IDCODE unknown 0x%x", DBGMCU->IDCODE);
+		efiPrintf("MCU IDCODE unknown 0x%lx", DBGMCU->IDCODE);
 	}
 	efiPrintf("MCU SER_ID %s rev %c",
 		(mcuSerId == 0x0d) ? "AT32F435" : ((mcuSerId == 0x0e) ? "AT32F437" : "UNKNOWN"),
