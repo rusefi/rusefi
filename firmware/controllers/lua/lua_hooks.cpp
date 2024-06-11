@@ -1082,6 +1082,11 @@ void configureRusefiLuaHooks(lua_State* lState) {
 		doScheduleStopEngine();
 		return 0;
 	});
+	lua_register(lState, "isEngineStopRequested", [](lua_State* l) {
+		bool result = getLimpManager()->shutdownController.isEngineStop(getTimeNowNt());
+		lua_pushboolean(l, result);
+		return 1;
+	});
 	lua_register(lState, "getTimeSinceTriggerEventMs", [](lua_State* l) {
 		int result = engine->triggerCentral.m_lastEventTimer.getElapsedUs() / 1000;
 		lua_pushnumber(l, result);

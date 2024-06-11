@@ -16,15 +16,15 @@ public:
 //		ignitionOnTimeNt = 0;
 	}
 
-	float getTimeSinceEngineStop(efitick_t nowNt) const {
-		return m_engineStopTimer.getElapsedSeconds(nowNt);
-	}
+//	float getTimeSinceEngineStop(efitick_t nowNt) const {
+//		return m_engineStopTimer.getElapsedSeconds(nowNt);
+//	}
 
 	bool isEngineStop(efitick_t nowNt) const {
-		float timeSinceStop = getTimeSinceEngineStop(nowNt);
+		float timeSinceStopRequested = m_engineStopTimer.getElapsedSeconds(nowNt);
 
 		// If there was stop requested in the past 5 seconds, we're in stop mode
-		return timeSinceStop < 5;
+		return timeSinceStopRequested < 5;
 	}
 
 private:
