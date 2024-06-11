@@ -1029,7 +1029,7 @@ void initElectronicThrottle() {
 	  efiPrintf("TPS=%.2f", Sensor::getOrZero(SensorType::Tps1));
 
 	  efiPrintf("ETB1 duty=%.2f",
-			engine->outputChannels.etb1DutyCycle);
+			(float)engine->outputChannels.etb1DutyCycle);
 
 	  efiPrintf("ETB freq=%d",
 			engineConfiguration->etbFreq);
