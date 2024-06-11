@@ -960,10 +960,15 @@ float getOutputValueByName(const char *name) {
 		case 1265600943:
 			return engine->launchController.activateSwitchCondition;
 #endif
-// rpmCondition
+// rpmLaunchCondition
 #if EFI_LAUNCH_CONTROL
-		case -1221336517:
-			return engine->launchController.rpmCondition;
+		case 859283926:
+			return engine->launchController.rpmLaunchCondition;
+#endif
+// rpmPreLaunchCondition
+#if EFI_LAUNCH_CONTROL
+		case -774592003:
+			return engine->launchController.rpmPreLaunchCondition;
 #endif
 // speedCondition
 #if EFI_LAUNCH_CONTROL

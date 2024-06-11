@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/launch_control_state.txt Tue Jun 11 16:18:04 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/launch_control_state.txt Tue Jun 11 18:52:19 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -15,9 +15,10 @@ public class LaunchControl {
 	public static final Field ISVALIDINPUTPIN = Field.create("ISVALIDINPUTPIN", 4, FieldType.BIT, 5).setBaseOffset(1028);
 	public static final Field ISAFTERLAUNCH = Field.create("ISAFTERLAUNCH", 4, FieldType.BIT, 6).setBaseOffset(1028);
 	public static final Field ACTIVATESWITCHCONDITION = Field.create("ACTIVATESWITCHCONDITION", 4, FieldType.BIT, 7).setBaseOffset(1028);
-	public static final Field RPMCONDITION = Field.create("RPMCONDITION", 4, FieldType.BIT, 8).setBaseOffset(1028);
-	public static final Field SPEEDCONDITION = Field.create("SPEEDCONDITION", 4, FieldType.BIT, 9).setBaseOffset(1028);
-	public static final Field TPSCONDITION = Field.create("TPSCONDITION", 4, FieldType.BIT, 10).setBaseOffset(1028);
+	public static final Field RPMLAUNCHCONDITION = Field.create("RPMLAUNCHCONDITION", 4, FieldType.BIT, 8).setBaseOffset(1028);
+	public static final Field RPMPRELAUNCHCONDITION = Field.create("RPMPRELAUNCHCONDITION", 4, FieldType.BIT, 9).setBaseOffset(1028);
+	public static final Field SPEEDCONDITION = Field.create("SPEEDCONDITION", 4, FieldType.BIT, 10).setBaseOffset(1028);
+	public static final Field TPSCONDITION = Field.create("TPSCONDITION", 4, FieldType.BIT, 11).setBaseOffset(1028);
 	public static final Field[] VALUES = {
 	RETARDTHRESHOLDRPM,
 	LAUNCHACTIVATEPINSTATE,
@@ -28,7 +29,8 @@ public class LaunchControl {
 	ISVALIDINPUTPIN,
 	ISAFTERLAUNCH,
 	ACTIVATESWITCHCONDITION,
-	RPMCONDITION,
+	RPMLAUNCHCONDITION,
+	RPMPRELAUNCHCONDITION,
 	SPEEDCONDITION,
 	TPSCONDITION,
 	};
