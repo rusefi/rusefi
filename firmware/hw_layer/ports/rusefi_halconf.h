@@ -167,8 +167,13 @@
 #define PAL_USE_CALLBACKS           TRUE
 
 // USB Serial
+#ifndef SERIAL_USB_BUFFERS_SIZE
 #define SERIAL_USB_BUFFERS_SIZE     768
+#endif
+
+#ifndef SERIAL_USB_BUFFERS_NUMBER
 #define SERIAL_USB_BUFFERS_NUMBER   2
+#endif
 
 // USB Mass Storage
 #if EFI_USE_COMPRESSED_INI_MSD
