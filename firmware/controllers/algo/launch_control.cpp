@@ -88,14 +88,14 @@ LaunchCondition LaunchControlBase::calculateRPMLaunchCondition(const int rpm) {
 }
 
 LaunchCondition LaunchControlBase::calculateLaunchCondition(const int rpm) {
-	const LaunchCondition rpmLaunchCondition = calculateRPMLaunchCondition(rpm);
+	const LaunchCondition currentRpmLaunchCondition = calculateRPMLaunchCondition(rpm);
 	activateSwitchCondition = isInsideSwitchCondition();
-	rpmCondition = (rpmLaunchCondition == LaunchCondition::Launch);
+	rpmLaunchCondition = (currentRpmLaunchCondition == LaunchCondition::Launch);
 	speedCondition = isInsideSpeedCondition();
 	tpsCondition = isInsideTpsCondition();
 
 	if(speedCondition && activateSwitchCondition && tpsCondition) {
-		return rpmLaunchCondition;
+		return currentRpmLaunchCondition;
 	} else {
 		return LaunchCondition::NotMet;
 	}
