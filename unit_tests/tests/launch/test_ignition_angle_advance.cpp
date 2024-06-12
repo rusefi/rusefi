@@ -147,7 +147,7 @@ namespace {
         }
     }
 
-    TEST_F(IgnitionAngleAdvanceTest, withEnabledLaunchControlAndWithoutLaunchRetard) {
+    TEST_F(IgnitionAngleAdvanceTest, withDisabledLaunchControlAndWithoutLaunchRetardWithSatisfiedLaunchConditions) {
         doTest(
             /* config = */ {
                 /* launchControlEnabled = */ {},
@@ -159,7 +159,10 @@ namespace {
         );
     }
 
-    TEST_F(IgnitionAngleAdvanceTest, withEnabledLaunchControlAndLaunchRetardWithoutSmooth) {
+    TEST_F(
+        IgnitionAngleAdvanceTest,
+        withEnabledLaunchControlAndLaunchRetardWithoutSmoothWithSatisfiedLaunchConditions
+    ) {
         doTest(
             /* config = */ {
                 /* launchControlEnabled = */ { true },
@@ -193,7 +196,10 @@ namespace {
         );
     }
 
-    TEST_F(IgnitionAngleAdvanceTest, withEnabledLaunchControlAndLaunchRetardAndLaunchSmoothRetard) {
+    TEST_F(
+        IgnitionAngleAdvanceTest,
+        withEnabledLaunchControlAndLaunchRetardAndLaunchSmoothRetardWithSatisfiedLaunchConditions
+    ) {
         doTest(
             /* config = */ {
                /* launchControlEnabled = */ { true },
@@ -243,7 +249,10 @@ namespace {
 
     /* Tests for https://github.com/rusefi/rusefi/issues/6571: */
 
-    TEST_F(IgnitionAngleAdvanceTest, withDisabledLaunchControlAndLaunchRetardWithoutSmooth) {
+    TEST_F(
+        IgnitionAngleAdvanceTest,
+        withDisabledLaunchControlAndLaunchRetardWithoutSmoothWithSatisfiedLaunchConditions
+    ) {
         doTest(
             /* config = */ {
                 /* launchControlEnabled = */ { false },
@@ -255,7 +264,7 @@ namespace {
         );
     }
 
-    TEST_F(IgnitionAngleAdvanceTest, withDisabledLaunchControlAndLaunchRetardAndSmooth) {
+    TEST_F(IgnitionAngleAdvanceTest, withDisabledLaunchControlAndLaunchRetardAndSmoothWithSatisfiedLaunchConditions) {
         doTest(
             /* config = */ {
                 /* launchControlEnabled = */ { false },
@@ -264,6 +273,83 @@ namespace {
                 /* satifySwitchSpeedThresholdAndTpsConditions = */ true
             },
             /* testData = */ TEST_DATA_WITHOUT_LAUNCH_ANGLE_ADVANCE
+        );
+    }
+
+    /* Tests with unsatisfied launch conditions: */
+
+    TEST_F(
+        IgnitionAngleAdvanceTest,
+        withDisabledLaunchControlAndWithoutLaunchRetardWithDisabledSmoothRetardWithoutSatisfiedLaunchConditions
+    ) {
+        doTest(
+            /* config = */ {
+                /* launchControlEnabled = */ { false },
+                /* ignitionRetardEnable = */ { false },
+                /* smoothRetardMode = */ { false },
+                /* satifySwitchSpeedThresholdAndTpsConditions = */ false
+            },
+            /* testData = */ TEST_DATA_WITHOUT_LAUNCH_ANGLE_ADVANCE
+        );
+    }
+
+    TEST_F(
+        IgnitionAngleAdvanceTest,
+        withEnabledLaunchControlAndLaunchRetardWithoutSmoothAndSatisfiedLaunchConditions
+    ) {
+        doTest(
+            /* config = */ {
+                /* launchControlEnabled = */ { true },
+                /* ignitionRetardEnable = */ { true },
+                /* smoothRetardMode = */ { false },
+                /* satifySwitchSpeedThresholdAndTpsConditions = */ false
+            },
+            /* testData = */ TEST_DATA_WITHOUT_LAUNCH_ANGLE_ADVANCE
+        );
+    }
+
+    TEST_F(
+        IgnitionAngleAdvanceTest,
+        withEnabledLaunchControlAndLaunchRetardAndLaunchSmoothRetardWithoutSatisfiedLaunchConditions
+    ) {
+        doTest(
+            /* config = */ {
+                /* launchControlEnabled = */ { true },
+                /* ignitionRetardEnable = */ { true },
+                /* smoothRetardMode = */ { true },
+                /* satifySwitchSpeedThresholdAndTpsConditions = */ false
+            },
+            /* testData = */ TEST_DATA_WITHOUT_LAUNCH_ANGLE_ADVANCE
+        );
+    }
+
+    TEST_F(
+        IgnitionAngleAdvanceTest,
+        withDisabledLaunchControlAndLaunchRetardWithoutSmoothAndWithoutSatisfiedLaunchConditions
+    ) {
+        doTest(
+                /* config = */ {
+                                       /* launchControlEnabled = */ { false },
+                                       /* ignitionRetardEnable = */ { true },
+                                       /* smoothRetardMode = */ { false },
+                                       /* satifySwitchSpeedThresholdAndTpsConditions = */ false
+                               },
+                /* testData = */ TEST_DATA_WITHOUT_LAUNCH_ANGLE_ADVANCE
+        );
+    }
+
+    TEST_F(
+        IgnitionAngleAdvanceTest,
+        withDisabledLaunchControlAndLaunchRetardAndSmoothAndWithoutSatisfiedLaunchConditions
+    ) {
+        doTest(
+                /* config = */ {
+                                       /* launchControlEnabled = */ { false },
+                                       /* ignitionRetardEnable = */ { true },
+                                       /* smoothRetardMode = */ { true },
+                                       /* satifySwitchSpeedThresholdAndTpsConditions = */ false
+                               },
+                /* testData = */ TEST_DATA_WITHOUT_LAUNCH_ANGLE_ADVANCE
         );
     }
 }
