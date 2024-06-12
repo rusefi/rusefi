@@ -66,7 +66,67 @@ namespace {
         setSatisfyActivationSwithSpeedAndTpsConditions(satifySwitchSpeedThresholdAndTpsConditions);
     }
 
-    static void setUpTestParameters() {
+    struct IgnitionAngleAdvanceTestData {
+        const std::string context;
+        const int rpm;
+        const float expectedIgnitionAdvance;
+        const float epsilon = EPS5D;
+    };
+
+    class IgnitionAngleAdvanceTest : public LaunchTestBase {
+    protected:
+        void doTest(
+            const IgnitionAngleAdvanceTestConfig& config,
+            const std::vector<IgnitionAngleAdvanceTestData> &testData
+        );
+
+        static const std::vector<IgnitionAngleAdvanceTestData> TEST_DATA_WITHOUT_LAUNCH_ANGLE_ADVANCE;
+    private:
+        void configureTestIgnitionTable();
+    };
+
+    void IgnitionAngleAdvanceTest::doTest(
+        const IgnitionAngleAdvanceTestConfig& config,
+        const std::vector<IgnitionAngleAdvanceTestData> &testData
+    ) {
+        configureTestIgnitionTable();
+        setUpTestConfig(config);
+
+        for (const IgnitionAngleAdvanceTestData &testDataItem: testData) {
+            updateRpm(testDataItem.rpm);
+            EXPECT_NEAR(
+                testDataItem.expectedIgnitionAdvance,
+                engine->ignitionState.baseIgnitionAdvance,
+                testDataItem.epsilon
+            ) << testDataItem.context;
+        }
+    }
+
+    const std::vector<IgnitionAngleAdvanceTestData> IgnitionAngleAdvanceTest::TEST_DATA_WITHOUT_LAUNCH_ANGLE_ADVANCE = {
+            { "TEST_IGNITION_650",  650,  TEST_IGNITION_650 },
+            { "TEST_IGNITION_800",  800,  TEST_IGNITION_800 },
+            { "TEST_IGNITION_1100", 1100, TEST_IGNITION_1100 },
+            { "TEST_IGNITION_1400", 1400, TEST_IGNITION_1400 },
+            { "TEST_IGNITION_1700", 1700, TEST_IGNITION_1700 },
+            /* We've entered smooth retard RPM window: */
+            { "TEST_IGNITION_2000", 2000, TEST_IGNITION_2000 },
+            { "TEST_IGNITION_2300", 2300, TEST_IGNITION_2300 },
+            { "TEST_IGNITION_2600", 2600, TEST_IGNITION_2600 },
+            { "TEST_IGNITION_2900", 2900, TEST_IGNITION_2900 },
+            /* See https://github.com/rusefi/rusefi/issues/5611#issuecomment-2137028838
+             * We've left smooth retard RPM window:
+             */
+            { "TEST_IGNITION_3200", 3200, TEST_IGNITION_3200 },
+            { "TEST_IGNITION_3500", 3500, TEST_IGNITION_3500 },
+            /* We've reached TEST_LAUNCH_RPM: */
+            { "TEST_IGNITION_3800", 3800, TEST_IGNITION_3800 },
+            { "TEST_IGNITION_4100", 4100, TEST_IGNITION_4100 },
+            { "TEST_IGNITION_4400", 4400, TEST_IGNITION_4400 },
+            { "TEST_IGNITION_4700", 4700, TEST_IGNITION_4700 },
+            { "TEST_IGNITION_7000", 7000, TEST_IGNITION_7000 }
+    };
+
+    void IgnitionAngleAdvanceTest::configureTestIgnitionTable() {
         for (int loadIdx = 0; loadIdx < IGN_LOAD_COUNT; loadIdx++) {
             config->ignitionTable[loadIdx][0] = TEST_IGNITION_650;
             config->ignitionTable[loadIdx][1] = TEST_IGNITION_800;
@@ -87,91 +147,19 @@ namespace {
         }
     }
 
-    struct IgnitionAngleAdvanceTestData {
-        const std::string context;
-        const int rpm;
-        const float expectedIgnitionAdvance;
-        const float epsilon = EPS5D;
-    };
-
-    class IgnitionAngleAdvanceTest : public LaunchTestBase {
-    protected:
-        void doTest(
-            const IgnitionAngleAdvanceTestConfig& config,
-            const std::vector<IgnitionAngleAdvanceTestData> &testData
-        );
-
-        /* Checks that angle advance is not affected by `Launch Control` functionality: */
-        void checkAngleAdvanceWithoutLaunchControl(
-            const std::optional<bool> launchControlEnabled = {},
-            const std::optional<bool> enableLaunchRetard = {},
-            const std::optional<bool> launchSmoothRetard = {}
-        );
-    };
-
-    void IgnitionAngleAdvanceTest::doTest(
-        const IgnitionAngleAdvanceTestConfig& config,
-        const std::vector<IgnitionAngleAdvanceTestData> &testData
-    ) {
-        setUpTestConfig(config);
-
-        for (const IgnitionAngleAdvanceTestData &testDataItem: testData) {
-            updateRpm(testDataItem.rpm);
-            EXPECT_NEAR(
-                testDataItem.expectedIgnitionAdvance,
-                engine->ignitionState.baseIgnitionAdvance,
-                testDataItem.epsilon
-            ) << testDataItem.context;
-        }
-    }
-
-    void IgnitionAngleAdvanceTest::checkAngleAdvanceWithoutLaunchControl(
-        const std::optional<bool> launchControlEnabled,
-        const std::optional<bool> enableLaunchRetard,
-        const std::optional<bool> launchSmoothRetard
-    ) {
-        setUpTestParameters();
-
+    TEST_F(IgnitionAngleAdvanceTest, withEnabledLaunchControlAndWithoutLaunchRetard) {
         doTest(
             /* config = */ {
-               /* launchControlEnabled = */ launchControlEnabled,
-               /* ignitionRetardEnable = */ enableLaunchRetard,
-               /* smoothRetardMode = */ launchSmoothRetard,
-               /* satifySwitchSpeedThresholdAndTpsConditions = */ true
+                /* launchControlEnabled = */ {},
+                /* ignitionRetardEnable = */ {},
+                /* smoothRetardMode = */ {},
+                /* satifySwitchSpeedThresholdAndTpsConditions = */ true
             },
-            /* testData = */ {
-                { "TEST_IGNITION_650",  650,  TEST_IGNITION_650 },
-                { "TEST_IGNITION_800",  800,  TEST_IGNITION_800 },
-                { "TEST_IGNITION_1100", 1100, TEST_IGNITION_1100 },
-                { "TEST_IGNITION_1400", 1400, TEST_IGNITION_1400 },
-                { "TEST_IGNITION_1700", 1700, TEST_IGNITION_1700 },
-                /* We've entered smooth retard RPM window: */
-                { "TEST_IGNITION_2000", 2000, TEST_IGNITION_2000 },
-                { "TEST_IGNITION_2300", 2300, TEST_IGNITION_2300 },
-                { "TEST_IGNITION_2600", 2600, TEST_IGNITION_2600 },
-                { "TEST_IGNITION_2900", 2900, TEST_IGNITION_2900 },
-                /* See https://github.com/rusefi/rusefi/issues/5611#issuecomment-2137028838
-                 * We've left smooth retard RPM window:
-                 */
-                { "TEST_IGNITION_3200", 3200, TEST_IGNITION_3200 },
-                { "TEST_IGNITION_3500", 3500, TEST_IGNITION_3500 },
-                /* We've reached TEST_LAUNCH_RPM: */
-                { "TEST_IGNITION_3800", 3800, TEST_IGNITION_3800 },
-                { "TEST_IGNITION_4100", 4100, TEST_IGNITION_4100 },
-                { "TEST_IGNITION_4400", 4400, TEST_IGNITION_4400 },
-                { "TEST_IGNITION_4700", 4700, TEST_IGNITION_4700 },
-                { "TEST_IGNITION_7000", 7000, TEST_IGNITION_7000 }
-            }
+            /* testData = */ TEST_DATA_WITHOUT_LAUNCH_ANGLE_ADVANCE
         );
-    }
-
-    TEST_F(IgnitionAngleAdvanceTest, withEnabledLaunchControlAndWithoutLaunchRetard) {
-        checkAngleAdvanceWithoutLaunchControl();
     }
 
     TEST_F(IgnitionAngleAdvanceTest, withEnabledLaunchControlAndLaunchRetardWithoutSmooth) {
-        setUpTestParameters();
-
         doTest(
             /* config = */ {
                 /* launchControlEnabled = */ { true },
@@ -206,8 +194,6 @@ namespace {
     }
 
     TEST_F(IgnitionAngleAdvanceTest, withEnabledLaunchControlAndLaunchRetardAndLaunchSmoothRetard) {
-        setUpTestParameters();
-
         doTest(
             /* config = */ {
                /* launchControlEnabled = */ { true },
@@ -255,21 +241,29 @@ namespace {
         );
     }
 
-/* Tests for https://github.com/rusefi/rusefi/issues/6571: */
+    /* Tests for https://github.com/rusefi/rusefi/issues/6571: */
 
     TEST_F(IgnitionAngleAdvanceTest, withDisabledLaunchControlAndLaunchRetardWithoutSmooth) {
-        checkAngleAdvanceWithoutLaunchControl(
-                /* launchControlEnabled = */ {false},
-                /* enableLaunchRetard = */ {true},
-                /* launchSmoothRetard = */ {false}
+        doTest(
+            /* config = */ {
+                /* launchControlEnabled = */ { false },
+                /* ignitionRetardEnable = */ { true },
+                /* smoothRetardMode = */ { false },
+                /* satifySwitchSpeedThresholdAndTpsConditions = */ true
+            },
+            /* testData = */ TEST_DATA_WITHOUT_LAUNCH_ANGLE_ADVANCE
         );
     }
 
     TEST_F(IgnitionAngleAdvanceTest, withDisabledLaunchControlAndLaunchRetardAndSmooth) {
-        checkAngleAdvanceWithoutLaunchControl(
-                /* launchControlEnabled = */ {false},
-                /* enableLaunchRetard = */ {true},
-                /* launchSmoothRetard = */ {true}
+        doTest(
+            /* config = */ {
+                /* launchControlEnabled = */ { false },
+                /* ignitionRetardEnable = */ { true },
+                /* smoothRetardMode = */ { true },
+                /* satifySwitchSpeedThresholdAndTpsConditions = */ true
+            },
+            /* testData = */ TEST_DATA_WITHOUT_LAUNCH_ANGLE_ADVANCE
         );
     }
 }
