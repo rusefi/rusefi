@@ -1077,6 +1077,10 @@ void configureRusefiLuaHooks(lua_State* lState) {
 	lua_register(lState, "setAirmass", lua_setAirmass);
 #endif // EFI_ENGINE_CONTROL
 
+	lua_register(lState, "isFirmwareError", [](lua_State* l) {
+		lua_pushboolean(l, hasFirmwareError());
+		return 1;
+	});
 #if EFI_SHAFT_POSITION_INPUT
 	lua_register(lState, "stopEngine", [](lua_State*) {
 		doScheduleStopEngine();
