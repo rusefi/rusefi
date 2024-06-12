@@ -192,7 +192,7 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t off
 		return;
 	}
 
-	efiPrintf("TS -> Write chunk offset %d count %d", offset, count);
+	efiPrintf("TS -> Write chunk offset %d count %d (output_count=%d)", offset, count, tsState.outputChannelsCommandCounter);
 
 	if (validateOffsetCount(offset, count, tsChannel)) {
 		return;
