@@ -364,6 +364,12 @@ pins:
     id: C6
     class: outputs
     ts_name: ETB EN 
+  
+  - pin: D1
+    id: E12
+    class: event_inputs
+    ts_name: Digital 1
+    function: Digital Input
 
 
 
