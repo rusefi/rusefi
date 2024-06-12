@@ -22,6 +22,10 @@ void LaunchTestBase::setUpTestConfig(const LaunchTestConfig& config) {
     configureLaunchRpmWindow(config.getLaunchRpmWindow());
     configureLaunchCorrectionsEndRpm(config.getLaunchCorrectionsEndRpm());
 
+    configureIgnitionRetardEnable(config.getIgnitionRetardEnable());
+    configureIgnitionRetard(config.getIgnitionRetard());
+    configureSmoothRetardMode(config.getSmoothRetardMode());
+
     configureEnableIgnitionCut(config.getEnableIgnitionCut());
     configureInitialIgnitionCutPercent(config.getInitialIgnitionCut());
     configureFinalIgnitionCutPercentBeforeLaunch(config.getFinalIgnitionCutBeforeLaunch());
@@ -66,6 +70,30 @@ void LaunchTestBase::configureLaunchCorrectionsEndRpm(const std::optional<int> l
         engineConfiguration->launchCorrectionsEndRpm = launchCorrectionsEndRpm.value();
     } else {
         ASSERT_EQ(engineConfiguration->launchCorrectionsEndRpm, 0); // check default value
+    }
+}
+
+void LaunchTestBase::configureIgnitionRetardEnable(std::optional<bool> ignitionRetardEnable) {
+    if (ignitionRetardEnable.has_value()) {
+        engineConfiguration->enableLaunchRetard = ignitionRetardEnable.value();
+    } else {
+        ASSERT_FALSE(engineConfiguration->enableLaunchRetard); // check default value
+    }
+}
+
+void LaunchTestBase::configureIgnitionRetard(std::optional<float> ignitionRetard) {
+    if (ignitionRetard.has_value()) {
+        engineConfiguration->launchTimingRetard = ignitionRetard.value();
+    } else {
+        ASSERT_EQ(engineConfiguration->launchTimingRetard, 0); // check default value
+    }
+}
+
+void LaunchTestBase::configureSmoothRetardMode(std::optional<bool> smoothRetardMode) {
+    if (smoothRetardMode.has_value()) {
+        engineConfiguration->launchSmoothRetard = smoothRetardMode.value();
+    } else {
+        ASSERT_FALSE(engineConfiguration->launchSmoothRetard); // check default value
     }
 }
 

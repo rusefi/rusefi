@@ -39,12 +39,16 @@ namespace {
     public:
         IgnitionAngleAdvanceTestConfig(
             const std::optional<bool> launchControlEnabled,
+            const std::optional<bool> ignitionRetardEnable,
+            const std::optional<bool> smoothRetardMode,
             const bool satifySwitchSpeedThresholdAndTpsConditions
         );
     };
 
     IgnitionAngleAdvanceTestConfig::IgnitionAngleAdvanceTestConfig(
         const std::optional<bool> launchControlEnabled,
+        const std::optional<bool> ignitionRetardEnable,
+        const std::optional<bool> smoothRetardMode,
         const bool satifySwitchSpeedThresholdAndTpsConditions
     ) {
         setLaunchControlEnabled(launchControlEnabled);
@@ -53,15 +57,16 @@ namespace {
         setLaunchRpmWindow({TEST_LAUNCH_RPM_WINDOW });
         setLaunchCorrectionsEndRpm({TEST_SMOOTH_RETARD_END_RPM });
 
+        setIgnitionRetardEnable({ ignitionRetardEnable });
+        setIgnitionRetard({ TEST_LAUNCH_TIMING_RETARD });
+        setSmoothRetardMode({ smoothRetardMode });
+
         setEnableIgnitionCut(true);
 
         setSatisfyActivationSwithSpeedAndTpsConditions(satifySwitchSpeedThresholdAndTpsConditions);
     }
 
-    static void setUpTestParameters(
-        const std::optional<bool> enableLaunchRetard,
-        const std::optional<bool> launchSmoothRetard
-    ) {
+    static void setUpTestParameters() {
         for (int loadIdx = 0; loadIdx < IGN_LOAD_COUNT; loadIdx++) {
             config->ignitionTable[loadIdx][0] = TEST_IGNITION_650;
             config->ignitionTable[loadIdx][1] = TEST_IGNITION_800;
@@ -79,19 +84,6 @@ namespace {
             config->ignitionTable[loadIdx][13] = TEST_IGNITION_4400;
             config->ignitionTable[loadIdx][14] = TEST_IGNITION_4700;
             config->ignitionTable[loadIdx][15] = TEST_IGNITION_7000;
-        }
-
-        engineConfiguration->launchTimingRetard = TEST_LAUNCH_TIMING_RETARD;
-
-        if (enableLaunchRetard.has_value()) {
-            engineConfiguration->enableLaunchRetard = enableLaunchRetard.value();
-        } else {
-            ASSERT_FALSE(engineConfiguration->enableLaunchRetard); // check default value
-        }
-        if (launchSmoothRetard.has_value()) {
-            engineConfiguration->launchSmoothRetard = launchSmoothRetard.value();
-        } else {
-            ASSERT_FALSE(engineConfiguration->launchSmoothRetard); // check default value
         }
     }
 
@@ -138,14 +130,13 @@ namespace {
         const std::optional<bool> enableLaunchRetard,
         const std::optional<bool> launchSmoothRetard
     ) {
-        setUpTestParameters(
-            /* enableLaunchRetard = */ enableLaunchRetard,
-            /* launchSmoothRetard = */ launchSmoothRetard
-        );
+        setUpTestParameters();
 
         doTest(
             /* config = */ {
                /* launchControlEnabled = */ launchControlEnabled,
+               /* ignitionRetardEnable = */ enableLaunchRetard,
+               /* smoothRetardMode = */ launchSmoothRetard,
                /* satifySwitchSpeedThresholdAndTpsConditions = */ true
             },
             /* testData = */ {
@@ -179,14 +170,13 @@ namespace {
     }
 
     TEST_F(IgnitionAngleAdvanceTest, withEnabledLaunchControlAndLaunchRetardWithoutSmooth) {
-        setUpTestParameters(
-            /* enableLaunchRetard = */ { true },
-            /* launchSmoothRetard = */ { false }
-        );
+        setUpTestParameters();
 
         doTest(
             /* config = */ {
                 /* launchControlEnabled = */ { true },
+                /* ignitionRetardEnable = */ { true },
+                /* smoothRetardMode = */ { false },
                 /* satifySwitchSpeedThresholdAndTpsConditions = */ true
             },
             /* testData = */ {
@@ -216,14 +206,13 @@ namespace {
     }
 
     TEST_F(IgnitionAngleAdvanceTest, withEnabledLaunchControlAndLaunchRetardAndLaunchSmoothRetard) {
-        setUpTestParameters(
-            /* enableLaunchRetard = */ std::make_optional<bool>(true),
-            /* launchSmoothRetard = */ std::make_optional<bool>(true)
-        );
+        setUpTestParameters();
 
         doTest(
             /* config = */ {
                /* launchControlEnabled = */ { true },
+               /* ignitionRetardEnable = */ { true },
+               /* smoothRetardMode = */ { true },
                /* satifySwitchSpeedThresholdAndTpsConditions = */ true
             },
             /* testData = */ {
