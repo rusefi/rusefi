@@ -250,7 +250,7 @@ end
 static void commonGenesisCoupe() {
 	set201xHyundai();
 
-#if HW_HELLEN_HYUNDAI
+#if defined(HW_HELLEN_HYUNDAI)
 	cannedprimeBins();
 	cannedprimeValues();
 	cannedcltIdleCorrBins();

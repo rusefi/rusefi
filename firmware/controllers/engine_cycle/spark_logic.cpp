@@ -20,7 +20,7 @@
 extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */
 
-#if EFI_PRINTF_FUEL_DETAILS || FUEL_MATH_EXTREME_LOGGING
+#if defined(EFI_PRINTF_FUEL_DETAILS) || FUEL_MATH_EXTREME_LOGGING
 	extern bool printFuelDebug;
 #endif // EFI_PRINTF_FUEL_DETAILS
 

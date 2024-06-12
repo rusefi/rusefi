@@ -23,7 +23,7 @@
 
 #include "pch.h"
 
-#if EFI_PRINTF_FUEL_DETAILS
+#if defined(EFI_PRINTF_FUEL_DETAILS)
 	bool printFuelDebug = false;
 #endif // EFI_PRINTF_FUEL_DETAILS
 
@@ -114,7 +114,7 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 	const floatms_t injectionDurationStage1 = engine->module<InjectorModelPrimary>()->getInjectionDuration(injectionMassStage1);
 	const floatms_t injectionDurationStage2 = injectionMassStage2 > 0 ? engine->module<InjectorModelSecondary>()->getInjectionDuration(injectionMassStage2) : 0;
 
-#if EFI_PRINTF_FUEL_DETAILS
+#if defined(EFI_PRINTF_FUEL_DETAILS)
 	if (printFuelDebug) {
 		printf("fuel injectionDuration=%.2fms adjusted=%.2fms\n",
 				getEngineState()->injectionDuration,
@@ -151,7 +151,7 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 	// Only bother with the second stage if it's long enough to be relevant
 	bool hasStage2Injection = durationUsStage2 > 50;
 
-#if EFI_PRINTF_FUEL_DETAILS
+#if defined(EFI_PRINTF_FUEL_DETAILS)
 	if (printFuelDebug) {
 		InjectorOutputPin *output = outputs[0];
 		printf("handleFuelInjectionEvent fuelout %s injection_duration %dus engineCycleDuration=%.1fms\t\n", output->getName(), (int)durationUsStage1,
@@ -247,7 +247,7 @@ static void handleFuel(efitick_t nowNt, float currentPhase, float nextPhase) {
 void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_t currentPhase, angle_t nextPhase) {
 	ScopePerf perf(PE::MainTriggerCallback);
 
-#if ! HW_CHECK_MODE
+#ifndef HW_CHECK_MODE
 	if (hasFirmwareError()) {
 		/**
 		 * In case on a major error we should not process any more events.

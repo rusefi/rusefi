@@ -133,7 +133,7 @@ void Engine::updateTriggerWaveform() {
 #endif /* EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 }
 
-#if ANALOG_HW_CHECK_MODE
+#if defined(ANALOG_HW_CHECK_MODE)
 static void assertCloseTo(const char* msg, float actual, float expected) {
 	if (actual < 0.95f * expected || actual > 1.05f * expected) {
 		criticalError("%s validation failed actual=%f vs expected=%f", msg, actual, expected);
@@ -183,7 +183,7 @@ void Engine::periodicSlowCallback() {
 	baroLps25Update();
 #endif // EFI_PROD_CODE
 
-#if ANALOG_HW_CHECK_MODE
+#if defined(ANALOG_HW_CHECK_MODE)
 	criticalAssertVoid(isAdcChannelValid(engineConfiguration->clt.adcChannel), "No CLT setting");
 	efitimesec_t secondsNow = getTimeNowS();
 

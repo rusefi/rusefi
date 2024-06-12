@@ -290,7 +290,7 @@ void runMainLoop() {
 	 * control is around main_trigger_callback
 	 */
 	while (true) {
-#if EFI_CLI_SUPPORT && !EFI_UART_ECHO_TEST_MODE
+#if EFI_CLI_SUPPORT && !defined(EFI_UART_ECHO_TEST_MODE)
 		// sensor state + all pending messages for our own rusEfi console
 		// todo: is this mostly dead code?
 		updateDevConsoleState();

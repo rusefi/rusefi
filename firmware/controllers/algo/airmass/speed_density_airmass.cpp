@@ -26,7 +26,7 @@ AirmassResult SpeedDensityAirmass::getAirmass(float rpm, float map, bool postSta
 		warning(ObdCode::CUSTOM_ERR_6685, "NaN airMass");
 		return {};
 	}
-#if EFI_PRINTF_FUEL_DETAILS
+#if defined(EFI_PRINTF_FUEL_DETAILS)
 	printf("getSpeedDensityAirmass map=%.2f\n", map);
 #endif /*EFI_PRINTF_FUEL_DETAILS */
 

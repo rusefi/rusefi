@@ -7,13 +7,13 @@
 
 #include "pch.h"
 #include "m111.h"
-#if HW_HELLEN
+#if defined(HW_HELLEN)
 #include "hellen_meta.h"
 #endif // HW_HELLEN
 
 void setHellenMercedes128_4_cyl() {
     setMercedesM111EngineConfiguration();
-#if HW_HELLEN
+#if defined(HW_HELLEN)
 	engineConfiguration->injectionPins[0] = Gpio::H144_LS_7;
 	engineConfiguration->injectionPins[1] = H176_LS_6;
 	engineConfiguration->injectionPins[2] = H176_LS_8;

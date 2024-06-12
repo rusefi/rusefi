@@ -247,7 +247,7 @@ void initializeConsole() {
 	addConsoleAction("test", [](){ /* do nothing */});
 	addConsoleActionI("echo", echo);
 	addConsoleAction("hello", sayHello);
-#if EFI_HAS_RESET
+#ifdef EFI_HAS_RESET
 	addConsoleAction("reset", scheduleReset);
 #endif
 

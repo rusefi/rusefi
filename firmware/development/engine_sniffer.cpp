@@ -83,7 +83,7 @@ void WaveChart::init() {
 }
 
 void WaveChart::reset() {
-#if DEBUG_WAVE
+#ifdef DEBUG_WAVE
 	efiPrintf("reset while at ", counter);
 #endif /* DEBUG_WAVE */
 	logging.reset();
@@ -142,7 +142,7 @@ void WaveChart::publish() {
 #if EFI_ENGINE_SNIFFER
 	logging.appendPrintf( LOG_DELIMITER);
 	waveChartUsedSize = logging.loggingSize();
-#if DEBUG_WAVE
+#ifdef DEBUG_WAVE
 	Logging *l = &chart->logging;
 	efiPrintf("IT'S TIME", strlen(l->buffer));
 #endif // DEBUG_WAVE
@@ -180,7 +180,7 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 #endif /* EFI_PROD_CODE */
 
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6653, isInitialized, "chart not initialized");
-#if DEBUG_WAVE
+#ifdef DEBUG_WAVE
 	efiPrintf("current", chart->counter);
 #endif /* DEBUG_WAVE */
 	if (isFull()) {

@@ -281,7 +281,7 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 			setAllLeds(0);
 		} else if (counter % 2 == 0) {
 			enginePins.communicationLedPin.setValue(0, /*force*/true);
-#if HW_CHECK_SD
+#ifdef HW_CHECK_SD
 extern int totalLoggedBytes;
 			if (totalLoggedBytes > 2000) {
 				enginePins.communicationLedPin.setValue(1);
@@ -701,7 +701,7 @@ void updateTunerStudioState() {
 	extern FrequencySensor vehicleSpeedSensor;
 	tsOutputChannels->vssEdgeCounter = vehicleSpeedSensor.eventCounter;
 
-#if HW_CHECK_MODE
+#ifdef HW_CHECK_MODE
 	tsOutputChannels->hasCriticalError = 1;
 #else
 	tsOutputChannels->hasCriticalError = hasFirmwareError();

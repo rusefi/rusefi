@@ -99,7 +99,7 @@ static efitick_t getNextSwitchTimeNt(PwmConfig *state) {
 	// we handle PM_ZERO and PM_FULL separately
 	float switchTime = state->mode == PM_NORMAL ? state->multiChannelStateSequence->getSwitchTime(state->safe.phaseIndex) : 1;
 	float periodNt = state->safe.periodNt;
-#if DEBUG_PWM
+#ifdef DEBUG_PWM
 	efiPrintf("iteration=%d switchTime=%.2f period=%.2f", iteration, switchTime, period);
 #endif /* DEBUG_PWM */
 
@@ -110,7 +110,7 @@ static efitick_t getNextSwitchTimeNt(PwmConfig *state) {
 	 */
 	uint32_t timeToSwitchNt = (uint32_t)((iteration + switchTime) * periodNt);
 
-#if DEBUG_PWM
+#ifdef DEBUG_PWM
 	efiPrintf("start=%d timeToSwitch=%d", state->safe.start, timeToSwitch);
 #endif /* DEBUG_PWM */
 	return state->safe.startNt + timeToSwitchNt;
@@ -165,7 +165,7 @@ void PwmConfig::handleCycleStart() {
 		safe.periodNt = periodNt;
 
 		forceCycleStart = false;
-#if DEBUG_PWM
+#ifdef DEBUG_PWM
 		efiPrintf("state reset start=%d iteration=%d", state->safe.start, state->safe.iteration);
 #endif
 	}
@@ -179,7 +179,7 @@ efitick_t PwmConfig::togglePwmState() {
 		return 0;
 	}
 
-#if DEBUG_PWM
+#ifdef DEBUG_PWM
 	efiPrintf("togglePwmState phaseIndex=%d iteration=%d", safe.phaseIndex, safe.iteration);
 	efiPrintf("period=%.2f safe.period=%.2f", period, safe.periodNt);
 #endif
@@ -222,7 +222,7 @@ efitick_t PwmConfig::togglePwmState() {
 	}
 
 	efitick_t nextSwitchTimeNt = getNextSwitchTimeNt(this);
-#if DEBUG_PWM
+#ifdef DEBUG_PWM
 	efiPrintf("%s: nextSwitchTime %d", state->m_name, nextSwitchTime);
 #endif /* DEBUG_PWM */
 
