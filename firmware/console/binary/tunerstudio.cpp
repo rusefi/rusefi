@@ -165,7 +165,7 @@ void sendErrorCode(TsChannelBase *tsChannel, uint8_t code, const char *msg) {
 }
 
 void TunerStudio::sendErrorCode(TsChannelBase* tsChannel, uint8_t code, const char *msg) {
-	::sendErrorCode(tsChannel, code);
+	::sendErrorCode(tsChannel, code, msg);
 }
 
 void TunerStudio::handlePageSelectCommand(TsChannelBase *tsChannel) {
@@ -188,7 +188,7 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t off
 		void *content) {
 	tsState.writeChunkCommandCounter++;
 	if (isLockedFromUser()) {
-		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
+		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND, "locked");
 		return;
 	}
 
@@ -294,7 +294,7 @@ void TunerStudio::handleWriteValueCommand(TsChannelBase* tsChannel, uint16_t off
 
 	tsState.writeValueCommandCounter++;
 	if (isLockedFromUser()) {
-		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
+		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND, "locked");
 		return;
 	}
 
@@ -316,7 +316,7 @@ void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t offse
 	tsState.readPageCommandsCounter++;
 
 	if (rebootForPresetPending) {
-		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
+		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND, "reboot");
 		return;
 	}
 
@@ -534,7 +534,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 			efiPrintf("process_ts: channel=%s invalid size: %d", tsChannel->name, incomingPacketSize);
 			tunerStudioError(tsChannel, "process_ts: ERROR: CRC header size");
 			/* send error only if previously we were in sync */
-			sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
+			sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN, "underrun");
 		}
 		tsChannel->in_sync = false;
 		return -1;
@@ -552,7 +552,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 			efiPrintf("Got only %d bytes while expecting %d for command 0x%02x", received,
 					expectedSize, command);
 			tunerStudioError(tsChannel, "ERROR: not enough bytes in stream");
-			sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN);
+			sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN, "underrun");
 			tsChannel->in_sync = false;
 			return -1;
 		}
@@ -560,7 +560,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 		if (!isKnownCommand(command)) {
 			/* print and send error as we were in sync */
 			efiPrintf("unexpected command %x", command);
-			sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
+			sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND, "unknown");
 			tsChannel->in_sync = false;
 			return -1;
 		}
@@ -596,7 +596,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 			efiPrintf("TunerStudio: command %c actual CRC %x/expected %x", tsChannel->scratchBuffer[0],
 					(unsigned int)actualCrc, (unsigned int)expectedCrc);
 			tunerStudioError(tsChannel, "ERROR: CRC issue");
-			sendErrorCode(tsChannel, TS_RESPONSE_CRC_FAILURE);
+			sendErrorCode(tsChannel, TS_RESPONSE_CRC_FAILURE, "crc_issue");
 			tsChannel->in_sync = false;
 		}
 		return -1;
@@ -880,7 +880,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		break;
 	}
 	default:
-		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND);
+		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND, "unknown_command");
 static char tsErrorBuff[80];
 		chsnprintf(tsErrorBuff, sizeof(tsErrorBuff), "ERROR: ignoring unexpected command %d [%c]", command, command);
 		tunerStudioError(tsChannel, tsErrorBuff);
