@@ -5,6 +5,7 @@ import com.rusefi.Launcher;
 import com.rusefi.Timeouts;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autodetect.SerialAutoChecker;
+import com.rusefi.core.FindFileHelper;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.DfuHelper;
@@ -25,7 +26,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
-import static com.rusefi.Launcher.INPUT_FILES_PATH;
+import static com.rusefi.core.FindFileHelper.INPUT_FILES_PATH;
 
 /**
  * @see StLinkFlasher
@@ -71,7 +72,7 @@ public class DfuFlasher {
             boolean finalNeedsEraseFirst = needsEraseFirst;
             submitAction(() -> {
                 timeForDfuSwitch(callbacks);
-                executeDFU(callbacks, finalNeedsEraseFirst, MaintenanceUtil.FIRMWARE_BIN_FILE);
+                executeDFU(callbacks, finalNeedsEraseFirst, FindFileHelper.FIRMWARE_BIN_FILE);
             });
         } else {
             callbacks.log("Please use manual DFU to change bundle type.");
@@ -152,7 +153,7 @@ public class DfuFlasher {
     }
 
     public static void runDfuProgramming(UpdateOperationCallbacks callbacks) {
-        submitAction(() -> executeDFU(callbacks, false, MaintenanceUtil.FIRMWARE_BIN_FILE));
+        submitAction(() -> executeDFU(callbacks, false, FindFileHelper.FIRMWARE_BIN_FILE));
     }
 
     public static void runOpenBltInitialProgramming(UpdateOperationCallbacks callbacks) {

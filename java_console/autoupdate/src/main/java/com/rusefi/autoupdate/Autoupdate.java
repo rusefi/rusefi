@@ -22,8 +22,10 @@ import java.util.Date;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static com.rusefi.core.FindFileHelper.findSrecFile;
+
 public class Autoupdate {
-    private static final int VERSION = 20240603;
+    private static final int VERSION = 20240612;
 
     private static final String LOGO_PATH = "/com/rusefi/";
     private static final String LOGO = LOGO_PATH + "logo.png";
@@ -143,9 +145,11 @@ public class Autoupdate {
 
             File file = new File(zipFileName);
             file.setLastModified(lastModified);
-            System.out.println("Downloaded " + file.length() + " bytes");
+            System.out.println("Downloaded " + file.length() + " bytes, lastModified=" + lastModified);
 
             FileUtil.unzip(zipFileName, new File(".."));
+            String srecFile = findSrecFile();
+            new File(srecFile == null ? FindFileHelper.FIRMWARE_BIN_FILE : srecFile).setLastModified(lastModified);
         } catch (ReportedIOException e) {
             // we had already reported error with a UI dialog when we had parent frame
             System.err.println("Error downloading bundle: " + e);

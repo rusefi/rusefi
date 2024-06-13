@@ -6,6 +6,11 @@ import java.io.File;
 import java.util.Objects;
 
 public class FindFileHelper {
+    public static final String INPUT_FILES_PATH = System.getProperty("input_files_path", "..");
+    /**
+     * Same .bin used by primary DFU and a bit unneeded ST-LINK options
+     */
+    public static final String FIRMWARE_BIN_FILE = INPUT_FILES_PATH + "/" + "rusefi.bin";
     private static final String BINARY_PREFIX = "rusefi";
 
     @Nullable
@@ -25,7 +30,7 @@ public class FindFileHelper {
 
     @Nullable
     public static String findSrecFile() {
-        return findFile("..", BINARY_PREFIX, "srec");
+        return findFile(INPUT_FILES_PATH, BINARY_PREFIX, "srec");
     }
 
     public static boolean isObfuscated() {

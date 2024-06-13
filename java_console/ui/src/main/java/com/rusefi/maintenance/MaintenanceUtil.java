@@ -5,13 +5,7 @@ import com.rusefi.io.UpdateOperationCallbacks;
 
 import java.io.File;
 
-import static com.rusefi.Launcher.INPUT_FILES_PATH;
-
 public class MaintenanceUtil {
-    /**
-     * Same .bin used by primary DFU and a bit unneeded ST-LINK options
-     */
-    public static final String FIRMWARE_BIN_FILE = INPUT_FILES_PATH + "/" + "rusefi.bin";
 
     private static final String WMIC_PCAN_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%PCAN-USB%'\" get Caption,ConfigManagerErrorCode /format:list";
 
@@ -32,7 +26,7 @@ public class MaintenanceUtil {
     }
 
     public static long getBinaryModificationTimestamp() {
-        String fileName = FindFileHelper.isObfuscated() ? FindFileHelper.findSrecFile() : FIRMWARE_BIN_FILE;
+        String fileName = FindFileHelper.isObfuscated() ? FindFileHelper.findSrecFile() : FindFileHelper.FIRMWARE_BIN_FILE;
         return new File(fileName).lastModified();
     }
 }
