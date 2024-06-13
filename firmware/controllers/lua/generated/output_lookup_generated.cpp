@@ -950,11 +950,6 @@ float getOutputValueByName(const char *name) {
 		case -978523544:
 			return engine->launchController.isValidInputPin;
 #endif
-// isAfterLaunch
-#if EFI_LAUNCH_CONTROL
-		case 1702192078:
-			return engine->launchController.isAfterLaunch;
-#endif
 // activateSwitchCondition
 #if EFI_LAUNCH_CONTROL
 		case 1265600943:
