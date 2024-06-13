@@ -3,6 +3,7 @@ package com.rusefi.autodetect;
 import com.devexperts.logging.Logging;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.serial.BufferedSerialIoStream;
@@ -48,7 +49,7 @@ public class SerialAutoChecker {
             if (!checkResponseCode(response))
                 return null;
             String signature = new String(response, 1, response.length - 1);
-            if (!signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX)) {
+            if (!isSignatureWithValidPrefix(signature)) {
                 return null;
             }
             log.info("Got signature=" + signature + " from " + stream);
@@ -59,6 +60,13 @@ public class SerialAutoChecker {
         } catch (IOException ignore) {
             return null;
         }
+    }
+
+    private static boolean isSignatureWithValidPrefix(String signature) {
+        if (signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX))
+            return true;
+        String whitelabel = ConnectionAndMeta.getWhitelabel();
+        return whitelabel != null && signature.startsWith(whitelabel + " ");
     }
 
     public void openAndCheckResponse(PortDetector.DetectorMode mode, AtomicReference<AutoDetectResult> result, Function<CallbackContext, Void> callback) {
@@ -128,9 +136,9 @@ public class SerialAutoChecker {
         @Override
         public String toString() {
             return "AutoDetectResult{" +
-                    "serialPort='" + serialPort + '\'' +
-                    ", signature='" + signature + '\'' +
-                    '}';
+                "serialPort='" + serialPort + '\'' +
+                ", signature='" + signature + '\'' +
+                '}';
         }
     }
 }

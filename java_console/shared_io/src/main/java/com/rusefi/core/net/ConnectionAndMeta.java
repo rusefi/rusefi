@@ -28,17 +28,27 @@ public class ConnectionAndMeta {
     }
 
     public static String getBaseUrl() {
+        String result = getProperties().getProperty("auto_update_root_url");
+        System.out.println(ConnectionAndMeta.class + ": got [" + result + "]");
+        return result;
+    }
+
+    public static String getWhitelabel() {
+        String whitelabel = getProperties().getProperty("WHITELABEL");
+        whitelabel = whitelabel == null ? null : whitelabel.trim();
+        return whitelabel;
+    }
+
+    private static Properties getProperties() throws RuntimeException {
         Properties props = new Properties();
         try {
             InputStream stream = ConnectionAndMeta.class.getResourceAsStream(IO_PROPERTIES);
             Objects.requireNonNull(stream, "Error reading " + IO_PROPERTIES);
             props.load(stream);
+            return props;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        String result = props.getProperty("auto_update_root_url");
-        System.out.println(ConnectionAndMeta.class + ": got [" + result + "]");
-        return result;
     }
 
     public static String getDefaultAutoUpdateUrl() {

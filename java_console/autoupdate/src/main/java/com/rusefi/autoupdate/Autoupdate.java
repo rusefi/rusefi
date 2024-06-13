@@ -83,7 +83,7 @@ public class Autoupdate {
     private static void doDownload(BundleUtil.BundleInfo bundleInfo, UpdateMode mode) {
         if (bundleInfo.getBranchName().equals("snapshot")) {
             System.out.println("Snapshot requested");
-            downloadAndUnzipAutoupdate(bundleInfo, mode, ConnectionAndMeta.getBaseUrl()+ ConnectionAndMeta.AUTOUPDATE);
+            downloadAndUnzipAutoupdate(bundleInfo, mode, ConnectionAndMeta.getBaseUrl() + ConnectionAndMeta.AUTOUPDATE);
         } else {
             downloadAndUnzipAutoupdate(bundleInfo, mode, ConnectionAndMeta.getBaseUrl() + "/lts/" + bundleInfo.getBranchName() + ConnectionAndMeta.AUTOUPDATE);
         }
