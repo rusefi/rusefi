@@ -20,34 +20,34 @@ static void updateRpm(const int rpm) {
     engine->launchController.update();
 }
 
-TEST(rpmCondition, IncreasingRpm) {
+TEST(rpmCondition, increasingRpm) {
     EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
     setUpTestParameters();
 
     /* RPM hasn't reached Launch RPM parameter - rpmCondition isn't satisfied: */
     EXPECT_FALSE(engine->launchController.rpmLaunchCondition); // check default value
-    EXPECT_FALSE(engine->launchController.isAfterLaunch); // check default value
+    EXPECT_FALSE(engine->launchController.rpmPreLaunchCondition); // check default value
 
     updateRpm(TEST_PRELAUNCH_RPM - 1);
     EXPECT_FALSE(engine->launchController.rpmLaunchCondition);
-    EXPECT_FALSE(engine->launchController.isAfterLaunch);
+    EXPECT_FALSE(engine->launchController.rpmPreLaunchCondition);
 
     updateRpm(TEST_PRELAUNCH_RPM);
     EXPECT_FALSE(engine->launchController.rpmLaunchCondition);
-    EXPECT_FALSE(engine->launchController.isAfterLaunch);
+    EXPECT_TRUE(engine->launchController.rpmPreLaunchCondition);
 
     updateRpm(TEST_LAUNCH_RPM - 1);
     EXPECT_FALSE(engine->launchController.rpmLaunchCondition);
-    EXPECT_FALSE(engine->launchController.isAfterLaunch);
+    EXPECT_TRUE(engine->launchController.rpmPreLaunchCondition);
 
     updateRpm(TEST_LAUNCH_RPM);
     /* RPM reached Launch RPM parameter - now rpmCondition is satisfied: */
     EXPECT_TRUE(engine->launchController.rpmLaunchCondition);
-    EXPECT_TRUE(engine->launchController.isAfterLaunch);
+    EXPECT_FALSE(engine->launchController.rpmPreLaunchCondition);
 }
 
-TEST(rpmCondition, HysterisisOnDecreasingRpm) {
+TEST(rpmCondition, decreasingRpm) {
     EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
     setUpTestParameters();
@@ -55,24 +55,24 @@ TEST(rpmCondition, HysterisisOnDecreasingRpm) {
     updateRpm(TEST_LAUNCH_RPM);
     /* RPM reached Launch RPM parameter - rpmCondition is satisfied: */
     EXPECT_TRUE(engine->launchController.rpmLaunchCondition);
-    EXPECT_TRUE(engine->launchController.isAfterLaunch);
+    EXPECT_FALSE(engine->launchController.rpmPreLaunchCondition);
 
     updateRpm(TEST_LAUNCH_RPM - 1);
     /* RPM is below Launch RPM parameter, but still in Launch Control Window - so rpmCondition is still satisfied: */
-    EXPECT_TRUE(engine->launchController.rpmLaunchCondition);
-    EXPECT_TRUE(engine->launchController.isAfterLaunch);
+    EXPECT_FALSE(engine->launchController.rpmLaunchCondition);
+    EXPECT_TRUE(engine->launchController.rpmPreLaunchCondition);
 
     updateRpm(TEST_PRELAUNCH_RPM);
-    EXPECT_TRUE(engine->launchController.rpmLaunchCondition);
-    EXPECT_TRUE(engine->launchController.isAfterLaunch);
+    EXPECT_FALSE(engine->launchController.rpmLaunchCondition);
+    EXPECT_TRUE(engine->launchController.rpmPreLaunchCondition);
 
     updateRpm(TEST_PRELAUNCH_RPM - 1);
     /* RPM went down below Launch Control Window parameter - now rpmCondition is not satisfied: */
     EXPECT_FALSE(engine->launchController.rpmLaunchCondition);
-    EXPECT_FALSE(engine->launchController.isAfterLaunch);
+    EXPECT_FALSE(engine->launchController.rpmPreLaunchCondition);
 }
 
-TEST(rpmCondition, HysterisisRpmOscillation) {
+TEST(rpmCondition, rpmOscillation) {
     EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
     setUpTestParameters();
@@ -80,39 +80,39 @@ TEST(rpmCondition, HysterisisRpmOscillation) {
     updateRpm(TEST_LAUNCH_RPM);
     /* RPM reached Launch RPM parameter - rpmCondition is satisfied: */
     EXPECT_TRUE(engine->launchController.rpmLaunchCondition);
-    EXPECT_TRUE(engine->launchController.isAfterLaunch);
+    EXPECT_FALSE(engine->launchController.rpmPreLaunchCondition);
 
     updateRpm(TEST_LAUNCH_RPM - 1);
-    EXPECT_TRUE(engine->launchController.rpmLaunchCondition);
-    EXPECT_TRUE(engine->launchController.isAfterLaunch);
+    EXPECT_FALSE(engine->launchController.rpmLaunchCondition);
+    EXPECT_TRUE(engine->launchController.rpmPreLaunchCondition);
 
     updateRpm(TEST_LAUNCH_RPM + 1);
     EXPECT_TRUE(engine->launchController.rpmLaunchCondition);
-    EXPECT_TRUE(engine->launchController.isAfterLaunch);
+    EXPECT_FALSE(engine->launchController.rpmPreLaunchCondition);
 
     updateRpm(TEST_PRELAUNCH_RPM);
-    EXPECT_TRUE(engine->launchController.rpmLaunchCondition);
-    EXPECT_TRUE(engine->launchController.isAfterLaunch);
+    EXPECT_FALSE(engine->launchController.rpmLaunchCondition);
+    EXPECT_TRUE(engine->launchController.rpmPreLaunchCondition);
 
     updateRpm(TEST_LAUNCH_RPM + 2);
     EXPECT_TRUE(engine->launchController.rpmLaunchCondition);
-    EXPECT_TRUE(engine->launchController.isAfterLaunch);
+    EXPECT_FALSE(engine->launchController.rpmPreLaunchCondition);
 
     updateRpm(TEST_PRELAUNCH_RPM - 1);
     /* RPM went down below Launch Control Window parameter - now rpmCondition is not satisfied: */
     EXPECT_FALSE(engine->launchController.rpmLaunchCondition);
-    EXPECT_FALSE(engine->launchController.isAfterLaunch);
+    EXPECT_FALSE(engine->launchController.rpmPreLaunchCondition);
 
     updateRpm(TEST_PRELAUNCH_RPM);
     EXPECT_FALSE(engine->launchController.rpmLaunchCondition);
-    EXPECT_FALSE(engine->launchController.isAfterLaunch);
+    EXPECT_TRUE(engine->launchController.rpmPreLaunchCondition);
 
     updateRpm(TEST_LAUNCH_RPM - 1);
     EXPECT_FALSE(engine->launchController.rpmLaunchCondition);
-    EXPECT_FALSE(engine->launchController.isAfterLaunch);
+    EXPECT_TRUE(engine->launchController.rpmPreLaunchCondition);
 
     /* RPM reached Launch RPM parameter again - now rpmCondition is satisfied: */
     updateRpm(TEST_LAUNCH_RPM);
     EXPECT_TRUE(engine->launchController.rpmLaunchCondition);
-    EXPECT_TRUE(engine->launchController.isAfterLaunch);
+    EXPECT_FALSE(engine->launchController.rpmPreLaunchCondition);
 }
