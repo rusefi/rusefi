@@ -31,12 +31,12 @@ Release template (copy/paste this for new release):
  - Suzuki K6A (NON VVTI Trigger) #6490
  - explicit error if 32 bit java is used #6497
  - configurable Open Loop Boost vertical axis #4778
- - In Launch Control, add RPM Hysterisis #5610
  - reduce JRE download complexity #6569
  - simpler basic firmware updater #5577
  - prohibit mcu_standby on ECU start-up #6589
  - Allow to choose lower RPM cutoff for AC Compressor #6597
  - New TPS/TPS enrichment mode: percent adder #3167
+ - Launch control has a variable ignition cut BEFORE the main Hard cut #6566
 
 ### Fixed
  - knock logic not activated until any configuration change via TS #6462
