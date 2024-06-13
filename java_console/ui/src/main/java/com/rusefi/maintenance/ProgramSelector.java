@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static com.rusefi.core.ui.FrameHelper.appendBundleName;
@@ -97,7 +96,7 @@ public class ProgramSelector {
                     case ST_LINK:
                         job = updateOperationCallbacks -> {
                             // todo: add ST-LINK no-assert mode? or not?
-                            StLinkFlasher.doUpdateFirmware(MaintenanceUtil.FIRMWARE_BIN_FILE, parent);
+                            StLinkFlasher.doUpdateFirmware(FindFileHelper.FIRMWARE_BIN_FILE, parent);
                         };
                         break;
                     case DFU_SWITCH:
