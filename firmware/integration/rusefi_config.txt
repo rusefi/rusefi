@@ -2031,6 +2031,7 @@ end_struct
 #define ts_show_cam2 true
 #define ts_show_bank2_cam1 true
 #define ts_show_bank2_cam2 true
+#define ts_show_globalTriggerAngleOffset true
 #define ts_show_sync_cam true
 #define INJECTOR_1_NAME "Injector #1"
 #define INJECTOR_2_NAME "Injector #2"
