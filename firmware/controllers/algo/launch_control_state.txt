@@ -8,7 +8,6 @@ bit isLaunchCondition
 bit isSwitchActivated
 bit isClutchActivated
 bit isValidInputPin
-bit isAfterLaunch
 
 bit     activateSwitchCondition;
 bit     rpmLaunchCondition;

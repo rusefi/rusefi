@@ -77,13 +77,11 @@ LaunchCondition LaunchControlBase::calculateRPMLaunchCondition(const int rpm) {
 	const int launchRpm = engineConfiguration->launchRpm;
 	const int preLaunchRpm = launchRpm - engineConfiguration->launchRpmWindow;
 	if (rpm < preLaunchRpm) {
-		isAfterLaunch = false;
 		return LaunchCondition::NotMet;
 	} else if (launchRpm <= rpm) {
-		isAfterLaunch = true;
 		return LaunchCondition::Launch;
 	} else {
-		return (isAfterLaunch ?  LaunchCondition::Launch : LaunchCondition::PreLaunch);
+		return LaunchCondition::PreLaunch;
 	}
 }
 
