@@ -723,17 +723,17 @@ struct EtbImpl final : public TBase {
 
 		// Write out the learned values to TS, waiting briefly after setting each to let TS grab it
 		engine->outputChannels.calibrationMode = (uint8_t)functionToCalModePriMax(myFunction);
-		engine->outputChannels.calibrationValue = primaryMax * TPS_TS_CONVERSION;
+		engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(primaryMax);
 		chThdSleepMilliseconds(500);
 		engine->outputChannels.calibrationMode = (uint8_t)functionToCalModePriMin(myFunction);
-		engine->outputChannels.calibrationValue = primaryMin * TPS_TS_CONVERSION;
+		engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(primaryMin);
 		chThdSleepMilliseconds(500);
 
 		engine->outputChannels.calibrationMode = (uint8_t)functionToCalModeSecMax(myFunction);
-		engine->outputChannels.calibrationValue = secondaryMax * TPS_TS_CONVERSION;
+		engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(secondaryMax);
 		chThdSleepMilliseconds(500);
 		engine->outputChannels.calibrationMode = (uint8_t)functionToCalModeSecMin(myFunction);
-		engine->outputChannels.calibrationValue = secondaryMin * TPS_TS_CONVERSION;
+		engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(secondaryMin);
 		chThdSleepMilliseconds(500);
 
 		engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::None;
