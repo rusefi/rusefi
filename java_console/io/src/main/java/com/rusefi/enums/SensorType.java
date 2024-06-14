@@ -87,6 +87,7 @@ public enum SensorType {
 	DashOverrideVehicleSpeed,
 	DashOverrideClt,
 	DashOverrideBatteryVoltage,
+	AcPressure,
 	AuxLinear1,
 	AuxLinear2,
 	AuxSpeed1,

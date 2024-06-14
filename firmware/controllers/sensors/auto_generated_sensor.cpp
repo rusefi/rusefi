@@ -1,12 +1,14 @@
 #include "global.h"
 #include "sensor_type.h"
-// was generated automatically by rusEFI tool  from sensor_type.h // by enum_to_string.jar tool on Mon Apr 15 00:16:37 UTC 2024
+// was generated automatically by rusEFI tool  from sensor_type.h // by enum_to_string.jar tool on Fri Jun 14 13:56:54 UTC 2024
 // see also gen_config_and_enums.bat
 
 
 
 const char *getSensorType(SensorType value){
 switch(value) {
+case SensorType::AcPressure:
+  return "AcPressure";
 case SensorType::AcceleratorPedal:
   return "AcceleratorPedal";
 case SensorType::AcceleratorPedalPrimary:
