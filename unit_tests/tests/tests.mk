@@ -79,7 +79,6 @@ TESTS_SRC_CPP = \
 	tests/test_lambda_monitor.cpp \
 	tests/sensor/basic_sensor.cpp \
 	tests/sensor/func_sensor.cpp \
-	tests/sensor/function_pointer_sensor.cpp \
 	tests/sensor/mock_sensor.cpp \
 	tests/sensor/sensor_reader.cpp \
 	tests/sensor/lin_func.cpp \
