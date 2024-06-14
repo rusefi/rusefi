@@ -146,6 +146,8 @@ enum class SensorType : unsigned char {
   DashOverrideClt,
   DashOverrideBatteryVoltage,
 
+  AcPressure,
+
 	AuxLinear1,
 	AuxLinear2,
 
