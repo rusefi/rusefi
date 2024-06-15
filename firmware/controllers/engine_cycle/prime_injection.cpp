@@ -59,7 +59,9 @@ void PrimeController::onIgnitionStateChanged(bool ignitionOn) {
 
 	// start prime injection if this is a 'fresh start'
 	if (ignSwitchCounter == 0) {
-		uint32_t primeDelayNt = MSF2NT(engineConfiguration->primingDelay * 1000);
+		// Give sensors long enough to wake up before priming
+		constexpr float minimumPrimeDelayMs = 100;
+		uint32_t primeDelayNt = MSF2NT(engineConfiguration->primingDelay * 1000 + minimumPrimeDelayMs);
 
 		auto startTime = getTimeNowNt() + primeDelayNt;
 		getExecutorInterface()->scheduleByTimestampNt("prime start", nullptr, startTime, { PrimeController::onPrimeStartAdapter, this });
