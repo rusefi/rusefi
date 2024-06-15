@@ -48,7 +48,7 @@ static NamedOutputPin mapAveragingPin("map");
 #define MAX_MAP_BUFFER_LENGTH (MAX_CYLINDER_COUNT)
 // in MAP units, not voltage!
 static float averagedMapRunningBuffer[MAX_MAP_BUFFER_LENGTH];
-int mapMinBufferLength = 0;
+static int mapMinBufferLength = 0;
 static int averagedMapBufIdx = 0;
 
 /**

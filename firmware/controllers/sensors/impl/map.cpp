@@ -25,17 +25,14 @@ static float validateBaroMap(float mapKPa) {
 
 #if EFI_PROD_CODE
 
-extern int mapMinBufferLength;
-
 static void printMAPInfo() {
 #if EFI_ANALOG_SENSORS
 	efiPrintf("instant value=%.2fkPa", Sensor::getOrZero(SensorType::Map));
 
 #if EFI_MAP_AVERAGING
-	efiPrintf("map type=%d/%s MAP=%.2fkPa mapMinBufferLength=%d", engineConfiguration->map.sensor.type,
+	efiPrintf("map type=%d/%s MAP=%.2fkPa", engineConfiguration->map.sensor.type,
 			getAir_pressure_sensor_type_e(engineConfiguration->map.sensor.type),
-			Sensor::getOrZero(SensorType::Map),
-			mapMinBufferLength);
+			Sensor::getOrZero(SensorType::Map));
 #endif // EFI_MAP_AVERAGING
 
 	adc_channel_e mapAdc = engineConfiguration->map.sensor.hwChannel;
