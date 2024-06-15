@@ -142,8 +142,8 @@ void mapAveragingAdcCallback(float instantVoltage) {
 		warning(ObdCode::CUSTOM_INSTANT_MAP_DECODING, "Invalid MAP at %f", instantVoltage);
 	}
 
-	float instantMap = mapResult.value_or(0);
 #if EFI_TUNER_STUDIO
+	float instantMap = mapResult.value_or(0);
 	engine->outputChannels.instantMAPValue = instantMap;
 #endif // EFI_TUNER_STUDIO
 }
