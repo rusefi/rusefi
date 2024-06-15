@@ -97,6 +97,13 @@ SensorResult MapAverager::submit(float volts) {
 	return result;
 }
 
+PUBLIC_API_WEAK float filterMapValue(float value) {
+static float state = 0;
+  float result = state + engineConfiguration->mapExpAverageAlpha * (value - state);
+  state = result;
+  return result;
+}
+
 void MapAverager::stop() {
 	chibios_rt::CriticalSectionLocker csl;
 
