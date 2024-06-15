@@ -51,14 +51,18 @@ static int averagedMapBufIdx = 0;
 /**
  * here we have averaging start and averaging end points for each cylinder
  */
-static CCM_OPTIONAL scheduling_s startTimers[MAX_CYLINDER_COUNT][2];
-static CCM_OPTIONAL scheduling_s endTimers[MAX_CYLINDER_COUNT][2];
+struct sampler {
+	scheduling_s startTimer;
+	scheduling_s endTimer;
+};
+
+static CCM_OPTIONAL sampler samplers[MAX_CYLINDER_COUNT][2];
 
 static void endAveraging(MapAverager* arg);
 
 static size_t currentMapAverager = 0;
 
-static void startAveraging(scheduling_s *endAveragingScheduling) {
+static void startAveraging(sampler* s) {
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6649, getCurrentRemainingStack() > 128, "lowstck#9");
 
 	// TODO: set currentMapAverager based on cylinder bank
@@ -67,7 +71,7 @@ static void startAveraging(scheduling_s *endAveragingScheduling) {
 
 	mapAveragingPin.setHigh();
 
-	scheduleByAngle(endAveragingScheduling, getTimeNowNt(), engine->engineState.mapAveragingDuration,
+	scheduleByAngle(&s->endTimer, getTimeNowNt(), engine->engineState.mapAveragingDuration,
 		{ endAveraging, &averager });
 }
 
@@ -245,14 +249,13 @@ void mapAveragingTriggerCallback(
 		// only if value is already prepared
 		int structIndex = getRevolutionCounter() % 2;
 
-		scheduling_s *startTimer = &startTimers[i][structIndex];
-		scheduling_s *endTimer = &endTimers[i][structIndex];
+		sampler* s = &samplers[i][structIndex];
 
 		// at the moment we schedule based on time prediction based on current RPM and angle
 		// we are loosing precision in case of changing RPM - the further away is the event the worse is precision
 		// todo: schedule this based on closest trigger event, same as ignition works
-		scheduleByAngle(startTimer, edgeTimestamp, samplingStart,
-				{ startAveraging, endTimer });
+		scheduleByAngle(&s->startTimer, edgeTimestamp, samplingStart,
+				{ startAveraging, s });
 	}
 #endif
 }
