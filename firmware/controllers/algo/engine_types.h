@@ -254,7 +254,7 @@ typedef enum __attribute__ ((__packed__)) {
 	DBG_24 = 24,
 	DBG_25 = 25,
 	DBG_26 = 26,
-	DBG_MAP = 27,
+	DBG_27 = 27,
 	DBG_METRICS = 28,
 	DBG_29 = 29,
 	DBG_ION = 30,

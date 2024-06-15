@@ -762,11 +762,6 @@ void updateTunerStudioState() {
 		tsOutputChannels->debugIntField2 = instance.invalidResponsesCount;
 		break;
 #endif /* EFI_HIP_9011 */
-#if EFI_MAP_AVERAGING
-	case DBG_MAP:
-		postMapState(tsOutputChannels);
-		break;
-#endif /* EFI_MAP_AVERAGING */
 	case DBG_ION:
 #if EFI_CDM_INTEGRATION
 		ionPostState(tsOutputChannels);

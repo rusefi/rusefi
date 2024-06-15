@@ -168,12 +168,6 @@ static void applyMapMinBufferLength() {
 	}
 }
 
-#if EFI_TUNER_STUDIO
-void postMapState(TunerStudioOutputChannels *tsOutputChannels) {
-	tsOutputChannels->debugFloatField2 = engine->engineState.mapAveragingDuration;
-}
-#endif /* EFI_TUNER_STUDIO */
-
 void refreshMapAveragingPreCalc() {
 	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	if (isValidRpm(rpm)) {
