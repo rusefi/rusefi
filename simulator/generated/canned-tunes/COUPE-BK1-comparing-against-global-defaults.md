@@ -127,7 +127,7 @@
     engineConfiguration->auxPid[1].dFactor = 0.2;
     // default "None"
     engineConfiguration->canNbcType = CAN_BUS_GENESIS_COUPE;
-    // default "MAP"
+    // default "Executor"
     engineConfiguration->debugMode = DBG_22;
     // default 200.0
     engineConfiguration->rpmSoftLimitWindowSize = 0;

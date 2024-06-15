@@ -197,7 +197,7 @@
     engineConfiguration->gearRatio[5] = 0;
     // default "500kbps"
     engineConfiguration->can2BaudRate = B100KBPS;
-    // default "MAP"
+    // default "Executor"
     engineConfiguration->debugMode = DBG_TPS_ACCEL;
     // default 300.0
     engineConfiguration->boostCutPressure = 0;

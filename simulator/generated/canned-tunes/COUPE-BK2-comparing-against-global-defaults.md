@@ -115,7 +115,7 @@
     engineConfiguration->auxPid[1].iFactor = 25.4;
     // default 0.0
     engineConfiguration->auxPid[1].dFactor = 0.2;
-    // default "MAP"
+    // default "Executor"
     engineConfiguration->debugMode = DBG_22;
     // default 200.0
     engineConfiguration->rpmSoftLimitWindowSize = 0;

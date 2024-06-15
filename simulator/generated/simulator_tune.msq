@@ -208,7 +208,7 @@
         <constant name="acrPin">"NONE"</constant>
         <constant digits="1" name="driveWheelRevPerKm" units="revs/km">1000.0</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
-        <constant digits="0" name="byFirmwareVersion" units="index">2.0240614E7</constant>
+        <constant digits="0" name="byFirmwareVersion" units="index">2.0240615E7</constant>
         <constant name="tps1_1AdcChannel">"Disabled"</constant>
         <constant name="vbattAdcChannel">"Disabled"</constant>
         <constant name="fuelLevelSensor">"Disabled"</constant>
@@ -223,7 +223,7 @@
         <constant digits="0" name="boostControlSafeDutyCycle" units="%">0.0</constant>
         <constant name="mafAdcChannel">"Disabled"</constant>
         <constant digits="0" name="acrRevolutions" units="">5.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0240614E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0240615E7</constant>
         <constant digits="3" name="adcVcc" units="volts">3.0</constant>
         <constant digits="0" name="mapCamDetectionAnglePosition" units="Deg">0.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -780,7 +780,7 @@
         <constant name="auxSpeedSensorInputPin2">"NONE"</constant>
         <constant digits="0" name="totalGearsCount" units="">0.0</constant>
         <constant name="injectionTimingMode">"End of injection"</constant>
-        <constant name="debugMode">"MAP"</constant>
+        <constant name="debugMode">"Executor"</constant>
         <constant digits="0" name="fan1ExtraIdle" units="%">2.0</constant>
         <constant digits="0" name="uartConsoleSerialSpeed" units="BPs">115200.0</constant>
         <constant digits="1" name="tpsDecelEnleanmentThreshold" units="roc">0.0</constant>
@@ -4719,7 +4719,7 @@ end</constant>
 </constant>
         <constant digits="0" name="tcu_shiftTime" units="ms">0.0</constant>
     </page>
-    <versionInfo firmwareInfo="20240607" nPages="1" signature="rusEFI master.2024.06.14.f407-discovery.478864919" version="5.0"/>
+    <versionInfo firmwareInfo="20240607" nPages="1" signature="rusEFI master.2024.06.15.f407-discovery.478864919" version="5.0"/>
     <bibliography author="rusEFI 20240607" writeDate="date"/>
     <settings/>
     <userComments/>

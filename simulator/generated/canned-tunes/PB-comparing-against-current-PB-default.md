@@ -119,6 +119,8 @@
     engineConfiguration->gearRatio[4] = 1.88;
     // default 0.0
     engineConfiguration->gearRatio[5] = 1.57;
+    // default "Executor"
+    engineConfiguration->debugMode = DBG_27;
     // default 200.0
     engineConfiguration->afterCrankingIACtaperDuration = 100;
     // default "Launch Button"

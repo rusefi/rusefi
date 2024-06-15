@@ -41,7 +41,7 @@
     engineConfiguration->knockRetardAggression = 0;
     // default 3.0
     engineConfiguration->knockRetardReapplyRate = 0;
-    // default "MAP"
+    // default "Executor"
     engineConfiguration->debugMode = DBG_22;
     // default 200.0
     engineConfiguration->rpmSoftLimitWindowSize = 0;

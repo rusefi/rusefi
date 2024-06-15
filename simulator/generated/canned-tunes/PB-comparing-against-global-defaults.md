@@ -163,6 +163,8 @@
     engineConfiguration->gearRatio[4] = 1.88;
     // default 0.0
     engineConfiguration->gearRatio[5] = 1.57;
+    // default "Executor"
+    engineConfiguration->debugMode = DBG_27;
     // default "Simultaneous"
     engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
     // default 200.0

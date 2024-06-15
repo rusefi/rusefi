@@ -73,6 +73,8 @@
     engineConfiguration->enableSoftwareKnock = true;
     // default "false"
     engineConfiguration->enableVerboseCanTx = true;
+    // default "Executor"
+    engineConfiguration->debugMode = DBG_27;
     // default 200.0
     engineConfiguration->rpmSoftLimitWindowSize = 0;
     // default 4.0
