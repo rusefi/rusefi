@@ -38,6 +38,7 @@ Release template (copy/paste this for new release):
  - New TPS/TPS enrichment mode: percent adder #3167
  - Launch control has a variable ignition cut BEFORE the main Hard cut #6566
  - Experimental mapExpAverageAlpha filtering #6579
+ - minimum priming delay of 0.1 second
 
 ### Fixed
  - knock logic not activated until any configuration change via TS #6462
