@@ -508,7 +508,7 @@
         <constant digits="0" name="launchSpeedThreshold" units="Kph">30.0</constant>
         <constant digits="0" name="launchRpmWindow" units="RPM">500.0</constant>
         <constant digits="3" name="triggerEventsTimeoutMs" units="ms">0.0</constant>
-        <constant digits="0" name="unusedHere13" units="">0.0</constant>
+        <constant digits="3" name="mapExpAverageAlpha" units="">0.0</constant>
         <constant digits="0" name="magicNumberAvailableForDevTricks" units="">1.0</constant>
         <constant digits="0" name="turbochargerFilter" units="">0.01</constant>
         <constant digits="0" name="launchTpsThreshold" units="">0.0</constant>
@@ -4795,7 +4795,7 @@ end</constant>
 </constant>
         <constant digits="0" name="tcu_shiftTime" units="ms">0.0</constant>
     </page>
-    <versionInfo firmwareInfo="20240607" nPages="1" signature="rusEFI master.2024.06.15.f407-discovery.478864919" version="5.0"/>
+    <versionInfo firmwareInfo="20240607" nPages="1" signature="rusEFI master.2024.06.15.f407-discovery.522334893" version="5.0"/>
     <bibliography author="rusEFI 20240607" writeDate="date"/>
     <settings/>
     <userComments/>
