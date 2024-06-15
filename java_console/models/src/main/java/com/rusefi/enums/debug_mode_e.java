@@ -32,7 +32,7 @@ public enum debug_mode_e {
 	DBG_24,
 	DBG_25,
 	DBG_26,
-	DBG_MAP,
+	DBG_27,
 	DBG_METRICS,
 	DBG_29,
 	DBG_ION,
