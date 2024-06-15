@@ -546,6 +546,9 @@ bool validateConfigOnStartUpOrBurn() {
     criticalError("Invalid adcVcc: %f", engineConfiguration->adcVcc);
 		return false;
 	}
+	if (engineConfiguration->mapExpAverageAlpha <= 0 || engineConfiguration->mapExpAverageAlpha > 1) {
+	  engineConfiguration->mapExpAverageAlpha = 1;
+	}
 
 	ensureArrayIsAscending("Batt Lag", engineConfiguration->injector.battLagCorrBins);
 

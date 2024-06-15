@@ -37,6 +37,7 @@ Release template (copy/paste this for new release):
  - Allow to choose lower RPM cutoff for AC Compressor #6597
  - New TPS/TPS enrichment mode: percent adder #3167
  - Launch control has a variable ignition cut BEFORE the main Hard cut #6566
+ - Experimental mapExpAverageAlpha filtering #6579
 
 ### Fixed
  - knock logic not activated until any configuration change via TS #6462

@@ -97,6 +97,17 @@ SensorResult MapAverager::submit(float volts) {
 	return result;
 }
 
+PUBLIC_API_WEAK float filterMapValue(float value) {
+  static float state = 0;
+  if (state == 0) {
+    state = value;
+    return value;
+  }
+  float result = state + engineConfiguration->mapExpAverageAlpha * (value - state);
+  state = result;
+  return result;
+}
+
 void MapAverager::stop() {
 	chibios_rt::CriticalSectionLocker csl;
 
@@ -117,7 +128,7 @@ void MapAverager::stop() {
 				minPressure = averagedMapRunningBuffer[i];
 		}
 
-		setValidValue(minPressure, getTimeNowNt());
+		setValidValue(filterMapValue(minPressure), getTimeNowNt());
 	} else {
 #if EFI_PROD_CODE
 		warning(ObdCode::CUSTOM_UNEXPECTED_MAP_VALUE, "No MAP values to average");
