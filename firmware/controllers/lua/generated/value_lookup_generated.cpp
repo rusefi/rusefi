@@ -712,6 +712,9 @@ float getConfigValueByName(const char *name) {
 // triggerEventsTimeoutMs
 		case 665024981:
 			return engineConfiguration->triggerEventsTimeoutMs;
+// mapExpAverageAlpha
+		case -1852204335:
+			return engineConfiguration->mapExpAverageAlpha;
 // magicNumberAvailableForDevTricks
 		case -2071167002:
 			return engineConfiguration->magicNumberAvailableForDevTricks;
@@ -3033,6 +3036,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 665024981:
 	{
 		engineConfiguration->triggerEventsTimeoutMs = value;
+		return 1;
+	}
+		case -1852204335:
+	{
+		engineConfiguration->mapExpAverageAlpha = value;
 		return 1;
 	}
 		case -2071167002:

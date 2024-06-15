@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Jun 15 05:26:27 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Jun 15 14:33:53 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1197,7 +1197,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 478864919;
+	public static final int SIGNATURE_HASH = 522334893;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1453,7 +1453,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.06.15.f407-discovery.478864919";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.06.15.f407-discovery.522334893";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1992,7 +1992,7 @@ public class Fields {
 	public static final Field LAUNCHSPEEDTHRESHOLD = Field.create("LAUNCHSPEEDTHRESHOLD", 980, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field LAUNCHRPMWINDOW = Field.create("LAUNCHRPMWINDOW", 984, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field TRIGGEREVENTSTIMEOUTMS = Field.create("TRIGGEREVENTSTIMEOUTMS", 988, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field UNUSEDHERE13 = Field.create("UNUSEDHERE13", 992, FieldType.INT).setScale(1.0).setBaseOffset(0);
+	public static final Field MAPEXPAVERAGEALPHA = Field.create("MAPEXPAVERAGEALPHA", 992, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field MAGICNUMBERAVAILABLEFORDEVTRICKS = Field.create("MAGICNUMBERAVAILABLEFORDEVTRICKS", 996, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field TURBOCHARGERFILTER = Field.create("TURBOCHARGERFILTER", 1000, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field LAUNCHTPSTHRESHOLD = Field.create("LAUNCHTPSTHRESHOLD", 1004, FieldType.INT).setScale(1.0).setBaseOffset(0);
@@ -3663,7 +3663,7 @@ public class Fields {
 	LAUNCHSPEEDTHRESHOLD,
 	LAUNCHRPMWINDOW,
 	TRIGGEREVENTSTIMEOUTMS,
-	UNUSEDHERE13,
+	MAPEXPAVERAGEALPHA,
 	MAGICNUMBERAVAILABLEFORDEVTRICKS,
 	TURBOCHARGERFILTER,
 	LAUNCHTPSTHRESHOLD,

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Jun 09 23:34:54 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Jun 15 14:33:25 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2175,7 +2175,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 992
 	 */
-	int unusedHere13;
+	float mapExpAverageAlpha;
 	/**
 	 * offset 996
 	 */
@@ -5637,4 +5637,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22248);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Jun 09 23:34:54 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Jun 15 14:33:25 UTC 2024
