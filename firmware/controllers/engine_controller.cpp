@@ -542,6 +542,13 @@ bool validateConfig() {
 		criticalError("Invalid cylinder count: %d", engineConfiguration->cylindersCount);
 		return false;
 	}
+	if (engineConfiguration->adcVcc > 5.0f || engineConfiguration->adcVcc < 1.0f) {
+    criticalError("Invalid adcVcc: %f", engineConfiguration->adcVcc);
+		return false;
+	}
+	if (engineConfiguration->mapExpAverageAlpha <= 0 || engineConfiguration->mapExpAverageAlpha > 1) {
+	  engineConfiguration->mapExpAverageAlpha = 1;
+	}
 
 	ensureArrayIsAscending("Batt Lag", engineConfiguration->injector.battLagCorrBins);
 
