@@ -242,7 +242,7 @@ uint8_t findBaudIndex(SerialTsChannelBase* tsChannel) {
 			return 255;//failed
 		}
 
-		efiPrintf("Restarting at %d", baudRates[baudIdx].rate);
+		efiPrintf("Restarting at %lu", baudRates[baudIdx].rate);
 		tsChannel->start(baudRates[baudIdx].rate);
 		chThdSleepMilliseconds(10);	// safety
 
