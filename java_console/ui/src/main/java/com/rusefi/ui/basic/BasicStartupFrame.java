@@ -31,6 +31,10 @@ import static com.rusefi.FileLog.isWindows;
 public class BasicStartupFrame {
     private final FrameHelper frame;
 
+    public static void main(String[] args) {
+        runTool(null);
+    }
+
     public static void runTool(String[] args) {
         new BasicStartupFrame().runTool();
     }
@@ -66,10 +70,12 @@ public class BasicStartupFrame {
                     if (!ecuPorts.isEmpty()) {
                         noPortsMessage.setVisible(false);
                         update.setEnabled(true);
+                        update.setText("Auto Update Firmware");
                         update.addActionListener(e -> ProgramSelector.executeJob(update, ProgramSelector.OPENBLT_AUTO, ecuPorts.get(0)));
                     } else if (!bootloaderPorts.isEmpty()) {
                         noPortsMessage.setVisible(false);
                         update.setEnabled(true);
+                        update.setText("Blt Update Firmware");
                         update.addActionListener(e -> ProgramSelector.executeJob(update, ProgramSelector.OPENBLT_MANUAL, ecuPorts.get(0)));
                     } else {
                         noPortsMessage.setText("ECU not found");

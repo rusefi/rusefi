@@ -1,5 +1,6 @@
 package com.rusefi.maintenance;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.core.FindFileHelper;
 import com.rusefi.FileLog;
 import com.rusefi.Launcher;
@@ -24,11 +25,13 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.ui.FrameHelper.appendBundleName;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 import static com.rusefi.ui.util.UiUtils.trueLayout;
 
 public class ProgramSelector {
+    private static final Logging log = getLogging(ProgramSelector.class);
 
     // todo: migrate to enum?
     private static final String AUTO_DFU = "Auto Update";
@@ -76,6 +79,7 @@ public class ProgramSelector {
     }
 
     public static void executeJob(JComponent parent, String selectedMode, SerialPortScanner.PortResult selectedPort) {
+        log.info("ProgramSelector " + selectedMode + " " + selectedPort);
                 String jobName = null;
                 Consumer<UpdateOperationCallbacks> job;
 
@@ -191,7 +195,7 @@ public class ProgramSelector {
             }
         }
 
-        if (newItems.size() == 0) {
+        if (newItems.isEmpty()) {
             callbacks.log("Looks like your ECU disappeared during the update process. Please try again.");
             callbacks.error();
             return;
