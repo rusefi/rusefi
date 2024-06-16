@@ -159,7 +159,7 @@ void setDefaultBaseEngine() {
 #if EFI_SIMULATOR
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
 	engineConfiguration->vvtOffsets[0] = 450;
-	engineConfiguration->vvtPins[0] = Gpio::E0; // a random unused pin needed to unblock startSimplePwmExt()
+	engineConfiguration->vvtPins[0] = Gpio::A0; // a random unused pin needed to unblock startSimplePwmExt()
 #endif // EFI_SIMULATOR
 
 #if EFI_SIMULATOR
