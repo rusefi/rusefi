@@ -28,7 +28,7 @@
 #if EFI_MAP_AVERAGING
 #if !EFI_SHAFT_POSITION_INPUT
 	fail("EFI_SHAFT_POSITION_INPUT required to have EFI_EMULATE_POSITION_SENSORS")
-#endif
+#endif // EFI_SHAFT_POSITION_INPUT
 
 #include "map_averaging.h"
 #include "trigger_central.h"
@@ -74,7 +74,7 @@ static void startAveraging(scheduling_s *endAveragingScheduling) {
 	scheduleByAngle(endAveragingScheduling, getTimeNowNt(), engine->engineState.mapAveragingDuration,
 		{ endAveraging, &averager });
 }
-#endif
+#endif // EFI_ENGINE_CONTROL && EFI_PROD_CODE
 
 void MapAverager::start() {
 	chibios_rt::CriticalSectionLocker csl;
@@ -97,7 +97,8 @@ SensorResult MapAverager::submit(float volts) {
 	return result;
 }
 
-PUBLIC_API_WEAK float filterMapValue(float value) {
+// huh? why is this killing unit tests _linking_ only on WINDOWS?! PUBLIC_API_WEAK
+float filterMapValue(float value) {
   static float state = 0;
   if (state == 0) {
     state = value;
