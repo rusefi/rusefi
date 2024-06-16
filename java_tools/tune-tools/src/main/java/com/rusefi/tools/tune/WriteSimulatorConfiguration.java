@@ -34,7 +34,11 @@ public class WriteSimulatorConfiguration {
 
         System.out.println("ROOT_FOLDER=" + ROOT_FOLDER);
         try {
-            readBinaryWriteXmlTune(iniFileName, Fields.SIMULATOR_TUNE_BIN_FILE_NAME, TuneCanTool.DEFAULT_TUNE);
+            try {
+                readBinaryWriteXmlTune(iniFileName, Fields.SIMULATOR_TUNE_BIN_FILE_NAME, TuneCanTool.DEFAULT_TUNE);
+            } catch (Throwable e) {
+                throw new IllegalStateException("White default tune", e);
+            }
             for (engine_type_e type : new engine_type_e[]{
                     // [CannedTunes] see 'rusEfiFunctionalTest.cpp' which exports default tunes into binary files for us
                 // [CannedTunes] TuneCanToolRunner for last third step
