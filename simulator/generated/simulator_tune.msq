@@ -208,7 +208,7 @@
         <constant name="acrPin">"NONE"</constant>
         <constant digits="1" name="driveWheelRevPerKm" units="revs/km">1000.0</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
-        <constant digits="0" name="byFirmwareVersion" units="index">2.0240615E7</constant>
+        <constant digits="0" name="byFirmwareVersion" units="index">2.0240616E7</constant>
         <constant name="tps1_1AdcChannel">"Disabled"</constant>
         <constant name="vbattAdcChannel">"Disabled"</constant>
         <constant name="fuelLevelSensor">"Disabled"</constant>
@@ -859,7 +859,7 @@
         <constant digits="2" name="mapLowValueVoltage" units="v">0.0</constant>
         <constant digits="2" name="mapHighValueVoltage" units="v">5.0</constant>
         <constant digits="2" name="egoValueShift" units="value">0.0</constant>
-        <constant name="vvtPins1">"PI0"</constant>
+        <constant name="vvtPins1">"PE0"</constant>
         <constant name="vvtPins2">"NONE"</constant>
         <constant name="vvtPins3">"NONE"</constant>
         <constant name="vvtPins4">"NONE"</constant>

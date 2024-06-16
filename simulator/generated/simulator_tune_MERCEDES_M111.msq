@@ -209,7 +209,7 @@
         <constant digits="1" name="driveWheelRevPerKm" units="revs/km">1000.0</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0.0</constant>
-        <constant name="tps1_1AdcChannel">"PC3"</constant>
+        <constant name="tps1_1AdcChannel">"Disabled"</constant>
         <constant name="vbattAdcChannel">"Disabled"</constant>
         <constant name="fuelLevelSensor">"Disabled"</constant>
         <constant name="tps2_1AdcChannel">"Disabled"</constant>
@@ -226,7 +226,7 @@
         <constant digits="0" name="calibrationBirthday" units="">2.0240616E7</constant>
         <constant digits="3" name="adcVcc" units="volts">3.0</constant>
         <constant digits="0" name="mapCamDetectionAnglePosition" units="Deg">0.0</constant>
-        <constant name="camInputs1">"PE11"</constant>
+        <constant name="camInputs1">"NONE"</constant>
         <constant name="camInputs2">"NONE"</constant>
         <constant name="camInputs3">"NONE"</constant>
         <constant name="camInputs4">"NONE"</constant>
@@ -236,7 +236,7 @@
         <constant digits="2" name="afr_value1" units="AFR">9.996</constant>
         <constant digits="2" name="afr_v2" units="volts">5.0</constant>
         <constant digits="2" name="afr_value2" units="AFR">19.992</constant>
-        <constant name="throttlePedalPositionAdcChannel">"PA7"</constant>
+        <constant name="throttlePedalPositionAdcChannel">"Disabled"</constant>
         <constant digits="1" name="etbSplit" units="%">5.0</constant>
         <constant name="tle6240_cs">"NONE"</constant>
         <constant name="tle6240_csPinMode">"default"</constant>
@@ -286,13 +286,13 @@
         <constant name="ignitionPins12">"NONE"</constant>
         <constant name="injectionPinMode">"default"</constant>
         <constant name="ignitionPinMode">"default"</constant>
-        <constant name="fuelPumpPin">"TLE8888_21"</constant>
+        <constant name="fuelPumpPin">"NONE"</constant>
         <constant name="fuelPumpPinMode">"default"</constant>
         <constant digits="0" name="gapVvtTrackingLengthOverride" units="count">0.0</constant>
         <constant name="malfunctionIndicatorPin">"NONE"</constant>
         <constant name="malfunctionIndicatorPinMode">"default"</constant>
         <constant name="fanPinMode">"default"</constant>
-        <constant name="fanPin">"TLE8888_22"</constant>
+        <constant name="fanPin">"NONE"</constant>
         <constant name="clutchDownPin">"NONE"</constant>
         <constant name="alternatorControlPin">"NONE"</constant>
         <constant name="alternatorControlPinMode">"default"</constant>
@@ -309,13 +309,13 @@
         <constant name="mc33972_cs">"NONE"</constant>
         <constant name="mc33972_csPinMode">"default"</constant>
         <constant name="auxFastSensor1_adcChannel">"Disabled"</constant>
-        <constant name="tps1_2AdcChannel">"PA6"</constant>
+        <constant name="tps1_2AdcChannel">"Disabled"</constant>
         <constant name="tps2_2AdcChannel">"Disabled"</constant>
-        <constant name="throttlePedalPositionSecondAdcChannel">"PC5"</constant>
+        <constant name="throttlePedalPositionSecondAdcChannel">"Disabled"</constant>
         <constant name="afr_type">"14Point7"</constant>
         <constant name="mc33810_cs1">"NONE"</constant>
         <constant digits="4" name="idle_antiwindupFreq" units="x">0.0</constant>
-        <constant name="triggerInputPins1">"PE7"</constant>
+        <constant name="triggerInputPins1">"NONE"</constant>
         <constant name="triggerInputPins2">"NONE"</constant>
         <constant digits="0" name="mc33_t_min_boost" units="us">100.0</constant>
         <constant name="hip9011CsPinMode">"default"</constant>
@@ -486,7 +486,7 @@
         <constant name="etbIo2_directionPin2">"NONE"</constant>
         <constant name="etbIo2_controlPin">"NONE"</constant>
         <constant name="etbIo2_disablePin">"NONE"</constant>
-        <constant name="boostControlPin">"PB1"</constant>
+        <constant name="boostControlPin">"NONE"</constant>
         <constant name="boostControlPinMode">"default"</constant>
         <constant name="ALSActivatePin">"NONE"</constant>
         <constant name="launchActivatePin">"NONE"</constant>
@@ -861,7 +861,7 @@
         <constant digits="2" name="mapLowValueVoltage" units="v">0.3</constant>
         <constant digits="2" name="mapHighValueVoltage" units="v">4.65</constant>
         <constant digits="2" name="egoValueShift" units="value">0.0</constant>
-        <constant name="vvtPins1">"TLE8888_6"</constant>
+        <constant name="vvtPins1">"PE0"</constant>
         <constant name="vvtPins2">"NONE"</constant>
         <constant name="vvtPins3">"NONE"</constant>
         <constant name="vvtPins4">"NONE"</constant>
@@ -1040,7 +1040,7 @@
         <constant digits="2" name="highPressureFuel_value1" units="">0.0</constant>
         <constant digits="2" name="highPressureFuel_v2" units="volts">0.0</constant>
         <constant digits="2" name="highPressureFuel_value2" units="">0.0</constant>
-        <constant name="lowPressureFuel_hwChannel">"PC2"</constant>
+        <constant name="lowPressureFuel_hwChannel">"Disabled"</constant>
         <constant digits="2" name="lowPressureFuel_v1" units="volts">0.0</constant>
         <constant digits="2" name="lowPressureFuel_value1" units="">0.0</constant>
         <constant digits="2" name="lowPressureFuel_v2" units="volts">0.0</constant>
@@ -1153,7 +1153,7 @@
          85.0 85.0 85.0 85.0 85.0 85.0 85.0 85.0
          100.0 100.0 100.0 100.0 100.0 100.0 100.0 100.0
 </constant>
-        <constant name="gppwm2_pin">"TLE8888_5"</constant>
+        <constant name="gppwm2_pin">"NONE"</constant>
         <constant digits="0" name="gppwm2_dutyIfError" units="%">0.0</constant>
         <constant digits="0" name="gppwm2_pwmFrequency" units="hz">250.0</constant>
         <constant digits="0" name="gppwm2_onAboveDuty" units="%">60.0</constant>

@@ -226,7 +226,7 @@
         <constant digits="0" name="calibrationBirthday" units="">2.0240616E7</constant>
         <constant digits="3" name="adcVcc" units="volts">3.0</constant>
         <constant digits="0" name="mapCamDetectionAnglePosition" units="Deg">0.0</constant>
-        <constant name="camInputs1">"PE15"</constant>
+        <constant name="camInputs1">"NONE"</constant>
         <constant name="camInputs2">"NONE"</constant>
         <constant name="camInputs3">"NONE"</constant>
         <constant name="camInputs4">"NONE"</constant>
@@ -386,7 +386,7 @@
         <constant digits="3" name="applyNonlinearBelowPulse" units="ms">0.0</constant>
         <constant name="lps25BaroSensorScl">"NONE"</constant>
         <constant name="lps25BaroSensorSda">"NONE"</constant>
-        <constant name="vehicleSpeedSensorInputPin">"PE13"</constant>
+        <constant name="vehicleSpeedSensorInputPin">"NONE"</constant>
         <constant name="clutchUpPin">"NONE"</constant>
         <constant name="injectorNonlinearMode">"None"</constant>
         <constant name="clutchUpPinMode">"PULLUP"</constant>
@@ -410,7 +410,7 @@
         <constant name="starterRelayDisablePin">"NONE"</constant>
         <constant name="starterRelayDisablePinMode">"default"</constant>
         <constant name="secondSolenoidPin">"NONE"</constant>
-        <constant name="startStopButtonPin">"PA1"</constant>
+        <constant name="startStopButtonPin">"NONE"</constant>
         <constant digits="0" name="lambdaProtectionRestoreRpm" units="RPM">2000.0</constant>
         <constant name="acRelayPinMode">"default"</constant>
         <constant digits="0" name="mapMinBufferLength" units="count">1.0</constant>
@@ -486,7 +486,7 @@
         <constant name="etbIo2_directionPin2">"NONE"</constant>
         <constant name="etbIo2_controlPin">"NONE"</constant>
         <constant name="etbIo2_disablePin">"NONE"</constant>
-        <constant name="boostControlPin">"PE2"</constant>
+        <constant name="boostControlPin">"NONE"</constant>
         <constant name="boostControlPinMode">"default"</constant>
         <constant name="ALSActivatePin">"NONE"</constant>
         <constant name="launchActivatePin">"NONE"</constant>
@@ -712,7 +712,7 @@
         <constant name="turboSpeedSensorInputPin">"NONE"</constant>
         <constant digits="0" name="tps2Min" units="ADC">0.0</constant>
         <constant digits="0" name="tps2Max" units="ADC">1000.0</constant>
-        <constant name="starterControlPin">"PE0"</constant>
+        <constant name="starterControlPin">"NONE"</constant>
         <constant name="startStopButtonMode">"DEFAULT"</constant>
         <constant name="mc33816_flag0">"NONE"</constant>
         <constant digits="0" name="tachPulsePerRev" units="Pulse">1.0</constant>
@@ -861,7 +861,7 @@
         <constant digits="2" name="mapLowValueVoltage" units="v">0.0</constant>
         <constant digits="2" name="mapHighValueVoltage" units="v">5.0</constant>
         <constant digits="2" name="egoValueShift" units="value">0.0</constant>
-        <constant name="vvtPins1">"PI0"</constant>
+        <constant name="vvtPins1">"PE0"</constant>
         <constant name="vvtPins2">"NONE"</constant>
         <constant name="vvtPins3">"NONE"</constant>
         <constant name="vvtPins4">"NONE"</constant>
@@ -878,7 +878,7 @@
         <constant name="vvtMode2">"Inactive"</constant>
         <constant digits="0" name="fan2ExtraIdle" units="%">0.0</constant>
         <constant digits="2" name="primingDelay" units="sec">0.5</constant>
-        <constant name="auxAnalogInputs1">"PC3"</constant>
+        <constant name="auxAnalogInputs1">"Disabled"</constant>
         <constant name="auxAnalogInputs2">"Disabled"</constant>
         <constant name="auxAnalogInputs3">"Disabled"</constant>
         <constant name="auxAnalogInputs4">"Disabled"</constant>
@@ -1153,7 +1153,7 @@
          85.0 85.0 85.0 85.0 85.0 85.0 85.0 85.0
          100.0 100.0 100.0 100.0 100.0 100.0 100.0 100.0
 </constant>
-        <constant name="gppwm2_pin">"PG11"</constant>
+        <constant name="gppwm2_pin">"NONE"</constant>
         <constant digits="0" name="gppwm2_dutyIfError" units="%">0.0</constant>
         <constant digits="0" name="gppwm2_pwmFrequency" units="hz">250.0</constant>
         <constant digits="0" name="gppwm2_onAboveDuty" units="%">60.0</constant>
@@ -1437,8 +1437,8 @@
         <constant name="fuelPressureSensorMode">"Absolute"</constant>
         <constant name="luaDigitalInputPins1">"NONE"</constant>
         <constant name="luaDigitalInputPins2">"NONE"</constant>
-        <constant name="luaDigitalInputPins3">"PA5"</constant>
-        <constant name="luaDigitalInputPins4">"PA3"</constant>
+        <constant name="luaDigitalInputPins3">"NONE"</constant>
+        <constant name="luaDigitalInputPins4">"NONE"</constant>
         <constant name="luaDigitalInputPins5">"NONE"</constant>
         <constant name="luaDigitalInputPins6">"NONE"</constant>
         <constant name="luaDigitalInputPins7">"NONE"</constant>

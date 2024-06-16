@@ -205,11 +205,11 @@
         <constant digits="2" name="vbattDividerCoeff" units="coef">5.333333</constant>
         <constant digits="0" name="fanOnTemperature" units="deg C">92.0</constant>
         <constant digits="0" name="fanOffTemperature" units="deg C">88.0</constant>
-        <constant name="acrPin">"PG6"</constant>
+        <constant name="acrPin">"NONE"</constant>
         <constant digits="1" name="driveWheelRevPerKm" units="revs/km">1000.0</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0.0</constant>
-        <constant name="tps1_1AdcChannel">"PC1"</constant>
+        <constant name="tps1_1AdcChannel">"Disabled"</constant>
         <constant name="vbattAdcChannel">"Disabled"</constant>
         <constant name="fuelLevelSensor">"Disabled"</constant>
         <constant name="tps2_1AdcChannel">"Disabled"</constant>
@@ -236,7 +236,7 @@
         <constant digits="2" name="afr_value1" units="AFR">9.996</constant>
         <constant digits="2" name="afr_v2" units="volts">5.0</constant>
         <constant digits="2" name="afr_value2" units="AFR">19.992</constant>
-        <constant name="throttlePedalPositionAdcChannel">"PC3"</constant>
+        <constant name="throttlePedalPositionAdcChannel">"Disabled"</constant>
         <constant digits="1" name="etbSplit" units="%">5.0</constant>
         <constant name="tle6240_cs">"NONE"</constant>
         <constant name="tle6240_csPinMode">"default"</constant>
@@ -309,13 +309,13 @@
         <constant name="mc33972_cs">"NONE"</constant>
         <constant name="mc33972_csPinMode">"default"</constant>
         <constant name="auxFastSensor1_adcChannel">"Disabled"</constant>
-        <constant name="tps1_2AdcChannel">"PC2"</constant>
+        <constant name="tps1_2AdcChannel">"Disabled"</constant>
         <constant name="tps2_2AdcChannel">"Disabled"</constant>
-        <constant name="throttlePedalPositionSecondAdcChannel">"PA0"</constant>
+        <constant name="throttlePedalPositionSecondAdcChannel">"Disabled"</constant>
         <constant name="afr_type">"14Point7"</constant>
         <constant name="mc33810_cs1">"NONE"</constant>
         <constant digits="4" name="idle_antiwindupFreq" units="x">0.0</constant>
-        <constant name="triggerInputPins1">"PE7"</constant>
+        <constant name="triggerInputPins1">"NONE"</constant>
         <constant name="triggerInputPins2">"NONE"</constant>
         <constant digits="0" name="mc33_t_min_boost" units="us">100.0</constant>
         <constant name="hip9011CsPinMode">"default"</constant>
@@ -554,7 +554,7 @@
         <constant name="drv8860_cs">"NONE"</constant>
         <constant name="drv8860_csPinMode">"default"</constant>
         <constant name="drv8860_miso">"NONE"</constant>
-        <constant name="luaOutputPins1">"PB8"</constant>
+        <constant name="luaOutputPins1">"NONE"</constant>
         <constant name="luaOutputPins2">"NONE"</constant>
         <constant name="luaOutputPins3">"NONE"</constant>
         <constant name="luaOutputPins4">"NONE"</constant>
@@ -860,7 +860,7 @@
         <constant digits="2" name="mapLowValueVoltage" units="v">0.79</constant>
         <constant digits="2" name="mapHighValueVoltage" units="v">4.0</constant>
         <constant digits="2" name="egoValueShift" units="value">0.0</constant>
-        <constant name="vvtPins1">"PI0"</constant>
+        <constant name="vvtPins1">"PE0"</constant>
         <constant name="vvtPins2">"NONE"</constant>
         <constant name="vvtPins3">"NONE"</constant>
         <constant name="vvtPins4">"NONE"</constant>
@@ -1398,7 +1398,7 @@
         <constant name="tcu_32_solenoid_pin">"NONE"</constant>
         <constant name="tcu_32_solenoid_pin_mode">"default"</constant>
         <constant digits="0" name="tcu_32_solenoid_freq" units="Hz">0.0</constant>
-        <constant name="acrPin2">"PG5"</constant>
+        <constant name="acrPin2">"NONE"</constant>
         <constant digits="2" name="etbMinimumPosition" units="%">1.0</constant>
         <constant digits="0" name="tuneHidingKey" units="">0.0</constant>
         <constant cols="1" digits="0" name="highSpeedOffsets" rows="32">
@@ -2347,113 +2347,40 @@
          0.0 0.0 0.0 0.0
          0.0 0.0 0.0 0.0
 </constant>
-        <constant name="luaScript">--outputIndex = 0
---startPwm(outputIndex, 100, 0)
+        <constant name="luaScript">hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F" }
 
-rpmLimitSetting = findSetting("compReleaseRpm", 300)
-compReleaseDulationLimit = findSetting("compReleaseDur", 6000)
+function toHexString(num)
+	if num == 0 then
+		return '0'
+	end
 
-every200msTimer = Timer.new();
-everySecondTimer = Timer.new();
-every50msTimer = Timer.new();
-offCounter = 0
--- cranking!
-packet542 = {0x20, 0x82, 0x81, 0xd9, 0x00, 0x00, 0x00, 0x00}
-packet543 = {0x13, 0x57, 0x13, 0x45, 0x00, 0xe8, 0x00, 0x00}
-packet541 = {0x00, 0x00, 0x00, 0x00, 0x00, 0x45, 0x00, 0xFF}
-
--- every 200ms
-packet540 = {0x00, 0x00, 0x5a, 0x4c, 0xff, 0x00, 0x00, 0x00}
-
--- every 1000ms
-packet502 = {0x01}
-packet546 = {0x35, 0x48, 0x44, 0x31, 0x46, 0x48}
-packet547 = {0x50, 0x41, 0x31, 0x4b, 0x42, 0x36}
-packet548 = {0x33, 0x34, 0x38, 0x32, 0x32, 0x00}
-
-counter543 = 0;
-setTickRate(66);
-
-canRxAdd(0x570)
-canRxAdd(0x500)
-
-function onCanRx(bus, id, dlc, data)
-  --print('got CAN id=' .. id .. ' dlc='  .. dlc)
-
-  if id == 0x500 then --Check can state of BCM
-    canState = data[1]
-    if canState == 01 then
-      packet502[1] = 0x01
-    else
-      packet502[1] = 0x00
-    end
-    if id == 0x570 then
-      curState = data[1]
-      if curState == 06 then -- Cranking TODO: MUST ONLY DO THIS ON RPM TILL STARt
-        packet542[2] =  0x82
-      end
-      if curState == 04 then -- Kill off
-        packet542[2] =  0x82
-      end
-      if curState == 01 then -- Kill
-        packet542[2] =  0xA2
-      end
-    end
-  end
+	local result = ""
+	while num &gt; 0 do
+		local n = num % 16
+		result = hexstr[n + 1] ..result
+		num = math.floor(num / 16)
+	end
+	return result
 end
 
+function arrayToString(arr)
+	local str = ""
+	local index = 1
+	while arr[index] ~= nil do
+		str = str.." "..toHexString(arr[index])
+		index = index + 1
+	end
+	return str
+end
+
+function printPacket(bus, id, dlc, data)
+    print('Received ' .. arrayToString(data))
+end
+
+function onCanRx(bus, id, dlc, data)
+end
 
 function onTick()
-
-  if packet502[1] == 01 then
-    offCounter = 0
-    counter543 = (counter543 + 1) % 64
-    packet543[7] = 64 + counter543
-    packet543[8] = crc8_j1850(packet543, 7)
-    APP = getSensor("AcceleratorPedal")
-    if APP == nil then
-      packet543[5] = 0
-    else
-      packet543[5] = APP *2
-    end
-
-    txCan(1, 0x543, 0, packet543)
-	txCan(1, 0x541, 0, packet541)
-
-    if every200msTimer:getElapsedSeconds() &gt; 0.2 then
-       every200msTimer:reset();
-       txCan(1, 0x540, 0, packet540)
-    end
-
-    if every50msTimer:getElapsedSeconds() &gt; 0.05 then
-       every50msTimer:reset();
-	   txCan(1, 0x542, 0, packet542)
-    end
-
-    if everySecondTimer:getElapsedSeconds() &gt; 1 then
-       everySecondTimer:reset();
-       txCan(1, 0x502, 0, packet502)
-       txCan(1, 0x546, 0, packet546)
-       txCan(1, 0x547, 0, packet547)
-       txCan(1, 0x548, 0, packet548)
-    end
-
-
-	rpm = getSensor("RPM")
--- handle nil RPM, todo: change firmware to avoid nil RPM
-	rpm = (rpm == nil and 0 or rpm)
-    --print('Rpm ' .. rpm)
-	--print('getTimeSinceTriggerEventMs ' .. getTimeSinceTriggerEventMs())
-	enableCompressionReleaseSolenoid = getTimeSinceTriggerEventMs() &lt; compReleaseDulationLimit and rpm &lt; rpmLimitSetting
-    duty = enableCompressionReleaseSolenoid and 1 or 0
---    print("Compression release solenoid " .. duty)
---	setPwmDuty(outputIndex, duty)
-  else
-    if offCounter == 0 then --goodbye sweet love
-      txCan(1, 0x502, 0, packet502) --goodbye
-      offCounter = 1 --One shot
-    end
-  end
 end</constant>
         <constant cols="1" digits="2" name="cltFuelCorrBins" rows="16">
          -40.0
