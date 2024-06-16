@@ -32,6 +32,7 @@ bluetooth_module_e btModuleType;
 static int setBaudIdx = -1;
 static char btName[20 + 1];
 static char btPinCode[4 + 1];
+static uint8_t workingBaudIndex;
 
 // JDY-33 has 9: 128000 which we do not
 static const struct {
@@ -123,49 +124,10 @@ static int btVerOk(SerialTsChannelBase* tsChannel)
 // We assume that the user has disconnected the software before starting the code.
 static void runCommands(SerialTsChannelBase* tsChannel) {
 	char tmp[64];
-	size_t baudIdx = 0;
-	bool baudFound = false;
 
-	// find current baudrate
-	while (baudFound == false) {
-		tsChannel->stop();
-		chThdSleepMilliseconds(10);	// safety
-
-		if (baudIdx == efi::size(baudRates)) {
-			efiPrintf("Failed to find current BT module baudrate");
-			tsChannel->start(engineConfiguration->tunerStudioSerialSpeed);
-			return;
-		}
-
-		efiPrintf("Restarting at %lu", baudRates[baudIdx].rate);
-		tsChannel->start(baudRates[baudIdx].rate);
-		chThdSleepMilliseconds(10);	// safety
-
-		/* Ping BT module */
-		btWrite(tsChannel, "AT\r\n");
-		if (btWaitOk(tsChannel) == 0) {
-			baudFound = true;
-		} else if (btModuleType == BLUETOOTH_JDY_3x) {
-			/* try to disconnect in case device already configured and in silence mode */
-			btWrite(tsChannel, "AT+DISC\r\n");
-			if (btWaitOk(tsChannel) == 0) {
-				efiPrintf("JDY33 disconnected");
-				chThdSleepMilliseconds(10);	// safety
-				baudFound = true;
-			}
-		} else if (btModuleType == BLUETOOTH_JDY_31) {
-			/* try to disconnect in case device already configured and in silence mode */
-			btWrite(tsChannel, "AT+VERSION\r\n");
-			if (btVerOk(tsChannel) == 0) {
-				efiPrintf("JDY31 disconnected");
-				chThdSleepMilliseconds(10);	// safety
-				baudFound = true;
-			}
-		}
-
-		/* else try next baudrate */
-		baudIdx++;
-	}
+	workingBaudIndex = findBaudIndex(tsChannel);//find it
+	if(workingBaudIndex == 255)//failed
+		return;//problem connecting
 
 	if ((btModuleType == BLUETOOTH_JDY_3x) ||
 		(btModuleType == BLUETOOTH_JDY_31))  {
@@ -210,10 +172,11 @@ static void runCommands(SerialTsChannelBase* tsChannel) {
 		}
 	}
 
-	/* restart with new baud */
+	/* restart with a working baud, then change settings */
 	tsChannel->stop();
 	chThdSleepMilliseconds(10);	// safety
-	tsChannel->start(baudRates[setBaudIdx].rate);
+
+	tsChannel->start(baudRates[workingBaudIndex].rate);
 
 	if (btModuleType == BLUETOOTH_HC_05)
 		chsnprintf(tmp, sizeof(tmp), "AT+NAME=%s\r\n", btName);
@@ -265,6 +228,48 @@ static void runCommands(SerialTsChannelBase* tsChannel) {
 
 cmdFailed:
 	efiPrintf("FAIL! Command %s failed", tmp);
+}
+
+uint8_t findBaudIndex(SerialTsChannelBase* tsChannel) {
+	// find current baudrate
+	for(uint8_t baudIdx=0; baudIdx < efi::size(baudRates); baudIdx++) {
+		tsChannel->stop();
+		chThdSleepMilliseconds(10);	// safety
+
+		if (baudIdx == efi::size(baudRates)) {
+			efiPrintf("Failed to find current BT module baudrate");
+			tsChannel->start(engineConfiguration->tunerStudioSerialSpeed);
+			return 255;//failed
+		}
+
+		efiPrintf("Restarting at %d", baudRates[baudIdx].rate);
+		tsChannel->start(baudRates[baudIdx].rate);
+		chThdSleepMilliseconds(10);	// safety
+
+		/* Ping BT module */
+		btWrite(tsChannel, "AT\r\n");
+		if (btWaitOk(tsChannel) == 0) {
+			return baudIdx;
+		} else if (btModuleType == BLUETOOTH_JDY_3x) {
+			/* try to disconnect in case device already configured and in silence mode */
+			btWrite(tsChannel, "AT+DISC\r\n");
+			if (btWaitOk(tsChannel) == 0) {
+				efiPrintf("JDY33 disconnected");
+				chThdSleepMilliseconds(10);	// safety
+				return baudIdx;
+			}
+		} else if (btModuleType == BLUETOOTH_JDY_31) {
+			/* try to disconnect in case device already configured and in silence mode */
+			btWrite(tsChannel, "AT+VERSION\r\n");
+			if (btVerOk(tsChannel) == 0) {
+				efiPrintf("JDY31 disconnected");
+				chThdSleepMilliseconds(10);	// safety
+				return baudIdx;
+			}
+		}
+		/* try next baudrate */
+	}
+	return 255;//failed
 }
 
 void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const char *name, const char *pinCode) {
