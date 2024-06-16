@@ -45,3 +45,8 @@ void bluetoothStart(bluetooth_module_e moduleType, const char *baudRate, const c
  */
 void bluetoothSoftwareDisconnectNotify(SerialTsChannelBase* tsChannel);
 
+/**
+ * Called during bluetooth initialization. Checks to see if module responds to common baud rates
+ * returns the index of the found baud
+ */
+uint8_t findBaudIndex(SerialTsChannelBase* tsChannel);
