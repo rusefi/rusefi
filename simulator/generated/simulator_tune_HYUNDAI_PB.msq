@@ -861,7 +861,7 @@
         <constant digits="2" name="mapLowValueVoltage" units="v">0.79</constant>
         <constant digits="2" name="mapHighValueVoltage" units="v">4.0</constant>
         <constant digits="2" name="egoValueShift" units="value">0.0</constant>
-        <constant name="vvtPins1">"PE0"</constant>
+        <constant name="vvtPins1">"PA0"</constant>
         <constant name="vvtPins2">"NONE"</constant>
         <constant name="vvtPins3">"NONE"</constant>
         <constant name="vvtPins4">"NONE"</constant>
