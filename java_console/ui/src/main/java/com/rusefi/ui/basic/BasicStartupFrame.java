@@ -6,7 +6,6 @@ import com.rusefi.StartupFrame;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.core.FindFileHelper;
 import com.rusefi.core.ui.FrameHelper;
-import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.DfuFlasher;
 import com.rusefi.maintenance.ProgramSelector;
 import com.rusefi.maintenance.StatusAnimation;
@@ -19,10 +18,8 @@ import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
 
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.function.Predicate;
+import java.awt.Color;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.rusefi.FileLog.isWindows;
@@ -55,50 +52,25 @@ public class BasicStartupFrame {
                 noPortsMessage.setForeground(Color.red);
                 panel.add(noPortsMessage);
 
-                StatusAnimation status = new StatusAnimation(new StatusAnimation.StatusConsumer() {
-                    @Override
-                    public void onStatus(String niceStatus) {
-                        noPortsMessage.setText(niceStatus);
-                    }
-                }, StartupFrame.SCANNING_PORTS);
+                StatusAnimation status = new StatusAnimation(noPortsMessage::setText, StartupFrame.SCANNING_PORTS);
 
                 SerialPortScanner.INSTANCE.addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
                     status.stop();
                     frame.getFrame().pack();
 
-                    java.util.List<SerialPortScanner.PortResult> ecuPorts =  currentHardware.getKnownPorts().stream().filter(new Predicate<SerialPortScanner.PortResult>() {
-                        @Override
-                        public boolean test(SerialPortScanner.PortResult portResult) {
-                            return portResult.type == SerialPortScanner.SerialPortType.EcuWithOpenblt;
-                        }
-                    }).collect(Collectors.toList());
+                    List<SerialPortScanner.PortResult> ecuPorts =  currentHardware.getKnownPorts().stream().filter(portResult -> portResult.type == SerialPortScanner.SerialPortType.EcuWithOpenblt).collect(Collectors.toList());
 
-                    java.util.List<SerialPortScanner.PortResult> bootloaderPorts =  currentHardware.getKnownPorts().stream().filter(new Predicate<SerialPortScanner.PortResult>() {
-                        @Override
-                        public boolean test(SerialPortScanner.PortResult portResult) {
-                            return portResult.type == SerialPortScanner.SerialPortType.OpenBlt;
-                        }
-                    }).collect(Collectors.toList());
+                    List<SerialPortScanner.PortResult> bootloaderPorts =  currentHardware.getKnownPorts().stream().filter(portResult -> portResult.type == SerialPortScanner.SerialPortType.OpenBlt).collect(Collectors.toList());
 
 
                     if (!ecuPorts.isEmpty()) {
                         noPortsMessage.setVisible(false);
                         update.setEnabled(true);
-                        update.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                ProgramSelector.executeJob(update, ProgramSelector.OPENBLT_AUTO, ecuPorts.get(0));
-                            }
-                        });
+                        update.addActionListener(e -> ProgramSelector.executeJob(update, ProgramSelector.OPENBLT_AUTO, ecuPorts.get(0)));
                     } else if (!bootloaderPorts.isEmpty()) {
                         noPortsMessage.setVisible(false);
                         update.setEnabled(true);
-                        update.addActionListener(new ActionListener() {
-                            @Override
-                            public void actionPerformed(ActionEvent e) {
-                                ProgramSelector.executeJob(update, ProgramSelector.OPENBLT_MANUAL, ecuPorts.get(0));
-                            }
-                        });
+                        update.addActionListener(e -> ProgramSelector.executeJob(update, ProgramSelector.OPENBLT_MANUAL, ecuPorts.get(0)));
                     } else {
                         noPortsMessage.setText("ECU not found");
                     }
