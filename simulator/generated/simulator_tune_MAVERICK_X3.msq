@@ -4718,8 +4718,8 @@ end</constant>
 </constant>
         <constant digits="0" name="tcu_shiftTime" units="ms">0.0</constant>
     </page>
-    <versionInfo firmwareInfo="20240607" nPages="1" signature="rusEFI master.2024.06.16.f407-discovery.522334893" version="5.0"/>
-    <bibliography author="rusEFI 20240607" writeDate="date"/>
+    <versionInfo firmwareInfo="20240616" nPages="1" signature="rusEFI master.2024.06.16.f407-discovery.522334893" version="5.0"/>
+    <bibliography author="rusEFI 20240616" writeDate="date"/>
     <settings/>
     <userComments/>
 </msq>
