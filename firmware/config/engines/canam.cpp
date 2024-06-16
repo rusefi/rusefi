@@ -83,7 +83,7 @@ void setMaverickX3() {
 	  // todo: matches Hyundai TODO extract method?
 	  setTPS1Calibration(98, 926, 891, 69);
 
-#if HW_PROTEUS
+#if HW_PROTEUS && EFI_PROD_CODE
     engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_6;
    	engineConfiguration->vehicleSpeedSensorInputPin = PROTEUS_DIGITAL_5;
 	engineConfiguration->auxAnalogInputs[0] = PROTEUS_IN_ANALOG_VOLT_4;

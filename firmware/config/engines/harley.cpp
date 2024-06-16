@@ -46,7 +46,7 @@ void setHarley() {
 
 	setCustomMap(/*lowValue*/ 20, /*mapLowValueVoltage*/ 0.79, /*highValue*/ 101.3, /*mapHighValueVoltage*/ 4);
 
-#if HW_PROTEUS
+#if HW_PROTEUS && EFI_PROD_CODE
     engineConfiguration->acrPin = Gpio::PROTEUS_IGN_8;
     engineConfiguration->acrPin2 = Gpio::PROTEUS_IGN_9;
 

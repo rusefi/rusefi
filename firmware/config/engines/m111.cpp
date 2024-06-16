@@ -62,16 +62,12 @@ void setMercedesM111EngineConfiguration() {
     scBypass->pin = MRE_GPOUT_3;
 #endif // HW_MICRO_RUSEFI
 
-#if HW_MICRO_RUSEFI
+    strcpy(engineConfiguration->gpPwmNote[1], "SC Clutch");
+#if HW_MICRO_RUSEFI && EFI_PROD_CODE
 	gppwm_channel *scClutch = &engineConfiguration->gppwm[1];
     scClutch->pin = MRE_LS_2;
     engineConfiguration->vvtPins[0] = MRE_LS_1;
-#endif // HW_MICRO_RUSEFI
-    strcpy(engineConfiguration->gpPwmNote[1], "SC Clutch");
 
-
-
-#if HW_MICRO_RUSEFI
 	engineConfiguration->fuelPumpPin = MRE_GPOUT_1; // more or less MRE default
 	engineConfiguration->fanPin = MRE_GPOUT_2; // more or less MRE default
     setPPSInputs(MRE_IN_PPS, MRE_IN_PPS2);
@@ -86,7 +82,7 @@ void setMercedesM111EngineConfiguration() {
     // honda cable position sensor
     setPPSCalibration(0.38, 4.77, 4.64, 2.47);
 
-#if HW_PROTEUS
+#if HW_PROTEUS && EFI_PROD_CODE
     engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;
     engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_2;
 

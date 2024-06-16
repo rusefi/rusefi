@@ -64,7 +64,7 @@ void setHellen121nissanVQ() {
 	// we have this here and not in board_configuration.cpp so that unit test would get this value
 	engineConfiguration->invertCamVVTSignal = true;
 
-#if HW_HELLEN
+#if HW_HELLEN && EFI_PROD_CODE
 	engineConfiguration->vvtPins[0 * CAMS_PER_BANK] = H176_LS_7;
 	engineConfiguration->vvtPins[1 * CAMS_PER_BANK] = H176_LS_8;
 #endif

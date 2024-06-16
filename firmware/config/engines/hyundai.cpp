@@ -104,7 +104,7 @@ void setHyundaiPb() {
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
 #endif // HW_HELLEN_4CHAN
 
-#if HW_PROTEUS
+#if HW_PROTEUS && EFI_PROD_CODE
 	engineConfiguration->highPressureFuel.hwChannel = PROTEUS_IN_ANALOG_VOLT_4;
 	setCommonNTCSensor(&engineConfiguration->clt, PROTEUS_DEFAULT_AT_PULLUP);
 	setCommonNTCSensor(&engineConfiguration->iat, PROTEUS_DEFAULT_AT_PULLUP);
