@@ -54,3 +54,4 @@ private:
 };
 
 MapAverager& getMapAvg(size_t idx);
+float filterMapValue(float value);
