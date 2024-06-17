@@ -1856,10 +1856,10 @@ Maximum coil charge current, 1A step
 
 
 ### minAcPressure
-value of A/C pressure in kPa before that compressor is disengaged
+null
 
 ### maxAcPressure
-value of A/C pressure in kPa after that compressor is disengaged
+null
 
 ### tcu_shiftTime
 
