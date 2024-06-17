@@ -1539,8 +1539,6 @@ uint8_t[TORQUE_CURVE_SIZE x TORQUE_CURVE_SIZE] autoscale torqueTable;;"Nm", 10, 
 
 	uint16_t acrDisablePhase;;"deg", 1, 0, 0, 720, 0
 
-linear_sensor_s acPressure
-
 linear_sensor_s auxLinear1
 linear_sensor_s auxLinear2
 
@@ -1691,7 +1689,9 @@ int anotherCiTest
 	uint8_t autoscale mc33810Nomi;Nominal coil charge current, 0.25A step;"A", 0.25, 0, 3.00, 10.75, 2
 	uint8_t mc33810Maxi;Maximum coil charge current, 1A step;"A", 1, 0, 6, 21, 0
 
-#define END_OF_CALIBRATION_PADDING 198
+    linear_sensor_s acPressure
+
+#define END_OF_CALIBRATION_PADDING 178
 uint8_t[END_OF_CALIBRATION_PADDING] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
