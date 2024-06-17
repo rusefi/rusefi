@@ -1612,6 +1612,18 @@ We need to give engine time to build oil pressure without diverting it to VVT
 ### acrDisablePhase
 
 
+### acPressure.v1
+
+
+### acPressure.value1
+
+
+### acPressure.v2
+
+
+### acPressure.value2
+
+
 ### auxLinear1.v1
 
 
