@@ -1855,6 +1855,12 @@ Maximum coil charge current, 1A step
 ### acPressure.value2
 
 
+### minAcPressure
+null
+
+### maxAcPressure
+null
+
 ### tcu_shiftTime
 
 

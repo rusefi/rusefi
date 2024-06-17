@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Jun 17 15:28:08 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Jun 17 16:27:23 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4831,7 +4831,15 @@ struct persistent_config_s {
 	/**
 	 * offset 5340
 	 */
-	uint8_t unusedGapHere[16];
+	uint16_t minAcPressure;
+	/**
+	 * offset 5342
+	 */
+	uint16_t maxAcPressure;
+	/**
+	 * offset 5344
+	 */
+	uint8_t unusedGapHere[12];
 	/**
 	 * offset 5356
 	 */
@@ -5653,4 +5661,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22768);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Jun 17 15:28:08 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Jun 17 16:27:23 UTC 2024
