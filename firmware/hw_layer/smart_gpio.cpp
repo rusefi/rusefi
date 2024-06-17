@@ -52,7 +52,13 @@ struct tle6240_config tle6240 = {
 	.spi_bus = NULL,
 	.spi_config = {
 		.circular = false,
-		.end_cb = NULL,
+#ifdef _CHIBIOS_RT_CONF_VER_6_1_
+	.end_cb = NULL,
+#else
+        .slave = false,
+        .data_cb = NULL,
+        .error_cb = NULL,
+#endif
 		.ssport = NULL,
 		.sspad = 0,
 		.cr1 =
@@ -80,7 +86,13 @@ struct mc33972_config mc33972 = {
 	.spi_bus = NULL,
 	.spi_config = {
 		.circular = false,
-		.end_cb = NULL,
+#ifdef _CHIBIOS_RT_CONF_VER_6_1_
+	.end_cb = NULL,
+#else
+        .slave = false,
+        .data_cb = NULL,
+        .error_cb = NULL,
+#endif
 		.ssport = NULL,
 		.sspad = 0,
 		.cr1 =
@@ -104,7 +116,13 @@ struct l9779_config l9779_cfg = {
 	.spi_bus = NULL,
 	.spi_config = {
 		.circular = false,
-		.end_cb = NULL,
+#ifdef _CHIBIOS_RT_CONF_VER_6_1_
+	.end_cb = NULL,
+#else
+        .slave = false,
+        .data_cb = NULL,
+        .error_cb = NULL,
+#endif
 		.ssport = NULL,
 		.sspad = 0,
 		.cr1 =
@@ -144,7 +162,13 @@ struct tle8888_config tle8888_cfg = {
 	.spi_bus = NULL,
 	.spi_config = {
 		.circular = false,
-		.end_cb = NULL,
+#ifdef _CHIBIOS_RT_CONF_VER_6_1_
+	.end_cb = NULL,
+#else
+        .slave = false,
+        .data_cb = NULL,
+        .error_cb = NULL,
+#endif
 		.ssport = NULL,
 		.sspad = 0,
 		.cr1 =
@@ -200,7 +224,13 @@ struct drv8860_config drv8860 = {
 	.spi_bus = NULL,
 	.spi_config = {
 		.circular = false,
-		.end_cb = NULL,
+#ifdef _CHIBIOS_RT_CONF_VER_6_1_
+	.end_cb = NULL,
+#else
+        .slave = false,
+        .data_cb = NULL,
+        .error_cb = NULL,
+#endif
 		.ssport = NULL,
 		.sspad = 0,
 		.cr1 =

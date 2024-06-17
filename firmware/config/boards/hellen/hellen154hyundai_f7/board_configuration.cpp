@@ -140,7 +140,13 @@ static const struct mc33810_config mc33810 = {
 	.spi_bus = &SPID3,
 	.spi_config = {
 		.circular = false,
+#ifdef _CHIBIOS_RT_CONF_VER_6_1_
 		.end_cb = NULL,
+#else
+        .slave = false,
+        .data_cb = NULL,
+        .error_cb = NULL,
+#endif
 		// SPI3_CS_33810 OUT_PWM1 H144_OUT_PWM1
 		.ssport = GPIOD,
 		.sspad = 13,

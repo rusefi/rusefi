@@ -230,7 +230,13 @@ static const struct mc33810_config mc33810_odd = {
 	.spi_bus = &SPID5,
 	.spi_config = {
 		.circular = false,
+#ifdef _CHIBIOS_RT_CONF_VER_6_1_
 		.end_cb = NULL,
+#else
+        .slave = false,
+        .data_cb = NULL,
+        .error_cb = NULL,
+#endif
 		.ssport = GPIOF,
 		.sspad = 1,
 		.cr1 =
@@ -269,7 +275,13 @@ static const struct mc33810_config mc33810_even = {
 	.spi_bus = &SPID5,
 	.spi_config = {
 		.circular = false,
-		.end_cb = NULL,
+#ifdef _CHIBIOS_RT_CONF_VER_6_1_
+	.end_cb = NULL,
+#else
+        .slave = false,
+        .data_cb = NULL,
+        .error_cb = NULL,
+#endif
 		.ssport = GPIOF,
 		.sspad = 2,
 		.cr1 =
