@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22748">
+    <page number="0" size="22768">
         <constant name="engineType">"HELLEN_154_HYUNDAI_COUPE_BK1"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">0.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
@@ -223,7 +223,7 @@
         <constant digits="0" name="boostControlSafeDutyCycle" units="%">0.0</constant>
         <constant name="mafAdcChannel">"Disabled"</constant>
         <constant digits="0" name="acrRevolutions" units="">5.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0240616E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0240617E7</constant>
         <constant digits="3" name="adcVcc" units="volts">3.0</constant>
         <constant digits="0" name="mapCamDetectionAnglePosition" units="Deg">0.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -1376,6 +1376,11 @@
         <constant name="gearControllerMode">"None"</constant>
         <constant name="transmissionControllerMode">"None"</constant>
         <constant digits="0" name="acrDisablePhase" units="deg">0.0</constant>
+        <constant name="acPressure_hwChannel">"Disabled"</constant>
+        <constant digits="2" name="acPressure_v1" units="volts">0.0</constant>
+        <constant digits="2" name="acPressure_value1" units="">0.0</constant>
+        <constant digits="2" name="acPressure_v2" units="volts">0.0</constant>
+        <constant digits="2" name="acPressure_value2" units="">0.0</constant>
         <constant name="auxLinear1_hwChannel">"Disabled"</constant>
         <constant digits="2" name="auxLinear1_v1" units="volts">0.0</constant>
         <constant digits="2" name="auxLinear1_value1" units="">0.0</constant>
@@ -4768,7 +4773,7 @@ end</constant>
 </constant>
         <constant digits="0" name="tcu_shiftTime" units="ms">0.0</constant>
     </page>
-    <versionInfo firmwareInfo="20240616" nPages="1" signature="rusEFI master.2024.06.16.f407-discovery.522334893" version="5.0"/>
+    <versionInfo firmwareInfo="20240616" nPages="1" signature="rusEFI master.2024.06.17.f407-discovery.3190159752" version="5.0"/>
     <bibliography author="rusEFI 20240616" writeDate="date"/>
     <settings/>
     <userComments/>
