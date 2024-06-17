@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Jun 17 16:28:09 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Jun 17 19:41:07 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -303,7 +303,7 @@ public class Fields {
 	public static final int ego_sensor_e_ES_Innovate_MTX_L = 1;
 	public static final int ego_sensor_e_ES_PLX = 4;
 	public static final int EGT_CHANNEL_COUNT = 8;
-	public static final int END_OF_CALIBRATION_PADDING = 178;
+	public static final int END_OF_CALIBRATION_PADDING = 174;
 	public static final int engine_configuration_s_size = 4212;
 	public static final int engine_load_mode_e_LM_ALPHA_N = 2;
 	public static final int engine_load_mode_e_LM_LUA = 3;
@@ -1197,6 +1197,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 1952042381;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1449,10 +1450,11 @@ public class Fields {
 	public static final int TS_RESPONSE_FRAMING_ERROR = 0x8D;
 	public static final int TS_RESPONSE_OK = 0;
 	public static final int TS_RESPONSE_OUT_OF_RANGE = 0x84;
+	public static final int TS_RESPONSE_OVERRUN = 0x81;
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.06.17.f407-discovery.4152501468";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.06.17.f407-discovery.1952042381";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2900,7 +2902,9 @@ public class Fields {
 	public static final Field ACPRESSURE_VALUE1 = Field.create("ACPRESSURE_VALUE1", 4020, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ACPRESSURE_V2 = Field.create("ACPRESSURE_V2", 4024, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ACPRESSURE_VALUE2 = Field.create("ACPRESSURE_VALUE2", 4028, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE = Field.create("UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE", 4032, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field MINACPRESSURE = Field.create("MINACPRESSURE", 4032, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field MAXACPRESSURE = Field.create("MAXACPRESSURE", 4034, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE = Field.create("UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE", 4036, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_4210 = Field.create("ALIGNMENTFILL_AT_4210", 4210, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 4212, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4244, FieldType.FLOAT).setBaseOffset(0);
@@ -2935,9 +2939,7 @@ public class Fields {
 	public static final Field IACCOASTINGRPMBINS = Field.create("IACCOASTINGRPMBINS", 5172, FieldType.INT8).setScale(100.0).setBaseOffset(0);
 	public static final Field IACCOASTING = Field.create("IACCOASTING", 5188, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field WARNING_MESSAGE = Field.create("WARNING_MESSAGE", 5204, 120, FieldType.STRING).setScale(1.0).setBaseOffset(0);
-	public static final Field MINACPRESSURE = Field.create("MINACPRESSURE", 5324, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field MAXACPRESSURE = Field.create("MAXACPRESSURE", 5326, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSEDGAPHERE = Field.create("UNUSEDGAPHERE", 5328, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDGAPHERE = Field.create("UNUSEDGAPHERE", 5324, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field BOOSTTABLEOPENLOOP = Field.create("BOOSTTABLEOPENLOOP", 5340, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field BOOSTRPMBINS = Field.create("BOOSTRPMBINS", 5404, FieldType.INT8).setScale(100.0).setBaseOffset(0);
 	public static final Field BOOSTTABLECLOSEDLOOP = Field.create("BOOSTTABLECLOSEDLOOP", 5412, FieldType.INT8).setScale(2.0).setBaseOffset(0);
@@ -4566,6 +4568,8 @@ public class Fields {
 	ACPRESSURE_VALUE1,
 	ACPRESSURE_V2,
 	ACPRESSURE_VALUE2,
+	MINACPRESSURE,
+	MAXACPRESSURE,
 	UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE,
 	ALIGNMENTFILL_AT_4210,
 	ETBBIASBINS,
@@ -4601,8 +4605,6 @@ public class Fields {
 	IACCOASTINGRPMBINS,
 	IACCOASTING,
 	WARNING_MESSAGE,
-	MINACPRESSURE,
-	MAXACPRESSURE,
 	UNUSEDGAPHERE,
 	BOOSTTABLEOPENLOOP,
 	BOOSTRPMBINS,

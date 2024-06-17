@@ -1863,10 +1863,10 @@ float getConfigValueByName(const char *name) {
 			return engineConfiguration->acPressure.value2;
 // minAcPressure
 		case -965637402:
-			return config->minAcPressure;
+			return engineConfiguration->minAcPressure;
 // maxAcPressure
 		case 1953870952:
-			return config->maxAcPressure;
+			return engineConfiguration->maxAcPressure;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -4973,12 +4973,12 @@ bool setConfigValueByName(const char *name, float value) {
 	}
 		case -965637402:
 	{
-		config->minAcPressure = (int)value;
+		engineConfiguration->minAcPressure = (int)value;
 		return 1;
 	}
 		case 1953870952:
 	{
-		config->maxAcPressure = (int)value;
+		engineConfiguration->maxAcPressure = (int)value;
 		return 1;
 	}
 		case -1658957891:
