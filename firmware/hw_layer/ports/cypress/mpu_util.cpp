@@ -154,7 +154,13 @@ void initSpiCsNoOccupy(SPIConfig *spiConfig, brain_pin_e csPin) {
 
 void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
 	/* TODO: why this is here? */
+#ifdef _CHIBIOS_RT_CONF_VER_6_1_
 	spiConfig->end_cb = nullptr;
+#else
+	spiConfig->data_cb = nullptr;
+	spiConfig->error_cb = nullptr;
+#endif
+
 	initSpiCsNoOccupy(spiConfig, csPin);
 	// CS is controlled inside 'hal_spi_lld' driver using both software and hardware methods.
 	//efiSetPadMode("chip select", csPin, PAL_MODE_OUTPUT_OPENDRAIN);

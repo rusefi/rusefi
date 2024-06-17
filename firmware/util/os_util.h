@@ -1,5 +1,5 @@
 /*
- * @file    rfiutil.h
+ * @file    os_util.h
  * @brief   Number to string conversion header
  *
  * @date Nov 15, 2012
