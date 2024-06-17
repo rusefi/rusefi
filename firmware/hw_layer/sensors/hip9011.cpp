@@ -94,7 +94,13 @@ static SPIDriver *spi;
 
 static SPIConfig hipSpiCfg = {
 	.circular = false,
+#ifdef _CHIBIOS_RT_CONF_VER_6_1_
 	.end_cb = NULL,
+#else
+        .slave = false,
+        .data_cb = NULL,
+        .error_cb = NULL,
+#endif
 	.ssport = NULL,
 	.sspad = 0,
 	.cr1 =
