@@ -199,7 +199,7 @@ public class ConsoleUI {
 
         getConfig().load();
         FileLog.suspendLogging = getConfig().getRoot().getBoolProperty(GaugesPanel.DISABLE_LOGS);
-        Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
+        DefaultExceptionHandler.install();
 // not very useful?        VersionChecker.start();
         SwingUtilities.invokeAndWait(() -> awtCode(args));
     }

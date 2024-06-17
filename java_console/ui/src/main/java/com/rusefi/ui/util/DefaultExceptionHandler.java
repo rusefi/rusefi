@@ -21,6 +21,10 @@ public class DefaultExceptionHandler implements Thread.UncaughtExceptionHandler 
 
     private static boolean hadExceptionAlready;
 
+    public static void install() {
+        Thread.setDefaultUncaughtExceptionHandler(new DefaultExceptionHandler());
+    }
+
     public void uncaughtException(Thread t, Throwable e) {
         handleException(e);
     }
