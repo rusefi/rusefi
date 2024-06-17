@@ -1690,8 +1690,10 @@ int anotherCiTest
 	uint8_t mc33810Maxi;Maximum coil charge current, 1A step;"A", 1, 0, 6, 21, 0
 
     linear_sensor_s acPressure
+    uint16_t minAcPressure;value of A/C pressure in kPa before that compressor is disengaged;"kPa"
+    uint16_t maxAcPressure;value of A/C pressure in kPa after that compressor is disengaged;"kPa"
 
-#define END_OF_CALIBRATION_PADDING 178
+#define END_OF_CALIBRATION_PADDING 174
 uint8_t[END_OF_CALIBRATION_PADDING] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
@@ -1744,9 +1746,7 @@ uint8_t[CLT_CURVE_SIZE] autoscale iacCoasting;    RPM-based idle position for co
 
 warning_message_t warning_message;
 
-    uint16_t minAcPressure
-    uint16_t maxAcPressure
-    uint8_t[12] unusedGapHere
+    uint8_t[16] unusedGapHere
 
 uint8_t[BOOST_LOAD_COUNT x BOOST_RPM_COUNT] autoscale boostTableOpenLoop;;"", {1/2}, 0, 0, 100, 1
 uint8_t[BOOST_RPM_COUNT] autoscale boostRpmBins;;"RPM", 100, 0, 0, 25000, 0
