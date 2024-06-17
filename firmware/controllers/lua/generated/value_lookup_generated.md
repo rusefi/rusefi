@@ -1843,6 +1843,18 @@ Nominal coil charge current, 0.25A step
 ### mc33810Maxi
 Maximum coil charge current, 1A step
 
+### acPressure.v1
+
+
+### acPressure.value1
+
+
+### acPressure.v2
+
+
+### acPressure.value2
+
+
 ### tcu_shiftTime
 
 

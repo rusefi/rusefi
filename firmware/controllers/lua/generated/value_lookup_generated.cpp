@@ -1849,6 +1849,18 @@ float getConfigValueByName(const char *name) {
 // mc33810Maxi
 		case -695395485:
 			return engineConfiguration->mc33810Maxi;
+// acPressure.v1
+		case 1470507575:
+			return engineConfiguration->acPressure.v1;
+// acPressure.value1
+		case -1171243586:
+			return engineConfiguration->acPressure.value1;
+// acPressure.v2
+		case 1470507576:
+			return engineConfiguration->acPressure.v2;
+// acPressure.value2
+		case -1171243585:
+			return engineConfiguration->acPressure.value2;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -4931,6 +4943,26 @@ bool setConfigValueByName(const char *name, float value) {
 		case -695395485:
 	{
 		engineConfiguration->mc33810Maxi = (int)value;
+		return 1;
+	}
+		case 1470507575:
+	{
+		engineConfiguration->acPressure.v1 = value;
+		return 1;
+	}
+		case -1171243586:
+	{
+		engineConfiguration->acPressure.value1 = value;
+		return 1;
+	}
+		case 1470507576:
+	{
+		engineConfiguration->acPressure.v2 = value;
+		return 1;
+	}
+		case -1171243585:
+	{
+		engineConfiguration->acPressure.value2 = value;
 		return 1;
 	}
 		case -1658957891:
