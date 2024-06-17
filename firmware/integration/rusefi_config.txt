@@ -1539,6 +1539,8 @@ uint8_t[TORQUE_CURVE_SIZE x TORQUE_CURVE_SIZE] autoscale torqueTable;;"Nm", 10, 
 
 	uint16_t acrDisablePhase;;"deg", 1, 0, 0, 720, 0
 
+linear_sensor_s acPressure
+
 linear_sensor_s auxLinear1
 linear_sensor_s auxLinear2
 
