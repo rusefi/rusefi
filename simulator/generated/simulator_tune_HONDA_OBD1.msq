@@ -2184,11 +2184,9 @@
          0.0
          0.0
 </constant>
-        <constant cols="1" digits="0" name="unusedGapHere" rows="16">
-         0.0
-         0.0
-         0.0
-         0.0
+        <constant digits="0" name="minAcPressure" units="">0.0</constant>
+        <constant digits="0" name="maxAcPressure" units="">0.0</constant>
+        <constant cols="1" digits="0" name="unusedGapHere" rows="12">
          0.0
          0.0
          0.0
@@ -4705,8 +4703,8 @@ end</constant>
 </constant>
         <constant digits="0" name="tcu_shiftTime" units="ms">0.0</constant>
     </page>
-    <versionInfo firmwareInfo="20240616" nPages="1" signature="rusEFI master.2024.06.17.f407-discovery.3925713834" version="5.0"/>
-    <bibliography author="rusEFI 20240616" writeDate="date"/>
+    <versionInfo firmwareInfo="20240617" nPages="1" signature="rusEFI master.2024.06.17.f407-discovery.47211617" version="5.0"/>
+    <bibliography author="rusEFI 20240617" writeDate="date"/>
     <settings/>
     <userComments/>
 </msq>
