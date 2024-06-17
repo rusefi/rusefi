@@ -529,12 +529,12 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 	uint16_t incomingPacketSize = firstByte << 8 | secondByte;
 	size_t expectedSize = incomingPacketSize + TS_PACKET_TAIL_SIZE;
 
-	if (incomingPacketSize == 0 || expectedSize > sizeof(tsChannel->scratchBuffer)) {
+	if ((incomingPacketSize == 0) || (expectedSize > sizeof(tsChannel->scratchBuffer))) {
 		if (tsChannel->in_sync) {
 			efiPrintf("process_ts: channel=%s invalid size: %d", tsChannel->name, incomingPacketSize);
-			tunerStudioError(tsChannel, "process_ts: ERROR: CRC header size");
+			tunerStudioError(tsChannel, "process_ts: ERROR: packet size");
 			/* send error only if previously we were in sync */
-			sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN, "underrun");
+			sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "invalid size");
 		}
 		tsChannel->in_sync = false;
 		return -1;
@@ -552,6 +552,7 @@ static int tsProcessOne(TsChannelBase* tsChannel) {
 			efiPrintf("Got only %d bytes while expecting %d for command 0x%02x", received,
 					expectedSize, command);
 			tunerStudioError(tsChannel, "ERROR: not enough bytes in stream");
+			// MS serial protocol spec: There was a timeout before all data was received. (25ms per character.)
 			sendErrorCode(tsChannel, TS_RESPONSE_UNDERRUN, "underrun");
 			tsChannel->in_sync = false;
 			return -1;
