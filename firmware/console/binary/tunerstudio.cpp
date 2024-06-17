@@ -96,6 +96,9 @@ static void printErrorCounters() {
 			tsState.outputChannelsCommandCounter, tsState.readPageCommandsCounter, tsState.burnCommandCounter);
 	efiPrintf("TunerStudio W=%d / C=%d / P=%d", tsState.writeValueCommandCounter,
 			tsState.writeChunkCommandCounter, tsState.pageCommandCounter);
+	efiPrintf("TunerStudio errors: underrun=%d / overrun=%d / crc=%d / unrecognized=%d / outofrange=%d / other=%d",
+			tsState.errorUnderrunCounter, tsState.errorOverrunCounter, tsState.errorCrcCounter,
+			tsState.errorUnrecognizedCommand, tsState.errorOutOfRange, tsState.errorOther);
 }
 
 static void printScatterList() {
@@ -160,6 +163,27 @@ void sendErrorCode(TsChannelBase *tsChannel, uint8_t code, const char *msg) {
 //TODO uncomment once I have test it myself  if (msg != DO_NOT_LOG) {
 //	  efiPrintf("TS <- Err: %d [%s]", code, msg);
 //  }
+
+	switch (code) {
+	case TS_RESPONSE_UNDERRUN:
+		tsState.errorUnderrunCounter++;
+		break;
+	case TS_RESPONSE_OVERRUN:
+		tsState.errorOverrunCounter++;
+		break;
+	case TS_RESPONSE_CRC_FAILURE:
+		tsState.errorCrcCounter++;
+		break;
+	case TS_RESPONSE_UNRECOGNIZED_COMMAND:
+		tsState.errorUnrecognizedCommand++;
+		break;
+	case TS_RESPONSE_OUT_OF_RANGE:
+		tsState.errorOutOfRange++;
+		break;
+	default:
+		tsState.errorOther++;
+		break;
+	}
 
 	tsChannel->writeCrcResponse(code);
 }

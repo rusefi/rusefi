@@ -18,10 +18,19 @@ typedef struct {
 	int writeValueCommandCounter;
 	int crc32CheckCommandCounter;
 	int writeChunkCommandCounter;
-	int errorCounter;
 	int totalCounter;
 	int textCommandCounter;
 	int testCommandCounter;
+
+	// overall counter, not all of this errors are reported back to TS
+	int errorCounter;
+	// by type error counters reported to TS
+	int errorUnderrunCounter;
+	int errorOverrunCounter;
+	int errorCrcCounter;
+	int errorUnrecognizedCommand;
+	int errorOutOfRange;
+	int errorOther;
 } tunerstudio_counters_s;
 
 extern tunerstudio_counters_s tsState;
