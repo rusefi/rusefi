@@ -1690,8 +1690,8 @@ int anotherCiTest
 	uint8_t mc33810Maxi;Maximum coil charge current, 1A step;"A", 1, 0, 6, 21, 0
 
     linear_sensor_s acPressure
-    uint16_t minAcPressure;value of A/C pressure in kPa before that compressor is disengaged;"kPa"
-    uint16_t maxAcPressure;value of A/C pressure in kPa after that compressor is disengaged;"kPa"
+    uint16_t minAcPressure
+    uint16_t maxAcPressure
 
 #define END_OF_CALIBRATION_PADDING 174
 uint8_t[END_OF_CALIBRATION_PADDING] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
