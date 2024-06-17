@@ -11,7 +11,7 @@ void SerialTsChannel::start(uint32_t baud) {
 		#if EFI_PROD_CODE
 			.speed = baud,
 			.cr1 = 0,
-			.cr2 = USART_CR2_STOP1_BITS | USART_CR2_LINEN,
+			.cr2 = USART_CR2_STOP1_BITS,
 			.cr3 = 0
 		#endif // EFI_PROD_CODE
 	};
