@@ -1744,7 +1744,9 @@ uint8_t[CLT_CURVE_SIZE] autoscale iacCoasting;    RPM-based idle position for co
 
 warning_message_t warning_message;
 
-uint8_t[16] unusedGapHere
+    uint16_t minAcPressure
+    uint16_t maxAcPressure
+    uint8_t[12] unusedGapHere
 
 uint8_t[BOOST_LOAD_COUNT x BOOST_RPM_COUNT] autoscale boostTableOpenLoop;;"", {1/2}, 0, 0, 100, 1
 uint8_t[BOOST_RPM_COUNT] autoscale boostRpmBins;;"RPM", 100, 0, 0, 25000, 0
