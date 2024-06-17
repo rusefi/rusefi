@@ -11,6 +11,7 @@ import com.rusefi.maintenance.ProgramSelector;
 import com.rusefi.maintenance.StatusAnimation;
 import com.rusefi.maintenance.UpdateStatusWindow;
 import com.rusefi.ui.LogoHelper;
+import com.rusefi.ui.util.DefaultExceptionHandler;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.ToolButtons;
@@ -36,6 +37,7 @@ public class BasicStartupFrame {
     }
 
     public static void runTool(String[] args) {
+        DefaultExceptionHandler.install();
         new BasicStartupFrame().runTool();
     }
 
@@ -76,7 +78,7 @@ public class BasicStartupFrame {
                         noPortsMessage.setVisible(false);
                         update.setEnabled(true);
                         update.setText("Blt Update Firmware");
-                        update.addActionListener(e -> ProgramSelector.executeJob(update, ProgramSelector.OPENBLT_MANUAL, ecuPorts.get(0)));
+                        update.addActionListener(e -> ProgramSelector.executeJob(update, ProgramSelector.OPENBLT_MANUAL, bootloaderPorts.get(0)));
                     } else {
                         noPortsMessage.setText("ECU not found");
                     }
