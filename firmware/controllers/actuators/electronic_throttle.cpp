@@ -319,9 +319,9 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	// [0, 100] -> [idle, 100]
 	// 0% target from table -> idle position as target
 	// 100% target from table -> 100% target position
-	idlePosition = interpolateClamped(0, etbIdleAddition, 100, 100, etbCurrentTarget);
+	targetWithIdlePosition = interpolateClamped(0, etbIdleAddition, 100, 100, etbCurrentTarget);
 
-	percent_t targetPosition = idlePosition + getLuaAdjustment();
+	percent_t targetPosition = targetWithIdlePosition + getLuaAdjustment();
 
 #if EFI_ANTILAG_SYSTEM
 	if (engine->antilagController.isAntilagCondition) {

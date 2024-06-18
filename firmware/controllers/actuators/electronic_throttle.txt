@@ -1,7 +1,7 @@
 ! units,scale,offset,min,max,digits
 
 struct_no_prefix electronic_throttle_s
-	float idlePosition;"ETB: idlePosition";"per", 1,0, 0,10, 2,@@GAUGE_CATEGORY_ETB@@
+	float targetWithIdlePosition;"ETB: target with idle";"per", 1,0, 0,10, 2,@@GAUGE_CATEGORY_ETB@@
 	float trim;"ETB: trim"
 	float luaAdjustment;"ETB: luaAdjustment";"per", 1,0, 0,3, 2,@@GAUGE_CATEGORY_ETB@@
 
