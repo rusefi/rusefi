@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "util/test_base.h"
+
 class LaunchTestConfig {
 public:
     std::optional<bool> getLaunchControlEnabled() const { return m_launchControlEnabled; }
@@ -59,17 +61,12 @@ private:
     bool m_satisfyActivationSwithSpeedAndTpsConditions { false };
 };
 
-class LaunchTestBase : public testing::Test {
+class LaunchTestBase : public TestBase {
 protected:
-    virtual void SetUp() override;
-    virtual void TearDown() override;
-
     void setUpTestConfig(const LaunchTestConfig& config);
 
     void updateRpm(const int rpm);
 private:
-    std::unique_ptr<EngineTestHelper> eth;
-
     void configureLaunchControlEnabled(std::optional<bool> launchControlEnabled);
 
     void configureLaunchRpm(std::optional<int> launchRpm);
