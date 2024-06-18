@@ -69,6 +69,10 @@ public:
 		return 0;
 	}
 
+  float getCurrentTarget() const override {
+    return etbCurrentTarget;
+  }
+
 	// Lua throttle adjustment
 	void setLuaAdjustment(percent_t adjustment) override;
 	float getLuaAdjustment() const;

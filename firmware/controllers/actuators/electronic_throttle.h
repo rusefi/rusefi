@@ -55,6 +55,6 @@ public:
 	virtual bool isEtbMode() const = 0;
 
 	virtual const pid_state_s& getPidState() const = 0;
-
+  virtual float getCurrentTarget() const = 0;
 	virtual void setLuaAdjustment(percent_t adjustment) = 0;
 };
