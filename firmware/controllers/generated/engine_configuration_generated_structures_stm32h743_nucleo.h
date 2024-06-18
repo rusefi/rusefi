@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Jun 17 20:12:05 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Jun 18 16:55:01 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4573,10 +4573,14 @@ struct engine_configuration_s {
 	 */
 	linear_sensor_s acPressure;
 	/**
+	 * value of A/C pressure in kPa before that compressor is disengaged
+	 * units: kPa
 	 * offset 4032
 	 */
 	uint16_t minAcPressure;
 	/**
+	 * value of A/C pressure in kPa after that compressor is disengaged
+	 * units: kPa
 	 * offset 4034
 	 */
 	uint16_t maxAcPressure;
@@ -5661,4 +5665,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22752);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Jun 17 20:12:05 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Jun 18 16:55:01 UTC 2024
