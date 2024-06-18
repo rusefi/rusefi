@@ -7,6 +7,7 @@
  */
 
 #include "pch.h"
+#include "os_util.h"
 
 int at32GetMcuType(uint32_t id, const char **pn, const char **package, uint32_t *flashSize)
 {
