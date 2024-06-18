@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Tue Jun 18 01:50:01 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -6,11 +6,11 @@
 // start of electronic_throttle_s
 struct electronic_throttle_s {
 	/**
-	 * "ETB: idlePosition"
+	 * "ETB: target with idle"
 	 * units: per
 	 * offset 0
 	 */
-	float idlePosition = (float)0;
+	float targetWithIdlePosition = (float)0;
 	/**
 	 * "ETB: trim"
 	 * offset 4
@@ -37,6 +37,7 @@ struct electronic_throttle_s {
 	 */
 	float etbIntegralError = (float)0;
 	/**
+	 * ETB: target for current pedal
 	 * units: %
 	 * offset 24
 	 */
@@ -184,4 +185,4 @@ struct electronic_throttle_s {
 static_assert(sizeof(electronic_throttle_s) == 52);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Tue Jun 18 01:50:01 UTC 2024
