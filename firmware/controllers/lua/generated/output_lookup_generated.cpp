@@ -1092,6 +1092,12 @@ float getOutputValueByName(const char *name) {
 // acCompressorState
 		case -1015278697:
 			return engine->module<AcController>()->acCompressorState;
+// acPressureTooLow
+		case -1208328954:
+			return engine->module<AcController>()->acPressureTooLow;
+// acPressureTooHigh
+		case -1220300524:
+			return engine->module<AcController>()->acPressureTooHigh;
 // latest_usage_ac_control
 		case 1630756809:
 			return engine->module<AcController>()->latest_usage_ac_control;

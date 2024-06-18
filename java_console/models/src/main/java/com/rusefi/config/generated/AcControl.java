@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/ac_control.txt Wed Jun 05 18:56:14 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/ac_control.txt Tue Jun 18 15:21:47 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -185,6 +185,8 @@ public class AcControl {
 	public static final Field TPSTOOHIGH = Field.create("TPSTOOHIGH", 4, FieldType.BIT, 5).setBaseOffset(1072);
 	public static final Field ISDISABLEDBYLUA = Field.create("ISDISABLEDBYLUA", 4, FieldType.BIT, 6).setBaseOffset(1072);
 	public static final Field ACCOMPRESSORSTATE = Field.create("ACCOMPRESSORSTATE", 4, FieldType.BIT, 7).setBaseOffset(1072);
+	public static final Field ACPRESSURETOOLOW = Field.create("ACPRESSURETOOLOW", 4, FieldType.BIT, 8).setBaseOffset(1072);
+	public static final Field ACPRESSURETOOHIGH = Field.create("ACPRESSURETOOHIGH", 4, FieldType.BIT, 9).setBaseOffset(1072);
 	public static final Field LATEST_USAGE_AC_CONTROL = Field.create("LATEST_USAGE_AC_CONTROL", 8, FieldType.INT).setScale(1.0).setBaseOffset(1072);
 	public static final Field ACSWITCHLASTCHANGETIMEMS = Field.create("ACSWITCHLASTCHANGETIMEMS", 12, FieldType.INT).setScale(1.0).setBaseOffset(1072);
 	public static final Field[] VALUES = {
@@ -198,6 +200,8 @@ public class AcControl {
 	TPSTOOHIGH,
 	ISDISABLEDBYLUA,
 	ACCOMPRESSORSTATE,
+	ACPRESSURETOOLOW,
+	ACPRESSURETOOHIGH,
 	LATEST_USAGE_AC_CONTROL,
 	ACSWITCHLASTCHANGETIMEMS,
 	};

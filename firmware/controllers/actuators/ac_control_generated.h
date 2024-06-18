@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/ac_control.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/ac_control.txt Tue Jun 18 15:21:47 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -49,77 +49,79 @@ struct ac_control_s {
 	offset 4 bit 7 */
 	bool acCompressorState : 1 {};
 	/**
+	 * AC pressure too low
 	offset 4 bit 8 */
-	bool unusedBit_10_8 : 1 {};
+	bool acPressureTooLow : 1 {};
 	/**
+	 * AC pressure too high
 	offset 4 bit 9 */
-	bool unusedBit_10_9 : 1 {};
+	bool acPressureTooHigh : 1 {};
 	/**
 	offset 4 bit 10 */
-	bool unusedBit_10_10 : 1 {};
+	bool unusedBit_12_10 : 1 {};
 	/**
 	offset 4 bit 11 */
-	bool unusedBit_10_11 : 1 {};
+	bool unusedBit_12_11 : 1 {};
 	/**
 	offset 4 bit 12 */
-	bool unusedBit_10_12 : 1 {};
+	bool unusedBit_12_12 : 1 {};
 	/**
 	offset 4 bit 13 */
-	bool unusedBit_10_13 : 1 {};
+	bool unusedBit_12_13 : 1 {};
 	/**
 	offset 4 bit 14 */
-	bool unusedBit_10_14 : 1 {};
+	bool unusedBit_12_14 : 1 {};
 	/**
 	offset 4 bit 15 */
-	bool unusedBit_10_15 : 1 {};
+	bool unusedBit_12_15 : 1 {};
 	/**
 	offset 4 bit 16 */
-	bool unusedBit_10_16 : 1 {};
+	bool unusedBit_12_16 : 1 {};
 	/**
 	offset 4 bit 17 */
-	bool unusedBit_10_17 : 1 {};
+	bool unusedBit_12_17 : 1 {};
 	/**
 	offset 4 bit 18 */
-	bool unusedBit_10_18 : 1 {};
+	bool unusedBit_12_18 : 1 {};
 	/**
 	offset 4 bit 19 */
-	bool unusedBit_10_19 : 1 {};
+	bool unusedBit_12_19 : 1 {};
 	/**
 	offset 4 bit 20 */
-	bool unusedBit_10_20 : 1 {};
+	bool unusedBit_12_20 : 1 {};
 	/**
 	offset 4 bit 21 */
-	bool unusedBit_10_21 : 1 {};
+	bool unusedBit_12_21 : 1 {};
 	/**
 	offset 4 bit 22 */
-	bool unusedBit_10_22 : 1 {};
+	bool unusedBit_12_22 : 1 {};
 	/**
 	offset 4 bit 23 */
-	bool unusedBit_10_23 : 1 {};
+	bool unusedBit_12_23 : 1 {};
 	/**
 	offset 4 bit 24 */
-	bool unusedBit_10_24 : 1 {};
+	bool unusedBit_12_24 : 1 {};
 	/**
 	offset 4 bit 25 */
-	bool unusedBit_10_25 : 1 {};
+	bool unusedBit_12_25 : 1 {};
 	/**
 	offset 4 bit 26 */
-	bool unusedBit_10_26 : 1 {};
+	bool unusedBit_12_26 : 1 {};
 	/**
 	offset 4 bit 27 */
-	bool unusedBit_10_27 : 1 {};
+	bool unusedBit_12_27 : 1 {};
 	/**
 	offset 4 bit 28 */
-	bool unusedBit_10_28 : 1 {};
+	bool unusedBit_12_28 : 1 {};
 	/**
 	offset 4 bit 29 */
-	bool unusedBit_10_29 : 1 {};
+	bool unusedBit_12_29 : 1 {};
 	/**
 	offset 4 bit 30 */
-	bool unusedBit_10_30 : 1 {};
+	bool unusedBit_12_30 : 1 {};
 	/**
 	offset 4 bit 31 */
-	bool unusedBit_10_31 : 1 {};
+	bool unusedBit_12_31 : 1 {};
 	/**
 	 * AC latest activity
 	 * offset 8
@@ -133,4 +135,4 @@ struct ac_control_s {
 static_assert(sizeof(ac_control_s) == 16);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/ac_control.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/ac_control.txt Tue Jun 18 15:21:47 UTC 2024
