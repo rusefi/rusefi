@@ -11,6 +11,7 @@ protected:
     virtual void TearDown() override;
 
     void periodicFastCallback();
+    void periodicSlowCallback();
 private:
     std::unique_ptr<EngineTestHelper> eth;
 };
