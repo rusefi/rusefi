@@ -889,6 +889,11 @@ void configureRusefiLuaHooks(lua_State* lState) {
 	});
 
 #if EFI_ELECTRONIC_THROTTLE_BODY && EFI_PROD_CODE
+  lua_register(lState, "getEtbTarget", [](lua_State* l) {
+ 		auto result = engine->etbControllers[0]->getCurrentTarget();
+		lua_pushnumber(l, result);
+		return 1;
+  });
 	lua_register(lState, "restartEtb", [](lua_State*) {
 		// this is about Lua sensor acting in place of real analog PPS sensor
 		// todo: smarter implementation
