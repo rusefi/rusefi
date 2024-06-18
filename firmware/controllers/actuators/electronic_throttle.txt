@@ -12,7 +12,7 @@ struct_no_prefix electronic_throttle_s
 
 	percent_t etbFeedForward
 	float etbIntegralError;;"", 1, 0, -10000, 10000, 3
-	float etbCurrentTarget;;"%", 1, 0, -10000, 10000, 3
+	float etbCurrentTarget;ETB: target for current pedal;"%", 1, 0, -10000, 10000, 3
 	float etbCurrentAdjustedTarget;;"%", 1, 0, -10000, 10000, 3
 
 	bit etbRevLimitActive
