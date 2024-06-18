@@ -7,7 +7,7 @@
 
 #include "pch.h"
 #include "rusefi/efistringutil.h"
-
+#include "os_util.h"
 #include "backup_ram.h"
 #include "error_handling_led.h"
 #include "log_hard_fault.h"
@@ -121,7 +121,7 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 	dbg_panic_file = file;
 	dbg_panic_line = line;
 #if CH_DBG_SYSTEM_STATE_CHECK
-	ch.dbg.panic_msg = msg;
+	ch0.dbg.panic_msg = msg;
 #endif /* CH_DBG_SYSTEM_STATE_CHECK */
 
 #if !EFI_PROD_CODE
