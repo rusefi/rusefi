@@ -7,6 +7,8 @@
 static Deadband<200> maxRpmDeadband;
 static Deadband<5> maxCltDeadband;
 static Deadband<5> maxTpsDeadband;
+static Deadband<5> minPressureDeadband;
+static Deadband<5> maxPressureDeadband;
 
 bool AcController::getAcState() {
 	latest_usage_ac_control = getTimeNowS();
@@ -45,6 +47,22 @@ bool AcController::getAcState() {
 	if (tpsTooHigh) {
 			return false;
 	}
+
+    const auto acPressure= Sensor::get(SensorType::AcPressure);
+    if (acPressure.Valid) {
+        const auto minAcPressure = static_cast<float>(engineConfiguration->minAcPressure);
+        acPressureTooLow = minPressureDeadband.lt(acPressure.Value, minAcPressure);
+        if (acPressureTooLow) {
+            return false;
+        }
+
+        const auto maxAcPressure = static_cast<float>(engineConfiguration->maxAcPressure);
+        acPressureTooHigh = maxPressureDeadband.gt(acPressure.Value, maxAcPressure);
+        if (acPressureTooHigh) {
+            return false;
+        }
+    }
+
 	if (isDisabledByLua) {
 		return false;
 	}
