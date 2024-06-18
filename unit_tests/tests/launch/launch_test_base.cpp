@@ -6,15 +6,6 @@
 
 #include "launch_test_base.h"
 
-
-void LaunchTestBase::SetUp() {
-    eth = std::make_unique<EngineTestHelper>(engine_type_e::TEST_ENGINE);
-}
-
-void LaunchTestBase::TearDown() {
-    eth.reset();
-}
-
 void LaunchTestBase::setUpTestConfig(const LaunchTestConfig& config) {
     configureLaunchControlEnabled(config.getLaunchControlEnabled());
 
@@ -37,8 +28,7 @@ void LaunchTestBase::setUpTestConfig(const LaunchTestConfig& config) {
 
 void LaunchTestBase::updateRpm(const int rpm) {
     Sensor::setMockValue(SensorType::Rpm, rpm);
-    // run the ignition math
-    engine->periodicFastCallback();
+    periodicFastCallback();
 }
 
 void LaunchTestBase::configureLaunchControlEnabled(const std::optional<bool> launchControlEnabled) {
