@@ -1641,8 +1641,8 @@
         <constant digits="2" name="acPressure_value1" units="">0.0</constant>
         <constant digits="2" name="acPressure_v2" units="volts">0.0</constant>
         <constant digits="2" name="acPressure_value2" units="">0.0</constant>
-        <constant digits="3" name="minAcPressure" units="kPa">0.0</constant>
-        <constant digits="3" name="maxAcPressure" units="kPa">0.0</constant>
+        <constant digits="0" name="minAcPressure" units="kPa">0.0</constant>
+        <constant digits="0" name="maxAcPressure" units="kPa">0.0</constant>
         <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="174">
          0.0
          0.0
@@ -4701,7 +4701,7 @@ end</constant>
 </constant>
         <constant digits="0" name="tcu_shiftTime" units="ms">0.0</constant>
     </page>
-    <versionInfo firmwareInfo="20240617" nPages="1" signature="rusEFI master.2024.06.18.f407-discovery.1945762643" version="5.0"/>
+    <versionInfo firmwareInfo="20240617" nPages="1" signature="rusEFI master.2024.06.18.f407-discovery.207070811" version="5.0"/>
     <bibliography author="rusEFI 20240617" writeDate="date"/>
     <settings/>
     <userComments/>
