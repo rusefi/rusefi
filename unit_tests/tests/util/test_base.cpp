@@ -18,3 +18,7 @@ void TestBase::periodicFastCallback() {
     // run the ignition math
     engine->periodicFastCallback();
 }
+
+void TestBase::periodicSlowCallback() {
+    engine->periodicSlowCallback();
+}
