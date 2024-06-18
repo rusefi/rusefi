@@ -108,7 +108,7 @@ private:
 	Timer m_jamDetectTimer;
 
 	// Pedal -> target map
-	const ValueProvider3D* m_pedalMap = nullptr;
+	const ValueProvider3D* m_pedalProvider = nullptr;
 
 	float m_idlePosition = 0;
 

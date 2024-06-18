@@ -165,7 +165,7 @@ static percent_t directPwmValue = NAN;
 // this macro clamps both positive and negative percentages from about -100% to 100%
 #define ETB_PERCENT_TO_DUTY(x) (clampF(-ETB_DUTY_LIMIT, 0.01f * (x), ETB_DUTY_LIMIT))
 
-bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalMap, bool hasPedal) {
+bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalProvider, bool hasPedal) {
 	if (function == DC_None) {
 		// if not configured, don't init.
 		etbErrorCode = (int8_t)TpsState::None;
@@ -212,7 +212,7 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 
 	m_motor = motor;
 	m_pid.initPidClass(pidParameters);
-	m_pedalMap = pedalMap;
+	m_pedalProvider = pedalProvider;
 
 	// Ignore 3% position error before complaining
 	m_errorAccumulator.init(3.0f, etbPeriodSeconds);
@@ -303,14 +303,14 @@ expected<percent_t> EtbController::getSetpointEtb() {
 //	}
 
 	// If the pedal map hasn't been set, we can't provide a setpoint.
-	if (!m_pedalMap) {
+	if (!m_pedalProvider) {
 		return unexpected;
 	}
 
   float sanitizedPedal = getSanitizedPedal();
 
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
-	etbCurrentTarget = m_pedalMap->getValue(rpm, sanitizedPedal);
+	etbCurrentTarget = m_pedalProvider->getValue(rpm, sanitizedPedal);
 
 	percent_t etbIdlePosition = clampPercentValue(m_idlePosition);
 	percent_t etbIdleAddition = PERCENT_DIV * engineConfiguration->etbIdleThrottleRange * etbIdlePosition;
