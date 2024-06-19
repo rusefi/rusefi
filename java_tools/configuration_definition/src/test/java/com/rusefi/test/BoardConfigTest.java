@@ -13,7 +13,11 @@ public class BoardConfigTest {
         ReaderStateImpl state = new ReaderStateImpl();
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
 
-        state.getVariableRegistry().register(BoardConfigStrategy.BOARD_CONFIG_FROM_FILE, "int fieldName2;\n");
+        state.getVariableRegistry().register(BoardConfigStrategy.BOARD_CONFIG_FROM_FILE, "struct pid_s\n" +
+            "  float pFactor;;\"\", 1, 0, -10000, 10000, 4\n" +
+            "\t \tint16_t maxValue;Output Max Duty Cycle;\"\", 1, 0, -30000, 30000, 0\n" +
+            "end_struct\n" +
+            "int fieldName2;\n");
 
         String inputString = "struct pid_s\n" +
             "int fieldName;\n" +

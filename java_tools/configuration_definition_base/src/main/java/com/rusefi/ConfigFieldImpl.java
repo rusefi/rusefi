@@ -167,7 +167,7 @@ public class ConfigFieldImpl implements ConfigField {
      * @see ConfigFieldParserTest#testParseLine()
      */
     public static ConfigFieldImpl parse(ReaderState state, String line) {
-        Matcher matcher = FIELD.matcher(line);
+        Matcher matcher = FIELD.matcher(line.trim());
         if (!matcher.matches())
             return null;
 
