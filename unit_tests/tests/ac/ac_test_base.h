@@ -23,6 +23,10 @@ private:
 
 class AcTestBase : public TestBase {
 protected:
+    constexpr static double DEFAULT_AC_DELAY = 0.5f;
+    constexpr static uint16_t DEFAULT_MIN_AC_PRESSURE = 100;
+    constexpr static uint16_t DEFAULT_MAX_AC_PRESSURE = 300;
+
     void updateAcPressure(float acPressure);
 
     void setUpTestConfig(const AcTestConfig& config);

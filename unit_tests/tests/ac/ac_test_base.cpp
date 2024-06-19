@@ -21,7 +21,7 @@ void AcTestBase::configureAcDelay(const std::optional<float> acDelay) {
     if (acDelay.has_value()) {
         engineConfiguration->acDelay = acDelay.value();
     } else {
-        ASSERT_EQ(engineConfiguration->acDelay, 0.5); // check default value
+        ASSERT_EQ(engineConfiguration->acDelay, DEFAULT_AC_DELAY); // check default value
     }
 }
 
@@ -29,7 +29,7 @@ void AcTestBase::configureMinAcPressure(const std::optional<uint16_t> minAcPress
     if (minAcPressure.has_value()) {
         engineConfiguration->minAcPressure = minAcPressure.value();
     } else {
-        ASSERT_EQ(engineConfiguration->minAcPressure, 0); // check default value
+        ASSERT_EQ(engineConfiguration->minAcPressure, DEFAULT_MIN_AC_PRESSURE); // check default value
     }
 }
 
@@ -37,6 +37,6 @@ void AcTestBase::configureMaxAcPressure(const std::optional<uint16_t> maxAcPress
     if (maxAcPressure.has_value()) {
         engineConfiguration->maxAcPressure = maxAcPressure.value();
     } else {
-        ASSERT_EQ(engineConfiguration->maxAcPressure, 0); // check default value
+        ASSERT_EQ(engineConfiguration->maxAcPressure, DEFAULT_MAX_AC_PRESSURE); // check default value
     }
 }

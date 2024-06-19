@@ -14,12 +14,27 @@ namespace {
     class AcPressureTestConfig : public AcTestConfig {
     public:
         AcPressureTestConfig();
+        AcPressureTestConfig(
+            const std::optional<float> acDelay,
+            const std::optional<uint16_t> minAcPressure,
+            const std::optional<uint16_t> maxAcPressure
+        );
     };
 
-    AcPressureTestConfig::AcPressureTestConfig() {
-        setAcDelay(0.0f);
-        setMinAcPressure(TEST_MIN_AC_PRESSURE);
-        setMaxAcPressure(TEST_MAX_AC_PRESSURE);
+    AcPressureTestConfig::AcPressureTestConfig(): AcPressureTestConfig {
+        { 0.0f },
+        { TEST_MIN_AC_PRESSURE },
+        { TEST_MAX_AC_PRESSURE }
+    } {}
+
+    AcPressureTestConfig::AcPressureTestConfig(
+            const std::optional<float> acDelay,
+            const std::optional<uint16_t> minAcPressure,
+            const std::optional<uint16_t> maxAcPressure
+    ) {
+        setAcDelay(acDelay);
+        setMinAcPressure(minAcPressure);
+        setMaxAcPressure(maxAcPressure);
     }
 
     struct AcPressureTestData {
@@ -80,8 +95,8 @@ namespace {
             /* config = */ {},
             /* testData = */ {
                {
-                   "acPressure = (TEST_MIN_AC_PRESSURE + TEST_MAX_AC_PRESSURE) / 2",
-                   (TEST_MIN_AC_PRESSURE + TEST_MAX_AC_PRESSURE) / 2,
+                   "acPressure = (TEST_MIN_AC_PRESSURE + TEST_MAX_AC_PRESSURE) / 2.0",
+                   (TEST_MIN_AC_PRESSURE + TEST_MAX_AC_PRESSURE) / 2.0,
                    false,
                    false
                },
@@ -124,8 +139,8 @@ namespace {
             /* config = */ {},
             /* testData = */ {
                 {
-                    "acPressure = (TEST_MIN_AC_PRESSURE + TEST_MAX_AC_PRESSURE) / 2",
-                    (TEST_MIN_AC_PRESSURE + TEST_MAX_AC_PRESSURE) / 2,
+                    "acPressure = (TEST_MIN_AC_PRESSURE + TEST_MAX_AC_PRESSURE) / 2.0",
+                    (TEST_MIN_AC_PRESSURE + TEST_MAX_AC_PRESSURE) / 2.0,
                     false,
                     false
                 },
@@ -159,6 +174,94 @@ namespace {
                     false,
                     false
                 }
+            }
+        );
+    }
+
+    TEST_F(AcPressureTest, defaultMinAcPressure) {
+        doTest(
+            /* config = */ { {}, {}, {}},
+            /* testData = */ {
+               {
+                   "acPressure = (DEFAULT_MIN_AC_PRESSURE + DEFAULT_MAX_AC_PRESSURE) / 2.0",
+                   (DEFAULT_MIN_AC_PRESSURE + DEFAULT_MAX_AC_PRESSURE) / 2.0,
+                   false,
+                   false
+               },
+               {
+                   "acPressure = DEFAULT_MIN_AC_PRESSURE - DEADBAND_WIDTH",
+                       DEFAULT_MIN_AC_PRESSURE - DEADBAND_WIDTH,
+                   false,
+                   false
+               },
+               {
+                   "acPressure = DEFAULT_MIN_AC_PRESSURE - DEADBAND_WIDTH - EPS5D",
+                   DEFAULT_MIN_AC_PRESSURE - DEADBAND_WIDTH - EPS5D,
+                   true,
+                   false
+               },
+               {
+                   "acPressure = DEFAULT_MIN_AC_PRESSURE",
+                   DEFAULT_MIN_AC_PRESSURE,
+                   true,
+                   false
+               },
+               {
+                   "acPressure = DEFAULT_MIN_AC_PRESSURE + DEADBAND_WIDTH",
+                   DEFAULT_MIN_AC_PRESSURE + DEADBAND_WIDTH,
+                   true,
+                   false
+               },
+               {
+                   "acPressure = DEFAULT_MIN_AC_PRESSURE + DEADBAND_WIDTH + EPS5D",
+                   DEFAULT_MIN_AC_PRESSURE + DEADBAND_WIDTH + EPS5D,
+                   false,
+                   false
+               }
+           }
+        );
+    }
+
+    TEST_F(AcPressureTest, defaultMaxAcPressure) {
+        doTest(
+            /* config = */ { {}, {}, {} },
+            /* testData = */ {
+               {
+                   "acPressure = (DEFAULT_MIN_AC_PRESSURE + DEFAULT_MAX_AC_PRESSURE) / 2.0",
+                   (DEFAULT_MIN_AC_PRESSURE + DEFAULT_MAX_AC_PRESSURE) / 2.0,
+                   false,
+                   false
+               },
+               {
+                   "acPressure = DEFAULT_MAX_AC_PRESSURE + DEADBAND_WIDTH",
+                   DEFAULT_MAX_AC_PRESSURE + DEADBAND_WIDTH,
+                   false,
+                   false
+               },
+               {
+                   "acPressure = DEFAULT_MAX_AC_PRESSURE + DEADBAND_WIDTH + EPS4D",
+                   DEFAULT_MAX_AC_PRESSURE + DEADBAND_WIDTH + EPS4D,
+                   false,
+                   true
+               },
+               {
+                   "acPressure = DEFAULT_MAX_AC_PRESSURE",
+                   DEFAULT_MAX_AC_PRESSURE,
+                   false,
+                   true
+               },
+               {
+                   "acPressure = DEFAULT_MAX_AC_PRESSURE - DEADBAND_WIDTH",
+                   DEFAULT_MAX_AC_PRESSURE - DEADBAND_WIDTH,
+                   false,
+                   true
+               },
+               {
+                   "acPressure = DEFAULT_MAX_AC_PRESSURE - DEADBAND_WIDTH - EPS4implementD",
+                   DEFAULT_MAX_AC_PRESSURE - DEADBAND_WIDTH - EPS4D,
+                   false,
+                   false
+               }
             }
         );
     }
