@@ -9,6 +9,8 @@
 
 #include "generated_lookup_engine_configuration.h"
 #include "sensor_converter_func.h"
+#include "resistance_func.h"
+#include "func_chain.h"
 
 class ThermistorFunc final : public SensorConverter {
 public:
@@ -23,3 +25,8 @@ public:
 	float m_b = 0;
 	float m_c = 0;
 };
+
+using resist = ResistanceFunc;
+using therm = ThermistorFunc;
+
+typedef FuncChain<resist, therm> thermistor_t;

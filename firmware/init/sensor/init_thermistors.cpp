@@ -2,18 +2,13 @@
 
 #include "adc_subscription.h"
 #include "functional_sensor.h"
-#include "func_chain.h"
 #include "linear_func.h"
-#include "resistance_func.h"
 #include "thermistor_func.h"
-
-using resist = ResistanceFunc;
-using therm = ThermistorFunc;
 
 // Each one could be either linear or thermistor
 struct FuncPair {
 	LinearFunc linear;
-	FuncChain<resist, therm> thermistor;
+	thermistor_t thermistor;
 };
 
 static CCM_OPTIONAL FunctionalSensor clt(SensorType::Clt, MS2NT(10));
