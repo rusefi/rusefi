@@ -12,8 +12,11 @@ DDEFS += -DADC_MUX_PIN=Gpio::F2
 # 37K would not fit
 DDEFS += -DLUA_USER_HEAP=32000
 
-# pretty temporary
+# pretty temporary?
 DDEFS += -DDISABLE_PIN_STATE_VALIDATION=TRUE
+
+# temporary or not?
+DDEFS += -DETB_INTERMITTENT_LIMIT=60000
 
 # quick board start-up with less fancy bootloader
 DDEFS += -DBOOT_BACKDOOR_ENTRY_TIMEOUT_MS=0
