@@ -232,7 +232,9 @@ public class ReaderStateImpl implements ReaderState {
             log.debug("Ending structure " + structure.getName());
         structure.addAlignmentFill(this, 4);
 
-        structures.put(structure.getName(), structure);
+        ConfigStructureImpl existing = structures.put(structure.getName(), structure);
+        if (existing != null)
+            throw new IllegalStateException("Same struct again: " + structure.getName());
 
         for (ConfigurationConsumer consumer : consumers)
             consumer.handleEndStruct(this, structure);

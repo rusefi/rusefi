@@ -3,7 +3,6 @@ package com.rusefi.test;
 import com.rusefi.*;
 import com.rusefi.output.*;
 import com.rusefi.parse.TypesHelper;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -67,6 +66,22 @@ public class ConfigFieldParserTest {
         state.readBufferedReader(test, tsProjectConsumer);
         assertEquals("afr_type = array, S32, 0, [1x3], \"ms\", 1, 0, 0, 3000, 0, noMsqSave\n" +
                 "; total TS size = 12\n", tsProjectConsumer.getContent());
+    }
+
+    @Test
+    public void testEmbeddedStructs() {
+        assertThrows(IllegalStateException.class, () -> {
+            String test = "struct pid_s\n" +
+                "int afr_type;PID dTime;\"ms\",      1.0,      0,       0, 3000,      0, noMsqSave\n" +
+                "struct pid_s\n" +
+                "int afr_type;PID dTime;\"ms\",      1.0,      0,       0, 3000,      0, noMsqSave\n" +
+                "end_struct\n" +
+                "end_struct\n";
+            ReaderStateImpl state = new ReaderStateImpl();
+
+            TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
+            state.readBufferedReader(test, tsProjectConsumer);
+        });
     }
 
     @Test
