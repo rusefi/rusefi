@@ -31,7 +31,7 @@
 #include "stored_value_sensor.h"
 
 #ifndef MAX3185X_REFRESH_TIME
-#define MAX3185X_REFRESH_TIME 500
+#define MAX3185X_REFRESH_TIME 100
 #endif
 
 /* TODO: move all stuff to Max3185xRead class */
