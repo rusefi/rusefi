@@ -19,7 +19,7 @@ public class BoardConfigTest {
             "end_struct\n" +
             "int fieldName2;\n");
 
-        String inputString = "struct pid_s\n" +
+        String inputString = "struct parent\n" +
             "int fieldName;\n" +
             "@@" + BoardConfigStrategy.BOARD_CONFIG_FROM_FILE + "@@\n" +
             "end_struct\n";
