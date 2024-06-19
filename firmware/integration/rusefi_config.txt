@@ -988,7 +988,7 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
     int launchSpeedThreshold;Launch disabled above this speed if setting is above zero;"Kph", 1, 0, 0, 300, 0
     int launchRpmWindow;Starting Launch RPM window to activate (subtracts from Launch RPM);"RPM", 1, 0, 0, 8000, 0
     float triggerEventsTimeoutMs;;"ms", 1, 0, 0, 3000, 3
-    float mapExpAverageAlpha;;"", 1, 0, 0, 3000, 3
+    float mapExpAverageAlpha;;"", 1, 0, 0, 1, 3
 	float magicNumberAvailableForDevTricks
 	float turbochargerFilter
 	int launchTpsThreshold;;"", 1, 0, 0, 20000, 0
