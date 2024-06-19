@@ -1641,8 +1641,8 @@
         <constant digits="2" name="acPressure_value1" units="">0.0</constant>
         <constant digits="2" name="acPressure_v2" units="volts">0.0</constant>
         <constant digits="2" name="acPressure_value2" units="">0.0</constant>
-        <constant digits="0" name="minAcPressure" units="kPa">0.0</constant>
-        <constant digits="0" name="maxAcPressure" units="kPa">0.0</constant>
+        <constant digits="0" name="minAcPressure" units="kPa">100.0</constant>
+        <constant digits="0" name="maxAcPressure" units="kPa">300.0</constant>
         <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="174">
          0.0
          0.0
