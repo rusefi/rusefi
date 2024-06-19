@@ -83,6 +83,10 @@ TEST(FunctionChain, TestGet)
     fc.get<AddOne>();
     fc.get<Doubler>();
     fc.get<SubOne>();
+
+    ASSERT_TRUE(fc.getPtr<AddOne>() == &fc.get<AddOne>());
+    ASSERT_TRUE(fc.getPtr<Doubler>() == &fc.get<Doubler>());
+    ASSERT_TRUE(fc.getPtr<SubOne>() == &fc.get<SubOne>());
 }
 
 TEST(Sensor, OverrideValue) {

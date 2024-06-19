@@ -1,6 +1,6 @@
 /**
  * @author Matthew Kennedy, (c) 2019
- * 
+ *
  * This lets us compose multiple functions in to a single function. If we have
  * conversion functions F(x), G(x), and H(x), we can define a new function
  * FuncChain<F, G, H> that will compute H(G(F(X))).  F first, then G, then H.
@@ -57,10 +57,21 @@ public:
 		return m_f;
 	}
 
+	template <class TGet>
+	std::enable_if_t<std::is_same_v<TGet, TFirst>, TGet *> getPtr() {
+		return &m_f;
+	}
+
 	// We don't have it - check level (n - 1)
 	template <class TGet>
 	std::enable_if_t<!std::is_same_v<TGet, TFirst>, TGet &> get() {
 		return TBase::template get<TGet>();
+	}
+
+	// We don't have it - check level (n - 1)
+	template <class TGet>
+	std::enable_if_t<!std::is_same_v<TGet, TFirst>, TGet *> getPtr() {
+		return TBase::template getPtr<TGet>();
 	}
 
 	void showInfo(float testInputValue) const {
@@ -91,6 +102,12 @@ public:
 	template <typename TGet>
 	TGet &get() {
 		return m_fs.template get<TGet>();
+	}
+
+  // references would be sometimes implicitly deleted, right? adding parallel pointer API which would stay?
+	template <typename TGet>
+	TGet *getPtr() {
+		return m_fs.template getPtr<TGet>();
 	}
 
 	void showInfo(float testInputValue) const override {
