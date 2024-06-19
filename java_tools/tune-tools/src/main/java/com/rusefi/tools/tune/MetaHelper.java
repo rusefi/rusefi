@@ -26,7 +26,7 @@ public class MetaHelper {
         List<String> options = Files.readAllLines(Paths.get(RootHolder.ROOT + "../" + ConfigDefinition.CONFIG_PATH));
         // add default (empty) board config
         options.add(ConfigDefinition.READFILE_OPTION);
-        options.add("BOARD_CONFIG_FROM_FILE");
+        options.add(BoardConfigStrategy.BOARD_CONFIG_FROM_FILE);
         options.add("tunerstudio/empty_board_options.ini");
 
         String[] totalArgs = options.toArray(new String[0]);
