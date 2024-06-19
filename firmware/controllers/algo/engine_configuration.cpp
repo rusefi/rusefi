@@ -617,6 +617,8 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->acIdleRpmTarget = 900;
 	engineConfiguration->acDelay = 0.5;
+    engineConfiguration->minAcPressure = 100;
+    engineConfiguration->maxAcPressure = 300;
 	engineConfiguration->acIdleExtraOffset = 15;
 
 	/* these two are used for HIP9011 only
