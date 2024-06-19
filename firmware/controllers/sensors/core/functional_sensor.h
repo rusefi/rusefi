@@ -34,6 +34,10 @@ public:
 		m_function = &func;
 	}
 
+	SensorConverter* getFunction() const {
+	  return m_function;
+	}
+
 	float getRaw() const override final {
 		return m_rawValue;
 	}
