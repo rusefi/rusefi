@@ -7,8 +7,8 @@
 static Deadband<200> maxRpmDeadband;
 static Deadband<5> maxCltDeadband;
 static Deadband<5> maxTpsDeadband;
-static Deadband<5> minPressureDeadband;
-static Deadband<5> maxPressureDeadband;
+static Deadband<AcController::PRESSURE_DEADBAND_WIDTH> minPressureDeadband;
+static Deadband<AcController::PRESSURE_DEADBAND_WIDTH> maxPressureDeadband;
 
 bool AcController::getAcState() {
 	latest_usage_ac_control = getTimeNowS();

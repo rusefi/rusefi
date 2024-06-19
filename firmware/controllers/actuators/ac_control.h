@@ -5,6 +5,8 @@
 
 class AcController : public ac_control_s, public EngineModule {
 public:
+    constexpr static int PRESSURE_DEADBAND_WIDTH = 5;
+
 	using interface_t = AcController;
 
 	void onSlowCallback() override;

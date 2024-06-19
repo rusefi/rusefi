@@ -9,7 +9,7 @@
 namespace {
     constexpr uint16_t TEST_MIN_AC_PRESSURE = 17;
     constexpr uint16_t TEST_MAX_AC_PRESSURE = 239;
-    constexpr uint16_t DEADBAND_WIDTH = 5;
+    constexpr uint16_t DEADBAND_WIDTH = AcController::PRESSURE_DEADBAND_WIDTH;
 
     class AcPressureTestConfig : public AcTestConfig {
     public:
