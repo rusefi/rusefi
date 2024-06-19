@@ -12,8 +12,17 @@ void AcTestBase::updateAcPressure(float acPressure) {
 }
 
 void AcTestBase::setUpTestConfig(const AcTestConfig& config) {
+    configureAcDelay(config.getAcDelay());
     configureMinAcPressure(config.getMinAcPressure());
     configureMaxAcPressure(config.getMaxAcPressure());
+}
+
+void AcTestBase::configureAcDelay(const std::optional<float> acDelay) {
+    if (acDelay.has_value()) {
+        engineConfiguration->acDelay = acDelay.value();
+    } else {
+        ASSERT_EQ(engineConfiguration->acDelay, 0.5); // check default value
+    }
 }
 
 void AcTestBase::configureMinAcPressure(const std::optional<uint16_t> minAcPressure) {

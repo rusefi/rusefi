@@ -17,6 +17,7 @@ namespace {
     };
 
     AcPressureTestConfig::AcPressureTestConfig() {
+        setAcDelay(0.0f);
         setMinAcPressure(TEST_MIN_AC_PRESSURE);
         setMaxAcPressure(TEST_MAX_AC_PRESSURE);
     }
@@ -38,8 +39,9 @@ namespace {
     void AcPressureTest::doTest(const AcPressureTestConfig& config, const std::vector<AcPressureTestData>& testData) {
         setUpTestConfig(config);
 
+        engineConfiguration->acDelay = 0;
         Sensor::setMockValue(SensorType::Rpm, 500); // to avoid engineTooSlow
-        engine->engineModules.get<AcController>()->acButtonState = true;
+        engine->engineState.lua.acRequestState = true; // to emulate pressed A/C button
 
         for (const AcPressureTestData& testDataItem: testData) {
             updateAcPressure(testDataItem.acPressure);
@@ -53,10 +55,18 @@ namespace {
                 engine->engineModules.get<AcController>()->acPressureTooHigh,
                 testDataItem.expectedAcPressureTooHigh
             ) << testDataItem.context;
+            const bool shouldAcBeEnabled = !testDataItem.expectedAcPressureTooLow
+                && !testDataItem.expectedAcPressureTooHigh;
+            EXPECT_EQ(engine->engineModules.get<AcController>()->isAcEnabled(), shouldAcBeEnabled)
+                << testDataItem.context;
+            EXPECT_EQ(engine->engineModules.get<AcController>()->acCompressorState, shouldAcBeEnabled)
+                << testDataItem.context;
+            EXPECT_EQ(enginePins.acRelay.getLogicValue(), shouldAcBeEnabled) << testDataItem.context;
         }
     }
 
     void AcPressureTest::checkPersistentIndicators() {
+        EXPECT_TRUE(engine->engineModules.get<AcController>()->acButtonState);
         EXPECT_FALSE(engine->engineModules.get<AcController>()->engineTooSlow);
         EXPECT_FALSE(engine->engineModules.get<AcController>()->engineTooFast);
         EXPECT_FALSE(engine->engineModules.get<AcController>()->noClt);
