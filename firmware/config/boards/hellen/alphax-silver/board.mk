@@ -4,9 +4,8 @@
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 
-
-
-
+# This board has two tle9104
+DDEFS += -DBOARD_TLE9104_COUNT=2
 
 
 
