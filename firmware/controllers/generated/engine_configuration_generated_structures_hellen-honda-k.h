@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Jun 18 16:54:07 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Jun 20 15:45:59 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -5662,21 +5662,36 @@ struct persistent_config_s {
 	 */
 	float tcu_shiftTime;
 	/**
+	 * units: Volts
 	 * offset 23424
+	 */
+	scaled_channel<int16_t, 10, 1> alternatorVoltageTargetTable[ALTERNATOR_VOLTAGE_TARGET_SIZE][ALTERNATOR_VOLTAGE_TARGET_SIZE];
+	/**
+	 * units: Load
+	 * offset 23456
+	 */
+	uint16_t alternatorVoltageTargetLoadBins[ALTERNATOR_VOLTAGE_TARGET_SIZE];
+	/**
+	 * units: RPM
+	 * offset 23464
+	 */
+	uint16_t alternatorVoltageTargetRpmBins[ALTERNATOR_VOLTAGE_TARGET_SIZE];
+	/**
+	 * offset 23472
 	 */
 	uint8_t hondaKcltGaugeAdder;
 	/**
-	 * offset 23425
+	 * offset 23473
 	 */
 	uint8_t unusedConfigPadding[BOTTOM_PADDING];
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 23461
+	 * offset 23509
 	 */
-	uint8_t alignmentFill_at_23461[3];
+	uint8_t alignmentFill_at_23509[3];
 };
-static_assert(sizeof(persistent_config_s) == 23464);
+static_assert(sizeof(persistent_config_s) == 23512);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Jun 18 16:54:07 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Jun 20 15:45:59 UTC 2024

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Jun 19 23:18:24 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Jun 20 15:46:41 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -68,6 +68,7 @@ public class Fields {
 	public static final int air_pressure_sensor_type_e_MT_MPXH6400 = 14;
 	public static final int air_pressure_sensor_type_e_MT_SUBY_DENSO = 5;
 	public static final int air_pressure_sensor_type_e_MT_TOYOTA_89420_02010 = 8;
+	public static final int ALTERNATOR_VOLTAGE_TARGET_SIZE = 4;
 	public static final int antiLagActivationMode_e_ALWAYS_ON_ANTILAG = 1;
 	public static final int antiLagActivationMode_e_SWITCH_INPUT_ANTILAG = 0;
 	public static final int AUX_DIGITAL_VALVE_COUNT = 2;
@@ -1130,7 +1131,7 @@ public class Fields {
 	public static final int PACK_MULT_VOLTAGE = 1000;
 	public static final int PACK_MULT_VSS = 100;
 	public static final int PEDAL_TO_TPS_SIZE = 8;
-	public static final int persistent_config_s_size = 22752;
+	public static final int persistent_config_s_size = 22800;
 	public static final int pid_s_size = 20;
 	public static final int pin_input_mode_e_PI_DEFAULT = 0;
 	public static final int pin_input_mode_e_PI_PULLDOWN = 2;
@@ -1244,7 +1245,7 @@ public class Fields {
 	public static final int TOOTH_PACKET_SIZE = 2;
 	public static final String TOP_DEAD_CENTER_MESSAGE = "r";
 	public static final int TORQUE_CURVE_SIZE = 6;
-	public static final int TOTAL_CONFIG_SIZE = 22752;
+	public static final int TOTAL_CONFIG_SIZE = 22800;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int TPS_PPS_TOO_HIGH_THRESHOLD = 110;
 	public static final int TPS_PPS_TOO_LOW_THRESHOLD = -10;
@@ -1453,7 +1454,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.06.20.f407-discovery.3267124581";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.06.20.f407-discovery.2161064885";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -3218,6 +3219,9 @@ public class Fields {
 	public static final Field TCU_SHIFTSPEED32 = Field.create("TCU_SHIFTSPEED32", 22732, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field TCU_SHIFTSPEED43 = Field.create("TCU_SHIFTSPEED43", 22740, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field TCU_SHIFTTIME = Field.create("TCU_SHIFTTIME", 22748, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field ALTERNATORVOLTAGETARGETTABLE = Field.create("ALTERNATORVOLTAGETARGETTABLE", 22752, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field ALTERNATORVOLTAGETARGETLOADBINS = Field.create("ALTERNATORVOLTAGETARGETLOADBINS", 22784, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field ALTERNATORVOLTAGETARGETRPMBINS = Field.create("ALTERNATORVOLTAGETARGETRPMBINS", 22792, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field[] VALUES = {
 	ENGINETYPE,
 	STARTBUTTONSUPPRESSONSTARTUPMS,
@@ -4884,5 +4888,8 @@ public class Fields {
 	TCU_SHIFTSPEED32,
 	TCU_SHIFTSPEED43,
 	TCU_SHIFTTIME,
+	ALTERNATORVOLTAGETARGETTABLE,
+	ALTERNATORVOLTAGETARGETLOADBINS,
+	ALTERNATORVOLTAGETARGETRPMBINS,
 	};
 }
