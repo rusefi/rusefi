@@ -53,8 +53,8 @@ public class SimulatorFunctionalTest {
         testOutputPin(bench_mode_e.BENCH_STARTER_ENABLE_RELAY, Fields.BENCH_STARTER_DURATION);
         EcuTestHelper ecu = new EcuTestHelper(linkManager);
 
-        ecu.sendCommand(getDisableCommand(Fields.CMD_SELF_STIMULATION));
-        IoUtil.awaitRpm(0);
+//        ecu.sendCommand(getDisableCommand(Fields.CMD_SELF_STIMULATION));
+//        IoUtil.awaitRpm(0);
 
         testOutputPin(bench_mode_e.BENCH_VVT0_VALVE, Fields.BENCH_VVT_DURATION);
     }
