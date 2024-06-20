@@ -219,10 +219,10 @@ void AdcDevice::init(void) {
 	//hwConfig->sqr1 += ADC_SQR1_NUM_CH(size());
 }
 
-void AdcDevice::enableChannel(adc_channel_e hwChannel) {
+int AdcDevice::enableChannel(adc_channel_e hwChannel) {
 	if ((channelCount + 1) >= ADC_MAX_CHANNELS_COUNT) {
 		criticalError("Too many ADC channels configured");
-		return;
+		return -1;
 	}
 
 	int logicChannel = channelCount++;
@@ -248,6 +248,8 @@ void AdcDevice::enableChannel(adc_channel_e hwChannel) {
 		hwConfig->sqr5 |= channelAdcIndex << (5 * (logicChannel - 24));
 	}
 #endif /* ADC_MAX_CHANNELS_COUNT */
+
+	return channelAdcIndex;
 }
 
 adcsample_t AdcDevice::getAvgAdcValue(adc_channel_e hwChannel, size_t bufDepth) {
