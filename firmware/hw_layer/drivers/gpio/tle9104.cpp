@@ -88,9 +88,11 @@ static Tle9104 chips[BOARD_TLE9104_COUNT];
 
 static bool parityBit(uint16_t val) {
 	// (1 + number of bits set) mod 2 = parity bit
-	int count = 1;
+	int count = 1 + __builtin_popcount(val);
 
-	/* TODO: use __builtin_popcount() */
+	return count % 2;
+
+#if 0
 	while (val != 0) {
 		if (val & 0x01) {
 			count++;
@@ -100,6 +102,7 @@ static bool parityBit(uint16_t val) {
 	}
 
 	return (count % 2) == 1;
+#endif
 }
 
 int Tle9104::spi_rw(uint16_t tx, uint16_t *rx) {
