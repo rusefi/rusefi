@@ -28,7 +28,7 @@ float __attribute__((weak)) getAnalogInputDividerCoefficient(adc_channel_e) {
 #if HAL_USE_ADC
 
 #include "adc_subscription.h"
-#include "AdcConfiguration.h"
+#include "AdcDevice.h"
 #include "mpu_util.h"
 #include "periodic_thread_controller.h"
 #include "protected_gpio.h"

@@ -34,7 +34,7 @@
 
 #include "mmc_card.h"
 
-#include "AdcConfiguration.h"
+#include "AdcDevice.h"
 #include "idle_hardware.h"
 #include "mcp3208.h"
 #include "hip9011.h"
