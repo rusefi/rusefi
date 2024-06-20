@@ -90,6 +90,7 @@ static bool parityBit(uint16_t val) {
 	// (1 + number of bits set) mod 2 = parity bit
 	int count = 1;
 
+	/* TODO: use __builtin_popcount() */
 	while (val != 0) {
 		if (val & 0x01) {
 			count++;
@@ -124,6 +125,8 @@ int Tle9104::spi_rw(uint16_t tx, uint16_t *rx) {
 	if (!parityOk) {
 		return -1;
 	}
+
+	/* TODO: check Fault Global and Fault Communication flags */
 
 	// return data
 	if (rx) {
