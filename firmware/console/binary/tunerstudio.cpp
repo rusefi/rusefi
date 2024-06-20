@@ -719,6 +719,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 	uint16_t count = 0;
 
 	// command may not have offset field - keep safe default value
+	// not used by .ini at the moment TODO actually use that version of the command in the .ini
 	if (incomingPacketSize >= 3) {
 		offset = data16[0];
 	}
