@@ -18,6 +18,18 @@
 
 #define DRIVER_NAME					"tle9104"
 
+/* TODO: aling with WD settings */
+#define TLE9104_POLL_INTERVAL_MS	100
+
+static bool drv_task_ready = false;
+
+typedef enum {
+	TLE9104_DISABLED = 0,
+	TLE9104_WAIT_INIT,
+	TLE9104_READY,
+	TLE9104_FAILED
+} tle9104_drv_state;
+
 /* IN MOSI and MISO a read is defined with a s0 and a write is defined with a 1. */
 #define TLE9104_WR_REG(addr, val)	((((addr) & 0x0f) << 8) | ((val) & 0xff))
 #define TLE9104_RD_REG(addr)		(BIT(15) | (((addr) & 0x0f) << 8))
@@ -52,6 +64,7 @@ struct Tle9104 : public GpioChip {
 	int updateDiagState();
 
 	const tle9104_config* cfg;
+	tle9104_drv_state drv_state;
 private:
 	int spi_rw(uint16_t tx, uint16_t *rx);
 	int read_reg(uint8_t addr, uint8_t *val);
@@ -173,59 +186,53 @@ int Tle9104::chip_init() {
 		return ret;
 	}
 
+	drv_state = TLE9104_READY;
+
 	return 0;
+}
+
+/*==========================================================================*/
+/* Driver thread.															*/
+/*==========================================================================*/
+
+SEMAPHORE_DECL(tle9104_wake, 10 /* or BOARD_TLE9104_COUNT ? */);
+static THD_WORKING_AREA(tle9104_thread_1_wa, 256);
+
+static THD_FUNCTION(tle9104_driver_thread, p)
+{
+	int i;
+	msg_t msg;
+
+	(void)p;
+
+	chRegSetThreadName(DRIVER_NAME);
+
+	while(1) {
+		msg = chSemWaitTimeout(&tle9104_wake, TIME_MS2I(TLE9104_POLL_INTERVAL_MS));
+
+		/* should we care about msg == MSG_TIMEOUT? */
+		(void)msg;
+
+		for (i = 0; i < BOARD_TLE9104_COUNT; i++) {
+			int ret;
+			Tle9104& chip = chips[i];
+
+			if (!chip.cfg ||
+				(chip.drv_state == TLE9104_DISABLED) ||
+				(chip.drv_state == TLE9104_FAILED))
+				continue;
+
+			ret = chip.updateDiagState();
+			if (ret) {
+				/* set state to TLE6240_FAILED? */
+			}
+		}
+	}
 }
 
 /*==========================================================================*/
 /* Driver exported functions.												*/
 /*==========================================================================*/
-
-int Tle9104::init() {
-	int ret;
-
-	m_resn.initPin(DRIVER_NAME " RESN", cfg->resn);
-	m_en.initPin(DRIVER_NAME " EN", cfg->en);
-
-	// disable outputs
-	m_en.setValue(false);
-
-	/* TODO: ensure all direct_io pins valid, otherwise support manipulationg output states over SPI */
-	for (int i = 0; i < 4; i++) {
-		gpio_pin_markUsed(cfg->direct_io[i].port, cfg->direct_io[i].pad, DRIVER_NAME " Direct IO");
-		palSetPadMode(cfg->direct_io[i].port, cfg->direct_io[i].pad, PAL_MODE_OUTPUT_PUSHPULL);
-
-		// Ensure all outputs are off
-		writePad(i, false);
-	}
-
-	// Reset the chip
-	m_resn.setValue(false);
-	chThdSleepMilliseconds(1);
-	m_resn.setValue(true);
-	chThdSleepMilliseconds(1);
-
-	// read ID register
-	uint8_t id;
-	ret = read_reg(TLE9104_REG_ICVID, &id);
-
-	if (ret) {
-		return ret;
-	}
-	// No chip detected if ID is wrong
-	if ((id & 0xFF) != 0xB1) {
-		return -1;
-	}
-
-	ret = chip_init();
-	if (ret) {
-		return ret;
-	}
-
-	// Set hardware enable
-	m_en.setValue(true);
-
-	return 0;
-}
 
 int Tle9104::writePad(size_t pin, int value) {
 	// Inverted since TLE9104 is active low (low level to turn on output)
@@ -334,6 +341,59 @@ brain_pin_diag_e Tle9104::getDiag(size_t pin) {
 	return (brain_pin_diag_e)result;
 }
 
+int Tle9104::init() {
+	int ret;
+
+	m_resn.initPin(DRIVER_NAME " RESN", cfg->resn);
+	m_en.initPin(DRIVER_NAME " EN", cfg->en);
+
+	// disable outputs
+	m_en.setValue(false);
+
+	/* TODO: ensure all direct_io pins valid, otherwise support manipulationg output states over SPI */
+	for (int i = 0; i < 4; i++) {
+		gpio_pin_markUsed(cfg->direct_io[i].port, cfg->direct_io[i].pad, DRIVER_NAME " Direct IO");
+		palSetPadMode(cfg->direct_io[i].port, cfg->direct_io[i].pad, PAL_MODE_OUTPUT_PUSHPULL);
+
+		// Ensure all outputs are off
+		writePad(i, false);
+	}
+
+	// Reset the chip
+	m_resn.setValue(false);
+	chThdSleepMilliseconds(1);
+	m_resn.setValue(true);
+	chThdSleepMilliseconds(1);
+
+	// read ID register
+	uint8_t id;
+	ret = read_reg(TLE9104_REG_ICVID, &id);
+
+	if (ret) {
+		return ret;
+	}
+	// No chip detected if ID is wrong
+	if ((id & 0xFF) != 0xB1) {
+		return -1;
+	}
+
+	ret = chip_init();
+	if (ret) {
+		return ret;
+	}
+
+	// Set hardware enable
+	m_en.setValue(true);
+
+	if (!drv_task_ready) {
+		chThdCreateStatic(tle9104_thread_1_wa, sizeof(tle9104_thread_1_wa),
+						  PRIO_GPIOCHIP, tle9104_driver_thread, nullptr);
+		drv_task_ready = true;
+	}
+
+	return 0;
+}
+
 int tle9104_add(Gpio base, int index, const tle9104_config* cfg) {
 	Tle9104& chip = chips[index];
 
@@ -343,6 +403,7 @@ int tle9104_add(Gpio base, int index, const tle9104_config* cfg) {
 	}
 
 	chip.cfg = cfg;
+	chip.drv_state = TLE9104_WAIT_INIT;
 
 	return gpiochip_register(base, DRIVER_NAME, chip, 4);
 }
