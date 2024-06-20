@@ -24,7 +24,7 @@
 class AdcDevice {
 public:
 	explicit AdcDevice(ADCConversionGroup* p_hwConfig, volatile adcsample_t *p_buf);
-	void enableChannel(adc_channel_e hwChannel);
+	int enableChannel(adc_channel_e hwChannel);
 	adc_channel_e getAdcChannelByInternalIndex(int index) const;
 	adcsample_t getAvgAdcValue(adc_channel_e hwChannel, size_t bufDepth);
 	FastAdcToken getAdcChannelToken(adc_channel_e hwChannel);
