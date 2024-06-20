@@ -77,7 +77,7 @@
 #endif /* EFI_LOGIC_ANALYZER */
 
 #if HAL_USE_ADC
-#include "AdcConfiguration.h"
+#include "AdcDevice.h"
 #endif /* HAL_USE_ADC */
 
 #if defined(EFI_BOOTLOADER_INCLUDE_CODE)

@@ -201,7 +201,7 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 
 #if EFI_USE_FAST_ADC
 
-#include "AdcConfiguration.h"
+#include "AdcDevice.h"
 
 extern AdcDevice fastAdc;
 
