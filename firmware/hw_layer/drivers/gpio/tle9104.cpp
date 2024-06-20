@@ -240,8 +240,8 @@ int Tle9104::updateDiagState() {
 }
 
 brain_pin_diag_e Tle9104::getDiag(size_t pin) {
-	int off_diag;
-	int on_diag;
+	uint8_t off_diag;
+	uint8_t on_diag;
 
 	switch (pin) {
 		case 0:
@@ -301,7 +301,7 @@ brain_pin_diag_e Tle9104::getDiag(size_t pin) {
 	return (brain_pin_diag_e)result;
 }
 
-static Tle9104 chips[4];
+static Tle9104 chips[BOARD_TLE9104_COUNT];
 
 int tle9104_add(Gpio base, int index, const tle9104_config* cfg) {
 	Tle9104& chip = chips[index];
@@ -320,4 +320,10 @@ void updatetlediag() {
 	chips[0].updateDiagState();
 }
 
-#endif // BOARD_TLE9104_COUNT > 0
+#else // BOARD_TLE9104_COUNT > 0
+
+int tle9104_add(Gpio, int, const tle9104_config*) {
+	return -1;
+}
+
+#endif // BOARD_TLE9104_COUNT
