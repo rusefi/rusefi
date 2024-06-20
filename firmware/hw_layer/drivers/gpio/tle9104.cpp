@@ -4,6 +4,20 @@
 
 #if defined(BOARD_TLE9104_COUNT) && BOARD_TLE9104_COUNT > 0
 
+/*
+ * TODO list:
+ * - support driving outputs over SPI
+ * - count communication errors, POR events, etc
+ * - support WD functionality
+ * - implement direct-io mapping test. Check if user provides correct direct_io data
+ */
+
+/*==========================================================================*/
+/* Driver local definitions.												*/
+/*==========================================================================*/
+
+#define DRIVER_NAME					"tle9104"
+
 /* IN MOSI and MISO a read is defined with a s0 and a write is defined with a 1. */
 #define TLE9104_WR_REG(addr, val)	((((addr) & 0x0f) << 8) | ((val) & 0xff))
 #define TLE9104_RD_REG(addr)		(BIT(15) | (((addr) & 0x0f) << 8))
@@ -20,6 +34,14 @@
 #define TLE9104_REG_DIAG_OFF		0x06
 #define TLE9104_REG_GLOBAL_STATUS	0x07
 #define TLE9104_REG_ICVID			0x08
+
+/*==========================================================================*/
+/* Driver exported variables.												*/
+/*==========================================================================*/
+
+/*==========================================================================*/
+/* Driver local variables and types.										*/
+/*==========================================================================*/
 
 struct Tle9104 : public GpioChip {
 	int init() override;
@@ -44,6 +66,12 @@ private:
 	uint8_t diag_on12;
 	uint8_t diag_on34;
 };
+
+static Tle9104 chips[BOARD_TLE9104_COUNT];
+
+/*==========================================================================*/
+/* Driver local functions.													*/
+/*==========================================================================*/
 
 static bool parityBit(uint16_t val) {
 	// (1 + number of bits set) mod 2 = parity bit
@@ -148,17 +176,22 @@ int Tle9104::chip_init() {
 	return 0;
 }
 
+/*==========================================================================*/
+/* Driver exported functions.												*/
+/*==========================================================================*/
+
 int Tle9104::init() {
 	int ret;
 
-	m_resn.initPin("TLE9104 RESN", cfg->resn);
-	m_en.initPin("TLE9104 EN", cfg->en);
+	m_resn.initPin(DRIVER_NAME " RESN", cfg->resn);
+	m_en.initPin(DRIVER_NAME " EN", cfg->en);
 
 	// disable outputs
 	m_en.setValue(false);
 
+	/* TODO: ensure all direct_io pins valid, otherwise support manipulationg output states over SPI */
 	for (int i = 0; i < 4; i++) {
-		gpio_pin_markUsed(cfg->direct_io[i].port, cfg->direct_io[i].pad, "TLE9104 Direct IO");
+		gpio_pin_markUsed(cfg->direct_io[i].port, cfg->direct_io[i].pad, DRIVER_NAME " Direct IO");
 		palSetPadMode(cfg->direct_io[i].port, cfg->direct_io[i].pad, PAL_MODE_OUTPUT_PUSHPULL);
 
 		// Ensure all outputs are off
@@ -301,8 +334,6 @@ brain_pin_diag_e Tle9104::getDiag(size_t pin) {
 	return (brain_pin_diag_e)result;
 }
 
-static Tle9104 chips[BOARD_TLE9104_COUNT];
-
 int tle9104_add(Gpio base, int index, const tle9104_config* cfg) {
 	Tle9104& chip = chips[index];
 
@@ -313,7 +344,7 @@ int tle9104_add(Gpio base, int index, const tle9104_config* cfg) {
 
 	chip.cfg = cfg;
 
-	return gpiochip_register(base, "TLE9104", chip, 4);
+	return gpiochip_register(base, DRIVER_NAME, chip, 4);
 }
 
 void updatetlediag() {
