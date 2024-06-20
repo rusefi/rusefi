@@ -53,7 +53,9 @@ static bool parityBit(uint16_t val) {
 	return (count % 2) == 1;
 }
 
-uint16_t Tle9104::readWrite(uint8_t addr, uint8_t data) {
+uint16_t Tle9104::readWrite(uint8_t addr, uint8_t data) {	
+	SPIDriver *spi = cfg->spi_bus;
+
 	uint16_t tx = (addr << 8) + data;
 
 	// set the parity bit appropriately
@@ -61,9 +63,18 @@ uint16_t Tle9104::readWrite(uint8_t addr, uint8_t data) {
 
 	SPIDriver* spi = cfg->spi_bus;
 
+	/* Acquire ownership of the bus. */
+	spiAcquireBus(spi);
+	/* Setup transfer parameters. */
+	spiStart(spi, &cfg->spi_config);
+	/* Slave Select assertion. */
 	spiSelect(spi);
+	/* Atomic transfer operations. */
 	uint16_t rx = spiPolledExchange(spi, tx);
+	/* Slave Select de-assertion. */
 	spiUnselect(spi);
+	/* Ownership release. */
+	spiReleaseBus(spi);
 
 	/*bool parityOk = */parityBit(rx);
 
@@ -104,8 +115,6 @@ int Tle9104::init() {
 	m_resn.setValue(true);
 	chThdSleepMilliseconds(1);
 
-	spiStart(cfg->spi_bus, &cfg->spi_config);
-
 	// read ID register
 	uint16_t id = read(TLE9104_REG_ICVID);
 
@@ -143,8 +152,6 @@ int Tle9104::writePad(size_t pin, int value) {
 }
 
 void Tle9104::updateDiagState() {
-	spiStart(cfg->spi_bus, &cfg->spi_config);
-
 	diag_on12 = read(TLE9104_REG_DIAG_OUT_1_2_ON);
 	diag_on34 = read(TLE9104_REG_DIAG_OUT_3_4_ON);
 	diag_off = read(TLE9104_REG_DIAG_OFF);
