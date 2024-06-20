@@ -4,15 +4,22 @@
 
 #if defined(BOARD_TLE9104_COUNT) && BOARD_TLE9104_COUNT > 0
 
-#define TLE9104_REG_CTRL 0x00
-#define TLE9104_REG_CFG 0x01
-#define TLE9104_REG_OFF_DIAG_CFG 0x02
-#define TLE9104_REG_ON_DIAG_CFG 0x03
-#define TLE9104_REG_DIAG_OUT_1_2_ON 0x04
-#define TLE9104_REG_DIAG_OUT_3_4_ON 0x05
-#define TLE9104_REG_DIAG_OFF 0x06
-#define TLE9104_REG_GLOBAL_STATUS 0x07
-#define TLE9104_REG_ICVID 0x08
+/* IN MOSI and MISO a read is defined with a s0 and a write is defined with a 1. */
+#define TLE9104_WR_REG(addr, val)	((((addr) & 0x0f) << 8) | ((val) & 0xff))
+#define TLE9104_RD_REG(addr)		(BIT(15) | (((addr) & 0x0f) << 8))
+
+#define TLE9104_GET_VAL(rx)			((rx) & 0xff)
+#define TLE9104_GET_ADDR(rx)		(((rx) >> 8) & 0x0f)
+
+#define TLE9104_REG_CTRL			0x00
+#define TLE9104_REG_CFG				0x01
+#define TLE9104_REG_OFF_DIAG_CFG	0x02
+#define TLE9104_REG_ON_DIAG_CFG		0x03
+#define TLE9104_REG_DIAG_OUT_1_2_ON	0x04
+#define TLE9104_REG_DIAG_OUT_3_4_ON	0x05
+#define TLE9104_REG_DIAG_OFF		0x06
+#define TLE9104_REG_GLOBAL_STATUS	0x07
+#define TLE9104_REG_ICVID			0x08
 
 struct Tle9104 : public GpioChip {
 	int init() override;
@@ -20,22 +27,22 @@ struct Tle9104 : public GpioChip {
 	int writePad(size_t pin, int value) override;
 	brain_pin_diag_e getDiag(size_t pin) override;
 
-
-	uint16_t readWrite(uint8_t addr, uint8_t data);
-	uint16_t read(uint8_t addr);
-	void write(uint8_t addr, uint8_t data);
-
-	void updateDiagState();
+	int updateDiagState();
 
 	const tle9104_config* cfg;
+private:
+	int spi_rw(uint16_t tx, uint16_t *rx);
+	int read_reg(uint8_t addr, uint8_t *val);
+	int write_reg(uint8_t addr, uint8_t val);
 
+	int chip_init();
+
+	OutputPin m_en;
+	OutputPin m_resn;
 
 	uint8_t diag_off;
 	uint8_t diag_on12;
 	uint8_t diag_on34;
-
-	OutputPin m_en;
-	OutputPin m_resn;
 };
 
 static bool parityBit(uint16_t val) {
@@ -53,15 +60,11 @@ static bool parityBit(uint16_t val) {
 	return (count % 2) == 1;
 }
 
-uint16_t Tle9104::readWrite(uint8_t addr, uint8_t data) {	
+int Tle9104::spi_rw(uint16_t tx, uint16_t *rx) {
 	SPIDriver *spi = cfg->spi_bus;
 
-	uint16_t tx = (addr << 8) + data;
-
 	// set the parity bit appropriately
-	tx |= parityBit(tx) ? (1 << 14) : 0;
-
-	SPIDriver* spi = cfg->spi_bus;
+	tx |= parityBit(tx) << 14;
 
 	/* Acquire ownership of the bus. */
 	spiAcquireBus(spi);
@@ -70,31 +73,84 @@ uint16_t Tle9104::readWrite(uint8_t addr, uint8_t data) {
 	/* Slave Select assertion. */
 	spiSelect(spi);
 	/* Atomic transfer operations. */
-	uint16_t rx = spiPolledExchange(spi, tx);
+	uint16_t rxd = spiPolledExchange(spi, tx);
 	/* Slave Select de-assertion. */
 	spiUnselect(spi);
 	/* Ownership release. */
 	spiReleaseBus(spi);
 
-	/*bool parityOk = */parityBit(rx);
+	bool parityOk = parityBit(rxd);
+	if (!parityOk) {
+		return -1;
+	}
 
 	// return data
-	return rx;
+	if (rx) {
+		*rx = rxd;
+	}
+
+	return 0;
 }
 
-uint16_t Tle9104::read(uint8_t addr) {
+int Tle9104::read_reg(uint8_t addr, uint8_t *val) {
+	int ret;
+
 	// R/W bit is 0 for read
-	readWrite(addr, 0);
+	ret = spi_rw(addr << 8, nullptr);
+	if (ret) {
+		return ret;
+	}
 
-	return readWrite(addr, 0);
+	uint16_t rxd;
+	ret = spi_rw(addr, &rxd);
+	if (ret) {
+		return ret;
+	}
+
+	if (val) {
+		*val = TLE9104_GET_VAL(rxd);
+	}
+
+	return 0;
 }
 
-void Tle9104::write(uint8_t addr, uint8_t data) {
+int Tle9104::write_reg(uint8_t addr, uint8_t val) {
 	// R/W bit is 1 for write
-	readWrite(0x80 | addr, data);
+	return spi_rw(((0x80 | addr) << 8) | val, nullptr);
+}
+
+int Tle9104::chip_init() {
+	int ret;
+
+	// disable comms watchdog, enable direct drive on all 4 channels
+	// TODO: should we enable comms watchdog?
+	ret = write_reg(TLE9104_REG_CFG, 0x0F);
+	if (ret) {
+		return ret;
+	}
+
+	// clear any suprious diag states from startup: first call resets, second reads true state
+	ret = updateDiagState();
+	if (ret) {
+		return ret;
+	}
+	ret = updateDiagState();
+	if (ret) {
+		return ret;
+	}
+
+	// set output enable, clear all other flags
+	ret = write_reg(TLE9104_REG_GLOBAL_STATUS, BIT(7));
+	if (ret) {
+		return ret;
+	}
+
+	return 0;
 }
 
 int Tle9104::init() {
+	int ret;
+
 	m_resn.initPin("TLE9104 RESN", cfg->resn);
 	m_en.initPin("TLE9104 EN", cfg->en);
 
@@ -116,23 +172,21 @@ int Tle9104::init() {
 	chThdSleepMilliseconds(1);
 
 	// read ID register
-	uint16_t id = read(TLE9104_REG_ICVID);
+	uint8_t id;
+	ret = read_reg(TLE9104_REG_ICVID, &id);
 
+	if (ret) {
+		return ret;
+	}
 	// No chip detected if ID is wrong
 	if ((id & 0xFF) != 0xB1) {
 		return -1;
 	}
 
-	// disable comms watchdog, enable direct drive on all 4 channels
-	// TODO: should we enable comms watchdog?
-	write(TLE9104_REG_CFG, 0x0F);
-
-	// clear any suprious diag states from startup: first call resets, second reads true state
-	updateDiagState();
-	updateDiagState();
-
-	// set output enable, clear all other flags
-	write(TLE9104_REG_GLOBAL_STATUS, 0x80);
+	ret = chip_init();
+	if (ret) {
+		return ret;
+	}
 
 	// Set hardware enable
 	m_en.setValue(true);
@@ -141,7 +195,7 @@ int Tle9104::init() {
 }
 
 int Tle9104::writePad(size_t pin, int value) {
-	// Inverted since TLE9104 is active low (falling edge to turn on output)
+	// Inverted since TLE9104 is active low (low level to turn on output)
 	if (value) {
 		palClearPad(cfg->direct_io[pin].port, cfg->direct_io[pin].pad);
 	} else {
@@ -151,15 +205,38 @@ int Tle9104::writePad(size_t pin, int value) {
 	return 0;
 }
 
-void Tle9104::updateDiagState() {
-	diag_on12 = read(TLE9104_REG_DIAG_OUT_1_2_ON);
-	diag_on34 = read(TLE9104_REG_DIAG_OUT_3_4_ON);
-	diag_off = read(TLE9104_REG_DIAG_OFF);
+int Tle9104::updateDiagState() {
+	int ret;
+
+	/* TODO: implement and use spi_rw_array() */
+	ret = read_reg(TLE9104_REG_DIAG_OUT_1_2_ON, &diag_on12);
+	if (ret) {
+		return ret;
+	}
+	ret = read_reg(TLE9104_REG_DIAG_OUT_3_4_ON, &diag_on34);
+	if (ret) {
+		return ret;
+	}
+	ret = read_reg(TLE9104_REG_DIAG_OFF, &diag_off);
+	if (ret) {
+		return ret;
+	}
 
 	// clear diag states
-	write(TLE9104_REG_DIAG_OUT_1_2_ON, 0);
-	write(TLE9104_REG_DIAG_OUT_3_4_ON, 0);
-	write(TLE9104_REG_DIAG_OFF, 0);
+	ret = write_reg(TLE9104_REG_DIAG_OUT_1_2_ON, 0);
+	if (ret) {
+		return ret;
+	}
+	ret = write_reg(TLE9104_REG_DIAG_OUT_3_4_ON, 0);
+	if (ret) {
+		return ret;
+	}
+	ret = write_reg(TLE9104_REG_DIAG_OFF, 0);
+	if (ret) {
+		return ret;
+	}
+
+	return 0;
 }
 
 brain_pin_diag_e Tle9104::getDiag(size_t pin) {
@@ -226,11 +303,17 @@ brain_pin_diag_e Tle9104::getDiag(size_t pin) {
 
 static Tle9104 chips[4];
 
-void tle9104_add(Gpio base, int index, const tle9104_config* cfg) {
+int tle9104_add(Gpio base, int index, const tle9104_config* cfg) {
 	Tle9104& chip = chips[index];
 
+	/* already added? */
+	if (chip.cfg != NULL) {
+		return -1;
+	}
+
 	chip.cfg = cfg;
-	gpiochip_register(base, "TLE9104", chip, 4);
+
+	return gpiochip_register(base, "TLE9104", chip, 4);
 }
 
 void updatetlediag() {
