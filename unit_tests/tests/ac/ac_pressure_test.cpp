@@ -13,26 +13,16 @@ namespace {
 
     class AcPressureTestConfig : public AcTestConfig {
     public:
-        AcPressureTestConfig();
         AcPressureTestConfig(
-            const std::optional<float> acDelay,
             const std::optional<uint16_t> minAcPressure,
             const std::optional<uint16_t> maxAcPressure
         );
     };
 
-    AcPressureTestConfig::AcPressureTestConfig(): AcPressureTestConfig {
-        { 0.0f },
-        { TEST_MIN_AC_PRESSURE },
-        { TEST_MAX_AC_PRESSURE }
-    } {}
-
     AcPressureTestConfig::AcPressureTestConfig(
-            const std::optional<float> acDelay,
             const std::optional<uint16_t> minAcPressure,
             const std::optional<uint16_t> maxAcPressure
     ) {
-        setAcDelay(acDelay);
         setMinAcPressure(minAcPressure);
         setMaxAcPressure(maxAcPressure);
     }
@@ -46,9 +36,19 @@ namespace {
 
     class AcPressureTest : public AcTestBase {
     protected:
+        static const AcPressureTestConfig DEFAULT_AC_PRESSURE_CONFIG;
+        static const AcPressureTestConfig TEST_AC_PRESSURE_CONFIG;
+
         void doTest(const AcPressureTestConfig& config, const std::vector<AcPressureTestData>& testData);
     private:
         void checkPersistentIndicators();
+    };
+
+    const AcPressureTestConfig AcPressureTest::DEFAULT_AC_PRESSURE_CONFIG = { {}, {} };
+
+    const AcPressureTestConfig AcPressureTest::TEST_AC_PRESSURE_CONFIG = {
+            { TEST_MIN_AC_PRESSURE },
+            { TEST_MAX_AC_PRESSURE }
     };
 
     void AcPressureTest::doTest(const AcPressureTestConfig& config, const std::vector<AcPressureTestData>& testData) {
@@ -92,7 +92,7 @@ namespace {
 
     TEST_F(AcPressureTest, pressureTooLow) {
         doTest(
-            /* config = */ {},
+            /* config = */ TEST_AC_PRESSURE_CONFIG,
             /* testData = */ {
                {
                    "acPressure = (TEST_MIN_AC_PRESSURE + TEST_MAX_AC_PRESSURE) / 2.0",
@@ -136,7 +136,7 @@ namespace {
 
     TEST_F(AcPressureTest, pressureTooHigh) {
         doTest(
-            /* config = */ {},
+            /* config = */ TEST_AC_PRESSURE_CONFIG,
             /* testData = */ {
                 {
                     "acPressure = (TEST_MIN_AC_PRESSURE + TEST_MAX_AC_PRESSURE) / 2.0",
@@ -180,7 +180,7 @@ namespace {
 
     TEST_F(AcPressureTest, defaultMinAcPressure) {
         doTest(
-            /* config = */ { {}, {}, {}},
+            /* config = */ DEFAULT_AC_PRESSURE_CONFIG,
             /* testData = */ {
                {
                    "acPressure = (DEFAULT_MIN_AC_PRESSURE + DEFAULT_MAX_AC_PRESSURE) / 2.0",
@@ -224,7 +224,7 @@ namespace {
 
     TEST_F(AcPressureTest, defaultMaxAcPressure) {
         doTest(
-            /* config = */ { {}, {}, {} },
+            /* config = */ DEFAULT_AC_PRESSURE_CONFIG,
             /* testData = */ {
                {
                    "acPressure = (DEFAULT_MIN_AC_PRESSURE + DEFAULT_MAX_AC_PRESSURE) / 2.0",
