@@ -2016,6 +2016,11 @@ uint8_t[TCU_TABLE_WIDTH] tcu_shiftSpeed43;;"MPH", 1, 0, 0, 255, 0
 
 float tcu_shiftTime;;"ms", 1, 0, 0, 3000, 0
 
+#define ALTERNATOR_VOLTAGE_TARGET_SIZE 4
+int16_t[ALTERNATOR_VOLTAGE_TARGET_SIZE x ALTERNATOR_VOLTAGE_TARGET_SIZE] autoscale alternatorVoltageTargetTable;;"Volts", 0.1, 0, 0, 30, 1
+uint16_t[ALTERNATOR_VOLTAGE_TARGET_SIZE] alternatorVoltageTargetLoadBins;;"Load", 1, 0, 0, 1000, 0
+uint16_t[ALTERNATOR_VOLTAGE_TARGET_SIZE] alternatorVoltageTargetRpmBins;;"RPM", 1, 0, 0, 18000, 0
+
 @@BOARD_CONFIG_FROM_FILE@@
 
 end_struct
