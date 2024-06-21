@@ -31,8 +31,8 @@ typedef enum {
 } tle9104_drv_state;
 
 /* IN MOSI and MISO a read is defined with a s0 and a write is defined with a 1. */
-#define TLE9104_WR_REG(addr, val)	((((addr) & 0x0f) << 8) | ((val) & 0xff))
-#define TLE9104_RD_REG(addr)		(BIT(15) | (((addr) & 0x0f) << 8))
+#define TLE9104_WR_REG(addr, val)	(BIT(15) | (((addr) & 0x0f) << 8) | ((val) & 0xff))
+#define TLE9104_RD_REG(addr)		(((addr) & 0x0f) << 8)
 
 #define TLE9104_GET_VAL(rx)			((rx) & 0xff)
 #define TLE9104_GET_ADDR(rx)		(((rx) >> 8) & 0x0f)
@@ -142,14 +142,13 @@ int Tle9104::spi_rw(uint16_t tx, uint16_t *rx) {
 int Tle9104::read_reg(uint8_t addr, uint8_t *val) {
 	int ret;
 
-	// R/W bit is 0 for read
-	ret = spi_rw(addr << 8, nullptr);
+	ret = spi_rw(TLE9104_RD_REG(addr), nullptr);
 	if (ret) {
 		return ret;
 	}
 
 	uint16_t rxd;
-	ret = spi_rw(addr, &rxd);
+	ret = spi_rw(TLE9104_RD_REG(addr), &rxd);
 	if (ret) {
 		return ret;
 	}
@@ -163,7 +162,7 @@ int Tle9104::read_reg(uint8_t addr, uint8_t *val) {
 
 int Tle9104::write_reg(uint8_t addr, uint8_t val) {
 	// R/W bit is 1 for write
-	return spi_rw(((0x80 | addr) << 8) | val, nullptr);
+	return spi_rw(TLE9104_WR_REG(addr, val), nullptr);
 }
 
 int Tle9104::chip_init() {
