@@ -945,6 +945,11 @@ float getOutputValueByName(const char *name) {
 		case 1569151513:
 			return engine->launchController.isClutchActivated;
 #endif
+// isBrakePedalActivated
+#if EFI_LAUNCH_CONTROL
+		case 781025153:
+			return engine->launchController.isBrakePedalActivated;
+#endif
 // isValidInputPin
 #if EFI_LAUNCH_CONTROL
 		case -978523544:
