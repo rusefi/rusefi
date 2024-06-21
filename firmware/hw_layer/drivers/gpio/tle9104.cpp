@@ -37,6 +37,8 @@ typedef enum {
 #define TLE9104_GET_VAL(rx)			((rx) & 0xff)
 #define TLE9104_GET_ADDR(rx)		(((rx) >> 8) & 0x0f)
 
+#define TLE9104_PARITY_MASK(val)	((val) & (~BIT(14)))
+
 #define TLE9104_REG_CTRL			0x00
 #define TLE9104_REG_CFG				0x01
 #define TLE9104_REG_OFF_DIAG_CFG	0x02
@@ -124,7 +126,8 @@ int Tle9104::spi_rw(uint16_t tx, uint16_t *rx) {
 	/* Ownership release. */
 	spiReleaseBus(spi);
 
-	bool parityOk = parityBit(rxd);
+	/* with parity bit included */
+	bool parityOk = !parityBit(rxd);
 	if (!parityOk) {
 		return -1;
 	}
