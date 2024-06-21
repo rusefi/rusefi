@@ -354,6 +354,8 @@ int Tle9104::init() {
 
 	// disable outputs
 	m_en.setValue(false);
+	// Reset the chip
+	m_resn.setValue(false);
 
 	/* TODO: ensure all direct_io pins valid, otherwise support manipulationg output states over SPI */
 	for (int i = 0; i < 4; i++) {
@@ -364,11 +366,11 @@ int Tle9104::init() {
 		writePad(i, false);
 	}
 
-	// Reset the chip
-	m_resn.setValue(false);
-	chThdSleepMilliseconds(1);
-	m_resn.setValue(true);
-	chThdSleepMilliseconds(1);
+	if (isBrainPinValid(cfg->resn)) {
+		chThdSleepMilliseconds(1);
+		m_resn.setValue(true);
+		chThdSleepMilliseconds(1);
+	}
 
 	// read ID register
 	uint8_t id;
@@ -378,7 +380,7 @@ int Tle9104::init() {
 		return ret;
 	}
 	// No chip detected if ID is wrong
-	if ((id & 0xFF) != 0xB1) {
+	if (id != 0xB1) {
 		return -1;
 	}
 
