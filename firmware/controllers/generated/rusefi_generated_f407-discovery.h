@@ -1668,7 +1668,7 @@
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.06.20.f407-discovery.1535094110"
+#define TS_SIGNATURE "rusEFI master.2024.06.21.f407-discovery.1535094110"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
