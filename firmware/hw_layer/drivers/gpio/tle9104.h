@@ -1,9 +1,12 @@
 #pragma once
 
-#if EFI_PROD_CODE && BOARD_TLE9104_COUNT > 0
+#include "global.h"
+
+#include <hal.h>
+#include "efifeatures.h"
 
 struct tle9104_config {
-	SPIDriver		*spi_bus;
+	SPIDriver	*spi_bus;
 	SPIConfig	spi_config;
 
 	struct {
@@ -44,5 +47,3 @@ int tle9104_add(Gpio base, int index, const tle9104_config* cfg);
 // 	.resn = Gpio::A3,
 // 	.en   = Gpio::C9
 // };
-
-#endif // BOARD_TLE9104_COUNT > 0
