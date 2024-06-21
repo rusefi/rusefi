@@ -418,10 +418,6 @@ int tle9104_add(Gpio base, int index, const tle9104_config* cfg) {
 	return gpiochip_register(base, DRIVER_NAME, chip, 4);
 }
 
-void updatetlediag() {
-	chips[0].updateDiagState();
-}
-
 #else // BOARD_TLE9104_COUNT > 0
 
 int tle9104_add(Gpio, int, const tle9104_config*) {
