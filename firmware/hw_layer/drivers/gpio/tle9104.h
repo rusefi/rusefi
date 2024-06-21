@@ -2,12 +2,14 @@
 
 #include "global.h"
 
-#include <hal.h>
 #include "efifeatures.h"
+#include <hal.h>
 
 struct tle9104_config {
+#if HAL_USE_SPI
 	SPIDriver	*spi_bus;
 	SPIConfig	spi_config;
+#endif
 
 	struct {
 		ioportid_t		port;
