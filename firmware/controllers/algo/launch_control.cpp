@@ -24,7 +24,7 @@
 bool LaunchControlBase::isInsideSwitchCondition() {
 	isSwitchActivated = engineConfiguration->launchActivationMode == SWITCH_INPUT_LAUNCH;
 	isClutchActivated = engineConfiguration->launchActivationMode == CLUTCH_INPUT_LAUNCH;
-
+    isBrakePedalActivated = engineConfiguration->launchActivationMode == STOP_INPUT_LAUNCH;
 
 	if (isSwitchActivated) {
 #if !EFI_SIMULATOR
@@ -39,7 +39,13 @@ bool LaunchControlBase::isInsideSwitchCondition() {
 		} else {
 			return false;
 		}
-	} else {
+	} else if (isBrakePedalActivated) {
+        if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
+            return engine->engineState.brakePedalState;
+        } else {
+            return false;
+        }
+    } else {
 		// ALWAYS_ACTIVE_LAUNCH
 		return true;
 	}
