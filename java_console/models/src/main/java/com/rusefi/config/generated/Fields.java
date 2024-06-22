@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Jun 22 15:39:57 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Jun 22 17:17:37 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -466,6 +466,7 @@ public class Fields {
 	public static final int GAUGE_LUA_TO_5 = 30000;
 	public static final int GAUGE_LUA_TO_6 = 30000;
 	public static final int GAUGE_LUA_TO_7 = 30000;
+	public static final String GAUGE_NAME_AC_PRESSURE = "A/C pressure";
 	public static final String GAUGE_NAME_ACCEL_LAT = "Accel: Lateral";
 	public static final String GAUGE_NAME_ACCEL_LON = "Accel: Longitudinal";
 	public static final String GAUGE_NAME_ACCEL_ROLL = "Acceleration: Roll";
@@ -1454,11 +1455,11 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.06.22.f407-discovery.3905545744";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.06.22.f407-discovery.2287563309";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1748;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1752;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_2_NAME = "Channel 2";
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;

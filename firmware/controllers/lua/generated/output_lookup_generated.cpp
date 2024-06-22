@@ -758,6 +758,9 @@ float getOutputValueByName(const char *name) {
 // injectionPrimingCounter
 		case 1526237246:
 			return engine->outputChannels.injectionPrimingCounter;
+// acPressure
+		case 1644550754:
+			return engine->outputChannels.acPressure;
 // totalFuelCorrection
 #if EFI_ENGINE_CONTROL
 		case -1779658835:

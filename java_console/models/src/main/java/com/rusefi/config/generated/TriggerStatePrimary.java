@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Wed Jun 05 18:56:14 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Sat Jun 22 17:16:04 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -17,6 +17,7 @@ public class TriggerStatePrimary {
 	public static final String GAUGE_CATEGORY_SYNC = "Sync";
 	public static final String GAUGE_CATEGORY_TIMING = "Timing";
 	public static final String GAUGE_COIL_DWELL_TIME = "Ignition: coil charge time";
+	public static final String GAUGE_NAME_AC_PRESSURE = "A/C pressure";
 	public static final String GAUGE_NAME_ACCEL_LAT = "Accel: Lateral";
 	public static final String GAUGE_NAME_ACCEL_LON = "Accel: Longitudinal";
 	public static final String GAUGE_NAME_ACCEL_VERT = "Accel: Vertical";
@@ -175,9 +176,9 @@ public class TriggerStatePrimary {
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field CAMRESYNCCOUNTER = Field.create("CAMRESYNCCOUNTER", 0, FieldType.INT8).setScale(1.0).setBaseOffset(1524);
-	public static final Field ALIGNMENTFILL_AT_1 = Field.create("ALIGNMENTFILL_AT_1", 1, FieldType.INT8).setScale(1.0).setBaseOffset(1524);
-	public static final Field M_HASSYNCHRONIZEDPHASE = Field.create("M_HASSYNCHRONIZEDPHASE", 4, FieldType.BIT, 0).setBaseOffset(1524);
+	public static final Field CAMRESYNCCOUNTER = Field.create("CAMRESYNCCOUNTER", 0, FieldType.INT8).setScale(1.0).setBaseOffset(1528);
+	public static final Field ALIGNMENTFILL_AT_1 = Field.create("ALIGNMENTFILL_AT_1", 1, FieldType.INT8).setScale(1.0).setBaseOffset(1528);
+	public static final Field M_HASSYNCHRONIZEDPHASE = Field.create("M_HASSYNCHRONIZEDPHASE", 4, FieldType.BIT, 0).setBaseOffset(1528);
 	public static final Field[] VALUES = {
 	CAMRESYNCCOUNTER,
 	ALIGNMENTFILL_AT_1,

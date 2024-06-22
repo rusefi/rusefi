@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/sensors/sent_state.txt Wed Jun 05 18:56:14 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/sensors/sent_state.txt Sat Jun 22 17:16:04 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -17,6 +17,7 @@ public class SentState {
 	public static final String GAUGE_CATEGORY_SYNC = "Sync";
 	public static final String GAUGE_CATEGORY_TIMING = "Timing";
 	public static final String GAUGE_COIL_DWELL_TIME = "Ignition: coil charge time";
+	public static final String GAUGE_NAME_AC_PRESSURE = "A/C pressure";
 	public static final String GAUGE_NAME_ACCEL_LAT = "Accel: Lateral";
 	public static final String GAUGE_NAME_ACCEL_LON = "Accel: Longitudinal";
 	public static final String GAUGE_NAME_ACCEL_VERT = "Accel: Vertical";
@@ -175,9 +176,9 @@ public class SentState {
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field VALUE0 = Field.create("VALUE0", 0, FieldType.INT16).setScale(1.0).setBaseOffset(1728);
-	public static final Field VALUE1 = Field.create("VALUE1", 2, FieldType.INT16).setScale(1.0).setBaseOffset(1728);
-	public static final Field ERRORRATE = Field.create("ERRORRATE", 4, FieldType.FLOAT).setBaseOffset(1728);
+	public static final Field VALUE0 = Field.create("VALUE0", 0, FieldType.INT16).setScale(1.0).setBaseOffset(1732);
+	public static final Field VALUE1 = Field.create("VALUE1", 2, FieldType.INT16).setScale(1.0).setBaseOffset(1732);
+	public static final Field ERRORRATE = Field.create("ERRORRATE", 4, FieldType.FLOAT).setBaseOffset(1732);
 	public static final Field[] VALUES = {
 	VALUE0,
 	VALUE1,
