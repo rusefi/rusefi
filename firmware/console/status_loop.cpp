@@ -518,6 +518,7 @@ static void updatePressures() {
 	engine->outputChannels.baroPressure = Sensor::getOrZero(SensorType::BarometricPressure);
 	engine->outputChannels.MAPValue = Sensor::getOrZero(SensorType::Map);
 	engine->outputChannels.oilPressure = Sensor::getOrZero(SensorType::OilPressure);
+    engine->outputChannels.acPressure = Sensor::getOrZero(SensorType::AcPressure);
 
 	engine->outputChannels.auxLinear1 = Sensor::getOrZero(SensorType::AuxLinear1);
 	engine->outputChannels.auxLinear2 = Sensor::getOrZero(SensorType::AuxLinear2);

@@ -394,5 +394,7 @@ float mapFast
 	uint8_t sadDwellRatioCounter
 	uint8_t injectionPrimingCounter
 
+	float acPressure;@@GAUGE_NAME_AC_PRESSURE@@;"kPa", 1, 0, 0, 0, 0
+
 	uint8_t[72 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct
