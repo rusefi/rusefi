@@ -120,6 +120,8 @@
 
 #define GAUGE_NAME_ECU_TEMPERATURE "ECU temperature"
 
+#define GAUGE_NAME_AC_PRESSURE "A/C pressure"
+
 #define GAUGE_NAME_AUX_LINEAR_1 "Aux linear #1"
 #define GAUGE_NAME_AUX_LINEAR_2 "Aux linear #2"
 
