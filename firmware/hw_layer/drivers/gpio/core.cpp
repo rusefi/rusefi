@@ -402,6 +402,21 @@ int gpiochips_get_total_pins(void)
 	return cnt;
 }
 
+void gpiochips_debug(void)
+{
+	int i;
+
+	for (i = 0; i < BOARD_EXT_GPIOCHIPS; i++) {
+		gpiochip *chip = &chips[i];
+
+		if (chip->base == Gpio::Unassigned)
+			continue;
+
+		efiPrintf("%s (base %d, size %d):\n", chip->name, (int)chip->base, chip->size);
+		chip->chip->debug();
+	}
+}
+
 #if EFI_PROD_CODE
 
 /**
@@ -472,6 +487,11 @@ int gpiochips_init(void) {
 }
 
 int gpiochips_get_total_pins(void)
+{
+	return 0;
+}
+
+void gpiochips_debug(void)
 {
 	return 0;
 }

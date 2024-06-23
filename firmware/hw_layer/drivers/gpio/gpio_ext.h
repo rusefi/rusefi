@@ -30,6 +30,7 @@ struct GpioChip {
 	virtual int setPadPWM(size_t /*pin*/, float /*frequency*/, float /*duty*/) { return -1; }
 	virtual brain_pin_diag_e getDiag(size_t /*pin*/) { return PIN_OK; }
 	virtual int deinit() { return 0; }
+	virtual void debug() { }
 
 	/* chip needs reinitialization due to some critical issue */
 	bool						need_init;
@@ -56,6 +57,8 @@ int gpiochips_setPadMode(brain_pin_e pin, iomode_t mode);
 int gpiochips_writePad(brain_pin_e pin, int value);
 int gpiochips_readPad(brain_pin_e pin);
 brain_pin_diag_e gpiochips_getDiag(brain_pin_e pin);
+
+void gpiochips_debug();
 
 #if EFI_PROD_CODE
 hardware_pwm* gpiochip_tryInitPwm(const char* msg, brain_pin_e pin, float frequency, float duty);
