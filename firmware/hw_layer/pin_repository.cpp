@@ -186,6 +186,8 @@ static void reportPins() {
 	#endif
 
 	efiPrintf("Total pins used: %d", totalPinsUsed);
+
+	gpiochips_debug();
 }
 
 __attribute__((weak)) const char * getBoardSpecificPinName(brain_pin_e /*brainPin*/) {
