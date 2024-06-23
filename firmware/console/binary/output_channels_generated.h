@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sat Jun 22 17:16:04 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sun Jun 23 21:44:26 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -619,15 +619,20 @@ struct output_channels_s {
 	 */
 	scaled_channel<int16_t, 1000, 1> rawOilPressure = (int16_t)0;
 	/**
+	 * units: V
 	 * offset 224
+	 */
+	scaled_channel<int16_t, 1000, 1> rawAcPressure = (int16_t)0;
+	/**
+	 * offset 226
 	 */
 	uint8_t fuelClosedLoopBinIdx = (uint8_t)0;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 225
+	 * offset 227
 	 */
-	uint8_t alignmentFill_at_225[3];
+	uint8_t alignmentFill_at_227[1];
 	/**
 	 * units: V
 	 * offset 228
@@ -1144,10 +1149,10 @@ struct output_channels_s {
 	bool vvtChannel4 : 1 {};
 	/**
 	offset 640 bit 30 */
-	bool unusedBit_233_30 : 1 {};
+	bool unusedBit_234_30 : 1 {};
 	/**
 	offset 640 bit 31 */
-	bool unusedBit_233_31 : 1 {};
+	bool unusedBit_234_31 : 1 {};
 	/**
 	 * offset 644
 	 */
@@ -1324,4 +1329,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 836);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sat Jun 22 17:16:04 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sun Jun 23 21:44:26 UTC 2024

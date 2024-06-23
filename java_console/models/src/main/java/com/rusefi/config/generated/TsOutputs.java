@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sat Jun 22 17:16:04 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sun Jun 23 21:44:26 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -302,8 +302,9 @@ public class TsOutputs {
 	public static final Field RAWCLT = Field.create("RAWCLT", 218, FieldType.INT16).setScale(0.001).setBaseOffset(0);
 	public static final Field RAWIAT = Field.create("RAWIAT", 220, FieldType.INT16).setScale(0.001).setBaseOffset(0);
 	public static final Field RAWOILPRESSURE = Field.create("RAWOILPRESSURE", 222, FieldType.INT16).setScale(0.001).setBaseOffset(0);
-	public static final Field FUELCLOSEDLOOPBINIDX = Field.create("FUELCLOSEDLOOPBINIDX", 224, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_225 = Field.create("ALIGNMENTFILL_AT_225", 225, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field RAWACPRESSURE = Field.create("RAWACPRESSURE", 224, FieldType.INT16).setScale(0.001).setBaseOffset(0);
+	public static final Field FUELCLOSEDLOOPBINIDX = Field.create("FUELCLOSEDLOOPBINIDX", 226, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_227 = Field.create("ALIGNMENTFILL_AT_227", 227, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field RAWPPSPRIMARY = Field.create("RAWPPSPRIMARY", 228, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field RAWPPSSECONDARY = Field.create("RAWPPSSECONDARY", 232, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field RAWRAWPPSPRIMARY = Field.create("RAWRAWPPSPRIMARY", 236, FieldType.FLOAT).setBaseOffset(0);
@@ -783,8 +784,9 @@ public class TsOutputs {
 	RAWCLT,
 	RAWIAT,
 	RAWOILPRESSURE,
+	RAWACPRESSURE,
 	FUELCLOSEDLOOPBINIDX,
-	ALIGNMENTFILL_AT_225,
+	ALIGNMENTFILL_AT_227,
 	RAWPPSPRIMARY,
 	RAWPPSSECONDARY,
 	RAWRAWPPSPRIMARY,
