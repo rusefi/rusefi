@@ -7,6 +7,7 @@
 #define ts_show_clt_iat_pullup false
 #define ts_show_egt false
 
+#define ts_show_etb false
 #define ts_show_etb_pins false
 #define ts_show_analog_divider false
 #define ts_show_spi false
@@ -18,7 +19,6 @@
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins false
 #define ts_show_vr_threshold_2 true
-#define ts_show_fancy_hardware true
 
 
 #define show_2chan_presets true

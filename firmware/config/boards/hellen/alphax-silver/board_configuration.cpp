@@ -5,15 +5,32 @@
 #include "smart_gpio.h"
 #include "drivers/gpio/tle9104.h"
 
-//static void setInjectorPins() {
-//
-//}
+static OutputPin alphaTempPullUp;
 
+static void setInjectorPins() {
+	engineConfiguration->injectionPins[0] = Gpio::MC33810_0_OUT_0;
+	engineConfiguration->injectionPins[1] = Gpio::MC33810_0_OUT_1;
+	engineConfiguration->injectionPins[2] = Gpio::MC33810_0_OUT_2;
+	engineConfiguration->injectionPins[3] = Gpio::MC33810_0_OUT_3;
+}
+
+static void setIgnitionPins() {
+	engineConfiguration->ignitionPins[0] = Gpio::MM100_IGN1;
+	engineConfiguration->ignitionPins[1] = Gpio::MM100_IGN2;
+	engineConfiguration->ignitionPins[2] = Gpio::MM100_IGN3;
+	engineConfiguration->ignitionPins[3] = Gpio::MM100_IGN4;
+}
 
 static void setupDefaultSensorInputs() {
 	engineConfiguration->tps1_1AdcChannel = MM100_IN_TPS_ANALOG;
 
-	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP1;
+    engineConfiguration->boardUseTempPullUp = true;
+
+
+//	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP1; // external MAP
+  engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2; // On-board MAP
+  engineConfiguration->map.sensor.type = MT_MPXH6400;
+
 	engineConfiguration->clt.adcChannel = MM100_IN_CLT_ANALOG;
 	engineConfiguration->iat.adcChannel = MM100_IN_IAT_ANALOG;
 }
@@ -32,6 +49,8 @@ void setBoardConfigOverrides() {
 }
 
 void setBoardDefaultConfiguration() {
+	setInjectorPins();
+	setIgnitionPins();
 	setHellenMMbaro();
 	setupDefaultSensorInputs();
 	setInline4();
@@ -136,5 +155,10 @@ static void board_init_ext_gpios()
  */
 void boardInitHardware(void)
 {
+	alphaTempPullUp.initPin("a-temp", Gpio::MM100_IGN8);
 	board_init_ext_gpios();
+}
+
+void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
+	alphaTempPullUp.setValue(engineConfiguration->boardUseTempPullUp);
 }

@@ -74,6 +74,13 @@ pins:
     ts_name: ___ - IAT
     color: blue
 
+  - pin: On-board MAP
+    meta: MM100_IN_MAP2_ANALOG
+    class: analog_inputs
+    function: MAP Sensor Input
+    ts_name: On-board MAP
+    color: orange
+
   - pin: 21A
     meta: MM100_IN_MAP1_ANALOG
     class: analog_inputs

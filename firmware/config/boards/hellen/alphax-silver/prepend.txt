@@ -1,8 +1,11 @@
 #define MAIN_HELP_URL "https://rusefi.com/s/silver"
 
 
+#define ts_show_tps2 false
 
 
+#define ts_show_etb false
+#define ts_show_etb_pins false
 #define ts_show_vbatt false
 #define ts_show_clt_iat_pullup false
 #define ts_show_egt false
