@@ -65,6 +65,7 @@ struct Tle9104 : public GpioChip {
 
 	int writePad(size_t pin, int value) override;
 	brain_pin_diag_e getDiag(size_t pin) override;
+	void debug() override;
 
 	int updateDiagState();
 
@@ -93,6 +94,7 @@ private:
 	int init_req_cnt;
 	int fault_cnt;
 	int fault_comm_cnt;
+	int spi_address_err_cnt;
 	int spi_cnt;
 	int spi_parity_err_cnt;
 };
@@ -208,9 +210,17 @@ int Tle9104::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 
 		/* validate reply */
 		ret = spi_validate(rxdata);
-
 		if (ret < 0)
 			break;
+
+		if (i >= 1) {
+			/* validate that we received correct answer to previous tx */
+			if (TLE9104_GET_ADDR(tx[i - 1] != TLE9104_GET_ADDR(rxdata))) {
+				spi_address_err_cnt++;
+				ret = -2;
+				break;
+			}
+		}
 	}
 	/* Ownership release. */
 	spiReleaseBus(spi);
@@ -247,6 +257,8 @@ int Tle9104::write_reg(uint8_t addr, uint8_t val) {
 
 int Tle9104::chip_init() {
 	int ret;
+
+	init_req_cnt++;
 
 	// disable comms watchdog, enable direct drive on all 4 channels
 	// TODO: should we enable comms watchdog?
@@ -424,6 +436,15 @@ brain_pin_diag_e Tle9104::getDiag(size_t pin) {
 	}
 
 	return (brain_pin_diag_e)result;
+}
+
+void Tle9104::debug() {
+	efiPrintf("spi transfers %d with patiry error %d with wrong address %d communication fault counter %d\n",
+		spi_cnt, spi_parity_err_cnt, spi_address_err_cnt, fault_comm_cnt);
+	efiPrintf("fault counter %d communication fault counter %d\n",
+		fault_cnt, fault_comm_cnt);
+	efiPrintf("POR counter %d reinit counter %d WD counter %d\n",
+		por_cnt, init_req_cnt, wdr_cnt);
 }
 
 int Tle9104::init() {
