@@ -105,15 +105,15 @@ static int btWaitOk(SerialTsChannelBase* tsChannel) {
 	return ret;
 }
 
-static int btVerOk(SerialTsChannelBase* tsChannel)
+static int btBaudOk(SerialTsChannelBase* tsChannel)
 {
 	int len;
 	int ret = -1;
-	char tmp[38];
+	char tmp[16];
 
 	/* wait for resposne  */
 	len = btReadLine(tsChannel, tmp, sizeof(tmp));
-	if ((len >= 36) && (len <= 40)) {
+	if (len == 9) {
 			ret = 0;
 	}
 
@@ -260,8 +260,8 @@ uint8_t findBaudIndex(SerialTsChannelBase* tsChannel) {
 			}
 		} else if (btModuleType == BLUETOOTH_JDY_31) {
 			/* try to disconnect in case device already configured and in silence mode */
-			btWrite(tsChannel, "AT+VERSION\r\n");
-			if (btVerOk(tsChannel) == 0) {
+			btWrite(tsChannel, "AT+BAUD\r\n");
+			if (btBaudOk(tsChannel) == 0) {
 				efiPrintf("JDY31 disconnected");
 				chThdSleepMilliseconds(10);	// safety
 				return baudIdx;
