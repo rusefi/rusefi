@@ -902,7 +902,7 @@ Read MAP sensor on ECU start-up to use as baro value.
 In Constant mode, timing is automatically tapered to running as RPM increases.\nIn Table mode, the "Cranking ignition advance" table is used directly.
 
 ### useAdvanceCorrectionsForCranking
-This enables the various ignition corrections during cranking (IAT, CLT, FSIO and PID idle).\nYou probably don't need this.
+This enables the various ignition corrections during cranking (IAT, CLT and PID idle).\nYou probably don't need this.
 
 ### flexCranking
 Enable a second cranking table to use for E100 flex fuel, interpolating between the two based on flex fuel sensor.

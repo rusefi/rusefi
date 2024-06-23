@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Jun 20 15:45:56 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Jun 23 18:18:20 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2505,7 +2505,7 @@ struct engine_configuration_s {
 	offset 1316 bit 16 */
 	bool useSeparateAdvanceForCranking : 1 {};
 	/**
-	 * This enables the various ignition corrections during cranking (IAT, CLT, FSIO and PID idle).
+	 * This enables the various ignition corrections during cranking (IAT, CLT and PID idle).
 	 * You probably don't need this.
 	offset 1316 bit 17 */
 	bool useAdvanceCorrectionsForCranking : 1 {};
@@ -5680,4 +5680,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22800);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Jun 20 15:45:56 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Jun 23 18:18:20 UTC 2024
