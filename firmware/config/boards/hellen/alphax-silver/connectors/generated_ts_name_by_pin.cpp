@@ -6,7 +6,13 @@
 // see comments at declaration in pin_repository.h
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
-		case Gpio::G7: return "1A - Injector 1";
+		case Gpio::TLE9104_0_OUT_0: return "4A - Injector 1";
+		case Gpio::TLE9104_0_OUT_1: return "3A - Injector 2";
+		case Gpio::TLE9104_0_OUT_2: return "2A - Injector 3";
+		case Gpio::TLE9104_0_OUT_3: return "1A - Injector 4";
+		case Gpio::TLE9104_1_OUT_1: return "5A Fuel Pump Relay";
+		case Gpio::TLE9104_1_OUT_2: return "6A Idle Output";
+		case Gpio::TLE9104_1_OUT_3: return "28A Fan Realy";
 		default: return nullptr;
 	}
 	return nullptr;
