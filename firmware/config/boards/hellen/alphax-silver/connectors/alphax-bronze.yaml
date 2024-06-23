@@ -62,6 +62,7 @@ info:
   title: AlphaX Silver
   name: AlphaX Silver
   board_url: https://rusefi.com/s/silver
+  directory: hellen/alphax-silver
   image:
     file: 34pins-3k.jpg
   pins:
