@@ -46,8 +46,8 @@
 #define adc_channel_e_EFI_ADC_ERROR 50
 #define adc_channel_e_EFI_ADC_NONE 0
 #define adc_channel_e_EFI_ADC_TOTAL_CHANNELS 41
-#define adc_channel_e_enum "Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5"
-#define adc_channel_e_fullenum "Disabled", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PB0", "PB1", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5"
+#define adc_channel_e_enum 0="NONE",5="18A - TPS",13="19A - CLT",14="20A - IAT",11="21A - MAP"
+#define adc_channel_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","18A - TPS","INVALID","INVALID","INVALID","INVALID","INVALID","21A - MAP","INVALID","19A - CLT","20A - IAT"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define air_pressure_sensor_config_s_size 12
@@ -1136,7 +1136,7 @@
 #define maf_sensor_type_e_CUSTOM 0
 #define maf_sensor_type_e_DensoTODO 3
 #define maf_sensor_type_e_enum "v0", "v1", "v2", "v3"
-#define MAIN_HELP_URL "http://www.rusefi.com/"
+#define MAIN_HELP_URL "https://rusefi.com/s/silver"
 #define MAP_ANGLE_SIZE 8
 #define MAP_sensor_config_s_size 140
 #define MAP_WINDOW_SIZE 8
@@ -1276,7 +1276,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 2229951090
+#define SIGNATURE_HASH 3130494965
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1669,7 +1669,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.06.23.alphax-silver.2229951090"
+#define TS_SIGNATURE "rusEFI master.2024.06.23.alphax-silver.3130494965"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
