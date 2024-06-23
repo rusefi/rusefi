@@ -23,6 +23,7 @@ void setBoardConfigOverrides() {
 	setHellenMegaEnPin();
 
 	setHellenVbatt();
+	setHellenCan();
 	hellenMegaSdWithAccelerometer();
 	setDefaultHellenAtPullUps();
 

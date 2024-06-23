@@ -1,4 +1,4 @@
-
+#define MAIN_HELP_URL "https://rusefi.com/s/silver"
 
 
 
