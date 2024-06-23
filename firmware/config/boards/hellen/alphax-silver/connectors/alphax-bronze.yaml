@@ -2,13 +2,60 @@ meta: config/boards/hellen_meta.h
 
 pins:
   - pin: 1A
-    meta: H144_LS_1
+    id: TLE9104_0_OUT_3
+    function: Injector 4 Output
+    class: outputs
+    type: inj
+    ts_name: ___ - Injector 4
+    color: blue
+
+  - pin: 2A
+    id: TLE9104_0_OUT_2
+    function: Injector 3 Output
+    class: outputs
+    type: inj
+    ts_name: ___ - Injector 3
+    color: blue
+
+  - pin: 3A
+    id: TLE9104_0_OUT_1
+    function: Injector 2 Output
+    class: outputs
+    type: inj
+    ts_name: ___ - Injector 2
+    color: blue
+
+  - pin: 4A
+    id: TLE9104_0_OUT_0
     function: Injector 1 Output
     class: outputs
     type: inj
     ts_name: ___ - Injector 1
     color: blue
 
+  - pin: 5A
+    id: TLE9104_1_OUT_1
+    function: Fuel Pump Relay
+    class: outputs
+    type: inj
+    ts_name: ___ Fuel Pump Relay
+    color: blue
+
+  - pin: 6A
+    id: TLE9104_1_OUT_2
+    function: Idle Output
+    class: outputs
+    type: inj
+    ts_name: ___ Idle Output
+    color: blue
+
+  - pin: 28A
+    id: TLE9104_1_OUT_3
+    function: Fan Realy
+    class: outputs
+    type: inj
+    ts_name: ___ Fan Realy
+    color: blue
 
 info:
   title: AlphaX Bronze
