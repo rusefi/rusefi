@@ -11,8 +11,11 @@
 
 
 static void setupDefaultSensorInputs() {
-	engineConfiguration->clt.adcChannel = H144_IN_CLT;
-	engineConfiguration->iat.adcChannel = H144_IN_IAT;
+	engineConfiguration->tps1_1AdcChannel = MM100_IN_TPS_ANALOG;
+
+	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP1;
+	engineConfiguration->clt.adcChannel = MM100_IN_CLT_ANALOG;
+	engineConfiguration->iat.adcChannel = MM100_IN_IAT_ANALOG;
 }
 
 void setBoardConfigOverrides() {

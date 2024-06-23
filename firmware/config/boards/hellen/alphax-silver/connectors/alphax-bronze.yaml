@@ -5,7 +5,7 @@ pins:
     id: TLE9104_0_OUT_3
     function: Injector 4 Output
     class: outputs
-    type: inj
+    type: ls
     ts_name: ___ - Injector 4
     color: blue
 
@@ -13,7 +13,7 @@ pins:
     id: TLE9104_0_OUT_2
     function: Injector 3 Output
     class: outputs
-    type: inj
+    type: ls
     ts_name: ___ - Injector 3
     color: blue
 
@@ -21,7 +21,7 @@ pins:
     id: TLE9104_0_OUT_1
     function: Injector 2 Output
     class: outputs
-    type: inj
+    type: ls
     ts_name: ___ - Injector 2
     color: blue
 
@@ -29,7 +29,7 @@ pins:
     id: TLE9104_0_OUT_0
     function: Injector 1 Output
     class: outputs
-    type: inj
+    type: ls
     ts_name: ___ - Injector 1
     color: blue
 
@@ -37,7 +37,7 @@ pins:
     id: TLE9104_1_OUT_1
     function: Fuel Pump Relay
     class: outputs
-    type: inj
+    type: ls
     ts_name: ___ Fuel Pump Relay
     color: blue
 
@@ -45,15 +45,65 @@ pins:
     id: TLE9104_1_OUT_2
     function: Idle Output
     class: outputs
-    type: inj
+    type: ls
     ts_name: ___ Idle Output
     color: blue
+
+  - pin: 18A
+    meta: MM100_IN_TPS_ANALOG
+    class: analog_inputs
+    function: TPS Sensor Input
+    ts_name: ___ - TPS
+    type: av
+    color: orange
+
+
+  - pin: 19A
+    meta: MM100_IN_CLT_ANALOG
+    class: analog_inputs
+    function: CLT Sensor Input
+    ts_name: ___ - CLT
+    type: av
+    color: grey
+
+
+  - pin: 20A
+    meta: MM100_IN_IAT_ANALOG
+    class: analog_inputs
+    function: IAT Sensor Input
+    ts_name: ___ - IAT
+    color: blue
+
+  - pin: 21A
+    meta: MM100_IN_MAP1_ANALOG
+    class: analog_inputs
+    function: MAP Sensor Input
+    ts_name: ___ - MAP
+    type: av
+    color: yellow
+
+
+  - pin: 23A
+    function: Sensor +5v Power Feed
+    type: 5v
+    color: orange
+
+
+  - pin: 26A
+    function: Power Ground
+    type: gnd
+    color: black
+  - pin: 27A
+    function: Power Ground
+    type: gnd
+    color: black
+
 
   - pin: 28A
     id: TLE9104_1_OUT_3
     function: Fan Realy
     class: outputs
-    type: inj
+    type: ls
     ts_name: ___ Fan Realy
     color: blue
 
