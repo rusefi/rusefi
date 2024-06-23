@@ -68,6 +68,7 @@ struct Tle9104 : public GpioChip {
 	void debug() override;
 
 	int updateDiagState();
+	int updateStatus();
 
 	const tle9104_config* cfg;
 	tle9104_drv_state drv_state;
@@ -323,6 +324,10 @@ static THD_FUNCTION(tle9104_driver_thread, p)
 			if (ret) {
 				/* set state to TLE6240_FAILED? */
 			}
+			ret = chip.updateStatus();
+			if (ret) {
+				/* set state to TLE6240_FAILED? */
+			}
 		}
 	}
 }
@@ -371,6 +376,36 @@ int Tle9104::updateDiagState() {
 	ret = write_reg(TLE9104_REG_DIAG_OFF, 0);
 	if (ret) {
 		return ret;
+	}
+
+	return 0;
+}
+
+int Tle9104::updateStatus() {
+	int ret;
+
+	uint8_t status;
+	ret = read_reg(TLE9104_REG_GLOBAL_STATUS, &status);
+	if (ret) {
+		return ret;
+	}
+
+	/* Device was reset since last cleared */
+	if (status & BIT(0)) {
+		por_cnt++;
+		need_init = true;
+	}
+	/* Communication watchdog timeout occurred */
+	if (status & BIT(2)) {
+		wdr_cnt++;
+		need_init = true;
+	}
+
+	if (need_init) {
+		ret = chip_init();
+		if (ret == 0) {
+			need_init = false;
+		}
 	}
 
 	return 0;
