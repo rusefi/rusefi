@@ -46,8 +46,8 @@
 #define adc_channel_e_EFI_ADC_ERROR 50
 #define adc_channel_e_EFI_ADC_NONE 0
 #define adc_channel_e_EFI_ADC_TOTAL_CHANNELS 41
-#define adc_channel_e_enum 0="NONE",5="18A - TPS",13="19A - CLT",14="20A - IAT",11="21A - MAP"
-#define adc_channel_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","18A - TPS","INVALID","INVALID","INVALID","INVALID","INVALID","21A - MAP","INVALID","19A - CLT","20A - IAT"
+#define adc_channel_e_enum 0="NONE",5="18A - TPS",13="19A - CLT",14="20A - IAT",11="21A - MAP",12="On-board MAP"
+#define adc_channel_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","18A - TPS","INVALID","INVALID","INVALID","INVALID","INVALID","21A - MAP","On-board MAP","19A - CLT","20A - IAT"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define air_pressure_sensor_config_s_size 12
@@ -120,8 +120,6 @@
 #define BOARD_DIAG_PANEL2_FROM_FILE 
 #define BOARD_GAUGES_FROM_FILE 
 #define BOARD_INDICATORS_FROM_FILE 
-#define BOARD_MENU_FROM_FILE 
-#define BOARD_OPTIONS_FROM_FILE 
 #define BOARD_PANELS_FROM_FILE 
 #define BOARD_TABLES_FROM_FILE 
 #define BOARD_VE_MENU_FROM_FILE 
@@ -1276,7 +1274,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 3130494965
+#define SIGNATURE_HASH 1816312560
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1602,12 +1600,10 @@
 #define ts_show_cylinder_bank true
 #define ts_show_debug_mode false
 #define ts_show_egt false
-#define ts_show_etb true
+#define ts_show_etb false
 #define ts_show_etb_pins false
 #define ts_show_experimental true
 #define ts_show_fan2_settings true
-#define ts_show_fancy_hardware false
-#define ts_show_fancy_options true
 #define ts_show_firing_order true
 #define ts_show_forced_induction true
 #define ts_show_ford_toyota_tps_pps true
@@ -1657,7 +1653,7 @@
 #define ts_show_tcu false
 #define ts_show_tle8888 false
 #define ts_show_top_level_can_menu true
-#define ts_show_tps2 true
+#define ts_show_tps2 false
 #define ts_show_tps2_error true
 #define ts_show_tps_sent false
 #define ts_show_trigger_comparator false
@@ -1669,7 +1665,7 @@
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
 #define ts_show_vvt_output true
-#define TS_SIGNATURE "rusEFI master.2024.06.23.alphax-silver.3130494965"
+#define TS_SIGNATURE "rusEFI master.2024.06.24.alphax-silver.1816312560"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
