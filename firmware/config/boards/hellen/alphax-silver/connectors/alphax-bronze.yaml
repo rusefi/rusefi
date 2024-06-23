@@ -58,9 +58,10 @@ pins:
     color: blue
 
 info:
-  title: AlphaX Bronze
-  name: AlphaX Bronze
-#  board_url: https://rusefi.com/s/8chan
+  cid: main
+  title: AlphaX Silver
+  name: AlphaX Silver
+  board_url: https://rusefi.com/s/silver
   image:
     file: 34pins-3k.jpg
   pins:
