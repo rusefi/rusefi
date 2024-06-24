@@ -461,12 +461,13 @@
  *  PE5
  */
 
-// allow override of EFI_USE_UART_DMA from cmdline passed defs
 #ifndef EFI_USE_UART_DMA
 #define EFI_USE_UART_DMA TRUE
 #endif
 
+#ifndef AUX_SERIAL_DEVICE
 #define AUX_SERIAL_DEVICE (&SD6)
+#endif
 
 #ifndef EFI_CONSOLE_TX_BRAIN_PIN
 #define EFI_CONSOLE_TX_BRAIN_PIN Gpio::C10

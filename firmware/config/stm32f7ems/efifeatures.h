@@ -36,25 +36,24 @@
 #define EFI_USE_COMPRESSED_INI_MSD TRUE
 #endif
 
-// note order of include - first we set F7 defaults (above) and only later we apply F4 defaults
-#include "../stm32f4ems/efifeatures.h"
-
-// todo: get rid of the 'undef' patter just move all defaults above f4 include?
-
-
-#undef EFI_MC33816
-#define EFI_MC33816 FALSE
-
-// todo: our "DMA-half" ChibiOS patch not implemented for USARTv2/STM32F7/STM32H7
-#undef EFI_USE_UART_DMA
-#define EFI_USE_UART_DMA FALSE
+#ifndef LUA_USER_HEAP
+#define LUA_USER_HEAP 100000
+#endif
 
 // UART driver not implemented on F7
-
+#ifndef AUX_SERIAL_DEVICE
 #define AUX_SERIAL_DEVICE (&SD6)
+#endif
+
+// todo: our "DMA-half" ChibiOS patch not implemented for USARTv2/STM32F7/STM32H7
+#ifndef EFI_USE_UART_DMA
+#define EFI_USE_UART_DMA FALSE
+#endif
 
 // F7 may have dual bank, so flash on its own (low priority) thread so as to not block any other operations
+#ifndef EFI_FLASH_WRITE_THREAD
 #define EFI_FLASH_WRITE_THREAD TRUE
+#endif
 
-#undef LUA_USER_HEAP
-#define LUA_USER_HEAP 100000
+// note order of include - first we set F7 defaults (above) and only later we apply F4 defaults
+#include "../stm32f4ems/efifeatures.h"
