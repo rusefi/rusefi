@@ -51,6 +51,9 @@ static void printUid() {
 }
 #endif
 
+BOARD_WEAK void boardSayHello() {
+}
+
 static void sayHello() {
 	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI LLC (c) 2012-2024. All rights reserved.");
 	efiPrintf(PROTOCOL_HELLO_PREFIX " rusEFI v%d@%d now=%d", getRusEfiVersion(), /*do we have a working way to print 64 bit values?!*/(int)SIGNATURE_HASH, (int)getTimeNowMs());
@@ -60,6 +63,8 @@ static void sayHello() {
 #if EFI_USE_OPENBLT
 	efiPrintf(PROTOCOL_HELLO_PREFIX " with OPENBLT");
 #endif
+
+  boardSayHello();
 
 #if EFI_PROD_CODE && ENABLE_AUTO_DETECT_HSE
 	extern float hseFrequencyMhz;
