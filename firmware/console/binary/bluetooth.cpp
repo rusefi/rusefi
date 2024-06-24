@@ -113,7 +113,7 @@ static int btBaudOk(SerialTsChannelBase* tsChannel)
 
 	/* wait for resposne  */
 	len = btReadLine(tsChannel, tmp, sizeof(tmp));
-	if (len == 9)) {
+	if (len == 9) {
 			ret = 0;
 	}
 
