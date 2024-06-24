@@ -112,9 +112,9 @@ void boardInitHardware() {
 }
 
 void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
-	alphaCrankPPullUp.setValue(engineConfiguration->boardUseCrankPullUp);
-	alphaD2PullDown.setValue(engineConfiguration->boardUseD2PullDown);
-	alphaD3PullDown.setValue(engineConfiguration->boardUseD3PullDown);
+	alphaCrankPPullUp.setValue(config->boardUseCrankPullUp);
+	alphaD2PullDown.setValue(config->boardUseD2PullDown);
+	alphaD3PullDown.setValue(config->boardUseD3PullDown);
 }
 
 void setBoardConfigOverrides() {
