@@ -760,12 +760,6 @@ Enables lambda sensor closed loop feedback for fuelling.
 ### oddFireEngine
 On even fire engines with even number of cylinders we go wasted spark during cranking. Use this setting to disable wasted spark cranking on odd fire engines.
 
-### boardUseTachPullUp
-
-
-### boardUseTempPullUp
-
-
 ### yesUnderstandLocking
 
 
@@ -782,9 +776,6 @@ enable can_read/disable can_read
 enable can_write/disable can_write. See also can1ListenMode
 
 ### useLinearIatSensor
-
-
-### boardUse2stepPullDown
 
 
 ### tachPulseDurationAsDutyCycle
@@ -810,27 +801,6 @@ Be careful enabling this: some engines are known to self-disassemble their valve
 
 ### launchSparkCutEnable
 This is the Cut Mode normally used
-
-### boardUseCrankPullUp
-
-
-### boardUseCamPullDown
-
-
-### boardUseCamVrPullUp
-
-
-### boardUseD2PullDown
-
-
-### boardUseD3PullDown
-
-
-### boardUseD4PullDown
-
-
-### boardUseD5PullDown
-
 
 ### verboseIsoTp
 Are you a developer troubleshooting TS over CAN ISO/TP?

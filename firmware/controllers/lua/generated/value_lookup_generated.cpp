@@ -766,12 +766,6 @@ float getConfigValueByName(const char *name) {
 // oddFireEngine
 		case -111377544:
 			return engineConfiguration->oddFireEngine;
-// boardUseTachPullUp
-		case 885690524:
-			return engineConfiguration->boardUseTachPullUp;
-// boardUseTempPullUp
-		case -1457484942:
-			return engineConfiguration->boardUseTempPullUp;
 // yesUnderstandLocking
 		case -1985448683:
 			return engineConfiguration->yesUnderstandLocking;
@@ -790,9 +784,6 @@ float getConfigValueByName(const char *name) {
 // useLinearIatSensor
 		case 667504645:
 			return engineConfiguration->useLinearIatSensor;
-// boardUse2stepPullDown
-		case -1470758947:
-			return engineConfiguration->boardUse2stepPullDown;
 // tachPulseDurationAsDutyCycle
 		case 99110078:
 			return engineConfiguration->tachPulseDurationAsDutyCycle;
@@ -817,27 +808,6 @@ float getConfigValueByName(const char *name) {
 // launchSparkCutEnable
 		case -1829995308:
 			return engineConfiguration->launchSparkCutEnable;
-// boardUseCrankPullUp
-		case 1280316843:
-			return engineConfiguration->boardUseCrankPullUp;
-// boardUseCamPullDown
-		case 1304425152:
-			return engineConfiguration->boardUseCamPullDown;
-// boardUseCamVrPullUp
-		case -94892331:
-			return engineConfiguration->boardUseCamVrPullUp;
-// boardUseD2PullDown
-		case 1868156805:
-			return engineConfiguration->boardUseD2PullDown;
-// boardUseD3PullDown
-		case -472498042:
-			return engineConfiguration->boardUseD3PullDown;
-// boardUseD4PullDown
-		case 1481814407:
-			return engineConfiguration->boardUseD4PullDown;
-// boardUseD5PullDown
-		case -858840440:
-			return engineConfiguration->boardUseD5PullDown;
 // verboseIsoTp
 		case -487204662:
 			return engineConfiguration->verboseIsoTp;
@@ -3146,16 +3116,6 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->oddFireEngine = (int)value;
 		return 1;
 	}
-		case 885690524:
-	{
-		engineConfiguration->boardUseTachPullUp = (int)value;
-		return 1;
-	}
-		case -1457484942:
-	{
-		engineConfiguration->boardUseTempPullUp = (int)value;
-		return 1;
-	}
 		case -1985448683:
 	{
 		engineConfiguration->yesUnderstandLocking = (int)value;
@@ -3184,11 +3144,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case 667504645:
 	{
 		engineConfiguration->useLinearIatSensor = (int)value;
-		return 1;
-	}
-		case -1470758947:
-	{
-		engineConfiguration->boardUse2stepPullDown = (int)value;
 		return 1;
 	}
 		case 99110078:
@@ -3229,41 +3184,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1829995308:
 	{
 		engineConfiguration->launchSparkCutEnable = (int)value;
-		return 1;
-	}
-		case 1280316843:
-	{
-		engineConfiguration->boardUseCrankPullUp = (int)value;
-		return 1;
-	}
-		case 1304425152:
-	{
-		engineConfiguration->boardUseCamPullDown = (int)value;
-		return 1;
-	}
-		case -94892331:
-	{
-		engineConfiguration->boardUseCamVrPullUp = (int)value;
-		return 1;
-	}
-		case 1868156805:
-	{
-		engineConfiguration->boardUseD2PullDown = (int)value;
-		return 1;
-	}
-		case -472498042:
-	{
-		engineConfiguration->boardUseD3PullDown = (int)value;
-		return 1;
-	}
-		case 1481814407:
-	{
-		engineConfiguration->boardUseD4PullDown = (int)value;
-		return 1;
-	}
-		case -858840440:
-	{
-		engineConfiguration->boardUseD5PullDown = (int)value;
 		return 1;
 	}
 		case -487204662:

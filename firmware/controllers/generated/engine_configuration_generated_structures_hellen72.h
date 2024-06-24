@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Jun 23 18:18:29 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Jun 24 17:52:09 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2303,10 +2303,10 @@ struct engine_configuration_s {
 	bool oddFireEngine : 1 {};
 	/**
 	offset 1304 bit 3 */
-	bool boardUseTachPullUp : 1 {};
+	bool unusedFancy3 : 1 {};
 	/**
 	offset 1304 bit 4 */
-	bool boardUseTempPullUp : 1 {};
+	bool unusedFancy4 : 1 {};
 	/**
 	offset 1304 bit 5 */
 	bool yesUnderstandLocking : 1 {};
@@ -2330,7 +2330,7 @@ struct engine_configuration_s {
 	bool useLinearIatSensor : 1 {};
 	/**
 	offset 1304 bit 11 */
-	bool boardUse2stepPullDown : 1 {};
+	bool unusedFancy5 : 1 {};
 	/**
 	 * Treat milliseconds value as duty cycle value, i.e. 0.5ms would become 50%
 	offset 1304 bit 12 */
@@ -2365,25 +2365,25 @@ struct engine_configuration_s {
 	bool launchSparkCutEnable : 1 {};
 	/**
 	offset 1304 bit 20 */
-	bool boardUseCrankPullUp : 1 {};
+	bool unusedFancy1 : 1 {};
 	/**
 	offset 1304 bit 21 */
-	bool boardUseCamPullDown : 1 {};
+	bool unusedFancy2 : 1 {};
 	/**
 	offset 1304 bit 22 */
-	bool boardUseCamVrPullUp : 1 {};
+	bool unusedFancy14 : 1 {};
 	/**
 	offset 1304 bit 23 */
-	bool boardUseD2PullDown : 1 {};
+	bool unusedFancy7 : 1 {};
 	/**
 	offset 1304 bit 24 */
-	bool boardUseD3PullDown : 1 {};
+	bool unusedFancy8 : 1 {};
 	/**
 	offset 1304 bit 25 */
-	bool boardUseD4PullDown : 1 {};
+	bool unusedFancy9 : 1 {};
 	/**
 	offset 1304 bit 26 */
-	bool boardUseD5PullDown : 1 {};
+	bool unusedFancy10 : 1 {};
 	/**
 	 * Are you a developer troubleshooting TS over CAN ISO/TP?
 	offset 1304 bit 27 */
@@ -5680,4 +5680,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22800);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Jun 23 18:18:29 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Jun 24 17:52:09 UTC 2024
