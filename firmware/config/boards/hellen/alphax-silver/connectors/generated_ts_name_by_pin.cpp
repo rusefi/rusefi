@@ -6,6 +6,10 @@
 // see comments at declaration in pin_repository.h
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
+		case Gpio::C13: return "13A Coil 1";
+		case Gpio::E3: return "10A Coil 4";
+		case Gpio::E4: return "11A Coil 3";
+		case Gpio::E5: return "12A Coil 2";
 		case Gpio::TLE9104_0_OUT_0: return "4A - Injector 1";
 		case Gpio::TLE9104_0_OUT_1: return "3A - Injector 2";
 		case Gpio::TLE9104_0_OUT_2: return "2A - Injector 3";
