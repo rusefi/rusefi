@@ -1,0 +1,5 @@
+bit boardUseTachPullUp,"12v","5v"
+bit boardUseTempPullUp,"With Pull Ups","Piggyback Mode"
+bit boardUseCrankPullUp,"Hall","VR"
+bit boardUse2stepPullDown,"With Pull Down","With Pull Up"
+bit boardUseCamPullDown,"With Pull Down","With Pull Up"

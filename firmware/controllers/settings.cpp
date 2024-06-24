@@ -574,12 +574,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->verboseKLine = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "stepperidle")) {
 		engineConfiguration->useStepperIdle = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "boardUseTempPullUp")) {
-		engineConfiguration->boardUseTempPullUp = isEnabled;
-		incrementGlobalConfigurationVersion();
-	} else if (strEqualCaseInsensitive(param, "boardUseTachPullUp")) {
-		engineConfiguration->boardUseTachPullUp = isEnabled;
-		incrementGlobalConfigurationVersion();
 	} else if (strEqualCaseInsensitive(param, "two_wire_wasted_spark")) {
 		engineConfiguration->twoWireBatchIgnition = isEnabled;
 		incrementGlobalConfigurationVersion();
