@@ -608,15 +608,15 @@
         <constant name="widebandOnSecondBus">"1"</constant>
         <constant name="fuelClosedLoopCorrectionEnabled">"false"</constant>
         <constant name="oddFireEngine">"false"</constant>
-        <constant name="boardUseTachPullUp">"5v"</constant>
-        <constant name="boardUseTempPullUp">"Piggyback Mode"</constant>
+        <constant name="unusedFancy3">"false"</constant>
+        <constant name="unusedFancy4">"false"</constant>
         <constant name="yesUnderstandLocking">"no"</constant>
         <constant name="silentTriggerError">"true"</constant>
         <constant name="useLinearCltSensor">"false"</constant>
         <constant name="canReadEnabled">"true"</constant>
         <constant name="canWriteEnabled">"true"</constant>
         <constant name="useLinearIatSensor">"false"</constant>
-        <constant name="boardUse2stepPullDown">"With Pull Up"</constant>
+        <constant name="unusedFancy5">"false"</constant>
         <constant name="tachPulseDurationAsDutyCycle">"Duty cycle"</constant>
         <constant name="isAlternatorControlEnabled">"false"</constant>
         <constant name="invertPrimaryTriggerSignal">"Rising"</constant>
@@ -625,13 +625,13 @@
         <constant name="cutSparkOnHardLimit">"yes"</constant>
         <constant name="launchFuelCutEnable">"false"</constant>
         <constant name="launchSparkCutEnable">"false"</constant>
-        <constant name="boardUseCrankPullUp">"VR"</constant>
-        <constant name="boardUseCamPullDown">"With Pull Up"</constant>
-        <constant name="boardUseCamVrPullUp">"VR"</constant>
-        <constant name="boardUseD2PullDown">"With Pull Up"</constant>
-        <constant name="boardUseD3PullDown">"With Pull Up"</constant>
-        <constant name="boardUseD4PullDown">"With Pull Up"</constant>
-        <constant name="boardUseD5PullDown">"With Pull Up"</constant>
+        <constant name="unusedFancy1">"false"</constant>
+        <constant name="unusedFancy2">"false"</constant>
+        <constant name="unusedFancy14">"false"</constant>
+        <constant name="unusedFancy7">"false"</constant>
+        <constant name="unusedFancy8">"false"</constant>
+        <constant name="unusedFancy9">"false"</constant>
+        <constant name="unusedFancy10">"false"</constant>
         <constant name="verboseIsoTp">"false"</constant>
         <constant name="engineSnifferFocusOnInputs">"false"</constant>
         <constant name="launchActivateInverted">"false"</constant>
@@ -4720,7 +4720,7 @@ end</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240617" nPages="1" signature="rusEFI master.2024.06.24.f407-discovery.1818028616" version="5.0"/>
+    <versionInfo firmwareInfo="20240617" nPages="1" signature="rusEFI master.2024.06.24.f407-discovery.3106770953" version="5.0"/>
     <bibliography author="rusEFI 20240617" writeDate="date"/>
     <settings/>
     <userComments/>
