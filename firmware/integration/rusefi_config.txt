@@ -1693,6 +1693,8 @@ int anotherCiTest
     uint16_t minAcPressure;value of A/C pressure in kPa before that compressor is disengaged;"kPa", 1, 0, 0, 500, 0
     uint16_t maxAcPressure;value of A/C pressure in kPa after that compressor is disengaged;"kPa", 1, 0, 0, 500, 0
 
+@@BOARD_ENGINE_CONFIGURATION_FROM_FILE@@
+
 #define END_OF_CALIBRATION_PADDING 174
 uint8_t[END_OF_CALIBRATION_PADDING] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
