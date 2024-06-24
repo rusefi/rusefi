@@ -117,12 +117,10 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 	alphaCrankPPullUp.setValue(engineConfiguration->boardUseCrankPullUp);
 	alpha2stepPullDown.setValue(engineConfiguration->boardUse2stepPullDown);
 	alphaCamPullDown.setValue(engineConfiguration->boardUseCamPullDown);
-	//alphaCamVrPullUp.setValue(engineConfiguration->boardUseCamVrPullUp);
 
 	alphaD2PullDown.setValue(engineConfiguration->boardUseD2PullDown);
 	alphaD3PullDown.setValue(engineConfiguration->boardUseD3PullDown);
 	alphaD4PullDown.setValue(engineConfiguration->boardUseD4PullDown);
-	//alphaD5PullDown.setValue(engineConfiguration->boardUseD5PullDown);
 }
 
 void setBoardConfigOverrides() {

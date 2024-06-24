@@ -1,2 +1,5 @@
 bit boardUseTempPullUp,"With Pull Ups","Piggyback Mode"
 bit boardUse2stepPullDown,"With Pull Down","With Pull Up"
+bit boardUseD2PullDown,"With Pull Down","With Pull Up"
+bit boardUseD3PullDown,"With Pull Down","With Pull Up"
+

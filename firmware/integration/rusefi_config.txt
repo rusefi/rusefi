@@ -1034,15 +1034,15 @@ end_struct
 	bit widebandOnSecondBus,"2","1";Select which bus the wideband controller is attached to.
 	bit fuelClosedLoopCorrectionEnabled;Enables lambda sensor closed loop feedback for fuelling.
 	bit oddFireEngine;On even fire engines with even number of cylinders we go wasted spark during cranking. Use this setting to disable wasted spark cranking on odd fire engines.
-	bit boardUseTachPullUp,"12v","5v"
-	bit boardUseTempPullUp,"With Pull Ups","Piggyback Mode"
+	bit unusedFancy3
+	bit unusedFancy4
 	bit yesUnderstandLocking,"yes","no"
 	bit silentTriggerError;Sometimes we have a performance issue while printing error
 	bit useLinearCltSensor
 	bit canReadEnabled;enable can_read/disable can_read
 	bit canWriteEnabled;enable can_write/disable can_write. See also can1ListenMode
 	bit useLinearIatSensor
-	bit boardUse2stepPullDown,"With Pull Down","With Pull Up"
+	bit unusedFancy5
 	bit tachPulseDurationAsDutyCycle,"Duty cycle","Constant time";Treat milliseconds value as duty cycle value, i.e. 0.5ms would become 50%
 	bit isAlternatorControlEnabled;This enables smart alternator control and activates the extra alternator settings.
 	bit invertPrimaryTriggerSignal,"Falling","Rising";https://wiki.rusefi.com/Trigger-Configuration-Guide\nThis setting flips the signal from the primary engine speed sensor.
@@ -1052,13 +1052,13 @@ bit cutFuelOnHardLimit,"yes","no"
 bit cutSparkOnHardLimit,"yes","no";Be careful enabling this: some engines are known to self-disassemble their valvetrain with a spark cut. Fuel cut is much safer.
 bit launchFuelCutEnable
 bit launchSparkCutEnable;This is the Cut Mode normally used
-	bit boardUseCrankPullUp,"Hall","VR"
-	bit boardUseCamPullDown,"With Pull Down","With Pull Up"
-	bit boardUseCamVrPullUp,"Hall","VR"
-	bit boardUseD2PullDown,"With Pull Down","With Pull Up"
-	bit boardUseD3PullDown,"With Pull Down","With Pull Up"
-	bit boardUseD4PullDown,"With Pull Down","With Pull Up"
-	bit boardUseD5PullDown,"With Pull Down","With Pull Up"
+	bit unusedFancy1
+	bit unusedFancy2
+	bit unusedFancy14
+	bit unusedFancy7
+	bit unusedFancy8
+	bit unusedFancy9
+	bit unusedFancy10
 bit verboseIsoTp;Are you a developer troubleshooting TS over CAN ISO/TP?
 bit engineSnifferFocusOnInputs
 bit launchActivateInverted

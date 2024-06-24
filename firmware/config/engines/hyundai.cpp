@@ -99,7 +99,7 @@ void setHyundaiPb() {
     engineConfiguration->hpfpValvePin = Gpio::H144_OUT_IO6; // E2
 	engineConfiguration->starterControlPin = Gpio::H144_OUT_PWM5; // F1
 	engineConfiguration->startStopButtonPin = Gpio::H144_IN_VSS; // C4
-	engineConfiguration->boardUse2stepPullDown = true; // looks like 1K extra pull-down is needed on the harness?! :(
+	config->boardUse2stepPullDown = true; // looks like 1K extra pull-down is needed on the harness?! :(
 	engineConfiguration->camInputs[0] = Gpio::H144_IN_D_4; // E6
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2;
 #endif // HW_HELLEN_4CHAN
