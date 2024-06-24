@@ -29,8 +29,11 @@ public class MetaHelper {
         options.add(BoardConfigStrategy.BOARD_CONFIG_FROM_FILE);
         options.add("tunerstudio/empty_board_options.ini");
 
-        String[] totalArgs = options.toArray(new String[0]);
+        options.add(ConfigDefinition.READFILE_OPTION);
+        options.add("BOARD_ENGINE_CONFIGURATION_FROM_FILE");
+        options.add("tunerstudio/empty_board_options.ini");
 
+        String[] totalArgs = options.toArray(new String[0]);
 
         ReaderStateImpl state = new ReaderStateImpl();
         ConfigDefinition.doJob(totalArgs, state);
