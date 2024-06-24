@@ -8,10 +8,10 @@
 static OutputPin alphaTempPullUp;
 
 static void setInjectorPins() {
-	engineConfiguration->injectionPins[0] = Gpio::MC33810_0_OUT_0;
-	engineConfiguration->injectionPins[1] = Gpio::MC33810_0_OUT_1;
-	engineConfiguration->injectionPins[2] = Gpio::MC33810_0_OUT_2;
-	engineConfiguration->injectionPins[3] = Gpio::MC33810_0_OUT_3;
+	engineConfiguration->injectionPins[0] = Gpio::TLE9104_0_OUT_0;
+	engineConfiguration->injectionPins[1] = Gpio::TLE9104_0_OUT_1;
+	engineConfiguration->injectionPins[2] = Gpio::TLE9104_0_OUT_2;
+	engineConfiguration->injectionPins[3] = Gpio::TLE9104_0_OUT_3;
 }
 
 static void setIgnitionPins() {
@@ -108,10 +108,10 @@ static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
 			.cr2 = SPI_CR2_16BIT_MODE
 		},
 		.direct_io = {
-			{ .port = GPIOA, .pad = 8 },
-			{ .port = GPIOD, .pad = 15 },
-			{ .port = GPIOD, .pad = 2 },
-			{ .port = GPIOD, .pad = 12 }
+			{ .port = GPIOA, .pad = 8 }, // tach
+			{ .port = GPIOD, .pad = 15 }, // pump relay
+			{ .port = GPIOD, .pad = 2 }, // idle valve
+			{ .port = GPIOD, .pad = 12 } // fan relay
 		},
 		.resn = Gpio::Unassigned, //Gpio::B14,
 		.en   = Gpio::Unassigned //Gpio::B15
@@ -155,10 +155,29 @@ static void board_init_ext_gpios()
  */
 void boardInitHardware(void)
 {
-	alphaTempPullUp.initPin("a-temp", Gpio::MM100_IGN8);
+	alphaTempPullUp.initPin("a-temp", Gpio::MM100_IGN8); //  E6
 	board_init_ext_gpios();
+	boardOnConfigurationChange(nullptr); // TODO? invoke this from main firmware code not from board file?
 }
 
 void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
 	alphaTempPullUp.setValue(engineConfiguration->boardUseTempPullUp);
+}
+
+static Gpio OUTPUTS[] = {
+	Gpio::TLE9104_0_OUT_3, // 1A - Injector 4
+	Gpio::TLE9104_0_OUT_2, // 2A - Injector 3
+	Gpio::TLE9104_0_OUT_1, // 3A - Injector 2
+	Gpio::TLE9104_0_OUT_0, // 4A - Injector 1
+	Gpio::TLE9104_1_OUT_1, // 5A Fuel Pump Relay
+	Gpio::TLE9104_1_OUT_2, // 6A Idle Output
+	Gpio::TLE9104_1_OUT_3, // 28A Fan Relay
+};
+
+int getBoardMetaOutputsCount() {
+    return efi::size(OUTPUTS);
+}
+
+Gpio* getBoardMetaOutputs() {
+    return OUTPUTS;
 }

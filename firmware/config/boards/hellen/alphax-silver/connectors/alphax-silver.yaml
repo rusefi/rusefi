@@ -49,6 +49,14 @@ pins:
     ts_name: ___ Idle Output
     color: blue
 
+  - pin: 14A
+    id: TLE9104_1_OUT_0
+    function: Tach Out
+    class: outputs
+    type: ls
+    ts_name: ___ Tach Output
+    color: blue
+
   - pin: 18A
     meta: MM100_IN_TPS_ANALOG
     class: analog_inputs
@@ -108,10 +116,10 @@ pins:
 
   - pin: 28A
     id: TLE9104_1_OUT_3
-    function: Fan Realy
+    function: Fan Relay
     class: outputs
     type: ls
-    ts_name: ___ Fan Realy
+    ts_name: ___ Fan Relay
     color: blue
 
 info:
