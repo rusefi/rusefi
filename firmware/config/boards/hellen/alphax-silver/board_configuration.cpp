@@ -172,10 +172,19 @@ static Gpio OUTPUTS[] = {
 	Gpio::TLE9104_1_OUT_1, // 5A Fuel Pump Relay
 	Gpio::TLE9104_1_OUT_2, // 6A Idle Output
 	Gpio::TLE9104_1_OUT_3, // 28A Fan Relay
+	Gpio::TLE9104_1_OUT_0, // 14A Tach Output
+	Gpio::MM100_IGN1,
+	Gpio::MM100_IGN2,
+	Gpio::MM100_IGN3,
+	Gpio::MM100_IGN4,
 };
 
 int getBoardMetaOutputsCount() {
     return efi::size(OUTPUTS);
+}
+
+int getBoardMetaLowSideOutputsCount() {
+    return getBoardMetaOutputsCount() - 4;
 }
 
 Gpio* getBoardMetaOutputs() {

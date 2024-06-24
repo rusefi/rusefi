@@ -7,7 +7,7 @@ pins:
     class: outputs
     type: ls
     ts_name: ___ - Injector 4
-    color: blue
+    color: orange
 
   - pin: 2A
     id: TLE9104_0_OUT_2
@@ -23,7 +23,7 @@ pins:
     class: outputs
     type: ls
     ts_name: ___ - Injector 2
-    color: blue
+    color: white
 
   - pin: 4A
     id: TLE9104_0_OUT_0
@@ -31,7 +31,7 @@ pins:
     class: outputs
     type: ls
     ts_name: ___ - Injector 1
-    color: blue
+    color: green
 
   - pin: 5A
     id: TLE9104_1_OUT_1
@@ -39,7 +39,7 @@ pins:
     class: outputs
     type: ls
     ts_name: ___ Fuel Pump Relay
-    color: blue
+    color: white
 
   - pin: 6A
     id: TLE9104_1_OUT_2
@@ -47,7 +47,32 @@ pins:
     class: outputs
     type: ls
     ts_name: ___ Idle Output
+    color: yellow
+
+  - pin: 10A
+    meta: MM100_IGN4
+    class: outputs
+    ts_name: ___ Coil 4
+    color: orange
+
+  - pin: 11A
+    meta: MM100_IGN3
+    class: outputs
+    ts_name: ___ Coil 3
     color: blue
+
+  - pin: 12A
+    meta: MM100_IGN2
+    class: outputs
+    ts_name: ___ Coil 2
+    color: white
+
+  - pin: 13A
+    meta: MM100_IGN1
+    class: outputs
+    ts_name: ___ Coil 1
+    color: green
+
 
   - pin: 14A
     id: TLE9104_1_OUT_0
