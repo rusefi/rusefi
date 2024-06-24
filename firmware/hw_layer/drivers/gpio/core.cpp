@@ -493,7 +493,6 @@ int gpiochips_get_total_pins(void)
 
 void gpiochips_debug(void)
 {
-	return 0;
 }
 
 #endif /* BOARD_EXT_GPIOCHIPS > 0 */
