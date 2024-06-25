@@ -973,7 +973,10 @@ void configureRusefiLuaHooks(lua_State* lState) {
 		engine->engineState.lua.clutchUpState = lua_toboolean(l, 1);
 		return 0;
 	});
-
+	lua_register(lState, "setClutchDownState", [](lua_State* l) {
+		engine->engineState.lua.clutchDownState = lua_toboolean(l, 1);
+		return 0;
+	});
 	lua_register(lState, "setBrakePedalState", [](lua_State* l) {
 		engine->engineState.lua.brakePedalState = lua_toboolean(l, 1);
 		return 0;

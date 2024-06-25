@@ -227,6 +227,14 @@ void Engine::updateSlowSensors() {
 }
 
 #if EFI_GPIO_HARDWARE
+static bool getClutchDownState() {
+	if (isBrainPinValid(engineConfiguration->clutchDownPin)) {
+		return engineConfiguration->clutchDownPinInverted ^ efiReadPin(engineConfiguration->clutchDownPin);
+	}
+	// todo: boolean sensors should leverage sensor framework #6342
+	return engine->engineState.lua.clutchDownState;
+}
+
 static bool getClutchUpState() {
 	if (isBrainPinValid(engineConfiguration->clutchUpPin)) {
 		return engineConfiguration->clutchUpPinInverted ^ efiReadPin(engineConfiguration->clutchUpPin);
@@ -247,9 +255,7 @@ static bool getBrakePedalState() {
 void Engine::updateSwitchInputs() {
 #if EFI_GPIO_HARDWARE
 	// this value is not used yet
-	if (isBrainPinValid(engineConfiguration->clutchDownPin)) {
-		engine->engineState.clutchDownState = engineConfiguration->clutchDownPinInverted ^ efiReadPin(engineConfiguration->clutchDownPin);
-	}
+  engine->engineState.clutchDownState = getClutchDownState();
 	{
 		bool currentState;
 		if (hasAcToggle()) {
