@@ -58,7 +58,9 @@ float getVoltage(const char *msg, adc_channel_e hwChannel) {
 #define ADC_BUF_DEPTH_FAST      4
 #endif
 
-AdcDevice::AdcDevice(ADCConversionGroup* p_hwConfig, volatile adcsample_t *p_buf) {
+AdcDevice::AdcDevice(ADCDriver *p_adcp, ADCConversionGroup* p_hwConfig, volatile adcsample_t *p_buf, size_t p_depth) {
+	adcp = p_adcp;
+	depth = p_depth;
 	hwConfig = p_hwConfig;
 	samples = p_buf;
 
@@ -138,7 +140,7 @@ static ADCConversionGroup adcgrpcfgFast = {
 
 static volatile NO_CACHE adcsample_t fastAdcSampleBuf[ADC_BUF_DEPTH_FAST * ADC_MAX_CHANNELS_COUNT];
 
-AdcDevice fastAdc(&adcgrpcfgFast, fastAdcSampleBuf);
+AdcDevice fastAdc(&ADC_FAST_DEVICE, &adcgrpcfgFast, fastAdcSampleBuf, ADC_BUF_DEPTH_FAST);
 
 static void fastAdcDoneCB(ADCDriver *adcp) {
 	// State may not be complete if we get a callback for "half done"
@@ -162,46 +164,10 @@ static void fastAdcTrigger(GPTDriver*) {
 	 * will be executed in parallel to the current PWM cycle and will
 	 * terminate before the next PWM cycle.
 	 */
-	chSysLockFromISR();
-	if ((ADC_FAST_DEVICE.state != ADC_READY) &&
-		(ADC_FAST_DEVICE.state != ADC_COMPLETE) &&
-		(ADC_FAST_DEVICE.state != ADC_ERROR)) {
-		engine->outputChannels.fastAdcErrorsCount++;
-		// todo: when? why? criticalError("ADC fast not ready?");
-		// see notes at https://github.com/rusefi/rusefi/issues/6399
-	} else {
-		/* drop volatile type qualifier - this is safe */
-		adcStartConversionI(&ADC_FAST_DEVICE, &adcgrpcfgFast, (adcsample_t *)fastAdc.samples, ADC_BUF_DEPTH_FAST);
-	}
-	chSysUnlockFromISR();
+	fastAdc.startConversionI();
 #endif /* EFI_INTERNAL_ADC */
 }
-#endif // EFI_USE_FAST_ADC
 
-static float mcuTemperature;
-
-float getMCUInternalTemperature() {
-	return mcuTemperature;
-}
-
-int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
-	if (!isAdcChannelValid(hwChannel)) {
-		warning(ObdCode::CUSTOM_OBD_ANALOG_INPUT_NOT_CONFIGURED, "ADC: %s input is not configured", msg);
-		return -1;
-	}
-
-#if EFI_USE_FAST_ADC
-	if (adcHwChannelMode[hwChannel] == ADC_FAST) {
-		/* todo if ADC_BUF_DEPTH_FAST EQ 1
-		 * return fastAdc.samples[internalIndex]; */
-		return fastAdc.getAvgAdcValue(hwChannel, ADC_BUF_DEPTH_FAST);
-	}
-#endif // EFI_USE_FAST_ADC
-
-	return slowAdcSamples[hwChannel - EFI_ADC_0];
-}
-
-#if EFI_USE_FAST_ADC
 static GPTConfig fast_adc_config = {
 	.frequency = GPT_FREQ_FAST,
 	.callback = fastAdcTrigger,
@@ -252,12 +218,28 @@ int AdcDevice::enableChannel(adc_channel_e hwChannel) {
 	return channelAdcIndex;
 }
 
-adcsample_t AdcDevice::getAvgAdcValue(adc_channel_e hwChannel, size_t bufDepth) {
+void AdcDevice::startConversionI()
+{
+	chSysLockFromISR();
+	if ((ADC_FAST_DEVICE.state != ADC_READY) &&
+		(ADC_FAST_DEVICE.state != ADC_COMPLETE) &&
+		(ADC_FAST_DEVICE.state != ADC_ERROR)) {
+		engine->outputChannels.fastAdcErrorsCount++;
+		// todo: when? why? criticalError("ADC fast not ready?");
+		// see notes at https://github.com/rusefi/rusefi/issues/6399
+	} else {
+		/* drop volatile type qualifier - this is safe */
+		adcStartConversionI(adcp, hwConfig, (adcsample_t *)samples, depth);
+	}
+	chSysUnlockFromISR();
+}
+
+adcsample_t AdcDevice::getAvgAdcValue(adc_channel_e hwChannel) {
 	uint32_t result = 0;
 	int numChannels = size();
 	int index = fastAdc.internalAdcIndexByHardwareIndex[hwChannel];
 
-	for (size_t i = 0; i < bufDepth; i++) {
+	for (size_t i = 0; i < depth; i++) {
 		adcsample_t sample = samples[index];
 //		if (sample > 0x1FFF) {
 //			// 12bit ADC expected right now, make this configurable one day
@@ -277,7 +259,7 @@ adcsample_t AdcDevice::getAvgAdcValue(adc_channel_e hwChannel, size_t bufDepth) 
 	}
 
 	// this truncation is guaranteed to not be lossy - the average can't be larger than adcsample_t
-	return static_cast<adcsample_t>(result / bufDepth);
+	return static_cast<adcsample_t>(result / depth);
 }
 
 adc_channel_e AdcDevice::getAdcChannelByInternalIndex(int hwChannel) const {
@@ -297,6 +279,27 @@ AdcToken AdcDevice::getAdcChannelToken(adc_channel_e hwChannel) {
 
 static uint32_t slowAdcConversionCount = 0;
 static uint32_t slowAdcErrorsCount = 0;
+
+static float mcuTemperature;
+
+float getMCUInternalTemperature() {
+	return mcuTemperature;
+}
+
+int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
+	if (!isAdcChannelValid(hwChannel)) {
+		warning(ObdCode::CUSTOM_OBD_ANALOG_INPUT_NOT_CONFIGURED, "ADC: %s input is not configured", msg);
+		return -1;
+	}
+
+#if EFI_USE_FAST_ADC
+	if (adcHwChannelMode[hwChannel] == ADC_FAST) {
+		return fastAdc.getAvgAdcValue(hwChannel);
+	}
+#endif // EFI_USE_FAST_ADC
+
+	return slowAdcSamples[hwChannel - EFI_ADC_0];
+}
 
 static void printAdcValue(int channel) {
 	/* Do this check before conversion to adc_channel_e that is uint8_t based */
