@@ -61,10 +61,6 @@
     engineConfiguration->throttlePedalSecondaryUpVoltage = 0.34;
     // default 0.0
     engineConfiguration->throttlePedalSecondaryWOTVoltage = 1.86;
-    // default "Normal"
-    engineConfiguration->clutchDownPinInverted = false;
-    // default "Normal"
-    engineConfiguration->clutchUpPinInverted = false;
     // default 300.0
     engineConfiguration->idle.solenoidFrequency = 200;
     // default "false"
@@ -153,6 +149,8 @@
     engineConfiguration->etb.iFactor = 70.2307;
     // default 0.05
     engineConfiguration->etb.dFactor = 0.1855;
+    // default "Normal"
+    engineConfiguration->clutchDownPinInverted = false;
 
 
 	coupleBK2cannedtpsTspCorrValuesBins();

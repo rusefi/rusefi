@@ -94,10 +94,6 @@
     // default 10000.0
     engineConfiguration->mc33_t_hold_tot = 0;
     // default "Normal"
-    engineConfiguration->clutchDownPinInverted = false;
-    // default "Normal"
-    engineConfiguration->clutchUpPinInverted = false;
-    // default "Normal"
     engineConfiguration->flexSensorInverted = false;
     // default 1.0
     engineConfiguration->turboSpeedSensorMultiplier = 0;
@@ -283,6 +279,8 @@
     engineConfiguration->etbMaximumPosition = 97;
     // default "false"
     engineConfiguration->launchControlEnabled = true;
+    // default "Normal"
+    engineConfiguration->clutchDownPinInverted = false;
     // default 30.0
     engineConfiguration->launchSpeedThreshold = 15;
     // default 3000.0

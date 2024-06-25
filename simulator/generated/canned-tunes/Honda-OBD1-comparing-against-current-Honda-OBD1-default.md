@@ -40,10 +40,6 @@
     // default 0.0
     engineConfiguration->cylinderBankSelect[11] = 1;
     // default "Normal"
-    engineConfiguration->clutchDownPinInverted = false;
-    // default "Normal"
-    engineConfiguration->clutchUpPinInverted = false;
-    // default "Normal"
     engineConfiguration->flexSensorInverted = false;
     // default 0.0
     engineConfiguration->mapLowValueVoltage = 2.91;
@@ -69,6 +65,8 @@
     engineConfiguration->rpmSoftLimitTimingRetard = 0;
     // default 1.0
     engineConfiguration->tpsAccelFractionDivisor = 0;
+    // default "Normal"
+    engineConfiguration->clutchDownPinInverted = false;
     // default 60.0
     engineConfiguration->gppwm[0].onAboveDuty = 80;
     // default 50.0

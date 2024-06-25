@@ -40,10 +40,6 @@
     // default 1.86
     engineConfiguration->throttlePedalSecondaryWOTVoltage = 2.28;
     // default "Normal"
-    engineConfiguration->clutchDownPinInverted = false;
-    // default "Normal"
-    engineConfiguration->clutchUpPinInverted = false;
-    // default "Normal"
     engineConfiguration->flexSensorInverted = false;
     // default 0.05
     engineConfiguration->idleRpmPid.pFactor = 0.03;
@@ -125,6 +121,8 @@
     engineConfiguration->afterCrankingIACtaperDuration = 100;
     // default "Launch Button"
     engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
+    // default "Normal"
+    engineConfiguration->clutchDownPinInverted = false;
     // default "NONE"
     engineConfiguration->hpfpCam = HPFP_CAM_EX1;
     // default 10.0

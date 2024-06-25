@@ -70,10 +70,6 @@
     // default 0.0
     engineConfiguration->throttlePedalSecondaryWOTVoltage = 2.28;
     // default "Normal"
-    engineConfiguration->clutchDownPinInverted = false;
-    // default "Normal"
-    engineConfiguration->clutchUpPinInverted = false;
-    // default "Normal"
     engineConfiguration->flexSensorInverted = false;
     // default 0.0
     engineConfiguration->highPressureFuel.v1 = 0.5;
@@ -183,6 +179,8 @@
     engineConfiguration->disableEtbWhenEngineStopped = true;
     // default "Launch Button"
     engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
+    // default "Normal"
+    engineConfiguration->clutchDownPinInverted = false;
     // default "false"
     engineConfiguration->rethrowHardFault = true;
     // default 3.0
