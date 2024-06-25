@@ -13,6 +13,7 @@
 #include <stdint.h>
 #include <sys/types.h>
 
+#include <board_types.h>
 #include <rusefi/rusefi_time_types.h>
 #include "generated_lookup_meta.h"
 #include "rusefi_enums.h"
