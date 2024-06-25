@@ -2050,6 +2050,8 @@ end_struct
 #define ts_show_tps2_error true
 #define ts_show_clutch_up true
 #define ts_show_clutch_down true
+#define ts_show_clutch_up_pin true
+#define ts_show_clutch_down_pin true
 
 #define GAUGE_NAME_LUA_0 "Lua Gauge 1"
 #define GAUGE_NAME_LUA_1 "Lua Gauge 2"
