@@ -241,6 +241,11 @@ __attribute__((weak)) void setAdcChannelOverrides() { }
 static void configureInputs() {
 	memset(adcHwChannelMode, 0x0, sizeof(adcHwChannelMode));
 
+	/* This is workaround for slow ADC lazy initialization - consumers does not call any init for channel before start using it */
+	for (int hwChannel = EFI_ADC_0; hwChannel <= EFI_ADC_15; hwChannel++) {
+		addChannel("auto", static_cast<adc_channel_e>(hwChannel), ADC_SLOW);
+	}
+
 	/**
 	 * order of analog channels here is totally random and has no meaning
 	 * we also have some weird implementation with internal indices - that all has no meaning, it's just a random implementation
