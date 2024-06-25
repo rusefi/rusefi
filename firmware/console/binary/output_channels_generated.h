@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sun Jun 23 21:44:26 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Tue Jun 25 02:20:41 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1322,11 +1322,31 @@ struct output_channels_s {
 	 */
 	float acPressure = (float)0;
 	/**
+	 * units: V
 	 * offset 764
+	 */
+	scaled_channel<int16_t, 1000, 1> rawAuxAnalog1 = (int16_t)0;
+	/**
+	 * units: V
+	 * offset 766
+	 */
+	scaled_channel<int16_t, 1000, 1> rawAuxAnalog2 = (int16_t)0;
+	/**
+	 * units: V
+	 * offset 768
+	 */
+	scaled_channel<int16_t, 1000, 1> rawAuxAnalog3 = (int16_t)0;
+	/**
+	 * units: V
+	 * offset 770
+	 */
+	scaled_channel<int16_t, 1000, 1> rawAuxAnalog4 = (int16_t)0;
+	/**
+	 * offset 772
 	 */
 	uint8_t unusedAtTheEnd[72];
 };
-static_assert(sizeof(output_channels_s) == 836);
+static_assert(sizeof(output_channels_s) == 844);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sun Jun 23 21:44:26 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Tue Jun 25 02:20:41 UTC 2024

@@ -319,6 +319,10 @@ static const LogField fields[] = {
 	{engine->outputChannels.sadDwellRatioCounter, "sadDwellRatioCounter", "", 0},
 	{engine->outputChannels.injectionPrimingCounter, "injectionPrimingCounter", "", 0},
 	{engine->outputChannels.acPressure, "A/C pressure", "kPa", 0},
+	{engine->outputChannels.rawAuxAnalog1, "rawAuxAnalog1", "V", 3},
+	{engine->outputChannels.rawAuxAnalog2, "rawAuxAnalog2", "V", 3},
+	{engine->outputChannels.rawAuxAnalog3, "rawAuxAnalog3", "V", 3},
+	{engine->outputChannels.rawAuxAnalog4, "rawAuxAnalog4", "V", 3},
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},
 #endif
