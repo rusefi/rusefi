@@ -264,8 +264,6 @@ static AdcToken hipSampleIndex;
 static AdcToken triggerSampleIndex;
 #endif // HAL_TRIGGER_USE_ADC
 
-extern AdcDevice fastAdc;
-
 #ifdef FAST_ADC_SKIP
 // No reason to enable if N = 1
 static_assert(FAST_ADC_SKIP > 1);
