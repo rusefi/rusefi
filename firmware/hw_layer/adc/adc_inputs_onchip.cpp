@@ -41,9 +41,19 @@ float getVoltage(const char *msg, adc_channel_e hwChannel) {
 
 #if EFI_USE_FAST_ADC
 
-/* Depth of the conversion buffer, channels are sampled X times each.*/
+// is there a reason to have this configurable at runtime?
+#ifndef ADC_FAST_DEVICE
+#define ADC_FAST_DEVICE		ADCD2
+#endif
+
+// Depth of the conversion buffer, channels are sampled X times each
 #ifndef ADC_BUF_DEPTH_FAST
-#define ADC_BUF_DEPTH_FAST      4
+#define ADC_BUF_DEPTH_FAST	4
+#endif
+
+// See https://github.com/rusefi/rusefi/issues/976 for discussion on this value
+#ifndef ADC_SAMPLING_FAST
+#define ADC_SAMPLING_FAST	ADC_SAMPLE_28
 #endif
 
 AdcDevice::AdcDevice(ADCDriver *p_adcp, ADCConversionGroup* p_hwConfig, volatile adcsample_t *p_buf, size_t p_depth) {
@@ -61,20 +71,6 @@ AdcDevice::AdcDevice(ADCDriver *p_adcp, ADCConversionGroup* p_hwConfig, volatile
 #endif /* ADC_MAX_CHANNELS_COUNT */
 	memset(internalAdcIndexByHardwareIndex, 0xFF, sizeof(internalAdcIndexByHardwareIndex));
 }
-
-#endif // EFI_USE_FAST_ADC
-
-// is there a reason to have this configurable at runtime?
-#ifndef ADC_FAST_DEVICE
-#define ADC_FAST_DEVICE ADCD2
-#endif /* ADC_FAST_DEVICE */
-
-#if EFI_USE_FAST_ADC
-
-// See https://github.com/rusefi/rusefi/issues/976 for discussion on this value
-#ifndef ADC_SAMPLING_FAST
-#define ADC_SAMPLING_FAST ADC_SAMPLE_28
-#endif
 
 static void fastAdcDoneCB(ADCDriver *adcp);
 static void fastAdcErrorCB(ADCDriver *, adcerror_t err);
