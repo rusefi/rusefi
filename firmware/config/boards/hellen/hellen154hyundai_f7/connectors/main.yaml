@@ -46,9 +46,9 @@ pins:
 
   - pin: K15
     meta: H144_IN_D_3
-    function: 'Cam Sensor (2014: yellow)'
+    function: 'Exhaust Cam Sensor (2014: yellow)'
     class: event_inputs
-    ts_name: Cam - K15
+    ts_name: Exhaust Cam - K15
 
   - pin: K16
     function: Analog Ground
@@ -201,9 +201,9 @@ pins:
 
   - pin: K62
     meta: H144_IN_D_2
-    function: Cam Sensor
+    function: Intake Cam Sensor
     class: event_inputs
-    ts_name: Cam - ___
+    ts_name: Intake Cam - ___
 
   - pin: K63
     function: sensor +5v feed

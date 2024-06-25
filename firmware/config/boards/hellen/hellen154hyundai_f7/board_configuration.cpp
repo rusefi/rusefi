@@ -61,8 +61,8 @@ void setBoardConfigOverrides() {
 	// trigger inputs
 	engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_D_1;
 	// Direct hall-only cam input
-	engineConfiguration->camInputs[0] = Gpio::H144_IN_D_2;
-	engineConfiguration->camInputs[1] = Gpio::H144_IN_D_3;
+	engineConfiguration->camInputs[0] = Gpio::H144_IN_D_2; // intake
+	engineConfiguration->camInputs[1] = Gpio::H144_IN_D_3; // exhaust
 
 		// todo You would not believe how you invert TLE9201 #4579
 		engineConfiguration->stepperDcInvertedPins = true;
