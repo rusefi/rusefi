@@ -1,1 +1,0 @@
-bit boardUseTempPullUp,"With Pull Ups","Piggyback Mode"
