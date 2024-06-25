@@ -187,7 +187,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 !	int16_t autoscale rawPpsSecondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 !	int16_t autoscale rawRawPpsPrimary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 !	int16_t autoscale rawRawPpsSecondary;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
-
+! special extra precision treatment see https://github.com/rusefi/rusefi/issues/6376
 	float rawPpsPrimary;;"V",1, 0, 0, 5, 3
 	float rawPpsSecondary;;"V",1, 0, 0, 5, 3
 	float rawRawPpsPrimary;;"V",1, 0, 0, 5, 3
@@ -396,6 +396,12 @@ float mapFast
 	uint8_t injectionPrimingCounter
 
 	float acPressure;@@GAUGE_NAME_AC_PRESSURE@@;"kPa", 1, 0, 0, 0, 0
+
+ 	int16_t autoscale rawAuxAnalog1;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+ 	int16_t autoscale rawAuxAnalog2;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+ 	int16_t autoscale rawAuxAnalog3;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+ 	int16_t autoscale rawAuxAnalog4;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+
 
 	uint8_t[72 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct

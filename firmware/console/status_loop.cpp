@@ -500,6 +500,10 @@ static void updateRawSensors() {
 	engine->outputChannels.rawMap = Sensor::getRaw(SensorType::MapSlow);
 	engine->outputChannels.rawWastegatePosition = Sensor::getRaw(SensorType::WastegatePosition);
 	engine->outputChannels.rawIdlePositionSensor = Sensor::getRaw(SensorType::IdlePosition);
+	engine->outputChannels.rawAuxAnalog1 = Sensor::getRaw(SensorType::AuxAnalog1);
+	engine->outputChannels.rawAuxAnalog2 = Sensor::getRaw(SensorType::AuxAnalog2);
+	engine->outputChannels.rawAuxAnalog3 = Sensor::getRaw(SensorType::AuxAnalog3);
+	engine->outputChannels.rawAuxAnalog4 = Sensor::getRaw(SensorType::AuxAnalog4);
 
   for (size_t i = 0;i<LUA_GAUGE_COUNT;i++) {
 	  engine->outputChannels.luaGauges[i] = Sensor::getOrZero(luaGaugeTypes[i]);
