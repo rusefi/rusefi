@@ -218,13 +218,14 @@ void initAdcInputs() {
 	slowAdcController.start();
 
 #if EFI_USE_FAST_ADC
+	// After this point fastAdc is not allowed to add channels
 	fastAdc.init();
 #endif // EFI_USE_FAST_ADC
 
 	addConsoleActionI("adc", (VoidInt) printAdcValue);
-#else
+#else // ! EFI_INTERNAL_ADC
 	efiPrintf("ADC disabled");
-#endif
+#endif // EFI_INTERNAL_ADC
 }
 
 void printFullAdcReportIfNeeded(void) {
