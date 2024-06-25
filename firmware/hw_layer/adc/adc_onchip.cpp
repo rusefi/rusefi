@@ -178,6 +178,11 @@ int AdcDevice::enableChannel(adc_channel_e hwChannel) {
 		return -1;
 	}
 
+	if (hwConfig->num_channels > 0) {
+		criticalError("Fast ADC does not support on-fly reconfiguration");
+		return -1;
+	}
+
 	int logicChannel = channelCount++;
 
 	/* TODO: following is correct for STM32 ADC1/2.
