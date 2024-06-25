@@ -92,3 +92,6 @@ public:
 };
 
 EngineState * getEngineState();
+
+bool getClutchDownState();
+bool getBrakePedalState();

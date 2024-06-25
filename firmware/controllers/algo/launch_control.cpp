@@ -34,17 +34,9 @@ bool LaunchControlBase::isInsideSwitchCondition() {
 #endif // EFI_PROD_CODE
 		return launchActivatePinState;
 	} else if (isClutchActivated) {
-		if (isBrainPinValid(engineConfiguration->clutchDownPin)) {
-			return engine->engineState.clutchDownState;
-		} else {
-			return false;
-		}
+		  return getClutchDownState();
 	} else if (isBrakePedalActivated) {
-        if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
-            return engine->engineState.brakePedalState;
-        } else {
-            return false;
-        }
+      return getBrakePedalState();
     } else {
 		// ALWAYS_ACTIVE_LAUNCH
 		return true;
