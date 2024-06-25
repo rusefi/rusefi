@@ -203,28 +203,4 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 	return result;
 }
 
-#if EFI_USE_FAST_ADC
-
-#include "adc_device.h"
-
-extern AdcDevice fastAdc;
-
-AdcToken enableFastAdcChannel(const char*, adc_channel_e channel) {
-	if (!isAdcChannelValid(channel)) {
-		return invalidAdcToken;
-	}
-
-	return fastAdc.getAdcChannelToken(channel);
-}
-
-adcsample_t getFastAdc(AdcToken token) {
-	if (token == invalidAdcToken) {
-		return 0;
-	}
-
-	return fastAdc.getAdcValueByToken(token);
-}
-
-#endif
-
 #endif // HAL_USE_ADC

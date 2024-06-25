@@ -70,23 +70,45 @@ inline bool isAdcChannelOffChip(adc_channel_e hwChannel) {
 
 #if HAL_USE_ADC
 
+/* as much as bits in uint16_t used as adc_mask */
+#define ADC_MAX_DRIVERS		16
+
 typedef enum {
-	ADC_OFF = 0,
-	ADC_SLOW = 1,
-	ADC_FAST = 2,
+	ADC_SLOW = 0,
+	ADC_FAST = 1,
+	ADC_AUX = 2,
+
+	ADC_EXTERNAL_0 = 8,
+	ADC_EXTERNAL_1 = 9,
+	ADC_EXTERNAL_3 = 10,
+
+	ADC_OFF = 16,
 } adc_channel_mode_e;
+
+using AdcToken = uint32_t;
+
+using AdcTockenInternal = union {
+	AdcToken token;
+	struct {
+		uint16_t adc_mask;
+		uint16_t channel;
+	} __attribute__((packed));
+};
+
+static constexpr AdcToken invalidAdcToken = (AdcToken)(0);
 
 adc_channel_mode_e getAdcMode(adc_channel_e hwChannel);
 void initAdcInputs();
 
 // wait until at least 1 slowADC sampling is complete
-void waitForSlowAdc(uint32_t lastAdcCounter = 1);
+void waitForSlowAdc(uint32_t lastAdcCounter = 0);
 
 void printFullAdcReportIfNeeded(void);
 int getInternalAdcValue(const char *msg, adc_channel_e index);
 float getMCUInternalTemperature(void);
 
-void addFastAdcChannel(const char *name, adc_channel_e hwChannel);
+AdcToken addChannel(const char *name, adc_channel_e hwChannel, adc_channel_mode_e mode);
+AdcToken addFastAdcChannel(const char *msg, adc_channel_e hwChannel);
 void removeChannel(const char *name, adc_channel_e hwChannel);
 
 #define getAdcValue(msg, hwChannel) getInternalAdcValue(msg, hwChannel)
@@ -96,19 +118,7 @@ void removeChannel(const char *name, adc_channel_e hwChannel);
 // This callback is called by the ADC driver when a new fast ADC sample is ready
 void onFastAdcComplete(adcsample_t* samples);
 
-using AdcToken = uint32_t;
-
-using AdcTockenInternal = union {
-	AdcToken token;
-	struct {
-		uint16_t adc;
-		uint16_t channel;
-	} __attribute__((packed));
-};
-
 static_assert(sizeof(AdcTockenInternal) == sizeof(AdcToken));
-
-static constexpr AdcToken invalidAdcToken = (AdcToken)(-1);
 
 AdcToken enableFastAdcChannel(const char* msg, adc_channel_e channel);
 adcsample_t getFastAdc(AdcToken token);

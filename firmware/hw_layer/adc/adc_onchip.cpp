@@ -72,7 +72,6 @@ AdcDevice::AdcDevice(ADCDriver *p_adcp, ADCConversionGroup* p_hwConfig, volatile
 	hwConfig->sqr4 = 0;
 	hwConfig->sqr5 = 0;
 #endif /* ADC_MAX_CHANNELS_COUNT */
-	memset(internalAdcIndexByHardwareIndex, 0xFF, sizeof(internalAdcIndexByHardwareIndex));
 }
 
 static void fastAdcDoneCB(ADCDriver *adcp);
@@ -183,14 +182,14 @@ int AdcDevice::enableChannel(adc_channel_e hwChannel) {
 		return -1;
 	}
 
+	int channelAdcIndex = getAdcInternalChannel(adcp->adc, hwChannel);
+	if (channelAdcIndex < 0) {
+		criticalError("hwChannel is not supported by ADC");
+		return -1;
+	}
+
 	int logicChannel = channelCount++;
 
-	/* TODO: following is correct for STM32 ADC1/2.
-	 * ADC3 has another input to gpio mapping
-	 * and should be handled separately */
-	size_t channelAdcIndex = hwChannel - EFI_ADC_0;
-
-	internalAdcIndexByHardwareIndex[hwChannel] = logicChannel;
 	if (logicChannel < 6) {
 		hwConfig->sqr3 |= channelAdcIndex << (5 * logicChannel);
 	} else if (logicChannel < 12) {
@@ -207,7 +206,8 @@ int AdcDevice::enableChannel(adc_channel_e hwChannel) {
 	}
 #endif /* ADC_MAX_CHANNELS_COUNT */
 
-	return channelAdcIndex;
+	// logic channel ie index in output array is used as ADC-specific (channel) part of AdcToken
+	return logicChannel;
 }
 
 void AdcDevice::startConversionI()
@@ -226,17 +226,12 @@ void AdcDevice::startConversionI()
 	chSysUnlockFromISR();
 }
 
-adcsample_t AdcDevice::getAvgAdcValue(adc_channel_e hwChannel) {
+adcsample_t AdcDevice::getAvgAdcValueByToken(uint16_t token) {
 	uint32_t result = 0;
 	int numChannels = size();
-	int index = fastAdc.internalAdcIndexByHardwareIndex[hwChannel];
-	if (index == 0xff) {
-		criticalError("Fast ADC attempt to read unconfigured input %d.", hwChannel);
-		return 0;
-	}
 
 	for (size_t i = 0; i < depth; i++) {
-		adcsample_t sample = samples[index];
+		adcsample_t sample = samples[token];
 //		if (sample > 0x1FFF) {
 //			// 12bit ADC expected right now, make this configurable one day
 //			criticalError("fast ADC unexpected sample %d", sample);
@@ -247,24 +242,11 @@ adcsample_t AdcDevice::getAvgAdcValue(adc_channel_e hwChannel) {
 				(uint32_t)getTimeNowS());
 		}
 		result += sample;
-		index += numChannels;
+		token += numChannels;
 	}
 
 	// this truncation is guaranteed to not be lossy - the average can't be larger than adcsample_t
 	return static_cast<adcsample_t>(result / depth);
-}
-
-adc_channel_e AdcDevice::getAdcChannelByInternalIndex(int hwChannel) const {
-	for (size_t idx = EFI_ADC_0; idx < EFI_ADC_TOTAL_CHANNELS; idx++) {
-		if (internalAdcIndexByHardwareIndex[idx] == hwChannel) {
-			return (adc_channel_e)idx;
-		}
-	}
-	return EFI_ADC_NONE;
-}
-
-AdcToken AdcDevice::getAdcChannelToken(adc_channel_e hwChannel) {
-	return fastAdc.internalAdcIndexByHardwareIndex[hwChannel];
 }
 
 #endif // EFI_USE_FAST_ADC

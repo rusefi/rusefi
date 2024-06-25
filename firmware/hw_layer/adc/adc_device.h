@@ -27,16 +27,12 @@ public:
 	int enableChannel(adc_channel_e hwChannel);
 	/* Should be called from ISR context */
 	void startConversionI(void);
-	adc_channel_e getAdcChannelByInternalIndex(int index) const;
-	adcsample_t getAvgAdcValue(adc_channel_e hwChannel);
-	adcsample_t getAdcValueByToken(AdcToken token)
+	adcsample_t getAdcValueByToken(uint16_t token)
 	{
-		/* TODO: validate token? */
-
 		/* TODO: in case depth > 1 this will return random (not last) sample */
 		return samples[token];
 	};
-	AdcToken getAdcChannelToken(adc_channel_e hwChannel);
+	adcsample_t getAvgAdcValueByToken(uint16_t token);
 	int size() const;
 	void init(void);
 	uint32_t conversionCount = 0;
@@ -46,7 +42,6 @@ private:
 	ADCConversionGroup* hwConfig;
 	volatile adcsample_t *samples;
 	size_t depth;
-	uint8_t internalAdcIndexByHardwareIndex[EFI_ADC_TOTAL_CHANNELS];
 	/**
 	 * Number of ADC channels in use
 	 */
