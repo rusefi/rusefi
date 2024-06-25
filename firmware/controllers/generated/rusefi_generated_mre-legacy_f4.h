@@ -2,7 +2,7 @@
 // was generated automatically by rusEFI tool config_definition-all.jar based on gen_config.sh integration/rusefi_config.txt
 //
 
-#define adc_channel_e_auto_enum 0="EFI_ADC_NONE",1="EFI_ADC_0",2="EFI_ADC_1",11="EFI_ADC_10",12="EFI_ADC_11",13="EFI_ADC_12",14="EFI_ADC_13",15="EFI_ADC_14",16="EFI_ADC_15",17="EFI_ADC_16",18="EFI_ADC_17",19="EFI_ADC_18",20="EFI_ADC_19",3="EFI_ADC_2",21="EFI_ADC_20",22="EFI_ADC_21",23="EFI_ADC_22",24="EFI_ADC_23",25="EFI_ADC_24",26="EFI_ADC_25",27="EFI_ADC_26",28="EFI_ADC_27",29="EFI_ADC_28",30="EFI_ADC_29",4="EFI_ADC_3",31="EFI_ADC_30",32="EFI_ADC_31",33="EFI_ADC_32",34="EFI_ADC_33",35="EFI_ADC_34",36="EFI_ADC_35",37="EFI_ADC_36",38="EFI_ADC_37",39="EFI_ADC_38",40="EFI_ADC_39",5="EFI_ADC_4",6="EFI_ADC_5",7="EFI_ADC_6",8="EFI_ADC_7",9="EFI_ADC_8",10="EFI_ADC_9",50="EFI_ADC_ERROR",41="EFI_ADC_TOTAL_CHANNELS"
+#define adc_channel_e_auto_enum 0="EFI_ADC_NONE",1="EFI_ADC_0",2="EFI_ADC_1",11="EFI_ADC_10",12="EFI_ADC_11",13="EFI_ADC_12",14="EFI_ADC_13",15="EFI_ADC_14",16="EFI_ADC_15",17="EFI_ADC_16",18="EFI_ADC_17",19="EFI_ADC_18",20="EFI_ADC_19",3="EFI_ADC_2",21="EFI_ADC_20",22="EFI_ADC_21",23="EFI_ADC_22",24="EFI_ADC_23",25="EFI_ADC_24",26="EFI_ADC_25",27="EFI_ADC_26",28="EFI_ADC_27",29="EFI_ADC_28",30="EFI_ADC_29",4="EFI_ADC_3",31="EFI_ADC_30",32="EFI_ADC_31",33="EFI_ADC_32",34="EFI_ADC_33",35="EFI_ADC_34",36="EFI_ADC_35",37="EFI_ADC_36",38="EFI_ADC_37",39="EFI_ADC_38",40="EFI_ADC_39",5="EFI_ADC_4",41="EFI_ADC_40",42="EFI_ADC_41",43="EFI_ADC_42",44="EFI_ADC_43",45="EFI_ADC_44",46="EFI_ADC_45",47="EFI_ADC_46",48="EFI_ADC_47",6="EFI_ADC_5",7="EFI_ADC_6",8="EFI_ADC_7",9="EFI_ADC_8",10="EFI_ADC_9",50="EFI_ADC_ERROR",49="EFI_ADC_TOTAL_CHANNELS"
 #define adc_channel_e_EFI_ADC_0 1
 #define adc_channel_e_EFI_ADC_1 2
 #define adc_channel_e_EFI_ADC_10 11
@@ -38,6 +38,14 @@
 #define adc_channel_e_EFI_ADC_38 39
 #define adc_channel_e_EFI_ADC_39 40
 #define adc_channel_e_EFI_ADC_4 5
+#define adc_channel_e_EFI_ADC_40 41
+#define adc_channel_e_EFI_ADC_41 42
+#define adc_channel_e_EFI_ADC_42 43
+#define adc_channel_e_EFI_ADC_43 44
+#define adc_channel_e_EFI_ADC_44 45
+#define adc_channel_e_EFI_ADC_45 46
+#define adc_channel_e_EFI_ADC_46 47
+#define adc_channel_e_EFI_ADC_47 48
 #define adc_channel_e_EFI_ADC_5 6
 #define adc_channel_e_EFI_ADC_6 7
 #define adc_channel_e_EFI_ADC_7 8
@@ -45,7 +53,7 @@
 #define adc_channel_e_EFI_ADC_9 10
 #define adc_channel_e_EFI_ADC_ERROR 50
 #define adc_channel_e_EFI_ADC_NONE 0
-#define adc_channel_e_EFI_ADC_TOTAL_CHANNELS 41
+#define adc_channel_e_EFI_ADC_TOTAL_CHANNELS 49
 #define adc_channel_e_enum 0="NONE",1="18 - AN temp 1",13="19 - AN volt 4",14="20 - AN volt 5",4="22 - AN temp 4 or Hall Input",2="23 - AN temp 2",3="24 - AN temp 3 or Hall Input",7="26 - AN volt 2",11="27 - AN volt 1",5="28 - AN volt 10, Aux Reuse",16="30 - AN volt 7",8="31 - AN volt 3",15="32 - AN volt 6, Aux Reuse",9="36 - AN volt 8, Aux Reuse",10="40 - AN volt 9, Aux Reuse",12="Battery Sense"
 #define adc_channel_e_fullenum "NONE","18 - AN temp 1","23 - AN temp 2","24 - AN temp 3 or Hall Input","22 - AN temp 4 or Hall Input","28 - AN volt 10, Aux Reuse","INVALID","26 - AN volt 2","31 - AN volt 3","36 - AN volt 8, Aux Reuse","40 - AN volt 9, Aux Reuse","27 - AN volt 1","Battery Sense","19 - AN volt 4","20 - AN volt 5","32 - AN volt 6, Aux Reuse","30 - AN volt 7"
 #define ADC_CHANNEL_NONE 0
