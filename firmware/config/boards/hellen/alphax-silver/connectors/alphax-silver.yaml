@@ -49,6 +49,14 @@ pins:
     ts_name: ___ Idle Output
     color: yellow
 
+  - pin: 9A
+    meta: MM100_IN_VBATT
+    class: analog_inputs
+    function: ECU power supply
+    id: EFI_ADC_5
+    ts_name: ___ Battery Sense
+    type: 12v
+
   - pin: 10A
     meta: MM100_IGN4
     class: outputs
