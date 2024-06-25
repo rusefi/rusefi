@@ -1,8 +1,5 @@
 /**
- * @file fsio_impl.cpp
- * @brief FSIO as it's used for GPIO
- *
- * TODO: rename this file, FSIO is gone!
+ * @file script_impl.cpp
  *
  * @date Oct 5, 2014
  * @author Andrey Belomutskiy, (c) 2012-2020

@@ -241,7 +241,6 @@ static void tcuSolenoidBench(float humanIndex, float onTime, float offTimeMs, fl
 
 /**
  * channel #1, 5ms ON, 1000ms OFF, repeat 3 times
- * fsiobench2 1 5 1000 3
  */
 static void luaOutBench2(float humanIndex, float onTime, float offTimeMs, float count) {
 	doRunBenchTestLuaOutput((int)humanIndex, onTime, offTimeMs, (int)count);
@@ -280,7 +279,6 @@ void acRelayBench() {
 }
 
 static void mainRelayBench() {
-	// main relay is usually "ON" via FSIO thus bench testing that one is pretty unusual
 	pinbench(BENCH_MAIN_RELAY_DURATION, 100.0, 1, &enginePins.mainRelay, true);
 }
 

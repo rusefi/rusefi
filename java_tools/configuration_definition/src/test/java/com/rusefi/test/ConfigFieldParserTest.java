@@ -409,7 +409,7 @@ public class ConfigFieldParserTest {
     }
 
     @Test
-    public void testFsioVisible() {
+    public void testLegacyVisible() {
         {
             ReaderStateImpl state = new ReaderStateImpl();
             ConfigFieldImpl cf = ConfigFieldImpl.parse(state, "int field");
@@ -421,9 +421,9 @@ public class ConfigFieldParserTest {
         {
             ReaderStateImpl state = new ReaderStateImpl();
             String test = "struct pid_s\n" +
-                    "\tint16_t fsio_visible offset;Linear addition to PID logic;\"\",      1,      0,       -1000, 1000,      0\n" +
+                    "\tint16_t offset;Linear addition to PID logic;\"\",      1,      0,       -1000, 1000,      0\n" +
                     "\tint16_t periodMs;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
-                    "\tint16_t fsio_visible minValue;Output min value;\"\",        1,     0,  -30000,    30000.0,  0\n" +
+                    "\tint16_t minValue;Output min value;\"\",        1,     0,  -30000,    30000.0,  0\n" +
                     "end_struct\n" +
                     "struct_no_prefix engine_configuration_s\n" +
                     "\tpid_s alternatorControl;\n" +

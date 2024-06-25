@@ -255,7 +255,6 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 		return 0;
 	}
 
-	// #1553 we need to give FSIO variable offset or minValue a chance
 	bool acToggleJustTouched = (US2MS(nowUs) - engine->module<AcController>().unmock().acSwitchLastChangeTimeMs) < 500/*ms*/;
 	// check if within the dead zone
 	isInDeadZone = !acToggleJustTouched && absI(rpm - targetRpm) <= engineConfiguration->idlePidRpmDeadZone;
