@@ -40,14 +40,32 @@ inline bool isAdcChannelOffChip(adc_channel_e hwChannel) {
 
 
 #if !defined(GPT_FREQ_FAST) || !defined(GPT_PERIOD_FAST)
-/**
+
+/*
  * 8000 RPM is 133Hz
- * If we want to sample MAP once per 5 degrees we need 133Hz * (360 / 5) = 9576Hz of fast ADC
+ * If we want to sample MAP once per 5 degrees we need 133Hz * (360 / 5) = 9576Hz of fast ADC ~= 10 KHz
  */
-// todo: migrate to continuous ADC mode? probably not - we cannot afford the callback in
-// todo: continuous mode. todo: look into our options
-#define GPT_FREQ_FAST 100000   /* PWM clock frequency. I wonder what does this setting mean?  */
-#define GPT_PERIOD_FAST 10  /* PWM period (in PWM ticks).    */
+
+/*
+ * TODO: migrate to continuous ADC mode? probably not - we cannot afford the callback in continuous mode.
+ * TODO: look into other options
+ * TODO: ADC convertion can be triggered directly from timer, with no SW intervention
+ */
+
+/* PWM clock frequency. Timer clock = 100 KHz */
+#define GPT_FREQ_FAST 100000
+/* PWM period (in PWM ticks), 100 KHz / 10 = 10KHz callback rate */
+#define GPT_PERIOD_FAST 10
+
+/*
+ * We have 1 / (GPT_FREQ_FAST / GPT_PERIOD_FAST) to finish conversion = 100 uS
+ * With ADC_SAMPLING_FAST = 28 ADC clock @ 21 MHz (F4) -> one channel conversion takes 1.33(3) uS
+ * Oversampling is ADC_BUF_DEPTH_FAST = 4
+ * We can do up-to 100 / (1.33(3) * 4) = 18.75 channels conversions
+ * So we can enable ALL channels for fast ADC.
+ * This will increase bus load with more DMA transfers, but who cares?
+ */
+
 #endif /* GPT_FREQ_FAST GPT_PERIOD_FAST */
 
 #if HAL_USE_ADC
