@@ -83,6 +83,10 @@
     engineConfiguration->mc33_t_max_boost = 470;
     // default 10.0
     engineConfiguration->mc33_t_bypass = 15;
+    // default "Normal"
+    engineConfiguration->clutchDownPinInverted = false;
+    // default "Normal"
+    engineConfiguration->clutchUpPinInverted = false;
     // default 5.0
     engineConfiguration->mapErrorDetectionTooLow = 0;
     // default "false"
@@ -221,8 +225,6 @@
     engineConfiguration->disableEtbWhenEngineStopped = true;
     // default 100.0
     engineConfiguration->etbMaximumPosition = 90;
-    // default "Normal"
-    engineConfiguration->clutchDownPinInverted = false;
     // default 3000.0
     engineConfiguration->launchRpm = 3800;
     // default "false"

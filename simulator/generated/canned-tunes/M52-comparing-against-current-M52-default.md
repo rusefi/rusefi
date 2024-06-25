@@ -63,6 +63,10 @@
     engineConfiguration->tpsMin = 120;
     // default 1000.0
     engineConfiguration->tpsMax = 791;
+    // default "Normal"
+    engineConfiguration->clutchDownPinInverted = false;
+    // default "Normal"
+    engineConfiguration->clutchUpPinInverted = false;
     // default 300.0
     engineConfiguration->idle.solenoidFrequency = 200;
     // default 3.0
@@ -157,8 +161,6 @@
     engineConfiguration->boostControlMinTps = 0;
     // default 110.0
     engineConfiguration->boostControlMinMap = 0;
-    // default "Normal"
-    engineConfiguration->clutchDownPinInverted = false;
     // default "false"
     engineConfiguration->coastingFuelCutEnabled = true;
     // default 60.0

@@ -27,6 +27,10 @@
     engineConfiguration->cylinderBankSelect[10] = 1;
     // default 0.0
     engineConfiguration->cylinderBankSelect[11] = 1;
+    // default "Normal"
+    engineConfiguration->clutchDownPinInverted = false;
+    // default "Normal"
+    engineConfiguration->clutchUpPinInverted = false;
     // default 300.0
     engineConfiguration->idle.solenoidFrequency = 200;
     // default "false"
@@ -51,8 +55,6 @@
     engineConfiguration->boostControlMinTps = 0;
     // default 110.0
     engineConfiguration->boostControlMinMap = 0;
-    // default "Normal"
-    engineConfiguration->clutchDownPinInverted = false;
 
 
 	coupleBK2cannedtpsTspCorrValuesBins();
