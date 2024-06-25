@@ -30,4 +30,23 @@ public class BoardConfigTest {
                 "\tpublic static final Field FIELDNAME2 = Field.create(\"FIELDNAME2\", 4, FieldType.INT).setScale(1.0).setBaseOffset(0);\n",
             javaFieldsConsumer.getContent());
     }
-}
+
+    @Test
+    public void testBoardConfigWithCustomType() {
+        ReaderStateImpl state = new ReaderStateImpl();
+        JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
+
+        state.getVariableRegistry().register(BoardConfigStrategy.BOARD_CONFIG_FROM_FILE, "custom string_here_t 64 string, ASCII, @OFFSET@, 64\n" +
+            "string_here_t fieldName2;\n");
+
+        String inputString = "struct parent\n" +
+            "@@" + BoardConfigStrategy.BOARD_CONFIG_FROM_FILE + "@@\n" +
+            "int fieldName;\n" +
+            "end_struct\n";
+
+        state.readBufferedReader(inputString, javaFieldsConsumer);
+
+        assertEquals("\tpublic static final Field FIELDNAME2 = Field.create(\"FIELDNAME2\", 0, 64, FieldType.STRING).setScale(1.0).setBaseOffset(0);\n" +
+                "\tpublic static final Field FIELDNAME = Field.create(\"FIELDNAME\", 64, FieldType.INT).setScale(1.0).setBaseOffset(0);\n",
+            javaFieldsConsumer.getContent());
+    }}
