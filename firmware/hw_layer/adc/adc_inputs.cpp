@@ -15,22 +15,30 @@ float PUBLIC_API_WEAK getAnalogInputDividerCoefficient(adc_channel_e) {
 #if HAL_USE_ADC
 
 #include "adc_device.h"
+#include "adc_onchip.h"
 #include "adc_subscription.h"
 #include "mpu_util.h"
 #include "periodic_thread_controller.h"
 #include "protected_gpio.h"
 
-extern AdcDevice fastAdc;
-
-static volatile NO_CACHE adcsample_t slowAdcSamples[SLOW_ADC_CHANNEL_COUNT];
-
+extern AdcSlowOnchipDevice slowAdc;
 static uint32_t slowAdcConversionCount = 0;
-static uint32_t slowAdcErrorsCount = 0;
+
+#if EFI_USE_FAST_ADC
+extern AdcFastOnchipDevice fastAdc;
+#endif
 
 static AdcTockenInternal adcHwChannelMode[EFI_ADC_TOTAL_CHANNELS];
 
 // todo: move this flag to Engine god object
 static int adcDebugReporting = false;
+
+static int adcGetFirstDriver(uint16_t adc_mask)
+{
+	// return index of first bit set
+	// return index of first ADC driver enabled for this hwChannel (few drivers can digitize same analog input)
+	return (adc_channel_mode_e)(__builtin_ffs(adc_mask) - 1);
+}
 
 adc_channel_mode_e getAdcMode(adc_channel_e hwChannel) {
 	uint16_t adc_mask = adcHwChannelMode[hwChannel].adc_mask;
@@ -39,21 +47,21 @@ adc_channel_mode_e getAdcMode(adc_channel_e hwChannel) {
 		return ADC_OFF;
 	}
 
-	// return index of first bit set.
-	// return index of first ADC driver enabled for this hwChannel (few drivers can digitize same analog input)
-	return (adc_channel_mode_e)(__builtin_ffs(adc_mask) - 1);
+	return (adc_channel_mode_e)adcGetFirstDriver(adc_mask);
 }
 
 static adcsample_t getAdcValueByToken(AdcTockenInternal token)
 {
-#if EFI_USE_FAST_ADC
-	if (token.adc_mask & BIT(ADC_FAST)) {
-		return fastAdc.getAvgAdcValueByToken(token.channel);
-	}
-#endif // EFI_USE_FAST_ADC
+	int idx = adcGetFirstDriver(token.adc_mask);
 
-	// TODO: validate index?
-	return slowAdcSamples[token.channel];
+	if (idx < 0) {
+		warning(ObdCode::CUSTOM_OBD_ANALOG_INPUT_NOT_CONFIGURED, "Incalid ADC token");
+
+		/* Is it a safe value? */
+		return 0;
+	}
+
+	return adcDevices[idx]->getAvg(token.channel);
 };
 
 int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
@@ -163,11 +171,7 @@ public:
 		{
 			ScopePerf perf(PE::AdcConversionSlow);
 
-			/* drop volatile type qualifier - this is safe */
-			if (!readSlowAnalogInputs((adcsample_t *)slowAdcSamples)) {
-				slowAdcErrorsCount++;
-				return;
-			}
+			slowAdc.doConversion();
 
 			// Ask the port to sample the MCU temperature
 			mcuTemperature = getMcuTemperature();
@@ -284,13 +288,17 @@ void initAdcInputs() {
 #if EFI_INTERNAL_ADC
 	portInitAdc();
 
-	// Start the slow ADC thread
-	slowAdcController.start();
-
 #if EFI_USE_FAST_ADC
 	// After this point fastAdc is not allowed to add channels
 	fastAdc.init();
 #endif // EFI_USE_FAST_ADC
+
+	if (slowAdc.start() == 0) {
+		adcDevices[ADC_SLOW] = &slowAdc;
+	}
+
+	// Start the slow ADC thread
+	slowAdcController.start();
 
 	addConsoleActionI("adc", (VoidInt) printAdcValue);
 #else // ! EFI_INTERNAL_ADC

@@ -20,7 +20,7 @@
 
 #if HAL_USE_ADC
 
-#include "adc_device.h"
+#include "adc_onchip.h"
 #include "adc_subscription.h"
 #include "mpu_util.h"
 #include "periodic_thread_controller.h"
@@ -42,6 +42,75 @@ float getVoltage(const char *msg, adc_channel_e hwChannel) {
 	return boardAdjustVoltage(voltage, hwChannel);
 }
 
+/* #if EFI_USE_SLOW_ADC */
+
+static volatile NO_CACHE adcsample_t slowAdcSamples[SLOW_ADC_CHANNEL_COUNT];
+
+AdcSlowOnchipDevice slowAdc(&ADCD1, slowAdcSamples);
+
+AdcSlowOnchipDevice::AdcSlowOnchipDevice(ADCDriver *p_adcp, volatile adcsample_t *p_buf) {
+	adcp = p_adcp;
+	samples = p_buf;
+}
+
+int AdcSlowOnchipDevice::size() const {
+	return channelCount;
+}
+
+int AdcSlowOnchipDevice::start(void) {
+	return 0;
+}
+
+int AdcSlowOnchipDevice::enableChannel(adc_channel_e hwChannel) {
+	if ((channelCount + 1) >= ADC_MAX_CHANNELS_COUNT) {
+		criticalError("Too many Slow ADC channels configured");
+		return -1;
+	}
+
+	int channelAdcIndex = getAdcInternalChannel(adcp->adc, adcMuxedGetParent(hwChannel));
+	if (channelAdcIndex < 0) {
+		criticalError("hwChannel is not supported by Slow ADC");
+		return channelAdcIndex;
+	}
+
+	channelCount++;
+
+	if (adcIsMuxedInput(hwChannel)) {
+		/* Muxed channels are in second half of buffer */
+		channelAdcIndex += ADC_MAX_CHANNELS_COUNT;
+	}
+
+	return channelAdcIndex;
+}
+
+void AdcSlowOnchipDevice::disableChannel(uint16_t /* token */)
+{
+	/* nothing to do */
+}
+
+void AdcSlowOnchipDevice::doConversion(void)
+{
+	/* drop volatile type qualifier - this is safe */
+	bool ret = readSlowAnalogInputs((adcsample_t *)samples);
+
+	if (!ret) {
+		engine->outputChannels.slowAdcErrorsCount++;
+	}
+}
+
+adcsample_t AdcSlowOnchipDevice::get(uint16_t token)
+{
+	return samples[token];
+};
+
+adcsample_t AdcSlowOnchipDevice::getAvg(uint16_t token)
+{
+	/* Averaging is done in readSlowAnalogInputs() after conversion */
+	return get(token);
+}
+
+/* #endif // EFI_USE_FAST_ADC */
+
 #if EFI_USE_FAST_ADC
 
 // is there a reason to have this configurable at runtime?
@@ -59,79 +128,10 @@ float getVoltage(const char *msg, adc_channel_e hwChannel) {
 #define ADC_SAMPLING_FAST	ADC_SAMPLE_28
 #endif
 
-AdcDevice::AdcDevice(ADCDriver *p_adcp, ADCConversionGroup* p_hwConfig, volatile adcsample_t *p_buf, size_t p_depth) {
-	adcp = p_adcp;
-	depth = p_depth;
-	hwConfig = p_hwConfig;
-	samples = p_buf;
-
-	hwConfig->sqr1 = 0;
-	hwConfig->sqr2 = 0;
-	hwConfig->sqr3 = 0;
-#if ADC_MAX_CHANNELS_COUNT > 16
-	hwConfig->sqr4 = 0;
-	hwConfig->sqr5 = 0;
-#endif /* ADC_MAX_CHANNELS_COUNT */
-}
-
-static void fastAdcDoneCB(ADCDriver *adcp);
-static void fastAdcErrorCB(ADCDriver *, adcerror_t err);
-
-static ADCConversionGroup adcgrpcfgFast = {
-	.circular			= FALSE,
-	.num_channels		= 0,
-	.end_cb				= fastAdcDoneCB,
-	.error_cb			= fastAdcErrorCB,
-	/* HW dependent part.*/
-	.cr1				= 0,
-	.cr2				= ADC_CR2_SWSTART,
-		/**
-		 * here we configure all possible channels for fast mode. Some channels would not actually
-         * be used hopefully that's fine to configure all possible channels.
-		 *
-		 */
-	// sample times for channels 10...18
-	.smpr1 =
-		ADC_SMPR1_SMP_AN10(ADC_SAMPLING_FAST) |
-		ADC_SMPR1_SMP_AN11(ADC_SAMPLING_FAST) |
-		ADC_SMPR1_SMP_AN12(ADC_SAMPLING_FAST) |
-		ADC_SMPR1_SMP_AN13(ADC_SAMPLING_FAST) |
-		ADC_SMPR1_SMP_AN14(ADC_SAMPLING_FAST) |
-		ADC_SMPR1_SMP_AN15(ADC_SAMPLING_FAST),
-	// In this field must be specified the sample times for channels 0...9
-	.smpr2 =
-		ADC_SMPR2_SMP_AN0(ADC_SAMPLING_FAST) |
-		ADC_SMPR2_SMP_AN1(ADC_SAMPLING_FAST) |
-		ADC_SMPR2_SMP_AN2(ADC_SAMPLING_FAST) |
-		ADC_SMPR2_SMP_AN3(ADC_SAMPLING_FAST) |
-		ADC_SMPR2_SMP_AN4(ADC_SAMPLING_FAST) |
-		ADC_SMPR2_SMP_AN5(ADC_SAMPLING_FAST) |
-		ADC_SMPR2_SMP_AN6(ADC_SAMPLING_FAST) |
-		ADC_SMPR2_SMP_AN7(ADC_SAMPLING_FAST) |
-		ADC_SMPR2_SMP_AN8(ADC_SAMPLING_FAST) |
-		ADC_SMPR2_SMP_AN9(ADC_SAMPLING_FAST),
-	.htr				= 0,
-	.ltr				= 0,
-	.sqr1				= 0, // Conversion group sequence 13...16 + sequence length
-	.sqr2				= 0, // Conversion group sequence 7...12
-	.sqr3				= 0, // Conversion group sequence 1...6
-#if ADC_MAX_CHANNELS_COUNT > 16
-	.sqr4				= 0, // Conversion group sequence 19...24
-	.sqr5				= 0  // Conversion group sequence 25...30
-#endif /* ADC_MAX_CHANNELS_COUNT */
-};
-
 static volatile NO_CACHE adcsample_t fastAdcSampleBuf[ADC_BUF_DEPTH_FAST * ADC_MAX_CHANNELS_COUNT];
 
-AdcDevice fastAdc(&ADC_FAST_DEVICE, &adcgrpcfgFast, fastAdcSampleBuf, ADC_BUF_DEPTH_FAST);
-
-static void fastAdcDoneCB(ADCDriver *adcp) {
-	// State may not be complete if we get a callback for "half done"
-	if (adcp->state == ADC_COMPLETE) {
-		fastAdc.conversionCount++;
-		onFastAdcComplete(adcp->samples);
-	}
-}
+/* TODO: make static */
+AdcFastOnchipDevice fastAdc(&ADC_FAST_DEVICE, fastAdcSampleBuf, ADC_BUF_DEPTH_FAST);
 
 static volatile adcerror_t fastAdcLastError;
 
@@ -151,6 +151,14 @@ static void fastAdcTrigger(GPTDriver*) {
 #endif /* EFI_INTERNAL_ADC */
 }
 
+static void fastAdcDoneCB(ADCDriver *adcp) {
+	// State may not be complete if we get a callback for "half done"
+	if (adcp->state == ADC_COMPLETE) {
+		fastAdc.conversionCount++;
+		onFastAdcComplete(adcp->samples);
+	}
+}
+
 static GPTConfig fast_adc_config = {
 	.frequency = GPT_FREQ_FAST,
 	.callback = fastAdcTrigger,
@@ -158,26 +166,78 @@ static GPTConfig fast_adc_config = {
 	.dier = 0,
 };
 
-int AdcDevice::size() const {
+AdcFastOnchipDevice::AdcFastOnchipDevice(ADCDriver *p_adcp, volatile adcsample_t *p_buf, size_t p_depth) {
+	adcp = p_adcp;
+	depth = p_depth;
+	samples = p_buf;
+
+	hwConfig = {
+		.circular			= FALSE,
+		.num_channels		= 0,
+		.end_cb				= fastAdcDoneCB,
+		.error_cb			= fastAdcErrorCB,
+		/* HW dependent part.*/
+		.cr1				= 0,
+		.cr2				= ADC_CR2_SWSTART,
+			/**
+			 * here we configure all possible channels for fast mode. Some channels would not actually
+	         * be used hopefully that's fine to configure all possible channels.
+			 *
+			 */
+		// sample times for channels 10...18
+		.smpr1 =
+			ADC_SMPR1_SMP_AN10(ADC_SAMPLING_FAST) |
+			ADC_SMPR1_SMP_AN11(ADC_SAMPLING_FAST) |
+			ADC_SMPR1_SMP_AN12(ADC_SAMPLING_FAST) |
+			ADC_SMPR1_SMP_AN13(ADC_SAMPLING_FAST) |
+			ADC_SMPR1_SMP_AN14(ADC_SAMPLING_FAST) |
+			ADC_SMPR1_SMP_AN15(ADC_SAMPLING_FAST),
+		// In this field must be specified the sample times for channels 0...9
+		.smpr2 =
+			ADC_SMPR2_SMP_AN0(ADC_SAMPLING_FAST) |
+			ADC_SMPR2_SMP_AN1(ADC_SAMPLING_FAST) |
+			ADC_SMPR2_SMP_AN2(ADC_SAMPLING_FAST) |
+			ADC_SMPR2_SMP_AN3(ADC_SAMPLING_FAST) |
+			ADC_SMPR2_SMP_AN4(ADC_SAMPLING_FAST) |
+			ADC_SMPR2_SMP_AN5(ADC_SAMPLING_FAST) |
+			ADC_SMPR2_SMP_AN6(ADC_SAMPLING_FAST) |
+			ADC_SMPR2_SMP_AN7(ADC_SAMPLING_FAST) |
+			ADC_SMPR2_SMP_AN8(ADC_SAMPLING_FAST) |
+			ADC_SMPR2_SMP_AN9(ADC_SAMPLING_FAST),
+		.htr				= 0,
+		.ltr				= 0,
+		.sqr1				= 0, // Conversion group sequence 13...16 + sequence length
+		.sqr2				= 0, // Conversion group sequence 7...12
+		.sqr3				= 0, // Conversion group sequence 1...6
+	#if ADC_MAX_CHANNELS_COUNT > 16
+		.sqr4				= 0, // Conversion group sequence 19...24
+		.sqr5				= 0  // Conversion group sequence 25...30
+	#endif /* ADC_MAX_CHANNELS_COUNT */
+	};
+}
+
+int AdcFastOnchipDevice::size() const {
 	return channelCount;
 }
 
-void AdcDevice::init(void) {
-	hwConfig->num_channels = size();
+int AdcFastOnchipDevice::start(void) {
+	hwConfig.num_channels = size();
 	/* driver does this internally */
-	//hwConfig->sqr1 += ADC_SQR1_NUM_CH(size());
+	//hwConfig.sqr1 += ADC_SQR1_NUM_CH(size());
 
 	gptStart(EFI_INTERNAL_FAST_ADC_GPT, &fast_adc_config);
 	gptStartContinuous(EFI_INTERNAL_FAST_ADC_GPT, GPT_PERIOD_FAST);
+
+	return 0;
 }
 
-int AdcDevice::enableChannel(adc_channel_e hwChannel) {
+int AdcFastOnchipDevice::enableChannel(adc_channel_e hwChannel) {
 	if ((channelCount + 1) >= ADC_MAX_CHANNELS_COUNT) {
 		criticalError("Too many ADC channels configured");
 		return -1;
 	}
 
-	if (hwConfig->num_channels > 0) {
+	if (hwConfig.num_channels > 0) {
 		criticalError("Fast ADC does not support on-fly reconfiguration");
 		return -1;
 	}
@@ -191,18 +251,18 @@ int AdcDevice::enableChannel(adc_channel_e hwChannel) {
 	int logicChannel = channelCount++;
 
 	if (logicChannel < 6) {
-		hwConfig->sqr3 |= channelAdcIndex << (5 * logicChannel);
+		hwConfig.sqr3 |= channelAdcIndex << (5 * logicChannel);
 	} else if (logicChannel < 12) {
-		hwConfig->sqr2 |= channelAdcIndex << (5 * (logicChannel - 6));
+		hwConfig.sqr2 |= channelAdcIndex << (5 * (logicChannel - 6));
 	} else if (logicChannel < 18) {
-		hwConfig->sqr1 |= channelAdcIndex << (5 * (logicChannel - 12));
+		hwConfig.sqr1 |= channelAdcIndex << (5 * (logicChannel - 12));
 	}
 #if ADC_MAX_CHANNELS_COUNT > 16
 	else if (logicChannel < 24) {
-		hwConfig->sqr4 |= channelAdcIndex << (5 * (logicChannel - 18));
+		hwConfig.sqr4 |= channelAdcIndex << (5 * (logicChannel - 18));
 	}
 	else if (logicChannel < 30) {
-		hwConfig->sqr5 |= channelAdcIndex << (5 * (logicChannel - 24));
+		hwConfig.sqr5 |= channelAdcIndex << (5 * (logicChannel - 24));
 	}
 #endif /* ADC_MAX_CHANNELS_COUNT */
 
@@ -210,23 +270,34 @@ int AdcDevice::enableChannel(adc_channel_e hwChannel) {
 	return logicChannel;
 }
 
-void AdcDevice::startConversionI()
+void AdcFastOnchipDevice::disableChannel(uint16_t /* token */)
+{
+	/* nothing to do */
+}
+
+void AdcFastOnchipDevice::startConversionI()
 {
 	chSysLockFromISR();
-	if ((ADC_FAST_DEVICE.state != ADC_READY) &&
-		(ADC_FAST_DEVICE.state != ADC_COMPLETE) &&
-		(ADC_FAST_DEVICE.state != ADC_ERROR)) {
+	if ((adcp->state != ADC_READY) &&
+		(adcp->state != ADC_COMPLETE) &&
+		(adcp->state != ADC_ERROR)) {
 		engine->outputChannels.fastAdcErrorsCount++;
 		// todo: when? why? criticalError("ADC fast not ready?");
 		// see notes at https://github.com/rusefi/rusefi/issues/6399
 	} else {
 		/* drop volatile type qualifier - this is safe */
-		adcStartConversionI(adcp, hwConfig, (adcsample_t *)samples, depth);
+		adcStartConversionI(adcp, &hwConfig, (adcsample_t *)samples, depth);
 	}
 	chSysUnlockFromISR();
 }
 
-adcsample_t AdcDevice::getAvgAdcValueByToken(uint16_t token) {
+adcsample_t AdcFastOnchipDevice::get(uint16_t token)
+{
+	/* TODO: in case depth > 1 this will return random (not last) sample */
+	return samples[token];
+};
+
+adcsample_t AdcFastOnchipDevice::getAvg(uint16_t token) {
 	uint32_t result = 0;
 	int numChannels = size();
 

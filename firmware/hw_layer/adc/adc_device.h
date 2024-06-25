@@ -21,31 +21,18 @@
 #endif // def ADC_MUX_PIN
 #endif // SLOW_ADC_CHANNEL_COUNT
 
-class AdcDevice {
+class AdcDeviceBase {
 public:
-	explicit AdcDevice(ADCDriver *p_adcp, ADCConversionGroup* p_hwConfig, volatile adcsample_t *p_buf, size_t p_depth);
-	int enableChannel(adc_channel_e hwChannel);
-	/* Should be called from ISR context */
-	void startConversionI(void);
-	adcsample_t getAdcValueByToken(uint16_t token)
-	{
-		/* TODO: in case depth > 1 this will return random (not last) sample */
-		return samples[token];
-	};
-	adcsample_t getAvgAdcValueByToken(uint16_t token);
-	int size() const;
-	void init(void);
-	uint32_t conversionCount = 0;
+	virtual int start(void) = 0;
 
-private:
-	ADCDriver *adcp;
-	ADCConversionGroup* hwConfig;
-	volatile adcsample_t *samples;
-	size_t depth;
-	/**
-	 * Number of ADC channels in use
-	 */
-	size_t channelCount = 0;
+	/* Returns internal channel number in case of success, or negative number in case of error */
+	virtual int enableChannel(adc_channel_e /* hwChannel */) { return -1; }
+	virtual void disableChannel(uint16_t /* token */) { }
+
+	virtual adcsample_t get(uint16_t /* token */) { return 0; }
+	virtual adcsample_t getAvg(uint16_t /* token */) { return 0; }
+
+	virtual const char *name() { return "Dummy"; }
 };
 
 #endif /* HAL_USE_ADC */
