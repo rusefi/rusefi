@@ -152,7 +152,7 @@ public class PinoutLogic {
                 throw new IllegalStateException("[" + metaAsObject + "] meta could only be a string for " + pinId);
             String meta = (String) metaAsObject;
             if (meta != null && pinId != null) {
-                throw new IllegalStateException(pinId + " not expected with meta=" + meta);
+                throw new IllegalStateException("Please use either meta or id, not both. id=" + pinId + " not expected with meta=" + meta);
             }
             String headerValue;
             if (meta != null) {
