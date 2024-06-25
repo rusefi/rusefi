@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Jun 25 02:49:57 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Jun 25 12:23:48 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -5772,104 +5772,8 @@ struct persistent_config_s {
 	 * offset 22796
 	 */
 	uint16_t alternatorVoltageTargetRpmBins[ALTERNATOR_VOLTAGE_TARGET_SIZE];
-	/**
-	offset 22804 bit 0 */
-	bool boardUseTempPullUp : 1 {};
-	/**
-	offset 22804 bit 1 */
-	bool unusedBit_204_1 : 1 {};
-	/**
-	offset 22804 bit 2 */
-	bool unusedBit_204_2 : 1 {};
-	/**
-	offset 22804 bit 3 */
-	bool unusedBit_204_3 : 1 {};
-	/**
-	offset 22804 bit 4 */
-	bool unusedBit_204_4 : 1 {};
-	/**
-	offset 22804 bit 5 */
-	bool unusedBit_204_5 : 1 {};
-	/**
-	offset 22804 bit 6 */
-	bool unusedBit_204_6 : 1 {};
-	/**
-	offset 22804 bit 7 */
-	bool unusedBit_204_7 : 1 {};
-	/**
-	offset 22804 bit 8 */
-	bool unusedBit_204_8 : 1 {};
-	/**
-	offset 22804 bit 9 */
-	bool unusedBit_204_9 : 1 {};
-	/**
-	offset 22804 bit 10 */
-	bool unusedBit_204_10 : 1 {};
-	/**
-	offset 22804 bit 11 */
-	bool unusedBit_204_11 : 1 {};
-	/**
-	offset 22804 bit 12 */
-	bool unusedBit_204_12 : 1 {};
-	/**
-	offset 22804 bit 13 */
-	bool unusedBit_204_13 : 1 {};
-	/**
-	offset 22804 bit 14 */
-	bool unusedBit_204_14 : 1 {};
-	/**
-	offset 22804 bit 15 */
-	bool unusedBit_204_15 : 1 {};
-	/**
-	offset 22804 bit 16 */
-	bool unusedBit_204_16 : 1 {};
-	/**
-	offset 22804 bit 17 */
-	bool unusedBit_204_17 : 1 {};
-	/**
-	offset 22804 bit 18 */
-	bool unusedBit_204_18 : 1 {};
-	/**
-	offset 22804 bit 19 */
-	bool unusedBit_204_19 : 1 {};
-	/**
-	offset 22804 bit 20 */
-	bool unusedBit_204_20 : 1 {};
-	/**
-	offset 22804 bit 21 */
-	bool unusedBit_204_21 : 1 {};
-	/**
-	offset 22804 bit 22 */
-	bool unusedBit_204_22 : 1 {};
-	/**
-	offset 22804 bit 23 */
-	bool unusedBit_204_23 : 1 {};
-	/**
-	offset 22804 bit 24 */
-	bool unusedBit_204_24 : 1 {};
-	/**
-	offset 22804 bit 25 */
-	bool unusedBit_204_25 : 1 {};
-	/**
-	offset 22804 bit 26 */
-	bool unusedBit_204_26 : 1 {};
-	/**
-	offset 22804 bit 27 */
-	bool unusedBit_204_27 : 1 {};
-	/**
-	offset 22804 bit 28 */
-	bool unusedBit_204_28 : 1 {};
-	/**
-	offset 22804 bit 29 */
-	bool unusedBit_204_29 : 1 {};
-	/**
-	offset 22804 bit 30 */
-	bool unusedBit_204_30 : 1 {};
-	/**
-	offset 22804 bit 31 */
-	bool unusedBit_204_31 : 1 {};
 };
-static_assert(sizeof(persistent_config_s) == 22808);
+static_assert(sizeof(persistent_config_s) == 22804);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Jun 25 02:49:57 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Jun 25 12:23:48 UTC 2024
