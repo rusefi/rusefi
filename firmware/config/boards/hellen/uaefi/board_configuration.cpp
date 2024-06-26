@@ -35,7 +35,6 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->map.sensor.hwChannel = MM100_IN_MAP1_ANALOG;
 
 	setPPSInputs(MM100_IN_PPS_ANALOG, MM100_IN_AUX2_ANALOG);
-	engineConfiguration->enableAemXSeries = true;
 
 	engineConfiguration->clt.adcChannel = MM100_IN_CLT_ANALOG;
 
