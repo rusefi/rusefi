@@ -134,22 +134,6 @@ private:
 
 static PeriodicFastController fastController;
 
-void EngineStateBlinkingTask::onSlowCallback() {
-#if EFI_SHAFT_POSITION_INPUT
-	bool is_running = engine->rpmCalculator.isRunning();
-#else
-	bool is_running = false;
-#endif /* EFI_SHAFT_POSITION_INPUT */
-
-	if (is_running) {
-		// blink in running mode
-		enginePins.runningLedPin.toggle();
-	} else {
-		int is_cranking = engine->rpmCalculator.isCranking();
-		enginePins.runningLedPin.setValue(is_cranking);
-	}
-}
-
 static void resetAccel() {
 	engine->tpsAccelEnrichment.resetAE();
 
@@ -384,6 +368,22 @@ static void initConfigActions() {
 	addConsoleActionII("get_bit", getBit);
 }
 #endif /* EFI_UNIT_TEST */
+
+void EngineStateBlinkingTask::onSlowCallback() {
+#if EFI_SHAFT_POSITION_INPUT
+	bool is_running = engine->rpmCalculator.isRunning();
+#else
+	bool is_running = false;
+#endif /* EFI_SHAFT_POSITION_INPUT */
+
+	if (is_running) {
+		// blink in running mode
+		enginePins.runningLedPin.toggle();
+	} else {
+		int is_cranking = engine->rpmCalculator.isCranking();
+		enginePins.runningLedPin.setValue(is_cranking);
+	}
+}
 
 // this method is used by real firmware and simulator and unit test
 void commonInitEngineController() {
