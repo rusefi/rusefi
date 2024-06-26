@@ -1,7 +1,9 @@
 /**
  * @file	serial_rx.cpp
  *
- * This file handles auxilery serial communication.
+ * 2024 Q1: do we really want to support Innovate LC-2 serial?
+ * 2024 Q2: what else do we have here?
+ * This file handles auxiliary serial communication.
  *
  * @date Mar 19, 2020
  * @author Konstantin Smola, (c) 2020
@@ -38,7 +40,7 @@ void SerialRead::ThreadTask() {
 		} else {
 			ResetSerialSensor();
 		}
-		
+
 		//clear buffer every frame to avoid parsing old data
 		if (clear_ser_buffer) {
 			ClearSerialBuffer();
