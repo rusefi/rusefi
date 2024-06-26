@@ -108,28 +108,31 @@ void initDataStructures() {
 static void doPeriodicSlowCallback();
 
 class PeriodicFastController : public PeriodicTimerController {
+protected:
 	void PeriodicTask() override {
 		engine->periodicFastCallback();
+
+		if (m_slowCallbackCounter == 0) {
+			doPeriodicSlowCallback();
+
+			// Check that an integer number of fast callbacks fit in a slow callback
+			static_assert((SLOW_CALLBACK_PERIOD_MS % FAST_CALLBACK_PERIOD_MS) == 0);
+
+			m_slowCallbackCounter = SLOW_CALLBACK_PERIOD_MS / FAST_CALLBACK_PERIOD_MS;
+		}
+
+		m_slowCallbackCounter--;
 	}
 
 	int getPeriodMs() override {
 		return FAST_CALLBACK_PERIOD_MS;
 	}
-};
 
-class PeriodicSlowController : public PeriodicTimerController {
-	void PeriodicTask() override {
-		doPeriodicSlowCallback();
-	}
-
-	int getPeriodMs() override {
-		// no reason to have this configurable, looks like everyone is happy with 20Hz
-		return SLOW_CALLBACK_PERIOD_MS;
-	}
+private:
+	size_t m_slowCallbackCounter = 0;
 };
 
 static PeriodicFastController fastController;
-static PeriodicSlowController slowController;
 
 void EngineStateBlinkingTask::onSlowCallback() {
 #if EFI_SHAFT_POSITION_INPUT
@@ -205,7 +208,6 @@ static void doPeriodicSlowCallback() {
 }
 
 void initPeriodicEvents() {
-	slowController.start();
 	fastController.start();
 }
 
