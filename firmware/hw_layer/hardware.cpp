@@ -369,7 +369,7 @@ void applyNewHardwareSettings() {
 #endif /* EFI_AUX_SERIAL */
 
 #if EFI_HIP_9011
-	stopHip9001_pins();
+	stopHip9011_pins();
 #endif /* EFI_HIP_9011 */
 
 	stopHardware();
@@ -423,7 +423,7 @@ void applyNewHardwareSettings() {
 
 
 #if EFI_HIP_9011
-	startHip9001_pins();
+	startHip9011_pins();
 #endif /* EFI_HIP_9011 */
 
 

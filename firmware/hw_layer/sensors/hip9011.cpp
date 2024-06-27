@@ -97,9 +97,9 @@ static SPIConfig hipSpiCfg = {
 #ifdef _CHIBIOS_RT_CONF_VER_6_1_
 	.end_cb = NULL,
 #else
-        .slave = false,
-        .data_cb = NULL,
-        .error_cb = NULL,
+	.slave = false,
+	.data_cb = NULL,
+	.error_cb = NULL,
 #endif
 	.ssport = NULL,
 	.sspad = 0,
@@ -283,7 +283,7 @@ void hip9011_onFireEvent(uint8_t cylinderNumber, efitick_t nowNt) {
 		return;
 
 	/* We are not checking here for READY_TO_INTEGRATE state as
-	 * previous integration may be stil in progress, while
+	 * previous integration may be still in progress, while
 	 * we are scheduling next integration start only
 	 * knockDetectionWindowStart from now.
 	 * Check for correct state will be done at startIntegration () */
@@ -391,7 +391,7 @@ static int hip_init() {
 			 * Now we dont care for return value */
 			instance.hw->sendSyncCommand(SET_ADVANCED_MODE_CMD, &rx);
 			if (rx != SET_ADVANCED_MODE_REP) {
-				/* this is realy a communication problem */
+				/* this is really a communication problem */
 				return ret;
 			}
 		}
@@ -527,22 +527,20 @@ static msg_t hipThread(void *arg) {
 /* Exported functions.														*/
 /*==========================================================================*/
 
-void stopHip9001_pins() {
+void stopHip9011_pins() {
 	intHold.deInit();
 	Cs.deInit();
 #if EFI_PROD_CODE
+	spi = NULL;
 	hipSpiCfg.ssport = NULL;
 #endif
 }
 
-void startHip9001_pins() {
+void startHip9011_pins() {
 	intHold.initPin("hip int/hold", engineConfiguration->hip9011IntHoldPin, engineConfiguration->hip9011IntHoldPinMode);
+	intHold.setValue(1);
 	Cs.initPin("hip CS", engineConfiguration->hip9011CsPin, engineConfiguration->hip9011CsPinMode);
-}
-
-void initHip9011() {
-	if (!engineConfiguration->isHip9011Enabled)
-		return;
+	Cs.setValue(1);
 
 #if EFI_PROD_CODE
 	spi = getSpiDevice(engineConfiguration->hip9011SpiDevice);
@@ -550,12 +548,16 @@ void initHip9011() {
 		// error already reported
 		return;
 	}
-
 	hipSpiCfg.ssport = getHwPort("hip", engineConfiguration->hip9011CsPin);
 	hipSpiCfg.sspad = getHwPin("hip", engineConfiguration->hip9011CsPin);
 #endif /* EFI_PROD_CODE */
+}
 
-	startHip9001_pins();
+void initHip9011() {
+	if (!engineConfiguration->isHip9011Enabled)
+		return;
+
+	startHip9011_pins();
 
 	/* load settings */
 	instance.prescaler = engineConfiguration->hip9011PrescalerAndSDO;
