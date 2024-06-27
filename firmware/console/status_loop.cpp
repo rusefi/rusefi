@@ -272,7 +272,7 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 	void setAllLeds(int value) {
 		// make sure we do not turn the critical LED off if already have
 		// critical error by now
-		for (uint32_t i = 0; !hasFirmwareError() && i < sizeof(leds) / sizeof(leds[0]); i++) {
+		for (size_t i = 0; !hasFirmwareError() && i < efi::size(leds); i++) {
 			leds[i]->setValue(value);
 		}
 	}
