@@ -756,7 +756,7 @@
         <constant name="enableAemXSeriesEgt">"false"</constant>
         <constant name="startRequestPinInverted">"Normal"</constant>
         <constant name="tcu_rangeSensorPulldown">"false"</constant>
-        <constant name="skipBoardCanDash">"false"</constant>
+        <constant name="unusedBit2423423">"false"</constant>
         <constant name="brakePedalPinInverted">"Normal"</constant>
         <constant name="devBit0">"false"</constant>
         <constant name="devBit1">"false"</constant>
@@ -4808,7 +4808,7 @@ canRxAdd(IN_35D, onCanRxAc)</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240617" nPages="1" signature="rusEFI master.2024.06.27.f407-discovery.1377005925" version="5.0"/>
+    <versionInfo firmwareInfo="20240617" nPages="1" signature="rusEFI master.2024.06.27.f407-discovery.4245681911" version="5.0"/>
     <bibliography author="rusEFI 20240617" writeDate="date"/>
     <settings/>
     <userComments/>
