@@ -369,7 +369,7 @@ static void initConfigActions() {
 }
 #endif /* EFI_UNIT_TEST */
 
-void EngineStateBlinkingTask::onSlowCallback() {
+void LedBlinkingTask::onSlowCallback() {
 #if EFI_SHAFT_POSITION_INPUT
 	bool is_running = engine->rpmCalculator.isRunning();
 #else
@@ -380,7 +380,7 @@ void EngineStateBlinkingTask::onSlowCallback() {
 		// blink in running mode
 		enginePins.runningLedPin.toggle();
 	} else {
-		int is_cranking = engine->rpmCalculator.isCranking();
+		bool is_cranking = engine->rpmCalculator.isCranking();
 		enginePins.runningLedPin.setValue(is_cranking);
 	}
 }

@@ -98,7 +98,8 @@ struct AirmassModelBase;
 
 class IEtbController;
 
-struct EngineStateBlinkingTask : public EngineModule {
+class LedBlinkingTask : public EngineModule {
+public:
 	void onSlowCallback() override;
 };
 
@@ -172,7 +173,7 @@ public:
 #if EFI_BOOST_CONTROL
 		BoostController,
 #endif // EFI_BOOST_CONTROL
-		EngineStateBlinkingTask,
+		LedBlinkingTask,
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 
