@@ -496,9 +496,7 @@ void TunerstudioThread::ThreadTask() {
 	// Until the end of time, process incoming messages.
 	while (true) {
 		if (tsProcessOne(channel) == 0) {
-			onDataArrived(true);
-		} else {
-			onDataArrived(false);
+			onDataArrived();
 		}
 	}
 }

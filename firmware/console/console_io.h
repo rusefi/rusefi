@@ -21,4 +21,4 @@ typedef void (*CommandHandler)(char *);
 
 void consoleOutputBuffer(const uint8_t *buf, int size);
 void startConsole(CommandHandler console_line_callback_p);
-void onDataArrived(bool valid);
+void onDataArrived();

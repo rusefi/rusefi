@@ -47,3 +47,5 @@
 #else
 #include "chprintf.h"
 #endif
+
+#include <atomic>

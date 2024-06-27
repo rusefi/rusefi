@@ -257,7 +257,11 @@ static bool isTriggerErrorNow() {
 #endif /* EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 }
 
-extern bool consoleByteArrived;
+static std::atomic<bool> consoleByteArrived = false;
+
+void onDataArrived() {
+	consoleByteArrived.store(true);
+}
 
 class CommunicationBlinkingTask : public PeriodicTimerController {
 
@@ -299,7 +303,8 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 				// differentiates software firmware error from critical interrupt error with CPU halt.
 				offTimeMs = 50;
 				onTimeMs = 450;
-			} else if (consoleByteArrived) {
+			} else if (consoleByteArrived.exchange(false)) {
+				consoleByteArrived = false;
 				offTimeMs = 100;
 				onTimeMs = 33;
 #if EFI_INTERNAL_FLASH
