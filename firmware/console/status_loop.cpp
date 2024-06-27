@@ -243,6 +243,12 @@ static void initStatusLeds() {
 	enginePins.runningLedPin.initPin("led: running status", getRunningLedPin(), LED_PIN_MODE, true);
 }
 
+static std::atomic<bool> consoleByteArrived = false;
+
+void onDataArrived() {
+	consoleByteArrived.store(true);
+}
+
 #if EFI_PROD_CODE
 
 static OutputPin* leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPin,
@@ -255,12 +261,6 @@ static bool isTriggerErrorNow() {
 #else
 	return false;
 #endif /* EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
-}
-
-static std::atomic<bool> consoleByteArrived = false;
-
-void onDataArrived() {
-	consoleByteArrived.store(true);
 }
 
 class CommunicationBlinkingTask : public PeriodicTimerController {
