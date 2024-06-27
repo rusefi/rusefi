@@ -98,7 +98,7 @@ Inhibit operation of this fan while the engine is not running.
 Enable secondary spark outputs that fire after the primary (rotaries, twin plug engines).
 
 ### etb_use_two_wires
-TLE7209 uses two-wire mode. TLE9201 and VNH2SP30 do NOT use two wire mode.
+TLE7209 and L6205 use two-wire mode. TLE9201 and VNH2SP30 do NOT use two wire mode.
 
 ### isDoubleSolenoidIdle
 Subaru/BMW style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
