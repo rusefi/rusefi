@@ -101,6 +101,10 @@ class IEtbController;
 class LedBlinkingTask : public EngineModule {
 public:
 	void onSlowCallback() override;
+
+private:
+	void updateRunningLed();
+	void updateWarningLed();
 };
 
 class Engine final : public TriggerStateListener {

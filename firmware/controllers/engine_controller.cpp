@@ -370,11 +370,20 @@ static void initConfigActions() {
 #endif /* EFI_UNIT_TEST */
 
 void LedBlinkingTask::onSlowCallback() {
+	updateRunningLed();
+	updateWarningLed();
+}
+
+void LedBlinkingTask::updateRunningLed() {
 #if EFI_SHAFT_POSITION_INPUT
 	bool is_running = engine->rpmCalculator.isRunning();
 #else
 	bool is_running = false;
 #endif /* EFI_SHAFT_POSITION_INPUT */
+
+	// Running -> flashing
+	// Stopped -> off
+	// Cranking -> on
 
 	if (is_running) {
 		// blink in running mode
@@ -383,6 +392,18 @@ void LedBlinkingTask::onSlowCallback() {
 		bool is_cranking = engine->rpmCalculator.isCranking();
 		enginePins.runningLedPin.setValue(is_cranking);
 	}
+}
+
+void LedBlinkingTask::updateWarningLed() {
+	bool warnLedState = Sensor::getOrZero(SensorType::BatteryVoltage) < LOW_VBATT;
+
+#if EFI_ENGINE_CONTROL
+	// TODO: should this do something more intelligent?
+	// warnLedState |= isTriggerErrorNow();
+#endif
+
+	// todo: at the moment warning codes do not affect warning LED?!
+	enginePins.warningLedPin.setValue(warnLedState);
 }
 
 // this method is used by real firmware and simulator and unit test
