@@ -1254,9 +1254,7 @@ void canDashboardAim(CanCycle cycle) {
 PUBLIC_API_WEAK void boardUpdateDash(CanCycle cycle) {}
 
 void updateDash(CanCycle cycle) {
-  if (!engineConfiguration->skipBoardCanDash) {
-    boardUpdateDash(cycle);
-  }
+  boardUpdateDash(cycle);
 
 	// Transmit dash data, if enabled
 	switch (engineConfiguration->canNbcType) {
