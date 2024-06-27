@@ -11,8 +11,8 @@
 #define HIP_THREAD_PERIOD 100
 
 void initHip9011();
-void startHip9001_pins();
-void stopHip9001_pins();
+void startHip9011_pins();
+void stopHip9011_pins();
 #if HAL_USE_ADC
 void hipAdcCallback(float volts);
 #endif /* HAL_USE_ADC */
