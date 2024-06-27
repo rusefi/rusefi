@@ -168,7 +168,7 @@ class EngineStateBlinkingTask : public PeriodicTimerController {
 			// blink in running mode
 			enginePins.runningLedPin.toggle();
 		} else {
-			int is_cranking = engine->rpmCalculator.isCranking();
+			bool is_cranking = engine->rpmCalculator.isCranking();
 			enginePins.runningLedPin.setValue(is_cranking);
 		}
 	}
