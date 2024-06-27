@@ -86,11 +86,14 @@ runs:
     - name: Check branch name
       shell: bash
       if: ${{ contains(github.ref_name, '.') }}
-      run: echo '::error::Branch names must not contain ".", this breaks firmware autoupdates.' && exit 1
+      run: |
+        : Check branch name
+        echo '::error::Branch names must not contain ".", this breaks firmware autoupdates.' && exit 1
 
     - name: Mask Secrets
       shell: bash
       run: |
+        : Mask Secrets
         [ -z "${{inputs.MY_REPO_PAT}}" ] || echo "::add-mask::${{inputs.MY_REPO_PAT}}"
         [ -z "${{inputs.RUSEFI_ONLINE_FTP_USER}}" ] || echo "::add-mask::${{inputs.RUSEFI_ONLINE_FTP_USER}}"
         [ -z "${{inputs.RUSEFI_ONLINE_FTP_PASS}}" ] || echo "::add-mask::${{inputs.RUSEFI_ONLINE_FTP_PASS}}"
@@ -109,6 +112,7 @@ runs:
     - name: Set Token
       shell: bash
       run: |
+        : Set Token
         if [ -n "${{ inputs.MY_REPO_PAT }}" ]; then
           echo "Using current secret"
           echo "TOKEN=${{ inputs.MY_REPO_PAT }}" >> "$GITHUB_ENV"
@@ -120,6 +124,7 @@ runs:
     - name: Echo
       shell: bash
       run: |
+        : Echo
         echo "rusefi_dir=${{inputs.rusefi_dir}}"
         echo "meta_info=${{inputs.meta_info}}"
 
@@ -127,6 +132,7 @@ runs:
       working-directory: ${{inputs.rusefi_dir}}
       shell: bash
       run: |
+        : Checkout Submodules
         git submodule update --init --depth=1 firmware/ChibiOS
         git submodule update --init --depth=1 firmware/ChibiOS-Contrib
         git submodule update --init --depth=1 firmware/libfirmware
@@ -141,6 +147,7 @@ runs:
     - name: Invoking Post-Checkout Action
       shell: bash
       run: |
+        : Invoking Post-Checkout Action
         if [ -f .github/workflows/actions/post-checkout.sh ]; then
           bash .github/workflows/actions/post-checkout.sh
         fi
@@ -148,6 +155,7 @@ runs:
     - name: Set Env Variables
       shell: bash
       run: |
+        : Set Env Variables
         echo "RUSEFI_SSH_SERVER=${{inputs.RUSEFI_SSH_SERVER}}" >> $GITHUB_ENV
         echo "RUSEFI_SSH_USER=${{inputs.RUSEFI_SSH_USER}}" >> $GITHUB_ENV
         echo "RUSEFI_SSH_PASS=${{inputs.RUSEFI_SSH_PASS}}" >> $GITHUB_ENV
@@ -183,6 +191,7 @@ runs:
     - name: Set Build Env Variables
       shell: bash
       run: |
+        : Set Build Env Variables
         if [[ ${{github.ref_name}} == "lts"* ]]; then
           echo AUTOMATION_LTS=true >> $GITHUB_ENV
           echo AUTOMATION_REF=${{github.ref_name}} >> $GITHUB_ENV
@@ -203,11 +212,14 @@ runs:
 
     - name: Test Compiler
       shell: bash
-      run: javac -version
+      run: |
+        : Test Compiler
+        javac -version
 
     - name: Install Tools
       shell: bash
       run: |
+        : Install Tools
         if [ "$BUNDLE_SIMULATOR" == "true" -o "$RUN_SIMULATOR" == "true" ]; then
           SIM_REQS="gcc-multilib g++-multilib"
         fi
@@ -220,12 +232,14 @@ runs:
     - name: Repo Status
       shell: bash
       run: |
+        : Repo Status
         git status
 
     - name: rusefi_dir Status
       working-directory: ${{inputs.rusefi_dir}}
       shell: bash
       run: |
+        : rusefi_dir Status
         if [ "$(git rev-parse --is-inside-work-tree 2>&1)" == "true" ]; then
           git status
         else
@@ -236,6 +250,7 @@ runs:
       if: ${{ inputs.push == 'true' }}
       shell: bash
       run: |
+        : Git Config
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub git update Action"
 
@@ -243,6 +258,7 @@ runs:
       working-directory: ${{inputs.rusefi_dir}}/firmware
       shell: bash
       run: |
+        : Handle configs separately just to make github logs more readable
         bash bin/compile.sh $BOARD_META_PATH config
 
     - name: Add Config to Commit Regardless of firmware build status
@@ -251,6 +267,7 @@ runs:
       if: "false"
       shell: bash
       run: |
+        : Add Config to Commit Regardless of firmware build status
         git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*
         OUT=$(git commit -m "Quick Auto-generated Configs" -m "[no ci]" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
@@ -269,6 +286,7 @@ runs:
       working-directory: ${{inputs.rusefi_dir}}/firmware
       shell: bash
       run: |
+        : Building simulator separately just to make github logs more readable
         if [ "$RUN_SIMULATOR" == "true" ]; then
           echo Building simulator...
           bash bin/compile.sh $BOARD_META_PATH ../simulator/build/rusefi_simulator.linux
@@ -279,16 +297,18 @@ runs:
       working-directory: ${{inputs.rusefi_dir}}/firmware
       shell: bash
       run: |
+        : Build Firmware
         if [ "$RUN_SIMULATOR" == "true" ]; then
           TARGETS=("../simulator/build/rusefi_simulator.linux" "../java_tools/tune-tools/build/libs/tune-tools-all.jar")
         fi
-        bash bin/compile.sh $BOARD_META_PATH --output-sync=recurse ${{inputs.artifacts}} ${{inputs.uploads}} ${TARGETS[@]}
+        bash bin/compile.sh $BOARD_META_PATH --output-sync=recurse ${{inputs.artifacts}} ${{inputs.uploads}} ${TARGETS[@]}        
 
     - name: Upload Bundle
       if: ${{ contains(inputs.uploads, 'bundles') }}
       working-directory: ${{inputs.rusefi_dir}}/artifacts
       shell: bash
       run: |
+        : Upload Bundle
         if [ "${{github.ref}}" = "refs/heads/master" ]; then
           echo "On master branch"
         elif [[ ${{github.ref_name}} == "lts"* ]]; then
@@ -303,6 +323,7 @@ runs:
       if: ${{ inputs.run_simulator == 'true' }}
       shell: bash
       run: |
+        : Run Simulator
         cd ${{inputs.rusefi_dir}}/simulator/
         ./build/rusefi_simulator 10
         ./write_tune.sh ${ABSOLUTE_BOARD_DIR}/generated/tunerstudio/generated/rusefi_${SHORT_BOARD_NAME}.ini
@@ -320,6 +341,7 @@ runs:
       if: ${{ inputs.run_simulator == 'true' && inputs.push == 'true' }}
       shell: bash
       run: |
+        : Add Tune to Commit
         echo "Current directory: $PWD"
         ls ${{inputs.sim_output}}
         git add ${{inputs.sim_output}}*msq
@@ -335,6 +357,7 @@ runs:
       if: ${{ inputs.push == 'true' }}
       shell: bash
       run: |
+        : Add Config to Commit
         git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*
         OUT=$(git commit -m "Auto-generated Configs" -m "[no ci]" 2>&1) || echo "commit failed, finding out why"
         if echo "$OUT" | grep 'nothing to commit'; then
@@ -347,6 +370,7 @@ runs:
       if: ${{ inputs.push == 'true' }}
       shell: bash
       run: |
+        : Add Connectors to Commit
         if [ -d $BOARD_DIR/connectors ]; then
           git add $BOARD_DIR/connectors/*
         fi
@@ -367,7 +391,8 @@ runs:
       if: ${{ contains(inputs.uploads, 'ini') }}
       working-directory: ${{inputs.rusefi_dir}}/firmware/${{env.META_OUTPUT_ROOT_FOLDER}}tunerstudio/generated
       shell: bash
-      run:
+      run: |
+        : Upload .ini files to rusEFI Online server
         ${{github.workspace}}/${{inputs.rusefi_dir}}/firmware/tunerstudio/upload_ini.sh ${{ inputs.RUSEFI_ONLINE_FTP_USER }} "${{ inputs.RUSEFI_ONLINE_FTP_PASS }}" ${{ inputs.RUSEFI_FTP_SERVER }}
 
     - name: Upload .ini files to secondary Online server
@@ -375,6 +400,7 @@ runs:
       working-directory: ${{inputs.rusefi_dir}}/firmware/${{env.META_OUTPUT_ROOT_FOLDER}}tunerstudio/generated
       shell: bash
       run: |
+        : Upload .ini files to secondary Online server
         export INI_DESTINATION_FOLDER=html/ini/
         ${{github.workspace}}/${{inputs.rusefi_dir}}/firmware/tunerstudio/upload_ini.sh ${{ inputs.RUSEFI_ONLINE2_USER }} "${{ inputs.RUSEFI_ONLINE2_PASS }}" ${{ inputs.RUSEFI_ONLINE2_SERVER }}
 
@@ -446,6 +472,7 @@ runs:
       working-directory: ${{inputs.rusefi_dir}}/artifacts
       shell: bash
       run: |
+        : Upload obfuscated Bundle
         if [ "${{github.ref}}" = "refs/heads/master" ]; then
           echo "obfuscated: On master branch"
         elif [[ ${{github.ref_name}} == "lts"* ]]; then
