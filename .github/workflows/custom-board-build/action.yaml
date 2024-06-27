@@ -510,3 +510,11 @@ runs:
         github_token: ${{env.TOKEN}}
         custom_tag: ${{ env.release_date }}
         tag_prefix: ''
+
+    - name: Upload Tagged Daily Release Bundle
+      if: ${{ contains(inputs.uploads, 'bundles') && steps.checkTag.outputs.exists == 'false'}}
+      working-directory: ${{inputs.rusefi_dir}}/artifacts
+      shell: bash
+      run: |
+        : Upload Tagged Daily Release Bundle
+        bash ../firmware/bin/upload_bundle.sh ${{ env.RUSEFI_SSH_USER }} ${{ env.RUSEFI_SSH_PASS }} ${{ env.RUSEFI_SSH_SERVER }} ${{ env.BUNDLE_NAME }} ${{ env.release_date }}
