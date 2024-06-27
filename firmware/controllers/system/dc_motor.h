@@ -2,7 +2,7 @@
  *  @file dc_motor.h
  *
  * ETB user documentation at https://github.com/rusefi/rusefi/wiki/HOWTO_electronic_throttle_body
- * 
+ *
  *
  *  @date Dec 22, 2018
  *  @author Matthew Kennedy, (c) 2018
@@ -12,7 +12,7 @@
 
 /**
  * @brief Brushed or brushless DC motor interface
- * 
+ *
  * Represents a DC motor (brushed or brushless) that provides simple
  * torque/power/current/duty cycle control, but not accurate absolute position control.
  */
@@ -50,7 +50,7 @@ class OutputPin;
 
 /**
  * @brief Represents a DC motor controller (H-bridge) with some combination of PWM and on/off control pins.
- *
+ * 2024: what does 'TwoPin' class name mean? is that just a historic artifact?
  */
 class TwoPinDcMotor : public DcMotor
 {

@@ -21,6 +21,11 @@
 bool qcDirectPinControlMode = false;
 
 static void directWritePad(Gpio pin, int value) {
+  if (!isBrainPinValid(pin)) {
+    criticalError("QC of invalid pin %d", (int)pin);
+    return;
+  }
+
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
 	if (brain_pin_is_onchip(pin)) {
 	  palWritePad(getHwPort("can_write", pin), getHwPin("can_write", pin), value);
@@ -36,10 +41,17 @@ static void qcSetEtbState(uint8_t dcIndex, uint8_t direction) {
 	qcDirectPinControlMode = true;
 	const dc_io *io = &engineConfiguration->etbIo[dcIndex];
 	Gpio controlPin = io->controlPin;
-	directWritePad(controlPin, 1);
-	efiSetPadModeWithoutOwnershipAcquisition("QC_ETB", controlPin, PAL_MODE_OUTPUT_PUSHPULL);
-	directWritePad(io->directionPin1, direction);
-	directWritePad(io->disablePin, 0); // disable pin is inverted - here we ENABLE. direct pin access due to qcDirectPinControlMode
+  directWritePad(controlPin, 1);
+	if (engineConfiguration->etb_use_two_wires) {
+	  // TLE7209 and L6205
+	  directWritePad(io->directionPin1, direction);
+	  directWritePad(io->directionPin2, !direction);
+	} else {
+	  // TLE9201 and VNH2SP30
+	  efiSetPadModeWithoutOwnershipAcquisition("QC_ETB", controlPin, PAL_MODE_OUTPUT_PUSHPULL);
+	  directWritePad(io->directionPin1, direction);
+	  directWritePad(io->disablePin, 0); // disable pin is inverted - here we ENABLE. direct pin access due to qcDirectPinControlMode
+    }
 }
 
 #if EFI_CAN_SUPPORT
