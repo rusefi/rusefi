@@ -591,7 +591,7 @@ custom timing_mode_e 1 bits, U08, @OFFSET@, [0:0], "dynamic", "fixed"
 timing_mode_e timingMode;Dynamic uses the timing map to decide the ignition timing\nStatic timing fixes the timing to the value set below (only use for checking static timing with a timing light).
 
 custom can_nbc_e 1 bits, U08, @OFFSET@, [0:4], "None", "FIAT", "VAG", "MAZDA RX8", "BMW E46", "W202", "BMW E90", "Haltech", "VAG MQB", "Nissan VQ35", "Genesis Coupe", "Honda K", "AiM", "MS Simplified Broadcast", "type 14"
-can_nbc_e canNbcType;set can_mode X
+can_nbc_e canNbcType
 
 angle_t fixedModeTiming;This value is the ignition timing used when in 'fixed timing' mode, i.e. constant timing\nThis mode is useful when adjusting distributor location.;"RPM", 1, 0, 0, 3000, 0
 
@@ -2507,6 +2507,7 @@ end_struct
 #define ts_show_spi true
 #define ts_show_sd_card true
 #define ts_show_can_pins true
+#define ts_show_can_bitrate true
 #define ts_show_vbatt true
 #define ts_show_clt_iat_pullup true
 #define ts_show_tunerstudio_port true
