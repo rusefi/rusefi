@@ -1111,9 +1111,6 @@ float getConfigValueByName(const char *name) {
 // tcu_rangeSensorPulldown
 		case -2079591860:
 			return engineConfiguration->tcu_rangeSensorPulldown;
-// skipBoardCanDash
-		case 1878649142:
-			return engineConfiguration->skipBoardCanDash;
 // brakePedalPinInverted
 		case -1969589096:
 			return engineConfiguration->brakePedalPinInverted;
@@ -3689,11 +3686,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -2079591860:
 	{
 		engineConfiguration->tcu_rangeSensorPulldown = (int)value;
-		return 1;
-	}
-		case 1878649142:
-	{
-		engineConfiguration->skipBoardCanDash = (int)value;
 		return 1;
 	}
 		case -1969589096:
