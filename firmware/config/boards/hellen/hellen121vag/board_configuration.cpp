@@ -120,3 +120,7 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->vrThreshold[0].pin = Gpio::H144_OUT_PWM6;
 }
+
+int getBoardMetaDcOutputsCount() {
+    return 1;
+}

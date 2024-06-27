@@ -134,3 +134,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->tps1SecondaryMax = 102;
 	hellenWbo();
 }
+
+int getBoardMetaDcOutputsCount() {
+    return 1;
+}
