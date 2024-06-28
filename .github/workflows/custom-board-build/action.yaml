@@ -518,3 +518,11 @@ runs:
       run: |
         : Upload Tagged Daily Release Bundle
         bash ../firmware/bin/upload_bundle.sh ${{ env.RUSEFI_SSH_USER }} ${{ env.RUSEFI_SSH_PASS }} ${{ env.RUSEFI_SSH_SERVER }} ${{ env.BUNDLE_NAME }} ${{ env.release_date }}
+
+    - name: Upload Obfuscated Tagged Daily Release Bundle
+      if: ${{ contains(inputs.artifacts, 'obfuscated') && steps.checkTag.outputs.exists == 'false'}}
+      working-directory: ${{inputs.rusefi_dir}}/artifacts
+      shell: bash
+      run: |
+        : Upload Obfuscated Tagged Daily Release Bundle
+        bash ../firmware/bin/upload_bundle.sh ${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_USER }} "${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_PASS }}" ${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_SERVER }} "${{env.SHORT_BOARD_NAME}}_obfuscated_public ${{ env.release_date }}
