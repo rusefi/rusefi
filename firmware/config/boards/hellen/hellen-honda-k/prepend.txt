@@ -26,6 +26,7 @@
 
 #define ts_show_bank2_cam1 false
 #define ts_show_bank2_cam2 false
+#define ts_show_second_bank false
 
 #define ts_show_starter_disable false
 #define ts_show_status_leds false
