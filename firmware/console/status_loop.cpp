@@ -237,22 +237,13 @@ void updateDevConsoleState() {
 
 static void initStatusLeds() {
 	enginePins.communicationLedPin.initPin("led: comm status", getCommsLedPin(), LED_PIN_MODE, true);
-	// checkEnginePin is already initialized by the time we get here
+	// errorLedPin is already initialized by the time we get here
 
 	enginePins.warningLedPin.initPin("led: warning status", getWarningLedPin(), LED_PIN_MODE, true);
 	enginePins.runningLedPin.initPin("led: running status", getRunningLedPin(), LED_PIN_MODE, true);
 }
 
-static std::atomic<bool> consoleByteArrived = false;
-
-void onDataArrived() {
-	consoleByteArrived.store(true);
-}
-
 #if EFI_PROD_CODE
-
-static OutputPin* leds[] = { &enginePins.warningLedPin, &enginePins.runningLedPin,
-		&enginePins.errorLedPin, &enginePins.communicationLedPin, &enginePins.checkEnginePin };
 
 static bool isTriggerErrorNow() {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
@@ -262,70 +253,6 @@ static bool isTriggerErrorNow() {
 	return false;
 #endif /* EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 }
-
-class CommunicationBlinkingTask : public PeriodicTimerController {
-
-	int getPeriodMs() override {
-		return counter % 2 == 0 ? onTimeMs : offTimeMs;
-	}
-
-	void setAllLeds(int value) {
-		// make sure we do not turn the critical LED off if already have
-		// critical error by now
-		for (size_t i = 0; !hasFirmwareError() && i < efi::size(leds); i++) {
-			leds[i]->setValue(value);
-		}
-	}
-
-	void PeriodicTask() override {
-		counter++;
-
-
-		if (counter == 1) {
-			// first invocation of BlinkingTask
-			setAllLeds(1);
-		} else if (counter == 2) {
-			// second invocation of BlinkingTask
-			setAllLeds(0);
-		} else if (counter % 2 == 0) {
-			enginePins.communicationLedPin.setValue(0);
-		} else {
-#define BLINKING_PERIOD_MS 33
-
-			if (hasFirmwareError()) {
-				// special behavior in case of critical error - not equal on/off time
-				// this special behavior helps to notice that something is not right, also
-				// differentiates software firmware error from critical interrupt error with CPU halt.
-				offTimeMs = 50;
-				onTimeMs = 450;
-			} else if (consoleByteArrived.exchange(false)) {
-				consoleByteArrived = false;
-				offTimeMs = 100;
-				onTimeMs = 33;
-#if EFI_INTERNAL_FLASH
-			} else if (getNeedToWriteConfiguration()) {
-				offTimeMs = onTimeMs = 500;
-#endif // EFI_INTERNAL_FLASH
-			} else {
-				onTimeMs =
-#if EFI_USB_SERIAL
-				is_usb_serial_ready() ? 3 * BLINKING_PERIOD_MS :
-#endif // EFI_USB_SERIAL
-				BLINKING_PERIOD_MS;
-				offTimeMs = 0.6 * onTimeMs;
-			}
-
-			enginePins.communicationLedPin.setValue(1);
-		}
-	}
-
-private:
-	int counter = 0;
-	int onTimeMs = 100;
-	int offTimeMs = 100;
-};
-
-static CommunicationBlinkingTask communicationsBlinkingTask;
 
 #endif /* EFI_PROD_CODE */
 
@@ -732,6 +659,5 @@ void startStatusThreads() {
 	// todo: refactoring needed, this file should probably be split into pieces
 #if EFI_PROD_CODE
 	initStatusLeds();
-	communicationsBlinkingTask.start();
 #endif /* EFI_PROD_CODE */
 }

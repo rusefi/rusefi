@@ -372,6 +372,8 @@ static void initConfigActions() {
 void LedBlinkingTask::onSlowCallback() {
 	updateRunningLed();
 	updateWarningLed();
+	updateCommsLed();
+	updateErrorLed();
 }
 
 void LedBlinkingTask::updateRunningLed() {
@@ -404,6 +406,43 @@ void LedBlinkingTask::updateWarningLed() {
 
 	// todo: at the moment warning codes do not affect warning LED?!
 	enginePins.warningLedPin.setValue(warnLedState);
+}
+
+static std::atomic<bool> consoleByteArrived = false;
+
+void onDataArrived() {
+	consoleByteArrived.store(true);
+}
+
+void LedBlinkingTask::updateCommsLed() {
+	// USB unplugged -> off (or no USB)
+	// USB plugged in -> on
+	// Data transferring -> flashing
+
+	if (consoleByteArrived.exchange(false)) {
+		enginePins.communicationLedPin.toggle();
+	} else {
+		bool usbReady = 
+			#if EFI_USB_SERIAL
+				is_usb_serial_ready()
+			#else 
+				true
+			#endif
+			;
+
+		enginePins.communicationLedPin.setValue(usbReady);
+	}
+}
+
+void LedBlinkingTask::updateErrorLed() {
+	if (hasFirmwareError()) {
+		if (m_errorBlinkCounter == 0) {
+			enginePins.errorLedPin.toggle();
+			m_errorBlinkCounter = 5;
+		}
+
+		m_errorBlinkCounter--;
+	}
 }
 
 // this method is used by real firmware and simulator and unit test

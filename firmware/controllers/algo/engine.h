@@ -105,6 +105,10 @@ public:
 private:
 	void updateRunningLed();
 	void updateWarningLed();
+	void updateCommsLed();
+	void updateErrorLed();
+
+	size_t m_errorBlinkCounter = 0;
 };
 
 class Engine final : public TriggerStateListener {
