@@ -208,15 +208,6 @@ void Sensor::setInvalidMockValue(SensorType type) {
 	}
 }
 
-/*static*/ void Sensor::setMockValue(int type, float value) {
-	// bounds check
-	if (type <= 0 || type >= static_cast<int>(SensorType::PlaceholderLast)) {
-		return;
-	}
-
-	setMockValue(static_cast<SensorType>(type), value);
-}
-
 /*static*/ void Sensor::resetMockValue(SensorType type) {
 	auto entry = getEntryForType(type);
 
