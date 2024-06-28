@@ -1,0 +1,92 @@
+-- scriptname man-in-the-middle-nissan-tcu.txt
+
+-- sometimes we want to cut a CAN bus and install rusEFI into that cut
+-- https://en.wikipedia.org/wiki/Man-in-the-middle_attack
+
+-- this controls onCanRx rate as well!
+setTickRate(300)
+
+ECU_BUS = 1
+-- really 'not ECU'
+TCU_BUS = 2
+
+TCU_251_593 = 593
+TCU_253_595 = 595
+
+hexstr = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "A", "B", "C", "D", "E", "F" }
+
+function toHexString(num)
+	if num == 0 then
+		return '0'
+	end
+
+	local result = ""
+	while num > 0 do
+		local n = num % 16
+		result = hexstr[n + 1] ..result
+		num = math.floor(num / 16)
+	end
+	return result
+end
+
+function arrayToString(arr)
+	local str = ""
+	local index = 1
+	while arr[index] ~= nil do
+		str = str.." "..toHexString(arr[index])
+		index = index + 1
+	end
+	return str
+end
+
+totalEcuMessages = 0
+totalTcuMessages = 0
+totalDropped = 0
+totalReplaced = 0
+
+function printAndDrop(bus, id, dlc, data)
+	print('Dropping ' ..arrayToString(data))
+	totalDropped = totalDropped + 1
+end
+
+function onAnythingFromECU(bus, id, dlc, data)
+	totalEcuMessages = totalEcuMessages + 1
+	print('from ECU ' ..id .." " ..arrayToString(data) .." dropped=" ..totalDropped .." replaced " ..totalReplaced)
+	txCan(TCU_BUS, id, 0, data) -- relay non-TCU message to TCU
+end
+
+function onAnythingFromTCU(bus, id, dlc, data)
+	totalTcuMessages = totalTcuMessages + 1
+	if id ~= TCU_251_593 and id ~= TCU_253_595 then
+		print('from TCU ' ..id .." " ..arrayToString(data) .." dropped=" ..totalDropped .." replaced " ..totalReplaced)
+	end
+	txCan(ECU_BUS, id, 0, data) -- relay non-ECU message to ECU
+end
+
+MOTOR_1 = 0x282
+
+function interceptAndReplaceContent(bus, id, dlc, data)
+	totalReplaced = totalReplaced + 1
+	rpm = 200
+	data[3] = rpm
+	-- send adjusted packet into the other bus
+	txCan(TCU_BUS, MOTOR_1, 0, data)
+end
+
+-- VAG Motor_1 just as example
+-- canRxAdd(ECU_BUS, 0x280, printAndDrop)
+-- canRxAdd(ECU_BUS, MOTOR_1, interceptAndReplaceContent)
+
+-- last option: unconditional forward of all remaining messages
+canRxAddMask(ECU_BUS, 0, 0, onAnythingFromECU)
+canRxAddMask(TCU_BUS, 0, 0, onAnythingFromTCU)
+
+everySecondTimer = Timer.new()
+
+function onTick()
+	if everySecondTimer : getElapsedSeconds() > 1 then
+		everySecondTimer : reset()
+		print("Total from ECU " ..totalEcuMessages .." from TCU " ..totalTcuMessages .." dropped=" ..totalDropped .." replaced " ..totalReplaced)
+	end
+end
+
