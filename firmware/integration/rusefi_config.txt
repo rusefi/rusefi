@@ -2462,12 +2462,17 @@ end_struct
 #define ts_show_full_pinout true
 #define ts_show_egt true
 #define ts_show_k_line false
+#define ts_show_spi1_enable true
 #define ts_show_spi1_pins true
 #define ts_show_spi2_enable true
 #define ts_show_spi2_pins true
+#define ts_show_spi2_enable true
 #define ts_show_spi3_pins true
+#define ts_show_spi4_enable true
 #define ts_show_spi4_pins false
+#define ts_show_spi5_enable true
 #define ts_show_spi5_pins false
+#define ts_show_spi6_enable true
 #define ts_show_spi6_pins false
 #define ts_show_tps2 true
 #define ts_show_starter_disable true
