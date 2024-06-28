@@ -1287,7 +1287,7 @@
 #define show_Proteus_presets false
 #define show_small_can_board_presets true
 #define show_test_presets false
-#define SIGNATURE_HASH 1033314025
+#define SIGNATURE_HASH 3971535728
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1620,6 +1620,7 @@
 #define ts_show_engine_control false
 #define ts_show_etb true
 #define ts_show_etb_pins false
+#define ts_show_exhaust_vvt true
 #define ts_show_experimental true
 #define ts_show_fan2_settings true
 #define ts_show_firing_order true
@@ -1658,6 +1659,7 @@
 #define ts_show_rotary true
 #define ts_show_sd_card true
 #define ts_show_sd_pins true
+#define ts_show_second_bank true
 #define ts_show_software_knock false
 #define ts_show_speedo_settings true
 #define ts_show_spi true
@@ -1694,7 +1696,7 @@
 #define ts_show_vvt_output true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.06.28.small-can-board.1033314025"
+#define TS_SIGNATURE "rusEFI master.2024.06.28.small-can-board.3971535728"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
