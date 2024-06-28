@@ -108,6 +108,7 @@ private:
 	void updateCommsLed();
 	void updateErrorLed();
 
+	size_t m_commBlinkCounter = 0;
 	size_t m_errorBlinkCounter = 0;
 };
 

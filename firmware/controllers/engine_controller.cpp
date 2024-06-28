@@ -415,8 +415,8 @@ void onDataArrived() {
 }
 
 void LedBlinkingTask::updateCommsLed() {
-	// USB unplugged -> off (or no USB)
-	// USB plugged in -> on
+	// USB unplugged (or no USB) -> off, blink on
+	// USB plugged in -> on, blink off
 	// Data transferring -> flashing
 
 	if (consoleByteArrived.exchange(false)) {
@@ -430,7 +430,15 @@ void LedBlinkingTask::updateCommsLed() {
 			#endif
 			;
 
-		enginePins.communicationLedPin.setValue(usbReady);
+		// toggle the state 1/20 of the time so it blinks at you a little
+		bool ledState = usbReady ^ (m_commBlinkCounter >= 19);
+		enginePins.communicationLedPin.setValue(ledState);
+
+		if (m_commBlinkCounter == 0) {
+			m_commBlinkCounter = 20;
+		}
+
+		m_commBlinkCounter--;
 	}
 }
 
