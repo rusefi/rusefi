@@ -176,8 +176,20 @@ void reconfigureSensors() {
 
 // Mocking/testing helpers
 static void initSensorCli() {
-	addConsoleActionIF(CMD_SET_SENSOR_MOCK, Sensor::setMockValue);
-	addConsoleAction(CMD_RESET_SENSOR_MOCKS, Sensor::resetAllMocks);
+	addConsoleActionSS("set_sensor_mock", [](const char* typeName, const char* valueStr) {
+		SensorType type = findSensorTypeByName(typeName);
+
+		if (type == SensorType::Invalid) {
+			efiPrintf("Invalid sensor type specified: %s", typeName);
+			return;
+		}
+
+		float value = atoff(valueStr);
+
+		Sensor::setMockValue(type, value);
+	});
+
+	addConsoleAction("reset_sensor_mocks", Sensor::resetAllMocks);
 	addConsoleAction("show_sensors", Sensor::showAllSensorInfo);
 	addConsoleActionI("show_sensor",
 		[](int idx) {
