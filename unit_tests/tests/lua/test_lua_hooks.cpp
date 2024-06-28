@@ -62,7 +62,7 @@ TEST(LuaHooks, TestGetSensorByIndex) {
 	EXPECT_EQ(testLuaReturnsNumberOrNil(getSensorTestByIndex), unexpected);
 
 	// Now test with a value, returns value
-	Sensor::setMockValue(10, 33);
+	Sensor::setMockValue(static_cast<SensorType>(10), 33);
 	EXPECT_EQ(testLuaReturnsNumberOrNil(getSensorTestByIndex).value_or(0), 33);
 }
 
@@ -81,7 +81,7 @@ TEST(LuaHooks, TestGetSensorByName) {
 	EXPECT_EQ(testLuaReturnsNumberOrNil(getSensorTestByName), unexpected);
 
 	// Now test with a value, returns value
-	Sensor::setMockValue((int)SensorType::Clt, 33);
+	Sensor::setMockValue(SensorType::Clt, 33);
 	EXPECT_EQ(testLuaReturnsNumberOrNil(getSensorTestByName).value_or(0), 33);
 }
 
