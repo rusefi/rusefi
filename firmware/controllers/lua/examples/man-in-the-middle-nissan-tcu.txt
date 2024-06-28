@@ -141,8 +141,8 @@ payloadENGINE_4_574 = {0x00, 0x40, 0xff, 0x45, 0x00, 0xd6, 0x00, 0xa2}
 function onENGINE_4_574(bus, id, dlc, data)
 --	payloadENGINE_4_574[0] = data[0]
 --	payloadENGINE_4_574[1] = data[1]
-	payloadENGINE_4_574[2] = data[2]
-	payloadENGINE_4_574[3] = data[3]
+--	payloadENGINE_4_574[2] = data[2]
+	payloadENGINE_4_574[3] = data[3] -- affects desired torque converter pressure
 	payloadENGINE_4_574[4] = data[4]
 --	payloadENGINE_4_574[5] = data[5]
 	payloadENGINE_4_574[6] = data[6]
