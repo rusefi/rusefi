@@ -10,6 +10,7 @@ ECU_BUS = 1
 -- really 'not ECU'
 TCU_BUS = 2
 
+
 TCU_251_593 = 593
 TCU_253_595 = 595
 
@@ -50,17 +51,23 @@ function printAndDrop(bus, id, dlc, data)
 end
 
 function onAnythingFromECU(bus, id, dlc, data)
+--	totalEcuMessages = totalEcuMessages + 1
+--	print('from ECU ' ..id .." " ..arrayToString(data) .." dropped=" ..totalDropped .." replaced " ..totalReplaced)
+--	txCan(TCU_BUS, id, 0, data) -- relay non-TCU message to TCU
+end
+
+function relayFromECU(bus, id, dlc, data)
 	totalEcuMessages = totalEcuMessages + 1
-	print('from ECU ' ..id .." " ..arrayToString(data) .." dropped=" ..totalDropped .." replaced " ..totalReplaced)
+--	print('from ECU ' ..id .." " ..arrayToString(data) .." dropped=" ..totalDropped .." replaced " ..totalReplaced)
 	txCan(TCU_BUS, id, 0, data) -- relay non-TCU message to TCU
 end
 
 function onAnythingFromTCU(bus, id, dlc, data)
 	totalTcuMessages = totalTcuMessages + 1
 	if id ~= TCU_251_593 and id ~= TCU_253_595 then
-		print('from TCU ' ..id .." " ..arrayToString(data) .." dropped=" ..totalDropped .." replaced " ..totalReplaced)
+	--	print('from TCU ' ..id .." " ..arrayToString(data) .." dropped=" ..totalDropped .." replaced " ..totalReplaced)
 	end
-	txCan(ECU_BUS, id, 0, data) -- relay non-ECU message to ECU
+--	txCan(ECU_BUS, id, 0, data) -- relay non-ECU message to ECU
 end
 
 MOTOR_1 = 0x282
@@ -73,9 +80,17 @@ function interceptAndReplaceContent(bus, id, dlc, data)
 	txCan(TCU_BUS, MOTOR_1, 0, data)
 end
 
--- VAG Motor_1 just as example
--- canRxAdd(ECU_BUS, 0x280, printAndDrop)
--- canRxAdd(ECU_BUS, MOTOR_1, interceptAndReplaceContent)
+ENGINE_1_505 = 505
+ENGINE_2_561 = 561
+ENGINE_7_563 = 563
+ENGINE_3_573 = 573
+ENGINE_4_574 = 574
+
+canRxAdd(ECU_BUS, ENGINE_1_505, relayFromECU)
+canRxAdd(ECU_BUS, ENGINE_2_561, relayFromECU)
+canRxAdd(ECU_BUS, ENGINE_7_563, relayFromECU)
+canRxAdd(ECU_BUS, ENGINE_3_573, relayFromECU)
+--canRxAdd(ECU_BUS, ENGINE_4_574, relayFromECU)
 
 -- last option: unconditional forward of all remaining messages
 canRxAddMask(ECU_BUS, 0, 0, onAnythingFromECU)
