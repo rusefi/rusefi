@@ -70,26 +70,41 @@ function onAnythingFromTCU(bus, id, dlc, data)
 --	txCan(ECU_BUS, id, 0, data) -- relay non-ECU message to ECU
 end
 
-MOTOR_1 = 0x282
-
-function interceptAndReplaceContent(bus, id, dlc, data)
-	totalReplaced = totalReplaced + 1
-	rpm = 200
-	data[3] = rpm
-	-- send adjusted packet into the other bus
-	txCan(TCU_BUS, MOTOR_1, 0, data)
-end
-
 ENGINE_1_505 = 505
 ENGINE_2_561 = 561
 ENGINE_7_563 = 563
 ENGINE_3_573 = 573
 ENGINE_4_574 = 574
 
-canRxAdd(ECU_BUS, ENGINE_1_505, relayFromECU)
-canRxAdd(ECU_BUS, ENGINE_2_561, relayFromECU)
-canRxAdd(ECU_BUS, ENGINE_7_563, relayFromECU)
-canRxAdd(ECU_BUS, ENGINE_3_573, relayFromECU)
+payloadENGINE_1_505 = {0x20, 0x00, 0x1a, 0x5e, 0x00, 0x00, 0x00, 0x00}
+function onENGINE_1_505(bus, id, dlc, data)
+--	payloadENGINE_1_505[x] = counter505_1f9
+--	txCan(TCU_BUS, ENGINE_1_505, 0, payloadENGINE_1_505)
+	txCan(TCU_BUS, ENGINE_1_505, 0, data)
+end
+
+payloadENGINE_2_561 = {0xe0, 0x80, 0x09, 0xe0, 0xd4, 0xc3, 0x4c, 0x9e}
+function onENGINE_2_561(bus, id, dlc, data)
+--	txCan(TCU_BUS, ENGINE_2_561, 0, payloadENGINE_2_561)
+	txCan(TCU_BUS, ENGINE_2_561, 0, data)
+end
+
+payloadENGINE_7_563 = {0x79, 0xa2, 0x00, 0x18, 0x0e, 0x00, 0x00, 0x01}
+function onENGINE_7_563(bus, id, dlc, data)
+--	txCan(TCU_BUS, ENGINE_7_563, 0, payloadENGINE_7_563)
+	txCan(TCU_BUS, ENGINE_7_563, 0, data)
+end
+
+payloadENGINE_3_573 = {0x00, 0x0e, 0x0b, 0x0e, 0x01, 0x38, 0x00, 0x79}
+function onENGINE_3_573(bus, id, dlc, data)
+--	txCan(TCU_BUS, ENGINE_3_573, 0, payloadENGINE_3_573)
+	txCan(TCU_BUS, ENGINE_3_573, 0, data)
+end
+
+canRxAdd(ECU_BUS, ENGINE_1_505, onENGINE_1_505)
+canRxAdd(ECU_BUS, ENGINE_2_561, onENGINE_2_561)
+canRxAdd(ECU_BUS, ENGINE_7_563, onENGINE_7_563)
+canRxAdd(ECU_BUS, ENGINE_3_573, onENGINE_3_573)
 --canRxAdd(ECU_BUS, ENGINE_4_574, relayFromECU)
 
 -- last option: unconditional forward of all remaining messages
