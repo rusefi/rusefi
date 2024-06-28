@@ -50,7 +50,7 @@ void setBoardDefaultConfiguration() {
 	/* Throttle position */
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_12;
 
-	/* MAP: stock car dows not have MAP
+	/* MAP: stock car does not have MAP
 	 * but EFI_ADC_10 is reserved for this purpose */
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_NONE;
 
@@ -159,25 +159,29 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->vehicleSpeedSensorInputPin = Gpio::Unassigned;
 
 	/* SPIs */
-	engineConfiguration->is_enabled_spi_1 = true;
-	engineConfiguration->is_enabled_spi_2 = false;
-	engineConfiguration->is_enabled_spi_3 = true;
-	engineConfiguration->is_enabled_spi_4 = true;
-
+	/* SPI4, 5 are always enabled and its configuration is set in setBoardConfigOverrides() */
+	engineConfiguration->is_enabled_spi_1 = false;
+	engineConfiguration->is_enabled_spi_3 = false;
+	engineConfiguration->is_enabled_spi_6 = false;
 	engineConfiguration->spi1mosiPin = Gpio::Unassigned;
 	engineConfiguration->spi1misoPin = Gpio::Unassigned;
 	engineConfiguration->spi1sckPin = Gpio::Unassigned;
+	engineConfiguration->spi3mosiPin = Gpio::Unassigned;
+	engineConfiguration->spi3misoPin = Gpio::Unassigned;
+	engineConfiguration->spi3sckPin = Gpio::Unassigned;
+	engineConfiguration->spi6mosiPin = Gpio::Unassigned;
+	engineConfiguration->spi6misoPin = Gpio::Unassigned;
+	engineConfiguration->spi6sckPin = Gpio::Unassigned;
+	/* Use PP mode as default for optional display SPI bus */
+	engineConfiguration->spi2SckMode = PO_DEFAULT;
+	engineConfiguration->spi2MosiMode = PO_DEFAULT;
+	engineConfiguration->spi2MisoMode = PO_DEFAULT;
+	/* User can disable this bus */
+	engineConfiguration->is_enabled_spi_2 = true;
 
-	engineConfiguration->spi3mosiPin = Gpio::C12;
-	engineConfiguration->spi3misoPin = Gpio::C11;
-	engineConfiguration->spi3sckPin = Gpio::C10;
-
-	engineConfiguration->is_enabled_spi_1 = false;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
 	engineConfiguration->sdCardCsPin = Gpio::A2;
 	engineConfiguration->isSdCardEnabled = false;
-
-	/* TODO: add settings for SPI4 */
 
 	/* Knock sensor */
 	/* Interface settings */
@@ -223,6 +227,34 @@ void setBoardDefaultConfiguration() {
 		setAlgorithm(LM_SPEED_DENSITY);
 	if (engineConfiguration->fuelAlgorithm == LM_ALPHA_N)
 		setAlgorithm(LM_ALPHA_N);
+}
+
+void setBoardConfigOverrides() {
+	/* Optional SPI display */
+	engineConfiguration->spi2sckPin = Gpio::I1;
+	engineConfiguration->spi2misoPin = Gpio::I2;
+	engineConfiguration->spi2mosiPin = Gpio::I3;
+	/* User can disable this bus and change pin mode, but not pins itself */
+
+	/* Smart chip and TPIC9011 */
+	engineConfiguration->spi4sckPin = Gpio::E12;
+	engineConfiguration->spi4misoPin = Gpio::E13;
+	engineConfiguration->spi4mosiPin = Gpio::E14;
+	engineConfiguration->spi4SckMode = PO_DEFAULT;
+	engineConfiguration->spi4MosiMode = PO_OPENDRAIN;
+	engineConfiguration->spi4MisoMode = PO_DEFAULT;
+	/* This is mandatory to have this bus enabled */
+	engineConfiguration->is_enabled_spi_4 = true;
+
+	/* Smart ignition chips */
+	engineConfiguration->spi5sckPin = Gpio::F7;
+	engineConfiguration->spi5misoPin = Gpio::F8;
+	engineConfiguration->spi5mosiPin = Gpio::F9;
+	engineConfiguration->spi5SckMode = PO_DEFAULT;
+	engineConfiguration->spi5MosiMode = PO_DEFAULT;
+	engineConfiguration->spi5MisoMode = PO_DEFAULT;
+	/* This is mandatory to have this bus enabled */
+	engineConfiguration->is_enabled_spi_5 = true;
 }
 
 /* Schematic RefDef DA3 */
