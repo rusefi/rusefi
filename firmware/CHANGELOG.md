@@ -39,6 +39,7 @@ or
  - Add EGT values to CAN broadcast format #398
  - Add options to enable/disable optional CAN frames (cams, EGT so far)
  - Add 1-5-4-8-3-7-2-6 and 1-6-5-10-2-7-3-8-4-9 firing orders
+ - Console command `set_sensor_mock` now accepts a sensor by name, instead of index. Example: `set_sensor_mock CLT 85.5`
 
 ### Fixed
  - Improve performance with Lua CAN reception of a high volume of frames
