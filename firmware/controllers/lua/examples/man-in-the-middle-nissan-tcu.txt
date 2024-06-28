@@ -72,8 +72,10 @@ function onAnythingFromECU(bus, id, dlc, data)
 	and id ~= ENGINE_4_574
 	and id ~= ENGINE_5_1361
 	and id ~= ENGINE_6_1408
+	and id ~= 721
+	and id ~= 734
 	then
- -- 	print('from ECU ' ..id .." " ..arrayToString(data) .." dropped=" ..totalDropped .." replaced " ..totalReplaced)
+  	print('from ECU ' ..id .." " ..arrayToString(data) .." dropped=" ..totalDropped .." replaced " ..totalReplaced)
 	end	txCan(TCU_BUS, id, 0, data) -- relay non-TCU message to TCU
 end
 
@@ -84,13 +86,13 @@ function relayFromECU(bus, id, dlc, data)
 	txCan(TCU_BUS, id, 0, data) -- relay non-TCU message to TCU
 end
 
---function onAnythingFromTCU(bus, id, dlc, data)
---	totalTcuMessages = totalTcuMessages + 1
---	if id ~= TCU_251_593 and id ~= TCU_253_595 then
---	--	print('from TCU ' ..id .." " ..arrayToString(data) .." dropped=" ..totalDropped .." replaced " ..totalReplaced)
---	end
---	txCan(ECU_BUS, id, 0, data) -- relay non-ECU message to ECU
---end
+function onAnythingFromTCU(bus, id, dlc, data)
+	totalTcuMessages = totalTcuMessages + 1
+	if id ~= TCU_251_593 and id ~= TCU_253_595 then
+	  print('from TCU ' ..id .." " ..arrayToString(data) .." dropped=" ..totalDropped .." replaced " ..totalReplaced)
+	end
+	txCan(ECU_BUS, id, 0, data) -- relay non-ECU message to ECU
+end
 
 
 
@@ -141,7 +143,8 @@ canRxAdd(ECU_BUS, ENGINE_6_1408, relayFromECU)
 --canRxAdd(ECU_BUS, ENGINE_5_1361, relayFromECU)
 --canRxAdd(ECU_BUS, ENGINE_6_1408, relayFromECU)
 
---canRxAdd(ECU_BUS, 721, silentDrop) -- TCU
+--canRxAdd(ECU_BUS, 721, silentDrop) -- required for TCU not to throw code
+--canRxAdd(ECU_BUS, 734, silentDrop) -- required for TCU not to throw code
 
 
 canRxAdd(ECU_BUS, 2, silentDrop)
@@ -153,10 +156,7 @@ canRxAdd(ECU_BUS, 645, silentDrop)
 canRxAdd(ECU_BUS, 670, silentDrop)
 canRxAdd(ECU_BUS, 672, silentDrop)
 canRxAdd(ECU_BUS, 677, silentDrop)
---canRxAdd(ECU_BUS, 734, silentDrop)
---canRxAdd(ECU_BUS, 1738, silentDrop)
 
---canRxAdd(ECU_BUS, 1573, silentDrop)
 canRxAdd(ECU_BUS, 861, silentDrop)
 canRxAdd(ECU_BUS, 901, silentDrop)
 
@@ -166,6 +166,10 @@ canRxAdd(ECU_BUS, 1940, silentDrop)
 canRxAdd(ECU_BUS, 1783, silentDrop)
 canRxAdd(ECU_BUS, 1477, silentDrop)
 canRxAdd(ECU_BUS, 1549, silentDrop)
+
+canRxAdd(ECU_BUS, 1738, silentDrop)
+
+canRxAdd(ECU_BUS, 1573, silentDrop)
 
 payloadTCU_251_593 = {0x10, 0x00, 0x00, 0x01, 0x00, 0xef, 0x16, 0xde}
 function onTCU_251_593(bus, id, dlc, data)
@@ -192,7 +196,7 @@ canRxAdd(TCU_BUS, TCU_253_595, onTCU_253_595)
 
 -- last option: unconditional forward of all remaining messages
 canRxAddMask(ECU_BUS, 0, 0, onAnythingFromECU)
---canRxAddMask(TCU_BUS, 0, 0, onAnythingFromTCU)
+canRxAddMask(TCU_BUS, 0, 0, onAnythingFromTCU)
 
 everySecondTimer = Timer.new()
 
