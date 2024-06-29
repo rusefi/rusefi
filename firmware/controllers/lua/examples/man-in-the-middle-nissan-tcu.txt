@@ -99,10 +99,19 @@ function onAnythingFromTCU(bus, id, dlc, data)
 	txCan(ECU_BUS, id, 0, data) -- relay non-ECU message to ECU
 end
 
+function getTwoBytesLSB(data, offset, factor)
+	return (data[offset + 2] * 256 + data[offset + 1]) * factor
+end
 
+--function getTwoBytesMSB(data, offset, factor)
+--	return (data[offset + 1] * 256 + data[offset + 2]) * factor
+--end
+
+local rpm = 0
 
 payloadENGINE_1_505 = {0x20, 0x00, 0x1a, 0x5e, 0x00, 0x00, 0x00, 0x00}
 function onENGINE_1_505(bus, id, dlc, data)
+  rpm = getTwoBytesLSB(data, 2, 0.125)
 -- RPM
 	payloadENGINE_1_505[3] = data[3]
 	payloadENGINE_1_505[4] = data[4]
@@ -119,9 +128,9 @@ end
 
 payloadENGINE_7_563 = {0x79, 0xa2, 0x00, 0x18, 0x0e, 0x00, 0x00, 0x01}
 function onENGINE_7_563(bus, id, dlc, data)
-	payloadENGINE_7_563[3] = data[3]
-	payloadENGINE_7_563[4] = data[4]
-	payloadENGINE_7_563[7] = data[7]
+	payloadENGINE_7_563[3] = data[3] -- huh?
+	payloadENGINE_7_563[4] = data[4] -- RPMlow
+	payloadENGINE_7_563[7] = data[7] -- RPMhi
 	txCan(TCU_BUS, ENGINE_7_563, 0, payloadENGINE_7_563)
 --	txCan(TCU_BUS, ENGINE_7_563, 0, data)
 end
@@ -142,7 +151,7 @@ function onENGINE_4_574(bus, id, dlc, data)
 --	payloadENGINE_4_574[0] = data[0]
 --	payloadENGINE_4_574[1] = data[1]
 --	payloadENGINE_4_574[2] = data[2]
-	payloadENGINE_4_574[3] = data[3] -- affects desired torque converter pressure
+	payloadENGINE_4_574[3] = data[3] -- affects desired torque converter pressure Throttle_position_inverted
 	payloadENGINE_4_574[4] = data[4]
 --	payloadENGINE_4_574[5] = data[5]
 	payloadENGINE_4_574[6] = data[6]
@@ -234,6 +243,7 @@ everySecondTimer = Timer.new()
 
 function onTick()
 	if everySecondTimer : getElapsedSeconds() > 1 then
+	  print("rpm " .. rpm)
 		everySecondTimer : reset()
 		print("Total from ECU " ..totalEcuMessages .." from TCU " ..totalTcuMessages .." dropped=" ..totalDropped .." replaced " ..totalReplaced)
 	end
