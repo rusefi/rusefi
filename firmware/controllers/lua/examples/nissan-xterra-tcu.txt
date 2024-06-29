@@ -109,7 +109,6 @@ function sendENGINE_1_505()
 end
 
 pps = 0
--- 231
 payloadENGINE_2_561 = {0xe0, 0x80, 0x09, 0xe0, 0xd4, 0xc3, 0x4c, 0x9e}
 function sendENGINE_2_231_561()
 	payloadENGINE_2_561[3] = pps / 0.5 -- tps or pps
@@ -137,9 +136,7 @@ function sendENGINE_3_573()
 --	txCan(TCU_BUS, ENGINE_3_23D_573, 0, data)
 end
 
-ENGINE_4_574 = 574
 payloadENGINE_4_574 = {0x00, 0x40, 0xff, 0x45, 0x00, 0xd6, 0x00, 0xa2}
--- 23E
 function sendENGINE_4_23E_574()
 	payloadENGINE_4_574[3] = (100 - pps) / 0.392 -- data[3] -- affects desired torque converter pressure Throttle_position_inverted
 	payloadENGINE_4_574[7] = pps / 0.392 -- data[7] -- TPS
@@ -162,26 +159,23 @@ canRxAdd(ECU_BUS, ENGINE_3_23D_573, onENGINE_3_573)
 
 CAN_721_2d1 = 721
 payload721_2d1 = {0x00, 0x84, 0x00, 0x00, 0x31, 0xf8, 0x01}
-function onCan721_2d1(bus, id, dlc, data)
-end
-
 function sendCan721_2d1()
 	txCan(TCU_BUS, CAN_721_2d1, 0, payload721_2d1)
 end
 
---canRxAdd(ECU_BUS, CAN_721_2d1, onCan721_2d1)
 
 CAN_734_2de = 734
 payload734_2de = {0x0f, 0x08, 0x02, 0x00, 0x19, 0x65, 0x07, 0xa8}
-function onCan734_2de(bus, id, dlc, data)
-end
-
 function sendCan734_2de()
 	txCan(TCU_BUS, CAN_734_2de, 0, payload734_2de)
 end
 
+--function onCan734_2de(bus, id, dlc, data)
+--end
+--function onCan721_2d1(bus, id, dlc, data)
+--end
+--canRxAdd(ECU_BUS, CAN_721_2d1, onCan721_2d1)
 --canRxAdd(ECU_BUS, CAN_734_2de, onCan734_2de)
-
 
 --canRxAdd(ECU_BUS, 721, onAnythingFromECU) -- required for TCU not to throw code
 --canRxAdd(ECU_BUS, 734, onAnythingFromECU) -- required for TCU not to throw code
@@ -222,8 +216,8 @@ function onTick()
     _10msPeriodTimer : reset()
     sendENGINE_1_505()
     sendENGINE_2_231_561()
-    sendENGINE_3_573()
     sendENGINE_7_233_563()
+    sendENGINE_3_573()
     sendENGINE_4_23E_574()
     sendCan721_2d1()
     sendCan734_2de()
