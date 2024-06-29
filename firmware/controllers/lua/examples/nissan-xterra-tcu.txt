@@ -45,11 +45,11 @@ totalTcuMessages = 0
 totalDropped = 0
 totalReplaced = 0
 
-ENGINE_1_505 = 505
+ENGINE_1_1F9_505 = 505
 ENGINE_2_561 = 561
-ENGINE_7_563 = 563
-ENGINE_3_573 = 573
-ENGINE_4_574 = 574
+ENGINE_7_233_563 = 563
+ENGINE_3_23D_573 = 573
+ENGINE_4_23E_574 = 574
 ENGINE_5_551_1361 = 1361
 ENGINE_6_580_1408 = 1408
 
@@ -101,7 +101,7 @@ end
 
 function sendENGINE_1_505()
 -- wow it's happy without RPM?!  setTwoBytesMsb(payloadENGINE_1_505, 2, 8 * rpm)
-	txCan(TCU_BUS, ENGINE_1_505, 0, payloadENGINE_1_505)
+	txCan(TCU_BUS, ENGINE_1_1F9_505, 0, payloadENGINE_1_505)
 end
 
 pps = 0
@@ -117,7 +117,7 @@ payloadENGINE_7_563 = {0x79, 0xa2, 0x00, 0x18, 0x0e, 0x00, 0x00, 0x01}
 function sendENGINE_7_233_563()
 --	payloadENGINE_7_563[4] = data[4] -- RPMlow
 --	payloadENGINE_7_563[7] = data[7] -- RPMhi
-	txCan(TCU_BUS, ENGINE_7_563, 0, payloadENGINE_7_563)
+	txCan(TCU_BUS, ENGINE_7_233_563, 0, payloadENGINE_7_563)
 end
 
 payloadENGINE_3_573 = {0x00, 0x0e, 0x0b, 0x0e, 0x01, 0x38, 0x00, 0x79}
@@ -129,18 +129,16 @@ end
 function sendENGINE_3_573()
 	payloadENGINE_3_573[2] = pps / 0.392
 	payloadENGINE_3_573[3] = pps / 0.392 -- Throttle_position_capped
-	txCan(TCU_BUS, ENGINE_3_573, 0, payloadENGINE_3_573)
---	txCan(TCU_BUS, ENGINE_3_573, 0, data)
+	txCan(TCU_BUS, ENGINE_3_23D_573, 0, payloadENGINE_3_573)
+--	txCan(TCU_BUS, ENGINE_3_23D_573, 0, data)
 end
 
-ENGINE_4_574 = 574
 payloadENGINE_4_574 = {0x00, 0x40, 0xff, 0x45, 0x00, 0xd6, 0x00, 0xa2}
 -- 23E
 function sendENGINE_4_23E_574()
 	payloadENGINE_4_574[3] = (100 - pps) / 0.392 -- data[3] -- affects desired torque converter pressure Throttle_position_inverted
 	payloadENGINE_4_574[7] = pps / 0.392 -- data[7] -- TPS
---	txCan(TCU_BUS, ENGINE_4_574, 0, data)
-	txCan(TCU_BUS, ENGINE_4_574, 0, payloadENGINE_4_574)
+	txCan(TCU_BUS, ENGINE_4_23E_574, 0, payloadENGINE_4_574)
 end
 
 payloadENGINE_5 = {0x7d, 0xdb, 0x00, 0xa0, 0x00, 0x02, 0x80, 0xff}
@@ -153,9 +151,9 @@ function sendEngine6_580_1408()
 	txCan(TCU_BUS, ENGINE_6_580_1408, 0, payloadENGINE_6)
 end
 
-canRxAdd(ECU_BUS, ENGINE_1_505, onENGINE_1_505)
+canRxAdd(ECU_BUS, ENGINE_1_1F9_505, onENGINE_1_505)
 
-canRxAdd(ECU_BUS, ENGINE_3_573, onENGINE_3_573)
+canRxAdd(ECU_BUS, ENGINE_3_23D_573, onENGINE_3_573)
 
 CAN_721_2d1 = 721
 payload721_2d1 = {0x00, 0x84, 0x00, 0x00, 0x31, 0xf8, 0x01}
