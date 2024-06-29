@@ -14,6 +14,9 @@ ENGINE_4_23E_574 = 574
 ENGINE_5_551_1361 = 1361
 ENGINE_6_580_1408 = 1408
 
+speedSensor = Sensor.new("VehicleSpeed")
+speedSensor : setTimeout(3000)
+
 setTickRate(100)
 startUpTimer = Timer.new()
 startUpTimer : reset()
@@ -81,39 +84,40 @@ end
 payloadENGINE_2_561 = {0xe0, 0x80, 0x09, 0xe0, 0xd4, 0xc3, 0x4c, 0x9e}
 function sendENGINE_2_231_561()
 	payloadENGINE_2_561[3] = pps / 0.5 -- tps or pps
-	txCan(TCU_BUS, ENGINE_2_561, 0, payloadENGINE_2_561)
+	txCan(1, ENGINE_2_561, 0, payloadENGINE_2_561)
 end
 
 payloadENGINE_4_574 = {0x00, 0x40, 0xff, 0x45, 0x00, 0xd6, 0x00, 0xa2}
 function sendENGINE_4_23E_574()
 	payloadENGINE_4_574[3] = (100 - pps) / 0.392 -- data[3] -- affects desired torque converter pressure Throttle_position_inverted
 	payloadENGINE_4_574[7] = pps / 0.392 -- data[7] -- TPS
-	txCan(TCU_BUS, ENGINE_4_23E_574, 0, payloadENGINE_4_574)
+	txCan(1, ENGINE_4_23E_574, 0, payloadENGINE_4_574)
 end
 
 CAN_721_2d1 = 721
 payload721_2d1 = {0x00, 0x84, 0x00, 0x00, 0x31, 0xf8, 0x01}
 function sendCan721_2d1()
-	txCan(TCU_BUS, CAN_721_2d1, 0, payload721_2d1)
+	txCan(1, CAN_721_2d1, 0, payload721_2d1)
 end
 
 CAN_734_2de = 734
 payload734_2de = {0x0f, 0x08, 0x02, 0x00, 0x19, 0x65, 0x07, 0xa8}
 function sendCan734_2de()
-	txCan(TCU_BUS, CAN_734_2de, 0, payload734_2de)
+	txCan(1, CAN_734_2de, 0, payload734_2de)
 end
 
 payloadENGINE_5 = {0x7d, 0xdb, 0x00, 0xa0, 0x00, 0x02, 0x80, 0xff}
 function sendENGINE_5_551_1361()
-	txCan(TCU_BUS, ENGINE_5_551_1361, 0, payloadENGINE_5)
+	txCan(1, ENGINE_5_551_1361, 0, payloadENGINE_5)
 end
 
 payloadENGINE_6 = {0x00, 0x82, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00}
 function sendEngine6_580_1408()
-	txCan(TCU_BUS, ENGINE_6_580_1408, 0, payloadENGINE_6)
+	txCan(1, ENGINE_6_580_1408, 0, payloadENGINE_6)
 end
 
 _10msPeriodTimer = Timer.new()
+_15msPeriodTimer = Timer.new()
 
 function onTick()
     pps = getSensor("AcceleratorPedal") or 0
@@ -167,6 +171,7 @@ end
 
 function onCanRxAbs1(bus, id, dlc, data)
     kph = getTwoBytesMSB(data, 0, 0.005)
+    speedSensor : set(kph)
 end
 
 function onCanRxAc(bus, id, dlc, data)
