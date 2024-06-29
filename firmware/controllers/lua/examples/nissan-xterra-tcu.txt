@@ -45,16 +45,6 @@ totalTcuMessages = 0
 totalDropped = 0
 totalReplaced = 0
 
-function silentDrop(bus, id, dlc, data)
-	totalDropped = totalDropped + 1
-end
-
-function printAndDrop(bus, id, dlc, data)
-	print('Dropping ' ..arrayToString(data))
-	totalDropped = totalDropped + 1
-end
-
-
 ENGINE_1_505 = 505
 ENGINE_2_561 = 561
 ENGINE_7_563 = 563
@@ -65,14 +55,7 @@ ENGINE_6_580_1408 = 1408
 
 function onAnythingFromECU(bus, id, dlc, data)
 --	totalEcuMessages = totalEcuMessages + 1
-	if id ~= ENGINE_1_505
-	and id ~= ENGINE_2_561
-	and id ~= ENGINE_7_563
-	and id ~= ENGINE_3_573
-	and id ~= ENGINE_4_574
-	and id ~= ENGINE_5_551_1361
-	and id ~= ENGINE_6_580_1408
-	and id ~= 721
+	if id ~= 721
 	and id ~= 734
 	then
   	print('from ECU ' ..id .." " ..arrayToString(data) .." dropped=" ..totalDropped .." replaced " ..totalReplaced)
@@ -114,8 +97,10 @@ local rpm = 0
 payloadENGINE_1_505 = {0x20, 0x00, 0x1a, 0x5e, 0x00, 0x00, 0x00, 0x00}
 function onENGINE_1_505(bus, id, dlc, data)
   rpm = getTwoBytesMSB(data, 2, 0.125)
+end
 
-  setTwoBytesMsb(data, 2, 8 * rpm)
+function sendENGINE_1_505()
+-- wow it's happy without RPM?!  setTwoBytesMsb(payloadENGINE_1_505, 2, 8 * rpm)
 	txCan(TCU_BUS, ENGINE_1_505, 0, payloadENGINE_1_505)
 end
 
@@ -139,7 +124,9 @@ payloadENGINE_3_573 = {0x00, 0x0e, 0x0b, 0x0e, 0x01, 0x38, 0x00, 0x79}
 -- 23D
 function onENGINE_3_573(bus, id, dlc, data)
 	pps = data[2] * 0.392
+end
 
+function sendENGINE_3_573()
 	payloadENGINE_3_573[2] = pps / 0.392
 	payloadENGINE_3_573[3] = pps / 0.392 -- Throttle_position_capped
 	txCan(TCU_BUS, ENGINE_3_573, 0, payloadENGINE_3_573)
@@ -167,43 +154,19 @@ function sendEngine6_580_1408()
 end
 
 canRxAdd(ECU_BUS, ENGINE_1_505, onENGINE_1_505)
-canRxAdd(ECU_BUS, ENGINE_2_561, silentDrop)
-canRxAdd(ECU_BUS, ENGINE_7_563, silentDrop)
+
 canRxAdd(ECU_BUS, ENGINE_3_573, onENGINE_3_573)
-canRxAdd(ECU_BUS, ENGINE_4_574, silentDrop)
-canRxAdd(ECU_BUS, ENGINE_5_551_1361, silentDrop)
-canRxAdd(ECU_BUS, ENGINE_6_580_1408, silentDrop)
 
 
---canRxAdd(ECU_BUS, 721, silentDrop) -- required for TCU not to throw code
---canRxAdd(ECU_BUS, 734, silentDrop) -- required for TCU not to throw code
+
+canRxAdd(ECU_BUS, 721, onAnythingFromECU) -- required for TCU not to throw code
+canRxAdd(ECU_BUS, 734, onAnythingFromECU) -- required for TCU not to throw code
 
 
-canRxAdd(ECU_BUS, 2, silentDrop)
-canRxAdd(ECU_BUS, 533, silentDrop)
-canRxAdd(ECU_BUS, 534, silentDrop)
-canRxAdd(ECU_BUS, 640, silentDrop)
-canRxAdd(ECU_BUS, 644, silentDrop)
-canRxAdd(ECU_BUS, 645, silentDrop)
-canRxAdd(ECU_BUS, 670, silentDrop)
-canRxAdd(ECU_BUS, 672, silentDrop)
-canRxAdd(ECU_BUS, 677, silentDrop)
-
-canRxAdd(ECU_BUS, 861, silentDrop)
-canRxAdd(ECU_BUS, 901, silentDrop)
-
-canRxAdd(ECU_BUS, 852, silentDrop)
-canRxAdd(ECU_BUS, 856, silentDrop)
-canRxAdd(ECU_BUS, 1940, silentDrop)
-canRxAdd(ECU_BUS, 1783, silentDrop)
-canRxAdd(ECU_BUS, 1477, silentDrop)
-canRxAdd(ECU_BUS, 1549, silentDrop)
-canRxAdd(ECU_BUS, 1738, silentDrop)
-canRxAdd(ECU_BUS, 1573, silentDrop)
 
 
 -- last option: unconditional forward of all remaining messages
-canRxAddMask(ECU_BUS, 0, 0, onAnythingFromECU)
+--canRxAddMask(ECU_BUS, 0, 0, onAnythingFromECU)
 canRxAddMask(TCU_BUS, 0, 0, onAnythingFromTCU)
 
 everySecondTimer = Timer.new()
@@ -218,9 +181,14 @@ function onTick()
 		print("Total from ECU " ..totalEcuMessages .." from TCU " ..totalTcuMessages .." dropped=" ..totalDropped .." replaced " ..totalReplaced)
 	end
 
+--  rpm = getSensor("RPM") or 0
+--  pps = Sensor.new("AcceleratorPedal") or 0
+
 	if _10msPeriodTimer : getElapsedSeconds() > 0.01 then
     _10msPeriodTimer : reset()
+    sendENGINE_1_505()
     sendENGINE_2_231_561()
+    sendENGINE_3_573()
     sendENGINE_7_233_563()
     sendENGINE_4_23E_574()
 	end
