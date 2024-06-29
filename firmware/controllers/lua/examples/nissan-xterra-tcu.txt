@@ -180,18 +180,6 @@ end
 --canRxAdd(ECU_BUS, 721, onAnythingFromECU) -- required for TCU not to throw code
 --canRxAdd(ECU_BUS, 734, onAnythingFromECU) -- required for TCU not to throw code
 
-canRxAdd(ECU_BUS, 861, silentDrop)
-canRxAdd(ECU_BUS, 901, silentDrop)
-
-canRxAdd(ECU_BUS, 852, silentDrop)
-canRxAdd(ECU_BUS, 856, silentDrop)
-canRxAdd(ECU_BUS, 1940, silentDrop)
-canRxAdd(ECU_BUS, 1783, silentDrop)
-canRxAdd(ECU_BUS, 1477, silentDrop)
-canRxAdd(ECU_BUS, 1549, silentDrop)
-canRxAdd(ECU_BUS, 1738, silentDrop)
-canRxAdd(ECU_BUS, 1573, silentDrop)
-
 
 -- last option: unconditional forward of all remaining messages
 --canRxAddMask(ECU_BUS, 0, 0, onAnythingFromECU)
@@ -209,8 +197,8 @@ function onTick()
 		print("Total from ECU " ..totalEcuMessages .." from TCU " ..totalTcuMessages .." dropped=" ..totalDropped .." replaced " ..totalReplaced)
 	end
 
---  rpm = getSensor("RPM") or 0
---  pps = Sensor.new("AcceleratorPedal") or 0
+  rpm = getSensor("RPM") or 0
+  pps = getSensor("AcceleratorPedal") or 0
 
 	if _10msPeriodTimer : getElapsedSeconds() > 0.01 then
     _10msPeriodTimer : reset()
