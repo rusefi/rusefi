@@ -161,7 +161,6 @@ runs:
         echo "RUSEFI_SSH_PASS=${{inputs.RUSEFI_SSH_PASS}}" >> $GITHUB_ENV
         echo "bundle_upload_folder=${{inputs.bundle_upload_folder}}" >> $GITHUB_ENV
         echo "AUTOMATION_LTS=${{toJSON(inputs.lts)}}" >> $GITHUB_ENV
-        echo "release_date=${{toJSON(env.release_date)}}" >> $GITHUB_ENV
         echo "BUNDLE_SIMULATOR=${{toJSON(inputs.bundle_simulator)}}" >> $GITHUB_ENV
         echo "RUN_SIMULATOR=${{toJSON(inputs.run_simulator)}}" >> $GITHUB_ENV
         echo "AUTOMATION_REF=${{github.ref_name}}" >> $GITHUB_ENV
@@ -500,7 +499,7 @@ runs:
     - uses: mukunku/tag-exists-action@v1.6.0
       id: checkTag
       with:
-        tag: ${{ env.release_date }}
+        tag: ${{ inputs.release_date }}
 
     - name: Create Release Tag
       if: ${{ steps.checkTag.outputs.exists == 'false' }}
@@ -508,7 +507,7 @@ runs:
       uses: mathieudutour/github-tag-action@v6.2
       with:
         github_token: ${{env.TOKEN}}
-        custom_tag: ${{ env.release_date }}
+        custom_tag: ${{ inputs.release_date }}
         tag_prefix: ''
 
     - name: Upload Tagged Daily Release Bundle
@@ -517,7 +516,7 @@ runs:
       shell: bash
       run: |
         : Upload Tagged Daily Release Bundle
-        bash ../firmware/bin/upload_bundle.sh ${{ env.RUSEFI_SSH_USER }} ${{ env.RUSEFI_SSH_PASS }} ${{ env.RUSEFI_SSH_SERVER }} ${{ env.BUNDLE_NAME }} ${{ env.release_date }}
+        bash ../firmware/bin/upload_bundle.sh ${{ env.RUSEFI_SSH_USER }} ${{ env.RUSEFI_SSH_PASS }} ${{ env.RUSEFI_SSH_SERVER }} ${{ env.BUNDLE_NAME }} ${{ inputs.release_date }}
 
     - name: Upload Obfuscated Tagged Daily Release Bundle
       if: ${{ contains(inputs.artifacts, 'obfuscated') && steps.checkTag.outputs.exists == 'false'}}
@@ -525,4 +524,4 @@ runs:
       shell: bash
       run: |
         : Upload Obfuscated Tagged Daily Release Bundle
-        bash ../firmware/bin/upload_bundle.sh ${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_USER }} "${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_PASS }}" ${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_SERVER }} "${{env.SHORT_BOARD_NAME}}_obfuscated_public ${{ env.release_date }}
+        bash ../firmware/bin/upload_bundle.sh ${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_USER }} "${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_PASS }}" ${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_SERVER }} "${{env.SHORT_BOARD_NAME}}_obfuscated_public" ${{ inputs.release_date }}

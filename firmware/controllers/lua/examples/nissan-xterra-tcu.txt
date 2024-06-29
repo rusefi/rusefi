@@ -1,4 +1,4 @@
--- scriptname man-in-the-middle-nissan-tcu.txt
+-- scriptname nissan-xterra-tcu.txt
 
 -- sometimes we want to cut a CAN bus and install rusEFI into that cut
 -- https://en.wikipedia.org/wiki/Man-in-the-middle_attack
@@ -45,34 +45,17 @@ totalTcuMessages = 0
 totalDropped = 0
 totalReplaced = 0
 
-function silentDrop(bus, id, dlc, data)
-	totalDropped = totalDropped + 1
-end
-
-function printAndDrop(bus, id, dlc, data)
-	print('Dropping ' ..arrayToString(data))
-	totalDropped = totalDropped + 1
-end
-
-
-ENGINE_1_505 = 505
+ENGINE_1_1F9_505 = 505
 ENGINE_2_561 = 561
-ENGINE_7_563 = 563
-ENGINE_3_573 = 573
-ENGINE_4_574 = 574
-ENGINE_5_1361 = 1361
-ENGINE_6_1408 = 1408
+ENGINE_7_233_563 = 563
+ENGINE_3_23D_573 = 573
+ENGINE_4_23E_574 = 574
+ENGINE_5_551_1361 = 1361
+ENGINE_6_580_1408 = 1408
 
 function onAnythingFromECU(bus, id, dlc, data)
 --	totalEcuMessages = totalEcuMessages + 1
-	if id ~= ENGINE_1_505
-	and id ~= ENGINE_2_561
-	and id ~= ENGINE_7_563
-	and id ~= ENGINE_3_573
-	and id ~= ENGINE_4_574
-	and id ~= ENGINE_5_1361
-	and id ~= ENGINE_6_1408
-	and id ~= 721
+	if id ~= 721
 	and id ~= 734
 	then
   	print('from ECU ' ..id .." " ..arrayToString(data) .." dropped=" ..totalDropped .." replaced " ..totalReplaced)
@@ -118,85 +101,90 @@ local rpm = 0
 payloadENGINE_1_505 = {0x20, 0x00, 0x1a, 0x5e, 0x00, 0x00, 0x00, 0x00}
 function onENGINE_1_505(bus, id, dlc, data)
   rpm = getTwoBytesMSB(data, 2, 0.125)
+end
 
-  setTwoBytesMsb(data, 2, 8 * rpm)
-	txCan(TCU_BUS, ENGINE_1_505, 0, payloadENGINE_1_505)
+function sendENGINE_1_505()
+-- wow it's happy without RPM?!  setTwoBytesMsb(payloadENGINE_1_505, 2, 8 * rpm)
+	txCan(TCU_BUS, ENGINE_1_1F9_505, 0, payloadENGINE_1_505)
 end
 
 pps = 0
 -- 231
 payloadENGINE_2_561 = {0xe0, 0x80, 0x09, 0xe0, 0xd4, 0xc3, 0x4c, 0x9e}
-function onENGINE_2_561(bus, id, dlc, data)
-	payloadENGINE_2_561[3] = pps / 0.5 -- data[3] -- tps or pps
+function sendENGINE_2_231_561()
+	payloadENGINE_2_561[3] = pps / 0.5 -- tps or pps
 	txCan(TCU_BUS, ENGINE_2_561, 0, payloadENGINE_2_561)
 end
 
 payloadENGINE_7_563 = {0x79, 0xa2, 0x00, 0x18, 0x0e, 0x00, 0x00, 0x01}
 -- 233
-function onENGINE_7_563(bus, id, dlc, data)
-  rpm315
-	payloadENGINE_7_563[4] = data[4] -- RPMlow
-	payloadENGINE_7_563[7] = data[7] -- RPMhi
-	txCan(TCU_BUS, ENGINE_7_563, 0, payloadENGINE_7_563)
+function sendENGINE_7_233_563()
+--	payloadENGINE_7_563[4] = data[4] -- RPMlow
+--	payloadENGINE_7_563[7] = data[7] -- RPMhi
+	txCan(TCU_BUS, ENGINE_7_233_563, 0, payloadENGINE_7_563)
 end
 
 payloadENGINE_3_573 = {0x00, 0x0e, 0x0b, 0x0e, 0x01, 0x38, 0x00, 0x79}
 -- 23D
 function onENGINE_3_573(bus, id, dlc, data)
---	payloadENGINE_3_573[1] = data[1]
-	payloadENGINE_3_573[2] = data[2]
-	pps = payloadENGINE_3_573[2] * 0.392
-	payloadENGINE_3_573[3] = pps / 0.392 -- data[3] -- Throttle_position_capped
---	payloadENGINE_3_573[7] = data[7] -- CLT
-	txCan(TCU_BUS, ENGINE_3_573, 0, payloadENGINE_3_573)
---	txCan(TCU_BUS, ENGINE_3_573, 0, data)
+	pps = data[2] * 0.392
+end
+
+function sendENGINE_3_573()
+	payloadENGINE_3_573[2] = pps / 0.392
+	payloadENGINE_3_573[3] = pps / 0.392 -- Throttle_position_capped
+	txCan(TCU_BUS, ENGINE_3_23D_573, 0, payloadENGINE_3_573)
+--	txCan(TCU_BUS, ENGINE_3_23D_573, 0, data)
 end
 
 ENGINE_4_574 = 574
 payloadENGINE_4_574 = {0x00, 0x40, 0xff, 0x45, 0x00, 0xd6, 0x00, 0xa2}
 -- 23E
-function onENGINE_4_574(bus, id, dlc, data)
-	payloadENGINE_4_574[3] = 0xFF pps / 0.392 -- data[3] -- affects desired torque converter pressure Throttle_position_inverted
+function sendENGINE_4_23E_574()
+	payloadENGINE_4_574[3] = (100 - pps) / 0.392 -- data[3] -- affects desired torque converter pressure Throttle_position_inverted
 	payloadENGINE_4_574[7] = pps / 0.392 -- data[7] -- TPS
-	txCan(TCU_BUS, ENGINE_4_574, 0, payloadENGINE_4_574)
+	txCan(TCU_BUS, ENGINE_4_23E_574, 0, payloadENGINE_4_574)
 end
 
 payloadENGINE_5 = {0x7d, 0xdb, 0x00, 0xa0, 0x00, 0x02, 0x80, 0xff}
-function onENGINE_5(bus, id, dlc, data)
-	txCan(TCU_BUS, ENGINE_5_1361, 0, payloadENGINE_5)
+function sendENGINE_5_551_1361()
+	txCan(TCU_BUS, ENGINE_5_551_1361, 0, payloadENGINE_5)
 end
 
 payloadENGINE_6 = {0x00, 0x82, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00}
-function onENGINE_6(bus, id, dlc, data)
-	txCan(TCU_BUS, ENGINE_6_1408, 0, payloadENGINE_6)
+function sendEngine6_580_1408()
+	txCan(TCU_BUS, ENGINE_6_580_1408, 0, payloadENGINE_6)
 end
 
-canRxAdd(ECU_BUS, ENGINE_1_505, onENGINE_1_505)
-canRxAdd(ECU_BUS, ENGINE_2_561, onENGINE_2_561)
-canRxAdd(ECU_BUS, ENGINE_7_563, onENGINE_7_563)
-canRxAdd(ECU_BUS, ENGINE_3_573, onENGINE_3_573)
-canRxAdd(ECU_BUS, ENGINE_4_574, onENGINE_4_574)
-canRxAdd(ECU_BUS, ENGINE_5_1361, onENGINE_5)
-canRxAdd(ECU_BUS, ENGINE_6_1408, onENGINE_6)
+canRxAdd(ECU_BUS, ENGINE_1_1F9_505, onENGINE_1_505)
+
+canRxAdd(ECU_BUS, ENGINE_3_23D_573, onENGINE_3_573)
+
+CAN_721_2d1 = 721
+payload721_2d1 = {0x00, 0x84, 0x00, 0x00, 0x31, 0xf8, 0x01}
+function onCan721_2d1(bus, id, dlc, data)
+end
+
+function sendCan721_2d1()
+	txCan(TCU_BUS, CAN_721_2d1, 0, payload721_2d1)
+end
+
+--canRxAdd(ECU_BUS, CAN_721_2d1, onCan721_2d1)
+
+CAN_734_2de = 734
+payload734_2de = {0x0f, 0x08, 0x02, 0x00, 0x19, 0x65, 0x07, 0xa8}
+function onCan734_2de(bus, id, dlc, data)
+end
+
+function sendCan734_2de()
+	txCan(TCU_BUS, CAN_734_2de, 0, payload734_2de)
+end
+
+--canRxAdd(ECU_BUS, CAN_734_2de, onCan734_2de)
 
 
---canRxAdd(ECU_BUS, ENGINE_4_574, silentDrop)
---canRxAdd(ECU_BUS, ENGINE_5_1361, relayFromECU)
---canRxAdd(ECU_BUS, ENGINE_6_1408, relayFromECU)
-
---canRxAdd(ECU_BUS, 721, silentDrop) -- required for TCU not to throw code
---canRxAdd(ECU_BUS, 734, silentDrop) -- required for TCU not to throw code
-
-
-canRxAdd(ECU_BUS, 2, silentDrop)
-canRxAdd(ECU_BUS, 533, silentDrop)
-canRxAdd(ECU_BUS, 534, silentDrop)
-canRxAdd(ECU_BUS, 640, silentDrop)
-canRxAdd(ECU_BUS, 644, silentDrop)
-canRxAdd(ECU_BUS, 645, silentDrop)
-canRxAdd(ECU_BUS, 670, silentDrop)
-canRxAdd(ECU_BUS, 672, silentDrop)
-canRxAdd(ECU_BUS, 677, silentDrop)
+--canRxAdd(ECU_BUS, 721, onAnythingFromECU) -- required for TCU not to throw code
+--canRxAdd(ECU_BUS, 734, onAnythingFromECU) -- required for TCU not to throw code
 
 canRxAdd(ECU_BUS, 861, silentDrop)
 canRxAdd(ECU_BUS, 901, silentDrop)
@@ -212,12 +200,13 @@ canRxAdd(ECU_BUS, 1573, silentDrop)
 
 
 -- last option: unconditional forward of all remaining messages
-canRxAddMask(ECU_BUS, 0, 0, onAnythingFromECU)
+--canRxAddMask(ECU_BUS, 0, 0, onAnythingFromECU)
 canRxAddMask(TCU_BUS, 0, 0, onAnythingFromTCU)
 
 everySecondTimer = Timer.new()
 
 _10msPeriodTimer = Timer.new()
+_15msPeriodTimer = Timer.new()
 
 function onTick()
 	if everySecondTimer : getElapsedSeconds() > 1 then
@@ -226,8 +215,24 @@ function onTick()
 		print("Total from ECU " ..totalEcuMessages .." from TCU " ..totalTcuMessages .." dropped=" ..totalDropped .." replaced " ..totalReplaced)
 	end
 
+--  rpm = getSensor("RPM") or 0
+--  pps = Sensor.new("AcceleratorPedal") or 0
+
 	if _10msPeriodTimer : getElapsedSeconds() > 0.01 then
     _10msPeriodTimer : reset()
+    sendENGINE_1_505()
+    sendENGINE_2_231_561()
+    sendENGINE_3_573()
+    sendENGINE_7_233_563()
+    sendENGINE_4_23E_574()
+    sendCan721_2d1()
+    sendCan734_2de()
+	end
+
+	if _15msPeriodTimer : getElapsedSeconds() > 0.015 then
+    _15msPeriodTimer : reset()
+    sendENGINE_5_551_1361()
+    sendEngine6_580_1408()
 	end
 
 
