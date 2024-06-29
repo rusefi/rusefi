@@ -19,9 +19,6 @@
 
 #include "periodic_thread_controller.h"
 
-#define CAN_PEDAL_TPS_OFFSET 2
-#define CAN_SENSOR_1_OFFSET 3
-
 #define CAN_TIMEOUT MS2NT(100)
 
 //can tx periodic task cycle time in frequency, 200hz -> 5ms period

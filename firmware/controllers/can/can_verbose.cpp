@@ -18,6 +18,9 @@
 #include "fuel_math.h"
 #include "spark_logic.h"
 
+#define CAN_PEDAL_TPS_OFFSET 2
+#define CAN_SENSOR_1_OFFSET 3
+
 struct Status {
 	uint16_t warningCounter;
 	uint16_t lastErrorCode;
