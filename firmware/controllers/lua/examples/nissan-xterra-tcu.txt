@@ -157,10 +157,31 @@ canRxAdd(ECU_BUS, ENGINE_1_505, onENGINE_1_505)
 
 canRxAdd(ECU_BUS, ENGINE_3_573, onENGINE_3_573)
 
+CAN_721_2d1 = 721
+payload721_2d1 = {0x00, 0x84, 0x00, 0x00, 0x31, 0xf8, 0x01}
+function onCan721_2d1(bus, id, dlc, data)
+end
+
+function sendCan721_2d1()
+	txCan(TCU_BUS, CAN_721_2d1, 0, payload721_2d1)
+end
+
+--canRxAdd(ECU_BUS, CAN_721_2d1, onCan721_2d1)
+
+CAN_734_2de = 734
+payload734_2de = {0x0f, 0x08, 0x02, 0x00, 0x19, 0x65, 0x07, 0xa8}
+function onCan734_2de(bus, id, dlc, data)
+end
+
+function sendCan734_2de()
+	txCan(TCU_BUS, CAN_734_2de, 0, payload734_2de)
+end
+
+--canRxAdd(ECU_BUS, CAN_734_2de, onCan734_2de)
 
 
-canRxAdd(ECU_BUS, 721, onAnythingFromECU) -- required for TCU not to throw code
-canRxAdd(ECU_BUS, 734, onAnythingFromECU) -- required for TCU not to throw code
+--canRxAdd(ECU_BUS, 721, onAnythingFromECU) -- required for TCU not to throw code
+--canRxAdd(ECU_BUS, 734, onAnythingFromECU) -- required for TCU not to throw code
 
 
 
@@ -191,6 +212,8 @@ function onTick()
     sendENGINE_3_573()
     sendENGINE_7_233_563()
     sendENGINE_4_23E_574()
+    sendCan721_2d1()
+    sendCan734_2de()
 	end
 
 	if _15msPeriodTimer : getElapsedSeconds() > 0.015 then
