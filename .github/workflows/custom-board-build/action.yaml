@@ -524,4 +524,4 @@ runs:
       shell: bash
       run: |
         : Upload Obfuscated Tagged Daily Release Bundle
-        bash ../firmware/bin/upload_bundle.sh ${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_USER }} "${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_PASS }}" ${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_SERVER }} "${{env.SHORT_BOARD_NAME}}_obfuscated_public ${{ inputs.release_date }}
+        bash ../firmware/bin/upload_bundle.sh ${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_USER }} "${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_PASS }}" ${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_SERVER }} "${{env.SHORT_BOARD_NAME}}_obfuscated_public" ${{ inputs.release_date }}
