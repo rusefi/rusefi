@@ -121,7 +121,7 @@ end
 
 payloadENGINE_2_561 = {0xe0, 0x80, 0x09, 0xe0, 0xd4, 0xc3, 0x4c, 0x9e}
 function onENGINE_2_561(bus, id, dlc, data)
-	payloadENGINE_2_561[3] = data[3]
+	payloadENGINE_2_561[3] = data[3] -- tps or pps
 	txCan(TCU_BUS, ENGINE_2_561, 0, payloadENGINE_2_561)
 --	txCan(TCU_BUS, ENGINE_2_561, 0, data)
 end
@@ -142,7 +142,7 @@ function onENGINE_3_573(bus, id, dlc, data)
 --	payloadENGINE_3_573[1] = data[1]
 	payloadENGINE_3_573[2] = data[2]
 	pps = payloadENGINE_3_573[2] * 0.392
-	payloadENGINE_3_573[3] = data[3]
+	payloadENGINE_3_573[3] = data[3] -- Throttle_position_capped
 --	payloadENGINE_3_573[7] = data[7] -- CLT
 	txCan(TCU_BUS, ENGINE_3_573, 0, payloadENGINE_3_573)
 --	txCan(TCU_BUS, ENGINE_3_573, 0, data)
@@ -151,14 +151,13 @@ end
 ENGINE_4_574 = 574
 payloadENGINE_4_574 = {0x00, 0x40, 0xff, 0x45, 0x00, 0xd6, 0x00, 0xa2}
 function onENGINE_4_574(bus, id, dlc, data)
---	payloadENGINE_4_574[0] = data[0]
 --	payloadENGINE_4_574[1] = data[1]
 --	payloadENGINE_4_574[2] = data[2]
 	payloadENGINE_4_574[3] = data[3] -- affects desired torque converter pressure Throttle_position_inverted
 --	payloadENGINE_4_574[4] = data[4]
 --	payloadENGINE_4_574[5] = data[5]
 --	payloadENGINE_4_574[6] = data[6]
-	payloadENGINE_4_574[7] = data[7] -- affects desired torque converter pressure
+	payloadENGINE_4_574[7] = data[7] -- TPS
 --	txCan(TCU_BUS, ENGINE_4_574, 0, data)
 	txCan(TCU_BUS, ENGINE_4_574, 0, payloadENGINE_4_574)
 end
