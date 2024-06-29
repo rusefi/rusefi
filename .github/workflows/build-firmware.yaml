@@ -3,6 +3,13 @@ name: Firmware at GHA
 #
 # this github action uses generate_matrix.sh to scan the file system and automatically produce build matrix!
 #
+# this github action is the heaviest one we've got, with each run taking around 10 minutes and the matrix which has a few dozens of these runs 
+#
+# We have two mechanists to reduce github action runner consumption
+# * 'skip_rate' ratio in meta-info.env files allows to skip some builds with specific skip percentage
+# * 'only' syntax allow to build only specificed configuration, for example 'only:uaefi' line in the commit message would only build 'uaefi' configuration
+# *        for random commits we can build zero jobs if we do 'only:docs' or anything similar
+#
 
 on:
   push:
