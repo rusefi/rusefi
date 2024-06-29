@@ -122,14 +122,14 @@ end
 pps = 0
 -- 231
 payloadENGINE_2_561 = {0xe0, 0x80, 0x09, 0xe0, 0xd4, 0xc3, 0x4c, 0x9e}
-function onENGINE_2_561(bus, id, dlc, data)
+function sendENGINE_2_231_561()
 	payloadENGINE_2_561[3] = pps / 0.5 -- tps or pps
 	txCan(TCU_BUS, ENGINE_2_561, 0, payloadENGINE_2_561)
 end
 
 payloadENGINE_7_563 = {0x79, 0xa2, 0x00, 0x18, 0x0e, 0x00, 0x00, 0x01}
 -- 233
-function onENGINE_7_563(bus, id, dlc, data)
+function sendENGINE_7_233_563()
 --	payloadENGINE_7_563[4] = data[4] -- RPMlow
 --	payloadENGINE_7_563[7] = data[7] -- RPMhi
 	txCan(TCU_BUS, ENGINE_7_563, 0, payloadENGINE_7_563)
@@ -149,7 +149,7 @@ end
 ENGINE_4_574 = 574
 payloadENGINE_4_574 = {0x00, 0x40, 0xff, 0x45, 0x00, 0xd6, 0x00, 0xa2}
 -- 23E
-function onENGINE_4_574(bus, id, dlc, data)
+function sendENGINE_4_23E_574()
 	payloadENGINE_4_574[3] = (100 - pps) / 0.392 -- data[3] -- affects desired torque converter pressure Throttle_position_inverted
 	payloadENGINE_4_574[7] = pps / 0.392 -- data[7] -- TPS
 --	txCan(TCU_BUS, ENGINE_4_574, 0, data)
@@ -167,10 +167,10 @@ function sendEngine6_580_1408()
 end
 
 canRxAdd(ECU_BUS, ENGINE_1_505, onENGINE_1_505)
-canRxAdd(ECU_BUS, ENGINE_2_561, onENGINE_2_561)
-canRxAdd(ECU_BUS, ENGINE_7_563, onENGINE_7_563)
+canRxAdd(ECU_BUS, ENGINE_2_561, silentDrop)
+canRxAdd(ECU_BUS, ENGINE_7_563, silentDrop)
 canRxAdd(ECU_BUS, ENGINE_3_573, onENGINE_3_573)
-canRxAdd(ECU_BUS, ENGINE_4_574, onENGINE_4_574)
+canRxAdd(ECU_BUS, ENGINE_4_574, silentDrop)
 canRxAdd(ECU_BUS, ENGINE_5_551_1361, silentDrop)
 canRxAdd(ECU_BUS, ENGINE_6_580_1408, silentDrop)
 
@@ -209,6 +209,7 @@ canRxAddMask(TCU_BUS, 0, 0, onAnythingFromTCU)
 everySecondTimer = Timer.new()
 
 _10msPeriodTimer = Timer.new()
+_15msPeriodTimer = Timer.new()
 
 function onTick()
 	if everySecondTimer : getElapsedSeconds() > 1 then
@@ -219,6 +220,13 @@ function onTick()
 
 	if _10msPeriodTimer : getElapsedSeconds() > 0.01 then
     _10msPeriodTimer : reset()
+    sendENGINE_2_231_561()
+    sendENGINE_7_233_563()
+    sendENGINE_4_23E_574()
+	end
+
+	if _15msPeriodTimer : getElapsedSeconds() > 0.015 then
+    _15msPeriodTimer : reset()
     sendENGINE_5_551_1361()
     sendEngine6_580_1408()
 	end
