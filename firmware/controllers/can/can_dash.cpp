@@ -64,18 +64,14 @@ static time_msecs_t mph_ctr;
 //https://www.drive2.ru/b/500679938089681452/
 #define NISSAN_STEERING_WHEEL 0x002
 
-// 505
-#define NISSAN_RPM_1F9 0x1F9
+#define NISSAN_ENGINE_1_RPM_1F9_505 0x1F9
 
-// 561
-#define NISSAN_ENGINE_2 0x231
-// 563
-#define NISSAN_UNKNOWN_2 0x233
+#define NISSAN_ENGINE_2 0x231_561
+#define NISSAN_ENGINE_7_233_563 0x233
 // Nissan z33 350Z and else
 // 0x23d = 573
-#define NISSAN_RPM_CLT       0x23D
-// 574
-#define NISSAN_UNKNOWN_3 0x23E
+#define NISSAN_ENGINE_3_23D_573       0x23D
+#define NISSAN_ENGINE_4_23E_574 0x23E
 
 #define NISSAN_TCU_1 0x251
 #define NISSAN_TCU_2 0x253
@@ -101,8 +97,7 @@ static time_msecs_t mph_ctr;
 // 852
 #define NISSAN_VEHICLE_SPEED 0x354
 
-// 1361
-#define NISSAN_CLT_551 0x551
+#define NISSAN_ENGINE_5_CLT_551_1361 0x551
 // 1408
 #define NISSAN_RPM_AGAIN 0x580
 #define NISSAN_ODOMETER 0x5C5
@@ -336,12 +331,12 @@ void canDashboardGenesisCoupe(CanCycle cycle) {
 void canDashboardNissanVQ(CanCycle cycle) {
 	if (cycle.isInterval(CI::_50ms)) {
 		{
-			CanTxMessage msg(CanCategory::NBC, NISSAN_RPM_1F9, 8);
+			CanTxMessage msg(CanCategory::NBC, NISSAN_ENGINE_1_RPM_1F9_505, 8);
 			msg.setShortValueMsb(Sensor::getOrZero(SensorType::Rpm) * 8, /*offset*/ 2);
 		}
 
 		{
-			CanTxMessage msg(CanCategory::OBD, NISSAN_CLT_551, 8);
+			CanTxMessage msg(CanCategory::OBD, NISSAN_ENGINE_5_CLT_551_1361, 8);
 
 			int clt = Sensor::getOrZero(SensorType::Clt);
 			msg[0] = clt + 45;
@@ -349,7 +344,7 @@ void canDashboardNissanVQ(CanCycle cycle) {
 
 
 		{
-			CanTxMessage msg(CanCategory::NBC, NISSAN_RPM_CLT, 8);
+			CanTxMessage msg(CanCategory::NBC, NISSAN_ENGINE_3_23D_573, 8);
 
 			rollingId = (rollingId + 1) % 4;
 			const uint8_t magicByte[4] = {0x03, 0x23, 0x42, 0x63};
