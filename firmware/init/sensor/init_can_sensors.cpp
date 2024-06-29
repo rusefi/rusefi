@@ -13,11 +13,6 @@
 #include "can_sensor.h"
 #include "can.h"
 
-CanSensor<int16_t, PACK_MULT_PERCENT> canPedalSensor(
-	CAN_DEFAULT_BASE + CAN_PEDAL_TPS_OFFSET, /*offset =*/ 0,
-	SensorType::AcceleratorPedal, CAN_TIMEOUT
-);
-
 ObdCanSensor<2, 0> obdRpmSensor(
 		PID_RPM, ODB_RPM_MULT,
 	SensorType::Rpm
@@ -45,7 +40,6 @@ ObdCanSensor<1, 0> obdTpsSensor(
 
 void initCanSensors() {
 	if (engineConfiguration->consumeObdSensors) {
-//		registerCanSensor(canPedalSensor);
 		registerCanSensor(obdRpmSensor);
 		registerCanSensor(obdCltSensor);
 		registerCanSensor(obdIatSensor);
