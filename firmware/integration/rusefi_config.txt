@@ -532,7 +532,10 @@ ThermistorConf clt;todo: merge with channel settings, use full-scale Thermistor 
 ThermistorConf iat;
 
 	float launchTimingRetard;;"deg", 1, 0, -180, 180, 2
-	int hip9011PrescalerAndSDO;value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into two bit fields;"integer", 1, 0, 0, 32, 0
+	uint8_t hip9011Prescaler;value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into two bit fields;"integer", 1, 0, 0, 32, 0
+	uint8_t unusedHip0
+	uint8_t unusedHip1
+	uint8_t unusedHip2
 	float knockBandCustom;Use any online calculator and input your bore.\nReminder that in some cases double frequency works better!;"kHz", 1, 0, 0, 20, 2
 
 uint16_t autoscale displacement;Engine displacement in litres;"L", 0.001, 0, 0, 65, 3
