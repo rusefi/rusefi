@@ -413,8 +413,12 @@ static int hip_init() {
 	}
 
 	#if EFI_HIP_9011_DEBUG
-		/* reset error counter now */
+		/* reset counters now */
+		instance.correctResponsesCount = 0;
 		instance.invalidResponsesCount = 0;
+		instance.samples = 0;
+		instance.overrun = 0;
+		instance.unsync = 0;
 	#endif
 
 	instance.state = READY_TO_INTEGRATE;
@@ -598,8 +602,14 @@ static void showHipInfo() {
 		return;
 	}
 
-	efiPrintf("HIP9011: enabled %s state %s",
-		boolToString(engineConfiguration->isHip9011Enabled),
+	efiPrintf("HIP9011: enabled %s",
+		boolToString(engineConfiguration->isHip9011Enabled));
+
+	if (!engineConfiguration->isHip9011Enabled) {
+		return;
+	}
+
+	efiPrintf(" State %s",
 		hip_state_names[instance.state]);
 
 	efiPrintf(" Advanced mode: enabled %d used %d",
