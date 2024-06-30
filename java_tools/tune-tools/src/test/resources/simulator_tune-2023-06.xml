@@ -1299,7 +1299,7 @@
         <constant digits="2" name="hip9011Gain" units="">1.0</constant>
         <constant name="hip9011IntHoldPin">"NONE"</constant>
         <constant name="hip9011IntHoldPinMode">"default"</constant>
-        <constant digits="0" name="hip9011PrescalerAndSDO" units="integer">0.0</constant>
+        <constant digits="0" name="hip9011Prescaler" units="integer">0.0</constant>
         <constant name="hip9011SpiDevice">"Off"</constant>
         <constant name="hipOutputChannel">"Disabled"</constant>
         <constant name="hondaK">"false"</constant>
@@ -2188,7 +2188,6 @@
          -20.0
          -20.0
 </constant>
-        <constant digits="2" name="knockDetectionWindowEnd" units="angle">60.0</constant>
         <constant digits="2" name="knockDetectionWindowStart" units="angle">20.0</constant>
         <constant cols="1" digits="0" name="knockNoiseRpmBins" rows="16">
          650.0
