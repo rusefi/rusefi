@@ -303,7 +303,7 @@ void hip9011_onFireEvent(uint8_t cylinderNumber, efitick_t nowNt) {
 				{ startIntegration, &instance });
 
 		scheduleByAngle(&hardware.endTimer, nowNt,
-				engineConfiguration->knockDetectionWindowEnd,
+				engineConfiguration->knockDetectionWindowStart + engineConfiguration->knockSamplingDuration,
 				{ endIntegration, &instance });
 	} else {
 		#if EFI_HIP_9011_DEBUG
@@ -658,7 +658,7 @@ static void showHipInfo() {
 
 	efiPrintf(" Window start %.2f end %.2f",
 		engineConfiguration->knockDetectionWindowStart,
-		engineConfiguration->knockDetectionWindowEnd);
+		engineConfiguration->knockDetectionWindowStart + engineConfiguration->knockSamplingDuration);
 
 	if (!instance.adv_mode) {
 		efiPrintf(" Adc input %d (%.2f V)",

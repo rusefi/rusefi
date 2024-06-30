@@ -56,21 +56,21 @@ public:
 		engineConfiguration->hip9011Gain, \
 		engineConfiguration->hip9011Prescaler, \
 		engineConfiguration->knockDetectionWindowStart, \
-		engineConfiguration->knockDetectionWindowEnd
+		engineConfiguration->knockSamplingDuration
 
 #define FORWARD_HIP_PARAMS \
 		cylinderBore, \
 		hip9011Gain, \
 		hip9011Prescaler, \
 		knockDetectionWindowStart, \
-		knockDetectionWindowEnd
+		knockSamplingDuration
 
 #define DEFINE_HIP_PARAMS \
 		float cylinderBore, \
 		float hip9011Gain, \
 		uint8_t hip9011Prescaler, \
 		float knockDetectionWindowStart, \
-		float knockDetectionWindowEnd
+		float knockSamplingDuration
 
 
 #define GET_CONFIG_VALUE(x) x
