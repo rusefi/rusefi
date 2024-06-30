@@ -119,9 +119,10 @@ public:
 	hip_state_e state;
 	int8_t cylinderNumber = -1;
 	int8_t expectedCylinderNumber = -1;
-	int rawValue[HIP_INPUT_CHANNELS];
+	uint16_t rawValue[HIP_INPUT_CHANNELS];
 
-	float rpmLookup[INT_LOOKUP_SIZE];
+	/* No need to have float accuracity, 65535 RPM is reasonable limit */
+	uint16_t rpmLookup[INT_LOOKUP_SIZE];
 
 	// Timestamp of the last sensed event
 	efitick_t knockSampleTimestamp = 0;
@@ -131,7 +132,7 @@ public:
 		int correctResponsesCount = 0;
 		int invalidResponsesCount = 0;
 
-		/* counters */
+		/* logic error counters */
 		int samples = 0;
 		int overrun = 0;
 		int unsync = 0;
