@@ -331,6 +331,7 @@ static void setDefaultBoostOpenLoopParameters() {
 static void setDefaultEngineNoiseTable() {
 	setRpmTableBin(config->knockNoiseRpmBins);
 
+	engineConfiguration->knockDetectionWindowStart = 15.0 + 5.0;
 	engineConfiguration->knockSamplingDuration = 45;
 
 	setArrayValues(config->knockBaseNoise, -20);
@@ -599,12 +600,6 @@ static void setDefaultEngineConfiguration() {
     engineConfiguration->nitrousActivationRpm = engine_configuration_defaults::NITROUS_ACTIVATION_RPM;
     engineConfiguration->nitrousDeactivationRpm = engine_configuration_defaults::NITROUS_DEACTIVATION_RPM;
     engineConfiguration->nitrousDeactivationRpmWindow = engine_configuration_defaults::NITROUS_DEACTIVATION_RPM_WINDOW;
-
-	/* these two are used for HIP9011 only
-	 * Currently this is offset from fire event, not TDC */
-	/* TODO: convert to offset from TDC */
-	engineConfiguration->knockDetectionWindowStart = 15.0 + 5.0;
-	engineConfiguration->knockDetectionWindowEnd = 15.0 + 45.0;
 
 	engineConfiguration->triggerSimulatorRpm = DEFAULT_SELT_STIM_RPM;
 	engineConfiguration->simulatorCamPosition[0] = DEFAULT_SELT_STIM_VVT0;

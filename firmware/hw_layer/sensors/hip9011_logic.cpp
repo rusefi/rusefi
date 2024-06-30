@@ -138,9 +138,7 @@ int HIP9011::getIntegrationIndexByRpm(float rpm) {
 }
 
 void HIP9011::setAngleWindowWidth(DEFINE_HIP_PARAMS) {
-	float new_angleWindowWidth =
-		GET_CONFIG_VALUE(knockDetectionWindowEnd) -
-		GET_CONFIG_VALUE(knockDetectionWindowStart);
+	float new_angleWindowWidth = GET_CONFIG_VALUE(knockSamplingDuration);
 	if (new_angleWindowWidth < 0) {
 #if EFI_PROD_CODE
 		warning(ObdCode::CUSTOM_KNOCK_WINDOW, "invalid knock window");
