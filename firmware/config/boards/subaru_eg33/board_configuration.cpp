@@ -194,8 +194,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->isHip9011Enabled = true;
 	/* this board has TPIC8101, that supports advanced mode */
 	engineConfiguration->useTpicAdvancedMode = true;
-	/* Chip settings */
-	engineConfiguration->hip9011PrescalerAndSDO = (0x6 << 1); //HIP_16MHZ_PRESCALER;
+	/* HIP9011 chip settings */
 	engineConfiguration->hip9011Gain = 1.0;
 	engineConfiguration->knockBandCustom = 0.0;
 	engineConfiguration->cylinderBore = 96.9;
@@ -255,6 +254,9 @@ void setBoardConfigOverrides() {
 	engineConfiguration->spi5MisoMode = PO_DEFAULT;
 	/* This is mandatory to have this bus enabled */
 	engineConfiguration->is_enabled_spi_5 = true;
+
+	/* HIP9011 gets fixed 16MHz clock from STM32, this is not configurable */
+	engineConfiguration->hip9011Prescaler = 0x6; //HIP_16MHZ_PRESCALER;
 }
 
 /* Schematic RefDef DA3 */
