@@ -374,9 +374,10 @@ static int hip_testAdvMode() {
 static int hip_init() {
 	int ret;
 
+	/* Just to enable SDO */
 	ret = instance.hw->sendSyncCommand(SET_PRESCALER_CMD(instance.prescaler), NULL);
 	if (ret) {
-		/* NOTE: hip9011/tpic8101 can be in default or advansed mode at this point
+		/* NOTE: hip9011/tpic8101 can be in default or advanced mode at this point
 		 * If we supposed not to support advanced mode this is definitely error */
 		if (!engineConfiguration->useTpicAdvancedMode)
 			return ret;
@@ -384,18 +385,18 @@ static int hip_init() {
 
 	/* ...othervice or when no error is reported lets try to switch to advanced mode */
 	if (engineConfiguration->useTpicAdvancedMode) {
+		uint8_t rx = 0x00;
 		/* enable advanced mode */
-		ret = instance.hw->sendSyncCommand(SET_ADVANCED_MODE_CMD, NULL);
-		if (ret) {
-			uint8_t rx;
-			/* communication error is detected for default mode...
-			 * may be we are in advanced mode already?
-			 * Now we dont care for return value */
-			instance.hw->sendSyncCommand(SET_ADVANCED_MODE_CMD, &rx);
-			if (rx != SET_ADVANCED_MODE_REP) {
-				/* this is really a communication problem */
-				return ret;
-			}
+		instance.hw->sendSyncCommand(SET_ADVANCED_MODE_CMD, NULL);
+
+		/* send enable advanced mode again... */
+		instance.hw->sendSyncCommand(SET_ADVANCED_MODE_CMD, NULL);
+
+		/* to get reply on next command */
+		instance.hw->sendSyncCommand(SET_ADVANCED_MODE_CMD, &rx);
+		if (rx != SET_ADVANCED_MODE_REP) {
+			/* this is really a communication problem */
+			return -1;
 		}
 
 		/* now we should be in advanced mode... if chip supports...
@@ -407,6 +408,7 @@ static int hip_init() {
 		if (ret) {
 			warning(ObdCode::CUSTOM_OBD_KNOCK_PROCESSOR, "TPIC/HIP does not support advanced mode");
 			instance.adv_mode = false;
+			return -1;
 		}
 	}
 
