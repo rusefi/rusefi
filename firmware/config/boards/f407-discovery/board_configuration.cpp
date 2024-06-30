@@ -40,7 +40,7 @@ static void setHip9011FrankensoPinout() {
 	//	engineConfiguration->hip9011CsPin = Gpio::D0; // rev 0.1
 
 	engineConfiguration->isHip9011Enabled = true;
-	engineConfiguration->hip9011PrescalerAndSDO = HIP_8MHZ_PRESCALER; // 8MHz chip
+	engineConfiguration->hip9011Prescaler = HIP_8MHZ_PRESCALER; // 8MHz chip
 	engineConfiguration->is_enabled_spi_2 = true;
 	// todo: convert this to rusEfi, hardware-independent enum
 #if EFI_PROD_CODE
