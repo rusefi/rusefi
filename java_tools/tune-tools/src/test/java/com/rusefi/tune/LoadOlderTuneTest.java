@@ -100,7 +100,7 @@ public class LoadOlderTuneTest {
             "    // default \"false\"\n" +
             "    engineConfiguration->isHip9011Enabled = true;\n" +
             "    // default 0.0\n" +
-            "    engineConfiguration->hip9011PrescalerAndSDO = 6;\n" +
+            "    engineConfiguration->hip9011Prescaler = 6;\n" +
             "    // default 20.0\n" +
             "    engineConfiguration->knockDetectionWindowStart = 35;\n" +
             "    // default 60.0\n" +
