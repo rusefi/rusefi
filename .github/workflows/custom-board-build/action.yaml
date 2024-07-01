@@ -505,12 +505,13 @@ runs:
       shell: bash
       run: |
         : Output Tag Debugging Information
+        : # TODO: remove this step after unexpected tags disappear
         echo 'steps.checkTag.outputs.exists: "${{ steps.checkTag.outputs.exists }}"'
         echo 'inputs.release_date: "${{ inputs.release_date }}"'
         echo 'github.ref_name: "${{ github.ref_name }}"'
 
     - name: Create Release Tag
-      if: ${{ steps.checkTag.outputs.exists == 'false' }}
+      if: ${{ inputs.release_date != '' && steps.checkTag.outputs.exists == 'false' }}
       id: tag
       uses: mathieudutour/github-tag-action@v6.2
       with:
