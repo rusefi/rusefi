@@ -501,6 +501,13 @@ runs:
       with:
         tag: ${{ inputs.release_date }}
 
+    - name: Output Tag Debugging Information
+      run: |
+        : Output Tag Debugging Information
+        echo 'steps.checkTag.outputs.exists: "${{ steps.checkTag.outputs.exists }}"'
+        echo 'inputs.release_date: "${{ inputs.release_date }}"'
+        echo 'github.ref_name: "${{ github.ref_name }}"'
+
     - name: Create Release Tag
       if: ${{ steps.checkTag.outputs.exists == 'false' }}
       id: tag
