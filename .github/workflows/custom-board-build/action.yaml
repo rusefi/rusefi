@@ -300,7 +300,7 @@ runs:
         if [ "$RUN_SIMULATOR" == "true" ]; then
           TARGETS=("../simulator/build/rusefi_simulator.linux" "../java_tools/tune-tools/build/libs/tune-tools-all.jar")
         fi
-        bash bin/compile.sh $BOARD_META_PATH --output-sync=recurse ${{inputs.artifacts}} ${{inputs.uploads}} ${TARGETS[@]}        
+        bash bin/compile.sh $BOARD_META_PATH --output-sync=recurse ${{inputs.artifacts}} ${{inputs.uploads}} ${TARGETS[@]}
 
     - name: Upload Bundle
       if: ${{ contains(inputs.uploads, 'bundles') }}
@@ -502,6 +502,7 @@ runs:
         tag: ${{ inputs.release_date }}
 
     - name: Output Tag Debugging Information
+      shell: bash
       run: |
         : Output Tag Debugging Information
         echo 'steps.checkTag.outputs.exists: "${{ steps.checkTag.outputs.exists }}"'
