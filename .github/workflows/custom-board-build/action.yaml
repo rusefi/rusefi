@@ -497,6 +497,7 @@ runs:
         path: ${{inputs.rusefi_dir}}/artifacts/rusefi_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public_autoupdate.zip
 
     - uses: mukunku/tag-exists-action@v1.6.0
+      if: ${{ inputs.release_date != '' }}
       id: checkTag
       with:
         tag: ${{ inputs.release_date }}
