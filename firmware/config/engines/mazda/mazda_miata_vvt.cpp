@@ -71,11 +71,11 @@ static const float injectorLagCorrection[VBAT_INJECTOR_CURVE_SIZE] = {
 };
 
 #if SCRIPT_TABLE_8 == 8
-static const float vvt18fsioRpmBins[SCRIPT_TABLE_8] =
+static const float vvt18RpmBins[SCRIPT_TABLE_8] =
 {700.0, 1000.0, 2000.0, 3000.0, 3500.0, 4500.0, 5500.0, 6500.0}
 ;
 
-static const float vvt18fsioLoadBins[SCRIPT_TABLE_8] =
+static const float vvt18LoadBins[SCRIPT_TABLE_8] =
 {30.0, 40.0, 50.0, 60.0, 70.0, 75.0, 82.0, 85.0}
 ;
 
@@ -367,8 +367,8 @@ static void setMazdaMiataEngineNB2Defaults() {
 	setCommonMazdaNB();
 
 #if SCRIPT_TABLE_8 == 8
-	copyArray(config->vvtTable1RpmBins, vvt18fsioRpmBins);
-	copyArray(config->vvtTable1LoadBins, vvt18fsioLoadBins);
+	copyArray(config->vvtTable1RpmBins, vvt18RpmBins);
+	copyArray(config->vvtTable1LoadBins, vvt18LoadBins);
 	copyTable(config->vvtTable1, SCRIPT_TABLE_vvt_target);
 #endif
 
