@@ -88,7 +88,7 @@ runs:
       if: ${{ contains(github.ref_name, '.') }}
       run: |
         : Check branch name
-        echo '::error::Branch names must not contain ".", this breaks firmware autoupdates.' && exit 1
+        echo '::error::Branch names must not contain ".", this breaks firmware autoupdates. Branch name is "${{ github.ref_name }}".' && exit 1
 
     - name: Mask Secrets
       shell: bash
