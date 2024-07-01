@@ -1695,7 +1695,7 @@
 #define ts_show_vvt_output true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.07.01.hellen121nissan.790741825"
+#define TS_SIGNATURE "rusEFI master.2024.07.02.hellen121nissan.790741825"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
