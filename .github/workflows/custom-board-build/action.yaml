@@ -24,8 +24,8 @@ inputs:
     description: 'LTS Build'
     required: false
     default: 'false'
-  release_date:
-    description: 'Date for nightly releases'
+  new_tag:
+    description: 'Tag to create in the repo for this build'
     required: false
   bundle_simulator:
     description: 'Include Simulator in Bundle'
@@ -497,26 +497,18 @@ runs:
         path: ${{inputs.rusefi_dir}}/artifacts/rusefi_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public_autoupdate.zip
 
     - uses: mukunku/tag-exists-action@v1.6.0
+      if: ${{ inputs.new_tag != '' }}
       id: checkTag
       with:
-        tag: ${{ inputs.release_date }}
-
-    - name: Output Tag Debugging Information
-      shell: bash
-      run: |
-        : Output Tag Debugging Information
-        : # TODO: remove this step after unexpected tags disappear
-        echo 'steps.checkTag.outputs.exists: "${{ steps.checkTag.outputs.exists }}"'
-        echo 'inputs.release_date: "${{ inputs.release_date }}"'
-        echo 'github.ref_name: "${{ github.ref_name }}"'
+        tag: ${{ inputs.new_tag }}
 
     - name: Create Release Tag
-      if: ${{ inputs.release_date != '' && steps.checkTag.outputs.exists == 'false' }}
+      if: ${{ inputs.new_tag != '' && steps.checkTag.outputs.exists == 'false' }}
       id: tag
       uses: mathieudutour/github-tag-action@v6.2
       with:
         github_token: ${{env.TOKEN}}
-        custom_tag: ${{ inputs.release_date }}
+        custom_tag: ${{ inputs.new_tag }}
         tag_prefix: ''
 
     - name: Upload Tagged Daily Release Bundle
@@ -525,7 +517,7 @@ runs:
       shell: bash
       run: |
         : Upload Tagged Daily Release Bundle
-        bash ../firmware/bin/upload_bundle.sh ${{ env.RUSEFI_SSH_USER }} ${{ env.RUSEFI_SSH_PASS }} ${{ env.RUSEFI_SSH_SERVER }} ${{ env.BUNDLE_NAME }} ${{ inputs.release_date }}
+        bash ../firmware/bin/upload_bundle.sh ${{ env.RUSEFI_SSH_USER }} ${{ env.RUSEFI_SSH_PASS }} ${{ env.RUSEFI_SSH_SERVER }} ${{ env.BUNDLE_NAME }} ${{ inputs.new_tag }}
 
     - name: Upload Obfuscated Tagged Daily Release Bundle
       if: ${{ contains(inputs.artifacts, 'obfuscated') && steps.checkTag.outputs.exists == 'false'}}
@@ -533,4 +525,4 @@ runs:
       shell: bash
       run: |
         : Upload Obfuscated Tagged Daily Release Bundle
-        bash ../firmware/bin/upload_bundle.sh ${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_USER }} "${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_PASS }}" ${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_SERVER }} "${{env.SHORT_BOARD_NAME}}_obfuscated_public" ${{ inputs.release_date }}
+        bash ../firmware/bin/upload_bundle.sh ${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_USER }} "${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_PASS }}" ${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_SERVER }} "${{env.SHORT_BOARD_NAME}}_obfuscated_public" ${{ inputs.new_tag }}
