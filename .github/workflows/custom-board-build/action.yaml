@@ -502,15 +502,6 @@ runs:
       with:
         tag: ${{ inputs.new_tag }}
 
-    - name: Output Tag Debugging Information
-      shell: bash
-      run: |
-        : Output Tag Debugging Information
-        : # TODO: remove this step after unexpected tags disappear
-        echo 'steps.checkTag.outputs.exists: "${{ steps.checkTag.outputs.exists }}"'
-        echo 'inputs.new_tag: "${{ inputs.new_tag }}"'
-        echo 'github.ref_name: "${{ github.ref_name }}"'
-
     - name: Create Release Tag
       if: ${{ inputs.new_tag != '' && steps.checkTag.outputs.exists == 'false' }}
       id: tag
