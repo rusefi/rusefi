@@ -5,10 +5,6 @@
 name: Build Custom Board Firmware
 
 inputs:
-  white_label:
-    description: 'White-label'
-    required: false
-    default: rusefi
   rusefi_dir:
     description: 'Path to rusefi submodule'
     required: false
@@ -156,11 +152,25 @@ runs:
           bash .github/workflows/actions/post-checkout.sh
         fi
 
+    - name: Find out white-label
+      id: find-out-white-label
+      shell: bash
+      run: |
+        : Find out white-label
+        shared_io_properties_file="shared_io.resources/shared_io.properties"  
+        if [ -f ${shared_io_properties_file} ]; then
+          white_label=`grep -m1 "^white_label=" ${shared_io_properties_file} | cut -d'=' -f2`
+        fi
+        if [ -z "$white_label" ]; then
+          white_label=rusefi
+        fi
+        echo "white_label=${white_label}" >> $GITHUB_OUTPUT
+
     - name: Set Env Variables
       shell: bash
       run: |
         : Set Env Variables
-        echo "WHITE_LABEL=${{inputs.white_label}}" >> $GITHUB_ENV
+        echo "WHITE_LABEL=${{steps.find-out-white-label.outputs.white_label}}" >> $GITHUB_ENV
         echo "RUSEFI_SSH_SERVER=${{inputs.RUSEFI_SSH_SERVER}}" >> $GITHUB_ENV
         echo "RUSEFI_SSH_USER=${{inputs.RUSEFI_SSH_USER}}" >> $GITHUB_ENV
         echo "RUSEFI_SSH_PASS=${{inputs.RUSEFI_SSH_PASS}}" >> $GITHUB_ENV
@@ -461,15 +471,15 @@ runs:
       if: ${{ contains(inputs.artifacts, 'bundle') }}
       uses: actions/upload-artifact@v4
       with:
-        name: ${{inputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_2024-05-25.zip.zip
-        path: ${{inputs.rusefi_dir}}/artifacts/${{inputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}.zip
+        name: ${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_2024-05-25.zip.zip
+        path: ${{inputs.rusefi_dir}}/artifacts/${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}.zip
 
     - name: Upload github action bundle autoupdate artifact
       if: ${{ contains(inputs.artifacts, 'autoupdate') }}
       uses: actions/upload-artifact@v4
       with:
-        name: ${{inputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_autoupdate_2024-05-25.zip.zip
-        path: ${{inputs.rusefi_dir}}/artifacts/${{inputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_autoupdate.zip
+        name: ${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_autoupdate_2024-05-25.zip.zip
+        path: ${{inputs.rusefi_dir}}/artifacts/${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_autoupdate.zip
 
     - name: Upload obfuscated Bundle
       if: ${{ contains(inputs.artifacts, 'obfuscated') }}
@@ -491,15 +501,15 @@ runs:
       if: ${{ contains(inputs.artifacts, 'obfuscated') }}
       uses: actions/upload-artifact@v4
       with:
-        name: ${{inputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public_${{env.current_date}}.zip
-        path: ${{inputs.rusefi_dir}}/artifacts/{{inputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public.zip
+        name: ${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public_${{env.current_date}}.zip
+        path: ${{inputs.rusefi_dir}}/artifacts/{{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public.zip
 
     - name: Upload github action bundle obfuscated_public_autoupdate artifact
       if: ${{ contains(inputs.artifacts, 'obfuscated') }}
       uses: actions/upload-artifact@v4
       with:
-        name: ${{inputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public_autoupdate_${{env.current_date}}.zip
-        path: ${{inputs.rusefi_dir}}/artifacts/{{inputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public_autoupdate.zip
+        name: ${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public_autoupdate_${{env.current_date}}.zip
+        path: ${{inputs.rusefi_dir}}/artifacts/{{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public_autoupdate.zip
 
     - uses: mukunku/tag-exists-action@v1.6.0
       if: ${{ inputs.new_tag != '' }}
