@@ -28,9 +28,13 @@ if [ -n "${USER}" -a -n "$PASS" -a -n "${HOST}" ]; then
    echo "$SCRIPT_NAME: RELEASE_TAG is ${RELEASE_TAG}"
  fi
 
- # technical debt: more than one file uses magic 'rusefi_bundle_' constant, can we extract constant?
- FULL_BUNDLE_FILE="rusefi_bundle_${BUNDLE_FILE_NAME}.zip"
- UPDATE_BUNDLE_FILE="rusefi_bundle_${BUNDLE_FILE_NAME}_autoupdate.zip"
+ if [[ -z "${WHITE_LABEL}" ]]; then
+     echo "WHITE_LABEL environment variable is not specified"
+     exit 1
+ fi
+
+ FULL_BUNDLE_FILE="${WHITE_LABEL}_bundle_${BUNDLE_FILE_NAME}.zip"
+ UPDATE_BUNDLE_FILE="${WHITE_LABEL}_bundle_${BUNDLE_FILE_NAME}_autoupdate.zip"
 
      # sftp does not support -p flag on mkdir :(
      sshpass -p $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD

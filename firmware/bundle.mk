@@ -17,6 +17,10 @@ DFU = $(DELIVER)/$(PROJECT).dfu
 DBIN = $(DELIVER)/$(PROJECT).bin
 FIRMWARE_BIN_OUT = $(FOLDER)/$(PROJECT).bin
 
+ifeq (,$(WHITE_LABEL))
+	WHITE_LABEL = rusefi
+endif
+
 # If provided with a git reference and the LTS flag, use a folder name including the ref
 # This weird if statement structure is because Make doesn't have &&
 ifeq ($(AUTOMATION_LTS),true)
@@ -33,6 +37,7 @@ DELIVER = deliver
 ARTIFACTS = ../artifacts
 
 BUNDLE_FULL_NAME = rusefi_bundle_$(BUNDLE_NAME)
+WHITE_LABEL_BUNDLE_NAME = $(WHITE_LABEL)_bundle_$(BUNDLE_NAME)
 
 CONSOLE_FOLDER = $(FOLDER)/console
 DRIVERS_FOLDER = $(FOLDER)/drivers
@@ -184,24 +189,24 @@ $(ST_DRIVERS): | $(DRIVERS_FOLDER)
 $(DELIVER) $(ARTIFACTS) $(FOLDER) $(CONSOLE_FOLDER) $(DRIVERS_FOLDER):
 	mkdir -p $@
 
-$(ARTIFACTS)/$(BUNDLE_FULL_NAME).zip: $(BUNDLE_FILES) | $(ARTIFACTS)
+$(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME).zip: $(BUNDLE_FILES) | $(ARTIFACTS)
 	zip -r $@ $(BUNDLE_FILES)
 
-$(ARTIFACTS)/$(BUNDLE_FULL_NAME)_obfuscated_public.zip:  $(OBFUSCATED_OUT) $(BUNDLE_FILES) | $(ARTIFACTS)
+$(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_obfuscated_public.zip:  $(OBFUSCATED_OUT) $(BUNDLE_FILES) | $(ARTIFACTS)
 	zip -r $@ $(FULL_BUNDLE_CONTENT) $(MOST_COMMON_BUNDLE_FILES) $(OBFUSCATED_SREC)
 
 # The autopdate zip doesn't have a folder with the bundle contents
-$(ARTIFACTS)/$(BUNDLE_FULL_NAME)_autoupdate.zip: $(UPDATE_BUNDLE_FILES) | $(ARTIFACTS)
+$(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_autoupdate.zip: $(UPDATE_BUNDLE_FILES) | $(ARTIFACTS)
 	cd $(FOLDER) &&	zip -r ../$@ $(subst $(FOLDER)/,,$(UPDATE_BUNDLE_FILES))
 
-$(ARTIFACTS)/$(BUNDLE_FULL_NAME)_obfuscated_public_autoupdate.zip:  $(OBFUSCATED_OUT) $(BUNDLE_FILES) | $(ARTIFACTS)
+$(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_obfuscated_public_autoupdate.zip:  $(OBFUSCATED_OUT) $(BUNDLE_FILES) | $(ARTIFACTS)
 	cd $(FOLDER) &&	zip -r ../$@ $(subst $(FOLDER)/,,$(MOST_COMMON_BUNDLE_FILES)) $(subst $(FOLDER)/,,$(OBFUSCATED_SREC))
 
 .PHONY: bundle bundles autoupdate obfuscated bin hex dfu map elf list srec bootloader
 
-bundle: $(ARTIFACTS)/$(BUNDLE_FULL_NAME).zip
-autoupdate: $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_autoupdate.zip
-obfuscated: $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_obfuscated_public.zip $(ARTIFACTS)/$(BUNDLE_FULL_NAME)_obfuscated_public_autoupdate.zip
+bundle: $(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME).zip
+autoupdate: $(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_autoupdate.zip
+obfuscated: $(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_obfuscated_public.zip $(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_obfuscated_public_autoupdate.zip
 bundles: bundle autoupdate
 
 bootloader: $(BOOTLOADER_BIN)
