@@ -121,7 +121,10 @@ public:
 		}
 
 		bool hasSecond = m_sec.init(secondary);
-		if (secondaryMaximum < 20) {
+		if (secondaryMaximum == 0) {
+			// config compat, if 0, then assume you want full-scale redundancy
+			secondaryMaximum = 100;
+		} else if (secondaryMaximum < 20) {
 			// don't allow <20% partial redundancy
 			warning(ObdCode::CUSTOM_INVALID_TPS_SETTING, "Configuration for partial redundant switch-over too low: %.1f %s", secondaryMaximum, m_redund.getSensorName());
 			secondaryMaximum = 20;
