@@ -17,22 +17,26 @@ DFU = $(DELIVER)/$(PROJECT).dfu
 DBIN = $(DELIVER)/$(PROJECT).bin
 FIRMWARE_BIN_OUT = $(FOLDER)/$(PROJECT).bin
 
+ifeq (,$(WHITELABEL))
+	WHITELABEL = rusefi
+endif
+
 # If provided with a git reference and the LTS flag, use a folder name including the ref
 # This weird if statement structure is because Make doesn't have &&
 ifeq ($(AUTOMATION_LTS),true)
 ifneq (,$(AUTOMATION_REF))
-  FOLDER = rusefi.$(AUTOMATION_REF).$(BUNDLE_NAME)
+  FOLDER = $(WHITELABEL).$(AUTOMATION_REF).$(BUNDLE_NAME)
 else
-  FOLDER = rusefi.lts_unknown.$(BUNDLE_NAME)
+  FOLDER = $(WHITELABEL).lts_unknown.$(BUNDLE_NAME)
 endif
 else
-  FOLDER = rusefi.snapshot.$(BUNDLE_NAME)
+  FOLDER = $(WHITELABEL).snapshot.$(BUNDLE_NAME)
 endif
 
 DELIVER = deliver
 ARTIFACTS = ../artifacts
 
-BUNDLE_FULL_NAME = rusefi_bundle_$(BUNDLE_NAME)
+BUNDLE_FULL_NAME = $(WHITELABEL)_bundle_$(BUNDLE_NAME)
 
 CONSOLE_FOLDER = $(FOLDER)/console
 DRIVERS_FOLDER = $(FOLDER)/drivers
@@ -41,14 +45,14 @@ UPDATE_FOLDER_SOURCES = \
   $(RUSEFI_CONSOLE_SETTINGS) \
   $(INI_FILE) \
   ../misc/console_launcher/readme.html \
-  ../misc/console_launcher/rusefi_updater.exe
+  ../misc/console_launcher/$(WHITELABEL)_updater.exe
 
 FOLDER_SOURCES = \
   ../java_console/bin
 
 # Custom board builds don't include the simulator
 ifneq ($(BUNDLE_SIMULATOR),false)
-  SIMULATOR_EXE = ../simulator/build/rusefi_simulator.exe
+  SIMULATOR_EXE = ../simulator/build/$(WHITELABEL)_simulator.exe
 endif
 
 UPDATE_CONSOLE_FOLDER_SOURCES = \
@@ -58,8 +62,8 @@ UPDATE_CONSOLE_FOLDER_SOURCES = \
 # todo: remove BootCommander.exe once https://github.com/rusefi/rusefi/issues/6358 is done
 
 CONSOLE_FOLDER_SOURCES = \
-  ../misc/console_launcher/rusefi_autoupdate.exe \
-  ../misc/console_launcher/rusefi_console.exe \
+  ../misc/console_launcher/$(WHITELABEL)_autoupdate.exe \
+  ../misc/console_launcher/$(WHITELABEL)_console.exe \
   ../misc/install/openocd \
   ../misc/install/STM32_Programmer_CLI \
   $(wildcard ../java_console/*.dll) \
@@ -79,7 +83,7 @@ BOOTLOADER_HEX = bootloader/blbuild/openblt_$(PROJECT_BOARD).hex
 ifeq ($(USE_OPENBLT),yes)
   BOOTLOADER_HEX_OUT = $(BOOTLOADER_HEX)
   BOOTLOADER_BIN_OUT = $(FOLDER)/openblt.bin
-  SREC_TARGET = $(FOLDER)/rusefi_update.srec
+  SREC_TARGET = $(FOLDER)/$(WHITELABEL)_update.srec
 else
   FIRMWARE_OUTPUTS = $(FOLDER)/$(PROJECT).hex
   BINSRC = $(BUILDDIR)/$(PROJECT).bin
@@ -123,12 +127,12 @@ $(SIMULATOR_EXE): $(CONFIG_FILES) .FORCE
 	$(MAKE) -C ../simulator -r OS="Windows_NT" SUBMAKE=yes
 
 # make sure not to invoke in parallel with SIMULATOR_EXE rule above
-../simulator/build/rusefi_simulator.linux: $(CONFIG_FILES) .FORCE
+../simulator/build/$(WHITELABEL)_simulator.linux: $(CONFIG_FILES) .FORCE
 	$(MAKE) -C ../simulator -r OS="Linux" SUBMAKE=yes
 
 # make Windows simulator a prerequisite so that we don't try compiling them concurrently
 # that also means no incremental compilation making that rule less useful. See 'rusefi_simulator.linux' above
-../simulator/build/rusefi_simulator.both: $(CONFIG_FILES) .FORCE | $(SIMULATOR_EXE)
+../simulator/build/$(WHITELABEL)_simulator.both: $(CONFIG_FILES) .FORCE | $(SIMULATOR_EXE)
 	$(MAKE) -C ../simulator -r OS="Linux" SUBMAKE=yes
 
 $(BOOTLOADER_HEX) $(BOOTLOADER_BIN): .bootloader-sentinel ;
@@ -141,7 +145,7 @@ $(BOOTLOADER_HEX) $(BOOTLOADER_BIN): .bootloader-sentinel ;
 
 $(BUILDDIR)/$(PROJECT).map: $(BUILDDIR)/$(PROJECT).elf
 
-$(SREC_TARGET): $(BUILDDIR)/rusefi.srec
+$(SREC_TARGET): $(BUILDDIR)/$(WHITELABEL).srec
 	ln -rfs $< $@
 
 $(FIRMWARE_OUTPUTS): $(FOLDER)/%: $(BUILDDIR)/% | $(FOLDER)
@@ -166,10 +170,10 @@ else
 endif
 	@touch $@
 
-OBFUSCATED_SREC = $(FOLDER)/rusefi-obfuscated.srec
+OBFUSCATED_SREC = $(FOLDER)/$(WHITELABEL)-obfuscated.srec
 
 OBFUSCATED_OUT = \
-  $(FOLDER)/rusefi-obfuscated.bin \
+  $(FOLDER)/$(WHITELABEL)-obfuscated.bin \
   $(OBFUSCATED_SREC)
 
 $(OBFUSCATED_OUT): .obfuscated-sentinel
@@ -209,7 +213,7 @@ bootloader: $(BOOTLOADER_BIN)
 bin: $(DBIN)
 hex: $(BUILDDIR)/$(PROJECT).hex
 dfu: $(DFU)
-srec: $(BUILDDIR)/rusefi.srec
+srec: $(BUILDDIR)/$(WHITELABEL).srec
 elf: $(BUILDDIR)/$(PROJECT).elf
 map: $(BUILDDIR)/$(PROJECT).map
 list: $(BUILDDIR)/$(PROJECT).list
