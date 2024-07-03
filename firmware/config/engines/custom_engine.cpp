@@ -587,7 +587,7 @@ void proteusBoardTest() {
 #endif // HW_PROTEUS
 
 void mreBCM() {
-	for (int i = 0; i < MAX_CYLINDER_COUNT;i++) {
+	for (int i = 0; i < MAX_CYLINDER_COUNT; i++) {
 		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
 		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
 	}

@@ -29,25 +29,25 @@ void configureGm60_2_2_2(TriggerWaveform *s) {
 	float m = CRANK_MODE_MULTIPLIER;
 	int offset = 1 * m;
 
-	for (int i=0;i<12;i++) {
+	for (int i = 0; i < 12; i++) {
 		offset = addTooth(offset, s);
 	}
 
 	offset += m * 2 * 6;
 
-	for (int i=0;i<18;i++) {
+	for (int i = 0; i < 18; i++) {
 		offset = addTooth(offset, s);
 	}
 
 	offset += m * 2 * 6;
 
-	for (int i=0;i<18;i++) {
+	for (int i = 0; i < 18; i++) {
 		offset = addTooth(offset, s);
 	}
 
 	offset += m * 2 * 6;
 
-	for (int i=0;i<5;i++) {
+	for (int i = 0; i < 5; i++) {
 		offset = addTooth(offset, s);
 	}
 

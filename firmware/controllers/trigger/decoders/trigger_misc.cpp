@@ -71,7 +71,7 @@ void configureFordPip(TriggerWaveform * s) {
 	s->addEventAngle(oneCylinder, false);
 
 
-	for (int i = 2;i<=8;i++) {
+	for (int i = 2; i <= 8; i++) {
 		s->addEventAngle(oneCylinder * (i - 0.5), true);
 		s->addEventAngle(oneCylinder * i, false);
 	}
@@ -170,7 +170,7 @@ void configureBenelli(TriggerWaveform *s) {
 	s->addEvent360(angle / 2 /* 22.5 */, true);
 	s->addEvent360(angle /*     45   */, false);
 
-	for (int i = 0;i< 24 - 3;i++) {
+	for (int i = 0; i < 24 - 3; i++) {
 		angle += magic / 2;
 		s->addEvent360(angle, true);
 

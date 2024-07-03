@@ -134,12 +134,12 @@ angle_t TriggerCentral::syncAndReport(int divider, int remainder) {
 static void turnOffAllDebugFields(void *arg) {
 	(void)arg;
 #if EFI_PROD_CODE
-	for (int index = 0;index<TRIGGER_INPUT_PIN_COUNT;index++) {
+	for (int index = 0; index < TRIGGER_INPUT_PIN_COUNT; index++) {
 		if (isBrainPinValid(engineConfiguration->triggerInputDebugPins[index])) {
 			writePad("trigger debug", engineConfiguration->triggerInputDebugPins[index], 0);
 		}
 	}
-	for (int index = 0;index<CAM_INPUTS_COUNT;index++) {
+	for (int index = 0; index < CAM_INPUTS_COUNT; index++) {
 		if (isBrainPinValid(engineConfiguration->camInputsDebug[index])) {
 			writePad("cam debug", engineConfiguration->camInputsDebug[index], 0);
 		}

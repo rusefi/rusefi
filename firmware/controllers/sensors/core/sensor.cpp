@@ -260,7 +260,7 @@ void Sensor::setInvalidMockValue(SensorType type) {
  * todo: some sort of hashmap in the future?
  */
 SensorType findSensorTypeByName(const char *name) {
-	for (int i = 0;i<(int)SensorType::PlaceholderLast;i++) {
+	for (int i = 0; i < (int)SensorType::PlaceholderLast; i++) {
 		SensorType type = (SensorType)i;
 		const char *sensorName = getSensorType(type);
 		if (strEqualCaseInsensitive(sensorName, name)) {

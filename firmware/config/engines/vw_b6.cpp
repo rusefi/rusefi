@@ -33,7 +33,7 @@ static inline void commonPassatB6() {
 	engineConfiguration->disableEtbWhenEngineStopped = true;
 
 
-	for (int i = 4; i < MAX_CYLINDER_COUNT;i++) {
+	for (int i = 4; i < MAX_CYLINDER_COUNT; i++) {
 		engineConfiguration->injectionPins[i] = Gpio::Unassigned;
 		engineConfiguration->ignitionPins[i] = Gpio::Unassigned;
 	}

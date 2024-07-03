@@ -67,12 +67,12 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 	bool newTriggerState[TRIGGER_INPUT_PIN_COUNT];
 	bool newVvtState[CAM_INPUTS_COUNT];
 
-	for (size_t i = 0;i<m_triggerCount;i++) {
+	for (size_t i = 0; i < m_triggerCount; i++) {
 		char * triggerToken = trim(strtok(nullptr, s));
 		newTriggerState[m_triggerColumnIndeces[i]] = triggerToken[0] == '1';
 	}
 
-	for (size_t i = 0;i<m_vvtCount;i++) {
+	for (size_t i = 0; i < m_vvtCount; i++) {
 		char *vvtToken = trim(strtok(nullptr, s));
 		newVvtState[m_vvtColumnIndeces[i]] = vvtToken[0] == '1';
 	}

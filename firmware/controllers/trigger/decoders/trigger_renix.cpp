@@ -18,7 +18,7 @@ static void commonRenix(TriggerWaveform *s) {
 	float tooth = s->getCycleDuration() / count; // hint: tooth = 8.181818 degrees
 
 	float currentAngle = 0;
-	for (int i = 0;i < 20;i++) {
+	for (int i = 0; i < 20; i++) {
 		s->addEventAngle(currentAngle + tooth / 2, true);
 		s->addEventAngle(currentAngle + tooth, false);
 		currentAngle += tooth;

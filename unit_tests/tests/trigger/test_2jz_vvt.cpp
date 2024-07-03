@@ -14,7 +14,7 @@ TEST(sensors, test2jz) {
 	eth.setTriggerType(trigger_type_e::TT_ONE);
 
 	ASSERT_EQ( 0,  Sensor::getOrZero(SensorType::Rpm)) << "test2jz RPM";
-	for (int i = 0; i < 2;i++) {
+	for (int i = 0; i < 2; i++) {
 		eth.fireRise(12.5);
 		eth.fireFall(12.5);
 		ASSERT_EQ( 0,  Sensor::getOrZero(SensorType::Rpm)) << "test2jz RPM at " << i;

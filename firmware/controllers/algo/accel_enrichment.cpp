@@ -137,7 +137,7 @@ int TpsAccelEnrichment::getMaxDeltaIndex() {
 	// todo: 'get' method is maybe a bit heavy because of the branching
 	// todo: this could be optimized with some careful magic
 
-	for (int i = 1; i<len - 1;i++) {
+	for (int i = 1; i < len - 1; i++) {
 		float v = cb.get(ci - i) - cb.get(ci - i - 1);
 		if (v > maxValue) {
 			maxValue = v;

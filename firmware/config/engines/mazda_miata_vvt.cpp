@@ -213,7 +213,7 @@ constexpr void copyArrayPartial(TDst (&dest)[NDest], const TSrc (&src)[NSrc]) {
 static void setMAFTransferFunction() {
 	copyArrayPartial(config->mafDecoding, mafTransferKgH);
 	copyArrayPartial(config->mafDecodingBins, mafTransferVolts);
-	for (int i = MAF_TRANSFER_SIZE;i<MAF_DECODING_COUNT;i++) {
+	for (int i = MAF_TRANSFER_SIZE; i < MAF_DECODING_COUNT; i++) {
 		config->mafDecodingBins[i] = config->mafDecodingBins[MAF_TRANSFER_SIZE - 1] + i * 0.01;
 		config->mafDecoding[i] = config->mafDecoding[MAF_TRANSFER_SIZE - 1];
 	}

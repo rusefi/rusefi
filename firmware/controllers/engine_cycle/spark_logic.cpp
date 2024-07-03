@@ -161,7 +161,7 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	}
 #endif
 
-	for (int i = 0; i< MAX_OUTPUTS_FOR_IGNITION;i++) {
+	for (int i = 0; i< MAX_OUTPUTS_FOR_IGNITION; i++) {
 		IgnitionOutputPin *output = event->outputs[i];
 
 		if (output) {
@@ -291,7 +291,7 @@ void turnSparkPinHigh(IgnitionEvent *event) {
 	LogTriggerCoilState(nowNt, true);
 #endif // EFI_TOOTH_LOGGER
 
-	for (int i = 0; i< MAX_OUTPUTS_FOR_IGNITION;i++) {
+	for (int i = 0; i < MAX_OUTPUTS_FOR_IGNITION; i++) {
 		IgnitionOutputPin *output = event->outputs[i];
 		if (output != NULL) {
 			startDwellByTurningSparkPinHigh(event, output);

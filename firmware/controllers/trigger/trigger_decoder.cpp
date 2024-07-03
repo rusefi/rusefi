@@ -300,14 +300,14 @@ void VvtTriggerDecoder::onTooManyTeeth(int actual, int expected) {
 bool TriggerDecoderBase::validateEventCounters(const TriggerWaveform& triggerShape) const {
 	// We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
 	bool isDecodingError = false;
-	for (int i = 0;i < PWM_PHASE_MAX_WAVE_PER_PWM;i++) {
+	for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 		isDecodingError |= (currentCycle.eventCount[i] != triggerShape.getExpectedEventCount((TriggerWheel)i));
 	}
 
 #if EFI_UNIT_TEST
 	printf("validateEventCounters: isDecodingError=%d\n", isDecodingError);
 	if (isDecodingError) {
-		for (int i = 0;i < PWM_PHASE_MAX_WAVE_PER_PWM;i++) {
+		for (int i = 0; i < PWM_PHASE_MAX_WAVE_PER_PWM; i++) {
 			printf("count: cur=%d exp=%d\n", currentCycle.eventCount[i],  triggerShape.getExpectedEventCount((TriggerWheel)i));
 		}
 	}
@@ -467,7 +467,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			if (verbose || (someSortOfTriggerError() && !silentTriggerError)) {
 			    const char * prefix = verbose ? "[vrb]" : "[err]";
 
-				for (int i = 0;i<triggerShape.gapTrackingLength;i++) {
+				for (int i = 0; i < triggerShape.gapTrackingLength; i++) {
 					float ratioFrom = triggerShape.syncronizationRatioFrom[i];
 					if (cisnan(ratioFrom)) {
 						// we do not track gap at this depth
@@ -499,7 +499,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 			}
 #else
 			if (printTriggerTrace) {
-				for (int i = 0;i<triggerShape.gapTrackingLength;i++) {
+				for (int i = 0; i < triggerShape.gapTrackingLength; i++) {
 					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
 					printf("%sindex=%d: gap=%.2f expected from %.2f to %.2f error=%s\r\n",
 							triggerConfiguration.PrintPrefix,

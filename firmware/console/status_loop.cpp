@@ -136,7 +136,7 @@ static void printEngineSnifferPinMappings() {
 #if EFI_PROD_CODE
 	printOutPin(PROTOCOL_CRANK1, engineConfiguration->triggerInputPins[0]);
 	printOutPin(PROTOCOL_CRANK2, engineConfiguration->triggerInputPins[1]);
-	for (int i = 0;i<CAM_INPUTS_COUNT;i++) {
+	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
 		extern const char *vvtNames[];
 		printOutPin(vvtNames[i], engineConfiguration->camInputs[i]);
 	}
@@ -152,7 +152,7 @@ static void printEngineSnifferPinMappings() {
 		printOutPin(enginePins.injectors[i].getShortName(), engineConfiguration->injectionPins[i]);
 		printOutPin(enginePins.injectorsStage2[i].getShortName(), engineConfiguration->injectionPinsStage2[i]);
 	}
-	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT;i++) {
+	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
 		printOutPin(enginePins.auxValve[i].getShortName(), engineConfiguration->auxValves[i]);
 	}
 #endif /* EFI_PROD_CODE */
@@ -571,7 +571,7 @@ void updateTunerStudioState() {
 
 	tsOutputChannels->warningCounter = engine->engineState.warnings.warningCounter;
 	tsOutputChannels->lastErrorCode = static_cast<uint16_t>(engine->engineState.warnings.lastErrorCode);
-	for (int i = 0; i < 8;i++) {
+	for (int i = 0; i < 8; i++) {
 		tsOutputChannels->recentErrorCode[i] = static_cast<uint16_t>(engine->engineState.warnings.recentWarnings.get(i).Code);
 	}
 

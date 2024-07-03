@@ -28,7 +28,7 @@ TEST(exp_average, length12) {
     ASSERT_NEAR(ea.average(3), 1.8334, EPS2D);
     ASSERT_NEAR(ea.average(8), 2.7821, EPS2D);
 
-    for (int i = 0;i<300;i++) {
+    for (int i = 0; i < 300; i++) {
     	ea.average(3);
     	ea.average(8);
     }

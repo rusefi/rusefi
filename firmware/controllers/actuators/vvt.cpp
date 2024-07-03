@@ -172,13 +172,13 @@ static void turnVvtPidOn(int index) {
 }
 
 void startVvtControlPins() {
-	for (int i = 0;i <CAM_INPUTS_COUNT;i++) {
+	for (int i = 0; i <CAM_INPUTS_COUNT; i++) {
 		turnVvtPidOn(i);
 	}
 }
 
 void stopVvtControlPins() {
-	for (int i = 0;i < CAM_INPUTS_COUNT;i++) {
+	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
 		vvtPins[i].deInit();
 	}
 }

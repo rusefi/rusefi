@@ -106,7 +106,7 @@ void initializeNissanQR25crank(TriggerWaveform *s) {
 	s->tdcPosition = 585;
 
 	float currentAngle = 20;
-	for (int i = 0;i < 16;i++) {
+	for (int i = 0; i < 16; i++) {
 		currentAngle += 10;
 		s->addEventAngle(currentAngle - 5, true);
 		s->addEventAngle(currentAngle, false);

@@ -31,7 +31,7 @@ TEST(trigger, testNoStartUpWarnings) {
 	eth.setTriggerType(trigger_type_e::TT_TOOTHED_WHEEL);
 	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "testNoStartUpWarnings RPM";
 
-	for (int i = 0;i < 10;i++) {
+	for (int i = 0; i < 10; i++) {
 		eth.fireRise(50);
 		eth.fireFall(50);
 		eth.fireRise(50);
@@ -47,7 +47,7 @@ TEST(trigger, testNoStartUpWarnings) {
 	eth.fireFall(50); // this is noise
 	eth.fireRise(50);
 	eth.fireFall(150);
-	for (int i = 0;i < 1;i++) {
+	for (int i = 0; i < 1; i++) {
 		eth.fireRise(50);
 		eth.fireFall(50);
 		eth.fireRise(50);
@@ -89,7 +89,7 @@ TEST(trigger, testCamInput) {
 
 	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "testCamInput RPM";
 
-	for (int i = 0; i < 5;i++) {
+	for (int i = 0; i < 5; i++) {
 		eth.fireRise(25);
 		eth.fireFall(25);
 	}
@@ -97,7 +97,7 @@ TEST(trigger, testCamInput) {
 	ASSERT_EQ(1200,  round(Sensor::getOrZero(SensorType::Rpm)));
 	ASSERT_EQ(0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput";
 
-	for (int i = 0; i < 600;i++) {
+	for (int i = 0; i < 600; i++) {
 		eth.fireRise(25);
 		eth.fireFall(25);
 	}
@@ -107,7 +107,7 @@ TEST(trigger, testCamInput) {
 	ASSERT_EQ(ObdCode::OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, unitTestWarningCodeState.recentWarnings.get(0).Code) << "@0";
 	unitTestWarningCodeState.recentWarnings.clear();
 
-	for (int i = 0; i < 600;i++) {
+	for (int i = 0; i < 600; i++) {
 		eth.moveTimeForwardUs(MS2US(10));
 
 		// cam comes every other crank rev
@@ -135,7 +135,7 @@ TEST(trigger, testNB2CamInput) {
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
 	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm)));
-	for (int i = 0; i < 6;i++) {
+	for (int i = 0; i < 6; i++) {
 		eth.fireRise(25 * 70 / 180);
 		eth.fireRise(25 * 110 / 180);
 		ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm)));

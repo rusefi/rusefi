@@ -37,7 +37,7 @@ ValueProvider3D *getscriptTable(int index) {
  * @return zero-based index of curve with given name
  */
 expected<int> getCurveIndexByName(const char *name) {
-	for (int i = 0;i<SCRIPT_CURVE_COUNT;i++) {
+	for (int i = 0; i < SCRIPT_CURVE_COUNT; i++) {
 		if (strEqualCaseInsensitive(name, engineConfiguration->scriptCurveName[i])) {
 			return i;
 		}
@@ -47,7 +47,7 @@ expected<int> getCurveIndexByName(const char *name) {
 }
 
 expected<int> getTableIndexByName(const char *name) {
-	for (int i = 0;i<SCRIPT_TABLE_COUNT;i++) {
+	for (int i = 0; i < SCRIPT_TABLE_COUNT; i++) {
 		if (strEqualCaseInsensitive(name, engineConfiguration->scriptTableName[i])) {
 			return i;
 		}
@@ -57,7 +57,7 @@ expected<int> getTableIndexByName(const char *name) {
 }
 
 expected<int> getSettingIndexByName(const char *name) {
-	for (int i = 0;i<SCRIPT_SETTING_COUNT;i++) {
+	for (int i = 0; i < SCRIPT_SETTING_COUNT; i++) {
 		if (strEqualCaseInsensitive(name, engineConfiguration->scriptSettingName[i])) {
 			return i;
 		}
