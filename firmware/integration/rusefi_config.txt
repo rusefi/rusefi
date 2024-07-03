@@ -1774,8 +1774,6 @@ end_struct
 #define CMD_IDLE_PIN "set_idle_pin"
 #define CMD_BOOST_PIN "set_boost_pin"
 #define CMD_TRIGGER_SIMULATOR_PIN "set_trigger_simulator_pin"
-#define CMD_IGNITION_PIN "set_ignition_pin"
-#define CMD_INJECTION_PIN "set_injection_pin"
 
 #define CMD_RESET_ENGINE_SNIFFER "reset_engine_chart"
 #define CMD_FUNCTIONAL_TEST_MODE "test_mode"
