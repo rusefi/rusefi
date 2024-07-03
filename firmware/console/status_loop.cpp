@@ -208,10 +208,6 @@ void updateDevConsoleState() {
 	}
 #endif /* EFI_PROD_CODE */
 
-#if HAL_USE_ADC
-	printFullAdcReportIfNeeded();
-#endif /* HAL_USE_ADC */
-
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	systime_t nowSeconds = getTimeNowS();
 

@@ -59,7 +59,6 @@ int getSlowAdcCounter();
 
 int getAdcHardwareIndexByInternalIndex(int index);
 
-void printFullAdcReportIfNeeded(void);
 int getInternalAdcValue(const char *msg, adc_channel_e index);
 float getMCUInternalTemperature(void);
 
@@ -90,5 +89,3 @@ using FastAdcToken = size_t;
 FastAdcToken enableFastAdcChannel(const char* msg, adc_channel_e channel);
 adcsample_t getFastAdc(FastAdcToken token);
 #endif // HAL_USE_ADC
-
-void printFullAdcReport(void);

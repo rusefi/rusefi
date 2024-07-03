@@ -537,8 +537,6 @@ void initSettings() {
 	addConsoleActionS(CMD_ALTERNATOR_PIN, setAlternatorPin);
 	addConsoleActionS(CMD_IDLE_PIN, setIdlePin);
 
-	addConsoleAction("adc_report", printFullAdcReport);
-
 #if HAL_USE_ADC
 	addConsoleActionSS("set_analog_input_pin", setAnalogInputPin);
 #endif // HAL_USE_ADC

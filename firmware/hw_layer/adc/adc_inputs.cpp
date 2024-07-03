@@ -78,9 +78,6 @@ AdcDevice::AdcDevice(ADCConversionGroup* hwConfig, adcsample_t *buf, size_t buf_
 
 static uint32_t slowAdcCounter = 0;
 
-// todo: move this flag to Engine god object
-static int adcDebugReporting = false;
-
 static adcsample_t getAvgAdcValue(int index, adcsample_t *samples, int bufDepth, int numChannels) {
 	uint32_t result = 0;
 	for (int i = 0; i < bufDepth; i++) {
@@ -295,50 +292,6 @@ static void printAdcValue(int channel) {
 	efiPrintf("adc voltage : %.2f", volts);
 }
 
-static uint32_t slowAdcConversionCount = 0;
-static uint32_t slowAdcErrorsCount = 0;
-
-void printFullAdcReport(void) {
-#if EFI_USE_FAST_ADC
-	efiPrintf("fast %lu samples", fastAdc.conversionCount);
-
-	for (int internalIndex = 0; internalIndex < fastAdc.size(); internalIndex++) {
-		adc_channel_e hwIndex = fastAdc.getAdcHardwareIndexByInternalIndex(internalIndex);
-
-		if (isAdcChannelValid(hwIndex)) {
-			ioportid_t port = getAdcChannelPort("print", hwIndex);
-			int pin = getAdcChannelPin(hwIndex);
-			int adcValue = getAvgAdcValue(internalIndex, fastAdc.m_samples, ADC_BUF_DEPTH_FAST, fastAdc.size());
-			float volts = adcToVolts(adcValue);
-			/* Human index starts from 1 */
-			efiPrintf(" F ch[%2d] @ %s%d ADC%d 12bit=%4d %.2fV",
-				internalIndex, portname(port), pin, hwIndex - EFI_ADC_0 + 1, adcValue, volts);
-		}
-	}
-#endif // EFI_USE_FAST_ADC
-	efiPrintf("slow %lu samples", slowAdcConversionCount);
-
-	/* we assume that all slow ADC channels are enabled */
-	for (int internalIndex = 0; internalIndex < ADC_MAX_CHANNELS_COUNT; internalIndex++) {
-		adc_channel_e hwIndex = static_cast<adc_channel_e>(internalIndex + EFI_ADC_0);
-
-		if (isAdcChannelValid(hwIndex)) {
-			ioportid_t port = getAdcChannelPort("print", hwIndex);
-			int pin = getAdcChannelPin(hwIndex);
-			int adcValue = slowAdcSamples[internalIndex];
-			float volts = adcToVolts(adcValue);
-			/* Human index starts from 1 */
-			efiPrintf(" S ch[%2d] @ %s%d ADC%d 12bit=%4d %.2fV",
-				internalIndex, portname(port), pin, hwIndex - EFI_ADC_0 + 1, adcValue, volts);
-		}
-	}
-}
-
-static void setAdcDebugReporting(int value) {
-	adcDebugReporting = value;
-	efiPrintf("adcDebug=%d", adcDebugReporting);
-}
-
 void waitForSlowAdc(uint32_t lastAdcCounter) {
 	// we use slowAdcCounter instead of slowAdc.conversionCount because we need ADC_COMPLETE state
 	// todo: use sync.objects?
@@ -363,9 +316,7 @@ public:
 		{
 			ScopePerf perf(PE::AdcConversionSlow);
 
-			slowAdcConversionCount++;
 			if (!readSlowAnalogInputs(slowAdcSamples)) {
-				slowAdcErrorsCount++;
 				return;
 			}
 
@@ -438,9 +389,6 @@ void initAdcInputs() {
 
 	configureInputs();
 
-	// migrate to 'enable adcdebug'
-	addConsoleActionI("adcdebug", &setAdcDebugReporting);
-
 #if EFI_INTERNAL_ADC
 	portInitAdc();
 
@@ -458,12 +406,6 @@ void initAdcInputs() {
 #else
 	efiPrintf("ADC disabled");
 #endif
-}
-
-void printFullAdcReportIfNeeded(void) {
-	if (!adcDebugReporting)
-		return;
-	printFullAdcReport();
 }
 
 #else /* not HAL_USE_ADC */
