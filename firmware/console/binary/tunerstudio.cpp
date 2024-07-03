@@ -673,7 +673,7 @@ extern CommandHandler console_line_callback;
 
 static void handleGetVersion(TsChannelBase* tsChannel) {
 	char versionBuffer[32];
-	chsnprintf(versionBuffer, sizeof(versionBuffer), "rusEFI v%d@%u", getRusEfiVersion(), SIGNATURE_HASH);
+	chsnprintf(versionBuffer, sizeof(versionBuffer), "%s v%d@%u", "rusEFI", getRusEfiVersion(), SIGNATURE_HASH);
 	tsChannel->sendResponse(TS_CRC, (const uint8_t *) versionBuffer, strlen(versionBuffer) + 1);
 }
 
