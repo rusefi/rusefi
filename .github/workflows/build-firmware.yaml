@@ -208,6 +208,7 @@ jobs:
         echo AUTOMATION_LTS=${{toJSON(inputs.lts)}} >> $GITHUB_ENV
         echo AUTOMATION_REF=${{github.ref_name}} >> $GITHUB_ENV
         echo BOARD_META_PATH=${{matrix.meta-info}} >> $GITHUB_ENV
+        echo "WHITE_LABEL=rusefi" >> $GITHUB_ENV
 
     - name: Git Status
       run: |
