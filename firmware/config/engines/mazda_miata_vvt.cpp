@@ -201,10 +201,18 @@ static const float mafTransferKgH[MAF_TRANSFER_SIZE] = {
 		350.00
 };
 
+template <typename TSrc, typename TDst, size_t NSrc, size_t NDest>
+constexpr void copyArrayPartial(TDst (&dest)[NDest], const TSrc (&src)[NSrc]) {
+	static_assert(NDest >= NSrc, "Source array must be larger than destination.");
+
+	for (size_t i = 0; i < NSrc; i++) {
+		dest[i] = src[i];
+	}
+}
 
 static void setMAFTransferFunction() {
-	memcpy(config->mafDecoding, mafTransferKgH, sizeof(mafTransferKgH));
-	memcpy(config->mafDecodingBins, mafTransferVolts, sizeof(mafTransferVolts));
+	copyArrayPartial(config->mafDecoding, mafTransferKgH);
+	copyArrayPartial(config->mafDecodingBins, mafTransferVolts);
 	for (int i = MAF_TRANSFER_SIZE;i<MAF_DECODING_COUNT;i++) {
 		config->mafDecodingBins[i] = config->mafDecodingBins[MAF_TRANSFER_SIZE - 1] + i * 0.01;
 		config->mafDecoding[i] = config->mafDecoding[MAF_TRANSFER_SIZE - 1];
