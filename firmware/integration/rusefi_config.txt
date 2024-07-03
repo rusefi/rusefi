@@ -2318,6 +2318,7 @@ end_struct
 #define PROTOCOL_VERSION_TAG "rusEfiVersion"
 #define PROTOCOL_TEST_RESPONSE_TAG "ts_p_alive"
 #define PROTOCOL_SIGNATURE_PREFIX "rusEFI "
+#define FRONTEND_TITLE_BAR_NAME "rusEFI"
 
 ! Engine Sniffer Protocol
 #define PROTOCOL_ES_DOWN "d"
