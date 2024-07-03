@@ -30,11 +30,11 @@ else
  echo "! Current branch is: $branchname" >> ${TEMP_FILE}
 fi
 
-if [ -z "${WHITELABEL}"  ]; then
-WHITELABEL=rusEFI
+if [ -z "${signature_white_label}"  ]; then
+signature_white_label=rusEFI
 fi
 
-echo "#define TS_SIGNATURE \"${WHITELABEL} $branchname.$date.${SHORT_BOARD_NAME}.@@SIGNATURE_HASH@@\"" >> ${TEMP_FILE}
+echo "#define TS_SIGNATURE \"${signature_white_label} $branchname.$date.${SHORT_BOARD_NAME}.@@SIGNATURE_HASH@@\"" >> ${TEMP_FILE}
 
 # We will generate the signature in a temp file, then only use it if it has changed.
 # This is to avoid updating the timestamp of the signature file, which would cause the configs to regenerate when they don't need to.

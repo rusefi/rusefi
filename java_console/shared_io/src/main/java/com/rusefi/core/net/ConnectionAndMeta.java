@@ -33,10 +33,10 @@ public class ConnectionAndMeta {
         return result;
     }
 
-    public static String getWhitelabel() {
-        String whitelabel = getProperties().getProperty("WHITELABEL");
-        whitelabel = whitelabel == null ? null : whitelabel.trim();
-        return whitelabel;
+    public static String getSignatureWhiteLabel() {
+        String signatureWhiteLabel = getProperties().getProperty("signature_white_label");
+        signatureWhiteLabel = signatureWhiteLabel == null ? null : signatureWhiteLabel.trim();
+        return signatureWhiteLabel;
     }
 
     private static Properties getProperties() throws RuntimeException {
