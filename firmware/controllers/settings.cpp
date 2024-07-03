@@ -462,7 +462,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 	int valueI = atoi(valueStr);
 
 	const command_f_s *currentF = &commandsF[0];
-	while (currentF < commandsF + sizeof(commandsF)/sizeof(commandsF[0])) {
+	while (currentF < commandsF + efi::size(commandsF)) {
 		if (strEqualCaseInsensitive(paramStr, currentF->token)) {
 			currentF->callback(valueF);
 			return;
@@ -471,7 +471,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 	}
 
 	const command_i_s *currentI = &commandsI[0];
-	while (currentI < commandsI + sizeof(commandsI)/sizeof(commandsI[0])) {
+	while (currentI < commandsI + efi::size(commandsI)) {
 		if (strEqualCaseInsensitive(paramStr, currentI->token)) {
 			currentI->callback(valueI);
 			return;
@@ -479,15 +479,6 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		currentI++;
 	}
 
-#if EFI_ALTERNATOR_CONTROL
-	if (strEqualCaseInsensitive(paramStr, "alt_t")) {
-		if (valueI > 10) {
-			engineConfiguration->alternatorControl.periodMs = valueI;
-		}
-	} else if (strEqualCaseInsensitive(paramStr, "alt_offset")) {
-		engineConfiguration->alternatorControl.offset = valueI;
-	} else
-#endif // EFI_ALTERNATOR_CONTROL
 	if (strEqualCaseInsensitive(paramStr, "dwell")) {
 		setConstantDwell(valueF);
 	} else if (strEqualCaseInsensitive(paramStr, CMD_ENGINESNIFFERRPMTHRESHOLD)) {
@@ -496,30 +487,21 @@ static void setValue(const char *paramStr, const char *valueStr) {
 	} else if (strEqualCaseInsensitive(paramStr, CMD_RPM)) {
 		setTriggerEmulatorRPM(valueI);
 #endif // EFI_EMULATE_POSITION_SENSORS
-	} else if (strEqualCaseInsensitive(paramStr, "vvt_offset")) {
-		engineConfiguration->vvtOffsets[0] = valueF;
-	} else if (strEqualCaseInsensitive(paramStr, "vvt_mode")) {
-		engineConfiguration->vvtMode[0] = (vvt_mode_e)valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "wwaeTau")) {
 		engineConfiguration->wwaeTau = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, "wwaeBeta")) {
 		engineConfiguration->wwaeBeta = valueF;
-	} else if (strEqualCaseInsensitive(paramStr, "benchTestOffTime")) {
-		engineConfiguration->benchTestOffTime = valueI;
-	} else if (strEqualCaseInsensitive(paramStr, "benchTestCount")) {
-		engineConfiguration->benchTestCount = valueI;
 	} else if (strEqualCaseInsensitive(paramStr, "cranking_dwell")) {
 		engineConfiguration->ignitionDwellForCrankingMs = valueF;
 #if EFI_PROD_CODE
 	} else if (strEqualCaseInsensitive(paramStr, CMD_VSS_PIN)) {
 		setVssPin(valueStr);
 #endif // EFI_PROD_CODE
-	} else if (strEqualCaseInsensitive(paramStr, "targetvbatt")) {
-		engineConfiguration->targetVBatt = valueF;
 	} else if (strEqualCaseInsensitive(paramStr, CMD_DATE)) {
 		// rusEfi console invokes this method with timestamp in local timezone
 		setDateTime(valueStr);
 	}
+
 	engine->resetEngineSnifferIfInTestMode();
 }
 
