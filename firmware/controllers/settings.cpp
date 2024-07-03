@@ -510,9 +510,6 @@ void initSettings() {
 	printf("initSettings\n");
 #endif // EFI_SIMULATOR
 
-	addConsoleAction("calibrate_tps_1_closed", grabTPSIsClosed);
-	addConsoleAction("calibrate_tps_1_wot", grabTPSIsWideOpen);
-
 	addConsoleAction("set_individual_coils_ignition", setIndividualCoilsIgnition);
 
 	addConsoleActionF("set_whole_timing_map", setWholeTimingMapCmd);
