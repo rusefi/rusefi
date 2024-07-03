@@ -119,7 +119,7 @@ public class Autoupdate {
     private static void downloadAndUnzipAutoupdate(BundleUtil.BundleInfo info, UpdateMode mode, String baseUrl) {
         try {
             String suffix = FindFileHelper.isObfuscated() ? "_obfuscated_public" : "";
-            String zipFileName = "rusefi_bundle_" + info.getTarget() + suffix + "_autoupdate" + ".zip";
+            String zipFileName = ConnectionAndMeta.getWhiteLabel() + "_bundle_" + info.getTarget() + suffix + "_autoupdate" + ".zip";
             ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(zipFileName).invoke(baseUrl);
             System.out.println("Remote file " + zipFileName);
             System.out.println("Server has " + connectionAndMeta.getCompleteFileSize() + " from " + new Date(connectionAndMeta.getLastModified()));
