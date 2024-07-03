@@ -271,7 +271,6 @@ static void setIgnitionMode(int value) {
 	engineConfiguration->ignitionMode = (ignition_mode_e) value;
 	incrementGlobalConfigurationVersion();
 	prepareOutputSignals();
-	doPrintConfiguration();
 #endif // EFI_ENGINE_CONTROL
 }
 
@@ -295,25 +294,12 @@ static void setWholeTimingMap(float value) {
 	setTable(config->ignitionTable, value);
 }
 
-static void setWholePhaseMapCmd(float value) {
-	efiPrintf("Setting whole injection phase map to %.2f", value);
-	setTable(config->injectionPhase, value);
-}
-
 static void setWholeTimingMapCmd(float value) {
 	efiPrintf("Setting whole timing advance map to %.2f", value);
 	setWholeTimingMap(value);
 	engine->resetEngineSnifferIfInTestMode();
 }
 
-static void setWholeVeCmd(float value) {
-	efiPrintf("Setting whole VE map to %.2f", value);
-	if (engineConfiguration->fuelAlgorithm != LM_SPEED_DENSITY) {
-		efiPrintf("WARNING: setting VE map not in SD mode is pointless");
-	}
-	setTable(config->veTable, value);
-	engine->resetEngineSnifferIfInTestMode();
-}
 #endif // EFI_ENGINE_CONTROL
 
 #if EFI_PROD_CODE
@@ -395,28 +381,8 @@ static void setIdlePin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->idle.solenoidPin, "idle");
 }
 
-static void setMainRelayPin(const char *pinName) {
-	setIndividualPin(pinName, &engineConfiguration->mainRelayPin, "main relay");
-}
-
-static void setTriggerSyncPin(const char *pinName) {
-	setIndividualPin(pinName, &engineConfiguration->debugTriggerSync, "trigger sync");
-}
-
-static void setStarterRelayPin(const char *pinName) {
-	setIndividualPin(pinName, &engineConfiguration->starterRelayDisablePin, "starter disable relay");
-}
-
 static void setAlternatorPin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->alternatorControlPin, "alternator");
-}
-
-static void setACRelayPin(const char *pinName) {
-	setIndividualPin(pinName, &engineConfiguration->acRelayPin, "A/C");
-}
-
-static void setFuelPumpPin(const char *pinName) {
-	setIndividualPin(pinName, &engineConfiguration->fuelPumpPin, "fuelPump");
 }
 
 static void setInjectionPin(const char *indexStr, const char *pinName) {
@@ -777,10 +743,6 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		setConstantDwell(valueF);
 	} else if (strEqualCaseInsensitive(paramStr, CMD_ENGINESNIFFERRPMTHRESHOLD)) {
 		engineConfiguration->engineSnifferRpmThreshold = valueI;
-	} else if (strEqualCaseInsensitive(paramStr, "tps_max")) {
-		engineConfiguration->tpsMax = valueI;
-	} else if (strEqualCaseInsensitive(paramStr, "tps_min")) {
-		engineConfiguration->tpsMin = valueI;
 #if EFI_EMULATE_POSITION_SENSORS
 	} else if (strEqualCaseInsensitive(paramStr, CMD_RPM)) {
 		setTriggerEmulatorRPM(valueI);
@@ -844,10 +806,7 @@ void initSettings() {
     // used by HW CI
 	addConsoleAction(CMD_INDIVIDUAL_INJECTION, setIndividualCoilsIgnition);
 	addConsoleAction("showconfig", doPrintConfiguration);
-	addConsoleActionF("set_whole_phase_map", setWholePhaseMapCmd);
 	addConsoleActionF("set_whole_timing_map", setWholeTimingMapCmd);
-	addConsoleActionF("set_whole_ve_map", setWholeVeCmd);
-	addConsoleActionF("set_whole_ign_corr_map", setWholeIgnitionIatCorr);
 #endif // EFI_ENGINE_CONTROL
 
 	addConsoleAction("stopengine", (Void) scheduleStopEngine);
@@ -871,13 +830,8 @@ void initSettings() {
 
 	addConsoleActionI(CMD_ECU_UNLOCK, unlockEcu);
 
-	addConsoleActionS("set_fuel_pump_pin", setFuelPumpPin);
-	addConsoleActionS("set_acrelay_pin", setACRelayPin);
 	addConsoleActionS(CMD_ALTERNATOR_PIN, setAlternatorPin);
 	addConsoleActionS(CMD_IDLE_PIN, setIdlePin);
-	addConsoleActionS("set_main_relay_pin", setMainRelayPin);
-	addConsoleActionS("set_starter_relay_pin", setStarterRelayPin);
-	addConsoleActionS("set_trigger_sync_pin", setTriggerSyncPin);
 
 	addConsoleActionS("bench_clearpin", benchClearPin);
 	addConsoleActionS("bench_setpin", benchSetPin);

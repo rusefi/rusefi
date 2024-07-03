@@ -860,9 +860,7 @@ static const float boschBiasValues[] = {
 };
 
 void setBoschVAGETB() {
-	// set tps_min 890
 	engineConfiguration->tpsMin = 890; // convert 12to10 bit (ADC/4)
-	// set tps_max 70
 	engineConfiguration->tpsMax = 70; // convert 12to10 bit (ADC/4)
 
 	engineConfiguration->tps1SecondaryMin = 102;

@@ -271,10 +271,8 @@ void setFrankensoBoardTestConfiguration() {
 // set engine_type 58
 void setEtbTestConfiguration() {
 	// VAG test ETB
-	// set tps_min 54
 	engineConfiguration->tpsMin = 54;
 	// by the way this ETB has default position of ADC=74 which is about 4%
-	// set tps_max 540
 	engineConfiguration->tpsMax = 540;
 
 	// yes, 30K - that's a test configuration
@@ -1011,7 +1009,7 @@ void testEngine6451() {
   engineConfiguration->trigger.type = trigger_type_e::TT_NARROW_SINGLE_TOOTH;
 
 	setWholeTimingTable(30);
-	setWholeIgnitionIatCorr(0);
+	setTable(config->ignitionIatCorrTable, 0);
 	engineConfiguration->cylindersCount = 6;
 	engineConfiguration->firingOrder = FO_1_5_3_6_2_4;
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
