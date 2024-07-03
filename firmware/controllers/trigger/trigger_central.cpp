@@ -773,7 +773,7 @@ void triggerInfo(void) {
 	}
 
 
-	for (int camInputIndex = 0; camInputIndex<CAM_INPUTS_COUNT;camInputIndex++) {
+	for (int camInputIndex = 0; camInputIndex < CAM_INPUTS_COUNT; camInputIndex++) {
 		if (isBrainPinValid(engineConfiguration->camInputs[camInputIndex])) {
 			int camLogicalIndex = camInputIndex % CAMS_PER_BANK;
 			efiPrintf("VVT input: %s mode %s", hwPortname(engineConfiguration->camInputs[camInputIndex]),
@@ -895,7 +895,7 @@ TriggerDecoderBase initState("init");
 void TriggerCentral::updateWaveform() {
 	// Re-read config in case it's changed
 	primaryTriggerConfiguration.update();
-	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
+	for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {
 		vvtTriggerConfiguration[camIndex].update();
 	}
 

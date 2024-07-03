@@ -129,7 +129,7 @@ void Engine::periodicSlowCallback() {
 #if EFI_SHAFT_POSITION_INPUT
 	// Re-read config in case it's changed
 	triggerCentral.primaryTriggerConfiguration.update();
-	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
+	for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {
 		triggerCentral.vvtTriggerConfiguration[camIndex].update();
 	}
 #endif // EFI_SHAFT_POSITION_INPUT
@@ -325,7 +325,7 @@ void Engine::OnTriggerSyncronization(bool wasSynchronized, bool isDecodingError)
 void Engine::injectEngineReferences() {
 #if EFI_SHAFT_POSITION_INPUT
 	triggerCentral.primaryTriggerConfiguration.update();
-	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
+	for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {
 		triggerCentral.vvtTriggerConfiguration[camIndex].update();
 	}
 #endif // EFI_SHAFT_POSITION_INPUT

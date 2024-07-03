@@ -262,7 +262,7 @@ static void listDirectory(const char *path) {
 
 	efiPrintf(LS_RESPONSE);
 
-	for (int count = 0;count < FILE_LIST_MAX_COUNT;) {
+	for (int count = 0; count < FILE_LIST_MAX_COUNT; count++) {
 		FILINFO fno;
 
 		res = f_readdir(&dir, &fno);
@@ -276,8 +276,6 @@ static void listDirectory(const char *path) {
 			continue;
 		}
 		efiPrintf("logfile %lu:%s", (uint32_t)fno.fsize, fno.fname);
-		count++;
-
 //			efiPrintf("%c%c%c%c%c %u/%02u/%02u %02u:%02u %9lu  %-12s", (fno.fattrib & AM_DIR) ? 'D' : '-',
 //					(fno.fattrib & AM_RDO) ? 'R' : '-', (fno.fattrib & AM_HID) ? 'H' : '-',
 //					(fno.fattrib & AM_SYS) ? 'S' : '-', (fno.fattrib & AM_ARC) ? 'A' : '-', (fno.fdate >> 9) + 1980,

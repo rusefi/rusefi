@@ -870,8 +870,8 @@ void setDefaultEtbParameters() {
 	setLinearCurve(config->pedalToTpsPedalBins, /*from*/0, /*to*/100, 1);
 	setLinearCurve(config->pedalToTpsRpmBins, /*from*/0, /*to*/8000, 1);
 
-	for (int pedalIndex = 0;pedalIndex<PEDAL_TO_TPS_SIZE;pedalIndex++) {
-		for (int rpmIndex = 0;rpmIndex<PEDAL_TO_TPS_SIZE;rpmIndex++) {
+	for (int pedalIndex = 0; pedalIndex < PEDAL_TO_TPS_SIZE; pedalIndex++) {
+		for (int rpmIndex = 0; rpmIndex < PEDAL_TO_TPS_SIZE; rpmIndex++) {
 			config->pedalToTpsTable[pedalIndex][rpmIndex] = config->pedalToTpsPedalBins[pedalIndex];
 		}
 	}

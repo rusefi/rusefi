@@ -61,7 +61,7 @@ static void buildTimingMap(float advanceMax) {
 	 */
 	for (int loadIndex = 0; loadIndex < IGN_LOAD_COUNT; loadIndex++) {
 		float load = config->ignitionLoadBins[loadIndex];
-		for (int rpmIndex = 0;rpmIndex<IGN_RPM_COUNT;rpmIndex++) {
+		for (int rpmIndex = 0; rpmIndex < IGN_RPM_COUNT; rpmIndex++) {
 			float rpm = config->ignitionRpmBins[rpmIndex];
 			config->ignitionTable[loadIndex][rpmIndex] = getInitialAdvance(rpm, load, advanceMax);
 		}
