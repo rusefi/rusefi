@@ -92,7 +92,7 @@
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date! It is required to also update TS_SIGNATURE above
 ! when this happens.
-#define FLASH_DATA_VERSION 20015
+#define FLASH_DATA_VERSION 20016
 
 ! this offset is part of console compatibility mechanism, please DO NOT change this offset
 #define TS_FILE_VERSION_OFFSET 124
@@ -218,7 +218,7 @@ struct_no_prefix engine_configuration_s
 
 #define BARO_CORR_SIZE 4
 
-#define MAF_DECODING_COUNT 256
+#define MAF_DECODING_COUNT 64
 
 #define GPPWM_LOAD_COUNT 8
 #define GPPWM_RPM_COUNT 8
@@ -1542,8 +1542,8 @@ float[IAT_CURVE_SIZE] iatFuelCorr;;"ratio", 1, 0, 0, 5, 2
 float[CLT_CURVE_SIZE] cltIdleCorrBins;CLT-based idle position multiplier for simple manual idle controller;"C", 1, 0, -100, 250, 2
 float[CLT_CURVE_SIZE] cltIdleCorr;    CLT-based idle position multiplier for simple manual idle controller;"ratio", 1, 0, 0, 10, 2
 
-float[MAF_DECODING_COUNT] mafDecoding;Also known as MAF transfer function.\nkg/hour value.\nBy the way 2.081989116 kg/h = 1 ft3/m;"kg/hour", 1, 0, -500, 4000, 2
-float[MAF_DECODING_COUNT] mafDecodingBins;;"V", 1, 0, -5, 150, 2
+uint32_t[MAF_DECODING_COUNT] autoscale mafDecoding;;"kg/hour", 0.001, 0, 0, 4000, 3
+uint16_t[MAF_DECODING_COUNT] autoscale mafDecodingBins;;"V", 0.01, 0, 0, 20, 2
 
 int8_t[8 x 8] autoscale ignitionIatCorrTable;;"deg", 0.1, 0, -25, 25, 1
 int8_t[8] ignitionIatCorrTempBins;;"C", 1, 0, -40, 120, 0

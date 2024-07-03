@@ -9,9 +9,6 @@ static FunctionalSensor maf (SensorType::Maf , /* timeout = */ MS2NT(50));
 static FunctionalSensor maf2(SensorType::Maf2, /* timeout = */ MS2NT(50));
 
 #if !EFI_UNIT_TEST
-// extract the type of the elements in the bin/value arrays
-using BinType = std::remove_extent_t<decltype(config->mafDecodingBins)>;
-using ValueType = std::remove_extent_t<decltype(config->mafDecoding)>;
 
 // This function converts volts -> kg/h
 static TableFunc mafCurve(config->mafDecodingBins, config->mafDecoding);
