@@ -671,6 +671,7 @@ void tunerStudioError(TsChannelBase* tsChannel, const char *msg) {
 
 extern CommandHandler console_line_callback;
 
+// see also handleQueryCommand
 static void handleGetVersion(TsChannelBase* tsChannel) {
 	char versionBuffer[32];
 	chsnprintf(versionBuffer, sizeof(versionBuffer), "%s v%d@%u", "rusEFI", getRusEfiVersion(), SIGNATURE_HASH);

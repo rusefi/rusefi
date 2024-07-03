@@ -2347,7 +2347,7 @@ end_struct
 ! These commands are used by TunerStudio and the rusEFI console
 ! 0x4F ochGetCommand
 #define TS_OUTPUT_COMMAND 'O'
-! 0x53 queryCommand
+! 0x53 queryCommand - this one is about detailed signature
 #define TS_HELLO_COMMAND 'S'
 ! todo: replace all usages of TS_HELLO_COMMAND with TS_QUERY_COMMAND
 ! todo#2: actually is above still the case?
@@ -2386,7 +2386,7 @@ end_struct
 ! 0x46
 #define TS_COMMAND_F 'F'
 #define TS_GET_PROTOCOL_VERSION_COMMAND_F 'F'
-! versionInfo 0x56 86
+! versionInfo 0x56 86 this one is only used for TS and console title bars, right?
 #define TS_GET_FIRMWARE_VERSION 'V'
 ! returns getFirmwareError(), works together with ind_hasFatalError
 #define TS_GET_CONFIG_ERROR 'e'
