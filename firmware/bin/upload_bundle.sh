@@ -3,7 +3,7 @@
 USER=$1
 PASS=$2
 HOST=$3
-BUNDLE_FILE_NAME=$4
+BUNDLE_NAME=$4
 RELEASE_TAG=$5
 
 SCRIPT_NAME=$(basename "$0")
@@ -11,10 +11,10 @@ SCRIPT_NAME=$(basename "$0")
 if [ -n "${USER}" -a -n "$PASS" -a -n "${HOST}" ]; then
  echo "$SCRIPT_NAME: Uploading both bundles"
 
- if [ -n "${BUNDLE_FILE_NAME}" ]; then
-   echo "$SCRIPT_NAME: BUNDLE_FILE_NAME is ${BUNDLE_FILE_NAME}"
+ if [ -n "${BUNDLE_NAME}" ]; then
+   echo "$SCRIPT_NAME: BUNDLE_NAME is ${BUNDLE_NAME}"
  else
-   echo "$SCRIPT_NAME: BUNDLE_FILE_NAME argument not specified"
+   echo "$SCRIPT_NAME: BUNDLE_NAME argument not specified"
    exit 1
  fi
  if [ -n "${bundle_upload_folder}" ]; then
@@ -33,8 +33,8 @@ if [ -n "${USER}" -a -n "$PASS" -a -n "${HOST}" ]; then
      exit 1
  fi
 
- FULL_BUNDLE_FILE="${WHITE_LABEL}_bundle_${BUNDLE_FILE_NAME}.zip"
- UPDATE_BUNDLE_FILE="${WHITE_LABEL}_bundle_${BUNDLE_FILE_NAME}_autoupdate.zip"
+ FULL_BUNDLE_FILE="${WHITE_LABEL}_bundle_${BUNDLE_NAME}.zip"
+ UPDATE_BUNDLE_FILE="${WHITE_LABEL}_bundle_${BUNDLE_NAME}_autoupdate.zip"
 
      # sftp does not support -p flag on mkdir :(
      sshpass -p $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
