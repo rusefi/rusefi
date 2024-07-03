@@ -24,18 +24,6 @@
  * enable verbose_etb
  * disable verbose_etb
  * etbinfo
- * set mock_pedal_position X
- *
- *
- * set debug_mode 17
- * for PID outputs
- *
- * set etb_p X
- * set etb_i X
- * set etb_d X
- * set etb_o X
- *
- * set_etb_duty X
  *
  * http://rusefi.com/forum/viewtopic.php?f=5&t=592
  *
@@ -836,7 +824,6 @@ void setThrottleDutyCycle(percent_t level) {
 	}
 	efiPrintf("duty ETB duty=%f", dc);
 }
-
 #endif /* EFI_PROD_CODE */
 
 void etbAutocal(size_t throttleIndex) {
@@ -1073,11 +1060,6 @@ void setEtbLuaAdjustment(percent_t pos) {
 			etb->setLuaAdjustment(pos);
 		}
 	}
-}
-
-void set18919_AM810_pedal_position_sensor() {
-    // todo use setPPSCalibration(0.1, 4.3, 0.1, 1.96); once we have https://github.com/rusefi/rusefi/issues/5056
-    setPPSCalibration(0.1, 4.5, 0.1, 2.2);
 }
 
 void setToyota89281_33010_pedal_position_sensor() {

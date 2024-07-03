@@ -19,8 +19,7 @@ void setEtbWastegatePosition(percent_t pos);
 void setEtbLuaAdjustment(percent_t adjustment);
 void setHitachiEtbCalibration();
 
-// these two sensors use same plug but have different calibrations and even rotate in different directions
-void set18919_AM810_pedal_position_sensor();
+// same plug as 18919 AM810 but have different calibrations
 void setToyota89281_33010_pedal_position_sensor();
 
 void setBoschVAGETB();
