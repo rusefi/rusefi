@@ -378,9 +378,6 @@ const command_f_s commandsF[] = {
 		{"global_trigger_offset_angle", setGlobalTriggerAngleOffset},
 		{"cranking_iac", setCrankingIACExtra},
 		{"cranking_timing_angle", setCrankingTimingAngle},
-		{"tps_accel_threshold", setTpsAccelThr},
-		{"tps_decel_threshold", setTpsDecelThr},
-		{"tps_decel_multiplier", setTpsDecelMult},
 #endif // EFI_ENGINE_CONTROL
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
@@ -402,7 +399,6 @@ const command_i_s commandsI[] = {{"ignition_mode", setIgnitionMode},
 		{"debug_mode", setDebugMode},
 		{"trigger_type", setTriggerType},
 		{"idle_solenoid_freq", setIdleSolenoidFrequency},
-		{"tps_accel_len", setTpsAccelLen},
 #endif // EFI_ENGINE_CONTROL
 #if EFI_PROD_CODE
 #if EFI_CAN_SUPPORT

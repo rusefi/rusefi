@@ -195,29 +195,15 @@ TpsAccelEnrichment::TpsAccelEnrichment() {
 
 #if ! EFI_UNIT_TEST
 
-void setTpsAccelThr(float value) {
-	engineConfiguration->tpsAccelEnrichmentThreshold = value;
-}
-
-void setTpsDecelThr(float value) {
-	engineConfiguration->tpsDecelEnleanmentThreshold = value;
-}
-
-void setTpsDecelMult(float value) {
-	engineConfiguration->tpsDecelEnleanmentMultiplier = value;
-}
-
-void setTpsAccelLen(int length) {
-	if (length < 1) {
-		efiPrintf("Length should be positive");
-		return;
-	}
-	engine->tpsAccelEnrichment.setLength(length);
-}
-
 void updateAccelParameters() {
 	constexpr float slowCallbackPeriodSecond = SLOW_CALLBACK_PERIOD_MS / 1000.0f;
-	setTpsAccelLen(engineConfiguration->tpsAccelLookback / slowCallbackPeriodSecond);
+	int length = engineConfiguration->tpsAccelLookback / slowCallbackPeriodSecond;
+
+	if (length < 1) {
+		length = 1;
+	}
+
+	engine->tpsAccelEnrichment.setLength(length);
 }
 
 #endif /* ! EFI_UNIT_TEST */
