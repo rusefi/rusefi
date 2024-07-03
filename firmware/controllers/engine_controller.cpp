@@ -455,8 +455,6 @@ void LedBlinkingTask::updateErrorLed() {
 
 // this method is used by real firmware and simulator and unit test
 void commonInitEngineController() {
-	initInterpolation();
-
 #if EFI_SIMULATOR || EFI_UNIT_TEST
 	printf("commonInitEngineController\n");
 #endif

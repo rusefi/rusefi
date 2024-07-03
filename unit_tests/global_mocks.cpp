@@ -5,7 +5,6 @@
 #include "pch.h"
 
 #include "trigger_central.h"
-#include "map_resize.h"
 
 bool verboseMode = false;
 

@@ -22,8 +22,6 @@
 
 #define INTERPOLATION_A(x1, y1, x2, y2) ((y1 - y2) / (x1 - x2))
 
-int findIndex(const float array[], int size, float value);
-int findIndex2(const float array[], unsigned size, float value);
 float interpolateClamped(float x1, float y1, float x2, float y2, float x);
 float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, float x);
 
@@ -119,5 +117,3 @@ void setCurveValue(const kType bins[], VType values[], int size, float key, floa
 		index = 0;
 	values[index] = value;
 }
-
-void initInterpolation();

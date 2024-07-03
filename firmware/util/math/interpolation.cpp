@@ -14,52 +14,6 @@
 
 #include "efi_interpolation.h"
 
-#define BINARY_PERF true
-
-#if BINARY_PERF && ! EFI_UNIT_TEST
-
-#define COUNT 10000
-
-float array16[] = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16 };
-
-static void testBinary() {
-	const int size16 = 16;
-
-	uint32_t totalOld = 0;
-	uint32_t totalNew = 0;
-
-	for (int v = 0; v <= 16; v++) {
-		uint32_t timeOld;
-		{
-			uint32_t start = getTimeNowLowerNt();
-			int temp = 0;
-			for (int i = 0; i < COUNT; i++) {
-				temp += findIndex(array16, size16, v);
-			}
-			timeOld = getTimeNowLowerNt() - start;
-		}
-		uint32_t timeNew;
-		{
-			uint32_t start = getTimeNowLowerNt();
-			int temp = 0;
-			for (int i = 0; i < COUNT; i++) {
-				temp += findIndex2(array16, size16, v);
-			}
-			timeNew = getTimeNowLowerNt() - start;
-		}
-		efiPrintf("for v=%d old=%lu ticks", v, timeOld);
-		efiPrintf("for v=%d new=%lu ticks", v, timeNew);
-
-		totalOld += timeOld;
-		totalNew += timeNew;
-	}
-	efiPrintf("totalOld=%lu ticks", totalOld);
-	efiPrintf("totalNew=%lu ticks", totalNew);
-
-}
-
-#endif
-
 /** @brief	Linear interpolation by two points
  *
  * @param	x1 key of the first point
@@ -118,41 +72,4 @@ float interpolateClamped(float x1, float y1, float x2, float y2, float x) {
 	float a = INTERPOLATION_A(x1, y1, x2, y2);
 	float b = y1 - a * x1;
 	return a * x + b;
-}
-
-/**
- * Another implementation, which one is faster?
- */
-int findIndex2(const float array[], unsigned size, float value) {
-	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(value), "NaN in findIndex2", 0);
-	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, size > 1, "size in findIndex", 0);
-//	if (size <= 1)
-//		return size && *array <= value ? 0 : -1;
-
-	signed i = 0;
-	//unsigned b = 1 << int(log(float(size) - 1) / 0.69314718055994530942);
-	unsigned b = size >> 1; // in our case size is always a power of 2
-	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, b + b == size, "Size not power of 2", -1);
-	for (; b; b >>= 1) {
-		unsigned j = i | b;
-		/**
-		 * it should be
-		 * "if (j < size && array[j] <= value)"
-		 * but in our case size is always power of 2 thus size is always more then j
-		 */
-		// efiAssert(ObdCode::CUSTOM_ERR_ASSERT, j < size, "size", 0);
-		if (array[j] <= value)
-			i = j;
-	}
-	return i || *array <= value ? i : -1;
-}
-
-int findIndex(const float array[], int size, float value) {
-	return findIndexMsg("", array, size, value);
-}
-
-void initInterpolation() {
-#if BINARY_PERF && ! EFI_UNIT_TEST
-	addConsoleAction("binarytest", testBinary);
-#endif
 }
