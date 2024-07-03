@@ -2387,7 +2387,7 @@ end_struct
 ! 0x46
 #define TS_COMMAND_F 'F'
 #define TS_GET_PROTOCOL_VERSION_COMMAND_F 'F'
-! versionInfo 0x56 86 this one is only used for TS and console title bars, right?
+! versionInfo 0x56 86 this one is only used for TS title bar
 #define TS_GET_FIRMWARE_VERSION 'V'
 ! returns getFirmwareError(), works together with ind_hasFatalError
 #define TS_GET_CONFIG_ERROR 'e'
