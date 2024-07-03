@@ -119,10 +119,17 @@ public class MainFrame {
     }
 
     private void setTitle() {
-        String disconnected = ConnectionStatusLogic.INSTANCE.isConnected() ? "" : "DISCONNECTED ";
-        BinaryProtocol bp = consoleUI.uiContext.getLinkManager().getCurrentStreamState();
-        String signature = bp == null ? "not loaded" : bp.signature;
-        frame.getFrame().setTitle(disconnected + "Console " + Launcher.CONSOLE_VERSION + "; firmware=" + Launcher.firmwareVersion.get() + "@" + consoleUI.getPort() + " " + signature);
+        String consoleVersion = "Console " + Launcher.CONSOLE_VERSION;
+        String frameTitle;
+        if (ConnectionStatusLogic.INSTANCE.isConnected()) {
+            BinaryProtocol bp = consoleUI.uiContext.getLinkManager().getCurrentStreamState();
+            String signature = bp == null ? "not loaded" : bp.signature;
+            frameTitle = consoleVersion + "; firmware=" + Launcher.firmwareVersion.get() + "@" + consoleUI.getPort() + " " + signature;
+            frame.getFrame().setTitle(frameTitle);
+        } else {
+            frameTitle = "DISCONNECTED " + consoleVersion;
+        }
+        frame.getFrame().setTitle(frameTitle);
     }
 
     private void windowClosedHandler() {
