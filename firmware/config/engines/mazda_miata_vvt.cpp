@@ -350,9 +350,7 @@ static void setCommonMazdaNB() {
 	// Sensors
 
 	// TPS
-	// set tps_min 90
 	engineConfiguration->tpsMin = 100; // convert 12to10 bit (ADC/4)
-	// set tps_max 540
 	engineConfiguration->tpsMax = 650; // convert 12to10 bit (ADC/4)
 
 	// CLT/IAT
@@ -629,10 +627,7 @@ static void setMiataNB2_MRE_common() {
 // disabled for now since only allowed with ETB
 //	engineConfiguration->throttlePedalPositionAdcChannel = EFI_ADC_7;
 
-	// set tps_min 90
 	engineConfiguration->tpsMin = 90;
-
-	// set tps_max 540
 	engineConfiguration->tpsMax = 870;
 
 	// 0.3#4 has wrong R139? TODO: fix that custom board to match proper value!!!
@@ -857,10 +852,7 @@ void setMiataNB2_Hellen72() {
     setMazdaMiataEngineNB2Defaults();
 	strcpy(engineConfiguration->vehicleName, "H72 test");
 
-
-	// set tps_min 90
 	engineConfiguration->tpsMin = 110; // convert 12to10 bit (ADC/4)
-
 }
 
 void setMiataNB2_Hellen72_36() {

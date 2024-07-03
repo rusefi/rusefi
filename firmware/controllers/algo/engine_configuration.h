@@ -27,7 +27,6 @@ void setTwoStrokeOperationMode();
 
 void prepareVoidConfiguration(engine_configuration_s *activeConfiguration);
 void setTargetRpmCurve(int rpm);
-void setWholeIgnitionIatCorr(float value);
 void setFuelTablesLoadBin(float minValue, float maxValue);
 void setWholeIatCorrTimingTable(float value);
 void setWholeTimingTable_d(angle_t value);

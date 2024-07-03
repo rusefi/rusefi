@@ -104,10 +104,6 @@ static void printErrorCounters() {
 /* 10mS when receiving byte by byte */
 #define TS_COMMUNICATION_TIMEOUT_SHORT	TIME_MS2I(10)
 
-static void resetTs() {
-	memset(&tsState, 0, sizeof(tsState));
-}
-
 #endif // EFI_TUNER_STUDIO
 
 void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg) {
@@ -724,8 +720,7 @@ void startTunerStudioConnectivity(void) {
 	memset(&tsState, 0, sizeof(tsState));
 
 	addConsoleAction("tsinfo", printErrorCounters);
-	addConsoleAction("reset_ts", resetTs);
-	
+
 #if EFI_BLUETOOTH_SETUP
 	// module initialization start (it waits for disconnect and then communicates to the module)
 	// Usage:   "bluetooth_hc06 <baud> <name> <pincode>"

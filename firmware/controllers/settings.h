@@ -16,7 +16,6 @@ void scheduleStopEngine();
 
 void setEngineType(int value);
 void setEngineType(engine_type_e value);
-void readPin(const char *pinName);
 
 void printDateTime();
 void setDateTime(const char * const isoDateTime);

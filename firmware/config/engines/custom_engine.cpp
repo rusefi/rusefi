@@ -218,10 +218,8 @@ void setFrankensoBoardTestConfiguration() {
 // set engine_type 58
 void setEtbTestConfiguration() {
 	// VAG test ETB
-	// set tps_min 54
 	engineConfiguration->tpsMin = 54;
 	// by the way this ETB has default position of ADC=74 which is about 4%
-	// set tps_max 540
 	engineConfiguration->tpsMax = 540;
 
 	// yes, 30K - that's a test configuration
@@ -359,10 +357,8 @@ void setTle8888TestConfiguration() {
 	engineConfiguration->etb_iTermMax = 300;
 
 	// VAG test ETB, no divider on red board - direct 3v TPS sensor
-	// set tps_min 332
 	engineConfiguration->tpsMin = 332;
 	// by the way this ETB has default position of ADC=74 which is about 4%
-	// set tps_max 540
 	engineConfiguration->tpsMax = 799;
 }
 

@@ -202,10 +202,6 @@ void setConstantDwell(floatms_t dwellMs) {
 	setArrayValues(config->sparkDwellValues, dwellMs);
 }
 
-void setWholeIgnitionIatCorr(float value) {
-	setTable(config->ignitionIatCorrTable, value);
-}
-
 void setFuelTablesLoadBin(float minValue, float maxValue) {
 	setLinearCurve(config->injPhaseLoadBins, minValue, maxValue, 1);
 	setLinearCurve(config->veLoadBins, minValue, maxValue, 1);
