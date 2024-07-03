@@ -65,8 +65,8 @@ public class SerialAutoChecker {
     private static boolean isSignatureWithValidPrefix(String signature) {
         if (signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX))
             return true;
-        String whitelabel = ConnectionAndMeta.getWhitelabel();
-        return whitelabel != null && signature.startsWith(whitelabel + " ");
+        String signatureWhiteLabel = ConnectionAndMeta.getSignatureWhiteLabel();
+        return signatureWhiteLabel != null && signature.startsWith(signatureWhiteLabel + " ");
     }
 
     public void openAndCheckResponse(PortDetector.DetectorMode mode, AtomicReference<AutoDetectResult> result, Function<CallbackContext, Void> callback) {
