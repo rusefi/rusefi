@@ -663,6 +663,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 	case trigger_type_e::TT_MITSU_4G63_CRANK:
 	    initializeMitsubishi4gSymmetricalCrank(this);
         break;
+	case trigger_type_e::TT_DEV:
 	case trigger_type_e::TT_VVT_FORD_COYOTE:
 	    configureFordCoyote(this);
         break;
