@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Tue May 28 21:05:44 UTC 2024
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Thu Jul 04 18:11:10 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -820,6 +820,8 @@ case VVT_BARRA_3_PLUS_1:
   return "VVT_BARRA_3_PLUS_1";
 case VVT_BOSCH_QUICK_START:
   return "VVT_BOSCH_QUICK_START";
+case VVT_DEV:
+  return "VVT_DEV";
 case VVT_FORD_COYOTE:
   return "VVT_FORD_COYOTE";
 case VVT_FORD_ST170:
