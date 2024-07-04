@@ -1193,6 +1193,9 @@ float getOutputValueByName(const char *name) {
 // lua.clutchDownState
 		case 133427185:
 			return engine->engineState.lua.clutchDownState;
+// lua.disableDecelerationFuelCutOff
+		case 1680936043:
+			return engine->engineState.lua.disableDecelerationFuelCutOff;
 // sd.tCharge
 		case -893334680:
 			return engine->engineState.sd.tCharge;

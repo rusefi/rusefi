@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Tue Jun 25 02:20:42 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Thu Jul 04 01:02:11 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -184,6 +184,7 @@ public class EngineState {
 	public static final Field LUA_LUADISABLEETB = Field.create("LUA_LUADISABLEETB", 8, FieldType.BIT, 3).setBaseOffset(1124);
 	public static final Field LUA_LUAIGNCUT = Field.create("LUA_LUAIGNCUT", 8, FieldType.BIT, 4).setBaseOffset(1124);
 	public static final Field LUA_CLUTCHDOWNSTATE = Field.create("LUA_CLUTCHDOWNSTATE", 8, FieldType.BIT, 5).setBaseOffset(1124);
+	public static final Field LUA_DISABLEDECELERATIONFUELCUTOFF = Field.create("LUA_DISABLEDECELERATIONFUELCUTOFF", 8, FieldType.BIT, 6).setBaseOffset(1124);
 	public static final Field SD_TCHARGE = Field.create("SD_TCHARGE", 12, FieldType.INT16).setScale(0.01).setBaseOffset(1124);
 	public static final Field SD_ALIGNMENTFILL_AT_2 = Field.create("SD_ALIGNMENTFILL_AT_2", 14, FieldType.INT8).setScale(1.0).setBaseOffset(1124);
 	public static final Field SD_TCHARGEK = Field.create("SD_TCHARGEK", 16, FieldType.FLOAT).setBaseOffset(1124);
@@ -234,6 +235,7 @@ public class EngineState {
 	LUA_LUADISABLEETB,
 	LUA_LUAIGNCUT,
 	LUA_CLUTCHDOWNSTATE,
+	LUA_DISABLEDECELERATIONFUELCUTOFF,
 	SD_TCHARGE,
 	SD_ALIGNMENTFILL_AT_2,
 	SD_TCHARGEK,
