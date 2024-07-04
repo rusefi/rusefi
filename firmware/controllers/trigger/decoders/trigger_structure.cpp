@@ -664,6 +664,8 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 	    initializeMitsubishi4gSymmetricalCrank(this);
         break;
 	case trigger_type_e::TT_DEV:
+	    configureFordCoyote2(this);
+        break;
 	case trigger_type_e::TT_VVT_FORD_COYOTE:
 	    configureFordCoyote(this);
         break;
