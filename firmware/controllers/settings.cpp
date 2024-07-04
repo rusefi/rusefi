@@ -385,19 +385,6 @@ static void setAlternatorPin(const char *pinName) {
 	setIndividualPin(pinName, &engineConfiguration->alternatorControlPin, "alternator");
 }
 
-static void setInjectionPin(const char *indexStr, const char *pinName) {
-	int index = atoi(indexStr) - 1; // convert from human index into software index
-	if (index < 0 || index >= MAX_CYLINDER_COUNT)
-		return;
-	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
-	if (pin == Gpio::Invalid) {
-		return;
-	}
-	efiPrintf("setting injection pin[%d] to %s please save&restart", index, hwPortname(pin));
-	engineConfiguration->injectionPins[index] = pin;
-	incrementGlobalConfigurationVersion();
-}
-
 /**
  * For example:
  *   set_trigger_input_pin 0 PA5
@@ -481,14 +468,6 @@ static void setLogicInputPin(const char *indexStr, const char *pinName) {
 	efiPrintf("setting logic input pin[%d] to %s please save&restart", index, hwPortname(pin));
 	engineConfiguration->logicAnalyzerPins[index] = pin;
 	incrementGlobalConfigurationVersion();
-}
-
-static void showPinFunction(const char *pinName) {
-	brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
-	if (pin == Gpio::Invalid) {
-		return;
-	}
-	efiPrintf("Pin %s: [%s]", pinName, getPinFunction(pin));
 }
 
 #endif // EFI_PROD_CODE
@@ -822,8 +801,6 @@ void initSettings() {
 	addConsoleActionS(CMD_GET, getValue);
 
 #if EFI_PROD_CODE
-	addConsoleActionS("showpin", showPinFunction);
-	addConsoleActionSS(CMD_INJECTION_PIN, setInjectionPin);
 	addConsoleActionSS(CMD_IGNITION_PIN, setIgnitionPin);
 	addConsoleActionSS(CMD_TRIGGER_PIN, setTriggerInputPin);
 	addConsoleActionSS(CMD_TRIGGER_SIMULATOR_PIN, setTriggerSimulatorPin);
