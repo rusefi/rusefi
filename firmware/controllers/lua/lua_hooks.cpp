@@ -967,6 +967,10 @@ void configureRusefiLuaHooks(lua_State* lState) {
 		engine->engineState.lua.luaIgnCut = lua_toboolean(l, 1);
 		return 0;
 	});
+	lua_register(lState, "setDfcoDisabled", [](lua_State* l) {
+		engine->engineState.lua.disableDecelerationFuelCutOff = lua_toboolean(l, 1);
+		return 0;
+	});
 #endif // EFI_PROD_CODE
 
 	lua_register(lState, "setClutchUpState", [](lua_State* l) {

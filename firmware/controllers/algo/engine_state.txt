@@ -10,6 +10,7 @@ struct_no_prefix engine_state_s
 		bit luaDisableEtb
 		bit luaIgnCut
 		bit clutchDownState
+		bit disableDecelerationFuelCutOff
 	end_struct
 
 	struct speed_density_s

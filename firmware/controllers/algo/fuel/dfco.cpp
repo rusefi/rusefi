@@ -1,6 +1,5 @@
 
-#include "engine_configuration.h"
-#include "sensor.h"
+#include "pch.h"
 
 #include "dfco.h"
 
@@ -15,6 +14,10 @@ bool DfcoController::getState() const {
 
 	// If some sensor is broken, inhibit DFCO
 	if (!tps || !clt || !map) {
+		return false;
+	}
+	if (engine->engineState.lua.disableDecelerationFuelCutOff) {
+	  // Lua might have reasons to disable
 		return false;
 	}
 
