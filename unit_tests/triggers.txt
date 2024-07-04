@@ -5591,25 +5591,27 @@ crankBased=false
 hasSecondChannel=false
 isSecondWheelCam=false
 cycleDuration=720
-gapsCount=2
+gapsCount=3
 syncEdge=RiseOnly
 isSynchronizationNeeded=1
-gapFrom.0=2.250000
-gapTo.0=3.750000
-gapFrom.1=0.375000
-gapTo.1=0.625000
+gapFrom.0=0.470000
+gapTo.0=0.700000
+gapFrom.1=0.950000
+gapTo.1=1.590000
+gapFrom.2=0.950000
+gapTo.2=1.590000
 # end of meta section
-event 0 0 1 0.00 3.000000
+event 0 0 1 0.00 0.500000
 event 1 0 0 0.00 nan
-event 2 0 1 90.00 0.500000
-event 3 0 0 90.00 nan
-event 4 0 1 180.00 1.000000
+event 2 0 1 120.00 2.000000
+event 3 0 0 120.00 nan
+event 4 0 1 180.00 0.500000
 event 5 0 0 180.00 nan
-event 6 0 1 300.00 1.333333
-event 7 0 0 300.00 nan
-event 8 0 1 360.00 0.500000
-event 9 0 0 360.00 nan
-event 10 0 1 480.00 2.000000
-event 11 0 0 480.00 nan
-event 12 0 1 540.00 0.500000
-event 13 0 0 540.00 nan
+event 6 0 1 360.00 3.000000
+event 7 0 0 360.00 nan
+event 8 0 1 450.00 0.500000
+event 9 0 0 450.00 nan
+event 10 0 1 540.00 1.000000
+event 11 0 0 540.00 nan
+event 12 0 1 660.00 1.333333
+event 13 0 0 660.00 nan
