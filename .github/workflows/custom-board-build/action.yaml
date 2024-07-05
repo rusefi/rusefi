@@ -157,17 +157,7 @@ runs:
       shell: bash
       run: |
         : Find out white-label
-        shared_io_properties_file="shared_io.resources/shared_io.properties"  
-        if [ -f ${shared_io_properties_file} ]; then
-          white_label_property=`grep -m1 "^white_label=" "${shared_io_properties_file}"`
-          if [ -n "${white_label_property}" ]; then
-            white_label=`echo "${white_label_property}" | cut -d'=' -f2`
-          fi
-        fi
-        if [ -z "${white_label}" ]; then
-          white_label=rusefi
-        fi
-        echo "white_label=${white_label}" >> $GITHUB_OUTPUT
+        echo "white_label=$(bash ${{inputs.rusefi_dir}}/firmware/bin/find_white_label.sh shared_io.resources/shared_io.properties)" >> $GITHUB_OUTPUT
 
     - name: Set Env Variables
       shell: bash
