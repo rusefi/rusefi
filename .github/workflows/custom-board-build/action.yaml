@@ -495,14 +495,14 @@ runs:
       uses: actions/upload-artifact@v4
       with:
         name: ${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public_${{env.current_date}}.zip
-        path: ${{inputs.rusefi_dir}}/artifacts/{{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public.zip
+        path: ${{inputs.rusefi_dir}}/artifacts/${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public.zip
 
     - name: Upload github action bundle obfuscated_public_autoupdate artifact
       if: ${{ contains(inputs.artifacts, 'obfuscated') }}
       uses: actions/upload-artifact@v4
       with:
         name: ${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public_autoupdate_${{env.current_date}}.zip
-        path: ${{inputs.rusefi_dir}}/artifacts/{{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public_autoupdate.zip
+        path: ${{inputs.rusefi_dir}}/artifacts/${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public_autoupdate.zip
 
     - uses: mukunku/tag-exists-action@v1.6.0
       if: ${{ inputs.new_tag != '' }}
