@@ -519,6 +519,12 @@ runs:
         custom_tag: ${{ inputs.new_tag }}
         tag_prefix: ''
 
+    - name: Check Created Release Tag
+      shell: bash
+      run: |
+        : Check Created Realease Tag
+        echo "new_tag=${{ steps.tag.outputs.new_tag }}" >> $GITHUB_OUTPUT
+
     - name: Upload Tagged Daily Release Bundle
       if: ${{ contains(inputs.uploads, 'bundles') && steps.checkTag.outputs.exists == 'false'}}
       working-directory: ${{inputs.rusefi_dir}}/artifacts
