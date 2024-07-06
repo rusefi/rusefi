@@ -79,6 +79,8 @@ inputs:
     required: false
   EXTRA_LIVE_DATA_FILE:
     required: false
+outputs:
+  new_tag: ${{ steps.tag.outputs.new_tag }}
 
 runs:
   using: "composite"
@@ -519,14 +521,8 @@ runs:
         custom_tag: ${{ inputs.new_tag }}
         tag_prefix: ''
 
-    - name: Check Created Release Tag
-      shell: bash
-      run: |
-        : Check Created Realease Tag
-        echo "new_tag=${{ steps.tag.outputs.new_tag }}" >> $GITHUB_OUTPUT
-
     - name: Upload Tagged Daily Release Bundle
-      if: ${{ contains(inputs.uploads, 'bundles') && steps.checkTag.outputs.exists == 'false'}}
+      if: ${{ contains(inputs.uploads, 'bundles') && steps.tag.outputs.new_tag != ''}}
       working-directory: ${{inputs.rusefi_dir}}/artifacts
       shell: bash
       run: |
@@ -534,7 +530,7 @@ runs:
         bash ../firmware/bin/upload_bundle.sh ${{ env.RUSEFI_SSH_USER }} ${{ env.RUSEFI_SSH_PASS }} ${{ env.RUSEFI_SSH_SERVER }} ${{ env.BUNDLE_NAME }} ${{ inputs.new_tag }}
 
     - name: Upload Obfuscated Tagged Daily Release Bundle
-      if: ${{ contains(inputs.artifacts, 'obfuscated') && steps.checkTag.outputs.exists == 'false'}}
+      if: ${{ contains(inputs.artifacts, 'obfuscated') && steps.tag.outputs.new_tag != ''}}
       working-directory: ${{inputs.rusefi_dir}}/artifacts
       shell: bash
       run: |
