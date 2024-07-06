@@ -279,6 +279,10 @@ float getSanitizedPedal() {
 	return clampPercentValue(pedalPosition.value_or(0));
 }
 
+BOARD_WEAK float boardAdjustEtbTarget(float currentEtbTarget) {
+  return currentEtbTarget;
+}
+
 expected<percent_t> EtbController::getSetpointEtb() {
 	// Autotune runs with 50% target position
 	if (m_isAutotune) {
@@ -309,7 +313,7 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	// 100% target from table -> 100% target position
 	targetWithIdlePosition = interpolateClamped(0, etbIdleAddition, 100, 100, etbCurrentTarget);
 
-	percent_t targetPosition = targetWithIdlePosition + getLuaAdjustment();
+	percent_t targetPosition = boardAdjustEtbTarget(targetWithIdlePosition + getLuaAdjustment());
 
 #if EFI_ANTILAG_SYSTEM
 	if (engine->antilagController.isAntilagCondition) {
