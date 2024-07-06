@@ -79,8 +79,6 @@ inputs:
     required: false
   EXTRA_LIVE_DATA_FILE:
     required: false
-outputs:
-  new_tag: ${{ steps.tag.outputs.new_tag }}
 
 runs:
   using: "composite"
