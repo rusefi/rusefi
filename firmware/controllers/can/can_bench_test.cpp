@@ -244,6 +244,7 @@ void processCanQcBenchTest(const CANRxFrame& frame) {
 	if (command == bench_test_io_control_e::CAN_BENCH_GET_COUNT) {
 	    sendOutBoardMeta();
 	} else if (command == bench_test_io_control_e::CAN_QC_OUTPUT_CONTROL_SET) {
+	  // see also "bench_setpin" console command
 		qcDirectPinControlMode = true;
 	    setPin(frame, 1);
 	} else if (command == bench_test_io_control_e::CAN_QC_OUTPUT_CONTROL_CLEAR) {

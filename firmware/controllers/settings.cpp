@@ -348,6 +348,7 @@ static void benchSetPinValue(const char *pinName, int bit) {
 	if (pin == Gpio::Invalid) {
 		return;
 	}
+	// low-level API which does not care about 'qcDirectPinControlMode'
 	palWritePad(getHwPort("write", pin), getHwPin("write", pin), bit);
 	efiPrintf("pin %s set value", hwPortname(pin));
 	readPin(pinName);
@@ -813,6 +814,10 @@ void initSettings() {
 	addConsoleActionS("bench_clearpin", benchClearPin);
 	addConsoleActionS("bench_setpin", benchSetPin);
 	addConsoleActionS("readpin", readPin);
+	addConsoleAction("hw_qc_mode", [](){
+	  extern bool qcDirectPinControlMode;
+  	qcDirectPinControlMode = true;
+  });
 
 #if HAL_USE_ADC
 	addConsoleAction("adc_report", printFullAdcReport);
