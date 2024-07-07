@@ -135,6 +135,27 @@ void setBoardDefaultConfiguration() {
 	hellenWbo();
 }
 
+static Gpio OUTPUTS[] = {
+	Gpio::G14, // 111 Main Relay
+	Gpio::D12, // 113 Fuel Pump Relay
+//	Gpio::D9, // 21 - INJ_5
+//	Gpio::D11, // 22 - INJ_3
+//	Gpio::G7, // 23 - INJ_1
+//	Gpio::F12, // 40 - INJ_6
+//	Gpio::D10, // 41 - INJ_4
+//	Gpio::G8, // 42 - INJ_2
+//	Gpio::F13, // 10 - VTC Left
+//	Gpio::F14, // 11 - VTC Right
+};
+
+int getBoardMetaOutputsCount() {
+    return efi::size(OUTPUTS);
+}
+
+Gpio* getBoardMetaOutputs() {
+    return OUTPUTS;
+}
+
 int getBoardMetaDcOutputsCount() {
     return 1;
 }
