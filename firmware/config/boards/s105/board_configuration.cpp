@@ -108,8 +108,7 @@ void setBoardConfigOverrides() {
 	engineConfiguration->canTxPin = Gpio::A12;
 }
 
-float getAnalogInputDividerCoefficient(adc_channel_e hwChannel)
-{
+float getAnalogInputDividerCoefficient(adc_channel_e hwChannel) {
 	switch (hwChannel) {
 		/* MAP, TPS, MAF (na), AC press (na) */
 		case EFI_ADC_0:
