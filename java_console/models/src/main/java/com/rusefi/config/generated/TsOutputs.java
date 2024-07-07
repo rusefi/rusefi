@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Tue Jun 25 02:20:41 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sun Jul 07 03:19:26 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -225,7 +225,7 @@ public class TsOutputs {
 	public static final Field VVTPOSITIONB1I = Field.create("VVTPOSITIONB1I", 40, FieldType.INT16).setScale(0.02).setBaseOffset(0);
 	public static final Field ACTUALLASTINJECTION = Field.create("ACTUALLASTINJECTION", 42, FieldType.INT16).setScale(0.0033333333333333335).setBaseOffset(0);
 	public static final Field INJECTORDUTYCYCLE = Field.create("INJECTORDUTYCYCLE", 44, FieldType.INT8).setScale(0.5).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_45 = Field.create("ALIGNMENTFILL_AT_45", 45, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field TEMPLOGGING1 = Field.create("TEMPLOGGING1", 45, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field INJECTIONOFFSET = Field.create("INJECTIONOFFSET", 46, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field ENGINEMAKECODENAMECRC16 = Field.create("ENGINEMAKECODENAMECRC16", 48, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field WALLFUELAMOUNT = Field.create("WALLFUELAMOUNT", 50, FieldType.INT16).setScale(0.01).setBaseOffset(0);
@@ -260,7 +260,8 @@ public class TsOutputs {
 	public static final Field FLEXPERCENT = Field.create("FLEXPERCENT", 109, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field WASTEGATEPOSITIONSENSOR = Field.create("WASTEGATEPOSITIONSENSOR", 110, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field HIGHFUELPRESSURE = Field.create("HIGHFUELPRESSURE", 112, FieldType.INT16).setScale(0.1).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_114 = Field.create("ALIGNMENTFILL_AT_114", 114, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field TEMPLOGGING3 = Field.create("TEMPLOGGING3", 114, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field TEMPLOGGING4 = Field.create("TEMPLOGGING4", 115, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field CALIBRATIONVALUE = Field.create("CALIBRATIONVALUE", 116, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field CALIBRATIONMODE = Field.create("CALIBRATIONMODE", 120, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field IDLESTEPPERTARGETPOSITION = Field.create("IDLESTEPPERTARGETPOSITION", 121, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -583,7 +584,8 @@ public class TsOutputs {
 	public static final Field UNEXPECTEDADCSAMPLE = Field.create("UNEXPECTEDADCSAMPLE", 754, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field SADDWELLRATIOCOUNTER = Field.create("SADDWELLRATIOCOUNTER", 756, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field INJECTIONPRIMINGCOUNTER = Field.create("INJECTIONPRIMINGCOUNTER", 757, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_758 = Field.create("ALIGNMENTFILL_AT_758", 758, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field TEMPLOGGING2 = Field.create("TEMPLOGGING2", 758, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_759 = Field.create("ALIGNMENTFILL_AT_759", 759, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ACPRESSURE = Field.create("ACPRESSURE", 760, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field RAWAUXANALOG1 = Field.create("RAWAUXANALOG1", 764, FieldType.INT16).setScale(0.001).setBaseOffset(0);
 	public static final Field RAWAUXANALOG2 = Field.create("RAWAUXANALOG2", 766, FieldType.INT16).setScale(0.001).setBaseOffset(0);
@@ -711,7 +713,7 @@ public class TsOutputs {
 	VVTPOSITIONB1I,
 	ACTUALLASTINJECTION,
 	INJECTORDUTYCYCLE,
-	ALIGNMENTFILL_AT_45,
+	TEMPLOGGING1,
 	INJECTIONOFFSET,
 	ENGINEMAKECODENAMECRC16,
 	WALLFUELAMOUNT,
@@ -746,7 +748,8 @@ public class TsOutputs {
 	FLEXPERCENT,
 	WASTEGATEPOSITIONSENSOR,
 	HIGHFUELPRESSURE,
-	ALIGNMENTFILL_AT_114,
+	TEMPLOGGING3,
+	TEMPLOGGING4,
 	CALIBRATIONVALUE,
 	CALIBRATIONMODE,
 	IDLESTEPPERTARGETPOSITION,
@@ -1069,7 +1072,8 @@ public class TsOutputs {
 	UNEXPECTEDADCSAMPLE,
 	SADDWELLRATIOCOUNTER,
 	INJECTIONPRIMINGCOUNTER,
-	ALIGNMENTFILL_AT_758,
+	TEMPLOGGING2,
+	ALIGNMENTFILL_AT_759,
 	ACPRESSURE,
 	RAWAUXANALOG1,
 	RAWAUXANALOG2,

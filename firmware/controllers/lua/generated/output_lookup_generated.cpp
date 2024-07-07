@@ -149,6 +149,9 @@ float getOutputValueByName(const char *name) {
 // injectorDutyCycle
 		case -354325031:
 			return engine->outputChannels.injectorDutyCycle;
+// tempLogging1
+		case -679828717:
+			return engine->outputChannels.tempLogging1;
 // injectionOffset
 		case -243031057:
 			return engine->outputChannels.injectionOffset;
@@ -251,6 +254,12 @@ float getOutputValueByName(const char *name) {
 // highFuelPressure
 		case -1973799222:
 			return engine->outputChannels.highFuelPressure;
+// tempLogging3
+		case -679828715:
+			return engine->outputChannels.tempLogging3;
+// tempLogging4
+		case -679828714:
+			return engine->outputChannels.tempLogging4;
 // calibrationValue
 		case -1560670902:
 			return engine->outputChannels.calibrationValue;
@@ -761,6 +770,9 @@ float getOutputValueByName(const char *name) {
 // injectionPrimingCounter
 		case 1526237246:
 			return engine->outputChannels.injectionPrimingCounter;
+// tempLogging2
+		case -679828716:
+			return engine->outputChannels.tempLogging2;
 // acPressure
 		case 1644550754:
 			return engine->outputChannels.acPressure;

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Tue Jun 25 02:20:41 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sun Jul 07 03:19:26 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -278,11 +278,9 @@ struct output_channels_s {
 	 */
 	scaled_channel<uint8_t, 2, 1> injectorDutyCycle = (uint8_t)0;
 	/**
-	 * need 4 byte alignment
-	 * units: units
 	 * offset 45
 	 */
-	uint8_t alignmentFill_at_45[1];
+	uint8_t tempLogging1 = (uint8_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_INJECTION_TIMING@@
 	 * units: deg
@@ -476,11 +474,13 @@ struct output_channels_s {
 	 */
 	scaled_channel<int16_t, 10, 1> highFuelPressure = (int16_t)0;
 	/**
-	 * need 4 byte alignment
-	 * units: units
 	 * offset 114
 	 */
-	uint8_t alignmentFill_at_114[2];
+	uint8_t tempLogging3 = (uint8_t)0;
+	/**
+	 * offset 115
+	 */
+	uint8_t tempLogging4 = (uint8_t)0;
 	/**
 	 * offset 116
 	 */
@@ -1149,10 +1149,10 @@ struct output_channels_s {
 	bool vvtChannel4 : 1 {};
 	/**
 	offset 640 bit 30 */
-	bool unusedBit_234_30 : 1 {};
+	bool unusedBit_235_30 : 1 {};
 	/**
 	offset 640 bit 31 */
-	bool unusedBit_234_31 : 1 {};
+	bool unusedBit_235_31 : 1 {};
 	/**
 	 * offset 644
 	 */
@@ -1310,11 +1310,15 @@ struct output_channels_s {
 	 */
 	uint8_t injectionPrimingCounter = (uint8_t)0;
 	/**
-	 * need 4 byte alignment
-	 * units: units
 	 * offset 758
 	 */
-	uint8_t alignmentFill_at_758[2];
+	uint8_t tempLogging2 = (uint8_t)0;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 759
+	 */
+	uint8_t alignmentFill_at_759[1];
 	/**
 	 * @@GAUGE_NAME_AC_PRESSURE@@
 	 * units: kPa
@@ -1349,4 +1353,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 844);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Tue Jun 25 02:20:41 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sun Jul 07 03:19:26 UTC 2024
