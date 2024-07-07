@@ -25,5 +25,7 @@ public:
 	static void UnsubscribeSensor(FunctionalSensor& sensor, adc_channel_e newChannel);
 	static void UpdateSubscribers(efitick_t nowNt);
 
+	static void ResetFilters();
+
 	static void PrintInfo();
 };

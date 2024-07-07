@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "hellen_meta.h"
+#include "adc_subscription.h"
 
 void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
@@ -66,11 +67,13 @@ static bool hellenEnPinInitialized = false;
 void hellenEnableEn(const char *msg) {
   efiPrintf("Turning board ON [%s]", msg);
 	    megaEn.setValue(1, /*isForce*/ true);
+  AdcSubscription::ResetFilters();
 }
 
 void hellenDisableEn(const char *msg) {
   efiPrintf("Turning board off [%s]", msg);
 	    megaEn.setValue(0, /*isForce*/ true);
+  AdcSubscription::ResetFilters();
 }
 
 void setHellenEnPin(Gpio pin, bool enableBoardOnStartUp) {

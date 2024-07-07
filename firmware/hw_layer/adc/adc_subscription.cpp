@@ -125,6 +125,13 @@ TODO: this code is similar to initIfValid, what is the plan? shall we extract he
 	}
 }
 
+void AdcSubscription::ResetFilters() {
+	for (size_t i = 0; i < efi::size(s_entries); i++) {
+		auto &entry = s_entries[i];
+		entry.HasUpdated = false;
+	}
+}
+
 void AdcSubscription::UpdateSubscribers(efitick_t nowNt) {
 	ScopePerf perf(PE::AdcSubscriptionUpdateSubscribers);
 
