@@ -34,9 +34,15 @@ float getVoltageDivided(const char *msg, adc_channel_e hwChannel) {
 	return getVoltage(msg, hwChannel) * getAnalogInputDividerCoefficient(hwChannel);
 }
 
+float BOARD_WEAK boardAdjustVoltage(float voltage, adc_channel_e hwChannel) {
+  // a hack useful when we do not trust voltage just after board EN was turned on. is this just hiding electrical design flaws?
+  return voltage;
+}
+
 // voltage in MCU universe, from zero to VDD
 float getVoltage(const char *msg, adc_channel_e hwChannel) {
-	return adcToVolts(getAdcValue(msg, hwChannel));
+	float voltage = adcToVolts(getAdcValue(msg, hwChannel));
+	return boardAdjustVoltage(voltage, hwChannel);
 }
 
 #if EFI_USE_FAST_ADC
