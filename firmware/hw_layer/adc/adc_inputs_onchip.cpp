@@ -2,7 +2,7 @@
  * @file	adc_inputs_onchip.cpp
  * @brief	Low level ADC code
  *
- * rusEfi uses two ADC devices on the same 16 pins at the moment. Two ADC devices are used in orde to distinguish between
+ * rusEfi uses two ADC devices on the same 16 pins at the moment. Two ADC devices are used in order to distinguish between
  * fast and slow devices. The idea is that but only having few channels in 'fast' mode we can sample those faster?
  *
  * At the moment rusEfi does not allow to have more than 16 ADC channels combined. At the moment there is no flexibility to use
