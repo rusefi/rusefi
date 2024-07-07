@@ -44,6 +44,10 @@ static void qcSetEtbState(uint8_t dcIndex, uint8_t direction) {
   directWritePad(controlPin, 1);
 	if (engineConfiguration->etb_use_two_wires) {
 	  // TLE7209 and L6205
+	  // let's force proper pin mode to work around potentially uninitialized subsystem
+	  efiSetPadModeWithoutOwnershipAcquisition("QC_ETB_1", io->directionPin1, PAL_MODE_OUTPUT_PUSHPULL);
+	  efiSetPadModeWithoutOwnershipAcquisition("QC_ETB_2", io->directionPin2, PAL_MODE_OUTPUT_PUSHPULL);
+
 	  directWritePad(io->directionPin1, direction);
 	  directWritePad(io->directionPin2, !direction);
 	} else {

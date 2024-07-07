@@ -818,6 +818,13 @@ void initSettings() {
 	  extern bool qcDirectPinControlMode;
   	qcDirectPinControlMode = true;
   });
+	addConsoleActionS("bench_set_output_mode", [](const char *pinName){
+	  brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
+	  if (pin == Gpio::Invalid) {
+		  return;
+	  }
+	  efiSetPadModeWithoutOwnershipAcquisition("manual-mode", pin, PAL_MODE_OUTPUT_PUSHPULL);
+  });
 
 #if HAL_USE_ADC
 	addConsoleAction("adc_report", printFullAdcReport);
