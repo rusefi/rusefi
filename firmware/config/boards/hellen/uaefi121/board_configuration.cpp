@@ -13,7 +13,13 @@ void setBoardConfigOverrides() {
 	setHellenMegaEnPin();
 	setHellenVbatt();
 
-	hellenMegaSdWithAccelerometer();
+	hellenMegaAccelerometerPreInitCS2Pin();
+  engineConfiguration->isSdCardEnabled = true;
+	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
+	engineConfiguration->spi1mosiPin = Gpio::A7; // not the usual H_SPI1_MOSI since that's CAN2RX
+	engineConfiguration->spi1misoPin = Gpio::H_SPI1_MISO;
+	engineConfiguration->spi1sckPin = Gpio::H_SPI1_SCK;
+	engineConfiguration->is_enabled_spi_1 = true;
 	setDefaultHellenAtPullUps();
 
 	engineConfiguration->canTxPin = Gpio::B13;
