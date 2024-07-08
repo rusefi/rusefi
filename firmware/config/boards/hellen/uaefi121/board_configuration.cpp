@@ -16,6 +16,10 @@ void setBoardConfigOverrides() {
 	hellenMegaSdWithAccelerometer();
 	setDefaultHellenAtPullUps();
 
+	engineConfiguration->canTxPin = Gpio::B13;
+	engineConfiguration->canRxPin = Gpio::B5;
+
+
 }
 
 void setBoardDefaultConfiguration() {
