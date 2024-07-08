@@ -232,7 +232,7 @@
 							<Parameters address="0x40023C14" name="FLASH_OPTCR" size="0x4"/>
 							<AssignedBits>
 								<Bit config="0">
-									<Name>WRP0</Name>
+									<Name>nWRP0</Name>
 									<Description/>
 									<BitOffset>0x10</BitOffset>
 									<BitWidth>0x8</BitWidth>
@@ -243,7 +243,7 @@
 									</Values>	
 								</Bit>
 								<Bit config="1">
-									<Name>WRP0</Name>
+									<Name>nWRP0</Name>
 									<Description/>
 									<BitOffset>0x10</BitOffset>
 									<BitWidth>0x8</BitWidth>
@@ -363,10 +363,10 @@
 					<Category>
 						<Name>Write Protection</Name>
 						<Field>
-							<Parameters address="0x1FFFC008" name="WRP1" size="0x4"/>
+							<Parameters address="0x1FFFC008" name="nWRP1" size="0x4"/>
 							<AssignedBits>
 								<Bit config="0">
-									<Name>WRP0</Name>
+									<Name>nWRP0</Name>
 									<Description/>
 									<BitOffset>0x0</BitOffset>
 									<BitWidth>0x8</BitWidth>
@@ -377,7 +377,7 @@
 									</Values>	
 								</Bit>
 								<Bit config="1">
-									<Name>WRP0</Name>
+									<Name>nWRP0</Name>
 									<Description/>
 									<BitOffset>0x0</BitOffset>
 									<BitWidth>0x8</BitWidth>
