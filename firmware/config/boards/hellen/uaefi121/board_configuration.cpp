@@ -15,6 +15,7 @@ void setBoardConfigOverrides() {
 
 	hellenMegaAccelerometerPreInitCS2Pin();
   engineConfiguration->isSdCardEnabled = true;
+  engineConfiguration->sdCardCsPin = Gpio::H_SPI1_CS1;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
 	engineConfiguration->spi1mosiPin = Gpio::A7; // not the usual H_SPI1_MOSI since that's CAN2RX
 	engineConfiguration->spi1misoPin = Gpio::H_SPI1_MISO;
