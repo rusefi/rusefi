@@ -548,7 +548,7 @@ bool validateConfigOnStartUpOrBurn() {
 	  engineConfiguration->mapExpAverageAlpha = 1;
 	}
 
-	ensureArrayIsAscending("Batt Lag", engineConfiguration->injector.battLagCorrBins);
+	ensureArrayIsAscending("Injector deadtime", engineConfiguration->injector.battLagCorrBins);
 
 #if EFI_ENGINE_CONTROL
 	// Fueling
@@ -609,7 +609,7 @@ bool validateConfigOnStartUpOrBurn() {
 
 // todo: huh? why does this not work on CI?	ensureArrayIsAscendingOrDefault("Dwell Correction Voltage", engineConfiguration->dwellVoltageCorrVoltBins);
 
-	ensureArrayIsAscending("MAF decoding", config->mafDecodingBins);
+	ensureArrayIsAscending("MAF transfer function", config->mafDecodingBins);
 
 	// Cranking tables
 	ensureArrayIsAscending("Cranking fuel mult", config->crankingFuelBins);
@@ -631,7 +631,7 @@ bool validateConfigOnStartUpOrBurn() {
 		if (cfg.pin == Gpio::Unassigned) {
 			continue;
 		}
-		ensureArrayIsAscending("VR Bins", cfg.rpmBins);
+		ensureArrayIsAscending("VR threshold", cfg.rpmBins);
 	}
 
 #if EFI_BOOST_CONTROL
