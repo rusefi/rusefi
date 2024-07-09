@@ -556,4 +556,4 @@ runs:
       with:
         operation: 'write'
         file-path: ${{ inputs.gha_outputs_file }}
-        key-value-pairs: '{"white_label": "${{ steps.find-out-white-label.outputs.white_label }}", "short_board_name": "${{ steps.set-env-variables.outputs.short_board_name }}", "new_tag": "${{ steps.tag.outputs.new_tag }}"}'
+        key-value-pairs: '{"white_label": "${{ steps.find-out-white-label.outputs.white_label }}", "short_board_name": "${{ env.SHORT_BOARD_NAME }}", "new_tag": "${{ steps.tag.outputs.new_tag }}"}'
