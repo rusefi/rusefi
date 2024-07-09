@@ -6,7 +6,6 @@ import com.rusefi.Timeouts;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.core.FindFileHelper;
-import com.rusefi.core.io.BundleUtil;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.DfuHelper;
 import com.rusefi.io.IoStream;
@@ -47,18 +46,6 @@ public class DfuFlasher {
             return;
         }
 
-        boolean needsEraseFirst = false;
-        String bundle = BundleUtil.getBundleTarget();
-        if (bundle.contains("alphax") && bundle.contains("f7")) {
-            int result = JOptionPane.showConfirmDialog(parent, "Firmware update requires a full erase of the ECU. If your tune is not saved in TunerStudio, it will be lost.\nEnsure that TunerStudio has your current tune saved!\n\nAfter updating, re-connect TunerStudio to restore your tune.\n\nPress OK to continue with the update, or Cancel to abort so you can save your tune.", "WARNING", JOptionPane.OK_CANCEL_OPTION);
-
-            if (result != JOptionPane.YES_OPTION) {
-                return;
-            }
-
-            needsEraseFirst = true;
-        }
-
         AtomicBoolean isSignatureValidated = rebootToDfu(parent, port, callbacks, Fields.CMD_REBOOT_DFU);
         if (isSignatureValidated == null)
             return;
@@ -69,10 +56,9 @@ public class DfuFlasher {
                 return;
             }
 
-            boolean finalNeedsEraseFirst = needsEraseFirst;
             submitAction(() -> {
                 timeForDfuSwitch(callbacks);
-                executeDFU(callbacks, finalNeedsEraseFirst, FindFileHelper.FIRMWARE_BIN_FILE);
+                executeDFU(callbacks, FindFileHelper.FIRMWARE_BIN_FILE);
             });
         } else {
             callbacks.log("Please use manual DFU to change bundle type.");
@@ -153,23 +139,19 @@ public class DfuFlasher {
     }
 
     public static void runDfuProgramming(UpdateOperationCallbacks callbacks) {
-        submitAction(() -> executeDFU(callbacks, false, FindFileHelper.FIRMWARE_BIN_FILE));
+        submitAction(() -> executeDFU(callbacks, FindFileHelper.FIRMWARE_BIN_FILE));
     }
 
     public static void runOpenBltInitialProgramming(UpdateOperationCallbacks callbacks) {
-        submitAction(() -> executeDFU(callbacks, false, DfuFlasher.BOOTLOADER_BIN_FILE));
+        submitAction(() -> executeDFU(callbacks, DfuFlasher.BOOTLOADER_BIN_FILE));
     }
 
-    private static void executeDFU(UpdateOperationCallbacks callbacks, boolean fullErase, String firmwareBinFile) {
+    private static void executeDFU(UpdateOperationCallbacks callbacks, String firmwareBinFile) {
         boolean driverIsHappy = detectSTM32BootloaderDriverState(callbacks);
         if (!driverIsHappy) {
             callbacks.append("*** DRIVER ERROR? *** Did you have a chance to try 'Install Drivers' button on top of rusEFI console start screen?");
             callbacks.error();
             return;
-        }
-
-        if (fullErase) {
-            runDfuErase(callbacks);
         }
 
         StringBuffer stdout = new StringBuffer();
