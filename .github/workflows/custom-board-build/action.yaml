@@ -82,6 +82,10 @@ inputs:
   gha_outputs_file:
     description: '.properties file to store GHA outputs (unfortunately GGA outputs do not work for nested GHA - see https://github.com/actions/runner/issues/2009#issuecomment-1793565031)'
     required: false
+    default: ''
+  skip_uploading_obfuscated_bundle:
+    description: 'should be true if this GHA should not upload obfuscated bundle'
+    required: false
     default: 'false'
 
 runs:
@@ -480,7 +484,7 @@ runs:
         path: ${{inputs.rusefi_dir}}/artifacts/${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_autoupdate.zip
 
     - name: Upload obfuscated Bundle
-      if: ${{ contains(inputs.artifacts, 'obfuscated') }}
+      if: ${{ contains(inputs.artifacts, 'obfuscated') && inputs.skip_uploading_obfuscated_bundle == 'false' }}
       working-directory: ${{inputs.rusefi_dir}}/artifacts
       shell: bash
       run: |
@@ -496,14 +500,14 @@ runs:
         bash ../firmware/bin/upload_bundle.sh ${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_USER }} "${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_PASS }}" ${{ inputs.RUSEFI_OBFUSCATED_PUBLIC_SSH_SERVER }} "${{env.SHORT_BOARD_NAME}}_obfuscated_public"
 
     - name: Upload github action bundle obfuscated_public artifact
-      if: ${{ contains(inputs.artifacts, 'obfuscated') }}
+      if: ${{ contains(inputs.artifacts, 'obfuscated') && inputs.skip_uploading_obfuscated_bundle == 'false' }}
       uses: actions/upload-artifact@v4
       with:
         name: ${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public_${{env.current_date}}.zip
         path: ${{inputs.rusefi_dir}}/artifacts/${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public.zip
 
     - name: Upload github action bundle obfuscated_public_autoupdate artifact
-      if: ${{ contains(inputs.artifacts, 'obfuscated') }}
+      if: ${{ contains(inputs.artifacts, 'obfuscated') && inputs.skip_uploading_obfuscated_bundle == 'false' }}
       uses: actions/upload-artifact@v4
       with:
         name: ${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_obfuscated_public_autoupdate_${{env.current_date}}.zip
@@ -533,7 +537,7 @@ runs:
         bash ../firmware/bin/upload_bundle.sh ${{ env.RUSEFI_SSH_USER }} ${{ env.RUSEFI_SSH_PASS }} ${{ env.RUSEFI_SSH_SERVER }} ${{ env.BUNDLE_NAME }} ${{ inputs.new_tag }}
 
     - name: Upload Obfuscated Tagged Daily Release Bundle
-      if: ${{ contains(inputs.artifacts, 'obfuscated') && steps.tag.outputs.new_tag != ''}}
+      if: ${{ contains(inputs.artifacts, 'obfuscated') && inputs.skip_uploading_obfuscated_bundle == 'false' && steps.tag.outputs.new_tag != ''}}
       working-directory: ${{inputs.rusefi_dir}}/artifacts
       shell: bash
       run: |
