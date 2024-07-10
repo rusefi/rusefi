@@ -4,12 +4,12 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
-	Gpio::I2, // Main Relay
+	Gpio::MM176_OUT_PWM17, // Main Relay
 	Gpio::F13, // 19 - INJ 7
 	Gpio::F14, // 24 - INJ 8
 	Gpio::D13, // 37 - TACH
 	Gpio::G4, // 47 - CEL
-	Gpio::H14, // 65 - Fuel Pump
+	Gpio::MM176_GP13, // 65 - Fuel Pump
 	Gpio::D10, // 88 - INJ_4
 	Gpio::G8, // 89 - INJ_2
 	Gpio::G7, // 96 - INJ_1
