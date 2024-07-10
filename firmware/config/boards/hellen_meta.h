@@ -247,9 +247,9 @@ static void enableHellenSpi1() {
 	engineConfiguration->is_enabled_spi_1 = true;
 }
 
-static void setHellenSdCardSpi1NoCS() {
-    engineConfiguration->isSdCardEnabled = true;
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
+static void setHellenSdCardSpi1Hardware() {
+  engineConfiguration->sdCardCsPin = Gpio::H_SPI1_CS1;
+  engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
 	enableHellenSpi1();
 }
 
@@ -275,8 +275,8 @@ static void setAccelerometerSpi() {
 }
 
 static void setHellenSdCardSpi1() {
-    setHellenSdCardSpi1NoCS();
-    engineConfiguration->sdCardCsPin = Gpio::H_SPI1_CS1;
+  setHellenSdCardSpi1Hardware();
+  engineConfiguration->isSdCardEnabled = true;
 }
 
 static void setHellen64SdCardSpi() {
