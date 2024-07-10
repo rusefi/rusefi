@@ -1,6 +1,8 @@
+meta: config/boards/hellen_mm176_meta.h
+
 pins:
   - pin: MR
-    id: I2
+    meta: MM176_OUT_PWM17
     class: outputs
     ts_name: Main Relay
     function: OUT_MAIN
@@ -180,7 +182,7 @@ pins:
     function: EVAP unused
 
   - pin: 65a
-    id: H14
+    meta: MM176_GP13
     class: outputs
     ts_name: 65 - Fuel Pump
     function: Fuel Pump Relay
