@@ -92,6 +92,7 @@ public:
 	int readValueAndHandleChannel(DEFINE_HIP_PARAMS);
 	float getBand(DEFINE_HIP_PARAMS);
 	int getIntegrationIndexByRpm(float rpm);
+	int getIntegrationTimeByIndex(int index);
 	int getBandIndex(DEFINE_HIP_PARAMS);
 	int getGainIndex(DEFINE_HIP_PARAMS);
 
