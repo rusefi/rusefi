@@ -626,8 +626,9 @@ static void showHipInfo() {
 		instance.getBand(PASS_HIP_PARAMS),
 		instance.bandIdx);
 
-	efiPrintf(" Integrator idx 0x%x",
-		instance.intergratorIdx);
+	efiPrintf(" Integrator %d uS idx 0x%x RPM %d",
+		instance.getIntegrationTimeByIndex(instance.intergratorIdx),
+		instance.intergratorIdx, instance.rpmLookup[INT_LOOKUP_SIZE - 1 - instance.intergratorIdx]);
 
 	efiPrintf(" Gain %.2f idx 0x%x",
 		engineConfiguration->hip9011Gain,

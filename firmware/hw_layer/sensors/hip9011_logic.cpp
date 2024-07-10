@@ -137,6 +137,10 @@ int HIP9011::getIntegrationIndexByRpm(float rpm) {
 	return i == -1 ? INT_LOOKUP_SIZE - 1 : INT_LOOKUP_SIZE - i - 1;
 }
 
+int HIP9011::getIntegrationTimeByIndex(int index) {
+	return integratorValues[index & 0x1f];
+}
+
 void HIP9011::setAngleWindowWidth(DEFINE_HIP_PARAMS) {
 	float new_angleWindowWidth = GET_CONFIG_VALUE(knockSamplingDuration);
 	if (new_angleWindowWidth < 0) {
