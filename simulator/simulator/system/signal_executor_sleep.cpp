@@ -106,10 +106,6 @@ static void doScheduleForLater(scheduling_s *scheduling, int delayUs, action_s a
 	chVTSetI(&scheduling->timer, delaySt, (vtfunc_t)timerCallback, ctx);
 }
 
-void SleepExecutor::scheduleForLater(const char *msg, scheduling_s *scheduling, int delayUs, action_s action) {
-	doScheduleForLater(scheduling, delayUs, action);
-}
-
 void SleepExecutor::cancel(scheduling_s* s) {
 	chibios_rt::CriticalSectionLocker csl;
 
