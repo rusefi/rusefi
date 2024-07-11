@@ -854,7 +854,7 @@ pin_output_mode_e hip9011IntHoldPinMode;
 
 	Gpio[EGT_CHANNEL_COUNT iterate] max31855_cs;
 	brain_input_pin_e flexSensorPin;Continental/GM flex fuel sensor, 50-150hz type;
-	Gpio test557pin
+	uint16_t unused720
 	pin_output_mode_e stepperDirectionPinMode;
 
 	spi_device_e mc33972spiDevice;

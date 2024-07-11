@@ -37,39 +37,6 @@ static_assert(libHELLEN_4CHAN_STIM_QC == (int)engine_type_e::HELLEN_4CHAN_STIM_Q
 #include "scheduler.h"
 #endif /* EFI_PROD_CODE */
 
-#if EFI_PROD_CODE
-static int periodIndex = 0;
-
-static OutputPin testPin;
-static scheduling_s testScheduling;
-
-static int test557[] = {5, 5, 10, 10, 20, 20, 50, 50, 100, 100, 200, 200, 500, 500, 500, 500};
-#define TEST_LEN 16
-
-efitimeus_t testTime;
-
-static void toggleTestAndScheduleNext(void *) {
-	testPin.toggle();
-	periodIndex = (periodIndex + 1) % TEST_LEN;
-	testTime += test557[periodIndex];
-	engine->executor.scheduleByTimestamp("test", &testScheduling, testTime, &toggleTestAndScheduleNext);
-}
-
-/**
- * https://github.com/rusefi/rusefi/issues/557 common rail / direct injection scheduling control test
- */
-void runSchedulingPrecisionTestIfNeeded(void) {
-	if (!isBrainPinValid(engineConfiguration->test557pin)) {
-		return;
-	}
-
-	testPin.initPin("test", engineConfiguration->test557pin);
-	testPin.setValue(0);
-	testTime = getTimeNowUs();
-	toggleTestAndScheduleNext(/*unused*/ nullptr);
-}
-#endif /* EFI_PROD_CODE */
-
 void setDiscoveryPdm() {
 }
 

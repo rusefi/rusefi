@@ -278,7 +278,6 @@ void runRusEfiWithConfig() {
 		initTimePerfActions();
 	#endif
 
-		runSchedulingPrecisionTestIfNeeded();
 	}
 }
 
