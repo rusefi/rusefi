@@ -45,10 +45,6 @@ SingleTimerExecutor::SingleTimerExecutor()
 {
 }
 
-void SingleTimerExecutor::scheduleForLater(const char *msg, scheduling_s *scheduling, int delayUs, action_s action) {
-	scheduleByTimestamp(msg, scheduling, getTimeNowUs() + delayUs, action);
-}
-
 /**
  * @brief Schedule an event at specific delay after now
  *

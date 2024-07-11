@@ -81,7 +81,6 @@ public:
 
 	MOCK_METHOD(void, scheduleByTimestamp, (const char *msg, scheduling_s *scheduling, efitimeus_t timeUs, action_s action), (override));
 	MOCK_METHOD(void, scheduleByTimestampNt, (const char *msg, scheduling_s *scheduling, efitick_t timeNt, action_s action), (override));
-	MOCK_METHOD(void, scheduleForLater, (const char *msg, scheduling_s *scheduling, int delayUs, action_s action), (override));
 	MOCK_METHOD(void, cancel, (scheduling_s*), (override));
 };
 
