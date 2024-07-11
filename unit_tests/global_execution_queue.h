@@ -14,7 +14,6 @@ class TestExecutor : public ExecutorInterface {
 public:
 	~TestExecutor();
 
-	void scheduleByTimestamp(const char *msg, scheduling_s *scheduling, efitimeus_t timeUs, action_s action) override;
 	void scheduleByTimestampNt(const char *msg, scheduling_s *scheduling, efitick_t timeNt, action_s action) override;
 	void cancel(scheduling_s* scheduling) override;
 
