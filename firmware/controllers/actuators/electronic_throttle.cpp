@@ -657,10 +657,11 @@ void EtbController::checkOutput(percent_t output) {
 	etbDutyRateOfChange = m_dutyRocAverage.average(absF(output - prevOutput));
 	prevOutput = output;
 
-	float integrator = absF(m_pid.getIntegration());
+#if EFI_UNIT_TEST
 	auto integratorLimit = engineConfiguration->etbJamIntegratorLimit;
 
 	if (integratorLimit != 0) {
+	  float integrator = absF(m_pid.getIntegration());
 		auto nowNt = getTimeNowNt();
 
 		if (integrator > integratorLimit) {
@@ -677,6 +678,8 @@ void EtbController::checkOutput(percent_t output) {
 
 		jamTimer = m_jamDetectTimer.getElapsedSeconds(nowNt);
 	}
+#endif // EFI_UNIT_TEST
+
 }
 
 void EtbController::autoCalibrateTps() {
