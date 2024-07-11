@@ -3,7 +3,27 @@
 #include "event_queue.h"
 
 bool TriggerScheduler::assertNotInList(AngleBasedEvent *head, AngleBasedEvent *element) {
-       assertNotInListMethodBody(head, element, nextToothEvent)
+	/* this code is just to validate state, no functional load*/
+	decltype(head) current;
+	int counter = 0;
+	LL_FOREACH2(head, current, nextToothEvent) {
+		if (++counter > QUEUE_LENGTH_LIMIT) {
+			firmwareError(ObdCode::CUSTOM_ERR_LOOPED_QUEUE, "Looped queue?");
+			return false;
+		}
+
+		if (current == element) {
+			/**
+			 * for example, this might happen in case of sudden RPM change if event
+			 * was not scheduled by angle but was scheduled by time. In case of scheduling
+			 * by time with slow RPM the whole next fast revolution might be within the wait 
+			 */
+			warning(ObdCode::CUSTOM_RE_ADDING_INTO_EXECUTION_QUEUE, "re-adding element into event_queue");
+			return true;
+		}
+	}
+
+	return false;
 }
 
 void TriggerScheduler::schedule(const char *msg, AngleBasedEvent* event, angle_t angle, action_s action) {
