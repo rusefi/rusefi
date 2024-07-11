@@ -263,7 +263,7 @@ bool EventQueue::executeOne(efitick_t now) {
 	return true;
 }
 
-int EventQueue::size(void) const {
+int EventQueue::size() const {
 	scheduling_s *tmp;
 	int result;
 	LL_COUNT2(m_head, tmp, result, nextScheduling_s);
@@ -298,7 +298,7 @@ scheduling_s *EventQueue::getElementAtIndexForUnitText(int index) {
 	return NULL;
 }
 
-void EventQueue::clear(void) {
+void EventQueue::clear() {
 	// Flush the queue, resetting all scheduling_s as though we'd executed them
 	while(m_head) {
 		auto x = m_head;
