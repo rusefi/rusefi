@@ -139,9 +139,9 @@ static void fastAdcDoneCB(ADCDriver *adcp) {
 
 static volatile adcerror_t fastAdcLastError;
 
-static void fastAdcErrorCB(ADCDriver *, adcerror_t err)
-{
+static void fastAdcErrorCB(ADCDriver *, adcerror_t err) {
 	fastAdcLastError = err;
+	engine->outputChannels.fastAdcErrorCallbackCount++;
 }
 
 static void fastAdcTrigger(GPTDriver*) {

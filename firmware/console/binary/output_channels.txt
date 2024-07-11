@@ -405,6 +405,8 @@ float mapFast
  	int16_t autoscale rawAuxAnalog3;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
  	int16_t autoscale rawAuxAnalog4;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
+  uint8_t fastAdcErrorCallbackCount
+  uint8_t slowAdcErrorsCount
 
-	uint8_t[72 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t[68 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct
