@@ -327,6 +327,8 @@ static const LogField fields[] = {
 	{engine->outputChannels.rawAuxAnalog2, "rawAuxAnalog2", "V", 3},
 	{engine->outputChannels.rawAuxAnalog3, "rawAuxAnalog3", "V", 3},
 	{engine->outputChannels.rawAuxAnalog4, "rawAuxAnalog4", "V", 3},
+	{engine->outputChannels.fastAdcErrorCallbackCount, "fastAdcErrorCallbackCount", "", 0},
+	{engine->outputChannels.slowAdcErrorsCount, "slowAdcErrorsCount", "", 0},
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},
 #endif

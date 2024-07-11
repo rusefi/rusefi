@@ -788,6 +788,12 @@ float getOutputValueByName(const char *name) {
 // rawAuxAnalog4
 		case 98140611:
 			return engine->outputChannels.rawAuxAnalog4;
+// fastAdcErrorCallbackCount
+		case -2045395013:
+			return engine->outputChannels.fastAdcErrorCallbackCount;
+// slowAdcErrorsCount
+		case -276658792:
+			return engine->outputChannels.slowAdcErrorsCount;
 // totalFuelCorrection
 #if EFI_ENGINE_CONTROL
 		case -1779658835:
