@@ -130,7 +130,7 @@ static void watchDogBuddyCallback(void*) {
 	 * watchdog happy by ensuring that we have scheduler activity even in case of very broken configuration
 	 * without any PWM or input pins
 	 */
-	engine->executor.scheduleForLater("watch", &watchDogBuddy, MS2US(1000), watchDogBuddyCallback);
+	engine->executor.scheduleByTimestampNt("watch", &watchDogBuddy, getTimeNowNt() + MS2NT(1000), watchDogBuddyCallback);
 }
 
 static volatile bool testSchedulingHappened = false;
@@ -156,7 +156,11 @@ static void validateHardwareTimer() {
 	testScheduling.reset();
 
 	// to save RAM let's use 'watchDogBuddy' here once before we enable watchdog
-	engine->executor.scheduleForLater("hw-validate", &watchDogBuddy, MS2US(TEST_CALLBACK_DELAY), timerValidationCallback);
+	engine->executor.scheduleByTimestampNt(
+			"hw-validate",
+			&watchDogBuddy,
+			getTimeNowNt() + MS2NT(TEST_CALLBACK_DELAY),
+			timerValidationCallback);
 
 	chThdSleepMilliseconds(TEST_CALLBACK_DELAY + 2);
 	if (!testSchedulingHappened) {
