@@ -96,6 +96,9 @@ pins:
     function: Ambient Temperature
 
   - pin: K22
+    meta: H144_IN_AUX3
+    function: BK2 Wastegate Position - 22
+    class: analog_inputs
     ts_name: BK2 Wastegate Position - 22
 
   - pin: K25
