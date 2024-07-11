@@ -1701,7 +1701,7 @@
 #define ts_show_vvt_output true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.07.10.hellen-112-17.1883307600"
+#define TS_SIGNATURE "rusEFI master.2024.07.11.hellen-112-17.1883307600"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
