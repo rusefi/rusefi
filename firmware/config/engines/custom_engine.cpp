@@ -147,22 +147,6 @@ void setFrankensoConfiguration() {
 
 	setAlgorithm(LM_SPEED_DENSITY);
 
-#if EFI_PWM_TESTER
-	engineConfiguration->injectionPins[4] = Gpio::C8; // #5
-	engineConfiguration->injectionPins[5] = Gpio::D10; // #6
-	engineConfiguration->injectionPins[6] = Gpio::D9;
-	engineConfiguration->injectionPins[7] = Gpio::D11;
-	engineConfiguration->injectionPins[8] = Gpio::D0;
-	engineConfiguration->injectionPins[9] = Gpio::B11;
-	engineConfiguration->injectionPins[10] = Gpio::C7;
-	engineConfiguration->injectionPins[11] = Gpio::E4;
-
-	/**
-	 * We want to initialize all outputs for test
-	 */
-	engineConfiguration->cylindersCount = 12;
-
-#else /* EFI_PWM_TESTER */
 	engineConfiguration->injectionPins[4] = Gpio::Unassigned;
 	engineConfiguration->injectionPins[5] = Gpio::Unassigned;
 	engineConfiguration->injectionPins[6] = Gpio::Unassigned;
@@ -177,7 +161,6 @@ void setFrankensoConfiguration() {
 	engineConfiguration->ignitionPins[2] = Gpio::C9;
 	// set_ignition_pin 4 PE10
 	engineConfiguration->ignitionPins[3] = Gpio::E10;
-#endif /* EFI_PWM_TESTER */
 
 	// todo: 8.2 or 10k?
 	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;

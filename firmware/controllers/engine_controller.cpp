@@ -92,10 +92,6 @@
 #include "mpu_util.h"
 #endif /* EFI_UNIT_TEST */
 
-#if EFI_PROD_CODE
-#include "pwm_tester.h"
-#endif /* EFI_PROD_CODE */
-
 #if !EFI_UNIT_TEST
 
 /**
@@ -738,11 +734,6 @@ void initRealHardwareEngineController() {
 	engineStateBlinkingTask.start();
 
 	initVrThresholdPwm();
-
-#if EFI_PWM_TESTER
-	initPwmTester();
-#endif /* EFI_PWM_TESTER */
-
 }
 
 /**
