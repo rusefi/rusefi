@@ -60,7 +60,9 @@ static void scheduleTriggerEvents(TriggerWaveform *shape,
 			param->isVvt = isVvt;
 			param->vvtBankIndex = vvtBankIndex;
 
-			engine->executor.scheduleByTimestamp("test", &param->sched, timeScale * 1000 * angle, { func, param.get() });
+			efitick_t timeNt = efitick_t{US2NT(timeScale * 1000 * angle)};
+
+			engine->executor.scheduleByTimestampNt("test", &param->sched, timeNt, { func, param.get() });
 			totalIndex++;
 		}
 	}
