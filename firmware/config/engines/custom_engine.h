@@ -9,7 +9,6 @@
 
 #include "engine_configuration.h"
 void setFrankensoConfiguration();
-void runSchedulingPrecisionTestIfNeeded(void);
 void setDiscoveryPdm();
 void setFrankensoBoardTestConfiguration();
 void setEtbTestConfiguration();

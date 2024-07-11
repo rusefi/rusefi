@@ -290,8 +290,6 @@ void runRusEfiWithConfig() {
 
 		// This has to happen after RegisteredOutputPins are init'd: otherwise no change will be detected, and no init will happen
 		rememberCurrentConfiguration();
-
-		runSchedulingPrecisionTestIfNeeded();
 	}
 }
 
