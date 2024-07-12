@@ -398,7 +398,7 @@ efitick_t scheduleByAngle(scheduling_s *timer, efitick_t nowNt, angle_t angle,
 
 	efitick_t actionTimeNt = sumTickAndFloat(nowNt, USF2NT(delayUs));
 
-	engine->executor.scheduleByTimestampNt("angle", timer, actionTimeNt, action);
+	engine->scheduler.schedule("angle", timer, actionTimeNt, action);
 
 	return actionTimeNt;
 }

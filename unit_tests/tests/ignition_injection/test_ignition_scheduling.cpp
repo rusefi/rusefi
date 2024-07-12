@@ -89,7 +89,7 @@ TEST(ignition, trailingSpark) {
 	EXPECT_EQ(enginePins.trailingCoils[0].getLogicValue(), false);
 
 	// Should be a TDC callback + spark firing
-	EXPECT_EQ(engine->executor.size(), 2);
+	EXPECT_EQ(engine->scheduler.size(), 2);
 
 	// execute all actions
 	eth.executeActions();
@@ -198,7 +198,7 @@ TEST(ignition, oddCylinderWastedSpark) {
 	StrictMock<MockExecutor> mockExec;
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engine->executor.setMockExecutor(&mockExec);
+	engine->scheduler.setMockExecutor(&mockExec);
 	engineConfiguration->cylindersCount = 1;
 	engineConfiguration->firingOrder = FO_1;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
@@ -216,19 +216,19 @@ TEST(ignition, oddCylinderWastedSpark) {
 		// Dwell 5 deg from now
 		float nt1deg = USF2NT(engine->rpmCalculator.oneDegreeUs);
 		efitick_t startTime = nowNt1 + nt1deg * 5;
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime, _));
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime, _));
 		// Spark 15 deg from now
 		efitick_t endTime = startTime + nt1deg * 10;
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, endTime, _));
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, endTime, _));
 
 
 		// Should schedule second dwell+fire pair, the out of phase copy
 		// Dwell 5 deg from now
 		startTime = nowNt2 + nt1deg * 5;
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime, _));
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime, _));
 		// Spark 15 deg from now
 		endTime = startTime + nt1deg * 10;
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, endTime, _));
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, endTime, _));
 	}
 
 	engine->ignitionState.sparkDwell = 1;

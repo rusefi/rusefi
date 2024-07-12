@@ -160,7 +160,7 @@ static void turnVvtPidOn(int index) {
 	}
 
 	startSimplePwmExt(&vvtPwms[index], vvtOutputNames[index],
-			&engine->executor,
+			&engine->scheduler,
 			engineConfiguration->vvtPins[index],
 			getVvtOutputPin(index),
 			engineConfiguration->vvtOutputFrequency, 0.1,

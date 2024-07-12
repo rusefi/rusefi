@@ -234,7 +234,7 @@ static void logVvtFront(bool useOnlyRise, bool isImportantFront, TriggerValue fr
 #if EFI_PROD_CODE
 		writePad("cam debug", engineConfiguration->camInputsDebug[index], 1);
 #endif /* EFI_PROD_CODE */
-		getExecutorInterface()->scheduleByTimestampNt("dbg_on", &debugToggleScheduling, nowNt + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
+		getScheduler()->schedule("dbg_on", &debugToggleScheduling, nowNt + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
 	}
 
 	if (!useOnlyRise || engineConfiguration->displayLogicLevelsInEngineSniffer) {
@@ -536,7 +536,7 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 #if EFI_PROD_CODE
 		writePad("trigger debug", engineConfiguration->triggerInputDebugPins[signalIndex], 1);
 #endif /* EFI_PROD_CODE */
-		getExecutorInterface()->scheduleByTimestampNt("dbg_off", &debugToggleScheduling, timestamp + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
+		getScheduler()->schedule("dbg_off", &debugToggleScheduling, timestamp + DEBUG_PIN_DELAY, &turnOffAllDebugFields);
 	}
 
 #if EFI_TOOTH_LOGGER
