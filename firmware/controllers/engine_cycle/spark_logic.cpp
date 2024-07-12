@@ -264,8 +264,8 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 #endif /* SPARK_EXTREME_LOGGING */
 
 		// We can schedule both of these right away, since we're going for "asap" not "particular angle"
-		engine->executor.scheduleByTimestampNt("dwell", &event->dwellStartTimer, nextDwellStart, { &turnSparkPinHighStartCharging, event });
-		engine->executor.scheduleByTimestampNt("firing", &event->sparkEvent.eventScheduling, nextFiring, { fireSparkAndPrepareNextSchedule, event });
+		engine->scheduler.schedule("dwell", &event->dwellStartTimer, nextDwellStart, { &turnSparkPinHighStartCharging, event });
+		engine->scheduler.schedule("firing", &event->sparkEvent.eventScheduling, nextFiring, { fireSparkAndPrepareNextSchedule, event });
 	} else {
 		if (engineConfiguration->enableTrailingSparks) {
 #if SPARK_EXTREME_LOGGING
@@ -466,7 +466,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
        * and it looks like current (smart?) re-queuing is effectively cancelling out the overdwell? is that the way this was intended to work?
        * [tag:overdwell]
        */
-			engine->executor.scheduleByTimestampNt("overdwell", &event->sparkEvent.eventScheduling, fireTime, { overFireSparkAndPrepareNextSchedule, event });
+			engine->scheduler.schedule("overdwell", &event->sparkEvent.eventScheduling, fireTime, { overFireSparkAndPrepareNextSchedule, event });
 
 #if EFI_UNIT_TEST
 			engine->onScheduleOverFireSparkAndPrepareNextSchedule(*event, fireTime);

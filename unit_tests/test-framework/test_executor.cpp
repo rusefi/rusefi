@@ -35,9 +35,9 @@ scheduling_s* TestExecutor::getForUnitTest(int index) {
 	return schedulingQueue.getElementAtIndexForUnitText(index);
 }
 
-void TestExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* scheduling, efitick_t timeNt, action_s action) {
+void TestExecutor::schedule(const char *msg, scheduling_s* scheduling, efitick_t timeNt, action_s action) {
 	if (m_mockExecutor) {
-		m_mockExecutor->scheduleByTimestampNt(msg, scheduling, timeNt, action);
+		m_mockExecutor->schedule(msg, scheduling, timeNt, action);
 		return;
 	}
   // by the way we have loss of precision while converting NT to integer US
@@ -55,6 +55,6 @@ void TestExecutor::cancel(scheduling_s* s) {
 	schedulingQueue.remove(s);
 }
 
-void TestExecutor::setMockExecutor(ExecutorInterface* exec) {
+void TestExecutor::setMockExecutor(Scheduler* exec) {
 	m_mockExecutor = exec;
 }

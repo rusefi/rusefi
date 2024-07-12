@@ -45,7 +45,7 @@ void initVrThresholdPwm() {
 		}
 
 		startSimplePwmHard(&pwms[i], "VR Threshold",
-			&engine->executor,
+			&engine->scheduler,
 			cfg.pin,
 			&pins[i],
 			10000,	// it's guaranteed to be hardware PWM, the faster the PWM, the less noise makes it through

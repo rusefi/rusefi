@@ -122,7 +122,7 @@ void initAlternatorCtrl() {
 
 	startSimplePwm(&alternatorControl,
 				"Alternator control",
-				&engine->executor,
+				&engine->scheduler,
 				&enginePins.alternatorPin,
 				engineConfiguration->alternatorPwmFrequency, 0);
 }

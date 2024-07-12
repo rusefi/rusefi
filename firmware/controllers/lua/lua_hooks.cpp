@@ -277,7 +277,7 @@ void startPwm(int index, float freq, float duty) {
   brain_pin_e pwmPin = engineConfiguration->luaOutputPins[index];
 
 	startSimplePwmExt(
-		&pwms[index], "lua", &engine->executor,
+		&pwms[index], "lua", &engine->scheduler,
 		pwmPin, &enginePins.luaOutputPins[index],
 		freq, duty
 	);

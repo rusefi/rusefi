@@ -601,8 +601,8 @@ TunerStudioOutputChannels *getTunerStudioOutputChannels() {
 	return &engine->outputChannels;
 }
 
-ExecutorInterface *getExecutorInterface() {
-	return &engine->executor;
+Scheduler *getScheduler() {
+	return &engine->scheduler;
 }
 
 #if EFI_SHAFT_POSITION_INPUT
