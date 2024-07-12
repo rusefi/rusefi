@@ -413,7 +413,7 @@ static bool mountMmc() {
 
 #if HAL_USE_USB_MSD
 	// Wait for the USB stack to wake up, or a 15 second timeout, whichever occurs first
-	msg_t usbResult = usbConnectedSemaphore.wait(TIME_MS2I(15000));
+	msg_t usbResult = engineConfiguration->alwaysWriteSdCard ? MSG_RESET : usbConnectedSemaphore.wait(TIME_MS2I(15000));
 
 	bool hasUsb = usbResult == MSG_OK;
 

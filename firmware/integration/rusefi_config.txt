@@ -1042,7 +1042,7 @@ end_struct
 	bit widebandOnSecondBus,"2","1";Select which bus the wideband controller is attached to.
 	bit fuelClosedLoopCorrectionEnabled;Enables lambda sensor closed loop feedback for fuelling.
 	bit oddFireEngine;On even fire engines with even number of cylinders we go wasted spark during cranking. Use this setting to disable wasted spark cranking on odd fire engines.
-	bit unusedFancy3
+	bit alwaysWriteSdCard;Write SD card log even when powered by USB
 	bit unusedFancy4
 	bit yesUnderstandLocking,"yes","no"
 	bit silentTriggerError;Sometimes we have a performance issue while printing error
