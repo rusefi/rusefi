@@ -219,12 +219,12 @@ void EngineTestHelper::smartFireTriggerEvents2(int count, float durationMs) {
 }
 
 void EngineTestHelper::clearQueue() {
-	engine.executor.executeAll(99999999); // this is needed to clear 'isScheduled' flag
-	ASSERT_EQ( 0,  engine.executor.size()) << "Failed to clearQueue";
+	engine.scheduler.executeAll(99999999); // this is needed to clear 'isScheduled' flag
+	ASSERT_EQ( 0,  engine.scheduler.size()) << "Failed to clearQueue";
 }
 
 int EngineTestHelper::executeActions() {
-	return engine.executor.executeAll(getTimeNowUs());
+	return engine.scheduler.executeAll(getTimeNowUs());
 }
 
 void EngineTestHelper::moveTimeForwardMs(float deltaTimeMs) {
@@ -258,7 +258,7 @@ void EngineTestHelper::moveTimeForwardAndInvokeEventsUs(int deltaTimeUs) {
 
 void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTime) {
 	while (true) {
-		scheduling_s* nextScheduledEvent = engine.executor.getHead();
+		scheduling_s* nextScheduledEvent = engine.scheduler.getHead();
 		if (nextScheduledEvent == nullptr) {
 			// nothing pending - we are done here
 			break;
@@ -269,7 +269,7 @@ void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTime) {
 			break;
 		}
 		setTimeNowUs(nextEventTime);
-		engine.executor.executeAll(getTimeNowUs());
+		engine.scheduler.executeAll(getTimeNowUs());
 	}
 
 	setTimeNowUs(targetTime);
@@ -290,7 +290,7 @@ void EngineTestHelper::assertInjectorDownEvent(const char *msg, int eventIndex, 
 }
 
 scheduling_s * EngineTestHelper::assertEvent5(const char *msg, int index, void *callback, efitimeus_t expectedTimestamp) {
-	TestExecutor *executor = &engine.executor;
+	TestExecutor *executor = &engine.scheduler;
 	EXPECT_TRUE(executor->size() > index) << msg << " valid index";
 	scheduling_s *event = executor->getForUnitTest(index);
 	assertEqualsM4(msg, " callback up/down", (void*)event->action.getCallback() == (void*) callback, 1);
