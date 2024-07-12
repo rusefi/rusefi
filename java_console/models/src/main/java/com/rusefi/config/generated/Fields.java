@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Jul 11 13:40:02 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Jul 12 21:27:52 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1208,7 +1208,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1813579309;
+	public static final int SIGNATURE_HASH = 666321392;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1466,7 +1466,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.07.11.f407-discovery.1813579309";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.07.12.f407-discovery.666321392";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2086,6 +2086,7 @@ public class Fields {
 	public static final Field WIDEBANDONSECONDBUS = Field.create("WIDEBANDONSECONDBUS", 1304, FieldType.BIT, 0).setBaseOffset(0);
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1304, FieldType.BIT, 1).setBaseOffset(0);
 	public static final Field ODDFIREENGINE = Field.create("ODDFIREENGINE", 1304, FieldType.BIT, 2).setBaseOffset(0);
+	public static final Field ALWAYSWRITESDCARD = Field.create("ALWAYSWRITESDCARD", 1304, FieldType.BIT, 3).setBaseOffset(0);
 	public static final Field YESUNDERSTANDLOCKING = Field.create("YESUNDERSTANDLOCKING", 1304, FieldType.BIT, 5).setBaseOffset(0);
 	public static final Field SILENTTRIGGERERROR = Field.create("SILENTTRIGGERERROR", 1304, FieldType.BIT, 6).setBaseOffset(0);
 	public static final Field USELINEARCLTSENSOR = Field.create("USELINEARCLTSENSOR", 1304, FieldType.BIT, 7).setBaseOffset(0);
@@ -3759,6 +3760,7 @@ public class Fields {
 	WIDEBANDONSECONDBUS,
 	FUELCLOSEDLOOPCORRECTIONENABLED,
 	ODDFIREENGINE,
+	ALWAYSWRITESDCARD,
 	YESUNDERSTANDLOCKING,
 	SILENTTRIGGERERROR,
 	USELINEARCLTSENSOR,

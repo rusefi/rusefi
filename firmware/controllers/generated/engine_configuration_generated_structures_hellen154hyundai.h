@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Jun 27 23:08:55 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Jul 12 21:27:13 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2301,8 +2301,9 @@ struct engine_configuration_s {
 	offset 1304 bit 2 */
 	bool oddFireEngine : 1 {};
 	/**
+	 * Write SD card log even when powered by USB
 	offset 1304 bit 3 */
-	bool unusedFancy3 : 1 {};
+	bool alwaysWriteSdCard : 1 {};
 	/**
 	offset 1304 bit 4 */
 	bool unusedFancy4 : 1 {};
@@ -5679,4 +5680,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22800);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Jun 27 23:08:55 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Jul 12 21:27:13 UTC 2024

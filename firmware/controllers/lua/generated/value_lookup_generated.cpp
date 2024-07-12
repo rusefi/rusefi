@@ -766,6 +766,9 @@ float getConfigValueByName(const char *name) {
 // oddFireEngine
 		case -111377544:
 			return engineConfiguration->oddFireEngine;
+// alwaysWriteSdCard
+		case 787397010:
+			return engineConfiguration->alwaysWriteSdCard;
 // yesUnderstandLocking
 		case -1985448683:
 			return engineConfiguration->yesUnderstandLocking;
@@ -3111,6 +3114,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -111377544:
 	{
 		engineConfiguration->oddFireEngine = (int)value;
+		return 1;
+	}
+		case 787397010:
+	{
+		engineConfiguration->alwaysWriteSdCard = (int)value;
 		return 1;
 	}
 		case -1985448683:
