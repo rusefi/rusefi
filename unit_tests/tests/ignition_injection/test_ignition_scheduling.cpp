@@ -84,7 +84,7 @@ TEST(ignition, trailingSpark) {
 	EXPECT_EQ(enginePins.trailingCoils[0].getLogicValue(), false);
 
 	// Should be a TDC callback + spark firing
-	EXPECT_EQ(engine->executor.size(), 2);
+	EXPECT_EQ(engine->scheduler.size(), 2);
 
 	// execute all actions
 	eth.executeActions();

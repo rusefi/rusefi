@@ -41,7 +41,7 @@ TEST(OddFireRunningMode, hd) {
 
 	angle_t expectedAngle3 = -360 + cylinderOne - timing;
 
-	ASSERT_EQ( 12,  engine->executor.size());
+	ASSERT_EQ( 12,  engine->scheduler.size());
 	eth.assertEvent5("spark down#1", 1, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(expectedAngle3));
 
 	angle_t expectedAngle7 = -180 + cylinderOne - timing;

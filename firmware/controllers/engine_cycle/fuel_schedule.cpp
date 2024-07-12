@@ -39,8 +39,8 @@ void turnInjectionPinLow(uintptr_t arg) {
 		efitick_t openTime = getTimeNowNt() + MS2NT(2);
 		efitick_t closeTime = openTime + nextSplitDuration;
 
-		getExecutorInterface()->scheduleByTimestampNt("inj", nullptr, openTime, { &turnInjectionPinHigh, arg });
-		getExecutorInterface()->scheduleByTimestampNt("inj", nullptr, closeTime, { turnInjectionPinLow, arg });
+		getScheduler()->schedule("inj", nullptr, openTime, { &turnInjectionPinHigh, arg });
+		getScheduler()->schedule("inj", nullptr, closeTime, { turnInjectionPinLow, arg });
 	} else {
 		event->update();
 	}
@@ -214,12 +214,12 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 		this->splitInjectionDuration = {};
 	}
 
-	getExecutorInterface()->scheduleByTimestampNt("inj", nullptr, turnOffTimeStage1, endActionStage1);
+	getScheduler()->schedule("inj", nullptr, turnOffTimeStage1, endActionStage1);
 
 	// Schedule closing stage 2 (if applicable)
 	if (hasStage2Injection && endActionStage2) {
 		efitick_t turnOffTimeStage2 = startTime + US2NT((int)durationUsStage2);
-		getExecutorInterface()->scheduleByTimestampNt("inj stage 2", nullptr, turnOffTimeStage2, endActionStage2);
+		getScheduler()->schedule("inj stage 2", nullptr, turnOffTimeStage2, endActionStage2);
 	}
 
 #if EFI_UNIT_TEST

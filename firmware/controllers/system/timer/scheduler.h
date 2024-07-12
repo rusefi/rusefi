@@ -75,7 +75,7 @@ struct scheduling_s {
 };
 #pragma pack(pop)
 
-struct ExecutorInterface {
+struct Scheduler {
 	/**
 	 * @brief Schedule an action to be executed in the future.
 	 * 
@@ -87,7 +87,7 @@ struct ExecutorInterface {
 	 *                   very near future, it may execute immediately.
 	 * @param action An action to execute at the specified time.
 	 */
-	virtual void scheduleByTimestampNt(const char *msg, scheduling_s *scheduling, efitick_t targetTime, action_s action) = 0;
+	virtual void schedule(const char *msg, scheduling_s *scheduling, efitick_t targetTime, action_s action) = 0;
 
 	/**
 	 * @brief Cancel the specified scheduling_s so that, if currently scheduled, it does not execute.
@@ -97,5 +97,5 @@ struct ExecutorInterface {
 	virtual void cancel(scheduling_s* scheduling) = 0;
 };
 
-ExecutorInterface *getExecutorInterface();
+Scheduler *getScheduler();
 

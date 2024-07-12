@@ -266,7 +266,7 @@ static void timerCallback(PwmConfig *state) {
 		return;
 	}
 
-	state->m_executor->scheduleByTimestampNt(state->m_name, &state->scheduling, switchTimeNt, { timerCallback, state });
+	state->m_executor->schedule(state->m_name, &state->scheduling, switchTimeNt, { timerCallback, state });
 	state->dbgNestingLevel--;
 }
 
@@ -285,7 +285,7 @@ void copyPwmParameters(PwmConfig *state, MultiChannelStateSequence const * seq) 
  * this method also starts the timer cycle
  * See also startSimplePwm
  */
-void PwmConfig::weComplexInit(ExecutorInterface *executor,
+void PwmConfig::weComplexInit(Scheduler *executor,
 		MultiChannelStateSequence const * seq,
 		pwm_cycle_callback *pwmCycleCallback, pwm_gen_callback *stateChangeCallback) {
 	m_executor = executor;
@@ -315,7 +315,7 @@ void PwmConfig::weComplexInit(ExecutorInterface *executor,
 	timerCallback(this);
 }
 
-void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *executor,
+void startSimplePwm(SimplePwm *state, const char *msg, Scheduler *executor,
 		OutputPin *output, float frequency, float dutyCycle) {
 	efiAssertVoid(ObdCode::CUSTOM_ERR_PWM_STATE_ASSERT, state != NULL, "state");
 	efiAssertVoid(ObdCode::CUSTOM_ERR_PWM_DUTY_ASSERT, dutyCycle >= 0 && dutyCycle <= 1, "dutyCycle");
@@ -337,7 +337,7 @@ void startSimplePwm(SimplePwm *state, const char *msg, ExecutorInterface *execut
 }
 
 void startSimplePwmExt(SimplePwm *state, const char *msg,
-		ExecutorInterface *executor,
+		Scheduler *executor,
 		brain_pin_e brainPin, OutputPin *output, float frequency,
 		float dutyCycle) {
 
@@ -350,7 +350,7 @@ void startSimplePwmExt(SimplePwm *state, const char *msg,
  * @param dutyCycle value between 0 and 1
  */
 void startSimplePwmHard(SimplePwm *state, const char *msg,
-		ExecutorInterface *executor,
+		Scheduler *executor,
 		brain_pin_e brainPin, OutputPin *output, float frequency,
 		float dutyCycle) {
 #if EFI_PROD_CODE && HAL_USE_PWM

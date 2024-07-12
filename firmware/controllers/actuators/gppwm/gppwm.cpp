@@ -44,7 +44,7 @@ void initGpPwm() {
 		// Setup pin & pwm
 		pins[i].initPin("gp pwm", cfg.pin);
 		if (usePwm) {
-			startSimplePwm(&outputs[i], channelNames[i], &engine->executor, &pins[i], freq, 0);
+			startSimplePwm(&outputs[i], channelNames[i], &engine->scheduler, &pins[i], freq, 0);
 		}
 
 		// Set up this channel's lookup table

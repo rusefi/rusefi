@@ -10,11 +10,11 @@
 #include "scheduler.h"
 #include "event_queue.h"
 
-class TestExecutor : public ExecutorInterface {
+class TestExecutor : public Scheduler {
 public:
 	~TestExecutor();
 
-	void scheduleByTimestampNt(const char *msg, scheduling_s *scheduling, efitick_t timeNt, action_s action) override;
+	void schedule(const char *msg, scheduling_s *scheduling, efitick_t timeNt, action_s action) override;
 	void cancel(scheduling_s* scheduling) override;
 
 	void clear();
@@ -23,8 +23,8 @@ public:
 	scheduling_s * getHead();
 	scheduling_s * getForUnitTest(int index);
 
-	void setMockExecutor(ExecutorInterface* exec);
+	void setMockExecutor(Scheduler* exec);
 private:
 	EventQueue schedulingQueue;
-	ExecutorInterface* m_mockExecutor = nullptr;
+	Scheduler* m_mockExecutor = nullptr;
 };

@@ -61,7 +61,7 @@ static void scheduleTriggerEvents(TriggerWaveform *shape,
 
 			efitick_t timeNt = efitick_t{US2NT(timeScale * 1000 * angle)};
 
-			engine->executor.scheduleByTimestampNt("test", &param->sched, timeNt, { func, param.get() });
+			engine->scheduler.schedule("test", &param->sched, timeNt, { func, param.get() });
 			totalIndex++;
 		}
 	}
@@ -128,7 +128,7 @@ TEST(nissan, vq_vvt) {
 	scheduling_s *head;
 
 	int queueIndex = 0;
-	while ((head = engine->executor.getHead()) != nullptr) {
+	while ((head = engine->scheduler.getHead()) != nullptr) {
 		eth.setTimeAndInvokeEventsUs(head->momentX);
 
 		ASSERT_TRUE(tc->vvtState[0][0].getShaftSynchronized());

@@ -250,7 +250,7 @@ static int lua_startPwm(lua_State* l) {
 	freq = clampF(1, freq, 1000);
 
 	startSimplePwmExt(
-		&p.pwm, "lua", &engine->executor,
+		&p.pwm, "lua", &engine->scheduler,
 		engineConfiguration->luaOutputPins[p.idx], &enginePins.luaOutputPins[p.idx],
 		freq, duty
 	);

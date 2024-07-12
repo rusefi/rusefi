@@ -101,8 +101,8 @@ static void runBench(BenchParams& params) {
 		efitick_t endTime = startTime + US2NT(onTimeUs);
 
 		// Schedule both events
-		engine->executor.scheduleByTimestampNt("bstart", nullptr, startTime, {benchOn, params.Pin});
-		engine->executor.scheduleByTimestampNt("bend", nullptr, endTime, {benchOff, params.Pin});
+		engine->scheduler.schedule("bstart", nullptr, startTime, {benchOn, params.Pin});
+		engine->scheduler.schedule("bend", nullptr, endTime, {benchOff, params.Pin});
 
 		// Wait one full cycle time for the event + delay to happen
 		chThdSleepMicroseconds(onTimeUs + offTimeUs);

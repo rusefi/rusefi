@@ -35,7 +35,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// check RPM
 	ASSERT_EQ( 0,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM=0";
 	// the queue should be empty, no trigger events yet
-	ASSERT_EQ(0, engine->executor.size()) << "plain#1";
+	ASSERT_EQ(0, engine->scheduler.size()) << "plain#1";
 
 	// check all events starting from now
 	// advance 1 revolution
@@ -47,7 +47,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// due to isFasterEngineSpinUp=true, we should have already detected RPM!
 	ASSERT_EQ( 300,  round(Sensor::getOrZero(SensorType::Rpm))) << "spinning-RPM#1";
 	// two simultaneous injections
-	ASSERT_EQ(4, engine->executor.size()) << "plain#2";
+	ASSERT_EQ(4, engine->scheduler.size()) << "plain#2";
 	// test if they are simultaneous
 	ASSERT_EQ(IM_SIMULTANEOUS, getCurrentInjectionMode());
 	// test if ignition mode is temporary changed to wasted spark, if set to individual coils
@@ -73,7 +73,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// Should still be in wasted spark since we don't have cam sync yet
 	ASSERT_EQ(IM_WASTED_SPARK, getCurrentIgnitionMode());
 	// two simultaneous injections
-	ASSERT_EQ( 4,  engine->executor.size()) << "plain#2";
+	ASSERT_EQ( 4,  engine->scheduler.size()) << "plain#2";
 	// check real events
 	eth.assertEvent5("inj start#2", 0, (void*)startSimultaneousInjection, 148375);
 	eth.assertEvent5("inj end#2", 1, (void*)endSimultaneousInjection, 149999);
@@ -95,7 +95,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// check if the injection mode is back to sequential now
 	ASSERT_EQ(IM_SEQUENTIAL, getCurrentInjectionMode());
 	// 4 sequential injections for the full cycle
-	ASSERT_EQ( 8,  engine->executor.size()) << "plain#3";
+	ASSERT_EQ( 8,  engine->scheduler.size()) << "plain#3";
 
 	// check real events for sequential injection
 	// Note: See addFuelEvents() fix inside setRpmValue()!

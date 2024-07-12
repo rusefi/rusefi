@@ -16,21 +16,21 @@ void Gm4l6xTransmissionController::init() {
 		enginePins.tcuTccPwmSolenoid.initPin("TCC PWM Solenoid", engineConfiguration->tcu_tcc_pwm_solenoid, engineConfiguration->tcu_tcc_pwm_solenoid_mode);
 		startSimplePwm(&tccPwm,
 									 "TCC",
-									 &engine->executor,
+									 &engine->scheduler,
 									 &enginePins.tcuTccPwmSolenoid,
 									 engineConfiguration->tcu_tcc_pwm_solenoid_freq,
 									 0);
 		enginePins.tcuPcSolenoid.initPin("Pressure Control Solenoid", engineConfiguration->tcu_pc_solenoid_pin, engineConfiguration->tcu_pc_solenoid_pin_mode);
 		startSimplePwm(&pcPwm,
 									 "Line Pressure",
-									 &engine->executor,
+									 &engine->scheduler,
 									 &enginePins.tcuPcSolenoid,
 									 engineConfiguration->tcu_pc_solenoid_freq,
 									 0);
 		enginePins.tcu32Solenoid.initPin("3-2 Shift Solenoid", engineConfiguration->tcu_32_solenoid_pin, engineConfiguration->tcu_32_solenoid_pin_mode);
 		startSimplePwm(&shift32Pwm,
 									 "3-2 Solenoid",
-									 &engine->executor,
+									 &engine->scheduler,
 									 &enginePins.tcu32Solenoid,
 									 engineConfiguration->tcu_32_solenoid_freq,
 									 0);

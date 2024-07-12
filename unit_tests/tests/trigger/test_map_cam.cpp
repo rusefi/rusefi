@@ -28,8 +28,8 @@ TEST(trigger, map_cam_by_magic_point) {
 	ASSERT_EQ(0, engine->triggerCentral.triggerState.camResyncCounter);
 
 	// Nothing should have been scheduled yet
-	ASSERT_EQ(1, engine->executor.size());
-	scheduling_s* next = engine->executor.getForUnitTest(0);
+	ASSERT_EQ(1, engine->scheduler.size());
+	scheduling_s* next = engine->scheduler.getForUnitTest(0);
 	eth.assertEvent5("spark down#0", 0, (void*)fireSparkAndPrepareNextSchedule, 188333);
 
 	engine->outputChannels.instantMAPValue = 120;
@@ -43,7 +43,7 @@ TEST(trigger, map_cam_by_magic_point) {
 	ASSERT_EQ(ClearReason::None, getLimpManager()->allowInjection().reason);
 
 	// We have "VVT" sync, things should be scheduled!
-	ASSERT_EQ(2, engine->executor.size());
+	ASSERT_EQ(2, engine->scheduler.size());
 	eth.assertEvent5("spark down#0", 0, (void*)turnSparkPinHigh, 185333);
 	eth.assertEvent5("spark down#1", 1, (void*)fireSparkAndPrepareNextSchedule, 188333);
 }

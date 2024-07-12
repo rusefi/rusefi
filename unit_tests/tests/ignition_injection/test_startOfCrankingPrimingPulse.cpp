@@ -25,7 +25,7 @@ TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 	eth.fireRise(/* delayMs */ 200);
 	ASSERT_EQ( 300,  Sensor::getOrZero(SensorType::Rpm)) << "RPM#2";
 	// two simultaneous injections
-	ASSERT_EQ( 4,  engine->executor.size()) << "plain#2";
+	ASSERT_EQ( 4,  engine->scheduler.size()) << "plain#2";
 
 	eth.assertEvent5("sim start", 0, (void*)startSimultaneousInjection, 100000 - 1625);
 	// -1 because ugh floating point math
@@ -41,7 +41,7 @@ TEST(priming, startScheduling) {
 	// Turn on the ignition switch!
 	engine->module<PrimeController>()->onIgnitionStateChanged(true);
 
-	ASSERT_EQ(1, engine->executor.size()) << "prime fuel";
+	ASSERT_EQ(1, engine->scheduler.size()) << "prime fuel";
 }
 
 TEST(priming, duration) {

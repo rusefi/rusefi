@@ -64,7 +64,7 @@ void PrimeController::onIgnitionStateChanged(bool ignitionOn) {
 		uint32_t primeDelayNt = MSF2NT(engineConfiguration->primingDelay * 1000 + minimumPrimeDelayMs);
 
 		auto startTime = getTimeNowNt() + primeDelayNt;
-		getExecutorInterface()->scheduleByTimestampNt("prime start", nullptr, startTime, { PrimeController::onPrimeStartAdapter, this });
+		getScheduler()->schedule("prime start", nullptr, startTime, { PrimeController::onPrimeStartAdapter, this });
 	} else {
 		efiPrintf("Skipped priming pulse since ignSwitchCounter = %lu", ignSwitchCounter);
 	}
@@ -105,7 +105,7 @@ void PrimeController::onPrimeStart() {
 	// Open all injectors, schedule closing later
 	m_isPriming = true;
 	startSimultaneousInjection();
-	getExecutorInterface()->scheduleByTimestampNt("prime end", nullptr, endTime, { onPrimeEndAdapter, this });
+	getScheduler()->schedule("prime end", nullptr, endTime, { onPrimeEndAdapter, this });
 }
 
 void PrimeController::onPrimeEnd() {

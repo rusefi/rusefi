@@ -224,8 +224,8 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 #endif /* SPARK_EXTREME_LOGGING */
 
 		// We can schedule both of these right away, since we're going for "asap" not "particular angle"
-		engine->executor.scheduleByTimestampNt("dwell", &event->dwellStartTimer, nextDwellStart, { &turnSparkPinHigh, event });
-		engine->executor.scheduleByTimestampNt("firing", &event->sparkEvent.scheduling, nextFiring, { fireSparkAndPrepareNextSchedule, event });
+		engine->scheduler.schedule("dwell", &event->dwellStartTimer, nextDwellStart, { &turnSparkPinHigh, event });
+		engine->scheduler.schedule("firing", &event->sparkEvent.scheduling, nextFiring, { fireSparkAndPrepareNextSchedule, event });
 	} else {
 		if (engineConfiguration->enableTrailingSparks) {
 #if SPARK_EXTREME_LOGGING
@@ -382,7 +382,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 		if (!limitedSpark && engine->enableOverdwellProtection) {
 			// auto fire spark at 1.5x nominal dwell
 			efitick_t fireTime = chargeTime + (uint32_t)MSF2NT(1.5f * dwellMs);
-			engine->executor.scheduleByTimestampNt("overdwell", &event->sparkEvent.scheduling, fireTime, { overFireSparkAndPrepareNextSchedule, event });
+			engine->scheduler.schedule("overdwell", &event->sparkEvent.scheduling, fireTime, { overFireSparkAndPrepareNextSchedule, event });
 		}
 	}
 

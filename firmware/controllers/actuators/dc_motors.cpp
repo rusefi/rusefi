@@ -17,7 +17,7 @@
 			brain_pin_e pinDir2,
 			brain_pin_e pinDisable,
 			bool isInverted,
-			ExecutorInterface* executor,
+			Scheduler* executor,
 			int frequency) {
 
 		if (isStarted) {
@@ -99,7 +99,7 @@ DcMotor* initDcMotor(const dc_io& io, size_t index, bool useTwoWires) {
 		io.disablePin,
 		// todo You would not believe how you invert TLE9201 #4579
 		engineConfiguration->stepperDcInvertedPins,
-		&engine->executor,
+		&engine->scheduler,
 		engineConfiguration->etbFreq
 	);
 
@@ -116,7 +116,7 @@ DcMotor* initDcMotor(brain_pin_e coil_p, brain_pin_e coil_m, size_t index) {
 		coil_m,
 		Gpio::Unassigned, /* pinDisable */
 		engineConfiguration->stepperDcInvertedPins,
-		&engine->executor,
+		&engine->scheduler,
 		engineConfiguration->etbFreq /* same in case of stepper? */
 	);
 

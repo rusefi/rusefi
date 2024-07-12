@@ -19,7 +19,7 @@ TEST(injectionScheduling, InjectionIsScheduled) {
 	StrictMock<MockExecutor> mockExec;
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engine->executor.setMockExecutor(&mockExec);
+	engine->scheduler.setMockExecutor(&mockExec);
 
 	efitick_t nowNt = 1000000;
 
@@ -42,10 +42,10 @@ TEST(injectionScheduling, InjectionIsScheduled) {
 		// rising edge 5 degrees from now
 		float nt5deg = USF2NT(engine->rpmCalculator.oneDegreeUs * 5);
 		efitick_t startTime = nowNt + nt5deg;
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime, Not(Truly(ActionArgumentHasLowBitSet))));
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime, Not(Truly(ActionArgumentHasLowBitSet))));
 		// falling edge 20ms later
 		efitick_t endTime = startTime + MS2NT(20);
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, endTime, Property(&action_s::getArgument, Eq(&event))));
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, endTime, Property(&action_s::getArgument, Eq(&event))));
 	}
 
 	// Event scheduled at 125 degrees
@@ -60,7 +60,7 @@ TEST(injectionScheduling, InjectionIsScheduledDualStage) {
 	StrictMock<MockInjectorModel2> im;
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engine->executor.setMockExecutor(&mockExec);
+	engine->scheduler.setMockExecutor(&mockExec);
 	engine->module<InjectorModelPrimary>().set(&im);
 	engine->module<InjectorModelSecondary>().set(&im);
 
@@ -92,13 +92,13 @@ TEST(injectionScheduling, InjectionIsScheduledDualStage) {
 		// rising edge 5 degrees from now
 		float nt5deg = USF2NT(engine->rpmCalculator.oneDegreeUs * 5);
 		efitick_t startTime = nowNt + nt5deg;
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime, Truly(ActionArgumentHasLowBitSet)));
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime, Truly(ActionArgumentHasLowBitSet)));
 		// falling edge (primary) 20ms later
 		efitick_t endTime1 = startTime + MS2NT(20);
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, endTime1, Truly(ActionArgumentHasLowBitSet)));
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, endTime1, Truly(ActionArgumentHasLowBitSet)));
 		// falling edge (secondary) 10ms later
 		efitick_t endTime2 = startTime + MS2NT(10);
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, endTime2, Property(&action_s::getArgument, Eq(&event))));
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, endTime2, Property(&action_s::getArgument, Eq(&event))));
 	}
 
 	// Event scheduled at 125 degrees
@@ -112,7 +112,7 @@ TEST(injectionScheduling, InjectionIsScheduledBeforeWraparound) {
 	StrictMock<MockExecutor> mockExec;
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engine->executor.setMockExecutor(&mockExec);
+	engine->scheduler.setMockExecutor(&mockExec);
 
 	efitick_t nowNt = 1000000;
 
@@ -135,10 +135,10 @@ TEST(injectionScheduling, InjectionIsScheduledBeforeWraparound) {
 		// rising edge 5 degrees from now
 		float nt5deg = USF2NT(engine->rpmCalculator.oneDegreeUs * 5);
 		efitick_t startTime = nowNt + nt5deg;
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime, Not(Truly(ActionArgumentHasLowBitSet))));
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime, Not(Truly(ActionArgumentHasLowBitSet))));
 		// falling edge 20ms later
 		efitick_t endTime = startTime + MS2NT(20);
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, endTime, Property(&action_s::getArgument, Eq(&event))));
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, endTime, Property(&action_s::getArgument, Eq(&event))));
 	}
 
 	// Event scheduled at 715 degrees
@@ -152,7 +152,7 @@ TEST(injectionScheduling, InjectionIsScheduledAfterWraparound) {
 	StrictMock<MockExecutor> mockExec;
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engine->executor.setMockExecutor(&mockExec);
+	engine->scheduler.setMockExecutor(&mockExec);
 
 	efitick_t nowNt = 1000000;
 
@@ -175,10 +175,10 @@ TEST(injectionScheduling, InjectionIsScheduledAfterWraparound) {
 		// rising edge 15 degrees from now
 		float nt5deg = USF2NT(engine->rpmCalculator.oneDegreeUs * 15);
 		efitick_t startTime = nowNt + nt5deg;
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime, Not(Truly(ActionArgumentHasLowBitSet))));
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime, Not(Truly(ActionArgumentHasLowBitSet))));
 		// falling edge 20ms later
 		efitick_t endTime = startTime + MS2NT(20);
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, endTime, Property(&action_s::getArgument, Eq(&event))));
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, endTime, Property(&action_s::getArgument, Eq(&event))));
 	}
 
 	// Event scheduled at 5 degrees
@@ -193,7 +193,7 @@ TEST(injectionScheduling, InjectionNotScheduled) {
 	StrictMock<MockExecutor> mockExec;
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engine->executor.setMockExecutor(&mockExec);
+	engine->scheduler.setMockExecutor(&mockExec);
 
 	efitick_t nowNt = 1000000;
 
@@ -226,7 +226,7 @@ TEST(injectionScheduling, SplitInjectionScheduled) {
 	StrictMock<MockExecutor> mockExec;
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engine->executor.setMockExecutor(&mockExec);
+	engine->scheduler.setMockExecutor(&mockExec);
 
 	InjectionEvent event;
 	uintptr_t arg = reinterpret_cast<uintptr_t>(&event);
@@ -243,9 +243,9 @@ TEST(injectionScheduling, SplitInjectionScheduled) {
 		// - duration 10ms (ends 12ms from now)
 		efitick_t nowNt = getTimeNowNt();
 		efitick_t startTime = nowNt + MS2NT(2);
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, startTime, Property(&action_s::getArgument, Eq(&event))));
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime, Property(&action_s::getArgument, Eq(&event))));
 		efitick_t endTime = startTime + MS2NT(10);
-		EXPECT_CALL(mockExec, scheduleByTimestampNt(testing::NotNull(), _, endTime, Property(&action_s::getArgument, Eq(&event))));
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, endTime, Property(&action_s::getArgument, Eq(&event))));
 	}
 
 	// Split injection duration of 10ms

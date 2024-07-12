@@ -241,13 +241,13 @@ public:
 	// a pointer with interface type would make this code nicer but would carry extra runtime
 	// cost to resolve pointer, we use instances as a micro optimization
 #if EFI_SIGNAL_EXECUTOR_ONE_TIMER
-	SingleTimerExecutor executor;
+	SingleTimerExecutor scheduler;
 #endif
 #if EFI_SIGNAL_EXECUTOR_SLEEP
-	SleepExecutor executor;
+	SleepExecutor scheduler;
 #endif
 #if EFI_UNIT_TEST
-	TestExecutor executor;
+	TestExecutor scheduler;
 
 	std::function<void(IgnitionEvent*, bool)> onIgnitionEvent;
 #endif // EFI_UNIT_TEST

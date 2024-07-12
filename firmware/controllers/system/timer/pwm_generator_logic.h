@@ -52,12 +52,12 @@ public:
 	PwmConfig();
 
 	void weComplexInit(
-			ExecutorInterface *executor,
+			Scheduler *executor,
 			MultiChannelStateSequence const * seq,
 			pwm_cycle_callback *pwmCycleCallback,
 			pwm_gen_callback *callback);
 
-	ExecutorInterface *m_executor = nullptr;
+	Scheduler *m_executor = nullptr;
 
 	/**
 	 * We need to handle zero duty cycle and 100% duty cycle in a special way
@@ -132,7 +132,7 @@ void applyPinState(int stateIndex, PwmConfig* state) /* pwm_gen_callback */;
  * This method should be called after scheduling layer is started by initSignalExecutor()
  */
 void startSimplePwm(SimplePwm *state, const char *msg,
-		ExecutorInterface *executor,
+		Scheduler *executor,
 		OutputPin *output,
 		float frequency, float dutyCycle);
 
@@ -143,12 +143,12 @@ void startSimplePwm(SimplePwm *state, const char *msg,
  */
 void startSimplePwmExt(SimplePwm *state,
 		const char *msg,
-		ExecutorInterface *executor,
+		Scheduler *executor,
 		brain_pin_e brainPin, OutputPin *output,
 		float frequency, float dutyCycle);
 
 void startSimplePwmHard(SimplePwm *state, const char *msg,
-		ExecutorInterface *executor,
+		Scheduler *executor,
 		brain_pin_e brainPin, OutputPin *output, float frequency,
 		float dutyCycle);
 
