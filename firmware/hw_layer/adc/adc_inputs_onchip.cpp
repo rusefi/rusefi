@@ -240,15 +240,9 @@ adcsample_t AdcDevice::getAvgAdcValue(adc_channel_e hwChannel) {
 //			criticalError("fast ADC unexpected sample %d", sample);
 //		} else
 		if (sample > ADC_MAX_VALUE) {
-			if (!engineConfiguration->skipADC12bitAssert) {
-				criticalError("ADC unexpected sample %d at %ld uptime. Please report and use skipADC12bitAssert to disable.",
+ 			criticalError("ADC unexpected sample %d at %ld uptime.",
 				sample,
 				(uint32_t)getTimeNowS());
-			}
-			engine->outputChannels.unexpectedAdcSample = sample;
-			// sad hack which works around https://github.com/rusefi/rusefi/issues/6376 which we do not understand
-			sample = sample & ADC_MAX_VALUE;
-			engine->outputChannels.adc13bitCounter++;
 		}
 		result += sample;
 		index += numChannels;

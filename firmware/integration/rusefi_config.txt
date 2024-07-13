@@ -1212,7 +1212,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	bit devBit5
 	bit devBit6
 	bit devBit7
-	bit skipADC12bitAssert
+	bit unusedSkipWasHere
 	bit invertExhaustCamVVTSignal,"Falling","Rising"
 	bit enableKnockSpectrogram
 
