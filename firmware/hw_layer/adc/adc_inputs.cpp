@@ -29,7 +29,7 @@ static uint32_t slowAdcErrorsCount = 0;
 
 static float mcuTemperature;
 
-static adc_channel_mode_e adcHwChannelMode[HW_MAX_ADC_INDEX];
+static adc_channel_mode_e adcHwChannelMode[EFI_ADC_TOTAL_CHANNELS];
 
 // todo: move this flag to Engine god object
 static int adcDebugReporting = false;
