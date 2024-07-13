@@ -228,6 +228,10 @@ adcsample_t AdcDevice::getAvgAdcValue(adc_channel_e hwChannel) {
 	uint32_t result = 0;
 	int numChannels = size();
 	int index = fastAdc.internalAdcIndexByHardwareIndex[hwChannel];
+	if (index == 0xff) {
+		criticalError("Fast ADC attempt to read unconfigured input %d.", hwChannel);
+		return 0;
+	}
 
 	for (size_t i = 0; i < depth; i++) {
 		adcsample_t sample = samples[index];
