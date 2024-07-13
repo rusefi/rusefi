@@ -38,12 +38,12 @@ public class ExecHelper {
                     String line = bis.readLine();
                     if (line == null)
                         break;
-                    callbacks.log(line, true);
+                    callbacks.logLine(line);
                     buffer.append(line);
                     wasRunningTime = System.currentTimeMillis();
                 }
             } catch (IOException e) {
-                callbacks.log("Stream " + e, true);
+                callbacks.logLine("Stream " + e);
                 callbacks.error();
             }
         });
@@ -65,7 +65,7 @@ public class ExecHelper {
         StringBuffer error = new StringBuffer();
         String binaryFullName = workingDirPath + File.separator + binaryRelativeName;
         if (!new File(binaryFullName).exists()) {
-            callbacks.log(binaryFullName + " not found :(", true);
+            callbacks.logLine(binaryFullName + " not found :(");
             throw new FileNotFoundException(binaryFullName);
         }
 
@@ -75,17 +75,17 @@ public class ExecHelper {
 
     @NotNull
     public static String executeCommand(String command, UpdateOperationCallbacks callbacks, StringBuffer output, StringBuffer error, File workingDir) {
-        callbacks.log("Executing " + command, true);
+        callbacks.logLine("Executing " + command);
         try {
             Process p = Runtime.getRuntime().exec(command, null, workingDir);
             startStreamThread(p, p.getInputStream(), output, callbacks);
             startStreamThread(p, p.getErrorStream(), error, callbacks);
             p.waitFor(3, TimeUnit.MINUTES);
         } catch (IOException e) {
-            callbacks.log("IOError: " + e, true);
+            callbacks.logLine("IOError: " + e);
             callbacks.error();
         } catch (InterruptedException e) {
-            callbacks.log("WaitError: " + e, true);
+            callbacks.logLine("WaitError: " + e);
             callbacks.error();
         }
 

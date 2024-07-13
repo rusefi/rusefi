@@ -47,7 +47,7 @@ public class DriverInstall {
         FileLog.MAIN.logLine("IsWindows=" + FileLog.isWindows());
         if (!new File(FOLDER).exists()) {
             String message = FOLDER + " not found";
-            wnd.append(message, true);
+            wnd.appendLine(message);
             FileLog.MAIN.logLine(message);
             return;
         }
@@ -60,7 +60,7 @@ public class DriverInstall {
       String batch = isWindows7orBelow() ? WINDOWS7_BATCH : WINDOWS8_BATCH;
         ExecHelper.executeCommand(UNPACKED_FOLDER, ExecHelper.getBatchCommand(batch), batch, wnd);
       } catch (FileNotFoundException e) {
-        wnd.append(e.toString(), true);
+        wnd.appendLine(e.toString());
         wnd.error();
       }
     }

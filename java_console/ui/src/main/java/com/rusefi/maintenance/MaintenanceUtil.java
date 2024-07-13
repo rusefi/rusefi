@@ -14,8 +14,8 @@ public class MaintenanceUtil {
         StringBuffer output = new StringBuffer();
         StringBuffer error = new StringBuffer();
         ExecHelper.executeCommand(queryCommand, callbacks, output, error, null);
-        callbacks.log(output.toString(), true);
-        callbacks.log(error.toString(), true);
+        callbacks.logLine(output.toString());
+        callbacks.logLine(error.toString());
 //        long cost = System.currentTimeMillis() - now;
 //        System.out.println("DFU lookup cost " + cost + "ms");
         return output.toString().contains(pattern);

@@ -51,8 +51,8 @@ public class DfuFlasher {
             return;
         if (isSignatureValidated.get()) {
             if (!FileLog.isWindows()) {
-                callbacks.append("Switched to DFU mode!", true);
-                callbacks.append("rusEFI console can only program on Windows", true);
+                callbacks.appendLine("Switched to DFU mode!");
+                callbacks.appendLine("rusEFI console can only program on Windows");
                 return;
             }
 
@@ -61,7 +61,7 @@ public class DfuFlasher {
                 executeDFU(callbacks, FindFileHelper.FIRMWARE_BIN_FILE);
             });
         } else {
-            callbacks.log("Please use manual DFU to change bundle type.", true);
+            callbacks.logLine("Please use manual DFU to change bundle type.");
         }
     }
 
@@ -73,7 +73,7 @@ public class DfuFlasher {
     public static AtomicBoolean rebootToDfu(JComponent parent, String port, UpdateOperationCallbacks callbacks, String command) {
         AtomicBoolean isSignatureValidated = new AtomicBoolean(true);
         if (!PortDetector.isAutoPort(port)) {
-            callbacks.log("Using selected " + port + "\n", true);
+            callbacks.logLine("Using selected " + port + "\n");
             IoStream stream = BufferedSerialIoStream.openPort(port);
             AtomicReference<String> signature = new AtomicReference<>();
             new SerialAutoChecker(PortDetector.DetectorMode.DETECT_TS, port, new CountDownLatch(1)).checkResponse(stream, new Function<SerialAutoChecker.CallbackContext, Void>() {
@@ -84,22 +84,22 @@ public class DfuFlasher {
                 }
             });
             if (signature.get() == null) {
-                callbacks.append("", true);
-                callbacks.append("", true);
-                callbacks.append("", true);
-                callbacks.append("Make sure TUNERSTUDIO IS DISCONNECTED FROM ECU", true);
-                callbacks.append("", true);
-                callbacks.append("", true);
-                callbacks.append("", true);
-              callbacks.append("*** ERROR *** rusEFI has not responded on selected " + port + "\n" +
-                        "Maybe try automatic serial port detection?", true);
+                callbacks.appendLine("");
+                callbacks.appendLine("");
+                callbacks.appendLine("");
+                callbacks.appendLine("Make sure TUNERSTUDIO IS DISCONNECTED FROM ECU");
+                callbacks.appendLine("");
+                callbacks.appendLine("");
+                callbacks.appendLine("");
+              callbacks.appendLine("*** ERROR *** rusEFI has not responded on selected " + port + "\n" +
+                        "Maybe try automatic serial port detection?");
                 callbacks.error();
                 return null;
             }
             boolean isSignatureValidatedLocal = DfuHelper.sendDfuRebootCommand(parent, signature.get(), stream, callbacks, command);
             isSignatureValidated.set(isSignatureValidatedLocal);
         } else {
-            callbacks.log("Auto-detecting port...\n", true);
+            callbacks.logLine("Auto-detecting port...\n");
             // instead of opening the just-detected port we execute the command using the same stream we used to discover port
             // it's more reliable this way
             // ISSUE: that's blocking stuff on UI thread at the moment, TODO smarter threading!
@@ -109,11 +109,11 @@ public class DfuFlasher {
                 return null;
             }).getSerialPort();
             if (port == null) {
-                callbacks.append("*** ERROR *** rusEFI serial port not detected", true);
+                callbacks.appendLine("*** ERROR *** rusEFI serial port not detected");
                 callbacks.error();
                 return null;
             } else {
-                callbacks.append("Detected rusEFI on " + port + "\n", true);
+                callbacks.appendLine("Detected rusEFI on " + port + "\n");
             }
         }
         return isSignatureValidated;
@@ -133,7 +133,7 @@ public class DfuFlasher {
                     getDfuEraseCommand(),
                 DFU_CMD_TOOL, callbacks);
         } catch (FileNotFoundException e) {
-            callbacks.log(e.toString(), true);
+            callbacks.logLine(e.toString());
             callbacks.error();
         }
     }
@@ -149,7 +149,7 @@ public class DfuFlasher {
     private static void executeDFU(UpdateOperationCallbacks callbacks, String firmwareBinFile) {
         boolean driverIsHappy = detectSTM32BootloaderDriverState(callbacks);
         if (!driverIsHappy) {
-            callbacks.append("*** DRIVER ERROR? *** Did you have a chance to try 'Install Drivers' button on top of rusEFI console start screen?", true);
+            callbacks.appendLine("*** DRIVER ERROR? *** Did you have a chance to try 'Install Drivers' button on top of rusEFI console start screen?");
             callbacks.error();
             return;
         }
@@ -161,27 +161,27 @@ public class DfuFlasher {
                     getDfuWriteCommand(firmwareBinFile),
                 DFU_CMD_TOOL, callbacks, stdout);
         } catch (FileNotFoundException e) {
-            callbacks.log("ERROR: " + e, true);
+            callbacks.logLine("ERROR: " + e);
             callbacks.error();
             return;
         }
 
         if (stdout.toString().contains("Download verified successfully")) {
             // looks like sometimes we are not catching the last line of the response? 'Upgrade' happens before 'Verify'
-            callbacks.log("SUCCESS!", true);
-            callbacks.log("Please power cycle device to exit DFU mode", true);
+            callbacks.logLine("SUCCESS!");
+            callbacks.logLine("Please power cycle device to exit DFU mode");
             callbacks.done();
         } else if (stdout.toString().contains("Target device not found")) {
-            callbacks.append("ERROR: Device not connected or STM32 Bootloader driver not installed?", true);
+            callbacks.appendLine("ERROR: Device not connected or STM32 Bootloader driver not installed?");
             appendWindowsVersion(callbacks);
-            callbacks.append("ERROR: Please try installing drivers using 'Install Drivers' button on rusEFI splash screen", true);
-            callbacks.append("ERROR: Alternatively please install drivers using Device Manager pointing at 'drivers/silent_st_drivers/DFU_Driver' folder", true);
+            callbacks.appendLine("ERROR: Please try installing drivers using 'Install Drivers' button on rusEFI splash screen");
+            callbacks.appendLine("ERROR: Alternatively please install drivers using Device Manager pointing at 'drivers/silent_st_drivers/DFU_Driver' folder");
             appendDeviceReport(callbacks);
             callbacks.error();
         } else {
             appendWindowsVersion(callbacks);
             appendDeviceReport(callbacks);
-            callbacks.log(stdout.length() + " / " + errorResponse.length(), true);
+            callbacks.logLine(stdout.length() + " / " + errorResponse.length());
             callbacks.error();
         }
     }
@@ -191,22 +191,22 @@ public class DfuFlasher {
     }
 
     private static void appendWindowsVersion(UpdateOperationCallbacks callbacks) {
-        callbacks.log("ERROR: does not look like DFU has worked!", true);
+        callbacks.logLine("ERROR: does not look like DFU has worked!");
     }
 
     private static void appendDeviceReport(UpdateOperationCallbacks callbacks) {
         for (String line : getDevicesReport()) {
             if (line.contains("STM Device in DFU Mode")) {
-                callbacks.log(" ******************************************************************", true);
-                callbacks.log(" ************* YOU NEED TO REMOVE LEGACY DFU DRIVER ***************", true);
-                callbacks.log(" ******************************************************************", true);
+                callbacks.logLine(" ******************************************************************");
+                callbacks.logLine(" ************* YOU NEED TO REMOVE LEGACY DFU DRIVER ***************");
+                callbacks.logLine(" ******************************************************************");
             }
-            callbacks.log("Devices: " + line, true);
+            callbacks.logLine("Devices: " + line);
         }
     }
 
     private static void timeForDfuSwitch(UpdateOperationCallbacks callbacks) {
-        callbacks.log("Giving time for USB enumeration...", true);
+        callbacks.logLine("Giving time for USB enumeration...");
         try {
             // two seconds not enough on my Windows 10
             Thread.sleep(3 * Timeouts.SECOND);
