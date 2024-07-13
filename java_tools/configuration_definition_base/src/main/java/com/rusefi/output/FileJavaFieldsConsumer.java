@@ -33,11 +33,19 @@ public class FileJavaFieldsConsumer extends JavaFieldsConsumer {
 
     @Override
     public void startFile() {
-        javaFields.write("package " + JAVA_PACKAGE + ";" + ToolUtil.EOL + ToolUtil.EOL);
+        writePackageLine(javaFields);
         javaFields.write("// this file " + state.getHeader() + ToolUtil.EOL + EOL);
         javaFields.write("// by " + getClass() + EOL);
         javaFields.write("import com.rusefi.config.*;" + EOL + EOL);
-        javaFields.write("public class " + className + " {" + ToolUtil.EOL);
+        writeClassOpenLine(javaFields, className);
+    }
+
+    public static void writeClassOpenLine(LazyFile lazyFile, String className1) {
+        lazyFile.write("public class " + className1 + " {" + ToolUtil.EOL);
+    }
+
+    public static void writePackageLine(LazyFile lazyFile) {
+        lazyFile.write("package " + JAVA_PACKAGE + ";" + ToolUtil.EOL + ToolUtil.EOL);
     }
 
     @Override

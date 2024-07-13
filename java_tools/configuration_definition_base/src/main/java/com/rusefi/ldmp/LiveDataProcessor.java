@@ -25,6 +25,7 @@ public class LiveDataProcessor {
     public static final String STATE_DICTIONARY_FACTORY_JAVA = "../java_console/io/src/main/java/com/rusefi/enums/StateDictionaryFactory.java";
     public static final String FANCY_CONTENT_INI = "console/binary/generated/fancy_content.ini";
     public static final String FANCY_MENU_INI = "console/binary/generated/fancy_menu.ini";
+    public static final String JAVA_DESTINATION = "../java_console/models/src/main/java/com/rusefi/config/generated/";
 
     private final ReaderProvider readerProvider;
     private final LazyFile.LazyFileFactory fileFactory;
@@ -161,7 +162,7 @@ public class LiveDataProcessor {
                 state.addCHeaderDestination(folder + File.separator + name + "_generated.h");
 
                 int baseOffset = outputsSections.getBaseOffset();
-                state.addDestination(new FileJavaFieldsConsumer(state, "../java_console/models/src/main/java/com/rusefi/config/generated/" + javaName, baseOffset, fileFactory));
+                state.addDestination(new FileJavaFieldsConsumer(state, JAVA_DESTINATION + javaName, baseOffset, fileFactory));
 
                 if (constexpr != null) {
                     sdCardFieldsConsumer.home = constexpr;

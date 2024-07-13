@@ -56,6 +56,10 @@ public class VariableRegistry {
         return token;
     }
 
+    static boolean looksLikeDefineLine(String line) {
+        return ToolUtil.startsWithToken(line, DEFINE);
+    }
+
     public void readPrependValues(String prependFile, boolean ignoreUnexpectedLined) {
         File file = new File(RootHolder.ROOT + prependFile);
         try {
@@ -81,6 +85,10 @@ public class VariableRegistry {
                 throw new IllegalStateException("Unexpected line while prepending: [" + line + "]");
             }
         }
+    }
+
+    void processLine(String line) {
+        processDefine(line.substring(VariableRegistry.DEFINE.length()).trim());
     }
 
     void processDefine(String line) {

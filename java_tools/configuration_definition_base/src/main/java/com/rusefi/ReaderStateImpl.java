@@ -287,12 +287,12 @@ public class ReaderStateImpl implements ReaderState {
             } else if (ToolUtil.startsWithToken(line, CUSTOM)) {
                 handleCustomLine(line);
 
-            } else if (ToolUtil.startsWithToken(line, VariableRegistry.DEFINE)) {
+            } else if (VariableRegistry.looksLikeDefineLine(line)) {
                 /**
                  * for example
                  * #define CLT_CURVE_SIZE 16
                  */
-                variableRegistry.processDefine(line.substring(VariableRegistry.DEFINE.length()).trim());
+                variableRegistry.processLine(line);
             } else {
                 if (isStackEmpty())
                     throw new IllegalStateException("Expected to be within structure at line " + lineIndex + ": " + line);
