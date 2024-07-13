@@ -766,7 +766,7 @@
         <constant name="devBit5">"false"</constant>
         <constant name="devBit6">"false"</constant>
         <constant name="devBit7">"false"</constant>
-        <constant name="skipADC12bitAssert">"false"</constant>
+        <constant name="unusedSkipWasHere">"false"</constant>
         <constant name="invertExhaustCamVVTSignal">"Rising"</constant>
         <constant name="enableKnockSpectrogram">"false"</constant>
         <constant digits="0" name="afterCrankingIACtaperDuration" units="cycles">200.0</constant>
@@ -4884,7 +4884,7 @@ canRxAdd(IN_35D, onCanRxAc)</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240708" nPages="1" signature="rusEFI master.2024.07.13.f407-discovery.1194137807" version="5.0"/>
+    <versionInfo firmwareInfo="20240708" nPages="1" signature="rusEFI master.2024.07.14.f407-discovery.2338960884" version="5.0"/>
     <bibliography author="rusEFI 20240708" writeDate="date"/>
     <settings/>
     <userComments/>
