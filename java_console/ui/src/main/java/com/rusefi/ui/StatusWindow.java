@@ -41,9 +41,9 @@ public class StatusWindow implements StatusConsumer, UpdateOperationCallbacks {
         content.add(messagesScroll, BorderLayout.CENTER);
         content.add(bottomStatusLabel, BorderLayout.SOUTH);
 
-        append("Console version " + rusEFIVersion.CONSOLE_VERSION);
-        append("Windows " + System.getProperty("os.version"));
-        append("Bundle " + BundleUtil.readBundleFullNameNotNull());
+        append("Console version " + rusEFIVersion.CONSOLE_VERSION, true);
+        append("Windows " + System.getProperty("os.version"), true);
+        append("Bundle " + BundleUtil.readBundleFullNameNotNull(), true);
     }
 
     @NotNull
@@ -62,9 +62,8 @@ public class StatusWindow implements StatusConsumer, UpdateOperationCallbacks {
     }
 
   @Override
-  public void log(String message) {
-    append(message);
-
+  public void log(final String message, final boolean breakLineOnTextArea) {
+    append(message, breakLineOnTextArea);
   }
 
   @Override
@@ -94,12 +93,16 @@ public class StatusWindow implements StatusConsumer, UpdateOperationCallbacks {
     }
 
     @Override
-    public void append(final String string) {
+    public void append(final String string, final boolean breakLineOnTextArea) {
         // todo: check if AWT thread and do not invokeLater if already on AWT thread
         SwingUtilities.invokeLater(() -> {
             String s = string.replaceAll(Character.toString((char) 219), "");
             log.info(s);
-            logTextArea.append(s + "\r\n");
+            String stringForTestArea = s;
+            if (breakLineOnTextArea) {
+                stringForTestArea += "\r\n";
+            }
+            logTextArea.append(stringForTestArea);
             UiUtils.trueLayout(logTextArea);
         });
     }
@@ -110,7 +113,7 @@ public class StatusWindow implements StatusConsumer, UpdateOperationCallbacks {
         SwingUtilities.invokeLater(() -> Toolkit.getDefaultToolkit().getSystemClipboard()
                 .setContents(new StringSelection(logTextArea.getText()), null));
 
-        append("hint: error state is already in your clipboard, please use PASTE or Ctrl-V while reporting issues");
+        append("hint: error state is already in your clipboard, please use PASTE or Ctrl-V while reporting issues", true);
     }
 
     public void setStatus(String status) {

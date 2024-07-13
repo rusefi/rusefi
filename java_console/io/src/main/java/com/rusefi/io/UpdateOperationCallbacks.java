@@ -1,10 +1,10 @@
 package com.rusefi.io;
 
 public interface UpdateOperationCallbacks {
-    void log(String message);
+    void log(String message, boolean breakLineOnTextArea);
 
-    default void append(String message) {
-      log(message);
+    default void append(final String message, final boolean breakLineOnTextArea) {
+      log(message, breakLineOnTextArea);
     }
 
     void done();
@@ -12,7 +12,7 @@ public interface UpdateOperationCallbacks {
 
     class UpdateOperationDummy implements UpdateOperationCallbacks {
         @Override
-        public void log(String message) {
+        public void log(final String message, final boolean breakLineOnTextArea) {
         }
 
         @Override
