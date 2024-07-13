@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Thu Jul 11 13:38:29 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sat Jul 13 10:00:21 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -136,20 +136,22 @@ struct output_channels_s {
 	offset 0 bit 26 */
 	bool dfcoActive : 1 {};
 	/**
+	 * SD card writing
 	offset 0 bit 27 */
-	bool unusedBit_27_27 : 1 {};
+	bool sd_active_wr : 1 {};
 	/**
+	 * SD card reading
 	offset 0 bit 28 */
-	bool unusedBit_27_28 : 1 {};
+	bool sd_active_rd : 1 {};
 	/**
 	offset 0 bit 29 */
-	bool unusedBit_27_29 : 1 {};
+	bool unusedBit_29_29 : 1 {};
 	/**
 	offset 0 bit 30 */
-	bool unusedBit_27_30 : 1 {};
+	bool unusedBit_29_30 : 1 {};
 	/**
 	offset 0 bit 31 */
-	bool unusedBit_27_31 : 1 {};
+	bool unusedBit_29_31 : 1 {};
 	/**
 	 * @@GAUGE_NAME_RPM@@
 	 * units: RPM
@@ -1367,4 +1369,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 844);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Thu Jul 11 13:38:29 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sat Jul 13 10:00:21 UTC 2024

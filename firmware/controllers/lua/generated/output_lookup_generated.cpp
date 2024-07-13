@@ -86,6 +86,12 @@ float getOutputValueByName(const char *name) {
 // dfcoActive
 		case -622949795:
 			return engine->outputChannels.dfcoActive;
+// sd_active_wr
+		case 1301677887:
+			return engine->outputChannels.sd_active_wr;
+// sd_active_rd
+		case 1301677708:
+			return engine->outputChannels.sd_active_rd;
 // RPMValue
 		case 1699696209:
 			return engine->outputChannels.RPMValue;
