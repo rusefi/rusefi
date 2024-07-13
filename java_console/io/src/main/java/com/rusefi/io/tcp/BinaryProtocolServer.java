@@ -96,7 +96,7 @@ public class BinaryProtocolServer {
     public static ServerSocketReference tcpServerSocket(int port, String threadName, CompatibleFunction<Socket, Runnable> socketRunnableFactory, Listener serverSocketCreationCallback, StatusConsumer statusConsumer) throws IOException {
         return tcpServerSocket(socketRunnableFactory, port, threadName, serverSocketCreationCallback, p -> {
             ServerSocket serverSocket = new ServerSocket(p);
-            statusConsumer.append("ServerSocket " + p + " created. Feel free to point TS at IP Address 'localhost' port " + p, true);
+            statusConsumer.append("ServerSocket " + p + " created. Feel free to point TS at IP Address 'localhost' port " + p, true, true);
             return serverSocket;
         });
     }
