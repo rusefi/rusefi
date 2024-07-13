@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Jul 13 22:55:01 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Jul 13 23:49:41 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1207,7 +1207,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1194137807;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1465,7 +1464,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.07.13.f407-discovery.1194137807";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.07.14.f407-discovery.2338960884";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2234,7 +2233,6 @@ public class Fields {
 	public static final Field DEVBIT5 = Field.create("DEVBIT5", 1496, FieldType.BIT, 25).setBaseOffset(0);
 	public static final Field DEVBIT6 = Field.create("DEVBIT6", 1496, FieldType.BIT, 26).setBaseOffset(0);
 	public static final Field DEVBIT7 = Field.create("DEVBIT7", 1496, FieldType.BIT, 27).setBaseOffset(0);
-	public static final Field SKIPADC12BITASSERT = Field.create("SKIPADC12BITASSERT", 1496, FieldType.BIT, 28).setBaseOffset(0);
 	public static final Field INVERTEXHAUSTCAMVVTSIGNAL = Field.create("INVERTEXHAUSTCAMVVTSIGNAL", 1496, FieldType.BIT, 29).setBaseOffset(0);
 	public static final Field ENABLEKNOCKSPECTROGRAM = Field.create("ENABLEKNOCKSPECTROGRAM", 1496, FieldType.BIT, 30).setBaseOffset(0);
 	public static final Field AFTERCRANKINGIACTAPERDURATION = Field.create("AFTERCRANKINGIACTAPERDURATION", 1500, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -3908,7 +3906,6 @@ public class Fields {
 	DEVBIT5,
 	DEVBIT6,
 	DEVBIT7,
-	SKIPADC12BITASSERT,
 	INVERTEXHAUSTCAMVVTSIGNAL,
 	ENABLEKNOCKSPECTROGRAM,
 	AFTERCRANKINGIACTAPERDURATION,

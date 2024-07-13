@@ -1135,9 +1135,6 @@ AEM X-Series EGT gauge kit or rusEFI EGT sensor from Wideband controller
 ### devBit7
 
 
-### skipADC12bitAssert
-
-
 ### invertExhaustCamVVTSignal
 
 

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sat Jul 13 10:00:21 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sat Jul 13 23:48:08 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -580,10 +580,10 @@ public class TsOutputs {
 	public static final Field INJECTORDIAGNOSTIC12 = Field.create("INJECTORDIAGNOSTIC12", 747, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ACTUALLASTINJECTIONSTAGE2 = Field.create("ACTUALLASTINJECTIONSTAGE2", 748, FieldType.INT16).setScale(0.0033333333333333335).setBaseOffset(0);
 	public static final Field INJECTORDUTYCYCLESTAGE2 = Field.create("INJECTORDUTYCYCLESTAGE2", 750, FieldType.INT8).setScale(0.5).setBaseOffset(0);
-	public static final Field ADC13BITCOUNTER = Field.create("ADC13BITCOUNTER", 751, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDBYTEHERE = Field.create("UNUSEDBYTEHERE", 751, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field FASTADCERRORSCOUNT = Field.create("FASTADCERRORSCOUNT", 752, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field DEVICEUID = Field.create("DEVICEUID", 753, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field UNEXPECTEDADCSAMPLE = Field.create("UNEXPECTEDADCSAMPLE", 754, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field UNUSEDADCSAMPLE = Field.create("UNUSEDADCSAMPLE", 754, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field SADDWELLRATIOCOUNTER = Field.create("SADDWELLRATIOCOUNTER", 756, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field INJECTIONPRIMINGCOUNTER = Field.create("INJECTIONPRIMINGCOUNTER", 757, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field TEMPLOGGING2 = Field.create("TEMPLOGGING2", 758, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -1069,10 +1069,10 @@ public class TsOutputs {
 	INJECTORDIAGNOSTIC12,
 	ACTUALLASTINJECTIONSTAGE2,
 	INJECTORDUTYCYCLESTAGE2,
-	ADC13BITCOUNTER,
+	UNUSEDBYTEHERE,
 	FASTADCERRORSCOUNT,
 	DEVICEUID,
-	UNEXPECTEDADCSAMPLE,
+	UNUSEDADCSAMPLE,
 	SADDWELLRATIOCOUNTER,
 	INJECTIONPRIMINGCOUNTER,
 	TEMPLOGGING2,

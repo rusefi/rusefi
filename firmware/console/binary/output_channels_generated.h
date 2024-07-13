@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sat Jul 13 10:00:21 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sat Jul 13 23:48:08 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1290,7 +1290,7 @@ struct output_channels_s {
 	/**
 	 * offset 751
 	 */
-	uint8_t adc13bitCounter = (uint8_t)0;
+	uint8_t unusedByteHere = (uint8_t)0;
 	/**
 	 * offset 752
 	 */
@@ -1302,7 +1302,7 @@ struct output_channels_s {
 	/**
 	 * offset 754
 	 */
-	uint16_t unexpectedAdcSample = (uint16_t)0;
+	uint16_t unusedAdcSample = (uint16_t)0;
 	/**
 	 * offset 756
 	 */
@@ -1369,4 +1369,4 @@ struct output_channels_s {
 static_assert(sizeof(output_channels_s) == 844);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sat Jul 13 10:00:21 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Sat Jul 13 23:48:08 UTC 2024
