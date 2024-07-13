@@ -78,7 +78,11 @@ static spi_device_e mmcSpiDevice = SPI_NONE;
 MMCDriver MMCD1;
 
 /* MMC/SD over SPI driver configuration.*/
-static MMCConfig mmccfg = { NULL, &mmc_ls_spicfg, &mmc_hs_spicfg };
+static MMCConfig mmccfg = {
+	.spip = NULL,
+	.lscfg = &mmc_ls_spicfg,
+	.hscfg = &mmc_hs_spicfg
+};
 
 #if MMC_USE_MUTUAL_EXCLUSION == TRUE
 #define LOCK_SD_SPI()
@@ -382,7 +386,7 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 // Some ECUs are wired for SDIO/SDMMC instead of SPI
 #ifdef EFI_SDC_DEVICE
 static const SDCConfig sdcConfig = {
-	RE_SDC_MODE
+	.bus_width = RE_SDC_MODE
 };
 
 static BaseBlockDevice* initializeMmcBlockDevice() {
