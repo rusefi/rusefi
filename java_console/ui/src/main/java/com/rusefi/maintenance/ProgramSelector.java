@@ -8,6 +8,7 @@ import com.rusefi.SerialPortScanner;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.core.Pair;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.core.ui.AutoupdateUtil;
@@ -29,6 +30,7 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.ui.FrameHelper.appendBundleName;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 import static com.rusefi.ui.util.UiUtils.trueLayout;
+import static javax.swing.JOptionPane.YES_NO_OPTION;
 
 public class ProgramSelector {
     private static final Logging log = getLogging(ProgramSelector.class);
@@ -166,19 +168,43 @@ public class ProgramSelector {
         }
     }
 
+    private static Pair<Boolean, String[]> waitForEcuPortDisappeared(
+        final String ecuPort,
+        JComponent parent,
+        final UpdateOperationCallbacks callbacks
+    ) {
+        callbacks.log("Waiting for ECU to reboot to OpenBlt...", false, true);
+
+        String[] currentPorts = null;
+        for (int attemptsCount = 0; attemptsCount < 150; attemptsCount++) {
+            // Give the bootloader sec to enumerate
+            BinaryProtocol.sleep(200);
+
+            currentPorts = LinkManager.getCommPorts();
+            log.info("currentPorts: [" + String.join(",", currentPorts) + "]");
+
+            // Check that the ECU disappeared from the "after" list
+            final boolean ecuPortStillAlive = !PortDetector.AUTO.equals(ecuPort) && Arrays.stream(currentPorts).anyMatch(ecuPort::equals);
+            if (!ecuPortStillAlive) {
+                return new Pair<>(true, currentPorts);
+            } else {
+                callbacks.log(".", false, false);
+            }
+        }
+        callbacks.log("", true, false);
+        return new Pair<>(false, currentPorts);
+    }
+
     private static void flashOpenbltSerialAutomatic(JComponent parent, String ecuPort, UpdateOperationCallbacks callbacks) {
-        String[] portsBefore = LinkManager.getCommPorts();
+        final String[] portsBefore = LinkManager.getCommPorts();
         rebootToOpenblt(parent, ecuPort, callbacks);
 
-        // todo: we need a longer but smarter loop instead of just sleep
-        // Give the bootloader a sec to enumerate
-        BinaryProtocol.sleep(3000);
+        final Pair<Boolean, String[]> rebootResult = waitForEcuPortDisappeared(ecuPort, parent, callbacks);
+        final boolean ecuPrtDisappeared = rebootResult.first;
+        final String[] portsAfter = rebootResult.second;
 
-        String[] portsAfter = LinkManager.getCommPorts();
-
-        // Check that the ECU disappeared from the "after" list
-        if (!PortDetector.AUTO.equals(ecuPort) && Arrays.stream(portsAfter).anyMatch(ecuPort::equals)) {
-            callbacks.logLine("Looks like your ECU didn't reboot to OpenBLT fast enough");
+        if (!ecuPrtDisappeared) {
+            callbacks.logLine("Looks like your ECU still haven't rebooted to OpenBLT");
             callbacks.logLine("");
             callbacks.logLine("Try closing and opening console again");
             callbacks.logLine("");
