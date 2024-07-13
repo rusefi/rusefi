@@ -615,7 +615,9 @@ static void updateFlags() {
 #if EFI_CONFIGURATION_STORAGE
 	engine->outputChannels.needBurn = getNeedToWriteConfiguration();
 #endif /* EFI_CONFIGURATION_STORAGE */
+#if EFI_FILE_LOGGING
 	updateSdCardLiveFlags();
+#endif
 }
 
 static void updateWarningCodes() {
