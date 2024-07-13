@@ -62,8 +62,8 @@ public class StatusWindow implements StatusConsumer, UpdateOperationCallbacks {
     }
 
   @Override
-  public void log(final String message, final boolean breakLineOnTextArea) {
-    append(message, breakLineOnTextArea);
+  public void log(final String message, final boolean breakLineOnTextArea, final boolean sendToLogger) {
+    append(message, breakLineOnTextArea, sendToLogger);
   }
 
   @Override
@@ -93,11 +93,13 @@ public class StatusWindow implements StatusConsumer, UpdateOperationCallbacks {
     }
 
     @Override
-    public void append(final String string, final boolean breakLineOnTextArea) {
+    public void append(final String string, final boolean breakLineOnTextArea, final boolean sendToLogger) {
         // todo: check if AWT thread and do not invokeLater if already on AWT thread
         SwingUtilities.invokeLater(() -> {
             String s = string.replaceAll(Character.toString((char) 219), "");
-            log.info(s);
+            if (sendToLogger) {
+                log.info(s);
+            }
             String stringForTestArea = s;
             if (breakLineOnTextArea) {
                 stringForTestArea += "\r\n";

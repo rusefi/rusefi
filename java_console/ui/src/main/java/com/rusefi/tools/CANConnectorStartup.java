@@ -15,9 +15,9 @@ public class CANConnectorStartup {
 
         String signature = BinaryProtocol.getSignature(tsStream);
         if (signature == null) {
-            statusListener.append("Error: no ECU signature from " + tsStream, true);
+            statusListener.append("Error: no ECU signature from " + tsStream, true, true);
         } else {
-            statusListener.append("Got [" + signature + "] ECU signature via " + tsStream, true);
+            statusListener.append("Got [" + signature + "] ECU signature via " + tsStream, true, true);
         }
         BinaryProtocolProxy.createProxy(tsStream, TcpConnector.DEFAULT_PORT, BinaryProtocolProxy.ClientApplicationActivityListener.VOID, statusListener);
 

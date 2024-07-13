@@ -44,7 +44,7 @@ public class BinaryProtocolProxy {
                 clientStream = new TcpIoStream("[[proxy]] ", clientSocket);
                 runProxy(targetEcuSocket, clientStream, clientApplicationActivityListener, USER_IO_TIMEOUT);
             } catch (IOException e) {
-                statusConsumer.append("ERROR BinaryProtocolProxy::run " + e, true);
+                statusConsumer.append("ERROR BinaryProtocolProxy::run " + e, true, true);
                 close(clientStream);
             }
         };

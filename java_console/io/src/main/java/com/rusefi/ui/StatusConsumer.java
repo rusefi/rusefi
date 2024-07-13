@@ -10,11 +10,13 @@ import static com.devexperts.logging.Logging.getLogging;
 public interface StatusConsumer {
     Logging log = getLogging(StatusConsumer.class);
 
-    StatusConsumer ANONYMOUS = (status, breakLineOnTextArea) -> {
-        log.info(status);
+    StatusConsumer ANONYMOUS = (status, breakLineOnTextArea, sendToLogger) -> {
+        if (sendToLogger) {
+            log.info(status);
+        }
     };
-    StatusConsumer VOID = (status, breakLineOnTextArea) -> {
+    StatusConsumer VOID = (status, breakLineOnTextArea, sendToLogger) -> {
     };
 
-    void append(String status, boolean breakLineOnTextArea);
+    void append(String status, boolean breakLineOnTextArea, boolean sendToLogger);
 }
