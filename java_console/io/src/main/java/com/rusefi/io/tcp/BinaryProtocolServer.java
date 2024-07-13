@@ -170,7 +170,7 @@ public class BinaryProtocolServer {
                 handleCrc(linkManager, stream);
             } else if (command == Fields.TS_PAGE_COMMAND) {
                 stream.sendPacket(TS_OK.getBytes());
-            } else if (command == Fields.TS_READ_COMMAND) {
+            } else if (command == Integration.TS_READ_COMMAND) {
                 ByteRange byteRange = ByteRange.valueOf(payload);
                 handleRead(linkManager, byteRange, stream);
             } else if (command == Integration.TS_CHUNK_WRITE_COMMAND) {
@@ -178,7 +178,7 @@ public class BinaryProtocolServer {
                 handleWrite(linkManager, payload, byteRange, stream);
             } else if (command == Fields.TS_BURN_COMMAND) {
                 stream.sendPacket(new byte[]{TS_RESPONSE_BURN_OK});
-            } else if (command == Fields.TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY) {
+            } else if (command == Integration.TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY) {
                 System.err.println("NOT IMPLEMENTED TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY relay");
                 // todo: relay command
                 stream.sendPacket(TS_OK.getBytes());
@@ -188,7 +188,7 @@ public class BinaryProtocolServer {
 
                 byte[] response = getOutputCommandResponse(payload, currentOutputs);
                 stream.sendPacket(response);
-            } else if (command == Fields.TS_GET_TEXT) {
+            } else if (command == Integration.TS_GET_TEXT) {
                 // todo: relay command
                 System.err.println("NOT IMPLEMENTED TS_GET_TEXT relay");
                 stream.sendPacket(TS_OK.getBytes());

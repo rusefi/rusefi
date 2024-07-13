@@ -151,7 +151,7 @@ public class TcpServerSandbox {
             stream.sendPacket(TS_OK.getBytes());
         } else if (command == Fields.TS_BURN_COMMAND) {
             stream.sendPacket(new byte[]{Fields.TS_RESPONSE_BURN_OK});
-        } else if (command == Fields.TS_READ_COMMAND) {
+        } else if (command == Integration.TS_READ_COMMAND) {
             ByteRange byteRange = ByteRange.valueOf(payload);
             int count = byteRange.getCount();
             // always all zero response

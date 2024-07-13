@@ -100,7 +100,7 @@ public class BinaryProtocolLogger {
         // todo: actually if console gets disconnected composite logging might end up enabled in controller?
         isCompositeLoggerEnabled = true;
 
-        byte[] response = binaryProtocol.executeCommand(Fields.TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY, "composite log");
+        byte[] response = binaryProtocol.executeCommand(Integration.TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY, "composite log");
         if (checkResponseCode(response)) {
             List<CompositeEvent> events = CompositeParser.parse(response);
             createCompositesIfNeeded();

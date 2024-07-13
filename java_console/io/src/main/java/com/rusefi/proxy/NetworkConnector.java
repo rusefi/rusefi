@@ -5,6 +5,7 @@ import com.opensr5.ConfigurationImage;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.io.AbstractConnectionStateListener;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
@@ -141,7 +142,7 @@ public class NetworkConnector implements Closeable {
             protected void handleCommand(BinaryProtocolServer.Packet packet, TcpIoStream stream) throws IOException {
                 super.handleCommand(packet, stream);
                 byte command = packet.getPacket()[0];
-                if (command == Fields.TS_ONLINE_PROTOCOL) {
+                if (command == Integration.TS_ONLINE_PROTOCOL) {
                     byte connectorCommand = packet.getPacket()[1];
                     log.info("Got connector command " + packet.getPacket());
                     if (connectorCommand == NetworkConnector.UPDATE_CONNECTOR_SOFTWARE_LATEST) {

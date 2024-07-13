@@ -84,9 +84,9 @@ public class BinaryProtocol {
                 return "BURN";
             case Fields.TS_HELLO_COMMAND:
                 return "HELLO";
-            case Fields.TS_READ_COMMAND:
+            case Integration.TS_READ_COMMAND:
                 return "READ";
-            case Fields.TS_GET_TEXT:
+            case Integration.TS_GET_TEXT:
                 return "TS_GET_TEXT";
             case Fields.TS_GET_FIRMWARE_VERSION:
                 return "GET_FW_VERSION";
@@ -346,7 +346,7 @@ public class BinaryProtocol {
             byte[] packet = new byte[4];
             ByteRange.packOffsetAndSize(offset, requestSize, packet);
 
-            byte[] response = executeCommand(Fields.TS_READ_COMMAND, packet, "load image offset=" + offset);
+            byte[] response = executeCommand(Integration.TS_READ_COMMAND, packet, "load image offset=" + offset);
 
             if (!checkResponseCode(response) || response.length != requestSize + 1) {
                 if (extractCode(response) == TS_RESPONSE_OUT_OF_RANGE) {
@@ -566,7 +566,7 @@ public class BinaryProtocol {
 
         long start = System.currentTimeMillis();
         while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
-            byte[] response = executeCommand(Fields.TS_EXECUTE, command, "execute");
+            byte[] response = executeCommand(Integration.TS_EXECUTE, command, "execute");
             if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) || response.length != 1) {
                 continue;
             }
@@ -578,7 +578,7 @@ public class BinaryProtocol {
     public static byte[] getTextCommandBytes(String text) {
         byte[] asBytes = text.getBytes();
         byte[] command = new byte[asBytes.length + 1];
-        command[0] = Fields.TS_EXECUTE;
+        command[0] = Integration.TS_EXECUTE;
         System.arraycopy(asBytes, 0, command, 1, asBytes.length);
         return command;
     }
@@ -591,7 +591,7 @@ public class BinaryProtocol {
         if (isClosed)
             return null;
         try {
-            byte[] response = executeCommand(Fields.TS_GET_TEXT, "text");
+            byte[] response = executeCommand(Integration.TS_GET_TEXT, "text");
             if (response == null) {
                 log.error("ERROR: TS_GET_TEXT failed");
                 return null;

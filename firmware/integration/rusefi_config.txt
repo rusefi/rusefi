@@ -2358,30 +2358,7 @@ end_struct
 #define TS_QUERY_COMMAND 'Q'
 ! 0x6B 107
 #define TS_CRC_CHECK_COMMAND 'k'
-! 0x52 82
-#define TS_READ_COMMAND 'R'
-! 0x47
-#define TS_GET_TEXT 'G'
-! 0x45
-#define TS_EXECUTE 'E'
-#define TS_ONLINE_PROTOCOL 'z'
-! 0x34
-#define TS_GET_OUTPUTS_SIZE '4'
-#define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY '8'
-#define TS_GET_SCATTERED_GET_COMMAND '9'
 
-#define TS_QUERY_BOOTLOADER 'L'
-
-#define TS_QUERY_BOOTLOADER_NONE 0
-#define TS_QUERY_BOOTLOADER_OPENBLT 1
-
-! Performance tracing
-#define TS_PERF_TRACE_BEGIN '_'
-#define TS_PERF_TRACE_GET_BUFFER 'b'
-
-! knock analyzer
-#define TS_KNOCK_SPECTROGRAM_ENABLE 'm'
-#define TS_KNOCK_SPECTROGRAM_DISABLE 'n'
 
 ! 0x50 80
 #define TS_PAGE_COMMAND 'P'

@@ -8,6 +8,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.IoHelper;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.io.IoStream;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.ui.StatusConsumer;
@@ -72,7 +73,7 @@ public class BinaryProtocolProxy {
             }
             BinaryProtocolServer.Packet clientRequest = readClientRequest(clientStream.getDataBuffer(), firstByte);
             byte[] packet = clientRequest.getPacket();
-            if (packet.length > 1 && packet[0] == Fields.TS_ONLINE_PROTOCOL && packet[1] == NetworkConnector.DISCONNECT)
+            if (packet.length > 1 && packet[0] == Integration.TS_ONLINE_PROTOCOL && packet[1] == NetworkConnector.DISCONNECT)
                 throw new IOException("User requested disconnect");
             listener.onActivity();
 

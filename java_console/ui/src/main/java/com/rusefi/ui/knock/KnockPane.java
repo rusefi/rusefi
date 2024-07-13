@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.rusefi.FileLog;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.tools.ConsoleTools;
@@ -101,7 +102,7 @@ public class KnockPane {
             public void actionPerformed(ActionEvent e) {
                 uiContext.getLinkManager().submit(() -> {
                     BinaryProtocol binaryProtocol = uiContext.getLinkManager().getConnector().getBinaryProtocol();
-                    binaryProtocol.executeCommand(Fields.TS_KNOCK_SPECTROGRAM_DISABLE, "stop knock analyzer");
+                    binaryProtocol.executeCommand(Integration.TS_KNOCK_SPECTROGRAM_DISABLE, "stop knock analyzer");
                     //uiContext.getLinkManager().setCompositeLogicEnabled(true); // todo: use big_buffer
                 });
             }

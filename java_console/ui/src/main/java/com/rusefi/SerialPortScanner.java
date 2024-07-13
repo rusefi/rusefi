@@ -5,6 +5,7 @@ import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.IoHelper;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.core.RusEfiSignature;
 import com.rusefi.core.SignatureHelper;
 import com.rusefi.io.IoStream;
@@ -362,7 +363,7 @@ public enum SerialPortScanner {
                 return false;
             }
 
-            stream.sendPacket(new byte[]{(byte) Fields.TS_QUERY_BOOTLOADER});
+            stream.sendPacket(new byte[]{(byte) Integration.TS_QUERY_BOOTLOADER});
 
             byte[] response = stream.getDataBuffer().getPacket(500, "ecuHasOpenblt");
             if (!IoHelper.checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK)) {
@@ -371,7 +372,7 @@ public enum SerialPortScanner {
             }
 
             // Data byte indicates bootloader type
-            return response[1] == Fields.TS_QUERY_BOOTLOADER_OPENBLT;
+            return response[1] == Integration.TS_QUERY_BOOTLOADER_OPENBLT;
         } catch (Exception e) {
             return false;
         }

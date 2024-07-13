@@ -11,6 +11,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.MsqFactory;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.Pair;
 import com.rusefi.core.ResponseBuffer;
@@ -376,7 +377,7 @@ public class ConsoleTools {
         incomingData.getPacket("");
 
         sleep(300);
-        stream.sendPacket(new byte[]{Fields.TS_GET_TEXT});
+        stream.sendPacket(new byte[]{Integration.TS_GET_TEXT});
         sleep(300);
 
         byte[] response = incomingData.getPacket("");
