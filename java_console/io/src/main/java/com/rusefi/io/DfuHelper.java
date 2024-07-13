@@ -23,9 +23,9 @@ public class DfuHelper {
         try {
             stream.sendPacket(command);
             stream.close();
-            callbacks.log(String.format("Reboot command [%s] sent into %s!\n", cmd, stream), true);
+            callbacks.logLine(String.format("Reboot command [%s] sent into %s!\n", cmd, stream));
         } catch (IOException e) {
-            callbacks.log("Error " + e, true);
+            callbacks.logLine("Error " + e);
         }
     }
 

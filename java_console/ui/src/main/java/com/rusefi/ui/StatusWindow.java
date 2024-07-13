@@ -41,9 +41,9 @@ public class StatusWindow implements StatusConsumer, UpdateOperationCallbacks {
         content.add(messagesScroll, BorderLayout.CENTER);
         content.add(bottomStatusLabel, BorderLayout.SOUTH);
 
-        append("Console version " + rusEFIVersion.CONSOLE_VERSION, true);
-        append("Windows " + System.getProperty("os.version"), true);
-        append("Bundle " + BundleUtil.readBundleFullNameNotNull(), true);
+        appendLine("Console version " + rusEFIVersion.CONSOLE_VERSION);
+        appendLine("Windows " + System.getProperty("os.version"));
+        appendLine("Bundle " + BundleUtil.readBundleFullNameNotNull());
     }
 
     @NotNull
@@ -113,7 +113,7 @@ public class StatusWindow implements StatusConsumer, UpdateOperationCallbacks {
         SwingUtilities.invokeLater(() -> Toolkit.getDefaultToolkit().getSystemClipboard()
                 .setContents(new StringSelection(logTextArea.getText()), null));
 
-        append("hint: error state is already in your clipboard, please use PASTE or Ctrl-V while reporting issues", true);
+        appendLine("hint: error state is already in your clipboard, please use PASTE or Ctrl-V while reporting issues");
     }
 
     public void setStatus(String status) {
