@@ -56,7 +56,7 @@ public class ConsoleTools {
     private static final StatusConsumer statusListener = new StatusConsumer() {
         final Logging log = getLogging(CANConnectorStartup.class);
         @Override
-        public void append(String message) {
+        public void append(final String message, final boolean breakLineOnTextArea) {
             log.info(message);
         }
     };

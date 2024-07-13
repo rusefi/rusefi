@@ -156,10 +156,10 @@ public class ProgramSelector {
         try {
             OpenbltJni.flashCan(FindFileHelper.findSrecFile(), cb);
 
-            callbacks.log("Update completed successfully!");
+            callbacks.log("Update completed successfully!", true);
             callbacks.done();
         } catch (Throwable e) {
-            callbacks.log("Error: " + e);
+            callbacks.log("Error: " + e, true);
             callbacks.error();
         } finally {
             OpenbltJni.stop(cb);
@@ -178,10 +178,10 @@ public class ProgramSelector {
 
         // Check that the ECU disappeared from the "after" list
         if (!PortDetector.AUTO.equals(ecuPort) && Arrays.stream(portsAfter).anyMatch(ecuPort::equals)) {
-            callbacks.log("Looks like your ECU didn't reboot to OpenBLT fast enough");
-            callbacks.log("");
-            callbacks.log("Try closing and opening console again");
-            callbacks.log("");
+            callbacks.log("Looks like your ECU didn't reboot to OpenBLT fast enough", true);
+            callbacks.log("", true);
+            callbacks.log("Try closing and opening console again", true);
+            callbacks.log("", true);
             callbacks.error();
             return;
         }
@@ -196,21 +196,21 @@ public class ProgramSelector {
         }
 
         if (newItems.isEmpty()) {
-            callbacks.log("Looks like your ECU disappeared during the update process. Please try again.");
+            callbacks.log("Looks like your ECU disappeared during the update process. Please try again.", true);
             callbacks.error();
             return;
         }
 
         if (newItems.size() > 1) {
             // More than one port appeared? whattt?
-            callbacks.log("Unable to find ECU after reboot as multiple serial ports appeared. Before: " + portsBefore.length + " After: " + portsAfter.length);
+            callbacks.log("Unable to find ECU after reboot as multiple serial ports appeared. Before: " + portsBefore.length + " After: " + portsAfter.length, true);
             callbacks.error();
             return;
         }
 
         String openbltPort = newItems.get(0);
 
-        callbacks.log("Serial port " + openbltPort + " appeared, programming firmware...");
+        callbacks.log("Serial port " + openbltPort + " appeared, programming firmware...", true);
 
         flashOpenbltSerialJni(parent, openbltPort, callbacks);
     }
@@ -219,12 +219,12 @@ public class ProgramSelector {
         return new OpenbltJni.OpenbltCallbacks() {
             @Override
             public void log(String line) {
-                callbacks.log(line);
+                callbacks.log(line, true);
             }
 
             @Override
             public void updateProgress(int percent) {
-                callbacks.log("Progress: " + percent + "%");
+                callbacks.log("Progress: " + percent + "%", true);
             }
 
             @Override
@@ -234,7 +234,7 @@ public class ProgramSelector {
 
             @Override
             public void setPhase(String title, boolean hasProgress) {
-                callbacks.log("Phase: " + title);
+                callbacks.log("Phase: " + title, true);
             }
         };
     }
@@ -254,13 +254,13 @@ public class ProgramSelector {
 
         try {
             String fileName = FindFileHelper.findSrecFile();
-            callbacks.log("flashSerial " + fileName);
+            callbacks.log("flashSerial " + fileName, true);
             OpenbltJni.flashSerial(fileName, port, cb);
 
-            callbacks.log("Update completed successfully!");
+            callbacks.log("Update completed successfully!", true);
             callbacks.done();
         } catch (Throwable e) {
-            callbacks.log("Error: " + e.toString());
+            callbacks.log("Error: " + e.toString(), true);
             callbacks.error();
         } finally {
             OpenbltJni.stop(cb);
