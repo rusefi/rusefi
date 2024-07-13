@@ -7,6 +7,7 @@ import com.opensr5.io.ConfigurationImageFile;
 import com.opensr5.io.DataListener;
 import com.rusefi.ConfigurationImageDiff;
 import com.rusefi.NamedThreadFactory;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.core.SignatureHelper;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.test.Bug3923;
@@ -89,7 +90,7 @@ public class BinaryProtocol {
                 return "TS_GET_TEXT";
             case Fields.TS_GET_FIRMWARE_VERSION:
                 return "GET_FW_VERSION";
-            case Fields.TS_CHUNK_WRITE_COMMAND:
+            case Integration.TS_CHUNK_WRITE_COMMAND:
                 return "WRITE_CHUNK";
             case Fields.TS_OUTPUT_COMMAND:
                 return "TS_OUTPUT_COMMAND";
@@ -511,7 +512,7 @@ public class BinaryProtocol {
 
         long start = System.currentTimeMillis();
         while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
-            byte[] response = executeCommand(Fields.TS_CHUNK_WRITE_COMMAND, packet, "writeImage");
+            byte[] response = executeCommand(Integration.TS_CHUNK_WRITE_COMMAND, packet, "writeImage");
             if (!checkResponseCode(response) || response.length != 1) {
                 log.error("writeData: Something is wrong, retrying...");
                 continue;

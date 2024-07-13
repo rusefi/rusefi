@@ -11,6 +11,7 @@ import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.IoHelper;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.util.HexBinary;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.commands.ByteRange;
@@ -172,7 +173,7 @@ public class BinaryProtocolServer {
             } else if (command == Fields.TS_READ_COMMAND) {
                 ByteRange byteRange = ByteRange.valueOf(payload);
                 handleRead(linkManager, byteRange, stream);
-            } else if (command == Fields.TS_CHUNK_WRITE_COMMAND) {
+            } else if (command == Integration.TS_CHUNK_WRITE_COMMAND) {
                 ByteRange byteRange = ByteRange.valueOf(payload);
                 handleWrite(linkManager, payload, byteRange, stream);
             } else if (command == Fields.TS_BURN_COMMAND) {

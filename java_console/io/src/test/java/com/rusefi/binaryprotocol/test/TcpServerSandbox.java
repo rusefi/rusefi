@@ -6,6 +6,7 @@ import com.rusefi.Listener;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.config.generated.TsOutputs;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.ByteRange;
@@ -101,7 +102,7 @@ public class TcpServerSandbox {
             stream.sendPacket(TS_OK.getBytes());
         } else if (command == Fields.TS_CRC_CHECK_COMMAND) {
             stream.sendPacket(BinaryProtocolServer.createCrcResponse(TOTALLY_EMPTY_CONFIGURATION));
-        } else if (command == Fields.TS_SET_LOGGER_SWITCH) {
+        } else if (command == Integration.TS_SET_LOGGER_SWITCH) {
             if (payload[1] == Fields.TS_COMPOSITE_READ) {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 baos.write(TS_OK.charAt(0));
@@ -143,7 +144,7 @@ public class TcpServerSandbox {
             response[0] = (byte) TS_OK.charAt(0);
             stream.sendPacket(response);
 
-        } else if (command == Fields.TS_CHUNK_WRITE_COMMAND) {
+        } else if (command == Integration.TS_CHUNK_WRITE_COMMAND) {
             ByteRange byteRange = ByteRange.valueOf(payload);
             System.out.println("TS_CHUNK_WRITE_COMMAND " + byteRange + " payload " + payload.length);
             System.arraycopy(payload, WriteChunkCommand.SCR_POS_WITH, TOTALLY_EMPTY_CONFIGURATION, byteRange.getOffset(), byteRange.getCount());

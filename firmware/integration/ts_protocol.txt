@@ -1,0 +1,11 @@
+! 0x57 pageValueWrite
+#define TS_SINGLE_WRITE_COMMAND 'W'
+! 0x43 pageChunkWrite
+#define TS_CHUNK_WRITE_COMMAND 'C'
+
+! These commands are used exclusively by the rusEFI console
+! 0x74
+#define TS_TEST_COMMAND 't'
+
+! High speed logger commands
+#define TS_SET_LOGGER_SWITCH  'l'
