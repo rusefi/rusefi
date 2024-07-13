@@ -35,7 +35,7 @@ float __attribute__((weak)) getAnalogInputDividerCoefficient(adc_channel_e) {
 
 static volatile NO_CACHE adcsample_t slowAdcSamples[SLOW_ADC_CHANNEL_COUNT];
 
-static adc_channel_mode_e adcHwChannelMode[HW_MAX_ADC_INDEX];
+static adc_channel_mode_e adcHwChannelMode[EFI_ADC_TOTAL_CHANNELS];
 
 adc_channel_mode_e getAdcMode(adc_channel_e hwChannel) {
 	return adcHwChannelMode[hwChannel];
