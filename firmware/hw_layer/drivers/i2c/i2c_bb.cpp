@@ -62,6 +62,7 @@ bool BitbangI2c::init(brain_pin_e scl, brain_pin_e sda) {
 }
 
 void BitbangI2c::deinit() {
+#if EFI_PROD_CODE
 	if (m_sclPort) {
 		gpio_pin_markUnused(m_sclPort, m_sclPin);
 		m_sclPort = NULL;
@@ -70,6 +71,7 @@ void BitbangI2c::deinit() {
 		gpio_pin_markUnused(m_sdaPort, m_sdaPin);
 		m_sdaPort = NULL;
 	}
+#endif
 }
 
 void BitbangI2c::start() {
