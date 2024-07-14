@@ -5,12 +5,10 @@ DOCS_ENUMS_INPUTS = \
   $(PROJECT_DIR)/controllers/sensors/sensor_type.h \
   $(PROJECT_DIR)/controllers/trigger/decoders/sync_edge.h \
   $(PROJECT_DIR)/controllers/algo/engine_types.h \
-  $(PROJECT_DIR)/libfirmware/can/can_common.h \
   $(PROJECT_DIR)/controllers/algo/rusefi_enums.h \
-  $(PROJECT_DIR)/hw_layer/drivers/can/can_category.h \
-  $(PROJECT_DIR)/controllers/trigger/decoders/sync_edge.h \
   $(PROJECT_DIR)/controllers/algo/rusefi_hw_enums.h \
-  $(PROJECT_DIR)/controllers/sensors/sensor_type.h \
+  $(PROJECT_DIR)/libfirmware/can/can_common.h \
+  $(PROJECT_DIR)/hw_layer/drivers/can/can_category.h \
   $(PROJECT_DIR)/config/boards/cypress/rusefi_hw_enums.h \
   $(PROJECT_DIR)/config/boards/kinetis/rusefi_hw_enums.h
 
