@@ -4,6 +4,7 @@ import com.rusefi.BackendTestHelper;
 import com.rusefi.TestHelper;
 import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.commands.HelloCommand;
@@ -29,7 +30,7 @@ import static com.rusefi.TestHelper.*;
 import static com.rusefi.Timeouts.SECOND;
 import static com.rusefi.binaryprotocol.BinaryProtocol.findCommand;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
-import static com.rusefi.config.generated.Fields.TS_PROTOCOL;
+import static com.rusefi.config.generated.Integration.TS_PROTOCOL;
 import static com.rusefi.io.tcp.BinaryProtocolServer.getPacketLength;
 import static com.rusefi.io.tcp.TcpConnector.LOCALHOST;
 import static com.rusefi.core.FileUtil.close;
@@ -78,14 +79,14 @@ public class LocalApplicationProxyTest {
 
                 byte[] protocolResponse = new byte[TS_PROTOCOL.length()];
                 // request
-                applicationConnection.write(new byte[] {Fields.TS_COMMAND_F});
+                applicationConnection.write(new byte[] {Integration.TS_COMMAND_F});
                 applicationConnection.flush();
                 // response
                 applicationConnection.getDataBuffer().read(protocolResponse);
                 assertArrayEquals(protocolResponse, TS_PROTOCOL.getBytes());
 
                 // request again
-                applicationConnection.write(new byte[] {Fields.TS_COMMAND_F});
+                applicationConnection.write(new byte[] {Integration.TS_COMMAND_F});
                 applicationConnection.flush();
                 // response again
                 applicationConnection.getDataBuffer().read(protocolResponse);
@@ -93,7 +94,7 @@ public class LocalApplicationProxyTest {
 
                 // TODO: why is this logic duplicated from BinaryProtocol?
                 byte[] commandPacket = new byte[5];
-                commandPacket[0] = Fields.TS_OUTPUT_COMMAND;
+                commandPacket[0] = Integration.TS_OUTPUT_COMMAND;
                 System.arraycopy(GetOutputsCommand.createRequest(), 0, commandPacket, 1, 4);
 
                 applicationConnection.sendPacket(commandPacket);

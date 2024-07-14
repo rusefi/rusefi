@@ -1,6 +1,7 @@
 package com.rusefi;
 
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.commands.HelloCommand;
@@ -203,7 +204,7 @@ covered by FullServerTest
                 protected void handleCommand(BinaryProtocolServer.Packet packet, TcpIoStream stream) throws IOException {
                     super.handleCommand(packet, stream);
 
-                    if (packet.getPacket()[0] == Fields.TS_OUTPUT_COMMAND) {
+                    if (packet.getPacket()[0] == Integration.TS_OUTPUT_COMMAND) {
                         GetOutputsCommand.sendOutput(stream);
                     }
                 }

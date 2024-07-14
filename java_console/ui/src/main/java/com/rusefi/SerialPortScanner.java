@@ -366,7 +366,7 @@ public enum SerialPortScanner {
             stream.sendPacket(new byte[]{(byte) Integration.TS_QUERY_BOOTLOADER});
 
             byte[] response = stream.getDataBuffer().getPacket(500, "ecuHasOpenblt");
-            if (!IoHelper.checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK)) {
+            if (!IoHelper.checkResponseCode(response, (byte) Integration.TS_RESPONSE_OK)) {
                 // ECU didn't understand request, bootloader certainly not supported
                 return false;
             }

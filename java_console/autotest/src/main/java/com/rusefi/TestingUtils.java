@@ -131,7 +131,7 @@ public class TestingUtils {
         final AtomicReference<String> result = new AtomicReference<>();
 
         FileLog.MAIN.logLine("waiting for next chart");
-        commandQueue.getLinkManager().getEngineState().replaceStringValueAction(Fields.PROTOCOL_ENGINE_SNIFFER, new EngineState.ValueCallback<String>() {
+        commandQueue.getLinkManager().getEngineState().replaceStringValueAction(Integration.PROTOCOL_ENGINE_SNIFFER, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
                 engineChartLatch.countDown();
@@ -149,6 +149,6 @@ public class TestingUtils {
     }
 
     public static void installVoidEngineSnifferAction(CommandQueue commandQueue) {
-        commandQueue.getLinkManager().getEngineState().replaceStringValueAction(Fields.PROTOCOL_ENGINE_SNIFFER, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
+        commandQueue.getLinkManager().getEngineState().replaceStringValueAction(Integration.PROTOCOL_ENGINE_SNIFFER, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
     }
 }

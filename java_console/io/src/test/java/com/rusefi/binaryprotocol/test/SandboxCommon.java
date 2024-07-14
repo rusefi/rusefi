@@ -6,6 +6,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.util.HexBinary;
 import com.rusefi.io.IoStream;
@@ -82,7 +83,7 @@ public class SandboxCommon {
 
     static void runGetProtocolCommand(String prefix, IoStream tsStream) throws IOException {
         IncomingDataBuffer dataBuffer = tsStream.getDataBuffer();
-        tsStream.write(new byte[]{Fields.TS_GET_PROTOCOL_VERSION_COMMAND_F});
+        tsStream.write(new byte[]{Integration.TS_GET_PROTOCOL_VERSION_COMMAND_F});
         tsStream.flush();
         byte[] fResponse = new byte[3];
         dataBuffer.waitForBytes("hello", System.currentTimeMillis(), fResponse.length);

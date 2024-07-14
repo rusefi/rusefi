@@ -160,15 +160,15 @@ public class BinaryProtocolServer {
 
             log.info("Got command " + BinaryProtocol.findCommand(command));
 
-            if (command == Fields.TS_HELLO_COMMAND) {
+            if (command == Integration.TS_HELLO_COMMAND) {
                 new HelloCommand(Fields.TS_SIGNATURE).handle(stream);
-            } else if (command == Fields.TS_GET_PROTOCOL_VERSION_COMMAND_F) {
+            } else if (command == Integration.TS_GET_PROTOCOL_VERSION_COMMAND_F) {
                 stream.sendPacket((TS_OK + TS_PROTOCOL).getBytes());
-            } else if (command == Fields.TS_GET_FIRMWARE_VERSION) {
+            } else if (command == Integration.TS_GET_FIRMWARE_VERSION) {
                 stream.sendPacket((TS_OK + "rusEFI proxy").getBytes());
-            } else if (command == Fields.TS_CRC_CHECK_COMMAND) {
+            } else if (command == Integration.TS_CRC_CHECK_COMMAND) {
                 handleCrc(linkManager, stream);
-            } else if (command == Fields.TS_PAGE_COMMAND) {
+            } else if (command == Integration.TS_PAGE_COMMAND) {
                 stream.sendPacket(TS_OK.getBytes());
             } else if (command == Integration.TS_READ_COMMAND) {
                 ByteRange byteRange = ByteRange.valueOf(payload);
@@ -176,13 +176,13 @@ public class BinaryProtocolServer {
             } else if (command == Integration.TS_CHUNK_WRITE_COMMAND) {
                 ByteRange byteRange = ByteRange.valueOf(payload);
                 handleWrite(linkManager, payload, byteRange, stream);
-            } else if (command == Fields.TS_BURN_COMMAND) {
+            } else if (command == Integration.TS_BURN_COMMAND) {
                 stream.sendPacket(new byte[]{TS_RESPONSE_BURN_OK});
             } else if (command == Integration.TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY) {
                 System.err.println("NOT IMPLEMENTED TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY relay");
                 // todo: relay command
                 stream.sendPacket(TS_OK.getBytes());
-            } else if (command == Fields.TS_OUTPUT_COMMAND) {
+            } else if (command == Integration.TS_OUTPUT_COMMAND) {
                 BinaryProtocolState binaryProtocolState = linkManager.getBinaryProtocolState();
                 byte[] currentOutputs = binaryProtocolState.getCurrentOutputs();
 
@@ -252,7 +252,7 @@ public class BinaryProtocolServer {
 
     public static int getPacketLength(IncomingDataBuffer in, Handler protocolCommandHandler, int ioTimeout) throws IOException {
         byte first = in.readByte(ioTimeout);
-        if (first == Fields.TS_GET_PROTOCOL_VERSION_COMMAND_F) {
+        if (first == Integration.TS_GET_PROTOCOL_VERSION_COMMAND_F) {
             protocolCommandHandler.handle();
             return 0;
         }

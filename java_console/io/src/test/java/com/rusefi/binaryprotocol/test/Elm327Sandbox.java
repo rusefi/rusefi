@@ -2,6 +2,7 @@ package com.rusefi.binaryprotocol.test;
 
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.can.elm.Elm327Connector;
@@ -52,12 +53,12 @@ public class Elm327Sandbox {
         Elm327Connector.whyDoWeNeedToSleepBetweenCommands();
 
         {
-            tsStream.sendPacket(new byte[]{Fields.TS_HELLO_COMMAND});
+            tsStream.sendPacket(new byte[]{Integration.TS_HELLO_COMMAND});
             byte[] response = dataBuffer.getPacket("[hello command]");
             if (!checkResponseCode(response))
                 return;
             String signature = new String(response, 1, response.length - 1);
-            System.out.println(Fields.TS_HELLO_COMMAND + " returned " + signature);
+            System.out.println(Integration.TS_HELLO_COMMAND + " returned " + signature);
 
             if (!signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX))
                 throw new IllegalStateException("Unexpected S " + signature);

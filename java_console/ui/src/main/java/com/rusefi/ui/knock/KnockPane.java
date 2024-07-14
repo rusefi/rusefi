@@ -89,7 +89,7 @@ public class KnockPane {
                 uiContext.getLinkManager().submit(() -> {
                     //uiContext.getLinkManager().setCompositeLogicEnabled(false); // todo: use big_buffer
                     BinaryProtocol binaryProtocol = uiContext.getLinkManager().getConnector().getBinaryProtocol();
-                    binaryProtocol.executeCommand(Fields.TS_KNOCK_SPECTROGRAM_ENABLE, "start knock analyzer");
+                    binaryProtocol.executeCommand(Integration.TS_KNOCK_SPECTROGRAM_ENABLE, "start knock analyzer");
                 });
             }
         });

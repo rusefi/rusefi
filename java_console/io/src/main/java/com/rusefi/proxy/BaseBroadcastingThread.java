@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpIoStream;
@@ -44,7 +45,7 @@ public class BaseBroadcastingThread {
 
                     byte command = payload[0];
 
-                    if (isFirstHello && command == Fields.TS_HELLO_COMMAND) {
+                    if (isFirstHello && command == Integration.TS_HELLO_COMMAND) {
                         // first TS_HELLO_COMMAND is PROXY request, consecutive TS_HELLO_COMMAND would be real deal from user desktop application
                         isFirstHello = false;
                         // respond on hello request with information about session

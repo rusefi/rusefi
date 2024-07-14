@@ -20,7 +20,7 @@ import java.io.IOException;
 import java.net.Socket;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.config.generated.Fields.TS_PROTOCOL;
+import static com.rusefi.config.generated.Integration.TS_PROTOCOL;
 import static com.rusefi.core.FileUtil.close;
 
 /**
@@ -65,7 +65,7 @@ public class BinaryProtocolProxy {
          */
         while (!targetEcu.isClosed()) {
             byte firstByte = clientStream.getDataBuffer().readByte(timeoutMs);
-            if (firstByte == Fields.TS_GET_PROTOCOL_VERSION_COMMAND_F) {
+            if (firstByte == Integration.TS_GET_PROTOCOL_VERSION_COMMAND_F) {
                 log.info("Responding to GET_PROTOCOL_VERSION with " + TS_PROTOCOL);
                 clientStream.write(TS_PROTOCOL.getBytes());
                 clientStream.flush();

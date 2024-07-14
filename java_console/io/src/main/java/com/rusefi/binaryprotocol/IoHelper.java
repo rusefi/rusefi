@@ -2,6 +2,7 @@ package com.rusefi.binaryprotocol;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.util.HexBinary;
 
 import java.util.zip.CRC32;
@@ -69,7 +70,7 @@ public class IoHelper {
     }
 
     public static boolean checkResponseCode(byte[] response) {
-        return checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK);
+        return checkResponseCode(response, (byte) Integration.TS_RESPONSE_OK);
     }
 
     /**

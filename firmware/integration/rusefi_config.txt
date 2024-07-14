@@ -2231,115 +2231,12 @@ end_struct
 #define ENGINE_MAKE_Hyundai "Hyundai"
 
 
-! TEST_CONTROL_MAGIC_WORD copy-paste while we are learning how to share between rusEFI and stim firmware
-#define CAN_BENCH_HEADER2 0x66
 
-#define BENCH_FUEL_PUMP_DURATION 3000
-#define BENCH_FAN_DURATION 2000
-#define BENCH_VVT_DURATION 300
-#define BENCH_MAIN_RELAY_DURATION 1000
-#define BENCH_STARTER_DURATION 4000
-#define BENCH_AC_RELAY_DURATION 800
-
-#define DEFAULT_SELT_STIM_RPM 1200
-#define DEFAULT_SELT_STIM_VVT0 23
-
-#define PROTOCOL_MSG "msg"
-#define PROTOCOL_HELLO_PREFIX "***"
-
-#define TS_RESPONSE_UNDERRUN 0x80
-#define TS_RESPONSE_OVERRUN 0x81
-#define TS_RESPONSE_CRC_FAILURE 0x82
-#define TS_RESPONSE_UNRECOGNIZED_COMMAND 0x83
-#define TS_RESPONSE_OUT_OF_RANGE 0x84
-#define TS_RESPONSE_FRAMING_ERROR 0x8D
 
 ! we need 3 seconds on single-bank to survive write-to-flash reconnect
 ! dual-bank devices can go with 300 for better TS reconnect experience
 #define TS_BLOCK_READ_TIMEOUT 3000
 
-#define MLQ_HEADER_SIZE 24
-#define MLQ_FIELD_HEADER_SIZE 89
-
-#define PROTOCOL_OUTPIN "outpin"
-#define PROTOCOL_ANALOG_CHART "analog_chart"
-#define PROTOCOL_ENGINE_SNIFFER "wave_chart"
-#define PROTOCOL_KNOCK_SPECTROGRAMM "knock_spectrogram"
-#define PROTOCOL_VERSION_TAG "rusEfiVersion"
-#define PROTOCOL_TEST_RESPONSE_TAG "ts_p_alive"
-#define PROTOCOL_SIGNATURE_PREFIX "rusEFI "
-#define FRONTEND_TITLE_BAR_NAME "rusEFI"
-
-! Engine Sniffer Protocol
-#define PROTOCOL_ES_DOWN "d"
-#define PROTOCOL_ES_UP "u"
-#define TOP_DEAD_CENTER_MESSAGE "r"
-
-! Engine Sniffer channel names
-#define PROTOCOL_CRANK1 "t1"
-#define PROTOCOL_CRANK2 "t2"
-
-#define PROTOCOL_VVT1_NAME "VVT1"
-#define PROTOCOL_VVT2_NAME "VVT2"
-#define PROTOCOL_VVT3_NAME "VVT3"
-#define PROTOCOL_VVT4_NAME "VVT4"
-#define PROTOCOL_HIP_NAME "HIP"
-#define PROTOCOL_TACH_NAME "tach"
-#define PROTOCOL_HPFP_NAME "hpfp"
-#define PROTOCOL_ACR_NAME "acr"
-
-#define PROTOCOL_WA_CHANNEL_1 "input1"
-#define PROTOCOL_WA_CHANNEL_2 "input2"
-#define PROTOCOL_WA_CHANNEL_3 "input3"
-#define PROTOCOL_WA_CHANNEL_4 "input4"
-
-
-#define TS_PROTOCOL "001"
-! These commands are used by TunerStudio and the rusEFI console
-! 0x4F ochGetCommand
-#define TS_OUTPUT_COMMAND 'O'
-! 0x53 queryCommand - this one is about detailed signature
-#define TS_HELLO_COMMAND 'S'
-! todo: replace all usages of TS_HELLO_COMMAND with TS_QUERY_COMMAND
-! todo#2: actually is above still the case?
-! TS auto-detect depends on well-known queryCommand value 'Q' which is not yet mentioned in https://www.tunerstudio.com/index.php/support/manuals/tsdevmanuals/137-ecu-definition-specification-aka-the-ini-document
-! that Q command is not mentioned in the .ini neither since it could happen during ECU auto-detection phase before any .ini is available
-#define TS_QUERY_COMMAND 'Q'
-! 0x6B 107
-#define TS_CRC_CHECK_COMMAND 'k'
-
-
-! 0x50 80
-#define TS_PAGE_COMMAND 'P'
-! 0x46
-#define TS_COMMAND_F 'F'
-#define TS_GET_PROTOCOL_VERSION_COMMAND_F 'F'
-! versionInfo 0x56 86 this one is only used for TS title bar
-#define TS_GET_FIRMWARE_VERSION 'V'
-! returns getFirmwareError(), works together with ind_hasFatalError
-#define TS_GET_CONFIG_ERROR 'e'
-
-#define TS_SIMULATE_CAN '>'
-
-! 0x42 burnCommand
-#define TS_BURN_COMMAND 'B'
-! 0x77
-#define TS_IO_TEST_COMMAND 'Z'
-
-#define TS_RESPONSE_OK 0
-#define TS_RESPONSE_BURN_OK 4
-
-! Engine Sniffer time stamp unit, in microseconds
-#define ENGINE_SNIFFER_UNIT_US 10
-
-
-#define TS_COMPOSITE_ENABLE 1
-#define TS_COMPOSITE_DISABLE 2
-#define TS_COMPOSITE_READ 3
-
-#define TS_TRIGGER_SCOPE_ENABLE 4
-#define TS_TRIGGER_SCOPE_DISABLE 5
-#define TS_TRIGGER_SCOPE_READ 6
 
 ! Generic channel names, your board may want to override these
 #define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "Channel 1"

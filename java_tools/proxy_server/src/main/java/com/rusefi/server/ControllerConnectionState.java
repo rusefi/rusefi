@@ -2,6 +2,7 @@ package com.rusefi.server;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.IniFileModel;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.core.SignatureHelper;
 import com.rusefi.auth.AuthTokenUtil;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
@@ -130,7 +131,7 @@ public class ControllerConnectionState {
     public void getOutputs() throws IOException {
         // TODO: why is this logic duplicated from BinaryProtocol?
         byte[] commandPacket = new byte[5];
-        commandPacket[0] = Fields.TS_OUTPUT_COMMAND;
+        commandPacket[0] = Integration.TS_OUTPUT_COMMAND;
         System.arraycopy(GetOutputsCommand.createRequest(), 0, commandPacket, 1, 4);
 
         long start = System.currentTimeMillis();
@@ -167,7 +168,7 @@ public class ControllerConnectionState {
 
     public void invokeOnlineCommand(byte command) throws IOException {
         byte[] packet = new byte[2];
-        packet[0] = Fields.TS_ONLINE_PROTOCOL;
+        packet[0] = Integration.TS_ONLINE_PROTOCOL;
         packet[1] = command;
         stream.sendPacket(packet);
     }

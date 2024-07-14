@@ -74,27 +74,27 @@ public class BinaryProtocol {
 
     public static String findCommand(byte command) {
         switch (command) {
-            case Fields.TS_PAGE_COMMAND:
+            case Integration.TS_PAGE_COMMAND:
                 return "PAGE";
-            case Fields.TS_COMMAND_F:
+            case Integration.TS_COMMAND_F:
                 return "PROTOCOL";
-            case Fields.TS_CRC_CHECK_COMMAND:
+            case Integration.TS_CRC_CHECK_COMMAND:
                 return "CRC_CHECK";
-            case Fields.TS_BURN_COMMAND:
+            case Integration.TS_BURN_COMMAND:
                 return "BURN";
-            case Fields.TS_HELLO_COMMAND:
+            case Integration.TS_HELLO_COMMAND:
                 return "HELLO";
             case Integration.TS_READ_COMMAND:
                 return "READ";
             case Integration.TS_GET_TEXT:
                 return "TS_GET_TEXT";
-            case Fields.TS_GET_FIRMWARE_VERSION:
+            case Integration.TS_GET_FIRMWARE_VERSION:
                 return "GET_FW_VERSION";
             case Integration.TS_CHUNK_WRITE_COMMAND:
                 return "WRITE_CHUNK";
-            case Fields.TS_OUTPUT_COMMAND:
+            case Integration.TS_OUTPUT_COMMAND:
                 return "TS_OUTPUT_COMMAND";
-            case Fields.TS_RESPONSE_OK:
+            case Integration.TS_RESPONSE_OK:
                 return "TS_RESPONSE_OK";
             default:
                 return "command " + (char) command + "/" + command;
@@ -199,7 +199,7 @@ public class BinaryProtocol {
         byte[] packet = GetOutputsCommand.createRequest(TS_FILE_VERSION_OFFSET, requestSize);
 
         String msg = "load TS_CONFIG_VERSION";
-        byte[] response = executeCommand(Fields.TS_OUTPUT_COMMAND, packet, msg);
+        byte[] response = executeCommand(Integration.TS_OUTPUT_COMMAND, packet, msg);
         if (!checkResponseCode(response) || response.length != requestSize + 1) {
             close();
             return "Failed to " + msg;
@@ -427,7 +427,7 @@ public class BinaryProtocol {
 
     public int getCrcFromController(int configSize) {
         byte[] packet = createRequestCrcPayload(configSize);
-        byte[] response = executeCommand(Fields.TS_CRC_CHECK_COMMAND, packet, "get CRC32");
+        byte[] response = executeCommand(Integration.TS_CRC_CHECK_COMMAND, packet, "get CRC32");
 
         if (checkResponseCode(response) && response.length == 5) {
             ByteBuffer bb = ByteBuffer.wrap(response, 1, 4);
@@ -567,7 +567,7 @@ public class BinaryProtocol {
         long start = System.currentTimeMillis();
         while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
             byte[] response = executeCommand(Integration.TS_EXECUTE, command, "execute");
-            if (!checkResponseCode(response, (byte) Fields.TS_RESPONSE_OK) || response.length != 1) {
+            if (!checkResponseCode(response, (byte) Integration.TS_RESPONSE_OK) || response.length != 1) {
                 continue;
             }
             return false;
@@ -614,7 +614,7 @@ public class BinaryProtocol {
         // TODO: Get rid of the +1.  This adds a byte at the front to tack a fake TS response code on the front
         //  of the reassembled packet.
         byte[] reassemblyBuffer = new byte[TS_TOTAL_OUTPUT_SIZE + 1];
-        reassemblyBuffer[0] = Fields.TS_RESPONSE_OK;
+        reassemblyBuffer[0] = Integration.TS_RESPONSE_OK;
 
         int reassemblyIdx = 0;
         int remaining = TS_TOTAL_OUTPUT_SIZE;
@@ -624,12 +624,12 @@ public class BinaryProtocol {
             int chunkSize = Math.min(remaining, Fields.BLOCKING_FACTOR);
 
             byte[] response = executeCommand(
-                Fields.TS_OUTPUT_COMMAND,
+                Integration.TS_OUTPUT_COMMAND,
                 GetOutputsCommand.createRequest(reassemblyIdx, chunkSize),
                 "output channels"
             );
 
-            if (response == null || response.length != (chunkSize + 1) || response[0] != Fields.TS_RESPONSE_OK) {
+            if (response == null || response.length != (chunkSize + 1) || response[0] != Integration.TS_RESPONSE_OK) {
                 return false;
             }
 

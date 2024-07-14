@@ -79,7 +79,7 @@ public class BinaryProtocolLogger {
         if (needCompositeLogger) {
             getComposite(binaryProtocol);
         } else if (isCompositeLoggerEnabled) {
-            binaryProtocol.executeCommand(Integration.TS_SET_LOGGER_SWITCH, new byte[]{Fields.TS_COMPOSITE_DISABLE}, "disable composite");
+            binaryProtocol.executeCommand(Integration.TS_SET_LOGGER_SWITCH, new byte[]{Integration.TS_COMPOSITE_DISABLE}, "disable composite");
             isCompositeLoggerEnabled = false;
             closeComposites();
         }
