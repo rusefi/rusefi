@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Tue Jun 25 02:20:41 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/fuel/fuel_computer.txt Sun Jul 14 04:30:06 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -191,7 +191,6 @@ public class FuelComputer {
 	public static final Field SDAIRMASSINONECYLINDER = Field.create("SDAIRMASSINONECYLINDER", 36, FieldType.FLOAT).setBaseOffset(844);
 	public static final Field NORMALIZEDCYLINDERFILLING = Field.create("NORMALIZEDCYLINDERFILLING", 40, FieldType.FLOAT).setBaseOffset(844);
 	public static final Field BROKENINJECTOR = Field.create("BROKENINJECTOR", 44, FieldType.INT8).setScale(1.0).setBaseOffset(844);
-	public static final Field UNUSED88 = Field.create("UNUSED88", 45, FieldType.INT8).setScale(1.0).setBaseOffset(844);
 	public static final Field IDEALENGINETORQUE = Field.create("IDEALENGINETORQUE", 46, FieldType.INT16).setScale(1.0).setBaseOffset(844);
 	public static final Field INJECTORHWISSUE = Field.create("INJECTORHWISSUE", 48, FieldType.BIT, 0).setBaseOffset(844);
 	public static final Field[] VALUES = {
@@ -210,7 +209,6 @@ public class FuelComputer {
 	SDAIRMASSINONECYLINDER,
 	NORMALIZEDCYLINDERFILLING,
 	BROKENINJECTOR,
-	UNUSED88,
 	IDEALENGINETORQUE,
 	INJECTORHWISSUE,
 	};
