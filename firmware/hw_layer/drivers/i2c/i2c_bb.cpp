@@ -61,6 +61,17 @@ bool BitbangI2c::init(brain_pin_e scl, brain_pin_e sda) {
 	return true;
 }
 
+void BitbangI2c::deinit() {
+	if (m_sclPort) {
+		gpio_pin_markUnused(m_sclPort, m_sclPin);
+		m_sclPort = NULL;
+	}
+	if (m_sdaPort) {
+		gpio_pin_markUnused(m_sdaPort, m_sdaPin);
+		m_sdaPort = NULL;
+	}
+}
+
 void BitbangI2c::start() {
 	// Start with both lines high (bus idle)
 	sda_high();
