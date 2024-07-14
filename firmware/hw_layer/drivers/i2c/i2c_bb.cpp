@@ -189,15 +189,7 @@ void BitbangI2c::write(uint8_t addr, const uint8_t* writeData, size_t writeSize)
 }
 
 void BitbangI2c::writeRead(uint8_t addr, const uint8_t* writeData, size_t writeSize, uint8_t* readData, size_t readSize) {
-	start();
-
-	// Address + write
-	writeByte(addr << 1 | 0);
-
-	// Write outbound bytes
-	for (size_t i = 0; i < writeSize; i++) {
-		writeByte(writeData[i]);
-	}
+	write(addr, writeData, writeSize);
 
 	read(addr, readData, readSize);
 }
