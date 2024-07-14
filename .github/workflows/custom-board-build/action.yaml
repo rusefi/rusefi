@@ -347,6 +347,7 @@ runs:
         : Add Tune to Commit
         echo "Current directory: $PWD"
         ls ${{inputs.sim_output}}
+        git config advice.addIgnoredFile false
         git add ${{inputs.sim_output}}*msq
         git add ${{inputs.sim_output}}canned-tunes/*md
         OUT=$(git commit -m "Auto-generated Default Tune" -m "[no ci]" 2>&1) || echo "commit failed, finding out why"
