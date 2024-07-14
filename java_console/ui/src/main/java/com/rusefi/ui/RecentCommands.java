@@ -2,6 +2,7 @@ package com.rusefi.ui;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.AverageAnglesUtil;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
@@ -19,8 +20,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static com.rusefi.IoUtil.*;
-import static com.rusefi.config.generated.Fields.CMD_DATE;
-import static com.rusefi.config.generated.Fields.CMD_TRIGGERINFO;
+import static com.rusefi.config.generated.Integration.CMD_DATE;
+import static com.rusefi.config.generated.Integration.CMD_TRIGGERINFO;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 
 /**
@@ -62,7 +63,7 @@ public class RecentCommands {
         COMMAND_ICONS.put(FUELINFO, infoIcon);
         COMMAND_ICONS.put(SDINFO, AutoupdateUtil.loadIcon("sdinfo.jpg"));
         COMMAND_ICONS.put(PINS, infoIcon);
-        COMMAND_ICONS.put(Fields.CMD_WRITECONFIG, AutoupdateUtil.loadIcon("writeconfig.jpg"));
+        COMMAND_ICONS.put(Integration.CMD_WRITECONFIG, AutoupdateUtil.loadIcon("writeconfig.jpg"));
     }
 
     private final JPanel content = new JPanel(new GridLayout(NUMBER_OF_COMMANDS + 1, 1));
@@ -110,7 +111,7 @@ public class RecentCommands {
         add(CMD_TRIGGERINFO);
         add(TSINFO);
         add(CANINFO);
-        add(Fields.CMD_WRITECONFIG);
+        add(Integration.CMD_WRITECONFIG);
         add("rewriteconfig");
 
         add(getEnableCommand("injection"));

@@ -113,9 +113,9 @@ public class ConsoleTools {
                 sendCommand(command);
             }
         }, "Sends command specified as second argument");
-        registerTool("reboot_ecu", args -> sendCommand(Fields.CMD_REBOOT), "Sends a command to reboot rusEFI controller.");
-        registerTool(Fields.CMD_REBOOT_DFU, args -> {
-            sendCommand(Fields.CMD_REBOOT_DFU);
+        registerTool("reboot_ecu", args -> sendCommand(Integration.CMD_REBOOT), "Sends a command to reboot rusEFI controller.");
+        registerTool(Integration.CMD_REBOOT_DFU, args -> {
+            sendCommand(Integration.CMD_REBOOT_DFU);
             /**
              * AndreiKA reports that auto-detect fails to interrupt communication threads while in native code
              * See https://github.com/rusefi/rusefi/issues/3300

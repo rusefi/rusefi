@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.rusefi.IoUtil;
 import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.enums.bench_mode_e;
@@ -53,7 +54,7 @@ public class SimulatorFunctionalTest {
         testOutputPin(bench_mode_e.BENCH_STARTER_ENABLE_RELAY, Fields.BENCH_STARTER_DURATION);
         EcuTestHelper ecu = new EcuTestHelper(linkManager);
 
-        ecu.sendCommand(getDisableCommand(Fields.CMD_SELF_STIMULATION));
+        ecu.sendCommand(getDisableCommand(Integration.CMD_SELF_STIMULATION));
         IoUtil.awaitRpm(0);
 
         testOutputPin(bench_mode_e.BENCH_VVT0_VALVE, Fields.BENCH_VVT_DURATION);

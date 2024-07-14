@@ -2,6 +2,7 @@ package com.rusefi.f4discovery;
 
 import com.rusefi.config.generated.Fields;
 import com.rusefi.RusefiTestBase;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.enums.SensorType;
@@ -14,7 +15,7 @@ import java.util.Arrays;
 
 import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.TestingUtils.assertNull;
-import static com.rusefi.config.generated.Fields.CMD_SET_SENSOR_MOCK;
+import static com.rusefi.config.generated.Integration.CMD_SET_SENSOR_MOCK;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -275,7 +276,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
     public void test1995DodgeNeon() {
         ecu.setEngineType(engine_type_e.DODGE_NEON_1995);
         EngineChart chart;
-        sendComplexCommand(Fields.CMD_INDIVIDUAL_INJECTION);
+        sendComplexCommand(Integration.CMD_INDIVIDUAL_INJECTION);
         /**
          * note that command order matters - RPM change resets wave chart
          */
@@ -398,7 +399,7 @@ public class CommonFunctionalTest extends RusefiTestBase {
         assertWaveNotNull(chart, EngineChart.SPARK_1);
 
         // let's enable more channels dynamically
-        sendComplexCommand(Fields.CMD_INDIVIDUAL_INJECTION);
+        sendComplexCommand(Integration.CMD_INDIVIDUAL_INJECTION);
         chart = nextChart();
         assertWaveNotNull("Switching Aspire into INDIVIDUAL_COILS mode", chart, EngineChart.SPARK_2);
         assertWaveNotNull(chart, EngineChart.SPARK_3);

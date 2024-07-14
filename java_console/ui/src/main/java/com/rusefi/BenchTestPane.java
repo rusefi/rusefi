@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.ui.MessagesView;
 import com.rusefi.ui.UIContext;
@@ -36,13 +37,13 @@ public class BenchTestPane {
         content.add(new CommandControl(uiContext, "Reboot", "", "Reboot") {
             @Override
             protected String getCommand() {
-                return Fields.CMD_REBOOT;
+                return Integration.CMD_REBOOT;
             }
         }.getContent());
         content.add(new CommandControl(uiContext,"Reboot to DFU", "", "Reboot to DFU") {
             @Override
             protected String getCommand() {
-                return Fields.CMD_REBOOT_DFU;
+                return Integration.CMD_REBOOT_DFU;
             }
         }.getContent());
         content.add(new MessagesView(config.getRoot()).messagesScroll);
@@ -62,7 +63,7 @@ public class BenchTestPane {
         CommandControl panel = new CommandControl(uiContext,"MIL", "check_engine.jpg", TEST) {
             @NotNull
             protected String getCommand() {
-                return Fields.CMD_MIL_BENCH;
+                return Integration.CMD_MIL_BENCH;
             }
         };
         return panel.getContent();

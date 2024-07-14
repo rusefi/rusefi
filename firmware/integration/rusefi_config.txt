@@ -2034,10 +2034,6 @@ uint16_t[ALTERNATOR_VOLTAGE_TARGET_SIZE] alternatorVoltageTargetRpmBins;;"RPM", 
 
 end_struct
 
-#define CMD_SET_SENSOR_MOCK "set_sensor_mock"
-#define CMD_RESET_SENSOR_MOCKS "reset_sensor_mocks"
-#define CMD_RESET_SIMULATOR "reset_simulator"
-
 #define GAUGE_NAME_VERSION "firmware"
 #define GAUGE_NAME_UPTIME "Uptime"
 ! WARNING! THIS GAUGE NAME IS PART of REO integration API
@@ -2234,20 +2230,6 @@ end_struct
 #define ENGINE_MAKE_VAG "VAG"
 #define ENGINE_MAKE_Hyundai "Hyundai"
 
-#define CMD_SET "set"
-#define CMD_GET "get"
-#define CMD_ENGINESNIFFERRPMTHRESHOLD "engineSnifferRpmThreshold"
-#define CMD_INDIVIDUAL_INJECTION "set_individual_coils_ignition"
-#define CMD_MIL_BENCH "milbench"
-#define CMD_FUEL_BENCH "fuelbench"
-#define CMD_FUEL_PUMP_BENCH "fuelpumpbench"
-#define CMD_IDLE_BENCH "idlebench"
-#define CMD_SPARK_BENCH "sparkbench"
-#define CMD_STARTER_BENCH "starterbench"
-#define CMD_HPFP_BENCH "hpfpbench"
-#define CMD_AC_RELAY_BENCH "acrelaybench"
-#define CMD_FAN_BENCH "fanbench"
-#define CMD_FAN2_BENCH "fan2bench"
 
 ! TEST_CONTROL_MAGIC_WORD copy-paste while we are learning how to share between rusEFI and stim firmware
 #define CAN_BENCH_HEADER2 0x66
@@ -2259,41 +2241,8 @@ end_struct
 #define BENCH_STARTER_DURATION 4000
 #define BENCH_AC_RELAY_DURATION 800
 
-#define CMD_PINS "pins"
-#define CMD_ETB_DUTY "set_etb_duty"
 #define DEFAULT_SELT_STIM_RPM 1200
 #define DEFAULT_SELT_STIM_VVT0 23
-#define CMD_SELF_STIMULATION "self_stimulation"
-#define CMD_EXTERNAL_STIMULATION "ext_stimulation"
-#define CMD_RPM "rpm"
-#define CMD_VSS_PIN "vss_pin"
-#define CMD_TRIGGER_PIN "set_trigger_input_pin"
-#define CMD_LOGIC_PIN "set_logic_input_pin"
-#define CMD_ALTERNATOR_PIN "set_alternator_pin"
-#define CMD_IDLE_PIN "set_idle_pin"
-#define CMD_BOOST_PIN "set_boost_pin"
-#define CMD_TRIGGER_SIMULATOR_PIN "set_trigger_simulator_pin"
-#define CMD_IGNITION_PIN "set_ignition_pin"
-#define CMD_INJECTION_PIN "set_injection_pin"
-
-#define CMD_RESET_ENGINE_SNIFFER "reset_engine_chart"
-#define CMD_FUNCTIONAL_TEST_MODE "test_mode"
-
-#define CMD_ECU_UNLOCK "unlock"
-#define CMD_ENGINE_TYPE "engine_type"
-#define CMD_INJECTION "injection"
-#define CMD_IGNITION "ignition"
-#define CMD_PWM "pwm"
-#define CMD_TRIGGERINFO "triggerinfo"
-#define CMD_WRITECONFIG "writeconfig"
-#define CMD_BURNCONFIG "burnconfig"
-#define CMD_DATE "date"
-#define CMD_REBOOT "reboot"
-#define CMD_REBOOT_DFU "reboot_dfu"
-#define CMD_REBOOT_OPENBLT "reboot_openblt"
-#define CMD_ENABLE "enable"
-#define CMD_DISABLE "disable"
-#define CMD_TRIGGER_HW_INPUT "trigger_hw_input"
 
 #define PROTOCOL_MSG "msg"
 #define PROTOCOL_HELLO_PREFIX "***"

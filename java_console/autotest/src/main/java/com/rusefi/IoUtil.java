@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.ISensorCentral;
 import com.rusefi.core.Sensor;
@@ -17,7 +18,7 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.config.generated.Fields.CMD_RPM;
+import static com.rusefi.config.generated.Integration.CMD_RPM;
 import static com.rusefi.waves.EngineReport.isCloseEnough;
 
 /**
@@ -37,15 +38,15 @@ public class IoUtil {
     }
 
     public static String getSetCommand(String settingName) {
-        return Fields.CMD_SET + " " + settingName;
+        return Integration.CMD_SET + " " + settingName;
     }
 
     public static String getEnableCommand(String settingName) {
-        return Fields.CMD_ENABLE + " " + settingName;
+        return Integration.CMD_ENABLE + " " + settingName;
     }
 
     public static String getDisableCommand(String settingName) {
-        return Fields.CMD_DISABLE + " " + settingName;
+        return Integration.CMD_DISABLE + " " + settingName;
     }
 
     /**
@@ -85,7 +86,7 @@ public class IoUtil {
 
         if (!isCloseEnough(rpm, actualRpm))
             throw new IllegalStateException("rpm change did not happen: " + rpm + ", actual " + actualRpm);
-//        sendCommand(Fields.CMD_RESET_ENGINE_SNIFFER);
+//        sendCommand(Integration.CMD_RESET_ENGINE_SNIFFER);
         log.info("AUTOTEST RPM change [" + rpm + "] executed in " + (System.currentTimeMillis() - time));
     }
 

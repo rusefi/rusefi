@@ -3,6 +3,7 @@ package com.rusefi.io;
 import com.devexperts.logging.Logging;
 import com.rusefi.Listener;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.util.IoUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -39,7 +40,7 @@ public class CommandQueue {
 
     private static boolean isSlowCommand(String cmd) {
         String lc = cmd.toLowerCase();
-        return lc.startsWith("set " + Fields.CMD_ENGINE_TYPE) || lc.startsWith("writeconfig") || lc.startsWith("rewriteconfig");
+        return lc.startsWith("set " + Integration.CMD_ENGINE_TYPE) || lc.startsWith("writeconfig") || lc.startsWith("rewriteconfig");
     }
 
     public static int getTimeout(String cmd) {

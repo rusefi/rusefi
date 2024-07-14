@@ -5,7 +5,7 @@ import com.rusefi.enums.engine_type_e;
 import com.rusefi.functional_tests.EcuTestHelper;
 import org.junit.Test;
 
-import static com.rusefi.config.generated.Fields.CMD_ENGINESNIFFERRPMTHRESHOLD;
+import static com.rusefi.config.generated.Integration.CMD_ENGINESNIFFERRPMTHRESHOLD;
 import static com.rusefi.functional_tests.EcuTestHelper.FAIL;
 
 public class HighRevTest extends RusefiTestBase {

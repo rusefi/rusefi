@@ -6,6 +6,7 @@ import com.rusefi.config.Field;
 import com.rusefi.config.FieldType;
 import com.rusefi.config.FieldsMap;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.ui.RecentCommands;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.config.*;
@@ -121,7 +122,7 @@ public class SettingsTab {
 
         panel.add(dialogBody);
 
-        panel.add(UiUtils.wrap(RecentCommands.createButton(uiContext, new AtomicBoolean(), Fields.CMD_WRITECONFIG)));
+        panel.add(UiUtils.wrap(RecentCommands.createButton(uiContext, new AtomicBoolean(), Integration.CMD_WRITECONFIG)));
 
         JLabel unusable = new JLabel("This is painfully unusable, TunerStudio works way better for settings!");
         unusable.setForeground(Color.red);

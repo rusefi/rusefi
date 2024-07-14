@@ -25,7 +25,7 @@ public class UploadChanges {
         wnd.getFrameHelper().initFrame(wnd.getContent(), false);
 
         JPanel bottomPanel = new JPanel(new FlowLayout());
-//        bottomPanel.add(RecentCommands.createButton(new AtomicBoolean(), Fields.CMD_WRITECONFIG));
+//        bottomPanel.add(RecentCommands.createButton(new AtomicBoolean(), Integration.CMD_WRITECONFIG));
         wnd.getContent().add(bottomPanel, BorderLayout.SOUTH);
 
         if (args.length != 1) {

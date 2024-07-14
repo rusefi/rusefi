@@ -24,7 +24,7 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.rusefi.config.generated.Fields.CMD_SET_SENSOR_MOCK;
+import static com.rusefi.config.generated.Integration.CMD_SET_SENSOR_MOCK;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020

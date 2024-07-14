@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.core.EngineState;
 import com.rusefi.functional_tests.EcuTestHelper;
 import com.rusefi.io.CommandQueue;
@@ -112,7 +113,7 @@ public class TestingUtils {
     }
 
     static String getNextWaveChart(CommandQueue commandQueue) {
-        IoUtil.sendBlockingCommand(Fields.CMD_RESET_ENGINE_SNIFFER, commandQueue);
+        IoUtil.sendBlockingCommand(Integration.CMD_RESET_ENGINE_SNIFFER, commandQueue);
         String result = getEngineChart(commandQueue);
         FileLog.MAIN.logLine("current chart: " + result);
         return result;

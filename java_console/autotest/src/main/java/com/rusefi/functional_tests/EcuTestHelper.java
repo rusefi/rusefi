@@ -5,6 +5,7 @@ import com.rusefi.autotest.ControllerConnectorState;
 import com.rusefi.IoUtil;
 import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.core.ISensorCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -83,9 +84,9 @@ public class EcuTestHelper {
     public static EcuTestHelper createInstance(boolean allowHardwareTriggerInput) {
         EcuTestHelper ecu = new EcuTestHelper(ControllerConnectorState.getLinkManager());
         if (allowHardwareTriggerInput) {
-            ecu.sendCommand(getEnableCommand(Fields.CMD_TRIGGER_HW_INPUT));
+            ecu.sendCommand(getEnableCommand(Integration.CMD_TRIGGER_HW_INPUT));
         } else {
-            ecu.sendCommand(getDisableCommand(Fields.CMD_TRIGGER_HW_INPUT));
+            ecu.sendCommand(getDisableCommand(Integration.CMD_TRIGGER_HW_INPUT));
         }
         ecu.enableFunctionalMode();
         return ecu;
@@ -104,7 +105,7 @@ public class EcuTestHelper {
      * this seem to adjust engine sniffer behaviour
      */
     public void enableFunctionalMode() {
-        sendCommand(getEnableCommand(Fields.CMD_FUNCTIONAL_TEST_MODE));
+        sendCommand(getEnableCommand(Integration.CMD_FUNCTIONAL_TEST_MODE));
     }
 
     public void changeRpm(final int rpm) {
@@ -122,18 +123,18 @@ public class EcuTestHelper {
          * - waiting for scheduled actuator actions to run out
          * - disabling PWM
          */
-        sendCommand(getDisableCommand(Fields.CMD_SELF_STIMULATION));
-        sendCommand(getDisableCommand(Fields.CMD_INJECTION));
-        sendCommand(getDisableCommand(Fields.CMD_IGNITION));
-        sendCommand(getDisableCommand(Fields.CMD_PWM));
+        sendCommand(getDisableCommand(Integration.CMD_SELF_STIMULATION));
+        sendCommand(getDisableCommand(Integration.CMD_INJECTION));
+        sendCommand(getDisableCommand(Integration.CMD_IGNITION));
+        sendCommand(getDisableCommand(Integration.CMD_PWM));
         // changing engine type while engine is running does not work well - we rightfully
         // get invalid configuration critical errors
         sleepSeconds(2);
-        sendCommand("set " + Fields.CMD_ENGINE_TYPE + " " + type, Timeouts.SET_ENGINE_TIMEOUT);
+        sendCommand("set " + Integration.CMD_ENGINE_TYPE + " " + type, Timeouts.SET_ENGINE_TIMEOUT);
         // TODO: document the reason for this sleep?!
         sleepSeconds(1);
-        sendCommand(getEnableCommand(Fields.CMD_PWM));
-        sendCommand(getEnableCommand(Fields.CMD_SELF_STIMULATION));
+        sendCommand(getEnableCommand(Integration.CMD_PWM));
+        sendCommand(getEnableCommand(Integration.CMD_SELF_STIMULATION));
 //        // we need to skip one chart since it might have been produced with previous engine type
 //        TestingUtils.nextChart(commandQueue);
     }

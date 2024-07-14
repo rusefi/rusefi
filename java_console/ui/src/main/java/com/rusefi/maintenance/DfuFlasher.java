@@ -5,6 +5,7 @@ import com.rusefi.Launcher;
 import com.rusefi.Timeouts;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autodetect.SerialAutoChecker;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.core.FindFileHelper;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.DfuHelper;
@@ -46,7 +47,7 @@ public class DfuFlasher {
             return;
         }
 
-        AtomicBoolean isSignatureValidated = rebootToDfu(parent, port, callbacks, Fields.CMD_REBOOT_DFU);
+        AtomicBoolean isSignatureValidated = rebootToDfu(parent, port, callbacks, Integration.CMD_REBOOT_DFU);
         if (isSignatureValidated == null)
             return;
         if (isSignatureValidated.get()) {
