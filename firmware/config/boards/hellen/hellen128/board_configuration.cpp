@@ -66,6 +66,8 @@ static void setHellen128ETBConfig() {
 	if (isFirstInvocation) {
 		isFirstInvocation = false;
 		m_i2c.init(Gpio::B10, Gpio::B11);
+
+		/* TODO: release pis for LPS25 */
 	}
 	// looks like we support PCF8575 i2c I/O expander
 	m_i2c.read(/*address*/0x20, variant, sizeof(variant));
