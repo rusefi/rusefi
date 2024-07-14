@@ -20,6 +20,10 @@ ifneq ("$(wildcard $(BOARD_DIR)/board_options.ini)","")
   CONFIG_INPUTS += $(BOARD_DIR)/board_options.ini
 endif
 
+ifneq ("$(wildcard $(BOARD_DIR)/board_config.txt)","")
+  CONFIG_INPUTS += $(BOARD_DIR)/board_config.txt
+endif
+
 # Build the generated pin code only if the connector directory exists
 ifneq ("$(wildcard $(BOARD_DIR)/connectors)","")
   PIN_FILES = \
