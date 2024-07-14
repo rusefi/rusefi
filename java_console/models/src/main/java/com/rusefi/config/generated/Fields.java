@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Jul 14 02:42:26 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Jul 14 00:27:26 EDT 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1207,7 +1207,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1126331627;
+	public static final int SIGNATURE_HASH = 2033764441;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1465,7 +1465,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.07.14.f407-discovery.1126331627";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.07.14.f407-discovery.2033764441";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2733,7 +2733,6 @@ public class Fields {
 	public static final Field ALSIDLEADD = Field.create("ALSIDLEADD", 3540, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSETBADD = Field.create("ALSETBADD", 3544, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSSKIPRATIO = Field.create("ALSSKIPRATIO", 3548, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field UNUSEDSORRY11 = Field.create("UNUSEDSORRY11", 3552, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALSACTIVATEPINMODE = Field.create("ALSACTIVATEPINMODE", 3553, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSSECONDARYMAXIMUM = Field.create("TPSSECONDARYMAXIMUM", 3554, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field PPSSECONDARYMAXIMUM = Field.create("PPSSECONDARYMAXIMUM", 3555, FieldType.INT8).setScale(0.5).setBaseOffset(0);
@@ -2905,7 +2904,6 @@ public class Fields {
 	public static final Field ACPRESSURE_VALUE2 = Field.create("ACPRESSURE_VALUE2", 4028, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field MINACPRESSURE = Field.create("MINACPRESSURE", 4032, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field MAXACPRESSURE = Field.create("MAXACPRESSURE", 4034, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE = Field.create("UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE", 4036, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_4210 = Field.create("ALIGNMENTFILL_AT_4210", 4210, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBBIASBINS = Field.create("ETBBIASBINS", 4212, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ETBBIASVALUES = Field.create("ETBBIASVALUES", 4244, FieldType.FLOAT).setBaseOffset(0);
@@ -2940,7 +2938,6 @@ public class Fields {
 	public static final Field IACCOASTINGRPMBINS = Field.create("IACCOASTINGRPMBINS", 5172, FieldType.INT8).setScale(100.0).setBaseOffset(0);
 	public static final Field IACCOASTING = Field.create("IACCOASTING", 5188, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field WARNING_MESSAGE = Field.create("WARNING_MESSAGE", 5204, 120, FieldType.STRING).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSEDGAPHERE = Field.create("UNUSEDGAPHERE", 5324, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field BOOSTTABLEOPENLOOP = Field.create("BOOSTTABLEOPENLOOP", 5340, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field BOOSTRPMBINS = Field.create("BOOSTRPMBINS", 5404, FieldType.INT8).setScale(100.0).setBaseOffset(0);
 	public static final Field BOOSTTABLECLOSEDLOOP = Field.create("BOOSTTABLECLOSEDLOOP", 5412, FieldType.INT8).setScale(2.0).setBaseOffset(0);
@@ -4395,7 +4392,6 @@ public class Fields {
 	ALSIDLEADD,
 	ALSETBADD,
 	ALSSKIPRATIO,
-	UNUSEDSORRY11,
 	ALSACTIVATEPINMODE,
 	TPSSECONDARYMAXIMUM,
 	PPSSECONDARYMAXIMUM,
@@ -4563,7 +4559,6 @@ public class Fields {
 	ACPRESSURE_VALUE2,
 	MINACPRESSURE,
 	MAXACPRESSURE,
-	UNUSEDOFTENCHANGESDURINGFIRMWAREUPDATE,
 	ALIGNMENTFILL_AT_4210,
 	ETBBIASBINS,
 	ETBBIASVALUES,
@@ -4598,7 +4593,6 @@ public class Fields {
 	IACCOASTINGRPMBINS,
 	IACCOASTING,
 	WARNING_MESSAGE,
-	UNUSEDGAPHERE,
 	BOOSTTABLEOPENLOOP,
 	BOOSTRPMBINS,
 	BOOSTTABLECLOSEDLOOP,

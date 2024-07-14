@@ -75,7 +75,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                 String nameWithPrefix = prefix + configField.getName();
 
                 if (configField.isBit()) {
-                    if (!configField.getName().startsWith(ConfigStructure.UNUSED_ANYTHING_PREFIX)) {
+                    if (isUsefulField(configField)) {
                         writeJavaFieldName(nameWithPrefix, tsPosition);
                         content.append("FieldType.BIT, " + bitIndex + ")" + terminateField());
                     }
@@ -97,20 +97,22 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                     }
 
 
-                    writeJavaFieldName(nameWithPrefix, tsPosition);
-                    if (isStringField(configField)) {
-                        String custom = state.getTsCustomLine().get(configField.getTypeName());
-                        String[] tokens = custom.split(",");
-                        String stringSize = tokens[3].trim();
-                        content.append(stringSize + ", FieldType.STRING");
-                    } else {
-                        content.append(getJavaType(configField.getElementSize()));
-                    }
-                    if (enumOptions != null) {
-                        content.append(", " + configField.getTypeName());
-                    }
-                    content.append(")" + ".setScale(" + configField.autoscaleSpecNumber() + ")" +
+                    if (isUsefulField(configField)) {
+                        writeJavaFieldName(nameWithPrefix, tsPosition);
+                        if (isStringField(configField)) {
+                            String custom = state.getTsCustomLine().get(configField.getTypeName());
+                            String[] tokens = custom.split(",");
+                            String stringSize = tokens[3].trim();
+                            content.append(stringSize + ", FieldType.STRING");
+                        } else {
+                            content.append(getJavaType(configField.getElementSize()));
+                        }
+                        if (enumOptions != null) {
+                            content.append(", " + configField.getTypeName());
+                        }
+                        content.append(")" + ".setScale(" + configField.autoscaleSpecNumber() + ")" +
                             terminateField());
+                    }
                 }
 
                 tsPosition += configField.getSize(next);
@@ -119,6 +121,10 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
             }
         };
         fieldsStrategy.run(state, structure, 0);
+    }
+
+    private static boolean isUsefulField(ConfigField configField) {
+        return !configField.getName().startsWith(ConfigStructure.UNUSED_ANYTHING_PREFIX);
     }
 
     private String terminateField() {
