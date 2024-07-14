@@ -161,6 +161,9 @@ uint8_t BitbangI2c::readByte(bool ack) {
 	// 1 -> nack
 	sendBit(!ack);
 
+	// release SDA
+	sda_high();
+
 	return result;
 }
 
