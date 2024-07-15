@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Jul 15 03:38:52 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Jul 15 03:55:34 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1207,6 +1207,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 1203636781;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1464,7 +1465,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.07.15.f407-discovery.2335549103";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.07.15.f407-discovery.1203636781";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1886,7 +1887,6 @@ public class Fields {
 	public static final Field MAX31855_CS7 = Field.create("MAX31855_CS7", 812, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field MAX31855_CS8 = Field.create("MAX31855_CS8", 814, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field FLEXSENSORPIN = Field.create("FLEXSENSORPIN", 816, FieldType.INT16, brain_input_pin_e).setScale(1.0).setBaseOffset(0);
-	public static final Field TEST557PIN = Field.create("TEST557PIN", 818, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field STEPPERDIRECTIONPINMODE = Field.create("STEPPERDIRECTIONPINMODE", 820, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field MC33972SPIDEVICE = Field.create("MC33972SPIDEVICE", 821, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field STOICHRATIOSECONDARY = Field.create("STOICHRATIOSECONDARY", 822, FieldType.INT8).setScale(0.1).setBaseOffset(0);
@@ -3560,7 +3560,6 @@ public class Fields {
 	MAX31855_CS7,
 	MAX31855_CS8,
 	FLEXSENSORPIN,
-	TEST557PIN,
 	STEPPERDIRECTIONPINMODE,
 	MC33972SPIDEVICE,
 	STOICHRATIOSECONDARY,
