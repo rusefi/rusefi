@@ -171,7 +171,6 @@ public class ProgramSelector {
 
     private static Pair<Boolean, String[]> waitForEcuPortDisappeared(
         final String ecuPort,
-        JComponent parent,
         final UpdateOperationCallbacks callbacks
     ) {
         callbacks.log("Waiting for ECU to reboot to OpenBlt...", false, true);
@@ -203,7 +202,7 @@ public class ProgramSelector {
         rebootToOpenblt(parent, ecuPort, callbacks);
 
         // invoking blocking method
-        final Pair<Boolean, String[]> rebootResult = waitForEcuPortDisappeared(ecuPort, parent, callbacks);
+        final Pair<Boolean, String[]> rebootResult = waitForEcuPortDisappeared(ecuPort, callbacks);
         final boolean ecuPrtDisappeared = rebootResult.first;
         final String[] portsAfter = rebootResult.second;
 
