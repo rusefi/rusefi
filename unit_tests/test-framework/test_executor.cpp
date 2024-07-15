@@ -58,7 +58,9 @@ void TestExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* scheduli
 		return;
 	}
   // by the way we have loss of precision while converting NT to integer US
-	scheduleByTimestamp(msg, scheduling, NT2US(timeNt), action);
+  // technical debt: looks like our unit tests were all created with us precision?
+  efitimeus_t timeUs = NT2US(timeNt);
+	schedulingQueue.insertTask(scheduling, US2NT(timeUs), action);
 }
 
 void TestExecutor::cancel(scheduling_s* s) {
