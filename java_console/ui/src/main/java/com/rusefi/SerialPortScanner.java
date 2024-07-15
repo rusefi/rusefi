@@ -4,7 +4,6 @@ import com.devexperts.logging.Logging;
 import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.IoHelper;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.RusEfiSignature;
 import com.rusefi.core.SignatureHelper;
@@ -319,7 +318,7 @@ public enum SerialPortScanner {
         private final boolean stLinkConnected;
         private final boolean PCANConnected;
 
-        public <T> AvailableHardware(List<PortResult> ports, boolean dfuFound, boolean stLinkConnected, boolean PCANConnected) {
+        public AvailableHardware(List<PortResult> ports, boolean dfuFound, boolean stLinkConnected, boolean PCANConnected) {
             this.ports = ports;
             this.dfuFound = dfuFound;
             this.stLinkConnected = stLinkConnected;
