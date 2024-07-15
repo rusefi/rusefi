@@ -3,25 +3,60 @@
 //
 #include "pch.h"
 
-TEST(AlternatorVoltageTargetSetPointTest, HomogeneousAlternatorVoltageTargetTable) {
-    EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+#include "util/test_base.h"
 
-    const float TEST_ALTERNATOR_VOLTAGE_TARGET = 14.2f;
-    setTable(config->alternatorVoltageTargetTable, TEST_ALTERNATOR_VOLTAGE_TARGET);
-    engineConfiguration->cranking.rpm = 500;
-    engineConfiguration->isAlternatorControlEnabled = true;
+namespace {
+    constexpr int TEST_CRANKING_RPM = 500;
+    constexpr int TEST_LOAD = 17;
 
-    AlternatorController dut;
+    class AlternatorVoltageTargetSetPointTest : public TestBase {
+    protected:
+        virtual void SetUp() override;
 
-    Sensor::setMockValue(SensorType::Rpm, 500);
-    // disabled if rpm <= cranking.rpm
-    EXPECT_EQ(-1, dut.getSetpoint().value_or(-1));
+        void enableAlternatorControl();
+        void disableAlternatorControl();
 
-    Sensor::setMockValue(SensorType::Rpm, 501);
-    // enabled!
-    EXPECT_EQ(TEST_ALTERNATOR_VOLTAGE_TARGET, dut.getSetpoint().value_or(-1));
+        void setRpmAndLoad(int rpm, int load);
 
-    engineConfiguration->isAlternatorControlEnabled = false;
-    // disabled manually
-    EXPECT_EQ(-1, dut.getSetpoint().value_or(-1));
+        expected<float> getSetpoint();
+    };
+
+    void AlternatorVoltageTargetSetPointTest::SetUp() {
+        TestBase::SetUp();
+        engineConfiguration->cranking.rpm = TEST_CRANKING_RPM;
+        enableAlternatorControl();
+    }
+
+    void AlternatorVoltageTargetSetPointTest::enableAlternatorControl() {
+        engineConfiguration->isAlternatorControlEnabled = true;
+    }
+
+    void AlternatorVoltageTargetSetPointTest::disableAlternatorControl() {
+        engineConfiguration->isAlternatorControlEnabled = false;
+    }
+
+    void AlternatorVoltageTargetSetPointTest::setRpmAndLoad(int rpm, int load = TEST_LOAD) {
+        Sensor::setMockValue(SensorType::Rpm, rpm);
+    }
+
+    expected<float> AlternatorVoltageTargetSetPointTest::getSetpoint() {
+        return engine->engineModules.get<AlternatorController>()->getSetpoint();
+    }
+
+    TEST_F(AlternatorVoltageTargetSetPointTest, HomogeneousAlternatorVoltageTargetTable) {
+        const float TEST_ALTERNATOR_VOLTAGE_TARGET = 14.2f;
+        setTable(config->alternatorVoltageTargetTable, TEST_ALTERNATOR_VOLTAGE_TARGET);
+
+        setRpmAndLoad(TEST_CRANKING_RPM);
+        // disabled if rpm <= cranking.rpm
+        EXPECT_FALSE(getSetpoint().Valid);
+
+        setRpmAndLoad(TEST_CRANKING_RPM + 1);
+        // enabled!
+        EXPECT_EQ(TEST_ALTERNATOR_VOLTAGE_TARGET, getSetpoint().value_or(-1));
+
+        disableAlternatorControl();
+        // disabled manually
+        EXPECT_FALSE(getSetpoint().Valid);
+    }
 }
