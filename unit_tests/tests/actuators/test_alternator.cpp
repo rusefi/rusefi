@@ -8,7 +8,8 @@ using ::testing::Return;
 TEST(Alternator, TestSetPoint) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
-	engineConfiguration->targetVBatt = 14.2f;
+    const float TEST_ALTERNATOR_VOLTAGE_TARGET = 14.2f;
+    setTable(config->alternatorVoltageTargetTable, TEST_ALTERNATOR_VOLTAGE_TARGET);
 	engineConfiguration->cranking.rpm = 500;
 	engineConfiguration->isAlternatorControlEnabled = true;
 
@@ -20,7 +21,7 @@ TEST(Alternator, TestSetPoint) {
 
 	Sensor::setMockValue(SensorType::Rpm, 501);
 	// enabled!
-	EXPECT_EQ(engineConfiguration->targetVBatt, dut.getSetpoint().value_or(-1));
+	EXPECT_EQ(TEST_ALTERNATOR_VOLTAGE_TARGET, dut.getSetpoint().value_or(-1));
 
 	engineConfiguration->isAlternatorControlEnabled = false;
 	// disabled manually

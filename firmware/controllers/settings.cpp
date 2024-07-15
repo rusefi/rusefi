@@ -756,7 +756,7 @@ static void setValue(const char *paramStr, const char *valueStr) {
 		setVssPin(valueStr);
 #endif // EFI_PROD_CODE
 	} else if (strEqualCaseInsensitive(paramStr, "targetvbatt")) {
-		engineConfiguration->targetVBatt = valueF;
+		setTable(config->alternatorVoltageTargetTable, valueF);
 	} else if (strEqualCaseInsensitive(paramStr, CMD_DATE)) {
 		// rusEfi console invokes this method with timestamp in local timezone
 		setDateTime(valueStr);

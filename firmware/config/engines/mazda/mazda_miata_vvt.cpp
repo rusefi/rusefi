@@ -292,7 +292,7 @@ static void setCommonMazdaNB() {
 
 	// Alternator
 	engineConfiguration->isAlternatorControlEnabled = true;
-	engineConfiguration->targetVBatt = 14.0f;
+	setTable(config->alternatorVoltageTargetTable, 14.0f);
 	engineConfiguration->alternatorControl.offset = 20;
 	engineConfiguration->alternatorControl.pFactor = 16;
 	engineConfiguration->alternatorControl.iFactor = 8;
