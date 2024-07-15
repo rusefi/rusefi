@@ -1289,7 +1289,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 2322338533
+#define SIGNATURE_HASH 3270932281
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1636,6 +1636,7 @@
 #define ts_show_gdi false
 #define ts_show_globalTriggerAngleOffset true
 #define ts_show_hardware_simulator false
+#define ts_show_hbridge_function true
 #define ts_show_hd true
 #define ts_show_hip9011 false
 #define ts_show_idle_hardware true
@@ -1700,7 +1701,7 @@
 #define ts_show_vvt_output true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.07.15.hellen128.2322338533"
+#define TS_SIGNATURE "rusEFI master.2024.07.15.hellen128.3270932281"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
