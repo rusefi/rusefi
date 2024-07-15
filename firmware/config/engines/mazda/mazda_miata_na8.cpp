@@ -12,6 +12,7 @@
 #include "mazda_miata_na8.h"
 #include "custom_engine.h"
 #include "mazda_miata_1_6.h"
+#include "table_helper.h"
 
 void setMazdaMiata96() {
 	miataNAcommonEngineSettings();
@@ -42,7 +43,7 @@ void setMazdaMiata96() {
 	engineConfiguration->useIdleTimingPidControl = true;
 
 	engineConfiguration->wwaeTau = 0.1;
-	engineConfiguration->targetVBatt = 14.2;
+	setTable(config->alternatorVoltageTargetTable, 14.2);
 	engineConfiguration->crankingIACposition = 36;
 	engineConfiguration->afterCrankingIACtaperDuration = 189;
 

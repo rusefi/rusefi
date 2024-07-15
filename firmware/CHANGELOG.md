@@ -61,6 +61,7 @@ Release template (copy/paste this for new release):
  - critical error in case of unneeded second channel #6419
  - Open Loop Boost vertical axis needs to be configured #4778
  - Cranking Cycle Multiplier is now a Map with Coolant Temp as the additional axis. #6584
+ - Now we use "Alternator Voltage Target Table" instead of "Target(Volts)" setting on "Alternator Settings" area to calculate alternator voltage target. #6523
 
 ## Unreleased
 

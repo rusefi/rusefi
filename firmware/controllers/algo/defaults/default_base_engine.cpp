@@ -10,7 +10,7 @@
 
 #if EFI_ALTERNATOR_CONTROL
 static void setDefaultAlternatorParameters() {
-	engineConfiguration->targetVBatt = 14;
+	setTable(config->alternatorVoltageTargetTable, 14);
 
 	engineConfiguration->alternatorControl.offset = 0;
 	engineConfiguration->alternatorControl.pFactor = 30;

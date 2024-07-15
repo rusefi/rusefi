@@ -38,14 +38,21 @@ expected<float> AlternatorController::observePlant() {
 }
 
 expected<float> AlternatorController::getSetpoint() {
+	const float rpm = Sensor::getOrZero(SensorType::Rpm);
+
 	// check if the engine is not running
-	bool alternatorShouldBeEnabledAtCurrentRpm = Sensor::getOrZero(SensorType::Rpm) > engineConfiguration->cranking.rpm;
+	bool alternatorShouldBeEnabledAtCurrentRpm = rpm > engineConfiguration->cranking.rpm;
 
 	if (!engineConfiguration->isAlternatorControlEnabled || !alternatorShouldBeEnabledAtCurrentRpm) {
 		return unexpected;
 	}
 
-	return engineConfiguration->targetVBatt;
+	const float load = getEngineState()->fuelingLoad;
+	return interpolate3d(
+		config->alternatorVoltageTargetTable,
+		config->alternatorVoltageTargetLoadBins, load,
+		config->alternatorVoltageTargetRpmBins, rpm
+	);;
 }
 
 expected<percent_t> AlternatorController::getOpenLoop(float target) {
