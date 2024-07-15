@@ -38,12 +38,8 @@ struct CallbackContext
 
 static void doScheduleForLater(scheduling_s *scheduling, int delayUs, action_s action);
 
-void SleepExecutor::scheduleByTimestamp(const char* /*msg*/, scheduling_s *scheduling, efitimeus_t timeUs, action_s action) {
-	doScheduleForLater(scheduling, timeUs - getTimeNowUs(), action);
-}
-
 void SleepExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* scheduling, efitick_t timeNt, action_s action) {
-	scheduleByTimestamp(msg, scheduling, NT2US(timeNt), action);
+	doScheduleForLater(scheduling, NT2US(timeNt) - getTimeNowUs(), action);
 }
 
 static void timerCallback(CallbackContext* ctx) {

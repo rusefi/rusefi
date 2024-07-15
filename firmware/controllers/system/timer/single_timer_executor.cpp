@@ -45,20 +45,6 @@ SingleTimerExecutor::SingleTimerExecutor()
 {
 }
 
-/**
- * @brief Schedule an event at specific delay after now
- *
- * Invokes event callback after the specified amount of time.
- * callback would be executed either on ISR thread or current thread if we would need to execute right away
- *
- * @param [in, out] scheduling Data structure to keep this event in the collection.
- * @param [in] delayUs the number of microseconds before the output signal immediate output if delay is zero.
- * @param [in] dwell the number of ticks of output duration.
- */
-void SingleTimerExecutor::scheduleByTimestamp(const char *msg, scheduling_s *scheduling, efitimeus_t timeUs, action_s action) {
-	scheduleByTimestampNt(msg, scheduling, US2NT(timeUs), action);
-}
-
 void SingleTimerExecutor::scheduleByTimestampNt(const char *msg, scheduling_s* scheduling, efitick_t nt, action_s action) {
 	ScopePerf perf(PE::SingleTimerExecutorScheduleByTimestamp);
 
