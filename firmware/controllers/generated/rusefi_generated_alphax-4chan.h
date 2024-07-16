@@ -140,8 +140,8 @@
 #define boostType_e_auto_enum 0="OPEN_LOOP",1="CLOSED_LOOP"
 #define boostType_e_CLOSED_LOOP 1
 #define boostType_e_OPEN_LOOP 0
-#define brain_input_pin_e_enum 0="NONE",80="C2 - Crank- (hall)",19="C2/C3 Crank Sensor VR",78="C3 - Crank+ (hall)",93="C4 - 2Step/Digital",8="C7 - CAM Hall/Digital",86="E3 - Digital In 3",87="E4 - Digital In 4",91="E5/E6 Cam Sensor VR",81="E6 - Cam+ (hall)",9="E7 - Flex"
-#define brain_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C7 - CAM Hall/Digital","E7 - Flex","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C2/C3 Crank Sensor VR","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C3 - Crank+ (hall)","INVALID","C2 - Crank- (hall)","E6 - Cam+ (hall)","INVALID","INVALID","INVALID","INVALID","E3 - Digital In 3","E4 - Digital In 4","INVALID","INVALID","INVALID","E5/E6 Cam Sensor VR","INVALID","C4 - 2Step/Digital"
+#define brain_input_pin_e_enum 0="NONE",80="C2 - Crank- (hall)",19="C2/C3 Crank Sensor VR",78="C3 - Crank+ (hall)",93="C4 - 2Step/Digital",8="C7 - CAM Hall/Digital",97="C7 - CAM2 VR",86="E3 - Digital In 3",87="E4 - Digital In 4",91="E5/E6 Cam Sensor VR",81="E6 - Cam+ (hall)",9="E7 - Flex"
+#define brain_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C7 - CAM Hall/Digital","E7 - Flex","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C2/C3 Crank Sensor VR","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C3 - Crank+ (hall)","INVALID","C2 - Crank- (hall)","E6 - Cam+ (hall)","INVALID","INVALID","INVALID","INVALID","E3 - Digital In 3","E4 - Digital In 4","INVALID","INVALID","INVALID","E5/E6 Cam Sensor VR","INVALID","C4 - 2Step/Digital","INVALID","INVALID","INVALID","C7 - CAM2 VR"
 #define brain_pin_diag_e_PIN_DRIVER_OFF 0x20
 #define brain_pin_diag_e_PIN_DRIVER_OVERTEMP 0x10
 #define brain_pin_diag_e_PIN_OK 0
@@ -1287,7 +1287,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 3572278016
+#define SIGNATURE_HASH 2934758283
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1699,7 +1699,7 @@
 #define ts_show_vvt_output true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.07.16.alphax-4chan.3572278016"
+#define TS_SIGNATURE "rusEFI master.2024.07.16.alphax-4chan.2934758283"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

@@ -32,6 +32,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::E6: return "F4 - VVT#2 rev G";
 		case Gpio::F11: return "C4 - 2Step/Digital";
 		case Gpio::F12: return "Aux4 - Inj 6";
+		case Gpio::F15: return "C7 - CAM2 VR";
 		case Gpio::F3: return "D3 - Digital In 2";
 		case Gpio::F4: return "E3 - Digital In 3";
 		case Gpio::F5: return "E4 - Digital In 4";
