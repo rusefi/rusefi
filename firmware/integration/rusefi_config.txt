@@ -1182,7 +1182,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	int16_t idlePidRpmDeadZone;If the RPM closer to target than this value, disable closed loop idle correction to prevent oscillation;"RPM", 1, 0, 0, 800, 0
 
 
-	float targetVBatt;This is the target battery voltage the alternator PID control will attempt to maintain;"Volts", 1, 0, 0, 30, 1
+	float unusedTargetVBatt
 	bit mc33810DisableRecoveryMode;See Over/Undervoltage Shutdown/Retry bit in documentation
 	bit mc33810Gpgd0Mode
 	bit mc33810Gpgd1Mode
