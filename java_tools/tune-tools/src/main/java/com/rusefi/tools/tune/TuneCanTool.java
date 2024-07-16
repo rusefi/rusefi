@@ -69,8 +69,8 @@ public class TuneCanTool implements TuneCanToolConstants {
 //        writeDiffBetweenLocalTuneFileAndDefaultTune("vehicleName", getDefaultTuneName(engine_type_e.HONDA_OBD1),
 //            "C:\\stuff\\\\2024-03-09-CurrentTune.msq", "comment", "");
 
-//        writeDiffBetweenLocalTuneFileAndDefaultTune("vehicleName", getDefaultTuneName(engine_type_e.MAVERICK_X3),
-//            "C:\\stuff\\i\\canam-2022-short\\canam-progress-pnp-dec-29.msq", "comment", "");
+        writeDiffBetweenLocalTuneFileAndDefaultTune("canam", "C:\\stuff\\fw\\fw-\\generated\\simulator_tune_MAVERICK_X3.msq",
+            "C:\\stuff\\i\\!snapshots\\2024-07-16_14.28.35_default_cal_001.msq", "comment", "");
 
 
 //        handle("Mitsubicha", 1258);
