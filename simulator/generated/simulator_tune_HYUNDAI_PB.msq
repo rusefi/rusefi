@@ -738,7 +738,7 @@
         <constant digits="2" name="throttlePedalWOTVoltage" units="voltage">4.0</constant>
         <constant digits="0" name="startUpFuelPumpDuration" units="seconds">4.0</constant>
         <constant digits="0" name="idlePidRpmDeadZone" units="RPM">50.0</constant>
-        <constant digits="1" name="targetVBatt" units="Volts">14.0</constant>
+        <constant digits="1" name="targetVBatt" units="Volts">0.0</constant>
         <constant name="mc33810DisableRecoveryMode">"false"</constant>
         <constant name="mc33810Gpgd0Mode">"false"</constant>
         <constant name="mc33810Gpgd1Mode">"false"</constant>
@@ -4794,10 +4794,10 @@ end</constant>
 </constant>
         <constant digits="0" name="tcu_shiftTime" units="ms">0.0</constant>
         <constant cols="4" digits="1" name="alternatorVoltageTargetTable" rows="4">
-         0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0
-         0.0 0.0 0.0 0.0
+         14.0 14.0 14.0 14.0
+         14.0 14.0 14.0 14.0
+         14.0 14.0 14.0 14.0
+         14.0 14.0 14.0 14.0
 </constant>
         <constant cols="1" digits="0" name="alternatorVoltageTargetLoadBins" rows="4">
          0.0

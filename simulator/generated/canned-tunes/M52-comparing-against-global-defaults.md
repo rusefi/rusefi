@@ -127,6 +127,8 @@
     engineConfiguration->knockRetardReapplyRate = 0;
     // default 550.0
     engineConfiguration->vvtControlMinRpm = 800;
+    // default 0.0
+    engineConfiguration->targetVBatt = 14;
     // default "Speed Density"
     engineConfiguration->fuelAlgorithm = LM_ALPHA_N;
     // default "Executor"

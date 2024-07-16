@@ -167,7 +167,7 @@
     engineConfiguration->stft.deadband = 0;
     // default 90.0
     engineConfiguration->auxPid[1].maxValue = 0;
-    // default 14.0
+    // default 0.0
     engineConfiguration->targetVBatt = 14.19995;
     // default 3.0
     engineConfiguration->vssFilterReciprocal = 5;

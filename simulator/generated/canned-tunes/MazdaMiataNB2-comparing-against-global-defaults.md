@@ -213,7 +213,7 @@
     engineConfiguration->auxPid[1].maxValue = 0;
     // default "false"
     engineConfiguration->isAlternatorControlEnabled = true;
-    // default 14.0
+    // default 0.0
     engineConfiguration->targetVBatt = 14.19995;
     // default 0.0
     engineConfiguration->alternatorControl.offset = 20;

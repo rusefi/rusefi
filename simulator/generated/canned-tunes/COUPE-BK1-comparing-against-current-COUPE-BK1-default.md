@@ -87,6 +87,8 @@
     engineConfiguration->vvtActivationDelayMs = 3000;
     // default 0.1
     engineConfiguration->auxPid[0].dFactor = 0.2;
+    // default 0.0
+    engineConfiguration->targetVBatt = 14;
     // default "None"
     engineConfiguration->canNbcType = CAN_BUS_GENESIS_COUPE;
     // default "Executor"
