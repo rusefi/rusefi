@@ -8,6 +8,7 @@
 namespace {
     constexpr int TEST_CRANKING_RPM = 500;
     constexpr int TEST_LOAD = 17;
+    const float DEFAULT_ALTERNATOR_VOLTAGE_TARGET = 14.0f;
 
     class AlternatorVoltageTargetSetPointTest : public TestBase {
     protected:
@@ -58,5 +59,10 @@ namespace {
         disableAlternatorControl();
         // disabled manually
         EXPECT_FALSE(getSetpoint().Valid);
+    }
+
+    TEST_F(AlternatorVoltageTargetSetPointTest, DefaultAlternatorVoltageTargetTable) {
+        setRpmAndLoad(TEST_CRANKING_RPM + 1);
+        EXPECT_EQ(DEFAULT_ALTERNATOR_VOLTAGE_TARGET, getSetpoint().value_or(-1));
     }
 }
