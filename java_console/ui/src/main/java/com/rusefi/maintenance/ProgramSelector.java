@@ -8,7 +8,6 @@ import com.rusefi.Launcher;
 import com.rusefi.SerialPortScanner;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Pair;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
@@ -31,21 +30,22 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.ui.FrameHelper.appendBundleName;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 import static com.rusefi.ui.util.UiUtils.trueLayout;
-import static javax.swing.JOptionPane.YES_NO_OPTION;
 
 public class ProgramSelector {
     private static final Logging log = getLogging(ProgramSelector.class);
 
     // todo: migrate to enum?
-    private static final String AUTO_DFU = "Auto Update";
-    private static final String MANUAL_DFU = "Manual DFU Update";
+    private static final String DFU_AUTO = "Auto DFU Update";
+    private static final String DFU_MANUAL = "Manual DFU Update";
     private static final String DFU_SWITCH = "Switch to DFU Mode";
+    private static final String DFU_ERASE = "Full DFU Erase";
+
+    private static final String ST_LINK = "ST-LINK Update";
+
     private static final String OPENBLT_SWITCH = "Switch to OpenBLT Mode";
     public static final String OPENBLT_MANUAL = "Manual OpenBLT Update";
     public static final String OPENBLT_AUTO = "Auto OpenBLT Update";
-    private static final String DFU_ERASE = "Full Chip Erase";
     private static final String INSTALL_OPENBLT = "Install OpenBLT";
-    private static final String ST_LINK = "ST-LINK Update";
     private static final String OPENBLT_CAN = "OpenBLT via CAN";
 
     private static final String HELP = "https://github.com/rusefi/rusefi/wiki/HOWTO-Update-Firmware";
@@ -60,7 +60,7 @@ public class ProgramSelector {
         content.add(noHardware, BorderLayout.SOUTH);
 
         String persistedMode = getConfig().getRoot().getProperty(getClass().getSimpleName());
-        if (Arrays.asList(AUTO_DFU, MANUAL_DFU, OPENBLT_CAN, OPENBLT_SWITCH, OPENBLT_MANUAL, OPENBLT_AUTO, DFU_ERASE, DFU_SWITCH).contains(persistedMode))
+        if (Arrays.asList(DFU_AUTO, DFU_MANUAL, OPENBLT_CAN, OPENBLT_SWITCH, OPENBLT_MANUAL, OPENBLT_AUTO, DFU_ERASE, DFU_SWITCH).contains(persistedMode))
             updateModeComboBox.setSelectedItem(persistedMode);
 
         JButton updateFirmwareButton = createUpdateFirmwareButton();
@@ -88,11 +88,11 @@ public class ProgramSelector {
 
                 Objects.requireNonNull(selectedMode);
                 switch (selectedMode) {
-                    case AUTO_DFU:
+                    case DFU_AUTO:
                         jobName = "DFU update";
                         job = (callbacks) -> DfuFlasher.doAutoDfu(parent, selectedPort.port, callbacks);
                         break;
-                    case MANUAL_DFU:
+                    case DFU_MANUAL:
                       jobName = "DFU update";
                       job = DfuFlasher::runDfuProgramming;
                         break;
@@ -314,11 +314,11 @@ public class ProgramSelector {
         if (FileLog.isWindows()) {
             boolean requireBlt = FindFileHelper.isObfuscated();
             if (hasSerialPorts && !requireBlt) {
-                updateModeComboBox.addItem(AUTO_DFU);
+                updateModeComboBox.addItem(DFU_AUTO);
             }
 
             if (hasDfuDevice && !requireBlt) {
-                updateModeComboBox.addItem(MANUAL_DFU);
+                updateModeComboBox.addItem(DFU_MANUAL);
                 updateModeComboBox.addItem(DFU_ERASE);
                 if (DfuFlasher.haveBootloaderBinFile()) {
                     updateModeComboBox.addItem(INSTALL_OPENBLT);
