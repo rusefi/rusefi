@@ -973,7 +973,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 103547173;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1180,7 +1179,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2024.07.12.f407-discovery.103547173";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2024.07.16.f407-discovery.4210670367";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1388;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
@@ -1256,7 +1255,6 @@ public class Fields {
 	public static final Field INJECTORSECONDARY_BATTLAGCORRBINS = Field.create("INJECTORSECONDARY_BATTLAGCORRBINS", 60, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field INJECTORSECONDARY_BATTLAGCORR = Field.create("INJECTORSECONDARY_BATTLAGCORR", 76, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field ISFORCEDINDUCTION = Field.create("ISFORCEDINDUCTION", 92, FieldType.BIT, 0).setBaseOffset(0);
-	public static final Field USEFORDREDUNDANTTPS = Field.create("USEFORDREDUNDANTTPS", 92, FieldType.BIT, 1).setBaseOffset(0);
 	public static final Field LAMBDAPROTECTIONENABLE = Field.create("LAMBDAPROTECTIONENABLE", 92, FieldType.BIT, 2).setBaseOffset(0);
 	public static final Field OVERRIDETRIGGERGAPS = Field.create("OVERRIDETRIGGERGAPS", 92, FieldType.BIT, 3).setBaseOffset(0);
 	public static final Field ENABLEFAN1WITHAC = Field.create("ENABLEFAN1WITHAC", 92, FieldType.BIT, 4).setBaseOffset(0);
@@ -1278,7 +1276,6 @@ public class Fields {
 	public static final Field USESCRIPTTABLEFORCANSNIFFINGFILTERING = Field.create("USESCRIPTTABLEFORCANSNIFFINGFILTERING", 92, FieldType.BIT, 20).setBaseOffset(0);
 	public static final Field VERBOSECAN = Field.create("VERBOSECAN", 92, FieldType.BIT, 21).setBaseOffset(0);
 	public static final Field ARTIFICIALTESTMISFIRE = Field.create("ARTIFICIALTESTMISFIRE", 92, FieldType.BIT, 22).setBaseOffset(0);
-	public static final Field USEFORDREDUNDANTPPS = Field.create("USEFORDREDUNDANTPPS", 92, FieldType.BIT, 23).setBaseOffset(0);
 	public static final Field CLTSENSORPULLDOWN = Field.create("CLTSENSORPULLDOWN", 92, FieldType.BIT, 24).setBaseOffset(0);
 	public static final Field IATSENSORPULLDOWN = Field.create("IATSENSORPULLDOWN", 92, FieldType.BIT, 25).setBaseOffset(0);
 	public static final Field ALLOWIDENTICALPPS = Field.create("ALLOWIDENTICALPPS", 92, FieldType.BIT, 26).setBaseOffset(0);
