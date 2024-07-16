@@ -174,26 +174,27 @@ public class ProgramSelector {
         final UpdateOperationCallbacks callbacks
     ) {
         callbacks.log("Waiting for ECU to reboot to OpenBlt...", false, true);
+        try {
+            String[] currentPorts = null;
+            for (int attemptsCount = 0; attemptsCount < 150; attemptsCount++) {
+                // Give the bootloader sec to enumerate
+                BinaryProtocol.sleep(200);
 
-        String[] currentPorts = null;
-        for (int attemptsCount = 0; attemptsCount < 150; attemptsCount++) {
-            // Give the bootloader sec to enumerate
-            BinaryProtocol.sleep(200);
+                currentPorts = LinkManager.getCommPorts();
+                log.info("currentPorts: [" + String.join(",", currentPorts) + "]");
 
-            currentPorts = LinkManager.getCommPorts();
-            log.info("currentPorts: [" + String.join(",", currentPorts) + "]");
-
-            // Check that the ECU disappeared from the "after" list
-            final boolean ecuPortStillAlive = !PortDetector.AUTO.equals(ecuPort) && Arrays.stream(currentPorts).anyMatch(ecuPort::equals);
-            if (!ecuPortStillAlive) {
-                callbacks.logLine("[Disappeared]");
-                return new Pair<>(true, currentPorts);
-            } else {
-                callbacks.log(".", false, false);
+                // Check that the ECU disappeared from the "after" list
+                final boolean ecuPortStillAlive = !PortDetector.AUTO.equals(ecuPort) && Arrays.stream(currentPorts).anyMatch(ecuPort::equals);
+                if (!ecuPortStillAlive) {
+                    return new Pair<>(true, currentPorts);
+                } else {
+                    callbacks.log(".", false, false);
+                }
             }
+            return new Pair<>(false, currentPorts);
+        } finally {
+            callbacks.log("", true, false);
         }
-        callbacks.logLine("[Not found]");
-        return new Pair<>(false, currentPorts);
     }
 
     private static void flashOpenbltSerialAutomatic(JComponent parent, String ecuPort, UpdateOperationCallbacks callbacks) {
