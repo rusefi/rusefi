@@ -138,18 +138,28 @@ public class AutoupdateUtil {
         return null;
     }
 
+    public static void assertNotAwtThread() {
+        if (SwingUtilities.isEventDispatchThread()) {
+            showError("Non AWT thread expected");
+        }
+    }
+
     public static void assertAwtThread() {
         if (!SwingUtilities.isEventDispatchThread()) {
-            Exception e = new IllegalStateException("Not on AWT thread but " + Thread.currentThread().getName());
-
-            StringBuilder trace = new StringBuilder(e + "\n");
-            for(StackTraceElement element : e.getStackTrace())
-                trace.append(element.toString()).append("\n");
-            SwingUtilities.invokeLater(() -> {
-                Window w = getSelectedWindow(Window.getWindows());
-                JOptionPane.showMessageDialog(w, trace, "Error", JOptionPane.ERROR_MESSAGE);
-            });
+            showError("Not on AWT thread but " + Thread.currentThread().getName());
         }
+    }
+
+    private static void showError(String error) {
+        Exception e = new IllegalStateException(error);
+
+        StringBuilder trace = new StringBuilder(e + "\n");
+        for(StackTraceElement element : e.getStackTrace())
+            trace.append(element.toString()).append("\n");
+        SwingUtilities.invokeLater(() -> {
+            Window w = getSelectedWindow(Window.getWindows());
+            JOptionPane.showMessageDialog(w, trace, "Error", JOptionPane.ERROR_MESSAGE);
+        });
     }
 
     public static boolean hasExistingFile(String zipFileName, long completeFileSize, long lastModified) {

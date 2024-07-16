@@ -187,19 +187,22 @@ public class ProgramSelector {
             // Check that the ECU disappeared from the "after" list
             final boolean ecuPortStillAlive = !PortDetector.AUTO.equals(ecuPort) && Arrays.stream(currentPorts).anyMatch(ecuPort::equals);
             if (!ecuPortStillAlive) {
+                callbacks.logLine("[Disappeared]");
                 return new Pair<>(true, currentPorts);
             } else {
                 callbacks.log(".", false, false);
             }
         }
-        callbacks.log("", true, false);
+        callbacks.logLine("[Not found]");
         return new Pair<>(false, currentPorts);
     }
 
     private static void flashOpenbltSerialAutomatic(JComponent parent, String ecuPort, UpdateOperationCallbacks callbacks) {
+        AutoupdateUtil.assertNotAwtThread();
         final String[] portsBefore = LinkManager.getCommPorts();
         rebootToOpenblt(parent, ecuPort, callbacks);
 
+        // invoking blocking method
         final Pair<Boolean, String[]> rebootResult = waitForEcuPortDisappeared(ecuPort, parent, callbacks);
         final boolean ecuPrtDisappeared = rebootResult.first;
         final String[] portsAfter = rebootResult.second;
