@@ -180,6 +180,13 @@ pins:
     ts_name: C7 - CAM Hall/Digital
     color: brown
 
+  - pin: C7vr
+    meta: H144_GP_IO7
+    class: event_inputs
+    function: Camshaft Intake VR Sensor
+    type: hall
+    ts_name: C7 - CAM2 VR
+
   - pin: C8
     meta: H144_OUT_PWM1
     class: outputs
