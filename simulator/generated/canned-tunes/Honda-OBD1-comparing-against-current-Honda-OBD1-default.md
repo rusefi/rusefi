@@ -59,8 +59,6 @@
     engineConfiguration->enableSoftwareKnock = true;
     // default 500.0
     engineConfiguration->vvtControlMinRpm = 550;
-    // default 0.0
-    engineConfiguration->targetVBatt = 14;
     // default "false"
     engineConfiguration->enableVerboseCanTx = true;
     // default "Executor"

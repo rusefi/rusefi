@@ -105,8 +105,6 @@
     engineConfiguration->auxPid[1].iFactor = 0.005;
     // default 0.0
     engineConfiguration->auxPid[1].dFactor = 5.0E-4;
-    // default 0.0
-    engineConfiguration->targetVBatt = 14;
     // default 5.0
     engineConfiguration->totalGearsCount = 6;
     // default 12.0

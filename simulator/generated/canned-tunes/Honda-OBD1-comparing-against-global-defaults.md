@@ -71,8 +71,6 @@
     engineConfiguration->fanOffTemperature = 91;
     // default "false"
     engineConfiguration->enableSoftwareKnock = true;
-    // default 0.0
-    engineConfiguration->targetVBatt = 14;
     // default "false"
     engineConfiguration->enableVerboseCanTx = true;
     // default "Executor"

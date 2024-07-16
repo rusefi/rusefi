@@ -41,8 +41,6 @@
     engineConfiguration->knockRetardAggression = 0;
     // default 3.0
     engineConfiguration->knockRetardReapplyRate = 0;
-    // default 0.0
-    engineConfiguration->targetVBatt = 14;
     // default "Executor"
     engineConfiguration->debugMode = DBG_22;
     // default 200.0

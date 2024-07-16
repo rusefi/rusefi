@@ -165,8 +165,6 @@
     engineConfiguration->auxPid[1].iFactor = 0.01;
     // default 0.0
     engineConfiguration->auxPid[1].dFactor = 5.0E-4;
-    // default 0.0
-    engineConfiguration->targetVBatt = 14;
     // default 3.0
     engineConfiguration->vssFilterReciprocal = 0;
     // default 1000.0

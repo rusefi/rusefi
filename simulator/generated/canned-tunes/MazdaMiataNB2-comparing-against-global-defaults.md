@@ -214,8 +214,6 @@
     // default "false"
     engineConfiguration->isAlternatorControlEnabled = true;
     // default 0.0
-    engineConfiguration->targetVBatt = 14.19995;
-    // default 0.0
     engineConfiguration->alternatorControl.offset = 20;
     // default 30.0
     engineConfiguration->alternatorControl.pFactor = 16;

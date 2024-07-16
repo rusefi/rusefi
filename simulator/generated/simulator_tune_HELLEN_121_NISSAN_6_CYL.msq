@@ -737,7 +737,7 @@
         <constant digits="2" name="throttlePedalWOTVoltage" units="voltage">5.0</constant>
         <constant digits="0" name="startUpFuelPumpDuration" units="seconds">4.0</constant>
         <constant digits="0" name="idlePidRpmDeadZone" units="RPM">50.0</constant>
-        <constant digits="1" name="targetVBatt" units="Volts">0.0</constant>
+        <constant digits="0" name="unusedTargetVBatt" units="">0.0</constant>
         <constant name="mc33810DisableRecoveryMode">"false"</constant>
         <constant name="mc33810Gpgd0Mode">"false"</constant>
         <constant name="mc33810Gpgd1Mode">"false"</constant>
@@ -4884,7 +4884,7 @@ canRxAdd(IN_35D, onCanRxAc)</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240708" nPages="1" signature="rusEFI master.2024.07.16.f407-discovery.1203636781" version="5.0"/>
+    <versionInfo firmwareInfo="20240708" nPages="1" signature="rusEFI master.2024.07.16.f407-discovery.2880715048" version="5.0"/>
     <bibliography author="rusEFI 20240708" writeDate="date"/>
     <settings/>
     <userComments/>
