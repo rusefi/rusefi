@@ -491,6 +491,8 @@ static void updateRawSensors() {
 	engine->outputChannels.rawBattery = Sensor::getRaw(SensorType::BatteryVoltage);
 	engine->outputChannels.rawClt = Sensor::getRaw(SensorType::Clt);
 	engine->outputChannels.rawIat = Sensor::getRaw(SensorType::Iat);
+	engine->outputChannels.rawAuxTemp1 = Sensor::getRaw(SensorType::AuxTemp1);
+	engine->outputChannels.rawAuxTemp2 = Sensor::getRaw(SensorType::AuxTemp2);
 	engine->outputChannels.rawOilPressure = Sensor::getRaw(SensorType::OilPressure);
 	engine->outputChannels.rawLowFuelPressure = Sensor::getRaw(SensorType::FuelPressureLow);
 	engine->outputChannels.rawHighFuelPressure = Sensor::getRaw(SensorType::FuelPressureHigh);
