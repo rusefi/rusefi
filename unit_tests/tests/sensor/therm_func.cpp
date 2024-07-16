@@ -5,6 +5,9 @@
 #include "pch.h"
 
 #include "thermistor_func.h"
+#include "thermistors.h"
+#include "functional_sensor.h"
+#include "init.h"
 
 TEST(thermistor, Thermistor1) {
 	ThermistorFunc tf;
@@ -52,4 +55,45 @@ TEST(thermistor, PtcAirCooledMotorcycle) {
 	ASSERT_NEAR(tf.convert(704).value_or(0), 50, 2);
 	ASSERT_NEAR(tf.convert(1300).value_or(0), 150, 2);
 	ASSERT_NEAR(tf.convert(1846).value_or(0), 220, 2);
+}
+
+TEST(Thermistor, Option1) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
+                                                 			engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_12;; // arbitrary
+                                                 	});
+
+
+    setAtSensor(&engineConfiguration->auxTempSensor1, /*temp low*/-13.9, 73300, /*temp mid*/23.7, 10630 , /*temp high*/ 60, 2280);
+	initNewSensors();
+
+	FunctionalSensor * aatSensor = (FunctionalSensor*)Sensor::getSensorOfType(SensorType::AuxTemp1);
+    ASSERT_TRUE(aatSensor != nullptr);
+    thermistor_t *tFuncAat = (thermistor_t *)aatSensor->getFunction();
+
+    ThermistorFunc *thermistorFuncAat = tFuncAat->getPtr<ThermistorFunc>();
+
+    ASSERT_NEAR(60, thermistorFuncAat->convert(2280).Value, EPS2D);
+    ASSERT_NEAR(49.83, thermistorFuncAat->convert(3413).Value, EPS2D);
+}
+
+TEST(Thermistor, Option2) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
+                                                 			engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_12;; // arbitrary
+                                                 	});
+
+
+    setAtSensor(&engineConfiguration->auxTempSensor1, /*temp low*/-13.9, 73300, /*temp mid*/23.5, 53100 , /*temp high*/ 60, 2280);
+	initNewSensors();
+
+	FunctionalSensor * aatSensor = (FunctionalSensor*)Sensor::getSensorOfType(SensorType::AuxTemp1);
+    ASSERT_TRUE(aatSensor != nullptr);
+    thermistor_t *tFuncAat = (thermistor_t *)aatSensor->getFunction();
+
+    ThermistorFunc *thermistorFuncAat = tFuncAat->getPtr<ThermistorFunc>();
+
+    ASSERT_NEAR(60, thermistorFuncAat->convert(2280).Value, EPS2D);
+    // WOW! how cool is this issue - resistance between mid and high temps gives us a temperature way above high point!
+    // fun fact: java script version is not broken https://rusefi.com/Steinhart-Hart.html is this about loss of precision?
+    ASSERT_NEAR(104.094, thermistorFuncAat->convert(3413).Value, EPS2D);
+    ASSERT_NEAR(23.5, thermistorFuncAat->convert(53100).Value, EPS2D);
 }
