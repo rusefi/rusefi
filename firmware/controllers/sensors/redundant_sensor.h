@@ -10,7 +10,7 @@ public:
 		SensorType secondSensor
 	);
 
-	void configure(float maxDifference, bool ignoreSecondSensor, float secondaryMaximum);
+	void configure(float maxDifference, bool ignoreSecondSensor, float secondaryMaximum = 100);
 
 	SensorResult get() const override;
 

@@ -48,27 +48,28 @@ SensorResult RedundantSensor::get() const {
 	} else {
 		// Sensor is partially redundant; useful for some sensors: e.g. Ford and Toyota ETCS-i
 
-		// The threshold at which to switch to partial redundancy, just below maximum to avoid misbehavior near 100%
+		// The partial redundancy threshold, slightly less than 100% to avoid issues near full-range
 		float threshold = m_secondMaximum * 0.95f;
 
-		// The scaled second sensor, proportioning it to the first sensor
+		// Scale the second sensor value accordingly, proportioning to the first sensor
 		float scaledSecond = sensor2.Value * m_secondMaximum / 100;
 
 		// Check second sensor is below partial redundancy switch-over threshold
 		if (scaledSecond <= threshold) {
 			float delta = absF(sensor1.Value - scaledSecond);
 			if (delta <= m_maxDifference) {
-				// All is well: sensors are valid and values check out, return the average value
-				return (sensor1.Value + scaledSecond) / 2;
+				// All is well: sensors are valid and values check out, return the primary value
+				return sensor1.Value;
 			}
 		} else {
 			// Check first sensor is at or above partial redundancy switch-over threshold
 			if (sensor1.Value >= m_secondMaximum - m_maxDifference) {
+				// All is well: sensors are valid and values check out, return the primary value
 				return sensor1.Value;
 			}
 		}
 	}
 
-	// Fall-through and any other condition indicates an unexpected discrepancy, return inconsistency error
+	// Any other condition indicates an unexpected discrepancy, return inconsistency error
 	return UnexpectedCode::Inconsistent;
 }

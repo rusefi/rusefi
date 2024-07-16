@@ -401,7 +401,7 @@ injector_s injector
 injector_s injectorSecondary
 
 bit isForcedInduction;Does the vehicle have a turbo or supercharger?
-bit useFordRedundantTps;On some Ford and Toyota vehicles one of the throttle sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
+bit unusedFordTps
 bit lambdaProtectionEnable
 bit overrideTriggerGaps
 bit enableFan1WithAc;Turn on this fan when AC is on.
@@ -423,7 +423,7 @@ bit useTLE8888_stepper
 bit usescriptTableForCanSniffingFiltering
 bit verboseCan,"Print all","Do not print";Print incoming and outgoing first bus CAN messages in FOME console
 bit artificialTestMisfire,"Danger Mode","No thank you";Experimental setting that will cause a misfire\nDO NOT ENABLE.
-bit useFordRedundantPps;On some Ford and Toyota vehicles one of the pedal sensors is not linear on the full range, i.e. in the specific range of the positions we effectively have only one sensor.
+bit unusedFordPps
 bit cltSensorPulldown
 bit iatSensorPulldown
 bit allowIdenticalPps
@@ -1413,8 +1413,8 @@ uint8_t alsEtbPosition;;"", 1, 0, 0, 20000, 0
 	uint8_t ALSMaxDriverThrottleIntent;;"%", 1, 0, 0, 10, 0
 	pin_input_mode_e ALSActivatePinMode;
 
-	uint8_t autoscale tpsSecondaryMaximum;For Ford TPS, use 53%. For Toyota ETCS-i, use ~65%;"%", 0.5, 0, 0, 100, 1
-	uint8_t autoscale ppsSecondaryMaximum;For Toyota ETCS-i, use ~69%;"%", 0.5, 0, 0, 100, 1
+	uint8_t autoscale tpsSecondaryMaximum;For Ford TPS, use 53%. For Toyota ETCS-i, use ~65%. 0 and 100 disable, <20 invalid, rest will avoid sensor averaging.;"%", 0.5, 0, 0, 100, 1
+	uint8_t autoscale ppsSecondaryMaximum;For Toyota ETCS-i, use ~69%. 0 and 100 disable, <20 invalid, rest will avoid sensor averaging.;"%", 0.5, 0, 0, 100, 1
 pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 
 	uint8_t autoscale rpmHardLimitHyst;If the hard limit is 7200rpm and hysteresis is 200rpm, then when the ECU sees 7200rpm, fuel/ign will cut, and stay cut until 7000rpm (7200-200) is reached;"RPM", 10, 0, 0, 2500, 0
