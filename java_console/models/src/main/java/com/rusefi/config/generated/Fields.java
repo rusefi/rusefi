@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Jul 16 02:16:23 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Jul 16 14:34:08 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1207,7 +1207,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1203636781;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1465,7 +1464,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.07.16.f407-discovery.1203636781";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.07.16.f407-discovery.2880715048";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2207,7 +2206,7 @@ public class Fields {
 	public static final Field THROTTLEPEDALWOTVOLTAGE = Field.create("THROTTLEPEDALWOTVOLTAGE", 1484, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field STARTUPFUELPUMPDURATION = Field.create("STARTUPFUELPUMPDURATION", 1488, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field IDLEPIDRPMDEADZONE = Field.create("IDLEPIDRPMDEADZONE", 1490, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field TARGETVBATT = Field.create("TARGETVBATT", 1492, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field UNUSEDTARGETVBATT = Field.create("UNUSEDTARGETVBATT", 1492, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field MC33810DISABLERECOVERYMODE = Field.create("MC33810DISABLERECOVERYMODE", 1496, FieldType.BIT, 0).setBaseOffset(0);
 	public static final Field MC33810GPGD0MODE = Field.create("MC33810GPGD0MODE", 1496, FieldType.BIT, 1).setBaseOffset(0);
 	public static final Field MC33810GPGD1MODE = Field.create("MC33810GPGD1MODE", 1496, FieldType.BIT, 2).setBaseOffset(0);
@@ -3876,7 +3875,7 @@ public class Fields {
 	THROTTLEPEDALWOTVOLTAGE,
 	STARTUPFUELPUMPDURATION,
 	IDLEPIDRPMDEADZONE,
-	TARGETVBATT,
+	UNUSEDTARGETVBATT,
 	MC33810DISABLERECOVERYMODE,
 	MC33810GPGD0MODE,
 	MC33810GPGD1MODE,

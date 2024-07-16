@@ -1063,9 +1063,6 @@ float getConfigValueByName(const char *name) {
 // idlePidRpmDeadZone
 		case -528043591:
 			return engineConfiguration->idlePidRpmDeadZone;
-// targetVBatt
-		case 1160967565:
-			return engineConfiguration->targetVBatt;
 // mc33810DisableRecoveryMode
 		case -464979268:
 			return engineConfiguration->mc33810DisableRecoveryMode;
@@ -3606,11 +3603,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -528043591:
 	{
 		engineConfiguration->idlePidRpmDeadZone = (int)value;
-		return 1;
-	}
-		case 1160967565:
-	{
-		engineConfiguration->targetVBatt = value;
 		return 1;
 	}
 		case -464979268:

@@ -1057,9 +1057,6 @@ on IGN voltage detection turn fuel pump on to build fuel pressure
 ### idlePidRpmDeadZone
 If the RPM closer to target than this value, disable closed loop idle correction to prevent oscillation
 
-### targetVBatt
-This is the target battery voltage the alternator PID control will attempt to maintain
-
 ### mc33810DisableRecoveryMode
 See Over/Undervoltage Shutdown/Retry bit in documentation
 

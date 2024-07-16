@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Jul 15 03:55:23 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Jul 16 14:33:56 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2775,11 +2775,9 @@ struct engine_configuration_s {
 	 */
 	int16_t idlePidRpmDeadZone;
 	/**
-	 * This is the target battery voltage the alternator PID control will attempt to maintain
-	 * units: Volts
 	 * offset 1508
 	 */
-	float targetVBatt;
+	float unusedTargetVBatt;
 	/**
 	 * See Over/Undervoltage Shutdown/Retry bit in documentation
 	offset 1512 bit 0 */
@@ -5776,4 +5774,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22820);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Mon Jul 15 03:55:23 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Jul 16 14:33:56 UTC 2024
