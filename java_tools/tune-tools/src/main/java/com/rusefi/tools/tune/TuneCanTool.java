@@ -83,7 +83,7 @@ public class TuneCanTool implements TuneCanToolConstants {
      * @see WriteSimulatorConfiguration
      */
     protected static void processREOtune(int tuneId, engine_type_e engineType, String key,
-                                       String methodNamePrefix) throws JAXBException, IOException {
+                                         String methodNamePrefix) throws JAXBException, IOException {
         // compare specific internet tune to total global default
         handle(key + "-comparing-against-global-defaults", tuneId, YET_ANOTHER_ROOT + TuneCanTool.DEFAULT_TUNE, methodNamePrefix);
         // compare same internet tune to default tune of specified engine type
@@ -106,7 +106,7 @@ public class TuneCanTool implements TuneCanToolConstants {
 
     private static void writeDiffBetweenLocalTuneFileAndDefaultTune(String localFileName) throws JAXBException, IOException {
         writeDiffBetweenLocalTuneFileAndDefaultTune("vehicleName", DEFAULT_TUNE,
-            localFileName,  "comment", "");
+            localFileName, "comment", "");
     }
 //
 //    private static void writeDiffBetweenLocalTuneFileAndDefaultTune(int engineCode, String localFileName, String cannedComment) throws JAXBException, IOException {
@@ -217,7 +217,7 @@ public class TuneCanTool implements TuneCanToolConstants {
             if (TypesHelper.isFloat(cf.getTypeName()) && !cf.isArray()) {
                 float floatDefaultValue = Float.parseFloat(defaultValue.getValue());
                 float floatCustomValue = Float.parseFloat(customValue.getValue());
-                if (floatCustomValue != 0 && Math.abs(floatDefaultValue / floatCustomValue - 1) < 0.001) {
+                if (isValuesAreVeryNear(floatCustomValue, floatDefaultValue)) {
                     log.info("Skipping rounding error " + floatDefaultValue + " vs " + floatCustomValue);
                     continue;
                 }
@@ -261,8 +261,10 @@ public class TuneCanTool implements TuneCanToolConstants {
                             log.info("Table " + fieldName + " matches default content");
                             continue;
                         }
+                        log.info("Custom content in table " + fieldName);
+                    } else {
+                        log.info("New table " + fieldName);
                     }
-                    log.info("Custom content in table " + fieldName);
 
 
                     methods.append(customContent);
@@ -282,8 +284,14 @@ public class TuneCanTool implements TuneCanToolConstants {
                         log.info("Curve " + fieldName + " matches default content");
                         continue;
                     }
+                    if (isSameValue(data, defaultCurveData)) {
+                        log.info("Curve " + fieldName + " values are pretty close");
+                        continue;
+                    }
+                    log.info("Custom content in curve " + fieldName);
+                } else {
+                    log.info("New curve " + fieldName);
                 }
-                log.info("Custom content in curve " + fieldName);
 
                 methods.append(customContent);
                 invokeMethods.append(data.getCinvokeMethod(methodNamePrefix));
@@ -333,6 +341,24 @@ public class TuneCanTool implements TuneCanToolConstants {
         sb.append("\n\n").append(invokeMethods);
 
         return sb;
+    }
+
+    private static boolean isSameValue(CurveData data, CurveData defaultContent) {
+        float[] data1array = data.getRawData();
+        float[] data2array = defaultContent.getRawData();
+        if (data1array.length != data2array.length)
+            return false;
+        for (int i = 0; i < data1array.length; i++) {
+            if (!isValuesAreVeryNear(data1array[i], data2array[i]))
+                return false;
+        }
+        return true;
+    }
+
+    private static boolean isValuesAreVeryNear(float floatCustomValue, float floatDefaultValue) {
+        if (floatCustomValue == 0 && floatDefaultValue == 0)
+            return true;
+        return floatCustomValue != 0 && Math.abs(floatDefaultValue / floatCustomValue - 1) < 0.001;
     }
 
     private static String getPath(ConfigStructure parentType) {
