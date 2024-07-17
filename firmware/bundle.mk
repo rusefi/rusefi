@@ -5,6 +5,9 @@ ifeq (,$(BUNDLE_NAME))
 endif
 
 # If we're running on Windows, we need to call the .exe of hex2dfu
+ifeq ($(UNAME_S),)
+	UNAME_S = $(shell uname -s)
+endif
 ifneq (,$(findstring NT,$(UNAME_S)))
 	H2D = ../misc/encedo_hex2dfu/hex2dfu.exe
 else
@@ -164,9 +167,9 @@ $(DFU) $(DBIN): .h2d-sentinel ;
 
 .h2d-sentinel: $(BUILDDIR)/$(PROJECT).hex $(BOOTLOADER_HEX_OUT) $(BINSRC) | $(DELIVER)
 ifeq ($(USE_OPENBLT),yes)
-	$(H2D) -i $(BOOTLOADER_HEX) -i $(BUILDDIR)/$(PROJECT).hex -C 0x1C -o $(DFU) -b $(DBIN)
+	$(H2D) -i $(BOOTLOADER_HEX) -i $(BUILDDIR)/$(PROJECT).hex -c 0x0800801C -o $(DFU) -b $(DBIN)
 else
-	$(H2D) -i $(BUILDDIR)/$(PROJECT).hex -C 0x1C -o $(DFU)
+	$(H2D) -i $(BUILDDIR)/$(PROJECT).hex -c 0x0800001C -o $(DFU)
 	cp $(BUILDDIR)/$(PROJECT).bin $(DBIN)
 endif
 	@touch $@
