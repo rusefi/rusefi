@@ -8,7 +8,6 @@ import com.rusefi.Launcher;
 import com.rusefi.SerialPortScanner;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.core.Pair;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.core.ui.AutoupdateUtil;
@@ -24,6 +23,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -169,23 +169,17 @@ public class ProgramSelector {
         }
     }
 
-    private static boolean waitForEcuPortDisappeared(
-        final String ecuPort,
+    private static boolean waitForPredicate(
+        final String waitingMessage,
+        final Supplier<Boolean> shouldFinish,
         final UpdateOperationCallbacks callbacks
     ) {
-        callbacks.log("Waiting for ECU to reboot to OpenBlt...", false, true);
+        callbacks.log(waitingMessage, false, true);
         try {
-            String[] currentPorts = null;
             for (int attemptsCount = 0; attemptsCount < 150; attemptsCount++) {
                 // Give the bootloader sec to enumerate
                 BinaryProtocol.sleep(200);
-
-                currentPorts = LinkManager.getCommPorts();
-                log.info("currentPorts: [" + String.join(",", currentPorts) + "]");
-
-                // Check that the ECU disappeared from the "after" list
-                final boolean ecuPortStillAlive = !PortDetector.AUTO.equals(ecuPort) && Arrays.stream(currentPorts).anyMatch(ecuPort::equals);
-                if (!ecuPortStillAlive) {
+                if (shouldFinish.get()) {
                     return true;
                 } else {
                     callbacks.log(".", false, false);
@@ -195,6 +189,48 @@ public class ProgramSelector {
         } finally {
             callbacks.log("", true, false);
         }
+    }
+
+    private static boolean waitForEcuPortDisappeared(
+        final String ecuPort,
+        final UpdateOperationCallbacks callbacks
+    ) {
+        return waitForPredicate(
+            "Waiting for ECU to reboot to OpenBlt...",
+            () -> {
+                if (PortDetector.AUTO.equals(ecuPort)) {
+                    return true;
+                } else {
+                    final String[] currentPorts = LinkManager.getCommPorts();
+                    log.info("currentPorts: [" + String.join(",", currentPorts) + "]");
+                    return !Arrays.stream(LinkManager.getCommPorts()).anyMatch(ecuPort::equals);
+                }
+            },
+            callbacks
+        );
+    }
+
+    private static List<String> waitForNewPortAppeared(
+        final String[] portsBefore,
+        final UpdateOperationCallbacks callbacks
+    ) {
+        final List<String> newPorts = new ArrayList<>();
+        waitForPredicate(
+            "Waiting for new port to appear...",
+            () -> {
+                final String[] portsAfter = LinkManager.getCommPorts();
+                log.info("portsAfter: [" + String.join(",", portsAfter) + "]");
+                for (String s : portsAfter) {
+                    if (!Arrays.stream(portsBefore).anyMatch(s::equals)) {
+                        // This item is in the after list but not before list
+                        newPorts.add(s);
+                    }
+                }
+                return !newPorts.isEmpty();
+            },
+            callbacks
+        );
+        return newPorts;
     }
 
     private static void flashOpenbltSerialAutomatic(JComponent parent, String ecuPort, UpdateOperationCallbacks callbacks) {
@@ -214,17 +250,9 @@ public class ProgramSelector {
             return;
         }
 
-        final String[] portsAfter = LinkManager.getCommPorts();
+        List<String> newItems = waitForNewPortAppeared(portsBefore, callbacks);
 
         // Check that exactly one thing appeared in the "after" list
-        ArrayList<String> newItems = new ArrayList<>();
-        for (String s : portsAfter) {
-            if (!Arrays.stream(portsBefore).anyMatch(s::equals)) {
-                // This item is in the after list but not before list
-                newItems.add(s);
-            }
-        }
-
         if (newItems.isEmpty()) {
             callbacks.logLine("Looks like your ECU disappeared during the update process. Please try again.");
             callbacks.error();
@@ -233,7 +261,7 @@ public class ProgramSelector {
 
         if (newItems.size() > 1) {
             // More than one port appeared? whattt?
-            callbacks.logLine("Unable to find ECU after reboot as multiple serial ports appeared. Before: " + portsBefore.length + " After: " + portsAfter.length);
+            callbacks.logLine("Unable to find ECU after reboot as multiple serial ports appeared. Before: " + portsBefore.length);
             callbacks.error();
             return;
         }
