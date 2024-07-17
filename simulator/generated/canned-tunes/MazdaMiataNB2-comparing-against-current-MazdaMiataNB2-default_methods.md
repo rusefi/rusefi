@@ -89,11 +89,6 @@ static void nb2cannedvrThreshold2_values() {
 	copyArray(engineConfiguration->vrThreshold2.vrThreshold2_values, hardCodedvrThreshold2_values);
 }
 
-static void nb2cannedmafDecodingBins() {
-	static const float hardCodedmafDecodingBins[32] = {0.5, 0.86999893, 1.0699997, 1.5299988, 1.8499985, 2.1099854, 2.4599915, 3.0, 3.5100098, 4.5, 4.5999756, 4.6099854, 4.619995, 4.630005, 4.6400146, 4.6500244, 4.659973, 4.669983, 4.6799927, 4.6900024, 4.700012, 4.710022, 4.7199707, 4.7299805, 4.73999, 4.75, 4.76001, 4.7700195, 4.7800293, 4.789978, 4.799988, 4.8099976};
-	copyArray(config->mafDecodingBins, hardCodedmafDecodingBins);
-}
-
 static void nb2cannedcltFuelCorr() {
 	static const float hardCodedcltFuelCorr[16] = {1.5, 1.5, 1.4199982, 1.3600006, 1.2799988, 1.199997, 1.1800003, 1.1500015, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1, 1.1};
 	copyArray(config->cltFuelCorr, hardCodedcltFuelCorr);
@@ -112,11 +107,6 @@ static void nb2cannedcrankingFuelCoefE100() {
 static void nb2cannedcltRevLimitRpmBins() {
 	static const float hardCodedcltRevLimitRpmBins[4] = {0.0, 0.0, 0.0, 0.0};
 	copyArray(config->cltRevLimitRpmBins, hardCodedcltRevLimitRpmBins);
-}
-
-static void nb2cannedcltIdleCorrBins() {
-	static const float hardCodedcltIdleCorrBins[16] = {-40.0, -30.0, -20.0, -10.0, 0.0, 9.439941, 19.120117, 30.810059, 42.509766, 54.529785, 64.21973, 71.90039, 80.0, 90.0, 100.0, 110.0};
-	copyArray(config->cltIdleCorrBins, hardCodedcltIdleCorrBins);
 }
 
 static void nb2cannedcltIdleCorr() {

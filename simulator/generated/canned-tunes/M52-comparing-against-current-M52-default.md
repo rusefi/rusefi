@@ -211,7 +211,6 @@
 	cannedmap_samplingWindow();
 	cannedvrThreshold1_rpmBins();
 	cannedvrThreshold2_rpmBins();
-	cannedmafDecodingBins();
 	cannedcltFuelCorr();
 	cannedcrankingFuelCoef();
 	cannedcltRevLimitRpmBins();

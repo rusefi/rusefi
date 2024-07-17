@@ -293,12 +293,10 @@
 	nb2cannedvrThreshold1_values();
 	nb2cannedvrThreshold2_rpmBins();
 	nb2cannedvrThreshold2_values();
-	nb2cannedmafDecodingBins();
 	nb2cannedcltFuelCorr();
 	nb2cannedcrankingFuelCoef();
 	nb2cannedcrankingFuelCoefE100();
 	nb2cannedcltRevLimitRpmBins();
-	nb2cannedcltIdleCorrBins();
 	nb2cannedcltIdleCorr();
 	nb2cannedcltCrankingCorr();
 	nb2cannedcltIdleRpmBins();

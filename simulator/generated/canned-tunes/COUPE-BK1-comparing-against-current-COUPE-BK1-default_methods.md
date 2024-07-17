@@ -29,11 +29,6 @@ static void coupleBK1cannedvrThreshold2_rpmBins() {
 	copyArray(engineConfiguration->vrThreshold2.vrThreshold2_rpmBins, hardCodedvrThreshold2_rpmBins);
 }
 
-static void coupleBK1cannedmafDecodingBins() {
-	static const float hardCodedmafDecodingBins[32] = {0.0, 0.78125, 1.3867188, 2.9101562, 4.2578125, 4.9804688, 2016.0, 2017.0, 2018.0, 2019.0, 2020.0, 2021.0, 2022.0, 2023.0, 2024.0, 2025.0, 2026.0, 2027.0, 2028.0, 2029.0, 2030.0, 2031.0, 2032.0, 2033.0, 2034.0, 2035.0, 2036.0, 2037.0, 2038.0, 2039.0, 2040.0, 2041.0};
-	copyArray(config->mafDecodingBins, hardCodedmafDecodingBins);
-}
-
 static void coupleBK1cannedcltRevLimitRpmBins() {
 	static const float hardCodedcltRevLimitRpmBins[4] = {0.0, 0.0, 0.0, 0.0};
 	copyArray(config->cltRevLimitRpmBins, hardCodedcltRevLimitRpmBins);

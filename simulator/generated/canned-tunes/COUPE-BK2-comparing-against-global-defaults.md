@@ -163,7 +163,6 @@
 	coupleBK2cannedmap_samplingWindowBins();
 	coupleBK2cannedvrThreshold1_rpmBins();
 	coupleBK2cannedvrThreshold2_rpmBins();
-	coupleBK2cannedmafDecodingBins();
 	coupleBK2cannedcltRevLimitRpmBins();
 	coupleBK2cannedcltIdleCorrBins();
 	coupleBK2cannedcltIdleCorr();
