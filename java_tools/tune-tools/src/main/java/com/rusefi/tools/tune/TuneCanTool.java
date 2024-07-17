@@ -30,6 +30,7 @@ import java.util.TreeSet;
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.ConfigFieldImpl.unquote;
 import static com.rusefi.config.Field.niceToString;
+import static com.rusefi.tools.tune.WriteSimulatorConfiguration.INI_FILE_FOR_SIMULATOR;
 
 /**
  * this command line utility compares two TS calibration files and produces .md files with C++ source code of the difference between those two files.
@@ -60,7 +61,8 @@ public class TuneCanTool implements TuneCanToolConstants {
     public static void main(String[] args) throws Exception {
         //writeDiffBetweenLocalTuneFileAndDefaultTune("../1.msq");
 
-        TuneCanToolRunner.initialize();
+//        TuneCanToolRunner.initialize("C:\\stuff\\fw\\generated\\tunerstudio\\generated\\rusefi_.ini");
+        TuneCanToolRunner.initialize(INI_FILE_FOR_SIMULATOR);
 
 //        writeDiffBetweenLocalTuneFileAndDefaultTune("harley", "C:\\stuff\\fw\\fw-\\generated\\simulator_tune_HARLEY.msq",
 //            "c:\\stuff\\hd-\\tunes\\pnp-april-8-inverted-offsets.msq","comment", "");
@@ -242,7 +244,7 @@ public class TuneCanTool implements TuneCanToolConstants {
                 } else {
                     // todo: unit test?
                     String path = getPath(cf.getParentStructureType());
-                    parentReference = "engineConfiguration->" + path + ".";
+                    parentReference = path + ".";
                 }
 
                 if (cf.getArraySizes().length == 2) {
@@ -253,10 +255,10 @@ public class TuneCanTool implements TuneCanToolConstants {
                     }
                     log.info("Handling table " + fieldName + " with " + cf.autoscaleSpecPair());
 
-                    String customContent = tableData.getCsourceMethod(parentReference, methodNamePrefix);
+                    String customContent = tableData.getCsourceMethod(parentReference, methodNamePrefix, tableData.getName());
                     if (defaultTuneFileName != null) {
                         TableData defaultTableData = TableData.readTable(defaultTuneFileName, fieldName, ini);
-                        String defaultContent = defaultTableData.getCsourceMethod(parentReference, methodNamePrefix);
+                        String defaultContent = defaultTableData.getCsourceMethod(parentReference, methodNamePrefix, defaultTableData.getName());
                         if (defaultContent.equals(customContent)) {
                             log.info("Table " + fieldName + " matches default content");
                             continue;
@@ -276,10 +278,10 @@ public class TuneCanTool implements TuneCanToolConstants {
                 if (data == null)
                     continue;
 
-                String customContent = data.getCsourceMethod(parentReference, methodNamePrefix);
+                String customContent = data.getCsourceMethod(parentReference, methodNamePrefix, cName);
                 if (defaultTuneFileName != null) {
                     CurveData defaultCurveData = CurveData.valueOf(defaultTuneFileName, fieldName, ini);
-                    String defaultContent = defaultCurveData.getCsourceMethod(parentReference, methodNamePrefix);
+                    String defaultContent = defaultCurveData.getCsourceMethod(parentReference, methodNamePrefix, cName);
                     if (defaultContent.equals(customContent)) {
                         log.info("Curve " + fieldName + " matches default content");
                         continue;
@@ -363,7 +365,17 @@ public class TuneCanTool implements TuneCanToolConstants {
 
     private static String getPath(ConfigStructure parentType) {
         String parentTypeName = parentType.getName();
-        return parentType.getParent().getCurrentInstance().get(parentTypeName).getName();
+        ConfigField configField = parentType.getParent().getCurrentInstance().get(parentTypeName);
+        ConfigStructure grandFather = configField.getParentStructureType();
+        String grandParentName;
+        if (grandFather.getName().equals("persistent_config_s")) {
+            grandParentName = "config->";
+        } else if (grandFather.getName().equals("engine_configuration_s")) {
+            grandParentName = "engineConfiguration->";
+        } else {
+            throw new IllegalStateException("Unexpected grandParentName " + grandFather);
+        }
+        return grandParentName + configField.getOriginalArrayName();
     }
 
     private final static Set<String> HARDWARE_PROPERTIES = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);

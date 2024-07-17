@@ -101,10 +101,10 @@ public class CurveData implements CannableEntity {
     }
 
     @Override
-    public String getCsourceMethod(String reference, String methodNamePrefix) {
+    public String getCsourceMethod(String reference, String methodNamePrefix, String name) {
         return "static void " + getCannedMethod(methodNamePrefix) + " {\n"
                 + "\t" + getCsourceCode() +
-                "\tcopyArray(" + reference + curveName + ", " + getCannedName() + ");\n" +
+                "\tcopyArray(" + reference + name + ", " + getCannedName() + ");\n" +
                 "}\n\n";
     }
 
@@ -116,5 +116,10 @@ public class CurveData implements CannableEntity {
     @Override
     public String getCinvokeMethod(String methodNamePrefix) {
         return "\t" + getCannedMethod(methodNamePrefix) + ";\n";
+    }
+
+    @Override
+    public String getName() {
+        return curveName;
     }
 }
