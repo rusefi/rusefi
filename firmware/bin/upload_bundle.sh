@@ -4,7 +4,7 @@ USER=$1
 PASS=$2
 HOST=$3
 BUNDLE_NAME=$4
-RELEASE_TAG=$5
+SUBFOLDER_TO_UPLOAD=$5
 
 SCRIPT_NAME=$(basename "$0")
 
@@ -24,8 +24,8 @@ if [ -n "${USER}" -a -n "$PASS" -a -n "${HOST}" ]; then
    echo "$SCRIPT_NAME: bundle_upload_folder env variable was not specified using default ${bundle_upload_folder}"
  fi
 
- if [ -n "${RELEASE_TAG}" ]; then
-   echo "$SCRIPT_NAME: RELEASE_TAG is ${RELEASE_TAG}"
+ if [ -n "${SUBFOLDER_TO_UPLOAD}" ]; then
+   echo "$SCRIPT_NAME: SUBFOLDER_TO_UPLOAD is ${SUBFOLDER_TO_UPLOAD}"
  fi
 
  if [[ -z "${WHITE_LABEL}" ]]; then
@@ -49,8 +49,8 @@ SSHCMD
 mkdir ${bundle_upload_folder}/lts
 mkdir ${DESTINATION_FOLDER}
 SSHCMD
- elif [ -n "${RELEASE_TAG}" ]; then # daily release with tag
-    DESTINATION_FOLDER="${bundle_upload_folder}/${SHORT_BOARD_NAME}/${RELEASE_TAG}"
+ elif [ -n "${SUBFOLDER_TO_UPLOAD}" ]; then # daily release with tag
+    DESTINATION_FOLDER="${bundle_upload_folder}/${SHORT_BOARD_NAME}/${SUBFOLDER_TO_UPLOAD}"
     # sftp does not support -p flag on mkdir :(
     sshpass -p $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
 mkdir ${bundle_upload_folder}/${SHORT_BOARD_NAME}
