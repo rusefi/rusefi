@@ -6,7 +6,7 @@ static void pbcannedknockBaseNoise() {
 
 static void pbcannedinjector_battLagCorr() {
 	static const float hardCodedinjector_battLagCorr[8] = {0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2};
-	copyArray(engineConfiguration->injectorSecondary.injector_battLagCorr, hardCodedinjector_battLagCorr);
+	copyArray(engineConfiguration->injectorSecondary.injector.battLagCorr, hardCodedinjector_battLagCorr);
 }
 
 static void pbcannedcltTimingBins() {

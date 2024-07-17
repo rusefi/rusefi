@@ -1,12 +1,12 @@
 ```
 static void cannedinjector_battLagCorrBins() {
 	static const float hardCodedinjector_battLagCorrBins[8] = {0.0, 6.0, 8.0, 9.92, 12.05, 13.15, 14.16, 16.0};
-	copyArray(engineConfiguration->injectorSecondary.injector_battLagCorrBins, hardCodedinjector_battLagCorrBins);
+	copyArray(engineConfiguration->injectorSecondary.injector.battLagCorrBins, hardCodedinjector_battLagCorrBins);
 }
 
 static void cannedinjector_battLagCorr() {
 	static const float hardCodedinjector_battLagCorr[8] = {3.37, 2.04, 1.53, 1.09, 0.62, 0.51, 0.47, 0.33};
-	copyArray(engineConfiguration->injectorSecondary.injector_battLagCorr, hardCodedinjector_battLagCorr);
+	copyArray(engineConfiguration->injectorSecondary.injector.battLagCorr, hardCodedinjector_battLagCorr);
 }
 
 static void cannedtractionControlSlipBins() {
@@ -110,7 +110,7 @@ static void cannedlambdaTable() {
 
 static void cannedgppwm1_rpmBins() {
 	static const float hardCodedgppwm1_rpmBins[8] = {0.0, 2000.0, 3000.0, 4000.0, 4500.0, 5000.0, 5500.0, 7000.0};
-	copyArray(engineConfiguration->gppwm4.gppwm1_rpmBins, hardCodedgppwm1_rpmBins);
+	copyArray(engineConfiguration->gppwm[3].gppwm[0].rpmBins, hardCodedgppwm1_rpmBins);
 }
 
 static void cannedgppwm1_table() {
@@ -124,7 +124,7 @@ static void cannedgppwm1_table() {
 {0.000,	0.000,	0.000,	0.000,	100.000,	100.000,	100.000,	100.000,	},
 {0.000,	0.000,	0.000,	0.000,	100.000,	100.000,	100.000,	100.000,	},
 };
-	copyTable(engineConfiguration->gppwm4.gppwm1_table, hardCodedgppwm1_table);
+	copyTable(engineConfiguration->gppwm[3].gppwm1_table, hardCodedgppwm1_table);
 }
 
 static void cannedtcuSolenoidTable() {
