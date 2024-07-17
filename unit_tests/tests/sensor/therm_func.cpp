@@ -16,7 +16,7 @@ TEST(thermistor, Thermistor1) {
 
 	SensorResult t = tf.convert(2100);
 	ASSERT_TRUE(t.Valid);
-	ASSERT_FLOAT_EQ(75, t.Value);
+	ASSERT_NEAR(75, t.Value, EPS2D);
 
 	ASSERT_NEAR(-0.003, tf.m_a, EPS4D);
 	ASSERT_NEAR(0.001, tf.m_b, EPS4D);
@@ -83,7 +83,25 @@ TEST(Thermistor, Option2) {
 
 
     setAtSensor(&engineConfiguration->auxTempSensor1, /*temp low*/-13.9, 73300, /*temp mid*/23.5, 53100 , /*temp high*/ 60, 2280);
-	initNewSensors();
+
+  EXPECT_FATAL_ERROR(
+	  initNewSensors()
+	);
+
+	FunctionalSensor * aatSensor = (FunctionalSensor*)Sensor::getSensorOfType(SensorType::AuxTemp1);
+    ASSERT_TRUE(aatSensor == nullptr);
+}
+
+
+TEST(Thermistor, Option3) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
+                                                 			engineConfiguration->auxTempSensor1.adcChannel = EFI_ADC_12;; // arbitrary
+                                                 	});
+
+
+    setAtSensor(&engineConfiguration->auxTempSensor1, /*temp low*/-13.9, 73300, /*temp mid*/45, 3810, /*temp high*/ 90, 952);
+
+	  initNewSensors();
 
 	FunctionalSensor * aatSensor = (FunctionalSensor*)Sensor::getSensorOfType(SensorType::AuxTemp1);
     ASSERT_TRUE(aatSensor != nullptr);
@@ -91,9 +109,8 @@ TEST(Thermistor, Option2) {
 
     ThermistorFunc *thermistorFuncAat = tFuncAat->getPtr<ThermistorFunc>();
 
-    ASSERT_NEAR(60, thermistorFuncAat->convert(2280).Value, EPS2D);
-    // WOW! how cool is this issue - resistance between mid and high temps gives us a temperature way above high point!
-    // fun fact: java script version is not broken https://rusefi.com/Steinhart-Hart.html is this about loss of precision?
-    ASSERT_NEAR(104.094, thermistorFuncAat->convert(3413).Value, EPS2D);
-    ASSERT_NEAR(23.5, thermistorFuncAat->convert(53100).Value, EPS2D);
+    ASSERT_NEAR(59.9064, thermistorFuncAat->convert(2280).Value, EPS2D);
+    ASSERT_NEAR(48.043, thermistorFuncAat->convert(3413).Value, EPS2D);
+    ASSERT_NEAR(-9.17, thermistorFuncAat->convert(53100).Value, EPS2D);
 }
+
