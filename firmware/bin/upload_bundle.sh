@@ -36,29 +36,32 @@ if [ -n "${USER}" -a -n "$PASS" -a -n "${HOST}" ]; then
  FULL_BUNDLE_FILE="${WHITE_LABEL}_bundle_${BUNDLE_NAME}.zip"
  UPDATE_BUNDLE_FILE="${WHITE_LABEL}_bundle_${BUNDLE_NAME}_autoupdate.zip"
 
-     # sftp does not support -p flag on mkdir :(
-     sshpass -p $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
-mkdir ${bundle_upload_folder}
-SSHCMD
-
  RET=0
  if [ "$AUTOMATION_LTS" == "true" -a -n "$AUTOMATION_REF" ]; then # lts build
-   DESTINATION_FOLDER="${bundle_upload_folder}/lts/${AUTOMATION_REF}"
-     # sftp does not support -p flag on mkdir :(
-     sshpass -p $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
-mkdir ${bundle_upload_folder}/lts
-mkdir ${DESTINATION_FOLDER}
-SSHCMD
+    DESTINATION_SUBFOLDER="lts/${AUTOMATION_REF}"
  elif [ -n "${SUBFOLDER_TO_UPLOAD}" ]; then # daily release with tag
-    DESTINATION_FOLDER="${bundle_upload_folder}/${SHORT_BOARD_NAME}/${SUBFOLDER_TO_UPLOAD}"
-    # sftp does not support -p flag on mkdir :(
-    sshpass -p $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
-mkdir ${bundle_upload_folder}/${SHORT_BOARD_NAME}
+    DESTINATION_SUBFOLDER="${SHORT_BOARD_NAME}/${SUBFOLDER_TO_UPLOAD}"
+ else
+    DESTINATION_SUBFOLDER=""
+ fi
+
+ DESTINATION_FOLDER="${bundle_upload_folder}"
+ # sftp does not support -p flag on mkdir :(
+ sshpass -p $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
 mkdir ${DESTINATION_FOLDER}
 SSHCMD
- else
-   DESTINATION_FOLDER="${bundle_upload_folder}"
- fi
+
+ readarray -d "/" -t SUBFOLDER_ARRAY <<< "${DESTINATION_SUBFOLDER}"
+ for ((n=0; n < ${#SUBFOLDER_ARRAY[*]}; n++))
+ do
+    SUBFOLDER_COMPONENT="${SUBFOLDER_ARRAY[n]}"
+    if [ -n "${SUBFOLDER_COMPONENT}" ]; then
+      DESTINATION_FOLDER="${DESTINATION_FOLDER}/${SUBFOLDER_COMPONENT}"
+      sshpass -p $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
+mkdir ${DESTINATION_FOLDER}
+SSHCMD
+    fi
+ done
 
      # sftp does not support -p flag on mkdir :(
      sshpass -p $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
