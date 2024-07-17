@@ -1291,7 +1291,7 @@
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 #define show_test_presets false
-#define SIGNATURE_HASH 3953060525
+#define SIGNATURE_HASH 2056593484
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1591,6 +1591,7 @@
 #define TS_SET_LOGGER_SWITCH 'l'
 #define TS_SET_LOGGER_SWITCH_char l
 #define ts_show_air_conditioning true
+#define ts_show_alternator true
 #define ts_show_analog_divider false
 #define ts_show_auxserial_pins true
 #define ts_show_bank2_cam1 true
@@ -1655,6 +1656,7 @@
 #define ts_show_main_relay true
 #define ts_show_main_relay_microRusEFI_message false
 #define ts_show_mc33810 false
+#define ts_show_multispark true
 #define ts_show_number_of_cylinders true
 #define ts_show_odd_fire true
 #define ts_show_onboard_accelerometer false
@@ -1679,10 +1681,13 @@
 #define ts_show_spi5_pins false
 #define ts_show_spi6_enable true
 #define ts_show_spi6_pins false
+#define ts_show_staged_injection true
+#define ts_show_start_button true
 #define ts_show_starter_disable true
 #define ts_show_startup_map_baro_grab true
 #define ts_show_status_leds true
 #define ts_show_sync_cam true
+#define ts_show_tachometer true
 #define ts_show_tcu false
 #define ts_show_tle8888 false
 #define ts_show_top_level_can_menu true
@@ -1703,7 +1708,7 @@
 #define ts_show_vvt_output true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.07.17.hellen-nb1.3953060525"
+#define TS_SIGNATURE "rusEFI master.2024.07.17.hellen-nb1.2056593484"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
