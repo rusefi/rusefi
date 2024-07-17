@@ -169,7 +169,7 @@ public class ProgramSelector {
         }
     }
 
-    private static Pair<Boolean, String[]> waitForEcuPortDisappeared(
+    private static boolean waitForEcuPortDisappeared(
         final String ecuPort,
         final UpdateOperationCallbacks callbacks
     ) {
@@ -186,12 +186,12 @@ public class ProgramSelector {
                 // Check that the ECU disappeared from the "after" list
                 final boolean ecuPortStillAlive = !PortDetector.AUTO.equals(ecuPort) && Arrays.stream(currentPorts).anyMatch(ecuPort::equals);
                 if (!ecuPortStillAlive) {
-                    return new Pair<>(true, currentPorts);
+                    return true;
                 } else {
                     callbacks.log(".", false, false);
                 }
             }
-            return new Pair<>(false, currentPorts);
+            return false;
         } finally {
             callbacks.log("", true, false);
         }
@@ -203,9 +203,7 @@ public class ProgramSelector {
         rebootToOpenblt(parent, ecuPort, callbacks);
 
         // invoking blocking method
-        final Pair<Boolean, String[]> rebootResult = waitForEcuPortDisappeared(ecuPort, callbacks);
-        final boolean ecuPrtDisappeared = rebootResult.first;
-        final String[] portsAfter = rebootResult.second;
+        final boolean ecuPrtDisappeared = waitForEcuPortDisappeared(ecuPort, callbacks);
 
         if (!ecuPrtDisappeared) {
             callbacks.logLine("Looks like your ECU still haven't rebooted to OpenBLT");
@@ -215,6 +213,8 @@ public class ProgramSelector {
             callbacks.error();
             return;
         }
+
+        final String[] portsAfter = LinkManager.getCommPorts();
 
         // Check that exactly one thing appeared in the "after" list
         ArrayList<String> newItems = new ArrayList<>();
