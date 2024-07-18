@@ -18,6 +18,7 @@ endif
 #  than to try uploading them from the rusefi.snapshot.<BUNDLE_NAME> directory
 DFU = $(DELIVER)/$(PROJECT).dfu
 DBIN = $(DELIVER)/$(PROJECT).bin
+DBIN_CRC = $(BUILDDIR)/$(PROJECT)_crc32.bin
 FIRMWARE_BIN_OUT = $(FOLDER)/$(PROJECT).bin
 
 ifeq (,$(WHITE_LABEL))
@@ -161,15 +162,27 @@ $(BOOTLOADER_BIN_OUT): $(FOLDER)/openblt%: bootloader/blbuild/openblt_$(PROJECT_
 $(FIRMWARE_BIN_OUT) $(FOLDER)/$(PROJECT).dfu: $(FOLDER)/%: $(DELIVER)/% | $(FOLDER)
 	ln -rfs $< $@
 
+HEX_BASE_ADDRESS = "0x$(shell $(OD) -h -j .vectors $(BUILDDIR)/$(PROJECT).elf | awk '/.vectors/ {print $$5 }')"
+ifeq ($(USE_OPENBLT),yes)
+	CHECKSUM_ADDRESS = 0x0800801C
+else
+	CHECKSUM_ADDRESS = 0x0800001C
+endif
+
+$(BUILDDIR)/rusefi.srec: $(BUILDDIR)/$(PROJECT).hex
+	# make sure we create the srec from a binary with crc
+	$(H2D) -i $< -c $(CHECKSUM_ADDRESS) -b $(DBIN_CRC)
+	$(CP) -I binary -O srec --change-addresses=$(HEX_BASE_ADDRESS) $(DBIN_CRC) $@
+
 # The DFU is currenly not included in the bundle, so these prerequisites are listed as order-only to avoid building it.
 # If you want it, you can build it with `make rusefi.snapshot.$BUNDLE_NAME/rusefi.dfu`
 $(DFU) $(DBIN): .h2d-sentinel ;
 
 .h2d-sentinel: $(BUILDDIR)/$(PROJECT).hex $(BOOTLOADER_HEX_OUT) $(BINSRC) | $(DELIVER)
 ifeq ($(USE_OPENBLT),yes)
-	$(H2D) -i $(BOOTLOADER_HEX) -i $(BUILDDIR)/$(PROJECT).hex -c 0x0800801C -o $(DFU) -b $(DBIN)
+	$(H2D) -i $(BOOTLOADER_HEX) -i $(BUILDDIR)/$(PROJECT).hex -c $(CHECKSUM_ADDRESS) -o $(DFU) -b $(DBIN)
 else
-	$(H2D) -i $(BUILDDIR)/$(PROJECT).hex -c 0x0800001C -o $(DFU)
+	$(H2D) -i $(BUILDDIR)/$(PROJECT).hex -c $(CHECKSUM_ADDRESS) -o $(DFU)
 	cp $(BUILDDIR)/$(PROJECT).bin $(DBIN)
 endif
 	@touch $@

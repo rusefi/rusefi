@@ -377,8 +377,8 @@ OD   = $(TRGT)objdump
 SZ   = $(TRGT)size
 HEX  = $(CP) -O ihex
 BIN  = $(CP) -O binary
-# OpenBLT flasher expects srec files
-SREC = $(CP) -O srec
+# OpenBLT flasher expects srec files, but we create them in our bundle.mk, not in rules.mk
+#SREC = $(CP) -O srec
 
 # ARM-specific options here
 AOPT =
