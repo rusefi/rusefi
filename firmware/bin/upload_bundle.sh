@@ -37,10 +37,10 @@ if [ -n "${USER}" -a -n "$PASS" -a -n "${HOST}" ]; then
  UPDATE_BUNDLE_FILE="${WHITE_LABEL}_bundle_${BUNDLE_NAME}_autoupdate.zip"
 
  RET=0
- if [ "$AUTOMATION_LTS" == "true" -a -n "$AUTOMATION_REF" ]; then # lts build
+ if [ -n "${SUBFOLDER_TO_UPLOAD}" ]; then # subfolder to upload bundle is specified explicitly
+     DESTINATION_SUBFOLDER="${SHORT_BOARD_NAME}/${SUBFOLDER_TO_UPLOAD}"
+ elif [ "$AUTOMATION_LTS" == "true" -a -n "$AUTOMATION_REF" ]; then # lts build
     DESTINATION_SUBFOLDER="lts/${AUTOMATION_REF}"
- elif [ -n "${SUBFOLDER_TO_UPLOAD}" ]; then # daily release with tag
-    DESTINATION_SUBFOLDER="${SHORT_BOARD_NAME}/${SUBFOLDER_TO_UPLOAD}"
  else
     DESTINATION_SUBFOLDER=""
  fi
