@@ -74,7 +74,7 @@ inputs:
   EXTRA_LIVE_DATA_FILE:
     required: false
   gha_outputs_file:
-    description: '.properties file to store GHA outputs (unfortunately GGA outputs do not work for nested GHA - see https://github.com/actions/runner/issues/2009#issuecomment-1793565031)'
+    description: '.properties file to store GHA outputs (unfortunately GHA outputs do not work for nested GHA - see https://github.com/actions/runner/issues/2009#issuecomment-1793565031)'
     required: false
     default: ''
 
