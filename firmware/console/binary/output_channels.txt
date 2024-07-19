@@ -416,5 +416,7 @@ float mapFast
 	int16_t autoscale rawAuxTemp1;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	int16_t autoscale rawAuxTemp2;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
-	uint8_t[64 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	int16_t autoscale rawAmbientTemp;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+
+	uint8_t[60 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct
