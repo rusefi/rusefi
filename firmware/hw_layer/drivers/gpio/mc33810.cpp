@@ -450,7 +450,9 @@ int Mc33810::chip_init()
 			} else {
 				msg = "unexpected";
 			}
-			efiPrintf(DRIVER_NAME " spi loopback test failed [first 0x%04x][spi check 0x%04x][%s] vBatt=%f", rxSpiCheck, rx, msg, vBatt);
+			engine->outputChannels.mc33810spiErrorCounter++;
+			efiPrintf(DRIVER_NAME " spi loopback test failed [first 0x%04x][spi check 0x%04x][%s] vBatt=%f count=%d", rxSpiCheck, rx, msg, vBatt,
+			  engine->outputChannels.mc33810spiErrorCounter);
 		}
 		ret = -2;
 		goto err_exit;
