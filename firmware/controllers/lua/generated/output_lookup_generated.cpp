@@ -803,6 +803,9 @@ float getOutputValueByName(const char *name) {
 // rawAuxTemp2
 		case -801974331:
 			return engine->outputChannels.rawAuxTemp2;
+// rawAmbientTemp
+		case 1781305509:
+			return engine->outputChannels.rawAmbientTemp;
 // totalFuelCorrection
 #if EFI_ENGINE_CONTROL
 		case -1779658835:

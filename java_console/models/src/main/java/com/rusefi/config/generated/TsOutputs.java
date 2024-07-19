@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Fri Jul 19 17:47:12 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Fri Jul 19 23:44:20 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -595,7 +595,7 @@ public class TsOutputs {
 	public static final Field SLOWADCERRORSCOUNT = Field.create("SLOWADCERRORSCOUNT", 773, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field RAWAUXTEMP1 = Field.create("RAWAUXTEMP1", 774, FieldType.INT16).setScale(0.001).setBaseOffset(0);
 	public static final Field RAWAUXTEMP2 = Field.create("RAWAUXTEMP2", 776, FieldType.INT16).setScale(0.001).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_842 = Field.create("ALIGNMENTFILL_AT_842", 842, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field RAWAMBIENTTEMP = Field.create("RAWAMBIENTTEMP", 778, FieldType.INT16).setScale(0.001).setBaseOffset(0);
 	public static final Field[] VALUES = {
 	SD_PRESENT,
 	SD_LOGGING_INTERNAL,
@@ -1016,6 +1016,6 @@ public class TsOutputs {
 	SLOWADCERRORSCOUNT,
 	RAWAUXTEMP1,
 	RAWAUXTEMP2,
-	ALIGNMENTFILL_AT_842,
+	RAWAMBIENTTEMP,
 	};
 }

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Fri Jul 19 17:47:12 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Fri Jul 19 23:44:20 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1366,17 +1366,16 @@ struct output_channels_s {
 	 */
 	scaled_channel<int16_t, 1000, 1> rawAuxTemp2 = (int16_t)0;
 	/**
+	 * units: V
 	 * offset 778
 	 */
-	uint8_t unusedAtTheEnd[64];
+	scaled_channel<int16_t, 1000, 1> rawAmbientTemp = (int16_t)0;
 	/**
-	 * need 4 byte alignment
-	 * units: units
-	 * offset 842
+	 * offset 780
 	 */
-	uint8_t alignmentFill_at_842[2];
+	uint8_t unusedAtTheEnd[60];
 };
-static_assert(sizeof(output_channels_s) == 844);
+static_assert(sizeof(output_channels_s) == 840);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Fri Jul 19 17:47:12 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Fri Jul 19 23:44:20 UTC 2024
