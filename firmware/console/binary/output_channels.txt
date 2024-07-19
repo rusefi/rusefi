@@ -397,7 +397,7 @@ float mapFast
 
 	uint8_t fastAdcErrorsCount
 	uint8_t deviceUid
-	uint16_t unusedAdcSample
+	uint16_t mc33810spiErrorCounter
 
 	uint8_t sadDwellRatioCounter
 	uint8_t injectionPrimingCounter
