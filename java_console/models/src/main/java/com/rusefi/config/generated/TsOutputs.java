@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Tue Jul 16 19:57:25 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Fri Jul 19 17:47:12 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -581,6 +581,7 @@ public class TsOutputs {
 	public static final Field INJECTORDUTYCYCLESTAGE2 = Field.create("INJECTORDUTYCYCLESTAGE2", 750, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field FASTADCERRORSCOUNT = Field.create("FASTADCERRORSCOUNT", 752, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field DEVICEUID = Field.create("DEVICEUID", 753, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field MC33810SPIERRORCOUNTER = Field.create("MC33810SPIERRORCOUNTER", 754, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field SADDWELLRATIOCOUNTER = Field.create("SADDWELLRATIOCOUNTER", 756, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field INJECTIONPRIMINGCOUNTER = Field.create("INJECTIONPRIMINGCOUNTER", 757, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field TEMPLOGGING2 = Field.create("TEMPLOGGING2", 758, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -1001,6 +1002,7 @@ public class TsOutputs {
 	INJECTORDUTYCYCLESTAGE2,
 	FASTADCERRORSCOUNT,
 	DEVICEUID,
+	MC33810SPIERRORCOUNTER,
 	SADDWELLRATIOCOUNTER,
 	INJECTIONPRIMINGCOUNTER,
 	TEMPLOGGING2,

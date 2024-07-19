@@ -301,7 +301,7 @@ injectorDutyCycleStage2("Fuel: injector duty cycle stage 2", SensorCategory.SENS
 unusedByteHere("unusedByteHere", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 751, 1.0, -1.0, -1.0, ""),
 fastAdcErrorsCount("fastAdcErrorsCount", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 752, 1.0, -1.0, -1.0, ""),
 deviceUid("deviceUid", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 753, 1.0, -1.0, -1.0, ""),
-unusedAdcSample("unusedAdcSample", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 754, 1.0, -1.0, -1.0, ""),
+mc33810spiErrorCounter("mc33810spiErrorCounter", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 754, 1.0, -1.0, -1.0, ""),
 sadDwellRatioCounter("sadDwellRatioCounter", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 756, 1.0, -1.0, -1.0, ""),
 injectionPrimingCounter("injectionPrimingCounter", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 757, 1.0, -1.0, -1.0, ""),
 tempLogging2("tempLogging2", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 758, 1.0, -1.0, -1.0, ""),

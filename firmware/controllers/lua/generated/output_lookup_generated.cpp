@@ -764,6 +764,9 @@ float getOutputValueByName(const char *name) {
 // deviceUid
 		case 540029591:
 			return engine->outputChannels.deviceUid;
+// mc33810spiErrorCounter
+		case -1225980502:
+			return engine->outputChannels.mc33810spiErrorCounter;
 // sadDwellRatioCounter
 		case -2146292012:
 			return engine->outputChannels.sadDwellRatioCounter;

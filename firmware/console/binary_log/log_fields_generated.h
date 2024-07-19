@@ -317,6 +317,7 @@ static const LogField fields[] = {
 	{engine->outputChannels.injectorDutyCycleStage2, "Fuel: injector duty cycle stage 2", "%", 0},
 	{engine->outputChannels.fastAdcErrorsCount, "fastAdcErrorsCount", "", 0},
 	{engine->outputChannels.deviceUid, "deviceUid", "", 0},
+	{engine->outputChannels.mc33810spiErrorCounter, "mc33810spiErrorCounter", "", 0},
 	{engine->outputChannels.sadDwellRatioCounter, "sadDwellRatioCounter", "", 0},
 	{engine->outputChannels.injectionPrimingCounter, "injectionPrimingCounter", "", 0},
 	{engine->outputChannels.tempLogging2, "tempLogging2", "", 0},
