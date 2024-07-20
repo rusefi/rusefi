@@ -63,7 +63,7 @@ const char *portname(ioportid_t port) {
 			return ports[idx].name;
 		}
 	}
-	return nullptr;
+	return "unknown";
 }
 
 static int getPortIndex(ioportid_t port) {
