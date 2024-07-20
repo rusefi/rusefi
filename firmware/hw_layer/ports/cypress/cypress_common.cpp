@@ -147,6 +147,10 @@ adc_channel_e getAdcChannel(brain_pin_e pin) {
 	}
 }
 
+bool adcIsMuxedInput(adc_channel_e hwChannel) {
+    return false;
+}
+
 int getAdcInternalChannel(ADC_TypeDef *adc, adc_channel_e hwChannel) {
 	(void)adc;
 

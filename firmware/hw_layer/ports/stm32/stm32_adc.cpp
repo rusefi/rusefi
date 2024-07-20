@@ -46,6 +46,12 @@ static const struct {
 brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel) {
     static_assert(EFI_ADC_NONE == ADC_CHANNEL_NONE);
 
+    /* Muxed adc inputs
+     * TODO: move this magic to adcChannels[] table? */
+    if (adcIsMuxedInput(hwChannel)) {
+        return getAdcChannelBrainPin(msg, (adc_channel_e)(EFI_ADC_0 + (hwChannel - EFI_ADC_16)));
+    }
+
     for (size_t idx = 0; idx < efi::size(adcChannels); idx++) {
         if (adcChannels[idx].ch == hwChannel) {
             return adcChannels[idx].pin;
@@ -59,6 +65,14 @@ brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel) {
     (void)msg;
 
     return Gpio::Invalid;
+}
+
+bool adcIsMuxedInput(adc_channel_e hwChannel) {
+#ifdef ADC_MUX_PIN
+    return ((hwChannel >= EFI_ADC_16) && (hwChannel <= EFI_ADC_31));
+#else
+    return false;
+#endif
 }
 
 adc_channel_e getAdcChannel(brain_pin_e pin) {
