@@ -12,7 +12,7 @@
 #define SLOW_CALLBACK_PERIOD_MS 50
 
 bool validateConfigOnStartUpOrBurn();
-char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer);
+char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer, size_t bufferSize);
 void initPeriodicEvents();
 // see also applyNewHardwareSettings
 void initRealHardwareEngineController();
