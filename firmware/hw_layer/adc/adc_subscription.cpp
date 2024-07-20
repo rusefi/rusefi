@@ -73,8 +73,13 @@ TODO: this code is similar to initIfValid, what is the plan? shall we extract he
  */
 	brain_pin_e pin = getAdcChannelBrainPin(name, channel);
 	if (pin != Gpio::Invalid) {
-	// todo: external muxes for internal ADC #3350
-	    efiSetPadMode(name, pin, PAL_MODE_INPUT_ANALOG);
+		// todo: external muxes for internal ADC #3350
+		/* reuqest pin only for first muxed channel */
+		if (!adcIsMuxedInput(channel)) {
+			efiSetPadMode(name, pin, PAL_MODE_INPUT_ANALOG);
+		} else {
+			efiSetPadModeWithoutOwnershipAcquisition(name, pin, PAL_MODE_INPUT_ANALOG);
+		}
 	}
 
 	// if 0, default to the board's divider coefficient for given channel
