@@ -2051,6 +2051,7 @@ end_struct
 #define INJECTOR_2_NAME "Injector #2"
 
 #define ts_show_hbridge_function true
+#define ts_show_aux_sensors true
 #define ts_show_tps2_error true
 #define ts_show_clutch_up true
 #define ts_show_clutch_down true
@@ -2278,6 +2279,7 @@ end_struct
 #define ts_show_main_relay true
 #define ts_show_main_relay_microRusEFI_message false
 #define ts_show_etb true
+#define ts_show_etb_bias_curve true
 #define ts_show_etb_pins true
 #define ts_show_forced_induction true
 #define ts_show_vehicle_weight false
@@ -2324,6 +2326,7 @@ end_struct
 #define ts_show_air_conditioning true
 #define ts_show_onboard_accelerometer false
 #define ts_show_vvt_output true
+#define show_vvt_output_pin true
 ! LAME! todo make this way less lame
 #define ts_show_cylinder_2 true
 #define ts_show_cylinder_3 true
