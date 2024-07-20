@@ -148,7 +148,7 @@ void Sensor::unregister() {
 /*static*/ SensorRegistryEntry *Sensor::getEntryForType(SensorType type) {
 	size_t index = getIndex(type);
 	// Check that we didn't get garbage
-	if (index >= getIndex(SensorType::PlaceholderLast)) {
+	if (index >= efi::size(s_sensorRegistry)) {
 		return nullptr;
 	}
 
@@ -257,7 +257,7 @@ void Sensor::setInvalidMockValue(SensorType type) {
  * todo: some sort of hashmap in the future?
  */
 SensorType findSensorTypeByName(const char *name) {
-	for (int i = 0;i<(int)SensorType::PlaceholderLast;i++) {
+	for (size_t i = 0;i < efi::size(s_sensorRegistry); i++) {
 		SensorType type = (SensorType)i;
 		const char *sensorName = getSensorType(type);
 		if (strEqualCaseInsensitive(sensorName, name)) {
