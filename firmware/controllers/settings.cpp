@@ -183,7 +183,7 @@ static void printTpsSenser(const char *msg, SensorType sensor, int16_t min, int1
 	char pinNameBuffer[16];
 
 	efiPrintf("tps min (closed) %d/max (full) %d v=%.2f @%s", min, max,
-			raw, getPinNameByAdcChannel(msg, channel, pinNameBuffer));
+			raw, getPinNameByAdcChannel(msg, channel, pinNameBuffer, sizeof(pinNameBuffer)));
 
 
 	efiPrintf("current 10bit=%d value=%.2f", convertVoltageTo10bitADC(raw), tps.value_or(0));

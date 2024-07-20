@@ -39,7 +39,7 @@ static void printMAPInfo() {
 	char pinNameBuffer[16];
 
 	efiPrintf("MAP %.2fv @%s", getVoltage("mapinfo", mapAdc),
-			getPinNameByAdcChannel("map", mapAdc, pinNameBuffer));
+			getPinNameByAdcChannel("map", mapAdc, pinNameBuffer, sizeof(pinNameBuffer)));
 	if (engineConfiguration->map.sensor.type == MT_CUSTOM) {
 		efiPrintf("at %.2fv=%.2f at %.2fv=%.2f",
 				engineConfiguration->mapLowValueVoltage,

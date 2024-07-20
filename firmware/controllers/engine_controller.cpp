@@ -237,16 +237,16 @@ void initPeriodicEvents() {
 	fastController.start();
 }
 
-char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer) {
+char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer, size_t bufferSize) {
 #if HAL_USE_ADC
 	if (!isAdcChannelValid(hwChannel)) {
-		strcpy(buffer, "NONE");
+		snprintf(buffer, bufferSize, "NONE");
 	} else {
-		strcpy(buffer, portname(getAdcChannelPort(msg, hwChannel)));
-		itoa10(&buffer[2], getAdcChannelPin(hwChannel));
+		const char *name = portname(getAdcChannelPort(msg, hwChannel));
+		snprintf(buffer, bufferSize, "%s%d", name ? name : "null", getAdcChannelPin(hwChannel));
 	}
 #else
-	strcpy(buffer, "NONE");
+	snprintf(buffer, bufferSize, "NONE");
 #endif /* HAL_USE_ADC */
 	return buffer;
 }

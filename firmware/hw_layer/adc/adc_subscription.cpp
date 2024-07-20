@@ -187,7 +187,7 @@ void AdcSubscription::PrintInfo() {
 			name,
 			channel,
 			getAdcMode(channel),
-			getPinNameByAdcChannel(name, channel, pinNameBuffer),
+			getPinNameByAdcChannel(name, channel, pinNameBuffer, sizeof(pinNameBuffer)),
 			mcuVolts, sensorVolts, entry.VoltsPerAdcVolt
 		);
 	}
