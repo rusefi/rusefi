@@ -123,10 +123,10 @@ void detectHellenBoardType();
 
 // IN_CLT AIN11 PC2
 #define H144_IN_CLT EFI_ADC_12
-#define H144_IN_AT1 EFI_ADC_28
+#define H144_IN_AT2 EFI_ADC_28
 // IN_IAT AIN14 PC3
 #define H144_IN_IAT EFI_ADC_13
-#define H144_IN_AT2 EFI_ADC_29
+#define H144_IN_AT1 EFI_ADC_29
 
 // IN_PPS AIN18 PA3
 #define H144_IN_PPS EFI_ADC_3
