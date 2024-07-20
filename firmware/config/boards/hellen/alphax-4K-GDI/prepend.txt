@@ -1,0 +1,23 @@
+#define MAIN_HELP_URL "https://rusefi.com/s/4k-gdi"
+
+
+
+
+#define ts_show_vbatt false
+#define ts_show_clt_iat_pullup false
+#define ts_show_egt false
+#define ts_show_etb_pins false
+#define ts_show_analog_divider false
+#define ts_show_spi false
+#define ts_show_can_pins false
+#define ts_show_tunerstudio_port true
+#define ts_show_can2 false
+#define ts_show_software_knock true
+#define ts_show_hardware_simulator false
+
+
+
+
+
+
+
