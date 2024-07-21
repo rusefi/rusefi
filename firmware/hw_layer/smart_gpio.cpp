@@ -404,6 +404,7 @@ void startSmartCsPins() {
 #endif /* BOARD_DRV8860_COUNT */
 #if (BOARD_MC33810_COUNT > 0)
     for (size_t i = 0;i<C_MC33810_COUNT;i++) {
+      // huh?! most boards are NOT using mc33810_cs we are directly initializing CS pin(s)?!
 	    mc33810Cs[i].initPin("mc33810 CS", engineConfiguration->mc33810_cs[i],
 				engineConfiguration->mc33810_csPinMode);
 	    mc33810Cs[i].setValue(true);
