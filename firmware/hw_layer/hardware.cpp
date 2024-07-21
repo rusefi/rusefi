@@ -181,7 +181,6 @@ void onFastAdcComplete(adcsample_t*) {
 	/**
 	 * this callback is executed 10 000 times a second, it needs to be as fast as possible
 	 */
-	efiAssertVoid(ObdCode::CUSTOM_STACK_ADC, getCurrentRemainingStack() > 128, "lowstck#9b");
 
 #if EFI_SENSOR_CHART && EFI_SHAFT_POSITION_INPUT
 	if (getEngineState()->sensorChartMode == SC_AUX_FAST1) {
