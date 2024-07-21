@@ -69,6 +69,8 @@ protected:
 
 static BlinkyThread blinky;
 
+blt_bool stayInBootloader;
+
 static blt_bool checkIfRebootIntoOpenBltRequested(void) {
 	uint8_t value = 0x00;
 	if (SharedParamsReadByIndex(0, &value) && (value == 0x01)) {
@@ -90,11 +92,11 @@ int main(void) {
 
 	// Init openblt shared params
 	SharedParamsInit();
+	stayInBootloader = checkIfRebootIntoOpenBltRequested();
 
 	// Init openblt itself
 	BootInit();
 
-	blt_bool stayInBootloader = checkIfRebootIntoOpenBltRequested();
 	blt_bool wasConnected = BLT_FALSE;
 
 	while (true) {
