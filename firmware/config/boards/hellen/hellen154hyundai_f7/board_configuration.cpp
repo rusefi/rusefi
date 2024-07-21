@@ -192,9 +192,8 @@ static const struct mc33810_config mc33810 = {
       gpio_pin_markUsed(mc33810.spi_config.ssport, mc33810.spi_config.sspad, "mc33810 CS");
       palSetPadMode(mc33810.spi_config.ssport, mc33810.spi_config.sspad, PAL_MODE_OUTPUT_PUSHPULL);
 
-      float voltage = Sensor::get(SensorType::BatteryVoltage).Value;
       int ret = mc33810_add(Gpio::MC33810_0_OUT_0, 0, &mc33810);
-      efiPrintf("*****************+ mc33810_add %d +******************* %f", ret, voltage);
+      efiPrintf("*****************+ mc33810_add %d +*******************", ret);
     #else
       efiPrintf("**********------------- mc33810 not configured yet ------------************");
     #endif
