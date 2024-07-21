@@ -34,13 +34,12 @@ inline bool isAdcChannelValid(adc_channel_e hwChannel) {
 
 #if HAL_USE_ADC
 
-typedef enum {
-	ADC_OFF = 0,
-	ADC_SLOW = 1,
-	ADC_FAST = 2,
-} adc_channel_mode_e;
+enum class AdcChannelMode : char {
+	Off,
+	Slow,
+	Fast
+};
 
-adc_channel_mode_e getAdcMode(adc_channel_e hwChannel);
 void initAdcInputs();
 
 // deprecated - migrate to 'getAdcChannelBrainPin'
@@ -62,8 +61,8 @@ int getAdcHardwareIndexByInternalIndex(int index);
 int getInternalAdcValue(const char *msg, adc_channel_e index);
 float getMCUInternalTemperature(void);
 
-void addChannel(const char *name, adc_channel_e setting, adc_channel_mode_e mode);
-void removeChannel(const char *name, adc_channel_e setting);
+void addFastAdcChannel(const char *name, adc_channel_e setting);
+void removeFastAdcChannel(const char *name, adc_channel_e setting);
 
 #define getAdcValue(msg, hwChannel) getInternalAdcValue(msg, hwChannel)
 

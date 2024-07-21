@@ -40,7 +40,7 @@ float __attribute__((weak)) getAnalogInputDividerCoefficient(adc_channel_e) {
 
 static NO_CACHE adcsample_t slowAdcSamples[SLOW_ADC_CHANNEL_COUNT];
 
-static adc_channel_mode_e adcHwChannelEnabled[HW_MAX_ADC_INDEX];
+static AdcChannelMode adcHwChannelEnabled[HW_MAX_ADC_INDEX];
 
 // Board voltage, with divider coefficient accounted for
 float getVoltageDivided(const char *msg, adc_channel_e hwChannel) {
@@ -188,7 +188,7 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 	}
 
 #if EFI_USE_FAST_ADC
-	if (adcHwChannelEnabled[hwChannel] == ADC_FAST) {
+	if (adcHwChannelEnabled[hwChannel] == AdcChannelMode::Fast) {
 		int internalIndex = fastAdc.internalAdcIndexByHardwareIndex[hwChannel];
 // todo if ADC_BUF_DEPTH_FAST EQ 1
 //		return fastAdc.samples[internalIndex];
@@ -207,16 +207,6 @@ static GPTConfig fast_adc_config = {
 	0, 0
 };
 #endif /* EFI_USE_FAST_ADC */
-
-adc_channel_mode_e getAdcMode(adc_channel_e hwChannel) {
-#if EFI_USE_FAST_ADC
-	if (fastAdc.isHwUsed(hwChannel)) {
-		return ADC_FAST;
-	}
-#endif // EFI_USE_FAST_ADC
-
-	return ADC_SLOW;
-}
 
 #if EFI_USE_FAST_ADC
 
@@ -336,29 +326,25 @@ public:
 	}
 };
 
-void addChannel(const char* /*name*/, adc_channel_e setting, adc_channel_mode_e mode) {
+void addFastAdcChannel(const char* /*name*/, adc_channel_e setting) {
 	if (!isAdcChannelValid(setting)) {
 		return;
 	}
 
-	adcHwChannelEnabled[setting] = mode;
+	adcHwChannelEnabled[setting] = AdcChannelMode::Fast;
 
 #if EFI_USE_FAST_ADC
-	if (mode == ADC_FAST) {
-		fastAdc.enableChannel(setting);
-		return;
-	}
+	fastAdc.enableChannel(setting);
 #endif
-
-	// Nothing to do for slow channels, input is mapped to analog in init_sensors.cpp
 }
 
-void removeChannel(const char *name, adc_channel_e setting) {
+void removeFastAdcChannel(const char *name, adc_channel_e setting) {
 	(void)name;
 	if (!isAdcChannelValid(setting)) {
 		return;
 	}
-	adcHwChannelEnabled[setting] = ADC_OFF;
+
+	adcHwChannelEnabled[setting] = AdcChannelMode::Off;
 }
 
 // Weak link a stub so that every board doesn't have to implement this function
@@ -373,11 +359,8 @@ static void configureInputs() {
 	 * which does not mean anything.
 	 */
 
-	addChannel("MAP", engineConfiguration->map.sensor.hwChannel, ADC_FAST);
-
-	// not currently used	addChannel("Vref", engineConfiguration->vRefAdcChannel, ADC_SLOW);
-
-	addChannel("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel, ADC_FAST);
+	addFastAdcChannel("MAP", engineConfiguration->map.sensor.hwChannel);
+	addFastAdcChannel("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel);
 
 	setAdcChannelOverrides();
 }
