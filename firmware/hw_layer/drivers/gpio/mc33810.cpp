@@ -580,22 +580,18 @@ void Mc33810::wake_driver()
 /* Driver thread.															*/
 /*==========================================================================*/
 
-static THD_FUNCTION(mc33810_driver_thread, p)
-{
-	int i;
-	msg_t msg;
-
+static THD_FUNCTION(mc33810_driver_thread, p) {
 	(void)p;
 
 	chRegSetThreadName(DRIVER_NAME);
 
-	while(1) {
-		msg = chSemWaitTimeout(&mc33810_wake, TIME_MS2I(MC33810_POLL_INTERVAL_MS));
+	while (true) {
+		msg_t msg = chSemWaitTimeout(&mc33810_wake, TIME_MS2I(MC33810_POLL_INTERVAL_MS));
 
 		/* should we care about msg == MSG_TIMEOUT? */
 		(void)msg;
 
-		for (i = 0; i < BOARD_MC33810_COUNT; i++) {
+		for (int i = 0; i < BOARD_MC33810_COUNT; i++) {
 			auto chip = &chips[i];
 
 			if (i == 0) {
