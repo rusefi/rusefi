@@ -166,6 +166,8 @@ struct Mc33810 : public GpioChip {
 	int 					lv_cnt;
 
 	mc33810_drv_state		drv_state;
+
+	bool hadSuccessfulInit = false;
 };
 
 static Mc33810 chips[BOARD_MC33810_COUNT];
@@ -421,6 +423,7 @@ int Mc33810::chip_init()
 	uint16_t rx;
 	uint16_t rxSpiCheck;
 
+// duplication with mc33810spiErrorCounter?
 	init_cnt++;
 
 	/* we do not know last issue CMD (if was) */
@@ -541,6 +544,11 @@ int Mc33810::chip_init()
 		palClearPort(cfg->en.port,
 					 PAL_PORT_BIT(cfg->en.pad));
 	}
+
+  if (!hadSuccessfulInit) {
+    efiPrintf(DRIVER_NAME " Successful Init");
+    hadSuccessfulInit = true;
+  }
 
 	return 0;
 
