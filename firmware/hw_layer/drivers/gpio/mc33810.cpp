@@ -25,6 +25,10 @@
 
 #if EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)
 
+// To avoid any spurious data, it is essential the high-to-low and low-to-high transitions of the CS signal occur only when SCLK is in a
+//   logic low state. Internal to the 33810 device is an active pull-up to VDD on CS
+#define UNSELECT_HACK 2
+
 /*
  * TODO list:
  *
@@ -206,6 +210,7 @@ int Mc33810::spi_rw(uint16_t tx, uint16_t *rx_ptr)
 	/* TODO: check why spiExchange transfers invalid data on STM32F7xx, DMA issue? */
 	//spiExchange(spi, 2, &tx, &rxb);
 	rx = spiPolledExchange(spi, tx);
+	chThdSleepMicroseconds(UNSELECT_HACK); // logic analyzes shows something much closer to one millisecond :(
 	/* Slave Select de-assertion. */
 	spiUnselect(spi);
 	/* Ownership release. */
@@ -265,16 +270,14 @@ int Mc33810::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 	/* Setup transfer parameters. */
 	spiStart(spi, &cfg->spi_config);
 
+	spiSelect(spi);
 	for (int i = 0; i < n; i++) {
 		/* Slave Select assertion. */
-		spiSelect(spi);
 		/* data transfer */
 		uint16_t rxdata = spiPolledExchange(spi, tx[i]);
 
 		if (rx)
 			rx[i] = rxdata;
-		/* Slave Select de-assertion. */
-		spiUnselect(spi);
 
 		/* Parse reply */
 		if (recentTx != MC_CMD_INVALID) {
@@ -310,6 +313,11 @@ int Mc33810::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 			break;
 		}
 	}
+
+	/* Slave Select de-assertion. */
+	chThdSleepMicroseconds(UNSELECT_HACK); // logic analyzes shows something much closer to one millisecond :(
+	spiUnselect(spi);
+
 	/* Ownership release. */
 	spiReleaseBus(spi);
 
