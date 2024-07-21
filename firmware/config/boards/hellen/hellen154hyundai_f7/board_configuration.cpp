@@ -108,6 +108,9 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->clutchUpPin = Gpio::H144_IN_RES2;
 	engineConfiguration->acSwitch = Gpio::H144_IN_RES1;
 
+  setCommonNTCSensor(&engineConfiguration->oilTempSensor, HELLEN_DEFAULT_AT_PULLUP); // random calibration for now
+  engineConfiguration->oilTempSensor.adcChannel = H144_IN_AT2;
+
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 
