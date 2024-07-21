@@ -158,7 +158,7 @@ static constexpr ADCConversionGroup convGroupSlow = {
 
 static NO_CACHE adcsample_t slowSampleBuffer[SLOW_ADC_OVERSAMPLE * adcChannelCount];
 
-static bool readBatch(adcsample_t* convertedSamples, size_t start) {
+static bool readBatch(adcsample_t* convertedSamples) {
 	msg_t result = adcConvert(&ADCD1, &convGroupSlow, slowSampleBuffer, SLOW_ADC_OVERSAMPLE);
 
 	// If something went wrong - try again later
@@ -176,7 +176,7 @@ static bool readBatch(adcsample_t* convertedSamples, size_t start) {
 		}
 
 		adcsample_t value = static_cast<adcsample_t>(sum / SLOW_ADC_OVERSAMPLE);
-		convertedSamples[start + i] = value;
+		convertedSamples[i] = value;
 	}
 
 	return true;
@@ -190,7 +190,7 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 #ifdef ADC_MUX_PIN
 	muxControl.setValue(1);
 	// read the second batch, starting where we left off
-	result &= readBatch(convertedSamples, adcChannelCount);
+	result &= readBatch(convertedSamples + adcChannelCount);
 	muxControl.setValue(0);
 #endif
 
