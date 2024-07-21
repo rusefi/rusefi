@@ -194,6 +194,16 @@ __attribute__((weak)) const char * getBoardSpecificPinName(brain_pin_e /*brainPi
 	return nullptr;
 }
 
+static const char *hwOnChipPhysicalPinName(ioportid_t hwPort, int hwPin) {
+  portNameStream.eos = 0; // reset
+	if (hwPort == GPIO_NULL) {
+		return "NONE";
+	}
+	chprintf((BaseSequentialStream *) &portNameStream, "%s%d", portname(hwPort), hwPin);
+	portNameStream.buffer[portNameStream.eos] = 0; // need to terminate explicitly
+  return portNameBuffer;
+}
+
 const char *hwPhysicalPinName(Gpio brainPin) {
 	if (brainPin == Gpio::Invalid) {
 		return "INVALID";
@@ -202,19 +212,14 @@ const char *hwPhysicalPinName(Gpio brainPin) {
 		return "NONE";
 	}
 
-	portNameStream.eos = 0; // reset
 	if (brain_pin_is_onchip(brainPin)) {
-
 		ioportid_t hwPort = getHwPort("hostname", brainPin);
-		if (hwPort == GPIO_NULL) {
-			return "NONE";
-		}
 		int hwPin = getHwPin("hostname", brainPin);
-		chprintf((BaseSequentialStream *) &portNameStream, "%s%d", portname(hwPort), hwPin);
+	  return hwOnChipPhysicalPinName(hwPort, hwPin);
 	}
 	#if (BOARD_EXT_GPIOCHIPS > 0)
 		else {
-
+	    portNameStream.eos = 0; // reset
 			const char *pin_name = gpiochips_getPinName(brainPin);
 
 			if (pin_name) {
@@ -224,11 +229,11 @@ const char *hwPhysicalPinName(Gpio brainPin) {
 				chprintf((BaseSequentialStream *) &portNameStream, "ext:%s.%d",
 					gpiochips_getChipName(brainPin), gpiochips_getPinOffset(brainPin));
 			}
+	    portNameStream.buffer[portNameStream.eos] = 0; // need to terminate explicitly
+	    return portNameBuffer;
 		}
 	#endif
-	portNameStream.buffer[portNameStream.eos] = 0; // need to terminate explicitly
-
-	return portNameBuffer;
+  return "unexpected";
 }
 
 const char *hwPortname(brain_pin_e brainPin) {
@@ -275,6 +280,9 @@ bool brain_pin_is_ext(brain_pin_e brainPin)
 
 bool gpio_pin_markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
 	int index = getPortPinIndex(port, pin);
+#ifndef EFI_BOOTLOADER
+	efiPrintf("pin_markUsed: %s on %s", msg, hwOnChipPhysicalPinName(port, pin));
+#endif
 
 	if (getBrainUsedPin(index) != NULL) {
 		/**
