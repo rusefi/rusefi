@@ -16,6 +16,9 @@ DDEFS += -DEFI_MAX_31855=TRUE
 DDEFS += -DSTM32_SPI_USE_SPI5=TRUE
 DDEFS += -DEFI_TCU=TRUE
 
+# let's start asap
+DDEFS += -DBOOT_BACKDOOR_ENTRY_TIMEOUT_MS=0
+
 # Any Proteus-based adapter boards with discrete-VR decoder are controlled via a 5v ignition output
 DDEFS += -DVR_SUPPLY_VOLTAGE=5
 
