@@ -69,7 +69,7 @@ pins:
 
 
   - pin: K21
-    meta: H144_IN_O2S
+    meta: H144_IN_AT1
     class: analog_inputs
     ts_name: K21 Ambient Temperature
     function: Ambient Temperature
@@ -187,7 +187,7 @@ pins:
     function: 'Analog Ground (2014: green)'
 
   - pin: K58
-    meta: H144_IN_O2S2
+    meta: H144_IN_AT2
     class: analog_inputs
     ts_name: ___ Oil Temp
     function: 'Oil Temperature (2014: blue/orange)'
