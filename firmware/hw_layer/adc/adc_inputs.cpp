@@ -133,9 +133,9 @@ public:
 		{
 			ScopePerf perf(PE::AdcProcessSlow);
 
-			slowAdcConversionCount++;
-
 			AdcSubscription::UpdateSubscribers(nowNt);
+
+			slowAdcConversionCount++;
 
 			protectedGpio_check(nowNt);
 		}
