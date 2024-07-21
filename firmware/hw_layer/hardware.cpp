@@ -591,7 +591,7 @@ void initHardware() {
 	initAdcInputs();
 
 	// wait for first set of ADC values so that we do not produce invalid sensor data
-	waitForSlowAdc(1);
+	waitForSlowAdc();
 #endif /* HAL_USE_ADC */
 
 #if EFI_SOFTWARE_KNOCK

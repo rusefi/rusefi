@@ -80,7 +80,7 @@ adc_channel_mode_e getAdcMode(adc_channel_e hwChannel);
 void initAdcInputs();
 
 // wait until at least 1 slowADC sampling is complete
-void waitForSlowAdc(uint32_t lastAdcCounter = 0);
+void waitForSlowAdc(uint32_t lastAdcCounter = 1);
 
 void printFullAdcReportIfNeeded(void);
 int getInternalAdcValue(const char *msg, adc_channel_e index);
