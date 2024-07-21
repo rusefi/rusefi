@@ -54,8 +54,8 @@
 #define adc_channel_e_EFI_ADC_ERROR 50
 #define adc_channel_e_EFI_ADC_NONE 0
 #define adc_channel_e_EFI_ADC_TOTAL_CHANNELS 49
-#define adc_channel_e_enum 0="NONE",8="BK2 Wastegate Position - 22",13="CLT",14="IAT",12="K10 Sensor",6="K2 Ignition Key Voltage",1="K21 Ambient Temperature",3="K54 A/C pressure",2="K58 Oil Temp",11="Map Sensor K31",4="PPS 1",15="PPS 2",5="TPS 1",9="TPS 2",7="X10 AIN2",10="X11 AIN1"
-#define adc_channel_e_fullenum "NONE","K21 Ambient Temperature","K58 Oil Temp","K54 A/C pressure","PPS 1","TPS 1","K2 Ignition Key Voltage","X10 AIN2","BK2 Wastegate Position - 22","TPS 2","X11 AIN1","Map Sensor K31","K10 Sensor","CLT","IAT","PPS 2"
+#define adc_channel_e_enum 0="NONE",8="BK2 Wastegate Position - 22",13="CLT",14="IAT",12="K10 Sensor",6="K2 Ignition Key Voltage",30="K21 Ambient Temperature",3="K54 A/C pressure",29="K58 Oil Temp",11="Map Sensor K31",4="PPS 1",15="PPS 2",5="TPS 1",9="TPS 2",7="X10 AIN2",10="X11 AIN1"
+#define adc_channel_e_fullenum "NONE","INVALID","INVALID","K54 A/C pressure","PPS 1","TPS 1","K2 Ignition Key Voltage","X10 AIN2","BK2 Wastegate Position - 22","TPS 2","X11 AIN1","Map Sensor K31","K10 Sensor","CLT","IAT","PPS 2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","K58 Oil Temp","K21 Ambient Temperature"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define air_pressure_sensor_config_s_size 12
@@ -1292,7 +1292,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1967046383
+#define SIGNATURE_HASH 1127015862
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1711,7 +1711,7 @@
 #define ts_show_vvt_output true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.07.21.hellen154hyundai_f7.1967046383"
+#define TS_SIGNATURE "rusEFI master.2024.07.21.hellen154hyundai_f7.1127015862"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
