@@ -33,9 +33,9 @@ struct GpioChip {
 	virtual void debug() { }
 
 	/* chip needs reinitialization due to some critical issue */
-	bool						need_init;
-	int							init_cnt;
-	int             alive_cnt;
+	bool						need_init = 0;
+	int							init_cnt = 0;
+	int             alive_cnt = 0;
 
 	int statusCode;
 };
