@@ -195,6 +195,7 @@ static void configureInputs() {
 }
 
 void waitForSlowAdc(uint32_t lastAdcCounter) {
+	// note that having ADC reading is one thing while having new sensor API is a totally different thing!
 	// todo: use sync.objects?
 	while (slowAdcConversionCount <= lastAdcCounter) {
 		chThdSleepMilliseconds(1);
