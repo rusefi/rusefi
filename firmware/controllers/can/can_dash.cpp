@@ -502,68 +502,70 @@ void canDashboardHaltech(CanCycle cycle) {
 		/* todo: 0x3E5 = 50Hz rate */
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x3E5, 8);
-			msg[0] = 0x00;
-			msg[1] = 0x00;
-			msg[2] = 0x00;
+			msg[0] = 0x00;				//Ignition Switch
+			msg[1] = 0x00;				//Turbo Timer - Time Remaining
+			msg[2] = 0x00;				//Turbo Timer - Engine Time Remaining
 			msg[3] = 0x00;
-			msg[4] = 0x00;
+			msg[4] = 0x00;				//4-5 Steering Wheel Angle
 			msg[5] = 0x00;
-			msg[6] = 0x00;
+			msg[6] = 0x00;				//6-7 Driveshaft RPM
 			msg[7] = 0x00;
 		}
 
 		/* todo: 0x3EA = 50Hz rate */
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x3EA, 8);
-			msg[0] = 0x00;
+			msg[0] = 0x00;				//0-1 Gearbox Line Pressure
 			msg[1] = 0x00;
-			msg[2] = 0x00;
+			msg[2] = 0x00;				//2-3 Injection Stage 3 Duty Cycle
 			msg[3] = 0x00;
-			msg[4] = 0x00;
+			msg[4] = 0x00;				//4-5 Injection Stage 4 Duty Cycle
 			msg[5] = 0x00;
-			msg[6] = 0x00;
+			msg[6] = 0x00;				//Crank Case Pressure
 			msg[7] = 0x00;
 		}
 
 		/* todo: 0x3EB = 50Hz rate */
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x3EB, 8);
-			msg[0] = 0x00;
+			msg[0] = 0x00;				//0-3 Race Timer
 			msg[1] = 0x00;
 			msg[2] = 0x00;
 			msg[3] = 0x00;
-			msg[4] = 0x00;
+			msg[4] = 0x00;				//4-5 Ignition Angle Bank 1
 			msg[5] = 0x00;
-			msg[6] = 0x00;
+			msg[6] = 0x00;				//6-7 Ignition Angle Bank 2
 			msg[7] = 0x00;
 		}
 
 		/* todo: 0x3EC = 50Hz rate */
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x3EC, 8);
-			msg[0] = 0x00;
+			msg[0] = 0x00;				//0-1 Torque Management Driveshaft RPM Target
 			msg[1] = 0x00;
-			msg[2] = 0x00;
+			msg[2] = 0x00;				//2-3 Torque Management Driveshaft RPM Target Error
 			msg[3] = 0x00;
-			msg[4] = 0x00;
+			msg[4] = 0x00;				//4-5 Torque Management Driveshaft RPM Target Error Ignition Correction
 			msg[5] = 0x00;
-			msg[6] = 0x00;
+			msg[6] = 0x00;				//6-7 Torque Management Driveshaft RPM Timed Ignition Correction
 			msg[7] = 0x00;
 		}
 
 		/* todo: 0x3ED = 50Hz rate */
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x3ED, 2);
-			msg[0] = 0x00;
+			msg[0] = 0x00;				//0-1 Torque Management Combined Ignition Correction
 			msg[1] = 0x00;
 		}
 
 		/* todo: 0x471 = 50Hz rate */
 		{
-			CanTxMessage msg(CanCategory::NBC, 0x471, 2);
-			msg[0] = 0x00;
+			CanTxMessage msg(CanCategory::NBC, 0x471, 6);
+			msg[0] = 0x00;				//0-1 Injector Pressure Differential
 			msg[1] = 0x00;
 			msg.setShortValueMsb(Sensor::getOrZero(SensorType::AcceleratorPedal) * 10, 2);
+			msg[4] = 0x00;				//4-5 Exhaust Manifold Pressure
+			msg[5] = 0x00;
 		}
 	}
 
@@ -718,106 +720,106 @@ void canDashboardHaltech(CanCycle cycle) {
 		/* todo: 0x3E6 = 20Hz rate */
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x3E6, 8);
-			msg[0] = 0x00;
+			msg[0] = 0x00;				//0-1 NOS Pressure Sensor 2
 			msg[1] = 0x00;
-			msg[2] = 0x00;
+			msg[2] = 0x00;				//2-3 NOS Pressure Sensor 3
 			msg[3] = 0x00;
-			msg[4] = 0x00;
+			msg[4] = 0x00;				//4-5 NOS Pressure Sensor 4
 			msg[5] = 0x00;
-			msg[6] = 0x00;
+			msg[6] = 0x00;				//6-7 Turbo Speed Sensor 2
 			msg[7] = 0x00;
 		}
 
 		/* todo: 0x3E7 = 20Hz rate */
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x3E7, 8);
-			msg[0] = 0x00;
+			msg[0] = 0x00;				//0-1 Generic Sensor 1
 			msg[1] = 0x00;
-			msg[2] = 0x00;
+			msg[2] = 0x00;				//2-3 Generic Sensor 2
 			msg[3] = 0x00;
-			msg[4] = 0x00;
+			msg[4] = 0x00;				//4-5 Generic Sensor 3
 			msg[5] = 0x00;
-			msg[6] = 0x00;
+			msg[6] = 0x00;				//6-7 Generic Sensor 4
 			msg[7] = 0x00;
 		}
 
 		/* todo: 0x3E8 = 20Hz rate */
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x3E8, 8);
-			msg[0] = 0x00;
+			msg[0] = 0x00;				//0-1 Generic Sensor 5
 			msg[1] = 0x00;
-			msg[2] = 0x00;
+			msg[2] = 0x00;				//2-3 Generic Sensor 6
 			msg[3] = 0x00;
-			msg[4] = 0x00;
+			msg[4] = 0x00;				//4-5 Generic Sensor 7
 			msg[5] = 0x00;
-			msg[6] = 0x00;
+			msg[6] = 0x00;				//6-7 Generic Sensor 8
 			msg[7] = 0x00;
 		}
 
 		/* todo: 0x3E9 = 20Hz rate */
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x3E9, 8);
-			msg[0] = 0x00;
+			msg[0] = 0x00;				//0-1 Generic Sensor 9
 			msg[1] = 0x00;
-			msg[2] = 0x00;
+			msg[2] = 0x00;				//2-3 Generic Sensor 10
 			msg[3] = 0x00;
-			msg[4] = 0x00;
+			msg[4] = 0x00;				//4-5 Target Lambda
 			msg[5] = 0x00;
-			msg[6] = 0x00;
-			msg[7] = 0x00;
+			msg[6] = 0x00;				//Nitous Stage Output
+			msg[7] = 0x00;				//Torque Management Knob
 		}
 
 		/* todo: 0x3EE = 20Hz rate */
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x3EE, 8);
-			msg[0] = 0x00;
+			msg[0] = 0x00;				//0-1 Wideband Sensor 5
 			msg[1] = 0x00;
-			msg[2] = 0x00;
+			msg[2] = 0x00;				//2-3 Wideband Sensor 6
 			msg[3] = 0x00;
-			msg[4] = 0x00;
+			msg[4] = 0x00;				//4-5 Wideband Sensor 7
 			msg[5] = 0x00;
-			msg[6] = 0x00;
+			msg[6] = 0x00;				//6-7 Wideband Sensor 8
 			msg[7] = 0x00;
 		}
 
 		/* todo: 0x3EF = 20Hz rate */
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x3EF, 8);
-			msg[0] = 0x00;
+			msg[0] = 0x00;				//0-1 Wideband Sensor 9
 			msg[1] = 0x00;
-			msg[2] = 0x00;
+			msg[2] = 0x00;				//2-3 Wideband Sensor 10
 			msg[3] = 0x00;
-			msg[4] = 0x00;
+			msg[4] = 0x00;				//4-5 Wideband Sensor 11
 			msg[5] = 0x00;
-			msg[6] = 0x00;
+			msg[6] = 0x00;				//6-7 Wideband Sensor 12
 			msg[7] = 0x00;
 		}
 
 		/* todo: 0x470 = 20Hz rate */
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x470, 8);
-			msg[0] = 0x00;
+			msg[0] = 0x00;				//0-1 Wideband Overall
 			msg[1] = 0x00;
-			msg[2] = 0x00;
+			msg[2] = 0x00;				//2-3 Wideband Bank 1
 			msg[3] = 0x00;
-			msg[4] = 0x00;
+			msg[4] = 0x00;				//4-5 Wideband Bank 2
 			msg[5] = 0x00;
 			// todo: open question what are Haltech Special Values for gear encoding
-			msg[6] = Sensor::getOrZero(SensorType::DetectedGear);
-			msg[7] = 0x00;
+			msg[6] = 0x00;				//Gear Selector Position
+			msg[7] = Sensor::getOrZero(SensorType::DetectedGear);
 		}
 
 		/* todo: 0x472 = 20Hz rate */
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x472, 8);
-			msg[0] = 0x00;
+			msg[0] = 0x00;				//0-1 Cruise Control Target Speed
 			msg[1] = 0x00;
-			msg[2] = 0x00;
+			msg[2] = 0x00;				//2-3 Cruise Control Last Target Speed
 			msg[3] = 0x00;
-			msg[4] = 0x00;
+			msg[4] = 0x00;				//4-5 Cruise Control Speed Error
 			msg[5] = 0x00;
-			msg[6] = 0x00;
-			msg[7] = 0x00;
+			msg[6] = 0x00;				//Cruise Control Controller state (enum)
+			msg[7] = 0x00;				//Cruise Control Input State (bit-field)
 		}
 	}
 
@@ -853,17 +855,13 @@ void canDashboardHaltech(CanCycle cycle) {
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x373, 8);
 			/* EGT1 */
-			msg[0] = 0x00;
-			msg[1] = 0x00;
+			msg.setShortValueMsb(Sensor::getOrZero(SensorType::EGT1) * 10, 0);
 			/* EGT2 */
-			msg[2] = 0x00;
-			msg[3] = 0x00;
+			msg.setShortValueMsb(Sensor::getOrZero(SensorType::EGT2) * 10, 2);
 			/* EGT3 */
-			msg[4] = 0x00;
-			msg[5] = 0x00;
+			msg.setShortValueMsb(Sensor::getOrZero(SensorType::EGT3) * 10, 4);
 			/* EGT4 */
-			msg[6] = 0x00;
-			msg[7] = 0x00;
+			msg.setShortValueMsb(Sensor::getOrZero(SensorType::EGT4) * 10, 6);
 		}
 
 		/* 0x374 = 10Hz rate */
@@ -927,8 +925,7 @@ void canDashboardHaltech(CanCycle cycle) {
 			/* Air Temperature */
 			msg.setShortValueMsb((Sensor::getOrZero(SensorType::Iat) + 273.15) * 10, 2);
 			/* Fuel Temperature */
-			msg[4] = 0x00;
-			msg[5] = 0x00;
+			msg.setShortValueMsb((Sensor::getOrZero(SensorType::FuelTemperature) + 273.15) * 10, 4);
 			/* Oil Temperature */
 			msg[6] = 0x00;
 			msg[7] = 0x00;
@@ -944,8 +941,7 @@ void canDashboardHaltech(CanCycle cycle) {
 			msg[2] = 0x00;
 			msg[3] = 0x00;
 			/* Fuel Composition */
-			msg[4] = 0x00;
-			msg[5] = 0x00;
+			msg.setShortValueMsb(Sensor::getOrZero(SensorType::FuelEthanolPercent) * 10, 4);
 		}
 
 		/* 0x3E2 = 5Hz rate */
