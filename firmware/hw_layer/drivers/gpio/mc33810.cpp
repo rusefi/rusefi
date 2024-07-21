@@ -593,7 +593,7 @@ static THD_FUNCTION(mc33810_driver_thread, p) {
 
 	chRegSetThreadName(DRIVER_NAME);
 
-	chThdSleepMilliseconds(60); // let's wait BatteryVoltage to appear. TODO: more proper way of synchronization with BatteryVoltage!
+	chThdSleepMilliseconds(2); // let's wait BatteryVoltage to appear. TODO: more proper way of synchronization with BatteryVoltage!
 
 
 	while (true) {
