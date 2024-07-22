@@ -111,7 +111,7 @@ static ADCConversionGroup adcgrpcfgFast = {
 	.cr2				= ADC_CR2_SWSTART,
 		/**
 		 * here we configure all possible channels for fast mode. Some channels would not actually
-         * be used hopefully that's fine to configure all possible channels.
+		 * be used hopefully that's fine to configure all possible channels.
 		 *
 		 */
 	// sample times for channels 10...18
@@ -150,26 +150,16 @@ AdcDevice fastAdc(&adcgrpcfgFast, fastAdcSampleBuf, efi::size(fastAdcSampleBuf))
 
 static void fast_adc_callback(GPTDriver*) {
 #if EFI_INTERNAL_ADC
-	/*
-	 * Starts an asynchronous ADC conversion operation, the conversion
-	 * will be executed in parallel to the current PWM cycle and will
-	 * terminate before the next PWM cycle.
-	 */
-	chSysLockFromISR()
-	;
+	chibios_rt::CriticalSectionLocker csl;
+
 	if (ADC_FAST_DEVICE.state != ADC_READY &&
-	ADC_FAST_DEVICE.state != ADC_COMPLETE &&
-	ADC_FAST_DEVICE.state != ADC_ERROR) {
+		ADC_FAST_DEVICE.state != ADC_COMPLETE &&
+		ADC_FAST_DEVICE.state != ADC_ERROR) {
 		fastAdc.errorsCount++;
-		// todo: when? why? firmwareError(ObdCode::OBD_PCM_Processor_Fault, "ADC fast not ready?");
-		chSysUnlockFromISR()
-		;
 		return;
 	}
 
 	adcStartConversionI(&ADC_FAST_DEVICE, &adcgrpcfgFast, fastAdc.m_samples, ADC_BUF_DEPTH_FAST);
-	chSysUnlockFromISR()
-	;
 	fastAdc.conversionCount++;
 #endif /* EFI_INTERNAL_ADC */
 }
