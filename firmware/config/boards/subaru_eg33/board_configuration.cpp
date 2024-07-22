@@ -298,7 +298,9 @@ static const struct mc33810_config mc33810_odd = {
 		[7] = {.port = GPIOB, .pad = 8},	/* IGN 5 */
 	},
 	/* en shared between two chips */
-	.en = {.port = GPIOI, .pad = 7}
+	.en = {.port = GPIOI, .pad = 7},
+	// TODO: pick from engineConfiguration->spi5sckPin or whatever SPI is used
+	.sck = {.port = GPIOF, .pad = 7}
 };
 
 /* Schematic RefDef DA22 */
@@ -342,7 +344,9 @@ static const struct mc33810_config mc33810_even = {
 		[7] = {.port = GPIOC, .pad = 13},	/* IGN 1 */
 	},
 	/* en shared between two chips */
-	.en = {.port = nullptr, .pad = 0}
+	.en = {.port = nullptr, .pad = 0},
+	// TODO: pick from engineConfiguration->spi5sckPin or whatever SPI is used
+	.sck = {.port = GPIOF, .pad = 7}
 };
 
 static void board_init_ext_gpios()
