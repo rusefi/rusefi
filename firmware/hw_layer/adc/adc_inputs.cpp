@@ -142,18 +142,16 @@ public:
 	}
 };
 
-void addChannel(const char*, adc_channel_e hwChannel, adc_channel_mode_e mode) {
+void addFastAdcChannel(const char*, adc_channel_e hwChannel) {
 	if (!isAdcChannelValid(hwChannel)) {
 		return;
 	}
 
 #if EFI_USE_FAST_ADC
-	if (mode == ADC_FAST) {
-		fastAdc.enableChannel(hwChannel);
-	}
+	fastAdc.enableChannel(hwChannel);
 #endif
 
-	adcHwChannelMode[hwChannel] = mode;
+	adcHwChannelMode[hwChannel] = ADC_FAST;
 	// Nothing to do for slow channels, input is mapped to analog in init_sensors.cpp
 }
 
@@ -183,13 +181,13 @@ static void configureInputs() {
 	 * which does not mean anything.
 	 */
 
-	addChannel("MAP", engineConfiguration->map.sensor.hwChannel, ADC_FAST);
+	addFastAdcChannel("MAP", engineConfiguration->map.sensor.hwChannel);
 
-	addChannel("HIP9011", engineConfiguration->hipOutputChannel, ADC_FAST);
+	addFastAdcChannel("HIP9011", engineConfiguration->hipOutputChannel);
 
-	// not currently used	addChannel("Vref", engineConfiguration->vRefAdcChannel, ADC_SLOW);
+	// not currently used	addFastAdcChannel("Vref", engineConfiguration->vRefAdcChannel, ADC_SLOW);
 
-	addChannel("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel, ADC_FAST);
+	addFastAdcChannel("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel);
 
 	setAdcChannelOverrides();
 }

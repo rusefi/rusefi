@@ -105,10 +105,10 @@ void setAdcChannelOverrides() {
 	// on Kinetis, ADC_FAST & SLOW are not really "fast" or "slow",
 	// they are just different ADC numbers with different sets of channels
 	removeChannel("VBatt", engineConfiguration->vbattAdcChannel);
-	addChannel("VBatt", engineConfiguration->vbattAdcChannel, ADC_FAST);
+	addFastAdcChannel("VBatt", engineConfiguration->vbattAdcChannel);
 
 	removeChannel("TPS", engineConfiguration->tps1_1AdcChannel);
-	addChannel("TPS", engineConfiguration->tps1_1AdcChannel, ADC_SLOW);
+	addFastAdcChannel("TPS", engineConfiguration->tps1_1AdcChannel);
 }
 
 #include <setjmp.h>
