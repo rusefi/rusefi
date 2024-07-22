@@ -186,7 +186,7 @@ void AdcSubscription::PrintInfo() {
 			"%s ADC%d m=%d %s adc=%.2f/input=%.2fv/divider=%.2f",
 			name,
 			channel,
-			getAdcMode(channel),
+			(int)getAdcMode(channel),
 			getPinNameByAdcChannel(name, channel, pinNameBuffer, sizeof(pinNameBuffer)),
 			mcuVolts, sensorVolts, entry.VoltsPerAdcVolt
 		);
