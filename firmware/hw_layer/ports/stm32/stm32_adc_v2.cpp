@@ -185,7 +185,7 @@ static bool readBatch(adcsample_t* convertedSamples) {
 bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 	bool result = true;
 
-	result &= readBatch(convertedSamples, 0);
+	result &= readBatch(convertedSamples);
 
 #ifdef ADC_MUX_PIN
 	muxControl.setValue(1);

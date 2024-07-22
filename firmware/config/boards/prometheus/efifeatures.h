@@ -67,10 +67,6 @@
 
 #undef CONSOLE_MODE_SWITCH_PORT
 
-//!!!!!!!!!!!!!!!
-//#undef EFI_INTERNAL_ADC
-//#define EFI_INTERNAL_ADC FALSE
-
 #undef ADC_VCC
 #define ADC_VCC 3.275f
 
