@@ -171,14 +171,14 @@ void refreshMapAveragingPreCalc() {
 	if (isValidRpm(rpm)) {
 		MAP_sensor_config_s * c = &engineConfiguration->map;
 		angle_t start = interpolate2d(rpm, c->samplingAngleBins, c->samplingAngle);
-		efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_START_ASSERT, !cisnan(start), "start");
+		efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_START_ASSERT, !std::isnan(start), "start");
 
 		angle_t offsetAngle = engine->triggerCentral.triggerFormDetails.eventAngles[engineConfiguration->mapAveragingSchedulingAtIndex];
-		efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_AVG_OFFSET, !cisnan(offsetAngle), "offsetAngle");
+		efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_AVG_OFFSET, !std::isnan(offsetAngle), "offsetAngle");
 
 		for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
 			angle_t cylinderOffset = getEngineCycle(getEngineRotationState()->getOperationMode()) * i / engineConfiguration->cylindersCount;
-			efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_CYL_OFFSET, !cisnan(cylinderOffset), "cylinderOffset");
+			efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_CYL_OFFSET, !std::isnan(cylinderOffset), "cylinderOffset");
 			// part of this formula related to specific cylinder offset is never changing - we can
 			// move the loop into start-up calculation and not have this loop as part of periodic calculation
 			// todo: change the logic as described above in order to reduce periodic CPU usage?
@@ -233,7 +233,7 @@ void mapAveragingTriggerCallback(
 
 		angle_t samplingEnd = samplingStart + samplingDuration;
 
-		if (cisnan(samplingEnd)) {
+		if (std::isnan(samplingEnd)) {
 			// todo: when would this happen?
 			warning(ObdCode::CUSTOM_ERR_6549, "no map angles");
 			return;

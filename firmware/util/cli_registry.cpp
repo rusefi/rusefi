@@ -360,7 +360,7 @@ int handleActionWithParameter(TokenCallback *current, char *argv[], int argc) {
 	case FLOAT_PARAMETER:
 	{
 		float value = atoff(argv[0]);
-		if (cisnan(value)) {
+		if (std::isnan(value)) {
 			efiPrintf("invalid float [%s]", argv[0]);
 			return -1;
 		}
@@ -375,7 +375,7 @@ int handleActionWithParameter(TokenCallback *current, char *argv[], int argc) {
 		float value[2];
 		for (int i = 0; i < 2; i++) {
 			value[i] = atoff(argv[i]);
-			if (cisnan(value[i])) {
+			if (std::isnan(value[i])) {
 				efiPrintf("invalid float [%s]", argv[i]);
 				return -1;
 			}
@@ -394,7 +394,7 @@ int handleActionWithParameter(TokenCallback *current, char *argv[], int argc) {
 		float value[3];
 		for (int i = 0; i < 3; i++) {
 			value[i] = atoff(argv[i]);
-			if (cisnan(value[i])) {
+			if (std::isnan(value[i])) {
 				efiPrintf("invalid float [%s]", argv[i]);
 				return -1;
 			}
@@ -408,7 +408,7 @@ int handleActionWithParameter(TokenCallback *current, char *argv[], int argc) {
 		float value[4];
 		for (int i = 0; i < 4; i++) {
 			value[i] = atoff(argv[i]);
-			if (cisnan(value[i])) {
+			if (std::isnan(value[i])) {
 				efiPrintf("invalid float [%s]", argv[i]);
 				return -1;
 			}
@@ -427,7 +427,7 @@ int handleActionWithParameter(TokenCallback *current, char *argv[], int argc) {
 			return -1;
 		}
 		float value2 = atoff(argv[1]);
-		if (cisnan(value2)) {
+		if (std::isnan(value2)) {
 			efiPrintf("invalid float [%s]", argv[1]);
 			return -1;
 		}

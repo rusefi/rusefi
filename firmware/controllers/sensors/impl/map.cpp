@@ -16,7 +16,7 @@
 static float validateBaroMap(float mapKPa) {
 	// Highest interstate is the Eisenhower Tunnel at 11158 feet -> 66 kpa
 	// Lowest point is the Dead Sea, -1411 feet -> 106 kpa
-	if (cisnan(mapKPa) || mapKPa > 110 || mapKPa < 60) {
+	if (std::isnan(mapKPa) || mapKPa > 110 || mapKPa < 60) {
 		warning(ObdCode::OBD_Barometric_Press_Circ, "Invalid start-up baro pressure = %.2fkPa", mapKPa);
 		return NAN;
 	}
@@ -72,7 +72,7 @@ void initMapDecoder() {
 		efiPrintf("Get initial baro MAP pressure = %.2fkPa", storedInitialBaroPressure);
 		// validate if it's within a reasonable range (the engine should not be spinning etc.)
 		storedInitialBaroPressure = validateBaroMap(storedInitialBaroPressure);
-		if (!cisnan(storedInitialBaroPressure)) {
+		if (!std::isnan(storedInitialBaroPressure)) {
 			efiPrintf("Using this fixed MAP pressure to override the baro correction!");
 
 			// TODO: do literally anything other than this

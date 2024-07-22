@@ -59,7 +59,7 @@ float InstantRpmCalculator::calculateInstantRpm(
 
 	// Determine where we currently are in the revolution
 	angle_t currentAngle = triggerFormDetails->eventAngles[current_index];
-	efiAssert(ObdCode::OBD_PCM_Processor_Fault, !cisnan(currentAngle), "eventAngles", 0);
+	efiAssert(ObdCode::OBD_PCM_Processor_Fault, !std::isnan(currentAngle), "eventAngles", 0);
 
 	// Hunt for a tooth ~90 degrees ago to compare to the current time
 	angle_t previousAngle = currentAngle - engineConfiguration->instantRpmRange;

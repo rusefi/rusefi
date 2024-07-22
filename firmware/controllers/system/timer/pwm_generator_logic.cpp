@@ -50,7 +50,7 @@ void SimplePwm::setSimplePwmDutyCycle(float dutyCycle) {
 		// we are here in order to not change pin once PWM stop was requested
 		return;
 	}
-	if (cisnan(dutyCycle)) {
+	if (std::isnan(dutyCycle)) {
 		warning(ObdCode::CUSTOM_DUTY_INVALID, "%s spwd:dutyCycle %.2f", m_name, dutyCycle);
 		return;
 	} else if (dutyCycle < 0) {
