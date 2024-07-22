@@ -25,10 +25,6 @@
 
 #if EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)
 
-// To avoid any spurious data, it is essential the high-to-low and low-to-high transitions of the CS signal occur only when SCLK is in a
-//   logic low state. Internal to the 33810 device is an active pull-up to VDD on CS
-#define UNSELECT_HACK 2
-
 /*
  * TODO list:
  *
@@ -128,6 +124,7 @@ struct Mc33810 : public GpioChip {
 	brain_pin_diag_e getDiag(size_t pin) override;
 
 	// internal functions
+	int spi_unselect();
 	int spi_rw(uint16_t tx, uint16_t* rx);
 	int spi_rw_array(const uint16_t *tx, uint16_t *rx, int n);
 	int update_output_and_diag();
@@ -190,6 +187,35 @@ inline bool isCor(uint16_t rx) {
 }
 
 /**
+ * @brief MC33810 spi CS release helper with workaround
+ * @details Will wait until SCK = low before releasing CS
+ */
+
+int Mc33810::spi_unselect()
+{
+	int retry = 0;
+	SPIDriver *spi = cfg->spi_bus;
+
+	if (cfg->sck.port) {
+		while (palReadPad(cfg->sck.port, cfg->sck.pad) && (++retry < 1000)) {
+			/* NOP */
+		}
+	}
+
+	/* Slave Select de-assertion. */
+	spiUnselect(spi);
+
+	if (retry < 1000) {
+		return 0;
+	}
+
+	efiPrintf(DRIVER_NAME "failed wait for SCK = 0");
+
+	return -1;
+}
+
+
+/**
  * @brief MC33810 send and receive routine.
  * @details Sends and receives 16 bits. CS asserted before and released
  * after transaction.
@@ -210,9 +236,8 @@ int Mc33810::spi_rw(uint16_t tx, uint16_t *rx_ptr)
 	/* TODO: check why spiExchange transfers invalid data on STM32F7xx, DMA issue? */
 	//spiExchange(spi, 2, &tx, &rxb);
 	rx = spiPolledExchange(spi, tx);
-	chThdSleepMicroseconds(UNSELECT_HACK); // logic analyzes shows something much closer to one millisecond :(
 	/* Slave Select de-assertion. */
-	spiUnselect(spi);
+	spi_unselect();
 	/* Ownership release. */
 	spiReleaseBus(spi);
 
@@ -270,14 +295,15 @@ int Mc33810::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 	/* Setup transfer parameters. */
 	spiStart(spi, &cfg->spi_config);
 
-	spiSelect(spi);
 	for (int i = 0; i < n; i++) {
 		/* Slave Select assertion. */
+		spiSelect(spi);
 		/* data transfer */
 		uint16_t rxdata = spiPolledExchange(spi, tx[i]);
-
 		if (rx)
 			rx[i] = rxdata;
+		/* Slave Select de-assertion. */
+		spi_unselect();
 
 		/* Parse reply */
 		if (recentTx != MC_CMD_INVALID) {
@@ -313,10 +339,6 @@ int Mc33810::spi_rw_array(const uint16_t *tx, uint16_t *rx, int n)
 			break;
 		}
 	}
-
-	/* Slave Select de-assertion. */
-	chThdSleepMicroseconds(UNSELECT_HACK); // logic analyzes shows something much closer to one millisecond :(
-	spiUnselect(spi);
 
 	/* Ownership release. */
 	spiReleaseBus(spi);
