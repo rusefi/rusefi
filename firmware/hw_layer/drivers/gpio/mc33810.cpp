@@ -434,7 +434,7 @@ int Mc33810::chip_init()
 // duplication with mc33810spiErrorCounter?
 	init_cnt++;
 
-	/* we do not know last issue CMD (if was) */
+	/* we do not know last CMD was sent (if was) */
 	recentTx = MC_CMD_INVALID;
 
 	/* check SPI communication */
@@ -553,10 +553,10 @@ int Mc33810::chip_init()
 					 PAL_PORT_BIT(cfg->en.pad));
 	}
 
-  if (!hadSuccessfulInit) {
-    efiPrintf(DRIVER_NAME " Successful Init");
-    hadSuccessfulInit = true;
-  }
+	if (!hadSuccessfulInit) {
+		efiPrintf(DRIVER_NAME " Successful Init");
+		hadSuccessfulInit = true;
+	}
 
 	return 0;
 
