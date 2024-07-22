@@ -49,7 +49,7 @@ angle_t getRunningAdvance(int rpm, float engineLoad) {
 		return NAN;
 	}
 
-	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(engineLoad), "invalid el", NAN);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(engineLoad), "invalid el", NAN);
 
 	// compute base ignition angle from main table
 	float advanceAngle = interpolate3d(

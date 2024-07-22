@@ -388,7 +388,7 @@ static void setFloat(const char *offsetStr, const char *valueStr) {
 	if (isOutOfBounds(offset))
 		return;
 	float value = atoff(valueStr);
-	if (cisnan(value)) {
+	if (std::isnan(value)) {
 		efiPrintf("invalid value [%s]", valueStr);
 		return;
 	}
