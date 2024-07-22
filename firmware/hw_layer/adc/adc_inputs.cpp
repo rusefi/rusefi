@@ -244,30 +244,22 @@ void AdcDevice::enableChannel(adc_channel_e hwChannel) {
 		return;
 	}
 
-	int logicChannel = channelCount++;
+	// hwChannel = which external pin are we using
+	// adcChannelIndex = which ADC channel are we using
+	// adcIndex = which index does that get in sampling order
+	size_t adcChannelIndex = hwChannel - EFI_ADC_0;
+	size_t adcIndex = channelCount++;
 
-	/* TODO: following is correct for STM32 ADC1/2.
-	 * ADC3 has another input to gpio mapping
-	 * and should be handled separately */
-	size_t channelAdcIndex = hwChannel - EFI_ADC_0;
+	internalAdcIndexByHardwareIndex[hwChannel] = adcIndex;
+	hardwareIndexByIndernalAdcIndex[adcIndex] = hwChannel;
 
-	internalAdcIndexByHardwareIndex[hwChannel] = logicChannel;
-	hardwareIndexByIndernalAdcIndex[logicChannel] = hwChannel;
-	if (logicChannel < 6) {
-		m_hwConfig->sqr3 |= channelAdcIndex << (5 * logicChannel);
-	} else if (logicChannel < 12) {
-		m_hwConfig->sqr2 |= channelAdcIndex << (5 * (logicChannel - 6));
-	} else if (logicChannel < 18) {
-		m_hwConfig->sqr1 |= channelAdcIndex << (5 * (logicChannel - 12));
+	if (adcIndex < 6) {
+		m_hwConfig->sqr3 |= adcChannelIndex << (5 * adcIndex);
+	} else if (adcIndex < 12) {
+		m_hwConfig->sqr2 |= adcChannelIndex << (5 * (adcIndex - 6));
+	} else if (adcIndex < 18) {
+		m_hwConfig->sqr1 |= adcChannelIndex << (5 * (adcIndex - 12));
 	}
-#if ADC_MAX_CHANNELS_COUNT > 16
-	else if (logicChannel < 24) {
-		m_hwConfig->sqr4 |= channelAdcIndex << (5 * (logicChannel - 18));
-	}
-	else if (logicChannel < 30) {
-		m_hwConfig->sqr5 |= channelAdcIndex << (5 * (logicChannel - 24));
-	}
-#endif /* ADC_MAX_CHANNELS_COUNT */
 }
 
 adc_channel_e AdcDevice::getAdcHardwareIndexByInternalIndex(int index) const {
@@ -350,27 +342,17 @@ void removeFastAdcChannel(const char *name, adc_channel_e setting) {
 // Weak link a stub so that every board doesn't have to implement this function
 __attribute__((weak)) void setAdcChannelOverrides() { }
 
-static void configureInputs() {
-	memset(adcHwChannelEnabled, 0, sizeof(adcHwChannelEnabled));
-
-	/**
-	 * order of analog channels here is totally random and has no meaning
-	 * we also have some weird implementation with internal indices - that all has no meaning, it's just a random implementation
-	 * which does not mean anything.
-	 */
-
-	addFastAdcChannel("MAP", engineConfiguration->map.sensor.hwChannel);
-	addFastAdcChannel("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel);
-
-	setAdcChannelOverrides();
-}
-
 static CCM_OPTIONAL SlowAdcController slowAdcController;
 
 void initAdcInputs() {
 	efiPrintf("initAdcInputs()");
 
-	configureInputs();
+	memset(adcHwChannelEnabled, 0, sizeof(adcHwChannelEnabled));
+
+	addFastAdcChannel("MAP", engineConfiguration->map.sensor.hwChannel);
+	addFastAdcChannel("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel);
+
+	setAdcChannelOverrides();
 
 #if EFI_INTERNAL_ADC
 	portInitAdc();
