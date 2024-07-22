@@ -80,7 +80,7 @@ floatms_t IgnitionState::getSparkDwell(int rpm) {
 	if (engine->rpmCalculator.isCranking()) {
 		dwellMs = engineConfiguration->ignitionDwellForCrankingMs;
 	} else {
-		efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(rpm), "invalid rpm", NAN);
+		efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(rpm), "invalid rpm", NAN);
 
 		baseDwell = interpolate2d(rpm, config->sparkDwellRpmBins, config->sparkDwellValues);
 		dwellVoltageCorrection = interpolate2d(
@@ -97,7 +97,7 @@ floatms_t IgnitionState::getSparkDwell(int rpm) {
 		dwellMs = baseDwell * dwellVoltageCorrection;
 	}
 
-	if (cisnan(dwellMs) || dwellMs <= 0) {
+	if (std::isnan(dwellMs) || dwellMs <= 0) {
 		// this could happen during engine configuration reset
 		warning(ObdCode::CUSTOM_ERR_DWELL_DURATION, "invalid dwell: %.2f at rpm=%d", dwellMs, rpm);
 		return 0;

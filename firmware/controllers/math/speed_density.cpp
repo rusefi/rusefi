@@ -95,7 +95,7 @@ temperature_t IFuelComputer::getTCharge(int rpm, float tps) {
 
 	sdTcharge_coff = getTChargeCoefficient(rpm, tps);
 
-	if (cisnan(sdTcharge_coff)) {
+	if (std::isnan(sdTcharge_coff)) {
 		warning(ObdCode::CUSTOM_ERR_T2_CHARGE, "t2-getTCharge NaN");
 		return coolantTemp;
 	}
@@ -105,7 +105,7 @@ temperature_t IFuelComputer::getTCharge(int rpm, float tps) {
 	// 1.0 coefficient -> use IAT (no heat transfer)
 	float Tcharge = interpolateClamped(0.0f, coolantTemp, 1.0f, airTemp, sdTcharge_coff);
 
-	if (cisnan(Tcharge)) {
+	if (std::isnan(Tcharge)) {
 		// we can probably end up here while resetting engine state - interpolation would fail
 		warning(ObdCode::CUSTOM_ERR_TCHARGE_NOT_READY, "getTCharge NaN");
 		return coolantTemp;

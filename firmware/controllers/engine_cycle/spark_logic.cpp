@@ -116,7 +116,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 		// Offset by this cylinder's position in the cycle
 		+ getPerCylinderFiringOrderOffset(event->cylinderIndex, coilIndex);
 
-	efiAssertVoid(ObdCode::CUSTOM_SPARK_ANGLE_1, !cisnan(sparkAngle), "sparkAngle#1");
+	efiAssertVoid(ObdCode::CUSTOM_SPARK_ANGLE_1, !std::isnan(sparkAngle), "sparkAngle#1");
 	wrapAngle(sparkAngle, "findAngle#2", ObdCode::CUSTOM_ERR_6550);
 	event->sparkAngle = sparkAngle;
 
@@ -145,7 +145,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 
 
 	angle_t dwellStartAngle = sparkAngle - dwellAngleDuration;
-	efiAssertVoid(ObdCode::CUSTOM_ERR_6590, !cisnan(dwellStartAngle), "findAngle#5");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6590, !std::isnan(dwellStartAngle), "findAngle#5");
 
 	assertAngleRange(dwellStartAngle, "findAngle dwellStartAngle", ObdCode::CUSTOM_ERR_6550);
 	wrapAngle(dwellStartAngle, "findAngle#7", ObdCode::CUSTOM_ERR_6550);
@@ -240,7 +240,7 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 
 	angle_t dwellAngleDuration = engine->ignitionState.dwellDurationAngle;
 	floatms_t sparkDwell = engine->ignitionState.sparkDwell;
-	if (cisnan(dwellAngleDuration) || cisnan(sparkDwell)) {
+	if (std::isnan(dwellAngleDuration) || std::isnan(sparkDwell)) {
 		// we are here if engine has just stopped
 		return;
 	}
@@ -376,11 +376,11 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 
 	angle_t sparkAngle = event->sparkAngle;
 	const floatms_t dwellMs = engine->ignitionState.sparkDwell;
-	if (cisnan(dwellMs) || dwellMs <= 0) {
+	if (std::isnan(dwellMs) || dwellMs <= 0) {
 		warning(ObdCode::CUSTOM_DWELL, "invalid dwell to handle: %.2f at %d", dwellMs, rpm);
 		return;
 	}
-	if (cisnan(sparkAngle)) {
+	if (std::isnan(sparkAngle)) {
 		warning(ObdCode::CUSTOM_ADVANCE_SPARK, "NaN advance");
 		return;
 	}
@@ -436,7 +436,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 	 * Spark event is often happening during a later trigger event timeframe
 	 */
 
-	efiAssertVoid(ObdCode::CUSTOM_ERR_6591, !cisnan(sparkAngle), "findAngle#4");
+	efiAssertVoid(ObdCode::CUSTOM_ERR_6591, !std::isnan(sparkAngle), "findAngle#4");
 	assertAngleRange(sparkAngle, "findAngle#a5", ObdCode::CUSTOM_ERR_6549);
 
 	bool isTimeScheduled = engine->module<TriggerScheduler>()->scheduleOrQueue(
@@ -493,7 +493,7 @@ void initializeIgnitionActions() {
 	IgnitionEventList *list = &engine->ignitionEvents;
 	angle_t dwellAngle = engine->ignitionState.dwellDurationAngle;
 	floatms_t sparkDwell = engine->ignitionState.sparkDwell;
-	if (cisnan(engine->engineState.timingAdvance[0]) || cisnan(dwellAngle)) {
+	if (std::isnan(engine->engineState.timingAdvance[0]) || std::isnan(dwellAngle)) {
 		// error should already be reported
 		// need to invalidate previous ignition schedule
 		list->isReady = false;
