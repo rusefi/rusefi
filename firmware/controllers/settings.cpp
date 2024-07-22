@@ -78,10 +78,6 @@ static void setCrankingIACExtra(float percent) {
 }
 
 static void setGlobalTriggerAngleOffset(float value) {
-	if (cisnan(value)) {
-		warning(ObdCode::CUSTOM_ERR_SGTP_ARGUMENT, "Invalid argument");
-		return;
-	}
 	engineConfiguration->globalTriggerAngleOffset = value;
 	incrementGlobalConfigurationVersion();
 }
