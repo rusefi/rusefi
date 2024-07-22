@@ -1131,13 +1131,13 @@ void TriggerCentral::updateWaveform() {
 	if (engineConfiguration->overrideTriggerGaps) {
 		int gapIndex = 0;
 
-		engine->triggerCentral.triggerShape.gapTrackingLength = engineConfiguration->gapTrackingLengthOverride;
+		triggerShape.gapTrackingLength = engineConfiguration->gapTrackingLengthOverride;
 
 		// copy however many the user wants
 		for (; gapIndex < engineConfiguration->gapTrackingLengthOverride; gapIndex++) {
 			float gapOverrideFrom = engineConfiguration->triggerGapOverrideFrom[gapIndex];
 			float gapOverrideTo = engineConfiguration->triggerGapOverrideTo[gapIndex];
-			TRIGGER_WAVEFORM(setTriggerSynchronizationGap3(/*gapIndex*/gapIndex, gapOverrideFrom, gapOverrideTo));
+			triggerShape.setTriggerSynchronizationGap3(/*gapIndex*/gapIndex, gapOverrideFrom, gapOverrideTo);
 		}
 
 		// fill the remainder with the default gaps
