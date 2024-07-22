@@ -1168,6 +1168,7 @@ void TriggerCentral::updateWaveform() {
         int gapIndex = 0;
 
         TriggerWaveform *shape = &vvtShape[0];
+        shape->gapTrackingLength = engineConfiguration->gapVvtTrackingLengthOverride;
 
 		for (; gapIndex < engineConfiguration->gapVvtTrackingLengthOverride; gapIndex++) {
 			float gapOverrideFrom = engineConfiguration->triggerVVTGapOverrideFrom[gapIndex];
