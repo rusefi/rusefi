@@ -141,7 +141,7 @@ void TriggerFormDetails::prepareEventAngles(TriggerWaveform *shape) {
 			// Compute the relative angle of this tooth to the sync point's tooth
 			float angle = shape->getAngle(wrappedIndex) - firstAngle;
 
-			efiAssertVoid(ObdCode::CUSTOM_TRIGGER_CYCLE, !cisnan(angle), "trgSyncNaN");
+			efiAssertVoid(ObdCode::CUSTOM_TRIGGER_CYCLE, !std::isnan(angle), "trgSyncNaN");
 			// Wrap the angle back in to [0, 720)
 			wrapAngle(angle, "trgSync", ObdCode::CUSTOM_TRIGGER_SYNC_ANGLE_RANGE);
 
@@ -469,13 +469,13 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 
 				for (int i = 0; i < triggerShape.gapTrackingLength; i++) {
 					float ratioFrom = triggerShape.syncronizationRatioFrom[i];
-					if (cisnan(ratioFrom)) {
+					if (std::isnan(ratioFrom)) {
 						// we do not track gap at this depth
 						continue;
 					}
 
 					float gap = 1.0 * toothDurations[i] / toothDurations[i + 1];
-					if (cisnan(gap)) {
+					if (std::isnan(gap)) {
 						efiPrintf("%s index=%d NaN gap, you have noise issues?", prefix, i);
 					} else {
 						float ratioTo = triggerShape.syncronizationRatioTo[i];
@@ -653,7 +653,7 @@ bool TriggerDecoderBase::isSyncPoint(const TriggerWaveform& triggerShape, trigge
 		auto from = triggerShape.syncronizationRatioFrom[i];
 		auto to = triggerShape.syncronizationRatioTo[i];
 
-		if (cisnan(from)) {
+		if (std::isnan(from)) {
 			// don't check this gap, skip it
 			continue;
 		}

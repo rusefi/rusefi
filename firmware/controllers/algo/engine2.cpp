@@ -188,7 +188,7 @@ void EngineState::periodicFastCallback() {
 void EngineState::updateTChargeK(int rpm, float tps) {
 #if EFI_ENGINE_CONTROL
 	float newTCharge = engine->fuelComputer.getTCharge(rpm, tps);
-	if (!cisnan(newTCharge)) {
+	if (!std::isnan(newTCharge)) {
 		// control the rate of change or just fill with the initial value
 		efitick_t nowNt = getTimeNowNt();
 		float secsPassed = timeSinceLastTChargeK.getElapsedSeconds(nowNt);

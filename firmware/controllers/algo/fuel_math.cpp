@@ -307,7 +307,7 @@ float getInjectionMass(int rpm) {
 
 	bool isCranking = engine->rpmCalculator.isCranking();
 	float cycleFuelMass = getCycleFuelMass(isCranking, baseFuelMass);
-	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(cycleFuelMass), "NaN cycleFuelMass", 0);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(cycleFuelMass), "NaN cycleFuelMass", 0);
 
 	if (engine->module<DfcoController>()->cutFuel()) {
 		// If decel fuel cut, zero out fuel
@@ -389,7 +389,7 @@ float getBaroCorrection() {
 			config->baroCorrRpmBins, Sensor::getOrZero(SensorType::Rpm)
 		);
 
-		if (cisnan(correction) || correction < 0.01) {
+		if (std::isnan(correction) || correction < 0.01) {
 			warning(ObdCode::OBD_Barometric_Press_Circ_Range_Perf, "Invalid baro correction %f", correction);
 			return 1;
 		}
