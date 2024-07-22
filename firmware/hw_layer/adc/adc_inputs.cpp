@@ -386,8 +386,6 @@ void initAdcInputs() {
 #endif // EFI_USE_FAST_ADC
 
 	addConsoleActionI("adc", (VoidInt) printAdcValue);
-#else
-	efiPrintf("ADC disabled");
 #endif
 }
 
