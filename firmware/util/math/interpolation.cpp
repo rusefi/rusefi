@@ -26,11 +26,11 @@
  * @see interpolateClamped
  */
 float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, float x) {
-	if (cisnan(x1) || cisnan(x2) || cisnan(y1) || cisnan(y2)) {
+	if (std::isnan(x1) || std::isnan(x2) || std::isnan(y1) || std::isnan(y2)) {
 		warning(ObdCode::CUSTOM_ERR_INTERPOLATE_1, "interpolate%s: why param", msg);
 		return NAN;
 	}
-	if (cisnan(x)) {
+	if (std::isnan(x)) {
 		warning(ObdCode::CUSTOM_ERR_INTERPOLATE_2, "interpolate%s: why X", msg);
 		return NAN;
 	}
@@ -47,7 +47,7 @@ float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, fl
 	// a*x2 + b = y2
 //	efiAssertVoid(ObdCode::CUSTOM_ERR_ASSERT_VOID, x1 != x2, "no way we can interpolate");
 	float a = INTERPOLATION_A(x1, y1, x2, y2);
-	if (cisnan(a)) {
+	if (std::isnan(a)) {
 		warning(ObdCode::CUSTOM_ERR_INTERPOLATE_4, "interpolate%s: why a", msg);
 		return NAN;
 	}

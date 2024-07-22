@@ -38,7 +38,7 @@ static angle_t getRunningAdvance(int rpm, float engineLoad) {
 		return engineConfiguration->fixedTiming;
 	}
 
-	if (cisnan(engineLoad)) {
+	if (std::isnan(engineLoad)) {
 		warning(ObdCode::CUSTOM_NAN_ENGINE_LOAD, "NaN engine load");
 		return NAN;
 	}
@@ -154,7 +154,7 @@ static angle_t getCrankingAdvance(int rpm, float engineLoad) {
 
 angle_t getAdvance(int rpm, float engineLoad) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
-	if (cisnan(engineLoad)) {
+	if (std::isnan(engineLoad)) {
 		return 0; // any error should already be reported
 	}
 
@@ -164,11 +164,11 @@ angle_t getAdvance(int rpm, float engineLoad) {
 	if (isCranking) {
 		angle = getCrankingAdvance(rpm, engineLoad);
 		assertAngleRange(angle, "crAngle", ObdCode::CUSTOM_ERR_ANGLE_CR);
-		efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(angle), "cr_AngleN", 0);
+		efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(angle), "cr_AngleN", 0);
 	} else {
 		angle = getRunningAdvance(rpm, engineLoad);
 
-		if (cisnan(angle)) {
+		if (std::isnan(angle)) {
 			warning(ObdCode::CUSTOM_ERR_6610, "NaN angle from table");
 			return 0;
 		}
@@ -181,12 +181,12 @@ angle_t getAdvance(int rpm, float engineLoad) {
 
 	if (allowCorrections) {
 		angle_t correction = getAdvanceCorrections(engineLoad);
-		if (!cisnan(correction)) { // correction could be NaN during settings update
+		if (!std::isnan(correction)) { // correction could be NaN during settings update
 			angle += correction;
 		}
 	}
 
-	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(angle), "_AngleN5", 0);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(angle), "_AngleN5", 0);
 	wrapAngle(angle, "getAdvance", ObdCode::CUSTOM_ERR_ADCANCE_CALC_ANGLE);
 	return angle;
 #else

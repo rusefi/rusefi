@@ -132,7 +132,7 @@ GppwmResult GppwmChannel::getOutput() const {
 
 	float resultVal = m_table->getValue(xAxisValue.Value, yAxisValue.Value);
 
-	if (cisnan(result.Result)) {
+	if (std::isnan(result.Result)) {
 		return result;
 	}
 

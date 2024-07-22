@@ -115,9 +115,9 @@ float getRunningFuel(float baseFuel) {
 	float postCrankingFuelCorrection = engine->fuelComputer.running.postCrankingFuelCorrection;
 	float baroCorrection = engine->engineState.baroCorrection;
 
-	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(iatCorrection), "NaN iatCorrection", 0);
-	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(cltCorrection), "NaN cltCorrection", 0);
-	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(postCrankingFuelCorrection), "NaN postCrankingFuelCorrection", 0);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(iatCorrection), "NaN iatCorrection", 0);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(cltCorrection), "NaN cltCorrection", 0);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(postCrankingFuelCorrection), "NaN postCrankingFuelCorrection", 0);
 
 	float correction = baroCorrection * iatCorrection * cltCorrection * postCrankingFuelCorrection;
 
@@ -131,7 +131,7 @@ float getRunningFuel(float baseFuel) {
 
 	float runningFuel = baseFuel * correction;
 
-	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(runningFuel), "NaN runningFuel", 0);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(runningFuel), "NaN runningFuel", 0);
 
 	// Publish output state
 	engine->fuelComputer.running.baseFuel = baseFuel * 1000;
@@ -195,7 +195,7 @@ static float getBaseFuelMass(int rpm) {
 	baseFuelMass *= engineConfiguration->globalFuelCorrection;
 	engine->engineState.baseFuel = baseFuelMass;
 
-	if (cisnan(baseFuelMass)) {
+	if (std::isnan(baseFuelMass)) {
 		// todo: we should not have this here but https://github.com/rusefi/rusefi/issues/1690 
 		return 0;
 	}
@@ -204,11 +204,11 @@ static float getBaseFuelMass(int rpm) {
 }
 
 angle_t getInjectionOffset(float rpm, float load) {
-	if (cisnan(rpm)) {
+	if (std::isnan(rpm)) {
 		return 0; // error already reported
 	}
 
-	if (cisnan(load)) {
+	if (std::isnan(load)) {
 		return 0; // error already reported
 	}
 
@@ -218,7 +218,7 @@ angle_t getInjectionOffset(float rpm, float load) {
 		config->injPhaseRpmBins, rpm
 	);
 
-	if (cisnan(value)) {
+	if (std::isnan(value)) {
 		// we could be here while resetting configuration for example
 		// huh? what? when do we have RPM while resetting configuration? is that CI edge case? shall we fix CI?
 		warning(ObdCode::CUSTOM_ERR_6569, "phase map not ready");
@@ -325,7 +325,7 @@ float getInjectionMass(int rpm) {
 	}
 
 	floatms_t tpsAccelEnrich = engine->tpsAccelEnrichment.getTpsEnrichment();
-	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(tpsAccelEnrich), "NaN tpsAccelEnrich", 0);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(tpsAccelEnrich), "NaN tpsAccelEnrich", 0);
 	engine->engineState.tpsAccelEnrich = tpsAccelEnrich;
 
 	// For legacy reasons, the TPS accel table is in units of milliseconds, so we have to convert BACK to mass
