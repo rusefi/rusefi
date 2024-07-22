@@ -163,7 +163,9 @@ static const struct mc33810_config mc33810 = {
 		[6] = {.port = GPIOG, .pad = 11},	/* H144_OUT_IO6 */
 		[7] = {.port = GPIOG, .pad = 2},	/* H144_OUT_IO11 */
 	},
-	.en = {.port = GPIOG, .pad = 9} // H144_GP_IO4 hopefully
+	.en = {.port = GPIOG, .pad = 9}, // H144_GP_IO4 hopefully
+	// TODO: pick from engineConfiguration->spi3sckPin or whatever SPI is used
+	.sck = {.port = GPIOC, .pad = 10}
 };
 
 /*PUBLIC_API_WEAK*/ void boardInitHardware() {
