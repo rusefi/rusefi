@@ -136,11 +136,6 @@ void mapAveragingAdcCallback(float instantVoltage) {
 
 	SensorResult mapResult = getMapAvg(currentMapAverager).submit(instantVoltage);
 
-	if (!mapResult) {
-		// hopefully this warning is not too much CPU consumption for fast ADC callback
-		warning(ObdCode::CUSTOM_INSTANT_MAP_DECODING, "Invalid MAP at %f", instantVoltage);
-	}
-
 	float instantMap = mapResult.value_or(0);
 #if EFI_TUNER_STUDIO
 	engine->outputChannels.instantMAPValue = instantMap;
