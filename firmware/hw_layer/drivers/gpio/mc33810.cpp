@@ -197,6 +197,10 @@ int Mc33810::spi_unselect()
 	SPIDriver *spi = cfg->spi_bus;
 
 	if (cfg->sck.port) {
+		/* Lets poll for SCK=0... spiPolledExchange() returns while SPI HW is
+		 * still active and did not set SCK low yet. So do ot drive CS high until
+		 * SCK is low. This polling should not take much time. But anyway we have
+		 * timeout exit. */
 		while (palReadPad(cfg->sck.port, cfg->sck.pad) && (++retry < 1000)) {
 			/* NOP */
 		}
