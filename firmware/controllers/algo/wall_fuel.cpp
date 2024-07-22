@@ -13,7 +13,7 @@ void WallFuel::resetWF() {
 
 float WallFuel::adjust(float desiredMassGrams) {
 	invocationCounter++;
-	if (cisnan(desiredMassGrams)) {
+	if (std::isnan(desiredMassGrams)) {
 		return desiredMassGrams;
 	}
 
