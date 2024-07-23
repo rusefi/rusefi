@@ -127,7 +127,7 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 		engine->outputChannels.actualLastInjectionStage2 = injectionDurationStage2;
 	}
 
-	if (cisnan(injectionDurationStage1) || cisnan(injectionDurationStage2)) {
+	if (std::isnan(injectionDurationStage1) || std::isnan(injectionDurationStage2)) {
 		warning(ObdCode::CUSTOM_OBD_NAN_INJECTION, "NaN injection pulse");
 		return;
 	}

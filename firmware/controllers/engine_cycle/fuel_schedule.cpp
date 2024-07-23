@@ -64,10 +64,10 @@ static float getInjectionAngleCorrection(float fuelMs, float oneDegreeUs) {
 		return 0;
 	}
 
-	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(fuelMs), "NaN fuelMs", false);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(fuelMs), "NaN fuelMs", false);
 
 	angle_t injectionDurationAngle = MS2US(fuelMs) / oneDegreeUs;
-	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(injectionDurationAngle), "NaN injectionDurationAngle", false);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(injectionDurationAngle), "NaN injectionDurationAngle", false);
 	assertAngleRange(injectionDurationAngle, "injectionDuration_r", ObdCode::CUSTOM_INJ_DURATION);
 
 	if (mode == InjectionTimingMode::Center) {
@@ -87,7 +87,7 @@ InjectionEvent::InjectionEvent() {
 // or unexpected if unable to calculate the start angle due to missing information.
 expected<float> InjectionEvent::computeInjectionAngle() const {
 	floatus_t oneDegreeUs = getEngineRotationState()->getOneDegreeUs(); // local copy
-	if (cisnan(oneDegreeUs)) {
+	if (std::isnan(oneDegreeUs)) {
 		// in order to have fuel schedule we need to have current RPM
 		// wonder if this line slows engine startup?
 		return unexpected;
@@ -99,7 +99,7 @@ expected<float> InjectionEvent::computeInjectionAngle() const {
 
 	// User configured offset - degrees after TDC combustion
 	floatus_t injectionOffset = getEngineState()->injectionOffset;
-	if (cisnan(injectionOffset)) {
+	if (std::isnan(injectionOffset)) {
 		// injection offset map not ready - we are not ready to schedule fuel events
 		return unexpected;
 	}
@@ -113,7 +113,7 @@ expected<float> InjectionEvent::computeInjectionAngle() const {
 	// Convert from cylinder-relative to cylinder-1-relative
 	openingAngle += getPerCylinderFiringOrderOffset(ownIndex, cylinderNumber);
 
-	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !cisnan(openingAngle), "findAngle#3", false);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(openingAngle), "findAngle#3", false);
 	assertAngleRange(openingAngle, "findAngle#a33", ObdCode::CUSTOM_ERR_6544);
 
 	wrapAngle(openingAngle, "addFuel#2", ObdCode::CUSTOM_ERR_6555);

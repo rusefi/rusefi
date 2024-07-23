@@ -120,7 +120,7 @@ void EngineState::periodicFastCallback() {
 
 	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	engine->ignitionState.sparkDwell = engine->ignitionState.getSparkDwell(rpm);
-	engine->ignitionState.dwellDurationAngle = cisnan(rpm) ? NAN :  engine->ignitionState.sparkDwell / getOneDegreeTimeMs(rpm);
+	engine->ignitionState.dwellDurationAngle = std::isnan(rpm) ? NAN :  engine->ignitionState.sparkDwell / getOneDegreeTimeMs(rpm);
 
 	// todo: move this into slow callback, no reason for IAT corr to be here
 	engine->fuelComputer.running.intakeTemperatureCoefficient = getIatFuelCorrection();

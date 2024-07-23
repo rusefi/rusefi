@@ -117,7 +117,7 @@ static efitick_t getNextSwitchTimeNt(PwmConfig *state) {
 }
 
 void PwmConfig::setFrequency(float frequency) {
-	if (cisnan(frequency)) {
+	if (std::isnan(frequency)) {
 		// explicit code just to be sure
 		periodNt = NAN;
 		return;
@@ -184,7 +184,7 @@ efitick_t PwmConfig::togglePwmState() {
 	efiPrintf("period=%.2f safe.period=%.2f", period, safe.periodNt);
 #endif
 
-	if (cisnan(periodNt)) {
+	if (std::isnan(periodNt)) {
 		// NaN period means PWM is paused, we also set the pin low
 		if (m_stateChangeCallback) {
 			m_stateChangeCallback(0, this);
