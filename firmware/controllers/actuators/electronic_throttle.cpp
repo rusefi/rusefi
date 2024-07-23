@@ -627,7 +627,7 @@ void EtbController::update() {
 	}
 #endif // EFI_UNIT_TEST
 
-	if (!cisnan(directPwmValue)) {
+	if (!std::isnan(directPwmValue)) {
 		m_motor->set(directPwmValue);
 		etbErrorCode = (int8_t)TpsState::Manual;
 		return;
@@ -819,7 +819,7 @@ void etbPidReset() {
  */
 void setThrottleDutyCycle(percent_t level) {
 	efiPrintf("setting ETB duty=%f%%", level);
-	if (cisnan(level)) {
+	if (std::isnan(level)) {
 		directPwmValue = NAN;
 		return;
 	}

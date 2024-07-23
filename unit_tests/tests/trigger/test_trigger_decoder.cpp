@@ -157,7 +157,7 @@ static void testTriggerDecoder2(const char *msg, engine_type_e type, int synchPo
 	ASSERT_FALSE(t->shapeDefinitionError) << "isError";
 
 	ASSERT_EQ(synchPointIndex, t->getTriggerWaveformSynchPointIndex()) << "synchPointIndex " << msg;
-	if (!cisnan(expectedGapRatio)) {
+	if (!std::isnan(expectedGapRatio)) {
 		assertEqualsM2("actual gap ratio", expectedGapRatio, initState.triggerSyncGapRatio, 0.001);
     }
 }
