@@ -115,7 +115,7 @@ static efitick_t getNextSwitchTimeNt(PwmConfig *state) {
 }
 
 void PwmConfig::setFrequency(float frequency) {
-	if (cisnan(frequency)) {
+	if (std::isnan(frequency)) {
 		// explicit code just to be sure
 		periodNt = NAN;
 		return;

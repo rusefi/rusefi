@@ -789,7 +789,7 @@ void etbPidReset() {
  */
 void setThrottleDutyCycle(percent_t level) {
 	efiPrintf("setting ETB duty=%f%%", level);
-	if (cisnan(level)) {
+	if (std::isnan(level)) {
 		directPwmValue = NAN;
 		return;
 	}
