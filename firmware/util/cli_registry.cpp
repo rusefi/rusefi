@@ -17,7 +17,11 @@
 #include <cstring>
 #include <cstdint>
 #include <rusefi/isnan.h>
+
+// looks like some technical debt here?! that's about error: ‘isnan’ is not a member of ‘std’
+#include <cmath>
 #include <rusefi/math.h>
+
 #include "efiprintf.h"
 #include "rusefi/efistringutil.h"
 #include "cli_registry.h"
