@@ -10,9 +10,9 @@ public:
 		T absError = absF(currentValue - m_lastValue);
 
 		if (std::is_same<T,float>::value) {
-			if (cisnan(currentValue))
+			if (std::isnan(currentValue))
 				return currentValue;
-			if (cisnan(m_lastValue))
+			if (std::isnan(m_lastValue))
 				m_lastValue = currentValue;
 		}
 
@@ -40,7 +40,7 @@ TEST(Sticky, PPS) {
 	EXPECT_NEAR(2.2, pps.get(2.2, threshold), EPS4D);
 
 	float expectedNaN = pps.get(NAN, threshold);
-	EXPECT_TRUE(cisnan(expectedNaN));
+	EXPECT_TRUE(std::isnan(expectedNaN));
 
 	EXPECT_NEAR(33, pps.get(33, threshold), EPS4D);
 }

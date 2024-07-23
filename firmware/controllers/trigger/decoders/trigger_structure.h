@@ -12,7 +12,6 @@
 
 #include "state_sequence.h"
 #include "generated_lookup_engine_configuration.h"
-#include <rusefi/isnan.h>
 #include "engine_state.h"
 
 #define FOUR_STROKE_ENGINE_CYCLE 720

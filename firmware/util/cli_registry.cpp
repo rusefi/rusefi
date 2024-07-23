@@ -16,7 +16,6 @@
 
 #include <cstring>
 #include <cstdint>
-#include <rusefi/isnan.h>
 
 // looks like some technical debt here?! that's about error: ‘isnan’ is not a member of ‘std’
 #include <cmath>

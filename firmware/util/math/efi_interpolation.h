@@ -8,7 +8,6 @@
 
 #pragma once
 
-#include <rusefi/isnan.h>
 #include <math.h>
 #include "datalogging.h"
 #include "obd_error_codes.h"
