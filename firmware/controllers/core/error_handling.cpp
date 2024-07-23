@@ -11,6 +11,7 @@
 #include "backup_ram.h"
 #include "error_handling_led.h"
 #include "log_hard_fault.h"
+#include "rusefi/critical_error.h"
 
 static critical_msg_t warningBuffer;
 static critical_msg_t criticalErrorMessageBuffer;
@@ -21,6 +22,11 @@ bool hasFirmwareErrorFlag = false;
 
 const char *dbg_panic_file;
 int dbg_panic_line;
+
+// todo: need vararg version of 'firmwareError' to make this method vararg?
+void efiCriticalError(const char *message) {
+  criticalError(message);
+}
 
 const char* getCriticalErrorMessage(void) {
 	return criticalErrorMessageBuffer;

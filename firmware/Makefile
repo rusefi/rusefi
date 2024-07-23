@@ -88,6 +88,9 @@ endif
 # EFI_SIMULATOR determines if we are running in the simulator (hide things from hw/tests)
 USE_OPT += $(RUSEFI_OPT) -DEFI_UNIT_TEST=0 -DEFI_PROD_CODE=1 -DEFI_SIMULATOR=0
 
+# signalling to libfirmware that we have criticalError() method
+USE_OPT += -DWE_HAVE_CRITICAL_ERROR_METHOD
+
 # C specific options here (added to USE_OPT).
 ifeq ($(USE_COPT),)
   USE_COPT = -fgnu89-inline -std=gnu99 -Wno-error=implicit-fallthrough
