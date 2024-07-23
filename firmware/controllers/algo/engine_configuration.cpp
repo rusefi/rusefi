@@ -254,7 +254,7 @@ static void initTemperatureCurve(float *bins, float *values, int size, float def
 #endif // EFI_ENGINE_CONTROL
 
 void prepareVoidConfiguration(engine_configuration_s *p_engineConfiguration) {
-	criticalAssertVoid(p_engineConfiguration != NULL, "ec NULL");
+	criticalAssertVoid(p_engineConfiguration != nullptr, "ec NULL");
 	efi::clear(p_engineConfiguration);
 
 	p_engineConfiguration->clutchDownPinMode = PI_PULLUP;
