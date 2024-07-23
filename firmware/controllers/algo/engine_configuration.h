@@ -77,9 +77,8 @@ int hackHellenBoardId(int detectedId);
 
 #if !EFI_UNIT_TEST
 extern persistent_config_container_s persistentState;
-static engine_configuration_s * const engineConfiguration =
-	&persistentState.persistentConfiguration.engineConfiguration;
-static persistent_config_s * const config = &persistentState.persistentConfiguration;
+static constexpr engine_configuration_s * engineConfiguration = &persistentState.persistentConfiguration.engineConfiguration;
+static constexpr persistent_config_s * config = &persistentState.persistentConfiguration;
 #else // EFI_UNIT_TEST
 extern engine_configuration_s *engineConfiguration;
 extern persistent_config_s *config;
