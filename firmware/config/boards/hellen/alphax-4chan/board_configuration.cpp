@@ -85,8 +85,13 @@ static void setupDefaultSensorInputs() {
 }
 
 static bool is_F_OrOlder() {
+#ifdef STM32F7XX
+  // only new mega module boards were fabricated with F7
+  return false;
+#else
     int16_t hellenBoardId = engine->engineState.hellenBoardId;
     return hellenBoardId == BOARD_ID_ALPHA4CH_B || hellenBoardId == BOARD_ID_ALPHA4CH_D || hellenBoardId == BOARD_ID_ALPHA4CH_E || hellenBoardId == BOARD_ID_ALPHA4CH_F;
+#endif
 }
 
 void boardInitHardware() {

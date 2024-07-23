@@ -29,6 +29,8 @@ include $(BOARDS_DIR)/hellen/hellen-common-mega144.mk
 DDEFS += -DTRIGGER_SCOPE
 
 ifeq ($(PROJECT_CPU),ARCH_STM32F7)
+  # need boot times of under 350ms for car that expects fast CAN https://github.com/rusefi/alphax-4chan/issues/184
+  DDEFS += -DHW_HELLEN_SKIP_BOARD_TYPE=TRUE
 	DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_ALPHAX_4CHAN_F7
     # TODO do we only support serial on F7 but not UART?
     DDEFS += -DEFI_CONSOLE_TX_BRAIN_PIN=Gpio::D6 -DEFI_CONSOLE_RX_BRAIN_PIN=Gpio::D5
