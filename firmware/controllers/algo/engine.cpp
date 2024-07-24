@@ -27,7 +27,6 @@
 #include "speedometer.h"
 #include "dynoview.h"
 #include "boost_control.h"
-#include "fan_control.h"
 #include "ac_control.h"
 #include "vr_pwm.h"
 #if EFI_MC33816

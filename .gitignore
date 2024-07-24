@@ -23,8 +23,9 @@ err.txt
 log.txt
 *.rusefi_binary
 *.msq
-gitversion.h
-gitversion.h.gen
+gitversion.h*
+engine_modules_generated.h*
+modules_list_generated.h*
 
 # Eclipse
 .metadata/

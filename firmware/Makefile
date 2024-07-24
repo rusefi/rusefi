@@ -200,6 +200,7 @@ endif
 
 include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
 include $(PROJECT_DIR)/common.mk
+include $(PROJECT_DIR)/controllers/modules/modules.mk
 
 ifeq ($(USE_OPENBLT),yes)
   # Reserve start of flash for OpenBLT
@@ -239,6 +240,7 @@ CPPSRC = \
   $(HW_LAYER_DRIVERS_CORE_CPP) \
   $(HW_LAYER_DRIVERS_CPP) \
   $(CONSOLE_SRC_CPP) \
+  $(MODULES_CPPSRC) \
   $(RUSEFI_LIB_CPP) \
   rusefi.cpp \
   main.cpp
@@ -275,6 +277,7 @@ INCDIR = \
   $(PCH_DIR) \
   $(BOARDINC) \
   $(ALLINC) \
+  $(MODULES_INC) \
   $(TESTINC) \
   $(CHIBIOS)/os/various \
   $(RUSEFI_LIB_INC) \
@@ -360,6 +363,7 @@ include $(RULESFILE)
 include $(PROJECT_DIR)/rusefi_pch.mk
 include $(PROJECT_DIR)/fome_generated.mk
 include $(PROJECT_DIR)/gitversion.mk
+include $(PROJECT_DIR)/controllers/modules/modules_header_gen.mk
 
 .PHONY: CLEAN_RULE_HOOK CLEAN_PCH_HOOK CLEAN_BUNDLE_HOOK
 

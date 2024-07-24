@@ -69,13 +69,13 @@ Usages:
     output_name: ac
 
   - name: fan_control
-    folder: controllers/actuators
+    folder: controllers/modules/fan
     output_name: [ "fan1", "fan2" ]
     constexpr: "___engine.module<FanControl1>()"
     isPtr: true
 
   - name: fuel_pump_control
-    folder: controllers/actuators
+    folder: controllers/modules/fuel_pump
     output_name: fuelPump
 
   - name: main_relay

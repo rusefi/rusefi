@@ -115,12 +115,14 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 	{
 		// Log this fuel as consumed
 
+		#ifdef MODULE_TRIP_ODO
 		bool isCranking = getEngineRotationState()->isCranking();
 		int numberOfInjections = isCranking ? getNumberOfInjections(engineConfiguration->crankingInjectionMode) : getNumberOfInjections(engineConfiguration->injectionMode);
 
 		float actualInjectedMass = numberOfInjections * (injectionMassStage1 + injectionMassStage2);
 
 		engine->module<TripOdometer>()->consumeFuel(actualInjectedMass, nowNt);
+		#endif // MODULE_TRIP_ODO
 	}
 
 	if (doSplitInjection) {

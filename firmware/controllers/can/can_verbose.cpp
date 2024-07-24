@@ -52,8 +52,10 @@ static void populateFrame(Status& msg) {
 
 	msg.gear = Sensor::getOrZero(SensorType::DetectedGear);
 
+	#ifdef MODULE_TRIP_ODO
 	// scale to units of 0.1km
 	msg.distanceTraveled = engine->module<TripOdometer>()->getDistanceMeters() / 100;
+	#endif
 }
 
 struct Speeds {
@@ -158,8 +160,10 @@ struct Fueling2 {
 };
 
 static void populateFrame(Fueling2& msg) {
-	msg.fuelConsumedGram = engine->module<TripOdometer>()->getConsumedGrams();
-	msg.fuelFlowRate = engine->module<TripOdometer>()->getConsumptionGramPerSecond();
+	#ifdef MODULE_TRIP_ODO
+		msg.fuelConsumedGram = engine->module<TripOdometer>()->getConsumedGrams();
+		msg.fuelFlowRate = engine->module<TripOdometer>()->getConsumptionGramPerSecond();
+	#endif // MODULE_TRIP_ODO
 
 	for (size_t i = 0; i < 2; i++) {
 		msg.fuelTrim[i] = 100.0f * (engine->stftCorrection[i] - 1.0f);

@@ -1,7 +1,5 @@
 #include "pch.h"
 
-#include "fan_control.h"
-
 static void updateFans() {
 	engine->module<FanControl1>()->onSlowCallback();
 }

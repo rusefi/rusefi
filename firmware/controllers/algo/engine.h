@@ -32,7 +32,6 @@
 #include "launch_control.h"
 #include "antilag_system.h"
 #include "trigger_scheduler.h"
-#include "fuel_pump.h"
 #include "main_relay.h"
 #include "ac_control.h"
 #include "type_list.h"
@@ -42,16 +41,15 @@
 #include "harley_acr.h"
 #include "dfco.h"
 #include "fuel_computer.h"
-#include "gear_detector.h"
 #include "advance_map.h"
-#include "fan_control.h"
 #include "sensor_checker.h"
 #include "fuel_schedule.h"
 #include "prime_injection.h"
 #include "throttle_model.h"
 #include "lambda_monitor.h"
 #include "vvt.h"
-#include "trip_odometer.h"
+
+#include "engine_modules_generated.h"
 
 #include <functional>
 
@@ -156,20 +154,13 @@ public:
 #if EFI_ALTERNATOR_CONTROL
 		AlternatorController,
 #endif /* EFI_ALTERNATOR_CONTROL */
-		FuelPumpController,
 		MainRelayController,
 		IgnitionController,
 		Mockable<AcController>,
-		FanControl1,
-		FanControl2,
 		PrimeController,
 		DfcoController,
 		HarleyAcr,
 		Mockable<WallFuelController>,
-#if EFI_VEHICLE_SPEED
-		GearDetector,
-		TripOdometer,
-#endif // EFI_VEHICLE_SPEED
 		KnockController,
 		SensorChecker,
 		LimpManager,
@@ -183,6 +174,9 @@ public:
 		BoostController,
 #endif // EFI_BOOST_CONTROL
 		LedBlinkingTask,
+
+		#include "modules_list_generated.h"
+
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 

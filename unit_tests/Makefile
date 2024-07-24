@@ -14,6 +14,7 @@ include $(UNIT_TESTS_DIR)/test.mk
 include $(UNIT_TESTS_DIR)/tests/tests.mk
 include $(PROJECT_DIR)/../unit_tests/tests/util/test_util.mk
 include $(PROJECT_DIR)/common.mk
+include $(PROJECT_DIR)/controllers/modules/modules.mk
 
 RUSEFI_LIB = $(PROJECT_DIR)/libfirmware
 include $(RUSEFI_LIB)/util/util.mk
@@ -47,11 +48,13 @@ CPPSRC += $(ALLCPPSRC) \
 	$(PROJECT_DIR)/../unit_tests/mocks.cpp \
 	$(RUSEFI_LIB_CPP) \
 	$(RUSEFI_LIB_CPP_TEST) \
+	$(MODULES_CPPSRC) \
 
 INCDIR += \
 	$(PCH_DIR) \
 	$(UNIT_TESTS_DIR) \
 	$(ALLINC) \
+	$(MODULES_INC) \
 	$(GENERATED_DIR) \
 	$(PROJECT_DIR)/config/boards/hellen \
 	$(UNIT_TESTS_DIR)/test_data_structures \
