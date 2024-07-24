@@ -1,0 +1,38 @@
+gearSensor = Sensor.new("DetectedGear")
+gearSensor : setTimeout(timeout)
+
+
+function onTick()
+  gearAnalog = getAuxAnalog(0) or 0
+
+
+	if gearAnalog < 0.6 then
+		-- error condition!!!
+		gearCode = 7
+	elseif gearAnalog >= 0.6 and gearAnalog <= 0.8 then
+--		print("1")
+		gearCode = 1
+	elseif gearAnalog > 0.8 and gearAnalog <= 1.3 then
+--		print("N")
+		gearCode = 0
+	elseif gearAnalog > 1.3 and gearAnalog <= 2.3 then
+--		print("Gear: 2")
+		gearCode = 2
+	elseif gearAnalog > 2.3 and gearAnalog <= 2.7 then
+--		print("Gear: 3")
+		gearCode = 3
+	elseif gearAnalog > 2.7 and gearAnalog <= 3.5 then
+--		print("Gear: 4")
+		gearCode = 4
+	elseif gearAnalog > 3.5 and gearAnalog <= 4.15 then
+--		print("Gear: 5")
+		gearCode = 5
+	elseif gearAnalog > 4.15 then
+--		print("Gear: 6")
+		gearCode = 6
+	end
+
+  gearSensor : set(gearCode)
+
+end
+
