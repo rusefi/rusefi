@@ -2050,6 +2050,7 @@ end_struct
 #define INJECTOR_1_NAME "Injector #1"
 #define INJECTOR_2_NAME "Injector #2"
 
+#define ts_show_vvt_output_pin true
 #define ts_show_hbridge_function true
 #define ts_show_aux_sensors true
 #define ts_show_tps2_error true
