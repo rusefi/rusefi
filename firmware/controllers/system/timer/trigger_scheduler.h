@@ -5,10 +5,10 @@ public:
 	void schedule(AngleBasedEvent* event, angle_t angle, action_s action);
 
 	bool scheduleOrQueue(AngleBasedEvent *event,
-			     efitick_t edgeTimestamp,
-			     angle_t angle,
-			     action_s action,
-				 float currentPhase, float nextPhase);
+							efitick_t edgeTimestamp,
+							angle_t angle,
+							action_s action,
+							float currentPhase, float nextPhase);
 
 	void scheduleEventsUntilNextTriggerTooth(int rpm,
 						 efitick_t edgeTimestamp,
