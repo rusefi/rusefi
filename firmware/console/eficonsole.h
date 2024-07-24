@@ -8,7 +8,12 @@
 
 #pragma once
 
+#include "engine_module.h"
+
 void initializeConsole();
 void startUsbConsole();
-void startEthernetConsole();
 void startWifiConsole();
+
+struct EthernetConsoleModule final : public EngineModule {
+	void initNoConfiguration() override;
+};

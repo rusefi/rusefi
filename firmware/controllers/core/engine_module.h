@@ -8,6 +8,9 @@
 
 class EngineModule {
 public:
+	// Called exactly once during boot, before configuration is loaded
+	virtual void initNoConfiguration() { }
+
 	// Called when 'Burn' is invoked
 	virtual void onConfigurationChange(engine_configuration_s const * /*previousConfig*/) { }
 

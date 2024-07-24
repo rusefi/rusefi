@@ -10,7 +10,7 @@ DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::B14
 
 # Enable ethernet
 LWIP = yes
-DDEFS += -DEFI_ETHERNET=TRUE
+include $(PROJECT_DIR)/controllers/modules/ethernet_console/ethernet_console.mk
 
 DDEFS += -DFIRMWARE_ID=\"nucleo_f767\"
 DDEFS += -DDEFAULT_ENGINE_TYPE=MINIMAL_PINS

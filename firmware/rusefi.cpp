@@ -205,9 +205,9 @@ void runRusEfi() {
 
 	detectBoardType();
 
-#if EFI_ETHERNET
-	startEthernetConsole();
-#endif
+	engine->engineModules.apply_all([](auto & m) {
+		m.initNoConfiguration();
+	});
 
 #if EFI_USB_SERIAL
 	startUsbConsole();

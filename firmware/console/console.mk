@@ -9,7 +9,6 @@ CONSOLE_SRC_CPP = $(CONSOLE_COMMON_SRC_CPP) \
 	$(PROJECT_DIR)/console/connector_uart_dma.cpp \
 	$(PROJECT_DIR)/console/binary_log/binary_logging.cpp \
 	$(PROJECT_DIR)/console/binary_log/usb_console.cpp \
-	$(PROJECT_DIR)/console/binary_log/ethernet_console.cpp \
 	$(PROJECT_DIR)/console/wifi_console.cpp \
 
 

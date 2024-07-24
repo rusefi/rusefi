@@ -1,7 +1,5 @@
 #include "pch.h"
 
-#if EFI_ETHERNET
-
 #include "lwipthread.h"
 
 #include "lwip/sockets.h"
@@ -80,8 +78,6 @@ struct EthernetThread : public TunerstudioThread {
 
 static EthernetThread ethernetConsole;
 
-void startEthernetConsole() {
+void EthernetConsoleModule::initNoConfiguration() {
 	ethernetConsole.start();
 }
-
-#endif // EFI_ETHERNET

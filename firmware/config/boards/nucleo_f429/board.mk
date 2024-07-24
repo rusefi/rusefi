@@ -4,7 +4,7 @@ DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::B14
 
 # Enable ethernet
 LWIP = yes
-DDEFS += -DEFI_ETHERNET=TRUE
+include $(PROJECT_DIR)/controllers/modules/ethernet_console/ethernet_console.mk
 
 # This is an F429!
 IS_STM32F429 = yes

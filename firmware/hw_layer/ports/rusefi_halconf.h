@@ -41,7 +41,7 @@
 #define USB_USE_WAIT (EFI_FILE_LOGGING && EFI_USB_SERIAL)
 
 // Ethernet
-#define HAL_USE_MAC EFI_ETHERNET
+#define HAL_USE_MAC MODULE_ETHERNET_CONSOLE
 
 /*===========================================================================*/
 /* Required rusEFI settings                                                  */
