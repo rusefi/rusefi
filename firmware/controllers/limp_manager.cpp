@@ -85,6 +85,10 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 		allowSpark.clear(ClearReason::Lua);
 	}
 
+	if (engine->engineState.lua.luaFuelCut) {
+		allowFuel.clear(ClearReason::Lua);
+	}
+
 #if EFI_HD_ACR
 	// Don't inject fuel during Harley compression release - it sprays fuel everywhere
 	if (engine->module<HarleyAcr>()->isActive() && engineConfiguration->cutFuelInAcr) {

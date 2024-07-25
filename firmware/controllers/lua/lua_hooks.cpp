@@ -869,6 +869,10 @@ void configureRusefiLuaHooks(lua_State* lState) {
 		engine->engineState.lua.luaIgnCut = lua_toboolean(l, 1);
 		return 0;
 	});
+	lua_register(lState, "setFuelDisabled", [](lua_State* l) {
+		engine->engineState.lua.luaFuelCut = lua_toboolean(l, 1);
+		return 0;
+	});
 	lua_register(lState, "setDfcoDisabled", [](lua_State* l) {
 		engine->engineState.lua.disableDecelerationFuelCutOff = lua_toboolean(l, 1);
 		return 0;
