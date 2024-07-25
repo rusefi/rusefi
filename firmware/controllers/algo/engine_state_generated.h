@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Thu Jul 04 01:02:11 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Thu Jul 25 15:37:24 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -33,85 +33,85 @@ struct LuaAdjustments {
 	bool luaIgnCut : 1 {};
 	/**
 	offset 8 bit 5 */
-	bool clutchDownState : 1 {};
+	bool luaFuelCut : 1 {};
 	/**
 	offset 8 bit 6 */
-	bool disableDecelerationFuelCutOff : 1 {};
+	bool clutchDownState : 1 {};
 	/**
 	offset 8 bit 7 */
-	bool unusedBit_9_7 : 1 {};
+	bool disableDecelerationFuelCutOff : 1 {};
 	/**
 	offset 8 bit 8 */
-	bool unusedBit_9_8 : 1 {};
+	bool unusedBit_10_8 : 1 {};
 	/**
 	offset 8 bit 9 */
-	bool unusedBit_9_9 : 1 {};
+	bool unusedBit_10_9 : 1 {};
 	/**
 	offset 8 bit 10 */
-	bool unusedBit_9_10 : 1 {};
+	bool unusedBit_10_10 : 1 {};
 	/**
 	offset 8 bit 11 */
-	bool unusedBit_9_11 : 1 {};
+	bool unusedBit_10_11 : 1 {};
 	/**
 	offset 8 bit 12 */
-	bool unusedBit_9_12 : 1 {};
+	bool unusedBit_10_12 : 1 {};
 	/**
 	offset 8 bit 13 */
-	bool unusedBit_9_13 : 1 {};
+	bool unusedBit_10_13 : 1 {};
 	/**
 	offset 8 bit 14 */
-	bool unusedBit_9_14 : 1 {};
+	bool unusedBit_10_14 : 1 {};
 	/**
 	offset 8 bit 15 */
-	bool unusedBit_9_15 : 1 {};
+	bool unusedBit_10_15 : 1 {};
 	/**
 	offset 8 bit 16 */
-	bool unusedBit_9_16 : 1 {};
+	bool unusedBit_10_16 : 1 {};
 	/**
 	offset 8 bit 17 */
-	bool unusedBit_9_17 : 1 {};
+	bool unusedBit_10_17 : 1 {};
 	/**
 	offset 8 bit 18 */
-	bool unusedBit_9_18 : 1 {};
+	bool unusedBit_10_18 : 1 {};
 	/**
 	offset 8 bit 19 */
-	bool unusedBit_9_19 : 1 {};
+	bool unusedBit_10_19 : 1 {};
 	/**
 	offset 8 bit 20 */
-	bool unusedBit_9_20 : 1 {};
+	bool unusedBit_10_20 : 1 {};
 	/**
 	offset 8 bit 21 */
-	bool unusedBit_9_21 : 1 {};
+	bool unusedBit_10_21 : 1 {};
 	/**
 	offset 8 bit 22 */
-	bool unusedBit_9_22 : 1 {};
+	bool unusedBit_10_22 : 1 {};
 	/**
 	offset 8 bit 23 */
-	bool unusedBit_9_23 : 1 {};
+	bool unusedBit_10_23 : 1 {};
 	/**
 	offset 8 bit 24 */
-	bool unusedBit_9_24 : 1 {};
+	bool unusedBit_10_24 : 1 {};
 	/**
 	offset 8 bit 25 */
-	bool unusedBit_9_25 : 1 {};
+	bool unusedBit_10_25 : 1 {};
 	/**
 	offset 8 bit 26 */
-	bool unusedBit_9_26 : 1 {};
+	bool unusedBit_10_26 : 1 {};
 	/**
 	offset 8 bit 27 */
-	bool unusedBit_9_27 : 1 {};
+	bool unusedBit_10_27 : 1 {};
 	/**
 	offset 8 bit 28 */
-	bool unusedBit_9_28 : 1 {};
+	bool unusedBit_10_28 : 1 {};
 	/**
 	offset 8 bit 29 */
-	bool unusedBit_9_29 : 1 {};
+	bool unusedBit_10_29 : 1 {};
 	/**
 	offset 8 bit 30 */
-	bool unusedBit_9_30 : 1 {};
+	bool unusedBit_10_30 : 1 {};
 	/**
 	offset 8 bit 31 */
-	bool unusedBit_9_31 : 1 {};
+	bool unusedBit_10_31 : 1 {};
 };
 static_assert(sizeof(LuaAdjustments) == 12);
 
@@ -403,4 +403,4 @@ struct engine_state_s {
 static_assert(sizeof(engine_state_s) == 100);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Thu Jul 04 01:02:11 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Thu Jul 25 15:37:24 UTC 2024

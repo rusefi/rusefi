@@ -1220,6 +1220,9 @@ float getOutputValueByName(const char *name) {
 // lua.luaIgnCut
 		case -802271455:
 			return engine->engineState.lua.luaIgnCut;
+// lua.luaFuelCut
+		case 252935343:
+			return engine->engineState.lua.luaFuelCut;
 // lua.clutchDownState
 		case 133427185:
 			return engine->engineState.lua.clutchDownState;

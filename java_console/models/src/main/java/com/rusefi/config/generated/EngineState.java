@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Fri Jul 19 23:44:21 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt Thu Jul 25 15:37:24 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -183,8 +183,9 @@ public class EngineState {
 	public static final Field LUA_ACREQUESTSTATE = Field.create("LUA_ACREQUESTSTATE", 8, FieldType.BIT, 2).setBaseOffset(1120);
 	public static final Field LUA_LUADISABLEETB = Field.create("LUA_LUADISABLEETB", 8, FieldType.BIT, 3).setBaseOffset(1120);
 	public static final Field LUA_LUAIGNCUT = Field.create("LUA_LUAIGNCUT", 8, FieldType.BIT, 4).setBaseOffset(1120);
-	public static final Field LUA_CLUTCHDOWNSTATE = Field.create("LUA_CLUTCHDOWNSTATE", 8, FieldType.BIT, 5).setBaseOffset(1120);
-	public static final Field LUA_DISABLEDECELERATIONFUELCUTOFF = Field.create("LUA_DISABLEDECELERATIONFUELCUTOFF", 8, FieldType.BIT, 6).setBaseOffset(1120);
+	public static final Field LUA_LUAFUELCUT = Field.create("LUA_LUAFUELCUT", 8, FieldType.BIT, 5).setBaseOffset(1120);
+	public static final Field LUA_CLUTCHDOWNSTATE = Field.create("LUA_CLUTCHDOWNSTATE", 8, FieldType.BIT, 6).setBaseOffset(1120);
+	public static final Field LUA_DISABLEDECELERATIONFUELCUTOFF = Field.create("LUA_DISABLEDECELERATIONFUELCUTOFF", 8, FieldType.BIT, 7).setBaseOffset(1120);
 	public static final Field SD_TCHARGE = Field.create("SD_TCHARGE", 12, FieldType.INT16).setScale(0.01).setBaseOffset(1120);
 	public static final Field SD_ALIGNMENTFILL_AT_2 = Field.create("SD_ALIGNMENTFILL_AT_2", 14, FieldType.INT8).setScale(1.0).setBaseOffset(1120);
 	public static final Field SD_TCHARGEK = Field.create("SD_TCHARGEK", 16, FieldType.FLOAT).setBaseOffset(1120);
@@ -234,6 +235,7 @@ public class EngineState {
 	LUA_ACREQUESTSTATE,
 	LUA_LUADISABLEETB,
 	LUA_LUAIGNCUT,
+	LUA_LUAFUELCUT,
 	LUA_CLUTCHDOWNSTATE,
 	LUA_DISABLEDECELERATIONFUELCUTOFF,
 	SD_TCHARGE,
