@@ -1,9 +1,12 @@
 -- scriptname launch_control.lua
 
+-- uncomment functions setIgnDisabled and setFuelDisabled below to use script with rusefi_simulator:
+--[[
 function setIgnDisabled(value) end
 function setFuelDisabled(value) end
+]]--
 
-SPEED_THRESHOLD = 30 -- emulates `Speed Threshold(Kph)` setting on `Launch Control` dialog in TunerStudio
+local SPEED_THRESHOLD = 30 -- emulates `Speed Threshold(Kph)` setting on `Launch Control` dialog in TunerStudio
 local LAUNCH_RPM = 3000 -- emulates `Launch RPM(rpm)` setting on `Launch Control` dialog in TunerStudio
 local LAUNCH_CONTROL_WINDOW = 500 -- emulates `Launch Control Window(RPM)` setting on `Launch Control` dialog in TunerStudio
 local TPS_THRESHOLD  = 0 -- emulates `Speed Threshold(Kph)` setting on `Launch Control` dialog in TunerStudio
