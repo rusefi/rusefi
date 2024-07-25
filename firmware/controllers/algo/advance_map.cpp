@@ -208,11 +208,16 @@ angle_t getAdvance(int rpm, float engineLoad) {
 	}
 
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(angle), "_AngleN5", 0);
-	wrapAngle(angle, "getAdvance", ObdCode::CUSTOM_ERR_ADCANCE_CALC_ANGLE);
 	return angle;
 #else
 	return 0;
 #endif
+}
+
+angle_t getWrappedAdvance(const int rpm, const float engineLoad) {
+    angle_t angle = getAdvance(rpm, engineLoad) * engine->ignitionState.luaTimingMult + engine->ignitionState.luaTimingAdd;
+    wrapAngle(angle, "getWrappedAdvance", ObdCode::CUSTOM_ERR_ADCANCE_CALC_ANGLE);
+    return angle;
 }
 
 angle_t getCylinderIgnitionTrim(size_t cylinderNumber, int rpm, float ignitionLoad) {

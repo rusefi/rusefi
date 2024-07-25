@@ -174,7 +174,7 @@ void EngineState::periodicFastCallback() {
 #endif //EFI_LAUNCH_CONTROL
 
 	float l_ignitionLoad = getIgnitionLoad();
-	float baseAdvance = getAdvance(rpm, l_ignitionLoad) * engine->ignitionState.luaTimingMult + engine->ignitionState.luaTimingAdd;
+	float baseAdvance = getWrappedAdvance(rpm, l_ignitionLoad);
 	float correctedIgnitionAdvance = baseAdvance
 			// Pull any extra timing for knock retard
 			- engine->module<KnockController>()->getKnockRetard()
