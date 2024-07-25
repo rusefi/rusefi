@@ -168,7 +168,7 @@ TEST(ignition, negativeAdvance) {
 	ASSERT_EQ(DEFAULT_CRANKING_ANGLE, getCrankingAdvance(rpm, load));
 	ASSERT_EQ(-13, getRunningAdvance(rpm, load));
 	ASSERT_EQ(0, getAdvanceCorrections(load));
-	ASSERT_EQ(707, getAdvance(rpm, load));
+	ASSERT_EQ(707, getWrappedAdvance(rpm, load));
 
 	ASSERT_NEAR(-13, engine->ignitionState.baseIgnitionAdvance, EPS4D);
 	ASSERT_NEAR(-13, engine->ignitionState.correctedIgnitionAdvance, EPS4D);
@@ -188,7 +188,7 @@ TEST(ignition, negativeAdvance2stroke) {
 	engine->periodicFastCallback();
 
 	eth.assertRpm(0);
-	ASSERT_EQ(347, getAdvance(rpm, load));
+	ASSERT_EQ(347, getWrappedAdvance(rpm, load));
 
 	ASSERT_NEAR(-13, engine->ignitionState.correctedIgnitionAdvance, EPS4D);
 }
