@@ -9,6 +9,7 @@ struct_no_prefix engine_state_s
 		bit acRequestState
 		bit luaDisableEtb
 		bit luaIgnCut
+		bit luaFuelCut
 		bit clutchDownState
 		bit disableDecelerationFuelCutOff
 	end_struct
