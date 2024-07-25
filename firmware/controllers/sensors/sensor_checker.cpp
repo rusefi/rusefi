@@ -53,7 +53,8 @@ static ObdCode getCode(SensorType type, UnexpectedCode code) {
 				default: break;
 			} break;
 
-		case SensorType::Map:
+		case SensorType::MapSlow:
+		case SensorType::MapSlow2:
 			switch (code) {
 				case UnexpectedCode::Timeout:      return ObdCode::OBD_Map_Timeout;
 				case UnexpectedCode::Low:          return ObdCode::OBD_Map_Low;
@@ -171,8 +172,8 @@ void SensorChecker::onSlowCallback() {
 	check(SensorType::AcceleratorPedalSecondary);
 	check(SensorType::AcceleratorPedal);
 
-	check(SensorType::Map);
-	check(SensorType::Map2);
+	check(SensorType::MapSlow);
+	check(SensorType::MapSlow2);
 
 	check(SensorType::Clt);
 	check(SensorType::Iat);
