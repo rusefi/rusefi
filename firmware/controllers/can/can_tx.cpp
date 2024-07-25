@@ -30,14 +30,19 @@ PUBLIC_API_WEAK bool boardEnableSendWidebandInfo() { return true; }
 
 extern bool withHwQcActivity;
 
+static uint16_t m_cycleCount = 0;
+
+void resetCanWriteCycle() {
+  m_cycleCount = 0;
+}
+
 void CanWrite::PeriodicTask(efitick_t nowNt) {
 	UNUSED(nowNt);
-	static uint16_t cycleCount = 0;
-	CanCycle cycle(cycleCount);
+	CanCycle cycle(m_cycleCount);
 
 	//in case we have Verbose Can enabled, we should keep user configured period
 	if (engineConfiguration->enableVerboseCanTx && !engine->pauseCANdueToSerial) {
-		uint16_t cycleCountsPeriodMs = cycleCount * CAN_CYCLE_PERIOD;
+		uint16_t cycleCountsPeriodMs = m_cycleCount * CAN_CYCLE_PERIOD;
 		if (0 != engineConfiguration->canSleepPeriodMs) {
 			if (cycleCountsPeriodMs % engineConfiguration->canSleepPeriodMs) {
 				void sendCanVerbose();
@@ -54,7 +59,7 @@ void CanWrite::PeriodicTask(efitick_t nowNt) {
 
 	if (cycle.isInterval(CI::_MAX_Cycle)) {
 		//we now reset cycleCount since we reached max cycle count
-		cycleCount = 0;
+		m_cycleCount = 0;
 	}
 
 	updateDash(cycle);
@@ -78,7 +83,7 @@ void CanWrite::PeriodicTask(efitick_t nowNt) {
 	}
 #endif
 
-	cycleCount++;
+	m_cycleCount++;
 }
 
 CanInterval CanCycle::computeFlags(uint32_t cycleCount) {
