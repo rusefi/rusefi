@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Jul 26 05:41:55 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Jul 26 06:19:41 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1209,7 +1209,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 2031878680;
+	public static final int SIGNATURE_HASH = 1483669745;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1467,7 +1467,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.07.26.f407-discovery.2031878680";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.07.26.f407-discovery.1483669745";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2749,7 +2749,7 @@ public class Fields {
 	public static final Field KLINEBAUDRATE = Field.create("KLINEBAUDRATE", 3566, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final String[] CanGpioType = {"None", "DRT protocol", "MS protocol"};
 	public static final Field CANGPIOTYPE = Field.create("CANGPIOTYPE", 3568, FieldType.INT8, CanGpioType).setScale(1.0).setBaseOffset(0);
-	public static final String[] UiMode = {"Full", "Installation", "Tuning"};
+	public static final String[] UiMode = {"Full", "INVALID", "Tuning"};
 	public static final Field UIMODE = Field.create("UIMODE", 3569, FieldType.INT8, UiMode).setScale(1.0).setBaseOffset(0);
 	public static final Field HPFPPEAKPOS = Field.create("HPFPPEAKPOS", 3570, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field KLINEPERIODUS = Field.create("KLINEPERIODUS", 3572, FieldType.INT16).setScale(1.0).setBaseOffset(0);

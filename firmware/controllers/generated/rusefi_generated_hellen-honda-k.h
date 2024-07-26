@@ -1290,7 +1290,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3693899571
+#define SIGNATURE_HASH 4250889690
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1713,7 +1713,7 @@
 #define ts_show_vvt_output_pin true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.07.26.hellen-honda-k.3693899571"
+#define TS_SIGNATURE "rusEFI master.2024.07.26.hellen-honda-k.4250889690"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
@@ -1747,7 +1747,7 @@
 #define uart_device_e_UART_DEVICE_4 4
 #define uart_device_e_UART_NONE 0
 #define UiMode_auto_enum 0="FULL",1="INSTALLATION",2="TUNING"
-#define UiMode_enum "Full", "Installation", "Tuning"
+#define UiMode_enum "Full", "INVALID", "Tuning"
 #define UiMode_FULL 0
 #define UiMode_INSTALLATION 1
 #define UiMode_TUNING 2
