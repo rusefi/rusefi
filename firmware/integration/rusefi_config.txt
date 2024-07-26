@@ -202,6 +202,7 @@ struct_no_prefix engine_configuration_s
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
 #define SCRIPT_SETTING_COUNT 8
 
+#define VVT1_TARGET_NAME "VVT intake target"
 #define GPPWM_1_NAME "General Purpose PWM 1"
 #define GPPWM_2_NAME "General Purpose PWM 2"
 #define GPPWM_3_NAME "General Purpose PWM 3"
