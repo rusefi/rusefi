@@ -2333,6 +2333,13 @@ end_struct
 #define ts_show_popular_vehicles true
 #define ts_show_reset_calibrations false
 #define ts_show_air_conditioning true
+#define ts_show_oil_pressure_sensor true
+#define ts_show_oil_temp_sensor true
+#define ts_show_compressor_sensor true
+#define ts_show_fuel_pressure_sensor true
+#define ts_show_fuel_temp_sensor true
+#define ts_show_wastegate_sensor true
+#define ts_show_aux_connections true
 #define ts_show_onboard_accelerometer false
 #define ts_show_vvt_output true
 #define show_vvt_output_pin true
