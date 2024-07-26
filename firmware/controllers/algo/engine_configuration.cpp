@@ -245,11 +245,20 @@ void setWholeTimingTable(angle_t value) {
 }
 
 #if EFI_ENGINE_CONTROL
-static void initTemperatureCurve(float *bins, float *values, int size, float defaultValue) {
-	for (int i = 0; i < size; i++) {
-		bins[i] = -40 + i * 10;
-		values[i] = defaultValue; // this correction is a multiplier
-	}
+namespace {
+    void initTemperatureCurve(
+        float * const bins,
+        float * const values,
+        const int size,
+        const float defaultValue,
+        const float initialTemperature = -40,
+        const float temperatureStep = 10
+    ) {
+        for (int i = 0; i < size; i++) {
+            bins[i] = initialTemperature + i * temperatureStep;
+            values[i] = defaultValue; // this correction is a multiplier
+        }
+    }
 }
 #endif // EFI_ENGINE_CONTROL
 
