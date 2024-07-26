@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Jul 16 14:33:43 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Jul 26 12:43:18 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -5770,8 +5770,28 @@ struct persistent_config_s {
 	 * offset 22796
 	 */
 	uint16_t alternatorVoltageTargetRpmBins[ALTERNATOR_VOLTAGE_TARGET_SIZE];
+	/**
+	 * units: C
+	 * offset 22804
+	 */
+	float cltBoostCorrBins[BOOST_CURVE_SIZE];
+	/**
+	 * units: ratio
+	 * offset 22824
+	 */
+	float cltBoostCorr[BOOST_CURVE_SIZE];
+	/**
+	 * units: C
+	 * offset 22844
+	 */
+	float iatBoostCorrBins[BOOST_CURVE_SIZE];
+	/**
+	 * units: ratio
+	 * offset 22864
+	 */
+	float iatBoostCorr[BOOST_CURVE_SIZE];
 };
-static_assert(sizeof(persistent_config_s) == 22804);
+static_assert(sizeof(persistent_config_s) == 22884);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Jul 16 14:33:43 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Jul 26 12:43:18 UTC 2024
