@@ -2030,6 +2030,13 @@ int16_t[ALTERNATOR_VOLTAGE_TARGET_SIZE x ALTERNATOR_VOLTAGE_TARGET_SIZE] autosca
 uint16_t[ALTERNATOR_VOLTAGE_TARGET_SIZE] alternatorVoltageTargetLoadBins;;"Load", 1, 0, 0, 1000, 0
 uint16_t[ALTERNATOR_VOLTAGE_TARGET_SIZE] alternatorVoltageTargetRpmBins;;"RPM", 1, 0, 0, 18000, 0
 
+#define BOOST_CURVE_SIZE 5
+float[BOOST_CURVE_SIZE] cltBoostCorrBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
+float[BOOST_CURVE_SIZE] cltBoostCorr;;"ratio", 1, 0, 0, 5, 2
+
+float[BOOST_CURVE_SIZE] iatBoostCorrBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
+float[BOOST_CURVE_SIZE] iatBoostCorr;;"ratio", 1, 0, 0, 5, 2
+
 @@BOARD_CONFIG_FROM_FILE@@
 
 end_struct
