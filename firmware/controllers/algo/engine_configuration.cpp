@@ -245,11 +245,24 @@ void setWholeTimingTable(angle_t value) {
 }
 
 #if EFI_ENGINE_CONTROL
-static void initTemperatureCurve(float *bins, float *values, int size, float defaultValue) {
-	for (int i = 0; i < size; i++) {
-		bins[i] = -40 + i * 10;
-		values[i] = defaultValue; // this correction is a multiplier
-	}
+namespace {
+    void initTemperatureCurve(
+        float * const bins,
+        float * const values,
+        const int size,
+        const float defaultValue,
+        const float initialTemperature = -40.0f,
+        const float temperatureStep = 10.0f
+    ) {
+        for (int i = 0; i < size; i++) {
+            bins[i] = initialTemperature + i * temperatureStep;
+            values[i] = defaultValue; // this correction is a multiplier
+        }
+    }
+
+    void initBoostTemperatureCurve(float* const bins, float* const values) {
+        initTemperatureCurve(bins, values, BOOST_CURVE_SIZE, 1.0f, 20.0f, 20.0f);
+    }
 }
 #endif // EFI_ENGINE_CONTROL
 
@@ -476,6 +489,9 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->maxAcTps = 75;
 
 	initTemperatureCurve(IAT_FUEL_CORRECTION_CURVE, 1);
+
+	initBoostTemperatureCurve(config->cltBoostCorrBins, config->cltBoostCorr);
+	initBoostTemperatureCurve(config->iatBoostCorrBins, config->iatBoostCorr);
 
 	engineConfiguration->alternatorControl.minValue = 0;
 	engineConfiguration->alternatorControl.maxValue = 90;

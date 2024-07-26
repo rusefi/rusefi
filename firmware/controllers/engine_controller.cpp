@@ -558,6 +558,9 @@ bool validateConfigOnStartUpOrBurn() {
 		ensureArrayIsAscending("Fuel CLT mult", config->cltFuelCorrBins);
 		ensureArrayIsAscending("Fuel IAT mult", config->iatFuelCorrBins);
 
+		ensureArrayIsAscendingOrDefault("Boost CLT mult", config->cltBoostCorrBins);
+		ensureArrayIsAscendingOrDefault("Boost IAT mult", config->iatBoostCorrBins);
+
 		ensureArrayIsAscending("Injection phase load", config->injPhaseLoadBins);
 		ensureArrayIsAscending("Injection phase RPM", config->injPhaseRpmBins);
 
