@@ -304,7 +304,7 @@ struct MsIoBox_config_s
 	MsIoBoxVss vss
 end_struct
 
-#define UiMode_enum "Full", "Installation", "Tuning"
+#define UiMode_enum "Full", "INVALID", "Tuning"
 custom UiMode 1 bits, S08, @OFFSET@, [0:1], @@UiMode_enum@@
 
 struct cranking_parameters_s
