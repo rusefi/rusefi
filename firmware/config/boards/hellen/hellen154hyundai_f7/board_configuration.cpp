@@ -67,22 +67,10 @@ void setBoardConfigOverrides() {
 		// todo You would not believe how you invert TLE9201 #4579
 		engineConfiguration->stepperDcInvertedPins = true;
 
-	    //ETB1
-	    // PWM pin
-	    engineConfiguration->etbIo[0].controlPin = Gpio::H144_OUT_PWM2;
-	    // DIR pin
-		engineConfiguration->etbIo[0].directionPin1 = Gpio::H144_OUT_PWM3;
-	   	// Disable pin
-	   	engineConfiguration->etbIo[0].disablePin = Gpio::H144_OUT_IO12;
+	  setupTLE9201(/*controlPin*/Gpio::H144_OUT_PWM2, Gpio::H144_OUT_PWM3, Gpio::H144_OUT_IO12);
 
 		// wastegate DC motor
-	    //ETB2
-	    // PWM pin
-	    engineConfiguration->etbIo[1].controlPin = Gpio::H144_OUT_PWM4;
-	    // DIR pin
-		engineConfiguration->etbIo[1].directionPin1 = Gpio::H144_OUT_PWM5;
-	   	// Disable pin
-	   	engineConfiguration->etbIo[1].disablePin = Gpio::H144_OUT_IO13;
+	  setupTLE9201(/*controlPin*/Gpio::H144_OUT_PWM4, Gpio::H144_OUT_PWM5, Gpio::H144_OUT_IO13, 1);
 }
 
 /**

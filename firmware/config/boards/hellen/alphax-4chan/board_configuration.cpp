@@ -36,24 +36,6 @@ static void setInjectorPins() {
 	engineConfiguration->malfunctionIndicatorPin = Gpio::Unassigned;
 }
 
-static void setupEtb() {
-	// TLE9201 driver
-	// This chip has three control pins:
-	// DIR - sets direction of the motor
-	// PWM - pwm control (enable high, coast low)
-	// DIS - disables motor (enable low)
-
-	// PWM pin
-	engineConfiguration->etbIo[0].controlPin = Gpio::H144_OUT_PWM2;
-	// DIR pin
-	engineConfiguration->etbIo[0].directionPin1 = Gpio::H144_GP_IO1;
-	// Disable pin
-	engineConfiguration->etbIo[0].disablePin = Gpio::H144_GP_IO2;
-
-	// we only have pwm/dir, no dira/dirb
-	engineConfiguration->etb_use_two_wires = false;
-}
-
 static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[0] = Gpio::H144_IGN_1;
 	engineConfiguration->ignitionPins[1] = Gpio::H144_IGN_2;
@@ -160,7 +142,7 @@ void setBoardConfigOverrides() {
 void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
-	setupEtb();
+	setupTLE9201(/*controlPin*/Gpio::H144_OUT_PWM2, /*directionPin1*/Gpio::H144_GP_IO1, /*disablePin*/Gpio::H144_GP_IO2);
 	if (is_F_OrOlder()) {
         engineConfiguration->tachOutputPin = Gpio::H144_OUT_IO13;
 	    engineConfiguration->vvtPins[0] = Gpio::H144_OUT_PWM7;
