@@ -34,7 +34,7 @@ float getVoltageDivided(const char *msg, adc_channel_e hwChannel) {
 	return getVoltage(msg, hwChannel) * getAnalogInputDividerCoefficient(hwChannel);
 }
 
-float BOARD_WEAK boardAdjustVoltage(float voltage, adc_channel_e hwChannel) {
+float PUBLIC_API_WEAK boardAdjustVoltage(float voltage, adc_channel_e hwChannel) {
   // a hack useful when we do not trust voltage just after board EN was turned on. is this just hiding electrical design flaws?
   return voltage;
 }

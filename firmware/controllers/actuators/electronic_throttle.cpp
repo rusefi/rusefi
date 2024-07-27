@@ -279,7 +279,7 @@ float getSanitizedPedal() {
 	return clampPercentValue(pedalPosition.value_or(0));
 }
 
-BOARD_WEAK float boardAdjustEtbTarget(float currentEtbTarget) {
+PUBLIC_API_WEAK float boardAdjustEtbTarget(float currentEtbTarget) {
   return currentEtbTarget;
 }
 
@@ -937,7 +937,7 @@ static pid_s* getPidForDcFunction(dc_function_e function) {
 	}
 }
 
-BOARD_WEAK ValueProvider3D* pedal2TpsProvider() {
+PUBLIC_API_WEAK ValueProvider3D* pedal2TpsProvider() {
   return &pedal2tpsMap;
 }
 

@@ -59,7 +59,7 @@ static void printUid() {
  * But it looks like our manner of __attribute__((weak)) declaration works at well, and I hope it will not cause
  * problems in the future.
  */
-BOARD_WEAK void boardSayHello() {
+PUBLIC_API_WEAK void boardSayHello() {
 }
 
 static void sayHello() {

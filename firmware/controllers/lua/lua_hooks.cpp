@@ -642,7 +642,7 @@ static int lua_vincpy(lua_State* l) {
 	return 0;
 }
 
-BOARD_WEAK void boardConfigureLuaHooks(lua_State* lState) { }
+PUBLIC_API_WEAK void boardConfigureLuaHooks(lua_State* lState) { }
 
 void configureRusefiLuaHooks(lua_State* lState) {
   boardConfigureLuaHooks(lState);

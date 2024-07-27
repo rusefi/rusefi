@@ -744,7 +744,7 @@ bool TriggerCentral::isToothExpectedNow(efitick_t timestamp) {
 	return true;
 }
 
-BOARD_WEAK bool boardAllowTriggerActions() { return true; }
+PUBLIC_API_WEAK bool boardAllowTriggerActions() { return true; }
 
 angle_t TriggerCentral::findNextTriggerToothAngle(int p_currentToothIndex) {
   int currentToothIndex = p_currentToothIndex;

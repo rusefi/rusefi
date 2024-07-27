@@ -8,7 +8,7 @@
 
 #include "pch.h"
 
-float BOARD_WEAK getAnalogInputDividerCoefficient(adc_channel_e) {
+float PUBLIC_API_WEAK getAnalogInputDividerCoefficient(adc_channel_e) {
     return engineConfiguration->analogInputDividerCoefficient;
 }
 

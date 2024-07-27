@@ -21,15 +21,12 @@
 
 #define MOCK_UNDEFINED -1
 
+// why is Windows compiler not happy around simulator?! feature or defect?!
 #if !defined(EFI_SIM_IS_WINDOWS) || !EFI_SIM_IS_WINDOWS
-// todo: dup of PUBLIC_API_WEAK?
-#define BOARD_WEAK_SOMETHING_WEIRD __attribute__((weak))
+#define PUBLIC_API_WEAK_SOMETHING_WEIRD __attribute__((weak))
 #else
-#define BOARD_WEAK_SOMETHING_WEIRD
+#define PUBLIC_API_WEAK_SOMETHING_WEIRD
 #endif
-
-// todo: dup of PUBLIC_API_WEAK?
-#define BOARD_WEAK __attribute__((weak))
 
 void setCrankOperationMode();
 void setCamOperationMode();

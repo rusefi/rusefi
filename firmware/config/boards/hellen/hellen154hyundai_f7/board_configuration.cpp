@@ -166,7 +166,7 @@ static const struct mc33810_config mc33810 = {
 	.en = {.port = GPIOG, .pad = 9} // H144_GP_IO4 hopefully
 };
 
-/*BOARD_WEAK*/ void boardInitHardware() {
+/*PUBLIC_API_WEAK*/ void boardInitHardware() {
 	static OutputPin spi3CsEtb;
 	static OutputPin spi3CsWastegate;
 
