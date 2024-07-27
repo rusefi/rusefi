@@ -25,7 +25,7 @@
 // todo: dup of PUBLIC_API_WEAK?
 #define BOARD_WEAK __attribute__((weak))
 #else
-#define BOARD_WEAK
+#define BOARD_WEAK __attribute__((weak))
 #endif
 
 void setCrankOperationMode();
