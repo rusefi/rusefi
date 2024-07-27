@@ -23,7 +23,7 @@
 
 #if !defined(EFI_SIM_IS_WINDOWS) || !EFI_SIM_IS_WINDOWS
 // todo: dup of PUBLIC_API_WEAK?
-#define BOARD_WEAK __attribute__((weak))
+#define BOARD_WEAK PUBLIC_API_WEAK
 #else
 #define BOARD_WEAK
 #endif

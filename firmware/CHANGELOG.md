@@ -43,6 +43,7 @@ Release template (copy/paste this for new release):
  - Console command `set_sensor_mock` now accepts a sensor by name, instead of index. Example: `set_sensor_mock CLT 85.5`
  - STM32Cube v2.17
  - Better validation of thermistor configuration #6724
+ - Full layout vs tuning layout #5154
 
 ### Fixed
  - knock logic not activated until any configuration change via TS #6462
