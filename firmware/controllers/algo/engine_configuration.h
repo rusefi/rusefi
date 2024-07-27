@@ -23,10 +23,13 @@
 
 #if !defined(EFI_SIM_IS_WINDOWS) || !EFI_SIM_IS_WINDOWS
 // todo: dup of PUBLIC_API_WEAK?
-#define BOARD_WEAK __attribute__((weak))
+#define BOARD_WEAK_SOMETHING_WEIRD __attribute__((weak))
 #else
-#define BOARD_WEAK
+#define BOARD_WEAK_SOMETHING_WEIRD
 #endif
+
+// todo: dup of PUBLIC_API_WEAK?
+#define BOARD_WEAK __attribute__((weak))
 
 void setCrankOperationMode();
 void setCamOperationMode();
