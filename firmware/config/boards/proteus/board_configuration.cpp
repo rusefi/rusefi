@@ -270,6 +270,9 @@ int getBoardMetaLowSideOutputsCount() {
     if (engineConfiguration->engineType == engine_type_e::GM_SBC) {
         return getBoardMetaOutputsCount();
     }
+    if (engineConfiguration->engineType == engine_type_e::ME17_9_MISC) {
+        return getBoardMetaOutputsCount();
+    }
     return 16;
 }
 

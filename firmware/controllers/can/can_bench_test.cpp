@@ -63,7 +63,7 @@ static void qcSetEtbState(uint8_t dcIndex, uint8_t direction) {
 static void setPin(const CANRxFrame& frame, int value) {
 		int outputIndex = frame.data8[2];
 		if (outputIndex >= getBoardMetaOutputsCount()) {
-		  criticalError("QC pin index %d", outputIndex);
+		  criticalError("QC pin index %d out of range", outputIndex);
 			return;
 	  }
 #if EFI_GPIO_HARDWARE && EFI_PROD_CODE
