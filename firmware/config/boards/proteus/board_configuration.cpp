@@ -197,8 +197,11 @@ void boardPrepareForStop() {
 }
 
 #if HW_PROTEUS
-static Gpio PROTEUS_ME17_ADAPTER_OUTPUTS[] = {
-    Gpio::PROTEUS_LS_1,
+static Gpio PROTEUS_SLINGSHOT_OUTPUTS[] = {
+    Gpio::PROTEUS_LS_1, // inj 1
+    Gpio::PROTEUS_LS_2, // inj 2
+    Gpio::PROTEUS_LS_3, // inj 3
+    Gpio::PROTEUS_LS_4, // inj 4
 };
 
 static Gpio PROTEUS_SBC_OUTPUTS[] = {
@@ -310,7 +313,7 @@ int getBoardMetaOutputsCount() {
         return efi::size(PROTEUS_CANAM_OUTPUTS);
     }
     if (engineConfiguration->engineType == engine_type_e::ME17_9_MISC) {
-        return efi::size(PROTEUS_ME17_ADAPTER_OUTPUTS);
+        return efi::size(PROTEUS_SLINGSHOT_OUTPUTS);
     }
     if (engineConfiguration->engineType == engine_type_e::HARLEY) {
         return efi::size(PROTEUS_HARLEY_OUTPUTS);
@@ -341,6 +344,9 @@ int getBoardMetaDcOutputsCount() {
 Gpio* getBoardMetaOutputs() {
     if (engineConfiguration->engineType == engine_type_e::MAVERICK_X3) {
         return PROTEUS_CANAM_OUTPUTS;
+    }
+    if (engineConfiguration->engineType == engine_type_e::ME17_9_MISC) {
+        return PROTEUS_SLINGSHOT_OUTPUTS;
     }
     if (engineConfiguration->engineType == engine_type_e::HARLEY) {
         return PROTEUS_HARLEY_OUTPUTS;
