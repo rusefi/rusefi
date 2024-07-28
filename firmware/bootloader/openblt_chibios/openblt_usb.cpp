@@ -7,16 +7,9 @@ extern "C" {
 	#include "rs232.h"
 }
 
-extern blt_bool stayInBootloader;
-
 void Rs232Init() {
-#if (BOOT_BACKDOOR_ENTRY_TIMEOUT_MS == 0)
-	if (stayInBootloader)
-#endif
-	{
-	  // Set up USB serial
-  	usb_serial_start();
-	}
+	// Set up USB serial
+	usb_serial_start();
 }
 
 #define RS232_CTO_RX_PACKET_TIMEOUT_MS (100u)
