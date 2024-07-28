@@ -46,6 +46,19 @@ public class ConnectionAndMeta {
         return signatureWhiteLabel;
     }
 
+    public static boolean usePCAN() {
+        return getBoolead("show_pcan");
+    }
+
+    public static boolean useSimulator() {
+        return getBoolead("show_simulator");
+    }
+
+    private static boolean getBoolead(String propertyName) {
+        String flag = getProperties().getProperty(propertyName);
+        return Boolean.TRUE.toString().equals(flag);
+    }
+
     private static Properties getProperties() throws RuntimeException {
         Properties props = new Properties();
         try {
