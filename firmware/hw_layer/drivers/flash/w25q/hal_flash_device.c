@@ -192,16 +192,24 @@ static bool w25q_find_id(const uint8_t *set, size_t size, uint8_t element) {
 }
 
 static flash_error_t w25q_poll_status(SNORDriver *devp) {
+  int timeout = 100;
   uint8_t sts;
 
   do {
-#if W25Q_NICE_WAITING == TRUE
-    osalThreadSleepMilliseconds(1);
-#endif
     /* Read status command.*/
     bus_cmd_receive(devp->config->busp, W25Q_CMD_READ_STATUS_REGISTER,
                     1, &sts);
-  } while ((sts & W25Q_FLAGS_BUSY) != 0U);
+    if ((sts & W25Q_FLAGS_BUSY) == 0U) {
+      break;
+    }
+#if W25Q_NICE_WAITING == TRUE
+    osalThreadSleepMilliseconds(1);
+#endif
+  } while (--timeout);
+
+  if (timeout <= 0) {
+    return FLASH_ERROR_PROGRAM;
+  }
 
   /* Checking for errors.*/
   /* NOP */
