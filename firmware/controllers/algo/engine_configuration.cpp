@@ -836,12 +836,13 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::MAVERICK_X3:
 	    setMaverickX3();
 		break;
+	case engine_type_e::ME17_9_MISC:
+	case engine_type_e::POLARIS:
+	    setSlingshot();
+		break;
 #endif
 
 #if HW_PROTEUS
-	case engine_type_e::ME17_9_MISC:
-	    setSlingshot();
-		break;
     case engine_type_e::WASTEGATE_PROTEUS_TEST:
         proteusDcWastegateTest();
         break;
