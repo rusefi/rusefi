@@ -310,15 +310,20 @@ public class ProgramSelector {
 
         OpenbltJni.OpenbltCallbacks cb = makeOpenbltCallbacks(callbacks);
 
+        String fileName = FindFileHelper.findSrecFile();
+        if (fileName == null) {
+            callbacks.logLine(".srec image file not found");
+            callbacks.error();
+            return;
+        }
         try {
-            String fileName = FindFileHelper.findSrecFile();
             callbacks.logLine("flashSerial " + fileName);
             OpenbltJni.flashSerial(fileName, port, cb);
 
             callbacks.logLine("Update completed successfully!");
             callbacks.done();
         } catch (Throwable e) {
-            callbacks.logLine("Error: " + e.toString());
+            callbacks.logLine("Error: " + e);
             callbacks.error();
         } finally {
             OpenbltJni.stop(cb);

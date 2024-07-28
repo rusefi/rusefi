@@ -230,16 +230,23 @@ public class StartupFrame {
 
     public static @NotNull JLabel binaryModificationControl() {
         long binaryModificationTimestamp = MaintenanceUtil.getBinaryModificationTimestamp();
-        String fileTimestampText = binaryModificationTimestamp == 0 ? "firmware file not found" : ("Files " + new Date(binaryModificationTimestamp).toString());
-        JLabel jLabel = new JLabel(fileTimestampText);
-        jLabel.setToolTipText("Click to copy");
-        jLabel.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                Toolkit.getDefaultToolkit().getSystemClipboard()
-                    .setContents(new StringSelection(fileTimestampText), null);
-            }
-        });
+        JLabel jLabel;
+        if (binaryModificationTimestamp == 0) {
+            jLabel = new JLabel("firmware file not found");
+            jLabel.setForeground(Color.red);
+        } else {
+            String fileTimestampText = "Files " + new Date(binaryModificationTimestamp);
+            jLabel = new JLabel(fileTimestampText);
+            jLabel.setToolTipText("Click to copy");
+            jLabel.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mouseClicked(MouseEvent e) {
+                    Toolkit.getDefaultToolkit().getSystemClipboard()
+                        .setContents(new StringSelection(fileTimestampText), null);
+                }
+            });
+        }
+
         return jLabel;
     }
 
