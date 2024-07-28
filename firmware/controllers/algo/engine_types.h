@@ -97,7 +97,7 @@ enum class engine_type_e : uint16_t {
 
 	MAZDA_MIATA_NA6 = 34,
 
-	ET_UNUSED_35 = 35,
+	POLARIS = 35,
 
 	HELLEN_128_MERCEDES_4_CYL = 36,
 
