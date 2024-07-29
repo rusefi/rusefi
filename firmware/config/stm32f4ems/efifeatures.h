@@ -201,9 +201,6 @@
 #define EFI_STORAGE_MFS         FALSE
 #endif
 
-#ifndef EFI_STORAGE_MFS_EXTERNAL
-#define EFI_STORAGE_MFS_EXTERNAL FALSE
-#endif
 
 /**
  * Usually you need shaft position input, but maybe you do not need it?
