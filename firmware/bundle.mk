@@ -164,6 +164,7 @@ $(FIRMWARE_BIN_OUT) $(FOLDER)/$(PROJECT).dfu: $(FOLDER)/%: $(DELIVER)/% | $(FOLD
 
 HEX_BASE_ADDRESS = "0x$(shell $(OD) -h -j .vectors $(BUILDDIR)/$(PROJECT).elf | awk '/.vectors/ {print $$5 }')"
 ifeq ($(USE_OPENBLT),yes)
+  # note how bootloader_size from .ld file is hard-coded here!
 	CHECKSUM_ADDRESS = 0x0800801C
 else
 	CHECKSUM_ADDRESS = 0x0800001C

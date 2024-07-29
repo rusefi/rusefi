@@ -26,6 +26,7 @@
  */
 
 /* change address & length if bootloader */
+/* WARNING same bootloader_size is hard-coded in CHECKSUM_ADDRESS variable in bundle.mk */
 bootloader_size = 32k;
 flash_start = 0x08000000 + (DEFINED(HAS_BOOTLOADER) ? bootloader_size : 0);
 flash_size = DEFINED(IS_BOOTLOADER) ? bootloader_size : (DEFINED(EFI_FLASH_SIZE) ? EFI_FLASH_SIZE : 768k);
