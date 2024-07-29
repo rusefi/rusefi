@@ -28,7 +28,7 @@ void TunerStudio::cmdOutputChannels(TsChannelBase* tsChannel, uint16_t offset, u
 		return;
 	}
 
-	if (offset < BLOCKING_FACTOR) {
+	if (offset == 0) {
 		engine->outputChannels.outputRequestPeriod = channelsRequestTimer.getElapsedUs();
 		channelsRequestTimer.reset();
 	}
