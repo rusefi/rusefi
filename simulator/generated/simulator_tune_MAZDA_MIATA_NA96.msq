@@ -4750,7 +4750,7 @@ end</constant>
          1.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240728" nPages="1" signature="rusEFI master.2024.07.29.f407-discovery.4265734945" version="5.0"/>
+    <versionInfo firmwareInfo="20240728" nPages="1" signature="rusEFI master.2024.07.30.f407-discovery.4265734945" version="5.0"/>
     <bibliography author="rusEFI 20240728" writeDate="date"/>
     <settings/>
     <userComments/>
