@@ -8,6 +8,7 @@
  */
 
 #include "pch.h"
+#include "efifeatures.h"
 
 /* If any setting storage is exist */
 #if EFI_CONFIGURATION_STORAGE
