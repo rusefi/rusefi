@@ -28,10 +28,6 @@
 
 #include "runtime_state.h"
 
-#ifndef EFI_STORAGE_MFS_EXTERNAL
-#define EFI_STORAGE_MFS_EXTERNAL FALSE
-#endif
-
 static bool needToWriteConfiguration = false;
 
 /* if we use ChibiOS MFS for settings */
