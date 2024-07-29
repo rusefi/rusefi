@@ -5,3 +5,5 @@
 DDEFS += -DEFI_STORAGE_INT_FLASH=FALSE
 # use higher level API instead
 DDEFS += -DEFI_STORAGE_MFS=TRUE
+# Are we going to store seometing else but settings?
+DDEFS += -DMFS_CFG_MAX_RECORDS=8 -DMFS_CFG_TRANSACTION_MAX=8
