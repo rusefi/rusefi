@@ -144,7 +144,7 @@ runs:
       run: |
         : Invoking Post-Checkout Action
         if [ -f .github/workflows/actions/post-checkout.sh ]; then
-          bash .github/workflows/actions/post-checkout.sh
+           bash .github/workflows/actions/post-checkout.sh
         fi
 
     - name: Find out white-label
@@ -294,6 +294,25 @@ runs:
           echo Building simulator...
           bash bin/compile.sh $BOARD_META_PATH ../simulator/build/rusefi_simulator.linux
           echo DONE: simulator
+        fi
+
+    - name: Building bootloader separately
+      working-directory: ${{inputs.rusefi_dir}}/firmware
+      if: ${{ contains(inputs.artifacts, 'bootloader') }}
+      shell: bash
+      run: |
+        : Building bootloader separately
+        echo Building bootloader...
+        bash bin/compile.sh $BOARD_META_PATH bootloader
+        echo DONE: bootloader
+        ls -l bootloader/blbuild
+
+    - name: Invoking Post-bootloader Action
+      shell: bash
+      run: |
+        : Invoking Post-Checkout Action
+        if [ -f .github/workflows/actions/post-bootloader.sh ]; then
+           bash .github/workflows/actions/post-bootloader.sh
         fi
 
     - name: Build Firmware
