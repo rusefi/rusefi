@@ -10,6 +10,7 @@
 bool allowFlashWhileRunning() {
     /* TODO: check for actual flash configuration? */
     /* currently we support only AT32F43X with dual-bank flash, so allow flashing to second bank */
+    /* TODO: Seems AT32 is still freezes even write is happen to second bank, while executing code from first */
 	return true;
 }
 
