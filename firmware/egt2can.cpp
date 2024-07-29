@@ -19,9 +19,9 @@ static msg_t Thread1(void *arg) {
   chRegSetThreadName("blinker1");
   while (TRUE) {
     palClearPad(GPIOC, 13);
-    chThdSleepMilliseconds(500);
+    chThdSleepMilliseconds(1000);
     palSetPad(GPIOC, 13);
-    chThdSleepMilliseconds(500);
+    chThdSleepMilliseconds(1000);
   }
   return 0;
 }
