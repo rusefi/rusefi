@@ -143,7 +143,8 @@ void writeToFlashNow() {
 		needToWriteConfiguration = false;
 		return;
 	}
-	efiPrintf("Writing pending configuration...");
+	efiPrintf("Writing pending configuration... %d bytes", sizeof(persistentState));
+	efitick_t startNt = getTimeNowNt();
 
 	// Set up the container
 	persistentState.size = sizeof(persistentState);
@@ -184,7 +185,14 @@ void writeToFlashNow() {
 	startWatchdog();
 
 	if (isSuccess) {
-		efiPrintf("FLASH_SUCCESS");
+		efitick_t endNt = getTimeNowNt();
+		int elapsed_Ms = US2MS(NT2US(endNt - startNt));
+
+#if EFI_STORAGE_MFS == TRUE
+		efiPrintf("FLASH_SUCCESS after %d mS MFS status %d", elapsed_Ms, err);
+#else
+		efiPrintf("FLASH_SUCCESS after %d mS", elapsed_Ms);
+#endif
 	} else {
 		efiPrintf("Flashing failed");
 	}
@@ -336,6 +344,19 @@ static void rewriteConfig() {
 	writeToFlashNow();
 }
 
+#if EFI_STORAGE_MFS == TRUE
+static void eraseConfig() {
+	efitick_t startNt = getTimeNowNt();
+
+	mfs_error_t err;
+	err = mfsErase(&mfsd);
+
+	efitick_t endNt = getTimeNowNt();
+	int elapsed_Ms = US2MS(NT2US(endNt - startNt));
+	efiPrintf("erase done %d mS err %d", elapsed_Ms, err);
+}
+#endif
+
 void initFlash() {
 #if EFI_STORAGE_MFS == TRUE
 	boardInitMfs();
@@ -347,6 +368,8 @@ void initFlash() {
 	if (err < MFS_NO_ERROR) {
 		/* hm...? */
 	}
+
+	addConsoleAction("eraseconfig", eraseConfig);
 #endif
 
 	addConsoleAction("readconfig", readFromFlash);
