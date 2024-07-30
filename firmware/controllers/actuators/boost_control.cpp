@@ -18,14 +18,27 @@
 #error "Unexpected OS ACCESS HERE"
 #endif
 
-static Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t, uint8_t> boostMapOpen{"bo"};
-static Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t, uint8_t> boostMapClosed{"bc"};
-static SimplePwm boostPwmControl("boost");
+namespace {
+    static Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t, uint8_t> boostMapOpen{"bo"};
+    static Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t, uint8_t> boostMapClosed{"bc"};
+    Map2D<BOOST_CURVE_SIZE, float, float> boostCltCorr { "clt" };
+    Map2D<BOOST_CURVE_SIZE, float, float> boostIatCorr { "iat" };
+    static SimplePwm boostPwmControl("boost");
+}
 
-void BoostController::init(IPwm* pwm, const ValueProvider3D* openLoopMap, const ValueProvider3D* closedLoopTargetMap, pid_s* pidParams) {
+void BoostController::init(
+    IPwm* const pwm,
+    const ValueProvider3D* const openLoopMap,
+    const ValueProvider3D* const closedLoopTargetMap,
+    const ValueProvider2D& cltMultiplierProvider,
+    const ValueProvider2D& iatMultiplierProvider,
+    pid_s* const pidParams
+) {
 	m_pwm = pwm;
 	m_openLoopMap = openLoopMap;
 	m_closedLoopTargetMap = closedLoopTargetMap;
+    m_cltBoostCorrMap = &cltMultiplierProvider;
+    m_iatBoostCorrMap = &iatMultiplierProvider;
 
 	m_pid.initPidClass(pidParams);
 	resetLua();
@@ -106,8 +119,10 @@ expected<percent_t> BoostController::getOpenLoop(float target) {
 	}
 
 	efiAssert(ObdCode::OBD_PCM_Processor_Fault, m_openLoopMap != nullptr, "boost open loop", unexpected);
+    efiAssert(ObdCode::OBD_PCM_Processor_Fault, m_cltBoostCorrMap != nullptr, "boost CLT multiplier", unexpected);
+    efiAssert(ObdCode::OBD_PCM_Processor_Fault, m_iatBoostCorrMap != nullptr, "boost IAT multiplier", unexpected);
 
-	percent_t openLoop = luaOpenLoopAdd + m_openLoopMap->getValue(rpm, driverIntent.Value);
+	percent_t openLoop = luaOpenLoopAdd + getBoostControlDutyCycleWithTemperatureCorrections(rpm, driverIntent.Value);
 
 #if EFI_ENGINE_CONTROL
 	// Add any blends if configured
@@ -160,6 +175,37 @@ percent_t BoostController::getClosedLoopImpl(float target, float manifoldPressur
 
 	return m_pid.getOutput(target, manifoldPressure, FAST_CALLBACK_PERIOD_MS / 1000.0f);
 }
+
+float BoostController::getBoostControlDutyCycleWithTemperatureCorrections(
+    const float rpm,
+    const float driverIntent
+) const {
+    float result = m_openLoopMap->getValue(rpm, driverIntent);
+    std::optional<float> cltBoostMultiplier = getBoostMultiplier(SensorType::Clt, *m_cltBoostCorrMap);
+    if (cltBoostMultiplier.has_value()) {
+        result *= cltBoostMultiplier.value();
+    }
+    std::optional<float> iatBoostMultiplier = getBoostMultiplier(SensorType::Iat, *m_iatBoostCorrMap);
+    if (iatBoostMultiplier.has_value()) {
+        result *= iatBoostMultiplier.value();
+    }
+    return result;
+}
+
+std::optional<float> BoostController::getBoostMultiplier(
+    const SensorType sensorType,
+    const ValueProvider2D& multiplierCurve
+) const {
+    const SensorResult temperature = Sensor::get(sensorType);
+    if (temperature.Valid) {
+        const std::optional<float> boostMultiplier = multiplierCurve.getValue(temperature.Value);
+        if (boostMultiplier.has_value()) {
+            return std::make_optional<float>(boostMultiplier.value());
+        }
+    }
+    return {};
+}
+
 
 expected<percent_t> BoostController::getClosedLoop(float target, float manifoldPressure) {
 	boostControllerClosedLoopPart = getClosedLoopImpl(target, manifoldPressure);
@@ -280,9 +326,18 @@ void initBoostCtrl() {
 	// Set up open & closed loop tables
 	boostMapOpen.initTable(config->boostTableOpenLoop, config->boostRpmBins, config->boostTpsBins);
 	boostMapClosed.initTable(config->boostTableClosedLoop, config->boostRpmBins, config->boostTpsBins);
+    boostCltCorr.initTable(config->cltBoostCorr, config->cltBoostCorrBins);
+    boostIatCorr.initTable(config->iatBoostCorr, config->iatBoostCorrBins);
 
 	// Set up boost controller instance
-	engine->module<BoostController>().unmock().init(&boostPwmControl, &boostMapOpen, &boostMapClosed, &engineConfiguration->boostPid);
+	engine->module<BoostController>().unmock().init(
+        &boostPwmControl,
+        &boostMapOpen,
+        &boostMapClosed,
+        boostCltCorr,
+        boostIatCorr,
+        &engineConfiguration->boostPid
+    );
 
 #if !EFI_UNIT_TEST
 	startBoostPin();
