@@ -167,6 +167,8 @@ ifeq ($(USE_OPENBLT),yes)
   # note how bootloader_size from .ld file is hard-coded here!
 	CHECKSUM_ADDRESS = 0x0800801C
 else
+  # by the way '1C' is the magic address of first reserved DWORD in vector table
+  # by the way hex2dfu lower-case '-c' would also write binary length in second DWORD
 	CHECKSUM_ADDRESS = 0x0800001C
 endif
 
@@ -175,7 +177,7 @@ $(BUILDDIR)/rusefi.srec: $(BUILDDIR)/$(PROJECT).hex
 	$(H2D) -i $< -c $(CHECKSUM_ADDRESS) -b $(DBIN_CRC)
 	$(CP) -I binary -O srec --change-addresses=$(HEX_BASE_ADDRESS) $(DBIN_CRC) $@
 
-# The DFU is currenly not included in the bundle, so these prerequisites are listed as order-only to avoid building it.
+# The DFU is currently not included in the bundle, so these prerequisites are listed as order-only to avoid building it.
 # If you want it, you can build it with `make rusefi.snapshot.$BUNDLE_NAME/rusefi.dfu`
 $(DFU) $(DBIN): .h2d-sentinel ;
 
