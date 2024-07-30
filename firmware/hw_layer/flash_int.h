@@ -98,18 +98,6 @@ uintptr_t getFlashAddrFirstCopy(void);
 uintptr_t getFlashAddrSecondCopy(void);
 
 /**
- * @brief Erase the flash @p sector.
- * @details The sector is checked for errors after erase.
- * @note The sector is deleted regardless of its current state.
- *
- * @param sector Sector which is going to be erased.
- * @return FLASH_RETURN_SUCCESS         No error erasing the sector.
- * @return FLASH_RETURN_BAD_FLASH       Flash cell error.
- * @return FLASH_RETURN_NO_PERMISSION   Access denied.
- */
-int intFlashSectorErase(flashsector_t sector);
-
-/**
  * @brief Erase the sectors containing the span of @p size bytes starting at @p address.
  *
  * @warning If @p address doesn't match the beginning of a sector, the

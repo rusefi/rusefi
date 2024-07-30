@@ -58,8 +58,7 @@ flashsector_t intFlashSectorAt(flashaddr_t address) {
 	return sector;
 }
 
-static void intFlashClearErrors(void)
-{
+static void intFlashClearErrors() {
 #ifdef STM32H7XX
 	FLASH->CCR2 = 0xffffffff;
 #else
@@ -67,8 +66,7 @@ static void intFlashClearErrors(void)
 #endif
 }
 
-static int intFlashCheckErrors(void)
-{
+static int intFlashCheckErrors() {
 	uint32_t sr = FLASH_SR;
 
 #ifdef FLASH_SR_OPERR
@@ -129,7 +127,17 @@ static bool isDualBank(void) {
 }
 #endif
 
-int intFlashSectorErase(flashsector_t sector) {
+/**
+ * @brief Erase the flash @p sector.
+ * @details The sector is checked for errors after erase.
+ * @note The sector is deleted regardless of its current state.
+ *
+ * @param sector Sector which is going to be erased.
+ * @return FLASH_RETURN_SUCCESS         No error erasing the sector.
+ * @return FLASH_RETURN_BAD_FLASH       Flash cell error.
+ * @return FLASH_RETURN_NO_PERMISSION   Access denied.
+ */
+static int intFlashSectorErase(flashsector_t sector) {
 	int ret;
 	uint8_t sectorRegIdx = sector;
 #ifdef STM32F7XX
