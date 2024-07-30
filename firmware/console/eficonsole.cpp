@@ -260,6 +260,13 @@ void initializeConsole() {
 	addConsoleAction("test", [](){ /* do nothing */});
 	addConsoleActionI("echo", echo);
 	addConsoleAction("hello", sayHello);
+	#if EFI_USE_OPENBLT
+	  addConsoleAction("show_blt_version", [](){
+	    #define BLT_BIN_VERSION_ADDR              ((uint32_t)0x08000024U)       /*! 3rd reserved DWORD in vector table search:openblt_version */
+      	uint32_t bltBinVersion = ((uint32_t *)BLT_BIN_VERSION_ADDR)[0];
+      	efiPrintf("********************** blt=%lx", bltBinVersion);
+	  });
+	#endif
 #if EFI_HAS_RESET
 	addConsoleAction("reset", scheduleReset);
 #endif
