@@ -3,6 +3,11 @@
 BIN_FILE=$1
 
 SCRIPT_NAME=$(basename "$0")
+if [ -z "$BOARD_DIR" ]; then
+	echo "$SCRIPT_NAME: BIN_FILE parameter expected"
+	exit 1
+fi
+
 echo "$SCRIPT_NAME: ${BIN_FILE}"
 
 # search:openblt_version
