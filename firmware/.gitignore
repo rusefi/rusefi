@@ -12,3 +12,6 @@ build*
 # tools
 gcc-arm-none-eabi
 arm-gnu*
+
+# bundle temp folder
+rusefi.snapshot.*
