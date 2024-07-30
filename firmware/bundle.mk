@@ -184,6 +184,8 @@ $(DFU) $(DBIN): .h2d-sentinel ;
 .h2d-sentinel: $(BUILDDIR)/$(PROJECT).hex $(BOOTLOADER_HEX_OUT) $(BINSRC) | $(DELIVER)
 ifeq ($(USE_OPENBLT),yes)
 	$(H2D) -i $(BOOTLOADER_HEX) -i $(BUILDDIR)/$(PROJECT).hex -c $(CHECKSUM_ADDRESS) -o $(DFU) -b $(DBIN)
+	# TODO: handle .dfu file which is only used by Linux consumers!
+	bin/set_bl_bin_version.sh $(DBIN)
 else
 	$(H2D) -i $(BUILDDIR)/$(PROJECT).hex -c $(CHECKSUM_ADDRESS) -o $(DFU)
 	cp $(BUILDDIR)/$(PROJECT).bin $(DBIN)
