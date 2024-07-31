@@ -46,8 +46,8 @@ void setHondaK() {
 	static const uint16_t defaultPostCrankinDurationBins[] = {
 		0, 65, 100, 125, 150, 250
 	};
-	copyArray(engineConfiguration->postCrankingDurationBins, defaultPostCrankinDurationBins);
-	setTable(engineConfiguration->postCrankingFactor, 1.25f);
+	copyArray(config->postCrankingDurationBins, defaultPostCrankinDurationBins);
+	setTable(config->postCrankingFactor, 1.25f);
     engineConfiguration->useRunningMathForCranking = true;
 
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_HONDA);

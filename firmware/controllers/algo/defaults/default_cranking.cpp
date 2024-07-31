@@ -30,9 +30,9 @@ void setDefaultCranking() {
 	static const uint16_t defaultPostCrankinDurationBins[] = {
 		0, 15, 35, 65, 100, 150
 	};
-	copyArray(engineConfiguration->postCrankingCLTBins, defaultPostCrankingCLTBins);
-	copyArray(engineConfiguration->postCrankingDurationBins, defaultPostCrankinDurationBins);
-	setTable(engineConfiguration->postCrankingFactor, 1.2f);
+	copyArray(config->postCrankingCLTBins, defaultPostCrankingCLTBins);
+	copyArray(config->postCrankingDurationBins, defaultPostCrankinDurationBins);
+	setTable(config->postCrankingFactor, 1.2f);
 #endif
 
 	setLinearCurve(config->crankingTpsCoef, /*from*/1, /*to*/1, 1);
