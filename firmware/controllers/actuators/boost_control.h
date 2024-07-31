@@ -23,6 +23,8 @@ public:
         const ValueProvider3D* const closedLoopTargetMap,
         const ValueProvider2D& cltMultiplierProvider,
         const ValueProvider2D& iatMultiplierProvider,
+        const ValueProvider2D& cltAdderProvider,
+        const ValueProvider2D& iatAdderProvider,
         pid_s* const pidParams
     );
 
@@ -46,7 +48,11 @@ private:
 	percent_t getClosedLoopImpl(float target, float manifoldPressure);
 
     float getBoostControlDutyCycleWithTemperatureCorrections(const float rpm, const float driverIntent) const;
-    std::optional<float> getBoostMultiplier(const SensorType sensorType, const ValueProvider2D& multiplierCurve) const;
+    std::optional<float> getBoostControlTargetTemperatureAdder() const;
+    std::optional<float> getBoostTemperatureCorrection(
+        const SensorType sensorType,
+        const ValueProvider2D& correctionCurve
+    ) const;
 
 	Pid m_pid;
 
@@ -54,6 +60,8 @@ private:
 	const ValueProvider3D* m_closedLoopTargetMap = nullptr;
     const ValueProvider2D* m_cltBoostCorrMap = nullptr;
     const ValueProvider2D* m_iatBoostCorrMap = nullptr;
+    const ValueProvider2D* m_cltBoostAdderMap = nullptr;
+    const ValueProvider2D* m_iatBoostAdderMap = nullptr;
 	IPwm* m_pwm = nullptr;
 };
 

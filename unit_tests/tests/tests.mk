@@ -142,4 +142,6 @@ TESTS_SRC_CPP = \
 	tests/actuators/test_vvt.cpp \
 	tests/actuators/test_alternator.cpp \
 	tests/actuators/test_alternator_voltage_target_set_point.cpp \
+	tests/actuators/boost/boost_test_base.cpp \
 	tests/actuators/boost/test_open_loop_multipliers.cpp \
+	tests/actuators/boost/test_closed_loop_adders.cpp \
