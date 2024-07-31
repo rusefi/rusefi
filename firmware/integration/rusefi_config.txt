@@ -2039,6 +2039,12 @@ float[BOOST_CURVE_SIZE] cltBoostCorr;;"ratio", 1, 0, 0, 5, 2
 float[BOOST_CURVE_SIZE] iatBoostCorrBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
 float[BOOST_CURVE_SIZE] iatBoostCorr;;"ratio", 1, 0, 0, 5, 2
 
+float[BOOST_CURVE_SIZE] cltBoostAdderBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
+float[BOOST_CURVE_SIZE] cltBoostAdder;;"", 1, 0, 0, 5, 2
+
+float[BOOST_CURVE_SIZE] iatBoostAdderBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
+float[BOOST_CURVE_SIZE] iatBoostAdder;;"", 1, 0, 0, 5, 2
+
 @@BOARD_CONFIG_FROM_FILE@@
 
 end_struct
