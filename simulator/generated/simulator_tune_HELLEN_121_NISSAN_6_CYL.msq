@@ -902,30 +902,6 @@
         <constant name="injectorCompensationMode">"None"</constant>
         <constant name="fan2PinMode">"default"</constant>
         <constant digits="0" name="fuelReferencePressure" units="kPa">300.0</constant>
-        <constant cols="6" digits="2" name="postCrankingFactor" rows="6">
-         1.2 1.2 1.2 1.2 1.2 1.2
-         1.2 1.2 1.2 1.2 1.2 1.2
-         1.2 1.2 1.2 1.2 1.2 1.2
-         1.2 1.2 1.2 1.2 1.2 1.2
-         1.2 1.2 1.2 1.2 1.2 1.2
-         1.2 1.2 1.2 1.2 1.2 1.2
-</constant>
-        <constant cols="1" digits="0" name="postCrankingDurationBins" rows="6">
-         0.0
-         15.0
-         35.0
-         65.0
-         100.0
-         150.0
-</constant>
-        <constant cols="1" digits="0" name="postCrankingCLTBins" rows="6">
-         -20.0
-         0.0
-         20.0
-         40.0
-         60.0
-         80.0
-</constant>
         <constant digits="1" name="auxTempSensor1_tempC_1" units="*C">0.0</constant>
         <constant digits="1" name="auxTempSensor1_tempC_2" units="*C">0.0</constant>
         <constant digits="1" name="auxTempSensor1_tempC_3" units="*C">0.0</constant>
@@ -1817,6 +1793,30 @@
          0.0
          0.0
          0.0
+</constant>
+        <constant cols="6" digits="2" name="postCrankingFactor" rows="6">
+         1.2 1.2 1.2 1.2 1.2 1.2
+         1.2 1.2 1.2 1.2 1.2 1.2
+         1.2 1.2 1.2 1.2 1.2 1.2
+         1.2 1.2 1.2 1.2 1.2 1.2
+         1.2 1.2 1.2 1.2 1.2 1.2
+         1.2 1.2 1.2 1.2 1.2 1.2
+</constant>
+        <constant cols="1" digits="0" name="postCrankingDurationBins" rows="6">
+         0.0
+         15.0
+         35.0
+         65.0
+         100.0
+         150.0
+</constant>
+        <constant cols="1" digits="0" name="postCrankingCLTBins" rows="6">
+         -20.0
+         0.0
+         20.0
+         40.0
+         60.0
+         80.0
 </constant>
         <constant cols="1" digits="0" name="etbBiasBins" rows="8">
          0.0
@@ -4912,7 +4912,7 @@ canRxAdd(IN_35D, onCanRxAc)</constant>
          1.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240728" nPages="1" signature="rusEFI master.2024.07.31.f407-discovery.4265734945" version="5.0"/>
+    <versionInfo firmwareInfo="20240728" nPages="1" signature="rusEFI master.2024.07.31.f407-discovery.3637985993" version="5.0"/>
     <bibliography author="rusEFI 20240728" writeDate="date"/>
     <settings/>
     <userComments/>

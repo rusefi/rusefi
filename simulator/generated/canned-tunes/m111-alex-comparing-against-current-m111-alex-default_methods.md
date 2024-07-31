@@ -841,7 +841,7 @@ static void cannedpostCrankingFactor() {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 };
-	copyTable(engineConfiguration->postCrankingFactor, hardCodedpostCrankingFactor);
+	copyTable(config->postCrankingFactor, hardCodedpostCrankingFactor);
 }
 
 ```
