@@ -23,6 +23,8 @@ namespace {
     static Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t, uint8_t> boostMapClosed{"bc"};
     Map2D<BOOST_CURVE_SIZE, float, float> boostCltCorr { "clt" };
     Map2D<BOOST_CURVE_SIZE, float, float> boostIatCorr { "iat" };
+    Map2D<BOOST_CURVE_SIZE, float, float> boostCltAdder { "clt (adder)" };
+    Map2D<BOOST_CURVE_SIZE, float, float> boostIatAdder { "iat (adder)" };
     static SimplePwm boostPwmControl("boost");
 }
 
@@ -32,6 +34,8 @@ void BoostController::init(
     const ValueProvider3D* const closedLoopTargetMap,
     const ValueProvider2D& cltMultiplierProvider,
     const ValueProvider2D& iatMultiplierProvider,
+    const ValueProvider2D& cltAdderProvider,
+    const ValueProvider2D& iatAdderProvider,
     pid_s* const pidParams
 ) {
 	m_pwm = pwm;
@@ -39,6 +43,8 @@ void BoostController::init(
 	m_closedLoopTargetMap = closedLoopTargetMap;
     m_cltBoostCorrMap = &cltMultiplierProvider;
     m_iatBoostCorrMap = &iatMultiplierProvider;
+    m_cltBoostAdderMap = &cltAdderProvider;
+    m_iatBoostAdderMap = &iatAdderProvider;
 
 	m_pid.initPidClass(pidParams);
 	resetLua();
@@ -106,7 +112,13 @@ expected<float> BoostController::getSetpoint() {
 	}
 #endif //EFI_ENGINE_CONTROL
 
-	return target * luaTargetMult + luaTargetAdd;
+	target *= luaTargetMult;
+	target += luaTargetAdd;
+	const std::optional<float> temperatureAdder = getBoostControlTargetTemperatureAdder();
+	if (temperatureAdder.has_value()) {
+		target += temperatureAdder.value();
+	}
+	return target;
 }
 
 expected<percent_t> BoostController::getOpenLoop(float target) {
@@ -185,26 +197,39 @@ float BoostController::getBoostControlDutyCycleWithTemperatureCorrections(
     const float driverIntent
 ) const {
     float result = m_openLoopMap->getValue(rpm, driverIntent);
-    std::optional<float> cltBoostMultiplier = getBoostMultiplier(SensorType::Clt, *m_cltBoostCorrMap);
+    std::optional<float> cltBoostMultiplier = getBoostTemperatureCorrection(SensorType::Clt, *m_cltBoostCorrMap);
     if (cltBoostMultiplier.has_value()) {
         result *= cltBoostMultiplier.value();
     }
-    std::optional<float> iatBoostMultiplier = getBoostMultiplier(SensorType::Iat, *m_iatBoostCorrMap);
+    std::optional<float> iatBoostMultiplier = getBoostTemperatureCorrection(SensorType::Iat, *m_iatBoostCorrMap);
     if (iatBoostMultiplier.has_value()) {
         result *= iatBoostMultiplier.value();
     }
     return result;
 }
 
-std::optional<float> BoostController::getBoostMultiplier(
+std::optional<float> BoostController::getBoostControlTargetTemperatureAdder() const {
+    std::optional<float> result = getBoostTemperatureCorrection(SensorType::Clt, *m_cltBoostAdderMap);
+    const std::optional<float> iatBoostAdder = getBoostTemperatureCorrection(SensorType::Iat, *m_iatBoostAdderMap);
+    if (iatBoostAdder.has_value()) {
+        if (result.has_value()) {
+            result.value() += iatBoostAdder.value();
+        } else {
+            result = iatBoostAdder;
+        }
+    }
+    return result;
+}
+
+std::optional<float> BoostController::getBoostTemperatureCorrection(
     const SensorType sensorType,
-    const ValueProvider2D& multiplierCurve
+    const ValueProvider2D& correctionCurve
 ) const {
     const SensorResult temperature = Sensor::get(sensorType);
     if (temperature.Valid) {
-        const std::optional<float> boostMultiplier = multiplierCurve.getValue(temperature.Value);
-        if (boostMultiplier.has_value()) {
-            return std::make_optional<float>(boostMultiplier.value());
+        const std::optional<float> boostCorrection = correctionCurve.getValue(temperature.Value);
+        if (boostCorrection.has_value()) {
+            return std::make_optional<float>(boostCorrection.value());
         }
     }
     return {};
@@ -344,6 +369,8 @@ void initBoostCtrl() {
         &boostMapClosed,
         boostCltCorr,
         boostIatCorr,
+        boostCltAdder,
+        boostIatAdder,
         &engineConfiguration->boostPid
     );
 

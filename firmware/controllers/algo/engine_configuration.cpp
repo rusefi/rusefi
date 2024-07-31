@@ -260,8 +260,8 @@ namespace {
         }
     }
 
-    void initBoostTemperatureCurve(float* const bins, float* const values) {
-        initTemperatureCurve(bins, values, BOOST_CURVE_SIZE, 1.0f, 20.0f, 20.0f);
+    void initBoostTemperatureCurve(float* const bins, float* const values, const float defaultValue) {
+        initTemperatureCurve(bins, values, BOOST_CURVE_SIZE, defaultValue, 20.0f, 20.0f);
     }
 }
 #endif // EFI_ENGINE_CONTROL
@@ -490,8 +490,10 @@ static void setDefaultEngineConfiguration() {
 
 	initTemperatureCurve(IAT_FUEL_CORRECTION_CURVE, 1);
 
-	initBoostTemperatureCurve(config->cltBoostCorrBins, config->cltBoostCorr);
-	initBoostTemperatureCurve(config->iatBoostCorrBins, config->iatBoostCorr);
+	initBoostTemperatureCurve(config->cltBoostCorrBins, config->cltBoostCorr, 1.0f);
+	initBoostTemperatureCurve(config->iatBoostCorrBins, config->iatBoostCorr, 1.0f);
+	initBoostTemperatureCurve(config->cltBoostAdderBins, config->cltBoostAdder, 0.0f);
+	initBoostTemperatureCurve(config->iatBoostAdderBins, config->iatBoostAdder, 0.0f);
 
 	engineConfiguration->alternatorControl.minValue = 0;
 	engineConfiguration->alternatorControl.maxValue = 90;
