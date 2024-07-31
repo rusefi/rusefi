@@ -1,0 +1,9 @@
+SHORT_BOARD_NAME=f407-discovery
+PROJECT_CPU=ARCH_STM32F4
+EXTRA_PARAMS= -DEFI_HPFP=FALSE  -DEFI_ALTERNATOR_CONTROL=FALSE  -DEFI_LOGIC_ANALYZER=FALSE  -DEFI_TOOTH_LOGGER=FALSE  -DEFI_LUA=FALSE  -DRAMDISK_INVALID
+! we are out of flash for debug - TODO figure out something
+! not great option one: reduce some table dimensions for both debug and not debug (easier)
+! not great option two: kill this configuration
+! not great option: reduce some table dimensions only for debug (not sure how to do, complete split of configuration?
+! DEBUG_LEVEL_OPT=-O0 -ggdb -g
+INCLUDE_ELF=yes
