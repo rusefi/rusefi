@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22880">
+    <page number="0" size="22960">
         <constant name="engineType">"MINIMAL_PINS"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">0.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
@@ -4747,8 +4747,36 @@ end</constant>
          1.0
          1.0
 </constant>
+        <constant cols="1" digits="2" name="cltBoostAdderBins" rows="5">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant cols="1" digits="2" name="cltBoostAdder" rows="5">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant cols="1" digits="2" name="iatBoostAdderBins" rows="5">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant cols="1" digits="2" name="iatBoostAdder" rows="5">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
     </page>
-    <versionInfo firmwareInfo="20240728" nPages="1" signature="rusEFI master.2024.07.31.f407-discovery.3637985993" version="5.0"/>
+    <versionInfo firmwareInfo="20240728" nPages="1" signature="rusEFI master.2024.07.31.f407-discovery.2200383740" version="5.0"/>
     <bibliography author="rusEFI 20240728" writeDate="date"/>
     <settings/>
     <userComments/>
