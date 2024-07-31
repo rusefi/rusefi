@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Jul 31 01:09:25 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Jul 31 17:15:19 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -5694,8 +5694,26 @@ struct persistent_config_s {
 	 * offset 22860
 	 */
 	float iatBoostCorr[BOOST_CURVE_SIZE];
+	/**
+	 * units: C
+	 * offset 22880
+	 */
+	float cltBoostAdderBins[BOOST_CURVE_SIZE];
+	/**
+	 * offset 22900
+	 */
+	float cltBoostAdder[BOOST_CURVE_SIZE];
+	/**
+	 * units: C
+	 * offset 22920
+	 */
+	float iatBoostAdderBins[BOOST_CURVE_SIZE];
+	/**
+	 * offset 22940
+	 */
+	float iatBoostAdder[BOOST_CURVE_SIZE];
 };
-static_assert(sizeof(persistent_config_s) == 22880);
+static_assert(sizeof(persistent_config_s) == 22960);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Jul 31 01:09:25 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Jul 31 17:15:19 UTC 2024

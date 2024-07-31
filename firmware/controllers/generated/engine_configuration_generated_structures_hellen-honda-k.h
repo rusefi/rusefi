@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Jul 31 01:09:14 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Jul 31 17:15:08 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -5695,21 +5695,39 @@ struct persistent_config_s {
 	 */
 	float iatBoostCorr[BOOST_CURVE_SIZE];
 	/**
+	 * units: C
 	 * offset 23552
+	 */
+	float cltBoostAdderBins[BOOST_CURVE_SIZE];
+	/**
+	 * offset 23572
+	 */
+	float cltBoostAdder[BOOST_CURVE_SIZE];
+	/**
+	 * units: C
+	 * offset 23592
+	 */
+	float iatBoostAdderBins[BOOST_CURVE_SIZE];
+	/**
+	 * offset 23612
+	 */
+	float iatBoostAdder[BOOST_CURVE_SIZE];
+	/**
+	 * offset 23632
 	 */
 	uint8_t hondaKcltGaugeAdder;
 	/**
-	 * offset 23553
+	 * offset 23633
 	 */
 	uint8_t unusedConfigPadding[BOTTOM_PADDING];
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 23589
+	 * offset 23669
 	 */
-	uint8_t alignmentFill_at_23589[3];
+	uint8_t alignmentFill_at_23669[3];
 };
-static_assert(sizeof(persistent_config_s) == 23592);
+static_assert(sizeof(persistent_config_s) == 23672);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Jul 31 01:09:14 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Jul 31 17:15:08 UTC 2024

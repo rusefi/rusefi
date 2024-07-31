@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Jul 31 01:10:24 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Jul 31 17:16:22 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1143,7 +1143,7 @@ public class Fields {
 	public static final int PACK_MULT_VOLTAGE = 1000;
 	public static final int PACK_MULT_VSS = 100;
 	public static final int PEDAL_TO_TPS_SIZE = 8;
-	public static final int persistent_config_s_size = 22880;
+	public static final int persistent_config_s_size = 22960;
 	public static final int pid_s_size = 20;
 	public static final int pin_input_mode_e_PI_DEFAULT = 0;
 	public static final int pin_input_mode_e_PI_PULLDOWN = 2;
@@ -1257,7 +1257,7 @@ public class Fields {
 	public static final int TOOTH_PACKET_SIZE = 2;
 	public static final String TOP_DEAD_CENTER_MESSAGE = "r";
 	public static final int TORQUE_CURVE_SIZE = 6;
-	public static final int TOTAL_CONFIG_SIZE = 22880;
+	public static final int TOTAL_CONFIG_SIZE = 22960;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int TPS_PPS_TOO_HIGH_THRESHOLD = 110;
 	public static final int TPS_PPS_TOO_LOW_THRESHOLD = -10;
@@ -1467,7 +1467,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.07.31.f407-discovery.3637985993";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.07.31.f407-discovery.2200383740";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -3226,6 +3226,10 @@ public class Fields {
 	public static final Field CLTBOOSTCORR = Field.create("CLTBOOSTCORR", 22820, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field IATBOOSTCORRBINS = Field.create("IATBOOSTCORRBINS", 22840, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field IATBOOSTCORR = Field.create("IATBOOSTCORR", 22860, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field CLTBOOSTADDERBINS = Field.create("CLTBOOSTADDERBINS", 22880, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field CLTBOOSTADDER = Field.create("CLTBOOSTADDER", 22900, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field IATBOOSTADDERBINS = Field.create("IATBOOSTADDERBINS", 22920, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field IATBOOSTADDER = Field.create("IATBOOSTADDER", 22940, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field[] VALUES = {
 	ENGINETYPE,
 	STARTBUTTONSUPPRESSONSTARTUPMS,
@@ -4884,5 +4888,9 @@ public class Fields {
 	CLTBOOSTCORR,
 	IATBOOSTCORRBINS,
 	IATBOOSTCORR,
+	CLTBOOSTADDERBINS,
+	CLTBOOSTADDER,
+	IATBOOSTADDERBINS,
+	IATBOOSTADDER,
 	};
 }

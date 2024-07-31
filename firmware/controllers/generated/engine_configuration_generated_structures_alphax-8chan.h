@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Jul 31 01:09:34 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Jul 31 17:15:29 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -5695,103 +5695,121 @@ struct persistent_config_s {
 	 */
 	float iatBoostCorr[BOOST_CURVE_SIZE];
 	/**
-	offset 22896 bit 0 */
+	 * units: C
+	 * offset 22896
+	 */
+	float cltBoostAdderBins[BOOST_CURVE_SIZE];
+	/**
+	 * offset 22916
+	 */
+	float cltBoostAdder[BOOST_CURVE_SIZE];
+	/**
+	 * units: C
+	 * offset 22936
+	 */
+	float iatBoostAdderBins[BOOST_CURVE_SIZE];
+	/**
+	 * offset 22956
+	 */
+	float iatBoostAdder[BOOST_CURVE_SIZE];
+	/**
+	offset 22976 bit 0 */
 	bool boardUseTempPullUp : 1 {};
 	/**
-	offset 22896 bit 1 */
+	offset 22976 bit 1 */
 	bool boardUse2stepPullDown : 1 {};
 	/**
-	offset 22896 bit 2 */
+	offset 22976 bit 2 */
 	bool boardUseD2PullDown : 1 {};
 	/**
-	offset 22896 bit 3 */
+	offset 22976 bit 3 */
 	bool boardUseD3PullDown : 1 {};
 	/**
-	offset 22896 bit 4 */
+	offset 22976 bit 4 */
 	bool boardUseCrankPullUp : 1 {};
 	/**
-	offset 22896 bit 5 */
-	bool unusedBit_215_5 : 1 {};
+	offset 22976 bit 5 */
+	bool unusedBit_219_5 : 1 {};
 	/**
-	offset 22896 bit 6 */
-	bool unusedBit_215_6 : 1 {};
+	offset 22976 bit 6 */
+	bool unusedBit_219_6 : 1 {};
 	/**
-	offset 22896 bit 7 */
-	bool unusedBit_215_7 : 1 {};
+	offset 22976 bit 7 */
+	bool unusedBit_219_7 : 1 {};
 	/**
-	offset 22896 bit 8 */
-	bool unusedBit_215_8 : 1 {};
+	offset 22976 bit 8 */
+	bool unusedBit_219_8 : 1 {};
 	/**
-	offset 22896 bit 9 */
-	bool unusedBit_215_9 : 1 {};
+	offset 22976 bit 9 */
+	bool unusedBit_219_9 : 1 {};
 	/**
-	offset 22896 bit 10 */
-	bool unusedBit_215_10 : 1 {};
+	offset 22976 bit 10 */
+	bool unusedBit_219_10 : 1 {};
 	/**
-	offset 22896 bit 11 */
-	bool unusedBit_215_11 : 1 {};
+	offset 22976 bit 11 */
+	bool unusedBit_219_11 : 1 {};
 	/**
-	offset 22896 bit 12 */
-	bool unusedBit_215_12 : 1 {};
+	offset 22976 bit 12 */
+	bool unusedBit_219_12 : 1 {};
 	/**
-	offset 22896 bit 13 */
-	bool unusedBit_215_13 : 1 {};
+	offset 22976 bit 13 */
+	bool unusedBit_219_13 : 1 {};
 	/**
-	offset 22896 bit 14 */
-	bool unusedBit_215_14 : 1 {};
+	offset 22976 bit 14 */
+	bool unusedBit_219_14 : 1 {};
 	/**
-	offset 22896 bit 15 */
-	bool unusedBit_215_15 : 1 {};
+	offset 22976 bit 15 */
+	bool unusedBit_219_15 : 1 {};
 	/**
-	offset 22896 bit 16 */
-	bool unusedBit_215_16 : 1 {};
+	offset 22976 bit 16 */
+	bool unusedBit_219_16 : 1 {};
 	/**
-	offset 22896 bit 17 */
-	bool unusedBit_215_17 : 1 {};
+	offset 22976 bit 17 */
+	bool unusedBit_219_17 : 1 {};
 	/**
-	offset 22896 bit 18 */
-	bool unusedBit_215_18 : 1 {};
+	offset 22976 bit 18 */
+	bool unusedBit_219_18 : 1 {};
 	/**
-	offset 22896 bit 19 */
-	bool unusedBit_215_19 : 1 {};
+	offset 22976 bit 19 */
+	bool unusedBit_219_19 : 1 {};
 	/**
-	offset 22896 bit 20 */
-	bool unusedBit_215_20 : 1 {};
+	offset 22976 bit 20 */
+	bool unusedBit_219_20 : 1 {};
 	/**
-	offset 22896 bit 21 */
-	bool unusedBit_215_21 : 1 {};
+	offset 22976 bit 21 */
+	bool unusedBit_219_21 : 1 {};
 	/**
-	offset 22896 bit 22 */
-	bool unusedBit_215_22 : 1 {};
+	offset 22976 bit 22 */
+	bool unusedBit_219_22 : 1 {};
 	/**
-	offset 22896 bit 23 */
-	bool unusedBit_215_23 : 1 {};
+	offset 22976 bit 23 */
+	bool unusedBit_219_23 : 1 {};
 	/**
-	offset 22896 bit 24 */
-	bool unusedBit_215_24 : 1 {};
+	offset 22976 bit 24 */
+	bool unusedBit_219_24 : 1 {};
 	/**
-	offset 22896 bit 25 */
-	bool unusedBit_215_25 : 1 {};
+	offset 22976 bit 25 */
+	bool unusedBit_219_25 : 1 {};
 	/**
-	offset 22896 bit 26 */
-	bool unusedBit_215_26 : 1 {};
+	offset 22976 bit 26 */
+	bool unusedBit_219_26 : 1 {};
 	/**
-	offset 22896 bit 27 */
-	bool unusedBit_215_27 : 1 {};
+	offset 22976 bit 27 */
+	bool unusedBit_219_27 : 1 {};
 	/**
-	offset 22896 bit 28 */
-	bool unusedBit_215_28 : 1 {};
+	offset 22976 bit 28 */
+	bool unusedBit_219_28 : 1 {};
 	/**
-	offset 22896 bit 29 */
-	bool unusedBit_215_29 : 1 {};
+	offset 22976 bit 29 */
+	bool unusedBit_219_29 : 1 {};
 	/**
-	offset 22896 bit 30 */
-	bool unusedBit_215_30 : 1 {};
+	offset 22976 bit 30 */
+	bool unusedBit_219_30 : 1 {};
 	/**
-	offset 22896 bit 31 */
-	bool unusedBit_215_31 : 1 {};
+	offset 22976 bit 31 */
+	bool unusedBit_219_31 : 1 {};
 };
-static_assert(sizeof(persistent_config_s) == 22900);
+static_assert(sizeof(persistent_config_s) == 22980);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Jul 31 01:09:34 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Jul 31 17:15:29 UTC 2024
