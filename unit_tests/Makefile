@@ -16,6 +16,10 @@ include $(UNIT_TESTS_DIR)/tests/tests.mk
 include $(PROJECT_DIR)/../unit_tests/tests/util/test_util.mk
 include $(PROJECT_DIR)/common.mk
 
+ifneq ("$(wildcard $(BOARD_DIR)/board_unit_tests.mk)","")
+  include $(BOARD_DIR)/board_unit_tests.mk
+endif
+
 RUSEFI_LIB = $(PROJECT_DIR)/libfirmware
 include $(RUSEFI_LIB)/util/util.mk
 include $(RUSEFI_LIB)/pt2001/pt2001.mk
