@@ -1254,6 +1254,7 @@
 #define PROTOCOL_WA_CHANNEL_3 "input3"
 #define PROTOCOL_WA_CHANNEL_4 "input4"
 #define RANGE_INPUT_COUNT 6
+#define REBOOT_COMMAND 0xbb
 #define SCRIPT_CURVE_16 16
 #define SCRIPT_CURVE_8 8
 #define SCRIPT_CURVE_COUNT 6
@@ -1293,7 +1294,7 @@
 #define show_test_presets false
 #define show_uaefi_presets true
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1645630979
+#define SIGNATURE_HASH 1337403344
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1673,6 +1674,7 @@
 #define ts_show_onboard_accelerometer false
 #define ts_show_output_diag false
 #define ts_show_popular_vehicles true
+#define ts_show_reboot_to_dfu true
 #define ts_show_reset_calibrations false
 #define ts_show_rotary true
 #define ts_show_sd_card true
@@ -1721,7 +1723,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.08.01.uaefi.1645630979"
+#define TS_SIGNATURE "rusEFI master.2024.08.02.uaefi.1337403344"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

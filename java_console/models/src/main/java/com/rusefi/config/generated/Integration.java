@@ -87,6 +87,7 @@ public class Integration {
 	public static final String PROTOCOL_WA_CHANNEL_2 = "input2";
 	public static final String PROTOCOL_WA_CHANNEL_3 = "input3";
 	public static final String PROTOCOL_WA_CHANNEL_4 = "input4";
+	public static final int REBOOT_COMMAND = 0xbb;
 	public static final String TOP_DEAD_CENTER_MESSAGE = "r";
 	public static final char TS_BURN_COMMAND = 'B';
 	public static final char TS_CHUNK_WRITE_COMMAND = 'C';
