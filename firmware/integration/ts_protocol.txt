@@ -36,6 +36,7 @@
 ! Engine Sniffer time stamp unit, in microseconds
 #define ENGINE_SNIFFER_UNIT_US 10
 
+#define REBOOT_COMMAND 0xbb
 
 #define TS_COMPOSITE_ENABLE 1
 #define TS_COMPOSITE_DISABLE 2

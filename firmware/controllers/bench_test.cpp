@@ -610,7 +610,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 #endif /* EFI_DFU_JUMP */
 		break;
 
-	case 0xbb:
+	case REBOOT_COMMAND:
 #if EFI_PROD_CODE
 		rebootNow();
 #endif /* EFI_PROD_CODE */
