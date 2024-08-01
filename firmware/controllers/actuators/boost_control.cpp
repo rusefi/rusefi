@@ -53,6 +53,10 @@ void BoostController::resetLua() {
 }
 
 void BoostController::onConfigurationChange(engine_configuration_s const * previousConfig) {
+#if EFI_PROD_CODE
+  initBoostCtrl();
+#endif
+
 	if (!previousConfig || !m_pid.isSame(&previousConfig->boostPid)) {
 		m_shouldResetPid = true;
 	}
@@ -305,6 +309,10 @@ void startBoostPin() {
 
 void initBoostCtrl() {
 #if EFI_PROD_CODE
+	if (engine->module<BoostController>().unmock().hasInitBoost) {
+    // already initialized - nothing to do here
+	  return;
+	}
 	// todo: why do we have 'isBoostControlEnabled' setting exactly?
 	// 'initVvtActuators' is an example of a subsystem without explicit enable
 	if (!engineConfiguration->isBoostControlEnabled) {
