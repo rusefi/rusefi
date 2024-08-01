@@ -151,11 +151,11 @@ void setupTLE9201(Gpio controlPin, Gpio direction, Gpio disable, int dcIndex) {
 	// DIS - disables motor (enable low)
 
 	// PWM pin
-	engineConfiguration->etbIo[0].controlPin = controlPin;
+	engineConfiguration->etbIo[dcIndex].controlPin = controlPin;
 	// DIR pin
-	engineConfiguration->etbIo[0].directionPin1 = direction;
+	engineConfiguration->etbIo[dcIndex].directionPin1 = direction;
 	// Disable pin
-	engineConfiguration->etbIo[0].disablePin = disable;
+	engineConfiguration->etbIo[dcIndex].disablePin = disable;
 
 	// we only have pwm/dir, no dira/dirb
 	engineConfiguration->etb_use_two_wires = false;
