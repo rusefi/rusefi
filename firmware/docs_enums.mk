@@ -16,6 +16,10 @@ ifneq ("$(wildcard $(BOARD_DIR)/extra.txt)","")
   DOCS_ENUMS_INPUTS += $(BOARD_DIR)/extra.txt
 endif
 
+ifneq ("$(wildcard $(BOARD_DIR)/board_config.txt)","")
+  DOCS_ENUMS_INPUTS += $(BOARD_DIR)/board_config.txt
+endif
+
 .docsenums-sentinel: $(DOCS_ENUMS_INPUTS) $(CONFIG_DEFINITION_BASE) $(ENUM_TO_STRING)
 	META_OUTPUT_ROOT_FOLDER="" bash $(PROJECT_DIR)/gen_live_documentation.sh
 	@touch $@
