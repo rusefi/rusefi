@@ -181,29 +181,21 @@ TpsAccelEnrichment::TpsAccelEnrichment() {
 	cb.setSize(4);
 }
 
-#if ! EFI_UNIT_TEST
+void TpsAccelEnrichment::onConfigurationChange(engine_configuration_s const* /*previousConfig*/) {
+	constexpr float slowCallbackPeriodSecond = SLOW_CALLBACK_PERIOD_MS / 1000.0f;
+	int length = engineConfiguration->tpsAccelLookback / slowCallbackPeriodSecond;
 
-static void setTpsAccelLen(int length) {
 	if (length < 1) {
 		efiPrintf("setTpsAccelLen: Length should be positive [%d]", length);
 		return;
 	}
-	engine->tpsAccelEnrichment.setLength(length);
+
+	setLength(length);
 }
-
-void updateAccelParameters() {
-	constexpr float slowCallbackPeriodSecond = SLOW_CALLBACK_PERIOD_MS / 1000.0f;
-	setTpsAccelLen(engineConfiguration->tpsAccelLookback / slowCallbackPeriodSecond);
-}
-
-#endif /* ! EFI_UNIT_TEST */
-
 
 void initAccelEnrichment() {
 	tpsTpsMap.initTable(config->tpsTpsAccelTable, config->tpsTpsAccelToRpmBins, config->tpsTpsAccelFromRpmBins);
 
-#if ! EFI_UNIT_TEST
-	updateAccelParameters();
-#endif /* ! EFI_UNIT_TEST */
+	engine->module<TpsAccelEnrichment>()->onConfigurationChange(nullptr);
 }
 

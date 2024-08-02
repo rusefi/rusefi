@@ -16,9 +16,11 @@
 
 typedef Map3D<TPS_TPS_ACCEL_TABLE, TPS_TPS_ACCEL_TABLE, float, float, float> tps_tps_Map3D_t;
 
-class TpsAccelEnrichment : public tps_accel_state_s {
+class TpsAccelEnrichment : public tps_accel_state_s, public EngineModule {
 public:
 	TpsAccelEnrichment();
+
+	void onConfigurationChange(engine_configuration_s const* previousConfig) override;
 
 	int getMaxDeltaIndex();
 	float getMaxDelta();
@@ -38,5 +40,3 @@ public:
 };
 
 void initAccelEnrichment();
-
-void updateAccelParameters();

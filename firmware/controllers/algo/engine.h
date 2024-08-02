@@ -167,6 +167,7 @@ public:
 #if EFI_BOOST_CONTROL
 		BoostController,
 #endif // EFI_BOOST_CONTROL
+		TpsAccelEnrichment,
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 
@@ -217,8 +218,6 @@ public:
 #endif
 
 	void setConfig();
-
-	LocalVersionHolder versionForConfigurationListeners;
 
 	AuxActor auxValves[AUX_DIGITAL_VALVE_COUNT][2];
 
@@ -279,8 +278,6 @@ public:
 	 * tuning software)
 	 */
 	int globalConfigurationVersion = 0;
-
-	TpsAccelEnrichment tpsAccelEnrichment;
 
 #if EFI_SHAFT_POSITION_INPUT
 	TriggerCentral triggerCentral;
