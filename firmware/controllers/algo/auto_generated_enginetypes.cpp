@@ -51,6 +51,8 @@ const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
 case DBG_0:
   return "DBG_0";
+case DBG_1:
+  return "DBG_1";
 case DBG_10:
   return "DBG_10";
 case DBG_11:
@@ -137,8 +139,6 @@ case DBG_TCU:
   return "DBG_TCU";
 case DBG_TLE8888:
   return "DBG_TLE8888";
-case DBG_TPS_ACCEL:
-  return "DBG_TPS_ACCEL";
 case DBG_TRIGGER_COUNTERS:
   return "DBG_TRIGGER_COUNTERS";
 case DBG_UNUSED41:

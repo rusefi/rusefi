@@ -189,6 +189,7 @@ public class Fields {
 	public static final int dc_io_size = 8;
 	public static final int DC_PER_STEPPER = 2;
 	public static final int debug_mode_e_DBG_0 = 0;
+	public static final int debug_mode_e_DBG_1 = 1;
 	public static final int debug_mode_e_DBG_10 = 10;
 	public static final int debug_mode_e_DBG_11 = 11;
 	public static final int debug_mode_e_DBG_12 = 12;
@@ -232,7 +233,6 @@ public class Fields {
 	public static final int debug_mode_e_DBG_STEPPER_IDLE_CONTROL = 3;
 	public static final int debug_mode_e_DBG_TCU = 47;
 	public static final int debug_mode_e_DBG_TLE8888 = 31;
-	public static final int debug_mode_e_DBG_TPS_ACCEL = 1;
 	public static final int debug_mode_e_DBG_TRIGGER_COUNTERS = 5;
 	public static final int debug_mode_e_DBG_UNUSED41 = 41;
 	public static final int debug_mode_e_DBG_UNUSED_42 = 42;
@@ -1179,7 +1179,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2024.07.25.f407-discovery.3888349420";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2024.08.02.f407-discovery.3888349420";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1388;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
