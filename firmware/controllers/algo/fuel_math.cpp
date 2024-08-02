@@ -324,7 +324,7 @@ float getInjectionMass(int rpm) {
 		engine->module<InjectorModelSecondary>()->prepare();
 	}
 
-	floatms_t tpsAccelEnrich = engine->tpsAccelEnrichment.getTpsEnrichment();
+	floatms_t tpsAccelEnrich = engine->module<TpsAccelEnrichment>()->getTpsEnrichment();
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(tpsAccelEnrich), "NaN tpsAccelEnrich", 0);
 	engine->engineState.tpsAccelEnrich = tpsAccelEnrich;
 

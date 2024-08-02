@@ -137,7 +137,7 @@ void Engine::periodicSlowCallback() {
 	updateSlowSensors();
 	checkShutdown();
 
-	tpsAccelEnrichment.onNewValue(Sensor::getOrZero(SensorType::Tps1));
+	module<TpsAccelEnrichment>()->onNewValue(Sensor::getOrZero(SensorType::Tps1));
 
 	updateVrPwm();
 

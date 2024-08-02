@@ -131,7 +131,7 @@ private:
 static PeriodicFastController fastController;
 
 static void resetAccel() {
-	engine->tpsAccelEnrichment.resetAE();
+	engine->module<TpsAccelEnrichment>()->resetAE();
 
 	for (size_t i = 0; i < efi::size(engine->injectionEvents.elements); i++)
 	{
@@ -161,10 +161,6 @@ static void doPeriodicSlowCallback() {
 
 	if (engine->rpmCalculator.isStopped()) {
 		resetAccel();
-	}
-
-	if (engine->versionForConfigurationListeners.isOld(engine->getGlobalConfigurationVersion())) {
-		updateAccelParameters();
 	}
 
 	engine->periodicSlowCallback();

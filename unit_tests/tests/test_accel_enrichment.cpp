@@ -20,23 +20,23 @@ TEST(fuel, testTpsAccelEnrichmentMath) {
 	engine->rpmCalculator.setRpmValue(600);
 	engine->periodicFastCallback();
 
-	engine->tpsAccelEnrichment.setLength(4);
+	engine->module<TpsAccelEnrichment>()->setLength(4);
 
-	engine->tpsAccelEnrichment.onNewValue(0);
-	ASSERT_EQ( 0,  engine->tpsAccelEnrichment.getMaxDelta()) << "maxDelta";
-	engine->tpsAccelEnrichment.onNewValue(10);
-	ASSERT_EQ( 10,  engine->tpsAccelEnrichment.getMaxDelta()) << "maxDelta#1";
-	engine->tpsAccelEnrichment.onNewValue(30);
-	ASSERT_EQ( 20,  engine->tpsAccelEnrichment.getMaxDelta()) << "maxDelta#2";
+	engine->module<TpsAccelEnrichment>()->onNewValue(0);
+	ASSERT_EQ( 0,  engine->module<TpsAccelEnrichment>()->getMaxDelta()) << "maxDelta";
+	engine->module<TpsAccelEnrichment>()->onNewValue(10);
+	ASSERT_EQ( 10,  engine->module<TpsAccelEnrichment>()->getMaxDelta()) << "maxDelta#1";
+	engine->module<TpsAccelEnrichment>()->onNewValue(30);
+	ASSERT_EQ( 20,  engine->module<TpsAccelEnrichment>()->getMaxDelta()) << "maxDelta#2";
 
-	engine->tpsAccelEnrichment.onNewValue(0);
-	ASSERT_EQ( 20,  engine->tpsAccelEnrichment.getMaxDelta()) << "maxDelta#3";
-	engine->tpsAccelEnrichment.onNewValue(0);
-	ASSERT_EQ( 20,  engine->tpsAccelEnrichment.getMaxDelta()) << "maxDelta#4";
-	engine->tpsAccelEnrichment.onNewValue(0);
-	ASSERT_EQ( 0,  engine->tpsAccelEnrichment.getMaxDelta()) << "maxDelta#5";
-	engine->tpsAccelEnrichment.onNewValue(0);
-	ASSERT_EQ( 0,  engine->tpsAccelEnrichment.getMaxDelta()) << "maxDelta";
+	engine->module<TpsAccelEnrichment>()->onNewValue(0);
+	ASSERT_EQ( 20,  engine->module<TpsAccelEnrichment>()->getMaxDelta()) << "maxDelta#3";
+	engine->module<TpsAccelEnrichment>()->onNewValue(0);
+	ASSERT_EQ( 20,  engine->module<TpsAccelEnrichment>()->getMaxDelta()) << "maxDelta#4";
+	engine->module<TpsAccelEnrichment>()->onNewValue(0);
+	ASSERT_EQ( 0,  engine->module<TpsAccelEnrichment>()->getMaxDelta()) << "maxDelta#5";
+	engine->module<TpsAccelEnrichment>()->onNewValue(0);
+	ASSERT_EQ( 0,  engine->module<TpsAccelEnrichment>()->getMaxDelta()) << "maxDelta";
 }
 
 TEST(fuel, testTpsAccelEnrichmentScheduling) {
@@ -58,7 +58,7 @@ TEST(fuel, testTpsAccelEnrichmentScheduling) {
 	eth.fireTriggerEvents2(/* count */ 4, 25 /* ms */);
 	ASSERT_EQ( 1200,  Sensor::getOrZero(SensorType::Rpm)) << "RPM";
 	int expectedInvocationCounter = 1;
-	ASSERT_EQ(expectedInvocationCounter, engine->tpsAccelEnrichment.onUpdateInvocationCounter);
+	ASSERT_EQ(expectedInvocationCounter, engine->module<TpsAccelEnrichment>()->onUpdateInvocationCounter);
 
 	Sensor::setMockValue(SensorType::Tps1, 70);
 	eth.fireTriggerEvents2(/* count */ 1, 25 /* ms */);
@@ -66,17 +66,17 @@ TEST(fuel, testTpsAccelEnrichmentScheduling) {
 	float expectedAEValue = 1.4;
 	// it does not matter how many times we invoke 'getTpsEnrichment' - state does not change
 	for (int i = 0; i < 20; i++) {
-		ASSERT_NEAR(expectedAEValue, engine->tpsAccelEnrichment.getTpsEnrichment(), EPS4D);
+		ASSERT_NEAR(expectedAEValue, engine->module<TpsAccelEnrichment>()->getTpsEnrichment(), EPS4D);
 	}
 
 	expectedInvocationCounter++;
-	ASSERT_EQ(expectedInvocationCounter, engine->tpsAccelEnrichment.onUpdateInvocationCounter);
+	ASSERT_EQ(expectedInvocationCounter, engine->module<TpsAccelEnrichment>()->onUpdateInvocationCounter);
 
 	eth.engine.periodicFastCallback();
 	eth.engine.periodicFastCallback();
 	eth.engine.periodicFastCallback();
 
-	ASSERT_EQ(expectedInvocationCounter, engine->tpsAccelEnrichment.onUpdateInvocationCounter);
+	ASSERT_EQ(expectedInvocationCounter, engine->module<TpsAccelEnrichment>()->onUpdateInvocationCounter);
 }
 
 static void doFractionalTpsIteration(int period, int divisor, int numCycles, std::vector<floatms_t> &tpsEnrich) {
@@ -85,12 +85,12 @@ static void doFractionalTpsIteration(int period, int divisor, int numCycles, std
 	// split into 2 portions
 	engineConfiguration->tpsAccelFractionDivisor = divisor;
 
-	engine->tpsAccelEnrichment.resetAE();
-	engine->tpsAccelEnrichment.onNewValue(0);
+	engine->module<TpsAccelEnrichment>()->resetAE();
+	engine->module<TpsAccelEnrichment>()->onNewValue(0);
 	for (int i = 0; i < numCycles; i++) {
-		engine->tpsAccelEnrichment.onNewValue(10);
-		engine->tpsAccelEnrichment.onEngineCycleTps();
-		tpsEnrich[i] = engine->tpsAccelEnrichment.getTpsEnrichment();
+		engine->module<TpsAccelEnrichment>()->onNewValue(10);
+		engine->module<TpsAccelEnrichment>()->onEngineCycleTps();
+		tpsEnrich[i] = engine->module<TpsAccelEnrichment>()->getTpsEnrichment();
 	}
 }
 
@@ -116,7 +116,7 @@ TEST(fuel, testAccelEnrichmentFractionalTps) {
 	engine->rpmCalculator.setRpmValue(600);
 	engine->periodicFastCallback();
 
-	engine->tpsAccelEnrichment.setLength(2);
+	engine->module<TpsAccelEnrichment>()->setLength(2);
 
 
 	const int numCycles = 4;

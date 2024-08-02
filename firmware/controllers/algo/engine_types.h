@@ -227,7 +227,7 @@ enum class engine_type_e : uint32_t {
  */
 typedef enum __attribute__ ((__packed__)) {
 	DBG_0 = 0,
-	DBG_TPS_ACCEL = 1,
+	DBG_1 = 1,
 	DBG_2 = 2,
 	DBG_STEPPER_IDLE_CONTROL = 3,
 	DBG_EL_ACCEL = 4,

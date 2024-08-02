@@ -70,19 +70,6 @@ floatms_t TpsAccelEnrichment::getTpsEnrichment() {
 		resetFractionValues();
 	}
 
-#if EFI_TUNER_STUDIO
-	if (engineConfiguration->debugMode == DBG_TPS_ACCEL) {
-		engine->outputChannels.debugFloatField1 = tpsFrom;
-		engine->outputChannels.debugFloatField2 = tpsTo;
-		engine->outputChannels.debugFloatField3 = valueFromTable;
-		engine->outputChannels.debugFloatField4 = extraFuel;
-		engine->outputChannels.debugFloatField5 = accumulatedValue;
-		engine->outputChannels.debugFloatField6 = maxExtraPerPeriod;
-		engine->outputChannels.debugFloatField7 = maxInjectedPerPeriod;
-		engine->outputChannels.debugIntField1 = cycleCnt;
-	}
-#endif /* EFI_TUNER_STUDIO */
-
 	float mult = interpolate2d(rpm, config->tpsTspCorrValuesBins,
 						config->tpsTspCorrValues);
 	if (mult != 0 && (mult < 0.01 || mult > 100)) {
@@ -193,9 +180,7 @@ TpsAccelEnrichment::TpsAccelEnrichment() {
 	cb.setSize(4);
 }
 
-#if ! EFI_UNIT_TEST
-
-void updateAccelParameters() {
+void TpsAccelEnrichment::onConfigurationChange(engine_configuration_s const* /*previousConfig*/) {
 	constexpr float slowCallbackPeriodSecond = SLOW_CALLBACK_PERIOD_MS / 1000.0f;
 	int length = engineConfiguration->tpsAccelLookback / slowCallbackPeriodSecond;
 
@@ -203,18 +188,12 @@ void updateAccelParameters() {
 		length = 1;
 	}
 
-	engine->tpsAccelEnrichment.setLength(length);
+	setLength(length);
 }
-
-#endif /* ! EFI_UNIT_TEST */
-
 
 void initAccelEnrichment() {
 	tpsTpsMap.init(config->tpsTpsAccelTable, config->tpsTpsAccelFromRpmBins, config->tpsTpsAccelToRpmBins);
 
-#if ! EFI_UNIT_TEST
-
-	updateAccelParameters();
-#endif /* ! EFI_UNIT_TEST */
+	engine->module<TpsAccelEnrichment>()->onConfigurationChange(nullptr);
 }
 

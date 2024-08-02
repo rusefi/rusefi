@@ -671,7 +671,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		expectedNextPhase = expectNextPhase;
 
 		if (engine->rpmCalculator.getCachedRpm() > 0 && triggerIndexForListeners == 0) {
-			engine->tpsAccelEnrichment.onEngineCycleTps();
+			engine->module<TpsAccelEnrichment>()->onEngineCycleTps();
 		}
 
 		// Handle ignition and injection

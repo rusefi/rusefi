@@ -97,7 +97,7 @@ const engine_state_s* getLiveData(size_t) {
 
 template<>
 const tps_accel_state_s* getLiveData(size_t) {
-	return &engine->tpsAccelEnrichment;
+	return &engine->module<TpsAccelEnrichment>().unmock();
 }
 
 template<>

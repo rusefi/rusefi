@@ -608,9 +608,6 @@ void updateTunerStudioState() {
 #endif
 
 	switch (engineConfiguration->debugMode)	{
-	case DBG_TPS_ACCEL:
-		tsOutputChannels->debugIntField1 = engine->tpsAccelEnrichment.cb.getSize();
-		break;
 	case DBG_SR5_PROTOCOL: {
 		const int _10_6 = 100000;
 		tsOutputChannels->debugIntField1 = tsState.textCommandCounter * _10_6 +  tsState.totalCounter;
