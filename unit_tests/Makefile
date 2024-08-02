@@ -57,6 +57,7 @@ INCDIR += \
 	$(PCH_DIR) \
 	$(UNIT_TESTS_DIR) \
 	$(ALLINC) \
+	$(BOARDINC) \
 	$(PROJECT_DIR)/config/boards/hellen \
 	$(FRAMEWORK_INC) \
 	$(UNIT_TESTS_DIR)/test_data_structures \
