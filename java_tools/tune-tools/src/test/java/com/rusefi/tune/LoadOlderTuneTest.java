@@ -99,8 +99,6 @@ public class LoadOlderTuneTest {
             "    engineConfiguration->idleTimingPid.maxValue = 0;\n" +
             "    // default \"false\"\n" +
             "    engineConfiguration->isHip9011Enabled = true;\n" +
-            "    // default 0.0\n" +
-            "    engineConfiguration->hip9011PrescalerAndSDO = 6;\n" +
             "    // default 20.0\n" +
             "    engineConfiguration->knockDetectionWindowStart = 35;\n" +
             "    // default 60.0\n" +
@@ -126,7 +124,9 @@ public class LoadOlderTuneTest {
             "    // default \"true\"\n" +
             "    engineConfiguration->canReadEnabled = false;\n" +
             "    // default \"None\"\n" +
-            "   ", sb.substring(0, 3500));
+            "    engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;\n" +
+            "    // default \"Sp",
+            sb.substring(0, 3500));
     }
 
     @Test

@@ -560,7 +560,7 @@ void initHip9011() {
 	startHip9011_pins();
 
 	/* load settings */
-	instance.prescaler = engineConfiguration->hip9011PrescalerAndSDO;
+	instance.prescaler = engineConfiguration->hip9011Prescaler;
 
 	efiPrintf("Starting HIP9011/TPIC8101 driver");
 
@@ -662,8 +662,8 @@ static void showHipInfo() {
 	}
 }
 
-static void setPrescalerAndSDO(int value) {
-	engineConfiguration->hip9011PrescalerAndSDO = value;
+static void setPrescaler(int value) {
+	engineConfiguration->hip9011Prescaler = value;
 }
 
 static void setHipBand(float value) {
@@ -680,7 +680,7 @@ static void hip_addconsoleActions() {
 	addConsoleAction("hipinfo", showHipInfo);
 	addConsoleActionF("set_gain", setHipGain);
 	addConsoleActionF("set_band", setHipBand);
-	addConsoleActionI("set_hip_prescalerandsdo", setPrescalerAndSDO);
+	addConsoleActionI("set_hip_prescaler", setPrescaler);
 }
 
 #endif /* EFI_HIP_9011_DEBUG */
