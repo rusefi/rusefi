@@ -55,23 +55,23 @@ public:
 #define PASS_HIP_PARAMS engineConfiguration->knockBandCustom, \
 		engineConfiguration->cylinderBore, \
 		engineConfiguration->hip9011Gain, \
-		engineConfiguration->hip9011PrescalerAndSDO, \
+		engineConfiguration->hip9011Prescaler, \
 		engineConfiguration->knockDetectionWindowStart, \
-		engineConfiguration->knockDetectionWindowEnd
+		engineConfiguration->knockSamplingDuration
 
 #define FORWARD_HIP_PARAMS knockBandCustom, \
 		cylinderBore, \
 		hip9011Gain, \
-		hip9011PrescalerAndSDO, \
+		hip9011Prescaler, \
 		knockDetectionWindowStart, \
-		knockDetectionWindowEnd
+		knockSamplingDuration
 
 #define DEFINE_HIP_PARAMS float knockBandCustom,\
 		float cylinderBore, \
 		float hip9011Gain, \
-		int hip9011PrescalerAndSDO, \
+		uint8_t hip9011Prescaler, \
 		float knockDetectionWindowStart, \
-		float knockDetectionWindowEnd
+		float knockSamplingDuration
 
 
 #define GET_CONFIG_VALUE(x) x
@@ -120,9 +120,10 @@ public:
 	hip_state_e state;
 	int8_t cylinderNumber = -1;
 	int8_t expectedCylinderNumber = -1;
-	int rawValue[HIP_INPUT_CHANNELS];
+	uint16_t rawValue[HIP_INPUT_CHANNELS];
 
-	float rpmLookup[INT_LOOKUP_SIZE];
+	/* No need to have float accuracity, 65535 RPM is reasonable limit */
+	uint16_t rpmLookup[INT_LOOKUP_SIZE];
 
 	// Timestamp of the last sensed event
 	efitick_t knockSampleTimestamp = 0;
@@ -132,15 +133,15 @@ public:
 		int correctResponsesCount = 0;
 		int invalidResponsesCount = 0;
 
-		/* counters */
+		/* logic error counters */
 		int samples = 0;
 		int overrun = 0;
 		int unsync = 0;
 	#endif
 };
 
-// 0b010x.xxxx
-#define SET_PRESCALER_CMD(v) 	(0x40 | ((v) & 0x1f))
+// 0b010x.xxx0, SDO always active
+#define SET_PRESCALER_CMD(v) 	(0x40 | (((v) & 0x0f) << 1) | 0)
 // 0b1110.000x
 #define SET_CHANNEL_CMD(v) 		(0xE0 | ((v) & 0x01))
 // 0b00xx.xxxx
@@ -161,21 +162,21 @@ public:
 #define SET_ADVANCED_MODE_REP	((~SET_ADVANCED_MODE_CMD) & 0xff)
 
 //	D[4:1] = 0000 : 4 MHz
-#define HIP_4MHZ_PRESCALER		(0x0 << 1)
+#define HIP_4MHZ_PRESCALER		(0x0)
 //	D[4:1] = 0001 : 5 MHz
-#define HIP_5MHZ_PRESCALER		(0x1 << 1)
+#define HIP_5MHZ_PRESCALER		(0x1)
 //	D[4:1] = 0010 : 6 MHz
-#define HIP_6MHZ_PRESCALER		(0x2 << 1)
+#define HIP_6MHZ_PRESCALER		(0x2)
 //	D[4:1] = 0011 ; 8 MHz
-#define HIP_8MHZ_PRESCALER		(0x3 << 1)
+#define HIP_8MHZ_PRESCALER		(0x3)
 //	D[4:1] = 0100 ; 10 MHz
-#define HIP_10MHZ_PRESCALER		(0x4 << 1)
+#define HIP_10MHZ_PRESCALER		(0x4)
 //	D[4:1] = 0101 ; 12 MHz
-#define HIP_12MHZ_PRESCALER		(0x5 << 1)
+#define HIP_12MHZ_PRESCALER		(0x5)
 //	D[4:1] = 0110 : 16 MHz
-#define HIP_16MHZ_PRESCALER		(0x6 << 1)
+#define HIP_16MHZ_PRESCALER		(0x6)
 //	D[4:1] = 0111 : 20 MHz
-#define HIP_20MHZ_PRESCALER		(0x7 << 1)
+#define HIP_20MHZ_PRESCALER		(0x7)
 //	D[4:1] = 1000 : 24 MHz
-#define HIP_24MHZ_PRESCALER		(0x8 << 1)
+#define HIP_24MHZ_PRESCALER		(0x8)
 

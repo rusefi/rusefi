@@ -301,7 +301,7 @@ void hip9011_onFireEvent(uint8_t cylinderNumber, efitick_t nowNt) {
 				{ startIntegration, &instance });
 
 		scheduleByAngle(&hardware.endTimer, nowNt,
-				engineConfiguration->knockDetectionWindowEnd,
+				engineConfiguration->knockDetectionWindowStart + engineConfiguration->knockSamplingDuration,
 				{ endIntegration, &instance });
 	} else {
 		#if EFI_HIP_9011_DEBUG
@@ -372,9 +372,10 @@ static int hip_testAdvMode() {
 static int hip_init() {
 	int ret;
 
+	/* Just to enable SDO */
 	ret = instance.hw->sendSyncCommand(SET_PRESCALER_CMD(instance.prescaler), NULL);
 	if (ret) {
-		/* NOTE: hip9011/tpic8101 can be in default or advansed mode at this point
+		/* NOTE: hip9011/tpic8101 can be in default or advanced mode at this point
 		 * If we supposed not to support advanced mode this is definitely error */
 		if (!engineConfiguration->useTpicAdvancedMode)
 			return ret;
@@ -382,18 +383,18 @@ static int hip_init() {
 
 	/* ...othervice or when no error is reported lets try to switch to advanced mode */
 	if (engineConfiguration->useTpicAdvancedMode) {
+		uint8_t rx = 0x00;
 		/* enable advanced mode */
-		ret = instance.hw->sendSyncCommand(SET_ADVANCED_MODE_CMD, NULL);
-		if (ret) {
-			uint8_t rx;
-			/* communication error is detected for default mode...
-			 * may be we are in advanced mode already?
-			 * Now we dont care for return value */
-			instance.hw->sendSyncCommand(SET_ADVANCED_MODE_CMD, &rx);
-			if (rx != SET_ADVANCED_MODE_REP) {
-				/* this is really a communication problem */
-				return ret;
-			}
+		instance.hw->sendSyncCommand(SET_ADVANCED_MODE_CMD, NULL);
+
+		/* send enable advanced mode again... */
+		instance.hw->sendSyncCommand(SET_ADVANCED_MODE_CMD, NULL);
+
+		/* to get reply on next command */
+		instance.hw->sendSyncCommand(SET_ADVANCED_MODE_CMD, &rx);
+		if (rx != SET_ADVANCED_MODE_REP) {
+			/* this is really a communication problem */
+			return -1;
 		}
 
 		/* now we should be in advanced mode... if chip supports...
@@ -405,12 +406,17 @@ static int hip_init() {
 		if (ret) {
 			warning(ObdCode::CUSTOM_OBD_KNOCK_PROCESSOR, "TPIC/HIP does not support advanced mode");
 			instance.adv_mode = false;
+			return -1;
 		}
 	}
 
 	#if EFI_HIP_9011_DEBUG
-		/* reset error counter now */
+		/* reset counters now */
+		instance.correctResponsesCount = 0;
 		instance.invalidResponsesCount = 0;
+		instance.samples = 0;
+		instance.overrun = 0;
+		instance.unsync = 0;
 	#endif
 
 	instance.state = READY_TO_INTEGRATE;
@@ -560,7 +566,7 @@ void initHip9011() {
 	startHip9011_pins();
 
 	/* load settings */
-	instance.prescaler = engineConfiguration->hip9011PrescalerAndSDO;
+	instance.prescaler = engineConfiguration->hip9011Prescaler;
 
 	efiPrintf("Starting HIP9011/TPIC8101 driver");
 
@@ -594,8 +600,14 @@ static void showHipInfo() {
 		return;
 	}
 
-	efiPrintf("HIP9011: enabled %s state %s",
-		boolToString(engineConfiguration->isHip9011Enabled),
+	efiPrintf("HIP9011: enabled %s",
+		boolToString(engineConfiguration->isHip9011Enabled));
+
+	if (!engineConfiguration->isHip9011Enabled) {
+		return;
+	}
+
+	efiPrintf(" State %s",
 		hip_state_names[instance.state]);
 
 	efiPrintf(" Advanced mode: enabled %d used %d",
@@ -644,7 +656,7 @@ static void showHipInfo() {
 
 	efiPrintf(" Window start %.2f end %.2f",
 		engineConfiguration->knockDetectionWindowStart,
-		engineConfiguration->knockDetectionWindowEnd);
+		engineConfiguration->knockDetectionWindowStart + engineConfiguration->knockSamplingDuration);
 
 	if (!instance.adv_mode) {
 		efiPrintf(" Adc input %d (%.2f V)",
@@ -662,8 +674,8 @@ static void showHipInfo() {
 	}
 }
 
-static void setPrescalerAndSDO(int value) {
-	engineConfiguration->hip9011PrescalerAndSDO = value;
+static void setPrescaler(int value) {
+	engineConfiguration->hip9011Prescaler = value;
 }
 
 static void setHipBand(float value) {
@@ -680,7 +692,7 @@ static void hip_addconsoleActions() {
 	addConsoleAction("hipinfo", showHipInfo);
 	addConsoleActionF("set_gain", setHipGain);
 	addConsoleActionF("set_band", setHipBand);
-	addConsoleActionI("set_hip_prescalerandsdo", setPrescalerAndSDO);
+	addConsoleActionI("set_hip_prescaler", setPrescaler);
 }
 
 #endif /* EFI_HIP_9011_DEBUG */

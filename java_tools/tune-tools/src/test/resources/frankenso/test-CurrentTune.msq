@@ -150,7 +150,7 @@
 <constant name="iat_adcChannel">"PC1"</constant>
 <constant digits="2" name="launchRpm" units="rpm">3000.0</constant>
 <constant digits="2" name="launchTimingRetard" units="deg">10.0</constant>
-<constant digits="0" name="hip9011PrescalerAndSDO" units="integer">6.0</constant>
+<constant digits="0" name="hip9011Prescaler" units="integer">6.0</constant>
 <constant digits="2" name="knockBandCustom" units="kHz">0.0</constant>
 <constant cols="1" digits="2" name="sparkDwellRpmBins" rows="8" units="RPM">
          0.0
@@ -709,7 +709,6 @@
 <constant digits="0" name="acIdleRpmBump" units="RPM">200.0</constant>
 <constant digits="0" name="warningPeriod" units="seconds">10.0</constant>
 <constant digits="2" name="knockDetectionWindowStart" units="angle">35.0</constant>
-<constant digits="2" name="knockDetectionWindowEnd" units="angle">135.0</constant>
 <constant digits="0" name="idleStepperReactionTime" units="ms">10.0</constant>
 <constant digits="2" name="knockVThreshold" units="V">4.0</constant>
 <constant digits="1" name="fsioInputModes1" units="todo">0.0</constant>

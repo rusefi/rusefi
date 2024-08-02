@@ -116,7 +116,7 @@ float HIP9011::getRpmByAngleWindowAndTimeUs(int timeUs, float p_angleWindowWidth
 	 * '60000000' because revolutions per MINUTE in uS conversion
 	 */
 	float windowWidthMult = p_angleWindowWidth / 360.0f;
-	return 60000000.0f / integrationTimeUs * windowWidthMult;
+	return (60.0f * 1000.0f * 1000.0f) / integrationTimeUs * windowWidthMult;
 }
 
 /**
@@ -133,14 +133,12 @@ void HIP9011::prepareRpmLookup(void) {
 }
 
 int HIP9011::getIntegrationIndexByRpm(float rpm) {
-	int i = findIndexMsg("getIbR", rpmLookup, INT_LOOKUP_SIZE, (rpm));
+	int i = findIndexMsg("getIbR", rpmLookup, INT_LOOKUP_SIZE, (uint16_t)(rpm));
 	return i == -1 ? INT_LOOKUP_SIZE - 1 : INT_LOOKUP_SIZE - i - 1;
 }
 
 void HIP9011::setAngleWindowWidth(DEFINE_HIP_PARAMS) {
-	float new_angleWindowWidth =
-		GET_CONFIG_VALUE(knockDetectionWindowEnd) -
-		GET_CONFIG_VALUE(knockDetectionWindowStart);
+	float new_angleWindowWidth = GET_CONFIG_VALUE(knockSamplingDuration);
 	if (new_angleWindowWidth < 0) {
 #if EFI_PROD_CODE
 		warning(ObdCode::CUSTOM_KNOCK_WINDOW, "invalid knock window");
@@ -159,10 +157,10 @@ void HIP9011::handleSettings(int rpm DEFINE_PARAM_SUFFIX(DEFINE_HIP_PARAMS)) {
 
 	setAngleWindowWidth(FORWARD_HIP_PARAMS);
 
-	int new_prescaler = GET_CONFIG_VALUE(hip9011PrescalerAndSDO);
-	int new_integratorIdx = getIntegrationIndexByRpm(rpm);
-	int new_gainIdx = getGainIndex(FORWARD_HIP_PARAMS);
-	int new_bandIdx = getBandIndex(FORWARD_HIP_PARAMS);
+	uint8_t new_prescaler = GET_CONFIG_VALUE(hip9011Prescaler);
+	uint8_t new_integratorIdx = getIntegrationIndexByRpm(rpm);
+	uint8_t new_gainIdx = getGainIndex(FORWARD_HIP_PARAMS);
+	uint8_t new_bandIdx = getBandIndex(FORWARD_HIP_PARAMS);
 
 	if (gainIdx != new_gainIdx) {
 		ret = sendCommand(SET_GAIN_CMD(new_gainIdx));
