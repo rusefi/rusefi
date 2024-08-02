@@ -173,7 +173,8 @@ class EngineStateBlinkingTask : public PeriodicTimerController {
 static EngineStateBlinkingTask engineStateBlinkingTask;
 
 static void resetAccel() {
-	engine->tpsAccelEnrichment.resetAE();
+	engine->module<TpsAccelEnrichment>()->resetAE();
+
 #if EFI_ENGINE_CONTROL
 	for (size_t i = 0; i < efi::size(engine->injectionEvents.elements); i++)
 	{
@@ -191,10 +192,6 @@ static void doPeriodicSlowCallback() {
 	engine->rpmCalculator.onSlowCallback();
 	if (engine->rpmCalculator.isStopped()) {
 		resetAccel();
-	}
-
-	if (engine->versionForConfigurationListeners.isOld(engine->getGlobalConfigurationVersion())) {
-		updateAccelParameters();
 	}
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
