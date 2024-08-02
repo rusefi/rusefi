@@ -4912,11 +4912,11 @@ canRxAdd(IN_35D, onCanRxAc)</constant>
          1.0
 </constant>
         <constant cols="1" digits="2" name="cltBoostAdderBins" rows="5">
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         20.0
+         40.0
+         60.0
+         80.0
+         100.0
 </constant>
         <constant cols="1" digits="2" name="cltBoostAdder" rows="5">
          0.0
@@ -4926,11 +4926,11 @@ canRxAdd(IN_35D, onCanRxAc)</constant>
          0.0
 </constant>
         <constant cols="1" digits="2" name="iatBoostAdderBins" rows="5">
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+         20.0
+         40.0
+         60.0
+         80.0
+         100.0
 </constant>
         <constant cols="1" digits="2" name="iatBoostAdder" rows="5">
          0.0
