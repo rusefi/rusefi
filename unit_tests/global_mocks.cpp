@@ -15,9 +15,6 @@ efitimems_t getTimeNowMs() {
 void initLogging(LoggingWithStorage *logging, const char *name) {
 }
 
-void setBoardConfigOverrides() {
-}
-
 void onCliCaseError(const char *token) {
 }
 

@@ -129,6 +129,12 @@ ifeq ($(USE_LTO),)
   USE_OPT += -flto=auto
 endif
 
+ifeq ($(OS),Windows_NT)
+   USE_OPT += -DIS_WINDOWS_COMPILER=1
+else
+   USE_OPT += -DIS_WINDOWS_COMPILER=0
+endif
+
 # If enabled, this option allows to compile the application in THUMB mode.
 ifeq ($(USE_THUMB),)
   USE_THUMB = yes

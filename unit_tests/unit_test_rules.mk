@@ -147,6 +147,13 @@ CPPWARN = -Wall -Wextra -Wno-unused-parameter -Wno-unused-function -Wno-unused-v
 
 USE_OPT += -Werror=switch
 
+ifeq ($(OS),Windows_NT)
+   USE_OPT += -DIS_WINDOWS_COMPILER=1
+else
+   USE_OPT += -DIS_WINDOWS_COMPILER=0
+endif
+
+
 #
 # Compiler settings
 ##############################################################################
