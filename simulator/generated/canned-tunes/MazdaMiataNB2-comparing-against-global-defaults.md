@@ -248,7 +248,7 @@
     // default "500kbps"
     engineConfiguration->can2BaudRate = B100KBPS;
     // default "Executor"
-    engineConfiguration->debugMode = DBG_TPS_ACCEL;
+    engineConfiguration->debugMode = DBG_1;
     // default 7000.0
     engineConfiguration->rpmHardLimit = 7200;
     // default 300.0
