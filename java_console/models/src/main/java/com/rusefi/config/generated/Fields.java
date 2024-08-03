@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Aug 03 06:18:37 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Aug 03 14:44:28 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -249,6 +249,7 @@ public class Fields {
 	public static final int dc_io_size = 8;
 	public static final int DC_PER_STEPPER = 2;
 	public static final int debug_mode_e_DBG_0 = 0;
+	public static final int debug_mode_e_DBG_1 = 1;
 	public static final int debug_mode_e_DBG_10 = 10;
 	public static final int debug_mode_e_DBG_11 = 11;
 	public static final int debug_mode_e_DBG_12 = 12;
@@ -293,7 +294,6 @@ public class Fields {
 	public static final int debug_mode_e_DBG_STEPPER_IDLE_CONTROL = 3;
 	public static final int debug_mode_e_DBG_TCU = 47;
 	public static final int debug_mode_e_DBG_TLE8888 = 31;
-	public static final int debug_mode_e_DBG_TPS_ACCEL = 1;
 	public static final int debug_mode_e_DBG_UNUSED41 = 41;
 	public static final int debug_mode_e_DBG_UNUSED_42 = 42;
 	public static final int debug_mode_e_UNUSED23 = 23;

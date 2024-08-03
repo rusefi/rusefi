@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sun Jul 28 05:46:48 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sat Aug 03 14:42:58 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -74,6 +74,8 @@ const char *getDebug_mode_e(debug_mode_e value){
 switch(value) {
 case DBG_0:
   return "DBG_0";
+case DBG_1:
+  return "DBG_1";
 case DBG_10:
   return "DBG_10";
 case DBG_11:
@@ -162,8 +164,6 @@ case DBG_TCU:
   return "DBG_TCU";
 case DBG_TLE8888:
   return "DBG_TLE8888";
-case DBG_TPS_ACCEL:
-  return "DBG_TPS_ACCEL";
 case DBG_UNUSED41:
   return "DBG_UNUSED41";
 case DBG_UNUSED_42:
