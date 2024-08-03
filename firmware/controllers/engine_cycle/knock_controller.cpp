@@ -44,7 +44,7 @@ int getCylinderKnockBank(uint8_t cylinderNumber) {
 	}
 }
 
-bool KnockControllerBase::onKnockSenseCompleted(uint8_t cylinderNumber, float dbv, float frequency, efitick_t lastKnockTime) {
+void KnockControllerBase::onKnockSenseCompleted(uint8_t cylinderNumber, float dbv, float frequency, efitick_t lastKnockTime) {
 	bool isKnock = dbv > m_knockThreshold;
 
 	// Per-cylinder peak detector
@@ -74,8 +74,6 @@ bool KnockControllerBase::onKnockSenseCompleted(uint8_t cylinderNumber, float db
 			m_knockRetard = clampF(0, newRetard, m_maximumRetard);
 		}
 	}
-
-	return isKnock;
 }
 
 float KnockControllerBase::getKnockRetard() const {
