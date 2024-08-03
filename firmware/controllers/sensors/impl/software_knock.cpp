@@ -233,7 +233,7 @@ static void processLastKnockEvent() {
 	// looks like we have a defect float mainFreq = 0.f;
 
 #ifdef KNOCK_SPECTROGRAM
-	if(enableKnockSpectrogram) {
+	if (enableKnockSpectrogram) {
 		//ScopePerf perf(PE::KnockAnalyzer);
 
 		fft::fft_adc_sample(spectrogramData->window, ratio, sampleBuffer, spectrogramData->fftBuffer, SIZE);
