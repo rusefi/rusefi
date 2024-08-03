@@ -71,19 +71,6 @@ float TpsAccelEnrichment::getTpsEnrichment() {
 		resetFractionValues();
 	}
 
-#if EFI_TUNER_STUDIO
-	if (engineConfiguration->debugMode == DBG_TPS_ACCEL) {
-		engine->outputChannels.debugFloatField1 = tpsFrom;
-		engine->outputChannels.debugFloatField2 = tpsTo;
-		engine->outputChannels.debugFloatField3 = valueFromTable;
-		engine->outputChannels.debugFloatField4 = extraFuel;
-		engine->outputChannels.debugFloatField5 = accumulatedValue;
-		engine->outputChannels.debugFloatField6 = maxExtraPerPeriod;
-		engine->outputChannels.debugFloatField7 = maxInjectedPerPeriod;
-		engine->outputChannels.debugIntField1 = cycleCnt;
-	}
-#endif /* EFI_TUNER_STUDIO */
-
 	float mult = interpolate2d(rpm, config->tpsTspCorrValuesBins,
 						config->tpsTspCorrValues);
 	if (mult != 0 && (mult < 0.01 || mult > 100)) {

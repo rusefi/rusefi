@@ -765,28 +765,9 @@ void updateTunerStudioState() {
 #endif
 
 	switch (engineConfiguration->debugMode)	{
-	case DBG_TPS_ACCEL:
-		tsOutputChannels->debugIntField1 = engine->tpsAccelEnrichment.cb.getSize();
-		break;
-#if EFI_HIP_9011_DEBUG
-	case DBG_KNOCK:
-		// todo: maybe extract hipPostState(tsOutputChannels);
-		tsOutputChannels->debugIntField1 = instance.correctResponsesCount;
-		tsOutputChannels->debugIntField2 = instance.invalidResponsesCount;
-		break;
-#endif /* EFI_HIP_9011 */
-	case DBG_ION:
-#if EFI_CDM_INTEGRATION
-		ionPostState(tsOutputChannels);
-#endif /* EFI_CDM_INTEGRATION */
-		break;
-	case DBG_TLE8888:
-#if (BOARD_TLE8888_COUNT > 0)
-		tle8888PostState();
-#endif /* BOARD_TLE8888_COUNT */
-		break;
 	case DBG_LOGIC_ANALYZER:
 #if EFI_LOGIC_ANALYZER
+    // used by HW CI
 		reportLogicAnalyzerToTS();
 #endif /* EFI_LOGIC_ANALYZER */
 		break;
