@@ -2365,6 +2365,20 @@ end_struct
 #define ts_show_cylinder_11 true
 #define ts_show_cylinder_12 true
 
+#define ts_show_fuel_trims true
+#define ts_show_fuel_trim_cylinder_1 true
+#define ts_show_fuel_trim_cylinder_2 true
+#define ts_show_fuel_trim_cylinder_3 true
+#define ts_show_fuel_trim_cylinder_4 true
+#define ts_show_fuel_trim_cylinder_5 true
+#define ts_show_fuel_trim_cylinder_6 true
+#define ts_show_fuel_trim_cylinder_7 true
+#define ts_show_fuel_trim_cylinder_8 true
+#define ts_show_fuel_trim_cylinder_9 true
+#define ts_show_fuel_trim_cylinder_10 true
+#define ts_show_fuel_trim_cylinder_11 true
+#define ts_show_fuel_trim_cylinder_12 true
+
 #define ts_show_analog_divider true
 #define ts_show_spi true
 #define ts_show_sd_card true

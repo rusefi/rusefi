@@ -32,7 +32,7 @@ percent_t getInjectorDutyCycleStage2(int rpm);
 float getStage2InjectionFraction(int rpm, float fuelLoad);
 
 float getStandardAirCharge();
-float getCylinderFuelTrim(size_t cylinderNumber, int rpm, float fuelLoad);
+float getCylinderFuelTrim(size_t cylinderNumber, float rpm, float fuelLoad);
 
 struct AirmassModelBase;
 AirmassModelBase* getAirmassModel(engine_load_mode_e mode);

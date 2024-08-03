@@ -118,7 +118,7 @@ void EngineState::periodicFastCallback() {
 
 	recalculateAuxValveTiming();
 
-	int rpm = Sensor::getOrZero(SensorType::Rpm);
+	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	engine->ignitionState.sparkDwell = engine->ignitionState.getSparkDwell(rpm);
 	engine->ignitionState.dwellDurationAngle = std::isnan(rpm) ? NAN :  engine->ignitionState.sparkDwell / getOneDegreeTimeMs(rpm);
 
