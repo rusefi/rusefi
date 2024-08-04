@@ -5,7 +5,7 @@
 
 #define ts_show_vbatt false
 #define ts_show_clt_iat_pullup false
-#define ts_show_egt false
+
 ! users would need an option to un-select in order to use H-bridges for stepper idle
 #define ts_show_etb_pins true
 #define ts_show_analog_divider false
