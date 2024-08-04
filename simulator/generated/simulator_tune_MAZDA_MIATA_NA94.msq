@@ -176,7 +176,7 @@
         <constant name="iat_adcChannel">"Disabled"</constant>
         <constant digits="2" name="launchTimingRetard" units="deg">0.0</constant>
         <constant digits="0" name="hip9011PrescalerAndSDO" units="integer">0.0</constant>
-        <constant digits="2" name="knockBandCustom" units="kHz">0.0</constant>
+        <constant digits="0" name="unusedFloatHere" units="">0.0</constant>
         <constant digits="3" name="displacement" units="L">1.8</constant>
         <constant digits="0" name="triggerSimulatorRpm" units="RPM">1200.0</constant>
         <constant digits="0" name="cylindersCount" units="">4.0</constant>
@@ -611,7 +611,7 @@
         <constant name="fuelClosedLoopCorrectionEnabled">"false"</constant>
         <constant name="oddFireEngine">"false"</constant>
         <constant name="alwaysWriteSdCard">"false"</constant>
-        <constant name="unusedFancy4">"false"</constant>
+        <constant name="knockDetectionUseDoubleFrequency">"second harmonic"</constant>
         <constant name="yesUnderstandLocking">"no"</constant>
         <constant name="silentTriggerError">"true"</constant>
         <constant name="useLinearCltSensor">"false"</constant>
@@ -4778,7 +4778,7 @@ end</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240801" nPages="1" signature="rusEFI master.2024.08.04.f407-discovery.1394353172" version="5.0"/>
+    <versionInfo firmwareInfo="20240801" nPages="1" signature="rusEFI master.2024.08.04.f407-discovery.630339080" version="5.0"/>
     <bibliography author="rusEFI 20240801" writeDate="date"/>
     <settings/>
     <userComments/>

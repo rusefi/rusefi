@@ -173,8 +173,6 @@
     engineConfiguration->startUpFuelPumpDuration = 1;
     // default 3.0
     engineConfiguration->startCrankingDuration = 5;
-    // default 0.0
-    engineConfiguration->knockBandCustom = 12.80005;
     // default 20.0
     engineConfiguration->knockRetardAggression = 5;
     // default 3.0
