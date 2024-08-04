@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Jul 31 17:15:42 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Aug 04 18:05:05 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -930,12 +930,9 @@ struct engine_configuration_s {
 	 */
 	int hip9011PrescalerAndSDO;
 	/**
-	 * Use any online calculator and input your bore.
-	 * Reminder that in some cases double frequency works better!
-	 * units: kHz
 	 * offset 428
 	 */
-	float knockBandCustom;
+	float unusedFloatHere;
 	/**
 	 * Engine displacement in litres
 	 * units: L
@@ -965,7 +962,7 @@ struct engine_configuration_s {
 	 */
 	Gpio communityCommsLedPid;
 	/**
-	 * Cylinder diameter in mm.
+	 * @@CYLINDER_BORE_TOOLTIP@@
 	 * units: mm
 	 * offset 444
 	 */
@@ -2305,8 +2302,9 @@ struct engine_configuration_s {
 	offset 1304 bit 3 */
 	bool alwaysWriteSdCard : 1 {};
 	/**
+	 * Second harmonic (aka double) is usually quieter background noise
 	offset 1304 bit 4 */
-	bool unusedFancy4 : 1 {};
+	bool knockDetectionUseDoubleFrequency : 1 {};
 	/**
 	offset 1304 bit 5 */
 	bool yesUnderstandLocking : 1 {};
@@ -5716,4 +5714,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22960);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Jul 31 17:15:42 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Aug 04 18:05:05 UTC 2024

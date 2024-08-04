@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Aug 04 05:30:28 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Aug 04 18:05:42 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -240,6 +240,9 @@ public class Fields {
 	public static final int cranking_parameters_s_size = 8;
 	public static final int CRITICAL_BUFFER_SIZE = 120;
 	public static final String CRITICAL_PREFIX = "CRITICAL";
+	public static final int CYLINDER_BORE_MULTIPLIER = 1;
+	public static final String CYLINDER_BORE_TOOLTIP = "Cylinder diameter in mm";
+	public static final String CYLINDER_BORE_UNITS = "mm";
 	public static final int DAC_OUTPUT_COUNT = 2;
 	public static final int dc_function_e_DC_IdleValve = 3;
 	public static final int dc_function_e_DC_None = 0;
@@ -1211,7 +1214,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1394353172;
+	public static final int SIGNATURE_HASH = 630339080;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1469,7 +1472,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.08.04.f407-discovery.1394353172";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.08.04.f407-discovery.630339080";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1650,7 +1653,7 @@ public class Fields {
 	public static final Field IAT_ALIGNMENTFILL_AT_29 = Field.create("IAT_ALIGNMENTFILL_AT_29", 417, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field LAUNCHTIMINGRETARD = Field.create("LAUNCHTIMINGRETARD", 420, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field HIP9011PRESCALERANDSDO = Field.create("HIP9011PRESCALERANDSDO", 424, FieldType.INT).setScale(1.0).setBaseOffset(0);
-	public static final Field KNOCKBANDCUSTOM = Field.create("KNOCKBANDCUSTOM", 428, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field UNUSEDFLOATHERE = Field.create("UNUSEDFLOATHERE", 428, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field DISPLACEMENT = Field.create("DISPLACEMENT", 432, FieldType.INT16).setScale(0.001).setBaseOffset(0);
 	public static final Field TRIGGERSIMULATORRPM = Field.create("TRIGGERSIMULATORRPM", 434, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field CYLINDERSCOUNT = Field.create("CYLINDERSCOUNT", 436, FieldType.INT).setScale(1.0).setBaseOffset(0);
@@ -2090,6 +2093,7 @@ public class Fields {
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1304, FieldType.BIT, 1).setBaseOffset(0);
 	public static final Field ODDFIREENGINE = Field.create("ODDFIREENGINE", 1304, FieldType.BIT, 2).setBaseOffset(0);
 	public static final Field ALWAYSWRITESDCARD = Field.create("ALWAYSWRITESDCARD", 1304, FieldType.BIT, 3).setBaseOffset(0);
+	public static final Field KNOCKDETECTIONUSEDOUBLEFREQUENCY = Field.create("KNOCKDETECTIONUSEDOUBLEFREQUENCY", 1304, FieldType.BIT, 4).setBaseOffset(0);
 	public static final Field YESUNDERSTANDLOCKING = Field.create("YESUNDERSTANDLOCKING", 1304, FieldType.BIT, 5).setBaseOffset(0);
 	public static final Field SILENTTRIGGERERROR = Field.create("SILENTTRIGGERERROR", 1304, FieldType.BIT, 6).setBaseOffset(0);
 	public static final Field USELINEARCLTSENSOR = Field.create("USELINEARCLTSENSOR", 1304, FieldType.BIT, 7).setBaseOffset(0);
@@ -3339,7 +3343,7 @@ public class Fields {
 	IAT_ALIGNMENTFILL_AT_29,
 	LAUNCHTIMINGRETARD,
 	HIP9011PRESCALERANDSDO,
-	KNOCKBANDCUSTOM,
+	UNUSEDFLOATHERE,
 	DISPLACEMENT,
 	TRIGGERSIMULATORRPM,
 	CYLINDERSCOUNT,
@@ -3767,6 +3771,7 @@ public class Fields {
 	FUELCLOSEDLOOPCORRECTIONENABLED,
 	ODDFIREENGINE,
 	ALWAYSWRITESDCARD,
+	KNOCKDETECTIONUSEDOUBLEFREQUENCY,
 	YESUNDERSTANDLOCKING,
 	SILENTTRIGGERERROR,
 	USELINEARCLTSENSOR,

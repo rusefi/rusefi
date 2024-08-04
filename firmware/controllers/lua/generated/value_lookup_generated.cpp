@@ -253,9 +253,6 @@ float getConfigValueByName(const char *name) {
 // hip9011PrescalerAndSDO
 		case -1310663509:
 			return engineConfiguration->hip9011PrescalerAndSDO;
-// knockBandCustom
-		case -1738843157:
-			return engineConfiguration->knockBandCustom;
 // displacement
 		case -1227821282:
 			return engineConfiguration->displacement;
@@ -769,6 +766,9 @@ float getConfigValueByName(const char *name) {
 // alwaysWriteSdCard
 		case 787397010:
 			return engineConfiguration->alwaysWriteSdCard;
+// knockDetectionUseDoubleFrequency
+		case 892958612:
+			return engineConfiguration->knockDetectionUseDoubleFrequency;
 // yesUnderstandLocking
 		case -1985448683:
 			return engineConfiguration->yesUnderstandLocking;
@@ -2255,11 +2255,6 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->hip9011PrescalerAndSDO = (int)value;
 		return 1;
 	}
-		case -1738843157:
-	{
-		engineConfiguration->knockBandCustom = value;
-		return 1;
-	}
 		case -1227821282:
 	{
 		engineConfiguration->displacement = (int)value;
@@ -3113,6 +3108,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 787397010:
 	{
 		engineConfiguration->alwaysWriteSdCard = (int)value;
+		return 1;
+	}
+		case 892958612:
+	{
+		engineConfiguration->knockDetectionUseDoubleFrequency = (int)value;
 		return 1;
 	}
 		case -1985448683:

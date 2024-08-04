@@ -247,9 +247,6 @@ Pull-up resistor value on your board
 ### hip9011PrescalerAndSDO
 value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into two bit fields
 
-### knockBandCustom
-Use any online calculator and input your bore.\nReminder that in some cases double frequency works better!
-
 ### displacement
 Engine displacement in litres
 
@@ -263,7 +260,7 @@ Number of cylinder the engine has.
 null
 
 ### cylinderBore
-Cylinder diameter in mm.
+@@CYLINDER_BORE_TOOLTIP@@
 
 ### ALSMaxTPS
 
@@ -762,6 +759,9 @@ On even fire engines with even number of cylinders we go wasted spark during cra
 
 ### alwaysWriteSdCard
 Write SD card log even when powered by USB
+
+### knockDetectionUseDoubleFrequency
+Second harmonic (aka double) is usually quieter background noise
 
 ### yesUnderstandLocking
 
