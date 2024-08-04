@@ -3,6 +3,7 @@ package com.rusefi.test;
 import com.rusefi.*;
 import com.rusefi.output.*;
 import com.rusefi.parse.TypesHelper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -12,6 +13,10 @@ import static org.junit.jupiter.api.Assertions.*;
  * 1/15/15
  */
 public class ConfigFieldParserTest {
+    @Test
+    public void testErrorDetection() {
+        Assertions.assertThrows(IllegalStateException.class, () -> ConfigFieldImpl.getScaleSpec("2.54", "test"));
+    }
 
     @Test
     public void testByteArray() {

@@ -15,6 +15,7 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.TokenUtils.tokenizeWithBraces;
 
 import com.rusefi.parse.TypesHelper;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -343,6 +344,10 @@ public class ConfigFieldImpl implements ConfigField {
             throw new IllegalArgumentException("Second comma-separated token expected in [" + tsInfo + "] for " + name);
 
         String scale = tokens[1].trim();
+        return getScaleSpec(scale, name);
+    }
+
+    public static @NotNull Pair<Integer, Integer> getScaleSpec(String scale, String name) {
         double factor;
         if (scale.startsWith("{") && scale.endsWith("}")) {
             // Handle just basic division, not a full fledged eval loop
@@ -367,7 +372,7 @@ public class ConfigFieldImpl implements ConfigField {
         double accuracy = Math.abs((factor2 / factor) - 1.);
         if (accuracy > 0.0000001) {
             // Don't want to deal with exception propogation; this should adequately not compile
-            throw new IllegalStateException("$*@#$* Cannot accurately represent autoscale for [" + tokens[1] + "] got " + accuracy);
+            throw new IllegalStateException("$*@#$* Cannot accurately represent autoscale for [" + scale + "] got " + accuracy);
         }
 
         return new Pair<>(mul, div);
