@@ -68,6 +68,7 @@ static void mc33810defaults() {
 void setDefaultBaseEngine() {
 	// Base Engine Settings
 	engineConfiguration->displacement = 2;
+	engineConfiguration->knockDetectionUseDoubleFrequency = true;
 	setInline4();
 
   for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
