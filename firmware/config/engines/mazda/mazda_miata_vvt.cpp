@@ -332,9 +332,6 @@ static void setCommonMazdaNB() {
 	// MAF (todo: do we use this?)
 	setMAFTransferFunction();
 
-	// second harmonic (aka double) is usually quieter background noise
-	engineConfiguration->knockBandCustom = 13.8;
-
 	engineConfiguration->wwaeTau = 0.1;
 
 	miataNA_setCltIdleCorrBins();

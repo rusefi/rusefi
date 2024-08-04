@@ -22,7 +22,6 @@ void setMazdaMiata96() {
 	 */
 	engineConfiguration->injector.flow = 265;
 	engineConfiguration->cylinderBore = 83;
-	engineConfiguration->knockBandCustom = 13.81;
 
 	engineConfiguration->idleMode = IM_AUTO;
 	// below 20% this valve seems to be opening for fail-safe idle air
