@@ -176,7 +176,7 @@
         <constant name="iat_adcChannel">"Disabled"</constant>
         <constant digits="2" name="launchTimingRetard" units="deg">0.0</constant>
         <constant digits="0" name="hip9011PrescalerAndSDO" units="integer">0.0</constant>
-        <constant digits="2" name="knockBandCustom" units="kHz">6.8</constant>
+        <constant digits="2" name="knockBandCustom" units="kHz">0.0</constant>
         <constant digits="3" name="displacement" units="L">1.6</constant>
         <constant digits="0" name="triggerSimulatorRpm" units="RPM">1200.0</constant>
         <constant digits="0" name="cylindersCount" units="">4.0</constant>

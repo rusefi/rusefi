@@ -147,6 +147,8 @@
     engineConfiguration->maxAcTps = 70;
     // default "false"
     engineConfiguration->enableSoftwareKnock = true;
+    // default 0.0
+    engineConfiguration->knockBandCustom = 13.80627;
     // default 20.0
     engineConfiguration->knockRetardAggression = 0;
     // default 3.0
