@@ -367,7 +367,7 @@ public class ConfigFieldImpl implements ConfigField {
         double accuracy = Math.abs((factor2 / factor) - 1.);
         if (accuracy > 0.0000001) {
             // Don't want to deal with exception propogation; this should adequately not compile
-            throw new IllegalStateException("$*@#$* Cannot accurately represent autoscale for " + tokens[1]);
+            throw new IllegalStateException("$*@#$* Cannot accurately represent autoscale for [" + tokens[1] + "] got " + accuracy);
         }
 
         return new Pair<>(mul, div);
