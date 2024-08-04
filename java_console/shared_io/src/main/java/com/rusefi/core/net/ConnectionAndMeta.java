@@ -54,9 +54,14 @@ public class ConnectionAndMeta {
         return getBoolead("show_simulator");
     }
 
+    // TS multiplier is technically different from autoscale, open question when we shall allow multiplier without autoscale
+    public static boolean flexibleAutoscale() {
+        return getBoolead("flexible_autoscale");
+    }
+
     private static boolean getBoolead(String propertyName) {
         String flag = getProperties().getProperty(propertyName);
-        return Boolean.TRUE.toString().equals(flag);
+        return Boolean.TRUE.toString().equalsIgnoreCase(flag);
     }
 
     private static Properties getProperties() throws RuntimeException {

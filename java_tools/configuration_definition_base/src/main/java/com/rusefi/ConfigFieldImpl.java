@@ -3,6 +3,7 @@ package com.rusefi;
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.field.EnumIniField;
 import com.rusefi.core.Pair;
+import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.output.ConfigStructure;
 import com.rusefi.output.JavaFieldsConsumer;
 
@@ -91,7 +92,7 @@ public class ConfigFieldImpl implements ConfigField {
         this.arraySizes = arraySizes;
         this.tsInfo = tsInfo == null ? null : state.getVariableRegistry().applyVariables(tsInfo);
         this.isIterate = isIterate;
-        if (tsInfo != null) {
+        if (tsInfo != null && !ConnectionAndMeta.flexibleAutoscale()) {
             String[] tokens = getTokens();
             if (tokens.length > 1) {
                 String scale = tokens[1].trim();
@@ -176,13 +177,7 @@ public class ConfigFieldImpl implements ConfigField {
         String[] nameTokens = nameString.split("\\s");
         String name = nameTokens[nameTokens.length - 1];
 
-        boolean hasAutoscale = false;
-        for (String autoscaler : nameTokens) {
-            if (autoscaler.equals("autoscale")) {
-                hasAutoscale = true;
-                break;
-            }
-        }
+        boolean hasAutoscale = isHasAutoscale(nameTokens);
 
         String comment = matcher.group(10);
         validateComment(comment);
@@ -217,6 +212,17 @@ public class ConfigFieldImpl implements ConfigField {
             log.debug("comment " + comment);
 
         return field;
+    }
+
+    private static boolean isHasAutoscale(String[] nameTokens) {
+        boolean hasAutoscale = false;
+        for (String autoscaler : nameTokens) {
+            if (autoscaler.equals("autoscale")) {
+                hasAutoscale = true;
+                break;
+            }
+        }
+        return hasAutoscale;
     }
 
     private static void validateComment(String comment) {
@@ -318,6 +324,8 @@ public class ConfigFieldImpl implements ConfigField {
 
     @Override
     public String autoscaleSpec() {
+        if (!hasAutoscale)
+            return null;
         Pair<Integer, Integer> pair = autoscaleSpecPair();
         if (pair == null)
             return null;
