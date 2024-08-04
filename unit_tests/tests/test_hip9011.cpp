@@ -19,11 +19,11 @@ TEST(hip9011, lookup) {
 	assertEqualsM2("240us 50 degree", 1105.2435, instance.getRpmByAngleWindowAndTimeUs(240, 50), 0.1);
 	assertEqualsM2("240us 50 degree", 6631.4619, instance.getRpmByAngleWindowAndTimeUs(40, 50), 0.1);
 
-	EXPECT_EQ(0, instance.getGainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/3, 0, NAN, NAN));
-	EXPECT_EQ(0, instance.getGainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/2, 0, NAN, NAN));
-	EXPECT_EQ(47, instance.getGainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/0.234, 0, NAN, NAN));
-	EXPECT_EQ(63, instance.getGainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/0.000001, 0, NAN, NAN));
-	EXPECT_EQ(63, instance.getGainIndex(/* knockBandCustom*/NAN, /*cylinderBore*/NAN, /*hip9011Gain*/-1.0, 0, NAN, NAN));
+	EXPECT_EQ(0, instance.getGainIndex(/*cylinderBore*/NAN, /*hip9011Gain*/3, 0, NAN, NAN));
+	EXPECT_EQ(0, instance.getGainIndex(/*cylinderBore*/NAN, /*hip9011Gain*/2, 0, NAN, NAN));
+	EXPECT_EQ(47, instance.getGainIndex(/*cylinderBore*/NAN, /*hip9011Gain*/0.234, 0, NAN, NAN));
+	EXPECT_EQ(63, instance.getGainIndex(/*cylinderBore*/NAN, /*hip9011Gain*/0.000001, 0, NAN, NAN));
+	EXPECT_EQ(63, instance.getGainIndex(/*cylinderBore*/NAN, /*hip9011Gain*/-1.0, 0, NAN, NAN));
 
 }
 
@@ -42,10 +42,9 @@ TEST(hip9011, rpmLookup) {
 TEST(hip9011, band) {
 	HIP9011 instance(NULL);
 
-	EXPECT_FLOAT_EQ(3, instance.getBand(/* knockBandCustom*/3, /*cylinderBore*/76, /*hip9011Gain*/NAN, 0, NAN, NAN));
-	EXPECT_NEAR_M4(7.5389242, instance.getBand(/* knockBandCustom*/0, /*cylinderBore*/76, /*hip9011Gain*/NAN, 0, NAN, NAN));
+	EXPECT_NEAR_M4(7.5389242, instance.getBand(/*cylinderBore*/76, /*hip9011Gain*/NAN, 0, NAN, NAN));
 
-	EXPECT_EQ(42, instance.getBandIndex(/* knockBandCustom*/0, /*cylinderBore*/76, /*hip9011Gain*/NAN, 0, NAN, NAN));
+	EXPECT_EQ(42, instance.getBandIndex(/*cylinderBore*/76, /*hip9011Gain*/NAN, 0, NAN, NAN));
 
 }
 
@@ -64,7 +63,7 @@ TEST(hip9011, configurationCommands) {
 	HIP9011 instance(&mock);
 
 // want to invoke method with same parameters a few times
-#define PARAMETERS 600, /* knockBandCustom*/0, /*cylinderBore*/76, /*hip9011Gain*/1, HIP_8MHZ_PRESCALER, 0.0, 50.0
+#define PARAMETERS 600, /*cylinderBore*/76, /*hip9011Gain*/1, HIP_8MHZ_PRESCALER, 0.0, 50.0
 
 	 // Not making assumptions on the message send ...
 	EXPECT_CALL(mock, sendSyncCommand(SET_GAIN_CMD(0xE), 0)).Times(1);

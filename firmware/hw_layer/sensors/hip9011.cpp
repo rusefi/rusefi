@@ -666,11 +666,6 @@ static void setPrescalerAndSDO(int value) {
 	engineConfiguration->hip9011PrescalerAndSDO = value;
 }
 
-static void setHipBand(float value) {
-	engineConfiguration->knockBandCustom = value;
-	showHipInfo();
-}
-
 static void setHipGain(float value) {
 	engineConfiguration->hip9011Gain = value;
 	showHipInfo();
@@ -679,7 +674,6 @@ static void setHipGain(float value) {
 static void hip_addconsoleActions() {
 	addConsoleAction("hipinfo", showHipInfo);
 	addConsoleActionF("set_gain", setHipGain);
-	addConsoleActionF("set_band", setHipBand);
 	addConsoleActionI("set_hip_prescalerandsdo", setPrescalerAndSDO);
 }
 
