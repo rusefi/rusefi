@@ -12,6 +12,8 @@
 
 int getCylinderKnockBank(uint8_t cylinderNumber);
 
+#define bore2frequency(bore)		(900 / (CONST_PI * (bore) / 2))
+
 class KnockControllerBase : public EngineModule, public knock_controller_s {
 public:
     KnockControllerBase() {

@@ -14,7 +14,6 @@
 #define EFI_HIP_9011_DEBUG EFI_HIP_9011
 #endif
 
-#define HIP9011_BAND(bore)		(900 / (CONST_PI * (bore) / 2))
 #define HIP9011_ANALOG_OUTPUT_MAX		5.0f
 #define HIP9011_DIGITAL_OUTPUT_MAX		0x03ff	/* 10 bit max value */
 #define HIP_INPUT_CHANNELS		2
