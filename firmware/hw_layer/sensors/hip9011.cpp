@@ -608,7 +608,7 @@ static void showHipInfo() {
 		instance.expectedCylinderNumber);
 
 	efiPrintf(" Cyl bore %.2fmm freq %.2fkHz band idx 0x%x",
-		engineConfiguration->cylinderBore,
+		(float)engineConfiguration->cylinderBore,
 		instance.getBand(PASS_HIP_PARAMS),
 		instance.bandIdx);
 
