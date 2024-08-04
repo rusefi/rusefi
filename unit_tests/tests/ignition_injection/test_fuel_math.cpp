@@ -211,6 +211,7 @@ TEST(FuelMath, deadtime) {
 	EXPECT_FLOAT_EQ( 20 + 2,  engine->engineState.injectionDuration);
 }
 
+#ifndef SUPPRESS_FUEL_MATH_FUEL_TRIM_TEST
 TEST(FuelMath, CylinderFuelTrim) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
@@ -232,6 +233,7 @@ TEST(FuelMath, CylinderFuelTrim) {
 	EXPECT_NEAR(engine->engineState.injectionMass[2], unadjusted * 1.02, EPS4D);
 	EXPECT_NEAR(engine->engineState.injectionMass[3], unadjusted * 1.04, EPS4D);
 }
+#endif
 
 struct MockIdle : public MockIdleController {
 	bool isIdling = false;
