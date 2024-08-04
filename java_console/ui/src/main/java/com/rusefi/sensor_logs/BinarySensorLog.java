@@ -1,6 +1,6 @@
 package com.rusefi.sensor_logs;
 
-import com.opensr5.Logger;
+import com.devexperts.logging.FileLogger;
 import com.rusefi.FileLog;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.rusEFIVersion;
@@ -46,8 +46,8 @@ public class BinarySensorLog<T extends BinaryLogEntry> implements SensorLog {
     @Override
     public void writeSensorLogLine() {
         if (stream == null) {
-            FileLog.createFolderIfNeeded();
-            fileName = Logger.DIR + "rusEFI_gauges_" + FileLog.getDate() + ".mlg";
+            FileLogger.createFolderIfNeeded();
+            fileName = FileLogger.DIR + "rusEFI_gauges_" + FileLog.getDate() + ".mlg";
 
             try {
                 stream = new DataOutputStream(new FileOutputStream(fileName));

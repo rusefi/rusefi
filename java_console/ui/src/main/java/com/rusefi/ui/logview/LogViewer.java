@@ -1,6 +1,6 @@
 package com.rusefi.ui.logview;
 
-import com.opensr5.Logger;
+import com.devexperts.logging.FileLogger;
 import com.rusefi.ConsoleUI;
 import com.rusefi.FileLog;
 import com.rusefi.config.generated.Fields;
@@ -11,7 +11,6 @@ import com.rusefi.ui.LogDownloader;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.util.UiUtils;
-import com.rusefi.waves.EngineReport;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,7 +37,7 @@ public class LogViewer extends JPanel {
             return pathname.getName().contains("MAIN_rfi_report");
         }
     };
-    public static final String DEFAULT_LOG_LOCATION = Logger.DIR;
+    public static final String DEFAULT_LOG_LOCATION = FileLogger.DIR;
     private final JLabel folderLabel = new JLabel();
     private final JLabel fileLabel = new JLabel();
     private final DefaultListModel<FileItem> fileListModel = new DefaultListModel<FileItem>();

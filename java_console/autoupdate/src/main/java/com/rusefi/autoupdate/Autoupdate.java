@@ -1,5 +1,6 @@
 package com.rusefi.autoupdate;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.core.FindFileHelper;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
@@ -22,10 +23,12 @@ import java.util.Date;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.FindFileHelper.findSrecFile;
 
 public class Autoupdate {
-    private static final int VERSION = 20240612;
+    private static final Logging log = getLogging(Autoupdate.class);
+    private static final int VERSION = 20240804;
 
     private static final String LOGO_PATH = "/com/rusefi/";
     private static final String LOGO = LOGO_PATH + "logo.png";
@@ -55,10 +58,10 @@ public class Autoupdate {
     private static void autoupdate(String[] args) {
         String bundleFullName = BundleUtil.readBundleFullName();
         if (bundleFullName == null) {
-            System.err.println("ERROR: Autoupdate: unable to perform without bundleFullName (parent folder name)");
+            log.error("ERROR: Autoupdate: unable to perform without bundleFullName (parent folder name)");
             System.exit(-1);
         }
-        System.out.println("Handling parent folder name [" + bundleFullName + "]");
+        log.info("Handling parent folder name [" + bundleFullName + "]");
 
         BundleUtil.BundleInfo bundleInfo = BundleUtil.parse(bundleFullName);
         String branchName = bundleInfo.getBranchName();
@@ -69,14 +72,14 @@ public class Autoupdate {
             doDownload(bundleInfo, UpdateMode.ALWAYS);
         } else if (args.length > 0 && args[0].equalsIgnoreCase("release")) {
             // this branch needs progress for custom boards!
-            System.out.println("Release update requested");
+            log.info("Release update requested");
             downloadAndUnzipAutoupdate(bundleInfo, UpdateMode.ALWAYS, ConnectionAndMeta.BASE_URL_RELEASE);
         } else {
             UpdateMode mode = getMode();
             if (mode != UpdateMode.NEVER) {
                 doDownload(bundleInfo, mode);
             } else {
-                System.out.println("Update mode: NEVER");
+                log.info("Update mode: NEVER");
             }
         }
         startConsole(args);
@@ -84,7 +87,7 @@ public class Autoupdate {
 
     private static void doDownload(BundleUtil.BundleInfo bundleInfo, UpdateMode mode) {
         if (bundleInfo.getBranchName().equals("snapshot")) {
-            System.out.println("Snapshot requested");
+            log.info("Snapshot requested");
             downloadAndUnzipAutoupdate(bundleInfo, mode, ConnectionAndMeta.getBaseUrl() + ConnectionAndMeta.AUTOUPDATE);
         } else {
             downloadAndUnzipAutoupdate(bundleInfo, mode, ConnectionAndMeta.getBaseUrl() + "/lts/" + bundleInfo.getBranchName() + ConnectionAndMeta.AUTOUPDATE);
@@ -94,7 +97,7 @@ public class Autoupdate {
     private static void startConsole(String[] args) {
         try {
             // we want to make sure that files are available to write so we use reflection to get lazy class initialization
-            System.out.println("Running rusEFI console with " + Arrays.toString(args));
+            log.info("Running rusEFI console with " + Arrays.toString(args));
             // since we are overriding file we cannot just use static java classpath while launching
             URLClassLoader jarClassLoader = AutoupdateUtil.getClassLoaderByJar(RUSEFI_CONSOLE_JAR);
 
@@ -103,7 +106,7 @@ public class Autoupdate {
             mainMethod.invoke(null, new Object[]{args});
         } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException |
                  MalformedURLException e) {
-            System.out.println(e);
+            log.error("Failed to start", e);
         }
     }
 
@@ -121,11 +124,11 @@ public class Autoupdate {
             String suffix = FindFileHelper.isObfuscated() ? "_obfuscated_public" : "";
             String zipFileName = ConnectionAndMeta.getWhiteLabel() + "_bundle_" + info.getTarget() + suffix + "_autoupdate" + ".zip";
             ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(zipFileName).invoke(baseUrl);
-            System.out.println("Remote file " + zipFileName);
-            System.out.println("Server has " + connectionAndMeta.getCompleteFileSize() + " from " + new Date(connectionAndMeta.getLastModified()));
+            log.info("Remote file " + zipFileName);
+            log.info("Server has " + connectionAndMeta.getCompleteFileSize() + " from " + new Date(connectionAndMeta.getLastModified()));
 
             if (AutoupdateUtil.hasExistingFile(zipFileName, connectionAndMeta.getCompleteFileSize(), connectionAndMeta.getLastModified())) {
-                System.out.println("We already have latest update " + new Date(connectionAndMeta.getLastModified()));
+                log.info("We already have latest update " + new Date(connectionAndMeta.getLastModified()));
                 return;
             }
 
@@ -139,24 +142,24 @@ public class Autoupdate {
             long completeFileSize = connectionAndMeta.getCompleteFileSize();
             long lastModified = connectionAndMeta.getLastModified();
 
-            System.out.println(info + " " + completeFileSize + " bytes, last modified " + new Date(lastModified));
+            log.info(info + " " + completeFileSize + " bytes, last modified " + new Date(lastModified));
 
             AutoupdateUtil.downloadAutoupdateFile(zipFileName, connectionAndMeta, TITLE);
 
             File file = new File(zipFileName);
             file.setLastModified(lastModified);
-            System.out.println("Downloaded " + file.length() + " bytes, lastModified=" + lastModified);
+            log.info("Downloaded " + file.length() + " bytes, lastModified=" + lastModified);
 
             FileUtil.unzip(zipFileName, new File(".."));
             String srecFile = findSrecFile();
             new File(srecFile == null ? FindFileHelper.FIRMWARE_BIN_FILE : srecFile).setLastModified(lastModified);
         } catch (ReportedIOException e) {
             // we had already reported error with a UI dialog when we had parent frame
-            System.err.println("Error downloading bundle: " + e);
+            log.error("Error downloading bundle: " + e);
         } catch (IOException e) {
             // we are here if error happened while we did not have UI frame
             // todo: open frame prior to network connection and keep frame opened while uncompressing?
-            System.err.println("Error downloading bundle: " + e);
+            log.error("Error downloading bundle: " + e);
             if (!AutoupdateUtil.runHeadless) {
                 JOptionPane.showMessageDialog(null, "Error downloading " + e, "Error",
                     JOptionPane.ERROR_MESSAGE);

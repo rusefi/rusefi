@@ -52,7 +52,7 @@ public class Logging {
 		return getLogging(clazz.getName());
 	}
 
-	public static Logging getLogging(String name) {
+	private static Logging getLogging(String name) {
 		Logging logging = INSTANCES.get(name);
 		if (logging != null)
 			return logging;

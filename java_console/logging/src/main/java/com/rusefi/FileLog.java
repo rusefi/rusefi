@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.devexperts.logging.FileLogger;
 import com.devexperts.logging.Logging;
 import com.opensr5.Logger;
 import com.rusefi.util.LazyFile;
@@ -21,9 +22,8 @@ public enum FileLog {
     MAIN,
     SIMULATOR_CONSOLE;
 
-    public static final String LOG_INFO_TEXT = "Writing logs to '" + Logger.DIR + "'";
+    public static final String LOG_INFO_TEXT = "Writing logs to '" + FileLogger.DIR + "'";
     public static final String OS_VERSION = "os.version";
-    public static final String DATE_PATTERN = "yyyy-MM-dd_HH_mm_ss_SSS";
     private static final String WIKI_URL = "https://github.com/rusefi/rusefi/wiki/rusEFI-logs-folder";
     public static String currentLogName;
 
@@ -35,7 +35,7 @@ public enum FileLog {
     }
 
     public static String getDate() {
-        return new SimpleDateFormat(DATE_PATTERN).format(new Date());
+        return FileLogger.getDate();
     }
 
     public void start() {
@@ -51,7 +51,7 @@ public enum FileLog {
     }
 
     private static void writeReadmeFile() {
-        LazyFile file = new LazyFileImpl(Logger.DIR + "README.html");
+        LazyFile file = new LazyFileImpl(FileLogger.DIR + "README.html");
         file.write("<center>" + "<a href='" + WIKI_URL + "'>More info online<br/><img src=https://raw.githubusercontent.com/wiki/rusefi/rusefi/logo.gif></a>");
         try {
             file.close();
@@ -77,23 +77,12 @@ public enum FileLog {
     }
 
     private FileOutputStream openLog() throws FileNotFoundException {
-        String date = getDate();
-        createFolderIfNeeded();
-        String shortFileName = name() + "_rfi_report_" + date;
-        Logging.configureLogFile(Logger.DIR + shortFileName + ".log");
+        FileLogger.createFolderIfNeeded();
+        String shortFileName = name() + "_rfi_report_" + FileLogger.date;
         currentLogName = shortFileName + ".csv";
-        String fullFileName = Logger.DIR + currentLogName;
+        String fullFileName = FileLogger.DIR + currentLogName;
         rlog("Writing to " + fullFileName);
         return new FileOutputStream(fullFileName, true);
-    }
-
-    public static void createFolderIfNeeded() {
-        File dir = new File(Logger.DIR);
-        if (dir.exists())
-            return;
-        boolean created = dir.mkdirs();
-        if (!created)
-            throw new IllegalStateException("Failed to create " + Logger.DIR + " folder");
     }
 
     public synchronized void logLine(String fullLine) {

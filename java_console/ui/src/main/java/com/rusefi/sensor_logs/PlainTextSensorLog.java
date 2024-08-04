@@ -1,7 +1,7 @@
 package com.rusefi.sensor_logs;
 
+import com.devexperts.logging.FileLogger;
 import com.opensr5.ConfigurationImage;
-import com.opensr5.Logger;
 import com.rusefi.FileLog;
 import com.rusefi.Launcher;
 import com.rusefi.binaryprotocol.BinaryProtocol;
@@ -40,8 +40,8 @@ public class PlainTextSensorLog implements SensorLog {
     }
 
     private void startSensorLogFile() {
-        FileLog.createFolderIfNeeded();
-        String fileName = Logger.DIR + "rusEFI_gauges_" + FileLog.getDate() + ".msl";
+        FileLogger.createFolderIfNeeded();
+        String fileName = FileLogger.DIR + "rusEFI_gauges_" + FileLog.getDate() + ".msl";
 
         fileStartTime = System.currentTimeMillis();
         try {

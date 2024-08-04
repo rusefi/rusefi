@@ -1,11 +1,10 @@
 package com.rusefi.binaryprotocol;
 
-import com.opensr5.Logger;
+import com.devexperts.logging.FileLogger;
 import com.rusefi.FileLog;
 import com.rusefi.Timeouts;
 import com.rusefi.composite.CompositeEvent;
 import com.rusefi.composite.CompositeParser;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -72,7 +71,7 @@ public class BinaryProtocolLogger {
 
     @NotNull
     public static String getFileName(String prefix, String fileType) {
-        return Logger.DIR + prefix + FileLog.getDate() + fileType;
+        return FileLogger.DIR + prefix + FileLog.getDate() + fileType;
     }
 
     public void compositeLogic(BinaryProtocol binaryProtocol) {
