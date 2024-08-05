@@ -914,8 +914,7 @@ void doInitElectronicThrottle() {
 	printf("doInitElectronicThrottle %s\n", boolToString(hasPedal));
 #endif // EFI_UNIT_TEST
 
-	// these status flags are consumed by TS see tunerstudio.template.ini TODO should those be outputs/live data not configuration?!
-	engineConfiguration->etb1configured = engineConfiguration->etb2configured = false;
+	bool anyEtbConfigured = false;
 
 	// todo: technical debt: we still have DC motor code initialization in ETB-specific file while DC motors are used not just as ETB
 	// like DC motor wastegate code flow should probably NOT go through electronic_throttle.cpp right?
@@ -936,15 +935,10 @@ void doInitElectronicThrottle() {
 		auto pid = getPidForDcFunction(func);
 
 		bool dcConfigured = controller->init(func, motor, pid, &pedal2tpsMap, hasPedal);
-		bool etbConfigured = dcConfigured && controller->isEtbMode();
-		if (i == 0) {
-		    engineConfiguration->etb1configured = etbConfigured;
-		} else if (i == 1) {
-		    engineConfiguration->etb2configured = etbConfigured;
-		}
+		anyEtbConfigured |= dcConfigured && controller->isEtbMode();
 	}
 
-	if (!engineConfiguration->etb1configured && !engineConfiguration->etb2configured) {
+	if (!anyEtbConfigured) {
 		// It's not valid to have a PPS without any ETBs - check that at least one ETB was enabled along with the pedal
 		if (hasPedal) {
 			firmwareError(ObdCode::OBD_PCM_Processor_Fault, "A pedal position sensor was configured, but no electronic throttles are configured.");
