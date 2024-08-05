@@ -1179,7 +1179,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2024.08.02.f407-discovery.3888349420";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2024.08.05.f407-discovery.3559842413";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1388;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
@@ -1507,8 +1507,6 @@ public class Fields {
 	public static final Field ENABLEDSTEP1LIMITER = Field.create("ENABLEDSTEP1LIMITER", 664, FieldType.BIT, 7).setBaseOffset(0);
 	public static final Field VERBOSETLE8888 = Field.create("VERBOSETLE8888", 664, FieldType.BIT, 8).setBaseOffset(0);
 	public static final Field ENABLEVERBOSECANTX = Field.create("ENABLEVERBOSECANTX", 664, FieldType.BIT, 9).setBaseOffset(0);
-	public static final Field ETB1CONFIGURED = Field.create("ETB1CONFIGURED", 664, FieldType.BIT, 10).setBaseOffset(0);
-	public static final Field ETB2CONFIGURED = Field.create("ETB2CONFIGURED", 664, FieldType.BIT, 11).setBaseOffset(0);
 	public static final Field MEASUREMAPONLYINONECYLINDER = Field.create("MEASUREMAPONLYINONECYLINDER", 664, FieldType.BIT, 12).setBaseOffset(0);
 	public static final Field STEPPERFORCEPARKINGEVERYRESTART = Field.create("STEPPERFORCEPARKINGEVERYRESTART", 664, FieldType.BIT, 13).setBaseOffset(0);
 	public static final Field ISFASTERENGINESPINUPENABLED = Field.create("ISFASTERENGINESPINUPENABLED", 664, FieldType.BIT, 14).setBaseOffset(0);
