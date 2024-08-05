@@ -57,6 +57,7 @@ Release template (copy/paste this for new release):
  - Launch RPM + Launch Control window is not correct #6533
  - MAX3185X_REFRESH_TIME is now 0.1 sec.
  - ADC array out of bounds when using analog muxes #6376
+ - DFCO without a MAP sensor #6771
 
 ### Breaking Changes
  - "60/2 VW" trigger wheel renamed to "60-2 Wrong Polarity" #988
