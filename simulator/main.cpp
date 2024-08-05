@@ -18,7 +18,6 @@
 #include "chprintf.h"
 #include "rusEfiFunctionalTest.h"
 #include "flash_int.h"
-#include "libc_argp.h"
 
 #include <iostream>
 #include <filesystem>
@@ -144,14 +143,6 @@ static virtual_timer_t exitTimer;
 int main(int argc, char** argv) {
 	setbuf(stdout, NULL);
 
-	struct arguments arguments;
-	arguments.quiet = 0;
-	arguments.socketcanDevice = (char *)"can0";
-	arguments.timeout = -1;
-	argp_parse(&argp, argc, argv, 0, 0, &arguments);
-
-	verboseMode = arguments.quiet == 0;
-
 	/*
 	 * System initializations.
 	 * - HAL initialization, this also initializes the configured device drivers
@@ -162,10 +153,12 @@ int main(int argc, char** argv) {
 	halInit();
 	chSysInit();
 
-	if (arguments.timeout >= 0) {
-		printf("Running rusEFI simulator for %d seconds, then exiting.\n\n", arguments.timeout);
+	if (argc == 2) {
+		int timeoutSeconds = atoi(argv[1]);
+		printf("Running rusEFI simulator for %d seconds, then exiting.\n\n", timeoutSeconds);
+
 		chSysLock();
-		chVTSetI(&exitTimer, MY_US2ST(arguments.timeout * 1e6), [](void *) { exit(0); }, nullptr);
+		chVTSetI(&exitTimer, MY_US2ST(timeoutSeconds * 1e6), [](void*) { exit(0); }, nullptr);
 		chSysUnlock();
 	}
 
@@ -185,7 +178,7 @@ int main(int argc, char** argv) {
 	cputs("  - Listening for connections on SD2");
 	chEvtRegister(chnGetEventSource(&SD2), &sd2fel, 2);
 
-	rusEfiFunctionalTest(arguments.socketcanDevice);
+	rusEfiFunctionalTest();
 
 	/*
 	 * Events servicing loop.
