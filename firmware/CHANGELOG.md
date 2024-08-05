@@ -47,6 +47,7 @@ or
  - Make Toyota "3 Tooth Cam" decoder more robust #382
  - Flex sensor-derived fuel temperature indication works properly
  - Fix a scenario where noisy trigger can cause overdwell [rusefi/rusefi#6349](https://github.com/rusefi/rusefi/issues/6349)
+ - Fix DFCO on engines without a MAP sensor #457
 
 ## December 2023 Release
 
