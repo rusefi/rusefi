@@ -7,6 +7,6 @@
 
 #pragma once
 
-void rusEfiFunctionalTest(void);
+void rusEfiFunctionalTest(char const * const socketcanDevice);
 void printPendingMessages(void);
 void logMsg(const char *fmt, ...);

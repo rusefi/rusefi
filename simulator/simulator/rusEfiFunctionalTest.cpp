@@ -84,7 +84,7 @@ static void runChprintfTest() {
 
 }
 
-void rusEfiFunctionalTest(void) {
+void rusEfiFunctionalTest(char const * const socketcanDevice) {
 	printToConsole("Running rusEfi simulator version:");
 	static char versionBuffer[20];
 	itoa10(versionBuffer, (int)getRusEfiVersion());
@@ -128,8 +128,8 @@ void rusEfiFunctionalTest(void) {
 
 #if HAL_USE_CAN
 	// Set CAN device name
-	CAND1.deviceName = "can0";
-
+	CAND1.deviceName = socketcanDevice;
+	printf("Using SocketCAN device: %s\n", CAND1.deviceName);
 	initCan();
 #endif // HAL_USE_CAN
 

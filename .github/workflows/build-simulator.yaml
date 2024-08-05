@@ -40,7 +40,7 @@ jobs:
 
     - name: Run Linux Simulator for 10 seconds
       working-directory: ./simulator/
-      run: ./build/fome_simulator 10
+      run: ./build/fome_simulator --timeout 10
 
     - name: Upload Linux built simulator
       uses: actions/upload-artifact@v4
