@@ -107,6 +107,8 @@ void MapAverager::stop() {
 
 	m_isAveraging = false;
 
+	engine->outputChannels.mapAveragingSamples = m_counter;
+
 	if (m_counter > 0) {
 		float averageMap = m_sum / m_counter;
 		m_lastCounter = m_counter;
