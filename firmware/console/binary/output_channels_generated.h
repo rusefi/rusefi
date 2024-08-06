@@ -774,7 +774,11 @@ struct output_channels_s {
 	// offset 682
 	scaled_channel<uint8_t, 2, 1> injectorDutyCycleStage2 = (uint8_t)0;
 	// offset 683
-	uint8_t unusedAtTheEnd[117];
+	uint8_t pad = (uint8_t)0;
+	// offset 684
+	uint16_t mapAveragingSamples = (uint16_t)0;
+	// offset 686
+	uint8_t unusedAtTheEnd[114];
 };
 static_assert(sizeof(output_channels_s) == 800);
 static_assert(offsetof(output_channels_s, RPMValue) == 4);
@@ -955,5 +959,7 @@ static_assert(offsetof(output_channels_s, afrGasolineScale) == 676);
 static_assert(offsetof(output_channels_s, afr2GasolineScale) == 678);
 static_assert(offsetof(output_channels_s, actualLastInjectionStage2) == 680);
 static_assert(offsetof(output_channels_s, injectorDutyCycleStage2) == 682);
-static_assert(offsetof(output_channels_s, unusedAtTheEnd) == 683);
+static_assert(offsetof(output_channels_s, pad) == 683);
+static_assert(offsetof(output_channels_s, mapAveragingSamples) == 684);
+static_assert(offsetof(output_channels_s, unusedAtTheEnd) == 686);
 
