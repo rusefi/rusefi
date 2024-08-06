@@ -909,7 +909,7 @@ public class Fields {
 	public static final int PACK_MULT_TEMPERATURE = 100;
 	public static final int PACK_MULT_VOLTAGE = 1000;
 	public static final int PEDAL_TO_TPS_SIZE = 8;
-	public static final int persistent_config_s_size = 21004;
+	public static final int persistent_config_s_size = 21020;
 	public static final int pid_s_size = 20;
 	public static final int pin_input_mode_e_PI_DEFAULT = 0;
 	public static final int pin_input_mode_e_PI_PULLDOWN = 2;
@@ -973,6 +973,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 623207147;
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1011,7 +1012,7 @@ public class Fields {
 	public static final int TOOTH_PACKET_SIZE = 2;
 	public static final String TOP_DEAD_CENTER_MESSAGE = "r";
 	public static final int TORQUE_CURVE_SIZE = 6;
-	public static final int TOTAL_CONFIG_SIZE = 21004;
+	public static final int TOTAL_CONFIG_SIZE = 21020;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int TPS_TPS_ACCEL_CLT_CORR_TABLE = 4;
 	public static final int TPS_TPS_ACCEL_TABLE = 8;
@@ -1179,7 +1180,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2024.08.06.f407-discovery.2237802418";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2024.08.06.f407-discovery.623207147";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1388;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
@@ -1569,7 +1570,7 @@ public class Fields {
 	public static final Field LAMBDAPROTECTIONRESTORERPM = Field.create("LAMBDAPROTECTIONRESTORERPM", 754, FieldType.INT8).setScale(100.0).setBaseOffset(0);
 	public static final Field ACRELAYPINMODE = Field.create("ACRELAYPINMODE", 755, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field ACRELAYPIN = Field.create("ACRELAYPIN", 756, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSED754 = Field.create("UNUSED754", 758, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field MINIMUMOILPRESSURETIMEOUT = Field.create("MINIMUMOILPRESSURETIMEOUT", 758, FieldType.INT8).setScale(0.1).setBaseOffset(0);
 	public static final Field DRV8860SPIDEVICE = Field.create("DRV8860SPIDEVICE", 759, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field SCRIPTSETTING1 = Field.create("SCRIPTSETTING1", 760, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field SCRIPTSETTING2 = Field.create("SCRIPTSETTING2", 764, FieldType.INT).setScale(1.0).setBaseOffset(0);
@@ -1598,6 +1599,7 @@ public class Fields {
 	public static final Field ENABLELAUNCHRETARD = Field.create("ENABLELAUNCHRETARD", 812, FieldType.BIT, 4).setBaseOffset(0);
 	public static final Field ENABLECANVSS = Field.create("ENABLECANVSS", 812, FieldType.BIT, 5).setBaseOffset(0);
 	public static final Field ENABLEINNOVATELC2 = Field.create("ENABLEINNOVATELC2", 812, FieldType.BIT, 6).setBaseOffset(0);
+	public static final Field ENABLEOILPRESSUREPROTECT = Field.create("ENABLEOILPRESSUREPROTECT", 812, FieldType.BIT, 7).setBaseOffset(0);
 	public static final Field STFTIGNOREERRORMAGNITUDE = Field.create("STFTIGNOREERRORMAGNITUDE", 812, FieldType.BIT, 8).setBaseOffset(0);
 	public static final Field ENABLESOFTWAREKNOCK = Field.create("ENABLESOFTWAREKNOCK", 812, FieldType.BIT, 9).setBaseOffset(0);
 	public static final Field VERBOSEVVTDECODING = Field.create("VERBOSEVVTDECODING", 812, FieldType.BIT, 10).setBaseOffset(0);
@@ -2675,4 +2677,6 @@ public class Fields {
 	public static final Field FUELLEVELVALUES = Field.create("FUELLEVELVALUES", 20980, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field DWELLVOLTAGECORRVOLTBINS = Field.create("DWELLVOLTAGECORRVOLTBINS", 20988, FieldType.INT8).setScale(0.1).setBaseOffset(0);
 	public static final Field DWELLVOLTAGECORRVALUES = Field.create("DWELLVOLTAGECORRVALUES", 20996, FieldType.INT8).setScale(0.02).setBaseOffset(0);
+	public static final Field MINIMUMOILPRESSUREBINS = Field.create("MINIMUMOILPRESSUREBINS", 21004, FieldType.INT8).setScale(100.0).setBaseOffset(0);
+	public static final Field MINIMUMOILPRESSUREVALUES = Field.create("MINIMUMOILPRESSUREVALUES", 21012, FieldType.INT8).setScale(10.0).setBaseOffset(0);
 }
