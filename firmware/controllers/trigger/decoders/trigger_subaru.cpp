@@ -12,25 +12,25 @@
 static void initialize_one_of_36_2_2_2(TriggerWaveform *s, int firstCount, int secondCount) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 
-	float narrow = (360 / 36) * 2;
+	float narrow = 360 / 36;
 	float wide = narrow * 3;
 
 	float base = 0;
 
 	for (int i = 0; i < firstCount; i++) {
-		s->addToothFallRise(base / 2 + narrow / 2, narrow / 4);
+		s->addToothFallRise(base + narrow, narrow / 2);
 		base += narrow;
 	}
 
-	s->addToothFallRise(base / 2 + wide / 2, wide / 4);
+	s->addToothFallRise(base + wide, wide / 2);
 	base += wide;
 
 	for (int i = 0; i < secondCount; i++) {
-		s->addToothFallRise(base / 2 + narrow / 2, narrow / 4);
+		s->addToothFallRise(base + narrow, narrow / 2);
 		base += narrow;
 	}
 
-  s->addToothFallRise(360 - wide / 2);
+  s->addToothFallRise(360 - wide);
 	s->addToothFallRise(360);
 }
 
