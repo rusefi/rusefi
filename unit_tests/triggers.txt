@@ -5269,12 +5269,12 @@ isSecondWheelCam=false
 cycleDuration=720
 gapsCount=3
 isSynchronizationNeeded=1
-gapFrom.0=0.375000
-gapTo.0=0.625000
+gapFrom.0=0.320000
+gapTo.0=0.800000
 gapFrom.1=1.500000
 gapTo.1=2.500000
-gapFrom.2=0.375000
-gapTo.2=0.625000
+gapFrom.2=0.320000
+gapTo.2=0.800000
 # end of meta section
 event 0 0 1 0.00 0.500000
 event 1 0 0 0.00 nan
