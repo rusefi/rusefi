@@ -5615,7 +5615,7 @@ event 10 0 1 540.00 1.000000
 event 11 0 0 540.00 nan
 event 12 0 1 660.00 1.333333
 event 13 0 0 660.00 nan
-TRIGGERTYPE 84 128 TT_NISSAN_HR 0.00
+TRIGGERTYPE 84 128 TT_NISSAN_HR 55.00
 knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
