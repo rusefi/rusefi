@@ -243,6 +243,11 @@ void TriggerWaveform::addToothRiseFall(angle_t angle, angle_t width, TriggerWhee
     addEvent360(angle, TriggerValue::FALL, channelIndex);
 }
 
+void TriggerWaveform::addToothFallRise(angle_t angle, angle_t width, TriggerWheel const channelIndex) {
+    addEvent360(angle - width, TriggerValue::FALL, channelIndex);
+    addEvent360(angle, TriggerValue::RISE, channelIndex);
+}
+
 void TriggerWaveform::addEventAngle(angle_t angle, TriggerValue const state, TriggerWheel const channelIndex) {
 	addEvent(angle / getCycleDuration(), state, channelIndex);
 }
