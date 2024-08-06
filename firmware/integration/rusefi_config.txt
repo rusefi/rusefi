@@ -1053,7 +1053,7 @@ end_struct
 	bit canReadEnabled;enable can_read/disable can_read
 	bit canWriteEnabled;enable can_write/disable can_write. See also can1ListenMode
 	bit useLinearIatSensor
-	bit unusedFancy5
+	bit enableOilPressureProtect
 	bit tachPulseDurationAsDutyCycle,"Duty cycle","Constant time";Treat milliseconds value as duty cycle value, i.e. 0.5ms would become 50%
 	bit isAlternatorControlEnabled;This enables smart alternator control and activates the extra alternator settings.
 	bit invertPrimaryTriggerSignal,"Falling","Rising";https://wiki.rusefi.com/Trigger-Configuration-Guide\nThis setting flips the signal from the primary engine speed sensor.
@@ -1700,9 +1700,12 @@ int anotherCiTest
     uint16_t minAcPressure;value of A/C pressure in kPa before that compressor is disengaged;"kPa", 1, 0, 0, 500, 0
     uint16_t maxAcPressure;value of A/C pressure in kPa after that compressor is disengaged;"kPa", 1, 0, 0, 500, 0
 
+	uint8_t autoscale minimumOilPressureTimeout;Delay before cutting fuel due to low oil pressure. Use this to ignore short pressure blips and sensor noise.;"sec", 0.1, 0, 0, 5, 1
+
+
 @@BOARD_ENGINE_CONFIGURATION_FROM_FILE@@
 
-#define END_OF_CALIBRATION_PADDING 174
+#define END_OF_CALIBRATION_PADDING 168
 uint8_t[END_OF_CALIBRATION_PADDING] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
@@ -2047,6 +2050,9 @@ float[BOOST_CURVE_SIZE] cltBoostAdder;;"", 1, 0, 0, 5, 2
 
 float[BOOST_CURVE_SIZE] iatBoostAdderBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
 float[BOOST_CURVE_SIZE] iatBoostAdder;;"", 1, 0, 0, 5, 2
+
+uint8_t[8] autoscale minimumOilPressureBins;;"RPM", 100, 0, 0, 25000, 0
+uint8_t[8] autoscale minimumOilPressureValues;;"kPa", 10, 0, 0, 1000, 0
 
 @@BOARD_CONFIG_FROM_FILE@@
 
