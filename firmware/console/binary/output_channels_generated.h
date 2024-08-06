@@ -777,10 +777,13 @@ struct output_channels_s {
 	uint8_t pad = (uint8_t)0;
 	// offset 684
 	uint16_t mapAveragingSamples = (uint16_t)0;
+	// kPa
 	// offset 686
-	uint8_t unusedAtTheEnd[114];
+	uint8_t mapPerCylinder[12];
+	// offset 698
+	uint8_t unusedAtTheEnd[106];
 };
-static_assert(sizeof(output_channels_s) == 800);
+static_assert(sizeof(output_channels_s) == 804);
 static_assert(offsetof(output_channels_s, RPMValue) == 4);
 static_assert(offsetof(output_channels_s, rpmAcceleration) == 6);
 static_assert(offsetof(output_channels_s, speedToRpmRatio) == 8);
@@ -961,5 +964,6 @@ static_assert(offsetof(output_channels_s, actualLastInjectionStage2) == 680);
 static_assert(offsetof(output_channels_s, injectorDutyCycleStage2) == 682);
 static_assert(offsetof(output_channels_s, pad) == 683);
 static_assert(offsetof(output_channels_s, mapAveragingSamples) == 684);
-static_assert(offsetof(output_channels_s, unusedAtTheEnd) == 686);
+static_assert(offsetof(output_channels_s, mapPerCylinder) == 686);
+static_assert(offsetof(output_channels_s, unusedAtTheEnd) == 698);
 
