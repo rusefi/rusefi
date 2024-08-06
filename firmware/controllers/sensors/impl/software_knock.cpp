@@ -151,7 +151,30 @@ static CCM_OPTIONAL KnockThread kt;
 
 void initSoftwareKnock() {
 	if (engineConfiguration->enableSoftwareKnock) {
-		knockFilter.configureBandpass(KNOCK_SAMPLE_RATE, 1000 * engineConfiguration->knockBandCustom, 3);
+		float freqKhz;
+
+		if (engineConfiguration->knockBandCustom != 0) {
+			freqKhz = engineConfiguration->knockBandCustom;
+		} else {
+			float bore = engineConfiguration->cylinderBore;
+
+			if (bore == 0) {
+				efiPrintf("Knock sense disabled due to invalid freq/bore");
+				return;
+			}
+
+			if (bore < 10 || bore > 200) {
+				firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Invalid knock cylinder bore: %.1f", bore);
+				return;
+			}
+
+			// derived from https://phormula.com/knock-frequency-calculator/
+			freqKhz = 1140.0f / bore;
+		}
+
+		efiPrintf("Knock sense configuring filter with frequency %.2f khz", freqKhz);
+
+		knockFilter.configureBandpass(KNOCK_SAMPLE_RATE, 1000 * freqKhz, 3);
 		adcStart(&KNOCK_ADC, nullptr);
 
 		efiSetPadMode("knock ch1", KNOCK_PIN_CH1, PAL_MODE_INPUT_ANALOG);
