@@ -40,6 +40,7 @@ or
  - Add options to enable/disable optional CAN frames (cams, EGT so far)
  - Add 1-5-4-8-3-7-2-6 and 1-6-5-10-2-7-3-8-4-9 firing orders
  - Console command `set_sensor_mock` now accepts a sensor by name, instead of index. Example: `set_sensor_mock CLT 85.5`
+ - TunerStudio UI improvements (#436, etc)
 
 ### Fixed
  - Improve performance with Lua CAN reception of a high volume of frames
@@ -47,7 +48,7 @@ or
  - Make Toyota "3 Tooth Cam" decoder more robust #382
  - Flex sensor-derived fuel temperature indication works properly
  - Fix a scenario where noisy trigger can cause overdwell [rusefi/rusefi#6349](https://github.com/rusefi/rusefi/issues/6349)
- - Fix DFCO on engines without a MAP sensor #457
+ - Fix decel fuel cutoff (DFCO) on engines without a MAP sensor #457
 
 ## December 2023 Release
 
