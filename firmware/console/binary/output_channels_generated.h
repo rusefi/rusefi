@@ -781,9 +781,9 @@ struct output_channels_s {
 	// offset 686
 	uint8_t mapPerCylinder[12];
 	// offset 698
-	uint8_t unusedAtTheEnd[106];
+	uint8_t unusedAtTheEnd[102];
 };
-static_assert(sizeof(output_channels_s) == 804);
+static_assert(sizeof(output_channels_s) == 800);
 static_assert(offsetof(output_channels_s, RPMValue) == 4);
 static_assert(offsetof(output_channels_s, rpmAcceleration) == 6);
 static_assert(offsetof(output_channels_s, speedToRpmRatio) == 8);
