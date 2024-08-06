@@ -5615,3 +5615,23 @@ event 10 0 1 540.00 1.000000
 event 11 0 0 540.00 nan
 event 12 0 1 660.00 1.333333
 event 13 0 0 660.00 nan
+TRIGGERTYPE 84 8 TT_NISSAN_HR 630.00
+knownOperationMode=true
+crankBased=false
+hasSecondChannel=false
+isSecondWheelCam=false
+cycleDuration=720
+gapsCount=1
+syncEdge=Both
+isSynchronizationNeeded=1
+gapFrom.0=7.252500
+gapTo.0=16.000000
+# end of meta section
+event 0 0 1 0.00 11.000000
+event 1 0 0 4.00 0.022727
+event 2 0 1 180.00 44.000000
+event 3 0 0 184.00 0.022727
+event 4 0 1 360.00 44.000000
+event 5 0 0 364.00 0.022727
+event 6 0 1 528.00 41.000000
+event 7 0 0 544.00 0.097561
