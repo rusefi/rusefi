@@ -11,6 +11,7 @@
 
 #include "trigger_nissan.h"
 #include "trigger_universal.h"
+#include "trigger_subaru.h"
 
 /**
  * 8,2,2,2 Nissan pattern
@@ -59,7 +60,7 @@ void makeNissanPattern(TriggerWaveform* s, size_t halfCylinderCount, size_t tota
 
 	auto patternTeeth = totalWheel / halfCylinderCount;
 	auto toothCount = patternTeeth - missing;
-	
+
 	float currentAngle = missing * toothAngle;
 	for (size_t i = 0; i < toothCount; i++) {
 		currentAngle += toothAngle;
@@ -186,4 +187,8 @@ void initializeNissanMRvvt(TriggerWaveform *s) {
 
 	// nominal gap 0.44
 	s->setSecondTriggerSynchronizationGap2(0.3, 0.55);
+}
+
+void initializeNissanHRcrank(TriggerWaveform *s) {
+  initialize_one_of_36_2_2_2(s, 9, 19);
 }

@@ -14,3 +14,5 @@ void initializeSubaru7_6(TriggerWaveform *s);
 void initializeSubaruOnly7(TriggerWaveform *s);
 void initializeSubaru_SVX(TriggerWaveform *s);
 void initializeSubaruEZ30(TriggerWaveform *s);
+
+void initialize_one_of_36_2_2_2(TriggerWaveform *s, int firstCount, int secondCount);

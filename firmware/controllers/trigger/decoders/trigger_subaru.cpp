@@ -9,7 +9,7 @@
 
 #include "trigger_subaru.h"
 
-static void initialize_one_of_36_2_2_2(TriggerWaveform *s, int firstCount, int secondCount) {
+void initialize_one_of_36_2_2_2(TriggerWaveform *s, int firstCount, int secondCount) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 
 	float narrow = 360 / 36;
@@ -29,6 +29,8 @@ static void initialize_one_of_36_2_2_2(TriggerWaveform *s, int firstCount, int s
 		s->addToothFallRise(base + narrow, narrow / 2);
 		base += narrow;
 	}
+
+  // depending on firstCount + secondCount we might have a gap here
 
   s->addToothFallRise(360 - wide);
 	s->addToothFallRise(360);

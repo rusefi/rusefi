@@ -18,3 +18,6 @@ void initializeNissanMR18crank(TriggerWaveform *s);
 void initializeNissanQR25crank(TriggerWaveform *s);
 
 void initializeNissanVQ30cam(TriggerWaveform *s);
+
+// not vq35hr but https://en.wikipedia.org/wiki/Nissan_HR_engine
+void initializeNissanHRcrank(TriggerWaveform *s);
