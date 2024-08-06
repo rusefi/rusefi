@@ -33,11 +33,8 @@ static void initialize_one_of_36_2_2_2(TriggerWaveform *s, int firstCount, int s
 		base += narrow;
 	}
 
-	s->addEvent720(720 - wide - wide / 2, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	s->addEvent720(720 - wide, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
-
-	s->addEvent720(720 - wide / 2, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	s->addEvent720(720, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+  s->addToothFallRise(360 - wide / 2);
+	s->addToothFallRise(360);
 }
 
 /**
