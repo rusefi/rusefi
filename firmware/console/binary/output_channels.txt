@@ -370,5 +370,7 @@ float mapFast
 
 	uint16_t mapAveragingSamples
 
-	uint8_t[114 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t[12 iterate] mapPerCylinder;;"kPa", 1, 0, 0, 0, 0
+
+	uint8_t[106 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct

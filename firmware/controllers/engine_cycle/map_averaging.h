@@ -37,7 +37,7 @@ public:
 	{
 	}
 
-	void start();
+	void start(uint8_t cylinderIndex);
 	void stop();
 
 	SensorResult submit(float sensorVolts);
@@ -55,6 +55,7 @@ private:
 	size_t m_counter = 0;
 	size_t m_lastCounter = 0;
 	float m_sum = 0;
+	uint8_t m_cylinderIndex = 0;
 };
 
 MapAverager& getMapAvg(size_t idx);

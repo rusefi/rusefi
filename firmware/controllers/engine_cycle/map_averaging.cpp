@@ -54,6 +54,7 @@ static int averagedMapBufIdx = 0;
 struct sampler {
 	scheduling_s startTimer;
 	scheduling_s endTimer;
+	uint8_t cylinderIndex;
 };
 
 static CCM_OPTIONAL sampler samplers[MAX_CYLINDER_COUNT][2];
@@ -73,7 +74,7 @@ static void startAveraging(sampler* s) {
 
 	// TODO: set currentMapAverager based on cylinder bank
 	auto& averager = getMapAvg(currentMapAverager);
-	averager.start();
+	averager.start(s->cylinderIndex);
 
 	mapAveragingPin.setHigh();
 
@@ -81,12 +82,13 @@ static void startAveraging(sampler* s) {
 		{ endAveraging, &averager });
 }
 
-void MapAverager::start() {
+void MapAverager::start(uint8_t cylinderIndex) {
 	chibios_rt::CriticalSectionLocker csl;
 
 	m_counter = 0;
 	m_sum = 0;
 	m_isAveraging = true;
+	m_cylinderIndex = cylinderIndex;
 }
 
 SensorResult MapAverager::submit(float volts) {
@@ -124,6 +126,9 @@ void MapAverager::stop() {
 				minPressure = averagedMapRunningBuffer[i];
 		}
 
+		if (m_cylinderIndex < efi::size(engine->outputChannels.mapPerCylinder)) {
+			engine->outputChannels.mapPerCylinder[m_cylinderIndex] = minPressure;
+		}
 		setValidValue(minPressure, getTimeNowNt());
 	} else {
 #if EFI_PROD_CODE
@@ -181,6 +186,7 @@ void refreshMapAveragingPreCalc() {
 		angle_t start = interpolate2d(rpm, c->samplingAngleBins, c->samplingAngle);
 		angle_t duration = interpolate2d(rpm, c->samplingWindowBins, c->samplingWindow);
 		efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_START_ASSERT, !std::isnan(start), "start");
+		assertAngleRange(duration, "samplingDuration", ObdCode::CUSTOM_ERR_6563);
 
 		angle_t offsetAngle = engine->triggerCentral.triggerFormDetails.eventAngles[engineConfiguration->mapAveragingSchedulingAtIndex];
 		efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_AVG_OFFSET, !std::isnan(offsetAngle), "offsetAngle");
@@ -228,15 +234,12 @@ void mapAveragingTriggerCallback(
 		applyMapMinBufferLength();
 	}
 
-	// todo: this could be pre-calculated
 	int samplingCount = engineConfiguration->measureMapOnlyInOneCylinder ? 1 : engineConfiguration->cylindersCount;
 
 	for (int i = 0; i < samplingCount; i++) {
 		angle_t samplingStart = engine->engineState.mapAveragingStart[i];
-
 		angle_t samplingDuration = engine->engineState.mapAveragingDuration;
-		// todo: this assertion could be moved out of trigger handler
-		assertAngleRange(samplingDuration, "samplingDuration", ObdCode::CUSTOM_ERR_6563);
+
 		if (samplingDuration <= 0) {
 			warning(ObdCode::CUSTOM_MAP_ANGLE_PARAM, "map sampling angle should be positive");
 			return;
@@ -256,6 +259,7 @@ void mapAveragingTriggerCallback(
 		int structIndex = getRevolutionCounter() % 2;
 
 		sampler* s = &samplers[i][structIndex];
+		s->cylinderIndex = i;
 
 		// at the moment we schedule based on time prediction based on current RPM and angle
 		// we are loosing precision in case of changing RPM - the further away is the event the worse is precision
