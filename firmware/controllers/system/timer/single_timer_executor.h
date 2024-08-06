@@ -10,10 +10,10 @@
 #include "scheduler.h"
 #include "event_queue.h"
 
-class SingleTimerExecutor final : public ExecutorInterface {
+class SingleTimerExecutor final : public Scheduler {
 public:
 	SingleTimerExecutor();
-	void scheduleByTimestampNt(const char *msg, scheduling_s *scheduling, efitick_t timeNt, action_s action) override;
+	void schedule(const char *msg, scheduling_s *scheduling, efitick_t timeNt, action_s action) override;
 	void cancel(scheduling_s* scheduling) override;
 
 	void onTimerCallback();

@@ -112,8 +112,8 @@ static void runBench(OutputPin *output, float onTimeMs, float offTimeMs, int cou
 		efitick_t endTime = startTime + US2NT(onTimeUs);
 
 		// Schedule both events
-		engine->executor.scheduleByTimestampNt("bstart", &benchSchedStart, startTime, {(swapOnOff ? benchOff : benchOn), output});
-		engine->executor.scheduleByTimestampNt("bend", &benchSchedEnd, endTime, {(swapOnOff ? benchOn : benchOff), output});
+		engine->scheduler.schedule("bstart", &benchSchedStart, startTime, {(swapOnOff ? benchOff : benchOn), output});
+		engine->scheduler.schedule("bend", &benchSchedEnd, endTime, {(swapOnOff ? benchOn : benchOff), output});
 
 		// Wait one full cycle time for the event + delay to happen
 		chThdSleepMicroseconds(onTimeUs + offTimeUs);

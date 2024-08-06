@@ -9,11 +9,11 @@ static SimplePwm shift32Pwm("3-2 Shift Control");
 
 void Gm4l6xTransmissionController::init() {
 	Generic4TransmissionController::init();
-	
+
 	enginePins.tcuTccPwmSolenoid.initPin("TCC PWM Solenoid", engineConfiguration->tcu_tcc_pwm_solenoid, engineConfiguration->tcu_tcc_pwm_solenoid_mode);
 	startSimplePwm(&tccPwm,
 								 "TCC",
-								 &engine->executor,
+								 &engine->scheduler,
 								 &enginePins.tcuTccPwmSolenoid,
 								 engineConfiguration->tcu_tcc_pwm_solenoid_freq,
 								 0);
@@ -21,7 +21,7 @@ void Gm4l6xTransmissionController::init() {
 	enginePins.tcu32Solenoid.initPin("3-2 Shift Solenoid", engineConfiguration->tcu_32_solenoid_pin, engineConfiguration->tcu_32_solenoid_pin_mode);
 	startSimplePwm(&shift32Pwm,
 								 "3-2 Solenoid",
-								 &engine->executor,
+								 &engine->scheduler,
 								 &enginePins.tcu32Solenoid,
 								 engineConfiguration->tcu_32_solenoid_freq,
 								 0);

@@ -16,7 +16,7 @@ bool TriggerScheduler::assertNotInList(AngleBasedEvent *head, AngleBasedEvent *e
 			/**
 			 * for example, this might happen in case of sudden RPM change if event
 			 * was not scheduled by angle but was scheduled by time. In case of scheduling
-			 * by time with slow RPM the whole next fast revolution might be within the wait 
+			 * by time with slow RPM the whole next fast revolution might be within the wait
 			 */
 			warning(ObdCode::CUSTOM_RE_ADDING_INTO_EXECUTION_QUEUE, "re-adding element into event_queue");
 			return true;
@@ -129,7 +129,7 @@ void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(int rpm,
 			// In case this event was scheduled by overdwell protection, cancel it so
 			// we can re-schedule at the correct time
 			// [tag:overdwell]
-			engine->executor.cancel(sDown);
+			engine->scheduler.cancel(sDown);
 
 			scheduleByAngle(
 				sDown,

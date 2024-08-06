@@ -14,7 +14,7 @@ void Generic4TransmissionController::init() {
 	enginePins.tcuPcSolenoid.initPin("Pressure Control Solenoid", engineConfiguration->tcu_pc_solenoid_pin, engineConfiguration->tcu_pc_solenoid_pin_mode);
 	startSimplePwm(&pcPwm,
 								 "Line Pressure",
-								 &engine->executor,
+								 &engine->scheduler,
 								 &enginePins.tcuPcSolenoid,
 								 engineConfiguration->tcu_pc_solenoid_freq,
 								 0);

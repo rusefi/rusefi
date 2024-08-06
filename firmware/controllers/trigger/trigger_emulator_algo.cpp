@@ -182,7 +182,7 @@ static void startSimulatedTriggerSignal() {
 		if (s->getSize() == 0)
 			continue;
 		triggerEmulatorSignals[channel].weComplexInit(
-			&engine->executor,
+			&engine->scheduler,
 			&s->wave,
 			updateTriggerWaveformIfNeeded, emulatorApplyPinState);
 	}

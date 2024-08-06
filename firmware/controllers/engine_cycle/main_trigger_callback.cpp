@@ -189,12 +189,12 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 
 	// Schedule closing stage 1
 	efitick_t turnOffTimeStage1 = startTime + US2NT((int)durationUsStage1);
-	getExecutorInterface()->scheduleByTimestampNt("inj", nullptr, turnOffTimeStage1, endActionStage1);
+	getScheduler()->schedule("inj", nullptr, turnOffTimeStage1, endActionStage1);
 
 	// Schedule closing stage 2 (if applicable)
 	if (hasStage2Injection && endActionStage2) {
 		efitick_t turnOffTimeStage2 = startTime + US2NT((int)durationUsStage2);
-		getExecutorInterface()->scheduleByTimestampNt("inj stage 2", nullptr, turnOffTimeStage2, endActionStage2);
+		getScheduler()->schedule("inj stage 2", nullptr, turnOffTimeStage2, endActionStage2);
 	}
 
 #if EFI_DEFAILED_LOGGING

@@ -94,7 +94,7 @@ const BigBufferHandle& triggerScopeGetBuffer() {
 
 	// Start the next sample once we've read out this one
 	if (isRunning) {
-		engine->executor.scheduleByTimestampNt("trigger scope", &restartTimer, getTimeNowNt() + MS2NT(10), startSampling);
+		engine->scheduler.schedule("trigger scope", &restartTimer, getTimeNowNt() + MS2NT(10), startSampling);
 	}
 
 	return buffer;

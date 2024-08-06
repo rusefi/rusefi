@@ -324,7 +324,7 @@ void startBoostPin() {
 	startSimplePwm(
 		&boostPwmControl,
 		"Boost",
-		&engine->executor,
+		&engine->scheduler,
 		&enginePins.boostPin,
 		engineConfiguration->boostPwmFrequency,
 		/*dutyCycle*/0

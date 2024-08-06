@@ -31,7 +31,7 @@ void initSpeedometer() {
 
 	startSimplePwm(&speedoPwm,
 					"Speedometer",
-					&engine->executor,
+					&engine->scheduler,
 					&enginePins.speedoOut,
 					NAN, 0.5f);
 
