@@ -48,11 +48,8 @@ public:
 	 * MAP averaging angle start, in relation to 'mapAveragingSchedulingAtIndex' trigger index index
 	 */
 	angle_t mapAveragingStart[MAX_CYLINDER_COUNT];
-	angle_t mapAveragingDuration = 0;
 
-	/**
-	 * timing advance is angle distance before Top Dead Center (TDP), i.e. "10 degree timing advance" means "happens 10 degrees before TDC"
-	 */
+	// degrees timing advance - 10 means fire spark 10 degrees BTDC
 	angle_t timingAdvance[MAX_CYLINDER_COUNT] = {0};
 
 	// Angle between firing the main (primary) spark and the secondary (trailing) spark

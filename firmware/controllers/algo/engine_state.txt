@@ -54,5 +54,7 @@ struct_no_prefix engine_state_s
 
 	uint16_t autoscale veTableYAxis;;"%",{1/100}, 0, 0, 0, 0
 
+	uint16_t autoscale mapAveragingDuration;;"deg", 0.01, 0, 0, 0, 0
+
 ! engine_state_s
 end_struct

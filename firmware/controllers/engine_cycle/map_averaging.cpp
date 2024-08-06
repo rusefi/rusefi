@@ -65,13 +65,19 @@ static size_t currentMapAverager = 0;
 static void startAveraging(sampler* s) {
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6649, getCurrentRemainingStack() > 128, "lowstck#9");
 
+	float duration = engine->engineState.mapAveragingDuration;
+	if (duration == 0) {
+		// Zero duration means the engine wasn't spinning or something, abort
+		return;
+	}
+
 	// TODO: set currentMapAverager based on cylinder bank
 	auto& averager = getMapAvg(currentMapAverager);
 	averager.start();
 
 	mapAveragingPin.setHigh();
 
-	scheduleByAngle(&s->endTimer, getTimeNowNt(), engine->engineState.mapAveragingDuration,
+	scheduleByAngle(&s->endTimer, getTimeNowNt(), duration,
 		{ endAveraging, &averager });
 }
 
@@ -171,6 +177,7 @@ void refreshMapAveragingPreCalc() {
 	if (isValidRpm(rpm)) {
 		MAP_sensor_config_s * c = &engineConfiguration->map;
 		angle_t start = interpolate2d(rpm, c->samplingAngleBins, c->samplingAngle);
+		angle_t duration = interpolate2d(rpm, c->samplingWindowBins, c->samplingWindow);
 		efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_START_ASSERT, !std::isnan(start), "start");
 
 		angle_t offsetAngle = engine->triggerCentral.triggerFormDetails.eventAngles[engineConfiguration->mapAveragingSchedulingAtIndex];
@@ -186,12 +193,14 @@ void refreshMapAveragingPreCalc() {
 			wrapAngle(cylinderStart, "cylinderStart", ObdCode::CUSTOM_ERR_6562);
 			engine->engineState.mapAveragingStart[i] = cylinderStart;
 		}
-		engine->engineState.mapAveragingDuration = interpolate2d(rpm, c->samplingWindowBins, c->samplingWindow);
+
+		engine->engineState.mapAveragingDuration = duration;
 	} else {
 		for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
-			engine->engineState.mapAveragingStart[i] = NAN;
+			engine->engineState.mapAveragingStart[i] = 0;
 		}
-		engine->engineState.mapAveragingDuration = NAN;
+
+		engine->engineState.mapAveragingDuration = 0;
 	}
 
 }
