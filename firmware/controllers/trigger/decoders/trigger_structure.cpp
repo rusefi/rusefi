@@ -736,6 +736,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		configure12ToothCrank(this);
 		break;
 
+	case trigger_type_e::TT_NISSAN_HR:
 	case trigger_type_e::TT_NISSAN_SR20VE:
 		initializeNissanSR20VE_4(this);
 		break;
