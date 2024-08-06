@@ -1179,7 +1179,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2024.08.05.f407-discovery.3559842413";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2024.08.06.f407-discovery.4011145285";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1388;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
