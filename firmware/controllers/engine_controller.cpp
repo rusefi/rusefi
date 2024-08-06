@@ -671,6 +671,10 @@ bool validateConfigOnStartUpOrBurn() {
 	}
 #endif
 
+	if (engineConfiguration->enableOilPressureProtect) {
+		ensureArrayIsAscending("Oil pressure protection", config->minimumOilPressureBins);
+	}
+
 	return true;
 }
 
