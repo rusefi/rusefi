@@ -348,8 +348,8 @@
         <constant name="lambdaProtectionEnable">"false"</constant>
         <constant name="verboseTLE8888">"false"</constant>
         <constant name="enableVerboseCanTx">"false"</constant>
-        <constant name="etb1configured">"false"</constant>
-        <constant name="etb2configured">"false"</constant>
+        <constant name="unused644b10">"false"</constant>
+        <constant name="unused644b11">"false"</constant>
         <constant name="measureMapOnlyInOneCylinder">"false"</constant>
         <constant name="stepperForceParkingEveryRestart">"true"</constant>
         <constant name="isFasterEngineSpinUpEnabled">"true"</constant>
@@ -4868,7 +4868,7 @@ end</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240801" nPages="1" signature="rusEFI master.2024.08.06.f407-discovery.1336606850" version="5.0"/>
+    <versionInfo firmwareInfo="20240801" nPages="1" signature="rusEFI master.2024.08.06.f407-discovery.3408717121" version="5.0"/>
     <bibliography author="rusEFI 20240801" writeDate="date"/>
     <settings/>
     <userComments/>
