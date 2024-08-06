@@ -157,6 +157,9 @@ private:
 
 	// Tracks how long injector duty has been over the sustained limit
 	Timer m_injectorDutySustainedTimer;
+
+	// Tracks how long oil pressure has been below threshold
+	Timer m_lowOilPressureTimer;
 };
 
 LimpManager * getLimpManager();

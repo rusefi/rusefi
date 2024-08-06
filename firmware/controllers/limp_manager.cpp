@@ -111,17 +111,17 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	}
 #if EFI_SHAFT_POSITION_INPUT
 	if (engine->rpmCalculator.isRunning()) {
+		bool hasOilpSensor = Sensor::hasSensor(SensorType::OilPressure);
+		auto oilp = Sensor::get(SensorType::OilPressure);
 		uint16_t minOilPressure = engineConfiguration->minOilPressureAfterStart;
 
 		// Only check if the setting is enabled and you have an oil pressure sensor
-		if (minOilPressure > 0 && Sensor::hasSensor(SensorType::OilPressure)) {
+		if (minOilPressure > 0 && hasOilpSensor) {
 			// Has it been long enough we should have pressure?
 			bool isTimedOut = engine->rpmCalculator.getSecondsSinceEngineStart(nowNt) > 5.0f;
 
 			// Only check before timed out
 			if (!isTimedOut) {
-				auto oilp = Sensor::get(SensorType::OilPressure);
-
 				if (oilp) {
 					// We had oil pressure! Set the flag.
 					if (oilp.Value > minOilPressure) {
@@ -135,9 +135,23 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 				allowFuel.clear(ClearReason::OilPressure);
 			}
 		}
+
+		if (oilp && engineConfiguration->enableOilPressureProtect) {
+			float minPressure = interpolate2d(rpm, config->minimumOilPressureBins, config->minimumOilPressureValues);
+			bool isPressureSufficient = oilp.Value > minPressure;
+
+			if (isPressureSufficient) {
+				m_lowOilPressureTimer.reset(nowNt);
+			}
+
+			if (m_lowOilPressureTimer.hasElapsedSec(engineConfiguration->minimumOilPressureTimeout)) {
+				allowFuel.clear(ClearReason::OilPressure);
+			}
+		}
 	} else {
 		// reset state in case of stalled engine
 		m_hadOilPressureAfterStart = false;
+		m_lowOilPressureTimer.reset(nowNt);
 	}
 
 	// If we're in engine stop mode, inhibit fuel

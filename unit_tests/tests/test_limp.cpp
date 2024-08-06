@@ -132,7 +132,7 @@ TEST(limp, boostCut) {
 	EXPECT_TRUE(dut.allowInjection());
 }
 
-TEST(limp, oilPressureFailureCase) {
+TEST(limp, oilPressureStartupFailureCase) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->minOilPressureAfterStart = 200;
 
@@ -165,7 +165,7 @@ TEST(limp, oilPressureFailureCase) {
 	ASSERT_FALSE(dut.allowInjection());
 }
 
-TEST(limp, oilPressureSuccessCase) {
+TEST(limp, oilPressureStartupSuccessCase) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->minOilPressureAfterStart = 200;
 
@@ -199,6 +199,48 @@ TEST(limp, oilPressureSuccessCase) {
 	// Later, we lose oil pressure, but engine should stay running
 	advanceTimeUs(10e6);
 	Sensor::setMockValue(SensorType::OilPressure, 10);
+	dut.updateState(1000, getTimeNowNt());
+	ASSERT_TRUE(dut.allowInjection());
+}
+
+TEST(limp, oilPressureRunning) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->enableOilPressureProtect = true;
+	engineConfiguration->minimumOilPressureTimeout = 1.0f;
+	setArrayValues(config->minimumOilPressureValues, 100);
+
+	LimpManager dut;
+
+	// Oil pressure starts OK
+	Sensor::setMockValue(SensorType::OilPressure, 110);
+
+	// Start the engine
+	engine->rpmCalculator.setRpmValue(1000);
+
+	// update & check: injection should be allowed
+	dut.updateState(1000, getTimeNowNt());
+	EXPECT_TRUE(dut.allowInjection());
+
+	// A long time later, everything should still be OK
+	advanceTimeUs(60e6);
+	dut.updateState(1000, getTimeNowNt());
+	EXPECT_TRUE(dut.allowInjection());
+
+	// Now oil pressure drops below threshold
+	Sensor::setMockValue(SensorType::OilPressure, 90);
+
+	// 0.9 second later, injection should continue as timeout isn't hit yet
+	advanceTimeUs(0.9e6);
+	dut.updateState(1000, getTimeNowNt());
+	ASSERT_TRUE(dut.allowInjection());
+
+	// 0.2 second later (1.1s since low pressure starts), injection should cut
+	advanceTimeUs(1.0e6);
+	dut.updateState(1000, getTimeNowNt());
+	ASSERT_FALSE(dut.allowInjection());
+
+	// Oil pressure is restored, and fuel should be restored too
+	Sensor::setMockValue(SensorType::OilPressure, 110);
 	dut.updateState(1000, getTimeNowNt());
 	ASSERT_TRUE(dut.allowInjection());
 }
