@@ -46,6 +46,7 @@ Release template (copy/paste this for new release):
  - Full layout vs tuning layout #5154
  - Usability: turn on boost controller without ECU power cycle #6761
  - Knock frequency inputs to be bore diameter and checkbox #6767
+ - Nissan HR crank trigger wheel #6773
 
 ### Fixed
  - knock logic not activated until any configuration change via TS #6462
