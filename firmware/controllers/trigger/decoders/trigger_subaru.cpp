@@ -32,8 +32,8 @@ void initialize_one_of_36_2_2_2(TriggerWaveform *s, int firstCount, int secondCo
 
   // depending on firstCount + secondCount we might have a gap here
 
-  s->addToothFallRise(360 - wide);
-	s->addToothFallRise(360);
+  s->addToothFallRise(360 - wide, narrow / 2);
+  s->addToothFallRise(360, narrow / 2);
 }
 
 /**
