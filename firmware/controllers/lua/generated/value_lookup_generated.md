@@ -454,12 +454,6 @@ This setting should only be used if you have a stepper motor idle valve and a st
 ### enableVerboseCanTx
 CAN broadcast using custom rusEFI protocol\nenable can_broadcast/disable can_broadcast
 
-### etb1configured
-
-
-### etb2configured
-
-
 ### measureMapOnlyInOneCylinder
 Useful for individual intakes
 

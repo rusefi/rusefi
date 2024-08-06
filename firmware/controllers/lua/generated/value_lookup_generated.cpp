@@ -460,12 +460,6 @@ float getConfigValueByName(const char *name) {
 // enableVerboseCanTx
 		case 1643181024:
 			return engineConfiguration->enableVerboseCanTx;
-// etb1configured
-		case -432676169:
-			return engineConfiguration->etb1configured;
-// etb2configured
-		case 1804769272:
-			return engineConfiguration->etb2configured;
 // measureMapOnlyInOneCylinder
 		case -1236202550:
 			return engineConfiguration->measureMapOnlyInOneCylinder;
@@ -2598,16 +2592,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1643181024:
 	{
 		engineConfiguration->enableVerboseCanTx = (int)value;
-		return 1;
-	}
-		case -432676169:
-	{
-		engineConfiguration->etb1configured = (int)value;
-		return 1;
-	}
-		case 1804769272:
-	{
-		engineConfiguration->etb2configured = (int)value;
 		return 1;
 	}
 		case -1236202550:
