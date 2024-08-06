@@ -12,8 +12,8 @@
 static void initialize_one_of_36_2_2_2(TriggerWaveform *s, int firstCount, int secondCount) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
 
-	float wide = 30 * 2;
-	float narrow = 10 * 2;
+	float narrow = (360 / 36) * 2;
+	float wide = narrow * 3;
 
 	float base = 0;
 
