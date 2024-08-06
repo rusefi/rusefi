@@ -14,6 +14,11 @@ struct MockKnockController : public KnockControllerBase {
 	}
 };
 
+TEST(Knock, frequencyApproximation) {
+  // that's first harmonic while default is knockDetectionUseDoubleFrequency for second harmonic
+  ASSERT_NEAR(7.3456, bore2frequency(78/*mm*/), EPS2D);
+}
+
 TEST(Knock, Retards) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
