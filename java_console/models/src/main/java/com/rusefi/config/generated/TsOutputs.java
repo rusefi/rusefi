@@ -632,8 +632,4 @@ public class TsOutputs {
 	public static final Field UNUSEDATTHEEND100 = Field.create("UNUSEDATTHEEND100", 797, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field UNUSEDATTHEEND101 = Field.create("UNUSEDATTHEEND101", 798, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field UNUSEDATTHEEND102 = Field.create("UNUSEDATTHEEND102", 799, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSEDATTHEEND103 = Field.create("UNUSEDATTHEEND103", 800, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSEDATTHEEND104 = Field.create("UNUSEDATTHEEND104", 801, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSEDATTHEEND105 = Field.create("UNUSEDATTHEEND105", 802, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSEDATTHEEND106 = Field.create("UNUSEDATTHEEND106", 803, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 }
