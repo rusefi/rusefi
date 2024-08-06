@@ -89,5 +89,6 @@ public enum trigger_type_e {
 	TT_DAIHATSU_4_CYL,
 	TT_VVT_MAZDA_L,
 	TT_DEV,
+	TT_NISSAN_HR,
 	TT_UNUSED,
 }
