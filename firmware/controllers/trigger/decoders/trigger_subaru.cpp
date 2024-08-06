@@ -18,18 +18,15 @@ static void initialize_one_of_36_2_2_2(TriggerWaveform *s, int firstCount, int s
 	float base = 0;
 
 	for (int i = 0; i < firstCount; i++) {
-		s->addEvent720(base + narrow / 2, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-		s->addEvent720(base + narrow, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+		s->addToothFallRise(base / 2 + narrow / 2, narrow / 4);
 		base += narrow;
 	}
 
-	s->addEvent720(base + wide / 2, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-	s->addEvent720(base + wide, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addToothFallRise(base / 2 + wide / 2, wide / 4);
 	base += wide;
 
 	for (int i = 0; i < secondCount; i++) {
-		s->addEvent720(base + narrow / 2, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
-		s->addEvent720(base + narrow, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+		s->addToothFallRise(base / 2 + narrow / 2, narrow / 4);
 		base += narrow;
 	}
 
