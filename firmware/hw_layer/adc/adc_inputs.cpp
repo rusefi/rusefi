@@ -109,12 +109,9 @@ static ADCConversionGroup adcgrpcfgFast = {
 	/* HW dependent part.*/
 	.cr1				= 0,
 	.cr2				= ADC_CR2_SWSTART,
-		/**
-		 * here we configure all possible channels for fast mode. Some channels would not actually
-		 * be used hopefully that's fine to configure all possible channels.
-		 *
-		 */
-	// sample times for channels 10...18
+	// Configure sample time for all channels. We'll only actually use
+	// one or two (MAP sensors, etc), but setting sample time for unused
+	// channels doesn't do anything.
 	.smpr1 =
 		ADC_SMPR1_SMP_AN10(ADC_SAMPLING_FAST) |
 		ADC_SMPR1_SMP_AN11(ADC_SAMPLING_FAST) |
@@ -122,7 +119,6 @@ static ADCConversionGroup adcgrpcfgFast = {
 		ADC_SMPR1_SMP_AN13(ADC_SAMPLING_FAST) |
 		ADC_SMPR1_SMP_AN14(ADC_SAMPLING_FAST) |
 		ADC_SMPR1_SMP_AN15(ADC_SAMPLING_FAST),
-	// In this field must be specified the sample times for channels 0...9
 	.smpr2 =
 		ADC_SMPR2_SMP_AN0(ADC_SAMPLING_FAST) |
 		ADC_SMPR2_SMP_AN1(ADC_SAMPLING_FAST) |
@@ -139,10 +135,6 @@ static ADCConversionGroup adcgrpcfgFast = {
 	.sqr1				= 0, // Conversion group sequence 13...16 + sequence length
 	.sqr2				= 0, // Conversion group sequence 7...12
 	.sqr3				= 0, // Conversion group sequence 1...6
-#if ADC_MAX_CHANNELS_COUNT > 16
-	.sqr4				= 0, // Conversion group sequence 19...24
-	.sqr5				= 0  // Conversion group sequence 25...30
-#endif /* ADC_MAX_CHANNELS_COUNT */
 };
 
 static NO_CACHE adcsample_t fastAdcSampleBuf[ADC_BUF_DEPTH_FAST * ADC_MAX_CHANNELS_COUNT];

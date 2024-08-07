@@ -476,7 +476,7 @@ void Engine::periodicFastCallback() {
 	tachUpdate();
 	speedoUpdate();
 
-	engine->engineModules.apply_all([](auto & m) { m.onFastCallback(); });
+	engineModules.apply_all([](auto & m) { m.onFastCallback(); });
 }
 
 EngineRotationState * getEngineRotationState() {
