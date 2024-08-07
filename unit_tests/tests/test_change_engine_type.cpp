@@ -7,8 +7,6 @@
 
 #include "pch.h"
 
-extern engine_configuration_s & activeConfiguration;
-
 TEST(misc, changeEngineType) {
 	/**
 	 * this configuration has triggerInputDebugPins defined

@@ -21,7 +21,7 @@ extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
 extern WarningCodeState unitTestWarningCodeState;
-extern engine_configuration_s & activeConfiguration;
+extern engine_configuration_s activeConfiguration;
 extern bool printTriggerDebug;
 extern bool printTriggerTrace;
 extern bool printFuelDebug;
