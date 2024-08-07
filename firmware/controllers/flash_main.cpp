@@ -32,6 +32,10 @@
 #define EFI_STORAGE_MFS_EXTERNAL FALSE
 #endif
 
+#ifndef EFI_FLASH_WRITE_THREAD
+#define EFI_FLASH_WRITE_THREAD FALSE
+#endif
+
 // Sanity check
 #if (EFI_STORAGE_MFS_EXTERNAL == TRUE) && (EFI_FLASH_WRITE_THREAD == FALSE)
 	#error EFI_FLASH_WRITE_THREAD should be enabled if MFS is used for external flash
@@ -63,7 +67,7 @@ static uint32_t flashStateCrc(const persistent_config_container_s& state) {
 	return crc32(&state.persistentConfiguration, sizeof(persistent_config_s));
 }
 
-#if EFI_FLASH_WRITE_THREAD
+#if (EFI_FLASH_WRITE_THREAD == TRUE)
 chibios_rt::BinarySemaphore flashWriteSemaphore(/*taken =*/ true);
 
 #if EFI_STORAGE_MFS == TRUE
@@ -72,6 +76,7 @@ static THD_WORKING_AREA(flashWriteStack, 3 * UTILITY_THREAD_STACK_SIZE);
 #else
 static THD_WORKING_AREA(flashWriteStack, UTILITY_THREAD_STACK_SIZE);
 #endif
+
 static void flashWriteThread(void*) {
 	chRegSetThreadName("flash writer");
 
@@ -89,7 +94,7 @@ void setNeedToWriteConfiguration() {
 	efiPrintf("Scheduling configuration write");
 	needToWriteConfiguration = true;
 
-#if EFI_FLASH_WRITE_THREAD
+#if (EFI_FLASH_WRITE_THREAD == TRUE)
 	if (allowFlashWhileRunning() || (EFI_STORAGE_MFS_EXTERNAL == TRUE)) {
 		// Signal the flash writer thread to wake up and write at its leisure
 		flashWriteSemaphore.signal();
@@ -102,7 +107,7 @@ bool getNeedToWriteConfiguration() {
 }
 
 void writeToFlashIfPending() {
-#if EFI_FLASH_WRITE_THREAD
+#if (EFI_FLASH_WRITE_THREAD == TRUE)
 	// with a flash write thread, the schedule happens directly from
 	// setNeedToWriteConfiguration, so there's nothing to do here
 	return;
@@ -395,9 +400,11 @@ void initFlash() {
 	addConsoleAction("resetconfig", doResetConfiguration);
 	addConsoleAction("rewriteconfig", rewriteConfig);
 
-#if EFI_FLASH_WRITE_THREAD
+#if (EFI_FLASH_WRITE_THREAD == TRUE)
 	if (allowFlashWhileRunning() || (EFI_STORAGE_MFS_EXTERNAL == TRUE)) {
 		chThdCreateStatic(flashWriteStack, sizeof(flashWriteStack), PRIO_FLASH_WRITE, flashWriteThread, nullptr);
+	} else {
+		efiPrintf("EFI_FLASH_WRITE_THREAD is enabled, but not used");
 	}
 #endif
 }
