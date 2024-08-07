@@ -40,6 +40,10 @@ public class ConnectionAndMeta {
             .orElse(DEFAULT_WHITE_LABEL);
     }
 
+    public static boolean isDefaultWhitelabel() {
+        return getWhiteLabel().equals(DEFAULT_WHITE_LABEL);
+    }
+
     public static String getSignatureWhiteLabel() {
         String signatureWhiteLabel = getProperties().getProperty("signature_white_label");
         signatureWhiteLabel = signatureWhiteLabel == null ? null : signatureWhiteLabel.trim();

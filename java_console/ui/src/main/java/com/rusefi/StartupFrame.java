@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.core.io.BundleUtil;
+import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.io.LinkManager;
@@ -69,7 +70,7 @@ public class StartupFrame {
     private final StatusAnimation status;
 
     public StartupFrame() {
-        String title = "rusEFI console " + Launcher.CONSOLE_VERSION;
+        String title = ConnectionAndMeta.getWhiteLabel() + " console " + Launcher.CONSOLE_VERSION;
         log.info(title);
         noPortsMessage.setForeground(Color.red);
         status = new StatusAnimation(new StatusAnimation.StatusConsumer() {
@@ -213,7 +214,8 @@ public class StartupFrame {
         JLabel logo = LogoHelper.createLogoLabel();
         if (logo != null)
             rightPanel.add(logo);
-        rightPanel.add(LogoHelper.createUrlLabel());
+        if (ConnectionAndMeta.isDefaultWhitelabel())
+            rightPanel.add(LogoHelper.createUrlLabel());
         rightPanel.add(new JLabel("Console " + Launcher.CONSOLE_VERSION));
 
         JPanel content = new JPanel(new BorderLayout());
