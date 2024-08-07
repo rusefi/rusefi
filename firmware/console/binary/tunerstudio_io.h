@@ -48,23 +48,19 @@ public:
 #ifdef EFI_CAN_SERIAL
 	virtual	// CAN device needs this function to be virtual for small-packet optimization
 #endif
-	void writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size, bool allowLongPackets = false);
-	void sendResponse(ts_response_format_e mode, const uint8_t * buffer, int size, bool allowLongPackets = false);
+	void writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size);
+	void sendResponse(ts_response_format_e mode, const uint8_t * buffer, int size);
 
-	/**
-	 * See 'blockingFactor' in rusefi.ini
-	 */
-	char scratchBuffer[BLOCKING_FACTOR + 30];
+	char scratchBuffer[256];
 	const char *name;
 
-	void assertPacketSize(size_t size, bool allowLongPackets);
 	uint32_t writePacketHeader(const uint8_t responseCode, const size_t size);
-	void crcAndWriteBuffer(const uint8_t responseCode, const size_t size);
-	void copyAndWriteSmallCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size);
+	uint32_t writePacketBody(const uint8_t* buf, const size_t size, uint32_t crc);
+	void writeCrcPacketTail(uint32_t crc);
 
 	// Write a response code with no data
 	void writeCrcResponse(uint8_t responseCode) {
-		writeCrcPacketLarge(responseCode, nullptr, 0);
+		writeCrcPacketSmall(responseCode, nullptr, 0);
 	}
 
 	/* When TsChannel is in "not in sync" state tsProcessOne will silently try to find
@@ -82,6 +78,7 @@ public:
 private:
 	bool isBigPacket(size_t size);
 	void writeCrcPacketLarge(uint8_t responseCode, const uint8_t* buf, size_t size);
+	void writeCrcPacketSmall(uint8_t responseCode, const uint8_t* buf, size_t size);
 };
 
 // This class represents a channel for a physical async serial poart
