@@ -1,4 +1,38 @@
+meta: config/boards/hellen_meta.h
+
 pins:
+  - pin: 2A
+    function: GDI Injector 4 Positive
+
+  - pin: 4A
+    function: GDI Injector 3 Positive
+
+  - pin: 6A
+    function: GDI Injector 3 Positive
+
+  - pin: 8A
+    function: GDI Injector 2 Positive
+
+  - pin: 9A
+    function: GDI Injector 1 Negative
+    ts_name: ___ GDI Injector 1
+    meta: H144_LS_1
+    type: ls
+
+  - pin: 15A
+    function: CAN bus high (CANH)
+    type: can
+    color: green
+
+  - pin: 16A
+    function: CAN1 bus low (CANL)
+    type: can
+    color: blue
+
+  - pin: 17A
+    function: ETB negative
+    type: etb
+
   - pin: 18A
     function: +12V from main relay
     type: 12v
@@ -38,6 +72,16 @@ pins:
     meta: H144_IN_MAP1
     class: analog_inputs
 
+  - pin: 24A
+    function: Sensor +5v Power Feed
+    type: 5v
+    color: orange
+
+  - pin: 25A
+    function: ETB positive
+    type: etb
+    color: purple
+
 
   - pin: 26A
     function: Power GND
@@ -51,6 +95,7 @@ pins:
 info:
   title: AlphaX 4K-GDI
   name: AlphaX 4K-GDI
+  directory: hellen/alphax-4K-GDI
   order: 0
   board_url: https://rusefi.com/s/4K-GDI
   image:

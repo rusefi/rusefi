@@ -18,7 +18,7 @@ pins:
   - pin: 4D
     function: CAN2 bus low (CANL)
     type: can
-    color: green
+    color: blue
 
   - pin: 5D
     function: CAN1 bus high (CANH)
@@ -28,7 +28,7 @@ pins:
   - pin: 6D
     function: CAN1 bus low (CANL)
     type: can
-    color: green
+    color: blue
 
   - pin: 7D
     function: Power GND

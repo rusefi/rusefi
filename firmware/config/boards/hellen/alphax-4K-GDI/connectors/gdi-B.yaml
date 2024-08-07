@@ -1,5 +1,6 @@
-pins:
+meta: config/boards/hellen_meta.h
 
+pins:
   - pin: 6B
     meta: MM100_IN_VBATT
     class: analog_inputs
@@ -21,6 +22,11 @@ pins:
     meta: H144_IN_PPS2
     class: analog_inputs
     ts_name: ___ PPS2
+
+  - pin: 26B
+    function: Power GND
+    type: gnd
+
 
 info:
   title: AlphaX 4K-GDI
