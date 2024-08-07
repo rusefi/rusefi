@@ -35,10 +35,12 @@ jar {
     destinationDirectory = file("$rootDir/../java_console_binary")
 
     // lame 'shadowJar' manual implementation causes logo.png to be include both as source ans outputs? weird
+    // todo: why do we not use proper shadowJar here?
     duplicatesStrategy = DuplicatesStrategy.WARN
     from project.sourceSets.main.allSource
     from project(':core_ui').sourceSets.main.output
     from project(":core_io").sourceSets.main.output
+    from project(':logging-api').sourceSets.main.output
 
     manifest {
         attributes(
