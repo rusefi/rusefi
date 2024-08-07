@@ -17,6 +17,7 @@ import static com.devexperts.logging.Logging.getLogging;
  * 12/25/12
  * Andrey Belomutskiy, (c) 2013-2020
  *
+ * @see Autoupdate#COM_RUSEFI_LAUNCHER which invokes this class via reflection!
  * @see StartupFrame
  * @see EngineSnifferPanel
  */
