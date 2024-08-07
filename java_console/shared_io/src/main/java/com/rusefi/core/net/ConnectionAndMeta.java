@@ -52,11 +52,15 @@ public class ConnectionAndMeta {
     }
 
     public static boolean getBoolean(String propertyName) {
-        String flag = getProperties().getProperty(propertyName);
+        return getBoolean(propertyName, getProperties());
+    }
+
+    public static boolean getBoolean(String propertyName, Properties properties) {
+        String flag = properties.getProperty(propertyName);
         return Boolean.TRUE.toString().equalsIgnoreCase(flag);
     }
 
-    private static Properties getProperties() throws RuntimeException {
+    public static Properties getProperties() throws RuntimeException {
         Properties props = new Properties();
         try {
             InputStream stream = ConnectionAndMeta.class.getResourceAsStream(IO_PROPERTIES);

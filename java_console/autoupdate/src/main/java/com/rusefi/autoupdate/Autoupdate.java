@@ -20,6 +20,7 @@ import java.net.MalformedURLException;
 import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -101,6 +102,7 @@ public class Autoupdate {
             log.info("Running rusEFI console with " + Arrays.toString(args));
             // since we are overriding file we cannot just use static java classpath while launching
             URLClassLoader jarClassLoader = AutoupdateUtil.getClassLoaderByJar(RUSEFI_CONSOLE_JAR);
+            hackProperties(jarClassLoader);
 
             Class mainClass = Class.forName(COM_RUSEFI_LAUNCHER, true, jarClassLoader);
             Method mainMethod = mainClass.getMethod("main", args.getClass());
@@ -110,6 +112,15 @@ public class Autoupdate {
             log.error("Failed to start", e);
             throw new IllegalStateException(e);
         }
+    }
+
+    private static void hackProperties(URLClassLoader jarClassLoader) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+        // in case of fresh jar file for some reason we are failing with ZipException if executed within console domain
+        Class uiProperties = Class.forName("com.rusefi.UiProperties", true, jarClassLoader);
+        for (Method m : uiProperties.getMethods())
+            System.out.println(m);
+        Method setter = uiProperties.getMethod("setProperties", Properties.class);
+        setter.invoke(null, ConnectionAndMeta.getProperties());
     }
 
     private static UpdateMode getMode() {
