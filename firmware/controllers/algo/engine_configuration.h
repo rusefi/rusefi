@@ -76,14 +76,7 @@ extern engine_configuration_s *engineConfiguration;
 extern persistent_config_s *config;
 #endif // EFI_UNIT_TEST
 
-/**
- * & is reference in C++ (not C)
- * Ref is a pointer that:
- *   you access with dot instead of arrow
- *   Cannot be null
- * This is about EFI_ACTIVE_CONFIGURATION_IN_FLASH
- */
-extern engine_configuration_s & activeConfiguration;
+extern engine_configuration_s activeConfiguration;
 
 // We store a special changeable copy of configuration is RAM, so we can just compare them
 #define isConfigurationChanged(x) (engineConfiguration->x != activeConfiguration.x)

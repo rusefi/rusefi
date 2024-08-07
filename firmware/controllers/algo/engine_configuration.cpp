@@ -111,8 +111,7 @@
  *
  * todo: place this field next to 'engineConfiguration'?
  */
-static engine_configuration_s activeConfigurationLocalStorage;
-engine_configuration_s & activeConfiguration = activeConfigurationLocalStorage;
+engine_configuration_s activeConfiguration;
 
 void rememberCurrentConfiguration() {
 	memcpy(&activeConfiguration, engineConfiguration, sizeof(engine_configuration_s));
