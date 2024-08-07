@@ -46,20 +46,12 @@ public class ConnectionAndMeta {
         return signatureWhiteLabel;
     }
 
-    public static boolean usePCAN() {
-        return getBoolean("show_pcan");
-    }
-
-    public static boolean useSimulator() {
-        return getBoolean("show_simulator");
-    }
-
     // TS multiplier is technically different from autoscale, open question when we shall allow multiplier without autoscale
     public static boolean flexibleAutoscale() {
         return getBoolean("flexible_autoscale");
     }
 
-    private static boolean getBoolean(String propertyName) {
+    public static boolean getBoolean(String propertyName) {
         String flag = getProperties().getProperty(propertyName);
         return Boolean.TRUE.toString().equalsIgnoreCase(flag);
     }

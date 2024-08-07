@@ -2,7 +2,6 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.core.io.BundleUtil;
-import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.io.LinkManager;
@@ -135,7 +134,7 @@ public class StartupFrame {
         connectButton.addActionListener(e -> connectButtonAction(comboSpeeds));
 
         leftPanel.add(realHardwarePanel);
-        if (ConnectionAndMeta.useSimulator()) {
+        if (UiProperties.useSimulator()) {
             leftPanel.add(miscPanel);
         }
 
@@ -143,7 +142,7 @@ public class StartupFrame {
             JPanel topButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
             topButtons.add(ToolButtons.createShowDeviceManagerButton());
             topButtons.add(DriverInstall.createButton());
-            if (ConnectionAndMeta.usePCAN()) {
+            if (UiProperties.usePCAN()) {
                 topButtons.add(ToolButtons.createPcanConnectorButton());
             }
             realHardwarePanel.add(topButtons, "right, wrap");
