@@ -336,8 +336,6 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->isMapAveragingEnabled = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "logic_analyzer")) {
 		engineConfiguration->isWaveAnalyzerEnabled = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "manual_spinning")) {
-		engineConfiguration->isManualSpinningMode = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "cylinder_cleanup")) {
 		engineConfiguration->isCylinderCleanupEnabled = isEnabled;
 	} else {
