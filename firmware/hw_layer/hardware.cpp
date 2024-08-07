@@ -145,10 +145,6 @@ SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 
 static FastAdcToken fastMapSampleIndex;
 
-#if HAL_TRIGGER_USE_ADC
-static FastAdcToken triggerSampleIndex;
-#endif
-
 extern AdcDevice fastAdc;
 
 /**
@@ -156,11 +152,6 @@ extern AdcDevice fastAdc;
  */
 void onFastAdcComplete(adcsample_t*) {
 	ScopePerf perf(PE::AdcCallbackFast);
-
-#if HAL_TRIGGER_USE_ADC
-	// we need to call this ASAP, because trigger processing is time-critical
-	triggerAdcCallback(getFastAdc(triggerSampleIndex));
-#endif /* HAL_TRIGGER_USE_ADC */
 
 	/**
 	 * this callback is executed 10 000 times a second, it needs to be as fast as possible
@@ -182,10 +173,6 @@ void onFastAdcComplete(adcsample_t*) {
 static void calcFastAdcIndexes() {
 #if HAL_USE_ADC
 	fastMapSampleIndex = enableFastAdcChannel("Fast MAP", engineConfiguration->map.sensor.hwChannel);
-#if HAL_TRIGGER_USE_ADC
-	triggerSampleIndex = enableFastAdcChannel("Trigger ADC", getAdcChannelForTrigger());
-#endif /* HAL_TRIGGER_USE_ADC */
-
 #endif/* HAL_USE_ADC */
 }
 

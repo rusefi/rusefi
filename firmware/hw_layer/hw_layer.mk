@@ -15,7 +15,6 @@ HW_LAYER_EMS_CPP = \
 	$(PROJECT_DIR)/hw_layer/digital_input/digital_input_exti.cpp \
 	$(PROJECT_DIR)/hw_layer/digital_input/trigger/trigger_input.cpp \
 	$(PROJECT_DIR)/hw_layer/digital_input/trigger/trigger_input_exti.cpp \
-	$(PROJECT_DIR)/hw_layer/digital_input/trigger/trigger_input_adc.cpp \
 	$(PROJECT_DIR)/hw_layer/hardware.cpp \
 	$(PROJECT_DIR)/hw_layer/kline.cpp \
 	$(PROJECT_DIR)/hw_layer/smart_gpio.cpp \

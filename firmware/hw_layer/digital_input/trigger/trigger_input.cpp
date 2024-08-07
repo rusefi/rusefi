@@ -14,42 +14,14 @@
 
 #if (EFI_SHAFT_POSITION_INPUT) || defined(__DOXYGEN__)
 
-#if (HAL_TRIGGER_USE_PAL == TRUE) || (HAL_TRIGGER_USE_ADC == TRUE)
-
 #if (HAL_TRIGGER_USE_PAL == TRUE)
-	int  extiTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft);
-	void extiTriggerTurnOffInputPin(brain_pin_e brainPin);
-#else
-	int  extiTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
-		UNUSED(msg);
-		UNUSED(index);
-		UNUSED(isTriggerShaft);
 
-		return -2;
-	}
-	#define extiTriggerTurnOffInputPin(brainPin) ((void)0)
-#endif
-
-#if (HAL_TRIGGER_USE_ADC == TRUE)
-	void adcTriggerTurnOnInputPins();
-	int  adcTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft);
-	void adcTriggerTurnOffInputPin(brain_pin_e brainPin);
-#else
-	#define adcTriggerTurnOnInputPins() ((void)0)
-	int  adcTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft) {
-		UNUSED(msg);
-		UNUSED(index);
-		UNUSED(isTriggerShaft);
-
-		return -2;
-	}
-	#define adcTriggerTurnOffInputPin(brainPin) ((void)0)
-#endif
+int  extiTriggerTurnOnInputPin(const char *msg, int index, bool isTriggerShaft);
+void extiTriggerTurnOffInputPin(brain_pin_e brainPin);
 
 enum triggerType {
 	TRIGGER_NONE,
 	TRIGGER_EXTI,
-	TRIGGER_ADC,
 };
 
 static triggerType shaftTriggerType[TRIGGER_INPUT_PIN_COUNT];
@@ -68,18 +40,6 @@ static int turnOnTriggerInputPin(const char *msg, int index, bool isTriggerShaft
 	if (!isBrainPinValid(brainPin)) {
 		return 0;
 	}
-
-	/* ... then ADC */
-#if HAL_TRIGGER_USE_ADC
-	if (adcTriggerTurnOnInputPin(msg, index, isTriggerShaft) >= 0) {
-		if (isTriggerShaft) {
-			shaftTriggerType[index] = TRIGGER_ADC;
-		} else {
-			camTriggerType[index] = TRIGGER_ADC;
-		}
-		return 0;
-	}
-#endif
 
 	/* ... then EXTI */
 	if (extiTriggerTurnOnInputPin(msg, index, isTriggerShaft) >= 0) {
@@ -101,20 +61,12 @@ static void turnOffTriggerInputPin(int index, bool isTriggerShaft) {
 		activeConfiguration.triggerInputPins[index] : activeConfiguration.camInputs[index];
 
 	if (isTriggerShaft) {
-		if (shaftTriggerType[index] == TRIGGER_ADC) {
-			adcTriggerTurnOffInputPin(brainPin);
-		}
-
 		if (shaftTriggerType[index] == TRIGGER_EXTI) {
 			extiTriggerTurnOffInputPin(brainPin);
 		}
 
 		shaftTriggerType[index] = TRIGGER_NONE;
 	} else {
-		if (camTriggerType[index] == TRIGGER_ADC) {
-			adcTriggerTurnOffInputPin(brainPin);
-		}
-
 		if (camTriggerType[index] == TRIGGER_EXTI) {
 			extiTriggerTurnOffInputPin(brainPin);
 		}
@@ -161,7 +113,7 @@ void turnOnTriggerInputPins() {
 	applyNewTriggerInputPins();
 }
 
-#endif /* (HAL_TRIGGER_USE_PAL == TRUE) || (HAL_TRIGGER_USE_ADC == TRUE) */
+#endif /* (HAL_TRIGGER_USE_PAL == TRUE) */
 
 
 void stopTriggerDebugPins() {

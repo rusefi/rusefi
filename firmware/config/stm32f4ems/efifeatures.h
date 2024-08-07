@@ -79,10 +79,6 @@
 #define HAL_TRIGGER_USE_PAL TRUE
 #endif /* HAL_TRIGGER_USE_PAL */
 
-#ifndef HAL_TRIGGER_USE_ADC
-#define HAL_TRIGGER_USE_ADC FALSE
-#endif /* HAL_TRIGGER_USE_ADC */
-
 /**
  * TunerStudio support.
  */
