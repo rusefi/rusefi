@@ -145,17 +145,16 @@ SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 
 static FastAdcToken fastMapSampleIndex;
 
-extern AdcDevice fastAdc;
-
 /**
  * This method is not in the adc* lower-level file because it is more business logic then hardware.
  */
 void onFastAdcComplete(adcsample_t*) {
+	// this callback is executed 10 000 times a second, it needs to be as fast as possible!
 	ScopePerf perf(PE::AdcCallbackFast);
 
-	/**
-	 * this callback is executed 10 000 times a second, it needs to be as fast as possible
-	 */
+#if EFI_MAP_AVERAGING
+	mapAveragingAdcCallback(adcToVoltsDivided(getFastAdc(fastMapSampleIndex), engineConfiguration->map.sensor.hwChannel));
+#endif /* EFI_MAP_AVERAGING */
 
 #if EFI_SENSOR_CHART && EFI_SHAFT_POSITION_INPUT
 	if (getEngineState()->sensorChartMode == SC_AUX_FAST1) {
@@ -163,10 +162,6 @@ void onFastAdcComplete(adcsample_t*) {
 		scAddData(engine->triggerCentral.getCurrentEnginePhase(getTimeNowNt()).value_or(0), voltage);
 	}
 #endif /* EFI_SENSOR_CHART */
-
-#if EFI_MAP_AVERAGING
-	mapAveragingAdcCallback(adcToVoltsDivided(getFastAdc(fastMapSampleIndex), engineConfiguration->map.sensor.hwChannel));
-#endif /* EFI_MAP_AVERAGING */
 }
 #endif /* HAL_USE_ADC */
 
