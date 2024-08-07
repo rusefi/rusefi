@@ -40,6 +40,7 @@ public class Autoupdate {
         } catch (Throwable e) {
             String stackTrace = extracted(e);
             JOptionPane.showMessageDialog(null, stackTrace, "Autoupdate Error " + TITLE, JOptionPane.ERROR_MESSAGE);
+            System.exit(-1);
         }
     }
 
@@ -61,7 +62,7 @@ public class Autoupdate {
         System.out.println("Handling parent folder name [" + bundleFullName + "]");
 
         BundleUtil.BundleInfo bundleInfo = BundleUtil.parse(bundleFullName);
-        String branchName = bundleInfo.getBranchName();
+        // todo: huh unused? String branchName = bundleInfo.getBranchName();
 
         @NotNull String firstArgument = args.length > 0 ? args[0] : "";
 
@@ -104,6 +105,7 @@ public class Autoupdate {
         } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException |
                  MalformedURLException e) {
             System.out.println(e);
+            throw new IllegalStateException(e);
         }
     }
 
