@@ -29,14 +29,14 @@ public class SimulatorHelper {
     private static void startSimulator() {
         LinkManager.isSimulationMode = true;
 
-        FileLog.MAIN.logLine("Executing " + BINARY);
+        FileLog.MAIN.logLine("Executing simulator " + BINARY);
         THREAD_FACTORY.newThread(new Runnable() {
             @Override
             public void run() {
                 try {
                     FileLog.SIMULATOR_CONSOLE.start();
                     process = Runtime.getRuntime().exec(BINARY);
-                    FileLog.MAIN.logLine("Executing " + BINARY + "=" + process);
+                    FileLog.MAIN.logLine("Executing simulator " + BINARY + "=" + process);
                     SimulatorExecHelper.dumpProcessOutput(process, new CountDownLatch(1));
                 } catch (IOException e) {
                     throw new IllegalStateException(e);

@@ -13,7 +13,13 @@ public class MaintenanceUtil {
         //        long now = System.currentTimeMillis();
         StringBuffer output = new StringBuffer();
         StringBuffer error = new StringBuffer();
-        ExecHelper.executeCommand(queryCommand, callbacks, output, error, null);
+        try {
+            ExecHelper.executeCommand(queryCommand, callbacks, output, error, null);
+        } catch (ErrorExecutingCommand e) {
+            callbacks.logLine("IOError: " + e);
+            // let's assume DFU is present just to give user more options
+            return true;
+        }
         callbacks.logLine(output.toString());
         callbacks.logLine(error.toString());
 //        long cost = System.currentTimeMillis() - now;

@@ -70,20 +70,25 @@ public class ExecHelper {
         }
 
         File workingDir = new File(workingDirPath);
-        return executeCommand(command, callbacks, output, error, workingDir);
+        try {
+            return executeCommand(command, callbacks, output, error, workingDir);
+        } catch (ErrorExecutingCommand e) {
+            callbacks.logLine("ErrorExecutingCommand: " + e);
+            callbacks.error();
+            throw new RuntimeException(e);
+        }
     }
 
     @NotNull
-    public static String executeCommand(String command, UpdateOperationCallbacks callbacks, StringBuffer output, StringBuffer error, File workingDir) {
-        callbacks.logLine("Executing " + command);
+    public static String executeCommand(String command, UpdateOperationCallbacks callbacks, StringBuffer output, StringBuffer error, File workingDir) throws ErrorExecutingCommand {
+        callbacks.logLine("Executing command=" + command);
         try {
             Process p = Runtime.getRuntime().exec(command, null, workingDir);
             startStreamThread(p, p.getInputStream(), output, callbacks);
             startStreamThread(p, p.getErrorStream(), error, callbacks);
             p.waitFor(3, TimeUnit.MINUTES);
         } catch (IOException e) {
-            callbacks.logLine("IOError: " + e);
-            callbacks.error();
+            throw new ErrorExecutingCommand(e);
         } catch (InterruptedException e) {
             callbacks.logLine("WaitError: " + e);
             callbacks.error();
