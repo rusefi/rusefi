@@ -54,11 +54,7 @@ void ButtonDebounce::startConfigurationList () {
 
 void ButtonDebounce::stopConfiguration () {
     // If the configuration has changed
-#if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
     if (*m_pin != active_pin || *m_mode != active_mode) {
-#else
-    if (*m_pin != active_pin || *m_mode != active_mode || (isActiveConfigurationVoid && ((int)(*m_pin) != 0 || (int)(*m_mode) != 0))) {
-#endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 #if EFI_PROD_CODE
     	efiSetPadUnused(active_pin);
 #endif /* EFI_UNIT_TEST */

@@ -111,22 +111,11 @@
  *
  * todo: place this field next to 'engineConfiguration'?
  */
-#if EFI_ACTIVE_CONFIGURATION_IN_FLASH
-#include "flash_int.h"
-engine_configuration_s & activeConfiguration = reinterpret_cast<persistent_config_container_s*>(getFlashAddrFirstCopy())->persistentConfiguration.engineConfiguration;
-// we cannot use this activeConfiguration until we call rememberCurrentConfiguration()
-bool isActiveConfigurationVoid = true;
-#else
 static engine_configuration_s activeConfigurationLocalStorage;
 engine_configuration_s & activeConfiguration = activeConfigurationLocalStorage;
-#endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 
 void rememberCurrentConfiguration() {
-#if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
 	memcpy(&activeConfiguration, engineConfiguration, sizeof(engine_configuration_s));
-#else
-	isActiveConfigurationVoid = false;
-#endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 }
 
 static void wipeString(char *string, int size) {
@@ -599,10 +588,8 @@ static void setDefaultEngineConfiguration() {
 #endif
 
 void loadConfiguration() {
-#if ! EFI_ACTIVE_CONFIGURATION_IN_FLASH
 	// Clear the active configuration so that registered output pins (etc) detect the change on startup and init properly
 	prepareVoidConfiguration(&activeConfiguration);
-#endif /* EFI_ACTIVE_CONFIGURATION_IN_FLASH */
 
 #if EFI_INTERNAL_FLASH
 	if (IGNORE_FLASH_CONFIGURATION) {
