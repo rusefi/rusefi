@@ -1,0 +1,134 @@
+pins:
+
+  - pin: 6B
+    meta: MM100_IN_VBATT
+    class: analog_inputs
+    function: ECU power supply
+    ts_name: ___ Battery Sense
+    type: 12v
+
+
+  - pin: 19B
+    function: PPS 1
+    type: av
+    meta: H144_IN_PPS1
+    class: analog_inputs
+    ts_name: ___ PPS1
+
+  - pin: 20B
+    function: PPS 2
+    type: av
+    meta: H144_IN_PPS2
+    class: analog_inputs
+    ts_name: ___ PPS2
+
+info:
+  title: AlphaX 4K-GDI
+  name: AlphaX 4K-GDI
+  order: 1
+  board_url: https://rusefi.com/s/4K-GDI
+  image:
+    file: 34pins-3k-B.jpg
+  pins:
+    - pin: 1A
+      x: 95
+      y: 90
+    - pin: 2A
+      x: 120
+      y: 90
+    - pin: 3A
+      x: 155
+      y: 90
+    - pin: 4A
+      x: 180
+      y: 90
+    - pin: 5A
+      x: 205
+      y: 90
+    - pin: 6A
+      x: 230
+      y: 90
+    - pin: 7A
+      x: 255
+      y: 90
+    - pin: 8A
+      x: 280
+      y: 90
+    - pin: 9A
+      x: 305
+      y: 90
+    - pin: 10A
+      x: 110
+      y: 120
+    - pin: 11A
+      x: 135
+      y: 120
+    - pin: 12A
+      x: 160
+      y: 120
+    - pin: 13A
+      x: 185
+      y: 120
+    - pin: 14A
+      x: 210
+      y: 120
+    - pin: 15A
+      x: 235
+      y: 120
+    - pin: 16A
+      x: 260
+      y: 120
+    - pin: 17A
+      x: 285
+      y: 120
+    - pin: 18A
+      x: 110
+      y: 150
+    - pin: 19A
+      x: 135
+      y: 150
+    - pin: 20A
+      x: 160
+      y: 150
+    - pin: 21A
+      x: 185
+      y: 150
+    - pin: 22A
+      x: 210
+      y: 150
+    - pin: 23A
+      x: 235
+      y: 150
+    - pin: 24A
+      x: 260
+      y: 150
+    - pin: 25A
+      x: 285
+      y: 150
+    - pin: 26A
+      x: 95
+      y: 180
+    - pin: 27A
+      x: 120
+      y: 180
+    - pin: 28A
+      x: 155
+      y: 180
+    - pin: 29A
+      x: 180
+      y: 180
+    - pin: 30A
+      x: 205
+      y: 180
+    - pin: 31A
+      x: 230
+      y: 180
+    - pin: 32A
+      x: 255
+      y: 180
+    - pin: 33A
+      x: 280
+      y: 180
+    - pin: 34A
+      x: 305
+      y: 180

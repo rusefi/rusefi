@@ -1,0 +1,160 @@
+pins:
+  - pin: 18A
+    function: +12V from main relay
+    type: 12v
+    color: red
+
+  - pin: 19A
+    function: TPS 1 signal
+    ts_name: ___ TPS1
+    meta: H144_IN_TPS1
+    type: av
+    class: analog_inputs
+
+  - pin: 20A
+    function: TPS 2 signal
+    ts_name: ___ TPS2
+    meta: H144_IN_TPS2
+    type: av
+    class: analog_inputs
+
+
+  - pin: 21A
+    function: ECT CLT Coolant
+    type: at
+    meta: H144_IN_CLT
+    class: analog_inputs
+
+
+  - pin: 22A
+    function: IAT
+    type: at
+    meta: H144_IN_IAT
+    class: analog_inputs
+
+  - pin: 23A
+    function: MAP Signal
+    type: av
+    meta: H144_IN_MAP1
+    class: analog_inputs
+
+
+  - pin: 26A
+    function: Power GND
+    type: gnd
+
+  - pin: 27A
+    function: Sensor GND
+    type: agnd
+
+
+info:
+  title: AlphaX 4K-GDI
+  name: AlphaX 4K-GDI
+  order: 0
+  board_url: https://rusefi.com/s/4K-GDI
+  image:
+    file: 34pins-4k-A.jpg
+  pins:
+    - pin: 1A
+      x: 75
+      y: 90
+    - pin: 2A
+      x: 95
+      y: 90
+    - pin: 3A
+      x: 120
+      y: 90
+    - pin: 4A
+      x: 145
+      y: 90
+    - pin: 5A
+      x: 165
+      y: 90
+    - pin: 6A
+      x: 190
+      y: 90
+    - pin: 7A
+      x: 215
+      y: 90
+    - pin: 8A
+      x: 240
+      y: 90
+    - pin: 9A
+      x: 265
+      y: 90
+    - pin: 10A
+      x: 85
+      y: 120
+    - pin: 11A
+      x: 105
+      y: 120
+    - pin: 12A
+      x: 130
+      y: 120
+    - pin: 13A
+      x: 155
+      y: 120
+    - pin: 14A
+      x: 180
+      y: 120
+    - pin: 15A
+      x: 205
+      y: 120
+    - pin: 16A
+      x: 225
+      y: 120
+    - pin: 17A
+      x: 245
+      y: 120
+    - pin: 18A
+      x: 85
+      y: 150
+    - pin: 19A
+      x: 110
+      y: 150
+    - pin: 20A
+      x: 130
+      y: 150
+    - pin: 21A
+      x: 155
+      y: 150
+    - pin: 22A
+      x: 180
+      y: 150
+    - pin: 23A
+      x: 205
+      y: 150
+    - pin: 24A
+      x: 225
+      y: 150
+    - pin: 25A
+      x: 245
+      y: 150
+    - pin: 26A
+      x: 74
+      y: 180
+    - pin: 27A
+      x: 98
+      y: 180
+    - pin: 28A
+      x: 122
+      y: 180
+    - pin: 29A
+      x: 146
+      y: 180
+    - pin: 30A
+      x: 170
+      y: 180
+    - pin: 31A
+      x: 195
+      y: 180
+    - pin: 32A
+      x: 220
+      y: 180
+    - pin: 33A
+      x: 245
+      y: 180
+    - pin: 34A
+      x: 265
+      y: 180
