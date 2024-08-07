@@ -58,8 +58,6 @@ static char WAVE_LOGGING_BUFFER[WAVE_LOGGING_SIZE];
 
 int waveChartUsedSize;
 
-//#define DEBUG_WAVE 1
-
 /**
  * We want to skip some engine cycles to skip what was scheduled before parameters were changed
  */
@@ -82,9 +80,6 @@ void WaveChart::init() {
 }
 
 void WaveChart::reset() {
-#if DEBUG_WAVE
-	efiPrintf("reset while at ", counter);
-#endif /* DEBUG_WAVE */
 	logging.reset();
 	counter = 0;
 	startTimeNt = 0;
@@ -141,10 +136,7 @@ void WaveChart::publish() {
 #if EFI_ENGINE_SNIFFER
 	logging.appendPrintf( LOG_DELIMITER);
 	waveChartUsedSize = logging.loggingSize();
-#if DEBUG_WAVE
-	Logging *l = &chart->logging;
-	efiPrintf("IT'S TIME", strlen(l->buffer));
-#endif // DEBUG_WAVE
+
 	if (getTriggerCentral()->isEngineSnifferEnabled) {
 		scheduleLogging(&logging);
 	}
@@ -181,9 +173,7 @@ void WaveChart::addEvent3(const char *name, const char * msg) {
 #endif /* EFI_PROD_CODE */
 
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6653, isInitialized, "chart not initialized");
-#if DEBUG_WAVE
-	efiPrintf("current", chart->counter);
-#endif /* DEBUG_WAVE */
+
 	if (isFull()) {
 		return;
 	}

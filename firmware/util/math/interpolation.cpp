@@ -53,10 +53,7 @@ float interpolateMsg(const char *msg, float x1, float y1, float x2, float y2, fl
 	}
 	float b = y1 - a * x1;
 	float result = a * x + b;
-#if	DEBUG_FUEL
-	printf("x1=%.2f y1=%.2f x2=%.2f y2=%.2f\r\n", x1, y1, x2, y2);
-	printf("a=%.2f b=%.2f result=%.2f\r\n", a, b, result);
-#endif
+
 	return result;
 }
 

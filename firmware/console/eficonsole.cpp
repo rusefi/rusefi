@@ -156,9 +156,6 @@ void initializeConsole() {
 	sayHello();
 	addConsoleAction("test", [](){ /* do nothing */});
 	addConsoleAction("hello", sayHello);
-#if EFI_HAS_RESET
-	addConsoleAction("reset", scheduleReset);
-#endif
 
 	addConsoleAction("critical", testCritical);
 	addConsoleAction("error", myerror);
