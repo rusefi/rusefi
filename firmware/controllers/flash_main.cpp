@@ -32,6 +32,11 @@
 #define EFI_STORAGE_MFS_EXTERNAL FALSE
 #endif
 
+// Sanity check
+#if (EFI_STORAGE_MFS_EXTERNAL == TRUE) && (EFI_FLASH_WRITE_THREAD == FALSE)
+	#error EFI_FLASH_WRITE_THREAD should be enabled if MFS is used for external flash
+#endif
+
 static bool needToWriteConfiguration = false;
 
 /* if we use ChibiOS MFS for settings */

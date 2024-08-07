@@ -42,8 +42,10 @@
 #undef EFI_EMBED_INI_MSD
 #define EFI_EMBED_INI_MSD TRUE
 
+#ifndef EFI_FLASH_WRITE_THREAD
 // H7 has dual bank, so flash on its own (low priority) thread so as to not block any other operations
 #define EFI_FLASH_WRITE_THREAD TRUE
+#endif
 
 #undef ENABLE_PERF_TRACE
 #define ENABLE_PERF_TRACE TRUE
