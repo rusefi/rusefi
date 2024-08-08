@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Aug 06 01:04:48 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Aug 08 03:18:20 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -2478,11 +2478,8 @@ struct engine_configuration_s {
 	offset 1316 bit 10 */
 	bool verboseTriggerSynchDetails : 1 {};
 	/**
-	 * Usually if we have no trigger events that means engine is stopped
-	 * Unless we are troubleshooting and spinning the engine by hand - this case a longer
-	 * delay is needed
 	offset 1316 bit 11 */
-	bool isManualSpinningMode : 1 {};
+	bool unused1188b12 : 1 {};
 	/**
 	offset 1316 bit 12 */
 	bool cutFuelInAcr : 1 {};
@@ -5714,4 +5711,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22960);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Aug 06 01:04:48 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Aug 08 03:18:20 UTC 2024

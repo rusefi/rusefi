@@ -850,9 +850,6 @@ This activates a separate fuel table for Idle, this allows fine tuning of the id
 ### verboseTriggerSynchDetails
 Verbose info in console below engineSnifferRpmThreshold\nenable trigger_details
 
-### isManualSpinningMode
-Usually if we have no trigger events that means engine is stopped\nUnless we are troubleshooting and spinning the engine by hand - this case a longer\ndelay is needed
-
 ### cutFuelInAcr
 
 

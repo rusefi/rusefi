@@ -856,9 +856,6 @@ float getConfigValueByName(const char *name) {
 // verboseTriggerSynchDetails
 		case -325018342:
 			return engineConfiguration->verboseTriggerSynchDetails;
-// isManualSpinningMode
-		case -795241238:
-			return engineConfiguration->isManualSpinningMode;
 // cutFuelInAcr
 		case -723193750:
 			return engineConfiguration->cutFuelInAcr;
@@ -3252,11 +3249,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -325018342:
 	{
 		engineConfiguration->verboseTriggerSynchDetails = (int)value;
-		return 1;
-	}
-		case -795241238:
-	{
-		engineConfiguration->isManualSpinningMode = (int)value;
 		return 1;
 	}
 		case -723193750:

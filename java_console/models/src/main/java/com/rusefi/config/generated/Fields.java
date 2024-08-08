@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Aug 07 23:17:37 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Aug 08 03:19:12 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1214,6 +1214,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 2127422044;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1472,7 +1473,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.08.08.f407-discovery.2721808482";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.08.08.f407-discovery.2127422044";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2129,7 +2130,6 @@ public class Fields {
 	public static final Field ISWAVEANALYZERENABLED = Field.create("ISWAVEANALYZERENABLED", 1316, FieldType.BIT, 8).setBaseOffset(0);
 	public static final Field USESEPARATEVEFORIDLE = Field.create("USESEPARATEVEFORIDLE", 1316, FieldType.BIT, 9).setBaseOffset(0);
 	public static final Field VERBOSETRIGGERSYNCHDETAILS = Field.create("VERBOSETRIGGERSYNCHDETAILS", 1316, FieldType.BIT, 10).setBaseOffset(0);
-	public static final Field ISMANUALSPINNINGMODE = Field.create("ISMANUALSPINNINGMODE", 1316, FieldType.BIT, 11).setBaseOffset(0);
 	public static final Field CUTFUELINACR = Field.create("CUTFUELINACR", 1316, FieldType.BIT, 12).setBaseOffset(0);
 	public static final Field HONDAK = Field.create("HONDAK", 1316, FieldType.BIT, 13).setBaseOffset(0);
 	public static final Field TWOWIREBATCHIGNITION = Field.create("TWOWIREBATCHIGNITION", 1316, FieldType.BIT, 14).setBaseOffset(0);
@@ -3805,7 +3805,6 @@ public class Fields {
 	ISWAVEANALYZERENABLED,
 	USESEPARATEVEFORIDLE,
 	VERBOSETRIGGERSYNCHDETAILS,
-	ISMANUALSPINNINGMODE,
 	CUTFUELINACR,
 	HONDAK,
 	TWOWIREBATCHIGNITION,
