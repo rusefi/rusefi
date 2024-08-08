@@ -36,6 +36,16 @@ struct mc33810_config {
 		ioportid_t		port;
 		uint_fast8_t	pad;
 	} en;
+	/* See datasheet:
+	 * "To avoid any spurious data, it is essential the high-to-low and low-to-high
+	 * transitions of the CS signal occur only when SCLK is in a logic low state."
+	 * If sck.port != null, driver will wait until SCLK goes low before releasing CS
+	 * at the end of each transaction.
+	 * STM32 driver/hw is known to affected by this issue */
+	struct {
+		ioportid_t		port;
+		uint_fast8_t	pad;
+	} sck;
 };
 
 int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg);

@@ -180,7 +180,9 @@ static const struct mc33810_config mc33810 = {
 // meaning even if we do not use it we need a pin for now
 		[7] = {.port = GPIOD, .pad = 1},
 	},
-	.en = {.port = GPIOA, .pad = 6} // copy-paste with setMode code!
+	.en = {.port = GPIOA, .pad = 6}, // copy-paste with setMode code!
+	// TODO: pick from engineConfiguration->spi3sckPin or whatever SPI is used
+	.sck = {.port = GPIOB, .pad = 3}
 };
 
     if (engineConfiguration->engineType == engine_type_e::FRANKENSO_TEST_33810) {
