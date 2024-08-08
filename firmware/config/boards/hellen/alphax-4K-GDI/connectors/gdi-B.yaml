@@ -1,12 +1,26 @@
 meta: config/boards/hellen_meta.h
 
 pins:
+  - pin: 5B
+    meta: H144_OUT_IO5
+    class: outputs
+    ts_name: ___ MAIN
+    function: Main relay control
+    type: ls
+
   - pin: 6B
     meta: H144_IN_VBATT
     class: analog_inputs
     function: ECU power supply
     ts_name: ___ Battery Sense
     type: 12v
+
+  - pin: 7B
+    meta: H144_OUT_IO6
+    class: outputs
+    function: Fuel Pump Relay Output
+    type: ls
+    ts_name: ___ Fuel Pump
 
 
   - pin: 19B
