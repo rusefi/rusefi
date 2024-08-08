@@ -29,11 +29,21 @@ import static com.rusefi.core.FindFileHelper.findSrecFile;
 
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
-    private static final int VERSION = 20240807;
+    private static final int VERSION = 20240808;
 
     private static final String LOGO_PATH = "/com/rusefi/";
     private static final String LOGO = LOGO_PATH + "logo.png";
-    private static final String TITLE = "rusEFI Bundle Updater " + VERSION;
+    private static final String TITLE = getTitle();
+
+    private static String getTitle() {
+        try {
+            return ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties()) + " Bundle Updater " + VERSION;
+        } catch (Throwable e) {
+            log.error("Error", e);
+            return "Error while getting title";
+        }
+    }
+
     private static final String AUTOUPDATE_MODE = "autoupdate";
     private static final String RUSEFI_CONSOLE_JAR = "rusefi_console.jar";
     private static final String COM_RUSEFI_LAUNCHER = "com.rusefi.Launcher";
@@ -42,6 +52,7 @@ public class Autoupdate {
         try {
             autoupdate(args);
         } catch (Throwable e) {
+            log.error("Autoupdate Error", e);
             String stackTrace = extracted(e);
             JOptionPane.showMessageDialog(null, stackTrace, "Autoupdate Error " + TITLE, JOptionPane.ERROR_MESSAGE);
             System.exit(-1);
