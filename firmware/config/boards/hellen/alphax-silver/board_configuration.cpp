@@ -120,27 +120,30 @@ static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
 	}
 };
 
-static OutputPin TleReset;
-static OutputPin TleEn;
-/* Waste of RAM, switch to palSetPadMode() and palSetPort() */
-static OutputPin TleCs0;
-static OutputPin TleCs1;
+static void board_init_ext_gpios() {
+  {
+    /* Waste of RAM, switch to palSetPadMode() and palSetPort() */
+    static OutputPin TleCs0;
+	  TleCs0.initPin("TLE9104 CS0", Gpio::A15);
+	  TleCs0.setValue(1);
+	}
+	{
+    static OutputPin TleCs1;
+	  TleCs1.initPin("TLE9104 CS1", Gpio::B12);
+	  TleCs1.setValue(1);
+	}
 
-static void board_init_ext_gpios()
-{
-	int ret;
+	{
+	  static OutputPin TleReset;
+	  TleReset.initPin("TLE9104 Reset", Gpio::B14);
+	  TleReset.setValue(1);
 
-	TleCs0.initPin("TLE9104 CS0", Gpio::A15);
-	TleCs0.setValue(1);
-	TleCs1.initPin("TLE9104 CS1", Gpio::B12);
-	TleCs1.setValue(1);
+	  static OutputPin TleEn;
+	  TleEn.initPin("TLE9104 En", Gpio::B15);
+	  TleEn.setValue(1);
+	}
 
-	TleReset.initPin("TLE9104 Reset", Gpio::B14);
-	TleEn.initPin("TLE9104 En", Gpio::B15);
-	TleReset.setValue(1);
-	TleEn.setValue(1);
-
-	ret = tle9104_add(Gpio::TLE9104_0_OUT_0, 0, &tle9104_cfg[0]);
+	int ret = tle9104_add(Gpio::TLE9104_0_OUT_0, 0, &tle9104_cfg[0]);
 	if (ret < 0) {
 		/* error */
 	}
