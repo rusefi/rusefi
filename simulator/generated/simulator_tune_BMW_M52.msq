@@ -653,7 +653,7 @@
         <constant name="isWaveAnalyzerEnabled">"true"</constant>
         <constant name="useSeparateVeForIdle">"false"</constant>
         <constant name="verboseTriggerSynchDetails">"false"</constant>
-        <constant name="isManualSpinningMode">"false"</constant>
+        <constant name="unused1188b12">"false"</constant>
         <constant name="cutFuelInAcr">"false"</constant>
         <constant name="hondaK">"false"</constant>
         <constant name="twoWireBatchIgnition">"false"</constant>
@@ -4776,7 +4776,7 @@ end</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240807" nPages="1" signature="rusEFI master.2024.08.08.f407-discovery.2721808482" version="5.0"/>
+    <versionInfo firmwareInfo="20240807" nPages="1" signature="rusEFI master.2024.08.08.f407-discovery.2127422044" version="5.0"/>
     <bibliography author="rusEFI 20240807" writeDate="date"/>
     <settings/>
     <userComments/>
