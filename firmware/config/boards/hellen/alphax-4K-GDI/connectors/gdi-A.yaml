@@ -41,7 +41,7 @@ pins:
   - pin: 19A
     function: TPS 1 signal
     ts_name: ___ TPS1
-    meta: H144_IN_TPS1
+    meta: H144_IN_TPS
     type: av
     class: analog_inputs
 

@@ -2,7 +2,7 @@ meta: config/boards/hellen_meta.h
 
 pins:
   - pin: 6B
-    meta: MM100_IN_VBATT
+    meta: H144_IN_VBATT
     class: analog_inputs
     function: ECU power supply
     ts_name: ___ Battery Sense
@@ -12,7 +12,7 @@ pins:
   - pin: 19B
     function: PPS 1
     type: av
-    meta: H144_IN_PPS1
+    meta: H144_IN_PPS
     class: analog_inputs
     ts_name: ___ PPS1
 
