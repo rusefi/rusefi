@@ -8,6 +8,7 @@
 
 #include "pch.h"
 #include "board_id.h"
+#include "boards_id.h"
 #include "boards_dictionary.h"
 
 
