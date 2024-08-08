@@ -775,6 +775,9 @@ enable can_write/disable can_write. See also can1ListenMode
 ### useLinearIatSensor
 
 
+### enableOilPressureProtect
+
+
 ### tachPulseDurationAsDutyCycle
 Treat milliseconds value as duty cycle value, i.e. 0.5ms would become 50%
 
@@ -1815,6 +1818,9 @@ value of A/C pressure in kPa before that compressor is disengaged
 
 ### maxAcPressure
 value of A/C pressure in kPa after that compressor is disengaged
+
+### minimumOilPressureTimeout
+Delay before cutting fuel due to low oil pressure. Use this to ignore short pressure blips and sensor noise.
 
 ### tcu_shiftTime
 

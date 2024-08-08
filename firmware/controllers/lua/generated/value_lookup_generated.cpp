@@ -781,6 +781,9 @@ float getConfigValueByName(const char *name) {
 // useLinearIatSensor
 		case 667504645:
 			return engineConfiguration->useLinearIatSensor;
+// enableOilPressureProtect
+		case -1194560694:
+			return engineConfiguration->enableOilPressureProtect;
 // tachPulseDurationAsDutyCycle
 		case 99110078:
 			return engineConfiguration->tachPulseDurationAsDutyCycle;
@@ -1822,6 +1825,9 @@ float getConfigValueByName(const char *name) {
 // maxAcPressure
 		case 1953870952:
 			return engineConfiguration->maxAcPressure;
+// minimumOilPressureTimeout
+		case -2016978331:
+			return engineConfiguration->minimumOilPressureTimeout;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -3124,6 +3130,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 667504645:
 	{
 		engineConfiguration->useLinearIatSensor = (int)value;
+		return 1;
+	}
+		case -1194560694:
+	{
+		engineConfiguration->enableOilPressureProtect = (int)value;
 		return 1;
 	}
 		case 99110078:
@@ -4859,6 +4870,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1953870952:
 	{
 		engineConfiguration->maxAcPressure = (int)value;
+		return 1;
+	}
+		case -2016978331:
+	{
+		engineConfiguration->minimumOilPressureTimeout = (int)value;
 		return 1;
 	}
 		case -1658957891:
