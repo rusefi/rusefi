@@ -201,6 +201,8 @@ OBFUSCATED_OUT = \
 $(OBFUSCATED_OUT): .obfuscated-sentinel
 
 .obfuscated-sentinel: $(BUILDDIR)/$(PROJECT).bin
+	[ -z "$(POST_BUILD_SCRIPT)" ] || echo "Invoking POST_BUILD_SCRIPT $(POST_BUILD_SCRIPT)"
+	[ ! -z "$(POST_BUILD_SCRIPT)" ] || echo "Not Invoking POST_BUILD_SCRIPT"
 	[ -z "$(POST_BUILD_SCRIPT)" ] || bash $(POST_BUILD_SCRIPT) $(BUILDDIR)/$(PROJECT).bin $(OBFUSCATED_OUT)
 	@touch $@
 
