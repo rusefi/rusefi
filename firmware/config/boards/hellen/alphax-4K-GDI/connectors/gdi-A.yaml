@@ -1,14 +1,35 @@
 meta: config/boards/hellen_meta.h
 
 pins:
+  - pin: 1A
+    function: HPFP Positive
+
   - pin: 2A
     function: GDI Injector 4 Positive
+
+  - pin: 3A
+    function: GDI Injector 4 Negative
+    ts_name: ___ GDI Injector 4
+    meta: H144_LS_4
+    type: ls
 
   - pin: 4A
     function: GDI Injector 3 Positive
 
+  - pin: 5A
+    function: GDI Injector 3 Negative
+    ts_name: ___ GDI Injector 3
+    meta: H144_LS_3
+    type: ls
+
   - pin: 6A
     function: GDI Injector 3 Positive
+
+  - pin: 7A
+    function: GDI Injector 2 Negative
+    ts_name: ___ GDI Injector 2
+    meta: H144_LS_2
+    type: ls
 
   - pin: 8A
     function: GDI Injector 2 Positive
@@ -18,6 +39,34 @@ pins:
     ts_name: ___ GDI Injector 1
     meta: H144_LS_1
     type: ls
+
+  - pin: 11A
+    meta: H144_IGN_4
+    class: outputs
+    function: Smart Ignition 4
+    type: ign
+    ts_name: ___ Ignition 4
+
+  - pin: 12A
+    meta: H144_IGN_3
+    class: outputs
+    function: Smart Ignition 3
+    type: ign
+    ts_name: ___ Ignition 3
+
+  - pin: 13A
+    meta: H144_IGN_2
+    class: outputs
+    function: Smart Ignition 2
+    type: ign
+    ts_name: ___ Ignition 2
+
+  - pin: 14A
+    meta: H144_IGN_1
+    class: outputs
+    function: Smart Ignition 1
+    type: ign
+    ts_name: ___ Ignition 1
 
   - pin: 15A
     function: CAN bus high (CANH)

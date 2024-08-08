@@ -36,105 +36,105 @@ info:
   image:
     file: 34pins-3k-B.jpg
   pins:
-    - pin: 1A
+    - pin: 1B
       x: 95
       y: 90
-    - pin: 2A
+    - pin: 2B
       x: 120
       y: 90
-    - pin: 3A
+    - pin: 3B
       x: 155
       y: 90
-    - pin: 4A
+    - pin: 4B
       x: 180
       y: 90
-    - pin: 5A
+    - pin: 5B
       x: 205
       y: 90
-    - pin: 6A
+    - pin: 6B
       x: 230
       y: 90
-    - pin: 7A
+    - pin: 7B
       x: 255
       y: 90
-    - pin: 8A
+    - pin: 8B
       x: 280
       y: 90
-    - pin: 9A
+    - pin: 9B
       x: 305
       y: 90
-    - pin: 10A
+    - pin: 10B
       x: 110
       y: 120
-    - pin: 11A
+    - pin: 11B
       x: 135
       y: 120
-    - pin: 12A
+    - pin: 12B
       x: 160
       y: 120
-    - pin: 13A
+    - pin: 13B
       x: 185
       y: 120
-    - pin: 14A
+    - pin: 14B
       x: 210
       y: 120
-    - pin: 15A
+    - pin: 15B
       x: 235
       y: 120
-    - pin: 16A
+    - pin: 16B
       x: 260
       y: 120
-    - pin: 17A
+    - pin: 17B
       x: 285
       y: 120
-    - pin: 18A
+    - pin: 18B
       x: 110
       y: 150
-    - pin: 19A
+    - pin: 19B
       x: 135
       y: 150
-    - pin: 20A
+    - pin: 20B
       x: 160
       y: 150
-    - pin: 21A
+    - pin: 21B
       x: 185
       y: 150
-    - pin: 22A
+    - pin: 22B
       x: 210
       y: 150
-    - pin: 23A
+    - pin: 23B
       x: 235
       y: 150
-    - pin: 24A
+    - pin: 24B
       x: 260
       y: 150
-    - pin: 25A
+    - pin: 25B
       x: 285
       y: 150
-    - pin: 26A
+    - pin: 26B
       x: 95
       y: 180
-    - pin: 27A
+    - pin: 27B
       x: 120
       y: 180
-    - pin: 28A
+    - pin: 28B
       x: 155
       y: 180
-    - pin: 29A
+    - pin: 29B
       x: 180
       y: 180
-    - pin: 30A
+    - pin: 30B
       x: 205
       y: 180
-    - pin: 31A
+    - pin: 31B
       x: 230
       y: 180
-    - pin: 32A
+    - pin: 32B
       x: 255
       y: 180
-    - pin: 33A
+    - pin: 33B
       x: 280
       y: 180
-    - pin: 34A
+    - pin: 34B
       x: 305
       y: 180
