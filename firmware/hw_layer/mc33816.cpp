@@ -81,7 +81,8 @@ protected:
 
 	// Get battery voltage - only try to init chip when powered
 	float getVbatt() const override {
-		return Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE);
+	  // reminder that we do not have sensor subsystem right away
+		return Sensor::get(SensorType::BatteryVoltage).value_or(0);
 	}
 
 	// CONFIGURATIONS: currents, timings, voltages
@@ -164,6 +165,8 @@ private:
 	OutputPin chipSelect;
 };
 
+static Pt2001 pt;
+
 void Pt2001::init() {
 	//
 	// see setTest33816EngineConfiguration for default configuration
@@ -207,16 +210,18 @@ void Pt2001::init() {
   efiPrintf("mc33 started SPI");
 
 	// addConsoleAction("mc33_stats", showStats);
-	// addConsoleAction("mc33_restart", mcRestart);
+	addConsoleAction("mc33_restart", [](){
+    pt.initIfNeeded();
+  });
 
+	// todo: too soon to read voltage, it has to fail, right?!
 	initIfNeeded();
 }
 
 static bool isInitialized = false;
 
 void Pt2001::initIfNeeded() {
-// see also: isIgnVoltage()
-	if (Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) < LOW_VBATT) {
+	if (!isIgnVoltage()) {
 		isInitialized = false;
 	  efiPrintf("unhappy mc33 due to battery voltage");
 	} else {
@@ -230,8 +235,6 @@ void Pt2001::initIfNeeded() {
 		}
 	}
 }
-
-static Pt2001 pt;
 
 void initMc33816() {
 	pt.init();
