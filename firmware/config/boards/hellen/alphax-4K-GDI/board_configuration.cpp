@@ -35,6 +35,7 @@ void setBoardDefaultConfiguration() {
 }
 
 /*PUBLIC_API_WEAK*/ void boardInitHardware() {
+  setHellenMegaEnPin();
     {
     	static OutputPin csLs1;
 	    csLs1.initPin("csLs1", Gpio::H144_GP_IO1);
