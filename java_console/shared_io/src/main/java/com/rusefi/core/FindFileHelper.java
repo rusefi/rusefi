@@ -11,7 +11,6 @@ public class FindFileHelper {
      * Same .bin used by primary DFU and a bit unneeded ST-LINK options
      */
     public static final String FIRMWARE_BIN_FILE = INPUT_FILES_PATH + "/" + "rusefi.bin";
-    private static final String BINARY_PREFIX = "rusefi";
 
     @Nullable
     public static String findFile(String fileDirectory, String prefix, String suffix) {
@@ -30,7 +29,7 @@ public class FindFileHelper {
 
     @Nullable
     public static String findSrecFile() {
-        return findFile(INPUT_FILES_PATH, BINARY_PREFIX, "srec");
+        return findFile(INPUT_FILES_PATH, "", "srec");
     }
 
     public static boolean isObfuscated() {
