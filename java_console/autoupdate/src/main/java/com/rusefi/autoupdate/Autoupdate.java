@@ -108,13 +108,13 @@ public class Autoupdate {
             Method mainMethod = mainClass.getMethod("main", args.getClass());
             mainMethod.invoke(null, new Object[]{args});
         } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException |
-                 MalformedURLException e) {
+                 MalformedURLException | ConnectionAndMeta.DamagedPackageException e) {
             log.error("Failed to start", e);
             throw new IllegalStateException(e);
         }
     }
 
-    private static void hackProperties(URLClassLoader jarClassLoader) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException {
+    private static void hackProperties(URLClassLoader jarClassLoader) throws ClassNotFoundException, NoSuchMethodException, InvocationTargetException, IllegalAccessException, ConnectionAndMeta.DamagedPackageException {
         // in case of fresh jar file for some reason we are failing with ZipException if executed within console domain
         Class uiProperties = Class.forName("com.rusefi.UiProperties", true, jarClassLoader);
         for (Method m : uiProperties.getMethods())
@@ -133,9 +133,17 @@ public class Autoupdate {
     }
 
     private static void downloadAndUnzipAutoupdate(BundleUtil.BundleInfo info, UpdateMode mode, String baseUrl) {
+        Properties properties;
+        try {
+            properties = ConnectionAndMeta.getProperties();
+        } catch (ConnectionAndMeta.DamagedPackageException e) {
+            JOptionPane.showMessageDialog(null, "Internal error. Maybe special characters in folder name?", "Bundle Error",
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
         try {
             String suffix = FindFileHelper.isObfuscated() ? "_obfuscated_public" : "";
-            String zipFileName = ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties()) + "_bundle_" + info.getTarget() + suffix + "_autoupdate" + ".zip";
+            String zipFileName = ConnectionAndMeta.getWhiteLabel(properties) + "_bundle_" + info.getTarget() + suffix + "_autoupdate" + ".zip";
             ConnectionAndMeta connectionAndMeta = new ConnectionAndMeta(zipFileName).invoke(baseUrl);
             log.info("Remote file " + zipFileName);
             log.info("Server has " + connectionAndMeta.getCompleteFileSize() + " from " + new Date(connectionAndMeta.getLastModified()));

@@ -17,7 +17,11 @@ public class UiProperties {
 
     private static Properties getProperties() {
         if (properties == null) {
-            properties = ConnectionAndMeta.getProperties();
+            try {
+                properties = ConnectionAndMeta.getProperties();
+            } catch (ConnectionAndMeta.DamagedPackageException e) {
+                throw new RuntimeException(e);
+            }
         }
         return properties;
     }

@@ -30,7 +30,12 @@ public class ConnectionAndMeta {
     }
 
     public static String getBaseUrl() {
-        String result = getProperties().getProperty("auto_update_root_url");
+        String result;
+        try {
+            result = getProperties().getProperty("auto_update_root_url");
+        } catch (DamagedPackageException e) {
+            throw new RuntimeException(e);
+        }
         System.out.println(ConnectionAndMeta.class + ": got [" + result + "]");
         return result;
     }
@@ -41,7 +46,12 @@ public class ConnectionAndMeta {
     }
 
     public static String getSignatureWhiteLabel() {
-        String signatureWhiteLabel = getProperties().getProperty("signature_white_label");
+        String signatureWhiteLabel;
+        try {
+            signatureWhiteLabel = getProperties().getProperty("signature_white_label");
+        } catch (DamagedPackageException e) {
+            throw new RuntimeException(e);
+        }
         signatureWhiteLabel = signatureWhiteLabel == null ? null : signatureWhiteLabel.trim();
         return signatureWhiteLabel;
     }
@@ -52,7 +62,11 @@ public class ConnectionAndMeta {
     }
 
     public static boolean getBoolean(String propertyName) {
-        return getBoolean(propertyName, getProperties());
+        try {
+            return getBoolean(propertyName, getProperties());
+        } catch (DamagedPackageException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static boolean getBoolean(String propertyName, Properties properties) {
@@ -60,11 +74,12 @@ public class ConnectionAndMeta {
         return Boolean.TRUE.toString().equalsIgnoreCase(flag);
     }
 
-    public static Properties getProperties() throws RuntimeException {
+    public static Properties getProperties() throws DamagedPackageException {
         Properties props = new Properties();
         try {
             InputStream stream = ConnectionAndMeta.class.getResourceAsStream(IO_PROPERTIES);
-            Objects.requireNonNull(stream, "Error reading " + IO_PROPERTIES);
+            if (stream == null)
+                throw new DamagedPackageException();
             props.load(stream);
             return props;
         } catch (IOException e) {
@@ -156,5 +171,8 @@ public class ConnectionAndMeta {
         public X509Certificate[] getAcceptedIssuers() {
             return null;
         }
+    }
+
+    public static class DamagedPackageException extends Exception {
     }
 }
