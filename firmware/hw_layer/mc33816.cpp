@@ -205,9 +205,8 @@ void Pt2001::init() {
 		return;
 	}
 
-  efiPrintf("mc33 starting SPI");
 	spiStart(driver, &spiCfg);
-  efiPrintf("mc33 started SPI");
+	efiPrintf("mc33 started SPI");
 
 	// addConsoleAction("mc33_stats", showStats);
 	addConsoleAction("mc33_restart", [](){
