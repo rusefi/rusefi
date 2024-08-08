@@ -14,7 +14,7 @@ import java.util.Properties;
 
 public class ConnectionAndMeta {
     public static final String BASE_URL_RELEASE = "https://github.com/rusefi/rusefi/releases/latest/download/";
-    private static final String DEFAULT_WHITE_LABEL = "rusefi";
+    public static final String DEFAULT_WHITE_LABEL = "rusefi";
     public static final String AUTOUPDATE = "/autoupdate/";
 
     private static final int BUFFER_SIZE = 32 * 1024;
@@ -35,13 +35,9 @@ public class ConnectionAndMeta {
         return result;
     }
 
-    public static String getWhiteLabel() {
-        return Optional.ofNullable(getProperties().getProperty("white_label")).map(String::trim)
+    public static String getWhiteLabel(Properties properties) {
+        return Optional.ofNullable(properties.getProperty("white_label")).map(String::trim)
             .orElse(DEFAULT_WHITE_LABEL);
-    }
-
-    public static boolean isDefaultWhitelabel() {
-        return getWhiteLabel().equals(DEFAULT_WHITE_LABEL);
     }
 
     public static String getSignatureWhiteLabel() {

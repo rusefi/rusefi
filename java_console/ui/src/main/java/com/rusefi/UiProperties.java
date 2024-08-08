@@ -26,4 +26,12 @@ public class UiProperties {
     public static void setProperties(Properties properties) {
         UiProperties.properties = properties;
     }
+
+    public static String getWhiteLabel() {
+        return ConnectionAndMeta.getWhiteLabel(getProperties());
+    }
+
+    public static boolean isDefaultWhitelabel() {
+        return ConnectionAndMeta.DEFAULT_WHITE_LABEL.equals(getWhiteLabel());
+    }
 }
