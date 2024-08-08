@@ -7,6 +7,10 @@
 // see comments at declaration in pin_repository.h
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
+		case Gpio::C13: return "14A Ignition 1";
+		case Gpio::E3: return "11A Ignition 4";
+		case Gpio::E4: return "12A Ignition 3";
+		case Gpio::E5: return "13A Ignition 2";
 		default: return nullptr;
 	}
 	return nullptr;
