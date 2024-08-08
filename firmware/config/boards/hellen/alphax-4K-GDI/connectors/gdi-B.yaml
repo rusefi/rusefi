@@ -1,10 +1,38 @@
 meta: config/boards/hellen_meta.h
 
 pins:
+  - pin: 1B
+    meta: H144_OUT_IO1
+    class: outputs
+    ts_name: ___ Port injector 4
+    function: Port injector 4
+    type: ls
+
+  - pin: 2B
+    meta: H144_OUT_IO2
+    class: outputs
+    ts_name: ___ Port injector 3
+    function: Port injector 3
+    type: ls
+
+  - pin: 3B
+    meta: H144_OUT_IO3
+    class: outputs
+    ts_name: ___ Port injector 2
+    function: Port injector 2
+    type: ls
+
+  - pin: 4B
+    meta: H144_OUT_IO4
+    class: outputs
+    ts_name: ___ Port injector 1
+    function: Port injector 1
+    type: ls
+
   - pin: 5B
     meta: H144_OUT_IO5
     class: outputs
-    ts_name: ___ MAIN
+    ts_name: ___ Main Relay Control
     function: Main relay control
     type: ls
 
