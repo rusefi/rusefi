@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22960">
+    <page number="0" size="22972">
         <constant name="engineType">"POLARIS_RZR"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">1000.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
@@ -618,7 +618,7 @@
         <constant name="canReadEnabled">"true"</constant>
         <constant name="canWriteEnabled">"true"</constant>
         <constant name="useLinearIatSensor">"false"</constant>
-        <constant name="unusedFancy5">"false"</constant>
+        <constant name="enableOilPressureProtect">"false"</constant>
         <constant name="tachPulseDurationAsDutyCycle">"Duty cycle"</constant>
         <constant name="isAlternatorControlEnabled">"false"</constant>
         <constant name="invertPrimaryTriggerSignal">"Rising"</constant>
@@ -1619,13 +1619,8 @@
         <constant digits="2" name="acPressure_value2" units="">0.0</constant>
         <constant digits="0" name="minAcPressure" units="kPa">100.0</constant>
         <constant digits="0" name="maxAcPressure" units="kPa">300.0</constant>
-        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="174">
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+        <constant digits="1" name="minimumOilPressureTimeout" units="sec">0.5</constant>
+        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="168">
          0.0
          0.0
          0.0
@@ -4774,8 +4769,28 @@ end</constant>
          0.0
          0.0
 </constant>
+        <constant cols="1" digits="0" name="minimumOilPressureBins" rows="8">
+         0.0
+         1000.0
+         2000.0
+         3000.0
+         4000.0
+         5000.0
+         6000.0
+         7000.0
+</constant>
+        <constant cols="1" digits="0" name="minimumOilPressureValues" rows="8">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
     </page>
-    <versionInfo firmwareInfo="20240807" nPages="1" signature="rusEFI master.2024.08.08.f407-discovery.204825818" version="5.0"/>
+    <versionInfo firmwareInfo="20240807" nPages="1" signature="rusEFI master.2024.08.08.f407-discovery.2368542090" version="5.0"/>
     <bibliography author="rusEFI 20240807" writeDate="date"/>
     <settings/>
     <userComments/>
