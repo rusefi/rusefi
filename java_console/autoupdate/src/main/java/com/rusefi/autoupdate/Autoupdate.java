@@ -1,5 +1,6 @@
 package com.rusefi.autoupdate;
 
+import com.devexperts.logging.FileLogger;
 import com.devexperts.logging.Logging;
 import com.rusefi.core.FindFileHelper;
 import com.rusefi.core.io.BundleUtil;
@@ -50,6 +51,7 @@ public class Autoupdate {
 
     public static void main(String[] args) {
         try {
+            FileLogger.init();
             autoupdate(args);
         } catch (Throwable e) {
             log.error("Autoupdate Error", e);
@@ -71,7 +73,7 @@ public class Autoupdate {
     private static void autoupdate(String[] args) {
         String bundleFullName = BundleUtil.readBundleFullName();
         if (bundleFullName == null) {
-            log.error("ERROR: Autoupdate: unable to perform without bundleFullName (parent folder name)");
+            log.error("ERROR: Autoupdate: unable to perform without bundleFullName (check parent folder name)");
             System.exit(-1);
         }
         log.info("Handling parent folder name [" + bundleFullName + "]");

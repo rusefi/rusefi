@@ -123,14 +123,4 @@ public enum FileLog {
         OutputStreamWriter os = new OutputStreamWriter(fileLog);
         exception.printStackTrace(new PrintWriter(os));
     }
-
-    public void logException(String msg, Throwable e) {
-        logLine(msg + e);
-        e.printStackTrace();
-        if (fileLog == null) {
-            JOptionPane.showConfirmDialog(null, msg + " " + e, "no log and Exception Occurred", JOptionPane.DEFAULT_OPTION);
-            return;
-        }
-        log(e);
-    }
 }

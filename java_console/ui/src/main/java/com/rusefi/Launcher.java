@@ -1,5 +1,6 @@
 package com.rusefi;
 
+import com.devexperts.logging.FileLogger;
 import com.devexperts.logging.Logging;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.tools.ConsoleTools;
@@ -31,6 +32,7 @@ public class Launcher implements rusEFIVersion {
      * @see StartupFrame if no parameters specified
      */
     public static void main(final String[] args) throws Exception {
+        FileLogger.init();
         log.info("rusEFI UI console " + CONSOLE_VERSION);
         log.info("Compiled " + new Date(rusEFIVersion.classBuildTimeMillis()));
         log.info("\n\n");
