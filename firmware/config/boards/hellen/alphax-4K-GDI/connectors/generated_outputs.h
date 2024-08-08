@@ -5,10 +5,14 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
+	Gpio::H144_OUT_IO5, // 5B MAIN
+	Gpio::H144_OUT_IO6, // 7B Fuel Pump
 	Gpio::H144_IGN_4, // 11A Ignition 4
 	Gpio::H144_IGN_3, // 12A Ignition 3
 	Gpio::H144_IGN_2, // 13A Ignition 2
 	Gpio::H144_IGN_1, // 14A Ignition 1
+// "5B MAIN",
+// "7B Fuel Pump",
 // "11A Ignition 4",
 // "12A Ignition 3",
 // "13A Ignition 2",
