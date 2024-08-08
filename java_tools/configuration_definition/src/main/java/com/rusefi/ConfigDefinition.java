@@ -22,7 +22,7 @@ public class ConfigDefinition {
     public static final String SIGNATURE_HASH = "SIGNATURE_HASH";
 
     private static final String KEY_DEFINITION = "-definition";
-    private static final String KEY_TS_DESTINATION = "-ts_destination";
+    private static final String KEY_TS_TEMPLATE = "-ts_destination";
     private static final String KEY_C_DESTINATION = "-c_destination";
     private static final String KEY_C_DEFINES = "-c_defines";
     public static final String KEY_WITH_C_DEFINES = "-with_c_defines";
@@ -44,7 +44,7 @@ public class ConfigDefinition {
             if (totalArgs.length < 2) {
                 SystemOut.println("Please specify\r\n"
                         + KEY_DEFINITION + " x\r\n"
-                        + KEY_TS_DESTINATION + " x\r\n"
+                        + KEY_TS_TEMPLATE + " x\r\n"
                         + KEY_C_DESTINATION + " x\r\n"
                         + KEY_JAVA_DESTINATION + " x\r\n"
                 );
@@ -82,7 +82,7 @@ public class ConfigDefinition {
                     // lame: order of command line arguments is important, these arguments should be AFTER '-tool' argument
                     state.setDefinitionInputFile(args[i + 1]);
                     break;
-                case KEY_TS_DESTINATION:
+                case KEY_TS_TEMPLATE:
                     tsInputFileFolder = args[i + 1];
                     break;
                 case KEY_C_DESTINATION:
