@@ -191,3 +191,15 @@
 // Ethernet MAC
 #define MAC_USE_ZERO_COPY FALSE
 #define MAC_USE_EVENTS TRUE
+
+#include "error_handling_c.h"
+
+#define LIMITED_WHILE_LOOP(msg, condition) \
+  { int limit = 1000000 ;                  \
+    while (condition) {                    \
+      if (limit-- == 0) {                  \
+        criticalErrorM(msg);               \
+        break;                             \
+      }                                    \
+    }                                      \
+  }

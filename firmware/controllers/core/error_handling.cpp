@@ -10,6 +10,7 @@
 #include "os_util.h"
 #include "backup_ram.h"
 #include "error_handling_led.h"
+#include "error_handling_c.h"
 #include "log_hard_fault.h"
 #include "rusefi/critical_error.h"
 
@@ -331,4 +332,8 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 	throw std::logic_error(errorBuffer);
 #endif /* EFI_SIMULATOR */
 #endif
+}
+
+void criticalErrorM(const char *msg) {
+  criticalError(msg);
 }
