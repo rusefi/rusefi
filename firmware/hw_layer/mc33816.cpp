@@ -187,16 +187,24 @@ void Pt2001::init() {
 	spiCfg.ssport = getHwPort("mc33816", engineConfiguration->mc33816_cs);
 	spiCfg.sspad = getHwPin("mc33816", engineConfiguration->mc33816_cs);
 
+#if HW_MICRO_RUSEFI
 	// hard-coded for now, just resolve the conflict with SD card!
 	engineConfiguration->mc33816spiDevice = SPI_DEVICE_3;
+#endif
+
+  if (engineConfiguration->mc33816spiDevice == SPI_NONE) {
+    criticalError("mc33816 needs SPI selection");
+  }
 
 	driver = getSpiDevice(engineConfiguration->mc33816spiDevice);
-	if (driver == NULL) {
+	if (driver == nullptr) {
 		// error already reported
 		return;
 	}
 
+  efiPrintf("mc33 starting SPI");
 	spiStart(driver, &spiCfg);
+  efiPrintf("mc33 started SPI");
 
 	// addConsoleAction("mc33_stats", showStats);
 	// addConsoleAction("mc33_restart", mcRestart);

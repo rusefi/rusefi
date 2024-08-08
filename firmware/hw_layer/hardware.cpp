@@ -142,7 +142,7 @@ brain_pin_e getSckPin(spi_device_e device) {
  */
 SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 	if (spiDevice == SPI_NONE) {
-		return NULL;
+		return nullptr;
 	}
 #if STM32_SPI_USE_SPI1
 	if (spiDevice == SPI_DEVICE_1) {
@@ -175,7 +175,7 @@ SPIDriver * getSpiDevice(spi_device_e spiDevice) {
 	}
 #endif
 	firmwareError(ObdCode::CUSTOM_ERR_UNEXPECTED_SPI, "Unexpected SPI device: %d", spiDevice);
-	return NULL;
+	return nullptr;
 }
 
 /**
