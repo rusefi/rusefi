@@ -90,12 +90,19 @@ static void flashWriteThread(void*) {
 }
 #endif // EFI_FLASH_WRITE_THREAD
 
+// Allow saving setting to flash while engine is runnig.
+bool allowFlashWhileRunning() {
+	// either MCU supports flashing while executing
+	// either we store settings in external storage
+	return (mcuCanFlashWhileRunning() || (EFI_STORAGE_MFS_EXTERNAL == TRUE));
+}
+
 void setNeedToWriteConfiguration() {
 	efiPrintf("Scheduling configuration write");
 	needToWriteConfiguration = true;
 
 #if (EFI_FLASH_WRITE_THREAD == TRUE)
-	if (allowFlashWhileRunning() || (EFI_STORAGE_MFS_EXTERNAL == TRUE)) {
+	if (allowFlashWhileRunning()) {
 		// Signal the flash writer thread to wake up and write at its leisure
 		flashWriteSemaphore.signal();
 	}
@@ -401,7 +408,7 @@ void initFlash() {
 	addConsoleAction("rewriteconfig", rewriteConfig);
 
 #if (EFI_FLASH_WRITE_THREAD == TRUE)
-	if (allowFlashWhileRunning() || (EFI_STORAGE_MFS_EXTERNAL == TRUE)) {
+	if (allowFlashWhileRunning()) {
 		chThdCreateStatic(flashWriteStack, sizeof(flashWriteStack), PRIO_FLASH_WRITE, flashWriteThread, nullptr);
 	} else {
 		efiPrintf("EFI_FLASH_WRITE_THREAD is enabled, but not used");

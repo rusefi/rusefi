@@ -218,7 +218,7 @@ void canHwInfo(CANDriver* cand)
 
 #endif /* EFI_CAN_SUPPORT */
 
-bool allowFlashWhileRunning() {
+bool mcuCanFlashWhileRunning() {
 	return false;
 }
 

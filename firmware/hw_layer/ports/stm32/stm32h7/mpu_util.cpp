@@ -9,7 +9,7 @@
 
 #include "flash_int.h"
 
-bool allowFlashWhileRunning() {
+bool mcuCanFlashWhileRunning() {
 	// We only support dual bank H7, so always allow flash while running.
 	return true;
 }

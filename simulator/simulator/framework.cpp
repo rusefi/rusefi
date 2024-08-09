@@ -18,7 +18,7 @@ uint32_t getTimeNowLowerNt(void) {
 CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx);
 #endif // HAL_USE_CAN
 
-bool allowFlashWhileRunning() { return true; }
+bool mcuCanFlashWhileRunning() { return true; }
 //void causeHardFault() { }
 
 

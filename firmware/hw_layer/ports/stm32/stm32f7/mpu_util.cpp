@@ -50,7 +50,7 @@ static DeviceType determineDevice() {
 	return DeviceType::Unknown;
 }
 
-bool allowFlashWhileRunning() {
+bool mcuCanFlashWhileRunning() {
 	// Allow flash-while-running if dual bank mode is enabled, and we're a 2MB device (ie, no code located in second bank)
 	return determineDevice() == DeviceType::DualBank2MB;
 }

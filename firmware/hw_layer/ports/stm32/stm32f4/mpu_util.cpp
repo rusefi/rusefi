@@ -7,7 +7,7 @@
 #include "pch.h"
 #include "flash_int.h"
 
-bool allowFlashWhileRunning() {
+bool mcuCanFlashWhileRunning() {
 	// Never allow flash while running on F4, dual bank not implemented.
 	return false;
 }
