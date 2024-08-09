@@ -70,4 +70,8 @@ public class DriverInstall {
         // https://en.wikipedia.org/wiki/List_of_Microsoft_Windows_versions
         return version.startsWith("5.") || version.startsWith("6.0") || version.startsWith("6.1");
     }
+
+    public static boolean isFolderExist() {
+        return new File(FOLDER).exists();
+    }
 }

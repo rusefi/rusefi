@@ -142,7 +142,8 @@ public class StartupFrame {
         if (FileLog.isWindows()) {
             JPanel topButtons = new JPanel(new FlowLayout(FlowLayout.CENTER, 5, 0));
             topButtons.add(ToolButtons.createShowDeviceManagerButton());
-            topButtons.add(DriverInstall.createButton());
+            if (DriverInstall.isFolderExist())
+                topButtons.add(DriverInstall.createButton());
             if (UiProperties.usePCAN()) {
                 topButtons.add(ToolButtons.createPcanConnectorButton());
             }
