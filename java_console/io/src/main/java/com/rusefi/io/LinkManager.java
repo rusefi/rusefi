@@ -329,22 +329,6 @@ public class LinkManager implements Closeable {
         return null;
     }
 
-    /**
-     * @return null if no port located
-     */
-    public static String getDefaultPort() {
-        String[] ports = getCommPorts();
-        if (ports.length == 0) {
-            System.out.println("Port not specified and no ports found");
-            return null;
-        }
-        String port = ports[ports.length - 1];
-        // todo: reuse 'PortDetector.autoDetectPort' here?
-        System.out.println("Using last of " + ports.length + " port(s)");
-        System.out.println("All ports: " + Arrays.toString(ports));
-        return port;
-    }
-
     public interface MessagesListener {
         void postMessage(Class<?> source, String message);
     }
