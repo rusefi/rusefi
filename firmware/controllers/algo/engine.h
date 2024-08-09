@@ -180,7 +180,7 @@ public:
 	}
 
 #if EFI_TCU
-	GearControllerBase *gearController;
+	GearControllerBase *gearController = nullptr;
 #endif
 
 	// todo: boolean sensors should leverage sensor framework #6342
