@@ -212,7 +212,7 @@ public enum SerialPortScanner {
         boolean stLinkConnected;
         boolean PCANConnected;
 
-        String[] serialPorts = LinkManager.getCommPorts();
+        final Set<String> serialPorts = LinkManager.getCommPorts();
 
         List<String> portsToInspect = new ArrayList<>();
 
@@ -241,7 +241,7 @@ public enum SerialPortScanner {
             // In any other scenario, auto could have unexpected behavior for the user
             List<String> toRemove = new ArrayList<>();
             for (String x : portCache.keySet()) {
-                if (Arrays.stream(serialPorts).noneMatch(x::equals)) {
+                if (!serialPorts.contains(x)) {
                     toRemove.add(x);
                 }
             }

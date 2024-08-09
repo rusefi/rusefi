@@ -19,8 +19,10 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Closeable;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Set;
 import java.util.TreeSet;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -109,13 +111,10 @@ public class LinkManager implements Closeable {
         return COMMUNICATION_EXECUTOR.submit(runnable);
     }
 
-    public static String[] getCommPorts() {
+    public static Set<String> getCommPorts() {
         SerialPort[] ports = SerialPort.getCommPorts();
         // wow sometimes driver returns same port name more than once?!
-        TreeSet<String> names = new TreeSet<>();
-        for (SerialPort port : ports)
-            names.add(port.getSystemPortName());
-        return names.toArray(new String[0]);
+        return Arrays.stream(ports).map(SerialPort::getSystemPortName).collect(Collectors.toCollection(TreeSet::new));
     }
 
     public BinaryProtocol getBinaryProtocol() {
@@ -306,8 +305,8 @@ public class LinkManager implements Closeable {
             return;
         close(); // Explicitly kill the connection (call connectors destructor??????)
 
-        String[] ports = getCommPorts();
-        boolean isPortAvailableAgain = Arrays.asList(ports).contains(lastTriedPort);
+        final Set<String> ports = getCommPorts();
+        final boolean isPortAvailableAgain = ports.contains(lastTriedPort);
         log.info("restart isPortAvailableAgain=" + isPortAvailableAgain);
         if (isPortAvailableAgain) {
             connect(lastTriedPort);
@@ -327,22 +326,6 @@ public class LinkManager implements Closeable {
         if (message.startsWith(CommandQueue.CONFIRMATION_PREFIX))
             return message.substring(CommandQueue.CONFIRMATION_PREFIX.length());
         return null;
-    }
-
-    /**
-     * @return null if no port located
-     */
-    public static String getDefaultPort() {
-        String[] ports = getCommPorts();
-        if (ports.length == 0) {
-            System.out.println("Port not specified and no ports found");
-            return null;
-        }
-        String port = ports[ports.length - 1];
-        // todo: reuse 'PortDetector.autoDetectPort' here?
-        System.out.println("Using last of " + ports.length + " port(s)");
-        System.out.println("All ports: " + Arrays.toString(ports));
-        return port;
     }
 
     public interface MessagesListener {
