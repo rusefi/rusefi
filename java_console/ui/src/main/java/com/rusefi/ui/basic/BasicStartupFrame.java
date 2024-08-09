@@ -5,6 +5,7 @@ import com.rusefi.SerialPortScanner;
 import com.rusefi.StartupFrame;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.core.FindFileHelper;
+import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.maintenance.DfuFlasher;
 import com.rusefi.maintenance.ProgramSelector;
@@ -42,7 +43,8 @@ public class BasicStartupFrame {
     }
 
     public BasicStartupFrame() {
-        String title = "rusEFI basic console " + Launcher.CONSOLE_VERSION;
+        String whiteLabel = ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties());
+        String title = whiteLabel + " basic console " + Launcher.CONSOLE_VERSION;
         frame = FrameHelper.createFrame(title);
         JPanel panel = new JPanel(new VerticalFlowLayout());
         if (isWindows()) {
@@ -95,7 +97,8 @@ public class BasicStartupFrame {
         JLabel logoLabel = LogoHelper.createLogoLabel();
         if (logoLabel != null)
             panel.add(logoLabel);
-        panel.add(LogoHelper.createUrlLabel());
+        if (ConnectionAndMeta.isDefaultWhitelabel(whiteLabel))
+            panel.add(LogoHelper.createUrlLabel());
 
         frame.showFrame(panel, false);
         UiUtils.centerWindow(frame.getFrame());

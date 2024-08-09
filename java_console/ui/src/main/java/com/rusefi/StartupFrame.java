@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.core.io.BundleUtil;
+import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.io.LinkManager;
@@ -214,7 +215,7 @@ public class StartupFrame {
         JLabel logo = LogoHelper.createLogoLabel();
         if (logo != null)
             rightPanel.add(logo);
-        if (UiProperties.isDefaultWhitelabel())
+        if (ConnectionAndMeta.isDefaultWhitelabel(UiProperties.getWhiteLabel()))
             rightPanel.add(LogoHelper.createUrlLabel());
         rightPanel.add(new JLabel("Console " + Launcher.CONSOLE_VERSION));
 

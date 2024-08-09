@@ -108,6 +108,10 @@ public class ConnectionAndMeta {
         new File(localTargetFileName).setLastModified(connectionAndMeta.getLastModified());
     }
 
+    public static boolean isDefaultWhitelabel(String whiteLabel) {
+        return DEFAULT_WHITE_LABEL.equals(whiteLabel);
+    }
+
     public HttpURLConnection getHttpConnection() {
         return httpConnection;
     }
