@@ -1,8 +1,10 @@
 package com.rusefi.autodetect;
 
+import com.rusefi.IoUtil;
+import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.ConnectionStatusLogic;
+import com.rusefi.io.ConnectionWatchdog;
 import com.rusefi.io.LinkManager;
-import com.rusefi.ui.light.LightweightGUI;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -11,7 +13,7 @@ public class ReconnectSandbox {
 
         LinkManager linkManager = new LinkManager();
 
-        LightweightGUI.waitForDeviceAndStart(linkManager);
+        waitForDeviceAndStart(linkManager);
 
         AtomicBoolean status = new AtomicBoolean();
 
@@ -23,4 +25,22 @@ public class ReconnectSandbox {
         }
     }
 
+    private static String detectPortUntilDetected() {
+        while (true) {
+            String port = PortDetector.autoDetectSerial(null).getSerialPort();
+            System.out.println("Detected " + port);
+            if (port != null)
+                return port;
+            IoUtil.sleepSeconds(1);
+        }
+    }
+
+    public static void waitForDeviceAndStart(LinkManager linkManager) {
+        String autoDetectedPort = detectPortUntilDetected();
+        System.out.println("First time port detected: " + autoDetectedPort);
+
+        linkManager.startAndConnect(autoDetectedPort, ConnectionStateListener.VOID);
+
+        ConnectionWatchdog.init(linkManager);
+    }
 }
