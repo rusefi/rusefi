@@ -1,6 +1,7 @@
 package com.rusefi.maintenance;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.UiProperties;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.FindFileHelper;
 import com.rusefi.FileLog;
@@ -48,7 +49,6 @@ public class ProgramSelector {
     private static final String INSTALL_OPENBLT = "Install OpenBLT";
     private static final String OPENBLT_CAN = "OpenBLT via CAN";
 
-    private static final String HELP = "https://github.com/rusefi/rusefi/wiki/HOWTO-Update-Firmware";
 
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel noHardware = new JLabel("Nothing detected");
@@ -332,7 +332,7 @@ public class ProgramSelector {
 
     @NotNull
     public static JComponent createHelpButton() {
-        return new URLLabel("HOWTO Update Firmware", HELP);
+        return new URLLabel("HOWTO Update Firmware", UiProperties.getUpdateHelpUrl());
     }
 
     public JPanel getControl() {

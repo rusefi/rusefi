@@ -34,4 +34,8 @@ public class UiProperties {
     public static boolean isDefaultWhitelabel() {
         return ConnectionAndMeta.DEFAULT_WHITE_LABEL.equals(getWhiteLabel());
     }
+
+    public static String getUpdateHelpUrl() {
+        return properties.getProperty("UPDATE_FW_HELP_URL");
+    }
 }
