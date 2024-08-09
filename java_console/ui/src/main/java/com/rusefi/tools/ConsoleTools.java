@@ -31,6 +31,7 @@ import com.rusefi.tools.online.Online;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
 import com.rusefi.ui.StatusConsumer;
+import com.rusefi.io.UiLinkManagerHelper;
 import com.rusefi.ui.basic.BasicStartupFrame;
 import com.rusefi.ui.light.LightweightGUI;
 import org.jetbrains.annotations.Nullable;
@@ -130,7 +131,7 @@ public class ConsoleTools {
             System.out.println(RUS_EFI_NOT_DETECTED);
             return;
         }
-        IoStream ecuStream = LinkManager.open(autoDetectedPort);
+        IoStream ecuStream = UiLinkManagerHelper.open(autoDetectedPort);
 
         ServerSocketReference serverHolder = BinaryProtocolProxy.createProxy(ecuStream, 29001, new BinaryProtocolProxy.ClientApplicationActivityListener() {
             @Override
@@ -207,7 +208,7 @@ public class ConsoleTools {
         String autoDetectedPort = autoDetectPort();
         if (autoDetectedPort == null)
             return;
-        IoStream stream = LinkManager.open(autoDetectedPort);
+        IoStream stream = UiLinkManagerHelper.open(autoDetectedPort);
         byte[] commandBytes = BinaryProtocol.getTextCommandBytes(command);
         stream.sendPacket(commandBytes);
     }
@@ -369,7 +370,7 @@ public class ConsoleTools {
             System.out.println(RUS_EFI_NOT_DETECTED);
             return;
         }
-        IoStream stream = LinkManager.open(autoDetectedPort);
+        IoStream stream = UiLinkManagerHelper.open(autoDetectedPort);
         IncomingDataBuffer incomingData = stream.getDataBuffer();
         byte[] commandBytes = BinaryProtocol.getTextCommandBytes("hello");
         stream.sendPacket(commandBytes);

@@ -17,7 +17,6 @@ import com.rusefi.util.IoUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Closeable;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.TreeSet;
@@ -81,13 +80,6 @@ public class LinkManager implements Closeable {
             }
         });
         commandQueue = new CommandQueue(this);
-    }
-
-    @NotNull
-    public static IoStream open(String port) throws IOException {
-        if (TcpConnector.isTcpPort(port))
-            return TcpIoStream.open(port);
-        return BufferedSerialIoStream.openPort(port);
     }
 
     @NotNull
