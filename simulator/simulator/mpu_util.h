@@ -7,7 +7,7 @@ inline bool isValidCanRxPin(brain_pin_e) { return true; }
 inline void canHwInfo(CANDriver*) { return; }
 #endif // HAL_USE_CAN
 
- bool allowFlashWhileRunning() ;
+ bool mcuCanFlashWhileRunning() ;
  void causeHardFault() ;
 
 
