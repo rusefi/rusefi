@@ -116,10 +116,13 @@ bool getNeedToWriteConfiguration() {
 void writeToFlashIfPending() {
 #if (EFI_FLASH_WRITE_THREAD == TRUE)
 	// with a flash write thread, the schedule happens directly from
-	// setNeedToWriteConfiguration, so there's nothing to do here
-	return;
+	// setNeedToWriteConfiguration and writing happens from flash thread,
+	// so there's nothing to do here
+	if (allowFlashWhileRunning()) {
+		return;
+	}
 #endif
-	if (allowFlashWhileRunning() || !getNeedToWriteConfiguration()) {
+	if (!getNeedToWriteConfiguration()) {
 		// Allow sensor timeouts again now that we're done (and a little time has passed)
 		Sensor::inhibitTimeouts(false);
 		return;
