@@ -9,8 +9,8 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
@@ -41,19 +41,19 @@ public class PortDetector {
     public static SerialAutoChecker.AutoDetectResult autoDetectSerial(Function<SerialAutoChecker.CallbackContext, Void> callback, PortDetector.DetectorMode mode) {
         String rusEfiAddress = System.getProperty("rusefi.address");
         if (rusEfiAddress != null) {
-            return getSignatureFromPorts(mode, callback, new String[] {rusEfiAddress});
+            return getSignatureFromPorts(mode, callback, Set.of(rusEfiAddress));
         }
-        String[] serialPorts = getPortNames();
-        if (serialPorts.length == 0) {
+        final Set<String> serialPorts = LinkManager.getCommPorts();
+        if (serialPorts.isEmpty()) {
             log.error("No serial ports detected");
             return new SerialAutoChecker.AutoDetectResult(null, null);
         }
-        log.info("Trying " + Arrays.toString(serialPorts));
+        log.info("Trying [" + String.join(", ", serialPorts) + "]");
         return getSignatureFromPorts(mode, callback, serialPorts);
     }
 
     @NotNull
-    private static SerialAutoChecker.AutoDetectResult getSignatureFromPorts(DetectorMode mode, Function<SerialAutoChecker.CallbackContext, Void> callback, String[] serialPorts) {
+    private static SerialAutoChecker.AutoDetectResult getSignatureFromPorts(DetectorMode mode, Function<SerialAutoChecker.CallbackContext, Void> callback, Set<String> serialPorts) {
         List<Thread> serialFinder = new ArrayList<>();
         CountDownLatch portFound = new CountDownLatch(1);
         AtomicReference<SerialAutoChecker.AutoDetectResult> result = new AtomicReference<>();
@@ -101,13 +101,6 @@ public class PortDetector {
 
     public static SerialAutoChecker.AutoDetectResult autoDetectSerial(Function<SerialAutoChecker.CallbackContext, Void> callback) {
         return autoDetectSerial(callback, PortDetector.DetectorMode.DETECT_TS);
-    }
-
-    private static String[] getPortNames() {
-//        long now = System.currentTimeMillis();
-        String[] portNames = LinkManager.getCommPorts();
-//        log.info("Took " + (System.currentTimeMillis() - now));
-        return portNames;
     }
 
     @Nullable

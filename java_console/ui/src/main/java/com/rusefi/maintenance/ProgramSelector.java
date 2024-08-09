@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -201,9 +202,9 @@ public class ProgramSelector {
                 if (PortDetector.AUTO.equals(ecuPort)) {
                     return true;
                 } else {
-                    final String[] currentPorts = LinkManager.getCommPorts();
+                    final Set<String> currentPorts = LinkManager.getCommPorts();
                     log.info("currentPorts: [" + String.join(",", currentPorts) + "]");
-                    return !Arrays.stream(LinkManager.getCommPorts()).anyMatch(ecuPort::equals);
+                    return !LinkManager.getCommPorts().contains(ecuPort);
                 }
             },
             callbacks
@@ -211,17 +212,17 @@ public class ProgramSelector {
     }
 
     private static List<String> waitForNewPortAppeared(
-        final String[] portsBefore,
+        final Set<String> portsBefore,
         final UpdateOperationCallbacks callbacks
     ) {
         final List<String> newPorts = new ArrayList<>();
         waitForPredicate(
             "Waiting for new port to appear...",
             () -> {
-                final String[] portsAfter = LinkManager.getCommPorts();
+                final Set<String> portsAfter = LinkManager.getCommPorts();
                 log.info("portsAfter: [" + String.join(",", portsAfter) + "]");
                 for (String s : portsAfter) {
-                    if (!Arrays.stream(portsBefore).anyMatch(s::equals)) {
+                    if (!portsBefore.contains(s)) {
                         // This item is in the after list but not before list
                         newPorts.add(s);
                     }
@@ -235,7 +236,7 @@ public class ProgramSelector {
 
     private static void flashOpenbltSerialAutomatic(JComponent parent, String ecuPort, UpdateOperationCallbacks callbacks) {
         AutoupdateUtil.assertNotAwtThread();
-        final String[] portsBefore = LinkManager.getCommPorts();
+        final Set<String> portsBefore = LinkManager.getCommPorts();
         rebootToOpenblt(parent, ecuPort, callbacks);
 
         // invoking blocking method
@@ -261,7 +262,7 @@ public class ProgramSelector {
 
         if (newItems.size() > 1) {
             // More than one port appeared? whattt?
-            callbacks.logLine("Unable to find ECU after reboot as multiple serial ports appeared. Before: " + portsBefore.length);
+            callbacks.logLine("Unable to find ECU after reboot as multiple serial ports appeared. Before: " + portsBefore.size());
             callbacks.error();
             return;
         }
