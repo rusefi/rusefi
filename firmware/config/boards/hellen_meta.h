@@ -301,7 +301,6 @@ static void enableHellenSpi2() {
 
 inline void setHellenSdCardSpi2() {
   enableHellenSpi2();
-	engineConfiguration->isSdCardEnabled = true;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_2;
 	engineConfiguration->sdCardCsPin = H_SPI2_CS;
 }

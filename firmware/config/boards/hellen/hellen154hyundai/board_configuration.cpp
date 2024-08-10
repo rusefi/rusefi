@@ -137,6 +137,7 @@ void setBoardDefaultConfiguration() {
 	setInjectorPins();
 	setIgnitionPins();
 
+	engineConfiguration->isSdCardEnabled = true;
 	setHellenCan();
 
 	engineConfiguration->fuelPumpPin = Gpio::H144_OUT_IO9;
