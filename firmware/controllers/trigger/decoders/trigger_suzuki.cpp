@@ -35,7 +35,7 @@ void initializeSuzukiG13B(TriggerWaveform *s) {
 }
 
 void initializeSuzukiK6A(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Both);
 	float w = 5;
 
   int secondTooth = 15;
