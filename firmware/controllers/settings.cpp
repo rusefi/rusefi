@@ -344,6 +344,7 @@ static void benchSetPinValue(const char *pinName, int bit) {
 	if (pin == Gpio::Invalid) {
 		return;
 	}
+	efiSetPadModeWithoutOwnershipAcquisition("bench_pin_test", pin, PAL_MODE_OUTPUT_PUSHPULL);
 	// low-level API which does not care about 'qcDirectPinControlMode'
 	palWritePad(getHwPort("write", pin), getHwPin("write", pin), bit);
 	efiPrintf("pin %s set value", hwPortname(pin));
