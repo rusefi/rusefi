@@ -35,13 +35,13 @@ void initializeSuzukiG13B(TriggerWaveform *s) {
 }
 
 void initializeSuzukiK6A(TriggerWaveform *s) {
-	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Both);
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 	float w = 5;
 
   int secondTooth = 15;
 
-  // a bit lame: we start with falling front of first tooth
-  s->addEvent360(5, TriggerValue::FALL);
+  // a bit lame: we start with rising front of first tooth
+  s->addEvent360(5, TriggerValue::RISE);
 
   s->addToothRiseFall(secondTooth, w);
   s->addToothRiseFall(43, w);
@@ -55,8 +55,8 @@ void initializeSuzukiK6A(TriggerWaveform *s) {
   s->addToothRiseFall(240 + secondTooth, w);
   s->addToothRiseFall(283, w);
 
-  // a bit lame: we end with rising front of first tooth
-  s->addEvent360(360, TriggerValue::RISE);
+  // a bit lame: we end with falling front of first tooth
+  s->addEvent360(360, TriggerValue::FALL);
 
 	s->setTriggerSynchronizationGap(4.47);
 	s->setSecondTriggerSynchronizationGap(0.65);
