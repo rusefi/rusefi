@@ -133,7 +133,7 @@ int Tle9104::spi_validate(uint16_t rx)
 	bool parityOk = !parityBit(rx);
 	if (!parityOk) {
 		spi_parity_err_cnt++;
-		return -1;
+		return -53;
 	}
 
 	if (rx & TLE9104_FAULT_GLOBAL) {
@@ -519,7 +519,7 @@ int Tle9104::init() {
 	}
 	// No chip detected if ID is wrong
 	if (id != 0xB1) {
-		return -1;
+		return -54;
 	}
 
 	ret = chip_init();
@@ -543,8 +543,8 @@ int tle9104_add(Gpio base, int index, const tle9104_config* cfg) {
 	Tle9104& chip = chips[index];
 
 	/* already added? */
-	if (chip.cfg != NULL) {
-		return -1;
+	if (chip.cfg != nullptr) {
+		return -52;
 	}
 
 	chip.cfg = cfg;
@@ -565,7 +565,7 @@ void initAll9104(const tle9104_config *configs) {
 #else // BOARD_TLE9104_COUNT > 0
 
 int tle9104_add(Gpio, int, const tle9104_config*) {
-	return -1;
+	return -222;
 }
 
 #endif // BOARD_TLE9104_COUNT

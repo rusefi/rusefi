@@ -468,8 +468,7 @@ const char *gpiochips_getPinName(brain_pin_e pin) {
 	return nullptr;
 }
 
-int gpiochip_register(brain_pin_e base, const char *name, GpioChip&, size_t size)
-{
+int gpiochip_register(brain_pin_e base, const char *name, GpioChip&, size_t size) {
 	(void)base; (void)name; (void)size;
 
 	return 0;
