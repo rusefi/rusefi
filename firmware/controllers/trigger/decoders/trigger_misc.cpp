@@ -199,3 +199,26 @@ void configure60degSingleTooth(TriggerWaveform *s) {
 	s->isSynchronizationNeeded = false;
 	s->useOnlyPrimaryForSync = true;
 }
+
+void configureArcticCat(TriggerWaveform *s) {
+  s->initialize(TWO_STROKE, SyncEdge::Rise);
+
+  int totalTeethCount = 24;
+  float engineCycle = TWO_STROKE_CYCLE_DURATION;
+  float toothWidth = 0.5;
+
+    addSkippedToothTriggerEvents(TriggerWheel::T_PRIMARY, s, totalTeethCount, 0, toothWidth, /*offset*/0, engineCycle,
+    		/*from*/ 30 + 1, /* to */ 195 + 1);
+
+
+    addSkippedToothTriggerEvents(TriggerWheel::T_PRIMARY, s, totalTeethCount, 0, toothWidth, /*offset*/0, engineCycle,
+    		/*from*/ 210 + 1, /* to */ NO_RIGHT_FILTER);
+
+  s->setTriggerSynchronizationGap(2);
+  int c = 9;
+  for (int gapIndex = 1; gapIndex <= c; gapIndex++) {
+    s->setTriggerSynchronizationGap3(gapIndex, 0.75, 1.25);
+  }
+
+
+}

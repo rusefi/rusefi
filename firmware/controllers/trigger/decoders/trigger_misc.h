@@ -24,3 +24,4 @@ void configureBenelli(TriggerWaveform *s);
  * @param s Trigger waveform visitor to config
  */
 void configure60degSingleTooth(TriggerWaveform *s);
+void configureArcticCat(TriggerWaveform *s);

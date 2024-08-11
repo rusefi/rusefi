@@ -261,7 +261,7 @@ void TriggerWaveform::addEvent(angle_t angle, TriggerValue const state, TriggerW
 
 #if EFI_UNIT_TEST
 	if (printTriggerDebug) {
-		printf("addEvent2 %.2f i=%d r/f=%d\r\n", angle, channelIndex, state);
+		printf("addEvent2 %.2f i=%d front=%d\r\n", angle, channelIndex, state);
 	}
 #endif
 
@@ -742,6 +742,9 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case trigger_type_e::TT_ARCTIC_CAT:
+	  configureArcticCat(this);
+	  break;
+
 	case trigger_type_e::TT_NISSAN_HR:
 	  initializeNissanHRcrank(this);
     break;
