@@ -25,7 +25,7 @@ void setStepperHw() {
 	engineConfiguration->stepperDcIo[0].directionPin2 = Gpio::Unassigned;
 	engineConfiguration->stepperDcIo[0].disablePin = Gpio::H144_GP_IO5; // ETB_DIS
 	// using 8chan pinout for DC2: A28 (OUT_DC2+ BL pin "A") and A29 (OUT_DC2- BH pin "B")
-	engineConfiguration->stepperDcIo[1].controlPin = H144_UART1_TX; // DC2_PWM
+	engineConfiguration->stepperDcIo[1].controlPin = H144_UART8_TX; // DC2_PWM
 	engineConfiguration->stepperDcIo[1].directionPin1 = H_SPI3_CS; // DC2_DIR
 	engineConfiguration->stepperDcIo[1].directionPin2 = Gpio::Unassigned;
 #endif // HW_HELLEN

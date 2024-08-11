@@ -36,8 +36,8 @@ int detectHellenBoardId();
 void detectHellenBoardType();
 
 // stm32 UART8
-#define H144_UART1_RX Gpio::E0
-#define H144_UART1_TX Gpio::E1
+#define H144_UART8_RX Gpio::E0
+#define H144_UART8_TX Gpio::E1
 
 // stm32 UART2
 #define H144_UART2_RX Gpio::D6

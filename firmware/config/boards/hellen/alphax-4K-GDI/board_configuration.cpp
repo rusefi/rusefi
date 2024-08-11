@@ -2,6 +2,7 @@
 #include "pch.h"
 #include "defaults.h"
 #include "hellen_meta.h"
+#include "drivers/gpio/tle9104.h"
 
 void setBoardConfigOverrides() {
     setHellenSdCardSpi1Hardware();
@@ -22,17 +23,46 @@ void setBoardConfigOverrides() {
 }
 
 void setBoardDefaultConfiguration() {
-	engineConfiguration->injectionPins[0] = Gpio::H144_LS_1;
-	engineConfiguration->injectionPins[1] = Gpio::H144_LS_2;
-	engineConfiguration->injectionPins[2] = Gpio::H144_LS_3;
-	engineConfiguration->injectionPins[3] = Gpio::H144_LS_4;
+	engineConfiguration->injectionPins[0] = Gpio::TLE9104_0_OUT_0;
+	engineConfiguration->injectionPins[1] = Gpio::TLE9104_0_OUT_1;
+	engineConfiguration->injectionPins[2] = Gpio::TLE9104_0_OUT_2;
+	engineConfiguration->injectionPins[3] = Gpio::TLE9104_0_OUT_3;
 
+	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP1;
 	engineConfiguration->clt.adcChannel = H144_IN_CLT;
 	engineConfiguration->iat.adcChannel = H144_IN_IAT;
 	engineConfiguration->tps1_1AdcChannel = H144_IN_TPS;
 	engineConfiguration->tps1_2AdcChannel = H144_IN_TPS2;
 	setPPSInputs(H144_IN_PPS, H144_IN_PPS2);
 }
+
+static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
+	{
+		.spi_bus = &SPID2,
+		.spi_config = {
+			.circular = false,
+			.end_cb = NULL,
+			.ssport = GPIOD,
+			.sspad = 4,
+			.cr1 =
+				SPI_CR1_16BIT_MODE |
+				SPI_CR1_SSM |
+				SPI_CR1_SSI |
+				((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	// div = 16
+				SPI_CR1_MSTR |
+				SPI_CR1_CPHA |
+				0,
+			.cr2 = SPI_CR2_16BIT_MODE
+		},
+		.direct_io = {
+			{ .port = GPIOD, .pad = 3 },
+			{ .port = GPIOA, .pad = 9 },
+			{ .port = GPIOG, .pad = 14 },
+			{ .port = GPIOG, .pad = 5 }
+		},
+		.resn = Gpio::Unassigned,
+		.en   = Gpio::Unassigned
+	}};
 
 /*PUBLIC_API_WEAK*/ void boardInitHardware() {
   setHellenMegaEnPin();
@@ -56,6 +86,16 @@ void setBoardDefaultConfiguration() {
 	    csLs4.initPin("csLs4", Gpio::H144_GP_IO4);
 	    csLs4.setValue(1);
     }
+	{
+	  static OutputPin TleEn;
+	  TleEn.initPin("TLE9104 En", H144_UART8_RX);
+	  TleEn.setValue(1);
+	  }
+	  {
+	    static OutputPin TleReset;
+	    TleReset.initPin("TLE9104 Reset", H144_UART8_TX);
+	    TleReset.setValue(1);
+    }
     {
     	static OutputPin csDcEtb;
 	    csDcEtb.initPin("cs-dc-etb", Gpio::H144_GP_IO5);
@@ -66,5 +106,20 @@ void setBoardDefaultConfiguration() {
 	    csDcAux.initPin("cs-dc-aux", Gpio::H144_GP_IO6);
 	    csDcAux.setValue(1);
     }
-
 }
+
+static Gpio OUTPUTS[] = {
+	Gpio::TLE9104_0_OUT_0,
+	Gpio::TLE9104_0_OUT_1,
+	Gpio::TLE9104_0_OUT_2,
+	Gpio::TLE9104_0_OUT_3,
+};
+
+int getBoardMetaOutputsCount() {
+    return efi::size(OUTPUTS);
+}
+
+Gpio* getBoardMetaOutputs() {
+    return OUTPUTS;
+}
+

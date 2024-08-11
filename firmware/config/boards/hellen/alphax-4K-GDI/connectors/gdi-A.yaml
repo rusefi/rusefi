@@ -91,6 +91,7 @@ pins:
     function: TPS 1 signal
     ts_name: ___ TPS1
     meta: H144_IN_TPS
+    color: green
     type: av
     class: analog_inputs
 
@@ -98,12 +99,14 @@ pins:
     function: TPS 2 signal
     ts_name: ___ TPS2
     meta: H144_IN_TPS2
+    color: blue
     type: av
     class: analog_inputs
 
 
   - pin: 21A
     function: ECT CLT Coolant
+    color: grey
     type: at
     meta: H144_IN_CLT
     class: analog_inputs
@@ -111,6 +114,7 @@ pins:
 
   - pin: 22A
     function: IAT
+    color: blue
     type: at
     meta: H144_IN_IAT
     class: analog_inputs
@@ -118,6 +122,7 @@ pins:
   - pin: 23A
     function: MAP Signal
     type: av
+    color: yellow
     meta: H144_IN_MAP1
     class: analog_inputs
 
