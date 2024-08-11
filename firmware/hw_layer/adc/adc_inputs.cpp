@@ -29,12 +29,12 @@ static uint32_t slowAdcErrorsCount = 0;
 
 static float mcuTemperature;
 
-static AdcChannelMode adcHwChannelMode[EFI_ADC_TOTAL_CHANNELS];
+static adc_channel_mode_e adcHwChannelMode[EFI_ADC_TOTAL_CHANNELS];
 
 // todo: move this flag to Engine god object
 static int adcDebugReporting = false;
 
-AdcChannelMode getAdcMode(adc_channel_e hwChannel) {
+adc_channel_mode_e getAdcMode(adc_channel_e hwChannel) {
 	return adcHwChannelMode[hwChannel];
 }
 
@@ -49,7 +49,7 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 	}
 
 #if EFI_USE_FAST_ADC
-	if (adcHwChannelMode[hwChannel] == AdcChannelMode::Fast) {
+	if (adcHwChannelMode[hwChannel] == ADC_FAST) {
 		return fastAdc.getAvgAdcValue(hwChannel);
 	}
 #endif // EFI_USE_FAST_ADC
@@ -151,7 +151,7 @@ void addFastAdcChannel(const char*, adc_channel_e hwChannel) {
 	fastAdc.enableChannel(hwChannel);
 #endif
 
-	adcHwChannelMode[hwChannel] = AdcChannelMode::Fast;
+	adcHwChannelMode[hwChannel] = ADC_FAST;
 	// Nothing to do for slow channels, input is mapped to analog in init_sensors.cpp
 }
 
@@ -160,20 +160,20 @@ void removeChannel(const char*, adc_channel_e hwChannel) {
 		return;
 	}
 #if EFI_USE_FAST_ADC
-	if (adcHwChannelMode[hwChannel] == AdcChannelMode::Fast) {
+	if (adcHwChannelMode[hwChannel] == ADC_FAST) {
 		/* TODO: */
 		//fastAdc.disableChannel(hwChannel);
 	}
 #endif
 
-	adcHwChannelMode[hwChannel] = AdcChannelMode::Off;
+	adcHwChannelMode[hwChannel] = ADC_OFF;
 }
 
 // Weak link a stub so that every board doesn't have to implement this function
 __attribute__((weak)) void setAdcChannelOverrides() { }
 
 static void configureInputs() {
-	memset(adcHwChannelMode, (int)AdcChannelMode::Off, sizeof(adcHwChannelMode));
+	memset(adcHwChannelMode, ADC_OFF, sizeof(adcHwChannelMode));
 
 	/**
 	 * order of analog channels here is totally random and has no meaning

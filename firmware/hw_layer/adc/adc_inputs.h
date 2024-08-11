@@ -70,13 +70,13 @@ inline bool isAdcChannelOffChip(adc_channel_e hwChannel) {
 
 #if HAL_USE_ADC
 
-enum class AdcChannelMode : char {
-	Off,
-	Slow,
-	Fast
-};
+typedef enum {
+	ADC_OFF = 0,
+	ADC_SLOW = 1,
+	ADC_FAST = 2,
+} adc_channel_mode_e;
 
-AdcChannelMode getAdcMode(adc_channel_e hwChannel);
+adc_channel_mode_e getAdcMode(adc_channel_e hwChannel);
 void initAdcInputs();
 
 // wait until at least 1 slowADC sampling is complete
