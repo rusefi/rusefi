@@ -33,7 +33,7 @@ static SPIConfig spiCfg = {
         .data_cb = NULL,
         .error_cb = NULL,
 #endif
-		.ssport = NULL,
+		.ssport = nullptr,
 		.sspad = 0,
 		.cr1 =
 				SPI_CR1_16BIT_MODE |
@@ -49,6 +49,8 @@ public:
 
 protected:
 	void select() override {
+// revive MC33816 driver, also support bus sharing #6781
+// should be somewhere but not here 	  spiStart(driver, &spiCfg);
 		spiSelect(driver);
 	}
 
@@ -181,6 +183,7 @@ void Pt2001::init() {
 	}
 
 	chipSelect.initPin("mc33 CS", engineConfiguration->mc33816_cs /*, &engineConfiguration->csPinMode*/);
+	chipSelect.setValue(1);
 
 	// Initialize the chip via ResetB
 	resetB.initPin("mc33 RESTB", engineConfiguration->mc33816_rstb);

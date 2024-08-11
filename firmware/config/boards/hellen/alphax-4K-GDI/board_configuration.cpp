@@ -67,7 +67,8 @@ static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
 		},
 		.resn = Gpio::Unassigned,
 		.en   = Gpio::Unassigned
-	},
+	}
+/*	,
 	{
 		.spi_bus = &SPID2,
 		.spi_config = {
@@ -119,7 +120,9 @@ static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
 		},
 		.resn = Gpio::Unassigned,
 		.en   = Gpio::Unassigned
-	}};
+	}
+*/
+	};
 
 /*PUBLIC_API_WEAK*/ void boardInitHardware() {
   setHellenMegaEnPin();
@@ -164,7 +167,7 @@ static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
 	    csDcAux.setValue(1);
     }
 
-  initAll9104(tle9104_cfg);
+//  initAll9104(tle9104_cfg);
 }
 
 static Gpio OUTPUTS[] = {
