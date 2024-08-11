@@ -741,6 +741,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		configure12ToothCrank(this);
 		break;
 
+	case trigger_type_e::TT_ARCTIC_CAT:
 	case trigger_type_e::TT_NISSAN_HR:
 	  initializeNissanHRcrank(this);
     break;
