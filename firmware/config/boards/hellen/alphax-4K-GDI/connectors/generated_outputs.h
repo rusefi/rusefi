@@ -5,12 +5,18 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
-	Gpio::H144_OUT_IO1, // 1B Port injector 4
-	Gpio::H144_OUT_IO2, // 2B Port injector 3
-	Gpio::H144_OUT_IO3, // 3B Port injector 2
-	Gpio::H144_OUT_IO4, // 4B Port injector 1
-	Gpio::H144_OUT_IO5, // 5B Main Relay Control
-	Gpio::H144_OUT_IO6, // 7B Fuel Pump
+	Gpio::TLE9104_0_OUT_3, // 1B Port injector 4
+	Gpio::TLE9104_0_OUT_2, // 2B Port injector 3
+	Gpio::TLE9104_0_OUT_1, // 3B Port injector 2
+	Gpio::TLE9104_0_OUT_0, // 4B Port injector 1
+	Gpio::TLE9104_1_OUT_0, // 5B Main Relay Control
+	Gpio::TLE9104_1_OUT_1, // 7B Fuel Pump
+	Gpio::TLE9104_1_OUT_2, // 8B Fan 1
+	Gpio::TLE9104_1_OUT_3, // 8B Fan 2
+	Gpio::TLE9104_2_OUT_0, // 29B VVT1
+	Gpio::TLE9104_2_OUT_1, // 30B VVT2
+	Gpio::TLE9104_2_OUT_2, // 31B VVT3
+	Gpio::TLE9104_2_OUT_3, // 32B VVT4
 	Gpio::H144_IGN_4, // 11A Ignition 4
 	Gpio::H144_IGN_3, // 12A Ignition 3
 	Gpio::H144_IGN_2, // 13A Ignition 2
@@ -21,6 +27,12 @@ Gpio GENERATED_OUTPUTS = {
 // "4B Port injector 1",
 // "5B Main Relay Control",
 // "7B Fuel Pump",
+// "8B Fan 1",
+// "8B Fan 2",
+// "29B VVT1",
+// "30B VVT2",
+// "31B VVT3",
+// "32B VVT4",
 // "11A Ignition 4",
 // "12A Ignition 3",
 // "13A Ignition 2",
