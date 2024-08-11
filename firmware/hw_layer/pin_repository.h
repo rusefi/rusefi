@@ -16,7 +16,7 @@
 #include "plain_pin_repository.h"
 
 bool isBrainPinValid(Gpio brainPin);
-
+const char *hwOnChipPhysicalPinName(ioportid_t hwPort, int hwPin);
 void initPinRepository();
 bool brain_pin_is_onchip(Gpio brainPin);
 bool brain_pin_is_ext(Gpio brainPin);

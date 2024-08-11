@@ -194,7 +194,7 @@ __attribute__((weak)) const char * getBoardSpecificPinName(brain_pin_e /*brainPi
 	return nullptr;
 }
 
-static const char *hwOnChipPhysicalPinName(ioportid_t hwPort, int hwPin) {
+const char *hwOnChipPhysicalPinName(ioportid_t hwPort, int hwPin) {
   portNameStream.eos = 0; // reset
 	if (hwPort == GPIO_NULL) {
 		return "NONE";
