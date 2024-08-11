@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Tue Aug 06 20:47:59 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sun Aug 11 02:50:28 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -414,6 +414,8 @@ case trigger_type_e::TT_60_2_WRONG_POLARITY:
   return "TT_60_2_WRONG_POLARITY";
 case trigger_type_e::TT_6_TOOTH_CRANK:
   return "TT_6_TOOTH_CRANK";
+case trigger_type_e::TT_ARCTIC_CAT:
+  return "TT_ARCTIC_CAT";
 case trigger_type_e::TT_BENELLI_TRE:
   return "TT_BENELLI_TRE";
 case trigger_type_e::TT_CHRYSLER_NGC_36_2_2:
