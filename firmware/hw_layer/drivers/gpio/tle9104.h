@@ -20,6 +20,7 @@ struct tle9104_config {
 	Gpio en;
 };
 
+void initAll9104(const tle9104_config *configs);
 int tle9104_add(Gpio base, int index, const tle9104_config* cfg);
 
 // This example config worked on the bench!

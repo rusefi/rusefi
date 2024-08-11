@@ -4,6 +4,8 @@
 
 #if defined(BOARD_TLE9104_COUNT) && BOARD_TLE9104_COUNT > 0
 
+#define TLE9204_OUT_COUNT 4
+
 /*
  * TODO list:
  * - support driving outputs over SPI
@@ -549,6 +551,15 @@ int tle9104_add(Gpio base, int index, const tle9104_config* cfg) {
 	chip.drv_state = TLE9104_WAIT_INIT;
 
 	return gpiochip_register(base, DRIVER_NAME, chip, 4);
+}
+
+void initAll9104(const tle9104_config *configs) {
+  for (int chipIndex = 0;chipIndex < BOARD_TLE9104_COUNT;chipIndex++) {
+	  int ret = tle9104_add((Gpio)(Gpio::TLE9104_0_OUT_0 + TLE9204_OUT_COUNT * chipIndex), chipIndex, &configs[chipIndex]);
+	  if (ret < 0) {
+	    criticalError("tle9104_add");
+	  }
+	}
 }
 
 #else // BOARD_TLE9104_COUNT > 0

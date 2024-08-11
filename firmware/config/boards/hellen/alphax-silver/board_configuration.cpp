@@ -143,15 +143,7 @@ static void board_init_ext_gpios() {
 	  TleEn.setValue(1);
 	}
 
-	int ret = tle9104_add(Gpio::TLE9104_0_OUT_0, 0, &tle9104_cfg[0]);
-	if (ret < 0) {
-		/* error */
-	}
-
-	ret = tle9104_add(Gpio::TLE9104_1_OUT_0, 1, &tle9104_cfg[1]);
-	if (ret < 0) {
-		/* error */
-	}
+  initAll9104(tle9104_cfg);
 }
 
 /**

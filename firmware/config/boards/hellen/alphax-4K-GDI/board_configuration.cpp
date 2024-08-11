@@ -106,6 +106,8 @@ static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
 	    csDcAux.initPin("cs-dc-aux", Gpio::H144_GP_IO6);
 	    csDcAux.setValue(1);
     }
+
+  initAll9104(tle9104_cfg);
 }
 
 static Gpio OUTPUTS[] = {
