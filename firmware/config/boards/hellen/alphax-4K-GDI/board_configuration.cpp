@@ -28,6 +28,11 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->injectionPins[2] = Gpio::TLE9104_0_OUT_2;
 	engineConfiguration->injectionPins[3] = Gpio::TLE9104_0_OUT_3;
 
+	engineConfiguration->mainRelayPin = Gpio::TLE9104_1_OUT_0;
+	engineConfiguration->fuelPumpPin = Gpio::TLE9104_1_OUT_1;
+	engineConfiguration->fanPin = Gpio::TLE9104_1_OUT_2;
+
+
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP1;
 	engineConfiguration->clt.adcChannel = H144_IN_CLT;
 	engineConfiguration->iat.adcChannel = H144_IN_IAT;
@@ -41,8 +46,8 @@ static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
 		.spi_bus = &SPID2,
 		.spi_config = {
 			.circular = false,
-			.end_cb = NULL,
-			.ssport = GPIOD,
+			.end_cb = nullptr,
+			.ssport = GPIOD, // H144_GP_IO1
 			.sspad = 4,
 			.cr1 =
 				SPI_CR1_16BIT_MODE |
@@ -55,10 +60,62 @@ static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
 			.cr2 = SPI_CR2_16BIT_MODE
 		},
 		.direct_io = {
-			{ .port = GPIOD, .pad = 3 },
-			{ .port = GPIOA, .pad = 9 },
-			{ .port = GPIOG, .pad = 14 },
-			{ .port = GPIOG, .pad = 5 }
+			{ .port = GPIOD, .pad = 3 }, // H144_OUT_IO1
+			{ .port = GPIOA, .pad = 9 }, // H144_OUT_IO2
+			{ .port = GPIOG, .pad = 14 }, // H144_OUT_IO3
+			{ .port = GPIOG, .pad = 5 } // H144_OUT_IO4
+		},
+		.resn = Gpio::Unassigned,
+		.en   = Gpio::Unassigned
+	},
+	{
+		.spi_bus = &SPID2,
+		.spi_config = {
+			.circular = false,
+			.end_cb = nullptr,
+			.ssport = GPIOD, // H144_GP_IO2
+			.sspad = 7,
+			.cr1 =
+				SPI_CR1_16BIT_MODE |
+				SPI_CR1_SSM |
+				SPI_CR1_SSI |
+				((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	// div = 16
+				SPI_CR1_MSTR |
+				SPI_CR1_CPHA |
+				0,
+			.cr2 = SPI_CR2_16BIT_MODE
+		},
+		.direct_io = {
+			{ .port = GPIOD, .pad = 2 }, // H144_OUT_IO5
+			{ .port = GPIOG, .pad = 11 }, // H144_OUT_IO6
+			{ .port = GPIOG, .pad = 3 }, // H144_OUT_IO7
+			{ .port = GPIOG, .pad = 4 } // H144_OUT_IO8
+		},
+		.resn = Gpio::Unassigned,
+		.en   = Gpio::Unassigned
+	},
+	{
+		.spi_bus = &SPID2,
+		.spi_config = {
+			.circular = false,
+			.end_cb = nullptr,
+			.ssport = GPIOG, // H144_GP_IO3
+			.sspad = 10,
+			.cr1 =
+				SPI_CR1_16BIT_MODE |
+				SPI_CR1_SSM |
+				SPI_CR1_SSI |
+				((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	// div = 16
+				SPI_CR1_MSTR |
+				SPI_CR1_CPHA |
+				0,
+			.cr2 = SPI_CR2_16BIT_MODE
+		},
+		.direct_io = {
+			{ .port = GPIOG, .pad = 13 }, // H144_OUT_IO9
+			{ .port = GPIOG, .pad = 12 }, // H144_OUT_IO10
+			{ .port = GPIOG, .pad = 2 }, // H144_OUT_IO11
+			{ .port = GPIOA, .pad = 8 } // H144_OUT_IO12
 		},
 		.resn = Gpio::Unassigned,
 		.en   = Gpio::Unassigned

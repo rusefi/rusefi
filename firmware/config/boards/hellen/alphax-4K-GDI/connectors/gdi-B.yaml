@@ -2,7 +2,7 @@ meta: config/boards/hellen_meta.h
 
 pins:
   - pin: 1B
-    meta: H144_OUT_IO1
+    id: TLE9104_0_OUT_3
     class: outputs
     ts_name: ___ Port injector 4
     function: Port injector 4
@@ -10,7 +10,7 @@ pins:
     type: ls
 
   - pin: 2B
-    meta: H144_OUT_IO2
+    id: TLE9104_0_OUT_2
     class: outputs
     ts_name: ___ Port injector 3
     function: Port injector 3
@@ -18,7 +18,7 @@ pins:
     type: ls
 
   - pin: 3B
-    meta: H144_OUT_IO3
+    id: TLE9104_0_OUT_1
     class: outputs
     ts_name: ___ Port injector 2
     function: Port injector 2
@@ -26,7 +26,7 @@ pins:
     type: ls
 
   - pin: 4B
-    meta: H144_OUT_IO4
+    id: TLE9104_0_OUT_0
     class: outputs
     ts_name: ___ Port injector 1
     function: Port injector 1
@@ -34,7 +34,7 @@ pins:
     type: ls
 
   - pin: 5B
-    meta: H144_OUT_IO5
+    id: TLE9104_1_OUT_0
     class: outputs
     ts_name: ___ Main Relay Control
     function: Main relay control
@@ -48,12 +48,25 @@ pins:
     type: 12v
 
   - pin: 7B
-    meta: H144_OUT_IO6
+    id: TLE9104_1_OUT_1
     class: outputs
     function: Fuel Pump Relay Output
     type: ls
     ts_name: ___ Fuel Pump
 
+  - pin: 8B
+    id: TLE9104_1_OUT_2
+    class: outputs
+    function: Fan 1
+    type: ls
+    ts_name: ___ Fan 1
+
+  - pin: 8B
+    id: TLE9104_1_OUT_3
+    class: outputs
+    function: Fan 2
+    type: ls
+    ts_name: ___ Fan 2
 
   - pin: 19B
     function: PPS 1
@@ -74,6 +87,38 @@ pins:
   - pin: 26B
     function: Power GND
     type: gnd
+
+  - pin: 29B
+    id: TLE9104_2_OUT_0
+    class: outputs
+    ts_name: ___ VVT1
+    function: VVT1
+    type: ls
+    color: orange
+
+  - pin: 30B
+    id: TLE9104_2_OUT_1
+    class: outputs
+    ts_name: ___ VVT2
+    function: VVT2
+    type: ls
+    color: blue
+
+  - pin: 31B
+    id: TLE9104_2_OUT_2
+    class: outputs
+    ts_name: ___ VVT3
+    function: VVT3
+    type: ls
+    color: white
+
+  - pin: 32B
+    id: TLE9104_2_OUT_3
+    class: outputs
+    ts_name: ___ VVT4
+    function: VVT4
+    type: ls
+    color: green
 
 
 info:
