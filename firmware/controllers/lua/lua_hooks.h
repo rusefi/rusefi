@@ -9,6 +9,7 @@ void luaDeInitPins();
 struct AirmassModelBase;
 AirmassModelBase& getLuaAirmassModel();
 bool getAuxDigital(int index);
+uint32_t getLuaArray(lua_State* l, int paramIndex, uint8_t *data, uint32_t size);
 
 struct LuaOverrideSensor final : public Sensor {
   LuaOverrideSensor(SensorType type, SensorType underlyingType) : Sensor(type) {

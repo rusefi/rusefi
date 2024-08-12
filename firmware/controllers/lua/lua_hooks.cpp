@@ -132,7 +132,7 @@ static int lua_hasSensor(lua_State* l) {
 /**
  * @return number of elements
  */
-static uint32_t getArray(lua_State* l, int paramIndex, uint8_t *data, uint32_t size) {
+uint32_t getLuaArray(lua_State* l, int paramIndex, uint8_t *data, uint32_t size) {
 	uint32_t result = 0;
 
 	luaL_checktype(l, paramIndex, LUA_TTABLE);
@@ -205,7 +205,7 @@ static int lua_txCan(lua_State* l) {
 	// so we have to just iterate until we run out of numbers
 	uint8_t dlc = 0;
 
-	// todo: reduce code duplication with getArray
+	// todo: reduce code duplication with getLuaArray
 	luaL_checktype(l, dataIndex, LUA_TTABLE);
 	while (true) {
 		lua_pushnumber(l, dlc + 1);
@@ -807,7 +807,7 @@ void configureRusefiLuaHooks(lua_State* lState) {
     // checksum stuff
 	lua_register(lState, "crc8_j1850", [](lua_State* l) {
 		uint8_t data[8];
-		uint32_t length = getArray(l, 1, data, sizeof(data));
+		uint32_t length = getLuaArray(l, 1, data, sizeof(data));
 		auto trimLength = luaL_checkinteger(l, 2);
 		int crc = crc8(data, minI(length, trimLength));
 
