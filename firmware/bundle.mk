@@ -29,13 +29,16 @@ endif
 # This weird if statement structure is because Make doesn't have &&
 ifeq ($(AUTOMATION_LTS),true)
 ifneq (,$(AUTOMATION_REF))
-  FOLDER = rusefi.$(AUTOMATION_REF).$(BUNDLE_NAME)
+  BRANCH_PART_OF_FOLDER=$(AUTOMATION_REF)
 else
-  FOLDER = rusefi.lts_unknown.$(BUNDLE_NAME)
+  BRANCH_PART_OF_FOLDER=lts_unknown
 endif
 else
-  FOLDER = rusefi.snapshot.$(BUNDLE_NAME)
+  # todo: (as long as not Windows linux?) invoke bin/find_branch_name_or_snapshot.sh instead?
+  BRANCH_PART_OF_FOLDER=snapshot
 endif
+
+FOLDER = rusefi.$(BRANCH_PART_OF_FOLDER).$(BUNDLE_NAME)
 
 DELIVER = deliver
 ARTIFACTS = ../artifacts
