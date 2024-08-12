@@ -197,15 +197,11 @@ public class ProgramSelector {
         final UpdateOperationCallbacks callbacks
     ) {
         return waitForPredicate(
-            "Waiting for ECU to reboot to OpenBlt...",
+            String.format("Waiting for ECU on port %s to reboot to OpenBlt...", ecuPort),
             () -> {
-                if (PortDetector.AUTO.equals(ecuPort)) {
-                    return true;
-                } else {
-                    final Set<String> currentPorts = LinkManager.getCommPorts();
-                    log.info("currentPorts: [" + String.join(",", currentPorts) + "]");
-                    return !LinkManager.getCommPorts().contains(ecuPort);
-                }
+                final Set<String> currentPorts = LinkManager.getCommPorts();
+                log.info("currentPorts: [" + String.join(",", currentPorts) + "]");
+                return !LinkManager.getCommPorts().contains(ecuPort);
             },
             callbacks
         );
