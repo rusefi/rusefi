@@ -192,19 +192,23 @@ public class ProgramSelector {
         }
     }
 
-    private static boolean waitForEcuPortDisappeared(
+    private static Set<String> waitForEcuPortDisappeared(
         final String ecuPort,
         final UpdateOperationCallbacks callbacks
     ) {
-        return waitForPredicate(
+        // we need the following wrapper to modify local variable in lambda:
+        var currentPortsWrapper = new Object() { Set<String> currentPorts; };
+        waitForPredicate(
             String.format("Waiting for ECU on port %s to reboot to OpenBlt...", ecuPort),
             () -> {
                 final Set<String> currentPorts = LinkManager.getCommPorts();
                 log.info("currentPorts: [" + String.join(",", currentPorts) + "]");
-                return !LinkManager.getCommPorts().contains(ecuPort);
+                currentPortsWrapper.currentPorts = currentPorts;
+                return !currentPorts.contains(ecuPort);
             },
             callbacks
         );
+        return currentPortsWrapper.currentPorts;
     }
 
     private static List<String> waitForNewPortAppeared(
@@ -232,13 +236,12 @@ public class ProgramSelector {
 
     private static void flashOpenbltSerialAutomatic(JComponent parent, String ecuPort, UpdateOperationCallbacks callbacks) {
         AutoupdateUtil.assertNotAwtThread();
-        final Set<String> portsBefore = LinkManager.getCommPorts();
         rebootToOpenblt(parent, ecuPort, callbacks);
 
         // invoking blocking method
-        final boolean ecuPortDisappeared = waitForEcuPortDisappeared(ecuPort, callbacks);
+        final Set<String> portsBefore = waitForEcuPortDisappeared(ecuPort, callbacks);
 
-        if (!ecuPortDisappeared) {
+        if (portsBefore.contains(ecuPort)) {
             callbacks.logLine("Looks like your ECU still haven't rebooted to OpenBLT");
             callbacks.logLine("");
             callbacks.logLine("Try closing and opening console again");
