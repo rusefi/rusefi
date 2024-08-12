@@ -12,7 +12,7 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::TLE9104_1_OUT_0, // 5B Main Relay Control
 	Gpio::TLE9104_1_OUT_1, // 7B Fuel Pump
 	Gpio::TLE9104_1_OUT_2, // 8B Fan 1
-	Gpio::TLE9104_1_OUT_3, // 8B Fan 2
+	Gpio::TLE9104_1_OUT_3, // 9B Fan 2
 	Gpio::TLE9104_2_OUT_0, // 29B VVT1
 	Gpio::TLE9104_2_OUT_1, // 30B VVT2
 	Gpio::TLE9104_2_OUT_2, // 31B VVT3
@@ -28,7 +28,7 @@ Gpio GENERATED_OUTPUTS = {
 // "5B Main Relay Control",
 // "7B Fuel Pump",
 // "8B Fan 1",
-// "8B Fan 2",
+// "9B Fan 2",
 // "29B VVT1",
 // "30B VVT2",
 // "31B VVT3",

@@ -18,7 +18,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::TLE9104_1_OUT_0: return "5B Main Relay Control";
 		case Gpio::TLE9104_1_OUT_1: return "7B Fuel Pump";
 		case Gpio::TLE9104_1_OUT_2: return "8B Fan 1";
-		case Gpio::TLE9104_1_OUT_3: return "8B Fan 2";
+		case Gpio::TLE9104_1_OUT_3: return "9B Fan 2";
 		case Gpio::TLE9104_2_OUT_0: return "29B VVT1";
 		case Gpio::TLE9104_2_OUT_1: return "30B VVT2";
 		case Gpio::TLE9104_2_OUT_2: return "31B VVT3";
