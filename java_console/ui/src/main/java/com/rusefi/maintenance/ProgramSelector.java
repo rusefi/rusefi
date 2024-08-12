@@ -240,9 +240,9 @@ public class ProgramSelector {
         rebootToOpenblt(parent, ecuPort, callbacks);
 
         // invoking blocking method
-        final boolean ecuPrtDisappeared = waitForEcuPortDisappeared(ecuPort, callbacks);
+        final boolean ecuPortDisappeared = waitForEcuPortDisappeared(ecuPort, callbacks);
 
-        if (!ecuPrtDisappeared) {
+        if (!ecuPortDisappeared) {
             callbacks.logLine("Looks like your ECU still haven't rebooted to OpenBLT");
             callbacks.logLine("");
             callbacks.logLine("Try closing and opening console again");
