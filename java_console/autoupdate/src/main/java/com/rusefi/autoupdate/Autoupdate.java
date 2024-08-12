@@ -30,7 +30,7 @@ import static com.rusefi.core.FindFileHelper.findSrecFile;
 
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
-    private static final int VERSION = 20240808;
+    private static final int VERSION = 20240812;
 
     private static final String LOGO_PATH = "/com/rusefi/";
     private static final String LOGO = LOGO_PATH + "logo.png";
@@ -110,20 +110,32 @@ public class Autoupdate {
     }
 
     private static void startConsole(String[] args) {
+        URLClassLoader jarClassLoader = null;
         try {
-            // we want to make sure that files are available to write so we use reflection to get lazy class initialization
-            log.info("Running rusEFI console with " + Arrays.toString(args));
-            // since we are overriding file we cannot just use static java classpath while launching
-            URLClassLoader jarClassLoader = AutoupdateUtil.getClassLoaderByJar(RUSEFI_CONSOLE_JAR);
+            jarClassLoader = AutoupdateUtil.getClassLoaderByJar(RUSEFI_CONSOLE_JAR);
+        } catch (MalformedURLException e) {
+            log.error("Failed to start", e);
+            throw new IllegalStateException("Problem with " + RUSEFI_CONSOLE_JAR, e);
+        }
+        // we want to make sure that files are available to write so we use reflection to get lazy class initialization
+        log.info("Running console with " + Arrays.toString(args));
+        // since we are overriding file we cannot just use static java classpath while launching
+        try {
             hackProperties(jarClassLoader);
+        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
+                 IllegalAccessException e) {
+            log.error("Failed to start", e);
+            throw new IllegalStateException("Failed to update properties", e);
+        }
+        try {
 
             Class mainClass = Class.forName(COM_RUSEFI_LAUNCHER, true, jarClassLoader);
             Method mainMethod = mainClass.getMethod("main", args.getClass());
             mainMethod.invoke(null, new Object[]{args});
-        } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException | NoSuchMethodException |
-                 MalformedURLException e) {
+        } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException |
+                 NoSuchMethodException e) {
             log.error("Failed to start", e);
-            throw new IllegalStateException(e);
+            throw new IllegalStateException("Invoking console", e);
         }
     }
 
