@@ -119,7 +119,7 @@ pins:
     function: Manifold Pressure Sensor
 
   - pin: K32
-    meta: H144_IN_AUX1
+    meta: H144_IN_TPS2
     class: analog_inputs
     ts_name: TPS 2
     function: TPS 2 sensor input
@@ -134,7 +134,7 @@ pins:
     function: Analog Ground
 
   - pin: K35
-    meta: H144_IN_AUX2
+    meta: H144_IN_PPS2
     class: analog_inputs
     ts_name: PPS 2
     function: PPS 2 sensor input
