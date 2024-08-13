@@ -5,7 +5,6 @@ import com.rusefi.core.RusEfiSignature;
 import com.rusefi.core.SignatureHelper;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.ui.StatusConsumer;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -18,11 +17,10 @@ public class DfuHelper {
     private static final Logging log = getLogging(DfuHelper.class);
     private static final String PREFIX = "rusefi_bundle";
 
-    public static void sendDfuRebootCommand(IoStream stream, UpdateOperationCallbacks callbacks, String cmd) {
+    private static void sendDfuRebootCommand(IoStream stream, UpdateOperationCallbacks callbacks, String cmd) {
         byte[] command = BinaryProtocol.getTextCommandBytes(cmd);
         try {
             stream.sendPacket(command);
-            stream.close();
             callbacks.logLine(String.format("Reboot command [%s] sent into %s!\n", cmd, stream));
         } catch (IOException e) {
             callbacks.logLine("Error " + e);

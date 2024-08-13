@@ -75,27 +75,28 @@ public class DfuFlasher {
         AtomicBoolean isSignatureValidated = new AtomicBoolean(true);
         if (!PortDetector.isAutoPort(port)) {
             callbacks.logLine("Using selected " + port + "\n");
-            IoStream stream = BufferedSerialIoStream.openPort(port);
-            AtomicReference<String> signature = new AtomicReference<>();
-            SerialAutoChecker.checkResponse(stream, callbackContext -> {
-                signature.set(callbackContext.getSignature());
-                return null;
-            });
-            if (signature.get() == null) {
-                callbacks.appendLine("");
-                callbacks.appendLine("");
-                callbacks.appendLine("");
-                callbacks.appendLine("Make sure TUNERSTUDIO IS DISCONNECTED FROM ECU");
-                callbacks.appendLine("");
-                callbacks.appendLine("");
-                callbacks.appendLine("");
-              callbacks.appendLine("*** ERROR *** rusEFI has not responded on selected " + port + "\n" +
+            try (final IoStream stream = BufferedSerialIoStream.openPort(port)) {
+                AtomicReference<String> signature = new AtomicReference<>();
+                SerialAutoChecker.checkResponse(stream, callbackContext -> {
+                    signature.set(callbackContext.getSignature());
+                    return null;
+                });
+                if (signature.get() == null) {
+                    callbacks.appendLine("");
+                    callbacks.appendLine("");
+                    callbacks.appendLine("");
+                    callbacks.appendLine("Make sure TUNERSTUDIO IS DISCONNECTED FROM ECU");
+                    callbacks.appendLine("");
+                    callbacks.appendLine("");
+                    callbacks.appendLine("");
+                    callbacks.appendLine("*** ERROR *** rusEFI has not responded on selected " + port + "\n" +
                         "Maybe try automatic serial port detection?");
-                callbacks.error();
-                return null;
+                    callbacks.error();
+                    return null;
+                }
+                boolean isSignatureValidatedLocal = DfuHelper.sendDfuRebootCommand(parent, signature.get(), stream, callbacks, command);
+                isSignatureValidated.set(isSignatureValidatedLocal);
             }
-            boolean isSignatureValidatedLocal = DfuHelper.sendDfuRebootCommand(parent, signature.get(), stream, callbacks, command);
-            isSignatureValidated.set(isSignatureValidatedLocal);
         } else {
             callbacks.logLine("Auto-detecting port...\n");
             // instead of opening the just-detected port we execute the command using the same stream we used to discover port
