@@ -13,7 +13,6 @@
 #include "alternator_controller.h"
 #include "efi_pid.h"
 #include "local_version_holder.h"
-#include "periodic_task.h"
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
