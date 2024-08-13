@@ -15,7 +15,6 @@ bit acCompressorState;AC compressor on
 bit acPressureTooLow;AC pressure too low
 bit acPressureTooHigh;AC pressure too high
 
-int latest_usage_ac_control;AC latest activity
 ! todo: extract some helper which would contain boolean state and most recent toggle time?
 int acSwitchLastChangeTimeMs;
 

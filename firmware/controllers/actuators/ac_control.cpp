@@ -11,7 +11,6 @@ static Deadband<AcController::PRESSURE_DEADBAND_WIDTH> minPressureDeadband;
 static Deadband<AcController::PRESSURE_DEADBAND_WIDTH> maxPressureDeadband;
 
 bool AcController::getAcState() {
-	latest_usage_ac_control = getTimeNowS();
 	auto rpm = Sensor::getOrZero(SensorType::Rpm);
 
 	engineTooSlow = rpm < 500;
