@@ -264,11 +264,6 @@ void waitForSlowAdc(uint32_t lastAdcCounter) {
 	}
 }
 
-int getSlowAdcCounter() {
-	return slowAdcCounter;
-}
-
-
 class SlowAdcController : public PeriodicController<256> {
 public:
 	SlowAdcController() 
