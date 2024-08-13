@@ -9,7 +9,6 @@ static Deadband<5> maxCltDeadband;
 static Deadband<5> maxTpsDeadband;
 
 bool AcController::getAcState() {
-	latest_usage_ac_control = getTimeNowS();
 	auto rpm = Sensor::getOrZero(SensorType::Rpm);
 
 	engineTooSlow = rpm < 500;
