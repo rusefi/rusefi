@@ -17,7 +17,7 @@
 
 #if EFI_PROD_CODE
 
-#include "periodic_task.h"
+#include "periodic_thread_controller.h"
 
 // Just in case we have a mechanism to validate that hardware timer is clocked right and all the
 // conversions between wall clock and hardware frequencies are done right
@@ -107,16 +107,15 @@ void portMicrosecondTimerCallback() {
 	}
 }
 
-class MicrosecondTimerWatchdogController : public PeriodicTimerController {
-	void PeriodicTask() override {
-		efitick_t nowNt = getTimeNowNt();
-
-		// 2 seconds of inactivity would not look right
-		efiAssertVoid(ObdCode::CUSTOM_TIMER_WATCHDOG, nowNt < lastSetTimerTimeNt + 2 * CORE_CLOCK, "Watchdog: no events for 2 seconds!");
+struct MicrosecondTimerWatchdogController : public PeriodicController<256> {
+	MicrosecondTimerWatchdogController()
+		: PeriodicController("MstWatchdog", NORMALPRIO, 2)
+	{
 	}
 
-	int getPeriodMs() override {
-		return 500;
+	void PeriodicTask(efitick_t nowNt) override {
+		// 2 seconds of inactivity would not look right
+		efiAssertVoid(ObdCode::CUSTOM_TIMER_WATCHDOG, nowNt < lastSetTimerTimeNt + 2 * CORE_CLOCK, "Watchdog: no events for 2 seconds!");
 	}
 };
 
