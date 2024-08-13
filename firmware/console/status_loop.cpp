@@ -63,7 +63,6 @@ extern bool main_loop_started;
 #include "pin_repository.h"
 #include "max31855.h"
 #include "single_timer_executor.h"
-#include "periodic_task.h"
 #endif /* EFI_PROD_CODE */
 
 #if EFI_INTERNAL_FLASH

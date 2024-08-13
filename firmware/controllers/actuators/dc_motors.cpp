@@ -7,8 +7,6 @@
 
 #include "pch.h"
 
-#include "periodic_task.h"
-
 #include "dc_motors.h"
 
 	void DcHardware::start(bool useTwoWires,

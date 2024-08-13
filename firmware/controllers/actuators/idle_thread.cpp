@@ -16,7 +16,6 @@
 #include "idle_thread.h"
 #include "idle_hardware.h"
 
-#include "periodic_task.h"
 #include "dc_motors.h"
 
 #if EFI_TUNER_STUDIO

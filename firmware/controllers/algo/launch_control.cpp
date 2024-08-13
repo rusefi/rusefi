@@ -10,7 +10,6 @@
 #if EFI_LAUNCH_CONTROL
 #include "boost_control.h"
 #include "launch_control.h"
-#include "periodic_task.h"
 #include "advance_map.h"
 #include "engine_state.h"
 #include "advance_map.h"
