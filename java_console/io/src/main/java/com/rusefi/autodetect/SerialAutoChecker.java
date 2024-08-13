@@ -19,12 +19,10 @@ import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
 
 public class SerialAutoChecker {
     private final static Logging log = Logging.getLogging(SerialAutoChecker.class);
-    private final PortDetector.DetectorMode mode;
     private final String serialPort;
     private final CountDownLatch portFound;
 
-    public SerialAutoChecker(PortDetector.DetectorMode mode, String serialPort, CountDownLatch portFound) {
-        this.mode = mode;
+    public SerialAutoChecker(String serialPort, CountDownLatch portFound) {
         this.serialPort = serialPort;
         this.portFound = portFound;
     }
