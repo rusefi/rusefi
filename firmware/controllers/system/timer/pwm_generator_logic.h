@@ -114,7 +114,7 @@ struct IPwm {
 class SimplePwm : public PwmConfig, public IPwm {
 public:
 	SimplePwm();
-	explicit SimplePwm(const char *name);
+	SimplePwm(const char *name);
 	void setSimplePwmDutyCycle(float dutyCycle) override;
 	MultiChannelStateSequenceWithData<2> seq;
 	hardware_pwm* hardPwm = nullptr;

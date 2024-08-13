@@ -157,7 +157,7 @@ static const char *vvtOutputNames[CAM_INPUTS_COUNT] = {
  };
 
 static OutputPin vvtPins[CAM_INPUTS_COUNT];
-static SimplePwm vvtPwms[CAM_INPUTS_COUNT];
+static SimplePwm vvtPwms[CAM_INPUTS_COUNT] = { "VVT1", "VVT2", "VVT3", "VVT4" };
 
 static void turnVvtPidOn(int index) {
 	if (!isBrainPinValid(engineConfiguration->vvtPins[index])) {
