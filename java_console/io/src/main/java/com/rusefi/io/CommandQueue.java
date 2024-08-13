@@ -107,7 +107,7 @@ public class CommandQueue {
             @SuppressWarnings("InfiniteLoopStatement")
             @Override
             public void run() {
-                linkManager.messageListener.postMessage(COMMAND_QUEUE_CLASS, "SerialIO started");
+                linkManager.messageListener.postMessage(CommandQueue.class, "SerialIO started");
                 while (true) {
                     try {
                         sendPendingCommand();

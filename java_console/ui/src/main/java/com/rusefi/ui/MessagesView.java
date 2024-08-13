@@ -101,9 +101,9 @@ does not work? maybe wrong UI colors since control is not editable?
      * this is ugly as hell, but that's so much better then nothing...
      */
     private AttributeSet getStyle(Class clazz) {
-        if (clazz == CommandQueue.COMMAND_QUEUE_CLASS)
+        if (clazz == CommandQueue.class)
             return bold;
-        if (clazz == EngineState.ENGINE_STATE_CLASS)
+        if (clazz == EngineState.class)
             return italic;
         return null;
     }
