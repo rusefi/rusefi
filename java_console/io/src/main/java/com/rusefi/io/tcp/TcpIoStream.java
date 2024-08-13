@@ -2,7 +2,6 @@ package com.rusefi.io.tcp;
 
 import com.opensr5.io.DataListener;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
-import com.rusefi.io.ByteReader;
 import com.rusefi.io.serial.AbstractIoStream;
 import com.rusefi.core.FileUtil;
 import org.jetbrains.annotations.NotNull;

@@ -1,10 +1,9 @@
-package com.rusefi.io;
+package com.rusefi.io.tcp;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.io.DataListener;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.io.serial.AbstractIoStream;
-import com.rusefi.io.tcp.BinaryProtocolServer;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -17,7 +16,7 @@ public interface ByteReader {
     Logging log = getLogging(ByteReader.class);
 
     static void runReaderLoop(String loggingPrefix, DataListener listener, ByteReader reader, AbstractIoStream ioStream) {
-        /**
+        /*
          * Threading of the whole input/output does not look healthy at all!
          *
          * @see #COMMUNICATION_EXECUTOR
