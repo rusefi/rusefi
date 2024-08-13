@@ -27,6 +27,7 @@
 #include "odometer.h"
 #include "kline.h"
 #include "dac.h"
+#include "peak_hold_test.h"
 
 #if EFI_PROD_CODE
 #include "mpu_util.h"
@@ -658,6 +659,8 @@ void initHardware() {
 #if EFI_DAC
 	initDac();
 #endif
+
+  initPeakHoldTest();
 
 	calcFastAdcIndexes();
 

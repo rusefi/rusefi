@@ -17,6 +17,7 @@ HW_LAYER_CPP = \
 	$(PROJECT_DIR)/hw_layer/digital_input/trigger/trigger_input_exti.cpp \
 	$(PROJECT_DIR)/hw_layer/digital_input/trigger/trigger_input_adc.cpp \
 	$(PROJECT_DIR)/hw_layer/hardware.cpp \
+	$(PROJECT_DIR)/hw_layer/peak_hold_test.cpp \
 	$(PROJECT_DIR)/hw_layer/ports/arm_common.cpp \
 	$(PROJECT_DIR)/hw_layer/kline.cpp \
 	$(PROJECT_DIR)/hw_layer/mmc_card.cpp \
