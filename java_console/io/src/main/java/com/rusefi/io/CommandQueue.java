@@ -28,7 +28,6 @@ public class CommandQueue {
     public static int DEFAULT_TIMEOUT = 500;
     private static final int COMMAND_CONFIRMATION_TIMEOUT = 1000;
     public static final int SLOW_CONFIRMATION_TIMEOUT = 5000;
-    public static final Class<CommandQueue> COMMAND_QUEUE_CLASS = CommandQueue.class;
     private final LinkManager linkManager;
 
     private final BlockingQueue<IMethodInvocation> pendingCommands = new LinkedBlockingQueue<>();
