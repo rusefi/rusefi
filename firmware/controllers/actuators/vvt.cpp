@@ -124,7 +124,7 @@ void VvtController::setOutput(expected<percent_t> outputValue) {
 
 		// Compensate for battery voltage so that the % output is actually % solenoid current normalized
 		// to a 14v supply (boost duty when battery is low, etc)
-		float voltageRatio = 14 / Sensor::get(SensorType::BatteryVoltage).value_or(14);
+		float voltageRatio = 14 / clampF(10, Sensor::get(SensorType::BatteryVoltage).value_or(14), 24);
 		vvtPct *= voltageRatio;
 
 		vvtOutput = vvtPct;
