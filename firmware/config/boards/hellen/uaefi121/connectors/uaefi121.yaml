@@ -1,0 +1,1109 @@
+pins:
+  - pin: 1a
+    class: outputs
+    ts_name: DC1+
+    function: DC1+ output
+    color: blue
+    type: etb
+
+  - pin: 2a
+    class: outputs
+    ts_name: DC1-
+    function: DC1- output
+    color: white
+    type: etb
+
+  - pin: 3a
+    function: GND
+    type: GND
+    color: black
+
+  - pin: 4a
+    class: outputs
+    ts_name: DC2+
+    function: DC2+ output
+    type: etb
+
+  - pin: 5a
+    class: outputs
+    ts_name: DC2-
+    function: DC2- output
+    type: etb
+
+#  - pin: 6a
+#    class: outputs
+#    ts_name: Coil 8
+#    function: Coil 8 UNUSED
+#    type: ign
+#
+#  - pin: 7a
+#    class: outputs
+#    ts_name: Coil 7
+#    function: Coil 7 UNUSED
+#    type: ign
+
+  - pin: 8a
+    class: outputs
+    ts_name: Coil 6
+    function: Coil 6
+    color: yellow
+    type: ign
+
+  - pin: 9a
+    class: outputs
+    ts_name: Coil 5
+    function: Coil 5
+    color: brown
+    type: ign
+
+  - pin: 10a
+    class: outputs
+    ts_name: Coil 4
+    function: Coil 4
+    type: ign
+    color: orange
+
+  - pin: 11a
+    class: outputs
+    ts_name: Coil 3
+    function: Coil 3
+    type: ign
+    color: blue
+
+  - pin: 12a
+    class: outputs
+    ts_name: Coil 2
+    function: Coil 2
+    type: ign
+    color: white
+
+  - pin: 13a
+    class: outputs
+    ts_name: Coil 1
+    function: Coil 1
+    type: ign
+    color: green
+
+  - pin: 14a
+    ts_name: LS1
+    class: outputs
+    function: Low-Side 1 output
+    type: ls
+
+  - pin: 15a
+    ts_name: LS2
+    class: outputs
+    function: Low-Side 2 output
+    type: ls
+
+  - pin: 16a
+    ts_name: LS3
+    class: outputs
+    function: Low-Side 3 output
+    type: ls
+
+  - pin: 17a
+    ts_name: VR_DISCRETE+
+    function: VR_DISCRETE positive input
+    type: vr
+
+  - pin: 18a
+    ts_name: VR_DISCRETE-
+    function: VR_DISCRETE negative input
+    type: vr
+
+  - pin: 19a
+    ts_name: VR_9924+
+    function: VR_9924 positive input
+    type: vr
+
+  - pin: 20a
+    ts_name: VR_9924-
+    function: VR_9924 negative input
+    type: vr
+
+  - pin: 21a
+    ts_name: EGT+
+    function: EGT positive input
+
+  - pin: 22a
+    ts_name: EGT+
+    function: EGT negative input
+
+  - pin: 23a
+    function: +12v from main relay OUTPUT
+    type: 12V
+
+  - pin: 24a
+    function: +12v from main relay OUTPUT
+    type: 12V
+
+
+  - pin: 25a
+    class: outputs
+    ts_name: Coil 8
+    function: Coil 8 UNUSED
+    type: ign
+
+  - pin: 26a
+    class: outputs
+    ts_name: Coil 7
+    function: Coil 7 UNUSED
+    type: ign
+
+  - pin: 27a
+    class: outputs
+    ts_name: Coil 6
+    function: Coil 6
+    type: ign
+
+  - pin: 28a
+    class: outputs
+    ts_name: Coil 5
+    function: Coil 5
+    type: ign
+
+  - pin: 29a
+    class: outputs
+    ts_name: Coil 4
+    function: Coil 4
+    type: ign
+
+  - pin: 30a
+    class: outputs
+    ts_name: Coil 3
+    function: Coil 3
+    type: ign
+
+  - pin: 31a
+    class: outputs
+    ts_name: Coil 2
+    function: Coil 2
+    type: ign
+
+  - pin: 32a
+    class: outputs
+    ts_name: Coil 1
+    function: Coil 1
+    type: ign
+
+
+  - pin: 33a
+    class: digital_inputs
+    ts_name: DIN
+    function: Digital input signal
+
+
+  - pin: 34a
+    function: CAM Sensor Left
+    ts_name: HALL3
+    type: hall
+
+  - pin: 35a
+    function: CAM Sensor Right
+    ts_name: HALL2
+    type: hall
+
+  - pin: 36a
+    function: HALL1 Sensor
+    ts_name: HALL1
+    type: hall
+
+  - pin: 37a
+    class: analog_inputs
+    ts_name: MAP
+    function: MAP signal
+    color: yellow
+
+  - pin: 38a
+    class: analog_inputs
+    ts_name: TPS 1
+    function: TPS 1 sensor input
+
+  - pin: 39a
+    class: analog_inputs
+    ts_name: TPS 2
+    function: TPS 2 sensor input
+    color: blue
+
+  - pin: 40a
+    class: analog_inputs
+    ts_name: AIN 1
+    function: AUX1 analog input
+
+  - pin: 41a
+    class: analog_inputs
+    ts_name: AIN 2
+    function: AUX2 analog input
+
+  - pin: 42a
+    function: FLEX
+    ts_name: FLEX
+
+  - pin: 43a
+    class: outputs
+    ts_name: HS
+    function: High-side high current output
+
+  - pin: 44a
+    class: outputs
+    ts_name: INJ_1
+    function: Injector 1
+    color: green
+    type: inj
+
+  - pin: 45a
+    class: outputs
+    ts_name: INJ_2
+    function: Injector 2
+    color: white
+    type: inj
+
+  - pin: 46a
+    class: outputs
+    ts_name: INJ_3
+    function: Injector 3
+    color: blue
+    type: inj
+
+  - pin: 47a
+    class: outputs
+    ts_name: INJ_4
+    function: Injector 4
+    color: orange/brown
+    type: inj
+
+  - pin: 48a
+    class: outputs
+    ts_name: INJ_5
+    function: Injector 5
+    color: brown
+    type: inj
+
+  - pin: 49a
+    class: outputs
+    ts_name: INJ_6
+    function: Injector 6
+    color: yellow
+    type: inj
+
+  - pin: 50a
+    class: outputs
+    ts_name: INJ_7
+    function: Injector 7
+    color: white
+    type: inj
+
+  - pin: 51a
+    class: outputs
+    ts_name: INJ_8
+    function: Injector 8
+    color: green
+    type: inj
+
+  - pin: 52a
+    function: GNDA HALL1 sensor
+    type: gnd
+    color: black
+
+  - pin: 53a
+    function: GNDA HALL2 sensor
+    type: gnd
+    color: black
+
+  - pin: 54a
+    function: GNDA HALL3 sensor
+    type: gnd
+    color: black
+
+  - pin: 55a
+    function: GNDA DIN sensor
+    type: gnd
+    color: black
+
+  - pin: 56a
+    function: GNDA map sensor
+    type: gnd
+    color: black
+
+  - pin: 57a
+    function: GNDA tps1 sensor
+    type: gnd
+    color: black
+
+  - pin: 58a
+    function: GNDA tps2 sensor
+    type: gnd
+    color: black
+
+  - pin: 59a
+    function: GNDA AIN1 sensor
+    type: gnd
+
+  - pin: 60a
+    function: GNDA AIN2 sensor
+    type: gnd
+    color: black
+
+  - pin: 61a
+    function: GNDA FLEX/HALL sensor
+    type: gnd
+    color: black
+
+  - pin: 62a
+    function: GNDA KNOCK sensor
+    type: gnd
+    color: black
+
+  - pin: 63a
+    class: analog_inputs
+    ts_name: IAT
+    function: IAT sensor
+    color: blue
+
+  - pin: 64a
+    function: GNDA IAT sensor
+    type: gnd
+    color: black
+
+  - pin: 65a
+    class: analog_inputs
+    ts_name: CLT
+    function: CLT sensor
+    color: grey
+
+  - pin: 66a
+    function: GNDA CLT sensor
+    type: gnd
+    color: black
+
+  - pin: 67a
+    class: analog_inputs
+    ts_name: KNOCK2
+    function: KNOCK2 UNUSED sensor
+
+  - pin: 68a
+    function: GNDA KNOCK2 sensor
+    type: gnd
+
+  - pin: 71a
+    function: +5v HALL1 sensor
+    type: 5v
+    color: red
+
+  - pin: 72a
+    function: +5v HALL2 sensor
+    type: 5v
+    color: red
+
+  - pin: 73a
+    function: +5v HALL3 sensor
+    type: 5v
+    color: red
+
+  - pin: 74a
+    function: +5v DIN sensor
+    type: 5v
+    color: red
+
+  - pin: 75a
+    function: +5v map sensor
+    type: 5v
+    color: red
+
+  - pin: 76a
+    function: +5v tps1 sensor
+    type: 5v
+    color: red
+
+  - pin: 77a
+    function: +5v tps2 sensor
+    type: 5v
+    color: red
+
+  - pin: 78a
+    function: +5v AIN1 sensor
+    type: 5v
+    color: red
+
+  - pin: 79a
+    function: +5v AIN2 sensor
+    type: 5v
+    color: red
+
+  - pin: 80a
+    function: +5v FLEX/HALL sensor
+    type: 5v
+    color: red
+
+  - pin: 81a
+    class: analog_inputs
+    ts_name: KNOCK
+    function: KNOCK sensor
+
+  - pin: 82a
+    function: CAN bus high
+    type: can
+
+  - pin: 83a
+    function: CAN bus low
+    type: can
+
+  - pin: 84a
+    class: digital_inputs
+    ts_name: BUTTON1
+    function: BUTTON1 sensor
+
+  - pin: 85a
+    class: digital_inputs
+    ts_name: BUTTON2
+    function: BUTTON2 sensor
+
+  - pin: 86a
+    ts_name: LS_HOT1
+    class: outputs
+    function: Low-Side 1 always hot capable output
+    type: ls
+
+  - pin: 87a
+    ts_name: LS_HOT2
+    class: outputs
+    function: Low-Side 2 always hot capable output
+    type: ls
+
+  - pin: 88a
+    ts_name: LS4
+    class: outputs
+    function: Low-Side 4 output
+    type: ls
+
+  - pin: 89a
+    class: digital_inputs
+    ts_name: BUTTON3
+    function: BUTTON3 input
+
+  - pin: 90a
+    class: analog_inputs
+    ts_name: PPS 1
+    function: PPS 1 sensor input
+    color: white
+
+  - pin: 91a
+    class: analog_inputs
+    ts_name: PPS 2
+    function: PPS 2 sensor input
+    color: orange
+
+  - pin: 92a
+    function: WBO2 SWD
+
+  - pin: 93a
+    function: WBO2 SWC
+
+  - pin: 94a
+    function: WBO2 Rtrim
+    color: green
+
+  - pin: 95a
+    function: WBO2 Ip
+    color: red
+
+  - pin: 96a
+    function: WBO2 Vm
+    color: yellow
+
+  - pin: 97a
+    function: WBO2 Vs
+
+  - pin: 98a
+    function: GNDA PPS1 sensor
+    color: black
+
+  - pin: 99a
+    function: GNDA PPS2 sensor
+    color: black
+
+  - pin: 100a
+    function: WBO1 SWD
+
+  - pin: 101a
+    function: WBO1 SWC
+
+  - pin: 102a
+    function: WBO1 Rtrim
+
+  - pin: 103a
+    function: WBO1 Ip
+    color: red
+
+  - pin: 104a
+    function: WBO1 Vm
+    color: yellow
+
+  - pin: 105a
+    function: WBO1 Vs
+    color: black
+
+  - pin: 106a
+    function: +5v PPS1 sensor
+    type: 5v
+    color: red
+
+  - pin: 107a
+    function: +5v PPS2 sensor
+    type: 5v
+    color: red
+
+  - pin: 109a
+    function: PROG BUTTON
+    color: white
+
+  - pin: 110a
+    function: USB VBUS
+
+  - pin: 111a
+    function: USB D-
+
+  - pin: 112a
+    function: USB D+
+
+  - pin: 113a
+    function: GND USB
+    type: GND
+    color: red
+
+  - pin: 114a
+    function: GND
+    type: GND
+    color: red
+
+  - pin: 115a
+    function: GND
+    type: GND
+    color: red
+
+  - pin: 116a
+    function: +12v Bat+ (Hot all times)
+    type: 12V
+
+  - pin: 117a
+    function: WBO1 HTR +12
+
+  - pin: 118a
+    function: WBO2 HTR +12
+
+  - pin: 119a
+    function: WBO1 HTR-
+    color: white
+
+  - pin: 120a
+    function: +12v from main relay INPUT
+    type: 12V
+    color: red
+
+  - pin: 121a
+    function: WBO2 HTR-
+    color: white
+
+info:
+  title: uaEFI 121
+  name: uaEFI 121
+  cid: main
+  order: 0
+  board_url: https://github.com/rusefi/rusefi/wiki/uaefi121
+  directory: hellen/uaefi121
+  image:
+    file: 121pin.jpg
+  pins:
+    - pin: 1a
+      x: 286
+      y: 582
+
+    - pin: 2a
+      x: 456
+      y: 582
+
+    - pin: 3a
+      x: 375
+      y: 405
+
+    - pin: 4a
+      x: 286
+      y: 250
+
+    - pin: 5a
+      x: 456
+      y: 250
+
+# 6-24 segment
+    - pin: 6a
+      x: 2193
+      y: 250
+
+    - pin: 7a
+      x: 2113
+      y: 250
+
+    - pin: 8a
+      x: 2033
+      y: 250
+
+    - pin: 9a
+      x: 1953
+      y: 250
+
+    - pin: 10a
+      x: 1873
+      y: 250
+
+    - pin: 11a
+      x: 1793
+      y: 250
+
+    - pin: 12a
+      x: 1713
+      y: 250
+
+    - pin: 13a
+      x: 1633
+      y: 250
+
+    - pin: 14a
+      x: 1553
+      y: 250
+
+    - pin: 15a
+      x: 1473
+      y: 250
+
+    - pin: 16a
+      x: 1393
+      y: 250
+
+    - pin: 17a
+      x: 1313
+      y: 250
+
+    - pin: 18a
+      x: 1233
+      y: 250
+
+    - pin: 19a
+      x: 1153
+      y: 250
+
+    - pin: 20a
+      x: 1073
+      y: 250
+
+    - pin: 21a
+      x: 993
+      y: 250
+
+    - pin: 22a
+      x: 913
+      y: 250
+
+    - pin: 23a
+      x: 833
+      y: 250
+
+    - pin: 24a
+      x: 753
+      y: 250
+
+# 25-43 segment
+    - pin: 25a
+      x: 2193
+      y: 330
+
+    - pin: 26a
+      x: 2113
+      y: 330
+
+    - pin: 27a
+      x: 2033
+      y: 330
+
+    - pin: 28a
+      x: 1953
+      y: 330
+
+    - pin: 29a
+      x: 1873
+      y: 330
+
+    - pin: 30a
+      x: 1793
+      y: 330
+
+    - pin: 31a
+      x: 1713
+      y: 330
+
+    - pin: 32a
+      x: 1633
+      y: 330
+
+    - pin: 33a
+      x: 1553
+      y: 330
+
+    - pin: 34a
+      x: 1473
+      y: 330
+
+    - pin: 35a
+      x: 1393
+      y: 330
+
+    - pin: 36a
+      x: 1313
+      y: 330
+
+    - pin: 37a
+      x: 1233
+      y: 330
+
+    - pin: 38a
+      x: 1153
+      y: 330
+
+    - pin: 39a
+      x: 1073
+      y: 330
+
+    - pin: 40a
+      x: 993
+      y: 330
+
+    - pin: 41a
+      x: 913
+      y: 330
+
+    - pin: 42a
+      x: 833
+      y: 330
+
+    - pin: 43a
+      x: 753
+      y: 330
+
+# 44-62 segment
+    - pin: 44a
+      x: 2193
+      y: 495
+
+    - pin: 45a
+      x: 2113
+      y: 495
+
+    - pin: 46a
+      x: 2033
+      y: 495
+
+    - pin: 47a
+      x: 1953
+      y: 495
+
+    - pin: 48a
+      x: 1873
+      y: 495
+
+    - pin: 49a
+      x: 1793
+      y: 495
+
+    - pin: 50a
+      x: 1713
+      y: 495
+
+    - pin: 51a
+      x: 1633
+      y: 495
+
+    - pin: 52a
+      x: 1553
+      y: 495
+
+    - pin: 53a
+      x: 1473
+      y: 495
+
+    - pin: 54a
+      x: 1393
+      y: 495
+
+    - pin: 55a
+      x: 1313
+      y: 495
+
+    - pin: 56a
+      x: 1233
+      y: 495
+
+    - pin: 57a
+      x: 1153
+      y: 495
+
+    - pin: 58a
+      x: 1073
+      y: 495
+
+    - pin: 59a
+      x: 993
+      y: 495
+
+    - pin: 60a
+      x: 913
+      y: 495
+
+    - pin: 61a
+      x: 833
+      y: 495
+
+    - pin: 62a
+      x: 732
+      y: 495
+
+# 63-81 segment
+    - pin: 63a
+      x: 2193
+      y: 579
+
+    - pin: 64a
+      x: 2113
+      y: 579
+
+    - pin: 65a
+      x: 2033
+      y: 579
+
+    - pin: 66a
+      x: 1953
+      y: 579
+
+    - pin: 67a
+      x: 1873
+      y: 579
+
+    - pin: 68a
+      x: 1793
+      y: 579
+
+    - pin: 69a
+      x: 1713
+      y: 579
+
+    - pin: 70a
+      x: 1633
+      y: 579
+
+    - pin: 71a
+      x: 1553
+      y: 579
+
+    - pin: 72a
+      x: 1473
+      y: 579
+
+    - pin: 73a
+      x: 1393
+      y: 579
+
+    - pin: 74a
+      x: 1313
+      y: 579
+
+    - pin: 75a
+      x: 1233
+      y: 579
+
+    - pin: 76a
+      x: 1153
+      y: 579
+
+    - pin: 77a
+      x: 1073
+      y: 579
+
+    - pin: 78a
+      x: 993
+      y: 579
+
+    - pin: 79a
+      x: 913
+      y: 579
+
+    - pin: 80a
+      x: 833
+      y: 579
+
+    - pin: 81a
+      x: 732
+      y: 579
+
+# 82-89 segment
+    - pin: 82a
+      x: 2724
+      y: 585
+
+    - pin: 83a
+      x: 2802
+      y: 585
+
+    - pin: 84a
+      x: 2877
+      y: 585
+
+    - pin: 85a
+      x: 2958
+      y: 585
+
+    - pin: 86a
+      x: 3048
+      y: 585
+
+    - pin: 87a
+      x: 3123
+      y: 585
+
+    - pin: 88a
+      x: 3201
+      y: 585
+
+    - pin: 89a
+      x: 3282
+      y: 585
+
+# 90-97 segment
+    - pin: 90a
+      x: 2724
+      y: 507
+
+    - pin: 91a
+      x: 2802
+      y: 507
+
+    - pin: 92a
+      x: 2877
+      y: 507
+
+    - pin: 93a
+      x: 2958
+      y: 507
+
+    - pin: 94a
+      x: 3048
+      y: 507
+
+    - pin: 95a
+      x: 3123
+      y: 507
+
+    - pin: 96a
+      x: 3201
+      y: 507
+
+    - pin: 97a
+      x: 3282
+      y: 507
+
+# 98-105 segment
+    - pin: 98a
+      x: 2724
+      y: 336
+
+    - pin: 99a
+      x: 2802
+      y: 336
+
+    - pin: 100a
+      x: 2877
+      y: 336
+
+    - pin: 101a
+      x: 2958
+      y: 336
+
+    - pin: 102a
+      x: 3048
+      y: 336
+
+    - pin: 103a
+      x: 3123
+      y: 336
+
+    - pin: 104a
+      x: 3201
+      y: 336
+
+    - pin: 105a
+      x: 3282
+      y: 336
+
+# 106-113 segment
+    - pin: 106a
+      x: 2724
+      y: 258
+
+    - pin: 107a
+      x: 2802
+      y: 258
+
+    - pin: 108a
+      x: 2877
+      y: 258
+
+    - pin: 109a
+      x: 2958
+      y: 258
+
+    - pin: 110a
+      x: 3048
+      y: 258
+
+    - pin: 111a
+      x: 3123
+      y: 258
+
+    - pin: 112a
+      x: 3201
+      y: 258
+
+    - pin: 113a
+      x: 3282
+      y: 258
+
+    - pin: 114a
+      x: 3516
+      y: 585
+
+    - pin: 115a
+      x: 3700
+      y: 585
+
+    - pin: 116a
+      x: 3882
+      y: 585
+
+    - pin: 117a
+      x: 3615
+      y: 414
+
+    - pin: 118a
+      x: 3780
+      y: 414
+
+    - pin: 119a
+      x: 3516
+      y: 261
+
+    - pin: 120a
+      x: 3700
+      y: 261
+
+    - pin: 121a
+      x: 3882
+      y: 261
+
