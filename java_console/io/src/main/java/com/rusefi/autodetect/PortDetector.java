@@ -103,16 +103,6 @@ public class PortDetector {
         return autoDetectSerial(callback, PortDetector.DetectorMode.DETECT_TS);
     }
 
-    @Nullable
-    public static SerialAutoChecker.AutoDetectResult autoDetectPort(JFrame parent) {
-        SerialAutoChecker.AutoDetectResult autoDetectedPort = autoDetectSerial(null);
-        if (autoDetectedPort.getSerialPort() == null) {
-            JOptionPane.showMessageDialog(parent, "Failed to locate rusEFI");
-            return null;
-        }
-        return autoDetectedPort;
-    }
-
     public static String autoDetectSerialIfNeeded(String port) {
         if (!isAutoPort(port))
             return port;
