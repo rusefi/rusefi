@@ -328,6 +328,10 @@ public enum SerialPortScanner {
         @NotNull
         public List<PortResult> getKnownPorts() {return new ArrayList<>(ports);}
 
+        public List<PortResult> getKnownPorts(final SerialPortType type) {
+            return ports.stream().filter(port -> port.type == type).collect(Collectors.toList());
+        }
+
         public boolean isDfuFound() {
             return dfuFound;
         }

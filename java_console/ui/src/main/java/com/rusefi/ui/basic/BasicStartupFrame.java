@@ -91,9 +91,8 @@ public class BasicStartupFrame {
         status.stop();
         frame.getFrame().pack();
 
-        List<SerialPortScanner.PortResult> ecuPorts =  currentHardware.getKnownPorts().stream().filter(portResult -> portResult.type == SerialPortScanner.SerialPortType.EcuWithOpenblt).collect(Collectors.toList());
-
-        List<SerialPortScanner.PortResult> bootloaderPorts =  currentHardware.getKnownPorts().stream().filter(portResult -> portResult.type == SerialPortScanner.SerialPortType.OpenBlt).collect(Collectors.toList());
+        final List<SerialPortScanner.PortResult> ecuPorts = currentHardware.getKnownPorts(SerialPortScanner.SerialPortType.EcuWithOpenblt);
+        final List<SerialPortScanner.PortResult> bootloaderPorts = currentHardware.getKnownPorts(SerialPortScanner.SerialPortType.OpenBlt);
 
 
         if (!ecuPorts.isEmpty()) {
