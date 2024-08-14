@@ -62,19 +62,8 @@ void setBoardConfigOverrides() {
 
 static void setDefaultETBPins() {
   // users would want to override those if using H-bridges for stepper idle control
-
-    // PWM pin
-    engineConfiguration->etbIo[0].controlPin = Gpio::MM100_OUT_PWM3;
-    // DIR pin
-	engineConfiguration->etbIo[0].directionPin1 = Gpio::MM100_OUT_PWM4;
-   	// Disable pin
-   	engineConfiguration->etbIo[0].disablePin = Gpio::MM100_SPI2_MISO;
-    // PWM pin
-    engineConfiguration->etbIo[1].controlPin = Gpio::MM100_OUT_PWM5;
-    // DIR pin
-	engineConfiguration->etbIo[1].directionPin1 = Gpio::MM100_SPI2_MOSI;
-   	// Disable pin
-   	engineConfiguration->etbIo[1].disablePin = Gpio::MM100_USB1ID;
+  setupTLE9201(/*PWM controlPin*/Gpio::MM100_OUT_PWM3, Gpio::MM100_OUT_PWM4, Gpio::MM100_SPI2_MISO);
+  setupTLE9201(/*PWM controlPin*/Gpio::MM100_OUT_PWM5, Gpio::MM100_SPI2_MOSI, Gpio::MM100_USB1ID, 1);
 }
 
 /**

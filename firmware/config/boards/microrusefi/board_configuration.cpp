@@ -86,21 +86,7 @@ static void setupTle8888() {
 }
 
 static void setupEtb() {
-	// TLE9201 driver
-	// This chip has three control pins:
-	// DIR - sets direction of the motor
-	// PWM - pwm control (enable high, coast low)
-	// DIS - disables motor (enable low)
-
-	// PWM pin
-	engineConfiguration->etbIo[0].controlPin = Gpio::C7;
-	// DIR pin
-	engineConfiguration->etbIo[0].directionPin1 = Gpio::A8;
-	// Disable pin
-	engineConfiguration->etbIo[0].disablePin = Gpio::C8;
-
-	// we only have pwm/dir, no dira/dirb
-	engineConfiguration->etb_use_two_wires = false;
+	setupTLE9201(/*PWM controlPin*/Gpio::C7, Gpio::A8, Gpio::C8);
 }
 
 static void setupDefaultSensorInputs() {
