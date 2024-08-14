@@ -1,5 +1,6 @@
 package com.rusefi.ui.basic;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.Launcher;
 import com.rusefi.SerialPortScanner;
 import com.rusefi.StartupFrame;
@@ -26,6 +27,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.FileLog.isWindows;
 
 /**
@@ -33,6 +35,8 @@ import static com.rusefi.FileLog.isWindows;
  * Much simpler than {@link com.rusefi.StartupFrame}
  */
 public class BasicStartupFrame {
+    private static final Logging log = getLogging(BasicStartupFrame.class);
+
     private final FrameHelper frame;
 
     private final JLabel noPortsMessage = new JLabel();
@@ -108,7 +112,7 @@ public class BasicStartupFrame {
                 } else if (!bootloaderPorts.isEmpty()) {
                     switchToPort(bootloaderPorts.get(0), "Blt Update Firmware");
                 } else {
-                    // TODO: notify user about strange situation?
+                    log.error("Do nothing.");
                 }
                 break;
             }
@@ -151,12 +155,12 @@ public class BasicStartupFrame {
                         break;
                     }
                     default: {
-                        // TODO: notify user about strange situation?
+                        log.error(String.format("Unexpected port type: %s (%s)", port.type, port));
                         break;
                     }
                 }
             }, ()-> {
-                // TODO: notify user about strange situation?
+                log.error("Port to update firmware is not defined.");
             }
         );
     }
