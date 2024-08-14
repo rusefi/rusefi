@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sun Aug 11 02:50:28 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Aug 14 01:02:08 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -571,16 +571,20 @@ case trigger_type_e::TT_VVT_TOYOTA_4_1:
 }
 const char *getTs_14_command(ts_14_command value){
 switch(value) {
-case TS_14_0:
-  return "TS_14_0";
-case TS_14_1:
-  return "TS_14_1";
-case TS_14_4:
-  return "TS_14_4";
-case TS_14_5:
-  return "TS_14_5";
-case TS_14_9:
-  return "TS_14_9";
+case COMMAND_X14_UNUSED_0:
+  return "COMMAND_X14_UNUSED_0";
+case COMMAND_X14_UNUSED_1:
+  return "COMMAND_X14_UNUSED_1";
+case COMMAND_X14_UNUSED_2:
+  return "COMMAND_X14_UNUSED_2";
+case COMMAND_X14_UNUSED_3:
+  return "COMMAND_X14_UNUSED_3";
+case COMMAND_X14_UNUSED_4:
+  return "COMMAND_X14_UNUSED_4";
+case COMMAND_X14_UNUSED_5:
+  return "COMMAND_X14_UNUSED_5";
+case COMMAND_X14_UNUSED_9:
+  return "COMMAND_X14_UNUSED_9";
 case TS_BURN_WITHOUT_FLASH:
   return "TS_BURN_WITHOUT_FLASH";
 case TS_ETB_AUTOCAL_0:
@@ -599,10 +603,6 @@ case TS_GRAB_PEDAL_UP:
   return "TS_GRAB_PEDAL_UP";
 case TS_GRAB_PEDAL_WOT:
   return "TS_GRAB_PEDAL_WOT";
-case TS_GRAB_TPS_CLOSED:
-  return "TS_GRAB_TPS_CLOSED";
-case TS_GRAB_TPS_WOT:
-  return "TS_GRAB_TPS_WOT";
 case TS_RESET_MC33810:
   return "TS_RESET_MC33810";
 case TS_RESET_TLE8888:

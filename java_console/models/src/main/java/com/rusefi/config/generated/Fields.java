@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Aug 13 01:49:05 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Aug 14 01:03:46 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1214,7 +1214,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1127934513;
+	public static final int SIGNATURE_HASH = 1172150079;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1377,11 +1377,13 @@ public class Fields {
 	public static final String TRIGGERS_FILE_NAME = "triggers.txt";
 	public static final int TriggerWheel_T_PRIMARY = 0;
 	public static final int TriggerWheel_T_SECONDARY = 1;
-	public static final int ts_14_command_TS_14_0 = 0;
-	public static final int ts_14_command_TS_14_1 = 1;
-	public static final int ts_14_command_TS_14_4 = 4;
-	public static final int ts_14_command_TS_14_5 = 5;
-	public static final int ts_14_command_TS_14_9 = 9;
+	public static final int ts_14_command_COMMAND_X14_UNUSED_0 = 0x00;
+	public static final int ts_14_command_COMMAND_X14_UNUSED_1 = 0x01;
+	public static final int ts_14_command_COMMAND_X14_UNUSED_2 = 0x02;
+	public static final int ts_14_command_COMMAND_X14_UNUSED_3 = 0x03;
+	public static final int ts_14_command_COMMAND_X14_UNUSED_4 = 0x04;
+	public static final int ts_14_command_COMMAND_X14_UNUSED_5 = 0x05;
+	public static final int ts_14_command_COMMAND_X14_UNUSED_9 = 0x09;
 	public static final int ts_14_command_TS_BURN_WITHOUT_FLASH = 0x15;
 	public static final int ts_14_command_TS_ETB_AUTOCAL_0 = 0x0E;
 	public static final int ts_14_command_TS_ETB_AUTOCAL_1 = 0x11;
@@ -1391,8 +1393,6 @@ public class Fields {
 	public static final int ts_14_command_TS_EXTERNAL_TRIGGER_STIMULATOR_ENABLE = 0x13;
 	public static final int ts_14_command_TS_GRAB_PEDAL_UP = 6;
 	public static final int ts_14_command_TS_GRAB_PEDAL_WOT = 7;
-	public static final int ts_14_command_TS_GRAB_TPS_CLOSED = 2;
-	public static final int ts_14_command_TS_GRAB_TPS_WOT = 3;
 	public static final int ts_14_command_TS_RESET_MC33810 = 0x14;
 	public static final int ts_14_command_TS_RESET_TLE8888 = 8;
 	public static final int ts_14_command_TS_TRIGGER_STIMULATOR_DISABLE = 0x0F;
@@ -1474,7 +1474,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.08.13.f407-discovery.1127934513";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.08.14.f407-discovery.1172150079";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
