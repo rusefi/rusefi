@@ -22,7 +22,7 @@ import javax.swing.*;
 
 import java.awt.Color;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 import static com.rusefi.FileLog.isWindows;
 
@@ -36,6 +36,8 @@ public class BasicStartupFrame {
     private final JLabel noPortsMessage = new JLabel();
     private final StatusAnimation status = new StatusAnimation(noPortsMessage::setText, StartupFrame.SCANNING_PORTS);
     private final JButton update = ProgramSelector.createUpdateFirmwareButton();
+
+    private volatile Optional<SerialPortScanner.PortResult> portToUpdateFirmware = Optional.empty();
 
     public static void main(String[] args) {
         runTool(null);
@@ -57,6 +59,7 @@ public class BasicStartupFrame {
 
             boolean requireBlt = FindFileHelper.isObfuscated();
             if (requireBlt) {
+                update.addActionListener(e-> onUpdateButtonClicked());
                 update.setEnabled(false);
 
                 noPortsMessage.setForeground(Color.red);
@@ -94,18 +97,40 @@ public class BasicStartupFrame {
 
 
         if (!ecuPorts.isEmpty()) {
+            portToUpdateFirmware = Optional.of(ecuPorts.get(0));
             noPortsMessage.setVisible(false);
             update.setEnabled(true);
             update.setText("Auto Update Firmware");
-            update.addActionListener(e -> ProgramSelector.executeJob(update, ProgramSelector.OPENBLT_AUTO, ecuPorts.get(0)));
         } else if (!bootloaderPorts.isEmpty()) {
+            portToUpdateFirmware = Optional.of(bootloaderPorts.get(0));
             noPortsMessage.setVisible(false);
             update.setEnabled(true);
             update.setText("Blt Update Firmware");
-            update.addActionListener(e -> ProgramSelector.executeJob(update, ProgramSelector.OPENBLT_MANUAL, bootloaderPorts.get(0)));
         } else {
             noPortsMessage.setText("ECU not found");
         }
+    }
+
+    private void onUpdateButtonClicked() {
+        portToUpdateFirmware.ifPresentOrElse(port -> {
+                switch (port.type) {
+                    case EcuWithOpenblt: {
+                        ProgramSelector.executeJob(update, ProgramSelector.OPENBLT_AUTO, port);
+                        break;
+                    }
+                    case OpenBlt: {
+                        ProgramSelector.executeJob(update, ProgramSelector.OPENBLT_MANUAL, port);
+                        break;
+                    }
+                    default: {
+                        // TODO: notify user about strange situation?
+                        break;
+                    }
+                }
+            }, ()-> {
+                // TODO: notify user about strange situation?
+            }
+        );
     }
 
     private void runTool() {
