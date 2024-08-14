@@ -4,4 +4,14 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
+	Gpio::MM100_INJ1, // 44a INJ_1
+	Gpio::MM100_INJ2, // 45a INJ_2
+	Gpio::MM100_INJ3, // 46a INJ_3
+	Gpio::MM100_INJ4, // 47a INJ_4
+	Gpio::MM100_INJ5, // 48a INJ_5
+// "44a INJ_1",
+// "45a INJ_2",
+// "46a INJ_3",
+// "47a INJ_4",
+// "48a INJ_5",
 }

@@ -6,6 +6,11 @@
 // see comments at declaration in pin_repository.h
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
+		case Gpio::A9: return "45a INJ_2";
+		case Gpio::D10: return "47a INJ_4";
+		case Gpio::D11: return "46a INJ_3";
+		case Gpio::D2: return "48a INJ_5";
+		case Gpio::D3: return "44a INJ_1";
 		default: return nullptr;
 	}
 	return nullptr;
