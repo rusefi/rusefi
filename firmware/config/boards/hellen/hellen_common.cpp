@@ -142,21 +142,3 @@ void detectHellenBoardType() {
 	engine->engineState.hellenBoardId = hackHellenBoardId(detectHellenBoardId());
 #endif /* EFI_BOOTLOADER */
 }
-
-void setupTLE9201(Gpio controlPin, Gpio direction, Gpio disable, int dcIndex) {
-	// TLE9201 driver
-	// This chip has three control pins:
-	// DIR - sets direction of the motor
-	// PWM - pwm control (enable high, coast low)
-	// DIS - disables motor (enable low)
-
-	// PWM pin
-	engineConfiguration->etbIo[dcIndex].controlPin = controlPin;
-	// DIR pin
-	engineConfiguration->etbIo[dcIndex].directionPin1 = direction;
-	// Disable pin
-	engineConfiguration->etbIo[dcIndex].disablePin = disable;
-
-	// we only have pwm/dir, no dira/dirb
-	engineConfiguration->etb_use_two_wires = false;
-}

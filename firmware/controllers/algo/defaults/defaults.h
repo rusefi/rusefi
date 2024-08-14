@@ -2,6 +2,8 @@
  * file defaults.h
  */
 
+#pragma once
+
 void setLeftRightBanksNeedBetterName();
 void setDefaultBaseEngine();
 void setDefaultFuel();
@@ -10,6 +12,7 @@ void setDefaultCranking();
 void setGDIFueling();
 void setGdiWallWetting();
 void setInline4();
+void setupTLE9201(Gpio controlPin, Gpio direction, Gpio disable, int dcIndex = 0);
 
 #define DEFAULT_CRANKING_DWELL_MS 6
 #define DEFAULT_CRANKING_ANGLE 6

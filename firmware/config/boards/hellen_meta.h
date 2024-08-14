@@ -30,7 +30,6 @@ void setHellenCan();
 void setHellen64Can();
 
 void setHellenVbatt();
-void setupTLE9201(Gpio controlPin, Gpio direction, Gpio disable, int dcIndex = 0);
 
 int detectHellenBoardId();
 void detectHellenBoardType();
