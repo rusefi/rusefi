@@ -35,8 +35,9 @@ public class FrameHelper {
         return title + " " + bundleName;
     }
 
+    // note hard-coded 'EXIT_ON_CLOSE' - that's the best choice at the moment
     public static FrameHelper createFrame(String title) {
-        FrameHelper frame = new FrameHelper();
+        FrameHelper frame = new FrameHelper(JDialog.EXIT_ON_CLOSE);
         frame.frame.setTitle(appendBundleName(title));
         return frame;
     }

@@ -86,7 +86,7 @@ public class StartupFrame {
             public void windowClosed(WindowEvent ev) {
                 if (!isProceeding) {
                     getConfig().save();
-                    IoUtils.exit("windowClosed", 0);
+                    log.info("Configuration saved.");
                 }
             }
         });
