@@ -41,6 +41,9 @@ void setBoardConfigOverrides() {
 }
 
 void setBoardDefaultConfiguration() {
+  setupTLE9201(/*PWM controlPin*/Gpio::MM100_OUT_PWM3, Gpio::MM100_OUT_PWM4, Gpio::MM100_SPI2_MISO);
+  setupTLE9201(/*PWM controlPin*/Gpio::MM100_OUT_PWM5, Gpio::MM100_SPI2_MOSI, Gpio::MM100_USB1ID, 1);
+
 		engineConfiguration->injectionPins[0] = Gpio::MM100_INJ1;
   	engineConfiguration->injectionPins[1] = Gpio::MM100_INJ2;
   	engineConfiguration->injectionPins[2] = Gpio::MM100_INJ3;

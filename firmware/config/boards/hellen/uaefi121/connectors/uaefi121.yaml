@@ -93,19 +93,22 @@ pins:
     color: green
 
   - pin: 14a
-    ts_name: LS1
+    meta: MM100_INJ7
+    ts_name: ___ LS1
     class: outputs
     function: Low-Side 1 output
     type: ls
 
   - pin: 15a
-    ts_name: LS2
+    meta: MM100_INJ8
+    ts_name: ___ LS2
     class: outputs
     function: Low-Side 2 output
     type: ls
 
   - pin: 16a
-    ts_name: LS3
+    ts_name: ___ LS3
+    meta: MM100_OUT_PWM1
     class: outputs
     function: Low-Side 3 output
     type: ls
@@ -497,7 +500,8 @@ pins:
     type: ls
 
   - pin: 88a
-    ts_name: LS4
+    ts_name: ___ LS4
+    meta: MM100_OUT_PWM2
     class: outputs
     function: Low-Side 4 output
     type: ls
