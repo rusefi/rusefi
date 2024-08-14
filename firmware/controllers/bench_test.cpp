@@ -343,64 +343,56 @@ static void handleBenchCategory(uint16_t index) {
 
 static void handleCommandX14(uint16_t index) {
 	switch (index) {
-	case TS_GRAB_TPS_CLOSED:
-		grabTPSIsClosed();
-		return;
-	case TS_GRAB_TPS_WOT:
-		grabTPSIsWideOpen();
-		return;
-	// case 4: tps2_closed
-	// case 5: tps2_wot
-	case TS_GRAB_PEDAL_UP:
+	case COMMAND_X14_GRAB_PEDAL_UP:
 		grabPedalIsUp();
 		return;
-	case TS_GRAB_PEDAL_WOT:
+	case COMMAND_X14_GRAB_PEDAL_DOWN:
 		grabPedalIsWideOpen();
 		return;
-	case TS_RESET_TLE8888:
+	case COMMAND_X14_RESET_TLE8888:
 #if (BOARD_TLE8888_COUNT > 0)
 		tle8888_req_init();
 #endif
 		return;
-	case 0xA:
+	case COMMAND_X14_WRITE_CONFIG:
 		// cmd_write_config
 #if EFI_INTERNAL_FLASH
 		writeToFlashNow();
 #endif /* EFI_INTERNAL_FLASH */
 		return;
 #if EFI_EMULATE_POSITION_SENSORS
-	case 0xD:
+	case COMMAND_X14_ENABLE_SELF_STIM:
 		enableTriggerStimulator();
 		return;
-	case 0xF:
+	case COMMAND_X14_DISABLE_SELF_STIM:
 		disableTriggerStimulator();
 		return;
-	case 0x13:
+	case COMMAND_X14_ENABLE_EXTERNAL_STIM:
 		enableExternalTriggerStimulator();
 		return;
 #endif // EFI_EMULATE_POSITION_SENSORS
 #if EFI_ELECTRONIC_THROTTLE_BODY
-	case 0xE:
+	case COMMAND_X14_ETB_AUTO_CALIBRATE:
 		etbAutocal(0);
 		return;
-	case 0x11:
+	case COMMAND_X14_ETB2_AUTO_CALIBRATE:
 		etbAutocal(1);
 		return;
-	case 0xC:
+	case COMMAND_X14_ETB_AUTOTUNE:
 		engine->etbAutoTune = true;
 		return;
-	case 0x10:
+	case COMMAND_X14_ETB_AUTOTUNE_STOP:
 		engine->etbAutoTune = false;
 #if EFI_TUNER_STUDIO
 		engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::None;
 #endif // EFI_TUNER_STUDIO
 		return;
-#endif
-	case 0x12:
+#endif // EFI_ELECTRONIC_THROTTLE_BODY
+	case COMMAND_X14_WIDEBAND_FIRMWARE_UPDATE:
 		widebandUpdatePending = true;
 		benchSemaphore.signal();
 		return;
-	case 0x15:
+	case COMMAND_X14_BURN_WITHOUT_FLASH:
 #if EFI_PROD_CODE
 		extern bool burnWithoutFlash;
 		burnWithoutFlash = true;
