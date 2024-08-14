@@ -63,27 +63,7 @@ public class BasicStartupFrame {
                 panel.add(noPortsMessage);
 
                 SerialPortScanner.INSTANCE.addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
-                    status.stop();
-                    frame.getFrame().pack();
-
-                    List<SerialPortScanner.PortResult> ecuPorts =  currentHardware.getKnownPorts().stream().filter(portResult -> portResult.type == SerialPortScanner.SerialPortType.EcuWithOpenblt).collect(Collectors.toList());
-
-                    List<SerialPortScanner.PortResult> bootloaderPorts =  currentHardware.getKnownPorts().stream().filter(portResult -> portResult.type == SerialPortScanner.SerialPortType.OpenBlt).collect(Collectors.toList());
-
-
-                    if (!ecuPorts.isEmpty()) {
-                        noPortsMessage.setVisible(false);
-                        update.setEnabled(true);
-                        update.setText("Auto Update Firmware");
-                        update.addActionListener(e -> ProgramSelector.executeJob(update, ProgramSelector.OPENBLT_AUTO, ecuPorts.get(0)));
-                    } else if (!bootloaderPorts.isEmpty()) {
-                        noPortsMessage.setVisible(false);
-                        update.setEnabled(true);
-                        update.setText("Blt Update Firmware");
-                        update.addActionListener(e -> ProgramSelector.executeJob(update, ProgramSelector.OPENBLT_MANUAL, bootloaderPorts.get(0)));
-                    } else {
-                        noPortsMessage.setText("ECU not found");
-                    }
+                    onHardwareUpdated(currentHardware);
                 }));
             } else {
                 update.addActionListener(e -> DfuFlasher.doAutoDfu(update, PortDetector.AUTO, new UpdateStatusWindow("Update")));
@@ -102,6 +82,30 @@ public class BasicStartupFrame {
 
         frame.showFrame(panel, false);
         UiUtils.centerWindow(frame.getFrame());
+    }
+
+    private void onHardwareUpdated(final SerialPortScanner.AvailableHardware currentHardware) {
+        status.stop();
+        frame.getFrame().pack();
+
+        List<SerialPortScanner.PortResult> ecuPorts =  currentHardware.getKnownPorts().stream().filter(portResult -> portResult.type == SerialPortScanner.SerialPortType.EcuWithOpenblt).collect(Collectors.toList());
+
+        List<SerialPortScanner.PortResult> bootloaderPorts =  currentHardware.getKnownPorts().stream().filter(portResult -> portResult.type == SerialPortScanner.SerialPortType.OpenBlt).collect(Collectors.toList());
+
+
+        if (!ecuPorts.isEmpty()) {
+            noPortsMessage.setVisible(false);
+            update.setEnabled(true);
+            update.setText("Auto Update Firmware");
+            update.addActionListener(e -> ProgramSelector.executeJob(update, ProgramSelector.OPENBLT_AUTO, ecuPorts.get(0)));
+        } else if (!bootloaderPorts.isEmpty()) {
+            noPortsMessage.setVisible(false);
+            update.setEnabled(true);
+            update.setText("Blt Update Firmware");
+            update.addActionListener(e -> ProgramSelector.executeJob(update, ProgramSelector.OPENBLT_MANUAL, bootloaderPorts.get(0)));
+        } else {
+            noPortsMessage.setText("ECU not found");
+        }
     }
 
     private void runTool() {
