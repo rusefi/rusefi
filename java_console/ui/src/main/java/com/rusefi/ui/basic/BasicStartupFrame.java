@@ -23,6 +23,8 @@ import javax.swing.*;
 import java.awt.Color;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.rusefi.FileLog.isWindows;
 
@@ -94,13 +96,32 @@ public class BasicStartupFrame {
         final List<SerialPortScanner.PortResult> ecuPorts = currentHardware.getKnownPorts(SerialPortScanner.SerialPortType.EcuWithOpenblt);
         final List<SerialPortScanner.PortResult> bootloaderPorts = currentHardware.getKnownPorts(SerialPortScanner.SerialPortType.OpenBlt);
 
+        final int availablePortCount = ecuPorts.size() + bootloaderPorts.size();
+        switch (availablePortCount) {
+            case 0: {
+                resetPort("ECU not found");
+                break;
+            }
+            case 1: {
+                if (!ecuPorts.isEmpty()) {
+                    switchToPort(ecuPorts.get(0), "Auto Update Firmware");
+                } else if (!bootloaderPorts.isEmpty()) {
+                    switchToPort(bootloaderPorts.get(0), "Blt Update Firmware");
+                } else {
+                    // TODO: notify user about strange situation?
+                }
+                break;
+            }
+            default: {
+                resetPort(String.format(
+                    "Multiple ECUs found on: %s",
+                    Stream.concat(ecuPorts.stream(), bootloaderPorts.stream())
+                        .map(portResult -> portResult.port)
+                        .collect(Collectors.joining(", "))
+                ));
+                break;
 
-        if (!ecuPorts.isEmpty()) {
-            switchToPort(ecuPorts.get(0), "Auto Update Firmware");
-        } else if (!bootloaderPorts.isEmpty()) {
-            switchToPort(bootloaderPorts.get(0), "Blt Update Firmware");
-        } else {
-            noPortsMessage.setText("ECU not found");
+            }
         }
     }
 
@@ -109,6 +130,13 @@ public class BasicStartupFrame {
         noPortsMessage.setVisible(false);
         update.setEnabled(true);
         update.setText(updateButtonText);
+    }
+
+    private void resetPort(final String reason) {
+        portToUpdateFirmware = Optional.empty();
+        update.setEnabled(false);
+        noPortsMessage.setText(reason);
+        noPortsMessage.setVisible(true);
     }
 
     private void onUpdateButtonClicked() {
