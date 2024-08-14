@@ -20,6 +20,7 @@
 
 #include "pch.h"
 #include "mre_meta.h"
+#include "defaults.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = MRE_INJ_1;
