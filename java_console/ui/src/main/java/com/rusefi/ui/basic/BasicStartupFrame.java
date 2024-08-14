@@ -96,18 +96,19 @@ public class BasicStartupFrame {
 
 
         if (!ecuPorts.isEmpty()) {
-            portToUpdateFirmware = Optional.of(ecuPorts.get(0));
-            noPortsMessage.setVisible(false);
-            update.setEnabled(true);
-            update.setText("Auto Update Firmware");
+            switchToPort(ecuPorts.get(0), "Auto Update Firmware");
         } else if (!bootloaderPorts.isEmpty()) {
-            portToUpdateFirmware = Optional.of(bootloaderPorts.get(0));
-            noPortsMessage.setVisible(false);
-            update.setEnabled(true);
-            update.setText("Blt Update Firmware");
+            switchToPort(bootloaderPorts.get(0), "Blt Update Firmware");
         } else {
             noPortsMessage.setText("ECU not found");
         }
+    }
+
+    private void switchToPort(final SerialPortScanner.PortResult port, final String updateButtonText) {
+        portToUpdateFirmware = Optional.of(port);
+        noPortsMessage.setVisible(false);
+        update.setEnabled(true);
+        update.setText(updateButtonText);
     }
 
     private void onUpdateButtonClicked() {
