@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/ac_control.txt Tue Jun 18 15:21:47 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/ac_control.txt Wed Aug 14 05:20:00 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -123,16 +123,11 @@ struct ac_control_s {
 	offset 4 bit 31 */
 	bool unusedBit_12_31 : 1 {};
 	/**
-	 * AC latest activity
 	 * offset 8
-	 */
-	int latest_usage_ac_control = (int)0;
-	/**
-	 * offset 12
 	 */
 	int acSwitchLastChangeTimeMs = (int)0;
 };
-static_assert(sizeof(ac_control_s) == 16);
+static_assert(sizeof(ac_control_s) == 12);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/ac_control.txt Tue Jun 18 15:21:47 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/ac_control.txt Wed Aug 14 05:20:00 UTC 2024

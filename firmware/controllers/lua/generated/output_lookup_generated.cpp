@@ -1151,9 +1151,6 @@ float getOutputValueByName(const char *name) {
 // acPressureTooHigh
 		case -1220300524:
 			return engine->module<AcController>()->acPressureTooHigh;
-// latest_usage_ac_control
-		case 1630756809:
-			return engine->module<AcController>()->latest_usage_ac_control;
 // acSwitchLastChangeTimeMs
 		case -954065340:
 			return engine->module<AcController>()->acSwitchLastChangeTimeMs;

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/ac_control.txt Fri Jul 19 23:44:20 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/ac_control.txt Wed Aug 14 05:20:00 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -188,8 +188,7 @@ public class AcControl {
 	public static final Field ACCOMPRESSORSTATE = Field.create("ACCOMPRESSORSTATE", 4, FieldType.BIT, 7).setBaseOffset(1080);
 	public static final Field ACPRESSURETOOLOW = Field.create("ACPRESSURETOOLOW", 4, FieldType.BIT, 8).setBaseOffset(1080);
 	public static final Field ACPRESSURETOOHIGH = Field.create("ACPRESSURETOOHIGH", 4, FieldType.BIT, 9).setBaseOffset(1080);
-	public static final Field LATEST_USAGE_AC_CONTROL = Field.create("LATEST_USAGE_AC_CONTROL", 8, FieldType.INT).setScale(1.0).setBaseOffset(1080);
-	public static final Field ACSWITCHLASTCHANGETIMEMS = Field.create("ACSWITCHLASTCHANGETIMEMS", 12, FieldType.INT).setScale(1.0).setBaseOffset(1080);
+	public static final Field ACSWITCHLASTCHANGETIMEMS = Field.create("ACSWITCHLASTCHANGETIMEMS", 8, FieldType.INT).setScale(1.0).setBaseOffset(1080);
 	public static final Field[] VALUES = {
 	ACBUTTONSTATE,
 	ALIGNMENTFILL_AT_1,
@@ -203,7 +202,6 @@ public class AcControl {
 	ACCOMPRESSORSTATE,
 	ACPRESSURETOOLOW,
 	ACPRESSURETOOHIGH,
-	LATEST_USAGE_AC_CONTROL,
 	ACSWITCHLASTCHANGETIMEMS,
 	};
 }
