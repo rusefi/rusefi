@@ -4,12 +4,13 @@
 #include "pch.h"
 #include "sent.h"
 
+/*
 void grabTPSIsClosed() {
 #if EFI_PROD_CODE
 	printTPSInfo();
 	engineConfiguration->tpsMin = convertVoltageTo10bitADC(Sensor::getRaw(SensorType::Tps1));
 	printTPSInfo();
-#endif /* EFI_PROD_CODE */
+#endif // EFI_PROD_CODE
 }
 
 void grabTPSIsWideOpen() {
@@ -17,8 +18,9 @@ void grabTPSIsWideOpen() {
 	printTPSInfo();
 	engineConfiguration->tpsMax = convertVoltageTo10bitADC(Sensor::getRaw(SensorType::Tps1));
 	printTPSInfo();
-#endif /* EFI_PROD_CODE */
+#endif // EFI_PROD_CODE
 }
+*/
 
 void grabPedalIsUp() {
 	/**

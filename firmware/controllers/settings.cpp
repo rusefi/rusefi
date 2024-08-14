@@ -775,9 +775,6 @@ void initSettings() {
 	// todo: start saving values into flash right away?
 
 	addConsoleAction("tpsinfo", printTPSInfo);
-	addConsoleAction("calibrate_tps_1_closed", grabTPSIsClosed);
-	addConsoleAction("calibrate_tps_1_wot", grabTPSIsWideOpen);
-
 
 #if EFI_ENGINE_CONTROL
     // used by HW CI
