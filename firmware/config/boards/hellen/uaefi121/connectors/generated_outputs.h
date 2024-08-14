@@ -4,6 +4,9 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
+	Gpio::MM100_INJ7, // 14a LS1
+	Gpio::MM100_INJ8, // 15a LS2
+	Gpio::MM100_OUT_PWM1, // 16a LS3
 	Gpio::MM100_INJ1, // 44a INJ_1
 	Gpio::MM100_INJ2, // 45a INJ_2
 	Gpio::MM100_INJ3, // 46a INJ_3
@@ -12,12 +15,16 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::MM100_INJ6, // 49a INJ_6
 	Gpio::MM100_SPI2_CS, // 50a INJ_7
 	Gpio::MM100_SPI2_SCK, // 51a INJ_8
+	Gpio::MM100_OUT_PWM2, // 88a LS4
 	Gpio::MM100_IGN6, // Coil 6
 	Gpio::MM100_IGN5, // Coil 5
 	Gpio::MM100_IGN4, // Coil 4
 	Gpio::MM100_IGN3, // Coil 3
 	Gpio::MM100_IGN2, // Coil 2
 	Gpio::MM100_IGN1, // Coil 1
+// "14a LS1",
+// "15a LS2",
+// "16a LS3",
 // "44a INJ_1",
 // "45a INJ_2",
 // "46a INJ_3",
@@ -26,6 +33,7 @@ Gpio GENERATED_OUTPUTS = {
 // "49a INJ_6",
 // "50a INJ_7",
 // "51a INJ_8",
+// "88a LS4",
 // "Coil 6",
 // "Coil 5",
 // "Coil 4",

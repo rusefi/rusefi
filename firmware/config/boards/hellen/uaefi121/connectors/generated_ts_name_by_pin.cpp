@@ -12,8 +12,12 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::B13: return "51a INJ_8";
 		case Gpio::B8: return "Coil 6";
 		case Gpio::C13: return "Coil 1";
+		case Gpio::C6: return "88a LS4";
 		case Gpio::D10: return "47a INJ_4";
 		case Gpio::D11: return "46a INJ_3";
+		case Gpio::D12: return "15a LS2";
+		case Gpio::D13: return "16a LS3";
+		case Gpio::D15: return "14a LS1";
 		case Gpio::D2: return "48a INJ_5";
 		case Gpio::D3: return "44a INJ_1";
 		case Gpio::E2: return "Coil 5";
