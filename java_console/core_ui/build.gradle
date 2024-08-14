@@ -6,5 +6,6 @@ plugins {
 // this CORE module cannot depend on model/ini!
 
 dependencies {
+    api project(':logging-api')
     api project(':core_io')
 }

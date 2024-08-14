@@ -1,5 +1,6 @@
 package com.rusefi.core.ui;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.core.io.BundleUtil;
 import org.jetbrains.annotations.NotNull;
 
@@ -9,11 +10,14 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Arrays;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 /**
  * Date: 3/24/13
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public class FrameHelper {
+    private static final Logging log = getLogging(FrameHelper.class);
     private final JFrame frame = new JFrame();
 
     public FrameHelper() {
@@ -65,9 +69,9 @@ public class FrameHelper {
                 onWindowClosed();
                 for (Thread t : Thread.getAllStackTraces().keySet()) {
                     if (!t.isDaemon())
-                        System.out.println("Non-daemon thread: " + t);
+                       log.info("Non-daemon thread: " + t);
                 }
-                System.out.println(Arrays.toString(Frame.getFrames()));
+                log.info(Arrays.toString(Frame.getFrames()));
             }
         });
         frame.add(component);
