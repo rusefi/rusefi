@@ -1,3 +1,5 @@
+meta: config/boards/hellen_mm100_meta.h
+
 pins:
   - pin: 1a
     class: outputs
@@ -216,14 +218,19 @@ pins:
     color: yellow
 
   - pin: 38a
+    meta: MM100_IN_TPS_ANALOG
     class: analog_inputs
-    ts_name: TPS 1
+    ts_name: ___ TPS1
     function: TPS 1 sensor input
+    type: av
+    color: green
 
   - pin: 39a
     class: analog_inputs
-    ts_name: TPS 2
+    meta: MM100_IN_AUX1_ANALOG
+    ts_name: ___ TPS2
     function: TPS 2 sensor input
+    type: av
     color: blue
 
   - pin: 40a
@@ -247,56 +254,61 @@ pins:
 
   - pin: 44a
     class: outputs
-    ts_name: INJ_1
+    meta: MM100_INJ1
+    ts_name: ___ INJ_1
     function: Injector 1
     color: green
     type: inj
 
   - pin: 45a
     class: outputs
-    ts_name: INJ_2
+    meta: MM100_INJ2
+    ts_name: ___ INJ_2
     function: Injector 2
     color: white
     type: inj
 
   - pin: 46a
     class: outputs
-    ts_name: INJ_3
+    meta: MM100_INJ3
+    ts_name: ___ INJ_3
     function: Injector 3
     color: blue
     type: inj
 
   - pin: 47a
     class: outputs
-    ts_name: INJ_4
+    meta: MM100_INJ4
+    ts_name: ___ INJ_4
     function: Injector 4
     color: orange/brown
     type: inj
 
   - pin: 48a
     class: outputs
-    ts_name: INJ_5
+    meta: MM100_INJ5
+    ts_name: ___ INJ_5
     function: Injector 5
     color: brown
     type: inj
 
   - pin: 49a
     class: outputs
-    ts_name: INJ_6
+    ts_name: ___ INJ_6
     function: Injector 6
     color: yellow
     type: inj
 
   - pin: 50a
     class: outputs
-    ts_name: INJ_7
+    ts_name: ___ INJ_7
     function: Injector 7
     color: white
     type: inj
 
   - pin: 51a
     class: outputs
-    ts_name: INJ_8
+    ts_name: ___ INJ_8
     function: Injector 8
     color: green
     type: inj
@@ -357,8 +369,10 @@ pins:
 
   - pin: 63a
     class: analog_inputs
-    ts_name: IAT
-    function: IAT sensor
+    meta: MM100_IN_IAT_ANALOG
+    ts_name: ___ IAT
+    function: IAT input
+    type: at
     color: blue
 
   - pin: 64a
@@ -368,8 +382,10 @@ pins:
 
   - pin: 65a
     class: analog_inputs
-    ts_name: CLT
-    function: CLT sensor
+    meta: MM100_IN_CLT_ANALOG
+    ts_name: ___ CLT Coolant
+    function: CLT input
+    type: at
     color: grey
 
   - pin: 66a
@@ -484,15 +500,19 @@ pins:
 
   - pin: 90a
     class: analog_inputs
-    ts_name: PPS 1
-    function: PPS 1 sensor input
+    meta: MM100_IN_PPS_ANALOG
+    ts_name: ___ PPS1
+    function: PPS input 1
+    type: av
     color: white
 
   - pin: 91a
     class: analog_inputs
-    ts_name: PPS 2
-    function: PPS 2 sensor input
-    color: orange
+    meta: MM100_IN_AUX2_ANALOG
+    ts_name: ___ PPS2
+    function: PPS input 2
+    type: av
+    color: orange/brown
 
   - pin: 92a
     function: WBO2 SWD

@@ -9,6 +9,17 @@
 #include "hellen_meta.h"
 #include "hellen_leds_100.cpp"
 
+static void setupDefaultSensorInputs() {
+	engineConfiguration->tps1_1AdcChannel = MM100_IN_TPS_ANALOG;
+	engineConfiguration->tps1_2AdcChannel = MM100_IN_AUX1_ANALOG;
+	engineConfiguration->map.sensor.hwChannel = MM100_IN_MAP1_ANALOG;
+
+	setPPSInputs(MM100_IN_PPS_ANALOG, MM100_IN_AUX2_ANALOG);
+
+	engineConfiguration->clt.adcChannel = MM100_IN_CLT_ANALOG;
+	engineConfiguration->iat.adcChannel = MM100_IN_IAT_ANALOG;
+}
+
 void setBoardConfigOverrides() {
 	setHellenMegaEnPin();
 	setHellenVbatt();
@@ -30,9 +41,38 @@ void setBoardConfigOverrides() {
 }
 
 void setBoardDefaultConfiguration() {
+		engineConfiguration->injectionPins[0] = Gpio::MM100_INJ1;
+  	engineConfiguration->injectionPins[1] = Gpio::MM100_INJ2;
+  	engineConfiguration->injectionPins[2] = Gpio::MM100_INJ3;
+  	engineConfiguration->injectionPins[3] = Gpio::MM100_INJ4;
+  	engineConfiguration->injectionPins[4] = Gpio::MM100_INJ5;
+  	engineConfiguration->injectionPins[5] = Gpio::MM100_INJ6;
 
+	engineConfiguration->ignitionPins[0] = Gpio::MM100_IGN1;
+	engineConfiguration->ignitionPins[1] = Gpio::MM100_IGN2;
+	engineConfiguration->ignitionPins[2] = Gpio::MM100_IGN3;
+	engineConfiguration->ignitionPins[3] = Gpio::MM100_IGN4;
+	engineConfiguration->ignitionPins[4] = Gpio::MM100_IGN5;
+	engineConfiguration->ignitionPins[5] = Gpio::MM100_IGN6;
+
+    setupDefaultSensorInputs();
 }
 
 int getBoardMetaDcOutputsCount() {
-    return 2;
+    // todo return 2;
+    return 0;
+}
+
+static Gpio OUTPUTS[] = {
+	Gpio::MM100_INJ1,
+	Gpio::MM100_INJ2,
+	Gpio::MM100_INJ3,
+};
+
+int getBoardMetaOutputsCount() {
+    return efi::size(OUTPUTS);
+}
+
+Gpio* getBoardMetaOutputs() {
+    return OUTPUTS;
 }
