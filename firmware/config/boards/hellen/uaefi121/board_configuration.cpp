@@ -64,9 +64,12 @@ int getBoardMetaDcOutputsCount() {
 }
 
 static Gpio OUTPUTS[] = {
-	Gpio::MM100_INJ1,
-	Gpio::MM100_INJ2,
-	Gpio::MM100_INJ3,
+	Gpio::MM100_INJ1, // 44a INJ_1
+	Gpio::MM100_INJ2, // 45a INJ_2
+	Gpio::MM100_INJ3, // 46a INJ_3
+	Gpio::MM100_INJ4, // 47a INJ_4
+	Gpio::MM100_INJ5, // 48a INJ_5
+	Gpio::MM100_INJ6,
 };
 
 int getBoardMetaOutputsCount() {

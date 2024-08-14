@@ -46,6 +46,7 @@ pins:
 
   - pin: 8a
     class: outputs
+    meta: MM100_IGN6
     ts_name: Coil 6
     function: Coil 6
     color: yellow
@@ -53,6 +54,7 @@ pins:
 
   - pin: 9a
     class: outputs
+    meta: MM100_IGN5
     ts_name: Coil 5
     function: Coil 5
     color: brown
@@ -60,6 +62,7 @@ pins:
 
   - pin: 10a
     class: outputs
+    meta: MM100_IGN4
     ts_name: Coil 4
     function: Coil 4
     type: ign
@@ -67,6 +70,7 @@ pins:
 
   - pin: 11a
     class: outputs
+    meta: MM100_IGN3
     ts_name: Coil 3
     function: Coil 3
     type: ign
@@ -74,6 +78,7 @@ pins:
 
   - pin: 12a
     class: outputs
+    meta: MM100_IGN2
     ts_name: Coil 2
     function: Coil 2
     type: ign
@@ -81,6 +86,7 @@ pins:
 
   - pin: 13a
     class: outputs
+    meta: MM100_IGN1
     ts_name: Coil 1
     function: Coil 1
     type: ign
@@ -294,6 +300,7 @@ pins:
 
   - pin: 49a
     class: outputs
+    meta: MM100_INJ6
     ts_name: ___ INJ_6
     function: Injector 6
     color: yellow
@@ -301,6 +308,7 @@ pins:
 
   - pin: 50a
     class: outputs
+    meta: MM100_SPI2_CS
     ts_name: ___ INJ_7
     function: Injector 7
     color: white
@@ -308,6 +316,7 @@ pins:
 
   - pin: 51a
     class: outputs
+    meta: MM100_SPI2_SCK
     ts_name: ___ INJ_8
     function: Injector 8
     color: green
