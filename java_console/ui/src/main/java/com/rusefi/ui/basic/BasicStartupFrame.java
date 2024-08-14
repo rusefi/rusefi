@@ -33,6 +33,10 @@ import static com.rusefi.FileLog.isWindows;
 public class BasicStartupFrame {
     private final FrameHelper frame;
 
+    private final JLabel noPortsMessage = new JLabel();
+    private final StatusAnimation status = new StatusAnimation(noPortsMessage::setText, StartupFrame.SCANNING_PORTS);
+    private final JButton update = ProgramSelector.createUpdateFirmwareButton();
+
     public static void main(String[] args) {
         runTool(null);
     }
@@ -51,16 +55,12 @@ public class BasicStartupFrame {
             panel.add(ToolButtons.createShowDeviceManagerButton());
             panel.add(StartupFrame.binaryModificationControl());
 
-            JButton update = ProgramSelector.createUpdateFirmwareButton();
             boolean requireBlt = FindFileHelper.isObfuscated();
             if (requireBlt) {
                 update.setEnabled(false);
 
-                JLabel noPortsMessage = new JLabel();
                 noPortsMessage.setForeground(Color.red);
                 panel.add(noPortsMessage);
-
-                StatusAnimation status = new StatusAnimation(noPortsMessage::setText, StartupFrame.SCANNING_PORTS);
 
                 SerialPortScanner.INSTANCE.addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
                     status.stop();
