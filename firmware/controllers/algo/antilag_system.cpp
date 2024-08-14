@@ -9,7 +9,6 @@
 
 #if EFI_ANTILAG_SYSTEM
 #include "antilag_system.h"
-#include "periodic_task.h"
 #include "advance_map.h"
 #include "engine_state.h"
 #include "advance_map.h"

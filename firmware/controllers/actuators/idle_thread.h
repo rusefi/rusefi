@@ -10,7 +10,6 @@
 
 #include "engine_module.h"
 #include "rusefi_types.h"
-#include "periodic_task.h"
 #include "efi_pid.h"
 #include "sensor.h"
 #include "idle_state_generated.h"
