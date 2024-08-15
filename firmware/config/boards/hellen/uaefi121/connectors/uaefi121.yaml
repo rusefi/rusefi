@@ -258,7 +258,8 @@ pins:
 
   - pin: 43a
     class: outputs
-    ts_name: HS
+    mega: MM100_LED2_GREEN
+    ts_name: ___ High Side Output
     function: High-side high current output
 
   - pin: 44a
@@ -488,15 +489,17 @@ pins:
     function: BUTTON2 sensor
 
   - pin: 86a
-    ts_name: LS_HOT1
+    ts_name: LS5_HOT
+    mega: MM100_IGN7
     class: outputs
-    function: Low-Side 1 always hot capable output
+    function: Low-Side 5 always hot / relay capable output
     type: ls
 
   - pin: 87a
-    ts_name: LS_HOT2
+    ts_name: LS6_HOT
+    mega: MM100_IGN8
     class: outputs
-    function: Low-Side 2 always hot capable output
+    function: Low-Side 6 always hot / relay capable output
     type: ls
 
   - pin: 88a

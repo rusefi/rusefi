@@ -80,10 +80,18 @@ static Gpio OUTPUTS[] = {
 	Gpio::MM100_INJ7, // 14a LS1
 	Gpio::MM100_INJ8, // 15a LS2
 	Gpio::MM100_OUT_PWM1, // 16a LS3
+	Gpio::MM100_OUT_PWM2,
+	Gpio::MM100_IGN7,
+	Gpio::MM100_IGN8,
+	Gpio::MM100_LED2_GREEN
 };
 
 int getBoardMetaOutputsCount() {
     return efi::size(OUTPUTS);
+}
+
+int getBoardMetaLowSideOutputsCount() {
+    return getBoardMetaOutputsCount() - 1;
 }
 
 Gpio* getBoardMetaOutputs() {
