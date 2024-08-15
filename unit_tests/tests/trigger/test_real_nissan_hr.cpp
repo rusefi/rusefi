@@ -18,8 +18,8 @@ TEST(nissan, realFromFile) {
 	}
 
 	ASSERT_EQ( 1, eth.recentWarnings()->getCount())<< "warningCounter#nissanRealCranking";
+	ASSERT_EQ(1,  engine->triggerCentral.triggerState.totalTriggerErrorCounter);
 	ASSERT_EQ(179, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
-
 }
 
 TEST(nissan, realNoSparkPlugsFromFile) {
@@ -37,11 +37,11 @@ TEST(nissan, realNoSparkPlugsFromFile) {
 		reader.processLine(&eth);
 	}
 
+
 	ASSERT_EQ( 1, eth.recentWarnings()->getCount())<< "warningCounter#nissanRealCranking";
+	ASSERT_EQ(1,  engine->triggerCentral.triggerState.totalTriggerErrorCounter);
 	ASSERT_EQ(215, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
-
 }
-
 
 TEST(nissan, realFromFile4seconds) {
 	CsvReader reader(1, /* vvtCount */ 0);
@@ -60,5 +60,6 @@ TEST(nissan, realFromFile4seconds) {
 	}
 
 	ASSERT_EQ( 1, eth.recentWarnings()->getCount())<< "warningCounter#nissanRealCranking";
+	ASSERT_EQ(8,  engine->triggerCentral.triggerState.totalTriggerErrorCounter);
 	ASSERT_EQ(179, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 }
