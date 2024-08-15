@@ -1,6 +1,7 @@
 package com.rusefi.maintenance;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.AvailableHardware;
 import com.rusefi.UiProperties;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.FindFileHelper;
@@ -339,7 +340,7 @@ public class ProgramSelector {
         return content;
     }
 
-    public void apply(SerialPortScanner.AvailableHardware currentHardware) {
+    public void apply(AvailableHardware currentHardware) {
         noHardware.setVisible(currentHardware.isEmpty());
         updateModeAndButton.setVisible(!currentHardware.isEmpty());
 

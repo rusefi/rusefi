@@ -1,6 +1,7 @@
 package com.rusefi.ui.basic;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.AvailableHardware;
 import com.rusefi.Launcher;
 import com.rusefi.SerialPortScanner;
 import com.rusefi.StartupFrame;
@@ -93,7 +94,7 @@ public class BasicStartupFrame {
         UiUtils.centerWindow(frame.getFrame());
     }
 
-    private void onHardwareUpdated(final SerialPortScanner.AvailableHardware currentHardware) {
+    private void onHardwareUpdated(final AvailableHardware currentHardware) {
         status.stop();
         frame.getFrame().pack();
 
