@@ -1296,7 +1296,11 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define show_vvt_output_pin true
+<<<<<<< HEAD
 #define SIGNATURE_HASH 1433324592
+=======
+#define SIGNATURE_HASH 4058658055
+>>>>>>> 598e502ab6 (Auto-generated configs and docs)
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1740,7 +1744,11 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
+<<<<<<< HEAD
 #define TS_SIGNATURE "rusEFI master.2024.08.17.uaefi121.1433324592"
+=======
+#define TS_SIGNATURE "rusEFI master.2024.08.15.uaefi121.4058658055"
+>>>>>>> 598e502ab6 (Auto-generated configs and docs)
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
