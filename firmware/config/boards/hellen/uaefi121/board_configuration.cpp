@@ -85,6 +85,7 @@ static Gpio OUTPUTS[] = {
 	Gpio::MM100_INJ7, // 14a LS1
 	Gpio::MM100_INJ8, // 15a LS2
 	Gpio::MM100_OUT_PWM1, // 16a LS3
+<<<<<<< HEAD
 	Gpio::MM100_OUT_PWM2, // 88a LS4
 	Gpio::MM100_IGN7, // 86a LS5_HOT
 	Gpio::MM100_IGN8, // 87a LS6_HOT
@@ -96,6 +97,12 @@ static Gpio OUTPUTS[] = {
 	Gpio::MM100_IGN5, // Coil 5
 	Gpio::MM100_IGN6, // Coil 6
 
+=======
+	MM100_OUT_PWM2,
+	MM100_IGN7,
+	MM100_IGN8,
+	MM100_LED2_GREEN
+>>>>>>> e05dccb987 (only:uaefi121)
 };
 
 int getBoardMetaOutputsCount() {
@@ -103,7 +110,11 @@ int getBoardMetaOutputsCount() {
 }
 
 int getBoardMetaLowSideOutputsCount() {
+<<<<<<< HEAD
     return getBoardMetaOutputsCount() - 1 - 6;
+=======
+    return getBoardMetaOutputsCount() - 1;
+>>>>>>> e05dccb987 (only:uaefi121)
 }
 
 Gpio* getBoardMetaOutputs() {
