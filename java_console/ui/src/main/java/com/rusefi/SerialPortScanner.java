@@ -105,6 +105,12 @@ public enum SerialPortScanner {
 
     private final List<Listener> listeners = new CopyOnWriteArrayList<>();
 
+    public AvailableHardware getCurrentHardware() {
+        synchronized (lock) {
+            return knownHardware;
+        }
+    }
+
     public void addListener(Listener listener) {
         boolean shouldStart = listeners.isEmpty();
         listeners.add(listener);

@@ -2,6 +2,7 @@ package com.rusefi.maintenance;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.AvailableHardware;
+import com.rusefi.SerialPortScanner.PortResult;
 import com.rusefi.UiProperties;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.FindFileHelper;
@@ -10,7 +11,6 @@ import com.rusefi.Launcher;
 import com.rusefi.SerialPortScanner;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ui.util.URLLabel;
@@ -24,12 +24,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
+import static com.rusefi.SerialPortScanner.SerialPortType.OpenBlt;
 import static com.rusefi.core.ui.FrameHelper.appendBundleName;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 import static com.rusefi.ui.util.UiUtils.trueLayout;
@@ -57,7 +57,7 @@ public class ProgramSelector {
     private final JPanel updateModeAndButton = new JPanel(new FlowLayout());
     private final JComboBox<String> updateModeComboBox = new JComboBox<>();
 
-    public ProgramSelector(JComboBox<SerialPortScanner.PortResult> comboPorts) {
+    public ProgramSelector(JComboBox<PortResult> comboPorts) {
         content.add(updateModeAndButton, BorderLayout.NORTH);
         content.add(noHardware, BorderLayout.SOUTH);
 
@@ -75,7 +75,7 @@ public class ProgramSelector {
             @Override
             public void actionPerformed(ActionEvent e) {
                 final String selectedMode = (String) updateModeComboBox.getSelectedItem();
-                final SerialPortScanner.PortResult selectedPort = ((SerialPortScanner.PortResult) comboPorts.getSelectedItem());
+                final PortResult selectedPort = ((PortResult) comboPorts.getSelectedItem());
 
                 getConfig().getRoot().setProperty(getClass().getSimpleName(), selectedMode);
                 executeJob(comboPorts, selectedMode, selectedPort);
@@ -83,7 +83,7 @@ public class ProgramSelector {
         });
     }
 
-    public static void executeJob(JComponent parent, String selectedMode, SerialPortScanner.PortResult selectedPort) {
+    public static void executeJob(JComponent parent, String selectedMode, PortResult selectedPort) {
         log.info("ProgramSelector " + selectedMode + " " + selectedPort);
                 String jobName = null;
                 Consumer<UpdateOperationCallbacks> job;
@@ -126,7 +126,7 @@ public class ProgramSelector {
                         break;
                     case OPENBLT_AUTO:
                         jobName = "OpenBLT via Serial";
-                        job = (callbacks) -> flashOpenbltSerialAutomatic(parent, selectedPort.port, callbacks);
+                        job = (callbacks) -> flashOpenbltSerialAutomatic(parent, selectedPort, callbacks);
                         break;
                     case DFU_ERASE:
                         jobName = "DFU erase";
@@ -193,39 +193,45 @@ public class ProgramSelector {
         }
     }
 
-    private static Set<String> waitForEcuPortDisappeared(
-        final String ecuPort,
+    private static boolean waitForEcuPortDisappeared(
+        final PortResult ecuPort,
         final UpdateOperationCallbacks callbacks
     ) {
-        // we need the following wrapper to modify local variable in lambda:
-        var currentPortsWrapper = new Object() { Set<String> currentPorts; };
-        waitForPredicate(
+        return waitForPredicate(
             String.format("Waiting for ECU on port %s to reboot to OpenBlt...", ecuPort),
             () -> {
-                final Set<String> currentPorts = LinkManager.getCommPorts();
-                log.info("currentPorts: [" + String.join(",", currentPorts) + "]");
-                currentPortsWrapper.currentPorts = currentPorts;
-                return !currentPorts.contains(ecuPort);
+                final AvailableHardware availableHardware = SerialPortScanner.INSTANCE.getCurrentHardware();
+                log.info(String.format(
+                    "current ports: [%s]",
+                    availableHardware.getKnownPorts().stream()
+                        .map(PortResult::toString)
+                        .collect(Collectors.joining(","))
+                ));
+                return !availableHardware.isPortAvailable(ecuPort);
             },
             callbacks
         );
-        return currentPortsWrapper.currentPorts;
     }
 
-    private static List<String> waitForNewPortAppeared(
-        final Set<String> portsBefore,
+    private static List<PortResult> waitForNewOpenBltPortAppeared(
+        final List<PortResult> openBltPortsBefore,
         final UpdateOperationCallbacks callbacks
     ) {
-        final List<String> newPorts = new ArrayList<>();
+        final List<PortResult> newPorts = new ArrayList<>();
         waitForPredicate(
-            "Waiting for new port to appear...",
+            "Waiting for new OpenBlt port to appear...",
             () -> {
-                final Set<String> portsAfter = LinkManager.getCommPorts();
-                log.info("portsAfter: [" + String.join(",", portsAfter) + "]");
-                for (String s : portsAfter) {
-                    if (!portsBefore.contains(s)) {
+                final AvailableHardware availableHardwareAfter = SerialPortScanner.INSTANCE.getCurrentHardware();
+                log.info(String.format(
+                    "ports after reboot to OpenBlt: [%s]",
+                    availableHardwareAfter.getKnownPorts().stream()
+                        .map(PortResult::toString)
+                        .collect(Collectors.joining(","))
+                ));
+                for (final PortResult p: availableHardwareAfter.getKnownPorts(OpenBlt)) {
+                    if (!openBltPortsBefore.contains(p)) {
                         // This item is in the after list but not before list
-                        newPorts.add(s);
+                        newPorts.add(p);
                     }
                 }
                 return !newPorts.isEmpty();
@@ -235,14 +241,17 @@ public class ProgramSelector {
         return newPorts;
     }
 
-    private static void flashOpenbltSerialAutomatic(JComponent parent, String ecuPort, UpdateOperationCallbacks callbacks) {
+    private static void flashOpenbltSerialAutomatic(JComponent parent, PortResult ecuPort, UpdateOperationCallbacks callbacks) {
         AutoupdateUtil.assertNotAwtThread();
-        rebootToOpenblt(parent, ecuPort, callbacks);
+
+        final List<PortResult> openBltPortsBefore = SerialPortScanner.INSTANCE.getCurrentHardware().getKnownPorts(OpenBlt);
+
+        rebootToOpenblt(parent, ecuPort.port, callbacks);
 
         // invoking blocking method
-        final Set<String> portsBefore = waitForEcuPortDisappeared(ecuPort, callbacks);
+        final boolean isEcuPortDisappeared = waitForEcuPortDisappeared(ecuPort, callbacks);
 
-        if (portsBefore.contains(ecuPort)) {
+        if (!isEcuPortDisappeared) {
             callbacks.logLine("Looks like your ECU still haven't rebooted to OpenBLT");
             callbacks.logLine("");
             callbacks.logLine("Try closing and opening console again");
@@ -251,7 +260,7 @@ public class ProgramSelector {
             return;
         }
 
-        List<String> newItems = waitForNewPortAppeared(portsBefore, callbacks);
+        final List<PortResult> newItems = waitForNewOpenBltPortAppeared(openBltPortsBefore, callbacks);
 
         // Check that exactly one thing appeared in the "after" list
         if (newItems.isEmpty()) {
@@ -262,12 +271,15 @@ public class ProgramSelector {
 
         if (newItems.size() > 1) {
             // More than one port appeared? whattt?
-            callbacks.logLine("Unable to find ECU after reboot as multiple serial ports appeared. Before: " + portsBefore.size());
+            callbacks.logLine(
+                "Unable to find ECU after reboot as multiple serial ports appeared. Before: "
+                    + openBltPortsBefore.size()
+            );
             callbacks.error();
             return;
         }
 
-        String openbltPort = newItems.get(0);
+        final String openbltPort = newItems.get(0).port;
 
         callbacks.logLine("Serial port " + openbltPort + " appeared, programming firmware...");
 
@@ -376,7 +388,7 @@ public class ProgramSelector {
             updateModeComboBox.addItem(OPENBLT_SWITCH);
             updateModeComboBox.addItem(OPENBLT_MANUAL);
 
-            List<SerialPortScanner.PortResult> listOfBootloaders = currentHardware.getKnownPorts().stream().filter(portResult -> portResult.type == SerialPortScanner.SerialPortType.OpenBlt).collect(Collectors.toList());
+            List<PortResult> listOfBootloaders = currentHardware.getKnownPorts().stream().filter(portResult -> portResult.type == OpenBlt).collect(Collectors.toList());
             if (!listOfBootloaders.isEmpty()) {
                 updateModeComboBox.setSelectedItem(OPENBLT_MANUAL);
             }
