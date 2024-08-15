@@ -34,6 +34,10 @@ public class AvailableHardware {
     public boolean isStLinkConnected() {return stLinkConnected;}
     public boolean isPCANConnected(){return PCANConnected;}
 
+    public boolean isPortAvailable(final SerialPortScanner.PortResult port) {
+        return ports.contains(port);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
