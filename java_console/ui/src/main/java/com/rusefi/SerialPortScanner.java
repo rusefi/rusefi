@@ -201,7 +201,7 @@ public enum SerialPortScanner {
         return new ArrayList<>(results.values());
     }
 
-    private final static Map<String, PortResult> portCache = new HashMap<>();
+    private final static SerialPortCache portCache = new SerialPortCache();
 
     /**
      * Find all available serial ports and checks if simulator local TCP port is available
@@ -218,40 +218,18 @@ public enum SerialPortScanner {
 
         for (String serialPort : serialPorts) {
             // First, check the port cache
-            if (portCache.containsKey(serialPort)) {
-                // We've already probed this port - don't re-probe it again
-                PortResult cached = portCache.get(serialPort);
-
-                ports.add(cached);
-            } else {
-                portsToInspect.add(serialPort);
-            }
+            final Optional<PortResult> cachedPort = portCache.get(serialPort);
+            cachedPort.ifPresentOrElse(ports::add, () -> portsToInspect.add(serialPort));
         }
 
         for (PortResult p : inspectPorts(portsToInspect)) {
             log.info("Port " + p.port + " detected as: " + p.type.friendlyString);
 
             ports.add(p);
-            portCache.put(p.port, p);
+            portCache.put(p);
         }
 
-        {
-            // Clean the port cache of any entries that no longer exist
-            // If the same port appears later, we want to re-probe it at that time
-            // In any other scenario, auto could have unexpected behavior for the user
-            List<String> toRemove = new ArrayList<>();
-            for (String x : portCache.keySet()) {
-                if (!serialPorts.contains(x)) {
-                    toRemove.add(x);
-                }
-            }
-
-            // two steps to avoid ConcurrentModificationException
-            toRemove.forEach(p -> {
-                portCache.remove(p);
-                log.info("Removing port " + p);
-            });
-        }
+        portCache.retainAll(serialPorts);
 
         // Sort ports by their type to put your ECU at the top
         ports.sort(Comparator.comparingInt(a -> a.type.sortOrder));
