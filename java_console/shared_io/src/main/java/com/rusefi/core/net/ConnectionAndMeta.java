@@ -1,5 +1,7 @@
 package com.rusefi.core.net;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.net.ssl.*;
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -36,8 +38,16 @@ public class ConnectionAndMeta {
     }
 
     public static String getWhiteLabel(Properties properties) {
-        return Optional.ofNullable(properties.getProperty("white_label")).map(String::trim)
-            .orElse(DEFAULT_WHITE_LABEL);
+        return getStringProperty(properties, "white_label", DEFAULT_WHITE_LABEL);
+    }
+
+    public static String getRusEfiConsoleJarName() {
+        return getStringProperty(getProperties(), "console_jar", "rusefi_console.jar");
+    }
+
+    private static @NotNull String getStringProperty(Properties properties, String key, String defaultValue) {
+        return Optional.ofNullable(properties.getProperty(key)).map(String::trim)
+            .orElse(defaultValue);
     }
 
     public static String getSignatureWhiteLabel() {

@@ -30,7 +30,7 @@ import static com.rusefi.core.FindFileHelper.findSrecFile;
 
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
-    private static final int VERSION = 20240812;
+    private static final int VERSION = 20240815;
 
     private static final String LOGO_PATH = "/com/rusefi/";
     private static final String LOGO = LOGO_PATH + "logo.png";
@@ -110,12 +110,13 @@ public class Autoupdate {
     }
 
     private static void startConsole(String[] args) {
-        URLClassLoader jarClassLoader = null;
+        URLClassLoader jarClassLoader;
+        String consoleJarFileName = ConnectionAndMeta.getRusEfiConsoleJarName();
         try {
-            jarClassLoader = AutoupdateUtil.getClassLoaderByJar(RUSEFI_CONSOLE_JAR);
+            jarClassLoader = AutoupdateUtil.getClassLoaderByJar(consoleJarFileName);
         } catch (MalformedURLException e) {
             log.error("Failed to start", e);
-            throw new IllegalStateException("Problem with " + RUSEFI_CONSOLE_JAR, e);
+            throw new IllegalStateException("Problem with " + consoleJarFileName, e);
         }
         // we want to make sure that files are available to write so we use reflection to get lazy class initialization
         log.info("Running console with " + Arrays.toString(args));
