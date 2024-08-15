@@ -74,7 +74,12 @@ static Gpio OUTPUTS[] = {
 	Gpio::MM100_INJ3, // 46a INJ_3
 	Gpio::MM100_INJ4, // 47a INJ_4
 	Gpio::MM100_INJ5, // 48a INJ_5
-	Gpio::MM100_INJ6,
+	Gpio::MM100_INJ6, // 49a INJ_6
+	Gpio::MM100_SPI2_CS, // 50a INJ_7
+	Gpio::MM100_SPI2_SCK, // 51a INJ_8
+	Gpio::MM100_INJ7, // 14a LS1
+	Gpio::MM100_INJ8, // 15a LS2
+	Gpio::MM100_OUT_PWM1, // 16a LS3
 };
 
 int getBoardMetaOutputsCount() {
