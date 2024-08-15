@@ -258,7 +258,7 @@ public class StartupFrame {
         return jLabel;
     }
 
-    private void applyKnownPorts(SerialPortScanner.AvailableHardware currentHardware) {
+    private void applyKnownPorts(AvailableHardware currentHardware) {
         List<SerialPortScanner.PortResult> ports = currentHardware.getKnownPorts();
         log.info("Rendering available ports: " + ports);
         connectPanel.setVisible(!ports.isEmpty());
