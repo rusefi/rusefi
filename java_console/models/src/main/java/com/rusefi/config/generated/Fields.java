@@ -1,6 +1,10 @@
 package com.rusefi.config.generated;
 
+<<<<<<< HEAD
 // this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Aug 16 23:26:32 UTC 2024
+=======
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Aug 15 23:39:28 UTC 2024
+>>>>>>> b61df16db6 (Auto-generated configs and docs)
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1473,7 +1477,11 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
+<<<<<<< HEAD
 	public static final String TS_SIGNATURE = "rusEFI master.2024.08.17.f407-discovery.2213667239";
+=======
+	public static final String TS_SIGNATURE = "rusEFI master.2024.08.16.f407-discovery.3611898288";
+>>>>>>> b61df16db6 (Auto-generated configs and docs)
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';

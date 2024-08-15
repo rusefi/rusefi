@@ -7,5 +7,9 @@
 #define TS_SIGNATURE "rusEFI master.2024.08.17.uaefi121.1433324592"
 =======
 #define SIGNATURE_HASH 4058658055
+<<<<<<< HEAD
 #define TS_SIGNATURE "rusEFI master.2024.08.15.uaefi121.4058658055"
 >>>>>>> 598e502ab6 (Auto-generated configs and docs)
+=======
+#define TS_SIGNATURE "rusEFI master.2024.08.16.uaefi121.4058658055"
+>>>>>>> b61df16db6 (Auto-generated configs and docs)

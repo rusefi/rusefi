@@ -1745,10 +1745,14 @@
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define TS_SIGNATURE "rusEFI master.2024.08.17.uaefi121.1433324592"
 =======
 #define TS_SIGNATURE "rusEFI master.2024.08.15.uaefi121.4058658055"
 >>>>>>> 598e502ab6 (Auto-generated configs and docs)
+=======
+#define TS_SIGNATURE "rusEFI master.2024.08.16.uaefi121.4058658055"
+>>>>>>> b61df16db6 (Auto-generated configs and docs)
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
