@@ -4791,7 +4791,11 @@ end</constant>
          0.0
 </constant>
     </page>
+<<<<<<< HEAD
     <versionInfo firmwareInfo="20240815" nPages="1" signature="rusEFI master.2024.08.17.f407-discovery.2213667239" version="5.0"/>
+=======
+    <versionInfo firmwareInfo="20240815" nPages="1" signature="rusEFI master.2024.08.16.f407-discovery.3611898288" version="5.0"/>
+>>>>>>> a58b71d6f2 (Auto-generated default tune)
     <bibliography author="rusEFI 20240815" writeDate="date"/>
     <settings/>
     <userComments/>
