@@ -4,10 +4,8 @@ import com.devexperts.logging.Logging;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -23,7 +21,6 @@ public class SerialPortCache {
             if (cachedPort.isExpired()) {
                 cachedPorts.remove(serialPort);
                 log.info("Expired port is removed: " + serialPort);
-
             } else {
                 return Optional.of(cachedPort.port);
             }
@@ -36,21 +33,10 @@ public class SerialPortCache {
     }
 
     void retainAll(final Set<String> serialPortsToRetain) {
-        // Clean the port cache of any entries that no longer exist
-        // If the same port appears later, we want to re-probe it at that time
-        // In any other scenario, auto could have unexpected behavior for the user
-        List<String> toRemove = new ArrayList<>();
-        for (String x : cachedPorts.keySet()) {
-            if (!serialPortsToRetain.contains(x)) {
-                toRemove.add(x);
-            }
+        final int cachedPortCount = cachedPorts.size();
+        if (cachedPorts.keySet().retainAll(serialPortsToRetain)) {
+            log.info(String.format("%d disappeared ports are removed", cachedPortCount - cachedPorts.size()));
         }
-
-        // two steps to avoid ConcurrentModificationException
-        toRemove.forEach(p -> {
-            cachedPorts.remove(p);
-            log.info("Disappeared port is removed: " + p);
-        });
     }
 
     private static class CachedPort {
