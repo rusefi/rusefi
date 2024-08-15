@@ -489,14 +489,14 @@ pins:
     function: BUTTON2 sensor
 
   - pin: 86a
-    ts_name: LS5_HOT
+    ts_name: ___ LS5_HOT
     mega: MM100_IGN7
     class: outputs
     function: Low-Side 5 always hot / relay capable output
     type: ls
 
   - pin: 87a
-    ts_name: LS6_HOT
+    ts_name: ___ LS6_HOT
     mega: MM100_IGN8
     class: outputs
     function: Low-Side 6 always hot / relay capable output

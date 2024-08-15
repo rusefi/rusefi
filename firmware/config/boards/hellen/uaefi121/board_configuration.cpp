@@ -64,8 +64,7 @@ void setBoardDefaultConfiguration() {
 }
 
 int getBoardMetaDcOutputsCount() {
-    // todo return 2;
-    return 0;
+    return 2;
 }
 
 static Gpio OUTPUTS[] = {
@@ -80,10 +79,17 @@ static Gpio OUTPUTS[] = {
 	Gpio::MM100_INJ7, // 14a LS1
 	Gpio::MM100_INJ8, // 15a LS2
 	Gpio::MM100_OUT_PWM1, // 16a LS3
-	Gpio::MM100_OUT_PWM2,
+	Gpio::MM100_OUT_PWM2, // 88a LS4
 	Gpio::MM100_IGN7,
 	Gpio::MM100_IGN8,
-	Gpio::MM100_LED2_GREEN
+	Gpio::MM100_LED2_GREEN,
+	Gpio::MM100_IGN1, // Coil 1
+	Gpio::MM100_IGN2, // Coil 2
+	Gpio::MM100_IGN3, // Coil 3
+	Gpio::MM100_IGN4, // Coil 4
+	Gpio::MM100_IGN5, // Coil 5
+	Gpio::MM100_IGN6, // Coil 6
+
 };
 
 int getBoardMetaOutputsCount() {
@@ -91,7 +97,7 @@ int getBoardMetaOutputsCount() {
 }
 
 int getBoardMetaLowSideOutputsCount() {
-    return getBoardMetaOutputsCount() - 1;
+    return getBoardMetaOutputsCount() - 1 - 6;
 }
 
 Gpio* getBoardMetaOutputs() {
