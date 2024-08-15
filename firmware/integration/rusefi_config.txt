@@ -1460,7 +1460,7 @@ end_struct
 engine_configuration_s engineConfiguration;
 
 		uint8_t[ETB_BIAS_CURVE_LENGTH] autoscale etbBiasBins;target TPS value, 0 to 100%;"target TPS position", 0.5, 0, 0, 100, 1
-		int16_t[ETB_BIAS_CURVE_LENGTH] autoscale etbBiasValues;PWM bias, 0 to 100%;"ETB duty cycle bias", 0.1, 0, -100, 100, 1
+		int16_t[ETB_BIAS_CURVE_LENGTH] autoscale etbBiasValues;PWM bias, -100% to 100%. The output of this table is added to the output of the ETB PID function to generate the final ETB Duty output.;"ETB duty cycle bias", 0.1, 0, -100, 100, 1
 
 	uint8_t[IAC_PID_MULT_SIZE x IAC_PID_MULT_SIZE] autoscale iacPidMultTable;;"%", 0.05, 0, 0, 10, 2
 	uint8_t[IAC_PID_MULT_SIZE] iacPidMultLoadBins;;"Load", 1, 0, 0, 500, 2
