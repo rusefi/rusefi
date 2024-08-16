@@ -1190,8 +1190,8 @@
 #define operation_mode_e_FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR 6
 #define operation_mode_e_OM_NONE 0
 #define operation_mode_e_TWO_STROKE 3
-#define output_pin_e_enum 0="NONE",65="14a LS1",62="15a LS2",63="16a LS3",50="44a INJ_1",11="45a INJ_2",61="46a INJ_3",60="47a INJ_4",52="48a INJ_5",10="49a INJ_6",53="50a INJ_7",31="51a INJ_8",40="88a LS4",47="Coil 1",71="Coil 2",70="Coil 3",69="Coil 4",68="Coil 5",26="Coil 6"
-#define output_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","49a INJ_6","45a INJ_2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Coil 6","INVALID","INVALID","INVALID","INVALID","51a INJ_8","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","88a LS4","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Coil 1","INVALID","INVALID","44a INJ_1","INVALID","48a INJ_5","50a INJ_7","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","47a INJ_4","46a INJ_3","15a LS2","16a LS3","INVALID","14a LS1","INVALID","INVALID","Coil 5","Coil 4","Coil 3","Coil 2"
+#define output_pin_e_enum 0="NONE",65="14a LS1",62="15a LS2",63="16a LS3",57="43a High Side Output",50="44a INJ_1",11="45a INJ_2",61="46a INJ_3",60="47a INJ_4",52="48a INJ_5",10="49a INJ_6",53="50a INJ_7",31="51a INJ_8",27="86a LS5_HOT",72="87a LS6_HOT",40="88a LS4",47="Coil 1",71="Coil 2",70="Coil 3",69="Coil 4",68="Coil 5",26="Coil 6"
+#define output_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","49a INJ_6","45a INJ_2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Coil 6","86a LS5_HOT","INVALID","INVALID","INVALID","51a INJ_8","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","88a LS4","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Coil 1","INVALID","INVALID","44a INJ_1","INVALID","48a INJ_5","50a INJ_7","INVALID","INVALID","INVALID","43a High Side Output","INVALID","INVALID","47a INJ_4","46a INJ_3","15a LS2","16a LS3","INVALID","14a LS1","INVALID","INVALID","Coil 5","Coil 4","Coil 3","Coil 2","87a LS6_HOT"
 #define PACK_ADD_TEMPERATURE 40
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_AFR_CFG 10
@@ -1296,7 +1296,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2983621219
+#define SIGNATURE_HASH 2883764081
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1740,7 +1740,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.08.16.uaefi121.2983621219"
+#define TS_SIGNATURE "rusEFI master.2024.08.16.uaefi121.2883764081"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
