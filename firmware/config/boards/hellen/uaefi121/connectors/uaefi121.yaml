@@ -600,6 +600,13 @@ pins:
     type: 5v
     color: red
 
+  - pin: 108a
+    meta: MM100_IN_VBATT
+    class: analog_inputs
+    color: red
+    function: Ignition Switch / Battery Voltage Analog Input
+    ts_name: ___ Voltage From Key
+
   - pin: 109a
     function: PROG BUTTON
     color: white
