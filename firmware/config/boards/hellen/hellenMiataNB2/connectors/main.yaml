@@ -38,7 +38,7 @@ pins:
     color: blue Y1
 
  #- pin: 2E
- #  id: C7 
+ #  id: C7
  #  class: outputs
  #  ts_name: 2E - COIL_A2 (PWM2)
  #  function: EGR Valve #1 Coil
@@ -289,7 +289,7 @@ pins:
     ts_name: 4B - Brake/RES1 (A7)
     function: Brake Switch
 
-  - pin: 4C    
+  - pin: 4C
     function: Power Steering Switch
 
   - pin: 4D
@@ -311,14 +311,14 @@ pins:
     function: Neutral Switch
 
   - pin: 4I_rev_D
-  # H176_IN_RES3 
+  # H176_IN_RES3
     id: F8
     class: switch_inputs
     ts_name: 4I - Clutch rev D
     function: Clutch Switch
-    
+
   - pin: 4I
-  # H176_IN_D1 
+  # H176_IN_D1
     id: E13
     class: switch_inputs
     ts_name: 4I - Clutch rev E/F
@@ -443,7 +443,7 @@ pins:
 # huh?    ts_name: 4AA - O2S2 (A12)
     function: Rear O2 Sensor Signal
 
-  - pin: 4AB   
+  - pin: 4AB
     function: Fuel Tank Pressure Sensor, PPS
 
   - pin: 4AC
@@ -469,8 +469,8 @@ pins:
 
   - pin: 4AH
     function: Evap
-    
-  - pin: 5A     
+
+  - pin: 5A
     id: [C0]
     class: [switch_inputs]
     ts_name: 5A - Pressure Input
@@ -481,19 +481,19 @@ pins:
     #  class: switch_inputs
     #   ts_name: 5B - IN RES3
     #  function: options port in_res3
-    
-  - pin: 5C    
+
+  - pin: 5C
     id: E15
     class: event_inputs
     ts_name: 5C - Digital Input
     function: digital
 
-  - pin: 5D    
+  - pin: 5D
     id: F5
     class: switch_inputs
     ts_name: 5D - SENSOR INPUT
     function: Optional sensor input
-   
+
   - pin: 5E
     id: C9
     class: outputs
@@ -505,8 +505,8 @@ pins:
  #   class: outputs
  #   ts_name: 5F - HIGHSIDE OUTPUT
  #   function: high output
-    
-  - pin: 5H     
+
+  - pin: 5H
     function: GND
 
   - pin: 5I
@@ -514,92 +514,92 @@ pins:
     class: event_inputs
     ts_name: 5I - Digital Input
     function: digital
-    
+
   - pin: 5J
-        
+
 #  - pin: 5K
 #    id: F14
  #   class: outputs
  #   ts_name: 5K - BOOST OUT
  #   function: BOOST OUT
 #    type: inj
-  
+
   - pin: 5L
     function: +5v
-  
+
   - pin: 5M
     id: [C4, EFI_ADC_14]
     class: [switch_inputs, analog_inputs]
     ts_name: 5M - PPS2 OR TEMPERATURE SENSOR
     function: PPS
-    
-  - pin: 5N 
+
+  - pin: 5N
     id: [A0, EFI_ADC_0]
     class: [switch_inputs, analog_inputs]
     ts_name: 5N - TPS2
     function: TPS
 
-  - pin: 5O    
+  - pin: 5O
     function: TPS
-    
+
   - pin: 5P
     id: [A3, EFI_ADC_3]
     class: [switch_inputs, analog_inputs]
-    ts_name: 5P - PPS1   
-    
-  - pin: 5R     
+    ts_name: 5P - PPS1
+
+  - pin: 5R
     function: +5V
 
-  - pin: 5S    
+  - pin: 5S
     function: +5v
-    
-  - pin: 5T    
+
+  - pin: 5T
     function: GND
 
-  - pin: 5U    
+  - pin: 5U
     function: GND
-   
-  - pin: 5V     
+
+  - pin: 5V
     function: +12V
 
-  - pin: 5W    
+  - pin: 5W
     function: +12V
-    
-  - pin: 5X     
+
+  - pin: 5X
     function: GND
 
-  - pin: 5Z    
-    Function: WBO_Vs/Ip
-    
-  - pin: 5AA    
+  - pin: 5Z
+    function: WBO_Vs/Ip
+
+  - pin: 5AA
     function: WBO_Vs
-    
-  - pin: 5AB     
+
+  - pin: 5AB
     function: WBO_R_TRIM
-  
-  - pin: 5AC    
+
+  - pin: 5AC
     function: WBO_Ip
-  
+
   - pin: 5AD
-    function: WBO_H- 
-    
+    function: WBO_H-
+
   - pin: 5AE
     function: WBO_H+
-    
+
   - pin: int_etb+
     id: C7
     class: outputs
     ts_name: ETB +
-    
+
   - pin: int_etb-
     id: C8
     class: outputs
     ts_name: ETB -
-    
+
   - pin: int_etb_EN
     id: C6
     class: outputs
-    ts_name: ETB EN  
+    ts_name: ETB EN
 
 
 info:
