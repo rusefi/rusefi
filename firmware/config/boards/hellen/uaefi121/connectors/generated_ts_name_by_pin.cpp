@@ -24,7 +24,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::D7: return "43a High Side Output";
 		case Gpio::E0: return "VR_DISCRETE+";
 		case Gpio::E1: return "VR_9924+";
-		case Gpio::E12: return "36a HALL1";
+		case Gpio::E12: return "36a HALL1 / VSS";
 		case Gpio::E13: return "35a HALL2";
 		case Gpio::E14: return "34a HALL3";
 		case Gpio::E2: return "Coil 5";
