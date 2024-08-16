@@ -226,8 +226,8 @@ pins:
   - pin: 36a
     meta: MM100_IN_D1
     class: event_inputs
-    function: HALL1 Sensor
-    ts_name: ___ HALL1
+    function: VSS / HALL1 Sensor
+    ts_name: ___ HALL1 / VSS
     type: hall
 
   - pin: 37a

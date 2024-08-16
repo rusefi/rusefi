@@ -18,6 +18,12 @@ static void setupDefaultSensorInputs() {
 
 	engineConfiguration->clt.adcChannel = MM100_IN_CLT_ANALOG;
 	engineConfiguration->iat.adcChannel = MM100_IN_IAT_ANALOG;
+
+	engineConfiguration->triggerInputPins[0] = Gpio::MM100_UART8_TX; // VR2 max9924 is the safer default
+	engineConfiguration->camInputs[0] = Gpio::MM100_IN_D2; // HALL2
+	engineConfiguration->camInputs[1] = Gpio::MM100_IN_D3; // HALL3
+
+  engineConfiguration->vehicleSpeedSensorInputPin = Gpio::MM100_IN_D1;  // HALL1
 }
 
 void setBoardConfigOverrides() {
@@ -80,9 +86,9 @@ static Gpio OUTPUTS[] = {
 	Gpio::MM100_INJ8, // 15a LS2
 	Gpio::MM100_OUT_PWM1, // 16a LS3
 	Gpio::MM100_OUT_PWM2, // 88a LS4
-	Gpio::MM100_IGN7,
-	Gpio::MM100_IGN8,
-	Gpio::MM100_LED2_GREEN,
+	Gpio::MM100_IGN7, // 86a LS5_HOT
+	Gpio::MM100_IGN8, // 87a LS6_HOT
+	Gpio::MM100_LED2_GREEN, // 43a High Side Output
 	Gpio::MM100_IGN1, // Coil 1
 	Gpio::MM100_IGN2, // Coil 2
 	Gpio::MM100_IGN3, // Coil 3
