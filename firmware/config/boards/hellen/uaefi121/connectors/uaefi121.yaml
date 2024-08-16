@@ -560,6 +560,7 @@ pins:
 
   - pin: 97a
     function: WBO2 Vs
+    color: black
 
   - pin: 98a
     function: GNDA PPS1 sensor
@@ -577,6 +578,7 @@ pins:
 
   - pin: 102a
     function: WBO1 Rtrim
+    color: green
 
   - pin: 103a
     function: WBO1 Ip
