@@ -1016,8 +1016,6 @@ float idleStepperReactionTime;;"ms", 1, 0, 1, 300, 0
 
 	int idleStepperTotalSteps;;"count", 1, 0, 5, 3000, 0
 
-float noAccelAfterHardLimitPeriodSecs;TODO: finish this #413;"sec", 1, 0, 0, 60, 0
-
 int mapAveragingSchedulingAtIndex;At what trigger index should some MAP-related math be executed? This is a performance trick to reduce load on synchronization trigger callback.;"index", 1, 0, 0, 7000, 0
 
 
