@@ -268,7 +268,7 @@ pins:
 
   - pin: 43a
     class: outputs
-    mega: MM100_LED2_GREEN
+    meta: MM100_LED2_GREEN
     ts_name: ___ High Side Output
     function: High-side high current output
 
@@ -500,14 +500,14 @@ pins:
 
   - pin: 86a
     ts_name: ___ LS5_HOT
-    mega: MM100_IGN7
+    meta: MM100_IGN7
     class: outputs
     function: Low-Side 5 always hot / relay capable output
     type: ls
 
   - pin: 87a
     ts_name: ___ LS6_HOT
-    mega: MM100_IGN8
+    meta: MM100_IGN8
     class: outputs
     function: Low-Side 6 always hot / relay capable output
     type: ls

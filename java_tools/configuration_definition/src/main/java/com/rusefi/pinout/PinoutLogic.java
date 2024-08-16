@@ -22,6 +22,13 @@ public class PinoutLogic {
 
     private static final String NONE = "NONE";
     private static final String QUOTED_NONE = quote(NONE);
+    private static final String ID = "id";
+    private static final String META = "meta";
+    private static final String CLASS = "class";
+    private static final String PIN = "pin";
+    private static final String TS_NAME = "ts_name";
+    private static final String FUNCTION = "function";
+    private static final String TYPE = "type";
 
     private final ArrayList<PinState> globalList = new ArrayList<>();
     private final Map</*id*/String, /*tsName*/String> tsNameById = new TreeMap<>();
@@ -146,8 +153,9 @@ public class PinoutLogic {
         log.info("Got from " + yamlFile + ": " + data);
         Objects.requireNonNull(data, "data");
         for (Map<String, Object> pin : data) {
-            Object pinId = pin.get("id");
-            Object metaAsObject = pin.get("meta");
+            validateKeys(pin.keySet());
+            Object pinId = pin.get(ID);
+            Object metaAsObject = pin.get(META);
             if (metaAsObject != null && !(metaAsObject instanceof String))
                 throw new IllegalStateException("[" + metaAsObject + "] meta could only be a string for " + pinId);
             String meta = (String) metaAsObject;
@@ -166,15 +174,15 @@ public class PinoutLogic {
             } else {
                 headerValue = (pinId instanceof String) ? (String) pinId : null;
             }
-            Object pinClass = pin.get("class");
-            Object pinName = pin.get("pin");
-            Object pinTsName = pin.get("ts_name");
-            Object pinFunction = pin.get("function");
+            Object pinClass = pin.get(CLASS);
+            Object pinName = pin.get(PIN);
+            Object pinTsName = pin.get(TS_NAME);
+            Object pinFunction = pin.get(FUNCTION);
             if (pinTsName == null && pinFunction != null)
                 pinTsName = pinFunction;
-            Object pinType = pin.get("type");
+            Object pinType = pin.get(TYPE);
             if (pinId == null || pinClass == null || pinTsName == null) {
-                log.info("Skipping incomplete section " + pinId + "/" + pinClass + "/" + pinTsName);
+                log.info("Skipping incomplete section pinId=" + pinId + "/pinClass=" + pinClass + "/pinTsName=" + pinTsName);
                 continue;
             }
             if (pinName != null) {
@@ -211,6 +219,14 @@ public class PinoutLogic {
                 throw new IllegalStateException("Unexpected type of ID field: " + pinId.getClass().getSimpleName());
             }
         }
+    }
+
+    private static void validateKeys(Set<String> key) {
+        Set<String> copy = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
+        copy.addAll(key);
+        copy.removeAll(Arrays.asList(ID, CLASS, META, FUNCTION, TS_NAME, PIN, TYPE, "color"));
+        if (!copy.isEmpty())
+            throw new IllegalStateException("Unexpected key(s): " + copy);
     }
 
     private static String applyMetaMapping(Map<String, String> metaMapping, String id) {
