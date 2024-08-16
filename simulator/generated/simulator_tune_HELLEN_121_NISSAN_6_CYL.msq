@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22972">
+    <page number="0" size="22968">
         <constant name="engineType">"HELLEN_121_NISSAN_6_CYL"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">0.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
@@ -687,7 +687,6 @@
         <constant digits="2" name="knockDetectionWindowEnd" units="angle">60.0</constant>
         <constant digits="0" name="idleStepperReactionTime" units="ms">3.0</constant>
         <constant digits="0" name="idleStepperTotalSteps" units="count">200.0</constant>
-        <constant digits="0" name="noAccelAfterHardLimitPeriodSecs" units="sec">3.0</constant>
         <constant digits="0" name="mapAveragingSchedulingAtIndex" units="index">0.0</constant>
         <constant digits="2" name="tachPulseDuractionMs" units="">0.5</constant>
         <constant digits="2" name="wwaeTau" units="Seconds">0.3</constant>
@@ -4955,7 +4954,7 @@ canRxAdd(IN_35D, onCanRxAc)</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240815" nPages="1" signature="rusEFI master.2024.08.16.f407-discovery.3611898288" version="5.0"/>
+    <versionInfo firmwareInfo="20240815" nPages="1" signature="rusEFI master.2024.08.16.f407-discovery.2213667239" version="5.0"/>
     <bibliography author="rusEFI 20240815" writeDate="date"/>
     <settings/>
     <userComments/>
