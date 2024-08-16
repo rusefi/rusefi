@@ -543,8 +543,6 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->engineSnifferRpmThreshold = 2500;
 	engineConfiguration->sensorSnifferRpmThreshold = 2500;
 
-	engineConfiguration->noAccelAfterHardLimitPeriodSecs = 3;
-
 	/**
 	 * Idle control defaults
 	 */
