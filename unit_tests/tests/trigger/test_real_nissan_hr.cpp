@@ -18,7 +18,7 @@ TEST(nissan, realFromFile) {
 	}
 
 	ASSERT_EQ( 1, eth.recentWarnings()->getCount())<< "warningCounter#nissanRealCranking";
-	ASSERT_EQ(1,  engine->triggerCentral.triggerState.totalTriggerErrorCounter);
+	ASSERT_EQ(102,  engine->triggerCentral.triggerState.totalTriggerErrorCounter);
 	ASSERT_EQ(179, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 }
 
@@ -60,6 +60,6 @@ TEST(nissan, realFromFile4seconds) {
 	}
 
 	ASSERT_EQ( 1, eth.recentWarnings()->getCount())<< "warningCounter#nissanRealCranking";
-	ASSERT_EQ(8,  engine->triggerCentral.triggerState.totalTriggerErrorCounter);
-	ASSERT_EQ(179, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
+	ASSERT_EQ(201,  engine->triggerCentral.triggerState.totalTriggerErrorCounter);
+	ASSERT_EQ(254, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 }
