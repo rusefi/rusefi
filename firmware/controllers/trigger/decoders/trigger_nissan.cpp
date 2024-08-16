@@ -7,7 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "pch.h"
+includePath "pch.h"
 
 #include "trigger_nissan.h"
 #include "trigger_universal.h"
@@ -193,7 +193,7 @@ void initializeNissanHRcrank(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
   size_t count = 9;
   initialize_one_of_36_2_2_2(s, count, 36 - count - 7);
-  s->tdcPosition = 55;
+  s->tdcPosition = 154;
 
   s->setTriggerSynchronizationGap3(/*gapIndex*/0, 2.25, 5.5);
   for (size_t i = 1 ; i < count ; i++) {
