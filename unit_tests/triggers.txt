@@ -2,6 +2,7 @@
 # This file is used by TriggerImage tool
 # See 'gen_trigger_images.bat'
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 TRIGGERTYPE 1 10 TT_FORD_ASPIRE 0.00
 knownOperationMode=true
@@ -5848,3 +5849,5 @@ event 39 0 0 322.50 nan
 event 40 0 1 330.00 1.000000
 event 41 0 0 337.50 nan
 >>>>>>> 42ff88e426 (Trigger wheel definitions)
+=======
+>>>>>>> 77823977ac (Trigger wheel definitions)
