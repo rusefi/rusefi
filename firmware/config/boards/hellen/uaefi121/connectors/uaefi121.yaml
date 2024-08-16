@@ -114,6 +114,8 @@ pins:
     type: ls
 
   - pin: 17a
+    meta: MM100_UART8_RX
+    class: event_inputs
     ts_name: VR_DISCRETE+
     function: VR_DISCRETE positive input
     type: vr
@@ -124,6 +126,8 @@ pins:
     type: vr
 
   - pin: 19a
+    meta: MM100_UART8_TX
+    class: event_inputs
     ts_name: VR_9924+
     function: VR_9924 positive input
     type: vr
@@ -206,18 +210,24 @@ pins:
 
 
   - pin: 34a
-    function: CAM Sensor Left
-    ts_name: HALL3
+    function: CAM Sensor Exhaust
+    meta: MM100_IN_D3
+    class: event_inputs
+    ts_name: ___ HALL3
     type: hall
 
   - pin: 35a
-    function: CAM Sensor Right
-    ts_name: HALL2
+    meta: MM100_IN_D2
+    class: event_inputs
+    function: CAM Sensor Intake
+    ts_name: ___ HALL2
     type: hall
 
   - pin: 36a
+    meta: MM100_IN_D1
+    class: event_inputs
     function: HALL1 Sensor
-    ts_name: HALL1
+    ts_name: ___ HALL1
     type: hall
 
   - pin: 37a
@@ -264,7 +274,7 @@ pins:
 
   - pin: 44a
     class: outputs
-    meta: MM100_INJ1
+    meta: MM100_COATED_INJ1
     ts_name: ___ INJ_1
     function: Injector 1
     color: green
@@ -312,7 +322,7 @@ pins:
 
   - pin: 50a
     class: outputs
-    meta: MM100_SPI2_CS
+    meta: MM100_COATED_SPI2_SCK
     ts_name: ___ INJ_7
     function: Injector 7
     color: white
