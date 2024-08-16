@@ -228,6 +228,7 @@ public class Autoupdate {
         };
         JFrame frame = frameHelper.getFrame();
         frame.setTitle(TITLE);
+        // huh? sometimes we are making icon from logo and sometimes we have dedicated icon file?!
         ImageIcon icon = AutoupdateUtil.loadIcon(LOGO);
         if (icon != null)
             frame.setIconImage(icon.getImage());

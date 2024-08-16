@@ -47,6 +47,7 @@ public class AutoupdateUtil {
             return new ProgressView(null, null);
         } else {
             FrameHelper frameHelper = new FrameHelper();
+            setAppIcon(frameHelper.getFrame());
             JProgressBar jProgressBar = new JProgressBar();
 
             frameHelper.getFrame().setTitle(title);
@@ -182,6 +183,7 @@ public class AutoupdateUtil {
     }
 
     public static void setAppIcon(JFrame frame) {
+        // huh? sometimes we are making icon from logo and sometimes we have dedicated icon file?!
         ImageIcon icon = loadIcon(APPICON);
         if (icon != null)
             frame.setIconImage(icon.getImage());
