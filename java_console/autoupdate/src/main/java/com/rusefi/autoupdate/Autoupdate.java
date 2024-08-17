@@ -121,7 +121,8 @@ public class Autoupdate {
                 }
             }
         });
-        startConsole(args);
+        final URLClassLoader jarClassLoader = prepareClassLoaderToStartConsole();
+        startConsole(args, jarClassLoader);
     }
 
     private static Optional<DownloadedAutoupdateFileInfo> doDownload(
@@ -136,8 +137,8 @@ public class Autoupdate {
         }
     }
 
-    private static void startConsole(String[] args) {
-        URLClassLoader jarClassLoader;
+    private static URLClassLoader prepareClassLoaderToStartConsole() {
+        final URLClassLoader jarClassLoader;
         String consoleJarFileName = ConnectionAndMeta.getRusEfiConsoleJarName();
         try {
             jarClassLoader = AutoupdateUtil.getClassLoaderByJar(consoleJarFileName);
@@ -146,7 +147,6 @@ public class Autoupdate {
             throw new IllegalStateException("Problem with " + consoleJarFileName, e);
         }
         // we want to make sure that files are available to write so we use reflection to get lazy class initialization
-        log.info("Running console with " + Arrays.toString(args));
         // since we are overriding file we cannot just use static java classpath while launching
         try {
             hackProperties(jarClassLoader);
@@ -155,8 +155,12 @@ public class Autoupdate {
             log.error("Failed to start", e);
             throw new IllegalStateException("Failed to update properties", e);
         }
-        try {
+        return jarClassLoader;
+    }
 
+    private static void startConsole(final String[] args, final URLClassLoader jarClassLoader) {
+        log.info("Running console with " + Arrays.toString(args));
+        try {
             Class mainClass = Class.forName(COM_RUSEFI_LAUNCHER, true, jarClassLoader);
             Method mainMethod = mainClass.getMethod("main", args.getClass());
             mainMethod.invoke(null, new Object[]{args});
