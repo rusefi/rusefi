@@ -919,7 +919,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif // HW_HELLEN_4CHAN
 
-#ifdef HW_HELLEN_8CHAN
+#if defined(HW_HELLEN_8CHAN) || defined(HW_HELLEN_UAEFI121)
 	case engine_type_e::GM_SBC:
 	    setGmSbc();
         break;
