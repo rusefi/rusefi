@@ -56,7 +56,7 @@ pins:
 
   - pin: K17b
     function: Crank Sensor
-    meta: H144_IN_CRANK
+    meta: H144_IN_D_1
     class: event_inputs
     ts_name: Crank - K17
 
