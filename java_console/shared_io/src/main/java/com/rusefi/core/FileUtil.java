@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -14,7 +15,11 @@ import java.util.zip.ZipInputStream;
 public class FileUtil {
     public static final String RUSEFI_SETTINGS_FOLDER = System.getProperty("user.home") + File.separator + ".rusEFI";
 
-    public static void unzip(String zipFileName, File destDir) throws IOException {
+    public static void unzip(
+        final String zipFileName,
+        final File destDir,
+        final Predicate<ZipEntry> filter
+    ) throws IOException {
         byte[] buffer = new byte[1024];
         ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFileName));
         ZipEntry zipEntry = zis.getNextEntry();
@@ -24,15 +29,17 @@ public class FileUtil {
              * apache commons compress does
              * https://stackoverflow.com/questions/1050560/maintain-file-permissions-when-extracting-from-a-zip-file-using-jdk-5-api
              */
-            File newFile = newFile(destDir, zipEntry);
-            if (zipEntry.isDirectory()) {
-                if (!newFile.isDirectory()) {
-                    // we already have a file with name matching directory name
-                    newFile.delete();
+            if (filter.test(zipEntry)) {
+                File newFile = newFile(destDir, zipEntry);
+                if (zipEntry.isDirectory()) {
+                    if (!newFile.isDirectory()) {
+                        // we already have a file with name matching directory name
+                        newFile.delete();
+                    }
+                    newFile.mkdirs();
+                } else {
+                    unzipFile(buffer, zis, newFile);
                 }
-                newFile.mkdirs();
-            } else {
-                unzipFile(buffer, zis, newFile);
             }
             zipEntry = zis.getNextEntry();
         }
