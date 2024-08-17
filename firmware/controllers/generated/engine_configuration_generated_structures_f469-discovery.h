@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Aug 16 21:55:02 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Aug 17 15:39:58 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4665,7 +4665,7 @@ struct persistent_config_s {
 	 */
 	float etbBiasBins[ETB_BIAS_CURVE_LENGTH];
 	/**
-	 * PWM bias, 0 to 100%
+	 * PWM bias, open loop component of PID closed loop control
 	 * units: ETB duty cycle bias
 	 * offset 4236
 	 */
@@ -5721,4 +5721,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22968);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Aug 16 21:55:02 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Aug 17 15:39:58 UTC 2024
