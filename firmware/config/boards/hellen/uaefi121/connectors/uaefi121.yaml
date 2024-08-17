@@ -482,10 +482,12 @@ pins:
 
   - pin: 82a
     function: CAN bus high
+    color: green
     type: can
 
   - pin: 83a
     function: CAN bus low
+    color: blue
     type: can
 
   - pin: 84a
