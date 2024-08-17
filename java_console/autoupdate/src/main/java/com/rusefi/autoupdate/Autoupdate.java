@@ -21,6 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URLClassLoader;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Optional;
 import java.util.Properties;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -83,29 +84,55 @@ public class Autoupdate {
 
         @NotNull String firstArgument = args.length > 0 ? args[0] : "";
 
+        Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile = Optional.empty();
         if (firstArgument.equalsIgnoreCase("basic-ui")) {
-            doDownload(bundleInfo, UpdateMode.ALWAYS);
+            downloadedAutoupdateFile = doDownload(bundleInfo, UpdateMode.ALWAYS);
         } else if (args.length > 0 && args[0].equalsIgnoreCase("release")) {
             // this branch needs progress for custom boards!
             log.info("Release update requested");
-            downloadAndUnzipAutoupdate(bundleInfo, UpdateMode.ALWAYS, ConnectionAndMeta.BASE_URL_RELEASE);
+            downloadedAutoupdateFile = downloadAutoupdateZipFile(
+                bundleInfo,
+                UpdateMode.ALWAYS,
+                ConnectionAndMeta.BASE_URL_RELEASE
+            );
         } else {
             UpdateMode mode = getMode();
             if (mode != UpdateMode.NEVER) {
-                doDownload(bundleInfo, mode);
+                downloadedAutoupdateFile = doDownload(bundleInfo, mode);
             } else {
                 log.info("Update mode: NEVER");
             }
         }
+        downloadedAutoupdateFile.ifPresent(autoupdateFile -> {
+            try {
+                FileUtil.unzip(autoupdateFile.zipFileName, new File(".."));
+                final String srecFile = findSrecFile();
+                new File(srecFile == null ? FindFileHelper.FIRMWARE_BIN_FILE : srecFile)
+                    .setLastModified(autoupdateFile.lastModified);
+            } catch (IOException e) {
+                log.error("Error unzipping bundle: " + e);
+                if (!AutoupdateUtil.runHeadless) {
+                    JOptionPane.showMessageDialog(
+                        null,
+                        "Error unzipping bundle " + e,
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE
+                    );
+                }
+            }
+        });
         startConsole(args);
     }
 
-    private static void doDownload(BundleUtil.BundleInfo bundleInfo, UpdateMode mode) {
+    private static Optional<DownloadedAutoupdateFileInfo> doDownload(
+        final BundleUtil.BundleInfo bundleInfo,
+        final UpdateMode mode
+    ) {
         if (bundleInfo.getBranchName().equals("snapshot")) {
             log.info("Snapshot requested");
-            downloadAndUnzipAutoupdate(bundleInfo, mode, ConnectionAndMeta.getBaseUrl() + ConnectionAndMeta.AUTOUPDATE);
+            return downloadAutoupdateZipFile(bundleInfo, mode, ConnectionAndMeta.getBaseUrl() + ConnectionAndMeta.AUTOUPDATE);
         } else {
-            downloadAndUnzipAutoupdate(bundleInfo, mode, ConnectionAndMeta.getBaseUrl() + "/lts/" + bundleInfo.getBranchName() + ConnectionAndMeta.AUTOUPDATE);
+            return downloadAutoupdateZipFile(bundleInfo, mode, ConnectionAndMeta.getBaseUrl() + "/lts/" + bundleInfo.getBranchName() + ConnectionAndMeta.AUTOUPDATE);
         }
     }
 
@@ -158,7 +185,21 @@ public class Autoupdate {
         }
     }
 
-    private static void downloadAndUnzipAutoupdate(BundleUtil.BundleInfo info, UpdateMode mode, String baseUrl) {
+    private static class DownloadedAutoupdateFileInfo {
+        final String zipFileName;
+        final long lastModified;
+
+        DownloadedAutoupdateFileInfo(final String zipFileName, final long lastModified) {
+            this.zipFileName = zipFileName;
+            this.lastModified = lastModified;
+        }
+    }
+
+    private static Optional<DownloadedAutoupdateFileInfo> downloadAutoupdateZipFile(
+        final BundleUtil.BundleInfo info,
+        final UpdateMode mode,
+        final String baseUrl
+    ) {
         try {
             String suffix = FindFileHelper.isObfuscated() ? "_obfuscated_public" : "";
             String zipFileName = ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties()) + "_bundle_" + info.getTarget() + suffix + "_autoupdate" + ".zip";
@@ -168,18 +209,18 @@ public class Autoupdate {
 
             if (AutoupdateUtil.hasExistingFile(zipFileName, connectionAndMeta.getCompleteFileSize(), connectionAndMeta.getLastModified())) {
                 log.info("We already have latest update " + new Date(connectionAndMeta.getLastModified()));
-                return;
+                return Optional.empty();
             }
 
             if (mode != UpdateMode.ALWAYS) {
                 boolean doUpdate = askUserIfUpdateIsDesired();
                 if (!doUpdate)
-                    return;
+                    return Optional.empty();
             }
 
             // todo: user could have waited hours to respond to question above, we probably need to re-establish connection
             long completeFileSize = connectionAndMeta.getCompleteFileSize();
-            long lastModified = connectionAndMeta.getLastModified();
+            final long lastModified = connectionAndMeta.getLastModified();
 
             log.info(info + " " + completeFileSize + " bytes, last modified " + new Date(lastModified));
 
@@ -189,9 +230,7 @@ public class Autoupdate {
             file.setLastModified(lastModified);
             log.info("Downloaded " + file.length() + " bytes, lastModified=" + lastModified);
 
-            FileUtil.unzip(zipFileName, new File(".."));
-            String srecFile = findSrecFile();
-            new File(srecFile == null ? FindFileHelper.FIRMWARE_BIN_FILE : srecFile).setLastModified(lastModified);
+            return Optional.of(new DownloadedAutoupdateFileInfo(zipFileName, lastModified));
         } catch (ReportedIOException e) {
             // we had already reported error with a UI dialog when we had parent frame
             log.error("Error downloading bundle: " + e);
@@ -204,6 +243,7 @@ public class Autoupdate {
                     JOptionPane.ERROR_MESSAGE);
             }
         }
+        return Optional.empty();
     }
 
     private static boolean askUserIfUpdateIsDesired() {
