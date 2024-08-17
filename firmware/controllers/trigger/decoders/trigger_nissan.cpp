@@ -197,7 +197,7 @@ void initializeNissanHRcrank(TriggerWaveform *s) {
 
   s->setTriggerSynchronizationGap3(/*gapIndex*/0, 2.25, 5.5);
   for (size_t i = 1 ; i < count ; i++) {
-    s->setTriggerSynchronizationGap3(/*gapIndex*/i, 0.7, 1.7);
+    s->setTriggerSynchronizationGap3(/*gapIndex*/i, 0.65, 1.7);
   }
-  s->setTriggerSynchronizationGap3(/*gapIndex*/count, 0.1, 0.5);
+  s->setTriggerSynchronizationGap3(/*gapIndex*/count, 0.1, 0.55);
 }
