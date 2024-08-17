@@ -32,6 +32,6 @@ public class UiProperties {
     }
 
     public static String getUpdateHelpUrl() {
-        return properties.getProperty("UPDATE_FW_HELP_URL");
+        return properties.getProperty("UPDATE_FW_HELP_URL", "https://github.com/rusefi/rusefi/wiki/HOWTO-Update-Firmware");
     }
 }
