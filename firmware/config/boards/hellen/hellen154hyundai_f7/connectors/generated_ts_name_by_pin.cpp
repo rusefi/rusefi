@@ -8,12 +8,12 @@
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
 		case Gpio::A9: return "X2 AuxLS3";
-		case Gpio::B1: return "Crank - K17";
 		case Gpio::D12: return "MIL";
 		case Gpio::D14: return "X3 AuxLS2";
 		case Gpio::D15: return "Tacho";
 		case Gpio::D3: return "X8 AuxLS1";
 		case Gpio::D9: return "VVT1";
+		case Gpio::E12: return "Crank - K17";
 		case Gpio::E13: return "Intake Cam - K62";
 		case Gpio::E14: return "Exhaust Cam - K15";
 		case Gpio::F10: return "A43 Clutch Input";
