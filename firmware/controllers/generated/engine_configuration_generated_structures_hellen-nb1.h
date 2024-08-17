@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Aug 16 23:40:32 UTC 2024
+=======
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Aug 17 01:07:14 UTC 2024
+>>>>>>> c81ddd19d769b6d4b615100556e872712f775676
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -5721,4 +5725,8 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22968);
 
 // end
+<<<<<<< HEAD
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Fri Aug 16 23:40:32 UTC 2024
+=======
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Aug 17 01:07:14 UTC 2024
+>>>>>>> c81ddd19d769b6d4b615100556e872712f775676
