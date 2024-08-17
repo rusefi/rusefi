@@ -268,7 +268,11 @@ pins:
 
   - pin: 43a
     class: outputs
+<<<<<<< HEAD
     meta: MM100_LED2_GREEN
+=======
+    mega: MM100_LED2_GREEN
+>>>>>>> e05dccb987 (only:uaefi121)
     ts_name: ___ High Side Output
     function: High-side high current output
 
@@ -499,15 +503,25 @@ pins:
     function: BUTTON2 sensor
 
   - pin: 86a
+<<<<<<< HEAD
     ts_name: ___ LS5_HOT
     meta: MM100_IGN7
+=======
+    ts_name: LS5_HOT
+    mega: MM100_IGN7
+>>>>>>> e05dccb987 (only:uaefi121)
     class: outputs
     function: Low-Side 5 always hot / relay capable output
     type: ls
 
   - pin: 87a
+<<<<<<< HEAD
     ts_name: ___ LS6_HOT
     meta: MM100_IGN8
+=======
+    ts_name: LS6_HOT
+    mega: MM100_IGN8
+>>>>>>> e05dccb987 (only:uaefi121)
     class: outputs
     function: Low-Side 6 always hot / relay capable output
     type: ls

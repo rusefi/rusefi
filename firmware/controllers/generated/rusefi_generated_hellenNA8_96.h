@@ -1742,7 +1742,11 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
+<<<<<<< HEAD
 #define TS_SIGNATURE "rusEFI master.2024.08.17.hellenNA8_96.1289731048"
+=======
+#define TS_SIGNATURE "rusEFI master.2024.08.16.hellenNA8_96.409431039"
+>>>>>>> b61df16db6 (Auto-generated configs and docs)
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
