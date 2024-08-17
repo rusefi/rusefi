@@ -3,6 +3,10 @@
 #include "usbconsole.h"
 #include "hardware.h"
 
+#ifdef HW_HELLEN
+#include "hellen_meta.h"
+#endif // HW_HELLEN
+
 extern "C" {
 	#include "boot.h"
 	#include "flash.h"
