@@ -43,7 +43,7 @@ public class PcanConnectorUI {
                 if (stream != null)
                     CANConnectorStartup.start(stream, statusConsumer);
             } catch (IOException e) {
-                statusConsumer.append("Error " + e, true, true);
+                statusConsumer.append("Error " + e);
             }
         }).start();
 

@@ -18,5 +18,9 @@ public interface StatusConsumer {
     StatusConsumer VOID = (status, breakLineOnTextArea, sendToLogger) -> {
     };
 
+    default void append(String status) {
+        append(status, true, true);
+    }
+
     void append(String status, boolean breakLineOnTextArea, boolean sendToLogger);
 }
