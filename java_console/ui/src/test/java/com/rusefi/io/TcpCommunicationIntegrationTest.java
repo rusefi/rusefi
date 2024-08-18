@@ -95,7 +95,7 @@ public class TcpCommunicationIntegrationTest {
         // connect proxy to virtual controller
         IoStream targetEcuSocket = TestHelper.connectToLocalhost(controllerPort);
         final AtomicInteger relayCommandCounter = new AtomicInteger();
-        BinaryProtocolProxy.createProxy(targetEcuSocket, proxyPort, () -> relayCommandCounter.incrementAndGet(),
+        BinaryProtocolProxy.createProxy(targetEcuSocket, proxyPort, (BinaryProtocolServer.Packet clientRequest) -> relayCommandCounter.incrementAndGet(),
                 StatusConsumer.ANONYMOUS);
 
         CountDownLatch connectionEstablishedCountDownLatch = new CountDownLatch(1);

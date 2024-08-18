@@ -133,7 +133,7 @@ public class ConsoleTools {
 
         ServerSocketReference serverHolder = BinaryProtocolProxy.createProxy(ecuStream, 29001, new BinaryProtocolProxy.ClientApplicationActivityListener() {
             @Override
-            public void onActivity() {
+            public void onActivity(BinaryProtocolServer.Packet clientRequest) {
 
             }
         }, StatusConsumer.ANONYMOUS);

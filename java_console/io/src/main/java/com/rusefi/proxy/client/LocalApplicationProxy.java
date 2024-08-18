@@ -2,7 +2,6 @@ package com.rusefi.proxy.client;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.NamedThreadFactory;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.GetOutputsCommand;
@@ -10,6 +9,7 @@ import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.serial.AbstractIoStream;
 import com.rusefi.io.serial.StreamStatistics;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
+import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.ServerSocketReference;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.NetworkConnector;
@@ -104,7 +104,7 @@ public class LocalApplicationProxy implements Closeable {
         LocalApplicationProxy.sendHello(authenticatorToProxyStream, applicationRequest);
 
         AtomicLong lastActivity = new AtomicLong(System.currentTimeMillis());
-        BinaryProtocolProxy.ClientApplicationActivityListener clientApplicationActivityListener = () -> lastActivity.set(System.currentTimeMillis());
+        BinaryProtocolProxy.ClientApplicationActivityListener clientApplicationActivityListener = (BinaryProtocolServer.Packet clientRequest) -> lastActivity.set(System.currentTimeMillis());
 
         /**
          * We need to entertain proxy server and remote controller while user has already connected to proxy but has not yet started TunerStudio

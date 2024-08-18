@@ -6,6 +6,7 @@ import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.io.can.elm.Elm327Connector;
 import com.rusefi.io.serial.SerialIoStream;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
+import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.ui.StatusConsumer;
 
@@ -28,7 +29,7 @@ public class Elm327ConnectorStartup {
 
         BinaryProtocolProxy.createProxy(elm327Connector.getTsStream(), TcpConnector.DEFAULT_PORT, new BinaryProtocolProxy.ClientApplicationActivityListener() {
             @Override
-            public void onActivity() {
+            public void onActivity(BinaryProtocolServer.Packet clientRequest) {
                 System.out.println("onActivity");
                 Elm327Connector.whyDoWeNeedToSleepBetweenCommands();
             }
