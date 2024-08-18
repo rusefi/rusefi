@@ -40,6 +40,13 @@ public class RateCounter {
         timeStamps.add(new Pair(timestamp, 1));
     }
 
+    @Override
+    public String toString() {
+        return "RateCounter{" +
+            getSizeForUnitTest() +
+            '}';
+    }
+
     private static class Pair {
         private final long timestamp;
         private final int value;

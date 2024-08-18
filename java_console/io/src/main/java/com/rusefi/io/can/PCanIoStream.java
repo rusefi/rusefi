@@ -135,4 +135,11 @@ public class PCanIoStream extends AbstractIoStream {
     public IncomingDataBuffer getDataBuffer() {
         return dataBuffer;
     }
+
+    @Override
+    public String toString() {
+        return "PCanIoStream{" + PCanHelper.CHANNEL + ", " +
+            "totalCounter=" + totalCounter +
+            '}';
+    }
 }
