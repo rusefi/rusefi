@@ -70,9 +70,6 @@ inline bool isAdcChannelOffChip(adc_channel_e hwChannel) {
 
 #if HAL_USE_ADC
 
-/* as much as bits in uint16_t used as adc_mask */
-#define ADC_MAX_DRIVERS		16
-
 typedef enum {
 	ADC_SLOW = 0,
 	ADC_FAST = 1,
@@ -85,12 +82,14 @@ typedef enum {
 	ADC_OFF = 16,
 } adc_channel_mode_e;
 
+#define ADC_DRIVERS_COUNT	ADC_OFF
+
 using AdcToken = uint32_t;
 
 using AdcTockenInternal = union {
 	AdcToken token;
 	struct {
-		uint16_t adc_mask;
+		uint16_t drvIdx;
 		uint16_t channel;
 	} __attribute__((packed));
 };
