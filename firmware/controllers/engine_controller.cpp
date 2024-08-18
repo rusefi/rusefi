@@ -67,10 +67,6 @@
 #include "logic_analyzer.h"
 #endif /* EFI_LOGIC_ANALYZER */
 
-#if HAL_USE_ADC
-#include "AdcConfiguration.h"
-#endif /* HAL_USE_ADC */
-
 #include "periodic_task.h"
 
 
@@ -200,10 +196,6 @@ char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *bu
 #endif /* HAL_USE_ADC */
 	return buffer;
 }
-
-#if HAL_USE_ADC
-extern AdcDevice fastAdc;
-#endif /* HAL_USE_ADC */
 
 static void printSensorInfo() {
 #if HAL_USE_ADC
