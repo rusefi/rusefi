@@ -76,10 +76,6 @@
 #include "logic_analyzer.h"
 #endif /* EFI_LOGIC_ANALYZER */
 
-#if HAL_USE_ADC
-#include "AdcDevice.h"
-#endif /* HAL_USE_ADC */
-
 #if defined(EFI_BOOTLOADER_INCLUDE_CODE)
 #include "bootloader/bootloader.h"
 #endif /* EFI_BOOTLOADER_INCLUDE_CODE */
@@ -247,10 +243,6 @@ char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *bu
 #endif /* HAL_USE_ADC */
 	return buffer;
 }
-
-#if HAL_USE_ADC
-extern AdcDevice fastAdc;
-#endif /* HAL_USE_ADC */
 
 #if EFI_PROD_CODE
 static void printSensorInfo() {
