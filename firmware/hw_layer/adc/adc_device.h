@@ -1,5 +1,5 @@
 /**
- * @file	AdcDevice.h
+ * @file	adc_device.h
  *
  * @date May 3, 2014
  * @author Andrey Belomutskiy, (c) 2012-2020
