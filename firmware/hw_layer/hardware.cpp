@@ -32,7 +32,7 @@
 
 #include "mmc_card.h"
 
-#include "AdcDevice.h"
+#include "adc_device.h"
 #include "idle_hardware.h"
 #include "mcp3208.h"
 

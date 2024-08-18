@@ -46,8 +46,8 @@ int analogGetDiagnostic()
 
 #if HAL_USE_ADC
 
+#include "adc_device.h"
 #include "adc_subscription.h"
-#include "AdcDevice.h"
 #include "mpu_util.h"
 #include "protected_gpio.h"
 
