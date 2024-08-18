@@ -23,7 +23,12 @@ public class PcanConnectorUI {
         JPanel panel = new JPanel(new BorderLayout());
         panel.add(new JLabel("Running PCAN connector for TS: RX on " + Integer.toString(Fields.CAN_ECU_SERIAL_RX_ID, 16)), BorderLayout.NORTH);
         JTextArea logTextArea = new JTextArea();
-        panel.add(logTextArea, BorderLayout.CENTER);
+        JPanel panelForScroll = new JPanel(new BorderLayout());
+        panelForScroll.add(logTextArea, BorderLayout.CENTER);
+
+        JScrollPane scrollPane = new JScrollPane(panelForScroll, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+        panel.add(scrollPane, BorderLayout.CENTER);
 
         StatusConsumer statusConsumer = (string, breakLineOnTextArea, sendToLogger) -> SwingUtilities.invokeLater(() -> {
             if (sendToLogger) {
