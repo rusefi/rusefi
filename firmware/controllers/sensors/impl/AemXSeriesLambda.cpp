@@ -7,6 +7,9 @@
 static constexpr uint32_t aem_base    = 0x180;
 static constexpr uint32_t rusefi_base = WB_DATA_BASE_ADDR;
 
+// "silent" of wboFaultCodeList
+#define HACK_SILENT_VALUE 1
+
 AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
 	: CanSensorBase(
 		0,	// ID passed here doesn't matter since we override acceptFrame
@@ -15,7 +18,7 @@ AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
 	)
 	, m_sensorIndex(sensorIndex)
 {
-    faultCode = 1;// silent, initial state is "no one has spoken to us so far"
+    faultCode = HACK_SILENT_VALUE;// silent, initial state is "no one has spoken to us so far"
 }
 
 bool AemXSeriesWideband::acceptFrame(const CANRxFrame& frame) const {
