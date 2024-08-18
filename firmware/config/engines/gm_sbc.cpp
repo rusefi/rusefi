@@ -54,25 +54,26 @@ void setStepperHw() {
 #endif // HW_HELLEN_UAEFI
 
 #ifdef HW_PROTEUS
-	// coil #1 - proteus pin 7 to AH pin "D"
+	// coil #1 = proteus pin 15 (DC2 positive) to BL pin "A", pin B to pin 8 (DC2 negative)
 	// PWM pin
-	engineConfiguration->stepperDcIo[0].controlPin = Gpio::D12;
+	engineConfiguration->stepperDcIo[0].controlPin = Gpio::D13;
 	// DIR pin
-	engineConfiguration->stepperDcIo[0].directionPin1 = Gpio::D10;
+	engineConfiguration->stepperDcIo[0].directionPin1 = Gpio::D9;
 	// Disable pin
-	engineConfiguration->stepperDcIo[0].disablePin = Gpio::D11;
+	engineConfiguration->stepperDcIo[0].disablePin = Gpio::D8;
 	// Unused
 	engineConfiguration->stepperDcIo[0].directionPin2 = Gpio::Unassigned;
 
-	// coil #2 = proteus pin 15 to BL pin "A"
+	// coil #2 - proteus pin 7 (DC1 positive) to AH pin "D", pin C to pin 6 (DC1 negative)
 	// PWM pin
-	engineConfiguration->stepperDcIo[1].controlPin = Gpio::D13;
+	engineConfiguration->stepperDcIo[1].controlPin = Gpio::D12;
 	// DIR pin
-	engineConfiguration->stepperDcIo[1].directionPin1 = Gpio::D9;
+	engineConfiguration->stepperDcIo[1].directionPin1 = Gpio::D10;
 	// Disable pin
-	engineConfiguration->stepperDcIo[1].disablePin = Gpio::D8;
+	engineConfiguration->stepperDcIo[1].disablePin = Gpio::D11;
 	// Unused
 	engineConfiguration->stepperDcIo[1].directionPin2 = Gpio::Unassigned;
+
 #endif // HW_PROTEUS
 }
 
