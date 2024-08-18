@@ -41,10 +41,13 @@ void CanWrite::PeriodicTask(efitick_t nowNt) {
 	CanCycle cycle(m_cycleCount);
 
 	//in case we have Verbose Can enabled, we should keep user configured period
-	if (engineConfiguration->enableVerboseCanTx && !engine->pauseCANdueToSerial) {
+	if (engineConfiguration->enableVerboseCanTx) {
+	  // slow down verbose CAN while in serial CAN
+    int canSleepPeriodMs = (engine->pauseCANdueToSerial ? 5 : 1) * engineConfiguration->canSleepPeriodMs;
+
 		uint16_t cycleCountsPeriodMs = m_cycleCount * CAN_CYCLE_PERIOD;
 		if (0 != engineConfiguration->canSleepPeriodMs) {
-			if (cycleCountsPeriodMs % engineConfiguration->canSleepPeriodMs) {
+			if (cycleCountsPeriodMs % canSleepPeriodMs) {
 				void sendCanVerbose();
 				sendCanVerbose();
 			}
