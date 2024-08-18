@@ -1,5 +1,5 @@
 /**
- * @file	adc_inputs_onchip.cpp
+ * @file	adc_onchip.cpp
  * @brief	Low level ADC code
  *
  * rusEfi uses two ADC devices on the same 16 pins at the moment. Two ADC devices are used in order to distinguish between
