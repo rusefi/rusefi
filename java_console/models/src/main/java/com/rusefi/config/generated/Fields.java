@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Aug 18 00:40:34 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Aug 18 22:22:57 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -149,8 +149,8 @@ public class Fields {
 	public static final int can_baudrate_e_B83KBPS = 1;
 	public static final int CAN_BENCH_HEADER2 = 0x66;
 	public static final int CAN_DEFAULT_BASE = 0x200;
-	public static final int CAN_ECU_SERIAL_RX_ID = 0x100;
-	public static final int CAN_ECU_SERIAL_TX_ID = 0x102;
+	public static final int CAN_ECU_SERIAL_RX_ID = 0x710;
+	public static final int CAN_ECU_SERIAL_TX_ID = 0x720;
 	public static final int can_nbc_e_CAN_AIM_DASH = 12;
 	public static final int can_nbc_e_CAN_BUS_BMW_E46 = 4;
 	public static final int can_nbc_e_CAN_BUS_BMW_E90 = 6;
@@ -1473,7 +1473,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.08.18.f407-discovery.3482607461";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.08.18.f407-discovery.4071218329";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
