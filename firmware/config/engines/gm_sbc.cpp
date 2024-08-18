@@ -19,15 +19,19 @@ void setStepperHw() {
   setPPSInputs(EFI_ADC_NONE, EFI_ADC_NONE);
 
 #ifdef HW_HELLEN_UAEFI121
-	engineConfiguration->stepperDcIo[0].controlPin = Gpio::MM100_OUT_PWM3; // DC1_PWM
-	engineConfiguration->stepperDcIo[0].directionPin1 = Gpio::MM100_OUT_PWM4; // DC1_DIR
+  // on SBC style stepper IAC fully-extended valve shaft would give least idle air
+  // fully-retracted valve shaft would give most idle air
+	// DC2 positive#4/negative#5 to pins A/B
+	engineConfiguration->stepperDcIo[0].controlPin = Gpio::MM100_OUT_PWM5; // DC2_PWM
+	engineConfiguration->stepperDcIo[0].directionPin1 = Gpio::MM100_SPI2_MOSI; // DC2_DIR
 	engineConfiguration->stepperDcIo[0].directionPin2 = Gpio::Unassigned;
-	engineConfiguration->stepperDcIo[0].disablePin = Gpio::MM100_SPI2_MISO; // ETB_DIS
-
-	engineConfiguration->stepperDcIo[1].controlPin = Gpio::MM100_OUT_PWM5; // DC2_PWM
-	engineConfiguration->stepperDcIo[1].directionPin1 = Gpio::MM100_SPI2_MOSI; // DC2_DIR
-	engineConfiguration->stepperDcIo[1].directionPin2 = Gpio::Unassigned;
 	engineConfiguration->stepperDcIo[0].disablePin = Gpio::MM100_USB1ID;
+
+  // DC1 positive#1/negative#2 to pin D/C
+	engineConfiguration->stepperDcIo[1].controlPin = Gpio::MM100_OUT_PWM3; // DC1_PWM
+	engineConfiguration->stepperDcIo[1].directionPin1 = Gpio::MM100_OUT_PWM4; // DC1_DIR
+	engineConfiguration->stepperDcIo[1].directionPin2 = Gpio::Unassigned;
+	engineConfiguration->stepperDcIo[1].disablePin = Gpio::MM100_SPI2_MISO; // ETB_DIS
 #endif
 
 #ifdef HW_HELLEN_8CHAN
@@ -48,6 +52,7 @@ void setStepperHw() {
 	engineConfiguration->stepperDcIo[0].directionPin1 = Gpio::MM100_OUT_PWM4;
 	engineConfiguration->stepperDcIo[0].directionPin2 = Gpio::Unassigned;
 	engineConfiguration->stepperDcIo[0].disablePin = Gpio::MM100_SPI2_MISO;
+
 	engineConfiguration->stepperDcIo[1].controlPin = Gpio::MM100_OUT_PWM5;
 	engineConfiguration->stepperDcIo[1].directionPin1 = Gpio::MM100_SPI2_MOSI;
 	engineConfiguration->stepperDcIo[1].directionPin2 = Gpio::MM100_USB1ID;
