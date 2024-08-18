@@ -2409,6 +2409,6 @@ end_struct
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
 
-#define CAN_ECU_SERIAL_RX_ID 0x100
-#define CAN_ECU_SERIAL_TX_ID 0x102
+#define CAN_ECU_SERIAL_RX_ID 0x710
+#define CAN_ECU_SERIAL_TX_ID 0x720
 
