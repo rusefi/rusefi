@@ -86,6 +86,12 @@ public class Autoupdate {
 
         @NotNull String firstArgument = args.length > 0 ? args[0] : "";
 
+        Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile = downloadFreshZipFile(args, firstArgument, bundleInfo);
+        URLClassLoader jarClassLoader = safeUnzipMakingSureClassloaderIsHappy(downloadedAutoupdateFile);
+        startConsole(args, jarClassLoader);
+    }
+
+    private static Optional<DownloadedAutoupdateFileInfo> downloadFreshZipFile(String[] args, String firstArgument, BundleUtil.BundleInfo bundleInfo) {
         Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile = Optional.empty();
         if (firstArgument.equalsIgnoreCase("basic-ui")) {
             downloadedAutoupdateFile = doDownload(bundleInfo, UpdateMode.ALWAYS);
@@ -105,45 +111,51 @@ public class Autoupdate {
                 log.info("Update mode: NEVER");
             }
         }
-        downloadedAutoupdateFile.ifPresent(autoupdateFile -> {
-            try {
-                // We cannot unzip rusefi_autoupdate.jar file because we need the old one to prepare class loader below
-                // (otherwise we get `ZipFile invalid LOC header (bad signature)` exception, see #6777)
-                // TODO: extract only ConnectionAndMeta#getRusEfiConsoleJarName
-                FileUtil.unzip(autoupdateFile.zipFileName, new File(".."), isRusefiAutoupdateJar.negate());
-                final String srecFile = findSrecFile();
-                new File(srecFile == null ? FindFileHelper.FIRMWARE_BIN_FILE : srecFile)
-                    .setLastModified(autoupdateFile.lastModified);
-            } catch (IOException e) {
-                log.error("Error unzipping bundle without rusefi_autoupdate.jar: " + e);
-                if (!AutoupdateUtil.runHeadless) {
-                    JOptionPane.showMessageDialog(
-                        null,
-                        "Error unzipping bundle without rusefi_autoupdate.jar: " + e,
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE
-                    );
-                }
-            }
-        });
-        final URLClassLoader jarClassLoader = prepareClassLoaderToStartConsole();
+        return downloadedAutoupdateFile;
+    }
+
+    private static URLClassLoader safeUnzipMakingSureClassloaderIsHappy(Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile) {
+        downloadedAutoupdateFile.ifPresent(Autoupdate::unzipFreshConsole);
+        URLClassLoader jarClassLoader = prepareClassLoaderToStartConsole();
         downloadedAutoupdateFile.ifPresent(autoupdateFile -> {
             try {
                 // We've already prepared class loader, so now we can unzip rusefi_autoupdate.jar file (#6777)
                 FileUtil.unzip(autoupdateFile.zipFileName, new File(".."), isRusefiAutoupdateJar);
             } catch (IOException e) {
-                log.error("Error unzipping rusefi_autoupdate.jar from bundle: " + e);
+                log.error("Error unzipping autoupdate from bundle: " + e);
                 if (!AutoupdateUtil.runHeadless) {
                     JOptionPane.showMessageDialog(
                         null,
-                        "Error unzipping rusefi_autoupdate.jar from bundle: " + e,
+                        "Error unzipping autoupdate from bundle: " + e,
                         "Error",
                         JOptionPane.ERROR_MESSAGE
                     );
                 }
             }
         });
-        startConsole(args, jarClassLoader);
+        return jarClassLoader;
+    }
+
+    private static void unzipFreshConsole(DownloadedAutoupdateFileInfo autoupdateFile) {
+        try {
+            // We cannot unzip rusefi_autoupdate.jar file because we need the old one to prepare class loader below
+            // (otherwise we get `ZipFile invalid LOC header (bad signature)` exception, see #6777)
+            // TODO: extract only ConnectionAndMeta#getRusEfiConsoleJarName
+            FileUtil.unzip(autoupdateFile.zipFileName, new File(".."), isRusefiAutoupdateJar.negate());
+            final String srecFile = findSrecFile();
+            new File(srecFile == null ? FindFileHelper.FIRMWARE_BIN_FILE : srecFile)
+                .setLastModified(autoupdateFile.lastModified);
+        } catch (IOException e) {
+            log.error("Error unzipping bundle without autoupdate: " + e);
+            if (!AutoupdateUtil.runHeadless) {
+                JOptionPane.showMessageDialog(
+                    null,
+                    "Error unzipping bundle without autoupdate: " + e,
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+                );
+            }
+        }
     }
 
     private static final Predicate<ZipEntry> isRusefiAutoupdateJar =
