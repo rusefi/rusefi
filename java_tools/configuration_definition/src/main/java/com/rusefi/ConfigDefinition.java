@@ -1,11 +1,11 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.newparse.DefinitionsState;
 import com.rusefi.output.*;
 import com.rusefi.pinout.PinoutLogic;
 import com.rusefi.trigger.TriggerWheelTSLogic;
 import com.rusefi.util.LazyFile;
-import com.rusefi.util.SystemOut;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -19,6 +19,7 @@ import java.util.*;
  * @see ConfigurationConsumer
  */
 public class ConfigDefinition {
+    private final static Logging log = Logging.getLogging(ConfigDefinition.class);
     public static final String SIGNATURE_HASH = "SIGNATURE_HASH";
 
     private static final String KEY_DEFINITION = "-definition";
@@ -42,7 +43,7 @@ public class ConfigDefinition {
             options.addAll(Arrays.asList(args));
             String[] totalArgs = options.toArray(new String[0]);
             if (totalArgs.length < 2) {
-                SystemOut.println("Please specify\r\n"
+                log.error("Please specify\r\n"
                         + KEY_DEFINITION + " x\r\n"
                         + KEY_TS_TEMPLATE + " x\r\n"
                         + KEY_C_DESTINATION + " x\r\n"
@@ -52,16 +53,14 @@ public class ConfigDefinition {
             }
             doJob(totalArgs, new ReaderStateImpl());
         } catch (Throwable e) {
-            SystemOut.println(e);
+            log.error("unexpected", e);
             e.printStackTrace();
             System.exit(-1);
-        } finally {
-            SystemOut.close();
         }
     }
 
     public static void doJob(String[] args, ReaderStateImpl state) throws IOException {
-        SystemOut.println(ConfigDefinition.class + " Invoked with " + Arrays.toString(args));
+        log.info(ConfigDefinition.class + " Invoked with " + Arrays.toString(args));
 
         String tsInputFileFolder = null;
 
@@ -168,7 +167,7 @@ public class ConfigDefinition {
             state.addInputFile(TSProjectConsumer.getTsFileInputName(tsInputFileFolder));
         }
 
-        SystemOut.println(state.getEnumsReader().getEnums().size() + " total enumsReader");
+        log.info(state.getEnumsReader().getEnums().size() + " total enumsReader");
 
         // Add the variable for the config signature
         FirmwareVersion uniqueId = new FirmwareVersion(IoUtil2.getCrc32(state.getInputFiles()));

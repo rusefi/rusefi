@@ -1,9 +1,9 @@
 package com.rusefi.output;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.*;
 import com.rusefi.newparse.DefinitionsState;
 import com.rusefi.newparse.parsing.Definition;
-import com.rusefi.util.SystemOut;
 
 import java.io.IOException;
 
@@ -13,11 +13,12 @@ import java.io.IOException;
  * See also gen_signature.sh
  */
 public class SignatureConsumer implements ConfigurationConsumer {
+    private final static Logging log = Logging.getLogging(SignatureConsumer.class);
     private final String destHeader;
     private final VariableRegistry registry;
 
     public SignatureConsumer(String destHeader, VariableRegistry registry) {
-        SystemOut.println("Writing Signature header to " + destHeader);
+        log.info("Writing Signature header to " + destHeader);
         this.destHeader = destHeader;
         this.registry = registry;
     }

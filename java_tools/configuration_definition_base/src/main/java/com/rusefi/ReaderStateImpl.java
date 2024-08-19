@@ -9,7 +9,6 @@ import com.rusefi.output.*;
 import com.rusefi.parse.TokenUtil;
 import com.rusefi.parse.TypesHelper;
 import com.rusefi.util.LazyFile;
-import com.rusefi.util.SystemOut;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -117,7 +116,7 @@ public class ReaderStateImpl implements ReaderState {
          * this is the most important invocation - here we read the primary input file and generated code into all
          * the destinations/writers
          */
-        SystemOut.println("Reading definition from " + Objects.requireNonNull(definitionInputFile));
+        log.info("Reading definition from " + Objects.requireNonNull(definitionInputFile));
         String fileNameWithRoot = RootHolder.ROOT + definitionInputFile;
         try (BufferedReader definitionReader = new BufferedReader(readerProvider.read(fileNameWithRoot))) {
             readBufferedReader(definitionReader, destinations);

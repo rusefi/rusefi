@@ -1,9 +1,9 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.enum_reader.Value;
 import com.rusefi.util.LazyFile;
 import com.rusefi.util.LazyFileImpl;
-import com.rusefi.util.SystemOut;
 
 import java.io.*;
 import java.util.*;
@@ -15,6 +15,7 @@ import java.util.*;
  */
 @SuppressWarnings("StringConcatenationInsideStringBufferAppend")
 public class EnumToString {
+    private final static Logging log = Logging.getLogging(EnumToString.class);
     private final StringBuilder cppFileContent = new StringBuilder();
     private final StringBuilder includesSection = new StringBuilder();
 
@@ -56,7 +57,7 @@ public class EnumToString {
         state.cppFileContent.insert(0, state.includesSection);
         headerFileContent.insert(0, state.includesSection);
 
-        SystemOut.println("includesSection:\n" + state.includesSection + "end of includesSection\n");
+        log.info("includesSection:\n" + state.includesSection + "end of includesSection\n");
 
         state.cppFileContent.insert(0, "#include \"global.h\"\n");
         headerFileContent.insert(0, commonFilesHeader);
@@ -64,7 +65,6 @@ public class EnumToString {
         new File(outputPath).mkdirs();
         state.writeCppAndHeaderFiles(outputPath + File.separator + "auto_generated_" +
                 InvokeReader.fileSuffix);
-        SystemOut.close();
     }
 
     private void writeCppAndHeaderFiles(String outFileName) throws IOException {
@@ -80,7 +80,7 @@ public class EnumToString {
     public void consumeFile(EnumsReader enumsReader, String inputPath, String headerInputFileName) throws IOException {
         Objects.requireNonNull(inputPath, "inputPath");
         File f = new File(inputPath + File.separator + headerInputFileName);
-        SystemOut.println("Reading enums from " + headerInputFileName);
+        log.info("Reading enums from " + headerInputFileName);
 
         commonFilesHeader.insert(0, "// " + LazyFile.LAZY_FILE_TAG + " from " + f.getName() + " ");
 
@@ -89,7 +89,7 @@ public class EnumToString {
     }
 
     public void outputData(EnumsReader enumsReader) {
-        SystemOut.println("Preparing output for " + enumsReader.getEnums().size() + " enums\n");
+        log.info("Preparing output for " + enumsReader.getEnums().size() + " enums\n");
 
         for (Map.Entry<String, EnumsReader.EnumState> e : enumsReader.getEnums().entrySet()) {
             String enumName = e.getKey();
@@ -101,7 +101,7 @@ public class EnumToString {
             if (enumState.isEnumClass)
                 headerFileContent.append("#endif //__cplusplus\n");
         }
-        SystemOut.println("EnumToString: " + headerFileContent.length() + " bytes of content\n");
+        log.info("EnumToString: " + headerFileContent.length() + " bytes of content\n");
     }
 
     private static String makeCode(String enumName, EnumsReader.EnumState enumState) {

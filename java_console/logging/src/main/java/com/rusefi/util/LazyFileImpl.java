@@ -1,15 +1,20 @@
 package com.rusefi.util;
 
+import com.devexperts.logging.Logging;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Scanner;
 import java.util.regex.Pattern;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 /**
  * This file would override file content only of content has changed, disregarding the magic tag line.
  */
 public class LazyFileImpl implements LazyFile {
+    private static final Logging log = getLogging(LazyFileImpl.class);
 
     private final String filename;
 
@@ -44,15 +49,15 @@ public class LazyFileImpl implements LazyFile {
         String newContent = unifySpaces(contentWithoutTag.toString());
 
         if (fileContent.equals(newContent)) {
-            SystemOut.println(getClass().getSimpleName() + ": Not updating " + filename + " since looks to be the same content, new content size=" + contentWithoutTag.length());
+            log.info(getClass().getSimpleName() + ": Not updating " + filename + " since looks to be the same content, new content size=" + contentWithoutTag.length());
             return;
         }
         for (int i = 0; i < Math.min(fileContent.length(), newContent.length()); i++) {
             if (fileContent.charAt(i) != newContent.charAt(i)) {
-                SystemOut.println(getClass().getSimpleName() + " " + filename + ": Not same at " + i);
+                log.info(getClass().getSimpleName() + " " + filename + ": Not same at " + i);
                 if (i > 15 && i < fileContent.length() - 6 && i < newContent.length() - 6) {
-                    SystemOut.println("file       " + fileContent.substring(i - 15, i + 5));
-                    SystemOut.println("newContent " + newContent.substring(i - 15, i + 5));
+                    log.info("file       " + fileContent.substring(i - 15, i + 5));
+                    log.info("newContent " + newContent.substring(i - 15, i + 5));
                 }
                 break;
             }
@@ -67,7 +72,7 @@ public class LazyFileImpl implements LazyFile {
         if (LazyFile.TEST.equals(filename))
             return "";
         if (!new File(filename).exists()) {
-            SystemOut.println(filename + " does not exist considering empty current content");
+            log.info(filename + " does not exist considering empty current content");
             return "";
         }
         Scanner in = new Scanner(Paths.get(filename), IoUtils.CHARSET.name());

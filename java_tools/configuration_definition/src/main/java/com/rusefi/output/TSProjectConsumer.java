@@ -1,9 +1,9 @@
 package com.rusefi.output;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.*;
 import com.rusefi.util.LazyFileImpl;
 import com.rusefi.util.Output;
-import com.rusefi.util.SystemOut;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -14,6 +14,8 @@ import static com.rusefi.util.IoUtils.CHARSET;
  * [Constants]
  */
 public class TSProjectConsumer implements ConfigurationConsumer {
+    private final static Logging log = Logging.getLogging(TSProjectConsumer.class);
+
     private static final String TS_FILE_INPUT_NAME = "tunerstudio.template.ini";
     private static final String CONFIG_DEFINITION_START = "CONFIG_DEFINITION_START";
     private static final String CONFIG_DEFINITION_END = "CONFIG_DEFINITION_END";
@@ -41,7 +43,7 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
     protected void writeTunerStudioFile(String tsPath, String fieldsSection) throws IOException {
         TsFileContent tsContent = readTsTemplateInputFile(tsPath);
-        SystemOut.println("Got " + tsContent.getPrefix().length() + "/" + tsContent.getPostfix().length() + " of " + TS_FILE_INPUT_NAME);
+        log.info("Got " + tsContent.getPrefix().length() + "/" + tsContent.getPostfix().length() + " of " + TS_FILE_INPUT_NAME);
 
         // File.getPath() would eliminate potential separator at the end of the path
         String fileName = getTsFileOutputName(new File(ConfigDefinitionRootOutputFolder.getValue() + tsPath).getPath());

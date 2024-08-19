@@ -1,13 +1,13 @@
 package com.rusefi;
 
-import com.rusefi.util.SystemOut;
+import com.devexperts.logging.Logging;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class InvokeReader {
+    private final static Logging log = Logging.getLogging(InvokeReader.class);
     private final static String KEY_INPUT_PATH = "-enumInputPath";
     private final static String KEY_OUTPUT = "-outputPath";
     private final static String KEY_OUTPUT_FILE = "-generatedFile";
@@ -22,7 +22,7 @@ public class InvokeReader {
 
     public InvokeReader(String... args) {
         if (args.length < 4) {
-            SystemOut.println("Please specify at least\n\n" +
+            log.error("Please specify at least\n\n" +
                     EnumToString.KEY_ENUM_INPUT_FILE + "XXX\n" +
                     KEY_OUTPUT + "XXX\n"
             );

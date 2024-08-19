@@ -1,15 +1,18 @@
 package com.rusefi.parse;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.ReaderState;
-import com.rusefi.util.SystemOut;
 
 import java.util.Objects;
+
+import static com.devexperts.logging.Logging.getLogging;
 
 /**
  * TODO: migrate to Type?
  * 1/22/15
  */
 public class TypesHelper {
+    private static final Logging log = getLogging(TypesHelper.class);
     private static final String INT8_T = "int8_t";
     public static final String UINT8_T = "uint8_t";
     public static final String UINT_16_T = "uint16_t";
@@ -80,7 +83,7 @@ public class TypesHelper {
             return "S08";
         if (UINT8_T.equals(type))
             return "U08";
-        SystemOut.println("No TS type conversion for " + type);
+        log.info("No TS type conversion for " + type);
         return type;
     }
 

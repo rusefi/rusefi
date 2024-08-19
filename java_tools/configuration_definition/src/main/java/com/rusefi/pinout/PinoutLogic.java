@@ -5,7 +5,6 @@ import com.rusefi.*;
 import com.rusefi.enum_reader.Value;
 import com.rusefi.newparse.DefinitionsState;
 import com.rusefi.newparse.parsing.Definition;
-import com.rusefi.util.SystemOut;
 import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.Yaml;
 
@@ -140,14 +139,14 @@ public class PinoutLogic {
         Yaml yaml = new Yaml();
         Map<String, Object> yamlData = yaml.load(reader);
         if (yamlData == null) {
-            SystemOut.println("Null yaml for " + yamlFile);
+            log.info("Null yaml for " + yamlFile);
             return;
         }
         Map</*meta name*/String, /*native name*/String> metaMapping = processMetaHeader(yamlData);
 
         List<Map<String, Object>> data = (List<Map<String, Object>>) yamlData.get("pins");
         if (data == null) {
-            SystemOut.println("Null yaml for " + yamlFile);
+            log.info("Null yaml for " + yamlFile);
             return;
         }
         log.info("Got from " + yamlFile + ": " + data);
