@@ -145,7 +145,6 @@ public class Autoupdate {
             // We cannot unzip rusefi_autoupdate.jar file because we need the old one to prepare class loader below
             // (otherwise we get `ZipFile invalid LOC header (bad signature)` exception, see #6777). So now we unzip
             // only rusefi_console.jar:
-            // TODO: extract only ConnectionAndMeta#getRusEfiConsoleJarName
             FileUtil.unzip(autoupdateFile.zipFileName, new File(".."), isConsoleJar);
         } catch (IOException e) {
             log.error("Error unzipping bundle without autoupdate: " + e);
@@ -160,8 +159,10 @@ public class Autoupdate {
         }
     }
 
-    private static final Predicate<ZipEntry> isConsoleJar =
-        zipEntry -> "console/rusefi_console.jar".equals(zipEntry.getName());
+    private static final String consoleJarZipEntry =
+        String.format("console/%s", ConnectionAndMeta.getRusEfiConsoleJarName());
+
+    private static final Predicate<ZipEntry> isConsoleJar = zipEntry -> consoleJarZipEntry.equals(zipEntry.getName());
 
     private static Optional<DownloadedAutoupdateFileInfo> doDownload(
         final BundleUtil.BundleInfo bundleInfo,
