@@ -54,8 +54,8 @@
 #define adc_channel_e_EFI_ADC_ERROR 50
 #define adc_channel_e_EFI_ADC_NONE 0
 #define adc_channel_e_EFI_ADC_TOTAL_CHANNELS 49
-#define adc_channel_e_enum 0="NONE",12="101 - MAP2",6="106 - KNOCK",1="14 - O2",11="29 In Maf",4="34 In PPS1",15="35 In PPS2",9="84 - TPS2",14="85 - IAT",7="86 - CAM1",8="87 - CAM2",5="92 - TPS 1",13="93 - CLT"
-#define adc_channel_e_fullenum "NONE","14 - O2","INVALID","INVALID","34 In PPS1","92 - TPS 1","106 - KNOCK","86 - CAM1","87 - CAM2","84 - TPS2","INVALID","29 In Maf","101 - MAP2","93 - CLT","85 - IAT","35 In PPS2"
+#define adc_channel_e_enum 0="NONE",12="101 - MAP2",6="106 - KNOCK",1="14 - O2",11="29 In Maf",4="34 In PPS1",15="35 In PPS2",9="84 - TPS2",14="85 - IAT",7="86 - CAM1",8="87 - CAM2",5="92 - TPS 1",13="93 - CLT",18="auxP2 analog",3="auxP4 analog",16="auxP5 analog"
+#define adc_channel_e_fullenum "NONE","14 - O2","INVALID","auxP4 analog","34 In PPS1","92 - TPS 1","106 - KNOCK","86 - CAM1","87 - CAM2","84 - TPS2","INVALID","29 In Maf","101 - MAP2","93 - CLT","85 - IAT","35 In PPS2","auxP5 analog","INVALID","auxP2 analog"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define air_pressure_sensor_config_s_size 12
@@ -1297,7 +1297,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3883291419
+#define SIGNATURE_HASH 3725240127
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1323,8 +1323,8 @@
 #define stft_cell_cfg_s_size 4
 #define STFT_CELL_COUNT 4
 #define stft_s_size 24
-#define switch_input_pin_e_enum 0="NONE",92="39 - IN RES2",91="48 - IN RES1",78="In D1",79="In D2",80="In D3",81="In D4"
-#define switch_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","In D1","In D2","In D3","In D4","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","48 - IN RES1","39 - IN RES2"
+#define switch_input_pin_e_enum 0="NONE",92="39 - IN RES2",91="48 - IN RES1",78="In D1",79="In D2",80="In D3",81="In D4",90="auxP3 switch"
+#define switch_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","In D1","In D2","In D3","In D4","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","auxP3 switch","48 - IN RES1","39 - IN RES2"
 #define TABLE_2_LOAD_SIZE 8
 #define TABLE_2_RPM_SIZE 8
 #define TABLE_3_LOAD_SIZE 8
@@ -1741,7 +1741,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.08.19.hellen121vag.3883291419"
+#define TS_SIGNATURE "rusEFI master.2024.08.19.hellen121vag.3725240127"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
