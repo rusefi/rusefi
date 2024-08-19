@@ -1,6 +1,30 @@
 meta: config/boards/hellen_mm176_meta.h
 
 pins:
+  - pin: auxP2
+    meta: MM176_IN_O2S2_ANALOG
+    class: analog_inputs
+    ts_name: ___ analog
+    function: Aux P2 analog input
+
+  - pin: auxP3
+    meta: MM176_IN_RES3
+    class: switch_inputs
+    ts_name: ___ switch
+    function: Aux P3 switch input
+
+  - pin: auxP4
+    meta: MM176_IN_MAP3_ANALOG
+    class: analog_inputs
+    ts_name: ___ analog
+    function: Aux P4 analog input
+
+  - pin: auxP5
+    meta: MM176_IN_AUX3_ANALOG
+    class: analog_inputs
+    ts_name: ___ analog
+    function: Aux P5 analog input
+
   - pin: MR
     meta: MM176_OUT_PWM17
     class: outputs
