@@ -29,6 +29,10 @@ public:
 
 /**
  * this helper class brings together 3D table with two 2D axis curves
+ * TODO: explicitly spell out why do we have this template and when exactly is it useful
+ * *** WARNING *** https://en.wikipedia.org/wiki/KISS_principle
+ * *** WARNING *** this helper requires initialization, make sure that helper is useful any time you consider using it
+ * *** WARNING *** we had too many bugs where we were not initializing, often just using the underlying interpolate3d is the way to go
  */
 template<int TColNum, int TRowNum, typename TValue, typename TXColumn, typename TRow>
 class Map3D : public ValueProvider3D {
