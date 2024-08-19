@@ -402,6 +402,12 @@ void handleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 		break;
 	}
 
+#if EFI_PROD_CODE
+  if (!isBrainPinValid(engineConfiguration->vvtPins[engineConfiguration->engineSyncCam])) {
+    criticalError("Selected engine sync input not configured");
+  }
+#endif // EFI_PROD_CODE
+
 	// Only do engine sync using one cam, other cams just provide VVT position.
 	if (index == engineConfiguration->engineSyncCam) {
 		angle_t crankOffset = adjustCrankPhase(camIndex);
