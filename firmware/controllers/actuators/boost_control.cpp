@@ -359,8 +359,10 @@ void initBoostCtrl() {
 	// Set up open & closed loop tables
 	boostMapOpen.initTable(config->boostTableOpenLoop, config->boostRpmBins, config->boostTpsBins);
 	boostMapClosed.initTable(config->boostTableClosedLoop, config->boostRpmBins, config->boostTpsBins);
-    boostCltCorr.initTable(config->cltBoostCorr, config->cltBoostCorrBins);
-    boostIatCorr.initTable(config->iatBoostCorr, config->iatBoostCorrBins);
+	boostCltCorr.initTable(config->cltBoostCorr, config->cltBoostCorrBins);
+	boostIatCorr.initTable(config->iatBoostCorr, config->iatBoostCorrBins);
+	boostCltAdder.initTable(config->cltBoostAdder, config->cltBoostAdderBins);
+	boostIatAdder.initTable(config->iatBoostAdder, config->iatBoostAdderBins);
 
 	// Set up boost controller instance
 	engine->module<BoostController>().unmock().init(
