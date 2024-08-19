@@ -504,14 +504,14 @@ pins:
     ts_name: ___ LS5_HOT
     meta: MM100_IGN7
     class: outputs
-    function: Low-Side 5 always hot / relay capable output
+    function: Low-Side 5 main relay / always hot / relay capable output
     type: ls
 
   - pin: 87a
     ts_name: ___ LS6_HOT
     meta: MM100_IGN8
     class: outputs
-    function: Low-Side 6 always hot / relay capable output
+    function: Low-Side 6 fuel relay always hot / relay capable output
     type: ls
 
   - pin: 88a
