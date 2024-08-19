@@ -52,6 +52,9 @@ void setBoardDefaultConfiguration() {
 
   setHellenMMbaro();
 
+  engineConfiguration->mainRelayPin = Gpio::MM100_IGN7;
+  engineConfiguration->fuelPumpPin = Gpio::MM100_IGN8;
+
 		engineConfiguration->injectionPins[0] = Gpio::MM100_COATED_INJ1;
   	engineConfiguration->injectionPins[1] = Gpio::MM100_INJ2;
   	engineConfiguration->injectionPins[2] = Gpio::MM100_INJ3;
