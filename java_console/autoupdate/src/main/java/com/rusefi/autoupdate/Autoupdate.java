@@ -109,6 +109,7 @@ public class Autoupdate {
             try {
                 // We cannot unzip rusefi_autoupdate.jar file because we need the old one to prepare class loader below
                 // (otherwise we get `ZipFile invalid LOC header (bad signature)` exception, see #6777)
+                // TODO: extract only ConnectionAndMeta#getRusEfiConsoleJarName
                 FileUtil.unzip(autoupdateFile.zipFileName, new File(".."), isRusefiAutoupdateJar.negate());
                 final String srecFile = findSrecFile();
                 new File(srecFile == null ? FindFileHelper.FIRMWARE_BIN_FILE : srecFile)
