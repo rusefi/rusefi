@@ -119,8 +119,12 @@ public class Autoupdate {
         URLClassLoader jarClassLoader = prepareClassLoaderToStartConsole();
         downloadedAutoupdateFile.ifPresent(autoupdateFile -> {
             try {
-                // We've already prepared class loader, so now we can unzip rusefi_autoupdate.jar file (#6777)
-                FileUtil.unzip(autoupdateFile.zipFileName, new File(".."), isRusefiAutoupdateJar);
+                // We've already prepared class loader, so now we can unzip rusefi_autoupdate.jar and other files
+                // except already unzipped rusefi_console.jar (see #6777):
+                FileUtil.unzip(autoupdateFile.zipFileName, new File(".."), isConsoleJar.negate());
+                final String srecFile = findSrecFile();
+                new File(srecFile == null ? FindFileHelper.FIRMWARE_BIN_FILE : srecFile)
+                    .setLastModified(autoupdateFile.lastModified);
             } catch (IOException e) {
                 log.error("Error unzipping autoupdate from bundle: " + e);
                 if (!AutoupdateUtil.runHeadless) {
@@ -139,12 +143,10 @@ public class Autoupdate {
     private static void unzipFreshConsole(DownloadedAutoupdateFileInfo autoupdateFile) {
         try {
             // We cannot unzip rusefi_autoupdate.jar file because we need the old one to prepare class loader below
-            // (otherwise we get `ZipFile invalid LOC header (bad signature)` exception, see #6777)
+            // (otherwise we get `ZipFile invalid LOC header (bad signature)` exception, see #6777). So now we unzip
+            // only rusefi_console.jar:
             // TODO: extract only ConnectionAndMeta#getRusEfiConsoleJarName
-            FileUtil.unzip(autoupdateFile.zipFileName, new File(".."), isRusefiAutoupdateJar.negate());
-            final String srecFile = findSrecFile();
-            new File(srecFile == null ? FindFileHelper.FIRMWARE_BIN_FILE : srecFile)
-                .setLastModified(autoupdateFile.lastModified);
+            FileUtil.unzip(autoupdateFile.zipFileName, new File(".."), isConsoleJar);
         } catch (IOException e) {
             log.error("Error unzipping bundle without autoupdate: " + e);
             if (!AutoupdateUtil.runHeadless) {
@@ -158,8 +160,8 @@ public class Autoupdate {
         }
     }
 
-    private static final Predicate<ZipEntry> isRusefiAutoupdateJar =
-        zipEntry -> "console/rusefi_autoupdate.jar".equals(zipEntry.getName());
+    private static final Predicate<ZipEntry> isConsoleJar =
+        zipEntry -> "console/rusefi_console.jar".equals(zipEntry.getName());
 
     private static Optional<DownloadedAutoupdateFileInfo> doDownload(
         final BundleUtil.BundleInfo bundleInfo,
