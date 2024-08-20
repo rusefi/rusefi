@@ -1430,7 +1430,7 @@
         <constant digits="2" name="ALSIdleAdd" units="%">0.0</constant>
         <constant digits="2" name="ALSEtbAdd" units="%">0.0</constant>
         <constant digits="1" name="ALSSkipRatio" units="">0.0</constant>
-        <constant digits="0" name="unusedSorry11" units="">0.0</constant>
+        <constant digits="1" name="acPressureEnableHyst" units="kPa (absolute)">0.0</constant>
         <constant name="ALSActivatePinMode">"DEFAULT"</constant>
         <constant digits="1" name="tpsSecondaryMaximum" units="%">0.0</constant>
         <constant digits="1" name="ppsSecondaryMaximum" units="%">0.0</constant>
@@ -4954,7 +4954,7 @@ canRxAdd(IN_35D, onCanRxAc)</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240819" nPages="1" signature="rusEFI master.2024.08.20.f407-discovery.1499723357" version="5.0"/>
+    <versionInfo firmwareInfo="20240819" nPages="1" signature="rusEFI master.2024.08.20.f407-discovery.36222256" version="5.0"/>
     <bibliography author="rusEFI 20240819" writeDate="date"/>
     <settings/>
     <userComments/>
