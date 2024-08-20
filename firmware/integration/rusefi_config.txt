@@ -1589,7 +1589,7 @@ uint8_t alsEtbPosition;;"", 1, 0, 0, 20000, 0
 	int ALSIdleAdd;;"%", 1, 0, 0, 100, 2
 	int ALSEtbAdd;;"%", 1, 0, 0, 100, 2
 	float ALSSkipRatio;;"", 1, 0, 0, 1, 1
-	uint8_t unusedSorry11
+	uint8_t autoscale acPressureEnableHyst;Hysterisis: if Pressure High Disable is 240kpa, and acPressureEnableHyst is 20, when the ECU sees 240kpa, A/C will be disabled, and stay disabled until 240-20=220kpa is reached;"kPa (absolute)", 0.5, 0, 0, 125, 1
 	pin_input_mode_e ALSActivatePinMode;
 
 	uint8_t autoscale tpsSecondaryMaximum;For Ford TPS, use 53%. For Toyota ETCS-i, use ~65%;"%", 0.5, 0, 0, 100, 1
