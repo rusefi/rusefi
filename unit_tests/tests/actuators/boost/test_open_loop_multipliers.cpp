@@ -53,7 +53,7 @@ namespace {
     }
 
     void OpenLoopMultipliersTest::initLuaOpenLoopAdd(const float value) {
-        bc->luaOpenLoopAdd = value;
+        getBoostController().luaOpenLoopAdd = value;
     }
 
     std::optional<float> OpenLoopMultipliersTest::getTestCltBoostBin(const int index) {
@@ -85,7 +85,7 @@ namespace {
         if (iat.has_value()) {
             Sensor::setMockValue(SensorType::Iat, iat.value());
         }
-        const expected<percent_t> openLoop = bc->getOpenLoop(0.0f);
+        const expected<percent_t> openLoop = getBoostController().getOpenLoop(0.0f);
         EXPECT_TRUE(openLoop.Valid) << "clt: " << clt.value_or(-1) << ", iat: " << iat.value_or(-1) ;
         EXPECT_EQ(openLoop.Value, expectedOpenLoop) << "clt: " << clt.value_or(-1) << ", iat: " << iat.value_or(-1) ;
     }
