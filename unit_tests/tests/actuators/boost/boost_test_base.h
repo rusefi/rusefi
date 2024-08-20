@@ -22,10 +22,9 @@ protected:
         float (&dstValues)[BOOST_CURVE_SIZE]
     );
 
-    std::unique_ptr<BoostController> bc;
+    BoostController& getBoostController() const;
 private:
     void initBoostCurveArray(const float (&src)[BOOST_CURVE_SIZE], float (&dst)[BOOST_CURVE_SIZE]);
-    void initBoostControllerTables();
 
     Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t, uint8_t> boostMapOpen{ "bo" };
     Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t, uint8_t> boostMapClosed{ "bc" };

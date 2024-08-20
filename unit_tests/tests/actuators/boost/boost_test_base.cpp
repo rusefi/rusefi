@@ -13,14 +13,12 @@ const BoostTestBase::ValueByIndexRetriever BoostTestBase::emptyValue = [](const 
 void BoostTestBase::SetUp() {
     TestBase::SetUp();
 
-    bc = std::make_unique<BoostController>();
-    initBoostControllerTables();
+    initBoostCtrl();
 
     Sensor::resetAllMocks();
 }
 
 void BoostTestBase::TearDown() {
-    bc.reset();
     TestBase::TearDown();
 }
 
@@ -34,31 +32,10 @@ void BoostTestBase::initTestBoostCurve(
     initBoostCurveArray(testValues, dstValues);
 }
 
-void BoostTestBase::initBoostCurveArray(const float (&src)[BOOST_CURVE_SIZE], float (&dst)[BOOST_CURVE_SIZE]) {
-    std::copy(std::begin(src), std::end(src), std::begin(dst));
+BoostController& BoostTestBase::getBoostController() const {
+    return engine->module<BoostController>().unmock();
 }
 
-void BoostTestBase::initBoostControllerTables() {
-    // The code below is very similar to code in file boost_control.cpp
-    // TODO: think how we can get rid of duplicated code
-
-    // Set up open & closed loop tables
-    boostMapOpen.initTable(config->boostTableOpenLoop, config->boostRpmBins, config->boostTpsBins);
-    boostMapClosed.initTable(config->boostTableClosedLoop, config->boostRpmBins, config->boostTpsBins);
-    boostCltCorr.initTable(config->cltBoostCorr, config->cltBoostCorrBins);
-    boostIatCorr.initTable(config->iatBoostCorr, config->iatBoostCorrBins);
-    boostCltAdder.initTable(config->cltBoostAdder, config->cltBoostAdderBins);
-    boostIatAdder.initTable(config->iatBoostAdder, config->iatBoostAdderBins);
-
-    // Set up boost controller instance
-    bc->init(
-            &boostPwmControl,
-            &boostMapOpen,
-            &boostMapClosed,
-            boostCltCorr,
-            boostIatCorr,
-            boostCltAdder,
-            boostIatAdder,
-            &engineConfiguration->boostPid
-    );
+void BoostTestBase::initBoostCurveArray(const float (&src)[BOOST_CURVE_SIZE], float (&dst)[BOOST_CURVE_SIZE]) {
+    std::copy(std::begin(src), std::end(src), std::begin(dst));
 }

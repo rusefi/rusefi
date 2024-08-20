@@ -65,8 +65,8 @@ namespace {
     }
 
     void ClosedLoopAddersTest::initLuaTargetCorrections(const float luaTargetMult, const int luaTargetAdd) {
-        bc->luaTargetMult = luaTargetMult;
-        bc->luaTargetAdd = luaTargetAdd;
+        getBoostController().luaTargetMult = luaTargetMult;
+        getBoostController().luaTargetAdd = luaTargetAdd;
     }
 
     std::optional<float> ClosedLoopAddersTest::getTestCltBoostBin(const int index) {
@@ -102,7 +102,7 @@ namespace {
         if (iat.has_value()) {
             Sensor::setMockValue(SensorType::Iat, iat.value());
         }
-        const expected<percent_t> setPoint = bc->getSetpoint();
+        const expected<percent_t> setPoint = getBoostController().getSetpoint();
         EXPECT_TRUE(setPoint.Valid) << "clt: " << clt.value_or(-1) << ", iat: " << iat.value_or(-1) ;
         ASSERT_NEAR(setPoint.Value, expectedSetPoint, EPS5D)
             << "clt: " << clt.value_or(-1) << ", iat: " << iat.value_or(-1) ;
