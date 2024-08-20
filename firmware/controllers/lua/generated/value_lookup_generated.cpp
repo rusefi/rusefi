@@ -1639,6 +1639,9 @@ float getConfigValueByName(const char *name) {
 // ALSSkipRatio
 		case -1404414917:
 			return engineConfiguration->ALSSkipRatio;
+// acPressureEnableHyst
+		case 298344625:
+			return engineConfiguration->acPressureEnableHyst;
 // tpsSecondaryMaximum
 		case -1744146782:
 			return engineConfiguration->tpsSecondaryMaximum;
@@ -4557,6 +4560,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1404414917:
 	{
 		engineConfiguration->ALSSkipRatio = value;
+		return 1;
+	}
+		case 298344625:
+	{
+		engineConfiguration->acPressureEnableHyst = (int)value;
 		return 1;
 	}
 		case -1744146782:

@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Aug 17 15:40:36 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Aug 20 21:02:42 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4154,9 +4154,11 @@ struct engine_configuration_s {
 	 */
 	float ALSSkipRatio;
 	/**
+	 * Hysterisis: if Pressure High Disable is 240kpa, and acPressureEnableHyst is 20, when the ECU sees 240kpa, A/C will be disabled, and stay disabled until 240-20=220kpa is reached
+	 * units: kPa (absolute)
 	 * offset 3368
 	 */
-	uint8_t unusedSorry11;
+	scaled_channel<uint8_t, 2, 1> acPressureEnableHyst;
 	/**
 	 * offset 3369
 	 */
@@ -5817,4 +5819,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22972);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sat Aug 17 15:40:36 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Tue Aug 20 21:02:42 UTC 2024

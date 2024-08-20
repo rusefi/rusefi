@@ -1633,6 +1633,9 @@ null
 ### ALSSkipRatio
 
 
+### acPressureEnableHyst
+Hysterisis: if Pressure High Disable is 240kpa, and acPressureEnableHyst is 20, when the ECU sees 240kpa, A/C will be disabled, and stay disabled until 240-20=220kpa is reached
+
 ### tpsSecondaryMaximum
 For Ford TPS, use 53%. For Toyota ETCS-i, use ~65%
 
