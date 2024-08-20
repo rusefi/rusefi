@@ -50,6 +50,7 @@ or
  - Fix a scenario where noisy trigger can cause overdwell [rusefi/rusefi#6349](https://github.com/rusefi/rusefi/issues/6349)
  - Fix decel fuel cutoff (DFCO) on engines without a MAP sensor #457
  - Automatic calculation of knock sense frequency based on cylinder bore #379
+ - Removed MAP sampling option that can result in inaccurate MAP sensor readings
 
 ## December 2023 Release
 
