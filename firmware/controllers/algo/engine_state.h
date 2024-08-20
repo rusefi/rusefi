@@ -49,7 +49,7 @@ public:
 	float auxValveEnd = 0;
 
 	/**
-	 * MAP averaging angle start, in relation to 'mapAveragingSchedulingAtIndex' trigger index index
+	 * MAP averaging angle start, in relation to '0' trigger index index
 	 */
 	angle_t mapAveragingStart[MAX_CYLINDER_COUNT];
 	angle_t mapAveragingDuration = 0;

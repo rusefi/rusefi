@@ -191,7 +191,7 @@ void refreshMapAveragingPreCalc() {
 		angle_t start = interpolate2d(rpm, c->samplingAngleBins, c->samplingAngle);
 		efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_START_ASSERT, !std::isnan(start), "start");
 
-		angle_t offsetAngle = engine->triggerCentral.triggerFormDetails.eventAngles[engineConfiguration->mapAveragingSchedulingAtIndex];
+		angle_t offsetAngle = engine->triggerCentral.triggerFormDetails.eventAngles[0];
 		efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_AVG_OFFSET, !std::isnan(offsetAngle), "offsetAngle");
 
 		for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
@@ -221,9 +221,10 @@ void refreshMapAveragingPreCalc() {
 void mapAveragingTriggerCallback(
 		uint32_t index, efitick_t edgeTimestamp) {
 #if EFI_ENGINE_CONTROL && EFI_PROD_CODE
-	// this callback is invoked on interrupt thread
-	if (index != (uint32_t)engineConfiguration->mapAveragingSchedulingAtIndex)
+	// update only once per engine cycle
+	if (index != 0) {
 		return;
+	}
 
 	int rpm = Sensor::getOrZero(SensorType::Rpm);
 	if (!isValidRpm(rpm)) {

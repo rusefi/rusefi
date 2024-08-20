@@ -28,6 +28,9 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Fixed
+ - Removed questionable MAP sampling trigger index option
+
 ## August 2024 "Day 898"
 
 ### Added

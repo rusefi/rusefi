@@ -458,7 +458,7 @@ void proteusBoardTest() {
 static void setBasicNotECUmode() {
     engineConfiguration->trigger.type = trigger_type_e::TT_HALF_MOON;
 
-	engineConfiguration->mapAveragingSchedulingAtIndex = 999; // this should disable map averaging right?
+	// todo: shall we disable map averaging?
 
 	engineConfiguration->wwaeTau = 0.0;
 	engineConfiguration->wwaeBeta = 0.0;
