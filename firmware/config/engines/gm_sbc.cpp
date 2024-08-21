@@ -113,6 +113,9 @@ void setGmSbc() {
     ignOverride->pin = Gpio::MM100_IGN2; // 12a Coil 2
     // tach plug pin C
     engineConfiguration->triggerInputPins[0] = Gpio::MM100_IN_D2; // 35a HALL2
+	  engineConfiguration->camInputs[0] = Gpio::Unassigned;
+	  engineConfiguration->camInputs[1] = Gpio::Unassigned;
+	  engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
 #endif // HW_HELLEN_UAEFI121
 
 #if HW_PROTEUS
