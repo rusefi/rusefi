@@ -42,7 +42,7 @@ public class ConnectionAndMeta {
         return result;
     }
 
-    public static String getWhiteLabelFromJarName() {
+    public static String getJarFileNamePrefix() {
         try {
             CodeSource codeSource = ConnectionAndMeta.class.getProtectionDomain().getCodeSource();
             if (codeSource != null) {
@@ -51,23 +51,23 @@ public class ConnectionAndMeta {
                 String jarFileName = jarPath.substring(jarPath.lastIndexOf('/') + 1);
                 int startOfSuffix = jarFileName.lastIndexOf('_');
                 if (startOfSuffix > 0) {
-	                String whiteLabel = jarFileName.substring(0, startOfSuffix);
-                    log.info("WhiteLabel = " + whiteLabel);
-	                return whiteLabel;
+	                String jarFilePrefix = jarFileName.substring(0, startOfSuffix);
+                    log.info("jarFilePrefix = " + jarFilePrefix);
+	                return jarFilePrefix;
 	            }
             }
         } catch (Exception e) {
             log.error("Unexpected " + e, e);
         }
-        return DEFAULT_WHITE_LABEL;
+        return "rusefi";
     }
 
     public static String getWhiteLabel(Properties properties) {
-        return getStringProperty(properties, "white_label", getWhiteLabelFromJarName());
+        return getStringProperty(properties, "white_label", DEFAULT_WHITE_LABEL);
     }
 
     public static String getRusEfiConsoleJarName() {
-        return getStringProperty(getProperties(), "console_jar", getWhiteLabel(getProperties()) + "_console.jar");
+        return getStringProperty(getProperties(), "console_jar", getJarFileNamePrefix() + "_console.jar");
     }
 
     private static @NotNull String getStringProperty(Properties properties, String key, String defaultValue) {
