@@ -9,22 +9,26 @@
 namespace {
     constexpr uint16_t TEST_MIN_AC_PRESSURE = 17;
     constexpr uint16_t TEST_MAX_AC_PRESSURE = 239;
+    constexpr float TEST_AC_PRESSURE_ENABLE_HYSTERESIS = 2.0f;
     constexpr uint16_t DEADBAND_WIDTH = AcController::PRESSURE_DEADBAND_WIDTH;
 
     class AcPressureTestConfig : public AcTestConfig {
     public:
         AcPressureTestConfig(
-            const std::optional<uint16_t> minAcPressure,
-            const std::optional<uint16_t> maxAcPressure
+            std::optional<uint16_t> minAcPressure,
+            std::optional<uint16_t> maxAcPressure,
+            std::optional<float> acPressureEnableHysteresis
         );
     };
 
     AcPressureTestConfig::AcPressureTestConfig(
             const std::optional<uint16_t> minAcPressure,
-            const std::optional<uint16_t> maxAcPressure
+            const std::optional<uint16_t> maxAcPressure,
+            const std::optional<float> acPressureEnableHysteresis
     ) {
         setMinAcPressure(minAcPressure);
         setMaxAcPressure(maxAcPressure);
+        setAcPressureEnableHysteresis(acPressureEnableHysteresis);
     }
 
     struct AcPressureTestData {
@@ -44,11 +48,12 @@ namespace {
         void checkPersistentIndicators();
     };
 
-    const AcPressureTestConfig AcPressureTest::DEFAULT_AC_PRESSURE_CONFIG = { {}, {} };
+    const AcPressureTestConfig AcPressureTest::DEFAULT_AC_PRESSURE_CONFIG = { {}, {}, {} };
 
     const AcPressureTestConfig AcPressureTest::TEST_AC_PRESSURE_CONFIG = {
             { TEST_MIN_AC_PRESSURE },
-            { TEST_MAX_AC_PRESSURE }
+            { TEST_MAX_AC_PRESSURE },
+            { TEST_AC_PRESSURE_ENABLE_HYSTERESIS }
     };
 
     void AcPressureTest::doTest(const AcPressureTestConfig& config, const std::vector<AcPressureTestData>& testData) {
@@ -145,32 +150,26 @@ namespace {
                     false
                 },
                 {
-                    "acPressure = TEST_MAX_AC_PRESSURE + DEADBAND_WIDTH",
-                    TEST_MAX_AC_PRESSURE + DEADBAND_WIDTH,
+                    "acPressure = TEST_MAX_AC_PRESSURE",
+                    TEST_MAX_AC_PRESSURE,
                     false,
                     false
                 },
                 {
-                    "acPressure = TEST_MAX_AC_PRESSURE + DEADBAND_WIDTH + EPS5D",
-                    TEST_MAX_AC_PRESSURE + DEADBAND_WIDTH + EPS5D,
+                    "acPressure = TEST_MAX_AC_PRESSURE + EPS5D",
+                    TEST_MAX_AC_PRESSURE + EPS5D,
                     false,
                     true
                 },
                 {
-                    "acPressure = TEST_MAX_AC_PRESSURE",
-                    TEST_MAX_AC_PRESSURE,
+                    "acPressure = TEST_MAX_AC_PRESSURE - TEST_AC_PRESSURE_ENABLE_HYSTERESIS",
+                    TEST_MAX_AC_PRESSURE - TEST_AC_PRESSURE_ENABLE_HYSTERESIS,
                     false,
                     true
                 },
                 {
-                    "acPressure = TEST_MAX_AC_PRESSURE - DEADBAND_WIDTH",
-                    TEST_MAX_AC_PRESSURE - DEADBAND_WIDTH,
-                    false,
-                    true
-                },
-                {
-                    "acPressure = TEST_MAX_AC_PRESSURE - DEADBAND_WIDTH - EPS5D",
-                    TEST_MAX_AC_PRESSURE - DEADBAND_WIDTH - EPS5D,
+                    "acPressure = TEST_MAX_AC_PRESSURE - TEST_AC_PRESSURE_ENABLE_HYSTERESIS - EPS5D",
+                    TEST_MAX_AC_PRESSURE - TEST_AC_PRESSURE_ENABLE_HYSTERESIS - EPS5D,
                     false,
                     false
                 }
@@ -233,32 +232,26 @@ namespace {
                    false
                },
                {
-                   "acPressure = DEFAULT_MAX_AC_PRESSURE + DEADBAND_WIDTH",
-                   DEFAULT_MAX_AC_PRESSURE + DEADBAND_WIDTH,
+                   "acPressure = DEFAULT_MAX_AC_PRESSURE",
+                   DEFAULT_MAX_AC_PRESSURE,
                    false,
                    false
                },
                {
-                   "acPressure = DEFAULT_MAX_AC_PRESSURE + DEADBAND_WIDTH + EPS4D",
-                   DEFAULT_MAX_AC_PRESSURE + DEADBAND_WIDTH + EPS4D,
+                   "acPressure = DEFAULT_MAX_AC_PRESSURE + EPS4D",
+                   DEFAULT_MAX_AC_PRESSURE + EPS4D,
                    false,
                    true
                },
-               {
-                   "acPressure = DEFAULT_MAX_AC_PRESSURE",
-                   DEFAULT_MAX_AC_PRESSURE,
-                   false,
-                   true
-               },
-               {
-                   "acPressure = DEFAULT_MAX_AC_PRESSURE - DEADBAND_WIDTH",
-                   DEFAULT_MAX_AC_PRESSURE - DEADBAND_WIDTH,
-                   false,
-                   true
-               },
-               {
-                   "acPressure = DEFAULT_MAX_AC_PRESSURE - DEADBAND_WIDTH - EPS4implementD",
-                   DEFAULT_MAX_AC_PRESSURE - DEADBAND_WIDTH - EPS4D,
+                {
+                    "acPressure = DEFAULT_MAX_AC_PRESSURE",
+                    DEFAULT_MAX_AC_PRESSURE,
+                    false,
+                    true
+                },
+                {
+                   "acPressure = DEFAULT_MAX_AC_PRESSURE - EPS4D",
+                   DEFAULT_MAX_AC_PRESSURE - EPS4D,
                    false,
                    false
                }
