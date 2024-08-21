@@ -943,9 +943,6 @@ float getConfigValueByName(const char *name) {
 // idleStepperTotalSteps
 		case -1077032999:
 			return engineConfiguration->idleStepperTotalSteps;
-// mapAveragingSchedulingAtIndex
-		case 1556302698:
-			return engineConfiguration->mapAveragingSchedulingAtIndex;
 // tachPulseDuractionMs
 		case 58931511:
 			return engineConfiguration->tachPulseDuractionMs;
@@ -3400,11 +3397,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1077032999:
 	{
 		engineConfiguration->idleStepperTotalSteps = (int)value;
-		return 1;
-	}
-		case 1556302698:
-	{
-		engineConfiguration->mapAveragingSchedulingAtIndex = (int)value;
 		return 1;
 	}
 		case 58931511:

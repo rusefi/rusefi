@@ -937,9 +937,6 @@ set warningPeriod X
 ### idleStepperTotalSteps
 
 
-### mapAveragingSchedulingAtIndex
-At what trigger index should some MAP-related math be executed? This is a performance trick to reduce load on synchronization trigger callback.
-
 ### tachPulseDuractionMs
 Duration in ms or duty cycle depending on selected mode
 
