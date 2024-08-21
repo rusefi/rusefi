@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
-
+import com.devexperts.logging.Logging;
 
 public class ConnectionAndMeta {
     public static final String BASE_URL_RELEASE = "https://github.com/rusefi/rusefi/releases/latest/download/";
@@ -30,8 +30,7 @@ public class ConnectionAndMeta {
     private long completeFileSize;
     private long lastModified;
 
-
-    private static Logger logger = Logger.getLogger(ConnectionAndMeta.class.getName());
+    private static final Logging log = Logging.getLogging(ConnectionAndMeta.class);
 
     public ConnectionAndMeta(String zipFileName) {
         this.zipFileName = zipFileName;
@@ -53,12 +52,12 @@ public class ConnectionAndMeta {
                 int startOfSuffix = jarFileName.lastIndexOf('_');
                 if (startOfSuffix > 0) {
 	                String whiteLabel = jarFileName.substring(0, startOfSuffix);
-                    logger.info("WhiteLabel = " + whiteLabel);
+                    log.info("WhiteLabel = " + whiteLabel);
 	                return whiteLabel;
 	            }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("Unexpected " + e, e);
         }
         return DEFAULT_WHITE_LABEL;
     }
