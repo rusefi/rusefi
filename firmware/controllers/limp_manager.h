@@ -136,7 +136,7 @@ private:
 	void setFaultRevLimit(int limit);
 
 	Hysteresis m_revLimitHysteresis;
-	Hysteresis m_boostCutHysteresis;
+	Hysteresis m_boostCutHysteresis; //TODO: use MaxLimitWithHysteresis instead of Hysteresis
 	Hysteresis m_injectorDutyCutHysteresis;
 
 	// Start with no fault rev limit

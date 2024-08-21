@@ -70,6 +70,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/tcu/tc_4.cpp \
 	$(CONTROLLERS_DIR)/shutdown_controller.cpp \
 	$(CONTROLLERS_DIR)/limp_manager.cpp \
+	$(CONTROLLERS_DIR)/max_limit_with_hysteresis.cpp \
 
 CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR) \

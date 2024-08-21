@@ -2,6 +2,7 @@
 
 #include "ac_control.h"
 #include "deadband.h"
+#include "max_limit_with_hysteresis.h"
 
 namespace {
 	// Deadbands to prevent rapid switching on/off of AC
@@ -9,7 +10,7 @@ namespace {
 	Deadband<5> maxCltDeadband;
 	Deadband<5> maxTpsDeadband;
 	Deadband<AcController::PRESSURE_DEADBAND_WIDTH> minPressureDeadband;
-	Deadband<AcController::PRESSURE_DEADBAND_WIDTH> maxPressureDeadband;
+	MaxLimitWithHysteresis acPressureEnableHysteresis;
 }
 
 bool AcController::getAcState() {
@@ -58,7 +59,11 @@ bool AcController::getAcState() {
         }
 
         const auto maxAcPressure = static_cast<float>(engineConfiguration->maxAcPressure);
-        acPressureTooHigh = maxPressureDeadband.gt(acPressure.Value, maxAcPressure);
+        acPressureTooHigh = acPressureEnableHysteresis.checkIfLimitIsExceeded(
+        	acPressure.Value,
+        	maxAcPressure,
+        	engineConfiguration->acPressureEnableHyst
+        );
         if (acPressureTooHigh) {
             return false;
         }

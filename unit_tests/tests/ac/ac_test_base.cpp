@@ -15,6 +15,7 @@ void AcTestBase::setUpTestConfig(const AcTestConfig& config) {
     configureAcDelay(config.getAcDelay());
     configureMinAcPressure(config.getMinAcPressure());
     configureMaxAcPressure(config.getMaxAcPressure());
+    configureAcPressureEnableHysteresis(config.getAcPressureEnableHysteresis());
 }
 
 void AcTestBase::configureAcDelay(const std::optional<float> acDelay) {
@@ -38,5 +39,13 @@ void AcTestBase::configureMaxAcPressure(const std::optional<uint16_t> maxAcPress
         engineConfiguration->maxAcPressure = maxAcPressure.value();
     } else {
         ASSERT_EQ(engineConfiguration->maxAcPressure, DEFAULT_MAX_AC_PRESSURE); // check default value
+    }
+}
+
+void AcTestBase::configureAcPressureEnableHysteresis(std::optional<float> acPressureEnableHysteresis) {
+    if (acPressureEnableHysteresis.has_value()) {
+        engineConfiguration->acPressureEnableHyst = acPressureEnableHysteresis.value();
+    } else {
+        ASSERT_EQ(engineConfiguration->acPressureEnableHyst, DEFAULT_AC_PRESSURE_ENABLE_HYST); // check default value
     }
 }
