@@ -3,12 +3,14 @@
 #include "ac_control.h"
 #include "deadband.h"
 
-// Deadbands to prevent rapid switching on/off of AC
-static Deadband<200> maxRpmDeadband;
-static Deadband<5> maxCltDeadband;
-static Deadband<5> maxTpsDeadband;
-static Deadband<AcController::PRESSURE_DEADBAND_WIDTH> minPressureDeadband;
-static Deadband<AcController::PRESSURE_DEADBAND_WIDTH> maxPressureDeadband;
+namespace {
+	// Deadbands to prevent rapid switching on/off of AC
+	Deadband<200> maxRpmDeadband;
+	Deadband<5> maxCltDeadband;
+	Deadband<5> maxTpsDeadband;
+	Deadband<AcController::PRESSURE_DEADBAND_WIDTH> minPressureDeadband;
+	Deadband<AcController::PRESSURE_DEADBAND_WIDTH> maxPressureDeadband;
+}
 
 bool AcController::getAcState() {
 	auto rpm = Sensor::getOrZero(SensorType::Rpm);
