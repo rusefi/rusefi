@@ -6,13 +6,16 @@ import javax.net.ssl.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.security.CodeSource;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
+import java.util.logging.Logger;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
+
 
 public class ConnectionAndMeta {
     public static final String BASE_URL_RELEASE = "https://github.com/rusefi/rusefi/releases/latest/download/";
@@ -27,6 +30,9 @@ public class ConnectionAndMeta {
     private long completeFileSize;
     private long lastModified;
 
+
+    private static Logger logger = Logger.getLogger(ConnectionAndMeta.class.getName());
+
     public ConnectionAndMeta(String zipFileName) {
         this.zipFileName = zipFileName;
     }
@@ -37,12 +43,32 @@ public class ConnectionAndMeta {
         return result;
     }
 
+    public static String getWhiteLabelFromJarName() {
+        try {
+            CodeSource codeSource = ConnectionAndMeta.class.getProtectionDomain().getCodeSource();
+            if (codeSource != null) {
+                URL jarUrl = codeSource.getLocation();
+                String jarPath = jarUrl.getPath();
+                String jarFileName = jarPath.substring(jarPath.lastIndexOf('/') + 1);
+                int startOfSuffix = jarFileName.lastIndexOf('_');
+                if (startOfSuffix > 0) {
+	                String whiteLabel = jarFileName.substring(0, startOfSuffix);
+                    logger.info("WhiteLabel = " + whiteLabel);
+	                return whiteLabel;
+	            }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return DEFAULT_WHITE_LABEL;
+    }
+
     public static String getWhiteLabel(Properties properties) {
-        return getStringProperty(properties, "white_label", DEFAULT_WHITE_LABEL);
+        return getStringProperty(properties, "white_label", getWhiteLabelFromJarName());
     }
 
     public static String getRusEfiConsoleJarName() {
-        return getStringProperty(getProperties(), "console_jar", "rusefi_console.jar");
+        return getStringProperty(getProperties(), "console_jar", getWhiteLabel(getProperties()) + "_console.jar");
     }
 
     private static @NotNull String getStringProperty(Properties properties, String key, String defaultValue) {
