@@ -114,7 +114,7 @@ void setTestEngineIssue366rise() {
 #ifdef HARDWARE_CI
 // set engine_type 30
 void setProteusAnalogPwmTest() {
-  engineConfiguration->vvtPins[0] = Gpio::E0; // a random unused pin needed for happy HW CI. Huh, why do we have cam stimulation?!
+  engineConfiguration->camInputs[0] = Gpio::E0; // a random unused pin needed for happy HW CI. Huh, why do we have cam stimulation?!
 
 	// lowest cpu trigger possible
 	engineConfiguration->trigger.type = trigger_type_e::TT_HALF_MOON;

@@ -121,7 +121,7 @@ void m73engine() {
 
 // BMW_M73_F
 void setBMW_M73_TwoCoilUnitTest() {
-	engineConfiguration->vvtPins[0] = Gpio::A0; // a random unused pin needed for happy HW CI
+	engineConfiguration->camInputs[0] = Gpio::A0; // a random unused pin needed for happy HW CI
 	// twoCoil configuration without unit tests ETB setup drama
 	m73engine();
 }

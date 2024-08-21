@@ -17,7 +17,7 @@
 // set engine_type 32
 void setVwAba() {
 	setFrankensoConfiguration();
-	engineConfiguration->vvtPins[0] = Gpio::E0; // a random unused pin needed for happy HW CI
+	engineConfiguration->camInputs[0] = Gpio::E0; // a random unused pin needed for happy HW CI
 
 	setWholeTimingTable(20);
 	// set cranking_timing_angle 10
