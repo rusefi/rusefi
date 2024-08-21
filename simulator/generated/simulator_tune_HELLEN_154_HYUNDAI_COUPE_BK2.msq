@@ -4839,8 +4839,8 @@ end</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240819" nPages="1" signature="rusEFI master.2024.08.21.f407-discovery.3240305536" version="5.0"/>
-    <bibliography author="rusEFI 20240819" writeDate="date"/>
+    <versionInfo firmwareInfo="20240821" nPages="1" signature="rusEFI master.2024.08.21.f407-discovery.3240305536" version="5.0"/>
+    <bibliography author="rusEFI 20240821" writeDate="date"/>
     <settings/>
     <userComments/>
 </msq>
