@@ -223,7 +223,7 @@
         <constant digits="0" name="boostControlSafeDutyCycle" units="%">0.0</constant>
         <constant name="mafAdcChannel">"Disabled"</constant>
         <constant digits="0" name="acrRevolutions" units="">5.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.024082E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0240821E7</constant>
         <constant digits="3" name="adcVcc" units="volts">3.0</constant>
         <constant digits="0" name="mapCamDetectionAnglePosition" units="Deg">0.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -687,7 +687,7 @@
         <constant digits="2" name="knockDetectionWindowEnd" units="angle">60.0</constant>
         <constant digits="0" name="idleStepperReactionTime" units="ms">3.0</constant>
         <constant digits="0" name="idleStepperTotalSteps" units="count">200.0</constant>
-        <constant digits="0" name="mapAveragingSchedulingAtIndex" units="index">0.0</constant>
+        <constant digits="0" name="unusedInt3423423" units="">0.0</constant>
         <constant digits="2" name="tachPulseDuractionMs" units="">0.5</constant>
         <constant digits="2" name="wwaeTau" units="Seconds">0.3</constant>
         <constant digits="4" name="alternatorControl_pFactor" units="">30.0</constant>
@@ -4791,7 +4791,7 @@ end</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240819" nPages="1" signature="rusEFI master.2024.08.20.f407-discovery.36222256" version="5.0"/>
+    <versionInfo firmwareInfo="20240819" nPages="1" signature="rusEFI master.2024.08.21.f407-discovery.3240305536" version="5.0"/>
     <bibliography author="rusEFI 20240819" writeDate="date"/>
     <settings/>
     <userComments/>
