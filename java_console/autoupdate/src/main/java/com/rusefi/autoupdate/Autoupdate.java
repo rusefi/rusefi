@@ -206,7 +206,7 @@ public class Autoupdate {
         } catch (ClassNotFoundException | IllegalAccessException | InvocationTargetException |
                  NoSuchMethodException e) {
             log.error("Failed to start", e);
-            throw new IllegalStateException("Invoking console", e);
+            throw new IllegalStateException("Invoking console: " + e, e);
         }
     }
 
