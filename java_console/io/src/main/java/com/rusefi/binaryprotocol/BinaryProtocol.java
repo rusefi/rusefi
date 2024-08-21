@@ -14,6 +14,7 @@ import com.rusefi.binaryprotocol.test.Bug3923;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Pair;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.io.*;
 import com.rusefi.io.commands.BurnCommand;
 import com.rusefi.io.commands.ByteRange;
@@ -367,7 +368,9 @@ public class BinaryProtocol {
         }
         if (arguments != null && arguments.saveFile) {
             try {
-                ConfigurationImageFile.saveToFile(image, CONFIGURATION_RUSEFI_BINARY);
+                if (ConnectionAndMeta.saveSettingsToFile()) {
+                    ConfigurationImageFile.saveToFile(image, CONFIGURATION_RUSEFI_BINARY);
+                }
                 Msq tune = MsqFactory.valueOf(image, IniFileModel.getInstance());
                 tune.writeXmlFile(CONFIGURATION_RUSEFI_XML);
             } catch (Exception e) {

@@ -148,6 +148,10 @@ public class ConnectionAndMeta {
         return DEFAULT_WHITE_LABEL.equals(whiteLabel);
     }
 
+    public static boolean saveSettingsToFile() {
+        return Boolean.TRUE.toString().equalsIgnoreCase(getStringProperty(getProperties(), "binary_config_image", "false"));
+    }
+
     public HttpURLConnection getHttpConnection() {
         return httpConnection;
     }
