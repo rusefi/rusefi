@@ -370,3 +370,15 @@ void setupTLE9201(Gpio controlPin, Gpio direction, Gpio disable, int dcIndex) {
 	// we only have pwm/dir, no dira/dirb
 	engineConfiguration->etb_use_two_wires = false;
 }
+
+void setupTLE9201IncludingStepper(Gpio controlPin, Gpio direction, Gpio disable, int dcIndex) {
+  setupTLE9201(controlPin, direction, disable, dcIndex);
+
+  // on SBC style stepper IAC fully-extended valve shaft would give least idle air
+  // fully-retracted valve shaft would give most idle air
+  int stepperIndexWeirdness = 1 - dcIndex;
+	engineConfiguration->stepperDcIo[stepperIndexWeirdness].controlPin = controlPin;
+	engineConfiguration->stepperDcIo[stepperIndexWeirdness].directionPin1 = direction;
+	engineConfiguration->stepperDcIo[stepperIndexWeirdness].directionPin2 = Gpio::Unassigned;
+	engineConfiguration->stepperDcIo[stepperIndexWeirdness].disablePin = disable;
+}

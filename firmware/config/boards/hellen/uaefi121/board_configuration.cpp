@@ -47,8 +47,10 @@ void setBoardConfigOverrides() {
 }
 
 void setBoardDefaultConfiguration() {
-  setupTLE9201(/*PWM controlPin*/Gpio::MM100_OUT_PWM3, Gpio::MM100_OUT_PWM4, Gpio::MM100_SPI2_MISO);
-  setupTLE9201(/*PWM controlPin*/Gpio::MM100_OUT_PWM5, Gpio::MM100_SPI2_MOSI, Gpio::MM100_USB1ID, 1);
+	// GM stepper: DC2 positive#4/negative#5 to pins A/B
+  // DC1 positive#1/negative#2 to pin D/C
+  setupTLE9201IncludingStepper(/*PWM controlPin*/Gpio::MM100_OUT_PWM3, Gpio::MM100_OUT_PWM4, Gpio::MM100_SPI2_MISO);
+  setupTLE9201IncludingStepper(/*PWM controlPin*/Gpio::MM100_OUT_PWM5, Gpio::MM100_SPI2_MOSI, Gpio::MM100_USB1ID, 1);
 
   setHellenMMbaro();
 
