@@ -4954,7 +4954,7 @@ canRxAdd(IN_35D, onCanRxAc)</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240821" nPages="1" signature="rusEFI master.2024.08.22.f407-discovery.710189209" version="5.0"/>
+    <versionInfo firmwareInfo="20240821" nPages="1" signature="rusEFI master.2024.08.22.f407-discovery.672485455" version="5.0"/>
     <bibliography author="rusEFI 20240821" writeDate="date"/>
     <settings/>
     <userComments/>
