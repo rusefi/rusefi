@@ -92,6 +92,13 @@ void setBoardDefaultConfiguration() {
  	engineConfiguration->fanPin = Gpio::MM100_IGN8;
 	engineConfiguration->fuelPumpPin = Gpio::MM100_OUT_PWM2;
 
+	// SPI3 for on-board EGT
+	engineConfiguration->is_enabled_spi_3 = true;
+	// MOSI not needed, we have one-way communication here
+	engineConfiguration->spi3misoPin = Gpio::C11;
+	engineConfiguration->spi3sckPin = Gpio::C10;
+	engineConfiguration->max31855_cs[0] = Gpio::A15;
+
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
 	engineConfiguration->enableVerboseCanTx = true;
