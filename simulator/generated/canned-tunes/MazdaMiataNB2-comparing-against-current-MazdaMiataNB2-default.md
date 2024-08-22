@@ -309,7 +309,6 @@
 	nb2cannedhpfpDeadtimeVoltsBins();
 	nb2cannedtpsTpsAccelTable();
 	nb2cannedboostRpmBins();
-	nb2cannedboostTpsBins();
 	nb2cannedboostTableOpenLoop();
 	nb2cannedboostTableClosedLoop();
 	nb2cannedvvtTable1RpmBins();

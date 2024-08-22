@@ -401,7 +401,6 @@
 	cannedtpsTpsAccelTable();
 	cannedtractionControlSlipBins();
 	cannedboostRpmBins();
-	cannedboostTpsBins();
 	cannedboostTableOpenLoop();
 	cannedboostTableClosedLoop();
 	cannedscriptTable1RpmBins();

@@ -338,11 +338,6 @@ static void cannedboostRpmBins() {
 	copyArray(config->boostRpmBins, hardCodedboostRpmBins);
 }
 
-static void cannedboostTpsBins() {
-	static const float hardCodedboostTpsBins[8] = {0.0, 14.0, 28.0, 42.0, 58.0, 72.0, 86.0, 100.0};
-	copyArray(config->boostTpsBins, hardCodedboostTpsBins);
-}
-
 static void cannedboostTableOpenLoop() {
 	static const float hardCodedboostTableOpenLoop[8][8] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},

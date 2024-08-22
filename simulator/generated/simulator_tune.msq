@@ -2223,7 +2223,7 @@
          86.0 86.0 86.0 86.0 86.0 86.0 86.0 86.0
          100.0 100.0 100.0 100.0 100.0 100.0 100.0 100.0
 </constant>
-        <constant cols="1" digits="0" name="boostTpsBins" rows="8">
+        <constant cols="1" digits="0" name="boostLoadBins" rows="8">
          0.0
          14.0
          29.0
@@ -4790,7 +4790,7 @@ end</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240821" nPages="1" signature="rusEFI master.2024.08.22.f407-discovery.3240305536" version="5.0"/>
+    <versionInfo firmwareInfo="20240821" nPages="1" signature="rusEFI master.2024.08.22.f407-discovery.710189209" version="5.0"/>
     <bibliography author="rusEFI 20240821" writeDate="date"/>
     <settings/>
     <userComments/>
