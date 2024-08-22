@@ -30,6 +30,7 @@ Release template (copy/paste this for new release):
 
 ### Fixed
  - Removed questionable MAP sampling trigger index option
+ - boost control load axis range and rename #6840
 
 ## August 2024 "Day 898"
 

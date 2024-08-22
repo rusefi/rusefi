@@ -624,7 +624,7 @@ bool validateConfigOnStartUpOrBurn() {
 
 #if EFI_BOOST_CONTROL
 	// Boost
-	ensureArrayIsAscending("Boost control TPS", config->boostTpsBins);
+	ensureArrayIsAscending("Boost control Load", config->boostLoadBins);
 	ensureArrayIsAscending("Boost control RPM", config->boostRpmBins);
 #endif // EFI_BOOST_CONTROL
 

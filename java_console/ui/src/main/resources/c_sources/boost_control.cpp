@@ -181,12 +181,12 @@ void setDefaultBoostParameters() {
 	engineConfiguration->boostControlPinMode = OM_DEFAULT;
 
 	setLinearCurve(config->boostRpmBins, 0, 8000 / RPM_1_BYTE_PACKING_MULT, 1);
-	setLinearCurve(config->boostTpsBins, 0, 100 / TPS_1_BYTE_PACKING_MULT, 1);
+	setLinearCurve(config->boostLoadBins, 0, 100 / TPS_1_BYTE_PACKING_MULT, 1);
 
 	for (int loadIndex = 0; loadIndex < BOOST_LOAD_COUNT; loadIndex++) {
 		for (int rpmIndex = 0; rpmIndex < BOOST_RPM_COUNT; rpmIndex++) {
-			config->boostTableOpenLoop[loadIndex][rpmIndex] = config->boostTpsBins[loadIndex];
-			config->boostTableClosedLoop[loadIndex][rpmIndex] = config->boostTpsBins[loadIndex];
+			config->boostTableOpenLoop[loadIndex][rpmIndex] = config->boostLoadBins[loadIndex];
+			config->boostTableClosedLoop[loadIndex][rpmIndex] = config->boostLoadBins[loadIndex];
 		}
 	}
 
@@ -237,8 +237,8 @@ void initBoostCtrl() {
 	}
 
 	// Set up open & closed loop tables
-	boostMapOpen.init(config->boostTableOpenLoop, config->boostTpsBins, config->boostRpmBins);
-	boostMapClosed.init(config->boostTableClosedLoop, config->boostTpsBins, config->boostRpmBins);
+	boostMapOpen.init(config->boostTableOpenLoop, config->boostLoadBins, config->boostRpmBins);
+	boostMapClosed.init(config->boostTableClosedLoop, config->boostLoadBins, config->boostRpmBins);
 
 	// Set up boost controller instance
 	engine->boostController.init(&boostPwmControl, &boostMapOpen, &boostMapClosed, &engineConfiguration->boostPid);

@@ -300,11 +300,11 @@ void setDefaultBoostParameters() {
 	engineConfiguration->boostControlPinMode = OM_DEFAULT;
 
 	setRpmTableBin(config->boostRpmBins);
-	setLinearCurve(config->boostTpsBins, 0, 100, 1);
+	setLinearCurve(config->boostLoadBins, 0, 100, 1);
 
 	for (int loadIndex = 0; loadIndex < BOOST_LOAD_COUNT; loadIndex++) {
 		for (int rpmIndex = 0; rpmIndex < BOOST_RPM_COUNT; rpmIndex++) {
-			config->boostTableClosedLoop[loadIndex][rpmIndex] = (float)config->boostTpsBins[loadIndex];
+			config->boostTableClosedLoop[loadIndex][rpmIndex] = (float)config->boostLoadBins[loadIndex];
 		}
 	}
 
@@ -357,8 +357,8 @@ void initBoostCtrl() {
 #endif
 
 	// Set up open & closed loop tables
-	boostMapOpen.initTable(config->boostTableOpenLoop, config->boostRpmBins, config->boostTpsBins);
-	boostMapClosed.initTable(config->boostTableClosedLoop, config->boostRpmBins, config->boostTpsBins);
+	boostMapOpen.initTable(config->boostTableOpenLoop, config->boostRpmBins, config->boostLoadBins);
+	boostMapClosed.initTable(config->boostTableClosedLoop, config->boostRpmBins, config->boostLoadBins);
 	boostCltCorr.initTable(config->cltBoostCorr, config->cltBoostCorrBins);
 	boostIatCorr.initTable(config->iatBoostCorr, config->iatBoostCorrBins);
 	boostCltAdder.initTable(config->cltBoostAdder, config->cltBoostAdderBins);
