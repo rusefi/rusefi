@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Aug 21 12:24:32 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Aug 22 15:44:52 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -4853,7 +4853,7 @@ struct persistent_config_s {
 	/**
 	 * offset 5484
 	 */
-	uint8_t boostTpsBins[BOOST_LOAD_COUNT];
+	uint8_t boostLoadBins[BOOST_LOAD_COUNT];
 	/**
 	 * units: %
 	 * offset 5492
@@ -5817,4 +5817,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22988);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Wed Aug 21 12:24:32 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Aug 22 15:44:52 UTC 2024

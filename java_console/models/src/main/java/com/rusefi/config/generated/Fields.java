@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Aug 22 00:21:33 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Aug 22 15:46:04 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -1097,6 +1097,7 @@ public class Fields {
 	public static final String MAIN_HELP_URL = "http://www.rusefi.com/";
 	public static final int MAP_ANGLE_SIZE = 8;
 	public static final int MAP_sensor_config_s_size = 140;
+	public static final int MAP_UPPER_LIMIT = 255;
 	public static final int MAP_WINDOW_SIZE = 8;
 	public static final int MAX_CYLINDER_COUNT = 12;
 	public static final int MAX_TPS_PPS_DISCREPANCY = 5;
@@ -1214,6 +1215,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 710189209;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1473,7 +1475,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.08.22.f407-discovery.3240305536";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.08.22.f407-discovery.710189209";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2948,7 +2950,7 @@ public class Fields {
 	public static final Field BOOSTTABLEOPENLOOP = Field.create("BOOSTTABLEOPENLOOP", 5332, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field BOOSTRPMBINS = Field.create("BOOSTRPMBINS", 5396, FieldType.INT8).setScale(100.0).setBaseOffset(0);
 	public static final Field BOOSTTABLECLOSEDLOOP = Field.create("BOOSTTABLECLOSEDLOOP", 5404, FieldType.INT8).setScale(2.0).setBaseOffset(0);
-	public static final Field BOOSTTPSBINS = Field.create("BOOSTTPSBINS", 5468, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field BOOSTLOADBINS = Field.create("BOOSTLOADBINS", 5468, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field PEDALTOTPSTABLE = Field.create("PEDALTOTPSTABLE", 5476, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field PEDALTOTPSPEDALBINS = Field.create("PEDALTOTPSPEDALBINS", 5540, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field PEDALTOTPSRPMBINS = Field.create("PEDALTOTPSRPMBINS", 5548, FieldType.INT8).setScale(100.0).setBaseOffset(0);
@@ -4611,7 +4613,7 @@ public class Fields {
 	BOOSTTABLEOPENLOOP,
 	BOOSTRPMBINS,
 	BOOSTTABLECLOSEDLOOP,
-	BOOSTTPSBINS,
+	BOOSTLOADBINS,
 	PEDALTOTPSTABLE,
 	PEDALTOTPSPEDALBINS,
 	PEDALTOTPSRPMBINS,

@@ -1155,6 +1155,7 @@
 #define MAIN_HELP_URL "https://rusefi.com/s/hellenNA6"
 #define MAP_ANGLE_SIZE 8
 #define MAP_sensor_config_s_size 140
+#define MAP_UPPER_LIMIT 255
 #define MAP_WINDOW_SIZE 8
 #define MAX_CYLINDER_COUNT 12
 #define MAX_TPS_PPS_DISCREPANCY 5
@@ -1297,7 +1298,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 4057414401
+#define SIGNATURE_HASH 446740504
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1741,7 +1742,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.08.22.hellenNA6.4057414401"
+#define TS_SIGNATURE "rusEFI master.2024.08.22.hellenNA6.446740504"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
