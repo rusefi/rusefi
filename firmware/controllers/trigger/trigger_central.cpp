@@ -403,7 +403,8 @@ void handleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 	}
 
 #if EFI_PROD_CODE
-  if (!isBrainPinValid(engineConfiguration->camInputs[engineConfiguration->engineSyncCam])) {
+  if (!isBrainPinValid(engineConfiguration->camInputs[engineConfiguration->engineSyncCam]) &&
+      engineConfiguration->vvtMode[engineConfiguration->engineSyncCam] != VVT_MAP_V_TWIN) {
     criticalError("Selected engine sync input not configured: %d", engineConfiguration->engineSyncCam);
   }
 #endif // EFI_PROD_CODE
