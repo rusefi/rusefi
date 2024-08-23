@@ -131,7 +131,7 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	float mapCut = engineConfiguration->boostCutPressure;
 	if (mapCut != 0) {
 		// require drop of 'boostCutPressureHyst' kPa to resume fuel
-		if (m_boostCutHysteresis.test(Sensor::getOrZero(SensorType::Map), mapCut, mapCut - engineConfiguration->boostCutPressureHyst)) {
+		if (m_boostCutHysteresis.checkIfLimitIsExceeded(Sensor::getOrZero(SensorType::Map), mapCut, engineConfiguration->boostCutPressureHyst)) {
 			allowFuel.clear(ClearReason::BoostCut);
 		}
 	}
