@@ -629,9 +629,9 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->isWaveAnalyzerEnabled = true;
 
 	engineConfiguration->acIdleRpmTarget = 900;
-	engineConfiguration->acDelay = 0.5;
-    engineConfiguration->minAcPressure = 100;
-    engineConfiguration->maxAcPressure = 300;
+	engineConfiguration->acDelay = engine_configuration_defaults::AC_DELAY;
+    engineConfiguration->minAcPressure = engine_configuration_defaults::MIN_AC_PRESSURE;
+    engineConfiguration->maxAcPressure = engine_configuration_defaults::MAX_AC_PRESSURE;
 	engineConfiguration->acPressureEnableHyst = engine_configuration_defaults::AC_PRESSURE_ENABLE_HYST;
 	engineConfiguration->acIdleExtraOffset = 15;
 

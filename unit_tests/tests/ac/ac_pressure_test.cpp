@@ -184,32 +184,32 @@ namespace {
             /* config = */ { {}, {}, { 0.0f } },
             /* testData = */ {
                {
-                   "acPressure = (DEFAULT_MIN_AC_PRESSURE + DEFAULT_MAX_AC_PRESSURE) / 2.0",
-                   (DEFAULT_MIN_AC_PRESSURE + DEFAULT_MAX_AC_PRESSURE) / 2.0,
+                   "acPressure = (engine_configuration_defaults::MIN_AC_PRESSURE + engine_configuration_defaults::MAX_AC_PRESSURE) / 2.0",
+                   (engine_configuration_defaults::MIN_AC_PRESSURE + engine_configuration_defaults::MAX_AC_PRESSURE) / 2.0,
                    false,
                    false
                },
                {
-                   "acPressure = DEFAULT_MAX_AC_PRESSURE",
-                   DEFAULT_MAX_AC_PRESSURE,
+                   "acPressure = engine_configuration_defaults::MAX_AC_PRESSURE",
+                   engine_configuration_defaults::MAX_AC_PRESSURE,
                    false,
                    false
                },
                {
-                   "acPressure = DEFAULT_MAX_AC_PRESSURE + EPS4D",
-                   DEFAULT_MAX_AC_PRESSURE + EPS4D,
+                   "acPressure = engine_configuration_defaults::MAX_AC_PRESSURE + EPS4D",
+                   engine_configuration_defaults::MAX_AC_PRESSURE + EPS4D,
                    false,
                    true
                },
                 {
-                    "acPressure = DEFAULT_MAX_AC_PRESSURE",
-                    DEFAULT_MAX_AC_PRESSURE,
+                    "acPressure = engine_configuration_defaults::MAX_AC_PRESSURE",
+                    engine_configuration_defaults::MAX_AC_PRESSURE,
                     false,
                     true
                 },
                 {
-                   "acPressure = DEFAULT_MAX_AC_PRESSURE - EPS4D",
-                   DEFAULT_MAX_AC_PRESSURE - EPS4D,
+                   "acPressure = engine_configuration_defaults::MAX_AC_PRESSURE - EPS4D",
+                   engine_configuration_defaults::MAX_AC_PRESSURE - EPS4D,
                    false,
                    false
                }
@@ -223,37 +223,37 @@ namespace {
             /* testData = */ {
                {
                    "acPressure = (DEFAULT_MIN_AC_PRESSURE + DEFAULT_MAX_AC_PRESSURE) / 2.0",
-                   (DEFAULT_MIN_AC_PRESSURE + DEFAULT_MAX_AC_PRESSURE) / 2.0,
+                   (engine_configuration_defaults::MIN_AC_PRESSURE + engine_configuration_defaults::MAX_AC_PRESSURE) / 2.0,
                    false,
                    false
                },
                {
-                   "acPressure = DEFAULT_MIN_AC_PRESSURE - DEADBAND_WIDTH",
-                       DEFAULT_MIN_AC_PRESSURE - DEADBAND_WIDTH,
+                   "acPressure = engine_configuration_defaults::MIN_AC_PRESSURE - DEADBAND_WIDTH",
+                       engine_configuration_defaults::MIN_AC_PRESSURE - DEADBAND_WIDTH,
                    false,
                    false
                },
                {
-                   "acPressure = DEFAULT_MIN_AC_PRESSURE - DEADBAND_WIDTH - EPS5D",
-                   DEFAULT_MIN_AC_PRESSURE - DEADBAND_WIDTH - EPS5D,
+                   "acPressure = engine_configuration_defaults::MIN_AC_PRESSURE - DEADBAND_WIDTH - EPS5D",
+                   engine_configuration_defaults::MIN_AC_PRESSURE - DEADBAND_WIDTH - EPS5D,
                    true,
                    false
                },
                {
-                   "acPressure = DEFAULT_MIN_AC_PRESSURE",
-                   DEFAULT_MIN_AC_PRESSURE,
+                   "acPressure = engine_configuration_defaults::MIN_AC_PRESSURE",
+                   engine_configuration_defaults::MIN_AC_PRESSURE,
                    true,
                    false
                },
                {
-                   "acPressure = DEFAULT_MIN_AC_PRESSURE + DEADBAND_WIDTH",
-                   DEFAULT_MIN_AC_PRESSURE + DEADBAND_WIDTH,
+                   "acPressure = engine_configuration_defaults::MIN_AC_PRESSURE + DEADBAND_WIDTH",
+                   engine_configuration_defaults::MIN_AC_PRESSURE + DEADBAND_WIDTH,
                    true,
                    false
                },
                {
-                   "acPressure = DEFAULT_MIN_AC_PRESSURE + DEADBAND_WIDTH + EPS5D",
-                   DEFAULT_MIN_AC_PRESSURE + DEADBAND_WIDTH + EPS5D,
+                   "acPressure = engine_configuration_defaults::MIN_AC_PRESSURE + DEADBAND_WIDTH + EPS5D",
+                   engine_configuration_defaults::MIN_AC_PRESSURE + DEADBAND_WIDTH + EPS5D,
                    false,
                    false
                }
@@ -266,32 +266,32 @@ namespace {
             /* config = */ DEFAULT_AC_PRESSURE_CONFIG,
             /* testData = */ {
                {
-                   "acPressure = (DEFAULT_MIN_AC_PRESSURE + DEFAULT_MAX_AC_PRESSURE) / 2.0",
-                   (DEFAULT_MIN_AC_PRESSURE + DEFAULT_MAX_AC_PRESSURE) / 2.0,
+                   "acPressure = (engine_configuration_defaults::MIN_AC_PRESSURE + engine_configuration_defaults::MAX_AC_PRESSURE) / 2.0",
+                   (engine_configuration_defaults::MIN_AC_PRESSURE + engine_configuration_defaults::MAX_AC_PRESSURE) / 2.0,
                    false,
                    false
                },
                {
-                   "acPressure = DEFAULT_MAX_AC_PRESSURE",
-                   DEFAULT_MAX_AC_PRESSURE,
+                   "acPressure = engine_configuration_defaults::MAX_AC_PRESSURE",
+                   engine_configuration_defaults::MAX_AC_PRESSURE,
                    false,
                    false
                },
                {
-                   "acPressure = DEFAULT_MAX_AC_PRESSURE + EPS4D",
-                   DEFAULT_MAX_AC_PRESSURE + EPS4D,
+                   "acPressure = engine_configuration_defaults::MAX_AC_PRESSURE + EPS4D",
+                   engine_configuration_defaults::MAX_AC_PRESSURE + EPS4D,
                    false,
                    true
                },
                 {
-                    "acPressure = DEFAULT_MAX_AC_PRESSURE - engine_configuration_defaults::AC_PRESSURE_ENABLE_HYST",
-                    DEFAULT_MAX_AC_PRESSURE - engine_configuration_defaults::AC_PRESSURE_ENABLE_HYST,
+                    "acPressure = engine_configuration_defaults::MAX_AC_PRESSURE - engine_configuration_defaults::AC_PRESSURE_ENABLE_HYST",
+                    engine_configuration_defaults::MAX_AC_PRESSURE - engine_configuration_defaults::AC_PRESSURE_ENABLE_HYST,
                     false,
                     true
                 },
                 {
-                   "acPressure = DEFAULT_MAX_AC_PRESSURE - engine_configuration_defaults::AC_PRESSURE_ENABLE_HYST - EPS4D",
-                   DEFAULT_MAX_AC_PRESSURE - engine_configuration_defaults::AC_PRESSURE_ENABLE_HYST - EPS4D,
+                   "acPressure = engine_configuration_defaults::MAX_AC_PRESSURE - engine_configuration_defaults::AC_PRESSURE_ENABLE_HYST - EPS4D",
+                   engine_configuration_defaults::MAX_AC_PRESSURE - engine_configuration_defaults::AC_PRESSURE_ENABLE_HYST - EPS4D,
                    false,
                    false
                }
