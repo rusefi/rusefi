@@ -11,7 +11,6 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
-import java.util.logging.Logger;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Properties;
@@ -23,6 +22,7 @@ public class ConnectionAndMeta {
     public static final String AUTOUPDATE = "/autoupdate/";
 
     private static final int BUFFER_SIZE = 32 * 1024;
+    private volatile static Properties properties; // sad: we do not completely understand #6777 but caching should not hurt
     public static final int CENTUM = 100;
     public static final String IO_PROPERTIES = "/shared_io.properties";
     private final String zipFileName;
@@ -95,7 +95,14 @@ public class ConnectionAndMeta {
         return Boolean.TRUE.toString().equalsIgnoreCase(flag);
     }
 
-    public static Properties getProperties() throws RuntimeException {
+    public synchronized static Properties getProperties() throws RuntimeException {
+        if (properties == null) {
+            properties = getPropertiesForReal();
+        }
+        return properties;
+    }
+
+    private static Properties getPropertiesForReal() throws RuntimeException {
         Properties props = new Properties();
         try {
             InputStream stream = ConnectionAndMeta.class.getResourceAsStream(IO_PROPERTIES);
