@@ -5,6 +5,7 @@ PASS=$2
 HOST=$3
 BUNDLE_NAME=$4
 SUBFOLDER_TO_UPLOAD=$5
+# optional folder override in bundle_upload_folder env variable
 
 SCRIPT_NAME=$(basename "$0")
 
@@ -65,11 +66,13 @@ SSHCMD
 
      # sftp does not support -p flag on mkdir :(
      sshpass -p $PASS sftp -o StrictHostKeyChecking=no ${USER}@${HOST} <<SSHCMD
+dir
 cd ${DESTINATION_FOLDER}
 put $FULL_BUNDLE_FILE
 mkdir autoupdate
 cd autoupdate
 put $UPDATE_BUNDLE_FILE
+dir
 SSHCMD
  echo "$SCRIPT_NAME: DONE $FULL_BUNDLE_FILE"
 else
