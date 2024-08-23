@@ -98,6 +98,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->spi3misoPin = Gpio::C11;
 	engineConfiguration->spi3sckPin = Gpio::C10;
 	engineConfiguration->max31855_cs[0] = Gpio::A15;
+	engineConfiguration->max31855spiDevice = SPI_DEVICE_3;
 
 	// "required" hardware is done - set some reasonable defaults
 	setupDefaultSensorInputs();
