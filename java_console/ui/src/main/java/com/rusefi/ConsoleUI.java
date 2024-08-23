@@ -1,9 +1,11 @@
 package com.rusefi;
 
+import com.devexperts.logging.FileLogger;
 import com.devexperts.logging.Logging;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.binaryprotocol.BinaryProtocolLogger;
 import com.rusefi.core.MessagesCentral;
+import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
@@ -18,6 +20,8 @@ import com.rusefi.ui.lua.LuaScriptPanel;
 import com.rusefi.ui.util.DefaultExceptionHandler;
 import com.rusefi.ui.util.JustOneInstance;
 import com.rusefi.core.ui.AutoupdateUtil;
+import com.rusefi.util.LazyFile;
+import com.rusefi.util.LazyFileImpl;
 
 
 import javax.swing.*;
@@ -25,6 +29,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
@@ -41,6 +46,7 @@ import static com.rusefi.ui.util.UiUtils.createOnTopParent;
 public class ConsoleUI {
     private static final Logging log = getLogging(ConsoleUI.class);
     private static final int DEFAULT_TAB_INDEX = 0;
+    private static final String WIKI_URL = "https://github.com/rusefi/rusefi/wiki/rusEFI-logs-folder";
 
     public static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
@@ -192,8 +198,22 @@ public class ConsoleUI {
         return port;
     }
 
+    private static void writeReadmeFile() {
+        LazyFile file = new LazyFileImpl(FileLogger.DIR + "README.html");
+        file.write("<center>" + "<a href='" + WIKI_URL + "'>More info online<br/><img src=https://raw.githubusercontent.com/wiki/rusefi/rusefi/logo.gif></a>");
+        try {
+            file.close();
+        } catch (IOException e) {
+            // ignoring this one
+        }
+    }
+
     static void startUi(String[] args) throws InterruptedException, InvocationTargetException {
         FileLog.MAIN.start();
+        if (ConnectionAndMeta.saveReadmeHtmlToFile()) {
+            new Thread(ConsoleUI::writeReadmeFile).start();
+        }
+
         log.info("OS name: " + FileLog.getOsName());
         log.info("OS version: " + System.getProperty(FileLog.OS_VERSION));
 

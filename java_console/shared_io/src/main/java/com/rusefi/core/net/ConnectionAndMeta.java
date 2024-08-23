@@ -148,7 +148,11 @@ public class ConnectionAndMeta {
     }
 
     public static boolean saveSettingsToFile() {
-        return Boolean.TRUE.toString().equalsIgnoreCase(getStringProperty(getProperties(), "binary_config_image", "false"));
+        return getBoolean("binary_config_image");
+    }
+
+    public static boolean saveReadmeHtmlToFile() {
+        return Boolean.TRUE.toString().equalsIgnoreCase(getStringProperty(getProperties(), "write_readme_html", "false"));
     }
 
     public HttpURLConnection getHttpConnection() {

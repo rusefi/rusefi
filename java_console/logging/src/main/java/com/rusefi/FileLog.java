@@ -24,7 +24,6 @@ public enum FileLog {
 
     public static final String LOG_INFO_TEXT = "Writing logs to '" + FileLogger.DIR + "'";
     public static final String OS_VERSION = "os.version";
-    private static final String WIKI_URL = "https://github.com/rusefi/rusefi/wiki/rusEFI-logs-folder";
     public static String currentLogName;
 
     @Nullable
@@ -46,17 +45,6 @@ public enum FileLog {
         } catch (FileNotFoundException e) {
             // Access is denied would be an example of a legit exception to happen here
             return;
-        }
-        new Thread(FileLog::writeReadmeFile).start();
-    }
-
-    private static void writeReadmeFile() {
-        LazyFile file = new LazyFileImpl(FileLogger.DIR + "README.html");
-        file.write("<center>" + "<a href='" + WIKI_URL + "'>More info online<br/><img src=https://raw.githubusercontent.com/wiki/rusefi/rusefi/logo.gif></a>");
-        try {
-            file.close();
-        } catch (IOException e) {
-            // ignoring this one
         }
     }
 
