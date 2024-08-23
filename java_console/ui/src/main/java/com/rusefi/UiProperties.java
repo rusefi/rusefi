@@ -15,7 +15,7 @@ public class UiProperties {
         return ConnectionAndMeta.getBoolean("show_simulator", getProperties());
     }
 
-    private static Properties getProperties() {
+    private static synchronized Properties getProperties() {
         if (properties == null) {
             properties = ConnectionAndMeta.getProperties();
         }
