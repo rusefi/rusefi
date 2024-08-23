@@ -5,6 +5,7 @@
 #include "pch.h"
 
 #include "ac_test_base.h"
+#include "engine_configuration_defaults.h"
 
 void AcTestBase::updateAcPressure(float acPressure) {
     Sensor::setMockValue(SensorType::AcPressure, acPressure);
@@ -46,6 +47,9 @@ void AcTestBase::configureAcPressureEnableHysteresis(std::optional<float> acPres
     if (acPressureEnableHysteresis.has_value()) {
         engineConfiguration->acPressureEnableHyst = acPressureEnableHysteresis.value();
     } else {
-        ASSERT_EQ(engineConfiguration->acPressureEnableHyst, DEFAULT_AC_PRESSURE_ENABLE_HYST); // check default value
+        ASSERT_EQ(
+            engineConfiguration->acPressureEnableHyst,
+            engine_configuration_defaults::AC_PRESSURE_ENABLE_HYST
+        ); // check default value
     }
 }

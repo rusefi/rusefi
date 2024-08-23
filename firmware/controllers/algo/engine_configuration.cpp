@@ -83,6 +83,7 @@
 #include "mitsubishi_4G93.h"
 #include "ford_festiva.h"
 #include "boost_control.h"
+#include "engine_configuration_defaults.h"
 #if EFI_IDLE_CONTROL
 #include "idle_thread.h"
 #endif /* EFI_IDLE_CONTROL */
@@ -631,6 +632,7 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->acDelay = 0.5;
     engineConfiguration->minAcPressure = 100;
     engineConfiguration->maxAcPressure = 300;
+	engineConfiguration->acPressureEnableHyst = engine_configuration_defaults::AC_PRESSURE_ENABLE_HYST;
 	engineConfiguration->acIdleExtraOffset = 15;
 
 	/* these two are used for HIP9011 only

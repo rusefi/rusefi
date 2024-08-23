@@ -5,6 +5,7 @@
 #include "pch.h"
 
 #include "ac_test_base.h"
+#include "engine_configuration_defaults.h"
 
 namespace {
     constexpr uint16_t TEST_MIN_AC_PRESSURE = 17;
@@ -177,6 +178,45 @@ namespace {
         );
     }
 
+
+    TEST_F(AcPressureTest, pressureTooHighWithZeroHysteresis) {
+        doTest(
+            /* config = */ { {}, {}, { 0.0f } },
+            /* testData = */ {
+               {
+                   "acPressure = (DEFAULT_MIN_AC_PRESSURE + DEFAULT_MAX_AC_PRESSURE) / 2.0",
+                   (DEFAULT_MIN_AC_PRESSURE + DEFAULT_MAX_AC_PRESSURE) / 2.0,
+                   false,
+                   false
+               },
+               {
+                   "acPressure = DEFAULT_MAX_AC_PRESSURE",
+                   DEFAULT_MAX_AC_PRESSURE,
+                   false,
+                   false
+               },
+               {
+                   "acPressure = DEFAULT_MAX_AC_PRESSURE + EPS4D",
+                   DEFAULT_MAX_AC_PRESSURE + EPS4D,
+                   false,
+                   true
+               },
+                {
+                    "acPressure = DEFAULT_MAX_AC_PRESSURE",
+                    DEFAULT_MAX_AC_PRESSURE,
+                    false,
+                    true
+                },
+                {
+                   "acPressure = DEFAULT_MAX_AC_PRESSURE - EPS4D",
+                   DEFAULT_MAX_AC_PRESSURE - EPS4D,
+                   false,
+                   false
+               }
+            }
+        );
+    }
+
     TEST_F(AcPressureTest, defaultMinAcPressure) {
         doTest(
             /* config = */ DEFAULT_AC_PRESSURE_CONFIG,
@@ -244,14 +284,14 @@ namespace {
                    true
                },
                 {
-                    "acPressure = DEFAULT_MAX_AC_PRESSURE",
-                    DEFAULT_MAX_AC_PRESSURE,
+                    "acPressure = DEFAULT_MAX_AC_PRESSURE - engine_configuration_defaults::AC_PRESSURE_ENABLE_HYST",
+                    DEFAULT_MAX_AC_PRESSURE - engine_configuration_defaults::AC_PRESSURE_ENABLE_HYST,
                     false,
                     true
                 },
                 {
-                   "acPressure = DEFAULT_MAX_AC_PRESSURE - EPS4D",
-                   DEFAULT_MAX_AC_PRESSURE - EPS4D,
+                   "acPressure = DEFAULT_MAX_AC_PRESSURE - engine_configuration_defaults::AC_PRESSURE_ENABLE_HYST - EPS4D",
+                   DEFAULT_MAX_AC_PRESSURE - engine_configuration_defaults::AC_PRESSURE_ENABLE_HYST - EPS4D,
                    false,
                    false
                }
