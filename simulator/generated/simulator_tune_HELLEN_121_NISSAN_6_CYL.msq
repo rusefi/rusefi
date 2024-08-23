@@ -1430,7 +1430,7 @@
         <constant digits="2" name="ALSIdleAdd" units="%">0.0</constant>
         <constant digits="2" name="ALSEtbAdd" units="%">0.0</constant>
         <constant digits="1" name="ALSSkipRatio" units="">0.0</constant>
-        <constant digits="1" name="acPressureEnableHyst" units="kPa (absolute)">0.0</constant>
+        <constant digits="1" name="acPressureEnableHyst" units="kPa (absolute)">10.0</constant>
         <constant name="ALSActivatePinMode">"DEFAULT"</constant>
         <constant digits="1" name="tpsSecondaryMaximum" units="%">0.0</constant>
         <constant digits="1" name="ppsSecondaryMaximum" units="%">0.0</constant>
