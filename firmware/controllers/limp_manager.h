@@ -1,6 +1,7 @@
 #pragma once
 
 #include "shutdown_controller.h"
+#include "hysteresis.h"
 
 #include <cstdint>
 
@@ -80,27 +81,6 @@ struct LimpState {
 	constexpr explicit operator bool() const {
 		return value;
 	}
-};
-
-class Hysteresis {
-public:
-	// returns true if value > rising, false if value < falling, previous if falling < value < rising.
-	bool test(float value, float rising, float falling) {
-		return test(value > rising, value < falling);
-	}
-
-	bool test (bool risingCondition, bool fallingCondition) {
-		if (risingCondition) {
-			m_state = true;
-		} else if (fallingCondition) {
-			m_state = false;
-		}
-
-		return m_state;
-	}
-
-private:
-	bool m_state = false;
 };
 
 class LimpManager : public EngineModule {

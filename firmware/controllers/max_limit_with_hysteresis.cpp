@@ -1,5 +1,3 @@
-#include "pch.h"
-
 #include "max_limit_with_hysteresis.h"
 
 bool MaxLimitWithHysteresis::checkIfLimitIsExceeded(const float value, const float maxLimit, const float hysteresis) {
