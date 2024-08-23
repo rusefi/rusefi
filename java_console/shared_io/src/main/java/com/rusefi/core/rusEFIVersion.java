@@ -7,7 +7,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 public interface rusEFIVersion {
     /**
-     * @see com.rusefi.autoupdate.Autoupdate#VERSION
+     * *** BE CAREFUL WE HAVE SEPARATE AUTOUPDATE_VERSION also managed manually ***
+     * @see com.rusefi.autoupdate.Autoupdate#AUTOUPDATE_VERSION
      */
     int CONSOLE_VERSION = 20240823;
     AtomicReference<String> firmwareVersion = new AtomicReference<>("N/A");

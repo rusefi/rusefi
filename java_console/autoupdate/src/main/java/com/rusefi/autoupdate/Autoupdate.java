@@ -33,7 +33,7 @@ import static com.rusefi.core.FindFileHelper.findSrecFile;
 
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
-    private static final int VERSION = 20240815;
+    private static final int AUTOUPDATE_VERSION = 20240815; // separate from rusEFIVersion#CONSOLE_VERSION
 
     private static final String LOGO_PATH = "/com/rusefi/";
     private static final String LOGO = LOGO_PATH + "logo.png";
@@ -41,7 +41,7 @@ public class Autoupdate {
 
     private static String getTitle() {
         try {
-            return ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties()) + " Bundle Updater " + VERSION;
+            return ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties()) + " Bundle Updater " + AUTOUPDATE_VERSION;
         } catch (Throwable e) {
             log.error("Error", e);
             return "Error while getting title";
