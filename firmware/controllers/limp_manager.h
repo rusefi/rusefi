@@ -1,7 +1,7 @@
 #pragma once
 
 #include "shutdown_controller.h"
-#include "hysteresis.h"
+#include "max_limit_with_hysteresis.h"
 
 #include <cstdint>
 
@@ -116,7 +116,7 @@ private:
 	void setFaultRevLimit(int limit);
 
 	Hysteresis m_revLimitHysteresis;
-	Hysteresis m_boostCutHysteresis; //TODO: use MaxLimitWithHysteresis instead of Hysteresis
+	MaxLimitWithHysteresis m_boostCutHysteresis;
 	Hysteresis m_injectorDutyCutHysteresis;
 
 	// Start with no fault rev limit
