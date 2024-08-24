@@ -36,11 +36,16 @@ static SPIConfig spiCfg = {
 		.ssport = nullptr,
 		.sspad = 0,
 		.cr1 =
-				SPI_CR1_16BIT_MODE |
-				SPI_CR1_MSTR |
-//SPI_CR1_BR_1 // 5MHz
-		SPI_CR1_CPHA | SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 | SPI_CR1_SPE,
-		.cr2 = SPI_CR2_SSOE};
+			SPI_CR1_MSTR |
+			SPI_CR1_SSM | // Software Slave Management, the SSI bit will be internal reference
+			SPI_CR1_SSI | // Internal Slave Select (active low) set High
+			SPI_CR1_CPHA | 
+			//SPI_CR1_BR_1 // 5MHz
+			SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 | 
+			SPI_CR1_SPE,
+		.cr2 = SPI_CR2_SSOE |
+			SPI_CR2_16BIT_MODE
+		 };
 
 class Pt2001 : public Pt2001Base {
 public:
@@ -53,10 +58,14 @@ protected:
 // should be somewhere but not here 	  spiStart(driver, &spiCfg);
   efiPrintf("mc select %s", hwOnChipPhysicalPinName(driver->config->ssport, driver->config->sspad));
 		spiSelect(driver);
+		//chris - "no implementation on stm32"
+		chipSelect.setValue(0);
 	}
 
 	void deselect() override {
 		spiUnselect(driver);
+		//chris - "no implementation on stm32"
+		chipSelect.setValue(1);
 	}
 
 	uint16_t sendRecv(uint16_t tx) override {
@@ -231,10 +240,11 @@ void Pt2001::init() {
 static bool isInitialized = false;
 
 void Pt2001::initIfNeeded() {
-	if (!isIgnVoltage()) {
-		isInitialized = false;
-	  efiPrintf("unhappy mc33 due to battery voltage");
-	} else {
+	// chris
+	//if (!isIgnVoltage()) {
+	//	isInitialized = false;
+	//  efiPrintf("unhappy mc33 due to battery voltage");
+	//} else {
 		if (!isInitialized) {
 			isInitialized = restart();
 			if (isInitialized) {
@@ -243,7 +253,7 @@ void Pt2001::initIfNeeded() {
 			  efiPrintf("unhappy mc33 fault=%d", (int)fault);
 			}
 		}
-	}
+	//}
 }
 
 void initMc33816() {
