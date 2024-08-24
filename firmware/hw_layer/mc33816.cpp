@@ -240,11 +240,10 @@ void Pt2001::init() {
 static bool isInitialized = false;
 
 void Pt2001::initIfNeeded() {
-	// chris
-	//if (!isIgnVoltage()) {
-	//	isInitialized = false;
-	//  efiPrintf("unhappy mc33 due to battery voltage");
-	//} else {
+	if (!isIgnVoltage()) {
+		isInitialized = false;
+	  efiPrintf("unhappy mc33 due to battery voltage");
+	} else {
 		if (!isInitialized) {
 			isInitialized = restart();
 			if (isInitialized) {
@@ -253,10 +252,27 @@ void Pt2001::initIfNeeded() {
 			  efiPrintf("unhappy mc33 fault=%d", (int)fault);
 			}
 		}
-	//}
+	}
+}
+
+static THD_WORKING_AREA(mc33_thread_wa, 256);
+
+static THD_FUNCTION(mc33_driver_thread, p) {
+  (void)p;
+
+  while (true) {
+    if (!isIgnVoltage()) {
+      chThdSleepMilliseconds(100);
+      continue;
+    }
+    pt.initIfNeeded();
+    chThdSleepMilliseconds(100);
+  }
 }
 
 void initMc33816() {
+	chThdCreateStatic(mc33_thread_wa, sizeof(mc33_thread_wa), PRIO_GPIOCHIP, mc33_driver_thread, nullptr);
+
 	pt.init();
 }
 
