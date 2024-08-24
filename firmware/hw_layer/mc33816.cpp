@@ -170,6 +170,11 @@ private:
 
 static Pt2001 pt;
 
+bool Pt2001::errorOnUnexpectedFlag() {
+  efiPrintf("****** unexpected mc33 flag state ******");
+  return false;
+}
+
 void Pt2001::init() {
 	//
 	// see setTest33816EngineConfiguration for default configuration
