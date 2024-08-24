@@ -50,14 +50,14 @@ static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
 			.ssport = GPIOD, // H144_GP_IO1
 			.sspad = 4,
 			.cr1 =
-				SPI_CR1_16BIT_MODE |
+				/* on F4 this would have been SPI_CR1_16BIT_MODE | */
 				SPI_CR1_SSM |
 				SPI_CR1_SSI |
 				((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	// div = 16
 				SPI_CR1_MSTR |
 				SPI_CR1_CPHA |
 				0,
-			.cr2 = SPI_CR2_16BIT_MODE
+			.cr2 = /* f7 */ SPI_CR2_16BIT_MODE
 		},
 		.direct_io = {
 			{ .port = GPIOD, .pad = 3 }, // H144_OUT_IO1

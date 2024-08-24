@@ -142,14 +142,14 @@ static const struct mc33810_config mc33810 = {
 		.ssport = GPIOD,
 		.sspad = 13,
 		.cr1 =
-			SPI_CR1_16BIT_MODE |
+			/* on F4 this would have been SPI_CR1_16BIT_MODE | */
 			SPI_CR1_SSM |
 			SPI_CR1_SSI |
 //			((3 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	/* div = 16 */
 			((0b110 << SPI_CR1_BR_Pos) & SPI_CR1_BR) |	/* div = 128 */
 			SPI_CR1_MSTR |
 			0,
-		.cr2 = SPI_CR2_16BIT_MODE
+		.cr2 = /* f7 */ SPI_CR2_16BIT_MODE
 	},
 	.direct_io = {
 		/* injector drivers */
