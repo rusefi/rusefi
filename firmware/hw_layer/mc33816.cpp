@@ -39,9 +39,9 @@ static SPIConfig spiCfg = {
 			SPI_CR1_MSTR |
 			SPI_CR1_SSM | // Software Slave Management, the SSI bit will be internal reference
 			SPI_CR1_SSI | // Internal Slave Select (active low) set High
-			SPI_CR1_CPHA | 
+			SPI_CR1_CPHA |
 			//SPI_CR1_BR_1 // 5MHz
-			SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 | 
+			SPI_CR1_BR_0 | SPI_CR1_BR_1 | SPI_CR1_BR_2 |
 			SPI_CR1_SPE,
 		.cr2 = SPI_CR2_SSOE |
 			SPI_CR2_16BIT_MODE
@@ -165,6 +165,11 @@ protected:
 		efiPrintf("PT2001 error: %s", why);
 	}
 
+  bool errorOnUnexpectedFlag() override {
+    efiPrintf("****** unexpected mc33 flag state ******");
+    return false;
+  }
+
 	void sleepMs(size_t ms) override {
 		chThdSleepMilliseconds(ms);
 	}
@@ -178,11 +183,6 @@ private:
 };
 
 static Pt2001 pt;
-
-bool Pt2001::errorOnUnexpectedFlag() {
-  efiPrintf("****** unexpected mc33 flag state ******");
-  return false;
-}
 
 void Pt2001::init() {
 	//
