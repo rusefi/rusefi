@@ -92,7 +92,7 @@ static Gpio OUTPUTS[] = {
 	Gpio::MM100_OUT_PWM1, // 16a LS3
 	Gpio::MM100_OUT_PWM2, // 88a LS4
 	Gpio::MM100_IGN7, // 86a LS5_HOT
-	Gpio::MM100_IGN8, // 87a LS6_HOT
+	Gpio::MM100_IGN8, // 87a LS6_HOT fuelpump
 	Gpio::MM100_LED2_GREEN, // 43a High Side Output
 	Gpio::MM100_IGN1, // Coil 1
 	Gpio::MM100_IGN2, // Coil 2
@@ -100,17 +100,38 @@ static Gpio OUTPUTS[] = {
 	Gpio::MM100_IGN4, // Coil 4
 	Gpio::MM100_IGN5, // Coil 5
 	Gpio::MM100_IGN6, // Coil 6
+};
+
+static Gpio SBC_OUTPUTS[] = {
+	Gpio::MM100_COATED_INJ1, // 44a INJ_1
+	Gpio::MM100_INJ2, // 45a INJ_2
+	Gpio::MM100_INJ3, // 46a INJ_3
+	Gpio::MM100_INJ4, // 47a INJ_4
+	Gpio::MM100_INJ5, // 48a INJ_5
+	Gpio::MM100_INJ6, // 49a INJ_6
+	Gpio::MM100_SPI2_CS, // 50a INJ_7
+	Gpio::MM100_COATED_SPI2_SCK, // 51a INJ_8
+  Gpio::MM100_IGN8, // 87a LS6_HOT fuelpump
 
 };
 
 int getBoardMetaOutputsCount() {
+    if (engineConfiguration->engineType == engine_type_e::GM_SBC) {
+        return efi::size(SBC_OUTPUTS);
+    }
     return efi::size(OUTPUTS);
 }
 
 int getBoardMetaLowSideOutputsCount() {
+    if (engineConfiguration->engineType == engine_type_e::GM_SBC) {
+        return getBoardMetaOutputsCount();
+    }
     return getBoardMetaOutputsCount() - 1 - 6;
 }
 
 Gpio* getBoardMetaOutputs() {
+    if (engineConfiguration->engineType == engine_type_e::GM_SBC) {
+        return SBC_OUTPUTS;
+    }
     return OUTPUTS;
 }
