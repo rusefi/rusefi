@@ -34,4 +34,8 @@ public class UiProperties {
     public static String getUpdateHelpUrl() {
         return properties.getProperty("UPDATE_FW_HELP_URL", "https://github.com/rusefi/rusefi/wiki/HOWTO-Update-Firmware");
     }
+
+    public static boolean skipEcuTypeDetection() {
+        return ConnectionAndMeta.getBoolean("skip_ecu_type_detection");
+    }
 }
