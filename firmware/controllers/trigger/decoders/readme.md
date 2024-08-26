@@ -13,3 +13,7 @@ Step 3: get it working.
 It's useful to un-comments *AllTriggersFixture* line in unit_tests/main.cpp
 
 It's useful to add setVerboseTrigger(true) into unit tests while troubleshooting fresh trigger code
+
+## Sometimes you better add a unit test
+
+See unit_tests/tests/trigger/resources for logic analyzer files we test against
