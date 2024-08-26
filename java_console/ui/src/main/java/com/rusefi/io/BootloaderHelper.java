@@ -13,11 +13,13 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.Timeouts.SECOND;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 
-public class DfuHelper {
-    private static final Logging log = getLogging(DfuHelper.class);
-    private static final String PREFIX = "rusefi_bundle";
+/**
+ * this code is shared between DFU and OpenBLT tracks
+ */
+public class BootloaderHelper {
+    private static final Logging log = getLogging(BootloaderHelper.class);
 
-    private static void sendDfuRebootCommand(IoStream stream, UpdateOperationCallbacks callbacks, String cmd) {
+    private static void sendBootloaderRebootCommand(IoStream stream, UpdateOperationCallbacks callbacks, String cmd) {
         byte[] command = BinaryProtocol.getTextCommandBytes(cmd);
         try {
             stream.sendPacket(command);
@@ -27,7 +29,7 @@ public class DfuHelper {
         }
     }
 
-    public static boolean sendDfuRebootCommand(JComponent parent, String signature, IoStream stream, UpdateOperationCallbacks callbacks, String command) {
+    public static boolean sendBootloaderRebootCommand(JComponent parent, String signature, IoStream stream, UpdateOperationCallbacks callbacks, String command) {
         RusEfiSignature controllerSignature = SignatureHelper.parse(signature);
         String fileSystemBundleTarget = BundleUtil.getBundleTarget();
         if (fileSystemBundleTarget != null && controllerSignature != null) {
@@ -53,7 +55,7 @@ public class DfuHelper {
             }
         }
 
-        sendDfuRebootCommand(stream, callbacks, command);
+        sendBootloaderRebootCommand(stream, callbacks, command);
         return true;
     }
 }

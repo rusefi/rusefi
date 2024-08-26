@@ -7,8 +7,7 @@ import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.FindFileHelper;
-import com.rusefi.config.generated.Fields;
-import com.rusefi.io.DfuHelper;
+import com.rusefi.io.BootloaderHelper;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.io.serial.BufferedSerialIoStream;
@@ -21,10 +20,8 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
 
 import static com.rusefi.core.FindFileHelper.INPUT_FILES_PATH;
 
@@ -94,7 +91,7 @@ public class DfuFlasher {
                     callbacks.error();
                     return null;
                 }
-                boolean isSignatureValidatedLocal = DfuHelper.sendDfuRebootCommand(parent, signature.get(), stream, callbacks, command);
+                boolean isSignatureValidatedLocal = BootloaderHelper.sendBootloaderRebootCommand(parent, signature.get(), stream, callbacks, command);
                 isSignatureValidated.set(isSignatureValidatedLocal);
             }
         } else {
@@ -103,7 +100,7 @@ public class DfuFlasher {
             // it's more reliable this way
             // ISSUE: that's blocking stuff on UI thread at the moment, TODO smarter threading!
             port = PortDetector.autoDetectSerial(callbackContext -> {
-                boolean isSignatureValidatedLocal = DfuHelper.sendDfuRebootCommand(parent, callbackContext.getSignature(), callbackContext.getStream(), callbacks, command);
+                boolean isSignatureValidatedLocal = BootloaderHelper.sendBootloaderRebootCommand(parent, callbackContext.getSignature(), callbackContext.getStream(), callbacks, command);
                 isSignatureValidated.set(isSignatureValidatedLocal);
                 return null;
             }).getSerialPort();
