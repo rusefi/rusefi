@@ -389,11 +389,11 @@ static void setMazdaMiataEngineNB1Defaults() {
 
 	// Vehicle speed/gears
 	engineConfiguration->totalGearsCount = 5;
-	engineConfiguration->gearRatio[0] = 3.136;
-	engineConfiguration->gearRatio[1] = 1.888;
-	engineConfiguration->gearRatio[2] = 1.330;
-	engineConfiguration->gearRatio[3] = 1.000;
-	engineConfiguration->gearRatio[4] = 0.814;
+	engineConfiguration->gearRatio[0] = 3.14;
+	engineConfiguration->gearRatio[1] = 1.89;
+	engineConfiguration->gearRatio[2] = 1.33;
+	engineConfiguration->gearRatio[3] = 1.00;
+	engineConfiguration->gearRatio[4] = 0.81;
 
 	// These may need to change based on your real car
 	engineConfiguration->driveWheelRevPerKm = 551;
@@ -423,12 +423,12 @@ static void setMazdaMiataEngineNB2Defaults() {
 
 	// Vehicle speed/gears
 	engineConfiguration->totalGearsCount = 6;
-	engineConfiguration->gearRatio[0] = 3.760;
-	engineConfiguration->gearRatio[1] = 2.269;
-	engineConfiguration->gearRatio[2] = 1.646;
-	engineConfiguration->gearRatio[3] = 1.257;
-	engineConfiguration->gearRatio[4] = 1.000;
-	engineConfiguration->gearRatio[5] = 0.843;
+	engineConfiguration->gearRatio[0] = 3.76;
+	engineConfiguration->gearRatio[1] = 2.27;
+	engineConfiguration->gearRatio[2] = 1.65;
+	engineConfiguration->gearRatio[3] = 1.26;
+	engineConfiguration->gearRatio[4] = 1.00;
+	engineConfiguration->gearRatio[5] = 0.84;
 
 	// These may need to change based on your real car
 	engineConfiguration->driveWheelRevPerKm = 538;

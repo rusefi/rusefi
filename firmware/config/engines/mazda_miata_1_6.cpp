@@ -189,11 +189,11 @@ void miataNAcommonEngineSettings() {
 
 	// Vehicle speed/gears
 	engineConfiguration->totalGearsCount = 5;
-	engineConfiguration->gearRatio[0] = 3.136;
-	engineConfiguration->gearRatio[1] = 1.888;
-	engineConfiguration->gearRatio[2] = 1.330;
-	engineConfiguration->gearRatio[3] = 1.000;
-	engineConfiguration->gearRatio[4] = 0.814;
+	engineConfiguration->gearRatio[0] = 3.14;
+	engineConfiguration->gearRatio[1] = 1.89;
+	engineConfiguration->gearRatio[2] = 1.33;
+	engineConfiguration->gearRatio[3] = 1.00;
+	engineConfiguration->gearRatio[4] = 0.81;
 
 	// These may need to change based on your real car
 	engineConfiguration->driveWheelRevPerKm = 551;
