@@ -154,17 +154,17 @@ pins:
     type: 12V
 
 
-  - pin: 25a
-    class: outputs
-    ts_name: Coil 8
-    function: Coil 8 UNUSED
-    type: ign
-
-  - pin: 26a
-    class: outputs
-    ts_name: Coil 7
-    function: Coil 7 UNUSED
-    type: ign
+#  - pin: 25a
+#    class: outputs
+#    ts_name: Coil 8
+#    function: Coil 8 UNUSED
+#    type: ign
+#
+#  - pin: 26a
+#    class: outputs
+#    ts_name: Coil 7
+#    function: Coil 7 UNUSED
+#    type: ign
 
   - pin: 27a
     class: outputs
