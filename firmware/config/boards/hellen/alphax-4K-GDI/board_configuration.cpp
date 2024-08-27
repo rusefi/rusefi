@@ -23,14 +23,14 @@ void setBoardConfigOverrides() {
 }
 
 void setBoardDefaultConfiguration() {
-	engineConfiguration->injectionPins[0] = Gpio::TLE9104_0_OUT_0;
-	engineConfiguration->injectionPins[1] = Gpio::TLE9104_0_OUT_1;
-	engineConfiguration->injectionPins[2] = Gpio::TLE9104_0_OUT_2;
-	engineConfiguration->injectionPins[3] = Gpio::TLE9104_0_OUT_3;
+//	engineConfiguration->injectionPins[0] = Gpio::TLE9104_0_OUT_0;
+//	engineConfiguration->injectionPins[1] = Gpio::TLE9104_0_OUT_1;
+//	engineConfiguration->injectionPins[2] = Gpio::TLE9104_0_OUT_2;
+//	engineConfiguration->injectionPins[3] = Gpio::TLE9104_0_OUT_3;
 
-	engineConfiguration->mainRelayPin = Gpio::TLE9104_1_OUT_0;
-	engineConfiguration->fuelPumpPin = Gpio::TLE9104_1_OUT_1;
-	engineConfiguration->fanPin = Gpio::TLE9104_1_OUT_2;
+//	engineConfiguration->mainRelayPin = Gpio::TLE9104_1_OUT_0;
+//	engineConfiguration->fuelPumpPin = Gpio::TLE9104_1_OUT_1;
+//	engineConfiguration->fanPin = Gpio::TLE9104_1_OUT_2;
 
 
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP1;
