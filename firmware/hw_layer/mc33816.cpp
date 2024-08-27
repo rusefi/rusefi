@@ -268,6 +268,10 @@ static THD_FUNCTION(mc33_driver_thread, p) {
 
   while (true) {
     if (!isIgnVoltage()) {
+      if (isInitialized) {
+        efiPrintf("Power loss? Would have to re-init mc33/PT2001?");
+        isInitialized = false;
+      }
       chThdSleepMilliseconds(100);
       continue;
     }

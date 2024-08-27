@@ -25,7 +25,7 @@ pins:
     type: ls
 
   - pin: 6A
-    function: GDI Injector 3 Positive
+    function: GDI Injector 2 Positive
 
   - pin: 7A
     function: GDI Injector 2 Negative
@@ -35,7 +35,7 @@ pins:
     type: ls
 
   - pin: 8A
-    function: GDI Injector 2 Positive
+    function: GDI Injector 1 Positive
 
   - pin: 9A
     function: GDI Injector 1 Negative
