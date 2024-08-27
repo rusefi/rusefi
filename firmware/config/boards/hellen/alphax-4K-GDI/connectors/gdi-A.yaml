@@ -10,6 +10,7 @@ pins:
   - pin: 3A
     function: GDI Injector 4 Negative
     ts_name: ___ GDI Injector 4
+    class: outputs
     meta: H144_LS_4
     type: ls
 
@@ -19,6 +20,7 @@ pins:
   - pin: 5A
     function: GDI Injector 3 Negative
     ts_name: ___ GDI Injector 3
+    class: outputs
     meta: H144_LS_3
     type: ls
 
@@ -27,6 +29,7 @@ pins:
 
   - pin: 7A
     function: GDI Injector 2 Negative
+    class: outputs
     ts_name: ___ GDI Injector 2
     meta: H144_LS_2
     type: ls
@@ -36,6 +39,7 @@ pins:
 
   - pin: 9A
     function: GDI Injector 1 Negative
+    class: outputs
     ts_name: ___ GDI Injector 1
     meta: H144_LS_1
     type: ls
