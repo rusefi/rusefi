@@ -90,13 +90,13 @@ public class BasicStartupFrame {
         if (ConnectionAndMeta.isDefaultWhitelabel(whiteLabel))
             panel.add(LogoHelper.createUrlLabel());
 
+        frame.getFrame().pack();
         frame.showFrame(panel, false);
         UiUtils.centerWindow(frame.getFrame());
     }
 
     private void onHardwareUpdated(final AvailableHardware currentHardware) {
         status.stop();
-        frame.getFrame().pack();
 
         final List<SerialPortScanner.PortResult> ecuPorts = currentHardware.getKnownPorts(SerialPortScanner.SerialPortType.EcuWithOpenblt);
         final List<SerialPortScanner.PortResult> bootloaderPorts = currentHardware.getKnownPorts(SerialPortScanner.SerialPortType.OpenBlt);
