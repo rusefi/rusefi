@@ -5,6 +5,10 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
+	Gpio::H144_LS_4, // 3A GDI Injector 4
+	Gpio::H144_LS_3, // 5A GDI Injector 3
+	Gpio::H144_LS_2, // 7A GDI Injector 2
+	Gpio::H144_LS_1, // 9A GDI Injector 1
 	Gpio::TLE9104_0_OUT_3, // 1B Port injector 4
 	Gpio::TLE9104_0_OUT_2, // 2B Port injector 3
 	Gpio::TLE9104_0_OUT_1, // 3B Port injector 2
@@ -21,6 +25,10 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::H144_IGN_3, // 12A Ignition 3
 	Gpio::H144_IGN_2, // 13A Ignition 2
 	Gpio::H144_IGN_1, // 14A Ignition 1
+// "3A GDI Injector 4",
+// "5A GDI Injector 3",
+// "7A GDI Injector 2",
+// "9A GDI Injector 1",
 // "1B Port injector 4",
 // "2B Port injector 3",
 // "3B Port injector 2",
