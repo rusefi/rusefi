@@ -40,8 +40,8 @@ public class BasicStartupFrame {
 
     private final FrameHelper frame;
 
-    private final JLabel noPortsMessage = new JLabel();
-    private final StatusAnimation status = new StatusAnimation(noPortsMessage::setText, StartupFrame.SCANNING_PORTS);
+    private final JLabel statusMessage = new JLabel();
+    private final StatusAnimation status = new StatusAnimation(statusMessage::setText, StartupFrame.SCANNING_PORTS);
     private final JButton update = ProgramSelector.createUpdateFirmwareButton();
 
     private volatile Optional<SerialPortScanner.PortResult> portToUpdateFirmware = Optional.empty();
@@ -69,8 +69,8 @@ public class BasicStartupFrame {
                 update.addActionListener(e-> onUpdateButtonClicked());
                 update.setEnabled(false);
 
-                noPortsMessage.setForeground(Color.red);
-                panel.add(noPortsMessage);
+                statusMessage.setForeground(Color.red);
+                panel.add(statusMessage);
 
                 SerialPortScanner.INSTANCE.addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
                     onHardwareUpdated(currentHardware);
@@ -95,14 +95,14 @@ public class BasicStartupFrame {
         UiUtils.centerWindow(frame.getFrame());
     }
 
-    private void hideNoPortsMessage() {
+    private void hideStatusMessage() {
         // we use .setText("") to space instead of .setVisible(false) to avoid layout contraction
-        noPortsMessage.setText(" ");
+        statusMessage.setText(" ");
     }
 
     private void onHardwareUpdated(final AvailableHardware currentHardware) {
         status.stop();
-        hideNoPortsMessage();
+        hideStatusMessage();
 
         final List<SerialPortScanner.PortResult> ecuPorts = currentHardware.getKnownPorts(SerialPortScanner.SerialPortType.EcuWithOpenblt);
         final List<SerialPortScanner.PortResult> bootloaderPorts = currentHardware.getKnownPorts(SerialPortScanner.SerialPortType.OpenBlt);
@@ -138,7 +138,7 @@ public class BasicStartupFrame {
 
     private void switchToPort(final SerialPortScanner.PortResult port, final String updateButtonText) {
         portToUpdateFirmware = Optional.of(port);
-        hideNoPortsMessage();
+        hideStatusMessage();
         update.setEnabled(true);
         update.setText(updateButtonText);
     }
@@ -146,7 +146,7 @@ public class BasicStartupFrame {
     private void resetPort(final String reason) {
         portToUpdateFirmware = Optional.empty();
         update.setEnabled(false);
-        noPortsMessage.setText(reason);
+        statusMessage.setText(reason);
     }
 
     private void onUpdateButtonClicked() {
