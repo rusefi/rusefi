@@ -64,7 +64,7 @@ protected:
 	void select() override {
 // revive MC33816 driver, also support bus sharing #6781
 // should be somewhere but not here 	  spiStart(driver, &spiCfg);
-  efiPrintf("mc select %s", hwOnChipPhysicalPinName(driver->config->ssport, driver->config->sspad));
+//  efiPrintf("mc select %s", hwOnChipPhysicalPinName(driver->config->ssport, driver->config->sspad));
 		spiSelect(driver);
 		//chris - "no implementation on stm32"
 		chipSelect.setValue(0);
