@@ -53,6 +53,12 @@ public:
 	void initIfNeeded();
 
 protected:
+ 	void spiAcquireBus() override {
+ 	}
+
+ 	void spiReleaseBus() override {
+ 	}
+
 	void select() override {
 // revive MC33816 driver, also support bus sharing #6781
 // should be somewhere but not here 	  spiStart(driver, &spiCfg);
