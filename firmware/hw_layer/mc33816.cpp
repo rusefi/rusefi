@@ -54,9 +54,11 @@ public:
 
 protected:
  	void acquireBus() override {
+ 	  spiAcquireBus(driver);
  	}
 
  	void releaseBus() override {
+ 	  spiReleaseBus(driver);
  	}
 
 	void select() override {

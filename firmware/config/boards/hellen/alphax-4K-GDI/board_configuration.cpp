@@ -167,7 +167,7 @@ static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
 	    csDcAux.setValue(1);
     }
 
-//  initAll9104(tle9104_cfg);
+  initAll9104(tle9104_cfg);
 }
 
 static Gpio OUTPUTS[] = {
