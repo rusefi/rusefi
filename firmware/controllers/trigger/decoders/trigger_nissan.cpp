@@ -189,15 +189,41 @@ void initializeNissanMRvvt(TriggerWaveform *s) {
 	s->setSecondTriggerSynchronizationGap2(0.3, 0.55);
 }
 
-void initializeNissanHRcrank(TriggerWaveform *s) {
+void initialize_one_of_36_2_2(TriggerWaveform *s, int firstCount, int secondCount) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
-  size_t count = 9;
-  initialize_one_of_36_2_2_2(s, count, 36 - count - 7);
-  s->tdcPosition = 55;
 
-  s->setTriggerSynchronizationGap3(/*gapIndex*/0, 2.25, 5.5);
+	float narrow = 360 / 36;
+	float wide = narrow * 3;
+
+	float base = 0;
+
+	for (int i = 0; i < firstCount; i++) {
+		s->addToothFallRise(base + narrow, narrow / 2);
+		base += narrow;
+	}
+
+	s->addToothFallRise(base + wide, wide / 2);
+	base += wide;
+
+	for (int i = 0; i < secondCount; i++) {
+		s->addToothFallRise(base + narrow, narrow / 2);
+		base += narrow;
+	}
+     
+       s->addToothFallRise(360, narrow/2);
+}
+
+void initializeNissanHRcrank(TriggerWaveform *s) {
+	initialize_one_of_36_2_2(s, 9, 21);
+
+    size_t count = 9;
+
+    s->tdcPosition = 155 + 360;
+
+  s->setTriggerSynchronizationGap3(/*gapIndex*/0, 2.5, 5.5);
   for (size_t i = 1 ; i < count ; i++) {
     s->setTriggerSynchronizationGap3(/*gapIndex*/i, 0.7, 1.7);
   }
   s->setTriggerSynchronizationGap3(/*gapIndex*/count, 0.1, 0.5);
-}
+  }
+
