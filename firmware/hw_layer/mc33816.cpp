@@ -249,7 +249,7 @@ void Pt2001::initIfNeeded() {
 			if (isInitialized) {
 			  efiPrintf("happy mc33/PT2001!");
 			} else {
-			  efiPrintf("unhappy mc33 fault=%d", (int)fault);
+			  efiPrintf("unhappy mc33 fault=%d %s", (int)fault, mcFaultToString(fault));
 			}
 		}
 	}
