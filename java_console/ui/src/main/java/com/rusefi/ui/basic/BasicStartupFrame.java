@@ -95,8 +95,14 @@ public class BasicStartupFrame {
         UiUtils.centerWindow(frame.getFrame());
     }
 
+    private void hideNoPortsMessage() {
+        // we use .setText("") to space instead of .setVisible(false) to avoid layout contraction
+        noPortsMessage.setText(" ");
+    }
+
     private void onHardwareUpdated(final AvailableHardware currentHardware) {
         status.stop();
+        hideNoPortsMessage();
 
         final List<SerialPortScanner.PortResult> ecuPorts = currentHardware.getKnownPorts(SerialPortScanner.SerialPortType.EcuWithOpenblt);
         final List<SerialPortScanner.PortResult> bootloaderPorts = currentHardware.getKnownPorts(SerialPortScanner.SerialPortType.OpenBlt);
@@ -132,7 +138,7 @@ public class BasicStartupFrame {
 
     private void switchToPort(final SerialPortScanner.PortResult port, final String updateButtonText) {
         portToUpdateFirmware = Optional.of(port);
-        noPortsMessage.setVisible(false);
+        hideNoPortsMessage();
         update.setEnabled(true);
         update.setText(updateButtonText);
     }
@@ -141,7 +147,6 @@ public class BasicStartupFrame {
         portToUpdateFirmware = Optional.empty();
         update.setEnabled(false);
         noPortsMessage.setText(reason);
-        noPortsMessage.setVisible(true);
     }
 
     private void onUpdateButtonClicked() {
