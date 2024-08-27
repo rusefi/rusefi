@@ -18,11 +18,11 @@ pins:
 
   - pin: 7a
     function: USB +
-    
+
   - pin: 8a
     function: USB -
-    
- # OUT_C-IVC_L OUT_INJ7 
+
+ # OUT_C-IVC_L OUT_INJ7
   - pin: 10a
     id: F13
     ts_name: 10 - VTC Left
@@ -35,7 +35,7 @@ pins:
     ts_name: 11 - VTC Right
     class: outputs
     function: Intake VTC solenoid Bank 1
- 
+
   - pin: 13a
     function: Crank Sensor
 # IN_CRANK AIN24 A24
@@ -76,7 +76,7 @@ pins:
     ts_name: 23 - INJ_1
     function: Injector 1
     type: inj
-    
+
   - pin: 24a
     function: LSU 4.2 Heater2
 
@@ -92,7 +92,7 @@ pins:
     id: A7
     class: event_inputs
     ts_name: 33 - Cam Right
-    
+
   - pin: 34a
     id: EFI_ADC_13
     class: analog_inputs
@@ -122,6 +122,9 @@ pins:
     ts_name: 42 - INJ_2
     function: Injector 2
     type: inj
+
+  - pin: 45a
+    function: EVAP (unused)
 
   - pin: 47a
     function: +5v TPS sensors
@@ -190,7 +193,7 @@ pins:
     id: EFI_ADC_8
     class: analog_inputs
     ts_name: 69 - TPS 2
-    function: TPS 2 sensor input  
+    function: TPS 2 sensor input
 
   - pin: P66
     # IN_MAP1 AIN9 PC0
@@ -278,8 +281,8 @@ pins:
     id: EFI_ADC_14
     class: analog_inputs
     ts_name: 98 - PPS 2
-    function: PPS 2 sensor input 
-    
+    function: PPS 2 sensor input
+
   - pin: 101a
     id: F9
     class: switch_inputs
@@ -305,7 +308,7 @@ pins:
     id: EFI_ADC_3
     class: analog_inputs
     ts_name: 106 - PPS 1
-    function: PPS 1 sensor input  
+    function: PPS 1 sensor input
 
 
   - pin: 109a
@@ -850,4 +853,4 @@ info:
     - pin: 121a
       x: 3882
       y: 261
-      
+
