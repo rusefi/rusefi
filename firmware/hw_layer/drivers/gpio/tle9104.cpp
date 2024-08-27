@@ -4,8 +4,6 @@
 
 #if defined(BOARD_TLE9104_COUNT) && BOARD_TLE9104_COUNT > 0
 
-#define TLE9204_OUT_COUNT 4
-
 /*
  * TODO list:
  * - support driving outputs over SPI
@@ -339,11 +337,14 @@ static THD_FUNCTION(tle9104_driver_thread, p)
 /*==========================================================================*/
 
 int Tle9104::writePad(size_t pin, int value) {
+  auto port = cfg->direct_io[pin].port;
+  efiAssert(ObdCode::CUSTOM_ERR_ASSERT, port != nullptr, "unused 9104 port", -1);
+
 	// Inverted since TLE9104 is active low (low level to turn on output)
 	if (value) {
-		palClearPad(cfg->direct_io[pin].port, cfg->direct_io[pin].pad);
+		palClearPad(port, cfg->direct_io[pin].pad);
 	} else {
-		palSetPad(cfg->direct_io[pin].port, cfg->direct_io[pin].pad);
+		palSetPad(port, cfg->direct_io[pin].pad);
 	}
 
 	return 0;
@@ -496,8 +497,13 @@ int Tle9104::init() {
 	m_resn.setValue(false);
 
 	/* TODO: ensure all direct_io pins valid, otherwise support manipulationg output states over SPI */
-	for (int i = 0; i < 4; i++) {
-		gpio_pin_markUsed(cfg->direct_io[i].port, cfg->direct_io[i].pad, DRIVER_NAME " Direct IO");
+	for (int i = 0; i < TLE9204_OUT_COUNT; i++) {
+	  auto port = cfg->direct_io[i].port;
+	  if (port == nullptr) {
+	    // skipping unused io
+	    continue;
+	  }
+		gpio_pin_markUsed(port, cfg->direct_io[i].pad, DRIVER_NAME " Direct IO");
 		palSetPadMode(cfg->direct_io[i].port, cfg->direct_io[i].pad, PAL_MODE_OUTPUT_PUSHPULL);
 
 		// Ensure all outputs are off
