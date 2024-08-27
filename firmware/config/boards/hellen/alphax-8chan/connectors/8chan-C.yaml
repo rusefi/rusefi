@@ -10,17 +10,17 @@ pins:
     function: ETB+
     type: etb
     color: blue
-    
+
   - pin: 3C
     function: DC1-
     type: etb
     color: blue
-    
+
   - pin: 4C
     function: ETB-
     type: etb
     color: blue
-    
+
   - pin: 5C
     function: High Side 1
     meta: MM176_OUT_PWM8
@@ -34,7 +34,7 @@ pins:
     class: outputs
     ts_name: 6C - High Side 2
     color: orange
-    
+
   - pin: 7C
     function: High Side 3
 # we have weird HS2<>HS3 and HS3<>HS2 on the schematics, let's just accept it
@@ -42,7 +42,7 @@ pins:
     class: outputs
     ts_name: 7C - High Side 3
     color: purple
-    
+
   - pin: 8C
     function: Low Side 3
     meta: MM176_OUT_IO3
@@ -61,7 +61,7 @@ pins:
     function: DC2-
     type: etb
     color: yellow
-    
+
   - pin: 11C
     meta: MM176_IGN1
     class: outputs
@@ -137,12 +137,12 @@ pins:
     type: ign
     ts_name: 21C - Ignition 7
     color: yellow
-    
+
   - pin: 22C
     function: Power GND
     type: gnd
     color: orange
-    
+
   - pin: 23C
     meta: MM176_SPI3_MISO
     class: outputs
@@ -150,7 +150,7 @@ pins:
     type: ign
     ts_name: 23C - Ignition 10
     color: orange
-  
+
   - pin: 24C
     function: CAN2 bus low (CAN2L)
     type: can
@@ -220,8 +220,8 @@ pins:
     ts_name: 34C - Low Side 7
 
 info:
-  title: AlphaX 8chan
-  name: AlphaX 8chan
+  title: AlphaX Platinum
+  name: AlphaX Platinum
   image:
     file: 34pins-4k.jpg
   pins:

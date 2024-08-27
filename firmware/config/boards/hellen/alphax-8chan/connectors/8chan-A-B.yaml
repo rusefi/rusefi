@@ -361,8 +361,8 @@ pins:
     type: 12v
 
 info:
-  title: AlphaX 8chan
-  name: AlphaX 8chan
+  title: AlphaX Platinum
+  name: AlphaX Platinum
   board_url: https://rusefi.com/s/8chan
   image:
     file: 8chan-A-B.jpg

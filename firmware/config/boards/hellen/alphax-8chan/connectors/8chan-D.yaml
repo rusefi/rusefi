@@ -121,17 +121,17 @@ pins:
     class: outputs
     ts_name: 16C - Low Side 1
     color: orange
-    
+
   - pin: 17D
     function: Power GND
     type: gnd
     color: purple
-    
+
   - pin: 18D
     function: Power GND
     type: gnd
     color: purple
-    
+
   - pin: 19D
     meta: MM176_GP17
     function: Injector 9
@@ -154,7 +154,7 @@ pins:
     class: outputs
     ts_name: 21D - VVT 4
     color: purple
-    
+
   - pin: 22D
     function: Boost (low)
     meta: MM176_OUT_PWM5
@@ -174,7 +174,7 @@ pins:
     class: outputs
     type: inj
     ts_name: ___ - Injector 12
-    
+
   - pin: 25D
     meta: MM176_GP19
     function: Injector 11
@@ -190,9 +190,9 @@ pins:
     ts_name: 26D - Injector 10
 
 info:
-  title: AlphaX 8chan
-  directory: hellen/alphax-8chan
-  name: AlphaX 8chan
+  title: AlphaX Platinum
+  directory: hellen/alphax-platinum
+  name: AlphaX Platinum
   image:
     file: 26pins-4k.jpg
   pins:
