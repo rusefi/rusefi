@@ -37,4 +37,6 @@ TEST(real6g72, data) {
 		}
 	}
 	ASSERT_TRUE(gotRpm);
+	ASSERT_EQ(0,  engine->triggerCentral.triggerState.totalTriggerErrorCounter);
+	ASSERT_EQ(16,  engine->triggerCentral.triggerState.getCrankSynchronizationCounter());
 }
