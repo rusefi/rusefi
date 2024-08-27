@@ -207,8 +207,6 @@ void Pt2001::init() {
 
 	spiCfg.ssport = getHwPort("mc33816", engineConfiguration->mc33816_cs);
 	spiCfg.sspad = getHwPin("mc33816", engineConfiguration->mc33816_cs);
-	// huh, looks like we never set AF for any CS _anywhere_? are we supposed to?
-	palSetPadMode(spiCfg.ssport, spiCfg.sspad, PAL_MODE_ALTERNATE(5/* << magic for SPI2. todo make visible getSpiAf(driver)*/) | PAL_STM32_OSPEED_HIGHEST);
 
 #if HW_MICRO_RUSEFI
 	// hard-coded for now, just resolve the conflict with SD card!
