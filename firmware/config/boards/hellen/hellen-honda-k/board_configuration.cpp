@@ -163,8 +163,9 @@ static Gpio OUTPUTS[] = {
 	Gpio::H144_OUT_IO13, // E1 Fuel Relay
 	Gpio::H144_OUT_PWM8, // C11 Aux Low 3
 	Gpio::H144_OUT_IO9, // B18 Alternator Control
-	// high side starts here
+	// low-side with pull-up, faking push-pull
 	Gpio::H144_OUT_IO10, // 17: E26 Tachometer
+	// high side starts here
 	Gpio::H144_OUT_IO6, // B15 VTEC/VTS Output
 	Gpio::H144_IGN_1, // A30 - IGN1
 	Gpio::H144_IGN_2, // A29 - IGN2
@@ -177,7 +178,7 @@ int getBoardMetaOutputsCount() {
 }
 
 int getBoardMetaLowSideOutputsCount() {
-    return getBoardMetaOutputsCount() - 6;
+    return getBoardMetaOutputsCount() - 5;
 }
 
 Gpio* getBoardMetaOutputs() {
