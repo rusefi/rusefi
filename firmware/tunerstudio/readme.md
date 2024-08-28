@@ -1,5 +1,7 @@
 # TunerStudio
 
+For TS Protocol details see https://www.tunerstudio.com/index.php/support/manuals/tsdevmanuals/137-ecu-definition-specification-aka-the-ini-document
+
 This directory contains the initialization and configuration files for the
 rusEFI interface to TunerStudio.
 
