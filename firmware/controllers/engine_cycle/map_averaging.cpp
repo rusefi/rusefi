@@ -183,16 +183,8 @@ void refreshMapAveragingPreCalc() {
 		float cylinderPeriod = engine->engineState.engineCycle / engineConfiguration->cylindersCount;
 		duration = clampF(10, duration, cylinderPeriod - 10);
 
-		angle_t offsetAngle = engine->triggerCentral.triggerFormDetails.eventAngles[0];
-		efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_AVG_OFFSET, !std::isnan(offsetAngle), "offsetAngle");
-
 		for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
-			angle_t cylinderOffset = getEngineCycle(getEngineRotationState()->getOperationMode()) * i / engineConfiguration->cylindersCount;
-			efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_CYL_OFFSET, !std::isnan(cylinderOffset), "cylinderOffset");
-			// part of this formula related to specific cylinder offset is never changing - we can
-			// move the loop into start-up calculation and not have this loop as part of periodic calculation
-			// todo: change the logic as described above in order to reduce periodic CPU usage?
-			float cylinderStart = start + cylinderOffset - offsetAngle + tdcPosition();
+			float cylinderStart = start + getCylinderAngle(i, ID2INDEX(getCylinderId(i)));;
 			wrapAngle(cylinderStart, "cylinderStart", ObdCode::CUSTOM_ERR_6562);
 			engine->engineState.mapAveragingStart[i] = cylinderStart;
 		}
@@ -208,9 +200,7 @@ void refreshMapAveragingPreCalc() {
 
 }
 
-/**
- * Shaft Position callback used to schedule start and end of MAP averaging
- */
+// Callback to schedule the start of map averaging for each cylinder
 void mapAveragingTriggerCallback(efitick_t edgeTimestamp, angle_t currentPhase, angle_t nextPhase) {
 #if EFI_ENGINE_CONTROL
 	int rpm = Sensor::getOrZero(SensorType::Rpm);
