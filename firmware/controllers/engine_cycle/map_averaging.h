@@ -19,7 +19,7 @@ void initMapAveraging();
 void refreshMapAveragingPreCalc();
 
 void mapAveragingTriggerCallback(
-		uint32_t index, efitick_t edgeTimestamp);
+		uint32_t index, efitick_t edgeTimestamp, angle_t currentPhase, angle_t nextPhase);
 
 #if EFI_TUNER_STUDIO
 void postMapState(TunerStudioOutputChannels *tsOutputChannels);

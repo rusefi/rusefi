@@ -18,7 +18,6 @@
 #include "trigger_simulator.h"
 #include "trigger_emulator_algo.h"
 
-#include "map_averaging.h"
 #include "main_trigger_callback.h"
 #include "status_loop.h"
 #include "engine_sniffer.h"
@@ -644,12 +643,6 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 		// Schedule the TDC mark
 		tdcMarkCallback(triggerIndexForListeners, timestamp);
-
-#if !EFI_UNIT_TEST
-#if EFI_MAP_AVERAGING
-		mapAveragingTriggerCallback(triggerIndexForListeners, timestamp);
-#endif /* EFI_MAP_AVERAGING */
-#endif /* EFI_UNIT_TEST */
 
 #if EFI_LOGIC_ANALYZER
 		waTriggerEventListener(signal, triggerIndexForListeners, timestamp);

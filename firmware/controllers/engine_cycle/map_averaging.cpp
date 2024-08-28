@@ -23,8 +23,6 @@
 
 #include "pch.h"
 
-
-
 #if EFI_MAP_AVERAGING
 
 #include "map_averaging.h"
@@ -217,7 +215,7 @@ void refreshMapAveragingPreCalc() {
  * Shaft Position callback used to schedule start and end of MAP averaging
  */
 void mapAveragingTriggerCallback(
-		uint32_t index, efitick_t edgeTimestamp) {
+		uint32_t index, efitick_t edgeTimestamp, angle_t currentPhase, angle_t nextPhase) {
 #if EFI_ENGINE_CONTROL
 	// update only once per engine cycle
 	if (index != 0) {
