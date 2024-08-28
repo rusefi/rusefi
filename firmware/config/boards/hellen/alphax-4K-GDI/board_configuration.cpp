@@ -32,6 +32,11 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->fuelPumpPin = Gpio::TLE9104_1_OUT_1;
 	engineConfiguration->fanPin = Gpio::TLE9104_1_OUT_2;
 
+	engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_CRANK; // max9924 is the safer default
+	engineConfiguration->camInputs[0] = Gpio::H144_IN_SENS1;
+
+	engineConfiguration->lowPressureFuel.hwChannel = H144_IN_AUX4;
+	engineConfiguration->highPressureFuel.hwChannel = H144_IN_MAP3;
 
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP1;
 	engineConfiguration->clt.adcChannel = H144_IN_CLT;
@@ -207,8 +212,8 @@ static Gpio OUTPUTS[] = {
 	Gpio::TLE9104_2_OUT_1, // 30B VVT2
 	Gpio::TLE9104_2_OUT_2, // 31B VVT3
 	Gpio::TLE9104_2_OUT_3, // 32B VVT4
-	Gpio::TLE9104_3_OUT_0,
-	Gpio::TLE9104_3_OUT_1,
+	Gpio::TLE9104_3_OUT_0, // 33A Wastegate Solenoid
+	Gpio::TLE9104_3_OUT_1, // 34A AC Control
 };
 
 int getBoardMetaOutputsCount() {

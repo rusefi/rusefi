@@ -68,6 +68,12 @@ pins:
     type: ls
     ts_name: ___ Fan 2
 
+  - pin: 10B
+    meta: H144_IN_CRANK
+    class: event_inputs
+    function: VR 9924 Negative
+    ts_name: ___ VR Negative
+
   - pin: 19B
     function: PPS 1
     type: av
@@ -84,9 +90,41 @@ pins:
     ts_name: ___ PPS2
     color: orange/brown
 
+  - pin: 21B
+    id: [H144_IN_SENS1, H144_IN_SENS1]
+    class: [event_inputs, switch_inputs]
+    function: Digital Input 1
+    ts_name: ___ Digital Input 1
+
+  - pin: 23B
+    function: Fuel Low Pressure
+    type: av
+    meta: H144_IN_AUX4
+    class: analog_inputs
+    ts_name: ___ Fuel Low Pressure
+
+  - pin: 24B
+    function: Fuel High Pressure
+    type: av
+    meta: H144_IN_MAP3
+    class: analog_inputs
+    ts_name: ___ Fuel High Pressure
+
   - pin: 26B
     function: Power GND
     type: gnd
+
+  - pin: 27B
+    id: [H144_IN_SENS2, H144_IN_SENS2]
+    class: [event_inputs, switch_inputs]
+    function: Digital Input 3
+    ts_name: ___ Digital Input 3
+
+  - pin: 28B
+    id: [H144_IN_SENS3, H144_IN_SENS3]
+    class: [event_inputs, switch_inputs]
+    function: Digital Input 4
+    ts_name: ___ Digital Input 4
 
   - pin: 29B
     id: TLE9104_2_OUT_0
