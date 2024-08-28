@@ -128,6 +128,8 @@ case DBG_25:
   return "DBG_25";
 case DBG_26:
   return "DBG_26";
+case DBG_27:
+  return "DBG_27";
 case DBG_29:
   return "DBG_29";
 case DBG_32:
@@ -176,8 +178,6 @@ case DBG_LOGIC_ANALYZER:
   return "DBG_LOGIC_ANALYZER";
 case DBG_LUA:
   return "DBG_LUA";
-case DBG_MAP:
-  return "DBG_MAP";
 case DBG_METRICS:
   return "DBG_METRICS";
 case DBG_SR5_PROTOCOL:

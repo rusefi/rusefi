@@ -225,6 +225,7 @@ public class Fields {
 	public static final int debug_mode_e_DBG_24 = 24;
 	public static final int debug_mode_e_DBG_25 = 25;
 	public static final int debug_mode_e_DBG_26 = 26;
+	public static final int debug_mode_e_DBG_27 = 27;
 	public static final int debug_mode_e_DBG_29 = 29;
 	public static final int debug_mode_e_DBG_32 = 32;
 	public static final int debug_mode_e_DBG_34 = 34;
@@ -249,7 +250,6 @@ public class Fields {
 	public static final int debug_mode_e_DBG_ION = 30;
 	public static final int debug_mode_e_DBG_LOGIC_ANALYZER = 45;
 	public static final int debug_mode_e_DBG_LUA = 48;
-	public static final int debug_mode_e_DBG_MAP = 27;
 	public static final int debug_mode_e_DBG_METRICS = 28;
 	public static final int debug_mode_e_DBG_SR5_PROTOCOL = 14;
 	public static final int debug_mode_e_DBG_STEPPER_IDLE_CONTROL = 3;
