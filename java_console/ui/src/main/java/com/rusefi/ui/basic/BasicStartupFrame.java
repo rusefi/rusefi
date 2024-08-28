@@ -90,9 +90,9 @@ public class BasicStartupFrame {
         if (ConnectionAndMeta.isDefaultWhitelabel(whiteLabel))
             panel.add(LogoHelper.createUrlLabel());
 
-        frame.getFrame().pack();
         frame.showFrame(panel, false);
         UiUtils.centerWindow(frame.getFrame());
+        frame.getFrame().pack();
     }
 
     private void hideStatusMessage() {
