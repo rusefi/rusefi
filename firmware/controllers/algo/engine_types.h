@@ -253,7 +253,7 @@ typedef enum __attribute__ ((__packed__)) {
 	DBG_20 = 20,
 	DBG_21 = 21,
 
-	DBG_INSTANT_RPM = 22,
+	DBG_22 = 22,
 	UNUSED23 = 23,
 	DBG_24 = 24,
 	DBG_25 = 25,

@@ -622,14 +622,6 @@ void updateTunerStudioState() {
 #endif // EFI_SHAFT_POSITION_INPUT
 
 		break;
-	case DBG_INSTANT_RPM:
-		{
-#if EFI_SHAFT_POSITION_INPUT
-			tsOutputChannels->debugFloatField2 = instantRpm / Sensor::getOrZero(SensorType::Rpm);
-#endif // EFI_SHAFT_POSITION_INPUT
-
-		}
-		break;
 	case DBG_TLE8888:
 #if (BOARD_TLE8888_COUNT > 0)
 		tle8888PostState();
