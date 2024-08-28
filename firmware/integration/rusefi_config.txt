@@ -1443,8 +1443,6 @@ pin_input_mode_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPinModes;
 	Gpio spi6misoPin;
 	Gpio spi6sckPin;
 
-uint8_t[237] mainUnusedEnd;;"units", 1, 0, 0, 1, 0
-
 ! end of engine_configuration_s
 end_struct
 
