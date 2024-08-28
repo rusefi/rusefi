@@ -214,10 +214,18 @@ static Gpio OUTPUTS[] = {
 	Gpio::TLE9104_2_OUT_3, // 32B VVT4
 	Gpio::TLE9104_3_OUT_0, // 33A Wastegate Solenoid
 	Gpio::TLE9104_3_OUT_1, // 34A AC Control
+	Gpio::H144_IGN_4, // 11A Ignition 4
+	Gpio::H144_IGN_3, // 12A Ignition 3
+	Gpio::H144_IGN_2, // 13A Ignition 2
+	Gpio::H144_IGN_1, // 14A Ignition 1
 };
 
 int getBoardMetaOutputsCount() {
     return efi::size(OUTPUTS);
+}
+
+int getBoardMetaLowSideOutputsCount() {
+    return getBoardMetaOutputsCount() - 4;
 }
 
 Gpio* getBoardMetaOutputs() {
