@@ -117,7 +117,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 
 #if !EFI_UNIT_TEST
 #if EFI_MAP_AVERAGING
-	mapAveragingTriggerCallback(trgEventIndex, edgeTimestamp, currentPhase, nextPhase);
+	mapAveragingTriggerCallback(edgeTimestamp, currentPhase, nextPhase);
 #endif /* EFI_MAP_AVERAGING */
 #endif /* EFI_UNIT_TEST */
 }
