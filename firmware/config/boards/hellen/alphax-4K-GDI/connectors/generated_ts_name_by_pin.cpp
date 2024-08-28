@@ -27,6 +27,8 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::TLE9104_2_OUT_1: return "30B VVT2";
 		case Gpio::TLE9104_2_OUT_2: return "31B VVT3";
 		case Gpio::TLE9104_2_OUT_3: return "32B VVT4";
+		case Gpio::TLE9104_3_OUT_0: return "33A Wastegate Solenoid";
+		case Gpio::TLE9104_3_OUT_1: return "34A AC Control";
 		default: return nullptr;
 	}
 	return nullptr;

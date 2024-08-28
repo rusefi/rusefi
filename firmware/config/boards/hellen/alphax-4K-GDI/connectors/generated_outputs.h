@@ -9,6 +9,8 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::H144_LS_3, // 5A GDI Injector 3
 	Gpio::H144_LS_2, // 7A GDI Injector 2
 	Gpio::H144_LS_1, // 9A GDI Injector 1
+	Gpio::TLE9104_3_OUT_0, // 33A Wastegate Solenoid
+	Gpio::TLE9104_3_OUT_1, // 34A AC Control
 	Gpio::TLE9104_0_OUT_3, // 1B Port injector 4
 	Gpio::TLE9104_0_OUT_2, // 2B Port injector 3
 	Gpio::TLE9104_0_OUT_1, // 3B Port injector 2
@@ -29,6 +31,8 @@ Gpio GENERATED_OUTPUTS = {
 // "5A GDI Injector 3",
 // "7A GDI Injector 2",
 // "9A GDI Injector 1",
+// "33A Wastegate Solenoid",
+// "34A AC Control",
 // "1B Port injector 4",
 // "2B Port injector 3",
 // "3B Port injector 2",
