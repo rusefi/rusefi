@@ -10,9 +10,11 @@ public:
 							action_s action,
 							float currentPhase, float nextPhase);
 
-	void scheduleEventsUntilNextTriggerTooth(int rpm,
-						 efitick_t edgeTimestamp,
-						 float currentPhase, float nextPhase);
+	void onEnginePhase(float /*rpm*/,
+							efitick_t /*edgeTimestamp*/,
+							angle_t /*currentPhase*/,
+							angle_t /*nextPhase*/)
+							override;
 
 	// For unit tests
 	AngleBasedEvent * getElementAtIndexForUnitTest(int index);

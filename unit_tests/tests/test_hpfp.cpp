@@ -276,7 +276,7 @@ TEST(HPFP, Schedule) {
 	eth.assertTriggerEvent("h0", 0, &hpfp.m_event, (void*)&HpfpController::pinTurnOff, 270);
 
 	// Make the previous event happen, schedule the next.
-	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
+	engine->module<TriggerScheduler>()->onEnginePhase(
 		1000, tick_per_deg * 0, 180, 360);
 	// Mock executor doesn't run events, so we run it manually
 	HpfpController::pinTurnOff(&hpfp);
@@ -285,7 +285,7 @@ TEST(HPFP, Schedule) {
 	eth.assertTriggerEvent("h1", 0, &hpfp.m_event, (void*)&HpfpController::pinTurnOn, 450 - 37.6923065f);
 
 	// Make it happen
-	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
+	engine->module<TriggerScheduler>()->onEnginePhase(
 		1000, tick_per_deg * 180, 360, 540);
 
 	// Since we have a mock scheduler, lets insert the correct timestamp in the scheduling

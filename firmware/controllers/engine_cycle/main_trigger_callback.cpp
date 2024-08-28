@@ -89,7 +89,6 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 	}
 
 	if (trgEventIndex == 0) {
-
 		if (getTriggerCentral()->checkIfTriggerConfigChanged()) {
 			getIgnitionEvents()->isReady = false; // we need to rebuild complete ignition schedule
 			getFuelSchedule()->isReady = false;
@@ -101,14 +100,15 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 		}
 	}
 
+	engine->engineModules.apply_all([=](auto & m) {
+		m.onEnginePhase(rpm, edgeTimestamp, currentPhase, nextPhase);
+	});
+
 	/**
 	 * For fuel we schedule start of injection based on trigger angle, and then inject for
 	 * specified duration of time
 	 */
 	handleFuel(edgeTimestamp, currentPhase, nextPhase);
-
-	engine->module<TriggerScheduler>()->scheduleEventsUntilNextTriggerTooth(
-		rpm, edgeTimestamp, currentPhase, nextPhase);
 
 	/**
 	 * For spark we schedule both start of coil charge and actual spark based on trigger angle
