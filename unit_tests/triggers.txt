@@ -5615,7 +5615,7 @@ event 10 0 1 540.00 1.000000
 event 11 0 0 540.00 nan
 event 12 0 1 660.00 1.333333
 event 13 0 0 660.00 nan
-TRIGGERTYPE 84 128 TT_NISSAN_HR 55.00
+TRIGGERTYPE 84 128 TT_NISSAN_HR 515.00
 knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
@@ -5624,7 +5624,7 @@ cycleDuration=360
 gapsCount=10
 syncEdge=RiseOnly
 isSynchronizationNeeded=1
-gapFrom.0=2.250000
+gapFrom.0=2.500000
 gapTo.0=5.500000
 gapFrom.1=0.700000
 gapTo.1=1.700000
