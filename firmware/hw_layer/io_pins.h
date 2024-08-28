@@ -39,8 +39,6 @@ EXTERNC iomode_t getInputMode(pin_input_mode_e mode);
 
 #endif /* EFI_GPIO_HARDWARE */
 
-void writePad(const char *msg, brain_pin_e pin, int bit);
-
 #if ! EFI_PROD_CODE
 #define BRAIN_PIN_COUNT (1 << 8 * sizeof(brain_pin_e))
 extern bool mockPinStates[BRAIN_PIN_COUNT];

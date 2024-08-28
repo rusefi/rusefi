@@ -75,8 +75,6 @@ void setFordAspireEngineConfiguration() {
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 	engineConfiguration->trigger.type = trigger_type_e::TT_FORD_ASPIRE;
 
-	engineConfiguration->triggerInputDebugPins[0] = Gpio::C15;
-
 	engineConfiguration->injectionPins[4] = Gpio::Unassigned;
 	engineConfiguration->injectionPins[5] = Gpio::Unassigned;
 

@@ -16,7 +16,4 @@ void applyNewTriggerInputPins();
 void startTriggerInputPins();
 void stopTriggerInputPins();
 
-void stopTriggerDebugPins();
-void startTriggerDebugPins();
-
 void onTriggerChanged(efitick_t stamp, bool isPrimary, bool isRising);

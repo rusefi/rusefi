@@ -250,10 +250,6 @@ void applyNewHardwareSettings() {
 		efiSetPadUnused(activeConfiguration.clutchUpPin);
 	}
 
-#if EFI_SHAFT_POSITION_INPUT
-	stopTriggerDebugPins();
-#endif // EFI_SHAFT_POSITION_INPUT
-
 	enginePins.unregisterPins();
 
 #if EFI_PROD_CODE
@@ -391,9 +387,6 @@ void stopHardware() {
 void startHardware() {
 #if EFI_SHAFT_POSITION_INPUT
 	validateTriggerInputs();
-
-	startTriggerDebugPins();
-
 #endif // EFI_SHAFT_POSITION_INPUT
 
 	startPedalPins();

@@ -115,25 +115,6 @@ void turnOnTriggerInputPins() {
 
 #endif /* (HAL_TRIGGER_USE_PAL == TRUE) */
 
-
-void stopTriggerDebugPins() {
-	for (int i = 0; i < TRIGGER_INPUT_PIN_COUNT; i++) {
-		efiSetPadUnusedIfConfigurationChanged(triggerInputDebugPins[i]);
-	}
-	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
-		efiSetPadUnusedIfConfigurationChanged(camInputsDebug[i]);
-	}
-}
-
-void startTriggerDebugPins() {
-	for (int i = 0; i < TRIGGER_INPUT_PIN_COUNT; i++) {
-		efiSetPadModeIfConfigurationChanged("trigger debug", triggerInputDebugPins[i], PAL_MODE_OUTPUT_PUSHPULL);
-	}
-	for (int i = 0; i < CAM_INPUTS_COUNT; i++) {
-		efiSetPadModeIfConfigurationChanged("cam debug", camInputsDebug[i], PAL_MODE_OUTPUT_PUSHPULL);
-	}
-}
-
 void applyNewTriggerInputPins() {
 	if (hasFirmwareError()) {
 		return;
