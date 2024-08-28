@@ -794,7 +794,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	  fuelBenchMode();
 		break;
 
-#if HW_PROTEUS || HW_HELLEN_4CHAN || HW_HELLEN_8CHAN
+#if HW_PROTEUS || HW_HELLEN_4CHAN || HW_HELLEN_8CHAN || HW_HELLEN_4K_GDI
     case engine_type_e::HYUNDAI_PB:
         setHyundaiPb();
 		break;

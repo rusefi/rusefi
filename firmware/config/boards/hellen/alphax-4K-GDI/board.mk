@@ -15,5 +15,7 @@ DDEFS += -DBOARD_TLE9104_COUNT=4
 
 # we have hellen board id BOARD_ID_GDI4CHAN_A
 
+DDEFS += -DHW_HELLEN_4K_GDI=1
+
 include $(BOARDS_DIR)/hellen/hellen-common-mega144.mk
 
