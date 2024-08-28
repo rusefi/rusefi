@@ -77,6 +77,9 @@ pins:
   - pin: 11B
     function: Crank / VR 9924 Positive
 
+  - pin: 16B
+    function: Knock Input
+
   - pin: 19B
     function: PPS 1
     type: av

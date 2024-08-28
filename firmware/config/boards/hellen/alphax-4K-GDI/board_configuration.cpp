@@ -30,7 +30,8 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->mainRelayPin = Gpio::TLE9104_1_OUT_0;
 	engineConfiguration->fuelPumpPin = Gpio::TLE9104_1_OUT_1;
-	engineConfiguration->fanPin = Gpio::TLE9104_1_OUT_2;
+	engineConfiguration->fanPin = Gpio::TLE9104_1_OUT_2; // Fan 1 8B
+	engineConfiguration->fan2Pin = Gpio::TLE9104_1_OUT_3; // Fan 2 9B
 
 	engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_CRANK; // max9924 is the safer default
 	engineConfiguration->camInputs[0] = Gpio::H144_IN_SENS1; // Digital Input 1
