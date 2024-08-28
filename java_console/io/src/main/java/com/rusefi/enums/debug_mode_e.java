@@ -27,7 +27,7 @@ public enum debug_mode_e {
 	DBG_19,
 	DBG_20,
 	DBG_21,
-	DBG_INSTANT_RPM,
+	DBG_22,
 	UNUSED23,
 	DBG_24,
 	DBG_25,

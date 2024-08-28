@@ -122,6 +122,8 @@ case DBG_20:
   return "DBG_20";
 case DBG_21:
   return "DBG_21";
+case DBG_22:
+  return "DBG_22";
 case DBG_24:
   return "DBG_24";
 case DBG_25:
@@ -170,8 +172,6 @@ case DBG_ETB_AUTOTUNE:
   return "DBG_ETB_AUTOTUNE";
 case DBG_EXECUTOR:
   return "DBG_EXECUTOR";
-case DBG_INSTANT_RPM:
-  return "DBG_INSTANT_RPM";
 case DBG_ION:
   return "DBG_ION";
 case DBG_LOGIC_ANALYZER:

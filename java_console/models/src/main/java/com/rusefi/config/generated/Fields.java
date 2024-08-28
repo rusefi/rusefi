@@ -222,6 +222,7 @@ public class Fields {
 	public static final int debug_mode_e_DBG_2 = 2;
 	public static final int debug_mode_e_DBG_20 = 20;
 	public static final int debug_mode_e_DBG_21 = 21;
+	public static final int debug_mode_e_DBG_22 = 22;
 	public static final int debug_mode_e_DBG_24 = 24;
 	public static final int debug_mode_e_DBG_25 = 25;
 	public static final int debug_mode_e_DBG_26 = 26;
@@ -246,7 +247,6 @@ public class Fields {
 	public static final int debug_mode_e_DBG_ELECTRONIC_THROTTLE_PID = 17;
 	public static final int debug_mode_e_DBG_ETB_AUTOTUNE = 39;
 	public static final int debug_mode_e_DBG_EXECUTOR = 18;
-	public static final int debug_mode_e_DBG_INSTANT_RPM = 22;
 	public static final int debug_mode_e_DBG_ION = 30;
 	public static final int debug_mode_e_DBG_LOGIC_ANALYZER = 45;
 	public static final int debug_mode_e_DBG_LUA = 48;
@@ -1201,7 +1201,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2024.08.28.f407-discovery.2199613393";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2024.08.28.f407-discovery.2782651221";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final int TS_TOTAL_OUTPUT_SIZE = 1384;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
@@ -1883,7 +1883,7 @@ public class Fields {
 	public static final Field AUXSPEEDSENSORINPUTPIN2 = Field.create("AUXSPEEDSENSORINPUTPIN2", 1378, FieldType.INT16, brain_input_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field TOTALGEARSCOUNT = Field.create("TOTALGEARSCOUNT", 1380, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field INJECTIONTIMINGMODE = Field.create("INJECTIONTIMINGMODE", 1381, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final String[] debug_mode_e = {"INVALID", "TPS acceleration enrichment", "INVALID", "Stepper Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INSTANT_RPM", "INVALID", "Status", "INVALID", "INVALID", "MAP", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "Composite Log", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "INVALID", "TCU", "Lua"};
+	public static final String[] debug_mode_e = {"INVALID", "TPS acceleration enrichment", "INVALID", "Stepper Idle Control", "Engine Load accl enrich", "Trigger Counters", "Soft Spark Cut", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "SD card", "sr5", "Knock", "INVALID", "Electronic Throttle", "Executor", "Bench Test / TS commands", "INVALID", "Analog inputs #1", "INVALID", "INVALID", "Status", "INVALID", "INVALID", "INVALID", "Metrics", "INVALID", "Ion Sense", "TLE8888", "Analog inputs #2", "Dwell Metric", "INVALID", "INVALID", "Boost Control", "INVALID", "INVALID", "ETB Autotune", "Composite Log", "INVALID", "INVALID", "INVALID", "Dyno_View", "Logic_Analyzer", "INVALID", "TCU", "Lua"};
 	public static final Field DEBUGMODE = Field.create("DEBUGMODE", 1382, FieldType.INT8, debug_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field FAN1EXTRAIDLE = Field.create("FAN1EXTRAIDLE", 1383, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field UARTCONSOLESERIALSPEED = Field.create("UARTCONSOLESERIALSPEED", 1384, FieldType.INT).setScale(1.0).setBaseOffset(0);
