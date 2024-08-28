@@ -33,10 +33,13 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->fanPin = Gpio::TLE9104_1_OUT_2;
 
 	engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_CRANK; // max9924 is the safer default
-	engineConfiguration->camInputs[0] = Gpio::H144_IN_SENS1;
+	engineConfiguration->camInputs[0] = Gpio::H144_IN_SENS1; // Digital Input 1
+	engineConfiguration->camInputs[1] = Gpio::H144_IN_SENS2; // Digital Input 3
 
 	engineConfiguration->lowPressureFuel.hwChannel = H144_IN_AUX4;
 	engineConfiguration->highPressureFuel.hwChannel = H144_IN_MAP3;
+	engineConfiguration->vvtPins[0] = Gpio::TLE9104_2_OUT_0; // intake
+	engineConfiguration->vvtPins[1] = Gpio::TLE9104_2_OUT_1; // exhaust
 
 	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP1;
 	engineConfiguration->clt.adcChannel = H144_IN_CLT;

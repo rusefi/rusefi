@@ -43,7 +43,7 @@ pins:
   - pin: 6B
     meta: H144_IN_VBATT
     class: analog_inputs
-    function: ECU power supply
+    function: ECU power supply / Ignition Key Power
     ts_name: ___ Battery Sense
     type: 12v
 
@@ -71,8 +71,11 @@ pins:
   - pin: 10B
     meta: H144_IN_CRANK
     class: event_inputs
-    function: VR 9924 Negative
+    function: Crank / VR 9924 Negative
     ts_name: ___ VR Negative
+
+  - pin: 11B
+    function: Crank / VR 9924 Positive
 
   - pin: 19B
     function: PPS 1

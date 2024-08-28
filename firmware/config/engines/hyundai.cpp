@@ -91,6 +91,11 @@ void setHyundaiPb() {
    	// page 98, Fuel System > Engine Control System > Rail Pressure Sensor (RPS) > Specifications
    	engineConfiguration->highPressureFuel.value2 = 20'000;
 
+#ifdef HW_HELLEN_4K_GDI
+	engineConfiguration->starterControlPin = Gpio::TLE9104_2_OUT_2; // vvt3
+
+#endif
+
 #ifdef HW_HELLEN_4CHAN
 	engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_CAM;
 	engineConfiguration->triggerInputPins[1] = Gpio::H144_IN_D_4;

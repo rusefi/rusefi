@@ -47,7 +47,7 @@ pins:
   - pin: 11A
     meta: H144_IGN_4
     class: outputs
-    function: Smart Ignition 4
+    function: Smart Ignition Coil 4
     type: ign
     ts_name: ___ Ignition 4
     color: orange/brown
@@ -55,7 +55,7 @@ pins:
   - pin: 12A
     meta: H144_IGN_3
     class: outputs
-    function: Smart Ignition 3
+    function: Smart Ignition Coil 3
     type: ign
     ts_name: ___ Ignition 3
     color: blue
@@ -63,7 +63,7 @@ pins:
   - pin: 13A
     meta: H144_IGN_2
     class: outputs
-    function: Smart Ignition 2
+    function: Smart Ignition Coil 2
     type: ign
     ts_name: ___ Ignition 2
     color: white
@@ -71,7 +71,7 @@ pins:
   - pin: 14A
     meta: H144_IGN_1
     class: outputs
-    function: Smart Ignition 1
+    function: Smart Ignition Coil 1
     type: ign
     ts_name: ___ Ignition 1
     color: green
