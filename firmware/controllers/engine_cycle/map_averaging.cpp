@@ -179,6 +179,10 @@ void refreshMapAveragingPreCalc() {
 		efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_START_ASSERT, !std::isnan(start), "start");
 		assertAngleRange(duration, "samplingDuration", ObdCode::CUSTOM_ERR_6563);
 
+		// Clamp the duration to slightly less than one cylinder period
+		float cylinderPeriod = engine->engineState.engineCycle / engineConfiguration->cylindersCount;
+		duration = clampF(10, duration, cylinderPeriod - 10);
+
 		angle_t offsetAngle = engine->triggerCentral.triggerFormDetails.eventAngles[0];
 		efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_AVG_OFFSET, !std::isnan(offsetAngle), "offsetAngle");
 
