@@ -20,10 +20,6 @@ void refreshMapAveragingPreCalc();
 
 void mapAveragingTriggerCallback(efitick_t edgeTimestamp, angle_t currentPhase, angle_t nextPhase);
 
-#if EFI_TUNER_STUDIO
-void postMapState(TunerStudioOutputChannels *tsOutputChannels);
-#endif
-
 // allow smoothing up to number of cylinders
 #define MAX_MAP_BUFFER_LENGTH (MAX_CYLINDER_COUNT)
 

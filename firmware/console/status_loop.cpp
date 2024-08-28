@@ -622,11 +622,6 @@ void updateTunerStudioState() {
 #endif // EFI_SHAFT_POSITION_INPUT
 
 		break;
-#if EFI_MAP_AVERAGING
-	case DBG_MAP:
-		postMapState(tsOutputChannels);
-		break;
-#endif /* EFI_MAP_AVERAGING */
 	case DBG_INSTANT_RPM:
 		{
 #if EFI_SHAFT_POSITION_INPUT
