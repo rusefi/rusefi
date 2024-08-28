@@ -79,8 +79,6 @@ bool EventQueue::insertTask(scheduling_s *scheduling, efitick_t timeX, action_s 
 	assertListIsSorted();
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, action.getCallback() != NULL, "NULL callback", false);
 
-// please note that simulator does not use this code at all - simulator uses signal_executor_sleep
-
 	if (scheduling->action) {
 #if EFI_UNIT_TEST
 		if (verboseMode) {
