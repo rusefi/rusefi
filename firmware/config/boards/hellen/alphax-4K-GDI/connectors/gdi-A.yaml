@@ -149,6 +149,19 @@ pins:
     function: Sensor GND
     type: agnd
 
+  - pin: 33A
+    function: Wastegate Low Side
+    ts_name: ___ Wastegate Solenoid
+    class: outputs
+    id: TLE9104_3_OUT_0
+    type: ls
+
+  - pin: 34A
+    function: AC Low Side
+    ts_name: ___ AC Control
+    class: outputs
+    id: TLE9104_3_OUT_1
+    type: ls
 
 info:
   title: AlphaX 4K-GDI

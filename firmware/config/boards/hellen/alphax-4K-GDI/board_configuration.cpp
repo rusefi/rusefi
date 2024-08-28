@@ -195,10 +195,20 @@ static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
 }
 
 static Gpio OUTPUTS[] = {
-	Gpio::TLE9104_0_OUT_0,
-	Gpio::TLE9104_0_OUT_1,
-	Gpio::TLE9104_0_OUT_2,
-	Gpio::TLE9104_0_OUT_3,
+	Gpio::TLE9104_0_OUT_0, // 4B Port injector 1
+	Gpio::TLE9104_0_OUT_1, // 3B Port injector 2
+	Gpio::TLE9104_0_OUT_2, // 2B Port injector 3
+	Gpio::TLE9104_0_OUT_3, // 1B Port injector 4
+	Gpio::TLE9104_1_OUT_0, // 5B Main Relay Control
+	Gpio::TLE9104_1_OUT_1, // 7B Fuel Pump
+	Gpio::TLE9104_1_OUT_2, // 8B Fan 1
+	Gpio::TLE9104_1_OUT_3, // 9B Fan 2
+	Gpio::TLE9104_2_OUT_0, // 29B VVT1
+	Gpio::TLE9104_2_OUT_1, // 30B VVT2
+	Gpio::TLE9104_2_OUT_2, // 31B VVT3
+	Gpio::TLE9104_2_OUT_3, // 32B VVT4
+	Gpio::TLE9104_3_OUT_0,
+	Gpio::TLE9104_3_OUT_1,
 };
 
 int getBoardMetaOutputsCount() {
@@ -209,3 +219,6 @@ Gpio* getBoardMetaOutputs() {
     return OUTPUTS;
 }
 
+int getBoardMetaDcOutputsCount() {
+    return 1;
+}
