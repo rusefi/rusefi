@@ -14,6 +14,7 @@
 #if EFI_RTC
 void initRtc();
 void printRtcDateTime();
+uint32_t getEpochTime();
 efidatetime_t getRtcDateTime();
 void setRtcDateTime(const efidatetime_t * const dateTime);
 

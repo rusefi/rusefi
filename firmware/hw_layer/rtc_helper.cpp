@@ -52,6 +52,19 @@ void setRtcDateTime(efidatetime_t const * const dateTime) {
 	rtcSetTime(&RTCD1, &timespec);
 }
 
+static time_t rtc_encode(const RTCDateTime *timespec) {
+  struct tm tim;
+
+  rtcConvertDateTimeToStructTm(timespec, &tim, NULL);
+  return mktime(&tim);
+}
+
+uint32_t getEpochTime() {
+	RTCDateTime timespec;
+	rtcGetTime(&RTCD1, &timespec);
+	return rtc_encode(&timespec);
+}
+
 efidatetime_t getRtcDateTime() {
 	RTCDateTime timespec;
 	rtcGetTime(&RTCD1, &timespec);

@@ -202,6 +202,10 @@ void updateDevConsoleState() {
 	}
 #endif /* EFI_PROD_CODE */
 
+#if EFI_RTC
+  engine->outputChannels.rtcUnixEpochTime = getEpochTime();
+#endif
+
 #if HAL_USE_ADC
 	printFullAdcReportIfNeeded();
 #endif /* HAL_USE_ADC */
