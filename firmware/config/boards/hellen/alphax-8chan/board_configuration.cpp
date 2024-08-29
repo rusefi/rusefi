@@ -46,13 +46,13 @@ static void setIgnitionPins() {
 }
 
 static void setupDefaultSensorInputs() {
-	// trigger inputs, hall
-	engineConfiguration->triggerInputPins[0] = Gpio::MM176_USB1ID;
+	// trigger inputs, VR/hall crank
+	engineConfiguration->triggerInputPins[0] = Gpio::MM176_USB1ID; // 1B
 //	engineConfiguration->triggerInputPins[1] = Gpio::H144_IN_CAM;
-	engineConfiguration->camInputs[0] = Gpio::MM176_IN_D1;
+	engineConfiguration->camInputs[0] = Gpio::MM176_IN_D1; // 15A
 	engineConfiguration->camInputs[1] = Gpio::MM176_IN_D2;
-	engineConfiguration->camInputs[2] = Gpio::MM176_IN_D3;
-	engineConfiguration->camInputs[3] = Gpio::MM176_IN_D4;
+	engineConfiguration->camInputs[2] = Gpio::MM176_IN_D3; // 24A
+	engineConfiguration->camInputs[3] = Gpio::MM176_IN_D4; // 9A
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
 	engineConfiguration->vvtMode[1] = VVT_SINGLE_TOOTH;
 
