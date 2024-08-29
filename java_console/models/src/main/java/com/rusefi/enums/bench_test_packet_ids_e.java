@@ -14,6 +14,7 @@ public enum bench_test_packet_ids_e {
 	RAW_ANALOG_2(7798790),
 	PIN_STATE(7798791),
 	AUX_DIGITAL_COUNTERS(7798792),
+	MANUAL_PIN_TEST(7798793),
 	;
 
 
