@@ -4,7 +4,6 @@
 #include "linear_func.h"
 #include "fallback_sensor.h"
 #include "functional_sensor.h"
-#include "map_averaging.h"
 
 static LinearFunc baroConverter;
 static FunctionalSensor baroSensor(SensorType::BarometricPressure, MS2NT(50));

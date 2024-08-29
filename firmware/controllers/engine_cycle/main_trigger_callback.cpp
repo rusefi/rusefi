@@ -30,7 +30,6 @@
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 
 #include "spark_logic.h"
-#include "map_averaging.h"
 
 static void handleFuel(efitick_t nowNt, float currentPhase, float nextPhase) {
 	ScopePerf perf(PE::HandleFuel);

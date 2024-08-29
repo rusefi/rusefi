@@ -47,10 +47,6 @@
 #include "mc33816.h"
 #endif /* EFI_MC33816 */
 
-#if EFI_MAP_AVERAGING
-#include "map_averaging.h"
-#endif
-
 #if EFI_INTERNAL_FLASH
 #include "flash_main.h"
 #endif

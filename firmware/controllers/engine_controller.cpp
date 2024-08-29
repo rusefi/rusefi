@@ -32,7 +32,6 @@
 #include "flash_main.h"
 #include "bench_test.h"
 #include "electronic_throttle.h"
-#include "map_averaging.h"
 #include "high_pressure_fuel_pump.h"
 #include "malfunction_central.h"
 #include "malfunction_indicator.h"

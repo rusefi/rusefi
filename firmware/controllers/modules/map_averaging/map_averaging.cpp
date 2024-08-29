@@ -25,7 +25,6 @@
 
 #if EFI_MAP_AVERAGING
 
-#include "map_averaging.h"
 #include "trigger_central.h"
 
 #if EFI_SENSOR_CHART

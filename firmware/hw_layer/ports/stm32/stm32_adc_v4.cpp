@@ -11,7 +11,6 @@
 #if HAL_USE_ADC
 
 #include "mpu_util.h"
-#include "map_averaging.h"
 
 #ifdef ADC_MUX_PIN
 #error "ADC mux not yet supported on STM32H7"

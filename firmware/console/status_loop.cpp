@@ -69,10 +69,6 @@ extern bool main_loop_started;
 #include "flash_main.h"
 #endif
 
-#if EFI_MAP_AVERAGING
-#include "map_averaging.h"
-#endif
-
 #if (BOARD_TLE8888_COUNT > 0)
 #include "tle8888.h"
 #endif /* BOARD_TLE8888_COUNT */
