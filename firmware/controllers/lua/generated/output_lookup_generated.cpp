@@ -806,6 +806,9 @@ float getOutputValueByName(const char *name) {
 // rawAmbientTemp
 		case 1781305509:
 			return engine->outputChannels.rawAmbientTemp;
+// rtcUnixEpochTime
+		case -1684644880:
+			return engine->outputChannels.rtcUnixEpochTime;
 // totalFuelCorrection
 #if EFI_ENGINE_CONTROL
 		case -1779658835:

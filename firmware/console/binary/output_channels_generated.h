@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Fri Jul 19 23:44:20 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Thu Aug 29 01:22:51 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1373,9 +1373,13 @@ struct output_channels_s {
 	/**
 	 * offset 780
 	 */
-	uint8_t unusedAtTheEnd[60];
+	uint32_t rtcUnixEpochTime = (uint32_t)0;
+	/**
+	 * offset 784
+	 */
+	uint8_t unusedAtTheEnd[56];
 };
 static_assert(sizeof(output_channels_s) == 840);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Fri Jul 19 23:44:20 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt Thu Aug 29 01:22:51 UTC 2024
