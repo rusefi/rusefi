@@ -21,5 +21,5 @@ efidatetime_t convertRtcDateTimeToEfi(const RTCDateTime * const timespec);
 RTCDateTime convertRtcDateTimeFromEfi(const efidatetime_t * const dateTime);
 #endif // EFI_RTC
 
-void dateToString(char *buffer);
+//void dateToString(char *buffer);
 bool dateToStringShort(char *lcd_str);
