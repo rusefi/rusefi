@@ -608,14 +608,6 @@ static void getValue(const char *paramStr) {
 	} else if (strEqualCaseInsensitive(paramStr, "trigger_hw_input")) {
 		efiPrintf("trigger_hw_input=%s", boolToString(getTriggerCentral()->hwTriggerInputEnabled));
 #endif // EFI_SHAFT_POSITION_INPUT
-	} else if (strEqualCaseInsensitive(paramStr, "is_enabled_spi_1")) {
-		efiPrintf("is_enabled_spi_1=%s", boolToString(engineConfiguration->is_enabled_spi_1));
-	} else if (strEqualCaseInsensitive(paramStr, "is_enabled_spi_2")) {
-		efiPrintf("is_enabled_spi_2=%s", boolToString(engineConfiguration->is_enabled_spi_2));
-	} else if (strEqualCaseInsensitive(paramStr, "is_enabled_spi_3")) {
-		efiPrintf("is_enabled_spi_3=%s", boolToString(engineConfiguration->is_enabled_spi_3));
-	} else if (strEqualCaseInsensitive(paramStr, "isHip9011Enabled")) {
-		efiPrintf("isHip9011Enabled=%d", engineConfiguration->isHip9011Enabled);
 	} else if (strEqualCaseInsensitive(paramStr, CMD_DATE)) {
 		printDateTime();
 	} else {
