@@ -9,6 +9,7 @@
 #include "settings.h"
 #include "gpio/gpio_ext.h"
 
+// todo: WHAT?! document why do we manually truncate higher bits?
 #define TRUNCATE_TO_BYTE(i) ((i) & 0xff)
 // raw values are 0..5V, convert it to 8-bit (0..255)
 #define RAW_TO_BYTE(v) TRUNCATE_TO_BYTE((int)(v * 255.0 / 5.0))
@@ -195,6 +196,13 @@ void sendQcBenchBoardStatus() {
 #endif // EFI_PROD_CODE
 }
 
+#if EFI_PROD_CODE
+static void sendManualPinTest(int id) {
+	CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::MANUAL_PIN_TEST, 8, /*bus*/0, /*isExtended*/true);
+	msg[0] = id;
+}
+#endif // EFI_PROD_CODE
+
 static void sendPinStatePackets(int pinToggleCounter, uint32_t durationsInStateMs[2]) {
 	CanTxMessage msg(CanCategory::BENCH_TEST, (int)bench_test_packet_ids_e::PIN_STATE, 8, /*bus*/0, /*isExtended*/true);
 	msg[0] = TRUNCATE_TO_BYTE(pinToggleCounter >> 8);
@@ -282,7 +290,21 @@ void processCanQcBenchTest(const CANRxFrame& frame) {
 #endif // EFI_CAN_SUPPORT
 
 void initQcBenchControls() {
+#if EFI_PROD_CODE
     addConsoleActionII("qc_etb", [](int index, int direction) {
         qcSetEtbState(index, direction);
     });
+
+    addConsoleActionI("qc_output", [](int index) {
+	    Gpio* boardOutputs = getBoardMetaOutputs();
+	    criticalAssertVoid(boardOutputs != nullptr, "outputs not defined");
+      Gpio pin = boardOutputs[index];
+	    efiSetPadModeWithoutOwnershipAcquisition("qc_output", pin, PAL_MODE_OUTPUT_PUSHPULL);
+
+	    int physicalValue = palReadPad(getHwPort("read", pin), getHwPin("read", pin));
+	    efiPrintf("original pin %s value %d", hwPortname(pin), physicalValue);
+	    palWritePad(getHwPort("write", pin), getHwPin("write", pin), 1 - physicalValue);
+      sendManualPinTest(index);
+    });
+#endif // EFI_PROD_CODE
 }
