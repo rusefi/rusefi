@@ -58,6 +58,10 @@ expected<float> readGppwmChannel(gppwm_channel_e channel) {
 		return Sensor::get(SensorType::AuxLinear1);
 	case GPPWM_AuxLinear2:
 		return Sensor::get(SensorType::AuxLinear2);
+	case GPPWM_AuxLinear3:
+		return Sensor::get(SensorType::AuxLinear3);
+	case GPPWM_AuxLinear4:
+		return Sensor::get(SensorType::AuxLinear4);
 	case GPPWM_GppwmOutput1:
 		return (float)engine->outputChannels.gppwmOutput[0];
 	case GPPWM_GppwmOutput2:
