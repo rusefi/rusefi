@@ -249,6 +249,8 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 
 	float auxLinear1;@@GAUGE_NAME_AUX_LINEAR_1@@;"", 1, 0, 0, 0, 2
 	float auxLinear2;@@GAUGE_NAME_AUX_LINEAR_2@@;"", 1, 0, 0, 0, 2
+	float auxLinear3;@@GAUGE_NAME_AUX_LINEAR_3@@;"", 1, 0, 0, 0, 2
+	float auxLinear4;@@GAUGE_NAME_AUX_LINEAR_4@@;"", 1, 0, 0, 0, 2
 
 
 	uint16_t autoscale fallbackMap;;"kPa", 0.1, 0, 0, 1000, 1

@@ -106,6 +106,8 @@
 
 #define GAUGE_NAME_AUX_LINEAR_1 "Aux linear #1"
 #define GAUGE_NAME_AUX_LINEAR_2 "Aux linear #2"
+#define GAUGE_NAME_AUX_LINEAR_3 "Aux linear #3"
+#define GAUGE_NAME_AUX_LINEAR_4 "Aux linear #4"
 
 #define GAUGE_NAME_BOOST_OUTPUT "Boost: Output"
 #define GAUGE_NAME_BOOST_CLOSED_LOOP "Boost: Closed loop"

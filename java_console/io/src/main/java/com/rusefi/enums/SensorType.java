@@ -64,6 +64,8 @@ public enum SensorType {
 	LuaGauge2,
 	AuxLinear1,
 	AuxLinear2,
+	AuxLinear3,
+	AuxLinear4,
 	AuxSpeed1,
 	AuxSpeed2,
 	PlaceholderLast,

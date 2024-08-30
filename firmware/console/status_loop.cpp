@@ -387,6 +387,8 @@ static void updatePressures() {
 
 	engine->outputChannels.auxLinear1 = Sensor::getOrZero(SensorType::AuxLinear1);
 	engine->outputChannels.auxLinear2 = Sensor::getOrZero(SensorType::AuxLinear2);
+	engine->outputChannels.auxLinear3 = Sensor::getOrZero(SensorType::AuxLinear3);
+	engine->outputChannels.auxLinear4 = Sensor::getOrZero(SensorType::AuxLinear4);
 }
 
 static void updateMiscSensors() {
