@@ -235,14 +235,14 @@ pins:
 
 
   - pin: 1B
-    function: VR1-/Hall Input
+    function: VR1-/Hall Input max9924
     meta: MM176_USB1ID
     class: event_inputs
-    ts_name: 1B - VR1-/Hall Input
+    ts_name: 1B - VR1-/Hall Input max9924
     color: red
 
   - pin: 2B
-    function: VR1+
+    function: VR1+ max9924
 
 #  - pin: 1B2B
 #    function: VR1
