@@ -21,6 +21,8 @@
  */
 bool qcDirectPinControlMode = false;
 
+#if EFI_CAN_SUPPORT
+
 static void directWritePad(Gpio pin, int value) {
   if (!isBrainPinValid(pin)) {
     criticalError("QC of invalid pin %d", (int)pin);
@@ -58,8 +60,6 @@ static void qcSetEtbState(uint8_t dcIndex, uint8_t direction) {
 	  directWritePad(io->disablePin, 0); // disable pin is inverted - here we ENABLE. direct pin access due to qcDirectPinControlMode
     }
 }
-
-#if EFI_CAN_SUPPORT
 
 static void setPin(const CANRxFrame& frame, int value) {
 		int outputIndex = frame.data8[2];
