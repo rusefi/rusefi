@@ -2066,6 +2066,7 @@ end_struct
 #define GAUGE_NAME_TRG_GAP "Sync: Trigger Latest Ratio"
 
 #define VE_MENU_NAME "VE"
+#define VE_MENU_MAP_NAME "VE 3D view"
 #define CAM_1_MODE_NAME "Cam mode (intake)"
 #define CAM_2_MODE_NAME "Cam mode (exhaust)"
 #define ts_show_cam2 true
