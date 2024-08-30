@@ -8,7 +8,7 @@
 // see comments at declaration in pin_repository.h
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
-		case Gpio::A10: return "1B - VR1-/Hall Input";
+		case Gpio::A10: return "1B - VR1-/Hall Input max9924";
 		case Gpio::A15: return "31C - Ignition 12";
 		case Gpio::A6: return "3B/4B - VR2";
 		case Gpio::A9: return "6C - High Side 2";
