@@ -106,11 +106,17 @@ public class BasicStartupFrame {
 
     private void updateStatus(final String niceStatus) {
         statusMessage.setText(niceStatus);
+        // I'm not sure why it works, but it looks like the following frame packing helps to avoid displaying of logo on
+        // the right side of frame
+        packFrame();
     }
 
     private void onHardwareUpdated(final AvailableHardware currentHardware) {
         status.stop();
         hideStatusMessage();
+        // I'm not sure hat the following frame packing is really necessary, but I'm adding it just in case if frame was
+        // not packed in updateStatus method
+        packFrame();
 
         final List<SerialPortScanner.PortResult> ecuPorts = currentHardware.getKnownPorts(SerialPortScanner.SerialPortType.EcuWithOpenblt);
         final List<SerialPortScanner.PortResult> bootloaderPorts = currentHardware.getKnownPorts(SerialPortScanner.SerialPortType.OpenBlt);
