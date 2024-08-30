@@ -49,11 +49,7 @@ int efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, ExtiC
 		return -1;
 	}
 
-	bool wasUsed = brain_pin_markUsed(brainPin, msg);
-	if (wasUsed) {
-		// error condition we shall bail
-		return -1;
-	}
+	efiSetPadMode(msg, brainPin, PAL_MODE_INPUT);
 
 	int index = getHwPin(msg, brainPin);
 
