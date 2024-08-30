@@ -30,6 +30,10 @@ case SensorType::AuxLinear1:
   return "AuxLinear1";
 case SensorType::AuxLinear2:
   return "AuxLinear2";
+case SensorType::AuxLinear3:
+  return "AuxLinear3";
+case SensorType::AuxLinear4:
+  return "AuxLinear4";
 case SensorType::AuxSpeed1:
   return "AuxSpeed1";
 case SensorType::AuxSpeed2:
