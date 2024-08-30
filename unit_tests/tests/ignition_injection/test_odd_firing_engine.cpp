@@ -4,29 +4,34 @@
 #include "fuel_math.h"
 #include "defaults.h"
 
+	// let's pretend to have a 32 degree V odd fire engine.
+static const float cylinderOne = -19;
+static const float cylinderTwo = 13;
+static const angle_t timing = 1; // same timing cranking and running modes
+
 using ::testing::_;
+
+static void configureOddFiringEngine(EngineTestHelper &eth) {
+	engineConfiguration->cranking.rpm = 100;
+	engineConfiguration->timing_offset_cylinder[0] = cylinderOne;
+	engineConfiguration->timing_offset_cylinder[1] = cylinderTwo;
+	setTable(config->ignitionTable, timing); // this changes run mode timing
+	engineConfiguration->crankingTimingAngle = timing;
+	engine->tdcMarkEnabled = false; // reduce event queue noise TODO extract helper method
+}
 
 TEST(OddFireRunningMode, hd) {
   // basic engine setup
 	EngineTestHelper eth(engine_type_e::HARLEY);
+	configureOddFiringEngine(eth);
 	extern bool unitTestBusyWaitHack;
 	unitTestBusyWaitHack = true;
-	engineConfiguration->cranking.rpm = 100;
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH; // need to avoid engine phase sync requirement
-	// let's pretend to have a 32 degree V odd fire engine.
-	float cylinderOne = -19;
-	float cylinderTwo = 13;
-	engineConfiguration->timing_offset_cylinder[0] = cylinderOne;
-	engineConfiguration->timing_offset_cylinder[1] = cylinderTwo;
-	angle_t timing = 1;
-	setTable(config->ignitionTable, timing); // run mode timing
 
   // we need some fuel duration so let's mock airmass just to have legit fuel, we do not care for amount here at all
 	EXPECT_CALL(*eth.mockAirmass, getAirmass(/*any rpm*/_, _))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
-	engineConfiguration->crankingTimingAngle = timing;
-	engine->tdcMarkEnabled = false; // reduce event queue noise TODO extract helper method
 	engineConfiguration->camInputs[0] = Gpio::Unassigned;
 	eth.setTriggerType(trigger_type_e::TT_HALF_MOON);
 	// end of configuration

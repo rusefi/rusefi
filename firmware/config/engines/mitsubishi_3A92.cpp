@@ -1,5 +1,6 @@
 #include "pch.h"
 
+// set engine_type 12
 void setMitsubishi3A92() {
 	engineConfiguration->trigger.type = trigger_type_e::TT_36_2_1_1;
 
