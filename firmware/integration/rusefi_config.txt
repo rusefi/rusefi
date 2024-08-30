@@ -2065,6 +2065,7 @@ end_struct
 #define GAUGE_NAME_TRG_ERR "Trigger Error Counter"
 #define GAUGE_NAME_TRG_GAP "Sync: Trigger Latest Ratio"
 
+#define VE_MENU_NAME "VE"
 #define CAM_1_MODE_NAME "Cam mode (intake)"
 #define CAM_2_MODE_NAME "Cam mode (exhaust)"
 #define ts_show_cam2 true
@@ -2076,7 +2077,8 @@ end_struct
 #define INJECTOR_1_NAME "Injector #1"
 #define INJECTOR_2_NAME "Injector #2"
 
-#define ts_show_etb_extra_monitoring false
+#define ts_show_etb_extra_monitoring
+#define ts_show_can_wbo true
 #define ts_show_vvt_output_pin true
 #define ts_show_hbridge_function true
 #define ts_show_aux_sensors true
