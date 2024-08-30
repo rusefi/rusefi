@@ -41,7 +41,8 @@ or
  - Add 1-5-4-8-3-7-2-6 and 1-6-5-10-2-7-3-8-4-9 firing orders
  - Console command `set_sensor_mock` now accepts a sensor by name, instead of index. Example: `set_sensor_mock CLT 85.5`
  - TunerStudio UI improvements (#436, etc)
- - Dropdown selector for popular gearbox ratios (#358, thank you @alrijleh!)
+ - Dropdown selector for popular gearbox ratios (#358, thank you @alrijleh and @nmschulte!)
+ - Add two more aux linear sensors #476
 
 ### Fixed
  - Improve performance with Lua CAN reception of a high volume of frames
