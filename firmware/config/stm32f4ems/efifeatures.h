@@ -302,10 +302,6 @@
 //#define EFI_MALFUNCTION_INDICATOR FALSE
 #endif
 
-#ifndef EFI_MAP_AVERAGING
-#define EFI_MAP_AVERAGING TRUE
-#endif
-
 // todo: most of this should become configurable
 
 // todo: switch to continuous ADC conversion for fast ADC?

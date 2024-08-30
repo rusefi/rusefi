@@ -68,11 +68,6 @@ void Lps25Sensor::showInfo(const char* sensorName) const {
 	efiPrintf("%s: LPS25 baro %.2f kPa", sensorName, get().Value);
 }
 
-void MapAverager::showInfo(const char* sensorName) const {
-	const auto value = get();
-	efiPrintf("Sensor \"%s\" is MAP averager: valid: %s value: %.2f averaged sample count: %d", sensorName, boolToString(value.Valid), value.Value, m_lastCounter);
-}
-
 void LinearFunc::showInfo(float testRawValue) const {
 	efiPrintf("    Linear function slope: %.2f offset: %.2f min: %.1f max: %.1f", m_a, m_b, m_minOutput, m_maxOutput);
 	const auto value = convert(testRawValue);

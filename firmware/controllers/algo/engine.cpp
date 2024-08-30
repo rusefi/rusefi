@@ -466,10 +466,6 @@ injection_mode_e getCurrentInjectionMode() {
 void Engine::periodicFastCallback() {
 	ScopePerf pc(PE::EnginePeriodicFastCallback);
 
-#if EFI_MAP_AVERAGING
-	refreshMapAveragingPreCalc();
-#endif
-
 	engineState.periodicFastCallback();
 
 	tachUpdate();

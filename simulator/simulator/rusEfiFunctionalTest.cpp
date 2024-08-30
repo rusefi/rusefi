@@ -20,7 +20,6 @@
 #include "sensor_chart.h"
 #include "bench_test.h"
 #include "tunerstudio.h"
-#include "map_averaging.h"
 #include "mmc_card.h"
 #include "memstreams.h"
 #include <chprintf.h>

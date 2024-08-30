@@ -68,8 +68,6 @@
 
 #define EFI_BOARD_TEST FALSE
 
-#define EFI_MAP_AVERAGING TRUE
-
 #define EFI_LUA TRUE
 
 #define EFI_HPFP TRUE

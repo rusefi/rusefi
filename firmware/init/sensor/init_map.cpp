@@ -16,6 +16,7 @@ static FunctionalSensor slowMapSensor2(SensorType::MapSlow2, MS2NT(50));
 static FunctionalSensor compressorDischargePress(SensorType::CompressorDischargePressure, MS2NT(50));
 static FunctionalSensor throttleInletPress(SensorType::ThrottleInletPressure, MS2NT(50));
 
+#ifdef MODULE_MAP_AVERAGING
 // lowest reasonable idle is maybe 600 rpm
 // one sample per cycle (1 cylinder, or "sample one cyl" mode) gives a period of 100ms
 // add some margin -> 200ms timeout for fast MAP sampling
@@ -25,6 +26,7 @@ MapAverager fastMapSensor2(SensorType::MapFast2, MS2NT(200));
 MapAverager& getMapAvg(size_t idx) {
 	return idx == 0 ? fastMapSensor : fastMapSensor2;
 }
+#endif // MODULE_MAP_AVERAGING
 
 // Combine MAP sensors: prefer fast sensor, but use slow if fast is unavailable.
 static FallbackSensor mapCombiner(SensorType::Map, SensorType::MapFast, SensorType::MapSlow);
@@ -102,8 +104,10 @@ void initMap() {
 
 	slowMapSensor.setFunction(mapConverter);
 	slowMapSensor2.setFunction(mapConverter);
+#ifdef MODULE_MAP_AVERAGING
 	fastMapSensor.setFunction(mapConverter);
 	fastMapSensor2.setFunction(mapConverter);
+#endif // MODULE_MAP_AVERAGING
 	compressorDischargePress.setFunction(mapConverter);
 	throttleInletPress.setFunction(mapConverter);
 
@@ -111,8 +115,10 @@ void initMap() {
 	if (isAdcChannelValid(mapChannel)) {
 		slowMapSensor.Register();
 		slowMapSensor2.Register();
+#ifdef MODULE_MAP_AVERAGING
 		fastMapSensor.Register();
 		fastMapSensor2.Register();
+#endif // MODULE_MAP_AVERAGING
 		mapCombiner.Register();
 		mapCombiner2.Register();
 

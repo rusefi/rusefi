@@ -31,12 +31,12 @@ static void printMAPInfo() {
 #if EFI_ANALOG_SENSORS
 	efiPrintf("instant value=%.2fkPa", Sensor::getOrZero(SensorType::Map));
 
-#if EFI_MAP_AVERAGING
+#ifdef MODULE_MAP_AVERAGING
 	efiPrintf("map type=%d/%s MAP=%.2fkPa mapMinBufferLength=%d", engineConfiguration->map.sensor.type,
 			getAir_pressure_sensor_type_e(engineConfiguration->map.sensor.type),
 			Sensor::getOrZero(SensorType::Map),
 			mapMinBufferLength);
-#endif // EFI_MAP_AVERAGING
+#endif // MODULE_MAP_AVERAGING
 
 	adc_channel_e mapAdc = engineConfiguration->map.sensor.hwChannel;
 	char pinNameBuffer[16];
