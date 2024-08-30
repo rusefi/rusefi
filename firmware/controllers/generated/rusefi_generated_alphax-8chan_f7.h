@@ -1295,7 +1295,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1430141084
+#define SIGNATURE_HASH 4083253501
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1608,6 +1608,7 @@
 #define ts_show_can2 false
 #define ts_show_can_bitrate true
 #define ts_show_can_pins false
+#define ts_show_can_wbo true
 #define ts_show_check_engine true
 #define ts_show_clt_iat_pullup false
 #define ts_show_clutch_down true
@@ -1634,7 +1635,7 @@
 #define ts_show_egt false
 #define ts_show_etb true
 #define ts_show_etb_bias_curve true
-#define ts_show_etb_extra_monitoring false
+#define ts_show_etb_extra_monitoring 
 #define ts_show_etb_pins false
 #define ts_show_exhaust_vvt true
 #define ts_show_experimental true
@@ -1739,7 +1740,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.08.30.alphax-8chan_f7.1430141084"
+#define TS_SIGNATURE "rusEFI master.2024.08.30.alphax-8chan_f7.4083253501"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
@@ -1779,6 +1780,7 @@
 #define UiMode_TUNING 2
 #define VBAT_INJECTOR_CURVE_SIZE 8
 #define VE_BLEND_COUNT 4
+#define VE_MENU_NAME "VE"
 #define ve_override_e_auto_enum 0="VE_None",1="VE_MAP",2="VE_TPS"
 #define ve_override_e_enum "None", "MAP", "TPS"
 #define ve_override_e_VE_MAP 1
