@@ -150,6 +150,8 @@ enum class SensorType : unsigned char {
 
 	AuxLinear1,
 	AuxLinear2,
+	AuxLinear3,
+	AuxLinear4,
 
 	// frequency sensors
 	AuxSpeed1,
