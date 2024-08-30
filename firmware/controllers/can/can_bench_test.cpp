@@ -290,7 +290,7 @@ void processCanQcBenchTest(const CANRxFrame& frame) {
 #endif // EFI_CAN_SUPPORT
 
 void initQcBenchControls() {
-#if EFI_PROD_CODE
+#if EFI_CAN_SUPPORT && EFI_PROD_CODE
     addConsoleActionII("qc_etb", [](int index, int direction) {
         qcSetEtbState(index, direction);
     });
