@@ -38,10 +38,13 @@ import static com.rusefi.FileLog.isWindows;
 public class BasicStartupFrame {
     private static final Logging log = getLogging(BasicStartupFrame.class);
 
-    private final FrameHelper frame;
+    private final String whiteLabel = ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties());
+    private final FrameHelper frame = FrameHelper.createFrame(
+        whiteLabel + " basic console " + Launcher.CONSOLE_VERSION
+    );
 
     private final JLabel statusMessage = new JLabel();
-    private final StatusAnimation status = new StatusAnimation(statusMessage::setText, StartupFrame.SCANNING_PORTS);
+    private final StatusAnimation status = new StatusAnimation(this::updateStatus, StartupFrame.SCANNING_PORTS);
     private final JButton update = ProgramSelector.createUpdateFirmwareButton();
 
     private volatile Optional<SerialPortScanner.PortResult> portToUpdateFirmware = Optional.empty();
@@ -56,9 +59,6 @@ public class BasicStartupFrame {
     }
 
     public BasicStartupFrame() {
-        String whiteLabel = ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties());
-        String title = whiteLabel + " basic console " + Launcher.CONSOLE_VERSION;
-        frame = FrameHelper.createFrame(title);
         JPanel panel = new JPanel(new VerticalFlowLayout());
         if (isWindows()) {
             panel.add(ToolButtons.createShowDeviceManagerButton());
@@ -92,12 +92,20 @@ public class BasicStartupFrame {
 
         frame.showFrame(panel, false);
         UiUtils.centerWindow(frame.getFrame());
+        packFrame();
+    }
+
+    private void packFrame() {
         frame.getFrame().pack();
     }
 
     private void hideStatusMessage() {
-        // we use .setText("") to space instead of .setVisible(false) to avoid layout contraction
+        // we use .setText(" ") instead of .setVisible(false) to avoid layout contraction
         statusMessage.setText(" ");
+    }
+
+    private void updateStatus(final String niceStatus) {
+        statusMessage.setText(niceStatus);
     }
 
     private void onHardwareUpdated(final AvailableHardware currentHardware) {
