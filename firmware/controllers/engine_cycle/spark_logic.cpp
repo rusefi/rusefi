@@ -309,15 +309,9 @@ void turnSparkPinHigh(IgnitionEvent *event) {
 }
 
 static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
-		int rpm, efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
+		int rpm, float dwellMs, float dwellAngle, float sparkAngle, efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
 
-	angle_t sparkAngle = event->sparkAngle;
-	if (std::isnan(sparkAngle)) {
-		warning(ObdCode::CUSTOM_ADVANCE_SPARK, "NaN advance");
-		return;
-	}
-
-	float angleOffset = event->dwellAngle - currentPhase;
+	float angleOffset = dwellAngle - currentPhase;
 	if (angleOffset < 0) {
 		angleOffset += engine->engineState.engineCycle;
 	}
@@ -474,7 +468,8 @@ void onTriggerEventSparkLogic(int rpm, efitick_t edgeTimestamp, float currentPha
 		for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
 			IgnitionEvent *event = &engine->ignitionEvents.elements[i];
 
-			if (!isPhaseInRange(event->dwellAngle, currentPhase, nextPhase)) {
+			angle_t dwellAngle = event->dwellAngle;
+			if (!isPhaseInRange(dwellAngle, currentPhase, nextPhase)) {
 				continue;
 			}
 
@@ -499,7 +494,13 @@ void onTriggerEventSparkLogic(int rpm, efitick_t edgeTimestamp, float currentPha
             engine->ALSsoftSparkLimiter.setTargetSkipRatio(ALSSkipRatio);
 #endif // EFI_ANTILAG_SYSTEM
 
-			scheduleSparkEvent(limitedSpark, event, rpm, edgeTimestamp, currentPhase, nextPhase);
+			angle_t sparkAngle = event->sparkAngle;
+			if (std::isnan(sparkAngle)) {
+				warning(ObdCode::CUSTOM_ADVANCE_SPARK, "NaN advance");
+				continue;
+			}
+
+			scheduleSparkEvent(limitedSpark, event, rpm, dwellMs, dwellAngle, sparkAngle, edgeTimestamp, currentPhase, nextPhase);
 		}
 	}
 }
