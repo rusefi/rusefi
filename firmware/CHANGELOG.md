@@ -43,6 +43,7 @@ or
  - TunerStudio UI improvements (#436, etc)
  - Dropdown selector for popular gearbox ratios (#358, thank you @alrijleh and @nmschulte!)
  - Add two more aux linear sensors #476
+ - Support wasted spark on odd cylinder count 4-stroke engines. Improves startup and allows running without a cam sensor!
 
 ### Fixed
  - Improve performance with Lua CAN reception of a high volume of frames

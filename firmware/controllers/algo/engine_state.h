@@ -24,6 +24,8 @@ public:
 	 */
 	angle_t engineCycle;
 
+	bool useOddFireWastedSpark = false;
+
 	/**
 	 * this is based on sensorChartMode and sensorSnifferRpmThreshold settings
 	 */

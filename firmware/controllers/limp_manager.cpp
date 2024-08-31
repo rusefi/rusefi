@@ -19,12 +19,6 @@ static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
 		return true;
 	}
 
-	// Odd cylinder count engines don't work properly with wasted spark, so wait for full sync (so that sequential works)
-	// See https://github.com/rusefi/rusefi/issues/4195 for the issue to properly support this case
-	if (engineConfiguration->cylindersCount > 1 && engineConfiguration->cylindersCount % 2 == 1) {
-		return true;
-	}
-
 	// Symmetrical crank modes require cam sync before firing
 	// non-symmetrical cranks can use faster spin-up mode (firing in wasted/batch before VVT sync)
 	// Examples include Nissan MR/VQ, Miata NB, etc

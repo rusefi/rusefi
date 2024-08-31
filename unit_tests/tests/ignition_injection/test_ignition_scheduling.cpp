@@ -9,6 +9,8 @@
 #include "spark_logic.h"
 
 using ::testing::_;
+using ::testing::InSequence;
+using ::testing::StrictMock;
 
 TEST(ignition, twoCoils) {
 	EngineTestHelper eth(engine_type_e::FRANKENSO_BMW_M73_F);
@@ -147,4 +149,56 @@ TEST(ignition, CylinderTimingTrim) {
 	EXPECT_NEAR(engine->engineState.timingAdvance[1], unadjusted - 2, EPS4D);
 	EXPECT_NEAR(engine->engineState.timingAdvance[2], unadjusted + 2, EPS4D);
 	EXPECT_NEAR(engine->engineState.timingAdvance[3], unadjusted + 4, EPS4D);
+}
+
+TEST(ignition, oddCylinderWastedSpark) {
+	StrictMock<MockExecutor> mockExec;
+
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engine->scheduler.setMockExecutor(&mockExec);
+	engineConfiguration->cylindersCount = 1;
+	engineConfiguration->firingOrder = FO_1;
+	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
+
+	efitick_t nowNt1 = 1000000;
+	efitick_t nowNt2 = 2222222;
+
+
+	engine->rpmCalculator.oneDegreeUs = 100;
+
+	{
+		InSequence is;
+
+		// Should schedule one dwell+fire pair:
+		// Dwell 5 deg from now
+		float nt1deg = USF2NT(engine->rpmCalculator.oneDegreeUs);
+		efitick_t startTime = nowNt1 + nt1deg * 5;
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime, _));
+		// Spark 15 deg from now
+		efitick_t endTime = startTime + nt1deg * 10;
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, endTime, _));
+
+
+		// Should schedule second dwell+fire pair, the out of phase copy
+		// Dwell 5 deg from now
+		startTime = nowNt2 + nt1deg * 5;
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, startTime, _));
+		// Spark 15 deg from now
+		endTime = startTime + nt1deg * 10;
+		EXPECT_CALL(mockExec, schedule(testing::NotNull(), _, endTime, _));
+	}
+
+	engine->ignitionState.sparkDwell = 1;
+
+	// dwell should start at 15 degrees ATDC and firing at 25 deg ATDC
+	engine->ignitionState.dwellAngle = 10;
+	engine->engineState.timingAdvance[0] = -25;
+	engine->engineState.useOddFireWastedSpark = true;
+	engineConfiguration->minimumIgnitionTiming = -25;
+
+	// expect to schedule the on-phase dwell and spark (not the wasted spark copy)
+	onTriggerEventSparkLogic(1200, nowNt1, 10, 30);
+
+	// expect to schedule second events, the out-of-phase dwell and spark (the wasted spark copy)
+	onTriggerEventSparkLogic(1200, nowNt2, 360 + 10, 360 + 30);
 }
