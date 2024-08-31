@@ -23,10 +23,23 @@ void setBoardConfigOverrides() {
 }
 
 void setBoardDefaultConfiguration() {
-	engineConfiguration->injectionPins[0] = Gpio::TLE9104_0_OUT_0;
-	engineConfiguration->injectionPins[1] = Gpio::TLE9104_0_OUT_1;
-	engineConfiguration->injectionPins[2] = Gpio::TLE9104_0_OUT_2;
-	engineConfiguration->injectionPins[3] = Gpio::TLE9104_0_OUT_3;
+	engineConfiguration->ignitionPins[0] = Gpio::H144_IGN_1;
+	engineConfiguration->ignitionPins[1] = Gpio::H144_IGN_2;
+	engineConfiguration->ignitionPins[2] = Gpio::H144_IGN_3;
+	engineConfiguration->ignitionPins[3] = Gpio::H144_IGN_4;
+
+	engineConfiguration->injectionPins[0] = Gpio::H144_LS_1;
+	engineConfiguration->injectionPins[1] = Gpio::H144_LS_2;
+	engineConfiguration->injectionPins[2] = Gpio::H144_LS_3;
+	engineConfiguration->injectionPins[3] = Gpio::H144_LS_4;
+
+  // port injectors
+//	engineConfiguration->injectionPins[0] = Gpio::TLE9104_0_OUT_0;
+//	engineConfiguration->injectionPins[1] = Gpio::TLE9104_0_OUT_1;
+//	engineConfiguration->injectionPins[2] = Gpio::TLE9104_0_OUT_2;
+//	engineConfiguration->injectionPins[3] = Gpio::TLE9104_0_OUT_3;
+
+  engineConfiguration->hpfpValvePin = Gpio::H144_LS_6; // start 6?
 
 	engineConfiguration->mainRelayPin = Gpio::TLE9104_1_OUT_0;
 	engineConfiguration->fuelPumpPin = Gpio::TLE9104_1_OUT_1;

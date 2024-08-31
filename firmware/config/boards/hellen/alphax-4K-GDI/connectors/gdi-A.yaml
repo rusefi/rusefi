@@ -3,39 +3,53 @@ meta: config/boards/hellen_meta.h
 pins:
   - pin: 1A
     function: HPFP Positive
+    meta: H144_LS_6
+    color: green
+
+  - pin: 1A_5
+    function: HPFP Positive_5
+    meta: H144_LS_5
+    color: green
 
   - pin: 2A
     function: GDI Injector 4 Positive
+    color: brown
 
   - pin: 3A
     function: GDI Injector 4 Negative
     ts_name: ___ GDI Injector 4
     class: outputs
     meta: H144_LS_4
+    color: brown
     type: ls
 
   - pin: 4A
     function: GDI Injector 3 Positive
+    color: blue
 
   - pin: 5A
     function: GDI Injector 3 Negative
     ts_name: ___ GDI Injector 3
     class: outputs
     meta: H144_LS_3
+    color: blue
     type: ls
 
   - pin: 6A
     function: GDI Injector 2 Positive
+    color: white
 
   - pin: 7A
     function: GDI Injector 2 Negative
     class: outputs
     ts_name: ___ GDI Injector 2
     meta: H144_LS_2
+    color: white
     type: ls
 
   - pin: 8A
     function: GDI Injector 1 Positive
+    color: green
 
   - pin: 9A
     function: GDI Injector 1 Negative
@@ -43,6 +57,11 @@ pins:
     ts_name: ___ GDI Injector 1
     meta: H144_LS_1
     type: ls
+    color: green
+
+  - pin: 10A
+    function: HPFP Negative
+    color:
 
   - pin: 11A
     meta: H144_IGN_4
