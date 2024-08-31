@@ -312,11 +312,6 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 		int rpm, efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
 
 	angle_t sparkAngle = event->sparkAngle;
-	const floatms_t dwellMs = engine->ignitionState.sparkDwell;
-	if (std::isnan(dwellMs) || dwellMs <= 0) {
-		warning(ObdCode::CUSTOM_DWELL, "invalid dwell to handle: %.2f at %d", dwellMs, rpm);
-		return;
-	}
 	if (std::isnan(sparkAngle)) {
 		warning(ObdCode::CUSTOM_ADVANCE_SPARK, "NaN advance");
 		return;
@@ -456,6 +451,12 @@ void onTriggerEventSparkLogic(int rpm, efitick_t edgeTimestamp, float currentPha
 	// todo: eliminate state copy logic by giving limpManager it's owm limp_manager.txt and leveraging LiveData
 	engine->outputChannels.sparkCutReason = (int8_t)limitedSparkState.reason;
 	bool limitedSpark = !limitedSparkState.value;
+
+	const floatms_t dwellMs = engine->ignitionState.sparkDwell;
+	if (std::isnan(dwellMs) || dwellMs <= 0) {
+		warning(ObdCode::CUSTOM_DWELL, "invalid dwell to handle: %.2f at %d", dwellMs, rpm);
+		return;
+	}
 
 	if (!engine->ignitionEvents.isReady) {
 		prepareIgnitionSchedule();
