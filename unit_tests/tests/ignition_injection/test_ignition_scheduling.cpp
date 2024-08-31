@@ -233,7 +233,7 @@ TEST(ignition, oddCylinderWastedSpark) {
 	engine->ignitionState.sparkDwell = 1;
 
 	// dwell should start at 15 degrees ATDC and firing at 25 deg ATDC
-	engine->ignitionState.dwellAngle = 10;
+	engine->ignitionState.dwellDurationAngle = 10;
 	engine->engineState.timingAdvance[0] = -25;
 	engine->engineState.useOddFireWastedSpark = true;
 	engineConfiguration->minimumIgnitionTiming = -25;
