@@ -83,7 +83,7 @@ public class Fields {
 	public static final int bench_mode_e_BENCH_VVT_3_TARGET_BUMP = 19;
 	public static final int bench_mode_e_BENCH_VVT_4_TARGET_BUMP = 20;
 	public static final int blend_table_s_size = 188;
-	public static final int BLOCKING_FACTOR = 750;
+	public static final int BLOCKING_FACTOR = 1320;
 	public static final int BOOST_BLEND_COUNT = 2;
 	public static final int BOOST_LOAD_COUNT = 8;
 	public static final int BOOST_RPM_COUNT = 8;
@@ -1205,9 +1205,9 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2024.08.30.f407-discovery.3578579670";
+	public static final String TS_SIGNATURE = "rusEFI (FOME) master.2024.08.31.f407-discovery.3027027427";
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1392;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1292;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_2_NAME = "Channel 2";
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;
