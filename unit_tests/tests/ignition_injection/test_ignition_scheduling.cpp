@@ -10,6 +10,8 @@
 #include "spark_logic.h"
 
 using ::testing::_;
+using ::testing::InSequence;
+using ::testing::StrictMock;
 
 TEST(ignition, twoCoils) {
 	EngineTestHelper eth(engine_type_e::FRANKENSO_BMW_M73_F);
@@ -197,7 +199,7 @@ TEST(ignition, oddCylinderWastedSpark) {
 	StrictMock<MockExecutor> mockExec;
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engine->scheduler.setMockExecutor(&mockExec);
+	engine->executor.setMockExecutor(&mockExec);
 	engineConfiguration->cylindersCount = 1;
 	engineConfiguration->firingOrder = FO_1;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
