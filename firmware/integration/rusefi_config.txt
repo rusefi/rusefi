@@ -549,6 +549,7 @@ uint32_t cylindersCount;Number of cylinder the engine has.;"", 1, 0, 1, @@MAX_CY
 ! FO_1_8_4_3_6_5_7_2 = 5
 ! FO_1_2_4_5_3 = 6
 
+#define ts_show_console_settings true
 #define ts_show_communityCommsLedPid false
 #define ts_show_startup_map_baro_grab true
 #define ts_show_wbo_canbus_index true
