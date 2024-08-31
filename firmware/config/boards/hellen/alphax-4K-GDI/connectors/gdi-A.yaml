@@ -5,11 +5,13 @@ pins:
     function: HPFP Positive
     meta: H144_LS_6
     color: green
+    class: outputs
 
   - pin: 1A_5
     function: HPFP Positive_5
     meta: H144_LS_5
     color: green
+    class: outputs
 
   - pin: 2A
     function: GDI Injector 4 Positive
