@@ -6,7 +6,6 @@
 #include "thread_controller.h"
 #include "tunerstudio.h"
 
-
 // Assert that the USB tx/rx buffers are large enough to fit one full packet
 static_assert(SERIAL_USB_BUFFERS_SIZE >= BLOCKING_FACTOR + 10);
 

@@ -53,6 +53,7 @@ or
  - Fix decel fuel cutoff (DFCO) on engines without a MAP sensor #457
  - Automatic calculation of knock sense frequency based on cylinder bore #379
  - Removed MAP sampling option that can result in inaccurate MAP sensor readings
+ - Improve TunerStudio performance on STM32F4-based ECUs #474
 
 ## December 2023 Release
 

@@ -106,7 +106,7 @@ struct_no_prefix persistent_config_s
 
 struct_no_prefix engine_configuration_s
 
-#define BLOCKING_FACTOR 750
+#define BLOCKING_FACTOR 1320
 
 #define SENT_INPUT_COUNT 1
 

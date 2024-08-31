@@ -262,7 +262,7 @@
 
 	#if MODULE_ETHERNET_CONSOLE
 		// F4 ethernet needs some extra space
-		#define LUA_USER_HEAP 40000
+		#define LUA_USER_HEAP 25000
 	#else // MODULE_ETHERNET_CONSOLE
 		#define LUA_USER_HEAP 50000
 	#endif

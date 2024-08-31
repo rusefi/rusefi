@@ -42,6 +42,9 @@ static Timer requestPeriodTimer;
  * Gauges refresh
  */
 void TunerStudio::cmdOutputChannels(TsChannelBase* tsChannel, uint16_t offset, uint16_t count) {
+	// Assert that the entire output channels block will fit in a single TS transaction
+	static_assert(BLOCKING_FACTOR >= TS_TOTAL_OUTPUT_SIZE + 10);
+
 	if (offset + count > TS_TOTAL_OUTPUT_SIZE) {
 		efiPrintf("TS: Version Mismatch? Too much outputs requested %d/%d/%d", offset, count,
 				sizeof(TunerStudioOutputChannels));
@@ -49,10 +52,8 @@ void TunerStudio::cmdOutputChannels(TsChannelBase* tsChannel, uint16_t offset, u
 		return;
 	}
 
-	if (offset < BLOCKING_FACTOR) {
-		engine->outputChannels.outputRequestPeriod
-			= 1e6 * requestPeriodTimer.getElapsedSecondsAndReset(getTimeNowNt());
-	}
+	engine->outputChannels.outputRequestPeriod
+		= 1e6 * requestPeriodTimer.getElapsedSecondsAndReset(getTimeNowNt());
 
 	tsState.outputChannelsCommandCounter++;
 	updateTunerStudioState();
