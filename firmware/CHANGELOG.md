@@ -28,6 +28,9 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Added
+ - Support wasted spark on odd cylinder count 4-stroke engines. Improves startup and allows running without a cam sensor!
+
 ### Fixed
  - Removed questionable MAP sampling trigger index option
  - boost control load axis range and rename #6840
