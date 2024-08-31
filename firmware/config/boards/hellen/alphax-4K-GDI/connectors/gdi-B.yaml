@@ -102,6 +102,12 @@ pins:
     function: Digital Input 1
     ts_name: ___ Digital Input 1
 
+  - pin: 22B
+    id: [H144_IN_AUX2_DIGITAL, H144_IN_AUX2_DIGITAL, H144_IN_AUX2]
+    class: [event_inputs, switch_inputs, analog_inputs]
+    function: Input 2
+    ts_name: ___ Input 2
+
   - pin: 23B
     function: Fuel Low Pressure
     type: av
