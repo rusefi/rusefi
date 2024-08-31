@@ -23,6 +23,8 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::TLE9104_2_OUT_1, // 30B VVT2
 	Gpio::TLE9104_2_OUT_2, // 31B VVT3
 	Gpio::TLE9104_2_OUT_3, // 32B VVT4
+	Gpio::H144_LS_6, // HPFP Positive
+	Gpio::H144_LS_5, // HPFP Positive_5
 	Gpio::H144_IGN_4, // 11A Ignition 4
 	Gpio::H144_IGN_3, // 12A Ignition 3
 	Gpio::H144_IGN_2, // 13A Ignition 2
@@ -45,6 +47,8 @@ Gpio GENERATED_OUTPUTS = {
 // "30B VVT2",
 // "31B VVT3",
 // "32B VVT4",
+// "HPFP Positive",
+// "HPFP Positive_5",
 // "11A Ignition 4",
 // "12A Ignition 3",
 // "13A Ignition 2",
