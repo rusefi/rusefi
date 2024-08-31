@@ -55,6 +55,8 @@ void setRtcDateTime(efidatetime_t const * const dateTime) {
 static time_t rtc_encode(const RTCDateTime *timespec) {
   struct tm tim;
 
+  // todo: looks like this pulls a lot of library code? 4K+?
+  // todo: reimplement lighter? https://github.com/rusefi/rusefi/issues/6876
   rtcConvertDateTimeToStructTm(timespec, &tim, NULL);
   return mktime(&tim);
 }
