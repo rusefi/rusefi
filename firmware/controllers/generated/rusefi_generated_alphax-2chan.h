@@ -1295,7 +1295,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1935368456
+#define SIGNATURE_HASH 3011717757
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1618,6 +1618,7 @@
 #define ts_show_communityCommsLedPid false
 #define ts_show_compression_ratio false
 #define ts_show_compressor_sensor true
+#define ts_show_console_settings true
 #define ts_show_cylinder_10 false
 #define ts_show_cylinder_11 false
 #define ts_show_cylinder_12 false
@@ -1740,7 +1741,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.08.30.alphax-2chan.1935368456"
+#define TS_SIGNATURE "rusEFI master.2024.08.31.alphax-2chan.3011717757"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
