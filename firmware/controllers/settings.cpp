@@ -149,26 +149,9 @@ static void doPrintConfiguration() {
 	printConfiguration();
 }
 
-static void setFixedModeTiming(int value) {
-	engineConfiguration->fixedModeTiming = value;
-	doPrintConfiguration();
-	incrementGlobalConfigurationVersion();
-}
-
-static void setTimingMode(int value) {
-	engineConfiguration->timingMode = (timing_mode_e) value;
-	doPrintConfiguration();
-	incrementGlobalConfigurationVersion();
-}
-
 static void setIdleSolenoidFrequency(int value) {
 	engineConfiguration->idle.solenoidFrequency = value;
 	incrementGlobalConfigurationVersion();
-}
-
-static void setSensorChartMode(int value) {
-	engineConfiguration->sensorChartMode = (sensor_chart_e) value;
-	doPrintConfiguration();
 }
 #endif // EFI_ENGINE_CONTROL
 
@@ -654,15 +637,13 @@ const command_i_s commandsI[] = {
 		{"cranking_rpm", setCrankingRpm},
 		{"cranking_injection_mode", setCrankingInjectionMode},
 		{"injection_mode", setInjectionMode},
-		{"sensor_chart_mode", setSensorChartMode},
-		{"fixed_mode_timing", setFixedModeTiming},
-		{"timing_mode", setTimingMode},
 		{CMD_ENGINE_TYPE, setEngineTypeAndSave},
 		{"rpm_hard_limit", setRpmHardLimit},
 		{"firing_order", setFiringOrder},
 		{"algorithm", setAlgorithmInt},
 		{"debug_mode", setDebugMode},
 		{"trigger_type", setTriggerType},
+		// used by HW CI
 		{"idle_solenoid_freq", setIdleSolenoidFrequency},
 #endif // EFI_ENGINE_CONTROL
 #if EFI_PROD_CODE
