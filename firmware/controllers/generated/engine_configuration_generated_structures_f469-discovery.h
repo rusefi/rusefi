@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Aug 22 15:44:28 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Sep 01 00:19:28 UTC 2024
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -1582,7 +1582,7 @@ struct engine_configuration_s {
 	bool enableVerboseCanTx : 1 {};
 	/**
 	offset 752 bit 15 */
-	bool unused644b10 : 1 {};
+	bool externalRusEfiGdiModule : 1 {};
 	/**
 	offset 752 bit 16 */
 	bool unused644b11 : 1 {};
@@ -5721,4 +5721,4 @@ struct persistent_config_s {
 static_assert(sizeof(persistent_config_s) == 22968);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Thu Aug 22 15:44:28 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt Sun Sep 01 00:19:28 UTC 2024

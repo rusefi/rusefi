@@ -460,6 +460,9 @@ float getConfigValueByName(const char *name) {
 // enableVerboseCanTx
 		case 1643181024:
 			return engineConfiguration->enableVerboseCanTx;
+// externalRusEfiGdiModule
+		case 1546871344:
+			return engineConfiguration->externalRusEfiGdiModule;
 // measureMapOnlyInOneCylinder
 		case -1236202550:
 			return engineConfiguration->measureMapOnlyInOneCylinder;
@@ -2592,6 +2595,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1643181024:
 	{
 		engineConfiguration->enableVerboseCanTx = (int)value;
+		return 1;
+	}
+		case 1546871344:
+	{
+		engineConfiguration->externalRusEfiGdiModule = (int)value;
 		return 1;
 	}
 		case -1236202550:
