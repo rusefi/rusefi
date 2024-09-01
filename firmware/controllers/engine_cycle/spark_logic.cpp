@@ -183,35 +183,14 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	LogTriggerCoilState(nowNt, false);
 #endif // EFI_TOOTH_LOGGER
 
-#if !EFI_UNIT_TEST
-if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 #if EFI_TUNER_STUDIO
-	float actualDwellMs = event->actualDwellTimer.getElapsedSeconds(nowNt) * 1e3;
-
-	/**
-	 * ratio of desired dwell duration to actual dwell duration gives us some idea of how good is input trigger jitter
-	 */
-	float ratio = actualDwellMs / event->sparkDwell;
-
-	// todo: smarted solution for index to field mapping
-	switch (event->cylinderIndex) {
-	case 0:
-		engine->outputChannels.debugFloatField1 = ratio;
-		break;
-	case 1:
-		engine->outputChannels.debugFloatField2 = ratio;
-		break;
-	case 2:
-		engine->outputChannels.debugFloatField3 = ratio;
-		break;
-	case 3:
-		engine->outputChannels.debugFloatField4 = ratio;
-		break;
+	{
+		// ratio of desired dwell duration to actual dwell duration gives us some idea of how good is input trigger jitter
+		float actualDwellMs = event->actualDwellTimer.getElapsedSeconds(nowNt) * 1e3;
+		engine->outputChannels.dwellAccuracyRatio = actualDwellMs / event->sparkDwell;
 	}
 #endif
 
-	}
-#endif /* EFI_UNIT_TEST */
 	// now that we've just fired a coil let's prepare the new schedule for the next engine revolution
 
 	angle_t dwellAngleDuration = engine->ignitionState.dwellAngle;
@@ -227,19 +206,12 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 
 		efitick_t nextDwellStart = nowNt + engine->engineState.multispark.delay;
 		efitick_t nextFiring = nextDwellStart + engine->engineState.multispark.dwell;
-#if SPARK_EXTREME_LOGGING
-	efiPrintf("schedule multispark");
-#endif /* SPARK_EXTREME_LOGGING */
 
 		// We can schedule both of these right away, since we're going for "asap" not "particular angle"
 		engine->scheduler.schedule("dwell", &event->dwellStartTimer, nextDwellStart, { &turnSparkPinHigh, event });
 		engine->scheduler.schedule("firing", &event->sparkEvent.scheduling, nextFiring, { fireSparkAndPrepareNextSchedule, event });
 	} else {
 		if (engineConfiguration->enableTrailingSparks) {
-#if SPARK_EXTREME_LOGGING
-	efiPrintf("scheduleByAngle TrailingSparks");
-#endif /* SPARK_EXTREME_LOGGING */
-
 			// Trailing sparks are enabled - schedule an event for the corresponding trailing coil
 			scheduleByAngle(
 				&event->trailingSparkFire, nowNt, engine->engineState.trailingSparkAngle,
