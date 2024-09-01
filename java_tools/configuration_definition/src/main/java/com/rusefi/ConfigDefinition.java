@@ -94,7 +94,7 @@ public class ConfigDefinition {
                     state.setWithC_Defines(Boolean.parseBoolean(args[i + 1]));
                     break;
                 case KEY_C_DEFINES:
-                    state.destCDefinesFileName = args[i + 1];
+                    state.destCDefinesFileName = ConfigDefinitionRootOutputFolder.getValue() + args[i + 1];
                     break;
                 case KEY_JAVA_DESTINATION:
                     state.addJavaDestination(args[i + 1]);
