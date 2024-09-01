@@ -30,8 +30,7 @@ void turnAllPinsOff(void);
 class IgnitionOutputPin : public NamedOutputPin {
 public:
 	IgnitionOutputPin();
-	void setHigh() override;
-	void setLow() override;
+
 	void reset();
 	int signalFallSparkId;
 	bool outOfOrder; // https://sourceforge.net/p/rusefi/tickets/319/

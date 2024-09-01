@@ -312,31 +312,6 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
 	uint8_t[BOOST_BLEND_COUNT iterate] autoscale boostClosedLoopBlendBias;;"%", 0.5, 0, 0, 100, 1
 	int16_t[BOOST_BLEND_COUNT iterate] autoscale boostClosedLoopBlendOutput;;"%", 0.1, 0, -1000, 1000, 1
 
-bit coilState1
-bit coilState2
-bit coilState3
-bit coilState4
-bit coilState5
-bit coilState6
-bit coilState7
-bit coilState8
-bit coilState9
-bit coilState10
-bit coilState11
-bit coilState12
-bit injectorState1
-bit injectorState2
-bit injectorState3
-bit injectorState4
-bit injectorState5
-bit injectorState6
-bit injectorState7
-bit injectorState8
-bit injectorState9
-bit injectorState10
-bit injectorState11
-bit injectorState12
-
 uint32_t outputRequestPeriod
 float mapFast
 	float[LUA_GAUGE_COUNT iterate] luaGauges;Lua: Gauge;"value",1, 0, 0, 50000, 3

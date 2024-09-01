@@ -16,8 +16,6 @@ public:
 
 	void open(efitick_t nowNt);
 	void close(efitick_t nowNt);
-	void setHigh() override;
-	void setLow() override;
 
 	int8_t getOverlappingCounter() const { return m_overlappingCounter; }
 
