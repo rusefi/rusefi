@@ -649,148 +649,84 @@ struct output_channels_s {
 	scaled_channel<int16_t, 10, 1> boostClosedLoopBlendOutput[2];
 	// offset 634
 	uint8_t alignmentFill_at_634[2];
-	// offset 636 bit 0
-	bool coilState1 : 1 {};
-	// offset 636 bit 1
-	bool coilState2 : 1 {};
-	// offset 636 bit 2
-	bool coilState3 : 1 {};
-	// offset 636 bit 3
-	bool coilState4 : 1 {};
-	// offset 636 bit 4
-	bool coilState5 : 1 {};
-	// offset 636 bit 5
-	bool coilState6 : 1 {};
-	// offset 636 bit 6
-	bool coilState7 : 1 {};
-	// offset 636 bit 7
-	bool coilState8 : 1 {};
-	// offset 636 bit 8
-	bool coilState9 : 1 {};
-	// offset 636 bit 9
-	bool coilState10 : 1 {};
-	// offset 636 bit 10
-	bool coilState11 : 1 {};
-	// offset 636 bit 11
-	bool coilState12 : 1 {};
-	// offset 636 bit 12
-	bool injectorState1 : 1 {};
-	// offset 636 bit 13
-	bool injectorState2 : 1 {};
-	// offset 636 bit 14
-	bool injectorState3 : 1 {};
-	// offset 636 bit 15
-	bool injectorState4 : 1 {};
-	// offset 636 bit 16
-	bool injectorState5 : 1 {};
-	// offset 636 bit 17
-	bool injectorState6 : 1 {};
-	// offset 636 bit 18
-	bool injectorState7 : 1 {};
-	// offset 636 bit 19
-	bool injectorState8 : 1 {};
-	// offset 636 bit 20
-	bool injectorState9 : 1 {};
-	// offset 636 bit 21
-	bool injectorState10 : 1 {};
-	// offset 636 bit 22
-	bool injectorState11 : 1 {};
-	// offset 636 bit 23
-	bool injectorState12 : 1 {};
-	// offset 636 bit 24
-	bool unusedBit_636_24 : 1 {};
-	// offset 636 bit 25
-	bool unusedBit_636_25 : 1 {};
-	// offset 636 bit 26
-	bool unusedBit_636_26 : 1 {};
-	// offset 636 bit 27
-	bool unusedBit_636_27 : 1 {};
-	// offset 636 bit 28
-	bool unusedBit_636_28 : 1 {};
-	// offset 636 bit 29
-	bool unusedBit_636_29 : 1 {};
-	// offset 636 bit 30
-	bool unusedBit_636_30 : 1 {};
-	// offset 636 bit 31
-	bool unusedBit_636_31 : 1 {};
-	// offset 640
+	// offset 636
 	uint32_t outputRequestPeriod = (uint32_t)0;
-	// offset 644
+	// offset 640
 	float mapFast = (float)0;
 	// Lua: Gauge
 	// value
-	// offset 648
+	// offset 644
 	float luaGauges[2];
 	// V
-	// offset 656
+	// offset 652
 	scaled_channel<uint16_t, 1000, 1> rawMaf2 = (uint16_t)0;
 	// MAF #2
 	// kg/h
-	// offset 658
+	// offset 654
 	scaled_channel<uint16_t, 10, 1> mafMeasured2 = (uint16_t)0;
-	// offset 660
+	// offset 656
 	uint16_t schedulingUsedCount = (uint16_t)0;
 	// %
-	// offset 662
+	// offset 658
 	scaled_channel<uint16_t, 100, 1> Gego = (uint16_t)0;
 	// count
-	// offset 664
+	// offset 660
 	uint16_t testBenchIter = (uint16_t)0;
 	// deg C
-	// offset 666
+	// offset 662
 	scaled_channel<int16_t, 100, 1> oilTemp = (int16_t)0;
 	// deg C
-	// offset 668
+	// offset 664
 	scaled_channel<int16_t, 100, 1> fuelTemp = (int16_t)0;
 	// deg C
-	// offset 670
+	// offset 666
 	scaled_channel<int16_t, 100, 1> ambientTemp = (int16_t)0;
 	// deg C
-	// offset 672
+	// offset 668
 	scaled_channel<int16_t, 100, 1> compressorDischargeTemp = (int16_t)0;
 	// kPa
-	// offset 674
+	// offset 670
 	scaled_channel<uint16_t, 30, 1> compressorDischargePressure = (uint16_t)0;
 	// kPa
-	// offset 676
+	// offset 672
 	scaled_channel<uint16_t, 30, 1> throttleInletPressure = (uint16_t)0;
 	// sec
-	// offset 678
+	// offset 674
 	uint16_t ignitionOnTime = (uint16_t)0;
 	// sec
-	// offset 680
+	// offset 676
 	uint16_t engineRunTime = (uint16_t)0;
 	// km
-	// offset 682
+	// offset 678
 	scaled_channel<uint16_t, 10, 1> distanceTraveled = (uint16_t)0;
 	// Air/Fuel Ratio (Gas Scale)
 	// AFR
-	// offset 684
+	// offset 680
 	scaled_channel<uint16_t, 1000, 1> afrGasolineScale = (uint16_t)0;
 	// Air/Fuel Ratio 2 (Gas Scale)
 	// AFR
-	// offset 686
+	// offset 682
 	scaled_channel<uint16_t, 1000, 1> afr2GasolineScale = (uint16_t)0;
 	// Fuel: Last inj pulse width stg 2
 	// ms
-	// offset 688
+	// offset 684
 	scaled_channel<uint16_t, 300, 1> actualLastInjectionStage2 = (uint16_t)0;
 	// Fuel: injector duty cycle stage 2
 	// %
-	// offset 690
+	// offset 686
 	scaled_channel<uint8_t, 2, 1> injectorDutyCycleStage2 = (uint8_t)0;
-	// offset 691
+	// offset 687
 	uint8_t pad = (uint8_t)0;
-	// offset 692
+	// offset 688
 	uint16_t mapAveragingSamples = (uint16_t)0;
 	// kPa
-	// offset 694
+	// offset 690
 	uint8_t mapPerCylinder[12];
 	// ratio
-	// offset 706
+	// offset 702
 	scaled_channel<uint16_t, 1000, 1> dwellAccuracyRatio = (uint16_t)0;
 };
-static_assert(sizeof(output_channels_s) == 708);
+static_assert(sizeof(output_channels_s) == 704);
 static_assert(offsetof(output_channels_s, RPMValue) == 4);
 static_assert(offsetof(output_channels_s, rpmAcceleration) == 6);
 static_assert(offsetof(output_channels_s, speedToRpmRatio) == 8);
@@ -950,29 +886,29 @@ static_assert(offsetof(output_channels_s, boostOpenLoopBlendOutput) == 622);
 static_assert(offsetof(output_channels_s, boostClosedLoopBlendParameter) == 624);
 static_assert(offsetof(output_channels_s, boostClosedLoopBlendBias) == 628);
 static_assert(offsetof(output_channels_s, boostClosedLoopBlendOutput) == 630);
-static_assert(offsetof(output_channels_s, outputRequestPeriod) == 640);
-static_assert(offsetof(output_channels_s, mapFast) == 644);
-static_assert(offsetof(output_channels_s, luaGauges) == 648);
-static_assert(offsetof(output_channels_s, rawMaf2) == 656);
-static_assert(offsetof(output_channels_s, mafMeasured2) == 658);
-static_assert(offsetof(output_channels_s, schedulingUsedCount) == 660);
-static_assert(offsetof(output_channels_s, Gego) == 662);
-static_assert(offsetof(output_channels_s, testBenchIter) == 664);
-static_assert(offsetof(output_channels_s, oilTemp) == 666);
-static_assert(offsetof(output_channels_s, fuelTemp) == 668);
-static_assert(offsetof(output_channels_s, ambientTemp) == 670);
-static_assert(offsetof(output_channels_s, compressorDischargeTemp) == 672);
-static_assert(offsetof(output_channels_s, compressorDischargePressure) == 674);
-static_assert(offsetof(output_channels_s, throttleInletPressure) == 676);
-static_assert(offsetof(output_channels_s, ignitionOnTime) == 678);
-static_assert(offsetof(output_channels_s, engineRunTime) == 680);
-static_assert(offsetof(output_channels_s, distanceTraveled) == 682);
-static_assert(offsetof(output_channels_s, afrGasolineScale) == 684);
-static_assert(offsetof(output_channels_s, afr2GasolineScale) == 686);
-static_assert(offsetof(output_channels_s, actualLastInjectionStage2) == 688);
-static_assert(offsetof(output_channels_s, injectorDutyCycleStage2) == 690);
-static_assert(offsetof(output_channels_s, pad) == 691);
-static_assert(offsetof(output_channels_s, mapAveragingSamples) == 692);
-static_assert(offsetof(output_channels_s, mapPerCylinder) == 694);
-static_assert(offsetof(output_channels_s, dwellAccuracyRatio) == 706);
+static_assert(offsetof(output_channels_s, outputRequestPeriod) == 636);
+static_assert(offsetof(output_channels_s, mapFast) == 640);
+static_assert(offsetof(output_channels_s, luaGauges) == 644);
+static_assert(offsetof(output_channels_s, rawMaf2) == 652);
+static_assert(offsetof(output_channels_s, mafMeasured2) == 654);
+static_assert(offsetof(output_channels_s, schedulingUsedCount) == 656);
+static_assert(offsetof(output_channels_s, Gego) == 658);
+static_assert(offsetof(output_channels_s, testBenchIter) == 660);
+static_assert(offsetof(output_channels_s, oilTemp) == 662);
+static_assert(offsetof(output_channels_s, fuelTemp) == 664);
+static_assert(offsetof(output_channels_s, ambientTemp) == 666);
+static_assert(offsetof(output_channels_s, compressorDischargeTemp) == 668);
+static_assert(offsetof(output_channels_s, compressorDischargePressure) == 670);
+static_assert(offsetof(output_channels_s, throttleInletPressure) == 672);
+static_assert(offsetof(output_channels_s, ignitionOnTime) == 674);
+static_assert(offsetof(output_channels_s, engineRunTime) == 676);
+static_assert(offsetof(output_channels_s, distanceTraveled) == 678);
+static_assert(offsetof(output_channels_s, afrGasolineScale) == 680);
+static_assert(offsetof(output_channels_s, afr2GasolineScale) == 682);
+static_assert(offsetof(output_channels_s, actualLastInjectionStage2) == 684);
+static_assert(offsetof(output_channels_s, injectorDutyCycleStage2) == 686);
+static_assert(offsetof(output_channels_s, pad) == 687);
+static_assert(offsetof(output_channels_s, mapAveragingSamples) == 688);
+static_assert(offsetof(output_channels_s, mapPerCylinder) == 690);
+static_assert(offsetof(output_channels_s, dwellAccuracyRatio) == 702);
 
