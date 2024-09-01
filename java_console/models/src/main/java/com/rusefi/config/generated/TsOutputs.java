@@ -534,5 +534,5 @@ public class TsOutputs {
 	public static final Field MAPPERCYLINDER10 = Field.create("MAPPERCYLINDER10", 703, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field MAPPERCYLINDER11 = Field.create("MAPPERCYLINDER11", 704, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field MAPPERCYLINDER12 = Field.create("MAPPERCYLINDER12", 705, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_706 = Field.create("ALIGNMENTFILL_AT_706", 706, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field DWELLACCURACYRATIO = Field.create("DWELLACCURACYRATIO", 706, FieldType.INT16).setScale(0.001).setBaseOffset(0);
 }

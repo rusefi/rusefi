@@ -136,6 +136,8 @@ case DBG_29:
   return "DBG_29";
 case DBG_32:
   return "DBG_32";
+case DBG_33:
+  return "DBG_33";
 case DBG_34:
   return "DBG_34";
 case DBG_35:
@@ -160,8 +162,6 @@ case DBG_9:
   return "DBG_9";
 case DBG_COMPOSITE_LOG:
   return "DBG_COMPOSITE_LOG";
-case DBG_DWELL_METRIC:
-  return "DBG_DWELL_METRIC";
 case DBG_DYNO_VIEW:
   return "DBG_DYNO_VIEW";
 case DBG_ELECTRONIC_THROTTLE_PID:
