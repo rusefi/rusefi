@@ -40,10 +40,6 @@ static Map3D<TRACTION_CONTROL_ETB_DROP_SIZE, TRACTION_CONTROL_ETB_DROP_SIZE, int
  * @return ignition timing angle advance before TDC
  */
 angle_t getRunningAdvance(int rpm, float engineLoad) {
-	if (engineConfiguration->timingMode == TM_FIXED) {
-		return engineConfiguration->fixedTiming;
-	}
-
 	if (std::isnan(engineLoad)) {
 		warning(ObdCode::CUSTOM_NAN_ENGINE_LOAD, "NaN engine load");
 		return NAN;
@@ -178,6 +174,10 @@ angle_t getAdvance(int rpm, float engineLoad) {
 	if (std::isnan(engineLoad)) {
 		return 0; // any error should already be reported
 	}
+  if (engineConfiguration->timingMode == TM_FIXED) {
+		// fixed timing is the simple: cranking/running does not matter, no corrections!
+		return engineConfiguration->fixedTiming;
+	}
 
 	angle_t angle;
 
@@ -195,10 +195,8 @@ angle_t getAdvance(int rpm, float engineLoad) {
 		}
 	}
 
-	// Allow correction only if set to dynamic
-	// AND we're either not cranking OR allowed to correct in cranking
-	bool allowCorrections = engineConfiguration->timingMode == TM_DYNAMIC
-		&& (!isCranking || engineConfiguration->useAdvanceCorrectionsForCranking);
+	// Allow if we're either not cranking OR allowed to correct in cranking
+	bool allowCorrections = !isCranking || engineConfiguration->useAdvanceCorrectionsForCranking;
 
 	if (allowCorrections) {
 		angle_t correction = getAdvanceCorrections(engineLoad);

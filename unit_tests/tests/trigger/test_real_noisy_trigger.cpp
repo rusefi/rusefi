@@ -14,10 +14,6 @@ static void testNoOverdwell(const char* file, bool instantRpm, const int expecte
 	engineConfiguration->globalTriggerAngleOffset = 155;
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
-	// engineConfiguration->cylindersCount = 1;
-	// engineConfiguration->firingOrder = FO_1;
-	// engineConfiguration->globalTriggerAngleOffset = 35;
-
 	engineConfiguration->timingMode = TM_FIXED;
 	engineConfiguration->fixedTiming = 14.69;
 
@@ -56,7 +52,7 @@ static void testNoOverdwell(const char* file, bool instantRpm, const int expecte
 // noisy-trigger-min.csv contains lines 53-61 from noisy-trigger-1.csv - minimal subset to reproduce the single
 // bailed-on dwell
 TEST(RealNoisyTrigger, AvoidOverdwellMinNoInstant) {
-	testNoOverdwell("tests/trigger/resources/noisy-trigger-min.csv", false, 1);
+	testNoOverdwell("tests/trigger/resources/noisy-trigger-min.csv", false, 0);
 }
 
 TEST(RealNoisyTrigger, AvoidOverdwellMinWithInstant) {
@@ -64,7 +60,7 @@ TEST(RealNoisyTrigger, AvoidOverdwellMinWithInstant) {
 }
 
 TEST(RealNoisyTrigger, AvoidOverdwell1NoInstant) {
-	testNoOverdwell("tests/trigger/resources/noisy-trigger-1.csv", false, 25);
+	testNoOverdwell("tests/trigger/resources/noisy-trigger-1.csv", false, 24);
 }
 
 TEST(RealNoisyTrigger, AvoidOverdwell1WithInstant) {

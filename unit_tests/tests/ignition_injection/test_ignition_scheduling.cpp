@@ -168,7 +168,6 @@ TEST(ignition, negativeAdvance) {
 	eth.assertRpm(0);
 
 	ASSERT_EQ(DEFAULT_CRANKING_ANGLE, getCrankingAdvance(rpm, load));
-	ASSERT_EQ(-13, getRunningAdvance(rpm, load));
 	ASSERT_EQ(0, getAdvanceCorrections(load));
 	ASSERT_EQ(707, getWrappedAdvance(rpm, load));
 

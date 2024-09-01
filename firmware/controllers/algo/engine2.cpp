@@ -175,11 +175,13 @@ void EngineState::periodicFastCallback() {
 
 	float l_ignitionLoad = getIgnitionLoad();
 	float baseAdvance = getWrappedAdvance(rpm, l_ignitionLoad);
-	float correctedIgnitionAdvance = baseAdvance
+	float corrections = engineConfiguration->timingMode == TM_DYNAMIC ?
 			// Pull any extra timing for knock retard
 			- engine->module<KnockController>()->getKnockRetard()
 			// Degrees of timing REMOVED from actual timing during soft RPM limit window
-			- getLimpManager()->getLimitingTimingRetard();
+			- getLimpManager()->getLimitingTimingRetard() :
+			0;
+	float correctedIgnitionAdvance = baseAdvance + corrections;
 	// these fields are scaled_channel so let's only use for observability, with a local variables holding value while it matters locally
 	engine->ignitionState.baseIgnitionAdvance = MAKE_HUMAN_READABLE_ADVANCE(baseAdvance);
 	engine->ignitionState.correctedIgnitionAdvance = MAKE_HUMAN_READABLE_ADVANCE(correctedIgnitionAdvance);
@@ -200,7 +202,7 @@ void EngineState::periodicFastCallback() {
 
 		// Apply both per-bank and per-cylinder trims
 		engine->engineState.injectionMass[i] = untrimmedInjectionMass * bankTrim * cylinderTrim;
-
+    // todo: is it OK to apply cylinder trim with FIXED timing?
 		timingAdvance[i] = correctedIgnitionAdvance + getCylinderIgnitionTrim(i, rpm, l_ignitionLoad);
 	}
 
