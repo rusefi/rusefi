@@ -69,8 +69,8 @@ void LimpManager::updateState(int rpm, efitick_t nowNt) {
 	}
 #endif
 
-    if (isGdiEngine()) {
-        if (gdiComms.getElapsedSeconds() > 1) {
+    if (isGdiEngine() && engineConfiguration->externalRusEfiGdiModule) {
+        if (externalGdiCanBusComms.getElapsedSeconds() > 1) {
             allowFuel.clear(ClearReason::GdiComms);
         }
     }

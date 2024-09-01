@@ -804,7 +804,7 @@ bit is_enabled_spi_2
 	bit lambdaProtectionEnable
 	bit verboseTLE8888
 	bit enableVerboseCanTx;CAN broadcast using custom rusEFI protocol\nenable can_broadcast/disable can_broadcast
-	bit unused644b10
+	bit externalRusEfiGdiModule
 	bit unused644b11
 	bit measureMapOnlyInOneCylinder;Useful for individual intakes
 	bit stepperForceParkingEveryRestart

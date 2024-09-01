@@ -110,7 +110,7 @@ public:
 	// Other subsystems call these APIs to indicate a problem has occurred
 //	void reportEtbProblem();
 	void fatalError();
-	Timer gdiComms;
+	Timer externalGdiCanBusComms;
 
 private:
 	void setFaultRevLimit(int limit);

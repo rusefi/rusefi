@@ -136,7 +136,7 @@ static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
 		.direct_io = {
 			{ .port = GPIOG, .pad = 13 }, // H144_OUT_IO9
 			{ .port = GPIOG, .pad = 12 }, // H144_OUT_IO10
-			{ .port = GPIOG, .pad = 2 }, // H144_OUT_IO11
+			{ .port = GPIOG, .pad = 2 }, // H144_OUT_IO11 vvt3
 			{ .port = GPIOA, .pad = 8 } // H144_OUT_IO12
 		},
 		.resn = Gpio::Unassigned,
