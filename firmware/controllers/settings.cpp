@@ -102,25 +102,6 @@ void printConfiguration() {
 
 	efiPrintf("globalTriggerAngleOffset=%.2f", engineConfiguration->globalTriggerAngleOffset);
 
-	efiPrintf("=== cranking ===");
-	efiPrintf("crankingRpm: %d", engineConfiguration->cranking.rpm);
-	efiPrintf("cranking injection %s", getInjection_mode_e(engineConfiguration->crankingInjectionMode));
-
-	efiPrintf("cranking timing %.2f", engineConfiguration->crankingTimingAngle);
-
-	efiPrintf("=== ignition ===");
-
-	efiPrintf("ignitionMode: %s/enabled=%s", getIgnition_mode_e(engineConfiguration->ignitionMode),
-			boolToString(engineConfiguration->isIgnitionEnabled));
-	efiPrintf("timingMode: %s", getTiming_mode_e(engineConfiguration->timingMode));
-	if (engineConfiguration->timingMode == TM_FIXED) {
-		efiPrintf("fixedModeTiming: %d", (int) engineConfiguration->fixedModeTiming);
-	}
-
-	efiPrintf("=== injection ===");
-	efiPrintf("injection %s enabled=%s", getInjection_mode_e(engineConfiguration->injectionMode),
-			boolToString(engineConfiguration->isInjectionEnabled));
-
 	printOutputs();
 
 	efiPrintf("map_avg=%s/wa=%s",
