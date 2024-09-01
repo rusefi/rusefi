@@ -391,7 +391,7 @@ dwellDurationAngle("Ignition: dwell duration\nas crankshaft angle\nNAN if engine
 cltTimingCorrection("Ign: CLT correction", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 904, 0.01, -20.0, 20.0, "deg"),
 timingIatCorrection("Ign: IAT correction", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 906, 0.01, -20.0, 20.0, "deg"),
 timingPidCorrection("Idle: Timing adjustment", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 908, 0.01, -20.0, 20.0, "deg"),
-baseIgnitionAdvance("Ignition: Timing", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 910, 0.02, 0.0, 0.0, "deg"),
+baseIgnitionAdvance("Timing: base ignition", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 910, 0.02, 0.0, 0.0, "deg"),
 correctedIgnitionAdvance("Timing: ignition", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 912, 0.02, 0.0, 0.0, "deg"),
 tractionAdvanceDrop("Traction: timing correction", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 914, 0.02, 0.0, 0.0, "deg"),
 dwellVoltageCorrection("Ign: Dwell voltage correction", SensorCategory.SENSOR_INPUTS, FieldType.INT, 916, 1.0, -1.0, -1.0, ""),

@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/tps_accel_state.txt Wed Aug 14 05:20:00 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/tps_accel_state.txt Sun Sep 01 20:45:49 UTC 2024
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -124,7 +124,7 @@ public class TpsAccelState {
 	public static final String GAUGE_NAME_TCHARGE = "Air: SD tCharge";
 	public static final String GAUGE_NAME_THROTTLE_PEDAL = "Throttle pedal position";
 	public static final String GAUGE_NAME_TIME = "Time";
-	public static final String GAUGE_NAME_TIMING_ADVANCE = "Ignition: Timing";
+	public static final String GAUGE_NAME_TIMING_ADVANCE = "Timing: base ignition";
 	public static final String GAUGE_NAME_TPS = "TPS";
 	public static final String GAUGE_NAME_TPS2 = "TPS2";
 	public static final String GAUGE_NAME_TRG_ERR = "Trigger Error Counter";
