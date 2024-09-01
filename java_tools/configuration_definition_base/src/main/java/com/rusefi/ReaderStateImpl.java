@@ -396,7 +396,7 @@ public class ReaderStateImpl implements ReaderState {
     @Override
     public void setDefinitionInputFile(String definitionInputFile) {
         this.definitionInputFile = definitionInputFile;
-        headerMessage = ToolUtil.getGeneratedAutomaticallyTag() + definitionInputFile + " " + new Date();
+        headerMessage = ToolUtil.getGeneratedAutomaticallyTag() + definitionInputFile;
         inputFiles.add(definitionInputFile);
     }
 
