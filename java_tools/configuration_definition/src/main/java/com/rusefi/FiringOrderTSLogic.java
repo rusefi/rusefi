@@ -105,7 +105,7 @@ public class FiringOrderTSLogic {
         String output = "\t\tfield = \"" + IGNITION_OUTPUT + " " + cylinderId +
                 "\",                       ignitionPins" + cylinderId +
                 ", {isIgnitionEnabled == 1 && (ignitionMode != 0 && cylindersCount >= " + cylinderId + ") && (ignitionMode !=2 || twoWireBatchIgnition == 1 " + result + ")}";
-        System.out.println(output);
+        //log.info(output);
         return output;
     }
 

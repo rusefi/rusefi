@@ -1,5 +1,6 @@
 package com.rusefi.trigger;
 
+import com.devexperts.logging.Logging;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 import static com.rusefi.config.generated.TriggerMeta.*;
 
 public class TriggerWheelInfo {
+    private static final Logging log = Logging.getLogging(TriggerWheelInfo.class);
     private static final String TRIGGERTYPE = "TRIGGERTYPE";
     static final String DEFAULT_WORK_FOLDER = ".." + File.separator + "unit_tests";
 
@@ -52,7 +54,7 @@ public class TriggerWheelInfo {
         int id = Integer.parseInt(idStr);
         double tdcPosition = Double.parseDouble(tokens[4]);
 
-        System.out.println("id=" + id + ", count=" + eventCount + ", name=" + triggerName);
+        //log.info("id=" + id + ", count=" + eventCount + ", name=" + triggerName);
 
 
         boolean isCrankBased = false;
@@ -135,7 +137,7 @@ public class TriggerWheelInfo {
         try {
             br = new BufferedReader(new FileReader(fileName));
 
-            System.out.println("Reading " + fileName);
+            log.info("Reading " + fileName);
             String line;
             while ((line = br.readLine()) != null) {
                 if (line.trim().startsWith("#")) {
