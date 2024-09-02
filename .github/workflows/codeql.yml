@@ -58,7 +58,7 @@ jobs:
     - uses: actions/setup-java@v4
       with:
         distribution: 'zulu'
-        java-version: '11'
+        java-version: '17'
 
     - name: Code generation tools
       working-directory: ./java_tools
