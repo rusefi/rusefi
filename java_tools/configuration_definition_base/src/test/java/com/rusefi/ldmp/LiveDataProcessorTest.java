@@ -5,7 +5,6 @@ import com.rusefi.output.SdCardFieldsContent;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -136,6 +135,6 @@ public class LiveDataProcessorTest {
             "LDS_output_channels,\n" +
             "} live_data_e;\n" +
             "#define WBO_CHANNELS_BASE_ADDRESS 0\n" +
-            "#define OUTPUT_CHANNELS_BASE_ADDRESS 24\n", LiveDataProcessor.enumContentFileName);
+            "#define OUTPUT_CHANNELS_BASE_ADDRESS 24\n", liveDataProcessor.getEnumContentFileName());
     }
 }
