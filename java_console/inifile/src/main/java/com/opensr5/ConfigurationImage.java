@@ -11,9 +11,7 @@ import java.nio.ByteBuffer;
  */
 public class ConfigurationImage {
     /**
-     * This constant is used
-     * 1) as a header while saving configuration to a binary file
-     * 2) as RomRaider RomID#internalIdString
+     * This constant is used as a header while saving configuration to a binary file
      */
     public final static String BIN_HEADER = "OPEN_SR5_0.1";
     private final byte[] content;
