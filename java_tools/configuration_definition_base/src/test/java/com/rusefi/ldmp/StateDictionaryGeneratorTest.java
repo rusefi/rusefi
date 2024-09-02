@@ -33,7 +33,7 @@ public class StateDictionaryGeneratorTest {
         ArrayList<LinkedHashMap> data = LiveDataProcessor.getStringObjectMap(new StringReader(testYaml));
 
         TestFileCaptor captor = new TestFileCaptor();
-        LiveDataProcessor liveDataProcessor = new LiveDataProcessor("test", fileName -> new StringReader(""), captor);
+        LiveDataProcessor liveDataProcessor = new LiveDataProcessor("test", fileName -> new StringReader(""), captor, "./");
         liveDataProcessor.handleYaml(data);
         assertEquals("number of outputs", 14, captor.fileCapture.size());
 

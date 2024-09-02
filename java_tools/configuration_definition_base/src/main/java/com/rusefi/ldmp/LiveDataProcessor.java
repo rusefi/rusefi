@@ -17,26 +17,20 @@ public class LiveDataProcessor {
 
     public final static String enumContentFileName = "console/binary/generated/live_data_ids.h";
 
-    private final static String tsOutputsDestination = "console/binary/";
-    public static final String GAUGES = tsOutputsDestination + File.separator + "generated/gauges.ini";
-    public static final String DATA_LOG_FILE_NAME = tsOutputsDestination + File.separator + "generated/data_logs.ini";
-    public static final String OUTPUTS_SECTION_FILE_NAME = tsOutputsDestination + File.separator + "generated/output_channels.ini";
-    public static final String DATA_FRAGMENTS_H = "console/binary/generated/live_data_fragments.h";
     public static final String STATE_DICTIONARY_FACTORY_JAVA = "../java_console/io/src/main/java/com/rusefi/enums/StateDictionaryFactory.java";
-    public static final String FANCY_CONTENT_INI = "console/binary/generated/fancy_content.ini";
-    public static final String FANCY_MENU_INI = "console/binary/generated/fancy_menu.ini";
     public static final String JAVA_DESTINATION = "../java_console/models/src/main/java/com/rusefi/config/generated/";
 
     private final ReaderProvider readerProvider;
     private final LazyFile.LazyFileFactory fileFactory;
 
     private final GaugeConsumer gaugeConsumer;
+    private final String destinationFolder;
 
     private final StringBuilder enumContent = new StringBuilder(header +
-            "#pragma once\n" +
-            "\n" +
-            "// this generated C header is mostly used as input for java code generation\n" +
-            "typedef enum {\n");
+        "#pragma once\n" +
+        "\n" +
+        "// this generated C header is mostly used as input for java code generation\n" +
+        "typedef enum {\n");
 
     private final StringBuilder baseAddressCHeader = new StringBuilder();
 
@@ -52,22 +46,25 @@ public class LiveDataProcessor {
 
     private final String extraPrepend = System.getProperty("LiveDataProcessor.extra_prepend");
 
-    public LiveDataProcessor(String yamlFileName, ReaderProvider readerProvider, LazyFile.LazyFileFactory fileFactory) {
+    public LiveDataProcessor(String yamlFileName, ReaderProvider readerProvider, LazyFile.LazyFileFactory fileFactory, String destinationFolder) {
         this.readerProvider = readerProvider;
         this.fileFactory = fileFactory;
+        this.destinationFolder = destinationFolder;
+
         stateDictionaryGenerator = new StateDictionaryGenerator(yamlFileName);
-        gaugeConsumer = new GaugeConsumer(GAUGES, fileFactory);
+        gaugeConsumer = new GaugeConsumer(getGauges(), fileFactory);
     }
 
     public static void main(String[] args) throws IOException {
-        if (args.length != 4) {
-            System.err.println("Four arguments expected: name of live data yaml input file and else but got " + Arrays.toString(args));
+        if (args.length != 5) {
+            System.err.println("Five arguments expected: name of live data yaml input file and else but got " + args.length + ": " + Arrays.toString(args));
             System.exit(-1);
         }
         String yamlFileNames = args[0];
         String definitionInputFileName = args[1];
         String headerFileName = args[2];
         String javaDestinationFileName = args[3];
+        String destinationFolder = args[4];
         TriggerMetaGenerator.doJob(definitionInputFileName, headerFileName, javaDestinationFileName);
         ArrayList<LinkedHashMap> totalContent = new ArrayList<>();
         for (String fileName : yamlFileNames.split(",")) {
@@ -75,7 +72,7 @@ public class LiveDataProcessor {
             totalContent.addAll(yamlContent);
         }
 
-        LiveDataProcessor liveDataProcessor = new LiveDataProcessor(yamlFileNames, ReaderProvider.REAL, LazyFile.REAL);
+        LiveDataProcessor liveDataProcessor = new LiveDataProcessor(yamlFileNames, ReaderProvider.REAL, LazyFile.REAL, destinationFolder);
         int sensorTsPosition = liveDataProcessor.handleYaml(totalContent);
 
         liveDataProcessor.end(sensorTsPosition);
@@ -89,6 +86,34 @@ public class LiveDataProcessor {
             throw new IllegalStateException("Exactly one top level key expected");
         String key = objectMap.keySet().iterator().next();
         return (ArrayList<LinkedHashMap>) objectMap.get(key);
+    }
+
+    private String getTsOutputsDestination() {
+        return destinationFolder + "console/binary/generated/";
+    }
+
+    public String getGauges() {
+        return getTsOutputsDestination() + "gauges.ini";
+    }
+
+    public String getDataFragmentsH() {
+        return getTsOutputsDestination() + "live_data_fragments.h";
+    }
+
+    public String getFancyContentIni() {
+        return getTsOutputsDestination() + "fancy_content.ini";
+    }
+
+    public String getFancyMenuIni() {
+        return getTsOutputsDestination() + "fancy_menu.ini";
+    }
+
+    public String getDataLogFileName() {
+        return getTsOutputsDestination() + "data_logs.ini";
+    }
+
+    public String getOutputsSectionFileName() {
+        return getTsOutputsDestination() + "output_channels.ini";
     }
 
     private void end(int sensorTsPosition) throws IOException {
@@ -106,10 +131,10 @@ public class LiveDataProcessor {
     public int handleYaml(ArrayList<LinkedHashMap> liveDocs) throws IOException {
         AtomicInteger startingPosition = new AtomicInteger();
 
-        OutputsSectionConsumer outputsSections = new OutputsSectionConsumer(OUTPUTS_SECTION_FILE_NAME,
+        OutputsSectionConsumer outputsSections = new OutputsSectionConsumer(getOutputsSectionFileName(),
             fileFactory);
 
-        DataLogConsumer dataLogConsumer = new DataLogConsumer(DATA_LOG_FILE_NAME, fileFactory);
+        DataLogConsumer dataLogConsumer = new DataLogConsumer(getDataLogFileName(), fileFactory);
 
         SdCardFieldsContent sdCardFieldsConsumer = new SdCardFieldsContent();
 
@@ -281,11 +306,11 @@ public class LiveDataProcessor {
             fw.write(totalSensors.toString());
         }
 
-        try (LazyFile fw = fileFactory.create(FANCY_CONTENT_INI)) {
+        try (LazyFile fw = fileFactory.create(getFancyContentIni())) {
             fw.write(fancyNewStuff.toString());
         }
 
-        try (LazyFile fw = fileFactory.create(FANCY_MENU_INI)) {
+        try (LazyFile fw = fileFactory.create(getFancyMenuIni())) {
             fw.write(fancyNewMenu.toString());
         }
 
@@ -303,7 +328,7 @@ public class LiveDataProcessor {
             fw.write(baseAddressCHeader.toString());
         }
 
-        try (LazyFile fw = fileFactory.create(DATA_FRAGMENTS_H)) {
+        try (LazyFile fw = fileFactory.create(getDataFragmentsH())) {
             fw.write(fragmentsContent.toString());
         }
     }
