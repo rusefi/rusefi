@@ -33,14 +33,6 @@ public class ConfigurationImage {
         return content.length;
     }
 
-    public static byte[] extractContent(byte[] rom) {
-        if (rom.length < BIN_HEADER.length())
-            return null;
-        byte[] result = new byte[rom.length - BIN_HEADER.length()];
-        System.arraycopy(rom, BIN_HEADER.length(), result, 0, result.length);
-        return result;
-    }
-
     public byte[] getContent() {
         return content;
     }
