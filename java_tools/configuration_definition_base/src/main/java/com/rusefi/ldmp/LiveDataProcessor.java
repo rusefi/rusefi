@@ -126,7 +126,7 @@ public class LiveDataProcessor {
     }
 
     interface EntryHandler {
-        void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, String engineModule, Boolean isPtr, String cppFileName) throws IOException;
+        void onEntry(String name, String javaName, String inFolder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, String engineModule, Boolean isPtr, String cppFileName, String outFolder) throws IOException;
     }
 
     public int handleYaml(List<LinkedHashMap> liveDocs) throws IOException {
@@ -143,17 +143,17 @@ public class LiveDataProcessor {
 
         EntryHandler handler = new EntryHandler() {
             @Override
-            public void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, String engineModule, Boolean isPtr, String cppFileName) throws IOException {
+            public void onEntry(String name, String javaName, String inFolder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, String engineModule, Boolean isPtr, String cppFileName, String outFolder) throws IOException {
                 // TODO: use outputNames
 
-                stateDictionaryGenerator.onEntry(name, javaName, folder, prepend, withCDefines, outputNames, constexpr, conditional, engineModule, isPtr, cppFileName);
+                stateDictionaryGenerator.onEntry(name, javaName, outputNames, cppFileName);
 
                 log.info("Starting " + name + " at " + startingPosition + " with [" + conditional + "]");
 
                 baseAddressCHeader.append("#define " + name.toUpperCase() + "_BASE_ADDRESS " + startingPosition + "\n");
 
                 ReaderState state = new ReaderStateImpl(readerProvider, fileFactory);
-                state.setDefinitionInputFile(folder + File.separator + name + ".txt");
+                state.setDefinitionInputFile(inFolder + File.separator + name + ".txt");
                 state.setWithC_Defines(withCDefines);
 
                 outputsSections.outputNames = outputNames;
@@ -185,7 +185,7 @@ public class LiveDataProcessor {
                 if (extraPrepend != null)
                     state.addPrepend(extraPrepend);
                 state.addPrepend(prepend);
-                state.addCHeaderDestination(folder + File.separator + name + "_generated.h");
+                state.addCHeaderDestination(outFolder + File.separator + name + "_generated.h");
 
                 int baseOffset = outputsSections.getBaseOffset();
                 state.addDestination(new FileJavaFieldsConsumer(state, JAVA_DESTINATION + javaName, baseOffset, fileFactory));
@@ -235,7 +235,8 @@ public class LiveDataProcessor {
         for (LinkedHashMap entry : liveDocs) {
             String name = (String) entry.get("name");
             String java = (String) entry.get("java");
-            String folder = (String) entry.get("folder");
+            String inputOutputFolder = (String) entry.get("folder");
+            String inputFolder = (String) entry.get("input_folder");
             String prepend = (String) entry.get("prepend");
             String constexpr = (String) entry.get("constexpr");
             String engineModule = (String) entry.get("engineModule");
@@ -262,7 +263,15 @@ public class LiveDataProcessor {
                 nameList.toArray(outputNamesArr);
             }
 
-            handler.onEntry(name, java, folder, prepend, withCDefines, outputNamesArr, constexpr, conditional, engineModule, isPtr, cppFileName);
+            String outFolder;
+            if (inputFolder != null) {
+                outFolder = "";
+            } else {
+                inputFolder = inputOutputFolder;
+                outFolder = inputOutputFolder;
+            }
+
+            handler.onEntry(name, java, inputFolder, prepend, withCDefines, outputNamesArr, constexpr, conditional, engineModule, isPtr, cppFileName, outFolder);
 
             String enumName = "LDS_" + name;
             String type = name + "_s"; // convention
