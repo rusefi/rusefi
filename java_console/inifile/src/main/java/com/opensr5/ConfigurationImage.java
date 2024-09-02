@@ -10,10 +10,6 @@ import java.nio.ByteBuffer;
  * 3/6/2015
  */
 public class ConfigurationImage {
-    /**
-     * This constant is used as a header while saving configuration to a binary file
-     */
-    public final static String BIN_HEADER = "OPEN_SR5_0.1";
     private final byte[] content;
 
     public ConfigurationImage(int size) {
