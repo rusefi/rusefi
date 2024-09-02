@@ -1,7 +1,10 @@
 package com.rusefi.binaryprotocol;
 
 import com.devexperts.logging.Logging;
+import com.opensr5.ConfigurationImageMeta;
+import com.opensr5.ConfigurationImageMetaVersion0_0;
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.io.ConfigurationImageFile;
 import com.opensr5.io.DataListener;
@@ -183,7 +186,7 @@ public class BinaryProtocol {
         if (errorMessage != null)
             return errorMessage;
 
-        readImage(arguments, Fields.TOTAL_CONFIG_SIZE);
+        readImage(arguments, new ConfigurationImageMetaVersion0_0(Fields.TOTAL_CONFIG_SIZE, signature));
         if (isClosed)
             return "Failed to read calibration";
 
@@ -306,16 +309,16 @@ public class BinaryProtocol {
     /**
      * read complete tune from physical data stream
      */
-    public void readImage(Arguments arguments, int size) {
+    public void readImage(final Arguments arguments, final ConfigurationImageMeta meta) {
         ConfigurationImage image = getAndValidateLocallyCached();
 
         if (image == null) {
-            image = readFullImageFromController(arguments, size);
+            image = readFullImageFromController(arguments, meta);
             if (image == null)
                 return;
         }
         setController(image);
-        log.info("Got configuration from controller " + size + " byte(s)");
+        log.info("Got configuration from controller " + meta.getImageSize() + " byte(s)");
         ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
     }
 
@@ -328,9 +331,11 @@ public class BinaryProtocol {
     }
 
     @Nullable
-    private ConfigurationImage readFullImageFromController(Arguments arguments, int size) {
-        ConfigurationImage image;
-        image = new ConfigurationImage(size);
+    private ConfigurationImage readFullImageFromController(
+        final Arguments arguments,
+        final ConfigurationImageMeta meta
+    ) {
+        final ConfigurationImageWithMeta image = new ConfigurationImageWithMeta(meta);
 
         int offset = 0;
 
