@@ -119,7 +119,7 @@ public class LiveDataProcessor {
 
     private void end(int sensorTsPosition) throws IOException {
         log.info("TS_TOTAL_OUTPUT_SIZE=" + sensorTsPosition);
-        try (FileWriter fw = new FileWriter("console/binary/generated/total_live_data_generated.h")) {
+        try (FileWriter fw = new FileWriter(getTsOutputsDestination() + "total_live_data_generated.h")) {
             fw.write(header);
             fw.write("#define TS_TOTAL_OUTPUT_SIZE " + sensorTsPosition);
         }
@@ -144,6 +144,7 @@ public class LiveDataProcessor {
         EntryHandler handler = new EntryHandler() {
             @Override
             public void onEntry(String name, String javaName, String inFolder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, String engineModule, Boolean isPtr, String cppFileName, String outFolder) throws IOException {
+                Objects.requireNonNull(outFolder);
                 // TODO: use outputNames
 
                 stateDictionaryGenerator.onEntry(name, javaName, outputNames, cppFileName);
@@ -265,8 +266,10 @@ public class LiveDataProcessor {
 
             String outFolder;
             if (inputFolder != null) {
+                log.info("Only inputFolder " + inputFolder);
                 outFolder = "";
             } else {
+                log.info("Common inputOutputFolder " + inputOutputFolder);
                 inputFolder = inputOutputFolder;
                 outFolder = inputOutputFolder;
             }
