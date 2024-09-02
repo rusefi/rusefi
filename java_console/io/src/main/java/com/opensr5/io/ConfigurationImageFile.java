@@ -26,30 +26,14 @@ public class ConfigurationImageFile {
 
     @Nullable
     private static ConfigurationImage readFromStream(int size, FileInputStream fis) throws IOException {
-        int contentSize = size - ConfigurationImage.BIN_HEADER.length();
-
-        byte[] header = new byte[ConfigurationImage.BIN_HEADER.length()];
-        int result = fis.read(header);
-        if (result != header.length) {
-            System.err.println("Error reading header bytes, got " + result);
-            return null;
-        }
-        if (!Arrays.equals(header, ConfigurationImage.BIN_HEADER.getBytes())) {
-            System.err.println("Header mismatch");
-            return null;
-        }
-        ConfigurationImage image = new ConfigurationImage(contentSize);
-        result = fis.read(image.getContent());
+       final ConfigurationImage image = new ConfigurationImage(size);
+        final int result = fis.read(image.getContent());
         return result == image.getContent().length ? image : null;
     }
 
     public static byte[] getFileContent(ConfigurationImage configurationImage) {
         try {
             try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-                byte[] bytes = ConfigurationImage.BIN_HEADER.getBytes();
-                if (bytes.length != ConfigurationImage.BIN_HEADER.length())
-                    throw new IllegalStateException("Encoding issue");
-                baos.write(bytes);
                 baos.write(configurationImage.getContent());
                 return baos.toByteArray();
             }
