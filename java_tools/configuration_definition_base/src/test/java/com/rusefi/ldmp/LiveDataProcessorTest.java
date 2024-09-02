@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import static com.rusefi.AssertCompatibility.assertEquals;
 
@@ -29,7 +30,7 @@ public class LiveDataProcessorTest {
                 ;
 
 
-        ArrayList<LinkedHashMap> data = LiveDataProcessor.getStringObjectMap(new StringReader(testYaml));
+        List<LinkedHashMap> data = LiveDataProcessor.getStringObjectMap(new StringReader(testYaml));
 
         TestFileCaptor captor = new TestFileCaptor();
         LiveDataProcessor liveDataProcessor = new LiveDataProcessor("test", new ReaderProvider() {

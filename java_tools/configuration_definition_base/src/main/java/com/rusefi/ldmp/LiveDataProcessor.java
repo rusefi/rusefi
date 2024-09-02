@@ -60,13 +60,14 @@ public class LiveDataProcessor {
             System.err.println("Five arguments expected: name of live data yaml input file and else but got " + args.length + ": " + Arrays.toString(args));
             System.exit(-1);
         }
+        log.info("Invoked with " + Arrays.toString(args));
         String yamlFileNames = args[0];
         String definitionInputFileName = args[1];
         String headerFileName = args[2];
         String javaDestinationFileName = args[3];
         String destinationFolder = args[4];
         TriggerMetaGenerator.doJob(definitionInputFileName, headerFileName, javaDestinationFileName);
-        ArrayList<LinkedHashMap> totalContent = new ArrayList<>();
+        List<LinkedHashMap> totalContent = new ArrayList<>();
         for (String fileName : yamlFileNames.split(",")) {
             ArrayList<LinkedHashMap> yamlContent = getStringObjectMap(new FileReader(fileName));
             totalContent.addAll(yamlContent);
@@ -128,7 +129,7 @@ public class LiveDataProcessor {
         void onEntry(String name, String javaName, String folder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, String engineModule, Boolean isPtr, String cppFileName) throws IOException;
     }
 
-    public int handleYaml(ArrayList<LinkedHashMap> liveDocs) throws IOException {
+    public int handleYaml(List<LinkedHashMap> liveDocs) throws IOException {
         AtomicInteger startingPosition = new AtomicInteger();
 
         OutputsSectionConsumer outputsSections = new OutputsSectionConsumer(getOutputsSectionFileName(),
