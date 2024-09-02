@@ -7,11 +7,13 @@ allprojects {
     }
 
     plugins.withType(JavaPlugin) {
-        dependencies {
-            // let's be vocal that 1.8 is not enough
-            sourceCompatibility = '11'
-            targetCompatibility = '11'
+        java {
+          // let's be vocal that 1.8 is not enough
+          sourceCompatibility = '11'
+          targetCompatibility = '11'
+        }
 
+        dependencies {
             implementation global_libs.annotations
             testImplementation global_libs.junit5
             testImplementation global_libs.junit5engine
