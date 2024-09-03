@@ -314,6 +314,8 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	targetWithIdlePosition = interpolateClamped(0, etbIdleAddition, 100, 100, etbCurrentTarget);
 
 	percent_t targetPosition = boardAdjustEtbTarget(targetWithIdlePosition + getLuaAdjustment());
+	// just an additional logging data point
+	adjustedEtbTarget = targetPosition;
 
 #if EFI_ANTILAG_SYSTEM
 	if (engine->antilagController.isAntilagCondition) {

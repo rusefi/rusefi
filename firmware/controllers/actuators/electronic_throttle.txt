@@ -19,13 +19,14 @@ struct_no_prefix electronic_throttle_s
 	bit jamDetected
 
 	float etbDutyRateOfChange;"ETB duty rate of change";"per", 1,0, 0,25, 2,@@GAUGE_CATEGORY_ETB@@
-	float etbDutyAverage;"ETB average duty";"per", 1,0, -20,50, 2,@@GAUGE_CATEGORY_ETB@@
+	float etbDutyAverage;"ETB average duty";"%", 1,0, -20,50, 2,@@GAUGE_CATEGORY_ETB@@
 	uint16_t etbTpsErrorCounter;"ETB TPS error counter";"count", 1,0, 0,3, 0,@@GAUGE_CATEGORY_ETB@@
 	uint16_t etbPpsErrorCounter;"ETB pedal error counter";"count", 1,0, 0,3, 0,@@GAUGE_CATEGORY_ETB@@
 
 	int8_t etbErrorCode
-	int8_t tcEtbDrop
+	int8_t tcEtbDrop;ETB traction control;"%", 1, 0, 0, 100, 0
 
 	uint16_t autoscale jamTimer;ETB jam timer;"sec", 0.01, 0, 0, 100, 2
+	int8_t adjustedEtbTarget;ETB with adjustments;"%", 1, 0, 0, 100, 0
 
 end_struct
