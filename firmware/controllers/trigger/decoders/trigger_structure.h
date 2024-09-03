@@ -65,7 +65,7 @@ class TriggerConfiguration;
 class TriggerWaveform {
 public:
 	TriggerWaveform();
-	void initializeTriggerWaveform(operation_mode_e triggerOperationMode, const trigger_config_s &triggerType);
+	void initializeTriggerWaveform(operation_mode_e triggerOperationMode, const trigger_config_s &triggerType, bool isCrankWheel = true);
 	void setShapeDefinitionError(bool value);
 
 	/**

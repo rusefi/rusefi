@@ -424,7 +424,7 @@ void TriggerWaveform::setThirdTriggerSynchronizationGap(float syncRatio) {
 /**
  * External logger is needed because at this point our logger is not yet initialized
  */
-void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperationMode, const trigger_config_s &triggerType) {
+void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperationMode, const trigger_config_s &triggerType, bool isCrankWheel) {
 
 #if EFI_PROD_CODE
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6641, hasLotsOfRemainingStack(), "init t");
@@ -793,7 +793,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		warning(ObdCode::CUSTOM_ERR_NO_SHAPE, "initializeTriggerWaveform() not implemented: %d", triggerType.type);
 	}
 
-	if (!needSecondTriggerInput &&
+	if (isCrankWheel && !needSecondTriggerInput &&
 #if EFI_UNIT_TEST
  	engineConfiguration != nullptr &&
 #endif

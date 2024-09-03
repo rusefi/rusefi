@@ -1080,7 +1080,7 @@ void onConfigurationChangeTriggerCallback() {
 }
 
 static void initVvtShape(TriggerWaveform& shape, const TriggerConfiguration& p_config, TriggerDecoderBase &initState) {
-	shape.initializeTriggerWaveform(FOUR_STROKE_CAM_SENSOR, p_config.TriggerType);
+	shape.initializeTriggerWaveform(FOUR_STROKE_CAM_SENSOR, p_config.TriggerType, /*isCrank*/ false);
 	shape.initializeSyncPoint(initState, p_config);
 }
 
