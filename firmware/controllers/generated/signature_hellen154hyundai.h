@@ -2,5 +2,5 @@
 // was generated automatically by rusEFI tool config_definition-all.jar based on gen_config.sh by SignatureConsumer
 //
 
-#define SIGNATURE_HASH 3141098209
-#define TS_SIGNATURE "rusEFI master.2024.09.03.hellen154hyundai.3141098209"
+#define SIGNATURE_HASH 1269457047
+#define TS_SIGNATURE "rusEFI master.2024.09.03.hellen154hyundai.1269457047"

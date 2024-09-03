@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Tue Jun 18 01:50:01 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/electronic_throttle.txt
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -151,7 +151,7 @@ struct electronic_throttle_s {
 	float etbDutyRateOfChange = (float)0;
 	/**
 	 * "ETB average duty"
-	 * units: per
+	 * units: %
 	 * offset 40
 	 */
 	float etbDutyAverage = (float)0;
@@ -172,6 +172,8 @@ struct electronic_throttle_s {
 	 */
 	int8_t etbErrorCode = (int8_t)0;
 	/**
+	 * ETB traction control
+	 * units: %
 	 * offset 49
 	 */
 	int8_t tcEtbDrop = (int8_t)0;
@@ -181,8 +183,20 @@ struct electronic_throttle_s {
 	 * offset 50
 	 */
 	scaled_channel<uint16_t, 100, 1> jamTimer = (uint16_t)0;
+	/**
+	 * ETB with adjustments
+	 * units: %
+	 * offset 52
+	 */
+	int8_t adjustedEtbTarget = (int8_t)0;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 53
+	 */
+	uint8_t alignmentFill_at_53[3];
 };
-static_assert(sizeof(electronic_throttle_s) == 52);
+static_assert(sizeof(electronic_throttle_s) == 56);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/electronic_throttle.txt Tue Jun 18 01:50:01 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/electronic_throttle.txt
