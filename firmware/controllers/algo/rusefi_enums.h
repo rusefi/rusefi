@@ -529,6 +529,7 @@ typedef enum __attribute__ ((__packed__)) {
 	GPPWM_Egt2 = 28,
 	GPPWM_AuxLinear3 = 29,
 	GPPWM_AuxLinear4 = 30,
+	GPPWM_VehicleSpeed = 31,
 } gppwm_channel_e;
 
 typedef enum __attribute__ ((__packed__)) {

@@ -78,6 +78,8 @@ expected<float> readGppwmChannel(gppwm_channel_e channel) {
 		return Sensor::get(SensorType::EGT1);
 	case GPPWM_Egt2:
 		return Sensor::get(SensorType::EGT2);
+	case GPPWM_VehicleSpeed:
+		return Sensor::get(SensorType::VehicleSpeed);
 	}
 
 	return unexpected;
