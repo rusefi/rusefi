@@ -8,7 +8,9 @@
 #pragma once
 
 void initTachometer();
-void tachUpdate();
 
-// TODO
-struct TachometerModule : public EngineModule { };
+struct TachometerModule : public EngineModule {
+
+	// TODO: can/should this be slow callback instead?
+	void onFastCallback() override;
+};

@@ -11,8 +11,8 @@
 #include "pch.h"
 
 static SimplePwm tachControl("tach"); 
-static float tachFreq;  
-static float duty;   
+static float tachFreq;
+static float duty;
 
 #if EFI_UNIT_TEST
 float getTachFreq() {
@@ -26,7 +26,7 @@ float getTachDuty() {
 
 static bool tachHasInit = false;
 
-void tachUpdate() {
+void TachometerModule::onFastCallback() {
 	// Only do anything if tach enabled
 	if (!tachHasInit) {
 		return;
