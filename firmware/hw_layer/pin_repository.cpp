@@ -127,15 +127,20 @@ static void reportPins() {
 	int totalPinsUsed = 0;
 
 	for (unsigned int i = 0; i < getBrainPinOnchipNum(); i++) {
-		const char *pin_user = getBrainUsedPin(i);
+		const char* pinUser = getBrainUsedPin(i);
 
 		/* show used pins */
-		if (pin_user != NULL) {
+		if (pinUser) {
 			brain_pin_e brainPin = index_to_brainPin(i);
-			int pin = getBrainPinIndex(brainPin);
-			ioportid_t port = getBrainPinPort(brainPin);
 
-			efiPrintf("pin %s%d: %s", portname(port), pin, pin_user);
+			if (const char* friendlyName = getBoardSpecificPinName(brainPin)) {
+				efiPrintf("pin %s: %s", friendlyName, pinUser);
+			} else {
+				int pin = getBrainPinIndex(brainPin);
+				ioportid_t port = getBrainPinPort(brainPin);
+				efiPrintf("pin %s%d: %s", portname(port), pin, pinUser);
+			}
+
 			totalPinsUsed++;
 		}
 	}
