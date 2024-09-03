@@ -9,3 +9,6 @@
 
 void initTachometer();
 void tachUpdate();
+
+// TODO
+struct TachometerModule : public EngineModule { };

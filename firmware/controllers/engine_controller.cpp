@@ -44,7 +44,6 @@
 #include "vvt.h"
 #include "boost_control.h"
 #include "launch_control.h"
-#include "tachometer.h"
 #include "speedometer.h"
 #include "gppwm.h"
 #include "date_stamp.h"
