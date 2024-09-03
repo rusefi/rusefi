@@ -387,6 +387,8 @@ case GPPWM_VVT_2I:
   return "GPPWM_VVT_2I";
 case GPPWM_Vbatt:
   return "GPPWM_Vbatt";
+case GPPWM_VehicleSpeed:
+  return "GPPWM_VehicleSpeed";
 case GPPWM_Zero:
   return "GPPWM_Zero";
   }
