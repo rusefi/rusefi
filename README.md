@@ -61,7 +61,7 @@ Initialize the checkout:
 
 See [firmware/gcc_version_check.c](firmware/gcc_version_check.c) for the recommended version of GCC.
 
-Check out https://rusefi.com/forum/viewtopic.php?f=5&t=9
+Refer to [firmware/DEVELOPER.md](firmware/DEVELOPER.md) for details on building FOME firmware.
 
 # Release Notes
 
