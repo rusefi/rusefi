@@ -231,11 +231,7 @@ const char *hwPortname(brain_pin_e brainPin) {
 	return portNameBuffer;
 }
 
-void initPinRepository(void) {
-	/**
-	 * this method cannot use console because this method is invoked before console is initialized
-	 */
-
+void initPinRepository() {
 	addConsoleAction(CMD_PINS, reportPins);
 
 #if (BOARD_TLE8888_COUNT > 0)

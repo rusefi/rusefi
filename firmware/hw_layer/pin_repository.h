@@ -22,7 +22,7 @@ public:
 
 bool isBrainPinValid(brain_pin_e brainPin);
 
-void initPinRepository(void);
+void initPinRepository();
 bool brain_pin_is_onchip(brain_pin_e brainPin);
 bool brain_pin_is_ext(brain_pin_e brainPin);
 void pinDiag2string(char *buffer, size_t size, brain_pin_diag_e pin_diag);
