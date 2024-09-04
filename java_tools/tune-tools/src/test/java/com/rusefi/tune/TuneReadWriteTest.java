@@ -23,7 +23,7 @@ public class TuneReadWriteTest {
     private static final String PATH = TuneCanToolConstants.SRC_TEST_RESOURCES + "frankenso/";
     static final String TUNE_NAME = PATH + "test-CurrentTune.msq";
     static final String TEST_INI = PATH + "test-mainController.ini";
-    private static final String TEST_BINARY_FILE = PATH + "current_configuration.rusefi_binary";
+    private static final String TEST_BINARY_FILE = PATH + "current_configuration.binary_image";
     private static final int LEGACY_TOTAL_CONFIG_SIZE = 20000;
 
     private final IniFileModel model = new IniFileModel().readIniFile(TEST_INI);
