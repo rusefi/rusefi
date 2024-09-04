@@ -94,7 +94,7 @@ using AdcTockenInternal = union {
 	} __attribute__((packed));
 };
 
-static constexpr AdcToken invalidAdcToken = (AdcToken)(0);
+static constexpr AdcToken invalidAdcToken = (AdcToken)(0xffffffff);
 
 adc_channel_mode_e getAdcMode(adc_channel_e hwChannel);
 void initAdcInputs();
