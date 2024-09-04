@@ -16,8 +16,14 @@ import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
 
 /**
- * Utility class to read/write {@link ConfigurationImage} into a file
- *
+ * Utility class to read/write {@link ConfigurationImage} into a file.
+ * A configuration image file is a zip archive containing the following two files:
+ * 1. <b>Image.bin</b> - a binary file with an image binary representation
+ * 2. <b>${CONFIGURATION_IMAGE_META}.yaml</b> - a yaml file with an image binary metadata, where
+ *    ${CONFIGURATION_IMAGE_META} is a name of the corresponding class, inherited from {@link ConfigurationImageMeta}
+ *    class. Currently, we support only {@link ConfigurationImageMetaVersion0_0} value for ${CONFIGURATION_IMAGE_META},
+ *    but in th future we could extend list of supported image binary metadata formats.
+ * <p>
  * Andrey Belomutskiy, (c) 2013-2020
  * 6/20/2015.
  */
