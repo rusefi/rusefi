@@ -79,6 +79,7 @@ Release template (copy/paste this for new release):
  - Open Loop Boost vertical axis needs to be configured #4778
  - Cranking Cycle Multiplier is now a Map with Coolant Temp as the additional axis. #6584
  - Now we use "Alternator Voltage Target Table" instead of "Target(Volts)" setting on "Alternator Settings" area to calculate alternator voltage target. #6523
+ - Now console generates current_configuration.binary_image in new format instead of current_configuration.rusefi_binary #6863
 
 ## April 2024 "Day 785"
 
