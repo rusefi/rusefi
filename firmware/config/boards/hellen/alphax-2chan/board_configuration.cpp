@@ -77,8 +77,12 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 
 
 static bool isMegaModuleRevision() {
+#ifndef EFI_BOOTLOADER
     int16_t hellenBoardId = engine->engineState.hellenBoardId;
     return hellenBoardId != BOARD_ID_ALPHA2CH_B && hellenBoardId != BOARD_ID_ALPHA2CH_C && hellenBoardId != BOARD_ID_ALPHA2CH_D;
+#else
+  return true;
+#endif // EFI_BOOTLOADER
 }
 
 void setBoardConfigOverrides() {
