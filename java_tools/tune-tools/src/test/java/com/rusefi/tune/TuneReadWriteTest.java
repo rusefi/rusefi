@@ -1,6 +1,9 @@
 package com.rusefi.tune;
 
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ConfigurationImageMeta;
+import com.opensr5.ConfigurationImageMetaVersion0_0;
+import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
@@ -137,6 +140,16 @@ public class TuneReadWriteTest {
                 "\tcopyTable(config->veTable, hardCodedveTable);\n", copyMethodBody);
     }
 
+    @Test
+    public void testMeta() throws IOException {
+        final ConfigurationImageWithMeta configurationImage = ConfigurationImageFile.readFromFile(TEST_BINARY_FILE);
+        assertNotNull(configurationImage);
+        final ConfigurationImageMeta meta = configurationImage.getMeta();
+        assertInstanceOf(ConfigurationImageMetaVersion0_0.class, meta);
+        final ConfigurationImageMetaVersion0_0 metaVersion0_0 = (ConfigurationImageMetaVersion0_0) meta;
+        assertEquals(LEGACY_TOTAL_CONFIG_SIZE, metaVersion0_0.getImageSize());
+        assertEquals("rusEFI TEST_BRANCH.TEST_TAG.TEST_DEVICE.TEST_HASH\0", metaVersion0_0.getEcuSignature());
+    }
 
     @Test
     public void testCompareBinaryToTSTune() throws Exception {
