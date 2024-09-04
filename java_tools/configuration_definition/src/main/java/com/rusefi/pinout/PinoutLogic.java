@@ -65,23 +65,8 @@ public class PinoutLogic {
             if (classList == null) {
                 throw new IllegalStateException(boardName + ": Class not found:  " + className + " for " + id);
             }
-            PinType listPinType = PinType.find(className);
-            String pinType = listPinType.getPinType();
-            EnumsReader.EnumState enumList = enumsReader.getEnums().get(pinType);
-            Objects.requireNonNull(enumList, "Enum for " + pinType);
-            Map.Entry<String, Value> kv = find(enumList, id);
-            if (kv == null) {
-                if (id.toLowerCase().contains("gpio"))
-                    throw new IllegalStateException(boardName + ": Not found looks like legacy 'Gpio::' notation " + id + " in " + className);
-                throw new IllegalStateException(boardName + ": Not found " + id + " in " + className);
-            }
-
-            int index = kv.getValue().getIntValue();
-            classList.ensureCapacity(index + 1);
-            for (int ii = classList.size(); ii <= index; ii++) {
-                classList.add(null);
-            }
-            classList.set(index, listPin.getPinTsName());
+            String pinType = PinType.find(className).getPinType();
+            addToPinType(boardName, enumsReader, listPin, pinType, id, className, classList);
         }
         for (Map.Entry<String, ArrayList<String>> kv : names.entrySet()) {
             PinType namePinType = PinType.find(kv.getKey());
@@ -96,6 +81,29 @@ public class PinoutLogic {
                 parseState.addDefinition(registry, outputEnumName + ARRAY_FORMAT_ENUM, pair.getArrayForm(), Definition.OverwritePolicy.IgnoreNew);
             }
         }
+    }
+
+    private static void addToPinType(String boardName, EnumsReader enumsReader, PinState listPin, String pinType, String id, String className, ArrayList<String> classList) {
+        EnumsReader.EnumState enumList = enumsReader.getEnums().get(pinType);
+        Objects.requireNonNull(enumList, "Enum for " + pinType);
+        Map.Entry<String, Value> kv = find(enumList, id);
+        if (kv == null) {
+            if (id.toLowerCase().contains("gpio"))
+                throw new IllegalStateException(boardName + ": Not found looks like legacy 'Gpio::' notation " + id + " in " + className);
+            throw new IllegalStateException(boardName + ": Not found " + id + " in " + className);
+        }
+
+        Value value = kv.getValue();
+        addPin(listPin, value, classList);
+    }
+
+    private static void addPin(PinState listPin, Value value, ArrayList<String> classList) {
+        int index = value.getIntValue();
+        classList.ensureCapacity(index + 1);
+        for (int ii = classList.size(); ii <= index; ii++) {
+            classList.add(null);
+        }
+        classList.set(index, listPin.getPinTsName());
     }
 
     @NotNull
