@@ -9,6 +9,8 @@
 #include "settings.h"
 #include "gpio/gpio_ext.h"
 
+extern PinRepository pinRepository;
+
 // todo: WHAT?! document why do we manually truncate higher bits?
 #define TRUNCATE_TO_BYTE(i) ((i) & 0xff)
 // raw values are 0..5V, convert it to 8-bit (0..255)
@@ -73,7 +75,7 @@ static void setPin(const CANRxFrame& frame, int value) {
 		Gpio pin = boardOutputs[outputIndex];
 
         int hwIndex = brainPin_to_index(pin);
-        if (engine->pinRepository.getBrainUsedPin(hwIndex) == nullptr) {
+        if (pinRepository.getBrainUsedPin(hwIndex) == nullptr) {
             // if pin is assigned we better configure it
             efiSetPadModeWithoutOwnershipAcquisition("QC_SET", pin, PAL_MODE_OUTPUT_PUSHPULL);
         }

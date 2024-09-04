@@ -11,12 +11,14 @@
 
 #include "pch.h"
 
+PinRepository pinRepository CCM_OPTIONAL;
+
 static size_t getBrainPinTotalNum() {
 	return BRAIN_PIN_TOTAL_PINS;
 }
 
 const char* & getBrainUsedPin(size_t index) {
-	return engine->pinRepository.getBrainUsedPin(index);
+	return pinRepository.getBrainUsedPin(index);
 }
 
 /* Common for firmware and unit tests */
@@ -57,7 +59,7 @@ bool brain_pin_markUsed(Gpio brainPin, const char *msg) {
 	if (index < 0)
 		return true;
 
-	if (engine->pinRepository.getBrainUsedPin(index) != nullptr) {
+	if (pinRepository.getBrainUsedPin(index) != nullptr) {
 		// hwPortname and share a buffer behind the scenes, even while they probably never use it for different
 		// values here let's have an explicit second buffer to make this more reliable
 		char physicalPinName[32];

@@ -25,6 +25,7 @@ extern WaveChart waveChart;
 
 extern WarningCodeState unitTestWarningCodeState;
 extern engine_configuration_s & activeConfiguration;
+extern PinRepository pinRepository;
 extern bool printTriggerDebug;
 extern bool printTriggerTrace;
 extern bool printFuelDebug;
@@ -76,6 +77,8 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	EngineTestHelperBase(&engine, &persistentConfig.engineConfiguration, &persistentConfig)
 {
 	memset(&persistentConfig, 0, sizeof(persistentConfig));
+	memset(&pinRepository, 0, sizeof(pinRepository));
+
 
 	Sensor::setMockValue(SensorType::Clt, 70);
 	Sensor::setMockValue(SensorType::Iat, 30);

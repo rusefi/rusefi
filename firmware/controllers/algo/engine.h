@@ -113,8 +113,6 @@ public:
 	 */
 	bool pauseCANdueToSerial = false;
 
-	PinRepository pinRepository;
-
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
 
 #if EFI_ENGINE_CONTROL

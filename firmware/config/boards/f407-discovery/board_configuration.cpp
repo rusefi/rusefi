@@ -187,10 +187,11 @@ static const struct mc33810_config mc33810 = {
 	    int ret = mc33810_add(Gpio::MC33810_0_OUT_0, 0, &mc33810);
 	    efiPrintf("*****************+ mc33810_add %d +*******************", ret);
 
-
+#ifndef EFI_BOOTLOADER
 	    // todo: add to more appropriate location?
 	    addConsoleAction("injinfo", [](){
 	        efiPrintf("injinfo index=%d", engine->fuelComputer.brokenInjector);
 	    });
+#endif // EFI_BOOTLOADER
 	}
 }
