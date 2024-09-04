@@ -231,8 +231,7 @@ void removeChannel(const char*, adc_channel_e hwChannel) {
 	}
 #if EFI_USE_FAST_ADC
 	if (adcHwChannelMode[hwChannel].adc_mask & BIT(ADC_FAST)) {
-		/* TODO: */
-		//fastAdc.disableChannel(hwChannel);
+		fastAdc.disableChannel(hwChannel);
 	}
 #endif
 
