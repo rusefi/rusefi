@@ -65,8 +65,10 @@ public class PinoutLogic {
             if (classList == null) {
                 throw new IllegalStateException(boardName + ": Class not found:  " + className + " for " + id);
             }
-            String pinType = PinType.find(className).getPinType();
-            addToPinType(boardName, enumsReader, listPin, pinType, id, className, classList);
+            PinType pinType = PinType.find(className);
+            addToPinType(boardName, enumsReader, listPin, pinType.getPinType(), id, className, classList);
+            if (pinType == PinType.EVENT_INPUTS)
+                addToPinType(boardName, enumsReader, listPin, PinType.SWITCH_INPUTS.getPinType(), id, className, classList);
         }
         for (Map.Entry<String, ArrayList<String>> kv : names.entrySet()) {
             PinType namePinType = PinType.find(kv.getKey());

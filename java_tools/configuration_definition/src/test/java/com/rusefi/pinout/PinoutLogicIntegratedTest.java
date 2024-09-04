@@ -36,8 +36,8 @@ public class PinoutLogicIntegratedTest {
     public void testWholeThing() throws IOException {
         runPinoutTest("pins:\n" +
                 "  - pin: 1\n" +
-                "    id: [E11, E11]\n" +
-                "    class: [event_inputs, switch_inputs]\n" +
+                "    id: E11\n" +
+                "    class: event_inputs\n" +
                 "    function: Digital trigger/switch input for instance Hall type CAM\n" +
                 "    ts_name: Digital 2\n" +
                 "    type: din",
