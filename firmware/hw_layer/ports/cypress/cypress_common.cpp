@@ -151,6 +151,11 @@ bool adcIsMuxedInput(adc_channel_e hwChannel) {
     return false;
 }
 
+adc_channel_e adcMuxedGetParent(adc_channel_e hwChannel)
+{
+    return hwChannel;
+}
+
 int getAdcInternalChannel(ADC_TypeDef *adc, adc_channel_e hwChannel) {
 	(void)adc;
 

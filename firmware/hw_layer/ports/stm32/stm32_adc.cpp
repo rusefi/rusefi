@@ -46,11 +46,8 @@ static const struct {
 brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel) {
     static_assert(EFI_ADC_NONE == ADC_CHANNEL_NONE);
 
-    /* Muxed adc inputs
-     * TODO: move this magic to adcChannels[] table? */
-    if (adcIsMuxedInput(hwChannel)) {
-        return getAdcChannelBrainPin(msg, (adc_channel_e)(EFI_ADC_0 + (hwChannel - EFI_ADC_16)));
-    }
+    /* Muxed adc inputs */
+    hwChannel = adcMuxedGetParent(hwChannel);
 
     for (size_t idx = 0; idx < efi::size(adcChannels); idx++) {
         if (adcChannels[idx].ch == hwChannel) {
@@ -73,6 +70,16 @@ bool adcIsMuxedInput(adc_channel_e hwChannel) {
 #else
     return false;
 #endif
+}
+
+// If mux is not enabled or channel is already a root channel - return itself
+adc_channel_e adcMuxedGetParent(adc_channel_e hwChannel)
+{
+    if (adcIsMuxedInput(hwChannel)) {
+        return (adc_channel_e)(EFI_ADC_0 + (hwChannel - EFI_ADC_16));
+    }
+
+    return hwChannel;
 }
 
 adc_channel_e getAdcChannel(brain_pin_e pin) {
