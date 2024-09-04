@@ -29,6 +29,7 @@ bool isStm32F42x();
 adc_channel_e getAdcChannel(brain_pin_e pin);
 brain_pin_e getAdcChannelBrainPin(const char *msg, adc_channel_e hwChannel);
 bool adcIsMuxedInput(adc_channel_e hwChannel);
+adc_channel_e adcMuxedGetParent(adc_channel_e hwChannel);
 int getAdcInternalChannel(ADC_TypeDef *adc, adc_channel_e hwChannel);
 
 // deprecated - migrate to 'getAdcChannelBrainPin'
