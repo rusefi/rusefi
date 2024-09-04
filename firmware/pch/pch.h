@@ -22,8 +22,8 @@
 #include "loggingcentral.h"
 #include "error_handling.h"
 #include "efi_gpio.h"
-#include "tunerstudio_outputs.h"
 #ifndef EFI_BOOTLOADER
+#include "tunerstudio_outputs.h"
 #include "engine.h"
 #endif // EFI_BOOTLOADER
 #include "engine_configuration.h"
