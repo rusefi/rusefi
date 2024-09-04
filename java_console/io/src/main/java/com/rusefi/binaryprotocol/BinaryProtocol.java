@@ -53,7 +53,7 @@ public class BinaryProtocol {
     private static final ThreadFactory THREAD_FACTORY = new NamedThreadFactory("ECU text pull", true);
 
     private static final String USE_PLAIN_PROTOCOL_PROPERTY = "protocol.plain";
-    private static final String CONFIGURATION_RUSEFI_BINARY = "current_configuration.rusefi_binary";
+    private static final String CONFIGURATION_RUSEFI_BINARY = "current_configuration.binary_image";
     private static final String CONFIGURATION_RUSEFI_XML = "current_configuration.msq";
     /**
      * This properly allows to switch to non-CRC32 mode
