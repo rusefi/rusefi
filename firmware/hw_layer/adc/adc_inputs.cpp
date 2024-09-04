@@ -94,8 +94,17 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 	return getAdcValueByToken(adcHwChannelMode[hwChannel]);
 }
 
-AdcToken getAdcChannelToken(adc_channel_e hwChannel) {
-	return adcHwChannelMode[hwChannel].token;
+adcsample_t getFastAdc(AdcToken token) {
+	if (token == invalidAdcToken) {
+		return 0;
+	}
+
+	/* convert */
+	AdcTockenInternal intToken = {
+		.token = token
+	};
+
+	return getAdcValueByToken(intToken);
 }
 
 #if EFI_USE_FAST_ADC
@@ -110,19 +119,7 @@ AdcToken enableFastAdcChannel(const char *msg, adc_channel_e hwChannel) {
 		return addChannel(msg, hwChannel, ADC_FAST);
 	}
 
-	return getAdcChannelToken(hwChannel);
-}
-
-adcsample_t getFastAdc(AdcToken token) {
-	if (token == invalidAdcToken) {
-		return 0;
-	}
-
-	AdcTockenInternal intToken = {
-		.token = token
-	};
-
-	return getAdcValueByToken(intToken);
+	return adcHwChannelMode[hwChannel].token;
 }
 
 #endif
