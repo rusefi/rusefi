@@ -35,6 +35,7 @@ ALLINC += \
  	$(DEVELOPMENT_DIR) \
 	$(ENGINES_INC) \
 	$(PROJECT_DIR)/config/engines \
+	$(PROJECT_DIR)/live_data_generated \
 	$(BOARDS_DIR) \
 	$(PROJECT_DIR)/hw_layer/algo \
     $(PROJECT_DIR)/init \
@@ -46,4 +47,4 @@ ALLINC += \
 	$(CONTROLLERS_SENSORS_INC) \
 	$(CONTROLLERS_INC) \
 	$(PROJECT_DIR)/console/binary/generated \
-	
+

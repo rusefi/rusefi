@@ -276,7 +276,7 @@ public class LiveDataProcessor {
                 outFolder = inputOutputFolder;
             }
 
-            handler.onEntry(name, java, inputFolder, prepend, withCDefines, outputNamesArr, constexpr, conditional, engineModule, isPtr, cppFileName, outFolder);
+            handler.onEntry(name, java, inputFolder, prepend, withCDefines, outputNamesArr, constexpr, conditional, engineModule, isPtr, cppFileName, "live_data_generated");
 
             String enumName = "LDS_" + name;
             String type = name + "_s"; // convention
