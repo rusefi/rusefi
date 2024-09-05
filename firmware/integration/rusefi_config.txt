@@ -745,7 +745,7 @@ output_pin_e acFanPin;Optional Radiator Fan used with A/C
 	Gpio[EGT_CHANNEL_COUNT iterate] max31855_cs;
 	brain_input_pin_e flexSensorPin;Continental/GM flex fuel sensor, 50-150hz type;
 	uint8_t autoscale tachSweepTime;Total time for the tach to sweep up then back down at startup. Set to 0 to disable sweep.;"s", 0.1, 0, 0, 10, 1
-	uint8_t autoscale tachSweepMax;Maximum RPM for the startup tach sweep.;"rpm", 50, 9, 0, 12500, 0
+	uint8_t autoscale tachSweepMax;Maximum RPM for the startup tach sweep.;"rpm", 50, 0, 0, 12500, 0
 	pin_output_mode_e stepperDirectionPinMode;
 
 	spi_device_e mc33972spiDevice;
