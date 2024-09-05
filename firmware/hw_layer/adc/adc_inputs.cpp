@@ -307,6 +307,10 @@ void initAdcInputs() {
 		adcHwChannelMode[i].channel = 0;
 	}
 
+	// We need all drivers to be assigned here, couse configureInputs() will call ->enableChannel() through addChannel()/addFastAdcChannel
+	adcDevices[ADC_FAST] = &fastAdc;
+	adcDevices[ADC_SLOW] = &slowAdc;
+
 	configureInputs();
 
 	// migrate to 'enable adcdebug'
@@ -317,14 +321,9 @@ void initAdcInputs() {
 
 #if EFI_USE_FAST_ADC
 	// After this point fastAdc is not allowed to add channels
-	if (fastAdc.start() == 0) {
-		adcDevices[ADC_FAST] = &fastAdc;
-	}
+	fastAdc.start();
 #endif // EFI_USE_FAST_ADC
-
-	if (slowAdc.start() == 0) {
-		adcDevices[ADC_SLOW] = &slowAdc;
-	}
+	slowAdc.start();
 
 	// Start the slow ADC thread
 	slowAdcController.start();
