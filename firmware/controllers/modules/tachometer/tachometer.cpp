@@ -78,11 +78,11 @@ float TachometerModule::getRpm() {
 		return trueRpm;
 	} else if (sweepPosition < 0.5f) {
 		// First half of the ramp, ramp up from 0 -> max
-		return interpolateClamped(0, 0.5f, 0, engineConfiguration->tachSweepMax, sweepPosition);
+		return interpolateClamped(0, 0, 0.5f, engineConfiguration->tachSweepMax, sweepPosition);
 	} else {
 		// Use y2 = trueRpm instead of 0 so that it ramps back down smoothly
 		// to the current RPM if the engine started during ther ramp
-		return interpolateClamped(0.5f, 1, engineConfiguration->tachSweepMax, trueRpm, sweepPosition);
+		return interpolateClamped(0.5f, engineConfiguration->tachSweepMax, 1, trueRpm, sweepPosition);
 	}
 }
 
