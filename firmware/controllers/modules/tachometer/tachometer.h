@@ -9,8 +9,23 @@
 
 void initTachometer();
 
-struct TachometerModule : public EngineModule {
-
+class TachometerModule : public EngineModule {
+public:
 	// TODO: can/should this be slow callback instead?
 	void onFastCallback() override;
+	void onIgnitionStateChanged(bool ignitionOn) override;
+
+private:
+	float getRpm();
+
+	bool m_doTachSweep = false;
+
+	enum class TachState {
+		Normal,
+		RampUp,
+		RampDown,
+	};
+
+	TachState m_state = TachState::Normal;
+	Timer m_stateChangeTimer;
 };
