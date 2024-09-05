@@ -85,7 +85,7 @@ jobs:
           echo "default tune: looks like something has changed"
           exit 0
         else
-          echo "default tune: looks like something unexpected"
+          echo "default tune: looks like something unexpected: [$OUT]"
           exit 1
         fi
         git stash
