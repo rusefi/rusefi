@@ -14,6 +14,9 @@
 
 #define ts_show_trigger_comparator true
 
+#define CLT_CURVE_SIZE 4
+#define TCU_RANGE_COUNT 4
+
 #define IGN_RPM_COUNT 4
 #define IGN_LOAD_COUNT 4
 

@@ -16,8 +16,10 @@ static void cannedidleAdvanceBins() {
 }
 
 static void cannedcltIdleRpm() {
+#if CLT_CURVE_SIZE == 16
 	static const float hardCodedcltIdleRpm[16] = {1860.0, 1860.0, 1800.0, 1700.0, 1660.0, 1600.0, 1560.0, 1500.0, 1500.0, 1460.0, 1460.0, 1440.0, 1400.0, 1400.0, 1500.0, 1600.0};
 	copyArray(config->cltIdleRpm, hardCodedcltIdleRpm);
+#endif // CLT_CURVE_SIZE
 }
 
 static void cannedidleAdvance() {
@@ -66,8 +68,10 @@ static void cannedpedalToTpsRpmBins() {
 }
 
 static void cannedcltIdleCorr() {
+#if CLT_CURVE_SIZE == 16
 	static const float hardCodedcltIdleCorr[16] = {1.1, 1.1, 0.9333, 0.9333, 0.9333, 0.8333, 0.6333, 0.6333, 0.5, 0.5, 0.4667, 0.3, 0.3, 0.3, 0.3, 0.3};
 	copyArray(config->cltIdleCorr, hardCodedcltIdleCorr);
+#endif // CLT_CURVE_SIZE
 }
 
 static void cannedcltCrankingCorr() {

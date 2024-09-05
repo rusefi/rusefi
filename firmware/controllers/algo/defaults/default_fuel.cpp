@@ -32,6 +32,7 @@ static void setBosch02880155868(injector_s& cfg) {
 }
 
 static void setDefaultWarmupFuelEnrichment() {
+#if CLT_CURVE_SIZE == 16
 	static const float bins[] =
 	{
 		-40,
@@ -75,6 +76,7 @@ static void setDefaultWarmupFuelEnrichment() {
 	};
 
 	copyArray(config->cltFuelCorr, values);
+#endif // CLT_CURVE_SIZE
 }
 
 static void setDefaultVETable() {

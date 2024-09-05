@@ -324,8 +324,10 @@ static void setDefaultWarmupIdleCorrection() {
  * see also setTargetRpmCurve()
  */
 static void setDefaultIdleSpeedTarget() {
+#if CLT_CURVE_SIZE == 16
 	copyArray(config->cltIdleRpmBins, {  -30, - 20,  -10,    0,   10,   20,   30,   40,   50,  60,  70,  80,  90, 100 , 110,  120 });
 	copyArray(config->cltIdleRpm,     { 1350, 1350, 1300, 1200, 1150, 1100, 1050, 1000, 1000, 950, 950, 930, 900, 900, 1000, 1100 });
+#endif // CLT_CURVE_SIZE
 }
 #endif // EFI_ENGINE_CONTROL
 
