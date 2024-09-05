@@ -49,41 +49,6 @@ void printSpiState() {
 		boolToString(engineConfiguration->is_enabled_spi_4));
 }
 
-static void printOutputs() {
-	efiPrintf("injectionPins: mode %s", getPin_output_mode_e(engineConfiguration->injectionPinMode));
-	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
-		brain_pin_e brainPin = engineConfiguration->injectionPins[i];
-		efiPrintf("injection #%d @ %s", (1 + i), hwPortname(brainPin));
-	}
-
-	efiPrintf("ignitionPins: mode %s", getPin_output_mode_e(engineConfiguration->ignitionPinMode));
-	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
-		brain_pin_e brainPin = engineConfiguration->ignitionPins[i];
-		efiPrintf("ignition #%d @ %s", (1 + i), hwPortname(brainPin));
-	}
-
-	efiPrintf("idlePin: mode %s @ %s freq=%d", getPin_output_mode_e(engineConfiguration->idle.solenoidPinMode),
-			hwPortname(engineConfiguration->idle.solenoidPin), engineConfiguration->idle.solenoidFrequency);
-	efiPrintf("malfunctionIndicator: %s mode=%s", hwPortname(engineConfiguration->malfunctionIndicatorPin),
-			getPin_output_mode_e(engineConfiguration->malfunctionIndicatorPinMode));
-
-	efiPrintf("fuelPumpPin: mode %s @ %s", getPin_output_mode_e(engineConfiguration->fuelPumpPinMode),
-			hwPortname(engineConfiguration->fuelPumpPin));
-
-	efiPrintf("fanPin: mode %s @ %s", getPin_output_mode_e(engineConfiguration->fanPinMode),
-			hwPortname(engineConfiguration->fanPin));
-
-	efiPrintf("mainRelay: mode %s @ %s", getPin_output_mode_e(engineConfiguration->mainRelayPinMode),
-			hwPortname(engineConfiguration->mainRelayPin));
-
-	efiPrintf("starterRelay: mode %s @ %s", getPin_output_mode_e(engineConfiguration->starterRelayDisablePinMode),
-			hwPortname(engineConfiguration->starterRelayDisablePin));
-
-	efiPrintf("alternator field: mode %s @ %s",
-			getPin_output_mode_e(engineConfiguration->alternatorControlPinMode),
-			hwPortname(engineConfiguration->alternatorControlPin));
-}
-
 /**
  * @brief	Prints current engine configuration to human-readable console.
  */
@@ -94,31 +59,7 @@ void printConfiguration() {
 			getTrigger_type_e(engineConfiguration->trigger.type),
 			getEngine_load_mode_e(engineConfiguration->fuelAlgorithm), (int)engineConfiguration->fuelAlgorithm);
 
-
 	efiPrintf("configurationVersion=%d", engine->getGlobalConfigurationVersion());
-
-	efiPrintf("rpmHardLimit: %d/operationMode=%d", engineConfiguration->rpmHardLimit,
-			getEngineRotationState()->getOperationMode());
-
-	efiPrintf("globalTriggerAngleOffset=%.2f", engineConfiguration->globalTriggerAngleOffset);
-
-	printOutputs();
-
-	efiPrintf("map_avg=%s/wa=%s",
-			boolToString(engineConfiguration->isMapAveragingEnabled),
-			boolToString(engineConfiguration->isWaveAnalyzerEnabled));
-
-	efiPrintf("clutchUp@%s: %s", hwPortname(engineConfiguration->clutchUpPin),
-			boolToString(engine->engineState.clutchUpState));
-	efiPrintf("clutchDown@%s: %s", hwPortname(engineConfiguration->clutchDownPin),
-			boolToString(engine->engineState.clutchDownState));
-
-	efiPrintf("digitalPotentiometerSpiDevice %d", engineConfiguration->digitalPotentiometerSpiDevice);
-
-	for (int i = 0; i < DIGIPOT_COUNT; i++) {
-		efiPrintf("digitalPotentiometer CS%d %s", i,
-				hwPortname(engineConfiguration->digitalPotentiometerChipSelect[i]));
-	}
 
 #if EFI_PROD_CODE
 	printSpiState();
@@ -126,52 +67,16 @@ void printConfiguration() {
 }
 
 #if EFI_ENGINE_CONTROL
-static void doPrintConfiguration() {
-	printConfiguration();
-}
-
 static void setIdleSolenoidFrequency(int value) {
 	engineConfiguration->idle.solenoidFrequency = value;
 	incrementGlobalConfigurationVersion();
 }
 #endif // EFI_ENGINE_CONTROL
 
-static void printTpsSenser(const char *msg, SensorType sensor, int16_t min, int16_t max, adc_channel_e channel) {
-	auto tps = Sensor::get(sensor);
-	auto raw = Sensor::getRaw(sensor);
-
-	if (!tps.Valid) {
-		efiPrintf("TPS not valid");
-	}
-
-	char pinNameBuffer[16];
-
-	efiPrintf("tps min (closed) %d/max (full) %d v=%.2f @%s", min, max,
-			raw, getPinNameByAdcChannel(msg, channel, pinNameBuffer, sizeof(pinNameBuffer)));
-
-
-	efiPrintf("current 10bit=%d value=%.2f", convertVoltageTo10bitADC(raw), tps.value_or(0));
-}
-
-void printTPSInfo(void) {
-	efiPrintf("pedal up %f / down %f",
-			engineConfiguration->throttlePedalUpVoltage,
-			engineConfiguration->throttlePedalWOTVoltage);
-
-	auto pps = Sensor::get(SensorType::AcceleratorPedal);
-
-	if (!pps.Valid) {
-		efiPrintf("PPS not valid");
-	}
-
-	printTpsSenser("TPS", SensorType::Tps1, engineConfiguration->tpsMin, engineConfiguration->tpsMax, engineConfiguration->tps1_1AdcChannel);
-	printTpsSenser("TPS2", SensorType::Tps2, engineConfiguration->tps2Min, engineConfiguration->tps2Max, engineConfiguration->tps2_1AdcChannel);
-}
-
 #if EFI_ENGINE_CONTROL
 static void setCrankingRpm(int value) {
 	engineConfiguration->cranking.rpm = value;
-	doPrintConfiguration();
+	printConfiguration();
 }
 
 /**
@@ -179,17 +84,17 @@ static void setCrankingRpm(int value) {
  */
 static void setAlgorithmInt(int value) {
 	setAlgorithm((engine_load_mode_e) value);
-	doPrintConfiguration();
+	printConfiguration();
 }
 
 static void setFiringOrder(int value) {
 	engineConfiguration->firingOrder = (firing_order_e) value;
-	doPrintConfiguration();
+	printConfiguration();
 }
 
 static void setRpmHardLimit(int value) {
 	engineConfiguration->rpmHardLimit = value;
-	doPrintConfiguration();
+	printConfiguration();
 }
 
 static void setCrankingIACExtra(float percent) {
@@ -205,25 +110,25 @@ static void setCrankingFuel(float timeMs) {
 static void setGlobalTriggerAngleOffset(float value) {
 	engineConfiguration->globalTriggerAngleOffset = value;
 	incrementGlobalConfigurationVersion();
-	doPrintConfiguration();
+	printConfiguration();
 }
 
 static void setCrankingTimingAngle(float value) {
 	engineConfiguration->crankingTimingAngle = value;
 	incrementGlobalConfigurationVersion();
-	doPrintConfiguration();
+	printConfiguration();
 }
 
 static void setCrankingInjectionMode(int value) {
 	engineConfiguration->crankingInjectionMode = (injection_mode_e) value;
 	incrementGlobalConfigurationVersion();
-	doPrintConfiguration();
+	printConfiguration();
 }
 
 static void setInjectionMode(int value) {
 	engineConfiguration->injectionMode = (injection_mode_e) value;
 	incrementGlobalConfigurationVersion();
-	doPrintConfiguration();
+	printConfiguration();
 }
 
 static void setIgnitionMode(int value) {
@@ -241,7 +146,7 @@ static void setIndividualCoilsIgnition() {
 static void setTriggerType(int value) {
 	engineConfiguration->trigger.type = (trigger_type_e) value;
 	incrementGlobalConfigurationVersion();
-	doPrintConfiguration();
+	printConfiguration();
 	efiPrintf("Do you need to also invoke set operation_mode X?");
 	engine->resetEngineSnifferIfInTestMode();
 }
@@ -728,12 +633,10 @@ void initSettings() {
 
 	// todo: start saving values into flash right away?
 
-	addConsoleAction("tpsinfo", printTPSInfo);
-
 #if EFI_ENGINE_CONTROL
     // used by HW CI
 	addConsoleAction(CMD_INDIVIDUAL_INJECTION, setIndividualCoilsIgnition);
-	addConsoleAction("showconfig", doPrintConfiguration);
+	addConsoleAction("showconfig", printConfiguration);
 	addConsoleActionF("set_whole_timing_map", setWholeTimingMapCmd);
 #endif // EFI_ENGINE_CONTROL
 
@@ -841,6 +744,6 @@ void setEngineType(int value, bool isWriteToFlash) {
 	}
 	incrementGlobalConfigurationVersion("engineType");
 #if EFI_ENGINE_CONTROL && ! EFI_UNIT_TEST
-	doPrintConfiguration();
+	printConfiguration();
 #endif // ! EFI_UNIT_TEST
 }

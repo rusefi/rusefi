@@ -13,7 +13,6 @@ void printSpiState();
 void printConfiguration();
 void scheduleStopEngine();
 
-void printTPSInfo(void);
 void setEngineTypeAndSave(int value);
 void setEngineType(int value, bool isWriteToFlash = true);
 void readPin(const char *pinName);

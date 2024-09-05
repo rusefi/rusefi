@@ -142,9 +142,6 @@
 #define EFI_CAN_SUPPORT FALSE
 #endif
 
-#define EFI_HD44780_LCD FALSE
-#define EFI_LCD FALSE
-
 #ifndef EFI_IDLE_CONTROL
 #define EFI_IDLE_CONTROL FALSE
 #endif

@@ -7,17 +7,13 @@
 /*
 void grabTPSIsClosed() {
 #if EFI_PROD_CODE
-	printTPSInfo();
 	engineConfiguration->tpsMin = convertVoltageTo10bitADC(Sensor::getRaw(SensorType::Tps1));
-	printTPSInfo();
 #endif // EFI_PROD_CODE
 }
 
 void grabTPSIsWideOpen() {
 #if EFI_PROD_CODE
-	printTPSInfo();
 	engineConfiguration->tpsMax = convertVoltageTo10bitADC(Sensor::getRaw(SensorType::Tps1));
-	printTPSInfo();
 #endif // EFI_PROD_CODE
 }
 */
