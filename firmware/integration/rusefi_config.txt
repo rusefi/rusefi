@@ -1549,8 +1549,6 @@ uint8_t[TORQUE_CURVE_SIZE x TORQUE_CURVE_SIZE] autoscale torqueTable;;"Nm", 10, 
 
 linear_sensor_s auxLinear1
 linear_sensor_s auxLinear2
-linear_sensor_s auxLinear3
-linear_sensor_s auxLinear4
 
 output_pin_e tcu_tcc_onoff_solenoid
 pin_output_mode_e tcu_tcc_onoff_solenoid_mode
@@ -1705,10 +1703,12 @@ int anotherCiTest
 
 	uint8_t autoscale minimumOilPressureTimeout;Delay before cutting fuel due to low oil pressure. Use this to ignore short pressure blips and sensor noise.;"sec", 0.1, 0, 0, 5, 1
 
+linear_sensor_s auxLinear3
+linear_sensor_s auxLinear4
 
 @@BOARD_ENGINE_CONFIGURATION_FROM_FILE@@
 
-#define END_OF_CALIBRATION_PADDING 168
+#define END_OF_CALIBRATION_PADDING 128
 uint8_t[END_OF_CALIBRATION_PADDING] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
