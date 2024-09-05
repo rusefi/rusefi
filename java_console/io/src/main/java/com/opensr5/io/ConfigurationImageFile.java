@@ -100,7 +100,7 @@ public class ConfigurationImageFile {
         final ConfigurationImageWithMeta configurationImage,
         final String fileName
     ) throws IOException {
-        System.out.printf("Saving " + configurationImage.getSize() + " bytes of configuration into " + fileName);
+        log.info(String.format("Saving %d bytes of configuration into %s", configurationImage.getSize(), fileName));
         final File outputFile = new File(fileName);
         final byte[] calibrationsFileContent = getFileContent(configurationImage);
         final int calibrationsFileSize = calibrationsFileContent.length;
