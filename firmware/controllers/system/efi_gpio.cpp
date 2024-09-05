@@ -229,7 +229,9 @@ bool EnginePins::stopPins() {
 void EnginePins::unregisterPins() {
 	stopInjectionPins();
 	stopIgnitionPins();
+#if EFI_AUX_VALVES
 	stopAuxValves();
+#endif
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	unregisterEtbPins();
@@ -258,8 +260,11 @@ void EnginePins::startPins() {
 #if EFI_ENGINE_CONTROL
 	startInjectionPins();
 	startIgnitionPins();
-	startAuxValves();
 #endif /* EFI_ENGINE_CONTROL */
+
+#if EFI_AUX_VALVES
+	startAuxValves();
+#endif // EFI_AUX_VALVES
 
 	RegisteredOutputPin * pin = registeredOutputHead;
 	while (pin != nullptr) {
@@ -290,6 +295,7 @@ void EnginePins::stopInjectionPins() {
 	}
 }
 
+#if EFI_AUX_VALVES
 void EnginePins::stopAuxValves() {
 	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT; i++) {
 		NamedOutputPin *output = &enginePins.auxValve[i];
@@ -311,6 +317,7 @@ void EnginePins::startAuxValves() {
 	}
 #endif /* EFI_PROD_CODE */
 }
+#endif // EFI_AUX_VALVES
 
 void EnginePins::startIgnitionPins() {
 #if EFI_PROD_CODE

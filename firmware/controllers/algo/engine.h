@@ -217,7 +217,9 @@ public:
 
 	void setConfig();
 
+#if EFI_AUX_VALVES
 	AuxActor auxValves[AUX_DIGITAL_VALVE_COUNT][2];
+#endif // EFI_AUX_VALVES
 
 #if EFI_UNIT_TEST
 	bool needTdcCallback = true;

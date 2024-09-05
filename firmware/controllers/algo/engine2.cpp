@@ -116,7 +116,9 @@ void EngineState::periodicFastCallback() {
 
 	engine->fuelComputer.running.timeSinceCrankingInSecs = crankingTimer.getElapsedSeconds(nowNt);
 
+#if EFI_AUX_VALVES
 	recalculateAuxValveTiming();
+#endif //EFI_AUX_VALVES
 
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	engine->ignitionState.sparkDwell = engine->ignitionState.getSparkDwell(rpm);

@@ -19,6 +19,8 @@
 #include "trigger_central.h"
 #include "spark_logic.h"
 
+#if EFI_AUX_VALVES
+
 static void plainPinTurnOff(NamedOutputPin *output) {
 	output->setLow();
 }
@@ -102,3 +104,5 @@ void recalculateAuxValveTiming() {
 				engine->engineState.auxValveEnd);
 	}
 }
+
+#endif // EFI_AUX_VALVES

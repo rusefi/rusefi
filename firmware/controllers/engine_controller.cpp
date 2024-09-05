@@ -504,9 +504,9 @@ void commonInitEngineController() {
 	engine->rpmCalculator.Register();
 #endif /* EFI_UNIT_TEST */
 
-#if (EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT) || EFI_SIMULATOR || EFI_UNIT_TEST
+#if EFI_AUX_VALVES
 	initAuxValves();
-#endif /* EFI_ENGINE_CONTROL */
+#endif /* EFI_AUX_VALVES */
 
 	initTachometer();
 	initSpeedometer();

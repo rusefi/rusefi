@@ -22,6 +22,8 @@ DDEFS += -DEFI_USE_UART_DMA=FALSE
 # temp work-around only until June 3rd 2024
 DDEFS += -DETB_INTERMITTENT_LIMIT=30000
 
+DDEFS += -DEFI_AUX_VALVES=TRUE
+
 # maybe a way to disable SPI2 privately
 #DDEFS += -DSTM32_SPI_USE_SPI2=FALSE
 
