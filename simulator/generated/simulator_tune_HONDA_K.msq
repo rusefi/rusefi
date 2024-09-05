@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22968">
+    <page number="0" size="23008">
         <constant name="engineType">"HONDA_K"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">0.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
@@ -1361,6 +1361,16 @@
         <constant digits="2" name="auxLinear2_value1" units="">0.0</constant>
         <constant digits="2" name="auxLinear2_v2" units="volts">0.0</constant>
         <constant digits="2" name="auxLinear2_value2" units="">0.0</constant>
+        <constant name="auxLinear3_hwChannel">"Disabled"</constant>
+        <constant digits="2" name="auxLinear3_v1" units="volts">0.0</constant>
+        <constant digits="2" name="auxLinear3_value1" units="">0.0</constant>
+        <constant digits="2" name="auxLinear3_v2" units="volts">0.0</constant>
+        <constant digits="2" name="auxLinear3_value2" units="">0.0</constant>
+        <constant name="auxLinear4_hwChannel">"Disabled"</constant>
+        <constant digits="2" name="auxLinear4_v1" units="volts">0.0</constant>
+        <constant digits="2" name="auxLinear4_value1" units="">0.0</constant>
+        <constant digits="2" name="auxLinear4_v2" units="volts">0.0</constant>
+        <constant digits="2" name="auxLinear4_value2" units="">0.0</constant>
         <constant name="tcu_tcc_onoff_solenoid">"NONE"</constant>
         <constant name="tcu_tcc_onoff_solenoid_mode">"default"</constant>
         <constant name="tcu_tcc_pwm_solenoid">"NONE"</constant>
@@ -4792,7 +4802,7 @@ end</constant>
          0.0
 </constant>
     </page>
-    <versionInfo firmwareInfo="20240830" nPages="1" signature="rusEFI master.2024.09.05.f407-discovery.2529814497" version="5.0"/>
+    <versionInfo firmwareInfo="20240830" nPages="1" signature="rusEFI master.2024.09.05.f407-discovery.3084108222" version="5.0"/>
     <bibliography author="rusEFI 20240830" writeDate="date"/>
     <settings/>
     <userComments/>
