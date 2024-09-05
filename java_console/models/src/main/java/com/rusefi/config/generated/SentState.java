@@ -32,6 +32,8 @@ public class SentState {
 	public static final String GAUGE_NAME_AIR_MASS = "Air: Cylinder airmass";
 	public static final String GAUGE_NAME_AUX_LINEAR_1 = "Aux linear #1";
 	public static final String GAUGE_NAME_AUX_LINEAR_2 = "Aux linear #2";
+	public static final String GAUGE_NAME_AUX_LINEAR_3 = "Aux linear #3";
+	public static final String GAUGE_NAME_AUX_LINEAR_4 = "Aux linear #4";
 	public static final String GAUGE_NAME_AUX_TEMP1 = "Aux temp 1";
 	public static final String GAUGE_NAME_AUX_TEMP2 = "Aux temp 2";
 	public static final String GAUGE_NAME_BARO_PRESSURE = "Barometric pressure";
@@ -176,9 +178,9 @@ public class SentState {
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field VALUE0 = Field.create("VALUE0", 0, FieldType.INT16).setScale(1.0).setBaseOffset(1740);
-	public static final Field VALUE1 = Field.create("VALUE1", 2, FieldType.INT16).setScale(1.0).setBaseOffset(1740);
-	public static final Field ERRORRATE = Field.create("ERRORRATE", 4, FieldType.FLOAT).setBaseOffset(1740);
+	public static final Field VALUE0 = Field.create("VALUE0", 0, FieldType.INT16).setScale(1.0).setBaseOffset(1748);
+	public static final Field VALUE1 = Field.create("VALUE1", 2, FieldType.INT16).setScale(1.0).setBaseOffset(1748);
+	public static final Field ERRORRATE = Field.create("ERRORRATE", 4, FieldType.FLOAT).setBaseOffset(1748);
 	public static final Field[] VALUES = {
 	VALUE0,
 	VALUE1,

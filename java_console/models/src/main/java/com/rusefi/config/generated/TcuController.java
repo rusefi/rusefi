@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/tcu/tcu_controller.txt Sun Sep 01 20:45:49 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/tcu/tcu_controller.txt
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -32,6 +32,8 @@ public class TcuController {
 	public static final String GAUGE_NAME_AIR_MASS = "Air: Cylinder airmass";
 	public static final String GAUGE_NAME_AUX_LINEAR_1 = "Aux linear #1";
 	public static final String GAUGE_NAME_AUX_LINEAR_2 = "Aux linear #2";
+	public static final String GAUGE_NAME_AUX_LINEAR_3 = "Aux linear #3";
+	public static final String GAUGE_NAME_AUX_LINEAR_4 = "Aux linear #4";
 	public static final String GAUGE_NAME_AUX_TEMP1 = "Aux temp 1";
 	public static final String GAUGE_NAME_AUX_TEMP2 = "Aux temp 2";
 	public static final String GAUGE_NAME_BARO_PRESSURE = "Barometric pressure";
@@ -176,15 +178,15 @@ public class TcuController {
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field TCUCURRENTGEAR = Field.create("TCUCURRENTGEAR", 0, FieldType.INT8).setScale(1.0).setBaseOffset(968);
-	public static final Field ALIGNMENTFILL_AT_1 = Field.create("ALIGNMENTFILL_AT_1", 1, FieldType.INT8).setScale(1.0).setBaseOffset(968);
-	public static final Field TCRATIO = Field.create("TCRATIO", 2, FieldType.INT16).setScale(0.01).setBaseOffset(968);
-	public static final Field LASTSHIFTTIME = Field.create("LASTSHIFTTIME", 4, FieldType.FLOAT).setBaseOffset(968);
-	public static final Field TCU_CURRENTRANGE = Field.create("TCU_CURRENTRANGE", 8, FieldType.INT8).setScale(1.0).setBaseOffset(968);
-	public static final Field PRESSURECONTROLDUTY = Field.create("PRESSURECONTROLDUTY", 9, FieldType.INT8).setScale(1.0).setBaseOffset(968);
-	public static final Field TORQUECONVERTERDUTY = Field.create("TORQUECONVERTERDUTY", 10, FieldType.INT8).setScale(1.0).setBaseOffset(968);
-	public static final Field ALIGNMENTFILL_AT_11 = Field.create("ALIGNMENTFILL_AT_11", 11, FieldType.INT8).setScale(1.0).setBaseOffset(968);
-	public static final Field ISSHIFTING = Field.create("ISSHIFTING", 12, FieldType.BIT, 0).setBaseOffset(968);
+	public static final Field TCUCURRENTGEAR = Field.create("TCUCURRENTGEAR", 0, FieldType.INT8).setScale(1.0).setBaseOffset(976);
+	public static final Field ALIGNMENTFILL_AT_1 = Field.create("ALIGNMENTFILL_AT_1", 1, FieldType.INT8).setScale(1.0).setBaseOffset(976);
+	public static final Field TCRATIO = Field.create("TCRATIO", 2, FieldType.INT16).setScale(0.01).setBaseOffset(976);
+	public static final Field LASTSHIFTTIME = Field.create("LASTSHIFTTIME", 4, FieldType.FLOAT).setBaseOffset(976);
+	public static final Field TCU_CURRENTRANGE = Field.create("TCU_CURRENTRANGE", 8, FieldType.INT8).setScale(1.0).setBaseOffset(976);
+	public static final Field PRESSURECONTROLDUTY = Field.create("PRESSURECONTROLDUTY", 9, FieldType.INT8).setScale(1.0).setBaseOffset(976);
+	public static final Field TORQUECONVERTERDUTY = Field.create("TORQUECONVERTERDUTY", 10, FieldType.INT8).setScale(1.0).setBaseOffset(976);
+	public static final Field ALIGNMENTFILL_AT_11 = Field.create("ALIGNMENTFILL_AT_11", 11, FieldType.INT8).setScale(1.0).setBaseOffset(976);
+	public static final Field ISSHIFTING = Field.create("ISSHIFTING", 12, FieldType.BIT, 0).setBaseOffset(976);
 	public static final Field[] VALUES = {
 	TCUCURRENTGEAR,
 	ALIGNMENTFILL_AT_1,

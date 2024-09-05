@@ -1,6 +1,6 @@
 package com.rusefi.config.generated;
 
-// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/ignition_state.txt Sun Sep 01 20:45:49 UTC 2024
+// this file was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/ignition_state.txt
 
 // by class com.rusefi.output.FileJavaFieldsConsumer
 import com.rusefi.config.*;
@@ -32,6 +32,8 @@ public class IgnitionState {
 	public static final String GAUGE_NAME_AIR_MASS = "Air: Cylinder airmass";
 	public static final String GAUGE_NAME_AUX_LINEAR_1 = "Aux linear #1";
 	public static final String GAUGE_NAME_AUX_LINEAR_2 = "Aux linear #2";
+	public static final String GAUGE_NAME_AUX_LINEAR_3 = "Aux linear #3";
+	public static final String GAUGE_NAME_AUX_LINEAR_4 = "Aux linear #4";
 	public static final String GAUGE_NAME_AUX_TEMP1 = "Aux temp 1";
 	public static final String GAUGE_NAME_AUX_TEMP2 = "Aux temp 2";
 	public static final String GAUGE_NAME_BARO_PRESSURE = "Barometric pressure";
@@ -176,19 +178,19 @@ public class IgnitionState {
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field BASEDWELL = Field.create("BASEDWELL", 0, FieldType.FLOAT).setBaseOffset(892);
-	public static final Field SPARKDWELL = Field.create("SPARKDWELL", 4, FieldType.FLOAT).setBaseOffset(892);
-	public static final Field DWELLDURATIONANGLE = Field.create("DWELLDURATIONANGLE", 8, FieldType.FLOAT).setBaseOffset(892);
-	public static final Field CLTTIMINGCORRECTION = Field.create("CLTTIMINGCORRECTION", 12, FieldType.INT16).setScale(0.01).setBaseOffset(892);
-	public static final Field TIMINGIATCORRECTION = Field.create("TIMINGIATCORRECTION", 14, FieldType.INT16).setScale(0.01).setBaseOffset(892);
-	public static final Field TIMINGPIDCORRECTION = Field.create("TIMINGPIDCORRECTION", 16, FieldType.INT16).setScale(0.01).setBaseOffset(892);
-	public static final Field BASEIGNITIONADVANCE = Field.create("BASEIGNITIONADVANCE", 18, FieldType.INT16).setScale(0.02).setBaseOffset(892);
-	public static final Field CORRECTEDIGNITIONADVANCE = Field.create("CORRECTEDIGNITIONADVANCE", 20, FieldType.INT16).setScale(0.02).setBaseOffset(892);
-	public static final Field TRACTIONADVANCEDROP = Field.create("TRACTIONADVANCEDROP", 22, FieldType.INT16).setScale(0.02).setBaseOffset(892);
-	public static final Field DWELLVOLTAGECORRECTION = Field.create("DWELLVOLTAGECORRECTION", 24, FieldType.FLOAT).setBaseOffset(892);
-	public static final Field LUATIMINGADD = Field.create("LUATIMINGADD", 28, FieldType.FLOAT).setBaseOffset(892);
-	public static final Field LUATIMINGMULT = Field.create("LUATIMINGMULT", 32, FieldType.FLOAT).setBaseOffset(892);
-	public static final Field LUAIGNITIONSKIP = Field.create("LUAIGNITIONSKIP", 36, FieldType.BIT, 0).setBaseOffset(892);
+	public static final Field BASEDWELL = Field.create("BASEDWELL", 0, FieldType.FLOAT).setBaseOffset(900);
+	public static final Field SPARKDWELL = Field.create("SPARKDWELL", 4, FieldType.FLOAT).setBaseOffset(900);
+	public static final Field DWELLDURATIONANGLE = Field.create("DWELLDURATIONANGLE", 8, FieldType.FLOAT).setBaseOffset(900);
+	public static final Field CLTTIMINGCORRECTION = Field.create("CLTTIMINGCORRECTION", 12, FieldType.INT16).setScale(0.01).setBaseOffset(900);
+	public static final Field TIMINGIATCORRECTION = Field.create("TIMINGIATCORRECTION", 14, FieldType.INT16).setScale(0.01).setBaseOffset(900);
+	public static final Field TIMINGPIDCORRECTION = Field.create("TIMINGPIDCORRECTION", 16, FieldType.INT16).setScale(0.01).setBaseOffset(900);
+	public static final Field BASEIGNITIONADVANCE = Field.create("BASEIGNITIONADVANCE", 18, FieldType.INT16).setScale(0.02).setBaseOffset(900);
+	public static final Field CORRECTEDIGNITIONADVANCE = Field.create("CORRECTEDIGNITIONADVANCE", 20, FieldType.INT16).setScale(0.02).setBaseOffset(900);
+	public static final Field TRACTIONADVANCEDROP = Field.create("TRACTIONADVANCEDROP", 22, FieldType.INT16).setScale(0.02).setBaseOffset(900);
+	public static final Field DWELLVOLTAGECORRECTION = Field.create("DWELLVOLTAGECORRECTION", 24, FieldType.FLOAT).setBaseOffset(900);
+	public static final Field LUATIMINGADD = Field.create("LUATIMINGADD", 28, FieldType.FLOAT).setBaseOffset(900);
+	public static final Field LUATIMINGMULT = Field.create("LUATIMINGMULT", 32, FieldType.FLOAT).setBaseOffset(900);
+	public static final Field LUAIGNITIONSKIP = Field.create("LUAIGNITIONSKIP", 36, FieldType.BIT, 0).setBaseOffset(900);
 	public static final Field[] VALUES = {
 	BASEDWELL,
 	SPARKDWELL,

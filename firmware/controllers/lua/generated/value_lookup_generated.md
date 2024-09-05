@@ -1591,6 +1591,30 @@ We need to give engine time to build oil pressure without diverting it to VVT
 ### auxLinear2.value2
 
 
+### auxLinear3.v1
+
+
+### auxLinear3.value1
+
+
+### auxLinear3.v2
+
+
+### auxLinear3.value2
+
+
+### auxLinear4.v1
+
+
+### auxLinear4.value1
+
+
+### auxLinear4.v2
+
+
+### auxLinear4.value2
+
+
 ### etbMinimumPosition
 
 

@@ -449,6 +449,12 @@ float getOutputValueByName(const char *name) {
 // auxLinear2
 		case 803810400:
 			return engine->outputChannels.auxLinear2;
+// auxLinear3
+		case 803810401:
+			return engine->outputChannels.auxLinear3;
+// auxLinear4
+		case 803810402:
+			return engine->outputChannels.auxLinear4;
 // fallbackMap
 		case -940825965:
 			return engine->outputChannels.fallbackMap;

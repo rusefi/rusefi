@@ -154,6 +154,8 @@ static const LogField fields[] = {
 	{engine->outputChannels.issEdgeCounter, "issEdgeCounter", "", 0},
 	{engine->outputChannels.auxLinear1, "Aux linear #1", "", 2},
 	{engine->outputChannels.auxLinear2, "Aux linear #2", "", 2},
+	{engine->outputChannels.auxLinear3, "Aux linear #3", "", 2},
+	{engine->outputChannels.auxLinear4, "Aux linear #4", "", 2},
 	{engine->outputChannels.fallbackMap, "fallbackMap", "kPa", 1},
 	{engine->outputChannels.instantMAPValue, "Instant MAP", "kPa", 2},
 	{engine->outputChannels.maxLockedDuration, "maxLockedDuration", "us", 0},
