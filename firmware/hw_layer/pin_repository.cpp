@@ -144,7 +144,7 @@ static void reportPins() {
 		const char *pin_user = getBrainUsedPin(i);
 
 		/* show used pins */
-		if (pin_user != NULL) {
+		if (pin_user) {
 			static char pin_state[64];
 			brain_pin_e brainPin = index_to_brainPin(i);
 			int pin = getBrainPinIndex(brainPin);
@@ -169,19 +169,19 @@ static void reportPins() {
 			pinDiag2string(pin_error, sizeof(pin_error), pin_diag);
 
 			/* here show all pins, unused too */
-			if (pin_name != NULL) {
+			if (pin_name) {
 				// this probably uses a lot of output buffer!
 				efiPrintf("ext %s: %s diagnostic: %s",
 					pin_name, pin_user ? pin_user : "free", pin_error);
 			} else {
 				const char *chip_name = gpiochips_getChipName(brainPin);
 				/* if chip exist */
-				if (chip_name != NULL) {
+				if (chip_name) {
 					efiPrintf("ext %s.%d: %s diagnostic: %s",
 						chip_name, gpiochips_getPinOffset(brainPin), pin_user ? pin_user : "free", pin_error);
 				}
 			}
-			if (pin_user != NULL) {
+			if (pin_user) {
 				totalPinsUsed++;
 			}
 		}
