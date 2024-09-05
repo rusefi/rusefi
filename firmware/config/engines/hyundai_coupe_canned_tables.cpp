@@ -10,13 +10,17 @@ static void cannedprimeValues() {
 }
 
 static void cannedcltIdleCorrBins() {
+#if CLT_CURVE_SIZE == 16
 	static const float hardCodedcltIdleCorrBins[16] = {-40.0, -30.0, -20.0, -10.0, 0.0, 10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0, 90.0, 100.0, 110.0};
 	copyArray(config->cltIdleCorrBins, hardCodedcltIdleCorrBins);
+#endif // CLT_CURVE_SIZE
 }
 
 static void cannedcltIdleCorr() {
+#if CLT_CURVE_SIZE == 16
 	static const float hardCodedcltIdleCorr[16] = {1.5, 1.5, 1.333333, 1.333333, 1.333333, 1.333333, 1.333333, 1.333333, 1.333333, 1.233333, 1.166667, 1.1, 1.0, 1.0, 1.0, 1.0};
 	copyArray(config->cltIdleCorr, hardCodedcltIdleCorr);
+#endif // CLT_CURVE_SIZE
 }
 
 static void couplecannedveTable() {
