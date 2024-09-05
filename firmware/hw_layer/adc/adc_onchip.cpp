@@ -62,11 +62,6 @@ int AdcSlowOnchipDevice::start(void) {
 }
 
 int AdcSlowOnchipDevice::enableChannel(adc_channel_e hwChannel) {
-	if ((channelCount + 1) >= ADC_MAX_CHANNELS_COUNT) {
-		criticalError("Too many Slow ADC channels configured");
-		return -1;
-	}
-
 	int channelAdcIndex = getAdcInternalChannel(adcp->adc, adcMuxedGetParent(hwChannel));
 	if (channelAdcIndex < 0) {
 		criticalError("hwChannel is not supported by Slow ADC");
