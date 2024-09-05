@@ -87,6 +87,7 @@ static bool isMegaModuleRevision() {
 
 void setBoardConfigOverrides() {
 	setHellenVbatt();
+#ifndef EFI_BOOTLOADER
     int16_t hellenBoardId = engine->engineState.hellenBoardId;
 
 	// rev.D uses SPI1 pins for CAN2, but rev.E and later uses mega-module meaning SPI1 for SD-card
@@ -112,6 +113,7 @@ void setBoardConfigOverrides() {
 
     engineConfiguration->vrThreshold[1].pin = Gpio::Unassigned; // 2chan never had second VR
     setDefaultHellenAtPullUps();
+#endif // EFI_BOOTLOADER
 
 	setHellenCan();
 }
