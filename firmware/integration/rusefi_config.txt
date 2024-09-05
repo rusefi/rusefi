@@ -2073,6 +2073,7 @@ end_struct
 #define CAM_1_MODE_NAME "Cam mode (intake)"
 #define CAM_2_MODE_NAME "Cam mode (exhaust)"
 #define ts_show_cam2 true
+#define ts_show_gdi_low_level true
 #define ts_show_reboot_to_dfu true
 #define ts_show_bank2_cam1 true
 #define ts_show_bank2_cam2 true

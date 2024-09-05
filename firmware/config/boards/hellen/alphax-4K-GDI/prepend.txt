@@ -15,7 +15,7 @@
 #define ts_show_software_knock true
 #define ts_show_hardware_simulator false
 #define ts_show_gdi true
-
+#define ts_show_gdi_low_level false
 
 
 
