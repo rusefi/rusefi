@@ -1597,30 +1597,6 @@ float getConfigValueByName(const char *name) {
 // auxLinear2.value2
 		case -396384771:
 			return engineConfiguration->auxLinear2.value2;
-// auxLinear3.v1
-		case -1415598122:
-			return engineConfiguration->auxLinear3.v1;
-// auxLinear3.value1
-		case -727614755:
-			return engineConfiguration->auxLinear3.value1;
-// auxLinear3.v2
-		case -1415598121:
-			return engineConfiguration->auxLinear3.v2;
-// auxLinear3.value2
-		case -727614754:
-			return engineConfiguration->auxLinear3.value2;
-// auxLinear4.v1
-		case -1415562185:
-			return engineConfiguration->auxLinear4.v1;
-// auxLinear4.value1
-		case -1058844738:
-			return engineConfiguration->auxLinear4.value1;
-// auxLinear4.v2
-		case -1415562184:
-			return engineConfiguration->auxLinear4.v2;
-// auxLinear4.value2
-		case -1058844737:
-			return engineConfiguration->auxLinear4.value2;
 // etbMinimumPosition
 		case -1855700175:
 			return engineConfiguration->etbMinimumPosition;
@@ -1852,6 +1828,30 @@ float getConfigValueByName(const char *name) {
 // minimumOilPressureTimeout
 		case -2016978331:
 			return engineConfiguration->minimumOilPressureTimeout;
+// auxLinear3.v1
+		case -1415598122:
+			return engineConfiguration->auxLinear3.v1;
+// auxLinear3.value1
+		case -727614755:
+			return engineConfiguration->auxLinear3.value1;
+// auxLinear3.v2
+		case -1415598121:
+			return engineConfiguration->auxLinear3.v2;
+// auxLinear3.value2
+		case -727614754:
+			return engineConfiguration->auxLinear3.value2;
+// auxLinear4.v1
+		case -1415562185:
+			return engineConfiguration->auxLinear4.v1;
+// auxLinear4.value1
+		case -1058844738:
+			return engineConfiguration->auxLinear4.value1;
+// auxLinear4.v2
+		case -1415562184:
+			return engineConfiguration->auxLinear4.v2;
+// auxLinear4.value2
+		case -1058844737:
+			return engineConfiguration->auxLinear4.value2;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -4516,46 +4516,6 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->auxLinear2.value2 = value;
 		return 1;
 	}
-		case -1415598122:
-	{
-		engineConfiguration->auxLinear3.v1 = value;
-		return 1;
-	}
-		case -727614755:
-	{
-		engineConfiguration->auxLinear3.value1 = value;
-		return 1;
-	}
-		case -1415598121:
-	{
-		engineConfiguration->auxLinear3.v2 = value;
-		return 1;
-	}
-		case -727614754:
-	{
-		engineConfiguration->auxLinear3.value2 = value;
-		return 1;
-	}
-		case -1415562185:
-	{
-		engineConfiguration->auxLinear4.v1 = value;
-		return 1;
-	}
-		case -1058844738:
-	{
-		engineConfiguration->auxLinear4.value1 = value;
-		return 1;
-	}
-		case -1415562184:
-	{
-		engineConfiguration->auxLinear4.v2 = value;
-		return 1;
-	}
-		case -1058844737:
-	{
-		engineConfiguration->auxLinear4.value2 = value;
-		return 1;
-	}
 		case -1855700175:
 	{
 		engineConfiguration->etbMinimumPosition = value;
@@ -4939,6 +4899,46 @@ bool setConfigValueByName(const char *name, float value) {
 		case -2016978331:
 	{
 		engineConfiguration->minimumOilPressureTimeout = (int)value;
+		return 1;
+	}
+		case -1415598122:
+	{
+		engineConfiguration->auxLinear3.v1 = value;
+		return 1;
+	}
+		case -727614755:
+	{
+		engineConfiguration->auxLinear3.value1 = value;
+		return 1;
+	}
+		case -1415598121:
+	{
+		engineConfiguration->auxLinear3.v2 = value;
+		return 1;
+	}
+		case -727614754:
+	{
+		engineConfiguration->auxLinear3.value2 = value;
+		return 1;
+	}
+		case -1415562185:
+	{
+		engineConfiguration->auxLinear4.v1 = value;
+		return 1;
+	}
+		case -1058844738:
+	{
+		engineConfiguration->auxLinear4.value1 = value;
+		return 1;
+	}
+		case -1415562184:
+	{
+		engineConfiguration->auxLinear4.v2 = value;
+		return 1;
+	}
+		case -1058844737:
+	{
+		engineConfiguration->auxLinear4.value2 = value;
 		return 1;
 	}
 		case -1658957891:

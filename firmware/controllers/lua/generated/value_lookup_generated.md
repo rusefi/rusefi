@@ -1591,30 +1591,6 @@ We need to give engine time to build oil pressure without diverting it to VVT
 ### auxLinear2.value2
 
 
-### auxLinear3.v1
-
-
-### auxLinear3.value1
-
-
-### auxLinear3.v2
-
-
-### auxLinear3.value2
-
-
-### auxLinear4.v1
-
-
-### auxLinear4.value1
-
-
-### auxLinear4.v2
-
-
-### auxLinear4.value2
-
-
 ### etbMinimumPosition
 
 
@@ -1845,6 +1821,30 @@ value of A/C pressure in kPa after that compressor is disengaged
 
 ### minimumOilPressureTimeout
 Delay before cutting fuel due to low oil pressure. Use this to ignore short pressure blips and sensor noise.
+
+### auxLinear3.v1
+
+
+### auxLinear3.value1
+
+
+### auxLinear3.v2
+
+
+### auxLinear3.value2
+
+
+### auxLinear4.v1
+
+
+### auxLinear4.value1
+
+
+### auxLinear4.v2
+
+
+### auxLinear4.value2
+
 
 ### tcu_shiftTime
 
