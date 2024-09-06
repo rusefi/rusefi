@@ -960,7 +960,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 442
 	 */
-	Gpio communityCommsLedPid;
+	uint16_t unused2bytesHere;
 	/**
 	 * @@CYLINDER_BORE_TOOLTIP@@
 	 * units: mm

@@ -1152,7 +1152,7 @@ public class Fields {
 	public static final int PACK_MULT_VOLTAGE = 1000;
 	public static final int PACK_MULT_VSS = 100;
 	public static final int PEDAL_TO_TPS_SIZE = 8;
-	public static final int persistent_config_s_size = 22968;
+	public static final int persistent_config_s_size = 22972;
 	public static final int pid_s_size = 20;
 	public static final int pin_input_mode_e_PI_DEFAULT = 0;
 	public static final int pin_input_mode_e_PI_PULLDOWN = 2;
@@ -1220,7 +1220,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1635070452;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1268,7 +1267,7 @@ public class Fields {
 	public static final int TOOTH_PACKET_SIZE = 2;
 	public static final String TOP_DEAD_CENTER_MESSAGE = "r";
 	public static final int TORQUE_CURVE_SIZE = 6;
-	public static final int TOTAL_CONFIG_SIZE = 22968;
+	public static final int TOTAL_CONFIG_SIZE = 22972;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int TPS_PPS_TOO_HIGH_THRESHOLD = 110;
 	public static final int TPS_PPS_TOO_LOW_THRESHOLD = -10;
@@ -1480,7 +1479,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.09.06.f407-discovery.1635070452";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.09.06.f407-discovery.2270986416";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1669,7 +1668,6 @@ public class Fields {
 	public static final Field CYLINDERSCOUNT = Field.create("CYLINDERSCOUNT", 436, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field FIRINGORDER = Field.create("FIRINGORDER", 440, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field JUSTATEMPTEST = Field.create("JUSTATEMPTEST", 441, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field COMMUNITYCOMMSLEDPID = Field.create("COMMUNITYCOMMSLEDPID", 442, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field CYLINDERBORE = Field.create("CYLINDERBORE", 444, FieldType.FLOAT).setBaseOffset(0);
 	public static final String[] engine_load_mode_e = {"Speed Density", "MAF Air Charge", "Alpha-N", "Lua"};
 	public static final Field FUELALGORITHM = Field.create("FUELALGORITHM", 448, FieldType.INT8, engine_load_mode_e).setScale(1.0).setBaseOffset(0);
@@ -3259,6 +3257,8 @@ public class Fields {
 	public static final Field IATBOOSTADDER = Field.create("IATBOOSTADDER", 22932, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field MINIMUMOILPRESSUREBINS = Field.create("MINIMUMOILPRESSUREBINS", 22952, FieldType.INT8).setScale(100.0).setBaseOffset(0);
 	public static final Field MINIMUMOILPRESSUREVALUES = Field.create("MINIMUMOILPRESSUREVALUES", 22960, FieldType.INT8).setScale(10.0).setBaseOffset(0);
+	public static final Field COMMUNITYCOMMSLEDPIN = Field.create("COMMUNITYCOMMSLEDPIN", 22968, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_22970 = Field.create("ALIGNMENTFILL_AT_22970", 22970, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field[] VALUES = {
 	ENGINETYPE,
 	STARTBUTTONSUPPRESSONSTARTUPMS,
@@ -3372,7 +3372,6 @@ public class Fields {
 	CYLINDERSCOUNT,
 	FIRINGORDER,
 	JUSTATEMPTEST,
-	COMMUNITYCOMMSLEDPID,
 	CYLINDERBORE,
 	FUELALGORITHM,
 	ALSMAXTPS,
@@ -4935,5 +4934,7 @@ public class Fields {
 	IATBOOSTADDER,
 	MINIMUMOILPRESSUREBINS,
 	MINIMUMOILPRESSUREVALUES,
+	COMMUNITYCOMMSLEDPIN,
+	ALIGNMENTFILL_AT_22970,
 	};
 }

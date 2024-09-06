@@ -960,7 +960,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 442
 	 */
-	Gpio communityCommsLedPid;
+	uint16_t unused2bytesHere;
 	/**
 	 * @@CYLINDER_BORE_TOOLTIP@@
 	 * units: mm
@@ -5725,8 +5725,18 @@ struct persistent_config_s {
 	 * offset 22960
 	 */
 	scaled_channel<uint8_t, 1, 10> minimumOilPressureValues[8];
+	/**
+	 * offset 22968
+	 */
+	Gpio communityCommsLedPin;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 22970
+	 */
+	uint8_t alignmentFill_at_22970[2];
 };
-static_assert(sizeof(persistent_config_s) == 22968);
+static_assert(sizeof(persistent_config_s) == 22972);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt
