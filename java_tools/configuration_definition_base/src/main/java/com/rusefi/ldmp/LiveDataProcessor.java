@@ -60,6 +60,7 @@ public class LiveDataProcessor {
         }
         log.info("Invoked with " + Arrays.toString(args));
         String yamlFileNames = args[0];
+        log.info("yamlFileNames=" + yamlFileNames);
         String definitionInputFileName = args[1];
         String headerFileName = args[2];
         String javaDestinationFileName = args[3];
@@ -67,7 +68,7 @@ public class LiveDataProcessor {
         TriggerMetaGenerator.doJob(definitionInputFileName, headerFileName, javaDestinationFileName);
         List<LinkedHashMap> totalContent = new ArrayList<>();
         for (String fileName : yamlFileNames.split(",")) {
-            ArrayList<LinkedHashMap> yamlContent = getStringObjectMap(new FileReader(fileName));
+            List<LinkedHashMap> yamlContent = getStringObjectMap(new FileReader(fileName));
             totalContent.addAll(yamlContent);
         }
 
@@ -84,7 +85,9 @@ public class LiveDataProcessor {
         if (objectMap.size() != 1)
             throw new IllegalStateException("Exactly one top level key expected");
         String key = objectMap.keySet().iterator().next();
-        return (ArrayList<LinkedHashMap>) objectMap.get(key);
+        ArrayList<LinkedHashMap> linkedHashMaps = (ArrayList<LinkedHashMap>) objectMap.get(key);
+        log.info("Got "  + linkedHashMaps.size() + " for " + key);
+        return linkedHashMaps;
     }
 
     private String getTsOutputsDestination() {
