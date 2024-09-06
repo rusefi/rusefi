@@ -331,7 +331,7 @@ runs:
       shell: bash
       run: |
         : Upload Bundle
-        if [ "${{github.ref}}" = "refs/heads/master" ]; then
+        if [ "${{github.ref}}" = "refs/heads/master" ] || [ "${{github.ref}}" = "refs/heads/main" ]; then
           echo "On master branch"
         elif [[ ${{github.ref_name}} == "lts"* ]]; then
           echo "On LTS branch [${{github.ref}}]"
