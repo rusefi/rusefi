@@ -22,7 +22,7 @@ Current binaries are always available on our [build server](http://rusefi.com/bu
 `git clone https://github.com/rusefi/rusefi.git`
 Important note - we now use submodules:
 
-`git submodule update --init`
+`git submodule update --init --recursive`
 
 # What do we have here?
  * [Firmware](/firmware) Source code for open source engine control unit for stm32 chips incuding [implementation overview](https://github.com/rusefi/rusefi/blob/master/firmware/readme.md)
