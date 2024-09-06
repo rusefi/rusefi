@@ -255,6 +255,7 @@ jobs:
     - name: Handle configs separately just to make github logs more readable
       working-directory: ./firmware/
       run: |
+        bash bin/compile.sh ${{env.BOARD_META_PATH}} docs-enums
         bash bin/compile.sh ${{env.BOARD_META_PATH}} config
 
     - name: Building Windows simulator separately just to make github logs more readable
