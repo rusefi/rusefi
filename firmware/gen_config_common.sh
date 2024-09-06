@@ -30,11 +30,11 @@ set_board_file BOARD_DIAG_PANEL1_FILE "${BOARD_DIR}/board_diag_panel1.ini"
 set_board_file BOARD_DIAG_PANEL2_FILE "${BOARD_DIR}/board_diag_panel2.ini"
 
 COMMON_GEN_CONFIG="
- -readfile OUTPUTS_SECTION_FROM_FILE console/binary/generated/output_channels.ini \
- -readfile DATALOG_SECTION_FROM_FILE console/binary/generated/data_logs.ini \
- -readfile LIVE_DATA_MENU_FROM_FILE console/binary/generated/fancy_menu.ini \
- -readfile LIVE_DATA_PANELS_FROM_FILE console/binary/generated/fancy_content.ini \
- -readfile LIVE_DATA_GAUGES_FROM_FILE console/binary/generated/gauges.ini \
+ -readfile OUTPUTS_SECTION_FROM_FILE ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/output_channels.ini \
+ -readfile DATALOG_SECTION_FROM_FILE ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/data_logs.ini \
+ -readfile LIVE_DATA_MENU_FROM_FILE ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/fancy_menu.ini \
+ -readfile LIVE_DATA_PANELS_FROM_FILE ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/fancy_content.ini \
+ -readfile LIVE_DATA_GAUGES_FROM_FILE ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/gauges.ini \
  -readfile BOARD_ENGINE_CONFIGURATION_FROM_FILE ${BOARD_ENGINE_CONFIGURATION_FILE} \
  -readfile BOARD_CONFIG_FROM_FILE ${BOARD_CONFIG_FILE} \
  -readfile BOARD_OPTIONS_FROM_FILE ${BOARD_OPTIONS_FILE} \
