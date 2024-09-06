@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22968">
+    <page number="0" size="22972">
         <constant name="engineType">"MAVERICK_X3"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">1000.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
@@ -182,7 +182,7 @@
         <constant digits="0" name="cylindersCount" units="">3.0</constant>
         <constant name="firingOrder">"1-2-3"</constant>
         <constant digits="0" name="justATempTest" units="">0.0</constant>
-        <constant name="communityCommsLedPid">"NONE"</constant>
+        <constant digits="0" name="unused2bytesHere" units="">0.0</constant>
         <constant digits="2" name="cylinderBore" units="mm">87.5</constant>
         <constant name="fuelAlgorithm">"Speed Density"</constant>
         <constant digits="0" name="ALSMaxTPS" units="%">5.0</constant>
@@ -4758,8 +4758,9 @@ end</constant>
          0.0
          0.0
 </constant>
+        <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20240830" nPages="1" signature="rusEFI master.2024.09.06.f407-discovery.1635070452" version="5.0"/>
+    <versionInfo firmwareInfo="20240830" nPages="1" signature="rusEFI master.2024.09.06.f407-discovery.2270986416" version="5.0"/>
     <bibliography author="rusEFI 20240830" writeDate="date"/>
     <settings/>
     <userComments/>
