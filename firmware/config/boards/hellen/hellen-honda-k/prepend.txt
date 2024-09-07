@@ -47,9 +47,4 @@
 #define ts_show_cylinder_12 false
 
 
-#define show_Hellen_hyundai_154 false
-
-#define IGN_RPM_COUNT 24
-#define IGN_LOAD_COUNT 24
-
 #define CLT_UPPER_LIMIT 125
