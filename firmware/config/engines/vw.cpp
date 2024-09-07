@@ -39,17 +39,6 @@ void setVwAba() {
 
 	engineConfiguration->ignitionMode = IM_ONE_COIL;
 
-#ifdef HW_FRANKENSO
-	engineConfiguration->mafAdcChannel = EFI_ADC_1;
-	engineConfiguration->ignitionPins[0] = Gpio::E14; // Frankenso high side - pin 1G
-	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
-	engineConfiguration->ignitionPins[2] = Gpio::Unassigned;
-	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
-
-	engineConfiguration->idlePositionChannel = EFI_ADC_3; // PA3
-	engineConfiguration->wastegatePositionSensor = EFI_ADC_4; // PA4
-#endif // HW_FRANKENSO
-
 	float mapRange = 110;
 
 	setEgoSensor(ES_PLX);

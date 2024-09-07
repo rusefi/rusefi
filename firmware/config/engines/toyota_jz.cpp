@@ -34,24 +34,6 @@ static void common2jz() {
 	// set ignition_mode 1
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
-#ifdef HW_FRANKENSO
-	setFrankensoConfiguration(); // default pinout
-	engineConfiguration->ignitionPins[0] = Gpio::E14;
-	engineConfiguration->ignitionPins[1] = Gpio::C7;
-	engineConfiguration->ignitionPins[2] = Gpio::C9;
-	engineConfiguration->ignitionPins[3] = Gpio::E10;
-	engineConfiguration->ignitionPins[4] = Gpio::E8;
-	engineConfiguration->ignitionPins[5] = Gpio::E12;
-
-
-	engineConfiguration->injectionPins[0] = Gpio::B9; // #1
-	engineConfiguration->injectionPins[1] = Gpio::E2; // #2
-	engineConfiguration->injectionPins[2] = Gpio::B8; // #3
-	engineConfiguration->injectionPins[3] = Gpio::B7; // #4
-	engineConfiguration->injectionPins[4] = Gpio::E3; // #5
-	engineConfiguration->injectionPins[5] = Gpio::E4; // #6
-#endif // HW_FRANKENSO
-
 	engineConfiguration->fuelPumpPin = Gpio::Unassigned;
 
 	// chartsize 450
@@ -80,14 +62,7 @@ void setToyota_2jz_vics() {
 	setCrankOperationMode();
 	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_36_2;
 
-#ifdef HW_FRANKENSO
-	engineConfiguration->triggerInputPins[0] = Gpio::A5; // crank sensor
-	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned; // cam sensor will he handled by custom vtti code
-
-	engineConfiguration->camInputs[0] = Gpio::C6;
 	engineConfiguration->vvtMode[0] = VVT_TOYOTA_3_TOOTH;
-	engineConfiguration->vvtPins[0] = Gpio::E3; // VVT solenoid control
-#endif // HW_FRANKENSO
 
 	// set global_trigger_offset_angle 155
 	engineConfiguration->globalTriggerAngleOffset = 155; // todo

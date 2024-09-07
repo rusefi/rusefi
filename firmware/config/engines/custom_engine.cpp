@@ -160,56 +160,6 @@ void setFrankensoConfiguration() {
 #endif // HW_FRANKENSO
 }
 
-/**
- * set engine_type 49
- */
-void setFrankensoBoardTestConfiguration() {
-	setFrankensoConfiguration();
-
-	engineConfiguration->triggerSimulatorRpm = 300;
-	engineConfiguration->cranking.rpm = 100;
-
-	engineConfiguration->cylindersCount = 12;
-	engineConfiguration->firingOrder = FO_1_7_5_11_3_9_6_12_2_8_4_10;
-
-	// set ignition_mode 1
-	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
-
-	engineConfiguration->injectionPins[0] = Gpio::B7; // injector in default pinout
-	engineConfiguration->injectionPins[1] = Gpio::B8; // injector in default pinout
-	engineConfiguration->injectionPins[2] = Gpio::B9; // injector in default pinout
-	engineConfiguration->injectionPins[3] = Gpio::C13;
-
-	engineConfiguration->injectionPins[4] = Gpio::D3;
-	engineConfiguration->injectionPins[5] = Gpio::D5;
-	engineConfiguration->injectionPins[6] = Gpio::D7;
-	engineConfiguration->injectionPins[7] = Gpio::E2; // injector in default pinout
-	engineConfiguration->injectionPins[8] = Gpio::E3;
-	engineConfiguration->injectionPins[9] = Gpio::E4;
-	engineConfiguration->injectionPins[10] = Gpio::E5;
-	engineConfiguration->injectionPins[11] = Gpio::E6;
-
-	engineConfiguration->fuelPumpPin = Gpio::Unassigned;
-	engineConfiguration->mainRelayPin = Gpio::Unassigned;
-	engineConfiguration->idle.solenoidPin = Gpio::Unassigned;
-	engineConfiguration->fanPin = Gpio::Unassigned;
-
-
-	engineConfiguration->ignitionPins[0] = Gpio::C9; // coil in default pinout
-	engineConfiguration->ignitionPins[1] = Gpio::C7; // coil in default pinout
-	engineConfiguration->ignitionPins[2] = Gpio::E10; // coil in default pinout
-	engineConfiguration->ignitionPins[3] = Gpio::E8; // Miata VVT tach
-
-	engineConfiguration->ignitionPins[4] = Gpio::E14; // coil in default pinout
-	engineConfiguration->ignitionPins[5] = Gpio::E12;
-	engineConfiguration->ignitionPins[6] = Gpio::D8;
-	engineConfiguration->ignitionPins[7] = Gpio::D9;
-
-	engineConfiguration->ignitionPins[8] = Gpio::E0; // brain board, not discovery
-	engineConfiguration->ignitionPins[9] = Gpio::E1; // brain board, not discovery
-}
-
-
 // ETB_BENCH_ENGINE
 // set engine_type 58
 void setEtbTestConfiguration() {

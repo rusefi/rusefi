@@ -125,7 +125,7 @@ enum class engine_type_e : uint16_t {
     // todo: add wastegate case into HW CI
 	TEST_DC_WASTEGATE_DISCOVERY = 48,
 
-	FRANKENSO_QA_ENGINE = 49,
+	UNUSED49 = 49,
 
 	BMW_M73_MRE = 50,
 
