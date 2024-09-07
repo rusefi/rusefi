@@ -82,17 +82,18 @@ public class WriteSimulatorConfiguration {
     }
 
     private static void readBinaryWriteXmlTune(String iniFileName, String inputBinaryTuneFileName, String outputXmlFileName) throws JAXBException, IOException {
-        byte[] fileContent = Files.readAllBytes(new File(ROOT_FOLDER + inputBinaryTuneFileName).toPath());
-        System.out.println("Got " + fileContent.length + " from " + inputBinaryTuneFileName + " while expecting " + Fields.TOTAL_CONFIG_SIZE);
-        if (fileContent.length != Fields.TOTAL_CONFIG_SIZE)
-            throw new IllegalStateException("Unexpected image size " + fileContent.length + " while expecting " + Fields.TOTAL_CONFIG_SIZE);
-        ConfigurationImage configuration = new ConfigurationImage(fileContent);
-        System.out.println("Got " + Objects.requireNonNull(configuration, "configuration"));
         // we have to use board-specific .ini to account for all the board-specific offsets
         // INI_FILE_FOR_SIMULATOR is just not universal enough
         IniFileModel ini = new IniFileModel().readIniFile(iniFileName);
         if (ini == null)
             throw new IllegalStateException("Not found " + iniFileName);
+        byte[] fileContent = Files.readAllBytes(new File(ROOT_FOLDER + inputBinaryTuneFileName).toPath());
+        int pageSize = ini.getMetaInfo().getTotalSize();
+        log.info("Got " + fileContent.length + " from " + inputBinaryTuneFileName + " while expecting " + pageSize);
+        if (fileContent.length != pageSize)
+            throw new IllegalStateException("Unexpected image size " + fileContent.length + " while expecting " + pageSize);
+        ConfigurationImage configuration = new ConfigurationImage(fileContent);
+        log.info("Got " + Objects.requireNonNull(configuration, "configuration"));
         Msq m = MsqFactory.valueOf(configuration, ini);
         String name = Fields.KNOCKNOISERPMBINS.getName();
         Constant noiseRpmBins = m.page.get(1).getConstantsAsMap().get(name);
@@ -101,6 +102,6 @@ public class WriteSimulatorConfiguration {
         m.writeXmlFile(ROOT_FOLDER + outputXmlFileName);
 
         Msq newTuneJustToValidate = Msq.readTune(ROOT_FOLDER + outputXmlFileName);
-        System.out.println("Looks valid " + newTuneJustToValidate);
+        log.info("Looks valid " + newTuneJustToValidate);
     }
 }
