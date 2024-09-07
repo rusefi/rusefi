@@ -161,7 +161,7 @@ public class TuneReadWriteTest {
         assertNotNull(flow);
         assertEquals("2", flow.getDigits());
 
-        ConfigurationImage tsBinaryData = tsTune.asImage(model, LEGACY_TOTAL_CONFIG_SIZE);
+        ConfigurationImage tsBinaryData = tsTune.asImage(model);
 
         System.out.println("Reading " + TEST_BINARY_FILE);
         ConfigurationImage fileBinaryData = ConfigurationImageFile.readFromFile(TEST_BINARY_FILE);
@@ -206,7 +206,7 @@ public class TuneReadWriteTest {
         Msq tuneFromFile = Msq.readTune(fileName);
         assertNotNull(tuneFromFile.getVersionInfo().getSignature());
 
-        ConfigurationImage binaryDataFromXml = tuneFromFile.asImage(model, LEGACY_TOTAL_CONFIG_SIZE);
+        ConfigurationImage binaryDataFromXml = tuneFromFile.asImage(model);
 
         /**
          * Looks like I am not getting something right around Field#FIELD_PRECISION

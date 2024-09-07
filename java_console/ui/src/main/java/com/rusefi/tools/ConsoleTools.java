@@ -155,7 +155,7 @@ public class ConsoleTools {
     private static void calcXmlImageTuneCrc(String... args) throws Exception {
         String fileName = args[1];
         Msq msq = Msq.readTune(fileName);
-        ConfigurationImage image = msq.asImage(IniFileModel.getInstance(), Fields.TOTAL_CONFIG_SIZE);
+        ConfigurationImage image = msq.asImage(IniFileModel.getInstance());
         printCrc(image);
     }
 
@@ -294,7 +294,7 @@ public class ConsoleTools {
         Msq msq = Msq.readTune(fileName);
 
         startAndConnect(linkManager -> {
-            ConfigurationImage ci = msq.asImage(IniFileModel.getInstance(), Fields.TOTAL_CONFIG_SIZE);
+            ConfigurationImage ci = msq.asImage(IniFileModel.getInstance());
             linkManager.getConnector().getBinaryProtocol().uploadChanges(ci);
 
             //System.exit(0);

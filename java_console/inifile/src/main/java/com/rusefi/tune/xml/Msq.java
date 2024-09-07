@@ -49,8 +49,8 @@ public class Msq {
         return tune;
     }
 
-    public ConfigurationImage asImage(IniFileModel instance, int totalConfigSize) {
-        ConfigurationImage ci = new ConfigurationImage(totalConfigSize);
+    public ConfigurationImage asImage(IniFileModel instance) {
+        ConfigurationImage ci = new ConfigurationImage(instance.getMetaInfo().getTotalSize());
 
         Page page = findPage();
         if (page == null)
