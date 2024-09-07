@@ -983,9 +983,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::TEST_CRANK_ENGINE:
 		setTestCrankEngineConfiguration();
 		break;
-	case engine_type_e::FRANKENSO_QA_ENGINE:
-		setFrankensoBoardTestConfiguration();
-		break;
 	case engine_type_e::DODGE_NEON_1995:
 		setDodgeNeon1995EngineConfiguration();
 		break;

@@ -47,10 +47,6 @@ void setFordAspireEngineConfiguration() {
 	engineConfiguration->tpsMin = 100;
 	engineConfiguration->tpsMax = 750;
 
-#if EFI_PROD_CODE && defined(HW_FRANKENSO)
-  engineConfiguration->triggerInputPins[1] = Gpio::A5;
-#endif
-
 	/**
 	 * 18K Ohm @ -20C
 	 * 2.1K Ohm @ 24C
