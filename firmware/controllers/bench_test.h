@@ -15,6 +15,7 @@ void onConfigurationChangeBenchTest();
 
 bool isRunningBenchTest();
 const OutputPin *getOutputOnTheBenchTest();
+void fatalErrorForPresetApply();
 
 void fanBench();
 void fan2Bench();

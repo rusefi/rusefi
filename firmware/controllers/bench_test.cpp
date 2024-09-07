@@ -521,7 +521,7 @@ static void handleCommandX14(uint16_t index) {
 
 extern bool rebootForPresetPending;
 
-static void fatalErrorForPresetApply() {
+void fatalErrorForPresetApply() {
 	rebootForPresetPending = true;
 	firmwareError(ObdCode::OBD_PCM_Processor_Fault,
 		"\n\nTo complete preset apply:\n"
@@ -529,6 +529,8 @@ static void fatalErrorForPresetApply() {
 		"   2. Power cycle ECU\n"
 		"   3. Open TunerStudio and reconnect\n\n");
 }
+
+PUBLIC_API_WEAK void boardTsAction(uint16_t index) { }
 
 void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	efiPrintf("IO test subsystem=%d index=%d", subsystem, index);
@@ -587,6 +589,10 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	case TS_SET_ENGINE_TYPE:
 		fatalErrorForPresetApply();
 		setEngineType(index);
+		break;
+
+  case TS_BOARD_ACTION:
+    boardTsAction(index);
 		break;
 
 	case TS_SET_DEFAULT_ENGINE:
