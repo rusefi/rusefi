@@ -40,12 +40,7 @@ public class IniFileModel {
     private String currentXBins;
     private final Map<String, String> xBinsByZBins = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, String> yBinsByZBins = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-
-    public static void main(String[] args) {
-        IniFileModel iniFile = new IniFileModel();
-        iniFile.findAndReadIniFile(INI_FILE_PATH);
-        log.info("Dialogs: " + iniFile.dialogs);
-    }
+    private IniFileMetaInfo metaInfo;
 
     private boolean isInSettingContextHelp = false;
     private boolean isInsidePageDefinition;
@@ -53,6 +48,10 @@ public class IniFileModel {
     public IniFileModel findAndReadIniFile(String iniFilePath) {
         String fileName = findMetaInfoFile(iniFilePath);
         return readIniFile(fileName);
+    }
+
+    public IniFileMetaInfo getMetaInfo() {
+        return metaInfo;
     }
 
     public IniFileModel readIniFile(String fileName) {
@@ -66,6 +65,7 @@ public class IniFileModel {
 
         log.info("Reading " + fileName);
         RawIniFile content = IniFileReader.read(input);
+        metaInfo = new IniFileMetaInfo(content);
 
         readIniFile(content);
         return this;
