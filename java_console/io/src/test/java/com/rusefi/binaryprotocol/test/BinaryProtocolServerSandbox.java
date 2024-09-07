@@ -1,6 +1,7 @@
 package com.rusefi.binaryprotocol.test;
 
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.TestHelper;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
@@ -23,8 +24,10 @@ class BinaryProtocolServerSandbox {
 //        if (!f.exists())
 //            throw new IllegalStateException("File not found: " + BinaryProtocolServer.TEST_FILE);
 
+        IniFileModel model = IniFileModel.getInstance();
+
         BinaryProtocolState state = new BinaryProtocolState();
-        ConfigurationImage controller = new ConfigurationImage(new byte[Fields.TOTAL_CONFIG_SIZE]);
+        ConfigurationImage controller = new ConfigurationImage(new byte[model.getMetaInfo().getTotalSize()]);
         ScalarIniField iniField = TestHelper.createIniField(Fields.TWOSTROKE);
         iniField.setValue(controller, new Constant(iniField.getName(), "", "1", iniField.getDigits()));
         state.setController(controller);
