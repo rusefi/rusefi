@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Aug 14 01:02:08 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sat Sep 07 00:13:23 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -622,6 +622,8 @@ const char *getTs_command_e(ts_command_e value){
 switch(value) {
 case TS_BENCH_CATEGORY:
   return "TS_BENCH_CATEGORY";
+case TS_BOARD_ACTION:
+  return "TS_BOARD_ACTION";
 case TS_CLEAR_WARNINGS:
   return "TS_CLEAR_WARNINGS";
 case TS_COMMAND_1:
@@ -680,8 +682,6 @@ case TS_UNUSED_27:
   return "TS_UNUSED_27";
 case TS_UNUSED_28:
   return "TS_UNUSED_28";
-case TS_UNUSED_29:
-  return "TS_UNUSED_29";
 case TS_WIDEBAND:
   return "TS_WIDEBAND";
 case TS_X14:

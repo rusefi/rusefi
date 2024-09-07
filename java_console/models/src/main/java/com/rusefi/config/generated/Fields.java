@@ -1220,6 +1220,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 1175022111;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1408,6 +1409,7 @@ public class Fields {
 	public static final char TS_BURN_COMMAND = 'B';
 	public static final char TS_CHUNK_WRITE_COMMAND = 'C';
 	public static final int ts_command_e_TS_BENCH_CATEGORY = 22;
+	public static final int ts_command_e_TS_BOARD_ACTION = 29;
 	public static final int ts_command_e_TS_CLEAR_WARNINGS = 17;
 	public static final int ts_command_e_TS_COMMAND_1 = 1;
 	public static final int ts_command_e_TS_COMMAND_10 = 10;
@@ -1437,7 +1439,6 @@ public class Fields {
 	public static final int ts_command_e_TS_UNUSED_26 = 26;
 	public static final int ts_command_e_TS_UNUSED_27 = 27;
 	public static final int ts_command_e_TS_UNUSED_28 = 28;
-	public static final int ts_command_e_TS_UNUSED_29 = 29;
 	public static final int ts_command_e_TS_WIDEBAND = 21;
 	public static final int ts_command_e_TS_X14 = 20;
 	public static final char TS_COMMAND_F = 'F';
@@ -1479,7 +1480,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.09.07.f407-discovery.2315312639";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.09.07.f407-discovery.1175022111";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
