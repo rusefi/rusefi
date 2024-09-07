@@ -348,6 +348,7 @@ public class Fields {
 	public static final int engine_type_e_ET_BOSCH_QUICK_START = 21;
 	public static final int engine_type_e_ET_TEST_WITH_BOSCH_QUICK_START = 24;
 	public static final int engine_type_e_ET_UNUSED_55 = 55;
+	public static final int engine_type_e_ET_UNUSED_56 = 56;
 	public static final int engine_type_e_ETB_BENCH_ENGINE = 58;
 	public static final int engine_type_e_FERRARI_F136 = 105;
 	public static final int engine_type_e_FORD_ASPIRE_1996 = 3;
@@ -356,9 +357,7 @@ public class Fields {
 	public static final int engine_type_e_FORD_INLINE_6_1995 = 7;
 	public static final int engine_type_e_FRANKENSO_BMW_M73_F = 40;
 	public static final int engine_type_e_FRANKENSO_MIATA_NA6_MAP = 41;
-	public static final int engine_type_e_FRANKENSO_QA_ENGINE = 49;
 	public static final int engine_type_e_FRANKENSO_TEST_33810 = 59;
-	public static final int engine_type_e_FRANKENSO_TEST_TLE9104 = 56;
 	public static final int engine_type_e_FUEL_BENCH = 15;
 	public static final int engine_type_e_GM_SBC = 98;
 	public static final int engine_type_e_GY6_139QMB = 8;
@@ -436,6 +435,7 @@ public class Fields {
 	public static final int engine_type_e_TOYOTA_2JZ_GTE_VVTi = 44;
 	public static final int engine_type_e_UNUSED102 = 102;
 	public static final int engine_type_e_UNUSED47 = 47;
+	public static final int engine_type_e_UNUSED49 = 49;
 	public static final int engine_type_e_UNUSED67 = 67;
 	public static final int engine_type_e_UNUSED94 = 94;
 	public static final int engine_type_e_UNUSED_65 = 65;
