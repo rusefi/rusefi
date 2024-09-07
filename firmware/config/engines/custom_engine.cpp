@@ -43,13 +43,6 @@ void setDiscoveryPdm() {
 #ifdef HW_FRANKENSO
 
 /**
- * set engine_type 56
- * https://github.com/rusefi/rusefi-hardware/tree/main/tle9104-breakout
- */
-void setDiscoveryTLE9104Test() {
-}
-
-/**
  * set engine_type 59
  */
 void setDiscovery33810Test() {
