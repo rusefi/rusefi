@@ -12,7 +12,6 @@ void setFrankensoConfiguration();
 void setDiscoveryPdm();
 void setFrankensoBoardTestConfiguration();
 void setDiscovery33810Test();
-void setDiscoveryTLE9104Test();
 void setEtbTestConfiguration();
 void setL9779TestConfiguration();
 
