@@ -67,6 +67,7 @@ public class BinaryProtocol {
     private boolean isBurnPending;
     public String signature;
     public boolean isGoodOutputChannels;
+    private IniFileModel iniFile;
 
     private final BinaryProtocolState state = new BinaryProtocolState();
 
@@ -176,8 +177,9 @@ public class BinaryProtocol {
     public String connectAndReadConfiguration(Arguments arguments, DataListener listener) {
         try {
             signature = getSignature(stream);
-            log.info("Got " + signature + " signature");
-            SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(signature));
+            log.info("Got [" + signature + "] signature");
+            String localIniFile = SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(signature));
+            iniFile = new IniFileModel().readIniFile(localIniFile);
         } catch (IOException e) {
             return "Failed to read signature " + e;
         }
@@ -186,7 +188,9 @@ public class BinaryProtocol {
         if (errorMessage != null)
             return errorMessage;
 
-        readImage(arguments, new ConfigurationImageMetaVersion0_0(Fields.TOTAL_CONFIG_SIZE, signature));
+        int pageSize = iniFile.getMetaInfo().getTotalSize();
+        log.info("pageSize=" + pageSize);
+        readImage(arguments, new ConfigurationImageMetaVersion0_0(pageSize, signature));
         if (isClosed)
             return "Failed to read calibration";
 
