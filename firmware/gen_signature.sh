@@ -6,6 +6,7 @@
 set -e
 
 SHORT_BOARD_NAME=${1:-$SHORT_BOARD_NAME}
+SCRIPT_NAME=$(basename "$0")
 
 cd $(dirname "$0")
 
@@ -25,9 +26,9 @@ branchname=`git branch --show-current`
 if [ "${branchname}" = "" ]; then
  # custom board, empty value while executed within submodule
  branchname=${AUTOMATION_REF}
- echo "! Using env variable branch $branchname" >> ${TEMP_FILE}
+ echo "! ${SCRIPT_NAME} Using env variable branch [$branchname]" | tee >> ${TEMP_FILE}
 else
- echo "! Current branch is: $branchname" >> ${TEMP_FILE}
+ echo "! ${SCRIPT_NAME} Current branch is: $branchname" | tee >> ${TEMP_FILE}
 fi
 
 if [ -z "${signature_white_label}"  ]; then
