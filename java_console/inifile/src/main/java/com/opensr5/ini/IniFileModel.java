@@ -52,7 +52,7 @@ public class IniFileModel {
 
     public IniFileMetaInfo getMetaInfo() {
         // pageSize lives inside!
-        return metaInfo;
+        return Objects.requireNonNull(metaInfo, "metaInfo");
     }
 
     public IniFileModel readIniFile(String fileName) {
