@@ -178,11 +178,13 @@ public class BinaryProtocol {
         try {
             signature = getSignature(stream);
             log.info("Got [" + signature + "] signature");
-            String localIniFile = SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(signature));
-            iniFile = new IniFileModel().readIniFile(localIniFile);
         } catch (IOException e) {
             return "Failed to read signature " + e;
         }
+        String localIniFile = SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(signature));
+        if (localIniFile == null)
+            throw new IllegalStateException("Failed to download for " + signature);
+        iniFile = new IniFileModel().readIniFile(localIniFile);
 
         String errorMessage = validateConfigVersion();
         if (errorMessage != null)

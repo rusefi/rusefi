@@ -56,15 +56,9 @@ public class IniFileModel {
     }
 
     public IniFileModel readIniFile(String fileName) {
-        File input = null;
-        if (fileName != null)
-            input = new File(fileName);
-        if (fileName == null || !input.exists()) {
-            log.error("No such file: " + fileName);
-            return null;
-        }
-
+        Objects.requireNonNull(fileName, "fileName");
         log.info("Reading " + fileName);
+        File input = new File(fileName);
         RawIniFile content = IniFileReader.read(input);
         metaInfo = new IniFileMetaInfo(content);
 
