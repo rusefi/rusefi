@@ -745,6 +745,9 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 	  configureArcticCat(this);
 	  break;
 
+  case trigger_type_e::TT_NISSAN_HR_CAM_IN:
+    initializeNissanHRvvtIn(this);
+    break;
 	case trigger_type_e::TT_NISSAN_HR:
 	  initializeNissanHRcrank(this);
     break;

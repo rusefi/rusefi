@@ -209,7 +209,7 @@ void initialize_one_of_36_2_2(TriggerWaveform *s, int firstCount, int secondCoun
 		s->addToothFallRise(base + narrow, narrow / 2);
 		base += narrow;
 	}
-     
+
        s->addToothFallRise(360, narrow/2);
 }
 
@@ -227,3 +227,14 @@ void initializeNissanHRcrank(TriggerWaveform *s) {
   s->setTriggerSynchronizationGap3(/*gapIndex*/count, 0.1, 0.5);
   }
 
+
+void initializeNissanHRvvtIn(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
+
+	s->addToothRiseFall(120);
+	s->addToothRiseFall(120 + 22);
+	s->addToothRiseFall(240);
+	s->addToothRiseFall(360);
+
+	s->setTriggerSynchronizationGap(0.18);
+}
