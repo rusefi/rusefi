@@ -7,6 +7,4 @@ integration/rusefi_config.txt
 -firing_order
 controllers/algo/firing_order.h
 -prepend
-console/binary/generated/total_live_data_generated.h
--prepend
 integration/rusefi_config_shared.txt
