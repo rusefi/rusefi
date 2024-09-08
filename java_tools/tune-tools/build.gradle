@@ -1,9 +1,11 @@
 plugins {
     id 'java-library'
     id 'com.github.johnrengelman.shadow' version "${shadowVersion}"
+    id 'java-test-fixtures'
 }
 
 dependencies {
     api project(':config_definition')
     api project(':ecu_io')
+    testFixturesApi project(':ecu_io')
 }
