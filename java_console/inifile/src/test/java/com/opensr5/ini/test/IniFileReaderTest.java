@@ -93,6 +93,7 @@ public class IniFileReaderTest {
         String string = "   nPages              = 3\n" +
                 SIGNATURE_UNIT_TEST +
                 PAGE_READ +
+            "ochBlockSize=1\n" +
                 "   pageSize            = 288,   64,     288\n";
 
 

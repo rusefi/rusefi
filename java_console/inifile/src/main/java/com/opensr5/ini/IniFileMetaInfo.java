@@ -15,6 +15,7 @@ public class IniFileMetaInfo {
 
     private int totalSize;
     private final List<Integer> pageSizes = new ArrayList<>();
+    private int ochBlockSize;
 
     /**
      * read maximum chunk size
@@ -24,6 +25,7 @@ public class IniFileMetaInfo {
     public IniFileMetaInfo(RawIniFile file) {
 
         nPages = file.getSimpleIntegerProperty("nPages", 1);
+        ochBlockSize = file.getSimpleIntegerProperty("ochBlockSize");
 
         blockingFactor = file.getSimpleIntegerProperty("blockingFactor", DEFAULT_BLOCKING_FACTOR);
 
@@ -45,6 +47,10 @@ public class IniFileMetaInfo {
 
     public int getnPages() {
         return nPages;
+    }
+
+    public int getOchBlockSize() {
+        return ochBlockSize;
     }
 
     public int getBlockingFactor() {
