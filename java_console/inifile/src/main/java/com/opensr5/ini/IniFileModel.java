@@ -51,6 +51,7 @@ public class IniFileModel {
     }
 
     public IniFileMetaInfo getMetaInfo() {
+        // pageSize lives inside!
         return metaInfo;
     }
 

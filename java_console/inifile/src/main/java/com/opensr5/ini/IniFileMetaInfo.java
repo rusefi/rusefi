@@ -51,6 +51,7 @@ public class IniFileMetaInfo {
         return blockingFactor;
     }
 
+    // also known as 'pageSize'
     public int getTotalSize() {
         return totalSize;
     }

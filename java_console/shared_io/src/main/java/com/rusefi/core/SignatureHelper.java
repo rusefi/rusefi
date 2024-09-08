@@ -28,6 +28,9 @@ public class SignatureHelper {
                 fileName, fileName);
     }
 
+    /**
+     * @return local .ini file name
+     */
     public static String downloadIfNotAvailable(Pair<String, String> p) {
         if (p == null)
             return null;
