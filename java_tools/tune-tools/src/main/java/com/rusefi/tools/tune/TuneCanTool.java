@@ -42,7 +42,7 @@ import static com.rusefi.tools.tune.WriteSimulatorConfiguration.INI_FILE_FOR_SIM
  * <p>
  * see <a href="https://github.com/rusefi/rusefi/wiki/Canned-Tune-Process">...</a>
  */
-public class TuneCanTool implements TuneCanToolConstants {
+public class TuneCanTool {
     private static final Logging log = getLogging(TuneCanTool.class);
     private static final String REPORTS_OUTPUT_FOLDER = "generated/canned-tunes";
 

@@ -11,7 +11,6 @@ import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.binaryprotocol.MsqFactory;
 import com.rusefi.tools.tune.CurveData;
 import com.rusefi.tools.tune.TS2C;
-import com.rusefi.tools.tune.TuneCanToolConstants;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import org.junit.jupiter.api.Test;
@@ -23,7 +22,7 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TuneReadWriteTest {
-    private static final String PATH = TuneCanToolConstants.SRC_TEST_RESOURCES + "frankenso/";
+    private static final String PATH = "src/test/resources/";
     static final String TUNE_NAME = PATH + "test-CurrentTune.msq";
     static final String TEST_INI = PATH + "test-mainController.ini";
     private static final String TEST_BINARY_FILE = PATH + "current_configuration.binary_image";
