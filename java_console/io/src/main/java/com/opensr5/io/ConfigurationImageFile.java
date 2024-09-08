@@ -78,9 +78,9 @@ public class ConfigurationImageFile {
         final byte[] image = new byte[size];
         final int result = fis.read(image);
         if (result == image.length) {
-            log.warn(String.format("%d bytes are read instead of expected %d", result, size));
             return image;
         } else {
+            log.warn(String.format("%d bytes are read instead of expected %d", result, size));
             return null;
         }
     }
