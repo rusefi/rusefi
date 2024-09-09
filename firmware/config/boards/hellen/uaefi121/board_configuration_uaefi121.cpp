@@ -112,6 +112,8 @@ static Gpio SBC_OUTPUTS[] = {
 	Gpio::MM100_SPI2_CS, // 50a INJ_7
 	Gpio::MM100_COATED_SPI2_SCK, // 51a INJ_8
   Gpio::MM100_IGN8, // 87a LS6_HOT fuelpump
+	Gpio::MM100_IGN1, // Coil 1
+	Gpio::MM100_IGN2, // Coil 2
 
 };
 
@@ -124,7 +126,7 @@ int getBoardMetaOutputsCount() {
 
 int getBoardMetaLowSideOutputsCount() {
     if (engineConfiguration->engineType == engine_type_e::GM_SBC) {
-        return getBoardMetaOutputsCount();
+        return getBoardMetaOutputsCount() - 3;
     }
     return getBoardMetaOutputsCount() - 1 - 6;
 }

@@ -93,10 +93,10 @@ void setGmSbc() {
 #ifdef HW_HELLEN_UAEFI121
     // coil control plug pin A
 
-    // tan wire with a black trace - "HEI B", plug pin B
+    // tan wire with a black trace - "HEI B", plug pin B (we use yellow)
     ignOverride->pin = Gpio::MM100_IGN2; // 12a Coil 2
     // tach plug pin C
-    engineConfiguration->triggerInputPins[0] = Gpio::MM100_IN_D2; // 35a HALL2
+    engineConfiguration->triggerInputPins[0] = Gpio::MM100_IN_D2; // 35a HALL2 red wire
 	  engineConfiguration->camInputs[0] = Gpio::Unassigned;
 	  engineConfiguration->camInputs[1] = Gpio::Unassigned;
 	  engineConfiguration->ignitionPins[1] = Gpio::Unassigned;

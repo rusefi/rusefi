@@ -1,7 +1,7 @@
 # Combine the related files for a specific platform and MCU.
 
 # Target ECU board design
-BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
+BOARDCPPSRC = $(BOARD_DIR)/board_configuration_uaefi121.cpp
 
 DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 
