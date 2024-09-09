@@ -280,6 +280,9 @@ public class BinaryProtocol {
         }
     }
 
+    /**
+     * this method patches configuration inside ECU by writing only regions with different content
+     */
     public void uploadChanges(ConfigurationImage newVersion) {
         ConfigurationImage current = getControllerConfiguration();
         // let's have our own copy which no one would be able to change

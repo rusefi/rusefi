@@ -6,6 +6,8 @@ import org.jetbrains.annotations.NotNull;
 import java.nio.ByteBuffer;
 
 /**
+ * inside C/C++ that's config/engineConfiguration
+ *
  * Andrey Belomutskiy, (c) 2013-2020
  * 3/6/2015
  */
