@@ -57,7 +57,7 @@ void setBoardDefaultConfiguration() {
   engineConfiguration->mainRelayPin = Gpio::MM100_IGN7;
   engineConfiguration->fuelPumpPin = Gpio::MM100_IGN8;
 
-		engineConfiguration->injectionPins[0] = Gpio::MM100_COATED_INJ1;
+		engineConfiguration->injectionPins[0] = Gpio::MM100_MEGA_UAEFI_INJ1;
   	engineConfiguration->injectionPins[1] = Gpio::MM100_INJ2;
   	engineConfiguration->injectionPins[2] = Gpio::MM100_INJ3;
   	engineConfiguration->injectionPins[3] = Gpio::MM100_INJ4;
@@ -79,14 +79,14 @@ int getBoardMetaDcOutputsCount() {
 }
 
 static Gpio OUTPUTS[] = {
-	Gpio::MM100_COATED_INJ1, // 44a INJ_1
+	Gpio::MM100_MEGA_UAEFI_INJ1, // 44a INJ_1
 	Gpio::MM100_INJ2, // 45a INJ_2
 	Gpio::MM100_INJ3, // 46a INJ_3
 	Gpio::MM100_INJ4, // 47a INJ_4
 	Gpio::MM100_INJ5, // 48a INJ_5
 	Gpio::MM100_INJ6, // 49a INJ_6
 	Gpio::MM100_SPI2_CS, // 50a INJ_7
-	Gpio::MM100_COATED_SPI2_SCK, // 51a INJ_8
+	Gpio::MM100_MEGA_UAEFI_SPI2_SCK, // 51a INJ_8
 	Gpio::MM100_INJ7, // 14a LS1
 	Gpio::MM100_INJ8, // 15a LS2
 	Gpio::MM100_OUT_PWM1, // 16a LS3
@@ -103,14 +103,14 @@ static Gpio OUTPUTS[] = {
 };
 
 static Gpio SBC_OUTPUTS[] = {
-	Gpio::MM100_COATED_INJ1, // 44a INJ_1
+	Gpio::MM100_MEGA_UAEFI_INJ1, // 44a INJ_1
 	Gpio::MM100_INJ2, // 45a INJ_2
 	Gpio::MM100_INJ3, // 46a INJ_3
 	Gpio::MM100_INJ4, // 47a INJ_4
 	Gpio::MM100_INJ5, // 48a INJ_5
 	Gpio::MM100_INJ6, // 49a INJ_6
 	Gpio::MM100_SPI2_CS, // 50a INJ_7
-	Gpio::MM100_COATED_SPI2_SCK, // 51a INJ_8
+	Gpio::MM100_MEGA_UAEFI_SPI2_SCK, // 51a INJ_8
   Gpio::MM100_IGN8, // 87a LS6_HOT fuelpump
 	Gpio::MM100_IGN1, // Coil 1
 	Gpio::MM100_IGN2, // Coil 2

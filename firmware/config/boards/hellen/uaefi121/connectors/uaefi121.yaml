@@ -274,7 +274,7 @@ pins:
 
   - pin: 44a
     class: outputs
-    meta: MM100_COATED_INJ1
+    meta: MM100_MEGA_UAEFI_INJ1
     ts_name: ___ INJ_1
     function: Injector 1
     color: green
@@ -322,7 +322,7 @@ pins:
 
   - pin: 50a
     class: outputs
-    meta: MM100_COATED_SPI2_SCK
+    meta: MM100_MEGA_UAEFI_SPI2_SCK
     ts_name: ___ INJ_7
     function: Injector 7
     color: white

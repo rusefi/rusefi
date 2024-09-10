@@ -10,7 +10,8 @@
 #define MM100_IGN8 E6
 
 #define MM100_INJ1 D3
-#define MM100_COATED_INJ1 D0
+// uaefi121 is the first board compatible with CAN bus ST bootloader, we had to adjust a few pins
+#define MM100_MEGA_UAEFI_INJ1 D0
 #define MM100_INJ2 A9
 #define MM100_INJ3 D11
 #define MM100_INJ4 D10
@@ -53,9 +54,9 @@
 #define MM100_IN_AUX2 C4
 #define MM100_IN_AUX2_ANALOG EFI_ADC_14
 #define MM100_IN_AUX3 A7
-#define MM100_COATED_IN_AUX3 D1
+#define MM100_MEGA_UAEFI_IN_AUX3 D1
 #define MM100_IN_AUX3_ANALOG EFI_ADC_7
-//MM100_COATED AUX3 is digital input only
+//MM100_MEGA_UAEFI AUX3 is digital input only
 #define MM100_IN_AUX4 C5
 #define MM100_IN_AUX4_ANALOG EFI_ADC_15
 //KNOCK not defined
@@ -68,7 +69,7 @@
 #define MM100_IN_VBATT EFI_ADC_5
 
 #define MM100_SPI1_MOSI B5
-#define MM100_COATED_SPI1_MOSI A7
+#define MM100_MEGA_UAEFI_SPI1_MOSI A7
 #define MM100_SPI1_MISO B4
 #define MM100_SPI1_SCK B3
 #define MM100_SPI1_CS1 B6
@@ -77,7 +78,7 @@
 #define MM100_SPI2_MOSI B15
 #define MM100_SPI2_MISO B14
 #define MM100_SPI2_SCK B13
-#define MM100_COATED_SPI2_SCK D3
+#define MM100_MEGA_UAEFI_SPI2_SCK D3
 #define MM100_SPI2_CS B12
 
 #define MM100_SPI3_MOSI C12
@@ -86,12 +87,12 @@
 #define MM100_SPI3_CS A15
 
 // matches H176_CAN_RX & H176_CAN_TX
-//MM100_COATED has no CAN1 
+//MM100_MEGA_UAEFI has no CAN1
 #define MM100_CAN_RX D0
 #define MM100_CAN_TX D1
 
-#define MM100_COATED_CAN2_RX B5
-#define MM100_COATED_CAN2_TX B13
+#define MM100_MEGA_UAEFI_CAN2_RX B5
+#define MM100_MEGA_UAEFI_CAN2_TX B13
 
 #define MM100_UART8_RX E0
 #define MM100_UART8_TX E1
