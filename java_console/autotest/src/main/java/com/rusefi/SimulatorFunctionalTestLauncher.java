@@ -13,14 +13,13 @@ import java.io.IOException;
  */
 public class SimulatorFunctionalTestLauncher {
     static volatile boolean isHappy;
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) {
         Thread.setDefaultUncaughtExceptionHandler((t, e) -> {
             e.printStackTrace();
             System.exit(66);
         });
         String iniFileName = args[0];
-        IniFileModelImpl ini = new IniFileModelImpl().readIniFile(iniFileName);
-        BinaryProtocol.iniFileProvider = signature -> ini;
+        BinaryProtocol.iniFileProvider = signature -> new IniFileModelImpl().readIniFile(iniFileName);
         boolean startSimulator = args.length > 1 && args[1].equalsIgnoreCase("start");
 
 //        if (startSimulator) {

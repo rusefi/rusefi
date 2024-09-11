@@ -32,7 +32,7 @@ public class WriteSimulatorConfiguration {
 
     public static String ROOT_FOLDER = System.getProperty("ROOT_FOLDER", "../simulator/");
 
-    public static void main(String[] args) throws IOException, InterruptedException, JAXBException {
+    public static void main(String[] args) {
         if (args.length != 1)
             throw new IllegalArgumentException("One argument expected: .ini file name");
         String iniFileName = args[0];
