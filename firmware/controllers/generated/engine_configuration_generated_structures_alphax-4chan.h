@@ -1585,7 +1585,7 @@ struct engine_configuration_s {
 	bool externalRusEfiGdiModule : 1 {};
 	/**
 	offset 752 bit 16 */
-	bool unused644b11 : 1 {};
+	bool flipWboChannels : 1 {};
 	/**
 	 * Useful for individual intakes
 	offset 752 bit 17 */

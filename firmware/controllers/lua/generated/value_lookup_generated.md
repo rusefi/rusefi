@@ -457,6 +457,9 @@ CAN broadcast using custom rusEFI protocol\nenable can_broadcast/disable can_bro
 ### externalRusEfiGdiModule
 
 
+### flipWboChannels
+
+
 ### measureMapOnlyInOneCylinder
 Useful for individual intakes
 

@@ -1220,7 +1220,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1945474407;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1481,7 +1480,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.09.10.f407-discovery.1945474407";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.09.11.f407-discovery.3260823191";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1853,6 +1852,7 @@ public class Fields {
 	public static final Field VERBOSETLE8888 = Field.create("VERBOSETLE8888", 752, FieldType.BIT, 13).setBaseOffset(0);
 	public static final Field ENABLEVERBOSECANTX = Field.create("ENABLEVERBOSECANTX", 752, FieldType.BIT, 14).setBaseOffset(0);
 	public static final Field EXTERNALRUSEFIGDIMODULE = Field.create("EXTERNALRUSEFIGDIMODULE", 752, FieldType.BIT, 15).setBaseOffset(0);
+	public static final Field FLIPWBOCHANNELS = Field.create("FLIPWBOCHANNELS", 752, FieldType.BIT, 16).setBaseOffset(0);
 	public static final Field MEASUREMAPONLYINONECYLINDER = Field.create("MEASUREMAPONLYINONECYLINDER", 752, FieldType.BIT, 17).setBaseOffset(0);
 	public static final Field STEPPERFORCEPARKINGEVERYRESTART = Field.create("STEPPERFORCEPARKINGEVERYRESTART", 752, FieldType.BIT, 18).setBaseOffset(0);
 	public static final Field ISFASTERENGINESPINUPENABLED = Field.create("ISFASTERENGINESPINUPENABLED", 752, FieldType.BIT, 19).setBaseOffset(0);
@@ -3550,6 +3550,7 @@ public class Fields {
 	VERBOSETLE8888,
 	ENABLEVERBOSECANTX,
 	EXTERNALRUSEFIGDIMODULE,
+	FLIPWBOCHANNELS,
 	MEASUREMAPONLYINONECYLINDER,
 	STEPPERFORCEPARKINGEVERYRESTART,
 	ISFASTERENGINESPINUPENABLED,

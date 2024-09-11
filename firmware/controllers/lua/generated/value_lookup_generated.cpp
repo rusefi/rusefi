@@ -463,6 +463,9 @@ float getConfigValueByName(const char *name) {
 // externalRusEfiGdiModule
 		case 1546871344:
 			return engineConfiguration->externalRusEfiGdiModule;
+// flipWboChannels
+		case 950454372:
+			return engineConfiguration->flipWboChannels;
 // measureMapOnlyInOneCylinder
 		case -1236202550:
 			return engineConfiguration->measureMapOnlyInOneCylinder;
@@ -2624,6 +2627,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1546871344:
 	{
 		engineConfiguration->externalRusEfiGdiModule = (int)value;
+		return 1;
+	}
+		case 950454372:
+	{
+		engineConfiguration->flipWboChannels = (int)value;
 		return 1;
 	}
 		case -1236202550:
