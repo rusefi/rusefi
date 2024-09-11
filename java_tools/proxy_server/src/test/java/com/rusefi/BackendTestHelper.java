@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.tcp.TcpConnector;
+import com.rusefi.proxy.MockIniFileProvider;
 import com.rusefi.server.Backend;
 import com.rusefi.server.UserDetails;
 import com.rusefi.server.UserDetailsResolver;
@@ -42,6 +43,7 @@ public class BackendTestHelper {
     }
 
     public static void commonServerTest() throws MalformedURLException {
+        MockIniFileProvider.install();
         HttpUtil.RUSEFI_PROXY_HOSTNAME = TcpConnector.LOCALHOST;
         BinaryProtocol.DISABLE_LOCAL_CONFIGURATION_CACHE = true;
 

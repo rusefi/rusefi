@@ -28,7 +28,7 @@ dependencies {
     implementation global_libs.json
     implementation ts_plugin_libs.httpclient
 
-    testFixturesImplementation global_libs.mockito
+    testFixturesApi global_libs.mockito
     testFixturesApi global_libs.annotations
     testFixturesApi global_libs.junit5api
 }

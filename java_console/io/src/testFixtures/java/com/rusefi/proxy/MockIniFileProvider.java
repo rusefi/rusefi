@@ -2,8 +2,8 @@ package com.rusefi.proxy;
 
 import com.opensr5.ini.IniFileMetaInfo;
 import com.opensr5.ini.IniFileModelImpl;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IniFileProvider;
-import org.mockito.Mockito;
 
 import static org.mockito.Mockito.*;
 
@@ -25,5 +25,9 @@ public class MockIniFileProvider {
                 return mockModel;
             }
         };
+    }
+
+    public static void install() {
+        BinaryProtocol.iniFileProvider = create();
     }
 }

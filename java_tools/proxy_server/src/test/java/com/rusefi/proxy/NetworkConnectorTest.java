@@ -6,7 +6,6 @@ import com.rusefi.BackendTestHelper;
 import com.rusefi.TestHelper;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.server.Backend;
@@ -26,7 +25,6 @@ public class NetworkConnectorTest {
 
     @BeforeEach
     public void setup() throws MalformedURLException {
-        BinaryProtocol.iniFileProvider = MockIniFileProvider.create();
         BackendTestHelper.commonServerTest();
     }
 

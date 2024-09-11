@@ -22,7 +22,6 @@ dependencies {
     implementation files('../lib/dfu/dfu_java.jar')
     implementation files('../lib/dfu/IntelHexParser.jar')
 */
-    testImplementation global_libs.mockito
     testImplementation testFixtures(project(':ecu_io'))
 }
 
