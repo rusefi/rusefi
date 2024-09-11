@@ -32,7 +32,7 @@ bool AemXSeriesWideband::acceptFrame(const CANRxFrame& frame) const {
 	uint32_t aemXSeriesId = aem_base + m_sensorIndex;
 
 	// 0th sensor is 0x190 and 0x191, 1st sensor is 0x192 and 0x193
-	uint32_t rusefiBaseId = rusefi_base + 2 * m_sensorIndex;
+	uint32_t rusefiBaseId = rusefi_base + 2 * (engineConfiguration->flipWboChannels ? (1 - m_sensorIndex) : m_sensorIndex);
 
 	return
 		id == aemXSeriesId ||

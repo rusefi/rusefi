@@ -4,6 +4,7 @@
 
 TEST(CanWideband, AcceptFrameId0) {
 	AemXSeriesWideband dut(0, SensorType::Lambda1);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	CANRxFrame frame;
 
@@ -25,6 +26,7 @@ TEST(CanWideband, AcceptFrameId0) {
 
 TEST(CanWideband, AcceptFrameId1) {
 	AemXSeriesWideband dut(1, SensorType::Lambda2);
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	CANRxFrame frame;
 
@@ -45,6 +47,7 @@ TEST(CanWideband, AcceptFrameId1) {
 }
 
 TEST(CanWideband, DecodeValidAemFormat) {
+  EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	AemXSeriesWideband dut(0, SensorType::Lambda1);
 	dut.Register();
 
