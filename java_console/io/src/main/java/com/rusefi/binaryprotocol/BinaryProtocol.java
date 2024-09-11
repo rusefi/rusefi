@@ -11,7 +11,6 @@ import com.opensr5.io.DataListener;
 import com.rusefi.ConfigurationImageDiff;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.config.generated.Integration;
-import com.rusefi.core.SignatureHelper;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.test.Bug3923;
 import com.rusefi.config.generated.Fields;
@@ -76,6 +75,7 @@ public class BinaryProtocol {
 
     private final BinaryProtocolLogger binaryProtocolLogger;
     public static boolean DISABLE_LOCAL_CONFIGURATION_CACHE;
+    public static IniFileProvider iniFileProvider = new RealIniFileProvider();
 
     public static String findCommand(byte command) {
         switch (command) {
@@ -181,10 +181,7 @@ public class BinaryProtocol {
         } catch (IOException e) {
             return "Failed to read signature " + e;
         }
-        String localIniFile = SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(signature));
-        if (localIniFile == null)
-            throw new IllegalStateException("Failed to download for " + signature);
-        iniFile = new IniFileModel().readIniFile(localIniFile);
+        iniFile = iniFileProvider.provide(signature);
 
         String errorMessage = validateConfigVersion();
         if (errorMessage != null)
