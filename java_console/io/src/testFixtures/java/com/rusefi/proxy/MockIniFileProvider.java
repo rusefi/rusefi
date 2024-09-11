@@ -17,14 +17,7 @@ public class MockIniFileProvider {
         IniFileModelImpl mockModel = mock(IniFileModelImpl.class);
         when(mockModel.getMetaInfo()).thenReturn(mockMeta);
 
-
-
-        return new IniFileProvider() {
-            @Override
-            public IniFileModelImpl provide(String signature) {
-                return mockModel;
-            }
-        };
+        return signature -> mockModel;
     }
 
     public static void install() {
