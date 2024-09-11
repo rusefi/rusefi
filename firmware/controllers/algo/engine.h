@@ -93,8 +93,10 @@ public:
 
 	StartStopState startStopState;
 
+#if ! EFI_PROD_CODE
 	// todo: technical debt: enableOverdwellProtection #3553
 	bool enableOverdwellProtection = true;
+#endif
 
 	TunerStudioOutputChannels outputChannels;
 
