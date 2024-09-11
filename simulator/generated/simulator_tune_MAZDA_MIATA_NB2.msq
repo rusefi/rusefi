@@ -223,7 +223,7 @@
         <constant digits="0" name="boostControlSafeDutyCycle" units="%">0.0</constant>
         <constant name="mafAdcChannel">"Disabled"</constant>
         <constant digits="0" name="acrRevolutions" units="">5.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.024091E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0240911E7</constant>
         <constant digits="3" name="adcVcc" units="volts">3.0</constant>
         <constant digits="0" name="mapCamDetectionAnglePosition" units="Deg">0.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -349,7 +349,7 @@
         <constant name="verboseTLE8888">"false"</constant>
         <constant name="enableVerboseCanTx">"false"</constant>
         <constant name="externalRusEfiGdiModule">"false"</constant>
-        <constant name="unused644b11">"false"</constant>
+        <constant name="flipWboChannels">"false"</constant>
         <constant name="measureMapOnlyInOneCylinder">"false"</constant>
         <constant name="stepperForceParkingEveryRestart">"true"</constant>
         <constant name="isFasterEngineSpinUpEnabled">"true"</constant>
@@ -4764,7 +4764,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20240830" nPages="1" signature="rusEFI master.2024.09.10.f407-discovery.1945474407" version="5.0"/>
+    <versionInfo firmwareInfo="20240830" nPages="1" signature="rusEFI master.2024.09.11.f407-discovery.3260823191" version="5.0"/>
     <bibliography author="rusEFI 20240830" writeDate="date"/>
     <settings/>
     <userComments/>
