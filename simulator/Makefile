@@ -43,10 +43,7 @@ else
   SANITIZE = no
 endif
 
-ifeq ($(SIMULATOR_DEBUG_LEVEL_OPT),)
-# If you would like to debug the simulator, swap which of these lines is commented. It's commented because debug info causes a 10-15x increase in binary size.
-  SIMULATOR_DEBUG_LEVEL_OPT = -O0 -g
-endif
+  SIMULATOR_DEBUG_LEVEL_OPT = -O2
 
 # Compiler options here.
 ifeq ($(USE_OPT),)
