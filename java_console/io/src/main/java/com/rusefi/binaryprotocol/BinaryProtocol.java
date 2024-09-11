@@ -291,7 +291,7 @@ public class BinaryProtocol {
             byte[] newBytes = newVersion.getRange(range.first, size);
             log.info("new " + Arrays.toString(newBytes));
 
-            writeData(newVersion.getContent(), 0, range.first, size);
+            writeData(newVersion.getContent(), range.first, range.first, size);
 
             offset = range.second;
         }
