@@ -17,6 +17,36 @@ static void prepare(EngineTestHelper *eth, trigger_type_e trigger) {
 	engineConfiguration->vvtMode[0] = VVT_INACTIVE;
 }
 
+static void constructTriggerFromRecording(CsvReader *reader) {
+	int magic = 20;
+
+	if (reader->lineIndex() == magic) {
+
+		int len = 8;
+		double last = reader->history.get(magic - 1);
+		printf("last=%f\n", last);
+
+		double time360 = last - reader->history.get(magic - 1 - 8);
+
+		float current = 0;
+
+		for (int i=len - 1;i>=0;i--) {
+			double tooth = last - reader->history.get(magic - 1 - i);
+//				printf("index=%d width=%f\n", i, tooth);
+			double angle = 360 - (360 * tooth / time360);
+			//printf("index=%d, to=%f\n", i, angle);
+
+			bool isRise = (i % 2) == 1;
+			const char * front = isRise ? "RISE" : "FALL";
+
+			printf("\ts->addEvent360(%f, TriggerValue::%s);\n", angle, front);
+			current += tooth;
+		}
+
+//		printf("time360=%f\n", time360);
+	}
+}
+
 static void runTriggerTest(const char *fileName, int totalErrors, int syncCounter, float firstRpm) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
@@ -30,6 +60,10 @@ static void runTriggerTest(const char *fileName, int totalErrors, int syncCounte
 	reader.open(fileName);
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
+
+		constructTriggerFromRecording(&reader);
+
+
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 //		printf("rpm %f\n", rpm);
 
@@ -46,10 +80,10 @@ static void runTriggerTest(const char *fileName, int totalErrors, int syncCounte
 }
 
 
-TEST(real6g72, data) {
-	runTriggerTest("tests/trigger/resources/3000gt.csv", 0, 16, 419.42f);
+TEST(real6g72, data1) {
+	runTriggerTest("tests/trigger/resources/3000gt.csv", 0, 15, 195.515f);
 }
 
 TEST(real6g72, data2) {
-	runTriggerTest("tests/trigger/resources/3000gt_cranking_cam_first_crank_second_only_cam.csv", 4, 0, 376.20f);
+	runTriggerTest("tests/trigger/resources/3000gt_cranking_cam_first_crank_second_only_cam.csv", 2, 9, 157.843f);
 }

@@ -37,6 +37,8 @@ public:
 		return m_lineIndex;
 	}
 
+  cyclic_buffer<double, 720> history;
+
 private:
 	const size_t m_triggerCount;
 	const size_t m_vvtCount;

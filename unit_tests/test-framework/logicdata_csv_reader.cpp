@@ -92,6 +92,7 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 	}
 
 	double timeStamp = std::stod(timeStampstr);
+	history.add(timeStamp);
 
 	timeStamp += m_timestampOffset;
 
