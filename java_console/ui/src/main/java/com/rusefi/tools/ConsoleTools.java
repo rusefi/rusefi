@@ -92,7 +92,6 @@ public class ConsoleTools {
         registerTool("upload_tune", ConsoleTools::uploadTune, "Upload specified tune file to rusEFI Online using auth token from settings");
 
         registerTool("read_tune", args -> readTune(), "Read tune from controller");
-        registerTool("write_tune", ConsoleTools::writeTune, "Write specified XML tune into controller");
         registerTool("get_performance_trace", args -> PerformanceTraceHelper.getPerformanceTune(), "DEV TOOL: Get performance trace from ECU");
 
         registerTool("version", ConsoleTools::version, "Only print version");
