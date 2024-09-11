@@ -1,6 +1,5 @@
 package com.rusefi.tools.tune;
 
-import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelImpl;
 import com.rusefi.RootHolder;
 import com.rusefi.enums.engine_type_e;
@@ -8,7 +7,7 @@ import com.rusefi.enums.engine_type_e;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 
-import static com.rusefi.tools.tune.WriteSimulatorConfiguration.INI_FILE_FOR_SIMULATOR;
+import static com.rusefi.LocalIniFileProvider.INI_FILE_FOR_SIMULATOR;
 
 public class TuneCanToolRunner extends TuneCanTool {
     static {

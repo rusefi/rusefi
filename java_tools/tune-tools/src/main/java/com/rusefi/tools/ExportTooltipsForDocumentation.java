@@ -3,9 +3,7 @@ package com.rusefi.tools;
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelImpl;
-import com.opensr5.ini.field.IniField;
-import com.rusefi.RootHolder;
-import com.rusefi.tools.tune.WriteSimulatorConfiguration;
+import com.rusefi.LocalIniFileProvider;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -14,7 +12,7 @@ public class ExportTooltipsForDocumentation {
     public static void main(String[] args) throws IOException {
 //        RootHolder.ROOT = "../firmware/";
 
-        IniFileModel ini = new IniFileModelImpl().readIniFile(WriteSimulatorConfiguration.INI_FILE_FOR_SIMULATOR);
+        IniFileModel ini = new IniFileModelImpl().readIniFile(LocalIniFileProvider.INI_FILE_FOR_SIMULATOR);
 
         try (FileWriter fw = new FileWriter("all_fields.md")) {
 

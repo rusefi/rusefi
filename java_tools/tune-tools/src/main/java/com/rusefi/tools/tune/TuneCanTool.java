@@ -30,7 +30,7 @@ import java.util.TreeSet;
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.ConfigFieldImpl.unquote;
 import static com.rusefi.config.Field.niceToString;
-import static com.rusefi.tools.tune.WriteSimulatorConfiguration.INI_FILE_FOR_SIMULATOR;
+import static com.rusefi.LocalIniFileProvider.INI_FILE_FOR_SIMULATOR;
 
 /**
  * this command line utility compares two TS calibration files and produces .md files with C++ source code of the difference between those two files.

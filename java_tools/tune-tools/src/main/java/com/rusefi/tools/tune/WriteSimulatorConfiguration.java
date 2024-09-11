@@ -3,9 +3,7 @@ package com.rusefi.tools.tune;
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.*;
-import com.opensr5.ini.field.IniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.binaryprotocol.IniFileProvider;
 import com.rusefi.binaryprotocol.MsqFactory;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.enums.engine_type_e;
@@ -16,8 +14,6 @@ import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -27,8 +23,6 @@ import static com.devexperts.logging.Logging.getLogging;
  */
 public class WriteSimulatorConfiguration {
     private static final Logging log = getLogging(WriteSimulatorConfiguration.class);
-    // f407-discovery is historically the most inclusive .ini file
-    public static final String INI_FILE_FOR_SIMULATOR = "../firmware/tunerstudio/generated/rusefi_f407-discovery.ini";
 
     public static String ROOT_FOLDER = System.getProperty("ROOT_FOLDER", "../simulator/");
 
