@@ -12,7 +12,7 @@ public class MockIniFileProvider {
     public static IniFileProvider create() {
         IniFileMetaInfo mockMeta = mock(IniFileMetaInfo.class);
 
-        when(mockMeta.getTotalSize()).thenReturn(22972);
+        when(mockMeta.getTotalSize()).thenReturn(15000);
 
         IniFileModelImpl mockModel = mock(IniFileModelImpl.class);
         when(mockModel.getMetaInfo()).thenReturn(mockMeta);
