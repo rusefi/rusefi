@@ -6,6 +6,7 @@ import com.opensr5.ConfigurationImageMetaVersion0_0;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.IniFileModelImpl;
 import com.opensr5.io.ConfigurationImageFile;
 import com.opensr5.io.DataListener;
 import com.rusefi.ConfigurationImageDiff;
@@ -382,7 +383,7 @@ public class BinaryProtocol {
                 if (ConnectionAndMeta.saveSettingsToFile()) {
                     ConfigurationImageFile.saveToFile(image, CONFIGURATION_RUSEFI_BINARY);
                 }
-                Msq tune = MsqFactory.valueOf(image, IniFileModel.getInstance());
+                Msq tune = MsqFactory.valueOf(image, IniFileModelImpl.getInstance());
                 tune.writeXmlFile(CONFIGURATION_RUSEFI_XML);
             } catch (Exception e) {
                 System.err.println("Ignoring " + e);

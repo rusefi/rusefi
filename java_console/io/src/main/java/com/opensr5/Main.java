@@ -1,6 +1,7 @@
 package com.opensr5;
 
 import com.opensr5.ini.IniFileMetaInfo;
+import com.opensr5.ini.IniFileMetaInfoImpl;
 import com.opensr5.ini.IniFileReader;
 import com.opensr5.ini.RawIniFile;
 
@@ -24,7 +25,7 @@ public class Main {
 
         RawIniFile content = IniFileReader.read(new File(projectIniFileName));
 
-        IniFileMetaInfo meta = new IniFileMetaInfo(content);
+        IniFileMetaInfo meta = new IniFileMetaInfoImpl(content);
 
         System.out.println("nPages = " + meta.getnPages());
         System.out.println("blockingFactor = " + meta.getBlockingFactor());

@@ -35,7 +35,7 @@ public class Msq {
     @NotNull
     public static Msq valueOf(ConfigurationImage image, int totalConfigSize, String tsSignature, IniFileModel ini) {
         Msq tune = create(totalConfigSize, tsSignature);
-        for (String key : ini.allIniFields.keySet())
+        for (String key : ini.getAllIniFields().keySet())
             tune.loadConstant(ini, key, image);
         return tune;
     }
@@ -60,7 +60,7 @@ public class Msq {
             if (constant.getName().startsWith("UNALLOCATED_SPACE")) {
                 continue;
             }
-            IniField field = instance.allIniFields.get(constant.getName());
+            IniField field = instance.getAllIniFields().get(constant.getName());
             Objects.requireNonNull(field, "Field for " + constant.getName());
             log.debug("Setting " + field);
             field.setValue(ci, constant);
@@ -82,7 +82,7 @@ public class Msq {
     }
 
     public void loadConstant(IniFileModel ini, String key, ConfigurationImage image) {
-        IniField field = ini.allIniFields.get(key);
+        IniField field = ini.getAllIniFields().get(key);
         String value = field.getValue(image);
         Page page = findPage();
         if (page == null) {

@@ -3,6 +3,7 @@ package com.rusefi;
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.field.ScalarIniField;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.config.Field;
 import com.rusefi.config.generated.Fields;
@@ -48,7 +49,7 @@ public class TestHelper extends MockitoTestHelper {
 
     @NotNull
     public static ConfigurationImage prepareImage(int input, ScalarIniField scalarIniField) {
-        ConfigurationImage ci = new ConfigurationImage(Fields.TOTAL_CONFIG_SIZE);
+        ConfigurationImage ci = new ConfigurationImage(BinaryProtocol.iniFileProvider.provide(null).getMetaInfo().getTotalSize());
 
         scalarIniField.setValue(ci, new Constant(scalarIniField.getName(), "", Integer.toString(input), scalarIniField.getDigits()));
         return ci;

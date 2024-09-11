@@ -2,6 +2,7 @@ package com.rusefi.tools;
 
 import com.opensr5.ini.DialogModel;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.IniFileModelImpl;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.RootHolder;
 import com.rusefi.tools.tune.WriteSimulatorConfiguration;
@@ -13,7 +14,7 @@ public class ExportTooltipsForDocumentation {
     public static void main(String[] args) throws IOException {
 //        RootHolder.ROOT = "../firmware/";
 
-        IniFileModel ini = new IniFileModel().readIniFile(WriteSimulatorConfiguration.INI_FILE_FOR_SIMULATOR);
+        IniFileModel ini = new IniFileModelImpl().readIniFile(WriteSimulatorConfiguration.INI_FILE_FOR_SIMULATOR);
 
         try (FileWriter fw = new FileWriter("all_fields.md")) {
 
@@ -22,11 +23,11 @@ public class ExportTooltipsForDocumentation {
     }
 
     private static void writeAllFields(FileWriter fw, IniFileModel ini) throws IOException {
-        for (DialogModel.Field f : ini.fieldsInUiOrder.values()) {
+        for (DialogModel.Field f : ini.getFieldsInUiOrder().values()) {
 //            String fieldName = f.getKey();
 //            IniField iniField = ini.allIniFields.get(f.getKey());
 
-            String toolTip = ini.tooltips.get(f.getKey());
+            String toolTip = ini.getTooltips().get(f.getKey());
 
             if (toolTip != null) {
 

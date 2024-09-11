@@ -186,7 +186,7 @@ public class TuneCanTool {
 
 
         StringBuilder sb = new StringBuilder();
-        for (DialogModel.Field f : ini.fieldsInUiOrder.values()) {
+        for (DialogModel.Field f : ini.getFieldsInUiOrder().values()) {
             String fieldName = f.getKey();
             Constant customValue = customTune.getConstantsAsMap().get(fieldName);
             Constant defaultValue = defaultTune.getConstantsAsMap().get(fieldName);

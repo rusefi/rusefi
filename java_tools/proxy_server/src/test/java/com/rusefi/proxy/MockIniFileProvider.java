@@ -1,12 +1,29 @@
 package com.rusefi.proxy;
 
+import com.opensr5.ini.IniFileMetaInfo;
+import com.opensr5.ini.IniFileModelImpl;
 import com.rusefi.binaryprotocol.IniFileProvider;
 import org.mockito.Mockito;
+
+import static org.mockito.Mockito.*;
 
 public class MockIniFileProvider {
 
     public static IniFileProvider create() {
-        IniFileProvider mock = Mockito.mock(IniFileProvider.class);
-        return mock;
+        IniFileMetaInfo mockMeta = mock(IniFileMetaInfo.class);
+
+        when(mockMeta.getTotalSize()).thenReturn(22972);
+
+        IniFileModelImpl mockModel = mock(IniFileModelImpl.class);
+        when(mockModel.getMetaInfo()).thenReturn(mockMeta);
+
+
+
+        return new IniFileProvider() {
+            @Override
+            public IniFileModelImpl provide(String signature) {
+                return mockModel;
+            }
+        };
     }
 }

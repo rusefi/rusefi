@@ -20,8 +20,8 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import static com.opensr5.ini.IniFileModel.RUSEFI_INI_PREFIX;
-import static com.opensr5.ini.IniFileModel.RUSEFI_INI_SUFFIX;
+import static com.opensr5.ini.IniFileModelImpl.RUSEFI_INI_PREFIX;
+import static com.opensr5.ini.IniFileModelImpl.RUSEFI_INI_SUFFIX;
 
 /**
  * @see EnumConfigField

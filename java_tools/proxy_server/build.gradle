@@ -16,4 +16,5 @@ dependencies {
 
     testImplementation testFixtures(project(':ecu_io'))
     testImplementation ts_plugin_libs.httpcore
+    testImplementation global_libs.mockito
 }

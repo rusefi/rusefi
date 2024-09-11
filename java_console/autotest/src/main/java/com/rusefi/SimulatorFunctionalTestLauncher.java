@@ -1,5 +1,7 @@
 package com.rusefi;
 
+import com.opensr5.ini.IniFileModelImpl;
+import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.LinkManager;
 import com.rusefi.simulator.SimulatorFunctionalTest;
 
@@ -16,7 +18,10 @@ public class SimulatorFunctionalTestLauncher {
             e.printStackTrace();
             System.exit(66);
         });
-        boolean startSimulator = args.length == 1 && args[0].equalsIgnoreCase("start");
+        String iniFileName = args[0];
+        IniFileModelImpl ini = new IniFileModelImpl().readIniFile(iniFileName);
+        BinaryProtocol.iniFileProvider = signature -> ini;
+        boolean startSimulator = args.length > 1 && args[1].equalsIgnoreCase("start");
 
 //        if (startSimulator) {
 //            buildSimulator();

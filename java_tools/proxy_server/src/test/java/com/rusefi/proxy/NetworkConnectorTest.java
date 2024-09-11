@@ -26,7 +26,7 @@ public class NetworkConnectorTest {
 
     @BeforeEach
     public void setup() throws MalformedURLException {
-        //BinaryProtocol.iniFileProvider = MockIniFileProvider.create();
+        BinaryProtocol.iniFileProvider = MockIniFileProvider.create();
         BackendTestHelper.commonServerTest();
     }
 
@@ -37,7 +37,7 @@ public class NetworkConnectorTest {
 
         // create virtual controller to which "rusEFI network connector" connects to
         int controllerPort = 7502;
-        ConfigurationImage controllerImage = new ConfigurationImage(Fields.TOTAL_CONFIG_SIZE);
+        ConfigurationImage controllerImage = new ConfigurationImage(BinaryProtocol.iniFileProvider.provide(null).getMetaInfo().getTotalSize());
         BinaryProtocolServer.Context patientController = new BinaryProtocolServer.Context() {
             @Override
             public int getTimeout() {

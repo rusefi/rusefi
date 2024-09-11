@@ -182,7 +182,7 @@ public class EnumIniField extends IniField {
                 String trimmed = firstValue.trim();
                 if (trimmed.startsWith("$")) {
                     String key = trimmed.substring(1);
-                    List<String> elements = iniFileModel.defines.get(key);
+                    List<String> elements = iniFileModel.getDefines().get(key);
                     Objects.requireNonNull(elements, "Elements for " + key);
                     for (int i = 0; i < elements.size(); i++) {
                         keyValues.put(i, elements.get(i));

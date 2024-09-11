@@ -1,6 +1,7 @@
 package com.rusefi.tune;
 
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.IniFileModelImpl;
 import com.rusefi.*;
 import com.rusefi.tools.tune.TuneCanTool;
 import com.rusefi.tools.tune.TuneTools;
@@ -21,8 +22,8 @@ public class LoadOlderTuneTest {
 
         Msq lessOldDefaultTune = Msq.readTune(LoadOlderTuneTest.class.getResource("/simulator_tune-2023-06.xml").getFile());
 
-        IniFileModel ini = new IniFileModel().readIniFile(TuneReadWriteTest.TEST_INI);
-        assertFalse(ini.fieldsInUiOrder.isEmpty());
+        IniFileModel ini = new IniFileModelImpl().readIniFile(TuneReadWriteTest.TEST_INI);
+        assertFalse(ini.getFieldsInUiOrder().isEmpty());
 
         RootHolder.ROOT = "../../firmware/";
 

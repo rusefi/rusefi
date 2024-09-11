@@ -4,6 +4,7 @@ import com.efiAnalytics.plugin.ecu.ControllerAccess;
 import com.efiAnalytics.plugin.ecu.ControllerException;
 import com.efiAnalytics.plugin.ecu.ControllerParameterChangeListener;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.IniFileModelImpl;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.TsTuneReader;
@@ -176,7 +177,7 @@ public class TuneUploadTab {
     }
 
     private void subscribeToUpdates(String configurationName, ControllerAccess controllerAccess) {
-        IniFileModel model = new IniFileModel().readIniFile(TsTuneReader.getProjectModeFileName(configurationName));
+        IniFileModelImpl model = new IniFileModelImpl().readIniFile(TsTuneReader.getProjectModeFileName(configurationName));
         Map<String, IniField> allIniFields = model.allIniFields;
         if (model.allIniFields == null)
             return;

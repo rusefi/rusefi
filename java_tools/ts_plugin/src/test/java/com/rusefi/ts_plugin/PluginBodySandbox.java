@@ -4,6 +4,7 @@ import com.efiAnalytics.plugin.ecu.ControllerAccess;
 import com.efiAnalytics.plugin.ecu.ControllerException;
 import com.efiAnalytics.plugin.ecu.servers.ControllerParameterServer;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.IniFileModelImpl;
 import com.rusefi.TsTuneReader;
 import com.rusefi.core.ui.FrameHelper;
 
@@ -26,7 +27,7 @@ public class PluginBodySandbox {
 
     public static void main(String[] args) throws ControllerException {
         String iniFile = TsTuneReader.getProjectModeFileName(PROJECT_NAME);
-        IniFileModel model = new IniFileModel().readIniFile(iniFile);
+        IniFileModelImpl model = new IniFileModelImpl().readIniFile(iniFile);
         Objects.requireNonNull(model, "model");
         java.util.List<String> fieldNamesList = new ArrayList<>(model.allIniFields.keySet());
         String[] parameterNames = fieldNamesList.toArray(new String[0]);

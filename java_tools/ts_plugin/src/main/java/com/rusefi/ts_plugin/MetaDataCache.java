@@ -1,6 +1,7 @@
 package com.rusefi.ts_plugin;
 
 import com.opensr5.ini.IniFileMetaInfo;
+import com.opensr5.ini.IniFileMetaInfoImpl;
 import com.opensr5.ini.RawIniFile;
 import com.rusefi.TsTuneReader;
 import org.jetbrains.annotations.Nullable;
@@ -23,7 +24,7 @@ public class MetaDataCache {
             System.out.println("Reading meta " + projectName);
             String modeFileName = TsTuneReader.getProjectModeFileName(projectName);
             try {
-                cache = new IniFileMetaInfo(RawIniFile.read(modeFileName));
+                cache = new IniFileMetaInfoImpl(RawIniFile.read(modeFileName));
             } catch (FileNotFoundException e) {
                 System.out.println("No luck reading " + modeFileName + ": " + e);
                 return null;

@@ -38,7 +38,7 @@ public class CurveData implements CannableEntity {
 
     @Nullable
     public static CurveData valueOf(String msqFileName, String curveName, IniFileModel model) throws IOException {
-        IniField iniField = model.allIniFields.get(curveName);
+        IniField iniField = model.getAllIniFields().get(curveName);
         if (!(iniField instanceof ArrayIniField))
             return null;
         ArrayIniField field = (ArrayIniField) iniField;

@@ -1,6 +1,7 @@
 package com.rusefi.tools.tune;
 
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.IniFileModelImpl;
 import com.rusefi.RootHolder;
 import com.rusefi.enums.engine_type_e;
 
@@ -15,7 +16,7 @@ public class TuneCanToolRunner extends TuneCanTool {
     }
 
     protected static void initialize(String iniFileForSimulator) {
-        ini = new IniFileModel().readIniFile(iniFileForSimulator);
+        ini = new IniFileModelImpl().readIniFile(iniFileForSimulator);
         if (ini == null)
             throw new IllegalStateException("Not found " + iniFileForSimulator);
 /*

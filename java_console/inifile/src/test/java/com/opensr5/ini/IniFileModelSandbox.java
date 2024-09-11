@@ -6,8 +6,8 @@ public class IniFileModelSandbox {
     private static final Logging log = Logging.getLogging(IniFileModelSandbox.class);
 
     public static void main(String[] args) {
-        IniFileModel iniFile = new IniFileModel();
-        iniFile.findAndReadIniFile(IniFileModel.INI_FILE_PATH);
+        IniFileModel iniFile = new IniFileModelImpl();
+        iniFile.findAndReadIniFile(IniFileModelImpl.INI_FILE_PATH);
         log.info("Dialogs: " + iniFile.getDialogs());
     }
 }

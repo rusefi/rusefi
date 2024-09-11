@@ -2,7 +2,10 @@ package com.rusefi.tools.tune;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
-import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.*;
+import com.opensr5.ini.field.IniField;
+import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.IniFileProvider;
 import com.rusefi.binaryprotocol.MsqFactory;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.enums.engine_type_e;
@@ -13,6 +16,8 @@ import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -31,11 +36,13 @@ public class WriteSimulatorConfiguration {
         if (args.length != 1)
             throw new IllegalArgumentException("One argument expected: .ini file name");
         String iniFileName = args[0];
+        IniFileModelImpl ini = new IniFileModelImpl().readIniFile(iniFileName);
+        BinaryProtocol.iniFileProvider = signature -> ini;
 
         System.out.println("ROOT_FOLDER=" + ROOT_FOLDER);
         try {
             try {
-                readBinaryWriteXmlTune(iniFileName, Fields.SIMULATOR_TUNE_BIN_FILE_NAME, TuneCanTool.DEFAULT_TUNE);
+                readBinaryWriteXmlTune(iniFileName, Fields.SIMULATOR_TUNE_BIN_FILE_NAME, TuneCanTool.DEFAULT_TUNE, ini);
             } catch (Throwable e) {
                 throw new IllegalStateException("White default tune", e);
             }
@@ -59,7 +66,7 @@ public class WriteSimulatorConfiguration {
                     engine_type_e.POLARIS_RZR,
                     engine_type_e.HARLEY,
             }) {
-                writeSpecificEngineType(iniFileName, type);
+                writeSpecificEngineType(iniFileName, type, ini);
             }
             TuneCanToolRunner.runPopular();
         } catch (Throwable e) {
@@ -71,20 +78,19 @@ public class WriteSimulatorConfiguration {
         }
     }
 
-    private static void writeSpecificEngineType(String iniFileName, engine_type_e engineType) {
+    private static void writeSpecificEngineType(String iniFileName, engine_type_e engineType, IniFileModelImpl ini) {
         try {
             String in = Fields.SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX + "_" + engineType.ordinal() + Fields.SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX;
             readBinaryWriteXmlTune(iniFileName, in,
-                    TuneCanTool.getDefaultTuneName(engineType));
+                    TuneCanTool.getDefaultTuneName(engineType), ini);
         } catch (Throwable e) {
             throw new IllegalStateException("With " + engineType, e);
         }
     }
 
-    private static void readBinaryWriteXmlTune(String iniFileName, String inputBinaryTuneFileName, String outputXmlFileName) throws JAXBException, IOException {
+    private static void readBinaryWriteXmlTune(String iniFileName, String inputBinaryTuneFileName, String outputXmlFileName, IniFileModel ini) throws JAXBException, IOException {
         // we have to use board-specific .ini to account for all the board-specific offsets
         // INI_FILE_FOR_SIMULATOR is just not universal enough
-        IniFileModel ini = new IniFileModel().readIniFile(iniFileName);
         if (ini == null)
             throw new IllegalStateException("Not found " + iniFileName);
         byte[] fileContent = Files.readAllBytes(new File(ROOT_FOLDER + inputBinaryTuneFileName).toPath());

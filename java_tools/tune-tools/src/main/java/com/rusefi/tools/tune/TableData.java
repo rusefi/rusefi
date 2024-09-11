@@ -27,7 +27,7 @@ public class TableData implements CannableEntity {
 
     @Nullable
     public static TableData readTable(String msqFileName, String tableName, IniFileModel model) throws IOException {
-        IniField iniField = model.allIniFields.get(tableName);
+        IniField iniField = model.getAllIniFields().get(tableName);
         if (!(iniField instanceof ArrayIniField)) {
             // this could happen if older tune is not compatible with newer .ini
             return null;

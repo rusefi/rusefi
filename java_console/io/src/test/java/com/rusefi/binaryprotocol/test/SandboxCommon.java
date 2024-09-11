@@ -3,6 +3,7 @@ package com.rusefi.binaryprotocol.test;
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.IniFileModelImpl;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
@@ -67,7 +68,7 @@ public class SandboxCommon {
         linkManager.COMMUNICATION_EXECUTOR.submit(() -> {
             if (tsStream.getDataBuffer().dropPending() != 0)
                 log.info("ERROR Extra data before CRC");
-            bp.getCrcFromController(IniFileModel.getInstance().getMetaInfo().getTotalSize());
+            bp.getCrcFromController(IniFileModelImpl.getInstance().getMetaInfo().getTotalSize());
 //            bp.getCrcFromController(Fields.TOTAL_CONFIG_SIZE);
 //            bp.getCrcFromController(Fields.TOTAL_CONFIG_SIZE);
             if (tsStream.getDataBuffer().dropPending() != 0)

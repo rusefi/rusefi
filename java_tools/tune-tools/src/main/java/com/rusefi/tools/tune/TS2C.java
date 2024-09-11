@@ -1,6 +1,7 @@
 package com.rusefi.tools.tune;
 
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.IniFileModelImpl;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -52,7 +53,7 @@ public class TS2C {
         String rpmSectionName = args[2];
         String tableName = args.length == 3 ? "none" : args[3];
 
-        IniFileModel model = IniFileModel.getInstance();
+        IniFileModel model = IniFileModelImpl.getInstance();
 
         String entityName = tableName.equalsIgnoreCase("none") ? loadSectionName : tableName;
         String methodName = getMethodName(entityName);

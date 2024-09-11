@@ -3,6 +3,7 @@ package com.rusefi.tools;
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.IniFileModelImpl;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.*;
 import com.rusefi.autodetect.PortDetector;
@@ -154,7 +155,7 @@ public class ConsoleTools {
     private static void calcXmlImageTuneCrc(String... args) throws Exception {
         String fileName = args[1];
         Msq msq = Msq.readTune(fileName);
-        ConfigurationImage image = msq.asImage(IniFileModel.getInstance());
+        ConfigurationImage image = msq.asImage(IniFileModelImpl.getInstance());
         printCrc(image);
     }
 
@@ -293,7 +294,7 @@ public class ConsoleTools {
         Msq msq = Msq.readTune(fileName);
 
         startAndConnect(linkManager -> {
-            ConfigurationImage ci = msq.asImage(IniFileModel.getInstance());
+            ConfigurationImage ci = msq.asImage(IniFileModelImpl.getInstance());
             linkManager.getConnector().getBinaryProtocol().uploadChanges(ci);
 
             //System.exit(0);
@@ -349,7 +350,7 @@ public class ConsoleTools {
         ConfigurationImage image = ConfigurationImageFile.readFromFile(inputBinaryFileName);
         System.out.println("Got " + image.getSize() + " of configuration from " + inputBinaryFileName);
 
-        Msq tune = MsqFactory.valueOf(image, IniFileModel.getInstance());
+        Msq tune = MsqFactory.valueOf(image, IniFileModelImpl.getInstance());
         tune.writeXmlFile(Online.outputXmlFileName);
         String authToken = AuthTokenPanel.getAuthToken();
         System.out.println("Using " + authToken);
