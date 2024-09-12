@@ -10,8 +10,8 @@ SCRIPT_NAME=$(basename "$0")
 
 cd $(dirname "$0")
 
-SIGNATURE_FILE_NAME=tunerstudio/generated/signature_${SHORT_BOARD_NAME}.txt
-echo "Generating signature for ${SHORT_BOARD_NAME}"
+SIGNATURE_FILE_NAME=${META_OUTPUT_ROOT_FOLDER}tunerstudio/generated/signature_${SHORT_BOARD_NAME}.txt
+echo "Generating signature for ${SHORT_BOARD_NAME} file $SIGNATURE_FILE_NAME"
 
 TEMP_FILE="${SIGNATURE_FILE_NAME}.temp"
 
