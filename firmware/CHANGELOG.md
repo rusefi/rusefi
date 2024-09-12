@@ -30,6 +30,7 @@ Release template (copy/paste this for new release):
 
 ### Added
  - Support wasted spark on odd cylinder count 4-stroke engines. Improves startup and allows running without a cam sensor!
+ - CLT/IAT boost duty/target compensation #6424
 
 ### Fixed
  - Removed questionable MAP sampling trigger index option
