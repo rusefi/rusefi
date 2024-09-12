@@ -230,7 +230,11 @@ ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 # Compiler settings
 #
 
+ifeq ($(OS),)
+$(info OS is empty: not Windows?)
+else
 $(info OS is [${OS}])
+endif
 
 ifeq ($(OS),Windows_NT)
   # ChibiOS seem to require 32 bit compiler at least on Windows
