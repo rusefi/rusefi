@@ -48,7 +48,7 @@ import static com.rusefi.config.generated.Fields.*;
  * Andrey Belomutskiy, (c) 2013-2020
  * 3/6/2015
  */
-public class BinaryProtocol {
+public class BinaryProtocol implements CommandExecutor {
     private static final Logging log = getLogging(BinaryProtocol.class);
     private static final ThreadFactory THREAD_FACTORY = new NamedThreadFactory("ECU text pull", true);
 
@@ -63,6 +63,7 @@ public class BinaryProtocol {
 
     private final LinkManager linkManager;
     private final IoStream stream;
+    private final CommandExecutor commandExecutor;
     private final IncomingDataBuffer incomingData;
     private boolean isBurnPending;
     public String signature;
@@ -115,9 +116,17 @@ public class BinaryProtocol {
 
     public final CommunicationLoggingListener communicationLoggingListener;
 
-    public BinaryProtocol(LinkManager linkManager, IoStream stream) {
+    public BinaryProtocol(
+        final LinkManager linkManager,
+        final IoStream stream
+    ) {
+        this(linkManager, stream, null);
+    }
+
+    public BinaryProtocol(final LinkManager linkManager, final IoStream stream, final CommandExecutor commandExecutor) {
         this.linkManager = linkManager;
         this.stream = stream;
+        this.commandExecutor = (commandExecutor != null ? commandExecutor: this);
 
         communicationLoggingListener = linkManager.messageListener::postMessage;
 
@@ -207,7 +216,7 @@ public class BinaryProtocol {
         byte[] packet = GetOutputsCommand.createRequest(TS_FILE_VERSION_OFFSET, requestSize);
 
         String msg = "load TS_CONFIG_VERSION";
-        byte[] response = executeCommand(Integration.TS_OUTPUT_COMMAND, packet, msg);
+        byte[] response = commandExecutor.executeCommand(Integration.TS_OUTPUT_COMMAND, packet, msg);
         if (!checkResponseCode(response) || response.length != requestSize + 1) {
             close();
             return "Failed to " + msg;
@@ -359,7 +368,11 @@ public class BinaryProtocol {
             byte[] packet = new byte[4];
             ByteRange.packOffsetAndSize(offset, requestSize, packet);
 
-            byte[] response = executeCommand(Integration.TS_READ_COMMAND, packet, "load image offset=" + offset);
+            byte[] response = commandExecutor.executeCommand(
+                Integration.TS_READ_COMMAND,
+                packet,
+                "load image offset=" + offset
+            );
 
             if (!checkResponseCode(response) || response.length != requestSize + 1) {
                 if (extractCode(response) == TS_RESPONSE_OUT_OF_RANGE) {
@@ -442,7 +455,7 @@ public class BinaryProtocol {
 
     public int getCrcFromController(int configSize) {
         byte[] packet = createRequestCrcPayload(configSize);
-        byte[] response = executeCommand(Integration.TS_CRC_CHECK_COMMAND, packet, "get CRC32");
+        byte[] response = commandExecutor.executeCommand(Integration.TS_CRC_CHECK_COMMAND, packet, "get CRC32");
 
         if (checkResponseCode(response) && response.length == 5) {
             ByteBuffer bb = ByteBuffer.wrap(response, 1, 4);
@@ -466,7 +479,7 @@ public class BinaryProtocol {
     }
 
     public byte[] executeCommand(char opcode, String msg) {
-        return executeCommand(opcode, null, msg);
+        return commandExecutor.executeCommand(opcode, null, msg);
     }
 
     /**
@@ -474,6 +487,7 @@ public class BinaryProtocol {
      *
      * @return null in case of IO issues
      */
+    @Override
     public byte[] executeCommand(char opcode, byte[] packet, String msg) {
         if (isClosed)
             return null;
@@ -527,7 +541,7 @@ public class BinaryProtocol {
 
         long start = System.currentTimeMillis();
         while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
-            byte[] response = executeCommand(Integration.TS_CHUNK_WRITE_COMMAND, packet, "writeImage");
+            byte[] response = commandExecutor.executeCommand(Integration.TS_CHUNK_WRITE_COMMAND, packet, "writeImage");
             if (!checkResponseCode(response) || response.length != 1) {
                 log.error("writeData: Something is wrong, retrying...");
                 continue;
@@ -581,7 +595,7 @@ public class BinaryProtocol {
 
         long start = System.currentTimeMillis();
         while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
-            byte[] response = executeCommand(Integration.TS_EXECUTE, command, "execute");
+            byte[] response = commandExecutor.executeCommand(Integration.TS_EXECUTE, command, "execute");
             if (!checkResponseCode(response, (byte) Integration.TS_RESPONSE_OK) || response.length != 1) {
                 continue;
             }
@@ -639,7 +653,7 @@ public class BinaryProtocol {
             // If less than one full chunk left, do a smaller read
             int chunkSize = Math.min(remaining, Fields.BLOCKING_FACTOR);
 
-            byte[] response = executeCommand(
+            byte[] response = commandExecutor.executeCommand(
                 Integration.TS_OUTPUT_COMMAND,
                 GetOutputsCommand.createRequest(reassemblyIdx, chunkSize),
                 "output channels"
