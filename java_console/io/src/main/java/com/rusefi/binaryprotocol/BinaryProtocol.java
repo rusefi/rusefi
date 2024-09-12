@@ -300,7 +300,7 @@ public class BinaryProtocol {
         setController(newVersion);
     }
 
-    private byte[] receivePacket(String msg) throws IOException {
+    private static byte[] receivePacket(String msg, IoStream stream) throws IOException {
         long start = System.currentTimeMillis();
         synchronized (stream.getIoLock()) {
             return stream.getDataBuffer().getPacket(Timeouts.BINARY_IO_TIMEOUT, msg, start);
@@ -470,6 +470,10 @@ public class BinaryProtocol {
      */
     public byte[] executeCommand(char opcode, byte[] packet, String msg) {
         linkManager.assertCommunicationThread();
+        return doExecute(opcode, packet, msg, stream);
+    }
+
+    private static byte @Nullable [] doExecute(char opcode, byte[] packet, String msg, IoStream stream) {
         if (stream.isClosed())
             return null;
 
@@ -480,10 +484,10 @@ public class BinaryProtocol {
             if (Bug3923.obscene)
                 log.info("Sending opcode " + opcode + " payload " + packet.length);
             stream.sendPacket(fullRequest);
-            return receivePacket(msg);
+            return receivePacket(msg, stream);
         } catch (IOException e) {
             log.error(msg + ": executeCommand failed: " + e);
-            close();
+            stream.close();
             return null;
         }
     }
