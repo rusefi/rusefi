@@ -5742,85 +5742,85 @@ struct persistent_config_s {
 	bool boardUseCrankPullUp : 1 {};
 	/**
 	offset 22984 bit 5 */
-	bool unusedBit_221_5 : 1 {};
+	bool boardUseH1PullDown : 1 {};
 	/**
 	offset 22984 bit 6 */
-	bool unusedBit_221_6 : 1 {};
+	bool boardUseH2PullDown : 1 {};
 	/**
 	offset 22984 bit 7 */
-	bool unusedBit_221_7 : 1 {};
+	bool boardUseH3PullDown : 1 {};
 	/**
 	offset 22984 bit 8 */
-	bool unusedBit_221_8 : 1 {};
+	bool boardUseH4PullDown : 1 {};
 	/**
 	offset 22984 bit 9 */
-	bool unusedBit_221_9 : 1 {};
+	bool boardUseH5PullDown : 1 {};
 	/**
 	offset 22984 bit 10 */
-	bool unusedBit_221_10 : 1 {};
+	bool boardUseFlexPullDown : 1 {};
 	/**
 	offset 22984 bit 11 */
-	bool unusedBit_221_11 : 1 {};
+	bool unusedBit_227_11 : 1 {};
 	/**
 	offset 22984 bit 12 */
-	bool unusedBit_221_12 : 1 {};
+	bool unusedBit_227_12 : 1 {};
 	/**
 	offset 22984 bit 13 */
-	bool unusedBit_221_13 : 1 {};
+	bool unusedBit_227_13 : 1 {};
 	/**
 	offset 22984 bit 14 */
-	bool unusedBit_221_14 : 1 {};
+	bool unusedBit_227_14 : 1 {};
 	/**
 	offset 22984 bit 15 */
-	bool unusedBit_221_15 : 1 {};
+	bool unusedBit_227_15 : 1 {};
 	/**
 	offset 22984 bit 16 */
-	bool unusedBit_221_16 : 1 {};
+	bool unusedBit_227_16 : 1 {};
 	/**
 	offset 22984 bit 17 */
-	bool unusedBit_221_17 : 1 {};
+	bool unusedBit_227_17 : 1 {};
 	/**
 	offset 22984 bit 18 */
-	bool unusedBit_221_18 : 1 {};
+	bool unusedBit_227_18 : 1 {};
 	/**
 	offset 22984 bit 19 */
-	bool unusedBit_221_19 : 1 {};
+	bool unusedBit_227_19 : 1 {};
 	/**
 	offset 22984 bit 20 */
-	bool unusedBit_221_20 : 1 {};
+	bool unusedBit_227_20 : 1 {};
 	/**
 	offset 22984 bit 21 */
-	bool unusedBit_221_21 : 1 {};
+	bool unusedBit_227_21 : 1 {};
 	/**
 	offset 22984 bit 22 */
-	bool unusedBit_221_22 : 1 {};
+	bool unusedBit_227_22 : 1 {};
 	/**
 	offset 22984 bit 23 */
-	bool unusedBit_221_23 : 1 {};
+	bool unusedBit_227_23 : 1 {};
 	/**
 	offset 22984 bit 24 */
-	bool unusedBit_221_24 : 1 {};
+	bool unusedBit_227_24 : 1 {};
 	/**
 	offset 22984 bit 25 */
-	bool unusedBit_221_25 : 1 {};
+	bool unusedBit_227_25 : 1 {};
 	/**
 	offset 22984 bit 26 */
-	bool unusedBit_221_26 : 1 {};
+	bool unusedBit_227_26 : 1 {};
 	/**
 	offset 22984 bit 27 */
-	bool unusedBit_221_27 : 1 {};
+	bool unusedBit_227_27 : 1 {};
 	/**
 	offset 22984 bit 28 */
-	bool unusedBit_221_28 : 1 {};
+	bool unusedBit_227_28 : 1 {};
 	/**
 	offset 22984 bit 29 */
-	bool unusedBit_221_29 : 1 {};
+	bool unusedBit_227_29 : 1 {};
 	/**
 	offset 22984 bit 30 */
-	bool unusedBit_221_30 : 1 {};
+	bool unusedBit_227_30 : 1 {};
 	/**
 	offset 22984 bit 31 */
-	bool unusedBit_221_31 : 1 {};
+	bool unusedBit_227_31 : 1 {};
 };
 static_assert(sizeof(persistent_config_s) == 22988);
 
