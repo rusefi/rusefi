@@ -1,5 +1,8 @@
 package com.rusefi.binaryprotocol.test;
 
+
+/*
+
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
@@ -14,7 +17,6 @@ import java.io.IOException;
 import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
 import static com.rusefi.io.can.elm.Elm327Connector.ELM327_DEFAULT_BAUDRATE;
 
-/*
 public class Elm327Sandbox {
     public static void main(String[] args) throws InterruptedException, IOException {
         BaudRateHolder.INSTANCE.baudRate = ELM327_DEFAULT_BAUDRATE;

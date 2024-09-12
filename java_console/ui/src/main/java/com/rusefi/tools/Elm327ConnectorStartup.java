@@ -1,5 +1,8 @@
 package com.rusefi.tools;
 
+
+/*
+
 import com.devexperts.logging.Logging;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autodetect.SerialAutoChecker;
@@ -12,7 +15,6 @@ import com.rusefi.ui.StatusConsumer;
 
 import java.io.IOException;
 
-/*
 public class Elm327ConnectorStartup {
     private final static Logging log = Logging.getLogging(Elm327ConnectorStartup.class);
 

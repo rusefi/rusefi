@@ -17,7 +17,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static com.rusefi.Timeouts.SECOND;
-
+/*
 public class Elm327Connector implements Closeable {
 	private final static Logging log = Logging.getLogging(Elm327Connector.class);
 
@@ -37,13 +37,10 @@ public class Elm327Connector implements Closeable {
 
 	private final Object lock = new Object();
 
-	/**
-	 * Connection to ELM327 device where text based ELM protocol happens
-	 */
+//	 * Connection to ELM327 device where text based ELM protocol happens
+//
 	private final IoStream underlyingStream;
-	/**
-	 * Binary serial stream for TS traffic
-	 */
+//	 * Binary serial stream for TS traffic
 	private final Elm327IoStream tsStream;
 	private String partialLine = "";
 	private final List<String> completeLines = new ArrayList<>();
@@ -55,9 +52,7 @@ public class Elm327Connector implements Closeable {
 		tsStream = new Elm327IoStream(this);
 	}
 
-	/**
-	 * TODO: HUH? what's that about?!
-	 */
+//	 * TODO: HUH? what's that about?!
 	public static void whyDoWeNeedToSleepBetweenCommands() {
 		try {
 			Thread.sleep(100);
@@ -297,10 +292,11 @@ public class Elm327Connector implements Closeable {
 		tsStream.processCanPacket(canPacket);
     }
 
-	public static boolean checkConnection(String serialPort, IoStream stream) {
-		Elm327Connector con = new Elm327Connector(stream);
-		boolean found = con.initConnection(serialPort);
-		con.close();
-		return found;
-	}
+//	public static boolean checkConnection(String serialPort, IoStream stream) {
+//		Elm327Connector con = new Elm327Connector(stream);
+//		boolean found = con.initConnection(serialPort);
+//		con.close();
+//		return found;
+//	}
 }
+*/

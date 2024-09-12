@@ -14,6 +14,7 @@ import java.util.Arrays;
 /**
  *
  */
+/*
 public class Elm327IoStream extends AbstractIoStream {
     private final Elm327Connector con;
     @NotNull
@@ -121,3 +122,4 @@ public class Elm327IoStream extends AbstractIoStream {
             sendDataToClient(rawData);
     }
 }
+*/
