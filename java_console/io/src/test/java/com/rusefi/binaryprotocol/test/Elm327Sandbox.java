@@ -14,6 +14,7 @@ import java.io.IOException;
 import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;
 import static com.rusefi.io.can.elm.Elm327Connector.ELM327_DEFAULT_BAUDRATE;
 
+/*
 public class Elm327Sandbox {
     public static void main(String[] args) throws InterruptedException, IOException {
         BaudRateHolder.INSTANCE.baudRate = ELM327_DEFAULT_BAUDRATE;
@@ -38,13 +39,13 @@ public class Elm327Sandbox {
         if (1 == 1)
             return;
 
-        /*
-        SandboxCommon.runFcommand("First time", tsStream);
-        Elm327Connector.whyDoWeNeedToSleepBetweenCommands();
-
-        SandboxCommon.runFcommand("Second time", tsStream);
-        Elm327Connector.whyDoWeNeedToSleepBetweenCommands();
-*/
+//        /*
+//        SandboxCommon.runFcommand("First time", tsStream);
+//        Elm327Connector.whyDoWeNeedToSleepBetweenCommands();
+//
+//        SandboxCommon.runFcommand("Second time", tsStream);
+//        Elm327Connector.whyDoWeNeedToSleepBetweenCommands();
+///
 
         SandboxCommon.verifySignature(tsStream, "", "ELM");
         Elm327Connector.whyDoWeNeedToSleepBetweenCommands();
@@ -80,3 +81,4 @@ public class Elm327Sandbox {
     }
 
 }
+*/

@@ -12,6 +12,7 @@ import com.rusefi.ui.StatusConsumer;
 
 import java.io.IOException;
 
+/*
 public class Elm327ConnectorStartup {
     private final static Logging log = Logging.getLogging(Elm327ConnectorStartup.class);
 
@@ -38,3 +39,4 @@ public class Elm327ConnectorStartup {
         log.info("Running Elm327 connector for " + autoDetectedPort);
     }
 }
+*/

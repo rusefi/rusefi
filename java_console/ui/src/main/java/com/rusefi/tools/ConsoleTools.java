@@ -78,7 +78,7 @@ public class ConsoleTools {
 
         registerTool("network_connector", strings -> NetworkConnectorStartup.start(), "Connect your rusEFI ECU to rusEFI Online");
         registerTool("network_authenticator", strings -> LocalApplicationProxy.start(), "rusEFI Online Authenticator");
-        registerTool("elm327_connector", strings -> Elm327ConnectorStartup.start(), "Connect your rusEFI ECU using ELM327 CAN-bus adapter");
+//        registerTool("elm327_connector", strings -> Elm327ConnectorStartup.start(), "Connect your rusEFI ECU using ELM327 CAN-bus adapter");
         registerTool("pcan_connector", strings -> {
 
             PCanIoStream stream = PCanIoStream.createStream();

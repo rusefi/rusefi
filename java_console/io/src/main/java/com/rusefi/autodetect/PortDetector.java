@@ -3,11 +3,8 @@ package com.rusefi.autodetect;
 import com.devexperts.logging.Logging;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.io.LinkManager;
-import com.rusefi.io.serial.BaudRateHolder;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -15,8 +12,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
-
-import static com.rusefi.io.can.elm.Elm327Connector.ELM327_DEFAULT_BAUDRATE;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
@@ -61,10 +56,7 @@ public class PortDetector {
             Thread thread = AUTO_DETECT_PORT.newThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (mode == DetectorMode.DETECT_ELM327) {
-                        BaudRateHolder.INSTANCE.baudRate = ELM327_DEFAULT_BAUDRATE;
-                    }
-                    new SerialAutoChecker(serialPort, portFound).openAndCheckResponse(mode, result, callback);
+                    new SerialAutoChecker(serialPort, portFound).openAndCheckResponse(result, callback);
                 }
 
                 @Override

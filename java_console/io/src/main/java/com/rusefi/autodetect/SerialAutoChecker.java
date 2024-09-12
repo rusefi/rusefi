@@ -7,7 +7,6 @@ import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.serial.BufferedSerialIoStream;
-import com.rusefi.io.serial.SerialIoStream;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -67,10 +66,10 @@ public class SerialAutoChecker {
         return signatureWhiteLabel != null && signature.startsWith(signatureWhiteLabel + " ");
     }
 
-    public void openAndCheckResponse(PortDetector.DetectorMode mode, AtomicReference<AutoDetectResult> result, Function<CallbackContext, Void> callback) {
+    public void openAndCheckResponse(AtomicReference<AutoDetectResult> result, Function<CallbackContext, Void> callback) {
         String signature;
         // java 101: just a reminder that try-with syntax would take care of closing stream and that's important here!
-        try (IoStream stream = getStreamByMode(mode)) {
+        try (IoStream stream = getStreamByMode()) {
             signature = checkResponse(stream, callback);
         }
         if (signature != null) {
@@ -85,12 +84,8 @@ public class SerialAutoChecker {
     }
 
     @Nullable
-    private IoStream getStreamByMode(PortDetector.DetectorMode mode) {
-        if (mode == PortDetector.DetectorMode.DETECT_ELM327) {
-            return SerialIoStream.openPort(serialPort);
-        } else {
-            return BufferedSerialIoStream.openPort(serialPort);
-        }
+    private IoStream getStreamByMode() {
+        return BufferedSerialIoStream.openPort(serialPort);
     }
 
     public static class CallbackContext {
