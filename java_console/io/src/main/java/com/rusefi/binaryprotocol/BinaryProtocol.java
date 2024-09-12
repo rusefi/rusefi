@@ -103,8 +103,6 @@ public class BinaryProtocol {
         return stream;
     }
 
-    private boolean isClosed;
-
     public final CommunicationLoggingListener communicationLoggingListener;
 
     public BinaryProtocol(LinkManager linkManager, IoStream stream) {
@@ -117,7 +115,7 @@ public class BinaryProtocol {
     }
 
     public boolean isClosed() {
-        return isClosed;
+        return stream.isClosed();
     }
 
     public static void sleep(long millis) {
@@ -186,7 +184,7 @@ public class BinaryProtocol {
         int pageSize = iniFile.getMetaInfo().getTotalSize();
         log.info("pageSize=" + pageSize);
         readImage(arguments, new ConfigurationImageMetaVersion0_0(pageSize, signature));
-        if (isClosed)
+        if (stream.isClosed())
             return "Failed to read calibration";
 
         startPullThread(listener);
@@ -225,7 +223,7 @@ public class BinaryProtocol {
         Runnable textPull = new Runnable() {
             @Override
             public void run() {
-                while (!isClosed) {
+                while (!stream.isClosed()) {
 //                    FileLog.rlog("queue: " + LinkManager.COMMUNICATION_QUEUE.toString());
                     if (linkManager.COMMUNICATION_QUEUE.isEmpty() && linkManager.getNeedPullData()) {
                         linkManager.submit(new Runnable() {
@@ -267,7 +265,7 @@ public class BinaryProtocol {
 
     private void dropPending() {
         synchronized (stream.getIoLock()) {
-            if (isClosed)
+            if (stream.isClosed())
                 return;
             stream.getDataBuffer().dropPending();
         }
@@ -345,7 +343,7 @@ public class BinaryProtocol {
         log.info("Reading from controller...");
 
         while (offset < image.getSize() && (System.currentTimeMillis() - start < Timeouts.READ_IMAGE_TIMEOUT)) {
-            if (isClosed)
+            if (stream.isClosed())
                 return null;
 
             int remainingSize = image.getSize() - offset;
@@ -470,7 +468,7 @@ public class BinaryProtocol {
      * @return null in case of IO issues
      */
     public byte[] executeCommand(char opcode, byte[] packet, String msg) {
-        if (isClosed)
+        if (stream.isClosed())
             return null;
 
         byte[] fullRequest = getFullRequest((byte) opcode, packet);
@@ -505,9 +503,8 @@ public class BinaryProtocol {
     }
 
     public void close() {
-        if (isClosed)
+        if (stream.isClosed())
             return;
-        isClosed = true;
         binaryProtocolLogger.close();
         stream.close();
     }
@@ -521,7 +518,7 @@ public class BinaryProtocol {
         System.arraycopy(content, contentOffset, packet, 4, size);
 
         long start = System.currentTimeMillis();
-        while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
+        while (!stream.isClosed() && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
             byte[] response = executeCommand(Integration.TS_CHUNK_WRITE_COMMAND, packet, "writeImage");
             if (!checkResponseCode(response) || response.length != 1) {
                 log.error("writeData: Something is wrong, retrying...");
@@ -537,7 +534,7 @@ public class BinaryProtocol {
         log.info("Need to burn");
 
         while (true) {
-            if (isClosed)
+            if (stream.isClosed())
                 return;
             boolean isGoodBurn = BurnCommand.execute(this);
             if (!isGoodBurn) {
@@ -575,7 +572,7 @@ public class BinaryProtocol {
         byte[] command = getTextCommandBytesOnlyText(text);
 
         long start = System.currentTimeMillis();
-        while (!isClosed && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
+        while (!stream.isClosed() && (System.currentTimeMillis() - start < Timeouts.BINARY_IO_TIMEOUT)) {
             byte[] response = executeCommand(Integration.TS_EXECUTE, command, "execute");
             if (!checkResponseCode(response, (byte) Integration.TS_RESPONSE_OK) || response.length != 1) {
                 continue;
@@ -598,7 +595,7 @@ public class BinaryProtocol {
     }
 
     public String requestPendingTextMessages() {
-        if (isClosed)
+        if (stream.isClosed())
             return null;
         try {
             byte[] response = executeCommand(Integration.TS_GET_TEXT, "text");
@@ -618,7 +615,7 @@ public class BinaryProtocol {
     }
 
     public boolean requestOutputChannels() {
-        if (isClosed)
+        if (stream.isClosed())
             return false;
 
         // TODO: Get rid of the +1.  This adds a byte at the front to tack a fake TS response code on the front
