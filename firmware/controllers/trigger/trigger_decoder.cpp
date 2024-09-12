@@ -541,7 +541,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 		}
 #if EFI_UNIT_TEST
 		if (printTriggerTrace) {
-			printf("decodeTriggerEvent %s isSynchronizationPoint=%d index=%d %s\r\n",
+			printf("decodeTriggerEvent gap %s isSynchronizationPoint=%d index=%d %s\r\n",
 					getTrigger_type_e(triggerConfiguration.TriggerType.type),
 					isSynchronizationPoint, currentCycle.current_index,
 					getTrigger_event_e(signal));
