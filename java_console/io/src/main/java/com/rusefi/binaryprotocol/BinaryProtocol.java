@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.concurrent.*;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -111,7 +112,7 @@ public class BinaryProtocol {
 
     public BinaryProtocol(LinkManager linkManager, IoStream stream) {
         this.linkManager = linkManager;
-        this.stream = stream;
+        this.stream = Objects.requireNonNull(stream);
 
         communicationLoggingListener = linkManager.messageListener::postMessage;
 
