@@ -263,7 +263,7 @@ public class BinaryProtocol {
         tr.start();
     }
 
-    private void dropPending() {
+    private static void dropPending(IoStream stream) {
         synchronized (stream.getIoLock()) {
             if (stream.isClosed())
                 return;
@@ -468,17 +468,17 @@ public class BinaryProtocol {
      * @return null in case of IO issues
      */
     public byte[] executeCommand(char opcode, byte[] packet, String msg) {
+        linkManager.assertCommunicationThread();
         if (stream.isClosed())
             return null;
 
         byte[] fullRequest = getFullRequest((byte) opcode, packet);
 
         try {
-            linkManager.assertCommunicationThread();
-            dropPending();
+            dropPending(stream);
             if (Bug3923.obscene)
                 log.info("Sending opcode " + opcode + " payload " + packet.length);
-            sendPacket(fullRequest);
+            stream.sendPacket(fullRequest);
             return receivePacket(msg);
         } catch (IOException e) {
             log.error(msg + ": executeCommand failed: " + e);
@@ -557,10 +557,6 @@ public class BinaryProtocol {
      */
     public ConfigurationImage getControllerConfiguration() {
         return state.getControllerConfiguration();
-    }
-
-    private void sendPacket(byte[] command) throws IOException {
-        stream.sendPacket(command);
     }
 
     /**

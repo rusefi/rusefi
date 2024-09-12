@@ -50,6 +50,7 @@ public class BinaryProtocolLogger {
             }
         };
 
+        // fragile or just scary: here we install a JVM level callback for gradual file footer
         Runtime.getRuntime().addShutdownHook(hook);
         needCompositeLogger = linkManager.getCompositeLogicEnabled();
     }
