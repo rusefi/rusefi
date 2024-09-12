@@ -15,16 +15,14 @@
 // mm176 matches mm144 in terms of LED pinout
 #include "hellen_leds_144.cpp"
 
-static OutputPin alphaTachPullUp;
-static OutputPin alphaTempPullUp;
 static OutputPin alphaCrankPPullUp;
-static OutputPin alpha2stepPullDown;
-static OutputPin alphaCamPullDown;
-//static OutputPin alphaCamVrPullUp;
-static OutputPin alphaD2PullDown;
-static OutputPin alphaD3PullDown;
-static OutputPin alphaD4PullDown;
-//static OutputPin alphaD5PullDown;
+
+static OutputPin alphaHall1PullDown;
+static OutputPin alphaHall2PullDown;
+static OutputPin alphaHall3PullDown;
+static OutputPin alphaHall4PullDown;
+static OutputPin alphaHall5PullDown;
+static OutputPin alphaFlexPullDown;
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = Gpio::MM176_INJ1;
@@ -80,16 +78,23 @@ void boardInitHardware() {
 	setHellenEnPin(Gpio::MM176_EN_PIN);
 
 	alphaCrankPPullUp.initPin("a-crank-p", Gpio::MM176_GP16);
-	alphaD2PullDown.initPin("a-d2", Gpio::MM176_GP21);
-	alphaD3PullDown.initPin("a-d3", Gpio::MM176_GP22);
-	alphaD4PullDown.initPin("a-d4", Gpio::MM176_GP23);
+	alphaHall1PullDown.initPin("PD-H2", Gpio::MM176_GP21);
+	alphaHall2PullDown.initPin("PD-H2", Gpio::MM176_GP21);
+	alphaHall3PullDown.initPin("PD-H3", Gpio::MM176_GP22);
+	alphaHall4PullDown.initPin("PD-H4", Gpio::MM176_GP23);
+	alphaHall5PullDown.initPin("PD-H5", Gpio::MM176_GP23);
+	alphaFlexPullDown.initPin("PD-H5", Gpio::MM176_GP23);
 	boardOnConfigurationChange(nullptr);
 }
 
 void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
 	alphaCrankPPullUp.setValue(config->boardUseCrankPullUp);
-	alphaD2PullDown.setValue(config->boardUseD2PullDown);
-	alphaD3PullDown.setValue(config->boardUseD3PullDown);
+	alphaHall1PullDown.setValue(config->boardUseH1PullDown);
+	alphaHall2PullDown.setValue(config->boardUseH2PullDown);
+	alphaHall3PullDown.setValue(config->boardUseH3PullDown);
+	alphaHall4PullDown.setValue(config->boardUseH4PullDown);
+	alphaHall5PullDown.setValue(config->boardUseH5PullDown);
+	alphaFlexPullDown.setValue(config->boardUseFlexPullDown);
 }
 
 void setBoardConfigOverrides() {
