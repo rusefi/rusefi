@@ -41,6 +41,8 @@ public interface IoStream extends WriteStream, Closeable, StreamStatistics {
 
     long latestActivityTime();
 
+    void addCloseListener(Runnable listener);
+
     Object getIoLock();
 
     void onActivity();

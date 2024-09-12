@@ -10,9 +10,11 @@ import com.rusefi.NamedThreadFactory;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.test.Bug3923;
 import com.rusefi.io.IoStream;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -30,7 +32,7 @@ public abstract class SerialIoStream extends AbstractIoStream {
         SerialPortThreadFactory.set(new NamedThreadFactory("ECU SerialIoStream jSerialComm"));
     }
 
-    public SerialIoStream(@Nullable SerialPort sp, String port) {
+    public SerialIoStream(@NotNull SerialPort sp, String port) {
         this.sp = sp;
         this.port = port;
     }
@@ -50,10 +52,11 @@ public abstract class SerialIoStream extends AbstractIoStream {
 
     @Override
     public void close() {
+        if (isClosed())
+            return;
         log.info(port + ": Closing port...");
         super.close();
-        if (sp != null)
-            sp.closePort();
+        sp.closePort();
         log.info(port + ": Closed port.");
     }
 

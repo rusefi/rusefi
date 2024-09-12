@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.fazecast.jSerialComm.SerialPort;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.io.IoStream;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -21,7 +22,7 @@ public class BufferedSerialIoStream extends SerialIoStream {
     /**
      * @see #openPort(String)
      */
-    private BufferedSerialIoStream(SerialPort sp, String port) {
+    private BufferedSerialIoStream(@NotNull SerialPort sp, String port) {
         super(sp, port);
         dataBuffer = createDataBuffer();
     }

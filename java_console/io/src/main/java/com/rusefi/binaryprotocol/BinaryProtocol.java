@@ -112,6 +112,7 @@ public class BinaryProtocol {
         communicationLoggingListener = linkManager.messageListener::postMessage;
 
         binaryProtocolLogger = new BinaryProtocolLogger(linkManager);
+        stream.addCloseListener(binaryProtocolLogger::close);
     }
 
     public boolean isClosed() {
@@ -503,9 +504,6 @@ public class BinaryProtocol {
     }
 
     public void close() {
-        if (stream.isClosed())
-            return;
-        binaryProtocolLogger.close();
         stream.close();
     }
 
