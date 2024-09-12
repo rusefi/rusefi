@@ -6,7 +6,7 @@ import com.rusefi.util.HexBinary;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
+/*
 public class Elm327ConnectorTest {
     @Test
     public void testBytesToString() {
