@@ -52,14 +52,8 @@ public class BinaryProtocol {
     private static final Logging log = getLogging(BinaryProtocol.class);
     private static final ThreadFactory THREAD_FACTORY = new NamedThreadFactory("ECU text pull", true);
 
-    private static final String USE_PLAIN_PROTOCOL_PROPERTY = "protocol.plain";
     private static final String CONFIGURATION_RUSEFI_BINARY = "current_configuration.binary_image";
     private static final String CONFIGURATION_RUSEFI_XML = "current_configuration.msq";
-    /**
-     * This properly allows to switch to non-CRC32 mode
-     * todo: finish this feature, assuming we even need it.
-     */
-    public static final boolean PLAIN_PROTOCOL = Boolean.getBoolean(USE_PLAIN_PROTOCOL_PROPERTY);
 
     private final LinkManager linkManager;
     private final IoStream stream;
