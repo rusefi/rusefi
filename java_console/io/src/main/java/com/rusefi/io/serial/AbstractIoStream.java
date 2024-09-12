@@ -9,6 +9,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 public abstract class AbstractIoStream implements IoStream {
     private boolean isClosed;
 
+    // todo: this ioLock needs better documentation!
+    private final Object ioLock = new Object();
+
     protected final StreamStats streamStats = new StreamStats();
     private final AtomicInteger bytesOut = new AtomicInteger();
     private long latestActivity;
@@ -27,6 +30,11 @@ public abstract class AbstractIoStream implements IoStream {
     @Override
     public void close() {
         isClosed = true;
+    }
+
+    @Override
+    public Object getIoLock() {
+        return ioLock;
     }
 
     @Override
@@ -86,7 +94,7 @@ public abstract class AbstractIoStream implements IoStream {
     public int getBytesIn() {
         return streamStats.totalBytesArrived.get();
     }
-    
+
     @Override
     public int getBytesOut() {
         return bytesOut.get();

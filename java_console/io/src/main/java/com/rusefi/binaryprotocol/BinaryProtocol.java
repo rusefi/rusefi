@@ -58,7 +58,6 @@ public class BinaryProtocol {
 
     private final LinkManager linkManager;
     private final IoStream stream;
-    private final IncomingDataBuffer incomingData;
     private boolean isBurnPending;
     public String signature;
     public boolean isGoodOutputChannels;
@@ -66,8 +65,6 @@ public class BinaryProtocol {
 
     private final BinaryProtocolState state = new BinaryProtocolState();
 
-    // todo: this ioLock needs better documentation!
-    private final Object ioLock = new Object();
 
     private final BinaryProtocolLogger binaryProtocolLogger;
     public static boolean DISABLE_LOCAL_CONFIGURATION_CACHE;
@@ -116,7 +113,6 @@ public class BinaryProtocol {
 
         communicationLoggingListener = linkManager.messageListener::postMessage;
 
-        incomingData = stream.getDataBuffer();
         binaryProtocolLogger = new BinaryProtocolLogger(linkManager);
     }
 
@@ -270,10 +266,10 @@ public class BinaryProtocol {
     }
 
     private void dropPending() {
-        synchronized (ioLock) {
+        synchronized (stream.getIoLock()) {
             if (isClosed)
                 return;
-            incomingData.dropPending();
+            stream.getDataBuffer().dropPending();
         }
     }
 
@@ -307,8 +303,8 @@ public class BinaryProtocol {
 
     private byte[] receivePacket(String msg) throws IOException {
         long start = System.currentTimeMillis();
-        synchronized (ioLock) {
-            return incomingData.getPacket(Timeouts.BINARY_IO_TIMEOUT, msg, start);
+        synchronized (stream.getIoLock()) {
+            return stream.getDataBuffer().getPacket(Timeouts.BINARY_IO_TIMEOUT, msg, start);
         }
     }
 

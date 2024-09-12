@@ -41,6 +41,8 @@ public interface IoStream extends WriteStream, Closeable, StreamStatistics {
 
     long latestActivityTime();
 
+    Object getIoLock();
+
     void onActivity();
 
     default void sendPacket(byte[] plainPacket) throws IOException {
