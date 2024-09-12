@@ -144,7 +144,7 @@ public class MainFrame {
         consoleUI.uiContext.DetachedRepositoryINSTANCE.saveConfig();
         getConfig().save();
         BinaryProtocol bp = consoleUI.uiContext.getLinkManager().getCurrentStreamState();
-        if (bp != null && !bp.isClosed)
+        if (bp != null && !bp.isClosed())
             bp.close(); // it could be that serial driver wants to be closed explicitly
         IoUtils.exit("windowClosedHandler", 0);
     }

@@ -111,7 +111,7 @@ public class BinaryProtocol {
         return stream;
     }
 
-    public boolean isClosed;
+    private boolean isClosed;
 
     public final CommunicationLoggingListener communicationLoggingListener;
 
@@ -123,6 +123,10 @@ public class BinaryProtocol {
 
         incomingData = stream.getDataBuffer();
         binaryProtocolLogger = new BinaryProtocolLogger(linkManager);
+    }
+
+    public boolean isClosed() {
+        return isClosed;
     }
 
     public static void sleep(long millis) {

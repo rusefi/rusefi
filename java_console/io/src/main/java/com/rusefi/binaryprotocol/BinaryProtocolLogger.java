@@ -92,7 +92,7 @@ public class BinaryProtocolLogger {
     }
 
     public void getComposite(BinaryProtocol binaryProtocol) {
-        if (binaryProtocol.isClosed)
+        if (binaryProtocol.isClosed())
             return;
 
         // get command would enable composite logging in controller but we need to turn it off from our end
