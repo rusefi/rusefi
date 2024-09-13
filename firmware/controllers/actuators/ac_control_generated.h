@@ -74,9 +74,6 @@ struct ac_control_s {
 	bool unusedBit_0_30 : 1 {};
 	// offset 0 bit 31
 	bool unusedBit_0_31 : 1 {};
-	// offset 4
-	int acSwitchLastChangeTimeMs = (int)0;
 };
-static_assert(sizeof(ac_control_s) == 8);
-static_assert(offsetof(ac_control_s, acSwitchLastChangeTimeMs) == 4);
+static_assert(sizeof(ac_control_s) == 4);
 
