@@ -220,8 +220,8 @@ TEST(fuelCut, mapTable) {
 
 	//setup MAP cutoff table
 	engineConfiguration->useTableForDfcoMap = 1;
-	copyArray(engineConfiguration->dfcoMapRpmValuesBins, { 2000, 3000, 4000, 5000 });
-	copyArray(engineConfiguration->dfcoMapRpmValues, { 50, 30, 20, 10 });
+	copyArray(config->dfcoMapRpmValuesBins, { 2000, 3000, 4000, 5000 });
+	copyArray(config->dfcoMapRpmValues, { 50, 30, 20, 10 });
 
 	// basic engine setup
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
