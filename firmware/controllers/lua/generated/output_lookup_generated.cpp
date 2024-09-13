@@ -1160,9 +1160,6 @@ float getOutputValueByName(const char *name) {
 // acPressureTooHigh
 		case -1220300524:
 			return engine->module<AcController>()->acPressureTooHigh;
-// acSwitchLastChangeTimeMs
-		case -954065340:
-			return engine->module<AcController>()->acSwitchLastChangeTimeMs;
 // cranking
 		case 182391090:
 			return ___engine.module<FanControl1>()->cranking;
