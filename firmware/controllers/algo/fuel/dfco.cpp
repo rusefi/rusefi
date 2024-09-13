@@ -1,6 +1,7 @@
 
 #include "engine_configuration.h"
 #include "sensor.h"
+#include "rusefi/interpolation.h"
 
 #include "dfco.h"
 
@@ -26,7 +27,11 @@ bool DfcoController::getState() const {
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	float vss = Sensor::getOrZero(SensorType::VehicleSpeed);
 
-	bool mapActivate = map.value_or(0) < engineConfiguration->coastingFuelCutMap;
+	float mapThreshold = engineConfiguration->useTableForDfcoMap ?
+		interpolate2d(rpm, engineConfiguration->dfcoMapRpmValuesBins, engineConfiguration->dfcoMapRpmValues) :
+		engineConfiguration->coastingFuelCutMap;
+
+	bool mapActivate = map.value_or(0) < mapThreshold;
 	bool tpsActivate = tps.Value < engineConfiguration->coastingFuelCutTps;
 	bool cltActivate = clt.Value > engineConfiguration->coastingFuelCutClt;
 	// True if throttle, MAP, and CLT are all acceptable for DFCO to occur

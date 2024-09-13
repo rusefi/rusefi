@@ -26,6 +26,7 @@ TEST(fuelCut, coasting) {
 	engineConfiguration->coastingFuelCutRpmHigh = 1500;
 	engineConfiguration->coastingFuelCutTps = 2;
 	engineConfiguration->coastingFuelCutClt = 30;
+	engineConfiguration->useTableForDfcoMap = 0;
 	engineConfiguration->coastingFuelCutMap = 100;
 	// set cranking threshold
 	engineConfiguration->cranking.rpm = 999;
@@ -141,6 +142,7 @@ TEST(fuelCut, delay) {
 	engineConfiguration->coastingFuelCutRpmHigh = 1500;
 	engineConfiguration->coastingFuelCutTps = 2;
 	engineConfiguration->coastingFuelCutClt = 30;
+	engineConfiguration->useTableForDfcoMap = 0;
 	engineConfiguration->coastingFuelCutMap = 100;
 	// set cranking threshold
 	engineConfiguration->cranking.rpm = 999;
@@ -196,6 +198,63 @@ TEST(fuelCut, delay) {
 
 	// Put the throtle back, and it should come back instantly
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 30);
+	eth.engine.periodicFastCallback();
+	EXPECT_NORMAL();
+}
+
+TEST(fuelCut, mapTable) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
+		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
+
+	// configure coastingFuelCut
+	engineConfiguration->coastingFuelCutEnabled = true;
+	engineConfiguration->coastingFuelCutRpmLow = 1300;
+	engineConfiguration->coastingFuelCutRpmHigh = 1500;
+	engineConfiguration->coastingFuelCutTps = 2;
+	engineConfiguration->coastingFuelCutClt = 30;
+	engineConfiguration->dfcoDelay = 0;
+	engineConfiguration->coastingFuelCutMap = 10;
+	// set cranking threshold
+	engineConfiguration->cranking.rpm = 999;
+
+	//setup MAP cutoff table
+	engineConfiguration->useTableForDfcoMap = 1;
+	copyArray(engineConfiguration->dfcoMapRpmValuesBins, { 2000, 3000, 4000, 5000 });
+	copyArray(engineConfiguration->dfcoMapRpmValues, { 50, 30, 20, 10 });
+
+	// basic engine setup
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
+
+	// set MAP above all values in the table
+	Sensor::setMockValue(SensorType::Map, 60);
+	// mock CLT - just above threshold ('hot engine')
+	Sensor::setMockValue(SensorType::Clt, engineConfiguration->coastingFuelCutClt + 1);
+	// mock TPS - throttle is opened
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
+	// set 'running' RPM in the middle of two interpolation values
+	Sensor::setMockValue(SensorType::Rpm, 2500);
+	// 'advance' time (amount doesn't matter)
+	eth.moveTimeForwardUs(1000);
+
+	const float normalInjDuration = 1.5f;
+
+	// MAP > threshold, expect fueling
+	eth.engine.periodicFastCallback();
+	EXPECT_NORMAL();
+
+	// Drop MAP to just above the interpolated cutoff curve
+	Sensor::setMockValue(SensorType::Map, 41);
+	eth.engine.periodicFastCallback();
+	EXPECT_NORMAL();
+
+	// Drop MAP to just below the interpolated cutoff curve
+	Sensor::setMockValue(SensorType::Map, 39);
+	eth.engine.periodicFastCallback();
+	EXPECT_CUT();
+
+	// icrease RPM such that we move above the cutoff curve
+	Sensor::setMockValue(SensorType::Rpm, 4000);
 	eth.engine.periodicFastCallback();
 	EXPECT_NORMAL();
 }
