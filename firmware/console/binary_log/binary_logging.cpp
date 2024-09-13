@@ -12,10 +12,14 @@
 
 #if EFI_FILE_LOGGING
 
-#define TIME_PRECISION 1000
+// 2^32 milliseconds is 49 days, this is plenty of time.
+constexpr int TimestampCountsPerSec = 1000;
+constexpr int TicksPerCount = (US_TO_NT_MULTIPLIER * 1000000) / TimestampCountsPerSec;
 
-// floating number of seconds with millisecond precision
-static scaled_channel<uint32_t, TIME_PRECISION> packedTime;
+// Check that it's an integer number of ticks
+static_assert(US_TO_NT_MULTIPLIER * 1000000 == TimestampCountsPerSec * TicksPerCount);
+
+static scaled_channel<uint32_t, TimestampCountsPerSec> packedTime;
 
 // The list of logged fields lives in a separate file so it can eventually be tool-generated
 #include "log_fields_generated.h"
@@ -116,10 +120,8 @@ void writeSdBlock(Writer& outBuffer) {
 
 	outBuffer.write(buffer, 4);
 
-	// todo: add a log field for SD card period
-//	prevSdCardLineTime = nowUs;
-
-	packedTime = getTimeNowUs() * 1e-3 / TIME_PRECISION;
+	// Sigh.
+	*reinterpret_cast<uint32_t*>(&packedTime) = getTimeNowNt() / TicksPerCount;
 
 	uint8_t sum = 0;
 	for (size_t fieldIndex = 0; fieldIndex < efi::size(fields); fieldIndex++) {
