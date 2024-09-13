@@ -42,6 +42,7 @@ public class BasicStartupFrame {
     private final FrameHelper frame = FrameHelper.createFrame(
         whiteLabel + " basic console " + Launcher.CONSOLE_VERSION
     );
+    private final boolean requireBlt = FindFileHelper.isObfuscated();
 
     private final JLabel statusMessage = new JLabel();
     private final StatusAnimation status = new StatusAnimation(this::updateStatus, StartupFrame.SCANNING_PORTS);
@@ -64,9 +65,8 @@ public class BasicStartupFrame {
             panel.add(ToolButtons.createShowDeviceManagerButton());
             panel.add(StartupFrame.binaryModificationControl());
 
-            boolean requireBlt = FindFileHelper.isObfuscated();
+            updateFirmwareButton.addActionListener(e-> onUpdateFirmwareButtonClicked());
             if (requireBlt) {
-                updateFirmwareButton.addActionListener(e-> onUpdateFirmwareButtonClicked());
                 updateFirmwareButton.setEnabled(false);
 
                 statusMessage.setForeground(Color.red);
@@ -75,8 +75,6 @@ public class BasicStartupFrame {
                 SerialPortScanner.INSTANCE.addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
                     onHardwareUpdated(currentHardware);
                 }));
-            } else {
-                updateFirmwareButton.addActionListener(e -> DfuFlasher.doAutoDfu(updateFirmwareButton, PortDetector.AUTO, new UpdateStatusWindow("Update")));
             }
             panel.add(updateFirmwareButton);
         } else {
@@ -164,25 +162,29 @@ public class BasicStartupFrame {
     }
 
     private void onUpdateFirmwareButtonClicked() {
-        portToUpdateFirmware.ifPresentOrElse(port -> {
-                switch (port.type) {
-                    case EcuWithOpenblt: {
-                        ProgramSelector.executeJob(updateFirmwareButton, ProgramSelector.OPENBLT_AUTO, port);
-                        break;
+        if (requireBlt) {
+            portToUpdateFirmware.ifPresentOrElse(port -> {
+                    switch (port.type) {
+                        case EcuWithOpenblt: {
+                            ProgramSelector.executeJob(updateFirmwareButton, ProgramSelector.OPENBLT_AUTO, port);
+                            break;
+                        }
+                        case OpenBlt: {
+                            ProgramSelector.executeJob(updateFirmwareButton, ProgramSelector.OPENBLT_MANUAL, port);
+                            break;
+                        }
+                        default: {
+                            log.error(String.format("Unexpected port type: %s (%s)", port.type, port));
+                            break;
+                        }
                     }
-                    case OpenBlt: {
-                        ProgramSelector.executeJob(updateFirmwareButton, ProgramSelector.OPENBLT_MANUAL, port);
-                        break;
-                    }
-                    default: {
-                        log.error(String.format("Unexpected port type: %s (%s)", port.type, port));
-                        break;
-                    }
+                }, () -> {
+                    log.error("Port to update firmware is not defined.");
                 }
-            }, ()-> {
-                log.error("Port to update firmware is not defined.");
-            }
-        );
+            );
+        } else {
+            DfuFlasher.doAutoDfu(updateFirmwareButton, PortDetector.AUTO, new UpdateStatusWindow("Update"));
+        }
     }
 
     private void runTool() {
