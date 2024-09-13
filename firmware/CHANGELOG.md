@@ -43,7 +43,7 @@ or
  - TunerStudio UI improvements (#436, etc)
  - Dropdown selector for popular gearbox ratios (#358, thank you @alrijleh and @nmschulte!)
  - Add two more aux linear sensors #476
- - Support wasted spark on odd cylinder count 4-stroke engines. Improves startup and allows running without a cam sensor!
+ - Support wasted spark on odd cylinder count and odd-fire engines. Improves startup and allows running without a cam sensor!
 
 ### Fixed
  - Improve performance with Lua CAN reception of a high volume of frames
@@ -55,6 +55,7 @@ or
  - Automatic calculation of knock sense frequency based on cylinder bore #379
  - Removed MAP sampling option that can result in inaccurate MAP sensor readings
  - Improve TunerStudio performance on STM32F4-based ECUs #474
+ - Inhibit VVT control if the cam position sensor dies
 
 ## December 2023 Release
 
