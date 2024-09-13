@@ -13,7 +13,4 @@ bit tpsTooHigh;AC tps too high
 bit isDisabledByLua;AC disabled by Lua
 bit acCompressorState;AC compressor on
 
-! todo: extract some helper which would contain boolean state and most recent toggle time?
-int acSwitchLastChangeTimeMs;
-
 end_struct

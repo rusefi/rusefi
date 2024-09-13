@@ -11,6 +11,8 @@ public:
 
 	virtual bool isAcEnabled() const;
 
+	Timer timeSinceStateChange;
+
 private:
 	bool getAcState();
 

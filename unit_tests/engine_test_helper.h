@@ -40,10 +40,6 @@ public:
         return angle * engine.rpmCalculator.oneDegreeUs;
     }
 
-    float angleToTimeMs(angle_t angle) {
-        return US2MS(angleToTimeUs(angle));
-    }
-
 	warningBuffer_t *recentWarnings();
 	int getWarningCounter();
 

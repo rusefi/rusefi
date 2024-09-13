@@ -210,7 +210,7 @@ void Engine::updateSwitchInputs() {
 		AcController & acController = engine->module<AcController>().unmock();
 		if (acController.acButtonState != currentState) {
 			acController.acButtonState = currentState;
-			acController.acSwitchLastChangeTimeMs = US2MS(getTimeNowUs());
+			acController.timeSinceStateChange.reset();
 		}
 	}
 	engine->engineState.clutchUpState = getClutchUpState();
