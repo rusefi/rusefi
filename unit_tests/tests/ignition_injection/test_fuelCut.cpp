@@ -26,7 +26,6 @@ TEST(fuelCut, coasting) {
 	engineConfiguration->coastingFuelCutRpmHigh = 1500;
 	engineConfiguration->coastingFuelCutTps = 2;
 	engineConfiguration->coastingFuelCutClt = 30;
-	engineConfiguration->useTableForDfcoMap = 0;
 	engineConfiguration->coastingFuelCutMap = 100;
 	// set cranking threshold
 	engineConfiguration->cranking.rpm = 999;
@@ -142,7 +141,7 @@ TEST(fuelCut, delay) {
 	engineConfiguration->coastingFuelCutRpmHigh = 1500;
 	engineConfiguration->coastingFuelCutTps = 2;
 	engineConfiguration->coastingFuelCutClt = 30;
-	engineConfiguration->useTableForDfcoMap = 0;
+	engineConfiguration->useTableForDfcoMap = false;
 	engineConfiguration->coastingFuelCutMap = 100;
 	// set cranking threshold
 	engineConfiguration->cranking.rpm = 999;
@@ -219,7 +218,7 @@ TEST(fuelCut, mapTable) {
 	engineConfiguration->cranking.rpm = 999;
 
 	//setup MAP cutoff table
-	engineConfiguration->useTableForDfcoMap = 1;
+	engineConfiguration->useTableForDfcoMap = true;
 	copyArray(config->dfcoMapRpmValuesBins, { 2000, 3000, 4000, 5000 });
 	copyArray(config->dfcoMapRpmValues, { 50, 30, 20, 10 });
 
