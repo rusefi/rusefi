@@ -56,6 +56,7 @@ or
  - Removed MAP sampling option that can result in inaccurate MAP sensor readings
  - Improve TunerStudio performance on STM32F4-based ECUs #474
  - Inhibit VVT control if the cam position sensor dies
+ - Fix "Alpha-N IAT density correction" option
 
 ## December 2023 Release
 

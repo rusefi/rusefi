@@ -60,6 +60,40 @@ TEST(AirmassModes, AlphaNNormal) {
 	EXPECT_NEAR(result.EngineLoadPercent, 0.71f, EPS4D);
 }
 
+TEST(AirmassModes, AlphaNUseIat) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	// 4 cylinder 4 liter = easy math
+	engineConfiguration->displacement = 4.0f;
+	engineConfiguration->cylindersCount = 4;
+
+	StrictMock<MockVp3d> veTable;
+
+	EXPECT_CALL(veTable, getValue(1200, FloatNear(0.71f, EPS4D)))
+		.WillRepeatedly(Return(35.0f));
+
+	AlphaNAirmass dut(veTable);
+
+	// that's 0.71% not 71%
+	Sensor::setMockValue(SensorType::Tps1, 0.71f);
+
+	// Mass of 1 liter of air * VE
+	mass_t expectedAirmass = 1.2047f * 0.35f;
+
+	EXPECT_NEAR(dut.getAirmass(1200, false).CylinderAirmass, expectedAirmass, EPS4D);
+
+	engineConfiguration->alphaNUseIat = true;
+
+	// Cold we get more airmass
+	float expectedAirmassCold = expectedAirmass * (273.0f + 20) / (273.0f + 0);
+	Sensor::setMockValue(SensorType::Iat, 0);
+	EXPECT_NEAR(dut.getAirmass(1200, false).CylinderAirmass, expectedAirmassCold, EPS4D);
+
+	// Hot we get less airmass
+	float expectedAirmassHot = expectedAirmass * (273.0f + 20) / (273.0f + 40);
+	Sensor::setMockValue(SensorType::Iat, 40);
+	EXPECT_NEAR(dut.getAirmass(1200, false).CylinderAirmass, expectedAirmassHot, EPS4D);
+}
+
 TEST(AirmassModes, AlphaNFailedTps) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
