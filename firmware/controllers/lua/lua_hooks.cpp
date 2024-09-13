@@ -963,7 +963,7 @@ void configureRusefiLuaHooks(lua_State* lState) {
 		return 0;
 	});
 	lua_register(lState, "getTimeSinceAcToggleMs", [](lua_State* l) {
-		int result = US2MS(getTimeNowUs()) - engine->module<AcController>().unmock().acSwitchLastChangeTimeMs;
+		float result = engine->module<AcController>().unmock().timeSinceStateChange.getElapsedSeconds() * 1000;
 		lua_pushnumber(l, result);
 		return 1;
 	});

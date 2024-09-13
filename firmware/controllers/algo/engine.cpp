@@ -281,7 +281,7 @@ extern bool kAcRequestState;
 		}
 		AcController & acController = engine->module<AcController>().unmock();
 		if (engine->acButtonSwitchedState.update(currentState)) {
-			acController.acSwitchLastChangeTimeMs = US2MS(getTimeNowUs());
+			acController.timeSinceStateChange.reset();
 		}
 	}
 
