@@ -20,7 +20,8 @@ bool DfcoController::getState() const {
 	}
 
 	// MAP sensor is optional, only inhibit if the sensor is present but broken
-	if (Sensor::hasSensor(SensorType::Map) && !map) {
+	bool hasMap = Sensor::hasSensor(SensorType::Map);
+	if (hasMap && !map) {
 		return false;
 	}
 
@@ -31,7 +32,7 @@ bool DfcoController::getState() const {
 		interpolate2d(rpm, config->dfcoMapRpmValuesBins, config->dfcoMapRpmValues) :
 		engineConfiguration->coastingFuelCutMap;
 
-	bool mapActivate = map.value_or(0) < mapThreshold;
+	bool mapActivate = !hasMap || !m_mapHysteresis.test(map.value_or(0), mapThreshold + 1, mapThreshold - 1);
 	bool tpsActivate = tps.Value < engineConfiguration->coastingFuelCutTps;
 	bool cltActivate = clt.Value > engineConfiguration->coastingFuelCutClt;
 	// True if throttle, MAP, and CLT are all acceptable for DFCO to occur

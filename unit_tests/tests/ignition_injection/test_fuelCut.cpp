@@ -243,12 +243,12 @@ TEST(fuelCut, mapTable) {
 	EXPECT_NORMAL();
 
 	// Drop MAP to just above the interpolated cutoff curve
-	Sensor::setMockValue(SensorType::Map, 41);
+	Sensor::setMockValue(SensorType::Map, 43);
 	eth.engine.periodicFastCallback();
 	EXPECT_NORMAL();
 
 	// Drop MAP to just below the interpolated cutoff curve
-	Sensor::setMockValue(SensorType::Map, 39);
+	Sensor::setMockValue(SensorType::Map, 37);
 	eth.engine.periodicFastCallback();
 	EXPECT_CUT();
 
