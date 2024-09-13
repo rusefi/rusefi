@@ -44,6 +44,7 @@ or
  - Dropdown selector for popular gearbox ratios (#358, thank you @alrijleh and @nmschulte!)
  - Add two more aux linear sensors #476
  - Support wasted spark on odd cylinder count and odd-fire engines. Improves startup and allows running without a cam sensor!
+ - Add an option for the DFCO MAP threshold to use a table dependent upon RPM #485 (thank you @alrijleh!)
 
 ### Fixed
  - Improve performance with Lua CAN reception of a high volume of frames

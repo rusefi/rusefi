@@ -28,7 +28,7 @@ bool DfcoController::getState() const {
 	float vss = Sensor::getOrZero(SensorType::VehicleSpeed);
 
 	float mapThreshold = engineConfiguration->useTableForDfcoMap ?
-		interpolate2d(rpm, engineConfiguration->dfcoMapRpmValuesBins, engineConfiguration->dfcoMapRpmValues) :
+		interpolate2d(rpm, config->dfcoMapRpmValuesBins, config->dfcoMapRpmValues) :
 		engineConfiguration->coastingFuelCutMap;
 
 	bool mapActivate = map.value_or(0) < mapThreshold;
