@@ -76,35 +76,21 @@ expected<float> Lps25::readPressureKpa() {
 		return unexpected;
 	}
 
-	// First read the status reg to check if there are data available
-	uint8_t sr = m_i2c.readRegister(addr, REG_Status);
+	uint8_t buffer[4];
+	// Sequential multi-byte reads need to set the high bit of the
+	// register address to enable multi-byte read
+	constexpr uint8_t readAddr = REG_Status | 0x80;
+	m_i2c.writeRead(addr, &readAddr, 1, buffer, 4);
 
-	bool hasPressure = sr & LPS_SR_P_DA;
+	// First check the status reg to check if there are data available
+	bool hasPressure = buffer[0] & LPS_SR_P_DA;
 
 	if (!hasPressure) {
 		return unexpected;
 	}
 
-	/*
-	TODO: why doesn't this work?
-
-		// Sequential multi-byte reads need to set the high bit of the
-		// register address to enable multi-byte read
-		constexpr uint8_t readAddr = REG_PressureOutXl | 0x80;
-
-		uint8_t buffer[3];
-		m_i2c.writeRead(addr, &readAddr, 1, buffer, 3);
-
-		// Glue the 3 bytes back in to a 24 bit integer
-		uint32_t counts = buffer[2] << 16 | buffer[1] << 8 | buffer[0];
-	*/
-
-	auto xl = m_i2c.readRegister(addr, REG_PressureOutXl);
-	auto l = m_i2c.readRegister(addr, REG_PressureOutL);
-	auto h = m_i2c.readRegister(addr, REG_PressureOutH);
-
 	// Glue the 3 bytes back in to a 24 bit integer
-	uint32_t counts = h << 16 | l << 8 | xl;
+	uint32_t counts = buffer[3] << 16 | buffer[2] << 8 | buffer[1];
 
 	// 4096 counts per hectopascal
 	// = 40960 counts per kilopascal
