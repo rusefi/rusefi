@@ -25,6 +25,7 @@ import javax.swing.*;
 import java.awt.Color;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -119,34 +120,29 @@ public class BasicStartupFrame {
     }
 
     private void updatePortToUpdateFirmwareWithBlt(final AvailableHardware currentHardware) {
-        final List<SerialPortScanner.PortResult> ecuPortsToUpdateFirmwareWithBlt = currentHardware.getKnownPorts(SerialPortScanner.SerialPortType.EcuWithOpenblt);
-        final List<SerialPortScanner.PortResult> bootloaderPortsToUpdateFirmwareWithBlt = currentHardware.getKnownPorts(SerialPortScanner.SerialPortType.OpenBlt);
+        final List<SerialPortScanner.PortResult> portsToUpdateFirmwareWithBlt = currentHardware.getKnownPorts(Set.of(
+            SerialPortScanner.SerialPortType.EcuWithOpenblt,
+            SerialPortScanner.SerialPortType.OpenBlt
+        ));
 
-        final int availablePortForFirmwareUpdateWithBltCount = ecuPortsToUpdateFirmwareWithBlt.size() + bootloaderPortsToUpdateFirmwareWithBlt.size();
+        final int availablePortForFirmwareUpdateWithBltCount = portsToUpdateFirmwareWithBlt.size();
         switch (availablePortForFirmwareUpdateWithBltCount) {
             case 0: {
                 resetPortToUpdateFirmwareWithBlt("ECU not found");
                 break;
             }
             case 1: {
-                if (!ecuPortsToUpdateFirmwareWithBlt.isEmpty()) {
-                    setPortToUpdateFirmwareWithBlt(ecuPortsToUpdateFirmwareWithBlt.get(0));
-                } else if (!bootloaderPortsToUpdateFirmwareWithBlt.isEmpty()) {
-                    setPortToUpdateFirmwareWithBlt(bootloaderPortsToUpdateFirmwareWithBlt.get(0));
-                } else {
-                    log.error("Do nothing.");
-                }
+                setPortToUpdateFirmwareWithBlt(portsToUpdateFirmwareWithBlt.get(0));
                 break;
             }
             default: {
                 resetPortToUpdateFirmwareWithBlt(String.format(
                     "Multiple ECUs found on: %s",
-                    Stream.concat(ecuPortsToUpdateFirmwareWithBlt.stream(), bootloaderPortsToUpdateFirmwareWithBlt.stream())
+                    portsToUpdateFirmwareWithBlt.stream()
                         .map(portResult -> portResult.port)
                         .collect(Collectors.joining(", "))
                 ));
                 break;
-
             }
         }
     }
