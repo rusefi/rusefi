@@ -71,15 +71,14 @@ public class BasicStartupFrame {
 
                 statusMessage.setForeground(Color.red);
                 panel.add(statusMessage);
-
-                SerialPortScanner.INSTANCE.addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
-                    onHardwareUpdated(currentHardware);
-                }));
             }
             panel.add(updateFirmwareButton);
         } else {
             panel.add(new JLabel("Sorry only works on Windows"));
         }
+        SerialPortScanner.INSTANCE.addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
+            onHardwareUpdated(currentHardware);
+        }));
 
         panel.add(new HorizontalLine());
         JLabel logoLabel = LogoHelper.createLogoLabel();
@@ -151,14 +150,18 @@ public class BasicStartupFrame {
     private void switchToPort(final SerialPortScanner.PortResult port, final String updateButtonText) {
         portToUpdateFirmware = Optional.of(port);
         hideStatusMessage();
-        updateFirmwareButton.setEnabled(true);
-        updateFirmwareButton.setText(updateButtonText);
+        if (requireBlt) {
+            updateFirmwareButton.setEnabled(true);
+            updateFirmwareButton.setText(updateButtonText);
+        }
     }
 
     private void resetPort(final String reason) {
         portToUpdateFirmware = Optional.empty();
-        updateFirmwareButton.setEnabled(false);
-        statusMessage.setText(reason);
+        if (requireBlt) {
+            updateFirmwareButton.setEnabled(false);
+            statusMessage.setText(reason);
+        }
     }
 
     private void onUpdateFirmwareButtonClicked() {
