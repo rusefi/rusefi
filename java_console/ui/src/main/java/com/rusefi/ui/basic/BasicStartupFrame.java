@@ -45,7 +45,7 @@ public class BasicStartupFrame {
 
     private final JLabel statusMessage = new JLabel();
     private final StatusAnimation status = new StatusAnimation(this::updateStatus, StartupFrame.SCANNING_PORTS);
-    private final JButton update = ProgramSelector.createUpdateFirmwareButton();
+    private final JButton updateFirmwareButton = ProgramSelector.createUpdateFirmwareButton();
 
     private volatile Optional<SerialPortScanner.PortResult> portToUpdateFirmware = Optional.empty();
 
@@ -66,8 +66,8 @@ public class BasicStartupFrame {
 
             boolean requireBlt = FindFileHelper.isObfuscated();
             if (requireBlt) {
-                update.addActionListener(e-> onUpdateButtonClicked());
-                update.setEnabled(false);
+                updateFirmwareButton.addActionListener(e-> onUpdateFirmwareButtonClicked());
+                updateFirmwareButton.setEnabled(false);
 
                 statusMessage.setForeground(Color.red);
                 panel.add(statusMessage);
@@ -76,9 +76,9 @@ public class BasicStartupFrame {
                     onHardwareUpdated(currentHardware);
                 }));
             } else {
-                update.addActionListener(e -> DfuFlasher.doAutoDfu(update, PortDetector.AUTO, new UpdateStatusWindow("Update")));
+                updateFirmwareButton.addActionListener(e -> DfuFlasher.doAutoDfu(updateFirmwareButton, PortDetector.AUTO, new UpdateStatusWindow("Update")));
             }
-            panel.add(update);
+            panel.add(updateFirmwareButton);
         } else {
             panel.add(new JLabel("Sorry only works on Windows"));
         }
@@ -153,25 +153,25 @@ public class BasicStartupFrame {
     private void switchToPort(final SerialPortScanner.PortResult port, final String updateButtonText) {
         portToUpdateFirmware = Optional.of(port);
         hideStatusMessage();
-        update.setEnabled(true);
-        update.setText(updateButtonText);
+        updateFirmwareButton.setEnabled(true);
+        updateFirmwareButton.setText(updateButtonText);
     }
 
     private void resetPort(final String reason) {
         portToUpdateFirmware = Optional.empty();
-        update.setEnabled(false);
+        updateFirmwareButton.setEnabled(false);
         statusMessage.setText(reason);
     }
 
-    private void onUpdateButtonClicked() {
+    private void onUpdateFirmwareButtonClicked() {
         portToUpdateFirmware.ifPresentOrElse(port -> {
                 switch (port.type) {
                     case EcuWithOpenblt: {
-                        ProgramSelector.executeJob(update, ProgramSelector.OPENBLT_AUTO, port);
+                        ProgramSelector.executeJob(updateFirmwareButton, ProgramSelector.OPENBLT_AUTO, port);
                         break;
                     }
                     case OpenBlt: {
-                        ProgramSelector.executeJob(update, ProgramSelector.OPENBLT_MANUAL, port);
+                        ProgramSelector.executeJob(updateFirmwareButton, ProgramSelector.OPENBLT_MANUAL, port);
                         break;
                     }
                     default: {
