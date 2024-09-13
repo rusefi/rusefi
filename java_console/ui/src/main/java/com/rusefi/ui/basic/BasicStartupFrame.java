@@ -48,7 +48,7 @@ public class BasicStartupFrame {
     private final StatusAnimation status = new StatusAnimation(this::updateStatus, StartupFrame.SCANNING_PORTS);
     private final JButton updateFirmwareButton = ProgramSelector.createUpdateFirmwareButton();
 
-    private volatile Optional<SerialPortScanner.PortResult> portToUpdateFirmware = Optional.empty();
+    private volatile Optional<SerialPortScanner.PortResult> portToUpdateFirmwareWithBlt = Optional.empty();
 
     public static void main(String[] args) {
         runTool(null);
@@ -115,29 +115,29 @@ public class BasicStartupFrame {
         // not packed in updateStatus method
         packFrame();
 
-        final List<SerialPortScanner.PortResult> ecuPorts = currentHardware.getKnownPorts(SerialPortScanner.SerialPortType.EcuWithOpenblt);
-        final List<SerialPortScanner.PortResult> bootloaderPorts = currentHardware.getKnownPorts(SerialPortScanner.SerialPortType.OpenBlt);
+        final List<SerialPortScanner.PortResult> ecuPortsToUpdateFirmwareWithBlt = currentHardware.getKnownPorts(SerialPortScanner.SerialPortType.EcuWithOpenblt);
+        final List<SerialPortScanner.PortResult> bootloaderPortsToUpdateFirmwareWithBlt = currentHardware.getKnownPorts(SerialPortScanner.SerialPortType.OpenBlt);
 
-        final int availablePortCount = ecuPorts.size() + bootloaderPorts.size();
-        switch (availablePortCount) {
+        final int availablePortForFirmwareUpdateWithBltCount = ecuPortsToUpdateFirmwareWithBlt.size() + bootloaderPortsToUpdateFirmwareWithBlt.size();
+        switch (availablePortForFirmwareUpdateWithBltCount) {
             case 0: {
-                resetPort("ECU not found");
+                resetPortToUpdateFirmwareWithBlt("ECU not found");
                 break;
             }
             case 1: {
-                if (!ecuPorts.isEmpty()) {
-                    switchToPort(ecuPorts.get(0), "Auto Update Firmware");
-                } else if (!bootloaderPorts.isEmpty()) {
-                    switchToPort(bootloaderPorts.get(0), "Blt Update Firmware");
+                if (!ecuPortsToUpdateFirmwareWithBlt.isEmpty()) {
+                    setPortToUpdateFirmwareWithBlt(ecuPortsToUpdateFirmwareWithBlt.get(0), "Auto Update Firmware");
+                } else if (!bootloaderPortsToUpdateFirmwareWithBlt.isEmpty()) {
+                    setPortToUpdateFirmwareWithBlt(bootloaderPortsToUpdateFirmwareWithBlt.get(0), "Blt Update Firmware");
                 } else {
                     log.error("Do nothing.");
                 }
                 break;
             }
             default: {
-                resetPort(String.format(
+                resetPortToUpdateFirmwareWithBlt(String.format(
                     "Multiple ECUs found on: %s",
-                    Stream.concat(ecuPorts.stream(), bootloaderPorts.stream())
+                    Stream.concat(ecuPortsToUpdateFirmwareWithBlt.stream(), bootloaderPortsToUpdateFirmwareWithBlt.stream())
                         .map(portResult -> portResult.port)
                         .collect(Collectors.joining(", "))
                 ));
@@ -147,8 +147,8 @@ public class BasicStartupFrame {
         }
     }
 
-    private void switchToPort(final SerialPortScanner.PortResult port, final String updateButtonText) {
-        portToUpdateFirmware = Optional.of(port);
+    private void setPortToUpdateFirmwareWithBlt(final SerialPortScanner.PortResult port, final String updateButtonText) {
+        portToUpdateFirmwareWithBlt = Optional.of(port);
         hideStatusMessage();
         if (requireBlt) {
             updateFirmwareButton.setEnabled(true);
@@ -156,8 +156,8 @@ public class BasicStartupFrame {
         }
     }
 
-    private void resetPort(final String reason) {
-        portToUpdateFirmware = Optional.empty();
+    private void resetPortToUpdateFirmwareWithBlt(final String reason) {
+        portToUpdateFirmwareWithBlt = Optional.empty();
         if (requireBlt) {
             updateFirmwareButton.setEnabled(false);
             statusMessage.setText(reason);
@@ -166,7 +166,7 @@ public class BasicStartupFrame {
 
     private void onUpdateFirmwareButtonClicked() {
         if (requireBlt) {
-            portToUpdateFirmware.ifPresentOrElse(port -> {
+            portToUpdateFirmwareWithBlt.ifPresentOrElse(port -> {
                     switch (port.type) {
                         case EcuWithOpenblt: {
                             ProgramSelector.executeJob(updateFirmwareButton, ProgramSelector.OPENBLT_AUTO, port);
