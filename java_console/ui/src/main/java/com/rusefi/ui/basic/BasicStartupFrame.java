@@ -114,7 +114,7 @@ public class BasicStartupFrame {
     private void onHardwareUpdated(final AvailableHardware currentHardware) {
         status.stop();
         hideStatusMessage();
-        // I'm not sure hat the following frame packing is really necessary, but I'm adding it just in case if frame was
+        // I'm not sure if the following frame packing is really necessary, but I'm adding it just in case if frame was
         // not packed in updateStatus method
         packFrame();
 
