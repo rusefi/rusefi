@@ -61,7 +61,7 @@ angle_t HpfpLobe::findNextLobe() {
 		// TODO: Is the sign correct here?  + means ATDC?
 		vvt = engine->triggerCentral.getVVTPosition(
 			(engineConfiguration->hpfpCam - 1) / 2 & 1, // Bank
-			(engineConfiguration->hpfpCam - 1) & 1);    // Cam
+			(engineConfiguration->hpfpCam - 1) & 1).value_or(0);    // Cam
 	}
 
 	return engineConfiguration->hpfpPeakPos + vvt + next_index * 720 / lobes;

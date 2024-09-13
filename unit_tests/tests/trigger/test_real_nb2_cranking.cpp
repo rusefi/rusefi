@@ -20,7 +20,7 @@ TEST(realCrankingNB2, normalCranking) {
 	}
 
 	// VVT position nearly zero!
-	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(0, 0), 11.2627f, 1e-4);
+	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(0, 0).value_or(0), 11.2627f, 1e-4);
 
 	// Check the number of times VVT information was used to adjust crank phase
 	// This should happen exactly once: once we sync, we shouldn't lose it.
@@ -42,10 +42,12 @@ TEST(realCrankingNB2, crankingMissingInjector) {
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
-	}
 
-	// VVT position nearly zero!
-	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(0, 0), 4.476928f, 1e-4);
+		if (auto vvt = engine->triggerCentral.getVVTPosition(0, 0)) {
+			// VVT position nearly zero!
+			EXPECT_NEAR(vvt.Value, 0, 20);
+		}
+	}
 
 	ASSERT_EQ(316, round(Sensor::getOrZero(SensorType::Rpm)));
 

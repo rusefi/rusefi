@@ -133,15 +133,15 @@ TEST(nissan, vq_vvt) {
 
 		ASSERT_TRUE(tc->vvtState[0][0].getShaftSynchronized());
 		// let's celebrate that vvtPosition stays the same
-		ASSERT_NEAR(34, tc->vvtPosition[0][0], EPS2D) << "queueIndex=" << queueIndex;
+		ASSERT_NEAR(34, tc->getVVTPosition(0, 0).value_or(0), EPS2D) << "queueIndex=" << queueIndex;
     	queueIndex++;
 	}
 	ASSERT_TRUE(queueIndex == 422) << "Total queueIndex=" << queueIndex;
 
 	ASSERT_TRUE(tc->vvtState[1][0].getShaftSynchronized());
 
-	ASSERT_NEAR(34, tc->vvtPosition[0][0], EPS2D);
-	ASSERT_NEAR(34, tc->vvtPosition[1][0], EPS2D);
+	ASSERT_NEAR(34, tc->getVVTPosition(0, 0).value_or(0), EPS2D);
+	ASSERT_NEAR(34, tc->getVVTPosition(1, 0).value_or(0), EPS2D);
 
 	EXPECT_EQ(0, eth.recentWarnings()->getCount());
 }

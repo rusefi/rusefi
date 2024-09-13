@@ -55,10 +55,10 @@ TEST(trigger, testQuadCam) {
 	int secondCamSecondBank = secondBank * CAMS_PER_BANK + secondCam;
 
 	// Cams should have no position yet
-	ASSERT_EQ(0, engine->triggerCentral.getVVTPosition(firstBank, firstCam));
-	ASSERT_EQ(0, engine->triggerCentral.getVVTPosition(firstBank, secondCam));
-	ASSERT_EQ(0, engine->triggerCentral.getVVTPosition(secondBank, firstCam));
-	ASSERT_EQ(0, engine->triggerCentral.getVVTPosition(secondBank, secondCam));
+	ASSERT_EQ(0, engine->triggerCentral.getVVTPosition(firstBank, firstCam).value_or(0));
+	ASSERT_EQ(0, engine->triggerCentral.getVVTPosition(firstBank, secondCam).value_or(0));
+	ASSERT_EQ(0, engine->triggerCentral.getVVTPosition(secondBank, firstCam).value_or(0));
+	ASSERT_EQ(0, engine->triggerCentral.getVVTPosition(secondBank, secondCam).value_or(0));
 
 	hwHandleVvtCamSignal(true, getTimeNowNt(), firstCam);
 	hwHandleVvtCamSignal(true, getTimeNowNt(), secondCam);
@@ -68,10 +68,10 @@ TEST(trigger, testQuadCam) {
 	float basePos = -80.2f;
 
 	// All four cams should now have the same position
-	EXPECT_NEAR_M3(basePos, engine->triggerCentral.getVVTPosition(firstBank, firstCam));
-	EXPECT_NEAR_M3(basePos, engine->triggerCentral.getVVTPosition(firstBank, secondCam));
-	EXPECT_NEAR_M3(basePos, engine->triggerCentral.getVVTPosition(secondBank, firstCam));
-	EXPECT_NEAR_M3(basePos, engine->triggerCentral.getVVTPosition(secondBank, secondCam));
+	EXPECT_NEAR_M3(basePos, engine->triggerCentral.getVVTPosition(firstBank, firstCam).value_or(0));
+	EXPECT_NEAR_M3(basePos, engine->triggerCentral.getVVTPosition(firstBank, secondCam).value_or(0));
+	EXPECT_NEAR_M3(basePos, engine->triggerCentral.getVVTPosition(secondBank, firstCam).value_or(0));
+	EXPECT_NEAR_M3(basePos, engine->triggerCentral.getVVTPosition(secondBank, secondCam).value_or(0));
 
 	// Now fire cam events again, but with time gaps between each
 	eth.moveTimeForwardMs(1);
@@ -85,8 +85,8 @@ TEST(trigger, testQuadCam) {
 
 	// All four cams should have different positions, each retarded by 1ms from the last
 	float oneMsDegrees = 1000 / engine->rpmCalculator.oneDegreeUs;
-	EXPECT_NEAR(basePos - oneMsDegrees * 1, engine->triggerCentral.getVVTPosition(firstBank, firstCam), EPS3D);
-	EXPECT_NEAR(basePos - oneMsDegrees * 2, engine->triggerCentral.getVVTPosition(firstBank, secondCam), EPS3D);
-	EXPECT_NEAR(basePos - oneMsDegrees * 3, engine->triggerCentral.getVVTPosition(secondBank, firstCam), EPS3D);
-	EXPECT_NEAR(basePos - oneMsDegrees * 4, engine->triggerCentral.getVVTPosition(secondBank, secondCam), EPS3D);
+	EXPECT_NEAR(basePos - oneMsDegrees * 1, engine->triggerCentral.getVVTPosition(firstBank, firstCam).value_or(0), EPS3D);
+	EXPECT_NEAR(basePos - oneMsDegrees * 2, engine->triggerCentral.getVVTPosition(firstBank, secondCam).value_or(0), EPS3D);
+	EXPECT_NEAR(basePos - oneMsDegrees * 3, engine->triggerCentral.getVVTPosition(secondBank, firstCam).value_or(0), EPS3D);
+	EXPECT_NEAR(basePos - oneMsDegrees * 4, engine->triggerCentral.getVVTPosition(secondBank, secondCam).value_or(0), EPS3D);
 }

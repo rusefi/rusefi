@@ -13,10 +13,14 @@ TEST(HPFP, Lobe) {
 	engineConfiguration->hpfpPeakPos = 123;
 	engineConfiguration->hpfpCamLobes = 3;
 
-	engine->triggerCentral.vvtPosition[0][0] = 20; // Bank 0
-	engine->triggerCentral.vvtPosition[0][1] = 40;
-	engine->triggerCentral.vvtPosition[1][0] = 60; // Bank 1
-	engine->triggerCentral.vvtPosition[1][1] = 80;
+	engine->triggerCentral.vvtPosition[0][0].angle = 20; // Bank 0
+	engine->triggerCentral.vvtPosition[0][0].t.reset();
+	engine->triggerCentral.vvtPosition[0][1].angle = 40;
+	engine->triggerCentral.vvtPosition[0][1].t.reset();
+	engine->triggerCentral.vvtPosition[1][0].angle = 60; // Bank 1
+	engine->triggerCentral.vvtPosition[1][0].t.reset();
+	engine->triggerCentral.vvtPosition[1][1].angle = 80;
+	engine->triggerCentral.vvtPosition[1][1].t.reset();
 
 	HpfpLobe lobe;
 

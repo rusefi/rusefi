@@ -20,22 +20,22 @@ TEST(Toyota3ToothCam, RealEngineRunning) {
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
-		float vvt1 = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0);
+		auto vvt1 = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0);
 
-		if (vvt1 != 0) {
+		if (vvt1) {
 			if (!hasSeenFirstVvt) {
-				EXPECT_NEAR(vvt1, 0, /*precision*/1);
+				EXPECT_NEAR(vvt1.Value, 0, /*precision*/1);
 				hasSeenFirstVvt = true;
 			}
 
 			// cam position should never be reported outside of correct range
-			EXPECT_TRUE(vvt1 > -3 && vvt1 < 3);
+			EXPECT_TRUE(vvt1.Value > -3 && vvt1.Value < 3);
 		}
 	}
 
 	EXPECT_EQ(getTriggerCentral()->triggerState.camResyncCounter, 0);
 
-	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0), 0, 1);
+	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0).value_or(0), 0, 1);
 	ASSERT_EQ(3078, round(Sensor::getOrZero(SensorType::Rpm)));
 
 	// TODO: why warnings?
@@ -103,14 +103,14 @@ static void test3tooth(size_t revsBeforeVvt, size_t teethBeforeVvt, bool expectS
 	EXPECT_EQ(expectSync, getTriggerCentral()->triggerState.hasSynchronizedPhase());
 
 	if (expectSync) {
-		EXPECT_EQ(5, getTriggerCentral()->getVVTPosition(0, 0));
+		EXPECT_EQ(5, getTriggerCentral()->getVVTPosition(0, 0).value_or(0));
 
 		// Bump ahead by one tooth
 		eth.fireFall(1);
 		eth.fireRise(9);
 		ASSERT_EQ(60, getTriggerCentral()->currentEngineDecodedPhase);
 	} else {
-		EXPECT_EQ(0, getTriggerCentral()->getVVTPosition(0, 0));
+		EXPECT_EQ(0, getTriggerCentral()->getVVTPosition(0, 0).value_or(0));
 	}
 }
 

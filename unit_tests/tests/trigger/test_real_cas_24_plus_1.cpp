@@ -53,10 +53,10 @@ TEST(realCas24Plus1, spinningOnBench) {
 			EXPECT_NEAR(rpm, 915.08f, 0.1);
 		}
 
-		float vvt = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0);
-		if (vvt != 0) {
+		auto vvt = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0);
+		if (vvt) {
 			// cam position should never be reported outside of correct range
-			EXPECT_TRUE(vvt > -10 && vvt < -9);
+			EXPECT_TRUE(vvt.Value > -10 && vvt.Value < -9);
 		}
 	}
 

@@ -56,8 +56,14 @@ expected<angle_t> TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camI
 	}
 
 	// TODO: return unexpected if timed out
+	auto& vvt = vvtPosition[bankIndex][camIndex];
 
-	return vvtPosition[bankIndex][camIndex];
+	if (vvt.t.hasElapsedSec(1)) {
+		// 1s timeout on VVT angle
+		return unexpected;
+	} else {
+		return vvt.angle;
+	}
 }
 
 /**
@@ -341,11 +347,13 @@ void hwHandleVvtCamSignal(bool isRising, efitick_t nowNt, int index) {
 	}
 
 	// Only record VVT position if we have full engine sync - may be bogus before that point
+	auto& vvtPos = tc->vvtPosition[bankIndex][camIndex];
 	if (tc->triggerState.hasSynchronizedPhase()) {
-		tc->vvtPosition[bankIndex][camIndex] = vvtPosition;
+		vvtPos.angle = vvtPosition;
 	} else {
-		tc->vvtPosition[bankIndex][camIndex] = 0;
+		vvtPos.angle = 0;
 	}
+	vvtPos.t.reset(nowNt);
 }
 
 int triggerReentrant = 0;

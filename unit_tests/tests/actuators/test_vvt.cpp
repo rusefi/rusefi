@@ -27,7 +27,8 @@ TEST(Vvt, TestSetPoint) {
 TEST(Vvt, observePlant) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
-	engine->triggerCentral.vvtPosition[0][0] = 23;
+	engine->triggerCentral.vvtPosition[0][0].t.reset();
+	engine->triggerCentral.vvtPosition[0][0].angle = 23;
 
 	VvtController dut(0, 0, 0);
 	dut.init(nullptr, nullptr);

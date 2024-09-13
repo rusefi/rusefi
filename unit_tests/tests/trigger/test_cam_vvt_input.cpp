@@ -126,7 +126,7 @@ TEST(trigger, testCamInput) {
 
 	// asserting that error code has cleared
 	ASSERT_EQ(0, unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #3";
-	EXPECT_NEAR_M3(71, engine->triggerCentral.getVVTPosition(0, 0));
+	EXPECT_NEAR_M3(71, engine->triggerCentral.getVVTPosition(0, 0).value_or(0));
 }
 
 TEST(trigger, testNB2CamInput) {
@@ -170,7 +170,7 @@ TEST(trigger, testNB2CamInput) {
 	eth.moveTimeForwardUs(MS2US(10));
 	hwHandleVvtCamSignal(true, getTimeNowNt(), 0);
 
-	ASSERT_FLOAT_EQ(0, engine->triggerCentral.getVVTPosition(0, 0));
+	ASSERT_FALSE(engine->triggerCentral.getVVTPosition(0, 0));
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync, engine->triggerCentral.triggerState.getCrankSynchronizationCounter());
 
 	// Third gap - long
@@ -180,7 +180,7 @@ TEST(trigger, testNB2CamInput) {
 	eth.moveTimeForwardUs(MS2US( 30));
 	hwHandleVvtCamSignal(true, getTimeNowNt(), 0);
 
-	EXPECT_NEAR(297.5f, engine->triggerCentral.getVVTPosition(0, 0), EPS2D);
+	EXPECT_NEAR(297.5f, engine->triggerCentral.getVVTPosition(0, 0).value_or(0), EPS2D);
 	// actually position based on VVT!
 	ASSERT_EQ(totalRevolutionCountBeforeVvtSync + 3, engine->triggerCentral.triggerState.getCrankSynchronizationCounter());
 

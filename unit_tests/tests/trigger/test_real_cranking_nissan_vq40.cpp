@@ -25,27 +25,27 @@ static void test(int engineSyncCam, float camOffsetAdd) {
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
-		float vvt1 = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0);
-		float vvt2 = engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/0);
+		auto vvt1 = engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0);
+		auto vvt2 = engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/0);
 
-		if (vvt1 != 0) {
+		if (vvt1 && vvt1.Value != 0) {
 			if (!hasSeenFirstVvt) {
-				EXPECT_NEAR(vvt1, 1.4, /*precision*/1);
+				EXPECT_NEAR(vvt1.Value, 1.4, /*precision*/1);
 				hasSeenFirstVvt = true;
 			}
 
 			// cam position should never be reported outside of correct range
-			EXPECT_TRUE(vvt1 > -3 && vvt1 < 3);
+			EXPECT_TRUE(vvt1.Value > -3 && vvt1.Value < 3);
 		}
 
-		if (vvt2 != 0) {
+		if (vvt2) {
 			// cam position should never be reported outside of correct range
-			EXPECT_TRUE(vvt2 > -3 && vvt2 < 3);
+			EXPECT_TRUE(vvt2.Value > -3 && vvt2.Value < 3);
 		}
 	}
 
-	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0), 1.351, 1e-2);
-	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/0), 1.548, 1e-2);
+	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/0, /*camIndex*/0).value_or(0), 1.351, 1e-2);
+	EXPECT_NEAR(engine->triggerCentral.getVVTPosition(/*bankIndex*/1, /*camIndex*/0).value_or(0), 1.548, 1e-2);
 	ASSERT_EQ(102, round(Sensor::getOrZero(SensorType::Rpm)))<< reader.lineIndex();
 
 	// TODO: why warnings?
