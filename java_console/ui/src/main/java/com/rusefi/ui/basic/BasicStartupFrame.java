@@ -130,9 +130,9 @@ public class BasicStartupFrame {
             }
             case 1: {
                 if (!ecuPortsToUpdateFirmwareWithBlt.isEmpty()) {
-                    setPortToUpdateFirmwareWithBlt(ecuPortsToUpdateFirmwareWithBlt.get(0), "Auto Update Firmware");
+                    setPortToUpdateFirmwareWithBlt(ecuPortsToUpdateFirmwareWithBlt.get(0));
                 } else if (!bootloaderPortsToUpdateFirmwareWithBlt.isEmpty()) {
-                    setPortToUpdateFirmwareWithBlt(bootloaderPortsToUpdateFirmwareWithBlt.get(0), "Blt Update Firmware");
+                    setPortToUpdateFirmwareWithBlt(bootloaderPortsToUpdateFirmwareWithBlt.get(0));
                 } else {
                     log.error("Do nothing.");
                 }
@@ -151,12 +151,25 @@ public class BasicStartupFrame {
         }
     }
 
-    private void setPortToUpdateFirmwareWithBlt(final SerialPortScanner.PortResult port, final String updateButtonText) {
+    private void setPortToUpdateFirmwareWithBlt(final SerialPortScanner.PortResult port) {
         portToUpdateFirmwareWithBlt = Optional.of(port);
         hideStatusMessage();
         if (requireBlt) {
             updateFirmwareButton.setEnabled(true);
-            updateFirmwareButton.setText(updateButtonText);
+            switch (port.type) {
+                case EcuWithOpenblt: {
+                    updateFirmwareButton.setText("Auto Update Firmware");
+                    break;
+                }
+                case OpenBlt: {
+                    updateFirmwareButton.setText("Blt Update Firmware");
+                    break;
+                }
+                default: {
+                    log.error(String.format("Unexpected port type: %s", port));
+                    break;
+                }
+            }
         }
     }
 
