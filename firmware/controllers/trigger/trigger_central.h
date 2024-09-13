@@ -137,7 +137,7 @@ public:
 	int vvtEventRiseCounter[CAM_INPUTS_COUNT];
 	int vvtEventFallCounter[CAM_INPUTS_COUNT];
 
-	angle_t getVVTPosition(uint8_t bankIndex, uint8_t camIndex);
+	expected<angle_t> getVVTPosition(uint8_t bankIndex, uint8_t camIndex);
 
 #if EFI_UNIT_TEST
 	// latest VVT event position (could be not synchronization event)

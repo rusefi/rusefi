@@ -197,10 +197,10 @@ struct Cams {
 
 static void populateFrame(Cams& msg) {
 #if EFI_SHAFT_POSITION_INPUT
-	msg.Bank1IntakeActual  = engine->triggerCentral.getVVTPosition(0, 0);
-	msg.Bank1ExhaustActual = engine->triggerCentral.getVVTPosition(0, 1);
-	msg.Bank2IntakeActual  = engine->triggerCentral.getVVTPosition(1, 0);
-	msg.Bank2ExhaustActual = engine->triggerCentral.getVVTPosition(1, 1);
+	msg.Bank1IntakeActual  = engine->triggerCentral.getVVTPosition(0, 0).value_or(0);
+	msg.Bank1ExhaustActual = engine->triggerCentral.getVVTPosition(0, 1).value_or(0);
+	msg.Bank2IntakeActual  = engine->triggerCentral.getVVTPosition(1, 0).value_or(0);
+	msg.Bank2ExhaustActual = engine->triggerCentral.getVVTPosition(1, 1).value_or(0);
 #endif // EFI_SHAFT_POSITION_INPUT
 
 	// TODO: maybe don't rely on outputChannels here

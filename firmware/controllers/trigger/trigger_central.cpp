@@ -50,10 +50,13 @@ int TriggerCentral::getHwEventCounter(int index) const {
 }
 
 
-angle_t TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camIndex) {
+expected<angle_t> TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camIndex) {
 	if (bankIndex >= BANKS_COUNT || camIndex >= CAMS_PER_BANK) {
-		return NAN;
+		return unexpected;
 	}
+
+	// TODO: return unexpected if timed out
+
 	return vvtPosition[bankIndex][camIndex];
 }
 
