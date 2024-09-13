@@ -64,8 +64,8 @@ static spi_device_e mmcSpiDevice = SPI_NONE;
 
 #define LOG_INDEX_FILENAME "index.txt"
 
-#define RUSEFI_LOG_PREFIX "re_"
-#define PREFIX_LEN 3
+#define FOME_LOG_PREFIX "fome_"
+#define PREFIX_LEN 5
 #define SHORT_TIME_LEN 13
 
 #define LS_RESPONSE "ls_result"
@@ -168,15 +168,10 @@ static void incLogFileName() {
 }
 
 static void prepareLogFileName() {
-	strcpy(logName, RUSEFI_LOG_PREFIX);
+	strcpy(logName, FOME_LOG_PREFIX);
 	char *ptr;
 
-#if HAL_USE_USB_MSD
 	bool result = dateToStringShort(&logName[PREFIX_LEN]);
-#else 
-	// TS SD protocol supports only short 8 symbol file names :(
-	bool result = false;
-#endif
 
 	if (result) {
 		ptr = &logName[PREFIX_LEN + SHORT_TIME_LEN];
