@@ -18,7 +18,8 @@ bool DfcoController::getState() const {
 	}
 
 	// MAP sensor is optional, only inhibit if the sensor is present but broken
-	if (Sensor::hasSensor(SensorType::Map) && !map) {
+	bool hasMap = Sensor::hasSensor(SensorType::Map);
+	if (hasMap && !map) {
 		return false;
 	}
 	if (engine->engineState.lua.disableDecelerationFuelCutOff) {
@@ -29,7 +30,7 @@ bool DfcoController::getState() const {
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	float vss = Sensor::getOrZero(SensorType::VehicleSpeed);
 
-	bool mapActivate = map.value_or(0) < engineConfiguration->coastingFuelCutMap;
+	bool mapActivate = !hasMap || !m_mapHysteresis.test(map.value_or(0), engineConfiguration->coastingFuelCutMap + 1, engineConfiguration->coastingFuelCutMap - 1);
 	bool tpsActivate = tps.Value < engineConfiguration->coastingFuelCutTps;
 	bool cltActivate = clt.Value > engineConfiguration->coastingFuelCutClt;
 	// True if throttle, MAP, and CLT are all acceptable for DFCO to occur
