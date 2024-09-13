@@ -115,6 +115,10 @@ public class BasicStartupFrame {
         // not packed in updateStatus method
         packFrame();
 
+        updatePortToUpdateFirmwareWithBlt(currentHardware);
+    }
+
+    private void updatePortToUpdateFirmwareWithBlt(final AvailableHardware currentHardware) {
         final List<SerialPortScanner.PortResult> ecuPortsToUpdateFirmwareWithBlt = currentHardware.getKnownPorts(SerialPortScanner.SerialPortType.EcuWithOpenblt);
         final List<SerialPortScanner.PortResult> bootloaderPortsToUpdateFirmwareWithBlt = currentHardware.getKnownPorts(SerialPortScanner.SerialPortType.OpenBlt);
 
