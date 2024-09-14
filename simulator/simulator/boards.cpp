@@ -11,7 +11,7 @@
 #include "engine_sniffer.h"
 #include "adc_math.h"
 
-int getAdcValue(const char *msg, int hwChannel) {
+int getAdcValue(const char * /*msg*/, int /*hwChannel*/) {
 	return 0;
 }
 
