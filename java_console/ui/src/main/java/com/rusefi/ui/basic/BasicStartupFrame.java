@@ -23,6 +23,7 @@ import org.putgemin.VerticalFlowLayout;
 import javax.swing.*;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -66,7 +67,7 @@ public class BasicStartupFrame {
             panel.add(ToolButtons.createShowDeviceManagerButton());
             panel.add(StartupFrame.binaryModificationControl());
 
-            updateFirmwareButton.addActionListener(e-> onUpdateFirmwareButtonClicked());
+            updateFirmwareButton.addActionListener(this::onUpdateFirmwareButtonClicked);
             if (requireBlt) {
                 updateFirmwareButton.setEnabled(false);
 
@@ -177,7 +178,7 @@ public class BasicStartupFrame {
         }
     }
 
-    private void onUpdateFirmwareButtonClicked() {
+    private void onUpdateFirmwareButtonClicked(final ActionEvent actionEvent) {
         if (requireBlt) {
             portToUpdateFirmwareWithBlt.ifPresentOrElse(port -> {
                     switch (port.type) {
