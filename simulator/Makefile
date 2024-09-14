@@ -26,6 +26,12 @@ ifneq ("$(wildcard ../firmware/$(BOARD_DIR)/default_tune.cpp)","")
 endif
 endif
 
+# OS is a windows-specific environment variable
+ifneq ($(OS),Windows_NT)
+  OS = $(shell uname)
+endif
+$(info OS is [${OS}])
+
 include ../firmware/rusefi.mk
 include ../firmware/rusefi_rules.mk
 
@@ -229,12 +235,6 @@ ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM)
 ##############################################################################
 # Compiler settings
 #
-
-ifeq ($(OS),)
-$(info OS is empty: not Windows?)
-else
-$(info OS is [${OS}])
-endif
 
 ifeq ($(OS),Windows_NT)
   # ChibiOS seem to require 32 bit compiler at least on Windows
