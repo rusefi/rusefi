@@ -264,7 +264,7 @@ void onFatalError(const char *msg, const char * file, int line) {
 	exit(-1);
 }
 
-void logMsg(const char *format, ...) {
+void logMsg(const char * /*format*/, ...) {
 //	FILE * fp;
 //	fp = fopen ("simulator.log", "a");
 //
@@ -277,7 +277,7 @@ void logMsg(const char *format, ...) {
 
 #if HAL_USE_CAN
 static bool didInitCan = false;
-CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
+CANDriver* detectCanDevice(brain_pin_e /*pinRx*/, brain_pin_e /*pinTx*/) {
 	if (didInitCan) {
 		return nullptr;
 	}

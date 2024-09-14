@@ -36,7 +36,7 @@ const char *getMCUResetCause(Reset_Cause_t) {
 void startWatchdog(int) { }
 
 // Can be called for debug reasons to test the watchdog
-void setWatchdogResetPeriod(int resetMs) { }
+void setWatchdogResetPeriod(int /*resetMs*/) { }
 
 // A reset is done only if enough time has passed since the last reset.
 void tryResetWatchdog() { }
