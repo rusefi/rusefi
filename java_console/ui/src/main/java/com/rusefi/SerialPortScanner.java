@@ -23,6 +23,15 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 /**
+ * We have too many programming / ECU possible states
+ * 1) the oldest one: discovery board has on-board St-link debug interface (discovery board second microcontrollers on board which is used to debug the primary one), same if we have a modern ECU with external st-link hooked up. Open question if it's time to remove support of st-link programming since all nicer ECUs do not on-board debug interface. Orthogonal to USB port.
+ * 2) stm32 build-in bootloader, aka "DFU", regardless if PROG/BOOT0 button or software reboot into DFU
+ * 3) live ECU with software reboot into DFU, aka "Auto DFU", not suitable for obfuscated firmware
+ * 4) OpenBLT USB device, ala "Manual OpenBLT", regardless if primary firmware has not been uploaded yet or software reboot into OpenBLT
+ * 5) live ECU compiled with OpenBLT support
+ *
+ * technical debt: this class has some *serial* use-cases scanning and some not serial scanning: DFU and st-link
+ *
  * @author Andrey Belomutskiy
  */
 public enum SerialPortScanner {
@@ -30,6 +39,7 @@ public enum SerialPortScanner {
 
     private final static Logging log = Logging.getLogging(SerialPortScanner.class);
 
+    // this enum covers truly serial use-cases meaning NOT 'manual DFU' scanning and not st-link scanning
     public enum SerialPortType {
         Ecu("ECU", 20),
         EcuWithOpenblt("ECU w/ BL", 20),
