@@ -17,9 +17,9 @@ pins:
 
   - pin: 2A
     meta: MM176_IN_MAP1_ANALOG
-    function: Aux Analog 4
+    function: Aux Analog 4 / External MAP
     class: analog_inputs
-    ts_name: 2A - Aux Analog 4
+    ts_name: 2A - MAP / Aux Analog 4
     color: blue
 
   - pin: 3A
