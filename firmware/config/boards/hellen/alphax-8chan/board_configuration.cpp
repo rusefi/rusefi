@@ -23,6 +23,7 @@ static OutputPin alphaHall3PullDown;
 static OutputPin alphaHall4PullDown;
 static OutputPin alphaHall5PullDown;
 static OutputPin alphaFlexPullDown;
+static OutputPin tempPullUp;
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = Gpio::MM176_INJ1;
@@ -84,6 +85,7 @@ void boardInitHardware() {
 	alphaHall4PullDown.initPin("PullDown-Hall4", Gpio::MM176_GP23);
 	alphaHall5PullDown.initPin("PullDown-Hall5", Gpio::MM176_GP24);
 	alphaFlexPullDown.initPin("PullDown-Flex",   Gpio::MM176_GP25);
+	tempPullUp.initPin("Temp PullUp", Gpio::MM176_OUT_IO12);
 	boardOnConfigurationChange(nullptr);
 }
 
@@ -95,6 +97,7 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 	alphaHall4PullDown.setValue(config->boardUseH4PullDown);
 	alphaHall5PullDown.setValue(config->boardUseH5PullDown);
 	alphaFlexPullDown.setValue(config->boardUseFlexPullDown);
+	tempPullUp.setValue(config->boardUseTempPullUp);
 }
 
 void setBoardConfigOverrides() {
