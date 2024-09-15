@@ -9,12 +9,12 @@ pins:
   - pin: 4a
     class: outputs
     ts_name: ETB_OUT+
-    function: +ETB_OUT
+    function: +ETB_OUT Grey
 
   - pin: 5a
     class: outputs
     ts_name: ETB_OUT-
-    function: -ETB_OUT
+    function: -ETB_OUT Grey
 
   - pin: 7a
     function: USB +
@@ -35,6 +35,9 @@ pins:
     ts_name: 11 - VTC Right
     class: outputs
     function: Intake VTC solenoid Bank 1
+
+  - pin: 12a
+    function: 2005 POWER STEERING PRESSURE SENSOR
 
   - pin: 13a
     function: Crank Sensor
