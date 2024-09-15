@@ -96,9 +96,7 @@ const char* swapOutputBuffers(size_t* actualOutputBufferSize) {
 		chibios_rt::MutexLocker lock(logBufferMutex);
 
 		// Swap buffers under lock
-		auto temp = writeBuffer;
-		writeBuffer = readBuffer;
-		readBuffer = temp;
+		std::swap(writeBuffer, readBuffer);
 
 		// Reset the front buffer - it's now empty
 		writeBuffer->reset();

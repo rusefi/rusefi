@@ -198,7 +198,7 @@ static angle_t wrapVvt(angle_t vvtPosition, int period) {
 	return vvtPosition;
 }
 
-static void logVvtFront(bool isImportantFront, bool isRising, efitick_t nowNt, int index) {
+static void logVvtFront(bool isRising, efitick_t nowNt, int index) {
 	// If we care about both edges OR displayLogicLevel is set, log every front exactly as it is
 	addEngineSnifferVvtEvent(index, isRising);
 
@@ -217,6 +217,8 @@ void hwHandleVvtCamSignal(bool isRising, efitick_t nowNt, int index) {
 	// Invert if so configured
 	isRising ^= engineConfiguration->invertCamVVTSignal;
 
+	logVvtFront(isRising, nowNt, index);
+
 	int bankIndex = index / CAMS_PER_BANK;
 	int camIndex = index % CAMS_PER_BANK;
 	if (isRising) {
@@ -234,11 +236,7 @@ void hwHandleVvtCamSignal(bool isRising, efitick_t nowNt, int index) {
 
 	// Non real decoders only use the rising edge
 	bool vvtUseOnlyRise = !isVvtWithRealDecoder || vvtShape.useOnlyRisingEdges;
-	bool isImportantFront = !vvtUseOnlyRise || isRising;
-
-	logVvtFront(isImportantFront, isRising, nowNt, index);
-
-	if (!isImportantFront) {
+	if (vvtUseOnlyRise && !isRising) {
 		// This edge is unimportant, ignore it.
 		return;
 	}
