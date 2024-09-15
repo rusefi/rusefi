@@ -1005,7 +1005,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		setL9779TestConfiguration();
 		break;
 	case engine_type_e::EEPROM_BENCH_ENGINE:
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE && HAL_USE_EEPROM
 		setEepromTestConfiguration();
 #endif
 		break;

@@ -210,8 +210,7 @@ void setEtbTestConfiguration() {
 	// see also setDefaultEtbBiasCurve
 }
 
-#if defined(HW_FRANKENSO) && EFI_PROD_CODE
-
+#if defined(HW_FRANKENSO) && EFI_PROD_CODE && HAL_USE_EEPROM
 
 // todo: page_size + 2
 // todo:  CC_SECTION(".nocache")
@@ -268,8 +267,6 @@ void setEepromTestConfiguration() {
 
 
     		});
-
-
 }
 #endif //HW_FRANKENSO
 

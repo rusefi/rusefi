@@ -33,6 +33,8 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->injectionPins[2] = Gpio::H144_LS_3;
 	engineConfiguration->injectionPins[3] = Gpio::H144_LS_4;
 
+	setGDIFueling();
+
   // port injectors
 //	engineConfiguration->injectionPins[0] = Gpio::TLE9104_0_OUT_0;
 //	engineConfiguration->injectionPins[1] = Gpio::TLE9104_0_OUT_1;
