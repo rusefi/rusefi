@@ -7,6 +7,10 @@
 #if EFI_CAN_SUPPORT
 static AemXSeriesEgt aemEgt1(0, SensorType::EGT1);
 static AemXSeriesEgt aemEgt2(1, SensorType::EGT2);
+static AemXSeriesEgt aemEgt3(2, SensorType::EGT3);
+static AemXSeriesEgt aemEgt4(3, SensorType::EGT4);
+static AemXSeriesEgt aemEgt5(4, SensorType::EGT5);
+static AemXSeriesEgt aemEgt6(5, SensorType::EGT6);
 #endif
 
 void initEgt() {
@@ -19,6 +23,10 @@ void initEgt() {
 
 		registerCanSensor(aemEgt1);
 		registerCanSensor(aemEgt2);
+		registerCanSensor(aemEgt3);
+		registerCanSensor(aemEgt4);
+		registerCanSensor(aemEgt5);
+		registerCanSensor(aemEgt6);
 
 		return;
 	}
