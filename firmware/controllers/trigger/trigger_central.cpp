@@ -667,11 +667,11 @@ void TriggerCentral::decodeMapCam(efitick_t timestamp, float currentPhase) {
 			float map = engine->outputChannels.instantMAPValue;
 
 			// Compute diff against the last time we were here
-			float diff = map - mapCamPrevCycleValue;
+			float instantMapDiffBetweenReadoutAngles = map - mapCamPrevCycleValue;
 			mapCamPrevCycleValue = map;
 
-			if (diff > 0) {
-				mapVvt_map_peak++;
+			if (instantMapDiffBetweenReadoutAngles > 0) {
+				mapVvt_sync_counter++;
 				int revolutionCounter = getTriggerCentral()->triggerState.getCrankSynchronizationCounter();
 				mapVvt_MAP_AT_CYCLE_COUNT = revolutionCounter - prevChangeAtCycle;
 				prevChangeAtCycle = revolutionCounter;
@@ -686,7 +686,7 @@ void TriggerCentral::decodeMapCam(efitick_t timestamp, float currentPhase) {
 			}
 
 			mapVvt_MAP_AT_SPECIAL_POINT = map;
-			mapVvt_MAP_AT_DIFF = diff;
+			mapVvt_MAP_AT_DIFF = instantMapDiffBetweenReadoutAngles;
 		}
 
 		mapCamPrevToothAngle = toothAngle360;

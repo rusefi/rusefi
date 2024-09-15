@@ -125,7 +125,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
         }
         comment = comment + variableNameSuffix;
         if (comment.length() > MSQ_LENGTH_LIMIT)
-            throw new IllegalStateException("[" + comment + "] is too long for log files at " + comment.length());
+            throw new IllegalStateException("[" + comment + "] is too long for log files at " + comment.length() + " limit " + MSQ_LENGTH_LIMIT);
 
         if (comment.charAt(0) != '"')
             comment = VariableRegistry.quote(comment);

@@ -6,10 +6,10 @@ struct_no_prefix trigger_central_s
 
 uint32_t vvtCamCounter;Sync: total cams front counter
 
-    float mapVvt_MAP_AT_SPECIAL_POINT;;"", 1, 0, -10000, 10000, 3
-    float mapVvt_MAP_AT_DIFF;;"", 1, 0, -10000, 10000, 3
-    uint8_t mapVvt_MAP_AT_CYCLE_COUNT;;"", 1, 0, -10000, 10000, 3
-    uint8_t mapVvt_map_peak;;"", 1, 0, -10000, 10000, 3
+    float mapVvt_MAP_AT_SPECIAL_POINT;InstantMAP at readout angle;"kPa", 1, 0, -300, 300, 1
+    float mapVvt_MAP_AT_DIFF;InstantMAP delta @ readout angles;"kPa", 1, 0, -300, 300, 1
+    int8_t mapVvt_MAP_AT_CYCLE_COUNT;;"distance", 1, 0, -10, 100, 0
+    uint8_t mapVvt_sync_counter;Instant MAP sync counter;"counter", 1, 0, 0, 10000, 0
 
     float currentEngineDecodedPhase;Sync: Engine Phase;"deg",1, 0, 0, 0, 0, "Sync"
 
