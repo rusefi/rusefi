@@ -1360,10 +1360,10 @@ float getOutputValueByName(const char *name) {
 		case 1637661099:
 			return engine->triggerCentral.mapVvt_MAP_AT_CYCLE_COUNT;
 #endif
-// mapVvt_map_peak
+// mapVvt_sync_counter
 #if EFI_SHAFT_POSITION_INPUT
-		case 845799744:
-			return engine->triggerCentral.mapVvt_map_peak;
+		case 1921134430:
+			return engine->triggerCentral.mapVvt_sync_counter;
 #endif
 // currentEngineDecodedPhase
 #if EFI_SHAFT_POSITION_INPUT

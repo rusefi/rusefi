@@ -259,6 +259,9 @@ Number of cylinder the engine has.
 ### justATempTest
 null
 
+### mapSyncThreshold
+Delta kPa for MAP sync
+
 ### cylinderBore
 @@CYLINDER_BORE_TOOLTIP@@
 
@@ -344,7 +347,7 @@ null
 
 
 ### mapCamDetectionAnglePosition
-
+Magic engine phase: we compare instant MAP at X to instant MAP at x+360 angle in one complete cycle
 
 ### afr.v1
 

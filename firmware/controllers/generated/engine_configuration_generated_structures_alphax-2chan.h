@@ -958,9 +958,15 @@ struct engine_configuration_s {
 	 */
 	uint8_t justATempTest;
 	/**
+	 * Delta kPa for MAP sync
+	 * units: kPa
 	 * offset 442
 	 */
-	uint16_t unused2bytesHere;
+	uint8_t mapSyncThreshold;
+	/**
+	 * offset 443
+	 */
+	uint8_t unusedByteHere;
 	/**
 	 * @@CYLINDER_BORE_TOOLTIP@@
 	 * units: mm
@@ -1194,6 +1200,7 @@ struct engine_configuration_s {
 	 */
 	float adcVcc;
 	/**
+	 * Magic engine phase: we compare instant MAP at X to instant MAP at x+360 angle in one complete cycle
 	 * units: Deg
 	 * offset 548
 	 */
@@ -2865,7 +2872,7 @@ struct engine_configuration_s {
 	bool enableKnockSpectrogram : 1 {};
 	/**
 	offset 1492 bit 31 */
-	bool unusedBit_515_31 : 1 {};
+	bool unusedBit_516_31 : 1 {};
 	/**
 	 * This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.\Should be 100 once tune is better
 	 * units: cycles
@@ -3041,76 +3048,76 @@ struct engine_configuration_s {
 	bool can2ListenMode : 1 {};
 	/**
 	offset 1552 bit 8 */
-	bool unusedBit_551_8 : 1 {};
+	bool unusedBit_552_8 : 1 {};
 	/**
 	offset 1552 bit 9 */
-	bool unusedBit_551_9 : 1 {};
+	bool unusedBit_552_9 : 1 {};
 	/**
 	offset 1552 bit 10 */
-	bool unusedBit_551_10 : 1 {};
+	bool unusedBit_552_10 : 1 {};
 	/**
 	offset 1552 bit 11 */
-	bool unusedBit_551_11 : 1 {};
+	bool unusedBit_552_11 : 1 {};
 	/**
 	offset 1552 bit 12 */
-	bool unusedBit_551_12 : 1 {};
+	bool unusedBit_552_12 : 1 {};
 	/**
 	offset 1552 bit 13 */
-	bool unusedBit_551_13 : 1 {};
+	bool unusedBit_552_13 : 1 {};
 	/**
 	offset 1552 bit 14 */
-	bool unusedBit_551_14 : 1 {};
+	bool unusedBit_552_14 : 1 {};
 	/**
 	offset 1552 bit 15 */
-	bool unusedBit_551_15 : 1 {};
+	bool unusedBit_552_15 : 1 {};
 	/**
 	offset 1552 bit 16 */
-	bool unusedBit_551_16 : 1 {};
+	bool unusedBit_552_16 : 1 {};
 	/**
 	offset 1552 bit 17 */
-	bool unusedBit_551_17 : 1 {};
+	bool unusedBit_552_17 : 1 {};
 	/**
 	offset 1552 bit 18 */
-	bool unusedBit_551_18 : 1 {};
+	bool unusedBit_552_18 : 1 {};
 	/**
 	offset 1552 bit 19 */
-	bool unusedBit_551_19 : 1 {};
+	bool unusedBit_552_19 : 1 {};
 	/**
 	offset 1552 bit 20 */
-	bool unusedBit_551_20 : 1 {};
+	bool unusedBit_552_20 : 1 {};
 	/**
 	offset 1552 bit 21 */
-	bool unusedBit_551_21 : 1 {};
+	bool unusedBit_552_21 : 1 {};
 	/**
 	offset 1552 bit 22 */
-	bool unusedBit_551_22 : 1 {};
+	bool unusedBit_552_22 : 1 {};
 	/**
 	offset 1552 bit 23 */
-	bool unusedBit_551_23 : 1 {};
+	bool unusedBit_552_23 : 1 {};
 	/**
 	offset 1552 bit 24 */
-	bool unusedBit_551_24 : 1 {};
+	bool unusedBit_552_24 : 1 {};
 	/**
 	offset 1552 bit 25 */
-	bool unusedBit_551_25 : 1 {};
+	bool unusedBit_552_25 : 1 {};
 	/**
 	offset 1552 bit 26 */
-	bool unusedBit_551_26 : 1 {};
+	bool unusedBit_552_26 : 1 {};
 	/**
 	offset 1552 bit 27 */
-	bool unusedBit_551_27 : 1 {};
+	bool unusedBit_552_27 : 1 {};
 	/**
 	offset 1552 bit 28 */
-	bool unusedBit_551_28 : 1 {};
+	bool unusedBit_552_28 : 1 {};
 	/**
 	offset 1552 bit 29 */
-	bool unusedBit_551_29 : 1 {};
+	bool unusedBit_552_29 : 1 {};
 	/**
 	offset 1552 bit 30 */
-	bool unusedBit_551_30 : 1 {};
+	bool unusedBit_552_30 : 1 {};
 	/**
 	offset 1552 bit 31 */
-	bool unusedBit_551_31 : 1 {};
+	bool unusedBit_552_31 : 1 {};
 	/**
 	 * offset 1556
 	 */

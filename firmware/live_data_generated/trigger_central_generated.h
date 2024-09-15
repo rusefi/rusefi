@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/trigger/trigger_central.txt Tue May 07 17:41:25 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/trigger/trigger_central.txt
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -17,21 +17,28 @@ struct trigger_central_s {
 	 */
 	uint32_t vvtCamCounter = (uint32_t)0;
 	/**
+	 * InstantMAP at readout angle
+	 * units: kPa
 	 * offset 28
 	 */
 	float mapVvt_MAP_AT_SPECIAL_POINT = (float)0;
 	/**
+	 * InstantMAP delta @ readout angles
+	 * units: kPa
 	 * offset 32
 	 */
 	float mapVvt_MAP_AT_DIFF = (float)0;
 	/**
+	 * units: distance
 	 * offset 36
 	 */
-	uint8_t mapVvt_MAP_AT_CYCLE_COUNT = (uint8_t)0;
+	int8_t mapVvt_MAP_AT_CYCLE_COUNT = (int8_t)0;
 	/**
+	 * Instant MAP sync counter
+	 * units: counter
 	 * offset 37
 	 */
-	uint8_t mapVvt_map_peak = (uint8_t)0;
+	uint8_t mapVvt_sync_counter = (uint8_t)0;
 	/**
 	 * need 4 byte alignment
 	 * units: units
@@ -170,4 +177,4 @@ struct trigger_central_s {
 static_assert(sizeof(trigger_central_s) == 64);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/trigger/trigger_central.txt Tue May 07 17:41:25 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/trigger/trigger_central.txt

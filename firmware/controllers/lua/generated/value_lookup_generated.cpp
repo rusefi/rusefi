@@ -265,6 +265,9 @@ float getConfigValueByName(const char *name) {
 // justATempTest
 		case -48120222:
 			return engineConfiguration->justATempTest;
+// mapSyncThreshold
+		case 1640008461:
+			return engineConfiguration->mapSyncThreshold;
 // cylinderBore
 		case 1425664391:
 			return engineConfiguration->cylinderBore;
@@ -2297,6 +2300,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -48120222:
 	{
 		engineConfiguration->justATempTest = (int)value;
+		return 1;
+	}
+		case 1640008461:
+	{
+		engineConfiguration->mapSyncThreshold = (int)value;
 		return 1;
 	}
 		case 1425664391:

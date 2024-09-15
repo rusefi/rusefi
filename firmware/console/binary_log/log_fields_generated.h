@@ -499,16 +499,16 @@ static const LogField fields[] = {
 	{engine->triggerCentral.vvtCamCounter, "Sync: total cams front counter", "", 0},
 #endif
 #if EFI_SHAFT_POSITION_INPUT
-	{engine->triggerCentral.mapVvt_MAP_AT_SPECIAL_POINT, "mapVvt_MAP_AT_SPECIAL_POINT", "", 3},
+	{engine->triggerCentral.mapVvt_MAP_AT_SPECIAL_POINT, "InstantMAP at readout angle", "kPa", 1},
 #endif
 #if EFI_SHAFT_POSITION_INPUT
-	{engine->triggerCentral.mapVvt_MAP_AT_DIFF, "mapVvt_MAP_AT_DIFF", "", 3},
+	{engine->triggerCentral.mapVvt_MAP_AT_DIFF, "InstantMAP delta @ readout angles", "kPa", 1},
 #endif
 #if EFI_SHAFT_POSITION_INPUT
-	{engine->triggerCentral.mapVvt_MAP_AT_CYCLE_COUNT, "mapVvt_MAP_AT_CYCLE_COUNT", "", 3},
+	{engine->triggerCentral.mapVvt_MAP_AT_CYCLE_COUNT, "mapVvt_MAP_AT_CYCLE_COUNT", "distance", 0},
 #endif
 #if EFI_SHAFT_POSITION_INPUT
-	{engine->triggerCentral.mapVvt_map_peak, "mapVvt_map_peak", "", 3},
+	{engine->triggerCentral.mapVvt_sync_counter, "Instant MAP sync counter", "counter", 0},
 #endif
 #if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.currentEngineDecodedPhase, "Sync: Engine Phase", "deg", 0, "Sync"},

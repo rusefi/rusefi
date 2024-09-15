@@ -17,7 +17,7 @@ public class TriggerCentral {
 	public static final Field MAPVVT_MAP_AT_SPECIAL_POINT = Field.create("MAPVVT_MAP_AT_SPECIAL_POINT", 28, FieldType.FLOAT).setBaseOffset(1268);
 	public static final Field MAPVVT_MAP_AT_DIFF = Field.create("MAPVVT_MAP_AT_DIFF", 32, FieldType.FLOAT).setBaseOffset(1268);
 	public static final Field MAPVVT_MAP_AT_CYCLE_COUNT = Field.create("MAPVVT_MAP_AT_CYCLE_COUNT", 36, FieldType.INT8).setScale(1.0).setBaseOffset(1268);
-	public static final Field MAPVVT_MAP_PEAK = Field.create("MAPVVT_MAP_PEAK", 37, FieldType.INT8).setScale(1.0).setBaseOffset(1268);
+	public static final Field MAPVVT_SYNC_COUNTER = Field.create("MAPVVT_SYNC_COUNTER", 37, FieldType.INT8).setScale(1.0).setBaseOffset(1268);
 	public static final Field ALIGNMENTFILL_AT_38 = Field.create("ALIGNMENTFILL_AT_38", 38, FieldType.INT8).setScale(1.0).setBaseOffset(1268);
 	public static final Field CURRENTENGINEDECODEDPHASE = Field.create("CURRENTENGINEDECODEDPHASE", 40, FieldType.FLOAT).setBaseOffset(1268);
 	public static final Field TRIGGERTOOTHANGLEERROR = Field.create("TRIGGERTOOTHANGLEERROR", 44, FieldType.FLOAT).setBaseOffset(1268);
@@ -37,7 +37,7 @@ public class TriggerCentral {
 	MAPVVT_MAP_AT_SPECIAL_POINT,
 	MAPVVT_MAP_AT_DIFF,
 	MAPVVT_MAP_AT_CYCLE_COUNT,
-	MAPVVT_MAP_PEAK,
+	MAPVVT_SYNC_COUNTER,
 	ALIGNMENTFILL_AT_38,
 	CURRENTENGINEDECODEDPHASE,
 	TRIGGERTOOTHANGLEERROR,
