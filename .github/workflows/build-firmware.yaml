@@ -115,12 +115,12 @@ jobs:
         cp ./firmware/ext/openblt/Host/libopenblt.dylib deliver/
         cp ./misc/libopenblt_jni/build/libopenblt_jni.dylib deliver/
 
-    - uses: actions/upload-artifact@v4
-      with:
-        name: bootcommander-linux
-        path: |
-          ./deliver/libopenblt.dylib
-          ./deliver/libopenblt_jni.dylib
+#    - uses: actions/upload-artifact@v4
+#      with:
+#        name: bootcommander-linux
+#        path: |
+#          ./deliver/libopenblt.dylib
+#          ./deliver/libopenblt_jni.dylib
 
   generate-matrix:
     runs-on: ubuntu-latest
