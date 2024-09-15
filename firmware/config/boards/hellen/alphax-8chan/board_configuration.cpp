@@ -77,13 +77,13 @@ static void setupDefaultSensorInputs() {
 void boardInitHardware() {
 	setHellenEnPin(Gpio::MM176_EN_PIN);
 
-	alphaCrankPPullUp.initPin("a-crank-p", Gpio::MM176_GP16);
-	alphaHall1PullDown.initPin("PD-H2", Gpio::MM176_GP21);
-	alphaHall2PullDown.initPin("PD-H2", Gpio::MM176_GP21);
-	alphaHall3PullDown.initPin("PD-H3", Gpio::MM176_GP22);
-	alphaHall4PullDown.initPin("PD-H4", Gpio::MM176_GP23);
-	alphaHall5PullDown.initPin("PD-H5", Gpio::MM176_GP23);
-	alphaFlexPullDown.initPin("PD-H5", Gpio::MM176_GP23);
+	alphaCrankPPullUp.initPin("Crank-PullUp", Gpio::MM176_GP16);
+	alphaHall1PullDown.initPin("PullDown-Hall1", Gpio::MM176_OUT_IO10);
+	alphaHall2PullDown.initPin("PullDown-Hall2", Gpio::MM176_GP21);
+	alphaHall3PullDown.initPin("PullDown-Hall3", Gpio::MM176_GP22);
+	alphaHall4PullDown.initPin("PullDown-Hall4", Gpio::MM176_GP23);
+	alphaHall5PullDown.initPin("PullDown-Hall5", Gpio::MM176_GP24);
+	alphaFlexPullDown.initPin("PullDown-Flex",   Gpio::MM176_GP25);
 	boardOnConfigurationChange(nullptr);
 }
 
