@@ -363,6 +363,7 @@ pins:
 info:
   title: AlphaX Platinum
   name: AlphaX Platinum
+  # directory see D.yaml
   board_url: https://rusefi.com/s/8chan
   image:
     file: 8chan-A-B.jpg

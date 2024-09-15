@@ -221,6 +221,7 @@ pins:
 
 info:
   title: AlphaX Platinum
+  # directory see D.yaml
   name: AlphaX Platinum
   image:
     file: 34pins-4k.jpg

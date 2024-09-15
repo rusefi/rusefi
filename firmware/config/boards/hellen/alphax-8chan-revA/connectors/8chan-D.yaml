@@ -131,7 +131,7 @@ pins:
 
 info:
   title: AlphaX 8chan
-  directory: hellen/alphax-8chan
+  directory: hellen/alphax-8chan-rev-A
   name: AlphaX 8chan
   image:
     file: 26pins-4k.jpg
