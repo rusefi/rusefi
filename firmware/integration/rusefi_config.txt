@@ -535,7 +535,8 @@ ThermistorConf iat;
 
 	float launchTimingRetard;;"deg", 1, 0, -180, 180, 2
 	int hip9011PrescalerAndSDO;value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into two bit fields;"integer", 1, 0, 0, 32, 0
-	float unusedFloatHere
+uint8_t mapSyncThreshold;Delta kPa for MAP sync;"kPa", 1, 0, 0, 50, 0
+uint16_t unusedAlign
 
 uint16_t autoscale displacement;Engine displacement in litres;"L", 0.001, 0, 0, 65, 3
 
