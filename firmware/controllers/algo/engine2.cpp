@@ -111,13 +111,23 @@ void EngineState::periodicFastCallback() {
 	engine->module<DfcoController>()->update();
 
 	// post-cranking fuel enrichment.
-	// for compatibility reasons, apply only if the factor is greater than unity (only allow adding fuel)
-	if (engineConfiguration->postCrankingFactor > 1.0f) {
-		// use interpolation for correction taper
-		engine->fuelComputer.running.postCrankingFuelCorrection = interpolateClamped(0.0f, engineConfiguration->postCrankingFactor,
-			engineConfiguration->postCrankingDurationSec, 1.0f, engine->fuelComputer.running.timeSinceCrankingInSecs);
+	if (engineConfiguration->postCrankingFuelUseTable) {
+		float postCrankingCorr = interpolate3d(
+				config->postCrankingEnrichTable,
+				config->postCrankingEnrichTempBins, Sensor::getOrZero(SensorType::Clt),
+				config->postCrankingEnrichRuntimeBins, engine->fuelComputer.running.timeSinceCrankingInSecs
+			);
+
+		engine->fuelComputer.running.postCrankingFuelCorrection = clampF(1, postCrankingCorr, 5);
 	} else {
-		engine->fuelComputer.running.postCrankingFuelCorrection = 1.0f;
+		// for compatibility reasons, apply only if the factor is greater than unity (only allow adding fuel)
+		if (engineConfiguration->postCrankingFactor > 1.0f) {
+			// use interpolation for correction taper
+			engine->fuelComputer.running.postCrankingFuelCorrection = interpolateClamped(0.0f, engineConfiguration->postCrankingFactor,
+				engineConfiguration->postCrankingDurationSec, 1.0f, engine->fuelComputer.running.timeSinceCrankingInSecs);
+		} else {
+			engine->fuelComputer.running.postCrankingFuelCorrection = 1.0f;
+		}
 	}
 
 	engine->ignitionState.cltTimingCorrection = getCltTimingCorrection();

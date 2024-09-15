@@ -28,6 +28,9 @@ void setDefaultCranking() {
 
 	engineConfiguration->postCrankingDurationSec = 10;
 
+	copyArray(config->postCrankingEnrichTempBins, { -20, 0, 20, 40, 60, 80, 100, 120 });
+	copyArray(config->postCrankingEnrichRuntimeBins, { 0, 10, 20, 40, 60, 90, 120, 180 });
+
 	setLinearCurve(config->crankingTpsCoef, /*from*/1, /*to*/1, 1);
 	setLinearCurve(config->crankingTpsBins, 0, 100, 1);
 

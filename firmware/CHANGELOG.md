@@ -45,6 +45,7 @@ or
  - Add two more aux linear sensors #476
  - Support wasted spark on odd cylinder count and odd-fire engines. Improves startup and allows running without a cam sensor!
  - Add an option for the DFCO MAP threshold to use a table dependent upon RPM #485 (thank you @alrijleh!)
+ - Ability to use an 8x8 table for after-start fuel multiplier that depends on CLT and engine run time
 
 ### Fixed
  - Improve performance with Lua CAN reception of a high volume of frames
