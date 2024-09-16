@@ -117,6 +117,10 @@ public class BasicStartupFrame {
         // not packed in updateStatus method
         packFrame();
 
+        updatePortToUpdateObfuscatedFirmware(currentHardware);
+    }
+
+    private void updatePortToUpdateObfuscatedFirmware(final AvailableHardware currentHardware) {
         final List<SerialPortScanner.PortResult> portsToUpdateObfuscatedFirmware = currentHardware.getKnownPorts(Set.of(
             SerialPortScanner.SerialPortType.EcuWithOpenblt,
             SerialPortScanner.SerialPortType.OpenBlt
@@ -139,7 +143,6 @@ public class BasicStartupFrame {
                         .collect(Collectors.joining(", "))
                 ));
                 break;
-
             }
         }
     }
