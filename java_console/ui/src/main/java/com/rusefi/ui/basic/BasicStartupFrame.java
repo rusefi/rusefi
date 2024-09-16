@@ -25,6 +25,7 @@ import javax.swing.*;
 import java.awt.Color;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -116,29 +117,24 @@ public class BasicStartupFrame {
         // not packed in updateStatus method
         packFrame();
 
-        final List<SerialPortScanner.PortResult> ecuPorts = currentHardware.getKnownPorts(SerialPortScanner.SerialPortType.EcuWithOpenblt);
-        final List<SerialPortScanner.PortResult> bootloaderPorts = currentHardware.getKnownPorts(SerialPortScanner.SerialPortType.OpenBlt);
+        final List<SerialPortScanner.PortResult> portsToUpdateObfuscatedFirmware = currentHardware.getKnownPorts(Set.of(
+            SerialPortScanner.SerialPortType.EcuWithOpenblt,
+            SerialPortScanner.SerialPortType.OpenBlt
+        ));
 
-        final int availablePortCount = ecuPorts.size() + bootloaderPorts.size();
-        switch (availablePortCount) {
+        switch (portsToUpdateObfuscatedFirmware.size()) {
             case 0: {
                 resetPort("ECU not found");
                 break;
             }
             case 1: {
-                if (!ecuPorts.isEmpty()) {
-                    switchToPort(ecuPorts.get(0));
-                } else if (!bootloaderPorts.isEmpty()) {
-                    switchToPort(bootloaderPorts.get(0));
-                } else {
-                    log.error("Do nothing.");
-                }
+                switchToPort(portsToUpdateObfuscatedFirmware.get(0));
                 break;
             }
             default: {
                 resetPort(String.format(
                     "Multiple ECUs found on: %s",
-                    Stream.concat(ecuPorts.stream(), bootloaderPorts.stream())
+                    portsToUpdateObfuscatedFirmware.stream()
                         .map(portResult -> portResult.port)
                         .collect(Collectors.joining(", "))
                 ));
