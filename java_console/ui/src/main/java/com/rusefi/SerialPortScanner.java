@@ -95,9 +95,17 @@ public enum SerialPortScanner {
         }
     }
 
-    private volatile boolean isRunning = true;
-
     private static final boolean SHOW_SOCKETCAN = FileLog.isLinux();
+
+    private final RecurringStep portsScanner;
+
+    SerialPortScanner() {
+        this.portsScanner = new RecurringStep(
+            () -> findAllAvailablePorts(false),
+            () -> findAllAvailablePorts(true),
+            "Ports Scanner"
+        );
+    }
 
     private final Object lock = new Object();
     @NotNull
@@ -270,25 +278,11 @@ public enum SerialPortScanner {
     }
 
     private void startTimer() {
-        Thread portsScanner = new Thread(() -> {
-            boolean isFirstTime = true;
-            while (isRunning) {
-                findAllAvailablePorts(!isFirstTime);
-                isFirstTime = false;
-                try {
-                    Thread.sleep(300);
-                } catch (InterruptedException e) {
-                    log.error("sleep interrupted", e);
-                }
-            }
-
-        }, "Ports Scanner");
-        portsScanner.setDaemon(true);
         portsScanner.start();
     }
 
     public void stopTimer() {
-        isRunning = false;
+        portsScanner.stop();
     }
 
     public interface Listener {
