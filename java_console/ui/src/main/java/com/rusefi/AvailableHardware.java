@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class AvailableHardware {
@@ -23,8 +24,14 @@ public class AvailableHardware {
     @NotNull
     public List<SerialPortScanner.PortResult> getKnownPorts() {return new ArrayList<>(ports);}
 
+    @NotNull
     public List<SerialPortScanner.PortResult> getKnownPorts(final SerialPortScanner.SerialPortType type) {
         return ports.stream().filter(port -> port.type == type).collect(Collectors.toList());
+    }
+
+    @NotNull
+    public List<SerialPortScanner.PortResult> getKnownPorts(final Set<SerialPortScanner.SerialPortType> typesToReturn) {
+        return ports.stream().filter(port -> typesToReturn.contains(port.type)).collect(Collectors.toList());
     }
 
     public boolean isDfuFound() {
