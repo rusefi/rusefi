@@ -1220,6 +1220,8 @@
 #define PACK_MULT_VSS 100
 #define PACK_PERCENT_BYTE_MULT 100.0
 #define PEDAL_TO_TPS_SIZE 8
+#define pedalSensor_NAME "Accelerator pedal"
+#define pedalToTpsTbl_NAME "ETB pedal target"
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
 #define persistent_config_s_size 22968
 #define pid_s_size 20
@@ -1305,10 +1307,11 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2205203866
+#define SIGNATURE_HASH 3703781389
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
+#define smLaunchControl_NAME "Launch Control"
 #define spi_device_e_auto_enum 0="SPI_NONE",1="SPI_DEVICE_1",2="SPI_DEVICE_2",3="SPI_DEVICE_3",4="SPI_DEVICE_4",5="SPI_DEVICE_5",6="SPI_DEVICE_6"
 #define spi_device_e_SPI_DEVICE_1 1
 #define spi_device_e_SPI_DEVICE_2 2
@@ -1620,6 +1623,7 @@
 #define ts_show_can_bitrate true
 #define ts_show_can_pins false
 #define ts_show_can_wbo true
+#define ts_show_charge_estimation true
 #define ts_show_check_engine true
 #define ts_show_clt_iat_pullup false
 #define ts_show_clutch_down true
@@ -1753,7 +1757,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.09.16.hellen-112-17.2205203866"
+#define TS_SIGNATURE "rusEFI master.2024.09.16.hellen-112-17.3703781389"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
