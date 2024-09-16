@@ -2067,6 +2067,10 @@ end_struct
 #define GAUGE_NAME_TRG_ERR "Trigger Error Counter"
 #define GAUGE_NAME_TRG_GAP "Sync: Trigger Latest Ratio"
 
+#define smLaunchControl_NAME "Launch Control"
+#define pedalToTpsTbl_NAME "ETB pedal target"
+#define pedalSensor_NAME "Accelerator pedal"
+#define ts_show_charge_estimation true
 #define VE_MENU_NAME "VE"
 #define VE_MENU_MAP_NAME "VE 3D view"
 #define CAM_1_MODE_NAME "Cam mode (intake)"
