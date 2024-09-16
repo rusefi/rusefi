@@ -127,9 +127,9 @@ public class BasicStartupFrame {
             }
             case 1: {
                 if (!ecuPorts.isEmpty()) {
-                    switchToPort(ecuPorts.get(0), "Auto Update Firmware");
+                    switchToPort(ecuPorts.get(0));
                 } else if (!bootloaderPorts.isEmpty()) {
-                    switchToPort(bootloaderPorts.get(0), "Blt Update Firmware");
+                    switchToPort(bootloaderPorts.get(0));
                 } else {
                     log.error("Do nothing.");
                 }
@@ -148,11 +148,24 @@ public class BasicStartupFrame {
         }
     }
 
-    private void switchToPort(final SerialPortScanner.PortResult port, final String updateButtonText) {
+    private void switchToPort(final SerialPortScanner.PortResult port) {
         portToUpdateFirmware = Optional.of(port);
         hideStatusMessage();
         updateFirmwareButton.setEnabled(true);
-        updateFirmwareButton.setText(updateButtonText);
+        switch (port.type) {
+            case EcuWithOpenblt: {
+                updateFirmwareButton.setText("Auto Update Firmware");
+                break;
+            }
+            case OpenBlt: {
+                updateFirmwareButton.setText("Blt Update Firmware");
+                break;
+            }
+            default: {
+                log.error(String.format("Unexpected port type: %s", port));
+                break;
+            }
+        }
     }
 
     private void resetPort(final String reason) {
