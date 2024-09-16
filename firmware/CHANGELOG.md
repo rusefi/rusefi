@@ -37,6 +37,7 @@ Release template (copy/paste this for new release):
  - Removed questionable MAP sampling trigger index option
  - boost control load axis range and rename #6840
  - alphaNUseIat calculations are wrong #6907
+ - TPS/PPS Error Detection Threshold visible twice in same dialog #6922
 
 ## August 2024 "Day 898"
 
