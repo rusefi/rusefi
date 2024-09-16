@@ -49,7 +49,7 @@ public class BasicStartupFrame {
     private final StatusAnimation status = new StatusAnimation(this::updateStatus, StartupFrame.SCANNING_PORTS);
     private final JButton updateFirmwareButton = ProgramSelector.createUpdateFirmwareButton();
 
-    private volatile Optional<SerialPortScanner.PortResult> portToUpdateFirmware = Optional.empty();
+    private volatile Optional<SerialPortScanner.PortResult> portToUpdateObfuscatedFirmware = Optional.empty();
 
     public static void main(String[] args) {
         runTool(null);
@@ -124,15 +124,15 @@ public class BasicStartupFrame {
 
         switch (portsToUpdateObfuscatedFirmware.size()) {
             case 0: {
-                resetPort("ECU not found");
+                resetPortToUpdateObfuscatedFirmware("ECU not found");
                 break;
             }
             case 1: {
-                switchToPort(portsToUpdateObfuscatedFirmware.get(0));
+                switchToPortToUpdateObfuscatedFirmware(portsToUpdateObfuscatedFirmware.get(0));
                 break;
             }
             default: {
-                resetPort(String.format(
+                resetPortToUpdateObfuscatedFirmware(String.format(
                     "Multiple ECUs found on: %s",
                     portsToUpdateObfuscatedFirmware.stream()
                         .map(portResult -> portResult.port)
@@ -144,8 +144,8 @@ public class BasicStartupFrame {
         }
     }
 
-    private void switchToPort(final SerialPortScanner.PortResult port) {
-        portToUpdateFirmware = Optional.of(port);
+    private void switchToPortToUpdateObfuscatedFirmware(final SerialPortScanner.PortResult port) {
+        portToUpdateObfuscatedFirmware = Optional.of(port);
         hideStatusMessage();
         updateFirmwareButton.setEnabled(true);
         switch (port.type) {
@@ -164,15 +164,15 @@ public class BasicStartupFrame {
         }
     }
 
-    private void resetPort(final String reason) {
-        portToUpdateFirmware = Optional.empty();
+    private void resetPortToUpdateObfuscatedFirmware(final String reason) {
+        portToUpdateObfuscatedFirmware = Optional.empty();
         updateFirmwareButton.setEnabled(false);
         statusMessage.setText(reason);
     }
 
     private void onUpdateFirmwareButtonClicked() {
         if (isObfusacted) {
-            portToUpdateFirmware.ifPresentOrElse(port -> {
+            portToUpdateObfuscatedFirmware.ifPresentOrElse(port -> {
                     switch (port.type) {
                         case EcuWithOpenblt: {
                             ProgramSelector.executeJob(updateFirmwareButton, ProgramSelector.OPENBLT_AUTO, port);
