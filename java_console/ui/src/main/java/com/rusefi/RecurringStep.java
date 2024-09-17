@@ -2,6 +2,8 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 
+import java.util.concurrent.CountDownLatch;
+
 public class RecurringStep {
     private final static Logging log = Logging.getLogging(RecurringStep.class);
 
@@ -9,6 +11,8 @@ public class RecurringStep {
     private final Runnable stepToRepeat;
     private final String threadName;
     private volatile boolean isStopped = false;
+    private volatile boolean isSuspended = false;
+    private volatile CountDownLatch suspendedCountDownLatch = createSuspendedCountDownLatch();
 
     public RecurringStep(final Runnable initialStep, final Runnable stepToRecur, final String threadName) {
         this.initialStep = initialStep;
@@ -20,11 +24,13 @@ public class RecurringStep {
         final Thread workerThread = new Thread(() -> {
             boolean isFirstTime = true;
             while (!isStopped) {
-                if (isFirstTime) {
-                    initialStep.run();
-                    isFirstTime = false;
-                } else {
-                    stepToRepeat.run();
+                if (!checkSuspended()) {
+                    if (isFirstTime) {
+                        initialStep.run();
+                        isFirstTime = false;
+                    } else {
+                        stepToRepeat.run();
+                    }
                 }
                 try {
                     Thread.sleep(300);
@@ -39,5 +45,28 @@ public class RecurringStep {
 
     public void stop() {
         isStopped = true;
+    }
+
+    synchronized void resume() {
+        isSuspended = false;
+    }
+
+    synchronized CountDownLatch suspend() {
+        if (!isSuspended) {
+            isSuspended = true;
+            suspendedCountDownLatch = createSuspendedCountDownLatch();
+        }
+        return suspendedCountDownLatch;
+    }
+
+    private synchronized boolean checkSuspended() {
+        if (isSuspended) {
+            suspendedCountDownLatch.countDown();
+        }
+        return isSuspended;
+    }
+
+    private static CountDownLatch createSuspendedCountDownLatch() {
+        return new CountDownLatch(1);
     }
 }
