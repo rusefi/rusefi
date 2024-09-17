@@ -73,12 +73,11 @@ public class BasicStartupFrame {
 
                 statusMessage.setForeground(Color.red);
                 panel.add(statusMessage);
-
-                SerialPortScanner.INSTANCE.addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
-                    onHardwareUpdated(currentHardware);
-                }));
             }
             panel.add(updateFirmwareButton);
+            SerialPortScanner.INSTANCE.addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
+                onHardwareUpdated(currentHardware);
+            }));
         } else {
             panel.add(new JLabel("Sorry only works on Windows"));
         }
@@ -118,7 +117,9 @@ public class BasicStartupFrame {
         // not packed in updateStatus method
         packFrame();
 
-        updatePortToUpdateObfuscatedFirmware(currentHardware);
+        if (isObfusacted) {
+            updatePortToUpdateObfuscatedFirmware(currentHardware);
+        }
     }
 
     private void updatePortToUpdateObfuscatedFirmware(final AvailableHardware currentHardware) {
