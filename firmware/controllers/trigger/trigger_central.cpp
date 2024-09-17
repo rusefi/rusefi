@@ -663,7 +663,7 @@ void TriggerCentral::decodeMapCam(efitick_t timestamp, float currentPhase) {
 			float diff = map - mapCamPrevCycleValue;
 			mapCamPrevCycleValue = map;
 
-			if (diff > 0) {
+			if (diff > engineConfiguration->mapSyncThreshold) {
 				mapVvt_map_peak++;
 				int revolutionCounter = getTriggerCentral()->triggerState.getCrankSynchronizationCounter();
 				mapVvt_MAP_AT_CYCLE_COUNT = revolutionCounter - prevChangeAtCycle;
