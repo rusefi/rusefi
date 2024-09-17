@@ -1466,7 +1466,7 @@ engine_configuration_s engineConfiguration;
 	uint16_t[DWELL_CURVE_SIZE] autoscale sparkDwellValues;;"ms", 0.01, 0, 0, 30, 2
 
 	int8_t[CLT_CURVE_SIZE] autoscale cltIdleRpmBins;CLT-based target RPM for automatic idle controller;"C", 2, 0, -40, 200, 0
-	uint8_t[CLT_CURVE_SIZE] autoscale cltIdleRpm;See idleRpmPid;"RPM", 20, 0, 0, 5000, 0
+	uint8_t[CLT_CURVE_SIZE] autoscale cltIdleRpm;Sets the target engine speed that is used for the closed-loop idle air and closed-loop idle timing algorithms.;"RPM", 20, 0, 0, 5000, 0
 	float[CLT_TIMING_CURVE_SIZE] cltTimingBins;CLT-based timing correction;"C", 1, 0, -100, 250, 1
 	float[CLT_TIMING_CURVE_SIZE] cltTimingExtra;;"degree", 1, 0, -400, 400, 0
 
@@ -1551,7 +1551,7 @@ uint16_t[FUEL_RPM_COUNT] injPhaseRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
 uint8_t[TCU_SOLENOID_COUNT x TCU_GEAR_COUNT] tcuSolenoidTable;;"onoff", 1, 0, 0, 1, 0
 
-uint16_t[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] autoscale mapEstimateTable;;"kPa", 0.01, 0, 0, 600, 2
+uint16_t[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] autoscale mapEstimateTable;This table is used as a fallback in case of MAP sensor failure to estimate the MAP value at a given throttle position and engine speed. For example a naturally-aspirated engine's MAP value at 100% TPS should be 100kPa. At 0% TPS and at idle speed this value should be set to the engine's typical idling MAP reading. This table can be populated based on analysis of a log file at different engine speeds and loads.;"kPa", 0.01, 0, 0, 600, 2
 uint16_t[FUEL_LOAD_COUNT] autoscale mapEstimateTpsBins;;"% TPS", {1/@@TPS_2_BYTE_PACKING_MULT@@}, 0, 0, 100, 1
 uint16_t[FUEL_RPM_COUNT] mapEstimateRpmBins;;"RPM", 1, 0, 0, 18000, 0
 
@@ -1585,7 +1585,7 @@ uint8_t[FUEL_RPM_COUNT x FUEL_LOAD_COUNT] autoscale lambdaTable;;"afr", {1/@@PAC
 uint16_t[FUEL_LOAD_COUNT] lambdaLoadBins;;"",	1, 0, 0, 1000, 0
 uint16_t[FUEL_RPM_COUNT] lambdaRpmBins;;"RPM",	  1, 0, 0, 18000, 0
 
-float[TPS_TPS_ACCEL_TABLE x TPS_TPS_ACCEL_TABLE] tpsTpsAccelTable;;"value", 1, 0, 0, 30000, 2
+float[TPS_TPS_ACCEL_TABLE x TPS_TPS_ACCEL_TABLE] tpsTpsAccelTable;When the TPS accel threshold is exceeded, the original TPS value (X axis) is compared to the new larger TPS value (Y axis) to determine the extra fuel added to the pulsewidth in milliseconds. Where the From TPS value is greater than or less than the To TPS value that cell should be 0.;"value", 1, 0, 0, 30000, 2
 float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelFromRpmBins;;"from",	  1, 0, 0, 30000, 2
 float[TPS_TPS_ACCEL_TABLE] tpsTpsAccelToRpmBins;;"to",	  1, 0, 0, 25500, 2
 
@@ -1716,7 +1716,7 @@ uint16_t[ENGINE_NOISE_CURVE_SIZE] knockNoiseRpmBins;;"RPM", 1, 0, 0, 30000, 0
 int8_t[ENGINE_NOISE_CURVE_SIZE] autoscale knockBaseNoise;Knock sensor output knock detection threshold depending on current RPM.;"dB", 0.5, 0, -50, 10, 1
 
 uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValuesBins;;"RPM", 50, 0, 0, 17500, 0
-uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValues;;"multiplier", 0.02, 0, 0, 5, 2
+uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValues;Multiplier applied to the output of the TPS/TPS Acceleration Extra Fuel table. In general, engines may need more acceleration enrichment at lower engine speeds than higher engine speeds. A value of 2.0 multiplies the additional acceleration enrichment pulsewidth by 200%, a value of 1.0 does not modify the output.;"multiplier", 0.02, 0, 0, 5, 2
 
 int8_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpmBins;;"C", 1, 0, -40, 120, 0
 uint16_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpm;;"RPM", 1, 0, 0, 20000, 0
