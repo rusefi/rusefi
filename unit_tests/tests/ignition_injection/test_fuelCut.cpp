@@ -141,7 +141,6 @@ TEST(fuelCut, delay) {
 	engineConfiguration->coastingFuelCutRpmHigh = 1500;
 	engineConfiguration->coastingFuelCutTps = 2;
 	engineConfiguration->coastingFuelCutClt = 30;
-	engineConfiguration->useTableForDfcoMap = false;
 	engineConfiguration->coastingFuelCutMap = 100;
 	// set cranking threshold
 	engineConfiguration->cranking.rpm = 999;
@@ -256,4 +255,62 @@ TEST(fuelCut, mapTable) {
 	Sensor::setMockValue(SensorType::Rpm, 4000);
 	eth.engine.periodicFastCallback();
 	EXPECT_NORMAL();
+}
+// testing the ablity to have clutch input disable fuel cut when configured
+TEST(fuelCut, clutch) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
+		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
+
+	// configure coastingFuelCut
+	engineConfiguration->coastingFuelCutEnabled = true;
+	engineConfiguration->coastingFuelCutRpmLow = 1300;
+	engineConfiguration->coastingFuelCutRpmHigh = 1500;
+	engineConfiguration->coastingFuelCutTps = 2;
+	engineConfiguration->coastingFuelCutClt = 30;
+	engineConfiguration->coastingFuelCutMap = 100;
+	// set cranking threshold
+	engineConfiguration->cranking.rpm = 999;
+
+	// basic engine setup
+	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
+	
+	//all other conditions should allow fuel cut
+	float hotClt = engineConfiguration->coastingFuelCutClt + 1;
+	Sensor::setMockValue(SensorType::Clt, hotClt);
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 0);
+	Sensor::setMockValue(SensorType::Rpm, engineConfiguration->coastingFuelCutRpmHigh + 1);
+	Sensor::setMockValue(SensorType::Map, 0);
+	eth.moveTimeForwardUs(1000);
+
+	const float normalInjDuration = 1.5f;
+	eth.engine.periodicFastCallback();
+
+	// feature disabled, all fuel cut conditions met
+	engineConfiguration->disableFuelCutOnClutch = false;
+	setMockState(engineConfiguration->clutchUpPin, false);
+	engine->updateSwitchInputs();
+	eth.engine.periodicFastCallback();
+	EXPECT_CUT();
+
+	// feature enabled, io not configured, fuelCut should still occur
+	engineConfiguration->disableFuelCutOnClutch = true;
+	setMockState(engineConfiguration->clutchUpPin, false);
+	engine->updateSwitchInputs();
+	eth.engine.periodicFastCallback();
+	EXPECT_CUT();
+
+ 	//configure io, fuelCut should now be inhibited
+	engineConfiguration->clutchUpPin = Gpio::G2;
+	engineConfiguration->clutchUpPinMode = PI_PULLDOWN;
+	setMockState(engineConfiguration->clutchUpPin, false);
+	engine->updateSwitchInputs();
+	eth.engine.periodicFastCallback();
+	EXPECT_NORMAL();
+
+	// release clutch, fuel cut should now happen
+	setMockState(engineConfiguration->clutchUpPin, true);
+	engine->updateSwitchInputs();
+	eth.engine.periodicFastCallback();
+	EXPECT_CUT();
 }

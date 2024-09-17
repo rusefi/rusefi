@@ -109,6 +109,7 @@ static void setDefaultFuelCutParameters() {
 	engineConfiguration->coastingFuelCutTps = 2;
 	engineConfiguration->coastingFuelCutMap = 30;
 	engineConfiguration->coastingFuelCutClt = 60;
+	engineConfiguration->disableFuelCutOnClutch = false;
 
 	copyArray(config->dfcoMapRpmValuesBins, { 1500, 2000, 3500, 5000 });
 	copyArray(config->dfcoMapRpmValues, { 30, 25, 20, 18 });
