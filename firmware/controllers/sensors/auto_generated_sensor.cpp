@@ -48,8 +48,6 @@ case SensorType::BatteryVoltage:
   return "BatteryVoltage";
 case SensorType::Clt:
   return "Clt";
-case SensorType::ClutchUp:
-  return "ClutchUp";
 case SensorType::CompressorDischargePressure:
   return "CompressorDischargePressure";
 case SensorType::CompressorDischargeTemperature:

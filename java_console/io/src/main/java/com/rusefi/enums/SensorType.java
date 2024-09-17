@@ -36,7 +36,6 @@ public enum SensorType {
 	FuelEthanolPercent,
 	BatteryVoltage,
 	BarometricPressure,
-	ClutchUp,
 	FuelLevel,
 	VehicleSpeed,
 	TurbochargerSpeed,
