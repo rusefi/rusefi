@@ -28,7 +28,7 @@ or
 
 # Changelog
 
-## Unreleased
+## September 2024 Release
 
 ### Added
  - Staged injection: a second set of fuel injectors that inject part of the fuel load when you run out of primary injector
