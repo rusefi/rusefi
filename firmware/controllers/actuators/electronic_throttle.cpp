@@ -196,9 +196,6 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 	m_pid.initPidClass(pidParameters);
 	m_pedalProvider = pedalProvider;
 
-	// Ignore 3% position error before complaining
-	m_errorAccumulator.init(3.0f, etbPeriodSeconds);
-
 	reset();
 
 	return true;
@@ -498,15 +495,7 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 	if (m_isAutotune) {
 		return getClosedLoopAutotune(target, observation);
 	} else {
-		// Check that we're not over the error limit
-		etbIntegralError = m_errorAccumulator.accumulate(target - observation);
-
-		// Allow up to 10 percent-seconds of error
-		if (etbIntegralError > 10.0f) {
-			// TODO: figure out how to handle uncalibrated ETB
-			//getLimpManager()->reportEtbProblem();
-		}
-
+		checkJam(target, observation);
 		// Normal case - use PID to compute closed loop part
 		return m_pid.getOutput(target, observation, etbPeriodSeconds);
 	}
@@ -636,23 +625,21 @@ void EtbController::update() {
 	ClosedLoopController::update();
 }
 
-void EtbController::checkOutput(percent_t output) {
+void EtbController::checkJam(percent_t setpoint, percent_t observation) {
+	float absError = std::abs(setpoint - observation);
 
-	prevOutput = output;
+	auto jamDetectThreshold = engineConfiguration->jamDetectThreshold;
 
-#if EFI_UNIT_TEST
-	auto integratorLimit = engineConfiguration->jamDetectThreshold;
-
-	if (integratorLimit != 0) {
-	  float integrator = absF(m_pid.getIntegration());
+	if (jamDetectThreshold != 0) {
 		auto nowNt = getTimeNowNt();
 
-		if (integrator > integratorLimit) {
+		if (absError > jamDetectThreshold) {
 			if (m_jamDetectTimer.hasElapsedSec(engineConfiguration->etbJamTimeout)) {
 				// ETB is jammed!
 				jamDetected = true;
 
 				// TODO: do something about it!
+				// getLimpManager()->reportEtbProblem();
 			}
 		} else {
 			m_jamDetectTimer.reset(nowNt);
@@ -661,8 +648,6 @@ void EtbController::checkOutput(percent_t output) {
 
 		jamTimer = m_jamDetectTimer.getElapsedSeconds(nowNt);
 	}
-#endif // EFI_UNIT_TEST
-
 }
 
 void EtbController::autoCalibrateTps() {
