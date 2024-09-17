@@ -52,6 +52,7 @@ public class ProgramSelector {
     private static final String INSTALL_OPENBLT = "Install OpenBLT";
     private static final String OPENBLT_CAN = "OpenBLT via CAN";
 
+    public static final String UPDATE_CALIBRATIONS = "Update Calibrations";
 
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel noHardware = new JLabel("Nothing detected");
@@ -132,6 +133,13 @@ public class ProgramSelector {
                     case DFU_ERASE:
                         jobName = "DFU erase";
                         job = DfuFlasher::runDfuEraseAsync;
+                        break;
+                    case UPDATE_CALIBRATIONS:
+                        jobName = "Update calibrations";
+                        job = (callbacks) -> CalibrationsUpdater.INSTANCE.updateCalibrations(
+                            selectedPort.port,
+                            callbacks
+                        );
                         break;
                     default:
                         throw new IllegalArgumentException("How did you " + selectedMode);
