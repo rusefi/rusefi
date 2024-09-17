@@ -16,7 +16,7 @@ public class RecurringStep {
         this.threadName = threadName;
     }
 
-    void start() {
+    public void start() {
         final Thread workerThread = new Thread(() -> {
             boolean isFirstTime = true;
             while (!isStopped) {
@@ -37,7 +37,7 @@ public class RecurringStep {
         workerThread.start();
     }
 
-    void stop() {
+    public void stop() {
         isStopped = true;
     }
 }
