@@ -8,7 +8,7 @@ public class RecurringStep {
     private final Runnable initialStep;
     private final Runnable stepToRepeat;
     private final String threadName;
-    private volatile boolean isRunning = true;
+    private volatile boolean isStopped = false;
 
     public RecurringStep(final Runnable initialStep, final Runnable stepToRecur, final String threadName) {
         this.initialStep = initialStep;
@@ -19,7 +19,7 @@ public class RecurringStep {
     void start() {
         final Thread workerThread = new Thread(() -> {
             boolean isFirstTime = true;
-            while (isRunning) {
+            while (!isStopped) {
                 if (isFirstTime) {
                     initialStep.run();
                     isFirstTime = false;
@@ -38,6 +38,6 @@ public class RecurringStep {
     }
 
     void stop() {
-        isRunning = false;
+        isStopped = true;
     }
 }
