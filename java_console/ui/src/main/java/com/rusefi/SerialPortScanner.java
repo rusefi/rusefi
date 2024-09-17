@@ -20,6 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
 /**
@@ -351,5 +352,13 @@ public enum SerialPortScanner {
         } catch (IOException e) {
             return false;
         }
+    }
+
+    public void resume() {
+        portsScanner.resume();
+    }
+
+    public CountDownLatch suspend() {
+        return portsScanner.suspend();
     }
 }
