@@ -71,8 +71,6 @@ enum class SensorType : unsigned char {
 
 	BarometricPressure,
 
-	ClutchUp,
-
 	FuelLevel,
 
 	VehicleSpeed,
