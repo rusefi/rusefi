@@ -653,7 +653,7 @@ void EtbController::checkOutput(percent_t output) {
 	prevOutput = output;
 
 #if EFI_UNIT_TEST
-	auto integratorLimit = engineConfiguration->etbJamIntegratorLimit;
+	auto integratorLimit = engineConfiguration->jamDetectThreshold;
 
 	if (integratorLimit != 0) {
 	  float integrator = absF(m_pid.getIntegration());

@@ -778,7 +778,7 @@ TEST(etb, jamDetection) {
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 0.0f, true);
 
 	// Limit of 5%, 1 second
-	engineConfiguration->etbJamIntegratorLimit = 5;
+	engineConfiguration->jamDetectThreshold = 5;
 	engineConfiguration->etbJamTimeout = 1;
 
 	EtbController etb;

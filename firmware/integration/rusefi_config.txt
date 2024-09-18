@@ -1505,7 +1505,7 @@ tChargeMode_e tChargeMode;
 
 	uint16_t autoscale fordInjectorSmallPulseBreakPoint;;"mg", 0.001, 0, 0, 65, 3
 
-	uint8_t etbJamIntegratorLimit;;"%", 1, 0, 0, 50, 0
+	uint8_t jamDetectThreshold;;"%", 1, 0, 0, 50, 0
 
 ! Someday there will be a 6th option for BMW S55 that uses a separate shaft just for HPFP
 #define hpfp_cam_e_enum "NONE", "Intake 1", "Exhaust 1", "Intake 2", "Exhaust 2"
