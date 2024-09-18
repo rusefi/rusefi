@@ -456,7 +456,7 @@ uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this r
 	Gpio canTxPin
 	Gpio canRxPin
 
-	uint16_t etbExpAverageLength;By the way ETB PID runs at 500hz, length in 1/500 of second here.
+	uint16_t unusedEtbExpAverageLength
 	int8_t launchFuelAdderPercent;;"%", 1, 0, 0, 100, 0
 	uint8_t autoscale etbJamTimeout;Time required to detect a stuck throttle.;"sec", 0.02, 0, 0, 5, 2
 
@@ -1438,7 +1438,7 @@ float tChargeAirDecrLimit;Maximum allowed rate of decrease allowed for the estim
 	pid_s idleTimingPid;See useIdleTimingPidControl
 	float idleTimingSoftEntryTime;When entering idle, and the PID settings are aggressive, it's good to make a soft entry upon entering closed loop;"", 1, 0, 0, 100, 1
 
-	int16_t etbRocExpAverageLength;By the way ETB PID runs at 500hz, length in 1/500 of second here.
+	int16_t unusedEtbRocExpAverageLength
 
 	int16_t tpsAccelFractionPeriod;A delay in cycles between fuel-enrich. portions;"cycles", 1, 0, 0, 500, 0
 	float tpsAccelFractionDivisor;A fraction divisor: 1 or less = entire portion at once, or split into diminishing fractions;"coef", 1, 0, 1, 100, 2

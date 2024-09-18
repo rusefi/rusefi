@@ -35,17 +35,9 @@ TEST(etb, integrated) {
 
 	ASSERT_EQ(engine->outputChannels.etbTarget, 40);
 	ASSERT_NEAR(etb->prevOutput, 120.363, EPS3D);
-	ASSERT_NEAR(etb->etbDutyAverage, 60.1813, EPS3D);
 
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 10, true);
 	etb->update();
-	ASSERT_NEAR(etb->etbDutyAverage, 70.0741, EPS3D);
-	ASSERT_NEAR(etb->etbDutyRateOfChange, 130.2554, EPS3D);
-
-	float destination;
-	int offset = ELECTRONIC_THROTTLE_BASE_ADDRESS + offsetof(electronic_throttle_s, etbDutyRateOfChange);
-	copyRange((uint8_t*)&destination, getLiveDataFragments(), offset, sizeof(destination));
-	ASSERT_NEAR(destination, 130.2554, EPS3D);
 }
 
 extern WarningCodeState unitTestWarningCodeState;

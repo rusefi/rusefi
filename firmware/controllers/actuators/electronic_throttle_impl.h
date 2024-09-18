@@ -14,7 +14,6 @@
 #include "efi_pid.h"
 #include "error_accumulator.h"
 #include "electronic_throttle_generated.h"
-#include "exp_average.h"
 
 /**
  * Hard code ETB update speed.
@@ -105,9 +104,6 @@ private:
 	bool isEtbMode() const override {
 		return m_function == DC_Throttle1 || m_function == DC_Throttle2;
 	}
-
-	ExpAverage m_dutyRocAverage;
-	ExpAverage m_dutyAverage;
 
 	Timer m_jamDetectTimer;
 
