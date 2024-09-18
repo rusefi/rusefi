@@ -35,3 +35,9 @@ MockStepperHardware::~MockStepperHardware() { }
 
 MockTsChannel::MockTsChannel() : TsChannelBase("mock") { }
 MockTsChannel::~MockTsChannel() { }
+
+MockIdleController::MockIdleController() { }
+MockIdleController::~MockIdleController() { }
+
+MockIgnitionController::MockIgnitionController() { }
+MockIgnitionController::~MockIgnitionController() { }

@@ -123,6 +123,10 @@ public:
 };
 
 class MockIdleController : public IIdleController {
+public:
+	MockIdleController();
+	virtual ~MockIdleController();
+
 	MOCK_METHOD(IIdleController::Phase, determinePhase, (int rpm, int targetRpm, SensorResult tps, float vss, float crankingTaperFraction), (override));
 	MOCK_METHOD(int, getTargetRpm, (float clt), (override));
 	MOCK_METHOD(float, getCrankingOpenLoop, (float clt), (const, override));
@@ -132,4 +136,12 @@ class MockIdleController : public IIdleController {
 	MOCK_METHOD(float, getCrankingTaperFraction, (), (const, override));
 	MOCK_METHOD(bool, isIdlingOrTaper, (), (const, override));
 	MOCK_METHOD(float, getIdleTimingAdjustment, (int rpm), (override));
+};
+
+class MockIgnitionController : public IgnitionController {
+public:
+	MockIgnitionController();
+	virtual ~MockIgnitionController();
+
+	MOCK_METHOD(bool, getIgnState, (), (const, override));
 };

@@ -141,7 +141,7 @@ public:
 #endif /* EFI_ALTERNATOR_CONTROL */
 		FuelPumpController,
 		MainRelayController,
-		IgnitionController,
+		Mockable<IgnitionController>,
 		Mockable<AcController>,
 		FanControl1,
 		FanControl2,
