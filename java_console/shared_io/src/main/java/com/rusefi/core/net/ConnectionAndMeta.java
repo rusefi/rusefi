@@ -50,11 +50,11 @@ public class ConnectionAndMeta {
                 String jarPath = jarUrl.getPath();
                 String jarFileName = jarPath.substring(jarPath.lastIndexOf('/') + 1);
                 int startOfSuffix = jarFileName.lastIndexOf('_');
-                if (startOfSuffix > 0) {
-	                String jarFilePrefix = jarFileName.substring(0, startOfSuffix);
-                    log.info("jarFilePrefix = " + jarFilePrefix);
-	                return jarFilePrefix;
-	            }
+                if (startOfSuffix == -1)
+                    throw new IllegalStateException("Unexpected jar file name: " + jarFileName);
+                String jarFilePrefix = jarFileName.substring(0, startOfSuffix);
+                log.info("jarFilePrefix = " + jarFilePrefix);
+                return jarFilePrefix;
             }
         } catch (Exception e) {
             log.error("Unexpected " + e, e);
