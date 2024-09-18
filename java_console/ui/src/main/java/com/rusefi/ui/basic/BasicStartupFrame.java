@@ -11,7 +11,6 @@ import com.rusefi.StartupFrame;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.core.FindFileHelper;
 import com.rusefi.core.net.ConnectionAndMeta;
-import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.maintenance.*;
@@ -23,7 +22,6 @@ import com.rusefi.ui.widgets.ToolButtons;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -44,7 +42,6 @@ import static com.rusefi.FileLog.isWindows;
 public class BasicStartupFrame {
     private static final Logging log = getLogging(BasicStartupFrame.class);
 
-    private static final String BINARY_IMAGE_DEFAULT_DIRECTORY_PROPERTY_NAME = "binary_image_default_directory";
 
     private final String whiteLabel = ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties());
     private final FrameHelper frame = FrameHelper.createFrame(
@@ -59,7 +56,7 @@ public class BasicStartupFrame {
         "Update Calibrations",
         AutoupdateUtil.loadIcon("writeconfig48.png")
     );
-    private final JFileChooser calibrationsFileChooser = createConfigurationImageFileChooser();
+    private final UpdateCalibrations updateCalibrations = new UpdateCalibrations();
 
     private volatile Optional<SerialPortScanner.PortResult> portToUpdateObfuscatedFirmware = Optional.empty();
     private volatile Optional<SerialPortScanner.PortResult> portToUpdateCalibrations = Optional.empty();
@@ -70,7 +67,7 @@ public class BasicStartupFrame {
 
     public static void runTool(String[] args) {
         DefaultExceptionHandler.install();
-        new BasicStartupFrame().runTool();
+        new BasicStartupFrame();
     }
 
     public BasicStartupFrame() {
@@ -260,34 +257,7 @@ public class BasicStartupFrame {
     private void onUpdateCalibrationsButtonClicked(final ActionEvent actionEvent) {
         portToUpdateCalibrations.ifPresentOrElse(
             port -> {
-                final int selectedOption = calibrationsFileChooser.showOpenDialog(updateCalibrationsButton);
-                if (selectedOption == JFileChooser.APPROVE_OPTION) {
-                    final File selectedFile = calibrationsFileChooser.getSelectedFile();
-                    saveBinaryImageDefaultDirectory(selectedFile.getParent());
-                    try {
-                        final ConfigurationImage calibrationsImage = ConfigurationImageFile.readFromFile(
-                            selectedFile.getAbsolutePath()
-                        );
-                        CalibrationsUpdater.INSTANCE.setCalibrationsToUpload(calibrationsImage);
-                        ProgramSelector.executeJob(
-                            updateCalibrationsButton,
-                            ProgramSelector.UPDATE_CALIBRATIONS,
-                            port
-                        );
-                    } catch (final IOException e) {
-                        final String errorMsg = String.format(
-                            "Failed to load calibrations from file %s",
-                            selectedFile.getAbsolutePath()
-                        );
-                        log.error(errorMsg, e);
-                        JOptionPane.showMessageDialog(
-                            updateCalibrationsButton,
-                            errorMsg,
-                            "Error",
-                            JOptionPane.ERROR_MESSAGE
-                        );
-                    }
-                }
+                updateCalibrations.updateCalibrationsAction(port, updateCalibrationsButton);
             }, () -> {
                 JOptionPane.showMessageDialog(
                     updateCalibrationsButton,
@@ -297,36 +267,5 @@ public class BasicStartupFrame {
                 );
             }
         );
-    }
-
-    private void saveBinaryImageDefaultDirectory(final String path) {
-        PersistentConfiguration.getConfig().getRoot().setProperty(
-            BINARY_IMAGE_DEFAULT_DIRECTORY_PROPERTY_NAME,
-            path
-        );
-        PersistentConfiguration.getConfig().save();
-    }
-
-    private String loadBinaryImageDefaultDirectory() {
-        return PersistentConfiguration.getConfig().getRoot().getProperty(
-            BINARY_IMAGE_DEFAULT_DIRECTORY_PROPERTY_NAME,
-            ""
-        );
-    }
-
-    private void runTool() {
-    }
-
-    private JFileChooser createConfigurationImageFileChooser() {
-        final JFileChooser fc = new JFileChooser();
-        fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fc.setFileFilter(new FileNameExtensionFilter("Binary image files (.binary_image)", "binary_image"));
-
-        final String currentDirectory = loadBinaryImageDefaultDirectory();
-        if (currentDirectory != null) {
-            fc.setCurrentDirectory(new File(currentDirectory));
-        }
-
-        return fc;
     }
 }
