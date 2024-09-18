@@ -1827,13 +1827,15 @@ uint16_t[FUEL_LOAD_COUNT x FUEL_RPM_COUNT] autoscale mapEstimateTable;;"kPa", 0.
 uint16_t[FUEL_LOAD_COUNT] autoscale mapEstimateTpsBins;;"% TPS", {1/@@TPS_2_BYTE_PACKING_MULT@@}, 0, 0, 100, 1
 uint16_t[FUEL_RPM_COUNT] mapEstimateRpmBins;;"RPM", 1, 0, 0, 18000, 0
 
-int8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] vvtTable1;;"value", 1, 0, -125, 125, 0
-uint16_t[SCRIPT_TABLE_8] vvtTable1LoadBins;;"L", 1, 0, 0, 1000, 0
-uint16_t[SCRIPT_TABLE_8] vvtTable1RpmBins;;"RPM", 1, 0, 0, 18000, 0
+#define VVT_TABLE_SIZE 8
 
-int8_t[SCRIPT_TABLE_8 x SCRIPT_TABLE_8] vvtTable2;;"value", 1, 0, -125, 125, 0
-uint16_t[SCRIPT_TABLE_8] vvtTable2LoadBins;;"L", 1, 0, 0, 1000, 0
-uint16_t[SCRIPT_TABLE_8] vvtTable2RpmBins;;"RPM", 1, 0, 0, 18000, 0
+int8_t[VVT_TABLE_SIZE x VVT_TABLE_SIZE] vvtTable1;;"value", 1, 0, -125, 125, 0
+uint16_t[VVT_TABLE_SIZE] vvtTable1LoadBins;;"L", 1, 0, 0, 1000, 0
+uint16_t[VVT_TABLE_SIZE] vvtTable1RpmBins;;"RPM", 1, 0, 0, 18000, 0
+
+int8_t[VVT_TABLE_SIZE x VVT_TABLE_SIZE] vvtTable2;;"value", 1, 0, -125, 125, 0
+uint16_t[VVT_TABLE_SIZE] vvtTable2LoadBins;;"L", 1, 0, 0, 1000, 0
+uint16_t[VVT_TABLE_SIZE] vvtTable2RpmBins;;"RPM", 1, 0, 0, 18000, 0
 
 int16_t[IGN_LOAD_COUNT x IGN_RPM_COUNT] autoscale ignitionTable;;"deg", 0.1, 0, -20, 90, 1
 uint16_t[IGN_LOAD_COUNT] ignitionLoadBins;;"Load", 1, 0, 0, 1000, 0
