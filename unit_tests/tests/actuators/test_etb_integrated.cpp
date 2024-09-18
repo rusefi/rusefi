@@ -34,7 +34,6 @@ TEST(etb, integrated) {
 	etb->update();
 
 	ASSERT_EQ(engine->outputChannels.etbTarget, 40);
-	ASSERT_NEAR(etb->prevOutput, 120.363, EPS3D);
 
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 10, true);
 	etb->update();

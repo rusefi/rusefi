@@ -639,13 +639,7 @@ void EtbController::update() {
 		return;
 	}
 
-	auto output = ClosedLoopController::update();
-
-	if (!output) {
-		return;
-	}
-
-	checkOutput(output.Value);
+	ClosedLoopController::update();
 }
 
 void EtbController::checkOutput(percent_t output) {
