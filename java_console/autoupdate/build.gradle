@@ -10,9 +10,7 @@ configurations {
 
 dependencies {
     api global_libs.javaxJson
-    api project(':logging-api')
     api project(':core_ui')
-    api project(':core_io')
 
     api global_libs.jcip
     api global_libs.json
