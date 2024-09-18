@@ -9,11 +9,9 @@
 template <typename TInput, typename TOutput>
 class ClosedLoopController {
 public:
-	expected<TOutput> update() {
+	void update() {
 		expected<TOutput> outputValue = getOutput();
 		setOutput(outputValue);
-
-		return outputValue;
 	}
 
 private:
