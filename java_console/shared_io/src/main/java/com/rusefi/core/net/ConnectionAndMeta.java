@@ -42,37 +42,15 @@ public class ConnectionAndMeta {
         return result;
     }
 
-    public static String getJarFileNamePrefix() {
-        CodeSource codeSource = ConnectionAndMeta.class.getProtectionDomain().getCodeSource();
-        if (codeSource == null)
-            throw new IllegalStateException("No codeSource");
-//        try {
-            String jarFileName = getJarFileName(codeSource);
-            int startOfSuffix = jarFileName.lastIndexOf('_');
-            if (startOfSuffix == -1)
-                throw new IllegalStateException("Unexpected jar file name: " + jarFileName);
-            String jarFilePrefix = jarFileName.substring(0, startOfSuffix);
-            log.info("jarFilePrefix = " + jarFilePrefix);
-            return jarFilePrefix;
-//        } catch (NullPointerException e) {
-//            log.error("Unexpected " + e, e);
-//        }
-//        return "rusefi";
-    }
-
-    private static @NotNull String getJarFileName(CodeSource codeSource) {
-        URL jarUrl = codeSource.getLocation();
-        String jarPath = jarUrl.getPath();
-        String jarFileName = jarPath.substring(jarPath.lastIndexOf('/') + 1);
-        return jarFileName;
-    }
-
     public static String getWhiteLabel(Properties properties) {
         return getStringProperty(properties, "white_label", DEFAULT_WHITE_LABEL);
     }
 
     public static String getRusEfiConsoleJarName() {
-        return getStringProperty(getProperties(), "console_jar", getJarFileNamePrefix() + "_console.jar");
+        String defaultValue = JarFileUtil.getJarFileNamePrefix() + "_console.jar";
+        // why would we need this configurable? if we need it for development under IDE it should probably be done differently?
+        //return getStringProperty(getProperties(), "console_jar", defaultValue);
+        return defaultValue;
     }
 
     private static @NotNull String getStringProperty(Properties properties, String key, String defaultValue) {
