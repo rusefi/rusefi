@@ -5049,32 +5049,32 @@ struct persistent_config_s {
 	 * units: value
 	 * offset 21364
 	 */
-	int8_t vvtTable1[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
+	int8_t vvtTable1[VVT_TABLE_SIZE][VVT_TABLE_SIZE];
 	/**
 	 * units: L
 	 * offset 21428
 	 */
-	uint16_t vvtTable1LoadBins[SCRIPT_TABLE_8];
+	uint16_t vvtTable1LoadBins[VVT_TABLE_SIZE];
 	/**
 	 * units: RPM
 	 * offset 21444
 	 */
-	uint16_t vvtTable1RpmBins[SCRIPT_TABLE_8];
+	uint16_t vvtTable1RpmBins[VVT_TABLE_SIZE];
 	/**
 	 * units: value
 	 * offset 21460
 	 */
-	int8_t vvtTable2[SCRIPT_TABLE_8][SCRIPT_TABLE_8];
+	int8_t vvtTable2[VVT_TABLE_SIZE][VVT_TABLE_SIZE];
 	/**
 	 * units: L
 	 * offset 21524
 	 */
-	uint16_t vvtTable2LoadBins[SCRIPT_TABLE_8];
+	uint16_t vvtTable2LoadBins[VVT_TABLE_SIZE];
 	/**
 	 * units: RPM
 	 * offset 21540
 	 */
-	uint16_t vvtTable2RpmBins[SCRIPT_TABLE_8];
+	uint16_t vvtTable2RpmBins[VVT_TABLE_SIZE];
 	/**
 	 * units: deg
 	 * offset 21556
