@@ -115,7 +115,9 @@ public:
 	 */
 	bool pauseCANdueToSerial = false;
 
+#if EFI_ELECTRONIC_THROTTLE_BODY
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
+#endif // EFI_ELECTRONIC_THROTTLE_BODY
 
 #if EFI_ENGINE_CONTROL
 	FuelComputer fuelComputer;
@@ -261,8 +263,10 @@ public:
 	scheduling_s tdcScheduler[2];
 #endif /* EFI_ENGINE_CONTROL */
 
+#if EFI_ELECTRONIC_THROTTLE_BODY
     // todo: move to electronic_throttle something?
 	bool etbAutoTune = false;
+#endif // EFI_ELECTRONIC_THROTTLE_BODY
 
 #if EFI_UNIT_TEST
 	bool tdcMarkEnabled = true;

@@ -380,8 +380,8 @@ static void enableOrDisable(const char *param, bool isEnabled) {
 		engineConfiguration->displayLogicLevelsInEngineSniffer = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "can_broadcast")) {
 		engineConfiguration->enableVerboseCanTx = isEnabled;
-	} else if (strEqualCaseInsensitive(param, "etb_auto")) {
-		engine->etbAutoTune = isEnabled;
+//	} else if (strEqualCaseInsensitive(param, "etb_auto")) {
+//		engine->etbAutoTune = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "verboseKLine")) {
 		engineConfiguration->verboseKLine = isEnabled;
 	} else if (strEqualCaseInsensitive(param, "stepperidle")) {

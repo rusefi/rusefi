@@ -481,29 +481,23 @@ static void handleCommandX14(uint16_t index) {
 		#endif // EFI_ELECTRONIC_THROTTLE_BODY
 		return;
 */
+#if EFI_ELECTRONIC_THROTTLE_BODY
 	case TS_ETB_AUTOCAL_0:
-		#if EFI_ELECTRONIC_THROTTLE_BODY == TRUE
 			etbAutocal(0);
-		#endif /* EFI_ELECTRONIC_THROTTLE_BODY == TRUE */
 		return;
 	case TS_ETB_AUTOCAL_1:
-		#if EFI_ELECTRONIC_THROTTLE_BODY == TRUE
 			etbAutocal(1);
-		#endif /* EFI_ELECTRONIC_THROTTLE_BODY == TRUE */
 		return;
 	case TS_ETB_START_AUTOTUNE:
-		#if EFI_ELECTRONIC_THROTTLE_BODY == TRUE
 			engine->etbAutoTune = true;
-		#endif /* EFI_ELECTRONIC_THROTTLE_BODY == TRUE */
 		return;
 	case TS_ETB_STOP_AUTOTUNE:
-		#if EFI_ELECTRONIC_THROTTLE_BODY == TRUE
 			engine->etbAutoTune = false;
 			#if EFI_TUNER_STUDIO
 				engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::None;
 			#endif // EFI_TUNER_STUDIO
-		#endif /* EFI_ELECTRONIC_THROTTLE_BODY == TRUE */
 		return;
+#endif // EFI_ELECTRONIC_THROTTLE_BODY
 	case TS_WIDEBAND_UPDATE:
 		widebandUpdatePending = true;
 		benchSemaphore.signal();
