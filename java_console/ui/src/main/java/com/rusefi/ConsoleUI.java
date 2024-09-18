@@ -15,7 +15,6 @@ import com.rusefi.ui.console.MainFrame;
 import com.rusefi.ui.console.TabbedPanel;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.knock.KnockPane;
-import com.rusefi.ui.logview.LogViewer;
 import com.rusefi.ui.lua.LuaScriptPanel;
 import com.rusefi.ui.util.DefaultExceptionHandler;
 import com.rusefi.ui.util.JustOneInstance;
@@ -95,8 +94,9 @@ public class ConsoleUI {
         if (!LinkManager.isLogViewerMode(port))
             engineSnifferPanel.setOutpinListener(uiContext.getLinkManager().getEngineState());
 
-        if (LinkManager.isLogViewerMode(port))
-            tabbedPane.addTab("Log Viewer", new LogViewer(uiContext, engineSnifferPanel));
+        // what is LogViewer? is this all dead?
+//        if (LinkManager.isLogViewerMode(port))
+//            tabbedPane.addTab("Log Viewer", new LogViewer(uiContext, engineSnifferPanel));
 
         uiContext.DetachedRepositoryINSTANCE.init(getConfig().getRoot().getChild("detached"));
         uiContext.DetachedRepositoryINSTANCE.load();
@@ -209,7 +209,6 @@ public class ConsoleUI {
     }
 
     static void startUi(String[] args) throws InterruptedException, InvocationTargetException {
-        FileLog.MAIN.start();
         if (ConnectionAndMeta.saveReadmeHtmlToFile()) {
             new Thread(ConsoleUI::writeReadmeFile).start();
         }
@@ -218,7 +217,7 @@ public class ConsoleUI {
         log.info("OS version: " + System.getProperty(FileLog.OS_VERSION));
 
         getConfig().load();
-        FileLog.suspendLogging = getConfig().getRoot().getBoolProperty(GaugesPanel.DISABLE_LOGS);
+        AutotestLogging.suspendLogging = getConfig().getRoot().getBoolProperty(GaugesPanel.DISABLE_LOGS);
         DefaultExceptionHandler.install();
 // not very useful?        VersionChecker.start();
         SwingUtilities.invokeAndWait(() -> awtCode(args));

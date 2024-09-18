@@ -1,10 +1,12 @@
 package com.rusefi.sensor_logs;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.FileLog;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.Timeouts;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tools.online.UploadResult;
 import com.rusefi.ui.AuthTokenPanel;
@@ -17,7 +19,10 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 public class BinarySensorLogRestarter implements SensorLog {
+    private static final Logging log = getLogging(BinarySensorLogRestarter.class);
     private final static Executor UPLOAD_EXECUTOR = Executors.newSingleThreadExecutor(new NamedThreadFactory("BinarySensorLogRestarter"));
 
     private BinarySensorLog logger;
@@ -64,7 +69,7 @@ public class BinarySensorLogRestarter implements SensorLog {
     }
 
     private void scheduleUpload(String fileName) {
-        FileLog.MAIN.logLine("Will upload " + fileName);
+        log.error("Will upload " + fileName);
         UPLOAD_EXECUTOR.execute(new Runnable() {
             @Override
             public void run() {

@@ -135,7 +135,6 @@ public class AnyCommand {
                 return rawCommand;
             }
         } catch (Throwable e) {
-            FileLog.MAIN.log(e);
             return rawCommand;
         }
     }

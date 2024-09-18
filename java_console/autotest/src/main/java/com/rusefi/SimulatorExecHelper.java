@@ -36,14 +36,14 @@ public class SimulatorExecHelper {
      */
     private static void runSimulator(CountDownLatch simulatorStarted) {
         Thread.currentThread().setName("Main simulation");
-        FileLog.MAIN.logLine("runSimulator...");
+        AutotestLogging.INSTANCE.logLine("runSimulator...");
 
         try {
-            FileLog.MAIN.logLine("Binary size: " + new File(SIMULATOR_BINARY).length());
+            AutotestLogging.INSTANCE.logLine("Binary size: " + new File(SIMULATOR_BINARY).length());
 
-            FileLog.MAIN.logLine("Executing " + SIMULATOR_BINARY);
+            AutotestLogging.INSTANCE.logLine("Executing " + SIMULATOR_BINARY);
             simulatorProcess = Runtime.getRuntime().exec(SIMULATOR_BINARY);
-            FileLog.MAIN.logLine("simulatorProcess: " + simulatorProcess);
+            AutotestLogging.INSTANCE.logLine("simulatorProcess: " + simulatorProcess);
 
             dumpProcessOutput(simulatorProcess, simulatorStarted);
         } catch (Exception err) {
@@ -55,7 +55,7 @@ public class SimulatorExecHelper {
         }
 
         try {
-            FileLog.MAIN.logLine("exitValue: " + simulatorProcess.exitValue());
+            AutotestLogging.INSTANCE.logLine("exitValue: " + simulatorProcess.exitValue());
         } catch (Exception err) {
             log.warn("Error reading exit value", err);
         }
@@ -99,7 +99,7 @@ public class SimulatorExecHelper {
                 String prefix = "ERROR from console: ";
                 Consumer<String> PRINT_AND_LOG = string -> {
                     System.out.println(prefix + string);
-                    FileLog.SIMULATOR_CONSOLE.logLine(string);
+                    log.info(string);
                 };
 
                 readAndPrint(PRINT_AND_LOG, err);
@@ -111,7 +111,7 @@ public class SimulatorExecHelper {
 
     static void destroy() {
         if (simulatorProcess != null) {
-            FileLog.MAIN.logLine("Destroying sub-process...");
+            log.info("Destroying sub-process...");
             simulatorProcess.destroy();
         }
     }
@@ -119,7 +119,7 @@ public class SimulatorExecHelper {
     public static void startSimulator() throws InterruptedException {
         if (!new File(SIMULATOR_BINARY).exists())
             throw new IllegalStateException(SIMULATOR_BINARY + " not found");
-        FileLog.MAIN.logLine("startSimulator...");
+        AutotestLogging.INSTANCE.logLine("startSimulator...");
         CountDownLatch simulatorStarted = new CountDownLatch(1);
         new Thread(() -> runSimulator(simulatorStarted), "simulator process").start();
         simulatorStarted.await(1, TimeUnit.MINUTES);

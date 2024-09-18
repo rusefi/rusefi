@@ -1,5 +1,6 @@
 package com.rusefi.maintenance;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.FileLog;
 import com.rusefi.io.UpdateOperationCallbacks;
 
@@ -9,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 /**
  * This code automates drivers unpacking and installation
  * new, DFU Virtual Comport and ST-Link drivers are installed
@@ -16,6 +19,7 @@ import java.io.FileNotFoundException;
  * See https://github.com/rusefi/rusefi/tree/master/misc/install_st
  */
 public class DriverInstall {
+    private static final Logging log = getLogging(DriverInstall.class);
     private static final String FOLDER = "../drivers";
     private static final String SELF_UNCOMPRESSING_ARCHIVE = "silent_st_drivers2.exe";
     private static final String YES = " -y";
@@ -44,11 +48,11 @@ public class DriverInstall {
     }
 
     private static void installDrivers(UpdateOperationCallbacks wnd) {
-        FileLog.MAIN.logLine("IsWindows=" + FileLog.isWindows());
+        log.info("IsWindows=" + FileLog.isWindows());
         if (!new File(FOLDER).exists()) {
             String message = FOLDER + " not found";
             wnd.appendLine(message);
-            FileLog.MAIN.logLine(message);
+            log.info(message);
             return;
         }
       try {

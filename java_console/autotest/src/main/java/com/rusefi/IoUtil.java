@@ -118,7 +118,7 @@ public class IoUtil {
         if (!haveResponse)
             throw new IllegalStateException("No response from simulator");
         listener.remove();
-        FileLog.MAIN.logLine("Got first signal in " + (System.currentTimeMillis() - waitStart) + "ms");
+        AutotestLogging.INSTANCE.logLine("Got first signal in " + (System.currentTimeMillis() - waitStart) + "ms");
     }
 
     public static void connectToSimulator(LinkManager linkManager, boolean startProcess) throws InterruptedException {
@@ -159,7 +159,7 @@ public class IoUtil {
 
     @SuppressWarnings("UnusedDeclaration")
     public static void sleepSeconds(int seconds) {
-        FileLog.MAIN.logLine("Sleeping " + seconds + " seconds");
+        AutotestLogging.INSTANCE.logLine("Sleeping " + seconds + " seconds");
         try {
             Thread.sleep(seconds * 1000L);
         } catch (InterruptedException e) {

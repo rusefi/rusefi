@@ -1,7 +1,6 @@
 package com.rusefi;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.EngineState;
 import com.rusefi.functional_tests.EcuTestHelper;
@@ -108,14 +107,14 @@ public class TestingUtils {
     public static EngineChart nextChart(CommandQueue commandQueue) {
         long start = System.currentTimeMillis();
         EngineChart chart = EngineChartParser.unpackToMap(getNextWaveChart(commandQueue));
-        FileLog.MAIN.logLine("AUTOTEST nextChart() in " + (System.currentTimeMillis() - start));
+        AutotestLogging.INSTANCE.logLine("AUTOTEST nextChart() in " + (System.currentTimeMillis() - start));
         return chart;
     }
 
     static String getNextWaveChart(CommandQueue commandQueue) {
         IoUtil.sendBlockingCommand(Integration.CMD_RESET_ENGINE_SNIFFER, commandQueue);
         String result = getEngineChart(commandQueue);
-        FileLog.MAIN.logLine("current chart: " + result);
+        AutotestLogging.INSTANCE.logLine("current chart: " + result);
         return result;
     }
 
@@ -130,7 +129,7 @@ public class TestingUtils {
 
         final AtomicReference<String> result = new AtomicReference<>();
 
-        FileLog.MAIN.logLine("waiting for next chart");
+        AutotestLogging.INSTANCE.logLine("waiting for next chart");
         commandQueue.getLinkManager().getEngineState().replaceStringValueAction(Integration.PROTOCOL_ENGINE_SNIFFER, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {

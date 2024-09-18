@@ -1,7 +1,9 @@
 package com.rusefi;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.TcpConnector;
+import com.rusefi.ui.logview.LogViewer;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -11,12 +13,14 @@ import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ThreadFactory;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.ui.util.UiUtils.setToolTip;
 
 public class SimulatorHelper {
     private final static ThreadFactory THREAD_FACTORY = new NamedThreadFactory("SimulatorHelper");
     public static final String BINARY = "rusefi_simulator.exe";
     private static Process process;
+    private static final Logging log = getLogging(SimulatorHelper.class);
 
     public static boolean isBinaryHere() {
         return new File(BINARY).exists();
@@ -29,14 +33,13 @@ public class SimulatorHelper {
     private static void startSimulator() {
         LinkManager.isSimulationMode = true;
 
-        FileLog.MAIN.logLine("Executing simulator " + BINARY);
+        log.info("Executing simulator " + BINARY);
         THREAD_FACTORY.newThread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    FileLog.SIMULATOR_CONSOLE.start();
                     process = Runtime.getRuntime().exec(BINARY);
-                    FileLog.MAIN.logLine("Executing simulator " + BINARY + "=" + process);
+                    log.info("Executing simulator " + BINARY + "=" + process);
                     SimulatorExecHelper.dumpProcessOutput(process, new CountDownLatch(1));
                 } catch (IOException e) {
                     throw new IllegalStateException(e);
@@ -57,7 +60,7 @@ public class SimulatorHelper {
         }
         if (!isPortOpened)
             throw new IllegalStateException("Port not opened?");
-        FileLog.MAIN.logLine("Port " + TcpConnector.DEFAULT_PORT + " is alive");
+        log.info("Port " + TcpConnector.DEFAULT_PORT + " is alive");
 
         new ConsoleUI("" + TcpConnector.DEFAULT_PORT);
     }

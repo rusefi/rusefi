@@ -1,11 +1,13 @@
 package com.rusefi.ui.logview;
 
 import com.devexperts.logging.FileLogger;
+import com.devexperts.logging.Logging;
 import com.rusefi.ConsoleUI;
 import com.rusefi.FileLog;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.core.EngineState;
 import com.rusefi.file.FileUtils;
+import com.rusefi.sensor_logs.BinarySensorLogRestarter;
 import com.rusefi.ui.ChartRepository;
 import com.rusefi.ui.LogDownloader;
 import com.rusefi.ui.UIContext;
@@ -22,7 +24,10 @@ import java.io.File;
 import java.io.FileFilter;
 import java.util.Arrays;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 /**
+ * TODO: what is LogViewer? is this all dead?
  * This tab is the entry point of rusEfi own log browser
  * <p/>
  * <p/>
@@ -37,6 +42,7 @@ public class LogViewer extends JPanel {
             return pathname.getName().contains("MAIN_rfi_report");
         }
     };
+    private static final Logging log = getLogging(LogViewer.class);
     public static final String DEFAULT_LOG_LOCATION = FileLogger.DIR;
     private final JLabel folderLabel = new JLabel();
     private final JLabel fileLabel = new JLabel();
@@ -128,14 +134,6 @@ public class LogViewer extends JPanel {
 
         while (files.length > index && uiContext.getLinkManager().isLogViewer()) {
             File file = files[index];
-            if (file.getName().endsWith(FileLog.currentLogName)) {
-                /**
-                 * we do not want to view the log file we've just started to produce.
-                 * We are here if the logs are newer then our current time - remember about fime zone differences
-                 */
-                index++;
-                continue;
-            }
             openFile(file);
             break;
         }
@@ -185,7 +183,7 @@ public class LogViewer extends JPanel {
         engineState.registerStringValueAction(Fields.PROTOCOL_ENGINE_SNIFFER, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
-                FileLog.MAIN.logLine("Got wave_chart: " + value);
+                log.info("Got wave_chart: " + value);
 
                 ChartRepository.getInstance().addChart(value);
             }

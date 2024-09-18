@@ -48,7 +48,7 @@ public class VersionChecker {
                 try {
                     instance.readAndProcess();
                 } catch (IOException e) {
-                    FileLog.MAIN.logLine("Failed to read from " + VERSIONS_URL + e);
+                    log.error("Failed to read from " + VERSIONS_URL + e);
                 }
             }
         }, "version checker");
@@ -131,7 +131,7 @@ public class VersionChecker {
         try {
             version = Integer.parseInt(tokens[1]);
         } catch (NumberFormatException e) {
-            FileLog.MAIN.logLine("Error processing version [" + firmwareString + "]");
+            log.error("Error processing version [" + firmwareString + "]");
             return;
         }
         if (version == previousReportedVersion) {

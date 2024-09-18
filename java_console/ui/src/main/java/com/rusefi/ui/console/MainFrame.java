@@ -51,7 +51,6 @@ public class MainFrame {
              * here we would close the log file
              */
             log.info("onWindowClosed");
-            FileLog.MAIN.close();
         }
     };
 

@@ -1,6 +1,6 @@
 package com.rusefi.autotest;
 
-import com.rusefi.FileLog;
+import com.rusefi.AutotestLogging;
 import com.rusefi.IoUtil;
 import com.rusefi.TestingUtils;
 import com.rusefi.autodetect.PortDetector;
@@ -34,7 +34,7 @@ public class ControllerConnectorState {
          * test exact numbers yet
          */
         TestingUtils.isRealHardware = true;
-        FileLog.MAIN.start();
+        AutotestLogging.INSTANCE.start();
 
         String port = System.getenv("HARDWARE_CI_SERIAL_DEVICE");
         if (port == null) {

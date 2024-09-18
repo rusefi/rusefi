@@ -27,8 +27,7 @@ public class SimulatorFunctionalTestLauncher {
 //        }
 
         long start = System.currentTimeMillis();
-        FileLog.SIMULATOR_CONSOLE.start();
-        FileLog.MAIN.start();
+        AutotestLogging.INSTANCE.start();
 
         boolean failed = false;
         try {
@@ -45,11 +44,11 @@ public class SimulatorFunctionalTestLauncher {
         if (failed)
             System.exit(-1);
         isHappy = true;
-        FileLog.MAIN.logLine("*******************************************************************************");
-        FileLog.MAIN.logLine("**** SimulatorFunctionalTestLauncher  Looks good! *****************************");
-        FileLog.MAIN.logLine("*******************************************************************************");
+        AutotestLogging.INSTANCE.logLine("*******************************************************************************");
+        AutotestLogging.INSTANCE.logLine("**** SimulatorFunctionalTestLauncher  Looks good! *****************************");
+        AutotestLogging.INSTANCE.logLine("*******************************************************************************");
         long time = (System.currentTimeMillis() - start) / 1000;
-        FileLog.MAIN.logLine("Done in " + time + "secs");
+        AutotestLogging.INSTANCE.logLine("Done in " + time + "secs");
         System.exit(0); // this is a safer method eliminating the issue of non-daemon threads
     }
 
