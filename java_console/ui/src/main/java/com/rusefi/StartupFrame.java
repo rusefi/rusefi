@@ -200,7 +200,6 @@ public class StartupFrame {
         if (BundleUtil.readBundleFullNameNotNull().contains("proteus_f7")) {
             String text = "WARNING: Proteus F7";
             URLLabel urlLabel = new URLLabel(text, "https://github.com/rusefi/rusefi/wiki/F7-requires-full-erase");
-            Color originalColor = urlLabel.getForeground();
             new Timer(500, new ActionListener() {
                 int counter;
                 @Override
