@@ -10,13 +10,11 @@ import javax.swing.*;
 import java.awt.*;
 
 public class LogoHelper {
-    public static final String LOGO_PATH = "/com/rusefi/";
     public static final String LINK_TEXT = "rusEFI (c) 2012-2024";
-    private static final String LOGO = LOGO_PATH + "logo.png";
     public static final String URI = "http://rusefi.com/?java_console";
 
     public static JLabel createLogoLabel() {
-        ImageIcon logoIcon = getBundleIcon();
+        ImageIcon logoIcon = getBundleSpecificIcon();
         if (logoIcon == null)
             return null;
         JLabel logo = new JLabel(logoIcon);
@@ -27,20 +25,20 @@ public class LogoHelper {
     }
 
     @Nullable
-    public static ImageIcon getBundleIcon() {
+    public static ImageIcon getBundleSpecificIcon() {
         String bundle = BundleUtil.readBundleFullNameNotNull();
         String logoName;
         // these should be about 213px wide
         if (bundle.contains("proteus")) {
-            logoName = LOGO_PATH + "logo_proteus.png";
+            logoName = BasicLogoHelper.LOGO_PATH + "logo_proteus.png";
 //        } else if (bundle.contains("honda")) {
 //            logoName = LOGO_PATH + "logo_tutomo.png";
         } else if (bundle.contains("alphax")) {
-            logoName = LOGO_PATH + "logo_alphax.png";
+            logoName = BasicLogoHelper.LOGO_PATH + "logo_alphax.png";
         } else if (bundle.contains(".mre")) {
-            logoName = LOGO_PATH + "logo_mre.png";
+            logoName = BasicLogoHelper.LOGO_PATH + "logo_mre.png";
         } else {
-            logoName = LOGO;
+            logoName = BasicLogoHelper.GENERIC_LOGO;
         }
         return AutoupdateUtil.loadIcon(logoName);
     }

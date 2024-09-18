@@ -8,12 +8,12 @@ import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.*;
+import com.rusefi.ui.BasicLogoHelper;
 import com.rusefi.ui.LogoHelper;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.ToolButtons;
-import com.rusefi.util.IoUtils;
 import net.miginfocom.swing.MigLayout;
 import org.jetbrains.annotations.NotNull;
 import org.putgemin.VerticalFlowLayout;
@@ -278,9 +278,8 @@ public class StartupFrame {
     }
 
     public static void setFrameIcon(Frame frame) {
-        ImageIcon icon = LogoHelper.getBundleIcon();
-        if (icon != null)
-            frame.setIconImage(icon.getImage());
+        ImageIcon icon = LogoHelper.getBundleSpecificIcon();
+        BasicLogoHelper.setFrameIcon(frame, icon);
     }
 
     private void connectButtonAction(JComboBox<String> comboSpeeds) {

@@ -2,8 +2,6 @@ package com.rusefi.ui.basic;
 
 import com.devexperts.logging.Logging;
 
-import com.opensr5.ConfigurationImage;
-import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.AvailableHardware;
 import com.rusefi.Launcher;
 import com.rusefi.SerialPortScanner;
@@ -14,6 +12,7 @@ import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.maintenance.*;
+import com.rusefi.ui.BasicLogoHelper;
 import com.rusefi.ui.LogoHelper;
 import com.rusefi.ui.util.DefaultExceptionHandler;
 import com.rusefi.ui.util.HorizontalLine;
@@ -25,8 +24,6 @@ import javax.swing.*;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -102,6 +99,7 @@ public class BasicStartupFrame {
         updateCalibrationsButton.setEnabled(false);
         panel.add(updateCalibrationsButton);
 
+        BasicLogoHelper.setGenericFrameIcon(frame.getFrame());
         frame.showFrame(panel, false);
         UiUtils.centerWindow(frame.getFrame());
         packFrame();
