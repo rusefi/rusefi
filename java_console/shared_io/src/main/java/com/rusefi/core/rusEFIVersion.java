@@ -15,6 +15,10 @@ public interface rusEFIVersion {
 
     static long classBuildTimeMillis() {
         Class<?> clazz = rusEFIVersion.class;
+        return classBuildTimeMillis(clazz);
+    }
+
+    static long classBuildTimeMillis(Class<?> clazz) {
         URL resource = clazz.getResource(clazz.getSimpleName() + ".class");
         if (resource == null) {
             throw new IllegalStateException("Failed to find class file for class: " +

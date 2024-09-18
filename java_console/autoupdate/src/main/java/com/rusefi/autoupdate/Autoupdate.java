@@ -7,6 +7,7 @@ import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.FileUtil;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
+import com.rusefi.core.rusEFIVersion;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.FrameHelper;
 import org.jetbrains.annotations.NotNull;
@@ -33,7 +34,7 @@ import static com.rusefi.core.FindFileHelper.findSrecFile;
 
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
-    private static final int AUTOUPDATE_VERSION = 20240830; // separate from rusEFIVersion#CONSOLE_VERSION
+    private static final int AUTOUPDATE_VERSION = 20240918; // separate from rusEFIVersion#CONSOLE_VERSION
 
     private static final String LOGO_PATH = "/com/rusefi/";
     private static final String LOGO = LOGO_PATH + "logo.png";
@@ -54,6 +55,8 @@ public class Autoupdate {
     public static void main(String[] args) {
         try {
             FileLogger.init();
+            log.info("Version " + AUTOUPDATE_VERSION);
+            log.info("Compiled " + new Date(rusEFIVersion.classBuildTimeMillis(Autoupdate.class)));
             autoupdate(args);
         } catch (Throwable e) {
             log.error("Autoupdate Error", e);
