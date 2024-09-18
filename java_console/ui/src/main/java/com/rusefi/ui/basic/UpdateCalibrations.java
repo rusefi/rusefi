@@ -53,7 +53,7 @@ public class UpdateCalibrations {
         }
     }
 
-    static JFileChooser createConfigurationImageFileChooser() {
+    private static JFileChooser createConfigurationImageFileChooser() {
         final JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fc.setFileFilter(new FileNameExtensionFilter("Binary image files (.binary_image)", "binary_image"));
@@ -66,7 +66,7 @@ public class UpdateCalibrations {
         return fc;
     }
 
-    static void saveBinaryImageDefaultDirectory(final String path) {
+    private static void saveBinaryImageDefaultDirectory(final String path) {
         PersistentConfiguration.getConfig().getRoot().setProperty(
             BINARY_IMAGE_DEFAULT_DIRECTORY_PROPERTY_NAME,
             path
