@@ -26,22 +26,6 @@ public class AutoupdateUtil {
         return result;
     }
 
-    static class ProgressView {
-        private final FrameHelper frameHelper;
-        private final JProgressBar progressBar;
-
-        ProgressView(FrameHelper frameHelper, JProgressBar progressBar) {
-            this.frameHelper = frameHelper;
-            this.progressBar = progressBar;
-        }
-
-        public void dispose() {
-            if (frameHelper != null) {
-                frameHelper.getFrame().dispose();
-            }
-        }
-    }
-
     private static ProgressView createProgressView(String title) {
         if (runHeadless) {
             return new ProgressView(null, null);
@@ -63,17 +47,18 @@ public class AutoupdateUtil {
         try {
             ConnectionAndMeta.DownloadProgressListener listener = currentProgress -> {
                 if (!runHeadless) {
-                    SwingUtilities.invokeLater(() -> view.progressBar.setValue(currentProgress));
+                    SwingUtilities.invokeLater(() -> view.getProgressBar().setValue(currentProgress));
                 }
             };
 
             ConnectionAndMeta.downloadFile(localZipFileName, connectionAndMeta, listener);
         } catch (IOException e) {
-            if (view.progressBar!=null) {
-                JOptionPane.showMessageDialog(view.progressBar, "Error downloading: " + e, "Error", JOptionPane.ERROR_MESSAGE);
+            if (view.getProgressBar() != null) {
+                JOptionPane.showMessageDialog(view.getProgressBar(), "Error downloading: " + e, "Error", JOptionPane.ERROR_MESSAGE);
                 throw new ReportedIOException(e);
-            } else
+            } else {
                 throw e;
+            }
         } finally {
             view.dispose();
         }
