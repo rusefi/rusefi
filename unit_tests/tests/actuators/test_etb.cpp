@@ -763,6 +763,13 @@ TEST(etb, closedLoopPid) {
 TEST(etb, jamDetection) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
+	MockIgnitionController ignController;
+
+	EXPECT_CALL(ignController, getIgnState).WillRepeatedly(Return(true));
+
+	// This only works when the ignition is on!
+	engine->module<IgnitionController>().set(&ignController);
+
 	// Must have TPS & PPS initialized for ETB setup
 	Sensor::setMockValue(SensorType::Tps1Primary, 0);
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);

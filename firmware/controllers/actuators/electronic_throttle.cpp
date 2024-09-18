@@ -496,6 +496,7 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 		return getClosedLoopAutotune(target, observation);
 	} else {
 		checkJam(target, observation);
+
 		// Normal case - use PID to compute closed loop part
 		return m_pid.getOutput(target, observation, etbPeriodSeconds);
 	}
@@ -633,13 +634,12 @@ void EtbController::checkJam(percent_t setpoint, percent_t observation) {
 	if (jamDetectThreshold != 0) {
 		auto nowNt = getTimeNowNt();
 
-		if (absError > jamDetectThreshold) {
+		if (absError > jamDetectThreshold && engine->module<IgnitionController>()->getIgnState()) {
 			if (m_jamDetectTimer.hasElapsedSec(engineConfiguration->etbJamTimeout)) {
 				// ETB is jammed!
 				jamDetected = true;
 
-				// TODO: do something about it!
-				// getLimpManager()->reportEtbProblem();
+				getLimpManager()->reportEtbProblem();
 			}
 		} else {
 			m_jamDetectTimer.reset(nowNt);

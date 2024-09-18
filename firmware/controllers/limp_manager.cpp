@@ -252,12 +252,10 @@ void LimpManager::onIgnitionStateChanged(bool ignitionOn) {
 	m_ignitionOn = ignitionOn;
 }
 
-/*
 void LimpManager::reportEtbProblem() {
 	m_allowEtb.clear(ClearReason::EtbProblem);
-	setFaultRevLimit(/ * rpm*//*1500);
+	setFaultRevLimit(/*rpm*/1500);
 }
-*/
 
 void LimpManager::fatalError() {
 	m_allowEtb.clear(ClearReason::Fatal);

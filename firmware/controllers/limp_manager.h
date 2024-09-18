@@ -108,7 +108,7 @@ public:
 	float getLimitingFuelCorrection() const;
 
 	// Other subsystems call these APIs to indicate a problem has occurred
-//	void reportEtbProblem();
+	void reportEtbProblem();
 	void fatalError();
 	Timer externalGdiCanBusComms;
 
