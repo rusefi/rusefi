@@ -188,15 +188,13 @@ public class ElectronicThrottle {
 	public static final Field ETBCURRENTADJUSTEDTARGET = Field.create("ETBCURRENTADJUSTEDTARGET", 28, FieldType.FLOAT).setBaseOffset(1596);
 	public static final Field ETBREVLIMITACTIVE = Field.create("ETBREVLIMITACTIVE", 32, FieldType.BIT, 0).setBaseOffset(1596);
 	public static final Field JAMDETECTED = Field.create("JAMDETECTED", 32, FieldType.BIT, 1).setBaseOffset(1596);
-	public static final Field ETBDUTYRATEOFCHANGE = Field.create("ETBDUTYRATEOFCHANGE", 36, FieldType.FLOAT).setBaseOffset(1596);
-	public static final Field ETBDUTYAVERAGE = Field.create("ETBDUTYAVERAGE", 40, FieldType.FLOAT).setBaseOffset(1596);
-	public static final Field ETBTPSERRORCOUNTER = Field.create("ETBTPSERRORCOUNTER", 44, FieldType.INT16).setScale(1.0).setBaseOffset(1596);
-	public static final Field ETBPPSERRORCOUNTER = Field.create("ETBPPSERRORCOUNTER", 46, FieldType.INT16).setScale(1.0).setBaseOffset(1596);
-	public static final Field ETBERRORCODE = Field.create("ETBERRORCODE", 48, FieldType.INT8).setScale(1.0).setBaseOffset(1596);
-	public static final Field TCETBDROP = Field.create("TCETBDROP", 49, FieldType.INT8).setScale(1.0).setBaseOffset(1596);
-	public static final Field JAMTIMER = Field.create("JAMTIMER", 50, FieldType.INT16).setScale(0.01).setBaseOffset(1596);
-	public static final Field ADJUSTEDETBTARGET = Field.create("ADJUSTEDETBTARGET", 52, FieldType.INT8).setScale(1.0).setBaseOffset(1596);
-	public static final Field ALIGNMENTFILL_AT_53 = Field.create("ALIGNMENTFILL_AT_53", 53, FieldType.INT8).setScale(1.0).setBaseOffset(1596);
+	public static final Field ETBTPSERRORCOUNTER = Field.create("ETBTPSERRORCOUNTER", 36, FieldType.INT16).setScale(1.0).setBaseOffset(1596);
+	public static final Field ETBPPSERRORCOUNTER = Field.create("ETBPPSERRORCOUNTER", 38, FieldType.INT16).setScale(1.0).setBaseOffset(1596);
+	public static final Field ETBERRORCODE = Field.create("ETBERRORCODE", 40, FieldType.INT8).setScale(1.0).setBaseOffset(1596);
+	public static final Field TCETBDROP = Field.create("TCETBDROP", 41, FieldType.INT8).setScale(1.0).setBaseOffset(1596);
+	public static final Field JAMTIMER = Field.create("JAMTIMER", 42, FieldType.INT16).setScale(0.01).setBaseOffset(1596);
+	public static final Field ADJUSTEDETBTARGET = Field.create("ADJUSTEDETBTARGET", 44, FieldType.INT8).setScale(1.0).setBaseOffset(1596);
+	public static final Field ALIGNMENTFILL_AT_45 = Field.create("ALIGNMENTFILL_AT_45", 45, FieldType.INT8).setScale(1.0).setBaseOffset(1596);
 	public static final Field[] VALUES = {
 	TARGETWITHIDLEPOSITION,
 	TRIM,
@@ -208,14 +206,12 @@ public class ElectronicThrottle {
 	ETBCURRENTADJUSTEDTARGET,
 	ETBREVLIMITACTIVE,
 	JAMDETECTED,
-	ETBDUTYRATEOFCHANGE,
-	ETBDUTYAVERAGE,
 	ETBTPSERRORCOUNTER,
 	ETBPPSERRORCOUNTER,
 	ETBERRORCODE,
 	TCETBDROP,
 	JAMTIMER,
 	ADJUSTEDETBTARGET,
-	ALIGNMENTFILL_AT_53,
+	ALIGNMENTFILL_AT_45,
 	};
 }

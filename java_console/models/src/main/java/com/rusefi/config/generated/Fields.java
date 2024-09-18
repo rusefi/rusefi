@@ -1483,11 +1483,11 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.09.18.f407-discovery.3044239668";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.09.18.f407-discovery.4288156007";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1764;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1748;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_2_NAME = "Channel 2";
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;
@@ -1578,7 +1578,6 @@ public class Fields {
 	public static final Field SDCARDCSPIN = Field.create("SDCARDCSPIN", 30, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field CANTXPIN = Field.create("CANTXPIN", 32, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field CANRXPIN = Field.create("CANRXPIN", 34, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
-	public static final Field ETBEXPAVERAGELENGTH = Field.create("ETBEXPAVERAGELENGTH", 36, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field LAUNCHFUELADDERPERCENT = Field.create("LAUNCHFUELADDERPERCENT", 38, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBJAMTIMEOUT = Field.create("ETBJAMTIMEOUT", 39, FieldType.INT8).setScale(0.02).setBaseOffset(0);
 	public static final Field TACHOUTPUTPIN = Field.create("TACHOUTPUTPIN", 40, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
@@ -2516,7 +2515,6 @@ public class Fields {
 	public static final Field IDLETIMINGPID_MINVALUE = Field.create("IDLETIMINGPID_MINVALUE", 2376, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field IDLETIMINGPID_MAXVALUE = Field.create("IDLETIMINGPID_MAXVALUE", 2378, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field IDLETIMINGSOFTENTRYTIME = Field.create("IDLETIMINGSOFTENTRYTIME", 2380, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field ETBROCEXPAVERAGELENGTH = Field.create("ETBROCEXPAVERAGELENGTH", 2384, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSACCELFRACTIONPERIOD = Field.create("TPSACCELFRACTIONPERIOD", 2386, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSACCELFRACTIONDIVISOR = Field.create("TPSACCELFRACTIONDIVISOR", 2388, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field TLE8888SPIDEVICE = Field.create("TLE8888SPIDEVICE", 2392, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -2658,7 +2656,7 @@ public class Fields {
 	public static final String[] tChargeMode_e = {"RPM+TPS (Default)", "Air Mass Interpolation", "Table"};
 	public static final Field TCHARGEMODE = Field.create("TCHARGEMODE", 3059, FieldType.INT8, tChargeMode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field FORDINJECTORSMALLPULSEBREAKPOINT = Field.create("FORDINJECTORSMALLPULSEBREAKPOINT", 3060, FieldType.INT16).setScale(0.001).setBaseOffset(0);
-	public static final Field ETBJAMINTEGRATORLIMIT = Field.create("ETBJAMINTEGRATORLIMIT", 3062, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field JAMDETECTTHRESHOLD = Field.create("JAMDETECTTHRESHOLD", 3062, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field HPFPCAMLOBES = Field.create("HPFPCAMLOBES", 3063, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final String[] hpfp_cam_e = {"NONE", "Intake 1", "Exhaust 1", "Intake 2", "Exhaust 2"};
 	public static final Field HPFPCAM = Field.create("HPFPCAM", 3064, FieldType.INT8, hpfp_cam_e).setScale(1.0).setBaseOffset(0);
@@ -3286,7 +3284,6 @@ public class Fields {
 	SDCARDCSPIN,
 	CANTXPIN,
 	CANRXPIN,
-	ETBEXPAVERAGELENGTH,
 	LAUNCHFUELADDERPERCENT,
 	ETBJAMTIMEOUT,
 	TACHOUTPUTPIN,
@@ -4203,7 +4200,6 @@ public class Fields {
 	IDLETIMINGPID_MINVALUE,
 	IDLETIMINGPID_MAXVALUE,
 	IDLETIMINGSOFTENTRYTIME,
-	ETBROCEXPAVERAGELENGTH,
 	TPSACCELFRACTIONPERIOD,
 	TPSACCELFRACTIONDIVISOR,
 	TLE8888SPIDEVICE,
@@ -4344,7 +4340,7 @@ public class Fields {
 	ACDELAY,
 	TCHARGEMODE,
 	FORDINJECTORSMALLPULSEBREAKPOINT,
-	ETBJAMINTEGRATORLIMIT,
+	JAMDETECTTHRESHOLD,
 	HPFPCAMLOBES,
 	HPFPCAM,
 	ACLOWRPMLIMIT,

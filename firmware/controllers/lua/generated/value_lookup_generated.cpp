@@ -46,9 +46,6 @@ float getConfigValueByName(const char *name) {
 // idlePositionMax
 		case -1256791970:
 			return engineConfiguration->idlePositionMax;
-// etbExpAverageLength
-		case -86185846:
-			return engineConfiguration->etbExpAverageLength;
 // launchFuelAdderPercent
 		case -904771683:
 			return engineConfiguration->launchFuelAdderPercent;
@@ -1465,9 +1462,6 @@ float getConfigValueByName(const char *name) {
 // idleTimingSoftEntryTime
 		case 1881137064:
 			return engineConfiguration->idleTimingSoftEntryTime;
-// etbRocExpAverageLength
-		case 481957934:
-			return engineConfiguration->etbRocExpAverageLength;
 // tpsAccelFractionPeriod
 		case 1117566701:
 			return engineConfiguration->tpsAccelFractionPeriod;
@@ -1543,9 +1537,9 @@ float getConfigValueByName(const char *name) {
 // fordInjectorSmallPulseBreakPoint
 		case -1032938305:
 			return engineConfiguration->fordInjectorSmallPulseBreakPoint;
-// etbJamIntegratorLimit
-		case -929987018:
-			return engineConfiguration->etbJamIntegratorLimit;
+// jamDetectThreshold
+		case -1602450685:
+			return engineConfiguration->jamDetectThreshold;
 // hpfpCamLobes
 		case -1256141959:
 			return engineConfiguration->hpfpCamLobes;
@@ -1935,11 +1929,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1256791970:
 	{
 		engineConfiguration->idlePositionMax = (int)value;
-		return 1;
-	}
-		case -86185846:
-	{
-		engineConfiguration->etbExpAverageLength = (int)value;
 		return 1;
 	}
 		case -904771683:
@@ -4302,11 +4291,6 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->idleTimingSoftEntryTime = value;
 		return 1;
 	}
-		case 481957934:
-	{
-		engineConfiguration->etbRocExpAverageLength = (int)value;
-		return 1;
-	}
 		case 1117566701:
 	{
 		engineConfiguration->tpsAccelFractionPeriod = (int)value;
@@ -4432,9 +4416,9 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->fordInjectorSmallPulseBreakPoint = (int)value;
 		return 1;
 	}
-		case -929987018:
+		case -1602450685:
 	{
-		engineConfiguration->etbJamIntegratorLimit = (int)value;
+		engineConfiguration->jamDetectThreshold = (int)value;
 		return 1;
 	}
 		case -1256141959:

@@ -672,10 +672,9 @@ struct engine_configuration_s {
 	 */
 	Gpio canRxPin;
 	/**
-	 * By the way ETB PID runs at 500hz, length in 1/500 of second here.
 	 * offset 36
 	 */
-	uint16_t etbExpAverageLength;
+	uint16_t unusedEtbExpAverageLength;
 	/**
 	 * units: %
 	 * offset 38
@@ -3644,10 +3643,9 @@ struct engine_configuration_s {
 	 */
 	float idleTimingSoftEntryTime;
 	/**
-	 * By the way ETB PID runs at 500hz, length in 1/500 of second here.
 	 * offset 2400
 	 */
-	int16_t etbRocExpAverageLength;
+	int16_t unusedEtbRocExpAverageLength;
 	/**
 	 * A delay in cycles between fuel-enrich. portions
 	 * units: cycles
@@ -3878,7 +3876,7 @@ struct engine_configuration_s {
 	 * units: %
 	 * offset 3078
 	 */
-	uint8_t etbJamIntegratorLimit;
+	uint8_t jamDetectThreshold;
 	/**
 	 * units: lobes/cam
 	 * offset 3079

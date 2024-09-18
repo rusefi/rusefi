@@ -40,9 +40,6 @@ Voltage when the idle valve is closed.\nYou probably don't have one of these!
 ### idlePositionMax
 Voltage when the idle valve is open.\nYou probably don't have one of these!\n1 volt = 1000 units
 
-### etbExpAverageLength
-By the way ETB PID runs at 500hz, length in 1/500 of second here.
-
 ### launchFuelAdderPercent
 
 
@@ -1459,9 +1456,6 @@ Output Max Duty Cycle
 ### idleTimingSoftEntryTime
 When entering idle, and the PID settings are aggressive, it's good to make a soft entry upon entering closed loop
 
-### etbRocExpAverageLength
-By the way ETB PID runs at 500hz, length in 1/500 of second here.
-
 ### tpsAccelFractionPeriod
 A delay in cycles between fuel-enrich. portions
 
@@ -1537,7 +1531,7 @@ Delay before engaging the AC compressor. Set to 0 to engage immediately with no 
 ### fordInjectorSmallPulseBreakPoint
 
 
-### etbJamIntegratorLimit
+### jamDetectThreshold
 
 
 ### hpfpCamLobes
