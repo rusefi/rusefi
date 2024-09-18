@@ -153,6 +153,8 @@
     engineConfiguration->etb.iFactor = 70.2307;
     // default 0.05
     engineConfiguration->etb.dFactor = 0.1855;
+    // default 1.0
+    engineConfiguration->etbJamTimeout = 0;
 
 
 	coupleBK2cannedtpsTspCorrValuesBins();

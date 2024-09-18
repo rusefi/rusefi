@@ -121,6 +121,8 @@
     engineConfiguration->debugMode = DBG_27;
     // default 200.0
     engineConfiguration->afterCrankingIACtaperDuration = 100;
+    // default 1.0
+    engineConfiguration->etbJamTimeout = 0;
     // default "Launch Button"
     engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
     // default "NONE"

@@ -155,6 +155,8 @@
     engineConfiguration->etb.iFactor = 94.99006;
     // default 0.05
     engineConfiguration->etb.dFactor = 0.0892407;
+    // default 1.0
+    engineConfiguration->etbJamTimeout = 0;
 
 
 	coupleBK1cannedprimeBins();

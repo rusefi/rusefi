@@ -225,6 +225,8 @@
     engineConfiguration->disableEtbWhenEngineStopped = true;
     // default 100.0
     engineConfiguration->etbMaximumPosition = 90;
+    // default 1.0
+    engineConfiguration->etbJamTimeout = 0;
     // default 3000.0
     engineConfiguration->launchRpm = 3800;
     // default "false"

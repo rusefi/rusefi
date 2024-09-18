@@ -55,6 +55,8 @@
     engineConfiguration->boostControlMinTps = 0;
     // default 110.0
     engineConfiguration->boostControlMinMap = 0;
+    // default 1.0
+    engineConfiguration->etbJamTimeout = 0;
 
 
 	coupleBK2cannedtpsTspCorrValuesBins();

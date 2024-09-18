@@ -85,6 +85,8 @@
     engineConfiguration->etbFunctions[0] = DC_None;
     // default "Throttle 2"
     engineConfiguration->etbFunctions[1] = DC_None;
+    // default 1.0
+    engineConfiguration->etbJamTimeout = 0;
     // default 250.0
     engineConfiguration->gppwm[0].pwmFrequency = 0;
     // default 60.0

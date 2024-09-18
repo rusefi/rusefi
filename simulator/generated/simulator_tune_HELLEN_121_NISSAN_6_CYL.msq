@@ -21,9 +21,9 @@
         <constant name="sdCardCsPin">"NONE"</constant>
         <constant name="canTxPin">"NONE"</constant>
         <constant name="canRxPin">"NONE"</constant>
-        <constant digits="0" name="etbExpAverageLength" units="">50.0</constant>
+        <constant digits="0" name="unusedEtbExpAverageLength" units="">0.0</constant>
         <constant digits="0" name="launchFuelAdderPercent" units="%">0.0</constant>
-        <constant digits="2" name="etbJamTimeout" units="sec">0.0</constant>
+        <constant digits="2" name="etbJamTimeout" units="sec">1.0</constant>
         <constant name="tachOutputPin">"NONE"</constant>
         <constant name="tachOutputPinMode">"default"</constant>
         <constant digits="0" name="acIdleExtraOffset" units="%">15.0</constant>
@@ -1036,7 +1036,7 @@
         <constant digits="0" name="idleTimingPid_minValue" units="">-10.0</constant>
         <constant digits="0" name="idleTimingPid_maxValue" units="">10.0</constant>
         <constant digits="1" name="idleTimingSoftEntryTime" units="">0.0</constant>
-        <constant digits="0" name="etbRocExpAverageLength" units="">50.0</constant>
+        <constant digits="0" name="unusedEtbRocExpAverageLength" units="">0.0</constant>
         <constant digits="0" name="tpsAccelFractionPeriod" units="cycles">0.0</constant>
         <constant digits="2" name="tpsAccelFractionDivisor" units="coef">1.0</constant>
         <constant name="tle8888spiDevice">"Off"</constant>
@@ -1298,7 +1298,7 @@
         <constant digits="1" name="acDelay" units="sec">0.5</constant>
         <constant name="tChargeMode">"RPM+TPS (Default)"</constant>
         <constant digits="3" name="fordInjectorSmallPulseBreakPoint" units="mg">0.0</constant>
-        <constant digits="0" name="etbJamIntegratorLimit" units="%">0.0</constant>
+        <constant digits="0" name="jamDetectThreshold" units="%">10.0</constant>
         <constant digits="0" name="hpfpCamLobes" units="lobes/cam">3.0</constant>
         <constant name="hpfpCam">"NONE"</constant>
         <constant digits="0" name="acLowRpmLimit" units="RPM">500.0</constant>
@@ -4926,7 +4926,7 @@ canRxAdd(IN_35D, onCanRxAc)</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20240830" nPages="1" signature="rusEFI master.2024.09.18.f407-discovery.3044239668" version="5.0"/>
+    <versionInfo firmwareInfo="20240830" nPages="1" signature="rusEFI master.2024.09.18.f407-discovery.4288156007" version="5.0"/>
     <bibliography author="rusEFI 20240830" writeDate="date"/>
     <settings/>
     <userComments/>

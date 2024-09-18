@@ -179,6 +179,8 @@
     engineConfiguration->etb.dFactor = 0.1855;
     // default "false"
     engineConfiguration->disableEtbWhenEngineStopped = true;
+    // default 1.0
+    engineConfiguration->etbJamTimeout = 0;
     // default "Launch Button"
     engineConfiguration->launchActivationMode = CLUTCH_INPUT_LAUNCH;
     // default "false"

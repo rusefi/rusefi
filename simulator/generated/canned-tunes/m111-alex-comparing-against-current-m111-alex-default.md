@@ -279,6 +279,8 @@
     engineConfiguration->etbFreq = 2000;
     // default 100.0
     engineConfiguration->etbMaximumPosition = 97;
+    // default 1.0
+    engineConfiguration->etbJamTimeout = 0;
     // default "false"
     engineConfiguration->launchControlEnabled = true;
     // default 30.0
