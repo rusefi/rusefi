@@ -629,7 +629,7 @@ void EtbController::update() {
 void EtbController::checkJam(percent_t setpoint, percent_t observation) {
 	float absError = std::abs(setpoint - observation);
 
-	auto jamDetectThreshold = engineConfiguration->jamDetectThreshold;
+	auto jamDetectThreshold = engineConfiguration->etbJamDetectThreshold;
 
 	if (jamDetectThreshold != 0) {
 		auto nowNt = getTimeNowNt();
@@ -873,7 +873,7 @@ void setDefaultEtbParameters() {
 	engineConfiguration->etb_iTermMin = -30;
 	engineConfiguration->etb_iTermMax = 30;
 
-	engineConfiguration->jamDetectThreshold = 10;
+	engineConfiguration->etbJamDetectThreshold = 10;
 	engineConfiguration->etbJamTimeout = 1;
 }
 
