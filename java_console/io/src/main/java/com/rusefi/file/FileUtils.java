@@ -7,15 +7,10 @@ import java.io.*;
 import java.util.List;
 
 /**
- * Minor mess: we also have FileUtil in shared_ui
  * Date: 3/8/13
  * Andrey Belomutskiy, (c) 2013-2020
  */
 public class FileUtils {
-    public static void readFile(String filename, EngineState.EngineStateListener listener) {
-        readFile2(filename, new EngineState(listener));
-    }
-
     public static void readFile2(String filename, EngineState engineState) {
 
         BufferedReader reader;
