@@ -1,6 +1,7 @@
 #if (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT) && (IGN_RPM_COUNT == DEFAULT_IGN_RPM_COUNT) && (FUEL_LOAD_COUNT == DEFAULT_FUEL_LOAD_COUNT) && (FUEL_RPM_COUNT == DEFAULT_FUEL_LOAD_COUNT)
 
 static void pbcannedvvtTable1() {
+#if VVT_TABLE_SIZE == 8
 	static const float hardCodedvvtTable1[8][8] = {
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
 {0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	0.000,	},
@@ -12,9 +13,11 @@ static void pbcannedvvtTable1() {
 {0.000,	30.000,	35.000,	35.000,	35.000,	30.000,	20.000,	10.000,	},
 };
 	copyTable(config->vvtTable1, hardCodedvvtTable1);
+#endif // VVT_TABLE_SIZE
 }
 
 static void pbcannedvvtTable2() {
+#if VVT_TABLE_SIZE == 8
 	static const float hardCodedvvtTable2[8][8] = {
 {50.000,	50.000,	50.000,	50.000,	50.000,	40.000,	40.000,	40.000,	},
 {50.000,	50.000,	50.000,	50.000,	50.000,	40.000,	40.000,	40.000,	},
@@ -26,6 +29,7 @@ static void pbcannedvvtTable2() {
 {50.000,	50.000,	50.000,	50.000,	40.000,	40.000,	40.000,	40.000,	},
 };
 	copyTable(config->vvtTable2, hardCodedvvtTable2);
+	#endif // VVT_TABLE_SIZE
 }
 
 static void pbcannedignitionTable() {

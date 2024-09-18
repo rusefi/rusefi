@@ -48,3 +48,5 @@
 
 
 #define CLT_UPPER_LIMIT 125
+
+#define VVT_TABLE_SIZE 16

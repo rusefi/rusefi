@@ -367,7 +367,7 @@ static void setMazdaMiataEngineNB2Defaults() {
 	copyArray(config->vvtTable1RpmBins, vvt18RpmBins);
 	copyArray(config->vvtTable1LoadBins, vvt18LoadBins);
 	copyTable(config->vvtTable1, SCRIPT_TABLE_vvt_target);
-#endif
+#endif // VVT_TABLE_SIZE
 
 	// VVT closed loop
 	engineConfiguration->auxPid[0].pFactor = 2;
