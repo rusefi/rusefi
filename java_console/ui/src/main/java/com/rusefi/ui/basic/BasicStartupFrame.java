@@ -44,7 +44,7 @@ public class BasicStartupFrame {
     private final FrameHelper frame = FrameHelper.createFrame(
         whiteLabel + " basic console " + Launcher.CONSOLE_VERSION
     );
-    private final boolean isObfusacted = FindFileHelper.isObfuscated();
+    private final boolean isObfuscated = FindFileHelper.isObfuscated();
 
     private final JLabel statusMessage = new JLabel();
     private final StatusAnimation status = new StatusAnimation(this::updateStatus, StartupFrame.SCANNING_PORTS);
@@ -74,7 +74,7 @@ public class BasicStartupFrame {
             panel.add(StartupFrame.binaryModificationControl());
 
             updateFirmwareButton.addActionListener(this::onUpdateFirmwareButtonClicked);
-            if (isObfusacted) {
+            if (isObfuscated) {
                 updateFirmwareButton.setEnabled(false);
 
                 statusMessage.setForeground(Color.red);
@@ -128,7 +128,7 @@ public class BasicStartupFrame {
         // not packed in updateStatus method
         packFrame();
 
-        if (isObfusacted) {
+        if (isObfuscated) {
             updatePortToUpdateObfuscatedFirmware(currentHardware);
         }
         updatePortToUpdateCalibrations(currentHardware);
@@ -227,7 +227,7 @@ public class BasicStartupFrame {
     }
 
     private void onUpdateFirmwareButtonClicked(final ActionEvent actionEvent) {
-        if (isObfusacted) {
+        if (isObfuscated) {
             portToUpdateObfuscatedFirmware.ifPresentOrElse(port -> {
                     switch (port.type) {
                         case EcuWithOpenblt: {
