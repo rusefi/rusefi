@@ -674,7 +674,7 @@ void EtbController::checkOutput(percent_t output) {
 				// TODO: do something about it!
 			}
 		} else {
-			m_jamDetectTimer.reset(getTimeNowNt());
+			m_jamDetectTimer.reset(nowNt);
 			jamDetected = false;
 		}
 
