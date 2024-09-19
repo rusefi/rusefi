@@ -33,39 +33,24 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.SerialPortScanner.SerialPortType.OpenBlt;
 import static com.rusefi.core.ui.FrameHelper.appendBundleName;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
+import static com.rusefi.maintenance.JobType.*;
 import static com.rusefi.ui.util.UiUtils.trueLayout;
 
 public class ProgramSelector {
     private static final Logging log = getLogging(ProgramSelector.class);
 
-    // todo: migrate to enum?
-    public static final String DFU_AUTO = "Auto DFU Update";
-    private static final String DFU_MANUAL = "Manual DFU Update";
-    private static final String DFU_SWITCH = "Switch to DFU Mode";
-    private static final String DFU_ERASE = "Full DFU Erase";
-
-    private static final String ST_LINK = "ST-LINK Update";
-
-    private static final String OPENBLT_SWITCH = "Switch to OpenBLT Mode";
-    public static final String OPENBLT_MANUAL = "Manual OpenBLT Update";
-    public static final String OPENBLT_AUTO = "Auto OpenBLT Update";
-    private static final String INSTALL_OPENBLT = "Install OpenBLT";
-    private static final String OPENBLT_CAN = "OpenBLT via CAN";
-
-    public static final String UPDATE_CALIBRATIONS = "Update Calibrations";
-
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel noHardware = new JLabel("Nothing detected");
     private final JPanel updateModeAndButton = new JPanel(new FlowLayout());
-    private final JComboBox<String> updateModeComboBox = new JComboBox<>();
+    private final JComboBox<JobType> updateModeComboBox = new JComboBox<>();
 
     public ProgramSelector(JComboBox<PortResult> comboPorts) {
         content.add(updateModeAndButton, BorderLayout.NORTH);
         content.add(noHardware, BorderLayout.SOUTH);
 
         String persistedMode = getConfig().getRoot().getProperty(getClass().getSimpleName());
-        if (Arrays.asList(DFU_AUTO, DFU_MANUAL, OPENBLT_CAN, OPENBLT_SWITCH, OPENBLT_MANUAL, OPENBLT_AUTO, DFU_ERASE, DFU_SWITCH).contains(persistedMode))
-            updateModeComboBox.setSelectedItem(persistedMode);
+
+        parsePersistedValue(persistedMode).ifPresent(updateModeComboBox::setSelectedItem);
 
         JButton updateFirmwareButton = createUpdateFirmwareButton();
 
@@ -76,32 +61,30 @@ public class ProgramSelector {
         updateFirmwareButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                final String selectedMode = (String) updateModeComboBox.getSelectedItem();
+                final JobType selectedMode = (JobType) updateModeComboBox.getSelectedItem();
                 final PortResult selectedPort = ((PortResult) comboPorts.getSelectedItem());
 
-                getConfig().getRoot().setProperty(getClass().getSimpleName(), selectedMode);
+                final String persistedValue = (selectedMode != null ? selectedMode.persistedValue : null);
+                getConfig().getRoot().setProperty(getClass().getSimpleName(), persistedValue);
                 executeJob(comboPorts, selectedMode, selectedPort);
             }
         });
     }
 
-    public static void executeJob(JComponent parent, String selectedMode, PortResult selectedPort) {
+    public static void executeJob(JComponent parent, JobType selectedMode, PortResult selectedPort) {
         log.info("ProgramSelector " + selectedMode + " " + selectedPort);
-                String jobName = null;
+                final String jobName = selectedMode.jobName;
                 Consumer<UpdateOperationCallbacks> job;
 
                 Objects.requireNonNull(selectedMode);
                 switch (selectedMode) {
                     case DFU_AUTO:
-                        jobName = "DFU update";
                         job = (callbacks) -> DfuFlasher.doAutoDfu(parent, selectedPort.port, callbacks);
                         break;
                     case DFU_MANUAL:
-                      jobName = "DFU update";
                       job = DfuFlasher::runDfuProgramming;
                         break;
                     case INSTALL_OPENBLT:
-                        jobName = "OpenBLT Initial Programming";
                         job = DfuFlasher::runOpenBltInitialProgramming;
                         break;
                     case ST_LINK:
@@ -111,31 +94,24 @@ public class ProgramSelector {
                         };
                         break;
                     case DFU_SWITCH:
-                        jobName = "DFU switch";
                         job = (callbacks) -> rebootToDfu(parent, selectedPort.port, callbacks);
                         break;
                     case OPENBLT_SWITCH:
-                        jobName = "OpenBLT switch";
                         job = (callbacks) -> rebootToOpenblt(parent, selectedPort.port, callbacks);
                         break;
                     case OPENBLT_CAN:
-                        jobName = "OpenBLT via CAN";
                         job = (callbacks) -> flashOpenBltCan(parent, callbacks);
                         break;
                     case OPENBLT_MANUAL:
-                        jobName = "OpenBLT via Serial";
                         job = (callbacks) -> flashOpenbltSerialJni(parent, selectedPort.port, callbacks);
                         break;
                     case OPENBLT_AUTO:
-                        jobName = "OpenBLT via Serial";
                         job = (callbacks) -> flashOpenbltSerialAutomatic(parent, selectedPort, callbacks);
                         break;
                     case DFU_ERASE:
-                        jobName = "DFU erase";
                         job = DfuFlasher::runDfuEraseAsync;
                         break;
                     case UPDATE_CALIBRATIONS:
-                        jobName = "Update calibrations";
                         job = (callbacks) -> CalibrationsUpdater.INSTANCE.updateCalibrations(
                             selectedPort.port,
                             callbacks
