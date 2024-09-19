@@ -634,7 +634,7 @@ static bool isSdCardEnabled() {
 }
 
 void initMmcCard() {
-  if (isSdCardEnabled()) {
+  if (!isSdCardEnabled()) {
     // do not even bother starting the thread if SD card is not enabled & configured on start-up
     return;
   }
