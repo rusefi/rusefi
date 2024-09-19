@@ -14,8 +14,6 @@
 #include "can_bench_test.h"
 #include "can_common.h"
 
-typedef float SCRIPT_TABLE_8x8_f32t_linear[SCRIPT_TABLE_8 * SCRIPT_TABLE_8];
-
 #if EFI_CAN_SUPPORT
 
 #include "can.h"
