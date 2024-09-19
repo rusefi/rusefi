@@ -342,12 +342,6 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 		return nullptr;
 	}
 
-	if (!engineConfiguration->isSdCardEnabled ||
-		engineConfiguration->sdCardSpiDevice == SPI_NONE ||
-		!isBrainPinValid(engineConfiguration->sdCardCsPin)) {
-		return nullptr;
-	}
-
 	// Configures and activates the MMC peripheral.
 	mmcSpiDevice = engineConfiguration->sdCardSpiDevice;
 
@@ -390,10 +384,6 @@ static const SDCConfig sdcConfig = {
 };
 
 static BaseBlockDevice* initializeMmcBlockDevice() {
-	if (!engineConfiguration->isSdCardEnabled) {
-		return nullptr;
-	}
-
 	sdcStart(&EFI_SDC_DEVICE, &sdcConfig);
 	sdStatus = SD_STATE_CONNECTING;
 	if (blkConnect(&EFI_SDC_DEVICE) != HAL_SUCCESS) {
@@ -637,7 +627,17 @@ void initEarlyMmcCard() {
 #endif // EFI_PROD_CODE
 }
 
+static bool isSdCardEnabled() {
+  return engineConfiguration->isSdCardEnabled &&
+    engineConfiguration->sdCardSpiDevice != SPI_NONE &&
+    isBrainPinValid(engineConfiguration->sdCardCsPin);
+}
+
 void initMmcCard() {
+  if (isSdCardEnabled()) {
+    // do not even bother starting the thread if SD card is not enabled & configured on start-up
+    return;
+  }
 	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), PRIO_MMC, (tfunc_t)(void*) MMCmonThread, NULL);
 }
 
