@@ -21,7 +21,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
@@ -38,6 +37,8 @@ import static com.rusefi.ui.util.UiUtils.trueLayout;
 
 public class ProgramSelector {
     private static final Logging log = getLogging(ProgramSelector.class);
+    private static final int ONE_DOT_DURATION_MS = 200;
+    private static final int TOTAL_WAIT_MS = 60 * 1000;
 
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel noHardware = new JLabel("Nothing detected");
@@ -179,9 +180,9 @@ public class ProgramSelector {
     ) {
         callbacks.log(waitingMessage, false, true);
         try {
-            for (int attemptsCount = 0; attemptsCount < 150; attemptsCount++) {
+            for (int attemptsCount = 0; attemptsCount < TOTAL_WAIT_MS / ONE_DOT_DURATION_MS; attemptsCount++) {
                 // Give the bootloader sec to enumerate
-                BinaryProtocol.sleep(200);
+                BinaryProtocol.sleep(ONE_DOT_DURATION_MS);
                 if (shouldFinish.get()) {
                     return true;
                 } else {
