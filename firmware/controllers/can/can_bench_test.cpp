@@ -21,7 +21,14 @@ extern PinRepository pinRepository;
  * quite different from bench testing user functionality: QC direct should never be engaged on a real vehicle
  * Once QC direct control mode is activated the only way out is to reboot the unit!
  */
+// that one could be set by rusEFI console
 bool qcDirectPinControlMode = false;
+// todo: how is this flag different from the one above? shall we merge?
+/*board public API*/bool withHwQcActivity = false;
+
+bool isHwQcMode() {
+  return withHwQcActivity || qcDirectPinControlMode;
+}
 
 #if EFI_CAN_SUPPORT
 
@@ -243,8 +250,6 @@ static void resetPinStats(bench_mode_e benchModePinIdx) {
 	pin->resetToggleStats();
 #endif // EFI_SIMULATOR
 }
-
-/*board public API*/bool withHwQcActivity = false;
 
 void processCanQcBenchTest(const CANRxFrame& frame) {
 	if (CAN_EID(frame) != (int)bench_test_packet_ids_e::IO_CONTROL) {
