@@ -77,7 +77,9 @@ public class BasicStartupFrame {
 
             statusMessage.setForeground(Color.red);
             panel.add(statusMessage);
-            panel.add(updateFirmwareButton);
+            if (ConnectionAndMeta.showUpdateCalibrations()) {
+                panel.add(updateFirmwareButton);
+            }
         } else {
             panel.add(new JLabel("Sorry only works on Windows"));
         }
