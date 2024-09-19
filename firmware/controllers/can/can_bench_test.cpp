@@ -9,6 +9,10 @@
 #include "settings.h"
 #include "gpio/gpio_ext.h"
 
+#ifdef HW_HELLEN
+#include "hellen_meta.h"
+#endif // HW_HELLEN
+
 extern PinRepository pinRepository;
 
 // todo: WHAT?! document why do we manually truncate higher bits?
@@ -29,6 +33,11 @@ static bool qcDirectPinControlMode = false;
 
 void setHwQcMode() {
   qcDirectPinControlMode = true;
+#if HW_HELLEN && EFI_PROD_CODE
+        if (!getHellenBoardEnabled()) {
+            hellenEnableEn("HW QC");
+        }
+#endif // HW_HELLEN && EFI_PROD_CODE
 }
 
 #if EFI_CAN_SUPPORT
