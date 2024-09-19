@@ -20,24 +20,32 @@ extern PinRepository pinRepository;
 // raw values are 0..5V, convert it to 8-bit (0..255)
 #define RAW_TO_BYTE(v) TRUNCATE_TO_BYTE((int)(v * 255.0 / 5.0))
 
+#if EFI_PROD_CODE
 /**
  * QC direct output control API is used by https://github.com/rusefi/stim test device
  * quite different from bench testing user functionality: QC direct should never be engaged on a real vehicle
  * Once QC direct control mode is activated the only way out is to reboot the unit!
  */
 static bool qcDirectPinControlMode = false;
+#endif
 
 /*board public API*/bool isHwQcMode() {
+#if EFI_PROD_CODE
   return qcDirectPinControlMode;
+#else
+  return false;
+#endif // EFI_PROD_CODE
 }
 
 void setHwQcMode() {
+#if EFI_PROD_CODE
   qcDirectPinControlMode = true;
-#if HW_HELLEN && EFI_PROD_CODE
+#if HW_HELLEN
         if (!getHellenBoardEnabled()) {
             hellenEnableEn("HW QC");
         }
-#endif // HW_HELLEN && EFI_PROD_CODE
+#endif // HW_HELLEN
+#endif // EFI_PROD_CODE
 }
 
 #if EFI_CAN_SUPPORT
@@ -60,7 +68,7 @@ static void directWritePad(Gpio pin, int value) {
 }
 
 static void qcSetEtbState(uint8_t dcIndex, uint8_t direction) {
-	qcDirectPinControlMode = true;
+	setHwQcMode();
 	const dc_io *io = &engineConfiguration->etbIo[dcIndex];
 	Gpio controlPin = io->controlPin;
   directWritePad(controlPin, 1);
