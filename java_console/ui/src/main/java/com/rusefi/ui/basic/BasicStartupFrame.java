@@ -55,7 +55,7 @@ public class BasicStartupFrame {
     );
     private final UpdateCalibrations updateCalibrations = new UpdateCalibrations();
 
-    private volatile Optional<SerialPortScanner.PortResult> portToUpdateFirmware = Optional.empty();
+     private volatile Optional<JobParameters> updateFirmwareJob = Optional.empty();
     private volatile Optional<SerialPortScanner.PortResult> portToUpdateCalibrations = Optional.empty();
 
     public static void main(String[] args) {
@@ -128,11 +128,11 @@ public class BasicStartupFrame {
         // not packed in updateStatus method
         packFrame();
 
-        updatePortToUpdateFirmware(currentHardware);
+        updateUpdateFirmwareJob(currentHardware);
         updatePortToUpdateCalibrations(currentHardware);
     }
 
-    private void updatePortToUpdateFirmware(final AvailableHardware currentHardware) {
+    private void updateUpdateFirmwareJob(final AvailableHardware currentHardware) {
         final Set<SerialPortScanner.SerialPortType> portTypesToUpdateFirmware = (isObfuscated ?
             Set.of(
                 SerialPortScanner.SerialPortType.EcuWithOpenblt,
@@ -149,15 +149,36 @@ public class BasicStartupFrame {
 
         switch (portsToUpdateFirmware.size()) {
             case 0: {
-                resetPortToUpdateFirmware("ECU not found");
+                resetUpdateFirmwareJob("ECU not found");
                 break;
             }
             case 1: {
-                switchToPortToUpdateFirmware(portsToUpdateFirmware.get(0));
+                final SerialPortScanner.PortResult portToUpdateFirmware = portsToUpdateFirmware.get(0);
+                JobType jobType = null;
+                if (isObfuscated) {
+                    final SerialPortScanner.SerialPortType portType = portToUpdateFirmware.type;
+                    switch (portType) {
+                        case EcuWithOpenblt: {
+                            jobType = OPENBLT_AUTO;
+                            break;
+                        }
+                        case OpenBlt: {
+                            jobType = OPENBLT_MANUAL;
+                            break;
+                        }
+                        default: {
+                            log.error(String.format("Unexpected port type: %s", portType));
+                            break;
+                        }
+                    }
+                } else {
+                    jobType = DFU_AUTO;
+                }
+                setUpdateFirmwareJob(new JobParameters(jobType, portToUpdateFirmware));
                 break;
             }
             default: {
-                resetPortToUpdateFirmware(String.format(
+                resetUpdateFirmwareJob(String.format(
                     "Multiple ECUs found on: %s",
                     portsToUpdateFirmware.stream()
                         .map(portResult -> portResult.port)
@@ -168,30 +189,31 @@ public class BasicStartupFrame {
         }
     }
 
-    private void switchToPortToUpdateFirmware(final SerialPortScanner.PortResult port) {
-        portToUpdateFirmware = Optional.of(port);
+    private void setUpdateFirmwareJob(final JobParameters jobParams) {
+        updateFirmwareJob = Optional.of(jobParams);
         hideStatusMessage();
         updateFirmwareButton.setEnabled(true);
         if (isObfuscated) {
-            switch (port.type) {
-                case EcuWithOpenblt: {
+            final JobType jobType = jobParams.jobType;
+            switch (jobType) {
+                case OPENBLT_AUTO: {
                     updateFirmwareButton.setText("Auto Update Firmware");
                     break;
                 }
-                case OpenBlt: {
+                case OPENBLT_MANUAL: {
                     updateFirmwareButton.setText("Blt Update Firmware");
                     break;
                 }
                 default: {
-                    log.error(String.format("Unexpected port type: %s", port));
+                    log.error(String.format("Unexpected job type: %s", jobType));
                     break;
                 }
             }
         }
     }
 
-    private void resetPortToUpdateFirmware(final String reason) {
-        portToUpdateFirmware = Optional.empty();
+    private void resetUpdateFirmwareJob(final String reason) {
+        updateFirmwareJob = Optional.empty();
         updateFirmwareButton.setEnabled(false);
         statusMessage.setText(reason);
     }
@@ -236,28 +258,11 @@ public class BasicStartupFrame {
     }
 
     private void onUpdateFirmwareButtonClicked(final ActionEvent actionEvent) {
-        portToUpdateFirmware.ifPresentOrElse(
-            port -> {
-                if (isObfuscated) {
-                    switch (port.type) {
-                        case EcuWithOpenblt: {
-                            ProgramSelector.executeJob(updateFirmwareButton, OPENBLT_AUTO, port);
-                            break;
-                        }
-                        case OpenBlt: {
-                            ProgramSelector.executeJob(updateFirmwareButton, OPENBLT_MANUAL, port);
-                            break;
-                        }
-                        default: {
-                            log.error(String.format("Unexpected port type: %s (%s)", port.type, port));
-                            break;
-                        }
-                    }
-                } else {
-                    ProgramSelector.executeJob(updateFirmwareButton, DFU_AUTO, port);
-                }
+        updateFirmwareJob.ifPresentOrElse(
+            job -> {
+                ProgramSelector.executeJob(updateFirmwareButton, job.jobType, job.port);
             }, () -> {
-                log.error("Port to update firmware is not defined.");
+                log.error("Update firmware job is is not defined.");
             }
         );
     }
