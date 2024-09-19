@@ -94,7 +94,9 @@ public class BasicStartupFrame {
 
         updateCalibrationsButton.addActionListener(this::onUpdateCalibrationsButtonClicked);
         updateCalibrationsButton.setEnabled(false);
-        panel.add(updateCalibrationsButton);
+        if (ConnectionAndMeta.showUpdateCalibrations()) {
+            panel.add(updateCalibrationsButton);
+        }
 
         BasicLogoHelper.setGenericFrameIcon(frame.getFrame());
         frame.showFrame(panel, false);
