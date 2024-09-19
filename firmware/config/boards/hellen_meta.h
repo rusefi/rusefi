@@ -245,6 +245,8 @@ void detectHellenBoardType();
 #define H_SPI3_SCK Gpio::C10
 #define H_SPI3_CS Gpio::A15
 
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wunused-function"
 static void enableHellenSpi1() {
 	engineConfiguration->spi1mosiPin = Gpio::H_SPI1_MOSI;
 	engineConfiguration->spi1misoPin = Gpio::H_SPI1_MISO;
@@ -270,8 +272,6 @@ static void setHellenSdCardSpi3NoCS() {
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;
 	enableHellenSpi3();
 }
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wunused-function"
 
 static void setAccelerometerSpi() {
 	/* accelerometer SPI is shared with SD card SPI on mm144 */
