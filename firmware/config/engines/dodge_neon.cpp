@@ -147,8 +147,6 @@ void setDodgeNeonNGCEngineConfiguration() {
 //	engineConfiguration->fanOnTemperature = 115; // knock testing - value is a bit high
 //	engineConfiguration->fanOffTemperature = 100;
 
-//	engineConfiguration->tunerStudioSerialSpeed = 9600;
-	engineConfiguration->tunerStudioSerialSpeed = 19200;
 	setAlgorithm(LM_SPEED_DENSITY);
 
 //temp	engineConfiguration->alternatorControlPin = Gpio::D5;
