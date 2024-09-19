@@ -39,7 +39,7 @@ public class ProgramSelector {
     private static final Logging log = getLogging(ProgramSelector.class);
 
     // todo: migrate to enum?
-    private static final String DFU_AUTO = "Auto DFU Update";
+    public static final String DFU_AUTO = "Auto DFU Update";
     private static final String DFU_MANUAL = "Manual DFU Update";
     private static final String DFU_SWITCH = "Switch to DFU Mode";
     private static final String DFU_ERASE = "Full DFU Erase";
