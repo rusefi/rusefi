@@ -80,6 +80,7 @@ void setBoardDefaultConfiguration() {
   setHellenMMbaro();
 
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
+	engineConfiguration->isSdCardEnabled = true;
 
 	engineConfiguration->globalTriggerAngleOffset = 0;
 

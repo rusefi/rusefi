@@ -279,11 +279,6 @@ static void setAccelerometerSpi() {
 	engineConfiguration->accelerometerCsPin = Gpio::H_SPI1_CS2;
 }
 
-static void setHellenSdCardSpi1() {
-  setHellenSdCardSpi1Hardware();
-  engineConfiguration->isSdCardEnabled = true;
-}
-
 static void setHellen64SdCardSpi() {
     engineConfiguration->isSdCardEnabled = true;
 	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_3;

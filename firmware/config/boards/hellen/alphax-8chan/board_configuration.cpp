@@ -103,7 +103,8 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 void setBoardConfigOverrides() {
 	setHellenVbatt();
 
-	setHellenSdCardSpi1();
+	setHellenSdCardSpi1Hardware();
+	engineConfiguration->isSdCardEnabled = true;
 
     setDefaultHellenAtPullUps();
 

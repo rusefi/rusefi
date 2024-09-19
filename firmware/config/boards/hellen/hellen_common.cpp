@@ -113,7 +113,7 @@ void hellenBoardStandBy() {
 extern OutputPin accelerometerChipSelect;
 
 void hellenMegaSdWithAccelerometer() {
-		setHellenSdCardSpi1();
+		setHellenSdCardSpi1Hardware();
 		// weird order of operations? i guess it does not really matter
 		hellenMegaAccelerometerPreInitCS2Pin();
 }
