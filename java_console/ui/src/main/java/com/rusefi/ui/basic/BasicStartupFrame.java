@@ -30,6 +30,7 @@ import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.FileLog.isWindows;
+import static com.rusefi.maintenance.JobType.*;
 
 /**
  * Focuses on firmware updater
@@ -240,11 +241,11 @@ public class BasicStartupFrame {
                 if (isObfuscated) {
                     switch (port.type) {
                         case EcuWithOpenblt: {
-                            ProgramSelector.executeJob(updateFirmwareButton, ProgramSelector.OPENBLT_AUTO, port);
+                            ProgramSelector.executeJob(updateFirmwareButton, OPENBLT_AUTO, port);
                             break;
                         }
                         case OpenBlt: {
-                            ProgramSelector.executeJob(updateFirmwareButton, ProgramSelector.OPENBLT_MANUAL, port);
+                            ProgramSelector.executeJob(updateFirmwareButton, OPENBLT_MANUAL, port);
                             break;
                         }
                         default: {
@@ -253,7 +254,7 @@ public class BasicStartupFrame {
                         }
                     }
                 } else {
-                    ProgramSelector.executeJob(updateFirmwareButton, ProgramSelector.DFU_AUTO, port);
+                    ProgramSelector.executeJob(updateFirmwareButton, DFU_AUTO, port);
                 }
             }, () -> {
                 log.error("Port to update firmware is not defined.");

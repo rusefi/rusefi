@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static com.devexperts.logging.Logging.getLogging;
+import static com.rusefi.maintenance.JobType.UPDATE_CALIBRATIONS;
 
 public class UpdateCalibrations {
     private static final Logging log = getLogging(UpdateCalibrations.class);
@@ -32,11 +33,7 @@ public class UpdateCalibrations {
                     selectedFile.getAbsolutePath()
                 );
                 CalibrationsUpdater.INSTANCE.setCalibrationsToUpload(calibrationsImage);
-                ProgramSelector.executeJob(
-                    parent,
-                    ProgramSelector.UPDATE_CALIBRATIONS,
-                    port
-                );
+                ProgramSelector.executeJob(parent, UPDATE_CALIBRATIONS, port);
             } catch (final IOException e) {
                 final String errorMsg = String.format(
                     "Failed to load calibrations from file %s",
