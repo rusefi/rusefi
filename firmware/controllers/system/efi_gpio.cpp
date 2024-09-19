@@ -586,9 +586,8 @@ void OutputPin::resetToggleStats() {
 #endif // EFI_SIMULATOR
 
 void OutputPin::setValue(const char *msg, int logicValue, bool isForce) {
-extern bool qcDirectPinControlMode;
     UNUSED(msg);
-    if ((qcDirectPinControlMode || getOutputOnTheBenchTest() == this) && !isForce) {
+    if ((isHwQcMode() || getOutputOnTheBenchTest() == this) && !isForce) {
         return;
     }
 

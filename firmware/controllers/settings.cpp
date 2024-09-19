@@ -666,8 +666,7 @@ void initSettings() {
 	addConsoleActionS("bench_setpin", benchSetPin);
 	addConsoleActionS("readpin", readPin);
 	addConsoleAction("hw_qc_mode", [](){
-	  extern bool qcDirectPinControlMode;
-  	qcDirectPinControlMode = true;
+  	setHwQcMode();
   });
 	addConsoleActionS("bench_set_output_mode", [](const char *pinName){
 	  brain_pin_e pin = parseBrainPinWithErrorMessage(pinName);
