@@ -16,7 +16,7 @@
 
 #if EFI_CAN_SUPPORT
 
-#include "can.h"
+#include "can_rx.h"
 #include "obd2.h"
 #include "can_sensor.h"
 #include "can_vss.h"
@@ -117,12 +117,16 @@ void registerCanSensor(CanSensorBase& sensor) {
 #define MM5_10_MB_YAW_Y_CANID		0x150
 #define MM5_10_MB_ROLL_X_CANID		0x151
 
-static uint16_t getLSB_intel(const CANRxFrame& frame, int offset) {
+uint16_t getTwoBytesLsb(const CANRxFrame& frame, int offset) {
 	return (frame.data8[offset + 1] << 8) + frame.data8[offset];
 }
 
+uint16_t getTwoBytesMsb(const CANRxFrame& frame, int offset) {
+	return (frame.data8[offset] << 8) + frame.data8[offset + 1];
+}
+
 static int16_t getShiftedLSB_intel(const CANRxFrame& frame, int offset) {
-	return getLSB_intel(frame, offset) - 0x8000;
+	return getTwoBytesLsb(frame, offset) - 0x8000;
 }
 
 static void processCanRxImu_BoschM5_10_YawY(const CANRxFrame& frame) {

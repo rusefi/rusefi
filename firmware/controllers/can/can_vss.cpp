@@ -10,7 +10,7 @@
 #include "pch.h"
 
 #if EFI_CAN_SUPPORT
-#include "can.h"
+#include "can_rx.h"
 #include "dynoview.h"
 #include "stored_value_sensor.h"
 
@@ -73,18 +73,6 @@ static uint16_t look_up_second_vss_can_id(can_vss_nbc_e type) {
 	}
 }
 
-static int getTwoBytesLsb(const CANRxFrame& frame, int index) {
-	uint8_t low = frame.data8[index];
-	uint8_t high = frame.data8[index + 1] & 0xFF;
-	return low | (high << 8);
-}
-
-static int getTwoBytesMsb(const CANRxFrame& frame, int index) {
-	uint8_t low = frame.data8[index + 1];
-	uint8_t high = frame.data8[index] & 0x0FF;
-	return low | (high << 8);
-}
-
 /* Module specific processing functions */
 /* source: http://z4evconversion.blogspot.com/2016/07/completely-forgot-but-it-does-live-on.html */
 float processBMW_e46(const CANRxFrame& frame) {
@@ -113,6 +101,7 @@ float processBMW_e90(const CANRxFrame& frame) {
 }
 
 float processW202(const CANRxFrame& frame) {
+  // todo: reuse one of the getTwoBytes methods!
 	uint16_t tmp = (frame.data8[2] << 8);
 	tmp |= frame.data8[3];
 	return tmp * 0.0625;

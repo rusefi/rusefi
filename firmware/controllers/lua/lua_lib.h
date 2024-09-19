@@ -65,6 +65,7 @@ end  \
 "
 
 // LSB (Least Significant Byte comes first) "Intel"
+// see also getTwoBytesLsb
 #define TWO_BYTES_LSB "function getTwoBytesLSB(data, offset, factor)\
 		return (data[offset + 2] * 256 + data[offset + 1]) * factor \n\
 	end\n\
@@ -80,11 +81,13 @@ end  \
 "
 
 // MOTOROLA order, MSB (Most Significant Byte/Big Endian) comes first.
+// see also getTwoBytesMsb
 #define TWO_BYTES_MSB "function getTwoBytesMSB(data, offset, factor)        \
 		return (data[offset + 1] * 256 + data[offset + 2]) * factor   \
 	end \
 "
 
+// see also CanTxMessage#setShortValueMsb
 #define SET_TWO_BYTES_MSB "	function setTwoBytesMsb(data, offset, value) \
 		value = math.floor(value) \
 		data[offset + 1] = value >> 8 \
