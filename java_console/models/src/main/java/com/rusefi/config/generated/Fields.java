@@ -1222,7 +1222,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 2064278030;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1484,7 +1483,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.09.20.f407-discovery.2064278030";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.09.20.f407-discovery.3743507484";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1970,7 +1969,6 @@ public class Fields {
 	public static final Field CANINPUTBCM = Field.create("CANINPUTBCM", 920, FieldType.BIT, 5).setBaseOffset(0);
 	public static final Field CONSUMEOBDSENSORS = Field.create("CONSUMEOBDSENSORS", 920, FieldType.BIT, 6).setBaseOffset(0);
 	public static final Field ENABLECANVSS = Field.create("ENABLECANVSS", 920, FieldType.BIT, 7).setBaseOffset(0);
-	public static final Field ENABLEINNOVATELC2 = Field.create("ENABLEINNOVATELC2", 920, FieldType.BIT, 8).setBaseOffset(0);
 	public static final Field SHOWHUMANREADABLEWARNING = Field.create("SHOWHUMANREADABLEWARNING", 920, FieldType.BIT, 9).setBaseOffset(0);
 	public static final Field STFTIGNOREERRORMAGNITUDE = Field.create("STFTIGNOREERRORMAGNITUDE", 920, FieldType.BIT, 10).setBaseOffset(0);
 	public static final Field VVTBOOLEANFORVERYSPECIALCASES = Field.create("VVTBOOLEANFORVERYSPECIALCASES", 920, FieldType.BIT, 11).setBaseOffset(0);
@@ -2259,8 +2257,6 @@ public class Fields {
 	public static final Field ENABLEKNOCKSPECTROGRAM = Field.create("ENABLEKNOCKSPECTROGRAM", 1492, FieldType.BIT, 30).setBaseOffset(0);
 	public static final Field AFTERCRANKINGIACTAPERDURATION = Field.create("AFTERCRANKINGIACTAPERDURATION", 1496, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field IACBYTPSTAPER = Field.create("IACBYTPSTAPER", 1498, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field AUXSERIALTXPIN = Field.create("AUXSERIALTXPIN", 1500, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
-	public static final Field AUXSERIALRXPIN = Field.create("AUXSERIALRXPIN", 1502, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field ACCELEROMETERCSPIN = Field.create("ACCELEROMETERCSPIN", 1504, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field COASTINGFUELCUTVSSLOW = Field.create("COASTINGFUELCUTVSSLOW", 1506, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field COASTINGFUELCUTVSSHIGH = Field.create("COASTINGFUELCUTVSSHIGH", 1507, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -2275,7 +2271,6 @@ public class Fields {
 	public static final Field UARTCONSOLESERIALSPEED = Field.create("UARTCONSOLESERIALSPEED", 1520, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSDECELENLEANMENTTHRESHOLD = Field.create("TPSDECELENLEANMENTTHRESHOLD", 1524, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field TPSDECELENLEANMENTMULTIPLIER = Field.create("TPSDECELENLEANMENTMULTIPLIER", 1528, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field AUXSERIALSPEED = Field.create("AUXSERIALSPEED", 1532, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field THROTTLEPEDALSECONDARYUPVOLTAGE = Field.create("THROTTLEPEDALSECONDARYUPVOLTAGE", 1536, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field THROTTLEPEDALSECONDARYWOTVOLTAGE = Field.create("THROTTLEPEDALSECONDARYWOTVOLTAGE", 1540, FieldType.FLOAT).setBaseOffset(0);
 	public static final String[] can_baudrate_e = {"50kbps", "83.33kbps", "100kbps", "125kbps", "250kbps", "500kbps", "1Mbps"};
@@ -3664,7 +3659,6 @@ public class Fields {
 	CANINPUTBCM,
 	CONSUMEOBDSENSORS,
 	ENABLECANVSS,
-	ENABLEINNOVATELC2,
 	SHOWHUMANREADABLEWARNING,
 	STFTIGNOREERRORMAGNITUDE,
 	VVTBOOLEANFORVERYSPECIALCASES,
@@ -3951,8 +3945,6 @@ public class Fields {
 	ENABLEKNOCKSPECTROGRAM,
 	AFTERCRANKINGIACTAPERDURATION,
 	IACBYTPSTAPER,
-	AUXSERIALTXPIN,
-	AUXSERIALRXPIN,
 	ACCELEROMETERCSPIN,
 	COASTINGFUELCUTVSSLOW,
 	COASTINGFUELCUTVSSHIGH,
@@ -3966,7 +3958,6 @@ public class Fields {
 	UARTCONSOLESERIALSPEED,
 	TPSDECELENLEANMENTTHRESHOLD,
 	TPSDECELENLEANMENTMULTIPLIER,
-	AUXSERIALSPEED,
 	THROTTLEPEDALSECONDARYUPVOLTAGE,
 	THROTTLEPEDALSECONDARYWOTVOLTAGE,
 	CANBAUDRATE,

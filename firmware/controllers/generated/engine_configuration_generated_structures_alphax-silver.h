@@ -2013,7 +2013,7 @@ struct engine_configuration_s {
 	bool enableCanVss : 1 {};
 	/**
 	offset 920 bit 8 */
-	bool enableInnovateLC2 : 1 {};
+	bool unusedSnableInnovateLC2 : 1 {};
 	/**
 	offset 920 bit 9 */
 	bool showHumanReadableWarning : 1 {};
@@ -2885,15 +2885,13 @@ struct engine_configuration_s {
 	 */
 	int16_t iacByTpsTaper;
 	/**
-	 * Auxiliary sensor serial, not to be confused with secondary calibration serial
 	 * offset 1500
 	 */
-	Gpio auxSerialTxPin;
+	Gpio unusedAuxSeria;
 	/**
-	 * Auxiliary sensor serial, not to be confused with secondary calibration serial
 	 * offset 1502
 	 */
-	Gpio auxSerialRxPin;
+	Gpio unusedAuxSerialRx;
 	/**
 	 * offset 1504
 	 */
@@ -2959,10 +2957,9 @@ struct engine_configuration_s {
 	 */
 	float tpsDecelEnleanmentMultiplier;
 	/**
-	 * units: BPs
 	 * offset 1532
 	 */
-	uint32_t auxSerialSpeed;
+	uint32_t unusedAuxSerialSpee;
 	/**
 	 * units: voltage
 	 * offset 1536

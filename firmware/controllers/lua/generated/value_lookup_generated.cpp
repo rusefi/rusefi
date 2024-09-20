@@ -598,9 +598,6 @@ float getConfigValueByName(const char *name) {
 // enableCanVss
 		case 245947066:
 			return engineConfiguration->enableCanVss;
-// enableInnovateLC2
-		case 1382521617:
-			return engineConfiguration->enableInnovateLC2;
 // showHumanReadableWarning
 		case 2046602309:
 			return engineConfiguration->showHumanReadableWarning;
@@ -1168,9 +1165,6 @@ float getConfigValueByName(const char *name) {
 // tpsDecelEnleanmentMultiplier
 		case 1164012327:
 			return engineConfiguration->tpsDecelEnleanmentMultiplier;
-// auxSerialSpeed
-		case 781749924:
-			return engineConfiguration->auxSerialSpeed;
 // throttlePedalSecondaryUpVoltage
 		case -1564912640:
 			return engineConfiguration->throttlePedalSecondaryUpVoltage;
@@ -2851,11 +2845,6 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->enableCanVss = (int)value;
 		return 1;
 	}
-		case 1382521617:
-	{
-		engineConfiguration->enableInnovateLC2 = (int)value;
-		return 1;
-	}
 		case 2046602309:
 	{
 		engineConfiguration->showHumanReadableWarning = (int)value;
@@ -3799,11 +3788,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1164012327:
 	{
 		engineConfiguration->tpsDecelEnleanmentMultiplier = value;
-		return 1;
-	}
-		case 781749924:
-	{
-		engineConfiguration->auxSerialSpeed = (int)value;
 		return 1;
 	}
 		case -1564912640:

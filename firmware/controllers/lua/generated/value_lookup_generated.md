@@ -592,9 +592,6 @@ This property is useful if using rusEFI as TCM or BCM only
 ### enableCanVss
 Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 
-### enableInnovateLC2
-
-
 ### showHumanReadableWarning
 
 
@@ -1161,9 +1158,6 @@ For decel we simply multiply delta of TPS and tFor decel we do not use table?!
 
 ### tpsDecelEnleanmentMultiplier
 Magic multiplier, we multiply delta of TPS and get fuel squirt duration
-
-### auxSerialSpeed
-
 
 ### throttlePedalSecondaryUpVoltage
 
