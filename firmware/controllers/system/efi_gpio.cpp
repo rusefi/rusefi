@@ -32,16 +32,16 @@ static const char* const trailNames[] = { "Trail 1", "Trail 2", "Trail 3", "Trai
 static const char* const trailShortNames[] = { "r1", "r2", "r3", "r4", "r5", "r6", "r7", "r8", "r9", "rA", "rB", "rD" };
 
 const char *vvtNames[] = {
-		PROTOCOL_VVT1_NAME,
-		PROTOCOL_VVT2_NAME,
-		PROTOCOL_VVT3_NAME,
-		PROTOCOL_VVT4_NAME};
+		"VVT1",
+		"VVT2",
+		"VVT3",
+		"VVT4"};
 
 const char *laNames[] = {
-		PROTOCOL_WA_CHANNEL_1,
-		PROTOCOL_WA_CHANNEL_2,
-		PROTOCOL_WA_CHANNEL_3,
-		PROTOCOL_WA_CHANNEL_4};
+		"input1",
+		"input2",
+		"input3",
+		"input4"};
 
 // these short names are part of engine sniffer protocol
 static const char* const sparkShortNames[] = { PROTOCOL_COIL_SHORT_PREFIX "1", PROTOCOL_COIL_SHORT_PREFIX "2", "c3", "c4", "c5", "c6", "c7", "c8",
@@ -165,9 +165,9 @@ EnginePins::EnginePins() :
 		triggerDecoderErrorPin("led: trigger debug", CONFIG_PIN_OFFSETS(triggerError)),
 		speedoOut("speedoOut", CONFIG_OFFSET(speedometerOutputPin))
 {
-	hpfpValve.setName(PROTOCOL_HPFP_NAME);
+	hpfpValve.setName("hpfp");
 #if EFI_HD_ACR
-	harleyAcr.setName(PROTOCOL_ACR_NAME);
+	harleyAcr.setName("acr");
 #endif // EFI_HD_ACR
 
 	static_assert(efi::size(sparkNames) >= MAX_CYLINDER_COUNT, "Too many ignition pins");
