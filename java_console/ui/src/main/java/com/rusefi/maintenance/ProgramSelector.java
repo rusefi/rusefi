@@ -13,6 +13,7 @@ import com.rusefi.autodetect.PortDetector;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.core.ui.AutoupdateUtil;
+import com.rusefi.maintenance.jobs.*;
 import com.rusefi.ui.util.URLLabel;
 import org.jetbrains.annotations.NotNull;
 
@@ -72,72 +73,68 @@ public class ProgramSelector {
         });
     }
 
-    public static void executeJob(JComponent parent, JobType selectedMode, PortResult selectedPort) {
+    private static void executeJob(JComponent parent, JobType selectedMode, PortResult selectedPort) {
         log.info("ProgramSelector " + selectedMode + " " + selectedPort);
-                final String jobName = selectedMode.jobName;
-                Consumer<UpdateOperationCallbacks> job;
-
                 Objects.requireNonNull(selectedMode);
+                AsyncJob job;
                 switch (selectedMode) {
                     case DFU_AUTO:
-                        job = (callbacks) -> DfuFlasher.doAutoDfu(parent, selectedPort.port, callbacks);
+                        job = new DfuAutoJob(selectedPort, parent);
                         break;
                     case DFU_MANUAL:
-                      job = DfuFlasher::runDfuProgramming;
+                        job = new DfuManualJob();
                         break;
                     case INSTALL_OPENBLT:
-                        job = DfuFlasher::runOpenBltInitialProgramming;
+                        job = new InstallOpenBltJob();
                         break;
                     case ST_LINK:
-                        job = updateOperationCallbacks -> {
-                            // todo: add ST-LINK no-assert mode? or not?
-                            StLinkFlasher.doUpdateFirmware(FindFileHelper.FIRMWARE_BIN_FILE, parent);
-                        };
+                        job = new StLinkJob(parent);
                         break;
                     case DFU_SWITCH:
-                        job = (callbacks) -> rebootToDfu(parent, selectedPort.port, callbacks);
+                        job = new DfuSwitchJob(selectedPort, parent);
                         break;
                     case OPENBLT_SWITCH:
-                        job = (callbacks) -> rebootToOpenblt(parent, selectedPort.port, callbacks);
+                        job = new OpenBltSwitchJob(selectedPort, parent);
                         break;
                     case OPENBLT_CAN:
-                        job = (callbacks) -> flashOpenBltCan(parent, callbacks);
+                        job = new OpenBltCanJob(parent);
                         break;
                     case OPENBLT_MANUAL:
-                        job = (callbacks) -> flashOpenbltSerialJni(parent, selectedPort.port, callbacks);
+                        job = new OpenBltManualJob(selectedPort, parent);
                         break;
                     case OPENBLT_AUTO:
-                        job = (callbacks) -> flashOpenbltSerialAutomatic(parent, selectedPort, callbacks);
+                        job = new OpenBltAutoJob(selectedPort, parent);
                         break;
                     case DFU_ERASE:
-                        job = DfuFlasher::runDfuEraseAsync;
+                        job = new DfuEraseJob();
                         break;
                     case UPDATE_CALIBRATIONS:
-                        job = (callbacks) -> CalibrationsUpdater.INSTANCE.updateCalibrations(
-                            selectedPort.port,
-                            callbacks
-                        );
+                        job = new UpdateCalibrationsJob(selectedPort);
                         break;
                     default:
                         throw new IllegalArgumentException("How did you " + selectedMode);
                 }
 
-                final UpdateOperationCallbacks callbacks = new UpdateStatusWindow(appendBundleName(jobName + " " + Launcher.CONSOLE_VERSION));
-                final Runnable jobToExecute = () -> job.accept(callbacks);
-                ExecHelper.submitAction(jobToExecute, "mx");
+                executeJob(job);
     }
 
-    private static void rebootToDfu(JComponent parent, String selectedPort, UpdateOperationCallbacks callbacks) {
+    public static void executeJob(final AsyncJob job) {
+        final UpdateOperationCallbacks callbacks = new UpdateStatusWindow(appendBundleName(job.getName() + " " + Launcher.CONSOLE_VERSION));
+        final Runnable jobWithSuspendedPortScanning = () -> job.doJob(callbacks);
+        ExecHelper.submitAction(jobWithSuspendedPortScanning, "mx");
+    }
+
+    public static void rebootToDfu(JComponent parent, String selectedPort, UpdateOperationCallbacks callbacks) {
         String port = selectedPort == null ? PortDetector.AUTO : selectedPort;
         DfuFlasher.rebootToDfu(parent, port, callbacks, Integration.CMD_REBOOT_DFU);
     }
 
-    private static void rebootToOpenblt(JComponent parent, String selectedPort, UpdateOperationCallbacks callbacks) {
+    public static void rebootToOpenblt(JComponent parent, String selectedPort, UpdateOperationCallbacks callbacks) {
         String port = selectedPort == null ? PortDetector.AUTO : selectedPort;
         DfuFlasher.rebootToDfu(parent, port, callbacks, Integration.CMD_REBOOT_OPENBLT);
     }
 
-    private static void flashOpenBltCan(JComponent parent, UpdateOperationCallbacks callbacks) {
+    public static void flashOpenBltCan(JComponent parent, UpdateOperationCallbacks callbacks) {
         if (FileLog.is32bitJava()) {
             showError32bitJava(parent);
             return;
@@ -227,7 +224,7 @@ public class ProgramSelector {
         return newPorts;
     }
 
-    private static void flashOpenbltSerialAutomatic(JComponent parent, PortResult ecuPort, UpdateOperationCallbacks callbacks) {
+    public static void flashOpenbltSerialAutomatic(JComponent parent, PortResult ecuPort, UpdateOperationCallbacks callbacks) {
         AutoupdateUtil.assertNotAwtThread();
 
         final List<PortResult> openBltPortsBefore = SerialPortScanner.INSTANCE.getCurrentHardware().getKnownPorts(OpenBlt);
@@ -301,7 +298,7 @@ public class ProgramSelector {
             "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    private static void flashOpenbltSerialJni(JComponent parent, String port, UpdateOperationCallbacks callbacks) {
+    public static void flashOpenbltSerialJni(JComponent parent, String port, UpdateOperationCallbacks callbacks) {
         if (FileLog.is32bitJava()) {
             showError32bitJava(parent);
             return;

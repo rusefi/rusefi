@@ -15,7 +15,7 @@ public enum JobType {
     DFU_ERASE("DFU erase", "Full DFU Erase"),
     UPDATE_CALIBRATIONS("Update calibrations");
 
-    final String jobName;
+    public final String jobName;
     /***
      * Text to display in the corresponding combo box item
      */

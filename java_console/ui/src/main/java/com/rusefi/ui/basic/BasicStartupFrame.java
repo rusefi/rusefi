@@ -11,6 +11,7 @@ import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.maintenance.*;
+import com.rusefi.maintenance.jobs.*;
 import com.rusefi.ui.BasicLogoHelper;
 import com.rusefi.ui.LogoHelper;
 import com.rusefi.ui.util.DefaultExceptionHandler;
@@ -30,7 +31,6 @@ import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.FileLog.isWindows;
-import static com.rusefi.maintenance.JobType.*;
 
 /**
  * Focuses on firmware updater
@@ -55,7 +55,7 @@ public class BasicStartupFrame {
     );
     private final UpdateCalibrations updateCalibrations = new UpdateCalibrations();
 
-     private volatile Optional<JobParameters> updateFirmwareJob = Optional.empty();
+    private volatile Optional<AsyncJob> updateFirmwareJob = Optional.empty();
     private volatile Optional<SerialPortScanner.PortResult> portToUpdateCalibrations = Optional.empty();
 
     public static void main(String[] args) {
@@ -134,7 +134,7 @@ public class BasicStartupFrame {
 
     private void updateUpdateFirmwareJob(final AvailableHardware currentHardware) {
         if (currentHardware.isDfuFound()) {
-            setUpdateFirmwareJob(new JobParameters(DFU_MANUAL, null));
+            setUpdateFirmwareJob(new DfuManualJob());
         } else {
             final Set<SerialPortScanner.SerialPortType> portTypesToUpdateFirmware = (isObfuscated ?
                 Set.of(
@@ -157,16 +157,16 @@ public class BasicStartupFrame {
                 }
                 case 1: {
                     final SerialPortScanner.PortResult portToUpdateFirmware = portsToUpdateFirmware.get(0);
-                    JobType jobType = null;
+                    AsyncJob job = null;
                     if (isObfuscated) {
                         final SerialPortScanner.SerialPortType portType = portToUpdateFirmware.type;
                         switch (portType) {
                             case EcuWithOpenblt: {
-                                jobType = OPENBLT_AUTO;
+                                job = new OpenBltAutoJob(portToUpdateFirmware, updateFirmwareButton);
                                 break;
                             }
                             case OpenBlt: {
-                                jobType = OPENBLT_MANUAL;
+                                job = new OpenBltManualJob(portToUpdateFirmware, updateFirmwareButton);
                                 break;
                             }
                             default: {
@@ -175,9 +175,9 @@ public class BasicStartupFrame {
                             }
                         }
                     } else {
-                        jobType = DFU_AUTO;
+                        job = new DfuAutoJob(portToUpdateFirmware, updateFirmwareButton);
                     }
-                    setUpdateFirmwareJob(new JobParameters(jobType, portToUpdateFirmware));
+                    setUpdateFirmwareJob(job);
                     break;
                 }
                 default: {
@@ -193,33 +193,23 @@ public class BasicStartupFrame {
         }
     }
 
-    private void setUpdateFirmwareJob(final JobParameters jobParams) {
-        updateFirmwareJob = Optional.of(jobParams);
+    private void setUpdateFirmwareJob(final AsyncJob updateFirmwareJob) {
+        this.updateFirmwareJob = Optional.of(updateFirmwareJob);
         hideStatusMessage();
         updateFirmwareButton.setEnabled(true);
-        final JobType jobType = jobParams.jobType;
-        switch (jobType) {
-            case OPENBLT_AUTO: {
-                updateFirmwareButton.setText("Auto Update Firmware");
-                break;
-            }
-            case OPENBLT_MANUAL: {
-                updateFirmwareButton.setText("Blt Update Firmware");
-                break;
-            }
-            case DFU_AUTO: {
-                updateFirmwareButton.setText("Update Firmware");
-                break;
-            }
-            case DFU_MANUAL: {
-                updateFirmwareButton.setText("Update Firmware via DFU");
-                break;
-            }
-            default: {
-                log.error(String.format("Unexpected job type: %s", jobType));
-                break;
-            }
+        Optional<String> updateFirmwareButtonText = Optional.empty();
+        if (updateFirmwareJob instanceof OpenBltAutoJob) {
+            updateFirmwareButtonText = Optional.of("Auto Update Firmware");
+        } else if (updateFirmwareJob instanceof OpenBltManualJob) {
+            updateFirmwareButtonText = Optional.of("Blt Update Firmware");
+        } else if (updateFirmwareJob instanceof DfuAutoJob) {
+            updateFirmwareButtonText = Optional.of("Update Firmware");
+        } else if (updateFirmwareJob instanceof DfuManualJob) {
+            updateFirmwareButtonText = Optional.of("Update Firmware via DFU");
+        } else {
+            log.error(String.format("Unexpected job type: %s", updateFirmwareJob.getClass().getSimpleName()));
         }
+        updateFirmwareButtonText.ifPresent(updateFirmwareButton::setText);
     }
 
     private void resetUpdateFirmwareJob(final String reason) {
@@ -269,11 +259,8 @@ public class BasicStartupFrame {
 
     private void onUpdateFirmwareButtonClicked(final ActionEvent actionEvent) {
         updateFirmwareJob.ifPresentOrElse(
-            job -> {
-                ProgramSelector.executeJob(updateFirmwareButton, job.jobType, job.port);
-            }, () -> {
-                log.error("Update firmware job is is not defined.");
-            }
+            ProgramSelector::executeJob,
+            () -> log.error("Update firmware job is is not defined.")
         );
     }
 
