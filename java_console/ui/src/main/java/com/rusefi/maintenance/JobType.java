@@ -16,25 +16,33 @@ public enum JobType {
     UPDATE_CALIBRATIONS("Update calibrations");
 
     final String jobName;
-    final String persistedValue;
+    /***
+     * Text to display in the corresponding combo box item
+     */
+    final String displayText;
 
-    JobType(final String jobName, final String persistedValue) {
+    JobType(final String jobName, final String displayText) {
         this.jobName = jobName;
-        this.persistedValue = persistedValue;
+        this.displayText = displayText;
     }
 
     JobType(final String jobName) {
         this.jobName = jobName;
-        this.persistedValue = null;
+        this.displayText = null;
     }
 
     static Optional<JobType> parsePersistedValue(final String persistedValue) {
         for (final JobType value: values()) {
-            final String valuePersistedValue = value.persistedValue;
+            final String valuePersistedValue = value.displayText;
             if ((valuePersistedValue != null) && valuePersistedValue.equals(persistedValue)) {
                 return Optional.of(value);
             }
         }
         return Optional.empty();
+    }
+
+    @Override
+    public String toString() {
+        return displayText;
     }
 }

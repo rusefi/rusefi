@@ -65,7 +65,7 @@ public class ProgramSelector {
                 final JobType selectedMode = (JobType) updateModeComboBox.getSelectedItem();
                 final PortResult selectedPort = ((PortResult) comboPorts.getSelectedItem());
 
-                final String persistedValue = (selectedMode != null ? selectedMode.persistedValue : null);
+                final String persistedValue = (selectedMode != null ? selectedMode.displayText : null);
                 getConfig().getRoot().setProperty(getClass().getSimpleName(), persistedValue);
                 executeJob(comboPorts, selectedMode, selectedPort);
             }
