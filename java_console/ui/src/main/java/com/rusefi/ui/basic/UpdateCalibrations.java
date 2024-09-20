@@ -7,6 +7,7 @@ import com.rusefi.SerialPortScanner;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.maintenance.CalibrationsUpdater;
 import com.rusefi.maintenance.ProgramSelector;
+import com.rusefi.maintenance.jobs.UpdateCalibrationsJob;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -33,7 +34,7 @@ public class UpdateCalibrations {
                     selectedFile.getAbsolutePath()
                 );
                 CalibrationsUpdater.INSTANCE.setCalibrationsToUpload(calibrationsImage);
-                ProgramSelector.executeJob(parent, UPDATE_CALIBRATIONS, port);
+                ProgramSelector.executeJob(new UpdateCalibrationsJob(port));
             } catch (final IOException e) {
                 final String errorMsg = String.format(
                     "Failed to load calibrations from file %s",
