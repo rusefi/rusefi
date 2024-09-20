@@ -54,6 +54,8 @@
 /* Local variables and types.												*/
 /*==========================================================================*/
 
+#define PROTOCOL_HIP_NAME "HIP"
+
 static NamedOutputPin intHold(PROTOCOL_HIP_NAME);
 static NamedOutputPin Cs(PROTOCOL_HIP_NAME);
 
