@@ -5,8 +5,8 @@ import java.util.Optional;
 public enum JobType {
     DFU_AUTO("DFU update", "Auto DFU Update"),
     DFU_MANUAL("DFU update", "Manual DFU Update"),
-    INSTALL_OPENBLT("OpenBLT Initial Programming"/*, "Install OpenBLT"*/),
-    ST_LINK(""/*, "ST-LINK Update"*/),
+    INSTALL_OPENBLT("OpenBLT Initial Programming", "Install OpenBLT"),
+    ST_LINK("", "ST-LINK Update"),
     DFU_SWITCH("DFU switch", "Switch to DFU Mode"),
     OPENBLT_SWITCH("OpenBLT switch", "Switch to OpenBLT Mode"),
     OPENBLT_CAN("OpenBLT via CAN", "OpenBLT via CAN"),
