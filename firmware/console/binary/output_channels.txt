@@ -46,7 +46,7 @@ bit sd_active_rd;SD card reading
 
 uint16_t RPMValue;@@GAUGE_NAME_RPM@@;"RPM",1, 0, 0, 8000, 0
 
-int16_t rpmAcceleration;dRPM;"RPM acceleration",1, 0, 0, 5, 2
+int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 
 	uint16_t autoscale speedToRpmRatio;@@GAUGE_NAME_GEAR_RATIO@@;"value",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 	uint8_t unusedVehicleSpeedKph;@@GAUGE_NAME_VVS@@;"kph",1, 0, 0, 0, 1
