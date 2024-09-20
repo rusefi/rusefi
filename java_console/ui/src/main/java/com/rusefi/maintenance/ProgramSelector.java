@@ -123,24 +123,8 @@ public class ProgramSelector {
                 }
 
                 final UpdateOperationCallbacks callbacks = new UpdateStatusWindow(appendBundleName(jobName + " " + Launcher.CONSOLE_VERSION));
-                final Runnable jobWithSuspendedPortScanning = () -> {
-                    try {
-                        callbacks.logLine("Suspending port scanning...");
-                        try {
-                            SerialPortScanner.INSTANCE.suspend().await(1, TimeUnit.MINUTES);
-                            callbacks.logLine("Port scanning is suspended.");
-                            job.accept(callbacks);
-                        } catch (final InterruptedException e) {
-                            callbacks.logLine("Failed to  suspend port scanning in a minute.");
-                            callbacks.error();
-                        }
-                    } finally {
-                        callbacks.logLine("Resuming port scanning...");
-                        SerialPortScanner.INSTANCE.resume();
-                        callbacks.logLine("Port scanning is resumed.");
-                    }
-                };
-                ExecHelper.submitAction(jobWithSuspendedPortScanning, "mx");
+                final Runnable jobToExecute = () -> job.accept(callbacks);
+                ExecHelper.submitAction(jobToExecute, "mx");
     }
 
     private static void rebootToDfu(JComponent parent, String selectedPort, UpdateOperationCallbacks callbacks) {
