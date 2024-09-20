@@ -38,7 +38,7 @@ import static com.rusefi.ui.util.UiUtils.trueLayout;
 public class ProgramSelector {
     private static final Logging log = getLogging(ProgramSelector.class);
     private static final int ONE_DOT_DURATION_MS = 200;
-    private static final int TOTAL_WAIT_MS = 60 * 1000;
+    private static final int TOTAL_WAIT_SECONDS = 90;
 
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel noHardware = new JLabel("Nothing detected");
@@ -180,7 +180,7 @@ public class ProgramSelector {
     ) {
         callbacks.log(waitingMessage, false, true);
         try {
-            for (int attemptsCount = 0; attemptsCount < TOTAL_WAIT_MS / ONE_DOT_DURATION_MS; attemptsCount++) {
+            for (int attemptsCount = 0; attemptsCount < TOTAL_WAIT_SECONDS * 1000 / ONE_DOT_DURATION_MS; attemptsCount++) {
                 // Give the bootloader sec to enumerate
                 BinaryProtocol.sleep(ONE_DOT_DURATION_MS);
                 if (shouldFinish.get()) {
@@ -200,7 +200,7 @@ public class ProgramSelector {
         final UpdateOperationCallbacks callbacks
     ) {
         return waitForPredicate(
-            String.format("Waiting for ECU on port %s to reboot to OpenBlt...", ecuPort),
+            String.format("Waiting for ECU on port %s to reboot to OpenBlt for up to " + TOTAL_WAIT_SECONDS + " seconds...", ecuPort),
             () -> {
                 final AvailableHardware availableHardware = SerialPortScanner.INSTANCE.getCurrentHardware();
                 log.info(String.format(
