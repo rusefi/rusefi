@@ -6,11 +6,9 @@ import com.rusefi.maintenance.DfuFlasher;
 
 import javax.swing.*;
 
-import static com.rusefi.maintenance.JobType.DFU_AUTO;
-
 public class DfuAutoJob extends AsyncJobWithContext<SerialPortWithParentComponentJobContext> {
     public DfuAutoJob(final SerialPortScanner.PortResult port, final JComponent parent) {
-        super(DFU_AUTO.jobName, new SerialPortWithParentComponentJobContext(port, parent));
+        super("DFU update", new SerialPortWithParentComponentJobContext(port, parent));
     }
 
     @Override

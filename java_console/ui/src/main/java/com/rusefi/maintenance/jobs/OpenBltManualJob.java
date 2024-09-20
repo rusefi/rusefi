@@ -6,11 +6,9 @@ import com.rusefi.maintenance.ProgramSelector;
 
 import javax.swing.*;
 
-import static com.rusefi.maintenance.JobType.OPENBLT_MANUAL;
-
 public class OpenBltManualJob extends AsyncJobWithContext<SerialPortWithParentComponentJobContext> {
     public OpenBltManualJob(final SerialPortScanner.PortResult port, final JComponent parent) {
-        super(OPENBLT_MANUAL.jobName, new SerialPortWithParentComponentJobContext(port, parent));
+        super("OpenBLT via Serial", new SerialPortWithParentComponentJobContext(port, parent));
     }
 
     @Override

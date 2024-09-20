@@ -108,9 +108,6 @@ public class ProgramSelector {
                     case DFU_ERASE:
                         job = new DfuEraseJob();
                         break;
-                    case UPDATE_CALIBRATIONS:
-                        job = new UpdateCalibrationsJob(selectedPort);
-                        break;
                     default:
                         throw new IllegalArgumentException("How did you " + selectedMode);
                 }
