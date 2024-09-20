@@ -455,7 +455,7 @@
         <constant name="canInputBCM">"false"</constant>
         <constant name="consumeObdSensors">"false"</constant>
         <constant name="enableCanVss">"false"</constant>
-        <constant name="enableInnovateLC2">"false"</constant>
+        <constant name="unusedSnableInnovateLC2">"false"</constant>
         <constant name="showHumanReadableWarning">"false"</constant>
         <constant name="stftIgnoreErrorMagnitude">"false"</constant>
         <constant name="vvtBooleanForVerySpecialCases">"false"</constant>
@@ -770,8 +770,8 @@
         <constant name="enableKnockSpectrogram">"false"</constant>
         <constant digits="0" name="afterCrankingIACtaperDuration" units="cycles">200.0</constant>
         <constant digits="0" name="iacByTpsTaper" units="percent">2.0</constant>
-        <constant name="auxSerialTxPin">"NONE"</constant>
-        <constant name="auxSerialRxPin">"NONE"</constant>
+        <constant name="unusedAuxSeria">"NONE"</constant>
+        <constant name="unusedAuxSerialRx">"NONE"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant digits="0" name="coastingFuelCutVssLow" units="kph">0.0</constant>
         <constant digits="0" name="coastingFuelCutVssHigh" units="kph">0.0</constant>
@@ -785,7 +785,7 @@
         <constant digits="0" name="uartConsoleSerialSpeed" units="BPs">115200.0</constant>
         <constant digits="1" name="tpsDecelEnleanmentThreshold" units="roc">0.0</constant>
         <constant digits="2" name="tpsDecelEnleanmentMultiplier" units="coeff">0.0</constant>
-        <constant digits="0" name="auxSerialSpeed" units="BPs">0.0</constant>
+        <constant digits="0" name="unusedAuxSerialSpee" units="">0.0</constant>
         <constant digits="2" name="throttlePedalSecondaryUpVoltage" units="voltage">5.0</constant>
         <constant digits="2" name="throttlePedalSecondaryWOTVoltage" units="voltage">0.0</constant>
         <constant name="canBaudRate">"500kbps"</constant>
@@ -4762,7 +4762,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20240919" nPages="1" signature="rusEFI master.2024.09.20.f407-discovery.2064278030" version="5.0"/>
+    <versionInfo firmwareInfo="20240919" nPages="1" signature="rusEFI master.2024.09.20.f407-discovery.3743507484" version="5.0"/>
     <bibliography author="rusEFI 20240919" writeDate="date"/>
     <settings/>
     <userComments/>
