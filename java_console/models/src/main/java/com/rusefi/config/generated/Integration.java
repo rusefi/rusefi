@@ -69,7 +69,6 @@ public class Integration {
 	public static final String PROTOCOL_ES_DOWN = "d";
 	public static final String PROTOCOL_ES_UP = "u";
 	public static final String PROTOCOL_HELLO_PREFIX = "***";
-	public static final String PROTOCOL_HIP_NAME = "HIP";
 	public static final String PROTOCOL_KNOCK_SPECTROGRAMM = "knock_spectrogram";
 	public static final String PROTOCOL_MSG = "msg";
 	public static final String PROTOCOL_OUTPIN = "outpin";

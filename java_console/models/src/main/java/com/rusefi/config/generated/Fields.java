@@ -1172,7 +1172,6 @@ public class Fields {
 	public static final String PROTOCOL_ES_DOWN = "d";
 	public static final String PROTOCOL_ES_UP = "u";
 	public static final String PROTOCOL_HELLO_PREFIX = "***";
-	public static final String PROTOCOL_HIP_NAME = "HIP";
 	public static final String PROTOCOL_INJ_SHORT_PREFIX = "i";
 	public static final String PROTOCOL_INJ_STAGE2_SHORT_PREFIX = "j";
 	public static final String PROTOCOL_KNOCK_SPECTROGRAMM = "knock_spectrogram";
@@ -1211,7 +1210,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 406364793;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1473,7 +1471,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.09.20.f407-discovery.406364793";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.09.20.f407-discovery.2878450802";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
