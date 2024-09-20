@@ -38,7 +38,7 @@ import static com.rusefi.ui.util.UiUtils.trueLayout;
 public class ProgramSelector {
     private static final Logging log = getLogging(ProgramSelector.class);
     private static final int ONE_DOT_DURATION_MS = 200;
-    private static final int TOTAL_WAIT_SECONDS = 90;
+    private static final int TOTAL_WAIT_SECONDS = 60;
 
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel noHardware = new JLabel("Nothing detected");
