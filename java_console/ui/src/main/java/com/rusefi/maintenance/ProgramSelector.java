@@ -24,8 +24,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -33,7 +31,7 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.SerialPortScanner.SerialPortType.OpenBlt;
 import static com.rusefi.core.ui.FrameHelper.appendBundleName;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
-import static com.rusefi.maintenance.JobType.*;
+import static com.rusefi.maintenance.UpdateMode.*;
 import static com.rusefi.ui.util.UiUtils.trueLayout;
 
 public class ProgramSelector {
@@ -44,7 +42,7 @@ public class ProgramSelector {
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel noHardware = new JLabel("Nothing detected");
     private final JPanel updateModeAndButton = new JPanel(new FlowLayout());
-    private final JComboBox<JobType> updateModeComboBox = new JComboBox<>();
+    private final JComboBox<UpdateMode> updateModeComboBox = new JComboBox<>();
 
     public ProgramSelector(JComboBox<PortResult> comboPorts) {
         content.add(updateModeAndButton, BorderLayout.NORTH);
@@ -52,7 +50,7 @@ public class ProgramSelector {
 
         String persistedMode = getConfig().getRoot().getProperty(getClass().getSimpleName());
 
-        parsePersistedValue(persistedMode).ifPresent(updateModeComboBox::setSelectedItem);
+        parseDisplayText(persistedMode).ifPresent(updateModeComboBox::setSelectedItem);
 
         JButton updateFirmwareButton = createUpdateFirmwareButton();
 
@@ -63,7 +61,7 @@ public class ProgramSelector {
         updateFirmwareButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                final JobType selectedMode = (JobType) updateModeComboBox.getSelectedItem();
+                final UpdateMode selectedMode = (UpdateMode) updateModeComboBox.getSelectedItem();
                 final PortResult selectedPort = ((PortResult) comboPorts.getSelectedItem());
 
                 final String persistedValue = (selectedMode != null ? selectedMode.displayText : null);
@@ -73,7 +71,7 @@ public class ProgramSelector {
         });
     }
 
-    private static void executeJob(JComponent parent, JobType selectedMode, PortResult selectedPort) {
+    private static void executeJob(JComponent parent, UpdateMode selectedMode, PortResult selectedPort) {
         log.info("ProgramSelector " + selectedMode + " " + selectedPort);
                 Objects.requireNonNull(selectedMode);
                 AsyncJob job;

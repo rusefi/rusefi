@@ -2,7 +2,7 @@ package com.rusefi.maintenance;
 
 import java.util.Optional;
 
-public enum JobType {
+public enum UpdateMode {
     DFU_AUTO("Auto DFU Update"),
     DFU_MANUAL("Manual DFU Update"),
     INSTALL_OPENBLT("Install OpenBLT"),
@@ -19,12 +19,12 @@ public enum JobType {
      */
     final String displayText;
 
-    JobType(final String displayText) {
+    UpdateMode(final String displayText) {
         this.displayText = displayText;
     }
 
-    static Optional<JobType> parsePersistedValue(final String persistedValue) {
-        for (final JobType value: values()) {
+    static Optional<UpdateMode> parseDisplayText(final String persistedValue) {
+        for (final UpdateMode value: values()) {
             final String valuePersistedValue = value.displayText;
             if ((valuePersistedValue != null) && valuePersistedValue.equals(persistedValue)) {
                 return Optional.of(value);
