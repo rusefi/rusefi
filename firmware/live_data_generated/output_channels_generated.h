@@ -160,7 +160,7 @@ struct output_channels_s {
 	uint16_t RPMValue = (uint16_t)0;
 	/**
 	 * dRPM
-	 * units: RPM acceleration
+	 * units: RPM acceleration/Rate of Change/ROC
 	 * offset 6
 	 */
 	int16_t rpmAcceleration = (int16_t)0;
