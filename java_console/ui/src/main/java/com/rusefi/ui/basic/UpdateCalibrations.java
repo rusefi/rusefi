@@ -5,7 +5,6 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.SerialPortScanner;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
-import com.rusefi.maintenance.CalibrationsUpdater;
 import com.rusefi.maintenance.ProgramSelector;
 import com.rusefi.maintenance.jobs.UpdateCalibrationsJob;
 
@@ -32,8 +31,7 @@ public class UpdateCalibrations {
                 final ConfigurationImage calibrationsImage = ConfigurationImageFile.readFromFile(
                     selectedFile.getAbsolutePath()
                 );
-                CalibrationsUpdater.INSTANCE.setCalibrationsToUpload(calibrationsImage);
-                ProgramSelector.executeJob(new UpdateCalibrationsJob(port));
+                ProgramSelector.executeJob(new UpdateCalibrationsJob(port, calibrationsImage));
             } catch (final IOException e) {
                 final String errorMsg = String.format(
                     "Failed to load calibrations from file %s",
