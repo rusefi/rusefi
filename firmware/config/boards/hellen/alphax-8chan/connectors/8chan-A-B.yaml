@@ -319,7 +319,7 @@ pins:
     function: WBO2 VS black 6
 
   - pin: 19B
-    function: +12V
+    function: regulated +12V output (12V from main relay for consumers)
     type: 12v
 
 
@@ -357,7 +357,7 @@ pins:
     type: gnd
 
   - pin: 26B
-    function: +12V ETB/DC power source
+    function: +12V from main relay ETB/DC power source
     type: 12v
 
 info:
