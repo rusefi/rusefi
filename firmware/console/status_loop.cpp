@@ -132,12 +132,6 @@ static void printEngineSnifferPinMappings() {
 		extern const char *vvtNames[];
 		printOutPin(vvtNames[i], engineConfiguration->camInputs[i]);
 	}
-	printOutPin(PROTOCOL_HIP_NAME, engineConfiguration->hip9011IntHoldPin);
-	printOutPin(PROTOCOL_TACH_NAME, engineConfiguration->tachOutputPin);
-#if EFI_LOGIC_ANALYZER
-	printOutPin(PROTOCOL_WA_CHANNEL_1, engineConfiguration->logicAnalyzerPins[0]);
-	printOutPin(PROTOCOL_WA_CHANNEL_2, engineConfiguration->logicAnalyzerPins[1]);
-#endif /* EFI_LOGIC_ANALYZER */
 
 	int cylCount = minI(engineConfiguration->cylindersCount, MAX_CYLINDER_COUNT);
 	for (int i = 0; i < cylCount; i++) {
@@ -145,9 +139,6 @@ static void printEngineSnifferPinMappings() {
 		printOutPin(enginePins.trailingCoils[i].getShortName(), engineConfiguration->trailingCoilPins[i]);
 		printOutPin(enginePins.injectors[i].getShortName(), engineConfiguration->injectionPins[i]);
 		printOutPin(enginePins.injectorsStage2[i].getShortName(), engineConfiguration->injectionPinsStage2[i]);
-	}
-	for (int i = 0; i < AUX_DIGITAL_VALVE_COUNT;i++) {
-		printOutPin(enginePins.auxValve[i].getShortName(), engineConfiguration->auxValves[i]);
 	}
 #endif /* EFI_PROD_CODE */
 }
