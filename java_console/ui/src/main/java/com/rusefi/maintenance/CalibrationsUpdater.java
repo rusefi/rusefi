@@ -16,17 +16,11 @@ public enum CalibrationsUpdater {
 
     private static final Logging log = getLogging(CalibrationsUpdater.class);
 
-    private volatile ConfigurationImage calibrationsToUpload = null;
-
-    public void setCalibrationsToUpload(final ConfigurationImage calibrations) {
-        calibrationsToUpload = calibrations;
-    }
-
     public synchronized void updateCalibrations(
         final String port,
+        final ConfigurationImage calibrationsImage,
         final UpdateOperationCallbacks callbacks
     ) {
-        final ConfigurationImage calibrationsImage = calibrationsToUpload;
         if (calibrationsImage != null) {
             final int calibrationsImageSize = calibrationsImage.getSize();
             try {
