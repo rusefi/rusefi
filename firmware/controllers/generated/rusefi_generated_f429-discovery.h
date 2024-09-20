@@ -1240,7 +1240,7 @@
 #define PRIME_CURVE_COUNT 8
 #define PROTOCOL_ACR_NAME "acr"
 #define PROTOCOL_ANALOG_CHART "analog_chart"
-#define PROTOCOL_COIL1_SHORT_NAME "c1"
+#define PROTOCOL_COIL_SHORT_PREFIX "c"
 #define PROTOCOL_CRANK1 "t1"
 #define PROTOCOL_CRANK2 "t2"
 #define PROTOCOL_ENGINE_SNIFFER "wave_chart"
@@ -1249,8 +1249,8 @@
 #define PROTOCOL_HELLO_PREFIX "***"
 #define PROTOCOL_HIP_NAME "HIP"
 #define PROTOCOL_HPFP_NAME "hpfp"
-#define PROTOCOL_INJ1_SHORT_NAME "i1"
-#define PROTOCOL_INJ1_STAGE2_SHORT_NAME "j1"
+#define PROTOCOL_INJ_SHORT_PREFIX "i"
+#define PROTOCOL_INJ_STAGE2_SHORT_PREFIX "j"
 #define PROTOCOL_KNOCK_SPECTROGRAMM "knock_spectrogram"
 #define PROTOCOL_MSG "msg"
 #define PROTOCOL_OUTPIN "outpin"
@@ -1306,7 +1306,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3006363922
+#define SIGNATURE_HASH 1426514522
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1756,7 +1756,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.09.20.f429-discovery.3006363922"
+#define TS_SIGNATURE "rusEFI master.2024.09.20.f429-discovery.1426514522"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
