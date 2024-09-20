@@ -16,11 +16,11 @@ public class NameUtil {
             return name;
         if (name.charAt(0) == Fields.PROTOCOL_CRANK1.charAt(0))
             return "Trigger #" + name.substring(1);
-        if (name.charAt(0) == Fields.PROTOCOL_COIL1_SHORT_NAME.charAt(0))
+        if (name.charAt(0) == Fields.PROTOCOL_COIL_SHORT_PREFIX.charAt(0))
             return "Coil #" + name.substring(1);
-        if (name.charAt(0) == Fields.PROTOCOL_INJ1_SHORT_NAME.charAt(0))
+        if (name.charAt(0) == Fields.PROTOCOL_INJ_SHORT_PREFIX.charAt(0))
             return "Injector #" + name.substring(1);
-        if (name.charAt(0) == Fields.PROTOCOL_INJ1_STAGE2_SHORT_NAME.charAt(0))
+        if (name.charAt(0) == Fields.PROTOCOL_INJ_STAGE2_SHORT_PREFIX.charAt(0))
             return "Injector Second Stage #" + name.substring(1);
         return name;
     }

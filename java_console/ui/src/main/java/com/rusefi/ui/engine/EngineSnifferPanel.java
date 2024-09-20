@@ -25,6 +25,7 @@ import java.util.*;
 import java.util.List;
 
 import static com.devexperts.logging.Logging.getLogging;
+import static com.rusefi.config.generated.Fields.*;
 
 /**
  * Engine Sniffer control consists of a set of {@link UpDownImage}
@@ -283,12 +284,10 @@ public class EngineSnifferPanel {
         } else if (name.startsWith("r")) {
             // trailing coil
             signalBody = new Color(0xffa400); // golden yellow
-        } else if (name.startsWith("c")) {
+        } else if (name.startsWith(PROTOCOL_COIL_SHORT_PREFIX)) {
             // coil
             signalBody = Color.darkGray;
-        } else if (name.startsWith("HIP")) {
-            signalBody = Color.white;
-        } else if (name.startsWith("i") || name.startsWith("j")) {
+        } else if (name.startsWith(PROTOCOL_INJ_SHORT_PREFIX) || name.startsWith(PROTOCOL_INJ_STAGE2_SHORT_PREFIX)) {
             // injection
             signalBody = Color.green;
         } else if (name.startsWith("map")) {
