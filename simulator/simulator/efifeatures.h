@@ -71,8 +71,6 @@
 
 #define EFI_BOSCH_YAW FALSE
 
-#define EFI_AUX_SERIAL FALSE
-
 #define EFI_CLOCK_LOCKS FALSE
 
 #define TS_UART_MODE FALSE

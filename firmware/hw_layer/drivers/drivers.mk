@@ -23,7 +23,6 @@ HW_LAYER_DRIVERS =
 
 HW_LAYER_DRIVERS_CPP = \
 	$(DRIVERS_DIR)/can/can_hw.cpp \
-	$(DRIVERS_DIR)/serial/serial_hw.cpp \
 	$(PROJECT_DIR)/hw_layer/smart_gpio.cpp \
 	$(DRIVERS_DIR)/gpio/can_gpio_msiobox.cpp \
 	$(DRIVERS_DIR)/gpio/tle6240.cpp \

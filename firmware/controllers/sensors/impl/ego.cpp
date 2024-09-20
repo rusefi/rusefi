@@ -14,7 +14,7 @@
 #include "cyclic_buffer.h"
 
 bool hasAfrSensor() {
-	if (engineConfiguration->enableAemXSeries || engineConfiguration->enableInnovateLC2) {
+	if (engineConfiguration->enableAemXSeries) {
 		return true;
 	}
 
@@ -24,11 +24,6 @@ bool hasAfrSensor() {
 extern float InnovateLC2AFR;
 
 float getAfr(SensorType type) {
-#if EFI_AUX_SERIAL
-	if (engineConfiguration->enableInnovateLC2)
-		return InnovateLC2AFR;
-#endif
-
 	afr_sensor_s * sensor = &engineConfiguration->afr;
 
 	if (!isAdcChannelValid(type == SensorType::Lambda1 ? engineConfiguration->afr.hwChannel : engineConfiguration->afr.hwChannel2)) {

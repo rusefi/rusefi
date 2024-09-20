@@ -554,7 +554,6 @@ uint32_t cylindersCount;Number of cylinder the engine has.;"", 1, 0, 1, @@MAX_CY
 #define ts_show_startup_map_baro_grab true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define ts_show_uegoSerial true
 #define ts_show_ego2 true
 #define ts_show_exhaust_vvt true
 #define ts_show_second_bank true
@@ -948,7 +947,7 @@ custom maf_sensor_type_e 1 bits, S08, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	bit canInputBCM
 	bit consumeObdSensors;This property is useful if using rusEFI as TCM or BCM only
 	bit enableCanVss;Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
-	bit enableInnovateLC2
+	bit unusedSnableInnovateLC2
 	bit showHumanReadableWarning
 	bit stftIgnoreErrorMagnitude;If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise.
 	bit vvtBooleanForVerySpecialCases
@@ -1224,8 +1223,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	int16_t afterCrankingIACtaperDuration;This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.\Should be 100 once tune is better;"cycles", 1, 0, 0, 5000, 0
 	int16_t iacByTpsTaper;IAC Value added when coasting and transitioning into idle.;"percent", 1, 0, 0, 500, 0
 
-	Gpio auxSerialTxPin;Auxiliary sensor serial, not to be confused with secondary calibration serial;
-	Gpio auxSerialRxPin;Auxiliary sensor serial, not to be confused with secondary calibration serial;
+	Gpio unusedAuxSeria
+	Gpio unusedAuxSerialRx
 
 	Gpio accelerometerCsPin;
 	uint8_t coastingFuelCutVssLow;Below this speed, disable DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.;"kph", 1, 0, 0, 255, 0
@@ -1247,7 +1246,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	float tpsDecelEnleanmentThreshold;For decel we simply multiply delta of TPS and tFor decel we do not use table?!;"roc", 1, 0, 0, 200, 1
 	float tpsDecelEnleanmentMultiplier;Magic multiplier, we multiply delta of TPS and get fuel squirt duration;"coeff", 1, 0, 0, 200, 2
 
-	uint32_t auxSerialSpeed;;"BPs", 1, 0, 0, 1000000, 0
+	uint32_t unusedAuxSerialSpee
 
 	float throttlePedalSecondaryUpVoltage;;"voltage", 1, 0, -6, 6, 2
 	float throttlePedalSecondaryWOTVoltage;Pedal in the floor;"voltage", 1, 0, -6, 6, 2

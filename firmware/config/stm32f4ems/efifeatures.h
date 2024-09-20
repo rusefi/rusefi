@@ -291,10 +291,6 @@
 
 #define EFI_WIDEBAND_FIRMWARE_UPDATE TRUE
 
-#ifndef EFI_AUX_SERIAL
-#define EFI_AUX_SERIAL TRUE
-#endif
-
 #ifndef EFI_IDLE_CONTROL
 #define EFI_IDLE_CONTROL TRUE
 #endif

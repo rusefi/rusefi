@@ -22,7 +22,6 @@
 #include "eficonsole.h"
 #include "console_io.h"
 #include "sensor_chart.h"
-#include "serial_hw.h"
 #include "idle_thread.h"
 #include "odometer.h"
 #include "kline.h"
@@ -348,10 +347,6 @@ void applyNewHardwareSettings() {
 
 	stopKLine();
 
-#if EFI_AUX_SERIAL
-	stopAuxSerialPins();
-#endif /* EFI_AUX_SERIAL */
-
 #if EFI_HIP_9011
 	stopHip9011_pins();
 #endif /* EFI_HIP_9011 */
@@ -399,12 +394,7 @@ void applyNewHardwareSettings() {
 	startSmartCsPins();
 #endif /* (BOARD_EXT_GPIOCHIPS > 0) */
 
-#if EFI_AUX_SERIAL
-	startAuxSerialPins();
-#endif /* EFI_AUX_SERIAL */
-
     startKLine();
-
 
 #if EFI_HIP_9011
 	startHip9011_pins();
@@ -636,10 +626,6 @@ void initHardware() {
 #if EFI_UART_GPS
 	initGps();
 #endif
-
-#if EFI_AUX_SERIAL
-	initAuxSerial();
-#endif /* EFI_AUX_SERIAL */
 
 #if EFI_CAN_SUPPORT
 	initCanVssSupport();
