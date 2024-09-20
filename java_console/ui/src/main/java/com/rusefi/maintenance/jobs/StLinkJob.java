@@ -6,12 +6,10 @@ import com.rusefi.maintenance.StLinkFlasher;
 
 import javax.swing.*;
 
-import static com.rusefi.maintenance.JobType.ST_LINK;
-
 public class StLinkJob extends AsyncJobWithContext<ParentComponentContext> {
 
     public StLinkJob(final JComponent parent) {
-        super(ST_LINK.jobName, new ParentComponentContext(parent));
+        super("", new ParentComponentContext(parent));
     }
 
     @Override

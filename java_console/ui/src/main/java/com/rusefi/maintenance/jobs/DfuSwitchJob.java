@@ -6,11 +6,9 @@ import com.rusefi.maintenance.ProgramSelector;
 
 import javax.swing.*;
 
-import static com.rusefi.maintenance.JobType.DFU_SWITCH;
-
 public class DfuSwitchJob extends AsyncJobWithContext<SerialPortWithParentComponentJobContext> {
     public DfuSwitchJob(final SerialPortScanner.PortResult port, final JComponent parent) {
-        super(DFU_SWITCH.jobName, new SerialPortWithParentComponentJobContext(port, parent));
+        super("DFU switch", new SerialPortWithParentComponentJobContext(port, parent));
     }
 
     @Override

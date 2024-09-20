@@ -15,7 +15,6 @@ import java.io.File;
 import java.io.IOException;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.maintenance.JobType.UPDATE_CALIBRATIONS;
 
 public class UpdateCalibrations {
     private static final Logging log = getLogging(UpdateCalibrations.class);

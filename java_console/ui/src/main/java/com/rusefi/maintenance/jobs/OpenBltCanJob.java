@@ -5,11 +5,9 @@ import com.rusefi.maintenance.ProgramSelector;
 
 import javax.swing.*;
 
-import static com.rusefi.maintenance.JobType.OPENBLT_CAN;
-
 public class OpenBltCanJob extends AsyncJobWithContext<ParentComponentContext> {
     public OpenBltCanJob(final JComponent parent) {
-        super(OPENBLT_CAN.jobName, new ParentComponentContext(parent));
+        super("OpenBLT via CAN", new ParentComponentContext(parent));
     }
 
     @Override
