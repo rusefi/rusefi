@@ -747,13 +747,13 @@ void configureRusefiLuaHooks(lua_State* lState) {
 		auto targetSkipRatio = luaL_checknumber(l, 1);
 		engine->engineState.luaSoftSparkSkip = targetSkipRatio;
 		engine->engineState.updateSparkSkip();
-		return 1;
+		return 0;
 	});
 	lua_register(lState, "setSparkHardSkipRatio", [](lua_State* l) {
 		auto targetSkipRatio = luaL_checknumber(l, 1);
 		engine->engineState.luaHardSparkSkip = targetSkipRatio;
 		engine->engineState.updateSparkSkip();
-		return 1;
+		return 0;
 	});
 #endif // EFI_LAUNCH_CONTROL
 
