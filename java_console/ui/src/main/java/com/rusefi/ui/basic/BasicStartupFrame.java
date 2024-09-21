@@ -259,7 +259,7 @@ public class BasicStartupFrame {
 
     private void onUpdateFirmwareButtonClicked(final ActionEvent actionEvent) {
         updateFirmwareJob.ifPresentOrElse(
-            ProgramSelector::executeJob,
+            AsyncJobExecutor.INSTANCE::executeJob,
             () -> log.error("Update firmware job is is not defined.")
         );
     }

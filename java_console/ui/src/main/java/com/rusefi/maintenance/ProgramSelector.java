@@ -73,50 +73,44 @@ public class ProgramSelector {
 
     private static void executeJob(JComponent parent, UpdateMode selectedMode, PortResult selectedPort) {
         log.info("ProgramSelector " + selectedMode + " " + selectedPort);
-                Objects.requireNonNull(selectedMode);
-                AsyncJob job;
-                switch (selectedMode) {
-                    case DFU_AUTO:
-                        job = new DfuAutoJob(selectedPort, parent);
-                        break;
-                    case DFU_MANUAL:
-                        job = new DfuManualJob();
-                        break;
-                    case INSTALL_OPENBLT:
-                        job = new InstallOpenBltJob();
-                        break;
-                    case ST_LINK:
-                        job = new StLinkJob(parent);
-                        break;
-                    case DFU_SWITCH:
-                        job = new DfuSwitchJob(selectedPort, parent);
-                        break;
-                    case OPENBLT_SWITCH:
-                        job = new OpenBltSwitchJob(selectedPort, parent);
-                        break;
-                    case OPENBLT_CAN:
-                        job = new OpenBltCanJob(parent);
-                        break;
-                    case OPENBLT_MANUAL:
-                        job = new OpenBltManualJob(selectedPort, parent);
-                        break;
-                    case OPENBLT_AUTO:
-                        job = new OpenBltAutoJob(selectedPort, parent);
-                        break;
-                    case DFU_ERASE:
-                        job = new DfuEraseJob();
-                        break;
-                    default:
-                        throw new IllegalArgumentException("How did you " + selectedMode);
-                }
+        Objects.requireNonNull(selectedMode);
+        AsyncJob job;
+        switch (selectedMode) {
+            case DFU_AUTO:
+                job = new DfuAutoJob(selectedPort, parent);
+                break;
+            case DFU_MANUAL:
+                job = new DfuManualJob();
+                break;
+            case INSTALL_OPENBLT:
+                job = new InstallOpenBltJob();
+                break;
+            case ST_LINK:
+                job = new StLinkJob(parent);
+                break;
+            case DFU_SWITCH:
+                job = new DfuSwitchJob(selectedPort, parent);
+                break;
+            case OPENBLT_SWITCH:
+                job = new OpenBltSwitchJob(selectedPort, parent);
+                break;
+            case OPENBLT_CAN:
+                job = new OpenBltCanJob(parent);
+                break;
+            case OPENBLT_MANUAL:
+                job = new OpenBltManualJob(selectedPort, parent);
+                break;
+            case OPENBLT_AUTO:
+                job = new OpenBltAutoJob(selectedPort, parent);
+                break;
+            case DFU_ERASE:
+                job = new DfuEraseJob();
+                break;
+            default:
+                throw new IllegalArgumentException("How did you " + selectedMode);
+        }
 
-                executeJob(job);
-    }
-
-    public static void executeJob(final AsyncJob job) {
-        final UpdateOperationCallbacks callbacks = new UpdateStatusWindow(appendBundleName(job.getName() + " " + Launcher.CONSOLE_VERSION));
-        final Runnable jobWithSuspendedPortScanning = () -> job.doJob(callbacks);
-        ExecHelper.submitAction(jobWithSuspendedPortScanning, "mx");
+        AsyncJobExecutor.INSTANCE.executeJob(job);
     }
 
     public static void rebootToDfu(JComponent parent, String selectedPort, UpdateOperationCallbacks callbacks) {
