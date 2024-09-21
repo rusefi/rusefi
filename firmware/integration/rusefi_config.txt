@@ -564,7 +564,7 @@ custom firing_order_e 1 bits, U08, @OFFSET@, [0:6], "One Cylinder", "1-3-4-2", "
 firing_order_e firingOrder;
 uint8_t justATempTest
 uint8_t mapSyncThreshold;Delta kPa for MAP sync;"kPa", 1, 0, 0, 50, 0
-uint8_t unusedByteHere
+uint8_t countAemXSeriesEgt;Number of CAN EGT channels.;"", 1, 0, 1, 6, 0
 
 #define CYLINDER_BORE_UNITS "mm"
 #define CYLINDER_BORE_TOOLTIP "Cylinder diameter in mm"

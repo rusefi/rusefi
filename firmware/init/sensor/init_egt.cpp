@@ -21,13 +21,31 @@ void initEgt() {
 			return;
 		}
 
-		registerCanSensor(aemEgt1);
-		registerCanSensor(aemEgt2);
-		registerCanSensor(aemEgt3);
-		registerCanSensor(aemEgt4);
-		registerCanSensor(aemEgt5);
-		registerCanSensor(aemEgt6);
-
+		if (engineConfiguration->countAemXSeriesEgt > 0)
+		{
+			registerCanSensor(aemEgt1);
+		}
+		if (engineConfiguration->countAemXSeriesEgt > 1)
+		{
+			registerCanSensor(aemEgt2);
+		}
+		if (engineConfiguration->countAemXSeriesEgt > 2)
+		{
+			registerCanSensor(aemEgt3);
+		}
+		if (engineConfiguration->countAemXSeriesEgt > 3)
+		{
+			registerCanSensor(aemEgt4);
+		}
+		if (engineConfiguration->countAemXSeriesEgt > 4)
+		{
+			registerCanSensor(aemEgt5);
+		}
+		if (engineConfiguration->countAemXSeriesEgt > 5)
+		{
+			registerCanSensor(aemEgt6);
+		}
+		
 		return;
 	}
 #endif
