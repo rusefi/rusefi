@@ -23,71 +23,55 @@ public enum CalibrationsUpdater {
     ) {
         if (calibrationsImage != null) {
             final int calibrationsImageSize = calibrationsImage.getSize();
-            try {
-                callbacks.logLine("Suspending port scanning...");
+            try (LinkManager linkManager = new LinkManager()
+                .setNeedPullText(false)
+                .setNeedPullLiveData(true)) {
+
+                callbacks.logLine(String.format("Connecting to port %s...", port));
                 try {
-                    SerialPortScanner.INSTANCE.suspend().await(1, TimeUnit.MINUTES);
-                    callbacks.logLine("Port scanning is suspended.");
+                    linkManager.connect(port).await(60, TimeUnit.SECONDS);
                 } catch (final InterruptedException e) {
-                    callbacks.logLine("Failed to  suspend port scanning in a minute.");
+                    final String errorMsg = String.format("Failed to connect to port %s", port);
+                    log.error(errorMsg, e);
+                    callbacks.logLine(errorMsg);
                     callbacks.error();
                     return;
                 }
-
-                try (LinkManager linkManager = new LinkManager()
-                    .setNeedPullText(false)
-                    .setNeedPullLiveData(true)) {
-
-                    callbacks.logLine(String.format("Connecting to port %s...", port));
-                    try {
-                        linkManager.connect(port).await(60, TimeUnit.SECONDS);
-                    } catch (final InterruptedException e) {
-                        final String errorMsg = String.format("Failed to connect to port %s", port);
-                        log.error(errorMsg, e);
-                        callbacks.logLine(errorMsg);
-                        callbacks.error();
-                        return;
-                    }
-                    callbacks.logLine(String.format(
-                        "Updating configuration image (%d bytes) to port %s...",
-                        calibrationsImageSize,
-                        port
-                    ));
-                    final CountDownLatch latch = new CountDownLatch(1);
-                    linkManager.execute(() -> {
-                        linkManager.getBinaryProtocol().uploadChanges(calibrationsImage);
-                        latch.countDown();
-                    });
-                    try {
-                        if (!latch.await(1, TimeUnit.MINUTES)) {
-                            callbacks.logLine(String.format(
-                                "Failed to update configuration image (%d bytes) to port %s in a minute",
-                                calibrationsImageSize,
-                                port
-                            ));
-                            callbacks.error();
-                        } else {
-                            callbacks.logLine(String.format(
-                                "Configuration image (%d bytes) has been uploaded to port %s",
-                                calibrationsImageSize,
-                                port
-                            ));
-                            callbacks.done();
-                        }
-                    } catch (final InterruptedException e) {
-                        final String errorMsg = String.format(
-                            "Updating calibrations to port %s was interrupted",
+                callbacks.logLine(String.format(
+                    "Updating configuration image (%d bytes) to port %s...",
+                    calibrationsImageSize,
+                    port
+                ));
+                final CountDownLatch latch = new CountDownLatch(1);
+                linkManager.execute(() -> {
+                    linkManager.getBinaryProtocol().uploadChanges(calibrationsImage);
+                    latch.countDown();
+                });
+                try {
+                    if (!latch.await(1, TimeUnit.MINUTES)) {
+                        callbacks.logLine(String.format(
+                            "Failed to update configuration image (%d bytes) to port %s in a minute",
+                            calibrationsImageSize,
                             port
-                        );
-                        log.error(errorMsg, e);
-                        callbacks.logLine(errorMsg);
+                        ));
                         callbacks.error();
+                    } else {
+                        callbacks.logLine(String.format(
+                            "Configuration image (%d bytes) has been uploaded to port %s",
+                            calibrationsImageSize,
+                            port
+                        ));
+                        callbacks.done();
                     }
+                } catch (final InterruptedException e) {
+                    final String errorMsg = String.format(
+                        "Updating calibrations to port %s was interrupted",
+                        port
+                    );
+                    log.error(errorMsg, e);
+                    callbacks.logLine(errorMsg);
+                    callbacks.error();
                 }
-            } finally {
-                callbacks.logLine("Resuming port scanning...");
-                SerialPortScanner.INSTANCE.resume();
-                callbacks.logLine("Port scanning is resumed.");
             }
         } else {
             callbacks.logLine("ERROR: Calibrations to update are undefined");
