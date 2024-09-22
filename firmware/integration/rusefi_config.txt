@@ -2374,6 +2374,7 @@ end_struct
 #define ts_show_onboard_accelerometer false
 #define ts_show_vvt_output true
 #define show_vvt_output_pin true
+#define ts_show_intake_vvt_direction true
 ! LAME! todo make this way less lame
 #define ts_show_cylinder_2 true
 #define ts_show_cylinder_3 true
