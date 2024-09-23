@@ -49,11 +49,12 @@ static SPIConfig spiCfg = {
 
 class Pt2001 : public Pt2001Base {
 public:
-	void init();
+	bool init();
 	void initIfNeeded();
 
 protected:
  	void acquireBus() override {
+ 	  criticalAssertVoid(driver != nullptr, "mc33816");
  	  spiAcquireBus(driver);
  	}
 
@@ -62,6 +63,7 @@ protected:
  	}
 
 	void select() override {
+ 	  criticalAssertVoid(driver != nullptr, "mc33816");
 // revive MC33816 driver, also support bus sharing #6781
 // should be somewhere but not here 	  spiStart(driver, &spiCfg);
 //  efiPrintf("mc select %s", hwOnChipPhysicalPinName(driver->config->ssport, driver->config->sspad));
@@ -192,14 +194,17 @@ private:
 
 static Pt2001 pt;
 
-void Pt2001::init() {
+/**
+ * returns true if chip has configuration
+ */
+bool Pt2001::init() {
 	//
 	// see setTest33816EngineConfiguration for default configuration
 	// Pins
 	if (!isBrainPinValid(engineConfiguration->mc33816_cs) ||
 		!isBrainPinValid(engineConfiguration->mc33816_rstb) ||
 		!isBrainPinValid(engineConfiguration->mc33816_driven)) {
-		return;
+		return false;
 	}
 	if (isBrainPinValid(engineConfiguration->mc33816_flag0)) {
 		efiSetPadMode("mc33816 flag0", engineConfiguration->mc33816_flag0, getInputMode(PI_DEFAULT));
@@ -228,7 +233,7 @@ void Pt2001::init() {
 	driver = getSpiDevice(engineConfiguration->mc33816spiDevice);
 	if (driver == nullptr) {
 		// error already reported
-		return;
+		return false;
 	}
 
 	spiStart(driver, &spiCfg);
@@ -241,6 +246,7 @@ void Pt2001::init() {
 
 	// todo: too soon to read voltage, it has to fail, right?!
 	initIfNeeded();
+	return true;
 }
 
 static bool isInitialized = false;
@@ -281,9 +287,10 @@ static THD_FUNCTION(mc33_driver_thread, p) {
 }
 
 void initMc33816() {
-	chThdCreateStatic(mc33_thread_wa, sizeof(mc33_thread_wa), PRIO_GPIOCHIP, mc33_driver_thread, nullptr);
-
-	pt.init();
+	bool isConfigured = pt.init();
+	if (isConfigured) {
+	  chThdCreateStatic(mc33_thread_wa, sizeof(mc33_thread_wa), PRIO_GPIOCHIP, mc33_driver_thread, nullptr);
+  }
 }
 
 #endif /* EFI_MC33816 */
