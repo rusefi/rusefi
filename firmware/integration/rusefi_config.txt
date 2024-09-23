@@ -2406,6 +2406,7 @@ end_struct
 
 #define ts_show_analog_divider true
 #define ts_show_analog_input_settings true
+#define ts_show_flex_inverted true
 #define ts_show_spi true
 #define ts_show_sd_card true
 #define ts_show_can_pins true
