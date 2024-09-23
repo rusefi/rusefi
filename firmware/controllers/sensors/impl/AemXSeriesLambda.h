@@ -10,6 +10,8 @@ public:
 
 	bool acceptFrame(const CANRxFrame& frame) const override;
 
+	void refreshState(void);
+
 protected:
 	// Dispatches to one of the three decoders below
 	void decodeFrame(const CANRxFrame& frame, efitick_t nowNt) override;
