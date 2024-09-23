@@ -9,6 +9,8 @@ static constexpr uint32_t rusefi_base = WB_DATA_BASE_ADDR;
 
 // "silent" of wboFaultCodeList
 #define HACK_SILENT_VALUE 1
+// todo: suggest values 1 and 2 into the official WB source fault enum?
+#define HACK_CRANKING_VALUE 2
 
 AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
 	: CanSensorBase(
@@ -38,6 +40,15 @@ bool AemXSeriesWideband::acceptFrame(const CANRxFrame& frame) const {
 		id == aemXSeriesId ||
 		id == rusefiBaseId ||
 		id == rusefiBaseId + 1;
+}
+
+void AemXSeriesWideband::refreshState() {
+	if (!engine->engineState.heaterControlEnabled) {
+		faultCode = HACK_CRANKING_VALUE;
+	} else if ((faultCode == static_cast<uint8_t>(wbo::Fault::None)) && (get() == UnexpectedCode::Timeout)) {
+		// fall to timeout from no error state only
+		faultCode = HACK_SILENT_VALUE;
+	}
 }
 
 void AemXSeriesWideband::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
@@ -115,13 +126,11 @@ void AemXSeriesWideband::decodeRusefiDiag(const CANRxFrame& frame) {
 	// no conversion, just ohms
 	esr = data->Esr;
 
-// todo: suggest values 1 and 2 into the official WB source fault enum?
-#define HACK_CRANKING_VALUE 2
-
     if (!engine->engineState.heaterControlEnabled) {
         faultCode = HACK_CRANKING_VALUE;
         return;
     }
+
 	faultCode = static_cast<uint8_t>(data->Status);
 
 	if (data->Status != wbo::Fault::None) {

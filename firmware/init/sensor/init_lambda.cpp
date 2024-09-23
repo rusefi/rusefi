@@ -37,8 +37,12 @@ template <>
 const wideband_state_s* getLiveData(size_t idx) {
 #if EFI_CAN_SUPPORT
 	switch (idx) {
-		case 0: return &aem1;
-		case 1: return &aem2;
+		case 0:
+			aem1.refreshState();
+			return &aem1;
+		case 1:
+			aem2.refreshState();
+			return &aem2;
 	}
 #endif
 
