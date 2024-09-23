@@ -25,6 +25,7 @@ class AdcDeviceBase {
 public:
 	virtual int start(void) = 0;
 
+	virtual bool isChannelSupported(adc_channel_e /* hwChannel */) { return true; }
 	/* Returns internal channel number in case of success, or negative number in case of error */
 	virtual int enableChannel(adc_channel_e /* hwChannel */) { return -1; }
 	virtual void disableChannel(uint16_t /* token */) { }

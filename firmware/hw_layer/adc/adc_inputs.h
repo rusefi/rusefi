@@ -10,6 +10,7 @@
 
 #include "global.h"
 #include "adc_math.h"
+#include "adc_device.h"
 
 #ifndef SLOW_ADC_RATE
 #define SLOW_ADC_RATE 500
@@ -71,17 +72,30 @@ inline bool isAdcChannelOffChip(adc_channel_e hwChannel) {
 #if HAL_USE_ADC
 
 typedef enum {
-	ADC_SLOW = 0,
-	ADC_FAST = 1,
-	ADC_AUX = 2,
+	// Just a dummy
+	ADC_DUMMY = 0,
+
+	// On-chip ADCs
+	ADC_SLOW = 1,
+	ADC_FAST = 2,
+	ADC_AUX = 3,
 
 	ADC_EXTERNAL_0 = 8,
 	ADC_EXTERNAL_1 = 9,
 	ADC_EXTERNAL_3 = 10,
 
 	ADC_OFF = 16,
+
+	// special case when user don't care which driver is gonna serve required input
+	ADC_ANY = 17
 } adc_channel_mode_e;
 
+inline bool adcIsValidDriver(adc_channel_mode_e mode) {
+	return ((mode >= ADC_DUMMY) && (mode < ADC_OFF));
+}
+
+// first read driver
+#define ADC_DRIVERS_FIRST	ADC_SLOW
 #define ADC_DRIVERS_COUNT	ADC_OFF
 
 using AdcToken = uint32_t;
@@ -89,7 +103,7 @@ using AdcToken = uint32_t;
 using AdcTockenInternal = union {
 	AdcToken token;
 	struct {
-		uint16_t drvIdx;
+		adc_channel_mode_e drvIdx;
 		uint16_t channel;
 	} __attribute__((packed));
 };
@@ -121,6 +135,11 @@ static_assert(sizeof(AdcTockenInternal) == sizeof(AdcToken));
 
 AdcToken enableFastAdcChannel(const char* msg, adc_channel_e channel);
 adcsample_t getFastAdc(AdcToken token);
+
+// Register new ADC
+int adcDeviceRegister(AdcDeviceBase *dev, adc_channel_mode_e mode);
+int adcDeviceRemove(adc_channel_mode_e mode);
+
 #endif // HAL_USE_ADC
 
 void printFullAdcReport(void);

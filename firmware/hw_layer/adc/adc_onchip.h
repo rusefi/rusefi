@@ -15,6 +15,7 @@ class AdcSlowOnchipDevice : public AdcDeviceBase {
 public:
 	int start(void) override;
 	const char *name() override { return "SlowAdc"; }
+	bool isChannelSupported(adc_channel_e hwChannel) override;
 	int enableChannel(adc_channel_e hwChannel) override;
 	void disableChannel(uint16_t token) override;
 
@@ -41,6 +42,7 @@ class AdcFastOnchipDevice : public AdcDeviceBase {
 public:
 	int start(void) override;
 	const char *name() override { return "FastAdc"; }
+	bool isChannelSupported(adc_channel_e hwChannel) override;
 	int enableChannel(adc_channel_e hwChannel) override;
 	void disableChannel(uint16_t token) override;
 

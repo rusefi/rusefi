@@ -61,6 +61,10 @@ int AdcSlowOnchipDevice::start(void) {
 	return 0;
 }
 
+bool AdcSlowOnchipDevice::isChannelSupported(adc_channel_e hwChannel) {
+	return (getAdcInternalChannel(adcp->adc, hwChannel) >= 0);
+}
+
 int AdcSlowOnchipDevice::enableChannel(adc_channel_e hwChannel) {
 	int channelAdcIndex = getAdcInternalChannel(adcp->adc, adcMuxedGetParent(hwChannel));
 	if (channelAdcIndex < 0) {
@@ -224,6 +228,11 @@ int AdcFastOnchipDevice::start(void) {
 	gptStartContinuous(EFI_INTERNAL_FAST_ADC_GPT, GPT_PERIOD_FAST);
 
 	return 0;
+}
+
+/* TODO: deduplicate */
+bool AdcFastOnchipDevice::isChannelSupported(adc_channel_e hwChannel) {
+	return (getAdcInternalChannel(adcp->adc, hwChannel) >= 0);
 }
 
 int AdcFastOnchipDevice::enableChannel(adc_channel_e hwChannel) {
