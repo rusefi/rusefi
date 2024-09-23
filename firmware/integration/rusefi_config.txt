@@ -2408,6 +2408,7 @@ end_struct
 #define ts_show_analog_input_settings true
 #define ts_show_flex_inverted true
 #define ts_show_trigger_pins true
+#define ts_show_intake_cam_edge true
 #define ts_show_strokes true
 #define ts_show_spi true
 #define ts_show_sd_card true
