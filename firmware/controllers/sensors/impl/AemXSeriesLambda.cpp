@@ -47,7 +47,7 @@ void AemXSeriesWideband::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
 	// We just have to check if it's AEM or rusEFI
 	if (id < rusefi_base) {
 		decodeAemXSeries(frame, nowNt);
-		faultCode = 6;//static_cast<uint8_t>(Fault::LegacyProtocol);
+		faultCode = 7;//static_cast<uint8_t>(Fault::LegacyProtocol);
 	} else {
 		// rusEFI custom format
 		if ((id & 0x1) != 0) {
