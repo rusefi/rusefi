@@ -14,9 +14,8 @@ public class FanControl {
 	public static final Field HOT = Field.create("HOT", 0, FieldType.BIT, 5).setBaseOffset(1096);
 	public static final Field COLD = Field.create("COLD", 0, FieldType.BIT, 6).setBaseOffset(1096);
 	public static final Field DISABLEDBYSPEED = Field.create("DISABLEDBYSPEED", 0, FieldType.BIT, 7).setBaseOffset(1096);
-	public static final Field TEMPALIVE = Field.create("TEMPALIVE", 4, FieldType.INT8).setScale(1.0).setBaseOffset(1096);
-	public static final Field TEMPCODE = Field.create("TEMPCODE", 5, FieldType.INT8).setScale(1.0).setBaseOffset(1096);
-	public static final Field ALIGNMENTFILL_AT_6 = Field.create("ALIGNMENTFILL_AT_6", 6, FieldType.INT8).setScale(1.0).setBaseOffset(1096);
+	public static final Field RADIATORFANSTATUS = Field.create("RADIATORFANSTATUS", 4, FieldType.INT8).setScale(1.0).setBaseOffset(1096);
+	public static final Field ALIGNMENTFILL_AT_5 = Field.create("ALIGNMENTFILL_AT_5", 5, FieldType.INT8).setScale(1.0).setBaseOffset(1096);
 	public static final Field[] VALUES = {
 	CRANKING,
 	NOTRUNNING,
@@ -26,8 +25,7 @@ public class FanControl {
 	HOT,
 	COLD,
 	DISABLEDBYSPEED,
-	TEMPALIVE,
-	TEMPCODE,
-	ALIGNMENTFILL_AT_6,
+	RADIATORFANSTATUS,
+	ALIGNMENTFILL_AT_5,
 	};
 }

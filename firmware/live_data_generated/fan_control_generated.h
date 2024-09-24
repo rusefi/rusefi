@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/fan_control.txt Fri Apr 12 16:51:56 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/fan_control.txt
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -104,19 +104,15 @@ struct fan_control_s {
 	/**
 	 * offset 4
 	 */
-	uint8_t tempAlive = (uint8_t)0;
-	/**
-	 * offset 5
-	 */
-	uint8_t tempCode = (uint8_t)0;
+	uint8_t radiatorFanStatus = (uint8_t)0;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 6
+	 * offset 5
 	 */
-	uint8_t alignmentFill_at_6[2];
+	uint8_t alignmentFill_at_5[3];
 };
 static_assert(sizeof(fan_control_s) == 8);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/fan_control.txt Fri Apr 12 16:51:56 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/fan_control.txt
