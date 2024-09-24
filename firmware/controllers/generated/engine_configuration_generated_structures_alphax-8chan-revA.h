@@ -2534,7 +2534,8 @@ struct engine_configuration_s {
 	offset 1316 bit 23 */
 	bool useCltBasedRpmLimit : 1 {};
 	/**
-	 * If enabled, don't wait for engine start to heat O2 sensors. WARNING: this will reduce the life of your sensor, as condensation in the exhaust from a cold start can crack the sensing element.
+	 * If enabled, don't wait for engine start to heat O2 sensors.
+	 * WARNING: this will reduce the life of your sensor, as condensation in the exhaust from a cold start can crack the sensing element.
 	offset 1316 bit 24 */
 	bool forceO2Heating : 1 {};
 	/**

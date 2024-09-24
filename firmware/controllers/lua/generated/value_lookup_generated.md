@@ -893,7 +893,7 @@ Some engines are OK running semi-random sequential while other engine require ph
 If enabled, use a curve for RPM limit (based on coolant temperature) instead of a constant value.
 
 ### forceO2Heating
-If enabled, don't wait for engine start to heat O2 sensors. WARNING: this will reduce the life of your sensor, as condensation in the exhaust from a cold start can crack the sensing element.
+If enabled, don't wait for engine start to heat O2 sensors.\nWARNING: this will reduce the life of your sensor, as condensation in the exhaust from a cold start can crack the sensing element.
 
 ### invertVvtControlIntake
 If increased VVT duty cycle increases the indicated VVT angle, set this to 'advance'. If it decreases, set this to 'retard'. Most intake cams use 'advance', and most exhaust cams use 'retard'.
