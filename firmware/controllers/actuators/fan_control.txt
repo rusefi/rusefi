@@ -7,6 +7,5 @@ struct_no_prefix fan_control_s
 	bit hot
 	bit cold
 	bit disabledBySpeed
-	uint8_t tempAlive
-	uint8_t tempCode
+	uint8_t radiatorFanStatus
 end_struct

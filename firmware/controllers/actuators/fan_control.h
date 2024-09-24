@@ -2,6 +2,20 @@
 
 #include "fan_control_generated.h"
 
+enum class RadiatorFanState : uint8_t {
+  None, // 0
+  Cranking, // 1
+  EngineStopped, // 2
+  VehicleIsTooFast, // 3
+  BoardStatus, // 4
+  CltBroken, // 5
+  AC, // 6
+  Hot, // 7
+  Cold, // 8
+  Previous, // 9
+  Bench
+};
+
 struct FanController : public EngineModule, public fan_control_s {
 	void onSlowCallback() override;
 

@@ -29,36 +29,34 @@ bool FanController::getState(bool acActive, bool lastState) {
 
 	if (cranking) {
 		// Inhibit while cranking
-		tempCode = 31;
+		radiatorFanStatus = (int)RadiatorFanState::Cranking;
 		return false;
 	} else if (disabledWhileEngineStopped) {
 		// Inhibit while not running (if so configured)
-		tempCode = 32;
+		radiatorFanStatus = (int)RadiatorFanState::EngineStopped;
 		return false;
 	} else if (disabledBySpeed) {
 		// Inhibit while driving fast
-		tempCode = 33;
+		radiatorFanStatus = (int)RadiatorFanState::VehicleIsTooFast;
 		return false;
   } else if (fansDisabledByBoardStatus()) {
-    tempCode = 34;
+    radiatorFanStatus = (int)RadiatorFanState::BoardStatus;
 		return false;
 	} else if (brokenClt) {
 		// If CLT is broken, turn the fan on
-		tempCode = 35;
+		radiatorFanStatus = (int)RadiatorFanState::CltBroken;
 		return true;
 	} else if (enabledForAc) {
-	  tempCode = 36;
+	  radiatorFanStatus = (int)RadiatorFanState::AC;
 		return true;
 	} else if (hot) {
-		// If hot, turn the fan on
-		tempCode = 37;
+		radiatorFanStatus = (int)RadiatorFanState::Hot;
 		return true;
 	} else if (cold) {
-		// If cold, turn the fan off
-		tempCode = 38;
+		radiatorFanStatus = (int)RadiatorFanState::Cold;
 		return false;
 	} else {
-	  tempCode = 40;
+	  radiatorFanStatus = (int)RadiatorFanState::Previous;
 		// no condition met, maintain previous state
 		return lastState;
 	}
@@ -67,7 +65,7 @@ bool FanController::getState(bool acActive, bool lastState) {
 void FanController::onSlowCallback() {
 #if EFI_PROD_CODE
 	if (isRunningBenchTest()) {
-	  tempCode = 30;
+	  radiatorFanStatus = (int)RadiatorFanState::Bench;
 		return; // let's not mess with bench testing
 	}
 #endif
@@ -77,7 +75,7 @@ void FanController::onSlowCallback() {
 	auto& pin = getPin();
 
 	bool result = getState(acActive, pin.getLogicValue());
-	tempAlive = tempAlive + 1;
+
 
 	pin.setValue(result);
 }
