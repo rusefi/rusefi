@@ -4,6 +4,8 @@
  *
  * @see test test_etb.cpp
  *
+ * PPS=pedal position sensor=AcceleratorPedal
+ * TPS=throttle position sensor, this one is inside ETB=electronic throttle body
  *
  * Limited user documentation at https://github.com/rusefi/rusefi/wiki/HOWTO_electronic_throttle_body
  *
