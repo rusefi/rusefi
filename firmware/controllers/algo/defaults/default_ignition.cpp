@@ -31,17 +31,21 @@ static void setDefaultIatTimingCorrection() {
 }
 
 static float getAdvanceForRpm(float rpm, float advanceMax) {
-        if (rpm >= 3000)
-            return advanceMax;
-        if (rpm < 600)
-            return 10;
-       return interpolateMsg("advance", 600, 10, 3000, advanceMax, rpm);
+	if (rpm >= 3000) {
+		return advanceMax;
+	}
+
+	if (rpm < 600) {
+		return 10;
+	}
+
+	return interpolateMsg("advance", 600, 10, 3000, advanceMax, rpm);
 }
 
 #define round10(x) efiRound(x, 0.1)
 
 float getInitialAdvance(float rpm, float map, float advanceMax) {
-	map = minF(map, 100);
+	map = std::min(map, 100.0f);
 	float advance = getAdvanceForRpm(rpm, advanceMax);
 
 	if (rpm >= 3000)
