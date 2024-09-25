@@ -30,7 +30,7 @@ static void setDefaultIatTimingCorrection() {
 	copyArray(config->ignitionIatCorrTable[2], {0, 0, 0, 0, 0, 0, -1, -2});
 }
 
-static float getAdvanceForRpm(int rpm, float advanceMax) {
+static float getAdvanceForRpm(float rpm, float advanceMax) {
         if (rpm >= 3000)
             return advanceMax;
         if (rpm < 600)
@@ -40,7 +40,7 @@ static float getAdvanceForRpm(int rpm, float advanceMax) {
 
 #define round10(x) efiRound(x, 0.1)
 
-float getInitialAdvance(int rpm, float map, float advanceMax) {
+float getInitialAdvance(float rpm, float map, float advanceMax) {
 	map = minF(map, 100);
 	float advance = getAdvanceForRpm(rpm, advanceMax);
 

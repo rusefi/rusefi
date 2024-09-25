@@ -58,7 +58,7 @@ expected<angle_t> VvtController::observePlant() {
 }
 
 expected<angle_t> VvtController::getSetpoint() {
-	int rpm = Sensor::getOrZero(SensorType::Rpm);
+	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	bool enabled = rpm > engineConfiguration->vvtControlMinRpm
 			&& engine->rpmCalculator.getSecondsSinceEngineStart(getTimeNowNt()) > engineConfiguration->vvtActivationDelayMs / MS_PER_SECOND
 			 ;
