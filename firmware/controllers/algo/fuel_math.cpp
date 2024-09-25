@@ -174,7 +174,7 @@ float getMaxAirflowAtMap(float map) {
 #if EFI_ENGINE_CONTROL
 
 // Per-cylinder base fuel mass
-static float getBaseFuelMass(int rpm) {
+static float getBaseFuelMass(float rpm) {
 	ScopePerf perf(PE::GetBaseFuel);
 
 	// airmass modes - get airmass first, then convert to fuel
@@ -303,7 +303,7 @@ static float getCycleFuelMass(bool isCranking, float baseFuelMass) {
  * @returns	Mass of each individual fuel injection, in grams
  *     in case of single point injection mode the amount of fuel into all cylinders, otherwise the amount for one cylinder
  */
-float getInjectionMass(int rpm) {
+float getInjectionMass(float rpm) {
 	ScopePerf perf(PE::GetInjectionDuration);
 
 	// Always update base fuel - some cranking modes use it

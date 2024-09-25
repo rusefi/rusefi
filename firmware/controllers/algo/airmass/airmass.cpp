@@ -14,7 +14,7 @@ static float getVeLoadAxis(ve_override_e mode, float passedLoad) {
 	}
 }
 
-float AirmassVeModelBase::getVe(int rpm, float load, bool postState) const {
+float AirmassVeModelBase::getVe(float rpm, float load, bool postState) const {
 	efiAssert(ObdCode::OBD_PCM_Processor_Fault, m_veTable != nullptr, "VE table null", 0);
 
 	// Override the load value if necessary

@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "speed_density_airmass.h"
 
-AirmassResult SpeedDensityAirmass::getAirmass(int rpm, bool postState) {
+AirmassResult SpeedDensityAirmass::getAirmass(float rpm, bool postState) {
 	ScopePerf perf(PE::GetSpeedDensityFuel);
 
 	auto map = getMap(rpm, postState);
@@ -50,7 +50,7 @@ float SpeedDensityAirmass::getAirflow(float rpm, float map, bool postState) {
 	return massPerCycle * rpm / 60;
 }
 
-float SpeedDensityAirmass::getMap(int rpm, bool postState) const {
+float SpeedDensityAirmass::getMap(float rpm, bool postState) const {
 	float fallbackMap = m_mapEstimationTable->getValue(rpm, Sensor::getOrZero(SensorType::Tps1));
 
 #if EFI_TUNER_STUDIO

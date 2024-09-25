@@ -91,7 +91,7 @@ public:
 
 	MockVp3d veTable;
 
-	MOCK_METHOD(AirmassResult, getAirmass, (int rpm, bool postState), (override));
+	MOCK_METHOD(AirmassResult, getAirmass, (float rpm, bool postState), (override));
 };
 
 class MockInjectorModel2 : public IInjectorModel {

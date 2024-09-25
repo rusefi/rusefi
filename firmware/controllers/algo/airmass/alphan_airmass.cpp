@@ -2,7 +2,7 @@
 
 #include "alphan_airmass.h"
 
-AirmassResult AlphaNAirmass::getAirmass(int rpm, bool postState) {
+AirmassResult AlphaNAirmass::getAirmass(float rpm, bool postState) {
 	auto tps = Sensor::get(SensorType::Tps1);
 
 	if (!tps.Valid) {

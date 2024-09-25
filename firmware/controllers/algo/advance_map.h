@@ -25,5 +25,5 @@ void initIgnitionAdvanceControl();
 
 class IgnitionState : public ignition_state_s {
 public:
-	floatms_t getSparkDwell(int rpm);
+	floatms_t getSparkDwell(float rpm);
 };
