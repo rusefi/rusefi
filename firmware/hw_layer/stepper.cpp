@@ -199,7 +199,7 @@ void StepperHw::pause(int divisor) const {
 }
 
 void StepperHw::setReactionTime(float ms) {
-	m_reactionTime = maxF(1, ms);
+	m_reactionTime = std::max(1.0f, ms);
 }
 
 bool StepDirectionStepper::step(bool positive) {
