@@ -122,7 +122,7 @@ float HellenBoardIdFinderBase::findClosestResistor(float R, bool testOnlyMajorSe
 	float minDelta = 1.e6f;
 	for (size_t i = 0; i < rValueSize; i++) {
 		// Find the nearest resistor by least ratio error
-		float delta = absF(1 - (R / rAllValues[i]));
+		float delta = std::abs(1 - (R / rAllValues[i]));
 		if (delta < minDelta) {
 			minDelta = delta;
 			*rIdx = i;

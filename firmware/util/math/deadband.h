@@ -14,7 +14,7 @@ class Deadband {
 public:
 	bool gt(float lhs, float rhs) {
 		// If we're within the deadband, be "sticky" with the previous value
-		float absError = absF(lhs - rhs);
+		float absError = std::abs(lhs - rhs);
 
 		// If there's enough error, actually compare values
 		if (absError > TDeadband) {

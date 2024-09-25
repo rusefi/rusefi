@@ -64,7 +64,7 @@ private:
 		float scaledClosed = cfg.closed / m_func.getDivideInput();
 		float scaledOpen = cfg.open / m_func.getDivideInput();
 
-		float split = absF(scaledOpen - scaledClosed);
+		float split = std::abs(scaledOpen - scaledClosed);
 
 		// If the voltage for closed vs. open is very near, something is wrong with your calibration
 		if (split < 0.5f) {
@@ -110,8 +110,8 @@ public:
 			// Check that the primary and secondary aren't too close together - if so, the user may have done
 			// an unsafe thing where they wired a single sensor to both inputs. Don't do that!
 			bool hasBothSensors = isAdcChannelValid(primary.channel) && isAdcChannelValid(secondary.channel);
-			bool tooCloseClosed = absF(primary.closed - secondary.closed) < 0.2f;
-			bool tooCloseOpen = absF(primary.open - secondary.open) < 0.2f;
+			bool tooCloseClosed = std::abs(primary.closed - secondary.closed) < 0.2f;
+			bool tooCloseOpen = std::abs(primary.open - secondary.open) < 0.2f;
 
 			if (hasBothSensors && tooCloseClosed && tooCloseOpen) {
 				firmwareError(ObdCode::OBD_TPS_Configuration, "Configuration for redundant pair %s/%s are too similar - did you wire one sensor to both inputs...?", m_pri.name(), m_sec.name());

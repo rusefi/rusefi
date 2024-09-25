@@ -12,7 +12,7 @@ void ClosedLoopFuelCellBase::update(float lambdaDeadband, bool ignoreErrorMagnit
 	float lambdaError = getLambdaError();
 
 	// If we're within the deadband, make no adjustment.
-	if (absF(lambdaError) < lambdaDeadband) {
+	if (std::abs(lambdaError) < lambdaDeadband) {
 		return;
 	}
 
