@@ -14,12 +14,12 @@ pins:
   - pin: 3C
     function: DC1-
     type: etb
-    color: blue
+    color: white
 
   - pin: 4C
     function: ETB-
     type: etb
-    color: blue
+    color: white
 
   - pin: 5C
     function: High Side 1
