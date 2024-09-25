@@ -29,7 +29,7 @@
 
 // TODO: wow move this into engineState at least for context not to leak from test to test!
 // todo: reset this between cranking attempts?! #2735
-int minCrankingRpm = 0;
+float minCrankingRpm = 0;
 
 static Map3D<TRACTION_CONTROL_ETB_DROP_SIZE, TRACTION_CONTROL_ETB_DROP_SIZE, int8_t, uint16_t, uint8_t> tcTimingDropTable{"tct"};
 static Map3D<TRACTION_CONTROL_ETB_DROP_SIZE, TRACTION_CONTROL_ETB_DROP_SIZE, int8_t, uint16_t, uint8_t> tcSparkSkipTable{"tcs"};
@@ -39,7 +39,7 @@ static Map3D<TRACTION_CONTROL_ETB_DROP_SIZE, TRACTION_CONTROL_ETB_DROP_SIZE, int
 /**
  * @return ignition timing angle advance before TDC
  */
-angle_t getRunningAdvance(int rpm, float engineLoad) {
+angle_t getRunningAdvance(float rpm, float engineLoad) {
 	if (std::isnan(engineLoad)) {
 		warning(ObdCode::CUSTOM_NAN_ENGINE_LOAD, "NaN engine load");
 		return NAN;
@@ -154,7 +154,7 @@ angle_t getAdvanceCorrections(float engineLoad) {
 /**
  * @return ignition timing angle advance before TDC for Cranking
  */
-angle_t getCrankingAdvance(int rpm, float engineLoad) {
+angle_t getCrankingAdvance(float rpm, float engineLoad) {
 	// get advance from the separate table for Cranking
 	if (engineConfiguration->useSeparateAdvanceForCranking) {
 		return interpolate2d(rpm, config->crankingAdvanceBins, config->crankingAdvance);
@@ -169,7 +169,7 @@ angle_t getCrankingAdvance(int rpm, float engineLoad) {
 }
 #endif // EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 
-angle_t getAdvance(int rpm, float engineLoad) {
+angle_t getAdvance(float rpm, float engineLoad) {
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	if (std::isnan(engineLoad)) {
 		return 0; // any error should already be reported
@@ -212,13 +212,13 @@ angle_t getAdvance(int rpm, float engineLoad) {
 #endif
 }
 
-angle_t getWrappedAdvance(const int rpm, const float engineLoad) {
+angle_t getWrappedAdvance(const float rpm, const float engineLoad) {
     angle_t angle = getAdvance(rpm, engineLoad) * engine->ignitionState.luaTimingMult + engine->ignitionState.luaTimingAdd;
     wrapAngle(angle, "getWrappedAdvance", ObdCode::CUSTOM_ERR_ADCANCE_CALC_ANGLE);
     return angle;
 }
 
-angle_t getCylinderIgnitionTrim(size_t cylinderNumber, int rpm, float ignitionLoad) {
+angle_t getCylinderIgnitionTrim(size_t cylinderNumber, float rpm, float ignitionLoad) {
 	return interpolate3d(
 		config->ignTrims[cylinderNumber].table,
 		config->ignTrimLoadBins, ignitionLoad,
@@ -226,7 +226,7 @@ angle_t getCylinderIgnitionTrim(size_t cylinderNumber, int rpm, float ignitionLo
 	);
 }
 
-size_t getMultiSparkCount(int rpm) {
+size_t getMultiSparkCount(float rpm) {
 	// Compute multispark (if enabled)
 	if (engineConfiguration->multisparkEnable
 		&& rpm <= engineConfiguration->multisparkMaxRpm
