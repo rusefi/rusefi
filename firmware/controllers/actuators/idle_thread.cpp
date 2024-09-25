@@ -36,7 +36,7 @@ int IdleController::getTargetRpm(float clt) {
 	return target;
 }
 
-IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, SensorResult tps, float vss, float crankingTaperFraction) {
+IIdleController::Phase IdleController::determinePhase(float rpm, float targetRpm, SensorResult tps, float vss, float crankingTaperFraction) {
 #if EFI_SHAFT_POSITION_INPUT
 	if (!engine->rpmCalculator.isRunning()) {
 		return Phase::Cranking;
@@ -55,7 +55,7 @@ IIdleController::Phase IdleController::determinePhase(int rpm, int targetRpm, Se
 
 	// If rpm too high (but throttle not pressed), we're coasting
 	// ALSO, if still in the cranking taper, disable coasting
-	int maximumIdleRpm = targetRpm + engineConfiguration->idlePidRpmUpperLimit;
+	float maximumIdleRpm = targetRpm + engineConfiguration->idlePidRpmUpperLimit;
 	looksLikeCoasting = rpm > maximumIdleRpm;
 	looksLikeCrankToIdle = crankingTaperFraction < 1;
 	if (looksLikeCoasting && !looksLikeCrankToIdle) {
@@ -179,11 +179,11 @@ percent_t IdleController::getOpenLoop(Phase phase, float rpm, float clt, SensorR
 	return interpolateClamped(0, crankingValvePosition, 1, running, crankingTaperFraction);
 }
 
-float IdleController::getIdleTimingAdjustment(int rpm) {
+float IdleController::getIdleTimingAdjustment(float rpm) {
 	return getIdleTimingAdjustment(rpm, m_lastTargetRpm, m_lastPhase);
 }
 
-float IdleController::getIdleTimingAdjustment(int rpm, int targetRpm, Phase phase) {
+float IdleController::getIdleTimingAdjustment(float rpm, float targetRpm, Phase phase) {
 	// if not enabled, do nothing
 	if (!engineConfiguration->useIdleTimingPidControl) {
 		return 0;
@@ -218,7 +218,7 @@ static void undoIdleBlipIfNeeded() {
 /**
  * @return idle valve position percentage for automatic closed loop mode
  */
-float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, int rpm, int targetRpm) {
+float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, float rpm, float targetRpm) {
 	auto idlePid = getIdlePid();
 
 	if (shouldResetPid) {
@@ -256,7 +256,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 
 	bool acToggleJustTouched = engine->module<AcController>().unmock().timeSinceStateChange.getElapsedSeconds() < 0.5f /*second*/;
 	// check if within the dead zone
-	isInDeadZone = !acToggleJustTouched && absI(rpm - targetRpm) <= engineConfiguration->idlePidRpmDeadZone;
+	isInDeadZone = !acToggleJustTouched && std::abs(rpm - targetRpm) <= engineConfiguration->idlePidRpmDeadZone;
 	if (isInDeadZone) {
 		idleState = RPM_DEAD_ZONE;
 		// current RPM is close enough, no need to change anything

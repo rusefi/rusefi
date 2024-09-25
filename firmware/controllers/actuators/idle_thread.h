@@ -23,15 +23,15 @@ struct IIdleController {
 		Running,	// On throttle
 	};
 
-	virtual Phase determinePhase(int rpm, int targetRpm, SensorResult tps, float vss, float crankingTaperFraction) = 0;
+	virtual Phase determinePhase(float rpm, float targetRpm, SensorResult tps, float vss, float crankingTaperFraction) = 0;
 	virtual int getTargetRpm(float clt) = 0;
 	virtual float getCrankingOpenLoop(float clt) const = 0;
 	virtual float getRunningOpenLoop(IIdleController::Phase phase, float rpm, float clt, SensorResult tps) = 0;
 	virtual float getOpenLoop(Phase phase, float rpm, float clt, SensorResult tps, float crankingTaperFraction) = 0;
-	virtual float getClosedLoop(Phase phase, float tps, int rpm, int target) = 0;
+	virtual float getClosedLoop(Phase phase, float tps, float rpm, float target) = 0;
 	virtual float getCrankingTaperFraction() const = 0;
 	virtual bool isIdlingOrTaper() const = 0;
-	virtual float getIdleTimingAdjustment(int rpm) = 0;
+	virtual float getIdleTimingAdjustment(float rpm) = 0;
 };
 
 class IdleController : public IIdleController, public EngineModule, public idle_state_s {
@@ -47,7 +47,7 @@ public:
 	int getTargetRpm(float clt) override;
 
 	// PHASE DETERMINATION: what is the driver trying to do right now?
-	Phase determinePhase(int rpm, int targetRpm, SensorResult tps, float vss, float crankingTaperFraction) override;
+	Phase determinePhase(float rpm, float targetRpm, SensorResult tps, float vss, float crankingTaperFraction) override;
 	float getCrankingTaperFraction() const override;
 
 	// OPEN LOOP CORRECTIONS
@@ -55,11 +55,11 @@ public:
 	percent_t getRunningOpenLoop(IIdleController::Phase phase, float rpm, float clt, SensorResult tps) override;
 	percent_t getOpenLoop(Phase phase, float rpm, float clt, SensorResult tps, float crankingTaperFraction) override;
 
-	float getIdleTimingAdjustment(int rpm) override;
-	float getIdleTimingAdjustment(int rpm, int targetRpm, Phase phase);
+	float getIdleTimingAdjustment(float rpm) override;
+	float getIdleTimingAdjustment(float rpm, float targetRpm, Phase phase);
 
 	// CLOSED LOOP CORRECTION
-	float getClosedLoop(IIdleController::Phase phase, float tpsPos, int rpm, int targetRpm) override;
+	float getClosedLoop(IIdleController::Phase phase, float tpsPos, float rpm, float targetRpm) override;
 
 	void onConfigurationChange(engine_configuration_s const * previousConfig) final;
 	void onSlowCallback() final;

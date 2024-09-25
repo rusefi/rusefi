@@ -127,15 +127,15 @@ public:
 	MockIdleController();
 	virtual ~MockIdleController();
 
-	MOCK_METHOD(IIdleController::Phase, determinePhase, (int rpm, int targetRpm, SensorResult tps, float vss, float crankingTaperFraction), (override));
+	MOCK_METHOD(IIdleController::Phase, determinePhase, (float rpm, float targetRpm, SensorResult tps, float vss, float crankingTaperFraction), (override));
 	MOCK_METHOD(int, getTargetRpm, (float clt), (override));
 	MOCK_METHOD(float, getCrankingOpenLoop, (float clt), (const, override));
 	MOCK_METHOD(float, getRunningOpenLoop, (IIdleController::Phase phase, float rpm, float clt, SensorResult tps), (override));
 	MOCK_METHOD(float, getOpenLoop, (IIdleController::Phase phase, float rpm, float clt, SensorResult tps, float crankingTaperFraction), (override));
-	MOCK_METHOD(float, getClosedLoop, (IIdleController::Phase phase, float tps, int rpm, int target), (override));
+	MOCK_METHOD(float, getClosedLoop, (IIdleController::Phase phase, float tps, float rpm, float target), (override));
 	MOCK_METHOD(float, getCrankingTaperFraction, (), (const, override));
 	MOCK_METHOD(bool, isIdlingOrTaper, (), (const, override));
-	MOCK_METHOD(float, getIdleTimingAdjustment, (int rpm), (override));
+	MOCK_METHOD(float, getIdleTimingAdjustment, (float rpm), (override));
 };
 
 class MockIgnitionController : public IgnitionController {

@@ -590,7 +590,7 @@ static void updateFuelInfo() {
 #endif // EFI_ENGINE_CONTROL
 }
 
-static void updateIgnition(int rpm) {
+static void updateIgnition(float rpm) {
 #if EFI_ENGINE_CONTROL
 	engine->outputChannels.coilDutyCycle = getCoilDutyCycle(rpm);
 #endif // EFI_ENGINE_CONTROL
@@ -653,7 +653,7 @@ void updateTunerStudioState() {
 	engine->outputChannels.isUsbConnected =	is_usb_serial_ready();
 #endif // EFI_USB_SERIAL
 
-	int rpm = Sensor::get(SensorType::Rpm).value_or(0);
+	float rpm = Sensor::get(SensorType::Rpm).value_or(0);
 
 #if EFI_PROD_CODE
 	executorStatistics();

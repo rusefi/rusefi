@@ -56,7 +56,7 @@ void LimpManager::updateRevLimit(int rpm) {
 	m_fuelCorrection = 1.0f + fuelAdded / 100;
 }
 
-void LimpManager::updateState(int rpm, efitick_t nowNt) {
+void LimpManager::updateState(float rpm, efitick_t nowNt) {
 	Clearable allowFuel = engineConfiguration->isInjectionEnabled;
 	Clearable allowSpark = engineConfiguration->isIgnitionEnabled;
 
