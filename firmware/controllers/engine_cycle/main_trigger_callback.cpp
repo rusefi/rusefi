@@ -256,7 +256,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 	}
 #endif // HW_CHECK_MODE
 
-	int rpm = engine->rpmCalculator.getCachedRpm();
+	float rpm = engine->rpmCalculator.getCachedRpm();
 	if (rpm == 0) {
 		// this happens while we just start cranking
 

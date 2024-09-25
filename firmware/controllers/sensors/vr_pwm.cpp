@@ -10,7 +10,7 @@ static SimplePwm pwms[VR_THRESHOLD_COUNT];
 #define VR_SUPPLY_VOLTAGE 3.3f
 #endif
 
-static void updateVrThresholdPwm(int rpm, size_t index) {
+static void updateVrThresholdPwm(float rpm, size_t index) {
 	auto& cfg = engineConfiguration->vrThreshold[index];
 
 	if (!isBrainPinValid(cfg.pin)) {

@@ -380,7 +380,7 @@ void turnSparkPinHighStartCharging(IgnitionEvent *event) {
 #endif
 
 static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
-		int rpm, float dwellMs, float dwellAngle, float sparkAngle, efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
+		float rpm, float dwellMs, float dwellAngle, float sparkAngle, efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
 
 	float angleOffset = dwellAngle - currentPhase;
 	if (angleOffset < 0) {
@@ -529,11 +529,10 @@ static void prepareIgnitionSchedule() {
 	initializeIgnitionActions();
 }
 
-void onTriggerEventSparkLogic(int rpm, efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
+void onTriggerEventSparkLogic(float rpm, efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
 	ScopePerf perf(PE::OnTriggerEventSparkLogic);
 
-	if (!isValidRpm(rpm) || !engineConfiguration->isIgnitionEnabled) {
-		 // this might happen for instance in case of a single trigger event after a pause
+	if (!engineConfiguration->isIgnitionEnabled) {
 		return;
 	}
 
@@ -545,7 +544,7 @@ void onTriggerEventSparkLogic(int rpm, efitick_t edgeTimestamp, float currentPha
 
 	const floatms_t dwellMs = engine->ignitionState.sparkDwell;
 	if (std::isnan(dwellMs) || dwellMs <= 0) {
-		warning(ObdCode::CUSTOM_DWELL, "invalid dwell to handle: %.2f at %d", dwellMs, rpm);
+		warning(ObdCode::CUSTOM_DWELL, "invalid dwell to handle: %.2f", dwellMs);
 		return;
 	}
 
@@ -666,7 +665,7 @@ int getNumberOfSparks(ignition_mode_e mode) {
 /**
  * @see getInjectorDutyCycle
  */
-percent_t getCoilDutyCycle(int rpm) {
+percent_t getCoilDutyCycle(float rpm) {
 	floatms_t totalPerCycle = engine->ignitionState.sparkDwell * getNumberOfSparks(getCurrentIgnitionMode());
 	floatms_t engineCycleDuration = getCrankshaftRevolutionTimeMs(rpm) * (getEngineRotationState()->getOperationMode() == TWO_STROKE ? 1 : 2);
 	return 100 * totalPerCycle / engineCycleDuration;

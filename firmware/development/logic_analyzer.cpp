@@ -212,7 +212,7 @@ static void reportWave(Logging *logging, int index) {
 	logging->appendPrintf("%s", LOG_DELIMITER);
 
 	efitimeus_t offsetUs = getWaveOffset(index);
-	int rpm = Sensor::getOrZero(SensorType::Rpm);
+	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	if (rpm != 0) {
 		float oneDegreeUs = getOneDegreeTimeUs(rpm);
 
