@@ -44,7 +44,7 @@ public:
 	/**
 	 * Calculate where the pump should become active, in degrees before pump lobe TDC
 	 */
-	angle_t pumpAngleFuel(int rpm, HpfpController *model);
+	angle_t pumpAngleFuel(float rpm, HpfpController *model);
 
 	/**
 	 * Calculate the percent of the pump stroke needed to replace the fuel injected.  Also
@@ -56,7 +56,7 @@ public:
 	 * Return value is nominally 0-100, but may be outside that range (including negative) if
 	 * model parameters are not accurate.
 	 */
-	float calcFuelPercent(int rpm);
+	float calcFuelPercent(float rpm);
 
 	/**
 	 * Calculates the PI controller contribution as a percent.  This amount should be added to
@@ -68,7 +68,7 @@ public:
 	 * Return value is nominally 0-100, but may be outside that range (including negative) if
 	 * model parameters are not accurate.  The sum of this and calc_fuel_percent will be 0-100.
 	 */
-	float calcPI(int rpm, float calc_fuel_percent);
+	float calcPI(float rpm, float calc_fuel_percent);
 
 	/**
 	 * Reset internal state due to a stopped engine.

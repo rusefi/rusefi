@@ -70,7 +70,7 @@ bool LaunchControlBase::isInsideTpsCondition() const {
 	return engineConfiguration->launchTpsThreshold < tps.Value;
 }
 
-LaunchCondition LaunchControlBase::calculateRPMLaunchCondition(const int rpm) {
+LaunchCondition LaunchControlBase::calculateRPMLaunchCondition(const float rpm) {
 	const int launchRpm = engineConfiguration->launchRpm;
 	const int preLaunchRpm = launchRpm - engineConfiguration->launchRpmWindow;
 	if (rpm < preLaunchRpm) {
@@ -82,7 +82,7 @@ LaunchCondition LaunchControlBase::calculateRPMLaunchCondition(const int rpm) {
 	}
 }
 
-LaunchCondition LaunchControlBase::calculateLaunchCondition(const int rpm) {
+LaunchCondition LaunchControlBase::calculateLaunchCondition(const float rpm) {
 	const LaunchCondition currentRpmLaunchCondition = calculateRPMLaunchCondition(rpm);
 	activateSwitchCondition = isInsideSwitchCondition();
 	rpmLaunchCondition = (currentRpmLaunchCondition == LaunchCondition::Launch);
@@ -112,7 +112,7 @@ void LaunchControlBase::update() {
 		return;
 	}
 
-	const int rpm = Sensor::getOrZero(SensorType::Rpm);
+	const float rpm = Sensor::getOrZero(SensorType::Rpm);
 	const LaunchCondition launchCondition = calculateLaunchCondition(rpm);
 	isLaunchCondition = (launchCondition == LaunchCondition::Launch);
 	isPreLaunchCondition = (launchCondition == LaunchCondition::PreLaunch);
