@@ -25,8 +25,8 @@ void setFlatInjectorLag(float value);
  */
 #define getOneDegreeTimeUs(rpm) (1000000.0f * 60 / 360 / (rpm))
 
-floatms_t getCrankshaftRevolutionTimeMs(int rpm);
-floatms_t getEngineCycleDuration(int rpm);
+floatms_t getCrankshaftRevolutionTimeMs(float rpm);
+floatms_t getEngineCycleDuration(float rpm);
 
 float getFuelingLoad();
 float getIgnitionLoad();

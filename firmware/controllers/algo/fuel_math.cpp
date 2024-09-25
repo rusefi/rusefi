@@ -279,13 +279,13 @@ float getInjectionModeDurationMultiplier() {
 	}
 }
 
-percent_t getInjectorDutyCycle(int rpm) {
+percent_t getInjectorDutyCycle(float rpm) {
 	floatms_t totalInjectiorAmountPerCycle = engine->engineState.injectionDuration * getNumberOfInjections(engineConfiguration->injectionMode);
 	floatms_t engineCycleDuration = getEngineCycleDuration(rpm);
 	return 100 * totalInjectiorAmountPerCycle / engineCycleDuration;
 }
 
-percent_t getInjectorDutyCycleStage2(int rpm) {
+percent_t getInjectorDutyCycleStage2(float rpm) {
 	floatms_t totalInjectiorAmountPerCycle = engine->engineState.injectionDurationStage2 * getNumberOfInjections(engineConfiguration->injectionMode);
 	floatms_t engineCycleDuration = getEngineCycleDuration(rpm);
 	return 100 * totalInjectiorAmountPerCycle / engineCycleDuration;
@@ -405,7 +405,7 @@ float getBaroCorrection() {
 	}
 }
 
-percent_t getFuelALSCorrection(int rpm) {
+percent_t getFuelALSCorrection(float rpm) {
 #if EFI_ANTILAG_SYSTEM
 		if (engine->antilagController.isAntilagCondition) {
 			float throttleIntent = Sensor::getOrZero(SensorType::DriverThrottleIntent);
@@ -444,7 +444,8 @@ float getStandardAirCharge() {
 	return idealGasLaw(cylDisplacement, 101.325f, 273.15f + 20.0f);
 }
 
-PUBLIC_API_WEAK_SOMETHING_WEIRD float getCylinderFuelTrim(size_t cylinderNumber, float rpm, float fuelLoad) {
+PUBLIC_API_WEAK_SOMETHING_WEIRD
+float getCylinderFuelTrim(size_t cylinderNumber, float rpm, float fuelLoad) {
 	auto trimPercent = interpolate3d(
 		config->fuelTrims[cylinderNumber].table,
 		config->fuelTrimLoadBins, fuelLoad,
@@ -459,7 +460,7 @@ PUBLIC_API_WEAK_SOMETHING_WEIRD float getCylinderFuelTrim(size_t cylinderNumber,
 
 static Hysteresis stage2Hysteresis;
 
-float getStage2InjectionFraction(int rpm, float load) {
+float getStage2InjectionFraction(float rpm, float load) {
 	if (!engineConfiguration->enableStagedInjection) {
 		return 0;
 	}

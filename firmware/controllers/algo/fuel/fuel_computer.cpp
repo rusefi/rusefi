@@ -10,9 +10,9 @@
 
 #if EFI_ENGINE_CONTROL
 
-mass_t FuelComputerBase::getCycleFuel(mass_t airmass, int rpm, float load) {
+mass_t FuelComputerBase::getCycleFuel(mass_t airmass, float rpm, float load) {
 	load = getTargetLambdaLoadAxis(load);
-	
+
 	float stoich = getStoichiometricRatio();
 	float lambda = getTargetLambda(rpm, load);
 	float afr = stoich * lambda;
@@ -58,7 +58,7 @@ float FuelComputer::getStoichiometricRatio() const {
 }
 
 
-float FuelComputer::getTargetLambda(int rpm, float load) const {
+float FuelComputer::getTargetLambda(float rpm, float load) const {
 	return interpolate3d(
 		config->lambdaTable,
 		config->lambdaLoadBins, load,

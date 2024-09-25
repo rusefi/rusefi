@@ -17,7 +17,7 @@ void initFuelMap();
 float getRunningFuel(float baseFuel);
 
 float getBaroCorrection();
-percent_t getFuelALSCorrection(int rpm);
+percent_t getFuelALSCorrection(float rpm);
 int getNumberOfInjections(injection_mode_e mode);
 angle_t getInjectionOffset(float rpm, float load);
 float getIatFuelCorrection();
@@ -27,9 +27,9 @@ angle_t getCltTimingCorrection();
 float getCrankingFuel(float baseFuel);
 float getCrankingFuel3(float baseFuel, uint32_t revolutionCounterSinceStart);
 float getInjectionMass(float rpm);
-percent_t getInjectorDutyCycle(int rpm);
-percent_t getInjectorDutyCycleStage2(int rpm);
-float getStage2InjectionFraction(int rpm, float fuelLoad);
+percent_t getInjectorDutyCycle(float rpm);
+percent_t getInjectorDutyCycleStage2(float rpm);
+float getStage2InjectionFraction(float rpm, float fuelLoad);
 
 float getStandardAirCharge();
 float getCylinderFuelTrim(size_t cylinderNumber, float rpm, float fuelLoad);

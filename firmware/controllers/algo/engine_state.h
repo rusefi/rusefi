@@ -17,7 +17,7 @@ public:
 	EngineState();
 	void periodicFastCallback();
 	void updateSlowSensors();
-	void updateTChargeK(int rpm, float tps);
+	void updateTChargeK(float rpm, float tps);
 
 	void updateSparkSkip();
 

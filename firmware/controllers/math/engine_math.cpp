@@ -30,14 +30,14 @@
 extern bool verboseMode;
 #endif /* EFI_UNIT_TEST */
 
-floatms_t getEngineCycleDuration(int rpm) {
+floatms_t getEngineCycleDuration(float rpm) {
 	return getCrankshaftRevolutionTimeMs(rpm) * (getEngineRotationState()->getOperationMode() == TWO_STROKE ? 1 : 2);
 }
 
 /**
  * @return number of milliseconds in one crank shaft revolution
  */
-floatms_t getCrankshaftRevolutionTimeMs(int rpm) {
+floatms_t getCrankshaftRevolutionTimeMs(float rpm) {
 	if (rpm == 0) {
 		return NAN;
 	}

@@ -30,7 +30,7 @@ fuel_Map3D_t veMap{"ve"};
 #define tpMin 0
 #define tpMax 100
 
-float IFuelComputer::getTChargeCoefficient(int rpm, float tps) {
+float IFuelComputer::getTChargeCoefficient(float rpm, float tps) {
 	// First, do TPS mode since it doesn't need any of the airflow math.
 	if (engineConfiguration->tChargeMode == TCHARGE_MODE_RPM_TPS) {
 		float minRpmKcurrentTPS = interpolateMsg("minRpm", tpMin,
@@ -71,7 +71,7 @@ float IFuelComputer::getTChargeCoefficient(int rpm, float tps) {
 
 //  http://rusefi.com/math/t_charge.html
 /***panel:Charge Temperature*/
-temperature_t IFuelComputer::getTCharge(int rpm, float tps) {
+temperature_t IFuelComputer::getTCharge(float rpm, float tps) {
 	const auto clt = Sensor::get(SensorType::Clt);
 	const auto iat = Sensor::get(SensorType::Iat);
 

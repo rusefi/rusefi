@@ -9,7 +9,7 @@ using ::testing::FloatEq;
 class MockFuelComputer : public FuelComputerBase {
 public:
 	MOCK_METHOD(float, getStoichiometricRatio, (), (const, override));
-	MOCK_METHOD(float, getTargetLambda, (int rpm, float load), (const, override));
+	MOCK_METHOD(float, getTargetLambda, (float rpm, float load), (const, override));
 	MOCK_METHOD(float, getTargetLambdaLoadAxis, (float defaultLoad), (const, override));
 };
 
