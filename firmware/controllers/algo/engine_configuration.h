@@ -34,7 +34,7 @@ void setCamOperationMode();
 void setTwoStrokeOperationMode();
 
 void prepareVoidConfiguration(engine_configuration_s *activeConfiguration);
-void setTargetRpmCurve(int rpm);
+void setTargetRpmCurve(float rpm);
 void setFuelTablesLoadBin(float minValue, float maxValue);
 void setWholeIatCorrTimingTable(float value);
 void setWholeTimingTable(angle_t value);

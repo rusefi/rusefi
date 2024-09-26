@@ -16,7 +16,7 @@ public:
 				 float currentPhase, float nextPhase);
 
     // scheduleForActualTimeBasedExecution using underlying time-base scheduler
-	void scheduleEventsUntilNextTriggerTooth(int rpm,
+	void scheduleEventsUntilNextTriggerTooth(float rpm,
 						 efitick_t edgeTimestamp,
 						 float currentPhase, float nextPhase);
 

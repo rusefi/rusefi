@@ -103,7 +103,7 @@ public:
 
 	bool allowTriggerInput() const;
 
-	void updateRevLimit(int rpm);
+	void updateRevLimit(float rpm);
 	angle_t getLimitingTimingRetard() const;
 	float getLimitingFuelCorrection() const;
 

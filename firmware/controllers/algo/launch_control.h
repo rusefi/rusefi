@@ -38,7 +38,7 @@ public:
 private:
 	bool isLaunchRpmRetardCondition() const;
 
-	float calculateSparkSkipRatio(int rpm) const;
+	float calculateSparkSkipRatio(float rpm) const;
 
 
 	float sparkSkipRatio = 0.0f;

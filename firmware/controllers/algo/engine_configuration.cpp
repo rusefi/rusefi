@@ -333,7 +333,7 @@ static void setDefaultIdleSpeedTarget() {
 /**
  * see also setDefaultIdleSpeedTarget()
  */
-void setTargetRpmCurve(int rpm) {
+void setTargetRpmCurve(float rpm) {
 	setLinearCurve(config->cltIdleRpmBins, CLT_CURVE_RANGE_FROM, 140, 10);
 	setLinearCurve(config->cltIdleRpm, rpm, rpm, 10);
 }

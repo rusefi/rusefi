@@ -41,7 +41,7 @@ void LimpManager::onFastCallback() {
 	updateState(Sensor::getOrZero(SensorType::Rpm), getTimeNowNt());
 }
 
-void LimpManager::updateRevLimit(int rpm) {
+void LimpManager::updateRevLimit(float rpm) {
 	// User-configured hard RPM limit, either constant or CLT-lookup
 	m_revLimit = engineConfiguration->useCltBasedRpmLimit
 		? interpolate2d(Sensor::getOrZero(SensorType::Clt), config->cltRevLimitRpmBins, config->cltRevLimitRpm)

@@ -135,7 +135,7 @@ bool LaunchControlBase::isLaunchFuelRpmRetardCondition() const {
 	return isLaunchRpmRetardCondition() && engineConfiguration->launchFuelCutEnable;
 }
 
-float LaunchControlBase::calculateSparkSkipRatio(const int rpm) const {
+float LaunchControlBase::calculateSparkSkipRatio(const float rpm) const {
 	float result = 0.0f;
 	if (engineConfiguration->launchControlEnabled && engineConfiguration->launchSparkCutEnable) {
 		if (isLaunchCondition) {

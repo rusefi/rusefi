@@ -24,7 +24,7 @@ namespace {
         void enableAlternatorControl();
         void disableAlternatorControl();
 
-        void setRpmAndLoad(const int rpm, const float load);
+        void setRpmAndLoad(const float rpm, const float load);
 
         expected<float> getSetpoint();
     private:
@@ -70,7 +70,7 @@ namespace {
         engineConfiguration->isAlternatorControlEnabled = false;
     }
 
-    void AlternatorVoltageTargetSetPointTest::setRpmAndLoad(const int rpm, const float load = TEST_LOAD) {
+    void AlternatorVoltageTargetSetPointTest::setRpmAndLoad(const float rpm, const float load = TEST_LOAD) {
         Sensor::setMockValue(SensorType::Rpm, rpm);
         engine->engineState.fuelingLoad = load;
     }

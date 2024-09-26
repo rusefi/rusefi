@@ -185,7 +185,7 @@ static void applyMapMinBufferLength() {
 }
 
 void refreshMapAveragingPreCalc() {
-	int rpm = Sensor::getOrZero(SensorType::Rpm);
+	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	if (isValidRpm(rpm)) {
 		MAP_sensor_config_s * c = &engineConfiguration->map;
 		angle_t start = interpolate2d(rpm, c->samplingAngleBins, c->samplingAngle);
@@ -226,7 +226,7 @@ void mapAveragingTriggerCallback(
 		return;
 	}
 
-	int rpm = Sensor::getOrZero(SensorType::Rpm);
+	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	if (!isValidRpm(rpm)) {
 		return;
 	}

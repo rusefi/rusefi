@@ -87,7 +87,7 @@ void TriggerScheduler::schedule(const char *msg, AngleBasedEvent* event, action_
 	}
 }
 
-void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(int rpm,
+void TriggerScheduler::scheduleEventsUntilNextTriggerTooth(float rpm,
 							   efitick_t edgeTimestamp, float currentPhase, float nextPhase) {
 
 	if (!isValidRpm(rpm)) {
