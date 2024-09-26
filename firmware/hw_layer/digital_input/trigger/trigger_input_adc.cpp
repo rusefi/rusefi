@@ -385,7 +385,7 @@ void TriggerAdcDetector::analogCallback(efitick_t stamp, triggerAdcSample_t valu
 		efitimeus_t deltaTimeUs = NT2US(stamp - prevStamp);
 		if (deltaTimeUs > 200) {	// 200 us = ~2500 RPM (we don't need this correction for large RPM)
 			triggerAdcITerm = 1.0f / (triggerAdcITermCoef * deltaTimeUs);
-			triggerAdcITerm = maxF(triggerAdcITerm, triggerAdcITermMin);
+			triggerAdcITerm = std::max(triggerAdcITerm, triggerAdcITermMin);
 		}
 #endif // 0
 

@@ -512,7 +512,7 @@ static msg_t hipThread(void *arg) {
 				#if EFI_HIP_9011_DEBUG
 					/* debug */
 					normalizedValue[idx] = knockNormalized;
-					normalizedValueMax[idx] = maxF(knockNormalized, normalizedValueMax[idx]);
+					normalizedValueMax[idx] = std::max(knockNormalized, normalizedValueMax[idx]);
 					/* counters */
 					instance.samples++;
 				#endif
