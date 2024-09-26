@@ -21,7 +21,7 @@
         <constant name="sdCardCsPin">"NONE"</constant>
         <constant name="canTxPin">"NONE"</constant>
         <constant name="canRxPin">"NONE"</constant>
-        <constant digits="0" name="unusedEtbExpAverageLength" units="">0.0</constant>
+        <constant name="torqueReductionTriggerPin">"NONE"</constant>
         <constant digits="0" name="launchFuelAdderPercent" units="%">0.0</constant>
         <constant digits="2" name="etbJamTimeout" units="sec">1.0</constant>
         <constant name="tachOutputPin">"NONE"</constant>
@@ -183,7 +183,7 @@
         <constant name="firingOrder">"1-3-4-2"</constant>
         <constant digits="0" name="justATempTest" units="">0.0</constant>
         <constant digits="0" name="mapSyncThreshold" units="kPa">0.0</constant>
-        <constant digits="0" name="unusedByteHere" units="">0.0</constant>
+        <constant digits="0" name="torqueReductionIgnitionCut" units="%">0.0</constant>
         <constant digits="2" name="cylinderBore" units="mm">87.5</constant>
         <constant name="fuelAlgorithm">"Speed Density"</constant>
         <constant digits="0" name="ALSMaxTPS" units="%">5.0</constant>
@@ -400,7 +400,7 @@
         <constant name="max31855_cs7">"NONE"</constant>
         <constant name="max31855_cs8">"NONE"</constant>
         <constant name="flexSensorPin">"NONE"</constant>
-        <constant digits="0" name="unused720" units="">0.0</constant>
+        <constant digits="0" name="torqueReductionArmingRpm" units="rpm">0.0</constant>
         <constant name="stepperDirectionPinMode">"default"</constant>
         <constant name="mc33972spiDevice">"Off"</constant>
         <constant digits="1" name="stoichRatioSecondary" units=":1">9.0</constant>
@@ -688,7 +688,7 @@
         <constant digits="2" name="knockDetectionWindowEnd" units="angle">60.0</constant>
         <constant digits="0" name="idleStepperReactionTime" units="ms">3.0</constant>
         <constant digits="0" name="idleStepperTotalSteps" units="count">200.0</constant>
-        <constant digits="0" name="unusedInt3423423" units="">0.0</constant>
+        <constant digits="0" name="torqueReductionArmingApp" units="">0.0</constant>
         <constant digits="2" name="tachPulseDuractionMs" units="">0.5</constant>
         <constant digits="2" name="wwaeTau" units="Seconds">0.3</constant>
         <constant digits="4" name="alternatorControl_pFactor" units="">30.0</constant>
@@ -737,7 +737,7 @@
         <constant digits="2" name="throttlePedalWOTVoltage" units="voltage">5.0</constant>
         <constant digits="0" name="startUpFuelPumpDuration" units="seconds">4.0</constant>
         <constant digits="0" name="idlePidRpmDeadZone" units="RPM">50.0</constant>
-        <constant digits="0" name="unusedTargetVBatt" units="">0.0</constant>
+        <constant digits="0" name="torqueReductionTime" units="ms">0.0</constant>
         <constant name="mc33810DisableRecoveryMode">"false"</constant>
         <constant name="mc33810Gpgd0Mode">"false"</constant>
         <constant name="mc33810Gpgd1Mode">"false"</constant>
@@ -786,7 +786,7 @@
         <constant digits="0" name="uartConsoleSerialSpeed" units="BPs">115200.0</constant>
         <constant digits="1" name="tpsDecelEnleanmentThreshold" units="roc">0.0</constant>
         <constant digits="2" name="tpsDecelEnleanmentMultiplier" units="coeff">0.0</constant>
-        <constant digits="0" name="unusedAuxSerialSpee" units="">0.0</constant>
+        <constant digits="2" name="torqueReductionIgnitionRetard" units="deg">0.0</constant>
         <constant digits="2" name="throttlePedalSecondaryUpVoltage" units="voltage">5.0</constant>
         <constant digits="2" name="throttlePedalSecondaryWOTVoltage" units="voltage">0.0</constant>
         <constant name="canBaudRate">"500kbps"</constant>
@@ -4763,7 +4763,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20240920" nPages="1" signature="rusEFI master.2024.09.26.f407-discovery.1264409701" version="5.0"/>
+    <versionInfo firmwareInfo="20240920" nPages="1" signature="rusEFI master.2024.09.26.f407-discovery.643883150" version="5.0"/>
     <bibliography author="rusEFI 20240920" writeDate="date"/>
     <settings/>
     <userComments/>
