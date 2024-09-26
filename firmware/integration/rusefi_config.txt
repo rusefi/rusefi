@@ -456,7 +456,7 @@ uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this r
 	Gpio canTxPin
 	Gpio canRxPin
 
-	uint16_t unusedEtbExpAverageLength
+	switch_input_pin_e torqueReductionTriggerPin;Pin that activates the reduction/cut for shifting. Sometimes shared with the Launch Control pin
 	int8_t launchFuelAdderPercent;;"%", 1, 0, 0, 100, 0
 	uint8_t autoscale etbJamTimeout;Time required to detect a stuck throttle.;"sec", 0.02, 0, 0, 5, 2
 
@@ -565,7 +565,7 @@ custom firing_order_e 1 bits, U08, @OFFSET@, [0:6], "One Cylinder", "1-3-4-2", "
 firing_order_e firingOrder;
 uint8_t justATempTest
 uint8_t mapSyncThreshold;Delta kPa for MAP sync;"kPa", 1, 0, 0, 50, 0
-uint8_t unusedByteHere
+int8_t torqueReductionIgnitionCut;How many % of ignition events will be cut;"%", 1, 0, 0, 100, 0
 
 #define CYLINDER_BORE_UNITS "mm"
 #define CYLINDER_BORE_TOOLTIP "Cylinder diameter in mm"
@@ -862,7 +862,7 @@ pin_output_mode_e hip9011IntHoldPinMode;
 
 	Gpio[EGT_CHANNEL_COUNT iterate] max31855_cs;
 	brain_input_pin_e flexSensorPin;Continental/GM flex fuel sensor, 50-150hz type;
-	uint16_t unused720
+	uint16_t torqueReductionArmingRpm;Since torque reduction pin is usually shared with launch control, most people have an RPM where behavior under that is Launch Control, over that is Flat Shift/Torque Reduction;"rpm", 1, 0, 0, 20000, 0
 	pin_output_mode_e stepperDirectionPinMode;
 
 	spi_device_e mc33972spiDevice;
@@ -1142,7 +1142,7 @@ float idleStepperReactionTime;;"ms", 1, 0, 1, 300, 0
 
 	int idleStepperTotalSteps;;"count", 1, 0, 5, 3000, 0
 
-int unusedInt3423423
+int torqueReductionArmingApp;Pedal position to realize that we need to reduce torque when the trigger pin is uuuh triggered;"", 1, 0, 0, 20000, 0
 
 	#define pin_mode_e_enum "default", "INVALID", "INVALID", "INVALID", "opendrain", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLUP", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLDOWN"
 custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], @@pin_mode_e_enum@@
@@ -1187,7 +1187,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	int16_t idlePidRpmDeadZone;If the RPM closer to target than this value, disable closed loop idle correction to prevent oscillation;"RPM", 1, 0, 0, 800, 0
 
 
-	float unusedTargetVBatt
+	float torqueReductionTime;For how long after the pin has been triggered will the cut/reduction stay active. After that, even if the pin is still triggered, torque is re-introduced;"ms", 1, 0, 1, 300, 0
 	bit mc33810DisableRecoveryMode;See Over/Undervoltage Shutdown/Retry bit in documentation
 	bit mc33810Gpgd0Mode
 	bit mc33810Gpgd1Mode
@@ -1247,7 +1247,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	float tpsDecelEnleanmentThreshold;For decel we simply multiply delta of TPS and tFor decel we do not use table?!;"roc", 1, 0, 0, 200, 1
 	float tpsDecelEnleanmentMultiplier;Magic multiplier, we multiply delta of TPS and get fuel squirt duration;"coeff", 1, 0, 0, 200, 2
 
-	uint32_t unusedAuxSerialSpee
+	float torqueReductionIgnitionRetard;How many degrees of timing advance will be reduced during the Torque Reduction Time;"deg", 1, 0, -180, 180, 2
 
 	float throttlePedalSecondaryUpVoltage;;"voltage", 1, 0, -6, 6, 2
 	float throttlePedalSecondaryWOTVoltage;Pedal in the floor;"voltage", 1, 0, -6, 6, 2
