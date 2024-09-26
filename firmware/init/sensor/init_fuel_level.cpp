@@ -7,7 +7,6 @@
 
 static FunctionalSensor fuelSensor(SensorType::FuelLevel, /* timeout = */ MS2NT(500));
 
-#if !EFI_UNIT_TEST
 // extract the type of the elements in the bin/value arrays
 using BinType = std::remove_extent_t<decltype(config->fuelLevelBins)>;
 using ValueType = std::remove_extent_t<decltype(config->fuelLevelValues)>;
@@ -31,4 +30,3 @@ void initFuelLevel() {
 	AdcSubscription::SubscribeSensor(fuelSensor, channel, /*lowpassCutoff =*/ 0.05f);
 	fuelSensor.Register();
 }
-#endif // ! EFI_UNIT_TEST

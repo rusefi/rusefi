@@ -123,10 +123,8 @@ void initNewSensors() {
 	initEgt();
 	initBaro();
 
-	#if !EFI_UNIT_TEST
-		initFuelLevel();
-		initMaf();
-	#endif
+	initFuelLevel();
+	initMaf();
 
 	initOldAnalogInputs();
 	initAuxDigital();

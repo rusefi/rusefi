@@ -8,7 +8,7 @@
 static FunctionalSensor maf (SensorType::Maf , /* timeout = */ MS2NT(50));
 static FunctionalSensor maf2(SensorType::Maf2, /* timeout = */ MS2NT(50));
 
-#if !EFI_UNIT_TEST
+
 // extract the type of the elements in the bin/value arrays
 using BinType = std::remove_extent_t<decltype(config->mafDecodingBins)>;
 using ValueType = std::remove_extent_t<decltype(config->mafDecoding)>;
@@ -31,4 +31,3 @@ void initMaf() {
 	initMaf(engineConfiguration->mafAdcChannel, maf);
 	initMaf(engineConfiguration->maf2AdcChannel, maf2);
 }
-#endif // ! EFI_UNIT_TEST
