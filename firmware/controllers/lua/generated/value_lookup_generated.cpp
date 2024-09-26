@@ -265,6 +265,9 @@ float getConfigValueByName(const char *name) {
 // mapSyncThreshold
 		case 1640008461:
 			return engineConfiguration->mapSyncThreshold;
+// torqueReductionIgnitionCut
+		case -1710081729:
+			return engineConfiguration->torqueReductionIgnitionCut;
 // cylinderBore
 		case 1425664391:
 			return engineConfiguration->cylinderBore;
@@ -532,6 +535,9 @@ float getConfigValueByName(const char *name) {
 // applyNonlinearBelowPulse
 		case 119460051:
 			return engineConfiguration->applyNonlinearBelowPulse;
+// torqueReductionArmingRpm
+		case -763820449:
+			return engineConfiguration->torqueReductionArmingRpm;
 // stoichRatioSecondary
 		case 1945443830:
 			return engineConfiguration->stoichRatioSecondary;
@@ -946,6 +952,9 @@ float getConfigValueByName(const char *name) {
 // idleStepperTotalSteps
 		case -1077032999:
 			return engineConfiguration->idleStepperTotalSteps;
+// torqueReductionArmingApp
+		case -763838959:
+			return engineConfiguration->torqueReductionArmingApp;
 // tachPulseDuractionMs
 		case 58931511:
 			return engineConfiguration->tachPulseDuractionMs;
@@ -1054,6 +1063,9 @@ float getConfigValueByName(const char *name) {
 // idlePidRpmDeadZone
 		case -528043591:
 			return engineConfiguration->idlePidRpmDeadZone;
+// torqueReductionTime
+		case -1417275359:
+			return engineConfiguration->torqueReductionTime;
 // mc33810DisableRecoveryMode
 		case -464979268:
 			return engineConfiguration->mc33810DisableRecoveryMode;
@@ -1165,6 +1177,9 @@ float getConfigValueByName(const char *name) {
 // tpsDecelEnleanmentMultiplier
 		case 1164012327:
 			return engineConfiguration->tpsDecelEnleanmentMultiplier;
+// torqueReductionIgnitionRetard
+		case 2048109045:
+			return engineConfiguration->torqueReductionIgnitionRetard;
 // throttlePedalSecondaryUpVoltage
 		case -1564912640:
 			return engineConfiguration->throttlePedalSecondaryUpVoltage;
@@ -2290,6 +2305,11 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->mapSyncThreshold = (int)value;
 		return 1;
 	}
+		case -1710081729:
+	{
+		engineConfiguration->torqueReductionIgnitionCut = (int)value;
+		return 1;
+	}
 		case 1425664391:
 	{
 		engineConfiguration->cylinderBore = value;
@@ -2733,6 +2753,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 119460051:
 	{
 		engineConfiguration->applyNonlinearBelowPulse = (int)value;
+		return 1;
+	}
+		case -763820449:
+	{
+		engineConfiguration->torqueReductionArmingRpm = (int)value;
 		return 1;
 	}
 		case 1945443830:
@@ -3425,6 +3450,11 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->idleStepperTotalSteps = (int)value;
 		return 1;
 	}
+		case -763838959:
+	{
+		engineConfiguration->torqueReductionArmingApp = (int)value;
+		return 1;
+	}
 		case 58931511:
 	{
 		engineConfiguration->tachPulseDuractionMs = value;
@@ -3603,6 +3633,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -528043591:
 	{
 		engineConfiguration->idlePidRpmDeadZone = (int)value;
+		return 1;
+	}
+		case -1417275359:
+	{
+		engineConfiguration->torqueReductionTime = value;
 		return 1;
 	}
 		case -464979268:
@@ -3788,6 +3823,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1164012327:
 	{
 		engineConfiguration->tpsDecelEnleanmentMultiplier = value;
+		return 1;
+	}
+		case 2048109045:
+	{
+		engineConfiguration->torqueReductionIgnitionRetard = value;
 		return 1;
 	}
 		case -1564912640:

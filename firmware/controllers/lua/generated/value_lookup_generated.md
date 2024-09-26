@@ -259,6 +259,9 @@ null
 ### mapSyncThreshold
 Delta kPa for MAP sync
 
+### torqueReductionIgnitionCut
+How many % of ignition events will be cut
+
 ### cylinderBore
 @@CYLINDER_BORE_TOOLTIP@@
 
@@ -525,6 +528,9 @@ How far above idle speed do we consider idling, i.e. coasting detection threshol
 
 ### applyNonlinearBelowPulse
 Apply nonlinearity correction below a pulse of this duration. Pulses longer than this duration will receive no adjustment.
+
+### torqueReductionArmingRpm
+Since torque reduction pin is usually shared with launch control, most people have an RPM where behavior under that is Launch Control, over that is Flat Shift/Torque Reduction
 
 ### stoichRatioSecondary
 Stoichiometric ratio for your secondary fuel. This value is used when the Flex Fuel sensor indicates E100, typically 9.0
@@ -940,6 +946,9 @@ set warningPeriod X
 ### idleStepperTotalSteps
 
 
+### torqueReductionArmingApp
+Pedal position to realize that we need to reduce torque when the trigger pin is uuuh triggered
+
 ### tachPulseDuractionMs
 Duration in ms or duty cycle depending on selected mode
 
@@ -1047,6 +1056,9 @@ on IGN voltage detection turn fuel pump on to build fuel pressure
 
 ### idlePidRpmDeadZone
 If the RPM closer to target than this value, disable closed loop idle correction to prevent oscillation
+
+### torqueReductionTime
+For how long after the pin has been triggered will the cut/reduction stay active. After that, even if the pin is still triggered, torque is re-introduced
 
 ### mc33810DisableRecoveryMode
 See Over/Undervoltage Shutdown/Retry bit in documentation
@@ -1158,6 +1170,9 @@ For decel we simply multiply delta of TPS and tFor decel we do not use table?!
 
 ### tpsDecelEnleanmentMultiplier
 Magic multiplier, we multiply delta of TPS and get fuel squirt duration
+
+### torqueReductionIgnitionRetard
+How many degrees of timing advance will be reduced during the Torque Reduction Time
 
 ### throttlePedalSecondaryUpVoltage
 

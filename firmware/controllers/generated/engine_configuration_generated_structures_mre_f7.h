@@ -672,9 +672,10 @@ struct engine_configuration_s {
 	 */
 	Gpio canRxPin;
 	/**
+	 * Pin that activates the reduction/cut for shifting. Sometimes shared with the Launch Control pin
 	 * offset 36
 	 */
-	uint16_t unusedEtbExpAverageLength;
+	switch_input_pin_e torqueReductionTriggerPin;
 	/**
 	 * units: %
 	 * offset 38
@@ -963,9 +964,11 @@ struct engine_configuration_s {
 	 */
 	uint8_t mapSyncThreshold;
 	/**
+	 * How many % of ignition events will be cut
+	 * units: %
 	 * offset 443
 	 */
-	uint8_t unusedByteHere;
+	int8_t torqueReductionIgnitionCut;
 	/**
 	 * @@CYLINDER_BORE_TOOLTIP@@
 	 * units: mm
@@ -1774,9 +1777,11 @@ struct engine_configuration_s {
 	 */
 	brain_input_pin_e flexSensorPin;
 	/**
+	 * Since torque reduction pin is usually shared with launch control, most people have an RPM where behavior under that is Launch Control, over that is Flat Shift/Torque Reduction
+	 * units: rpm
 	 * offset 818
 	 */
-	uint16_t unused720;
+	uint16_t torqueReductionArmingRpm;
 	/**
 	 * offset 820
 	 */
@@ -2609,9 +2614,10 @@ struct engine_configuration_s {
 	 */
 	int idleStepperTotalSteps;
 	/**
+	 * Pedal position to realize that we need to reduce torque when the trigger pin is uuuh triggered
 	 * offset 1356
 	 */
-	int unusedInt3423423;
+	int torqueReductionArmingApp;
 	/**
 	 * Duration in ms or duty cycle depending on selected mode
 	 * offset 1360
@@ -2769,9 +2775,11 @@ struct engine_configuration_s {
 	 */
 	int16_t idlePidRpmDeadZone;
 	/**
+	 * For how long after the pin has been triggered will the cut/reduction stay active. After that, even if the pin is still triggered, torque is re-introduced
+	 * units: ms
 	 * offset 1488
 	 */
-	float unusedTargetVBatt;
+	float torqueReductionTime;
 	/**
 	 * See Over/Undervoltage Shutdown/Retry bit in documentation
 	offset 1492 bit 0 */
@@ -2958,9 +2966,11 @@ struct engine_configuration_s {
 	 */
 	float tpsDecelEnleanmentMultiplier;
 	/**
+	 * How many degrees of timing advance will be reduced during the Torque Reduction Time
+	 * units: deg
 	 * offset 1532
 	 */
-	uint32_t unusedAuxSerialSpee;
+	float torqueReductionIgnitionRetard;
 	/**
 	 * units: voltage
 	 * offset 1536

@@ -1210,7 +1210,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1264409701;
+	public static final int SIGNATURE_HASH = 643883150;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1472,7 +1472,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.09.26.f407-discovery.1264409701";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.09.26.f407-discovery.643883150";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1568,6 +1568,8 @@ public class Fields {
 	public static final Field SDCARDCSPIN = Field.create("SDCARDCSPIN", 30, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field CANTXPIN = Field.create("CANTXPIN", 32, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field CANRXPIN = Field.create("CANRXPIN", 34, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
+	public static final String[] switch_input_pin_e = {"NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15", "PF0", "PF1", "PF2", "PF3", "PF4", "PF5", "PF6", "PF7", "PF8", "PF9", "PF10", "PF11", "PF12", "PF13", "PF14", "PF15", "PG0", "PG1", "PG2", "PG3", "PG4", "PG5", "PG6", "PG7", "PG8", "PG9", "PG10", "PG11", "PG12", "PG13", "PG14", "PG15", "PH0", "PH1", "PH2", "PH3", "PH4", "PH5", "PH6", "PH7", "PH8", "PH9", "PH10", "PH11", "PH12", "PH13", "PH14", "PH15", "PI0", "PI1", "PI2", "PI3", "PI4", "PI5", "PI6", "PI7", "PI8", "PI9", "PI10", "PI11", "PI12", "PI13", "PI14", "PI15"};
+	public static final Field TORQUEREDUCTIONTRIGGERPIN = Field.create("TORQUEREDUCTIONTRIGGERPIN", 36, FieldType.INT16, switch_input_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field LAUNCHFUELADDERPERCENT = Field.create("LAUNCHFUELADDERPERCENT", 38, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ETBJAMTIMEOUT = Field.create("ETBJAMTIMEOUT", 39, FieldType.INT8).setScale(0.02).setBaseOffset(0);
 	public static final Field TACHOUTPUTPIN = Field.create("TACHOUTPUTPIN", 40, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
@@ -1663,6 +1665,7 @@ public class Fields {
 	public static final Field FIRINGORDER = Field.create("FIRINGORDER", 440, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field JUSTATEMPTEST = Field.create("JUSTATEMPTEST", 441, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field MAPSYNCTHRESHOLD = Field.create("MAPSYNCTHRESHOLD", 442, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field TORQUEREDUCTIONIGNITIONCUT = Field.create("TORQUEREDUCTIONIGNITIONCUT", 443, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field CYLINDERBORE = Field.create("CYLINDERBORE", 444, FieldType.FLOAT).setBaseOffset(0);
 	public static final String[] engine_load_mode_e = {"Speed Density", "MAF Air Charge", "Alpha-N", "Lua"};
 	public static final Field FUELALGORITHM = Field.create("FUELALGORITHM", 448, FieldType.INT8, engine_load_mode_e).setScale(1.0).setBaseOffset(0);
@@ -1726,7 +1729,6 @@ public class Fields {
 	public static final Field TLE6240_CS = Field.create("TLE6240_CS", 582, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field TLE6240_CSPINMODE = Field.create("TLE6240_CSPINMODE", 584, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field MC33810_CSPINMODE = Field.create("MC33810_CSPINMODE", 585, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
-	public static final String[] switch_input_pin_e = {"NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15", "PF0", "PF1", "PF2", "PF3", "PF4", "PF5", "PF6", "PF7", "PF8", "PF9", "PF10", "PF11", "PF12", "PF13", "PF14", "PF15", "PG0", "PG1", "PG2", "PG3", "PG4", "PG5", "PG6", "PG7", "PG8", "PG9", "PG10", "PG11", "PG12", "PG13", "PG14", "PG15", "PH0", "PH1", "PH2", "PH3", "PH4", "PH5", "PH6", "PH7", "PH8", "PH9", "PH10", "PH11", "PH12", "PH13", "PH14", "PH15", "PI0", "PI1", "PI2", "PI3", "PI4", "PI5", "PI6", "PI7", "PI8", "PI9", "PI10", "PI11", "PI12", "PI13", "PI14", "PI15"};
 	public static final Field THROTTLEPEDALUPPIN = Field.create("THROTTLEPEDALUPPIN", 586, FieldType.INT16, switch_input_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field BAROSENSOR_LOWVALUE = Field.create("BAROSENSOR_LOWVALUE", 588, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field BAROSENSOR_HIGHVALUE = Field.create("BAROSENSOR_HIGHVALUE", 592, FieldType.FLOAT).setBaseOffset(0);
@@ -1898,6 +1900,7 @@ public class Fields {
 	public static final Field MAX31855_CS7 = Field.create("MAX31855_CS7", 812, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field MAX31855_CS8 = Field.create("MAX31855_CS8", 814, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field FLEXSENSORPIN = Field.create("FLEXSENSORPIN", 816, FieldType.INT16, brain_input_pin_e).setScale(1.0).setBaseOffset(0);
+	public static final Field TORQUEREDUCTIONARMINGRPM = Field.create("TORQUEREDUCTIONARMINGRPM", 818, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field STEPPERDIRECTIONPINMODE = Field.create("STEPPERDIRECTIONPINMODE", 820, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field MC33972SPIDEVICE = Field.create("MC33972SPIDEVICE", 821, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field STOICHRATIOSECONDARY = Field.create("STOICHRATIOSECONDARY", 822, FieldType.INT8).setScale(0.1).setBaseOffset(0);
@@ -2166,6 +2169,7 @@ public class Fields {
 	public static final Field KNOCKDETECTIONWINDOWEND = Field.create("KNOCKDETECTIONWINDOWEND", 1344, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field IDLESTEPPERREACTIONTIME = Field.create("IDLESTEPPERREACTIONTIME", 1348, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field IDLESTEPPERTOTALSTEPS = Field.create("IDLESTEPPERTOTALSTEPS", 1352, FieldType.INT).setScale(1.0).setBaseOffset(0);
+	public static final Field TORQUEREDUCTIONARMINGAPP = Field.create("TORQUEREDUCTIONARMINGAPP", 1356, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field TACHPULSEDURACTIONMS = Field.create("TACHPULSEDURACTIONMS", 1360, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field WWAETAU = Field.create("WWAETAU", 1364, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ALTERNATORCONTROL_PFACTOR = Field.create("ALTERNATORCONTROL_PFACTOR", 1368, FieldType.FLOAT).setBaseOffset(0);
@@ -2216,7 +2220,7 @@ public class Fields {
 	public static final Field THROTTLEPEDALWOTVOLTAGE = Field.create("THROTTLEPEDALWOTVOLTAGE", 1480, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field STARTUPFUELPUMPDURATION = Field.create("STARTUPFUELPUMPDURATION", 1484, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field IDLEPIDRPMDEADZONE = Field.create("IDLEPIDRPMDEADZONE", 1486, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field UNUSEDTARGETVBATT = Field.create("UNUSEDTARGETVBATT", 1488, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field TORQUEREDUCTIONTIME = Field.create("TORQUEREDUCTIONTIME", 1488, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field MC33810DISABLERECOVERYMODE = Field.create("MC33810DISABLERECOVERYMODE", 1492, FieldType.BIT, 0).setBaseOffset(0);
 	public static final Field MC33810GPGD0MODE = Field.create("MC33810GPGD0MODE", 1492, FieldType.BIT, 1).setBaseOffset(0);
 	public static final Field MC33810GPGD1MODE = Field.create("MC33810GPGD1MODE", 1492, FieldType.BIT, 2).setBaseOffset(0);
@@ -2260,6 +2264,7 @@ public class Fields {
 	public static final Field UARTCONSOLESERIALSPEED = Field.create("UARTCONSOLESERIALSPEED", 1520, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSDECELENLEANMENTTHRESHOLD = Field.create("TPSDECELENLEANMENTTHRESHOLD", 1524, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field TPSDECELENLEANMENTMULTIPLIER = Field.create("TPSDECELENLEANMENTMULTIPLIER", 1528, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field TORQUEREDUCTIONIGNITIONRETARD = Field.create("TORQUEREDUCTIONIGNITIONRETARD", 1532, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field THROTTLEPEDALSECONDARYUPVOLTAGE = Field.create("THROTTLEPEDALSECONDARYUPVOLTAGE", 1536, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field THROTTLEPEDALSECONDARYWOTVOLTAGE = Field.create("THROTTLEPEDALSECONDARYWOTVOLTAGE", 1540, FieldType.FLOAT).setBaseOffset(0);
 	public static final String[] can_baudrate_e = {"50kbps", "83.33kbps", "100kbps", "125kbps", "250kbps", "500kbps", "1Mbps"};
@@ -3270,6 +3275,7 @@ public class Fields {
 	SDCARDCSPIN,
 	CANTXPIN,
 	CANRXPIN,
+	TORQUEREDUCTIONTRIGGERPIN,
 	LAUNCHFUELADDERPERCENT,
 	ETBJAMTIMEOUT,
 	TACHOUTPUTPIN,
@@ -3363,6 +3369,7 @@ public class Fields {
 	FIRINGORDER,
 	JUSTATEMPTEST,
 	MAPSYNCTHRESHOLD,
+	TORQUEREDUCTIONIGNITIONCUT,
 	CYLINDERBORE,
 	FUELALGORITHM,
 	ALSMAXTPS,
@@ -3590,6 +3597,7 @@ public class Fields {
 	MAX31855_CS7,
 	MAX31855_CS8,
 	FLEXSENSORPIN,
+	TORQUEREDUCTIONARMINGRPM,
 	STEPPERDIRECTIONPINMODE,
 	MC33972SPIDEVICE,
 	STOICHRATIOSECONDARY,
@@ -3854,6 +3862,7 @@ public class Fields {
 	KNOCKDETECTIONWINDOWEND,
 	IDLESTEPPERREACTIONTIME,
 	IDLESTEPPERTOTALSTEPS,
+	TORQUEREDUCTIONARMINGAPP,
 	TACHPULSEDURACTIONMS,
 	WWAETAU,
 	ALTERNATORCONTROL_PFACTOR,
@@ -3904,7 +3913,7 @@ public class Fields {
 	THROTTLEPEDALWOTVOLTAGE,
 	STARTUPFUELPUMPDURATION,
 	IDLEPIDRPMDEADZONE,
-	UNUSEDTARGETVBATT,
+	TORQUEREDUCTIONTIME,
 	MC33810DISABLERECOVERYMODE,
 	MC33810GPGD0MODE,
 	MC33810GPGD1MODE,
@@ -3947,6 +3956,7 @@ public class Fields {
 	UARTCONSOLESERIALSPEED,
 	TPSDECELENLEANMENTTHRESHOLD,
 	TPSDECELENLEANMENTMULTIPLIER,
+	TORQUEREDUCTIONIGNITIONRETARD,
 	THROTTLEPEDALSECONDARYUPVOLTAGE,
 	THROTTLEPEDALSECONDARYWOTVOLTAGE,
 	CANBAUDRATE,
