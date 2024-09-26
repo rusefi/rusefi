@@ -1,10 +1,4 @@
-
-// here am flirting with not using pch.h and not including at least Engine
-#include <rusefi/interpolation.h>
-#include <rusefi/arrays.h>
-#include "engine_configuration.h"
-#include "sensor.h"
-#include "error_handling.h"
+#include "pch.h"
 
 #include "injector_model.h"
 #include "fuel_computer.h"

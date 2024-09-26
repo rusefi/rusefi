@@ -7,16 +7,7 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include <rusefi/interpolation.h>
-#include "engine_configuration.h"
-#include "error_handling.h"
-#include "fuel_computer.h"
-#include "speed_density.h"
-#include "fuel_math.h"
-#include "sensor.h"
-#include "efi_interpolation.h"
-#include "table_helper.h"
-#include "engine_math.h"
+#include "pch.h"
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
