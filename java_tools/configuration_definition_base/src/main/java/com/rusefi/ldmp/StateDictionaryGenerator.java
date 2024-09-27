@@ -8,7 +8,10 @@ import java.util.Date;
 import static com.rusefi.VariableRegistry.quote;
 import static com.rusefi.ldmp.LiveDataProcessor.tempLimit;
 
-public class StateDictionaryGenerator {
+/**
+ * generator for {@link StateDictionaryFactory}
+ */
+ public class StateDictionaryGenerator {
     public final StringBuilder content = new StringBuilder();
     private final String yamlFileName;
 

@@ -1,4 +1,6 @@
 #
+# see live_data.cpp - you would have to add a method manually!
+#
 # Here we facilitate monitoring by exposing model/transfer object of each individual controller. While some entries are only
 # useful for monitoring the big idea is to bring calculation and monitoring as close to each other as possible by exposing
 # many calculation fields directly
@@ -7,7 +9,6 @@
 # entry format, where 'key' is a unique ID:
 # key: [NameOfJavaToGenerate.java, folder_where_key.txt_is located, (optional advanced options)]
 # Naming convention: top level struct in .txt file should be called key_s
-# at the moment new line would need to be added into StateDictionary.java manually todo: Add code generation of StateDictionary.java
 #
 # see gen_live_documentation.sh which is the main generation script
 #
