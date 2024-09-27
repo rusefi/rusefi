@@ -29,7 +29,7 @@ void efiCriticalError(const char *message) {
   criticalError(message);
 }
 
-const char* getCriticalErrorMessage(void) {
+const char* getCriticalErrorMessage() {
 	return criticalErrorMessageBuffer;
 }
 
@@ -170,8 +170,9 @@ WarningCodeState unitTestWarningCodeState;
  * @returns TRUE in case there were warnings recently
  */
 bool warning(ObdCode code, const char *fmt, ...) {
-	if (hasFirmwareErrorFlag)
+	if (hasFirmwareErrorFlag) {
 		return true;
+  }
 
 #if EFI_SIMULATOR || EFI_PROD_CODE
 	bool known = engine->engineState.warnings.isWarningNow(code);
@@ -215,7 +216,7 @@ bool warning(ObdCode code, const char *fmt, ...) {
 	return false;
 }
 
-const char* getWarningMessage(void) {
+const char* getWarningMessage() {
 	return warningBuffer;
 }
 
