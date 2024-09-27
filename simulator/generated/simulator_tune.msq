@@ -626,8 +626,8 @@
         <constant name="cutSparkOnHardLimit">"yes"</constant>
         <constant name="launchFuelCutEnable">"false"</constant>
         <constant name="launchSparkCutEnable">"false"</constant>
-        <constant name="unusedFancy1">"false"</constant>
-        <constant name="unusedFancy2">"false"</constant>
+        <constant name="torqueReductionEnabled">"false"</constant>
+        <constant name="torqueReductionTriggerPinInverted">"false"</constant>
         <constant name="unusedFancy14">"false"</constant>
         <constant name="unusedFancy7">"false"</constant>
         <constant name="unusedFancy8">"false"</constant>
@@ -1035,7 +1035,8 @@
         <constant digits="0" name="idleTimingPid_minValue" units="">-10.0</constant>
         <constant digits="0" name="idleTimingPid_maxValue" units="">10.0</constant>
         <constant digits="1" name="idleTimingSoftEntryTime" units="">0.0</constant>
-        <constant digits="0" name="unusedEtbRocExpAverageLength" units="">0.0</constant>
+        <constant name="torqueReductionTriggerPinMode">"DEFAULT"</constant>
+        <constant name="torqueReductionActivationMode">"Torque Reduction Button"</constant>
         <constant digits="0" name="tpsAccelFractionPeriod" units="cycles">0.0</constant>
         <constant digits="2" name="tpsAccelFractionDivisor" units="coef">1.0</constant>
         <constant name="tle8888spiDevice">"Off"</constant>
@@ -4762,7 +4763,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20240920" nPages="1" signature="rusEFI master.2024.09.27.f407-discovery.643883150" version="5.0"/>
+    <versionInfo firmwareInfo="20240920" nPages="1" signature="rusEFI master.2024.09.27.f407-discovery.2283148957" version="5.0"/>
     <bibliography author="rusEFI 20240920" writeDate="date"/>
     <settings/>
     <userComments/>
