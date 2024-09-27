@@ -585,6 +585,11 @@ typedef enum __attribute__ ((__packed__)) {
 } launchActivationMode_e;
 
 typedef enum __attribute__ ((__packed__)) {
+	TORQUE_REDUCTION_BUTTON = 0,
+	LAUNCH_BUTTON = 1,
+} torqueReductionActivationMode_e;
+
+typedef enum __attribute__ ((__packed__)) {
 	SWITCH_INPUT_ANTILAG = 0,
 	ALWAYS_ON_ANTILAG = 1,
 } antiLagActivationMode_e;
