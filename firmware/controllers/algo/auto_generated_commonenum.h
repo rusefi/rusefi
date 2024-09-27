@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sat Apr 20 12:21:12 UTC 2024
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Fri Sep 27 22:36:30 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -76,6 +76,7 @@ const char *getStepper_num_micro_steps_e(stepper_num_micro_steps_e value);
 const char *getTChargeMode_e(tChargeMode_e value);
 const char *getTiming_mode_e(timing_mode_e value);
 const char *getTle8888_mode_e(tle8888_mode_e value);
+const char *getTorqueReductionActivationMode_e(torqueReductionActivationMode_e value);
 const char *getUart_device_e(uart_device_e value);
 const char *getVe_override_e(ve_override_e value);
 const char *getVvt_mode_e(vvt_mode_e value);

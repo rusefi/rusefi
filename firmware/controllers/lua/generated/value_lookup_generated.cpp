@@ -817,6 +817,12 @@ float getConfigValueByName(const char *name) {
 // launchSparkCutEnable
 		case -1829995308:
 			return engineConfiguration->launchSparkCutEnable;
+// torqueReductionEnabled
+		case -618104323:
+			return engineConfiguration->torqueReductionEnabled;
+// torqueReductionTriggerPinInverted
+		case 1931913358:
+			return engineConfiguration->torqueReductionTriggerPinInverted;
 // verboseIsoTp
 		case -487204662:
 			return engineConfiguration->verboseIsoTp;
@@ -3223,6 +3229,16 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1829995308:
 	{
 		engineConfiguration->launchSparkCutEnable = (int)value;
+		return 1;
+	}
+		case -618104323:
+	{
+		engineConfiguration->torqueReductionEnabled = (int)value;
+		return 1;
+	}
+		case 1931913358:
+	{
+		engineConfiguration->torqueReductionTriggerPinInverted = (int)value;
 		return 1;
 	}
 		case -487204662:

@@ -1295,7 +1295,7 @@
 #define show_Proteus_presets false
 #define show_test_presets false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3935337071
+#define SIGNATURE_HASH 1155959932
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1353,6 +1353,10 @@
 #define TOOTH_PACKET_SIZE 2
 #define TOP_DEAD_CENTER_MESSAGE "r"
 #define TORQUE_CURVE_SIZE 6
+#define torqueReductionActivationMode_e_auto_enum 0="TORQUE_REDUCTION_BUTTON",1="LAUNCH_BUTTON"
+#define torqueReductionActivationMode_e_enum "Torque Reduction Button", "Launch Button"
+#define torqueReductionActivationMode_e_LAUNCH_BUTTON 1
+#define torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON 0
 #define TOTAL_CONFIG_SIZE 22968
 #define TPS_2_BYTE_PACKING_MULT 100
 #define TPS_PPS_TOO_HIGH_THRESHOLD 110
@@ -1753,14 +1757,14 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.09.27.hellen154hyundai_f7.3935337071"
+#define TS_SIGNATURE "rusEFI master.2024.09.27.hellen154hyundai_f7.1155959932"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 1748
+#define TS_TOTAL_OUTPUT_SIZE 1752
 #define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "Channel 1"
 #define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "Channel 2"
 #define TS_TRIGGER_SCOPE_DISABLE 5

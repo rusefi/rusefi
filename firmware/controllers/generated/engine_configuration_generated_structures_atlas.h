@@ -2374,10 +2374,10 @@ struct engine_configuration_s {
 	bool launchSparkCutEnable : 1 {};
 	/**
 	offset 1304 bit 20 */
-	bool unusedFancy1 : 1 {};
+	bool torqueReductionEnabled : 1 {};
 	/**
 	offset 1304 bit 21 */
-	bool unusedFancy2 : 1 {};
+	bool torqueReductionTriggerPinInverted : 1 {};
 	/**
 	offset 1304 bit 22 */
 	bool unusedFancy14 : 1 {};
@@ -3653,7 +3653,11 @@ struct engine_configuration_s {
 	/**
 	 * offset 2384
 	 */
-	int16_t unusedEtbRocExpAverageLength;
+	pin_input_mode_e torqueReductionTriggerPinMode;
+	/**
+	 * offset 2385
+	 */
+	torqueReductionActivationMode_e torqueReductionActivationMode;
 	/**
 	 * A delay in cycles between fuel-enrich. portions
 	 * units: cycles

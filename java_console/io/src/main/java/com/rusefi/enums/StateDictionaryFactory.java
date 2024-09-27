@@ -1,5 +1,5 @@
 package com.rusefi.enums;
-//was generated automatically by rusEFI tool config_definition_base-all.jar based on StateDictionaryGenerator integration/LiveData.yaml on Sun Mar 31 03:19:31 UTC 2024n
+//was generated automatically by rusEFI tool config_definition_base-all.jar based on StateDictionaryGenerator integration/LiveData.yaml on Fri Sep 27 22:36:29 UTC 2024n
 import com.rusefi.config.generated.*;
 import com.rusefi.ldmp.StateDictionary;
 
@@ -14,6 +14,7 @@ public class StateDictionaryFactory {
         stateDictionary.register(live_data_e.LDS_high_pressure_fuel_pump, HighPressureFuelPump.VALUES, "high_pressure_fuel_pump");
         stateDictionary.register(live_data_e.LDS_injector_model, InjectorModel.VALUES, "injector_model");
         stateDictionary.register(live_data_e.LDS_launch_control_state, LaunchControl.VALUES, "launch_control");
+        stateDictionary.register(live_data_e.LDS_shift_torque_reduction_state, ShiftTorqueReductionController.VALUES, "shift_torque_reduction_controller");
         stateDictionary.register(live_data_e.LDS_antilag_system_state, AntilagSystem.VALUES, "antilag_system");
         stateDictionary.register(live_data_e.LDS_boost_control, BoostControl.VALUES, "boost_control");
         stateDictionary.register(live_data_e.LDS_ac_control, AcControl.VALUES, "ac_control");

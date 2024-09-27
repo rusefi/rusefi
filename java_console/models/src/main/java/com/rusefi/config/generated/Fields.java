@@ -1210,7 +1210,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 643883150;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1259,6 +1258,8 @@ public class Fields {
 	public static final int TOOTH_PACKET_SIZE = 2;
 	public static final String TOP_DEAD_CENTER_MESSAGE = "r";
 	public static final int TORQUE_CURVE_SIZE = 6;
+	public static final int torqueReductionActivationMode_e_LAUNCH_BUTTON = 1;
+	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON = 0;
 	public static final int TOTAL_CONFIG_SIZE = 22972;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int TPS_PPS_TOO_HIGH_THRESHOLD = 110;
@@ -1472,11 +1473,11 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.09.27.f407-discovery.643883150";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.09.27.f407-discovery.2283148957";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1748;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1752;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_2_NAME = "Channel 2";
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;
@@ -2114,6 +2115,8 @@ public class Fields {
 	public static final Field CUTSPARKONHARDLIMIT = Field.create("CUTSPARKONHARDLIMIT", 1304, FieldType.BIT, 17).setBaseOffset(0);
 	public static final Field LAUNCHFUELCUTENABLE = Field.create("LAUNCHFUELCUTENABLE", 1304, FieldType.BIT, 18).setBaseOffset(0);
 	public static final Field LAUNCHSPARKCUTENABLE = Field.create("LAUNCHSPARKCUTENABLE", 1304, FieldType.BIT, 19).setBaseOffset(0);
+	public static final Field TORQUEREDUCTIONENABLED = Field.create("TORQUEREDUCTIONENABLED", 1304, FieldType.BIT, 20).setBaseOffset(0);
+	public static final Field TORQUEREDUCTIONTRIGGERPININVERTED = Field.create("TORQUEREDUCTIONTRIGGERPININVERTED", 1304, FieldType.BIT, 21).setBaseOffset(0);
 	public static final Field VERBOSEISOTP = Field.create("VERBOSEISOTP", 1304, FieldType.BIT, 27).setBaseOffset(0);
 	public static final Field ENGINESNIFFERFOCUSONINPUTS = Field.create("ENGINESNIFFERFOCUSONINPUTS", 1304, FieldType.BIT, 28).setBaseOffset(0);
 	public static final Field LAUNCHACTIVATEINVERTED = Field.create("LAUNCHACTIVATEINVERTED", 1304, FieldType.BIT, 29).setBaseOffset(0);
@@ -2506,6 +2509,9 @@ public class Fields {
 	public static final Field IDLETIMINGPID_MINVALUE = Field.create("IDLETIMINGPID_MINVALUE", 2376, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field IDLETIMINGPID_MAXVALUE = Field.create("IDLETIMINGPID_MAXVALUE", 2378, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field IDLETIMINGSOFTENTRYTIME = Field.create("IDLETIMINGSOFTENTRYTIME", 2380, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field TORQUEREDUCTIONTRIGGERPINMODE = Field.create("TORQUEREDUCTIONTRIGGERPINMODE", 2384, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
+	public static final String[] torqueReductionActivationMode_e = {"Torque Reduction Button", "Launch Button"};
+	public static final Field TORQUEREDUCTIONACTIVATIONMODE = Field.create("TORQUEREDUCTIONACTIVATIONMODE", 2385, FieldType.INT8, torqueReductionActivationMode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSACCELFRACTIONPERIOD = Field.create("TPSACCELFRACTIONPERIOD", 2386, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSACCELFRACTIONDIVISOR = Field.create("TPSACCELFRACTIONDIVISOR", 2388, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field TLE8888SPIDEVICE = Field.create("TLE8888SPIDEVICE", 2392, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -3807,6 +3813,8 @@ public class Fields {
 	CUTSPARKONHARDLIMIT,
 	LAUNCHFUELCUTENABLE,
 	LAUNCHSPARKCUTENABLE,
+	TORQUEREDUCTIONENABLED,
+	TORQUEREDUCTIONTRIGGERPININVERTED,
 	VERBOSEISOTP,
 	ENGINESNIFFERFOCUSONINPUTS,
 	LAUNCHACTIVATEINVERTED,
@@ -4192,6 +4200,8 @@ public class Fields {
 	IDLETIMINGPID_MINVALUE,
 	IDLETIMINGPID_MAXVALUE,
 	IDLETIMINGSOFTENTRYTIME,
+	TORQUEREDUCTIONTRIGGERPINMODE,
+	TORQUEREDUCTIONACTIVATIONMODE,
 	TPSACCELFRACTIONPERIOD,
 	TPSACCELFRACTIONDIVISOR,
 	TLE8888SPIDEVICE,

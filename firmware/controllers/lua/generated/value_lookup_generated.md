@@ -811,6 +811,12 @@ Be careful enabling this: some engines are known to self-disassemble their valve
 ### launchSparkCutEnable
 This is the Cut Mode normally used
 
+### torqueReductionEnabled
+
+
+### torqueReductionTriggerPinInverted
+
+
 ### verboseIsoTp
 Are you a developer troubleshooting TS over CAN ISO/TP?
 

@@ -1037,6 +1037,16 @@ float getOutputValueByName(const char *name) {
 		case 827982787:
 			return engine->launchController.tpsCondition;
 #endif
+// isTorqueReductionTriggerPinValid
+#if EFI_LAUNCH_CONTROL
+		case 1922853657:
+			return engine->shiftTorqueReductionController.isTorqueReductionTriggerPinValid;
+#endif
+// torqueReductionTriggerPinState
+#if EFI_LAUNCH_CONTROL
+		case 501156654:
+			return engine->shiftTorqueReductionController.torqueReductionTriggerPinState;
+#endif
 // isTpsInvalid
 #if EFI_BOOST_CONTROL
 		case -575666209:
