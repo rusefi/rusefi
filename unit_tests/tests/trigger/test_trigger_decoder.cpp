@@ -116,7 +116,7 @@ TEST(trigger, test1995FordInline6TriggerDecoder) {
 TEST(misc, testGetCoilDutyCycleIssue977) {
 	EngineTestHelper eth(engine_type_e::FORD_ASPIRE_1996);
 
-	int rpm = 2000;
+	float rpm = 2000;
 	engine->rpmCalculator.setRpmValue(rpm);
 	ASSERT_EQ( 4,  engine->ignitionState.getSparkDwell(rpm)) << "running dwell";
 
