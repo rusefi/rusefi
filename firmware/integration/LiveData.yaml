@@ -75,6 +75,13 @@ Usages:
     constexpr: "engine->launchController"
     conditional_compilation: "EFI_LAUNCH_CONTROL"
 
+  - name: shift_torque_reduction_state
+    cppFileName: shift_torque_reduction_controller
+    java: ShiftTorqueReductionController.java
+    folder: controllers/algo
+    constexpr: "engine->shiftTorqueReductionController"
+    conditional_compilation: "EFI_LAUNCH_CONTROL"
+
   - name: antilag_system_state
     cppFileName: antilag_system
     java: AntilagSystem.java
