@@ -18,6 +18,9 @@ public class SignatureHelper {
     // todo: find a way to reference Fields.PROTOCOL_SIGNATURE_PREFIX
     private static final String PREFIX = "rusEFI ";
     private static final char SLASH = '/';
+    /**
+     * java -Dextra_local_ini_file_name=path_to_local_generated.ini ...
+     */
     private static final String EXTRA_INI_SOURCE = System.getProperty("extra_local_ini_file_name");
 
     public static Pair<String, String> getUrl(String signature) {
