@@ -18,6 +18,7 @@ public class SignatureHelper {
     // todo: find a way to reference Fields.PROTOCOL_SIGNATURE_PREFIX
     private static final String PREFIX = "rusEFI ";
     private static final char SLASH = '/';
+    private static final String EXTRA_INI_SOURCE = System.getProperty("extra_local_ini_file_name");
 
     public static Pair<String, String> getUrl(String signature) {
         RusEfiSignature s = parse(signature);
@@ -43,6 +44,9 @@ public class SignatureHelper {
         File file = new File(localIniFile);
         if (file.exists() && file.length() > 10000)
             return localIniFile;
+        if (EXTRA_INI_SOURCE != null) {
+            return EXTRA_INI_SOURCE;
+        }
         log.info("Failed to locate " + localIniFile + ", trying to download " + p.first);
         try (BufferedInputStream in = new BufferedInputStream(new URL(p.first).openStream());
              FileOutputStream fileOutputStream = new FileOutputStream(localIniFile)) {
