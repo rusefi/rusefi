@@ -1,6 +1,7 @@
 package com.rusefi.ui;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.FileLog;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.core.ui.FrameHelper;
@@ -13,6 +14,7 @@ import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 
 import static com.devexperts.logging.Logging.getLogging;
+import static com.rusefi.FileLog.isWindows;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
@@ -42,7 +44,7 @@ public class StatusWindow implements StatusConsumer, UpdateOperationCallbacks {
         content.add(bottomStatusLabel, BorderLayout.SOUTH);
 
         appendLine("Console version " + rusEFIVersion.CONSOLE_VERSION);
-        appendLine("Windows " + System.getProperty("os.version"));
+        appendLine(FileLog.getOsName() + " " + System.getProperty("os.version"));
         appendLine("Bundle " + BundleUtil.readBundleFullNameNotNull());
     }
 
