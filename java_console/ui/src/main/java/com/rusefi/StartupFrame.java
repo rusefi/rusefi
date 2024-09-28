@@ -156,10 +156,10 @@ public class StartupFrame {
 
         ProgramSelector selector = new ProgramSelector(portsComboBox.getComboPorts());
 
-        if (FileLog.isWindows()) {
-            realHardwarePanel.add(new HorizontalLine(), "right, wrap");
+        realHardwarePanel.add(new HorizontalLine(), "right, wrap");
+        realHardwarePanel.add(selector.getControl(), "right, wrap");
 
-            realHardwarePanel.add(selector.getControl(), "right, wrap");
+        if (FileLog.isWindows()) {
 
             // for F7 builds we just build one file at the moment
 //            realHardwarePanel.add(new FirmwareFlasher(FirmwareFlasher.IMAGE_FILE, "ST-LINK Program Firmware", "Default firmware version for most users").getButton());
