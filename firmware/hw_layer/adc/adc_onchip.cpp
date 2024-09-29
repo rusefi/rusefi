@@ -62,11 +62,19 @@ int AdcSlowOnchipDevice::start(void) {
 }
 
 bool AdcSlowOnchipDevice::isChannelSupported(adc_channel_e hwChannel) {
+#if defined(STM32H7XX)
+	return (getAdcInternalChannel(adcp->adcm, hwChannel) >= 0);
+#else
 	return (getAdcInternalChannel(adcp->adc, hwChannel) >= 0);
+#endif
 }
 
 int AdcSlowOnchipDevice::enableChannel(adc_channel_e hwChannel) {
+#if defined(STM32H7XX)
+	int channelAdcIndex = getAdcInternalChannel(adcp->adcm, adcMuxedGetParent(hwChannel));
+#else
 	int channelAdcIndex = getAdcInternalChannel(adcp->adc, adcMuxedGetParent(hwChannel));
+#endif
 	if (channelAdcIndex < 0) {
 		criticalError("hwChannel is not supported by Slow ADC");
 		return channelAdcIndex;
