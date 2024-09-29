@@ -1,1 +1,0 @@
-java -jar console/rusefi_console.jar print_vehicle_token
