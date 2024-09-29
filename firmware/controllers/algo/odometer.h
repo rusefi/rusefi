@@ -1,6 +1,6 @@
 #pragma once
 
-
+#if EFI_PROD_CODE && HAL_USE_EEPROM
 #ifndef EE_PAGE_SIZE
 #define EE_PAGE_SIZE 32
 #endif
@@ -17,3 +17,5 @@ struct odometer_state {
 	int totalMeters;
 	int crc;
 };
+
+#endif
