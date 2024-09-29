@@ -3,13 +3,13 @@
  * @brief This logic automatically detects the speed of the
  *        oscillator or crystal connected to HSE.
  * @date 12 July 2021
- * 
+ *
  * It works by first using the reasonably-precise HSI oscillator (16MHz) to measure LSI (nominally 32khz, but wide tolerance).
  * Then, it switches the system clock source to HSE, and repeats the same measurement.  The inaccurate LSI will not drift
  * significantly in the short period of time between these two measurements, so use it as a transfer standard to compare the speed
  * of HSI and HSE.  The ratio between the measured speed of LSI when running on HSE vs. HSI will give the ratio of speeds of HSE
  * and HSI themselves.  Since we know the value of HSI (16mhz), we can compute the speed of HSE.
- * 
+ *
  * Lastly, the PLL is reconfigured to use the correct input divider such that the input frequency is 1MHz
  * (PLLM is set to N for an N-MHz HSE crystal).
  */
@@ -78,9 +78,9 @@ static void reprogramPll(uint8_t roundedHseMhz) {
 
 	// H7 is configured for 2MHz input to PLL
 	auto pllm = roundedHseMhz / 2;
-	
+
 	// Set PLLM for all 3 PLLs to the new value, and select HSE as the clock source
-	RCC->PLLCKSELR = 
+	RCC->PLLCKSELR =
 		pllm << RCC_PLLCKSELR_DIVM1_Pos |
 		pllm << RCC_PLLCKSELR_DIVM2_Pos |
 		pllm << RCC_PLLCKSELR_DIVM3_Pos |
@@ -141,7 +141,7 @@ static void reprogramPll(uint8_t roundedHseMhz) {
 #endif
 
 #ifdef __cplusplus
-// __late_init runs after bss/zero initialziation, but before static constructors and main
+// __late_init runs after bss/zero initialization, but before static constructors and main
 extern "C" void __late_init() {
 #else
 void OscDetector() {
