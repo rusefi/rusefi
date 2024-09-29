@@ -107,6 +107,8 @@ void setBoardConfigOverrides() {
     setDefaultHellenAtPullUps();
 
 	setHellenCan();
+	engineConfiguration->can2RxPin = Gpio::B12;
+	engineConfiguration->can2TxPin = Gpio::B13;
 }
 
 /**
