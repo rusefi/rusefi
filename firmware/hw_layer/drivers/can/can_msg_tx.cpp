@@ -68,7 +68,7 @@ CanTxMessage::~CanTxMessage() {
 	auto device = s_devices[busIndex];
 
 	if (!device) {
-		warning(ObdCode::CUSTOM_ERR_CAN_CONFIGURATION, "Send: CAN configuration issue %d", busIndex);
+		criticalError("Send: CAN device not configured busIndex=%d", busIndex);
 		return;
 	}
 
