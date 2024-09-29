@@ -136,6 +136,12 @@ AdcToken enableFastAdcChannel(const char *msg, adc_channel_e hwChannel) {
 	return adcHwChannelMode[hwChannel].token;
 }
 
+#else
+
+AdcToken enableFastAdcChannel(const char*, adc_channel_e channel) {
+	return invalidAdcToken;
+}
+
 #endif
 
 static void printAdcValue(int channel) {
