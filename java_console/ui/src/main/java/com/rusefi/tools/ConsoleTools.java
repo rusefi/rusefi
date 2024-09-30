@@ -108,13 +108,14 @@ public class ConsoleTools {
                     throw new IllegalStateException("argument expected");
                 String command = CommandHelper.assembleCommand(args);
                 log.info("Sending command [" + command + "]");
-                sendCommand(command);
+                IoStream stream = sendNonBlockingCommandDoNotWaitForConfirmation(command);
+                stream.close(); // this would close connector non-daemon thread
 //                sleepAndPrintNonDaemons(4000);
             }
         }, "Sends command specified as second argument");
-        registerTool("reboot_ecu", args -> sendCommand(Integration.CMD_REBOOT), "Sends a command to reboot rusEFI controller.");
+        registerTool("reboot_ecu", args -> sendNonBlockingCommandDoNotWaitForConfirmation(Integration.CMD_REBOOT), "Sends a command to reboot rusEFI controller.");
         registerTool(Integration.CMD_REBOOT_DFU, args -> {
-            sendCommand(Integration.CMD_REBOOT_DFU);
+            sendNonBlockingCommandDoNotWaitForConfirmation(Integration.CMD_REBOOT_DFU);
             /**
              * AndreiKA reports that auto-detect fails to interrupt communication threads while in native code
              * See https://github.com/rusefi/rusefi/issues/3300
@@ -198,13 +199,14 @@ public class ConsoleTools {
         }
     }
 
-    private static void sendCommand(String command) throws IOException {
+    private static IoStream sendNonBlockingCommandDoNotWaitForConfirmation(String command) throws IOException {
         String autoDetectedPort = autoDetectPort();
         if (autoDetectedPort == null)
-            return;
+            return null;
         IoStream stream = UiLinkManagerHelper.open(autoDetectedPort);
         byte[] commandBytes = BinaryProtocol.getTextCommandBytes(command);
         stream.sendPacket(commandBytes);
+        return stream;
     }
 
     private static void sleepAndPrintNonDaemons(final int millis) {
