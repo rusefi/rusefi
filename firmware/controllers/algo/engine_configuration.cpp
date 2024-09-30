@@ -524,9 +524,14 @@ static void setDefaultEngineConfiguration() {
 	setRpmTableBin(engineConfiguration->map.samplingWindowBins);
 	setLinearCurve(engineConfiguration->map.samplingWindow, 50, 50, 1);
 
+#if VVT_TABLE_SIZE == 8
 	setLinearCurve(config->vvtTable1LoadBins, 20, 120, 10);
-	setRpmTableBin(config->vvtTable1RpmBins);
 	setLinearCurve(config->vvtTable2LoadBins, 20, 120, 10);
+#else
+	setLinearCurve(config->vvtTable1LoadBins, 20, 120, 5);
+	setLinearCurve(config->vvtTable2LoadBins, 20, 120, 5);
+#endif
+	setRpmTableBin(config->vvtTable1RpmBins);
 	setRpmTableBin(config->vvtTable2RpmBins);
 
 	setDefaultEngineNoiseTable();
