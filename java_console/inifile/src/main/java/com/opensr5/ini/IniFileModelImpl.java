@@ -3,6 +3,7 @@ package com.opensr5.ini;
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.field.*;
 import com.rusefi.core.FindFileHelper;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
 import java.util.*;
@@ -103,10 +104,14 @@ public class IniFileModelImpl implements IniFileModel {
     }
 
     private static String findMetaInfoFile(String iniFilePath) {
-        String iniFileName = FindFileHelper.findFile(iniFilePath, RUSEFI_INI_PREFIX, RUSEFI_INI_SUFFIX);
+        String iniFileName = findIniFile(iniFilePath);
         if (iniFileName == null)
             throw new IllegalStateException("Not found " + RUSEFI_INI_PREFIX + "*" + RUSEFI_INI_SUFFIX + " in " + iniFilePath);
         return iniFileName;
+    }
+
+    public static @Nullable String findIniFile(String iniFilePath) {
+        return FindFileHelper.findFile(iniFilePath, RUSEFI_INI_PREFIX, RUSEFI_INI_SUFFIX);
     }
 
     private void finishDialog() {
