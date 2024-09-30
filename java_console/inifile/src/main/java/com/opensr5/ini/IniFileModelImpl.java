@@ -103,7 +103,10 @@ public class IniFileModelImpl implements IniFileModel {
     }
 
     private static String findMetaInfoFile(String iniFilePath) {
-        return FindFileHelper.findFile(iniFilePath, RUSEFI_INI_PREFIX, RUSEFI_INI_SUFFIX);
+        String iniFileName = FindFileHelper.findFile(iniFilePath, RUSEFI_INI_PREFIX, RUSEFI_INI_SUFFIX);
+        if (iniFileName == null)
+            throw new IllegalStateException("Not found " + RUSEFI_INI_PREFIX + "*" + RUSEFI_INI_SUFFIX + " in " + iniFilePath);
+        return iniFileName;
     }
 
     private void finishDialog() {
