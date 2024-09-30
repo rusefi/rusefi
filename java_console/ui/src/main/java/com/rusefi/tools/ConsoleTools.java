@@ -107,6 +107,8 @@ public class ConsoleTools {
         registerTool("send_command", new ConsoleTool() {
             @Override
             public void runTool(String[] args) throws Exception {
+                if (args.length < 1)
+                    throw new IllegalStateException("argument expected");
                 String command = args[1];
                 System.out.println("Sending command " + command);
                 sendCommand(command);
