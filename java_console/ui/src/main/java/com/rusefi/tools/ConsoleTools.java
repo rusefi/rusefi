@@ -2,7 +2,6 @@ package com.rusefi.tools;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
-import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelImpl;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.*;
@@ -13,10 +12,7 @@ import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.MsqFactory;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
-import com.rusefi.core.EngineState;
-import com.rusefi.core.Pair;
-import com.rusefi.core.ResponseBuffer;
-import com.rusefi.core.SignatureHelper;
+import com.rusefi.core.*;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.IoStream;
@@ -49,6 +45,7 @@ import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 import static com.rusefi.binaryprotocol.IoHelper.getCrc32;
 
 public class ConsoleTools {
+    private static final Logging log = Logging.getLogging(ConsoleTools.class);
     public static final String SET_AUTH_TOKEN = "set_auth_token";
     public static final String RUS_EFI_NOT_DETECTED = "rusEFI not detected";
     private static final Map<String, ConsoleTool> TOOLS = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -109,9 +106,10 @@ public class ConsoleTools {
             public void runTool(String[] args) throws Exception {
                 if (args.length < 1)
                     throw new IllegalStateException("argument expected");
-                String command = args[1];
-                System.out.println("Sending command " + command);
+                String command = CommandHelper.assembleCommand(args);
+                log.info("Sending command [" + command + "]");
                 sendCommand(command);
+//                sleepAndPrintNonDaemons(4000);
             }
         }, "Sends command specified as second argument");
         registerTool("reboot_ecu", args -> sendCommand(Integration.CMD_REBOOT), "Sends a command to reboot rusEFI controller.");
@@ -207,6 +205,27 @@ public class ConsoleTools {
         IoStream stream = UiLinkManagerHelper.open(autoDetectedPort);
         byte[] commandBytes = BinaryProtocol.getTextCommandBytes(command);
         stream.sendPacket(commandBytes);
+    }
+
+    private static void sleepAndPrintNonDaemons(final int millis) {
+        new Thread(null, new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("Sleeping " + millis);
+                try {
+                    Thread.sleep(millis);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+                for (Thread thread : Thread.getAllStackTraces().keySet()) {
+                    // Daemon thread will not prevent the JVM from exiting
+                    if (!thread.isDaemon())
+                        System.out.println("Non-daemon: " + thread.getName() + "\n");
+
+                }
+
+            }
+        }, "test").start();
     }
 
     private static void setAuthToken(String[] args) {
