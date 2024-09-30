@@ -8,6 +8,8 @@ endif
 ifeq ($(UNAME_S),)
 	UNAME_S = $(shell uname -s)
 endif
+
+# *** KLUDGE ***: we do not include DFU files into bundle but we require DFU for checksum manipulations
 ifneq (,$(findstring NT,$(UNAME_S)))
 	H2D = ../misc/encedo_hex2dfu/hex2dfu.exe
 else
