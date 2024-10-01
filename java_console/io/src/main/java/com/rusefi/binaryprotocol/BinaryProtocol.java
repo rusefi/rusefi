@@ -70,6 +70,10 @@ public class BinaryProtocol {
     public static boolean DISABLE_LOCAL_CONFIGURATION_CACHE;
     public static IniFileProvider iniFileProvider = new RealIniFileProvider();
 
+    public IniFileModel getIniFile() {
+        return iniFile;
+    }
+
     public static String findCommand(byte command) {
         switch (command) {
             case Integration.TS_PAGE_COMMAND:
@@ -377,7 +381,7 @@ public class BinaryProtocol {
                 if (ConnectionAndMeta.saveSettingsToFile()) {
                     ConfigurationImageFile.saveToFile(image, CONFIGURATION_RUSEFI_BINARY);
                 }
-                Msq tune = MsqFactory.valueOf(image, IniFileModelImpl.getInstance());
+                Msq tune = MsqFactory.valueOf(image, iniFile);
                 tune.writeXmlFile(CONFIGURATION_RUSEFI_XML);
             } catch (Exception e) {
                 System.err.println("Ignoring " + e);

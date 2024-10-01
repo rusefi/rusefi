@@ -25,7 +25,7 @@ public class OnlineTab {
         upload.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Msq tune = MsqFactory.valueOf(uiContext.getLinkManager().getCurrentStreamState().getControllerConfiguration(), uiContext.getIni());
+                Msq tune = MsqFactory.valueOf(uiContext.getLinkManager().getCurrentStreamState().getControllerConfiguration(), null);
                 Online.uploadTune(tune, content, null);
             }
         });

@@ -1,7 +1,5 @@
 package com.rusefi.ui;
 
-import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.IniFileModelImpl;
 import com.rusefi.SensorSnifferCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
@@ -23,9 +21,5 @@ public class UIContext {
 
     public CommandQueue getCommandQueue() {
         return linkManager.getCommandQueue();
-    }
-
-    public IniFileModel getIni() {
-        return IniFileModelImpl.getInstance();
     }
 }
