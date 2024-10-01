@@ -28,6 +28,7 @@ set_board_file BOARD_GAUGES_FILE "${BOARD_DIR}/board_gauges.ini"
 set_board_file BOARD_CONSTANTS_EXTENSIONS_FILE "${BOARD_DIR}/board_constants_extensions.ini"
 set_board_file BOARD_DIAG_PANEL1_FILE "${BOARD_DIR}/board_diag_panel1.ini"
 set_board_file BOARD_DIAG_PANEL2_FILE "${BOARD_DIR}/board_diag_panel2.ini"
+set_board_file BOARD_VE_FILE "${BOARD_DIR}/board_ve.ini"
 
 COMMON_GEN_CONFIG="
  -readfile OUTPUTS_SECTION_FROM_FILE console/binary/generated/output_channels.ini \
@@ -49,6 +50,7 @@ COMMON_GEN_CONFIG="
  -readfile BOARD_PC_VARIABLES_FROM_FILE ${BOARD_PC_VARIABLES_FROM_FILE} \
  -readfile BOARD_INDICATORS_FROM_FILE ${BOARD_INDICATORS_FILE} \
  -readfile BOARD_GAUGES_FROM_FILE ${BOARD_GAUGES_FILE} \
+ -readfile BOARD_VE_FROM_FILE ${BOARD_VE_FILE} \
   -ts_destination tunerstudio \
  -triggerInputFolder ../unit_tests \
  -with_c_defines false \
