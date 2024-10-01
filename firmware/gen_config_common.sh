@@ -30,6 +30,7 @@ set_board_file BOARD_COMMANDS_FILE "${BOARD_DIR}/board_commands.ini"
 set_board_file BOARD_POPULAR_VEHICLES_FILE "${BOARD_DIR}/board_popular_vehicles.ini"
 set_board_file BOARD_DIAG_PANEL1_FILE "${BOARD_DIR}/board_diag_panel1.ini"
 set_board_file BOARD_DIAG_PANEL2_FILE "${BOARD_DIR}/board_diag_panel2.ini"
+set_board_file BOARD_VE_FILE "${BOARD_DIR}/board_ve.ini"
 
 COMMON_GEN_CONFIG="
  -prepend integration/ts_protocol.txt \
@@ -52,6 +53,7 @@ COMMON_GEN_CONFIG="
  -readfile BOARD_PC_VARIABLES_FROM_FILE ${BOARD_PC_VARIABLES_FROM_FILE} \
  -readfile BOARD_INDICATORS_FROM_FILE ${BOARD_INDICATORS_FILE} \
  -readfile BOARD_GAUGES_FROM_FILE ${BOARD_GAUGES_FILE} \
+ -readfile BOARD_VE_FROM_FILE ${BOARD_VE_FILE} \
  -readfile COMMANDS_FROM_FILE ${BOARD_COMMANDS_FILE} \
  -readfile BOARD_POPULAR_VEHICLES_FILE ${BOARD_POPULAR_VEHICLES_FILE} \
   -ts_destination tunerstudio \
