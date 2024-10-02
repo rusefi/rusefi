@@ -25,6 +25,7 @@ public class FrameHelper {
     }
 
     public FrameHelper(int operation) {
+        AutoupdateUtil.assertAwtThread();
         frame.setDefaultCloseOperation(operation);
         AutoupdateUtil.setAppIcon(frame);
     }
