@@ -46,16 +46,16 @@ public class FrameHelper {
         return frame;
     }
 
-    public void showFrame(JComponent component) {
-        showFrame(component, true);
+    public void showFrame(JComponent content) {
+        showFrame(content, true);
     }
 
-    public void showFrame(JComponent component, final boolean maximizeOnStart) {
-        initFrame(component, maximizeOnStart);
+    public void showFrame(JComponent content, final boolean maximizeOnStart) {
+        initFrame(content, maximizeOnStart);
         frame.setVisible(true);
     }
 
-    public void initFrame(JComponent component, final boolean maximizeOnStart) {
+    public void initFrame(JComponent content, final boolean maximizeOnStart) {
         frame.setSize(800, 500);
         frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -75,7 +75,7 @@ public class FrameHelper {
                 log.info(Arrays.toString(Frame.getFrames()));
             }
         });
-        frame.add(component);
+        frame.add(content);
     }
 
     protected void onWindowOpened() {
