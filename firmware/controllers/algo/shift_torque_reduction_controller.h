@@ -12,4 +12,8 @@ public:
 private:
 	void updateTriggerPinState();
 	void updateTriggerPinState(switch_input_pin_e pin, bool isPinInverted);
+
+	void updateTimeConditionSatisfied();
+
+	Timer m_pinTriggeredTimer;
 };
