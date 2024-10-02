@@ -14,13 +14,17 @@ public class ToolButtons {
         showDeviceManager.setMargin(new Insets(0, 0, 0, 0));
         showDeviceManager.setToolTipText("Show Device Manager");
         showDeviceManager.addActionListener(event -> {
-            try {
-                Runtime.getRuntime().exec(ExecHelper.getBatchCommand("devmgmt.msc"));
-            } catch (IOException ex) {
-                throw new IllegalStateException(ex);
-            }
+            showDeviceManager();
         });
         return showDeviceManager;
+    }
+
+    public static void showDeviceManager() {
+        try {
+            Runtime.getRuntime().exec(ExecHelper.getBatchCommand("devmgmt.msc"));
+        } catch (IOException ex) {
+            throw new IllegalStateException(ex);
+        }
     }
 
     public static Component createPcanConnectorButton() {

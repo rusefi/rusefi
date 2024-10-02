@@ -2,6 +2,7 @@ import com.rusefi.SerialPortScanner;
 import com.rusefi.maintenance.jobs.AsyncJobExecutor;
 import com.rusefi.maintenance.jobs.OpenBltManualJob;
 import com.rusefi.ui.StatusWindow;
+import com.rusefi.ui.widgets.ToolButtons;
 
 import javax.swing.*;
 import java.lang.reflect.InvocationTargetException;
@@ -35,13 +36,14 @@ public class MassUpdater {
                     knownBlts.add(openBltPort.port);
                     mainStatus.append("New OpenBlt " + openBltPort);
 
-                    AsyncJobExecutor.INSTANCE.executeJob(new OpenBltManualJob(openBltPort, mainStatus.getContent()));
+                    SwingUtilities.invokeLater(() -> AsyncJobExecutor.INSTANCE.executeJob(new OpenBltManualJob(openBltPort, mainStatus.getContent())));
                 }
             }
         });
     }
 
     public static void main(String[] args) throws InterruptedException, InvocationTargetException {
+        ToolButtons.showDeviceManager();
         SwingUtilities.invokeAndWait(MassUpdater::new);
     }
 }
