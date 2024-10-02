@@ -1473,7 +1473,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.10.02.f407-discovery.3217780889";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.10.02.f407-discovery.2988254147";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1512,6 +1512,7 @@ public class Fields {
 	public static final int ve_override_e_VE_MAP = 1;
 	public static final int ve_override_e_VE_None = 0;
 	public static final int ve_override_e_VE_TPS = 2;
+	public static final String VE_TABLE_NAME = "VE Table";
 	public static final int VEHICLE_INFO_SIZE = 32;
 	public static final int VIN_NUMBER_SIZE = 17;
 	public static final int VR_THRESHOLD_COUNT = 2;
