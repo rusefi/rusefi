@@ -57,6 +57,8 @@ TESTS_SRC_CPP = \
 	tests/launch/test_retard_threshold_rpm.cpp \
 	tests/launch/test_ignition_angle_advance.cpp \
 	tests/launch/test_spark_skip_ratio.cpp \
+	tests/shift_torque_reduction/shift_torque_reduction_test_base.cpp \
+	tests/shift_torque_reduction/test_shift_torque_reduction_trigger_pin_state.cpp \
 	tests/lua/test_lua_basic.cpp \
 	tests/lua/test_lookup.cpp \
 	tests/lua/test_lua_e38.cpp \
