@@ -15,6 +15,7 @@ import java.util.function.Function;
 
 /**
  * Andrey Belomutskiy, (c) 2013-2020
+ * @see SerialPortScanner what's the relationship?
  */
 public class PortDetector {
     private final static Logging log = Logging.getLogging(PortDetector.class);
