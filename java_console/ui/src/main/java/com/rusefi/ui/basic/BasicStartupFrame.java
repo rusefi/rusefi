@@ -24,6 +24,7 @@ import javax.swing.*;
 
 import java.awt.Color;
 import java.awt.event.ActionEvent;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -58,13 +59,13 @@ public class BasicStartupFrame {
     private volatile Optional<AsyncJob> updateFirmwareJob = Optional.empty();
     private volatile Optional<SerialPortScanner.PortResult> portToUpdateCalibrations = Optional.empty();
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException, InvocationTargetException {
         runTool(null);
     }
 
-    public static void runTool(String[] args) {
+    public static void runTool(String[] args) throws InterruptedException, InvocationTargetException {
         DefaultExceptionHandler.install();
-        new BasicStartupFrame();
+        SwingUtilities.invokeAndWait(BasicStartupFrame::new);
     }
 
     public BasicStartupFrame() {
