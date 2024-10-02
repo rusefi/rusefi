@@ -47,6 +47,13 @@ ShiftTorqueReductionTestConfig ShiftTorqueReductionTestConfig::setLaunchActivate
     return *this;
 }
 
+ShiftTorqueReductionTestConfig ShiftTorqueReductionTestConfig::setTorqueReductionTime(
+    const std::optional<float> value
+) {
+    m_torqueReductionTime = value;
+    return *this;
+}
+
 void ShiftTorqueReductionTestBase::setUpTestConfig(const ShiftTorqueReductionTestConfig& config) {
     configureTorqueReductionEnabled(config.getTorqueReductionEnabled());
     configureTorqueReductionActivationMode(config.getTorqueReductionActivationMode());
@@ -54,6 +61,7 @@ void ShiftTorqueReductionTestBase::setUpTestConfig(const ShiftTorqueReductionTes
     configureTorqueReductionButtonInverted(config.getPinInverted());
     configureLaunchActivatePin(config.getLaunchActivatePin());
     configureLaunchActivateInverted(config.getLaunchActivateInverted());
+    configureTorqueReductionTime(config.getTorqueReductionTime());
 }
 
 void ShiftTorqueReductionTestBase::configureTorqueReductionEnabled(const std::optional<bool> torqueReductionEnabled) {
@@ -120,6 +128,17 @@ void ShiftTorqueReductionTestBase::configureLaunchActivateInverted(const std::op
         ASSERT_EQ(
             engineConfiguration->launchActivateInverted,
             engine_configuration_defaults::LAUNCH_ACTIVATE_PIN_INVERTED
+        ); // check default value
+    }
+}
+
+void ShiftTorqueReductionTestBase::configureTorqueReductionTime(std::optional<float> timeout) {
+    if (timeout.has_value()) {
+        engineConfiguration->torqueReductionTime = timeout.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->torqueReductionTime,
+            engine_configuration_defaults::TORQUE_REDUCTION_TIME
         ); // check default value
     }
 }

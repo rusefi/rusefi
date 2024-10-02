@@ -16,6 +16,7 @@
 void ShiftTorqueReductionController::update() {
     if (engineConfiguration->torqueReductionEnabled) {
 		updateTriggerPinState();
+		updateTimeConditionSatisfied();
     }
 }
 
@@ -45,11 +46,22 @@ void ShiftTorqueReductionController::updateTriggerPinState(const switch_input_pi
 #if !EFI_SIMULATOR
     isTorqueReductionTriggerPinValid = isBrainPinValid(pin);
     if (isTorqueReductionTriggerPinValid) {
+		const bool previousTorqueReductionTriggerPinState = torqueReductionTriggerPinState;
         torqueReductionTriggerPinState = isPinInverted ^ efiReadPin(pin);
+		if (!previousTorqueReductionTriggerPinState && torqueReductionTriggerPinState) {
+			m_pinTriggeredTimer.reset();
+		}
     } else {
         torqueReductionTriggerPinState = false;
     }
 #endif // !EFI_SIMULATOR
+}
+
+void ShiftTorqueReductionController::updateTimeConditionSatisfied() {
+	isTimeConditionSatisfied = torqueReductionTriggerPinState
+	    ? (0.0f < engineConfiguration->torqueReductionTime)
+	        && !m_pinTriggeredTimer.hasElapsedMs(engineConfiguration->torqueReductionTime)
+	    : false;
 }
 
 #endif // EFI_LAUNCH_CONTROL

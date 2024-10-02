@@ -59,6 +59,7 @@ TESTS_SRC_CPP = \
 	tests/launch/test_spark_skip_ratio.cpp \
 	tests/shift_torque_reduction/shift_torque_reduction_test_base.cpp \
 	tests/shift_torque_reduction/test_shift_torque_reduction_trigger_pin_state.cpp \
+	tests/shift_torque_reduction/test_shift_torque_reduction_time_condition.cpp \
 	tests/lua/test_lua_basic.cpp \
 	tests/lua/test_lookup.cpp \
 	tests/lua/test_lua_e38.cpp \
