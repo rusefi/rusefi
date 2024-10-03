@@ -18,6 +18,7 @@ public:
     std::optional<bool> getLaunchActivateInverted() const { return m_launchActivateInverted; }
     std::optional<float> getTorqueReductionTime() const { return m_torqueReductionTime; }
     std::optional<float> getTorqueReductionArmingRpm() const { return m_torqueReductionArmingRpm; }
+    std::optional<float> getTorqueReductionArmingApp() const { return m_torqueReductionArmingApp; }
 
     // We do not core about performance in tests, but we want to use builder-like style, so setters return new instance
     // of configuration:
@@ -31,6 +32,7 @@ public:
     ShiftTorqueReductionTestConfig setLaunchActivateInverted(std::optional<bool> value);
     ShiftTorqueReductionTestConfig setTorqueReductionTime(std::optional<float> value);
     ShiftTorqueReductionTestConfig setTorqueReductionArmingRpm(std::optional<float> value);
+    ShiftTorqueReductionTestConfig setTorqueReductionArmingApp(std::optional<float> value);
 private:
     std::optional<bool> m_isTorqueReductionEnabled;
     std::optional<torqueReductionActivationMode_e> m_torqueReductionActivationMode;
@@ -40,6 +42,7 @@ private:
     std::optional<bool> m_launchActivateInverted;
     std::optional<float> m_torqueReductionTime;
     std::optional<float> m_torqueReductionArmingRpm;
+    std::optional<float> m_torqueReductionArmingApp;
 };
 
 class ShiftTorqueReductionTestBase : public TestBase {
@@ -54,4 +57,5 @@ private:
     void configureLaunchActivateInverted(std::optional<bool> pinInverted);
     void configureTorqueReductionTime(std::optional<float> timeout);
     void configureTorqueReductionArmingRpm(std::optional<float> armingRpm);
+    void configureTorqueReductionArmingApp(std::optional<float> armingApp);
 };
