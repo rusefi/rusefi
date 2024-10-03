@@ -17,6 +17,7 @@ void ShiftTorqueReductionController::update() {
     if (engineConfiguration->torqueReductionEnabled) {
 		updateTriggerPinState();
 		updateTimeConditionSatisfied();
+        updateRpmConditionSatisfied();
     }
 }
 
@@ -62,6 +63,11 @@ void ShiftTorqueReductionController::updateTimeConditionSatisfied() {
 	    ? (0.0f < engineConfiguration->torqueReductionTime)
 	        && !m_pinTriggeredTimer.hasElapsedMs(engineConfiguration->torqueReductionTime)
 	    : false;
+}
+
+void ShiftTorqueReductionController::updateRpmConditionSatisfied() {
+    const float currentRpm = Sensor::getOrZero(SensorType::Rpm);
+    isRpmConditionSatisfied = (engineConfiguration->torqueReductionArmingRpm <= currentRpm);
 }
 
 #endif // EFI_LAUNCH_CONTROL
