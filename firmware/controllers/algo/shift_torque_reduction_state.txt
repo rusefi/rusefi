@@ -4,5 +4,6 @@ bit isTorqueReductionTriggerPinValid
 bit torqueReductionTriggerPinState
 bit isTimeConditionSatisfied
 bit isRpmConditionSatisfied
+bit isAppConditionSatisfied
 
 end_struct

@@ -18,6 +18,7 @@ void ShiftTorqueReductionController::update() {
 		updateTriggerPinState();
 		updateTimeConditionSatisfied();
         updateRpmConditionSatisfied();
+        updateAppConditionSatisfied();
     }
 }
 
@@ -68,6 +69,16 @@ void ShiftTorqueReductionController::updateTimeConditionSatisfied() {
 void ShiftTorqueReductionController::updateRpmConditionSatisfied() {
     const float currentRpm = Sensor::getOrZero(SensorType::Rpm);
     isRpmConditionSatisfied = (engineConfiguration->torqueReductionArmingRpm <= currentRpm);
+}
+
+void ShiftTorqueReductionController::updateAppConditionSatisfied() {
+	const SensorResult currentApp = Sensor::get(SensorType::DriverThrottleIntent);
+
+    if (currentApp.Valid) {
+        isAppConditionSatisfied = (engineConfiguration->torqueReductionArmingApp <= currentApp.Value);
+    } else {
+        isAppConditionSatisfied = false;
+    }
 }
 
 #endif // EFI_LAUNCH_CONTROL

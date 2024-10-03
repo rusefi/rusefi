@@ -59,6 +59,11 @@ ShiftTorqueReductionTestConfig ShiftTorqueReductionTestConfig::setTorqueReductio
     return *this;
 }
 
+ShiftTorqueReductionTestConfig ShiftTorqueReductionTestConfig::setTorqueReductionArmingApp(std::optional<float> value) {
+    m_torqueReductionArmingApp = value;
+    return *this;
+}
+
 void ShiftTorqueReductionTestBase::setUpTestConfig(const ShiftTorqueReductionTestConfig& config) {
     configureTorqueReductionEnabled(config.getTorqueReductionEnabled());
     configureTorqueReductionActivationMode(config.getTorqueReductionActivationMode());
@@ -68,6 +73,7 @@ void ShiftTorqueReductionTestBase::setUpTestConfig(const ShiftTorqueReductionTes
     configureLaunchActivateInverted(config.getLaunchActivateInverted());
     configureTorqueReductionTime(config.getTorqueReductionTime());
     configureTorqueReductionArmingRpm(config.getTorqueReductionArmingRpm());
+    configureTorqueReductionArmingApp(config.getTorqueReductionArmingApp());
 }
 
 void ShiftTorqueReductionTestBase::configureTorqueReductionEnabled(const std::optional<bool> torqueReductionEnabled) {
@@ -149,13 +155,24 @@ void ShiftTorqueReductionTestBase::configureTorqueReductionTime(std::optional<fl
     }
 }
 
-void ShiftTorqueReductionTestBase::configureTorqueReductionArmingRpm(std::optional<float> armingRpm) {
+void ShiftTorqueReductionTestBase::configureTorqueReductionArmingRpm(const std::optional<float> armingRpm) {
     if (armingRpm.has_value()) {
         engineConfiguration->torqueReductionArmingRpm = armingRpm.value();
     } else {
         ASSERT_EQ(
             engineConfiguration->torqueReductionArmingRpm,
             engine_configuration_defaults::TORQUE_REDUCTION_ARMING_RPM
+        ); // check default value
+    }
+}
+
+void ShiftTorqueReductionTestBase::configureTorqueReductionArmingApp(const std::optional<float> armingApp) {
+    if (armingApp.has_value()) {
+        engineConfiguration->torqueReductionArmingApp = armingApp.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->torqueReductionArmingApp,
+            engine_configuration_defaults::TORQUE_REDUCTION_ARMING_APP
         ); // check default value
     }
 }

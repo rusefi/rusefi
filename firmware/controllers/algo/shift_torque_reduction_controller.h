@@ -15,6 +15,7 @@ private:
 
 	void updateTimeConditionSatisfied();
 	void updateRpmConditionSatisfied();
+	void updateAppConditionSatisfied();
 
 	Timer m_pinTriggeredTimer;
 };

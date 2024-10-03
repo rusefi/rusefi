@@ -14,6 +14,7 @@ protected:
     void periodicSlowCallback();
 
     void updateRpm(float rpm);
+    void updateApp(std::optional<float> app);
 private:
     std::unique_ptr<EngineTestHelper> eth;
 };

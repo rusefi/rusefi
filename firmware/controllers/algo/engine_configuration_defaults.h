@@ -17,6 +17,8 @@ namespace engine_configuration_defaults {
     constexpr switch_input_pin_e TORQUE_REDUCTION_TRIGGER_PIN = Gpio::Unassigned;
     constexpr bool TORQUE_REDUCTION_TRIGGER_PIN_INVERTED = false;
     constexpr float TORQUE_REDUCTION_TIME = 0.0f;
+    constexpr float TORQUE_REDUCTION_ARMING_RPM = 0.0f;
+    constexpr float TORQUE_REDUCTION_ARMING_APP = 0.0f;
 
     /* Launch Control: */
     constexpr switch_input_pin_e LAUNCH_ACTIVATE_PIN = Gpio::Unassigned;
