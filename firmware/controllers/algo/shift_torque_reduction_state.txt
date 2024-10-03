@@ -5,5 +5,6 @@ bit torqueReductionTriggerPinState
 bit isTimeConditionSatisfied
 bit isRpmConditionSatisfied
 bit isAppConditionSatisfied
+bit isFlatShiftConditionSatisfied
 
 end_struct
