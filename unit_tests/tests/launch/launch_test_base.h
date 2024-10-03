@@ -65,7 +65,6 @@ class LaunchTestBase : public TestBase {
 protected:
     void setUpTestConfig(const LaunchTestConfig& config);
 
-    void updateRpm(const int rpm);
 private:
     void configureLaunchControlEnabled(std::optional<bool> launchControlEnabled);
 

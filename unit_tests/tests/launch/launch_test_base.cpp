@@ -26,11 +26,6 @@ void LaunchTestBase::setUpTestConfig(const LaunchTestConfig& config) {
     }
 }
 
-void LaunchTestBase::updateRpm(const int rpm) {
-    Sensor::setMockValue(SensorType::Rpm, rpm);
-    periodicFastCallback();
-}
-
 void LaunchTestBase::configureLaunchControlEnabled(const std::optional<bool> launchControlEnabled) {
     if (launchControlEnabled.has_value()) {
         engineConfiguration->launchControlEnabled = launchControlEnabled.value();
