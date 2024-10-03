@@ -12,6 +12,8 @@ protected:
 
     void periodicFastCallback();
     void periodicSlowCallback();
+
+    void updateRpm(const int rpm);
 private:
     std::unique_ptr<EngineTestHelper> eth;
 };
