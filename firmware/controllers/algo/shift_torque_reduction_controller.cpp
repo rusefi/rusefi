@@ -19,6 +19,9 @@ void ShiftTorqueReductionController::update() {
 		updateTimeConditionSatisfied();
         updateRpmConditionSatisfied();
         updateAppConditionSatisfied();
+
+        isFlatShiftConditionSatisfied = torqueReductionTriggerPinState && isTimeConditionSatisfied
+            && isRpmConditionSatisfied && isAppConditionSatisfied;
     }
 }
 
