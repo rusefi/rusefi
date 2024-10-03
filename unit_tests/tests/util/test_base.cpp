@@ -23,7 +23,7 @@ void TestBase::periodicSlowCallback() {
     engine->periodicSlowCallback();
 }
 
-void TestBase::updateRpm(const int rpm) {
+void TestBase::updateRpm(const float rpm) {
     Sensor::setMockValue(SensorType::Rpm, rpm);
     periodicFastCallback();
 }

@@ -13,7 +13,7 @@ protected:
     void periodicFastCallback();
     void periodicSlowCallback();
 
-    void updateRpm(int rpm);
+    void updateRpm(float rpm);
 private:
     std::unique_ptr<EngineTestHelper> eth;
 };
