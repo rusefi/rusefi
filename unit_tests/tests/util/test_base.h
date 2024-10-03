@@ -7,13 +7,13 @@
 
 class TestBase : public testing::Test {
 protected:
-    virtual void SetUp() override;
-    virtual void TearDown() override;
+    void SetUp() override;
+    void TearDown() override;
 
     void periodicFastCallback();
     void periodicSlowCallback();
 
-    void updateRpm(const int rpm);
+    void updateRpm(int rpm);
 private:
     std::unique_ptr<EngineTestHelper> eth;
 };
