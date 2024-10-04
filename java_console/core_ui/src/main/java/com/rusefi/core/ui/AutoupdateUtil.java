@@ -8,10 +8,12 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Date;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class AutoupdateUtil {
     public static final boolean runHeadless = Boolean.getBoolean("run_headless") || GraphicsEnvironment.isHeadless();
@@ -26,7 +28,7 @@ public class AutoupdateUtil {
         return result;
     }
 
-    private static ProgressView createProgressView(String title) {
+    private static ProgressView doCreateProgressView(String title) {
         if (runHeadless) {
             return new ProgressView(null, null);
         } else {
@@ -62,6 +64,18 @@ public class AutoupdateUtil {
         } finally {
             view.dispose();
         }
+    }
+
+    private static ProgressView createProgressView(String title) {
+        AtomicReference<ProgressView> result = new AtomicReference<>();
+        try {
+            SwingUtilities.invokeAndWait(() -> result.set(doCreateProgressView(title)));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+        return result.get();
     }
 
     private static class DynamicForResourcesURLClassLoader extends URLClassLoader {
