@@ -20,7 +20,7 @@ java -DSystemOut.name=logs/gen_live_documentation \
 
 java -DSystemOut.name=logs/gen_java_enum -cp ../java_tools/enum_to_string/build/libs/enum_to_string-all.jar \
  com.rusefi.ToJavaEnum -enumInputFile \
- ${META_OUTPUT_ROOT_FOLDER}/console/binary/generated/live_data_ids.h \
+ ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/live_data_ids.h \
  -outputPath \
  ../java_console/io/src/main/java/com/rusefi/enums
 [ $? -eq 0 ] || { echo "ERROR generating live data ids"; exit 1; }
