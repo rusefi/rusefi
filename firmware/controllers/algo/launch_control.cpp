@@ -71,6 +71,17 @@ bool LaunchControlBase::isInsideTpsCondition() const {
 }
 
 LaunchCondition LaunchControlBase::calculateRPMLaunchCondition(const float rpm) {
+	if ((engineConfiguration->launchActivationMode == SWITCH_INPUT_LAUNCH)
+		&& (engineConfiguration->torqueReductionActivationMode == LAUNCH_BUTTON)
+		&& engineConfiguration->torqueReductionEnabled
+		&& (engineConfiguration->torqueReductionArmingRpm <= rpm)
+	) {
+		// We need perform Shift Torque Reduction stuff (see
+		// https://github.com/rusefi/rusefi/issues/5608#issuecomment-2391500472 and
+		// https://github.com/rusefi/rusefi/issues/5608#issuecomment-2391772899 for details)
+		return LaunchCondition::NotMet;
+	}
+
 	const int launchRpm = engineConfiguration->launchRpm;
 	const int preLaunchRpm = launchRpm - engineConfiguration->launchRpmWindow;
 	if (rpm < preLaunchRpm) {
