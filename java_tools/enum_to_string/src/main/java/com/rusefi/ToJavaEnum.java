@@ -36,7 +36,9 @@ public class ToJavaEnum {
         for (String inputFile : invokeReader.getInputFiles()) {
             File f = new File(invokeReader.getInputPath() + File.separator + inputFile);
             log.info("Reading enums from " + f);
-            sb.append("// based on ").append(f).append("\n");
+            // print unix-style path on windows
+            String fname = f.toString().replace("\\", "/");
+            sb.append("// based on ").append(fname).append("\n");
 
             enumsReader.read(new FileReader(f), registry, enumWithValues);
         }
