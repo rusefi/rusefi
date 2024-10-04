@@ -274,7 +274,7 @@ TEST(misc, testConsoleLogic) {
 
 	helpCommand();
 
-	char * cmd = "he ha";
+	const char * cmd = "he ha";
 	ASSERT_EQ(2, findEndOfToken(cmd));
 
 	cmd = "\"hee\" ha";
