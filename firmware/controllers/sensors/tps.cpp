@@ -3,6 +3,7 @@
  */
 #include "pch.h"
 #include "sent.h"
+#include "tunerstudio.h"
 
 /*
 void grabTPSIsClosed() {
@@ -18,6 +19,14 @@ void grabTPSIsWideOpen() {
 }
 */
 
+static void onGrabPedal() {
+  static uint8_t grabPedalCounter = 0;
+	grabPedalCounter++;
+	if (grabPedalCounter % 2 == 0) {
+	  requestBurn();
+	}
+}
+
 void grabPedalIsUp() {
 	/**
 	 * search for 'maintainConstantValue' to find how this TS magic works
@@ -25,12 +34,14 @@ void grabPedalIsUp() {
 	engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::PedalMin;
 	engine->outputChannels.calibrationValue = Sensor::getRaw(SensorType::AcceleratorPedalPrimary);
 	engine->outputChannels.calibrationValue2 = Sensor::getRaw(SensorType::AcceleratorPedalSecondary);
+	onGrabPedal();
 }
 
 void grabPedalIsWideOpen() {
 	engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::PedalMax;
 	engine->outputChannels.calibrationValue = Sensor::getRaw(SensorType::AcceleratorPedalPrimary);
 	engine->outputChannels.calibrationValue2 = Sensor::getRaw(SensorType::AcceleratorPedalSecondary);
+	onGrabPedal();
 }
 
 bool isTps1Error() {

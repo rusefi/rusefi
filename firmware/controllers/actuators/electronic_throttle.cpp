@@ -20,15 +20,6 @@
  *
  * Relevant console commands:
  *
- * ETB_BENCH_ENGINE
- * set engine_type 58
- *
- * enable verbose_etb
- * disable verbose_etb
- * etbinfo
- *
- * http://rusefi.com/forum/viewtopic.php?f=5&t=592
- *
  * @date Dec 7, 2013
  * @author Andrey Belomutskiy, (c) 2012-2020
  *
@@ -55,6 +46,7 @@
 #include "dc_motor.h"
 #include "dc_motors.h"
 #include "defaults.h"
+#include "tunerstudio.h"
 
 #if defined(HAS_OS_ACCESS)
 #error "Unexpected OS ACCESS HERE"
@@ -831,6 +823,7 @@ void etbAutocal(size_t throttleIndex) {
 
 	if (auto etb = engine->etbControllers[throttleIndex]) {
 		etb->autoCalibrateTps();
+		requestBurn();
 	}
 }
 
