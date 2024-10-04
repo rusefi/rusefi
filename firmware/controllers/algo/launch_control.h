@@ -56,7 +56,7 @@ public:
 	void updateTargetSkipRatio(
 		float luaSoftSparkSkip,
 		float tractionControlSparkSkip,
-		float launchControllerSparkSkipRatio = 0.0f
+		float launchOrShiftTorqueReductionControllerSparkSkipRatio = 0.0f
 	);
 	[[nodiscard]] float getTargetSkipRatio() const { return targetSkipRatio; }
 

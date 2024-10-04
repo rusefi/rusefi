@@ -94,7 +94,7 @@ void EngineState::updateSparkSkip() {
 			 * We are applying launch controller spark skip ratio only for hard skip limiter (see
 			 * https://github.com/rusefi/rusefi/issues/6566#issuecomment-2153149902).
 			 */
-			engine->launchController.getSparkSkipRatio()
+			engine->launchController.getSparkSkipRatio() + engine->shiftTorqueReductionController.getSparkSkipRatio()
 		);
 #endif // EFI_LAUNCH_CONTROL
 }
