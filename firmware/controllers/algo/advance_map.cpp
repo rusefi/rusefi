@@ -118,6 +118,11 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 			return launchAngle;
 		}
 	}
+	if (engineConfiguration->torqueReductionEnabled
+		&& engine->shiftTorqueReductionController.isFlatShiftConditionSatisfied
+	) {
+		return engineConfiguration->torqueReductionIgnitionRetard;
+	}
 #endif /* EFI_LAUNCH_CONTROL */
 
 	return advanceAngle;
