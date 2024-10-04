@@ -164,7 +164,7 @@ SoftSparkLimiter::SoftSparkLimiter(const bool p_allowHardCut)
 void SoftSparkLimiter::updateTargetSkipRatio(
 	const float luaSparkSkip,
 	const float tractionControlSparkSkip,
-	const float launchControllerSparkSkipRatio
+	const float launchOrShiftTorqueReductionControllerSparkSkipRatio
 ) {
 	targetSkipRatio = luaSparkSkip;
 	if (engineConfiguration->useHardSkipInTraction) {
@@ -180,7 +180,7 @@ void SoftSparkLimiter::updateTargetSkipRatio(
 		 * We are applying launch controller spark skip ratio only for hard skip limiter (see
 		 * https://github.com/rusefi/rusefi/issues/6566#issuecomment-2153149902).
 		 */
-		targetSkipRatio += launchControllerSparkSkipRatio;
+		targetSkipRatio += launchOrShiftTorqueReductionControllerSparkSkipRatio;
 	}
 }
 

@@ -25,6 +25,14 @@ void ShiftTorqueReductionController::update() {
     }
 }
 
+float ShiftTorqueReductionController::getSparkSkipRatio() const {
+    float result = 0.0f;
+    if (engineConfiguration->torqueReductionEnabled && isFlatShiftConditionSatisfied) {
+        result = engineConfiguration->torqueReductionIgnitionCut / 100.0f;
+    }
+    return result;
+}
+
 void ShiftTorqueReductionController::updateTriggerPinState() {
     switch (engineConfiguration->torqueReductionActivationMode) {
         case TORQUE_REDUCTION_BUTTON: {

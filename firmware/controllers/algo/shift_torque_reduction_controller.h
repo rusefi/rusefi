@@ -9,6 +9,8 @@
 class ShiftTorqueReductionController : public shift_torque_reduction_state_s {
 public:
 	void update();
+
+	float getSparkSkipRatio() const;
 private:
 	void updateTriggerPinState();
 	void updateTriggerPinState(switch_input_pin_e pin, bool isPinInverted);
