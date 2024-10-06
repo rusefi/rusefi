@@ -345,6 +345,14 @@ public class Fields {
 	public static final int engine_type_e_DODGE_NEON_2003_CRANK = 46;
 	public static final int engine_type_e_DODGE_RAM = 64;
 	public static final int engine_type_e_EEPROM_BENCH_ENGINE = 61;
+	public static final int engine_type_e_ET_AUX_0 = 106;
+	public static final int engine_type_e_ET_AUX_1 = 107;
+	public static final int engine_type_e_ET_AUX_2 = 108;
+	public static final int engine_type_e_ET_AUX_3 = 109;
+	public static final int engine_type_e_ET_AUX_4 = 110;
+	public static final int engine_type_e_ET_AUX_5 = 111;
+	public static final int engine_type_e_ET_AUX_6 = 112;
+	public static final int engine_type_e_ET_AUX_7 = 113;
 	public static final int engine_type_e_ET_BOSCH_QUICK_START = 21;
 	public static final int engine_type_e_ET_TEST_WITH_BOSCH_QUICK_START = 24;
 	public static final int engine_type_e_ET_UNUSED_55 = 55;
@@ -442,6 +450,7 @@ public class Fields {
 	public static final int engine_type_e_UNUSED_97 = 97;
 	public static final int engine_type_e_VW_ABA = 32;
 	public static final int engine_type_e_WASTEGATE_PROTEUS_TEST = 96;
+	public static final String ENGINE_TYPES_DIALOG_NAME = "Popular vehicles";
 	public static final int ETB2_TRIM_SIZE = 6;
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
@@ -1210,6 +1219,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 1144450557;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1473,7 +1483,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.10.05.f407-discovery.4010597116";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.10.06.f407-discovery.1144450557";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
