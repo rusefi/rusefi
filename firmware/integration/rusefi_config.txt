@@ -204,6 +204,7 @@ struct_no_prefix engine_configuration_s
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
 #define SCRIPT_SETTING_COUNT 8
 
+#define ENGINE_TYPES_DIALOG_NAME "Popular vehicles"
 #define VVT1_TARGET_NAME "VVT intake target"
 #define GPPWM_1_NAME "General Purpose PWM 1"
 #define GPPWM_2_NAME "General Purpose PWM 2"
@@ -2434,6 +2435,7 @@ end_struct
 #define ts_show_vr_threshold_pins true
 
 #define show_test_presets false
+#define show_default_engine_type true
 #define show_Frankenso_presets false
 #define show_microRusEFI_presets false
 #define show_Proteus_presets false
