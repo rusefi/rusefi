@@ -1276,7 +1276,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	bit stepperDcInvertedPins;Enable if DC-motor driver (H-bridge) inverts the signals (eg. RZ7899 on Hellen boards)
 	bit canOpenBLT; Allow OpenBLT on Primary CAN
 	bit can2OpenBLT; Allow OpenBLT on Secondary CAN
-	bit injectorFlowAsMassFlow,"mass flow","volumetric flow";Select whether to configure injector flow in volumetric flow (defualt, cc/min) or mass flow (g/s).
+	bit injectorFlowAsMassFlow,"mass flow","volumetric flow";Select whether to configure injector flow in volumetric flow (default, cc/min) or mass flow (g/s).
 	bit boardUseCanTerminator
 	bit kLineDoHondaSend
 	bit can1ListenMode;ListenMode is about acknowledging CAN traffic on the protocol level. Different from canWriteEnabled
