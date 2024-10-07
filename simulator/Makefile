@@ -209,6 +209,10 @@ ASMSRC = $(PORTASM)
 ifneq ($(BOARD_DIR),)
   # used by custom board custom live data
   INCDIR += $(BOARD_DIR)/firmware
+  ifneq ("$(wildcard $(BOARD_DIR)/board_common.mk)","")
+    # part common between PROD, simulator and unit tests
+    include $(BOARD_DIR)/board_common.mk
+  endif
 endif
 
 INCDIR += . \
