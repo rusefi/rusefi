@@ -11,6 +11,4 @@
 #define ts_show_etb_pins false
 #define ts_show_analog_divider false
 
-#define show_small_can_board_presets true
-
 !#define LUA_SCRIPT_SIZE 30000
