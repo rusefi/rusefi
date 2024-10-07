@@ -25,4 +25,4 @@
 #define FRONTEND_TITLE_BAR_NAME "uaEFI"
 
 
-#define show_uaefi_presets true
+
