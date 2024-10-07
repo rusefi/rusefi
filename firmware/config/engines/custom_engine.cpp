@@ -19,14 +19,9 @@
 #include "hellen_meta.h"
 #include "odometer.h"
 #include "defaults.h"
-#include "../board_id/qc_stim_meta.h"
 #if EFI_PROD_CODE
 #include "drivers/gpio/mc33810.h"
 #endif /* EFI_PROD_CODE */
-
-static_assert(libPROTEUS_STIM_QC == (int)engine_type_e::PROTEUS_STIM_QC);
-static_assert(libHELLEN_2CHAN_STIM_QC == (int)engine_type_e::HELLEN_2CHAN_STIM_QC);
-static_assert(libHELLEN_4CHAN_STIM_QC == (int)engine_type_e::HELLEN_4CHAN_STIM_QC);
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 #include "electronic_throttle.h"

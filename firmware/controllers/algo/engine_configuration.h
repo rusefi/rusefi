@@ -75,6 +75,7 @@ Gpio getWarningLedPin();
 Gpio getRunningLedPin();
 
 int hackHellenBoardId(int detectedId);
+void applyEngineType(engine_type_e engineType);
 
 #if !EFI_UNIT_TEST
 extern persistent_config_container_s persistentState;
