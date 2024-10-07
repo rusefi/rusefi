@@ -377,7 +377,6 @@ public class Fields {
 	public static final int engine_type_e_HELLEN_121_NISSAN_8_CYL = 85;
 	public static final int engine_type_e_HELLEN_121_NISSAN_ALMERA_N16 = 87;
 	public static final int engine_type_e_HELLEN_121_VAG_4_CYL = 71;
-	public static final int engine_type_e_HELLEN_121_VAG_5_CYL = 77;
 	public static final int engine_type_e_HELLEN_121_VAG_8_CYL = 81;
 	public static final int engine_type_e_HELLEN_121_VAG_V6_CYL = 78;
 	public static final int engine_type_e_HELLEN_121_VAG_VR6_CYL = 79;
@@ -450,6 +449,7 @@ public class Fields {
 	public static final int engine_type_e_UNUSED94 = 94;
 	public static final int engine_type_e_UNUSED_65 = 65;
 	public static final int engine_type_e_UNUSED_97 = 97;
+	public static final int engine_type_e_VAG_5_CYL = 77;
 	public static final int engine_type_e_VW_ABA = 32;
 	public static final int engine_type_e_WASTEGATE_PROTEUS_TEST = 96;
 	public static final String ENGINE_TYPES_DIALOG_NAME = "Popular vehicles";
@@ -1484,7 +1484,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.10.07.f407-discovery.2553996402";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.10.07.f407-discovery.2761541170";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';

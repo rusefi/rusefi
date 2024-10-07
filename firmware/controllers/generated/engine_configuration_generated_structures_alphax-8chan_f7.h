@@ -398,11 +398,8 @@ static_assert(sizeof(ThermistorConf) == 32);
 // start of injector_s
 struct injector_s {
 	/**
-	 * This is your injector flow at the fuel pressure used in the vehicle. cc/min, cubic centimetre per minute
-	 * By the way, g/s = 0.125997881 * (lb/hr)
-	 * g/s = 0.125997881 * (cc/min)/10.5
-	 * g/s = 0.0119997981 * cc/min
-	 * units: cm3/min
+	 * This is your injector flow at the fuel pressure used in the vehicle
+	 * See units setting below
 	 * offset 0
 	 */
 	float flow;
@@ -3037,7 +3034,7 @@ struct engine_configuration_s {
 	offset 1568 bit 2 */
 	bool can2OpenBLT : 1 {};
 	/**
-	 * Select whether to configure injector flow in volumetric flow (defualt, cc/min) or mass flow (g/s).
+	 * Select whether to configure injector flow in volumetric flow (default, cc/min) or mass flow (g/s).
 	offset 1568 bit 3 */
 	bool injectorFlowAsMassFlow : 1 {};
 	/**

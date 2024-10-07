@@ -62,10 +62,10 @@ Configures the maximum number of extra sparks to fire (does not include main spa
 
 
 ### injector.flow
-This is your injector flow at the fuel pressure used in the vehicle. cc/min, cubic centimetre per minute\nBy the way, g/s = 0.125997881 * (lb/hr)\ng/s = 0.125997881 * (cc/min)/10.5\ng/s = 0.0119997981 * cc/min
+This is your injector flow at the fuel pressure used in the vehicle\nSee units setting below
 
 ### injectorSecondary.flow
-This is your injector flow at the fuel pressure used in the vehicle. cc/min, cubic centimetre per minute\nBy the way, g/s = 0.125997881 * (lb/hr)\ng/s = 0.125997881 * (cc/min)/10.5\ng/s = 0.0119997981 * cc/min
+This is your injector flow at the fuel pressure used in the vehicle\nSee units setting below
 
 ### isForcedInduction
 Does the vehicle have a turbo or supercharger?
@@ -1208,7 +1208,7 @@ Allow OpenBLT on Primary CAN
 Allow OpenBLT on Secondary CAN
 
 ### injectorFlowAsMassFlow
-Select whether to configure injector flow in volumetric flow (defualt, cc/min) or mass flow (g/s).
+Select whether to configure injector flow in volumetric flow (default, cc/min) or mass flow (g/s).
 
 ### boardUseCanTerminator
 

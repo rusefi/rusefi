@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sun Oct 06 22:46:40 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Mon Oct 07 01:37:22 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -253,8 +253,6 @@ case engine_type_e::HELLEN_121_NISSAN_ALMERA_N16:
   return "HELLEN_121_NISSAN_ALMERA_N16";
 case engine_type_e::HELLEN_121_VAG_4_CYL:
   return "HELLEN_121_VAG_4_CYL";
-case engine_type_e::HELLEN_121_VAG_5_CYL:
-  return "HELLEN_121_VAG_5_CYL";
 case engine_type_e::HELLEN_121_VAG_8_CYL:
   return "HELLEN_121_VAG_8_CYL";
 case engine_type_e::HELLEN_121_VAG_V6_CYL:
@@ -399,6 +397,8 @@ case engine_type_e::UNUSED_65:
   return "UNUSED_65";
 case engine_type_e::UNUSED_97:
   return "UNUSED_97";
+case engine_type_e::VAG_5_CYL:
+  return "VAG_5_CYL";
 case engine_type_e::VW_ABA:
   return "VW_ABA";
 case engine_type_e::WASTEGATE_PROTEUS_TEST:
