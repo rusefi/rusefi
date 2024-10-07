@@ -305,6 +305,8 @@ public class Fields {
 	public static final int DEFAULT_SELT_STIM_VVT0 = 23;
 	public static final int DEFAULT_SOLENOID_FREQUENCY = 300;
 	public static final int DIGIPOT_COUNT = 4;
+	public static final String DISPLACEMENT_TOOLTIP = "Engine displacement in litres";
+	public static final String DISPLACEMENT_UNITS = "L";
 	public static final int display_mode_e_DM_HD44780 = 1;
 	public static final int display_mode_e_DM_HD44780_OVER_PCF8574 = 2;
 	public static final int display_mode_e_DM_NONE = 0;
@@ -1219,7 +1221,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1144450557;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1483,7 +1484,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.10.06.f407-discovery.1144450557";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.10.07.f407-discovery.2553996402";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';

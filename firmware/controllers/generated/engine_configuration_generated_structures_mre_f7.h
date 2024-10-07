@@ -934,7 +934,7 @@ struct engine_configuration_s {
 	 */
 	float unusedFloatHere;
 	/**
-	 * Engine displacement in litres
+	 * @@DISPLACEMENT_TOOLTIP@@
 	 * units: L
 	 * offset 432
 	 */

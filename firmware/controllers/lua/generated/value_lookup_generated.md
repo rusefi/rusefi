@@ -245,7 +245,7 @@ Pull-up resistor value on your board
 value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into two bit fields
 
 ### displacement
-Engine displacement in litres
+@@DISPLACEMENT_TOOLTIP@@
 
 ### triggerSimulatorRpm
 
