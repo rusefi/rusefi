@@ -15,6 +15,9 @@ java -DSystemOut.name=logs/gen_java_enum -cp ${ENUM_JAR} com.rusefi.ToJavaEnum -
 java -DSystemOut.name=logs/gen_java_enum -cp ${ENUM_JAR} com.rusefi.ToJavaEnum -enumInputFile controllers/algo/engine_types.h   -outputPath ../java_console/models/src/main/java/com/rusefi/enums -definition integration/rusefi_config.txt
 [ $? -eq 0 ] || { echo "ERROR generating types"; exit 1; }
 
+java -DSystemOut.name=logs/gen_java_enum -cp ${ENUM_JAR} com.rusefi.ToJavaEnum -enumInputFile controllers/algo/engine_type_e.h   -outputPath ../java_console/models/src/main/java/com/rusefi/enums -definition integration/rusefi_config.txt
+[ $? -eq 0 ] || { echo "ERROR generating engine_type_e"; exit 1; }
+
 java -DSystemOut.name=logs/gen_java_enum \
 	-Denum_with_values=true \
 	-cp ${ENUM_JAR} com.rusefi.ToJavaEnum \
@@ -52,6 +55,14 @@ java -DSystemOut.name=logs/gen_enum_to_string \
 	-outputPath controllers/algo \
 	-generatedFile enginetypes \
 	-enumInputFile controllers/algo/engine_types.h
+
+[ $? -eq 0 ] || { echo "ERROR generating enums"; exit 1; }
+
+java -DSystemOut.name=logs/gen_enum_to_string \
+	-jar ${ENUM_JAR} \
+	-outputPath controllers/algo \
+	-generatedFile engine_type_e \
+	-enumInputFile controllers/algo/engine_type_e.h
 
 [ $? -eq 0 ] || { echo "ERROR generating enums"; exit 1; }
 

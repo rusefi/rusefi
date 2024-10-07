@@ -17,6 +17,7 @@
 #include "efifeatures.h"
 #include "obd_error_codes.h"
 #include "engine_types.h"
+#include "engine_type_e.h"
 // we do not want to start the search for header from current folder so we use brackets here
 // https://stackoverflow.com/questions/21593/what-is-the-difference-between-include-filename-and-include-filename
 #include <rusefi_hw_enums.h>

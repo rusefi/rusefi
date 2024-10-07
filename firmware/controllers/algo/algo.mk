@@ -4,6 +4,7 @@ CONTROLLERS_ALGO_SRC_CPP = $(PROJECT_DIR)/controllers/algo/advance_map.cpp \
 	$(GENERATED_ENUMS_DIR)/auto_generated_enums.cpp \
 	$(GENERATED_ENUMS_DIR)/auto_generated_commonenum.cpp \
 	$(GENERATED_ENUMS_DIR)/auto_generated_enginetypes.cpp \
+	$(GENERATED_ENUMS_DIR)/auto_generated_engine_type_e.cpp \
 	$(PROJECT_DIR)/controllers/algo/fuel_math.cpp \
 	$(PROJECT_DIR)/controllers/algo/accel_enrichment.cpp \
 	$(PROJECT_DIR)/controllers/algo/wall_fuel.cpp \
