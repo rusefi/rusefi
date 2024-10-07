@@ -119,4 +119,5 @@ public enum engine_type_e {
 	ET_AUX_5,
 	ET_AUX_6,
 	ET_AUX_7,
+	ET_LAST_UNUSED,
 }

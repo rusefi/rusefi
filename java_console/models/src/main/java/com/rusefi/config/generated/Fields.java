@@ -356,6 +356,7 @@ public class Fields {
 	public static final int engine_type_e_ET_AUX_6 = 112;
 	public static final int engine_type_e_ET_AUX_7 = 113;
 	public static final int engine_type_e_ET_BOSCH_QUICK_START = 21;
+	public static final int engine_type_e_ET_LAST_UNUSED = 114;
 	public static final int engine_type_e_ET_TEST_WITH_BOSCH_QUICK_START = 24;
 	public static final int engine_type_e_ET_UNUSED_55 = 55;
 	public static final int engine_type_e_ET_UNUSED_56 = 56;
