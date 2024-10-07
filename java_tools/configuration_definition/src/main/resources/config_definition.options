@@ -1,6 +1,8 @@
 -enumInputFile
 controllers/algo/engine_types.h
 -enumInputFile
+controllers/algo/engine_type_e.h
+-enumInputFile
 controllers/algo/rusefi_enums.h
 -definition
 integration/rusefi_config.txt
