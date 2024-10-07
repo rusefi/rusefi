@@ -50,7 +50,7 @@ void setVwAba() {
 	engineConfiguration->tpsMax = 135;
 }
 
-void setHellen121Vag_5_cyl() {
+void setVag_5_cyl() {
 	engineConfiguration->cylindersCount = 5;
 	engineConfiguration->displacement = 2.5;
 	engineConfiguration->firingOrder = FO_1_2_4_5_3;
