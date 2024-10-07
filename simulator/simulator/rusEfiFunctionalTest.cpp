@@ -182,25 +182,9 @@ void rusEfiFunctionalTest() {
 
 	initFlash();
 
-  // [CannedTunes] at the moment we manually sync this list with WriteSimulatorConfiguration.java
-	for (auto const type : {
-			engine_type_e::MERCEDES_M111,
-			engine_type_e::BMW_M52,
-			engine_type_e::MAZDA_MIATA_NA6,
-			engine_type_e::MAZDA_MIATA_NA94,
-			engine_type_e::MAZDA_MIATA_NA96,
-			engine_type_e::MAZDA_MIATA_NB1,
-			engine_type_e::MAZDA_MIATA_NB2,
-			engine_type_e::HONDA_OBD1,
-			engine_type_e::HONDA_K,
-			engine_type_e::HELLEN_121_NISSAN_6_CYL,
-			engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK1,
-			engine_type_e::HELLEN_154_HYUNDAI_COUPE_BK2,
-			engine_type_e::POLARIS_RZR,
-			engine_type_e::HYUNDAI_PB,
-			engine_type_e::MAVERICK_X3,
-			engine_type_e::HARLEY,
-	} ) {
+  // [CannedTunes] let's export all just for simplicity. See also WriteSimulatorConfiguration.java
+	for (size_t typeIndex = 0;typeIndex<(size_t)engine_type_e::ET_LAST_UNUSED;typeIndex++) {
+    engine_type_e type = (engine_type_e)typeIndex;
 		writeEngineTypeDefaultConfig(type);
 	}
 

@@ -31,7 +31,7 @@
 
 #if EFI_ONBOARD_MEMS
 #include "accelerometer.h"
-#endif
+#endif // EFI_ONBOARD_MEMS
 
 #include "defaults.h"
 
@@ -735,17 +735,49 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	 * And override them with engine-specific defaults
 	 */
 	switch (engineType) {
+	case engine_type_e::ET_AUX_0:
+	case engine_type_e::ET_AUX_1:
+	case engine_type_e::ET_AUX_2:
+	case engine_type_e::ET_AUX_3:
+	case engine_type_e::ET_AUX_4:
+	case engine_type_e::ET_AUX_5:
+	case engine_type_e::ET_AUX_6:
+	case engine_type_e::ET_AUX_7:
+	case engine_type_e::FORD_COYOTE:
+	case engine_type_e::MAZDA_MIATA_NC:
+	case engine_type_e::DISCOVERY_PDM:
+	case engine_type_e::UNUSED47:
+	case engine_type_e::UNUSED49:
+	case engine_type_e::ET_UNUSED_55:
+	case engine_type_e::ET_UNUSED_56:
+	case engine_type_e::UNUSED_65:
+	case engine_type_e::UNUSED67:
+	case engine_type_e::UNUSED94:
+	case engine_type_e::UNUSED_97:
+	case engine_type_e::TEST_100:
+	case engine_type_e::TEST_101:
+	case engine_type_e::UNUSED102:
+	case engine_type_e::HELLEN_4CHAN_STIM_QC:
+	case engine_type_e::HELLEN_2CHAN_STIM_QC:
+	case engine_type_e::HELLEN_154_VAG:
+	case engine_type_e::HELLEN_121_NISSAN_8_CYL:
+	case engine_type_e::HELLEN_121_NISSAN_ALMERA_N16:
+	case engine_type_e::SIMULATOR_CONFIG:
 	case engine_type_e::HELLEN_121_VAG_4_CYL:
 	case engine_type_e::MINIMAL_PINS:
 		// all basic settings are already set in prepareVoidConfiguration(), no need to set anything here
 		// nothing to do - we do it all in setBoardDefaultConfiguration
 		break;
-#if EFI_UNIT_TEST
+#if EFI_UNIT_TEST || EFI_SIMULATOR
 	case engine_type_e::TEST_ISSUE_366_BOTH:
+	  #if EFI_UNIT_TEST
 		setTestEngineIssue366both();
+		#endif
 		break;
 	case engine_type_e::TEST_ISSUE_366_RISE:
+	  #if EFI_UNIT_TEST
 		setTestEngineIssue366rise();
+		#endif
 		break;
 	case engine_type_e::ET_BOSCH_QUICK_START:
 	  setTestEngineBoschQuickStart();
@@ -755,9 +787,11 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	  break;
 #endif // EFI_UNIT_TEST
 
-#if EFI_TCU
+#if EFI_TCU || EFI_SIMULATOR
 	case engine_type_e::TCU_4R70W:
+		#if EFI_TCU
 		configureTcu4R70W();
+		#endif // EFI_TCU
 		break;
 #endif //EFI_TCU
 
@@ -845,7 +879,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif
 
-#if HW_PROTEUS
+#if HW_PROTEUS || EFI_SIMULATOR
     case engine_type_e::WASTEGATE_PROTEUS_TEST:
         proteusDcWastegateTest();
         break;
@@ -879,14 +913,16 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::GM_SBC:
 	    setGmSbc();
         break;
-#ifdef HARDWARE_CI
+#if defined(HARDWARE_CI) || EFI_SIMULATOR
 	case engine_type_e::PROTEUS_ANALOG_PWM_TEST:
+    #if defined(HARDWARE_CI)
 		setProteusAnalogPwmTest();
+    #endif
 		break;
 #endif // HARDWARE_CI
 #endif // HW_PROTEUS
 
-#ifdef HW_HELLEN_MERCEDES
+#if defined(HW_HELLEN_MERCEDES) || EFI_SIMULATOR
 	case engine_type_e::HELLEN_128_MERCEDES_4_CYL:
 		setHellenMercedes128_4_cyl();
 		break;
@@ -916,19 +952,13 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		break;
 #endif
 
-#ifdef HW_HELLEN_4CHAN
-    case engine_type_e::HELLEN_4CHAN_STIM_QC:
-        alphax4chanStimQc();
-		break;
-#endif // HW_HELLEN_4CHAN
-
 #if defined(HW_HELLEN_8CHAN) || defined(HW_HELLEN_UAEFI121)
 	case engine_type_e::GM_SBC:
 	    setGmSbc();
         break;
 #endif
 
-#ifdef HW_HELLEN_121_VAG
+#if defined(HW_HELLEN_121_VAG) || EFI_SIMULATOR
 	case engine_type_e::HELLEN_121_VAG_5_CYL:
 	    setHellen121Vag_5_cyl();
         break;
@@ -955,7 +985,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	    setHondaCivicBcm();
         break;
 #endif // HW_HELLEN
-#if defined(HW_FRANKENSO) || HW_PROTEUS
+#if defined(HW_FRANKENSO) || HW_PROTEUS || EFI_SIMULATOR
     // used in HW CI
 	case engine_type_e::VW_ABA:
 		setVwAba();
@@ -969,12 +999,14 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 		testEngine6451();
 		break;
 
-#if defined(HW_FRANKENSO)
+#if defined(HW_FRANKENSO) || EFI_SIMULATOR
 	case engine_type_e::DEFAULT_FRANKENSO:
 		setFrankensoConfiguration();
 		break;
 	case engine_type_e::FRANKENSO_TEST_33810:
+#if EFI_PROD_CODE
 		setDiscovery33810Test();
+#endif
 		break;
 	case engine_type_e::TEST_ENGINE:
 		setTestCamEngineConfiguration();
@@ -1051,7 +1083,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	case engine_type_e::BMW_M52:
 	  bmwM52();
     break;
-#ifdef HW_SUBARU_EG33
+#if defined(HW_SUBARU_EG33) || EFI_SIMULATOR
 	case engine_type_e::SUBARU_EG33:
 		setSubaruEG33Defaults();
 		break;

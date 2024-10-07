@@ -874,23 +874,6 @@ void proteusStimQc() {
 }
 #endif // HW_PROTEUS
 
-#ifdef HW_HELLEN_4CHAN
-// HELLEN_4CHAN_STIM_QC
-// set engine_type 74
-void alphax4chanStimQc() {
-    engineConfiguration->trigger.type = trigger_type_e::TT_ONE_PLUS_ONE;
-	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
-	engineConfiguration->vvtMode[1] = VVT_SINGLE_TOOTH;
-
-   	engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_CAM; // C7
-   	engineConfiguration->triggerInputPins[1] = Gpio::H144_IN_D_4; // E6
-   	engineConfiguration->camInputs[0] = Gpio::H144_IN_VSS; // C4
-   	engineConfiguration->camInputs[1] = Gpio::H144_IN_D_AUX4; // E7
-   	engineConfiguration->camInputs[2] = Gpio::H144_IN_SENS2; // E3
-   	engineConfiguration->camInputs[3] = Gpio::H144_IN_SENS3; // E4
-}
-#endif // HW_HELLEN_4CHAN
-
 // set engine_type 93
 void testEngine6451() {
 #ifdef HW_FRANKENSO
