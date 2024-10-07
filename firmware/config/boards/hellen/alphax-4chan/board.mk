@@ -4,7 +4,7 @@
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
 
-# Add them all together
+DDEFS += -DKNOCK_SPECTROGRAM=TRUE
 
 # 37K would not fit
 DDEFS += -DLUA_USER_HEAP=32000
