@@ -225,6 +225,9 @@ enum class engine_type_e : uint16_t {
   ET_AUX_5 = 111,
   ET_AUX_6 = 112,
   ET_AUX_7 = 113,
+
+  // [CannedTunes] please keep this always last always unused
+  ET_LAST_UNUSED = 114,
 };
 
 /**
