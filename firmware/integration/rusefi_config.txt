@@ -2433,6 +2433,8 @@ end_struct
 #define ts_show_vr_threshold_pins true
 
 #define show_test_presets false
+#define show_honda_obd1_preset true
+#define show_fuel_bench_preset true
 #define show_default_engine_type true
 #define show_Frankenso_presets false
 #define show_microRusEFI_presets false
