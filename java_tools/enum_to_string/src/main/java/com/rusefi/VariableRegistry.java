@@ -207,7 +207,9 @@ public class VariableRegistry {
             if (m.groupCount() < 2)
                 throw new IllegalStateException("Something broken in: [" + line + "]");
             String key = m.group(2);
-            line = m.replaceFirst(function.apply(key));
+            String newValue = function.apply(key);
+            newValue = newValue.replace("\\", "\\\\"); // hack out symbol escaping
+            line = m.replaceFirst(newValue);
         }
         return line;
     }
@@ -322,7 +324,7 @@ public class VariableRegistry {
 
     public void registerHex(String name, int value) {
         register(name + _HEX_SUFFIX, Integer.toString(value, 16));
-        String _16_hex = String.format("\\\\x%02x\\\\x%02x", (value >> 8) & 0xFF, value & 0xFF);
+        String _16_hex = String.format("\\x%02x\\x%02x", (value >> 8) & 0xFF, value & 0xFF);
         register(name + _16_HEX_SUFFIX, _16_hex);
     }
 

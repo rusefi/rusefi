@@ -19,9 +19,9 @@ public class VariableRegistryTest {
     public void testBackSlash() {
         VariableRegistry registry = new VariableRegistry();
         registry.register("var1", "a\\b");
-        assertEquals("ab", registry.applyVariables("@@var1@@"));
+        assertEquals("a\\b", registry.applyVariables("@@var1@@"));
         registry.register("var2", "a\\\\b");
-        assertEquals("a\\b", registry.applyVariables("@@var2@@"));
+        assertEquals("a\\\\b", registry.applyVariables("@@var2@@"));
     }
 
     @Test
