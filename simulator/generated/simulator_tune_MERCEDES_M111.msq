@@ -31,7 +31,7 @@
         <constant digits="0" name="multisparkMaxSparkingAngle" units="deg">30.0</constant>
         <constant digits="0" name="multisparkMaxExtraSparkCount" units="count">2.0</constant>
         <constant digits="0" name="vvtControlMinRpm" units="RPM">500.0</constant>
-        <constant digits="2" name="injector_flow" units="cm3/min">196.0</constant>
+        <constant digits="2" name="injector_flow" units="">196.0</constant>
         <constant cols="1" digits="2" name="injector_battLagCorrBins" rows="8">
          6.0
          8.0
@@ -52,7 +52,7 @@
          0.797
          0.726
 </constant>
-        <constant digits="2" name="injectorSecondary_flow" units="cm3/min">200.0</constant>
+        <constant digits="2" name="injectorSecondary_flow" units="">200.0</constant>
         <constant cols="1" digits="2" name="injectorSecondary_battLagCorrBins" rows="8">
          6.0
          8.0
@@ -4765,7 +4765,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20241002" nPages="1" signature="rusEFI master.2024.10.07.f407-discovery.2553996402" version="5.0"/>
+    <versionInfo firmwareInfo="20241002" nPages="1" signature="rusEFI master.2024.10.07.f407-discovery.2761541170" version="5.0"/>
     <bibliography author="rusEFI 20241002" writeDate="date"/>
     <settings/>
     <userComments/>
