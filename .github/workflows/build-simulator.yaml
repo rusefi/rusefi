@@ -13,14 +13,7 @@ jobs:
 # todo: how to reduce code duplication of submodules list?
     - name: Checkout Submodules
       run: |
-        git submodule update --init --depth=1 firmware/ChibiOS
-        git submodule update --init --depth=1 firmware/ChibiOS-Contrib
-        git submodule update --init --depth=1 firmware/libfirmware
-        git submodule update --init --depth=1 firmware/ext/lua
-        git submodule update --init --depth=1 firmware/controllers/lua/luaaa
-        git submodule update --init --depth=1 firmware/controllers/can/wideband_firmware
-        git submodule update --init --depth=1 java_console/luaformatter
-        git submodule update --init --depth=1 java_console/peak-can-basic
+        misc/git_scripts/common_submodule_init.sh
 
     - name: Print GCC version
       working-directory: .
