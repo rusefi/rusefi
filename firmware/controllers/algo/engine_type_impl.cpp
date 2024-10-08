@@ -53,19 +53,19 @@ static_assert(libPROTEUS_STIM_QC == (int)engine_type_e::PROTEUS_STIM_QC);
 static_assert(libHELLEN_2CHAN_STIM_QC == (int)engine_type_e::HELLEN_2CHAN_STIM_QC);
 static_assert(libHELLEN_4CHAN_STIM_QC == (int)engine_type_e::HELLEN_4CHAN_STIM_QC);
 
+#ifndef WIN32
+// drama with weak on mingw gcc?
+PUBLIC_API_WEAK
+#endif
+engine_type_e getLastEngineType() {
+  return engine_type_e::FERRARI_F136;
+}
+
 void applyEngineType(engine_type_e engineType) {
 	/**
 	 * And override them with engine-specific defaults
 	 */
 	switch (engineType) {
-	case engine_type_e::ET_AUX_0:
-	case engine_type_e::ET_AUX_1:
-	case engine_type_e::ET_AUX_2:
-	case engine_type_e::ET_AUX_3:
-	case engine_type_e::ET_AUX_4:
-	case engine_type_e::ET_AUX_5:
-	case engine_type_e::ET_AUX_6:
-	case engine_type_e::ET_AUX_7:
 	case engine_type_e::FORD_COYOTE:
 	case engine_type_e::MAZDA_MIATA_NC:
 	case engine_type_e::DISCOVERY_PDM:
