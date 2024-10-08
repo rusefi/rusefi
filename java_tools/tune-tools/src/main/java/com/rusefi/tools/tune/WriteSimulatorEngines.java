@@ -21,6 +21,5 @@ public class WriteSimulatorEngines {
         engine_type_e.HYUNDAI_PB,
         engine_type_e.MAVERICK_X3,
         engine_type_e.POLARIS_RZR,
-        engine_type_e.HARLEY,
     };
 }

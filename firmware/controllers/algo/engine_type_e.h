@@ -205,15 +205,9 @@ enum class engine_type_e : uint16_t {
 	HYUNDAI_PB = 104,
   FERRARI_F136 = 105,
 
-  ET_AUX_0 = 106,
-  ET_AUX_1 = 107,
-  ET_AUX_2 = 108,
-  ET_AUX_3 = 109,
-  ET_AUX_4 = 110,
-  ET_AUX_5 = 111,
-  ET_AUX_6 = 112,
-  ET_AUX_7 = 113,
+// board_engine_types_tag
 
   // [CannedTunes] please keep this always last always unused
-  ET_LAST_UNUSED = 114,
 };
+
+engine_type_e getLastEngineType();

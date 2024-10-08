@@ -341,7 +341,7 @@ runs:
         ./build/rusefi_simulator 10
         ./write_tune.sh ${ABSOLUTE_BOARD_DIR}/generated/tunerstudio/generated/rusefi_${SHORT_BOARD_NAME}.ini
         cd $OLDPWD
-        echo "Current directory: $PWD"
+        echo "action.yaml: Current directory: $PWD"
         if [ ! "${{inputs.sim_output}}" -ef "${{inputs.rusefi_dir}}/simulator/generated" ]; then
           ls ${{inputs.rusefi_dir}}/simulator/generated/
           mkdir -p ${{inputs.sim_output}}canned-tunes
