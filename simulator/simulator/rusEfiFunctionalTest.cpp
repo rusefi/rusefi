@@ -183,7 +183,7 @@ void rusEfiFunctionalTest() {
 	initFlash();
 
   // [CannedTunes] let's export all just for simplicity. See also WriteSimulatorConfiguration.java
-	for (size_t typeIndex = 0;typeIndex<(size_t)engine_type_e::ET_LAST_UNUSED;typeIndex++) {
+	for (size_t typeIndex = 0;typeIndex<(size_t)getLastEngineType();typeIndex++) {
     engine_type_e type = (engine_type_e)typeIndex;
 		writeEngineTypeDefaultConfig(type);
 	}

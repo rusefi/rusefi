@@ -122,7 +122,6 @@ void onBurnRequest() {
  * todo: why two hooks? is one already dead?
  */
 PUBLIC_API_WEAK void boardTuneDefaults() { }
-PUBLIC_API_WEAK void boardEngineTypeTune(engine_type_e engineType) { }
 
 // Weak link a stub so that every board doesn't have to implement this function
 PUBLIC_API_WEAK void boardOnConfigurationChange(engine_configuration_s* /*previousConfiguration*/) { }
@@ -686,8 +685,6 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 
 	engineConfiguration->engineType = engineType;
 	applyEngineType(engineType);
-
-	boardEngineTypeTune(engineType);
 	applyNonPersistentConfiguration();
 }
 
