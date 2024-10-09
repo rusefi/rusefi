@@ -122,6 +122,7 @@ runs:
         : Echo
         echo "rusefi_dir=${{inputs.rusefi_dir}}"
         echo "meta_info=${{inputs.meta_info}}"
+        echo "sim_output=${{inputs.sim_output}}"
 
     - name: Checkout Submodules
       working-directory: ${{inputs.rusefi_dir}}
@@ -163,7 +164,7 @@ runs:
         shopt -s expand_aliases
         if which grealpath >/dev/null 2>&1; then alias realpath='grealpath'; fi
         echo "META_OUTPUT_ROOT_FOLDER=$(realpath --relative-to=${{inputs.rusefi_dir}}/firmware ${{inputs.meta_output}})/" >> $GITHUB_ENV
-        echo "SIM_OUTPUT_ROOT_FOLDER=$(realpath --relative-to=${{inputs.rusefi_dir}}/firmware ${{inputs.sim_output}})/" >> $GITHUB_ENV
+        echo "DEFAULT_TUNE_OUTPUT_FOLDER=$(realpath --relative-to=${{inputs.rusefi_dir}}/firmware ${{inputs.sim_output}})/" >> $GITHUB_ENV
         source ${{inputs.rusefi_dir}}/firmware/config/boards/common_script_read_meta_env.inc "${{inputs.meta_info}}"
         cd ${{inputs.rusefi_dir}}/firmware
         ABSOLUTE_BOARD_DIR=${{github.workspace}}/$BOARD_DIR
@@ -339,16 +340,8 @@ runs:
         : Run Simulator
         cd ${{inputs.rusefi_dir}}/simulator/
         ./build/rusefi_simulator 10
+        mkdir -p ${{inputs.sim_output}}canned-tunes
         ./write_tune.sh ${ABSOLUTE_BOARD_DIR}/generated/tunerstudio/generated/rusefi_${SHORT_BOARD_NAME}.ini
-        cd $OLDPWD
-        echo "action.yaml: Current directory: $PWD"
-        if [ ! "${{inputs.sim_output}}" -ef "${{inputs.rusefi_dir}}/simulator/generated" ]; then
-          ls ${{inputs.rusefi_dir}}/simulator/generated/
-          mkdir -p ${{inputs.sim_output}}canned-tunes
-          cp -v ${{inputs.rusefi_dir}}/simulator/generated/*.msq ${{inputs.sim_output}}
-          cp -v ${{inputs.rusefi_dir}}/simulator/generated/canned-tunes/*.md ${{inputs.sim_output}}canned-tunes
-          ls ${{inputs.sim_output}}
-        fi
 
     - name: Add Tune to Commit
       if: ${{ inputs.run_simulator == 'true' && inputs.push == 'true' }}

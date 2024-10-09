@@ -17,6 +17,7 @@ import java.nio.file.Files;
 import java.util.Objects;
 
 import static com.devexperts.logging.Logging.getLogging;
+import static com.rusefi.tools.tune.TuneCanTool.ENGINE_TUNE_OUTPUT_FOLDER;
 
 /**
  * see <a href="https://github.com/rusefi/rusefi/wiki/Canned-Tune-Process">...</a>
@@ -24,7 +25,7 @@ import static com.devexperts.logging.Logging.getLogging;
 public class WriteSimulatorConfiguration {
     private static final Logging log = getLogging(WriteSimulatorConfiguration.class);
 
-    public static String ROOT_FOLDER = System.getProperty("ROOT_FOLDER", "../simulator/");
+    private static final String ROOT_FOLDER = System.getProperty("ROOT_FOLDER", "../simulator/");
 
     public static void main(String[] args) {
         if (args.length != 1)
@@ -33,10 +34,10 @@ public class WriteSimulatorConfiguration {
         IniFileModelImpl ini = new IniFileModelImpl().readIniFile(iniFileName);
         BinaryProtocol.iniFileProvider = signature -> ini;
 
-        System.out.println("ROOT_FOLDER=" + ROOT_FOLDER);
+        log.info("ROOT_FOLDER=" + ROOT_FOLDER);
         try {
             try {
-                readBinaryWriteXmlTune(iniFileName, Fields.SIMULATOR_TUNE_BIN_FILE_NAME, TuneCanTool.DEFAULT_TUNE, ini);
+                readBinaryWriteXmlTune(iniFileName, Fields.SIMULATOR_TUNE_BIN_FILE_NAME, ENGINE_TUNE_OUTPUT_FOLDER + TuneCanTool.DEFAULT_TUNE, ini);
             } catch (Throwable e) {
                 throw new IllegalStateException("White default tune", e);
             }
@@ -57,7 +58,7 @@ public class WriteSimulatorConfiguration {
         try {
             String in = Fields.SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX + "_" + engineType.ordinal() + Fields.SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX;
             readBinaryWriteXmlTune(iniFileName, in,
-                    TuneCanTool.getDefaultTuneName(engineType), ini);
+                TuneCanTool.getDefaultTuneOutputFileName(engineType), ini);
         } catch (Throwable e) {
             throw new IllegalStateException("With " + engineType, e);
         }
@@ -80,7 +81,7 @@ public class WriteSimulatorConfiguration {
         Constant noiseRpmBins = m.page.get(1).getConstantsAsMap().get(name);
         if (!noiseRpmBins.getValue().contains(Fields.DEFAULT_RPM_AXIS_HIGH_VALUE + ".0"))
             throw new IllegalStateException(name + " canary wonders if everything is fine?");
-        m.writeXmlFile(ROOT_FOLDER + outputXmlFileName);
+        m.writeXmlFile(outputXmlFileName);
 
         Msq newTuneJustToValidate = Msq.readTune(ROOT_FOLDER + outputXmlFileName);
         log.info("Looks valid " + newTuneJustToValidate);

@@ -44,18 +44,22 @@ import static com.rusefi.LocalIniFileProvider.INI_FILE_FOR_SIMULATOR;
  */
 public class TuneCanTool {
     private static final Logging log = getLogging(TuneCanTool.class);
-    private static final String REPORTS_OUTPUT_FOLDER = "generated/canned-tunes";
+    private static final String REPORTS_OUTPUT_FOLDER = "canned-tunes";
 
-    private static final String FOLDER = "generated";
-    public static final String SIMULATED_PREFIX = FOLDER + File.separator + "simulator_tune";
+    public static final String SIMULATED_PREFIX = "simulator_tune";
     public static final String TUNE_FILE_SUFFIX = ".msq";
     public static final String DEFAULT_TUNE = SIMULATED_PREFIX + TUNE_FILE_SUFFIX;
     private static final String workingFolder = "downloaded_tunes";
     public static final String MD_FIXED_FORMATTING = "```\n";
     // IDE and GHA run from different working folders :(
-    public static final String YET_ANOTHER_ROOT = "../simulator/";
+    // see write_tune.sh for env variable to property mapping
+    static final String ENGINE_TUNE_OUTPUT_FOLDER = System.getProperty("ENGINE_TUNE_OUTPUT_FOLDER", "../simulator/generated/");
 
     protected static IniFileModel ini;
+
+    static {
+        log.info("ENGINE_TUNE_OUTPUT_FOLDER=" + ENGINE_TUNE_OUTPUT_FOLDER);
+    }
 
 
     public static void main(String[] args) throws Exception {
@@ -87,14 +91,14 @@ public class TuneCanTool {
     protected static void processREOtune(int tuneId, engine_type_e engineType, String key,
                                          String methodNamePrefix) throws JAXBException, IOException {
         // compare specific internet tune to total global default
-        handle(key + "-comparing-against-global-defaults", tuneId, YET_ANOTHER_ROOT + TuneCanTool.DEFAULT_TUNE, methodNamePrefix);
+        handle(key + "-comparing-against-global-defaults", tuneId, ENGINE_TUNE_OUTPUT_FOLDER + TuneCanTool.DEFAULT_TUNE, methodNamePrefix);
         // compare same internet tune to default tune of specified engine type
-        handle(key + "-comparing-against-current-" + key + "-default", tuneId, getDefaultTuneName(engineType), methodNamePrefix);
+        handle(key + "-comparing-against-current-" + key + "-default", tuneId, getDefaultTuneOutputFileName(engineType), methodNamePrefix);
     }
 
     @NotNull
-    public static String getDefaultTuneName(engine_type_e engineType) {
-        return YET_ANOTHER_ROOT + SIMULATED_PREFIX + "_" + engineType.name() + TUNE_FILE_SUFFIX;
+    public static String getDefaultTuneOutputFileName(engine_type_e engineType) {
+        return ENGINE_TUNE_OUTPUT_FOLDER + SIMULATED_PREFIX + "_" + engineType.name() + TUNE_FILE_SUFFIX;
     }
 
     private static void handle(String vehicleName, int tuneId, String defaultTuneFileName, String methodNamePrefix) throws JAXBException, IOException {
@@ -128,14 +132,14 @@ public class TuneCanTool {
 
         StringBuilder sb = getTunePatch(defaultTune, customTune, ini, customTuneFileName, methods, defaultTuneFileName, methodNamePrefix);
 
-        String fileNameMethods = YET_ANOTHER_ROOT + REPORTS_OUTPUT_FOLDER + "/" + vehicleName + "_methods.md";
+        String fileNameMethods = ENGINE_TUNE_OUTPUT_FOLDER + REPORTS_OUTPUT_FOLDER + "/" + vehicleName + "_methods.md";
         try (FileWriter methodsWriter = new FileWriter(fileNameMethods)) {
             methodsWriter.append(MD_FIXED_FORMATTING);
             methodsWriter.append(methods);
             methodsWriter.append(MD_FIXED_FORMATTING);
         }
 
-        String fileName = YET_ANOTHER_ROOT + REPORTS_OUTPUT_FOLDER + "/" + vehicleName + ".md";
+        String fileName = ENGINE_TUNE_OUTPUT_FOLDER + REPORTS_OUTPUT_FOLDER + "/" + vehicleName + ".md";
         File outputFile = new File(fileName);
         log.info("Writing to " + outputFile.getAbsolutePath());
 
