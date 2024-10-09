@@ -95,6 +95,7 @@ void detectHellenBoardType();
 #define H144_GP_IO5 G15
 #define H144_GP_IO6 D8
 #define H144_GP_IO7 F15
+// OUT_PWM_EN on kicad symbol
 #define H144_GP8 Gpio::E10
 #define H144_GP9 Gpio::F2
 
