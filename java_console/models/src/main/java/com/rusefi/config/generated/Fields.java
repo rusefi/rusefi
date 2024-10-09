@@ -1389,13 +1389,14 @@ public class Fields {
 	public static final int ts_14_command_TS_BURN_WITHOUT_FLASH = 0x15;
 	public static final int ts_14_command_TS_ETB_AUTOCAL_0 = 0x0E;
 	public static final int ts_14_command_TS_ETB_AUTOCAL_1 = 0x11;
+	public static final int ts_14_command_TS_ETB_DISABLE_JAM_DETECT = 0x14;
 	public static final int ts_14_command_TS_ETB_RESET = 0x0B;
 	public static final int ts_14_command_TS_ETB_START_AUTOTUNE = 0x0C;
 	public static final int ts_14_command_TS_ETB_STOP_AUTOTUNE = 0x10;
 	public static final int ts_14_command_TS_EXTERNAL_TRIGGER_STIMULATOR_ENABLE = 0x13;
 	public static final int ts_14_command_TS_GRAB_PEDAL_UP = 6;
 	public static final int ts_14_command_TS_GRAB_PEDAL_WOT = 7;
-	public static final int ts_14_command_TS_RESET_MC33810 = 0x14;
+	public static final int ts_14_command_TS_RESET_MC33810 = 0x16;
 	public static final int ts_14_command_TS_RESET_TLE8888 = 8;
 	public static final int ts_14_command_TS_TRIGGER_STIMULATOR_DISABLE = 0x0F;
 	public static final int ts_14_command_TS_TRIGGER_STIMULATOR_ENABLE = 0x0D;
@@ -1476,7 +1477,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.10.09.f407-discovery.3512952922";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.10.10.f407-discovery.2559849931";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
