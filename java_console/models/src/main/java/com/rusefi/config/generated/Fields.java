@@ -347,16 +347,7 @@ public class Fields {
 	public static final int engine_type_e_DODGE_NEON_2003_CRANK = 46;
 	public static final int engine_type_e_DODGE_RAM = 64;
 	public static final int engine_type_e_EEPROM_BENCH_ENGINE = 61;
-	public static final int engine_type_e_ET_AUX_0 = 106;
-	public static final int engine_type_e_ET_AUX_1 = 107;
-	public static final int engine_type_e_ET_AUX_2 = 108;
-	public static final int engine_type_e_ET_AUX_3 = 109;
-	public static final int engine_type_e_ET_AUX_4 = 110;
-	public static final int engine_type_e_ET_AUX_5 = 111;
-	public static final int engine_type_e_ET_AUX_6 = 112;
-	public static final int engine_type_e_ET_AUX_7 = 113;
 	public static final int engine_type_e_ET_BOSCH_QUICK_START = 21;
-	public static final int engine_type_e_ET_LAST_UNUSED = 114;
 	public static final int engine_type_e_ET_TEST_WITH_BOSCH_QUICK_START = 24;
 	public static final int engine_type_e_ET_UNUSED_55 = 55;
 	public static final int engine_type_e_ET_UNUSED_56 = 56;
@@ -1485,7 +1476,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.10.08.f407-discovery.3512952922";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.10.09.f407-discovery.3512952922";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
