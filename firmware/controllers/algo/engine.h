@@ -268,6 +268,7 @@ public:
 #if EFI_ELECTRONIC_THROTTLE_BODY
     // todo: move to electronic_throttle something?
 	bool etbAutoTune = false;
+	bool etbIgnoreJamProtection = false;
 #endif // EFI_ELECTRONIC_THROTTLE_BODY
 
 #if EFI_UNIT_TEST
