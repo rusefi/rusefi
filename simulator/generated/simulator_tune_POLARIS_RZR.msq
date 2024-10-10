@@ -224,7 +224,7 @@
         <constant digits="0" name="boostControlSafeDutyCycle" units="%">0.0</constant>
         <constant name="mafAdcChannel">"Disabled"</constant>
         <constant digits="0" name="acrRevolutions" units="">5.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0241009E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.024101E7</constant>
         <constant digits="3" name="adcVcc" units="volts">3.0</constant>
         <constant digits="0" name="mapCamDetectionAnglePosition" units="Deg">0.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -1300,7 +1300,7 @@
         <constant digits="1" name="acDelay" units="sec">0.5</constant>
         <constant name="tChargeMode">"RPM+TPS (Default)"</constant>
         <constant digits="3" name="fordInjectorSmallPulseBreakPoint" units="mg">0.0</constant>
-        <constant digits="0" name="jamDetectThreshold" units="%">10.0</constant>
+        <constant digits="0" name="etbJamDetectThreshold" units="%">10.0</constant>
         <constant digits="0" name="hpfpCamLobes" units="lobes/cam">3.0</constant>
         <constant name="hpfpCam">"NONE"</constant>
         <constant digits="0" name="acLowRpmLimit" units="RPM">500.0</constant>
@@ -1375,7 +1375,7 @@
         <constant name="tcu_32_solenoid_pin_mode">"default"</constant>
         <constant digits="0" name="tcu_32_solenoid_freq" units="Hz">0.0</constant>
         <constant name="acrPin2">"NONE"</constant>
-        <constant digits="2" name="etbMinimumPosition" units="%">1.0</constant>
+        <constant digits="1" name="etbMinimumPosition" units="%">1.0</constant>
         <constant digits="0" name="tuneHidingKey" units="">0.0</constant>
         <constant cols="1" digits="0" name="highSpeedOffsets" rows="32">
          0.0
@@ -4762,7 +4762,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20241002" nPages="1" signature="rusEFI master.2024.10.10.f407-discovery.2559849931" version="5.0"/>
+    <versionInfo firmwareInfo="20241002" nPages="1" signature="rusEFI master.2024.10.10.f407-discovery.3360185006" version="5.0"/>
     <bibliography author="rusEFI 20241002" writeDate="date"/>
     <settings/>
     <userComments/>
