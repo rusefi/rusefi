@@ -57,6 +57,12 @@ int getRusEfiVersion();
 #define criticalAssert(condition, message, result) efiAssert(ObdCode::OBD_PCM_Processor_Fault, condition, message, result)
 #define criticalAssertVoid(condition, message) efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, condition, message)
 
+//todo?#define GET_MACRO(_0, _1, _2, NAME, ...) NAME
+//todo?  #define FOO(...) GET_MACRO(_0, ##__VA_ARGS__, FOO2, FOO1, FOO0)(__VA_ARGS__)
+
+#define assertNotNullVoid(pointer) efiAssertVoid(ObdCode::OBD_PCM_Processor_Fault, pointer != nullptr, "unexpected nullptr")
+#define assertNotNull(pointer, result) efiAssert(ObdCode::OBD_PCM_Processor_Fault, pointer != nullptr, "unexpected nullptr", result)
+
 #ifdef __cplusplus
 extern "C"
 {
