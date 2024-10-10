@@ -781,6 +781,8 @@ struct DcThread final : public PeriodicController<512> {
 	void PeriodicTask(efitick_t) override {
 		// Simply update all controllers
 		for (int i = 0 ; i < ETB_COUNT; i++) {
+		  auto controller = engine->etbControllers[i];
+		  assertNotNullVoid(controller);
 			etbControllers[i]->update();
 		}
 	}
@@ -793,6 +795,7 @@ static DcThread dcThread CCM_OPTIONAL;
 void etbPidReset() {
 	for (int i = 0 ; i < ETB_COUNT; i++) {
 		if (auto controller = engine->etbControllers[i]) {
+		  assertNotNullVoid(controller);
 			controller->reset();
 		}
 	}
@@ -828,6 +831,7 @@ void etbAutocal(size_t throttleIndex) {
 	}
 
 	if (auto etb = engine->etbControllers[throttleIndex]) {
+	  assertNotNullVoid(etb);
 		etb->autoCalibrateTps();
 	}
 }
@@ -1032,6 +1036,7 @@ void initElectronicThrottle() {
 void setEtbIdlePosition(percent_t pos) {
 	for (int i = 0; i < ETB_COUNT; i++) {
 		if (auto etb = engine->etbControllers[i]) {
+		  assertNotNullVoid(etb);
 			etb->setIdlePosition(pos);
 		}
 	}
@@ -1040,6 +1045,7 @@ void setEtbIdlePosition(percent_t pos) {
 void setEtbWastegatePosition(percent_t pos) {
 	for (int i = 0; i < ETB_COUNT; i++) {
 		if (auto etb = engine->etbControllers[i]) {
+		  assertNotNullVoid(etb);
 			etb->setWastegatePosition(pos);
 		}
 	}
@@ -1048,6 +1054,7 @@ void setEtbWastegatePosition(percent_t pos) {
 void setEtbLuaAdjustment(percent_t pos) {
 	for (int i = 0; i < ETB_COUNT; i++) {
 		if (auto etb = engine->etbControllers[i]) {
+		  assertNotNullVoid(etb);
 			etb->setLuaAdjustment(pos);
 		}
 	}

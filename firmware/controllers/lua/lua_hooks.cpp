@@ -792,7 +792,9 @@ void configureRusefiLuaHooks(lua_State* lState) {
 
 #if EFI_ELECTRONIC_THROTTLE_BODY && EFI_PROD_CODE
   lua_register(lState, "getEtbTarget", [](lua_State* l) {
- 		auto result = engine->etbControllers[0]->getCurrentTarget();
+    auto controller = engine->etbControllers[0];
+ 		assertNotNull(controller, 0);
+    auto result = controller->getCurrentTarget();
 		lua_pushnumber(l, result);
 		return 1;
   });
