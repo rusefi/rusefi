@@ -1295,7 +1295,7 @@
 #define SentEtbType_GM_TYPE_1 1
 #define SentEtbType_NONE 0
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 498887824
+#define SIGNATURE_HASH 1298138101
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1758,7 +1758,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.10.10.hellen81.498887824"
+#define TS_SIGNATURE "rusEFI master.2024.10.10.hellen81.1298138101"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

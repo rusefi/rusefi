@@ -679,7 +679,7 @@ struct engine_configuration_s {
 	 */
 	int8_t launchFuelAdderPercent;
 	/**
-	 * Time required to detect a stuck throttle.
+	 * Time after which the throttle is considered jammed.
 	 * units: sec
 	 * offset 39
 	 */
@@ -3882,10 +3882,11 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint16_t, 1000, 1> fordInjectorSmallPulseBreakPoint;
 	/**
+	 * Threshold in ETB error (target vs. actual) above which the jam timer is started. If the timer reaches the time specified in the jam detection timeout period, the throttle is considered jammed, and engine operation limited.
 	 * units: %
 	 * offset 2902
 	 */
-	uint8_t jamDetectThreshold;
+	uint8_t etbJamDetectThreshold;
 	/**
 	 * units: lobes/cam
 	 * offset 2903
@@ -4069,88 +4070,101 @@ struct engine_configuration_s {
 	 */
 	output_pin_e acrPin2;
 	/**
+	 * Set a minimum allowed target position to avoid slamming/driving against the hard mechanical stop in the throttle.
 	 * units: %
 	 * offset 3076
 	 */
-	float etbMinimumPosition;
+	scaled_channel<uint8_t, 10, 1> etbMinimumPosition;
 	/**
-	 * offset 3080
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 3077
+	 */
+	uint8_t alignmentFill_at_3077[1];
+	/**
+	 * offset 3078
 	 */
 	uint16_t tuneHidingKey;
 	/**
-	 * offset 3082
+	 * offset 3080
 	 */
 	vin_number_t vinNumber;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 3099
+	 * offset 3097
 	 */
-	uint8_t alignmentFill_at_3099[1];
+	uint8_t alignmentFill_at_3097[1];
 	/**
-	 * offset 3100
+	 * offset 3098
 	 */
 	uint16_t highSpeedOffsets[HIGH_SPEED_COUNT];
 	/**
-	 * offset 3164
+	 * offset 3162
 	 */
 	fuel_pressure_sensor_mode_e fuelPressureSensorMode;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 3165
+	 * offset 3163
 	 */
-	uint8_t alignmentFill_at_3165[1];
+	uint8_t alignmentFill_at_3163[1];
 	/**
-	 * offset 3166
+	 * offset 3164
 	 */
 	switch_input_pin_e luaDigitalInputPins[LUA_DIGITAL_INPUT_COUNT];
 	/**
 	 * units: rpm
-	 * offset 3182
+	 * offset 3180
 	 */
 	int16_t ALSMinRPM;
 	/**
 	 * units: rpm
-	 * offset 3184
+	 * offset 3182
 	 */
 	int16_t ALSMaxRPM;
 	/**
 	 * units: sec
-	 * offset 3186
+	 * offset 3184
 	 */
 	int16_t ALSMaxDuration;
 	/**
 	 * units: C
-	 * offset 3188
+	 * offset 3186
 	 */
 	int8_t ALSMinCLT;
 	/**
 	 * units: C
-	 * offset 3189
+	 * offset 3187
 	 */
 	int8_t ALSMaxCLT;
 	/**
-	 * offset 3190
+	 * offset 3188
 	 */
 	uint8_t alsMinTimeBetween;
 	/**
-	 * offset 3191
+	 * offset 3189
 	 */
 	uint8_t alsEtbPosition;
 	/**
 	 * units: %
-	 * offset 3192
+	 * offset 3190
 	 */
 	uint8_t acRelayAlternatorDutyAdder;
 	/**
-	 * offset 3193
+	 * offset 3191
 	 */
 	SentEtbType sentEtbType;
 	/**
-	 * offset 3194
+	 * offset 3192
 	 */
 	uint16_t customSentTpsMin;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 3194
+	 */
+	uint8_t alignmentFill_at_3194[2];
 	/**
 	 * units: %
 	 * offset 3196

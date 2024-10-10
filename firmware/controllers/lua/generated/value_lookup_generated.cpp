@@ -1552,9 +1552,9 @@ float getConfigValueByName(const char *name) {
 // fordInjectorSmallPulseBreakPoint
 		case -1032938305:
 			return engineConfiguration->fordInjectorSmallPulseBreakPoint;
-// jamDetectThreshold
-		case -1602450685:
-			return engineConfiguration->jamDetectThreshold;
+// etbJamDetectThreshold
+		case -791880034:
+			return engineConfiguration->etbJamDetectThreshold;
 // hpfpCamLobes
 		case -1256141959:
 			return engineConfiguration->hpfpCamLobes;
@@ -4456,9 +4456,9 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->fordInjectorSmallPulseBreakPoint = (int)value;
 		return 1;
 	}
-		case -1602450685:
+		case -791880034:
 	{
-		engineConfiguration->jamDetectThreshold = (int)value;
+		engineConfiguration->etbJamDetectThreshold = (int)value;
 		return 1;
 	}
 		case -1256141959:
@@ -4558,7 +4558,7 @@ bool setConfigValueByName(const char *name, float value) {
 	}
 		case -1855700175:
 	{
-		engineConfiguration->etbMinimumPosition = value;
+		engineConfiguration->etbMinimumPosition = (int)value;
 		return 1;
 	}
 		case -243078627:

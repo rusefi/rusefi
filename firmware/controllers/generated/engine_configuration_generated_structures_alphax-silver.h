@@ -679,7 +679,7 @@ struct engine_configuration_s {
 	 */
 	int8_t launchFuelAdderPercent;
 	/**
-	 * Time required to detect a stuck throttle.
+	 * Time after which the throttle is considered jammed.
 	 * units: sec
 	 * offset 39
 	 */
@@ -3882,10 +3882,11 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint16_t, 1000, 1> fordInjectorSmallPulseBreakPoint;
 	/**
+	 * Threshold in ETB error (target vs. actual) above which the jam timer is started. If the timer reaches the time specified in the jam detection timeout period, the throttle is considered jammed, and engine operation limited.
 	 * units: %
 	 * offset 3062
 	 */
-	uint8_t jamDetectThreshold;
+	uint8_t etbJamDetectThreshold;
 	/**
 	 * units: lobes/cam
 	 * offset 3063
@@ -4069,88 +4070,101 @@ struct engine_configuration_s {
 	 */
 	output_pin_e acrPin2;
 	/**
+	 * Set a minimum allowed target position to avoid slamming/driving against the hard mechanical stop in the throttle.
 	 * units: %
 	 * offset 3236
 	 */
-	float etbMinimumPosition;
+	scaled_channel<uint8_t, 10, 1> etbMinimumPosition;
 	/**
-	 * offset 3240
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 3237
+	 */
+	uint8_t alignmentFill_at_3237[1];
+	/**
+	 * offset 3238
 	 */
 	uint16_t tuneHidingKey;
 	/**
-	 * offset 3242
+	 * offset 3240
 	 */
 	vin_number_t vinNumber;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 3259
+	 * offset 3257
 	 */
-	uint8_t alignmentFill_at_3259[1];
+	uint8_t alignmentFill_at_3257[1];
 	/**
-	 * offset 3260
+	 * offset 3258
 	 */
 	uint16_t highSpeedOffsets[HIGH_SPEED_COUNT];
 	/**
-	 * offset 3324
+	 * offset 3322
 	 */
 	fuel_pressure_sensor_mode_e fuelPressureSensorMode;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 3325
+	 * offset 3323
 	 */
-	uint8_t alignmentFill_at_3325[1];
+	uint8_t alignmentFill_at_3323[1];
 	/**
-	 * offset 3326
+	 * offset 3324
 	 */
 	switch_input_pin_e luaDigitalInputPins[LUA_DIGITAL_INPUT_COUNT];
 	/**
 	 * units: rpm
-	 * offset 3342
+	 * offset 3340
 	 */
 	int16_t ALSMinRPM;
 	/**
 	 * units: rpm
-	 * offset 3344
+	 * offset 3342
 	 */
 	int16_t ALSMaxRPM;
 	/**
 	 * units: sec
-	 * offset 3346
+	 * offset 3344
 	 */
 	int16_t ALSMaxDuration;
 	/**
 	 * units: C
-	 * offset 3348
+	 * offset 3346
 	 */
 	int8_t ALSMinCLT;
 	/**
 	 * units: C
-	 * offset 3349
+	 * offset 3347
 	 */
 	int8_t ALSMaxCLT;
 	/**
-	 * offset 3350
+	 * offset 3348
 	 */
 	uint8_t alsMinTimeBetween;
 	/**
-	 * offset 3351
+	 * offset 3349
 	 */
 	uint8_t alsEtbPosition;
 	/**
 	 * units: %
-	 * offset 3352
+	 * offset 3350
 	 */
 	uint8_t acRelayAlternatorDutyAdder;
 	/**
-	 * offset 3353
+	 * offset 3351
 	 */
 	SentEtbType sentEtbType;
 	/**
-	 * offset 3354
+	 * offset 3352
 	 */
 	uint16_t customSentTpsMin;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 3354
+	 */
+	uint8_t alignmentFill_at_3354[2];
 	/**
 	 * units: %
 	 * offset 3356
@@ -4595,97 +4609,97 @@ struct engine_configuration_s {
 	bool boardUseTempPullUp : 1 {};
 	/**
 	offset 3896 bit 1 */
-	bool unusedBit_876_1 : 1 {};
+	bool unusedBit_878_1 : 1 {};
 	/**
 	offset 3896 bit 2 */
-	bool unusedBit_876_2 : 1 {};
+	bool unusedBit_878_2 : 1 {};
 	/**
 	offset 3896 bit 3 */
-	bool unusedBit_876_3 : 1 {};
+	bool unusedBit_878_3 : 1 {};
 	/**
 	offset 3896 bit 4 */
-	bool unusedBit_876_4 : 1 {};
+	bool unusedBit_878_4 : 1 {};
 	/**
 	offset 3896 bit 5 */
-	bool unusedBit_876_5 : 1 {};
+	bool unusedBit_878_5 : 1 {};
 	/**
 	offset 3896 bit 6 */
-	bool unusedBit_876_6 : 1 {};
+	bool unusedBit_878_6 : 1 {};
 	/**
 	offset 3896 bit 7 */
-	bool unusedBit_876_7 : 1 {};
+	bool unusedBit_878_7 : 1 {};
 	/**
 	offset 3896 bit 8 */
-	bool unusedBit_876_8 : 1 {};
+	bool unusedBit_878_8 : 1 {};
 	/**
 	offset 3896 bit 9 */
-	bool unusedBit_876_9 : 1 {};
+	bool unusedBit_878_9 : 1 {};
 	/**
 	offset 3896 bit 10 */
-	bool unusedBit_876_10 : 1 {};
+	bool unusedBit_878_10 : 1 {};
 	/**
 	offset 3896 bit 11 */
-	bool unusedBit_876_11 : 1 {};
+	bool unusedBit_878_11 : 1 {};
 	/**
 	offset 3896 bit 12 */
-	bool unusedBit_876_12 : 1 {};
+	bool unusedBit_878_12 : 1 {};
 	/**
 	offset 3896 bit 13 */
-	bool unusedBit_876_13 : 1 {};
+	bool unusedBit_878_13 : 1 {};
 	/**
 	offset 3896 bit 14 */
-	bool unusedBit_876_14 : 1 {};
+	bool unusedBit_878_14 : 1 {};
 	/**
 	offset 3896 bit 15 */
-	bool unusedBit_876_15 : 1 {};
+	bool unusedBit_878_15 : 1 {};
 	/**
 	offset 3896 bit 16 */
-	bool unusedBit_876_16 : 1 {};
+	bool unusedBit_878_16 : 1 {};
 	/**
 	offset 3896 bit 17 */
-	bool unusedBit_876_17 : 1 {};
+	bool unusedBit_878_17 : 1 {};
 	/**
 	offset 3896 bit 18 */
-	bool unusedBit_876_18 : 1 {};
+	bool unusedBit_878_18 : 1 {};
 	/**
 	offset 3896 bit 19 */
-	bool unusedBit_876_19 : 1 {};
+	bool unusedBit_878_19 : 1 {};
 	/**
 	offset 3896 bit 20 */
-	bool unusedBit_876_20 : 1 {};
+	bool unusedBit_878_20 : 1 {};
 	/**
 	offset 3896 bit 21 */
-	bool unusedBit_876_21 : 1 {};
+	bool unusedBit_878_21 : 1 {};
 	/**
 	offset 3896 bit 22 */
-	bool unusedBit_876_22 : 1 {};
+	bool unusedBit_878_22 : 1 {};
 	/**
 	offset 3896 bit 23 */
-	bool unusedBit_876_23 : 1 {};
+	bool unusedBit_878_23 : 1 {};
 	/**
 	offset 3896 bit 24 */
-	bool unusedBit_876_24 : 1 {};
+	bool unusedBit_878_24 : 1 {};
 	/**
 	offset 3896 bit 25 */
-	bool unusedBit_876_25 : 1 {};
+	bool unusedBit_878_25 : 1 {};
 	/**
 	offset 3896 bit 26 */
-	bool unusedBit_876_26 : 1 {};
+	bool unusedBit_878_26 : 1 {};
 	/**
 	offset 3896 bit 27 */
-	bool unusedBit_876_27 : 1 {};
+	bool unusedBit_878_27 : 1 {};
 	/**
 	offset 3896 bit 28 */
-	bool unusedBit_876_28 : 1 {};
+	bool unusedBit_878_28 : 1 {};
 	/**
 	offset 3896 bit 29 */
-	bool unusedBit_876_29 : 1 {};
+	bool unusedBit_878_29 : 1 {};
 	/**
 	offset 3896 bit 30 */
-	bool unusedBit_876_30 : 1 {};
+	bool unusedBit_878_30 : 1 {};
 	/**
 	offset 3896 bit 31 */
-	bool unusedBit_876_31 : 1 {};
+	bool unusedBit_878_31 : 1 {};
 	/**
 	 * units: units
 	 * offset 3900

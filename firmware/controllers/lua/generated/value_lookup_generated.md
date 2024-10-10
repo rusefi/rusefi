@@ -44,7 +44,7 @@ Voltage when the idle valve is open.\nYou probably don't have one of these!\n1 v
 
 
 ### etbJamTimeout
-Time required to detect a stuck throttle.
+Time after which the throttle is considered jammed.
 
 ### acIdleExtraOffset
 Additional idle % while A/C is active
@@ -1546,8 +1546,8 @@ Delay before engaging the AC compressor. Set to 0 to engage immediately with no 
 ### fordInjectorSmallPulseBreakPoint
 
 
-### jamDetectThreshold
-
+### etbJamDetectThreshold
+Threshold in ETB error (target vs. actual) above which the jam timer is started. If the timer reaches the time specified in the jam detection timeout period, the throttle is considered jammed, and engine operation limited.
 
 ### hpfpCamLobes
 
@@ -1607,7 +1607,7 @@ We need to give engine time to build oil pressure without diverting it to VVT
 
 
 ### etbMinimumPosition
-
+Set a minimum allowed target position to avoid slamming/driving against the hard mechanical stop in the throttle.
 
 ### tuneHidingKey
 
