@@ -171,21 +171,4 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 	return true;
 }
 
-AdcToken enableFastAdcChannel(const char*, adc_channel_e channel) {
-	if (!isAdcChannelValid(channel)) {
-		return invalidAdcToken;
-	}
-
-	// H7 always samples all fast channels, nothing to do here but compute index
-	return channel - EFI_ADC_0;
-}
-
-adcsample_t getFastAdc(AdcToken token) {
-	if (token == invalidAdcToken) {
-		return 0;
-	}
-
-	return fastSampleBuffer[token];
-}
-
 #endif // HAL_USE_ADC

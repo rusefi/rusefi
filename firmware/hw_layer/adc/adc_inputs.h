@@ -10,6 +10,7 @@
 
 #include "global.h"
 #include "adc_math.h"
+#include "adc_device.h"
 
 #ifndef SLOW_ADC_RATE
 #define SLOW_ADC_RATE 500
@@ -70,23 +71,57 @@ inline bool isAdcChannelOffChip(adc_channel_e hwChannel) {
 
 #if HAL_USE_ADC
 
-enum class AdcChannelMode : char {
-	Off,
-	Slow,
-	Fast
+typedef enum {
+	// Just a dummy
+	ADC_DUMMY = 0,
+
+	// On-chip ADCs
+	ADC_SLOW = 1,
+	ADC_FAST = 2,
+	ADC_AUX = 3,
+
+	ADC_EXTERNAL_0 = 8,
+	ADC_EXTERNAL_1 = 9,
+	ADC_EXTERNAL_3 = 10,
+
+	ADC_OFF = 16,
+
+	// special case when user don't care which driver is gonna serve required input
+	ADC_ANY = 17
+} adc_channel_mode_e;
+
+inline bool adcIsValidDriver(adc_channel_mode_e mode) {
+	return ((mode >= ADC_DUMMY) && (mode < ADC_OFF));
+}
+
+// first read driver
+#define ADC_DRIVERS_FIRST	ADC_SLOW
+#define ADC_DRIVERS_COUNT	ADC_OFF
+
+using AdcToken = uint32_t;
+
+using AdcTockenInternal = union {
+	AdcToken token;
+	struct {
+		adc_channel_mode_e drvIdx;
+		uint16_t channel;
+	} __attribute__((packed));
 };
 
-AdcChannelMode getAdcMode(adc_channel_e hwChannel);
+static constexpr AdcToken invalidAdcToken = (AdcToken)(0xffffffff);
+
+adc_channel_mode_e getAdcMode(adc_channel_e hwChannel);
 void initAdcInputs();
 
 // wait until at least 1 slowADC sampling is complete
-void waitForSlowAdc(uint32_t lastAdcCounter = 1);
+void waitForSlowAdc(uint32_t lastAdcCounter = 0);
 
 void printFullAdcReportIfNeeded(void);
 int getInternalAdcValue(const char *msg, adc_channel_e index);
 float getMCUInternalTemperature(void);
 
-void addFastAdcChannel(const char *name, adc_channel_e hwChannel);
+AdcToken addChannel(const char *name, adc_channel_e hwChannel, adc_channel_mode_e mode);
+AdcToken addFastAdcChannel(const char *msg, adc_channel_e hwChannel);
 void removeChannel(const char *name, adc_channel_e hwChannel);
 
 #define getAdcValue(msg, hwChannel) getInternalAdcValue(msg, hwChannel)
@@ -96,22 +131,15 @@ void removeChannel(const char *name, adc_channel_e hwChannel);
 // This callback is called by the ADC driver when a new fast ADC sample is ready
 void onFastAdcComplete(adcsample_t* samples);
 
-using AdcToken = uint32_t;
-
-using AdcTockenInternal = union {
-	AdcToken token;
-	struct {
-		uint16_t adc;
-		uint16_t channel;
-	} __attribute__((packed));
-};
-
 static_assert(sizeof(AdcTockenInternal) == sizeof(AdcToken));
-
-static constexpr AdcToken invalidAdcToken = (AdcToken)(-1);
 
 AdcToken enableFastAdcChannel(const char* msg, adc_channel_e channel);
 adcsample_t getFastAdc(AdcToken token);
+
+// Register new ADC
+int adcDeviceRegister(AdcDeviceBase *dev, adc_channel_mode_e mode);
+int adcDeviceRemove(adc_channel_mode_e mode);
+
 #endif // HAL_USE_ADC
 
 void printFullAdcReport(void);
