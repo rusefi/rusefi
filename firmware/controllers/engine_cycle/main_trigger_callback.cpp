@@ -247,14 +247,12 @@ static void handleFuel(efitick_t nowNt, float currentPhase, float nextPhase) {
 void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_t currentPhase, angle_t nextPhase) {
 	ScopePerf perf(PE::MainTriggerCallback);
 
-#if ! HW_CHECK_MODE
 	if (hasFirmwareError()) {
 		/**
 		 * In case on a major error we should not process any more events.
 		 */
 		return;
 	}
-#endif // HW_CHECK_MODE
 
 	float rpm = engine->rpmCalculator.getCachedRpm();
 	if (rpm == 0) {

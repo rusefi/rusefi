@@ -178,28 +178,6 @@ void Engine::periodicSlowCallback() {
 	void baroLps25Update();
 	baroLps25Update();
 #endif // EFI_PROD_CODE
-
-#if ANALOG_HW_CHECK_MODE
-	criticalAssertVoid(isAdcChannelValid(engineConfiguration->clt.adcChannel), "No CLT setting");
-	efitimesec_t secondsNow = getTimeNowS();
-
-    int hwCheckRpm = 204;
-	if (secondsNow > 2 && secondsNow < 180) {
-		assertCloseTo("RPM", Sensor::get(SensorType::Rpm).Value, hwCheckRpm);
-	} else if (!hasFirmwareError() && secondsNow > 180) {
-		static bool isHappyTest = false;
-		if (!isHappyTest) {
-			setTriggerEmulatorRPM(5 * hwCheckRpm);
-			efiPrintf("TEST PASSED");
-			isHappyTest = true;
-		}
-	}
-
-	assertCloseTo("clt", Sensor::getRaw(SensorType::Clt), 1.351f);
-	assertCloseTo("iat", Sensor::getRaw(SensorType::Iat), 2.245f);
-	assertCloseTo("aut1", Sensor::getRaw(SensorType::AuxTemp1), 2.750f);
-	assertCloseTo("aut2", Sensor::getRaw(SensorType::AuxTemp2), 3.176f);
-#endif // ANALOG_HW_CHECK_MODE
 }
 
 /**

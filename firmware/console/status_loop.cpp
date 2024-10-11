@@ -700,11 +700,7 @@ void updateTunerStudioState() {
 	extern FrequencySensor vehicleSpeedSensor;
 	tsOutputChannels->vssEdgeCounter = vehicleSpeedSensor.eventCounter;
 
-#if HW_CHECK_MODE
-	tsOutputChannels->hasCriticalError = 1;
-#else
 	tsOutputChannels->hasCriticalError = hasFirmwareError();
-#endif // HW_CHECK_MODE
 
 	tsOutputChannels->isWarnNow = engine->engineState.warnings.isWarningNow();
 #if EFI_HIP_9011_DEBUG
