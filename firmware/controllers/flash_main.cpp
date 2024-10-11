@@ -321,21 +321,7 @@ static FlashState readConfiguration() {
 }
 
 void readFromFlash() {
-#if HW_CHECK_MODE
-	/*
-	 * getFlashAddr does device validation, we want validation to be invoked even while we are
-	 * HW_CHECK_MODE mode where we would not need actual address
-	 * todo: rename method to emphasis the fact of validation check?
-	 */
-	getFlashAddrFirstCopy();
-	getFlashAddrSecondCopy();
-
-	resetConfigurationExt(DEFAULT_ENGINE_TYPE);
-
-	FlashState result = FlashState::Ok;
-#else
 	FlashState result = readConfiguration();
-#endif
 
 	switch (result) {
 		case FlashState::CrcFailed:

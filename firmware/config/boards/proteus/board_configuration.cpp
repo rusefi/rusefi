@@ -102,15 +102,9 @@ static void setupEtb() {
 
 static void setupDefaultSensorInputs() {
 	// trigger inputs
-#if VR_HW_CHECK_MODE
-	// set_trigger_input_pin 0 PE7
-	engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;
-	engineConfiguration->camInputs[0] = PROTEUS_VR_2;
-#else
 	// Digital channel 1 as default - others not set
 	engineConfiguration->triggerInputPins[0] = PROTEUS_DIGITAL_1;
 	engineConfiguration->camInputs[0] = Gpio::Unassigned;
-#endif
 
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
 

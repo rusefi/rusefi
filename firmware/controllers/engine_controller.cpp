@@ -705,11 +705,6 @@ void commonEarlyInit() {
 	startCanConsole();
 #endif /* EFI_CAN_SERIAL */
 
-#if HW_CHECK_ALWAYS_STIMULATE
-	// we need a special binary for final assembly check. We cannot afford to require too much software or too many steps
-	// to be executed at the place of assembly
-	enableTriggerStimulator(/*incGlobalConfiguration*/false);
-#endif // HW_CHECK_ALWAYS_STIMULATE
 }
 
 // one-time start-up

@@ -137,14 +137,6 @@ void Engine::updateTriggerWaveform() {
 #endif /* EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 }
 
-#if ANALOG_HW_CHECK_MODE
-static void assertCloseTo(const char* msg, float actual, float expected) {
-	if (actual < 0.95f * expected || actual > 1.05f * expected) {
-		criticalError("%s validation failed actual=%f vs expected=%f", msg, actual, expected);
-	}
-}
-#endif // ANALOG_HW_CHECK_MODE
-
 void Engine::periodicSlowCallback() {
 	ScopePerf perf(PE::EnginePeriodicSlowCallback);
 
@@ -190,10 +182,6 @@ void Engine::periodicSlowCallback() {
 #if ANALOG_HW_CHECK_MODE
 	criticalAssertVoid(isAdcChannelValid(engineConfiguration->clt.adcChannel), "No CLT setting");
 	efitimesec_t secondsNow = getTimeNowS();
-
-#if ! HW_CHECK_ALWAYS_STIMULATE
-	fail("HW_CHECK_ALWAYS_STIMULATE required to have self-stimulation")
-#endif
 
     int hwCheckRpm = 204;
 	if (secondsNow > 2 && secondsNow < 180) {

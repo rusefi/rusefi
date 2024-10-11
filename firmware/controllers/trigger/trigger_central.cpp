@@ -296,20 +296,6 @@ void handleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 		warning(ObdCode::CUSTOM_VVT_MODE_NOT_SELECTED, "VVT: event on %d but no mode", camIndex);
 	}
 
-#ifdef VR_HW_CHECK_MODE
-	// some boards do not have hardware VR input LEDs which makes such boards harder to validate
-	// from experience we know that assembly mistakes happen and quality control is required
-	extern ioportid_t criticalErrorLedPort;
-	extern ioportmask_t criticalErrorLedPin;
-
-	for (int i = 0 ; i < 100 ; i++) {
-		// turning pin ON and busy-waiting a bit
-		palWritePad(criticalErrorLedPort, criticalErrorLedPin, 1);
-	}
-
-	palWritePad(criticalErrorLedPort, criticalErrorLedPin, 0);
-#endif // VR_HW_CHECK_MODE
-
 	const auto& vvtShape = tc->vvtShape[camIndex];
 
 	bool isVvtWithRealDecoder = vvtWithRealDecoder(engineConfiguration->vvtMode[camIndex]);
@@ -452,24 +438,6 @@ uint32_t triggerMaxDuration = 0;
 void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 	TriggerCentral *tc = getTriggerCentral();
 	ScopePerf perf(PE::HandleShaftSignal);
-#ifdef VR_HW_CHECK_MODE
-	// some boards do not have hardware VR input LEDs which makes such boards harder to validate
-	// from experience we know that assembly mistakes happen and quality control is required
-	extern ioportid_t criticalErrorLedPort;
-	extern ioportmask_t criticalErrorLedPin;
-
-#if HW_CHECK_ALWAYS_STIMULATE
-	disableTriggerStimulator();
-#endif // HW_CHECK_ALWAYS_STIMULATE
-
-
-	for (int i = 0 ; i < 100 ; i++) {
-		// turning pin ON and busy-waiting a bit
-		palWritePad(criticalErrorLedPort, criticalErrorLedPin, 1);
-	}
-
-	palWritePad(criticalErrorLedPort, criticalErrorLedPin, 0);
-#endif // VR_HW_CHECK_MODE
 
 	if (tc->directSelfStimulation || !tc->hwTriggerInputEnabled) {
 		// sensor noise + self-stim = loss of trigger sync
