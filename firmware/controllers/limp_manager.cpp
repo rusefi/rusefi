@@ -272,9 +272,11 @@ void LimpManager::setFaultRevLimit(int limit) {
 	m_faultRevLimit = minI(m_faultRevLimit, limit);
 }
 
+#if EFI_ELECTRONIC_THROTTLE_BODY
 bool LimpManager::allowElectronicThrottle() const {
 	return m_allowEtb || engine->etbIgnoreJamProtection;
 }
+#endif // EFI_ELECTRONIC_THROTTLE_BODY
 
 bool LimpManager::allowTriggerInput() const {
 	return m_allowTriggerInput;
