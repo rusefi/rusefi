@@ -39,6 +39,7 @@ import static javax.swing.JOptionPane.YES_NO_OPTION;
  * 2/14/14
  * @see SimulatorHelper
  * @see StLinkFlasher
+ * @see ProgramSelector
  */
 public class StartupFrame {
     private static final Logging log = getLogging(Launcher.class);
