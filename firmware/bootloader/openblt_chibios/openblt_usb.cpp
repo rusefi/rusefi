@@ -51,6 +51,15 @@ void Rs232TransmitPacket(blt_int8u *data, blt_int8u len)
   }
 } /*** end of Rs232TransmitPacket ***/
 
+PUBLIC_API_WEAK void openBltUnexpectedByte(blt_int8u firstByte) {
+// 'z' is right at the end of 128 ascii range
+static_assert(BOOT_COM_RS232_RX_MAX_DATA < 'z');
+  if (firstByte == 'z') {
+  const char * bltTest = "openblt\n";
+    chnWriteTimeout(&SDU1, (const uint8_t*)bltTest, sizeof(bltTest), TIME_INFINITE);
+  }
+}
+
 /************************************************************************************//**
 ** \brief     Receives a communication interface packet if one is present.
 ** \param     data Pointer to byte array where the data is to be stored.
@@ -80,6 +89,8 @@ blt_bool Rs232ReceivePacket(blt_int8u *data, blt_int8u *len)
         xcpCtoRxLength = 0;
         /* indicate that a cto packet is being received */
         xcpCtoRxInProgress = BLT_TRUE;
+      } else {
+        openBltUnexpectedByte(xcpCtoReqPacket[0]);
       }
     }
   }
