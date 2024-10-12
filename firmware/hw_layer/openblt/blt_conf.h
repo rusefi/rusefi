@@ -114,7 +114,9 @@
 /** \brief Configure number of bytes in the target->host data packet. */
 #define BOOT_COM_RS232_TX_MAX_DATA       (200)
 /** \brief Configure number of bytes in the host->target data packet. */
+#ifndef BOOT_COM_RS232_RX_MAX_DATA
 #define BOOT_COM_RS232_RX_MAX_DATA       (200)
+#endif
 
 /** only USB supported, this is ignored but required */
 #define BOOT_COM_RS232_CHANNEL_INDEX 0
