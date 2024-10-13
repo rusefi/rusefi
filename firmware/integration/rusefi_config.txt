@@ -204,6 +204,8 @@ struct_no_prefix engine_configuration_s
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
 #define SCRIPT_SETTING_COUNT 8
 
+#define GEAR_DETECTION_DIALOG_NAME "Gear Detection"
+#define ts_show_final_ratio true
 #define ENGINE_TYPES_DIALOG_NAME "Popular vehicles"
 #define VVT1_TARGET_NAME "VVT intake target"
 #define GPPWM_1_NAME "General Purpose PWM 1"
