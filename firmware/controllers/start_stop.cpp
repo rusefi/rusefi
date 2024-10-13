@@ -16,10 +16,7 @@ void initStartStopButton() {
 	  engineConfiguration->startRequestPinInverted);
 }
 
-static void onStartStopButtonToggle() {
-	engine->engineState.startStopStateToggleCounter++;
-
-	if (engine->rpmCalculator.isStopped()) {
+static void doStartCranking() {
 		bool wasStarterEngaged = enginePins.starterControl.getAndSet(1);
 		if (!wasStarterEngaged) {
 		    engine->startStopState.startStopStateLastPush.reset();
@@ -27,6 +24,13 @@ static void onStartStopButtonToggle() {
 		    		engineConfiguration->startCrankingDuration,
 					hwPortname(engineConfiguration->starterControlPin));
 		}
+}
+
+static void onStartStopButtonToggle() {
+	engine->engineState.startStopStateToggleCounter++;
+
+	if (engine->rpmCalculator.isStopped()) {
+	  doStartCranking();
 	} else if (engine->rpmCalculator.isRunning()) {
 		doScheduleStopEngine();
 	}
