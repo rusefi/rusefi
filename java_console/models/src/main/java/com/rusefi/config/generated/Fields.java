@@ -637,6 +637,7 @@ public class Fields {
 	public static final String GAUGE_NAME_WARNING_COUNTER = "Warning: counter";
 	public static final String GAUGE_NAME_WARNING_LAST = "Warning: last";
 	public static final String GAUGE_NAME_WG_POSITION = "Wastegate position sensor";
+	public static final String GEAR_DETECTION_DIALOG_NAME = "Gear Detection";
 	public static final int gear_e_GEAR_1 = 1;
 	public static final int gear_e_GEAR_2 = 2;
 	public static final int gear_e_GEAR_3 = 3;
@@ -1213,6 +1214,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SIGNATURE_HASH = 496795309;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1477,7 +1479,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.10.13.f407-discovery.3360185006";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.10.13.f407-discovery.496795309";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
