@@ -219,6 +219,8 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t off
 	efiPrintf("TS -> Write chunk offset %d count %d (output_count=%d)", offset, count, tsState.outputChannelsCommandCounter);
 
 	if (validateOffsetCount(offset, count, tsChannel)) {
+		tunerStudioError(tsChannel, "ERROR: WR out of range");
+		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
 		return;
 	}
 
@@ -238,6 +240,8 @@ void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint16_t offset, ui
 
 	// Ensure we are reading from in bounds
 	if (validateOffsetCount(offset, count, tsChannel)) {
+		tunerStudioError(tsChannel, "ERROR: CRC out of range");
+		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
 		return;
 	}
 
@@ -325,6 +329,8 @@ void TunerStudio::handleWriteValueCommand(TsChannelBase* tsChannel, uint16_t off
 	efiPrintf("TS -> Write value offset %d value %d", offset, value);
 
 	if (validateOffsetCount(offset, 1, tsChannel)) {
+		tunerStudioError(tsChannel, "ERROR: WR out of range");
+		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
 		return;
 	}
 
@@ -347,6 +353,8 @@ void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t offse
 	efiPrintf("TS <- Read chunk offset %d count %d", offset, count);
 
 	if (validateOffsetCount(offset, count, tsChannel)) {
+		tunerStudioError(tsChannel, "ERROR: RD out of range");
+		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
 		return;
 	}
 
