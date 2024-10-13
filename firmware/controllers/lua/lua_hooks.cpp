@@ -11,6 +11,7 @@
 #include "can_filter.h"
 #include "tunerstudio.h"
 #include "lua_pid.h"
+#include "start_stop.h"
 
 #if EFI_PROD_CODE && HW_HELLEN
 #include "hellen_meta.h"
@@ -686,6 +687,12 @@ void configureRusefiLuaHooks(lua_State* lState) {
 	configureRusefiLuaUtilHooks(lState);
 
 	lua_register(lState, "readPin", lua_readpin);
+#if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
+	lua_register(lState, "startCrankingEngine", [](lua_State* l) {
+		doStartCranking();
+		return 0;
+	});
+#endif // EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
 	lua_register(lState, "vin", lua_vin);
 	lua_register(lState, "vincpy", lua_vincpy);
 	lua_register(lState, "getAuxAnalog", lua_getAuxAnalog);

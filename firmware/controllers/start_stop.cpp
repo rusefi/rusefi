@@ -16,7 +16,7 @@ void initStartStopButton() {
 	  engineConfiguration->startRequestPinInverted);
 }
 
-static void doStartCranking() {
+void doStartCranking() {
 		bool wasStarterEngaged = enginePins.starterControl.getAndSet(1);
 		if (!wasStarterEngaged) {
 		    engine->startStopState.startStopStateLastPush.reset();

@@ -11,4 +11,5 @@ struct StartStopState {
 
 };
 
+void doStartCranking();
 void initStartStopButton();
