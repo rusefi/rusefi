@@ -22,7 +22,7 @@ jobs:
     - name: Install multilib
       run: |
         sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
-        sudo apt-get install gcc-multilib g++-multilib mtools dosfstools zip
+        sudo bash misc/actions/ubuntu-install-tools.sh
 
     - uses: actions/setup-java@v4
       with:

@@ -30,7 +30,8 @@ jobs:
       if: ${{ matrix.os != 'macos-latest' }}
       run: |
         sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
-        sudo apt-get install mtools zip dosfstools sshpass lcov valgrind
+        sudo bash misc/actions/ubuntu-install-tools.sh
+        sudo apt-get install lcov valgrind
 
     - name: Install required software (macos)
       if: ${{ matrix.os == 'macos-latest' }}

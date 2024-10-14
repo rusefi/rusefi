@@ -30,7 +30,7 @@ jobs:
       - name: Install Tools
         run: |
           sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
-          sudo apt-get install sshpass mtools
+          sudo bash misc/actions/ubuntu-install-tools.sh
 
       - name: Build Config Definition Base and Enum to String
         working-directory: ./java_tools/

@@ -191,7 +191,7 @@ jobs:
     - name: Install multilib, mingw, sshpass and mtools
       run: |
         sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
-        sudo apt-get install gcc-multilib g++-multilib g++-mingw-w64 gcc-mingw-w64 sshpass mtools zip dosfstools
+        sudo bash misc/actions/ubuntu-install-tools.sh
 
     - name: Set Build Env Variables
       working-directory: ./firmware/
