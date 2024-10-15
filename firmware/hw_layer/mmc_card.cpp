@@ -140,6 +140,9 @@ static void sdStatistics() {
 	if (isSdCardAlive()) {
 		efiPrintf("filename=%s size=%d", logName, totalLoggedBytes);
 	}
+#if EFI_FILE_LOGGING
+  efiPrintf("%d SD card fields", getSdCardFieldsCount());
+#endif
 }
 
 static void incLogFileName() {
