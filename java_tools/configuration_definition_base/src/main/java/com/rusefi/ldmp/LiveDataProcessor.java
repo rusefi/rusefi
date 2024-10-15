@@ -200,20 +200,20 @@ public class LiveDataProcessor {
                     sdCardFieldsConsumer.home = constexpr;
                     sdCardFieldsConsumer.conditional = conditional;
                     sdCardFieldsConsumer.isPtr = isPtr;
-                    state.addDestination((state1, structure) -> sdCardFieldsConsumer.handleEndStruct(state1, structure));
+                    state.addDestination(sdCardFieldsConsumer::handleEndStruct);
 
                     outputValueConsumer.currentSectionPrefix = constexpr;
                     outputValueConsumer.moduleMode = false;
                     outputValueConsumer.conditional = conditional;
                     outputValueConsumer.isPtr = isPtr;
-                    state.addDestination((state1, structure) -> outputValueConsumer.handleEndStruct(state1, structure));
+                    state.addDestination(outputValueConsumer::handleEndStruct);
 
                 } else if (engineModule != null) {
                     outputValueConsumer.currentEngineModule = engineModule;
                     outputValueConsumer.moduleMode = true;
                     outputValueConsumer.conditional = conditional;
                     outputValueConsumer.isPtr = isPtr;
-                    state.addDestination((state1, structure) -> outputValueConsumer.handleEndStruct(state1, structure));
+                    state.addDestination(outputValueConsumer::handleEndStruct);
                 }
                 state.addDestination(new ConfigurationConsumer() {
                     @Override
@@ -238,7 +238,7 @@ public class LiveDataProcessor {
             }
         };
 
-        for (LinkedHashMap entry : liveDocs) {
+        for (LinkedHashMap<?, ?> entry : liveDocs) {
             String name = (String) entry.get("name");
             String java = (String) entry.get("java");
             String inputOutputFolder = (String) entry.get("folder");
@@ -269,14 +269,11 @@ public class LiveDataProcessor {
                 nameList.toArray(outputNamesArr);
             }
 
-            String outFolder;
             if (inputFolder != null) {
                 log.info("Only inputFolder " + inputFolder);
-                outFolder = "";
             } else {
                 log.info("Common inputOutputFolder " + inputOutputFolder);
                 inputFolder = inputOutputFolder;
-                outFolder = inputOutputFolder;
             }
 
             handler.onEntry(name, java, inputFolder, prepend, withCDefines, outputNamesArr, constexpr, conditional, engineModule, isPtr, cppFileName, "live_data_generated");
