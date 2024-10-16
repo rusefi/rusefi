@@ -157,7 +157,7 @@ void HIP9011::handleSettings(int rpm DEFINE_PARAM_SUFFIX(DEFINE_HIP_PARAMS)) {
 
 	setAngleWindowWidth(FORWARD_HIP_PARAMS);
 
-	int new_prescaler = GET_CONFIG_VALUE(hip9011PrescalerAndSDO);
+	int new_prescaler = GET_CONFIG_VALUE(hip9011Prescaler);
 	int new_integratorIdx = getIntegrationIndexByRpm(rpm);
 	int new_gainIdx = getGainIndex(FORWARD_HIP_PARAMS);
 	int new_bandIdx = getBandIndex(FORWARD_HIP_PARAMS);

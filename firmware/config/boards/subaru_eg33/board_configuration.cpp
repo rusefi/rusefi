@@ -195,7 +195,7 @@ void setBoardDefaultConfiguration() {
 	/* this board has TPIC8101, that supports advanced mode */
 	engineConfiguration->useTpicAdvancedMode = true;
 	/* Chip settings */
-	engineConfiguration->hip9011PrescalerAndSDO = (0x6 << 1); //HIP_16MHZ_PRESCALER;
+	engineConfiguration->hip9011Prescaler = 0x6; //HIP_16MHZ_PRESCALER;
 	engineConfiguration->hip9011Gain = 1.0;
 	engineConfiguration->cylinderBore = 96.9;
 
