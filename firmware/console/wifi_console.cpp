@@ -43,7 +43,7 @@ public:
 	void write(const uint8_t* buffer, size_t size, bool /*isEndOfPacket*/) final override {
 		while (size) {
 			// Write at most SOCKET_BUFFER_MAX_LENGTH bytes at a time
-			size_t chunkSize = std::max(size, SOCKET_BUFFER_MAX_LENGTH);
+			size_t chunkSize = std::max(size, (size_t)SOCKET_BUFFER_MAX_LENGTH);
 
 			// Write this chunk
 			sendBuffer = buffer;
