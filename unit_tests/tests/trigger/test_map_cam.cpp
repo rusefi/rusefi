@@ -9,6 +9,8 @@ TEST(trigger, map_cam_by_magic_point) {
 	EngineTestHelper eth(engine_type_e::TEST_CRANK_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
+  engineConfiguration->isPhaseSyncRequiredForIgnition = true;
+
 	engineConfiguration->camInputs[0] = Gpio::A0;
 	engineConfiguration->vvtMode[0] = VVT_MAP_V_TWIN;
 	eth.engine.periodicFastCallback(); // trigger limp mode

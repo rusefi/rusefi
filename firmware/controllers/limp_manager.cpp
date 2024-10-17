@@ -12,11 +12,6 @@
 static bool noFiringUntilVvtSync(vvt_mode_e vvtMode) {
 	auto operationMode = getEngineRotationState()->getOperationMode();
 
-	// V-Twin MAP phase sense needs to always wait for sync
-	if (vvtMode == VVT_MAP_V_TWIN) {
-		return true;
-	}
-
 	if (engineConfiguration->isPhaseSyncRequiredForIgnition) {
 		// in rare cases engines do not like random sequential mode
 		return true;
