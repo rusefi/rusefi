@@ -202,9 +202,10 @@ void EngineState::periodicFastCallback() {
 		uint8_t bankIndex = engineConfiguration->cylinderBankSelect[i];
 		auto bankTrim = engine->engineState.stftCorrection[bankIndex];
 		auto cylinderTrim = getCylinderFuelTrim(i, rpm, fuelLoad);
+		auto knockTrim = engine->module<KnockController>()->getKnockRetard();
 
 		// Apply both per-bank and per-cylinder trims
-		engine->engineState.injectionMass[i] = untrimmedInjectionMass * bankTrim * cylinderTrim;
+		engine->engineState.injectionMass[i] = untrimmedInjectionMass * bankTrim * cylinderTrim * knockTrim;
     // todo: is it OK to apply cylinder trim with FIXED timing?
 		timingAdvance[i] = correctedIgnitionAdvance + getCylinderIgnitionTrim(i, rpm, l_ignitionLoad);
 	}

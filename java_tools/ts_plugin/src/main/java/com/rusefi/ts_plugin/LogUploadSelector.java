@@ -41,7 +41,13 @@ public class LogUploadSelector {
         JPanel filePanel = new JPanel(new BorderLayout());
         filePanel.add(fileList, BorderLayout.CENTER);
 
-        JScrollPane fileScroll = new JScrollPane(filePanel, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        var screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        fileList.setMaximumSize(new Dimension((int)(screenSize.width / 1.3), 800));
+        fileList.setPreferredSize(new Dimension((int)(screenSize.width / 1.3), 800));
+
+        JScrollPane fileScroll = new JScrollPane(fileList, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+
 
         content.add(topPanel, BorderLayout.NORTH);
         content.add(fileScroll, BorderLayout.CENTER);

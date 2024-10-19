@@ -33,20 +33,20 @@ TEST(Knock, Retards) {
 
 	// Send some weak knocks, should yield no response
 	for (size_t i = 0; i < 10; i++) {
-		dut.onKnockSenseCompleted(0, 10, 0, 0);
+		dut.onKnockSenseCompleted(0, 10, 0);
 	}
 
 	EXPECT_FLOAT_EQ(dut.getKnockRetard(), 0);
 
 	// Send a strong knock!
-	dut.onKnockSenseCompleted(0, 30, 0, 0);
+	dut.onKnockSenseCompleted(0, 30, 0);
 
 	// Should retard 10% of the distance between current timing and "maximum"
 	EXPECT_FLOAT_EQ(dut.getKnockRetard(), 2);
 
 	// Send tons of strong knocks, make sure we don't go over the configured limit
 	for (size_t i = 0; i < 100; i++) {
-		dut.onKnockSenseCompleted(0, 30, 0, 0);
+		dut.onKnockSenseCompleted(0, 30, 0);
 	}
 
 	EXPECT_FLOAT_EQ(dut.getKnockRetard(), 8);
@@ -64,7 +64,7 @@ TEST(Knock, Reapply) {
 	engineConfiguration->knockRetardReapplyRate = 1;
 
 	// Send a strong knock!
-	dut.onKnockSenseCompleted(0, 30, 0, 0);
+	dut.onKnockSenseCompleted(0, 30, 0);
 
 	// Should retard 10% of the distance between current timing and "maximum"
 	EXPECT_FLOAT_EQ(dut.getKnockRetard(), 2);

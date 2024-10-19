@@ -21,6 +21,10 @@ def jarDir = 'jar'
 def localPath = '.efianalytics/TunerStudio/plugins'
 def userHome = System.properties['user.home']
 
+compileJava {
+  options.debug = true
+}
+
 jar {
   archiveBaseName = jarName
 
