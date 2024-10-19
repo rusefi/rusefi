@@ -46,7 +46,7 @@ public class IgnitionState {
 	public static final String GAUGE_NAME_CAN_WRITE_OK = "CAN: Tx OK";
 	public static final String GAUGE_NAME_CLT = "CLT";
 	public static final String GAUGE_NAME_CPU_TEMP = "CPU Temperature";
-	public static final String GAUGE_NAME_CURRENT_GEAR = "Current Gear";
+	public static final String GAUGE_NAME_CURRENT_GEAR = "TCU: Current Gear";
 	public static final String GAUGE_NAME_DEBUG_F1 = "debug f1";
 	public static final String GAUGE_NAME_DEBUG_F2 = "debug f2: iTerm";
 	public static final String GAUGE_NAME_DEBUG_F3 = "debug f3: prevError";

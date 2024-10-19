@@ -553,7 +553,7 @@
 #define GAUGE_NAME_CAN_WRITE_OK "CAN: Tx OK"
 #define GAUGE_NAME_CLT "CLT"
 #define GAUGE_NAME_CPU_TEMP "CPU Temperature"
-#define GAUGE_NAME_CURRENT_GEAR "Current Gear"
+#define GAUGE_NAME_CURRENT_GEAR "TCU: Current Gear"
 #define GAUGE_NAME_DEBUG_F1 "debug f1"
 #define GAUGE_NAME_DEBUG_F2 "debug f2: iTerm"
 #define GAUGE_NAME_DEBUG_F3 "debug f3: prevError"
@@ -1296,8 +1296,9 @@
 #define SentEtbType_GM_TYPE_1 1
 #define SentEtbType_NONE 0
 #define show_8chan_presets false
+#define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1949052820
+#define SIGNATURE_HASH 306267584
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1761,7 +1762,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.10.19.hellen-112-17.1949052820"
+#define TS_SIGNATURE "rusEFI master.2024.10.19.hellen-112-17.306267584"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

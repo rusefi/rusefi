@@ -513,7 +513,7 @@ public class Fields {
 	public static final String GAUGE_NAME_CAN_WRITE_OK = "CAN: Tx OK";
 	public static final String GAUGE_NAME_CLT = "CLT";
 	public static final String GAUGE_NAME_CPU_TEMP = "CPU Temperature";
-	public static final String GAUGE_NAME_CURRENT_GEAR = "Current Gear";
+	public static final String GAUGE_NAME_CURRENT_GEAR = "TCU: Current Gear";
 	public static final String GAUGE_NAME_DEBUG_F1 = "debug f1";
 	public static final String GAUGE_NAME_DEBUG_F2 = "debug f2: iTerm";
 	public static final String GAUGE_NAME_DEBUG_F3 = "debug f3: prevError";
@@ -1214,7 +1214,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 496795309;
+	public static final int SIGNATURE_HASH = 2079397113;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1479,7 +1479,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.10.19.f407-discovery.496795309";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.10.19.f407-discovery.2079397113";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';

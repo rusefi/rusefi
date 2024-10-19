@@ -417,7 +417,7 @@ m_knockThreshold("Knock: Threshold", SensorCategory.SENSOR_INPUTS, FieldType.INT
 m_knockCount("Knock: Count", SensorCategory.SENSOR_INPUTS, FieldType.INT, 964, 1.0, 0.0, 0.0, ""),
 m_maximumRetard("Knock: Max retard", SensorCategory.SENSOR_INPUTS, FieldType.INT, 968, 1.0, -1.0, -1.0, ""),
 m_knockFrequency("knock: frequency", SensorCategory.SENSOR_INPUTS, FieldType.INT, 972, 1.0, 0.0, 0.0, "Hz"),
-tcuCurrentGear("Current Gear", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 976, 1.0, -1.0, 10.0, "gear"),
+tcuCurrentGear("TCU: Current Gear", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 976, 1.0, -1.0, 10.0, "gear"),
 alignmentFill_at_1("need 4 byte alignment", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 977, 1.0, -20.0, 100.0, "units"),
 tcRatio("TCU: Torque Converter Ratio", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 978, 0.01, 0.0, 0.0, "value"),
 lastShiftTime("lastShiftTime", SensorCategory.SENSOR_INPUTS, FieldType.INT, 980, 1.0, -1.0, -1.0, ""),
