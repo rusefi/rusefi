@@ -67,7 +67,7 @@
 #define GAUGE_NAME_VVT_TARGET_B2E "VVT: bank 2 exhaust target"
 
 #define GAUGE_NAME_DESIRED_GEAR "TCU: Desired Gear"
-#define GAUGE_NAME_CURRENT_GEAR "Current Gear"
+#define GAUGE_NAME_CURRENT_GEAR "TCU: Current Gear"
 #define GAUGE_NAME_ISS "TCU: Input Shaft Speed"
 #define GAUGE_NAME_TC_RATIO "TCU: Torque Converter Ratio"
 

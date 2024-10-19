@@ -2157,11 +2157,6 @@ end_struct
 #define GAUGE_NAME_VVT_TARGET_B2I "VVT: bank 2 intake target"
 #define GAUGE_NAME_VVT_TARGET_B2E "VVT: bank 2 exhaust target"
 
-#define GAUGE_NAME_DESIRED_GEAR "Desired Gear"
-#define GAUGE_NAME_CURRENT_GEAR "Current Gear"
-#define GAUGE_NAME_ISS "Input Shaft Speed"
-#define GAUGE_NAME_TC_RATIO "Torque Converter Ratio"
-
 #define GAUGE_NAME_VVS "Vehicle Speed"
 #define GAUGE_NAME_GEAR_RATIO "Gearbox Ratio"
 #define GAUGE_NAME_DETECTED_GEAR "Detected Gear"
@@ -2388,6 +2383,7 @@ end_struct
 #define ts_show_onboard_accelerometer false
 #define ts_show_vvt_output true
 #define show_vvt_output_pin true
+#define show_tcu_gauges false
 #define ts_show_intake_vvt_direction true
 ! LAME! todo make this way less lame
 #define ts_show_cylinder_2 true
