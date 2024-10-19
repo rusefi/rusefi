@@ -3789,7 +3789,7 @@ gapsCount=1
 syncEdge=Rise
 isSynchronizationNeeded=1
 gapFrom.0=2.750000
-gapTo.0=488.000000
+gapTo.0=5.000000
 # end of meta section
 event 0 0 1 0.00 3.913043
 event 1 0 0 131.00 nan
