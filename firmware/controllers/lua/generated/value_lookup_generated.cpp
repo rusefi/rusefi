@@ -251,6 +251,12 @@ float getConfigValueByName(const char *name) {
 // hip9011PrescalerAndSDO
 		case -1310663509:
 			return engineConfiguration->hip9011PrescalerAndSDO;
+// alternator_iTermMin
+		case 107641733:
+			return engineConfiguration->alternator_iTermMin;
+// alternator_iTermMax
+		case 107641479:
+			return engineConfiguration->alternator_iTermMax;
 // displacement
 		case -1227821282:
 			return engineConfiguration->displacement;
@@ -2285,6 +2291,16 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1310663509:
 	{
 		engineConfiguration->hip9011PrescalerAndSDO = (int)value;
+		return 1;
+	}
+		case 107641733:
+	{
+		engineConfiguration->alternator_iTermMin = (int)value;
+		return 1;
+	}
+		case 107641479:
+	{
+		engineConfiguration->alternator_iTermMax = (int)value;
 		return 1;
 	}
 		case -1227821282:

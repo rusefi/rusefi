@@ -244,6 +244,12 @@ Pull-up resistor value on your board
 ### hip9011PrescalerAndSDO
 value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into two bit fields
 
+### alternator_iTermMin
+iTerm min value
+
+### alternator_iTermMax
+iTerm max value
+
 ### displacement
 @@DISPLACEMENT_TOOLTIP@@
 

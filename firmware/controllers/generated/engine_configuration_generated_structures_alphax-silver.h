@@ -927,9 +927,15 @@ struct engine_configuration_s {
 	 */
 	int hip9011PrescalerAndSDO;
 	/**
+	 * iTerm min value
 	 * offset 428
 	 */
-	float unusedFloatHere;
+	int16_t alternator_iTermMin;
+	/**
+	 * iTerm max value
+	 * offset 430
+	 */
+	int16_t alternator_iTermMax;
 	/**
 	 * @@DISPLACEMENT_TOOLTIP@@
 	 * units: L
@@ -2877,7 +2883,7 @@ struct engine_configuration_s {
 	bool enableKnockSpectrogram : 1 {};
 	/**
 	offset 1492 bit 31 */
-	bool unusedBit_516_31 : 1 {};
+	bool unusedBit_517_31 : 1 {};
 	/**
 	 * This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.\Should be 100 once tune is better
 	 * units: cycles
@@ -3052,76 +3058,76 @@ struct engine_configuration_s {
 	bool can2ListenMode : 1 {};
 	/**
 	offset 1552 bit 8 */
-	bool unusedBit_552_8 : 1 {};
+	bool unusedBit_553_8 : 1 {};
 	/**
 	offset 1552 bit 9 */
-	bool unusedBit_552_9 : 1 {};
+	bool unusedBit_553_9 : 1 {};
 	/**
 	offset 1552 bit 10 */
-	bool unusedBit_552_10 : 1 {};
+	bool unusedBit_553_10 : 1 {};
 	/**
 	offset 1552 bit 11 */
-	bool unusedBit_552_11 : 1 {};
+	bool unusedBit_553_11 : 1 {};
 	/**
 	offset 1552 bit 12 */
-	bool unusedBit_552_12 : 1 {};
+	bool unusedBit_553_12 : 1 {};
 	/**
 	offset 1552 bit 13 */
-	bool unusedBit_552_13 : 1 {};
+	bool unusedBit_553_13 : 1 {};
 	/**
 	offset 1552 bit 14 */
-	bool unusedBit_552_14 : 1 {};
+	bool unusedBit_553_14 : 1 {};
 	/**
 	offset 1552 bit 15 */
-	bool unusedBit_552_15 : 1 {};
+	bool unusedBit_553_15 : 1 {};
 	/**
 	offset 1552 bit 16 */
-	bool unusedBit_552_16 : 1 {};
+	bool unusedBit_553_16 : 1 {};
 	/**
 	offset 1552 bit 17 */
-	bool unusedBit_552_17 : 1 {};
+	bool unusedBit_553_17 : 1 {};
 	/**
 	offset 1552 bit 18 */
-	bool unusedBit_552_18 : 1 {};
+	bool unusedBit_553_18 : 1 {};
 	/**
 	offset 1552 bit 19 */
-	bool unusedBit_552_19 : 1 {};
+	bool unusedBit_553_19 : 1 {};
 	/**
 	offset 1552 bit 20 */
-	bool unusedBit_552_20 : 1 {};
+	bool unusedBit_553_20 : 1 {};
 	/**
 	offset 1552 bit 21 */
-	bool unusedBit_552_21 : 1 {};
+	bool unusedBit_553_21 : 1 {};
 	/**
 	offset 1552 bit 22 */
-	bool unusedBit_552_22 : 1 {};
+	bool unusedBit_553_22 : 1 {};
 	/**
 	offset 1552 bit 23 */
-	bool unusedBit_552_23 : 1 {};
+	bool unusedBit_553_23 : 1 {};
 	/**
 	offset 1552 bit 24 */
-	bool unusedBit_552_24 : 1 {};
+	bool unusedBit_553_24 : 1 {};
 	/**
 	offset 1552 bit 25 */
-	bool unusedBit_552_25 : 1 {};
+	bool unusedBit_553_25 : 1 {};
 	/**
 	offset 1552 bit 26 */
-	bool unusedBit_552_26 : 1 {};
+	bool unusedBit_553_26 : 1 {};
 	/**
 	offset 1552 bit 27 */
-	bool unusedBit_552_27 : 1 {};
+	bool unusedBit_553_27 : 1 {};
 	/**
 	offset 1552 bit 28 */
-	bool unusedBit_552_28 : 1 {};
+	bool unusedBit_553_28 : 1 {};
 	/**
 	offset 1552 bit 29 */
-	bool unusedBit_552_29 : 1 {};
+	bool unusedBit_553_29 : 1 {};
 	/**
 	offset 1552 bit 30 */
-	bool unusedBit_552_30 : 1 {};
+	bool unusedBit_553_30 : 1 {};
 	/**
 	offset 1552 bit 31 */
-	bool unusedBit_552_31 : 1 {};
+	bool unusedBit_553_31 : 1 {};
 	/**
 	 * offset 1556
 	 */
@@ -4609,97 +4615,97 @@ struct engine_configuration_s {
 	bool boardUseTempPullUp : 1 {};
 	/**
 	offset 3896 bit 1 */
-	bool unusedBit_878_1 : 1 {};
+	bool unusedBit_879_1 : 1 {};
 	/**
 	offset 3896 bit 2 */
-	bool unusedBit_878_2 : 1 {};
+	bool unusedBit_879_2 : 1 {};
 	/**
 	offset 3896 bit 3 */
-	bool unusedBit_878_3 : 1 {};
+	bool unusedBit_879_3 : 1 {};
 	/**
 	offset 3896 bit 4 */
-	bool unusedBit_878_4 : 1 {};
+	bool unusedBit_879_4 : 1 {};
 	/**
 	offset 3896 bit 5 */
-	bool unusedBit_878_5 : 1 {};
+	bool unusedBit_879_5 : 1 {};
 	/**
 	offset 3896 bit 6 */
-	bool unusedBit_878_6 : 1 {};
+	bool unusedBit_879_6 : 1 {};
 	/**
 	offset 3896 bit 7 */
-	bool unusedBit_878_7 : 1 {};
+	bool unusedBit_879_7 : 1 {};
 	/**
 	offset 3896 bit 8 */
-	bool unusedBit_878_8 : 1 {};
+	bool unusedBit_879_8 : 1 {};
 	/**
 	offset 3896 bit 9 */
-	bool unusedBit_878_9 : 1 {};
+	bool unusedBit_879_9 : 1 {};
 	/**
 	offset 3896 bit 10 */
-	bool unusedBit_878_10 : 1 {};
+	bool unusedBit_879_10 : 1 {};
 	/**
 	offset 3896 bit 11 */
-	bool unusedBit_878_11 : 1 {};
+	bool unusedBit_879_11 : 1 {};
 	/**
 	offset 3896 bit 12 */
-	bool unusedBit_878_12 : 1 {};
+	bool unusedBit_879_12 : 1 {};
 	/**
 	offset 3896 bit 13 */
-	bool unusedBit_878_13 : 1 {};
+	bool unusedBit_879_13 : 1 {};
 	/**
 	offset 3896 bit 14 */
-	bool unusedBit_878_14 : 1 {};
+	bool unusedBit_879_14 : 1 {};
 	/**
 	offset 3896 bit 15 */
-	bool unusedBit_878_15 : 1 {};
+	bool unusedBit_879_15 : 1 {};
 	/**
 	offset 3896 bit 16 */
-	bool unusedBit_878_16 : 1 {};
+	bool unusedBit_879_16 : 1 {};
 	/**
 	offset 3896 bit 17 */
-	bool unusedBit_878_17 : 1 {};
+	bool unusedBit_879_17 : 1 {};
 	/**
 	offset 3896 bit 18 */
-	bool unusedBit_878_18 : 1 {};
+	bool unusedBit_879_18 : 1 {};
 	/**
 	offset 3896 bit 19 */
-	bool unusedBit_878_19 : 1 {};
+	bool unusedBit_879_19 : 1 {};
 	/**
 	offset 3896 bit 20 */
-	bool unusedBit_878_20 : 1 {};
+	bool unusedBit_879_20 : 1 {};
 	/**
 	offset 3896 bit 21 */
-	bool unusedBit_878_21 : 1 {};
+	bool unusedBit_879_21 : 1 {};
 	/**
 	offset 3896 bit 22 */
-	bool unusedBit_878_22 : 1 {};
+	bool unusedBit_879_22 : 1 {};
 	/**
 	offset 3896 bit 23 */
-	bool unusedBit_878_23 : 1 {};
+	bool unusedBit_879_23 : 1 {};
 	/**
 	offset 3896 bit 24 */
-	bool unusedBit_878_24 : 1 {};
+	bool unusedBit_879_24 : 1 {};
 	/**
 	offset 3896 bit 25 */
-	bool unusedBit_878_25 : 1 {};
+	bool unusedBit_879_25 : 1 {};
 	/**
 	offset 3896 bit 26 */
-	bool unusedBit_878_26 : 1 {};
+	bool unusedBit_879_26 : 1 {};
 	/**
 	offset 3896 bit 27 */
-	bool unusedBit_878_27 : 1 {};
+	bool unusedBit_879_27 : 1 {};
 	/**
 	offset 3896 bit 28 */
-	bool unusedBit_878_28 : 1 {};
+	bool unusedBit_879_28 : 1 {};
 	/**
 	offset 3896 bit 29 */
-	bool unusedBit_878_29 : 1 {};
+	bool unusedBit_879_29 : 1 {};
 	/**
 	offset 3896 bit 30 */
-	bool unusedBit_878_30 : 1 {};
+	bool unusedBit_879_30 : 1 {};
 	/**
 	offset 3896 bit 31 */
-	bool unusedBit_878_31 : 1 {};
+	bool unusedBit_879_31 : 1 {};
 	/**
 	 * units: units
 	 * offset 3900
