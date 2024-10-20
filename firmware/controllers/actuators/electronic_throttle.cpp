@@ -630,12 +630,13 @@ void EtbController::checkJam(percent_t setpoint, percent_t observation) {
 	float absError = std::abs(setpoint - observation);
 
 	auto jamDetectThreshold = engineConfiguration->etbJamDetectThreshold;
+	auto jamTimeout = engineConfiguration->etbJamTimeout;
 
-	if (jamDetectThreshold != 0) {
+	if (jamDetectThreshold != 0 && jamTimeout != 0) {
 		auto nowNt = getTimeNowNt();
 
 		if (absError > jamDetectThreshold && engine->module<IgnitionController>()->getIgnState()) {
-			if (m_jamDetectTimer.hasElapsedSec(engineConfiguration->etbJamTimeout)) {
+			if (m_jamDetectTimer.hasElapsedSec(jamTimeout)) {
 				// ETB is jammed!
 				jamDetected = true;
 
