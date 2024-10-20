@@ -349,7 +349,10 @@
 	// F42x has more memory, so we can:
 	//  - use compressed USB MSD image (requires 32k of memory)
 	//  - use perf trace (requires ~16k of memory)
-	#define EFI_USE_COMPRESSED_INI_MSD TRUE
+	//  - use spectorgram (requires ~12k of memory), need disable perf trace or compressed USB MSD image
+	#ifndef KNOCK_SPECTROGRAM
+		#define EFI_USE_COMPRESSED_INI_MSD TRUE
+	#endif
 	#define ENABLE_PERF_TRACE TRUE
 
 	#define LUA_USER_HEAP 25000
