@@ -538,7 +538,8 @@ ThermistorConf iat;
 
 	float launchTimingRetard;;"deg", 1, 0, -180, 180, 2
 	int hip9011PrescalerAndSDO;value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into two bit fields;"integer", 1, 0, 0, 32, 0
-	float unusedFloatHere
+	int16_t alternator_iTermMin;iTerm min value;"", 1, 0, -30000, 30000, 0
+	int16_t alternator_iTermMax;iTerm max value;"", 1, 0, -30000, 30000, 0
 
 #define DISPLACEMENT_UNITS "L"
 #define DISPLACEMENT_TOOLTIP "Engine displacement in litres"
