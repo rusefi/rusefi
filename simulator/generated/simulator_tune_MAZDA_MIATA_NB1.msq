@@ -176,7 +176,8 @@
         <constant name="iat_adcChannel">"Disabled"</constant>
         <constant digits="2" name="launchTimingRetard" units="deg">0.0</constant>
         <constant digits="0" name="hip9011PrescalerAndSDO" units="integer">0.0</constant>
-        <constant digits="0" name="unusedFloatHere" units="">0.0</constant>
+        <constant digits="0" name="alternator_iTermMin" units="">0.0</constant>
+        <constant digits="0" name="alternator_iTermMax" units="">0.0</constant>
         <constant digits="3" name="displacement" units="L">1.839</constant>
         <constant digits="0" name="triggerSimulatorRpm" units="RPM">1200.0</constant>
         <constant digits="0" name="cylindersCount" units="">4.0</constant>
@@ -224,7 +225,7 @@
         <constant digits="0" name="boostControlSafeDutyCycle" units="%">0.0</constant>
         <constant name="mafAdcChannel">"Disabled"</constant>
         <constant digits="0" name="acrRevolutions" units="">5.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0241019E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.024102E7</constant>
         <constant digits="3" name="adcVcc" units="volts">3.0</constant>
         <constant digits="0" name="mapCamDetectionAnglePosition" units="Deg">0.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -4765,7 +4766,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20241002" nPages="1" signature="rusEFI master.2024.10.19.f407-discovery.1972238352" version="5.0"/>
+    <versionInfo firmwareInfo="20241002" nPages="1" signature="rusEFI master.2024.10.20.f407-discovery.1717113764" version="5.0"/>
     <bibliography author="rusEFI 20241002" writeDate="date"/>
     <settings/>
     <userComments/>
