@@ -60,6 +60,9 @@ expected<percent_t> AlternatorController::getOpenLoop(float target) {
 }
 
 expected<percent_t> AlternatorController::getClosedLoop(float targetVoltage, float vBattVoltage) {
+		alternatorPid.iTermMin = engineConfiguration->alternator_iTermMin;
+		alternatorPid.iTermMax = engineConfiguration->alternator_iTermMax;
+
 	percent_t altDuty = alternatorPid.getOutput(targetVoltage, vBattVoltage, FAST_CALLBACK_PERIOD_MS / 1000.0f);
 
 	// this block could be executed even in on/off alternator control mode

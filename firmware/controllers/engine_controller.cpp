@@ -533,6 +533,13 @@ bool validateConfigOnStartUpOrBurn() {
 	  engineConfiguration->mapExpAverageAlpha = 1;
 	}
 
+	if (engineConfiguration->alternator_iTermMin == 0) {
+  	engineConfiguration->alternator_iTermMin = -1000;
+	}
+	if (engineConfiguration->alternator_iTermMax == 0) {
+  	engineConfiguration->alternator_iTermMax = 1000;
+	}
+
 	ensureArrayIsAscending("Injector deadtime", engineConfiguration->injector.battLagCorrBins);
 
 #if EFI_ENGINE_CONTROL

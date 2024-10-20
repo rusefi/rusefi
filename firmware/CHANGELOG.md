@@ -32,6 +32,7 @@ Release template (copy/paste this for new release):
  - Support wasted spark on odd cylinder count 4-stroke engines. Improves startup and allows running without a cam sensor!
  - CLT/IAT boost duty/target compensation #6424
  - DFCO MAP condition hysteresis #6915
+ - Add I-term bounds for Alternator Control #6988
 
 ### Fixed
  - Removed questionable MAP sampling trigger index option
