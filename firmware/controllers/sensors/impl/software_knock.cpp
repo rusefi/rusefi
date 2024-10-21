@@ -14,13 +14,6 @@
 #include "development/knock_spectrogram.h"
 #include "fft/fft.hpp"
 
-struct SpectrogramData {
-	fft::complex_type fftBuffer[KNOCK_SIZE];
-	float frequencies[KNOCK_SIZE/2];
-	float amplitudes[KNOCK_SIZE/2];
-	float window[KNOCK_SIZE];
-};
-
 static SpectrogramData spectrogramData0; // temporary use ram, will use big_buffer
 static SpectrogramData* spectrogramData = &spectrogramData0;
 static volatile bool enableKnockSpectrogram = false;
