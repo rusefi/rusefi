@@ -153,6 +153,8 @@ void setDefaultBaseEngine() {
 
     engineConfiguration->knockRetardAggression = 20;
     engineConfiguration->knockRetardReapplyRate = 3;
+    engineConfiguration->knockFuelTrim = 0;
+    engineConfiguration->knockSuppressMinTps = 10;
 
 	// Trigger
 	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_60_2;
