@@ -5,6 +5,10 @@
 #include <vector>
 #include <complex>
 
+#if EFI_UNIT_TEST
+typedef uint16_t adcsample_t;
+#endif
+
 namespace fft {
 
 typedef float real_type;
@@ -24,6 +28,5 @@ void blackmanharris(float * w, unsigned n, bool sflag);
 
 float get_main_freq(float* amplitudes, float* frequencies);
 
-} 
+}
 
-#include "fft.hpp"

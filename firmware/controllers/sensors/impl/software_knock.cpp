@@ -12,7 +12,7 @@
 
 #ifdef KNOCK_SPECTROGRAM
 #include "development/knock_spectrogram.h"
-#include "fft/fft.h"
+#include "fft/fft.hpp"
 
 struct SpectrogramData {
 	fft::complex_type fftBuffer[KNOCK_SIZE];
