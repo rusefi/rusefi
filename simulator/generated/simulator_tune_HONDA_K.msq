@@ -1633,7 +1633,7 @@
         <constant digits="2" name="auxLinear4_value1" units="">0.0</constant>
         <constant digits="2" name="auxLinear4_v2" units="volts">0.0</constant>
         <constant digits="2" name="auxLinear4_value2" units="">0.0</constant>
-        <constant digits="1" name="knockSuppressMinTps" units="%">0.0</constant>
+        <constant digits="1" name="knockSuppressMinTps" units="%">10.0</constant>
         <constant digits="1" name="knockFuelTrimAggression" units="%">0.0</constant>
         <constant digits="1" name="knockFuelTrimReapplyRate" units="deg/s">0.0</constant>
         <constant digits="1" name="knockFuelTrim" units="%">0.0</constant>
