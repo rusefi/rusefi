@@ -318,7 +318,7 @@ public class Fields {
 	public static final int ego_sensor_e_ES_Innovate_MTX_L = 1;
 	public static final int ego_sensor_e_ES_PLX = 4;
 	public static final int EGT_CHANNEL_COUNT = 8;
-	public static final int END_OF_CALIBRATION_PADDING = 128;
+	public static final int END_OF_CALIBRATION_PADDING = 116;
 	public static final int engine_configuration_s_size = 4024;
 	public static final int engine_load_mode_e_LM_ALPHA_N = 2;
 	public static final int engine_load_mode_e_LM_LUA = 3;
@@ -1214,7 +1214,6 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1717113764;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1479,11 +1478,11 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.10.21.f407-discovery.1717113764";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.10.21.f407-discovery.3127986523";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1752;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1828;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_2_NAME = "Channel 2";
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;
@@ -2259,6 +2258,7 @@ public class Fields {
 	public static final Field DEVBIT7 = Field.create("DEVBIT7", 1492, FieldType.BIT, 27).setBaseOffset(0);
 	public static final Field INVERTEXHAUSTCAMVVTSIGNAL = Field.create("INVERTEXHAUSTCAMVVTSIGNAL", 1492, FieldType.BIT, 29).setBaseOffset(0);
 	public static final Field ENABLEKNOCKSPECTROGRAM = Field.create("ENABLEKNOCKSPECTROGRAM", 1492, FieldType.BIT, 30).setBaseOffset(0);
+	public static final Field ENABLEKNOCKSPECTROGRAMFILTER = Field.create("ENABLEKNOCKSPECTROGRAMFILTER", 1492, FieldType.BIT, 31).setBaseOffset(0);
 	public static final Field AFTERCRANKINGIACTAPERDURATION = Field.create("AFTERCRANKINGIACTAPERDURATION", 1496, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field IACBYTPSTAPER = Field.create("IACBYTPSTAPER", 1498, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field ACCELEROMETERCSPIN = Field.create("ACCELEROMETERCSPIN", 1504, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
@@ -2941,6 +2941,12 @@ public class Fields {
 	public static final Field AUXLINEAR4_VALUE1 = Field.create("AUXLINEAR4_VALUE1", 3884, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field AUXLINEAR4_V2 = Field.create("AUXLINEAR4_V2", 3888, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field AUXLINEAR4_VALUE2 = Field.create("AUXLINEAR4_VALUE2", 3892, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field KNOCKSUPPRESSMINTPS = Field.create("KNOCKSUPPRESSMINTPS", 3896, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field KNOCKFUELTRIMAGGRESSION = Field.create("KNOCKFUELTRIMAGGRESSION", 3897, FieldType.INT8).setScale(0.1).setBaseOffset(0);
+	public static final Field KNOCKFUELTRIMREAPPLYRATE = Field.create("KNOCKFUELTRIMREAPPLYRATE", 3898, FieldType.INT8).setScale(0.1).setBaseOffset(0);
+	public static final Field KNOCKFUELTRIM = Field.create("KNOCKFUELTRIM", 3899, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field KNOCKSPECTRUMSENSITIVITY = Field.create("KNOCKSPECTRUMSENSITIVITY", 3900, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field KNOCKFREQUENCY = Field.create("KNOCKFREQUENCY", 3904, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field POSTCRANKINGFACTOR = Field.create("POSTCRANKINGFACTOR", 4024, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field POSTCRANKINGDURATIONBINS = Field.create("POSTCRANKINGDURATIONBINS", 4168, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field POSTCRANKINGCLTBINS = Field.create("POSTCRANKINGCLTBINS", 4192, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -3960,6 +3966,7 @@ public class Fields {
 	DEVBIT7,
 	INVERTEXHAUSTCAMVVTSIGNAL,
 	ENABLEKNOCKSPECTROGRAM,
+	ENABLEKNOCKSPECTROGRAMFILTER,
 	AFTERCRANKINGIACTAPERDURATION,
 	IACBYTPSTAPER,
 	ACCELEROMETERCSPIN,
@@ -4626,6 +4633,12 @@ public class Fields {
 	AUXLINEAR4_VALUE1,
 	AUXLINEAR4_V2,
 	AUXLINEAR4_VALUE2,
+	KNOCKSUPPRESSMINTPS,
+	KNOCKFUELTRIMAGGRESSION,
+	KNOCKFUELTRIMREAPPLYRATE,
+	KNOCKFUELTRIM,
+	KNOCKSPECTRUMSENSITIVITY,
+	KNOCKFREQUENCY,
 	POSTCRANKINGFACTOR,
 	POSTCRANKINGDURATIONBINS,
 	POSTCRANKINGCLTBINS,

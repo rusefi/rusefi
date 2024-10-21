@@ -2883,7 +2883,7 @@ struct engine_configuration_s {
 	bool enableKnockSpectrogram : 1 {};
 	/**
 	offset 1492 bit 31 */
-	bool unusedBit_517_31 : 1 {};
+	bool enableKnockSpectrogramFilter : 1 {};
 	/**
 	 * This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.\Should be 100 once tune is better
 	 * units: cycles
@@ -4611,8 +4611,43 @@ struct engine_configuration_s {
 	 */
 	linear_sensor_s auxLinear4;
 	/**
-	 * units: units
+	 * Below TPS value all knock suppression will be disabled.
+	 * units: %
 	 * offset 3896
+	 */
+	scaled_channel<uint8_t, 1, 1> knockSuppressMinTps;
+	/**
+	 * Fuel to odd when a knock event occurs. Advice: 5% (mild), 10% (turbo/high comp.), 15% (high knock, e.g. GDI), 20% (spicy lump),
+	 * units: %
+	 * offset 3897
+	 */
+	scaled_channel<uint8_t, 10, 1> knockFuelTrimAggression;
+	/**
+	 * After a knock event, reapply fuel at this rate.
+	 * units: deg/s
+	 * offset 3898
+	 */
+	scaled_channel<uint8_t, 10, 1> knockFuelTrimReapplyRate;
+	/**
+	 * Fuel trim when knock, max 30%
+	 * units: %
+	 * offset 3899
+	 */
+	scaled_channel<uint8_t, 1, 1> knockFuelTrim;
+	/**
+	 * units: sense
+	 * offset 3900
+	 */
+	float knockSpectrumSensitivity;
+	/**
+	 * "Estimated knock frequency, ignore cylinderBore if this one > 0"
+	 * units: Hz
+	 * offset 3904
+	 */
+	float knockFrequency;
+	/**
+	 * units: units
+	 * offset 3908
 	 */
 	uint8_t unusedOftenChangesDuringFirmwareUpdate[END_OF_CALIBRATION_PADDING];
 };

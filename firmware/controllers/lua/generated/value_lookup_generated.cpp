@@ -1160,6 +1160,9 @@ float getConfigValueByName(const char *name) {
 // enableKnockSpectrogram
 		case -556893719:
 			return engineConfiguration->enableKnockSpectrogram;
+// enableKnockSpectrogramFilter
+		case -1923222129:
+			return engineConfiguration->enableKnockSpectrogramFilter;
 // afterCrankingIACtaperDuration
 		case 671504531:
 			return engineConfiguration->afterCrankingIACtaperDuration;
@@ -1874,6 +1877,24 @@ float getConfigValueByName(const char *name) {
 // auxLinear4.value2
 		case -1058844737:
 			return engineConfiguration->auxLinear4.value2;
+// knockSuppressMinTps
+		case 893776859:
+			return engineConfiguration->knockSuppressMinTps;
+// knockFuelTrimAggression
+		case -1811840427:
+			return engineConfiguration->knockFuelTrimAggression;
+// knockFuelTrimReapplyRate
+		case -1833685972:
+			return engineConfiguration->knockFuelTrimReapplyRate;
+// knockFuelTrim
+		case -106437949:
+			return engineConfiguration->knockFuelTrim;
+// knockSpectrumSensitivity
+		case 1561929785:
+			return engineConfiguration->knockSpectrumSensitivity;
+// knockFrequency
+		case 1972605869:
+			return engineConfiguration->knockFrequency;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -3808,6 +3829,11 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->enableKnockSpectrogram = (int)value;
 		return 1;
 	}
+		case -1923222129:
+	{
+		engineConfiguration->enableKnockSpectrogramFilter = (int)value;
+		return 1;
+	}
 		case 671504531:
 	{
 		engineConfiguration->afterCrankingIACtaperDuration = (int)value;
@@ -4996,6 +5022,36 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1058844737:
 	{
 		engineConfiguration->auxLinear4.value2 = value;
+		return 1;
+	}
+		case 893776859:
+	{
+		engineConfiguration->knockSuppressMinTps = (int)value;
+		return 1;
+	}
+		case -1811840427:
+	{
+		engineConfiguration->knockFuelTrimAggression = (int)value;
+		return 1;
+	}
+		case -1833685972:
+	{
+		engineConfiguration->knockFuelTrimReapplyRate = (int)value;
+		return 1;
+	}
+		case -106437949:
+	{
+		engineConfiguration->knockFuelTrim = (int)value;
+		return 1;
+	}
+		case 1561929785:
+	{
+		engineConfiguration->knockSpectrumSensitivity = value;
+		return 1;
+	}
+		case 1972605869:
+	{
+		engineConfiguration->knockFrequency = value;
 		return 1;
 	}
 		case -1658957891:

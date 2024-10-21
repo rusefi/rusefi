@@ -1153,6 +1153,9 @@ AEM X-Series EGT gauge kit or rusEFI EGT sensor from Wideband controller
 ### enableKnockSpectrogram
 
 
+### enableKnockSpectrogramFilter
+
+
 ### afterCrankingIACtaperDuration
 This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.\Should be 100 once tune is better
 
@@ -1866,6 +1869,24 @@ Delay before cutting fuel due to low oil pressure. Use this to ignore short pres
 
 ### auxLinear4.value2
 
+
+### knockSuppressMinTps
+Below TPS value all knock suppression will be disabled.
+
+### knockFuelTrimAggression
+Fuel to odd when a knock event occurs. Advice: 5% (mild), 10% (turbo/high comp.), 15% (high knock, e.g. GDI), 20% (spicy lump),
+
+### knockFuelTrimReapplyRate
+After a knock event, reapply fuel at this rate.
+
+### knockFuelTrim
+Fuel trim when knock, max 30%
+
+### knockSpectrumSensitivity
+
+
+### knockFrequency
+"Estimated knock frequency, ignore cylinderBore if this one > 0"
 
 ### tcu_shiftTime
 

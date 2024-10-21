@@ -958,6 +958,18 @@ float getOutputValueByName(const char *name) {
 // m_knockFrequency
 		case -249826215:
 			return ___engine.module<KnockController>()->m_knockFrequency;
+// m_knockSpectrumChannelCyl
+		case -806484581:
+			return ___engine.module<KnockController>()->m_knockSpectrumChannelCyl;
+// m_knockFrequencyStart
+		case -592323161:
+			return ___engine.module<KnockController>()->m_knockFrequencyStart;
+// m_knockFrequencyStep
+		case 1283556181:
+			return ___engine.module<KnockController>()->m_knockFrequencyStep;
+// m_knockFuelTrimMultiplier
+		case 95716118:
+			return ___engine.module<KnockController>()->m_knockFuelTrimMultiplier;
 // m_deadtime
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case -1167844818:
