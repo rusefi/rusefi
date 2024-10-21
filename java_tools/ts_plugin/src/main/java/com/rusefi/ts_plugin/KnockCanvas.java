@@ -7,10 +7,100 @@ import java.awt.image.BufferedImage;
 
 import static org.apache.commons.math3.util.Precision.round;
 
-public class KnockCanvas extends JComponent implements ComponentListener {
+public class KnockCanvas {
 
-    JComponent dd = this;
-    //--------------------------------------
+    private JComponent component = new JComponent() {
+        @Override
+        public void paint(Graphics g) {
+            super.paint(g);
+
+            Dimension size = component.getSize();
+
+            int width = bufferedImage.getWidth();
+            int height = bufferedImage.getHeight();
+            float bx = (float)width / (float)SPECTROGRAM_X_AXIS_SIZE;
+
+            int offset = (int)(currentIndexXAxis * bx);
+
+            // flip buffers
+            g.drawImage(bufferedImage,
+                0, 0, size.width - offset, size.height,
+                offset, 0, size.width, size.height,
+                null);
+            g.drawImage(bufferedImage, size.width - offset, 0, size.width, size.height,null);
+
+            g.setColor(Color.RED);
+            int line = (int)(currentIndexXAxis * bx);
+            g.drawLine(line, 0, line, height);
+
+            Font f = g.getFont();
+            g.setFont(new Font(f.getName(), Font.CENTER_BASELINE, g.getFont().getSize() - 4));
+
+            g.setColor(Color.YELLOW);
+            for(int i = 0; i < yAxisHz.length; ++i) {
+
+                var y = hzToYScreen(yAxisHz[i], height);
+
+                g.setColor(Color.orange);
+                g.fillRect(0, y, 30, 1);
+
+                var hz = yAxisHz[i];
+                g.drawString(Double.valueOf(round(hz, 1)).toString(), 35,  y);
+            }
+
+            mouseFrequency = (float)YScreenToHz(mouse_y, height);
+
+            int mouseSpecX = canvasXToSpectrogramSpace(mouse_x);
+            int mouseSpecY = canvasYToSpectrogramSpace(mouse_y);
+
+            mouseAmplitude = specrtogram[mouseSpecX][mouseSpecY];
+
+            //Font f = g.getFont();
+            g.setFont(new Font(f.getName(), Font.BOLD, g.getFont().getSize()));
+
+            g.setColor(Color.YELLOW);
+            var currentX = width / 4;
+            g.drawString("[current]", currentX,  10);
+            g.drawString(Float.valueOf(currentFrequency).toString() + " Hz", currentX,  30);
+            g.drawString(Float.valueOf(currentAmplitude).toString() + " Amp", currentX,  50);
+
+            g.setColor(Color.RED);
+            g.drawString("[peak]", currentX * 2,  10);
+            g.drawString(Float.valueOf(peakFrequency).toString() + " Hz", currentX * 2,  30);
+            g.drawString(Float.valueOf(peakAmplitude).toString() + " Amp", currentX * 2,  50);
+
+            g.setColor(Color.ORANGE);
+            g.drawString("[mouse]", currentX * 3,  10);
+            g.drawString(Float.valueOf(mouseFrequency).toString() + " Hz", currentX * 3,  30);
+            g.drawString(Float.valueOf(mouseAmplitude).toString() + " Amp", currentX * 3,  50);
+
+            g.setFont(f);
+
+            g.setColor(Color.green);
+            g.fillOval(spectrogramSpaceToCanvasX(peakX)-5, spectrogramSpaceToCanvasY(peakY)-5, 10, 10);
+
+
+            g.setColor(Color.WHITE);
+            var yy = hzToYScreen(currentFrequency, height);
+            g.fillRect(0, yy, width, 1);
+
+            g.setColor(Color.DARK_GRAY);
+            g.fillRect(0, mouse_y, width, 1);
+
+
+            //for test
+            //var yy2 = hzToYScreen(8117.68, height);
+            //g.fillRect(0, yy2, width, 1);
+        }
+    };
+
+    private ComponentListener componentListener = new ComponentAdapter() {
+        @Override
+        public void componentResized(ComponentEvent e) {
+            bufferedImage = new BufferedImage(component.getWidth(), component.getHeight(), BufferedImage.TYPE_INT_RGB);
+            bufferedGraphics = bufferedImage.createGraphics();
+        }
+    };
 
     private BufferedImage bufferedImage;
     private Graphics2D bufferedGraphics;
@@ -51,15 +141,11 @@ public class KnockCanvas extends JComponent implements ComponentListener {
 
     public KnockCanvas() {
 
-        SwingUtilities.invokeLater(new Runnable(){
-            public void run() {
-                dd.repaint();
-            }
-        });
+        SwingUtilities.invokeLater(() -> component.repaint());
 
         bufferedImage = new BufferedImage(640,480, BufferedImage.TYPE_INT_RGB);
         bufferedGraphics = bufferedImage.createGraphics();
-        this.addComponentListener(this);
+        component.addComponentListener(componentListener);
 
         //linear-gradient(to right, #000000, #290d1a, #490b32, #670353, #81007b, #a60085, #ca008b, #ef008f, #ff356b, #ff6947, #ff9a22, #ffc700);
         colorspace = new Color[] {
@@ -370,105 +456,5 @@ public class KnockCanvas extends JComponent implements ComponentListener {
     float[] getCurrentMouseMagnitudes() {
         int spectrogramSpaceX = this.canvasXToSpectrogramSpace(this.mouse_x);
         return specrtogram[spectrogramSpaceX];
-    }
-
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-
-        Dimension size = getSize();
-
-        int width = bufferedImage.getWidth();
-        int height = bufferedImage.getHeight();
-        float bx = (float)width / (float)SPECTROGRAM_X_AXIS_SIZE;
-
-        int offset = (int)(currentIndexXAxis * bx);
-
-        // flip buffers
-        g.drawImage(bufferedImage,
-            0, 0, size.width - offset, size.height,
-            offset, 0, size.width, size.height,
-            null);
-        g.drawImage(bufferedImage, size.width - offset, 0, size.width, size.height,null);
-
-        g.setColor(Color.RED);
-        int line = (int)(currentIndexXAxis * bx);
-        g.drawLine(line, 0, line, height);
-
-        Font f = g.getFont();
-        g.setFont(new Font(f.getName(), Font.CENTER_BASELINE, g.getFont().getSize() - 4));
-
-        g.setColor(Color.YELLOW);
-        for(int i = 0; i < yAxisHz.length; ++i) {
-
-            var y = hzToYScreen(yAxisHz[i], height);
-
-            g.setColor(Color.orange);
-            g.fillRect(0, y, 30, 1);
-
-            var hz = this.yAxisHz[i];
-            g.drawString(Double.valueOf(round(hz, 1)).toString(), 35,  y);
-        }
-
-        mouseFrequency = (float)YScreenToHz(mouse_y, height);
-
-        int mouseSpecX = canvasXToSpectrogramSpace(mouse_x);
-        int mouseSpecY = canvasYToSpectrogramSpace(mouse_y);
-
-        mouseAmplitude = specrtogram[mouseSpecX][mouseSpecY];
-
-        //Font f = g.getFont();
-        g.setFont(new Font(f.getName(), Font.BOLD, g.getFont().getSize()));
-
-        g.setColor(Color.YELLOW);
-        var currentX = width / 4;
-        g.drawString("[current]", currentX,  10);
-        g.drawString(Float.valueOf(currentFrequency).toString() + " Hz", currentX,  30);
-        g.drawString(Float.valueOf(currentAmplitude).toString() + " Amp", currentX,  50);
-
-        g.setColor(Color.RED);
-        g.drawString("[peak]", currentX * 2,  10);
-        g.drawString(Float.valueOf(peakFrequency).toString() + " Hz", currentX * 2,  30);
-        g.drawString(Float.valueOf(peakAmplitude).toString() + " Amp", currentX * 2,  50);
-
-        g.setColor(Color.ORANGE);
-        g.drawString("[mouse]", currentX * 3,  10);
-        g.drawString(Float.valueOf(mouseFrequency).toString() + " Hz", currentX * 3,  30);
-        g.drawString(Float.valueOf(mouseAmplitude).toString() + " Amp", currentX * 3,  50);
-
-        g.setFont(f);
-
-        g.setColor(Color.green);
-        g.fillOval(spectrogramSpaceToCanvasX(peakX)-5, spectrogramSpaceToCanvasY(peakY)-5, 10, 10);
-
-
-        g.setColor(Color.WHITE);
-        var yy = hzToYScreen(currentFrequency, height);
-        g.fillRect(0, yy, width, 1);
-
-        g.setColor(Color.DARK_GRAY);
-        g.fillRect(0, mouse_y, width, 1);
-
-
-        //for test
-        //var yy2 = hzToYScreen(8117.68, height);
-        //g.fillRect(0, yy2, width, 1);
-    }
-
-    @Override
-    public void componentHidden(ComponentEvent e) {
-    }
-    @Override
-    public void componentMoved(ComponentEvent e) {
-    }
-
-    @Override
-    public void componentResized(ComponentEvent e) {
-        bufferedImage = new BufferedImage(getWidth(),getHeight(), BufferedImage.TYPE_INT_RGB);
-        bufferedGraphics = bufferedImage.createGraphics();
-    }
-
-    @Override
-    public void componentShown(ComponentEvent e) {
     }
 }

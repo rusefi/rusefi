@@ -5,18 +5,48 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+
 import static org.apache.commons.math3.util.Precision.round;
 
 
-public class KnockMagnitudeCanvas extends JComponent implements ComponentListener {
+public class KnockMagnitudeCanvas {
 
-    JComponent dd = this;
-    //--------------------------------------
+    private JComponent component = new JComponent() {
+        @Override
+        public void paint(Graphics g) {
+            super.paint(g);
+
+            Dimension size = getSize();
+
+            // flip buffers
+            g.drawImage(bufferedImage, 0, 0, size.width, size.height, null);
+        }
+    };
+
+    private ComponentListener componentListener = new ComponentListener() {
+        @Override
+        public void componentHidden(ComponentEvent e) {
+        }
+
+        @Override
+        public void componentMoved(ComponentEvent e) {
+        }
+
+        @Override
+        public void componentResized(ComponentEvent e) {
+            bufferedImage = new BufferedImage(component.getWidth(), component.getHeight(), BufferedImage.TYPE_INT_RGB);
+            bufferedGraphics = bufferedImage.createGraphics();
+        }
+
+        @Override
+        public void componentShown(ComponentEvent e) {
+        }
+    };
 
     private BufferedImage bufferedImage;
     private Graphics2D bufferedGraphics;
 
-    public double yAxisHz[];
+    public double[] yAxisHz;
     int yAxisFequencyStart = -1;
     float yAxisFequencyStep = -1;
 
@@ -26,15 +56,13 @@ public class KnockMagnitudeCanvas extends JComponent implements ComponentListene
 
     public KnockMagnitudeCanvas() {
 
-        SwingUtilities.invokeLater(new Runnable(){
-            public void run() {
-                dd.repaint();
-            }
+        SwingUtilities.invokeLater(() -> {
+            component.repaint();
         });
 
-        bufferedImage = new BufferedImage(640,480, BufferedImage.TYPE_INT_RGB);
+        bufferedImage = new BufferedImage(640, 480, BufferedImage.TYPE_INT_RGB);
         bufferedGraphics = bufferedImage.createGraphics();
-        this.addComponentListener(this);
+        component.addComponentListener(componentListener);
 
         yAxisHz = new double[64]; // protocol size
     }
@@ -44,7 +72,7 @@ public class KnockMagnitudeCanvas extends JComponent implements ComponentListene
 
         this.yAxisFequencyStart = start;
 
-        if(needSetup) {
+        if (needSetup) {
             setupFrequencyyAxis();
         }
     }
@@ -55,19 +83,19 @@ public class KnockMagnitudeCanvas extends JComponent implements ComponentListene
 
         this.yAxisFequencyStep = step;
 
-        if(needSetup) {
+        if (needSetup) {
             setupFrequencyyAxis();
         }
     }
 
     public void setupFrequencyyAxis() {
 
-        if(this.yAxisFequencyStep < 0 || this.yAxisFequencyStart < 0) {
+        if (this.yAxisFequencyStep < 0 || this.yAxisFequencyStart < 0) {
             return;
         }
 
-        for(var i = 0; i < 64; ++i) {
-            float y = (float)this.yAxisFequencyStart + (this.yAxisFequencyStep * (float)i);
+        for (var i = 0; i < 64; ++i) {
+            float y = (float) this.yAxisFequencyStart + (this.yAxisFequencyStep * (float) i);
             this.yAxisHz[i] = y;
         }
     }
@@ -77,10 +105,10 @@ public class KnockMagnitudeCanvas extends JComponent implements ComponentListene
         int max = 256;
         int index = -1;
 
-        for(int i = 0; i < 64; ++i) {
+        for (int i = 0; i < 64; ++i) {
             int value = yPoints[i];
 
-            if(value < max) {
+            if (value < max) {
                 max = value;
                 index = i;
             }
@@ -94,18 +122,18 @@ public class KnockMagnitudeCanvas extends JComponent implements ComponentListene
         int width = bufferedImage.getWidth();
         int height = bufferedImage.getHeight();
 
-        bufferedGraphics.clearRect(0,0, width, height);
+        bufferedGraphics.clearRect(0, 0, width, height);
 
-        float bx = (float)width / (float)64;
+        float bx = (float) width / (float) 64;
 
-        for(int i = 0; i < 64; ++i) {
+        for (int i = 0; i < 64; ++i) {
 
-            xPoints[i] = (int)(bx * i);
+            xPoints[i] = (int) (bx * i);
 
-            float normalized = magnitudes[i]/255.f;
+            float normalized = magnitudes[i] / 255.f;
             float y = height * normalized;
 
-            yPoints[i] = (int)(height - y);
+            yPoints[i] = (int) (height - y);
         }
         //last point 2 always in corners
         xPoints[64] = xPoints[63];
@@ -125,7 +153,7 @@ public class KnockMagnitudeCanvas extends JComponent implements ComponentListene
         bufferedGraphics.drawLine(xLine, 0, xLine, height);
 
         double hz = this.yAxisHz[index];
-        bufferedGraphics.drawString(Double.valueOf(round(hz, 1)).toString(), xLine,  10);
+        bufferedGraphics.drawString(Double.valueOf(round(hz, 1)).toString(), xLine, 10);
 
         Font defaultFont = bufferedGraphics.getFont();
         Font font = new Font(null, Font.PLAIN, 14);
@@ -134,42 +162,16 @@ public class KnockMagnitudeCanvas extends JComponent implements ComponentListene
         Font rotatedFont = font.deriveFont(rotate90);
         bufferedGraphics.setFont(rotatedFont);
 
-        for(int i = 0; i < 64; ++i) {
+        for (int i = 0; i < 64; ++i) {
             int x = (int) (bx * i);
             double hzZxis = this.yAxisHz[i];
             bufferedGraphics.setColor(Color.white);
             bufferedGraphics.drawLine(x, height, x, height - 10);
-            bufferedGraphics.drawString(Double.valueOf(round(hzZxis, 1)).toString(), x,  height - 20);
+            bufferedGraphics.drawString(Double.valueOf(round(hzZxis, 1)).toString(), x, height - 20);
         }
         bufferedGraphics.setFont(defaultFont);
 
-        this.repaint();
+        component.repaint();
     }
 
-    @Override
-    public void paint(Graphics g) {
-        super.paint(g);
-
-        Dimension size = getSize();
-
-        // flip buffers
-        g.drawImage(bufferedImage, 0, 0, size.width, size.height,null);
-    }
-
-    @Override
-    public void componentHidden(ComponentEvent e) {
-    }
-    @Override
-    public void componentMoved(ComponentEvent e) {
-    }
-
-    @Override
-    public void componentResized(ComponentEvent e) {
-        bufferedImage = new BufferedImage(getWidth(),getHeight(), BufferedImage.TYPE_INT_RGB);
-        bufferedGraphics = bufferedImage.createGraphics();
-    }
-
-    @Override
-    public void componentShown(ComponentEvent e) {
-    }
 }
