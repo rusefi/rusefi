@@ -35,7 +35,7 @@ public class MassUpdater {
                     knownBlts.add(openBltPort.port);
                     mainStatus.append("New OpenBlt " + openBltPort);
 
-                    AsyncJobExecutor.INSTANCE.executeJob(new OpenBltManualJob(openBltPort, mainStatus.getContent()));
+                    SwingUtilities.invokeLater(() -> AsyncJobExecutor.INSTANCE.executeJob(new OpenBltManualJob(openBltPort, mainStatus.getContent())));
                 }
             }
         });
