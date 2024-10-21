@@ -1,6 +1,13 @@
 meta: config/boards/hellen_mm100_meta.h
 
 pins:
+  - pin: On-board MAP
+    meta: MM100_IN_MAP2_ANALOG
+    class: analog_inputs
+    function: MAP Sensor Input
+    ts_name: On-board MAP
+    color: orange
+
   - pin: 1a
     class: outputs
     ts_name: DC1+
@@ -232,6 +239,7 @@ pins:
 
   - pin: 37a
     class: analog_inputs
+    meta: MM100_IN_MAP1_ANALOG
     ts_name: MAP
     function: MAP signal
     color: yellow
@@ -254,16 +262,20 @@ pins:
 
   - pin: 40a
     class: analog_inputs
+    meta: MM100_IN_O2S_ANALOG
     ts_name: AIN 1
     function: AUX1 analog input
 
   - pin: 41a
     class: analog_inputs
+    meta: MM100_IN_O2S2_ANALOG
     ts_name: AIN 2
     function: AUX2 analog input
 
   - pin: 42a
     function: FLEX
+    class: event_inputs
+    meta: MM100_IN_VSS
     ts_name: FLEX
 
   - pin: 43a
