@@ -14,33 +14,90 @@ float PUBLIC_API_WEAK getAnalogInputDividerCoefficient(adc_channel_e) {
 
 #if HAL_USE_ADC
 
+#include "adc_device.h"
+#include "adc_onchip.h"
 #include "adc_subscription.h"
-#include "AdcDevice.h"
 #include "mpu_util.h"
 #include "periodic_thread_controller.h"
 #include "protected_gpio.h"
 
-extern AdcDevice fastAdc;
-
-static volatile NO_CACHE adcsample_t slowAdcSamples[SLOW_ADC_CHANNEL_COUNT];
-
+extern AdcSlowOnchipDevice slowAdc;
 static uint32_t slowAdcConversionCount = 0;
-static uint32_t slowAdcErrorsCount = 0;
 
-static float mcuTemperature;
+#if EFI_USE_FAST_ADC
+extern AdcFastOnchipDevice fastAdc;
+#endif
 
-static AdcChannelMode adcHwChannelMode[EFI_ADC_TOTAL_CHANNELS];
+static AdcDeviceBase *adcDevices[ADC_DRIVERS_COUNT];
+
+static AdcTockenInternal adcHwChannelMode[EFI_ADC_TOTAL_CHANNELS];
 
 // todo: move this flag to Engine god object
 static int adcDebugReporting = false;
 
-AdcChannelMode getAdcMode(adc_channel_e hwChannel) {
-	return adcHwChannelMode[hwChannel];
+// Dummy driver to fill adcDevices array with valid pointer and catch invalid access
+class AdcDeviceDummy : public AdcDeviceBase {
+public:
+	int start(void) override {
+		return 0;
+	}
+
+	const char *name() override { return "Dummy"; }
+
+	bool isChannelSupported(adc_channel_e) override {
+		return true;
+	}
+
+	int enableChannel(adc_channel_e) override {
+		// Means deferred, waiting for real ADC
+		return -111;
+	}
+	void disableChannel(uint16_t) override {}
+
+	adcsample_t get(uint16_t) override {
+		return 0;
+	}
+	adcsample_t getAvg(uint16_t) override {
+		return 0;
+	}
+};
+
+AdcDeviceDummy dummyAdc;
+
+adc_channel_mode_e getAdcMode(adc_channel_e hwChannel) {
+	if (!isAdcChannelValid(hwChannel)) {
+		return ADC_OFF;
+	}
+
+	return (adc_channel_mode_e)adcHwChannelMode[hwChannel].drvIdx;
 }
 
-float getMCUInternalTemperature() {
-	return mcuTemperature;
+const char *adcGetDeviceName(adc_channel_e hwChannel) {
+	if (!isAdcChannelValid(hwChannel)) {
+		return "Invalid";
+	}
+
+	adc_channel_mode_e drvIdx = adcHwChannelMode[hwChannel].drvIdx;
+
+	if (adcIsValidDriver(drvIdx)) {
+		return adcDevices[drvIdx]->name();
+	}
+
+	return "Invalid";
 }
+
+
+static adcsample_t getAdcValueByToken(AdcTockenInternal token)
+{
+	if (token.drvIdx >= ADC_OFF) {
+		warning(ObdCode::CUSTOM_OBD_ANALOG_INPUT_NOT_CONFIGURED, "Invalid ADC token");
+
+		/* Is it a safe value? */
+		return 0;
+	}
+
+	return adcDevices[token.drvIdx]->getAvg(token.channel);
+};
 
 int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 	if (!isAdcChannelValid(hwChannel)) {
@@ -48,14 +105,44 @@ int getInternalAdcValue(const char *msg, adc_channel_e hwChannel) {
 		return -1;
 	}
 
-#if EFI_USE_FAST_ADC
-	if (adcHwChannelMode[hwChannel] == AdcChannelMode::Fast) {
-		return fastAdc.getAvgAdcValue(hwChannel);
-	}
-#endif // EFI_USE_FAST_ADC
-
-	return slowAdcSamples[hwChannel - EFI_ADC_0];
+	return getAdcValueByToken(adcHwChannelMode[hwChannel]);
 }
+
+adcsample_t getFastAdc(AdcToken token) {
+	if (token == invalidAdcToken) {
+		return 0;
+	}
+
+	/* convert */
+	AdcTockenInternal intToken = {
+		.token = token
+	};
+
+	return getAdcValueByToken(intToken);
+}
+
+#if EFI_USE_FAST_ADC
+
+AdcToken enableFastAdcChannel(const char *msg, adc_channel_e hwChannel) {
+	if (!isAdcChannelValid(hwChannel)) {
+		return invalidAdcToken;
+	}
+
+	if (adcHwChannelMode[hwChannel].drvIdx != ADC_FAST) {
+		warning(ObdCode::CUSTOM_OBD_ANALOG_INPUT_NOT_CONFIGURED, "ADC: %s input was not propery initialized", msg);
+		return addChannel(msg, hwChannel, ADC_FAST);
+	}
+
+	return adcHwChannelMode[hwChannel].token;
+}
+
+#else
+
+AdcToken enableFastAdcChannel(const char*, adc_channel_e channel) {
+	return invalidAdcToken;
+}
+
+#endif
 
 static void printAdcValue(int channel) {
 	/* Do this check before conversion to adc_channel_e that is uint8_t based */
@@ -68,9 +155,13 @@ static void printAdcValue(int channel) {
 	efiPrintf("adc %d voltage : %.3f", channel, volts);
 }
 
-static void printAdcChannedReport(const char *prefix, int internalIndex, adc_channel_e hwChannel)
+static void printAdcChannedReport(adc_channel_e hwChannel)
 {
 	if (isAdcChannelValid(hwChannel)) {
+		if ((getAdcMode(hwChannel) == ADC_OFF) || (getAdcMode(hwChannel) == ADC_DUMMY)) {
+			return;
+		}
+
 		ioportid_t port = getAdcChannelPort("print", hwChannel);
 		int pin = getAdcChannelPin(hwChannel);
 		int adcValue = getAdcValue("print", hwChannel);
@@ -78,7 +169,7 @@ static void printAdcChannedReport(const char *prefix, int internalIndex, adc_cha
 		float voltsDivided = getVoltageDivided("print", hwChannel);
 		/* Human index starts from 1 */
 		efiPrintf(" %s ch[%2d] @ %s%d ADC%d 12bit=%4d %.3fV (input %.3fV)",
-			prefix, internalIndex, portname(port), pin,
+			adcGetDeviceName(hwChannel), hwChannel - EFI_ADC_0, portname(port), pin,
 			/* TODO: */ hwChannel - EFI_ADC_0 + 1,
 			adcValue, volts, voltsDivided);
 	}
@@ -87,26 +178,24 @@ static void printAdcChannedReport(const char *prefix, int internalIndex, adc_cha
 void printFullAdcReport(void) {
 #if EFI_USE_FAST_ADC
 	efiPrintf("fast %lu samples", fastAdc.conversionCount);
-
-	for (int internalIndex = 0; internalIndex < fastAdc.size(); internalIndex++) {
-		adc_channel_e hwChannel = fastAdc.getAdcChannelByInternalIndex(internalIndex);
-
-		printAdcChannedReport("F", internalIndex, hwChannel);
-	}
 #endif // EFI_USE_FAST_ADC
 	efiPrintf("slow %lu samples", slowAdcConversionCount);
 
 	/* we assume that all slow ADC channels are enabled */
-	for (int internalIndex = 0; internalIndex < ADC_MAX_CHANNELS_COUNT; internalIndex++) {
-		adc_channel_e hwChannel = static_cast<adc_channel_e>(internalIndex + EFI_ADC_0);
-
-		printAdcChannedReport("S", internalIndex, hwChannel);
+	for (int hwChannel = EFI_ADC_0; hwChannel < EFI_ADC_TOTAL_CHANNELS; hwChannel++) {
+		printAdcChannedReport(static_cast<adc_channel_e>(hwChannel));
 	}
 }
 
 static void setAdcDebugReporting(int value) {
 	adcDebugReporting = value;
 	efiPrintf("adcDebug=%d", adcDebugReporting);
+}
+
+static float mcuTemperature;
+
+float getMCUInternalTemperature() {
+	return mcuTemperature;
 }
 
 class SlowAdcController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
@@ -120,11 +209,7 @@ public:
 		{
 			ScopePerf perf(PE::AdcConversionSlow);
 
-			/* drop volatile type qualifier - this is safe */
-			if (!readSlowAnalogInputs((adcsample_t *)slowAdcSamples)) {
-				slowAdcErrorsCount++;
-				return;
-			}
+			slowAdc.doConversion();
 
 			// Ask the port to sample the MCU temperature
 			mcuTemperature = getMcuTemperature();
@@ -142,38 +227,97 @@ public:
 	}
 };
 
-void addFastAdcChannel(const char*, adc_channel_e hwChannel) {
-	if (!isAdcChannelValid(hwChannel)) {
-		return;
+// return adc_channel_mode_e with ADC supporting reading this channel, in worst case returns ADC_DUMMY
+static adc_channel_mode_e adcFindForChannel(adc_channel_e hwChannel)
+{
+	for (int i = ADC_DRIVERS_FIRST; i < ADC_DRIVERS_COUNT; i++) {
+		if ((adcDevices[i]) && (adcDevices[i]->isChannelSupported(hwChannel))) {
+			return static_cast<adc_channel_mode_e>(i);
+		}
 	}
 
-#if EFI_USE_FAST_ADC
-	fastAdc.enableChannel(hwChannel);
-#endif
+	return ADC_DUMMY;
+}
 
-	adcHwChannelMode[hwChannel] = AdcChannelMode::Fast;
-	// Nothing to do for slow channels, input is mapped to analog in init_sensors.cpp
+AdcToken addChannel(const char *msg, adc_channel_e hwChannel, adc_channel_mode_e mode) {
+	if (!isAdcChannelValid(hwChannel)) {
+		return invalidAdcToken;
+	}
+
+	if (mode == ADC_ANY) {
+		mode = adcFindForChannel(hwChannel);
+	}
+
+	if (mode >= ADC_OFF) {
+		return invalidAdcToken;
+	}
+
+	if (adcHwChannelMode[hwChannel].drvIdx == mode) {
+		// channel already configured with requested driver
+		return adcHwChannelMode[hwChannel].token;
+	}
+
+	if (adcDevices[mode] == NULL) {
+		// adc device is not registered yet
+		adcHwChannelMode[hwChannel].drvIdx = mode;
+		return invalidAdcToken;
+	}
+
+	if (!adcDevices[mode]->isChannelSupported(hwChannel)) {
+		warning(ObdCode::CUSTOM_OBD_ANALOG_INPUT_NOT_CONFIGURED, "ADC %s channel is not supported by %s ADC",
+			msg, adcDevices[mode]->name());
+		return invalidAdcToken;
+	}
+
+	if (adcHwChannelMode[hwChannel].drvIdx != ADC_OFF) {
+		efiPrintf("ADC %s reconfiguring ADC channel %d from %s to %s",
+			msg, hwChannel, adcDevices[adcHwChannelMode[hwChannel].drvIdx]->name(), adcDevices[mode]->name());
+
+		// disable channel on old ADC
+		removeChannel(msg, hwChannel);
+	}
+
+	// enable channel on new ADC
+	int ret = adcDevices[mode]->enableChannel(hwChannel);
+	if (ret >= 0) {
+		adcHwChannelMode[hwChannel].channel = ret;
+		adcHwChannelMode[hwChannel].drvIdx = mode;
+	} else {
+		warning(ObdCode::CUSTOM_OBD_ANALOG_INPUT_NOT_CONFIGURED, "ADC %s failed to configure channel on %s ret %d",
+			msg, adcDevices[mode]->name(), ret);
+		return invalidAdcToken;
+	}
+
+	return adcHwChannelMode[hwChannel].token;
+}
+
+AdcToken addFastAdcChannel(const char *msg, adc_channel_e hwChannel) {
+	return addChannel(msg, hwChannel, ADC_FAST);
 }
 
 void removeChannel(const char*, adc_channel_e hwChannel) {
 	if (!isAdcChannelValid(hwChannel)) {
 		return;
 	}
-#if EFI_USE_FAST_ADC
-	if (adcHwChannelMode[hwChannel] == AdcChannelMode::Fast) {
-		/* TODO: */
-		//fastAdc.disableChannel(hwChannel);
-	}
-#endif
 
-	adcHwChannelMode[hwChannel] = AdcChannelMode::Off;
+	adc_channel_mode_e drvIdx = adcHwChannelMode[hwChannel].drvIdx;
+
+	if (drvIdx != ADC_OFF) {
+		adcDevices[drvIdx]->disableChannel(adcHwChannelMode[hwChannel].channel);
+	}
+
+	adcHwChannelMode[hwChannel].drvIdx = ADC_OFF;
+	adcHwChannelMode[hwChannel].channel = 0;
 }
 
 // Weak link a stub so that every board doesn't have to implement this function
 __attribute__((weak)) void setAdcChannelOverrides() { }
 
 static void configureInputs() {
-	memset(adcHwChannelMode, (int)AdcChannelMode::Off, sizeof(adcHwChannelMode));
+	/* This is workaround for slow ADC lazy initialization - consumers does not call any init for channel before start using it */
+	for (int hwChannel = EFI_ADC_0; hwChannel <= EFI_ADC_15; hwChannel++) {
+		addChannel("auto", static_cast<adc_channel_e>(hwChannel), ADC_SLOW);
+	}
 
 	/**
 	 * order of analog channels here is totally random and has no meaning
@@ -205,6 +349,17 @@ static SlowAdcController slowAdcController;
 void initAdcInputs() {
 	efiPrintf("initAdcInputs()");
 
+	adcDevices[ADC_DUMMY] = &dummyAdc;
+	for (int i = ADC_DRIVERS_FIRST; i < ADC_DRIVERS_COUNT; i++) {
+		adcDevices[i] = NULL;
+	}
+
+	// mask all inputs disabled
+	for (int i = 0; i < EFI_ADC_TOTAL_CHANNELS; i++) {
+		adcHwChannelMode[i].drvIdx = ADC_OFF;
+		adcHwChannelMode[i].channel = 0;
+	}
+
 	configureInputs();
 
 	// migrate to 'enable adcdebug'
@@ -213,13 +368,18 @@ void initAdcInputs() {
 #if EFI_INTERNAL_ADC
 	portInitAdc();
 
-	// Start the slow ADC thread
-	slowAdcController.start();
-
 #if EFI_USE_FAST_ADC
 	// After this point fastAdc is not allowed to add channels
-	fastAdc.init();
+	if (fastAdc.start() == 0) {
+		adcDeviceRegister(&fastAdc, ADC_FAST);
+	}
 #endif // EFI_USE_FAST_ADC
+	if (slowAdc.start() == 0) {
+		adcDeviceRegister(&slowAdc, ADC_SLOW);
+	}
+
+	// Start the slow ADC thread
+	slowAdcController.start();
 
 	addConsoleActionI("adc", (VoidInt) printAdcValue);
 #else // ! EFI_INTERNAL_ADC
@@ -231,6 +391,71 @@ void printFullAdcReportIfNeeded(void) {
 	if (!adcDebugReporting)
 		return;
 	printFullAdcReport();
+}
+
+static void adcRunDeferredProbe(AdcDeviceBase *dev, adc_channel_mode_e mode)
+{
+	for (int hwChannel = EFI_ADC_0; hwChannel < EFI_ADC_TOTAL_CHANNELS; hwChannel++) {
+		if (adcHwChannelMode[hwChannel].drvIdx == mode) {
+			int ret = dev->enableChannel(static_cast<adc_channel_e>(hwChannel));
+			if (ret >= 0) {
+				adcHwChannelMode[hwChannel].channel = ret;
+			} else {
+				warning(ObdCode::CUSTOM_OBD_ANALOG_INPUT_NOT_CONFIGURED, "ADC: failed to configure channel on %s ret %d",
+					adcDevices[mode]->name(), ret);
+			}
+		}
+	}
+}
+
+int adcDeviceRegister(AdcDeviceBase *dev, adc_channel_mode_e mode)
+{
+	if (mode >= ADC_DRIVERS_COUNT) {
+		efiPrintf("invalid ADC index %d", mode);
+		return -1;
+	}
+
+	if (adcDevices[mode] != NULL) {
+		efiPrintf("ADC index %d is already registered", mode);
+		return -1;
+	}
+
+	// Run dev->enableChannel() for all ADC channels previously assigned to this driver and pending it to appear
+	adcRunDeferredProbe(dev, mode);
+
+	adcDevices[mode] = dev;
+
+	efiPrintf("ADC %s registered at %d", dev->name(), mode);
+
+	return 0;
+}
+
+int adcDeviceRemove(adc_channel_mode_e mode)
+{
+	if (mode >= ADC_DRIVERS_COUNT) {
+		efiPrintf("invalid ADC index %d", mode);
+		return -1;
+	}
+
+	AdcDeviceBase *dev = adcDevices[mode];
+	if (dev == NULL) {
+		efiPrintf("ADC index %d is not registered", mode);
+		return -1;
+	}
+
+	for (int hwChannel = EFI_ADC_0; hwChannel < EFI_ADC_TOTAL_CHANNELS; hwChannel++) {
+		if (adcHwChannelMode[hwChannel].drvIdx == mode) {
+			dev->disableChannel(adcHwChannelMode[hwChannel].channel);
+
+			// Switch to dummy
+			adcHwChannelMode[hwChannel].drvIdx = ADC_DUMMY;
+			adcHwChannelMode[hwChannel].channel = 0;
+		}
+	}
+
+	adcDevices[mode] = NULL;
+
+	return 0;
 }
 
 #else /* not HAL_USE_ADC */
