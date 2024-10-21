@@ -424,10 +424,6 @@ static bool isKnownCommand(char command) {
 			|| command == TS_GET_TEXT
 			|| command == TS_CRC_CHECK_COMMAND
 			|| command == TS_GET_FIRMWARE_VERSION
-#ifdef KNOCK_SPECTROGRAM
-			|| command == TS_KNOCK_SPECTROGRAM_ENABLE
-			|| command == TS_KNOCK_SPECTROGRAM_DISABLE
-#endif
 			|| command == TS_PERF_TRACE_BEGIN
 			|| command == TS_PERF_TRACE_GET_BUFFER
 			|| command == TS_GET_CONFIG_ERROR
@@ -885,16 +881,6 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, DO_NOT_LOG);
 		break;
 #endif /* EFI_TOOTH_LOGGER */
-#ifdef KNOCK_SPECTROGRAM
-	case TS_KNOCK_SPECTROGRAM_ENABLE:
-		knockSpectrogramEnable();
-		sendOkResponse(tsChannel);
-		break;
-	case TS_KNOCK_SPECTROGRAM_DISABLE:
-		knockSpectrogramDisable();
-		sendOkResponse(tsChannel);
-		break;
-#endif /* KNOCK_SPECTROGRAM */
 #if ENABLE_PERF_TRACE
 	case TS_PERF_TRACE_BEGIN:
 		perfTraceEnable();

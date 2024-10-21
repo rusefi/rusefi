@@ -76,9 +76,6 @@
 #define TS_PERF_TRACE_BEGIN '_'
 #define TS_PERF_TRACE_GET_BUFFER 'b'
 
-! knock analyzer
-#define TS_KNOCK_SPECTROGRAM_ENABLE 'm'
-#define TS_KNOCK_SPECTROGRAM_DISABLE 'n'
 ! 0x57 pageValueWrite
 #define TS_SINGLE_WRITE_COMMAND 'W'
 ! 0x43 pageChunkWrite
@@ -148,7 +145,6 @@
 #define PROTOCOL_OUTPIN "outpin"
 #define PROTOCOL_ANALOG_CHART "analog_chart"
 #define PROTOCOL_ENGINE_SNIFFER "wave_chart"
-#define PROTOCOL_KNOCK_SPECTROGRAMM "knock_spectrogram"
 #define PROTOCOL_VERSION_TAG "rusEfiVersion"
 #define PROTOCOL_TEST_RESPONSE_TAG "ts_p_alive"
 #define PROTOCOL_SIGNATURE_PREFIX "rusEFI "
