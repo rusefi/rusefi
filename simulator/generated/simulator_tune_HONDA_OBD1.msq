@@ -770,6 +770,7 @@
         <constant name="unusedSkipWasHere">"false"</constant>
         <constant name="invertExhaustCamVVTSignal">"Rising"</constant>
         <constant name="enableKnockSpectrogram">"false"</constant>
+        <constant name="enableKnockSpectrogramFilter">"false"</constant>
         <constant digits="0" name="afterCrankingIACtaperDuration" units="cycles">200.0</constant>
         <constant digits="0" name="iacByTpsTaper" units="percent">2.0</constant>
         <constant name="unusedAuxSeria">"NONE"</constant>
@@ -1631,19 +1632,13 @@
         <constant digits="2" name="auxLinear4_value1" units="">0.0</constant>
         <constant digits="2" name="auxLinear4_v2" units="volts">0.0</constant>
         <constant digits="2" name="auxLinear4_value2" units="">0.0</constant>
-        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="128">
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+        <constant digits="1" name="knockSuppressMinTps" units="%">0.0</constant>
+        <constant digits="1" name="knockFuelTrimAggression" units="%">0.0</constant>
+        <constant digits="1" name="knockFuelTrimReapplyRate" units="deg/s">0.0</constant>
+        <constant digits="1" name="knockFuelTrim" units="%">0.0</constant>
+        <constant digits="2" name="knockSpectrumSensitivity" units="sense">0.0</constant>
+        <constant digits="2" name="knockFrequency" units="Hz">0.0</constant>
+        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="116">
          0.0
          0.0
          0.0
@@ -4765,7 +4760,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20241002" nPages="1" signature="rusEFI master.2024.10.21.f407-discovery.1717113764" version="5.0"/>
+    <versionInfo firmwareInfo="20241002" nPages="1" signature="rusEFI master.2024.10.21.f407-discovery.3127986523" version="5.0"/>
     <bibliography author="rusEFI 20241002" writeDate="date"/>
     <settings/>
     <userComments/>
