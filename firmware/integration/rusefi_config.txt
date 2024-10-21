@@ -2231,7 +2231,6 @@ end_struct
 #define GAUGE_NAME_KNOCK_LEVEL "knock: current level"
 #define GAUGE_NAME_KNOCK_COUNTER "knock: count"
 #define GAUGE_NAME_KNOCK_RETARD "knock: retard"
-#define GAUGE_NAME_KNOCK_FREQ "knock: frequency"
 #define GAUGE_NAME_KNOCK_1 "knock 1"
 #define GAUGE_NAME_KNOCK_2 "knock 2"
 #define GAUGE_NAME_KNOCK_3 "knock 3"

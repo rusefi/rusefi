@@ -153,6 +153,8 @@ void setDefaultBaseEngine() {
 
     engineConfiguration->knockRetardAggression = 20;
     engineConfiguration->knockRetardReapplyRate = 3;
+	engineConfiguration->knockFuelTrim = 0;
+	engineConfiguration->knockSupressMinTps = 10;
 
 	// Trigger
 	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_60_2;
@@ -281,6 +283,9 @@ void setDefaultBaseEngine() {
 	//knock
 #ifdef KNOCK_SPECTROGRAM
 	engineConfiguration->enableKnockSpectrogram = false;
+	engineConfiguration->enableKnockSpectrogramFilter = false;
+	engineConfiguration->knockSpectrumSensitivity = 1.0;
+	engineConfiguration->knockFrequency = 0.0;
 #endif
 
 	// Check engine light
