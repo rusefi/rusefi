@@ -11,7 +11,6 @@
 #include "ch.hpp"
 
 #ifdef KNOCK_SPECTROGRAM
-#include "development/knock_spectrogram.h"
 #include "fft/fft.hpp"
 
 static SpectrogramData spectrogramData0; // temporary use ram, will use big_buffer
@@ -223,21 +222,6 @@ static void processLastKnockEvent() {
 	knockNeedsProcess = false;
 
 	// looks like we have a defect float mainFreq = 0.f;
-
-#ifdef KNOCK_SPECTROGRAM
-	if (enableKnockSpectrogram) {
-		//ScopePerf perf(PE::KnockAnalyzer);
-
-		fft::fft_adc_sample(spectrogramData->window, ratio, sampleBuffer, spectrogramData->fftBuffer, KNOCK_SIZE);
-		fft::fft_freq(spectrogramData->frequencies, KNOCK_SIZE, KNOCK_SAMPLE_RATE); //samples per sec 218750
-		fft::fft_amp(spectrogramData->fftBuffer, spectrogramData->amplitudes, KNOCK_SIZE);
-		//fft::fft_db(spectrogramData->amplitudes, KNOCK_SIZE);
-
-		float mainFreq = fft::get_main_freq(spectrogramData->amplitudes, spectrogramData->frequencies, KNOCK_SIZE / 2);
-
-		knockSpectorgramAddLine(mainFreq, spectrogramData->amplitudes, 60); // [60] to 25207.5kHz for optimize data KNOCK_SIZE
-	}
-#endif
 
 	// mean of squares (not yet root)
 	float meanSquares = sumSq / localCount;
