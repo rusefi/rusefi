@@ -29,7 +29,7 @@ void rerrange(complex_type* data, const size_t num_elements)
 
         bit_mask = num_elements;
 
-        while (target_index & (bit_mask >>= 1)) 
+        while (target_index & (bit_mask >>= 1))
         {
             target_index &= ~bit_mask;
         }
@@ -58,7 +58,7 @@ bool transform(complex_type* data, const size_t count)
 
         for (size_t j = 0; j < i; ++j)
         {
-            for (size_t k = j; k < count; k += next) 
+            for (size_t k = j; k < count; k += next)
             {
                 match = k + i;
 
@@ -202,14 +202,14 @@ float get_main_freq(float* amplitudes, float* frequencies, size_t size)
     }
 
     float sum_amps =    amplitudes[peaks_index - 2] +
-                        amplitudes[peaks_index - 1] +  
-                        amplitudes[peaks_index] + 
+                        amplitudes[peaks_index - 1] +
+                        amplitudes[peaks_index] +
                         amplitudes[peaks_index + 1] +
                         amplitudes[peaks_index + 2];
 
-    float sum_wighted = amplitudes[peaks_index - 2] * frequencies[peaks_index - 2] + 
-                        amplitudes[peaks_index - 1] * frequencies[peaks_index - 1] + 
-                        amplitudes[peaks_index]     * frequencies[peaks_index] + 
+    float sum_wighted = amplitudes[peaks_index - 2] * frequencies[peaks_index - 2] +
+                        amplitudes[peaks_index - 1] * frequencies[peaks_index - 1] +
+                        amplitudes[peaks_index]     * frequencies[peaks_index] +
                         amplitudes[peaks_index + 1] * frequencies[peaks_index + 1] +
                         amplitudes[peaks_index + 2] * frequencies[peaks_index + 2];
 
