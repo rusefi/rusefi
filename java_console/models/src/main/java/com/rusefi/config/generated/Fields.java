@@ -1178,7 +1178,6 @@ public class Fields {
 	public static final String PROTOCOL_HELLO_PREFIX = "***";
 	public static final String PROTOCOL_INJ_SHORT_PREFIX = "i";
 	public static final String PROTOCOL_INJ_STAGE2_SHORT_PREFIX = "j";
-	public static final String PROTOCOL_KNOCK_SPECTROGRAMM = "knock_spectrogram";
 	public static final String PROTOCOL_MSG = "msg";
 	public static final String PROTOCOL_OUTPIN = "outpin";
 	public static final String PROTOCOL_SIGNATURE_PREFIX = "rusEFI ";
@@ -1456,8 +1455,6 @@ public class Fields {
 	public static final char TS_GET_TEXT = 'G';
 	public static final char TS_HELLO_COMMAND = 'S';
 	public static final char TS_IO_TEST_COMMAND = 'Z';
-	public static final char TS_KNOCK_SPECTROGRAM_DISABLE = 'n';
-	public static final char TS_KNOCK_SPECTROGRAM_ENABLE = 'm';
 	public static final char TS_ONLINE_PROTOCOL = 'z';
 	public static final char TS_OUTPUT_COMMAND = 'O';
 	public static final char TS_PAGE_COMMAND = 'P';
@@ -1478,7 +1475,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.10.21.f407-discovery.3127986523";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.10.21.f407-discovery.2639745756";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';

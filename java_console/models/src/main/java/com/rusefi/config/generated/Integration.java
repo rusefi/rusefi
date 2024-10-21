@@ -69,7 +69,6 @@ public class Integration {
 	public static final String PROTOCOL_ES_DOWN = "d";
 	public static final String PROTOCOL_ES_UP = "u";
 	public static final String PROTOCOL_HELLO_PREFIX = "***";
-	public static final String PROTOCOL_KNOCK_SPECTROGRAMM = "knock_spectrogram";
 	public static final String PROTOCOL_MSG = "msg";
 	public static final String PROTOCOL_OUTPIN = "outpin";
 	public static final String PROTOCOL_SIGNATURE_PREFIX = "rusEFI ";
@@ -94,8 +93,6 @@ public class Integration {
 	public static final char TS_GET_TEXT = 'G';
 	public static final char TS_HELLO_COMMAND = 'S';
 	public static final char TS_IO_TEST_COMMAND = 'Z';
-	public static final char TS_KNOCK_SPECTROGRAM_DISABLE = 'n';
-	public static final char TS_KNOCK_SPECTROGRAM_ENABLE = 'm';
 	public static final char TS_ONLINE_PROTOCOL = 'z';
 	public static final char TS_OUTPUT_COMMAND = 'O';
 	public static final char TS_PAGE_COMMAND = 'P';
