@@ -281,6 +281,9 @@ void setDefaultBaseEngine() {
 	//knock
 #ifdef KNOCK_SPECTROGRAM
 	engineConfiguration->enableKnockSpectrogram = false;
+	engineConfiguration->enableKnockSpectrogramFilter = false;
+	engineConfiguration->knockSpectrumSensitivity = 1.0;
+	engineConfiguration->knockFrequency = 0.0;
 #endif
 
 	// Check engine light
