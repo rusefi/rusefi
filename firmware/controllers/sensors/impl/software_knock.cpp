@@ -14,13 +14,11 @@
 #include "development/knock_spectrogram.h"
 #include "fft/fft.h"
 
-#define SIZE 512
-
 struct SpectrogramData {
-	fft::complex_type fftBuffer[SIZE];
-	float frequencies[SIZE/2];
-	float amplitudes[SIZE/2];
-	float window[SIZE];
+	fft::complex_type fftBuffer[KNOCK_SIZE];
+	float frequencies[KNOCK_SIZE/2];
+	float amplitudes[KNOCK_SIZE/2];
+	float window[KNOCK_SIZE];
 };
 
 static SpectrogramData spectrogramData0; // temporary use ram, will use big_buffer
@@ -237,14 +235,14 @@ static void processLastKnockEvent() {
 	if (enableKnockSpectrogram) {
 		//ScopePerf perf(PE::KnockAnalyzer);
 
-		fft::fft_adc_sample(spectrogramData->window, ratio, sampleBuffer, spectrogramData->fftBuffer, SIZE);
-		fft::fft_freq(spectrogramData->frequencies, SIZE, KNOCK_SAMPLE_RATE); //samples per sec 218750
-		fft::fft_amp(spectrogramData->fftBuffer, spectrogramData->amplitudes, SIZE);
-		//fft::fft_db(spectrogramData->amplitudes, SIZE);
+		fft::fft_adc_sample(spectrogramData->window, ratio, sampleBuffer, spectrogramData->fftBuffer, KNOCK_SIZE);
+		fft::fft_freq(spectrogramData->frequencies, KNOCK_SIZE, KNOCK_SAMPLE_RATE); //samples per sec 218750
+		fft::fft_amp(spectrogramData->fftBuffer, spectrogramData->amplitudes, KNOCK_SIZE);
+		//fft::fft_db(spectrogramData->amplitudes, KNOCK_SIZE);
 
-		float mainFreq = fft::get_main_freq(spectrogramData->amplitudes, spectrogramData->frequencies, SIZE / 2);
+		float mainFreq = fft::get_main_freq(spectrogramData->amplitudes, spectrogramData->frequencies, KNOCK_SIZE / 2);
 
-		knockSpectorgramAddLine(mainFreq, spectrogramData->amplitudes, 60); // [60] to 25207.5kHz for optimize data size
+		knockSpectorgramAddLine(mainFreq, spectrogramData->amplitudes, 60); // [60] to 25207.5kHz for optimize data KNOCK_SIZE
 	}
 #endif
 
@@ -281,7 +279,7 @@ void knockSpectrogramEnable() {
 
 	// spectrogramData = buffer.get<SpectrogramData>();
 
-	fft::blackmanharris(spectrogramData->window, SIZE, true);
+	fft::blackmanharris(spectrogramData->window, KNOCK_SIZE, true);
 
 	engineConfiguration->enableKnockSpectrogram = true;
 }
