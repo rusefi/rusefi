@@ -74,7 +74,6 @@
 #include "bluetooth.h"
 #include "tunerstudio_io.h"
 #include "trigger_scope.h"
-#include "software_knock.h"
 #include "electronic_throttle.h"
 #include "live_data.h"
 #include "efi_quote.h"

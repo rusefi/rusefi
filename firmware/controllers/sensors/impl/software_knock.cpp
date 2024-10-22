@@ -1,12 +1,11 @@
 #include "pch.h"
 
+#if EFI_SOFTWARE_KNOCK
+
 #include "biquad.h"
 #include "thread_controller.h"
 #include "knock_logic.h"
 #include "software_knock.h"
-
-#if EFI_SOFTWARE_KNOCK
-
 #include "knock_config.h"
 #include "ch.hpp"
 

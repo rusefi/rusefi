@@ -45,7 +45,9 @@
 #include "vvt.h"
 #include "trigger_emulator_algo.h"
 #include "boost_control.h"
+#if EFI_SOFTWARE_KNOCK
 #include "software_knock.h"
+#endif
 #include "trigger_scope.h"
 #include "init.h"
 #if EFI_MC33816
