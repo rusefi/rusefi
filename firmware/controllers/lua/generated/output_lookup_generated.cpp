@@ -955,9 +955,6 @@ float getOutputValueByName(const char *name) {
 // m_maximumRetard
 		case 164334513:
 			return ___engine.module<KnockController>()->m_maximumRetard;
-// m_knockFrequency
-		case -249826215:
-			return ___engine.module<KnockController>()->m_knockFrequency;
 // m_knockSpectrumChannelCyl
 		case -806484581:
 			return ___engine.module<KnockController>()->m_knockSpectrumChannelCyl;

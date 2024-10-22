@@ -412,7 +412,6 @@ static const LogField fields[] = {
 	{___engine.module<KnockController>()->m_knockThreshold, "Knock: Threshold", "", 0},
 	{___engine.module<KnockController>()->m_knockCount, "Knock: Count", "", 0},
 	{___engine.module<KnockController>()->m_maximumRetard, "Knock: Max retard", "", 0},
-	{___engine.module<KnockController>()->m_knockFrequency, "knock: frequency", "Hz", 2},
 	{___engine.module<KnockController>()->m_knockSpectrum[0], "Knock: SpectrumData 1", "compressed data", 0},
 	{___engine.module<KnockController>()->m_knockSpectrum[1], "Knock: SpectrumData 2", "compressed data", 0},
 	{___engine.module<KnockController>()->m_knockSpectrum[2], "Knock: SpectrumData 3", "compressed data", 0},

@@ -195,27 +195,26 @@ public class KnockController {
 	public static final Field M_KNOCKTHRESHOLD = Field.create("M_KNOCKTHRESHOLD", 20, FieldType.FLOAT).setBaseOffset(940);
 	public static final Field M_KNOCKCOUNT = Field.create("M_KNOCKCOUNT", 24, FieldType.INT).setScale(1.0).setBaseOffset(940);
 	public static final Field M_MAXIMUMRETARD = Field.create("M_MAXIMUMRETARD", 28, FieldType.FLOAT).setBaseOffset(940);
-	public static final Field M_KNOCKFREQUENCY = Field.create("M_KNOCKFREQUENCY", 32, FieldType.INT).setScale(1.0).setBaseOffset(940);
-	public static final Field M_KNOCKSPECTRUM1 = Field.create("M_KNOCKSPECTRUM1", 36, FieldType.INT).setScale(1.0).setBaseOffset(940);
-	public static final Field M_KNOCKSPECTRUM2 = Field.create("M_KNOCKSPECTRUM2", 40, FieldType.INT).setScale(1.0).setBaseOffset(940);
-	public static final Field M_KNOCKSPECTRUM3 = Field.create("M_KNOCKSPECTRUM3", 44, FieldType.INT).setScale(1.0).setBaseOffset(940);
-	public static final Field M_KNOCKSPECTRUM4 = Field.create("M_KNOCKSPECTRUM4", 48, FieldType.INT).setScale(1.0).setBaseOffset(940);
-	public static final Field M_KNOCKSPECTRUM5 = Field.create("M_KNOCKSPECTRUM5", 52, FieldType.INT).setScale(1.0).setBaseOffset(940);
-	public static final Field M_KNOCKSPECTRUM6 = Field.create("M_KNOCKSPECTRUM6", 56, FieldType.INT).setScale(1.0).setBaseOffset(940);
-	public static final Field M_KNOCKSPECTRUM7 = Field.create("M_KNOCKSPECTRUM7", 60, FieldType.INT).setScale(1.0).setBaseOffset(940);
-	public static final Field M_KNOCKSPECTRUM8 = Field.create("M_KNOCKSPECTRUM8", 64, FieldType.INT).setScale(1.0).setBaseOffset(940);
-	public static final Field M_KNOCKSPECTRUM9 = Field.create("M_KNOCKSPECTRUM9", 68, FieldType.INT).setScale(1.0).setBaseOffset(940);
-	public static final Field M_KNOCKSPECTRUM10 = Field.create("M_KNOCKSPECTRUM10", 72, FieldType.INT).setScale(1.0).setBaseOffset(940);
-	public static final Field M_KNOCKSPECTRUM11 = Field.create("M_KNOCKSPECTRUM11", 76, FieldType.INT).setScale(1.0).setBaseOffset(940);
-	public static final Field M_KNOCKSPECTRUM12 = Field.create("M_KNOCKSPECTRUM12", 80, FieldType.INT).setScale(1.0).setBaseOffset(940);
-	public static final Field M_KNOCKSPECTRUM13 = Field.create("M_KNOCKSPECTRUM13", 84, FieldType.INT).setScale(1.0).setBaseOffset(940);
-	public static final Field M_KNOCKSPECTRUM14 = Field.create("M_KNOCKSPECTRUM14", 88, FieldType.INT).setScale(1.0).setBaseOffset(940);
-	public static final Field M_KNOCKSPECTRUM15 = Field.create("M_KNOCKSPECTRUM15", 92, FieldType.INT).setScale(1.0).setBaseOffset(940);
-	public static final Field M_KNOCKSPECTRUM16 = Field.create("M_KNOCKSPECTRUM16", 96, FieldType.INT).setScale(1.0).setBaseOffset(940);
-	public static final Field M_KNOCKSPECTRUMCHANNELCYL = Field.create("M_KNOCKSPECTRUMCHANNELCYL", 100, FieldType.INT16).setScale(1.0).setBaseOffset(940);
-	public static final Field M_KNOCKFREQUENCYSTART = Field.create("M_KNOCKFREQUENCYSTART", 102, FieldType.INT16).setScale(1.0).setBaseOffset(940);
-	public static final Field M_KNOCKFREQUENCYSTEP = Field.create("M_KNOCKFREQUENCYSTEP", 104, FieldType.FLOAT).setBaseOffset(940);
-	public static final Field M_KNOCKFUELTRIMMULTIPLIER = Field.create("M_KNOCKFUELTRIMMULTIPLIER", 108, FieldType.FLOAT).setBaseOffset(940);
+	public static final Field M_KNOCKSPECTRUM1 = Field.create("M_KNOCKSPECTRUM1", 32, FieldType.INT).setScale(1.0).setBaseOffset(940);
+	public static final Field M_KNOCKSPECTRUM2 = Field.create("M_KNOCKSPECTRUM2", 36, FieldType.INT).setScale(1.0).setBaseOffset(940);
+	public static final Field M_KNOCKSPECTRUM3 = Field.create("M_KNOCKSPECTRUM3", 40, FieldType.INT).setScale(1.0).setBaseOffset(940);
+	public static final Field M_KNOCKSPECTRUM4 = Field.create("M_KNOCKSPECTRUM4", 44, FieldType.INT).setScale(1.0).setBaseOffset(940);
+	public static final Field M_KNOCKSPECTRUM5 = Field.create("M_KNOCKSPECTRUM5", 48, FieldType.INT).setScale(1.0).setBaseOffset(940);
+	public static final Field M_KNOCKSPECTRUM6 = Field.create("M_KNOCKSPECTRUM6", 52, FieldType.INT).setScale(1.0).setBaseOffset(940);
+	public static final Field M_KNOCKSPECTRUM7 = Field.create("M_KNOCKSPECTRUM7", 56, FieldType.INT).setScale(1.0).setBaseOffset(940);
+	public static final Field M_KNOCKSPECTRUM8 = Field.create("M_KNOCKSPECTRUM8", 60, FieldType.INT).setScale(1.0).setBaseOffset(940);
+	public static final Field M_KNOCKSPECTRUM9 = Field.create("M_KNOCKSPECTRUM9", 64, FieldType.INT).setScale(1.0).setBaseOffset(940);
+	public static final Field M_KNOCKSPECTRUM10 = Field.create("M_KNOCKSPECTRUM10", 68, FieldType.INT).setScale(1.0).setBaseOffset(940);
+	public static final Field M_KNOCKSPECTRUM11 = Field.create("M_KNOCKSPECTRUM11", 72, FieldType.INT).setScale(1.0).setBaseOffset(940);
+	public static final Field M_KNOCKSPECTRUM12 = Field.create("M_KNOCKSPECTRUM12", 76, FieldType.INT).setScale(1.0).setBaseOffset(940);
+	public static final Field M_KNOCKSPECTRUM13 = Field.create("M_KNOCKSPECTRUM13", 80, FieldType.INT).setScale(1.0).setBaseOffset(940);
+	public static final Field M_KNOCKSPECTRUM14 = Field.create("M_KNOCKSPECTRUM14", 84, FieldType.INT).setScale(1.0).setBaseOffset(940);
+	public static final Field M_KNOCKSPECTRUM15 = Field.create("M_KNOCKSPECTRUM15", 88, FieldType.INT).setScale(1.0).setBaseOffset(940);
+	public static final Field M_KNOCKSPECTRUM16 = Field.create("M_KNOCKSPECTRUM16", 92, FieldType.INT).setScale(1.0).setBaseOffset(940);
+	public static final Field M_KNOCKSPECTRUMCHANNELCYL = Field.create("M_KNOCKSPECTRUMCHANNELCYL", 96, FieldType.INT16).setScale(1.0).setBaseOffset(940);
+	public static final Field M_KNOCKFREQUENCYSTART = Field.create("M_KNOCKFREQUENCYSTART", 98, FieldType.INT16).setScale(1.0).setBaseOffset(940);
+	public static final Field M_KNOCKFREQUENCYSTEP = Field.create("M_KNOCKFREQUENCYSTEP", 100, FieldType.FLOAT).setBaseOffset(940);
+	public static final Field M_KNOCKFUELTRIMMULTIPLIER = Field.create("M_KNOCKFUELTRIMMULTIPLIER", 104, FieldType.FLOAT).setBaseOffset(940);
 	public static final Field[] VALUES = {
 	M_KNOCKLEVEL,
 	M_KNOCKCYL1,
@@ -234,7 +233,6 @@ public class KnockController {
 	M_KNOCKTHRESHOLD,
 	M_KNOCKCOUNT,
 	M_MAXIMUMRETARD,
-	M_KNOCKFREQUENCY,
 	M_KNOCKSPECTRUM1,
 	M_KNOCKSPECTRUM2,
 	M_KNOCKSPECTRUM3,

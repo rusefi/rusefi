@@ -178,18 +178,18 @@ public class TriggerState {
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field CRANKSYNCHRONIZATIONCOUNTER = Field.create("CRANKSYNCHRONIZATIONCOUNTER", 0, FieldType.INT).setScale(1.0).setBaseOffset(1412);
-	public static final Field VVTSYNCGAPRATIO = Field.create("VVTSYNCGAPRATIO", 4, FieldType.FLOAT).setBaseOffset(1412);
-	public static final Field VVTTOOTHDURATIONS0 = Field.create("VVTTOOTHDURATIONS0", 8, FieldType.INT).setScale(1.0).setBaseOffset(1412);
-	public static final Field VVTCURRENTPOSITION = Field.create("VVTCURRENTPOSITION", 12, FieldType.FLOAT).setBaseOffset(1412);
-	public static final Field VVTTOOTHPOSITION1 = Field.create("VVTTOOTHPOSITION1", 16, FieldType.FLOAT).setBaseOffset(1412);
-	public static final Field VVTTOOTHPOSITION2 = Field.create("VVTTOOTHPOSITION2", 20, FieldType.FLOAT).setBaseOffset(1412);
-	public static final Field VVTTOOTHPOSITION3 = Field.create("VVTTOOTHPOSITION3", 24, FieldType.FLOAT).setBaseOffset(1412);
-	public static final Field VVTTOOTHPOSITION4 = Field.create("VVTTOOTHPOSITION4", 28, FieldType.FLOAT).setBaseOffset(1412);
-	public static final Field TRIGGERSYNCGAPRATIO = Field.create("TRIGGERSYNCGAPRATIO", 32, FieldType.FLOAT).setBaseOffset(1412);
-	public static final Field TRIGGERSTATEINDEX = Field.create("TRIGGERSTATEINDEX", 36, FieldType.INT8).setScale(1.0).setBaseOffset(1412);
-	public static final Field VVTSTATEINDEX = Field.create("VVTSTATEINDEX", 37, FieldType.INT8).setScale(1.0).setBaseOffset(1412);
-	public static final Field ALIGNMENTFILL_AT_38 = Field.create("ALIGNMENTFILL_AT_38", 38, FieldType.INT8).setScale(1.0).setBaseOffset(1412);
+	public static final Field CRANKSYNCHRONIZATIONCOUNTER = Field.create("CRANKSYNCHRONIZATIONCOUNTER", 0, FieldType.INT).setScale(1.0).setBaseOffset(1408);
+	public static final Field VVTSYNCGAPRATIO = Field.create("VVTSYNCGAPRATIO", 4, FieldType.FLOAT).setBaseOffset(1408);
+	public static final Field VVTTOOTHDURATIONS0 = Field.create("VVTTOOTHDURATIONS0", 8, FieldType.INT).setScale(1.0).setBaseOffset(1408);
+	public static final Field VVTCURRENTPOSITION = Field.create("VVTCURRENTPOSITION", 12, FieldType.FLOAT).setBaseOffset(1408);
+	public static final Field VVTTOOTHPOSITION1 = Field.create("VVTTOOTHPOSITION1", 16, FieldType.FLOAT).setBaseOffset(1408);
+	public static final Field VVTTOOTHPOSITION2 = Field.create("VVTTOOTHPOSITION2", 20, FieldType.FLOAT).setBaseOffset(1408);
+	public static final Field VVTTOOTHPOSITION3 = Field.create("VVTTOOTHPOSITION3", 24, FieldType.FLOAT).setBaseOffset(1408);
+	public static final Field VVTTOOTHPOSITION4 = Field.create("VVTTOOTHPOSITION4", 28, FieldType.FLOAT).setBaseOffset(1408);
+	public static final Field TRIGGERSYNCGAPRATIO = Field.create("TRIGGERSYNCGAPRATIO", 32, FieldType.FLOAT).setBaseOffset(1408);
+	public static final Field TRIGGERSTATEINDEX = Field.create("TRIGGERSTATEINDEX", 36, FieldType.INT8).setScale(1.0).setBaseOffset(1408);
+	public static final Field VVTSTATEINDEX = Field.create("VVTSTATEINDEX", 37, FieldType.INT8).setScale(1.0).setBaseOffset(1408);
+	public static final Field ALIGNMENTFILL_AT_38 = Field.create("ALIGNMENTFILL_AT_38", 38, FieldType.INT8).setScale(1.0).setBaseOffset(1408);
 	public static final Field[] VALUES = {
 	CRANKSYNCHRONIZATIONCOUNTER,
 	VVTSYNCGAPRATIO,
