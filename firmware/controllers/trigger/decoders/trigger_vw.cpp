@@ -12,7 +12,7 @@
 void setSkodaFavorit(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Fall);
 
-	s->addEvent360(0, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+	s->addEvent360(360, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 	s->addEvent360(46, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 
 	s->addEvent360(180, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
