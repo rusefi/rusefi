@@ -39,43 +39,37 @@ struct knock_controller_s {
 	 */
 	float m_maximumRetard = (float)0;
 	/**
-	 * @@GAUGE_NAME_KNOCK_FREQ@@
-	 * units: Hz
-	 * offset 32
-	 */
-	uint32_t m_knockFrequency = (uint32_t)0;
-	/**
 	 * Knock: SpectrumData
 	 * units: compressed data
-	 * offset 36
+	 * offset 32
 	 */
 	uint32_t m_knockSpectrum[16];
 	/**
 	 * Knock: ChannelAndCylNumber
 	 * units: compressed N + N
-	 * offset 100
+	 * offset 96
 	 */
 	uint16_t m_knockSpectrumChannelCyl = (uint16_t)0;
 	/**
 	 * Knock: Start Freq
 	 * units: Hz
-	 * offset 102
+	 * offset 98
 	 */
 	uint16_t m_knockFrequencyStart = (uint16_t)0;
 	/**
 	 * Knock: Step Freq
 	 * units: Hz
-	 * offset 104
+	 * offset 100
 	 */
 	float m_knockFrequencyStep = (float)0;
 	/**
 	 * Knock: Fuel trim when knock
 	 * units: multiplier
-	 * offset 108
+	 * offset 104
 	 */
 	float m_knockFuelTrimMultiplier = (float)0;
 };
-static_assert(sizeof(knock_controller_s) == 112);
+static_assert(sizeof(knock_controller_s) == 108);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/engine_cycle/knock_controller.txt
