@@ -7,22 +7,23 @@
 
 TEST(knock, fft) {
   SpectrogramData data;
-  adcsample_t sampleBuffer[KNOCK_SIZE];
+  adcsample_t sampleBuffer[FFT_SIZE];
 
   float ratio = 1;
+  float sensetivity = 1;
 
-  for (int i = 0;i<KNOCK_SIZE;i++) {
+  for (int i = 0;i<FFT_SIZE;i++) {
     data.window[i] = 35;
     sampleBuffer[i] = i;
   }
 
-  fft::fft_adc_sample(data.window, ratio, sampleBuffer, data.fftBuffer, KNOCK_SIZE);
-  fft::fft_freq(data.frequencies, KNOCK_SIZE, KNOCK_SAMPLE_RATE);
+  fft::fft_adc_sample(data.window, ratio, sensetivity, sampleBuffer, data.fftBuffer, FFT_SIZE);
 
-	fft::fft_amp(data.fftBuffer, data.amplitudes, KNOCK_SIZE);
+  ASSERT_NEAR(data.fftBuffer[2].imag(), 730090, 1);
+  ASSERT_NEAR(data.fftBuffer[3].imag(), 486696, 1);
+  ASSERT_NEAR(data.fftBuffer[4].imag(), 364990, 1);
 
-	float mainFreq = fft::get_main_freq(data.amplitudes, data.frequencies, KNOCK_SIZE / 2);
-
-	ASSERT_NEAR(mainFreq, -4.2955f, EPS4D);
-
+  ASSERT_NEAR(data.fftBuffer[2].real(), -8960, 1);
+  ASSERT_NEAR(data.fftBuffer[3].real(), -8960, 1);
+  ASSERT_NEAR(data.fftBuffer[4].real(), -8960, 1);
 }
