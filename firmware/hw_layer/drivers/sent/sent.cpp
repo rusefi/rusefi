@@ -494,7 +494,7 @@ uint8_t sent_channel::crc6(uint32_t data)
 		uint8_t tmp = (data >> (24 - 6 * (i + 1))) & 0x3f;
 		crc = tmp ^ crc6_table[crc];
 	}
-	// Extra cound with 0 input
+	// Extra round with 0 input
 	crc = 0 ^ crc6_table[crc];
 
 	return crc;
