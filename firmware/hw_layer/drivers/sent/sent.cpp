@@ -59,7 +59,7 @@
 /* convert CPU ticks to float Us */
 #define TicksToUs(ticks)		((float)(ticks) * 1000.0 * 1000.0 / CORE_CLOCK)
 
-void sent_channel::restart(void) {
+void sent_channel::restart() {
 	state = SENT_STATE_CALIB;
 	pulseCounter = 0;
 	currentStatePulseCounter = 0;
@@ -89,7 +89,7 @@ uint32_t sent_channel::calcTickPerUnit(uint32_t clocks) {
 			(SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
 }
 
-float sent_channel::getTickTime(void) {
+float sent_channel::getTickTime() {
 	return tickPerUnit;
 }
 
@@ -506,7 +506,7 @@ uint8_t sent_channel::crc6(uint32_t data)
 
 static sent_channel channels[SENT_CHANNELS_NUM];
 
-void sent_channel::Info(void) {
+void sent_channel::Info() {
 	uint8_t stat;
 	uint16_t sig0, sig1;
 

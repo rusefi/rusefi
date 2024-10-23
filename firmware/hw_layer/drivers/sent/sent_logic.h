@@ -72,10 +72,10 @@ private:
 	uint16_t scMsgFlags;
 	uint32_t scShift2;	/* shift register for bit 2 from status nibble */
 	uint32_t scShift3;	/* shift register for bit 3 from status nibble */
-	uint32_t scCrcShift;	/* shift regiter for special order for CRC6 calculation */
+	uint32_t scCrcShift;	/* shift register for special order for CRC6 calculation */
 	/* Slow channel decoder and helpers */
 	int StoreSlowChannelValue(uint8_t id, uint16_t data);
-	int SlowChannelDecoder(void);
+	int SlowChannelDecoder();
 
 	/* CRC */
 	uint8_t crc4(uint32_t data);
@@ -87,7 +87,7 @@ private:
 	/* calc unit tick time from sync pulse */
 	uint32_t calcTickPerUnit(uint32_t clocks);
 
-	void restart(void);
+	void restart();
 
 public:
 	/* slow channel data */
@@ -109,15 +109,15 @@ public:
 	/* Unpack last valid message to status, signal0 and signal1
 	 * Note:
 	 * sig0 is nibbles 0 .. 2, where nibble 0 is MSB
-	 * sig1 is niblles 5 .. 3, where niblle 5 is MSB */
+	 * sig1 is nibbles 5 .. 3, where nibble 5 is MSB */
 	int GetSignals(uint8_t *pStat, uint16_t *pSig0, uint16_t *pSig1);
 
 	/* Get slow channel value for given ID 8*/
 	int GetSlowChannelValue(uint8_t id);
 
 	/* Current tick time in CPU/timer clocks */
-	float getTickTime(void);
+	float getTickTime();
 
 	/* Show status */
-	void Info(void);
+	void Info();
 };
