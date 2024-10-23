@@ -1558,7 +1558,7 @@ uint8_t[TORQUE_CURVE_SIZE x TORQUE_CURVE_SIZE] autoscale torqueTable;;"Nm", 10, 
 		custom TransmissionControllerMode 1 bits, U08, @OFFSET@, [0:1], @@transmission_controller_e_enum@@
 		TransmissionControllerMode transmissionControllerMode
 
-	uint16_t acrDisablePhase;;"deg", 1, 0, 0, 720, 0
+	uint16_t acrDisablePhase;During revolution where ACR should be disabled at what specific angle to disengage;"deg", 1, 0, 0, 720, 0
 
 linear_sensor_s auxLinear1
 linear_sensor_s auxLinear2
