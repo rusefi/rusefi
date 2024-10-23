@@ -2,4 +2,4 @@ Here we have source code for rusEFI console: while [TunerStudio](http://www.tune
 
 See also http://rusefi.com/build_server/ for pre-compiled full bundle
 
-this java_console folder is part of [../java_tools](../java_tools) gradle project
+🔴 not main folder for java code - it's [../java_tools](../java_tools) where primary build.gradle is located 🔴
