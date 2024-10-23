@@ -1,4 +1,6 @@
-Here we have some dev utilities - average rusEFI user would not need to use any of these!
+Main folder for rusEFI console source code, also some dev utilities.
+
+TODO: one day we shall merge java_console and java_tools, right after we come up with an amazing combined folder name!
 
 ```
 ./gradlew :config_definition:shadowJar
