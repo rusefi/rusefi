@@ -3991,6 +3991,7 @@ struct engine_configuration_s {
 	 */
 	TransmissionControllerMode transmissionControllerMode;
 	/**
+	 * During revolution where ACR should be disabled at what specific angle to disengage
 	 * units: deg
 	 * offset 3170
 	 */

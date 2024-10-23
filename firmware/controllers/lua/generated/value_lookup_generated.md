@@ -1589,7 +1589,7 @@ The fastest rate the target pressure can be reduced by. This is because HPFP hav
 We need to give engine time to build oil pressure without diverting it to VVT
 
 ### acrDisablePhase
-
+During revolution where ACR should be disabled at what specific angle to disengage
 
 ### auxLinear1.v1
 
