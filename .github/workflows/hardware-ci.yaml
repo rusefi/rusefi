@@ -12,11 +12,9 @@ jobs:
       # Let all builds finish even if one fails early
       fail-fast: false
       matrix:
-        build-target: [f407-discovery
-#          ,
+        build-target: [f407-discovery,
           #proteus F7 HW CI is not 100% reliable #6002          proteus_f7,
-        #  proteus_f4
-        ]
+          proteus_f4]
 
         include:
           - build-target: f407-discovery
@@ -29,15 +27,15 @@ jobs:
             vbatt_supply: 12
             stlink-serial: H?u\x06geVQ2S\x08g
 
-#          - build-target: proteus_f4
-#            runs-on: hw-ci-proteus
-#            # see HwCiProteus which would point you at ProteusAnalogTest.java for wiring documentation
-#            test-suite: com.rusefi.HwCiProteus
-#            folder: config/boards/proteus
-#            openocd-script: .github/workflows/openocd_ci_proteus_f4.cfg
-#            serial-device: /dev/serial/by-id/usb-rusEFI_LLC_rusEFI_Engine_Management_ECU_41003D000451383037343335-if01
-#            vbatt_supply: 12
-#            stlink-serial: 004D00323137511133333639
+          - build-target: proteus_f4
+            runs-on: hw-ci-proteus
+            # see HwCiProteus which would point you at ProteusAnalogTest.java for wiring documentation
+            test-suite: com.rusefi.HwCiProteus
+            folder: config/boards/proteus
+            openocd-script: .github/workflows/openocd_ci_proteus_f4.cfg
+            serial-device: /dev/serial/by-id/usb-rusEFI_LLC_rusEFI_Engine_Management_ECU_41003D000451383037343335-if01
+            vbatt_supply: 12
+            stlink-serial: 004D00323137511133333639
 
 #          - build-target: proteus_f7
 #            runs-on: hw-ci-proteus-f7
