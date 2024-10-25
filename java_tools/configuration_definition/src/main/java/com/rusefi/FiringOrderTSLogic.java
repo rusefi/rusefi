@@ -32,9 +32,9 @@ public class FiringOrderTSLogic {
         readFiringOrders(fileName, state);
 
         StringBuilder sb = new StringBuilder();
-        for (int i = 2; i <= 12; i++) {
+        for (int i = 2; i <= /*MAX_CYLINDER_COUNT?*/12; i++) {
             String line = processId(i, state);
-            sb.append(line).append("\r\n");
+            sb.append(line).append("\n");
         }
         return sb.toString();
     }

@@ -44,10 +44,10 @@ public class ConfigDefinition {
             String[] totalArgs = options.toArray(new String[0]);
             if (totalArgs.length < 2) {
                 log.error("Please specify\r\n"
-                        + KEY_DEFINITION + " x\r\n"
-                        + KEY_TS_TEMPLATE + " x\r\n"
-                        + KEY_C_DESTINATION + " x\r\n"
-                        + KEY_JAVA_DESTINATION + " x\r\n"
+                        + KEY_DEFINITION + " x\n"
+                        + KEY_TS_TEMPLATE + " x\n"
+                        + KEY_C_DESTINATION + " x\n"
+                        + KEY_JAVA_DESTINATION + " x\n"
                 );
                 return;
             }
