@@ -23,7 +23,7 @@ static void onGrabPedal() {
   static uint8_t grabPedalCounter = 0;
 	grabPedalCounter++;
 	if (grabPedalCounter % 2 == 0) {
-	  requestBurn();
+	  // todo fix root cause! work-around: make sure not to write bad tune since that would brick requestBurn();
 	}
 }
 

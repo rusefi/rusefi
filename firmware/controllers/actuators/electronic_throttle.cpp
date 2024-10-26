@@ -822,7 +822,7 @@ void etbAutocal(size_t throttleIndex) {
 	if (auto etb = engine->etbControllers[throttleIndex]) {
 	  assertNotNullVoid(etb);
 		etb->autoCalibrateTps();
-		requestBurn();
+		// todo fix root cause! work-around: make sure not to write bad tune since that would brick requestBurn();
 	}
 }
 
