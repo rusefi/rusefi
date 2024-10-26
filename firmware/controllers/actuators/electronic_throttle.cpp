@@ -655,6 +655,7 @@ void EtbController::autoCalibrateTps() {
 	// Only auto calibrate throttles
 	if (m_function == DC_Throttle1 || m_function == DC_Throttle2) {
 		m_isAutocal = true;
+		efiPrintf("m_isAutocal");
 	}
 }
 
@@ -681,12 +682,14 @@ struct EtbImpl final : public TBase {
 	if (TBase::m_isAutocal) {
 		// Don't allow if engine is running!
 		if (Sensor::getOrZero(SensorType::Rpm) > 0) {
+		  efiPrintf(" ****************** ERROR: Not while RPM ********************");
 			TBase::m_isAutocal = false;
 			return;
 		}
 
 		auto motor = TBase::getMotor();
 		if (!motor) {
+		  efiPrintf(" ****************** ERROR: No motor ********************");
 			TBase::m_isAutocal = false;
 			return;
 		}
@@ -694,11 +697,13 @@ struct EtbImpl final : public TBase {
 		auto myFunction = TBase::getFunction();
 
 		// First grab open
+	  efiPrintf("Opening!");
 		motor->set(0.5f);
 		motor->enable();
 		chThdSleepMilliseconds(1000);
 		float primaryMax = Sensor::getRaw(functionToTpsSensorPrimary(myFunction));
 		float secondaryMax = Sensor::getRaw(functionToTpsSensorSecondary(myFunction));
+	  efiPrintf("Opened %f %f", primaryMax, secondaryMax);
 
 		// Let it return
 		motor->set(0);
@@ -985,6 +990,11 @@ void initElectronicThrottle() {
 	}
 
 #if EFI_PROD_CODE
+  addConsoleAction("etbautocal", [](){
+    efiPrintf("etbAutocal invoked");
+    etbAutocal(0);
+	});
+
 	addConsoleAction("etbinfo", [](){
 	  efiPrintf("etbAutoTune=%d", engine->etbAutoTune);
 	  efiPrintf("TPS=%.2f", Sensor::getOrZero(SensorType::Tps1));
