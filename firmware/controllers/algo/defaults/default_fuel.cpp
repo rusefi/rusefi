@@ -81,7 +81,7 @@ static void setDefaultWarmupFuelEnrichment() {
 
 static void setDefaultVETable() {
 	setRpmTableBin(config->veRpmBins);
-#if (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT) && (IGN_RPM_COUNT == DEFAULT_IGN_RPM_COUNT)
+#if (IGN_LOAD_COUNT == 16) && (IGN_RPM_COUNT == 16)
 	static const float hardCodedveTable[16][16] = {
 {49.300,	49.300,	49.400,	49.600,	50.200,	51.400,	52.600,	53.800,	54.400,	54.600,	54.400,	53.700,	52.800,	51.800,	50.900,	50.000,	},
 {49.600,	50.500,	51.500,	54.100,	57.500,	60.700,	62.900,	64.400,	65.000,	65.000,	64.500,	63.500,	62.300,	61.100,	60.000,	58.800,	},
@@ -199,7 +199,7 @@ static void setMazdaMiataNbTpsTps() {
 static void setDefaultLambdaTable() {
 	setRpmTableBin(config->lambdaRpmBins);
 
-#if (FUEL_LOAD_COUNT == DEFAULT_FUEL_LOAD_COUNT) && (FUEL_RPM_COUNT == DEFAULT_FUEL_LOAD_COUNT)
+#if (FUEL_LOAD_COUNT == 16) && (FUEL_RPM_COUNT == 16)
 	static constexpr float mapBins[] = {
 		30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 150, 175, 200, 225, 250
 	};

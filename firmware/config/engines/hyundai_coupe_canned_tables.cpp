@@ -24,7 +24,7 @@ static void cannedcltIdleCorr() {
 }
 
 static void couplecannedveTable() {
-#if (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT) && (IGN_RPM_COUNT == DEFAULT_IGN_RPM_COUNT)
+#if (IGN_LOAD_COUNT == 16) && (IGN_RPM_COUNT == 16)
 	static const float hardCodedveTable[16][16] = {
 {52.000,	54.000,	54.000,	56.000,	61.000,	55.000,	55.000,	65.000,	65.000,	60.000,	60.000,	60.000,	60.000,	60.000,	60.000,	60.000,	},
 {51.500,	54.500,	54.400,	56.000,	61.000,	68.100,	66.800,	67.600,	68.200,	63.400,	63.400,	63.400,	63.400,	63.400,	63.400,	63.400,	},
@@ -48,7 +48,7 @@ static void couplecannedveTable() {
 }
 
 static void couplecannedignitionTable() {
-#if (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT) && (IGN_RPM_COUNT == DEFAULT_IGN_RPM_COUNT)
+#if (IGN_LOAD_COUNT == 16) && (IGN_RPM_COUNT == 16)
 	static const float hardCodedignitionTable[16][16] = {
 {12.100,	14.000,	17.800,	22.900,	29.300,	35.600,	-20.000,	-20.000,	-20.000,	-20.000,	-20.000,	-20.000,	42.000,	42.000,	42.000,	42.000,	},
 {11.800,	13.700,	10.000,	14.900,	28.600,	34.800,	-20.000,	-20.000,	-20.000,	-20.000,	-20.000,	-20.000,	41.000,	41.000,	41.000,	41.000,	},

@@ -1,5 +1,5 @@
 #ifdef HW_HELLEN_UAEFI
-#if (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT) && (IGN_RPM_COUNT == DEFAULT_IGN_RPM_COUNT) && (FUEL_LOAD_COUNT == DEFAULT_FUEL_LOAD_COUNT) && (FUEL_RPM_COUNT == DEFAULT_FUEL_LOAD_COUNT)
+#if (IGN_LOAD_COUNT == 16) && (IGN_RPM_COUNT == 16) && (FUEL_LOAD_COUNT == 16) && (FUEL_RPM_COUNT == 16)
 
 static void cannedignitionTable() {
 	static const float hardCodedignitionTable[16][16] = {

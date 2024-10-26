@@ -20,7 +20,7 @@
 #include "custom_engine.h"
 
 
-#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
+#if IGN_LOAD_COUNT == 16
 static const uint8_t miataNA8_maf_advance_table[16][16] = { {/*0  engineLoad=1.200*//*0 800.0*/+4, /*1 1213.0*/+11, /*2 1626.0*/
 		+23, /*3 2040.0*/+25, /*4 2453.0*/+25, /*5 2866.0*/+25, /*6 3280.0*/+29, /*7 3693.0*/
 		+32, /*8 4106.0*/+35, /*9 4520.0*/+37, /*10 4933.0*/+36, /*11 5346.0*/+30, /*12 5760.0*/

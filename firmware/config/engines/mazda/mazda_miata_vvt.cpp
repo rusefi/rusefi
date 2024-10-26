@@ -92,7 +92,7 @@ static const uint8_t SCRIPT_TABLE_vvt_target[VVT_TABLE_SIZE][VVT_TABLE_SIZE] = {
 };
 #endif
 
-#if (FUEL_LOAD_COUNT == DEFAULT_FUEL_LOAD_COUNT) && (FUEL_RPM_COUNT == DEFAULT_FUEL_LOAD_COUNT)
+#if (FUEL_LOAD_COUNT == 16) && (FUEL_RPM_COUNT == 16)
 const float mazda_miata_nb2_RpmBins[FUEL_RPM_COUNT] = {700.0, 820.0, 950.0, 1100.0,
 		1300.0, 1550.0, 1800.0, 2150.0,
 		2500.0, 3000.0, 3500.0, 4150.0,
@@ -106,7 +106,7 @@ const float mazda_miata_nb2_LoadBins[FUEL_LOAD_COUNT] = {20.0, 25.0, 30.0, 35.0,
 ;
 #endif
 
-#if (IGN_RPM_COUNT == DEFAULT_IGN_RPM_COUNT) && (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT)
+#if (IGN_RPM_COUNT == 16) && (IGN_LOAD_COUNT == 16)
 static const  float ignition18vvtRpmBins[IGN_RPM_COUNT] = {
 		700.0, 		         850.0 ,		         943.0 ,
 		         1112.0 ,		         1310.0 ,		         1545.0 ,
@@ -302,13 +302,13 @@ static void setCommonMazdaNB() {
 	// Tach
 	engineConfiguration->tachPulsePerRev = 2;
 
-#if (FUEL_RPM_COUNT == DEFAULT_FUEL_LOAD_COUNT) && (FUEL_LOAD_COUNT == DEFAULT_FUEL_LOAD_COUNT)
+#if (FUEL_RPM_COUNT == 16) && (FUEL_LOAD_COUNT == 16)
 	// Tables
 	copyArray(config->veRpmBins, mazda_miata_nb2_RpmBins);
 	copyArray(config->veLoadBins, mazda_miata_nb2_LoadBins);
 #endif
 
-#if (IGN_RPM_COUNT == DEFAULT_IGN_RPM_COUNT) && (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT)
+#if (IGN_RPM_COUNT == 16) && (IGN_LOAD_COUNT == 16)
 	copyTable(config->veTable, mapBased18vvtVeTable_NB_fuel_rail);
 	copyArray(config->ignitionRpmBins, ignition18vvtRpmBins);
 	copyArray(config->ignitionLoadBins, ignition18vvtLoadBins);

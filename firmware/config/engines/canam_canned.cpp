@@ -28,28 +28,28 @@ static void cannedidleAdvance() {
 }
 
 static void cannedignitionRpmBins() {
-#if (IGN_RPM_COUNT == DEFAULT_IGN_RPM_COUNT) && (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT)
+#if (IGN_RPM_COUNT == 16) && (IGN_LOAD_COUNT == 16)
 	static const float hardCodedignitionRpmBins[16] = {800.0, 1000.0, 1300.0, 1600.0, 2000.0, 2500.0, 3000.0, 3600.0, 4000.0, 4400.0, 4900.0, 5300.0, 5800.0, 6200.0, 7100.0, 8000.0};
 	copyArray(config->ignitionRpmBins, hardCodedignitionRpmBins);
 #endif
 }
 
 static void cannedignitionLoadBins() {
-#if (IGN_RPM_COUNT == DEFAULT_IGN_RPM_COUNT) && (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT)
+#if (IGN_RPM_COUNT == 16) && (IGN_LOAD_COUNT == 16)
 	static const float hardCodedignitionLoadBins[16] = {15.0, 27.0, 33.0, 45.0, 57.0, 69.0, 81.0, 93.0, 105.0, 129.0, 157.0, 186.0, 214.0, 243.0, 271.0, 300.0};
 	copyArray(config->ignitionLoadBins, hardCodedignitionLoadBins);
 #endif
 }
 
 static void cannedveRpmBins() {
-#if (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT) && (IGN_RPM_COUNT == DEFAULT_IGN_RPM_COUNT)
+#if (IGN_LOAD_COUNT == 16) && (IGN_RPM_COUNT == 16)
 	static const float hardCodedveRpmBins[16] = {800.0, 1000.0, 1300.0, 1600.0, 2000.0, 2500.0, 3000.0, 3600.0, 4000.0, 4400.0, 4900.0, 5300.0, 5800.0, 6200.0, 7100.0, 8000.0};
 	copyArray(config->veRpmBins, hardCodedveRpmBins);
 #endif
 }
 
 static void cannedveLoadBins() {
-#if (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT) && (IGN_RPM_COUNT == DEFAULT_IGN_RPM_COUNT)
+#if (IGN_LOAD_COUNT == 16) && (IGN_RPM_COUNT == 16)
 	static const float hardCodedveLoadBins[16] = {15.0, 27.0, 33.0, 45.0, 57.0, 69.0, 81.0, 93.0, 105.0, 129.0, 157.0, 186.0, 214.0, 243.0, 271.0, 300.0};
 	copyArray(config->veLoadBins, hardCodedveLoadBins);
 #endif

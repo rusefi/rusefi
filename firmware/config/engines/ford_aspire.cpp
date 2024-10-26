@@ -15,7 +15,7 @@
 
 #include "advance_map.h"
 
-#if IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT
+#if IGN_LOAD_COUNT == 16
 static const int8_t default_aspire_timing_table[16][16] = {
 /* RPM					800.000000	1213.333374	1626.666748	2040.000000	2453.333496	2866.666748	3280.000000	3693.333496	4106.666992	4520.000000	4933.333496	5346.666992	5760.000000	6173.333496	6586.666992	7000.000000*/
 /* Load 1.200000 */{	-0,	+7,	+16,	+23,	+29,	+31,	+32,	+30,	+30,	+26,	+24,	+25,	+25,	+25,	+25,	+25},
@@ -38,7 +38,7 @@ static const int8_t default_aspire_timing_table[16][16] = {
 #endif
 
 static void setDefaultAspireMaps() {
-#if (IGN_RPM_COUNT == DEFAULT_IGN_RPM_COUNT) && (IGN_LOAD_COUNT == DEFAULT_IGN_LOAD_COUNT)
+#if (IGN_RPM_COUNT == 16) && (IGN_LOAD_COUNT == 16)
 	copyTable(config->ignitionTable, default_aspire_timing_table);
 #endif
 }

@@ -23,11 +23,6 @@
 #include "efi_scaled_channel.h"
 #endif
 
-#define DEFAULT_FUEL_LOAD_COUNT 16
-#define DEFAULT_FUEL_RPM_COUNT 16
-#define DEFAULT_IGN_LOAD_COUNT 16
-#define DEFAULT_IGN_RPM_COUNT 16
-
 #define TWO_STROKE_CYCLE_DURATION 360
 #define FOUR_STROKE_CYCLE_DURATION 720
 
