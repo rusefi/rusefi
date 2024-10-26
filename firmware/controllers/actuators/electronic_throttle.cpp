@@ -147,6 +147,10 @@ static percent_t directPwmValue = NAN;
 // this macro clamps both positive and negative percentages from about -100% to 100%
 #define ETB_PERCENT_TO_DUTY(x) (clampF(-ETB_DUTY_LIMIT, 0.01f * (x), ETB_DUTY_LIMIT))
 
+PUBLIC_API_WEAK bool isBoardAllowingLackOfPps() {
+  return false;
+}
+
 bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalProvider, bool hasPedal) {
 	if (function == DC_None) {
 		// if not configured, don't init.
@@ -182,7 +186,7 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 			return false;
 		}
 
-		if (!Sensor::isRedundant(SensorType::AcceleratorPedal)) {
+		if (!isBoardAllowingLackOfPps() && !Sensor::isRedundant(SensorType::AcceleratorPedal)) {
 			firmwareError(
 				ObdCode::OBD_TPS_Configuration,
 				"Use of electronic throttle requires accelerator pedal to be redundant."

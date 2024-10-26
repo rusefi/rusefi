@@ -18,6 +18,10 @@ struct TpsConfig {
 	float max;
 };
 
+PUBLIC_API_WEAK float getFuncPairAllowedSplit() {
+  return 0.5f;
+}
+
 class FuncSensPair {
 public:
 AdcSubscriptionEntry *adc = nullptr;
@@ -67,7 +71,7 @@ private:
 		float split = std::abs(scaledOpen - scaledClosed);
 
 		// If the voltage for closed vs. open is very near, something is wrong with your calibration
-		if (split < 0.5f) {
+		if (split < getFuncPairAllowedSplit()) {
 			firmwareError(ObdCode::OBD_TPS_Configuration, "\"%s\" problem: open %.2f/closed %.2f cal values are too close together. Check your calibration and wiring!", name(),
 					cfg.open,
 					cfg.closed);
