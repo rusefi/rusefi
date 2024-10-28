@@ -7,7 +7,6 @@ import org.jetbrains.annotations.Nullable;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.InvalidPathException;
-import java.util.Date;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -48,7 +47,7 @@ public class BundleUtil {
                 return null; // just paranoia check
             return fullName;
         } catch (InvalidPathException e) {
-            System.err.println(new Date() + ": BundleUtil: Error reading bundle name");
+            log.error("Error reading bundle name", e);
             return null;
         }
     }
