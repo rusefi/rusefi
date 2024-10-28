@@ -170,7 +170,7 @@ public class Autoupdate {
         final BundleUtil.BundleInfo bundleInfo,
         final UpdateMode mode
     ) {
-        if (bundleInfo.getBranchName().equals("snapshot")) {
+        if (bundleInfo.isMaster()) {
             log.info("Snapshot requested");
             return downloadAutoupdateZipFile(bundleInfo, mode, ConnectionAndMeta.getBaseUrl() + ConnectionAndMeta.AUTOUPDATE);
         } else {
