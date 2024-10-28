@@ -1,18 +1,40 @@
 package com.rusefi.core.io;
 
+import com.devexperts.logging.Logging;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.InvalidPathException;
 import java.util.Date;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 public class BundleUtil {
+    private static final Logging log = getLogging(BundleUtil.class);
+
     private static final char BUNDLE_TOKEN_SEPARATOR = '.';
+    private static final String SNAPSHOT = "snapshot";
+
+    /**
+     * @return null in case of error
+     */
+    @Nullable
+    public static String readBranchNameToDisplay() {
+        final String bundleFullName = readBundleFullName();
+        if (bundleFullName != null) {
+            try {
+                final BundleInfo bundleInfo = parse(bundleFullName);
+                // TODO: get rid of the pornography below:
+                //  we should use `development` instead of `snapshot` for master branch in bundle name.
+                return (bundleInfo.isMaster() ? "development" : bundleInfo.getBranchName());
+            } catch (final Throwable e) {
+                log.warn(String.format("We failed to parse bundle full name `%s`", bundleFullName), e);
+            }
+        }
+        return null;
+    }
 
     /**
      * @return null in case of error
@@ -66,6 +88,10 @@ public class BundleUtil {
 
         public String getBranchName() {
             return branchName;
+        }
+
+        public boolean isMaster() {
+            return SNAPSHOT.equals(branchName);
         }
 
         public String getTarget() {

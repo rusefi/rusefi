@@ -42,6 +42,7 @@ import static javax.swing.JOptionPane.YES_NO_OPTION;
  */
 public class StartupFrame {
     private static final Logging log = getLogging(Launcher.class);
+
     public static final String ALWAYS_AUTO_PORT = "always_auto_port";
     private static final String NO_PORTS_FOUND = "<html>No ports found!<br>Confirm blue LED is blinking</html>";
     public static final String SCANNING_PORTS = "Scanning ports";
@@ -236,20 +237,32 @@ public class StartupFrame {
     }
 
     public static @NotNull JLabel binaryModificationControl() {
-        long binaryModificationTimestamp = MaintenanceUtil.getBinaryModificationTimestamp();
+        final long binaryModificationTimestamp = MaintenanceUtil.getBinaryModificationTimestamp();
         JLabel jLabel;
         if (binaryModificationTimestamp == 0) {
             jLabel = new JLabel("firmware file not found");
             jLabel.setForeground(Color.red);
         } else {
-            String fileTimestampText = "Files " + new Date(binaryModificationTimestamp);
-            jLabel = new JLabel(fileTimestampText);
+            final Date binaryModificationDate = new Date(binaryModificationTimestamp);
+            final String branchNameToDisplay = BundleUtil.readBranchNameToDisplay();
+            jLabel = new JLabel(String.format(
+                "<html><center>%s files<br/>%s</center></html>",
+                branchNameToDisplay,
+                binaryModificationDate
+            ));
             jLabel.setToolTipText("Click to copy");
             jLabel.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     Toolkit.getDefaultToolkit().getSystemClipboard()
-                        .setContents(new StringSelection(fileTimestampText), null);
+                        .setContents(
+                            new StringSelection(String.format(
+                                "%s files\r%s",
+                                branchNameToDisplay,
+                                binaryModificationDate
+                            )),
+                            null
+                        );
                 }
             });
         }
