@@ -190,7 +190,9 @@ enum class trigger_type_e : uint32_t {
 	// 4G69 would use it with different cam
 	TT_36_2_1 = 70,
 	// Mitsubishi 3 cyl and 6 cyl
+	// 36-2-1-1
     TT_36_2_1_1 = 71,
+    // 3-0
   TT_3_TOOTH_CRANK = 72,
 	TT_VVT_TOYOTA_4_1 = 73,
 	// GM 24x with 3/12 degree gaps
