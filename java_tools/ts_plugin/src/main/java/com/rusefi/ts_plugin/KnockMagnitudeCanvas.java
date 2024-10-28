@@ -11,7 +11,7 @@ import static org.apache.commons.math3.util.Precision.round;
 
 public class KnockMagnitudeCanvas {
 
-    private JComponent component = new JComponent() {
+    private final JComponent component = new JComponent() {
         @Override
         public void paint(Graphics g) {
             super.paint(g);
@@ -65,6 +65,11 @@ public class KnockMagnitudeCanvas {
         component.addComponentListener(componentListener);
 
         yAxisHz = new double[64]; // protocol size
+    }
+
+
+    public JComponent getComponent() {
+        return component;
     }
 
     public void setFrequencyStart(int start) {

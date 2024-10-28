@@ -98,8 +98,8 @@ public class KnockAnalyzerTab {
 
                             if(!started)
                             {
-                                canvas.repaint();
-                                canvas2.repaint();
+                                canvas.getComponent().repaint();
+                                canvas2.getComponent().repaint();
                                 return;
                             }
 
@@ -124,11 +124,11 @@ public class KnockAnalyzerTab {
 
                                 if(channel == 1) {
                                     canvas.processValues(values);
-                                    canvas.repaint();
+                                    canvas.getComponent().repaint();
                                 }
                                 else {
                                     canvas2.processValues(values);
-                                    canvas2.repaint();
+                                    canvas2.getComponent().repaint();
                                 }
 
                                 line_sum_index[0] = 0;
@@ -180,36 +180,18 @@ public class KnockAnalyzerTab {
         KnockMouseListener kml = new KnockMouseListener(this.canvas);
         KnockMotionListener kmml = new KnockMotionListener(this.canvas, this.magnituges);
         KnockKeyListener l = new KnockKeyListener();
-        canvas.setFocusTraversalKeysEnabled(false);
-        canvas.addMouseMotionListener(kmml);
-        canvas.addMouseListener(kml);
-        canvas.addKeyListener(l);
-
-        canvas.setFocusable(true);
-        canvas.setFocusTraversalKeysEnabled(false);
-        canvas.setFocusable(true);
-        canvas.setDoubleBuffered(true);
-        canvas.setPreferredSize(new Dimension(800, 200));
-        canvas.setMinimumSize(new Dimension(800, 200));
-        content.add(canvas);
+        initCanvas(kmml, kml, l, canvas.getComponent());
+        content.add(canvas.getComponent());
 
 
         KnockMouseListener kml2 = new KnockMouseListener(this.canvas2);
         KnockMotionListener kmml2 = new KnockMotionListener(this.canvas2, this.magnituges);
         KnockKeyListener l2 = new KnockKeyListener();
-        canvas.setFocusTraversalKeysEnabled(false);
-        canvas.addMouseMotionListener(kmml2);
-        canvas.addMouseListener(kml2);
-        canvas.addKeyListener(l2);
-        canvas2.setFocusable(true);
-        canvas2.setFocusTraversalKeysEnabled(false);
-        canvas2.setFocusable(true);
-        canvas2.setDoubleBuffered(true);
-        canvas2.setPreferredSize(new Dimension(800, 200));
-        canvas2.setMinimumSize(new Dimension(800, 200));
-        content.add(canvas2);
+        initCanvas(kmml2, kml2, l2, canvas2.getComponent());
+        content.add(canvas2.getComponent());
 
 
+        JComponent magnituges = this.magnituges.getComponent();
         magnituges.setFocusable(true);
         magnituges.setFocusTraversalKeysEnabled(false);
         magnituges.setFocusable(true);
@@ -219,6 +201,19 @@ public class KnockAnalyzerTab {
         content.add(magnituges);
 
         AutoupdateUtil.trueLayout(content);
+    }
+
+    private void initCanvas(KnockMotionListener kmml, KnockMouseListener kml, KnockKeyListener l, JComponent canvas) {
+        canvas.setFocusTraversalKeysEnabled(false);
+        canvas.addMouseMotionListener(kmml);
+        canvas.addMouseListener(kml);
+        canvas.addKeyListener(l);
+        canvas.setFocusable(true);
+        canvas.setFocusTraversalKeysEnabled(false);
+        canvas.setFocusable(true);
+        canvas.setDoubleBuffered(true);
+        canvas.setPreferredSize(new Dimension(800, 200));
+        canvas.setMinimumSize(new Dimension(800, 200));
     }
 
     public String getEnabled() {
@@ -243,7 +238,7 @@ public class KnockAnalyzerTab {
 
         this.line_sum_index[0] = 0;
 
-        if(this.started == true) {
+        if (this.started) {
             this.canvas.resetPeak();
         }
 

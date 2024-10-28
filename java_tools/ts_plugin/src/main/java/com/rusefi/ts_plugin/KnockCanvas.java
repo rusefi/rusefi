@@ -9,7 +9,7 @@ import static org.apache.commons.math3.util.Precision.round;
 
 public class KnockCanvas {
 
-    private JComponent component = new JComponent() {
+    private final JComponent component = new JComponent() {
         @Override
         public void paint(Graphics g) {
             super.paint(g);
@@ -179,6 +179,11 @@ public class KnockCanvas {
         if(needSetup) {
             setupFrequencyYAxis();
         }
+    }
+
+
+    public JComponent getComponent() {
+        return component;
     }
 
     public void setFrequencyStep(float step) {
