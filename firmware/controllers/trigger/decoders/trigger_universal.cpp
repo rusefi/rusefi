@@ -148,17 +148,17 @@ void configureQuickStartSenderWheel(TriggerWaveform *s) {
 	s->addToothRiseFall(360, /* width*/ 70);
 }
 
-static void commonSymmetrical(TriggerWaveform* s, int count) {
+static void commonSymmetrical(TriggerWaveform* s, int count, float gapFrom, float gapTo) {
 	s->shapeWithoutTdc = true;
 
 	// Sync after 2 good teeth
 	for (size_t i = 0; i < 2; i++) {
 		/**
 		 * https://github.com/rusefi/rusefi/issues/4943#issuecomment-1376289608
-		 * gaps would be nice during running but horrible during cranking
+		 * gaps would be nice during running but horrible during running
 		 * Hopefully we do not want variable gap logic yet?
 		 */
-		s->setTriggerSynchronizationGap3(i, 0.2f, 3.4f);
+		s->setTriggerSynchronizationGap3(i, gapFrom, gapTo);
 	}
 
     float width = 360 / count;
@@ -175,15 +175,15 @@ void configure12ToothCrank(TriggerWaveform* s) {
 	s->initialize(FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR, SyncEdge::RiseOnly);
 
 	// 2JZ would be global trigger offset 65 but same wheel could be Honda, not hard coding for now
-  commonSymmetrical(s, 12);
+  commonSymmetrical(s, 12, 0.2f, 3.4f);
 }
 
 void configure3ToothCrank(TriggerWaveform* s) {
 	s->initialize(FOUR_STROKE_THREE_TIMES_CRANK_SENSOR, SyncEdge::RiseOnly);
-  commonSymmetrical(s, 3);
+  commonSymmetrical(s, 3, 0.7, 1.4);
 }
 
 void configure6ToothCrank(TriggerWaveform* s) {
 	s->initialize(FOUR_STROKE_SIX_TIMES_CRANK_SENSOR, SyncEdge::RiseOnly);
-  commonSymmetrical(s, 6);
+  commonSymmetrical(s, 6, 0.7, 1.4);
 }
