@@ -2074,6 +2074,7 @@ end_struct
 #define GAUGE_NAME_TRG_ERR "Trigger Error Counter"
 #define GAUGE_NAME_TRG_GAP "Sync: Trigger Latest Ratio"
 
+#define HD_MENU_NAME "Harley"
 #define smLaunchControl_NAME "Launch Control"
 #define pedalToTpsTbl_NAME "ETB pedal target"
 #define pedalSensor_NAME "Accelerator pedal"
