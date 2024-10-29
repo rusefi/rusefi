@@ -361,6 +361,7 @@ public class Fields {
 	public static final int engine_type_e_FRANKENSO_MIATA_NA6_MAP = 41;
 	public static final int engine_type_e_FRANKENSO_TEST_33810 = 59;
 	public static final int engine_type_e_FUEL_BENCH = 15;
+	public static final int engine_type_e_GM_LCV = 47;
 	public static final int engine_type_e_GM_SBC = 98;
 	public static final int engine_type_e_GY6_139QMB = 8;
 	public static final int engine_type_e_HARLEY = 6;
@@ -435,7 +436,6 @@ public class Fields {
 	public static final int engine_type_e_TOYOTA_1NZ_FE = 13;
 	public static final int engine_type_e_TOYOTA_2JZ_GTE_VVTi = 44;
 	public static final int engine_type_e_UNUSED102 = 102;
-	public static final int engine_type_e_UNUSED47 = 47;
 	public static final int engine_type_e_UNUSED49 = 49;
 	public static final int engine_type_e_UNUSED67 = 67;
 	public static final int engine_type_e_UNUSED94 = 94;
