@@ -5,6 +5,12 @@ plugins {
 
 // this CORE module cannot depend on model/ini!
 
+/**
+ * this module is used by both autoupdate and ui subprojects
+ * note that during auto-update we have UI reference older version of core jars from older autoupdate!
+ * in order to avoid issues like java.lang.NoSuchMethodError: 'java.lang.String com.rusefi.core.io.BundleUtil.readBranchNameToDisplay()' #7004
+ * be careful about using minimal-required project placement while changing API!
+ */
 dependencies {
     api project(':logging-api')
     api project(':core_io')

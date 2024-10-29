@@ -21,25 +21,6 @@ public class BundleUtil {
      * @return null in case of error
      */
     @Nullable
-    public static String readBranchNameToDisplay() {
-        final String bundleFullName = readBundleFullName();
-        if (bundleFullName != null) {
-            try {
-                final BundleInfo bundleInfo = parse(bundleFullName);
-                // TODO: get rid of the pornography below:
-                //  we should use `development` instead of `snapshot` for master branch in bundle name.
-                return (bundleInfo.isMaster() ? "development" : bundleInfo.getBranchName());
-            } catch (final Throwable e) {
-                log.warn(String.format("We failed to parse bundle full name `%s`", bundleFullName), e);
-            }
-        }
-        return null;
-    }
-
-    /**
-     * @return null in case of error
-     */
-    @Nullable
     public static String readBundleFullName() {
         try {
             Path path = Paths.get("").toAbsolutePath();
