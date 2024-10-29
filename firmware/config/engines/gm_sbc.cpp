@@ -130,3 +130,11 @@ void setGmSbc() {
 
 	engineConfiguration->map.sensor.type = MT_GM_1_BAR;
 }
+
+void setGmLcv() {
+	setInline4();
+	engineConfiguration->displacement = 2.5;
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_GM);
+	strcpy(engineConfiguration->engineCode, "LCV");
+	setGDIFueling();
+}

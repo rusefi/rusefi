@@ -108,7 +108,7 @@ enum class engine_type_e : uint16_t {
 
 	DODGE_NEON_2003_CRANK = 46,
 
-	UNUSED47 = 47,
+	GM_LCV = 47,
 
     // todo: add wastegate case into HW CI
 	TEST_DC_WASTEGATE_DISCOVERY = 48,

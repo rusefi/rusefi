@@ -65,7 +65,6 @@ void applyEngineType(engine_type_e engineType) {
 	case engine_type_e::FORD_COYOTE:
 	case engine_type_e::MAZDA_MIATA_NC:
 	case engine_type_e::DISCOVERY_PDM:
-	case engine_type_e::UNUSED47:
 	case engine_type_e::UNUSED49:
 	case engine_type_e::ET_UNUSED_55:
 	case engine_type_e::ET_UNUSED_56:
@@ -197,6 +196,10 @@ void applyEngineType(engine_type_e engineType) {
 	    setSlingshot();
 		break;
 #endif
+
+	case engine_type_e::GM_LCV:
+	  setGmLcv();
+		break;
 
 #if HW_PROTEUS || EFI_SIMULATOR
     case engine_type_e::WASTEGATE_PROTEUS_TEST:
