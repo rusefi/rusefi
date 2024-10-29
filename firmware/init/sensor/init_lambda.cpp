@@ -65,6 +65,17 @@ void initLambda() {
 	}
 #endif
 
-	lambdaSensor.Register();
-	lambdaSensor2.Register();
+#if EFI_UNIT_TEST
+  constexpr bool isUnitTest = true;
+#else
+  constexpr bool isUnitTest = false;
+#endif
+
+  // CANbus option is handled above, let's handle analog inputs conditionally to give Lua sensors a chance
+  if (isAdcChannelValid(engineConfiguration->afr.hwChannel) || isUnitTest) {
+	  lambdaSensor.Register();
+	}
+	if (isAdcChannelValid(engineConfiguration->afr.hwChannel2) || isUnitTest) {
+	  lambdaSensor2.Register();
+  }
 }
