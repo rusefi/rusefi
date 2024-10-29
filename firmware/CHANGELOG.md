@@ -40,6 +40,7 @@ Release template (copy/paste this for new release):
  - alphaNUseIat calculations are wrong #6907
  - TPS/PPS Error Detection Threshold visible twice in same dialog #6922
  - V-Twin MAP phase sense does not need to always wait for sync #6985
+ - Organize sensor categories #6856
 
 ## August 2024 "Day 898"
 
