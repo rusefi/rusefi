@@ -57,7 +57,7 @@ public class Autoupdate {
             FileLogger.init();
             log.info("Version " + AUTOUPDATE_VERSION);
             log.info("Compiled " + new Date(rusEFIVersion.classBuildTimeMillis(Autoupdate.class)));
-            autoupdate(args);
+            startConsole(args, true);
         } catch (Throwable e) {
             log.error("Autoupdate Error", e);
             String stackTrace = extracted(e);
@@ -75,7 +75,7 @@ public class Autoupdate {
         return sb.toString();
     }
 
-    private static void autoupdate(String[] args) {
+    private static void startConsole(final String[] args, final boolean tryUpdate) {
         String bundleFullName = BundleUtil.readBundleFullName();
         if (bundleFullName == null) {
             log.error("ERROR: Autoupdate: unable to perform without bundleFullName (check parent folder name)");
@@ -88,7 +88,9 @@ public class Autoupdate {
 
         @NotNull String firstArgument = args.length > 0 ? args[0] : "";
 
-        Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile = downloadFreshZipFile(args, firstArgument, bundleInfo);
+        final Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile = tryUpdate ?
+            downloadFreshZipFile(args, firstArgument, bundleInfo) :
+            Optional.empty();
         URLClassLoader jarClassLoader = safeUnzipMakingSureClassloaderIsHappy(downloadedAutoupdateFile);
         startConsole(args, jarClassLoader);
     }
