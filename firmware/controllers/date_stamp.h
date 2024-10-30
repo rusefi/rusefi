@@ -1,2 +1,2 @@
 #pragma once
-#define VCS_DATE 20241029
+#define VCS_DATE 20241030
