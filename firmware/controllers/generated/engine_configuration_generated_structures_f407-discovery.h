@@ -2476,7 +2476,7 @@ struct engine_configuration_s {
 	offset 1316 bit 6 */
 	bool overrideCrankingIacSetting : 1 {};
 	/**
-	 * This activates a separate ignition timing table for idle conditions, this can help idle stability by using ignition retard and advance either side of the desired idle speed. Extra retard at low idle speeds will prevent stalling and extra advance at high idle speeds can help reduce engine power and slow the idle speed.
+	 * This activates a separate ignition timing table for idle conditions, this can help idle stability by using ignition retard and advance either side of the desired idle speed. Extra advance at low idle speeds will prevent stalling and extra retard at high idle speeds can help reduce engine power and slow the idle speed.
 	offset 1316 bit 7 */
 	bool useSeparateAdvanceForIdle : 1 {};
 	/**
