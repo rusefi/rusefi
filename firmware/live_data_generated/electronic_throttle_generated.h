@@ -160,29 +160,39 @@ struct electronic_throttle_s {
 	 */
 	int8_t etbErrorCode = (int8_t)0;
 	/**
+	 * offset 41
+	 */
+	int8_t etbErrorCodeBlinker = (int8_t)0;
+	/**
 	 * ETB traction control
 	 * units: %
-	 * offset 41
+	 * offset 42
 	 */
 	int8_t tcEtbDrop = (int8_t)0;
 	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 43
+	 */
+	uint8_t alignmentFill_at_43[1];
+	/**
 	 * ETB jam timer
 	 * units: sec
-	 * offset 42
+	 * offset 44
 	 */
 	scaled_channel<uint16_t, 100, 1> jamTimer = (uint16_t)0;
 	/**
 	 * ETB with adjustments
 	 * units: %
-	 * offset 44
+	 * offset 46
 	 */
 	int8_t adjustedEtbTarget = (int8_t)0;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 45
+	 * offset 47
 	 */
-	uint8_t alignmentFill_at_45[3];
+	uint8_t alignmentFill_at_47[1];
 };
 static_assert(sizeof(electronic_throttle_s) == 48);
 

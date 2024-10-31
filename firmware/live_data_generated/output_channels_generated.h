@@ -1387,7 +1387,21 @@ struct output_channels_s {
 	/**
 	 * offset 792
 	 */
-	uint8_t unusedAtTheEnd[56];
+	int8_t sparkCutReasonBlinker = (int8_t)0;
+	/**
+	 * offset 793
+	 */
+	int8_t fuelCutReasonBlinker = (int8_t)0;
+	/**
+	 * offset 794
+	 */
+	uint8_t unusedAtTheEnd[52];
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 846
+	 */
+	uint8_t alignmentFill_at_846[2];
 };
 static_assert(sizeof(output_channels_s) == 848);
 

@@ -601,6 +601,9 @@ public class TsOutputs {
 	public static final Field RAWAUXTEMP2 = Field.create("RAWAUXTEMP2", 784, FieldType.INT16).setScale(0.001).setBaseOffset(0);
 	public static final Field RAWAMBIENTTEMP = Field.create("RAWAMBIENTTEMP", 786, FieldType.INT16).setScale(0.001).setBaseOffset(0);
 	public static final Field RTCUNIXEPOCHTIME = Field.create("RTCUNIXEPOCHTIME", 788, FieldType.INT).setScale(1.0).setBaseOffset(0);
+	public static final Field SPARKCUTREASONBLINKER = Field.create("SPARKCUTREASONBLINKER", 792, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field FUELCUTREASONBLINKER = Field.create("FUELCUTREASONBLINKER", 793, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_846 = Field.create("ALIGNMENTFILL_AT_846", 846, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field[] VALUES = {
 	SD_PRESENT,
 	SD_LOGGING_INTERNAL,
@@ -1025,5 +1028,8 @@ public class TsOutputs {
 	RAWAUXTEMP2,
 	RAWAMBIENTTEMP,
 	RTCUNIXEPOCHTIME,
+	SPARKCUTREASONBLINKER,
+	FUELCUTREASONBLINKER,
+	ALIGNMENTFILL_AT_846,
 	};
 }
