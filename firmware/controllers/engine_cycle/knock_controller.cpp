@@ -113,7 +113,7 @@ void KnockControllerBase::onFastCallback() {
 		chibios_rt::CriticalSectionLocker csl;
 
 
-		 if(TPSValue <= engineConfiguration->knockSupressMinTps) {
+		 if(TPSValue <= engineConfiguration->knockSuppressMinTps) {
 		 	m_knockRetard = 0.0;
 		 	m_knockFuelTrimMultiplier = 0.0;
 		 	return;
