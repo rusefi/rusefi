@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-cd ../../.. && bash bin/compile.sh config/boards/nucleo_f767/meta-info-stm32f767_nucleo.env
+cd ../../.. && bash bin/compile.sh config/boards/nucleo_f767/meta-info.env
