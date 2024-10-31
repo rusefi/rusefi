@@ -33,6 +33,7 @@ Release template (copy/paste this for new release):
  - CLT/IAT boost duty/target compensation #6424
  - DFCO MAP condition hysteresis #6915
  - Add I-term bounds for Alternator Control #6988
+ - knock fuel trim + diasble suppression then deceleration #7017
 
 ### Fixed
  - Removed questionable MAP sampling trigger index option
