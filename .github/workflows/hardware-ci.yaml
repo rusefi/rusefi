@@ -16,19 +16,17 @@ jobs:
       fail-fast: false
       matrix:
         build-target: [f407-discovery
-#          ,
-          #proteus F7 HW CI is not 100% reliable #6002          proteus_f7,
+        #proteus F7 HW CI is not 100% reliable #6002          proteus_f7,
         #  proteus_f4
         ]
 
         include:
           - build-target: f407-discovery
-            runs-on: hw-ci-f4-discovery
+            runs-on: hw-ci-f407-discovery-default
             # see HwCiF4Discovery.java or https://github.com/rusefi/rusefi/wiki/Dev-Quality-Control#stm32f407g-disc1 for wiring documentation
             test-suite: com.rusefi.HwCiF4Discovery
             folder: config/boards/f407-discovery
             openocd-script: .github/workflows/openocd_ci_f4_discovery.cfg
-            serial-device: /dev/serial/by-id/usb-rusEFI_LLC_rusEFI_Engine_Management_ECU_2B003B000A51343033393930-if01
             vbatt_supply: 12
             stlink-serial: H?u\x06geVQ2S\x08g
 
@@ -124,13 +122,8 @@ jobs:
 # (cat .github/workflows/openocd_ci_f4_discovery.cfg ) | .github/workflows/hw-ci/openocd_wipe_and_flash.sh
     - name: OpenOCD wipe & flash STM32
       run: |
-        if [ "$(hostname)" == "rusefi-hw-ci-2" -o "$(hostname)" == "mck1117-github-actions-nuc" ]; then
-          (cat ${{matrix.openocd-script}}; echo "hla_serial ${{matrix.stlink-serial}}") \
+        (cat ${{matrix.openocd-script}}; echo "hla_serial ${{matrix.stlink-serial}}") \
           | .github/workflows/hw-ci/openocd_wipe_and_flash.sh
-        else
-          (cat ${{matrix.openocd-script}} ) \
-          | .github/workflows/hw-ci/openocd_wipe_and_flash.sh
-        fi
 
     - name: Upload build bin artifact
       uses: actions/upload-artifact@v4
