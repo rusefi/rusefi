@@ -80,6 +80,7 @@ jobs:
       run: arm-none-eabi-gcc -v
 
     - name: Build Firmware
+#      run: .github/workflows/hw-ci/build_for_hw_ci.sh config/boards/f407-discovery f407-discovery
       run: .github/workflows/hw-ci/build_for_hw_ci.sh ${{matrix.folder}} ${{matrix.build-target}}
 
     - name: Show USB status
@@ -109,17 +110,17 @@ jobs:
         if [ "$(hostname)" == "rusefi-hw-ci-2" -o "$(hostname)" == "mck1117-github-actions-nuc" ]; then
           echo "HARDWARE_CI_SERIAL_DEVICE=${{matrix.serial-device}}" >> $GITHUB_ENV
           echo "HARDWARE_CI_VBATT=${{matrix.vbatt_supply}}" >> $GITHUB_ENV
-        else
-          cat $GITHUB_WORKSPACE/../../../rusefi-env >> $GITHUB_ENV
         fi
 
+
+# (cat .github/workflows/openocd_ci_f4_discovery.cfg ) | .github/workflows/hw-ci/openocd_wipe_and_flash.sh
     - name: OpenOCD wipe & flash STM32
       run: |
         if [ "$(hostname)" == "rusefi-hw-ci-2" -o "$(hostname)" == "mck1117-github-actions-nuc" ]; then
           (cat ${{matrix.openocd-script}}; echo "hla_serial ${{matrix.stlink-serial}}") \
           | .github/workflows/hw-ci/openocd_wipe_and_flash.sh
         else
-          (cat ${{matrix.openocd-script}}; echo "hla_serial $HARDWARE_CI_STLINK_SERIAL") \
+          (cat ${{matrix.openocd-script}} ) \
           | .github/workflows/hw-ci/openocd_wipe_and_flash.sh
         fi
 
@@ -130,6 +131,7 @@ jobs:
         path: ./firmware/build/rusefi*.bin
 
     # This both compiles and runs HW CI tests
+    # .github/workflows/hw-ci/run_hw_ci.sh com.rusefi.HwCiF4Discovery
     - name: Run Hardware CI
       run: .github/workflows/hw-ci/run_hw_ci.sh ${{matrix.test-suite}}
 
