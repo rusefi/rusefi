@@ -64,7 +64,7 @@ TEST(Knock, Reapply) {
 	engineConfiguration->knockRetardReapplyRate = 1;
 
 	// disable suppress for test
-	engineConfiguration->knockSuppressMinTps = -1;
+	engineConfiguration->knockSuppressMinTps = 0;
 
 	// Send a strong knock!
 	dut.onKnockSenseCompleted(0, 30, 0);
