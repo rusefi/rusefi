@@ -66,11 +66,20 @@ void KnockControllerBase::onKnockSenseCompleted(uint8_t cylinderNumber, float db
 		auto retardFraction = engineConfiguration->knockRetardAggression * 0.01f;
 		auto retardAmount = distToMinimum * retardFraction;
 
+		auto  trimFuelFraction = engineConfiguration->knockFuelTrimAggression * 0.01f;
+		float trimFuelPersent = clampF(0.0, (float)engineConfiguration->knockFuelTrim, 30.0);
+		float trimFuelCoeff = (trimFuelPersent / 100.f);
+		float trimFuelAmount = trimFuelCoeff * trimFuelFraction;
+
 		{
 			// Adjust knock retard under lock
 			chibios_rt::CriticalSectionLocker csl;
+
 			auto newRetard = m_knockRetard + retardAmount;
 			m_knockRetard = clampF(0, newRetard, m_maximumRetard);
+
+			auto newFuelTrim = m_knockFuelTrimMultiplier + trimFuelAmount;
+			m_knockFuelTrimMultiplier = clampF(0.0, newFuelTrim, 0.3); // TODO: remove magic 30%
 		}
 	}
 }
@@ -83,26 +92,51 @@ uint32_t KnockControllerBase::getKnockCount() const {
 	return m_knockCount;
 }
 
+float KnockControllerBase::getFuelTrimMultiplier() const {
+	return 1.0 + m_knockFuelTrimMultiplier;
+}
+
 void KnockControllerBase::onFastCallback() {
 	m_knockThreshold = getKnockThreshold();
 	m_maximumRetard = getMaximumRetard();
 
 	constexpr auto callbackPeriodSeconds = FAST_CALLBACK_PERIOD_MS / 1000.0f;
 
-	auto applyAmount = engineConfiguration->knockRetardReapplyRate * callbackPeriodSeconds;
+	auto applyRetardAmount = engineConfiguration->knockRetardReapplyRate * callbackPeriodSeconds;
+	auto applyFuelAmount = engineConfiguration->knockFuelTrimReapplyRate * callbackPeriodSeconds;
+
+	// disable knock suppression then deceleration
+	auto TPSValue = Sensor::getOrZero(SensorType::Tps1);
 
 	{
 		// Adjust knock retard under lock
 		chibios_rt::CriticalSectionLocker csl;
 
+
+		 if(TPSValue < engineConfiguration->knockSuppressMinTps) {
+		 	m_knockRetard = 0.0;
+		 	m_knockFuelTrimMultiplier = 0.0;
+		 	return;
+		 }
+
 		// Reduce knock retard at the requested rate
-		float newRetard = m_knockRetard - applyAmount;
+		float newRetard = m_knockRetard - applyRetardAmount;
 
 		// don't allow retard to go negative
 		if (newRetard < 0) {
 			m_knockRetard = 0;
 		} else {
 			m_knockRetard = newRetard;
+		}
+
+		// Reduce fuel trim at the requested rate
+		float newTrim = m_knockFuelTrimMultiplier - applyFuelAmount;
+
+		// don't allow retard to go negative
+		if (newTrim < 0) {
+			m_knockFuelTrimMultiplier = 0;
+		} else {
+			m_knockFuelTrimMultiplier = newTrim;
 		}
 	}
 }
