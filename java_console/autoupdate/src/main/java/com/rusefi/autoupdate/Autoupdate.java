@@ -57,7 +57,7 @@ public class Autoupdate {
             FileLogger.init();
             log.info("Version " + AUTOUPDATE_VERSION);
             log.info("Compiled " + new Date(rusEFIVersion.classBuildTimeMillis(Autoupdate.class)));
-            startConsole(args, true);
+            startConsole(args, !ConnectionAndMeta.manualUpdate());
         } catch (Throwable e) {
             log.error("Autoupdate Error", e);
             String stackTrace = extracted(e);

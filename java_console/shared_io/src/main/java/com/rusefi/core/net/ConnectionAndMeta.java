@@ -73,6 +73,10 @@ public class ConnectionAndMeta {
         return getBoolean("show_update_calibrations");
     }
 
+    public static boolean manualUpdate() {
+        return getBoolean("manual_update");
+    }
+
     public static boolean getBoolean(String propertyName) {
         return getBoolean(propertyName, getProperties());
     }
