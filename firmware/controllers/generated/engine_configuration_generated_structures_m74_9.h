@@ -4093,6 +4093,7 @@ struct engine_configuration_s {
 	 */
 	uint16_t tuneHidingKey;
 	/**
+	 * Individual charaters are accessible using vin(index) Lua function
 	 * offset 3240
 	 */
 	vin_number_t vinNumber;
