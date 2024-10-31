@@ -53,15 +53,8 @@ public class Autoupdate {
     private static final String COM_RUSEFI_LAUNCHER = "com.rusefi.Launcher";
 
     public static void main(String[] args) {
-        try {
-            FileLogger.init();
-            log.info("Version " + AUTOUPDATE_VERSION);
-            log.info("Compiled " + new Date(rusEFIVersion.classBuildTimeMillis(Autoupdate.class)));
-            startConsole(args, !ConnectionAndMeta.manualUpdate());
-        } catch (Throwable e) {
-            log.error("Autoupdate Error", e);
-            String stackTrace = extracted(e);
-            JOptionPane.showMessageDialog(null, stackTrace, "Autoupdate Error " + TITLE, JOptionPane.ERROR_MESSAGE);
+        FileLogger.init();
+        if (!startConsole(args, !ConnectionAndMeta.manualUpdate())) {
             System.exit(-1);
         }
     }
@@ -75,24 +68,35 @@ public class Autoupdate {
         return sb.toString();
     }
 
-    private static void startConsole(final String[] args, final boolean tryUpdate) {
-        String bundleFullName = BundleUtil.readBundleFullName();
-        if (bundleFullName == null) {
-            log.error("ERROR: Autoupdate: unable to perform without bundleFullName (check parent folder name)");
-            System.exit(-1);
+    public static boolean startConsole(final String[] args, final boolean tryUpdate) {
+        try {
+            log.info("Version " + AUTOUPDATE_VERSION);
+            log.info("Compiled " + new Date(rusEFIVersion.classBuildTimeMillis(Autoupdate.class)));
+
+            String bundleFullName = BundleUtil.readBundleFullName();
+            if (bundleFullName == null) {
+                log.error("ERROR: Autoupdate: unable to perform without bundleFullName (check parent folder name)");
+                System.exit(-1);
+            }
+            log.info("Handling parent folder name [" + bundleFullName + "]");
+
+            BundleUtil.BundleInfo bundleInfo = BundleUtil.parse(bundleFullName);
+            // todo: huh unused? String branchName = bundleInfo.getBranchName();
+
+            @NotNull String firstArgument = args.length > 0 ? args[0] : "";
+
+            final Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile = tryUpdate ?
+                downloadFreshZipFile(args, firstArgument, bundleInfo) :
+                Optional.empty();
+            URLClassLoader jarClassLoader = safeUnzipMakingSureClassloaderIsHappy(downloadedAutoupdateFile);
+            startConsole(args, jarClassLoader);
+            return true;
+        } catch (Throwable e) {
+            log.error("Autoupdate Error", e);
+            String stackTrace = extracted(e);
+            JOptionPane.showMessageDialog(null, stackTrace, "Autoupdate Error " + TITLE, JOptionPane.ERROR_MESSAGE);
+            return false;
         }
-        log.info("Handling parent folder name [" + bundleFullName + "]");
-
-        BundleUtil.BundleInfo bundleInfo = BundleUtil.parse(bundleFullName);
-        // todo: huh unused? String branchName = bundleInfo.getBranchName();
-
-        @NotNull String firstArgument = args.length > 0 ? args[0] : "";
-
-        final Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile = tryUpdate ?
-            downloadFreshZipFile(args, firstArgument, bundleInfo) :
-            Optional.empty();
-        URLClassLoader jarClassLoader = safeUnzipMakingSureClassloaderIsHappy(downloadedAutoupdateFile);
-        startConsole(args, jarClassLoader);
     }
 
     private static Optional<DownloadedAutoupdateFileInfo> downloadFreshZipFile(String[] args, String firstArgument, BundleUtil.BundleInfo bundleInfo) {
