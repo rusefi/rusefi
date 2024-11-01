@@ -4626,7 +4626,7 @@ struct engine_configuration_s {
 	scaled_channel<uint8_t, 10, 1> knockFuelTrimAggression;
 	/**
 	 * After a knock event, reapply fuel at this rate.
-	 * units: deg/s
+	 * units: 1%/s
 	 * offset 3898
 	 */
 	scaled_channel<uint8_t, 10, 1> knockFuelTrimReapplyRate;
