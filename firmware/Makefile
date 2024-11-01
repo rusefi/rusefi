@@ -431,6 +431,7 @@ include $(RULESFILE)
 
 include target_sentinel.mk
 
+# this one would include ../java_tools/java_tools.mk for gradlew for config and console and plugin jars
 include rusefi_config.mk
 
 include docs_enums.mk

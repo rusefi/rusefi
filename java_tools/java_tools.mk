@@ -15,7 +15,7 @@ CONFIG_DEFINITION = $(JAVA_TOOLS)/configuration_definition/build/libs/config_def
 CONFIG_DEFINITION_BASE = $(JAVA_TOOLS)/configuration_definition_base/build/libs/config_definition_base-all.jar
 ENUM_TO_STRING = $(JAVA_TOOLS)/enum_to_string/build/libs/enum_to_string-all.jar
 TUNE_TOOLS = $(JAVA_TOOLS)/tune-tools/build/libs/tune-tools-all.jar
-TPL_OUT = $(JAVA_TOOLS)/ts_plugin_launcher/build/jar/rusefi_ts_plugin_launcher.jar
+TS_PLUGIN_LAUNCHER_OUT = $(JAVA_TOOLS)/ts_plugin_launcher/build/jar/rusefi_ts_plugin_launcher.jar
 CONSOLE_OUT = $(PROJECT_DIR)/../java_console_binary/rusefi_console.jar
 AUTOUPDATE_OUT = $(PROJECT_DIR)/../java_console_binary/rusefi_autoupdate.jar
 
@@ -34,7 +34,7 @@ $(ENUM_TO_STRING): .FORCE
 $(TUNE_TOOLS):
 	cd $(JAVA_TOOLS) && $(FLOCK) ./gradlew :tune-tools:shadowJar
 
-$(TPL_OUT): .FORCE
+$(TS_PLUGIN_LAUNCHER_OUT): .FORCE
 	cd $(JAVA_TOOLS) && $(FLOCK) ./gradlew :ts_plugin_launcher:shadowJar
 
 # The console depends on Fields.java.

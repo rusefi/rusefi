@@ -2,7 +2,8 @@ name: TS Plugin
 
 on:
   workflow_dispatch:
-# not really needed in 2024 [push,pull_request]
+  push:
+  pull_request:
 
 jobs:
   build:
@@ -18,7 +19,7 @@ jobs:
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
-          java-version: '17'
+          java-version: '11'
 
       - name: Test Compiler
         run: javac -version

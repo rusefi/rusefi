@@ -67,6 +67,7 @@ endif
 
 UPDATE_CONSOLE_FOLDER_SOURCES = \
   $(CONSOLE_OUT) \
+  $(TS_PLUGIN_LAUNCHER_OUT) \
   $(AUTOUPDATE_OUT)
 
 # todo: remove BootCommander.exe once https://github.com/rusefi/rusefi/issues/6358 is done
