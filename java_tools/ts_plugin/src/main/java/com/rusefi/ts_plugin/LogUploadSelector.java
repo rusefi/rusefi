@@ -41,7 +41,7 @@ public class LogUploadSelector {
         JPanel filePanel = new JPanel(new BorderLayout());
         filePanel.add(fileList, BorderLayout.CENTER);
 
-        var screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         fileList.setMaximumSize(new Dimension((int)(screenSize.width / 1.3), 800));
         fileList.setPreferredSize(new Dimension((int)(screenSize.width / 1.3), 800));
 

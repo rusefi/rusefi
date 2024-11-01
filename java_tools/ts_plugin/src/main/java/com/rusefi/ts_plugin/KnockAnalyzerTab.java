@@ -2,6 +2,7 @@ package com.rusefi.ts_plugin;
 
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
 import com.efiAnalytics.plugin.ecu.ControllerException;
+import com.efiAnalytics.plugin.ecu.ControllerParameter;
 import com.efiAnalytics.plugin.ecu.OutputChannelClient;
 import com.rusefi.core.ui.AutoupdateUtil;
 import org.putgemin.VerticalFlowLayout;
@@ -12,6 +13,7 @@ import java.awt.event.*;
 import java.util.Arrays;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class KnockAnalyzerTab {
@@ -33,7 +35,6 @@ public class KnockAnalyzerTab {
     private final KnockMagnitudeCanvas magnituges = new KnockMagnitudeCanvas();
 
     public KnockAnalyzerTab(Supplier<ControllerAccess> controllerAccessSupplier) {
-        var cc = this;
         this.controllerAccessSupplier = controllerAccessSupplier;
 
         this.setStartButtonState();
@@ -72,7 +73,7 @@ public class KnockAnalyzerTab {
         try {
             String[] outputChannelNames = this.controllerAccessSupplier.get().getOutputChannelServer().getOutputChannels(ecuControllerName);
 
-            var spectrums = Arrays.stream(outputChannelNames)
+            String[] spectrums = Arrays.stream(outputChannelNames)
                 .filter((n) -> n.indexOf("m_knockSpectrum") >= 0)
                 .collect(Collectors.toList())
                 .toArray(new String[0]);
@@ -82,14 +83,14 @@ public class KnockAnalyzerTab {
             button.setText(this.getEnabled() == "true" ? "Stop" : "Start");
 
             int checksum = 0;
-            for(var i = 0; i< 16; ++i) {
+            for (int i = 0; i< 16; ++i) {
                 checksum += i;
             }
 
-            for(var i = 0; i< 16; ++i){
+            for (int i = 0; i< 16; ++i){
                 try {
 
-                    var name = spectrums[i];
+                    String name = spectrums[i];
                     int finalChecksum = checksum;
                     controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName, name, new OutputChannelClient() {
                         @Override
@@ -103,8 +104,8 @@ public class KnockAnalyzerTab {
                                 return;
                             }
 
-                            var indexStr = name.substring(15);
-                            var index = Integer.parseInt(indexStr) - 1;
+                            String indexStr = name.substring(15);
+                            int index = Integer.parseInt(indexStr) - 1;
                             //values[index] = (int)v;
 
                             long value = (long)v;
@@ -151,8 +152,8 @@ public class KnockAnalyzerTab {
 
                     long value = (long)v;
 
-                    cc.channel = (int)(value >>> 8) & 0xFF;
-                    cc.cylinder =  (int)(value & 0xFF);
+                    KnockAnalyzerTab.this.channel = (int)(value >>> 8) & 0xFF;
+                    KnockAnalyzerTab.this.cylinder =  (int)(value & 0xFF);
 
                 }
             });
@@ -165,7 +166,7 @@ public class KnockAnalyzerTab {
             public void actionPerformed(ActionEvent e) {
 
                 try {
-                    var started = cc.setStartButtonState();
+                    boolean started = KnockAnalyzerTab.this.setStartButtonState();
                     controllerAccessSupplier.get().getControllerParameterServer().updateParameter(ecuControllerName, "enableKnockSpectrogram", started ? 1.0 : 0.0);
                 } catch (ControllerException ee) {
                     System.out.println(ee.getMessage());
@@ -219,7 +220,7 @@ public class KnockAnalyzerTab {
     public String getEnabled() {
         try {
             String ecuControllerName = this.controllerAccessSupplier.get().getEcuConfigurationNames()[0];
-            var enable = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(ecuControllerName, "enableKnockSpectrogram");
+            ControllerParameter enable = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(ecuControllerName, "enableKnockSpectrogram");
             String enabled = enable.getStringValue();
             return enabled;
         } catch (ControllerException ee) {

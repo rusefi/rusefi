@@ -39,12 +39,12 @@ public class KnockCanvas {
             g.setColor(Color.YELLOW);
             for(int i = 0; i < yAxisHz.length; ++i) {
 
-                var y = hzToYScreen(yAxisHz[i], height);
+                int y = hzToYScreen(yAxisHz[i], height);
 
                 g.setColor(Color.orange);
                 g.fillRect(0, y, 30, 1);
 
-                var hz = yAxisHz[i];
+                double hz = yAxisHz[i];
                 g.drawString(Double.valueOf(round(hz, 1)).toString(), 35,  y);
             }
 
@@ -59,7 +59,7 @@ public class KnockCanvas {
             g.setFont(new Font(f.getName(), Font.BOLD, g.getFont().getSize()));
 
             g.setColor(Color.YELLOW);
-            var currentX = width / 4;
+            int currentX = width / 4;
             g.drawString("[current]", currentX,  10);
             g.drawString(Float.valueOf(currentFrequency).toString() + " Hz", currentX,  30);
             g.drawString(Float.valueOf(currentAmplitude).toString() + " Amp", currentX,  50);
@@ -81,7 +81,7 @@ public class KnockCanvas {
 
 
             g.setColor(Color.WHITE);
-            var yy = hzToYScreen(currentFrequency, height);
+            int yy = hzToYScreen(currentFrequency, height);
             g.fillRect(0, yy, width, 1);
 
             g.setColor(Color.DARK_GRAY);
@@ -203,7 +203,7 @@ public class KnockCanvas {
             return;
         }
 
-        for(var i = 0; i < 64; ++i) {
+        for (int i = 0; i < 64; ++i) {
             float y = (float)this.yAxisFequencyStart + (this.yAxisFequencyStep * (float)i);
             this.yAxisHz[i] = y;
         }
@@ -302,10 +302,10 @@ public class KnockCanvas {
 
             //simple draw
             bufferedGraphics.setColor(color);
-            var yr = height - (height / spectrogramYAxisSize) * y;
-            var xr = (int)(currentIndexXAxis * bx);
-            var widthr = ((int)bx) + 1;
-            var heightr = (height / spectrogramYAxisSize);
+            int yr = height - (height / spectrogramYAxisSize) * y;
+            int xr = (int)(currentIndexXAxis * bx);
+            int widthr = ((int)bx) + 1;
+            int heightr = (height / spectrogramYAxisSize);
             bufferedGraphics.fillRect(xr, yr, widthr, heightr);
         }
 
@@ -348,7 +348,7 @@ public class KnockCanvas {
 
     int hzToYScreen(double hz, int screen_height) {
 
-        var near_hz_index = searchHZ(yAxisHz, 0, yAxisHz.length - 1, hz);
+        int near_hz_index = searchHZ(yAxisHz, 0, yAxisHz.length - 1, hz);
 
         int a = near_hz_index-1;
         int b = near_hz_index;

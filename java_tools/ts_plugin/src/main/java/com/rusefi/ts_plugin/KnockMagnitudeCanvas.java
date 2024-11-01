@@ -99,7 +99,7 @@ public class KnockMagnitudeCanvas {
             return;
         }
 
-        for (var i = 0; i < 64; ++i) {
+        for (int i = 0; i < 64; ++i) {
             float y = (float) this.yAxisFequencyStart + (this.yAxisFequencyStep * (float) i);
             this.yAxisHz[i] = y;
         }
