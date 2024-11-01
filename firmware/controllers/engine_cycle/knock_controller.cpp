@@ -66,20 +66,23 @@ void KnockControllerBase::onKnockSenseCompleted(uint8_t cylinderNumber, float db
 		auto retardFraction = engineConfiguration->knockRetardAggression * 0.01f;
 		auto retardAmount = distToMinimum * retardFraction;
 
+    // TODO: remove magic 30% m_maximumFuelTrim?
+    auto maximumFuelTrim = 0.3f;
+
 		auto  trimFuelFraction = engineConfiguration->knockFuelTrimAggression * 0.01f;
-		float trimFuelPersent = clampF(0.0, (float)engineConfiguration->knockFuelTrim, 30.0);
-		float trimFuelCoeff = (trimFuelPersent / 100.f);
-		float trimFuelAmount = trimFuelCoeff * trimFuelFraction;
+		float trimFuelPercent = clampF(0.f, (float)engineConfiguration->knockFuelTrim, maximumFuelTrim * 100.f);
+		float trimFuelAmountPercent = trimFuelPercent * trimFuelFraction;
+		float trimFuelAmount = trimFuelAmountPercent / 100.f;
 
 		{
 			// Adjust knock retard under lock
 			chibios_rt::CriticalSectionLocker csl;
 
 			auto newRetard = m_knockRetard + retardAmount;
-			m_knockRetard = clampF(0, newRetard, m_maximumRetard);
+			m_knockRetard = clampF(0.f, newRetard, m_maximumRetard);
 
 			auto newFuelTrim = m_knockFuelTrimMultiplier + trimFuelAmount;
-			m_knockFuelTrimMultiplier = clampF(0.0, newFuelTrim, 0.3); // TODO: remove magic 30%
+			m_knockFuelTrimMultiplier = clampF(0.f, newFuelTrim, maximumFuelTrim);
 		}
 	}
 }
@@ -103,7 +106,7 @@ void KnockControllerBase::onFastCallback() {
 	constexpr auto callbackPeriodSeconds = FAST_CALLBACK_PERIOD_MS / 1000.0f;
 
 	auto applyRetardAmount = engineConfiguration->knockRetardReapplyRate * callbackPeriodSeconds;
-	auto applyFuelAmount = engineConfiguration->knockFuelTrimReapplyRate * callbackPeriodSeconds;
+	auto applyFuelAmount = engineConfiguration->knockFuelTrimReapplyRate * 0.01f * callbackPeriodSeconds;
 
 	// disable knock suppression then deceleration
 	auto TPSValue = Sensor::getOrZero(SensorType::Tps1);
@@ -132,7 +135,7 @@ void KnockControllerBase::onFastCallback() {
 		// Reduce fuel trim at the requested rate
 		float newTrim = m_knockFuelTrimMultiplier - applyFuelAmount;
 
-		// don't allow retard to go negative
+		// don't allow trim to go negative
 		if (newTrim < 0) {
 			m_knockFuelTrimMultiplier = 0;
 		} else {
