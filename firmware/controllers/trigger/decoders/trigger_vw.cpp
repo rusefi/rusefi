@@ -12,17 +12,17 @@
 void setSkodaFavorit(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::Rise);
 
-	s->addEvent360(46, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(133, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 	s->addEvent360(177, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
 	s->addEvent360(180, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 	s->addEvent360(183, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-	s->addEvent360(226, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
+	s->addEvent360(313, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 	s->addEvent360(360, TriggerValue::FALL, TriggerWheel::T_PRIMARY);
 
-	s->tdcPosition = 180 - 46;
-	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 2.75, 5);
+	s->tdcPosition = 180 + 47;
+	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 2, 4);
 }
 
 void setVwConfiguration(TriggerWaveform *s) {
