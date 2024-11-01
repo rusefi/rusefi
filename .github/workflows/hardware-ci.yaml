@@ -32,6 +32,14 @@ jobs:
             vbatt_supply: 12
             stlink-serial: H?u\x06geVQ2S\x08g
 
+#          - build-target: nucleo_f767
+#            runs-on: hw-ci-nucleo-f7
+#            # see HwCiF4Discovery.java or https://github.com/rusefi/rusefi/wiki/Dev-Quality-Control#stm32f407g-disc1 for wiring documentation
+#            test-suite: com.rusefi.HwCiNucleoF7
+#            folder: config/boards/nucleo_f767
+#            openocd-script: .github/workflows/openocd_ci_proteus_f7.cfg
+
+
 #          - build-target: proteus_f4
 #            runs-on: hw-ci-proteus
 #            # see HwCiProteus which would point you at ProteusAnalogTest.java for wiring documentation

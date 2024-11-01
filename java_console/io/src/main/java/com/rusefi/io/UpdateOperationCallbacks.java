@@ -18,7 +18,7 @@ public interface UpdateOperationCallbacks {
     void done();
     void error();
 
-    class UpdateOperationDummy implements UpdateOperationCallbacks {
+    UpdateOperationCallbacks DUMMY = new UpdateOperationCallbacks() {
         @Override
         public void log(final String message, final boolean breakLineOnTextArea, boolean sendToLogger) {
         }
@@ -30,7 +30,5 @@ public interface UpdateOperationCallbacks {
         @Override
         public void error() {
         }
-    }
-
-    UpdateOperationCallbacks DUMMY = new UpdateOperationDummy();
+    };
 }

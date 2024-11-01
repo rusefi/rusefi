@@ -816,6 +816,12 @@ float getOutputValueByName(const char *name) {
 // rtcUnixEpochTime
 		case -1684644880:
 			return engine->outputChannels.rtcUnixEpochTime;
+// sparkCutReasonBlinker
+		case 927388609:
+			return engine->outputChannels.sparkCutReasonBlinker;
+// fuelCutReasonBlinker
+		case 1745186508:
+			return engine->outputChannels.fuelCutReasonBlinker;
 // totalFuelCorrection
 #if EFI_ENGINE_CONTROL
 		case -1779658835:

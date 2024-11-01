@@ -762,6 +762,12 @@ static EtbImpl<EtbController2> etb2(throttle2TrimTable);
 static_assert(ETB_COUNT == 2);
 static EtbController* etbControllers[] = { &etb1, &etb2 };
 
+void blinkEtbErrorCodes(bool blinkPhase) {
+  for (int i = 0;i<ETB_COUNT;i++) {
+    etbControllers[i]->etbErrorCodeBlinker = blinkPhase ? 0 : etbControllers[i]->etbErrorCode;
+  }
+}
+
 #if !EFI_UNIT_TEST
 
 struct DcThread final : public PeriodicController<512> {

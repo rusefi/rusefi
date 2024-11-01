@@ -19,6 +19,8 @@ void setEtbWastegatePosition(percent_t pos);
 void setEtbLuaAdjustment(percent_t adjustment);
 void setHitachiEtbCalibration();
 
+void blinkEtbErrorCodes(bool blinkPhase);
+
 // same plug as 18919 AM810 but have different calibrations
 void setToyota89281_33010_pedal_position_sensor();
 

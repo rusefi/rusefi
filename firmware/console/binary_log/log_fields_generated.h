@@ -335,6 +335,8 @@ static const LogField fields[] = {
 	{engine->outputChannels.rawAuxTemp2, "rawAuxTemp2", "V", 3},
 	{engine->outputChannels.rawAmbientTemp, "rawAmbientTemp", "V", 3},
 	{engine->outputChannels.rtcUnixEpochTime, "rtcUnixEpochTime", "", 0},
+	{engine->outputChannels.sparkCutReasonBlinker, "sparkCutReasonBlinker", "", 0},
+	{engine->outputChannels.fuelCutReasonBlinker, "fuelCutReasonBlinker", "", 0},
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},
 #endif

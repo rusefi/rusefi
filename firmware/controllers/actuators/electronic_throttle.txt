@@ -22,6 +22,7 @@ struct_no_prefix electronic_throttle_s
 	uint16_t etbPpsErrorCounter;"ETB pedal error counter";"count", 1,0, 0,3, 0,@@GAUGE_CATEGORY_ETB@@
 
 	int8_t etbErrorCode
+	int8_t etbErrorCodeBlinker
 	int8_t tcEtbDrop;ETB traction control;"%", 1, 0, 0, 100, 0
 
 	uint16_t autoscale jamTimer;ETB jam timer;"sec", 0.01, 0, 0, 100, 2

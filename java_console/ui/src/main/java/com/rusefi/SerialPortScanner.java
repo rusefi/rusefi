@@ -47,6 +47,7 @@ public enum SerialPortScanner {
         OpenBlt("OpenBLT Bootloader", 10),
         CAN("CAN", 30),
         Unknown("Unknown", 100),
+        // note that somewhere down we have DFU detection but not handled using this enum
         ;
 
         public final String friendlyString;

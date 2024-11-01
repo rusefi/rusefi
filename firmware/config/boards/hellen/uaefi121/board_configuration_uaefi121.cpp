@@ -57,6 +57,14 @@ void setBoardDefaultConfiguration() {
   engineConfiguration->mainRelayPin = Gpio::MM100_IGN7;
   engineConfiguration->fuelPumpPin = Gpio::MM100_IGN8;
 
+	// SPI3 for on-board EGT
+	engineConfiguration->is_enabled_spi_3 = true;
+	// MOSI not needed, we have one-way communication here
+	engineConfiguration->spi3misoPin = Gpio::C11;
+	engineConfiguration->spi3sckPin = Gpio::C10;
+	engineConfiguration->max31855_cs[0] = Gpio::A15;
+	engineConfiguration->max31855spiDevice = SPI_DEVICE_3;
+
 		engineConfiguration->injectionPins[0] = Gpio::MM100_MEGA_UAEFI_INJ1;
   	engineConfiguration->injectionPins[1] = Gpio::MM100_INJ2;
   	engineConfiguration->injectionPins[2] = Gpio::MM100_INJ3;

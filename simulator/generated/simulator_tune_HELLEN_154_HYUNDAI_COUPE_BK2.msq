@@ -225,7 +225,7 @@
         <constant digits="0" name="boostControlSafeDutyCycle" units="%">0.0</constant>
         <constant name="mafAdcChannel">"Disabled"</constant>
         <constant digits="0" name="acrRevolutions" units="">5.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0241031E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0241101E7</constant>
         <constant digits="3" name="adcVcc" units="volts">3.0</constant>
         <constant digits="0" name="mapCamDetectionAnglePosition" units="Deg">0.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -4808,8 +4808,8 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20241028" nPages="1" signature="rusEFI master.2024.10.31.f407-discovery.198006919" version="5.0"/>
-    <bibliography author="rusEFI 20241028" writeDate="date"/>
+    <versionInfo firmwareInfo="20241031" nPages="1" signature="rusEFI master.2024.11.01.f407-discovery.3976207678" version="5.0"/>
+    <bibliography author="rusEFI 20241031" writeDate="date"/>
     <settings/>
     <userComments/>
 </msq>

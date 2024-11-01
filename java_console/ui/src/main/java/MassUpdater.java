@@ -1,5 +1,8 @@
 import com.rusefi.SerialPortScanner;
+import com.rusefi.core.rusEFIVersion;
+import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.jobs.AsyncJobExecutor;
+import com.rusefi.maintenance.jobs.DfuManualJob;
 import com.rusefi.maintenance.jobs.OpenBltManualJob;
 import com.rusefi.ui.StatusWindow;
 import com.rusefi.ui.widgets.ToolButtons;
@@ -10,6 +13,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
 import static com.rusefi.SerialPortScanner.SerialPortType.OpenBlt;
@@ -19,9 +23,38 @@ public class MassUpdater {
     private final Set<String> knownBlts = new HashSet<>();
 
     public MassUpdater() {
-        mainStatus.showFrame("Mass Updater");
+        mainStatus.showFrame("Mass Updater " + rusEFIVersion.CONSOLE_VERSION);
+
+        final AtomicBoolean previousDfuState = new AtomicBoolean();
+        AtomicBoolean isUsingDfu = new AtomicBoolean(); // it seems like DFU detection is not 100% reliable? a work-around to avoid double-DFU
 
         SerialPortScanner.INSTANCE.addListener(currentHardware -> {
+
+            if (!isUsingDfu.get() && currentHardware.isDfuFound() != previousDfuState.get()) {
+                mainStatus.append(currentHardware.isDfuFound() ? "I see a DFU device!" : "No DFU...");
+                if (currentHardware.isDfuFound()) {
+                    isUsingDfu.set(true);
+                    UpdateOperationCallbacks releaseSemaphore = new UpdateOperationCallbacks() {
+                        @Override
+                        public void log(String message, boolean breakLineOnTextArea, boolean sendToLogger) {
+
+                        }
+
+                        @Override
+                        public void done() {
+                            isUsingDfu.set(false);
+                        }
+
+                        @Override
+                        public void error() {
+                            isUsingDfu.set(false);
+                        }
+                    };
+                    SwingUtilities.invokeLater(() -> AsyncJobExecutor.INSTANCE.executeJob(new DfuManualJob(), releaseSemaphore));
+                }
+                previousDfuState.set(currentHardware.isDfuFound());
+            }
+
             List<SerialPortScanner.PortResult> currentBltList = currentHardware.getKnownPorts().stream().filter(portResult -> portResult.type == OpenBlt).collect(Collectors.toList());
             Set<String> currentSet = currentBltList.stream().map(portResult -> portResult.port).collect(Collectors.toSet());
             for (Iterator<String> it = knownBlts.iterator(); it.hasNext(); ) {

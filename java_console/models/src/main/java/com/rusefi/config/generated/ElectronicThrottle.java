@@ -191,10 +191,12 @@ public class ElectronicThrottle {
 	public static final Field ETBTPSERRORCOUNTER = Field.create("ETBTPSERRORCOUNTER", 36, FieldType.INT16).setScale(1.0).setBaseOffset(1672);
 	public static final Field ETBPPSERRORCOUNTER = Field.create("ETBPPSERRORCOUNTER", 38, FieldType.INT16).setScale(1.0).setBaseOffset(1672);
 	public static final Field ETBERRORCODE = Field.create("ETBERRORCODE", 40, FieldType.INT8).setScale(1.0).setBaseOffset(1672);
-	public static final Field TCETBDROP = Field.create("TCETBDROP", 41, FieldType.INT8).setScale(1.0).setBaseOffset(1672);
-	public static final Field JAMTIMER = Field.create("JAMTIMER", 42, FieldType.INT16).setScale(0.01).setBaseOffset(1672);
-	public static final Field ADJUSTEDETBTARGET = Field.create("ADJUSTEDETBTARGET", 44, FieldType.INT8).setScale(1.0).setBaseOffset(1672);
-	public static final Field ALIGNMENTFILL_AT_45 = Field.create("ALIGNMENTFILL_AT_45", 45, FieldType.INT8).setScale(1.0).setBaseOffset(1672);
+	public static final Field ETBERRORCODEBLINKER = Field.create("ETBERRORCODEBLINKER", 41, FieldType.INT8).setScale(1.0).setBaseOffset(1672);
+	public static final Field TCETBDROP = Field.create("TCETBDROP", 42, FieldType.INT8).setScale(1.0).setBaseOffset(1672);
+	public static final Field ALIGNMENTFILL_AT_43 = Field.create("ALIGNMENTFILL_AT_43", 43, FieldType.INT8).setScale(1.0).setBaseOffset(1672);
+	public static final Field JAMTIMER = Field.create("JAMTIMER", 44, FieldType.INT16).setScale(0.01).setBaseOffset(1672);
+	public static final Field ADJUSTEDETBTARGET = Field.create("ADJUSTEDETBTARGET", 46, FieldType.INT8).setScale(1.0).setBaseOffset(1672);
+	public static final Field ALIGNMENTFILL_AT_47 = Field.create("ALIGNMENTFILL_AT_47", 47, FieldType.INT8).setScale(1.0).setBaseOffset(1672);
 	public static final Field[] VALUES = {
 	TARGETWITHIDLEPOSITION,
 	TRIM,
@@ -209,9 +211,11 @@ public class ElectronicThrottle {
 	ETBTPSERRORCOUNTER,
 	ETBPPSERRORCOUNTER,
 	ETBERRORCODE,
+	ETBERRORCODEBLINKER,
 	TCETBDROP,
+	ALIGNMENTFILL_AT_43,
 	JAMTIMER,
 	ADJUSTEDETBTARGET,
-	ALIGNMENTFILL_AT_45,
+	ALIGNMENTFILL_AT_47,
 	};
 }
