@@ -100,6 +100,15 @@ public class BasicStartupFrame {
             panel.add(updateCalibrationsButton);
         }
 
+        if (ConnectionAndMeta.manualUpdate()) {
+            final JButton checkForUpdateButton = new JButton(
+                "Check For Update",
+                AutoupdateUtil.loadIcon("download48.jpg")
+            );
+            checkForUpdateButton.addActionListener(this::onCheckForUpdateButtonClicked);
+            panel.add(checkForUpdateButton);
+        }
+
         BasicLogoHelper.setGenericFrameIcon(frame.getFrame());
         frame.showFrame(panel, false);
         UiUtils.centerWindow(frame.getFrame());
@@ -278,5 +287,9 @@ public class BasicStartupFrame {
                 );
             }
         );
+    }
+
+    private void onCheckForUpdateButtonClicked(final ActionEvent actionEvent) {
+        // TODO: call Autoupdate.startConsole method with tryUpdate = true
     }
 }
