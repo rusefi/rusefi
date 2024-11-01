@@ -1194,7 +1194,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	int16_t idlePidRpmDeadZone;If the RPM closer to target than this value, disable closed loop idle correction to prevent oscillation;"RPM", 1, 0, 0, 800, 0
 
 
-	float torqueReductionTime;For how long after the pin has been triggered will the cut/reduction stay active. After that, even if the pin is still triggered, torque is re-introduced;"ms", 1, 0, 1, 300, 0
+	float torqueReductionTime;For how long after the pin has been triggered will the cut/reduction stay active. After that, even if the pin is still triggered, torque is re-introduced;"ms", 1, 0, 1, 2000, 0
 	bit mc33810DisableRecoveryMode;See Over/Undervoltage Shutdown/Retry bit in documentation
 	bit mc33810Gpgd0Mode
 	bit mc33810Gpgd1Mode
