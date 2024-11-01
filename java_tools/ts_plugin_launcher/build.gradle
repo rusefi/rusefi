@@ -24,10 +24,15 @@ def userHome = System.properties['user.home']
 jar {
   archiveBaseName = jarName
 
+  def projectToolchain = java.toolchain {
+    languageVersion = JavaLanguageVersion.of(11)
+  }
+
   manifest {
     attributes(
       'Built-Date': new Date().format('yyyy-MM-dd HH:mm:ss'),
       'Signature-Vendor': 'rusEFI LLC',
+      'Build-Jdk'      : "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
       'ApplicationPlugin': 'com.rusefi.ts_plugin.TsPluginLauncher'
     )
   }

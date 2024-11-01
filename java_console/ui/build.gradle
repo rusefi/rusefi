@@ -33,6 +33,7 @@ shadowJar {
 
     manifest {
         attributes(
+                'Build-Jdk'      : "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
                 'Main-Class': 'com.rusefi.Launcher'
         )
     }
