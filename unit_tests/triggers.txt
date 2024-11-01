@@ -3779,7 +3779,7 @@ event 106 1 1 698.00 nan
 event 107 1 0 698.00 nan
 event 108 1 1 710.00 nan
 event 109 1 0 710.00 nan
-TRIGGERTYPE 55 12 TT_SKODA_FAVORIT 134.00
+TRIGGERTYPE 55 12 TT_SKODA_FAVORIT 227.00
 knownOperationMode=true
 crankBased=true
 hasSecondChannel=false
@@ -3788,21 +3788,21 @@ cycleDuration=360
 gapsCount=1
 syncEdge=Rise
 isSynchronizationNeeded=1
-gapFrom.0=2.750000
-gapTo.0=5.000000
+gapFrom.0=2.000000
+gapTo.0=4.000000
 # end of meta section
-event 0 0 1 0.00 3.913043
-event 1 0 0 131.00 nan
-event 2 0 1 134.00 0.744442
-event 3 0 0 137.00 nan
-event 4 0 1 180.00 0.343284
-event 5 0 0 314.00 nan
+event 0 0 1 0.00 2.829787
+event 1 0 0 47.00 nan
+event 2 0 1 180.00 1.353383
+event 3 0 0 224.00 nan
+event 4 0 1 227.00 0.261111
+event 5 0 0 230.00 nan
 event 6 0 1 360.00 nan
-event 7 0 0 491.00 nan
-event 8 0 1 494.00 nan
-event 9 0 0 497.00 nan
-event 10 0 1 540.00 nan
-event 11 0 0 674.00 nan
+event 7 0 0 407.00 nan
+event 8 0 1 540.00 nan
+event 9 0 0 584.00 nan
+event 10 0 1 587.00 nan
+event 11 0 0 590.00 nan
 TRIGGERTYPE 56 8 TT_VVT_BARRA_3_PLUS_1 0.00
 knownOperationMode=true
 crankBased=false
