@@ -3,6 +3,7 @@ package com.rusefi.ui.util;
 import com.devexperts.logging.Logging;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -58,8 +59,8 @@ public class JustOneInstance {
     }
 
     private static void handleConnection(Socket clientSocket) throws IOException {
-        try (clientSocket) {
-            PrintWriter networkWriter = new PrintWriter(clientSocket.getOutputStream(), true);
+        try (OutputStream outputStream = clientSocket.getOutputStream()) {
+            PrintWriter networkWriter = new PrintWriter(outputStream, true);
             String msg = new Date() + "Already running " + ProcessHandle.current().pid() + "\r\n";
             log.info(msg);
             networkWriter.println(msg);

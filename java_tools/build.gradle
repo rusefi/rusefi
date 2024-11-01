@@ -8,9 +8,9 @@ allprojects {
 
     plugins.withType(JavaPlugin) {
         java {
-          // let's be vocal that 1.8 is not enough
-          sourceCompatibility = '11'
-          targetCompatibility = '11'
+          // TS still comes with 1.8 and we have a plugin, lets build compatible
+          sourceCompatibility = '8'
+          targetCompatibility = '8'
         }
 
         dependencies {
