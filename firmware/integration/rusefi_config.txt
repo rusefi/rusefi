@@ -1723,7 +1723,7 @@ linear_sensor_s auxLinear4
 
 uint8_t autoscale knockSuppressMinTps;Below TPS value all knock suppression will be disabled.;"%", 1, 0, 0, 100, 1
 uint8_t autoscale knockFuelTrimAggression;Fuel to odd when a knock event occurs. Advice: 5% (mild), 10% (turbo/high comp.), 15% (high knock, e.g. GDI), 20% (spicy lump),;"%", 0.1, 0, 0, 20, 1
-uint8_t autoscale knockFuelTrimReapplyRate;After a knock event, reapply fuel at this rate.;"deg/s", 0.1, 0, 0, 10, 1
+uint8_t autoscale knockFuelTrimReapplyRate;After a knock event, reapply fuel at this rate.;"1%/s", 0.1, 0, 0, 10, 1
 uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 1
 
 	float knockSpectrumSensitivity;;"sense", 1, 0, 0, 1, 2
