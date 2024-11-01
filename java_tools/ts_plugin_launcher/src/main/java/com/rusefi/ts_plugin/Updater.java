@@ -1,5 +1,6 @@
 package com.rusefi.ts_plugin;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.FileUtil;
@@ -18,6 +19,7 @@ import java.net.URLClassLoader;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.ts_plugin.TsPluginLauncher.VERSION;
 
 /**
@@ -25,6 +27,7 @@ import static com.rusefi.ts_plugin.TsPluginLauncher.VERSION;
  * @see ConnectionAndMeta#getBaseUrl
  */
 public class Updater {
+    private static final Logging log = getLogging(Updater.class);
     private static final String PLUGIN_ENTRY_CLASS = "com.rusefi.ts_plugin.PluginEntry";
     private static final String PLUGIN_BODY_JAR = "rusefi_plugin_body.jar";
     private static final String LOCAL_JAR_FILE_NAME = FileUtil.RUSEFI_SETTINGS_FOLDER + File.separator + PLUGIN_BODY_JAR;
@@ -33,6 +36,7 @@ public class Updater {
     private final JPanel content = new JPanel(new VerticalFlowLayout());
     private static final ImageIcon LOGO = AutoupdateUtil.loadIcon("/rusefi_online_color_300.png");
     private final JLabel countDownLabel = new JLabel();
+    private final Object lock = new Object();
     private final AtomicInteger autoStartCounter = new AtomicInteger(4);
     private TsPluginBody instance;
     private final Timer timer = new Timer(1000, new ActionListener() {
@@ -43,10 +47,11 @@ public class Updater {
                 try {
                     if (shouldAutoStart) {
                         shouldAutoStart = false;
-                        System.out.println("Auto-starting startPlugin");
+                        log.info("Auto-starting startPlugin");
                         startPlugin();
                     }
-                } catch (IllegalAccessException | MalformedURLException | ClassNotFoundException | InstantiationException ex) {
+                } catch (IllegalAccessException | MalformedURLException | ClassNotFoundException |
+                         InstantiationException | InterruptedException | InvocationTargetException ex) {
                     ex.printStackTrace();
                     JOptionPane.showMessageDialog(content, "Error " + ex);
                 }
@@ -82,10 +87,10 @@ public class Updater {
                     e.printStackTrace();
                     return;
                 }
-                System.out.println("Server has " + connectionAndMeta.getCompleteFileSize() + " from " + new Date(connectionAndMeta.getLastModified()));
+                log.info("Server has " + connectionAndMeta.getCompleteFileSize() + " from " + new Date(connectionAndMeta.getLastModified()));
 
                 if (AutoupdateUtil.hasExistingFile(LOCAL_JAR_FILE_NAME, connectionAndMeta.getCompleteFileSize(), connectionAndMeta.getLastModified())) {
-                    System.out.println("We already have latest update " + new Date(connectionAndMeta.getLastModified()));
+                    log.info("We already have latest update " + new Date(connectionAndMeta.getLastModified()));
                     SwingUtilities.invokeLater(() -> {
                         download.setText("We have latest plugin version");
                         download.setEnabled(false);
@@ -120,9 +125,10 @@ public class Updater {
             public void actionPerformed(ActionEvent e) {
                 try {
                     cancelAutoStart();
-                    System.out.println("run startPlugin");
+                    log.info("run startPlugin");
                     startPlugin();
-                } catch (IllegalAccessException | MalformedURLException | ClassNotFoundException | InstantiationException ex) {
+                } catch (IllegalAccessException | MalformedURLException | ClassNotFoundException |
+                         InstantiationException | InterruptedException | InvocationTargetException ex) {
                     run.setText(e.toString());
                 }
             }
@@ -150,7 +156,7 @@ public class Updater {
     }
 
     private void startDownload(JButton download) {
-        System.out.println("startDownload");
+        log.info("startDownload");
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -163,7 +169,7 @@ public class Updater {
 
             AutoupdateUtil.downloadAutoupdateFile(LOCAL_JAR_FILE_NAME, connectionAndMeta,
                     TITLE);
-            System.out.println("Downloaded, now startPlugin");
+            log.info("Downloaded, now startPlugin");
             startPlugin();
 
         } catch (Exception e) {
@@ -172,22 +178,25 @@ public class Updater {
         }
     }
 
-    private void startPlugin() throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException {
-        System.out.println("Starting plugin " + this);
+    private void startPlugin() throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException, InterruptedException, InvocationTargetException {
+        log.info("Starting plugin " + this);
         Class clazz = getPluginClass();
-        synchronized (this) {
+        synchronized (lock) {
             if (instance != null) {
-                System.out.println("Not starting second instance");
+                log.info("Not starting second instance");
                 return; // avoid having two instances running
             }
-            instance = (TsPluginBody) clazz.newInstance();
+            SwingUtilities.invokeAndWait(() -> {
+                try {
+                    instance = (TsPluginBody) clazz.newInstance();
+                    replaceWith(instance);
+                } catch (InstantiationException e) {
+                    throw new RuntimeException(e);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            });
         }
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                replaceWith(instance);
-            }
-        });
     }
 
     private static Class getPluginClass() throws MalformedURLException, ClassNotFoundException {
