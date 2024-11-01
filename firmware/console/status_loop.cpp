@@ -27,6 +27,7 @@
 #include "pch.h"
 #include "status_loop.h"
 #include "hip9011_logic.h"
+#include "electronic_throttle.h"
 
 #if EFI_LOGIC_ANALYZER
 #include "logic_analyzer.h"
@@ -643,6 +644,26 @@ void updateTunerStudioState() {
 #endif // EFI_USB_SERIAL
 
 	float rpm = Sensor::get(SensorType::Rpm).value_or(0);
+
+
+  static Timer blinkIndicatorsTimer;
+  constexpr float blinkHalfPeriod = 0.3;
+  bool isBlinkPhase = blinkIndicatorsTimer.hasElapsedSec(blinkHalfPeriod);
+#if EFI_ELECTRONIC_THROTTLE_BODY
+  blinkEtbErrorCodes(isBlinkPhase);
+#endif // EFI_ELECTRONIC_THROTTLE_BODY
+  if (isBlinkPhase) {
+    engine->outputChannels.sparkCutReasonBlinker = 0;
+    engine->outputChannels.fuelCutReasonBlinker = 0;
+
+    if (blinkIndicatorsTimer.hasElapsedSec(2 * blinkHalfPeriod)) {
+      blinkIndicatorsTimer.reset();
+    }
+  } else {
+    engine->outputChannels.sparkCutReasonBlinker = engine->outputChannels.sparkCutReason;
+    engine->outputChannels.fuelCutReasonBlinker = engine->outputChannels.fuelCutReason;
+  }
+
 
 #if EFI_PROD_CODE
 	executorStatistics();
