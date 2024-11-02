@@ -178,6 +178,14 @@ public class Updater {
         }
     }
 
+    private static void invokeAndWait(Runnable runnable) throws InterruptedException, InvocationTargetException {
+        if (SwingUtilities.isEventDispatchThread()) {
+            runnable.run();
+        } else {
+            SwingUtilities.invokeAndWait(runnable);
+        }
+    }
+
     private void startPlugin() throws MalformedURLException, ClassNotFoundException, InstantiationException, IllegalAccessException, InterruptedException, InvocationTargetException {
         log.info("Starting plugin " + this);
         Class clazz = getPluginClass();
@@ -186,7 +194,7 @@ public class Updater {
                 log.info("Not starting second instance");
                 return; // avoid having two instances running
             }
-            SwingUtilities.invokeAndWait(() -> {
+            invokeAndWait(() -> {
                 try {
                     instance = (TsPluginBody) clazz.newInstance();
                     replaceWith(instance);
@@ -200,6 +208,7 @@ public class Updater {
     }
 
     private static Class getPluginClass() throws MalformedURLException, ClassNotFoundException {
+        log.info("Using " + LOCAL_JAR_FILE_NAME);
         URLClassLoader jarClassLoader = AutoupdateUtil.getClassLoaderByJar(LOCAL_JAR_FILE_NAME);
         return Class.forName(PLUGIN_ENTRY_CLASS, true, jarClassLoader);
     }

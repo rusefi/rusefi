@@ -141,14 +141,6 @@ public class UiUtils {
         return imageButton;
     }
 
-    public static void invokeAndWait(Runnable runnable) throws InterruptedException, InvocationTargetException {
-        if (SwingUtilities.isEventDispatchThread()) {
-            runnable.run();
-        } else {
-            SwingUtilities.invokeAndWait(runnable);
-        }
-    }
-
     public static void showLoadingMessage(JPanel panel) {
         panel.add(new JLabel("Loading..."), BorderLayout.CENTER);
     }
