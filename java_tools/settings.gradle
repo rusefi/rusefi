@@ -1,3 +1,7 @@
+plugins {
+  // [tag:java8]
+  id 'org.gradle.toolchains.foojay-resolver-convention' version '0.8.0'
+}
 include ':trigger-image'
 include ':tune-tools'
 include ':proxy_server'

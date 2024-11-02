@@ -11,6 +11,10 @@ allprojects {
           // TS still comes with 1.8 and we have a plugin, lets build compatible
           sourceCompatibility = '8'
           targetCompatibility = '8'
+          // [tag:java8]
+          toolchain {
+            languageVersion.set(JavaLanguageVersion.of(11))
+          }
         }
 
         dependencies {
