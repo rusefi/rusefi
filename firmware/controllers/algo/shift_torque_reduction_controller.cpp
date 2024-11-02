@@ -72,8 +72,10 @@ void ShiftTorqueReductionController::updateTriggerPinState(const switch_input_pi
 
 void ShiftTorqueReductionController::updateTimeConditionSatisfied() {
 	isTimeConditionSatisfied = torqueReductionTriggerPinState
-	    ? (0.0f < engineConfiguration->torqueReductionTime)
-	        && !m_pinTriggeredTimer.hasElapsedMs(engineConfiguration->torqueReductionTime)
+	    ? !engineConfiguration->limitTorqueReductionTime ||
+	        ((0.0f < engineConfiguration->torqueReductionTime)
+	            && !m_pinTriggeredTimer.hasElapsedMs(engineConfiguration->torqueReductionTime)
+	        )
 	    : false;
 }
 
