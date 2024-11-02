@@ -164,14 +164,14 @@ public class LuaScriptPanel {
         try {
             File file = new File(fullFileName);
             log.info("Reloading " + file.getAbsolutePath());
-            String discContent = Files.readString(file.toPath());
+            String discContent = CompatibilityFiles.readString(file.toPath());
 
             String newLua = LuaIncludeSyntax.reloadScript(discContent, name -> {
                 String includeFullName = getWorkingFolder() + File.separator + name;
                 File includeFile = new File(includeFullName);
                 log.info("Reading " + includeFile.getAbsolutePath());
                 try {
-                    String string = Files.readString(includeFile.toPath());
+                    String string = CompatibilityFiles.readString(includeFile.toPath());
                     log.info("Got " + string.length() + " bytes");
                     return string;
                 } catch (IOException e) {

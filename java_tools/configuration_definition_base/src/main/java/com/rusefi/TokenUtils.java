@@ -40,6 +40,6 @@ public class TokenUtils {
             }
             tokens.add(currentToken.toString());
         }
-        return tokens.toArray(String[]::new);
+        return tokens.toArray(new String[0]);
     }
 }

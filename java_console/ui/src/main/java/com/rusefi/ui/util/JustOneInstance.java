@@ -61,7 +61,7 @@ public class JustOneInstance {
     private static void handleConnection(Socket clientSocket) throws IOException {
         try (OutputStream outputStream = clientSocket.getOutputStream()) {
             PrintWriter networkWriter = new PrintWriter(outputStream, true);
-            String msg = new Date() + "Already running " + ProcessHandle.current().pid() + "\r\n";
+            String msg = new Date() + "Already running " + /* todo [tag:java8] ProcessHandle.current().pid() + */"\r\n";
             log.info(msg);
             networkWriter.println(msg);
         }

@@ -245,7 +245,7 @@ public enum SerialPortScanner {
         for (String serialPort : serialPorts) {
             // First, check the port cache
             final Optional<PortResult> cachedPort = portCache.get(serialPort);
-            cachedPort.ifPresentOrElse(ports::add, () -> portsToInspect.add(serialPort));
+            CompatibilityOptional.ifPresentOrElse(cachedPort, ports::add, () -> portsToInspect.add(serialPort));
         }
 
         for (PortResult p : inspectPorts(portsToInspect)) {

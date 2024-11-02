@@ -6,6 +6,7 @@ import com.rusefi.io.LinkManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CountDownLatch;
@@ -32,7 +33,7 @@ public class PortDetector {
     public static SerialAutoChecker.AutoDetectResult autoDetectSerial(Function<SerialAutoChecker.CallbackContext, Void> callback) {
         String rusEfiAddress = System.getProperty("rusefi.address");
         if (rusEfiAddress != null) {
-            return getSignatureFromPorts(callback, Set.of(rusEfiAddress));
+            return getSignatureFromPorts(callback, Collections.singleton(rusEfiAddress));
         }
         final Set<String> serialPorts = LinkManager.getCommPorts();
         if (serialPorts.isEmpty()) {

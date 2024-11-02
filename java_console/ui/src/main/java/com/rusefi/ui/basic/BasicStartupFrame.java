@@ -2,10 +2,7 @@ package com.rusefi.ui.basic;
 
 import com.devexperts.logging.Logging;
 
-import com.rusefi.AvailableHardware;
-import com.rusefi.Launcher;
-import com.rusefi.SerialPortScanner;
-import com.rusefi.StartupFrame;
+import com.rusefi.*;
 import com.rusefi.core.FindFileHelper;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.ui.AutoupdateUtil;
@@ -138,11 +135,11 @@ public class BasicStartupFrame {
             setUpdateFirmwareJob(new DfuManualJob());
         } else {
             final Set<SerialPortScanner.SerialPortType> portTypesToUpdateFirmware = (isObfuscated ?
-                Set.of(
+                CompatibilitySet.of(
                     SerialPortScanner.SerialPortType.EcuWithOpenblt,
                     SerialPortScanner.SerialPortType.OpenBlt
                 ) :
-                Set.of(
+                CompatibilitySet.of(
                     SerialPortScanner.SerialPortType.Ecu,
                     SerialPortScanner.SerialPortType.EcuWithOpenblt
                 )
@@ -220,7 +217,7 @@ public class BasicStartupFrame {
     }
 
     private void updatePortToUpdateCalibrations(final AvailableHardware currentHardware) {
-        final List<SerialPortScanner.PortResult> ecuPortsToUpdateCalibrations = currentHardware.getKnownPorts(Set.of(
+        final List<SerialPortScanner.PortResult> ecuPortsToUpdateCalibrations = currentHardware.getKnownPorts(CompatibilitySet.of(
             SerialPortScanner.SerialPortType.Ecu,
             SerialPortScanner.SerialPortType.EcuWithOpenblt
         ));
@@ -259,14 +256,14 @@ public class BasicStartupFrame {
     }
 
     private void onUpdateFirmwareButtonClicked(final ActionEvent actionEvent) {
-        updateFirmwareJob.ifPresentOrElse(
+        CompatibilityOptional.ifPresentOrElse(updateFirmwareJob,
             AsyncJobExecutor.INSTANCE::executeJob,
             () -> log.error("Update firmware job is is not defined.")
         );
     }
 
     private void onUpdateCalibrationsButtonClicked(final ActionEvent actionEvent) {
-        portToUpdateCalibrations.ifPresentOrElse(
+        CompatibilityOptional.ifPresentOrElse(portToUpdateCalibrations,
             port -> {
                 updateCalibrations.updateCalibrationsAction(port, updateCalibrationsButton);
             }, () -> {
