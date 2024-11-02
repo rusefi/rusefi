@@ -1214,7 +1214,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 1113373903;
+	public static final int SIGNATURE_HASH = 139568884;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1477,7 +1477,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.11.02.f407-discovery.1113373903";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.11.02.f407-discovery.139568884";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2123,6 +2123,7 @@ public class Fields {
 	public static final Field LAUNCHSPARKCUTENABLE = Field.create("LAUNCHSPARKCUTENABLE", 1304, FieldType.BIT, 19).setBaseOffset(0);
 	public static final Field TORQUEREDUCTIONENABLED = Field.create("TORQUEREDUCTIONENABLED", 1304, FieldType.BIT, 20).setBaseOffset(0);
 	public static final Field TORQUEREDUCTIONTRIGGERPININVERTED = Field.create("TORQUEREDUCTIONTRIGGERPININVERTED", 1304, FieldType.BIT, 21).setBaseOffset(0);
+	public static final Field LIMITTORQUEREDUCTIONTIME = Field.create("LIMITTORQUEREDUCTIONTIME", 1304, FieldType.BIT, 22).setBaseOffset(0);
 	public static final Field VERBOSEISOTP = Field.create("VERBOSEISOTP", 1304, FieldType.BIT, 27).setBaseOffset(0);
 	public static final Field ENGINESNIFFERFOCUSONINPUTS = Field.create("ENGINESNIFFERFOCUSONINPUTS", 1304, FieldType.BIT, 28).setBaseOffset(0);
 	public static final Field LAUNCHACTIVATEINVERTED = Field.create("LAUNCHACTIVATEINVERTED", 1304, FieldType.BIT, 29).setBaseOffset(0);
@@ -3831,6 +3832,7 @@ public class Fields {
 	LAUNCHSPARKCUTENABLE,
 	TORQUEREDUCTIONENABLED,
 	TORQUEREDUCTIONTRIGGERPININVERTED,
+	LIMITTORQUEREDUCTIONTIME,
 	VERBOSEISOTP,
 	ENGINESNIFFERFOCUSONINPUTS,
 	LAUNCHACTIVATEINVERTED,

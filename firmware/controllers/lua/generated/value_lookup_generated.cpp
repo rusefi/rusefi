@@ -830,6 +830,9 @@ float getConfigValueByName(const char *name) {
 // torqueReductionTriggerPinInverted
 		case 1931913358:
 			return engineConfiguration->torqueReductionTriggerPinInverted;
+// limitTorqueReductionTime
+		case -819413824:
+			return engineConfiguration->limitTorqueReductionTime;
 // verboseIsoTp
 		case -487204662:
 			return engineConfiguration->verboseIsoTp;
@@ -3277,6 +3280,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1931913358:
 	{
 		engineConfiguration->torqueReductionTriggerPinInverted = (int)value;
+		return 1;
+	}
+		case -819413824:
+	{
+		engineConfiguration->limitTorqueReductionTime = (int)value;
 		return 1;
 	}
 		case -487204662:

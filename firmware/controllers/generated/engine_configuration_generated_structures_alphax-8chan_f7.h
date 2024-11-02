@@ -2383,7 +2383,7 @@ struct engine_configuration_s {
 	bool torqueReductionTriggerPinInverted : 1 {};
 	/**
 	offset 1320 bit 22 */
-	bool unusedFancy14 : 1 {};
+	bool limitTorqueReductionTime : 1 {};
 	/**
 	offset 1320 bit 23 */
 	bool unusedFancy7 : 1 {};
