@@ -1076,7 +1076,7 @@ bit launchFuelCutEnable
 bit launchSparkCutEnable;This is the Cut Mode normally used
 	bit torqueReductionEnabled
 	bit torqueReductionTriggerPinInverted
-	bit unusedFancy14
+	bit limitTorqueReductionTime
 	bit unusedFancy7
 	bit unusedFancy8
 	bit unusedFancy9
