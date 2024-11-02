@@ -1094,7 +1094,7 @@ See Over/Undervoltage Shutdown/Retry bit in documentation
 Send out board statistics
 
 ### luaCanRxWorkaround
-
+global_can_data performance hack
 
 ### flexSensorInverted
 

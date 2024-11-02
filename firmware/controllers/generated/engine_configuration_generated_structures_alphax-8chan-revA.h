@@ -2804,6 +2804,7 @@ struct engine_configuration_s {
 	offset 1492 bit 5 */
 	bool enableExtendedCanBroadcast : 1 {};
 	/**
+	 * global_can_data performance hack
 	offset 1492 bit 6 */
 	bool luaCanRxWorkaround : 1 {};
 	/**
