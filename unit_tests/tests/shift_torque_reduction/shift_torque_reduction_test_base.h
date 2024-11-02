@@ -16,6 +16,7 @@ public:
     std::optional<bool> getPinInverted() const { return m_pinInverted; }
     std::optional<switch_input_pin_e> getLaunchActivatePin() const { return m_launchActivatePin; }
     std::optional<bool> getLaunchActivateInverted() const { return m_launchActivateInverted; }
+    std::optional<bool> getLimitTorqueReductionTime() const { return m_limitTorqueReductionTime; }
     std::optional<float> getTorqueReductionTime() const { return m_torqueReductionTime; }
     std::optional<float> getTorqueReductionArmingRpm() const { return m_torqueReductionArmingRpm; }
     std::optional<float> getTorqueReductionArmingApp() const { return m_torqueReductionArmingApp; }
@@ -30,6 +31,7 @@ public:
     ShiftTorqueReductionTestConfig setPinInverted(std::optional<bool> value);
     ShiftTorqueReductionTestConfig setLaunchActivatePin(std::optional<switch_input_pin_e> value);
     ShiftTorqueReductionTestConfig setLaunchActivateInverted(std::optional<bool> value);
+    ShiftTorqueReductionTestConfig setLimitTorqueReductionTime(std::optional<bool> value);
     ShiftTorqueReductionTestConfig setTorqueReductionTime(std::optional<float> value);
     ShiftTorqueReductionTestConfig setTorqueReductionArmingRpm(std::optional<float> value);
     ShiftTorqueReductionTestConfig setTorqueReductionArmingApp(std::optional<float> value);
@@ -40,6 +42,7 @@ private:
     std::optional<bool> m_pinInverted;
     std::optional<switch_input_pin_e> m_launchActivatePin;
     std::optional<bool> m_launchActivateInverted;
+    std::optional<bool> m_limitTorqueReductionTime;
     std::optional<float> m_torqueReductionTime;
     std::optional<float> m_torqueReductionArmingRpm;
     std::optional<float> m_torqueReductionArmingApp;
@@ -55,6 +58,7 @@ private:
     void configureTorqueReductionButtonInverted(std::optional<bool> pinInverted);
     void configureLaunchActivatePin(std::optional<switch_input_pin_e> pin);
     void configureLaunchActivateInverted(std::optional<bool> pinInverted);
+    void configureLimitTorqueReductionTime(std::optional<bool> limitTorqueReductionTime);
     void configureTorqueReductionTime(std::optional<float> timeout);
     void configureTorqueReductionArmingRpm(std::optional<float> armingRpm);
     void configureTorqueReductionArmingApp(std::optional<float> armingApp);

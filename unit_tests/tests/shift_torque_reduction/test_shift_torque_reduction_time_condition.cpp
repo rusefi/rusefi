@@ -46,6 +46,7 @@ namespace {
             .setTorqueReductionEnabled(true)
             .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
             .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setLimitTorqueReductionTime(true)
             .setTorqueReductionTime(TEST_TORQUE_REDUCTION_TIME)
         );
 
@@ -64,6 +65,7 @@ namespace {
             .setTorqueReductionEnabled(true)
             .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
             .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setLimitTorqueReductionTime(true)
             .setTorqueReductionTime(TEST_TORQUE_REDUCTION_TIME)
         );
 
@@ -81,6 +83,7 @@ namespace {
             .setTorqueReductionEnabled(true)
             .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
             .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setLimitTorqueReductionTime(true)
             .setTorqueReductionTime(TEST_TORQUE_REDUCTION_TIME)
         );
 
@@ -105,6 +108,7 @@ namespace {
             .setTorqueReductionEnabled(true)
             .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
             .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setLimitTorqueReductionTime(true)
             .setTorqueReductionTime(IMMEDIATELY)
         );
 
@@ -122,5 +126,28 @@ namespace {
 
         waitAndCheckTimeCondition(TEST_TORQUE_REDUCTION_TIME, true, false, "Before timeout expiration");
         waitAndCheckTimeCondition(EPS3D, true, false, "After timeout expiration");
+    }
+
+    TEST_F(ShiftTorqueReductionTimeConditionTest, checkDeactivationWithoutLimitedTorqueReductionTime) {
+        setUpTestConfig(ShiftTorqueReductionTestConfig()
+            .setTorqueReductionEnabled(true)
+            .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
+            .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setLimitTorqueReductionTime(false)
+            .setTorqueReductionTime(TEST_TORQUE_REDUCTION_TIME)
+        );
+
+        waitAndCheckTimeCondition(IMMEDIATELY, false, false, "Initial state");
+
+        setMockState(TEST_TORQUE_REDUCTION_BUTTON_PIN, true);
+        waitAndCheckTimeCondition(IMMEDIATELY, true, true, "Pin has just been actvated");
+
+        waitAndCheckTimeCondition(TEST_TORQUE_REDUCTION_TIME, true, true, "Before timeout exriration");
+
+        // Timeout expiration doesn't affect shift torque reduction because limitTorqueReductionTime is false:
+        waitAndCheckTimeCondition(EPS3D, true, true, "After timeout expiration");
+
+        setMockState(TEST_TORQUE_REDUCTION_BUTTON_PIN, false);
+        waitAndCheckTimeCondition(IMMEDIATELY, false, false, "Pin has just been deactvated");
     }
 }
