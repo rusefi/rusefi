@@ -156,6 +156,9 @@ void mapAveragingAdcCallback(float instantVoltage) {
 	if (!mapResult) {
 		// hopefully this warning is not too much CPU consumption for fast ADC callback
 		warning(ObdCode::CUSTOM_INSTANT_MAP_DECODING, "Invalid MAP at %f", instantVoltage);
+		engine->outputChannels.isMapValid = false;
+	} else {
+		engine->outputChannels.isMapValid = true;
 	}
 
 #if EFI_TUNER_STUDIO
