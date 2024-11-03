@@ -46,6 +46,87 @@ TEST(CanWideband, AcceptFrameId1) {
 	EXPECT_TRUE(dut.acceptFrame(frame));
 }
 
+class AemXSeriesWidebandWrapper: AemXSeriesWideband {
+public:
+	using AemXSeriesWideband::AemXSeriesWideband;
+	using AemXSeriesWideband::decodeAemXSeries;
+	using AemXSeriesWideband::Register;
+};
+
+TEST(CanWideband,DecodeAemXSeriesInvalidLambda){
+	AemXSeriesWidebandWrapper wbo(0, SensorType::Lambda1);
+	CANRxFrame frame;
+
+	frame.SID = 0x180;
+	frame.IDE = false;
+
+	frame.DLC = 8;
+
+	frame.data8[0] = 0x1F;
+	frame.data8[1] = 0x40;
+	frame.data8[2] = 0;
+	frame.data8[3] = 0;
+	frame.data8[4] = 0x79;
+	frame.data8[5] = 0x6E;
+	frame.data8[6] = 0b01000000;
+	frame.data8[7] = 0;
+	
+	EXPECT_FALSE(wbo.decodeAemXSeries(frame, getTimeNowNt()));
+}
+
+TEST(CanWideband,DecodeAemXSeriesSensorFault){
+	AemXSeriesWidebandWrapper wbo(0, SensorType::Lambda1);
+	CANRxFrame frame;
+
+	frame.SID = 0x180;
+	frame.IDE = false;
+
+	frame.DLC = 8;
+
+	frame.data8[0] = 0x1F;
+	frame.data8[1] = 0x40;
+	frame.data8[2] = 0;
+	frame.data8[3] = 0;
+	frame.data8[4] = 0x79;
+	frame.data8[5] = 0x6E;
+	frame.data8[6] = 0;
+	frame.data8[7] = 0b00000010;
+	
+	EXPECT_FALSE(wbo.decodeAemXSeries(frame, getTimeNowNt()));
+}
+
+
+TEST(CanWideband,DecodeAemXSeriesValidLambda){
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	AemXSeriesWidebandWrapper wbo(0, SensorType::Lambda1);
+
+	// only this tests needs register
+	wbo.Register();
+
+	CANRxFrame frame;
+
+	frame.SID = 0x180;
+	frame.IDE = false;
+
+	frame.DLC = 8;
+
+	frame.data8[0] = 0x2F;	// 8000, lambda 0.8
+	frame.data8[1] = 0x00;
+	frame.data8[2] = 0;
+	frame.data8[3] = 0;
+	frame.data8[4] = 0;
+	frame.data8[5] = 0;
+	frame.data8[6] =
+		1 << 1 |	// LSU 4.9 detected
+		1 << 7;		// Data valid
+	frame.data8[7] = 0;
+
+	wbo.decodeAemXSeries(frame, getTimeNowNt());
+
+	EXPECT_FLOAT_EQ(1.2032f, Sensor::get(SensorType::Lambda1).value_or(-1));
+	Sensor::resetRegistry();
+}
+
 TEST(CanWideband, DecodeValidAemFormat) {
   EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	AemXSeriesWideband dut(0, SensorType::Lambda1);
@@ -61,7 +142,7 @@ TEST(CanWideband, DecodeValidAemFormat) {
 
 	frame.DLC = 8;
 
-	frame.data8[0] = 0x1F;	// 8000, lambda 0.8
+	frame.data8[0] = 0x1F;
 	frame.data8[1] = 0x40;
 	frame.data8[2] = 0;
 	frame.data8[3] = 0;
