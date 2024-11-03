@@ -1,5 +1,7 @@
+# TODO: are we missing a ton of .txt file references from LiveData.yaml?!
 DOCS_ENUMS_INPUTS = \
   $(PROJECT_DIR)/integration/rusefi_config.txt \
+  $(PROJECT_DIR)/console/binary/output_channels.txt \
   $(PROJECT_DIR)/integration/LiveData.yaml \
   $(PROJECT_DIR)/console/binary/generated/live_data_ids.h \
   $(PROJECT_DIR)/controllers/sensors/sensor_type.h \
