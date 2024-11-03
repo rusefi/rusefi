@@ -144,14 +144,15 @@ struct output_channels_s {
 	offset 0 bit 28 */
 	bool sd_active_rd : 1 {};
 	/**
+	 * MAP from sensor seems valid
 	offset 0 bit 29 */
-	bool unusedBit_29_29 : 1 {};
+	bool isMapValid : 1 {};
 	/**
 	offset 0 bit 30 */
-	bool unusedBit_29_30 : 1 {};
+	bool unusedBit_30_30 : 1 {};
 	/**
 	offset 0 bit 31 */
-	bool unusedBit_29_31 : 1 {};
+	bool unusedBit_30_31 : 1 {};
 	/**
 	 * @@GAUGE_NAME_RPM@@
 	 * units: RPM

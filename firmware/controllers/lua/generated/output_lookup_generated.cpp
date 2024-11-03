@@ -93,6 +93,9 @@ float getOutputValueByName(const char *name) {
 // sd_active_rd
 		case 1301677708:
 			return engine->outputChannels.sd_active_rd;
+// isMapValid
+		case 43183663:
+			return engine->outputChannels.isMapValid;
 // RPMValue
 		case 1699696209:
 			return engine->outputChannels.RPMValue;
