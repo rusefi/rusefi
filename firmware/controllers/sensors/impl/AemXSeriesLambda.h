@@ -17,7 +17,7 @@ protected:
 	void decodeFrame(const CANRxFrame& frame, efitick_t nowNt) override;
 
 	// Decode an actual AEM controller, or a rusEFI controller sending AEM format
-	void decodeAemXSeries(const CANRxFrame& frame, efitick_t nowNt);
+	bool decodeAemXSeries(const CANRxFrame& frame, efitick_t nowNt);
 
 	// Decode rusEFI custom format
 	void decodeRusefiStandard(const CANRxFrame& frame, efitick_t nowNt);

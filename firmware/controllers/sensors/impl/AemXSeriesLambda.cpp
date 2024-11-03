@@ -11,6 +11,9 @@ static constexpr uint32_t rusefi_base = WB_DATA_BASE_ADDR;
 #define HACK_SILENT_VALUE 1
 // todo: suggest values 1 and 2 into the official WB source fault enum?
 #define HACK_CRANKING_VALUE 2
+// todo: static_cast<uint8_t>(Fault::LegacyProtocol);
+#define HACK_VALID_AEM 7
+#define HACK_INVALID_AEM 8
 
 AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
 	: CanSensorBase(
@@ -57,8 +60,8 @@ void AemXSeriesWideband::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
 	// accept frame has already guaranteed that this message belongs to us
 	// We just have to check if it's AEM or rusEFI
 	if (id < rusefi_base) {
-		decodeAemXSeries(frame, nowNt);
-		faultCode = 7;//static_cast<uint8_t>(Fault::LegacyProtocol);
+		bool isValidAemX = decodeAemXSeries(frame, nowNt);
+		faultCode = isValidAemX ? HACK_VALID_AEM : HACK_INVALID_AEM;
 	} else {
 		// rusEFI custom format
 		if ((id & 0x1) != 0) {
@@ -71,7 +74,10 @@ void AemXSeriesWideband::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
 	}
 }
 
-void AemXSeriesWideband::decodeAemXSeries(const CANRxFrame& frame, efitick_t nowNt) {
+/**
+ * @return true if valid, false if invalid
+ */
+bool AemXSeriesWideband::decodeAemXSeries(const CANRxFrame& frame, efitick_t nowNt) {
 	// reports in 0.0001 lambda per LSB
 	uint16_t lambdaInt = SWAP_UINT16(frame.data16[0]);
 	float lambdaFloat = 0.0001f * lambdaInt;
@@ -80,17 +86,18 @@ void AemXSeriesWideband::decodeAemXSeries(const CANRxFrame& frame, efitick_t now
 	bool sensorFault = frame.data8[7] & 0x40;
 	if (sensorFault) {
 		invalidate();
-		return;
+		return false;
 	}
 
 	// bit 7 indicates valid
 	bool valid = frame.data8[6] & 0x80;
 	if (!valid) {
 		invalidate();
-		return;
+		return false;
 	}
 
 	setValidValue(lambdaFloat, nowNt);
+	return true;
 }
 
 void AemXSeriesWideband::decodeRusefiStandard(const CANRxFrame& frame, efitick_t nowNt) {
