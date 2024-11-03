@@ -167,12 +167,24 @@
 #define PAL_USE_CALLBACKS           TRUE
 
 // USB Serial
-#ifndef SERIAL_USB_BUFFERS_SIZE
-#define SERIAL_USB_BUFFERS_SIZE     768
+#ifndef SERIAL_USB_BUFFERS_RX_SIZE
+#define SERIAL_USB_BUFFERS_RX_SIZE     64
 #endif
 
-#ifndef SERIAL_USB_BUFFERS_NUMBER
-#define SERIAL_USB_BUFFERS_NUMBER   2
+#if (SERIAL_USB_BUFFERS_RX_SIZE != 64)
+#error Please keep SERIAL_USB_BUFFERS_SIZE until https://forum.chibios.org/viewtopic.php?f=35&t=6395 is properly fixed!
+#endif
+
+#ifndef SERIAL_USB_BUFFERS_RX_NUMBER
+#define SERIAL_USB_BUFFERS_RX_NUMBER   2
+#endif
+
+#ifndef SERIAL_USB_BUFFERS_TX_SIZE
+#define SERIAL_USB_BUFFERS_TX_SIZE     1024
+#endif
+
+#ifndef SERIAL_USB_BUFFERS_TX_NUMBER
+#define SERIAL_USB_BUFFERS_TX_NUMBER   2
 #endif
 
 // USB Mass Storage
