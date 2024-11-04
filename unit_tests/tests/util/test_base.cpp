@@ -18,6 +18,10 @@ TestEngineConfiguration& TestBase::getTestEngineConfiguration() {
     return TestEngineConfiguration::getInstance();
 }
 
+TestEngineState& TestBase::getTestEngineState() {
+    return TestEngineState::getInstance();
+}
+
 void TestBase::periodicFastCallback() {
     // run the ignition math
     engine->periodicFastCallback();

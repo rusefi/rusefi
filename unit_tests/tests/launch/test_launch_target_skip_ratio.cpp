@@ -12,16 +12,19 @@ namespace {
     constexpr float TEST_LUA_HARD_SPARK_SKIP = 174.0f;
 
     class LaunchTargetSkipRatioTest : public TestBase {
+    protected:
+        void SetUp() override;
     };
 
-    static void setUpTestParameters() {
+    void LaunchTargetSkipRatioTest::SetUp() {
+        TestBase::SetUp();
         std::fill_n(
             &engineConfiguration->tractionControlIgnitionSkip[0][0],
             TRACTION_CONTROL_ETB_DROP_SIZE * TRACTION_CONTROL_ETB_DROP_SIZE,
             static_cast<int8_t>(TEST_TRACTION_CONTROL_IGNITION_SKIP)
         );
-        engine->engineState.luaSoftSparkSkip = TEST_LUA_SOFT_SPARK_SKIP;
-        engine->engineState.luaHardSparkSkip = TEST_LUA_HARD_SPARK_SKIP;
+        getTestEngineState().setLuaSoftSparkSkip(TEST_LUA_SOFT_SPARK_SKIP);
+        getTestEngineState().setLuaHardSparkSkip(TEST_LUA_HARD_SPARK_SKIP);
     }
 
     TEST_F(LaunchTargetSkipRatioTest, doNotUseSkipInTraction) {
