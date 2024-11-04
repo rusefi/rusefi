@@ -206,31 +206,37 @@ extern bool rebootForPresetPending;
 /**
  * This command is needed to make the whole transfer a bit faster
  */
-void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t offset, uint16_t count,
+void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t page, uint16_t offset, uint16_t count,
 		void *content) {
 	tsState.writeChunkCommandCounter++;
-	if (isLockedFromUser()) {
-		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND, "locked");
-		return;
+
+	efiPrintf("TS -> Page %d write chunk offset %d count %d (output_count=%d)",
+		page, offset, count, tsState.outputChannelsCommandCounter);
+
+	if (page == 0) {
+		if (isLockedFromUser()) {
+			sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND, "locked");
+			return;
+		}
+
+		if (validateOffsetCount(offset, count, tsChannel)) {
+			tunerStudioError(tsChannel, "ERROR: WR out of range");
+			sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+			return;
+		}
+
+		// Skip the write if a preset was just loaded - we don't want to overwrite it
+		if (!rebootForPresetPending) {
+			uint8_t * addr = (uint8_t *) (getWorkingPageAddr() + offset);
+			memcpy(addr, content, count);
+		}
+		// Force any board configuration options that humans shouldn't be able to change
+		setBoardConfigOverrides();
+
+		sendOkResponse(tsChannel);
+	} else {
+		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: WR invalid page");
 	}
-
-	efiPrintf("TS -> Write chunk offset %d count %d (output_count=%d)", offset, count, tsState.outputChannelsCommandCounter);
-
-	if (validateOffsetCount(offset, count, tsChannel)) {
-		tunerStudioError(tsChannel, "ERROR: WR out of range");
-		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
-		return;
-	}
-
-	// Skip the write if a preset was just loaded - we don't want to overwrite it
-	if (!rebootForPresetPending) {
-		uint8_t * addr = (uint8_t *) (getWorkingPageAddr() + offset);
-		memcpy(addr, content, count);
-	}
-	// Force any board configuration options that humans shouldn't be able to change
-	setBoardConfigOverrides();
-
-	sendOkResponse(tsChannel);
 }
 
 void TunerStudio::handleCrc32Check(TsChannelBase *tsChannel, uint16_t offset, uint16_t count) {
@@ -311,34 +317,38 @@ void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 }
 #endif // EFI_TS_SCATTER
 
-void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t offset, uint16_t count) {
+void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t page, uint16_t offset, uint16_t count) {
 	tsState.readPageCommandsCounter++;
 
-	if (rebootForPresetPending) {
-		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND, "reboot");
-		return;
-	}
+	efiPrintf("TS <- Page %d read chunk offset %d count %d", page, offset, count);
 
-	efiPrintf("TS <- Read chunk offset %d count %d", offset, count);
+	if (page == 0) {
+		if (rebootForPresetPending) {
+			sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND, "reboot");
+			return;
+		}
 
-	if (validateOffsetCount(offset, count, tsChannel)) {
-		tunerStudioError(tsChannel, "ERROR: RD out of range");
-		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
-		return;
-	}
+		if (validateOffsetCount(offset, count, tsChannel)) {
+			tunerStudioError(tsChannel, "ERROR: RD out of range");
+			sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
+			return;
+		}
 
-	uint8_t* addr;
-	if (isLockedFromUser()) {
-		// to have rusEFI console happy just send all zeros within a valid packet
-		addr = (uint8_t*)&tsChannel->scratchBuffer + TS_PACKET_HEADER_SIZE;
-		memset(addr, 0, count);
-	} else {
-		addr = getWorkingPageAddr() + offset;
-	}
-	tsChannel->sendResponse(TS_CRC, addr, count);
+		uint8_t* addr;
+		if (isLockedFromUser()) {
+			// to have rusEFI console happy just send all zeros within a valid packet
+			addr = (uint8_t*)&tsChannel->scratchBuffer + TS_PACKET_HEADER_SIZE;
+			memset(addr, 0, count);
+		} else {
+			addr = getWorkingPageAddr() + offset;
+		}
+		tsChannel->sendResponse(TS_CRC, addr, count);
 #if EFI_TUNER_STUDIO_VERBOSE
-//	efiPrintf("Sending %d done", count);
+//		efiPrintf("Sending %d done", count);
 #endif
+	} else {
+		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE, "ERROR: RD invalid page");
+	}
 }
 #endif // EFI_TUNER_STUDIO
 
@@ -690,6 +700,8 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 
 	const uint16_t* data16 = reinterpret_cast<uint16_t*>(data);
 
+	// only few commnad have page argument, default page is 0
+	uint16_t page = 0;
 	uint16_t offset = 0;
 	uint16_t count = 0;
 
@@ -737,12 +749,14 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		handlePageSelectCommand(tsChannel);
 		break;
 	case TS_CHUNK_WRITE_COMMAND:
-		handleWriteChunkCommand(tsChannel, offset, count, data + sizeof(TunerStudioWriteChunkRequest));
+		// command with no page argument, default page = 0
+		handleWriteChunkCommand(tsChannel, page, offset, count, data + sizeof(TunerStudioRWChunkRequest));
 		break;
 	case TS_SINGLE_WRITE_COMMAND:
+		// command with no page argument, default page = 0
 		// This command writes 1 byte
 		count = 1;
-		handleWriteChunkCommand(tsChannel, offset, count, data + sizeof(offset));
+		handleWriteChunkCommand(tsChannel, page, offset, count, data + sizeof(offset));
 		break;
 	case TS_GET_SCATTERED_GET_COMMAND:
 #if EFI_TS_SCATTER
@@ -758,7 +772,8 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		handleBurnCommand(tsChannel);
 		break;
 	case TS_READ_COMMAND:
-		handlePageReadCommand(tsChannel, offset, count);
+		// command with no page argument, default page = 0
+		handlePageReadCommand(tsChannel, page, offset, count);
 		break;
 	case TS_TEST_COMMAND:
 		[[fallthrough]];
