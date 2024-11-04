@@ -53,7 +53,7 @@ TESTS_SRC_CPP = \
 	tests/ac/ac_test_base.cpp \
 	tests/ac/ac_pressure_test.cpp \
 	tests/launch/launch_test_base.cpp \
-	tests/launch/test_target_skip_ratio.cpp \
+	tests/launch/test_launch_target_skip_ratio.cpp \
 	tests/launch/test_rpm_condition.cpp \
 	tests/launch/test_retard_threshold_rpm.cpp \
 	tests/launch/test_ignition_angle_advance.cpp \
