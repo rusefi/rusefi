@@ -2,6 +2,8 @@
 ! These commands are used by TunerStudio and the rusEFI console
 ! 0x4F ochGetCommand
 #define TS_OUTPUT_COMMAND 'O'
+! getCommand
+#define TS_OUTPUT_ALL_COMMAND 'A'
 ! 0x53 queryCommand - this one is about detailed signature
 #define TS_HELLO_COMMAND 'S'
 ! todo: replace all usages of TS_HELLO_COMMAND with TS_QUERY_COMMAND

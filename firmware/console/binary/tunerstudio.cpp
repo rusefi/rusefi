@@ -742,6 +742,11 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		}
 		cmdOutputChannels(tsChannel, offset, count);
 		break;
+	case TS_OUTPUT_ALL_COMMAND:
+		offset = 0;
+		count = TS_TOTAL_OUTPUT_SIZE;
+		cmdOutputChannels(tsChannel, offset, count);
+		break;
 	case TS_HELLO_COMMAND:
 		tunerStudioDebug(tsChannel, "got Query command");
 		handleQueryCommand(tsChannel, TS_CRC);
