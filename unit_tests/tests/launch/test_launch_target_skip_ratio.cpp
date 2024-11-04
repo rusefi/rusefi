@@ -28,7 +28,6 @@ namespace {
     }
 
     TEST_F(LaunchTargetSkipRatioTest, doNotUseSkipInTraction) {
-        setUpTestParameters();
         EXPECT_FALSE(engineConfiguration->useHardSkipInTraction);
 
         periodicFastCallback();
@@ -37,7 +36,6 @@ namespace {
     }
 
     TEST_F(LaunchTargetSkipRatioTest, useSkipInTraction) {
-        setUpTestParameters();
         engineConfiguration->useHardSkipInTraction = true;
 
         periodicFastCallback();

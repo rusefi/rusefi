@@ -10,6 +10,22 @@ class TestEngineConfiguration {
 public:
     static TestEngineConfiguration& getInstance();
 
+    // Launch Control Settings
+    void configureLaunchControlEnabled(std::optional<bool> launchControlEnabled);
+
+    void configureLaunchRpm(std::optional<int> launchRpm);
+    void configureLaunchRpmWindow(std::optional<int> launchRpmWindow);
+    void configureLaunchCorrectionsEndRpm(std::optional<int> launchCorrectionsEndRpm);
+
+    void configureIgnitionRetardEnable(std::optional<bool> ignitionRetardEnable);
+    void configureIgnitionRetard(std::optional<float> ignitionRetard);
+    void configureSmoothRetardMode(std::optional<bool> smoothRetardMode);
+
+    void configureEnableIgnitionCut(std::optional<bool> enableIgnitionCut);
+    void configureInitialIgnitionCutPercent(std::optional<int> initialIgnitionCut);
+    void configureFinalIgnitionCutPercentBeforeLaunch(std::optional<int> finalIgnitionCutBeforeLaunch);
+
+    // Shift Torque Reduction (Flat Shift)
     void configureTorqueReductionEnabled(std::optional<bool> isTorqueReductionEnabled);
     void configureTorqueReductionActivationMode(std::optional<torqueReductionActivationMode_e> activationMode);
     void configureTorqueReductionButton(std::optional<switch_input_pin_e> pin);

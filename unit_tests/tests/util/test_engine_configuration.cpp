@@ -12,6 +12,88 @@ TestEngineConfiguration& TestEngineConfiguration::getInstance() {
     return instance;
 }
 
+void TestEngineConfiguration::configureLaunchControlEnabled(const std::optional<bool> launchControlEnabled) {
+    if (launchControlEnabled.has_value()) {
+        engineConfiguration->launchControlEnabled = launchControlEnabled.value();
+    } else {
+        ASSERT_FALSE(engineConfiguration->launchControlEnabled); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureLaunchRpm(const std::optional<int> launchRpm) {
+    if (launchRpm.has_value()) {
+        engineConfiguration->launchRpm = launchRpm.value();
+    } else {
+        ASSERT_EQ(engineConfiguration->launchRpm, 0); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureLaunchRpmWindow(const std::optional<int> launchRpmWindow) {
+    if (launchRpmWindow.has_value()) {
+        engineConfiguration->launchRpmWindow = launchRpmWindow.value();
+    } else {
+        ASSERT_EQ(engineConfiguration->launchRpmWindow, 0); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureLaunchCorrectionsEndRpm(const std::optional<int> launchCorrectionsEndRpm) {
+    if (launchCorrectionsEndRpm.has_value()) {
+        engineConfiguration->launchCorrectionsEndRpm = launchCorrectionsEndRpm.value();
+    } else {
+        ASSERT_EQ(engineConfiguration->launchCorrectionsEndRpm, 0); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureIgnitionRetardEnable(std::optional<bool> ignitionRetardEnable) {
+    if (ignitionRetardEnable.has_value()) {
+        engineConfiguration->enableLaunchRetard = ignitionRetardEnable.value();
+    } else {
+        ASSERT_FALSE(engineConfiguration->enableLaunchRetard); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureIgnitionRetard(std::optional<float> ignitionRetard) {
+    if (ignitionRetard.has_value()) {
+        engineConfiguration->launchTimingRetard = ignitionRetard.value();
+    } else {
+        ASSERT_EQ(engineConfiguration->launchTimingRetard, 0); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureSmoothRetardMode(std::optional<bool> smoothRetardMode) {
+    if (smoothRetardMode.has_value()) {
+        engineConfiguration->launchSmoothRetard = smoothRetardMode.value();
+    } else {
+        ASSERT_FALSE(engineConfiguration->launchSmoothRetard); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureEnableIgnitionCut(const std::optional<bool> enableIgnitionCut) {
+    if (enableIgnitionCut.has_value()) {
+        engineConfiguration->launchSparkCutEnable = enableIgnitionCut.value();
+    } else {
+        ASSERT_FALSE(engineConfiguration->launchSparkCutEnable); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureInitialIgnitionCutPercent(const std::optional<int> initialIgnitionCutPercent) {
+    if (initialIgnitionCutPercent.has_value()) {
+        engineConfiguration->initialIgnitionCutPercent = initialIgnitionCutPercent.value();
+    } else {
+        ASSERT_EQ(engineConfiguration->initialIgnitionCutPercent, 0); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureFinalIgnitionCutPercentBeforeLaunch(
+    const std::optional<int> finalIgnitionCutPercentBeforeLaunch
+) {
+    if (finalIgnitionCutPercentBeforeLaunch.has_value()) {
+        engineConfiguration->finalIgnitionCutPercentBeforeLaunch = finalIgnitionCutPercentBeforeLaunch.value();
+    } else {
+        ASSERT_EQ(engineConfiguration->finalIgnitionCutPercentBeforeLaunch, 0); // check default value
+    }
+}
+
 void TestEngineConfiguration::configureTorqueReductionEnabled(const std::optional<bool> torqueReductionEnabled) {
     if (torqueReductionEnabled.has_value()) {
         engineConfiguration->torqueReductionEnabled = torqueReductionEnabled.value();
