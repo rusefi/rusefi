@@ -14,9 +14,6 @@
 ! 0x6B 107
 #define TS_CRC_CHECK_COMMAND 'k'
 
-
-! 0x50 80
-#define TS_PAGE_COMMAND 'P'
 ! 0x46
 #define TS_COMMAND_F 'F'
 #define TS_GET_PROTOCOL_VERSION_COMMAND_F 'F'
