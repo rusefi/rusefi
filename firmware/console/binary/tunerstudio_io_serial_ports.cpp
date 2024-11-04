@@ -54,6 +54,15 @@
 #endif // defined(TS_PRIMARY_UxART_PORT)
 
 #ifdef TS_SECONDARY_UxART_PORT
+
+#ifndef TS_SERIAL_RX_BRAIN_PIN_MODE
+#define TS_SERIAL_RX_BRAIN_PIN_MODE (PAL_MODE_ALTERNATE(TS_SERIAL_AF))
+#endif
+
+#ifndef TS_SERIAL_TX_BRAIN_PIN_MODE
+#define TS_SERIAL_TX_BRAIN_PIN_MODE (PAL_MODE_ALTERNATE(TS_SERIAL_AF))
+#endif
+
 #if EFI_TS_SECONDARY_IS_SERIAL
     SerialTsChannel
 #elif EFI_USE_UART_DMA
@@ -68,8 +77,8 @@
 
 		TsChannelBase* setupChannel() {
 #if EFI_PROD_CODE
-			efiSetPadMode("Secondary UART RX", engineConfiguration->binarySerialRxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
-			efiSetPadMode("Secondary UART TX", engineConfiguration->binarySerialTxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
+			efiSetPadMode("Secondary UART RX", engineConfiguration->binarySerialRxPin, TS_SERIAL_RX_BRAIN_PIN_MODE);
+			efiSetPadMode("Secondary UART TX", engineConfiguration->binarySerialTxPin, TS_SERIAL_TX_BRAIN_PIN_MODE);
 #endif /* EFI_PROD_CODE */
 
 			secondaryChannel.start(engineConfiguration->tunerStudioSerialSpeed);
