@@ -6,6 +6,7 @@ HW_TARGET=$2
 # for instance
 # .github/workflows/hw-ci/build_for_hw_ci.sh config/boards/f407-discovery f407-discovery
 # .github/workflows/hw-ci/build_for_hw_ci.sh config/boards/proteus        proteus_f4
+# .github/workflows/hw-ci/build_for_hw_ci.sh config/boards/proteus        proteus_f7
 # .github/workflows/hw-ci/build_for_hw_ci.sh config/boards/proteus        proteus_f7_debug
 # .github/workflows/hw-ci/build_for_hw_ci.sh config/boards/nucleo_f767 nucleo_f767
 
