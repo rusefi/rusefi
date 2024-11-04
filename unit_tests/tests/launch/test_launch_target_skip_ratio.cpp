@@ -4,38 +4,41 @@
 
 #include "pch.h"
 
-constexpr float TEST_TRACTION_CONTROL_IGNITION_SKIP = 17.0f;
-constexpr float TEST_LUA_SOFT_SPARK_SKIP = 239.0f;
-constexpr float TEST_LUA_HARD_SPARK_SKIP = 174.0f;
+#include "util/test_base.h"
 
-static void setUpTestParameters() {
-    std::fill_n(
-        &engineConfiguration->tractionControlIgnitionSkip[0][0],
-        TRACTION_CONTROL_ETB_DROP_SIZE * TRACTION_CONTROL_ETB_DROP_SIZE,
-        static_cast<int8_t>(TEST_TRACTION_CONTROL_IGNITION_SKIP)
-    );
-    engine->engineState.luaSoftSparkSkip = TEST_LUA_SOFT_SPARK_SKIP;
-    engine->engineState.luaHardSparkSkip = TEST_LUA_HARD_SPARK_SKIP;
-}
+namespace {
+    constexpr float TEST_TRACTION_CONTROL_IGNITION_SKIP = 17.0f;
+    constexpr float TEST_LUA_SOFT_SPARK_SKIP = 239.0f;
+    constexpr float TEST_LUA_HARD_SPARK_SKIP = 174.0f;
 
-TEST(targetSkipRatio, doNotUseSkipInTraction) {
-    EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+    class LaunchTargetSkipRatioTest : public TestBase {
+    };
 
-    setUpTestParameters();
-    EXPECT_FALSE(engineConfiguration->useHardSkipInTraction);
+    static void setUpTestParameters() {
+        std::fill_n(
+            &engineConfiguration->tractionControlIgnitionSkip[0][0],
+            TRACTION_CONTROL_ETB_DROP_SIZE * TRACTION_CONTROL_ETB_DROP_SIZE,
+            static_cast<int8_t>(TEST_TRACTION_CONTROL_IGNITION_SKIP)
+        );
+        engine->engineState.luaSoftSparkSkip = TEST_LUA_SOFT_SPARK_SKIP;
+        engine->engineState.luaHardSparkSkip = TEST_LUA_HARD_SPARK_SKIP;
+    }
 
-    eth.engine.periodicFastCallback();
-    EXPECT_EQ(engine->softSparkLimiter.getTargetSkipRatio(), TEST_LUA_SOFT_SPARK_SKIP + TEST_TRACTION_CONTROL_IGNITION_SKIP);
-    EXPECT_EQ(engine->hardSparkLimiter.getTargetSkipRatio(), TEST_LUA_HARD_SPARK_SKIP);
-}
+    TEST_F(LaunchTargetSkipRatioTest, doNotUseSkipInTraction) {
+        setUpTestParameters();
+        EXPECT_FALSE(engineConfiguration->useHardSkipInTraction);
 
-TEST(targetSkipRatio, useSkipInTraction) {
-    EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+        periodicFastCallback();
+        EXPECT_EQ(engine->softSparkLimiter.getTargetSkipRatio(), TEST_LUA_SOFT_SPARK_SKIP + TEST_TRACTION_CONTROL_IGNITION_SKIP);
+        EXPECT_EQ(engine->hardSparkLimiter.getTargetSkipRatio(), TEST_LUA_HARD_SPARK_SKIP);
+    }
 
-    setUpTestParameters();
-    engineConfiguration->useHardSkipInTraction = true;
+    TEST_F(LaunchTargetSkipRatioTest, useSkipInTraction) {
+        setUpTestParameters();
+        engineConfiguration->useHardSkipInTraction = true;
 
-    eth.engine.periodicFastCallback();
-    EXPECT_EQ(engine->softSparkLimiter.getTargetSkipRatio(), TEST_LUA_SOFT_SPARK_SKIP);
-    EXPECT_EQ(engine->hardSparkLimiter.getTargetSkipRatio(), TEST_LUA_HARD_SPARK_SKIP + TEST_TRACTION_CONTROL_IGNITION_SKIP);
+        periodicFastCallback();
+        EXPECT_EQ(engine->softSparkLimiter.getTargetSkipRatio(), TEST_LUA_SOFT_SPARK_SKIP);
+        EXPECT_EQ(engine->hardSparkLimiter.getTargetSkipRatio(), TEST_LUA_HARD_SPARK_SKIP + TEST_TRACTION_CONTROL_IGNITION_SKIP);
+    }
 }
