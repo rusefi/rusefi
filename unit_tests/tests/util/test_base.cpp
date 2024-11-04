@@ -14,6 +14,10 @@ void TestBase::TearDown() {
     eth.reset();
 }
 
+TestEngineConfiguration& TestBase::getTestEngineConfiguration() {
+    return TestEngineConfiguration::getInstance();
+}
+
 void TestBase::periodicFastCallback() {
     // run the ignition math
     engine->periodicFastCallback();
