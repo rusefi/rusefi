@@ -49,20 +49,24 @@ TESTS_SRC_CPP = \
 	tests/ignition_injection/test_odd_firing_engine.cpp \
 	tests/ignition_injection/test_three_cylinder.cpp \
 	tests/util/test_base.cpp \
+	tests/util/test_engine_configuration.cpp \
+	tests/util/test_engine_state.cpp \
 	tests/ac/ac_test_base.cpp \
 	tests/ac/ac_pressure_test.cpp \
 	tests/launch/launch_test_base.cpp \
-	tests/launch/test_target_skip_ratio.cpp \
+	tests/launch/test_launch_target_skip_ratio.cpp \
 	tests/launch/test_rpm_condition.cpp \
 	tests/launch/test_retard_threshold_rpm.cpp \
 	tests/launch/test_ignition_angle_advance.cpp \
 	tests/launch/test_spark_skip_ratio.cpp \
 	tests/shift_torque_reduction/shift_torque_reduction_test_base.cpp \
+	tests/shift_torque_reduction/flat_shift_condition_test_base.cpp \
 	tests/shift_torque_reduction/test_shift_torque_reduction_trigger_pin_state.cpp \
 	tests/shift_torque_reduction/test_shift_torque_reduction_time_condition.cpp \
 	tests/shift_torque_reduction/test_shift_torque_reduction_rpm_condition.cpp \
 	tests/shift_torque_reduction/test_shift_torque_reduction_app_condition.cpp \
 	tests/shift_torque_reduction/test_shift_torque_reduction_flat_shift_condition.cpp \
+	tests/shift_torque_reduction/test_shift_torque_reduction_spark_skip_ratio.cpp \
 	tests/test_fft.cpp \
 	tests/lua/test_lua_basic.cpp \
 	tests/lua/test_lookup.cpp \

@@ -4,11 +4,16 @@
 
 #pragma once
 
+#include "test_engine_configuration.h"
+#include "test_engine_state.h"
 
 class TestBase : public testing::Test {
 protected:
     void SetUp() override;
     void TearDown() override;
+
+    TestEngineConfiguration& getTestEngineConfiguration();
+    TestEngineState& getTestEngineState();
 
     void periodicFastCallback();
     void periodicSlowCallback();

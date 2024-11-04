@@ -66,19 +66,5 @@ protected:
     void setUpTestConfig(const LaunchTestConfig& config);
 
 private:
-    void configureLaunchControlEnabled(std::optional<bool> launchControlEnabled);
-
-    void configureLaunchRpm(std::optional<int> launchRpm);
-    void configureLaunchRpmWindow(std::optional<int> launchRpmWindow);
-    void configureLaunchCorrectionsEndRpm(std::optional<int> launchCorrectionsEndRpm);
-
-    void configureIgnitionRetardEnable(std::optional<bool> ignitionRetardEnable);
-    void configureIgnitionRetard(std::optional<float> ignitionRetard);
-    void configureSmoothRetardMode(std::optional<bool> smoothRetardMode);
-
-    void configureEnableIgnitionCut(std::optional<bool> enableIgnitionCut);
-    void configureInitialIgnitionCutPercent(std::optional<int> initialIgnitionCut);
-    void configureFinalIgnitionCutPercentBeforeLaunch(std::optional<int> finalIgnitionCutBeforeLaunch);
-
     void configureSatisfiedActivationSwithSpeedAndTpsConditions();
 };
