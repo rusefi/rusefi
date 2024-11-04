@@ -36,6 +36,7 @@ public:
     void configureTorqueReductionTime(std::optional<float> timeout);
     void configureTorqueReductionArmingRpm(std::optional<float> armingRpm);
     void configureTorqueReductionArmingApp(std::optional<float> armingApp);
+    void configureTorqueReductionIgnitionCut(std::optional<int8_t> ignitionCut);
 private:
     TestEngineConfiguration();
     static TestEngineConfiguration instance;

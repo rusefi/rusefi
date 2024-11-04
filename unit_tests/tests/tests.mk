@@ -60,11 +60,13 @@ TESTS_SRC_CPP = \
 	tests/launch/test_ignition_angle_advance.cpp \
 	tests/launch/test_spark_skip_ratio.cpp \
 	tests/shift_torque_reduction/shift_torque_reduction_test_base.cpp \
+	tests/shift_torque_reduction/flat_shift_condition_test_base.cpp \
 	tests/shift_torque_reduction/test_shift_torque_reduction_trigger_pin_state.cpp \
 	tests/shift_torque_reduction/test_shift_torque_reduction_time_condition.cpp \
 	tests/shift_torque_reduction/test_shift_torque_reduction_rpm_condition.cpp \
 	tests/shift_torque_reduction/test_shift_torque_reduction_app_condition.cpp \
 	tests/shift_torque_reduction/test_shift_torque_reduction_flat_shift_condition.cpp \
+	tests/shift_torque_reduction/test_shift_torque_reduction_spark_skip_ratio.cpp \
 	tests/test_fft.cpp \
 	tests/lua/test_lua_basic.cpp \
 	tests/lua/test_lookup.cpp \

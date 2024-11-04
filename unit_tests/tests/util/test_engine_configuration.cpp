@@ -206,6 +206,17 @@ void TestEngineConfiguration::configureTorqueReductionArmingApp(const std::optio
     }
 }
 
+void TestEngineConfiguration::configureTorqueReductionIgnitionCut(const std::optional<int8_t> ignitionCut) {
+    if (ignitionCut.has_value()) {
+        engineConfiguration->torqueReductionIgnitionCut = ignitionCut.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->torqueReductionIgnitionCut,
+            engine_configuration_defaults::TORQUE_REDUCTION_IGNITION_CUT
+        ); // check default value
+    }
+}
+
 TestEngineConfiguration::TestEngineConfiguration() {
 }
 

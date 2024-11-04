@@ -68,6 +68,13 @@ ShiftTorqueReductionTestConfig ShiftTorqueReductionTestConfig::setTorqueReductio
     return *this;
 }
 
+ShiftTorqueReductionTestConfig ShiftTorqueReductionTestConfig::setTorqueReductionIgnitionCut(
+    std::optional<int8_t> value
+) {
+    m_torqueReductionIgnitionCut = value;
+    return *this;
+}
+
 void ShiftTorqueReductionTestBase::setUpTestConfig(const ShiftTorqueReductionTestConfig& config) {
     getTestEngineConfiguration().configureTorqueReductionEnabled(config.getTorqueReductionEnabled());
     getTestEngineConfiguration().configureTorqueReductionActivationMode(config.getTorqueReductionActivationMode());
@@ -79,4 +86,5 @@ void ShiftTorqueReductionTestBase::setUpTestConfig(const ShiftTorqueReductionTes
     getTestEngineConfiguration().configureTorqueReductionTime(config.getTorqueReductionTime());
     getTestEngineConfiguration().configureTorqueReductionArmingRpm(config.getTorqueReductionArmingRpm());
     getTestEngineConfiguration().configureTorqueReductionArmingApp(config.getTorqueReductionArmingApp());
+    getTestEngineConfiguration().configureTorqueReductionIgnitionCut(config.getTorqueReductionIgnitionCut());
 }
