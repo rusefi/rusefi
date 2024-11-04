@@ -745,6 +745,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 	case TS_OUTPUT_ALL_COMMAND:
 		offset = 0;
 		count = TS_TOTAL_OUTPUT_SIZE;
+		// TS will not use this command until ochBlockSize is bigger than blockingFactor and prefer ochGetCommand :(
 		cmdOutputChannels(tsChannel, offset, count);
 		break;
 	case TS_HELLO_COMMAND:
