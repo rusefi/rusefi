@@ -16,6 +16,14 @@
 
 #ifdef TS_PRIMARY_UxART_PORT
 
+#ifndef EFI_CONSOLE_RX_BRAIN_PIN_MODE
+#define EFI_CONSOLE_RX_BRAIN_PIN_MODE (PAL_MODE_ALTERNATE(EFI_CONSOLE_AF))
+#endif
+
+#ifndef EFI_CONSOLE_TX_BRAIN_PIN_MODE
+#define EFI_CONSOLE_TX_BRAIN_PIN_MODE (PAL_MODE_ALTERNATE(EFI_CONSOLE_AF))
+#endif
+
 #if EFI_TS_PRIMARY_IS_SERIAL
     SerialTsChannel
 #elif EFI_USE_UART_DMA
@@ -32,8 +40,8 @@
 #if EFI_PROD_CODE
 			// historically the idea was that primary UART has to be very hard-coded as the last line of reliability defense
 			// as of 2022 it looks like sometimes we just need the GPIO on MRE for instance more than we need UART
-			efiSetPadMode("Primary UART RX", EFI_CONSOLE_RX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
-			efiSetPadMode("Primary UART TX", EFI_CONSOLE_TX_BRAIN_PIN, PAL_MODE_ALTERNATE(EFI_CONSOLE_AF));
+			efiSetPadMode("Primary UART RX", EFI_CONSOLE_RX_BRAIN_PIN, EFI_CONSOLE_RX_BRAIN_PIN_MODE);
+			efiSetPadMode("Primary UART TX", EFI_CONSOLE_TX_BRAIN_PIN, EFI_CONSOLE_TX_BRAIN_PIN_MODE);
 #endif /* EFI_PROD_CODE */
 
 			primaryChannel.start(engineConfiguration->uartConsoleSerialSpeed);
@@ -46,6 +54,15 @@
 #endif // defined(TS_PRIMARY_UxART_PORT)
 
 #ifdef TS_SECONDARY_UxART_PORT
+
+#ifndef TS_SERIAL_RX_BRAIN_PIN_MODE
+#define TS_SERIAL_RX_BRAIN_PIN_MODE (PAL_MODE_ALTERNATE(TS_SERIAL_AF))
+#endif
+
+#ifndef TS_SERIAL_TX_BRAIN_PIN_MODE
+#define TS_SERIAL_TX_BRAIN_PIN_MODE (PAL_MODE_ALTERNATE(TS_SERIAL_AF))
+#endif
+
 #if EFI_TS_SECONDARY_IS_SERIAL
     SerialTsChannel
 #elif EFI_USE_UART_DMA
@@ -60,8 +77,8 @@
 
 		TsChannelBase* setupChannel() {
 #if EFI_PROD_CODE
-			efiSetPadMode("Secondary UART RX", engineConfiguration->binarySerialRxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
-			efiSetPadMode("Secondary UART TX", engineConfiguration->binarySerialTxPin, PAL_MODE_ALTERNATE(TS_SERIAL_AF));
+			efiSetPadMode("Secondary UART RX", engineConfiguration->binarySerialRxPin, TS_SERIAL_RX_BRAIN_PIN_MODE);
+			efiSetPadMode("Secondary UART TX", engineConfiguration->binarySerialTxPin, TS_SERIAL_TX_BRAIN_PIN_MODE);
 #endif /* EFI_PROD_CODE */
 
 			secondaryChannel.start(engineConfiguration->tunerStudioSerialSpeed);

@@ -479,10 +479,27 @@
 #define EFI_CONSOLE_AF 7
 #endif
 
+// Rx pin should have either internal either external pull up to avoid floating and receiving random garbage
+#ifndef EFI_CONSOLE_RX_BRAIN_PIN_MODE
+#define EFI_CONSOLE_RX_BRAIN_PIN_MODE (PAL_MODE_ALTERNATE(EFI_CONSOLE_AF) | PAL_STM32_PUPDR_PULLUP)
+#endif
+
+#ifndef EFI_CONSOLE_TX_BRAIN_PIN_MODE
+#define EFI_CONSOLE_TX_BRAIN_PIN_MODE (PAL_MODE_ALTERNATE(EFI_CONSOLE_AF))
+#endif
+
 // todo: this should be detected automatically based on pin selection
 // https://github.com/rusefi/rusefi/issues/3536
 #ifndef TS_SERIAL_AF
 #define TS_SERIAL_AF 7
+#endif
+
+#ifndef TS_SERIAL_RX_BRAIN_PIN_MODE
+#define TS_SERIAL_RX_BRAIN_PIN_MODE (PAL_MODE_ALTERNATE(TS_SERIAL_AF) | PAL_STM32_PUPDR_PULLUP)
+#endif
+
+#ifndef TS_SERIAL_TX_BRAIN_PIN_MODE
+#define TS_SERIAL_TX_BRAIN_PIN_MODE (PAL_MODE_ALTERNATE(TS_SERIAL_AF))
 #endif
 
 #ifndef LED_CRITICAL_ERROR_BRAIN_PIN
