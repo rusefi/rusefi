@@ -1,10 +1,14 @@
 name: Proteus F7 Firmware on macos-latest
 
-on: [push,pull_request]
+on:
+# realpath drama sorry  push:
+# realpath drama sorry  pull_request:
+  workflow_dispatch:
+
 
 jobs:
   build:
-    runs-on: macos-12
+    runs-on: macos-13
 
     steps:
       - uses: actions/setup-java@v4
