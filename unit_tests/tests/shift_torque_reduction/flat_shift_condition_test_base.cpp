@@ -6,8 +6,11 @@
 
 #include "flat_shift_condition_test_base.h"
 
-FlatShiftConditionTestBase::FlatShiftConditionTestBase(const int8_t torqueReductionIgnitionCut)
-: m_torqueReductionIgnitionCut(torqueReductionIgnitionCut) {
+FlatShiftConditionTestBase::FlatShiftConditionTestBase(
+    const int8_t torqueReductionIgnitionCut,
+    const float torqueReductionIgnitionRetard
+) : m_torqueReductionIgnitionCut(torqueReductionIgnitionCut),
+    m_torqueReductionIgnitionRetard(torqueReductionIgnitionRetard) {
 }
 
 void FlatShiftConditionTestBase::SetUp() {
@@ -19,6 +22,7 @@ void FlatShiftConditionTestBase::SetUp() {
         .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
         .setLimitTorqueReductionTime(false)
         .setTorqueReductionIgnitionCut(m_torqueReductionIgnitionCut)
+        .setTorqueReductionIgnitionRetard(m_torqueReductionIgnitionRetard)
     );
 }
 
