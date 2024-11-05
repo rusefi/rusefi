@@ -20,6 +20,30 @@ void TestEngineConfiguration::configureLaunchControlEnabled(const std::optional<
     }
 }
 
+void TestEngineConfiguration::configureLaunchActivationMode(
+    const std::optional<launchActivationMode_e> launchActivationMode
+) {
+    if (launchActivationMode.has_value()) {
+        engineConfiguration->launchActivationMode = launchActivationMode.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->launchActivationMode,
+            engine_configuration_defaults::LAUNCH_ACTIVATION_MODE
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureLaunchSpeedThreshold(const std::optional<int> launchSpeedThreshold) {
+    if (launchSpeedThreshold.has_value()) {
+        engineConfiguration->launchSpeedThreshold = launchSpeedThreshold.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->launchSpeedThreshold,
+            engine_configuration_defaults::LAUNCH_SPEED_THRESHOLD
+        ); // check default value
+    }
+}
+
 void TestEngineConfiguration::configureLaunchRpm(const std::optional<int> launchRpm) {
     if (launchRpm.has_value()) {
         engineConfiguration->launchRpm = launchRpm.value();
