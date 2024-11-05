@@ -2,6 +2,7 @@
 DOCS_ENUMS_INPUTS = \
   $(PROJECT_DIR)/integration/rusefi_config.txt \
   $(PROJECT_DIR)/console/binary/output_channels.txt \
+  $(PROJECT_DIR)/controllers/engine_cycle/knock_controller.txt \
   $(PROJECT_DIR)/integration/LiveData.yaml \
   $(PROJECT_DIR)/console/binary/generated/live_data_ids.h \
   $(PROJECT_DIR)/controllers/sensors/sensor_type.h \
