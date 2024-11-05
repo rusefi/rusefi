@@ -6,6 +6,7 @@
 
 #include "test_engine_configuration.h"
 #include "test_engine_state.h"
+#include "test_persistent_configuration.h"
 
 class TestBase : public testing::Test {
 protected:
@@ -14,6 +15,7 @@ protected:
 
     TestEngineConfiguration& getTestEngineConfiguration();
     TestEngineState& getTestEngineState();
+    TestPersistentConfiguration& getTestPersistentConfiguration();
 
     void periodicFastCallback();
     void periodicSlowCallback();
