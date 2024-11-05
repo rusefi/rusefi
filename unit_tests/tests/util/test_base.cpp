@@ -18,6 +18,10 @@ TestEngineConfiguration& TestBase::getTestEngineConfiguration() {
     return TestEngineConfiguration::getInstance();
 }
 
+TestPersistentConfiguration& TestBase::getTestPersistentConfiguration() {
+    return TestPersistentConfiguration::getInstance();
+}
+
 TestEngineState& TestBase::getTestEngineState() {
     return TestEngineState::getInstance();
 }
