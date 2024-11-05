@@ -36,7 +36,6 @@ public:
 	void handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t offset, uint16_t count,
 			void *content);
 	void handleCrc32Check(TsChannelBase *tsChannel, uint16_t offset, uint16_t count);
-	void handleWriteValueCommand(TsChannelBase* tsChannel, uint16_t offset, uint8_t value);
 	void handlePageReadCommand(TsChannelBase* tsChannel, uint16_t offset, uint16_t count);
 	void handleScatteredReadCommand(TsChannelBase* tsChannel);
 

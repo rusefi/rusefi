@@ -205,7 +205,6 @@ extern bool rebootForPresetPending;
 
 /**
  * This command is needed to make the whole transfer a bit faster
- * @note See also handleWriteValueCommand
  */
 void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t offset, uint16_t count,
 		void *content) {
@@ -311,35 +310,6 @@ void TunerStudio::handleScatteredReadCommand(TsChannelBase* tsChannel) {
 	tsChannel->flush();
 }
 #endif // EFI_TS_SCATTER
-
-/**
- * 'Write' command receives a single value at a given offset
- * @note Writing values one by one is pretty slow
- */
-void TunerStudio::handleWriteValueCommand(TsChannelBase* tsChannel, uint16_t offset, uint8_t value) {
-	UNUSED(tsChannel);
-
-	tsState.writeValueCommandCounter++;
-	if (isLockedFromUser()) {
-		sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND, "locked");
-		return;
-	}
-
-	efiPrintf("TS -> Write value offset %d value %d", offset, value);
-
-	if (validateOffsetCount(offset, 1, tsChannel)) {
-		tunerStudioError(tsChannel, "ERROR: WR out of range");
-		sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
-		return;
-	}
-
-	// Skip the write if a preset was just loaded - we don't want to overwrite it
-	if (!rebootForPresetPending) {
-		getWorkingPageAddr()[offset] = value;
-	}
-	// Force any board configuration options that humans shouldn't be able to change
-	setBoardConfigOverrides();
-}
 
 void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t offset, uint16_t count) {
 	tsState.readPageCommandsCounter++;
@@ -770,10 +740,9 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		handleWriteChunkCommand(tsChannel, offset, count, data + sizeof(TunerStudioWriteChunkRequest));
 		break;
 	case TS_SINGLE_WRITE_COMMAND:
-		{
-			uint8_t value = data[4];
-			handleWriteValueCommand(tsChannel, offset, value);
-		}
+		// This command writes 1 byte
+		count = 1;
+		handleWriteChunkCommand(tsChannel, offset, count, data + sizeof(offset));
 		break;
 	case TS_GET_SCATTERED_GET_COMMAND:
 #if EFI_TS_SCATTER
