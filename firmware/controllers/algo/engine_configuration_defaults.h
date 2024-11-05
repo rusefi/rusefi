@@ -25,4 +25,6 @@ namespace engine_configuration_defaults {
     /* Launch Control: */
     constexpr switch_input_pin_e LAUNCH_ACTIVATE_PIN = Gpio::Unassigned;
     constexpr bool LAUNCH_ACTIVATE_PIN_INVERTED = false;
+    constexpr launchActivationMode_e LAUNCH_ACTIVATION_MODE = SWITCH_INPUT_LAUNCH;
+    constexpr int LAUNCH_SPEED_THRESHOLD = 0;
 }

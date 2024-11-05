@@ -27,7 +27,8 @@ void LaunchTestBase::setUpTestConfig(const LaunchTestConfig& config) {
 }
 
 void LaunchTestBase::configureSatisfiedActivationSwithSpeedAndTpsConditions() {
-    engineConfiguration->launchActivationMode = ALWAYS_ACTIVE_LAUNCH; // to satisfy activateSwitchCondition
-    engineConfiguration->launchSpeedThreshold = 0; // to satisfy speedCondition
+    getTestEngineConfiguration()
+        .configureLaunchActivationMode(ALWAYS_ACTIVE_LAUNCH);  // to satisfy activateSwitchCondition
+	getTestEngineConfiguration().configureLaunchSpeedThreshold(0); // to satisfy speedCondition
     Sensor::setMockValue(SensorType::DriverThrottleIntent, 1.7); // to satisfy tpsCondition
 }

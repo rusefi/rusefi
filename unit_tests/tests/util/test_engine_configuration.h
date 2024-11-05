@@ -13,6 +13,9 @@ public:
     // Launch Control Settings
     void configureLaunchControlEnabled(std::optional<bool> launchControlEnabled);
 
+    void configureLaunchActivationMode(std::optional<launchActivationMode_e> launchActivationMode);
+    void configureLaunchSpeedThreshold(std::optional<int> launchSpeedThreshold);
+
     void configureLaunchRpm(std::optional<int> launchRpm);
     void configureLaunchRpmWindow(std::optional<int> launchRpmWindow);
     void configureLaunchCorrectionsEndRpm(std::optional<int> launchCorrectionsEndRpm);
