@@ -93,8 +93,8 @@ static void printErrorCounters() {
 	efiPrintf("TunerStudio size=%d / total=%d / errors=%d / H=%d / O=%d / P=%d / B=%d",
 			sizeof(engine->outputChannels), tsState.totalCounter, tsState.errorCounter, tsState.queryCommandCounter,
 			tsState.outputChannelsCommandCounter, tsState.readPageCommandsCounter, tsState.burnCommandCounter);
-	efiPrintf("TunerStudio W=%d / C=%d / P=%d", tsState.writeValueCommandCounter,
-			tsState.writeChunkCommandCounter, tsState.pageCommandCounter);
+	efiPrintf("TunerStudio W=%d / C=%d", tsState.writeValueCommandCounter,
+			tsState.writeChunkCommandCounter);
 	efiPrintf("TunerStudio errors: underrun=%d / overrun=%d / crc=%d / unrecognized=%d / outofrange=%d / other=%d",
 			tsState.errorUnderrunCounter, tsState.errorOverrunCounter, tsState.errorCrcCounter,
 			tsState.errorUnrecognizedCommand, tsState.errorOutOfRange, tsState.errorOther);
@@ -189,14 +189,6 @@ void sendErrorCode(TsChannelBase *tsChannel, uint8_t code, const char *msg) {
 
 void TunerStudio::sendErrorCode(TsChannelBase* tsChannel, uint8_t code, const char *msg) {
 	::sendErrorCode(tsChannel, code, msg);
-}
-
-void TunerStudio::handlePageSelectCommand(TsChannelBase *tsChannel) {
-	tsState.pageCommandCounter++;
-
-	efiPrintf("TS -> Set page (no-op)");
-
-	sendOkResponse(tsChannel);
 }
 
 bool validateOffsetCount(size_t offset, size_t count, TsChannelBase* tsChannel);
@@ -389,7 +381,7 @@ static void handleBurnCommand(TsChannelBase* tsChannel) {
 
 static bool isKnownCommand(char command) {
 	return command == TS_HELLO_COMMAND || command == TS_READ_COMMAND || command == TS_OUTPUT_COMMAND
-			|| command == TS_PAGE_COMMAND || command == TS_BURN_COMMAND || command == TS_SINGLE_WRITE_COMMAND
+			|| command == TS_BURN_COMMAND || command == TS_SINGLE_WRITE_COMMAND
 			|| command == TS_CHUNK_WRITE_COMMAND || command == TS_EXECUTE
 			|| command == TS_IO_TEST_COMMAND
 #if EFI_SIMULATOR
@@ -744,9 +736,6 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 #endif // EFI_TEXT_LOGGING
 	case TS_EXECUTE:
 		handleExecuteCommand(tsChannel, data, incomingPacketSize - 1);
-		break;
-	case TS_PAGE_COMMAND:
-		handlePageSelectCommand(tsChannel);
 		break;
 	case TS_CHUNK_WRITE_COMMAND:
 		// command with no page argument, default page = 0
