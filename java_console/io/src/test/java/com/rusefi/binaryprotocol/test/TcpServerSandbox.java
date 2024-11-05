@@ -100,8 +100,6 @@ public class TcpServerSandbox {
             new HelloCommand(Fields.TS_SIGNATURE).handle(stream);
         } else if (command == Integration.TS_GET_PROTOCOL_VERSION_COMMAND_F) {
             stream.sendPacket((TS_OK + TS_PROTOCOL).getBytes());
-        } else if (command == Integration.TS_PAGE_COMMAND) {
-            stream.sendPacket(TS_OK.getBytes());
         } else if (command == Integration.TS_CRC_CHECK_COMMAND) {
             stream.sendPacket(BinaryProtocolServer.createCrcResponse(TOTALLY_EMPTY_CONFIGURATION));
         } else if (command == Integration.TS_SET_LOGGER_SWITCH) {

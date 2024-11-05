@@ -76,8 +76,6 @@ public class BinaryProtocol {
 
     public static String findCommand(byte command) {
         switch (command) {
-            case Integration.TS_PAGE_COMMAND:
-                return "PAGE";
             case Integration.TS_COMMAND_F:
                 return "PROTOCOL";
             case Integration.TS_CRC_CHECK_COMMAND:
