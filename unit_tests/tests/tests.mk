@@ -68,6 +68,7 @@ TESTS_SRC_CPP = \
 	tests/shift_torque_reduction/test_shift_torque_reduction_app_condition.cpp \
 	tests/shift_torque_reduction/test_shift_torque_reduction_flat_shift_condition.cpp \
 	tests/shift_torque_reduction/test_shift_torque_reduction_spark_skip_ratio.cpp \
+	tests/shift_torque_reduction/test_shift_torque_reduction_angle_advance.cpp \
 	tests/test_fft.cpp \
 	tests/lua/test_lua_basic.cpp \
 	tests/lua/test_lookup.cpp \

@@ -241,6 +241,17 @@ void TestEngineConfiguration::configureTorqueReductionIgnitionCut(const std::opt
     }
 }
 
+void TestEngineConfiguration::configureTorqueReductionIgnitionRetard(const std::optional<int8_t> ignitionRetard) {
+    if (ignitionRetard.has_value()) {
+        engineConfiguration->torqueReductionIgnitionRetard = ignitionRetard.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->torqueReductionIgnitionRetard,
+            engine_configuration_defaults::TORQUE_REDUCTION_IGNITION_RETARD
+        ); // check default value
+    }
+}
+
 TestEngineConfiguration::TestEngineConfiguration() {
 }
 

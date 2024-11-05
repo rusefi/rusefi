@@ -25,7 +25,7 @@ namespace {
     };
 
     ShiftTorqueReductionSparkSkipRatioTest::ShiftTorqueReductionSparkSkipRatioTest()
-    : FlatShiftConditionTestBase(TEST_TORQUE_REDUCTION_IGNITION_CUT) {
+    : FlatShiftConditionTestBase(TEST_TORQUE_REDUCTION_IGNITION_CUT, 0.0f) {
     }
 
     void ShiftTorqueReductionSparkSkipRatioTest::SetUp() {

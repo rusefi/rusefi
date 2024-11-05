@@ -21,6 +21,7 @@ namespace engine_configuration_defaults {
     constexpr float TORQUE_REDUCTION_ARMING_RPM = 0.0f;
     constexpr float TORQUE_REDUCTION_ARMING_APP = 0.0f;
     constexpr int8_t TORQUE_REDUCTION_IGNITION_CUT = 0;
+    constexpr float TORQUE_REDUCTION_IGNITION_RETARD = 0.0f;
 
     /* Launch Control: */
     constexpr switch_input_pin_e LAUNCH_ACTIVATE_PIN = Gpio::Unassigned;
