@@ -96,7 +96,6 @@ public class Integration {
 	public static final char TS_ONLINE_PROTOCOL = 'z';
 	public static final char TS_OUTPUT_ALL_COMMAND = 'A';
 	public static final char TS_OUTPUT_COMMAND = 'O';
-	public static final char TS_PAGE_COMMAND = 'P';
 	public static final char TS_PERF_TRACE_BEGIN = '_';
 	public static final char TS_PERF_TRACE_GET_BUFFER = 'b';
 	public static final String TS_PROTOCOL = "001";
