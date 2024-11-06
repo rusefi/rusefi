@@ -3,7 +3,7 @@ name: Simulator
 on: [push, pull_request]
 
 env: 
-    AUTOMATION_REF: ${{github.ref_name}}
+    AUTOMATION_REF: ${{github.head_ref}}
 jobs:
   # This is just to ensure the simulator compiles on Linux
   build-simulator:
