@@ -3,7 +3,10 @@ name: Simulator
 on: [push, pull_request]
 
 env: 
+# in a PR github executes the runner on a detached branch, so the command "git branch --show-current" returns an empty string, 
+# at the same time, github.ref_name in a PR only returns <pr_number>/merge , github.head_ref is *only* available in PR, but it does contain the branch name
     AUTOMATION_REF: ${{github.head_ref}}
+
 jobs:
   # This is just to ensure the simulator compiles on Linux
   build-simulator:
