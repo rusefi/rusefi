@@ -1,11 +1,10 @@
 #include "pch.h"
 #include "hellen_meta.h"
-#include "i2c_bb.h"
 #include "defaults.h"
 #include "hellen_leds_100.cpp"
 #include "smart_gpio.h"
 #include "drivers/gpio/tle9104.h"
-#include "pca_board_id.h"
+#include "pca_board_id.h" // bb i2c board id
 
 static OutputPin alphaTempPullUp;
 
