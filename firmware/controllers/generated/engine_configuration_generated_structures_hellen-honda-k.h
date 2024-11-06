@@ -2021,7 +2021,7 @@ struct engine_configuration_s {
 	bool enableCanVss : 1 {};
 	/**
 	offset 920 bit 8 */
-	bool unusedSnableInnovateLC2 : 1 {};
+	bool suppressWboWorkaround7048 : 1 {};
 	/**
 	offset 920 bit 9 */
 	bool showHumanReadableWarning : 1 {};

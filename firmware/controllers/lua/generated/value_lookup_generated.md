@@ -604,6 +604,9 @@ This property is useful if using rusEFI as TCM or BCM only
 ### enableCanVss
 Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 
+### suppressWboWorkaround7048
+
+
 ### showHumanReadableWarning
 
 

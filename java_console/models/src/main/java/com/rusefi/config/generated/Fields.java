@@ -1476,7 +1476,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.11.06.f407-discovery.2671730258";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.11.06.f407-discovery.2207575373";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1967,6 +1967,7 @@ public class Fields {
 	public static final Field CANINPUTBCM = Field.create("CANINPUTBCM", 920, FieldType.BIT, 5).setBaseOffset(0);
 	public static final Field CONSUMEOBDSENSORS = Field.create("CONSUMEOBDSENSORS", 920, FieldType.BIT, 6).setBaseOffset(0);
 	public static final Field ENABLECANVSS = Field.create("ENABLECANVSS", 920, FieldType.BIT, 7).setBaseOffset(0);
+	public static final Field SUPPRESSWBOWORKAROUND7048 = Field.create("SUPPRESSWBOWORKAROUND7048", 920, FieldType.BIT, 8).setBaseOffset(0);
 	public static final Field SHOWHUMANREADABLEWARNING = Field.create("SHOWHUMANREADABLEWARNING", 920, FieldType.BIT, 9).setBaseOffset(0);
 	public static final Field STFTIGNOREERRORMAGNITUDE = Field.create("STFTIGNOREERRORMAGNITUDE", 920, FieldType.BIT, 10).setBaseOffset(0);
 	public static final Field VVTBOOLEANFORVERYSPECIALCASES = Field.create("VVTBOOLEANFORVERYSPECIALCASES", 920, FieldType.BIT, 11).setBaseOffset(0);
@@ -3678,6 +3679,7 @@ public class Fields {
 	CANINPUTBCM,
 	CONSUMEOBDSENSORS,
 	ENABLECANVSS,
+	SUPPRESSWBOWORKAROUND7048,
 	SHOWHUMANREADABLEWARNING,
 	STFTIGNOREERRORMAGNITUDE,
 	VVTBOOLEANFORVERYSPECIALCASES,

@@ -611,6 +611,9 @@ float getConfigValueByName(const char *name) {
 // enableCanVss
 		case 245947066:
 			return engineConfiguration->enableCanVss;
+// suppressWboWorkaround7048
+		case -1190865359:
+			return engineConfiguration->suppressWboWorkaround7048;
 // showHumanReadableWarning
 		case 2046602309:
 			return engineConfiguration->showHumanReadableWarning;
@@ -2915,6 +2918,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 245947066:
 	{
 		engineConfiguration->enableCanVss = (int)value;
+		return 1;
+	}
+		case -1190865359:
+	{
+		engineConfiguration->suppressWboWorkaround7048 = (int)value;
 		return 1;
 	}
 		case 2046602309:
