@@ -16,7 +16,7 @@ static uint32_t getBoardRevision() {
 		const uint8_t read_inputs_cmd[1] = {0x00};
 		uint8_t rx[2] = {0xff, 0xff};
 
-		//same pins as for baso LPS25
+		//same pins as for baro LPS25
 		m_i2c.init(Gpio::B10, Gpio::B11);
 
 		// configuration registers:
@@ -39,6 +39,6 @@ static uint32_t getBoardRevision() {
 	return variant;
 }
 
-int hackHellenBoardId(int /* detectedId */) {
+/*PUBLIC_API_WEAK*/ int hackHellenBoardId(int /* detectedId */) {
 	return getBoardRevision();
 }
