@@ -3,4 +3,4 @@
 //
 
 #define SIGNATURE_HASH 733930905
-#define TS_SIGNATURE "rusEFI master.2024.11.05.hellen-honda-k.733930905"
+#define TS_SIGNATURE "rusEFI master.2024.11.06.hellen-honda-k.733930905"
