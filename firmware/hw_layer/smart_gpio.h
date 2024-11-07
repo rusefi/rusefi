@@ -12,6 +12,7 @@
 #include "drivers/gpio/tle6240.h"
 #include "drivers/gpio/mc33972.h"
 #include "drivers/gpio/tle8888.h"
+#include "drivers/gpio/tle9201.h"
 #include "drivers/gpio/drv8860.h"
 #include "drivers/gpio/can_gpio_msiobox.h"
 // we seem OK without L9779 here do we need those includes at all?
