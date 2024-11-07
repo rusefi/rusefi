@@ -59,7 +59,7 @@ CanTxMessage::CanTxMessage(CanCategory p_category, uint32_t eid, uint8_t dlc, si
 #endif // HAS_CAN_FRAME
 }
 
-CanTxMessage::~CanTxMessage(){
+CanTxMessage::~CanTxMessage() {
 #if EFI_SIMULATOR || EFI_UNIT_TEST
 	txCanBuffer.put(m_frame);
 
