@@ -46,6 +46,19 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->iat.adcChannel = H144_IN_IAT;
 }
 
+static struct tle9201_config tle9201 = {
+	.spi_bus = &SPID3,
+	.spi_config = {
+		.circular = false,
+		.end_cb = NULL,
+		// H_SPI3_CS
+		.ssport = GPIOA,
+		.sspad = 15,
+		.cr1 = TLE9201_CONFIG_CR1,
+		.cr2 = TLE9201_CONFIG_CR2
+	}
+};
+
 void setBoardConfigOverrides() {
 	/* Force 3.3V PWR_EN as MC33810 is powered from this power line */
 	setHellenMegaEnPin();
@@ -169,17 +182,19 @@ static const struct mc33810_config mc33810 = {
 };
 
 /*PUBLIC_API_WEAK*/ void boardInitHardware() {
-	static OutputPin spi3CsEtb;
 	static OutputPin spi3CsWastegate;
 
-	spi3CsEtb.initPin("spi3-cs-etb", H_SPI3_CS);
-	spi3CsEtb.setValue(1);
 	spi3CsWastegate.initPin("spi3-cs-wg", Gpio::H144_GP_IO6);
 	spi3CsWastegate.setValue(1);
 	// mc33810 takes care of the CS on it's own
 //	static OutputPin spi3CsMc33810;
 //	spi3CsMc33810.initPin("spi3-cs-mc33810", Gpio::H144_OUT_PWM1);
 //	spi3CsMc33810.setValue(1);
+
+          gpio_pin_markUsed(tle9201.spi_config.ssport, tle9201.spi_config.sspad, "TLE9201 ETB CS");
+          palSetPadMode(tle9201.spi_config.ssport, tle9201.spi_config.sspad, PAL_MODE_OUTPUT_PUSHPULL);
+          int retTle = tle9201_add(0, &tle9201);
+          efiPrintf("*****************+ tle9201_add %d +*******************", retTle);
 
     #if (BOARD_MC33810_COUNT > 0)
       gpio_pin_markUsed(mc33810.spi_config.ssport, mc33810.spi_config.sspad, "mc33810 CS");
