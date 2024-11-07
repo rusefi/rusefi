@@ -271,8 +271,17 @@ int Tle9201::init(int i) {
 
 int tle9201_add(unsigned int index, const tle9201_config *cfg) {
 	/* no config or no such chip */
-	if ((!cfg) || (!cfg->spi_bus) || (index >= BOARD_TLE9201_COUNT))
+	if ((!cfg) || (!cfg->spi_bus) || (index >= BOARD_TLE9201_COUNT)) {
 		return -1;
+	}
+
+	if (index == 0) {
+	  addConsoleAction("reset_9201", [](){
+	    auto chip = &chips[0];
+	    chip->spi_rw(TLE9201_REG_RES_DIA, nullptr);
+	    efiPrintf(DRIVER_NAME "reset!");
+	  });
+	}
 
 	/* check for valid cs.
 	 * TODO: remove this check? CS can be driven by SPI */
