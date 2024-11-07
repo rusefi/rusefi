@@ -67,7 +67,7 @@ static const char *diagDiaOut[16] = { "?", "?", "?",
 	"Short to Bat at OUT1, short to GND at OUT2", // 0x9
 	"Short to GND at OUT1 and OUT2", // 0xA
 	"Short to GND at OUT2", // 0xB
-	"Open Load", // 0xC
+	DRIVER_NAME " Open Load", // 0xC
 	"Short to Bat at OUT1", // 0xD
 	"Short to GND at OUT1", // 0xE
 	"No failure" // 0xF
@@ -198,7 +198,6 @@ void Tle9201::process_diag_and_rev(uint8_t diag, uint8_t rev) {
 /*==========================================================================*/
 
 static THD_FUNCTION(tle9201_driver_thread, p) {
-	int i;
 	bool wasSpiFailure = false;
 
 	(void)p;
@@ -219,7 +218,7 @@ static bool isInitialized = false;
     }
 
 
-		for (i = 0; i < BOARD_TLE9201_COUNT; i++) {
+		for (int i = 0; i < BOARD_TLE9201_COUNT; i++) {
 			auto chip = &chips[i];
 			if ((chip->cfg == NULL) ||
 				(chip->drv_state == TLE9201_DISABLED) ||
