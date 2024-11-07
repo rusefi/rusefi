@@ -57,7 +57,7 @@ typedef enum {
 /*==========================================================================*/
 
 // Output states
-static const char *diagDiaOut[16] = { "?", "?", "?", 
+static const char *diagDiaOut[16] = { "?", "?", "?",
 	"VS Undervoltage", // 0x3
 	"?",
 	"Short to Bat at OUT1 and OUT2", // 0x5
@@ -88,7 +88,7 @@ struct Tle9201 {
 	void process_diag_and_rev(uint8_t diag, uint8_t rev);
 
 	const tle9201_config		*cfg = NULL;
-	
+
 	tle9201_drv_state			drv_state;
 	int idx;
 	int detectedRev = 0;
@@ -165,7 +165,7 @@ void Tle9201::process_diag_and_rev(uint8_t diag, uint8_t rev) {
 		} else {
 			efiPrintf("%s ERROR: Unknown revision (%08x)!", name, rev);
 		}
-		
+
 		detectedRev = rev;
 	}
 
@@ -186,7 +186,7 @@ void Tle9201::process_diag_and_rev(uint8_t diag, uint8_t rev) {
 		if (!(diag & TLE9201_DIAG_EN)) {
 			efiPrintf("* Outputs disabled.");
 		}
-		// print the status of the outputs 
+		// print the status of the outputs
 		efiPrintf("* %s", diagDiaOut[diag & TLE9201_DIAG_OUT_MASK]);
 
 		savedDiag = diag;
@@ -208,12 +208,24 @@ static THD_FUNCTION(tle9201_driver_thread, p) {
 	while (1) {
 		chThdSleepMilliseconds(TLE9201_POLL_INTERVAL_MS);
 
+static bool isInitialized = false;
+
+    if (!isIgnVoltage()) {
+      if (isInitialized) {
+        efiPrintf("Power loss? Would have to re-init TLE9201?");
+        isInitialized = false;
+      }
+      continue;
+    }
+
+
 		for (i = 0; i < BOARD_TLE9201_COUNT; i++) {
 			auto chip = &chips[i];
 			if ((chip->cfg == NULL) ||
 				(chip->drv_state == TLE9201_DISABLED) ||
-				(chip->drv_state == TLE9201_FAILED))
+				(chip->drv_state == TLE9201_FAILED)) {
 				continue;
+      }
 
 			uint8_t diag, rev;
 			// get diagnosis and revision bytes
@@ -225,7 +237,7 @@ static THD_FUNCTION(tle9201_driver_thread, p) {
 			} else {
 				wasSpiFailure = false;
 			}
-			
+
 			chip->process_diag_and_rev(diag, rev);
 		}
 	}
