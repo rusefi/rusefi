@@ -71,6 +71,7 @@ TESTS_SRC_CPP = \
 	tests/shift_torque_reduction/test_shift_torque_reduction_angle_advance.cpp \
 	tests/test_fft.cpp \
 	tests/lua/test_lua_basic.cpp \
+  tests/lua/test_lua_dbc.cpp \
 	tests/lua/test_lookup.cpp \
 	tests/lua/test_lua_e38.cpp \
 	tests/lua/test_lua_canam.cpp \
