@@ -134,3 +134,6 @@ int getBitRangeLsb(const uint8_t data[], int bitIndex, int bitWidth);
  for instance DBC 8|16@0
  */
 int getBitRangeMsb(const uint8_t data[], int bitIndex, int bitWidth);
+
+int motorolaMagicFromDbc(int b, int length);
+int getBitRangeMoto(const uint8_t data[], int bitIndex, int bitWidth);
