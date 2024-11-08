@@ -38,12 +38,13 @@ enum class TpsState : uint8_t {
 	TpsError, // 2
 	PpsError, // 3
 	IntermittentTps, // 4
-	PidJitter, // 5
+	AutoTune, // 5
 	Lua, // 6
 	Manual, // 7
 	NotConfigured, // 8
 	Redundancy, // 9
 	IntermittentPps, // 10
+	JamDetected, // 11
 	// keep this list in sync with etbCutCodeList in tunerstudio.template.ini!
 };
 

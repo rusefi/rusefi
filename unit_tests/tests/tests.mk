@@ -71,7 +71,8 @@ TESTS_SRC_CPP = \
 	tests/shift_torque_reduction/test_shift_torque_reduction_angle_advance.cpp \
 	tests/test_fft.cpp \
 	tests/lua/test_lua_basic.cpp \
-  tests/lua/test_lua_dbc.cpp \
+	tests/lua/test_bit_range_msb.cpp \
+	tests/lua/test_lua_dbc.cpp \
 	tests/lua/test_lookup.cpp \
 	tests/lua/test_lua_e38.cpp \
 	tests/lua/test_lua_canam.cpp \
@@ -138,9 +139,6 @@ TESTS_SRC_CPP = \
 	tests/test_dynoview.cpp \
 	tests/test_gpio.cpp \
 	tests/test_limp.cpp \
-	tests/test_can_rx.cpp \
-	tests/test_can_serial.cpp \
-	tests/test_can_wideband.cpp \
 	tests/test_hellen_board_id.cpp \
 	tests/sensor/test_frequency_sensor.cpp \
 	tests/sensor/test_turbocharger_speed_converter.cpp \
@@ -163,3 +161,7 @@ TESTS_SRC_CPP = \
 	tests/actuators/boost/boost_test_base.cpp \
 	tests/actuators/boost/test_open_loop_multipliers.cpp \
 	tests/actuators/boost/test_closed_loop_adders.cpp \
+	tests/controllers/can/test_can_rx.cpp \
+	tests/controllers/can/test_can_serial.cpp \
+	tests/controllers/can/test_can_wideband.cpp \
+	tests/controllers/can/test_obd2.cpp \

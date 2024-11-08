@@ -64,16 +64,23 @@ static bool hellenEnPinInitialized = false;
   return !getHellenBoardEnabled();
 }
 
+PUBLIC_API_WEAK void onHellenEnChange(int value) {
+}
+
+static void setHellenEnValue(int value) {
+	megaEn.setValue(value, /*isForce*/ true);
+	onHellenEnChange(value);
+  AdcSubscription::ResetFilters();
+}
+
 void hellenEnableEn(const char *msg) {
   efiPrintf("Turning board ON [%s]", msg);
-	    megaEn.setValue(1, /*isForce*/ true);
-  AdcSubscription::ResetFilters();
+  setHellenEnValue(1);
 }
 
 void hellenDisableEn(const char *msg) {
   efiPrintf("Turning board off [%s]", msg);
-	    megaEn.setValue(0, /*isForce*/ true);
-  AdcSubscription::ResetFilters();
+	setHellenEnValue(0);
 }
 
 void setHellenEnPin(Gpio pin, bool enableBoardOnStartUp) {

@@ -14,7 +14,7 @@
 
 #include "can.h"
 
-#if EFI_SIMULATOR
+#if EFI_SIMULATOR || EFI_UNIT_TEST
 #include "fifo_buffer.h"
 fifo_buffer<CANTxFrame, 1024> txCanBuffer;
 #endif // EFI_SIMULATOR
@@ -60,8 +60,24 @@ CanTxMessage::CanTxMessage(CanCategory p_category, uint32_t eid, uint8_t dlc, si
 }
 
 CanTxMessage::~CanTxMessage() {
-#if EFI_SIMULATOR
+#if EFI_SIMULATOR || EFI_UNIT_TEST
 	txCanBuffer.put(m_frame);
+
+#if EFI_UNIT_TEST
+	printf("%s Sending CAN bus%d message: ID=%x/l=%x %x %x %x %x %x %x %x %x \n",
+		   getCanCategory(category),
+		   busIndex,
+#ifndef STM32H7XX
+		   (unsigned int)((m_frame.IDE == CAN_IDE_EXT) ? CAN_EID(m_frame) : CAN_SID(m_frame)),
+#else
+		   (unsigned int)(m_frame.common.XTD ? CAN_EID(m_frame) : CAN_SID(m_frame)),
+#endif
+		   m_frame.DLC,
+		   m_frame.data8[0], m_frame.data8[1],
+		   m_frame.data8[2], m_frame.data8[3],
+		   m_frame.data8[4], m_frame.data8[5],
+		   m_frame.data8[6], m_frame.data8[7]);
+#endif
 #endif // EFI_SIMULATOR
 
 #if EFI_CAN_SUPPORT
