@@ -170,6 +170,30 @@ float getConfigValueByName(const char *name) {
 // enableStagedInjection
 		case 1160459527:
 			return engineConfiguration->enableStagedInjection;
+// maxAdvanceSmoothing
+		case -484675851:
+			return engineConfiguration->maxAdvanceSmoothing;
+// minAdvanceSmoothing
+		case -1756713997:
+			return engineConfiguration->minAdvanceSmoothing;
+// increaseAdvanceSmoothing
+		case 2023934585:
+			return engineConfiguration->increaseAdvanceSmoothing;
+// decreaseAdvanceSmoothing
+		case 1680925515:
+			return engineConfiguration->decreaseAdvanceSmoothing;
+// timeoutAdvanceSmoothing
+		case 1607780662:
+			return engineConfiguration->timeoutAdvanceSmoothing;
+// deltaLoadSmoothingThreshold
+		case 1689333460:
+			return engineConfiguration->deltaLoadSmoothingThreshold;
+// enableAdvanceSmoothing
+		case 644314390:
+			return engineConfiguration->enableAdvanceSmoothing;
+// useIdleAdvanceWhileCoasting
+		case 586887955:
+			return engineConfiguration->useIdleAdvanceWhileCoasting;
 // tpsMin
 		case 513872736:
 			return engineConfiguration->tpsMin;
@@ -2183,6 +2207,46 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1160459527:
 	{
 		engineConfiguration->enableStagedInjection = (int)value;
+		return 1;
+	}
+		case -484675851:
+	{
+		engineConfiguration->maxAdvanceSmoothing = value;
+		return 1;
+	}
+		case -1756713997:
+	{
+		engineConfiguration->minAdvanceSmoothing = value;
+		return 1;
+	}
+		case 2023934585:
+	{
+		engineConfiguration->increaseAdvanceSmoothing = value;
+		return 1;
+	}
+		case 1680925515:
+	{
+		engineConfiguration->decreaseAdvanceSmoothing = value;
+		return 1;
+	}
+		case 1607780662:
+	{
+		engineConfiguration->timeoutAdvanceSmoothing = (int)value;
+		return 1;
+	}
+		case 1689333460:
+	{
+		engineConfiguration->deltaLoadSmoothingThreshold = (int)value;
+		return 1;
+	}
+		case 644314390:
+	{
+		engineConfiguration->enableAdvanceSmoothing = (int)value;
+		return 1;
+	}
+		case 586887955:
+	{
+		engineConfiguration->useIdleAdvanceWhileCoasting = (int)value;
 		return 1;
 	}
 		case 513872736:
