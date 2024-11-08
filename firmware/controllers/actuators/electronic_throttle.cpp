@@ -150,8 +150,10 @@ PUBLIC_API_WEAK bool isBoardAllowingLackOfPps() {
 }
 
 bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalProvider, bool hasPedal) {
+	state = (uint8_t)EtbState::InInit;
 	if (function == DC_None) {
 		// if not configured, don't init.
+		state = (uint8_t)EtbState::NotEbt;
 		etbErrorCode = (int8_t)TpsState::None;
 		return false;
 	}
@@ -163,7 +165,7 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 	if (isEtbMode()) {
 		// We don't need to init throttles, so nothing to do here.
 		if (!hasPedal) {
-			etbErrorCode = (int8_t)TpsState::None;
+			etbErrorCode = (int8_t)TpsState::PpsError;
 			return false;
 		}
 
@@ -200,6 +202,7 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 
 	reset();
 
+	state = (uint8_t)EtbState::SuccessfulInit;
 	return true;
 }
 
