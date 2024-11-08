@@ -556,6 +556,7 @@ bit allowIdenticalPps
 bit overrideVvtTriggerGaps
 bit useSpiImu;If enabled - use onboard SPI Accelerometer, otherwise listen for CAN messages
 bit enableStagedInjection
+bit useIdleAdvanceWhileCoasting
 
 int16_t tpsMin;Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel;"ADC", 1, 0, 0, 1023, 0
 int16_t tpsMax;Full throttle.\nSee also tps1_1AdcChannel;"ADC", 1, 0, 0, 1023, 0

@@ -84,7 +84,7 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 	// get advance from the separate table for Idle
 #if EFI_IDLE_CONTROL
 	if (engineConfiguration->useSeparateAdvanceForIdle &&
-		engine->module<IdleController>()->isIdlingOrTaper()) {
+		(engine->module<IdleController>()->isIdlingOrTaper() || engine->module<IdleController>()->isCoastingAdvance())) {
 		float idleAdvance = interpolate2d(rpm, config->idleAdvanceBins, config->idleAdvance);
 
 		auto tps = Sensor::get(SensorType::DriverThrottleIntent);
