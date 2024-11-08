@@ -188,10 +188,13 @@ public class IgnitionState {
 	public static final Field BASEIGNITIONADVANCE = Field.create("BASEIGNITIONADVANCE", 18, FieldType.INT16).setScale(0.02).setBaseOffset(900);
 	public static final Field CORRECTEDIGNITIONADVANCE = Field.create("CORRECTEDIGNITIONADVANCE", 20, FieldType.INT16).setScale(0.02).setBaseOffset(900);
 	public static final Field TRACTIONADVANCEDROP = Field.create("TRACTIONADVANCEDROP", 22, FieldType.INT16).setScale(0.02).setBaseOffset(900);
-	public static final Field DWELLVOLTAGECORRECTION = Field.create("DWELLVOLTAGECORRECTION", 24, FieldType.FLOAT).setBaseOffset(900);
-	public static final Field LUATIMINGADD = Field.create("LUATIMINGADD", 28, FieldType.FLOAT).setBaseOffset(900);
-	public static final Field LUATIMINGMULT = Field.create("LUATIMINGMULT", 32, FieldType.FLOAT).setBaseOffset(900);
-	public static final Field LUAIGNITIONSKIP = Field.create("LUAIGNITIONSKIP", 36, FieldType.BIT, 0).setBaseOffset(900);
+	public static final Field ACCELTHRESHOLDTHRIGGER = Field.create("ACCELTHRESHOLDTHRIGGER", 24, FieldType.BIT, 0).setBaseOffset(900);
+	public static final Field ACCELDELTALOADPERSIST = Field.create("ACCELDELTALOADPERSIST", 28, FieldType.INT).setScale(1.0).setBaseOffset(900);
+	public static final Field ACCELDELTACICLETHRIGER = Field.create("ACCELDELTACICLETHRIGER", 32, FieldType.INT).setScale(1.0).setBaseOffset(900);
+	public static final Field DWELLVOLTAGECORRECTION = Field.create("DWELLVOLTAGECORRECTION", 36, FieldType.FLOAT).setBaseOffset(900);
+	public static final Field LUATIMINGADD = Field.create("LUATIMINGADD", 40, FieldType.FLOAT).setBaseOffset(900);
+	public static final Field LUATIMINGMULT = Field.create("LUATIMINGMULT", 44, FieldType.FLOAT).setBaseOffset(900);
+	public static final Field LUAIGNITIONSKIP = Field.create("LUAIGNITIONSKIP", 48, FieldType.BIT, 0).setBaseOffset(900);
 	public static final Field[] VALUES = {
 	BASEDWELL,
 	SPARKDWELL,
@@ -202,6 +205,9 @@ public class IgnitionState {
 	BASEIGNITIONADVANCE,
 	CORRECTEDIGNITIONADVANCE,
 	TRACTIONADVANCEDROP,
+	ACCELTHRESHOLDTHRIGGER,
+	ACCELDELTALOADPERSIST,
+	ACCELDELTACICLETHRIGER,
 	DWELLVOLTAGECORRECTION,
 	LUATIMINGADD,
 	LUATIMINGMULT,

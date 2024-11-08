@@ -2,5 +2,5 @@
 // was generated automatically by rusEFI tool config_definition-all.jar based on gen_config.sh by SignatureConsumer
 //
 
-#define SIGNATURE_HASH 1704353366
-#define TS_SIGNATURE "rusEFI coastingIgnitionAdvance.2024.11.08.hellen-honda-k.1704353366"
+#define SIGNATURE_HASH 1251731318
+#define TS_SIGNATURE "rusEFI coastingIgnitionAdvance.2024.11.08.hellen-honda-k.1251731318"
