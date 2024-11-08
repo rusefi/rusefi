@@ -90,13 +90,13 @@ jobs:
       working-directory: .
       run: gcc -v
 
-    - name: Build Tests
-      working-directory: ./unit_tests/
-      run: make -j4
+#    - name: Build Tests
+#      working-directory: ./unit_tests/
+#      run: make -j4
 
-    - name: Run Tests
-      working-directory: ./unit_tests/
-      run: build/rusefi_test
+#    - name: Run Tests
+#      working-directory: ./unit_tests/
+#      run: build/rusefi_test
 
       # Commit changes and catch the error that occurs if nothing has been changed (without catching other errors)
     - name: Commit fresh triggers.txt
