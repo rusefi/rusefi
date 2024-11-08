@@ -20,7 +20,7 @@ void IgnitionController::onSlowCallback() {
 
 	// Ignore low voltage transients - we may see this at the start of cranking
 	// and we don't want to
-	if (!hasIgnVoltage && !m_timeSinceIgnVoltage.hasElapsedSec(0.2f)) {
+	if (!hasIgnVoltage && secondsSinceIgnVoltage() < 0.2f) {
 		return;
 	}
 

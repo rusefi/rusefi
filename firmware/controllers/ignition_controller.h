@@ -16,6 +16,10 @@ public:
 		return m_lastState;
 	}
 
+	float secondsSinceIgnVoltage() {
+	   return m_timeSinceIgnVoltage.getElapsedSeconds();
+	}
+
 private:
 	Timer m_timeSinceIgnVoltage;
 	bool m_lastState = false;
