@@ -65,7 +65,6 @@ float FuelComputer::getTargetLambda(float rpm, float load) const {
 		config->lambdaRpmBins, rpm
 	);
 
-	// Add any adjustments if configured
 	for (size_t i = 0; i < efi::size(config->lambdaBlends); i++) {
 		auto result = calculateBlend(config->lambdaBlends[i], rpm, load);
 
