@@ -597,6 +597,8 @@ bool EtbController::checkStatus() {
 		localReason = TpsState::IntermittentPps;
 	} else if (engine->engineState.lua.luaDisableEtb) {
 		localReason = TpsState::Lua;
+	} else if (!getLimpManager()->allowElectronicThrottle()) {
+	  localReason = TpsState::JamDetected;
 	}
 
 	etbErrorCode = (int8_t)localReason;
@@ -641,7 +643,7 @@ void EtbController::checkJam(percent_t setpoint, percent_t observation) {
 
 		if (absError > jamDetectThreshold && engine->module<IgnitionController>()->getIgnState()) {
 			if (m_jamDetectTimer.hasElapsedSec(jamTimeout)) {
-				// ETB is jammed!
+				efiPrintf(" ************* ETB is jammed! ***************");
 				jamDetected = true;
 
 				getLimpManager()->reportEtbProblem();
