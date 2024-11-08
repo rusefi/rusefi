@@ -67,7 +67,7 @@ float FuelComputer::getTargetLambda(float rpm, float load) const {
 
 	// Add any adjustments if configured
 	for (size_t i = 0; i < efi::size(config->lambdaBlends); i++) {
-		auto result = calculateBlend(config->lambdaBlends[i], rpm, engineLoad);
+		auto result = calculateBlend(config->lambdaBlends[i], rpm, load);
 
 		engine->outputChannels.lambdaBlendParameter[i] = result.BlendParameter;
 		engine->outputChannels.lambdaBlendBias[i] = result.Bias;
@@ -75,6 +75,7 @@ float FuelComputer::getTargetLambda(float rpm, float load) const {
 
 		baseLambda += result.Value;
 	}
+	return baseLambda;
 }
 
 float FuelComputer::getTargetLambdaLoadAxis(float defaultLoad) const {
