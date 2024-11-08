@@ -148,11 +148,12 @@ public class TsOutputs {
 	public static final String GAUGE_NAME_WARNING_COUNTER = "Warning: counter";
 	public static final String GAUGE_NAME_WARNING_LAST = "Warning: last";
 	public static final String GAUGE_NAME_WG_POSITION = "Wastegate position sensor";
-	public static final int IGN_BLEND_COUNT = 4;
+	public static final int IGN_BLEND_COUNT = 2;
 	public static final String INDICATOR_NAME_AC_SWITCH = "AC switch";
 	public static final String INDICATOR_NAME_BRAKE_DOWN = "Brake switch";
 	public static final String INDICATOR_NAME_CLUTCH_DOWN = "Clutch: down";
 	public static final String INDICATOR_NAME_CLUTCH_UP = "Clutch: up";
+	public static final int LAMBDA_BLEND_COUNT = 2;
 	public static final int LUA_ANALOG_INPUT_COUNT = 8;
 	public static final int LUA_GAUGE_COUNT = 8;
 	public static final int MAX_CYLINDER_COUNT = 12;
@@ -464,16 +465,16 @@ public class TsOutputs {
 	public static final Field RAWBATTERY = Field.create("RAWBATTERY", 586, FieldType.INT16).setScale(0.001).setBaseOffset(0);
 	public static final Field IGNBLENDPARAMETER1 = Field.create("IGNBLENDPARAMETER1", 588, FieldType.INT16).setScale(0.1).setBaseOffset(0);
 	public static final Field IGNBLENDPARAMETER2 = Field.create("IGNBLENDPARAMETER2", 590, FieldType.INT16).setScale(0.1).setBaseOffset(0);
-	public static final Field IGNBLENDPARAMETER3 = Field.create("IGNBLENDPARAMETER3", 592, FieldType.INT16).setScale(0.1).setBaseOffset(0);
-	public static final Field IGNBLENDPARAMETER4 = Field.create("IGNBLENDPARAMETER4", 594, FieldType.INT16).setScale(0.1).setBaseOffset(0);
-	public static final Field IGNBLENDBIAS1 = Field.create("IGNBLENDBIAS1", 596, FieldType.INT8).setScale(0.5).setBaseOffset(0);
-	public static final Field IGNBLENDBIAS2 = Field.create("IGNBLENDBIAS2", 597, FieldType.INT8).setScale(0.5).setBaseOffset(0);
-	public static final Field IGNBLENDBIAS3 = Field.create("IGNBLENDBIAS3", 598, FieldType.INT8).setScale(0.5).setBaseOffset(0);
-	public static final Field IGNBLENDBIAS4 = Field.create("IGNBLENDBIAS4", 599, FieldType.INT8).setScale(0.5).setBaseOffset(0);
-	public static final Field IGNBLENDOUTPUT1 = Field.create("IGNBLENDOUTPUT1", 600, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field IGNBLENDOUTPUT2 = Field.create("IGNBLENDOUTPUT2", 602, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field IGNBLENDOUTPUT3 = Field.create("IGNBLENDOUTPUT3", 604, FieldType.INT16).setScale(0.01).setBaseOffset(0);
-	public static final Field IGNBLENDOUTPUT4 = Field.create("IGNBLENDOUTPUT4", 606, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field IGNBLENDBIAS1 = Field.create("IGNBLENDBIAS1", 592, FieldType.INT8).setScale(0.5).setBaseOffset(0);
+	public static final Field IGNBLENDBIAS2 = Field.create("IGNBLENDBIAS2", 593, FieldType.INT8).setScale(0.5).setBaseOffset(0);
+	public static final Field IGNBLENDOUTPUT1 = Field.create("IGNBLENDOUTPUT1", 594, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field IGNBLENDOUTPUT2 = Field.create("IGNBLENDOUTPUT2", 596, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field LAMBDABLENDPARAMETER1 = Field.create("LAMBDABLENDPARAMETER1", 598, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field LAMBDABLENDPARAMETER2 = Field.create("LAMBDABLENDPARAMETER2", 600, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field LAMBDABLENDBIAS1 = Field.create("LAMBDABLENDBIAS1", 602, FieldType.INT8).setScale(0.5).setBaseOffset(0);
+	public static final Field LAMBDABLENDBIAS2 = Field.create("LAMBDABLENDBIAS2", 603, FieldType.INT8).setScale(0.5).setBaseOffset(0);
+	public static final Field LAMBDABLENDOUTPUT1 = Field.create("LAMBDABLENDOUTPUT1", 604, FieldType.INT16).setScale(0.01).setBaseOffset(0);
+	public static final Field LAMBDABLENDOUTPUT2 = Field.create("LAMBDABLENDOUTPUT2", 606, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field VEBLENDPARAMETER1 = Field.create("VEBLENDPARAMETER1", 608, FieldType.INT16).setScale(0.1).setBaseOffset(0);
 	public static final Field VEBLENDPARAMETER2 = Field.create("VEBLENDPARAMETER2", 610, FieldType.INT16).setScale(0.1).setBaseOffset(0);
 	public static final Field VEBLENDPARAMETER3 = Field.create("VEBLENDPARAMETER3", 612, FieldType.INT16).setScale(0.1).setBaseOffset(0);
@@ -892,16 +893,16 @@ public class TsOutputs {
 	RAWBATTERY,
 	IGNBLENDPARAMETER1,
 	IGNBLENDPARAMETER2,
-	IGNBLENDPARAMETER3,
-	IGNBLENDPARAMETER4,
 	IGNBLENDBIAS1,
 	IGNBLENDBIAS2,
-	IGNBLENDBIAS3,
-	IGNBLENDBIAS4,
 	IGNBLENDOUTPUT1,
 	IGNBLENDOUTPUT2,
-	IGNBLENDOUTPUT3,
-	IGNBLENDOUTPUT4,
+	LAMBDABLENDPARAMETER1,
+	LAMBDABLENDPARAMETER2,
+	LAMBDABLENDBIAS1,
+	LAMBDABLENDBIAS2,
+	LAMBDABLENDOUTPUT1,
+	LAMBDABLENDOUTPUT2,
 	VEBLENDPARAMETER1,
 	VEBLENDPARAMETER2,
 	VEBLENDPARAMETER3,

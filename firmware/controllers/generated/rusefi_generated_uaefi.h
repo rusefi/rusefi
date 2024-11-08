@@ -1089,7 +1089,7 @@
 #define idle_state_e_RPM_DEAD_ZONE 2
 #define idle_state_e_TPS_THRESHOLD 1
 #define IDLE_VE_SIZE 4
-#define IGN_BLEND_COUNT 4
+#define IGN_BLEND_COUNT 2
 #define ign_cyl_trim_s_size 16
 #define IGN_LOAD_COUNT 16
 #define IGN_RPM_COUNT 16
@@ -1136,6 +1136,7 @@
 #define InjectorNonlinearMode_INJ_None 0
 #define InjectorNonlinearMode_INJ_PolynomialAdder 1
 #define KNOCK_TABLE_SIZE 6
+#define LAMBDA_BLEND_COUNT 2
 #define launchActivationMode_e_ALWAYS_ACTIVE_LAUNCH 2
 #define launchActivationMode_e_auto_enum 0="SWITCH_INPUT_LAUNCH",2="ALWAYS_ACTIVE_LAUNCH",1="CLUTCH_INPUT_LAUNCH",3="STOP_INPUT_LAUNCH"
 #define launchActivationMode_e_CLUTCH_INPUT_LAUNCH 1
@@ -1295,7 +1296,7 @@
 #define SentEtbType_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3316313153
+#define SIGNATURE_HASH 258502948
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1756,7 +1757,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.11.07.uaefi.3316313153"
+#define TS_SIGNATURE "rusEFI targetLambdaBlend.2024.11.08.uaefi.258502948"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

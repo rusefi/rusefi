@@ -1010,14 +1010,28 @@ struct output_channels_s {
 	scaled_channel<int16_t, 10, 1> ignBlendParameter[IGN_BLEND_COUNT];
 	/**
 	 * units: %
-	 * offset 596
+	 * offset 592
 	 */
 	scaled_channel<uint8_t, 2, 1> ignBlendBias[IGN_BLEND_COUNT];
 	/**
 	 * units: deg
-	 * offset 600
+	 * offset 594
 	 */
 	scaled_channel<int16_t, 100, 1> ignBlendOutput[IGN_BLEND_COUNT];
+	/**
+	 * offset 598
+	 */
+	scaled_channel<int16_t, 10, 1> lambdaBlendParameter[LAMBDA_BLEND_COUNT];
+	/**
+	 * units: %
+	 * offset 602
+	 */
+	scaled_channel<uint8_t, 2, 1> lambdaBlendBias[LAMBDA_BLEND_COUNT];
+	/**
+	 * units: deg
+	 * offset 604
+	 */
+	scaled_channel<int16_t, 100, 1> lambdaBlendOutput[LAMBDA_BLEND_COUNT];
 	/**
 	 * offset 608
 	 */
@@ -1162,10 +1176,10 @@ struct output_channels_s {
 	bool vvtChannel4 : 1 {};
 	/**
 	offset 648 bit 30 */
-	bool unusedBit_237_30 : 1 {};
+	bool unusedBit_240_30 : 1 {};
 	/**
 	offset 648 bit 31 */
-	bool unusedBit_237_31 : 1 {};
+	bool unusedBit_240_31 : 1 {};
 	/**
 	 * offset 652
 	 */

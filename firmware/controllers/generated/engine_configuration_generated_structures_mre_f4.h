@@ -5462,9 +5462,13 @@ struct persistent_config_s {
 	 */
 	blend_table_s ignBlends[IGN_BLEND_COUNT];
 	/**
-	 * offset 22204
+	 * offset 21828
 	 */
 	blend_table_s veBlends[VE_BLEND_COUNT];
+	/**
+	 * offset 22580
+	 */
+	blend_table_s lambdaBlends[LAMBDA_BLEND_COUNT];
 	/**
 	 * units: %
 	 * offset 22956
