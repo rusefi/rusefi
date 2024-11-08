@@ -4701,7 +4701,7 @@ struct blend_table_s {
 	/**
 	 * offset 162
 	 */
-	scaled_channel<int16_t, 10, 1> blendBins[8];
+	scaled_channel<int16_t, 100, 1> blendBins[8];
 	/**
 	 * units: %
 	 * offset 178

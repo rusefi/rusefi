@@ -1215,7 +1215,7 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
-	public static final int SIGNATURE_HASH = 734516948;
+	public static final int SIGNATURE_HASH = 1838538502;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1478,7 +1478,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI targetLambdaBlend.2024.11.08.f407-discovery.734516948";
+	public static final String TS_SIGNATURE = "rusEFI targetLambdaBlend.2024.11.08.f407-discovery.1838538502";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -3120,7 +3120,7 @@ public class Fields {
 	public static final Field IGNBLENDS1_RPMBINS = Field.create("IGNBLENDS1_RPMBINS", 19596, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field IGNBLENDS1_BLENDPARAMETER = Field.create("IGNBLENDS1_BLENDPARAMETER", 19612, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field IGNBLENDS1_YAXISOVERRIDE = Field.create("IGNBLENDS1_YAXISOVERRIDE", 19613, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
-	public static final Field IGNBLENDS1_BLENDBINS = Field.create("IGNBLENDS1_BLENDBINS", 19614, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field IGNBLENDS1_BLENDBINS = Field.create("IGNBLENDS1_BLENDBINS", 19614, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field IGNBLENDS1_BLENDVALUES = Field.create("IGNBLENDS1_BLENDVALUES", 19630, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field IGNBLENDS1_ALIGNMENTFILL_AT_186 = Field.create("IGNBLENDS1_ALIGNMENTFILL_AT_186", 19638, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field IGNBLENDS2_TABLE = Field.create("IGNBLENDS2_TABLE", 19640, FieldType.INT16).setScale(0.1).setBaseOffset(0);
@@ -3128,7 +3128,7 @@ public class Fields {
 	public static final Field IGNBLENDS2_RPMBINS = Field.create("IGNBLENDS2_RPMBINS", 19784, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field IGNBLENDS2_BLENDPARAMETER = Field.create("IGNBLENDS2_BLENDPARAMETER", 19800, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field IGNBLENDS2_YAXISOVERRIDE = Field.create("IGNBLENDS2_YAXISOVERRIDE", 19801, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
-	public static final Field IGNBLENDS2_BLENDBINS = Field.create("IGNBLENDS2_BLENDBINS", 19802, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field IGNBLENDS2_BLENDBINS = Field.create("IGNBLENDS2_BLENDBINS", 19802, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field IGNBLENDS2_BLENDVALUES = Field.create("IGNBLENDS2_BLENDVALUES", 19818, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field IGNBLENDS2_ALIGNMENTFILL_AT_186 = Field.create("IGNBLENDS2_ALIGNMENTFILL_AT_186", 19826, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field VEBLENDS1_TABLE = Field.create("VEBLENDS1_TABLE", 19828, FieldType.INT16).setScale(0.1).setBaseOffset(0);
@@ -3136,7 +3136,7 @@ public class Fields {
 	public static final Field VEBLENDS1_RPMBINS = Field.create("VEBLENDS1_RPMBINS", 19972, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field VEBLENDS1_BLENDPARAMETER = Field.create("VEBLENDS1_BLENDPARAMETER", 19988, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field VEBLENDS1_YAXISOVERRIDE = Field.create("VEBLENDS1_YAXISOVERRIDE", 19989, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
-	public static final Field VEBLENDS1_BLENDBINS = Field.create("VEBLENDS1_BLENDBINS", 19990, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field VEBLENDS1_BLENDBINS = Field.create("VEBLENDS1_BLENDBINS", 19990, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field VEBLENDS1_BLENDVALUES = Field.create("VEBLENDS1_BLENDVALUES", 20006, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field VEBLENDS1_ALIGNMENTFILL_AT_186 = Field.create("VEBLENDS1_ALIGNMENTFILL_AT_186", 20014, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field VEBLENDS2_TABLE = Field.create("VEBLENDS2_TABLE", 20016, FieldType.INT16).setScale(0.1).setBaseOffset(0);
@@ -3144,7 +3144,7 @@ public class Fields {
 	public static final Field VEBLENDS2_RPMBINS = Field.create("VEBLENDS2_RPMBINS", 20160, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field VEBLENDS2_BLENDPARAMETER = Field.create("VEBLENDS2_BLENDPARAMETER", 20176, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field VEBLENDS2_YAXISOVERRIDE = Field.create("VEBLENDS2_YAXISOVERRIDE", 20177, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
-	public static final Field VEBLENDS2_BLENDBINS = Field.create("VEBLENDS2_BLENDBINS", 20178, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field VEBLENDS2_BLENDBINS = Field.create("VEBLENDS2_BLENDBINS", 20178, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field VEBLENDS2_BLENDVALUES = Field.create("VEBLENDS2_BLENDVALUES", 20194, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field VEBLENDS2_ALIGNMENTFILL_AT_186 = Field.create("VEBLENDS2_ALIGNMENTFILL_AT_186", 20202, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field VEBLENDS3_TABLE = Field.create("VEBLENDS3_TABLE", 20204, FieldType.INT16).setScale(0.1).setBaseOffset(0);
@@ -3152,7 +3152,7 @@ public class Fields {
 	public static final Field VEBLENDS3_RPMBINS = Field.create("VEBLENDS3_RPMBINS", 20348, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field VEBLENDS3_BLENDPARAMETER = Field.create("VEBLENDS3_BLENDPARAMETER", 20364, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field VEBLENDS3_YAXISOVERRIDE = Field.create("VEBLENDS3_YAXISOVERRIDE", 20365, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
-	public static final Field VEBLENDS3_BLENDBINS = Field.create("VEBLENDS3_BLENDBINS", 20366, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field VEBLENDS3_BLENDBINS = Field.create("VEBLENDS3_BLENDBINS", 20366, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field VEBLENDS3_BLENDVALUES = Field.create("VEBLENDS3_BLENDVALUES", 20382, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field VEBLENDS3_ALIGNMENTFILL_AT_186 = Field.create("VEBLENDS3_ALIGNMENTFILL_AT_186", 20390, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field VEBLENDS4_TABLE = Field.create("VEBLENDS4_TABLE", 20392, FieldType.INT16).setScale(0.1).setBaseOffset(0);
@@ -3160,7 +3160,7 @@ public class Fields {
 	public static final Field VEBLENDS4_RPMBINS = Field.create("VEBLENDS4_RPMBINS", 20536, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field VEBLENDS4_BLENDPARAMETER = Field.create("VEBLENDS4_BLENDPARAMETER", 20552, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field VEBLENDS4_YAXISOVERRIDE = Field.create("VEBLENDS4_YAXISOVERRIDE", 20553, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
-	public static final Field VEBLENDS4_BLENDBINS = Field.create("VEBLENDS4_BLENDBINS", 20554, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field VEBLENDS4_BLENDBINS = Field.create("VEBLENDS4_BLENDBINS", 20554, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field VEBLENDS4_BLENDVALUES = Field.create("VEBLENDS4_BLENDVALUES", 20570, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field VEBLENDS4_ALIGNMENTFILL_AT_186 = Field.create("VEBLENDS4_ALIGNMENTFILL_AT_186", 20578, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field LAMBDABLENDS1_TABLE = Field.create("LAMBDABLENDS1_TABLE", 20580, FieldType.INT16).setScale(0.1).setBaseOffset(0);
@@ -3168,7 +3168,7 @@ public class Fields {
 	public static final Field LAMBDABLENDS1_RPMBINS = Field.create("LAMBDABLENDS1_RPMBINS", 20724, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field LAMBDABLENDS1_BLENDPARAMETER = Field.create("LAMBDABLENDS1_BLENDPARAMETER", 20740, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field LAMBDABLENDS1_YAXISOVERRIDE = Field.create("LAMBDABLENDS1_YAXISOVERRIDE", 20741, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
-	public static final Field LAMBDABLENDS1_BLENDBINS = Field.create("LAMBDABLENDS1_BLENDBINS", 20742, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field LAMBDABLENDS1_BLENDBINS = Field.create("LAMBDABLENDS1_BLENDBINS", 20742, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field LAMBDABLENDS1_BLENDVALUES = Field.create("LAMBDABLENDS1_BLENDVALUES", 20758, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field LAMBDABLENDS1_ALIGNMENTFILL_AT_186 = Field.create("LAMBDABLENDS1_ALIGNMENTFILL_AT_186", 20766, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field LAMBDABLENDS2_TABLE = Field.create("LAMBDABLENDS2_TABLE", 20768, FieldType.INT16).setScale(0.1).setBaseOffset(0);
@@ -3176,7 +3176,7 @@ public class Fields {
 	public static final Field LAMBDABLENDS2_RPMBINS = Field.create("LAMBDABLENDS2_RPMBINS", 20912, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field LAMBDABLENDS2_BLENDPARAMETER = Field.create("LAMBDABLENDS2_BLENDPARAMETER", 20928, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field LAMBDABLENDS2_YAXISOVERRIDE = Field.create("LAMBDABLENDS2_YAXISOVERRIDE", 20929, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
-	public static final Field LAMBDABLENDS2_BLENDBINS = Field.create("LAMBDABLENDS2_BLENDBINS", 20930, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field LAMBDABLENDS2_BLENDBINS = Field.create("LAMBDABLENDS2_BLENDBINS", 20930, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field LAMBDABLENDS2_BLENDVALUES = Field.create("LAMBDABLENDS2_BLENDVALUES", 20946, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field LAMBDABLENDS2_ALIGNMENTFILL_AT_186 = Field.create("LAMBDABLENDS2_ALIGNMENTFILL_AT_186", 20954, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field THROTTLEESTIMATEEFFECTIVEAREABINS = Field.create("THROTTLEESTIMATEEFFECTIVEAREABINS", 20956, FieldType.INT16).setScale(0.1).setBaseOffset(0);
@@ -3186,7 +3186,7 @@ public class Fields {
 	public static final Field BOOSTOPENLOOPBLENDS1_RPMBINS = Field.create("BOOSTOPENLOOPBLENDS1_RPMBINS", 21148, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field BOOSTOPENLOOPBLENDS1_BLENDPARAMETER = Field.create("BOOSTOPENLOOPBLENDS1_BLENDPARAMETER", 21164, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field BOOSTOPENLOOPBLENDS1_YAXISOVERRIDE = Field.create("BOOSTOPENLOOPBLENDS1_YAXISOVERRIDE", 21165, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
-	public static final Field BOOSTOPENLOOPBLENDS1_BLENDBINS = Field.create("BOOSTOPENLOOPBLENDS1_BLENDBINS", 21166, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field BOOSTOPENLOOPBLENDS1_BLENDBINS = Field.create("BOOSTOPENLOOPBLENDS1_BLENDBINS", 21166, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field BOOSTOPENLOOPBLENDS1_BLENDVALUES = Field.create("BOOSTOPENLOOPBLENDS1_BLENDVALUES", 21182, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field BOOSTOPENLOOPBLENDS1_ALIGNMENTFILL_AT_186 = Field.create("BOOSTOPENLOOPBLENDS1_ALIGNMENTFILL_AT_186", 21190, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field BOOSTOPENLOOPBLENDS2_TABLE = Field.create("BOOSTOPENLOOPBLENDS2_TABLE", 21192, FieldType.INT16).setScale(0.1).setBaseOffset(0);
@@ -3194,7 +3194,7 @@ public class Fields {
 	public static final Field BOOSTOPENLOOPBLENDS2_RPMBINS = Field.create("BOOSTOPENLOOPBLENDS2_RPMBINS", 21336, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field BOOSTOPENLOOPBLENDS2_BLENDPARAMETER = Field.create("BOOSTOPENLOOPBLENDS2_BLENDPARAMETER", 21352, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field BOOSTOPENLOOPBLENDS2_YAXISOVERRIDE = Field.create("BOOSTOPENLOOPBLENDS2_YAXISOVERRIDE", 21353, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
-	public static final Field BOOSTOPENLOOPBLENDS2_BLENDBINS = Field.create("BOOSTOPENLOOPBLENDS2_BLENDBINS", 21354, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field BOOSTOPENLOOPBLENDS2_BLENDBINS = Field.create("BOOSTOPENLOOPBLENDS2_BLENDBINS", 21354, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field BOOSTOPENLOOPBLENDS2_BLENDVALUES = Field.create("BOOSTOPENLOOPBLENDS2_BLENDVALUES", 21370, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field BOOSTOPENLOOPBLENDS2_ALIGNMENTFILL_AT_186 = Field.create("BOOSTOPENLOOPBLENDS2_ALIGNMENTFILL_AT_186", 21378, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field BOOSTCLOSEDLOOPBLENDS1_TABLE = Field.create("BOOSTCLOSEDLOOPBLENDS1_TABLE", 21380, FieldType.INT16).setScale(0.1).setBaseOffset(0);
@@ -3202,7 +3202,7 @@ public class Fields {
 	public static final Field BOOSTCLOSEDLOOPBLENDS1_RPMBINS = Field.create("BOOSTCLOSEDLOOPBLENDS1_RPMBINS", 21524, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field BOOSTCLOSEDLOOPBLENDS1_BLENDPARAMETER = Field.create("BOOSTCLOSEDLOOPBLENDS1_BLENDPARAMETER", 21540, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field BOOSTCLOSEDLOOPBLENDS1_YAXISOVERRIDE = Field.create("BOOSTCLOSEDLOOPBLENDS1_YAXISOVERRIDE", 21541, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
-	public static final Field BOOSTCLOSEDLOOPBLENDS1_BLENDBINS = Field.create("BOOSTCLOSEDLOOPBLENDS1_BLENDBINS", 21542, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field BOOSTCLOSEDLOOPBLENDS1_BLENDBINS = Field.create("BOOSTCLOSEDLOOPBLENDS1_BLENDBINS", 21542, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field BOOSTCLOSEDLOOPBLENDS1_BLENDVALUES = Field.create("BOOSTCLOSEDLOOPBLENDS1_BLENDVALUES", 21558, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field BOOSTCLOSEDLOOPBLENDS1_ALIGNMENTFILL_AT_186 = Field.create("BOOSTCLOSEDLOOPBLENDS1_ALIGNMENTFILL_AT_186", 21566, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field BOOSTCLOSEDLOOPBLENDS2_TABLE = Field.create("BOOSTCLOSEDLOOPBLENDS2_TABLE", 21568, FieldType.INT16).setScale(0.1).setBaseOffset(0);
@@ -3210,7 +3210,7 @@ public class Fields {
 	public static final Field BOOSTCLOSEDLOOPBLENDS2_RPMBINS = Field.create("BOOSTCLOSEDLOOPBLENDS2_RPMBINS", 21712, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field BOOSTCLOSEDLOOPBLENDS2_BLENDPARAMETER = Field.create("BOOSTCLOSEDLOOPBLENDS2_BLENDPARAMETER", 21728, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field BOOSTCLOSEDLOOPBLENDS2_YAXISOVERRIDE = Field.create("BOOSTCLOSEDLOOPBLENDS2_YAXISOVERRIDE", 21729, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
-	public static final Field BOOSTCLOSEDLOOPBLENDS2_BLENDBINS = Field.create("BOOSTCLOSEDLOOPBLENDS2_BLENDBINS", 21730, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field BOOSTCLOSEDLOOPBLENDS2_BLENDBINS = Field.create("BOOSTCLOSEDLOOPBLENDS2_BLENDBINS", 21730, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field BOOSTCLOSEDLOOPBLENDS2_BLENDVALUES = Field.create("BOOSTCLOSEDLOOPBLENDS2_BLENDVALUES", 21746, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field BOOSTCLOSEDLOOPBLENDS2_ALIGNMENTFILL_AT_186 = Field.create("BOOSTCLOSEDLOOPBLENDS2_ALIGNMENTFILL_AT_186", 21754, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field TCU_RANGEP = Field.create("TCU_RANGEP", 21756, FieldType.FLOAT).setBaseOffset(0);
