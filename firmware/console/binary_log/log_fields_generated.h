@@ -394,6 +394,8 @@ static const LogField fields[] = {
 	{engine->ignitionState.baseIgnitionAdvance, "Timing: base ignition", "deg", 1},
 	{engine->ignitionState.correctedIgnitionAdvance, "Timing: ignition", "deg", 1},
 	{engine->ignitionState.tractionAdvanceDrop, "Traction: timing correction", "deg", 1},
+	{engine->ignitionState.accelDeltaLOADPersist, "accelDeltaLOADPersist", "", 0},
+	{engine->ignitionState.accelDeltaCicleThriger, "accelDeltaCicleThriger", "", 0},
 	{engine->ignitionState.dwellVoltageCorrection, "Ign: Dwell voltage correction", "", 0},
 	{engine->ignitionState.luaTimingAdd, "Ign: Lua timing add", "deg", 2, "Timing"},
 	{engine->ignitionState.luaTimingMult, "Ign: Lua timing mult", "deg", 2, "Timing"},
