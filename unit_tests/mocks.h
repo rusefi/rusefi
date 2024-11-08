@@ -135,6 +135,7 @@ public:
 	MOCK_METHOD(float, getClosedLoop, (IIdleController::Phase phase, float tps, float rpm, float target), (override));
 	MOCK_METHOD(float, getCrankingTaperFraction, (float clt), (const, override));
 	MOCK_METHOD(bool, isIdlingOrTaper, (), (const, override));
+	MOCK_METHOD(bool, isCoastingAdvance, (), (const, override));
 	MOCK_METHOD(float, getIdleTimingAdjustment, (float rpm), (override));
 };
 
