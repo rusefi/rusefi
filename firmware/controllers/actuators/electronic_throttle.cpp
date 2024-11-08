@@ -141,8 +141,6 @@ static TsCalMode functionToCalModeSecMax(dc_function_e func) {
 }
 #endif // EFI_TUNER_STUDIO
 
-static percent_t directPwmValue = NAN;
-
 #define ETB_DUTY_LIMIT 0.9
 // this macro clamps both positive and negative percentages from about -100% to 100%
 #define ETB_PERCENT_TO_DUTY(x) (clampF(-ETB_DUTY_LIMIT, 0.01f * (x), ETB_DUTY_LIMIT))
@@ -614,12 +612,6 @@ void EtbController::update() {
 	}
 #endif // EFI_UNIT_TEST
 
-	if (!std::isnan(directPwmValue)) {
-		m_motor->set(directPwmValue);
-		etbErrorCode = (int8_t)TpsState::Manual;
-		return;
-	}
-
 	bool isOk = checkStatus();
 
 	if (!isOk) {
@@ -801,30 +793,6 @@ void etbPidReset() {
 		}
 	}
 }
-
-#if !EFI_UNIT_TEST
-
-/**
- * At the moment there are TWO ways to use this
- * set_etb_duty X
- * set etb X
- * manual duty cycle control without PID. Percent value from 0 to 100
- */
-void setThrottleDutyCycle(percent_t level) {
-	efiPrintf("setting ETB duty=%f%%", level);
-	if (std::isnan(level)) {
-		directPwmValue = NAN;
-		return;
-	}
-
-	float dc = ETB_PERCENT_TO_DUTY(level);
-	directPwmValue = dc;
-	for (int i = 0 ; i < ETB_COUNT; i++) {
-		setDcMotorDuty(i, dc);
-	}
-	efiPrintf("duty ETB duty=%f", dc);
-}
-#endif /* EFI_PROD_CODE */
 
 void etbAutocal(size_t throttleIndex) {
 	if (throttleIndex >= ETB_COUNT) {

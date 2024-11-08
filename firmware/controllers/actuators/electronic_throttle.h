@@ -29,7 +29,7 @@ void setBoschVAGETB();
 void setDefaultEtbBiasCurve();
 void setDefaultEtbParameters();
 void setBoschVNH2SP30Curve();
-void setThrottleDutyCycle(percent_t level);
+
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration);
 void unregisterEtbPins();
 void setProteusHitachiEtbDefaults();
