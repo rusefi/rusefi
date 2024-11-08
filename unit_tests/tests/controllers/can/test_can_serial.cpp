@@ -114,6 +114,9 @@ public:
 		// check the FIFO buf size
 		EXPECT_EQ(0, rxFifoBuf.getCount());
 
+		// clear shared buffer
+		txCanBuffer.clear();
+		EXPECT_FALSE(txCanBuffer.getCount());
 	}
 
 protected:

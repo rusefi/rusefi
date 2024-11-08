@@ -23,7 +23,7 @@
 
 #include "pch.h"
 
-#if EFI_CAN_SUPPORT
+#if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 
 #include "obd2.h"
 #include "can.h"
@@ -56,7 +56,7 @@ static const int16_t supportedPids4160[] = {
 	-1
 };
 
-static void obdSendPacket(int mode, int PID, int numBytes, uint32_t iValue, size_t busIndex) {
+void obdSendPacket(int mode, int PID, int numBytes, uint32_t iValue, size_t busIndex) {
 	CanTxMessage resp(CanCategory::OBD, OBD_TEST_RESPONSE);
 
 	// Respond on the same bus we got the request from
@@ -84,9 +84,9 @@ static void obdSendValue(int mode, int PID, int numBytes, float value, size_t bu
 }
 
 
-//#define MOCK_SUPPORTED_PIDS 0xffffffff
+// #define MOCK_SUPPORTED_PIDS 0xffffffff
 
-static void obdWriteSupportedPids(int PID, int bitOffset, const int16_t *supportedPids, size_t busIndex) {
+void obdWriteSupportedPids(int PID, int bitOffset, const int16_t *supportedPids, size_t busIndex) {
 	uint32_t value = 0;
 	// gather all 32 bit fields
 	for (int i = 0; i < 32 && supportedPids[i] > 0; i++)
@@ -100,17 +100,17 @@ static void obdWriteSupportedPids(int PID, int bitOffset, const int16_t *support
 	obdSendPacket(1, PID, 4, value, busIndex);
 }
 
-static void handleGetDataRequest(const CANRxFrame& rx, size_t busIndex) {
+void handleGetDataRequest(const CANRxFrame& rx, size_t busIndex) {
 	int pid = rx.data8[2];
 	switch (pid) {
 	case PID_SUPPORTED_PIDS_REQUEST_01_20:
 		obdWriteSupportedPids(pid, 1, supportedPids0120, busIndex);
 		break;
 	case PID_SUPPORTED_PIDS_REQUEST_21_40:
-		obdWriteSupportedPids(pid, 21, supportedPids2140, busIndex);
+		obdWriteSupportedPids(pid, 0x21, supportedPids2140, busIndex);
 		break;
 	case PID_SUPPORTED_PIDS_REQUEST_41_60:
-		obdWriteSupportedPids(pid, 41, supportedPids4160, busIndex);
+		obdWriteSupportedPids(pid, 0x41, supportedPids4160, busIndex);
 		break;
 	case PID_MONITOR_STATUS:
 		obdSendPacket(1, pid, 4, 0, busIndex);	// todo: add statuses
@@ -188,7 +188,7 @@ static void handleDtcRequest(int numCodes, ObdCode* dtcCode) {
 	// }
 }
 
-#if HAL_USE_CAN
+#if HAS_CAN_FRAME
 void obdOnCanPacketRx(const CANRxFrame& rx, size_t busIndex) {
 	if (CAN_SID(rx) != OBD_TEST_REQUEST) {
 		return;
@@ -204,6 +204,6 @@ void obdOnCanPacketRx(const CANRxFrame& rx, size_t busIndex) {
 		handleDtcRequest(1, &engine->engineState.warnings.lastErrorCode);
 	}
 }
-#endif /* HAL_USE_CAN */
+#endif /* HAS_CAN_FRAME */
 
 #endif /* EFI_CAN_SUPPORT */

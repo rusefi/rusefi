@@ -15,6 +15,11 @@
 #include "can_category.h"
 #include "can.h"
 
+#if EFI_SIMULATOR || EFI_UNIT_TEST
+#include "fifo_buffer.h"
+extern fifo_buffer<CANTxFrame, 1024> txCanBuffer;
+#endif // EFI_SIMULATOR
+
 /**
  * Represent a message to be transmitted over CAN.
  *

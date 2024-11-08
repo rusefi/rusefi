@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include "can.h"
 
 #define OBD_TEST_REQUEST 0x7DF
 
@@ -45,9 +46,16 @@
 #define PID_FUEL_RATE 0x5E
 //todo#define PID_TURBO_RPM 0x74
 
-#if HAL_USE_CAN
+#if HAS_CAN_FRAME
+void obdSendPacket(int mode, int PID, int numBytes, uint32_t iValue, size_t busIndex);
+void obdWriteSupportedPids(int PID, int bitOffset, const int16_t *supportedPids, size_t busIndex);
 void obdOnCanPacketRx(const CANRxFrame& rx, size_t busIndex);
-#endif /* HAL_USE_CAN */
+void handleGetDataRequest(const CANRxFrame& rx, size_t busIndex);
+#endif /* HAS_CAN_FRAME */
+
+#if EFI_UNIT_TEST
+#include "can_msg_tx.h"
+#endif
 
 #define ODB_RPM_MULT 4
 #define ODB_TEMP_EXTRA 40
