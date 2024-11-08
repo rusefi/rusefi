@@ -1,17 +1,15 @@
 {
     "files.associations": {
-		"xstring": "cpp",
-		"ios": "cpp",
-		"xlocale": "cpp",
-		"xtr1common": "cpp",
-		"xiosbase": "cpp",
-		"deque": "cpp",
-		"forward_list": "cpp",
-		"list": "cpp",
-		"system_error": "cpp",
-		"vector": "cpp",
-		"xhash": "cpp",
-		"xtree": "cpp"
+		"*.input": "ini",
+		"array": "cpp",
+		"*.tcc": "cpp",
+		"memory": "cpp",
+		"istream": "cpp",
+		"functional": "cpp",
+		"tuple": "cpp",
+		"utility": "cpp",
+		"variant": "cpp",
+		"format": "cpp"
 	},
 	"editor.detectIndentation": false,
 	"editor.indentSize": 4,
@@ -36,4 +34,5 @@
 	"files.associations": {
 		"*.input": "ini"
 	},
+	"C_Cpp.formatting": "vcFormat",
 }

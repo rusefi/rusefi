@@ -6,6 +6,7 @@
  */
 
 #pragma once
+#include "can.h"
 
 #define OBD_TEST_REQUEST 0x7DF
 
