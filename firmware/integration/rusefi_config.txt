@@ -498,7 +498,6 @@ bit etb_use_two_wires;TLE7209 and L6205 use two-wire mode. TLE9201 and VNH2SP30 
 bit isDoubleSolenoidIdle;Subaru/BMW style where default valve position is somewhere in the middle. First solenoid opens it more while second can close it more than default position.
 bit useEeprom
 bit useCicPidForIdle;Switch between Industrial and Cic PID implementation
-bit useIdleAdvanceWhileCoasting;
 bit useTLE8888_cranking_hack;
 bit kickStartCranking
 bit useSeparateIdleTablesForCrankingTaper;This uses separate ignition timing and VE tables not only for idle conditions, also during the postcranking-to-idle taper transition (See also afterCrankingIACtaperDuration).
@@ -518,6 +517,15 @@ bit allowIdenticalPps
 bit overrideVvtTriggerGaps
 bit useSpiImu;If enabled - use onboard SPI Accelerometer, otherwise listen for CAN messages
 bit enableStagedInjection
+
+angle_t maxAdvanceSmoothing;Maximum absolute ignition timing while smothering;"deg", 1, 0, 10, 70, 0
+angle_t minAdvanceSmoothing;Minimum absolute ignition timing while smothering;"deg", 1, 0, -40, 20, 0
+angle_t increaseAdvanceSmoothing;Maximum ignition timing increase while smothering;"deg", 1, 0, 10, 70, 0
+angle_t decreaseAdvanceSmoothing;Maximum ignition timing decrease while smothering;"deg", 1, 0, -40, 20, 0
+int16_t timeoutAdvanceSmoothing;Time that the advance correction will stay on;"ms", 1, 0, 0, 3000, 0
+bit enableAdvanceSmoothing;Activate this to increment or decrement ignition angle after fast TPS variation, can improve drivability;
+
+bit useIdleAdvanceWhileCoasting;
 
 int16_t tpsMin;Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel\nset tps_min X;"ADC", 1, 0, 0, 1023, 0
 int16_t tpsMax;Full throttle.\nSee also tps1_1AdcChannel\nset tps_max X;"ADC", 1, 0, 0, 1023, 0
