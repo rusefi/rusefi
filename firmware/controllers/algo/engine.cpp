@@ -168,6 +168,7 @@ void Engine::periodicSlowCallback() {
 	checkShutdown();
 
 	module<TpsAccelEnrichment>()->onNewValue(Sensor::getOrZero(SensorType::Tps1));
+	module<IgnitionState>()->onNewValue(engine->engineState.fuelingLoad);
 
 	updateVrThresholdPwm();
 

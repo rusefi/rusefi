@@ -25,6 +25,7 @@
 #include "launch_control.h"
 #include "gppwm_channel.h"
 
+
 #if EFI_ENGINE_CONTROL
 
 // TODO: wow move this into engineState at least for context not to leak from test to test!
@@ -61,6 +62,32 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
   engine->engineState.updateSparkSkip();
 
   advanceAngle += engine->ignitionState.tractionAdvanceDrop;
+
+
+  if(engineConfiguration->enableAdvanceSmoothing && accelThresholdThrigger) {
+	if(engine->rpmCalculator.getRevolutionCounterSinceStart() - accelDeltaCycleThriger > engineConfiguration->timeoutAdvanceSmoothing){
+		accelThresholdThrigger = 0;
+	} else {
+		float maxDeltaIGN = 0;
+		if(accelDeltaLOADPersist > 0) {
+			maxDeltaIGN = engineConfiguration->increaseAdvanceSmoothing * accelDeltaLOADPersist / 100;
+		} else {
+			maxDeltaIGN = engineConfiguration->decreaseAdvanceSmoothing * accelDeltaLOADPersist / 100;
+		}
+		
+		uint32_t cyclesToEndCorrection = (engineConfiguration->timeoutAdvanceSmoothing + accelDeltaCycleThriger - engine->rpmCalculator.getRevolutionCounterSinceStart());
+		float ignitionCorrection = interpolateClamped(engineConfiguration->timeoutAdvanceSmoothing, maxDeltaIGN, 0, 0, cyclesToEndCorrection);
+
+		if(advanceAngle + ignitionCorrection > maxAdvanceSmoothing) {
+			advanceAngle = maxAdvanceSmoothing;
+		} else if (advanceAngle + ignitionCorrection < minAdvanceSmoothing) {
+			advanceAngle = minAdvanceSmoothing;
+		} else {
+			advanceAngle += ignitionCorrection;
+		}
+	}
+  }
+
 
 #if EFI_ANTILAG_SYSTEM
 	if (engine->antilagController.isAntilagCondition) {
@@ -272,6 +299,18 @@ size_t getMultiSparkCount(float rpm) {
 void initIgnitionAdvanceControl() {
 	tcTimingDropTable.initTable(engineConfiguration->tractionControlTimingDrop, engineConfiguration->tractionControlSlipBins, engineConfiguration->tractionControlSpeedBins);
 	tcSparkSkipTable.initTable(engineConfiguration->tractionControlIgnitionSkip, engineConfiguration->tractionControlSlipBins, engineConfiguration->tractionControlSpeedBins);
+}
+
+void IgnitionState::onNewValue(float currentValue) {
+	// REDO THIS WITH ENGINE LOAD
+	const float oldLoadValue = 0;
+
+	if(abs(currentValue - oldLoadValue) > engineConfiguration->deltaLoadSmoothingThreshold) {
+		accelThresholdThrigger = 1;
+		accelDeltaLOADPersist = int(currentValue - oldLoadValue);
+		accelDeltaCycleThriger = engine->rpmCalculator.getRevolutionCounterSinceStart();
+	}
+
 }
 
 #endif // EFI_ENGINE_CONTROL
