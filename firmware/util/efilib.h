@@ -138,3 +138,4 @@ void setBitRangeMsb(uint8_t data[], int totalBitIndex, int bitWidth, int value);
 
 int motorolaMagicFromDbc(int b, int length);
 int getBitRangeMoto(const uint8_t data[], int bitIndex, int bitWidth);
+void setBitRangeMoto(uint8_t data[], int totalBitIndex, int bitWidth, int value);

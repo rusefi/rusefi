@@ -260,6 +260,11 @@ int motorolaMagicFromDbc(int b, int length) {
 }
 
 int getBitRangeMoto(const uint8_t data[], int bitIndex, int bitWidth) {
-	int b = motorolaMagicFromDbc(bitIndex, bitWidth);
+	const int b = motorolaMagicFromDbc(bitIndex, bitWidth);
 	return getBitRangeMsb(data, b, bitWidth);
+}
+
+void setBitRangeMoto(uint8_t data[], const int totalBitIndex, const int bitWidth, const int value) {
+	const int b = motorolaMagicFromDbc(totalBitIndex, bitWidth);
+	return setBitRangeMsb(data, b, bitWidth, value);
 }

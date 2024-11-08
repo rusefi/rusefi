@@ -22,13 +22,18 @@ TEST(dbcMotorola, testFromIntelIntoMotorolaDbc) {
 }
 
 TEST(dbcMotorola, accessRange) {
-  uint8_t data[] = { 0x00, 0x00, 0x03, 0xFF, 0x00, 0x00, 0x00, 0x00};
+    uint8_t data[] = { 0x00, 0x00, 0x03, 0xFF, 0x00, 0x00, 0x00, 0x00};
 
-  EXPECT_EQ(getBitRangeMoto(data, 17, 10), 0x03FF);
+    EXPECT_EQ(getBitRangeMoto(data, 17, 10), 0x03FF);
 
-  EXPECT_EQ(getBitRangeLsb(data, 16, 2), 3);
-  EXPECT_EQ(getBitRangeLsb(data, 24, 8), 0xFF);
+    EXPECT_EQ(getBitRangeLsb(data, 16, 2), 3);
+    EXPECT_EQ(getBitRangeLsb(data, 24, 8), 0xFF);
 
-  // todo: setBitRangeMoto(data, 17, 10, 0x03FF);
-  // todo: assert data is empty now?
+    setBitRangeMoto(data, 17, 10, 0x0234);
+    EXPECT_THAT(data, testing::ElementsAre(0x00, 0x00, 0x02, 0x34, 0x00, 0x00, 0x00, 0x00));
+
+    EXPECT_EQ(getBitRangeMoto(data, 17, 10), 0x0234);
+
+    EXPECT_EQ(getBitRangeLsb(data, 16, 2), 2);
+    EXPECT_EQ(getBitRangeLsb(data, 24, 8), 0x34);
 }
