@@ -31,6 +31,7 @@ struct IIdleController {
 	virtual float getClosedLoop(Phase phase, float tps, float rpm, float target) = 0;
 	virtual float getCrankingTaperFraction() const = 0;
 	virtual bool isIdlingOrTaper() const = 0;
+	virtual bool isCoastingAdvance() const = 0;
 	virtual float getIdleTimingAdjustment(float rpm) = 0;
 };
 
@@ -67,6 +68,10 @@ public:
 	// Allow querying state from outside
 	bool isIdlingOrTaper() const override {
 		return m_lastPhase == Phase::Idling || (engineConfiguration->useSeparateIdleTablesForCrankingTaper && m_lastPhase == Phase::CrankToIdleTaper);
+	}
+
+	bool isCoastingAdvance() const override {
+		return m_lastPhase == Phase::Coasting && engineConfiguration->useIdleAdvanceWhileCoasting;
 	}
 
 	PidIndustrial industrialWithOverrideIdlePid;
