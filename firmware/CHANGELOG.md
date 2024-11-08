@@ -35,6 +35,7 @@ Release template (copy/paste this for new release):
  - Add I-term bounds for Alternator Control #6988
  - knock fuel trim + disable suppression then deceleration #7017
  - TS runtime rate improvement
+ - Added blend tables for target lambda
 
 ### Fixed
  - Removed questionable MAP sampling trigger index option
