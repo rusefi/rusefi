@@ -284,6 +284,7 @@ expected<percent_t> EtbController::getSetpointEtb() {
 
 	// If the pedal map hasn't been set, we can't provide a setpoint.
 	if (!m_pedalProvider) {
+    state = (uint8_t)EtbState::NoPedal;
 		return unexpected;
 	}
 
@@ -495,6 +496,7 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 	}
 
 	if (m_isAutotune) {
+	  state = (uint8_t)EtbState::Autotune;
 		return getClosedLoopAutotune(target, observation);
 	} else {
 		checkJam(target, observation);
@@ -513,14 +515,31 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 #endif
 
 	if (!m_motor) {
+	  state = (uint8_t)EtbState::NoMotor;
 		return;
 	}
 
+	bool isEnabled;
+	if (!isEtbMode()) {
+	  // technical debt: non-ETB usages of DC motor are still mixed into ETB controller?
+    state = (uint8_t)EtbState::NotEbt;
+    isEnabled = true;
+	} else if (!getLimpManager()->allowElectronicThrottle()) {
+	  state = (uint8_t)EtbState::LimpProhibited;
+	  isEnabled = false;
+	} else if (engineConfiguration->pauseEtbControl) {
+	  state = (uint8_t)EtbState::Paused;
+	  isEnabled = false;
+	} else if (!outputValue) {
+	  state = (uint8_t)EtbState::NoOutput;
+	  isEnabled = false;
+	} else {
+	  state = (uint8_t)EtbState::Active;
+	  isEnabled = true;
+	}
+
 	// If not ETB, or ETB is allowed, output is valid, and we aren't paused, output to motor.
-	if (!isEtbMode() ||
-	   (getLimpManager()->allowElectronicThrottle()
-		&& outputValue
-		&& !engineConfiguration->pauseEtbControl)) {
+	if (isEnabled) {
 		m_motor->enable();
 		m_motor->set(ETB_PERCENT_TO_DUTY(outputValue.Value));
 	} else {
@@ -608,6 +627,7 @@ void EtbController::update() {
 #if !EFI_UNIT_TEST
 	// If we didn't get initialized, fail fast
 	if (!m_motor) {
+	  state = (uint8_t)EtbState::FailFast;
 		return;
 	}
 #endif // EFI_UNIT_TEST
@@ -615,6 +635,7 @@ void EtbController::update() {
 	bool isOk = checkStatus();
 
 	if (!isOk) {
+	  state = (uint8_t)EtbState::NotOk;
 		// If engine is stopped and so configured, skip the ETB update entirely
 		// This is quieter and pulls less power than leaving it on all the time
 		m_motor->disable("etb status");

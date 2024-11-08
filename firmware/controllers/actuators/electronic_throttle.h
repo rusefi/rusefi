@@ -38,6 +38,20 @@ void etbAutocal(size_t throttleIndex);
 
 float getSanitizedPedal();
 
+enum class EtbState : uint8_t {
+  Uninitialized, // 0
+  Autotune, // 1
+  NoMotor, // 2
+  NotEbt, // 3
+  LimpProhibited, // 4
+  Paused, // 5
+  NoOutput, // 6
+  Active, // 7
+  NoPedal, // 8
+  FailFast,
+  NotOk
+};
+
 class DcMotor;
 struct pid_s;
 class ValueProvider3D;
