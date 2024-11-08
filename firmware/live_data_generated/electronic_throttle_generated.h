@@ -188,11 +188,9 @@ struct electronic_throttle_s {
 	 */
 	int8_t adjustedEtbTarget = (int8_t)0;
 	/**
-	 * need 4 byte alignment
-	 * units: units
 	 * offset 47
 	 */
-	uint8_t alignmentFill_at_47[1];
+	uint8_t state = (uint8_t)0;
 };
 static_assert(sizeof(electronic_throttle_s) == 48);
 

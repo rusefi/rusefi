@@ -196,7 +196,7 @@ public class ElectronicThrottle {
 	public static final Field ALIGNMENTFILL_AT_43 = Field.create("ALIGNMENTFILL_AT_43", 43, FieldType.INT8).setScale(1.0).setBaseOffset(1672);
 	public static final Field JAMTIMER = Field.create("JAMTIMER", 44, FieldType.INT16).setScale(0.01).setBaseOffset(1672);
 	public static final Field ADJUSTEDETBTARGET = Field.create("ADJUSTEDETBTARGET", 46, FieldType.INT8).setScale(1.0).setBaseOffset(1672);
-	public static final Field ALIGNMENTFILL_AT_47 = Field.create("ALIGNMENTFILL_AT_47", 47, FieldType.INT8).setScale(1.0).setBaseOffset(1672);
+	public static final Field STATE = Field.create("STATE", 47, FieldType.INT8).setScale(1.0).setBaseOffset(1672);
 	public static final Field[] VALUES = {
 	TARGETWITHIDLEPOSITION,
 	TRIM,
@@ -216,6 +216,6 @@ public class ElectronicThrottle {
 	ALIGNMENTFILL_AT_43,
 	JAMTIMER,
 	ADJUSTEDETBTARGET,
-	ALIGNMENTFILL_AT_47,
+	STATE,
 	};
 }
