@@ -1981,7 +1981,7 @@ struct blend_table_s
 	gppwm_channel_e blendParameter
 	gppwm_channel_e yAxisOverride
 
-	int16_t[8] autoscale blendBins;;"", 0.1, 0, -1000, 1000, 1
+	int16_t[8] autoscale blendBins;;"", 0.01, 0, -100, 100, 1
 	uint8_t[8] autoscale blendValues;;"%", 0.5, 0, 0, 100, 1
 end_struct
 
