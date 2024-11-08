@@ -56,6 +56,9 @@ typedef enum {
 /* Driver local variables and types.										*/
 /*==========================================================================*/
 
+static size_t diagOkCounter = 0;
+constexpr size_t DIAG_OK = 0xF;
+
 // Output states
 static const char *diagDiaOut[16] = { "?", "?", "?",
 	"VS Undervoltage", // 0x3
@@ -186,8 +189,12 @@ void Tle9201::process_diag_and_rev(uint8_t diag, uint8_t rev) {
 		if (!(diag & TLE9201_DIAG_EN)) {
 			efiPrintf("* Outputs disabled.");
 		}
+		size_t statusCode = diag & TLE9201_DIAG_OUT_MASK;
+		if (statusCode == DIAG_OK) {
+		  diagOkCounter++;
+		}
 		// print the status of the outputs
-		efiPrintf("* %s", diagDiaOut[diag & TLE9201_DIAG_OUT_MASK]);
+		efiPrintf("* %s OK=%d", diagDiaOut[statusCode], diagOkCounter);
 
 		savedDiag = diag;
 	}
