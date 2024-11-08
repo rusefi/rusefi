@@ -764,7 +764,11 @@ static EtbController* etbControllers[] = { &etb1, &etb2 };
 
 void blinkEtbErrorCodes(bool blinkPhase) {
   for (int i = 0;i<ETB_COUNT;i++) {
-    etbControllers[i]->etbErrorCodeBlinker = blinkPhase ? 0 : etbControllers[i]->etbErrorCode;
+    int8_t etbErrorCode = etbControllers[i]->etbErrorCode;
+    if (etbErrorCode && engine->etbAutoTune) {
+      etbErrorCode = (int8_t)TpsState::AutoTune;
+    }
+    etbControllers[i]->etbErrorCodeBlinker = blinkPhase ? 0 : etbErrorCode;
   }
 }
 
