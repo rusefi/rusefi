@@ -232,6 +232,22 @@ int getBitRangeMsb(const uint8_t data[], int bitIndex, int bitWidth) {
   return getBitRangeCommon(data, bitIndex, bitWidth, -1);
 }
 
+void setBitRangeMsb(uint8_t data[], const int totalBitIndex, const int bitWidth, const int value) {
+	int leftBitWidh = bitWidth;
+	const int byteIndex = totalBitIndex >> 3;
+	const int bitInByteIndex = totalBitIndex - byteIndex * 8;
+	if (bitInByteIndex + leftBitWidh > 8) {
+		const int bitsToHandleNow = 8 - bitInByteIndex;
+		setBitRangeMsb(data, totalBitIndex - bitsToHandleNow, leftBitWidh - bitsToHandleNow, value >> bitsToHandleNow);
+		leftBitWidh = bitsToHandleNow;
+	}
+	const int mask = (1 << leftBitWidh) - 1;
+	data[byteIndex] = data[byteIndex] & (~(mask << bitInByteIndex));
+	const int maskedValue = value & mask;
+	const int shiftedValue = maskedValue << bitInByteIndex;
+	data[byteIndex] = data[byteIndex] | shiftedValue;
+}
+
 int motorolaMagicFromDbc(int b, int length) {
     // https://github.com/ebroecker/canmatrix/wiki/signal-Byteorder
     // convert from lsb0 bit numbering to msb0 bit numbering (or msb0 to lsb0)
@@ -244,6 +260,11 @@ int motorolaMagicFromDbc(int b, int length) {
 }
 
 int getBitRangeMoto(const uint8_t data[], int bitIndex, int bitWidth) {
-	int b = motorolaMagicFromDbc(bitIndex, bitWidth);
+	const int b = motorolaMagicFromDbc(bitIndex, bitWidth);
 	return getBitRangeMsb(data, b, bitWidth);
+}
+
+void setBitRangeMoto(uint8_t data[], const int totalBitIndex, const int bitWidth, const int value) {
+	const int b = motorolaMagicFromDbc(totalBitIndex, bitWidth);
+	return setBitRangeMsb(data, b, bitWidth, value);
 }
