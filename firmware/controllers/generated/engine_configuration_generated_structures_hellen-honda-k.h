@@ -4701,7 +4701,7 @@ struct blend_table_s {
 	/**
 	 * offset 162
 	 */
-	scaled_channel<int16_t, 10, 1> blendBins[8];
+	scaled_channel<int16_t, 100, 1> blendBins[8];
 	/**
 	 * units: %
 	 * offset 178
@@ -5462,9 +5462,13 @@ struct persistent_config_s {
 	 */
 	blend_table_s ignBlends[IGN_BLEND_COUNT];
 	/**
-	 * offset 20652
+	 * offset 20276
 	 */
 	blend_table_s veBlends[VE_BLEND_COUNT];
+	/**
+	 * offset 21028
+	 */
+	blend_table_s lambdaBlends[LAMBDA_BLEND_COUNT];
 	/**
 	 * units: %
 	 * offset 21404

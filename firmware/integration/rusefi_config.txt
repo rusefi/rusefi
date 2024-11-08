@@ -1981,12 +1981,13 @@ struct blend_table_s
 	gppwm_channel_e blendParameter
 	gppwm_channel_e yAxisOverride
 
-	int16_t[8] autoscale blendBins;;"", 0.1, 0, -1000, 1000, 1
+	int16_t[8] autoscale blendBins;;"", 0.01, 0, -100, 100, 1
 	uint8_t[8] autoscale blendValues;;"%", 0.5, 0, 0, 100, 1
 end_struct
 
 blend_table_s[IGN_BLEND_COUNT iterate] ignBlends
 blend_table_s[VE_BLEND_COUNT iterate] veBlends
+blend_table_s[LAMBDA_BLEND_COUNT iterate] lambdaBlends
 
 uint16_t[12] autoscale throttleEstimateEffectiveAreaBins;;"%", 0.1, 0, 0, 100, 1
 uint16_t[12] autoscale throttleEstimateEffectiveAreaValues;In units of g/s normalized to choked flow conditions;"g/s", 0.1, 0, 0, 6500, 1

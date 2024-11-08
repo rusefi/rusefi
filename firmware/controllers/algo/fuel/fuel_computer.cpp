@@ -7,6 +7,7 @@
 #include "table_helper.h"
 #include "fuel_math.h"
 #include "fuel_computer.h"
+#include "gppwm_channel.h"
 
 #if EFI_ENGINE_CONTROL
 
@@ -58,11 +59,22 @@ float FuelComputer::getStoichiometricRatio() const {
 
 
 float FuelComputer::getTargetLambda(float rpm, float load) const {
-	return interpolate3d(
+	float baseLambda = interpolate3d(
 		config->lambdaTable,
 		config->lambdaLoadBins, load,
 		config->lambdaRpmBins, rpm
 	);
+
+	for (size_t i = 0; i < efi::size(config->lambdaBlends); i++) {
+		auto result = calculateBlend(config->lambdaBlends[i], rpm, load);
+
+		engine->outputChannels.lambdaBlendParameter[i] = result.BlendParameter;
+		engine->outputChannels.lambdaBlendBias[i] = result.Bias;
+		engine->outputChannels.lambdaBlendOutput[i] = result.Value;
+
+		baseLambda += result.Value;
+	}
+	return baseLambda;
 }
 
 float FuelComputer::getTargetLambdaLoadAxis(float defaultLoad) const {
