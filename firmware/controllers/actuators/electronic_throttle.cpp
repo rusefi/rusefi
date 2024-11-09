@@ -225,7 +225,7 @@ void EtbController::showStatus() {
 
 expected<percent_t> EtbController::observePlant() {
   expected<percent_t> plant = Sensor::get(m_positionSensor);
-  validPosition = plant.Valid;
+  validPlantPosition = plant.Valid;
 	return plant;
 }
 
@@ -648,6 +648,10 @@ void EtbController::update() {
 	}
 
 	ClosedLoopController::update();
+
+	if (isEtbMode() && !validPlantPosition) {
+	  etbErrorCode = (int8_t)TpsState::TpsError;
+	}
 }
 
 void EtbController::checkJam(percent_t setpoint, percent_t observation) {

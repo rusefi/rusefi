@@ -17,7 +17,7 @@ struct_no_prefix electronic_throttle_s
 
 	bit etbRevLimitActive
 	bit jamDetected
-	bit validPosition
+	bit validPlantPosition
 
 	uint16_t etbTpsErrorCounter;"ETB TPS error counter";"count", 1,0, 0,3, 0,@@GAUGE_CATEGORY_ETB@@
 	uint16_t etbPpsErrorCounter;"ETB pedal error counter";"count", 1,0, 0,3, 0,@@GAUGE_CATEGORY_ETB@@
