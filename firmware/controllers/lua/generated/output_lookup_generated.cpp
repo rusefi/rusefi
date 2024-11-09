@@ -937,15 +937,6 @@ float getOutputValueByName(const char *name) {
 // tractionAdvanceDrop
 		case -899895696:
 			return engine->ignitionState.tractionAdvanceDrop;
-// accelThresholdThrigger
-		case -748626810:
-			return engine->ignitionState.accelThresholdThrigger;
-// accelDeltaLOADPersist
-		case 334346545:
-			return engine->ignitionState.accelDeltaLOADPersist;
-// accelDeltaCicleThriger
-		case -1454209028:
-			return engine->ignitionState.accelDeltaCicleThriger;
 // dwellVoltageCorrection
 		case -80612537:
 			return engine->ignitionState.dwellVoltageCorrection;
