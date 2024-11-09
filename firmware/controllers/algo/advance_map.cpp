@@ -63,6 +63,7 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 
   advanceAngle += engine->ignitionState.tractionAdvanceDrop;
 
+	/*
   if(engineConfiguration->enableAdvanceSmoothing && engine->ignitionState.accelThresholdThrigger) {
 	if(engine->rpmCalculator.getRevolutionCounterSinceStart() - engine->ignitionState.accelDeltaCycleThriger > engineConfiguration->timeoutAdvanceSmoothing){
 		engine->ignitionState.accelThresholdThrigger = 0;
@@ -86,6 +87,7 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 		}
 	}
   }
+	*/
 
 
 #if EFI_ANTILAG_SYSTEM
@@ -305,9 +307,9 @@ void IgnitionState::onNewValue(float currentValue) {
 	const float oldLoadValue = 0;
 
 	if(abs(currentValue - oldLoadValue) > engineConfiguration->deltaLoadSmoothingThreshold) {
-		accelThresholdThrigger = 1;
-		accelDeltaLOADPersist = int(currentValue - oldLoadValue);
-		accelDeltaCycleThriger = engine->rpmCalculator.getRevolutionCounterSinceStart();
+		//accelThresholdThrigger = 1;
+		//accelDeltaLOADPersist = int(currentValue - oldLoadValue);
+		//accelDeltaCycleThriger = engine->rpmCalculator.getRevolutionCounterSinceStart();
 	}
 
 }
