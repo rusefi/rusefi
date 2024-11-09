@@ -224,7 +224,9 @@ void EtbController::showStatus() {
 }
 
 expected<percent_t> EtbController::observePlant() {
-	return Sensor::get(m_positionSensor);
+  expected<percent_t> plant = Sensor::get(m_positionSensor);
+  validPosition = plant.Valid;
+	return plant;
 }
 
 void EtbController::setIdlePosition(percent_t pos) {
