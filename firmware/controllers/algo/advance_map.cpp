@@ -63,18 +63,18 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 
   advanceAngle += engine->ignitionState.tractionAdvanceDrop;
 
-  if(engineConfiguration->enableAdvanceSmoothing && IgnitionState::accelThresholdThrigger) {
-	if(engine->rpmCalculator.getRevolutionCounterSinceStart() - IgnitionState::accelDeltaCycleThriger > engineConfiguration->timeoutAdvanceSmoothing){
-		IgnitionState::accelThresholdThrigger = 0;
+  if(engineConfiguration->enableAdvanceSmoothing && engine->ignitionState.accelThresholdThrigger) {
+	if(engine->rpmCalculator.getRevolutionCounterSinceStart() - engine->ignitionState.accelDeltaCycleThriger > engineConfiguration->timeoutAdvanceSmoothing){
+		engine->ignitionState.accelThresholdThrigger = 0;
 	} else {
 		float maxDeltaIGN = 0;
-		if(IgnitionState::accelDeltaLOADPersist > 0) {
-			maxDeltaIGN = engineConfiguration->increaseAdvanceSmoothing * IgnitionState::accelDeltaLOADPersist / 100;
+		if(engine->ignitionState.accelDeltaLOADPersist > 0) {
+			maxDeltaIGN = engineConfiguration->increaseAdvanceSmoothing * engine->ignitionState.accelDeltaLOADPersist / 100;
 		} else {
-			maxDeltaIGN = engineConfiguration->decreaseAdvanceSmoothing * IgnitionState::accelDeltaLOADPersist / 100;
+			maxDeltaIGN = engineConfiguration->decreaseAdvanceSmoothing * engine->ignitionState.accelDeltaLOADPersist / 100;
 		}
 
-		uint32_t cyclesToEndCorrection = (engineConfiguration->timeoutAdvanceSmoothing + IgnitionState::accelDeltaCycleThriger - engine->rpmCalculator.getRevolutionCounterSinceStart());
+		uint32_t cyclesToEndCorrection = (engineConfiguration->timeoutAdvanceSmoothing + engine->ignitionState.accelDeltaCycleThriger - engine->rpmCalculator.getRevolutionCounterSinceStart());
 		float ignitionCorrection = interpolateClamped(engineConfiguration->timeoutAdvanceSmoothing, maxDeltaIGN, 0, 0, cyclesToEndCorrection);
 
 		if(advanceAngle + ignitionCorrection > engineConfiguration->maxAdvanceSmoothing) {
