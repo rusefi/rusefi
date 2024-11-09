@@ -188,6 +188,7 @@ public class ElectronicThrottle {
 	public static final Field ETBCURRENTADJUSTEDTARGET = Field.create("ETBCURRENTADJUSTEDTARGET", 28, FieldType.FLOAT).setBaseOffset(1672);
 	public static final Field ETBREVLIMITACTIVE = Field.create("ETBREVLIMITACTIVE", 32, FieldType.BIT, 0).setBaseOffset(1672);
 	public static final Field JAMDETECTED = Field.create("JAMDETECTED", 32, FieldType.BIT, 1).setBaseOffset(1672);
+	public static final Field VALIDPOSITION = Field.create("VALIDPOSITION", 32, FieldType.BIT, 2).setBaseOffset(1672);
 	public static final Field ETBTPSERRORCOUNTER = Field.create("ETBTPSERRORCOUNTER", 36, FieldType.INT16).setScale(1.0).setBaseOffset(1672);
 	public static final Field ETBPPSERRORCOUNTER = Field.create("ETBPPSERRORCOUNTER", 38, FieldType.INT16).setScale(1.0).setBaseOffset(1672);
 	public static final Field ETBERRORCODE = Field.create("ETBERRORCODE", 40, FieldType.INT8).setScale(1.0).setBaseOffset(1672);
@@ -208,6 +209,7 @@ public class ElectronicThrottle {
 	ETBCURRENTADJUSTEDTARGET,
 	ETBREVLIMITACTIVE,
 	JAMDETECTED,
+	VALIDPOSITION,
 	ETBTPSERRORCOUNTER,
 	ETBPPSERRORCOUNTER,
 	ETBERRORCODE,
