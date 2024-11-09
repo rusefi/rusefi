@@ -55,7 +55,7 @@ struct electronic_throttle_s {
 	bool jamDetected : 1 {};
 	/**
 	offset 32 bit 2 */
-	bool validPosition : 1 {};
+	bool validPlantPosition : 1 {};
 	/**
 	offset 32 bit 3 */
 	bool unusedBit_11_3 : 1 {};
