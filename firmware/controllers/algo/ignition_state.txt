@@ -15,10 +15,6 @@ struct_no_prefix ignition_state_s
 
 	int16_t autoscale tractionAdvanceDrop;Traction: timing correction;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 1
 
-bit accelThresholdThrigger;
-int accelDeltaLOADPersist;
-uint32_t accelDeltaCycleThriger;
-
 float dwellVoltageCorrection;Ign: Dwell voltage correction
 
     float luaTimingAdd;Ign: Lua timing add;"deg",1, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
