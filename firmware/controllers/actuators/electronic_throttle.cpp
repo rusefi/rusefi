@@ -1111,3 +1111,4 @@ const electronic_throttle_s* getLiveData(size_t idx) {
 	return nullptr;
 #endif
 }
+
