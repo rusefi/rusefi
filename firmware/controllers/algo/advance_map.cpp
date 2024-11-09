@@ -63,25 +63,24 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 
   advanceAngle += engine->ignitionState.tractionAdvanceDrop;
 
-
-  if(engineConfiguration->enableAdvanceSmoothing && accelThresholdThrigger) {
-	if(engine->rpmCalculator.getRevolutionCounterSinceStart() - accelDeltaCycleThriger > engineConfiguration->timeoutAdvanceSmoothing){
-		accelThresholdThrigger = 0;
+  if(engineConfiguration->enableAdvanceSmoothing && IgnitionState::accelThresholdThrigger) {
+	if(engine->rpmCalculator.getRevolutionCounterSinceStart() - IgnitionState::accelDeltaCycleThriger > engineConfiguration->timeoutAdvanceSmoothing){
+		IgnitionState::accelThresholdThrigger = 0;
 	} else {
 		float maxDeltaIGN = 0;
-		if(accelDeltaLOADPersist > 0) {
-			maxDeltaIGN = engineConfiguration->increaseAdvanceSmoothing * accelDeltaLOADPersist / 100;
+		if(IgnitionState::accelDeltaLOADPersist > 0) {
+			maxDeltaIGN = engineConfiguration->increaseAdvanceSmoothing * IgnitionState::accelDeltaLOADPersist / 100;
 		} else {
-			maxDeltaIGN = engineConfiguration->decreaseAdvanceSmoothing * accelDeltaLOADPersist / 100;
+			maxDeltaIGN = engineConfiguration->decreaseAdvanceSmoothing * IgnitionState::accelDeltaLOADPersist / 100;
 		}
-		
-		uint32_t cyclesToEndCorrection = (engineConfiguration->timeoutAdvanceSmoothing + accelDeltaCycleThriger - engine->rpmCalculator.getRevolutionCounterSinceStart());
+
+		uint32_t cyclesToEndCorrection = (engineConfiguration->timeoutAdvanceSmoothing + IgnitionState::accelDeltaCycleThriger - engine->rpmCalculator.getRevolutionCounterSinceStart());
 		float ignitionCorrection = interpolateClamped(engineConfiguration->timeoutAdvanceSmoothing, maxDeltaIGN, 0, 0, cyclesToEndCorrection);
 
-		if(advanceAngle + ignitionCorrection > maxAdvanceSmoothing) {
-			advanceAngle = maxAdvanceSmoothing;
-		} else if (advanceAngle + ignitionCorrection < minAdvanceSmoothing) {
-			advanceAngle = minAdvanceSmoothing;
+		if(advanceAngle + ignitionCorrection > engineConfiguration->maxAdvanceSmoothing) {
+			advanceAngle = engineConfiguration->maxAdvanceSmoothing;
+		} else if (advanceAngle + ignitionCorrection < engineConfiguration->minAdvanceSmoothing) {
+			advanceAngle = engineConfiguration->minAdvanceSmoothing;
 		} else {
 			advanceAngle += ignitionCorrection;
 		}

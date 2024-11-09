@@ -17,7 +17,7 @@ struct_no_prefix ignition_state_s
 
 bit accelThresholdThrigger;
 int accelDeltaLOADPersist;
-uint32_t accelDeltaCicleThriger;
+uint32_t accelDeltaCycleThriger;
 
 float dwellVoltageCorrection;Ign: Dwell voltage correction
 
