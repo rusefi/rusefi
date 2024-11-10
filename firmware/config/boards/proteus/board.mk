@@ -49,6 +49,8 @@ DDEFS += -DOPENBLT_CAN_TX_PIN=1
 # We are running on Proteus hardware!
 DDEFS += -DHW_PROTEUS=1
 
+DDEFS += -DLUA_USER_HEAP=32000
+
 ifeq ($(PROJECT_CPU),ARCH_STM32F7)
   # todo: KNOCK_SPECTROGRAM to use big_buffer
 	DDEFS += -DKNOCK_SPECTROGRAM=TRUE
