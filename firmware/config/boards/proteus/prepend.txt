@@ -26,5 +26,5 @@
 
 
 
-#define LUA_SCRIPT_SIZE 23000
+#define LUA_SCRIPT_SIZE 26000
 
