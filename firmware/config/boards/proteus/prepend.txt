@@ -28,6 +28,4 @@
 #define CLT_TIMING_CURVE_SIZE 3
 #define IAT_IGN_CORR_COUNT 4
 
-! f4 does not like this #define LUA_SCRIPT_SIZE 32000
-#define LUA_SCRIPT_SIZE 13500
-
+#define LUA_SCRIPT_SIZE 32000
