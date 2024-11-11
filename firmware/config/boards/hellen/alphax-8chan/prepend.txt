@@ -21,7 +21,7 @@
 
 
 
-#define LUA_SCRIPT_SIZE 26000
+! f4 and debug would not be happy #define LUA_SCRIPT_SIZE 26000
 
 #define show_8chan_presets true
 
