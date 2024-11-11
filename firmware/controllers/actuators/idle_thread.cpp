@@ -169,7 +169,14 @@ percent_t IdleController::getOpenLoop(Phase phase, float rpm, float clt, SensorR
 	// If coasting (and enabled), use the coasting position table instead of normal open loop
 	isIacTableForCoasting = engineConfiguration->useIacTableForCoasting && isIdleCoasting;
 	if (isIacTableForCoasting) {
-		return interpolate2d(rpm, config->iacCoastingRpmBins, config->iacCoasting);
+		percent_t CoastingIACPosition = interpolate2d(rpm, config->iacCoastingRpmBins, config->iacCoasting) * interpolate2d(clt, config->cltIdleCorrBins, config->cltIdleCorr);
+
+		// Now we bump it by the AC/fan amount if necessary
+		CoastingIACPosition += engine->module<AcController>().unmock().acButtonState ? engineConfiguration->acIdleExtraOffset : 0;
+		CoastingIACPosition += enginePins.fanRelay.getLogicValue() ? engineConfiguration->fan1ExtraIdle : 0;
+		CoastingIACPosition += enginePins.fanRelay2.getLogicValue() ? engineConfiguration->fan2ExtraIdle : 0;
+
+		return CoastingIACPosition;
 	}
 
 	percent_t running = getRunningOpenLoop(phase, rpm, clt, tps);

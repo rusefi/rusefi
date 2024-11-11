@@ -27,6 +27,7 @@ protected:
 	virtual float getFanOnTemp() = 0;
 	virtual float getFanOffTemp() = 0;
 	virtual bool enableWithAc() = 0;
+	virtual uint32_t fanAcThreshold() = 0;
 	virtual bool disableWhenStopped() = 0;
 	virtual int disableAtSpeed() = 0;
 };
@@ -46,6 +47,10 @@ struct FanControl1 : public FanController {
 
 	bool enableWithAc() {
 		return engineConfiguration->enableFan1WithAc;
+	}
+
+	uint32_t fanAcThreshold() {
+		return uint32_t(engineConfiguration->Fan1AcThreshold);
 	}
 
 	bool disableWhenStopped() {
@@ -72,6 +77,10 @@ struct FanControl2 : public FanController {
 
 	bool enableWithAc() {
 		return engineConfiguration->enableFan2WithAc;
+	}
+
+	uint32_t fanAcThreshold() {
+		return uint32_t(engineConfiguration->Fan2AcThreshold);
 	}
 
 	bool disableWhenStopped() {

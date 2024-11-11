@@ -527,6 +527,8 @@ int16_t autoscale deltaLoadSmoothingThreshold;Minimum engine load that correctio
 bit enableAdvanceSmoothing;Activate this to increment or decrement ignition angle after fast TPS variation, can improve drivability;
 uint8_t strenghtAdvanceSmoothing;Strenght of advance correction;"%", 1, 0, 0, 100, 0
 
+uint8_t Fan1AcThreshold;Theshold to enable fan 1 after ac enable; "sec", 1, 0, 0, 100, 0
+uint8_t Fan2AcThreshold;Theshold to enable fan 2 after ac enable; "sec", 1, 0, 0, 100, 0
 
 bit useIdleAdvanceWhileCoasting;Use idle ignition table while coasting;
 

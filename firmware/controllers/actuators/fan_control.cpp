@@ -20,10 +20,22 @@ bool FanController::getState(bool acActive, bool lastState) {
 	notRunning = true;
 #endif
 
+	if(enabledAcOld != acActive) {
+		if(acActive) {
+			acEnableTime = getTimeNowS();
+		}
+		enabledAcOld = acActive;
+	}
+
+	if(enableWithAc() && acActive && getTimeNowS() - acEnableTime >= fanAcThreshold()) {
+		enabledForAc = 1;
+	} else {
+		enabledForAc = 0;
+	}
+
 	disabledBySpeed = disableAtSpeed() > 0 && vss.Valid && vss.Value > disableAtSpeed();
 	disabledWhileEngineStopped = notRunning && disableWhenStopped();
 	brokenClt = !clt;
-	enabledForAc = enableWithAc() && acActive;
 	hot = clt.value_or(0) > getFanOnTemp();
 	cold = clt.value_or(0) < getFanOffTemp();
 
