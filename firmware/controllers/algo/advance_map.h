@@ -25,11 +25,6 @@ void initIgnitionAdvanceControl();
 
 class IgnitionState : public ignition_state_s {
 public:
-	/*
-	bool accelThresholdThrigger;
-	int accelDeltaLOADPersist;
-	uint32_t accelDeltaCycleThriger;
-	*/
 	floatms_t getSparkDwell(float rpm);
 	void onNewValue(float currentValue);
 };

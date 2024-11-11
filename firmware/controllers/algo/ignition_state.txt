@@ -21,5 +21,10 @@ float dwellVoltageCorrection;Ign: Dwell voltage correction
     float luaTimingMult;Ign: Lua timing mult;"deg",1, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
 bit luaIgnitionSkip;Ign: Lua Spark Skip
 
+bit accelThresholdThrigger;
+int16_t accelDeltaLOADPersist;
+uint32_t accelDeltaCycleThriger;
+float oldLoadValue;
+
 end_struct
 

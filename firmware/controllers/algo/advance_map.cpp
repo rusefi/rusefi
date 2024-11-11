@@ -63,20 +63,19 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 
   advanceAngle += engine->ignitionState.tractionAdvanceDrop;
 
-	/*
   if(engineConfiguration->enableAdvanceSmoothing && engine->ignitionState.accelThresholdThrigger) {
 	if(engine->rpmCalculator.getRevolutionCounterSinceStart() - engine->ignitionState.accelDeltaCycleThriger > engineConfiguration->timeoutAdvanceSmoothing){
 		engine->ignitionState.accelThresholdThrigger = 0;
 	} else {
 		float maxDeltaIGN = 0;
 		if(engine->ignitionState.accelDeltaLOADPersist > 0) {
-			maxDeltaIGN = engineConfiguration->increaseAdvanceSmoothing * engine->ignitionState.accelDeltaLOADPersist / 100;
+			maxDeltaIGN = - (engineConfiguration->increaseAdvanceSmoothing * engine->ignitionState.accelDeltaLOADPersist / 100);
 		} else {
-			maxDeltaIGN = engineConfiguration->decreaseAdvanceSmoothing * engine->ignitionState.accelDeltaLOADPersist / 100;
+			maxDeltaIGN = (engineConfiguration->decreaseAdvanceSmoothing * engine->ignitionState.accelDeltaLOADPersist / 100);
 		}
 
 		uint32_t cyclesToEndCorrection = (engineConfiguration->timeoutAdvanceSmoothing + engine->ignitionState.accelDeltaCycleThriger - engine->rpmCalculator.getRevolutionCounterSinceStart());
-		float ignitionCorrection = interpolateClamped(engineConfiguration->timeoutAdvanceSmoothing, maxDeltaIGN, 0, 0, cyclesToEndCorrection);
+		float ignitionCorrection = interpolateClamped(engineConfiguration->timeoutAdvanceSmoothing, maxDeltaIGN, 0, 0, cyclesToEndCorrection) * engineConfiguration->strenghtAdvanceSmoothing * 0.01f;
 
 		if(advanceAngle + ignitionCorrection > engineConfiguration->maxAdvanceSmoothing) {
 			advanceAngle = engineConfiguration->maxAdvanceSmoothing;
@@ -87,8 +86,6 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 		}
 	}
   }
-	*/
-
 
 #if EFI_ANTILAG_SYSTEM
 	if (engine->antilagController.isAntilagCondition) {
@@ -303,14 +300,13 @@ void initIgnitionAdvanceControl() {
 }
 
 void IgnitionState::onNewValue(float currentValue) {
-	// REDO THIS WITH ENGINE LOAD
-	const float oldLoadValue = 0;
 
 	if(abs(currentValue - oldLoadValue) > engineConfiguration->deltaLoadSmoothingThreshold) {
-		//accelThresholdThrigger = 1;
-		//accelDeltaLOADPersist = int(currentValue - oldLoadValue);
-		//accelDeltaCycleThriger = engine->rpmCalculator.getRevolutionCounterSinceStart();
+		accelThresholdThrigger = 1;
+		accelDeltaLOADPersist = int(currentValue - oldLoadValue);
+		accelDeltaCycleThriger = engine->rpmCalculator.getRevolutionCounterSinceStart();
 	}
+	oldLoadValue = currentValue;
 
 }
 
