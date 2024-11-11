@@ -210,6 +210,37 @@ TEST(limp, boostCut) {
 	EXPECT_TRUE(dut.allowInjection());
 }
 
+TEST(limp, boostCutUint8Overflow) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	// Cut above 1500kPa
+	engineConfiguration->boostCutPressure = 1500;
+	engineConfiguration->boostCutPressureHyst = 20;
+
+	LimpManager dut;
+
+	// Below threshold, injection allowed
+	Sensor::setMockValue(SensorType::Map, 80);
+	dut.updateState(1000, 0);
+	EXPECT_TRUE(dut.allowInjection());
+
+	// Above rising threshold, injection cut
+	Sensor::setMockValue(SensorType::Map, 1600);
+	dut.updateState(1000, 0);
+	EXPECT_FALSE(dut.allowInjection());
+
+	// Below rising threshold, but should have hysteresis, so not cut yet
+	Sensor::setMockValue(SensorType::Map, 1495);
+	dut.updateState(1000, 0);
+	EXPECT_FALSE(dut.allowInjection());
+
+	// Below falling threshold, fuel restored
+	Sensor::setMockValue(SensorType::Map, 79);
+	dut.updateState(1000, 0);
+	EXPECT_TRUE(dut.allowInjection());
+}
+
+
 TEST(limp, oilPressureStartupFailureCase) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->minOilPressureAfterStart = 200;
