@@ -46,6 +46,7 @@ Release template (copy/paste this for new release):
  - V-Twin MAP phase sense does not need to always wait for sync #6985
  - Organize sensor categories #6856
  - USB serial is sometimes lost #6595
+ - fix detect cylinder for knock then wasted_spark #7062
 
 ## August 2024 "Day 898"
 
