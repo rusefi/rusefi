@@ -190,13 +190,34 @@
 /*
  * ICU driver system settings.
  */
+#ifndef STM32_ICU_USE_TIM1
 #define STM32_ICU_USE_TIM1                  FALSE
+#endif
+
+#ifndef STM32_ICU_USE_TIM2
 #define STM32_ICU_USE_TIM2                  TRUE
+#endif
+
+#ifndef STM32_ICU_USE_TIM3
 #define STM32_ICU_USE_TIM3                  FALSE
+#endif
+
+#ifndef STM32_ICU_USE_TIM4
 #define STM32_ICU_USE_TIM4                  FALSE
+#endif
+
+#ifndef STM32_ICU_USE_TIM5
 #define STM32_ICU_USE_TIM5                  FALSE
+#endif
+
+#ifndef STM32_ICU_USE_TIM8
 #define STM32_ICU_USE_TIM8                  FALSE
+#endif
+
+#ifndef STM32_ICU_USE_TIM9
 #define STM32_ICU_USE_TIM9                  FALSE
+#endif
+
 #define STM32_ICU_TIM1_IRQ_PRIORITY         ICU_PRIORITY
 #define STM32_ICU_TIM2_IRQ_PRIORITY         ICU_PRIORITY
 #define STM32_ICU_TIM3_IRQ_PRIORITY         ICU_PRIORITY
@@ -220,8 +241,14 @@
  * PWM driver system settings.
  */
 #define STM32_PWM_USE_ADVANCED              FALSE
+
+#ifndef STM32_PWM_USE_TIM1
 #define STM32_PWM_USE_TIM1                  TRUE
+#endif
+
+#ifndef STM32_PWM_USE_TIM2
 #define STM32_PWM_USE_TIM2                  FALSE
+#endif
 
 #ifndef STM32_PWM_USE_TIM3
 // Hellen often uses TIM3 for ETB
