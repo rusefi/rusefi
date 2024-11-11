@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/ignition_state.txt Thu Feb 29 00:39:49 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/ignition_state.txt
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -180,4 +180,4 @@ struct ignition_state_s {
 static_assert(sizeof(ignition_state_s) == 40);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/ignition_state.txt Thu Feb 29 00:39:49 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/ignition_state.txt

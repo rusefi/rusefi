@@ -25,6 +25,7 @@
 #include "launch_control.h"
 #include "gppwm_channel.h"
 
+
 #if EFI_ENGINE_CONTROL
 
 // TODO: wow move this into engineState at least for context not to leak from test to test!
@@ -62,6 +63,30 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 
   advanceAngle += engine->ignitionState.tractionAdvanceDrop;
 
+  if(engineConfiguration->enableAdvanceSmoothing && engine->ignitionState.accelThresholdThrigger) {
+	if(engine->rpmCalculator.getRevolutionCounterSinceStart() - engine->ignitionState.accelDeltaCycleThriger > engineConfiguration->timeoutAdvanceSmoothing){
+		engine->ignitionState.accelThresholdThrigger = 0;
+	} else {
+		float maxDeltaIGN = 0;
+		if(engine->ignitionState.accelDeltaLOADPersist > 0) {
+			maxDeltaIGN = - (engineConfiguration->increaseAdvanceSmoothing * engine->ignitionState.accelDeltaLOADPersist / 100);
+		} else {
+			maxDeltaIGN = (engineConfiguration->decreaseAdvanceSmoothing * engine->ignitionState.accelDeltaLOADPersist / 100);
+		}
+
+		uint32_t cyclesToEndCorrection = (engineConfiguration->timeoutAdvanceSmoothing + engine->ignitionState.accelDeltaCycleThriger - engine->rpmCalculator.getRevolutionCounterSinceStart());
+		float ignitionCorrection = interpolateClamped(engineConfiguration->timeoutAdvanceSmoothing, maxDeltaIGN, 0, 0, cyclesToEndCorrection) * engineConfiguration->strenghtAdvanceSmoothing * 0.01f;
+
+		if(advanceAngle + ignitionCorrection > engineConfiguration->maxAdvanceSmoothing) {
+			advanceAngle = engineConfiguration->maxAdvanceSmoothing;
+		} else if (advanceAngle + ignitionCorrection < engineConfiguration->minAdvanceSmoothing) {
+			advanceAngle = engineConfiguration->minAdvanceSmoothing;
+		} else {
+			advanceAngle += ignitionCorrection;
+		}
+	}
+  }
+
 #if EFI_ANTILAG_SYSTEM
 	if (engine->antilagController.isAntilagCondition) {
 		float throttleIntent = Sensor::getOrZero(SensorType::DriverThrottleIntent);
@@ -88,7 +113,7 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 	// get advance from the separate table for Idle
 #if EFI_IDLE_CONTROL
 	if (engineConfiguration->useSeparateAdvanceForIdle &&
-		engine->module<IdleController>()->isIdlingOrTaper()) {
+		(engine->module<IdleController>()->isIdlingOrTaper() || engine->module<IdleController>()->isCoastingAdvance())) {
 		float idleAdvance = interpolate2d(rpm, config->idleAdvanceBins, config->idleAdvance);
 
 		auto tps = Sensor::get(SensorType::DriverThrottleIntent);
@@ -272,6 +297,17 @@ size_t getMultiSparkCount(float rpm) {
 void initIgnitionAdvanceControl() {
 	tcTimingDropTable.initTable(engineConfiguration->tractionControlTimingDrop, engineConfiguration->tractionControlSlipBins, engineConfiguration->tractionControlSpeedBins);
 	tcSparkSkipTable.initTable(engineConfiguration->tractionControlIgnitionSkip, engineConfiguration->tractionControlSlipBins, engineConfiguration->tractionControlSpeedBins);
+}
+
+void IgnitionState::onNewValue(float currentValue) {
+
+	if(abs(currentValue - oldLoadValue) > engineConfiguration->deltaLoadSmoothingThreshold) {
+		accelThresholdThrigger = 1;
+		accelDeltaLOADPersist = int(currentValue - oldLoadValue);
+		accelDeltaCycleThriger = engine->rpmCalculator.getRevolutionCounterSinceStart();
+	}
+	oldLoadValue = currentValue;
+
 }
 
 #endif // EFI_ENGINE_CONTROL

@@ -163,6 +163,30 @@ If enabled - use onboard SPI Accelerometer, otherwise listen for CAN messages
 ### enableStagedInjection
 
 
+### maxAdvanceSmoothing
+Maximum absolute ignition timing while smothering
+
+### minAdvanceSmoothing
+Minimum absolute ignition timing while smothering
+
+### increaseAdvanceSmoothing
+Maximum ignition timing increase while smothering
+
+### decreaseAdvanceSmoothing
+Maximum ignition timing decrease while smothering
+
+### timeoutAdvanceSmoothing
+Engine cicles that the advance correction will stay on
+
+### deltaLoadSmoothingThreshold
+Minimum engine load that corrections will occour
+
+### enableAdvanceSmoothing
+Activate this to increment or decrement ignition angle after fast TPS variation, can improve drivability;
+
+### useIdleAdvanceWhileCoasting
+Use idle ignition table while coasting;
+
 ### tpsMin
 Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel\nset tps_min X
 

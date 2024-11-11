@@ -518,6 +518,18 @@ bit overrideVvtTriggerGaps
 bit useSpiImu;If enabled - use onboard SPI Accelerometer, otherwise listen for CAN messages
 bit enableStagedInjection
 
+angle_t maxAdvanceSmoothing;Maximum absolute ignition timing while smothering;"deg", 1, 0, 10, 70, 0
+angle_t minAdvanceSmoothing;Minimum absolute ignition timing while smothering;"deg", 1, 0, -40, 20, 0
+angle_t increaseAdvanceSmoothing;Maximum ignition timing increase while smothering;"deg", 1, 0, 10, 70, 0
+angle_t decreaseAdvanceSmoothing;Maximum ignition timing decrease while smothering;"deg", 1, 0, -40, 20, 0
+int16_t timeoutAdvanceSmoothing;Engine cicles that the advance correction will stay on;"cicles", 1, 0, 0, 3000, 0
+int16_t autoscale deltaLoadSmoothingThreshold;Minimum engine load that corrections will occour;"%", 1, 0, 0, 300, 0
+bit enableAdvanceSmoothing;Activate this to increment or decrement ignition angle after fast TPS variation, can improve drivability;
+uint8_t strenghtAdvanceSmoothing;Strenght of advance correction;"%", 1, 0, 0, 100, 0
+
+
+bit useIdleAdvanceWhileCoasting;Use idle ignition table while coasting;
+
 int16_t tpsMin;Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel\nset tps_min X;"ADC", 1, 0, 0, 1023, 0
 int16_t tpsMax;Full throttle.\nSee also tps1_1AdcChannel\nset tps_max X;"ADC", 1, 0, 0, 1023, 0
 

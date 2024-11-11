@@ -2,5 +2,5 @@
 // was generated automatically by rusEFI tool config_definition-all.jar based on gen_config.sh by SignatureConsumer
 //
 
-#define SIGNATURE_HASH 3070274099
-#define TS_SIGNATURE "rusEFI targetLambdaBlend.2024.11.08.tdg-pdm8.3070274099"
+#define SIGNATURE_HASH 2527819327
+#define TS_SIGNATURE "rusEFI coastingIgnitionAdvance.2024.11.09.tdg-pdm8.2527819327"
