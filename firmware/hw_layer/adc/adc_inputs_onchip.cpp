@@ -12,6 +12,9 @@
  *
  * 10KHz equals one measurement every 3.6 degrees at 6000 RPM
  *
+ * PS: analog muxes allow to double number of analog inputs
+ * oh, and ADC3 is dedicated for knock
+ *
  * @date Jan 14, 2013
  * @author Andrey Belomutskiy, (c) 2012-2020
  */

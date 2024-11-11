@@ -75,7 +75,7 @@ TEST(etb, intermittentTps) {
 
 		badCount++;
 		EXPECT_EQ(badCount, etb->etbTpsErrorCounter);
-		EXPECT_EQ(0, etb->etbErrorCode);
+		EXPECT_EQ((int)TpsState::TpsError, etb->etbErrorCode);
 
 		Sensor::setMockValue(SensorType::Tps1, 20);
 		ASSERT_FALSE(isTps1Error());

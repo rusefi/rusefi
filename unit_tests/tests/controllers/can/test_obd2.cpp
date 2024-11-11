@@ -188,9 +188,9 @@ TEST(CanObd2, handleGetDataRequest_PID_RPM)
     EXPECT_EQ(rxFrame.data8[2], PID_RPM); // correct PID
 
     int rpm = Sensor::getOrZero(SensorType::Rpm) * ODB_RPM_MULT;
-    
+
     EXPECT_EQ(rxFrame.data8[3], (rpm >> 0) & 0xff); // correct value
-    EXPECT_EQ(rxFrame.data8[3], (rpm >> 8) & 0xff); // correct value
+    EXPECT_EQ(rxFrame.data8[4], (rpm >> 8) & 0xff); // correct value
 
     // clear shared buffer
     txCanBuffer.clear();
@@ -211,6 +211,98 @@ TEST(CanObd2, handleGetDataRequest_PID_SPEED)
     EXPECT_EQ(rxFrame.data8[1], 0x41);	// correct header
     EXPECT_EQ(rxFrame.data8[2], PID_SPEED); // correct PID
     EXPECT_EQ(rxFrame.data8[3], Sensor::getOrZero(SensorType::VehicleSpeed)); // correct value
+
+    // clear shared buffer
+    txCanBuffer.clear();
+    EXPECT_FALSE(txCanBuffer.getCount());
+}
+
+
+TEST(CanObd2, handleGetDataRequest_PID_INTAKE_TEMP)
+{
+    EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+    CANRxFrame frame;
+    frame.data8[2] = PID_INTAKE_TEMP;
+
+    handleGetDataRequest(frame, 0);
+    CANTxFrame rxFrame = txCanBuffer.get();
+
+    EXPECT_EQ(rxFrame.data8[0], 3);		// correct data size
+    EXPECT_EQ(rxFrame.data8[1], 0x41);	// correct header
+    EXPECT_EQ(rxFrame.data8[2], PID_INTAKE_TEMP); // correct PID
+    EXPECT_EQ(rxFrame.data8[3], Sensor::getOrZero(SensorType::Iat) + ODB_TEMP_EXTRA); // correct value
+
+    // clear shared buffer
+    txCanBuffer.clear();
+    EXPECT_FALSE(txCanBuffer.getCount());
+}
+
+TEST(CanObd2, handleGetDataRequest_PID_INTAKE_MAF)
+{
+    EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+    CANRxFrame frame;
+    frame.data8[2] = PID_INTAKE_MAF;
+
+    handleGetDataRequest(frame, 0);
+    CANTxFrame rxFrame = txCanBuffer.get();
+
+    EXPECT_EQ(rxFrame.data8[0], 4);		// correct data size
+    EXPECT_EQ(rxFrame.data8[1], 0x41);	// correct header
+    EXPECT_EQ(rxFrame.data8[2], PID_INTAKE_MAF); // correct PID
+
+    int maf = Sensor::getOrZero(SensorType::Maf) * 100.0f;
+
+    EXPECT_EQ(rxFrame.data8[3], (maf >> 0) & 0xff); // correct value
+    EXPECT_EQ(rxFrame.data8[4], (maf >> 8) & 0xff); // correct value
+
+    // clear shared buffer
+    txCanBuffer.clear();
+    EXPECT_FALSE(txCanBuffer.getCount());
+}
+
+TEST(CanObd2, handleGetDataRequest_PID_THROTTLE)
+{
+    EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+    CANRxFrame frame;
+    frame.data8[2] = PID_THROTTLE;
+
+    handleGetDataRequest(frame, 0);
+    CANTxFrame rxFrame = txCanBuffer.get();
+
+    EXPECT_EQ(rxFrame.data8[0], 3);		// correct data size
+    EXPECT_EQ(rxFrame.data8[1], 0x41);	// correct header
+    EXPECT_EQ(rxFrame.data8[2], PID_THROTTLE); // correct PID
+    EXPECT_EQ(rxFrame.data8[3], Sensor::getOrZero(SensorType::Tps1) * ODB_TPS_BYTE_PERCENT); // correct value
+
+    // clear shared buffer
+    txCanBuffer.clear();
+    EXPECT_FALSE(txCanBuffer.getCount());
+}
+
+
+TEST(CanObd2, handleGetDataRequest_PID_FUEL_AIR_RATIO_1)
+{
+    EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+    CANRxFrame frame;
+    frame.data8[2] = PID_FUEL_AIR_RATIO_1;
+
+    handleGetDataRequest(frame, 0);
+    CANTxFrame rxFrame = txCanBuffer.get();
+
+    EXPECT_EQ(rxFrame.data8[0], 6);		// correct data size
+    EXPECT_EQ(rxFrame.data8[1], 0x41);	// correct header
+    EXPECT_EQ(rxFrame.data8[2], PID_FUEL_AIR_RATIO_1); // correct PID
+
+    float lambda = clampF(0, Sensor::getOrZero(SensorType::Lambda1), 1.99f);
+    uint16_t scaled = (lambda * 32768);
+
+    EXPECT_EQ(rxFrame.data8[3], ((scaled << 16) >> 0) & 0xff); // correct value
+    EXPECT_EQ(rxFrame.data8[4], ((scaled << 16) >> 8) & 0xff); // correct value
+
 
     // clear shared buffer
     txCanBuffer.clear();

@@ -141,8 +141,6 @@ static TsCalMode functionToCalModeSecMax(dc_function_e func) {
 }
 #endif // EFI_TUNER_STUDIO
 
-static percent_t directPwmValue = NAN;
-
 #define ETB_DUTY_LIMIT 0.9
 // this macro clamps both positive and negative percentages from about -100% to 100%
 #define ETB_PERCENT_TO_DUTY(x) (clampF(-ETB_DUTY_LIMIT, 0.01f * (x), ETB_DUTY_LIMIT))
@@ -152,8 +150,10 @@ PUBLIC_API_WEAK bool isBoardAllowingLackOfPps() {
 }
 
 bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalProvider, bool hasPedal) {
+	state = (uint8_t)EtbState::InInit;
 	if (function == DC_None) {
 		// if not configured, don't init.
+		state = (uint8_t)EtbState::NotEbt;
 		etbErrorCode = (int8_t)TpsState::None;
 		return false;
 	}
@@ -165,7 +165,7 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 	if (isEtbMode()) {
 		// We don't need to init throttles, so nothing to do here.
 		if (!hasPedal) {
-			etbErrorCode = (int8_t)TpsState::None;
+			etbErrorCode = (int8_t)TpsState::PpsError;
 			return false;
 		}
 
@@ -202,6 +202,7 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 
 	reset();
 
+	state = (uint8_t)EtbState::SuccessfulInit;
 	return true;
 }
 
@@ -223,7 +224,9 @@ void EtbController::showStatus() {
 }
 
 expected<percent_t> EtbController::observePlant() {
-	return Sensor::get(m_positionSensor);
+  expected<percent_t> plant = Sensor::get(m_positionSensor);
+  validPlantPosition = plant.Valid;
+	return plant;
 }
 
 void EtbController::setIdlePosition(percent_t pos) {
@@ -286,6 +289,7 @@ expected<percent_t> EtbController::getSetpointEtb() {
 
 	// If the pedal map hasn't been set, we can't provide a setpoint.
 	if (!m_pedalProvider) {
+    state = (uint8_t)EtbState::NoPedal;
 		return unexpected;
 	}
 
@@ -497,6 +501,7 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 	}
 
 	if (m_isAutotune) {
+	  state = (uint8_t)EtbState::Autotune;
 		return getClosedLoopAutotune(target, observation);
 	} else {
 		checkJam(target, observation);
@@ -515,14 +520,31 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 #endif
 
 	if (!m_motor) {
+	  state = (uint8_t)EtbState::NoMotor;
 		return;
 	}
 
+	bool isEnabled;
+	if (!isEtbMode()) {
+	  // technical debt: non-ETB usages of DC motor are still mixed into ETB controller?
+    state = (uint8_t)EtbState::NotEbt;
+    isEnabled = true;
+	} else if (!getLimpManager()->allowElectronicThrottle()) {
+	  state = (uint8_t)EtbState::LimpProhibited;
+	  isEnabled = false;
+	} else if (engineConfiguration->pauseEtbControl) {
+	  state = (uint8_t)EtbState::Paused;
+	  isEnabled = false;
+	} else if (!outputValue) {
+	  state = (uint8_t)EtbState::NoOutput;
+	  isEnabled = false;
+	} else {
+	  state = (uint8_t)EtbState::Active;
+	  isEnabled = true;
+	}
+
 	// If not ETB, or ETB is allowed, output is valid, and we aren't paused, output to motor.
-	if (!isEtbMode() ||
-	   (getLimpManager()->allowElectronicThrottle()
-		&& outputValue
-		&& !engineConfiguration->pauseEtbControl)) {
+	if (isEnabled) {
 		m_motor->enable();
 		m_motor->set(ETB_PERCENT_TO_DUTY(outputValue.Value));
 	} else {
@@ -610,19 +632,15 @@ void EtbController::update() {
 #if !EFI_UNIT_TEST
 	// If we didn't get initialized, fail fast
 	if (!m_motor) {
+	  state = (uint8_t)EtbState::FailFast;
 		return;
 	}
 #endif // EFI_UNIT_TEST
 
-	if (!std::isnan(directPwmValue)) {
-		m_motor->set(directPwmValue);
-		etbErrorCode = (int8_t)TpsState::Manual;
-		return;
-	}
-
 	bool isOk = checkStatus();
 
 	if (!isOk) {
+	  state = (uint8_t)EtbState::NotOk;
 		// If engine is stopped and so configured, skip the ETB update entirely
 		// This is quieter and pulls less power than leaving it on all the time
 		m_motor->disable("etb status");
@@ -630,6 +648,10 @@ void EtbController::update() {
 	}
 
 	ClosedLoopController::update();
+
+	if (isEtbMode() && !validPlantPosition) {
+	  etbErrorCode = (int8_t)TpsState::TpsError;
+	}
 }
 
 void EtbController::checkJam(percent_t setpoint, percent_t observation) {
@@ -801,30 +823,6 @@ void etbPidReset() {
 		}
 	}
 }
-
-#if !EFI_UNIT_TEST
-
-/**
- * At the moment there are TWO ways to use this
- * set_etb_duty X
- * set etb X
- * manual duty cycle control without PID. Percent value from 0 to 100
- */
-void setThrottleDutyCycle(percent_t level) {
-	efiPrintf("setting ETB duty=%f%%", level);
-	if (std::isnan(level)) {
-		directPwmValue = NAN;
-		return;
-	}
-
-	float dc = ETB_PERCENT_TO_DUTY(level);
-	directPwmValue = dc;
-	for (int i = 0 ; i < ETB_COUNT; i++) {
-		setDcMotorDuty(i, dc);
-	}
-	efiPrintf("duty ETB duty=%f", dc);
-}
-#endif /* EFI_PROD_CODE */
 
 void etbAutocal(size_t throttleIndex) {
 	if (throttleIndex >= ETB_COUNT) {
@@ -1119,3 +1117,4 @@ const electronic_throttle_s* getLiveData(size_t idx) {
 	return nullptr;
 #endif
 }
+

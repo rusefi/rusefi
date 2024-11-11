@@ -105,7 +105,7 @@ pins:
   - pin: 22B
     id: [H144_IN_AUX2_DIGITAL, H144_IN_AUX2_DIGITAL, H144_IN_AUX2]
     class: [event_inputs, switch_inputs, analog_inputs]
-    function: Input 2
+    function: Input 2 Digital / Analog / SENT
     ts_name: ___ Input 2
 
   - pin: 23B

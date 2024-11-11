@@ -189,6 +189,7 @@ public class ElectronicThrottle {
 	public static final Field ETBCURRENTADJUSTEDTARGET = Field.create("ETBCURRENTADJUSTEDTARGET", 28, FieldType.FLOAT).setBaseOffset(1672);
 	public static final Field ETBREVLIMITACTIVE = Field.create("ETBREVLIMITACTIVE", 32, FieldType.BIT, 0).setBaseOffset(1672);
 	public static final Field JAMDETECTED = Field.create("JAMDETECTED", 32, FieldType.BIT, 1).setBaseOffset(1672);
+	public static final Field VALIDPLANTPOSITION = Field.create("VALIDPLANTPOSITION", 32, FieldType.BIT, 2).setBaseOffset(1672);
 	public static final Field ETBTPSERRORCOUNTER = Field.create("ETBTPSERRORCOUNTER", 36, FieldType.INT16).setScale(1.0).setBaseOffset(1672);
 	public static final Field ETBPPSERRORCOUNTER = Field.create("ETBPPSERRORCOUNTER", 38, FieldType.INT16).setScale(1.0).setBaseOffset(1672);
 	public static final Field ETBERRORCODE = Field.create("ETBERRORCODE", 40, FieldType.INT8).setScale(1.0).setBaseOffset(1672);
@@ -197,7 +198,7 @@ public class ElectronicThrottle {
 	public static final Field ALIGNMENTFILL_AT_43 = Field.create("ALIGNMENTFILL_AT_43", 43, FieldType.INT8).setScale(1.0).setBaseOffset(1672);
 	public static final Field JAMTIMER = Field.create("JAMTIMER", 44, FieldType.INT16).setScale(0.01).setBaseOffset(1672);
 	public static final Field ADJUSTEDETBTARGET = Field.create("ADJUSTEDETBTARGET", 46, FieldType.INT8).setScale(1.0).setBaseOffset(1672);
-	public static final Field ALIGNMENTFILL_AT_47 = Field.create("ALIGNMENTFILL_AT_47", 47, FieldType.INT8).setScale(1.0).setBaseOffset(1672);
+	public static final Field STATE = Field.create("STATE", 47, FieldType.INT8).setScale(1.0).setBaseOffset(1672);
 	public static final Field[] VALUES = {
 	TARGETWITHIDLEPOSITION,
 	TRIM,
@@ -209,6 +210,7 @@ public class ElectronicThrottle {
 	ETBCURRENTADJUSTEDTARGET,
 	ETBREVLIMITACTIVE,
 	JAMDETECTED,
+	VALIDPLANTPOSITION,
 	ETBTPSERRORCOUNTER,
 	ETBPPSERRORCOUNTER,
 	ETBERRORCODE,
@@ -217,6 +219,6 @@ public class ElectronicThrottle {
 	ALIGNMENTFILL_AT_43,
 	JAMTIMER,
 	ADJUSTEDETBTARGET,
-	ALIGNMENTFILL_AT_47,
+	STATE,
 	};
 }

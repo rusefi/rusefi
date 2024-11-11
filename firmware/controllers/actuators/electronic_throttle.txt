@@ -17,6 +17,7 @@ struct_no_prefix electronic_throttle_s
 
 	bit etbRevLimitActive
 	bit jamDetected
+	bit validPlantPosition
 
 	uint16_t etbTpsErrorCounter;"ETB TPS error counter";"count", 1,0, 0,3, 0,@@GAUGE_CATEGORY_ETB@@
 	uint16_t etbPpsErrorCounter;"ETB pedal error counter";"count", 1,0, 0,3, 0,@@GAUGE_CATEGORY_ETB@@
@@ -27,5 +28,6 @@ struct_no_prefix electronic_throttle_s
 
 	uint16_t autoscale jamTimer;ETB jam timer;"sec", 0.01, 0, 0, 100, 2
 	int8_t adjustedEtbTarget;ETB with adjustments;"%", 1, 0, 0, 100, 0
+	uint8_t state
 
 end_struct
