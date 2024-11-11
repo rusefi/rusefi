@@ -1,55 +1,69 @@
 package com.rusefi.ts_plugin;
 
-import com.efiAnalytics.plugin.ecu.ControllerAccess;
-import com.efiAnalytics.plugin.ecu.ControllerException;
-import com.efiAnalytics.plugin.ecu.ControllerParameter;
-import com.efiAnalytics.plugin.ecu.OutputChannelClient;
+import com.efiAnalytics.plugin.ecu.*;
 import com.rusefi.core.ui.AutoupdateUtil;
+import com.rusefi.models.Utils;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 public class KnockAnalyzerTab {
 
+    private enum CanvasType {
+        CT_ALL,
+        CT_SENSORS,
+        CT_CYLINDERS,
+    }
+
     private final Supplier<ControllerAccess> controllerAccessSupplier;
+    String ecuControllerName;
 
     private final JComponent content = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 5, 5));
+    JComponent allDraw = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
+
+    JComponent canvasesComponent = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 5, 5));
     private final JLabel status = new JLabel();
-    private final JButton button = new JButton("Start");
+    private final JButton buttonStartStop = new JButton("Start");
+
+    private final JButton buttonAll = new JButton("All");
+    private final JButton buttonSensors = new JButton("Sensors");
+    private final JButton buttonCylinders = new JButton("Cylinders");
 
     private boolean started = false;
+    private boolean flushed = false;
 
     private final int[] line_sum_index = {0};
     private int channel = 0;
     private int cylinder = 0;
 
-    private final KnockCanvas canvas = new KnockCanvas();
-    private final KnockCanvas canvas2 = new KnockCanvas();
+    private float[] values = new float[64];
+
+    private int cylindersCount = 0;
+
+    private CanvasType canvasType = CanvasType.CT_ALL;
+
+    private ArrayList<KnockCanvas> canvases = new ArrayList<>();
     private final KnockMagnitudeCanvas magnituges = new KnockMagnitudeCanvas();
 
     public KnockAnalyzerTab(Supplier<ControllerAccess> controllerAccessSupplier) {
         this.controllerAccessSupplier = controllerAccessSupplier;
-
-        this.setStartButtonState();
-        this.setStartButtonState();
-
-        String ecuControllerName = this.controllerAccessSupplier.get().getEcuConfigurationNames()[0];
+        ecuControllerName = this.controllerAccessSupplier.get().getEcuConfigurationNames()[0];
 
         try {
             controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName, "m_knockFrequencyStart", new OutputChannelClient() {
                 @Override
                 public void setCurrentOutputChannelValue(String name, double v) {
-                    canvas.setFrequencyStart((int)v);
-                    canvas2.setFrequencyStart((int)v);
-                    magnituges.setFrequencyStart((int)v);
-                    //canvas.repaint();
+
+                    int frequency = (int)v;
+                    canvases.forEach(c -> c.setFrequencyStart(frequency));
+                    magnituges.setFrequencyStart(frequency);
                 }
             });
         } catch (ControllerException ee) {
@@ -60,12 +74,36 @@ public class KnockAnalyzerTab {
             controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName, "m_knockFrequencyStep", new OutputChannelClient() {
                 @Override
                 public void setCurrentOutputChannelValue(String name, double v) {
-                    canvas.setFrequencyStep((float)v);
-                    canvas2.setFrequencyStep((float)v);
-                    magnituges.setFrequencyStep((float)v);
-                    //canvas.repaint();
+
+                    float frequencyStep = (float)v;
+                    canvases.forEach(c -> c.setFrequencyStep(frequencyStep));
+                    magnituges.setFrequencyStep(frequencyStep);
                 }
             });
+        } catch (ControllerException ee) {
+            System.out.println(ee.getMessage());
+        }
+
+        try {
+            controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName, "m_knockSpectrumChannelCyl", (name, v) -> {
+
+                long value = (long)v;
+
+                flush();
+
+                KnockAnalyzerTab.this.channel = (int)(value >>> 8) & 0xFF;
+                KnockAnalyzerTab.this.cylinder =  (int)(value & 0xFF);
+            });
+        } catch (ControllerException ee) {
+            System.out.println(ee.getMessage());
+        }
+
+        try {
+            ControllerParameter cylindersCountParameter = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(ecuControllerName, "cylindersCount");
+            if(cylindersCountParameter != null) {
+                double value = cylindersCountParameter.getScalarValue();
+                KnockAnalyzerTab.this.cylindersCount = (int)(value);
+            }
         } catch (ControllerException ee) {
             System.out.println(ee.getMessage());
         }
@@ -78,10 +116,6 @@ public class KnockAnalyzerTab {
                 .collect(Collectors.toList())
                 .toArray(new String[0]);
 
-            float[] values = new float[64];
-
-            button.setText(this.getEnabled() == "true" ? "Stop" : "Start");
-
             int checksum = 0;
             for (int i = 0; i< 16; ++i) {
                 checksum += i;
@@ -92,48 +126,36 @@ public class KnockAnalyzerTab {
 
                     String name = spectrums[i];
                     int finalChecksum = checksum;
-                    controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName, name, new OutputChannelClient() {
-                        @Override
-                        public void setCurrentOutputChannelValue(String name, double v) {
-                            //value.setText(String.valueOf(v));
+                    controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName, name, (name1, v) -> {
+                        if(!started)
+                        {
+                            // SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayout(content));
+                            return;
+                        }
 
-                            if(!started)
-                            {
-                                canvas.getComponent().repaint();
-                                canvas2.getComponent().repaint();
-                                return;
-                            }
+                        flushed = false;
 
-                            String indexStr = name.substring(15);
-                            int index = Integer.parseInt(indexStr) - 1;
-                            //values[index] = (int)v;
+                        String indexStr = name1.substring(15);
+                        int index = Integer.parseInt(indexStr) - 1;
 
-                            long value = (long)v;
+                        long value = (long)v;
 
-                            long a = (value >>> 24) & 0xFF;
-                            long b = (value >>> 16) & 0xFF;
-                            long c = (value >>> 8) & 0xFF;
-                            long d =  value & 0xFF;
+                        long a = (value >>> 24) & 0xFF;
+                        long b = (value >>> 16) & 0xFF;
+                        long c = (value >>> 8) & 0xFF;
+                        long d =  value & 0xFF;
 
-                            values[index * 4] = a;
-                            values[(index * 4) + 1] = b;
-                            values[(index * 4) + 2] = c;
-                            values[(index * 4) + 3] = d;
+                        values[index * 4] = a;
+                        values[(index * 4) + 1] = b;
+                        values[(index * 4) + 2] = c;
+                        values[(index * 4) + 3] = d;
 
-                            line_sum_index[0] += index;
-                            if(line_sum_index[0] >= finalChecksum) {
+                        line_sum_index[0] += index;
+                        if(line_sum_index[0] >= finalChecksum) {
 
-                                if(channel == 1) {
-                                    canvas.processValues(values);
-                                    canvas.getComponent().repaint();
-                                }
-                                else {
-                                    canvas2.processValues(values);
-                                    canvas2.getComponent().repaint();
-                                }
+                            flush();
 
-                                line_sum_index[0] = 0;
-                            }
+                            line_sum_index[0] = 0;
                         }
                     });
                 } catch (ControllerException ee) {
@@ -145,63 +167,98 @@ public class KnockAnalyzerTab {
 
         }
 
-        try {
-            controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName, "m_knockSpectrumChannelCyl", new OutputChannelClient() {
-                @Override
-                public void setCurrentOutputChannelValue(String name, double v) {
-
-                    long value = (long)v;
-
-                    KnockAnalyzerTab.this.channel = (int)(value >>> 8) & 0xFF;
-                    KnockAnalyzerTab.this.cylinder =  (int)(value & 0xFF);
-
-                }
-            });
-        } catch (ControllerException ee) {
-            System.out.println(ee.getMessage());
-        }
-
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
-                try {
-                    boolean started = KnockAnalyzerTab.this.setStartButtonState();
-                    controllerAccessSupplier.get().getControllerParameterServer().updateParameter(ecuControllerName, "enableKnockSpectrogram", started ? 1.0 : 0.0);
-                } catch (ControllerException ee) {
-                    System.out.println(ee.getMessage());
-                }
-            }
+        buttonStartStop.addActionListener(e -> {
+                boolean enabled = this.getEnabledEcu();
+                KnockAnalyzerTab.this.setStartState(!enabled);
+                KnockAnalyzerTab.this.setEnabledEcu(!enabled);
         });
 
+        JComponent buttons = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
 
-        content.add(status);
-        content.add(button);
+        buttons.add(status);
+        buttons.add(buttonStartStop);
+        buttons.add(buttonAll);
+        buttons.add(buttonSensors);
+        buttons.add(buttonCylinders);
 
-        KnockMouseListener kml = new KnockMouseListener(this.canvas);
-        KnockMotionListener kmml = new KnockMotionListener(this.canvas, this.magnituges);
-        KnockKeyListener l = new KnockKeyListener();
-        initCanvas(kmml, kml, l, canvas.getComponent());
-        content.add(canvas.getComponent());
+        buttonAll.addActionListener(e -> {
+            canvasType = CanvasType.CT_ALL;
+            createCanvas(canvasType);
+            buttonStartStop.doClick();
+            buttonStartStop.doClick();
+        });
+        buttonSensors.addActionListener(e -> {
+            canvasType = CanvasType.CT_SENSORS;
+            createCanvas(canvasType);
+            buttonStartStop.doClick();
+            buttonStartStop.doClick();
+        });
+        buttonCylinders.addActionListener(e -> {
+            canvasType = CanvasType.CT_CYLINDERS;
+            createCanvas(canvasType);
+            buttonStartStop.doClick();
+            buttonStartStop.doClick();
+        });
 
+        content.add(buttons);
 
-        KnockMouseListener kml2 = new KnockMouseListener(this.canvas2);
-        KnockMotionListener kmml2 = new KnockMotionListener(this.canvas2, this.magnituges);
-        KnockKeyListener l2 = new KnockKeyListener();
-        initCanvas(kmml2, kml2, l2, canvas2.getComponent());
-        content.add(canvas2.getComponent());
-
+        JScrollPane canvasScroll = new JScrollPane(canvasesComponent, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        canvasScroll.setPreferredSize(new Dimension(840, 800));
+        canvasScroll.setMinimumSize(new Dimension(840, 800));
+        canvasScroll.setMaximumSize(new Dimension(840, 800));
+        allDraw.add(canvasScroll);
+        content.add(allDraw);
 
         JComponent magnituges = this.magnituges.getComponent();
         magnituges.setFocusable(true);
         magnituges.setFocusTraversalKeysEnabled(false);
         magnituges.setFocusable(true);
         magnituges.setDoubleBuffered(true);
-        magnituges.setPreferredSize(new Dimension(800, 200));
-        magnituges.setMinimumSize(new Dimension(800, 200));
-        content.add(magnituges);
+        magnituges.setPreferredSize(new Dimension(760, 200));
+        magnituges.setMinimumSize(new Dimension(760, 200));
+        allDraw.add(magnituges);
 
-        AutoupdateUtil.trueLayout(content);
+        createCanvas(CanvasType.CT_ALL);
+
+        boolean enabled = this.getEnabledEcu();
+        this.setStartState(enabled);
+
+        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayout(content));
+    }
+
+    private void flush() {
+
+        if(!started || flushed)
+        {
+            return;
+        }
+
+        switch (canvasType) {
+            case CT_ALL:
+                canvases.forEach(canvas -> {
+                    canvas.processValues(values);
+                    canvas.getComponent().repaint();
+                });
+                break;
+            case CT_SENSORS:
+                assert channel < canvases.size();
+                canvases.get(channel).processValues(values);
+                break;
+            case CT_CYLINDERS:
+                assert cylinder < canvases.size();
+                canvases.get(cylinder).processValues(values);
+                break;
+        }
+
+        canvases.forEach(canvas -> {
+            canvas.getComponent().repaint();
+        });
+
+        for (int i = 0; i < values.length; ++i) {
+            values[i] = 0;
+        }
+
+        flushed = true;
     }
 
     private void initCanvas(KnockMotionListener kmml, KnockMouseListener kml, KnockKeyListener l, JComponent canvas) {
@@ -217,32 +274,98 @@ public class KnockAnalyzerTab {
         canvas.setMinimumSize(new Dimension(800, 200));
     }
 
-    public String getEnabled() {
+    public void createCanvas(CanvasType canvasType) {
+
+        this.clearCanvas();
+
+        switch (canvasType) {
+            case CT_ALL:
+                createCanvas(1,1);
+                break;
+            case CT_SENSORS:
+                createCanvasSensors();
+                break;
+            case CT_CYLINDERS:
+                createCanvasCylinders();
+                break;
+            default:
+                throw new Error("Unknown CanvasType");
+        }
+
+        refreshCanvases();
+    }
+
+    public void clearCanvas() {
+        this.canvases.clear();
+        canvasesComponent.removeAll();
+        this.refreshCanvases();
+    }
+
+    public void refreshCanvases() {
+        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayout(canvasesComponent));
+        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayout(content));
+    }
+
+    public void createCanvas(int number, int divider) {
+        KnockCanvas canvas = new KnockCanvas(number, divider);
+        KnockMouseListener kml = new KnockMouseListener(canvas);
+        KnockMotionListener kmml = new KnockMotionListener(canvas, this.magnituges);
+        KnockKeyListener l = new KnockKeyListener();
+        initCanvas(kmml, kml, l, canvas.getComponent());
+        canvasesComponent.add(canvas.getComponent());
+        canvases.add(canvas);
+    }
+
+    public void createCanvasSensors() {
+        this.createCanvas(1, 2);
+        this.createCanvas(2, 2);
+    }
+
+    public void createCanvasCylinders() {
+        for(int i = 0; i < this.cylindersCount; ++i){
+            this.createCanvas(i + 1, this.cylindersCount);
+        }
+    }
+
+    public boolean getEnabledEcu() {
         try {
             String ecuControllerName = this.controllerAccessSupplier.get().getEcuConfigurationNames()[0];
             ControllerParameter enable = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(ecuControllerName, "enableKnockSpectrogram");
             String enabled = enable.getStringValue();
-            return enabled;
+            return enabled.indexOf("true") > 0;
         } catch (ControllerException ee) {
             System.out.println(ee.getMessage());
         }
 
-        return "false";
+        return false;
     }
 
-    public boolean setStartButtonState() {
-        String enabled = this.getEnabled();
+    public void setEnabledEcu(boolean enabled) {
+        try {
+            String ecuControllerName = this.controllerAccessSupplier.get().getEcuConfigurationNames()[0];
+            controllerAccessSupplier.get().getControllerParameterServer().updateParameter(ecuControllerName, "enableKnockSpectrogram", enabled ? 1.0 : 0.0);
+        } catch (ControllerException ee) {
+            System.out.println(ee.getMessage());
+        }
+    }
 
-        this.started = enabled.indexOf("true") > 0 ? false : true;
+    public void setStartState(boolean enabled) {
+        this.started = enabled;
 
-        button.setText(this.started ? "Stop" : "Start");
+        buttonStartStop.setText(this.started ? "Stop" : "Start");
 
         this.line_sum_index[0] = 0;
 
-        if (this.started) {
-            this.canvas.resetPeak();
+        if(this.started) {
+            canvases.forEach(canvas -> {
+                canvas.resetPeak();
+            });
         }
 
+        refreshCanvases();
+    }
+
+    public boolean getStartState() {
         return this.started;
     }
 
