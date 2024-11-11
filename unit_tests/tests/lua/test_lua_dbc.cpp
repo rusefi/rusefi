@@ -17,10 +17,6 @@ TEST(dbcMotorola, testFromDbc) {
     ASSERT_EQ(23, motorolaMagicFromDbc(14, 8));
 }
 
-TEST(dbcMotorola, testFromIntelIntoMotorolaDbc) {
-	// todo?!
-}
-
 TEST(dbcMotorola, accessRange) {
     uint8_t data[] = { 0x00, 0x00, 0x03, 0xFF, 0x00, 0x00, 0x00, 0x00};
 
