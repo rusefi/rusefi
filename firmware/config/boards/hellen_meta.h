@@ -167,7 +167,9 @@ void detectHellenBoardType();
 
 #define H144_IN_AUX1 EFI_ADC_8
 #define H144_IN_AUX2 EFI_ADC_14
-#define H144_IN_AUX2_DIGITAL C4
+// fun fact: same input goes to TWO stm32 pins so that we can use it both as analog and ICU capture
+//#define H144_IN_AUX2_DIGITAL C4
+#define H144_IN_AUX2_DIGITAL E9
 
 // AIN20 PA7
 #define H144_IN_AUX3 EFI_ADC_7
