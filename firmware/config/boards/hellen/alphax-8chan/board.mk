@@ -17,6 +17,7 @@ include $(BOARDS_DIR)/hellen/hellen-common176.mk
 
 ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 	DDEFS += -DCH_DBG_ENABLE_ASSERTS=FALSE
+	DDEFS += -DLUA_USER_HEAP=92000
 	DDEFS += -DENABLE_PERF_TRACE=FALSE
 else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
     # This board has trigger scope hardware!
