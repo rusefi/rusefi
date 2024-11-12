@@ -34,6 +34,7 @@ enum class SensorType : unsigned char {
 
 	FuelPressureLow, // in kPa
 	FuelPressureHigh, // in kPa
+	// ProxySensor for one of the above
 	FuelPressureInjector,
 
 	FuelTemperature,
