@@ -74,6 +74,7 @@ TESTS_SRC_CPP = \
 	tests/lua/test_bit_range_msb.cpp \
 	tests/lua/test_lua_dbc.cpp \
 	tests/lua/test_motorola_dbc.cpp \
+	tests/lua/test_lua_bit_range_msb.cpp \
 	tests/lua/test_lookup.cpp \
 	tests/lua/test_lua_e38.cpp \
 	tests/lua/test_lua_canam.cpp \
