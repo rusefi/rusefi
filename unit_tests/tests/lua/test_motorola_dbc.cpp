@@ -250,9 +250,9 @@ namespace {
         const int testValue = 0xB3; // 1011 0011
         setBitRangeMoto(data.data(), bitStart, length, testValue);
 
-        const std::array<uint8_t, 8> unexpectedData = { 0x00, 0x00, 0xC2, 0x00, 0x00, 0x00, 0x00, 0x00 };
-        EXPECT_THAT(data, testing::ElementsAreArray(unexpectedData)); // TODO: this check shouldn't pass!!!
-        EXPECT_EQ(getBitRangeMoto(data.data(), bitStart, length), 0x03); // TODO: this check shouldn't pass!!!
+        const std::array<uint8_t, 8> unexpectedData = { 0x00, 0x2C, 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00 };
+        EXPECT_THAT(data, testing::ElementsAreArray(unexpectedData));
+        EXPECT_EQ(getBitRangeMoto(data.data(), bitStart, length), 0xB3);
 
         ////     |  Bit Positions
         ////     | 7 6 5 4 3 2 1 0
@@ -266,9 +266,9 @@ namespace {
         //// u 6 | 0 0 0 0 0 0 0 0
         //// m 7 | 0 0 0 0 0 0 0 0
         //// . 8 | 0 0 0 0 0 0 0 0
-        //const std::array<uint8_t, 8> expectedData = { 0x00, 0x00, 0x2C, 0xC0, 0x00, 0x00, 0x00, 0x00 }; // TODO: these are expected data!!!
-        //EXPECT_THAT(data, testing::ElementsAreArray(expectedData)); // TODO: this check shouldn't fail!!!
-        //EXPECT_EQ(getBitRangeMoto(data.data(), bitStart, length), testValue); // TODO: this check shouldn't fail!!!
+        const std::array<uint8_t, 8> expectedData = { 0x00, 0x2C, 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00 };
+        EXPECT_THAT(data, testing::ElementsAreArray(expectedData));
+        EXPECT_EQ(getBitRangeMoto(data.data(), bitStart, length), testValue);
 
 //        checkRange(
 //            /* bitStart = */ 13,

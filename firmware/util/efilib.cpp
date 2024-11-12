@@ -238,7 +238,7 @@ void setBitRangeMsb(uint8_t data[], const int totalBitIndex, const int bitWidth,
 	const int bitInByteIndex = totalBitIndex - byteIndex * 8;
 	if (bitInByteIndex + leftBitWidh > 8) {
 		const int bitsToHandleNow = 8 - bitInByteIndex;
-		setBitRangeMsb(data, totalBitIndex - bitsToHandleNow, leftBitWidh - bitsToHandleNow, value >> bitsToHandleNow);
+		setBitRangeMsb(data, (byteIndex - 1) * 8, leftBitWidh - bitsToHandleNow, value >> bitsToHandleNow);
 		leftBitWidh = bitsToHandleNow;
 	}
 	const int mask = (1 << leftBitWidh) - 1;
