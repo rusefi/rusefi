@@ -163,12 +163,6 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 
 	// If we are a throttle, require redundant TPS sensor
 	if (isEtbMode()) {
-		// We don't need to init throttles, so nothing to do here.
-		if (!hasPedal) {
-			etbErrorCode = (int8_t)TpsState::PpsError;
-			return false;
-		}
-
 		// If no sensor is configured for this throttle, skip initialization.
 		if (!Sensor::hasSensor(functionToTpsSensor(function))) {
 			etbErrorCode = (int8_t)TpsState::TpsError;
@@ -937,9 +931,6 @@ PUBLIC_API_WEAK ValueProvider3D* pedal2TpsProvider() {
 void doInitElectronicThrottle() {
 	bool hasPedal = Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
 
-#if EFI_UNIT_TEST
-	printf("doInitElectronicThrottle %s\n", boolToString(hasPedal));
-#endif // EFI_UNIT_TEST
 
 	bool anyEtbConfigured = false;
 
@@ -960,7 +951,7 @@ void doInitElectronicThrottle() {
 
 		auto pid = getPidForDcFunction(func);
 
-		bool dcConfigured = controller->init(func, motor, pid, pedal2TpsProvider(), hasPedal);
+		bool dcConfigured = controller->init(func, motor, pid, pedal2TpsProvider(), false);
 		bool etbConfigured = dcConfigured && controller->isEtbMode();
 		anyEtbConfigured |= etbConfigured;
 	}

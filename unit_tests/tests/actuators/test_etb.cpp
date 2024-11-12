@@ -77,10 +77,10 @@ TEST(etb, initializationSingleThrottle) {
 	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 0);
 
 	// Expect mock0 to be init as throttle 1, and PID params
-	EXPECT_CALL(mocks[0], init(DC_Throttle1, _, &engineConfiguration->etb, Ne(nullptr), true)).WillOnce(Return(true));
+	EXPECT_CALL(mocks[0], init(DC_Throttle1, _, &engineConfiguration->etb, Ne(nullptr), false)).WillOnce(Return(true));
 
 	// Expect mock1 to be init as none
-	EXPECT_CALL(mocks[1], init(DC_None, _, _, _, true)).Times(0);
+	EXPECT_CALL(mocks[1], init(DC_None, _, _, _, false)).Times(0);
 
 	doInitElectronicThrottle();
 }
@@ -105,10 +105,10 @@ TEST(etb, initializationSingleThrottleInSecondSlot) {
 	Sensor::setMockValue(SensorType::AcceleratorPedalPrimary, 0, false);
 
 	// Expect mock0 to be init as none
-	EXPECT_CALL(mocks[0], init(DC_None, _, _, _, true)).Times(0);
+	EXPECT_CALL(mocks[0], init(DC_None, _, _, _, false)).Times(0);
 
 	// Expect mock1 to be init as throttle 1, and PID params
-	EXPECT_CALL(mocks[1], init(DC_Throttle1, _, &engineConfiguration->etb, Ne(nullptr), true)).WillOnce(Return(true));
+	EXPECT_CALL(mocks[1], init(DC_Throttle1, _, &engineConfiguration->etb, Ne(nullptr), false)).WillOnce(Return(true));
 
 	doInitElectronicThrottle();
 }
@@ -138,10 +138,10 @@ TEST(etb, initializationDualThrottle) {
 	engineConfiguration->etbFunctions[1] = DC_Throttle2;
 
 	// Expect mock0 to be init as throttle 1, and PID params
-	EXPECT_CALL(mocks[0], init(DC_Throttle1, _, &engineConfiguration->etb, Ne(nullptr), true)).WillOnce(Return(true));
+	EXPECT_CALL(mocks[0], init(DC_Throttle1, _, &engineConfiguration->etb, Ne(nullptr), false)).WillOnce(Return(true));
 
 	// Expect mock1 to be init as throttle 2, and PID params
-	EXPECT_CALL(mocks[1], init(DC_Throttle2, _, &engineConfiguration->etb, Ne(nullptr), true)).WillOnce(Return(true));
+	EXPECT_CALL(mocks[1], init(DC_Throttle2, _, &engineConfiguration->etb, Ne(nullptr), false)).WillOnce(Return(true));
 
 	doInitElectronicThrottle();
 }
@@ -246,7 +246,7 @@ TEST(etb, initializationNoThrottles) {
 	Sensor::setMockValue(SensorType::Tps1Primary, 0);
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, false);
 
-	EXPECT_NO_FATAL_ERROR(initElectronicThrottle());
+	EXPECT_FATAL_ERROR(initElectronicThrottle());
 }
 
 TEST(etb, idlePlumbing) {
