@@ -45,7 +45,13 @@ namespace {
         return testData.data();
     }
 
-    TEST_F(MotorolaDbcTest, testNewMessage001) {
+    /***************************************************************************************************************/
+    /* The following tests check `setBitRangeMoto` function writes messages in the proper bits, that are displayed */
+    /* by Kvazer Database Editor. The sample file with `NewMessage_0001` - `NewMessage_0008` can be found here:    */
+    /* https://gist.github.com/rusefillc/8cef24fa188f868a2a7028c16c26627f                                          */
+    /***************************************************************************************************************/
+
+    TEST_F(MotorolaDbcTest, testNewMessage_0001) {
         // Picture from Kvazer Database Editor for `27|4@0+`:
         //
         //     |  Bit Positions
@@ -81,7 +87,7 @@ namespace {
         );
     }
 
-    TEST_F(MotorolaDbcTest, testNewMessage002) {
+    TEST_F(MotorolaDbcTest, testNewMessage_0002) {
         // Picture from Kvazer Database Editor for `30|7@0+`:
         //
         //     |  Bit Positions
@@ -117,7 +123,7 @@ namespace {
         );
     }
 
-    TEST_F(MotorolaDbcTest, testNewMessage003) {
+    TEST_F(MotorolaDbcTest, testNewMessage_0003) {
         // Picture from Kvazer Database Editor for `31|8@0+`:
         //
         //     |  Bit Positions
@@ -153,7 +159,7 @@ namespace {
         );
     }
 
-    TEST_F(MotorolaDbcTest, testNewMessage004) {
+    TEST_F(MotorolaDbcTest, testNewMessage_0004) {
         // Picture from Kvazer Database Editor for `17|10@0+`:
         //
         //     |  Bit Positions
@@ -189,7 +195,7 @@ namespace {
         );
     }
 
-    TEST_F(MotorolaDbcTest, testNewMessage005) {
+    TEST_F(MotorolaDbcTest, testNewMessage_0005) {
         // Picture from Kvazer Database Editor for `16|9@0+`:
         //
         //     |  Bit Positions
@@ -225,7 +231,117 @@ namespace {
         );
     }
 
-    TEST_F(MotorolaDbcTest, testNewMessage006) {
+    TEST_F(MotorolaDbcTest, testNewMessage_0006) {
+        // Picture from Kvazer Database Editor for `13|8@0+`:
+        //
+        //     |  Bit Positions
+        //     | 7 6 5 4 3 2 1 0
+        // ----+----------------
+        // B 0 |
+        // y 1 |     <----------
+        // t 2 | --|
+        // e 3 |
+        //   4 |
+        // N 5 |
+        // u 6 |
+        // m 7 |
+        // . 8 |
+        checkRange(
+            /* bitStart = */ 13,
+            /* length = */ 8,
+            /* testValue = */ 0xB3, // 1011 0011
+            /* expectedLSB = */ 22,
+            //     |  Bit Positions
+            //     | 7 6 5 4 3 2 1 0
+            // ----+----------------
+            // B 0 | 0 0 0 0 0 0 0 0
+            // y 1 | 0 0 1-0-1-1-0-0-
+            // t 2 |-1-1 0 0 0 0 0 0
+            // e 3 | 0 0 0 0 0 0 0 0
+            //   4 | 0 0 0 0 0 0 0 0
+            // N 5 | 0 0 0 0 0 0 0 0
+            // u 6 | 0 0 0 0 0 0 0 0
+            // m 7 | 0 0 0 0 0 0 0 0
+            // . 8 | 0 0 0 0 0 0 0 0
+            /* expectedData = */ { 0x00, 0x2C, 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00 }
+        );
+    }
+
+    TEST_F(MotorolaDbcTest, testNewMessage_0007) {
+        // Picture from Kvazer Database Editor for `14|9@0+`:
+        //
+        //     |  Bit Positions
+        //     | 7 6 5 4 3 2 1 0
+        // ----+----------------
+        // B 0 |
+        // y 1 |   <------------
+        // t 2 | --|
+        // e 3 |
+        //   4 |
+        // N 5 |
+        // u 6 |
+        // m 7 |
+        // . 8 |
+        checkRange(
+            /* bitStart = */ 14,
+            /* length = */ 9,
+            /* testValue = */ 0x167, // 0001 0110 0111
+            /* expectedLSB = */ 22,
+            //     |  Bit Positions
+            //     | 7 6 5 4 3 2 1 0
+            // ----+----------------
+            // B 0 | 0 0 0 0 0 0 0 0
+            // y 1 | 0 1 0-1-1-0-0-1-
+            // t 2 |-1-1 0 0 0 0 0 0
+            // e 3 | 0 0 0 0 0 0 0 0
+            //   4 | 0 0 0 0 0 0 0 0
+            // N 5 | 0 0 0 0 0 0 0 0
+            // u 6 | 0 0 0 0 0 0 0 0
+            // m 7 | 0 0 0 0 0 0 0 0
+            // . 8 | 0 0 0 0 0 0 0 0
+            /* expectedData = */ { 0x00, 0x59, 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00 }
+        );
+    }
+
+    TEST_F(MotorolaDbcTest, testNewMessage_0008) {
+        // Picture from Kvazer Database Editor for `14|8@0+`:
+        //
+        //     |  Bit Positions
+        //     | 7 6 5 4 3 2 1 0
+        // ----+----------------
+        // B 0 |
+        // y 1 |   <------------
+        // t 2 | |
+        // e 3 |
+        //   4 |
+        // N 5 |
+        // u 6 |
+        // m 7 |
+        // . 8 |
+        checkRange(
+            /* bitStart = */ 14,
+            /* length = */ 8,
+            /* testValue = */ 0xB3, // 1011 0011
+            /* expectedLSB = */ 23,
+            //     |  Bit Positions
+            //     | 7 6 5 4 3 2 1 0
+            // ----+----------------
+            // B 0 | 0 0 0 0 0 0 0 0
+            // y 1 | 0 1-0-1-1-0-0-1-
+            // t 2 |-1 0 0 0 0 0 0 0
+            // e 3 | 0 0 0 0 0 0 0 0
+            //   4 | 0 0 0 0 0 0 0 0
+            // N 5 | 0 0 0 0 0 0 0 0
+            // u 6 | 0 0 0 0 0 0 0 0
+            // m 7 | 0 0 0 0 0 0 0 0
+            // . 8 | 0 0 0 0 0 0 0 0
+            /* expectedData = */ { 0x00, 0x59, 0x80, 0x00, 0x00, 0x00, 0x00, 0x00 }
+        );
+    }
+
+    // the following test completely duplicates functionality from `testNewMessage_0006`, we are leaving it as an
+    // outline to simplify debugging of the cases whan `checkRange` method fails
+    TEST_F(MotorolaDbcTest, testNewMessage_0006Simplified) {
         std::array<uint8_t, 8> data { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
         const int bitStart = 13;
@@ -237,9 +353,9 @@ namespace {
         //     | 7 6 5 4 3 2 1 0
         // ----+----------------
         // B 0 |
-        // y 1 |
-        // t 2 |     <----------
-        // e 3 | --|
+        // y 1 |     <----------
+        // t 2 | --|
+        // e 3 |
         //   4 |
         // N 5 |
         // u 6 |
@@ -250,17 +366,13 @@ namespace {
         const int testValue = 0xB3; // 1011 0011
         setBitRangeMoto(data.data(), bitStart, length, testValue);
 
-        const std::array<uint8_t, 8> unexpectedData = { 0x00, 0x2C, 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00 };
-        EXPECT_THAT(data, testing::ElementsAreArray(unexpectedData));
-        EXPECT_EQ(getBitRangeMoto(data.data(), bitStart, length), 0xB3);
-
         ////     |  Bit Positions
         ////     | 7 6 5 4 3 2 1 0
         //// ----+----------------
         //// B 0 | 0 0 0 0 0 0 0 0
-        //// y 1 | 0 0 0 0 0 0 0 0
-        //// t 2 | 0 0 1-0-1-1-0-0-
-        //// e 3 |-1-1 0 0 0 0 0 0
+        //// y 1 | 0 0 1-0-1-1-0-0-
+        //// t 2 |-1-1 0 0 0 0 0 0
+        //// e 3 | 0 0 0 0 0 0 0 0
         ////   4 | 0 0 0 0 0 0 0 0
         //// N 5 | 0 0 0 0 0 0 0 0
         //// u 6 | 0 0 0 0 0 0 0 0
@@ -269,25 +381,5 @@ namespace {
         const std::array<uint8_t, 8> expectedData = { 0x00, 0x2C, 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00 };
         EXPECT_THAT(data, testing::ElementsAreArray(expectedData));
         EXPECT_EQ(getBitRangeMoto(data.data(), bitStart, length), testValue);
-
-//        checkRange(
-//            /* bitStart = */ 13,
-//            /* length = */ 8,
-//            /* testValue = */ 0xB3, // 1011 0011
-//            /* expectedLSB = */ 22,
-//            //     |  Bit Positions
-//            //     | 7 6 5 4 3 2 1 0
-//            // ----+----------------
-//            // B 0 | 0 0 0 0 0 0 0 0
-//            // y 1 | 0 0 0 0 0 0 0 0
-//            // t 2 | 0 0 1-0-1-1-0-0-
-//            // e 3 |-1-1 0 0 0 0 0 0
-//            //   4 | 0 0 0 0 0 0 0 0
-//            // N 5 | 0 0 0 0 0 0 0 0
-//            // u 6 | 0 0 0 0 0 0 0 0
-//            // m 7 | 0 0 0 0 0 0 0 0
-//            // . 8 | 0 0 0 0 0 0 0 0
-//            /* expectedData = */ { 0x00, 0x00, 0x2C, 0xC0, 0x00, 0x00, 0x00, 0x00 }
-//        );
     }
 }
