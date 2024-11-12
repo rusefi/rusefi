@@ -149,7 +149,7 @@ PUBLIC_API_WEAK bool isBoardAllowingLackOfPps() {
   return false;
 }
 
-bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalProvider, bool hasPedal) {
+bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalProvider) {
 	state = (uint8_t)EtbState::InInit;
 	if (function == DC_None) {
 		// if not configured, don't init.
@@ -951,7 +951,7 @@ void doInitElectronicThrottle() {
 
 		auto pid = getPidForDcFunction(func);
 
-		bool dcConfigured = controller->init(func, motor, pid, pedal2TpsProvider(), false);
+		bool dcConfigured = controller->init(func, motor, pid, pedal2TpsProvider());
 		bool etbConfigured = dcConfigured && controller->isEtbMode();
 		anyEtbConfigured |= etbConfigured;
 	}
