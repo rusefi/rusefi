@@ -225,7 +225,7 @@ namespace {
         );
     }
 
-    TEST_F(MotorolaDbcTest, testNewMessage006) {
+    TEST_F(MotorolaDbcTest, testNewMessage006Simplified) {
         std::array<uint8_t, 8> data { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
 
         const int bitStart = 13;
@@ -250,10 +250,6 @@ namespace {
         const int testValue = 0xB3; // 1011 0011
         setBitRangeMoto(data.data(), bitStart, length, testValue);
 
-        const std::array<uint8_t, 8> unexpectedData = { 0x00, 0x2C, 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00 };
-        EXPECT_THAT(data, testing::ElementsAreArray(unexpectedData));
-        EXPECT_EQ(getBitRangeMoto(data.data(), bitStart, length), 0xB3);
-
         ////     |  Bit Positions
         ////     | 7 6 5 4 3 2 1 0
         //// ----+----------------
@@ -269,25 +265,5 @@ namespace {
         const std::array<uint8_t, 8> expectedData = { 0x00, 0x2C, 0xC0, 0x00, 0x00, 0x00, 0x00, 0x00 };
         EXPECT_THAT(data, testing::ElementsAreArray(expectedData));
         EXPECT_EQ(getBitRangeMoto(data.data(), bitStart, length), testValue);
-
-//        checkRange(
-//            /* bitStart = */ 13,
-//            /* length = */ 8,
-//            /* testValue = */ 0xB3, // 1011 0011
-//            /* expectedLSB = */ 22,
-//            //     |  Bit Positions
-//            //     | 7 6 5 4 3 2 1 0
-//            // ----+----------------
-//            // B 0 | 0 0 0 0 0 0 0 0
-//            // y 1 | 0 0 0 0 0 0 0 0
-//            // t 2 | 0 0 1-0-1-1-0-0-
-//            // e 3 |-1-1 0 0 0 0 0 0
-//            //   4 | 0 0 0 0 0 0 0 0
-//            // N 5 | 0 0 0 0 0 0 0 0
-//            // u 6 | 0 0 0 0 0 0 0 0
-//            // m 7 | 0 0 0 0 0 0 0 0
-//            // . 8 | 0 0 0 0 0 0 0 0
-//            /* expectedData = */ { 0x00, 0x00, 0x2C, 0xC0, 0x00, 0x00, 0x00, 0x00 }
-//        );
     }
 }
