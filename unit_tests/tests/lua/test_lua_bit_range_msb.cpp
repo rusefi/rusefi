@@ -27,19 +27,19 @@ namespace {
 			<< "bitStart=" << bitStart << ", length=" << length << ", testValue=" << testValue << std::endl << luaCode;
 	}
 
-    TEST_F(LuaBitRangeMsbTest, checkVariousBitRanges) {
+	TEST_F(LuaBitRangeMsbTest, checkVariousBitRanges) {
 		checkSetAndGet(24, 4, 0xB);
 		checkSetAndGet(24, 7, 0x59);
 		checkSetAndGet(24, 8, 0xB3);
 		checkSetAndGet(24, 10, 0x2C9);
 		checkSetAndGet(24, 9, 0x173);
-		//checkSetAndGet(22, 8, 0xB3); //TODO: this check should pass
-		//checkSetAndGet(22, 9, 0x167); //TODO: this check should pass
-		//checkSetAndGet(23, 8, 0xB3); //TODO: this check should pass
-    }
+		checkSetAndGet(22, 8, 0xB3);
+		checkSetAndGet(22, 9, 0x167);
+		checkSetAndGet(23, 8, 0xB3);
+	}
 
-    TEST_F(LuaBitRangeMsbTest, checkWithTotalBitIndex22AndBitWidth8) {
-        const char* realdata = SET_BIT_RANGE_MSB GET_BIT_RANGE_MSB R"(
+	TEST_F(LuaBitRangeMsbTest, checkWithTotalBitIndex22AndBitWidth8) {
+		const char* realdata = SET_BIT_RANGE_MSB GET_BIT_RANGE_MSB R"(
 
 	function testFunc()
 		data = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}
@@ -47,6 +47,6 @@ namespace {
 		return getBitRangeMsb(data, 22, 8)
 	end)";
 
-        EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0x3); //TODO: should be 0xB3, not 0x3
-    }
+		EXPECT_NEAR_M3(testLuaReturnsNumberOrNil(realdata).value_or(0), 0xB3);
+	}
 }
