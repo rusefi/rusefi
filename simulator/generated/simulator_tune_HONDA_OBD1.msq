@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22984">
+    <page number="0" size="22964">
         <constant name="engineType">"HONDA_OBD1"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">0.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
@@ -631,10 +631,6 @@
         <constant name="torqueReductionEnabled">"false"</constant>
         <constant name="torqueReductionTriggerPinInverted">"false"</constant>
         <constant name="limitTorqueReductionTime">"false"</constant>
-        <constant name="unusedFancy7">"false"</constant>
-        <constant name="unusedFancy8">"false"</constant>
-        <constant name="unusedFancy9">"false"</constant>
-        <constant name="unusedFancy10">"false"</constant>
         <constant name="verboseIsoTp">"false"</constant>
         <constant name="engineSnifferFocusOnInputs">"false"</constant>
         <constant name="launchActivateInverted">"false"</constant>
@@ -656,7 +652,6 @@
         <constant name="isWaveAnalyzerEnabled">"true"</constant>
         <constant name="useSeparateVeForIdle">"false"</constant>
         <constant name="verboseTriggerSynchDetails">"false"</constant>
-        <constant name="unused1188b12">"false"</constant>
         <constant name="cutFuelInAcr">"false"</constant>
         <constant name="hondaK">"false"</constant>
         <constant name="twoWireBatchIgnition">"false"</constant>
@@ -748,8 +743,6 @@
         <constant name="luaCanRxWorkaround">"false"</constant>
         <constant name="flexSensorInverted">"Normal"</constant>
         <constant name="useHardSkipInTraction">"false"</constant>
-        <constant name="unusedHere1212">"false"</constant>
-        <constant name="unusedHere1213">"false"</constant>
         <constant name="useAuxSpeedForSlipRatio">"false"</constant>
         <constant name="useVssAsSecondWheelSpeed">"false"</constant>
         <constant name="is_enabled_spi_5">"false"</constant>
@@ -757,7 +750,6 @@
         <constant name="enableAemXSeriesEgt">"false"</constant>
         <constant name="startRequestPinInverted">"Normal"</constant>
         <constant name="tcu_rangeSensorPulldown">"false"</constant>
-        <constant name="unusedBit2423423">"false"</constant>
         <constant name="brakePedalPinInverted">"Normal"</constant>
         <constant name="devBit0">"false"</constant>
         <constant name="devBit1">"false"</constant>
@@ -767,14 +759,11 @@
         <constant name="devBit5">"false"</constant>
         <constant name="devBit6">"false"</constant>
         <constant name="devBit7">"false"</constant>
-        <constant name="unusedSkipWasHere">"false"</constant>
         <constant name="invertExhaustCamVVTSignal">"Rising"</constant>
         <constant name="enableKnockSpectrogram">"false"</constant>
         <constant name="enableKnockSpectrogramFilter">"false"</constant>
         <constant digits="0" name="afterCrankingIACtaperDuration" units="cycles">200.0</constant>
         <constant digits="0" name="iacByTpsTaper" units="percent">2.0</constant>
-        <constant name="unusedAuxSeria">"NONE"</constant>
-        <constant name="unusedAuxSerialRx">"NONE"</constant>
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant digits="0" name="coastingFuelCutVssLow" units="kph">0.0</constant>
         <constant digits="0" name="coastingFuelCutVssHigh" units="kph">0.0</constant>
@@ -2127,24 +2116,6 @@
          8000.0
 </constant>
         <constant cols="1" digits="1" name="iacCoasting" rows="16">
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-</constant>
-        <constant cols="1" digits="0" name="unusedGapHere" rows="16">
          0.0
          0.0
          0.0
@@ -4760,7 +4731,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20241031" nPages="1" signature="rusEFI master.2024.11.12.f407-discovery.2139473748" version="5.0"/>
+    <versionInfo firmwareInfo="20241031" nPages="1" signature="rusEFI master.2024.11.12.f407-discovery.1364746790" version="5.0"/>
     <bibliography author="rusEFI 20241031" writeDate="date"/>
     <settings/>
     <userComments/>
