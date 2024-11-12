@@ -353,7 +353,7 @@
 #define ego_sensor_e_ES_PLX 4
 #define EGT_CHANNEL_COUNT 8
 #define END_OF_CALIBRATION_PADDING 116
-#define engine_configuration_s_size 4024
+#define engine_configuration_s_size 4036
 #define engine_load_mode_e_auto_enum 0="LM_SPEED_DENSITY",2="LM_ALPHA_N",3="LM_LUA",100="LM_MOCK",1="LM_REAL_MAF"
 #define engine_load_mode_e_enum "Speed Density", "MAF Air Charge", "Alpha-N", "Lua"
 #define engine_load_mode_e_LM_ALPHA_N 2
@@ -1169,7 +1169,7 @@
 #define MAIN_HELP_URL "http://www.rusefi.com/"
 #define MAP_ANGLE_SIZE 8
 #define MAP_sensor_config_s_size 140
-#define MAP_UPPER_LIMIT 255
+#define MAP_UPPER_LIMIT 1000
 #define MAP_WINDOW_SIZE 8
 #define MAX_CYLINDER_COUNT 12
 #define MAX_TPS_PPS_DISCREPANCY 5
@@ -1230,7 +1230,7 @@
 #define pedalSensor_NAME "Accelerator pedal"
 #define pedalToTpsTbl_NAME "ETB pedal target"
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 22968
+#define persistent_config_s_size 22980
 #define pid_s_size 20
 #define pin_input_mode_e_auto_enum 0="PI_DEFAULT",2="PI_PULLDOWN",1="PI_PULLUP"
 #define pin_input_mode_e_enum "DEFAULT", "PULLUP", "PULLDOWN"
@@ -1297,7 +1297,7 @@
 #define SentEtbType_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3956562729
+#define SIGNATURE_HASH 730281526
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1323,7 +1323,7 @@
 #define STFT_BANK_COUNT 2
 #define stft_cell_cfg_s_size 4
 #define STFT_CELL_COUNT 4
-#define stft_s_size 24
+#define stft_s_size 28
 #define switch_input_pin_e_enum 0="NONE",67="Air conditioner control input",92="Air conditioner pressure sensor (2 level)",87="CLT Coolant temperature sensor signal",27="Camshaft position sensor signal",36="ETB TPS position sensor 1 signal",37="ETB TPS position sensor 2 signal",88="IAT intake sensor signal",3="MAF/MAP sensor signal",85="Oxygen sensor 1 signal",34="Pedal position sensor 1 signal PPS1",35="Pedal position sensor 2 signal PPS2"
 #define switch_input_pin_e_fullenum "NONE","INVALID","INVALID","MAF/MAP sensor signal","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Camshaft position sensor signal","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Pedal position sensor 1 signal PPS1","Pedal position sensor 2 signal PPS2","ETB TPS position sensor 1 signal","ETB TPS position sensor 2 signal","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Air conditioner control input","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Oxygen sensor 1 signal","INVALID","CLT Coolant temperature sensor signal","IAT intake sensor signal","INVALID","INVALID","INVALID","Air conditioner pressure sensor (2 level)"
 #define TABLE_2_LOAD_SIZE 8
@@ -1359,7 +1359,7 @@
 #define torqueReductionActivationMode_e_enum "Torque Reduction Button", "Launch Button"
 #define torqueReductionActivationMode_e_LAUNCH_BUTTON 1
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON 0
-#define TOTAL_CONFIG_SIZE 22968
+#define TOTAL_CONFIG_SIZE 22980
 #define TPS_2_BYTE_PACKING_MULT 100
 #define TPS_PPS_TOO_HIGH_THRESHOLD 110
 #define TPS_PPS_TOO_LOW_THRESHOLD -10
@@ -1759,7 +1759,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.11.12.m74_9.3956562729"
+#define TS_SIGNATURE "rusEFI master.2024.11.12.m74_9.730281526"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
