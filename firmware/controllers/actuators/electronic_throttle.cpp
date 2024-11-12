@@ -170,12 +170,6 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 		}
 
 		if (!Sensor::isRedundant(m_positionSensor)) {
-			firmwareError(
-				ObdCode::OBD_TPS_Configuration,
-				"Use of electronic throttle requires %s to be redundant.",
-				Sensor::getSensorName(m_positionSensor)
-			);
-
 			etbErrorCode = (int8_t)TpsState::Redundancy;
 			return false;
 		}

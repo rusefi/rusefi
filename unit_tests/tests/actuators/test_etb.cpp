@@ -192,7 +192,7 @@ TEST(etb, initializationNotRedundantTps) {
 	Sensor::setMockValue(SensorType::Tps1Primary, 0);
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, false);
 
-	EXPECT_FATAL_ERROR(dut.init(DC_Throttle1, nullptr, nullptr, nullptr));
+	ASSERT_FALSE(dut.init(DC_Throttle1, nullptr, nullptr, nullptr));
 }
 
 TEST(etb, initializationNotRedundantPedal) {
@@ -246,7 +246,7 @@ TEST(etb, initializationNoThrottles) {
 	Sensor::setMockValue(SensorType::Tps1Primary, 0);
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, false);
 
-	EXPECT_FATAL_ERROR(initElectronicThrottle());
+	initElectronicThrottle();
 }
 
 TEST(etb, idlePlumbing) {
