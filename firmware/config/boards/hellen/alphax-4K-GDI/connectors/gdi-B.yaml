@@ -39,6 +39,7 @@ pins:
     ts_name: ___ Main Relay Control
     function: Main relay control
     type: ls
+    color: grey
 
   - pin: 6B
     meta: H144_IN_VBATT
@@ -101,6 +102,7 @@ pins:
     class: [event_inputs, switch_inputs]
     function: Digital Input 1
     ts_name: ___ Digital Input 1
+    color: white
 
   - pin: 22B
     id: [H144_IN_AUX2_DIGITAL, H144_IN_AUX2_DIGITAL, H144_IN_AUX2]
@@ -131,6 +133,7 @@ pins:
     class: [event_inputs, switch_inputs]
     function: Digital Input 3
     ts_name: ___ Digital Input 3
+    color: yellow
 
   - pin: 28B
     id: [H144_IN_SENS3, H144_IN_SENS3]
