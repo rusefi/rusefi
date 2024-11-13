@@ -110,6 +110,7 @@ pins:
   - pin: 17A
     function: ETB negative
     type: etb
+    color: white
 
   - pin: 18A
     function: +12V from main relay
@@ -163,7 +164,7 @@ pins:
   - pin: 25A
     function: ETB positive
     type: etb
-    color: purple
+    color: blue
 
 
   - pin: 26A

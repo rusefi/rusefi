@@ -66,6 +66,7 @@ pins:
     id: TLE9104_1_OUT_3
     class: outputs
     function: Fan 2
+    color: yellow
     type: ls
     ts_name: ___ Fan 2
 
