@@ -191,6 +191,15 @@ float getConfigValueByName(const char *name) {
 // enableAdvanceSmoothing
 		case 644314390:
 			return engineConfiguration->enableAdvanceSmoothing;
+// strenghtAdvanceSmoothing
+		case -1950180290:
+			return engineConfiguration->strenghtAdvanceSmoothing;
+// Fan1AcThreshold
+		case -1424475428:
+			return engineConfiguration->Fan1AcThreshold;
+// Fan2AcThreshold
+		case -603219907:
+			return engineConfiguration->Fan2AcThreshold;
 // useIdleAdvanceWhileCoasting
 		case 586887955:
 			return engineConfiguration->useIdleAdvanceWhileCoasting;
@@ -737,6 +746,9 @@ float getConfigValueByName(const char *name) {
 // noFuelTrimAfterDfcoTime
 		case 1286770247:
 			return engineConfiguration->noFuelTrimAfterDfcoTime;
+// noFuelTrimAfterAccelTime
+		case -1460984893:
+			return engineConfiguration->noFuelTrimAfterAccelTime;
 // launchSpeedThreshold
 		case -1743747394:
 			return engineConfiguration->launchSpeedThreshold;
@@ -1925,6 +1937,27 @@ float getConfigValueByName(const char *name) {
 // knockFrequency
 		case 1972605869:
 			return engineConfiguration->knockFrequency;
+// ltftEnabled
+		case -518141238:
+			return config->ltftEnabled;
+// ltftCRC
+		case -1822508201:
+			return config->ltftCRC;
+// ltftMinModTemp
+		case -970526247:
+			return config->ltftMinModTemp;
+// ltftMinTemp
+		case 1044047449:
+			return config->ltftMinTemp;
+// ltftPermissivity
+		case 1884487735:
+			return config->ltftPermissivity;
+// ltftMaxCorrection
+		case 932381213:
+			return config->ltftMaxCorrection;
+// ltftMinCorrection
+		case -1987127141:
+			return config->ltftMinCorrection;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -2242,6 +2275,21 @@ bool setConfigValueByName(const char *name, float value) {
 		case 644314390:
 	{
 		engineConfiguration->enableAdvanceSmoothing = (int)value;
+		return 1;
+	}
+		case -1950180290:
+	{
+		engineConfiguration->strenghtAdvanceSmoothing = (int)value;
+		return 1;
+	}
+		case -1424475428:
+	{
+		engineConfiguration->Fan1AcThreshold = (int)value;
+		return 1;
+	}
+		case -603219907:
+	{
+		engineConfiguration->Fan2AcThreshold = (int)value;
 		return 1;
 	}
 		case 586887955:
@@ -3152,6 +3200,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1286770247:
 	{
 		engineConfiguration->noFuelTrimAfterDfcoTime = (int)value;
+		return 1;
+	}
+		case -1460984893:
+	{
+		engineConfiguration->noFuelTrimAfterAccelTime = (int)value;
 		return 1;
 	}
 		case -1743747394:
@@ -5132,6 +5185,41 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1972605869:
 	{
 		engineConfiguration->knockFrequency = value;
+		return 1;
+	}
+		case -518141238:
+	{
+		config->ltftEnabled = (int)value;
+		return 1;
+	}
+		case -1822508201:
+	{
+		config->ltftCRC = (int)value;
+		return 1;
+	}
+		case -970526247:
+	{
+		config->ltftMinModTemp = (int)value;
+		return 1;
+	}
+		case 1044047449:
+	{
+		config->ltftMinTemp = (int)value;
+		return 1;
+	}
+		case 1884487735:
+	{
+		config->ltftPermissivity = (int)value;
+		return 1;
+	}
+		case 932381213:
+	{
+		config->ltftMaxCorrection = (int)value;
+		return 1;
+	}
+		case -1987127141:
+	{
+		config->ltftMinCorrection = (int)value;
 		return 1;
 	}
 		case -1658957891:

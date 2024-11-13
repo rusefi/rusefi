@@ -2,5 +2,5 @@
 // was generated automatically by rusEFI tool config_definition-all.jar based on gen_config.sh by SignatureConsumer
 //
 
-#define SIGNATURE_HASH 227529589
-#define TS_SIGNATURE "rusEFI coastingIgnitionAdvance.2024.11.09.alphax-4chan.227529589"
+#define SIGNATURE_HASH 3123400719
+#define TS_SIGNATURE "rusEFI customFirmwareDG.2024.11.13.alphax-4chan.3123400719"

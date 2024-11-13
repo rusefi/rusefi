@@ -723,6 +723,9 @@ float getOutputValueByName(const char *name) {
 // Gego
 		case 2090288615:
 			return engine->outputChannels.Gego;
+// Ltft
+		case 2090484607:
+			return engine->outputChannels.Ltft;
 // testBenchIter
 		case 1092959609:
 			return engine->outputChannels.testBenchIter;
@@ -949,6 +952,18 @@ float getOutputValueByName(const char *name) {
 // luaIgnitionSkip
 		case -1916613921:
 			return engine->ignitionState.luaIgnitionSkip;
+// accelThresholdThrigger
+		case -748626810:
+			return engine->ignitionState.accelThresholdThrigger;
+// accelDeltaLOADPersist
+		case 334346545:
+			return engine->ignitionState.accelDeltaLOADPersist;
+// accelDeltaCycleThriger
+		case -14820340:
+			return engine->ignitionState.accelDeltaCycleThriger;
+// oldLoadValue
+		case 454270721:
+			return engine->ignitionState.oldLoadValue;
 // m_knockLevel
 		case -1571781441:
 			return ___engine.module<KnockController>()->m_knockLevel;
@@ -1224,6 +1239,12 @@ float getOutputValueByName(const char *name) {
 // enabledForAc
 		case 291043035:
 			return ___engine.module<FanControl1>()->enabledForAc;
+// enabledAcOld
+		case 284679283:
+			return ___engine.module<FanControl1>()->enabledAcOld;
+// acEnableTime
+		case 493236703:
+			return ___engine.module<FanControl1>()->acEnableTime;
 // hot
 		case 193494032:
 			return ___engine.module<FanControl1>()->hot;

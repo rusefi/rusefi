@@ -192,6 +192,11 @@ public class IgnitionState {
 	public static final Field LUATIMINGADD = Field.create("LUATIMINGADD", 28, FieldType.FLOAT).setBaseOffset(900);
 	public static final Field LUATIMINGMULT = Field.create("LUATIMINGMULT", 32, FieldType.FLOAT).setBaseOffset(900);
 	public static final Field LUAIGNITIONSKIP = Field.create("LUAIGNITIONSKIP", 36, FieldType.BIT, 0).setBaseOffset(900);
+	public static final Field ACCELTHRESHOLDTHRIGGER = Field.create("ACCELTHRESHOLDTHRIGGER", 36, FieldType.BIT, 1).setBaseOffset(900);
+	public static final Field ACCELDELTALOADPERSIST = Field.create("ACCELDELTALOADPERSIST", 40, FieldType.INT16).setScale(1.0).setBaseOffset(900);
+	public static final Field ALIGNMENTFILL_AT_42 = Field.create("ALIGNMENTFILL_AT_42", 42, FieldType.INT8).setScale(1.0).setBaseOffset(900);
+	public static final Field ACCELDELTACYCLETHRIGER = Field.create("ACCELDELTACYCLETHRIGER", 44, FieldType.INT).setScale(1.0).setBaseOffset(900);
+	public static final Field OLDLOADVALUE = Field.create("OLDLOADVALUE", 48, FieldType.FLOAT).setBaseOffset(900);
 	public static final Field[] VALUES = {
 	BASEDWELL,
 	SPARKDWELL,
@@ -206,5 +211,10 @@ public class IgnitionState {
 	LUATIMINGADD,
 	LUATIMINGMULT,
 	LUAIGNITIONSKIP,
+	ACCELTHRESHOLDTHRIGGER,
+	ACCELDELTALOADPERSIST,
+	ALIGNMENTFILL_AT_42,
+	ACCELDELTACYCLETHRIGER,
+	OLDLOADVALUE,
 	};
 }

@@ -2,5 +2,5 @@
 // was generated automatically by rusEFI tool config_definition-all.jar based on gen_config.sh by SignatureConsumer
 //
 
-#define SIGNATURE_HASH 3242893546
-#define TS_SIGNATURE "rusEFI coastingIgnitionAdvance.2024.11.09.mre-legacy_f4.3242893546"
+#define SIGNATURE_HASH 1995318160
+#define TS_SIGNATURE "rusEFI customFirmwareDG.2024.11.13.mre-legacy_f4.1995318160"

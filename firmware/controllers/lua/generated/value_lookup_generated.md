@@ -184,6 +184,15 @@ Minimum engine load that corrections will occour
 ### enableAdvanceSmoothing
 Activate this to increment or decrement ignition angle after fast TPS variation, can improve drivability;
 
+### strenghtAdvanceSmoothing
+Strenght of advance correction
+
+### Fan1AcThreshold
+Theshold to enable fan 1 after ac enable
+
+### Fan2AcThreshold
+Theshold to enable fan 2 after ac enable
+
 ### useIdleAdvanceWhileCoasting
 Use idle ignition table while coasting;
 
@@ -729,6 +738,9 @@ How long to look back for TPS-based acceleration enrichment. Increasing this tim
 
 ### noFuelTrimAfterDfcoTime
 Pause closed loop fueling after deceleration fuel cut occurs. Set this to a little longer than however long is required for normal fueling behavior to resume after fuel cut.
+
+### noFuelTrimAfterAccelTime
+Pause closed loop fueling after acceleration fuel occurs. Set this to a little longer than however long is required for normal fueling behavior to resume after fuel accel.
 
 ### launchSpeedThreshold
 Launch disabled above this speed if setting is above zero
@@ -1917,6 +1929,27 @@ Fuel trim when knock, max 30%
 
 ### knockFrequency
 "Estimated knock frequency, ignore cylinderBore if this one > 0"
+
+### ltftEnabled
+
+
+### ltftCRC
+
+
+### ltftMinModTemp
+Minimum temperature to start correcting ltft tables
+
+### ltftMinTemp
+Minimum temperature to start using ltft tables
+
+### ltftPermissivity
+How much long term fuel trim should act to reduce short term fuel trim, 100 should keep stft in about 3%, 255 in 8% and 33 in 1%, and
+
+### ltftMaxCorrection
+
+
+### ltftMinCorrection
+
 
 ### tcu_shiftTime
 

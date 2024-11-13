@@ -279,6 +279,7 @@ static const LogField fields[] = {
 	{engine->outputChannels.schedulingUsedCount, "schedulingUsedCount", "", 0},
 	{engine->outputChannels.vehicleSpeedKph, "Vehicle Speed", "kph", 2},
 	{engine->outputChannels.Gego, "Gego", "%", 2},
+	{engine->outputChannels.Ltft, "Ltft", "%", 2},
 	{engine->outputChannels.testBenchIter, "testBenchIter", "count", 0},
 	{engine->outputChannels.oilTemp, "oilTemp", "deg C", 1},
 	{engine->outputChannels.fuelTemp, "fuelTemp", "deg C", 1},
@@ -397,6 +398,9 @@ static const LogField fields[] = {
 	{engine->ignitionState.dwellVoltageCorrection, "Ign: Dwell voltage correction", "", 0},
 	{engine->ignitionState.luaTimingAdd, "Ign: Lua timing add", "deg", 2, "Timing"},
 	{engine->ignitionState.luaTimingMult, "Ign: Lua timing mult", "deg", 2, "Timing"},
+	{engine->ignitionState.accelDeltaLOADPersist, "accelDeltaLOADPersist", "", 0},
+	{engine->ignitionState.accelDeltaCycleThriger, "accelDeltaCycleThriger", "", 0},
+	{engine->ignitionState.oldLoadValue, "oldLoadValue", "", 0},
 	{___engine.module<KnockController>()->m_knockLevel, "Knock: Current level", "Volts", 2},
 	{___engine.module<KnockController>()->m_knockCyl[0], "Knock: Cyl 1", "dBv", 0},
 	{___engine.module<KnockController>()->m_knockCyl[1], "Knock: Cyl 2", "dBv", 0},
@@ -467,6 +471,7 @@ static const LogField fields[] = {
 #if EFI_BOOST_CONTROL
 	{___engine.module<BoostController>()->boostControlTarget, "Boost: Target", "kPa", 1, "Boost Control"},
 #endif
+	{___engine.module<FanControl1>()->acEnableTime, "acEnableTime", "", 0},
 	{___engine.module<FanControl1>()->radiatorFanStatus, "radiatorFanStatus", "", 0},
 	{engine->engineState.lua.fuelAdd, "Lua: Fuel add", "g", 3},
 	{engine->engineState.lua.fuelMult, "Lua: Fuel mult", "", 0},
