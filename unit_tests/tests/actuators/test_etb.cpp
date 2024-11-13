@@ -205,7 +205,8 @@ TEST(etb, initializationNotRedundantPedal) {
 	Sensor::setMockValue(SensorType::Tps1Primary, 0);
 	Sensor::setMockValue(SensorType::Tps1, 0.0f, true);
 
-	EXPECT_FATAL_ERROR(dut.init(DC_Throttle1, nullptr, nullptr, nullptr));
+	// we require redundancy at runtime, not at initialization time. that would allow for Lua pedal to appear later on.
+	ASSERT_TRUE(dut.init(DC_Throttle1, nullptr, nullptr, nullptr));
 }
 
 TEST(etb, initializationNoSensor) {

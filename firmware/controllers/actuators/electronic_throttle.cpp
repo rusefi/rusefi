@@ -173,15 +173,6 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 			etbErrorCode = (int8_t)TpsState::Redundancy;
 			return false;
 		}
-
-		if (!isBoardAllowingLackOfPps() && !Sensor::isRedundant(SensorType::AcceleratorPedal)) {
-			firmwareError(
-				ObdCode::OBD_TPS_Configuration,
-				"Use of electronic throttle requires accelerator pedal to be redundant."
-			);
-			etbErrorCode = (int8_t)TpsState::Redundancy;
-			return false;
-		}
 	}
 
 	m_motor = motor;
@@ -609,6 +600,8 @@ bool EtbController::checkStatus() {
 		localReason = TpsState::Lua;
 	} else if (!getLimpManager()->allowElectronicThrottle()) {
 	  localReason = TpsState::JamDetected;
+	} else if(!isBoardAllowingLackOfPps() && !Sensor::isRedundant(SensorType::AcceleratorPedal)) {
+		etbErrorCode = (int8_t)TpsState::Redundancy;
 	}
 
 	etbErrorCode = (int8_t)localReason;
