@@ -554,6 +554,7 @@ static void updateFuelCorrections() {
 		engine->outputChannels.fuelPidCorrection[i] = 100.0f * (engine->engineState.stftCorrection[i] - 1.0f);
 	}
 	engine->outputChannels.Gego = 100.0f * engine->engineState.stftCorrection[0];
+	engine->outputChannels.Ltft = 100.0f * engine->engineState.ltftCorrection;
 }
 
 static void updateFuelResults() {

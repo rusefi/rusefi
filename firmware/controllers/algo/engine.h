@@ -56,6 +56,7 @@
 #include "efi_output.h"
 #include "vvt.h"
 #include "trip_odometer.h"
+#include "closed_loop_fuel.h"
 
 #include <functional>
 
@@ -171,6 +172,7 @@ public:
 		BoostController,
 #endif // EFI_BOOST_CONTROL
 		TpsAccelEnrichment,
+		LongTermFuelTrim,
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 

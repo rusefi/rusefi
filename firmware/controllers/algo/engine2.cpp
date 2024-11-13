@@ -153,8 +153,10 @@ void EngineState::periodicFastCallback() {
 	auto tps = Sensor::get(SensorType::Tps1);
 	updateTChargeK(rpm, tps.value_or(0));
 
+	float fuelLoad = getFuelingLoad();
+
 	float untrimmedInjectionMass = getInjectionMass(rpm) * engine->engineState.lua.fuelMult + engine->engineState.lua.fuelAdd;
-	auto clResult = fuelClosedLoopCorrection();
+	auto stftResult = fuelStftClosedLoopCorrection();
 
 	injectionStage2Fraction = getStage2InjectionFraction(rpm, engine->fuelComputer.afrTableYAxis);
 	float stage2InjectionMass = untrimmedInjectionMass * injectionStage2Fraction;
@@ -167,7 +169,6 @@ void EngineState::periodicFastCallback() {
 		? engine->module<InjectorModelSecondary>()->getInjectionDuration(stage2InjectionMass)
 		: 0;
 
-	float fuelLoad = getFuelingLoad();
 	injectionOffset = getInjectionOffset(rpm, fuelLoad);
 	engine->lambdaMonitor.update(rpm, fuelLoad);
 
@@ -190,17 +191,19 @@ void EngineState::periodicFastCallback() {
 	engine->ignitionState.correctedIgnitionAdvance = MAKE_HUMAN_READABLE_ADVANCE(correctedIgnitionAdvance);
 
 
-	// compute per-bank fueling
+	// compute per-bank fueling stft
 	for (size_t i = 0; i < STFT_BANK_COUNT; i++) {
-		float corr = clResult.banks[i];
+		float corr = stftResult.banks[i];
 		// todo: move to engine_state.txt and get rid of fuelPidCorrection in output_channels.txt?
 		engine->engineState.stftCorrection[i] = corr;
 	}
+	auto ltftResult = engine->module<LongTermFuelTrim>()->getLtft(fuelLoad, rpm);
+	engine->engineState.ltftCorrection = ltftResult;
 
 	// Now apply that to per-cylinder fueling and timing
 	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
 		uint8_t bankIndex = engineConfiguration->cylinderBankSelect[i];
-		auto bankTrim = engine->engineState.stftCorrection[bankIndex];
+		auto bankTrim = engine->engineState.stftCorrection[bankIndex] * engine->engineState.ltftCorrection;
 		auto cylinderTrim = getCylinderFuelTrim(i, rpm, fuelLoad);
 		auto knockTrim = engine->module<KnockController>()->getFuelTrimMultiplier();
 

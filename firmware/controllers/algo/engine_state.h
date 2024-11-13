@@ -37,6 +37,7 @@ public:
 	float injectionMass[MAX_CYLINDER_COUNT] = {0};
   // todo: move to .txt or even better extract injection.txt?
 	float stftCorrection[STFT_BANK_COUNT] = {0};
+	float ltftCorrection = {0};
 
 	float injectionStage2Fraction = 0;
 

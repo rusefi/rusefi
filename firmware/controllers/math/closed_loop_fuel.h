@@ -1,5 +1,7 @@
 #pragma once
 
+#include "table_helper.h"
+
 struct stft_s;
 
 struct ClosedLoopFuelResult {
@@ -13,6 +15,19 @@ struct ClosedLoopFuelResult {
 	float banks[STFT_BANK_COUNT];
 };
 
-ClosedLoopFuelResult fuelClosedLoopCorrection();
+ClosedLoopFuelResult fuelStftClosedLoopCorrection();
 size_t computeStftBin(float rpm, float load, stft_s& cfg);
 bool shouldUpdateCorrection(SensorType sensor);
+
+class LongTermFuelTrim : public EngineModule{
+		float ltftTableHelper[16][16];
+		bool ltftTableHelperInit = 0;
+		uint32_t lastLtftUpdateTime = 0;
+		float ltftResult = 1;
+		bool updatedLtft = 0;
+	public:
+		void onIgnitionStateChanged(bool ignitionOn);
+		float getLtft(float load, float rpm);
+		void resetLtftTimer();
+		void updateLtft(float load, float rpm);
+};
