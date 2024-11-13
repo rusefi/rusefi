@@ -621,7 +621,6 @@ void EtbController::update() {
 	bool isOk = checkStatus();
 
 	if (!isOk) {
-	  state = (uint8_t)EtbState::NotOk;
 		// If engine is stopped and so configured, skip the ETB update entirely
 		// This is quieter and pulls less power than leaving it on all the time
 		m_motor->disable("etb status");

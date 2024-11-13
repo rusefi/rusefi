@@ -49,9 +49,8 @@ enum class EtbState : uint8_t {
   Active, // 7
   NoPedal, // 8
   FailFast, // 9
-  NotOk, // 10
+  InInit, // 10
   SuccessfulInit, // 11
-  InInit, // 12
 };
 
 class DcMotor;
