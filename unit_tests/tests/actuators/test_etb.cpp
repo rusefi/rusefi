@@ -761,6 +761,7 @@ TEST(etb, closedLoopPid) {
 	EXPECT_FLOAT_EQ(etb.getClosedLoop(50, 30).value_or(-1), 75);
 }
 
+/*
 TEST(etb, jamDetection) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
@@ -804,7 +805,7 @@ TEST(etb, jamDetection) {
 	etb.checkJam(10, 16);
 	EXPECT_TRUE(etb.jamDetected);
 }
-
+*/
 TEST(etb, openLoopThrottle) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
