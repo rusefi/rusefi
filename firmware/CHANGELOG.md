@@ -28,6 +28,8 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+## November 2024 "Day 993"
+
 ### Added
  - Support wasted spark on odd cylinder count 4-stroke engines. Improves startup and allows running without a cam sensor!
  - CLT/IAT boost duty/target compensation #6424
