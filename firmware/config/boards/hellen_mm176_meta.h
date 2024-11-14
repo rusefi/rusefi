@@ -99,6 +99,7 @@
 
 #define MM176_IN_D1 E12
 #define MM176_IN_D2 E13
+// TIM1_CH4
 #define MM176_IN_D3 E14
 #define MM176_IN_D4 E15
 
