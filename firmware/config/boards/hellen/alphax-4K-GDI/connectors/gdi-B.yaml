@@ -110,6 +110,7 @@ pins:
     class: [event_inputs, switch_inputs, analog_inputs]
     function: Input 2 Digital / Analog / SENT
     ts_name: ___ Input 2
+    color: yellow
 
   - pin: 23B
     function: Fuel Low Pressure

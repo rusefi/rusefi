@@ -83,7 +83,7 @@ pins:
     meta: MM176_GP1
     class: outputs
     ts_name: 11D - Main Relay
-    color: purple
+    color: grey
 
   - pin: 12D
     function: NOS Relay Output (low)
