@@ -138,6 +138,7 @@ void setGmLcv() {
 
   engineConfiguration->starterControlPin = Gpio::TLE9104_0_OUT_1; // 3B Port injector 2
 #endif
+  engineConfiguration->sentEtbType = SentEtbType::GM_TYPE_1;
 
 	setInline4();
 	engineConfiguration->displacement = 2.5;
