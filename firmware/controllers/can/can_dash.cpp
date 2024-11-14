@@ -1076,7 +1076,7 @@ static void populateFrame(Aim5f3& msg) {
 struct Aim5f4 {
 	scaled_channel<uint16_t, 10000> Boost;
 	scaled_channel<uint16_t, 3200> Vbat;
-	scaled_channel<uint16_t, 10> FuelUse;
+	scaled_channel<uint16_t, 10> FuelConsumptionLH;
 	scaled_channel<int16_t, 1> Gear;
 };
 
@@ -1085,9 +1085,13 @@ static void populateFrame(Aim5f4& msg) {
 		- Sensor::get(SensorType::BarometricPressure).value_or(101.325);
 	float boostBar = deltaKpa / 100;
 
+	float gPerSecond = engine->module<TripOdometer>()->getConsumptionGramPerSecond();
+	float gPerHour = gPerSecond * 3600.0f;
+	float literPerHour = gPerHour * 0.00139f;
+
 	msg.Boost = boostBar;
 	msg.Vbat = Sensor::getOrZero(SensorType::BatteryVoltage);
-	msg.FuelUse = 0;
+	msg.FuelConsumptionLH = 10 * literPerHour;
 	msg.Gear = Sensor::getOrZero(SensorType::DetectedGear);
 }
 
