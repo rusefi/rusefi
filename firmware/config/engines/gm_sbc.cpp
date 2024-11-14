@@ -133,12 +133,19 @@ void setGmSbc() {
 
 void setGmLcv() {
 #ifdef HW_HELLEN_4K_GDI
-  setTPS1Inputs(EFI_ADC_NONE, EFI_ADC_NONE);
   engineConfiguration->sentInputPins[0] = Gpio::H144_IN_AUX2_DIGITAL;
 
-  engineConfiguration->starterControlPin = Gpio::TLE9104_0_OUT_1; // 3B Port injector 2
+  // engineConfiguration->starterControlPin = high side :()
 #endif
+
+#ifdef HW_HELLEN_8CHAN
+  engineConfiguration->sentInputPins[0] = Gpio::H144_IN_AUX2_DIGITAL;
+  engineConfiguration->starterControlPin = Gpio::MM176_IGN5; // 14C
+#endif
+
   engineConfiguration->sentEtbType = SentEtbType::GM_TYPE_1;
+  setTPS1Inputs(EFI_ADC_NONE, EFI_ADC_NONE);
+  setPPSCalibration(1, 4.25, 0.5, 2.14);
 
 	setInline4();
 	engineConfiguration->displacement = 2.5;
