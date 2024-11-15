@@ -1,5 +1,13 @@
 /**
  * can_gpio_msiobox.cpp
+ *
+ *  - discrete output works
+ *  - PWM output works
+ *
+ * TODO list:
+ *  - implement input reading
+ *  - support PWM out mode
+ *  - support VSS capture
  */
 
 #include "pch.h"
@@ -11,13 +19,6 @@
 #include "can_listener.h"
 #include "can_msg_tx.h"
 #include <rusefi/endian.h>
-
-/*
- * TODO list:
- *  - implement input reading
- *  - support PWM out mode
- *  - support VSS capture
- */
 
 /*==========================================================================*/
 /* Driver local definitions.												*/
