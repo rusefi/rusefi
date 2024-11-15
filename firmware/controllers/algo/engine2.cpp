@@ -153,8 +153,7 @@ void EngineState::periodicFastCallback() {
 	auto tps = Sensor::get(SensorType::Tps1);
 	updateTChargeK(rpm, tps.value_or(0));
 
-	float untrimmedInjectionMass = getInjectionMass(rpm) * engine->engineState.lua.fuelMult + engine->engineState.lua.fuelAdd;
-	auto clResult = fuelClosedLoopCorrection();
+  float untrimmedInjectionMass = getInjectionMass(rpm) * engine->engineState.lua.fuelMult + engine->engineState.lua.fuelAdd;
 
 	injectionStage2Fraction = getStage2InjectionFraction(rpm, engine->fuelComputer.afrTableYAxis);
 	float stage2InjectionMass = untrimmedInjectionMass * injectionStage2Fraction;
@@ -176,39 +175,43 @@ void EngineState::periodicFastCallback() {
 	engine->shiftTorqueReductionController.update();
 #endif //EFI_LAUNCH_CONTROL
 
-	float l_ignitionLoad = getIgnitionLoad();
-	float baseAdvance = getWrappedAdvance(rpm, l_ignitionLoad);
-	float corrections = engineConfiguration->timingMode == TM_DYNAMIC ?
-			// Pull any extra timing for knock retard
-			- engine->module<KnockController>()->getKnockRetard()
-			// Degrees of timing REMOVED from actual timing during soft RPM limit window
-			- getLimpManager()->getLimitingTimingRetard() :
-			0;
-	float correctedIgnitionAdvance = baseAdvance + corrections;
-	// these fields are scaled_channel so let's only use for observability, with a local variables holding value while it matters locally
-	engine->ignitionState.baseIgnitionAdvance = MAKE_HUMAN_READABLE_ADVANCE(baseAdvance);
-	engine->ignitionState.correctedIgnitionAdvance = MAKE_HUMAN_READABLE_ADVANCE(correctedIgnitionAdvance);
+    float l_ignitionLoad = getIgnitionLoad();
+    float baseAdvance = getWrappedAdvance(rpm, l_ignitionLoad);
+    float corrections = engineConfiguration->timingMode == TM_DYNAMIC ?
+        // Pull any extra timing for knock retard
+        - engine->module<KnockController>()->getKnockRetard()
+        // Degrees of timing REMOVED from actual timing during soft RPM limit window
+        - getLimpManager()->getLimitingTimingRetard() :
+        0;
+    float correctedIgnitionAdvance = baseAdvance + corrections;
+    // these fields are scaled_channel so let's only use for observability, with a local variables holding value while it matters locally
+    engine->ignitionState.baseIgnitionAdvance = MAKE_HUMAN_READABLE_ADVANCE(baseAdvance);
+    engine->ignitionState.correctedIgnitionAdvance = MAKE_HUMAN_READABLE_ADVANCE(correctedIgnitionAdvance);
 
 
-	// compute per-bank fueling
-	for (size_t i = 0; i < STFT_BANK_COUNT; i++) {
-		float corr = clResult.banks[i];
-		// todo: move to engine_state.txt and get rid of fuelPidCorrection in output_channels.txt?
-		engine->engineState.stftCorrection[i] = corr;
-	}
+    auto clResult = fuelClosedLoopCorrection();
+    // compute per-bank fueling
+    for (size_t i = 0; i < STFT_BANK_COUNT; i++) {
+        float corr = clResult.banks[i];
+        engine->engineState.stftCorrection[i] = corr;
+    }
 
-	// Now apply that to per-cylinder fueling and timing
-	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
-		uint8_t bankIndex = engineConfiguration->cylinderBankSelect[i];
-		auto bankTrim = engine->engineState.stftCorrection[bankIndex];
-		auto cylinderTrim = getCylinderFuelTrim(i, rpm, fuelLoad);
-		auto knockTrim = engine->module<KnockController>()->getFuelTrimMultiplier();
+    // Now apply that to per-cylinder fueling and timing
+    for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
+        uint8_t bankIndex = engineConfiguration->cylinderBankSelect[i];
+        auto bankTrim = engine->engineState.stftCorrection[bankIndex];
+        auto cylinderTrim = getCylinderFuelTrim(i, rpm, fuelLoad);
+        auto knockTrim = engine->module<KnockController>()->getFuelTrimMultiplier();
 
-		// Apply both per-bank and per-cylinder trims
-		engine->engineState.injectionMass[i] = untrimmedInjectionMass * bankTrim * cylinderTrim * knockTrim;
-    // todo: is it OK to apply cylinder trim with FIXED timing?
-		timingAdvance[i] = correctedIgnitionAdvance + getCylinderIgnitionTrim(i, rpm, l_ignitionLoad);
-	}
+        // Apply both per-bank and per-cylinder trims
+        engine->engineState.injectionMass[i] = untrimmedInjectionMass * bankTrim * cylinderTrim * knockTrim;
+        if (engineConfiguration->timingMode == TM_DYNAMIC) {
+            timingAdvance[i] = correctedIgnitionAdvance + getCylinderIgnitionTrim(i, rpm, l_ignitionLoad);
+        }
+        else {
+            timingAdvance[i] = correctedIgnitionAdvance;
+        }
+    }
 
 	shouldUpdateInjectionTiming = getInjectorDutyCycle(rpm) < 90;
 
