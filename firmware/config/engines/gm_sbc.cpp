@@ -132,7 +132,12 @@ void setGmSbc() {
 }
 
 void setGmLcv() {
+  engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
+  engineConfiguration->vvtMode[1] = VVT_BOSCH_QUICK_START;
 #ifdef HW_HELLEN_4K_GDI
+  engineConfiguration->invertCamVVTSignal = true;
+  engineConfiguration->invertExhaustCamVVTSignal = true;
+
   engineConfiguration->sentInputPins[0] = Gpio::H144_IN_AUX2_DIGITAL;
 
   // engineConfiguration->starterControlPin = high side :()
