@@ -348,7 +348,7 @@ enum class Gpio : uint16_t {
 	MSIOBOX_0_OUT_5 = 328,
 	MSIOBOX_0_OUT_6 = 329,
 	MSIOBOX_0_OUT_7 = 330,
-	MSIOBOX_0_OUT_8 = 331,	/* actually not exist, keep for aligment, label NONE in rusefi_config.txt */
+	MSIOBOX_0_OUT_8 = 331,	/* actually not exist, keep for alignment, label NONE in rusefi_config.txt */
 	MSIOBOX_0_VSS_1  = 332,
 	MSIOBOX_0_VSS_2  = 333,
 	MSIOBOX_0_VSS_3  = 334,
@@ -356,7 +356,7 @@ enum class Gpio : uint16_t {
 	MSIOBOX_0_SW_1  = 336,
 	MSIOBOX_0_SW_2  = 337,
 	MSIOBOX_0_SW_3  = 338,
-	MSIOBOX_0_SW_4  = 339,	/* actually not exist, keep for aligment, label NONE in rusefi_config.txt */
+	MSIOBOX_0_SW_4  = 339,	/* actually not exist, keep for alignment, label NONE in rusefi_config.txt */
 };
 
 /* Please keep updating these defines */
