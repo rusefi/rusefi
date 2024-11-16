@@ -141,6 +141,10 @@ void setGmLcv() {
 #ifdef HW_HELLEN_8CHAN
   engineConfiguration->sentInputPins[0] = Gpio::H144_IN_AUX2_DIGITAL;
   engineConfiguration->starterControlPin = Gpio::MM176_IGN5; // 14C
+
+	engineConfiguration->camInputs[2] = Gpio::Unassigned;
+	engineConfiguration->camInputs[3] = Gpio::Unassigned;
+	config->boardUseCrankPullUp = true;
 #endif
 
   engineConfiguration->sentEtbType = SentEtbType::GM_TYPE_1;
