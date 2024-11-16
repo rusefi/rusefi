@@ -155,9 +155,9 @@ static_assert(sizeof(iobox_tach) == 8);
 typedef enum {
 	MSIOBOX_DISABLED = 0,
 	MSIOBOX_WAIT_INIT,
-	MSIOBOX_WAIT_WHOAMI,
+	MSIOBOX_WAIT_WHOAMI, // 2
 	MSIOBOX_READY,
-	MSIOBOX_FAILED
+	MSIOBOX_FAILED // 4
 } msiobox_state;
 
 class MsIoBox final : public GpioChip, public CanListener {
