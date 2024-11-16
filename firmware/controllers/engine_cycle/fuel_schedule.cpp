@@ -93,9 +93,14 @@ expected<float> InjectionEvent::computeInjectionAngle() const {
 		return unexpected;
 	}
 
+	float fuelMs = getEngineState()->injectionDuration;
+	if (std::isnan(fuelMs)) {
+		return unexpected;
+	}
+
 	// injection phase may be scheduled by injection end, so we need to step the angle back
 	// for the duration of the injection
-	angle_t injectionDurationAngle = getInjectionAngleCorrection(getEngineState()->injectionDuration, oneDegreeUs);
+	angle_t injectionDurationAngle = getInjectionAngleCorrection(fuelMs, oneDegreeUs);
 
 	// User configured offset - degrees after TDC combustion
 	floatus_t injectionOffset = getEngineState()->injectionOffset;
