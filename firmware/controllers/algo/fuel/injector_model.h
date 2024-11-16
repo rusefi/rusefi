@@ -54,12 +54,14 @@ public:
 	expected<float> getFuelDifferentialPressure() const override;
 
 	using interface_t = IInjectorModel; // Mock interface
-
 private:
+	[[nodiscard]] virtual injector_compensation_mode_e getInjectorCompensationMode() const = 0;
+	[[nodiscard]] virtual float getFuelReferencePressure() const = 0;
+
 	const injector_s* const m_cfg;
 };
 
-struct InjectorModelPrimary : public InjectorModelWithConfig {
+struct InjectorModelPrimary : InjectorModelWithConfig {
 	InjectorModelPrimary();
 
 	InjectorNonlinearMode getNonlinearMode() const override;
@@ -67,9 +69,12 @@ struct InjectorModelPrimary : public InjectorModelWithConfig {
 	// Ford small pulse model
 	float getSmallPulseFlowRate() const override;
 	float getSmallPulseBreakPoint() const override;
+private:
+	[[nodiscard]] injector_compensation_mode_e getInjectorCompensationMode() const final;
+	[[nodiscard]] float getFuelReferencePressure() const final;
 };
 
-struct InjectorModelSecondary : public InjectorModelWithConfig {
+struct InjectorModelSecondary : InjectorModelWithConfig {
 	InjectorModelSecondary();
 
 	InjectorNonlinearMode getNonlinearMode() const override;
@@ -77,4 +82,7 @@ struct InjectorModelSecondary : public InjectorModelWithConfig {
 	// Ford small pulse model
 	float getSmallPulseFlowRate() const override;
 	float getSmallPulseBreakPoint() const override;
+private:
+	[[nodiscard]] injector_compensation_mode_e getInjectorCompensationMode() const final;
+	[[nodiscard]] float getFuelReferencePressure() const final;
 };
