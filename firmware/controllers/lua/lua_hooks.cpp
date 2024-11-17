@@ -698,6 +698,10 @@ void configureRusefiLuaHooks(lua_State* lState) {
 		lua_pushnumber(l, engine->module<TripOdometer>()->getConsumedGrams());
 		return 1;
 	});
+	lua_register(lState, "getConsumedGramsRemainder", [](lua_State* l) {
+		lua_pushnumber(l, engine->module<TripOdometer>()->getConsumedGramsRemainder());
+		return 1;
+	});
 	lua_register(lState, "getConsumptionGramPerSecond", [](lua_State* l) {
 		lua_pushnumber(l, engine->module<TripOdometer>()->getConsumptionGramPerSecond());
 		return 1;
