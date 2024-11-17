@@ -8,6 +8,10 @@ public:
 	void consumeFuel(float grams, efitick_t nowNt);
 
 	uint32_t getConsumedGrams() const;
+  // in case if integer number of grams moves too slow
+	float getConsumedGramsRemainder() const {
+	  return m_consumedRemainder;
+	}
 	float getConsumptionGramPerSecond() const;
 	uint32_t getDistanceMeters() const;
 	uint32_t getIgnitionOnTime() const;
