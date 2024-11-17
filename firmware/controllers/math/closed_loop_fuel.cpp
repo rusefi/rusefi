@@ -36,7 +36,7 @@ void LongTermFuelTrim::updateLtft(float load, float rpm) {
 			auto lowRpm = binRpm.Idx;
 			float fracRpm = binRpm.Frac;
 
-			if(lowLoad >= 0 && lowLoad <= 14 && lowRpm >= 0 && lowRpm <= 14 && fracLoad > 0.00f && fracLoad < 1.00f && fracRpm > 0.00f && fracRpm < 1.00f) {
+			if(lowLoad <= 14 && lowRpm <= 14 && fracLoad > 0.00f && fracLoad < 1.00f && fracRpm > 0.00f && fracRpm < 1.00f) {
 
 				float stftCorrection = engine->engineState.stftCorrection[0] - 1.00f;
 				float correctionRate = interpolate3d(
