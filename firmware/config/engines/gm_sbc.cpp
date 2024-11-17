@@ -144,7 +144,7 @@ void setGmLcv() {
 #endif
 
 #ifdef HW_HELLEN_8CHAN
-  engineConfiguration->sentInputPins[0] = Gpio::H144_IN_AUX2_DIGITAL;
+  // engineConfiguration->sentInputPins[0] = todo TIM1_CH4 ICU #7076
   engineConfiguration->starterControlPin = Gpio::MM176_IGN5; // 14C
 
 	engineConfiguration->camInputs[2] = Gpio::Unassigned;
