@@ -28,7 +28,7 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
-## November 2024 "Day 993"
+## November 2024 "Day 998"
 
 ### Added
  - Support wasted spark on odd cylinder count 4-stroke engines. Improves startup and allows running without a cam sensor!
@@ -47,6 +47,7 @@ Release template (copy/paste this for new release):
  - Organize sensor categories #6856
  - USB serial is sometimes lost #6595
  - fix detect cylinder for knock then wasted_spark #7062
+ - Change BMW E46 CAN interval to 10 ms #6974
 
 ## August 2024 "Day 898"
 
