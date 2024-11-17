@@ -693,6 +693,16 @@ void configureRusefiLuaHooks(lua_State* lState) {
 	lua_register(lState, "getSensor", lua_getSensorByName);
 	lua_register(lState, "getSensorRaw", lua_getSensorRaw);
 	lua_register(lState, "hasSensor", lua_hasSensor);
+#if EFI_VEHICLE_SPEED
+	lua_register(lState, "getConsumedGrams", [](lua_State* l) {
+		lua_pushnumber(l, engine->module<TripOdometer>()->getConsumedGrams());
+		return 1;
+	});
+	lua_register(lState, "getConsumptionGramPerSecond", [](lua_State* l) {
+		lua_pushnumber(l, engine->module<TripOdometer>()->getConsumptionGramPerSecond());
+		return 1;
+	});
+#endif // EFI_VEHICLE_SPEED
 	lua_register(lState, "table3d", [](lua_State* l) {
 		auto humanTableIdx = luaL_checkinteger(l, 1);
 		auto x = luaL_checknumber(l, 2);
