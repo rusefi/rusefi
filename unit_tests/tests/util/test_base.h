@@ -7,6 +7,7 @@
 #include "test_engine_configuration.h"
 #include "test_engine_state.h"
 #include "test_persistent_configuration.h"
+#include "engine_config.h"
 
 class TestBase : public testing::Test {
 protected:
@@ -16,6 +17,8 @@ protected:
     TestEngineConfiguration& getTestEngineConfiguration();
     TestEngineState& getTestEngineState();
     TestPersistentConfiguration& getTestPersistentConfiguration();
+
+    void setUpEngineConfiguration(const EngineConfig& config);
 
     void periodicFastCallback();
     void periodicSlowCallback();

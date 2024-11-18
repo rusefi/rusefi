@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "pch.h"
+#include "batt_lag_corr_curve.h"
 
 class TestEngineConfiguration {
 public:
@@ -41,6 +41,18 @@ public:
     void configureTorqueReductionArmingApp(std::optional<float> armingApp);
     void configureTorqueReductionIgnitionCut(std::optional<int8_t> ignitionCut);
     void configureTorqueReductionIgnitionRetard(std::optional<int8_t> ignitionRetard);
+
+    // Injector
+    void configureInjectorFlow(std::optional<float> flow);
+    void configureInjectorBattLagCorr(std::optional<BattLagCorrCurve> battLagCorr);
+    void configureInjectorFlowAsMassFlow(std::optional<bool> injectorFlowAsMassFlow);
+
+    // Secondary Injector
+    void configureInjectorSecondaryFlow(std::optional<float> flow);
+    void configureInjectorSecondaryBattLagCorr(std::optional<BattLagCorrCurve> battLagCorr);
+
+    // Staged injection
+    void configureEnableStagedInjection(std::optional<bool> isStagedInjectionEnabled);
 private:
     TestEngineConfiguration();
     static TestEngineConfiguration instance;
