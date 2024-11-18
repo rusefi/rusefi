@@ -49,6 +49,9 @@ Release template (copy/paste this for new release):
  - fix detect cylinder for knock then wasted_spark #7062
  - Change BMW E46 CAN interval to 10 ms #6974
 
+### Breaking Changes
+- Now secondary injectors use `Secondary injector flow compensation mode` and `Secondary injector reference pressure` instead of `Injector flow compensation mode` and `Injector reference pressure` Tuner Studio settings #6972
+
 ## August 2024 "Day 898"
 
 ### Added

@@ -1718,7 +1718,10 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 	float knockSpectrumSensitivity;;"sense", 1, 0, 0, 1, 2
 	float knockFrequency;"Estimated knock frequency, ignore cylinderBore if this one > 0";"Hz", 1, 0, 0, 20000, 2
 
-#define END_OF_CALIBRATION_PADDING 116
+    injector_compensation_mode_e secondaryInjectorCompensationMode;None = I have a MAP-referenced fuel pressure regulator\nFixed rail pressure = I have an atmosphere-referenced fuel pressure regulator (returnless, typically)\nSensed rail pressure = I have a fuel pressure sensor;
+    float secondaryInjectorFuelReferencePressure;This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.;"kPa", 1, 0, 50, 700000, 0
+
+#define END_OF_CALIBRATION_PADDING 111
 uint8_t[END_OF_CALIBRATION_PADDING] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
