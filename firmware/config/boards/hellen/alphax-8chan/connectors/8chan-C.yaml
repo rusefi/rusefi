@@ -99,9 +99,9 @@ pins:
     color: orange
 
   - pin: 16C
-    function: CAN2 bus high (CAN2H)
+    function: CAN2 bus low (CAN2L)
     type: can
-    color: green
+    color: blue
 
   - pin: 17C
     function: Low Side 5
@@ -152,9 +152,9 @@ pins:
     color: orange
 
   - pin: 24C
-    function: CAN2 bus low (CAN2L)
+    function: CAN2 bus high (CAN2H)
     type: can
-    color: blue
+    color: green
 
   - pin: 25C
     function: Low Side 6
