@@ -134,6 +134,8 @@ void setGmSbc() {
 void setGmLcv() {
   engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
   engineConfiguration->vvtMode[1] = VVT_BOSCH_QUICK_START;
+  engineConfiguration->lowPressureFuel.hwChannel = EFI_ADC_NONE;
+
 #ifdef HW_HELLEN_4K_GDI
   engineConfiguration->invertCamVVTSignal = true;
   engineConfiguration->invertExhaustCamVVTSignal = true;
