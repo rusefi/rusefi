@@ -38,18 +38,22 @@ static volatile size_t sampleCount = 0;
 
 chibios_rt::BinarySemaphore knockSem(/* taken =*/ true);
 
-static void completionCallback(ADCDriver* adcp) {
-	if (adcp->state == ADC_COMPLETE) {
-		knockNeedsProcess = true;
+static void onKnockSamplingComplete() {
+	knockNeedsProcess = true;
 
-		// Notify the processing thread that it's time to process this sample
-		chSysLockFromISR();
-		knockSem.signalI();
-		chSysUnlockFromISR();
+	// Notify the processing thread that it's time to process this sample
+	chSysLockFromISR();
+	knockSem.signalI();
+	chSysUnlockFromISR();
+}
+
+static void knockCompletionCallback(ADCDriver* adcp) {
+	if (adcp->state == ADC_COMPLETE) {
+	  onKnockSamplingComplete();
 	}
 }
 
-static void errorCallback(ADCDriver*, adcerror_t) {
+static void knockErrorCallback(ADCDriver*, adcerror_t) {
 }
 
 static const uint32_t smpr1 =
@@ -75,8 +79,8 @@ static const uint32_t smpr2 =
 static const ADCConversionGroup adcConvGroupCh1 = {
 	.circular = FALSE,
 	.num_channels = 1,
-	.end_cb = &completionCallback,
-	.error_cb = &errorCallback,
+	.end_cb = &knockCompletionCallback,
+	.error_cb = &knockErrorCallback,
 	.cr1 = 0,
 	.cr2 = ADC_CR2_SWSTART,
 	// sample times for channels 10...18
@@ -97,8 +101,8 @@ static const ADCConversionGroup adcConvGroupCh1 = {
 static const ADCConversionGroup adcConvGroupCh2 = {
 	.circular = FALSE,
    	.num_channels = 1,
-   	.end_cb = &completionCallback,
-   	.error_cb = &errorCallback,
+   	.end_cb = &knockCompletionCallback,
+   	.error_cb = &knockErrorCallback,
    	.cr1 = 0,
    	.cr2 = ADC_CR2_SWSTART,
    	// sample times for channels 10...18
@@ -115,7 +119,7 @@ static const ADCConversionGroup adcConvGroupCh2 = {
 };
 #endif // KNOCK_HAS_CH2
 
-static const ADCConversionGroup* getConversionGroup(uint8_t channelIdx) {
+static const ADCConversionGroup* getKnockConversionGroup(uint8_t channelIdx) {
 #if KNOCK_HAS_CH2
 	if (channelIdx == 1) {
 		return &adcConvGroupCh2;
@@ -149,7 +153,7 @@ void onStartKnockSampling(uint8_t cylinderNumber, float samplingSeconds, uint8_t
 	sampleCount = 0xFFFFFFFE & static_cast<size_t>(clampF(100, samplingSeconds * sampleRate, efi::size(sampleBuffer)));
 
 	// Select the appropriate conversion group - it will differ depending on which sensor this cylinder should listen on
-	auto conversionGroup = getConversionGroup(channelIdx);
+	auto conversionGroup = getKnockConversionGroup(channelIdx);
 
   //current chanel number for spectrum TS plugin
 	channelNumber = channelIdx;
