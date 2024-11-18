@@ -1901,6 +1901,9 @@ float getConfigValueByName(const char *name) {
 // knockFrequency
 		case 1972605869:
 			return engineConfiguration->knockFrequency;
+// secondaryInjectorFuelReferencePressure
+		case -425992769:
+			return engineConfiguration->secondaryInjectorFuelReferencePressure;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -5068,6 +5071,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1972605869:
 	{
 		engineConfiguration->knockFrequency = value;
+		return 1;
+	}
+		case -425992769:
+	{
+		engineConfiguration->secondaryInjectorFuelReferencePressure = value;
 		return 1;
 	}
 		case -1658957891:

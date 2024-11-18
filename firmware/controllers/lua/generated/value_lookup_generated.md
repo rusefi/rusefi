@@ -1894,6 +1894,9 @@ Fuel trim when knock, max 30%
 ### knockFrequency
 "Estimated knock frequency, ignore cylinderBore if this one > 0"
 
+### secondaryInjectorFuelReferencePressure
+This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.
+
 ### tcu_shiftTime
 
 
