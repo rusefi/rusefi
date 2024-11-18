@@ -230,10 +230,12 @@ float LongTermFuelTrim::getLtft(float load, float rpm) {
 			  config->veRpmBins, rpm
 		) * 0.01f;
 
+    /*
 		if(100.0f * ltft > config->ltftMaxCorrection || 100.0f * ltft < config->ltftMinCorrection) {
 			config->ltftEnabled = 0;
 			return 1.00f;
 		}
+    */
 
 		return ltft;
 	} else {
