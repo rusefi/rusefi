@@ -28,5 +28,8 @@ ONBOARD_MEMS_TYPE=LIS2DH12
 
 include $(BOARDS_DIR)/hellen/hellen-common100.mk
 
+# we do not have much Lua RAM, let's drop some fancy functions
+DDEFS += -DWITH_LUA_CONSUMPTION=FALSE
+
 DDEFS += $(PRIMARY_COMMUNICATION_PORT_USART2)
 

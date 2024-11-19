@@ -700,7 +700,12 @@ void configureRusefiLuaHooks(lua_State* lState) {
 	lua_register(lState, "getSensor", lua_getSensorByName);
 	lua_register(lState, "getSensorRaw", lua_getSensorRaw);
 	lua_register(lState, "hasSensor", lua_hasSensor);
-#if EFI_VEHICLE_SPEED
+
+#ifndef WITH_LUA_CONSUMPTION
+#define WITH_LUA_CONSUMPTION TRUE
+#endif
+
+#if EFI_VEHICLE_SPEED && WITH_LUA_CONSUMPTION
 	lua_register(lState, "getConsumedGrams", [](lua_State* l) {
 		lua_pushnumber(l, engine->module<TripOdometer>()->getConsumedGrams());
 		return 1;
