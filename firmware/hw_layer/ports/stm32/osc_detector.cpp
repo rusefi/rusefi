@@ -177,7 +177,7 @@ void OscDetector() {
 	disableTimer();
 
 	float hseFrequencyHz = 10 * rtcpreDivider * STM32_TIMCLK2 / hseCounts;
-
+  hseFrequencyMhz = hseFrequencyHz / 1e6;
 	autoDetectedRoundedMhz = ((int)hseFrequencyHz + (1e6 / 2)) / 1e6;
 
 	reprogramPll(autoDetectedRoundedMhz);
