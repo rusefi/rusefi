@@ -207,6 +207,9 @@ bool getIcuParams(brain_pin_e hwPin, iomode_t *af_ptr, ICUDriver ** icu_ptr, icu
 		case Gpio::E11:
 			RETURN_ICU1(ICU_CHANNEL_2);
 			return false;
+		case Gpio::E14:
+			RETURN_ICU1(ICU_CHANNEL_4);
+			return false;
 		case Gpio::F6:
 			RETURN_ICU10(ICU_CHANNEL_1);
 			return false;
