@@ -68,7 +68,7 @@ public:
 	virtual void setIdlePosition(percent_t pos) = 0;
 	virtual void setWastegatePosition(percent_t pos) = 0;
 	virtual void update() = 0;
-	virtual void autoCalibrateTps(bool reportToTs = true) = 0;
+	virtual void autoCalibrateTps(bool reportToTs = true) { (void)reportToTs; }
 	virtual bool isEtbMode() const = 0;
 
 	virtual const pid_state_s& getPidState() const = 0;
