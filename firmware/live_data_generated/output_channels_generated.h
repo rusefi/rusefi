@@ -1301,7 +1301,7 @@ struct output_channels_s {
 	/**
 	 * offset 759
 	 */
-	uint8_t unusedByteHere = (uint8_t)0;
+	uint8_t rawFlexFreq = (uint8_t)0;
 	/**
 	 * offset 760
 	 */

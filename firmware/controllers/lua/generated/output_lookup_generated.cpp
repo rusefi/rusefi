@@ -768,6 +768,9 @@ float getOutputValueByName(const char *name) {
 // injectorDutyCycleStage2
 		case -1337459841:
 			return engine->outputChannels.injectorDutyCycleStage2;
+// rawFlexFreq
+		case -1935221780:
+			return engine->outputChannels.rawFlexFreq;
 // fastAdcErrorsCount
 		case -805019103:
 			return engine->outputChannels.fastAdcErrorsCount;

@@ -318,6 +318,7 @@ static const LogField fields[] = {
 	{engine->outputChannels.injectorDiagnostic[11], "injectorDiagnostic 12", "", 0},
 	{engine->outputChannels.actualLastInjectionStage2, "Fuel: Last inj pulse width stg 2", "ms", 3},
 	{engine->outputChannels.injectorDutyCycleStage2, "Fuel: injector duty cycle stage 2", "%", 0},
+	{engine->outputChannels.rawFlexFreq, "rawFlexFreq", "", 0},
 	{engine->outputChannels.fastAdcErrorsCount, "fastAdcErrorsCount", "", 0},
 	{engine->outputChannels.deviceUid, "deviceUid", "", 0},
 	{engine->outputChannels.mc33810spiErrorCounter, "mc33810spiErrorCounter", "", 0},

@@ -584,6 +584,7 @@ public class TsOutputs {
 	public static final Field INJECTORDIAGNOSTIC12 = Field.create("INJECTORDIAGNOSTIC12", 755, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ACTUALLASTINJECTIONSTAGE2 = Field.create("ACTUALLASTINJECTIONSTAGE2", 756, FieldType.INT16).setScale(0.0033333333333333335).setBaseOffset(0);
 	public static final Field INJECTORDUTYCYCLESTAGE2 = Field.create("INJECTORDUTYCYCLESTAGE2", 758, FieldType.INT8).setScale(0.5).setBaseOffset(0);
+	public static final Field RAWFLEXFREQ = Field.create("RAWFLEXFREQ", 759, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field FASTADCERRORSCOUNT = Field.create("FASTADCERRORSCOUNT", 760, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field DEVICEUID = Field.create("DEVICEUID", 761, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field MC33810SPIERRORCOUNTER = Field.create("MC33810SPIERRORCOUNTER", 762, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -1012,6 +1013,7 @@ public class TsOutputs {
 	INJECTORDIAGNOSTIC12,
 	ACTUALLASTINJECTIONSTAGE2,
 	INJECTORDUTYCYCLESTAGE2,
+	RAWFLEXFREQ,
 	FASTADCERRORSCOUNT,
 	DEVICEUID,
 	MC33810SPIERRORCOUNTER,
