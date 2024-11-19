@@ -6,14 +6,17 @@
 // see comments at declaration in pin_repository.h
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
+		case Gpio::A6: return "BUTTON2";
 		case Gpio::A8: return "49a INJ_6";
 		case Gpio::A9: return "45a INJ_2";
+		case Gpio::B1: return "BUTTON1";
 		case Gpio::B13: return "51a INJ_8";
 		case Gpio::B8: return "Coil 6";
 		case Gpio::B9: return "86a LS5_HOT";
 		case Gpio::C13: return "Coil 1";
 		case Gpio::C6: return "88a LS4";
 		case Gpio::D0: return "44a INJ_1";
+		case Gpio::D1: return "DIN";
 		case Gpio::D10: return "47a INJ_4";
 		case Gpio::D11: return "46a INJ_3";
 		case Gpio::D12: return "15a LS2";
@@ -28,6 +31,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::E12: return "36a HALL1 / VSS";
 		case Gpio::E13: return "35a HALL2";
 		case Gpio::E14: return "34a HALL3";
+		case Gpio::E15: return "BUTTON3";
 		case Gpio::E2: return "Coil 5";
 		case Gpio::E3: return "Coil 4";
 		case Gpio::E4: return "Coil 3";
