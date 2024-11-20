@@ -631,28 +631,10 @@ int lua_canRxAddMask(lua_State* l) {
 }
 #endif // EFI_CAN_SUPPORT
 
-static int lua_vincpy(lua_State* l) {
-    luaL_checktype(l, 1, LUA_TTABLE);
-	size_t sourceIndex = luaL_checknumber(l, 2);
-	size_t destinationIndex = luaL_checknumber(l, 3);
-	size_t size = luaL_checknumber(l, 4);
-	for (size_t i = 0;i<size;i++) {
-	    lua_pushnumber(l, engineConfiguration->vinNumber[sourceIndex + i]);
-	    lua_rawseti(l, 1, destinationIndex + i);
-	}
-	return 0;
-}
-
 PUBLIC_API_WEAK void boardConfigureLuaHooks(lua_State* lState) { }
 
 void configureRusefiLuaHooks(lua_State* lState) {
   boardConfigureLuaHooks(lState);
-
-  LuaClass<LuaBiQuad> biQuard(lState, "Biquad");
-  biQuard
-    .ctor()
-		.fun("filter", &LuaBiQuad::filter)
-		.fun("configureLowpass", &LuaBiQuad::configureLowpass);
 
 	LuaClass<Timer> luaTimer(lState, "Timer");
 	luaTimer
@@ -667,6 +649,17 @@ void configureRusefiLuaHooks(lua_State* lState) {
 		.fun("setRedundant", &LuaSensor::setRedundant)
 		.fun("setTimeout", &LuaSensor::setTimeout)
 		.fun("invalidate", &LuaSensor::invalidate);
+
+#ifndef WITH_LUA_PID
+#define WITH_LUA_PID TRUE
+#endif
+
+#if WITH_LUA_PID
+  LuaClass<LuaBiQuad> biQuard(lState, "Biquad");
+  biQuard
+    .ctor()
+		.fun("filter", &LuaBiQuad::filter)
+		.fun("configureLowpass", &LuaBiQuad::configureLowpass);
 
 	LuaClass<LuaPid> luaPid(lState, "Pid");
 	luaPid
@@ -683,6 +676,7 @@ void configureRusefiLuaHooks(lua_State* lState) {
 		.fun("setDerivativeFilterLoss", &LuaIndustrialPid::setDerivativeFilterLoss)
 		.fun("setAntiwindupFreq", &LuaIndustrialPid::setAntiwindupFreq)
 		.fun("reset", &LuaIndustrialPid::reset);
+#endif
 
 	configureRusefiLuaUtilHooks(lState);
 
@@ -694,7 +688,7 @@ void configureRusefiLuaHooks(lua_State* lState) {
 	});
 #endif // EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
 	lua_register(lState, "vin", lua_vin);
-	lua_register(lState, "vincpy", lua_vincpy);
+
 	lua_register(lState, "getAuxAnalog", lua_getAuxAnalog);
 	lua_register(lState, "getSensorByIndex", lua_getSensorByIndex);
 	lua_register(lState, "getSensor", lua_getSensorByName);
@@ -717,6 +711,10 @@ void configureRusefiLuaHooks(lua_State* lState) {
 	lua_register(lState, "getConsumptionGramPerSecond", [](lua_State* l) {
 		lua_pushnumber(l, engine->module<TripOdometer>()->getConsumptionGramPerSecond());
 		return 1;
+	});
+	lua_register(lState, "resetOdometer", [](lua_State*) {
+		engine->module<TripOdometer>()->reset();
+		return 0;
 	});
 #endif // EFI_VEHICLE_SPEED
 	lua_register(lState, "table3d", [](lua_State* l) {
@@ -887,12 +885,12 @@ void configureRusefiLuaHooks(lua_State* lState) {
 
 		return 0;
 	});
-#endif // EFI_ELECTRONIC_THROTTLE_BODY
-#if EFI_PROD_CODE
 	lua_register(lState, "setEtbDisabled", [](lua_State* l) {
 		engine->engineState.lua.luaDisableEtb = lua_toboolean(l, 1);
 		return 0;
 	});
+#endif // EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_PROD_CODE
 	lua_register(lState, "setIgnDisabled", [](lua_State* l) {
 		engine->engineState.lua.luaIgnCut = lua_toboolean(l, 1);
 		return 0;
@@ -996,19 +994,6 @@ void configureRusefiLuaHooks(lua_State* lState) {
 		return 1;
 	});
 
-#if EFI_VEHICLE_SPEED
-	lua_register(lState, "getCurrentGear", [](lua_State* l) {
-		lua_pushinteger(l, Sensor::getOrZero(SensorType::DetectedGear));
-		return 1;
-	});
-
-	lua_register(lState, "getRpmInGear", [](lua_State* l) {
-		auto idx = luaL_checkinteger(l, 1);
-		lua_pushinteger(l, engine->module<GearDetector>()->getRpmInGear(idx));
-		return 1;
-	});
-#endif // EFI_VEHICLE_SPEED
-
 #if !EFI_UNIT_TEST
 	lua_register(lState, "startPwm", lua_startPwm);
 	lua_register(lState, "setPwmDuty", lua_setPwmDuty);
@@ -1023,6 +1008,12 @@ void configureRusefiLuaHooks(lua_State* lState) {
 	lua_register(lState, "setAirmass", lua_setAirmass);
 #endif // EFI_ENGINE_CONTROL
 
+
+#ifndef WITH_LUA_STOP_ENGINE
+#define WITH_LUA_STOP_ENGINE TRUE
+#endif
+
+#if WITH_LUA_STOP_ENGINE
 	lua_register(lState, "isFirmwareError", [](lua_State* l) {
 		lua_pushboolean(l, hasFirmwareError());
 		return 1;
@@ -1043,6 +1034,7 @@ void configureRusefiLuaHooks(lua_State* lState) {
 		return 1;
 	});
 #endif // EFI_SHAFT_POSITION_INPUT
+#endif // WITH_LUA_STOP_ENGINE
 
 #if EFI_CAN_SUPPORT
 	lua_register(lState, "canRxAdd", lua_canRxAdd);
@@ -1053,13 +1045,6 @@ void configureRusefiLuaHooks(lua_State* lState) {
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
 	lua_register(lState, "txCan", lua_txCan);
 #endif
-
-#if EFI_VEHICLE_SPEED
-	lua_register(lState, "resetOdometer", [](lua_State*) {
-		engine->module<TripOdometer>()->reset();
-		return 0;
-	});
-#endif // EFI_VEHICLE_SPEED
 
 #if EFI_PROD_CODE && HW_HELLEN
 	lua_register(lState, "hellenEnablePower", [](lua_State*) {
