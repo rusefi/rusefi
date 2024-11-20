@@ -17,8 +17,6 @@
     <mapping directory="$PROJECT_DIR$/../firmware/controllers/can/wideband_firmware/firmware/ext/openblt" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../firmware/controllers/can/wideband_firmware/firmware/libfirmware" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../firmware/controllers/can/wideband_firmware/kicad-libraries" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/../firmware/controllers/can/wideband_firmware/kicad-libraries/Fabrication/InteractiveHtmlBom" vcs="Git" />
-    <mapping directory="$PROJECT_DIR$/../firmware/controllers/can/wideband_firmware/kicad-libraries/Fabrication/bom_jlc" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../firmware/controllers/can/wideband_firmware/test/googletest" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../firmware/controllers/lua/luaaa" vcs="Git" />
     <mapping directory="$PROJECT_DIR$/../firmware/ext/lua" vcs="Git" />

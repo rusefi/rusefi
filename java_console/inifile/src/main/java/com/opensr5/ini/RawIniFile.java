@@ -18,6 +18,7 @@ public class RawIniFile {
      * A list of lines. Lines which are only a comment were filtered out already.
      */
     private final List<Line> lines;
+    final String msg;
 
     /**
      * Often we want to look-up line by first token.
@@ -25,8 +26,9 @@ public class RawIniFile {
      */
     private final Map<String, Line> asSet = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
 
-    public RawIniFile(List<Line> lines) {
+    public RawIniFile(List<Line> lines, String msg) {
         this.lines = lines;
+        this.msg = msg;
 
         for (Line line : lines) {
             if (line.tokens.length > 1)
