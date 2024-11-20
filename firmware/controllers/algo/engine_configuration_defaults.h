@@ -4,6 +4,8 @@
 
 #pragma once
 
+#include "batt_lag_corr_curve.h"
+
 namespace engine_configuration_defaults {
     /* A/C Settings: */
     constexpr float AC_DELAY = 0.5f;
@@ -28,4 +30,16 @@ namespace engine_configuration_defaults {
     constexpr bool LAUNCH_ACTIVATE_PIN_INVERTED = false;
     constexpr launchActivationMode_e LAUNCH_ACTIVATION_MODE = SWITCH_INPUT_LAUNCH;
     constexpr int LAUNCH_SPEED_THRESHOLD = 0;
+
+    /* Injector */
+    constexpr bool INJECTOR_FLOW_AS_MASS_FLOW = false;
+    constexpr float INJECTOR_FLOW = 200.0f;
+    constexpr BattLagCorrCurve INJECTOR_BATT_LAG_CURR { 3.371f, 1.974f, 1.383f, 1.194f, 1.04f, 0.914f, 0.797f, 0.726 };
+
+    /* Secondary injector: */
+    constexpr float INJECTOR_SECONDARY_FLOW = INJECTOR_FLOW;
+    constexpr BattLagCorrCurve INJECTOR_SECONDARY_BATT_LAG_CURR = INJECTOR_BATT_LAG_CURR;
+
+    /* Staged injection: */
+    constexpr bool ENABLE_STAGED_INJECTION = false;
 }

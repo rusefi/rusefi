@@ -18,4 +18,12 @@ void TestPersistentConfiguration::setIgnitionTable(const IgnitionTable& ignition
     }
 }
 
+void TestPersistentConfiguration::setInjectorStagingTable(const InjectorStagingTable& injectorStaging) {
+    for (int i = 0; i < INJ_STAGING_COUNT; i++) {
+        for (int j = 0; j < INJ_STAGING_COUNT; j++) {
+            config->injectorStagingTable[i][j] = injectorStaging[i][j];
+        }
+    }
+}
+
 TestPersistentConfiguration TestPersistentConfiguration::instance;

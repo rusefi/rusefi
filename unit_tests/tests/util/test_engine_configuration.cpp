@@ -252,6 +252,77 @@ void TestEngineConfiguration::configureTorqueReductionIgnitionRetard(const std::
     }
 }
 
+void TestEngineConfiguration::configureInjectorFlowAsMassFlow(const std::optional<bool> injectorFlowAsMassFlow) {
+    if (injectorFlowAsMassFlow.has_value()) {
+        engineConfiguration->injectorFlowAsMassFlow = injectorFlowAsMassFlow.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->injectorFlowAsMassFlow,
+            engine_configuration_defaults::INJECTOR_FLOW_AS_MASS_FLOW
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureInjectorFlow(const std::optional<float> flow) {
+    if (flow.has_value()) {
+        engineConfiguration->injector.flow = flow.value();
+    } else {
+        ASSERT_EQ(engineConfiguration->injector.flow, engine_configuration_defaults::INJECTOR_FLOW); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureInjectorBattLagCorr(const std::optional<BattLagCorrCurve> battLagCorr) {
+    if (battLagCorr.has_value()) {
+        std::copy(
+            std::begin(battLagCorr.value()),
+            std::end(battLagCorr.value()),
+            std::begin(engineConfiguration->injector.battLagCorr)
+        );
+    } else {
+        EXPECT_THAT(
+            engineConfiguration->injector.battLagCorr,
+            testing::ElementsAreArray(engine_configuration_defaults::INJECTOR_BATT_LAG_CURR)
+        );
+    }
+}
+
+void TestEngineConfiguration::configureInjectorSecondaryFlow(const std::optional<float> flow) {
+    if (flow.has_value()) {
+        engineConfiguration->injectorSecondary.flow = flow.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->injectorSecondary.flow,
+            engine_configuration_defaults::INJECTOR_SECONDARY_FLOW
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureInjectorSecondaryBattLagCorr(const std::optional<BattLagCorrCurve> battLagCorr) {
+    if (battLagCorr.has_value()) {
+        std::copy(
+            std::begin(battLagCorr.value()),
+            std::end(battLagCorr.value()),
+            std::begin(engineConfiguration->injectorSecondary.battLagCorr)
+        );
+    } else {
+        EXPECT_THAT(
+            engineConfiguration->injectorSecondary.battLagCorr,
+            testing::ElementsAreArray(engine_configuration_defaults::INJECTOR_SECONDARY_BATT_LAG_CURR)
+        );
+    }
+}
+
+void TestEngineConfiguration::configureEnableStagedInjection(const std::optional<bool> isStagedInjectionEnabled) {
+    if (isStagedInjectionEnabled.has_value()) {
+        engineConfiguration->enableStagedInjection = isStagedInjectionEnabled.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->enableStagedInjection,
+            engine_configuration_defaults::ENABLE_STAGED_INJECTION
+        ); // check default value
+    }
+}
+
 TestEngineConfiguration::TestEngineConfiguration() {
 }
 

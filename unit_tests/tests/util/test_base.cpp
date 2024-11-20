@@ -26,6 +26,20 @@ TestEngineState& TestBase::getTestEngineState() {
     return TestEngineState::getInstance();
 }
 
+void TestBase::setUpEngineConfiguration(const EngineConfig& config) {
+    // Injector
+    getTestEngineConfiguration().configureInjectorFlowAsMassFlow(config.getInjectorFlowAsMassFlow());
+    getTestEngineConfiguration().configureInjectorFlow(config.getInjectorFlow());
+    getTestEngineConfiguration().configureInjectorBattLagCorr(config.getInjectorBattLagCorr());
+
+    // Secondary injector
+    getTestEngineConfiguration().configureInjectorSecondaryFlow(config.getInjectorSecondaryFlow());
+    getTestEngineConfiguration().configureInjectorSecondaryBattLagCorr(config.getInjectorSecondaryBattLagCorr());
+
+    // Staged injection
+    getTestEngineConfiguration().configureEnableStagedInjection(config.getStagedInjectionEnabled());
+}
+
 void TestBase::periodicFastCallback() {
     // run the ignition math
     engine->periodicFastCallback();
