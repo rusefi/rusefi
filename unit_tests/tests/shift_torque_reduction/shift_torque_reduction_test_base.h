@@ -12,8 +12,8 @@ public:
     std::optional<torqueReductionActivationMode_e> getTorqueReductionActivationMode() const {
         return m_torqueReductionActivationMode;
     }
-    std::optional<switch_input_pin_e> getTriggerPin() const { return m_torqueReductionTriggerPin; }
-    std::optional<bool> getPinInverted() const { return m_pinInverted; }
+    std::optional<switch_input_pin_e> getTorqueReductionTriggerPin() const { return m_torqueReductionTriggerPin; }
+    std::optional<bool> getTorqueReductionTriggerPinInverted() const { return m_torqueReductionTriggerPinInverted; }
     std::optional<switch_input_pin_e> getLaunchActivatePin() const { return m_launchActivatePin; }
     std::optional<bool> getLaunchActivateInverted() const { return m_launchActivateInverted; }
     std::optional<bool> getLimitTorqueReductionTime() const { return m_limitTorqueReductionTime; }
@@ -29,8 +29,8 @@ public:
     ShiftTorqueReductionTestConfig setTorqueReductionActivationMode(
         std::optional<torqueReductionActivationMode_e> value
     );
-    ShiftTorqueReductionTestConfig setTriggerPin(std::optional<switch_input_pin_e> value);
-    ShiftTorqueReductionTestConfig setPinInverted(std::optional<bool> value);
+    ShiftTorqueReductionTestConfig setTorqueReductionTriggerPin(std::optional<switch_input_pin_e> value);
+    ShiftTorqueReductionTestConfig setTorqueReductionTriggerPinInverted(std::optional<bool> value);
     ShiftTorqueReductionTestConfig setLaunchActivatePin(std::optional<switch_input_pin_e> value);
     ShiftTorqueReductionTestConfig setLaunchActivateInverted(std::optional<bool> value);
     ShiftTorqueReductionTestConfig setLimitTorqueReductionTime(std::optional<bool> value);
@@ -43,7 +43,7 @@ private:
     std::optional<bool> m_isTorqueReductionEnabled;
     std::optional<torqueReductionActivationMode_e> m_torqueReductionActivationMode;
     std::optional<switch_input_pin_e> m_torqueReductionTriggerPin;
-    std::optional<bool> m_pinInverted;
+    std::optional<bool> m_torqueReductionTriggerPinInverted;
     std::optional<switch_input_pin_e> m_launchActivatePin;
     std::optional<bool> m_launchActivateInverted;
     std::optional<bool> m_limitTorqueReductionTime;

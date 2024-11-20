@@ -31,7 +31,7 @@ public:
     // Shift Torque Reduction (Flat Shift)
     void configureTorqueReductionEnabled(std::optional<bool> isTorqueReductionEnabled);
     void configureTorqueReductionActivationMode(std::optional<torqueReductionActivationMode_e> activationMode);
-    void configureTorqueReductionButton(std::optional<switch_input_pin_e> pin);
+    void configureTorqueReductionTriggerPin(std::optional<switch_input_pin_e> pin);
     void configureTorqueReductionButtonInverted(std::optional<bool> pinInverted);
     void configureLaunchActivatePin(std::optional<switch_input_pin_e> pin);
     void configureLaunchActivateInverted(std::optional<bool> pinInverted);

@@ -69,7 +69,7 @@ namespace {
         setUpTestConfig(ShiftTorqueReductionTestConfig()
             .setTorqueReductionEnabled(true)
             .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
-            .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setTorqueReductionTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
             .setLaunchActivatePin(TEST_LAUNCH_BUTTON_PIN)
         );
 
@@ -102,8 +102,8 @@ namespace {
         setUpTestConfig(ShiftTorqueReductionTestConfig()
             .setTorqueReductionEnabled(true)
             .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
-            .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
-            .setPinInverted(true)
+            .setTorqueReductionTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setTorqueReductionTriggerPinInverted(true)
         );
 
         checkShiftTorqueReductionStateAfterPeriodicFastCallback({ "Default trigger pin state", true, true });
@@ -123,7 +123,7 @@ namespace {
         setUpTestConfig(ShiftTorqueReductionTestConfig()
             .setTorqueReductionEnabled(true)
             .setTorqueReductionActivationMode(torqueReductionActivationMode_e::LAUNCH_BUTTON)
-            .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setTorqueReductionTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
             .setLaunchActivatePin(TEST_LAUNCH_BUTTON_PIN)
         );
 
@@ -156,7 +156,7 @@ namespace {
         setUpTestConfig(ShiftTorqueReductionTestConfig()
             .setTorqueReductionEnabled(false)
             .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
-            .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setTorqueReductionTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
             .setLaunchActivatePin(TEST_LAUNCH_BUTTON_PIN)
         );
 
