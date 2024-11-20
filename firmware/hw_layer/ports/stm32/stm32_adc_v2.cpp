@@ -52,6 +52,10 @@ void portInitAdc() {
 		nvicDisableVector(STM32_ADC_NUMBER);
 	}
 #endif
+
+	#ifdef KNOCK_ADC
+	adcStart(&KNOCK_ADC, nullptr);
+	#endif // KNOCK_ADC
 }
 
 /*
@@ -226,5 +230,94 @@ adcsample_t getFastAdc(AdcToken token) {
 }
 
 #endif
+
+#ifdef EFI_SOFTWARE_KNOCK
+#include "knock_config.h"
+
+static void knockCompletionCallback(ADCDriver* adcp) {
+	if (adcp->state == ADC_COMPLETE) {
+		onKnockSamplingComplete();
+	}
+}
+
+static void knockErrorCallback(ADCDriver*, adcerror_t) {
+}
+
+static const uint32_t smpr1 =
+	ADC_SMPR1_SMP_AN10(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR1_SMP_AN11(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR1_SMP_AN12(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR1_SMP_AN13(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR1_SMP_AN14(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR1_SMP_AN15(KNOCK_SAMPLE_TIME);
+
+static const uint32_t smpr2 =
+	ADC_SMPR2_SMP_AN0(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN1(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN2(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN3(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN4(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN5(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN6(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN7(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN8(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN9(KNOCK_SAMPLE_TIME);
+
+static const ADCConversionGroup adcConvGroupCh1 = {
+	.circular = FALSE,
+	.num_channels = 1,
+	.end_cb = &knockCompletionCallback,
+	.error_cb = &knockErrorCallback,
+	.cr1 = 0,
+	.cr2 = ADC_CR2_SWSTART,
+	// sample times for channels 10...18
+	.smpr1 = smpr1,
+	// sample times for channels 0...9
+	.smpr2 = smpr2,
+
+	.htr = 0,
+	.ltr = 0,
+
+	.sqr1 = 0,
+	.sqr2 = 0,
+	.sqr3 = ADC_SQR3_SQ1_N(KNOCK_ADC_CH1)
+};
+
+// Not all boards have a second channel - configure it if it exists
+#if KNOCK_HAS_CH2
+static const ADCConversionGroup adcConvGroupCh2 = {
+	.circular = FALSE,
+	.num_channels = 1,
+	.end_cb = &knockCompletionCallback,
+	.error_cb = &knockErrorCallback,
+	.cr1 = 0,
+	.cr2 = ADC_CR2_SWSTART,
+	// sample times for channels 10...18
+	.smpr1 = smpr1,
+	// sample times for channels 0...9
+	.smpr2 = smpr2,
+
+	.htr = 0,
+	.ltr = 0,
+
+	.sqr1 = 0,
+	.sqr2 = 0,
+	.sqr3 = ADC_SQR3_SQ1_N(KNOCK_ADC_CH2)
+};
+#endif // KNOCK_HAS_CH2
+
+const ADCConversionGroup* getKnockConversionGroup(uint8_t channelIdx) {
+#if KNOCK_HAS_CH2
+	if (channelIdx == 1) {
+		return &adcConvGroupCh2;
+	}
+#else
+	(void)channelIdx;
+#endif // KNOCK_HAS_CH2
+
+	return &adcConvGroupCh1;
+}
+
+#endif // EFI_SOFTWARE_KNOCK
 
 #endif // HAL_USE_ADC
