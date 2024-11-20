@@ -20,15 +20,17 @@ ShiftTorqueReductionTestConfig ShiftTorqueReductionTestConfig::setTorqueReductio
     return *this;
 }
 
-ShiftTorqueReductionTestConfig ShiftTorqueReductionTestConfig::setTriggerPin(
+ShiftTorqueReductionTestConfig ShiftTorqueReductionTestConfig::setTorqueReductionTriggerPin(
     const std::optional<switch_input_pin_e> value
 ) {
     m_torqueReductionTriggerPin = value;
     return *this;
 }
 
-ShiftTorqueReductionTestConfig ShiftTorqueReductionTestConfig::setPinInverted(const std::optional<bool> value) {
-    m_pinInverted = value;
+ShiftTorqueReductionTestConfig ShiftTorqueReductionTestConfig::setTorqueReductionTriggerPinInverted(
+    const std::optional<bool> value
+) {
+    m_torqueReductionTriggerPinInverted = value;
     return *this;
 }
 
@@ -85,8 +87,8 @@ ShiftTorqueReductionTestConfig ShiftTorqueReductionTestConfig::setTorqueReductio
 void ShiftTorqueReductionTestBase::setUpTestConfig(const ShiftTorqueReductionTestConfig& config) {
     getTestEngineConfiguration().configureTorqueReductionEnabled(config.getTorqueReductionEnabled());
     getTestEngineConfiguration().configureTorqueReductionActivationMode(config.getTorqueReductionActivationMode());
-    getTestEngineConfiguration().configureTorqueReductionButton(config.getTriggerPin());
-    getTestEngineConfiguration().configureTorqueReductionButtonInverted(config.getPinInverted());
+    getTestEngineConfiguration().configureTorqueReductionTriggerPin(config.getTorqueReductionTriggerPin());
+    getTestEngineConfiguration().configureTorqueReductionButtonInverted(config.getTorqueReductionTriggerPinInverted());
     getTestEngineConfiguration().configureLaunchActivatePin(config.getLaunchActivatePin());
     getTestEngineConfiguration().configureLaunchActivateInverted(config.getLaunchActivateInverted());
     getTestEngineConfiguration().configureLimitTorqueReductionTime(config.getLimitTorqueReductionTime());

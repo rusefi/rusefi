@@ -29,7 +29,7 @@ namespace {
         setUpTestConfig(ShiftTorqueReductionTestConfig()
             .setTorqueReductionEnabled(true)
             .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
-            .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setTorqueReductionTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
             .setLimitTorqueReductionTime(true)
             .setTorqueReductionTime(TEST_TORQUE_REDUCTION_TIME)
             .setTorqueReductionArmingRpm(TEST_TORQUE_REDUCTION_ARMING_RPM)

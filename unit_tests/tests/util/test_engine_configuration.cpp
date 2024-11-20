@@ -142,7 +142,7 @@ void TestEngineConfiguration::configureTorqueReductionActivationMode(
     }
 }
 
-void TestEngineConfiguration::configureTorqueReductionButton(const std::optional<switch_input_pin_e> pin) {
+void TestEngineConfiguration::configureTorqueReductionTriggerPin(const std::optional<switch_input_pin_e> pin) {
     if (pin.has_value()) {
         engineConfiguration->torqueReductionTriggerPin = pin.value();
     } else {

@@ -19,7 +19,7 @@ void FlatShiftConditionTestBase::SetUp() {
     setUpTestConfig(ShiftTorqueReductionTestConfig()
         .setTorqueReductionEnabled(true)
         .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
-        .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+        .setTorqueReductionTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
         .setLimitTorqueReductionTime(false)
         .setTorqueReductionIgnitionCut(m_torqueReductionIgnitionCut)
         .setTorqueReductionIgnitionRetard(m_torqueReductionIgnitionRetard)

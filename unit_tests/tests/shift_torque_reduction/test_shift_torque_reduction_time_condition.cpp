@@ -45,7 +45,7 @@ namespace {
         setUpTestConfig(ShiftTorqueReductionTestConfig()
             .setTorqueReductionEnabled(true)
             .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
-            .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setTorqueReductionTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
             .setLimitTorqueReductionTime(true)
             .setTorqueReductionTime(TEST_TORQUE_REDUCTION_TIME)
         );
@@ -64,7 +64,7 @@ namespace {
         setUpTestConfig(ShiftTorqueReductionTestConfig()
             .setTorqueReductionEnabled(true)
             .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
-            .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setTorqueReductionTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
             .setLimitTorqueReductionTime(true)
             .setTorqueReductionTime(TEST_TORQUE_REDUCTION_TIME)
         );
@@ -82,7 +82,7 @@ namespace {
         setUpTestConfig(ShiftTorqueReductionTestConfig()
             .setTorqueReductionEnabled(true)
             .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
-            .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setTorqueReductionTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
             .setLimitTorqueReductionTime(true)
             .setTorqueReductionTime(TEST_TORQUE_REDUCTION_TIME)
         );
@@ -107,7 +107,7 @@ namespace {
         setUpTestConfig(ShiftTorqueReductionTestConfig()
             .setTorqueReductionEnabled(true)
             .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
-            .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setTorqueReductionTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
             .setLimitTorqueReductionTime(true)
             .setTorqueReductionTime(IMMEDIATELY)
         );
@@ -132,7 +132,7 @@ namespace {
         setUpTestConfig(ShiftTorqueReductionTestConfig()
             .setTorqueReductionEnabled(true)
             .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
-            .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setTorqueReductionTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
             .setLimitTorqueReductionTime(false)
             .setTorqueReductionTime(TEST_TORQUE_REDUCTION_TIME)
         );
