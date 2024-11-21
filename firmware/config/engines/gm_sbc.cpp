@@ -66,6 +66,14 @@ void setStepperHw() {
 #endif // HW_PROTEUS
 }
 
+static void gmRailSensor() {
+	engineConfiguration->highPressureFuel.v1 = 0.5; /* volts */;
+	engineConfiguration->highPressureFuel.value1 = 0;
+	engineConfiguration->highPressureFuel.v2 = 4.5; /* volts */;
+	// fun fact: twice the range of VAG B6?
+	engineConfiguration->highPressureFuel.value2 = PSI2KPA(400);
+}
+
 void setGmSbc() {
 	engineConfiguration->cylindersCount = 8;
 	engineConfiguration->firingOrder = FO_1_8_4_3_6_5_7_2;
@@ -135,6 +143,7 @@ void setGmLcv() {
   engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
   engineConfiguration->vvtMode[1] = VVT_BOSCH_QUICK_START;
   engineConfiguration->lowPressureFuel.hwChannel = EFI_ADC_NONE;
+  gmRailSensor();
 
 #ifdef HW_HELLEN_4K_GDI
   engineConfiguration->invertCamVVTSignal = true;
