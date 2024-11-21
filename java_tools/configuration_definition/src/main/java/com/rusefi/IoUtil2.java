@@ -33,7 +33,7 @@ public class IoUtil2 {
     }
 
     private static long getCrc32(String fileName) throws IOException {
-        File file = new File(prependIfNotAbsolute(RootHolder.ROOT, fileName));
+        File file = new File(IoUtil3.prependIfNotAbsolute(RootHolder.ROOT, fileName));
         byte[] fileContent = Files.readAllBytes(file.toPath());
         for (int i = 0; i < fileContent.length; i++) {
             byte aByte = fileContent[i];
@@ -43,14 +43,6 @@ public class IoUtil2 {
         CRC32 c = new CRC32();
         c.update(fileContent, 0, fileContent.length);
         return c.getValue();
-    }
-
-    private static String prependIfNotAbsolute(String prefix, String fileName) {
-        if (new File(fileName).isAbsolute()) {
-            return fileName;
-        } else {
-            return prefix + fileName;
-        }
     }
 
     static long getCrc32(List<String> inputFileNames) throws IOException {

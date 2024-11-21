@@ -61,7 +61,7 @@ public class VariableRegistry {
     }
 
     public void readPrependValues(String prependFile, boolean ignoreUnexpectedLined) {
-        File file = new File(RootHolder.ROOT + prependFile);
+        File file = new File(IoUtil3.prependIfNotAbsolute(RootHolder.ROOT, prependFile));
         try {
             readPrependValues(new FileReader(file), ignoreUnexpectedLined);
         } catch (Throwable e) {
