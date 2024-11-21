@@ -4,9 +4,9 @@
 
 #pragma once
 
-#include "shift_torque_reduction_test_base.h"
+#include "util/test_base.h"
 
-class FlatShiftConditionTestBase : public ShiftTorqueReductionTestBase  {
+class FlatShiftConditionTestBase : public TestBase  {
 protected:
     static constexpr switch_input_pin_e TEST_TORQUE_REDUCTION_BUTTON_PIN = Gpio::G10;
     static constexpr float TEST_TORQUE_REDUCTION_ARMING_APP = 7.89;

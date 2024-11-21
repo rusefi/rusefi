@@ -4,12 +4,12 @@
 
 #include "pch.h"
 
-#include "shift_torque_reduction_test_base.h"
+#include "util/test_base.h"
 
 namespace {
     constexpr float TEST_TORQUE_REDUCTION_ARMING_RPM = 239.0f;
 
-    class ShiftTorqueReductionRpmConditionTest : public ShiftTorqueReductionTestBase {
+    class ShiftTorqueReductionRpmConditionTest : public TestBase {
     protected:
         void checkRpmCondition(float rpm, bool expectedRpmCondition, const char* context);
     };
@@ -24,7 +24,7 @@ namespace {
     }
 
     TEST_F(ShiftTorqueReductionRpmConditionTest, checkZeroArmingRpm) {
-        setUpTestConfig(ShiftTorqueReductionTestConfig()
+        setUpEngineConfiguration(EngineConfig()
             .setTorqueReductionEnabled(true)
             .setTorqueReductionArmingRpm(0.0f)
         );
@@ -33,7 +33,7 @@ namespace {
     }
 
     TEST_F(ShiftTorqueReductionRpmConditionTest, checkArmingRpm) {
-        setUpTestConfig(ShiftTorqueReductionTestConfig()
+        setUpEngineConfiguration(EngineConfig()
             .setTorqueReductionEnabled(true)
             .setTorqueReductionArmingRpm(TEST_TORQUE_REDUCTION_ARMING_RPM)
         );

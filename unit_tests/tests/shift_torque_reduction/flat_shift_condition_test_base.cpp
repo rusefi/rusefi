@@ -14,9 +14,9 @@ FlatShiftConditionTestBase::FlatShiftConditionTestBase(
 }
 
 void FlatShiftConditionTestBase::SetUp() {
-    ShiftTorqueReductionTestBase::SetUp();
+    TestBase::SetUp();
 
-    setUpTestConfig(ShiftTorqueReductionTestConfig()
+    setUpEngineConfiguration(EngineConfig()
         .setTorqueReductionEnabled(true)
         .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
         .setTorqueReductionTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
