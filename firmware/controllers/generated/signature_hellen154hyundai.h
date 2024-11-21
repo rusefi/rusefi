@@ -3,4 +3,4 @@
 //
 
 #define SIGNATURE_HASH 3608401777
-#define TS_SIGNATURE "rusEFI master.2024.11.20.hellen154hyundai.3608401777"
+#define TS_SIGNATURE "rusEFI master.2024.11.21.hellen154hyundai.3608401777"
