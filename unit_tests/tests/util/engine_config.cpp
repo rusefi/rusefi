@@ -20,6 +20,56 @@ EngineConfig EngineConfig::setLaunchActivateInverted(const std::optional<bool> v
     return *this;
 }
 
+EngineConfig EngineConfig::setLaunchControlEnabled(const std::optional<bool> value) {
+    m_launchControlEnabled = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setLaunchRpm(const std::optional<int> value) {
+    m_launchRpm = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setLaunchRpmWindow(const std::optional<int> value) {
+    m_launchRpmWindow = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setLaunchCorrectionsEndRpm(const std::optional<int> value) {
+    m_launchCorrectionsEndRpm = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setIgnitionRetardEnable(const std::optional<bool> value) {
+    m_ignitionRetardEnable = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setIgnitionRetard(const std::optional<float> value) {
+    m_ignitionRetard = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setSmoothRetardMode(const std::optional<bool> value) {
+    m_smoothRetardMode = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setEnableIgnitionCut(const std::optional<bool> value) {
+    m_enableIgnitionCut = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setInitialIgnitionCut(const std::optional<int> value) {
+    m_initialIgnitionCut = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setFinalIgnitionCutBeforeLaunch(const std::optional<int> value) {
+    m_finalIgnitionCutBeforeLaunch = value;
+    return *this;
+}
+
 EngineConfig EngineConfig::setTorqueReductionEnabled(const std::optional<bool> value) {
     m_isTorqueReductionEnabled = value;
     return *this;
