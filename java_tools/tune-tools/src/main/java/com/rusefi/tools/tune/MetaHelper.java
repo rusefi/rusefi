@@ -23,11 +23,16 @@ public class MetaHelper {
 
     @NotNull
     static ReaderStateImpl getReaderState() throws IOException {
+        return getReaderState("tunerstudio/empty_board_options.ini");
+    }
+
+    @NotNull
+    static ReaderStateImpl getReaderState(String boardConfig) throws IOException {
         List<String> options = Files.readAllLines(Paths.get(RootHolder.ROOT + "../" + ConfigDefinition.CONFIG_PATH));
         // add default (empty) board config
         options.add(ConfigDefinition.READFILE_OPTION);
         options.add(BoardConfigStrategy.BOARD_CONFIG_FROM_FILE);
-        options.add("tunerstudio/empty_board_options.ini");
+        options.add(boardConfig);
 
         options.add(ConfigDefinition.READFILE_OPTION);
         options.add("BOARD_ENGINE_CONFIGURATION_FROM_FILE");
