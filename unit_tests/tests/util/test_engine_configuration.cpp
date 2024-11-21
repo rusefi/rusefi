@@ -48,7 +48,7 @@ void TestEngineConfiguration::configureLaunchRpm(const std::optional<int> launch
     if (launchRpm.has_value()) {
         engineConfiguration->launchRpm = launchRpm.value();
     } else {
-        ASSERT_EQ(engineConfiguration->launchRpm, 0); // check default value
+        ASSERT_EQ(engineConfiguration->launchRpm, 3000); // check default value
     }
 }
 
@@ -56,7 +56,7 @@ void TestEngineConfiguration::configureLaunchRpmWindow(const std::optional<int> 
     if (launchRpmWindow.has_value()) {
         engineConfiguration->launchRpmWindow = launchRpmWindow.value();
     } else {
-        ASSERT_EQ(engineConfiguration->launchRpmWindow, 0); // check default value
+        ASSERT_EQ(engineConfiguration->launchRpmWindow, 500); // check default value
     }
 }
 

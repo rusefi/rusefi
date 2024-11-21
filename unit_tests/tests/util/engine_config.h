@@ -13,6 +13,19 @@ public:
     // Launch Control
     std::optional<switch_input_pin_e> getLaunchActivatePin() const { return m_launchActivatePin; }
     std::optional<bool> getLaunchActivateInverted() const { return m_launchActivateInverted; }
+    std::optional<bool> getLaunchControlEnabled() const { return m_launchControlEnabled; }
+
+    std::optional<int> getLaunchRpm() const { return m_launchRpm; }
+    std::optional<int> getLaunchRpmWindow() const { return m_launchRpmWindow; }
+    std::optional<int> getLaunchCorrectionsEndRpm() const { return m_launchCorrectionsEndRpm; }
+
+    std::optional<bool> getIgnitionRetardEnable() const { return m_ignitionRetardEnable; }
+    std::optional<float> getIgnitionRetard() const { return m_ignitionRetard; }
+    std::optional<bool> getSmoothRetardMode() const { return m_smoothRetardMode; }
+
+    std::optional<bool> getEnableIgnitionCut() const { return m_enableIgnitionCut; }
+    std::optional<int> getInitialIgnitionCut() const { return m_initialIgnitionCut; }
+    std::optional<int> getFinalIgnitionCutBeforeLaunch() const { return m_finalIgnitionCutBeforeLaunch; }
 
     // Shift Torque Reduction (Flat Shift)
     std::optional<bool> getTorqueReductionEnabled() const { return m_isTorqueReductionEnabled; }
@@ -46,6 +59,16 @@ public:
     // Launch Control
     EngineConfig setLaunchActivatePin(std::optional<switch_input_pin_e> value);
     EngineConfig setLaunchActivateInverted(std::optional<bool> value);
+    EngineConfig setLaunchControlEnabled(std::optional<bool> value);
+    EngineConfig setLaunchRpm(std::optional<int> value);
+    EngineConfig setLaunchRpmWindow(std::optional<int> value);
+    EngineConfig setLaunchCorrectionsEndRpm(std::optional<int> value);
+    EngineConfig setIgnitionRetardEnable(std::optional<bool> value);
+    EngineConfig setIgnitionRetard(std::optional<float> value);
+    EngineConfig setSmoothRetardMode(std::optional<bool> value);
+    EngineConfig setEnableIgnitionCut(std::optional<bool> value);
+    EngineConfig setInitialIgnitionCut(std::optional<int> value);
+    EngineConfig setFinalIgnitionCutBeforeLaunch(std::optional<int> value);
 
     // Shift Torque Reduction (Flat Shift)
     EngineConfig setTorqueReductionEnabled(std::optional<bool> value);
@@ -74,6 +97,16 @@ private:
     // Launch Control
     std::optional<switch_input_pin_e> m_launchActivatePin;
     std::optional<bool> m_launchActivateInverted;
+    std::optional<bool> m_launchControlEnabled;
+    std::optional<int> m_launchRpm;
+    std::optional<int> m_launchRpmWindow;
+    std::optional<int> m_launchCorrectionsEndRpm;
+    std::optional<bool> m_ignitionRetardEnable;
+    std::optional<float> m_ignitionRetard;
+    std::optional<bool> m_smoothRetardMode;
+    std::optional<bool> m_enableIgnitionCut;
+    std::optional<int> m_initialIgnitionCut;
+    std::optional<int> m_finalIgnitionCutBeforeLaunch;
 
     // Shift Torque Reduction (Flat Shift)
     std::optional<bool> m_isTorqueReductionEnabled;

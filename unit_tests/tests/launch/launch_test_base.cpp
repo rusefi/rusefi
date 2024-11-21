@@ -7,20 +7,7 @@
 #include "launch_test_base.h"
 
 void LaunchTestBase::setUpTestConfig(const LaunchTestConfig& config) {
-    getTestEngineConfiguration().configureLaunchControlEnabled(config.getLaunchControlEnabled());
-
-    getTestEngineConfiguration().configureLaunchRpm(config.getLaunchRpm());
-    getTestEngineConfiguration().configureLaunchRpmWindow(config.getLaunchRpmWindow());
-    getTestEngineConfiguration().configureLaunchCorrectionsEndRpm(config.getLaunchCorrectionsEndRpm());
-
-    getTestEngineConfiguration().configureIgnitionRetardEnable(config.getIgnitionRetardEnable());
-    getTestEngineConfiguration().configureIgnitionRetard(config.getIgnitionRetard());
-    getTestEngineConfiguration().configureSmoothRetardMode(config.getSmoothRetardMode());
-
-    getTestEngineConfiguration().configureEnableIgnitionCut(config.getEnableIgnitionCut());
-    getTestEngineConfiguration().configureInitialIgnitionCutPercent(config.getInitialIgnitionCut());
-    getTestEngineConfiguration().configureFinalIgnitionCutPercentBeforeLaunch(config.getFinalIgnitionCutBeforeLaunch());
-
+    setUpEngineConfiguration(config);
     if (config.getSatisfyActivationSwithSpeedAndTpsConditions()) {
         configureSatisfiedActivationSwithSpeedAndTpsConditions();
     }

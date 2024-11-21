@@ -30,6 +30,16 @@ void TestBase::setUpEngineConfiguration(const EngineConfig& config) {
     // Launch Control
     getTestEngineConfiguration().configureLaunchActivatePin(config.getLaunchActivatePin());
     getTestEngineConfiguration().configureLaunchActivateInverted(config.getLaunchActivateInverted());
+    getTestEngineConfiguration().configureLaunchControlEnabled(config.getLaunchControlEnabled());
+    getTestEngineConfiguration().configureLaunchRpm(config.getLaunchRpm());
+    getTestEngineConfiguration().configureLaunchRpmWindow(config.getLaunchRpmWindow());
+    getTestEngineConfiguration().configureLaunchCorrectionsEndRpm(config.getLaunchCorrectionsEndRpm());
+    getTestEngineConfiguration().configureIgnitionRetardEnable(config.getIgnitionRetardEnable());
+    getTestEngineConfiguration().configureIgnitionRetard(config.getIgnitionRetard());
+    getTestEngineConfiguration().configureSmoothRetardMode(config.getSmoothRetardMode());
+    getTestEngineConfiguration().configureEnableIgnitionCut(config.getEnableIgnitionCut());
+    getTestEngineConfiguration().configureInitialIgnitionCutPercent(config.getInitialIgnitionCut());
+    getTestEngineConfiguration().configureFinalIgnitionCutPercentBeforeLaunch(config.getFinalIgnitionCutBeforeLaunch());
 
     // Shift Torque Reduction (Flat Shift)
     getTestEngineConfiguration().configureTorqueReductionEnabled(config.getTorqueReductionEnabled());
