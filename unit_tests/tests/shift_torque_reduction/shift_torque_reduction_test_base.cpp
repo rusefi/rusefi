@@ -6,6 +6,20 @@
 
 #include "shift_torque_reduction_test_base.h"
 
+ShiftTorqueReductionTestConfig ShiftTorqueReductionTestConfig::setLaunchActivatePin(
+    const std::optional<switch_input_pin_e> value
+) {
+    m_launchActivatePin = value;
+    return *this;
+}
+
+ShiftTorqueReductionTestConfig ShiftTorqueReductionTestConfig::setLaunchActivateInverted(
+    const std::optional<bool> value
+) {
+    m_launchActivateInverted = value;
+    return *this;
+}
+
 ShiftTorqueReductionTestConfig ShiftTorqueReductionTestConfig::setTorqueReductionEnabled(
     const std::optional<bool> value
 ) {
@@ -31,20 +45,6 @@ ShiftTorqueReductionTestConfig ShiftTorqueReductionTestConfig::setTorqueReductio
     const std::optional<bool> value
 ) {
     m_torqueReductionTriggerPinInverted = value;
-    return *this;
-}
-
-ShiftTorqueReductionTestConfig ShiftTorqueReductionTestConfig::setLaunchActivatePin(
-    const std::optional<switch_input_pin_e> value
-) {
-    m_launchActivatePin = value;
-    return *this;
-}
-
-ShiftTorqueReductionTestConfig ShiftTorqueReductionTestConfig::setLaunchActivateInverted(
-    const std::optional<bool> value
-) {
-    m_launchActivateInverted = value;
     return *this;
 }
 
@@ -85,12 +85,15 @@ ShiftTorqueReductionTestConfig ShiftTorqueReductionTestConfig::setTorqueReductio
 }
 
 void ShiftTorqueReductionTestBase::setUpTestConfig(const ShiftTorqueReductionTestConfig& config) {
+	// Launch Control
+    getTestEngineConfiguration().configureLaunchActivatePin(config.getLaunchActivatePin());
+    getTestEngineConfiguration().configureLaunchActivateInverted(config.getLaunchActivateInverted());
+
+	// Shift Torque Reduction (Flat Shift)
     getTestEngineConfiguration().configureTorqueReductionEnabled(config.getTorqueReductionEnabled());
     getTestEngineConfiguration().configureTorqueReductionActivationMode(config.getTorqueReductionActivationMode());
     getTestEngineConfiguration().configureTorqueReductionTriggerPin(config.getTorqueReductionTriggerPin());
     getTestEngineConfiguration().configureTorqueReductionButtonInverted(config.getTorqueReductionTriggerPinInverted());
-    getTestEngineConfiguration().configureLaunchActivatePin(config.getLaunchActivatePin());
-    getTestEngineConfiguration().configureLaunchActivateInverted(config.getLaunchActivateInverted());
     getTestEngineConfiguration().configureLimitTorqueReductionTime(config.getLimitTorqueReductionTime());
     getTestEngineConfiguration().configureTorqueReductionTime(config.getTorqueReductionTime());
     getTestEngineConfiguration().configureTorqueReductionArmingRpm(config.getTorqueReductionArmingRpm());
