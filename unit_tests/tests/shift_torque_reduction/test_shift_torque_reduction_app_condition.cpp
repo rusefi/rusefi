@@ -4,12 +4,12 @@
 
 #include "pch.h"
 
-#include "shift_torque_reduction_test_base.h"
+#include "util/test_base.h"
 
 namespace {
     constexpr float TEST_TORQUE_REDUCTION_ARMING_APP = 17.0f;
 
-    class ShiftTorqueReductionAppConditionTest : public ShiftTorqueReductionTestBase {
+    class ShiftTorqueReductionAppConditionTest : public TestBase {
     protected:
         void checkAppCondition(std::optional<float> rpm, bool expectedAppCondition, const char* context);
     };
@@ -24,7 +24,7 @@ namespace {
     }
 
     TEST_F(ShiftTorqueReductionAppConditionTest, checkZeroArmingApp) {
-        setUpTestConfig(ShiftTorqueReductionTestConfig()
+        setUpEngineConfiguration(EngineConfig()
             .setTorqueReductionEnabled(true)
             .setTorqueReductionArmingApp(0.0f)
         );
@@ -34,7 +34,7 @@ namespace {
     }
 
     TEST_F(ShiftTorqueReductionAppConditionTest, checkArmingApp) {
-        setUpTestConfig(ShiftTorqueReductionTestConfig()
+        setUpEngineConfiguration(EngineConfig()
             .setTorqueReductionEnabled(true)
             .setTorqueReductionArmingApp(TEST_TORQUE_REDUCTION_ARMING_APP)
         );

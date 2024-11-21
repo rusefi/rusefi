@@ -27,6 +27,22 @@ TestEngineState& TestBase::getTestEngineState() {
 }
 
 void TestBase::setUpEngineConfiguration(const EngineConfig& config) {
+    // Launch Control
+    getTestEngineConfiguration().configureLaunchActivatePin(config.getLaunchActivatePin());
+    getTestEngineConfiguration().configureLaunchActivateInverted(config.getLaunchActivateInverted());
+
+    // Shift Torque Reduction (Flat Shift)
+    getTestEngineConfiguration().configureTorqueReductionEnabled(config.getTorqueReductionEnabled());
+    getTestEngineConfiguration().configureTorqueReductionActivationMode(config.getTorqueReductionActivationMode());
+    getTestEngineConfiguration().configureTorqueReductionTriggerPin(config.getTorqueReductionTriggerPin());
+    getTestEngineConfiguration().configureTorqueReductionButtonInverted(config.getTorqueReductionTriggerPinInverted());
+    getTestEngineConfiguration().configureLimitTorqueReductionTime(config.getLimitTorqueReductionTime());
+    getTestEngineConfiguration().configureTorqueReductionTime(config.getTorqueReductionTime());
+    getTestEngineConfiguration().configureTorqueReductionArmingRpm(config.getTorqueReductionArmingRpm());
+    getTestEngineConfiguration().configureTorqueReductionArmingApp(config.getTorqueReductionArmingApp());
+    getTestEngineConfiguration().configureTorqueReductionIgnitionCut(config.getTorqueReductionIgnitionCut());
+    getTestEngineConfiguration().configureTorqueReductionIgnitionRetard(config.getTorqueReductionIgnitionRetard());
+
     // Injector
     getTestEngineConfiguration().configureInjectorFlowAsMassFlow(config.getInjectorFlowAsMassFlow());
     getTestEngineConfiguration().configureInjectorFlow(config.getInjectorFlow());
