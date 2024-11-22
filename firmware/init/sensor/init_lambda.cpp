@@ -7,10 +7,10 @@
 
 struct GetAfrWrapper {
 	float getLambda() {
-		return getAfr(SensorType::Lambda1) / 14.7f;
+		return getAfr(SensorType::Lambda1) / STOICH_RATIO;
 	};
 	float getLambda2() {
-		return getAfr(SensorType::Lambda2) / 14.7f;
+		return getAfr(SensorType::Lambda2) / STOICH_RATIO;
 	}
 };
 
