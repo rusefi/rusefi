@@ -15,6 +15,7 @@
 
 #include "sent.h"
 #include "sent_logic.h"
+#include "sent_constants.h"
 
 /*==========================================================================*/
 /* Protocol definitions.													*/
@@ -27,10 +28,6 @@
 #define SENT_MAX_INTERVAL		15
 
 #define SENT_CRC_SEED           0x05
-
-#define SENT_MSG_DATA_SIZE      6
-/* Status + two 12-bit signals + CRC */
-#define SENT_MSG_PAYLOAD_SIZE   (1 + SENT_MSG_DATA_SIZE + 1)  // Size of payload
 
 /* use 3 full frames + one additional pulse for unit time calibration */
 #define SENT_CALIBRATION_PULSES	(1 + 3 * SENT_MSG_PAYLOAD_SIZE)
@@ -45,7 +42,7 @@
 
 /* Helpers for Msg manipulations */
 /* nibbles order: status, sig0_MSN, sig0_MidN, sig0_LSN, sig1_MSN, sig1_MidN, sig1_LSN, CRC */
-/* we shift rxReg left for 4 bits on each neable received and put newest nibble
+/* we shift rxReg left for 4 bits on each nibble received and put newest nibble
  * in [3:0] bits of rxReg, so when full message is received:
  * CRC is [3:0] - nibble 7
  * status is [31:28] - nibble 0
