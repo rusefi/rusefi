@@ -8,6 +8,11 @@ DDEFS += -DEFI_FILE_LOGGING=FALSE -DEFI_ALTERNATOR_CONTROL=FALSE -DEFI_LOGIC_ANA
 
 DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::B14
 
+# Configure the linker script to use more flash for this board (2Mb assumed)
+USE_OPT += -Wl,--defsym=EFI_FLASH_SIZE=1536k
+# affects config placement
+DDEFS += -DEFI_FLASH_USE_1500_OF_2MB
+
 # Enable ethernet
 LWIP = yes
 ALLOW_SHADOW = yes
