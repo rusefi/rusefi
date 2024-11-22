@@ -340,7 +340,7 @@ ASMXSRC = $(ALLXASMSRC) \
 #
 # WARNING! order of variables is important here - for instance cypress own folders should go before default folders
 #
-INCDIR = \
+INCDIR += \
   $(PCH_DIR) \
   $(BOARDINC) \
   $(ALLINC) \

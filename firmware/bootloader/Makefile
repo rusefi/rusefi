@@ -236,7 +236,7 @@ ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM) \
 	$(RUSEFIASM) \
 	$(PROJECT_DIR)/hw_layer/main_hardfault_asm.S
 
-INCDIR = $(ALLINC) \
+INCDIR += $(ALLINC) \
 	$(PCH_DIR) \
 	.. \
 	$(BOARDINC) \
