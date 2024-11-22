@@ -53,14 +53,24 @@ void TestBase::setUpEngineConfiguration(const EngineConfig& config) {
     getTestEngineConfiguration().configureTorqueReductionIgnitionCut(config.getTorqueReductionIgnitionCut());
     getTestEngineConfiguration().configureTorqueReductionIgnitionRetard(config.getTorqueReductionIgnitionRetard());
 
+    getTestEngineConfiguration().configureFuelPressureSensorMode(config.getFuelPressureSensorMode());
+
     // Injector
     getTestEngineConfiguration().configureInjectorFlowAsMassFlow(config.getInjectorFlowAsMassFlow());
     getTestEngineConfiguration().configureInjectorFlow(config.getInjectorFlow());
     getTestEngineConfiguration().configureInjectorBattLagCorr(config.getInjectorBattLagCorr());
+    getTestEngineConfiguration().configureFuelReferencePressure(config.getFuelReferencePressure());
+    getTestEngineConfiguration().configureInjectorCompensationMode(config.getInjectorCompensationMode());
 
     // Secondary injector
     getTestEngineConfiguration().configureInjectorSecondaryFlow(config.getInjectorSecondaryFlow());
     getTestEngineConfiguration().configureInjectorSecondaryBattLagCorr(config.getInjectorSecondaryBattLagCorr());
+    getTestEngineConfiguration().configureSecondaryInjectorFuelReferencePressure(
+        config.getSecondaryInjectorFuelReferencePressure()
+    );
+    getTestEngineConfiguration().configureSecondaryInjectorCompensationMode(
+        config.getSecondaryInjectorCompensationMode()
+    );
 
     // Staged injection
     getTestEngineConfiguration().configureEnableStagedInjection(config.getStagedInjectionEnabled());

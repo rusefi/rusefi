@@ -42,14 +42,22 @@ public:
     void configureTorqueReductionIgnitionCut(std::optional<int8_t> ignitionCut);
     void configureTorqueReductionIgnitionRetard(std::optional<int8_t> ignitionRetard);
 
+    void configureFuelPressureSensorMode(std::optional<fuel_pressure_sensor_mode_e> fuelPressureSensorMode);
+
     // Injector
     void configureInjectorFlow(std::optional<float> flow);
     void configureInjectorBattLagCorr(std::optional<BattLagCorrCurve> battLagCorr);
     void configureInjectorFlowAsMassFlow(std::optional<bool> injectorFlowAsMassFlow);
+    void configureFuelReferencePressure(std::optional<float> fuelReferencePressure);
+    void configureInjectorCompensationMode(std::optional<injector_compensation_mode_e> injectorCompensationMode);
 
     // Secondary Injector
     void configureInjectorSecondaryFlow(std::optional<float> flow);
     void configureInjectorSecondaryBattLagCorr(std::optional<BattLagCorrCurve> battLagCorr);
+    void configureSecondaryInjectorFuelReferencePressure(std::optional<float> secondaryInjectorFuelReferencePressure);
+    void configureSecondaryInjectorCompensationMode(
+        std::optional<injector_compensation_mode_e> secondaryInjectorCompensationMode
+    );
 
     // Staged injection
     void configureEnableStagedInjection(std::optional<bool> isStagedInjectionEnabled);
