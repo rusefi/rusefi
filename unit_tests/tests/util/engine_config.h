@@ -41,14 +41,20 @@ public:
     std::optional<int8_t> getTorqueReductionIgnitionCut() const { return m_torqueReductionIgnitionCut; }
     std::optional<float> getTorqueReductionIgnitionRetard() const { return m_torqueReductionIgnitionRetard; }
 
+    std::optional<fuel_pressure_sensor_mode_e> getFuelPressureSensorMode() const { return m_fuelPressureSensorMode; };
+
     // Injector
     std::optional<float> getInjectorFlow() const { return m_injectorFlow; }
     std::optional<BattLagCorrCurve> getInjectorBattLagCorr() const { return m_injectorBattLagCorrCurve; }
     std::optional<bool> getInjectorFlowAsMassFlow() const { return m_injectorFlowAsMassFlow; }
+    std::optional<float> getFuelReferencePressure() const { return m_fuelReferencePressure; }
+    std::optional<injector_compensation_mode_e> getInjectorCompensationMode() const { return m_injectorCompensationMode; }
 
     // Secondary injector
     std::optional<float> getInjectorSecondaryFlow() const { return m_injectorSecondaryFlow; }
     std::optional<BattLagCorrCurve> getInjectorSecondaryBattLagCorr() const { return m_injectorSecondaryBattLagCorrCurve; }
+    std::optional<float> getSecondaryInjectorFuelReferencePressure() const { return m_secondaryInjectorFuelReferencePressure; }
+    std::optional<injector_compensation_mode_e> getSecondaryInjectorCompensationMode() const { return m_secondaryInjectorCompensationMode; }
 
     // Staged injection
     std::optional<bool> getStagedInjectionEnabled() const { return m_isStagedInjectionEnabled; }
@@ -82,14 +88,20 @@ public:
     EngineConfig setTorqueReductionIgnitionCut(std::optional<int8_t> value);
     EngineConfig setTorqueReductionIgnitionRetard(std::optional<float> value);
 
+    EngineConfig setFuelPressureSensorMode(std::optional<fuel_pressure_sensor_mode_e> value);
+
     // Injector
     EngineConfig setInjectorFlowAsMassFlow(std::optional<bool> injectorFlowAsMassFlow);
     EngineConfig setInjectorFlow(std::optional<float> flow);
     EngineConfig setInjectorBattLagCorr(std::optional<BattLagCorrCurve> battLagCorr);
+    EngineConfig setFuelReferencePressure(std::optional<float> value);
+    EngineConfig setInjectorCompensationMode(std::optional<injector_compensation_mode_e> value);
 
     // Secondary injector
     EngineConfig setInjectorSecondaryFlow(std::optional<float> flow);
     EngineConfig setInjectorSecondaryBattLagCorr(std::optional<BattLagCorrCurve> battLagCorr);
+    EngineConfig setSecondaryInjectorFuelReferencePressure(std::optional<float> value);
+    EngineConfig setSecondaryInjectorCompensationMode(std::optional<injector_compensation_mode_e> value);
 
     // Staged injection
     EngineConfig setStagedInjectionEnabled(std::optional<bool> value);
@@ -120,14 +132,20 @@ private:
     std::optional<int8_t> m_torqueReductionIgnitionCut;
     std::optional<float> m_torqueReductionIgnitionRetard;
 
+    std::optional<fuel_pressure_sensor_mode_e> m_fuelPressureSensorMode;
+
     // Injector
     std::optional<float> m_injectorFlow;
     std::optional<BattLagCorrCurve> m_injectorBattLagCorrCurve;
     std::optional<bool> m_injectorFlowAsMassFlow;;
+    std::optional<float> m_fuelReferencePressure;
+    std::optional<injector_compensation_mode_e> m_injectorCompensationMode;
 
     // Secondary injector
     std::optional<float> m_injectorSecondaryFlow;
     std::optional<BattLagCorrCurve> m_injectorSecondaryBattLagCorrCurve;
+    std::optional<float> m_secondaryInjectorFuelReferencePressure;
+    std::optional<injector_compensation_mode_e> m_secondaryInjectorCompensationMode;
 
     // Staged injection
     std::optional<bool> m_isStagedInjectionEnabled;

@@ -25,6 +25,12 @@ protected:
 
     void updateRpm(float rpm);
     void updateApp(std::optional<float> app);
+
+    template<typename ModuleType> ModuleType& getModule();
 private:
     std::unique_ptr<EngineTestHelper> eth;
 };
+
+template<typename ModuleType> ModuleType& TestBase::getModule() {
+    return engine->module<ModuleType>().unmock();
+}

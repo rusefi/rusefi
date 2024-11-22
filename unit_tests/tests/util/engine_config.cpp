@@ -122,6 +122,11 @@ EngineConfig EngineConfig::setTorqueReductionIgnitionRetard(const std::optional<
     return *this;
 }
 
+EngineConfig EngineConfig::setFuelPressureSensorMode(std::optional<fuel_pressure_sensor_mode_e> value) {
+    m_fuelPressureSensorMode = value;
+    return *this;
+}
+
 EngineConfig EngineConfig::setInjectorFlowAsMassFlow(const std::optional<bool> injectorFlowAsMassFlow) {
     m_injectorFlowAsMassFlow = injectorFlowAsMassFlow;
     return *this;
@@ -137,6 +142,16 @@ EngineConfig EngineConfig::setInjectorBattLagCorr(const std::optional<BattLagCor
     return *this;
 }
 
+EngineConfig EngineConfig::setFuelReferencePressure(const std::optional<float> value) {
+    m_fuelReferencePressure = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setInjectorCompensationMode(const std::optional<injector_compensation_mode_e> value) {
+    m_injectorCompensationMode = value;
+    return *this;
+}
+
 EngineConfig EngineConfig::setInjectorSecondaryFlow(const std::optional<float> flow) {
     m_injectorSecondaryFlow = flow;
     return *this;
@@ -149,5 +164,17 @@ EngineConfig EngineConfig::setInjectorSecondaryBattLagCorr(const std::optional<B
 
 EngineConfig EngineConfig::setStagedInjectionEnabled(const std::optional<bool> value) {
     m_isStagedInjectionEnabled = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setSecondaryInjectorFuelReferencePressure(const std::optional<float> value) {
+    m_secondaryInjectorFuelReferencePressure = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setSecondaryInjectorCompensationMode(
+    const std::optional<injector_compensation_mode_e> value
+) {
+    m_secondaryInjectorCompensationMode = value;
     return *this;
 }

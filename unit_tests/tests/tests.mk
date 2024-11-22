@@ -49,6 +49,7 @@ TESTS_SRC_CPP = \
 	tests/ignition_injection/test_odd_firing_engine.cpp \
 	tests/ignition_injection/test_three_cylinder.cpp \
 	testa/ignition_injection/test_staged_injection.cpp \
+	testa/ignition_injection/test_fuel_differential_pressure.cpp \
 	tests/util/test_base.cpp \
 	tests/util/test_engine_configuration.cpp \
 	tests/util/engine_config.cpp \
