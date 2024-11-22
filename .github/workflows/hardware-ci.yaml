@@ -122,6 +122,7 @@ jobs:
 
 
 # (cat .github/workflows/openocd_ci_f4_discovery.cfg ) | .github/workflows/hw-ci/openocd_wipe_and_flash.sh
+# (cat .github/workflows/openocd_ci_proteus_f7.cfg ) | .github/workflows/hw-ci/openocd_wipe_and_flash.sh
     - name: OpenOCD wipe & flash STM32
       run: |
         if [ "$(hostname)" == "rusefi-hw-ci-2" -o "$(hostname)" == "mck1117-github-actions-nuc" ]; then
