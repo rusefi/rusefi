@@ -25,5 +25,4 @@
 #define ts_show_gdi true
 #define FRONTEND_TITLE_BAR_NAME "uaEFI"
 
-
-
+#define TIMING_ADJUSTMENT_SIZE 4
