@@ -139,7 +139,7 @@ void setGmSbc() {
 	engineConfiguration->map.sensor.type = MT_GM_1_BAR;
 }
 
-void setGmLcv() {
+static void setGmEcotec3() {
   engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
   engineConfiguration->vvtMode[1] = VVT_BOSCH_QUICK_START;
   engineConfiguration->lowPressureFuel.hwChannel = EFI_ADC_NONE;
@@ -168,8 +168,18 @@ void setGmLcv() {
   setPPSCalibration(1, 4.25, 0.5, 2.14);
 
 	setInline4();
-	engineConfiguration->displacement = 2.5;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_GM);
-	strcpy(engineConfiguration->engineCode, "LCV");
 	setGDIFueling();
+}
+
+void setGmLcv() {
+  setGmEcotec3();
+  engineConfiguration->displacement = 2.5;
+  strcpy(engineConfiguration->engineCode, "LCV");
+}
+
+void setGmLtg() {
+  setGmEcotec3();
+  engineConfiguration->displacement = 2.0;
+  strcpy(engineConfiguration->engineCode, "LTG");
 }
