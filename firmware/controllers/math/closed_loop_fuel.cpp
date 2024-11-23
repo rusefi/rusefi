@@ -19,7 +19,7 @@ static Deadband<2> loadDeadband;
 
 void LongTermFuelTrim::resetLtftTimer() {
 	lastLtftUpdateTime = uint32_t(getTimeNowMs);
-	updatedLtft = 0;
+	// updatedLtft = 0;
 }
 
 void LongTermFuelTrim::updateLtft(float load, float rpm) {
@@ -66,6 +66,8 @@ void LongTermFuelTrim::updateLtft(float load, float rpm) {
 							}
 						}
 					}
+
+					updatedLtft = 1;
 				}
 			}
 
@@ -73,13 +75,6 @@ void LongTermFuelTrim::updateLtft(float load, float rpm) {
 
 	}
 
-}
-
-void LongTermFuelTrim::onIgnitionStateChanged(bool ignitionOn) {
-	if(!ignitionOn) {
-		copyTable(config->ltftTable, ltftTableHelper);
-		setNeedToWriteConfiguration();
-	}
 }
 
 static SensorType getSensorForBankIndex(size_t index) {
@@ -222,6 +217,12 @@ float LongTermFuelTrim::getLtft(float load, float rpm) {
 		updateLtft(load, rpm);
 	} else {
 		resetLtftTimer();
+	}
+
+	if(rpm == 0 && updatedLtft) {
+		copyTable(config->ltftTable, ltftTableHelper);
+		setNeedToWriteConfiguration();
+		updatedLtft = 0;
 	}
 
 	if(config->ltftEnabled && config->ltftCRC == 132 && (Sensor::get(SensorType::Clt)).value_or(0) > float(config->ltftMinTemp)) {
