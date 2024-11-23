@@ -60,9 +60,6 @@ include $(PROJECT_DIR)/common_libfirmware.mk
 
 include rusefi.mk
 
-# by default EXTRA_PARAMS is empty and we create 'debug' version of the firmware with additional assertions and statistics
-# for 'release' options see 'clean_compile_two_versions.bat' file
-
 ifeq ($(DEBUG_LEVEL_OPT),)
   # Default to a release build - but leave in debug info.  It doesn't change the hex/bin output.
   DEBUG_LEVEL_OPT = -O2 -ggdb -g
