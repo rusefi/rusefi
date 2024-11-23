@@ -5847,8 +5847,22 @@ struct persistent_config_s {
 	 * offset 22956
 	 */
 	scaled_channel<uint8_t, 1, 10> minimumOilPressureValues[8];
+	/**
+	 * offset 22964
+	 */
+	uint8_t rainTimingAdjustment[TIMING_ADJUSTMENT_SIZE][TIMING_ADJUSTMENT_SIZE];
+	/**
+	 * units: RPM
+	 * offset 22980
+	 */
+	uint16_t rainTimingRpmBins[TIMING_ADJUSTMENT_SIZE];
+	/**
+	 * units: C
+	 * offset 22988
+	 */
+	float rainTimingPpsBins[TIMING_ADJUSTMENT_SIZE];
 };
-static_assert(sizeof(persistent_config_s) == 22964);
+static_assert(sizeof(persistent_config_s) == 23004);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt
