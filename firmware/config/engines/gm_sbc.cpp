@@ -149,6 +149,8 @@ static void setGmEcotec3() {
   engineConfiguration->invertCamVVTSignal = true;
   engineConfiguration->invertExhaustCamVVTSignal = true;
 
+  engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_SENS1; // Digital Input 1
+  engineConfiguration->camInputs[0] = Gpio::H144_IN_SENS3; // Digital Input 4
   engineConfiguration->sentInputPins[0] = Gpio::H144_IN_AUX2_DIGITAL;
 
   // engineConfiguration->starterControlPin = high side :()
