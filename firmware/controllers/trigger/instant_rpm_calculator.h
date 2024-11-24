@@ -27,8 +27,8 @@ public:
 	void movePreSynchTimestamps();
 
 	void resetInstantRpm() {
-		memset(timeOfLastEvent, 0, sizeof(timeOfLastEvent));
-		memset(spinningEvents, 0, sizeof(spinningEvents));
+		setArrayValues(timeOfLastEvent, 0);
+		setArrayValues(spinningEvents, 0);
 		spinningEventIndex = 0;
 		prevInstantRpmValue = 0;
 		m_instantRpm = 0;
