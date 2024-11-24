@@ -26,7 +26,6 @@ class LongTermFuelTrim : public EngineModule{
 		float ltftResult = 1;
 		bool updatedLtft = 0;
 	public:
-		void onIgnitionStateChanged(bool ignitionOn);
 		float getLtft(float load, float rpm);
 		void resetLtftTimer();
 		void updateLtft(float load, float rpm);
