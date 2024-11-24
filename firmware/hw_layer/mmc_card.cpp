@@ -566,6 +566,7 @@ void mlgLogger() {
 		}
 #endif
 
+		systime_t before = chVTGetSystemTime();
 
 		writeSdLogLine(logBuffer);
 
@@ -581,8 +582,8 @@ void mlgLogger() {
 			freq = 1;
 		}
 
-		auto period = 1e6 / freq;
-		chThdSleepMicroseconds((int)period);
+		systime_t period = CH_CFG_ST_FREQUENCY / freq;
+		chThdSleepUntilWindowed(before, before + period);
 	}
 }
 
