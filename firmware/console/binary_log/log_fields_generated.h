@@ -512,12 +512,6 @@ static const LogField fields[] = {
 	{engine->triggerCentral.hwEventCounters[3], "Hardware events since boot 4", "", 0},
 #endif
 #if EFI_SHAFT_POSITION_INPUT
-	{engine->triggerCentral.hwEventCounters[4], "Hardware events since boot 5", "", 0},
-#endif
-#if EFI_SHAFT_POSITION_INPUT
-	{engine->triggerCentral.hwEventCounters[5], "Hardware events since boot 6", "", 0},
-#endif
-#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.vvtCamCounter, "Sync: total cams front counter", "", 0},
 #endif
 #if EFI_SHAFT_POSITION_INPUT
