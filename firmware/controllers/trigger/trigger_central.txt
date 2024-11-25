@@ -1,4 +1,5 @@
-#define HW_EVENT_TYPES 6
+! technically that's PWM_PHASE_MAX_WAVE_PER_PWM * 2
+#define HW_EVENT_TYPES 4
 
 struct_no_prefix trigger_central_s
 

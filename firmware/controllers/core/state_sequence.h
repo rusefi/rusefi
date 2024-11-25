@@ -38,6 +38,7 @@ typedef enum {
 // todo https://github.com/rusefi/rusefi/issues/3003
 #define PWM_PHASE_MAX_COUNT 280
 #endif /* PWM_PHASE_MAX_COUNT */
+// todo: rename to TRIGGER_CHANNEL_COUNT?
 #define PWM_PHASE_MAX_WAVE_PER_PWM 2
 
 typedef TriggerValue pin_state_t;
