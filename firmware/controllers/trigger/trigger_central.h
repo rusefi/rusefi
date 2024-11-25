@@ -244,3 +244,16 @@ void onConfigurationChangeTriggerCallback();
 
 TriggerCentral * getTriggerCentral();
 int getCrankDivider(operation_mode_e operationMode);
+
+constexpr bool isTriggerUpEvent(trigger_event_e event) {
+	switch (event) {
+		case SHAFT_PRIMARY_FALLING:
+		case SHAFT_SECONDARY_FALLING:
+			return false;
+		case SHAFT_PRIMARY_RISING:
+		case SHAFT_SECONDARY_RISING:
+			return true;
+	}
+
+	return false;
+}
