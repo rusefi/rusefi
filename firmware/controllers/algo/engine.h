@@ -31,6 +31,7 @@
 #include "injector_model.h"
 #include "launch_control.h"
 #include "shift_torque_reduction_controller.h"
+#include "nitrous_controller.h"
 #include "antilag_system.h"
 #include "start_stop.h"
 #include "trigger_scheduler.h"
@@ -198,6 +199,7 @@ public:
 	SoftSparkLimiter softSparkLimiter;
 	// technically not directly related to EFI_LAUNCH_CONTROL since useful for TCU
 	SoftSparkLimiter hardSparkLimiter;
+	NitrousController nitrousController;
 #endif // EFI_LAUNCH_CONTROL
 
 #if EFI_ANTILAG_SYSTEM

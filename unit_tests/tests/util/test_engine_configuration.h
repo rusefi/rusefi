@@ -61,6 +61,16 @@ public:
 
     // Staged injection
     void configureEnableStagedInjection(std::optional<bool> isStagedInjectionEnabled);
+
+    // Nitrous control
+    void configureNitrousControlEnabled(std::optional<bool> nitrousControlEnabled);
+    void configureNitrousControlArmingMethod(std::optional<nitrousArmingMethod_e> armingMethod);
+    void configureNitrousControlTriggerPin(std::optional<switch_input_pin_e> triggerPin);
+    void configureNitrousControlTriggerPinInverted(std::optional<bool> triggerPinInverted);
+    void configureNitrousControlTriggerPinMode(std::optional<pin_input_mode_e> triggerPinMode);
+    void configureNitrousLuaGauge(std::optional<luaGauge_e> luaGauge);
+    void configureNitrousLuaGaugeMeaning(std::optional<luaGaugeMeaning_e> luaGaugeMeaning);
+    void configureNitrousLuaGaugeArmingValue(std::optional<float> luaGaugeArmingValue);
 private:
     TestEngineConfiguration();
     static TestEngineConfiguration instance;

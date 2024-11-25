@@ -82,6 +82,13 @@ Usages:
     constexpr: "engine->shiftTorqueReductionController"
     conditional_compilation: "EFI_LAUNCH_CONTROL"
 
+  - name: nitrous_control_state
+    cppFileName: nitrous_controller
+    java: NitrousController.java
+    folder: controllers/algo
+    constexpr: "engine->nitrousController"
+    conditional_compilation: "EFI_LAUNCH_CONTROL"
+
   - name: antilag_system_state
     cppFileName: antilag_system
     java: AntilagSystem.java

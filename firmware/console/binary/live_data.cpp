@@ -60,6 +60,15 @@ const shift_torque_reduction_state_s* getLiveData(size_t) {
 }
 
 template<>
+const nitrous_control_state_s* getLiveData(size_t) {
+#if EFI_LAUNCH_CONTROL
+	return &engine->nitrousController;
+#else
+	return nullptr;
+#endif
+}
+
+template<>
 const antilag_system_state_s* getLiveData(size_t) {
 #if EFI_ANTILAG_SYSTEM
 	return &engine->antilagController;
