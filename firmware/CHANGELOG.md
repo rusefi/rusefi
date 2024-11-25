@@ -28,6 +28,12 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Added
+ - Flex Fuel sensor settings should be under "Fuel sensor" #7097
+
+### Fixed
+ - Critical error when using big values on Boost Control Open Loop with Y axis as MAP #7093
+
 ## November 2024 "Day 998"
 
 ### Added
