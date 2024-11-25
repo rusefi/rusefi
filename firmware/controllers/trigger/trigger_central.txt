@@ -2,9 +2,9 @@
 
 struct_no_prefix trigger_central_s
 
-	uint32_t[HW_EVENT_TYPES iterate] hwEventCounters;Hardware events since boot
+	uint16_t[HW_EVENT_TYPES iterate] hwEventCounters;Hardware events since boot
 
-uint32_t vvtCamCounter;Sync: total cams front counter
+  uint16_t vvtCamCounter;Sync: total cams front counter
 
     float mapVvt_MAP_AT_SPECIAL_POINT;InstantMAP at readout angle;"kPa", 1, 0, -300, 300, 1
     float mapVvt_MAP_AT_DIFF;InstantMAP delta @ readout angles;"kPa", 1, 0, -300, 300, 1
@@ -22,4 +22,3 @@ uint32_t vvtCamCounter;Sync: total cams front counter
 	uint32_t triggerElapsedUs
 
 end_struct
-
