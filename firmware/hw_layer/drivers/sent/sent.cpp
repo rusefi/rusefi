@@ -16,6 +16,7 @@
 #if EFI_SENT_SUPPORT
 
 #include "sent.h"
+#include "init.h"
 #include "sent_logic.h"
 #include "sent_constants.h"
 
@@ -587,7 +588,9 @@ static void SentDecoderThread(void*) {
 
 					SentInput input = static_cast<SentInput>((size_t)SentInput::INPUT1 + n);
 					/* Call high level decoder from here */
+					/* TODO: implemnet subscribers, like it is done for ADC */
 					sentTpsDecode(input);
+					sentPressureDecode(input);
 				}
 			}
 		}
