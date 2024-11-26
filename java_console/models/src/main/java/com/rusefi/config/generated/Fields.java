@@ -318,7 +318,7 @@ public class Fields {
 	public static final int ego_sensor_e_ES_Innovate_MTX_L = 1;
 	public static final int ego_sensor_e_ES_PLX = 4;
 	public static final int EGT_CHANNEL_COUNT = 8;
-	public static final int END_OF_CALIBRATION_PADDING = 111;
+	public static final int END_OF_CALIBRATION_PADDING = 110;
 	public static final int engine_configuration_s_size = 4036;
 	public static final int engine_load_mode_e_LM_ALPHA_N = 2;
 	public static final int engine_load_mode_e_LM_LUA = 3;
@@ -463,6 +463,7 @@ public class Fields {
 	public static final String GAUGE_CATEGORY_BOOST_CONTROL = "Boost Control";
 	public static final String GAUGE_CATEGORY_ETB = "ETB more";
 	public static final String GAUGE_CATEGORY_FUEL_MATH = "Fuel: math";
+	public static final String GAUGE_CATEGORY_SENT = "Sensors - SENT";
 	public static final String GAUGE_CATEGORY_SYNC = "Sync";
 	public static final String GAUGE_CATEGORY_TIMING = "Timing";
 	public static final String GAUGE_COIL_DWELL_TIME = "Ignition: coil charge time";
@@ -1214,6 +1215,14 @@ public class Fields {
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
 	public static final int SentEtbType_GM_TYPE_1 = 1;
 	public static final int SentEtbType_NONE = 0;
+	public static final int SentInput_INPUT1 = 1;
+	public static final int SentInput_INPUT2 = 2;
+	public static final int SentInput_INPUT3 = 3;
+	public static final int SentInput_INPUT4 = 4;
+	public static final int SentInput_INPUT5 = 5;
+	public static final int SentInput_INPUT6 = 6;
+	public static final int SentInput_INPUT7 = 7;
+	public static final int SentInput_NONE = 0;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1476,7 +1485,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.11.25.f407-discovery.3383843753";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.11.26.f407-discovery.3930134479";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2956,6 +2965,8 @@ public class Fields {
 	public static final Field SECONDARYINJECTORCOMPENSATIONMODE = Field.create("SECONDARYINJECTORCOMPENSATIONMODE", 3916, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_3917 = Field.create("ALIGNMENTFILL_AT_3917", 3917, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field SECONDARYINJECTORFUELREFERENCEPRESSURE = Field.create("SECONDARYINJECTORFUELREFERENCEPRESSURE", 3920, FieldType.FLOAT).setBaseOffset(0);
+	public static final String[] SentInput = {"None", "SENT input 1", "SENT input 2", "SENT input 3", "SENT input 4", "SENT input 5", "SENT input 6", "SENT input 7"};
+	public static final Field ETBSENTINPUT = Field.create("ETBSENTINPUT", 3924, FieldType.INT8, SentInput).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_4035 = Field.create("ALIGNMENTFILL_AT_4035", 4035, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field POSTCRANKINGFACTOR = Field.create("POSTCRANKINGFACTOR", 4036, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field POSTCRANKINGDURATIONBINS = Field.create("POSTCRANKINGDURATIONBINS", 4180, FieldType.FLOAT).setBaseOffset(0);
@@ -4660,6 +4671,7 @@ public class Fields {
 	SECONDARYINJECTORCOMPENSATIONMODE,
 	ALIGNMENTFILL_AT_3917,
 	SECONDARYINJECTORFUELREFERENCEPRESSURE,
+	ETBSENTINPUT,
 	ALIGNMENTFILL_AT_4035,
 	POSTCRANKINGFACTOR,
 	POSTCRANKINGDURATIONBINS,

@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Fri Sep 27 22:36:30 UTC 2024
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Tue Nov 26 15:18:06 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -115,6 +115,27 @@ case SentEtbType::FORD_TYPE_1:
 case SentEtbType::GM_TYPE_1:
   return "GM_TYPE_1";
 case SentEtbType::NONE:
+  return "NONE";
+  }
+ return NULL;
+}
+const char *getSentInput(SentInput value){
+switch(value) {
+case SentInput::INPUT1:
+  return "INPUT1";
+case SentInput::INPUT2:
+  return "INPUT2";
+case SentInput::INPUT3:
+  return "INPUT3";
+case SentInput::INPUT4:
+  return "INPUT4";
+case SentInput::INPUT5:
+  return "INPUT5";
+case SentInput::INPUT6:
+  return "INPUT6";
+case SentInput::INPUT7:
+  return "INPUT7";
+case SentInput::NONE:
   return "NONE";
   }
  return NULL;

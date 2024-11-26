@@ -4189,6 +4189,7 @@ struct engine_configuration_s {
 	 */
 	uint8_t acRelayAlternatorDutyAdder;
 	/**
+	 * If you have SENT TPS sensor please select type. For analog TPS lease None
 	 * offset 3199
 	 */
 	SentEtbType sentEtbType;
@@ -4697,8 +4698,13 @@ struct engine_configuration_s {
 	 */
 	float secondaryInjectorFuelReferencePressure;
 	/**
-	 * units: units
+	 * SENT input connected to ETB
 	 * offset 3764
+	 */
+	SentInput EtbSentInput;
+	/**
+	 * units: units
+	 * offset 3765
 	 */
 	uint8_t unusedOftenChangesDuringFirmwareUpdate[END_OF_CALIBRATION_PADDING];
 	/**
