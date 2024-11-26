@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Tue Nov 26 15:18:06 UTC 2024
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Tue Nov 26 22:03:55 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -26,6 +26,9 @@ const char *getSelectedGear(SelectedGear value);
 #endif //__cplusplus
 #if __cplusplus
 const char *getSentEtbType(SentEtbType value);
+#endif //__cplusplus
+#if __cplusplus
+const char *getSentFuelHighPressureType(SentFuelHighPressureType value);
 #endif //__cplusplus
 #if __cplusplus
 const char *getSentInput(SentInput value);

@@ -4189,7 +4189,7 @@ struct engine_configuration_s {
 	 */
 	uint8_t acRelayAlternatorDutyAdder;
 	/**
-	 * If you have SENT TPS sensor please select type. For analog TPS lease None
+	 * If you have SENT TPS sensor please select type. For analog TPS leave None
 	 * offset 3359
 	 */
 	SentEtbType sentEtbType;
@@ -4703,8 +4703,18 @@ struct engine_configuration_s {
 	 */
 	SentInput EtbSentInput;
 	/**
-	 * units: units
+	 * SENT input used for high pressure fuel sensor
 	 * offset 3925
+	 */
+	SentInput FuelHighPressureSentInput;
+	/**
+	 * If you have SENT High Pressure Fuel Sensor please select type. For analog TPS leave None
+	 * offset 3926
+	 */
+	SentFuelHighPressureType FuelHighPressureSentType;
+	/**
+	 * units: units
+	 * offset 3927
 	 */
 	uint8_t unusedOftenChangesDuringFirmwareUpdate[END_OF_CALIBRATION_PADDING];
 	/**

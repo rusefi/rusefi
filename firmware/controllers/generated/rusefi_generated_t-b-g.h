@@ -352,7 +352,7 @@
 #define ego_sensor_e_ES_Innovate_MTX_L 1
 #define ego_sensor_e_ES_PLX 4
 #define EGT_CHANNEL_COUNT 8
-#define END_OF_CALIBRATION_PADDING 110
+#define END_OF_CALIBRATION_PADDING 108
 #define engine_configuration_s_size 4036
 #define engine_load_mode_e_auto_enum 0="LM_SPEED_DENSITY",2="LM_ALPHA_N",3="LM_LUA",100="LM_MOCK",1="LM_REAL_MAF"
 #define engine_load_mode_e_enum "Speed Density", "MAF Air Charge", "Alpha-N", "Lua"
@@ -1296,6 +1296,10 @@
 #define SentEtbType_FORD_TYPE_1 2
 #define SentEtbType_GM_TYPE_1 1
 #define SentEtbType_NONE 0
+#define SentFuelHighPressureType_auto_enum 0="NONE",1="GM_TYPE"
+#define SentFuelHighPressureType_enum "None", "GM type", "Custom"
+#define SentFuelHighPressureType_GM_TYPE 1
+#define SentFuelHighPressureType_NONE 0
 #define SentInput_auto_enum 0="NONE",1="INPUT1",2="INPUT2",3="INPUT3",4="INPUT4",5="INPUT5",6="INPUT6",7="INPUT7"
 #define SentInput_enum "None", "SENT input 1", "SENT input 2", "SENT input 3", "SENT input 4", "SENT input 5", "SENT input 6", "SENT input 7"
 #define SentInput_INPUT1 1
@@ -1308,7 +1312,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 184147570
+#define SIGNATURE_HASH 2586046385
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1769,7 +1773,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.11.26.t-b-g.184147570"
+#define TS_SIGNATURE "rusEFI master.2024.11.26.t-b-g.2586046385"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
