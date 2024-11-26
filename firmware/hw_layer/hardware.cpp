@@ -339,7 +339,7 @@ void applyNewHardwareSettings() {
 	stopTriggerInputPins();
 #endif /* EFI_SHAFT_POSITION_INPUT */
 
-#if EFI_SENT_SUPPORT
+#if EFI_PROD_CODE && EFI_SENT_SUPPORT
 	stopSent();
 #endif // EFI_SENT_SUPPORT
 
@@ -422,7 +422,7 @@ void applyNewHardwareSettings() {
 	startVvtControlPins();
 #endif /* EFI_VVT_PID */
 
-#if EFI_SENT_SUPPORT
+#if EFI_PROD_CODE && EFI_SENT_SUPPORT
 	startSent();
 #endif
 
@@ -637,7 +637,7 @@ void initHardware() {
 	cdmIonInit();
 #endif // EFI_CDM_INTEGRATION
 
-#if EFI_SENT_SUPPORT
+#if EFI_PROD_CODE && EFI_SENT_SUPPORT
 	initSent();
 #endif
 

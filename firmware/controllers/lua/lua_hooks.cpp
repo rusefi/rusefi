@@ -745,7 +745,7 @@ void configureRusefiLuaHooks(lua_State* lState) {
 		return 1;
 	});
 
-#if EFI_SENT_SUPPORT
+#if EFI_PROD_CODE && EFI_SENT_SUPPORT
 	lua_register(lState, "getSentValue",
 			[](lua_State* l) {
 			auto humanIndex = luaL_checkinteger(l, 1);
