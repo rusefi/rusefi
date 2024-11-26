@@ -56,7 +56,6 @@ bool isPedalError() {
     return !Sensor::get(SensorType::AcceleratorPedal).Valid && Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
 }
 
-#if EFI_PROD_CODE
 #if EFI_SENT_SUPPORT
 
 extern SentTps sentTps;
@@ -88,4 +87,3 @@ bool isDigitalTps1() {
 }
 
 #endif /* EFI_SENT_SUPPORT */
-#endif /* EFI_PROD_CODE */
