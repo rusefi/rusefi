@@ -122,6 +122,7 @@ void deinitFluidPressure() {
 	AdcSubscription::UnsubscribeSensor(auxLinear4Sensor, engineConfiguration->auxLinear4.hwChannel);
 }
 
+#if EFI_PROD_CODE
 #if EFI_SENT_SUPPORT
 /* init_ file is not correct place for following code, but pressure sensor is defined here and static */
 /* TODO: move? */
@@ -145,3 +146,4 @@ void sentPressureDecode(SentInput sentCh) {
 }
 
 #endif /* EFI_SENT_SUPPORT */
+#endif /* EFI_PROD_CODE */
