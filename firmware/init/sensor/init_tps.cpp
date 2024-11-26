@@ -200,7 +200,7 @@ static FuncSensPair wastegate(PACK_MULT_VOLTAGE, SensorType::WastegatePosition);
 static FuncSensPair idlePos(PACK_MULT_VOLTAGE, SensorType::IdlePosition);
 
 bool isDigitalTps1() {
-    return isBrainPinValid(engineConfiguration->sentInputPins[0]) && engineConfiguration->sentEtbType != SentEtbType::NONE;
+    return (engineConfiguration->sentEtbType != SentEtbType::NONE);
 }
 
 void initTps() {

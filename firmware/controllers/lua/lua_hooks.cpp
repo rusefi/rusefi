@@ -749,7 +749,7 @@ void configureRusefiLuaHooks(lua_State* lState) {
 	lua_register(lState, "getSentValue",
 			[](lua_State* l) {
 			auto humanIndex = luaL_checkinteger(l, 1);
-			auto value = getSentValue(humanIndex - 1);
+			auto value = getSentValue(static_cast<SentInput>(humanIndex));
 			lua_pushnumber(l, value);
 			return 1;
 	});
@@ -759,7 +759,7 @@ void configureRusefiLuaHooks(lua_State* lState) {
 			uint16_t sig0;
 			uint16_t sig1;
 			auto humanIndex = luaL_checkinteger(l, 1);
-			/*auto ret = */getSentValues(humanIndex - 1, &sig0, &sig1);
+			/*auto ret = */getSentValues(static_cast<SentInput>(humanIndex), &sig0, &sig1);
 			lua_pushnumber(l, sig0);
 			lua_pushnumber(l, sig1);
 			return 2;

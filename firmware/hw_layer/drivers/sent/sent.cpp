@@ -581,8 +581,9 @@ static void SentDecoderThread(void*) {
 						#endif // SENT_STATISTIC_COUNTERS
 					}
 
+					SentInput input = static_cast<SentInput>((size_t)SentInput::INPUT1 + n);
 					/* Call high level decoder from here */
-					sentTpsDecode(n);
+					sentTpsDecode(input);
 				}
 			}
 		}
@@ -595,7 +596,7 @@ static void printSentInfo() {
 		sent_channel &channel = channels[i];
 
         const char * pinName = getBoardSpecificPinName(engineConfiguration->sentInputPins[i]);
-		efiPrintf("---- SENT ch %d ---- on %s", i, pinName);
+		efiPrintf("---- SENT input %d ---- on %s", i + 1, pinName);
 		channel.Info();
 		efiPrintf("--------------------");
 	}
@@ -604,7 +605,9 @@ static void printSentInfo() {
 
 /* Don't be confused: this actually returns throttle body position */
 /* TODO: remove, replace with getSentValues() */
-float getSentValue(size_t index) {
+float getSentValue(SentInput input) {
+	size_t index = static_cast<size_t>(input) - static_cast<size_t>(SentInput::INPUT1);
+
 	if (index < SENT_CHANNELS_NUM) {
 		uint16_t sig0, sig1;
 		sent_channel &channel = channels[index];
@@ -620,7 +623,9 @@ float getSentValue(size_t index) {
     return NAN;
 }
 
-int getSentValues(size_t index, uint16_t *sig0, uint16_t *sig1) {
+int getSentValues(SentInput input, uint16_t *sig0, uint16_t *sig1) {
+	size_t index = static_cast<size_t>(input) - static_cast<size_t>(SentInput::INPUT1);
+
 	if (index < SENT_CHANNELS_NUM) {
 		sent_channel &channel = channels[index];
 

@@ -69,9 +69,9 @@ float decodeTpsSentValue(float sentValue) {
     }
 }
 
-void sentTpsDecode(int sentCh) {
+void sentTpsDecode(SentInput sentCh) {
 #if EFI_SENT_SUPPORT
-    if (!isDigitalTps1()) {
+    if ((!isDigitalTps1()) || (engineConfiguration->EtbSentInput != sentCh)) {
         return;
     }
     // todo: move away from weird float API

@@ -36,7 +36,7 @@ void grabTPSIsWideOpen();
 void grabPedalIsUp();
 void grabPedalIsWideOpen();
 
-void sentTpsDecode(int sentCh);
+void sentTpsDecode(SentInput sentCh);
 float decodeTpsSentValue(float sentValue);
 bool isDigitalTps1();
 
