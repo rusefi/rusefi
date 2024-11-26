@@ -176,7 +176,9 @@ static FuncSensPair tps2s(TPS_TS_CONVERSION, SensorType::Tps2Secondary);
 static RedundantPair analogTps1(tps1p, tps1s, SensorType::Tps1);
 static RedundantPair tps2(tps2p, tps2s, SensorType::Tps2);
 
+#if EFI_SENT_SUPPORT
 SentTps sentTps;
+#endif
 
 // Used only in case of weird Ford-style ETB TPS
 static RedundantFordTps fordTps1(SensorType::Tps1, SensorType::Tps1Primary, SensorType::Tps1Secondary);
@@ -199,10 +201,6 @@ static ProxySensor driverIntent(SensorType::DriverThrottleIntent);
 static FuncSensPair wastegate(PACK_MULT_VOLTAGE, SensorType::WastegatePosition);
 static FuncSensPair idlePos(PACK_MULT_VOLTAGE, SensorType::IdlePosition);
 
-bool isDigitalTps1() {
-    return isBrainPinValid(engineConfiguration->sentInputPins[0]) && engineConfiguration->sentEtbType != SentEtbType::NONE;
-}
-
 void initTps() {
     criticalAssertVoid(engineConfiguration != nullptr, "null engineConfiguration");
 	percent_t minTpsPps = engineConfiguration->tpsErrorDetectionTooLow;
@@ -219,9 +217,12 @@ void initTps() {
 		}
 
 
+#if EFI_SENT_SUPPORT
         if (isDigitalTps1()) {
             sentTps.Register();
-        } else {
+        } else
+#endif
+        {
 		    analogTps1.init(isFordTps, &fordTps1, tpsSecondaryMaximum,
     			{ engineConfiguration->tps1_1AdcChannel, (float)engineConfiguration->tpsMin, (float)engineConfiguration->tpsMax, minTpsPps, maxTpsPps },
 	    		{ engineConfiguration->tps1_2AdcChannel, (float)engineConfiguration->tps1SecondaryMin, (float)engineConfiguration->tps1SecondaryMax, minTpsPps, maxTpsPps }
@@ -269,7 +270,9 @@ void deinitTps() {
 	tps2.deinit(isFordTps, &fordTps2);
 	pedal.deinit(isFordPps, &fordPps);
 
+#if EFI_SENT_SUPPORT
 	sentTps.unregister();
+#endif
 
 	wastegate.deinit();
 	idlePos.deinit();

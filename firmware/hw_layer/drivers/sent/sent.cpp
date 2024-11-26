@@ -13,6 +13,8 @@
 
 #include "pch.h"
 
+#if EFI_SENT_SUPPORT
+
 #include "sent.h"
 #include "sent_logic.h"
 #include "sent_constants.h"
@@ -497,9 +499,11 @@ uint8_t sent_channel::crc6(uint32_t data)
 	return crc;
 }
 
+#endif /* EFI_SENT_SUPPORT */
 #endif // EFI_PROD_CODE || EFI_UNIT_TEST
 
 #if EFI_PROD_CODE
+#if EFI_SENT_SUPPORT
 
 static sent_channel channels[SENT_CHANNELS_NUM];
 
@@ -569,19 +573,21 @@ static void SentDecoderThread(void*) {
 				sent_channel &channel = channels[n];
 
 				if (channel.Decoder(tick) > 0) {
+					/* report only for first channel */
+					if (n == 0) {
+						uint16_t sig0, sig1;
+						channel.GetSignals(NULL, &sig0, &sig1);
+						engine->sent_state.value0 = sig0;
+						engine->sent_state.value1 = sig1;
 
-    				uint16_t sig0, sig1;
-    				channel.GetSignals(NULL, &sig0, &sig1);
-    				engine->sent_state.value0 = sig0;
-    				engine->sent_state.value1 = sig1;
+						#if SENT_STATISTIC_COUNTERS
+						    engine->sent_state.errorRate = 100.0 * channel.statistic.getErrorRate();
+						#endif // SENT_STATISTIC_COUNTERS
+					}
 
-    				#if SENT_STATISTIC_COUNTERS
-    				    engine->sent_state.errorRate = channel.statistic.getErrorRate();
-    				#endif // SENT_STATISTIC_COUNTERS
-
-
+					SentInput input = static_cast<SentInput>((size_t)SentInput::INPUT1 + n);
 					/* Call high level decoder from here */
-					sentTpsDecode();
+					sentTpsDecode(input);
 				}
 			}
 		}
@@ -589,21 +595,21 @@ static void SentDecoderThread(void*) {
 }
 
 static void printSentInfo() {
-#if EFI_SENT_SUPPORT
 	for (int i = 0; i < SENT_CHANNELS_NUM; i++) {
 		sent_channel &channel = channels[i];
 
         const char * pinName = getBoardSpecificPinName(engineConfiguration->sentInputPins[i]);
-		efiPrintf("---- SENT ch %d ---- on %s", i, pinName);
+		efiPrintf("---- SENT input %d ---- on %s", i + 1, pinName);
 		channel.Info();
 		efiPrintf("--------------------");
 	}
-#endif // EFI_SENT_SUPPORT
 }
 
 /* Don't be confused: this actually returns throttle body position */
 /* TODO: remove, replace with getSentValues() */
-float getSentValue(size_t index) {
+float getSentValue(SentInput input) {
+	size_t index = static_cast<size_t>(input) - static_cast<size_t>(SentInput::INPUT1);
+
 	if (index < SENT_CHANNELS_NUM) {
 		uint16_t sig0, sig1;
 		sent_channel &channel = channels[index];
@@ -619,7 +625,9 @@ float getSentValue(size_t index) {
     return NAN;
 }
 
-int getSentValues(size_t index, uint16_t *sig0, uint16_t *sig1) {
+int getSentValues(SentInput input, uint16_t *sig0, uint16_t *sig1) {
+	size_t index = static_cast<size_t>(input) - static_cast<size_t>(SentInput::INPUT1);
+
 	if (index < SENT_CHANNELS_NUM) {
 		sent_channel &channel = channels[index];
 
@@ -643,4 +651,5 @@ void initSent(void) {
 	addConsoleAction("sentinfo", &printSentInfo);
 }
 
+#endif /* EFI_SENT_SUPPORT */
 #endif /* EFI_PROD_CODE */
