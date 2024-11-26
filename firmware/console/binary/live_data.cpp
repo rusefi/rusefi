@@ -204,7 +204,11 @@ const ignition_state_s* getLiveData(size_t) {
 
 template<>
 const sent_state_s* getLiveData(size_t) {
+#if EFI_SENT_SUPPORT
 	return &engine->sent_state;
+#else
+	return nullptr;
+#endif
 }
 
 template<>
