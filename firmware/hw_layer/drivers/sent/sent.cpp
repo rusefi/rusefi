@@ -569,16 +569,17 @@ static void SentDecoderThread(void*) {
 				sent_channel &channel = channels[n];
 
 				if (channel.Decoder(tick) > 0) {
+					/* report only for first channel */
+					if (n == 0) {
+						uint16_t sig0, sig1;
+						channel.GetSignals(NULL, &sig0, &sig1);
+						engine->sent_state.value0 = sig0;
+						engine->sent_state.value1 = sig1;
 
-    				uint16_t sig0, sig1;
-    				channel.GetSignals(NULL, &sig0, &sig1);
-    				engine->sent_state.value0 = sig0;
-    				engine->sent_state.value1 = sig1;
-
-    				#if SENT_STATISTIC_COUNTERS
-    				    engine->sent_state.errorRate = channel.statistic.getErrorRate();
-    				#endif // SENT_STATISTIC_COUNTERS
-
+						#if SENT_STATISTIC_COUNTERS
+						    engine->sent_state.errorRate = channel.statistic.getErrorRate();
+						#endif // SENT_STATISTIC_COUNTERS
+					}
 
 					/* Call high level decoder from here */
 					sentTpsDecode(n);
