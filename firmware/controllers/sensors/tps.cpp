@@ -71,6 +71,7 @@ float decodeTpsSentValue(float sentValue) {
     }
 }
 
+#if EFI_PROD_CODE
 void sentTpsDecode(SentInput sentCh) {
     if ((!isDigitalTps1()) || (engineConfiguration->EtbSentInput != sentCh)) {
         return;
@@ -81,6 +82,7 @@ void sentTpsDecode(SentInput sentCh) {
 
     sentTps.setValidValue(tpsValue, getTimeNowNt());
 }
+#endif // EFI_PROD_CODE
 
 bool isDigitalTps1() {
     return (engineConfiguration->sentEtbType != SentEtbType::NONE);
