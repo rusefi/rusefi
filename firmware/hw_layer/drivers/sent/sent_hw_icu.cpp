@@ -60,7 +60,7 @@ void startSent() {
 		uint32_t baseClock;
 
 		if (getIcuParams(sentPin, &pinAF, &icu, &cfg->channel, &baseClock) != true) {
-			/* this pin has no ICU functionality, of ICU driver is not enabled for TIM on this pin */
+			/* this pin has no ICU functionality or ICU driver is not enabled for TIM on this pin */
 			criticalError("No ICU on selected SENT pin");
 			continue;
 		}
@@ -84,7 +84,7 @@ void stopSent() {
 		ICUDriver *icu;
 
 		if (getIcuParams(sentPin, NULL, &icu, NULL, NULL) != true) {
-			/* this pin has no ICU functionality, of ICU driver is not enabled for TIM on this pin */
+			/* this pin has no ICU functionality or ICU driver is not enabled for TIM on this pin */
 			/* throw error? */
 			continue;
 		}
