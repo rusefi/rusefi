@@ -69,13 +69,13 @@ float decodeTpsSentValue(float sentValue) {
     }
 }
 
-void sentTpsDecode() {
+void sentTpsDecode(int sentCh) {
 #if EFI_SENT_SUPPORT
     if (!isDigitalTps1()) {
         return;
     }
     // todo: move away from weird float API
-    float sentValue = getSentValue(0);
+    float sentValue = getSentValue(sentCh);
     float tpsValue = decodeTpsSentValue(sentValue);
 
     sentTps.setValidValue(tpsValue, getTimeNowNt());
