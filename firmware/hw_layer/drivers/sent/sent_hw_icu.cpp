@@ -11,6 +11,8 @@
 
 #include "pch.h"
 
+#if EFI_SENT_SUPPORT
+
 #include "sent.h"
 #include "sent_hw_icu.h"
 
@@ -96,6 +98,8 @@ void stopSent() {
 		efiSetPadUnused(sentPin);
 	}
 }
+
+#endif /* EFI_SENT_SUPPORT */
 
 #endif /* HAL_USE_ICU */
 

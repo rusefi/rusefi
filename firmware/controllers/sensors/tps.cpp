@@ -56,6 +56,8 @@ bool isPedalError() {
     return !Sensor::get(SensorType::AcceleratorPedal).Valid && Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
 }
 
+#if EFI_SENT_SUPPORT
+
 extern SentTps sentTps;
 
 float decodeTpsSentValue(float sentValue) {
@@ -70,7 +72,6 @@ float decodeTpsSentValue(float sentValue) {
 }
 
 void sentTpsDecode(SentInput sentCh) {
-#if EFI_SENT_SUPPORT
     if ((!isDigitalTps1()) || (engineConfiguration->EtbSentInput != sentCh)) {
         return;
     }
@@ -79,5 +80,10 @@ void sentTpsDecode(SentInput sentCh) {
     float tpsValue = decodeTpsSentValue(sentValue);
 
     sentTps.setValidValue(tpsValue, getTimeNowNt());
-#endif // EFI_SENT_SUPPORT
 }
+
+bool isDigitalTps1() {
+    return (engineConfiguration->sentEtbType != SentEtbType::NONE);
+}
+
+#endif /* EFI_SENT_SUPPORT */

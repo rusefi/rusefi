@@ -9,6 +9,8 @@
 
 #pragma once
 
+#if EFI_SENT_SUPPORT
+
 /* SENT decoder init */
 void initSent();
 
@@ -21,3 +23,5 @@ void stopSent();
 
 float getSentValue(SentInput input);
 int getSentValues(SentInput input, uint16_t *sig0, uint16_t *sig1);
+
+#endif /* EFI_SENT_SUPPORT */

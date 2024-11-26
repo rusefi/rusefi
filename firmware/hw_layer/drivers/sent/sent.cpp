@@ -13,6 +13,8 @@
 
 #include "pch.h"
 
+#if EFI_SENT_SUPPORT
+
 #include "sent.h"
 #include "sent_logic.h"
 #include "sent_constants.h"
@@ -497,9 +499,11 @@ uint8_t sent_channel::crc6(uint32_t data)
 	return crc;
 }
 
+#endif /* EFI_SENT_SUPPORT */
 #endif // EFI_PROD_CODE || EFI_UNIT_TEST
 
 #if EFI_PROD_CODE
+#if EFI_SENT_SUPPORT
 
 static sent_channel channels[SENT_CHANNELS_NUM];
 
@@ -591,7 +595,6 @@ static void SentDecoderThread(void*) {
 }
 
 static void printSentInfo() {
-#if EFI_SENT_SUPPORT
 	for (int i = 0; i < SENT_CHANNELS_NUM; i++) {
 		sent_channel &channel = channels[i];
 
@@ -600,7 +603,6 @@ static void printSentInfo() {
 		channel.Info();
 		efiPrintf("--------------------");
 	}
-#endif // EFI_SENT_SUPPORT
 }
 
 /* Don't be confused: this actually returns throttle body position */
@@ -649,4 +651,5 @@ void initSent(void) {
 	addConsoleAction("sentinfo", &printSentInfo);
 }
 
+#endif /* EFI_SENT_SUPPORT */
 #endif /* EFI_PROD_CODE */
