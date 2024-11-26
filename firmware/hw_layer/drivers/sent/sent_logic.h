@@ -46,7 +46,7 @@ uint32_t getTotalError() {
 }
 
 float getErrorRate() {
-    return getTotalError() * 1.0 / FrameCnt;
+    return 1.0 * getTotalError() / (FrameCnt + getTotalError());
 }
 
 };

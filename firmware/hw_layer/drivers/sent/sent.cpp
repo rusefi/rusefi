@@ -577,7 +577,7 @@ static void SentDecoderThread(void*) {
 						engine->sent_state.value1 = sig1;
 
 						#if SENT_STATISTIC_COUNTERS
-						    engine->sent_state.errorRate = channel.statistic.getErrorRate();
+						    engine->sent_state.errorRate = 100.0 * channel.statistic.getErrorRate();
 						#endif // SENT_STATISTIC_COUNTERS
 					}
 
