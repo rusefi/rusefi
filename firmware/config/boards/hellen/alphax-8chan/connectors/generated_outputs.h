@@ -45,7 +45,7 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::MM176_OUT_IO8, // 12D - NOS
 	Gpio::MM176_OUT_PWM2, // 14D - VVT 2
 	Gpio::MM176_OUT_IO13, // 15D - Tachometer
-	Gpio::MM176_OUT_PWM6, // 16C - Low Side 1
+	Gpio::MM176_OUT_PWM6, // 16D - Low Side 1
 	Gpio::MM176_OUT_PWM3, // 20D - VVT 3
 	Gpio::MM176_OUT_PWM4, // 21D - VVT 4
 	Gpio::MM176_OUT_PWM5, // 22C - Boost
@@ -89,7 +89,7 @@ Gpio GENERATED_OUTPUTS = {
 // "12D - NOS",
 // "14D - VVT 2",
 // "15D - Tachometer",
-// "16C - Low Side 1",
+// "16D - Low Side 1",
 // "20D - VVT 3",
 // "21D - VVT 4",
 // "22C - Boost",
