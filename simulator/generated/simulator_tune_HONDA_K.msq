@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22976">
+    <page number="0" size="22980">
         <constant name="engineType">"HONDA_K"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">0.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
@@ -1633,21 +1633,45 @@
         <constant name="EtbSentInput">"None"</constant>
         <constant name="FuelHighPressureSentInput">"None"</constant>
         <constant name="FuelHighPressureSentType">"None"</constant>
-        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="108">
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+        <constant name="nitrousControlEnabled">"false"</constant>
+        <constant name="nitrousControlTriggerPinInverted">"false"</constant>
+        <constant name="unusedFancy3">"false"</constant>
+        <constant name="unusedFancy4">"false"</constant>
+        <constant name="unusedFancy5">"false"</constant>
+        <constant name="unusedFancy6">"false"</constant>
+        <constant name="unusedFancy7">"false"</constant>
+        <constant name="unusedFancy8">"false"</constant>
+        <constant name="unusedFancy9">"false"</constant>
+        <constant name="unusedFancy10">"false"</constant>
+        <constant name="unusedFancy11">"false"</constant>
+        <constant name="unusedFancy12">"false"</constant>
+        <constant name="unusedFancy13">"false"</constant>
+        <constant name="unusedFancy14">"false"</constant>
+        <constant name="unusedFancy15">"false"</constant>
+        <constant name="unusedFancy16">"false"</constant>
+        <constant name="unusedFancy17">"false"</constant>
+        <constant name="unusedFancy18">"false"</constant>
+        <constant name="unusedFancy19">"false"</constant>
+        <constant name="unusedFancy20">"false"</constant>
+        <constant name="unusedFancy21">"false"</constant>
+        <constant name="unusedFancy22">"false"</constant>
+        <constant name="unusedFancy23">"false"</constant>
+        <constant name="unusedFancy24">"false"</constant>
+        <constant name="unusedFancy25">"false"</constant>
+        <constant name="unusedFancy26">"false"</constant>
+        <constant name="unusedFancy27">"false"</constant>
+        <constant name="unusedFancy28">"false"</constant>
+        <constant name="unusedFancy29">"false"</constant>
+        <constant name="unusedFancy30">"false"</constant>
+        <constant name="unusedFancy31">"false"</constant>
+        <constant name="unusedFancy32">"false"</constant>
+        <constant name="nitrousControlArmingMethod">"Digital Switch Input"</constant>
+        <constant name="nitrousControlTriggerPin">"NONE"</constant>
+        <constant name="nitrousControlTriggerPinMode">"DEFAULT"</constant>
+        <constant name="nitrousLuaGauge">"Lua Gauge 1"</constant>
+        <constant name="nitrousLuaGaugeMeaning">"Lower Bound"</constant>
+        <constant digits="3" name="nitrousLuaGaugeArmingValue" units="">0.0</constant>
+        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="94">
          0.0
          0.0
          0.0
@@ -4729,7 +4753,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20241120" nPages="1" signature="rusEFI master.2024.11.27.f407-discovery.1557510205" version="5.0"/>
+    <versionInfo firmwareInfo="20241120" nPages="1" signature="rusEFI master.2024.11.27.f407-discovery.3986160817" version="5.0"/>
     <bibliography author="rusEFI 20241120" writeDate="date"/>
     <settings/>
     <userComments/>
