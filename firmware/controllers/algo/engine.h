@@ -320,7 +320,9 @@ public:
 	EngineState engineState;
 
 	dc_motors_s dc_motors;
+#if EFI_SENT_SUPPORT
 	sent_state_s sent_state;
+#endif
 
 	/**
 	 * idle blip is a development tool: alternator PID research for instance have benefited from a repetitive change of RPM

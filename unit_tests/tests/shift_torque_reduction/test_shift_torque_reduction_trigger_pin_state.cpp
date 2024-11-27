@@ -4,7 +4,7 @@
 
 #include "pch.h"
 
-#include "shift_torque_reduction_test_base.h"
+#include "util/test_base.h"
 
 namespace {
     constexpr switch_input_pin_e TEST_TORQUE_REDUCTION_BUTTON_PIN = Gpio::F15;
@@ -16,7 +16,7 @@ namespace {
         const bool torqueReductionTriggerPinState;
     };
 
-    class ShiftTorqueReductionTriggerPinTest : public ShiftTorqueReductionTestBase {
+    class ShiftTorqueReductionTriggerPinTest : public TestBase {
     protected:
         void checkShiftTorqueReductionState(const ShiftTorqueReductionTriggerPinTestData& expected);
         void checkShiftTorqueReductionStateAfterPeriodicFastCallback(
@@ -60,16 +60,16 @@ namespace {
     }
 
     TEST_F(ShiftTorqueReductionTriggerPinTest, checkDefaultConfiguration) {
-        setUpTestConfig(ShiftTorqueReductionTestConfig());
+        setUpEngineConfiguration(EngineConfig());
 
         checkShiftTorqueReductionStateAfterPeriodicFastCallback({ "Default trigger pin state", false, false });
     }
 
     TEST_F(ShiftTorqueReductionTriggerPinTest, checkTorqueReductionTriggerPinSwitch) {
-        setUpTestConfig(ShiftTorqueReductionTestConfig()
+        setUpEngineConfiguration(EngineConfig()
             .setTorqueReductionEnabled(true)
             .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
-            .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setTorqueReductionTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
             .setLaunchActivatePin(TEST_LAUNCH_BUTTON_PIN)
         );
 
@@ -99,11 +99,11 @@ namespace {
     }
 
     TEST_F(ShiftTorqueReductionTriggerPinTest, checkTorqueReductionTriggerInvertedPinSwitch) {
-        setUpTestConfig(ShiftTorqueReductionTestConfig()
+        setUpEngineConfiguration(EngineConfig()
             .setTorqueReductionEnabled(true)
             .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
-            .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
-            .setPinInverted(true)
+            .setTorqueReductionTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setTorqueReductionTriggerPinInverted(true)
         );
 
         checkShiftTorqueReductionStateAfterPeriodicFastCallback({ "Default trigger pin state", true, true });
@@ -120,10 +120,10 @@ namespace {
     }
 
     TEST_F(ShiftTorqueReductionTriggerPinTest, checkLaunchActivatePinSwitch) {
-        setUpTestConfig(ShiftTorqueReductionTestConfig()
+        setUpEngineConfiguration(EngineConfig()
             .setTorqueReductionEnabled(true)
             .setTorqueReductionActivationMode(torqueReductionActivationMode_e::LAUNCH_BUTTON)
-            .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setTorqueReductionTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
             .setLaunchActivatePin(TEST_LAUNCH_BUTTON_PIN)
         );
 
@@ -153,10 +153,10 @@ namespace {
     }
 
     TEST_F(ShiftTorqueReductionTriggerPinTest, checkTorqueReductionTriggerPinSwitchWithDisabledTorqueReduction) {
-        setUpTestConfig(ShiftTorqueReductionTestConfig()
+        setUpEngineConfiguration(EngineConfig()
             .setTorqueReductionEnabled(false)
             .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
-            .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setTorqueReductionTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
             .setLaunchActivatePin(TEST_LAUNCH_BUTTON_PIN)
         );
 

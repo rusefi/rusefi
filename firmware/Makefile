@@ -56,15 +56,9 @@ PCHSUB = firmware
 # Imported source files and paths
 CHIBIOS_CONTRIB = ChibiOS-Contrib
 
-# Configure libfirmware Paths/Includes
-RUSEFI_LIB = $(PROJECT_DIR)/libfirmware
-include $(RUSEFI_LIB)/util/util.mk
-include $(RUSEFI_LIB)/pt2001/pt2001.mk
+include $(PROJECT_DIR)/common_libfirmware.mk
 
 include rusefi.mk
-
-# by default EXTRA_PARAMS is empty and we create 'debug' version of the firmware with additional assertions and statistics
-# for 'release' options see 'clean_compile_two_versions.bat' file
 
 ifeq ($(DEBUG_LEVEL_OPT),)
   # Default to a release build - but leave in debug info.  It doesn't change the hex/bin output.
@@ -343,7 +337,7 @@ ASMXSRC = $(ALLXASMSRC) \
 #
 # WARNING! order of variables is important here - for instance cypress own folders should go before default folders
 #
-INCDIR = \
+INCDIR += \
   $(PCH_DIR) \
   $(BOARDINC) \
   $(ALLINC) \

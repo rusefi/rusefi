@@ -66,6 +66,14 @@ void setStepperHw() {
 #endif // HW_PROTEUS
 }
 
+static void gmRailSensor() {
+	engineConfiguration->highPressureFuel.v1 = 0.5; /* volts */;
+	engineConfiguration->highPressureFuel.value1 = 0;
+	engineConfiguration->highPressureFuel.v2 = 4.5; /* volts */;
+	// fun fact: twice the range of VAG B6?
+	engineConfiguration->highPressureFuel.value2 = PSI2KPA(400);
+}
+
 void setGmSbc() {
 	engineConfiguration->cylindersCount = 8;
 	engineConfiguration->firingOrder = FO_1_8_4_3_6_5_7_2;
@@ -131,10 +139,49 @@ void setGmSbc() {
 	engineConfiguration->map.sensor.type = MT_GM_1_BAR;
 }
 
-void setGmLcv() {
+static void setGmEcotec3() {
+  engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
+  engineConfiguration->vvtMode[1] = VVT_BOSCH_QUICK_START;
+  engineConfiguration->lowPressureFuel.hwChannel = EFI_ADC_NONE;
+  gmRailSensor();
+
+#ifdef HW_HELLEN_4K_GDI
+  engineConfiguration->invertCamVVTSignal = true;
+  engineConfiguration->invertExhaustCamVVTSignal = true;
+
+  engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_SENS1; // Digital Input 1
+  engineConfiguration->camInputs[0] = Gpio::H144_IN_SENS3; // Digital Input 4
+  engineConfiguration->sentInputPins[0] = Gpio::H144_IN_AUX2_DIGITAL;
+
+  // engineConfiguration->starterControlPin = high side :()
+#endif
+
+#ifdef HW_HELLEN_8CHAN
+  // engineConfiguration->sentInputPins[0] = todo TIM1_CH4 ICU #7076
+  engineConfiguration->starterControlPin = Gpio::MM176_IGN5; // 14C
+
+	engineConfiguration->camInputs[2] = Gpio::Unassigned;
+	engineConfiguration->camInputs[3] = Gpio::Unassigned;
+	config->boardUseCrankPullUp = true;
+#endif
+
+  engineConfiguration->sentEtbType = SentEtbType::GM_TYPE_1;
+  setTPS1Inputs(EFI_ADC_NONE, EFI_ADC_NONE);
+  setPPSCalibration(1, 4.25, 0.5, 2.14);
+
 	setInline4();
-	engineConfiguration->displacement = 2.5;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_GM);
-	strcpy(engineConfiguration->engineCode, "LCV");
 	setGDIFueling();
+}
+
+void setGmLcv() {
+  setGmEcotec3();
+  engineConfiguration->displacement = 2.5;
+  strcpy(engineConfiguration->engineCode, "LCV");
+}
+
+void setGmLtg() {
+  setGmEcotec3();
+  engineConfiguration->displacement = 2.0;
+  strcpy(engineConfiguration->engineCode, "LTG");
 }

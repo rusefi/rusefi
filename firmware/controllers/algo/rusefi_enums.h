@@ -198,6 +198,22 @@ enum class SentEtbType : uint8_t {
 	CUSTOM = 3,
 };
 
+enum class SentFuelHighPressureType : uint8_t {
+	NONE = 0,
+	GM_TYPE = 1,
+};
+
+enum class SentInput : uint8_t {
+	NONE = 0,
+	INPUT1 = 1,
+	INPUT2 = 2,
+	INPUT3 = 3,
+	INPUT4 = 4,
+	INPUT5 = 5,
+	INPUT6 = 6,
+	INPUT7 = 7
+};
+
 enum class CanGpioType : uint8_t {
 	NONE = 0,
 	DRT = 1,

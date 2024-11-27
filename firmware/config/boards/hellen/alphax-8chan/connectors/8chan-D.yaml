@@ -83,7 +83,7 @@ pins:
     meta: MM176_GP1
     class: outputs
     ts_name: 11D - Main Relay
-    color: purple
+    color: grey
 
   - pin: 12D
     function: NOS Relay Output (low)
@@ -166,7 +166,7 @@ pins:
     function: Low Side 2
     meta: MM176_OUT_PWM7
     class: outputs
-    ts_name: 23C - Low Side 2
+    ts_name: 23D - Low Side 2
 
   - pin: 24D
     meta: MM176_GP20

@@ -1,6 +1,7 @@
 
 -- https://sourceforge.net/p/ecu/wiki/canbus/
 -- todo: CAN ID 430h, period 50ms, produced by SJB. Byte 7: Bit2 A/C request (button pressed).
+-- see also 'etb-test-script.lua'
 
 canRxAdd(0x201)
 setTickRate(20)

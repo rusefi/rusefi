@@ -19,8 +19,8 @@
 #endif
 
 namespace {
-    Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t, uint8_t> boostMapOpen{"bo"};
-    Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t, uint8_t> boostMapClosed{"bc"};
+    Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t, uint16_t> boostMapOpen{"bo"};
+    Map3D<BOOST_RPM_COUNT, BOOST_LOAD_COUNT, uint8_t, uint8_t, uint16_t> boostMapClosed{"bc"};
     Map2D<BOOST_CURVE_SIZE, float, float> boostCltCorr { "clt" };
     Map2D<BOOST_CURVE_SIZE, float, float> boostIatCorr { "iat" };
     Map2D<BOOST_CURVE_SIZE, float, float> boostCltAdder { "clt (adder)" };

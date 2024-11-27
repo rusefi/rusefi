@@ -29,6 +29,16 @@ Release template (copy/paste this for new release):
 ## Unreleased
 
 ### Added
+ - Flex Fuel sensor settings should be under "Fuel sensor" #7097
+ - GM SENT fuel pressure sensor #6997
+
+### Fixed
+ - Critical error when using big values on Boost Control Open Loop with Y axis as MAP #7093
+ - "Baro Correction" axis label
+
+## November 2024 "Day 998"
+
+### Added
  - Support wasted spark on odd cylinder count 4-stroke engines. Improves startup and allows running without a cam sensor!
  - CLT/IAT boost duty/target compensation #6424
  - DFCO MAP condition hysteresis #6915
@@ -45,6 +55,11 @@ Release template (copy/paste this for new release):
  - V-Twin MAP phase sense does not need to always wait for sync #6985
  - Organize sensor categories #6856
  - USB serial is sometimes lost #6595
+ - fix detect cylinder for knock then wasted_spark #7062
+ - Change BMW E46 CAN interval to 10 ms #6974
+
+### Breaking Changes
+- Now secondary injectors use `Secondary injector flow compensation mode` and `Secondary injector reference pressure` instead of `Injector flow compensation mode` and `Injector reference pressure` Tuner Studio settings #6972
 
 ## August 2024 "Day 898"
 

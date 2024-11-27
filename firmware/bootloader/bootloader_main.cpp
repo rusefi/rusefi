@@ -37,6 +37,26 @@ protected:
 		auto redPort = getBrainPinPort(red);
 		auto redPin = getBrainPinIndex(red);
 
+#ifdef BOOTLOADER_ENABLE_OUTPUT_PIN
+		{
+			ioportid_t en_port = getHwPort("blt-en-pin", BOOTLOADER_ENABLE_OUTPUT_PIN);
+			uint8_t en_pin = getHwPin("blt-en-pin", BOOTLOADER_ENABLE_OUTPUT_PIN);
+			palWritePad(en_port, en_pin, 1);
+		}
+#endif // BOOTLOADER_ENABLE_OUTPUT_PIN
+
+#ifdef BOOTLOADER_ENABLE_OUTPUT_PIN2
+		{
+			ioportid_t en_port = getHwPort("blt-en-pin2", BOOTLOADER_ENABLE_OUTPUT_PIN2);
+			uint8_t en_pin = getHwPin("blt-en-pin2", BOOTLOADER_ENABLE_OUTPUT_PIN2);
+			palWritePad(en_port, en_pin, 1);
+		}
+#endif // BOOTLOADER_ENABLE_OUTPUT_PIN2
+
+#ifdef BOOTLOADER_DISABLE_GREEN_LED
+		greenPort = NULL;
+#endif // BOOTLOADER_DISABLE_GREEN_LED
+
 		if (yellowPort) {
 			palSetPad(yellowPort, yellowPin);
 		}

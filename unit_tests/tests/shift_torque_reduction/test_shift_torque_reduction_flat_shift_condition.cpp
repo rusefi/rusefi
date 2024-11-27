@@ -4,10 +4,10 @@
 
 #include "pch.h"
 
-#include "shift_torque_reduction_test_base.h"
+#include "util/test_base.h"
 
 namespace {
-    class ShiftTorqueReductionFlatShiftConditionTest : public ShiftTorqueReductionTestBase {
+    class ShiftTorqueReductionFlatShiftConditionTest : public TestBase {
     protected:
         static constexpr switch_input_pin_e TEST_TORQUE_REDUCTION_BUTTON_PIN = Gpio::E13;
         static constexpr float TEST_TORQUE_REDUCTION_TIME = 123.45f;
@@ -26,10 +26,10 @@ namespace {
 
     void ShiftTorqueReductionFlatShiftConditionTest::SetUp() {
         TestBase::SetUp();
-        setUpTestConfig(ShiftTorqueReductionTestConfig()
+        setUpEngineConfiguration(EngineConfig()
             .setTorqueReductionEnabled(true)
             .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
-            .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setTorqueReductionTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
             .setLimitTorqueReductionTime(true)
             .setTorqueReductionTime(TEST_TORQUE_REDUCTION_TIME)
             .setTorqueReductionArmingRpm(TEST_TORQUE_REDUCTION_ARMING_RPM)

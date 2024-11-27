@@ -1,5 +1,7 @@
 package com.rusefi;
 
+import java.util.Arrays;
+
 public enum PinType {
     OUTPUTS("output_pin_e", "Gpio", "Unassigned"),
     ANALOG_INPUTS("adc_channel_e", "adc_channel_e", "EFI_ADC_NONE"),
@@ -36,6 +38,6 @@ public enum PinType {
                 return pinType;
             }
         }
-        throw new IllegalArgumentException(key + " not expected, possible keys are " + values());
+        throw new IllegalArgumentException(key + " not expected, possible keys are " + Arrays.toString(values()));
     }
 }

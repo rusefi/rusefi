@@ -79,10 +79,13 @@ public class IniFileReader {
         return c == ' ' || c == '\t' || c == '=' || c == ',';
     }
 
+    public static RawIniFile read(InputStream in) {
+        return read(in, "unknown");
+    }
     /**
      * Just grabs an collection of lines, no parsing logic here
      */
-    public static RawIniFile read(InputStream in) {
+    public static RawIniFile read(InputStream in, String msg) {
         List<RawIniFile.Line> lines = new ArrayList<>();
         BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 
@@ -97,13 +100,13 @@ public class IniFileReader {
         } catch (IOException e) {
             throw new IllegalStateException(e);
         }
-        return new RawIniFile(lines);
+        return new RawIniFile(lines, msg);
     }
 
     public static RawIniFile read(File input) {
         try {
             InputStream in = new FileInputStream(input);
-            return read(in);
+            return read(in, input.getAbsolutePath());
         } catch (FileNotFoundException e) {
             throw new IllegalStateException(e);
         }

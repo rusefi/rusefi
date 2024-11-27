@@ -149,7 +149,7 @@ PUBLIC_API_WEAK bool isBoardAllowingLackOfPps() {
   return false;
 }
 
-bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalProvider, bool hasPedal) {
+bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParameters, const ValueProvider3D* pedalProvider) {
 	state = (uint8_t)EtbState::InInit;
 	if (function == DC_None) {
 		// if not configured, don't init.
@@ -163,12 +163,6 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 
 	// If we are a throttle, require redundant TPS sensor
 	if (isEtbMode()) {
-		// We don't need to init throttles, so nothing to do here.
-		if (!hasPedal) {
-			etbErrorCode = (int8_t)TpsState::PpsError;
-			return false;
-		}
-
 		// If no sensor is configured for this throttle, skip initialization.
 		if (!Sensor::hasSensor(functionToTpsSensor(function))) {
 			etbErrorCode = (int8_t)TpsState::TpsError;
@@ -176,21 +170,6 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 		}
 
 		if (!Sensor::isRedundant(m_positionSensor)) {
-			firmwareError(
-				ObdCode::OBD_TPS_Configuration,
-				"Use of electronic throttle requires %s to be redundant.",
-				Sensor::getSensorName(m_positionSensor)
-			);
-
-			etbErrorCode = (int8_t)TpsState::Redundancy;
-			return false;
-		}
-
-		if (!isBoardAllowingLackOfPps() && !Sensor::isRedundant(SensorType::AcceleratorPedal)) {
-			firmwareError(
-				ObdCode::OBD_TPS_Configuration,
-				"Use of electronic throttle requires accelerator pedal to be redundant."
-			);
 			etbErrorCode = (int8_t)TpsState::Redundancy;
 			return false;
 		}
@@ -621,6 +600,8 @@ bool EtbController::checkStatus() {
 		localReason = TpsState::Lua;
 	} else if (!getLimpManager()->allowElectronicThrottle()) {
 	  localReason = TpsState::JamDetected;
+	} else if(!isBoardAllowingLackOfPps() && !Sensor::isRedundant(SensorType::AcceleratorPedal)) {
+		etbErrorCode = (int8_t)TpsState::Redundancy;
 	}
 
 	etbErrorCode = (int8_t)localReason;
@@ -640,7 +621,6 @@ void EtbController::update() {
 	bool isOk = checkStatus();
 
 	if (!isOk) {
-	  state = (uint8_t)EtbState::NotOk;
 		// If engine is stopped and so configured, skip the ETB update entirely
 		// This is quieter and pulls less power than leaving it on all the time
 		m_motor->disable("etb status");
@@ -937,9 +917,6 @@ PUBLIC_API_WEAK ValueProvider3D* pedal2TpsProvider() {
 void doInitElectronicThrottle() {
 	bool hasPedal = Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
 
-#if EFI_UNIT_TEST
-	printf("doInitElectronicThrottle %s\n", boolToString(hasPedal));
-#endif // EFI_UNIT_TEST
 
 	bool anyEtbConfigured = false;
 
@@ -960,7 +937,7 @@ void doInitElectronicThrottle() {
 
 		auto pid = getPidForDcFunction(func);
 
-		bool dcConfigured = controller->init(func, motor, pid, pedal2TpsProvider(), hasPedal);
+		bool dcConfigured = controller->init(func, motor, pid, pedal2TpsProvider());
 		bool etbConfigured = dcConfigured && controller->isEtbMode();
 		anyEtbConfigured |= etbConfigured;
 	}

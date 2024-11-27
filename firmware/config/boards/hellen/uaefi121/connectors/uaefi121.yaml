@@ -209,12 +209,11 @@ pins:
     function: Coil 1
     type: ign
 
-
   - pin: 33a
-    class: digital_inputs
+    meta: MM100_MEGA_UAEFI_IN_AUX3
+    class: switch_inputs
     ts_name: DIN
     function: Digital input signal
-
 
   - pin: 34a
     function: CAM Sensor Exhaust
@@ -503,12 +502,16 @@ pins:
     type: can
 
   - pin: 84a
-    class: digital_inputs
+    meta: MM100_IN_CRANK
+    class: switch_inputs
+    color: yellow
     ts_name: BUTTON1
     function: BUTTON1 sensor
 
   - pin: 85a
-    class: digital_inputs
+    meta: MM100_IN_CAM
+    class: switch_inputs
+    color: green
     ts_name: BUTTON2
     function: BUTTON2 sensor
 
@@ -534,7 +537,9 @@ pins:
     type: ls
 
   - pin: 89a
-    class: digital_inputs
+    meta: MM100_IN_D4
+    class: switch_inputs
+    color: grey
     ts_name: BUTTON3
     function: BUTTON3 input
 

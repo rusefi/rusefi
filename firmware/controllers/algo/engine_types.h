@@ -1,6 +1,8 @@
 /*
  * @file engine_types.h
  *
+ * this header alone few similar ones is consumed by code generation layer for values to be available in .ini template etc
+ *
  * See 'integration API' note in rusefi_enums.h
  * TODO: spell out which enums belong here and which enums belong in rusefi_enums.h for what reasons
  *

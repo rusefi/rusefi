@@ -48,7 +48,7 @@ void TestEngineConfiguration::configureLaunchRpm(const std::optional<int> launch
     if (launchRpm.has_value()) {
         engineConfiguration->launchRpm = launchRpm.value();
     } else {
-        ASSERT_EQ(engineConfiguration->launchRpm, 0); // check default value
+        ASSERT_EQ(engineConfiguration->launchRpm, 3000); // check default value
     }
 }
 
@@ -56,7 +56,7 @@ void TestEngineConfiguration::configureLaunchRpmWindow(const std::optional<int> 
     if (launchRpmWindow.has_value()) {
         engineConfiguration->launchRpmWindow = launchRpmWindow.value();
     } else {
-        ASSERT_EQ(engineConfiguration->launchRpmWindow, 0); // check default value
+        ASSERT_EQ(engineConfiguration->launchRpmWindow, 500); // check default value
     }
 }
 
@@ -142,7 +142,7 @@ void TestEngineConfiguration::configureTorqueReductionActivationMode(
     }
 }
 
-void TestEngineConfiguration::configureTorqueReductionButton(const std::optional<switch_input_pin_e> pin) {
+void TestEngineConfiguration::configureTorqueReductionTriggerPin(const std::optional<switch_input_pin_e> pin) {
     if (pin.has_value()) {
         engineConfiguration->torqueReductionTriggerPin = pin.value();
     } else {
@@ -248,6 +248,140 @@ void TestEngineConfiguration::configureTorqueReductionIgnitionRetard(const std::
         ASSERT_EQ(
             engineConfiguration->torqueReductionIgnitionRetard,
             engine_configuration_defaults::TORQUE_REDUCTION_IGNITION_RETARD
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureFuelPressureSensorMode(
+    const std::optional<fuel_pressure_sensor_mode_e> fuelPressureSensorMode
+) {
+    if (fuelPressureSensorMode.has_value()) {
+        engineConfiguration->fuelPressureSensorMode = fuelPressureSensorMode.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->fuelPressureSensorMode,
+            engine_configuration_defaults::FUEL_PRESSURE_SENSOR_MODE
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureInjectorFlowAsMassFlow(const std::optional<bool> injectorFlowAsMassFlow) {
+    if (injectorFlowAsMassFlow.has_value()) {
+        engineConfiguration->injectorFlowAsMassFlow = injectorFlowAsMassFlow.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->injectorFlowAsMassFlow,
+            engine_configuration_defaults::INJECTOR_FLOW_AS_MASS_FLOW
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureInjectorFlow(const std::optional<float> flow) {
+    if (flow.has_value()) {
+        engineConfiguration->injector.flow = flow.value();
+    } else {
+        ASSERT_EQ(engineConfiguration->injector.flow, engine_configuration_defaults::INJECTOR_FLOW); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureInjectorBattLagCorr(const std::optional<BattLagCorrCurve> battLagCorr) {
+    if (battLagCorr.has_value()) {
+        std::copy(
+            std::begin(battLagCorr.value()),
+            std::end(battLagCorr.value()),
+            std::begin(engineConfiguration->injector.battLagCorr)
+        );
+    } else {
+        EXPECT_THAT(
+            engineConfiguration->injector.battLagCorr,
+            testing::ElementsAreArray(engine_configuration_defaults::INJECTOR_BATT_LAG_CURR)
+        );
+    }
+}
+
+void TestEngineConfiguration::configureFuelReferencePressure(const std::optional<float> fuelReferencePressure) {
+    if (fuelReferencePressure.has_value()) {
+        engineConfiguration->fuelReferencePressure = fuelReferencePressure.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->fuelReferencePressure,
+            engine_configuration_defaults::FUEL_REFERENCE_PRESSURE
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureInjectorCompensationMode(
+    const std::optional<injector_compensation_mode_e> injectorCompensationMode
+) {
+    if (injectorCompensationMode.has_value()) {
+        engineConfiguration->injectorCompensationMode = injectorCompensationMode.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->injectorCompensationMode,
+            engine_configuration_defaults::INJECTOR_COMPENSATION_MODE
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureInjectorSecondaryFlow(const std::optional<float> flow) {
+    if (flow.has_value()) {
+        engineConfiguration->injectorSecondary.flow = flow.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->injectorSecondary.flow,
+            engine_configuration_defaults::INJECTOR_SECONDARY_FLOW
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureInjectorSecondaryBattLagCorr(const std::optional<BattLagCorrCurve> battLagCorr) {
+    if (battLagCorr.has_value()) {
+        std::copy(
+            std::begin(battLagCorr.value()),
+            std::end(battLagCorr.value()),
+            std::begin(engineConfiguration->injectorSecondary.battLagCorr)
+        );
+    } else {
+        EXPECT_THAT(
+            engineConfiguration->injectorSecondary.battLagCorr,
+            testing::ElementsAreArray(engine_configuration_defaults::INJECTOR_SECONDARY_BATT_LAG_CURR)
+        );
+    }
+}
+
+void TestEngineConfiguration::configureSecondaryInjectorFuelReferencePressure(
+    const std::optional<float> secondaryInjectorFuelReferencePressure
+) {
+    if (secondaryInjectorFuelReferencePressure.has_value()) {
+        engineConfiguration->secondaryInjectorFuelReferencePressure = secondaryInjectorFuelReferencePressure.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->secondaryInjectorFuelReferencePressure,
+            engine_configuration_defaults::SECONDARY_INJECTOR_FUEL_REFERENCE_PRESSURE
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureSecondaryInjectorCompensationMode(
+    const std::optional<injector_compensation_mode_e> secondaryInjectorCompensationMode
+) {
+    if (secondaryInjectorCompensationMode.has_value()) {
+        engineConfiguration->secondaryInjectorCompensationMode = secondaryInjectorCompensationMode.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->secondaryInjectorCompensationMode,
+            engine_configuration_defaults::SECONDARY_INJECTOR_COMPENSATION_MODE
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureEnableStagedInjection(const std::optional<bool> isStagedInjectionEnabled) {
+    if (isStagedInjectionEnabled.has_value()) {
+        engineConfiguration->enableStagedInjection = isStagedInjectionEnabled.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->enableStagedInjection,
+            engine_configuration_defaults::ENABLE_STAGED_INJECTION
         ); // check default value
     }
 }

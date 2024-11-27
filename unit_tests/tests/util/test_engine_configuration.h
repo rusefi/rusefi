@@ -4,7 +4,7 @@
 
 #pragma once
 
-#include "pch.h"
+#include "batt_lag_corr_curve.h"
 
 class TestEngineConfiguration {
 public:
@@ -31,7 +31,7 @@ public:
     // Shift Torque Reduction (Flat Shift)
     void configureTorqueReductionEnabled(std::optional<bool> isTorqueReductionEnabled);
     void configureTorqueReductionActivationMode(std::optional<torqueReductionActivationMode_e> activationMode);
-    void configureTorqueReductionButton(std::optional<switch_input_pin_e> pin);
+    void configureTorqueReductionTriggerPin(std::optional<switch_input_pin_e> pin);
     void configureTorqueReductionButtonInverted(std::optional<bool> pinInverted);
     void configureLaunchActivatePin(std::optional<switch_input_pin_e> pin);
     void configureLaunchActivateInverted(std::optional<bool> pinInverted);
@@ -41,6 +41,26 @@ public:
     void configureTorqueReductionArmingApp(std::optional<float> armingApp);
     void configureTorqueReductionIgnitionCut(std::optional<int8_t> ignitionCut);
     void configureTorqueReductionIgnitionRetard(std::optional<int8_t> ignitionRetard);
+
+    void configureFuelPressureSensorMode(std::optional<fuel_pressure_sensor_mode_e> fuelPressureSensorMode);
+
+    // Injector
+    void configureInjectorFlow(std::optional<float> flow);
+    void configureInjectorBattLagCorr(std::optional<BattLagCorrCurve> battLagCorr);
+    void configureInjectorFlowAsMassFlow(std::optional<bool> injectorFlowAsMassFlow);
+    void configureFuelReferencePressure(std::optional<float> fuelReferencePressure);
+    void configureInjectorCompensationMode(std::optional<injector_compensation_mode_e> injectorCompensationMode);
+
+    // Secondary Injector
+    void configureInjectorSecondaryFlow(std::optional<float> flow);
+    void configureInjectorSecondaryBattLagCorr(std::optional<BattLagCorrCurve> battLagCorr);
+    void configureSecondaryInjectorFuelReferencePressure(std::optional<float> secondaryInjectorFuelReferencePressure);
+    void configureSecondaryInjectorCompensationMode(
+        std::optional<injector_compensation_mode_e> secondaryInjectorCompensationMode
+    );
+
+    // Staged injection
+    void configureEnableStagedInjection(std::optional<bool> isStagedInjectionEnabled);
 private:
     TestEngineConfiguration();
     static TestEngineConfiguration instance;

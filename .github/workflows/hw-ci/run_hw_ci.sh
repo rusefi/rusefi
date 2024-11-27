@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # for instance
-# .github/workflows/hw-ci/run_hw_ci.sh com.rusefi.HwCiF4Proteus
+# .github/workflows/hw-ci/run_hw_ci.sh com.rusefi.HwCiProteus
 
 HW_SUITE=$1
 

@@ -71,14 +71,14 @@ void TriggerWaveform::initialize(operation_mode_e p_operationMode, SyncEdge p_sy
 	useOnlyPrimaryForSync = false;
 
 	triggerShapeSynchPointIndex = 0;
-	memset(expectedEventCount, 0, sizeof(expectedEventCount));
+	setArrayValues(expectedEventCount, 0);
 	wave.reset();
 	wave.waveCount = TRIGGER_INPUT_PIN_COUNT;
 	wave.phaseCount = 0;
 	previousAngle = 0;
-	memset(isRiseEvent, 0, sizeof(isRiseEvent));
+	setArrayValues(isRiseEvent, 0);
 #if EFI_UNIT_TEST
-	memset(&triggerSignalIndeces, 0, sizeof(triggerSignalIndeces));
+	memset(triggerSignalIndeces, 0, sizeof(triggerSignalIndeces));
 	memset(&triggerSignalStates, 0, sizeof(triggerSignalStates));
 	knownOperationMode = true;
 #endif // EFI_UNIT_TEST

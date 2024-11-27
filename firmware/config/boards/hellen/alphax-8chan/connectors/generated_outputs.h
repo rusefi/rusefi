@@ -49,7 +49,7 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::MM176_OUT_PWM3, // 20D - VVT 3
 	Gpio::MM176_OUT_PWM4, // 21D - VVT 4
 	Gpio::MM176_OUT_PWM5, // 22C - Boost
-	Gpio::MM176_OUT_PWM7, // 23C - Low Side 2
+	Gpio::MM176_OUT_PWM7, // 23D - Low Side 2
 // "1D - Injector 1",
 // "2D - Injector 2",
 // "3D - Injector 3",
@@ -93,5 +93,5 @@ Gpio GENERATED_OUTPUTS = {
 // "20D - VVT 3",
 // "21D - VVT 4",
 // "22C - Boost",
-// "23C - Low Side 2",
+// "23D - Low Side 2",
 }

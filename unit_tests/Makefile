@@ -23,9 +23,7 @@ ifneq ("$(wildcard $(BOARD_DIR)/board_unit_tests.mk)","")
   include $(BOARD_DIR)/board_unit_tests.mk
 endif
 
-RUSEFI_LIB = $(PROJECT_DIR)/libfirmware
-include $(RUSEFI_LIB)/util/util.mk
-include $(RUSEFI_LIB)/pt2001/pt2001.mk
+include $(PROJECT_DIR)/common_libfirmware.mk
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.

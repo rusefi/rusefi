@@ -16,7 +16,7 @@
 #define ts_show_hardware_simulator false
 
 
-
+#define ts_show_tps_sent true
 
 
 

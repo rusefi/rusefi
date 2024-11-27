@@ -112,6 +112,8 @@ static constexpr AdcToken invalidAdcToken = (AdcToken)(-1);
 
 AdcToken enableFastAdcChannel(const char* msg, adc_channel_e channel);
 adcsample_t getFastAdc(AdcToken token);
+const ADCConversionGroup* getKnockConversionGroup(uint8_t channelIdx);
+void onKnockSamplingComplete();
 #endif // HAL_USE_ADC
 
 void printFullAdcReport(void);

@@ -1,5 +1,5 @@
 struct sent_state_s
-	uint16_t value0;"ETB: SENT value0";"value", 1,0, 0,3, 0,@@GAUGE_CATEGORY_ETB@@
-	uint16_t value1;"ETB: SENT value1";"value", 1,0, 0,3, 0,@@GAUGE_CATEGORY_ETB@@
-	float errorRate;"ETB: SENT error rate";"ratio", 1,0, 0,3, 2,@@GAUGE_CATEGORY_ETB@@
+	uint16_t value0;"SENT ch0 value0";"RAW", 1,0, 0,4095, 0,@@GAUGE_CATEGORY_SENT@@
+	uint16_t value1;"SENT ch0 value1";"RAW", 1,0, 0,4095, 0,@@GAUGE_CATEGORY_SENT@@
+	float errorRate;"SENT ch0 error rate";"% (don't belive me)", 1,0, 0,100, 2,@@GAUGE_CATEGORY_SENT@@
 end_struct

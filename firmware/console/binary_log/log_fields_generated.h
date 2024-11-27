@@ -319,6 +319,7 @@ static const LogField fields[] = {
 	{engine->outputChannels.injectorDiagnostic[11], "injectorDiagnostic 12", "", 0},
 	{engine->outputChannels.actualLastInjectionStage2, "Fuel: Last inj pulse width stg 2", "ms", 3},
 	{engine->outputChannels.injectorDutyCycleStage2, "Fuel: injector duty cycle stage 2", "%", 0},
+	{engine->outputChannels.rawFlexFreq, "rawFlexFreq", "", 0},
 	{engine->outputChannels.fastAdcErrorsCount, "fastAdcErrorsCount", "", 0},
 	{engine->outputChannels.deviceUid, "deviceUid", "", 0},
 	{engine->outputChannels.mc33810spiErrorCounter, "mc33810spiErrorCounter", "", 0},
@@ -514,12 +515,6 @@ static const LogField fields[] = {
 #endif
 #if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.hwEventCounters[3], "Hardware events since boot 4", "", 0},
-#endif
-#if EFI_SHAFT_POSITION_INPUT
-	{engine->triggerCentral.hwEventCounters[4], "Hardware events since boot 5", "", 0},
-#endif
-#if EFI_SHAFT_POSITION_INPUT
-	{engine->triggerCentral.hwEventCounters[5], "Hardware events since boot 6", "", 0},
 #endif
 #if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.vvtCamCounter, "Sync: total cams front counter", "", 0},

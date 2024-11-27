@@ -1,5 +1,13 @@
 /**
  * can_gpio_msiobox.cpp
+ *
+ *  - discrete output works
+ *  - PWM output works
+ *
+ * TODO list:
+ *  - implement input reading
+ *  - support PWM out mode
+ *  - support VSS capture
  */
 
 #include "pch.h"
@@ -11,13 +19,6 @@
 #include "can_listener.h"
 #include "can_msg_tx.h"
 #include <rusefi/endian.h>
-
-/*
- * TODO list:
- *  - implement input reading
- *  - support PWM out mode
- *  - support VSS capture
- */
 
 /*==========================================================================*/
 /* Driver local definitions.												*/
@@ -61,13 +62,13 @@
 #define CAN_IOBOX_BASE2         0x220
 #define CAN_IOBOX_BASE3         0x240
 
-/* Packets from MS3 to device */
+/* Packets from ECU to device */
 #define CAN_IOBOX_PING          0x00
 #define CAN_IOBOX_CONFIG        0x01
 #define CAN_IOBOX_SET_PWM(n)    (0x02 + ((n) & 0x03))
 #define CAN_IOBOX_LAST_IN       0x05
 
-/* Packets from device to MS3 */
+/* Packets from device to ECU */
 #define CAN_IOBOX_WHOAMI        0x08
 #define CAN_IOBOX_ADC14         0x09
 #define CAN_IOBOX_ADC57         0x0A
@@ -154,9 +155,9 @@ static_assert(sizeof(iobox_tach) == 8);
 typedef enum {
 	MSIOBOX_DISABLED = 0,
 	MSIOBOX_WAIT_INIT,
-	MSIOBOX_WAIT_WHOAMI,
+	MSIOBOX_WAIT_WHOAMI, // 2
 	MSIOBOX_READY,
-	MSIOBOX_FAILED
+	MSIOBOX_FAILED // 4
 } msiobox_state;
 
 class MsIoBox final : public GpioChip, public CanListener {
@@ -169,6 +170,11 @@ class MsIoBox final : public GpioChip, public CanListener {
 public:
 	MsIoBox();
 	MsIoBox(uint32_t bus, uint32_t base, uint16_t period);
+
+	void printState() {
+	  efiPrintf("IO state: %d", (int)state);
+	  efiPrintf("pwmBaseFreq: %d", (int)pwmBaseFreq);
+	}
 
 	CanListener* request() override;
 	bool acceptFrame(const CANRxFrame& frame) const override;
@@ -535,9 +541,9 @@ CanListener* MsIoBox::request(void) {
 
 static MsIoBox instance[BOARD_CAN_GPIO_COUNT];
 
-int initCanGpioMsiobox() {
+void initCanGpioMsiobox() {
 	if (engineConfiguration->msIoBox0.id == MsIoBoxId::OFF) {
-		return 0;
+		return;
 	}
 
 	// MSIOBOX_0_OUT_1
@@ -549,10 +555,17 @@ int initCanGpioMsiobox() {
 			registerCanListener(instance[i]);
 			/* register */
 			int ret = gpiochip_register(Gpio::MSIOBOX_0_OUT_1, DRIVER_NAME, instance[i], MSIOBOX_SIGNALS);
-			if (ret < 0)
-				return ret;
+			if (ret < 0) {
+			  // no error handling, not returning error code
+				return;
+			}
 		}
 	}
-	return 0;
+
+	addConsoleAction("msioinfo", [](){
+	  for (size_t i = 0; i < BOARD_CAN_GPIO_COUNT; i++) {
+	    instance[i].printState();
+	  }
+  });
 }
 #endif // EFI_CAN_GPIO

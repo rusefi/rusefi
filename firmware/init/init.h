@@ -55,5 +55,8 @@ void deinitInputShaftSpeedSensor();
 void stopEgt(void);
 void startEgt(void);
 
+#if EFI_SENT_SUPPORT
+void sentPressureDecode(SentInput sentCh);
+#endif
 
 void pokeAuxDigital();

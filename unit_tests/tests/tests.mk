@@ -48,8 +48,11 @@ TESTS_SRC_CPP = \
 	tests/ignition_injection/test_injector_model.cpp \
 	tests/ignition_injection/test_odd_firing_engine.cpp \
 	tests/ignition_injection/test_three_cylinder.cpp \
+	testa/ignition_injection/test_staged_injection.cpp \
+	testa/ignition_injection/test_fuel_differential_pressure.cpp \
 	tests/util/test_base.cpp \
 	tests/util/test_engine_configuration.cpp \
+	tests/util/engine_config.cpp \
 	tests/util/test_persistent_configuration.cpp \
 	tests/util/test_engine_state.cpp \
 	tests/ac/ac_test_base.cpp \
@@ -60,7 +63,6 @@ TESTS_SRC_CPP = \
 	tests/launch/test_retard_threshold_rpm.cpp \
 	tests/launch/test_ignition_angle_advance.cpp \
 	tests/launch/test_spark_skip_ratio.cpp \
-	tests/shift_torque_reduction/shift_torque_reduction_test_base.cpp \
 	tests/shift_torque_reduction/flat_shift_condition_test_base.cpp \
 	tests/shift_torque_reduction/test_shift_torque_reduction_trigger_pin_state.cpp \
 	tests/shift_torque_reduction/test_shift_torque_reduction_time_condition.cpp \
@@ -73,6 +75,8 @@ TESTS_SRC_CPP = \
 	tests/lua/test_lua_basic.cpp \
 	tests/lua/test_bit_range_msb.cpp \
 	tests/lua/test_lua_dbc.cpp \
+	tests/lua/test_motorola_dbc.cpp \
+	tests/lua/test_lua_bit_range_msb.cpp \
 	tests/lua/test_lookup.cpp \
 	tests/lua/test_lua_e38.cpp \
 	tests/lua/test_lua_canam.cpp \

@@ -14,15 +14,17 @@
 	extern bool printTriggerTrace;
 #endif
 
-// this is not the only place where we have 'isUpEvent'. todo: reuse
-static const bool isRisingEdge[HW_EVENT_TYPES] = { false, true, false, true, false, true };
-
 /**
  * todo: should this method be invoked somewhere deeper? at the moment we have too many usages too high
  * @return true if front should be decoded further, false if we are not interested
  */
 bool isUsefulSignal(trigger_event_e signal, const TriggerWaveform& shape) {
-	return !shape.useOnlyRisingEdges || isRisingEdge[(int) signal];
+	if (shape.useOnlyRisingEdges) {
+		return isTriggerUpEvent(signal);
+	}
+
+	// consider both edges, so all edges are useful
+	return true;
 }
 
 #if EFI_UNIT_TEST

@@ -214,7 +214,7 @@ public class PinoutLogic {
                 }
             } else if (pinId instanceof String) {
                 String pinIdString = (String) pinId;
-                if (pinIdString.length() == 0) {
+                if (pinIdString.isEmpty()) {
                     throw new IllegalStateException("Unexpected empty ID field");
                 }
                 // array type is allowed even for pins with non-array class

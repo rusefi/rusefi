@@ -135,10 +135,7 @@ CHIBIOS = $(PROJECT_DIR)/ChibiOS
 # todo: looks like 'CHIBIOS_CONTRIB' path is universal shall we defined it only once?
 CHIBIOS_CONTRIB = $(CHIBIOS)/../ChibiOS-Contrib
 
-# Configure libfirmware Paths/Includes
-RUSEFI_LIB = $(PROJECT_DIR)/libfirmware
-include $(RUSEFI_LIB)/util/util.mk
-include $(RUSEFI_LIB)/pt2001/pt2001.mk
+include $(PROJECT_DIR)/common_libfirmware.mk
 
 RULESPATH = $(CHIBIOS)/os/common/startup/ARMCMx/compilers/GCC/mk
 RULESFILE = $(RULESPATH)/rules.mk
@@ -239,7 +236,7 @@ ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM) \
 	$(RUSEFIASM) \
 	$(PROJECT_DIR)/hw_layer/main_hardfault_asm.S
 
-INCDIR = $(ALLINC) \
+INCDIR += $(ALLINC) \
 	$(PCH_DIR) \
 	.. \
 	$(BOARDINC) \

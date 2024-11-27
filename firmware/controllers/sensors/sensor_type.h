@@ -34,6 +34,7 @@ enum class SensorType : unsigned char {
 
 	FuelPressureLow, // in kPa
 	FuelPressureHigh, // in kPa
+	// ProxySensor for one of the above
 	FuelPressureInjector,
 
 	FuelTemperature,
@@ -62,6 +63,7 @@ enum class SensorType : unsigned char {
 	AuxTemp1, // 20
 	AuxTemp2,
 
+  // this becomes AFR once we multiply by STOICH_RATIO
 	Lambda1,
 	Lambda2,
 

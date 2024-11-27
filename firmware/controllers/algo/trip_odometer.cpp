@@ -15,11 +15,12 @@ void TripOdometer::reset() {
 void TripOdometer::consumeFuel(float grams, efitick_t nowNt) {
 	m_consumedRemainder += grams;
 
+  criticalAssertVoid(m_consumedRemainder < 1000, "m_consumedRemainder busy loop");
 	while (m_consumedRemainder > 1) {
 		m_consumedRemainder--;
 		m_consumedGrams++;
 	}
-	
+
 	m_consumedGrams += grams;
 
 	float elapsedSecond = m_timer.getElapsedSecondsAndReset(nowNt);

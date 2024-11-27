@@ -17,6 +17,7 @@ public class FindFileHelper {
     @Nullable
     public static String findFile(String fileDirectory, String prefix, String suffix) {
         File dir = new File(fileDirectory);
+        log.info("Scanning " + dir.getAbsolutePath() + " for " + prefix + "/" + suffix);
         if (!dir.isDirectory()) {
             throw new IllegalStateException("Not a directory: " + fileDirectory);
         }

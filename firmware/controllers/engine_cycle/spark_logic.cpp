@@ -283,7 +283,7 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 		prepareCylinderIgnitionSchedule(dwellAngleDuration, sparkDwell, event);
 	}
 
-	engine->onSparkFireKnockSense(event->coilIndex, nowNt);
+	engine->onSparkFireKnockSense(event->cylinderIndex, nowNt);
 }
 
 static bool startDwellByTurningSparkPinHigh(IgnitionEvent *event, IgnitionOutputPin *output) {

@@ -27,6 +27,7 @@
 #define FOUR_STROKE_CYCLE_DURATION 720
 
 // gasoline E0
+// todo: some usages should be migrated to getStoichiometricRatio()
 #define STOICH_RATIO 14.7f
 #define CONST_PI 3.14159265358979323846
 

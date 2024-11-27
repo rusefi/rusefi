@@ -4,14 +4,14 @@
 
 #include "pch.h"
 
-#include "shift_torque_reduction_test_base.h"
+#include "util/test_base.h"
 
 namespace {
     constexpr switch_input_pin_e TEST_TORQUE_REDUCTION_BUTTON_PIN = Gpio::F13;
     constexpr float TEST_TORQUE_REDUCTION_TIME = 239.17;
     constexpr float IMMEDIATELY = 0.0f;
 
-    class ShiftTorqueReductionTimeConditionTest : public ShiftTorqueReductionTestBase {
+    class ShiftTorqueReductionTimeConditionTest : public TestBase {
     protected:
         void waitAndCheckTimeCondition(
             float timeoutInMs,
@@ -42,10 +42,10 @@ namespace {
     }
 
     TEST_F(ShiftTorqueReductionTimeConditionTest, checkExpiration) {
-        setUpTestConfig(ShiftTorqueReductionTestConfig()
+        setUpEngineConfiguration(EngineConfig()
             .setTorqueReductionEnabled(true)
             .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
-            .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setTorqueReductionTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
             .setLimitTorqueReductionTime(true)
             .setTorqueReductionTime(TEST_TORQUE_REDUCTION_TIME)
         );
@@ -61,10 +61,10 @@ namespace {
     }
 
     TEST_F(ShiftTorqueReductionTimeConditionTest, checkDeactivation) {
-        setUpTestConfig(ShiftTorqueReductionTestConfig()
+        setUpEngineConfiguration(EngineConfig()
             .setTorqueReductionEnabled(true)
             .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
-            .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setTorqueReductionTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
             .setLimitTorqueReductionTime(true)
             .setTorqueReductionTime(TEST_TORQUE_REDUCTION_TIME)
         );
@@ -79,10 +79,10 @@ namespace {
     }
 
     TEST_F(ShiftTorqueReductionTimeConditionTest, checkReactivation) {
-        setUpTestConfig(ShiftTorqueReductionTestConfig()
+        setUpEngineConfiguration(EngineConfig()
             .setTorqueReductionEnabled(true)
             .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
-            .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setTorqueReductionTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
             .setLimitTorqueReductionTime(true)
             .setTorqueReductionTime(TEST_TORQUE_REDUCTION_TIME)
         );
@@ -104,10 +104,10 @@ namespace {
     }
 
     TEST_F(ShiftTorqueReductionTimeConditionTest, checkTimeConditionIsNeverSatisfiedWithZeroTorqueReductionTime) {
-        setUpTestConfig(ShiftTorqueReductionTestConfig()
+        setUpEngineConfiguration(EngineConfig()
             .setTorqueReductionEnabled(true)
             .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
-            .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setTorqueReductionTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
             .setLimitTorqueReductionTime(true)
             .setTorqueReductionTime(IMMEDIATELY)
         );
@@ -129,10 +129,10 @@ namespace {
     }
 
     TEST_F(ShiftTorqueReductionTimeConditionTest, checkDeactivationWithoutLimitedTorqueReductionTime) {
-        setUpTestConfig(ShiftTorqueReductionTestConfig()
+        setUpEngineConfiguration(EngineConfig()
             .setTorqueReductionEnabled(true)
             .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
-            .setTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setTorqueReductionTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
             .setLimitTorqueReductionTime(false)
             .setTorqueReductionTime(TEST_TORQUE_REDUCTION_TIME)
         );

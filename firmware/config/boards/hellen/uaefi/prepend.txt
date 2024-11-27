@@ -19,10 +19,10 @@
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins false
 #define ts_show_vr_threshold_2 false
+#define ts_show_tps_sent true
 
 #define ts_show_tcu true
 #define ts_show_gdi true
 #define FRONTEND_TITLE_BAR_NAME "uaEFI"
 
-
-
+#define TIMING_ADJUSTMENT_SIZE 4

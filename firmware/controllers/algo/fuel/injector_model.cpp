@@ -44,6 +44,14 @@ InjectorNonlinearMode InjectorModelPrimary::getNonlinearMode() const {
 	return engineConfiguration->injectorNonlinearMode;
 }
 
+injector_compensation_mode_e InjectorModelPrimary::getInjectorCompensationMode() const {
+	return engineConfiguration->injectorCompensationMode;
+}
+
+float InjectorModelPrimary::getFuelReferencePressure() const {
+	return engineConfiguration->fuelReferencePressure;
+}
+
 float InjectorModelSecondary::getSmallPulseFlowRate() const {
 	// not supported on second bank
 	return 0;
@@ -52,6 +60,14 @@ float InjectorModelSecondary::getSmallPulseFlowRate() const {
 float InjectorModelSecondary::getSmallPulseBreakPoint() const {
 	// not supported on second bank
 	return 0;
+}
+
+injector_compensation_mode_e InjectorModelSecondary::getInjectorCompensationMode() const {
+	return engineConfiguration->secondaryInjectorCompensationMode;
+}
+
+float InjectorModelSecondary::getFuelReferencePressure() const {
+	return engineConfiguration->secondaryInjectorFuelReferencePressure;
 }
 
 InjectorNonlinearMode InjectorModelSecondary::getNonlinearMode() const {
@@ -68,11 +84,10 @@ expected<float> InjectorModelWithConfig::getFuelDifferentialPressure() const {
 		baroKpa = 101.325f;
 	}
 
-	switch (engineConfiguration->injectorCompensationMode) {
+	switch (getInjectorCompensationMode()) {
 		case ICM_FixedRailPressure:
 			// Add barometric pressure, as "fixed" really means "fixed pressure above atmosphere"
-			return
-				  engineConfiguration->fuelReferencePressure
+			return getFuelReferencePressure()
 				+ baroKpa
 				- map.value_or(101.325);
 		case ICM_SensedRailPressure: {
@@ -112,11 +127,11 @@ expected<float> InjectorModelWithConfig::getFuelDifferentialPressure() const {
 
 float InjectorModelWithConfig::getInjectorFlowRatio() {
 	// Compensation disabled, use reference flow.
-	if (engineConfiguration->injectorCompensationMode == ICM_None) {
+	if (getInjectorCompensationMode() == ICM_None) {
 		return 1.0f;
 	}
 
-	float referencePressure = engineConfiguration->fuelReferencePressure;
+	const float referencePressure = getFuelReferencePressure();
 
 	if (referencePressure < 50) {
 		// impossibly low fuel ref pressure

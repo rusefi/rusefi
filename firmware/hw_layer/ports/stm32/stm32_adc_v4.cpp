@@ -27,7 +27,7 @@
 
 static_assert((H7_ADC_OVERSAMPLE & (H7_ADC_OVERSAMPLE - 1)) == 0, "H7_ADC_OVERSAMPLE must be a power of 2");
 
-constexpr size_t log2_int(size_t x) {
+static constexpr size_t log2_int(size_t x) {
 	size_t result = 0;
 	while (x >>= 1) result++;
 	return result;
@@ -187,5 +187,107 @@ adcsample_t getFastAdc(AdcToken token) {
 
 	return fastSampleBuffer[token];
 }
+
+#ifdef EFI_SOFTWARE_KNOCK
+#include "knock_config.h"
+
+static_assert((H7_KNOCK_OVERSAMPLE & (H7_KNOCK_OVERSAMPLE - 1)) == 0, "H7_ADC_OVERSAMPLE must be a power of 2");
+static constexpr int H7_KNOCK_ADC_SHIFT_BITS = log2_int(H7_KNOCK_OVERSAMPLE);
+
+static void knockCompletionCallback(ADCDriver* adcp) {
+	if (adcp->state == ADC_COMPLETE) {
+		onKnockSamplingComplete();
+	}
+}
+
+static void knockErrorCallback(ADCDriver*, adcerror_t) {
+}
+
+static const uint32_t smpr1 =
+	ADC_SMPR1_SMP_AN0(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR1_SMP_AN1(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR1_SMP_AN2(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR1_SMP_AN3(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR1_SMP_AN4(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR1_SMP_AN5(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR1_SMP_AN6(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR1_SMP_AN7(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR1_SMP_AN8(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR1_SMP_AN9(KNOCK_SAMPLE_TIME);
+
+static const uint32_t smpr2 =
+	ADC_SMPR2_SMP_AN10(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN11(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN12(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN13(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN14(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN15(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN16(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN17(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN18(KNOCK_SAMPLE_TIME) |
+	ADC_SMPR2_SMP_AN19(KNOCK_SAMPLE_TIME);
+
+static const ADCConversionGroup adcConvGroupCh1 = {
+	.circular = FALSE,
+	.num_channels = 1,
+	.end_cb = &knockCompletionCallback,
+	.error_cb = &knockErrorCallback,
+	.cfgr				= ADC_CFGR_EXTEN_0 | (4 << ADC_CFGR_EXTSEL_Pos),	// External trigger ch4, rising edge: TIM3 TRGO
+	.cfgr2				= 	(H7_KNOCK_OVERSAMPLE - 1) << ADC_CFGR2_OVSR_Pos |	// Oversample by Nx (register contains N-1)
+							H7_KNOCK_ADC_SHIFT_BITS << ADC_CFGR2_OVSS_Pos |		// shift the result right log2(N) bits to make a 16 bit result out of the internal oversample sum
+							ADC_CFGR2_ROVSE,			// Enable oversampling
+	.ccr				= 0,
+	.pcsel				= 0xFFFFFFFF, // enable analog switches on all channels
+	// Thresholds aren't used
+	.ltr1 = 0, .htr1 = 0, .ltr2 = 0, .htr2 = 0, .ltr3 = 0, .htr3 = 0,
+	.awd2cr = 0,
+	.awd3cr = 0,
+	.smpr = {smpr1, smpr2},
+	.sqr = {
+		ADC_SQR1_SQ1_N(KNOCK_ADC_CH1),
+		0,
+		0
+	},
+};
+
+// Not all boards have a second channel - configure it if it exists
+#if KNOCK_HAS_CH2
+static const ADCConversionGroup adcConvGroupCh2 = {
+	.circular = FALSE,
+	.num_channels = 1,
+	.end_cb = &knockCompletionCallback,
+	.error_cb = &knockErrorCallback,
+	.cfgr				= ADC_CFGR_EXTEN_0 | (4 << ADC_CFGR_EXTSEL_Pos),	// External trigger ch4, rising edge: TIM3 TRGO
+	.cfgr2				= 	(H7_ADC_OVERSAMPLE - 1) << ADC_CFGR2_OVSR_Pos |	// Oversample by Nx (register contains N-1)
+							H7_ADC_SHIFT_BITS << ADC_CFGR2_OVSS_Pos |		// shift the result right log2(N) bits to make a 16 bit result out of the internal oversample sum
+							ADC_CFGR2_ROVSE,			// Enable oversampling
+	.ccr				= 0,
+	.pcsel				= 0xFFFFFFFF, // enable analog switches on all channels
+	// Thresholds aren't used
+	.ltr1 = 0, .htr1 = 0, .ltr2 = 0, .htr2 = 0, .ltr3 = 0, .htr3 = 0,
+	.awd2cr = 0,
+	.awd3cr = 0,
+	.smpr = {smpr1, smpr2},
+	.sqr = {
+		ADC_SQR1_SQ1_N(KNOCK_ADC_CH2),
+		0,
+		0
+	},
+};
+#endif // KNOCK_HAS_CH2
+
+const ADCConversionGroup* getKnockConversionGroup(uint8_t channelIdx) {
+#if KNOCK_HAS_CH2
+	if (channelIdx == 1) {
+		return &adcConvGroupCh2;
+	}
+#else
+	(void)channelIdx;
+#endif // KNOCK_HAS_CH2
+
+	return &adcConvGroupCh1;
+}
+
+#endif // EFI_SOFTWARE_KNOCK
 
 #endif // HAL_USE_ADC

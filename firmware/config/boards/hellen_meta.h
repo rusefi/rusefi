@@ -100,6 +100,7 @@ void detectHellenBoardType();
 #define H144_GP9 Gpio::F2
 
 #define H144_OUT_IO1 D3
+// TIM1_CH2
 #define H144_OUT_IO2 A9
 #define H144_OUT_IO3 G14
 #define H144_OUT_IO4 G5
@@ -110,6 +111,7 @@ void detectHellenBoardType();
 #define H144_OUT_IO9 G13
 #define H144_OUT_IO10 G12
 #define H144_OUT_IO11 G2
+// TIM1_CH1
 #define H144_OUT_IO12 A8
 #define H144_OUT_IO13 G6
 
@@ -167,7 +169,10 @@ void detectHellenBoardType();
 
 #define H144_IN_AUX1 EFI_ADC_8
 #define H144_IN_AUX2 EFI_ADC_14
-#define H144_IN_AUX2_DIGITAL C4
+// fun fact: same input goes to TWO stm32 pins so that we can use it both as analog and ICU capture
+//#define H144_IN_AUX2_DIGITAL C4
+// TIM1_CH1
+#define H144_IN_AUX2_DIGITAL E9
 
 // AIN20 PA7
 #define H144_IN_AUX3 EFI_ADC_7

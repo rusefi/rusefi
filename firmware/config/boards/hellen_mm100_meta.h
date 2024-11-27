@@ -12,6 +12,7 @@
 #define MM100_INJ1 D3
 // uaefi121 is the first board compatible with CAN bus ST bootloader, we had to adjust a few pins
 #define MM100_MEGA_UAEFI_INJ1 D0
+// TIM1_CH1
 #define MM100_INJ2 A9
 #define MM100_INJ3 D11
 #define MM100_INJ4 D10
@@ -32,6 +33,7 @@
 #define MM100_IN_CRANK_ANALOG EFI_ADC_9
 #define MM100_IN_CAM A6
 #define MM100_IN_CAM_ANALOG EFI_ADC_6
+// TIM1_CH2
 #define MM100_IN_VSS E11
 #define MM100_IN_TPS A4
 #define MM100_IN_TPS_ANALOG EFI_ADC_4

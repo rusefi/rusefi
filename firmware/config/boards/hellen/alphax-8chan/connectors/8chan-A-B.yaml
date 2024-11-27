@@ -186,6 +186,7 @@ pins:
     class: analog_inputs
     function: IAT Sensor Input
     ts_name: 27A - IAT Sensor Input
+    type: at
     color: purple
 
   - pin: 28A
@@ -193,12 +194,14 @@ pins:
     class: analog_inputs
     function: Aux Temp 1
     ts_name: 28A - Aux Temp 1
+    type: at
     color: purple
 
   - pin: 29A
     meta: MM176_IN_CLT_ANALOG
     class: analog_inputs
     function: CLT Sensor Input
+    type: at
     ts_name: 29A - CLT Sensor Input
     color: purple
 
@@ -206,12 +209,14 @@ pins:
     meta: MM176_IN_AT2_ANALOG
     class: analog_inputs
     function: Aux Temp 2
+    type: at
     ts_name: 28A - Aux Temp 2
 
   - pin: 31A
     meta: MM176_IN_TPS_ANALOG
     class: analog_inputs
     function: TPS Sensor Input
+    type: av
     ts_name: 31A - TPS Sensor Input
 
   - pin: 32A
@@ -219,17 +224,20 @@ pins:
     class: analog_inputs
     function: PPS Sensor Input
     ts_name: ___ - PPS Sensor Input
+    type: av
     color: orange
 
   - pin: 33A
     meta: MM176_IN_TPS2_ANALOG
     class: analog_inputs
+    type: av
     function: TPS2 Sensor Input
     ts_name: ___ - TPS2 Sensor Input
 
   - pin: 34A
     meta: MM176_IN_PPS2_ANALOG
     class: analog_inputs
+    type: av
     function: PPS2 Sensor Input
     ts_name: 34A - PPS2 Sensor Input
 
@@ -351,6 +359,7 @@ pins:
     ts_name: 24 - Ignition Key Voltage
     function: +12V engine ECU power source, run/start
     color: green
+    type: 12v
 
   - pin: 25B
     function: Power GND

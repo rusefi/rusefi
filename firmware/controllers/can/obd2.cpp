@@ -30,7 +30,7 @@
 #include "can_msg_tx.h"
 #include "fuel_math.h"
 
-static const int16_t supportedPids0120[] = { 
+static const int16_t supportedPids0120[] = {
 	PID_MONITOR_STATUS,
 	PID_FUEL_SYSTEM_STATUS,
 	PID_ENGINE_LOAD,
@@ -51,8 +51,11 @@ static const int16_t supportedPids2140[] = {
 	-1
 };
 
-static const int16_t supportedPids4160[] = { 
+static const int16_t supportedPids4160[] = {
+	PID_CONTROL_UNIT_VOLTAGE,
+	PID_ETHANOL,
 	PID_FUEL_RATE,
+	PID_OIL_TEMPERATURE,
 	-1
 };
 
@@ -167,6 +170,15 @@ void handleGetDataRequest(const CANRxFrame& rx, size_t busIndex) {
 		float gPerHour = gPerSecond * 3600;
 		float literPerHour = gPerHour * 0.00139f;
 		obdSendValue(_1_MODE, pid, 2, literPerHour * 20.0f, busIndex);	//	L/h.	(A*256+B)/20
+		break;
+	} case PID_CONTROL_UNIT_VOLTAGE: {
+		obdSendValue(_1_MODE, pid, 2, 1000 * Sensor::getOrZero(SensorType::BatteryVoltage), busIndex);
+		break;
+	} case PID_ETHANOL: {
+		obdSendValue(_1_MODE, pid, 1, (255.0f / 100) * Sensor::getOrZero(SensorType::FuelEthanolPercent), busIndex);
+		break;
+	} case PID_OIL_TEMPERATURE: {
+		obdSendValue(_1_MODE, pid, 1, Sensor::getOrZero(SensorType::OilTemperature) + ODB_TEMP_EXTRA, busIndex);
 		break;
 	} default:
 		// ignore unhandled PIDs

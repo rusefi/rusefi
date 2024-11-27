@@ -39,6 +39,7 @@ pins:
     ts_name: ___ Main Relay Control
     function: Main relay control
     type: ls
+    color: grey
 
   - pin: 6B
     meta: H144_IN_VBATT
@@ -65,6 +66,7 @@ pins:
     id: TLE9104_1_OUT_3
     class: outputs
     function: Fan 2
+    color: yellow
     type: ls
     ts_name: ___ Fan 2
 
@@ -101,12 +103,14 @@ pins:
     class: [event_inputs, switch_inputs]
     function: Digital Input 1
     ts_name: ___ Digital Input 1
+    color: white
 
   - pin: 22B
     id: [H144_IN_AUX2_DIGITAL, H144_IN_AUX2_DIGITAL, H144_IN_AUX2]
     class: [event_inputs, switch_inputs, analog_inputs]
     function: Input 2 Digital / Analog / SENT
     ts_name: ___ Input 2
+    color: yellow
 
   - pin: 23B
     function: Fuel Low Pressure
@@ -131,6 +135,7 @@ pins:
     class: [event_inputs, switch_inputs]
     function: Digital Input 3
     ts_name: ___ Digital Input 3
+    color: yellow
 
   - pin: 28B
     id: [H144_IN_SENS3, H144_IN_SENS3]

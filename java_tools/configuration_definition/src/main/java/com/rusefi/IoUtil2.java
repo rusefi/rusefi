@@ -33,7 +33,7 @@ public class IoUtil2 {
     }
 
     private static long getCrc32(String fileName) throws IOException {
-        File file = new File(RootHolder.ROOT + fileName);
+        File file = new File(IoUtil3.prependIfNotAbsolute(RootHolder.ROOT, fileName));
         byte[] fileContent = Files.readAllBytes(file.toPath());
         for (int i = 0; i < fileContent.length; i++) {
             byte aByte = fileContent[i];
@@ -44,7 +44,6 @@ public class IoUtil2 {
         c.update(fileContent, 0, fileContent.length);
         return c.getValue();
     }
-
 
     static long getCrc32(List<String> inputFileNames) throws IOException {
         // get CRC32 of given input files
