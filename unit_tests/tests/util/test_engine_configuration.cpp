@@ -386,6 +386,97 @@ void TestEngineConfiguration::configureEnableStagedInjection(const std::optional
     }
 }
 
+void TestEngineConfiguration::configureNitrousControlEnabled(const std::optional<bool> nitrousControlEnabled) {
+    if (nitrousControlEnabled.has_value()) {
+        engineConfiguration->nitrousControlEnabled = nitrousControlEnabled.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->nitrousControlEnabled,
+            engine_configuration_defaults::NITROUS_CONTROL_ENABLED
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureNitrousControlArmingMethod(
+    const std::optional<nitrousArmingMethod_e> armingMethod
+) {
+    if (armingMethod.has_value()) {
+        engineConfiguration->nitrousControlArmingMethod = armingMethod.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->nitrousControlArmingMethod,
+            engine_configuration_defaults::NITROUS_CONTROL_ARMING_METHOD
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureNitrousControlTriggerPin(const std::optional<switch_input_pin_e> triggerPin) {
+    if (triggerPin.has_value()) {
+        engineConfiguration->nitrousControlTriggerPin = triggerPin.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->nitrousControlTriggerPin,
+            engine_configuration_defaults::NITROUS_CONTROL_TRIGGER_PIN
+        ); // check default value
+    }
+}
+void TestEngineConfiguration::configureNitrousControlTriggerPinInverted(const std::optional<bool> triggerPinInverted) {
+    if (triggerPinInverted.has_value()) {
+        engineConfiguration->nitrousControlTriggerPinInverted = triggerPinInverted.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->nitrousControlTriggerPinInverted,
+            engine_configuration_defaults::NITROUS_CONTROL_TRIGGER_PIN_INVERTED
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureNitrousControlTriggerPinMode(
+    const std::optional<pin_input_mode_e> triggerPinMode
+) {
+    if (triggerPinMode.has_value()) {
+        engineConfiguration->nitrousControlTriggerPinMode = triggerPinMode.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->nitrousControlTriggerPinMode,
+            engine_configuration_defaults::NITROUS_CONTROL_TRIGGER_PIN_MODE
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureNitrousLuaGauge(const std::optional<luaGauge_e> luaGauge) {
+    if (luaGauge.has_value()) {
+        engineConfiguration->nitrousLuaGauge = luaGauge.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->nitrousLuaGauge,
+            engine_configuration_defaults::NITROUS_LUA_GAUGE
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureNitrousLuaGaugeMeaning(const std::optional<luaGaugeMeaning_e> luaGaugeMeaning) {
+    if (luaGaugeMeaning.has_value()) {
+        engineConfiguration->nitrousLuaGaugeMeaning = luaGaugeMeaning.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->nitrousLuaGaugeMeaning,
+            engine_configuration_defaults::NITROUS_LUA_GAUGE_MEANING
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureNitrousLuaGaugeArmingValue(const std::optional<float> luaGaugeArmingValue) {
+    if (luaGaugeArmingValue.has_value()) {
+        engineConfiguration->nitrousLuaGaugeArmingValue = luaGaugeArmingValue.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->nitrousLuaGaugeArmingValue,
+            engine_configuration_defaults::NITROUS_LUA_GAUGE_ARMING_VALUE
+        ); // check default value
+    }
+}
+
 TestEngineConfiguration::TestEngineConfiguration() {
 }
 

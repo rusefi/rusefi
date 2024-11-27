@@ -178,3 +178,43 @@ EngineConfig EngineConfig::setSecondaryInjectorCompensationMode(
     m_secondaryInjectorCompensationMode = value;
     return *this;
 }
+
+EngineConfig EngineConfig::setNitrousControlEnabled(const std::optional<bool> value) {
+    m_nitrousControlEnabled = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setNitrousControlArmingMethod(const std::optional<nitrous_arming_method_e> value) {
+    m_nitrousControlArmingMethod = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setNitrousControlTriggerPin(const std::optional<switch_input_pin_e> value) {
+    m_nitrousControlTriggerPin = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setNitrousControlTriggerPinInverted(const std::optional<bool> value) {
+    m_nitrousControlTriggerPinInverted = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setNitrousControlTriggerPinMode(const std::optional<pin_input_mode_e> value) {
+    m_nitrousControlTriggerPinMode = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setNitrousLuaGauge(const std::optional<lua_gauge_e> value) {
+    m_nitrousLuaGauge = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setNitrousLuaGaugeMeaning(const std::optional<lua_gauge_meaning_e> value) {
+    m_nitrousLuaGaugeMeaning = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setNitrousLuaGaugeArmingValue(const std::optional<float> value) {
+    m_nitrousLuaGaugeArmingValue = value;
+    return *this;
+}

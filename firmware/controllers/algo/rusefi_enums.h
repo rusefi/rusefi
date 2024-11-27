@@ -607,6 +607,27 @@ typedef enum __attribute__ ((__packed__)) {
 } torqueReductionActivationMode_e;
 
 typedef enum __attribute__ ((__packed__)) {
+	DIGITAL_SWITCH_INPUT = 0,
+	LUA_GAUGE = 1,
+} nitrous_arming_method_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	LUA_GAUGE_1 = 0,
+	LUA_GAUGE_2 = 1,
+	LUA_GAUGE_3 = 2,
+	LUA_GAUGE_4 = 3,
+	LUA_GAUGE_5 = 4,
+	LUA_GAUGE_6 = 5,
+	LUA_GAUGE_7 = 6,
+	LUA_GAUGE_8 = 7,
+} lua_gauge_e;
+
+typedef enum __attribute__ ((__packed__)) {
+	LUA_GAUGE_LOWER_BOUND = 0,
+	LUA_GAUGE_UPPER_BOUND = 1,
+} lua_gauge_meaning_e;
+
+typedef enum __attribute__ ((__packed__)) {
 	SWITCH_INPUT_ANTILAG = 0,
 	ALWAYS_ON_ANTILAG = 1,
 } antiLagActivationMode_e;

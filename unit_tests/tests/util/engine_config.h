@@ -59,6 +59,16 @@ public:
     // Staged injection
     std::optional<bool> getStagedInjectionEnabled() const { return m_isStagedInjectionEnabled; }
 
+    // Nitrous control
+    std::optional<bool> getNitrousControlEnabled() const { return m_nitrousControlEnabled; }
+    std::optional<nitrous_arming_method_e> getNitrousControlArmingMethod() const { return m_nitrousControlArmingMethod; }
+    std::optional<switch_input_pin_e> getNitrousControlTriggerPin() const { return m_nitrousControlTriggerPin; }
+    std::optional<bool> getNitrousControlTriggerPinInverted() const { return m_nitrousControlTriggerPinInverted; }
+    std::optional<pin_input_mode_e> getNitrousControlTriggerPinMode() const { return m_nitrousControlTriggerPinMode; }
+    std::optional<lua_gauge_e> getNitrousLuaGauge() const { return m_nitrousLuaGauge; }
+    std::optional<lua_gauge_meaning_e> getNitrousLuaGaugeMeaning() const { return m_nitrousLuaGaugeMeaning; }
+    std::optional<float> getNitrousLuaGaugeArmingValue() const { return m_nitrousLuaGaugeArmingValue; }
+
     // We do not core about performance in tests, but we want to use builder-like style, so setters return new instance
     // of configuration:
 
@@ -105,6 +115,16 @@ public:
 
     // Staged injection
     EngineConfig setStagedInjectionEnabled(std::optional<bool> value);
+
+    // Nitrous control
+    EngineConfig setNitrousControlEnabled(std::optional<bool> value);
+    EngineConfig setNitrousControlArmingMethod(std::optional<nitrous_arming_method_e> value);
+    EngineConfig setNitrousControlTriggerPin(std::optional<switch_input_pin_e> value);
+    EngineConfig setNitrousControlTriggerPinInverted(std::optional<bool> value);
+    EngineConfig setNitrousControlTriggerPinMode(std::optional<pin_input_mode_e> value);
+    EngineConfig setNitrousLuaGauge(std::optional<lua_gauge_e> value);
+    EngineConfig setNitrousLuaGaugeMeaning(std::optional<lua_gauge_meaning_e> value);
+    EngineConfig setNitrousLuaGaugeArmingValue(std::optional<float> value);
 private:
     // Launch Control
     std::optional<switch_input_pin_e> m_launchActivatePin;
@@ -149,4 +169,14 @@ private:
 
     // Staged injection
     std::optional<bool> m_isStagedInjectionEnabled;
+
+    // Nitrous control
+    std::optional<bool> m_nitrousControlEnabled;
+    std::optional<nitrous_arming_method_e> m_nitrousControlArmingMethod;
+    std::optional<switch_input_pin_e> m_nitrousControlTriggerPin;
+    std::optional<bool> m_nitrousControlTriggerPinInverted;
+    std::optional<pin_input_mode_e> m_nitrousControlTriggerPinMode;
+    std::optional<lua_gauge_e> m_nitrousLuaGauge;
+    std::optional<lua_gauge_meaning_e> m_nitrousLuaGaugeMeaning;
+    std::optional<float> m_nitrousLuaGaugeArmingValue;
 };

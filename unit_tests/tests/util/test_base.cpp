@@ -74,6 +74,18 @@ void TestBase::setUpEngineConfiguration(const EngineConfig& config) {
 
     // Staged injection
     getTestEngineConfiguration().configureEnableStagedInjection(config.getStagedInjectionEnabled());
+
+    // Nitrous control
+    getTestEngineConfiguration().configureNitrousControlEnabled(config.getNitrousControlEnabled());
+    getTestEngineConfiguration().configureNitrousControlArmingMethod(config.getNitrousControlArmingMethod());
+    getTestEngineConfiguration().configureNitrousControlTriggerPin(config.getNitrousControlTriggerPin());
+    getTestEngineConfiguration().configureNitrousControlTriggerPinInverted(
+        config.getNitrousControlTriggerPinInverted()
+    );
+    getTestEngineConfiguration().configureNitrousControlTriggerPinMode(config.getNitrousControlTriggerPinMode());
+    getTestEngineConfiguration().configureNitrousLuaGauge(config.getNitrousLuaGauge());
+    getTestEngineConfiguration().configureNitrousLuaGaugeMeaning(config.getNitrousLuaGaugeMeaning());
+    getTestEngineConfiguration().configureNitrousLuaGaugeArmingValue(config.getNitrousLuaGaugeArmingValue());
 }
 
 void TestBase::periodicFastCallback() {

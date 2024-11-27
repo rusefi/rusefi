@@ -1724,15 +1724,67 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 	float knockSpectrumSensitivity;;"sense", 1, 0, 0, 1, 2
 	float knockFrequency;"Estimated knock frequency, ignore cylinderBore if this one > 0";"Hz", 1, 0, 0, 20000, 2
 
-    injector_compensation_mode_e secondaryInjectorCompensationMode;None = I have a MAP-referenced fuel pressure regulator\nFixed rail pressure = I have an atmosphere-referenced fuel pressure regulator (returnless, typically)\nSensed rail pressure = I have a fuel pressure sensor;
-    float secondaryInjectorFuelReferencePressure;This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.;"kPa", 1, 0, 50, 700000, 0
+	injector_compensation_mode_e secondaryInjectorCompensationMode;None = I have a MAP-referenced fuel pressure regulator\nFixed rail pressure = I have an atmosphere-referenced fuel pressure regulator (returnless, typically)\nSensed rail pressure = I have a fuel pressure sensor;
+	float secondaryInjectorFuelReferencePressure;This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.;"kPa", 1, 0, 50, 700000, 0
 
     SentInput EtbSentInput;SENT input connected to ETB
 
     SentInput FuelHighPressureSentInput;SENT input used for high pressure fuel sensor
     SentFuelHighPressureType FuelHighPressureSentType;If you have SENT High Pressure Fuel Sensor please select type. For analog TPS leave None
 
-#define END_OF_CALIBRATION_PADDING 108
+	bit nitrousControlEnabled
+	bit nitrousControlTriggerPinInverted
+	bit unusedFancy3
+	bit unusedFancy4
+	bit unusedFancy5
+	bit unusedFancy6
+	bit unusedFancy7
+	bit unusedFancy8
+	bit unusedFancy9
+	bit unusedFancy10
+	bit unusedFancy11
+	bit unusedFancy12
+	bit unusedFancy13
+	bit unusedFancy14
+	bit unusedFancy15
+	bit unusedFancy16
+	bit unusedFancy17
+	bit unusedFancy18
+	bit unusedFancy19
+	bit unusedFancy20
+	bit unusedFancy21
+	bit unusedFancy22
+	bit unusedFancy23
+	bit unusedFancy24
+	bit unusedFancy25
+	bit unusedFancy26
+	bit unusedFancy27
+	bit unusedFancy28
+	bit unusedFancy29
+	bit unusedFancy30
+	bit unusedFancy31
+	bit unusedFancy32
+    ! 'unusedFancy32' is the 32nd bit here, you would need another bit region if more bits are desired
+
+	#define nitrous_arming_method_e_enum "Digital Switch Input", "Lua Gauge"
+	custom nitrous_arming_method_e  1 bits, S08, @OFFSET@, [3:3], @@nitrous_arming_method_e_enum@@
+	nitrous_arming_method_e nitrousControlArmingMethod;
+
+	switch_input_pin_e nitrousControlTriggerPin;Pin that activates nitrous control
+
+	pin_input_mode_e nitrousControlTriggerPinMode;
+
+	#define lua_gauge_e_enum "Lua Gauge 1", "Lua Gauge 2", "Lua Gauge 3", "Lua Gauge 4", "Lua Gauge 5", "Lua Gauge 6", "Lua Gauge 7", "Lua Gauge 8"
+	custom lua_gauge_e  1 bits, S08, @OFFSET@, [0:2], @@lua_gauge_e_enum@@
+	lua_gauge_e nitrousLuaGauge;
+
+	#define lua_gauge_meaning_e_enum "Lower Bound", "Upper Bound"
+	custom lua_gauge_meaning_e  1 bits, S08, @OFFSET@, [3:3], @@lua_gauge_meaning_e_enum@@
+	lua_gauge_meaning_e nitrousLuaGaugeMeaning;
+
+	float nitrousLuaGaugeArmingValue;;"", 1, 0, -30000, 30000, 3
+
+#define END_OF_CALIBRATION_PADDING 94
 uint8_t[END_OF_CALIBRATION_PADDING] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
