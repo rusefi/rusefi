@@ -398,7 +398,7 @@ void TestEngineConfiguration::configureNitrousControlEnabled(const std::optional
 }
 
 void TestEngineConfiguration::configureNitrousControlArmingMethod(
-    const std::optional<nitrousArmingMethod_e> armingMethod
+    const std::optional<nitrous_arming_method_e> armingMethod
 ) {
     if (armingMethod.has_value()) {
         engineConfiguration->nitrousControlArmingMethod = armingMethod.value();
@@ -444,7 +444,7 @@ void TestEngineConfiguration::configureNitrousControlTriggerPinMode(
     }
 }
 
-void TestEngineConfiguration::configureNitrousLuaGauge(const std::optional<luaGauge_e> luaGauge) {
+void TestEngineConfiguration::configureNitrousLuaGauge(const std::optional<lua_gauge_e> luaGauge) {
     if (luaGauge.has_value()) {
         engineConfiguration->nitrousLuaGauge = luaGauge.value();
     } else {
@@ -455,7 +455,7 @@ void TestEngineConfiguration::configureNitrousLuaGauge(const std::optional<luaGa
     }
 }
 
-void TestEngineConfiguration::configureNitrousLuaGaugeMeaning(const std::optional<luaGaugeMeaning_e> luaGaugeMeaning) {
+void TestEngineConfiguration::configureNitrousLuaGaugeMeaning(const std::optional<lua_gauge_meaning_e> luaGaugeMeaning) {
     if (luaGaugeMeaning.has_value()) {
         engineConfiguration->nitrousLuaGaugeMeaning = luaGaugeMeaning.value();
     } else {
