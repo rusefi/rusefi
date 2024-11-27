@@ -1904,6 +1904,15 @@ float getConfigValueByName(const char *name) {
 // secondaryInjectorFuelReferencePressure
 		case -425992769:
 			return engineConfiguration->secondaryInjectorFuelReferencePressure;
+// nitrousControlEnabled
+		case -582951931:
+			return engineConfiguration->nitrousControlEnabled;
+// nitrousControlTriggerPinInverted
+		case -1483164266:
+			return engineConfiguration->nitrousControlTriggerPinInverted;
+// nitrousLuaGaugeArmingValue
+		case -1760115393:
+			return engineConfiguration->nitrousLuaGaugeArmingValue;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -5076,6 +5085,21 @@ bool setConfigValueByName(const char *name, float value) {
 		case -425992769:
 	{
 		engineConfiguration->secondaryInjectorFuelReferencePressure = value;
+		return 1;
+	}
+		case -582951931:
+	{
+		engineConfiguration->nitrousControlEnabled = (int)value;
+		return 1;
+	}
+		case -1483164266:
+	{
+		engineConfiguration->nitrousControlTriggerPinInverted = (int)value;
+		return 1;
+	}
+		case -1760115393:
+	{
+		engineConfiguration->nitrousLuaGaugeArmingValue = value;
 		return 1;
 	}
 		case -1658957891:

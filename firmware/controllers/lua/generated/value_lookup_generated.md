@@ -1897,6 +1897,15 @@ Fuel trim when knock, max 30%
 ### secondaryInjectorFuelReferencePressure
 This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.
 
+### nitrousControlEnabled
+
+
+### nitrousControlTriggerPinInverted
+
+
+### nitrousLuaGaugeArmingValue
+
+
 ### tcu_shiftTime
 
 

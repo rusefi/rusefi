@@ -352,8 +352,8 @@
 #define ego_sensor_e_ES_Innovate_MTX_L 1
 #define ego_sensor_e_ES_PLX 4
 #define EGT_CHANNEL_COUNT 8
-#define END_OF_CALIBRATION_PADDING 108
-#define engine_configuration_s_size 4036
+#define END_OF_CALIBRATION_PADDING 94
+#define engine_configuration_s_size 4040
 #define engine_load_mode_e_auto_enum 0="LM_SPEED_DENSITY",2="LM_ALPHA_N",3="LM_LUA",100="LM_MOCK",1="LM_REAL_MAF"
 #define engine_load_mode_e_enum "Speed Density", "MAF Air Charge", "Alpha-N", "Lua"
 #define engine_load_mode_e_LM_ALPHA_N 2
@@ -1158,6 +1158,20 @@
 #define LUA_ANALOG_INPUT_COUNT 8
 #define LUA_DIGITAL_INPUT_COUNT 8
 #define LUA_GAUGE_COUNT 8
+#define lua_gauge_e_auto_enum 0="LUA_GAUGE_1",1="LUA_GAUGE_2",2="LUA_GAUGE_3",3="LUA_GAUGE_4",4="LUA_GAUGE_5",5="LUA_GAUGE_6",6="LUA_GAUGE_7",7="LUA_GAUGE_8"
+#define lua_gauge_e_enum "Lua Gauge 1", "Lua Gauge 2", "Lua Gauge 3", "Lua Gauge 4", "Lua Gauge 5", "Lua Gauge 6", "Lua Gauge 7", "Lua Gauge 8"
+#define lua_gauge_e_LUA_GAUGE_1 0
+#define lua_gauge_e_LUA_GAUGE_2 1
+#define lua_gauge_e_LUA_GAUGE_3 2
+#define lua_gauge_e_LUA_GAUGE_4 3
+#define lua_gauge_e_LUA_GAUGE_5 4
+#define lua_gauge_e_LUA_GAUGE_6 5
+#define lua_gauge_e_LUA_GAUGE_7 6
+#define lua_gauge_e_LUA_GAUGE_8 7
+#define lua_gauge_meaning_e_auto_enum 0="LUA_GAUGE_LOWER_BOUND",1="LUA_GAUGE_UPPER_BOUND"
+#define lua_gauge_meaning_e_enum "Lower Bound", "Upper Bound"
+#define lua_gauge_meaning_e_LUA_GAUGE_LOWER_BOUND 0
+#define lua_gauge_meaning_e_LUA_GAUGE_UPPER_BOUND 1
 #define LUA_PWM_COUNT 8
 #define LUA_SCRIPT_SIZE 8000
 #define MAF_DECODING_COUNT 32
@@ -1198,6 +1212,10 @@
 #define MsIoBoxVss_HALL34 2
 #define MsIoBoxVss_OFF 0
 #define MsIoBoxVss_VR12 1
+#define nitrous_arming_method_e_auto_enum 0="DIGITAL_SWITCH_INPUT",1="LUA_GAUGE"
+#define nitrous_arming_method_e_DIGITAL_SWITCH_INPUT 0
+#define nitrous_arming_method_e_enum "Digital Switch Input", "Lua Gauge"
+#define nitrous_arming_method_e_LUA_GAUGE 1
 #define operation_mode_e_FOUR_STROKE_CAM_SENSOR 2
 #define operation_mode_e_FOUR_STROKE_CRANK_SENSOR 1
 #define operation_mode_e_FOUR_STROKE_SIX_TIMES_CRANK_SENSOR 7
@@ -1231,7 +1249,7 @@
 #define pedalSensor_NAME "Accelerator pedal"
 #define pedalToTpsTbl_NAME "ETB pedal target"
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 22972
+#define persistent_config_s_size 22976
 #define pid_s_size 20
 #define pin_input_mode_e_auto_enum 0="PI_DEFAULT",2="PI_PULLDOWN",1="PI_PULLUP"
 #define pin_input_mode_e_enum "DEFAULT", "PULLUP", "PULLDOWN"
@@ -1312,7 +1330,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1880364600
+#define SIGNATURE_HASH 3243659956
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1374,7 +1392,7 @@
 #define torqueReductionActivationMode_e_enum "Torque Reduction Button", "Launch Button"
 #define torqueReductionActivationMode_e_LAUNCH_BUTTON 1
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON 0
-#define TOTAL_CONFIG_SIZE 22972
+#define TOTAL_CONFIG_SIZE 22976
 #define TPS_2_BYTE_PACKING_MULT 100
 #define TPS_PPS_TOO_HIGH_THRESHOLD 110
 #define TPS_PPS_TOO_LOW_THRESHOLD -10
@@ -1773,14 +1791,14 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.11.27.hellen-gm-e67.1880364600"
+#define TS_SIGNATURE "rusEFI master.2024.11.27.hellen-gm-e67.3243659956"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 1808
+#define TS_TOTAL_OUTPUT_SIZE 1812
 #define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "Channel 1"
 #define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "Channel 2"
 #define TS_TRIGGER_SCOPE_DISABLE 5
