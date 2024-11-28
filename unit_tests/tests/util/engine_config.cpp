@@ -218,3 +218,8 @@ EngineConfig EngineConfig::setNitrousLuaGaugeArmingValue(const std::optional<flo
     m_nitrousLuaGaugeArmingValue = value;
     return *this;
 }
+
+EngineConfig EngineConfig::setNitrousMinimumTps(const std::optional<int> value) {
+    m_nitrousMinimumTps = value;
+    return *this;
+}

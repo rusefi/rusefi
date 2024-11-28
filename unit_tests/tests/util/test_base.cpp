@@ -86,6 +86,8 @@ void TestBase::setUpEngineConfiguration(const EngineConfig& config) {
     getTestEngineConfiguration().configureNitrousLuaGauge(config.getNitrousLuaGauge());
     getTestEngineConfiguration().configureNitrousLuaGaugeMeaning(config.getNitrousLuaGaugeMeaning());
     getTestEngineConfiguration().configureNitrousLuaGaugeArmingValue(config.getNitrousLuaGaugeArmingValue());
+
+    getTestEngineConfiguration().configureNitrousMinimumTps(config.getNitrousMinimumTps());
 }
 
 void TestBase::periodicFastCallback() {
