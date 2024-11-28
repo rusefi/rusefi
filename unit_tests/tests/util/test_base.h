@@ -25,6 +25,7 @@ protected:
 
     void updateRpm(float rpm);
     void updateApp(std::optional<float> app);
+    void updateClt(std::optional<float> clt);
 
     template<typename ModuleType> ModuleType& getModule();
 private:

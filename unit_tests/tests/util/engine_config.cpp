@@ -223,3 +223,8 @@ EngineConfig EngineConfig::setNitrousMinimumTps(const std::optional<int> value) 
     m_nitrousMinimumTps = value;
     return *this;
 }
+
+EngineConfig EngineConfig::setNitrousMinimumClt(const std::optional<uint8_t> value) {
+    m_nitrousMinimumClt = value;
+    return *this;
+}

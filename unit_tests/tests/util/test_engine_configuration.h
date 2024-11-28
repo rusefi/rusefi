@@ -73,6 +73,7 @@ public:
     void configureNitrousLuaGaugeArmingValue(std::optional<float> luaGaugeArmingValue);
 
     void configureNitrousMinimumTps(std::optional<int> nitrousMinimumTps);
+    void configureNitrousMinimumClt(std::optional<uint8_t> nitrousMinimumClt);
 private:
     TestEngineConfiguration();
     static TestEngineConfiguration instance;

@@ -70,6 +70,7 @@ public:
     std::optional<float> getNitrousLuaGaugeArmingValue() const { return m_nitrousLuaGaugeArmingValue; }
 
     std::optional<int> getNitrousMinimumTps() const { return  m_nitrousMinimumTps; }
+    std::optional<uint8_t> getNitrousMinimumClt() const { return  m_nitrousMinimumClt; }
 
     // We do not core about performance in tests, but we want to use builder-like style, so setters return new instance
     // of configuration:
@@ -129,6 +130,7 @@ public:
     EngineConfig setNitrousLuaGaugeArmingValue(std::optional<float> value);
 
     EngineConfig setNitrousMinimumTps(std::optional<int> value);
+    EngineConfig setNitrousMinimumClt(std::optional<uint8_t> value);
 private:
     // Launch Control
     std::optional<switch_input_pin_e> m_launchActivatePin;
@@ -184,6 +186,6 @@ private:
     std::optional<lua_gauge_meaning_e> m_nitrousLuaGaugeMeaning;
     std::optional<float> m_nitrousLuaGaugeArmingValue;
 
-    std::optional<float> m_nitrousMinimumTps;
+    std::optional<int> m_nitrousMinimumTps;
     std::optional<uint8_t> m_nitrousMinimumClt;
 };

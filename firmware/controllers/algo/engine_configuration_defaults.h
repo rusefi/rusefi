@@ -60,4 +60,5 @@ namespace engine_configuration_defaults {
     constexpr float NITROUS_LUA_GAUGE_ARMING_VALUE = 0.0f;
 
     constexpr int NITROUS_MINIMUM_TPS = 0;
+    constexpr uint8_t NITROUS_MINIMUM_CLT = 0;
 }

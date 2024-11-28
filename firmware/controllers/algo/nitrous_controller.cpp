@@ -11,6 +11,7 @@ void NitrousController::update() {
     if (engineConfiguration->nitrousControlEnabled) {
         updateArmingState();
         updateTpsConditionSatisfied();
+        updateCltConditionSatisfied();
     }
 }
 
@@ -37,6 +38,15 @@ void NitrousController::updateTpsConditionSatisfied() {
         isTpsConditionSatisfied = tps.Valid && (engineConfiguration->nitrousMinimumTps <= tps.Value);
     } else {
         isTpsConditionSatisfied = true;
+    }
+}
+
+void NitrousController::updateCltConditionSatisfied() {
+    const expected<float> clt = Sensor::get(SensorType::Clt);
+    if (engineConfiguration->nitrousMinimumClt != 0) {
+        isCltConditionSatisfied = clt.Valid && (engineConfiguration->nitrousMinimumClt <= clt.Value);
+    } else {
+        isCltConditionSatisfied = true;
     }
 }
 

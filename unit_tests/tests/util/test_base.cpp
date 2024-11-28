@@ -88,6 +88,7 @@ void TestBase::setUpEngineConfiguration(const EngineConfig& config) {
     getTestEngineConfiguration().configureNitrousLuaGaugeArmingValue(config.getNitrousLuaGaugeArmingValue());
 
     getTestEngineConfiguration().configureNitrousMinimumTps(config.getNitrousMinimumTps());
+    getTestEngineConfiguration().configureNitrousMinimumClt(config.getNitrousMinimumClt());
 }
 
 void TestBase::periodicFastCallback() {
@@ -106,6 +107,10 @@ void TestBase::updateRpm(const float rpm) {
 
 void TestBase::updateApp(const std::optional<float> app) {
     updateSensor(SensorType::DriverThrottleIntent, app);
+}
+
+void TestBase::updateClt(const std::optional<float> clt) {
+    updateSensor(SensorType::Clt, clt);
 }
 
 void TestBase::updateSensor(const SensorType sensor, const std::optional<float> sensorReading) {
