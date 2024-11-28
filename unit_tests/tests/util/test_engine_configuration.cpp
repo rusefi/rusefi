@@ -477,6 +477,17 @@ void TestEngineConfiguration::configureNitrousLuaGaugeArmingValue(const std::opt
     }
 }
 
+void TestEngineConfiguration::configureNitrousMinimumTps(const std::optional<int> nitrousMinimumTps) {
+    if (nitrousMinimumTps.has_value()) {
+        engineConfiguration->nitrousMinimumTps = nitrousMinimumTps.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->nitrousMinimumTps,
+            engine_configuration_defaults::NITROUS_MINIMUM_TPS
+        ); // check default value
+    }
+}
+
 TestEngineConfiguration::TestEngineConfiguration() {
 }
 

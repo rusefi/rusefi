@@ -1,5 +1,6 @@
 struct_no_prefix nitrous_control_state_s
 
 bit isArmed
+bit isTpsConditionSatisfied
 
 end_struct

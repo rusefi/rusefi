@@ -10,6 +10,7 @@
 void NitrousController::update() {
     if (engineConfiguration->nitrousControlEnabled) {
         updateArmingState();
+        updateTpsConditionSatisfied();
     }
 }
 
@@ -27,6 +28,15 @@ void NitrousController::updateArmingState() {
             isArmed = false;
             break;
         }
+    }
+}
+
+void NitrousController::updateTpsConditionSatisfied() {
+    const expected<float> tps = Sensor::get(SensorType::DriverThrottleIntent);
+    if (engineConfiguration->nitrousMinimumTps != 0) {
+        isTpsConditionSatisfied = tps.Valid && (engineConfiguration->nitrousMinimumTps <= tps.Value);
+    } else {
+        isTpsConditionSatisfied = true;
     }
 }
 
