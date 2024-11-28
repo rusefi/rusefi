@@ -28,6 +28,8 @@ protected:
 
     template<typename ModuleType> ModuleType& getModule();
 private:
+    void updateSensor(SensorType sensor, std::optional<float> sensorReading);
+
     std::unique_ptr<EngineTestHelper> eth;
 };
 
