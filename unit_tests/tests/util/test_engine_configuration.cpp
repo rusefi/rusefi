@@ -488,6 +488,17 @@ void TestEngineConfiguration::configureNitrousMinimumTps(const std::optional<int
     }
 }
 
+void TestEngineConfiguration::configureNitrousMinimumClt(const std::optional<uint8_t> nitrousMinimumClt) {
+    if (nitrousMinimumClt.has_value()) {
+        engineConfiguration->nitrousMinimumClt = nitrousMinimumClt.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->nitrousMinimumClt,
+            engine_configuration_defaults::NITROUS_MINIMUM_CLT
+        ); // check default value
+    }
+}
+
 TestEngineConfiguration::TestEngineConfiguration() {
 }
 
