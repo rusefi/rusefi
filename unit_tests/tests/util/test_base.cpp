@@ -103,10 +103,14 @@ void TestBase::updateRpm(const float rpm) {
 }
 
 void TestBase::updateApp(const std::optional<float> app) {
-    if (app.has_value()) {
-        Sensor::setMockValue(SensorType::DriverThrottleIntent, app.value());
+    updateSensor(SensorType::DriverThrottleIntent, app);
+}
+
+void TestBase::updateSensor(const SensorType sensor, const std::optional<float> sensorReading) {
+    if (sensorReading.has_value()) {
+        Sensor::setMockValue(sensor, sensorReading.value());
     } else {
-        Sensor::resetMockValue(SensorType::DriverThrottleIntent);
+        Sensor::resetMockValue(sensor);
     }
     periodicFastCallback();
 }
