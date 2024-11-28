@@ -499,6 +499,16 @@ void TestEngineConfiguration::configureNitrousMinimumClt(const std::optional<uin
     }
 }
 
+void TestEngineConfiguration::configureNitrousMaximumMap(const std::optional<uint16_t> nitrousMaximumMap) {
+    if (nitrousMaximumMap.has_value()) {
+        engineConfiguration->nitrousMaximumMap = nitrousMaximumMap.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->nitrousMaximumMap,
+            engine_configuration_defaults::NITROUS_MAXIMUM_MAP
+        ); // check default value
+    }
+}
 TestEngineConfiguration::TestEngineConfiguration() {
 }
 

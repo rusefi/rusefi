@@ -71,6 +71,7 @@ public:
 
     std::optional<int> getNitrousMinimumTps() const { return  m_nitrousMinimumTps; }
     std::optional<uint8_t> getNitrousMinimumClt() const { return  m_nitrousMinimumClt; }
+    std::optional<uint16_t> getNitrousMaximumMap() const { return  m_nitrousMaximumMap; }
 
     // We do not core about performance in tests, but we want to use builder-like style, so setters return new instance
     // of configuration:
@@ -131,6 +132,7 @@ public:
 
     EngineConfig setNitrousMinimumTps(std::optional<int> value);
     EngineConfig setNitrousMinimumClt(std::optional<uint8_t> value);
+    EngineConfig setNitrousMaximumMap(std::optional<uint16_t> value);
 private:
     // Launch Control
     std::optional<switch_input_pin_e> m_launchActivatePin;
@@ -188,4 +190,5 @@ private:
 
     std::optional<int> m_nitrousMinimumTps;
     std::optional<uint8_t> m_nitrousMinimumClt;
+    std::optional<uint16_t> m_nitrousMaximumMap;
 };

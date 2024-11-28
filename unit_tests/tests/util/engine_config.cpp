@@ -228,3 +228,8 @@ EngineConfig EngineConfig::setNitrousMinimumClt(const std::optional<uint8_t> val
     m_nitrousMinimumClt = value;
     return *this;
 }
+
+EngineConfig EngineConfig::setNitrousMaximumMap(const std::optional<uint16_t> value) {
+    m_nitrousMaximumMap = value;
+    return *this;
+}

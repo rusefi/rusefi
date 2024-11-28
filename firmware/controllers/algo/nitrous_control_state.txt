@@ -3,5 +3,6 @@ struct_no_prefix nitrous_control_state_s
 bit isArmed
 bit isTpsConditionSatisfied
 bit isCltConditionSatisfied
+bit isMapConditionSatisfied
 
 end_struct

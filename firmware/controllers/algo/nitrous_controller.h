@@ -13,6 +13,7 @@ private:
     void updateArmingState();
     void updateTpsConditionSatisfied();
     void updateCltConditionSatisfied();
+    void updateMapConditionSatisfied();
 
     bool checkTriggerPinState() const;
     bool checkLuaGauge() const;
