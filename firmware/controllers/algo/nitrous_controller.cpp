@@ -12,6 +12,7 @@ void NitrousController::update() {
         updateArmingState();
         updateTpsConditionSatisfied();
         updateCltConditionSatisfied();
+        updateMapConditionSatisfied();
     }
 }
 
@@ -47,6 +48,15 @@ void NitrousController::updateCltConditionSatisfied() {
         isCltConditionSatisfied = clt.Valid && (engineConfiguration->nitrousMinimumClt <= clt.Value);
     } else {
         isCltConditionSatisfied = true;
+    }
+}
+
+void NitrousController::updateMapConditionSatisfied() {
+    const expected<float> map = Sensor::get(SensorType::Map);
+    if (engineConfiguration->nitrousMaximumMap != 0) {
+        isMapConditionSatisfied = map.Valid && (map.Value <= engineConfiguration->nitrousMaximumMap);
+    } else {
+        isMapConditionSatisfied = true;
     }
 }
 
