@@ -1913,6 +1913,15 @@ float getConfigValueByName(const char *name) {
 // nitrousLuaGaugeArmingValue
 		case -1760115393:
 			return engineConfiguration->nitrousLuaGaugeArmingValue;
+// nitrousMinimumTps
+		case 1089367148:
+			return engineConfiguration->nitrousMinimumTps;
+// nitrousMinimumClt
+		case 1089348504:
+			return engineConfiguration->nitrousMinimumClt;
+// nitrousMaximumMap
+		case -677571211:
+			return engineConfiguration->nitrousMaximumMap;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -5100,6 +5109,21 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1760115393:
 	{
 		engineConfiguration->nitrousLuaGaugeArmingValue = value;
+		return 1;
+	}
+		case 1089367148:
+	{
+		engineConfiguration->nitrousMinimumTps = (int)value;
+		return 1;
+	}
+		case 1089348504:
+	{
+		engineConfiguration->nitrousMinimumClt = (int)value;
+		return 1;
+	}
+		case -677571211:
+	{
+		engineConfiguration->nitrousMaximumMap = (int)value;
 		return 1;
 	}
 		case -1658957891:

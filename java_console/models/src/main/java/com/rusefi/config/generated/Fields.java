@@ -318,7 +318,7 @@ public class Fields {
 	public static final int ego_sensor_e_ES_Innovate_MTX_L = 1;
 	public static final int ego_sensor_e_ES_PLX = 4;
 	public static final int EGT_CHANNEL_COUNT = 8;
-	public static final int END_OF_CALIBRATION_PADDING = 94;
+	public static final int END_OF_CALIBRATION_PADDING = 87;
 	public static final int engine_configuration_s_size = 4040;
 	public static final int engine_load_mode_e_LM_ALPHA_N = 2;
 	public static final int engine_load_mode_e_LM_LUA = 3;
@@ -1499,7 +1499,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.11.28.f407-discovery.3986160817";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.11.28.f407-discovery.2151721385";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2998,7 +2998,11 @@ public class Fields {
 	public static final Field NITROUSLUAGAUGEMEANING = Field.create("NITROUSLUAGAUGEMEANING", 3938, FieldType.INT8, lua_gauge_meaning_e).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_3939 = Field.create("ALIGNMENTFILL_AT_3939", 3939, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field NITROUSLUAGAUGEARMINGVALUE = Field.create("NITROUSLUAGAUGEARMINGVALUE", 3940, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_4038 = Field.create("ALIGNMENTFILL_AT_4038", 4038, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field NITROUSMINIMUMTPS = Field.create("NITROUSMINIMUMTPS", 3944, FieldType.INT).setScale(1.0).setBaseOffset(0);
+	public static final Field NITROUSMINIMUMCLT = Field.create("NITROUSMINIMUMCLT", 3948, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_3949 = Field.create("ALIGNMENTFILL_AT_3949", 3949, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field NITROUSMAXIMUMMAP = Field.create("NITROUSMAXIMUMMAP", 3950, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_4039 = Field.create("ALIGNMENTFILL_AT_4039", 4039, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field POSTCRANKINGFACTOR = Field.create("POSTCRANKINGFACTOR", 4040, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field POSTCRANKINGDURATIONBINS = Field.create("POSTCRANKINGDURATIONBINS", 4184, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field POSTCRANKINGCLTBINS = Field.create("POSTCRANKINGCLTBINS", 4208, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -4716,7 +4720,11 @@ public class Fields {
 	NITROUSLUAGAUGEMEANING,
 	ALIGNMENTFILL_AT_3939,
 	NITROUSLUAGAUGEARMINGVALUE,
-	ALIGNMENTFILL_AT_4038,
+	NITROUSMINIMUMTPS,
+	NITROUSMINIMUMCLT,
+	ALIGNMENTFILL_AT_3949,
+	NITROUSMAXIMUMMAP,
+	ALIGNMENTFILL_AT_4039,
 	POSTCRANKINGFACTOR,
 	POSTCRANKINGDURATIONBINS,
 	POSTCRANKINGCLTBINS,

@@ -4852,16 +4852,36 @@ struct engine_configuration_s {
 	 */
 	float nitrousLuaGaugeArmingValue;
 	/**
-	 * units: units
 	 * offset 3960
+	 */
+	int nitrousMinimumTps;
+	/**
+	 * units: deg C
+	 * offset 3964
+	 */
+	uint8_t nitrousMinimumClt;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 3965
+	 */
+	uint8_t alignmentFill_at_3965[1];
+	/**
+	 * units: kPa
+	 * offset 3966
+	 */
+	int16_t nitrousMaximumMap;
+	/**
+	 * units: units
+	 * offset 3968
 	 */
 	uint8_t unusedOftenChangesDuringFirmwareUpdate[END_OF_CALIBRATION_PADDING];
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 4054
+	 * offset 4055
 	 */
-	uint8_t alignmentFill_at_4054[2];
+	uint8_t alignmentFill_at_4055[1];
 };
 static_assert(sizeof(engine_configuration_s) == 4056);
 
