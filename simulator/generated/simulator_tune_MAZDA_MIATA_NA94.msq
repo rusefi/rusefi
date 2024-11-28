@@ -1671,14 +1671,10 @@
         <constant name="nitrousLuaGauge">"Lua Gauge 1"</constant>
         <constant name="nitrousLuaGaugeMeaning">"Lower Bound"</constant>
         <constant digits="3" name="nitrousLuaGaugeArmingValue" units="">0.0</constant>
-        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="94">
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+        <constant digits="0" name="nitrousMinimumTps" units="">0.0</constant>
+        <constant digits="0" name="nitrousMinimumClt" units="deg C">0.0</constant>
+        <constant digits="0" name="nitrousMaximumMap" units="kPa">0.0</constant>
+        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="87">
          0.0
          0.0
          0.0
@@ -4753,7 +4749,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20241120" nPages="1" signature="rusEFI master.2024.11.28.f407-discovery.3986160817" version="5.0"/>
+    <versionInfo firmwareInfo="20241120" nPages="1" signature="rusEFI master.2024.11.28.f407-discovery.2151721385" version="5.0"/>
     <bibliography author="rusEFI 20241120" writeDate="date"/>
     <settings/>
     <userComments/>
