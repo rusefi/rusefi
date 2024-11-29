@@ -15,7 +15,7 @@ namespace {
 
     class NitrousMapConditionTest : public TestBase {
     protected:
-        static constexpr int TEST_MAP = 45;
+        static constexpr int TEST_MAX_MAP = 45;
 
         void checkMapCondition(const std::vector<MapConditionTestData>& testData);
     };
@@ -31,9 +31,9 @@ namespace {
         checkMapCondition({
             { {}, false, "default" },
             { { 0.0f }, false, "0.0" },
-            { { TEST_MAP - EPS5D }, false, "TEST_MAP - EPS5D" },
-            { { TEST_MAP }, false, "TEST_MAP" },
-            { { TEST_MAP + EPS5D }, false, "TEST_MAP + EPS5D" },
+            { { TEST_MAX_MAP - EPS5D }, false, "TEST_MAX_MAP - EPS5D" },
+            { { TEST_MAX_MAP }, false, "TEST_MAX_MAP" },
+            { { TEST_MAX_MAP + EPS5D }, false, "TEST_MAX_MAP + EPS5D" },
         });
     }
 
@@ -42,9 +42,9 @@ namespace {
         checkMapCondition({
             { {}, false, "default" },
             { { 0.0f }, false, "0.0" },
-            { { TEST_MAP - EPS5D }, false, "TEST_MAP - EPS5D" },
-            { { TEST_MAP }, false, "TEST_MAP" },
-            { { TEST_MAP + EPS5D }, false, "TEST_MAP + EPS5D" },
+            { { TEST_MAX_MAP - EPS5D }, false, "TEST_MAX_MAP - EPS5D" },
+            { { TEST_MAX_MAP }, false, "TEST_MAX_MAP" },
+            { { TEST_MAX_MAP + EPS5D }, false, "TEST_MAX_MAP + EPS5D" },
         });
     }
 
@@ -53,9 +53,9 @@ namespace {
         checkMapCondition({
             { {}, true, "default" },
             { { 0.0f }, true, "0.0" },
-            { { TEST_MAP - EPS5D }, true, "TEST_MAP - EPS5D" },
-            { { TEST_MAP }, true, "TEST_MAP" },
-            { { TEST_MAP + EPS5D }, true, "TEST_MAP + EPS5D" },
+            { { TEST_MAX_MAP - EPS5D }, true, "TEST_MAX_MAP - EPS5D" },
+            { { TEST_MAX_MAP }, true, "TEST_MAX_MAP" },
+            { { TEST_MAX_MAP + EPS5D }, true, "TEST_MAX_MAP + EPS5D" },
         });
     }
 
@@ -68,9 +68,9 @@ namespace {
         checkMapCondition({
             { {}, true, "default" },
             { { 0.0f }, true, "0.0" },
-            { { TEST_MAP - EPS5D }, true, "TEST_MAp - EPS5D" },
-            { { TEST_MAP }, true, "TEST_MAP" },
-            { { TEST_MAP + EPS5D }, true, "TEST_MAP + EPS5D" },
+            { { TEST_MAX_MAP - EPS5D }, true, "TEST_MAX_MAP - EPS5D" },
+            { { TEST_MAX_MAP }, true, "TEST_MAX_MAP" },
+            { { TEST_MAX_MAP + EPS5D }, true, "TEST_MAX_MAP + EPS5D" },
         });
     }
 
@@ -78,14 +78,14 @@ namespace {
         setUpEngineConfiguration(
             EngineConfig()
                 .setNitrousControlEnabled({ true })
-                .setNitrousMaximumMap({ TEST_MAP })
+                .setNitrousMaximumMap({ TEST_MAX_MAP })
         );
         checkMapCondition({
-            //{ {}, false, "default" },
+            { {}, false, "default" },
             { { 0.0f }, true, "0.0" },
-            //{ { TEST_MAP - EPS5D }, true, "TEST_MAP - EPS5D" },
-            //{ { TEST_MAP }, false, "TEST_MAP" },
-            //{ { TEST_MAP + EPS5D }, false, "TEST_MAP + EPS5D" },
+            { { TEST_MAX_MAP - EPS5D }, true, "TEST_MAX_MAP - EPS5D" },
+            { { TEST_MAX_MAP }, true, "TEST_MAX_MAP" },
+            { { TEST_MAX_MAP + EPS5D }, false, "TEST_MAX_MAP + EPS5D" },
         });
     }
 }
