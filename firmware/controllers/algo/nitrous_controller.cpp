@@ -13,6 +13,7 @@ void NitrousController::update() {
         updateTpsConditionSatisfied();
         updateCltConditionSatisfied();
         updateMapConditionSatisfied();
+        updateAfrConditionSatisfied();
     }
 }
 
@@ -57,6 +58,20 @@ void NitrousController::updateMapConditionSatisfied() {
         isMapConditionSatisfied = map.Valid && (map.Value <= engineConfiguration->nitrousMaximumMap);
     } else {
         isMapConditionSatisfied = true;
+    }
+}
+
+void NitrousController::updateAfrConditionSatisfied() {
+    if (static_cast<float>(engineConfiguration->nitrousMaximumAfr) != 0.0f) {
+        const expected<float> lambda1 = Sensor::get(SensorType::Lambda1);
+        if (lambda1.Valid) {
+            const float afr = lambda1.Value * STOICH_RATIO;
+            isAfrConditionSatisfied = (afr <= static_cast<float>(engineConfiguration->nitrousMaximumAfr));
+        } else {
+            isAfrConditionSatisfied = false;
+        }
+    } else {
+        isAfrConditionSatisfied = true;
     }
 }
 

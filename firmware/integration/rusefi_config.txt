@@ -1787,8 +1787,9 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 	int nitrousMinimumTps;;"", 1, 0, 0, 20000, 0
 	uint8_t nitrousMinimumClt;;"deg C", 1, 0, 0, @@CLT_UPPER_LIMIT@@, 0
 	int16_t nitrousMaximumMap;;"kPa", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
+	uint8_t autoscale nitrousMaximumAfr;;"afr", 0.1, 0, 10, 20, 1
 
-#define END_OF_CALIBRATION_PADDING 87
+#define END_OF_CALIBRATION_PADDING 86
 uint8_t[END_OF_CALIBRATION_PADDING] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s

@@ -27,6 +27,7 @@ protected:
     void updateApp(std::optional<float> app);
     void updateClt(std::optional<float> clt);
     void updateMap(std::optional<float> map);
+    void updateLambda1(std::optional<float> lambda1);
 
     template<typename ModuleType> ModuleType& getModule();
 private:

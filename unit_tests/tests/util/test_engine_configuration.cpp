@@ -509,6 +509,18 @@ void TestEngineConfiguration::configureNitrousMaximumMap(const std::optional<uin
         ); // check default value
     }
 }
+
+void TestEngineConfiguration::configureNitrousMaximumAfr(const std::optional<float> nitrousMaximumAfr) {
+    if (nitrousMaximumAfr.has_value()) {
+        engineConfiguration->nitrousMaximumAfr = nitrousMaximumAfr.value();
+    } else {
+        ASSERT_EQ(
+                engineConfiguration->nitrousMaximumAfr,
+                engine_configuration_defaults::NITROUS_MAXIMUM_AFR
+        ); // check default value
+    }
+}
+
 TestEngineConfiguration::TestEngineConfiguration() {
 }
 
