@@ -20,6 +20,14 @@ public:
 	   return m_timeSinceIgnVoltage.getElapsedSeconds();
 	}
 
+	float secondsSinceNotIgnVoltage() {
+		return m_timeSinceNotIgnVoltage.getElapsedSeconds();
+	}
+
+	bool getRestartFromSleep() {
+		return restartFromSleep;
+	}
+
 	bool getPendingSleep() {
 		return pendingSleep;
 	}
@@ -30,9 +38,11 @@ public:
 
 private:
 	Timer m_timeSinceIgnVoltage;
+	Timer m_timeSinceNotIgnVoltage;
 	bool m_lastState = false;
 	bool pendingSleep = false;
 	bool pendingSleepInner = false;
+	bool restartFromSleep = false;
 };
 
 // USB power or vehicle power?

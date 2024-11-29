@@ -13,8 +13,15 @@ void IgnitionController::onSlowCallback() {
 	// input misconfigured (or the ADC hasn't started yet)
 	auto hasIgnVoltage = isIgnVoltage();
 
-	if (hasIgnVoltage) {
+	if (hasIgnVoltage && (hasIgnVoltage == m_lastState)) {
 		m_timeSinceIgnVoltage.reset();
+	} else if (hasIgnVoltage && (hasIgnVoltage != m_lastState)) {
+		restartFromSleep = 1;
+		m_timeSinceNotIgnVoltage.reset();
+	}
+
+	if(secondsSinceNotIgnVoltage() > 0.2f && restartFromSleep) {
+		restartFromSleep = 0;
 	}
 
 	if (hasIgnVoltage == m_lastState) {
@@ -27,14 +34,16 @@ void IgnitionController::onSlowCallback() {
 	if (!hasIgnVoltage && secondsSinceIgnVoltage() < 0.2f) {
 		return;
 	} else if (!hasIgnVoltage && secondsSinceIgnVoltage() >= 0.2f) {
+		m_timeSinceNotIgnVoltage.reset();
 		pendingSleepInner = 1;
+		restartFromSleep = 0;
 	}
 
 	// Store state and notify other modules of the change
 	m_lastState = hasIgnVoltage;
 	engine->engineModules.apply_all([&](auto& m) { m.onIgnitionStateChanged(hasIgnVoltage); });
 
-	if(pendingSleepInner && secondsSinceIgnVoltage() >= 60.0f) {
+	if(pendingSleepInner && secondsSinceIgnVoltage() >= float(engineConfiguration->standbyTimeout)) {
 		pendingSleep = 1;
 		pendingSleepInner = 0;
 		writeToFlashNow();

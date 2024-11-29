@@ -85,7 +85,8 @@ bool isIdleHardwareRestartNeeded() {
 			isConfigurationChanged(stepper_raw_output[0])  ||
 			isConfigurationChanged(stepper_raw_output[1])  ||
 			isConfigurationChanged(stepper_raw_output[2])  ||
-			isConfigurationChanged(stepper_raw_output[3]);
+			isConfigurationChanged(stepper_raw_output[3])  ||
+			engine->module<IgnitionController>()->getPendingSleep();
 }
 
 bool isIdleMotorBusy() {
