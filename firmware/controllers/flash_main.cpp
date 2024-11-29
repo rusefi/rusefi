@@ -227,7 +227,7 @@ void writeToFlashNow() {
 	needToWriteConfiguration = false;
 
 	if(engine->module<IgnitionController>()->getPendingSleep()) {
-		engine->module<IgnitionController>()->resetPendingSleep()
+		engine->module<IgnitionController>()->resetPendingSleep();
 		onBoardStandBy();
 		stm32_standby();
 	}

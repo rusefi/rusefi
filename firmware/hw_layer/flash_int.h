@@ -96,6 +96,7 @@ size_t flashSectorSize(flashsector_t sector);
 
 uintptr_t getFlashAddrFirstCopy(void);
 uintptr_t getFlashAddrSecondCopy(void);
+void stm32_standby();
 
 /**
  * @brief Erase the sectors containing the span of @p size bytes starting at @p address.
