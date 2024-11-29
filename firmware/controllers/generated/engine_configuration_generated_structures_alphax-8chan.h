@@ -2434,7 +2434,13 @@ struct engine_configuration_s {
 	 * units: s
 	 * offset 1012
 	 */
-	float standbyTimeout;
+	uint16_t standbyTimeout;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 1014
+	 */
+	uint8_t alignmentFill_at_1014[2];
 	/**
 	 * units: Hz
 	 * offset 1016
@@ -2710,16 +2716,16 @@ struct engine_configuration_s {
 	bool skippedWheelOnCam : 1 {};
 	/**
 	offset 1372 bit 28 */
-	bool unusedBit_483_28 : 1 {};
+	bool unusedBit_484_28 : 1 {};
 	/**
 	offset 1372 bit 29 */
-	bool unusedBit_483_29 : 1 {};
+	bool unusedBit_484_29 : 1 {};
 	/**
 	offset 1372 bit 30 */
-	bool unusedBit_483_30 : 1 {};
+	bool unusedBit_484_30 : 1 {};
 	/**
 	offset 1372 bit 31 */
-	bool unusedBit_483_31 : 1 {};
+	bool unusedBit_484_31 : 1 {};
 	/**
 	 * offset 1376
 	 */
@@ -2876,7 +2882,7 @@ struct engine_configuration_s {
 	bool watchOutForLinearTime : 1 {};
 	/**
 	offset 1384 bit 31 */
-	bool unusedBit_525_31 : 1 {};
+	bool unusedBit_526_31 : 1 {};
 	/**
 	 * units: count
 	 * offset 1388
@@ -3182,16 +3188,16 @@ struct engine_configuration_s {
 	bool enableKnockSpectrogramFilter : 1 {};
 	/**
 	offset 1560 bit 28 */
-	bool unusedBit_595_28 : 1 {};
+	bool unusedBit_596_28 : 1 {};
 	/**
 	offset 1560 bit 29 */
-	bool unusedBit_595_29 : 1 {};
+	bool unusedBit_596_29 : 1 {};
 	/**
 	offset 1560 bit 30 */
-	bool unusedBit_595_30 : 1 {};
+	bool unusedBit_596_30 : 1 {};
 	/**
 	offset 1560 bit 31 */
-	bool unusedBit_595_31 : 1 {};
+	bool unusedBit_596_31 : 1 {};
 	/**
 	 * This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.\Should be 100 once tune is better
 	 * units: cycles
@@ -3358,76 +3364,76 @@ struct engine_configuration_s {
 	bool can2ListenMode : 1 {};
 	/**
 	offset 1616 bit 8 */
-	bool unusedBit_632_8 : 1 {};
+	bool unusedBit_633_8 : 1 {};
 	/**
 	offset 1616 bit 9 */
-	bool unusedBit_632_9 : 1 {};
+	bool unusedBit_633_9 : 1 {};
 	/**
 	offset 1616 bit 10 */
-	bool unusedBit_632_10 : 1 {};
+	bool unusedBit_633_10 : 1 {};
 	/**
 	offset 1616 bit 11 */
-	bool unusedBit_632_11 : 1 {};
+	bool unusedBit_633_11 : 1 {};
 	/**
 	offset 1616 bit 12 */
-	bool unusedBit_632_12 : 1 {};
+	bool unusedBit_633_12 : 1 {};
 	/**
 	offset 1616 bit 13 */
-	bool unusedBit_632_13 : 1 {};
+	bool unusedBit_633_13 : 1 {};
 	/**
 	offset 1616 bit 14 */
-	bool unusedBit_632_14 : 1 {};
+	bool unusedBit_633_14 : 1 {};
 	/**
 	offset 1616 bit 15 */
-	bool unusedBit_632_15 : 1 {};
+	bool unusedBit_633_15 : 1 {};
 	/**
 	offset 1616 bit 16 */
-	bool unusedBit_632_16 : 1 {};
+	bool unusedBit_633_16 : 1 {};
 	/**
 	offset 1616 bit 17 */
-	bool unusedBit_632_17 : 1 {};
+	bool unusedBit_633_17 : 1 {};
 	/**
 	offset 1616 bit 18 */
-	bool unusedBit_632_18 : 1 {};
+	bool unusedBit_633_18 : 1 {};
 	/**
 	offset 1616 bit 19 */
-	bool unusedBit_632_19 : 1 {};
+	bool unusedBit_633_19 : 1 {};
 	/**
 	offset 1616 bit 20 */
-	bool unusedBit_632_20 : 1 {};
+	bool unusedBit_633_20 : 1 {};
 	/**
 	offset 1616 bit 21 */
-	bool unusedBit_632_21 : 1 {};
+	bool unusedBit_633_21 : 1 {};
 	/**
 	offset 1616 bit 22 */
-	bool unusedBit_632_22 : 1 {};
+	bool unusedBit_633_22 : 1 {};
 	/**
 	offset 1616 bit 23 */
-	bool unusedBit_632_23 : 1 {};
+	bool unusedBit_633_23 : 1 {};
 	/**
 	offset 1616 bit 24 */
-	bool unusedBit_632_24 : 1 {};
+	bool unusedBit_633_24 : 1 {};
 	/**
 	offset 1616 bit 25 */
-	bool unusedBit_632_25 : 1 {};
+	bool unusedBit_633_25 : 1 {};
 	/**
 	offset 1616 bit 26 */
-	bool unusedBit_632_26 : 1 {};
+	bool unusedBit_633_26 : 1 {};
 	/**
 	offset 1616 bit 27 */
-	bool unusedBit_632_27 : 1 {};
+	bool unusedBit_633_27 : 1 {};
 	/**
 	offset 1616 bit 28 */
-	bool unusedBit_632_28 : 1 {};
+	bool unusedBit_633_28 : 1 {};
 	/**
 	offset 1616 bit 29 */
-	bool unusedBit_632_29 : 1 {};
+	bool unusedBit_633_29 : 1 {};
 	/**
 	offset 1616 bit 30 */
-	bool unusedBit_632_30 : 1 {};
+	bool unusedBit_633_30 : 1 {};
 	/**
 	offset 1616 bit 31 */
-	bool unusedBit_632_31 : 1 {};
+	bool unusedBit_633_31 : 1 {};
 	/**
 	 * offset 1620
 	 */

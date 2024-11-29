@@ -3195,7 +3195,7 @@ bool setConfigValueByName(const char *name, float value) {
 	}
 		case 813493057:
 	{
-		engineConfiguration->standbyTimeout = value;
+		engineConfiguration->standbyTimeout = (int)value;
 		return 1;
 	}
 		case -1990709262:
