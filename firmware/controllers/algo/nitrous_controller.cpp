@@ -14,6 +14,7 @@ void NitrousController::update() {
         updateCltConditionSatisfied();
         updateMapConditionSatisfied();
         updateAfrConditionSatisfied();
+        updateRpmConditionSatisfied();
     }
 }
 
@@ -72,6 +73,28 @@ void NitrousController::updateAfrConditionSatisfied() {
         }
     } else {
         isAfrConditionSatisfied = true;
+    }
+}
+
+namespace {
+    MaxLimitWithHysteresis rpmHysteresis;
+}
+
+void NitrousController::updateRpmConditionSatisfied() {
+    const expected<float> rpmSensorReading = Sensor::get(SensorType::Rpm);
+    if (rpmSensorReading.Valid) {
+        const float rpm = rpmSensorReading.Value;
+        if (rpmHysteresis.checkIfLimitIsExceeded(
+                rpm,
+                engineConfiguration->nitrousDeactivationRpm - 1,
+                engineConfiguration->nitrousDeactivationRpmWindow - 1
+        )) {
+            isNitrousRpmConditionSatisfied = false;
+        } else {
+            isNitrousRpmConditionSatisfied = (engineConfiguration->nitrousActivationRpm <= rpm);
+        }
+    } else {
+        isNitrousRpmConditionSatisfied = false;
     }
 }
 

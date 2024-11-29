@@ -15,6 +15,7 @@ private:
     void updateCltConditionSatisfied();
     void updateMapConditionSatisfied();
     void updateAfrConditionSatisfied();
+    void updateRpmConditionSatisfied();
 
     bool checkTriggerPinState() const;
     bool checkLuaGauge() const;

@@ -521,6 +521,41 @@ void TestEngineConfiguration::configureNitrousMaximumAfr(const std::optional<flo
     }
 }
 
+void TestEngineConfiguration::configureNitrousActivationRpm(const std::optional<uint16_t> nitrousActivationRpm) {
+    if (nitrousActivationRpm.has_value()) {
+        engineConfiguration->nitrousActivationRpm = nitrousActivationRpm.value();
+    } else {
+        ASSERT_EQ(
+                engineConfiguration->nitrousActivationRpm,
+                engine_configuration_defaults::NITROUS_ACTIVATION_RPM
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureNitrousDeactivationRpm(const std::optional<uint16_t> nitrousDeactivationRpm) {
+    if (nitrousDeactivationRpm.has_value()) {
+        engineConfiguration->nitrousDeactivationRpm = nitrousDeactivationRpm.value();
+    } else {
+        ASSERT_EQ(
+                engineConfiguration->nitrousDeactivationRpm,
+                engine_configuration_defaults::NITROUS_DEACTIVATION_RPM
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureNitrousDeactivationRpmWindow(
+    const std::optional<uint16_t> nitrousDeactivationRpmWindow
+) {
+    if (nitrousDeactivationRpmWindow.has_value()) {
+        engineConfiguration->nitrousDeactivationRpmWindow = nitrousDeactivationRpmWindow.value();
+    } else {
+        ASSERT_EQ(
+                engineConfiguration->nitrousDeactivationRpmWindow,
+                engine_configuration_defaults::NITROUS_DEACTIVATION_RPM_WINDOW
+        ); // check default value
+    }
+}
+
 TestEngineConfiguration::TestEngineConfiguration() {
 }
 

@@ -1789,7 +1789,11 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 	int16_t nitrousMaximumMap;;"kPa", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
 	uint8_t autoscale nitrousMaximumAfr;;"afr", 0.1, 0, 10, 20, 1
 
-#define END_OF_CALIBRATION_PADDING 86
+	uint16_t nitrousActivationRpm;;"rpm", 1, 0, 0, 20000, 0
+	uint16_t nitrousDeactivationRpm;;"rpm", 1, 0, 0, 20000, 0
+	uint16_t nitrousDeactivationRpmWindow;;"rpm", 1, 0, 0, 20000, 0
+
+#define END_OF_CALIBRATION_PADDING 80
 uint8_t[END_OF_CALIBRATION_PADDING] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
