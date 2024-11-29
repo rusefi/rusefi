@@ -15,7 +15,7 @@ namespace {
 
     class NitrousTpsConditionTest : public TestBase {
     protected:
-        static constexpr int TEST_TPS = 34;
+        static constexpr int TEST_MIN_TPS = 34;
 
         void checkTpsCondition(const std::vector<TpsConditionTestData>& testData);
     };
@@ -31,9 +31,9 @@ namespace {
         checkTpsCondition({
             { {}, false, "default" },
             { { 0.0f }, false, "0.0" },
-            { { TEST_TPS - EPS5D }, false, "TEST_TPS - EPS5D" },
-            { { TEST_TPS }, false, "TEST_TPS" },
-            { { TEST_TPS + EPS5D }, false, "TEST_TPS + EPS5D" },
+            { { TEST_MIN_TPS - EPS5D }, false, "TEST_MIN_TPS - EPS5D" },
+            { { TEST_MIN_TPS }, false, "TEST_MIN_TPS" },
+            { { TEST_MIN_TPS + EPS5D }, false, "TEST_MIN_TPS + EPS5D" },
         });
     }
 
@@ -42,9 +42,9 @@ namespace {
         checkTpsCondition({
             { {}, false, "default" },
             { { 0.0f }, false, "0.0" },
-            { { TEST_TPS - EPS5D }, false, "TEST_TPS - EPS5D" },
-            { { TEST_TPS }, false, "TEST_TPS" },
-            { { TEST_TPS + EPS5D }, false, "TEST_TPS + EPS5D" },
+            { { TEST_MIN_TPS - EPS5D }, false, "TEST_MIN_TPS - EPS5D" },
+            { { TEST_MIN_TPS }, false, "TEST_MIN_TPS" },
+            { { TEST_MIN_TPS + EPS5D }, false, "TEST_MIN_TPS + EPS5D" },
         });
     }
 
@@ -53,9 +53,9 @@ namespace {
         checkTpsCondition({
             { {}, true, "default" },
             { { 0.0f }, true, "0.0" },
-            { { TEST_TPS - EPS5D }, true, "TEST_TPS - EPS5D" },
-            { { TEST_TPS }, true, "TEST_TPS" },
-            { { TEST_TPS + EPS5D }, true, "TEST_TPS + EPS5D" },
+            { { TEST_MIN_TPS - EPS5D }, true, "TEST_MIN_TPS - EPS5D" },
+            { { TEST_MIN_TPS }, true, "TEST_MIN_TPS" },
+            { { TEST_MIN_TPS + EPS5D }, true, "TEST_MIN_TPS + EPS5D" },
         });
     }
 
@@ -68,9 +68,9 @@ namespace {
         checkTpsCondition({
             { {}, true, "default" },
             { { 0.0f }, true, "0.0" },
-            { { TEST_TPS - EPS5D }, true, "TEST_TPS - EPS5D" },
-            { { TEST_TPS }, true, "TEST_TPS" },
-            { { TEST_TPS + EPS5D }, true, "TEST_TPS + EPS5D" },
+            { { TEST_MIN_TPS - EPS5D }, true, "TEST_MIN_TPS - EPS5D" },
+            { { TEST_MIN_TPS }, true, "TEST_MIN_TPS" },
+            { { TEST_MIN_TPS + EPS5D }, true, "TEST_MIN_TPS + EPS5D" },
         });
     }
 
@@ -78,14 +78,14 @@ namespace {
         setUpEngineConfiguration(
             EngineConfig()
                 .setNitrousControlEnabled({ true })
-                .setNitrousMinimumTps({ TEST_TPS })
+                .setNitrousMinimumTps({ TEST_MIN_TPS })
         );
         checkTpsCondition({
             { {}, false, "default" },
             { { 0.0f }, false, "0.0" },
-            { { TEST_TPS - EPS5D }, false, "TEST_TPS - EPS5D" },
-            { { TEST_TPS }, true, "TEST_TPS" },
-            { { TEST_TPS + EPS5D }, true, "TEST_TPS + EPS5D" },
+            { { TEST_MIN_TPS - EPS5D }, false, "TEST_MIN_TPS - EPS5D" },
+            { { TEST_MIN_TPS }, true, "TEST_MIN_TPS" },
+            { { TEST_MIN_TPS + EPS5D }, true, "TEST_MIN_TPS + EPS5D" },
         });
     }
 }
