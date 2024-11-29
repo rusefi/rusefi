@@ -206,6 +206,10 @@ uintptr_t getFlashAddrSecondCopy() {
 	return 2;
 }
 
+void stm32_standby() {}
+
+void onBoardStandBy() {}
+
 #include "flash_int.h"
 
 static std::string makeFileName(flashaddr_t addr) {
