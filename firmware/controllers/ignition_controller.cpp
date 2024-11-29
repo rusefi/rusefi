@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "mpu_util.h"
+#include "port_mpu_util.h"
 #include "flash_main.h"
 
 bool isIgnVoltage() {
