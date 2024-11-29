@@ -1789,7 +1789,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.11.28.alphax-4k-gdi.4016383231"
+#define TS_SIGNATURE "rusEFI master.2024.11.29.alphax-4k-gdi.4016383231"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
