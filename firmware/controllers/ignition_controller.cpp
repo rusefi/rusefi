@@ -1,6 +1,10 @@
 #include "pch.h"
+#include "flash_main.h"
 
 bool isIgnVoltage() {
+#if defined(IGN_KEY_DIVIDER)
+  return Sensor::getOrZero(SensorType::IgnKeyVoltage) > 5;
+#endif
   return Sensor::getOrZero(SensorType::BatteryVoltage) > 5;
 }
 
@@ -22,9 +26,18 @@ void IgnitionController::onSlowCallback() {
 	// and we don't want to
 	if (!hasIgnVoltage && secondsSinceIgnVoltage() < 0.2f) {
 		return;
+	} else if (!hasIgnVoltage && secondsSinceIgnVoltage() >= 0.2f) {
+		pendingSleep = 1;
 	}
 
 	// Store state and notify other modules of the change
 	m_lastState = hasIgnVoltage;
 	engine->engineModules.apply_all([&](auto& m) { m.onIgnitionStateChanged(hasIgnVoltage); });
+
+	if(pendingSleep) {
+		pendingSleep = 0;
+		writeToFlashNow();
+		onBoardStandBy();
+		stm32_standby();
+	}
 }

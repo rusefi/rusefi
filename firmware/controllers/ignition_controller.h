@@ -23,6 +23,7 @@ public:
 private:
 	Timer m_timeSinceIgnVoltage;
 	bool m_lastState = false;
+	bool pendingSleep = false;
 };
 
 // USB power or vehicle power?

@@ -28,3 +28,4 @@
 
 #define LUA_SCRIPT_SIZE 11500
 
+#define IGN_KEY_DIVIDER 3
