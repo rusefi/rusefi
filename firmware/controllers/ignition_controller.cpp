@@ -27,14 +27,16 @@ void IgnitionController::onSlowCallback() {
 	if (!hasIgnVoltage && secondsSinceIgnVoltage() < 0.2f) {
 		return;
 	} else if (!hasIgnVoltage && secondsSinceIgnVoltage() >= 0.2f) {
-		pendingSleep = 1;
+		pendingSleepInner = 1;
 	}
 
 	// Store state and notify other modules of the change
 	m_lastState = hasIgnVoltage;
 	engine->engineModules.apply_all([&](auto& m) { m.onIgnitionStateChanged(hasIgnVoltage); });
 
-	if(pendingSleep) {
+	if(pendingSleepInner && secondsSinceIgnVoltage() >= 60.0f) {
+		pendingSleep = 1;
+		pendingSleepInner = 0;
 		writeToFlashNow();
 	}
 }
