@@ -20,6 +20,14 @@ public:
 	   return m_timeSinceIgnVoltage.getElapsedSeconds();
 	}
 
+	bool getPendingSleep() {
+		return pendingSleep;
+	}
+
+	void resetPendingSleep() {
+		pendingSleep = 0;
+	}
+
 private:
 	Timer m_timeSinceIgnVoltage;
 	bool m_lastState = false;

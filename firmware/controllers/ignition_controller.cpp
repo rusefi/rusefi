@@ -1,6 +1,4 @@
 #include "pch.h"
-#include "mpu_util.h"
-#include "port_mpu_util.h"
 #include "flash_main.h"
 
 bool isIgnVoltage() {
@@ -37,9 +35,6 @@ void IgnitionController::onSlowCallback() {
 	engine->engineModules.apply_all([&](auto& m) { m.onIgnitionStateChanged(hasIgnVoltage); });
 
 	if(pendingSleep) {
-		pendingSleep = 0;
 		writeToFlashNow();
-		onBoardStandBy();
-		stm32_standby();
 	}
 }

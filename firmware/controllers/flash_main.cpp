@@ -225,6 +225,12 @@ void writeToFlashNow() {
 
 	// Write complete, clear the flag
 	needToWriteConfiguration = false;
+
+	if(engine->module<IgnitionController>()->getPendingSleep()) {
+		engine->module<IgnitionController>()->resetPendingSleep()
+		onBoardStandBy();
+		stm32_standby();
+	}
 }
 
 static void doResetConfiguration() {
