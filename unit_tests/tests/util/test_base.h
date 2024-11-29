@@ -24,6 +24,7 @@ protected:
     void periodicSlowCallback();
 
     void updateRpm(float rpm);
+    void updateRpm(std::optional<float> rpm);
     void updateApp(std::optional<float> app);
     void updateClt(std::optional<float> clt);
     void updateMap(std::optional<float> map);

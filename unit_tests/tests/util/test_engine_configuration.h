@@ -76,6 +76,9 @@ public:
     void configureNitrousMinimumClt(std::optional<uint8_t> nitrousMinimumClt);
     void configureNitrousMaximumMap(std::optional<uint16_t> nitrousMaximumMap);
     void configureNitrousMaximumAfr(std::optional<float> nitrousMaximumAfr);
+    void configureNitrousActivationRpm(std::optional<uint16_t> nitrousActivationRpm);
+    void configureNitrousDeactivationRpm(std::optional<uint16_t> nitrousDeactivationRpm);
+    void configureNitrousDeactivationRpmWindow(std::optional<uint16_t> nitrousDeactivationRpmWindow);
 private:
     TestEngineConfiguration();
     static TestEngineConfiguration instance;

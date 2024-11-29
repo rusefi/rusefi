@@ -73,6 +73,9 @@ public:
     std::optional<uint8_t> getNitrousMinimumClt() const { return  m_nitrousMinimumClt; }
     std::optional<uint16_t> getNitrousMaximumMap() const { return  m_nitrousMaximumMap; }
     std::optional<float> getNitrousMaximumAfr() const { return  m_nitrousMaximumAfr; }
+    std::optional<uint16_t> getNitrousActivationRpm() const { return  m_nitrousActivationRpm; }
+    std::optional<uint16_t> getNitrousDeactivationRpm() const { return  m_nitrousDeactivationRpm; }
+    std::optional<uint16_t> getNitrousDeactivationRpmWindow() const { return  m_nitrousDeactivationRpmWindow; }
 
     // We do not core about performance in tests, but we want to use builder-like style, so setters return new instance
     // of configuration:
@@ -135,6 +138,9 @@ public:
     EngineConfig setNitrousMinimumClt(std::optional<uint8_t> value);
     EngineConfig setNitrousMaximumMap(std::optional<uint16_t> value);
     EngineConfig setNitrousMaximumAfr(std::optional<float> value);
+    EngineConfig setNitrousActivationRpm(std::optional<uint16_t> value);
+    EngineConfig setNitrousDeactivationRpm(std::optional<uint16_t> value);
+    EngineConfig setNitrousDeactivationRpmWindow(std::optional<uint16_t> value);
 private:
     // Launch Control
     std::optional<switch_input_pin_e> m_launchActivatePin;
@@ -194,4 +200,7 @@ private:
     std::optional<uint8_t> m_nitrousMinimumClt;
     std::optional<uint16_t> m_nitrousMaximumMap;
     std::optional<float> m_nitrousMaximumAfr;
+    std::optional<uint16_t> m_nitrousActivationRpm;
+    std::optional<uint16_t> m_nitrousDeactivationRpm;
+    std::optional<uint16_t> m_nitrousDeactivationRpmWindow;
 };

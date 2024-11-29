@@ -238,3 +238,18 @@ EngineConfig EngineConfig::setNitrousMaximumAfr(const std::optional<float> value
     m_nitrousMaximumAfr = value;
     return *this;
 }
+
+EngineConfig EngineConfig::setNitrousActivationRpm(const std::optional<uint16_t> value) {
+    m_nitrousActivationRpm = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setNitrousDeactivationRpm(const std::optional<uint16_t> value) {
+    m_nitrousDeactivationRpm = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setNitrousDeactivationRpmWindow(const std::optional<uint16_t> value) {
+    m_nitrousDeactivationRpmWindow = value;
+    return *this;
+}

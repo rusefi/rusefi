@@ -91,6 +91,11 @@ void TestBase::setUpEngineConfiguration(const EngineConfig& config) {
     getTestEngineConfiguration().configureNitrousMinimumClt(config.getNitrousMinimumClt());
     getTestEngineConfiguration().configureNitrousMaximumMap(config.getNitrousMaximumMap());
     getTestEngineConfiguration().configureNitrousMaximumAfr(config.getNitrousMaximumAfr());
+    getTestEngineConfiguration().configureNitrousActivationRpm(config.getNitrousActivationRpm());
+    getTestEngineConfiguration().configureNitrousDeactivationRpm(config.getNitrousDeactivationRpm());
+    getTestEngineConfiguration().configureNitrousDeactivationRpmWindow(
+        config.getNitrousDeactivationRpmWindow()
+    );
 }
 
 void TestBase::periodicFastCallback() {
@@ -105,6 +110,10 @@ void TestBase::periodicSlowCallback() {
 void TestBase::updateRpm(const float rpm) {
     Sensor::setMockValue(SensorType::Rpm, rpm);
     periodicFastCallback();
+}
+
+void TestBase::updateRpm(const std::optional<float> rpm) {
+    updateSensor(SensorType::Rpm, rpm);
 }
 
 void TestBase::updateApp(const std::optional<float> app) {
