@@ -42,8 +42,10 @@ void IgnitionController::onSlowCallback() {
 	}
 
 	// Store state and notify other modules of the change
-	m_lastState = hasIgnVoltage;
-	engine->engineModules.apply_all([&](auto& m) { m.onIgnitionStateChanged(hasIgnVoltage); });
+	if(hasIgnVoltage != m_lastState) {
+		m_lastState = hasIgnVoltage;
+		engine->engineModules.apply_all([&](auto& m) { m.onIgnitionStateChanged(hasIgnVoltage); });
+	}	
 
 	if(pendingSleepInner && secondsSinceIgnVoltage() >= float(engineConfiguration->standbyTimeout)) {
 		pendingSleep = 1;
