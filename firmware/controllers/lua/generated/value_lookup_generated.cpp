@@ -737,6 +737,9 @@ float getConfigValueByName(const char *name) {
 // boostPid.maxValue
 		case -572500550:
 			return engineConfiguration->boostPid.maxValue;
+// standbyTimeout
+		case 813493057:
+			return engineConfiguration->standbyTimeout;
 // boostPwmFrequency
 		case -1990709262:
 			return engineConfiguration->boostPwmFrequency;
@@ -1937,6 +1940,9 @@ float getConfigValueByName(const char *name) {
 // knockFrequency
 		case 1972605869:
 			return engineConfiguration->knockFrequency;
+// secondaryInjectorFuelReferencePressure
+		case -425992769:
+			return engineConfiguration->secondaryInjectorFuelReferencePressure;
 // ltftEnabled
 		case -518141238:
 			return config->ltftEnabled;
@@ -3185,6 +3191,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -572500550:
 	{
 		engineConfiguration->boostPid.maxValue = (int)value;
+		return 1;
+	}
+		case 813493057:
+	{
+		engineConfiguration->standbyTimeout = value;
 		return 1;
 	}
 		case -1990709262:
@@ -5185,6 +5196,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1972605869:
 	{
 		engineConfiguration->knockFrequency = value;
+		return 1;
+	}
+		case -425992769:
+	{
+		engineConfiguration->secondaryInjectorFuelReferencePressure = value;
 		return 1;
 	}
 		case -518141238:
