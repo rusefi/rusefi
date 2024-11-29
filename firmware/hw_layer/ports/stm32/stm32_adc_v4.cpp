@@ -44,6 +44,9 @@ void portInitAdc() {
 	// Init slow ADC
 	adcStart(&ADCD1, NULL);
 
+	// Knock/trigger scope ADC
+	adcStart(&ADCD3, nullptr);
+
 	// Connect the analog switches between {PA0_C, PA1_C, PC2_C, PC3_C} and their non-C counterparts
 	// This lets us use normal (non-direct) analog on those channels
 	SYSCFG->PMCR &= ~(SYSCFG_PMCR_PA0SO | SYSCFG_PMCR_PA1SO | SYSCFG_PMCR_PC2SO | SYSCFG_PMCR_PC3SO);
