@@ -101,7 +101,7 @@ typedef enum {
 #define ADC_CR2_SWSTART ((uint32_t)0x40000000)
 #endif
 
-#ifdef __cplusplus
+//#ifdef __cplusplus
 void stm32_stop();
 void stm32_standby();
 
@@ -110,4 +110,4 @@ void boardPrepareForStop();
 
 // Called just before the MCU is put in standby mode
 void boardPrepareForStandby();
-#endif
+//#endif
