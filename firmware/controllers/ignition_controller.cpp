@@ -16,6 +16,8 @@ void IgnitionController::onSlowCallback() {
 	if (hasIgnVoltage && (hasIgnVoltage == m_lastState)) {
 		m_timeSinceIgnVoltage.reset();
 	} else if (hasIgnVoltage && (hasIgnVoltage != m_lastState)) {
+		pendingSleep = 0;
+		pendingSleepInner = 0;
 		restartFromSleep = 1;
 		m_timeSinceNotIgnVoltage.reset();
 	}
@@ -34,6 +36,7 @@ void IgnitionController::onSlowCallback() {
 	if (!hasIgnVoltage && secondsSinceIgnVoltage() < 0.2f) {
 		return;
 	} else if (!hasIgnVoltage && secondsSinceIgnVoltage() >= 0.2f) {
+		m_timeSinceNotIgnVoltage.reset();
 		pendingSleepInner = 1;
 		restartFromSleep = 0;
 	}
