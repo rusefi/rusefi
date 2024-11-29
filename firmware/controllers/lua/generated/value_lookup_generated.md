@@ -1915,6 +1915,9 @@ This is the pressure at which your injector flow is known.\nFor example if your 
 ### nitrousMaximumMap
 
 
+### nitrousMaximumAfr
+
+
 ### tcu_shiftTime
 
 

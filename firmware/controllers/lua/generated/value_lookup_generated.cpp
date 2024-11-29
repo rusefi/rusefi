@@ -1922,6 +1922,9 @@ float getConfigValueByName(const char *name) {
 // nitrousMaximumMap
 		case -677571211:
 			return engineConfiguration->nitrousMaximumMap;
+// nitrousMaximumAfr
+		case -677584112:
+			return engineConfiguration->nitrousMaximumAfr;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -5124,6 +5127,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -677571211:
 	{
 		engineConfiguration->nitrousMaximumMap = (int)value;
+		return 1;
+	}
+		case -677584112:
+	{
+		engineConfiguration->nitrousMaximumAfr = (int)value;
 		return 1;
 	}
 		case -1658957891:

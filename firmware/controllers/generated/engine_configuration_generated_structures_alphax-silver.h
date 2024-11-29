@@ -4968,8 +4968,13 @@ struct engine_configuration_s {
 	 */
 	int16_t nitrousMaximumMap;
 	/**
-	 * units: units
+	 * units: afr
 	 * offset 3956
+	 */
+	scaled_channel<uint8_t, 10, 1> nitrousMaximumAfr;
+	/**
+	 * units: units
+	 * offset 3957
 	 */
 	uint8_t unusedOftenChangesDuringFirmwareUpdate[END_OF_CALIBRATION_PADDING];
 	/**
