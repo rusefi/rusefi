@@ -349,8 +349,8 @@
 #define ego_sensor_e_ES_Innovate_MTX_L 1
 #define ego_sensor_e_ES_PLX 4
 #define EGT_CHANNEL_COUNT 8
-#define END_OF_CALIBRATION_PADDING 116
-#define engine_configuration_s_size 4060
+#define END_OF_CALIBRATION_PADDING 108
+#define engine_configuration_s_size 4076
 #define engine_load_mode_e_auto_enum 0="LM_SPEED_DENSITY",2="LM_ALPHA_N",3="LM_LUA",100="LM_MOCK",1="LM_REAL_MAF"
 #define engine_load_mode_e_enum "Speed Density", "MAF Air Charge", "Alpha-N", "Lua"
 #define engine_load_mode_e_LM_ALPHA_N 2
@@ -484,7 +484,7 @@
 #define ETB_BIAS_CURVE_LENGTH 8
 #define ETB_COUNT 2
 #define ETB_HW_MAX_FREQUENCY 3000
-#define FLASH_DATA_VERSION 20016
+#define FLASH_DATA_VERSION 20024
 #define FRONTEND_TITLE_BAR_NAME "rusEFI"
 #define fuel_cyl_trim_s_size 16
 #define FUEL_LEVEL_TABLE_COUNT 8
@@ -500,6 +500,7 @@
 #define GAUGE_CATEGORY_BOOST_CONTROL "Boost Control"
 #define GAUGE_CATEGORY_ETB "ETB more"
 #define GAUGE_CATEGORY_FUEL_MATH "Fuel: math"
+#define GAUGE_CATEGORY_SENT "Sensors - SENT"
 #define GAUGE_CATEGORY_SYNC "Sync"
 #define GAUGE_CATEGORY_TIMING "Timing"
 #define GAUGE_COIL_DWELL_TIME "Ignition: coil charge time"
@@ -1168,7 +1169,7 @@
 #define MAIN_HELP_URL "https://rusefi.com/s/4chan"
 #define MAP_ANGLE_SIZE 8
 #define MAP_sensor_config_s_size 140
-#define MAP_UPPER_LIMIT 255
+#define MAP_UPPER_LIMIT 1000
 #define MAP_WINDOW_SIZE 8
 #define MAX_CYLINDER_COUNT 12
 #define MAX_TPS_PPS_DISCREPANCY 5
@@ -1204,8 +1205,8 @@
 #define operation_mode_e_FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR 6
 #define operation_mode_e_OM_NONE 0
 #define operation_mode_e_TWO_STROKE 3
-#define output_pin_e_enum 0="NONE",10="A3 - Fuel Pump",108="A4 - Tachometer",104="A4 - Tachometer legacy up to rev F",47="A6 - Ignition 1",71="A7 - Ignition 2",105="A8 - Injector 1",62="Aux10 - High2 legacy F4",59="Aux2 - Inj 5",94="Aux4 - Inj 6",68="Aux6 - Ignition 5",26="Aux8 - Ignition 6",65="Aux9 - High1 legacy F2",106="B8 - Injector 2",100="C1 - Fan Relay",63="C8 - Idle",61="D1 - Injector 3",41="D2 - Out Boost",70="D6 - Ignition 3",69="D7 - Ignition 4",60="E1 - Injector 4",109="E2 - Out NOS",43="F1 - Idle2",27="F2 - VVT#1 rev G",72="F4 - VVT#2 rev G",110="F5 - MAIN"
-#define output_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","A3 - Fuel Pump","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Aux8 - Ignition 6","F2 - VVT#1 rev G","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","D2 - Out Boost","INVALID","F1 - Idle2","INVALID","INVALID","INVALID","A6 - Ignition 1","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Aux2 - Inj 5","E1 - Injector 4","D1 - Injector 3","Aux10 - High2 legacy F4","C8 - Idle","INVALID","Aux9 - High1 legacy F2","INVALID","INVALID","Aux6 - Ignition 5","D7 - Ignition 4","D6 - Ignition 3","A7 - Ignition 2","F4 - VVT#2 rev G","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Aux4 - Inj 6","INVALID","INVALID","INVALID","INVALID","INVALID","C1 - Fan Relay","INVALID","INVALID","INVALID","A4 - Tachometer legacy up to rev F","A8 - Injector 1","B8 - Injector 2","INVALID","A4 - Tachometer","E2 - Out NOS","F5 - MAIN"
+#define output_pin_e_enum 0="NONE",10="A3 - Fuel Pump",108="A4 - Tachometer",104="A4 - Tachometer legacy up to rev F",47="A6 - Ignition 1",71="A7 - Ignition 2",105="A8 - Injector 1",62="Aux10 - High2 legacy F4",59="Aux2 - Inj 5",94="Aux4 - Inj 6",68="Aux6 - Ignition 5",26="Aux8 - Ignition 6",65="Aux9 - High1 legacy F2",106="B8 - Injector 2",100="C1 - Fan Relay",63="C8 - Idle",61="D1 - Injector 3",41="D2 - Out Boost",70="D6 - Ignition 3",69="D7 - Ignition 4",60="E1 - Injector 4",109="E2 - Out NOS",43="F1 - Idle2",27="F2 - VVT#1 rev G",72="F4 - VVT#2 rev G",110="F5 - MAIN",324="MS IO-Box 0 OUT 1",325="MS IO-Box 0 OUT 2",326="MS IO-Box 0 OUT 3",327="MS IO-Box 0 OUT 4"
+#define output_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","A3 - Fuel Pump","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Aux8 - Ignition 6","F2 - VVT#1 rev G","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","D2 - Out Boost","INVALID","F1 - Idle2","INVALID","INVALID","INVALID","A6 - Ignition 1","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Aux2 - Inj 5","E1 - Injector 4","D1 - Injector 3","Aux10 - High2 legacy F4","C8 - Idle","INVALID","Aux9 - High1 legacy F2","INVALID","INVALID","Aux6 - Ignition 5","D7 - Ignition 4","D6 - Ignition 3","A7 - Ignition 2","F4 - VVT#2 rev G","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","Aux4 - Inj 6","INVALID","INVALID","INVALID","INVALID","INVALID","C1 - Fan Relay","INVALID","INVALID","INVALID","A4 - Tachometer legacy up to rev F","A8 - Injector 1","B8 - Injector 2","INVALID","A4 - Tachometer","E2 - Out NOS","F5 - MAIN","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","MS IO-Box 0 OUT 1","MS IO-Box 0 OUT 2","MS IO-Box 0 OUT 3","MS IO-Box 0 OUT 4"
 #define PACK_ADD_TEMPERATURE 40
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_AFR_CFG 10
@@ -1229,7 +1230,7 @@
 #define pedalSensor_NAME "Accelerator pedal"
 #define pedalToTpsTbl_NAME "ETB pedal target"
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 24044
+#define persistent_config_s_size 24052
 #define pid_s_size 20
 #define pin_input_mode_e_auto_enum 0="PI_DEFAULT",2="PI_PULLDOWN",1="PI_PULLUP"
 #define pin_input_mode_e_enum "DEFAULT", "PULLUP", "PULLDOWN"
@@ -1294,10 +1295,24 @@
 #define SentEtbType_FORD_TYPE_1 2
 #define SentEtbType_GM_TYPE_1 1
 #define SentEtbType_NONE 0
+#define SentFuelHighPressureType_auto_enum 0="NONE",1="GM_TYPE"
+#define SentFuelHighPressureType_enum "None", "GM type", "Custom"
+#define SentFuelHighPressureType_GM_TYPE 1
+#define SentFuelHighPressureType_NONE 0
+#define SentInput_auto_enum 0="NONE",1="INPUT1",2="INPUT2",3="INPUT3",4="INPUT4",5="INPUT5",6="INPUT6",7="INPUT7"
+#define SentInput_enum "None", "SENT input 1", "SENT input 2", "SENT input 3", "SENT input 4", "SENT input 5", "SENT input 6", "SENT input 7"
+#define SentInput_INPUT1 1
+#define SentInput_INPUT2 2
+#define SentInput_INPUT3 3
+#define SentInput_INPUT4 4
+#define SentInput_INPUT5 5
+#define SentInput_INPUT6 6
+#define SentInput_INPUT7 7
+#define SentInput_NONE 0
 #define show_4chan_presets true
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3123400719
+#define SIGNATURE_HASH 2173417587
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1323,7 +1338,7 @@
 #define STFT_BANK_COUNT 2
 #define stft_cell_cfg_s_size 4
 #define STFT_CELL_COUNT 4
-#define stft_s_size 24
+#define stft_s_size 28
 #define switch_input_pin_e_enum 0="NONE",80="C2 - Crank- (hall)",78="C3 - Crank+ (hall)",93="C4 - 2Step/Digital",8="C7 - CAM Hall/Digital",85="D3 - Digital In 2",86="E3 - Digital In 3",87="E4 - Digital In 4",81="E6 - Cam+ (hall)",88="F3 - Digital In 5"
 #define switch_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C7 - CAM Hall/Digital","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","C3 - Crank+ (hall)","INVALID","C2 - Crank- (hall)","E6 - Cam+ (hall)","INVALID","INVALID","INVALID","D3 - Digital In 2","E3 - Digital In 3","E4 - Digital In 4","F3 - Digital In 5","INVALID","INVALID","INVALID","INVALID","C4 - 2Step/Digital"
 #define TABLE_2_LOAD_SIZE 8
@@ -1359,7 +1374,7 @@
 #define torqueReductionActivationMode_e_enum "Torque Reduction Button", "Launch Button"
 #define torqueReductionActivationMode_e_LAUNCH_BUTTON 1
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON 0
-#define TOTAL_CONFIG_SIZE 24044
+#define TOTAL_CONFIG_SIZE 24052
 #define TPS_2_BYTE_PACKING_MULT 100
 #define TPS_PPS_TOO_HIGH_THRESHOLD 110
 #define TPS_PPS_TOO_LOW_THRESHOLD -10
@@ -1552,7 +1567,7 @@
 #define TS_CRC_CHECK_COMMAND_char k
 #define TS_EXECUTE 'E'
 #define TS_EXECUTE_char E
-#define TS_FILE_VERSION 20240404
+#define TS_FILE_VERSION 20241104
 #define TS_FILE_VERSION_OFFSET 124
 #define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY '8'
 #define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY_char 8
@@ -1758,14 +1773,14 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI customFirmwareDG.2024.11.13.alphax-4chan.3123400719"
+#define TS_SIGNATURE "rusEFI testsDG.2024.11.29.alphax-4chan.2173417587"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 1852
+#define TS_TOTAL_OUTPUT_SIZE 1836
 #define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "C2/C3 Crank VR"
 #define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "E5/E6 Cam VR"
 #define TS_TRIGGER_SCOPE_DISABLE 5
