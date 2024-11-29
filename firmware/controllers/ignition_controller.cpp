@@ -24,7 +24,7 @@ void IgnitionController::onSlowCallback() {
 		restartFromSleep = 0;
 	}
 
-	if (hasIgnVoltage == m_lastState) {
+	if (hasIgnVoltage == m_lastState && !pendingSleepInner && !pendingSleep) {
 		// nothing to do, states match
 		return;
 	}
@@ -42,7 +42,7 @@ void IgnitionController::onSlowCallback() {
 	m_lastState = hasIgnVoltage;
 	engine->engineModules.apply_all([&](auto& m) { m.onIgnitionStateChanged(hasIgnVoltage); });
 
-	if(pendingSleepInner && secondsSinceIgnVoltage() >= 60) {
+	if(pendingSleepInner && secondsSinceIgnVoltage() >= float(engineConfiguration->standbyTimeout)) {
 		pendingSleep = 1;
 		pendingSleepInner = 0;
 		writeToFlashNow();
