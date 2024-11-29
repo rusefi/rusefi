@@ -90,6 +90,7 @@ void TestBase::setUpEngineConfiguration(const EngineConfig& config) {
     getTestEngineConfiguration().configureNitrousMinimumTps(config.getNitrousMinimumTps());
     getTestEngineConfiguration().configureNitrousMinimumClt(config.getNitrousMinimumClt());
     getTestEngineConfiguration().configureNitrousMaximumMap(config.getNitrousMaximumMap());
+    getTestEngineConfiguration().configureNitrousMaximumAfr(config.getNitrousMaximumAfr());
 }
 
 void TestBase::periodicFastCallback() {
@@ -116,6 +117,10 @@ void TestBase::updateClt(const std::optional<float> clt) {
 
 void TestBase::updateMap(const std::optional<float> map) {
     updateSensor(SensorType::Map, map);
+}
+
+void TestBase::updateLambda1(std::optional<float> lambda1) {
+    updateSensor(SensorType::Lambda1, lambda1);
 }
 
 void TestBase::updateSensor(const SensorType sensor, const std::optional<float> sensorReading) {

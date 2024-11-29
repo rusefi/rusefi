@@ -233,3 +233,8 @@ EngineConfig EngineConfig::setNitrousMaximumMap(const std::optional<uint16_t> va
     m_nitrousMaximumMap = value;
     return *this;
 }
+
+EngineConfig EngineConfig::setNitrousMaximumAfr(const std::optional<float> value) {
+    m_nitrousMaximumAfr = value;
+    return *this;
+}

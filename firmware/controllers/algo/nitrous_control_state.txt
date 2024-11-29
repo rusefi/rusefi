@@ -4,5 +4,6 @@ bit isArmed
 bit isTpsConditionSatisfied
 bit isCltConditionSatisfied
 bit isMapConditionSatisfied
+bit isAfrConditionSatisfied
 
 end_struct
