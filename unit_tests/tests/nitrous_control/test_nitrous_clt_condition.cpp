@@ -15,7 +15,7 @@ namespace {
 
     class NitrousCltConditionTest : public TestBase {
     protected:
-        static constexpr uint8_t TEST_CLT = 51;
+        static constexpr uint8_t TEST_MIN_CLT = 51;
 
         void checkCltCondition(const std::vector<CltConditionTestData>& testData);
     };
@@ -31,9 +31,9 @@ namespace {
         checkCltCondition({
             { {}, false, "default" },
             { { 0 }, false, "0.0" },
-            { { TEST_CLT - EPS5D }, false, "TEST_CLT - EPS5D" },
-            { { TEST_CLT }, false, "TEST_CLT" },
-            { { TEST_CLT + EPS5D }, false, "TEST_CLT + EPS5D" },
+            { { TEST_MIN_CLT - EPS5D }, false, "TEST_MIN_CLT - EPS5D" },
+            { { TEST_MIN_CLT }, false, "TEST_MIN_CLT" },
+            { { TEST_MIN_CLT + EPS5D }, false, "TEST_MIN_CLT + EPS5D" },
         });
     }
 
@@ -42,9 +42,9 @@ namespace {
         checkCltCondition({
             { {}, false, "default" },
             { { 0.0f }, false, "0.0" },
-            { { TEST_CLT - EPS5D }, false, "TEST_CLT - EPS5D" },
-            { { TEST_CLT }, false, "TEST_CLT" },
-            { { TEST_CLT + EPS5D }, false, "TEST_CLT + EPS5D" },
+            { { TEST_MIN_CLT - EPS5D }, false, "TEST_MIN_CLT - EPS5D" },
+            { { TEST_MIN_CLT }, false, "TEST_MIN_CLT" },
+            { { TEST_MIN_CLT + EPS5D }, false, "TEST_MIN_CLT + EPS5D" },
         });
     }
 
@@ -53,9 +53,9 @@ namespace {
         checkCltCondition({
             { {}, true, "default" },
             { { 0.0f }, true, "0.0" },
-            { { TEST_CLT - EPS5D }, true, "TEST_CLT - EPS5D" },
-            { { TEST_CLT }, true, "TEST_CLT" },
-            { { TEST_CLT + EPS5D }, true, "TEST_CLT + EPS5D" },
+            { { TEST_MIN_CLT - EPS5D }, true, "TEST_MIN_CLT - EPS5D" },
+            { { TEST_MIN_CLT }, true, "TEST_MIN_CLT" },
+            { { TEST_MIN_CLT + EPS5D }, true, "TEST_MIN_CLT + EPS5D" },
         });
     }
 
@@ -68,9 +68,9 @@ namespace {
         checkCltCondition({
             { {}, true, "default" },
             { { 0.0f }, true, "0.0" },
-            { { TEST_CLT - EPS5D }, true, "TEST_CLT - EPS5D" },
-            { { TEST_CLT }, true, "TEST_CLT" },
-            { { TEST_CLT + EPS5D }, true, "TEST_CLT + EPS5D" },
+            { { TEST_MIN_CLT - EPS5D }, true, "TEST_MIN_CLT - EPS5D" },
+            { { TEST_MIN_CLT }, true, "TEST_MIN_CLT" },
+            { { TEST_MIN_CLT + EPS5D }, true, "TEST_MIN_CLT + EPS5D" },
         });
     }
 
@@ -78,14 +78,14 @@ namespace {
         setUpEngineConfiguration(
             EngineConfig()
                 .setNitrousControlEnabled({ true })
-                .setNitrousMinimumClt({ TEST_CLT })
+                .setNitrousMinimumClt({ TEST_MIN_CLT })
         );
         checkCltCondition({
             { {}, false, "default" },
             { { 0.0f }, false, "0.0" },
-            { { TEST_CLT - EPS5D }, false, "TEST_CLT - EPS5D" },
-            { { TEST_CLT }, true, "TEST_CLT" },
-            { { TEST_CLT + EPS5D }, true, "TEST_CLT + EPS5D" },
+            { { TEST_MIN_CLT - EPS5D }, false, "TEST_MIN_CLT - EPS5D" },
+            { { TEST_MIN_CLT }, true, "TEST_MIN_CLT" },
+            { { TEST_MIN_CLT + EPS5D }, true, "TEST_MIN_CLT + EPS5D" },
         });
     }
 }
