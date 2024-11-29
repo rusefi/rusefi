@@ -35,8 +35,8 @@ void NitrousController::updateArmingState() {
 }
 
 void NitrousController::updateTpsConditionSatisfied() {
-    const expected<float> tps = Sensor::get(SensorType::DriverThrottleIntent);
     if (engineConfiguration->nitrousMinimumTps != 0) {
+        const expected<float> tps = Sensor::get(SensorType::DriverThrottleIntent);
         isTpsConditionSatisfied = tps.Valid && (engineConfiguration->nitrousMinimumTps <= tps.Value);
     } else {
         isTpsConditionSatisfied = true;
@@ -44,8 +44,8 @@ void NitrousController::updateTpsConditionSatisfied() {
 }
 
 void NitrousController::updateCltConditionSatisfied() {
-    const expected<float> clt = Sensor::get(SensorType::Clt);
     if (engineConfiguration->nitrousMinimumClt != 0) {
+        const expected<float> clt = Sensor::get(SensorType::Clt);
         isCltConditionSatisfied = clt.Valid && (engineConfiguration->nitrousMinimumClt <= clt.Value);
     } else {
         isCltConditionSatisfied = true;
@@ -53,8 +53,8 @@ void NitrousController::updateCltConditionSatisfied() {
 }
 
 void NitrousController::updateMapConditionSatisfied() {
-    const expected<float> map = Sensor::get(SensorType::Map);
     if (engineConfiguration->nitrousMaximumMap != 0) {
+        const expected<float> map = Sensor::get(SensorType::Map);
         isMapConditionSatisfied = map.Valid && (map.Value <= engineConfiguration->nitrousMaximumMap);
     } else {
         isMapConditionSatisfied = true;
