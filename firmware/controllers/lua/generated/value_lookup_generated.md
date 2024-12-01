@@ -1918,6 +1918,15 @@ This is the pressure at which your injector flow is known.\nFor example if your 
 ### nitrousMaximumAfr
 
 
+### nitrousActivationRpm
+
+
+### nitrousDeactivationRpm
+
+
+### nitrousDeactivationRpmWindow
+
+
 ### tcu_shiftTime
 
 

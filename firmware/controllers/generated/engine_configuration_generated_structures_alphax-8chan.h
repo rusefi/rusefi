@@ -4877,16 +4877,31 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 10, 1> nitrousMaximumAfr;
 	/**
+	 * need 4 byte alignment
 	 * units: units
 	 * offset 3969
 	 */
-	uint8_t unusedOftenChangesDuringFirmwareUpdate[END_OF_CALIBRATION_PADDING];
+	uint8_t alignmentFill_at_3969[1];
 	/**
-	 * need 4 byte alignment
-	 * units: units
-	 * offset 4055
+	 * units: rpm
+	 * offset 3970
 	 */
-	uint8_t alignmentFill_at_4055[1];
+	uint16_t nitrousActivationRpm;
+	/**
+	 * units: rpm
+	 * offset 3972
+	 */
+	uint16_t nitrousDeactivationRpm;
+	/**
+	 * units: rpm
+	 * offset 3974
+	 */
+	uint16_t nitrousDeactivationRpmWindow;
+	/**
+	 * units: units
+	 * offset 3976
+	 */
+	uint8_t unusedOftenChangesDuringFirmwareUpdate[END_OF_CALIBRATION_PADDING];
 };
 static_assert(sizeof(engine_configuration_s) == 4056);
 

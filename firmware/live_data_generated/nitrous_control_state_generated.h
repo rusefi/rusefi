@@ -22,85 +22,85 @@ struct nitrous_control_state_s {
 	bool isAfrConditionSatisfied : 1 {};
 	/**
 	offset 0 bit 5 */
-	bool unusedBit_5_5 : 1 {};
+	bool isNitrousRpmConditionSatisfied : 1 {};
 	/**
 	offset 0 bit 6 */
-	bool unusedBit_5_6 : 1 {};
+	bool unusedBit_6_6 : 1 {};
 	/**
 	offset 0 bit 7 */
-	bool unusedBit_5_7 : 1 {};
+	bool unusedBit_6_7 : 1 {};
 	/**
 	offset 0 bit 8 */
-	bool unusedBit_5_8 : 1 {};
+	bool unusedBit_6_8 : 1 {};
 	/**
 	offset 0 bit 9 */
-	bool unusedBit_5_9 : 1 {};
+	bool unusedBit_6_9 : 1 {};
 	/**
 	offset 0 bit 10 */
-	bool unusedBit_5_10 : 1 {};
+	bool unusedBit_6_10 : 1 {};
 	/**
 	offset 0 bit 11 */
-	bool unusedBit_5_11 : 1 {};
+	bool unusedBit_6_11 : 1 {};
 	/**
 	offset 0 bit 12 */
-	bool unusedBit_5_12 : 1 {};
+	bool unusedBit_6_12 : 1 {};
 	/**
 	offset 0 bit 13 */
-	bool unusedBit_5_13 : 1 {};
+	bool unusedBit_6_13 : 1 {};
 	/**
 	offset 0 bit 14 */
-	bool unusedBit_5_14 : 1 {};
+	bool unusedBit_6_14 : 1 {};
 	/**
 	offset 0 bit 15 */
-	bool unusedBit_5_15 : 1 {};
+	bool unusedBit_6_15 : 1 {};
 	/**
 	offset 0 bit 16 */
-	bool unusedBit_5_16 : 1 {};
+	bool unusedBit_6_16 : 1 {};
 	/**
 	offset 0 bit 17 */
-	bool unusedBit_5_17 : 1 {};
+	bool unusedBit_6_17 : 1 {};
 	/**
 	offset 0 bit 18 */
-	bool unusedBit_5_18 : 1 {};
+	bool unusedBit_6_18 : 1 {};
 	/**
 	offset 0 bit 19 */
-	bool unusedBit_5_19 : 1 {};
+	bool unusedBit_6_19 : 1 {};
 	/**
 	offset 0 bit 20 */
-	bool unusedBit_5_20 : 1 {};
+	bool unusedBit_6_20 : 1 {};
 	/**
 	offset 0 bit 21 */
-	bool unusedBit_5_21 : 1 {};
+	bool unusedBit_6_21 : 1 {};
 	/**
 	offset 0 bit 22 */
-	bool unusedBit_5_22 : 1 {};
+	bool unusedBit_6_22 : 1 {};
 	/**
 	offset 0 bit 23 */
-	bool unusedBit_5_23 : 1 {};
+	bool unusedBit_6_23 : 1 {};
 	/**
 	offset 0 bit 24 */
-	bool unusedBit_5_24 : 1 {};
+	bool unusedBit_6_24 : 1 {};
 	/**
 	offset 0 bit 25 */
-	bool unusedBit_5_25 : 1 {};
+	bool unusedBit_6_25 : 1 {};
 	/**
 	offset 0 bit 26 */
-	bool unusedBit_5_26 : 1 {};
+	bool unusedBit_6_26 : 1 {};
 	/**
 	offset 0 bit 27 */
-	bool unusedBit_5_27 : 1 {};
+	bool unusedBit_6_27 : 1 {};
 	/**
 	offset 0 bit 28 */
-	bool unusedBit_5_28 : 1 {};
+	bool unusedBit_6_28 : 1 {};
 	/**
 	offset 0 bit 29 */
-	bool unusedBit_5_29 : 1 {};
+	bool unusedBit_6_29 : 1 {};
 	/**
 	offset 0 bit 30 */
-	bool unusedBit_5_30 : 1 {};
+	bool unusedBit_6_30 : 1 {};
 	/**
 	offset 0 bit 31 */
-	bool unusedBit_5_31 : 1 {};
+	bool unusedBit_6_31 : 1 {};
 };
 static_assert(sizeof(nitrous_control_state_s) == 4);
 

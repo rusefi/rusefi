@@ -11,11 +11,13 @@ public class NitrousController {
 	public static final Field ISCLTCONDITIONSATISFIED = Field.create("ISCLTCONDITIONSATISFIED", 0, FieldType.BIT, 2).setBaseOffset(1128);
 	public static final Field ISMAPCONDITIONSATISFIED = Field.create("ISMAPCONDITIONSATISFIED", 0, FieldType.BIT, 3).setBaseOffset(1128);
 	public static final Field ISAFRCONDITIONSATISFIED = Field.create("ISAFRCONDITIONSATISFIED", 0, FieldType.BIT, 4).setBaseOffset(1128);
+	public static final Field ISNITROUSRPMCONDITIONSATISFIED = Field.create("ISNITROUSRPMCONDITIONSATISFIED", 0, FieldType.BIT, 5).setBaseOffset(1128);
 	public static final Field[] VALUES = {
 	ISARMED,
 	ISTPSCONDITIONSATISFIED,
 	ISCLTCONDITIONSATISFIED,
 	ISMAPCONDITIONSATISFIED,
 	ISAFRCONDITIONSATISFIED,
+	ISNITROUSRPMCONDITIONSATISFIED,
 	};
 }

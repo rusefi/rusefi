@@ -1925,6 +1925,15 @@ float getConfigValueByName(const char *name) {
 // nitrousMaximumAfr
 		case -677584112:
 			return engineConfiguration->nitrousMaximumAfr;
+// nitrousActivationRpm
+		case -469950118:
+			return engineConfiguration->nitrousActivationRpm;
+// nitrousDeactivationRpm
+		case 1072117635:
+			return engineConfiguration->nitrousDeactivationRpm;
+// nitrousDeactivationRpmWindow
+		case -1786673317:
+			return engineConfiguration->nitrousDeactivationRpmWindow;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -5132,6 +5141,21 @@ bool setConfigValueByName(const char *name, float value) {
 		case -677584112:
 	{
 		engineConfiguration->nitrousMaximumAfr = (int)value;
+		return 1;
+	}
+		case -469950118:
+	{
+		engineConfiguration->nitrousActivationRpm = (int)value;
+		return 1;
+	}
+		case 1072117635:
+	{
+		engineConfiguration->nitrousDeactivationRpm = (int)value;
+		return 1;
+	}
+		case -1786673317:
+	{
+		engineConfiguration->nitrousDeactivationRpmWindow = (int)value;
 		return 1;
 	}
 		case -1658957891:

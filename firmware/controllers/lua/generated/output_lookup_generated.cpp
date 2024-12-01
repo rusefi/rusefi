@@ -1114,6 +1114,11 @@ float getOutputValueByName(const char *name) {
 		case 112999709:
 			return engine->nitrousController.isAfrConditionSatisfied;
 #endif
+// isNitrousRpmConditionSatisfied
+#if EFI_LAUNCH_CONTROL
+		case 1138724839:
+			return engine->nitrousController.isNitrousRpmConditionSatisfied;
+#endif
 // isTpsInvalid
 #if EFI_BOOST_CONTROL
 		case -575666209:

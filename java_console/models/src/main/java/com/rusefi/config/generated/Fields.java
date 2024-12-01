@@ -318,7 +318,7 @@ public class Fields {
 	public static final int ego_sensor_e_ES_Innovate_MTX_L = 1;
 	public static final int ego_sensor_e_ES_PLX = 4;
 	public static final int EGT_CHANNEL_COUNT = 8;
-	public static final int END_OF_CALIBRATION_PADDING = 86;
+	public static final int END_OF_CALIBRATION_PADDING = 80;
 	public static final int engine_configuration_s_size = 4040;
 	public static final int engine_load_mode_e_LM_ALPHA_N = 2;
 	public static final int engine_load_mode_e_LM_LUA = 3;
@@ -1237,7 +1237,7 @@ public class Fields {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 1248538377;
+	public static final int SIGNATURE_HASH = 532371963;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1500,7 +1500,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.12.01.f407-discovery.1248538377";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.12.01.f407-discovery.532371963";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -3004,7 +3004,10 @@ public class Fields {
 	public static final Field ALIGNMENTFILL_AT_3949 = Field.create("ALIGNMENTFILL_AT_3949", 3949, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field NITROUSMAXIMUMMAP = Field.create("NITROUSMAXIMUMMAP", 3950, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field NITROUSMAXIMUMAFR = Field.create("NITROUSMAXIMUMAFR", 3952, FieldType.INT8).setScale(0.1).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_4039 = Field.create("ALIGNMENTFILL_AT_4039", 4039, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_3953 = Field.create("ALIGNMENTFILL_AT_3953", 3953, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field NITROUSACTIVATIONRPM = Field.create("NITROUSACTIVATIONRPM", 3954, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field NITROUSDEACTIVATIONRPM = Field.create("NITROUSDEACTIVATIONRPM", 3956, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field NITROUSDEACTIVATIONRPMWINDOW = Field.create("NITROUSDEACTIVATIONRPMWINDOW", 3958, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field POSTCRANKINGFACTOR = Field.create("POSTCRANKINGFACTOR", 4040, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field POSTCRANKINGDURATIONBINS = Field.create("POSTCRANKINGDURATIONBINS", 4184, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field POSTCRANKINGCLTBINS = Field.create("POSTCRANKINGCLTBINS", 4196, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -4727,7 +4730,10 @@ public class Fields {
 	ALIGNMENTFILL_AT_3949,
 	NITROUSMAXIMUMMAP,
 	NITROUSMAXIMUMAFR,
-	ALIGNMENTFILL_AT_4039,
+	ALIGNMENTFILL_AT_3953,
+	NITROUSACTIVATIONRPM,
+	NITROUSDEACTIVATIONRPM,
+	NITROUSDEACTIVATIONRPMWINDOW,
 	POSTCRANKINGFACTOR,
 	POSTCRANKINGDURATIONBINS,
 	POSTCRANKINGCLTBINS,
