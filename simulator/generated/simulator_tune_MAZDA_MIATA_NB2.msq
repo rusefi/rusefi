@@ -1676,13 +1676,10 @@
         <constant digits="0" name="nitrousMinimumClt" units="deg C">0.0</constant>
         <constant digits="0" name="nitrousMaximumMap" units="kPa">0.0</constant>
         <constant digits="1" name="nitrousMaximumAfr" units="afr">0.0</constant>
-        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="86">
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+        <constant digits="0" name="nitrousActivationRpm" units="rpm">0.0</constant>
+        <constant digits="0" name="nitrousDeactivationRpm" units="rpm">0.0</constant>
+        <constant digits="0" name="nitrousDeactivationRpmWindow" units="rpm">0.0</constant>
+        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="80">
          0.0
          0.0
          0.0
@@ -4750,7 +4747,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20241120" nPages="1" signature="rusEFI master.2024.12.01.f407-discovery.1248538377" version="5.0"/>
+    <versionInfo firmwareInfo="20241120" nPages="1" signature="rusEFI master.2024.12.01.f407-discovery.532371963" version="5.0"/>
     <bibliography author="rusEFI 20241120" writeDate="date"/>
     <settings/>
     <userComments/>
