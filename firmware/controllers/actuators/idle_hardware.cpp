@@ -49,7 +49,14 @@ void applyIACposition(percent_t position) {
 	} else {
 		// if not spinning or running a bench test, turn off the idle valve(s) to be quieter and save power
 #if EFI_SHAFT_POSITION_INPUT
-		if (!engine->triggerCentral.engineMovedRecently() && engine->timeToStopIdleTest == 0) {
+		//if (!engine->triggerCentral.engineMovedRecently() && engine->timeToStopIdleTest == 0) {
+		bool engineTurnedRecently;
+		if(Sensor::getOrZero(SensorType::Rpm) > 0) {
+			engineTurnedRecently = 1;
+		} else {
+			engineTurnedRecently = 0;
+		}
+		if (!engineTurnedRecently && engine->timeToStopIdleTest == 0) {
 			idleSolenoidOpen.setSimplePwmDutyCycle(0);
 			idleSolenoidClose.setSimplePwmDutyCycle(0);
 			return;

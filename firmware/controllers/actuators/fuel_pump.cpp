@@ -16,7 +16,12 @@ void FuelPumpController::onSlowCallback() {
 
 #if EFI_SHAFT_POSITION_INPUT
 	// If there was a trigger event recently, turn on the pump, the engine is running!
-	engineTurnedRecently = engine->triggerCentral.engineMovedRecently();
+	// engineTurnedRecently = engine->triggerCentral.engineMovedRecently();
+	if(Sensor::getOrZero(SensorType::Rpm) > 0) {
+		engineTurnedRecently = 1;
+	} else {
+		engineTurnedRecently = 0;
+	}
 #endif //EFI_SHAFT_POSITION_INPUT
 
 	isFuelPumpOn = isPrime || engineTurnedRecently;
