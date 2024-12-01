@@ -44,8 +44,10 @@ void portInitAdc() {
 	// Init slow ADC
 	adcStart(&ADCD1, NULL);
 
+#if STM32_ADC_USE_ADC3
 	// Knock/trigger scope ADC
 	adcStart(&ADCD3, nullptr);
+#endif // STM32_ADC_USE_ADC3
 
 	// Connect the analog switches between {PA0_C, PA1_C, PC2_C, PC3_C} and their non-C counterparts
 	// This lets us use normal (non-direct) analog on those channels
