@@ -6,5 +6,6 @@ bit isCltConditionSatisfied
 bit isMapConditionSatisfied
 bit isAfrConditionSatisfied
 bit isNitrousRpmConditionSatisfied
+bit isNitrousConditionSatisfied
 
 end_struct
