@@ -4,6 +4,8 @@
 
 #include "pch.h"
 
+#include "engine_configuration_defaults.h"
+
 #include "util/test_base.h"
 
 namespace {
@@ -51,11 +53,11 @@ namespace {
     TEST_F(NitrousTpsConditionTest, checkDefaultWithEnabledNitrousControl) {
         setUpEngineConfiguration(EngineConfig().setNitrousControlEnabled({ true }));
         checkTpsCondition({
-            { {}, true, "default" },
-            { { 0.0f }, true, "0.0" },
-            { { TEST_MIN_TPS - EPS5D }, true, "TEST_MIN_TPS - EPS5D" },
-            { { TEST_MIN_TPS }, true, "TEST_MIN_TPS" },
-            { { TEST_MIN_TPS + EPS5D }, true, "TEST_MIN_TPS + EPS5D" },
+            { {}, false, "default" },
+            { { 0.0f }, false, "0.0" },
+            { { engine_configuration_defaults::NITROUS_MINIMUM_TPS - EPS5D }, false, "NITROUS_MINIMUM_TPS - EPS5D" },
+            { { engine_configuration_defaults::NITROUS_MINIMUM_TPS }, true, "NITROUS_MINIMUM_TPS" },
+            { { engine_configuration_defaults::NITROUS_MINIMUM_TPS + EPS5D }, true, "NITROUS_MINIMUM_TPS + EPS5D" },
         });
     }
 

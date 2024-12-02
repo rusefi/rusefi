@@ -59,11 +59,11 @@ namespace engine_configuration_defaults {
     constexpr lua_gauge_meaning_e NITROUS_LUA_GAUGE_MEANING = LUA_GAUGE_LOWER_BOUND;
     constexpr float NITROUS_LUA_GAUGE_ARMING_VALUE = 0.0f;
 
-    constexpr int NITROUS_MINIMUM_TPS = 0;
-    constexpr uint8_t NITROUS_MINIMUM_CLT = 0;
+    constexpr int NITROUS_MINIMUM_TPS = 80;
+    constexpr uint8_t NITROUS_MINIMUM_CLT = 60;
     constexpr uint16_t NITROUS_MAXIMUM_MAP = 0;
-    constexpr float NITROUS_MAXIMUM_AFR = 0.0f;
-    constexpr uint16_t NITROUS_ACTIVATION_RPM = 0;
-    constexpr uint16_t NITROUS_DEACTIVATION_RPM = 0;
-    constexpr uint16_t NITROUS_DEACTIVATION_RPM_WINDOW = 0;
+    constexpr float NITROUS_MAXIMUM_AFR = 14.0f;
+    constexpr uint16_t NITROUS_ACTIVATION_RPM = 4000;
+    constexpr uint16_t NITROUS_DEACTIVATION_RPM = 7000;
+    constexpr uint16_t NITROUS_DEACTIVATION_RPM_WINDOW = 500;
 }
