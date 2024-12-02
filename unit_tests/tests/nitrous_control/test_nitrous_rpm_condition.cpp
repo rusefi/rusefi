@@ -4,6 +4,8 @@
 
 #include "pch.h"
 
+#include "engine_configuration_defaults.h"
+
 #include "util/test_base.h"
 
 namespace {
@@ -18,6 +20,10 @@ namespace {
         static constexpr uint16_t TEST_ACTIVATION_RPM = 239;
         static constexpr uint16_t TEST_DEACTIVATION_RPM = 932;
         static constexpr uint16_t TEST_DEACTIVATION_RPM_WINDOW = 17;
+
+        static constexpr uint16_t DEFAULT_DEACTIVATION_RPM_WINDOW_BEGIN
+            = engine_configuration_defaults::NITROUS_DEACTIVATION_RPM
+                - engine_configuration_defaults::NITROUS_DEACTIVATION_RPM_WINDOW;
 
         void checkRpmCondition(const std::vector<RpmConditionTestData>& testData);
         void checkRpmConditionIsAlwaysUnsatisfied();
@@ -38,6 +44,9 @@ namespace {
             { { TEST_ACTIVATION_RPM }, false, "rpm = TEST_ACTIVATION_RPM" },
             { { TEST_DEACTIVATION_RPM - 1 }, false, "rpm = TEST_DEACTIVATION_RPM - 1" },
             { { TEST_DEACTIVATION_RPM }, false, "rpm = TEST_DEACTIVATION_RPM" },
+            { { TEST_DEACTIVATION_RPM + 1 }, false, "rpm = TEST_DEACTIVATION_RPM + 1" },
+            { { engine_configuration_defaults::NITROUS_ACTIVATION_RPM }, false, "rpm = NITROUS_ACTIVATION_RPM" },
+            { { engine_configuration_defaults::NITROUS_DEACTIVATION_RPM }, false, "rpm = NITROUS_DEACTIVATION_RPM" },
             {
                 { TEST_DEACTIVATION_RPM - TEST_DEACTIVATION_RPM_WINDOW },
                 false,
@@ -77,7 +86,47 @@ namespace {
 
     TEST_F(NitrousRpmConditionTest, checkDefaultWithEnabledNitrousControl) {
         setUpEngineConfiguration(EngineConfig().setNitrousControlEnabled({ true }));
-        checkRpmConditionIsAlwaysUnsatisfied();
+
+        checkRpmCondition({
+            { { 0 }, false, "rpm = 0" },
+            {
+                { engine_configuration_defaults::NITROUS_ACTIVATION_RPM - 1 },
+                false,
+                "rpm = NITROUS_ACTIVATION_RPM - 1"
+            },
+            { { engine_configuration_defaults::NITROUS_ACTIVATION_RPM }, true, "rpm = NITROUS_ACTIVATION_RPM" },
+            {
+                { engine_configuration_defaults::NITROUS_DEACTIVATION_RPM - 1 },
+                true,
+                "rpm = NITROUS_DEACTIVATION_RPM - 1"
+            },
+            { { engine_configuration_defaults::NITROUS_DEACTIVATION_RPM }, false, "rpm = NITROUS_DEACTIVATION_RPM" },
+            {
+                { DEFAULT_DEACTIVATION_RPM_WINDOW_BEGIN },
+                false,
+                "rpm = DEFAULT_DEACTIVATION_RPM_WINDOW_BEGIN (still in window)"
+            },
+            {
+                { DEFAULT_DEACTIVATION_RPM_WINDOW_BEGIN - 1 },
+                true,
+                "rpm = DEFAULT_DEACTIVATION_RPM_WINDOW_BEGIN - 1"
+            },
+            {
+                { DEFAULT_DEACTIVATION_RPM_WINDOW_BEGIN },
+                true,
+                "rpm = DEFAULT_DEACTIVATION_RPM_WINDOW_BEGIN (returning to the window)"
+            },
+            {
+                { engine_configuration_defaults::NITROUS_DEACTIVATION_RPM - 1 },
+                true,
+                "rpm = NITROUS_DEACTIVATION_RPM - 1 (again)"
+            },
+            {
+                { engine_configuration_defaults::NITROUS_DEACTIVATION_RPM },
+                false,
+                "rpm = NITROUS_DEACTIVATION_RPM (again)"
+            },
+        });
     }
 
     TEST_F(NitrousRpmConditionTest, checkActivationAndDeactivation) {
