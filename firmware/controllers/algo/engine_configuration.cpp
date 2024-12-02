@@ -595,6 +595,8 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->acPressureEnableHyst = engine_configuration_defaults::AC_PRESSURE_ENABLE_HYST;
 	engineConfiguration->acIdleExtraOffset = 15;
 
+    engineConfiguration->nitrousMinimumTps = engine_configuration_defaults::NITROUS_MINIMUM_TPS;
+
 	/* these two are used for HIP9011 only
 	 * Currently this is offset from fire event, not TDC */
 	/* TODO: convert to offset from TDC */
