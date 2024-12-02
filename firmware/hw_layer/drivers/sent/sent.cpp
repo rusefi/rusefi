@@ -94,7 +94,6 @@ float sent_channel::getTickTime() {
 
 int sent_channel::Decoder(uint16_t clocks) {
 	int ret = 0;
-	int interval;
 
 	pulseCounter++;
 
@@ -108,8 +107,8 @@ int sent_channel::Decoder(uint16_t clocks) {
 			/* some tickPerUnit calculated...
 			 * Check next 1 + 6 + 1 pulses if they are valid with current tickPerUnit */
 			criticalAssert(tickPerUnit != 0, "zero tickPerUnit", 0);
-			interval = (clocks + tickPerUnit / 2) / tickPerUnit - SENT_OFFSET_INTERVAL;
-			if ((interval >= 0) && (interval <= SENT_MAX_INTERVAL)) {
+			int checkInterval = (clocks + tickPerUnit / 2) / tickPerUnit - SENT_OFFSET_INTERVAL;
+			if ((checkInterval >= 0) && (checkInterval <= SENT_MAX_INTERVAL)) {
 				currentStatePulseCounter++;
 				if (currentStatePulseCounter == SENT_MSG_PAYLOAD_SIZE) {
 					pulseCounter = 0;
@@ -157,7 +156,7 @@ int sent_channel::Decoder(uint16_t clocks) {
 		return 0;
 	}
 
-	interval = (clocks + tickPerUnit / 2) / tickPerUnit - SENT_OFFSET_INTERVAL;
+	int interval = (clocks + tickPerUnit / 2) / tickPerUnit - SENT_OFFSET_INTERVAL;
 
 	if (interval < 0) {
 		#if SENT_STATISTIC_COUNTERS
