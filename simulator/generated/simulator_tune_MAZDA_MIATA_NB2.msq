@@ -1672,13 +1672,13 @@
         <constant name="nitrousLuaGauge">"Lua Gauge 1"</constant>
         <constant name="nitrousLuaGaugeMeaning">"Lower Bound"</constant>
         <constant digits="3" name="nitrousLuaGaugeArmingValue" units="">0.0</constant>
-        <constant digits="0" name="nitrousMinimumTps" units="">0.0</constant>
-        <constant digits="0" name="nitrousMinimumClt" units="deg C">0.0</constant>
+        <constant digits="0" name="nitrousMinimumTps" units="">80.0</constant>
+        <constant digits="0" name="nitrousMinimumClt" units="deg C">60.0</constant>
         <constant digits="0" name="nitrousMaximumMap" units="kPa">0.0</constant>
-        <constant digits="1" name="nitrousMaximumAfr" units="afr">0.0</constant>
-        <constant digits="0" name="nitrousActivationRpm" units="rpm">0.0</constant>
-        <constant digits="0" name="nitrousDeactivationRpm" units="rpm">0.0</constant>
-        <constant digits="0" name="nitrousDeactivationRpmWindow" units="rpm">0.0</constant>
+        <constant digits="1" name="nitrousMaximumAfr" units="afr">14.0</constant>
+        <constant digits="0" name="nitrousActivationRpm" units="rpm">4000.0</constant>
+        <constant digits="0" name="nitrousDeactivationRpm" units="rpm">7000.0</constant>
+        <constant digits="0" name="nitrousDeactivationRpmWindow" units="rpm">500.0</constant>
         <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="80">
          0.0
          0.0
