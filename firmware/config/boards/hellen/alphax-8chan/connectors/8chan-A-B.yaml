@@ -57,7 +57,7 @@ pins:
 
   - pin: 8A
     function: Analog Ground
-    type: gnd
+    type: agnd
     color: green
 
   - pin: 9A
@@ -113,10 +113,11 @@ pins:
   - pin: 16A
     function: +5v sensors
     color: orange
+    type: 5v
 
   - pin: 17A
     function: Analog Ground
-    type: gnd
+    type: agnd
     color: orange
 
 
@@ -170,9 +171,8 @@ pins:
 
   - pin: 25A
     function: Analog Ground
-    type: gnd
+    type: agnd
     color: black
-
 
   - pin: 26A
     function: VSS Hall Input
@@ -330,10 +330,9 @@ pins:
     function: regulated +12V output (12V from main relay for consumers)
     type: 12v
 
-
   - pin: 20B
     function: Analog Ground
-    type: gnd
+    type: agnd
 
   - pin: 21B
     meta: MM176_IN_SENS4
@@ -352,6 +351,7 @@ pins:
   - pin: 23B
     function: +5v sensors
     color: green
+    type: av
 
   - pin: 24B
     meta: MM176_IN_VBATT
