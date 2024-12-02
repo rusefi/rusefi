@@ -4,6 +4,8 @@
 
 #include "pch.h"
 
+#include "engine_configuration_defaults.h"
+
 #include "util/test_base.h"
 
 namespace {
@@ -15,6 +17,8 @@ namespace {
 
     class NitrousAfrConditionTest : public TestBase {
     protected:
+        static constexpr float TEST_DEFAULT_LAMBDA1 = engine_configuration_defaults::NITROUS_MAXIMUM_AFR / STOICH_RATIO;
+
         static constexpr float TEST_MAXIMUM_AFR = 12.3;
         static constexpr float TEST_LAMBDA1 = TEST_MAXIMUM_AFR / STOICH_RATIO;
 
@@ -52,11 +56,11 @@ namespace {
     TEST_F(NitrousAfrConditionTest, checkDefaultWithEnabledNitrousControl) {
         setUpEngineConfiguration(EngineConfig().setNitrousControlEnabled({ true }));
         checkAfrCondition({
-            { {}, true, "default" },
+            { {}, false, "default" },
             { { 0.0f }, true, "0.0" },
-            { { TEST_LAMBDA1 - EPS5D }, true, "TEST_LAMBDA1 - EPS5D" },
-            { { TEST_LAMBDA1 }, true, "TEST_MAP" },
-            { { TEST_LAMBDA1 + EPS5D }, true, "TEST_LAMBDA1 + EPS5D" },
+            { { TEST_DEFAULT_LAMBDA1 - EPS5D }, true, "TEST_DEFAULT_LAMBDA1 - EPS5D" },
+            { { TEST_DEFAULT_LAMBDA1 }, true, "TEST_DEFAULT_LAMBDA1" },
+            { { TEST_DEFAULT_LAMBDA1 + EPS5D }, false, "TEST_DEFAULT_LAMBDA1 + EPS5D" },
         });
     }
 

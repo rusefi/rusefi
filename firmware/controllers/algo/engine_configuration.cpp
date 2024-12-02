@@ -597,6 +597,7 @@ static void setDefaultEngineConfiguration() {
 
     engineConfiguration->nitrousMinimumTps = engine_configuration_defaults::NITROUS_MINIMUM_TPS;
     engineConfiguration->nitrousMinimumClt = engine_configuration_defaults::NITROUS_MINIMUM_CLT;
+    engineConfiguration->nitrousMaximumAfr = engine_configuration_defaults::NITROUS_MAXIMUM_AFR;
 
 	/* these two are used for HIP9011 only
 	 * Currently this is offset from fire event, not TDC */

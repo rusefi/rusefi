@@ -62,7 +62,7 @@ namespace engine_configuration_defaults {
     constexpr int NITROUS_MINIMUM_TPS = 80;
     constexpr uint8_t NITROUS_MINIMUM_CLT = 60;
     constexpr uint16_t NITROUS_MAXIMUM_MAP = 0;
-    constexpr float NITROUS_MAXIMUM_AFR = 0.0f;
+    constexpr float NITROUS_MAXIMUM_AFR = 14.0f;
     constexpr uint16_t NITROUS_ACTIVATION_RPM = 0;
     constexpr uint16_t NITROUS_DEACTIVATION_RPM = 0;
     constexpr uint16_t NITROUS_DEACTIVATION_RPM_WINDOW = 0;
