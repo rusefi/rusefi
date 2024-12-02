@@ -77,7 +77,7 @@ void NitrousController::updateAfrConditionSatisfied() {
 }
 
 namespace {
-    MaxLimitWithHysteresis rpmHysteresis;
+    MaxLimitWithHysteresis<UnstrictChecker> rpmHysteresis;
 }
 
 void NitrousController::updateRpmConditionSatisfied() {
@@ -86,8 +86,8 @@ void NitrousController::updateRpmConditionSatisfied() {
         const float rpm = rpmSensorReading.Value;
         if (rpmHysteresis.checkIfLimitIsExceeded(
                 rpm,
-                engineConfiguration->nitrousDeactivationRpm - 1,
-                engineConfiguration->nitrousDeactivationRpmWindow - 1
+                engineConfiguration->nitrousDeactivationRpm,
+                engineConfiguration->nitrousDeactivationRpmWindow
         )) {
             isNitrousRpmConditionSatisfied = false;
         } else {
