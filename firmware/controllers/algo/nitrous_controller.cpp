@@ -15,6 +15,12 @@ void NitrousController::update() {
         updateMapConditionSatisfied();
         updateAfrConditionSatisfied();
         updateRpmConditionSatisfied();
+        isNitrousConditionSatisfied = (
+            isArmed && isTpsConditionSatisfied && isCltConditionSatisfied && isMapConditionSatisfied
+                && isAfrConditionSatisfied && isNitrousRpmConditionSatisfied
+        );
+    } else {
+        isNitrousConditionSatisfied = false;
     }
 }
 
