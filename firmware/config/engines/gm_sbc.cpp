@@ -144,6 +144,7 @@ static void setGmEcotec3() {
   engineConfiguration->vvtMode[1] = VVT_BOSCH_QUICK_START;
   engineConfiguration->lowPressureFuel.hwChannel = EFI_ADC_NONE;
   gmRailSensor();
+  engineConfiguration->EtbSentInput = SentInput::INPUT1;
 
 #ifdef HW_HELLEN_4K_GDI
   engineConfiguration->invertCamVVTSignal = true;
@@ -157,7 +158,7 @@ static void setGmEcotec3() {
 #endif
 
 #ifdef HW_HELLEN_8CHAN
-  // engineConfiguration->sentInputPins[0] = todo TIM1_CH4 ICU #7076
+  engineConfiguration->sentInputPins[0] = Gpio::MM176_IN_D3;
   engineConfiguration->starterControlPin = Gpio::MM176_IGN5; // 14C
 
 	engineConfiguration->camInputs[2] = Gpio::Unassigned;
