@@ -23,7 +23,8 @@ namespace {
 
         void SetUp() override;
 
-        void satisfyAllConditions();
+        void checkNitrousCondition(bool expected, const char* context);
+
     private:
         void armNitrousControl();
         void satisfyTpsCondition();
@@ -49,18 +50,38 @@ namespace {
             .setNitrousDeactivationRpmWindow({ TEST_DEACTIVATION_RPM_WINDOW })
         );
 
-        satisfyAllConditions();
+
+        EXPECT_FALSE(getModule<NitrousController>().isArmed);
+        EXPECT_FALSE(getModule<NitrousController>().isTpsConditionSatisfied);
+        EXPECT_FALSE(getModule<NitrousController>().isCltConditionSatisfied);
+        EXPECT_FALSE(getModule<NitrousController>().isMapConditionSatisfied);
+        EXPECT_FALSE(getModule<NitrousController>().isAfrConditionSatisfied);
+        EXPECT_FALSE(getModule<NitrousController>().isNitrousRpmConditionSatisfied);
+
+        checkNitrousCondition(false, "No conditions are satisfied");
+
+        armNitrousControl();
+        checkNitrousCondition(false, "Armed condition is satisfied");
+
+        satisfyTpsCondition();
+        checkNitrousCondition(false, "Armed + TPS conditions are satisfied");
+
+        satisfyCltCondition();
+        checkNitrousCondition(false, "Armed + TPS + CLT conditions are satisfied");
+
+        satisfyMapCondition();
+        checkNitrousCondition(false, "Armed + TPS + CLT + MAP conditions are satisfied");
+
+        satisfyAfrCondition();
+        checkNitrousCondition(false, "Armed + TPS + CLT + MAP + AFR conditions are satisfied");
+
+        satisfyRpmCondition();
+        checkNitrousCondition(true, "Armed + TPS + CLT + MAP + AFR + RPM conditions are satisfied");
     }
 
-    void NitrousConditionTest::satisfyAllConditions() {
-        armNitrousControl();
-        satisfyTpsCondition();
-        satisfyCltCondition();
-        satisfyMapCondition();
-        satisfyAfrCondition();
-        satisfyRpmCondition();
-
-        EXPECT_TRUE(getModule<NitrousController>().isNitrousRpmConditionSatisfied);
+    void NitrousConditionTest::checkNitrousCondition(const bool expected, const char* const context) {
+        EXPECT_EQ(getModule<NitrousController>().isNitrousConditionSatisfied, expected) << context;
+        EXPECT_EQ(enginePins.nitrousRelay.getLogicValue(), expected) << context;
     }
 
     void NitrousConditionTest::armNitrousControl() {
@@ -105,41 +126,41 @@ namespace {
         periodicSlowCallback();
 
         EXPECT_FALSE(getModule<NitrousController>().isArmed);
-        EXPECT_FALSE(getModule<NitrousController>().isNitrousConditionSatisfied);
+        checkNitrousCondition(false, "Without armed condition");
     }
 
     TEST_F(NitrousConditionTest, checkWithoutSatisfiedTpsCondition) {
         updateApp(TEST_MIN_TPS - EPS5D, &TestBase::periodicSlowCallback);
 
         EXPECT_FALSE(getModule<NitrousController>().isTpsConditionSatisfied);
-        EXPECT_FALSE(getModule<NitrousController>().isNitrousConditionSatisfied);
+        checkNitrousCondition(false, "Without TPS condition");
     }
 
     TEST_F(NitrousConditionTest, checkWithoutSatisfiedCltCondition) {
         updateClt(TEST_MIN_CLT - EPS5D, &TestBase::periodicSlowCallback);
 
         EXPECT_FALSE(getModule<NitrousController>().isCltConditionSatisfied);
-        EXPECT_FALSE(getModule<NitrousController>().isNitrousConditionSatisfied);
+        checkNitrousCondition(false, "Without CLT condition");
     }
 
     TEST_F(NitrousConditionTest, checkWithoutSatisfiedMapCondition) {
         updateMap(TEST_MAX_MAP + EPS5D, &TestBase::periodicSlowCallback);
 
         EXPECT_FALSE(getModule<NitrousController>().isMapConditionSatisfied);
-        EXPECT_FALSE(getModule<NitrousController>().isNitrousConditionSatisfied);
+        checkNitrousCondition(false, "Without MAP condition");
     }
 
     TEST_F(NitrousConditionTest, checkWithoutSatisfiedAfrCondition) {
         updateLambda1(TEST_LAMBDA1 + EPS5D, &TestBase::periodicSlowCallback);
 
         EXPECT_FALSE(getModule<NitrousController>().isAfrConditionSatisfied);
-        EXPECT_FALSE(getModule<NitrousController>().isNitrousConditionSatisfied);
+        checkNitrousCondition(false, "Without AFR condition");
     }
 
     TEST_F(NitrousConditionTest, checkWithoutSatisfiedRpmCondition) {
         updateRpm(TEST_ACTIVATION_RPM - EPS5D, &TestBase::periodicSlowCallback);
 
         EXPECT_FALSE(getModule<NitrousController>().isNitrousRpmConditionSatisfied);
-        EXPECT_FALSE(getModule<NitrousController>().isNitrousConditionSatisfied);
+        checkNitrousCondition(false, "Without RPM condition");
     }
 }

@@ -153,6 +153,7 @@ EnginePins::EnginePins() :
 		fanRelay2("Fan Relay 2", CONFIG_PIN_OFFSETS(fan2)),
 		acRelay("A/C Relay", CONFIG_PIN_OFFSETS(acRelay)),
 		fuelPumpRelay("Fuel pump Relay", CONFIG_PIN_OFFSETS(fuelPump)),
+		nitrousRelay("Nitrous Relay", CONFIG_PIN_OFFSETS(nitrousRelay)),
 #if EFI_HD_ACR
 		harleyAcr("Harley ACR", CONFIG_OFFSET(acrPin)),
 		harleyAcr2("Harley ACR 2", CONFIG_OFFSET(acrPin2)),
