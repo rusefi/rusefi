@@ -131,7 +131,7 @@ public class BoostControl {
 	public static final String GAUGE_NAME_TPS = "TPS";
 	public static final String GAUGE_NAME_TPS2 = "TPS2";
 	public static final String GAUGE_NAME_TRG_ERR = "Trigger Error Counter";
-	public static final String GAUGE_NAME_TRG_GAP = "Trigger Sync Latest Ratio";
+	public static final String GAUGE_NAME_TRG_GAP = "Sync: Trigger Latest Ratio";
 	public static final String GAUGE_NAME_TUNE_CRC16 = "Tune CRC16";
 	public static final String GAUGE_NAME_TURBO_SPEED = "Turbocharger Speed";
 	public static final String GAUGE_NAME_UPTIME = "Uptime";

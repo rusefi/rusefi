@@ -657,7 +657,7 @@
 #define GAUGE_NAME_TPS "TPS"
 #define GAUGE_NAME_TPS2 "TPS2"
 #define GAUGE_NAME_TRG_ERR "Trigger Error Counter"
-#define GAUGE_NAME_TRG_GAP "Trigger Sync Latest Ratio"
+#define GAUGE_NAME_TRG_GAP "Sync: Trigger Latest Ratio"
 #define GAUGE_NAME_TUNE_CRC16 "Tune CRC16"
 #define GAUGE_NAME_TURBO_SPEED "Turbocharger Speed"
 #define GAUGE_NAME_UPTIME "Uptime"
@@ -1329,7 +1329,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 4241036788
+#define SIGNATURE_HASH 1045688075
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1790,7 +1790,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.12.03.mre-legacy_f4.4241036788"
+#define TS_SIGNATURE "rusEFI master.2024.12.03.mre-legacy_f4.1045688075"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
