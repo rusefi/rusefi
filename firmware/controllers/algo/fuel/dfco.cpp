@@ -84,3 +84,7 @@ bool DfcoController::cutFuel() const {
 float DfcoController::getTimeSinceCut() const {
 	return m_timeSinceCut.getElapsedSeconds();
 }
+
+float DfcoController::getTimingRetard() const {
+	return 0;
+}

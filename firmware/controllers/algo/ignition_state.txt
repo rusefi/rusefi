@@ -9,6 +9,7 @@ struct_no_prefix ignition_state_s
 	int16_t autoscale cltTimingCorrection;Ign: CLT correction;"deg",{1/@@PACK_MULT_PERCENT@@},0, -20,20, 2,@@GAUGE_CATEGORY_TIMING@@
 	int16_t autoscale timingIatCorrection;Ign: IAT correction;"deg",{1/@@PACK_MULT_PERCENT@@},0, -20,20, 2,@@GAUGE_CATEGORY_TIMING@@
 	int16_t autoscale timingPidCorrection;Idle: Timing adjustment;"deg",{1/@@PACK_MULT_PERCENT@@},0, -20,20, 2,@@GAUGE_CATEGORY_TIMING@@
+	int16_t autoscale dfcoTimingRetard;DFCO: Timing retard;"deg",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 50, 2
 
 	int16_t autoscale baseIgnitionAdvance;@@GAUGE_NAME_TIMING_ADVANCE@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 1
 	int16_t autoscale correctedIgnitionAdvance;@@GAUGE_NAME_ADJUSTED_TIMING@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 1

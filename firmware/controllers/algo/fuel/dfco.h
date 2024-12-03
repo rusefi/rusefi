@@ -13,6 +13,7 @@ public:
 	void update();
 
 	bool cutFuel() const;
+	float getTimingRetard() const;
 
 	float getTimeSinceCut() const;
 
