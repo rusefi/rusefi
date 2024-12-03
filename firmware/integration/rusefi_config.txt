@@ -2148,10 +2148,6 @@ uint8_t[8] autoscale minimumOilPressureValues;;"kPa", 10, 0, 0, 1000, 0
 
 end_struct
 
-! WARNING! THIS GAUGE NAME IS PART of REO integration API
-#define GAUGE_NAME_TRG_ERR "Trigger Error Counter"
-#define GAUGE_NAME_TRG_GAP "Sync: Trigger Latest Ratio"
-
 #define HD_MENU_NAME "Harley"
 #define smLaunchControl_NAME "Launch Control"
 #define pedalToTpsTbl_NAME "ETB pedal target"

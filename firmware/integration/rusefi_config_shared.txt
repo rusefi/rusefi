@@ -43,8 +43,9 @@
 
 #define GAUGE_NAME_VERSION "firmware"
 #define GAUGE_NAME_UPTIME "Uptime"
+! WARNING! THIS GAUGE NAME IS PART of REO integration API
 #define GAUGE_NAME_TRG_ERR "Trigger Error Counter"
-#define GAUGE_NAME_TRG_GAP "Trigger Sync Latest Ratio"
+#define GAUGE_NAME_TRG_GAP "Sync: Trigger Latest Ratio"
 
 #define GAUGE_NAME_CAN_READ_OK "CAN: Rx"
 #define GAUGE_NAME_CAN_WRITE_OK "CAN: Tx OK"
