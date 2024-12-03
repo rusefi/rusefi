@@ -4898,10 +4898,28 @@ struct engine_configuration_s {
 	 */
 	uint16_t nitrousDeactivationRpmWindow;
 	/**
-	 * units: units
+	 * Retard timing by this amount during DFCO. Smooths the transition back from fuel cut. After fuel is restored, ramp timing back in over the period specified.
+	 * units: deg
 	 * offset 3960
 	 */
+	uint8_t dfcoRetardDeg;
+	/**
+	 * Smooths the transition back from fuel cut. After fuel is restored, ramp timing back in over the period specified.
+	 * units: s
+	 * offset 3961
+	 */
+	scaled_channel<uint8_t, 10, 1> dfcoRetardRampInTime;
+	/**
+	 * units: units
+	 * offset 3962
+	 */
 	uint8_t unusedOftenChangesDuringFirmwareUpdate[END_OF_CALIBRATION_PADDING];
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 4038
+	 */
+	uint8_t alignmentFill_at_4038[2];
 };
 static_assert(sizeof(engine_configuration_s) == 4040);
 

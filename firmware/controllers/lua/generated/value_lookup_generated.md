@@ -1927,6 +1927,12 @@ This is the pressure at which your injector flow is known.\nFor example if your 
 ### nitrousDeactivationRpmWindow
 
 
+### dfcoRetardDeg
+Retard timing by this amount during DFCO. Smooths the transition back from fuel cut. After fuel is restored, ramp timing back in over the period specified.
+
+### dfcoRetardRampInTime
+Smooths the transition back from fuel cut. After fuel is restored, ramp timing back in over the period specified.
+
 ### tcu_shiftTime
 
 

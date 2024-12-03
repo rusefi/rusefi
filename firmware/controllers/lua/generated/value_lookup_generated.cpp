@@ -1934,6 +1934,12 @@ float getConfigValueByName(const char *name) {
 // nitrousDeactivationRpmWindow
 		case -1786673317:
 			return engineConfiguration->nitrousDeactivationRpmWindow;
+// dfcoRetardDeg
+		case 601094003:
+			return engineConfiguration->dfcoRetardDeg;
+// dfcoRetardRampInTime
+		case 2030571545:
+			return engineConfiguration->dfcoRetardRampInTime;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -5156,6 +5162,16 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1786673317:
 	{
 		engineConfiguration->nitrousDeactivationRpmWindow = (int)value;
+		return 1;
+	}
+		case 601094003:
+	{
+		engineConfiguration->dfcoRetardDeg = (int)value;
+		return 1;
+	}
+		case 2030571545:
+	{
+		engineConfiguration->dfcoRetardRampInTime = (int)value;
 		return 1;
 	}
 		case -1658957891:
