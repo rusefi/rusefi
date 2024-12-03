@@ -144,6 +144,7 @@ void RegisteredOutputPin::unregister() {
 #define CONFIG_PIN_OFFSETS2(x, y) CONFIG_OFFSET2(x, y##Pin), CONFIG_OFFSET2(x, y##PinMode)
 
 EnginePins::EnginePins() :
+ // [tag:coding_by_convention] 'mainRelay' member here uses 'mainRelayPin' and 'mainRelayPinMode' configuration fields
 		mainRelay("Main Relay", CONFIG_PIN_OFFSETS(mainRelay)),
 		hpfpValve("HPFP Valve", CONFIG_PIN_OFFSETS(hpfpValve)),
 		starterControl("Starter Relay", CONFIG_PIN_OFFSETS(starterControl)),
