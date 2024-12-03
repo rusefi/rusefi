@@ -931,6 +931,9 @@ float getOutputValueByName(const char *name) {
 // timingPidCorrection
 		case -319326974:
 			return engine->ignitionState.timingPidCorrection;
+// dfcoTimingRetard
+		case -735105365:
+			return engine->ignitionState.dfcoTimingRetard;
 // baseIgnitionAdvance
 		case 493641747:
 			return engine->ignitionState.baseIgnitionAdvance;
