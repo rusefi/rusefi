@@ -92,7 +92,9 @@ bool AemXSeriesWideband::decodeAemXSeries(const CANRxFrame& frame, efitick_t now
 	// bit 7 indicates valid
 	bool valid = frame.data8[6] & 0x80;
 	if (!valid) {
-		invalidate();
+    // open discussion about the user usability of this check as we cannot determine the reason why this lambda value is invalid, see:
+    // https://github.com/rusefi/rusefi/issues/7011
+		setValidValue(lambdaFloat, nowNt);
 		return false;
 	}
 
