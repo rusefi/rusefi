@@ -4,6 +4,7 @@ DOCS_ENUMS_INPUTS = \
   $(PROJECT_DIR)/console/binary/output_channels.txt \
   $(PROJECT_DIR)/controllers/engine_cycle/knock_controller.txt \
   $(PROJECT_DIR)/controllers/trigger/trigger_central.txt \
+  $(PROJECT_DIR)/controllers/trigger/trigger_state.txt \
   $(PROJECT_DIR)/controllers/actuators/electronic_throttle.txt \
   $(PROJECT_DIR)/integration/LiveData.yaml \
   $(PROJECT_DIR)/console/binary/generated/live_data_ids.h \
