@@ -34,6 +34,8 @@ TEST(real4g93, cranking) {
 
 		// Expect that all teeth are in the correct spot
 
+    TriggerCentral *tc = getTriggerCentral();
+
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 		if (!gotRpm && rpm) {
 			gotRpm = true;
@@ -43,16 +45,18 @@ TEST(real4g93, cranking) {
 			EXPECT_NEAR(rpm, 132.77f, 0.1);
 		}
 
-		if (!gotSync && engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
+		if (!gotSync && tc->triggerState.hasSynchronizedPhase()) {
 			gotSync = true;
 
 			EXPECT_EQ(reader.lineIndex(), 17);
 			EXPECT_NEAR(rpm, 204.01f, 0.1);
 		}
-//		float instantRpm = engine->triggerCentral.instantRpm.getInstantRpm();
+//		float instantRpm = tc->instantRpm.getInstantRpm();
 // not looking too bad horrible		printf("rpm=%f instant=%f\n", rpm, instantRpm);
 
-		float vvtSyncGapRatio = engine->triggerCentral.triggerState.vvtSyncGapRatio;
+  TriggerDecoderBase& vvtDecoder = tc->vvtState[/*bankIndex*/0][/*camIndex*/0];
+
+		float vvtSyncGapRatio = vvtDecoder.triggerSyncGapRatio;
 		float gapRatio = gapRatios[idx < 12 ? 0 : 1][gapRatioIndices[idx % 12]];
 		if (isnan(gapRatio)) {
 			EXPECT_TRUE(isnan(vvtSyncGapRatio));
