@@ -7,7 +7,7 @@
 #if EFI_LAUNCH_CONTROL
 #include "nitrous_controller.h"
 
-void NitrousController::update() {
+void NitrousController::onSlowCallback() {
     if (engineConfiguration->nitrousControlEnabled) {
         updateArmingState();
         updateTpsConditionSatisfied();

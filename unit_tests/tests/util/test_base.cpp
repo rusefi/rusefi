@@ -107,31 +107,35 @@ void TestBase::periodicSlowCallback() {
     engine->periodicSlowCallback();
 }
 
-void TestBase::updateRpm(const std::optional<float> rpm) {
-    updateSensor(SensorType::Rpm, rpm);
+void TestBase::updateRpm(const std::optional<float> rpm, void (TestBase::* const postAction)()) {
+    updateSensor(SensorType::Rpm, rpm, postAction);
 }
 
-void TestBase::updateApp(const std::optional<float> app) {
-    updateSensor(SensorType::DriverThrottleIntent, app);
+void TestBase::updateApp(const std::optional<float> app, void (TestBase::* const postAction)()) {
+    updateSensor(SensorType::DriverThrottleIntent, app, postAction);
 }
 
-void TestBase::updateClt(const std::optional<float> clt) {
-    updateSensor(SensorType::Clt, clt);
+void TestBase::updateClt(const std::optional<float> clt, void (TestBase::* const postAction)()) {
+    updateSensor(SensorType::Clt, clt, postAction);
 }
 
-void TestBase::updateMap(const std::optional<float> map) {
-    updateSensor(SensorType::Map, map);
+void TestBase::updateMap(const std::optional<float> map, void (TestBase::* const postAction)()) {
+    updateSensor(SensorType::Map, map, postAction);
 }
 
-void TestBase::updateLambda1(std::optional<float> lambda1) {
-    updateSensor(SensorType::Lambda1, lambda1);
+void TestBase::updateLambda1(std::optional<float> lambda1, void (TestBase::* const postAction)()) {
+    updateSensor(SensorType::Lambda1, lambda1, postAction);
 }
 
-void TestBase::updateSensor(const SensorType sensor, const std::optional<float> sensorReading) {
+void TestBase::updateSensor(
+    const SensorType sensor,
+    const std::optional<float> sensorReading,
+    void (TestBase::* const postAction)()
+) {
     if (sensorReading.has_value()) {
         Sensor::setMockValue(sensor, sensorReading.value());
     } else {
         Sensor::resetMockValue(sensor);
     }
-    periodicFastCallback();
+    (this->*postAction)();
 }

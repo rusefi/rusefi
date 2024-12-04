@@ -172,6 +172,9 @@ public:
 		BoostController,
 #endif // EFI_BOOST_CONTROL
 		TpsAccelEnrichment,
+#if EFI_LAUNCH_CONTROL
+        NitrousController,
+#endif // EFI_LAUNCH_CONTROL
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 
@@ -199,7 +202,6 @@ public:
 	SoftSparkLimiter softSparkLimiter;
 	// technically not directly related to EFI_LAUNCH_CONTROL since useful for TCU
 	SoftSparkLimiter hardSparkLimiter;
-	NitrousController nitrousController;
 #endif // EFI_LAUNCH_CONTROL
 
 #if EFI_ANTILAG_SYSTEM

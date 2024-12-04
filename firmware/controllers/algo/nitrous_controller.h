@@ -6,9 +6,11 @@
 
 #include "nitrous_control_state_generated.h"
 
-class NitrousController : public nitrous_control_state_s {
+class NitrousController : public nitrous_control_state_s, public EngineModule {
 public:
-    void update();
+    using interface_t = NitrousController;
+
+    void onSlowCallback() override;
 private:
     void updateArmingState();
     void updateTpsConditionSatisfied();
