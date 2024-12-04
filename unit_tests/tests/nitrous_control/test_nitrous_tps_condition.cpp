@@ -24,8 +24,9 @@ namespace {
 
     void NitrousTpsConditionTest::checkTpsCondition(const std::vector<TpsConditionTestData>& testData) {
         for (const TpsConditionTestData& item: testData) {
-            updateApp(item.tps);
-            EXPECT_EQ(engine->nitrousController.isTpsConditionSatisfied, item.expectedTpsCondition) << item.context;
+            updateApp(item.tps, &TestBase::periodicSlowCallback);
+            EXPECT_EQ(getModule<NitrousController>().isTpsConditionSatisfied, item.expectedTpsCondition)
+                << item.context;
         }
     }
 

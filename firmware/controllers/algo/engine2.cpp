@@ -174,7 +174,6 @@ void EngineState::periodicFastCallback() {
 #if EFI_LAUNCH_CONTROL
 	engine->launchController.update();
 	engine->shiftTorqueReductionController.update();
-	engine->nitrousController.update();
 #endif //EFI_LAUNCH_CONTROL
 
 	float l_ignitionLoad = getIgnitionLoad();

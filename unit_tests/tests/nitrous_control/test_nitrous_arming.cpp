@@ -26,9 +26,9 @@ namespace {
             .setNitrousLuaGaugeArmingValue({ TEST_NITROUS_LUA_GAUGE_ARMING_VALUE });
 
     void NitrousArmingTest::checkArmingAfterPeriodicFastCallback(const bool shouldBeArmed, const char* const context) {
-        periodicFastCallback();
+        periodicSlowCallback();
 
-        EXPECT_EQ(engine->nitrousController.isArmed, shouldBeArmed) << context;
+        EXPECT_EQ(getModule<NitrousController>().isArmed, shouldBeArmed) << context;
     }
 
     TEST_F(NitrousArmingTest, checkDefault) {

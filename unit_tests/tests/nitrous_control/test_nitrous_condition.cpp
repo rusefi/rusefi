@@ -60,86 +60,86 @@ namespace {
         satisfyAfrCondition();
         satisfyRpmCondition();
 
-        EXPECT_TRUE(engine->nitrousController.isNitrousRpmConditionSatisfied);
+        EXPECT_TRUE(getModule<NitrousController>().isNitrousRpmConditionSatisfied);
     }
 
     void NitrousConditionTest::armNitrousControl() {
         setMockState(TEST_NITROUS_CONTROL_ARMING_PIN, true);
-        periodicFastCallback();
+        periodicSlowCallback();
 
-        EXPECT_TRUE(engine->nitrousController.isArmed);
+        EXPECT_TRUE(getModule<NitrousController>().isArmed);
     }
 
     void NitrousConditionTest::satisfyTpsCondition() {
-        updateApp(TEST_MIN_TPS);
+        updateApp(TEST_MIN_TPS, &TestBase::periodicSlowCallback);
 
-        EXPECT_TRUE(engine->nitrousController.isTpsConditionSatisfied);
+        EXPECT_TRUE(getModule<NitrousController>().isTpsConditionSatisfied);
     }
 
     void NitrousConditionTest::satisfyCltCondition() {
-        updateClt(TEST_MIN_CLT);
+        updateClt(TEST_MIN_CLT, &TestBase::periodicSlowCallback);
 
-        EXPECT_TRUE(engine->nitrousController.isCltConditionSatisfied);
+        EXPECT_TRUE(getModule<NitrousController>().isCltConditionSatisfied);
     }
 
     void NitrousConditionTest::satisfyMapCondition() {
-        updateMap(TEST_MAX_MAP);
+        updateMap(TEST_MAX_MAP, &TestBase::periodicSlowCallback);
 
-        EXPECT_TRUE(engine->nitrousController.isMapConditionSatisfied);
+        EXPECT_TRUE(getModule<NitrousController>().isMapConditionSatisfied);
     }
 
     void NitrousConditionTest::satisfyAfrCondition() {
-        updateLambda1(TEST_LAMBDA1);
+        updateLambda1(TEST_LAMBDA1, &TestBase::periodicSlowCallback);
 
-        EXPECT_TRUE(engine->nitrousController.isAfrConditionSatisfied);
+        EXPECT_TRUE(getModule<NitrousController>().isAfrConditionSatisfied);
     }
 
     void NitrousConditionTest::satisfyRpmCondition() {
-        updateRpm(TEST_ACTIVATION_RPM);
+        updateRpm(TEST_ACTIVATION_RPM, &TestBase::periodicSlowCallback);
 
-        EXPECT_TRUE(engine->nitrousController.isNitrousRpmConditionSatisfied);
+        EXPECT_TRUE(getModule<NitrousController>().isNitrousRpmConditionSatisfied);
     }
 
     TEST_F(NitrousConditionTest, checkWithoutArmedNitrousControl) {
         setMockState(TEST_NITROUS_CONTROL_ARMING_PIN, false);
-        periodicFastCallback();
+        periodicSlowCallback();
 
-        EXPECT_FALSE(engine->nitrousController.isArmed);
-        EXPECT_FALSE(engine->nitrousController.isNitrousConditionSatisfied);
+        EXPECT_FALSE(getModule<NitrousController>().isArmed);
+        EXPECT_FALSE(getModule<NitrousController>().isNitrousConditionSatisfied);
     }
 
     TEST_F(NitrousConditionTest, checkWithoutSatisfiedTpsCondition) {
-        updateApp(TEST_MIN_TPS - EPS5D);
+        updateApp(TEST_MIN_TPS - EPS5D, &TestBase::periodicSlowCallback);
 
-        EXPECT_FALSE(engine->nitrousController.isTpsConditionSatisfied);
-        EXPECT_FALSE(engine->nitrousController.isNitrousConditionSatisfied);
+        EXPECT_FALSE(getModule<NitrousController>().isTpsConditionSatisfied);
+        EXPECT_FALSE(getModule<NitrousController>().isNitrousConditionSatisfied);
     }
 
     TEST_F(NitrousConditionTest, checkWithoutSatisfiedCltCondition) {
-        updateClt(TEST_MIN_CLT - EPS5D);
+        updateClt(TEST_MIN_CLT - EPS5D, &TestBase::periodicSlowCallback);
 
-        EXPECT_FALSE(engine->nitrousController.isCltConditionSatisfied);
-        EXPECT_FALSE(engine->nitrousController.isNitrousConditionSatisfied);
+        EXPECT_FALSE(getModule<NitrousController>().isCltConditionSatisfied);
+        EXPECT_FALSE(getModule<NitrousController>().isNitrousConditionSatisfied);
     }
 
     TEST_F(NitrousConditionTest, checkWithoutSatisfiedMapCondition) {
-        updateMap(TEST_MAX_MAP + EPS5D);
+        updateMap(TEST_MAX_MAP + EPS5D, &TestBase::periodicSlowCallback);
 
-        EXPECT_FALSE(engine->nitrousController.isMapConditionSatisfied);
-        EXPECT_FALSE(engine->nitrousController.isNitrousConditionSatisfied);
+        EXPECT_FALSE(getModule<NitrousController>().isMapConditionSatisfied);
+        EXPECT_FALSE(getModule<NitrousController>().isNitrousConditionSatisfied);
     }
 
     TEST_F(NitrousConditionTest, checkWithoutSatisfiedAfrCondition) {
-        updateLambda1(TEST_LAMBDA1 + EPS5D);
+        updateLambda1(TEST_LAMBDA1 + EPS5D, &TestBase::periodicSlowCallback);
 
-        EXPECT_FALSE(engine->nitrousController.isAfrConditionSatisfied);
-        EXPECT_FALSE(engine->nitrousController.isNitrousConditionSatisfied);
+        EXPECT_FALSE(getModule<NitrousController>().isAfrConditionSatisfied);
+        EXPECT_FALSE(getModule<NitrousController>().isNitrousConditionSatisfied);
     }
 
     TEST_F(NitrousConditionTest, checkWithoutSatisfiedRpmCondition) {
-        updateRpm(TEST_ACTIVATION_RPM - EPS5D);
+        updateRpm(TEST_ACTIVATION_RPM - EPS5D, &TestBase::periodicSlowCallback);
 
-        EXPECT_FALSE(engine->nitrousController.isNitrousRpmConditionSatisfied);
-        EXPECT_FALSE(engine->nitrousController.isNitrousConditionSatisfied);
+        EXPECT_FALSE(getModule<NitrousController>().isNitrousRpmConditionSatisfied);
+        EXPECT_FALSE(getModule<NitrousController>().isNitrousConditionSatisfied);
     }
 }

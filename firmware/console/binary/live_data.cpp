@@ -60,15 +60,6 @@ const shift_torque_reduction_state_s* getLiveData(size_t) {
 }
 
 template<>
-const nitrous_control_state_s* getLiveData(size_t) {
-#if EFI_LAUNCH_CONTROL
-	return &engine->nitrousController;
-#else
-	return nullptr;
-#endif
-}
-
-template<>
 const antilag_system_state_s* getLiveData(size_t) {
 #if EFI_ANTILAG_SYSTEM
 	return &engine->antilagController;
@@ -132,6 +123,15 @@ const engine_state_s* getLiveData(size_t) {
 template<>
 const tps_accel_state_s* getLiveData(size_t) {
 	return &engine->module<TpsAccelEnrichment>().unmock();
+}
+
+template<>
+const nitrous_control_state_s* getLiveData(size_t) {
+#if EFI_LAUNCH_CONTROL
+    return &engine->module<NitrousController>().unmock();
+#else
+    return nullptr;
+#endif // EFI_LAUNCH_CONTROL
 }
 
 template<>
