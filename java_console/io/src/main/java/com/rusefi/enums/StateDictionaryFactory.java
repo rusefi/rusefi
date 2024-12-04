@@ -1,5 +1,5 @@
 package com.rusefi.enums;
-//was generated automatically by rusEFI tool config_definition_base-all.jar based on StateDictionaryGenerator integration/LiveData.yaml on Wed Nov 27 22:04:54 UTC 2024n
+//was generated automatically by rusEFI tool config_definition_base-all.jar based on StateDictionaryGenerator integration/LiveData.yaml on Wed Dec 04 22:56:34 UTC 2024n
 import com.rusefi.config.generated.*;
 import com.rusefi.ldmp.StateDictionary;
 
@@ -15,10 +15,10 @@ public class StateDictionaryFactory {
         stateDictionary.register(live_data_e.LDS_injector_model, InjectorModel.VALUES, "injector_model");
         stateDictionary.register(live_data_e.LDS_launch_control_state, LaunchControl.VALUES, "launch_control");
         stateDictionary.register(live_data_e.LDS_shift_torque_reduction_state, ShiftTorqueReductionController.VALUES, "shift_torque_reduction_controller");
-        stateDictionary.register(live_data_e.LDS_nitrous_control_state, NitrousController.VALUES, "nitrous_controller");
         stateDictionary.register(live_data_e.LDS_antilag_system_state, AntilagSystem.VALUES, "antilag_system");
         stateDictionary.register(live_data_e.LDS_boost_control, BoostControl.VALUES, "boost_control");
         stateDictionary.register(live_data_e.LDS_ac_control, AcControl.VALUES, "ac_control");
+        stateDictionary.register(live_data_e.LDS_nitrous_control_state, NitrousControl.VALUES, "nitrous_control_state");
         stateDictionary.register(live_data_e.LDS_fan_control0, FanControl.VALUES, "fan_control");
         stateDictionary.register(live_data_e.LDS_fan_control1, FanControl.VALUES, "fan_control");
         stateDictionary.register(live_data_e.LDS_fuel_pump_control, FuelPump.VALUES, "fuel_pump");

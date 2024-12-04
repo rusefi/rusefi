@@ -1092,41 +1092,6 @@ float getOutputValueByName(const char *name) {
 		case 1378388905:
 			return engine->shiftTorqueReductionController.isFlatShiftConditionSatisfied;
 #endif
-// isArmed
-#if EFI_LAUNCH_CONTROL
-		case -1447071222:
-			return engine->nitrousController.isArmed;
-#endif
-// isTpsConditionSatisfied
-#if EFI_LAUNCH_CONTROL
-		case -1256912197:
-			return engine->nitrousController.isTpsConditionSatisfied;
-#endif
-// isCltConditionSatisfied
-#if EFI_LAUNCH_CONTROL
-		case -747236121:
-			return engine->nitrousController.isCltConditionSatisfied;
-#endif
-// isMapConditionSatisfied
-#if EFI_LAUNCH_CONTROL
-		case 1960789698:
-			return engine->nitrousController.isMapConditionSatisfied;
-#endif
-// isAfrConditionSatisfied
-#if EFI_LAUNCH_CONTROL
-		case 112999709:
-			return engine->nitrousController.isAfrConditionSatisfied;
-#endif
-// isNitrousRpmConditionSatisfied
-#if EFI_LAUNCH_CONTROL
-		case 1138724839:
-			return engine->nitrousController.isNitrousRpmConditionSatisfied;
-#endif
-// isNitrousConditionSatisfied
-#if EFI_LAUNCH_CONTROL
-		case 1700736632:
-			return engine->nitrousController.isNitrousConditionSatisfied;
-#endif
 // isTpsInvalid
 #if EFI_BOOST_CONTROL
 		case -575666209:
@@ -1250,6 +1215,27 @@ float getOutputValueByName(const char *name) {
 // acPressureTooHigh
 		case -1220300524:
 			return engine->module<AcController>()->acPressureTooHigh;
+// isArmed
+		case -1447071222:
+			return engine->module<NitrousController>()->isArmed;
+// isTpsConditionSatisfied
+		case -1256912197:
+			return engine->module<NitrousController>()->isTpsConditionSatisfied;
+// isCltConditionSatisfied
+		case -747236121:
+			return engine->module<NitrousController>()->isCltConditionSatisfied;
+// isMapConditionSatisfied
+		case 1960789698:
+			return engine->module<NitrousController>()->isMapConditionSatisfied;
+// isAfrConditionSatisfied
+		case 112999709:
+			return engine->module<NitrousController>()->isAfrConditionSatisfied;
+// isNitrousRpmConditionSatisfied
+		case 1138724839:
+			return engine->module<NitrousController>()->isNitrousRpmConditionSatisfied;
+// isNitrousConditionSatisfied
+		case 1700736632:
+			return engine->module<NitrousController>()->isNitrousConditionSatisfied;
 // cranking
 		case 182391090:
 			return ___engine.module<FanControl1>()->cranking;

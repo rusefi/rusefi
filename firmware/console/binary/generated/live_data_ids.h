@@ -13,10 +13,10 @@ LDS_high_pressure_fuel_pump,
 LDS_injector_model,
 LDS_launch_control_state,
 LDS_shift_torque_reduction_state,
-LDS_nitrous_control_state,
 LDS_antilag_system_state,
 LDS_boost_control,
 LDS_ac_control,
+LDS_nitrous_control_state,
 LDS_fan_control0,
 LDS_fan_control1,
 LDS_fuel_pump_control,
@@ -51,10 +51,10 @@ LDS_lambda_monitor,
 #define INJECTOR_MODEL_BASE_ADDRESS 1108
 #define LAUNCH_CONTROL_STATE_BASE_ADDRESS 1120
 #define SHIFT_TORQUE_REDUCTION_STATE_BASE_ADDRESS 1128
-#define NITROUS_CONTROL_STATE_BASE_ADDRESS 1132
-#define ANTILAG_SYSTEM_STATE_BASE_ADDRESS 1136
-#define BOOST_CONTROL_BASE_ADDRESS 1148
-#define AC_CONTROL_BASE_ADDRESS 1172
+#define ANTILAG_SYSTEM_STATE_BASE_ADDRESS 1132
+#define BOOST_CONTROL_BASE_ADDRESS 1144
+#define AC_CONTROL_BASE_ADDRESS 1168
+#define NITROUS_CONTROL_STATE_BASE_ADDRESS 1176
 #define FAN_CONTROL_BASE_ADDRESS 1180
 #define FUEL_PUMP_CONTROL_BASE_ADDRESS 1196
 #define MAIN_RELAY_BASE_ADDRESS 1200
