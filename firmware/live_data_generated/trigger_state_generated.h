@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_state.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/trigger/trigger_state.txt
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -21,12 +21,12 @@ struct trigger_state_s {
 	 */
 	uint32_t vvtToothDurations0 = (uint32_t)0;
 	/**
-	 * units: sync: Primary Cam Position
+	 * "sync: Primary Cam Position"
 	 * offset 12
 	 */
 	float vvtCurrentPosition = (float)0;
 	/**
-	 * units: sync: Cam Tooth Position
+	 * "sync: Cam Tooth Position"
 	 * offset 16
 	 */
 	float vvtToothPosition[4];
@@ -53,4 +53,4 @@ struct trigger_state_s {
 static_assert(sizeof(trigger_state_s) == 40);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_state.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/trigger/trigger_state.txt
