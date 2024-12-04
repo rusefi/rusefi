@@ -47,3 +47,11 @@ A: please remember about https://github.com/rusefi/rusefi/wiki/Hardware#q-this-i
 # Q: I insist on custom
 
 A: https://github.com/rusefi/rusefi/wiki/Custom-Firmware
+
+# Q: I want to build the firmware in debug mode
+
+A: check DEBUG_LEVEL_OPT on the .env file of your board
+
+# Q: I want to build the bootloader firmware in debug mode
+
+A: check or add DEBUG_LEVEL_BLT_OPT on the .env file of your board, is the same as DEBUG_LEVEL_OPT but only for the bootloader
