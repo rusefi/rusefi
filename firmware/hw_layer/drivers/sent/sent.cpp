@@ -100,10 +100,11 @@ int sent_channel::Decoder(uint16_t clocks) {
 
 	/* special case - tick time calculation */
 	if (state == SENT_STATE_CALIB) {
-		if (tickPerUnit == 0) {
+		if (currentStatePulseCounter == 0) {
 			/* no tickPerUnit calculated yet
 			 * lets assume this is sync pulse... */
 			tickPerUnit = calcTickPerUnit(clocks);
+			currentStatePulseCounter++;
 		} else {
 			/* some tickPerUnit calculated...
 			 * Check next 1 + 6 + 1 pulses if they are valid with current tickPerUnit */
@@ -116,7 +117,7 @@ int sent_channel::Decoder(uint16_t clocks) {
 					state = SENT_STATE_INIT;
 				}
 			} else {
-				currentStatePulseCounter = 0;
+				currentStatePulseCounter = 1;
 				tickPerUnit = calcTickPerUnit(clocks);
 			}
 		}
