@@ -87,6 +87,9 @@ private:
 	/* calc unit tick time from sync pulse */
 	uint32_t calcTickPerUnit(uint32_t clocks);
 
+	/* check if current pulse looks like sync pulse */
+	bool isSyncPulse(uint16_t clocks);
+
 	void restart();
 
 public:
