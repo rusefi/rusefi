@@ -1216,26 +1216,40 @@ float getOutputValueByName(const char *name) {
 		case -1220300524:
 			return engine->module<AcController>()->acPressureTooHigh;
 // isArmed
+#if EFI_LAUNCH_CONTROL
 		case -1447071222:
 			return engine->module<NitrousController>()->isArmed;
+#endif
 // isTpsConditionSatisfied
+#if EFI_LAUNCH_CONTROL
 		case -1256912197:
 			return engine->module<NitrousController>()->isTpsConditionSatisfied;
+#endif
 // isCltConditionSatisfied
+#if EFI_LAUNCH_CONTROL
 		case -747236121:
 			return engine->module<NitrousController>()->isCltConditionSatisfied;
+#endif
 // isMapConditionSatisfied
+#if EFI_LAUNCH_CONTROL
 		case 1960789698:
 			return engine->module<NitrousController>()->isMapConditionSatisfied;
+#endif
 // isAfrConditionSatisfied
+#if EFI_LAUNCH_CONTROL
 		case 112999709:
 			return engine->module<NitrousController>()->isAfrConditionSatisfied;
+#endif
 // isNitrousRpmConditionSatisfied
+#if EFI_LAUNCH_CONTROL
 		case 1138724839:
 			return engine->module<NitrousController>()->isNitrousRpmConditionSatisfied;
+#endif
 // isNitrousConditionSatisfied
+#if EFI_LAUNCH_CONTROL
 		case 1700736632:
 			return engine->module<NitrousController>()->isNitrousConditionSatisfied;
+#endif
 // cranking
 		case 182391090:
 			return ___engine.module<FanControl1>()->cranking;
