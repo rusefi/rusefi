@@ -253,3 +253,8 @@ EngineConfig EngineConfig::setNitrousDeactivationRpmWindow(const std::optional<u
     m_nitrousDeactivationRpmWindow = value;
     return *this;
 }
+
+EngineConfig EngineConfig::setNitrousFuelAdderPercent(const std::optional<int8_t> value) {
+    m_nitrousFuelAdderPercent = value;
+    return *this;
+}

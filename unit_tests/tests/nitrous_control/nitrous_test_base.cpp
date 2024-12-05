@@ -6,7 +6,7 @@
 
 #include "nitrous_test_base.h"
 
-void NitrousTestBase::setUpTestConfiguration() {
+void NitrousTestBase::setUpTestConfiguration(const std::optional<int8_t> nitrousFuelAdderPercent) {
     setUpEngineConfiguration(EngineConfig()
         .setNitrousControlEnabled({ true })
         .setNitrousControlArmingMethod({ DIGITAL_SWITCH_INPUT })
@@ -18,6 +18,7 @@ void NitrousTestBase::setUpTestConfiguration() {
         .setNitrousActivationRpm({ TEST_ACTIVATION_RPM })
         .setNitrousDeactivationRpm({ TEST_DEACTIVATION_RPM })
         .setNitrousDeactivationRpmWindow({ TEST_DEACTIVATION_RPM_WINDOW })
+        .setNitrousFuelAdderPercent(nitrousFuelAdderPercent)
     );
 }
 
@@ -58,6 +59,15 @@ void NitrousTestBase::satisfyRpmCondition() {
     EXPECT_TRUE(getModule<NitrousController>().isNitrousRpmConditionSatisfied);
 }
 
+void NitrousTestBase::activateNitrousControl() {
+    armNitrousControl();
+    satisfyTpsCondition();
+    satisfyCltCondition();
+    satisfyMapCondition();
+    satisfyAfrCondition();
+    satisfyRpmCondition();
+}
+
 void NitrousTestBase::unarmNitrousControl() {
     setMockState(TEST_NITROUS_CONTROL_ARMING_PIN, false);
     periodicSlowCallback();
@@ -93,6 +103,15 @@ void NitrousTestBase::unsatisfyRpmCondition() {
     updateRpm(TEST_ACTIVATION_RPM - EPS5D, &TestBase::periodicSlowCallback);
 
     EXPECT_FALSE(getModule<NitrousController>().isNitrousRpmConditionSatisfied);
+}
+
+void NitrousTestBase::deactivateNitrousControl() {
+    unarmNitrousControl();
+    unsatisfyTpsCondition();
+    unsatisfyCltCondition();
+    unsatisfyMapCondition();
+    unsatisfyAfrCondition();
+    unsatisfyRpmCondition();
 }
 
 void NitrousTestBase::checkNitrousCondition(const bool expected, const char* const context) {

@@ -11,6 +11,8 @@ public:
     using interface_t = NitrousController;
 
     void onSlowCallback() override;
+
+    float getFuelCoefficient() const;
 private:
     void updateArmingState();
     void updateTpsConditionSatisfied();

@@ -556,6 +556,17 @@ void TestEngineConfiguration::configureNitrousDeactivationRpmWindow(
     }
 }
 
+void TestEngineConfiguration::configureNitrousFuelAdderPercent(const std::optional<int8_t> nitrousFuelAdderPercent) {
+    if (nitrousFuelAdderPercent.has_value()) {
+        engineConfiguration->nitrousFuelAdderPercent = nitrousFuelAdderPercent.value();
+    } else {
+        ASSERT_EQ(
+                engineConfiguration->nitrousFuelAdderPercent,
+                engine_configuration_defaults::NITROUS_FUEL_ADDER_PERCENT
+        ); // check default value
+    }
+}
+
 TestEngineConfiguration::TestEngineConfiguration() {
 }
 

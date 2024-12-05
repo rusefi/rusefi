@@ -20,7 +20,7 @@ protected:
     static constexpr uint16_t TEST_DEACTIVATION_RPM = 932;
     static constexpr uint16_t TEST_DEACTIVATION_RPM_WINDOW = 17;
 
-    void setUpTestConfiguration();
+    void setUpTestConfiguration(std::optional<int8_t> nitrousFuelAdderPercent = {});
 
     void armNitrousControl();
     void satisfyTpsCondition();
@@ -29,12 +29,16 @@ protected:
     void satisfyAfrCondition();
     void satisfyRpmCondition();
 
+    void activateNitrousControl();
+
     void unarmNitrousControl();
     void unsatisfyTpsCondition();
     void unsatisfyCltCondition();
     void unsatisfyMapCondition();
     void unsatisfyAfrCondition();
     void unsatisfyRpmCondition();
+
+    void deactivateNitrousControl();
 
     void checkNitrousCondition(bool expected, const char* context);
 };
