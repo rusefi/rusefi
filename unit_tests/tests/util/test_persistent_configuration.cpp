@@ -26,4 +26,8 @@ void TestPersistentConfiguration::setInjectorStagingTable(const InjectorStagingT
     }
 }
 
+void TestPersistentConfiguration::setCltFuelCorrCurve(const CltFuelCorrCurve& cltFuelCorr) {
+    std::copy(std::begin(cltFuelCorr), std::end(cltFuelCorr), std::begin(config->cltFuelCorr));
+}
+
 TestPersistentConfiguration TestPersistentConfiguration::instance;

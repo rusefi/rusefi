@@ -96,6 +96,9 @@ void TestBase::setUpEngineConfiguration(const EngineConfig& config) {
     getTestEngineConfiguration().configureNitrousDeactivationRpmWindow(
         config.getNitrousDeactivationRpmWindow()
     );
+    getTestEngineConfiguration().configureNitrousFuelAdderPercent(
+        config.getNitrousFuelAdderPercent()
+    );
 }
 
 void TestBase::periodicFastCallback() {

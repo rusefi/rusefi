@@ -79,6 +79,7 @@ public:
     void configureNitrousActivationRpm(std::optional<uint16_t> nitrousActivationRpm);
     void configureNitrousDeactivationRpm(std::optional<uint16_t> nitrousDeactivationRpm);
     void configureNitrousDeactivationRpmWindow(std::optional<uint16_t> nitrousDeactivationRpmWindow);
+    void configureNitrousFuelAdderPercent(std::optional<int8_t> nitrousFuelAdderPercent);
 private:
     TestEngineConfiguration();
     static TestEngineConfiguration instance;

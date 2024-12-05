@@ -25,6 +25,14 @@ void NitrousController::onSlowCallback() {
     enginePins.nitrousRelay.setValue(isNitrousConditionSatisfied);
 }
 
+float NitrousController::getFuelCoefficient() const {
+    float result = 1.0f;
+    if (engineConfiguration->nitrousControlEnabled && isNitrousConditionSatisfied) {
+        result += engineConfiguration->nitrousFuelAdderPercent / 100.0f;
+    }
+    return result;
+}
+
 void NitrousController::updateArmingState() {
     switch (engineConfiguration->nitrousControlArmingMethod) {
         case DIGITAL_SWITCH_INPUT: {

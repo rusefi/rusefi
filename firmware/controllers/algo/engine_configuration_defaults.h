@@ -66,4 +66,5 @@ namespace engine_configuration_defaults {
     constexpr uint16_t NITROUS_ACTIVATION_RPM = 4000;
     constexpr uint16_t NITROUS_DEACTIVATION_RPM = 7000;
     constexpr uint16_t NITROUS_DEACTIVATION_RPM_WINDOW = 500;
+    constexpr int8_t NITROUS_FUEL_ADDER_PERCENT = 0;
 }
