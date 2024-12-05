@@ -27,7 +27,6 @@ typedef enum
 	SENT_STATE_SIG2_DATA2,
 	SENT_STATE_SIG2_DATA3,
 	SENT_STATE_CRC,
-	SENT_STATE_PAUSE,
 } SENT_STATE_enum;
 
 struct sent_channel_stat {
@@ -36,6 +35,7 @@ struct sent_channel_stat {
 	uint32_t SyncErr;
 	uint32_t CrcErrCnt;
 	uint32_t FrameCnt;
+	uint32_t PauseCnt;
 	uint32_t RestartCnt;
 
 	/* Slow channel */
@@ -60,7 +60,7 @@ private:
 	uint32_t pulseCounter = 0;
 	/* pulses skipped in init or calibration state while waiting for SYNC */
 	uint32_t currentStatePulseCounter = 0;
-	bool hasPausePulse = false;
+	bool pausePulseReceived = false;
 
 	/* fast channel shift register*/
 	uint32_t rxReg;

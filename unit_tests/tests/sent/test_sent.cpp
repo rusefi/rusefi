@@ -80,6 +80,7 @@ static int sentTest_feedWithFile(sent_channel &channel, const char *file)
 		#if SENT_STATISTIC_COUNTERS
 			sent_channel_stat &statistic = channel.statistic;
 			printf("Restarts %d\n", statistic.RestartCnt);
+			printf("Pause pulses %d\n", statistic.PauseCnt);
 			printf("Interval errors %d short, %d long\n", statistic.ShortIntervalErr, statistic.LongIntervalErr);
 			printf("Total frames %d with CRC error %d (%f%%)\n", statistic.FrameCnt, statistic.CrcErrCnt, statistic.CrcErrCnt * 100.0 / statistic.FrameCnt);
 			printf("Total slow channel messages %d with crc6 errors %d (%f%%)\n", statistic.sc, statistic.scCrcErr, statistic.scCrcErr * 100.0 / statistic.sc);
