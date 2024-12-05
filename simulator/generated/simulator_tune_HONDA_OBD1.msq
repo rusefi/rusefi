@@ -1679,10 +1679,9 @@
         <constant digits="0" name="nitrousDeactivationRpmWindow" units="rpm">500.0</constant>
         <constant digits="0" name="dfcoRetardDeg" units="deg">0.0</constant>
         <constant digits="1" name="dfcoRetardRampInTime" units="s">0.0</constant>
-        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="76">
-         0.0
-         0.0
-         0.0
+        <constant name="nitrousRelayPin">"NONE"</constant>
+        <constant name="nitrousRelayPinMode">"default"</constant>
+        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="73">
          0.0
          0.0
          0.0
@@ -4743,7 +4742,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20241120" nPages="1" signature="rusEFI master.2024.12.05.f407-discovery.2015206846" version="5.0"/>
+    <versionInfo firmwareInfo="20241120" nPages="1" signature="rusEFI master.2024.12.05.f407-discovery.1277618013" version="5.0"/>
     <bibliography author="rusEFI 20241120" writeDate="date"/>
     <settings/>
     <userComments/>
