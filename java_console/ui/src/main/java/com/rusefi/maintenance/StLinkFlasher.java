@@ -3,10 +3,8 @@ package com.rusefi.maintenance;
 import com.rusefi.Launcher;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.io.UpdateOperationCallbacks;
-import com.rusefi.ui.StatusWindow;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 
@@ -31,25 +29,8 @@ public class StLinkFlasher {
     public static final String DONE = "DONE!";
     private static final String WMIC_STLINK_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%STLink%'\" get Caption,ConfigManagerErrorCode /format:list";
 
-    private final JButton button;
-
-    public StLinkFlasher(String fileName, String buttonTest, String tooltip) {
-        button = new JButton(buttonTest);
-        button.setToolTipText(tooltip);
-        button.addActionListener(event -> doUpdateFirmware(fileName, button));
-    }
-
-    public static void doUpdateFirmware(String fileName, JComponent parent) {
-        StatusWindow wnd = new StatusWindow();
-        int dialogResult = JOptionPane.showConfirmDialog(parent, "Do you really want to update firmware? Please disconnect vehicle battery before erasing.",
-                "Please disconnect from vehicle", JOptionPane.YES_NO_OPTION);
-        if (dialogResult != JOptionPane.YES_OPTION)
-            return;
-
-        wnd.getFrame().setLocationRelativeTo(parent);
-        wnd.showFrame(TITLE);
-
-        ExecHelper.submitAction(() -> doFlashFirmware(wnd, fileName), StLinkFlasher.class + " extProcessThread");
+    public static void doUpdateFirmware(String fileName, UpdateOperationCallbacks callbacks) {
+        ExecHelper.submitAction(() -> doFlashFirmware(callbacks, fileName), StLinkFlasher.class + " extProcessThread");
     }
 
     public static String getOpenocdCommand() {
@@ -63,14 +44,13 @@ public class StLinkFlasher {
                 OPENOCD_EXE, wnd);
     }
 
-    private static void doFlashFirmware(StatusWindow wnd, String fileName) {
+    private static void doFlashFirmware(UpdateOperationCallbacks wnd, String fileName) {
         if (!new File(fileName).exists()) {
             wnd.appendLine(fileName + " not found, cannot proceed !!!");
-            wnd.setStatus("ERROR");
+            wnd.error();
             return;
         }
-        StatusWindowAnimation sa = new StatusWindowAnimation(wnd);
-      String error = null;
+      String error;
       try {
         error = executeOpenOCDCommand(getOpenocdCommand() + " -c \"program " +
                 fileName +
@@ -82,21 +62,15 @@ public class StLinkFlasher {
       }
       if (error.contains(SUCCESS_MESSAGE_TAG) && !error.toLowerCase().contains(FAILED_MESSAGE_TAG)) {
             wnd.appendLine("Flashing looks good!");
-            sa.stop();
-            wnd.setStatus(DONE);
-            wnd.setSuccessState();
+            wnd.done();
         } else {
-            wnd.setErrorState();
+            wnd.error();
             wnd.appendLine("!!! FIRMWARE FLASH: DOES NOT LOOK RIGHT !!!");
         }
     }
 
     public static boolean detectStLink(UpdateOperationCallbacks wnd) {
         return MaintenanceUtil.detectDevice(wnd, WMIC_STLINK_QUERY_COMMAND, "STLink");
-    }
-
-    public JButton getButton() {
-        return button;
     }
 
     @NotNull

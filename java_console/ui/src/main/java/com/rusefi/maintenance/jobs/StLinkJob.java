@@ -15,6 +15,6 @@ public class StLinkJob extends AsyncJobWithContext<ParentComponentContext> {
     @Override
     public void doJob(final UpdateOperationCallbacks callbacks) {
         // todo: add ST-LINK no-assert mode? or not?
-        StLinkFlasher.doUpdateFirmware(FindFileHelper.FIRMWARE_BIN_FILE, context.getParent());
+        StLinkFlasher.doUpdateFirmware(FindFileHelper.FIRMWARE_BIN_FILE, callbacks);
     }
 }
