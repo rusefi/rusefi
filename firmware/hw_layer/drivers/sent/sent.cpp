@@ -27,7 +27,6 @@
 #define SENT_OFFSET_INTERVAL	12
 #define SENT_SYNC_INTERVAL		(56 - SENT_OFFSET_INTERVAL) // 56 ticks - 12
 
-#define SENT_MIN_INTERVAL		12
 #define SENT_MAX_INTERVAL		15
 
 #define SENT_CRC_SEED           0x05
