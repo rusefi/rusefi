@@ -123,7 +123,8 @@ int sent_channel::Decoder(uint16_t clocks) {
 			interval = (clocks + tickPerUnit / 2) / tickPerUnit - SENT_OFFSET_INTERVAL;
 			if ((interval >= 0) && (interval <= SENT_MAX_INTERVAL)) {
 				currentStatePulseCounter++;
-				if (currentStatePulseCounter == SENT_MSG_PAYLOAD_SIZE) {
+				/* Should end up with CRC pulse */
+				if (currentStatePulseCounter == (1 + SENT_MSG_PAYLOAD_SIZE)) {
 					pulseCounter = 0;
 					currentStatePulseCounter = 0;
 					state = SENT_STATE_INIT;
@@ -148,6 +149,7 @@ int sent_channel::Decoder(uint16_t clocks) {
 			/* we get here from calibration phase. calibration phase end with CRC nibble
 			 * if we had to skip ONE pulse before we get sync - that means device sends pause
 			 * pulses in between of messages */
+			hasPausePulse = false;
 			if (currentStatePulseCounter == 1) {
 				hasPausePulse = true;
 			}
@@ -521,6 +523,7 @@ void sent_channel::Info() {
 	uint16_t sig0, sig1;
 
 	efiPrintf("Unit time %lu CPU ticks %f uS", tickPerUnit, TicksToUs(getTickTime()));
+	efiPrintf("Pause pulse detected %s", hasPausePulse ? "Yes" : "No");
 	efiPrintf("Total pulses %lu", pulseCounter);
 
 	if (GetSignals(&stat, &sig0, &sig1) == 0) {
