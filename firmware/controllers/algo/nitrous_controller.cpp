@@ -22,6 +22,7 @@ void NitrousController::onSlowCallback() {
     } else {
         isNitrousConditionSatisfied = false;
     }
+    enginePins.nitrousRelay.setValue(isNitrousConditionSatisfied);
 }
 
 void NitrousController::updateArmingState() {
