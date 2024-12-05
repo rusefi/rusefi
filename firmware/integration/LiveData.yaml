@@ -111,6 +111,7 @@ Usages:
     prepend: integration/rusefi_config_shared.txt
     output_name: nitrous
     engineModule: NitrousController
+    conditional_compilation: "EFI_LAUNCH_CONTROL"
 
   - name: fan_control
     java: FanControl.java
