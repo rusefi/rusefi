@@ -1940,6 +1940,9 @@ float getConfigValueByName(const char *name) {
 // dfcoRetardRampInTime
 		case 2030571545:
 			return engineConfiguration->dfcoRetardRampInTime;
+// nitrousFuelAdderPercent
+		case -1197734314:
+			return engineConfiguration->nitrousFuelAdderPercent;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -5172,6 +5175,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 2030571545:
 	{
 		engineConfiguration->dfcoRetardRampInTime = (int)value;
+		return 1;
+	}
+		case -1197734314:
+	{
+		engineConfiguration->nitrousFuelAdderPercent = (int)value;
 		return 1;
 	}
 		case -1658957891:

@@ -5014,8 +5014,13 @@ struct engine_configuration_s {
 	 */
 	pin_output_mode_e nitrousRelayPinMode;
 	/**
-	 * units: units
+	 * units: %
 	 * offset 3969
+	 */
+	int8_t nitrousFuelAdderPercent;
+	/**
+	 * units: units
+	 * offset 3970
 	 */
 	uint8_t unusedOftenChangesDuringFirmwareUpdate[END_OF_CALIBRATION_PADDING];
 	/**

@@ -1933,6 +1933,9 @@ Retard timing by this amount during DFCO. Smooths the transition back from fuel 
 ### dfcoRetardRampInTime
 Smooths the transition back from fuel cut. After fuel is restored, ramp timing back in over the period specified.
 
+### nitrousFuelAdderPercent
+
+
 ### tcu_shiftTime
 
 
