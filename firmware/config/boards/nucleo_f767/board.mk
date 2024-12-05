@@ -8,7 +8,7 @@ DDEFS += -DEFI_FILE_LOGGING=FALSE -DEFI_ALTERNATOR_CONTROL=FALSE -DEFI_LOGIC_ANA
 
 DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::B14
 
-# STM32F767ZI nucleo USB and Ethernet broken in latest release #7118 include $(PROJECT_DIR)/hw_layer/ports/stm32/2mb_flash.mk
+include $(PROJECT_DIR)/hw_layer/ports/stm32/2mb_flash.mk
 
 # Enable ethernet
 LWIP = yes
