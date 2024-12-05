@@ -5006,8 +5006,16 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 10, 1> dfcoRetardRampInTime;
 	/**
-	 * units: units
 	 * offset 3966
+	 */
+	output_pin_e nitrousRelayPin;
+	/**
+	 * offset 3968
+	 */
+	pin_output_mode_e nitrousRelayPinMode;
+	/**
+	 * units: units
+	 * offset 3969
 	 */
 	uint8_t unusedOftenChangesDuringFirmwareUpdate[END_OF_CALIBRATION_PADDING];
 	/**

@@ -318,7 +318,7 @@ public class Fields {
 	public static final int ego_sensor_e_ES_Innovate_MTX_L = 1;
 	public static final int ego_sensor_e_ES_PLX = 4;
 	public static final int EGT_CHANNEL_COUNT = 8;
-	public static final int END_OF_CALIBRATION_PADDING = 76;
+	public static final int END_OF_CALIBRATION_PADDING = 73;
 	public static final int engine_configuration_s_size = 4040;
 	public static final int engine_load_mode_e_LM_ALPHA_N = 2;
 	public static final int engine_load_mode_e_LM_LUA = 3;
@@ -1237,7 +1237,7 @@ public class Fields {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 2015206846;
+	public static final int SIGNATURE_HASH = 1277618013;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1500,7 +1500,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.12.05.f407-discovery.2015206846";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.12.05.f407-discovery.1277618013";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -3010,6 +3010,8 @@ public class Fields {
 	public static final Field NITROUSDEACTIVATIONRPMWINDOW = Field.create("NITROUSDEACTIVATIONRPMWINDOW", 3958, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field DFCORETARDDEG = Field.create("DFCORETARDDEG", 3960, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field DFCORETARDRAMPINTIME = Field.create("DFCORETARDRAMPINTIME", 3961, FieldType.INT8).setScale(0.1).setBaseOffset(0);
+	public static final Field NITROUSRELAYPIN = Field.create("NITROUSRELAYPIN", 3962, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
+	public static final Field NITROUSRELAYPINMODE = Field.create("NITROUSRELAYPINMODE", 3964, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_4038 = Field.create("ALIGNMENTFILL_AT_4038", 4038, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field POSTCRANKINGFACTOR = Field.create("POSTCRANKINGFACTOR", 4040, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field POSTCRANKINGDURATIONBINS = Field.create("POSTCRANKINGDURATIONBINS", 4184, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -4739,6 +4741,8 @@ public class Fields {
 	NITROUSDEACTIVATIONRPMWINDOW,
 	DFCORETARDDEG,
 	DFCORETARDRAMPINTIME,
+	NITROUSRELAYPIN,
+	NITROUSRELAYPINMODE,
 	ALIGNMENTFILL_AT_4038,
 	POSTCRANKINGFACTOR,
 	POSTCRANKINGDURATIONBINS,
