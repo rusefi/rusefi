@@ -65,7 +65,7 @@ void sent_channel::restart() {
 	state = SENT_STATE_CALIB;
 	pulseCounter = 0;
 	currentStatePulseCounter = 0;
-	hasPausePulse = false;
+	pausePulseReceived = false;
 	tickPerUnit = 0;
 
 	/* reset slow channels */
@@ -79,6 +79,7 @@ void sent_channel::restart() {
 		statistic.SyncErr = 0;
 		statistic.CrcErrCnt = 0;
 		statistic.FrameCnt = 0;
+		statistic.PauseCnt = 0;
 		statistic.sc = 0;
 		statistic.scCrcErr = 0;
 		statistic.RestartCnt++;
@@ -126,7 +127,8 @@ int sent_channel::Decoder(uint32_t clocks) {
 			int checkInterval = (clocks + tickPerUnit / 2) / tickPerUnit - SENT_OFFSET_INTERVAL;
 			if ((checkInterval >= 0) && (checkInterval <= SENT_MAX_INTERVAL)) {
 				currentStatePulseCounter++;
-				if (currentStatePulseCounter == SENT_MSG_PAYLOAD_SIZE) {
+				/* Should end up with CRC pulse */
+				if (currentStatePulseCounter == (1 + SENT_MSG_PAYLOAD_SIZE)) {
 					pulseCounter = 0;
 					currentStatePulseCounter = 0;
 					state = SENT_STATE_INIT;
@@ -149,10 +151,11 @@ int sent_channel::Decoder(uint32_t clocks) {
 			/* adjust unit time */
 			tickPerUnit = calcTickPerUnit(clocks);
 			/* we get here from calibration phase. calibration phase end with CRC nibble
-			 * if we had to skip ONE pulse before we get sync - that means device sends pause
-			 * pulses in between of messages */
+			 * if we had to skip ONE pulse before we get sync - that means device may send pause
+			 * pulse in between of messages */
+			pausePulseReceived = false;
 			if (currentStatePulseCounter == 1) {
-				hasPausePulse = true;
+				pausePulseReceived = true;
 			}
 			/* next state */
 			currentStatePulseCounter = 0;
@@ -196,25 +199,46 @@ int sent_channel::Decoder(uint32_t clocks) {
 			}
 			else
 			{
-				#if SENT_STATISTIC_COUNTERS
-					// Increment sync interval err count
-					statistic.SyncErr++;
-					if (interval > SENT_SYNC_INTERVAL)
-					{
-						statistic.LongIntervalErr++;
-					}
-					else
-					{
-						statistic.ShortIntervalErr++;
-					}
-				#endif // SENT_STATISTIC_COUNTERS
-				/* wait for next sync and recalibrate tickPerUnit */
-				state = SENT_STATE_INIT;
-				ret = -1;
+				if (pausePulseReceived) {
+					#if SENT_STATISTIC_COUNTERS
+						// Increment sync interval err count
+						statistic.SyncErr++;
+						if (interval > SENT_SYNC_INTERVAL)
+						{
+							statistic.LongIntervalErr++;
+						}
+						else
+						{
+							statistic.ShortIntervalErr++;
+						}
+					#endif // SENT_STATISTIC_COUNTERS
+					/* wait for next sync and recalibrate tickPerUnit */
+					state = SENT_STATE_INIT;
+					ret = -1;
+				} else {
+					/* This is possibly pause pulse */
+					/* TODO: check:
+					 * Minimum Length 12 ticks (equivalent to a nibble with 0 value) - this is already checked
+					 * Maximum Length 768 ticks (3 * 256) */
+					#if SENT_STATISTIC_COUNTERS
+						statistic.PauseCnt++;
+					#endif // SENT_STATISTIC_COUNTERS
+					pausePulseReceived = true;
+				}
 			}
 			break;
 
 		case SENT_STATE_STATUS:
+			/* it is possible that pause pulse was threaded as sync and we are here with sync pulse */
+			if ((pausePulseReceived == false) && isSyncPulse(clocks)) {
+				#if SENT_STATISTIC_COUNTERS
+					statistic.PauseCnt++;
+				#endif // SENT_STATISTIC_COUNTERS
+				/* measured tick interval will be used until next sync pulse */
+				tickPerUnit = calcTickPerUnit(clocks);
+				return 0;
+			}
+			// fallthrough
 		case SENT_STATE_SIG1_DATA1:
 		case SENT_STATE_SIG1_DATA2:
 		case SENT_STATE_SIG1_DATA3:
@@ -255,7 +279,8 @@ int sent_channel::Decoder(uint32_t clocks) {
 						#endif // SENT_STATISTIC_COUNTERS
 						ret = -1;
 					}
-					state = hasPausePulse ? SENT_STATE_PAUSE : SENT_STATE_SYNC;
+					pausePulseReceived = false;
+					state = SENT_STATE_SYNC;
 				}
 			}
 			else
@@ -267,9 +292,6 @@ int sent_channel::Decoder(uint32_t clocks) {
 				state = SENT_STATE_INIT;
 				ret = -1;
 			}
-			break;
-		case SENT_STATE_PAUSE:
-			state = SENT_STATE_SYNC;
 			break;
 	}
 
@@ -525,6 +547,7 @@ void sent_channel::Info() {
 	uint16_t sig0, sig1;
 
 	efiPrintf("Unit time %lu CPU ticks %f uS", tickPerUnit, TicksToUs(getTickTime()));
+	efiPrintf("Pause pulse detected %s", pausePulseReceived ? "Yes" : "No");
 	efiPrintf("Total pulses %lu", pulseCounter);
 
 	if (GetSignals(&stat, &sig0, &sig1) == 0) {
@@ -541,6 +564,7 @@ void sent_channel::Info() {
 	}
 
 	#if SENT_STATISTIC_COUNTERS
+		efiPrintf("Pause pulses %lu\n", statistic.PauseCnt);
 		efiPrintf("Restarts %lu", statistic.RestartCnt);
 		efiPrintf("Interval errors %lu short, %lu long", statistic.ShortIntervalErr, statistic.LongIntervalErr);
 		efiPrintf("Total frames %lu with CRC error %lu (%f%%)", statistic.FrameCnt, statistic.CrcErrCnt, statistic.CrcErrCnt * 100.0 / statistic.FrameCnt);
