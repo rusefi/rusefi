@@ -71,6 +71,7 @@ TESTS_SRC_CPP = \
 	tests/shift_torque_reduction/test_shift_torque_reduction_flat_shift_condition.cpp \
 	tests/shift_torque_reduction/test_shift_torque_reduction_spark_skip_ratio.cpp \
 	tests/shift_torque_reduction/test_shift_torque_reduction_angle_advance.cpp \
+	tests/nitrous_control/nitrous_test_base.cpp \
 	tests/nitrous_control/test_nitrous_arming.cpp \
 	tests/nitrous_control/test_nitrous_tps_condition.cpp \
 	tests/nitrous_control/test_nitrous_clt_condition.cpp \
