@@ -69,9 +69,8 @@ void sent_channel::restart() {
 	tickPerUnit = 0;
 
 	/* reset slow channels */
+	SlowChannelDecoderReset();
 	scMsgFlags = 0;
-	scShift2 = 0;
-	scShift3 = 0;
 
 	#if SENT_STATISTIC_COUNTERS
 		statistic.ShortIntervalErr = 0;
@@ -86,9 +85,9 @@ void sent_channel::restart() {
 	#endif
 }
 
-uint32_t sent_channel::calcTickPerUnit(uint32_t clocks) {
+void sent_channel::calcTickPerUnit(uint32_t clocks) {
 	/* int division with rounding */
-	return (clocks + (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) / 2) /
+	tickPerUnit =  (clocks + (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) / 2) /
 			(SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL);
 }
 
@@ -108,16 +107,14 @@ bool sent_channel::isSyncPulse(uint32_t clocks)
 	return 0;
 }
 
-int sent_channel::Decoder(uint32_t clocks) {
-	int ret = 0;
-
+int sent_channel::FastChannelDecoder(uint32_t clocks) {
 	pulseCounter++;
 
 	/* special case - tick time calculation */
 	if (state == SENT_STATE_CALIB) {
 		if ((tickPerUnit == 0) || (currentStatePulseCounter == 0)) {
 			/* invalid or not yet calculated tickPerUnit */
-			tickPerUnit = calcTickPerUnit(clocks);
+			calcTickPerUnit(clocks);
 			/* lets assume this is sync pulse... */
 			currentStatePulseCounter = 1;
 		} else {
@@ -135,7 +132,7 @@ int sent_channel::Decoder(uint32_t clocks) {
 				}
 			} else {
 				currentStatePulseCounter = 1;
-				tickPerUnit = calcTickPerUnit(clocks);
+				calcTickPerUnit(clocks);
 			}
 		}
 		if (pulseCounter >= SENT_CALIBRATION_PULSES) {
@@ -149,7 +146,7 @@ int sent_channel::Decoder(uint32_t clocks) {
 	if (state == SENT_STATE_INIT) {
 		if (isSyncPulse(clocks)) {
 			/* adjust unit time */
-			tickPerUnit = calcTickPerUnit(clocks);
+			calcTickPerUnit(clocks);
 			/* we get here from calibration phase. calibration phase end with CRC nibble
 			 * if we had to skip ONE pulse before we get sync - that means device may send pause
 			 * pulse in between of messages */
@@ -186,14 +183,13 @@ int sent_channel::Decoder(uint32_t clocks) {
 		case SENT_STATE_CALIB:
 		case SENT_STATE_INIT:
 			/* handled above, should not get in here */
-			ret = -1;
-			break;
+			return -1;
 
 		case SENT_STATE_SYNC:
 			if (isSyncPulse(clocks))
 			{
 				/* measured tick interval will be used until next sync pulse */
-				tickPerUnit = calcTickPerUnit(clocks);
+				calcTickPerUnit(clocks);
 				rxReg = 0;
 				state = SENT_STATE_STATUS;
 			}
@@ -214,7 +210,7 @@ int sent_channel::Decoder(uint32_t clocks) {
 					#endif // SENT_STATISTIC_COUNTERS
 					/* wait for next sync and recalibrate tickPerUnit */
 					state = SENT_STATE_INIT;
-					ret = -1;
+					return -1;
 				} else {
 					/* This is possibly pause pulse */
 					/* TODO: check:
@@ -226,7 +222,7 @@ int sent_channel::Decoder(uint32_t clocks) {
 					pausePulseReceived = true;
 				}
 			}
-			break;
+			return 0;
 
 		case SENT_STATE_STATUS:
 			/* it is possible that pause pulse was threaded as sync and we are here with sync pulse */
@@ -235,7 +231,7 @@ int sent_channel::Decoder(uint32_t clocks) {
 					statistic.PauseCnt++;
 				#endif // SENT_STATISTIC_COUNTERS
 				/* measured tick interval will be used until next sync pulse */
-				tickPerUnit = calcTickPerUnit(clocks);
+				calcTickPerUnit(clocks);
 				return 0;
 			}
 			// fallthrough
@@ -246,63 +242,65 @@ int sent_channel::Decoder(uint32_t clocks) {
 		case SENT_STATE_SIG2_DATA2:
 		case SENT_STATE_SIG2_DATA3:
 		case SENT_STATE_CRC:
-			if(interval <= SENT_MAX_INTERVAL)
-			{
-				rxReg = (rxReg << 4) | (uint32_t)interval;
-
-				if (state != SENT_STATE_CRC)
-				{
-					/* TODO: refactor */
-					state = (SENT_STATE_enum)((int)state + 1);
-				}
-				else
-				{
-					#if SENT_STATISTIC_COUNTERS
-						statistic.FrameCnt++;
-					#endif // SENT_STATISTIC_COUNTERS
-					/* CRC check */
-					/* TODO: find correct way to calculate CRC */
-					if ((MsgGetCrc(rxReg) == crc4(rxReg)) ||
-						(MsgGetCrc(rxReg) == crc4_gm(rxReg)) ||
-						(MsgGetCrc(rxReg) == crc4_gm_v2(rxReg)))
-					{
-						/* Full packet with correct CRC has been received */
-						rxLast = rxReg;
-						hasValidFast = true;
-						/* TODO: add timestamp? */
-						ret = 1;
-					}
-					else
-					{
-						#if SENT_STATISTIC_COUNTERS
-							statistic.CrcErrCnt++;
-						#endif // SENT_STATISTIC_COUNTERS
-						ret = -1;
-					}
-					pausePulseReceived = false;
-					state = SENT_STATE_SYNC;
-				}
-			}
-			else
+			if (interval > SENT_MAX_INTERVAL)
 			{
 				#if SENT_STATISTIC_COUNTERS
 					statistic.LongIntervalErr++;
 				#endif
 
 				state = SENT_STATE_INIT;
-				ret = -1;
+				return -1;
 			}
-			break;
+
+			rxReg = (rxReg << 4) | (uint32_t)interval;
+
+			if (state != SENT_STATE_CRC)
+			{
+				/* TODO: refactor */
+				state = (SENT_STATE_enum)((int)state + 1);
+				return 0;
+			}
+
+			#if SENT_STATISTIC_COUNTERS
+				statistic.FrameCnt++;
+			#endif // SENT_STATISTIC_COUNTERS
+			pausePulseReceived = false;
+			state = SENT_STATE_SYNC;
+			/* CRC check */
+			/* TODO: find correct way to calculate CRC */
+			if ((MsgGetCrc(rxReg) == crc4(rxReg)) ||
+				(MsgGetCrc(rxReg) == crc4_gm(rxReg)) ||
+				(MsgGetCrc(rxReg) == crc4_gm_v2(rxReg)))
+			{
+				/* Full packet with correct CRC has been received */
+				rxLast = rxReg;
+				hasValidFast = true;
+				/* TODO: add timestamp? */
+				return 1;
+			}
+			else
+			{
+				#if SENT_STATISTIC_COUNTERS
+					statistic.CrcErrCnt++;
+				#endif // SENT_STATISTIC_COUNTERS
+				return -1;
+			}
+			return 0;
 	}
 
+	return 0;
+}
+
+int sent_channel::Decoder(uint32_t clocks) {
+	int ret;
+
+	ret = FastChannelDecoder(clocks);
 	if (ret > 0) {
 		/* valid packet received, can process slow channels */
 		SlowChannelDecoder();
 	} else if (ret < 0) {
 		/* packet is incorrect, reset slow channel state machine */
-		scShift2 = 0;
-		scShift3 = 0;
-		/* TODO: add error counter and restart from CALIB state? */
+		SlowChannelDecoderReset();
 	}
 
 	return ret;
@@ -458,6 +456,13 @@ int sent_channel::SlowChannelDecoder()
 	}
 
 	return 0;
+}
+
+void sent_channel::SlowChannelDecoderReset()
+{
+	/* packet is incorrect, reset slow channel state machine */
+	scShift2 = 0;
+	scShift3 = 0;
 }
 
 /* This is correct for Si7215 */
