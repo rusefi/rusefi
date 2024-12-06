@@ -152,6 +152,19 @@ TEST(sent, testFuelPressure) {
 	#endif
 }
 
+TEST(sent, testVagMap) {
+	static sent_channel channel;
+	int lineCount = sentTest_feedWithFile(channel, "tests/sent/resources/vag_04e.906.051.csv");
+	ASSERT_TRUE(lineCount > 100);
+	bool isError = channel.GetMsg(nullptr) != 0;
+	ASSERT_FALSE(isError);
+	#if SENT_STATISTIC_COUNTERS
+		sent_channel_stat &statistic = channel.statistic;
+		/* TODO: bad captured data or real problem? */
+		ASSERT_TRUE(statistic.RestartCnt <= 1);
+	#endif
+}
+
 TEST(sent, testNoMessages) {
     static sent_channel channel;
    	bool isError = channel.GetMsg(nullptr) != 0;
