@@ -59,6 +59,7 @@ namespace engine_configuration_defaults {
     constexpr lua_gauge_meaning_e NITROUS_LUA_GAUGE_MEANING = LUA_GAUGE_LOWER_BOUND;
     constexpr float NITROUS_LUA_GAUGE_ARMING_VALUE = 0.0f;
 
+    constexpr uint16_t NITROUS_MINIMUM_VEHICLE_SPEED = 0;
     constexpr int NITROUS_MINIMUM_TPS = 80;
     constexpr uint8_t NITROUS_MINIMUM_CLT = 60;
     constexpr uint16_t NITROUS_MAXIMUM_MAP = 0;

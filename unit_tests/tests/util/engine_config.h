@@ -69,6 +69,7 @@ public:
     std::optional<lua_gauge_meaning_e> getNitrousLuaGaugeMeaning() const { return m_nitrousLuaGaugeMeaning; }
     std::optional<float> getNitrousLuaGaugeArmingValue() const { return m_nitrousLuaGaugeArmingValue; }
 
+    std::optional<uint16_t> getNitrousMinimumVehicleSpeed() const { return m_nitrousMinimumVehicleSpeed; }
     std::optional<int> getNitrousMinimumTps() const { return  m_nitrousMinimumTps; }
     std::optional<uint8_t> getNitrousMinimumClt() const { return  m_nitrousMinimumClt; }
     std::optional<uint16_t> getNitrousMaximumMap() const { return  m_nitrousMaximumMap; }
@@ -136,6 +137,7 @@ public:
     EngineConfig setNitrousLuaGaugeMeaning(std::optional<lua_gauge_meaning_e> value);
     EngineConfig setNitrousLuaGaugeArmingValue(std::optional<float> value);
 
+    EngineConfig setNitrousMinimumVehicleSpeed(std::optional<uint16_t> value);
     EngineConfig setNitrousMinimumTps(std::optional<int> value);
     EngineConfig setNitrousMinimumClt(std::optional<uint8_t> value);
     EngineConfig setNitrousMaximumMap(std::optional<uint16_t> value);
@@ -200,6 +202,7 @@ private:
     std::optional<lua_gauge_meaning_e> m_nitrousLuaGaugeMeaning;
     std::optional<float> m_nitrousLuaGaugeArmingValue;
 
+    std::optional<uint16_t> m_nitrousMinimumVehicleSpeed;
     std::optional<int> m_nitrousMinimumTps;
     std::optional<uint8_t> m_nitrousMinimumClt;
     std::optional<uint16_t> m_nitrousMaximumMap;

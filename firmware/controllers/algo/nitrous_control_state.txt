@@ -1,6 +1,7 @@
 struct_no_prefix nitrous_control_state_s
 
 bit isArmed
+bit isNitrousSpeedConditionSatisfied
 bit isTpsConditionSatisfied
 bit isCltConditionSatisfied
 bit isMapConditionSatisfied

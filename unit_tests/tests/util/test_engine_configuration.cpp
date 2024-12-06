@@ -477,6 +477,19 @@ void TestEngineConfiguration::configureNitrousLuaGaugeArmingValue(const std::opt
     }
 }
 
+void TestEngineConfiguration::configureNitrousMinimumVehicleSpeed(
+    const std::optional<uint16_t> nitrousMinimumVehicleSpeed
+) {
+    if (nitrousMinimumVehicleSpeed.has_value()) {
+        engineConfiguration->nitrousMinimumVehicleSpeed = nitrousMinimumVehicleSpeed.value();
+    } else {
+        ASSERT_EQ(
+                engineConfiguration->nitrousMinimumVehicleSpeed,
+                engine_configuration_defaults::NITROUS_MINIMUM_VEHICLE_SPEED
+        ); // check default value
+    }
+}
+
 void TestEngineConfiguration::configureNitrousMinimumTps(const std::optional<int> nitrousMinimumTps) {
     if (nitrousMinimumTps.has_value()) {
         engineConfiguration->nitrousMinimumTps = nitrousMinimumTps.value();

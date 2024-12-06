@@ -23,6 +23,10 @@ protected:
 public:
     void periodicSlowCallback();
 protected:
+    void updateVehicleSpeed(
+        std::optional<float> speed,
+        void (TestBase::*postAction)() = &TestBase::periodicFastCallback
+    );
     void updateRpm(std::optional<float> rpm, void (TestBase::*postAction)() = &TestBase::periodicFastCallback);
     void updateApp(std::optional<float> app, void (TestBase::*postAction)() = &TestBase::periodicFastCallback);
     void updateClt(std::optional<float> clt, void (TestBase::*postAction)() = &TestBase::periodicFastCallback);

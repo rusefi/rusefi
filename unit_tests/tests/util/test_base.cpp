@@ -87,6 +87,7 @@ void TestBase::setUpEngineConfiguration(const EngineConfig& config) {
     getTestEngineConfiguration().configureNitrousLuaGaugeMeaning(config.getNitrousLuaGaugeMeaning());
     getTestEngineConfiguration().configureNitrousLuaGaugeArmingValue(config.getNitrousLuaGaugeArmingValue());
 
+    getTestEngineConfiguration().configureNitrousMinimumVehicleSpeed(config.getNitrousMinimumVehicleSpeed());
     getTestEngineConfiguration().configureNitrousMinimumTps(config.getNitrousMinimumTps());
     getTestEngineConfiguration().configureNitrousMinimumClt(config.getNitrousMinimumClt());
     getTestEngineConfiguration().configureNitrousMaximumMap(config.getNitrousMaximumMap());
@@ -109,6 +110,10 @@ void TestBase::periodicFastCallback() {
 
 void TestBase::periodicSlowCallback() {
     engine->periodicSlowCallback();
+}
+
+void TestBase::updateVehicleSpeed(const std::optional<float> speed, void (TestBase::* const postAction)()) {
+    updateSensor(SensorType::VehicleSpeed, speed, postAction);
 }
 
 void TestBase::updateRpm(const std::optional<float> rpm, void (TestBase::* const postAction)()) {
