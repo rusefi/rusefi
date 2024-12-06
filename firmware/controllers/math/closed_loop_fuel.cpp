@@ -40,8 +40,7 @@ void LongTermFuelTrim::updateLtft(float load, float rpm) {
 
 				float stftCorrection = engine->engineState.stftCorrection[0] - 1.00f;
 
-				SensorType sensor = getSensorForBankIndex(0);
-				auto lambda = Sensor::get(sensor);
+				auto lambda = Sensor::get(SensorType::Lambda1);
 				float lambdaError = lambda.Value - engine->fuelComputer.targetLambda;
 
 				// Only correct if stft on correct path
