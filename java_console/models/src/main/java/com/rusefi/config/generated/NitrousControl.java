@@ -179,22 +179,22 @@ public class NitrousControl {
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field ISARMED = Field.create("ISARMED", 0, FieldType.BIT, 0).setBaseOffset(1176);
-	public static final Field ISNITROUSSPEEDCONDITIONSATISFIED = Field.create("ISNITROUSSPEEDCONDITIONSATISFIED", 0, FieldType.BIT, 1).setBaseOffset(1176);
-	public static final Field ISTPSCONDITIONSATISFIED = Field.create("ISTPSCONDITIONSATISFIED", 0, FieldType.BIT, 2).setBaseOffset(1176);
-	public static final Field ISCLTCONDITIONSATISFIED = Field.create("ISCLTCONDITIONSATISFIED", 0, FieldType.BIT, 3).setBaseOffset(1176);
-	public static final Field ISMAPCONDITIONSATISFIED = Field.create("ISMAPCONDITIONSATISFIED", 0, FieldType.BIT, 4).setBaseOffset(1176);
-	public static final Field ISAFRCONDITIONSATISFIED = Field.create("ISAFRCONDITIONSATISFIED", 0, FieldType.BIT, 5).setBaseOffset(1176);
-	public static final Field ISNITROUSRPMCONDITIONSATISFIED = Field.create("ISNITROUSRPMCONDITIONSATISFIED", 0, FieldType.BIT, 6).setBaseOffset(1176);
-	public static final Field ISNITROUSCONDITIONSATISFIED = Field.create("ISNITROUSCONDITIONSATISFIED", 0, FieldType.BIT, 7).setBaseOffset(1176);
+	public static final Field ISNITROUSARMED = Field.create("ISNITROUSARMED", 0, FieldType.BIT, 0).setBaseOffset(1176);
+	public static final Field ISNITROUSSPEEDCONDITION = Field.create("ISNITROUSSPEEDCONDITION", 0, FieldType.BIT, 1).setBaseOffset(1176);
+	public static final Field ISNITROUSTPSCONDITION = Field.create("ISNITROUSTPSCONDITION", 0, FieldType.BIT, 2).setBaseOffset(1176);
+	public static final Field ISNITROUSCLTCONDITION = Field.create("ISNITROUSCLTCONDITION", 0, FieldType.BIT, 3).setBaseOffset(1176);
+	public static final Field ISNITROUSMAPCONDITION = Field.create("ISNITROUSMAPCONDITION", 0, FieldType.BIT, 4).setBaseOffset(1176);
+	public static final Field ISNITROUSAFRCONDITION = Field.create("ISNITROUSAFRCONDITION", 0, FieldType.BIT, 5).setBaseOffset(1176);
+	public static final Field ISNITROUSRPMCONDITION = Field.create("ISNITROUSRPMCONDITION", 0, FieldType.BIT, 6).setBaseOffset(1176);
+	public static final Field ISNITROUSCONDITION = Field.create("ISNITROUSCONDITION", 0, FieldType.BIT, 7).setBaseOffset(1176);
 	public static final Field[] VALUES = {
-	ISARMED,
-	ISNITROUSSPEEDCONDITIONSATISFIED,
-	ISTPSCONDITIONSATISFIED,
-	ISCLTCONDITIONSATISFIED,
-	ISMAPCONDITIONSATISFIED,
-	ISAFRCONDITIONSATISFIED,
-	ISNITROUSRPMCONDITIONSATISFIED,
-	ISNITROUSCONDITIONSATISFIED,
+	ISNITROUSARMED,
+	ISNITROUSSPEEDCONDITION,
+	ISNITROUSTPSCONDITION,
+	ISNITROUSCLTCONDITION,
+	ISNITROUSMAPCONDITION,
+	ISNITROUSAFRCONDITION,
+	ISNITROUSRPMCONDITION,
+	ISNITROUSCONDITION,
 	};
 }

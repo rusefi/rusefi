@@ -1215,45 +1215,45 @@ float getOutputValueByName(const char *name) {
 // acPressureTooHigh
 		case -1220300524:
 			return engine->module<AcController>()->acPressureTooHigh;
-// isArmed
+// isNitrousArmed
 #if EFI_LAUNCH_CONTROL
-		case -1447071222:
-			return engine->module<NitrousController>()->isArmed;
+		case 595683774:
+			return engine->module<NitrousController>()->isNitrousArmed;
 #endif
-// isNitrousSpeedConditionSatisfied
+// isNitrousSpeedCondition
 #if EFI_LAUNCH_CONTROL
-		case 1259221321:
-			return engine->module<NitrousController>()->isNitrousSpeedConditionSatisfied;
+		case 2135736269:
+			return engine->module<NitrousController>()->isNitrousSpeedCondition;
 #endif
-// isTpsConditionSatisfied
+// isNitrousTpsCondition
 #if EFI_LAUNCH_CONTROL
-		case -1256912197:
-			return engine->module<NitrousController>()->isTpsConditionSatisfied;
+		case 1400235571:
+			return engine->module<NitrousController>()->isNitrousTpsCondition;
 #endif
-// isCltConditionSatisfied
+// isNitrousCltCondition
 #if EFI_LAUNCH_CONTROL
-		case -747236121:
-			return engine->module<NitrousController>()->isCltConditionSatisfied;
+		case 31747807:
+			return engine->module<NitrousController>()->isNitrousCltCondition;
 #endif
-// isMapConditionSatisfied
+// isNitrousMapCondition
 #if EFI_LAUNCH_CONTROL
-		case 1960789698:
-			return engine->module<NitrousController>()->isMapConditionSatisfied;
+		case 541066842:
+			return engine->module<NitrousController>()->isNitrousMapCondition;
 #endif
-// isAfrConditionSatisfied
+// isNitrousAfrCondition
 #if EFI_LAUNCH_CONTROL
-		case 112999709:
-			return engine->module<NitrousController>()->isAfrConditionSatisfied;
+		case 2008830549:
+			return engine->module<NitrousController>()->isNitrousAfrCondition;
 #endif
-// isNitrousRpmConditionSatisfied
+// isNitrousRpmCondition
 #if EFI_LAUNCH_CONTROL
-		case 1138724839:
-			return engine->module<NitrousController>()->isNitrousRpmConditionSatisfied;
+		case -649083733:
+			return engine->module<NitrousController>()->isNitrousRpmCondition;
 #endif
-// isNitrousConditionSatisfied
+// isNitrousCondition
 #if EFI_LAUNCH_CONTROL
-		case 1700736632:
-			return engine->module<NitrousController>()->isNitrousConditionSatisfied;
+		case -454003684:
+			return engine->module<NitrousController>()->isNitrousCondition;
 #endif
 // cranking
 		case 182391090:

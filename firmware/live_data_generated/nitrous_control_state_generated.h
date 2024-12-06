@@ -7,28 +7,28 @@
 struct nitrous_control_state_s {
 	/**
 	offset 0 bit 0 */
-	bool isArmed : 1 {};
+	bool isNitrousArmed : 1 {};
 	/**
 	offset 0 bit 1 */
-	bool isNitrousSpeedConditionSatisfied : 1 {};
+	bool isNitrousSpeedCondition : 1 {};
 	/**
 	offset 0 bit 2 */
-	bool isTpsConditionSatisfied : 1 {};
+	bool isNitrousTpsCondition : 1 {};
 	/**
 	offset 0 bit 3 */
-	bool isCltConditionSatisfied : 1 {};
+	bool isNitrousCltCondition : 1 {};
 	/**
 	offset 0 bit 4 */
-	bool isMapConditionSatisfied : 1 {};
+	bool isNitrousMapCondition : 1 {};
 	/**
 	offset 0 bit 5 */
-	bool isAfrConditionSatisfied : 1 {};
+	bool isNitrousAfrCondition : 1 {};
 	/**
 	offset 0 bit 6 */
-	bool isNitrousRpmConditionSatisfied : 1 {};
+	bool isNitrousRpmCondition : 1 {};
 	/**
 	offset 0 bit 7 */
-	bool isNitrousConditionSatisfied : 1 {};
+	bool isNitrousCondition : 1 {};
 	/**
 	offset 0 bit 8 */
 	bool unusedBit_8_8 : 1 {};
