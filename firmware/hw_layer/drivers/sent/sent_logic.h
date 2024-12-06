@@ -88,7 +88,7 @@ private:
 	uint32_t calcTickPerUnit(uint32_t clocks);
 
 	/* check if current pulse looks like sync pulse */
-	bool isSyncPulse(uint16_t clocks);
+	bool isSyncPulse(uint32_t clocks);
 
 	void restart();
 
@@ -105,7 +105,7 @@ public:
 #endif // SENT_STATISTIC_COUNTERS
 
 	/* Decoder */
-	int Decoder(uint16_t clocks);
+	int Decoder(uint32_t clocks);
 
 	/* Get last raw message */
 	int GetMsg(uint32_t* rx);
