@@ -9,6 +9,7 @@
 
 static int sentTest_feedWithFile(sent_channel &channel, const char *file)
 {
+	int msgCount = 0;
 	int lineCount = 0;
 	int printDebug = 0;
 	CsvReader reader(1, 0);
@@ -18,6 +19,7 @@ static int sentTest_feedWithFile(sent_channel &channel, const char *file)
 	double prevTimeStamp;
 
 	while (reader.haveMore()) {
+		int ret = 0;
 		double value = 0;
 		double stamp = reader.readTimestampAndValues(&value);
 		lineCount++;
@@ -30,20 +32,27 @@ static int sentTest_feedWithFile(sent_channel &channel, const char *file)
 		// we care only about falling edges
 		if (value < 0.5) {
 			double diff = stamp - prevTimeStamp;
+			uint32_t clocks = diff * TIMER_CLOCK;
 
-			channel.Decoder(diff * TIMER_CLOCK);
+			uint32_t last_tickPerUnit = channel.getTickTime();
+
+			ret = channel.Decoder(clocks);
+			if ((ret < 0) && (printDebug)) {
+				printf("SENT decoder has failed at %f, clocks %d: %d\n", stamp, clocks, ret);
+				printf(" last tickPerUnit = %d, current pulse = %d\n", last_tickPerUnit, (clocks + last_tickPerUnit / 2) / last_tickPerUnit);
+			}
 
 			prevTimeStamp = stamp;
 		}
 
-		if (((lineCount % 100) == 0) && (printDebug)) {
-			int ret;
+		if ((ret > 0) && (printDebug)) {
 			uint8_t stat;
 			uint16_t sig0, sig1;
 
 			ret = channel.GetSignals(&stat, &sig0, &sig1);
 			if (ret == 0) {
-				printf("SENT status 0x%01x, signals: 0x%03x, 0x%03x\n", stat, sig0, sig1);
+				printf("%d: SENT status 0x%01x, signals: 0x%03x, 0x%03x: %d\n", msgCount, stat, sig0, sig1, ret);
+				msgCount++;
 			}
 		}
 	}
