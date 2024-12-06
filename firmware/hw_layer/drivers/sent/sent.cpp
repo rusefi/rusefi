@@ -107,6 +107,7 @@ int sent_channel::Decoder(uint16_t clocks) {
 		} else {
 			/* some tickPerUnit calculated...
 			 * Check next 1 + 6 + 1 pulses if they are valid with current tickPerUnit */
+			criticalAssert(tickPerUnit != 0, "zero tickPerUnit", 0);
 			interval = (clocks + tickPerUnit / 2) / tickPerUnit - SENT_OFFSET_INTERVAL;
 			if ((interval >= 0) && (interval <= SENT_MAX_INTERVAL)) {
 				currentStatePulseCounter++;
