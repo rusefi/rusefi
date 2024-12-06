@@ -145,7 +145,7 @@ pins:
     class: [event_inputs, switch_inputs]
     function: Flex
     type: hall
-    ts_name: 21B - Flex
+    ts_name: ___ - Flex
     color: blue
 
   - pin: 22A
@@ -210,7 +210,7 @@ pins:
     class: analog_inputs
     function: Aux Temp 2
     type: at
-    ts_name: 28A - Aux Temp 2
+    ts_name: ___ - Aux Temp 2
 
   - pin: 31A
     meta: MM176_IN_TPS_ANALOG
@@ -356,7 +356,7 @@ pins:
   - pin: 24B
     meta: MM176_IN_VBATT
     class: analog_inputs
-    ts_name: 24 - Ignition Key Voltage
+    ts_name: ___ - Ignition Key Voltage
     function: +12V engine ECU power source, run/start
     color: green
     type: 12v
