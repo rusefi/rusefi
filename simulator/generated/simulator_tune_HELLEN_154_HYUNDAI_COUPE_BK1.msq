@@ -1683,11 +1683,8 @@
         <constant name="nitrousRelayPin">"NONE"</constant>
         <constant name="nitrousRelayPinMode">"default"</constant>
         <constant digits="0" name="nitrousFuelAdderPercent" units="%">0.0</constant>
-        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="72">
-         0.0
-         0.0
-         0.0
-         0.0
+        <constant digits="2" name="nitrousIgnitionRetard" units="deg">0.0</constant>
+        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="68">
          0.0
          0.0
          0.0
@@ -4790,7 +4787,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20241205" nPages="1" signature="rusEFI master.2024.12.06.f407-discovery.1893664533" version="5.0"/>
+    <versionInfo firmwareInfo="20241205" nPages="1" signature="rusEFI master.2024.12.06.f407-discovery.3098179737" version="5.0"/>
     <bibliography author="rusEFI 20241205" writeDate="date"/>
     <settings/>
     <userComments/>
