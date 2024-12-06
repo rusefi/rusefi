@@ -113,6 +113,32 @@ TEST(sent, testFordClosed) {
 	#endif
 }
 
+TEST(sent, testOpelIdle) {
+	static sent_channel channel;
+	int lineCount = sentTest_feedWithFile(channel, "tests/sent/resources/opel-throttle-idle.csv");
+	ASSERT_TRUE(lineCount > 100);
+	bool isError = channel.GetMsg(nullptr) != 0;
+	ASSERT_FALSE(isError);
+	#if SENT_STATISTIC_COUNTERS
+		sent_channel_stat &statistic = channel.statistic;
+		/* TODO: bad captured data or real problem? */
+		ASSERT_TRUE(statistic.RestartCnt <= 1);
+	#endif
+}
+
+TEST(sent, testOpelMove) {
+	static sent_channel channel;
+	int lineCount = sentTest_feedWithFile(channel, "tests/sent/resources/opel-throttle-move.csv");
+	ASSERT_TRUE(lineCount > 100);
+	bool isError = channel.GetMsg(nullptr) != 0;
+	ASSERT_FALSE(isError);
+	#if SENT_STATISTIC_COUNTERS
+		sent_channel_stat &statistic = channel.statistic;
+		/* TODO: bad captured data or real problem? */
+		ASSERT_TRUE(statistic.RestartCnt <= 1);
+	#endif
+}
+
 TEST(sent, testFuelPressure) {
 	static sent_channel channel;
 	int lineCount = sentTest_feedWithFile(channel, "tests/sent/resources/SENT-fuel-pressure.csv");
