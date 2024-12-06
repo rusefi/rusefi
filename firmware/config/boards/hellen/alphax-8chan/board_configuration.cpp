@@ -76,6 +76,7 @@ static void setupDefaultSensorInputs() {
 }
 
 void boardInitHardware() {
+  // technically same thing as setHellenMegaEnPin() since underlying pin E10 is same as H144_GP8
 	setHellenEnPin(Gpio::MM176_EN_PIN);
 
 	alphaCrankPPullUp.initPin("Crank-PullUp", Gpio::MM176_GP16);
