@@ -207,6 +207,7 @@ int sent_channel::Decoder(uint32_t clocks) {
 				#endif // SENT_STATISTIC_COUNTERS
 				/* wait for next sync and recalibrate tickPerUnit */
 				state = SENT_STATE_INIT;
+				ret = -1;
 			}
 			break;
 
