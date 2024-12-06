@@ -23,7 +23,7 @@ namespace {
     void NitrousMapConditionTest::checkMapCondition(const std::vector<MapConditionTestData>& testData) {
         for (const MapConditionTestData& item: testData) {
             updateMap(item.map, &TestBase::periodicSlowCallback);
-            EXPECT_EQ(getModule<NitrousController>().isMapConditionSatisfied, item.expectedMapCondition)
+            EXPECT_EQ(getModule<NitrousController>().isNitrousMapCondition, item.expectedMapCondition)
                 << item.context;
         }
     }

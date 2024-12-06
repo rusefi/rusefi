@@ -25,7 +25,7 @@ namespace {
     void NitrousCltConditionTest::checkCltCondition(const std::vector<CltConditionTestData>& testData) {
         for (const CltConditionTestData& item: testData) {
             updateClt(item.clt, &TestBase::periodicSlowCallback);
-            EXPECT_EQ(getModule<NitrousController>().isCltConditionSatisfied, item.expectedCltCondition)
+            EXPECT_EQ(getModule<NitrousController>().isNitrousCltCondition, item.expectedCltCondition)
                 << item.context;
         }
     }

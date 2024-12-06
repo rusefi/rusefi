@@ -46,7 +46,7 @@ namespace {
     void NitrousRpmConditionTest::checkRpmCondition(const std::vector<RpmConditionTestData>& testData) {
         for (const RpmConditionTestData& item: testData) {
             updateRpm(item.rpm, &TestBase::periodicSlowCallback);
-            EXPECT_EQ(getModule<NitrousController>().isNitrousRpmConditionSatisfied, item.expectedRpmCondition)
+            EXPECT_EQ(getModule<NitrousController>().isNitrousRpmCondition, item.expectedRpmCondition)
                 << item.context;
         }
     }

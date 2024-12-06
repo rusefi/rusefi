@@ -28,7 +28,7 @@ namespace {
     void NitrousAfrConditionTest::checkAfrCondition(const std::vector<AfrConditionTestData>& testData) {
         for (const AfrConditionTestData& item: testData) {
             updateLambda1(item.lambda1, &TestBase::periodicSlowCallback);
-            EXPECT_EQ(getModule<NitrousController>().isAfrConditionSatisfied, item.expectedAfrCondition)
+            EXPECT_EQ(getModule<NitrousController>().isNitrousAfrCondition, item.expectedAfrCondition)
                 << item.context;
         }
     }

@@ -28,7 +28,7 @@ namespace {
     void NitrousArmingTest::checkArmingAfterPeriodicFastCallback(const bool shouldBeArmed, const char* const context) {
         periodicSlowCallback();
 
-        EXPECT_EQ(getModule<NitrousController>().isArmed, shouldBeArmed) << context;
+        EXPECT_EQ(getModule<NitrousController>().isNitrousArmed, shouldBeArmed) << context;
     }
 
     TEST_F(NitrousArmingTest, checkDefault) {

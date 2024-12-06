@@ -123,9 +123,7 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 	) {
 		return engineConfiguration->torqueReductionIgnitionRetard;
 	}
-    if (engineConfiguration->nitrousControlEnabled
-        && engine->module<NitrousController>()->isNitrousConditionSatisfied
-    ) {
+    if (engineConfiguration->nitrousControlEnabled && engine->module<NitrousController>()->isNitrousCondition) {
         advanceAngle -= engineConfiguration->nitrousIgnitionRetard;
     }
 #endif /* EFI_LAUNCH_CONTROL */
