@@ -10,14 +10,15 @@
 void NitrousController::onSlowCallback() {
     if (engineConfiguration->nitrousControlEnabled) {
         updateArmingState();
+        updateSpeedConditionSatisfied();
         updateTpsConditionSatisfied();
         updateCltConditionSatisfied();
         updateMapConditionSatisfied();
         updateAfrConditionSatisfied();
         updateRpmConditionSatisfied();
         isNitrousConditionSatisfied = (
-            isArmed && isTpsConditionSatisfied && isCltConditionSatisfied && isMapConditionSatisfied
-                && isAfrConditionSatisfied && isNitrousRpmConditionSatisfied
+            isArmed && isTpsConditionSatisfied && isNitrousSpeedConditionSatisfied && isCltConditionSatisfied
+                && isMapConditionSatisfied && isAfrConditionSatisfied && isNitrousRpmConditionSatisfied
         );
     } else {
         isNitrousConditionSatisfied = false;
@@ -47,6 +48,16 @@ void NitrousController::updateArmingState() {
             isArmed = false;
             break;
         }
+    }
+}
+
+void NitrousController::updateSpeedConditionSatisfied() {
+    if (engineConfiguration->nitrousMinimumVehicleSpeed != 0) {
+        const expected<float> speed = Sensor::get(SensorType::VehicleSpeed);
+        isNitrousSpeedConditionSatisfied =
+            speed.Valid && (engineConfiguration->nitrousMinimumVehicleSpeed <= speed.Value);
+    } else {
+        isNitrousSpeedConditionSatisfied = true;
     }
 }
 

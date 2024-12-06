@@ -14,6 +14,7 @@ void NitrousTestBase::setUpTestConfiguration(
         .setNitrousControlEnabled({ true })
         .setNitrousControlArmingMethod({ DIGITAL_SWITCH_INPUT })
         .setNitrousControlTriggerPin({ TEST_NITROUS_CONTROL_ARMING_PIN })
+        .setNitrousMinimumVehicleSpeed({ TEST_MIN_VEHICLE_SPEED })
         .setNitrousMinimumTps({ TEST_MIN_TPS })
         .setNitrousMinimumClt({ TEST_MIN_CLT })
         .setNitrousMaximumMap({ TEST_MAX_MAP })
@@ -31,6 +32,12 @@ void NitrousTestBase::armNitrousControl() {
     periodicSlowCallback();
 
     EXPECT_TRUE(getModule<NitrousController>().isArmed);
+}
+
+void NitrousTestBase::satisfySpeedCondition() {
+    updateVehicleSpeed(TEST_MIN_VEHICLE_SPEED, &TestBase::periodicSlowCallback);
+
+    EXPECT_TRUE(getModule<NitrousController>().isNitrousSpeedConditionSatisfied);
 }
 
 void NitrousTestBase::satisfyTpsCondition() {
@@ -65,6 +72,7 @@ void NitrousTestBase::satisfyRpmCondition() {
 
 void NitrousTestBase::activateNitrousControl() {
     armNitrousControl();
+    satisfySpeedCondition();
     satisfyTpsCondition();
     satisfyCltCondition();
     satisfyMapCondition();
@@ -77,6 +85,12 @@ void NitrousTestBase::unarmNitrousControl() {
     periodicSlowCallback();
 
     EXPECT_FALSE(getModule<NitrousController>().isArmed);
+}
+
+void NitrousTestBase::unsatisfySpeedCondition() {
+    updateVehicleSpeed(TEST_MIN_VEHICLE_SPEED - EPS5D, &TestBase::periodicSlowCallback);
+
+    EXPECT_FALSE(getModule<NitrousController>().isNitrousSpeedConditionSatisfied);
 }
 
 void NitrousTestBase::unsatisfyTpsCondition() {
@@ -111,6 +125,7 @@ void NitrousTestBase::unsatisfyRpmCondition() {
 
 void NitrousTestBase::deactivateNitrousControl() {
     unarmNitrousControl();
+    unsatisfySpeedCondition();
     unsatisfyTpsCondition();
     unsatisfyCltCondition();
     unsatisfyMapCondition();

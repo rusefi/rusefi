@@ -72,6 +72,7 @@ public:
     void configureNitrousLuaGaugeMeaning(std::optional<lua_gauge_meaning_e> luaGaugeMeaning);
     void configureNitrousLuaGaugeArmingValue(std::optional<float> luaGaugeArmingValue);
 
+    void configureNitrousMinimumVehicleSpeed(std::optional<uint16_t> nitrousMinimumVehicleSpeed);
     void configureNitrousMinimumTps(std::optional<int> nitrousMinimumTps);
     void configureNitrousMinimumClt(std::optional<uint8_t> nitrousMinimumClt);
     void configureNitrousMaximumMap(std::optional<uint16_t> nitrousMaximumMap);

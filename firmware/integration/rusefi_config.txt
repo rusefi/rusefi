@@ -1803,7 +1803,9 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 
 	int8_t nitrousFuelAdderPercent;;"%", 1, 0, 0, 100, 0
 	float nitrousIgnitionRetard;Retard timing to remove from actual final timing (after all corrections) due to additional air.;"deg", 1, 0, -180, 180, 2
-#define END_OF_CALIBRATION_PADDING 68
+    uint16_t nitrousMinimumVehicleSpeed;;"Kph", 1, 0, 0, 300, 0
+
+#define END_OF_CALIBRATION_PADDING 66
 uint8_t[END_OF_CALIBRATION_PADDING] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
