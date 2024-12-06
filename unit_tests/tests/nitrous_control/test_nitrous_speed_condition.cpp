@@ -25,7 +25,7 @@ namespace {
     void NitrousSpeedConditionTest::checkSpeedCondition(const std::vector<SpeedConditionTestData>& testData) {
         for (const SpeedConditionTestData& item: testData) {
             updateVehicleSpeed(item.speed, &TestBase::periodicSlowCallback);
-            EXPECT_EQ(getModule<NitrousController>().isNitrousSpeedConditionSatisfied, item.expectedSpeedCondition)
+            EXPECT_EQ(getModule<NitrousController>().isNitrousSpeedCondition, item.expectedSpeedCondition)
                 << item.context;
         }
     }
