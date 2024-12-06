@@ -75,7 +75,9 @@ private:
 	uint32_t scCrcShift;	/* shift register for special order for CRC6 calculation */
 	/* Slow channel decoder and helpers */
 	int StoreSlowChannelValue(uint8_t id, uint16_t data);
+	int FastChannelDecoder(uint32_t clocks);
 	int SlowChannelDecoder();
+	void SlowChannelDecoderReset();
 
 	/* CRC */
 	uint8_t crc4(uint32_t data);
@@ -85,7 +87,7 @@ private:
 	uint8_t crc6(uint32_t data);
 
 	/* calc unit tick time from sync pulse */
-	uint32_t calcTickPerUnit(uint32_t clocks);
+	void calcTickPerUnit(uint32_t clocks);
 
 	/* check if current pulse looks like sync pulse */
 	bool isSyncPulse(uint32_t clocks);
