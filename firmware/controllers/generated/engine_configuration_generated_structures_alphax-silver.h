@@ -5019,16 +5019,22 @@ struct engine_configuration_s {
 	 */
 	int8_t nitrousFuelAdderPercent;
 	/**
+	 * need 4 byte alignment
 	 * units: units
 	 * offset 3970
 	 */
-	uint8_t unusedOftenChangesDuringFirmwareUpdate[END_OF_CALIBRATION_PADDING];
+	uint8_t alignmentFill_at_3970[2];
 	/**
-	 * need 4 byte alignment
-	 * units: units
-	 * offset 4042
+	 * Retard timing to remove from actual final timing (after all corrections) due to additional air.
+	 * units: deg
+	 * offset 3972
 	 */
-	uint8_t alignmentFill_at_4042[2];
+	float nitrousIgnitionRetard;
+	/**
+	 * units: units
+	 * offset 3976
+	 */
+	uint8_t unusedOftenChangesDuringFirmwareUpdate[END_OF_CALIBRATION_PADDING];
 };
 static_assert(sizeof(engine_configuration_s) == 4044);
 
