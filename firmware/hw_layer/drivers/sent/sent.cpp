@@ -31,6 +31,9 @@
 
 #define SENT_CRC_SEED           0x05
 
+/* Sync + Status + Signals + CRC: 9 pulses */
+#define SENT_MSG_TOTAL			(1 + SENT_MSG_PAYLOAD_SIZE)
+
 /* use 3 full frames + one additional pulse for unit time calibration */
 #define SENT_CALIBRATION_PULSES	(1 + 3 * SENT_MSG_PAYLOAD_SIZE)
 
@@ -157,7 +160,7 @@ int sent_channel::Decoder(uint32_t clocks) {
 		} else {
 			currentStatePulseCounter++;
 			/* 3 frames skipped, no SYNC detected - recalibrate */
-			if (currentStatePulseCounter >= (9 * 3)) {
+			if (currentStatePulseCounter >= (SENT_MSG_TOTAL * 3)) {
 				restart();
 			}
 		}
