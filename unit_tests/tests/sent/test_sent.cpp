@@ -87,7 +87,7 @@ TEST(sent, testFordIdle) {
 	ASSERT_TRUE(lineCount > 100);
 	#if SENT_STATISTIC_COUNTERS
 		sent_channel_stat &statistic = channel.statistic;
-		ASSERT_TRUE(statistic.RestartCnt == 0);
+		ASSERT_EQ(statistic.RestartCnt, 0);
 	#endif
 }
 
