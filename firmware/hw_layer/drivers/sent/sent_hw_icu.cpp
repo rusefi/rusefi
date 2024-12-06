@@ -22,38 +22,57 @@
 /* This SENT HW driver is based on ChibiOS ICU driver */
 #if (HAL_USE_ICU == TRUE)
 
+/* TODO: do we care about scaling abstract timer ticks to some time base? */
 /* TODO: get at runtime */
 /* Max timer clock for most timers on STM32 is CPU clock / 2 */
 #define SENT_TIMER_CLOCK_DIV	2
 #define SENT_ICU_FREQ			(CORE_CLOCK / SENT_TIMER_CLOCK_DIV) // == CPU freq / 2
 
 static uint16_t lastPulse[SENT_INPUT_COUNT];
+static bool overcapture[SENT_INPUT_COUNT];
 
 static void icuperiodcb(ICUDriver *icup, size_t index)
 {
+	uint16_t clocks;
+	uint8_t flags = 0;
 	const ICUConfig *icucfg = icup->config;
 
 	if ((icucfg->channel == ICU_CHANNEL_1) || (icucfg->channel == ICU_CHANNEL_2)) {
 		/* channel 1 and channel 2 supports period measurements */
-		SENT_ISR_Handler(index, icuGetPeriodX(icup) * SENT_TIMER_CLOCK_DIV);
+		clocks = icuGetPeriodX(icup);
 	} else {
 		/* this is freerunnig timer and we need to calculate period using just captured timer value and previous one */
 		/* TODO: support 32 bit timers too? */
 		uint16_t val = icuGetWidthX(icup);
 
 		/* can overflow */
-		uint16_t clocks = val - lastPulse[index];
-
-		SENT_ISR_Handler(index, clocks /* * SENT_TIMER_CLOCK_DIV */);
+		clocks = val - lastPulse[index];
 
 		lastPulse[index] = val;
 	}
+
+	if (overcapture[index]) {
+		flags |= SENT_FLAG_HW_OVERFLOW;
+		overcapture[index] = false;
+	}
+
+	SENT_ISR_Handler(index, clocks, flags);
+}
+
+static void icuovercapture(ICUDriver *icup, size_t index)
+{
+	overcapture[index] = true;
 }
 
 /* ICU callbacks */
 static void icuperiodcb_in1(ICUDriver *icup)
 {
 	icuperiodcb(icup, 0);
+}
+
+static void icuovercapture_in1(ICUDriver *icup)
+{
+	icuovercapture(icup, 0);
 }
 
 /* ICU configs */
@@ -68,6 +87,7 @@ static ICUConfig icucfg[SENT_INPUT_COUNT] =
 		.channel = ICU_CHANNEL_1,	/* will be overwriten on startSent() */
 		.dier = 0U,
 		.arr = 0xFFFFFFFFU,
+		.overcapture_cb = icuovercapture_in1,
 	}
 };
 

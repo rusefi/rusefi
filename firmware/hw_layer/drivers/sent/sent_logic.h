@@ -30,6 +30,8 @@ typedef enum
 } SENT_STATE_enum;
 
 struct sent_channel_stat {
+	uint32_t hwOverflowCnt;
+
 	uint32_t ShortIntervalErr;
 	uint32_t LongIntervalErr;
 	uint32_t SyncErr;
@@ -107,7 +109,7 @@ public:
 #endif // SENT_STATISTIC_COUNTERS
 
 	/* Decoder */
-	int Decoder(uint32_t clocks);
+	int Decoder(uint32_t clocks, uint8_t flags = 0);
 
 	/* Get last raw message */
 	int GetMsg(uint32_t* rx);
