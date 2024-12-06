@@ -1,9 +1,10 @@
 name: TS Plugin
 
 on:
-  workflow_dispatch:
-  push:
-  pull_request:
+  workflow_run:
+    workflows: ["Configs & Live Docs"]
+    types:
+      - completed
 
 jobs:
   build:
