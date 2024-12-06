@@ -20,7 +20,10 @@ protected:
     static constexpr uint16_t TEST_DEACTIVATION_RPM = 932;
     static constexpr uint16_t TEST_DEACTIVATION_RPM_WINDOW = 17;
 
-    void setUpTestConfiguration(std::optional<int8_t> nitrousFuelAdderPercent = {});
+    void setUpTestConfiguration(
+        std::optional<int8_t> nitrousFuelAdderPercent = {},
+        std::optional<float> nitrousIgnitionRetard = {}
+    );
 
     void armNitrousControl();
     void satisfyTpsCondition();

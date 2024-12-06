@@ -258,3 +258,8 @@ EngineConfig EngineConfig::setNitrousFuelAdderPercent(const std::optional<int8_t
     m_nitrousFuelAdderPercent = value;
     return *this;
 }
+
+EngineConfig EngineConfig::setNitrousIgnitionRetard(const std::optional<float> value) {
+    m_nitrousIgnitionRetard = value;
+    return *this;
+}

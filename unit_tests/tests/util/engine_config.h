@@ -77,6 +77,7 @@ public:
     std::optional<uint16_t> getNitrousDeactivationRpm() const { return  m_nitrousDeactivationRpm; }
     std::optional<uint16_t> getNitrousDeactivationRpmWindow() const { return  m_nitrousDeactivationRpmWindow; }
     std::optional<int8_t> getNitrousFuelAdderPercent() const { return m_nitrousFuelAdderPercent; }
+    std::optional<float> getNitrousIgnitionRetard() const { return m_nitrousIgnitionRetard; }
 
     // We do not core about performance in tests, but we want to use builder-like style, so setters return new instance
     // of configuration:
@@ -143,6 +144,7 @@ public:
     EngineConfig setNitrousDeactivationRpm(std::optional<uint16_t> value);
     EngineConfig setNitrousDeactivationRpmWindow(std::optional<uint16_t> value);
     EngineConfig setNitrousFuelAdderPercent(std::optional<int8_t> value);
+    EngineConfig setNitrousIgnitionRetard(std::optional<float> value);
 private:
     // Launch Control
     std::optional<switch_input_pin_e> m_launchActivatePin;
@@ -206,4 +208,5 @@ private:
     std::optional<uint16_t> m_nitrousDeactivationRpm;
     std::optional<uint16_t> m_nitrousDeactivationRpmWindow;
     std::optional<int8_t> m_nitrousFuelAdderPercent;
+    std::optional<float> m_nitrousIgnitionRetard;
 };
