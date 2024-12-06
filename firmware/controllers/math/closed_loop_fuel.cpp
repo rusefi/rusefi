@@ -39,6 +39,15 @@ void LongTermFuelTrim::updateLtft(float load, float rpm) {
 			if(lowLoad <= 14 && lowRpm <= 14 && fracLoad > 0.00f && fracLoad < 1.00f && fracRpm > 0.00f && fracRpm < 1.00f) {
 
 				float stftCorrection = engine->engineState.stftCorrection[0] - 1.00f;
+
+				auto lambda = Sensor::get(m_lambdaSensor);
+				float lambdaError = lambda.Value - engine->fuelComputer.targetLambda;
+
+				// Only correct if stft on correct path
+				if((stftCorrection > 0.0f && lambdaError < 0.0f) || (stftCorrection < 0.0f && lambdaError > 0.0f)) {
+					return;
+				}
+
 				float correctionRate = interpolate3d(
 										config->ltftCorrectionRate,
 										config->veLoadBins, load,
