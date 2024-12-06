@@ -14,8 +14,10 @@
 /* SENT decoder init */
 void initSent();
 
+#define SENT_FLAG_HW_OVERFLOW	(1 << 0)
+
 /* ISR hook */
-void SENT_ISR_Handler(uint8_t ch, uint16_t val_res);
+void SENT_ISR_Handler(uint8_t channels, uint16_t clocks, uint8_t flags);
 
 /* Stop/Start for config update */
 void startSent();

@@ -291,8 +291,17 @@ int sent_channel::FastChannelDecoder(uint32_t clocks) {
 	return 0;
 }
 
-int sent_channel::Decoder(uint32_t clocks) {
+int sent_channel::Decoder(uint32_t clocks, uint8_t flags) {
 	int ret;
+
+	#if SENT_STATISTIC_COUNTERS
+		if (flags & SENT_FLAG_HW_OVERFLOW) {
+			statistic.hwOverflowCnt++;
+		}
+	#endif
+
+	/* TODO: handle flags */
+	(void)flags;
 
 	ret = FastChannelDecoder(clocks);
 	if (ret > 0) {
@@ -569,6 +578,8 @@ void sent_channel::Info() {
 	}
 
 	#if SENT_STATISTIC_COUNTERS
+		efiPrintf("HW overflows %lu\n", statistic.hwOverflowCnt);
+
 		efiPrintf("Pause pulses %lu\n", statistic.PauseCnt);
 		efiPrintf("Restarts %lu", statistic.RestartCnt);
 		efiPrintf("Interval errors %lu short, %lu long", statistic.ShortIntervalErr, statistic.LongIntervalErr);
@@ -590,9 +601,9 @@ static MAILBOX_DECL(sent_mb, sent_mb_buffer, SENT_MB_SIZE);
 
 static THD_WORKING_AREA(waSentDecoderThread, 256);
 
-void SENT_ISR_Handler(uint8_t channel, uint16_t clocks) {
+void SENT_ISR_Handler(uint8_t channel, uint16_t clocks, uint8_t flags) {
 	/* encode to fit msg_t */
-	msg_t msg = (channel << 16) | clocks;
+	msg_t msg = (flags << 24) | (channel << 16) | clocks;
 
 	/* called from ISR */
 	chSysLockFromISR();
@@ -610,11 +621,12 @@ static void SentDecoderThread(void*) {
 		if (ret == MSG_OK) {
 			uint16_t tick = msg & 0xffff;
 			uint8_t n = (msg >> 16) & 0xff;
+			uint8_t flags = (msg >> 24) & 0xff;
 
 			if (n < SENT_CHANNELS_NUM) {
 				sent_channel &channel = channels[n];
 
-				if (channel.Decoder(tick) > 0) {
+				if (channel.Decoder(tick, flags) > 0) {
 					/* report only for first channel */
 					if (n == 0) {
 						uint16_t sig0, sig1;
