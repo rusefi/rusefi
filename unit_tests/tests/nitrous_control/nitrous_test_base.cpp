@@ -6,7 +6,10 @@
 
 #include "nitrous_test_base.h"
 
-void NitrousTestBase::setUpTestConfiguration(const std::optional<int8_t> nitrousFuelAdderPercent) {
+void NitrousTestBase::setUpTestConfiguration(
+    const std::optional<int8_t> nitrousFuelAdderPercent,
+    const std::optional<float> nitrousIgnitionRetard
+) {
     setUpEngineConfiguration(EngineConfig()
         .setNitrousControlEnabled({ true })
         .setNitrousControlArmingMethod({ DIGITAL_SWITCH_INPUT })
@@ -19,6 +22,7 @@ void NitrousTestBase::setUpTestConfiguration(const std::optional<int8_t> nitrous
         .setNitrousDeactivationRpm({ TEST_DEACTIVATION_RPM })
         .setNitrousDeactivationRpmWindow({ TEST_DEACTIVATION_RPM_WINDOW })
         .setNitrousFuelAdderPercent(nitrousFuelAdderPercent)
+        .setNitrousIgnitionRetard(nitrousIgnitionRetard)
     );
 }
 

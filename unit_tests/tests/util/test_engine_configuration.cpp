@@ -567,6 +567,17 @@ void TestEngineConfiguration::configureNitrousFuelAdderPercent(const std::option
     }
 }
 
+void TestEngineConfiguration::configureNitrousIgnitionRetard(const std::optional<float> nitrousIgnitionRetard) {
+    if (nitrousIgnitionRetard.has_value()) {
+        engineConfiguration->nitrousIgnitionRetard = nitrousIgnitionRetard.value();
+    } else {
+        ASSERT_EQ(
+                engineConfiguration->nitrousIgnitionRetard,
+                engine_configuration_defaults::NITROUS_IGNITION_RETARD
+        ); // check default value
+    }
+}
+
 TestEngineConfiguration::TestEngineConfiguration() {
 }
 

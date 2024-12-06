@@ -99,6 +99,7 @@ void TestBase::setUpEngineConfiguration(const EngineConfig& config) {
     getTestEngineConfiguration().configureNitrousFuelAdderPercent(
         config.getNitrousFuelAdderPercent()
     );
+    getTestEngineConfiguration().configureNitrousIgnitionRetard(config.getNitrousIgnitionRetard());
 }
 
 void TestBase::periodicFastCallback() {
