@@ -131,7 +131,7 @@ public class TcuController {
 	public static final String GAUGE_NAME_TPS = "TPS";
 	public static final String GAUGE_NAME_TPS2 = "TPS2";
 	public static final String GAUGE_NAME_TRG_ERR = "Trigger Error Counter";
-	public static final String GAUGE_NAME_TRG_GAP = "Trigger Sync Latest Ratio";
+	public static final String GAUGE_NAME_TRG_GAP = "Sync: Trigger Latest Ratio";
 	public static final String GAUGE_NAME_TUNE_CRC16 = "Tune CRC16";
 	public static final String GAUGE_NAME_TURBO_SPEED = "Turbocharger Speed";
 	public static final String GAUGE_NAME_UPTIME = "Uptime";
@@ -180,15 +180,15 @@ public class TcuController {
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field TCUCURRENTGEAR = Field.create("TCUCURRENTGEAR", 0, FieldType.INT8).setScale(1.0).setBaseOffset(1060);
-	public static final Field ALIGNMENTFILL_AT_1 = Field.create("ALIGNMENTFILL_AT_1", 1, FieldType.INT8).setScale(1.0).setBaseOffset(1060);
-	public static final Field TCRATIO = Field.create("TCRATIO", 2, FieldType.INT16).setScale(0.01).setBaseOffset(1060);
-	public static final Field LASTSHIFTTIME = Field.create("LASTSHIFTTIME", 4, FieldType.FLOAT).setBaseOffset(1060);
-	public static final Field TCU_CURRENTRANGE = Field.create("TCU_CURRENTRANGE", 8, FieldType.INT8).setScale(1.0).setBaseOffset(1060);
-	public static final Field PRESSURECONTROLDUTY = Field.create("PRESSURECONTROLDUTY", 9, FieldType.INT8).setScale(1.0).setBaseOffset(1060);
-	public static final Field TORQUECONVERTERDUTY = Field.create("TORQUECONVERTERDUTY", 10, FieldType.INT8).setScale(1.0).setBaseOffset(1060);
-	public static final Field ALIGNMENTFILL_AT_11 = Field.create("ALIGNMENTFILL_AT_11", 11, FieldType.INT8).setScale(1.0).setBaseOffset(1060);
-	public static final Field ISSHIFTING = Field.create("ISSHIFTING", 12, FieldType.BIT, 0).setBaseOffset(1060);
+	public static final Field TCUCURRENTGEAR = Field.create("TCUCURRENTGEAR", 0, FieldType.INT8).setScale(1.0).setBaseOffset(1064);
+	public static final Field ALIGNMENTFILL_AT_1 = Field.create("ALIGNMENTFILL_AT_1", 1, FieldType.INT8).setScale(1.0).setBaseOffset(1064);
+	public static final Field TCRATIO = Field.create("TCRATIO", 2, FieldType.INT16).setScale(0.01).setBaseOffset(1064);
+	public static final Field LASTSHIFTTIME = Field.create("LASTSHIFTTIME", 4, FieldType.FLOAT).setBaseOffset(1064);
+	public static final Field TCU_CURRENTRANGE = Field.create("TCU_CURRENTRANGE", 8, FieldType.INT8).setScale(1.0).setBaseOffset(1064);
+	public static final Field PRESSURECONTROLDUTY = Field.create("PRESSURECONTROLDUTY", 9, FieldType.INT8).setScale(1.0).setBaseOffset(1064);
+	public static final Field TORQUECONVERTERDUTY = Field.create("TORQUECONVERTERDUTY", 10, FieldType.INT8).setScale(1.0).setBaseOffset(1064);
+	public static final Field ALIGNMENTFILL_AT_11 = Field.create("ALIGNMENTFILL_AT_11", 11, FieldType.INT8).setScale(1.0).setBaseOffset(1064);
+	public static final Field ISSHIFTING = Field.create("ISSHIFTING", 12, FieldType.BIT, 0).setBaseOffset(1064);
 	public static final Field[] VALUES = {
 	TCUCURRENTGEAR,
 	ALIGNMENTFILL_AT_1,

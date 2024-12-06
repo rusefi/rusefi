@@ -1943,6 +1943,45 @@ float getConfigValueByName(const char *name) {
 // secondaryInjectorFuelReferencePressure
 		case -425992769:
 			return engineConfiguration->secondaryInjectorFuelReferencePressure;
+// nitrousControlEnabled
+		case -582951931:
+			return engineConfiguration->nitrousControlEnabled;
+// nitrousControlTriggerPinInverted
+		case -1483164266:
+			return engineConfiguration->nitrousControlTriggerPinInverted;
+// nitrousLuaGaugeArmingValue
+		case -1760115393:
+			return engineConfiguration->nitrousLuaGaugeArmingValue;
+// nitrousMinimumTps
+		case 1089367148:
+			return engineConfiguration->nitrousMinimumTps;
+// nitrousMinimumClt
+		case 1089348504:
+			return engineConfiguration->nitrousMinimumClt;
+// nitrousMaximumMap
+		case -677571211:
+			return engineConfiguration->nitrousMaximumMap;
+// nitrousMaximumAfr
+		case -677584112:
+			return engineConfiguration->nitrousMaximumAfr;
+// nitrousActivationRpm
+		case -469950118:
+			return engineConfiguration->nitrousActivationRpm;
+// nitrousDeactivationRpm
+		case 1072117635:
+			return engineConfiguration->nitrousDeactivationRpm;
+// nitrousDeactivationRpmWindow
+		case -1786673317:
+			return engineConfiguration->nitrousDeactivationRpmWindow;
+// dfcoRetardDeg
+		case 601094003:
+			return engineConfiguration->dfcoRetardDeg;
+// dfcoRetardRampInTime
+		case 2030571545:
+			return engineConfiguration->dfcoRetardRampInTime;
+// nitrousFuelAdderPercent
+		case -1197734314:
+			return engineConfiguration->nitrousFuelAdderPercent;
 // ltftEnabled
 		case -518141238:
 			return config->ltftEnabled;
@@ -5201,6 +5240,71 @@ bool setConfigValueByName(const char *name, float value) {
 		case -425992769:
 	{
 		engineConfiguration->secondaryInjectorFuelReferencePressure = value;
+		return 1;
+	}
+		case -582951931:
+	{
+		engineConfiguration->nitrousControlEnabled = (int)value;
+		return 1;
+	}
+		case -1483164266:
+	{
+		engineConfiguration->nitrousControlTriggerPinInverted = (int)value;
+		return 1;
+	}
+		case -1760115393:
+	{
+		engineConfiguration->nitrousLuaGaugeArmingValue = value;
+		return 1;
+	}
+		case 1089367148:
+	{
+		engineConfiguration->nitrousMinimumTps = (int)value;
+		return 1;
+	}
+		case 1089348504:
+	{
+		engineConfiguration->nitrousMinimumClt = (int)value;
+		return 1;
+	}
+		case -677571211:
+	{
+		engineConfiguration->nitrousMaximumMap = (int)value;
+		return 1;
+	}
+		case -677584112:
+	{
+		engineConfiguration->nitrousMaximumAfr = (int)value;
+		return 1;
+	}
+		case -469950118:
+	{
+		engineConfiguration->nitrousActivationRpm = (int)value;
+		return 1;
+	}
+		case 1072117635:
+	{
+		engineConfiguration->nitrousDeactivationRpm = (int)value;
+		return 1;
+	}
+		case -1786673317:
+	{
+		engineConfiguration->nitrousDeactivationRpmWindow = (int)value;
+		return 1;
+	}
+		case 601094003:
+	{
+		engineConfiguration->dfcoRetardDeg = (int)value;
+		return 1;
+	}
+		case 2030571545:
+	{
+		engineConfiguration->dfcoRetardRampInTime = (int)value;
+		return 1;
+	}
+		case -1197734314:
+	{
+		engineConfiguration->nitrousFuelAdderPercent = (int)value;
 		return 1;
 	}
 		case -518141238:

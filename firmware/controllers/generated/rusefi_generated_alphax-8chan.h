@@ -347,8 +347,8 @@
 #define ego_sensor_e_ES_Innovate_MTX_L 1
 #define ego_sensor_e_ES_PLX 4
 #define EGT_CHANNEL_COUNT 8
-#define END_OF_CALIBRATION_PADDING 108
-#define engine_configuration_s_size 4092
+#define END_OF_CALIBRATION_PADDING 72
+#define engine_configuration_s_size 4096
 #define engine_load_mode_e_auto_enum 0="LM_SPEED_DENSITY",2="LM_ALPHA_N",3="LM_LUA",100="LM_MOCK",1="LM_REAL_MAF"
 #define engine_load_mode_e_enum "Speed Density", "MAF Air Charge", "Alpha-N", "Lua"
 #define engine_load_mode_e_LM_ALPHA_N 2
@@ -482,7 +482,7 @@
 #define ETB_BIAS_CURVE_LENGTH 8
 #define ETB_COUNT 2
 #define ETB_HW_MAX_FREQUENCY 3000
-#define FLASH_DATA_VERSION 20024
+#define FLASH_DATA_VERSION 20025
 #define FRONTEND_TITLE_BAR_NAME "rusEFI"
 #define fuel_cyl_trim_s_size 16
 #define FUEL_LEVEL_TABLE_COUNT 8
@@ -654,7 +654,7 @@
 #define GAUGE_NAME_TPS "TPS"
 #define GAUGE_NAME_TPS2 "TPS2"
 #define GAUGE_NAME_TRG_ERR "Trigger Error Counter"
-#define GAUGE_NAME_TRG_GAP "Trigger Sync Latest Ratio"
+#define GAUGE_NAME_TRG_GAP "Sync: Trigger Latest Ratio"
 #define GAUGE_NAME_TUNE_CRC16 "Tune CRC16"
 #define GAUGE_NAME_TURBO_SPEED "Turbocharger Speed"
 #define GAUGE_NAME_UPTIME "Uptime"
@@ -1154,6 +1154,20 @@
 #define LUA_ANALOG_INPUT_COUNT 8
 #define LUA_DIGITAL_INPUT_COUNT 8
 #define LUA_GAUGE_COUNT 8
+#define lua_gauge_e_auto_enum 0="LUA_GAUGE_1",1="LUA_GAUGE_2",2="LUA_GAUGE_3",3="LUA_GAUGE_4",4="LUA_GAUGE_5",5="LUA_GAUGE_6",6="LUA_GAUGE_7",7="LUA_GAUGE_8"
+#define lua_gauge_e_enum "Lua Gauge 1", "Lua Gauge 2", "Lua Gauge 3", "Lua Gauge 4", "Lua Gauge 5", "Lua Gauge 6", "Lua Gauge 7", "Lua Gauge 8"
+#define lua_gauge_e_LUA_GAUGE_1 0
+#define lua_gauge_e_LUA_GAUGE_2 1
+#define lua_gauge_e_LUA_GAUGE_3 2
+#define lua_gauge_e_LUA_GAUGE_4 3
+#define lua_gauge_e_LUA_GAUGE_5 4
+#define lua_gauge_e_LUA_GAUGE_6 5
+#define lua_gauge_e_LUA_GAUGE_7 6
+#define lua_gauge_e_LUA_GAUGE_8 7
+#define lua_gauge_meaning_e_auto_enum 0="LUA_GAUGE_LOWER_BOUND",1="LUA_GAUGE_UPPER_BOUND"
+#define lua_gauge_meaning_e_enum "Lower Bound", "Upper Bound"
+#define lua_gauge_meaning_e_LUA_GAUGE_LOWER_BOUND 0
+#define lua_gauge_meaning_e_LUA_GAUGE_UPPER_BOUND 1
 #define LUA_PWM_COUNT 8
 #define LUA_SCRIPT_SIZE 8000
 #define MAF_DECODING_COUNT 32
@@ -1194,6 +1208,10 @@
 #define MsIoBoxVss_HALL34 2
 #define MsIoBoxVss_OFF 0
 #define MsIoBoxVss_VR12 1
+#define nitrous_arming_method_e_auto_enum 0="DIGITAL_SWITCH_INPUT",1="LUA_GAUGE"
+#define nitrous_arming_method_e_DIGITAL_SWITCH_INPUT 0
+#define nitrous_arming_method_e_enum "Digital Switch Input", "Lua Gauge"
+#define nitrous_arming_method_e_LUA_GAUGE 1
 #define operation_mode_e_FOUR_STROKE_CAM_SENSOR 2
 #define operation_mode_e_FOUR_STROKE_CRANK_SENSOR 1
 #define operation_mode_e_FOUR_STROKE_SIX_TIMES_CRANK_SENSOR 7
@@ -1202,8 +1220,8 @@
 #define operation_mode_e_FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR 6
 #define operation_mode_e_OM_NONE 0
 #define operation_mode_e_TWO_STROKE 3
-#define output_pin_e_enum 0="NONE",57="10D - Fan",47="11C - Ignition 1",54="11D - Main Relay",102="12D - NOS",70="13C - Ignition 3",96="13D - Injector 8",68="14C - Ignition 5",40="14D - VVT 2",72="15C - Ignition 8",104="15D - Tachometer",64="16C - Low Side 1",52="17C - Low Side 5",71="19C - Ignition 2",119="19D - Injector 9",105="1D - Injector 1",69="20C - Ignition 4",41="20D - VVT 3",27="21C - Ignition 7",42="21D - VVT 4",43="22C - Boost",45="23C - Ignition 10",65="23D - Low Side 2",116="24D - Injector 12",109="25C - Low Side 6",117="25D - Injector 11",118="26D - Injector 10",26="28C - Ignition 6",44="29C - Ignition 9",106="2D - Injector 2",46="30C - Ignition 11",17="31C - Ignition 12",101="34C - Low Side 7",61="3D - Injector 3",60="4D - Injector 4",62="5C - High Side 1",59="5D - Injector 5",11="6C - High Side 2",94="6D - Injector 6",53="7C - High Side 3",95="7D - Injector 7",112="8C - Low Side 3",63="8D - VVT 1",103="9C - Low Side 4",108="9D - Fuel Pump"
-#define output_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","6C - High Side 2","INVALID","INVALID","INVALID","INVALID","INVALID","31C - Ignition 12","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","28C - Ignition 6","21C - Ignition 7","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","14D - VVT 2","20D - VVT 3","21D - VVT 4","22C - Boost","29C - Ignition 9","23C - Ignition 10","30C - Ignition 11","11C - Ignition 1","INVALID","INVALID","INVALID","INVALID","17C - Low Side 5","7C - High Side 3","11D - Main Relay","INVALID","INVALID","10D - Fan","INVALID","5D - Injector 5","4D - Injector 4","3D - Injector 3","5C - High Side 1","8D - VVT 1","16C - Low Side 1","23D - Low Side 2","INVALID","INVALID","14C - Ignition 5","20C - Ignition 4","13C - Ignition 3","19C - Ignition 2","15C - Ignition 8","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","6D - Injector 6","7D - Injector 7","13D - Injector 8","INVALID","INVALID","INVALID","INVALID","34C - Low Side 7","12D - NOS","9C - Low Side 4","15D - Tachometer","1D - Injector 1","2D - Injector 2","INVALID","9D - Fuel Pump","25C - Low Side 6","INVALID","INVALID","8C - Low Side 3","INVALID","INVALID","INVALID","24D - Injector 12","25D - Injector 11","26D - Injector 10","19D - Injector 9"
+#define output_pin_e_enum 0="NONE",57="10D - Fan",47="11C - Ignition 1",54="11D - Main Relay",102="12D - NOS",70="13C - Ignition 3",96="13D - Injector 8",68="14C - Ignition 5",40="14D - VVT 2",72="15C - Ignition 8",104="15D - Tachometer",64="16D - Low Side 1",52="17C - Low Side 5",71="19C - Ignition 2",119="19D - Injector 9",105="1D - Injector 1",69="20C - Ignition 4",41="20D - VVT 3",27="21C - Ignition 7",42="21D - VVT 4",43="22C - Boost",45="23C - Ignition 10",65="23D - Low Side 2",116="24D - Injector 12",109="25C - Low Side 6",117="25D - Injector 11",118="26D - Injector 10",26="28C - Ignition 6",44="29C - Ignition 9",106="2D - Injector 2",46="30C - Ignition 11",17="31C - Ignition 12",101="34C - Low Side 7",61="3D - Injector 3",60="4D - Injector 4",62="5C - High Side 1",59="5D - Injector 5",11="6C - High Side 2",94="6D - Injector 6",53="7C - High Side 3",95="7D - Injector 7",112="8C - Low Side 3",63="8D - VVT 1",103="9C - Low Side 4",108="9D - Fuel Pump"
+#define output_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","6C - High Side 2","INVALID","INVALID","INVALID","INVALID","INVALID","31C - Ignition 12","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","28C - Ignition 6","21C - Ignition 7","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","14D - VVT 2","20D - VVT 3","21D - VVT 4","22C - Boost","29C - Ignition 9","23C - Ignition 10","30C - Ignition 11","11C - Ignition 1","INVALID","INVALID","INVALID","INVALID","17C - Low Side 5","7C - High Side 3","11D - Main Relay","INVALID","INVALID","10D - Fan","INVALID","5D - Injector 5","4D - Injector 4","3D - Injector 3","5C - High Side 1","8D - VVT 1","16D - Low Side 1","23D - Low Side 2","INVALID","INVALID","14C - Ignition 5","20C - Ignition 4","13C - Ignition 3","19C - Ignition 2","15C - Ignition 8","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","6D - Injector 6","7D - Injector 7","13D - Injector 8","INVALID","INVALID","INVALID","INVALID","34C - Low Side 7","12D - NOS","9C - Low Side 4","15D - Tachometer","1D - Injector 1","2D - Injector 2","INVALID","9D - Fuel Pump","25C - Low Side 6","INVALID","INVALID","8C - Low Side 3","INVALID","INVALID","INVALID","24D - Injector 12","25D - Injector 11","26D - Injector 10","19D - Injector 9"
 #define PACK_ADD_TEMPERATURE 40
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_AFR_CFG 10
@@ -1227,7 +1245,7 @@
 #define pedalSensor_NAME "Accelerator pedal"
 #define pedalToTpsTbl_NAME "ETB pedal target"
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 24068
+#define persistent_config_s_size 24060
 #define pid_s_size 20
 #define pin_input_mode_e_auto_enum 0="PI_DEFAULT",2="PI_PULLDOWN",1="PI_PULLUP"
 #define pin_input_mode_e_enum "DEFAULT", "PULLUP", "PULLDOWN"
@@ -1309,7 +1327,7 @@
 #define show_8chan_presets true
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3007166392
+#define SIGNATURE_HASH 211939542
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1371,7 +1389,7 @@
 #define torqueReductionActivationMode_e_enum "Torque Reduction Button", "Launch Button"
 #define torqueReductionActivationMode_e_LAUNCH_BUTTON 1
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON 0
-#define TOTAL_CONFIG_SIZE 24068
+#define TOTAL_CONFIG_SIZE 24060
 #define TPS_2_BYTE_PACKING_MULT 100
 #define TPS_PPS_TOO_HIGH_THRESHOLD 110
 #define TPS_PPS_TOO_LOW_THRESHOLD -10
@@ -1564,7 +1582,7 @@
 #define TS_CRC_CHECK_COMMAND_char k
 #define TS_EXECUTE 'E'
 #define TS_EXECUTE_char E
-#define TS_FILE_VERSION 20241104
+#define TS_FILE_VERSION 20241201
 #define TS_FILE_VERSION_OFFSET 124
 #define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY '8'
 #define TS_GET_COMPOSITE_BUFFER_DONE_DIFFERENTLY_char 8
@@ -1770,14 +1788,14 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI testsDG.2024.11.29.alphax-8chan.3007166392"
+#define TS_SIGNATURE "rusEFI testsDG.2024.12.06.alphax-8chan.211939542"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 1836
+#define TS_TOTAL_OUTPUT_SIZE 1824
 #define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "Channel 1"
 #define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "Channel 2"
 #define TS_TRIGGER_SCOPE_DISABLE 5

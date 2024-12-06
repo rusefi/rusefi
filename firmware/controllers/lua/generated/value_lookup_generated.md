@@ -1936,6 +1936,45 @@ Fuel trim when knock, max 30%
 ### secondaryInjectorFuelReferencePressure
 This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.
 
+### nitrousControlEnabled
+
+
+### nitrousControlTriggerPinInverted
+
+
+### nitrousLuaGaugeArmingValue
+
+
+### nitrousMinimumTps
+
+
+### nitrousMinimumClt
+
+
+### nitrousMaximumMap
+
+
+### nitrousMaximumAfr
+
+
+### nitrousActivationRpm
+
+
+### nitrousDeactivationRpm
+
+
+### nitrousDeactivationRpmWindow
+
+
+### dfcoRetardDeg
+Retard timing by this amount during DFCO. Smooths the transition back from fuel cut. After fuel is restored, ramp timing back in over the period specified.
+
+### dfcoRetardRampInTime
+Smooths the transition back from fuel cut. After fuel is restored, ramp timing back in over the period specified.
+
+### nitrousFuelAdderPercent
+
+
 ### ltftEnabled
 
 
