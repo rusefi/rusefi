@@ -92,10 +92,10 @@ float sent_channel::getTickTime() {
 	return tickPerUnit;
 }
 
-bool sent_channel::isSyncPulse(uint16_t clocks)
+bool sent_channel::isSyncPulse(uint32_t clocks)
 {
 	/* check if pulse looks like sync with allowed +/-20% deviation */
-	int syncClocks = (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) * tickPerUnit;
+	uint32_t syncClocks = (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) * tickPerUnit;
 
 	if (((100 * clocks) >= (syncClocks * 80)) &&
 		((100 * clocks) <= (syncClocks * 120)))
@@ -104,7 +104,7 @@ bool sent_channel::isSyncPulse(uint16_t clocks)
 	return 0;
 }
 
-int sent_channel::Decoder(uint16_t clocks) {
+int sent_channel::Decoder(uint32_t clocks) {
 	int ret = 0;
 
 	pulseCounter++;
