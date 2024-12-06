@@ -6,7 +6,7 @@ pins:
     function: Injector 1
     class: outputs
     type: inj
-    ts_name: 1D - Injector 1
+    ts_name: ___ - Injector 1
     color: purple
 
   - pin: 2D
@@ -14,7 +14,7 @@ pins:
     function: Injector 2
     class: outputs
     type: inj
-    ts_name: 2D - Injector 2
+    ts_name: ___ - Injector 2
     color: purple
 
   - pin: 3D
@@ -22,7 +22,7 @@ pins:
     function: Injector 3
     class: outputs
     type: inj
-    ts_name: 3D - Injector 3
+    ts_name: ___ - Injector 3
     color: green
 
   - pin: 4D
@@ -30,7 +30,7 @@ pins:
     function: Injector 4
     class: outputs
     type: inj
-    ts_name: 4D - Injector 4
+    ts_name: ___ - Injector 4
     color: green
 
   - pin: 5D
@@ -38,7 +38,7 @@ pins:
     function: Injector 5
     class: outputs
     type: inj
-    ts_name: 5D - Injector 5
+    ts_name: ___ - Injector 5
     color: green
 
   - pin: 6D
@@ -46,7 +46,7 @@ pins:
     function: Injector 6
     class: outputs
     type: inj
-    ts_name: 6D - Injector 6
+    ts_name: ___ - Injector 6
     color: green
 
   - pin: 7D
@@ -54,42 +54,42 @@ pins:
     function: Injector 7
     class: outputs
     type: inj
-    ts_name: 7D - Injector 7
+    ts_name: ___ - Injector 7
 
 
   - pin: 8D
     function: VVT 1
     meta: MM176_OUT_PWM1
     class: outputs
-    ts_name: 8D - VVT 1
+    ts_name: ___ - VVT 1
     color: purple
 
   - pin: 9D
     function: Fuel Pump Relay Output (low)
     meta: MM176_GP3
     class: outputs
-    ts_name: 9D - Fuel Pump
+    ts_name: ___ - Fuel Pump
     color: purple
 
   - pin: 10D
     function: Fan Relay Output (low)
     meta: MM176_GP2
     class: outputs
-    ts_name: 10D - Fan
+    ts_name: ___ - Fan
     color: purple
 
   - pin: 11D
     function: Main Relay Output (low)
     meta: MM176_GP1
     class: outputs
-    ts_name: 11D - Main Relay
+    ts_name: ___ - Main Relay
     color: grey
 
   - pin: 12D
     function: NOS Relay Output (low)
     meta: MM176_OUT_IO8
     class: outputs
-    ts_name: 12D - NOS
+    ts_name: ___ - NOS
     color: purple
 
   - pin: 13D
@@ -97,7 +97,7 @@ pins:
     function: Injector 8
     class: outputs
     type: inj
-    ts_name: 13D - Injector 8
+    ts_name: ___ - Injector 8
     color: purple
 
 
@@ -112,14 +112,14 @@ pins:
     function: Tachometer Output (low)
     meta: MM176_OUT_IO13
     class: outputs
-    ts_name: 15D - Tachometer
+    ts_name: ___ - Tachometer
     color: orange
 
   - pin: 16D
     function: Low Side 1
     meta: MM176_OUT_PWM6
     class: outputs
-    ts_name: 16C - Low Side 1
+    ts_name: ___ - Low Side 1
     color: orange
 
   - pin: 17D

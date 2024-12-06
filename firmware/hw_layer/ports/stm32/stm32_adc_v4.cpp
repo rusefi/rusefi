@@ -44,6 +44,11 @@ void portInitAdc() {
 	// Init slow ADC
 	adcStart(&ADCD1, NULL);
 
+#if STM32_ADC_USE_ADC3
+	// Knock/trigger scope ADC
+	adcStart(&ADCD3, nullptr);
+#endif // STM32_ADC_USE_ADC3
+
 	// Connect the analog switches between {PA0_C, PA1_C, PC2_C, PC3_C} and their non-C counterparts
 	// This lets us use normal (non-direct) analog on those channels
 	SYSCFG->PMCR &= ~(SYSCFG_PMCR_PA0SO | SYSCFG_PMCR_PA1SO | SYSCFG_PMCR_PC2SO | SYSCFG_PMCR_PC3SO);
@@ -232,7 +237,7 @@ static const ADCConversionGroup adcConvGroupCh1 = {
 	.num_channels = 1,
 	.end_cb = &knockCompletionCallback,
 	.error_cb = &knockErrorCallback,
-	.cfgr				= ADC_CFGR_EXTEN_0 | (4 << ADC_CFGR_EXTSEL_Pos),	// External trigger ch4, rising edge: TIM3 TRGO
+	.cfgr				= 0,
 	.cfgr2				= 	(H7_KNOCK_OVERSAMPLE - 1) << ADC_CFGR2_OVSR_Pos |	// Oversample by Nx (register contains N-1)
 							H7_KNOCK_ADC_SHIFT_BITS << ADC_CFGR2_OVSS_Pos |		// shift the result right log2(N) bits to make a 16 bit result out of the internal oversample sum
 							ADC_CFGR2_ROVSE,			// Enable oversampling
@@ -257,7 +262,7 @@ static const ADCConversionGroup adcConvGroupCh2 = {
 	.num_channels = 1,
 	.end_cb = &knockCompletionCallback,
 	.error_cb = &knockErrorCallback,
-	.cfgr				= ADC_CFGR_EXTEN_0 | (4 << ADC_CFGR_EXTSEL_Pos),	// External trigger ch4, rising edge: TIM3 TRGO
+	.cfgr				= 0,
 	.cfgr2				= 	(H7_ADC_OVERSAMPLE - 1) << ADC_CFGR2_OVSR_Pos |	// Oversample by Nx (register contains N-1)
 							H7_ADC_SHIFT_BITS << ADC_CFGR2_OVSS_Pos |		// shift the result right log2(N) bits to make a 16 bit result out of the internal oversample sum
 							ADC_CFGR2_ROVSE,			// Enable oversampling

@@ -48,4 +48,23 @@ namespace engine_configuration_defaults {
 
     /* Staged injection: */
     constexpr bool ENABLE_STAGED_INJECTION = false;
+
+    /* Nitrous control */
+    constexpr bool NITROUS_CONTROL_ENABLED = false;
+    constexpr nitrous_arming_method_e NITROUS_CONTROL_ARMING_METHOD = DIGITAL_SWITCH_INPUT;
+    constexpr switch_input_pin_e NITROUS_CONTROL_TRIGGER_PIN = Gpio::Unassigned;
+    constexpr bool NITROUS_CONTROL_TRIGGER_PIN_INVERTED = false;
+    constexpr pin_input_mode_e NITROUS_CONTROL_TRIGGER_PIN_MODE = PI_DEFAULT;
+    constexpr lua_gauge_e NITROUS_LUA_GAUGE = LUA_GAUGE_1;
+    constexpr lua_gauge_meaning_e NITROUS_LUA_GAUGE_MEANING = LUA_GAUGE_LOWER_BOUND;
+    constexpr float NITROUS_LUA_GAUGE_ARMING_VALUE = 0.0f;
+
+    constexpr int NITROUS_MINIMUM_TPS = 80;
+    constexpr uint8_t NITROUS_MINIMUM_CLT = 60;
+    constexpr uint16_t NITROUS_MAXIMUM_MAP = 0;
+    constexpr float NITROUS_MAXIMUM_AFR = 14.0f;
+    constexpr uint16_t NITROUS_ACTIVATION_RPM = 4000;
+    constexpr uint16_t NITROUS_DEACTIVATION_RPM = 7000;
+    constexpr uint16_t NITROUS_DEACTIVATION_RPM_WINDOW = 500;
+    constexpr int8_t NITROUS_FUEL_ADDER_PERCENT = 0;
 }

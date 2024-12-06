@@ -19,15 +19,20 @@ protected:
     TestPersistentConfiguration& getTestPersistentConfiguration();
 
     void setUpEngineConfiguration(const EngineConfig& config);
-
     void periodicFastCallback();
+public:
     void periodicSlowCallback();
-
-    void updateRpm(float rpm);
-    void updateApp(std::optional<float> app);
+protected:
+    void updateRpm(std::optional<float> rpm, void (TestBase::*postAction)() = &TestBase::periodicFastCallback);
+    void updateApp(std::optional<float> app, void (TestBase::*postAction)() = &TestBase::periodicFastCallback);
+    void updateClt(std::optional<float> clt, void (TestBase::*postAction)() = &TestBase::periodicFastCallback);
+    void updateMap(std::optional<float> map, void (TestBase::*postAction)() = &TestBase::periodicFastCallback);
+    void updateLambda1(std::optional<float> lambda1, void (TestBase::*postAction)() = &TestBase::periodicFastCallback);
 
     template<typename ModuleType> ModuleType& getModule();
 private:
+    void updateSensor(SensorType sensor, std::optional<float> sensorReading, void (TestBase::*postAction)());
+
     std::unique_ptr<EngineTestHelper> eth;
 };
 

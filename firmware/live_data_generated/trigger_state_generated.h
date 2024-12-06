@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_state.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/trigger/trigger_state.txt
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -12,45 +12,41 @@ struct trigger_state_s {
 	 */
 	uint32_t crankSynchronizationCounter = (uint32_t)0;
 	/**
-	 * offset 4
-	 */
-	float vvtSyncGapRatio = (float)0;
-	/**
 	 * units: us
-	 * offset 8
+	 * offset 4
 	 */
 	uint32_t vvtToothDurations0 = (uint32_t)0;
 	/**
-	 * units: sync: Primary Cam Position
-	 * offset 12
+	 * "sync: Primary Cam Position"
+	 * offset 8
 	 */
 	float vvtCurrentPosition = (float)0;
 	/**
-	 * units: sync: Cam Tooth Position
-	 * offset 16
+	 * "sync: Cam Tooth Position"
+	 * offset 12
 	 */
 	float vvtToothPosition[4];
 	/**
 	 * @@GAUGE_NAME_TRG_GAP@@
-	 * offset 32
+	 * offset 28
 	 */
 	float triggerSyncGapRatio = (float)0;
 	/**
-	 * offset 36
+	 * offset 32
 	 */
 	uint8_t triggerStateIndex = (uint8_t)0;
 	/**
-	 * offset 37
+	 * offset 33
 	 */
 	uint8_t vvtStateIndex = (uint8_t)0;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 38
+	 * offset 34
 	 */
-	uint8_t alignmentFill_at_38[2];
+	uint8_t alignmentFill_at_34[2];
 };
-static_assert(sizeof(trigger_state_s) == 40);
+static_assert(sizeof(trigger_state_s) == 36);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_state.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/trigger/trigger_state.txt

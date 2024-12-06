@@ -1,0 +1,11 @@
+struct_no_prefix nitrous_control_state_s
+
+bit isArmed
+bit isTpsConditionSatisfied
+bit isCltConditionSatisfied
+bit isMapConditionSatisfied
+bit isAfrConditionSatisfied
+bit isNitrousRpmConditionSatisfied
+bit isNitrousConditionSatisfied
+
+end_struct

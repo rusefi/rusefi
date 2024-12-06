@@ -36,6 +36,10 @@ Release template (copy/paste this for new release):
  - Critical error when using big values on Boost Control Open Loop with Y axis as MAP #7093
  - "Baro Correction" axis label
 
+### Breaking Changes
+ - Lua: onCanRx parameter value to be use Lua-indexing #7110
+ - After start enrichment Engine Cycles is now represented with U16 data type
+
 ## November 2024 "Day 998"
 
 ### Added

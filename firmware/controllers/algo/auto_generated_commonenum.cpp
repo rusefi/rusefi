@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Tue Nov 26 22:03:55 UTC 2024
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Wed Nov 27 22:04:55 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -656,6 +656,36 @@ case AFR_Tps:
   }
  return NULL;
 }
+const char *getLua_gauge_e(lua_gauge_e value){
+switch(value) {
+case LUA_GAUGE_1:
+  return "LUA_GAUGE_1";
+case LUA_GAUGE_2:
+  return "LUA_GAUGE_2";
+case LUA_GAUGE_3:
+  return "LUA_GAUGE_3";
+case LUA_GAUGE_4:
+  return "LUA_GAUGE_4";
+case LUA_GAUGE_5:
+  return "LUA_GAUGE_5";
+case LUA_GAUGE_6:
+  return "LUA_GAUGE_6";
+case LUA_GAUGE_7:
+  return "LUA_GAUGE_7";
+case LUA_GAUGE_8:
+  return "LUA_GAUGE_8";
+  }
+ return NULL;
+}
+const char *getLua_gauge_meaning_e(lua_gauge_meaning_e value){
+switch(value) {
+case LUA_GAUGE_LOWER_BOUND:
+  return "LUA_GAUGE_LOWER_BOUND";
+case LUA_GAUGE_UPPER_BOUND:
+  return "LUA_GAUGE_UPPER_BOUND";
+  }
+ return NULL;
+}
 const char *getMaf_sensor_type_e(maf_sensor_type_e value){
 switch(value) {
 case Bosch0280218004:
@@ -683,6 +713,15 @@ case DWELL_64MS:
   return "DWELL_64MS";
 case DWELL_8MS:
   return "DWELL_8MS";
+  }
+ return NULL;
+}
+const char *getNitrous_arming_method_e(nitrous_arming_method_e value){
+switch(value) {
+case DIGITAL_SWITCH_INPUT:
+  return "DIGITAL_SWITCH_INPUT";
+case LUA_GAUGE:
+  return "LUA_GAUGE";
   }
  return NULL;
 }

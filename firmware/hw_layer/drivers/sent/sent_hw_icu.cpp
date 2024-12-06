@@ -27,10 +27,33 @@
 #define SENT_TIMER_CLOCK_DIV	2
 #define SENT_ICU_FREQ			(CORE_CLOCK / SENT_TIMER_CLOCK_DIV) // == CPU freq / 2
 
+static uint16_t lastPulse[SENT_INPUT_COUNT];
+
+static void icuperiodcb(ICUDriver *icup, size_t index)
+{
+	const ICUConfig *icucfg = icup->config;
+
+	if ((icucfg->channel == ICU_CHANNEL_1) || (icucfg->channel == ICU_CHANNEL_2)) {
+		/* channel 1 and channel 2 supports period measurements */
+		SENT_ISR_Handler(index, icuGetPeriodX(icup) * SENT_TIMER_CLOCK_DIV);
+	} else {
+		/* this is freerunnig timer and we need to calculate period using just captured timer value and previous one */
+		/* TODO: support 32 bit timers too? */
+		uint16_t val = icuGetWidthX(icup);
+
+		/* can overflow */
+		uint16_t clocks = val - lastPulse[index];
+
+		SENT_ISR_Handler(index, clocks /* * SENT_TIMER_CLOCK_DIV */);
+
+		lastPulse[index] = val;
+	}
+}
+
 /* ICU callbacks */
 static void icuperiodcb_in1(ICUDriver *icup)
 {
-	SENT_ISR_Handler(0, icuGetPeriodX(icup) * SENT_TIMER_CLOCK_DIV);
+	icuperiodcb(icup, 0);
 }
 
 /* ICU configs */

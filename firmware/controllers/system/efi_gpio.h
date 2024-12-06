@@ -89,6 +89,7 @@ public:
 	// see acRelayPin
 	RegisteredOutputPin acRelay;
 	RegisteredOutputPin fuelPumpRelay;
+	RegisteredOutputPin nitrousRelay;
 #if EFI_HD_ACR
 	RegisteredNamedOutputPin harleyAcr;
 	RegisteredOutputPin harleyAcr2;

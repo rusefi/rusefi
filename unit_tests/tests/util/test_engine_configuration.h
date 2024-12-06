@@ -61,6 +61,25 @@ public:
 
     // Staged injection
     void configureEnableStagedInjection(std::optional<bool> isStagedInjectionEnabled);
+
+    // Nitrous control
+    void configureNitrousControlEnabled(std::optional<bool> nitrousControlEnabled);
+    void configureNitrousControlArmingMethod(std::optional<nitrous_arming_method_e> armingMethod);
+    void configureNitrousControlTriggerPin(std::optional<switch_input_pin_e> triggerPin);
+    void configureNitrousControlTriggerPinInverted(std::optional<bool> triggerPinInverted);
+    void configureNitrousControlTriggerPinMode(std::optional<pin_input_mode_e> triggerPinMode);
+    void configureNitrousLuaGauge(std::optional<lua_gauge_e> luaGauge);
+    void configureNitrousLuaGaugeMeaning(std::optional<lua_gauge_meaning_e> luaGaugeMeaning);
+    void configureNitrousLuaGaugeArmingValue(std::optional<float> luaGaugeArmingValue);
+
+    void configureNitrousMinimumTps(std::optional<int> nitrousMinimumTps);
+    void configureNitrousMinimumClt(std::optional<uint8_t> nitrousMinimumClt);
+    void configureNitrousMaximumMap(std::optional<uint16_t> nitrousMaximumMap);
+    void configureNitrousMaximumAfr(std::optional<float> nitrousMaximumAfr);
+    void configureNitrousActivationRpm(std::optional<uint16_t> nitrousActivationRpm);
+    void configureNitrousDeactivationRpm(std::optional<uint16_t> nitrousDeactivationRpm);
+    void configureNitrousDeactivationRpmWindow(std::optional<uint16_t> nitrousDeactivationRpmWindow);
+    void configureNitrousFuelAdderPercent(std::optional<int8_t> nitrousFuelAdderPercent);
 private:
     TestEngineConfiguration();
     static TestEngineConfiguration instance;

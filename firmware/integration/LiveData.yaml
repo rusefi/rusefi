@@ -105,6 +105,14 @@ Usages:
     output_name: ac
     engineModule: AcController
 
+  - name: nitrous_control_state
+    java: NitrousControl.java
+    folder: controllers/algo
+    prepend: integration/rusefi_config_shared.txt
+    output_name: nitrous
+    engineModule: NitrousController
+    conditional_compilation: "EFI_LAUNCH_CONTROL"
+
   - name: fan_control
     java: FanControl.java
     folder: controllers/actuators

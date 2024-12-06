@@ -70,6 +70,8 @@ void startSwitchPins() {
 	startInputPinIfValid("Launch Button", engineConfiguration->launchActivatePin, engineConfiguration->launchActivatePinMode);
 	startInputPinIfValid("Antilag Button", engineConfiguration->ALSActivatePin, engineConfiguration->ALSActivatePinMode);
 	startInputPinIfValid("Ignition Switch", engineConfiguration->ignitionKeyDigitalPin, engineConfiguration->ignitionKeyDigitalPinMode);
+	startInputPinIfValid("Torque Reduction Button", engineConfiguration->torqueReductionTriggerPin, engineConfiguration->torqueReductionTriggerPinMode);
+	startInputPinIfValid("Nitrous Button", engineConfiguration->nitrousControlTriggerPin, engineConfiguration->nitrousControlTriggerPinMode);
 #endif /* EFI_PROD_CODE */
 }
 

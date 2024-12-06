@@ -178,3 +178,83 @@ EngineConfig EngineConfig::setSecondaryInjectorCompensationMode(
     m_secondaryInjectorCompensationMode = value;
     return *this;
 }
+
+EngineConfig EngineConfig::setNitrousControlEnabled(const std::optional<bool> value) {
+    m_nitrousControlEnabled = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setNitrousControlArmingMethod(const std::optional<nitrous_arming_method_e> value) {
+    m_nitrousControlArmingMethod = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setNitrousControlTriggerPin(const std::optional<switch_input_pin_e> value) {
+    m_nitrousControlTriggerPin = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setNitrousControlTriggerPinInverted(const std::optional<bool> value) {
+    m_nitrousControlTriggerPinInverted = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setNitrousControlTriggerPinMode(const std::optional<pin_input_mode_e> value) {
+    m_nitrousControlTriggerPinMode = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setNitrousLuaGauge(const std::optional<lua_gauge_e> value) {
+    m_nitrousLuaGauge = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setNitrousLuaGaugeMeaning(const std::optional<lua_gauge_meaning_e> value) {
+    m_nitrousLuaGaugeMeaning = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setNitrousLuaGaugeArmingValue(const std::optional<float> value) {
+    m_nitrousLuaGaugeArmingValue = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setNitrousMinimumTps(const std::optional<int> value) {
+    m_nitrousMinimumTps = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setNitrousMinimumClt(const std::optional<uint8_t> value) {
+    m_nitrousMinimumClt = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setNitrousMaximumMap(const std::optional<uint16_t> value) {
+    m_nitrousMaximumMap = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setNitrousMaximumAfr(const std::optional<float> value) {
+    m_nitrousMaximumAfr = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setNitrousActivationRpm(const std::optional<uint16_t> value) {
+    m_nitrousActivationRpm = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setNitrousDeactivationRpm(const std::optional<uint16_t> value) {
+    m_nitrousDeactivationRpm = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setNitrousDeactivationRpmWindow(const std::optional<uint16_t> value) {
+    m_nitrousDeactivationRpmWindow = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setNitrousFuelAdderPercent(const std::optional<int8_t> value) {
+    m_nitrousFuelAdderPercent = value;
+    return *this;
+}

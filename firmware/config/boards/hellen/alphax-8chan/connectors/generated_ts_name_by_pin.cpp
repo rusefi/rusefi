@@ -27,7 +27,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::D11: return "3D - Injector 3";
 		case Gpio::D12: return "5C - High Side 1";
 		case Gpio::D13: return "8D - VVT 1";
-		case Gpio::D14: return "16C - Low Side 1";
+		case Gpio::D14: return "16D - Low Side 1";
 		case Gpio::D15: return "23D - Low Side 2";
 		case Gpio::D2: return "17C - Low Side 5";
 		case Gpio::D3: return "7C - High Side 3";

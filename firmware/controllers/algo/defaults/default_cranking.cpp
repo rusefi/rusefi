@@ -27,11 +27,11 @@ void setDefaultCranking() {
 	static const int16_t defaultPostCrankingCLTBins[] = {
 		-20, 0, 20, 40, 60, 80
 	};
-	static const uint16_t defaultPostCrankinDurationBins[] = {
+	static const uint16_t defaultPostCrankingDurationBins[] = {
 		0, 15, 35, 65, 100, 150
 	};
 	copyArray(config->postCrankingCLTBins, defaultPostCrankingCLTBins);
-	copyArray(config->postCrankingDurationBins, defaultPostCrankinDurationBins);
+	copyArray(config->postCrankingDurationBins, defaultPostCrankingDurationBins);
 	setTable(config->postCrankingFactor, 1.2f);
 #endif
 

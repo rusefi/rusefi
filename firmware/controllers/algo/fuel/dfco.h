@@ -12,7 +12,10 @@ class DfcoController : public EngineModule {
 public:
 	void update();
 
+	// true if fuel should be cut, false during normal running
 	bool cutFuel() const;
+	// Degrees of timing to retard due to DFCO, positive removes timing
+	float getTimingRetard() const;
 
 	float getTimeSinceCut() const;
 

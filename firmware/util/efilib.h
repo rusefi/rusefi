@@ -32,6 +32,7 @@ inline uint32_t SWAP_UINT32(uint32_t x)
 
 #define BIT(n) (UINT32_C(1) << (n))
 
+// also known as 'HUMAN_INDEX'
 #define HUMAN_OFFSET 1
 
 // human-readable IDs start from 1 while computer-readable indices start from 0

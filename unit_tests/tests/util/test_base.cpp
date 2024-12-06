@@ -74,6 +74,31 @@ void TestBase::setUpEngineConfiguration(const EngineConfig& config) {
 
     // Staged injection
     getTestEngineConfiguration().configureEnableStagedInjection(config.getStagedInjectionEnabled());
+
+    // Nitrous control
+    getTestEngineConfiguration().configureNitrousControlEnabled(config.getNitrousControlEnabled());
+    getTestEngineConfiguration().configureNitrousControlArmingMethod(config.getNitrousControlArmingMethod());
+    getTestEngineConfiguration().configureNitrousControlTriggerPin(config.getNitrousControlTriggerPin());
+    getTestEngineConfiguration().configureNitrousControlTriggerPinInverted(
+        config.getNitrousControlTriggerPinInverted()
+    );
+    getTestEngineConfiguration().configureNitrousControlTriggerPinMode(config.getNitrousControlTriggerPinMode());
+    getTestEngineConfiguration().configureNitrousLuaGauge(config.getNitrousLuaGauge());
+    getTestEngineConfiguration().configureNitrousLuaGaugeMeaning(config.getNitrousLuaGaugeMeaning());
+    getTestEngineConfiguration().configureNitrousLuaGaugeArmingValue(config.getNitrousLuaGaugeArmingValue());
+
+    getTestEngineConfiguration().configureNitrousMinimumTps(config.getNitrousMinimumTps());
+    getTestEngineConfiguration().configureNitrousMinimumClt(config.getNitrousMinimumClt());
+    getTestEngineConfiguration().configureNitrousMaximumMap(config.getNitrousMaximumMap());
+    getTestEngineConfiguration().configureNitrousMaximumAfr(config.getNitrousMaximumAfr());
+    getTestEngineConfiguration().configureNitrousActivationRpm(config.getNitrousActivationRpm());
+    getTestEngineConfiguration().configureNitrousDeactivationRpm(config.getNitrousDeactivationRpm());
+    getTestEngineConfiguration().configureNitrousDeactivationRpmWindow(
+        config.getNitrousDeactivationRpmWindow()
+    );
+    getTestEngineConfiguration().configureNitrousFuelAdderPercent(
+        config.getNitrousFuelAdderPercent()
+    );
 }
 
 void TestBase::periodicFastCallback() {
@@ -85,16 +110,35 @@ void TestBase::periodicSlowCallback() {
     engine->periodicSlowCallback();
 }
 
-void TestBase::updateRpm(const float rpm) {
-    Sensor::setMockValue(SensorType::Rpm, rpm);
-    periodicFastCallback();
+void TestBase::updateRpm(const std::optional<float> rpm, void (TestBase::* const postAction)()) {
+    updateSensor(SensorType::Rpm, rpm, postAction);
 }
 
-void TestBase::updateApp(const std::optional<float> app) {
-    if (app.has_value()) {
-        Sensor::setMockValue(SensorType::DriverThrottleIntent, app.value());
+void TestBase::updateApp(const std::optional<float> app, void (TestBase::* const postAction)()) {
+    updateSensor(SensorType::DriverThrottleIntent, app, postAction);
+}
+
+void TestBase::updateClt(const std::optional<float> clt, void (TestBase::* const postAction)()) {
+    updateSensor(SensorType::Clt, clt, postAction);
+}
+
+void TestBase::updateMap(const std::optional<float> map, void (TestBase::* const postAction)()) {
+    updateSensor(SensorType::Map, map, postAction);
+}
+
+void TestBase::updateLambda1(std::optional<float> lambda1, void (TestBase::* const postAction)()) {
+    updateSensor(SensorType::Lambda1, lambda1, postAction);
+}
+
+void TestBase::updateSensor(
+    const SensorType sensor,
+    const std::optional<float> sensorReading,
+    void (TestBase::* const postAction)()
+) {
+    if (sensorReading.has_value()) {
+        Sensor::setMockValue(sensor, sensorReading.value());
     } else {
-        Sensor::resetMockValue(SensorType::DriverThrottleIntent);
+        Sensor::resetMockValue(sensor);
     }
-    periodicFastCallback();
+    (this->*postAction)();
 }

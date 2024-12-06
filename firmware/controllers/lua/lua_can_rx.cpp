@@ -97,7 +97,7 @@ static void handleCanFrame(LuaHandle& ls, CanFrameData* data) {
 	auto dlc = data->Frame.DLC;
 
 	// Push bus, ID and DLC
-	lua_pushinteger(ls, data->BusIndex);
+	lua_pushinteger(ls, HUMAN_OFFSET + data->BusIndex);
 	lua_pushinteger(ls, CAN_ID(data->Frame));
 	lua_pushinteger(ls, dlc);
 

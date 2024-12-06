@@ -27,7 +27,6 @@
 #define SENT_OFFSET_INTERVAL	12
 #define SENT_SYNC_INTERVAL		(56 - SENT_OFFSET_INTERVAL) // 56 ticks - 12
 
-#define SENT_MIN_INTERVAL		12
 #define SENT_MAX_INTERVAL		15
 
 #define SENT_CRC_SEED           0x05
@@ -93,6 +92,18 @@ float sent_channel::getTickTime() {
 	return tickPerUnit;
 }
 
+bool sent_channel::isSyncPulse(uint16_t clocks)
+{
+	/* check if pulse looks like sync with allowed +/-20% deviation */
+	int syncClocks = (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) * tickPerUnit;
+
+	if (((100 * clocks) >= (syncClocks * 80)) &&
+		((100 * clocks) <= (syncClocks * 120)))
+		return 1;
+
+	return 0;
+}
+
 int sent_channel::Decoder(uint16_t clocks) {
 	int ret = 0;
 	int interval;
@@ -108,6 +119,7 @@ int sent_channel::Decoder(uint16_t clocks) {
 		} else {
 			/* some tickPerUnit calculated...
 			 * Check next 1 + 6 + 1 pulses if they are valid with current tickPerUnit */
+			criticalAssert(tickPerUnit != 0, "zero tickPerUnit", 0);
 			interval = (clocks + tickPerUnit / 2) / tickPerUnit - SENT_OFFSET_INTERVAL;
 			if ((interval >= 0) && (interval <= SENT_MAX_INTERVAL)) {
 				currentStatePulseCounter++;
@@ -130,11 +142,7 @@ int sent_channel::Decoder(uint16_t clocks) {
 
 	/* special case for out-of-sync state */
 	if (state == SENT_STATE_INIT) {
-		/* check if pulse looks like sync with allowed +/-20% deviation */
-		int syncClocks = (SENT_SYNC_INTERVAL + SENT_OFFSET_INTERVAL) * tickPerUnit;
-
-		if (((100 * clocks) >= (syncClocks * 80)) &&
-			((100 * clocks) <= (syncClocks * 120))) {
+		if (isSyncPulse(clocks)) {
 			/* adjust unit time */
 			tickPerUnit = calcTickPerUnit(clocks);
 			/* we get here from calibration phase. calibration phase end with CRC nibble
@@ -176,8 +184,8 @@ int sent_channel::Decoder(uint16_t clocks) {
 			break;
 
 		case SENT_STATE_SYNC:
-			if (interval == SENT_SYNC_INTERVAL)
-			{// sync interval - 56 ticks
+			if (isSyncPulse(clocks))
+			{
 				/* measured tick interval will be used until next sync pulse */
 				tickPerUnit = calcTickPerUnit(clocks);
 				rxReg = 0;

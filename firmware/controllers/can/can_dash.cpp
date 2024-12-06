@@ -88,11 +88,6 @@ static void canDashboardBmwE46(CanCycle cycle) {
 
 	if (cycle.isInterval(CI::_10ms)) {
 		{
-			CanTxMessage msg(CanCategory::NBC, CAN_BMW_E46_SPEED);
-			msg.setShortValue(10 * 8, 1);
-		}
-
-		{
 			CanTxMessage msg(CanCategory::NBC, CAN_BMW_E46_RPM);
       msg[0] = 0x05; // ASC message
       msg[1] = 0x0C; // Indexed Engine Torque in % of C_TQ_STND TBD

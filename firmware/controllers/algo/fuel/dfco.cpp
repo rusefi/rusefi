@@ -84,3 +84,22 @@ bool DfcoController::cutFuel() const {
 float DfcoController::getTimeSinceCut() const {
 	return m_timeSinceCut.getElapsedSeconds();
 }
+
+float DfcoController::getTimingRetard() const {
+	float cutTiming = clampF(0, engineConfiguration->dfcoRetardDeg, 30);
+
+	if (m_isDfco) {
+		// While cut, always retard timing
+		return cutTiming;
+	} else {
+		float timeSinceCut = m_timeSinceCut.getElapsedSeconds();
+		float rampInTime = engineConfiguration->dfcoRetardRampInTime;
+
+		if (timeSinceCut > rampInTime) {
+			// Normal operation, no retard
+			return 0;
+		} else {
+			return interpolateClamped(0, cutTiming, 0.5, 0, timeSinceCut);
+		}
+	}
+}

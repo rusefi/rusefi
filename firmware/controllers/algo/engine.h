@@ -31,6 +31,7 @@
 #include "injector_model.h"
 #include "launch_control.h"
 #include "shift_torque_reduction_controller.h"
+#include "nitrous_controller.h"
 #include "antilag_system.h"
 #include "start_stop.h"
 #include "trigger_scheduler.h"
@@ -173,6 +174,9 @@ public:
 #endif // EFI_BOOST_CONTROL
 		TpsAccelEnrichment,
 		LongTermFuelTrim,
+#if EFI_LAUNCH_CONTROL
+        NitrousController,
+#endif // EFI_LAUNCH_CONTROL
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 

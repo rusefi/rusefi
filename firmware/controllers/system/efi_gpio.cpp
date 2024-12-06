@@ -144,6 +144,7 @@ void RegisteredOutputPin::unregister() {
 #define CONFIG_PIN_OFFSETS2(x, y) CONFIG_OFFSET2(x, y##Pin), CONFIG_OFFSET2(x, y##PinMode)
 
 EnginePins::EnginePins() :
+ // [tag:coding_by_convention] 'mainRelay' member here uses 'mainRelayPin' and 'mainRelayPinMode' configuration fields
 		mainRelay("Main Relay", CONFIG_PIN_OFFSETS(mainRelay)),
 		hpfpValve("HPFP Valve", CONFIG_PIN_OFFSETS(hpfpValve)),
 		starterControl("Starter Relay", CONFIG_PIN_OFFSETS(starterControl)),
@@ -152,6 +153,7 @@ EnginePins::EnginePins() :
 		fanRelay2("Fan Relay 2", CONFIG_PIN_OFFSETS(fan2)),
 		acRelay("A/C Relay", CONFIG_PIN_OFFSETS(acRelay)),
 		fuelPumpRelay("Fuel pump Relay", CONFIG_PIN_OFFSETS(fuelPump)),
+		nitrousRelay("Nitrous Relay", CONFIG_PIN_OFFSETS(nitrousRelay)),
 #if EFI_HD_ACR
 		harleyAcr("Harley ACR", CONFIG_OFFSET(acrPin)),
 		harleyAcr2("Harley ACR 2", CONFIG_OFFSET(acrPin2)),
