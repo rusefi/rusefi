@@ -1946,6 +1946,9 @@ float getConfigValueByName(const char *name) {
 // nitrousIgnitionRetard
 		case -617548836:
 			return engineConfiguration->nitrousIgnitionRetard;
+// nitrousMinimumVehicleSpeed
+		case 1658738502:
+			return engineConfiguration->nitrousMinimumVehicleSpeed;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -5188,6 +5191,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -617548836:
 	{
 		engineConfiguration->nitrousIgnitionRetard = value;
+		return 1;
+	}
+		case 1658738502:
+	{
+		engineConfiguration->nitrousMinimumVehicleSpeed = (int)value;
 		return 1;
 	}
 		case -1658957891:

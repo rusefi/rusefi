@@ -1939,6 +1939,9 @@ Smooths the transition back from fuel cut. After fuel is restored, ramp timing b
 ### nitrousIgnitionRetard
 Retard timing to remove from actual final timing (after all corrections) due to additional air.
 
+### nitrousMinimumVehicleSpeed
+
+
 ### tcu_shiftTime
 
 

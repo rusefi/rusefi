@@ -4935,8 +4935,13 @@ struct engine_configuration_s {
 	 */
 	float nitrousIgnitionRetard;
 	/**
-	 * units: units
+	 * units: Kph
 	 * offset 3812
+	 */
+	uint16_t nitrousMinimumVehicleSpeed;
+	/**
+	 * units: units
+	 * offset 3814
 	 */
 	uint8_t unusedOftenChangesDuringFirmwareUpdate[END_OF_CALIBRATION_PADDING];
 };

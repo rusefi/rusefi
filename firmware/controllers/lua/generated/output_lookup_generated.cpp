@@ -1220,6 +1220,11 @@ float getOutputValueByName(const char *name) {
 		case -1447071222:
 			return engine->module<NitrousController>()->isArmed;
 #endif
+// isNitrousSpeedConditionSatisfied
+#if EFI_LAUNCH_CONTROL
+		case 1259221321:
+			return engine->module<NitrousController>()->isNitrousSpeedConditionSatisfied;
+#endif
 // isTpsConditionSatisfied
 #if EFI_LAUNCH_CONTROL
 		case -1256912197:
