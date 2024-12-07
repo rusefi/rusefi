@@ -126,8 +126,9 @@ void StepperMotorBase::doIteration() {
 	int targetPosition = efiRound(getTargetPosition(), 1);
 	int currentPosition = m_currentPosition;
 
-	// the stepper does not work if the main relay is turned off (it requires +12V)
-	if (!engine->isMainRelayEnabled()) {
+	// stepper requires +12V
+	if (!isIgnVoltage()) {
+	  initialPositionSet = false;
 		m_hw->pause();
 		return;
 	}
