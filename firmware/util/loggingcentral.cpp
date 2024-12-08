@@ -137,19 +137,21 @@ public:
 			LogLineBuffer* line;
 			msg_t msg = filledBuffers.fetch(&line, TIME_INFINITE);
 
-			if (msg == MSG_RESET) {
+			if (msg != MSG_OK) {
 				// todo?
-				// what happens if MSG_RESET?
-			} else {
+				// what happens if MSG_RESET or MSG_TIMEOUT?
+				continue;
+			}
+			{
 				// Lock the buffer mutex - inhibit buffer swaps while writing
 				chibios_rt::MutexLocker lock(logBufferMutex);
 
 				// Write the line out to the output buffer
 				writeBuffer->writeLine(line);
-
-				// Return this line buffer to the free list
-				freeBuffers.post(line, TIME_INFINITE);
 			}
+
+			// Return this line buffer to the free list
+			freeBuffers.post(line, TIME_INFINITE);
 		}
 	}
 };
