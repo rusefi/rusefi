@@ -115,7 +115,7 @@ jobs:
     # java automated test suite picks ECU based on specified serial
     - name: Set EXTRA env
       run: |
-        if [ "$(hostname)" == "rusefi-hw-ci-2" -o "$(hostname)" == "mck1117-github-actions-nuc" ]; then
+        if [ "$(hostname)" == "rusefi-hw-ci-2" ]; then
           echo "HARDWARE_CI_SERIAL_DEVICE=${{matrix.serial-device}}" >> $GITHUB_ENV
           echo "HARDWARE_CI_VBATT=${{matrix.vbatt_supply}}" >> $GITHUB_ENV
         fi
@@ -125,7 +125,7 @@ jobs:
 # (cat .github/workflows/openocd_ci_proteus_f7.cfg ) | .github/workflows/hw-ci/openocd_wipe_and_flash.sh
     - name: OpenOCD wipe & flash STM32
       run: |
-        if [ "$(hostname)" == "rusefi-hw-ci-2" -o "$(hostname)" == "mck1117-github-actions-nuc" ]; then
+        if [ "$(hostname)" == "rusefi-hw-ci-2" ]; then
           (cat ${{matrix.openocd-script}}; echo "hla_serial ${{matrix.stlink-serial}}") \
           | .github/workflows/hw-ci/openocd_wipe_and_flash.sh
         else
