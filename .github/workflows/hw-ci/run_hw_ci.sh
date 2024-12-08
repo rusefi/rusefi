@@ -4,6 +4,7 @@
 # .github/workflows/hw-ci/run_hw_ci.sh com.rusefi.HwCiProteus
 
 HW_SUITE=$1
+SIMULATOR_INI_FILE=$2
 
 set -e
 
