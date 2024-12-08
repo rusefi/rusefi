@@ -37,7 +37,6 @@ jobs:
             test-suite: com.rusefi.HwCiNucleoF7
             test-suite-ini: firmware/tunerstudio/generated/rusefi_stm32f767_nucleo.ini
             folder: config/boards/nucleo_f767
-            openocd-script: .github/workflows/openocd_ci_proteus_f7.cfg
 
 
 #          - build-target: proteus_f4
@@ -45,7 +44,6 @@ jobs:
 #            # see HwCiProteus which would point you at ProteusAnalogTest.java for wiring documentation
 #            test-suite: com.rusefi.HwCiProteus
 #            folder: config/boards/proteus
-#            openocd-script: .github/workflows/openocd_ci_proteus_f4.cfg
 #            serial-device: /dev/serial/by-id/usb-rusEFI_LLC_rusEFI_Engine_Management_ECU_41003D000451383037343335-if01
 #            vbatt_supply: 12
 
@@ -53,7 +51,6 @@ jobs:
 #            runs-on: hw-ci-proteus-f7
 #            test-suite: com.rusefi.HwCiProteus
 #            folder: config/boards/proteus
-#            openocd-script: ../.github/workflows/openocd_ci_proteus_f7.cfg
 #            serial-device: /dev/serial/by-id/usb-rusEFI_LLC_rusEFI_Engine_Management_ECU_38002D0005504B4634303120-if01
 #            # let's power Proteus from same DC adapter as Nuc PC
 #            vbatt_supply: 12
