@@ -47,7 +47,7 @@ size_t LogBuffer<TBufferSize>::length() const {
 template <size_t TBufferSize>
 void LogBuffer<TBufferSize>::reset() {
 	m_writePtr = m_buffer;
-	memset(m_buffer, 0, TBufferSize);
+	*m_writePtr = '\0';
 }
 
 template <size_t TBufferSize>
@@ -63,11 +63,10 @@ void LogBuffer<TBufferSize>::writeInternal(const char* buffer) {
 
 	// If we can't fit the whole thing, write as much as we can
 	len = minI(available, len);
+	// Ensure the output buffer is always null terminated (in case we did a partial write)
+	*(m_writePtr + len) = '\0';
 	memcpy(m_writePtr, buffer, len);
 	m_writePtr += len;
-
-	// Ensure the output buffer is always null terminated (in case we did a partial write)
-	*m_writePtr = '\0';
 }
 
 // for unit tests
