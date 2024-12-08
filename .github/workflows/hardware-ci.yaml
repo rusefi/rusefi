@@ -15,8 +15,9 @@ jobs:
       # Let all builds finish even if one fails early
       fail-fast: false
       matrix:
-        build-target: [f407-discovery
-#        nucleo_f767
+        build-target: [
+            f407-discovery,
+            nucleo_f767
           #proteus F7 HW CI is not 100% reliable #6002          proteus_f7,
         #  proteus_f4
         ]
@@ -31,12 +32,12 @@ jobs:
             serial-device: /dev/serial/by-id/usb-rusEFI_LLC_rusEFI_Engine_Management_ECU_2B003B000A51343033393930-if01
             vbatt_supply: 12
 
-#          - build-target: nucleo_f767
-#            runs-on: hw-ci-nucleo-f7
-#            test-suite: com.rusefi.HwCiNucleoF7
-#            test-suite-ini: firmware/tunerstudio/generated/rusefi_stm32f767_nucleo.ini
-#            folder: config/boards/nucleo_f767
-#            openocd-script: .github/workflows/openocd_ci_proteus_f7.cfg
+          - build-target: nucleo_f767
+            runs-on: hw-ci-nucleo-f7
+            test-suite: com.rusefi.HwCiNucleoF7
+            test-suite-ini: firmware/tunerstudio/generated/rusefi_stm32f767_nucleo.ini
+            folder: config/boards/nucleo_f767
+            openocd-script: .github/workflows/openocd_ci_proteus_f7.cfg
 
 
 #          - build-target: proteus_f4
