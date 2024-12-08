@@ -307,7 +307,7 @@ void applyEngineType(engine_type_e engineType) {
 	    setHondaCivicBcm();
         break;
 #endif // HW_HELLEN
-#if defined(HW_FRANKENSO) || HW_PROTEUS || EFI_SIMULATOR
+#if defined(HW_NUCLEO_F767) || defined(HW_NUCLEO_H743) || defined(HW_FRANKENSO) || HW_PROTEUS || EFI_SIMULATOR
     // used in HW CI
 	case engine_type_e::VW_ABA:
 		setVwAba();
