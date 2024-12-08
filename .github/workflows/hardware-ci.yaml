@@ -124,14 +124,14 @@ jobs:
 # (cat .github/workflows/openocd_ci_f4_discovery.cfg ) | .github/workflows/hw-ci/openocd_wipe_and_flash.sh
 # (cat .github/workflows/openocd_ci_proteus_f7.cfg ) | .github/workflows/hw-ci/openocd_wipe_and_flash.sh
     - name: st-flash wipe & flash STM32
-      run:
-      if [ "$(hostname)" == "rusefi-hw-ci-2" ]; then
-        st-flash --area=main erase
-        st-flash --format=binary --reset --connect-under-reset --serial=${{matrix.stlink-serial}} write firmware/deliver/rusefi.bin 0x08000000
-      else
-        st-flash --area=main erase
-        st-flash --format=binary --reset --connect-under-reset write firmware/deliver/rusefi.bin 0x08000000
-      fi
+      run: |
+        if [ "$(hostname)" == "rusefi-hw-ci-2" ]; then
+            st-flash --area=main erase
+            st-flash --format=binary --reset --connect-under-reset --serial=${{matrix.stlink-serial}} write firmware/deliver/rusefi.bin 0x08000000
+        else
+            st-flash --area=main erase
+            st-flash --format=binary --reset --connect-under-reset write firmware/deliver/rusefi.bin 0x08000000
+        fi
 
     - name: Upload build bin artifact
       uses: actions/upload-artifact@v4
