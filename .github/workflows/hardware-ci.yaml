@@ -37,7 +37,7 @@ jobs:
             runs-on: hw-ci-nucleo-f7
             # see HwCiF4Discovery.java or https://github.com/rusefi/rusefi/wiki/Dev-Quality-Control#stm32f407g-disc1 for wiring documentation
             test-suite: com.rusefi.HwCiNucleoF7
-            test-suite-ini: ../firmware/tunerstudio/generated/rusefi_stm32f767_nucleo.ini
+            test-suite-ini: firmware/tunerstudio/generated/rusefi_stm32f767_nucleo.ini
             folder: config/boards/nucleo_f767
             openocd-script: .github/workflows/openocd_ci_proteus_f7.cfg
 

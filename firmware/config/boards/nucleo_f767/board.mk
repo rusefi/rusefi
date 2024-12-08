@@ -19,9 +19,5 @@ DDEFS += -DEFI_ETHERNET=TRUE
 DDEFS += -DHW_NUCLEO_F767=1
 
 DDEFS += -DFIRMWARE_ID=\"nucleo_f767\"
-# HACK: nucleo_f767 target does not contain VW_ABA as valid engine_type, but is used in functional tests
-# refer to: firmware/controllers/algo/engine_type_impl.cpp
-# java_console/autotest/src/main/java/com/rusefi/f4discovery
-DDEFS += -DHW_FRANKENSO=1
 DDEFS += -DDEFAULT_ENGINE_TYPE=engine_type_e::MINIMAL_PINS
 DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_NUCLEO_F767
