@@ -63,7 +63,7 @@ static void printAdcValue(int channel) {
 		efiPrintf("Invalid ADC channel %d", channel);
 		return;
 	}
-	int value = getAdcValue("print", (adc_channel_e)channel);
+	int value = adcGetRawValue("print", (adc_channel_e)channel);
 	float volts = adcToVoltsDivided(value, (adc_channel_e)channel);
 	efiPrintf("adc %d voltage : %.3f", channel, volts);
 }
@@ -73,7 +73,7 @@ static void printAdcChannedReport(const char *prefix, int internalIndex, adc_cha
 	if (isAdcChannelValid(hwChannel)) {
 		ioportid_t port = getAdcChannelPort("print", hwChannel);
 		int pin = getAdcChannelPin(hwChannel);
-		int adcValue = getAdcValue("print", hwChannel);
+		int adcValue = adcGetRawValue("print", hwChannel);
 		float volts = getVoltage("print", hwChannel);
 		float voltsDivided = getVoltageDivided("print", hwChannel);
 		/* Human index starts from 1 */

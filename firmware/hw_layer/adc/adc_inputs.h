@@ -89,7 +89,7 @@ float getMCUInternalTemperature(void);
 void addFastAdcChannel(const char *name, adc_channel_e hwChannel);
 void removeChannel(const char *name, adc_channel_e hwChannel);
 
-#define getAdcValue(msg, hwChannel) getInternalAdcValue(msg, hwChannel)
+#define adcGetRawValue(msg, hwChannel) getInternalAdcValue(msg, hwChannel)
 
 #define adcToVoltsDivided(adc, hwChannel) (adcToVolts(adc) * getAnalogInputDividerCoefficient(hwChannel))
 
