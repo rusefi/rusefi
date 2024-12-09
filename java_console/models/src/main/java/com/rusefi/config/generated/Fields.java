@@ -1063,6 +1063,8 @@ public class Fields {
 	public static final String INDICATOR_NAME_BRAKE_DOWN = "Brake switch";
 	public static final String INDICATOR_NAME_CLUTCH_DOWN = "Clutch: down";
 	public static final String INDICATOR_NAME_CLUTCH_UP = "Clutch: up";
+	public static final int INJ_PHASE_LOAD_COUNT = 16;
+	public static final int INJ_PHASE_RPM_COUNT = 16;
 	public static final int INJ_STAGING_COUNT = 6;
 	public static final int injection_mode_e_IM_BATCH = 2;
 	public static final int injection_mode_e_IM_SEQUENTIAL = 1;
@@ -1237,7 +1239,7 @@ public class Fields {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 319284043;
+	public static final int SIGNATURE_HASH = 30092072;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1500,7 +1502,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.12.09.f407-discovery.319284043";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.12.09.f407-discovery.30092072";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
