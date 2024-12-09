@@ -16,6 +16,8 @@
 #endif
 
 float getAnalogInputDividerCoefficient(adc_channel_e);
+/* optional, checks if measured voltage is valid */
+int getAnalogInputStatus(adc_channel_e, float voltage);
 
 inline bool isAdcChannelValid(adc_channel_e hwChannel) {
 	/* Compiler will optimize, keep following if as a reminder */

@@ -12,6 +12,11 @@ float PUBLIC_API_WEAK getAnalogInputDividerCoefficient(adc_channel_e) {
     return engineConfiguration->analogInputDividerCoefficient;
 }
 
+int PUBLIC_API_WEAK getAnalogInputStatus(adc_channel_e, float) {
+	/* input is valid */
+	return 0;
+}
+
 #if HAL_USE_ADC
 
 #include "adc_subscription.h"
