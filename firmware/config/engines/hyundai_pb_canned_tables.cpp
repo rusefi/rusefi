@@ -77,6 +77,7 @@ static void pbcannedveTable() {
 }
 
 static void pbcannedinjectionPhase() {
+#if INJ_PHASE_RPM_COUNT == 16
 	static const float hardCodedinjectionPhase[16][16] = {
 {-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-250.000,	-250.000,	-250.000,	-240.000,	-240.000,	-240.000,	-240.000,	-240.000,	},
 {-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-250.000,	-250.000,	-250.000,	-240.000,	-240.000,	-240.000,	-240.000,	-240.000,	},
@@ -96,6 +97,7 @@ static void pbcannedinjectionPhase() {
 {-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-220.000,	-250.000,	-250.000,	-230.000,	-180.000,	-180.000,	-180.000,	-180.000,	-180.000,	},
 };
 	copyTable(config->injectionPhase, hardCodedinjectionPhase);
+#endif
 }
 
 static void pbcannedlambdaTable() {
