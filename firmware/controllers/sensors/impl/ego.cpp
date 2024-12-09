@@ -30,7 +30,7 @@ float getAfr(SensorType type) {
 		return 0;
 	}
 
-	float volts = getVoltageDivided("ego", type == SensorType::Lambda1 ? sensor->hwChannel : sensor->hwChannel2);
+	float volts = adcGetScaledVoltage("ego", type == SensorType::Lambda1 ? sensor->hwChannel : sensor->hwChannel2);
 
 	return interpolateMsg("AFR", sensor->v1, sensor->value1, sensor->v2, sensor->value2, volts)
 			+ engineConfiguration->egoValueShift;

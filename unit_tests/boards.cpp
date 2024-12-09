@@ -17,6 +17,6 @@ float adcGetRawVoltage(const char *msg, adc_channel_e hwChannel) {
 	return 0;
 }
 
-float getVoltageDivided(const char *msg, adc_channel_e hwChannel) {
+float adcGetScaledVoltage(const char *msg, adc_channel_e hwChannel) {
 	return 0;
 }
