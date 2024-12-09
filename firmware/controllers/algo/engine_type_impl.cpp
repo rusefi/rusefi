@@ -321,7 +321,7 @@ void applyEngineType(engine_type_e engineType) {
 		testEngine6451();
 		break;
 
-#if defined(HW_FRANKENSO) || EFI_SIMULATOR
+#if defined(HW_NUCLEO_F767) || defined(HW_NUCLEO_H743) || defined(HW_FRANKENSO) || EFI_SIMULATOR
 	case engine_type_e::DEFAULT_FRANKENSO:
 		setFrankensoConfiguration();
 		break;
@@ -413,6 +413,22 @@ void applyEngineType(engine_type_e engineType) {
 	default:
 	  applyEngineTypeExt(engineType);
 	}
+
+#if defined(HW_NUCLEO_F767) || defined(HW_NUCLEO_H743)
+    // default PA1-6 ADC pins conflict with the ethernet module on F767, used on HW CI
+    engineConfiguration->tps1_1AdcChannel = EFI_ADC_32;
+    engineConfiguration->vbattAdcChannel = EFI_ADC_33;
+    engineConfiguration->clt.adcChannel = EFI_ADC_34;
+    engineConfiguration->iat.adcChannel = EFI_ADC_35;
+    engineConfiguration->afr.hwChannel = EFI_ADC_36;
+    engineConfiguration->map.sensor.hwChannel=EFI_ADC_39;
+    engineConfiguration->baroSensor.hwChannel=EFI_ADC_40;
+    engineConfiguration->throttlePedalUpPin = Gpio::Unassigned;
+    engineConfiguration->acSwitch = Gpio::Unassigned;
+    engineConfiguration->triggerInputPins[0] = Gpio::B2;
+    engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
+    engineConfiguration->camInputs[0] = Gpio::E0;
+#endif
 }
 
 PUBLIC_API_WEAK_SOMETHING_WEIRD engine_type_e getLastEngineType() {
