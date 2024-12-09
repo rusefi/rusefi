@@ -17,11 +17,12 @@
 #define ADC_MAX_VALUE 4095
 #endif
 
-#define adcToVolts(adc) ((engineConfiguration->adcVcc) / ADC_MAX_VALUE * (adc))
+#define adcToRawVolts(adc) ((engineConfiguration->adcVcc) / ADC_MAX_VALUE * (adc))
 
 #define voltsToAdc(volts) ((volts) * (ADC_MAX_VALUE / (engineConfiguration->adcVcc)))
 
-float getVoltage(const char *msg, adc_channel_e channel);
+// voltage in MCU universe, from zero to Vref
+float adcGetRawVoltage(const char *msg, adc_channel_e channel);
 
 float getVoltageDivided(const char *msg, adc_channel_e channel);
 

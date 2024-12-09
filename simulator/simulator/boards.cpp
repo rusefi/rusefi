@@ -16,11 +16,11 @@ int adcGetRawValue(const char * /*msg*/, int /*hwChannel*/) {
 }
 
 // voltage in MCU universe, from zero to VDD
-float getVoltage(const char *msg, adc_channel_e hwChannel) {
-	return adcToVolts(adcGetRawValue(msg, hwChannel));
+float adcGetRawVoltage(const char *msg, adc_channel_e hwChannel) {
+	return adcToRawVolts(adcGetRawValue(msg, hwChannel));
 }
 
 // Board voltage, with divider coefficient accounted for
 float getVoltageDivided(const char *msg, adc_channel_e hwChannel) {
-	return getVoltage(msg, hwChannel) * engineConfiguration->analogInputDividerCoefficient;
+	return adcGetRawVoltage(msg, hwChannel) * engineConfiguration->analogInputDividerCoefficient;
 }

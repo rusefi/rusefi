@@ -29,14 +29,14 @@
 #include "periodic_thread_controller.h"
 #include "protected_gpio.h"
 
-// Board voltage, with divider coefficient accounted for
-float getVoltageDivided(const char *msg, adc_channel_e hwChannel) {
-	return getVoltage(msg, hwChannel) * getAnalogInputDividerCoefficient(hwChannel);
+// voltage in MCU universe, from zero to Vref
+float adcGetRawVoltage(const char *msg, adc_channel_e hwChannel) {
+	return adcToRawVolts(adcGetRawValue(msg, hwChannel));
 }
 
-// voltage in MCU universe, from zero to VDD
-float getVoltage(const char *msg, adc_channel_e hwChannel) {
-	return adcToVolts(adcGetRawValue(msg, hwChannel));
+// Board voltage, with divider coefficient accounted for
+float getVoltageDivided(const char *msg, adc_channel_e hwChannel) {
+	return adcGetRawVoltage(msg, hwChannel) * getAnalogInputDividerCoefficient(hwChannel);
 }
 
 #if EFI_USE_FAST_ADC

@@ -91,7 +91,7 @@ void removeChannel(const char *name, adc_channel_e hwChannel);
 
 #define adcGetRawValue(msg, hwChannel) getInternalAdcValue(msg, hwChannel)
 
-#define adcToVoltsDivided(adc, hwChannel) (adcToVolts(adc) * getAnalogInputDividerCoefficient(hwChannel))
+#define adcToVoltsDivided(adc, hwChannel) (adcToRawVolts(adc) * getAnalogInputDividerCoefficient(hwChannel))
 
 // This callback is called by the ADC driver when a new fast ADC sample is ready
 void onFastAdcComplete(adcsample_t* samples);

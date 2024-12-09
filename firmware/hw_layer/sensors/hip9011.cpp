@@ -651,7 +651,7 @@ static void showHipInfo() {
 	if (!instance.adv_mode) {
 		efiPrintf(" Adc input %d (%.2f V)",
 			(int)engineConfiguration->hipOutputChannel,
-			getVoltage("hipinfo", engineConfiguration->hipOutputChannel));
+			adcGetRawVoltage("hipinfo", engineConfiguration->hipOutputChannel));
 	}
 
 	for (int i = 0; i < HIP_INPUT_CHANNELS; i++) {
