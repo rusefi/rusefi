@@ -94,7 +94,11 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 		auto tps = Sensor::get(SensorType::DriverThrottleIntent);
 		if (tps) {
 			// interpolate between idle table and normal (running) table using TPS threshold
-			advanceAngle = interpolateClamped(0.0f, idleAdvance, engineConfiguration->idlePidDeactivationTpsThreshold, advanceAngle, tps.Value);
+			// 0 TPS -> idle table
+			// 1/2 threshold -> idle table
+			// idle threshold -> normal table
+			float idleThreshold = engineConfiguration->idlePidDeactivationTpsThreshold;
+			advanceAngle = interpolateClamped(idleThreshold / 2, idleAdvance, idleThreshold, advanceAngle, tps.Value);
 		}
 	}
 #endif
