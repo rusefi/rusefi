@@ -18,5 +18,5 @@
 #define ts_show_output_diag true
 #define ts_show_l9779 true
 
-
-
+#define INJ_PHASE_RPM_COUNT 3
+#define INJ_PHASE_LOAD_COUNT 3
