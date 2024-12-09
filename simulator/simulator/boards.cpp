@@ -17,7 +17,7 @@ int adcGetRawValue(const char * /*msg*/, int /*hwChannel*/) {
 
 // voltage in MCU universe, from zero to VDD
 float adcGetRawVoltage(const char *msg, adc_channel_e hwChannel) {
-	return adcToRawVolts(adcGetRawValue(msg, hwChannel));
+	return adcRawValueToRawVoltage(adcGetRawValue(msg, hwChannel));
 }
 
 // voltage in ECU universe, with all input dividers and OpAmps gains taken into account, voltage at ECU connector pin

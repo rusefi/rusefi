@@ -17,7 +17,7 @@
 #define ADC_MAX_VALUE 4095
 #endif
 
-#define adcToRawVolts(adc) ((engineConfiguration->adcVcc) / ADC_MAX_VALUE * (adc))
+#define adcRawValueToRawVoltage(adc) ((engineConfiguration->adcVcc) / ADC_MAX_VALUE * (adc))
 
 #define voltsToAdc(volts) ((volts) * (ADC_MAX_VALUE / (engineConfiguration->adcVcc)))
 

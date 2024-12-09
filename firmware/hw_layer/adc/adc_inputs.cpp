@@ -63,9 +63,9 @@ static void printAdcValue(int channel) {
 		efiPrintf("Invalid ADC channel %d", channel);
 		return;
 	}
-	int value = adcGetRawValue("print", (adc_channel_e)channel);
-	float volts = adcToVoltsDivided(value, (adc_channel_e)channel);
-	efiPrintf("adc %d voltage : %.3f", channel, volts);
+	int adcValue = adcGetRawValue("print", (adc_channel_e)channel);
+	float voltsInput = adcRawValueToScaledVoltage(adcValue, (adc_channel_e)channel);
+	efiPrintf("adc %d input %.3fV", channel, voltsInput);
 }
 
 static void printAdcChannedReport(const char *prefix, int internalIndex, adc_channel_e hwChannel)
@@ -77,7 +77,7 @@ static void printAdcChannedReport(const char *prefix, int internalIndex, adc_cha
 		float volts = adcGetRawVoltage("print", hwChannel);
 		float voltsInput = adcGetScaledVoltage("print", hwChannel);
 		/* Human index starts from 1 */
-		efiPrintf(" %s ch[%2d] @ %s%d ADC%d 12bit=%4d %.3fV (input %.3fV)",
+		efiPrintf(" %s ch[%2d] @ %s%d ADC%d 12bit=%4d %.3fV input %.3fV",
 			prefix, internalIndex, portname(port), pin,
 			/* TODO: */ hwChannel - EFI_ADC_0 + 1,
 			adcValue, volts, voltsInput);
