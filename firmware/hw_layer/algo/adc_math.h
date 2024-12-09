@@ -22,8 +22,8 @@
 #define voltsToAdc(volts) ((volts) * (ADC_MAX_VALUE / (engineConfiguration->adcVcc)))
 
 // voltage in MCU universe, from zero to Vref
-float adcGetRawVoltage(const char *msg, adc_channel_e channel);
+expected<float> adcGetRawVoltage(const char *msg, adc_channel_e channel);
 
 // voltage in ECU universe, with all input dividers and OpAmps gains taken into account, voltage at ECU connector pin
-float adcGetScaledVoltage(const char *msg, adc_channel_e channel);
+expected<float> adcGetScaledVoltage(const char *msg, adc_channel_e channel);
 
