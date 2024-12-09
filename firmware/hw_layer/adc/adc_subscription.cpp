@@ -148,7 +148,7 @@ void AdcSubscription::UpdateSubscribers(efitick_t nowNt) {
 			continue;
 		}
 
-		float mcuVolts = getVoltage("sensor", entry.Channel);
+		float mcuVolts = adcGetRawVoltage("sensor", entry.Channel);
 		entry.sensorVolts = mcuVolts * entry.VoltsPerAdcVolt;
 
 		// On the very first update, preload the filter as if we've been
@@ -176,7 +176,7 @@ void AdcSubscription::PrintInfo() {
 		}
 
 		const auto name = entry.Sensor->getSensorName();
-		float mcuVolts = getVoltage("sensor", entry.Channel);
+		float mcuVolts = adcGetRawVoltage("sensor", entry.Channel);
 		float sensorVolts = mcuVolts * entry.VoltsPerAdcVolt;
 		auto channel = entry.Channel;
 

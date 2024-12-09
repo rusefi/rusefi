@@ -56,7 +56,7 @@ void ProtectedGpio::check(efitick_t /*nowNt*/) {
 		return;
 	}
 
-	float senseVolts = getVoltage("protected", m_config->SenseChannel);
+	float senseVolts = adcGetRawVoltage("protected", m_config->SenseChannel);
 	float amps = senseVolts * m_config->AmpsPerVolt;
 
 	// TODO: smarter state machine

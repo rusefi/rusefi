@@ -74,7 +74,7 @@ static void printAdcChannedReport(const char *prefix, int internalIndex, adc_cha
 		ioportid_t port = getAdcChannelPort("print", hwChannel);
 		int pin = getAdcChannelPin(hwChannel);
 		int adcValue = adcGetRawValue("print", hwChannel);
-		float volts = getVoltage("print", hwChannel);
+		float volts = adcGetRawVoltage("print", hwChannel);
 		float voltsDivided = getVoltageDivided("print", hwChannel);
 		/* Human index starts from 1 */
 		efiPrintf(" %s ch[%2d] @ %s%d ADC%d 12bit=%4d %.3fV (input %.3fV)",
@@ -235,12 +235,12 @@ void printFullAdcReportIfNeeded(void) {
 
 #else /* not HAL_USE_ADC */
 
-__attribute__((weak)) float getVoltageDivided(const char*, adc_channel_e) {
+// voltage in MCU universe, from zero to VDD
+__attribute__((weak)) float adcGetRawVoltage(const char*, adc_channel_e) {
 	return 0;
 }
 
-// voltage in MCU universe, from zero to VDD
-__attribute__((weak)) float getVoltage(const char*, adc_channel_e) {
+__attribute__((weak)) float getVoltageDivided(const char*, adc_channel_e) {
 	return 0;
 }
 
