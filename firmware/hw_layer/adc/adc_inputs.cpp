@@ -52,15 +52,29 @@ int analogGetDiagnostic()
 #include "protected_gpio.h"
 
 // voltage in MCU universe, from zero to Vref
-float adcGetRawVoltage(const char *msg, adc_channel_e hwChannel) {
-	return adcRawValueToRawVoltage(adcGetRawValue(msg, hwChannel));
+expected<float> adcGetRawVoltage(const char *msg, adc_channel_e hwChannel) {
+	float rawVoltage = adcRawValueToRawVoltage(adcGetRawValue(msg, hwChannel));
+	int inputStatus = boardGetAnalogInputDiagnostic(hwChannel, rawVoltage);
+
+	if (inputStatus == 0) {
+		return expected(rawVoltage);
+	}
+
+	/* TODO: convert inputStatus to unexpected? */
+	return unexpected;
 }
 
 // voltage in ECU universe, with all input dividers and OpAmps gains taken into account, voltage at ECU connector pin
-float adcGetScaledVoltage(const char *msg, adc_channel_e hwChannel) {
-	// TODO: merge getAnalogInputDividerCoefficient() and boardAdjustVoltage() into single board hook?
-	float voltage = adcGetRawVoltage(msg, hwChannel) * getAnalogInputDividerCoefficient(hwChannel);
-	return boardAdjustVoltage(voltage, hwChannel);
+expected<float> adcGetScaledVoltage(const char *msg, adc_channel_e hwChannel) {
+	auto rawVoltage = adcGetRawVoltage(msg, hwChannel);
+
+	if (rawVoltage) {
+		// TODO: merge getAnalogInputDividerCoefficient() and boardAdjustVoltage() into single board hook?
+		float voltage = rawVoltage.value_or(0) * getAnalogInputDividerCoefficient(hwChannel);
+		return expected(boardAdjustVoltage(voltage, hwChannel));
+	}
+
+	return expected(rawVoltage);
 }
 
 extern AdcDevice fastAdc;
@@ -108,13 +122,13 @@ void adcPrintChannelReport(const char *prefix, int internalIndex, adc_channel_e 
 		ioportid_t port = getAdcChannelPort("print", hwChannel);
 		int pin = getAdcChannelPin(hwChannel);
 		int adcValue = adcGetRawValue("print", hwChannel);
-		float volts = adcGetRawVoltage("print", hwChannel);
-		float voltsInput = adcGetScaledVoltage("print", hwChannel);
+		auto volts = adcGetRawVoltage("print", hwChannel);
+		auto voltsInput = adcGetScaledVoltage("print", hwChannel);
 		/* Human index starts from 1 */
-		efiPrintf(" %s ch[%2d] @ %s%d ADC%d 12bit=%4d %.3fV input %.3fV",
+		efiPrintf(" %s ch[%2d] @ %s%d ADC%d 12bit=%4d %.3fV input %.3fV %s",
 			prefix, internalIndex, portname(port), pin,
 			/* TODO: */ hwChannel - EFI_ADC_0 + 1,
-			adcValue, volts, voltsInput);
+			adcValue, volts.value_or(0), voltsInput.value_or(0), volts ? "valid" : "INVALID");
 	}
 }
 
@@ -237,13 +251,13 @@ void printFullAdcReportIfNeeded(void) {
 #else /* not HAL_USE_ADC */
 
 // voltage in MCU universe, from zero to VDD
-__attribute__((weak)) float adcGetRawVoltage(const char*, adc_channel_e) {
-	return 0;
+__attribute__((weak)) expected<float> adcGetRawVoltage(const char*, adc_channel_e) {
+	return expected(0.0f);
 }
 
 // voltage in ECU universe, with all input dividers and OpAmps gains taken into account, voltage at ECU connector pin
-__attribute__((weak)) float adcGetScaledVoltage(const char*, adc_channel_e) {
-	return 0;
+__attribute__((weak)) expected<float> adcGetScaledVoltage(const char*, adc_channel_e) {
+	return expected(0.0f);
 }
 
 #endif
