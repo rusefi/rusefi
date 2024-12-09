@@ -36,7 +36,7 @@ float getVoltageDivided(const char *msg, adc_channel_e hwChannel) {
 
 // voltage in MCU universe, from zero to VDD
 float getVoltage(const char *msg, adc_channel_e hwChannel) {
-	return adcToVolts(getAdcValue(msg, hwChannel));
+	return adcToVolts(adcGetRawValue(msg, hwChannel));
 }
 
 #if EFI_USE_FAST_ADC

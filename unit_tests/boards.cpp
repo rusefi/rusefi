@@ -9,14 +9,14 @@
 
 #include "boards.h"
 
+int adcGetRawValue(const char *msg, adc_channel_e hwChannel) {
+	return 0;
+}
+
 float getVoltageDivided(const char *msg, adc_channel_e hwChannel) {
 	return 0;
 }
 
 float getVoltage(const char *msg, adc_channel_e hwChannel) {
-	return 0;
-}
-
-int getAdcValue(const char *msg, adc_channel_e hwChannel) {
 	return 0;
 }
