@@ -24,5 +24,6 @@
 // voltage in MCU universe, from zero to Vref
 float adcGetRawVoltage(const char *msg, adc_channel_e channel);
 
-float getVoltageDivided(const char *msg, adc_channel_e channel);
+// voltage in ECU universe, with all input dividers and OpAmps gains taken into account, voltage at ECU connector pin
+float adcGetScaledVoltage(const char *msg, adc_channel_e channel);
 

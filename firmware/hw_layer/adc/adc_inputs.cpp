@@ -75,12 +75,12 @@ static void printAdcChannedReport(const char *prefix, int internalIndex, adc_cha
 		int pin = getAdcChannelPin(hwChannel);
 		int adcValue = adcGetRawValue("print", hwChannel);
 		float volts = adcGetRawVoltage("print", hwChannel);
-		float voltsDivided = getVoltageDivided("print", hwChannel);
+		float voltsInput = adcGetScaledVoltage("print", hwChannel);
 		/* Human index starts from 1 */
 		efiPrintf(" %s ch[%2d] @ %s%d ADC%d 12bit=%4d %.3fV (input %.3fV)",
 			prefix, internalIndex, portname(port), pin,
 			/* TODO: */ hwChannel - EFI_ADC_0 + 1,
-			adcValue, volts, voltsDivided);
+			adcValue, volts, voltsInput);
 	}
 }
 
@@ -240,7 +240,8 @@ __attribute__((weak)) float adcGetRawVoltage(const char*, adc_channel_e) {
 	return 0;
 }
 
-__attribute__((weak)) float getVoltageDivided(const char*, adc_channel_e) {
+// voltage in ECU universe, with all input dividers and OpAmps gains taken into account, voltage at ECU connector pin
+__attribute__((weak)) float adcGetScaledVoltage(const char*, adc_channel_e) {
 	return 0;
 }
 

@@ -20,7 +20,7 @@ float adcGetRawVoltage(const char *msg, adc_channel_e hwChannel) {
 	return adcToRawVolts(adcGetRawValue(msg, hwChannel));
 }
 
-// Board voltage, with divider coefficient accounted for
-float getVoltageDivided(const char *msg, adc_channel_e hwChannel) {
+// voltage in ECU universe, with all input dividers and OpAmps gains taken into account, voltage at ECU connector pin
+float adcGetScaledVoltage(const char *msg, adc_channel_e hwChannel) {
 	return adcGetRawVoltage(msg, hwChannel) * engineConfiguration->analogInputDividerCoefficient;
 }
