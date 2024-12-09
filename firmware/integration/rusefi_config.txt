@@ -219,6 +219,8 @@ struct_no_prefix engine_configuration_s
 
 #define FUEL_RPM_COUNT 16
 #define FUEL_LOAD_COUNT 16
+#define INJ_PHASE_RPM_COUNT 16
+#define INJ_PHASE_LOAD_COUNT 16
 
 #define BOOST_RPM_COUNT 8
 #define BOOST_LOAD_COUNT 8
@@ -1910,9 +1912,9 @@ int8_t[8 x 8] autoscale ignitionIatCorrTable;;"deg", 0.1, 0, -25, 25, 1
 int8_t[8] ignitionIatCorrTempBins;;"C", 1, 0, -40, 120, 0
 uint8_t[8] autoscale ignitionIatCorrLoadBins;;"Load", 5, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
 
-int16_t[FUEL_LOAD_COUNT x FUEL_RPM_COUNT] injectionPhase;;"deg", 1, 0, -720, 720, 0
-uint16_t[FUEL_LOAD_COUNT] injPhaseLoadBins;;"Load", 1, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
-uint16_t[FUEL_RPM_COUNT] injPhaseRpmBins;;"RPM",	   1, 0, 0, 18000, 0
+int16_t[INJ_PHASE_LOAD_COUNT x INJ_PHASE_RPM_COUNT] injectionPhase;;"deg", 1, 0, -720, 720, 0
+uint16_t[INJ_PHASE_LOAD_COUNT] injPhaseLoadBins;;"Load", 1, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
+uint16_t[INJ_PHASE_RPM_COUNT] injPhaseRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
 uint8_t[TCU_SOLENOID_COUNT x TCU_GEAR_COUNT] tcuSolenoidTable;;"onoff", 1, 0, 0, 1, 0
 
