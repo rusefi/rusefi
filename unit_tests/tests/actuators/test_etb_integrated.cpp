@@ -33,7 +33,7 @@ TEST(etb, integrated) {
 
 	etb->update();
 
-	ASSERT_EQ(engine->outputChannels.etbTarget, 40);
+	ASSERT_EQ(etb->m_adjustedTarget, 40);
 
 	Sensor::setMockValue(SensorType::AcceleratorPedal, 10, true);
 	etb->update();
