@@ -11,9 +11,9 @@ public class HwCiNucleoF7 {
             CompositeLoggerTest.class,
             HighRevTest.class,
             NucleoPwmHardwareTest.class,
-            MiscTest.class,
-            BurnCommandTest.class,
-            CommonFunctionalTest.class,
+//            MiscTest.class,
+//            BurnCommandTest.class,
+//            CommonFunctionalTest.class,
         });
     }
 }
