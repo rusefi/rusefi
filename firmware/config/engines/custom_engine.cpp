@@ -35,7 +35,7 @@
 void setDiscoveryPdm() {
 }
 
-#ifdef HW_FRANKENSO
+#if defined(HW_NUCLEO_F767) || defined(HW_NUCLEO_H743) || defined(HW_FRANKENSO)
 
 /**
  * set engine_type 59
