@@ -192,9 +192,6 @@ float getOutputValueByName(const char *name) {
 // coilDutyCycle
 		case 1029096098:
 			return engine->outputChannels.coilDutyCycle;
-// etbTarget
-		case -2105094009:
-			return engine->outputChannels.etbTarget;
 // etb1DutyCycle
 		case 1021133095:
 			return engine->outputChannels.etb1DutyCycle;

@@ -340,53 +340,53 @@ struct output_channels_s {
 	 */
 	scaled_channel<uint16_t, 100, 1> coilDutyCycle = (uint16_t)0;
 	/**
-	 * ETB Target
-	 * units: %
-	 * offset 64
-	 */
-	scaled_channel<int16_t, 100, 1> etbTarget = (int16_t)0;
-	/**
 	 * @@GAUGE_NAME_ETB_DUTY@@
 	 * units: %
-	 * offset 66
+	 * offset 64
 	 */
 	scaled_channel<int16_t, 100, 1> etb1DutyCycle = (int16_t)0;
 	/**
 	 * Fuel level
 	 * units: %
-	 * offset 68
+	 * offset 66
 	 */
 	scaled_channel<int16_t, 100, 1> fuelTankLevel = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_CONSUMPTION@@
 	 * units: grams
-	 * offset 70
+	 * offset 68
 	 */
 	uint16_t totalFuelConsumption = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_FLOW@@
 	 * units: gram/s
-	 * offset 72
+	 * offset 70
 	 */
 	scaled_channel<uint16_t, 200, 1> fuelFlowRate = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_TPS2@@
 	 * units: %
-	 * offset 74
+	 * offset 72
 	 */
 	scaled_channel<int16_t, 100, 1> TPS2Value = (int16_t)0;
 	/**
 	 * @@GAUGE_NAME_TUNE_CRC16@@
 	 * units: crc16
-	 * offset 76
+	 * offset 74
 	 */
 	uint16_t tuneCrc16 = (uint16_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_VE@@
 	 * units: ratio
-	 * offset 78
+	 * offset 76
 	 */
 	scaled_channel<uint16_t, 10, 1> veValue = (uint16_t)0;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 78
+	 */
+	uint8_t alignmentFill_at_78[2];
 	/**
 	 * @@GAUGE_NAME_UPTIME@@
 	 * units: sec
