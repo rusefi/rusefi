@@ -7,7 +7,7 @@
 struct electronic_throttle_s {
 	/**
 	 * "ETB: target with idle"
-	 * units: per
+	 * units: %
 	 * offset 0
 	 */
 	float targetWithIdlePosition = (float)0;
@@ -18,13 +18,13 @@ struct electronic_throttle_s {
 	float trim = (float)0;
 	/**
 	 * "ETB: luaAdjustment"
-	 * units: per
+	 * units: %
 	 * offset 8
 	 */
 	float luaAdjustment = (float)0;
 	/**
 	 * "DC: wastegatePosition"
-	 * units: per
+	 * units: %
 	 * offset 12
 	 */
 	float m_wastegatePosition = (float)0;

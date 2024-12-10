@@ -572,8 +572,8 @@ static const LogField fields[] = {
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{___engine.module<IdleController>().unmock().luaAdd, "idle: Lua Adder", "", 0},
 #endif
-	{engine->dc_motors.dcOutput0, "DC: output0", "per", 2, "ETB more"},
-	{engine->dc_motors.isEnabled0_int, "DC: en0", "per", 2, "ETB more"},
+	{engine->dc_motors.dcOutput0, "DC: output0", "%", 2, "ETB more"},
+	{engine->dc_motors.isEnabled0_int, "DC: en0", "%", 2, "ETB more"},
 #if EFI_VVT_PID
 	{___engine.module<VvtController1>()->vvtTarget, "vvtTarget", "deg", 1},
 #endif
