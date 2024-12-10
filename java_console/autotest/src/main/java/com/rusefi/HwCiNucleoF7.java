@@ -11,8 +11,9 @@ public class HwCiNucleoF7 {
             CompositeLoggerTest.class,
             HighRevTest.class,
             NucleoPwmHardwareTest.class,
-			// removed due to extremely low temperatures on the HWCI node (or we are incorrectly reading the CPU temperature on F7)
-           	// MiscTest.class,
+            MiscTest.class,
+            BurnCommandTest.class,
+            CommonFunctionalTest.class,
         });
     }
 }
