@@ -329,7 +329,7 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	maxPosition = std::min(maxPosition, 100.0f);
 
 	targetPosition = clampF(minPosition, targetPosition, maxPosition);
-	etbCurrentAdjustedTarget = targetPosition;
+	m_adjustedTarget = targetPosition;
 
 #if EFI_TUNER_STUDIO
 	if (m_function == DC_Throttle1) {
