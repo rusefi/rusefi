@@ -94,7 +94,7 @@ public:
 
 #if EFI_UNIT_TEST
 	/**
-	 * used for trigger export only
+	 * used only for trigger export
 	 */
 	float gapRatio[PWM_PHASE_MAX_COUNT * 6];
 #endif // EFI_UNIT_TEST

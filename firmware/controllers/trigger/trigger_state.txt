@@ -1,3 +1,5 @@
+! same live data is used for crank and cam decoders, so we usually have 1+4 of these
+
 struct_no_prefix trigger_state_s
 	uint32_t crankSynchronizationCounter;sync: Crank sync counter\nUsually matches crank revolutions
     uint32_t vvtToothDurations0;;"us", 1, 0, 0, 100000, 3
