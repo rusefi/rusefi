@@ -92,7 +92,7 @@ public enum Sensor implements BinaryLogEntry {
 //
 //    // Idle & ETB
 //    idlePosition("Idle Position", SensorCategory.OPERATIONS, FieldType.INT16, 90, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
-    etbTarget(GAUGE_NAME_ETB_TARGET, SensorCategory.OTHERS, FieldType.INT16, TsOutputs.ETBTARGET, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
+//    etbTarget(GAUGE_NAME_ETB_TARGET, SensorCategory.OTHERS, FieldType.INT16, TsOutputs.ETBTARGET, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
     etb1DutyCycle(GAUGE_NAME_ETB_DUTY, SensorCategory.OTHERS, FieldType.INT16, TsOutputs.ETB1DUTYCYCLE, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
 //    etb1Error(GAUGE_NAME_ETB_ERROR, SensorCategory.OTHERS, FieldType.INT16, 96, 1.0 / PACK_MULT_PERCENT, 0, 100, "%"),
 
