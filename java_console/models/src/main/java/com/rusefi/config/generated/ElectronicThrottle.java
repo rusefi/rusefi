@@ -186,7 +186,8 @@ public class ElectronicThrottle {
 	public static final Field ETBFEEDFORWARD = Field.create("ETBFEEDFORWARD", 16, FieldType.FLOAT).setBaseOffset(1644);
 	public static final Field ETBINTEGRALERROR = Field.create("ETBINTEGRALERROR", 20, FieldType.FLOAT).setBaseOffset(1644);
 	public static final Field ETBCURRENTTARGET = Field.create("ETBCURRENTTARGET", 24, FieldType.FLOAT).setBaseOffset(1644);
-	public static final Field ETBCURRENTADJUSTEDTARGET = Field.create("ETBCURRENTADJUSTEDTARGET", 28, FieldType.FLOAT).setBaseOffset(1644);
+	public static final Field M_ADJUSTEDTARGET = Field.create("M_ADJUSTEDTARGET", 28, FieldType.INT16).setScale(0.01).setBaseOffset(1644);
+	public static final Field ALIGNMENTFILL_AT_30 = Field.create("ALIGNMENTFILL_AT_30", 30, FieldType.INT8).setScale(1.0).setBaseOffset(1644);
 	public static final Field ETBREVLIMITACTIVE = Field.create("ETBREVLIMITACTIVE", 32, FieldType.BIT, 0).setBaseOffset(1644);
 	public static final Field JAMDETECTED = Field.create("JAMDETECTED", 32, FieldType.BIT, 1).setBaseOffset(1644);
 	public static final Field VALIDPLANTPOSITION = Field.create("VALIDPLANTPOSITION", 32, FieldType.BIT, 2).setBaseOffset(1644);
@@ -207,7 +208,8 @@ public class ElectronicThrottle {
 	ETBFEEDFORWARD,
 	ETBINTEGRALERROR,
 	ETBCURRENTTARGET,
-	ETBCURRENTADJUSTEDTARGET,
+	M_ADJUSTEDTARGET,
+	ALIGNMENTFILL_AT_30,
 	ETBREVLIMITACTIVE,
 	JAMDETECTED,
 	VALIDPLANTPOSITION,
