@@ -2054,7 +2054,8 @@ struct blend_table_s
 	gppwm_channel_e blendParameter
 	gppwm_channel_e yAxisOverride
 
-	int16_t[8] autoscale blendBins;;"", 0.1, 0, -1000, 1000, 1
+! todo: change type since to fit RPM as blend parameter
+	int16_t[8] autoscale blendBins;;"", 0.1, 0, -3200, 3200, 1
 	uint8_t[8] autoscale blendValues;;"%", 0.5, 0, 0, 100, 1
 end_struct
 
