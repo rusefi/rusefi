@@ -232,3 +232,40 @@ Gpio* getBoardMetaOutputs() {
 int getBoardMetaDcOutputsCount() {
     return 2;
 }
+
+int getAnalogInputStatus(adc_channel_e hwChannel, float voltage) {
+	/* we do not check voltage for valid ragne yet */
+	(void)voltage;
+#ifdef DIAG_5VP_PIN
+	if (!isBrainPinValid(DIAG_5VP_PIN)) {
+		/* Pin is not defined - return success */
+		return 0;
+	}
+
+	switch (hwChannel) {
+		/* inputs that may be affected by incorrect reference voltage */
+		case MM176_IN_TPS_ANALOG:
+		case MM176_IN_TPS2_ANALOG:
+		case MM176_IN_PPS1_ANALOG:
+		case MM176_IN_PPS2_ANALOG:
+		case MM176_IN_IAT_ANALOG:
+		case MM176_IN_AT1_ANALOG:
+		case MM176_IN_CLT_ANALOG:
+		case MM176_IN_AT2_ANALOG:
+		//case MM176_IN_O2S_ANALOG:
+		//case MM176_IN_O2S2_ANALOG:
+		case MM176_IN_MAP1_ANALOG:
+		case MM176_IN_MAP2_ANALOG:
+		case MM176_IN_AUX1_ANALOG:
+		case MM176_IN_AUX2_ANALOG:
+		case MM176_IN_AUX3_ANALOG:
+		case MM176_IN_AUX4_ANALOG:
+			/* TODO: more? */
+			return efiReadPin(DIAG_5VP_PIN) ? 0 : -1;
+		/* all other inputs should not rely on output 5V */
+		default:
+			return 0;
+	}
+#endif
+	return 0;
+}
