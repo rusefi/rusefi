@@ -8,11 +8,11 @@ inputs:
   rusefi_dir:
     description: 'Path to rusefi submodule'
     required: false
-    default: ext/rusefi
+    default: firmware/config/boards/microrusefi
   meta_info:
     description: 'Path to meta info file'
     required: false
-    default: meta-info.env
+    default: firmware/config/boards/microrusefi/meta-info-mre_f4.env
   meta_output:
     description: 'Path to meta output directory'
     required: false
