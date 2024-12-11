@@ -1049,7 +1049,7 @@ static void initVvtShape(TriggerWaveform& shape, const TriggerConfiguration& p_c
 }
 
 void TriggerCentral::validateCamVvtCounters() {
-	// micro-optimized 'crankSynchronizationCounter % 256'
+	// micro-optimized 'synchronizationCounter % 256'
 	int camVvtValidationIndex = triggerState.getSynchronizationCounter() & 0xFF;
 	if (camVvtValidationIndex == 0) {
 		vvtCamCounter = 0;

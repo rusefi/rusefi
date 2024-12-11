@@ -65,7 +65,7 @@ void TriggerDecoderBase::resetState() {
 
 	setArrayValues(toothDurations, 0);
 
-	crankSynchronizationCounter = 0;
+	synchronizationCounter = 0;
 	totalTriggerErrorCounter = 0;
 	orderingErrorCounter = 0;
 	m_timeSinceDecodeError.init();
@@ -169,7 +169,7 @@ int64_t TriggerDecoderBase::getTotalEventCounter() const {
 }
 
 int TriggerDecoderBase::getSynchronizationCounter() const {
-	return crankSynchronizationCounter;
+	return synchronizationCounter;
 }
 
 void PrimaryTriggerDecoder::resetState() {
@@ -230,7 +230,7 @@ angle_t PrimaryTriggerDecoder::syncEnginePhase(int divider, int remainder, angle
 }
 
 void TriggerDecoderBase::incrementShaftSynchronizationCounter() {
-	crankSynchronizationCounter++;
+	synchronizationCounter++;
 }
 
 void PrimaryTriggerDecoder::onTriggerError() {
@@ -325,7 +325,7 @@ void TriggerDecoderBase::onShaftSynchronization(
 		incrementShaftSynchronizationCounter();
 	} else {
 		// We have just synchronized, this is the zeroth revolution
-		crankSynchronizationCounter = 0;
+		synchronizationCounter = 0;
 	}
 
 	totalEventCountBase += triggerShape.getSize();
@@ -334,7 +334,7 @@ void TriggerDecoderBase::onShaftSynchronization(
 	if (printTriggerDebug) {
 		printf("onShaftSynchronization index=%d %d\r\n",
 				currentCycle.current_index,
-				crankSynchronizationCounter);
+				synchronizationCounter);
 	}
 #endif /* EFI_UNIT_TEST */
 }

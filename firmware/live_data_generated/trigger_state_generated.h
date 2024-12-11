@@ -10,7 +10,7 @@ struct trigger_state_s {
 	 * Usually matches crank revolutions
 	 * offset 0
 	 */
-	uint32_t crankSynchronizationCounter = (uint32_t)0;
+	uint32_t synchronizationCounter = (uint32_t)0;
 	/**
 	 * units: us
 	 * offset 4
