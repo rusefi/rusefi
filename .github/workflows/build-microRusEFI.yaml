@@ -13,7 +13,6 @@ jobs:
   build-microrusefi:
     runs-on: ubuntu-latest
     
-
     steps:
       - name: Install mtools
       run: sudo apt-get install mtools
