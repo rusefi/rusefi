@@ -254,6 +254,9 @@ void SensorChecker::onSlowCallback() {
 	if (analogGetDiagnostic() < 0) {
 		/* TODO: map to more OBD codes? */
 		warning(ObdCode::OBD_Sensor_Refence_Voltate_A_Open, "Analog subsystem fault");
+		state->isAnalogFailure = true;
+	} else {
+		state->isAnalogFailure = false;
 	}
 #endif // EFI_PROD_CODE
 
