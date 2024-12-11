@@ -188,8 +188,7 @@ public class TriggerState {
 	public static final Field VVTTOOTHPOSITION4 = Field.create("VVTTOOTHPOSITION4", 24, FieldType.FLOAT).setBaseOffset(1400);
 	public static final Field TRIGGERSYNCGAPRATIO = Field.create("TRIGGERSYNCGAPRATIO", 28, FieldType.FLOAT).setBaseOffset(1400);
 	public static final Field TRIGGERSTATEINDEX = Field.create("TRIGGERSTATEINDEX", 32, FieldType.INT8).setScale(1.0).setBaseOffset(1400);
-	public static final Field VVTSTATEINDEX = Field.create("VVTSTATEINDEX", 33, FieldType.INT8).setScale(1.0).setBaseOffset(1400);
-	public static final Field ALIGNMENTFILL_AT_34 = Field.create("ALIGNMENTFILL_AT_34", 34, FieldType.INT8).setScale(1.0).setBaseOffset(1400);
+	public static final Field ALIGNMENTFILL_AT_33 = Field.create("ALIGNMENTFILL_AT_33", 33, FieldType.INT8).setScale(1.0).setBaseOffset(1400);
 	public static final Field[] VALUES = {
 	SYNCHRONIZATIONCOUNTER,
 	VVTTOOTHDURATIONS0,
@@ -200,7 +199,6 @@ public class TriggerState {
 	VVTTOOTHPOSITION4,
 	TRIGGERSYNCGAPRATIO,
 	TRIGGERSTATEINDEX,
-	VVTSTATEINDEX,
-	ALIGNMENTFILL_AT_34,
+	ALIGNMENTFILL_AT_33,
 	};
 }
