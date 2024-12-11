@@ -47,10 +47,10 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
 
-      - name: Clean Previous Builds
-        working-directory: ./firmware
-        run: |
-          make clean
+ #     - name: Clean Previous Builds
+  #      working-directory: ./firmware
+   #     run: |
+    #      make clean
 
       - name: Build Firmware for mre-legacy_f4
         working-directory: ./firmware
@@ -62,8 +62,4 @@ jobs:
         with:
           name: mre-legacy_f4-firmware
           path: |
-            ./firmware/deliver/rusefi*.bin
-            ./firmware/deliver/rusefi*.hex
-            ./firmware/deliver/rusefi*.dfu
-            ./firmware/deliver/rusefi*.ini
-            ./firmware/deliver/rusefi_mre_f4*.ini
+            ./firmware/deliver/
