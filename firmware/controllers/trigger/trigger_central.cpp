@@ -326,7 +326,6 @@ void handleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 			tc->vvtTriggerConfiguration[camIndex],
 			front == TriggerValue::RISE ? SHAFT_PRIMARY_RISING : SHAFT_PRIMARY_FALLING, nowNt);
 		vvtDecoder.vvtToothDurations0 = (uint32_t)NT2US(vvtDecoder.toothDurations[0]);
-		vvtDecoder.vvtStateIndex = vvtDecoder.currentCycle.current_index;
 	}
 
     // here we count all cams together
