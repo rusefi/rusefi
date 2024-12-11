@@ -149,3 +149,18 @@ void detectHellenBoardType() {
 	engine->engineState.hellenBoardId = hackHellenBoardId(detectHellenBoardId());
 #endif /* EFI_BOOTLOADER */
 }
+
+int boardGetAnalogDiagnostic()
+{
+#ifdef DIAG_5VP_PIN
+	/* paranoid check */
+	if (!isBrainPinValid(DIAG_5VP_PIN)) {
+		/* Pin is not defined - return success */
+		return 0;
+	}
+
+	return efiReadPin(DIAG_5VP_PIN) ? 0 : -1;
+#else
+	return 0;
+#endif
+}
