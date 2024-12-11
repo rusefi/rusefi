@@ -3,7 +3,7 @@
 #
 
 name: MRE
-
+on: [push,pull_request]
 inputs:
   rusefi_dir:
     description: 'Path to rusefi submodule'
