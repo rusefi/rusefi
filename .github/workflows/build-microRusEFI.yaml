@@ -65,4 +65,6 @@ jobs:
             ./firmware/deliver/rusefi*.bin
             ./firmware/deliver/rusefi*.hex
             ./firmware/deliver/rusefi*.dfu
+            ./firmware/deliver/rusefi*.ini
+            ./firmware/deliver/rusefi_mre_f4.ini
 
