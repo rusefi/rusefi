@@ -66,4 +66,4 @@ jobs:
             ./firmware/deliver/rusefi*.hex
             ./firmware/deliver/rusefi*.dfu
             ./firmware/deliver/rusefi*.ini
-            tunerstudio/generated/rusefi_mre_f4.ini
+            ./firmware/deliver/rusefi_mre_f4*.ini
