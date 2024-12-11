@@ -6,8 +6,7 @@
 // start of trigger_state_s
 struct trigger_state_s {
 	/**
-	 * sync: Crank sync counter
-	 * Usually matches crank revolutions
+	 * sync: trigger wheel sync counter
 	 * offset 0
 	 */
 	uint32_t synchronizationCounter = (uint32_t)0;

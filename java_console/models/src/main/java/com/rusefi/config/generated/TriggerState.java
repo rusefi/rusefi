@@ -179,7 +179,7 @@ public class TriggerState {
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field CRANKSYNCHRONIZATIONCOUNTER = Field.create("CRANKSYNCHRONIZATIONCOUNTER", 0, FieldType.INT).setScale(1.0).setBaseOffset(1400);
+	public static final Field SYNCHRONIZATIONCOUNTER = Field.create("SYNCHRONIZATIONCOUNTER", 0, FieldType.INT).setScale(1.0).setBaseOffset(1400);
 	public static final Field VVTTOOTHDURATIONS0 = Field.create("VVTTOOTHDURATIONS0", 4, FieldType.INT).setScale(1.0).setBaseOffset(1400);
 	public static final Field VVTCURRENTPOSITION = Field.create("VVTCURRENTPOSITION", 8, FieldType.FLOAT).setBaseOffset(1400);
 	public static final Field VVTTOOTHPOSITION1 = Field.create("VVTTOOTHPOSITION1", 12, FieldType.FLOAT).setBaseOffset(1400);
@@ -191,7 +191,7 @@ public class TriggerState {
 	public static final Field VVTSTATEINDEX = Field.create("VVTSTATEINDEX", 33, FieldType.INT8).setScale(1.0).setBaseOffset(1400);
 	public static final Field ALIGNMENTFILL_AT_34 = Field.create("ALIGNMENTFILL_AT_34", 34, FieldType.INT8).setScale(1.0).setBaseOffset(1400);
 	public static final Field[] VALUES = {
-	CRANKSYNCHRONIZATIONCOUNTER,
+	SYNCHRONIZATIONCOUNTER,
 	VVTTOOTHDURATIONS0,
 	VVTCURRENTPOSITION,
 	VVTTOOTHPOSITION1,
