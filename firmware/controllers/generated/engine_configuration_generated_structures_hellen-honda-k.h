@@ -2904,6 +2904,7 @@ struct engine_configuration_s {
 	offset 1504 bit 25 */
 	bool invertExhaustCamVVTSignal : 1 {};
 	/**
+	 * "Available via TS Plugin see https://rusefi.com/s/knock"
 	offset 1504 bit 26 */
 	bool enableKnockSpectrogram : 1 {};
 	/**

@@ -1157,7 +1157,7 @@ AEM X-Series EGT gauge kit or rusEFI EGT sensor from Wideband controller
 
 
 ### enableKnockSpectrogram
-
+"Available via TS Plugin see https://rusefi.com/s/knock"
 
 ### enableKnockSpectrogramFilter
 
