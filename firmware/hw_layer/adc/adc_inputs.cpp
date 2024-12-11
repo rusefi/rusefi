@@ -12,6 +12,26 @@ float PUBLIC_API_WEAK getAnalogInputDividerCoefficient(adc_channel_e) {
     return engineConfiguration->analogInputDividerCoefficient;
 }
 
+/* overall analog health state
+ * return negative in case of any problems
+ * return 0 if everything is ok or no diagnostic is available */
+int PUBLIC_API_WEAK boardGetAnalogDiagnostic() {
+	return 0;
+}
+
+/* simple implementation if board does not provide advanced diagnostic */
+int PUBLIC_API_WEAK boardGetAnalogInputDiagnostic(adc_channel_e channel, float) {
+#if EFI_PROD_CODE
+	/* for on-chip ADC inputs we check common analog health */
+	if (isAdcChannelOnChip(channel)) {
+		return boardGetAnalogDiagnostic();
+	}
+#endif // EFI_PROD_CODE
+
+	/* input is outside chip/ECU */
+	return 0;
+}
+
 #if HAL_USE_ADC
 
 #include "adc_subscription.h"
