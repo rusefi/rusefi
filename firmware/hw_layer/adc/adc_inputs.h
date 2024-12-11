@@ -40,6 +40,7 @@ inline bool isAdcChannelOffChip(adc_channel_e hwChannel) {
 	return (isAdcChannelValid(hwChannel) && (hwChannel > EFI_ADC_ONCHIP_LAST));
 }
 
+int analogGetDiagnostic();
 
 #if !defined(GPT_FREQ_FAST) || !defined(GPT_PERIOD_FAST)
 
