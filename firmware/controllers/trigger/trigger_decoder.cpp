@@ -168,7 +168,7 @@ int64_t TriggerDecoderBase::getTotalEventCounter() const {
 	return totalEventCountBase + currentCycle.current_index;
 }
 
-int TriggerDecoderBase::getCrankSynchronizationCounter() const {
+int TriggerDecoderBase::getSynchronizationCounter() const {
 	return crankSynchronizationCounter;
 }
 
@@ -209,7 +209,7 @@ angle_t PrimaryTriggerDecoder::syncEnginePhase(int divider, int remainder, angle
 	efiAssert(ObdCode::OBD_PCM_Processor_Fault, divider > 1, "syncEnginePhase divider", false);
 	efiAssert(ObdCode::OBD_PCM_Processor_Fault, remainder < divider, "syncEnginePhase remainder", false);
 	angle_t totalShift = 0;
-	while (getCrankSynchronizationCounter() % divider != remainder) {
+	while (getSynchronizationCounter() % divider != remainder) {
 		/**
 		 * we are here if we've detected the cam sensor within the wrong crank phase
 		 * let's increase the trigger event counter, that would adjust the state of
@@ -708,7 +708,7 @@ uint32_t TriggerDecoderBase::findTriggerZeroEventIndex(
 	}
 
 	// Assert that we found the sync point on the very first revolution
-	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, getCrankSynchronizationCounter() == 0, "findZero_revCounter", EFI_ERROR_CODE);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, getSynchronizationCounter() == 0, "findZero_revCounter", EFI_ERROR_CODE);
 
 #if EFI_UNIT_TEST
 	if (printTriggerDebug) {

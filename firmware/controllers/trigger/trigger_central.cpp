@@ -638,7 +638,7 @@ void TriggerCentral::decodeMapCam(efitick_t timestamp, float currentPhase) {
 
 			if (instantMapDiffBetweenReadoutAngles > engineConfiguration->mapSyncThreshold) {
 				mapVvt_sync_counter++;
-				int revolutionCounter = getTriggerCentral()->triggerState.getCrankSynchronizationCounter();
+				int revolutionCounter = getTriggerCentral()->triggerState.getSynchronizationCounter();
 				mapVvt_MAP_AT_CYCLE_COUNT = revolutionCounter - prevChangeAtCycle;
 				prevChangeAtCycle = revolutionCounter;
 
@@ -798,7 +798,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		 * cycle into a four stroke, 720 degrees cycle.
 		 */
 		int crankDivider = getCrankDivider(triggerShape.getWheelOperationMode());
-		int crankInternalIndex = triggerState.getCrankSynchronizationCounter() % crankDivider;
+		int crankInternalIndex = triggerState.getSynchronizationCounter() % crankDivider;
 		int triggerIndexForListeners = decodeResult.Value.CurrentIndex + (crankInternalIndex * triggerShape.getSize());
 
 		reportEventToWaveChart(signal, triggerIndexForListeners, triggerShape.useOnlyRisingEdges);
@@ -847,7 +847,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 #if EFI_CDM_INTEGRATION
 		if (trgEventIndex == 0 && isBrainPinValid(engineConfiguration->cdmInputPin)) {
-			int cdmKnockValue = getCurrentCdmValue(getTriggerCentral()->triggerState.getCrankSynchronizationCounter());
+			int cdmKnockValue = getCurrentCdmValue(getTriggerCentral()->triggerState.getSynchronizationCounter());
 			engine->knockLogic(cdmKnockValue);
 		}
 #endif /* EFI_CDM_INTEGRATION */
@@ -932,7 +932,7 @@ void triggerInfo(void) {
 			boolToString(tc->isTriggerDecoderError()),
 			tc->triggerState.totalTriggerErrorCounter,
 			tc->triggerState.orderingErrorCounter,
-			tc->triggerState.getCrankSynchronizationCounter(),
+			tc->triggerState.getSynchronizationCounter(),
 			boolToString(tc->directSelfStimulation));
 
 	if (TRIGGER_WAVEFORM(isSynchronizationNeeded)) {
@@ -1050,7 +1050,7 @@ static void initVvtShape(TriggerWaveform& shape, const TriggerConfiguration& p_c
 
 void TriggerCentral::validateCamVvtCounters() {
 	// micro-optimized 'crankSynchronizationCounter % 256'
-	int camVvtValidationIndex = triggerState.getCrankSynchronizationCounter() & 0xFF;
+	int camVvtValidationIndex = triggerState.getSynchronizationCounter() & 0xFF;
 	if (camVvtValidationIndex == 0) {
 		vvtCamCounter = 0;
 	} else if (camVvtValidationIndex == 0xFE && vvtCamCounter < 60) {
