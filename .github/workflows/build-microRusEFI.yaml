@@ -1,0 +1,57 @@
+name: Build microRusEFI Firmware
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-microrusefi:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: Set Build Environment Variables
+        run: |
+          echo "BOARD_META_PATH=config/boards/microrusefi/meta-info-mre-legacy_f4.env" >> $GITHUB_ENV
+
+      - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
+        uses: carlosperate/arm-none-eabi-gcc-action@v1
+        with:
+          release: '12.3.Rel1'
+
+      - name: Test Arm GCC Compiler
+        run: arm-none-eabi-gcc -v
+
+      - name: Install Required Tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential cmake
+
+      - name: Clean Previous Builds
+        working-directory: ./firmware
+        run: |
+          make clean
+
+      - name: Build Firmware for mre-legacy_f4
+        working-directory: ./firmware
+        run: |
+          bash bin/compile.sh $BOARD_META_PATH bundles --output-sync=recurse
+
+      - name: Upload Firmware Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: mre-legacy_f4-firmware
+          path: |
+            ./firmware/deliver/rusefi*.bin
+            ./firmware/deliver/rusefi*.hex
+            ./firmware/deliver/rusefi*.dfu
+
