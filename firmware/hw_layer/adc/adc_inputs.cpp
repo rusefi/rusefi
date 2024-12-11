@@ -32,6 +32,13 @@ int PUBLIC_API_WEAK boardGetAnalogInputDiagnostic(adc_channel_e channel, float) 
 	return 0;
 }
 
+/* Get analog part diagnostic */
+int analogGetDiagnostic()
+{
+	/* TODO: debounce? */
+	return boardGetAnalogDiagnostic();
+}
+
 #if HAL_USE_ADC
 
 #include "adc_subscription.h"
