@@ -26,7 +26,7 @@ jobs:
 
       - name: Set Build Environment Variables
         run: |
-          echo "BOARD_META_PATH=config/boards/microrusefi/meta-info-mre-legacy_f4.env" >> $GITHUB_ENV
+          echo "BOARD_META_PATH=config/boards/microrusefi/meta-info-mre_f4.env" >> $GITHUB_ENV
 
       - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
         uses: carlosperate/arm-none-eabi-gcc-action@v1
