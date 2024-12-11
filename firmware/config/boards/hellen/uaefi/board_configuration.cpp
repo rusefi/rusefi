@@ -187,3 +187,29 @@ void setup_custom_board_overrides() {
 	custom_board_DefaultConfiguration = uaefi_boardDefaultConfiguration;
 	custom_board_ConfigOverrides =  uaefi_boardConfigOverrides;
 }
+
+int boardGetAnalogInputDiagnostic(adc_channel_e hwChannel, float voltage) {
+	/* we do not check voltage for valid ragne yet */
+	(void)voltage;
+
+	switch (hwChannel) {
+		/* inputs that may be affected by incorrect reference voltage */
+		case MM100_IN_TPS_ANALOG:
+		case MM100_IN_PPS_ANALOG:
+		case MM100_IN_IAT_ANALOG:
+		case MM100_IN_CLT_ANALOG:
+		case MM100_IN_O2S_ANALOG:
+		case MM100_IN_O2S2_ANALOG:
+		case MM100_IN_MAP1_ANALOG:
+		case MM100_IN_AUX1_ANALOG:
+		case MM100_IN_AUX2_ANALOG:
+		case MM100_IN_AUX4_ANALOG:
+			/* TODO: more? */
+			return boardGetAnalogDiagnostic();
+		/* all other inputs should not rely on output 5V */
+		default:
+			return 0;
+	}
+
+	return 0;
+}
