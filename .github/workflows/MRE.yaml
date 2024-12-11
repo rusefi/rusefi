@@ -1,0 +1,515 @@
+#
+# see https://github.com/rusefi/fw-Paralela/blob/master/.github/workflows/compile-board.yaml as an example of how to build custom board firmware
+#
+
+name: MRE
+
+inputs:
+  rusefi_dir:
+    description: 'Path to rusefi submodule'
+    required: false
+    default: ./config/boards/microrusefi
+  meta_info:
+    description: 'Path to meta info file'
+    required: false
+    default: ./config/boards/microrusefi/meta-info-mre_f4.env
+  meta_output:
+    description: 'Path to meta output directory'
+    required: false
+    default: ./config/boards/microrusefi/
+  sim_output:
+    required: false
+    default: ./config/boards/microrusefi/
+  lts:
+    description: 'LTS Build'
+    required: false
+    default: 'false'
+  new_tag:
+    description: 'Tag to create in the repo for this build'
+    required: false
+  bundle_simulator:
+    description: 'Include Simulator in Bundle'
+    required: false
+    default: 'false'
+  run_simulator:
+    description: 'Build and Run Simulator'
+    required: false
+    default: 'false'
+  push:
+    description: 'Push generated configs'
+    required: false
+    default: 'true'
+  artifacts:
+    required: false
+    default: bin hex dfu map elf list srec bootloader bundle autoupdate
+  uploads:
+    required: false
+    default: ini bundles
+  bundle_upload_folder:
+    required: false
+    default: 'build_server'
+  MY_REPO_PAT:
+    description: 'Token for accessing private repos'
+    required: false
+  RUSEFI_ONLINE_FTP_USER:
+    required: false
+  RUSEFI_ONLINE_FTP_PASS:
+    required: false
+  RUSEFI_FTP_SERVER:
+    required: false
+  RUSEFI_ONLINE2_USER:
+    required: false
+  RUSEFI_ONLINE2_PASS:
+    required: false
+  RUSEFI_ONLINE2_SERVER:
+    required: false
+  RUSEFI_SSH_SERVER:
+    required: false
+  RUSEFI_SSH_USER:
+    required: false
+  RUSEFI_SSH_PASS:
+    required: false
+  ADDITIONAL_ENV:
+    required: false
+  EXTRA_LIVE_DATA_FILE:
+    required: false
+  gha_outputs_file:
+    description: '.properties file to store GHA outputs (unfortunately GHA outputs do not work for nested GHA - see https://github.com/actions/runner/issues/2009#issuecomment-1793565031)'
+    required: false
+    default: ''
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check branch name
+      shell: bash
+      if: ${{ contains(github.ref_name, '.') }}
+      run: |
+        : Check branch name
+        echo '::error::Branch names must not contain ".", this breaks firmware autoupdates. Branch name is "${{ github.ref_name }}".' && exit 1
+
+    - name: Mask Secrets
+      shell: bash
+      run: |
+        : Mask Secrets
+        [ -z "${{inputs.MY_REPO_PAT}}" ] || echo "::add-mask::${{inputs.MY_REPO_PAT}}"
+        [ -z "${{inputs.RUSEFI_ONLINE_FTP_USER}}" ] || echo "::add-mask::${{inputs.RUSEFI_ONLINE_FTP_USER}}"
+        [ -z "${{inputs.RUSEFI_ONLINE_FTP_PASS}}" ] || echo "::add-mask::${{inputs.RUSEFI_ONLINE_FTP_PASS}}"
+        [ -z "${{inputs.RUSEFI_FTP_SERVER}}" ] || echo "::add-mask::${{inputs.RUSEFI_FTP_SERVER}}"
+        [ -z "${{inputs.RUSEFI_ONLINE2_USER}}" ] || echo "::add-mask::${{inputs.RUSEFI_ONLINE2_USER}}"
+        [ -z "${{inputs.RUSEFI_ONLINE2_PASS}}" ] || echo "::add-mask::${{inputs.RUSEFI_ONLINE2_PASS}}"
+        [ -z "${{inputs.RUSEFI_ONLINE2_SERVER}}" ] || echo "::add-mask::${{inputs.RUSEFI_ONLINE2_SERVER}}"
+        [ -z "${{inputs.RUSEFI_SSH_SERVER}}" ] || echo "::add-mask::${{inputs.RUSEFI_SSH_SERVER}}"
+        [ -z "${{inputs.RUSEFI_SSH_USER}}" ] || echo "::add-mask::${{inputs.RUSEFI_SSH_USER}}"
+        [ -z "${{inputs.RUSEFI_SSH_PASS}}" ] || echo "::add-mask::${{inputs.RUSEFI_SSH_PASS}}"
+        [ -z "${{inputs.ADDITIONAL_ENV}}" ] || echo "::add-mask::${{inputs.ADDITIONAL_ENV}}"
+
+    - name: Set Token
+      shell: bash
+      run: |
+        : Set Token
+        if [ -n "${{ inputs.MY_REPO_PAT }}" ]; then
+          echo "Using current secret"
+          echo "TOKEN=${{ inputs.MY_REPO_PAT }}" >> "$GITHUB_ENV"
+        else
+          echo "Using current token"
+          echo "TOKEN=${{ github.token }}" >> "$GITHUB_ENV"
+        fi
+
+    - name: Echo
+      shell: bash
+      run: |
+        : Echo
+        echo "rusefi_dir=${{inputs.rusefi_dir}}"
+        echo "meta_info=${{inputs.meta_info}}"
+        echo "sim_output=${{inputs.sim_output}}"
+
+    - name: Checkout Submodules
+      working-directory: ${{inputs.rusefi_dir}}
+      shell: bash
+      run: |
+        : Checkout Submodules
+        misc/git_scripts/common_submodule_init.sh
+
+    - name: Invoking Post-Checkout Action
+      shell: bash
+      run: |
+        : Invoking Post-Checkout Action
+        if [ -f .github/workflows/actions/post-checkout.sh ]; then
+           bash .github/workflows/actions/post-checkout.sh
+        fi
+
+    - name: Find out white-label
+      id: find-out-white-label
+      shell: bash
+      run: |
+        : Find out white-label
+        echo "white_label=$(bash ${{inputs.rusefi_dir}}/firmware/bin/find_white_label.sh shared_io.resources/shared_io.properties)" >> $GITHUB_OUTPUT
+
+    - name: Set Env Variables
+      id: set-env-variables
+      shell: bash
+      run: |
+        : Set Env Variables
+        echo "WHITE_LABEL=${{steps.find-out-white-label.outputs.white_label}}" >> $GITHUB_ENV
+        echo "RUSEFI_SSH_SERVER=${{inputs.RUSEFI_SSH_SERVER}}" >> $GITHUB_ENV
+        echo "RUSEFI_SSH_USER=${{inputs.RUSEFI_SSH_USER}}" >> $GITHUB_ENV
+        echo "RUSEFI_SSH_PASS=${{inputs.RUSEFI_SSH_PASS}}" >> $GITHUB_ENV
+        echo "bundle_upload_folder=${{inputs.bundle_upload_folder}}" >> $GITHUB_ENV
+        echo "AUTOMATION_LTS=${{toJSON(inputs.lts)}}" >> $GITHUB_ENV
+        echo "BUNDLE_SIMULATOR=${{toJSON(inputs.bundle_simulator)}}" >> $GITHUB_ENV
+        echo "RUN_SIMULATOR=${{toJSON(inputs.run_simulator)}}" >> $GITHUB_ENV
+        echo "AUTOMATION_REF=${{github.ref_name}}" >> $GITHUB_ENV
+        echo "${{ inputs.ADDITIONAL_ENV }}" >> $GITHUB_ENV
+        shopt -s expand_aliases
+        if which grealpath >/dev/null 2>&1; then alias realpath='grealpath'; fi
+        echo "META_OUTPUT_ROOT_FOLDER=$(realpath --relative-to=${{inputs.rusefi_dir}}/firmware ${{inputs.meta_output}})/" >> $GITHUB_ENV
+        echo "DEFAULT_TUNE_OUTPUT_FOLDER=$(realpath --relative-to=${{inputs.rusefi_dir}}/firmware ${{inputs.sim_output}})/" >> $GITHUB_ENV
+        source ${{inputs.rusefi_dir}}/firmware/config/boards/common_script_read_meta_env.inc "${{inputs.meta_info}}"
+        cd ${{inputs.rusefi_dir}}/firmware
+        ABSOLUTE_BOARD_DIR=${{github.workspace}}/$BOARD_DIR
+        # sometimes absolute path is simpler
+        echo "ABSOLUTE_BOARD_DIR=$ABSOLUTE_BOARD_DIR" >> $GITHUB_ENV
+        # todo: why do we require relative path exactly?
+        BOARD_DIR=$(realpath --relative-to=. "${{github.workspace}}/$BOARD_DIR")
+        BOARD_META_PATH=$(realpath --relative-to=. "${{github.workspace}}/$BOARD_META_PATH")
+        echo "BOARD_DIR=$BOARD_DIR" >> $GITHUB_ENV
+        echo "BOARD_META_PATH=$BOARD_META_PATH" >> $GITHUB_ENV
+        echo "SHORT_BOARD_NAME=$SHORT_BOARD_NAME" >> $GITHUB_ENV
+        PROJECT_BOARD=${PROJECT_BOARD:-$SHORT_BOARD_NAME}
+        echo "PROJECT_BOARD=$PROJECT_BOARD" >> $GITHUB_ENV
+        echo "BUNDLE_NAME=$BUNDLE_NAME" >> $GITHUB_ENV
+        echo "current_date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+        echo "EXTRA_LIVE_DATA_FILE=${{inputs.EXTRA_LIVE_DATA_FILE}}" >> $GITHUB_ENV
+
+
+    - name: Set Build Env Variables
+      shell: bash
+      run: |
+        : Set Build Env Variables
+        if [[ ${{github.ref_name}} == "lts"* ]]; then
+          echo AUTOMATION_LTS=true >> $GITHUB_ENV
+          echo AUTOMATION_REF=${{github.ref_name}} >> $GITHUB_ENV
+          echo "On LTS branch [${{github.ref}}]"
+        else
+          echo "Not LTS branch [${{github.ref}}]"
+        fi
+
+    - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
+      uses: carlosperate/arm-none-eabi-gcc-action@v1
+      with:
+        release: '12.3.Rel1'
+
+    - uses: actions/setup-java@v4
+      with:
+        distribution: 'zulu'
+        java-version: '11'
+
+    - name: Test Compiler
+      shell: bash
+      run: |
+        : Test Compiler
+        javac -version
+
+    - name: Install Tools
+      shell: bash
+      run: |
+        : Install Tools
+        if [ "$BUNDLE_SIMULATOR" == "true" -o "$RUN_SIMULATOR" == "true" ]; then
+          SIM_REQS="gcc-multilib g++-multilib"
+        fi
+        if [ "$BUNDLE_SIMULATOR" == "true" ]; then
+          SIM_REQS+=" g++-mingw-w64 gcc-mingw-w64 zip dosfstools"
+        fi
+        sudo bash ${{inputs.rusefi_dir}}/misc/actions/add-ubuntu-latest-apt-mirrors.sh
+        sudo apt-get install sshpass mtools $SIM_REQS
+
+    - name: Repo Status
+      shell: bash
+      run: |
+        : Repo Status
+        git status
+
+    - name: rusefi_dir Status
+      working-directory: ${{inputs.rusefi_dir}}
+      shell: bash
+      run: |
+        : rusefi_dir Status
+        if [ "$(git rev-parse --is-inside-work-tree 2>&1)" == "true" ]; then
+          git status
+        else
+          echo "Not a repository"
+        fi
+
+    - name: Git Config
+      if: ${{ inputs.push == 'true' }}
+      shell: bash
+      run: |
+        : Git Config
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub git update Action"
+
+    - name: Handle configs separately just to make github logs more readable
+      working-directory: ${{inputs.rusefi_dir}}/firmware
+      shell: bash
+      run: |
+        : Handle configs separately just to make github logs more readable
+        bash bin/compile.sh $BOARD_META_PATH config
+
+    - name: Add Config to Commit Regardless of firmware build status
+#      if: ${{ inputs.push == 'true' }}
+# looks like gen_live_data is either not invoked or not working right here?
+      if: "false"
+      shell: bash
+      run: |
+        : Add Config to Commit Regardless of firmware build status
+        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*
+        OUT=$(git commit -m "Quick Auto-generated Configs" -m "[no ci]" 2>&1) || echo "commit failed, finding out why"
+        if echo "$OUT" | grep 'nothing to commit'; then
+          echo "Configs: looks like nothing to commit"
+          exit 0
+        fi
+        git status
+
+    - name: Push Configs
+      if: ${{ inputs.push == 'true' }}
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{env.TOKEN}}
+
+    - name: Building simulator separately just to make github logs more readable
+      working-directory: ${{inputs.rusefi_dir}}/firmware
+      shell: bash
+      run: |
+        : Building simulator separately just to make github logs more readable
+        if [ "$RUN_SIMULATOR" == "true" ]; then
+          echo Building simulator...
+          bash bin/compile.sh $BOARD_META_PATH ../simulator/build/rusefi_simulator.linux
+          echo DONE: simulator
+        fi
+
+    - name: Building bootloader separately
+      working-directory: ${{inputs.rusefi_dir}}/firmware
+      if: ${{ contains(inputs.artifacts, 'bootloader') }}
+      shell: bash
+      run: |
+        : Building bootloader separately
+        echo Building bootloader...
+        bash bin/compile.sh $BOARD_META_PATH bootloader
+        echo DONE: bootloader
+        ls -l bootloader/blbuild
+
+    - name: Invoking Post-bootloader Action
+      shell: bash
+      run: |
+        : Invoking Post-Checkout Action
+        if [ -f .github/workflows/actions/post-bootloader.sh ]; then
+           bash .github/workflows/actions/post-bootloader.sh
+        fi
+
+    - name: Build Firmware
+      working-directory: ${{inputs.rusefi_dir}}/firmware
+      shell: bash
+      run: |
+        : Build Firmware
+        if [ "$RUN_SIMULATOR" == "true" ]; then
+          TARGETS=("../simulator/build/rusefi_simulator.linux" "../java_tools/tune-tools/build/libs/tune-tools-all.jar")
+        fi
+        bash bin/compile.sh $BOARD_META_PATH --output-sync=recurse ${{inputs.artifacts}} ${{inputs.uploads}} ${TARGETS[@]}
+
+    - name: Upload Bundle
+      if: ${{ contains(inputs.uploads, 'bundles') }}
+      working-directory: ${{inputs.rusefi_dir}}/artifacts
+      shell: bash
+      run: |
+        : Upload Bundle
+        if [ "${{github.ref}}" = "refs/heads/master" ] || [ "${{github.ref}}" = "refs/heads/main" ]; then
+          echo "On master branch"
+        elif [[ ${{github.ref_name}} == "lts"* ]]; then
+          echo "On LTS branch [${{github.ref}}]"
+        else
+          echo "Not uploading [${{github.ref}}]"
+          exit 0
+        fi
+        bash ../firmware/bin/upload_bundle.sh ${{ env.RUSEFI_SSH_USER }} ${{ env.RUSEFI_SSH_PASS }} ${{ env.RUSEFI_SSH_SERVER }} ${{ env.BUNDLE_NAME }}
+
+    - name: Run Simulator
+      if: ${{ inputs.run_simulator == 'true' }}
+      shell: bash
+      run: |
+        : Run Simulator
+        cd ${{inputs.rusefi_dir}}/simulator/
+        ./build/rusefi_simulator 10
+        mkdir -p ${{inputs.sim_output}}canned-tunes
+        ./write_tune.sh ${ABSOLUTE_BOARD_DIR}/generated/tunerstudio/generated/rusefi_${SHORT_BOARD_NAME}.ini
+
+    - name: Add Tune to Commit
+      if: ${{ inputs.run_simulator == 'true' && inputs.push == 'true' }}
+      shell: bash
+      run: |
+        : Add Tune to Commit
+        echo "Current directory: $PWD"
+        ls ${{inputs.sim_output}}
+        git config advice.addIgnoredFile false
+        git add ${{inputs.sim_output}}*msq
+        OUT=$(git commit -m "Auto-generated Default Tune (custom board)" -m "[no ci]" 2>&1) || echo "commit failed, finding out why"
+        if echo "$OUT" | grep 'nothing to commit'; then
+          echo "Tune: looks like nothing to commit"
+          exit 0
+        fi
+        echo "[$OUT]"
+
+    - name: Add Config to Commit
+      if: ${{ inputs.push == 'true' }}
+      shell: bash
+      run: |
+        : Add Config to Commit
+        git add ${{inputs.rusefi_dir}}/firmware/${META_OUTPUT_ROOT_FOLDER}*
+        : # TODO handle extra headers but only if those exist
+        : #if [ -d firmware ]; then
+        : #  git add firmware/extra*
+        : #fi
+        OUT=$(git commit -m "Custom Auto-generated Configs" -m "[no ci]" 2>&1) || echo "commit failed, finding out why"
+        if echo "$OUT" | grep 'nothing to commit'; then
+          echo "Configs: looks like nothing to commit"
+          exit 0
+        fi
+        git status
+
+    - name: Add Connectors to Commit
+      if: ${{ inputs.push == 'true' }}
+      shell: bash
+      run: |
+        : Add Connectors to Commit
+        if [ -d connectors ]; then
+          git add connectors/*
+        fi
+        OUT=$(git commit -m "Auto-generated Connectors" -m "[no ci]" 2>&1) || echo "commit failed, finding out why"
+        if echo "$OUT" | grep 'nothing to commit'; then
+          echo "Connectors: looks like nothing to commit"
+          exit 0
+        fi
+        echo "[$OUT]"
+
+    - name: Push
+      if: ${{ inputs.push == 'true' }}
+      uses: ad-m/github-push-action@master
+      with:
+        github_token: ${{env.TOKEN}}
+
+    - name: Upload .ini files to rusEFI Online server
+      if: ${{ contains(inputs.uploads, 'ini') }}
+      working-directory: ${{inputs.rusefi_dir}}/firmware/${{env.META_OUTPUT_ROOT_FOLDER}}tunerstudio/generated
+      shell: bash
+      run: |
+        : Upload .ini files to rusEFI Online server
+        ${{github.workspace}}/${{inputs.rusefi_dir}}/firmware/tunerstudio/upload_ini.sh ${{ inputs.RUSEFI_ONLINE_FTP_USER }} "${{ inputs.RUSEFI_ONLINE_FTP_PASS }}" ${{ inputs.RUSEFI_FTP_SERVER }}
+
+    - name: Upload .ini files to secondary Online server
+      if: ${{ contains(inputs.uploads, 'ini') }}
+      working-directory: ${{inputs.rusefi_dir}}/firmware/${{env.META_OUTPUT_ROOT_FOLDER}}tunerstudio/generated
+      shell: bash
+      run: |
+        : Upload .ini files to secondary Online server
+        export INI_DESTINATION_FOLDER=html/ini/
+        ${{github.workspace}}/${{inputs.rusefi_dir}}/firmware/tunerstudio/upload_ini.sh ${{ inputs.RUSEFI_ONLINE2_USER }} "${{ inputs.RUSEFI_ONLINE2_PASS }}" ${{ inputs.RUSEFI_ONLINE2_SERVER }}
+
+    - name: Upload github action bin artifact
+      if: ${{ contains(inputs.artifacts, 'bin') }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: rusefi.bin
+        path: ${{inputs.rusefi_dir}}/firmware/deliver/rusefi*.bin
+
+    - name: Upload github action srec artifact
+      if: ${{ contains(inputs.artifacts, 'srec') }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: rusefi_update.srec
+        path: ${{inputs.rusefi_dir}}/firmware/build/rusefi.srec
+
+    - name: Upload github action hex artifact
+      if: ${{ contains(inputs.artifacts, 'hex') }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: rusefi.hex
+        path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.hex
+
+    - name: Upload github action list artifact
+      if: ${{ contains(inputs.artifacts, 'list') }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: rusefi.list
+        path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.list
+
+    - name: Upload github action map artifact
+      if: ${{ contains(inputs.artifacts, 'map') }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: rusefi.map
+        path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.map
+
+    - name: Upload github action elf artifact
+      if: ${{ contains(inputs.artifacts, 'elf') }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: rusefi.elf
+        path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.elf
+
+    - name: Upload github action bootloader bin artifact
+      if: ${{ contains(inputs.artifacts, 'bootloader') }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: openblt_${{env.PROJECT_BOARD}}.bin
+        path: ${{inputs.rusefi_dir}}/firmware/bootloader/blbuild/openblt_${{env.PROJECT_BOARD}}.bin
+
+    - name: Upload github action bundle artifact
+      if: ${{ contains(inputs.artifacts, 'bundle') }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_${{env.current_date}}.zip.zip
+        path: ${{inputs.rusefi_dir}}/artifacts/${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}.zip
+
+    - name: Upload github action bundle autoupdate artifact
+      if: ${{ contains(inputs.artifacts, 'autoupdate') }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: ${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_autoupdate_${{env.current_date}}.zip.zip
+        path: ${{inputs.rusefi_dir}}/artifacts/${{steps.find-out-white-label.outputs.white_label}}_bundle_${{env.SHORT_BOARD_NAME}}_autoupdate.zip
+
+    - uses: mukunku/tag-exists-action@v1.6.0
+      if: ${{ inputs.new_tag != '' }}
+      id: checkTag
+      with:
+        tag: ${{ inputs.new_tag }}
+
+    - name: Create Release Tag
+      if: ${{ inputs.new_tag != '' && steps.checkTag.outputs.exists == 'false' }}
+      id: tag
+      uses: mathieudutour/github-tag-action@v6.2
+      with:
+        github_token: ${{env.TOKEN}}
+        custom_tag: ${{ inputs.new_tag }}
+        tag_prefix: ''
+
+    - name: Upload Tagged Daily Release Bundle
+      if: ${{ contains(inputs.uploads, 'bundles') && steps.tag.outputs.new_tag != ''}}
+      working-directory: ${{inputs.rusefi_dir}}/artifacts
+      shell: bash
+      run: |
+        : Upload Tagged Daily Release Bundle
+        bash ../firmware/bin/upload_bundle.sh ${{ env.RUSEFI_SSH_USER }} ${{ env.RUSEFI_SSH_PASS }} ${{ env.RUSEFI_SSH_SERVER }} ${{ env.BUNDLE_NAME }} ${{ inputs.new_tag }}
+
+    - name: Create .properties file for action outputs
+      if: ${{ inputs.gha_outputs_file != ''}}
+      uses: 1arp/create-a-file-action@0.4.5
+      with:
+        file: ${{ inputs.gha_outputs_file }}
+
+    - name: Populate .properties file with action outputs
+      if: ${{ inputs.gha_outputs_file != ''}}
+      uses: kurt-code/gha-properties@v0.0.2
+      with:
+        operation: 'write'
+        file-path: ${{ inputs.gha_outputs_file }}
+        key-value-pairs: '{"white_label": "${{ steps.find-out-white-label.outputs.white_label }}", "short_board_name": "${{ env.SHORT_BOARD_NAME }}", "new_tag": "${{ steps.tag.outputs.new_tag }}"}'
