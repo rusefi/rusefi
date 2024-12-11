@@ -86,7 +86,7 @@ public:
 	 * current trigger processing index, between zero and #size
 	 */
 	int getCurrentIndex() const;
-	int getCrankSynchronizationCounter() const;
+	int getSynchronizationCounter() const;
 	/**
 	 * this is important for crank-based virtual trigger and VVT magic
 	 */
@@ -94,7 +94,7 @@ public:
 
 #if EFI_UNIT_TEST
 	/**
-	 * used for trigger export only
+	 * used only for trigger export
 	 */
 	float gapRatio[PWM_PHASE_MAX_COUNT * 6];
 #endif // EFI_UNIT_TEST

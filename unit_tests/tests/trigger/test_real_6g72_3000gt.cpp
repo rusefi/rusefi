@@ -76,7 +76,7 @@ static void runTriggerTest(const char *fileName, int totalErrors, int syncCounte
 	}
 	ASSERT_TRUE(gotRpm);
 	ASSERT_EQ(totalErrors,  engine->triggerCentral.triggerState.totalTriggerErrorCounter);
-	ASSERT_EQ(syncCounter,  engine->triggerCentral.triggerState.getCrankSynchronizationCounter());
+	ASSERT_EQ(syncCounter,  engine->triggerCentral.triggerState.getSynchronizationCounter());
 }
 
 

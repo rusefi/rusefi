@@ -65,7 +65,7 @@ void TriggerDecoderBase::resetState() {
 
 	setArrayValues(toothDurations, 0);
 
-	crankSynchronizationCounter = 0;
+	synchronizationCounter = 0;
 	totalTriggerErrorCounter = 0;
 	orderingErrorCounter = 0;
 	m_timeSinceDecodeError.init();
@@ -168,8 +168,8 @@ int64_t TriggerDecoderBase::getTotalEventCounter() const {
 	return totalEventCountBase + currentCycle.current_index;
 }
 
-int TriggerDecoderBase::getCrankSynchronizationCounter() const {
-	return crankSynchronizationCounter;
+int TriggerDecoderBase::getSynchronizationCounter() const {
+	return synchronizationCounter;
 }
 
 void PrimaryTriggerDecoder::resetState() {
@@ -209,7 +209,7 @@ angle_t PrimaryTriggerDecoder::syncEnginePhase(int divider, int remainder, angle
 	efiAssert(ObdCode::OBD_PCM_Processor_Fault, divider > 1, "syncEnginePhase divider", false);
 	efiAssert(ObdCode::OBD_PCM_Processor_Fault, remainder < divider, "syncEnginePhase remainder", false);
 	angle_t totalShift = 0;
-	while (getCrankSynchronizationCounter() % divider != remainder) {
+	while (getSynchronizationCounter() % divider != remainder) {
 		/**
 		 * we are here if we've detected the cam sensor within the wrong crank phase
 		 * let's increase the trigger event counter, that would adjust the state of
@@ -230,7 +230,7 @@ angle_t PrimaryTriggerDecoder::syncEnginePhase(int divider, int remainder, angle
 }
 
 void TriggerDecoderBase::incrementShaftSynchronizationCounter() {
-	crankSynchronizationCounter++;
+	synchronizationCounter++;
 }
 
 void PrimaryTriggerDecoder::onTriggerError() {
@@ -325,7 +325,7 @@ void TriggerDecoderBase::onShaftSynchronization(
 		incrementShaftSynchronizationCounter();
 	} else {
 		// We have just synchronized, this is the zeroth revolution
-		crankSynchronizationCounter = 0;
+		synchronizationCounter = 0;
 	}
 
 	totalEventCountBase += triggerShape.getSize();
@@ -334,7 +334,7 @@ void TriggerDecoderBase::onShaftSynchronization(
 	if (printTriggerDebug) {
 		printf("onShaftSynchronization index=%d %d\r\n",
 				currentCycle.current_index,
-				crankSynchronizationCounter);
+				synchronizationCounter);
 	}
 #endif /* EFI_UNIT_TEST */
 }
@@ -708,7 +708,7 @@ uint32_t TriggerDecoderBase::findTriggerZeroEventIndex(
 	}
 
 	// Assert that we found the sync point on the very first revolution
-	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, getCrankSynchronizationCounter() == 0, "findZero_revCounter", EFI_ERROR_CODE);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, getSynchronizationCounter() == 0, "findZero_revCounter", EFI_ERROR_CODE);
 
 #if EFI_UNIT_TEST
 	if (printTriggerDebug) {
