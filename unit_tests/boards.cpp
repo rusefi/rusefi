@@ -8,15 +8,3 @@
 #include "pch.h"
 
 #include "boards.h"
-
-int adcGetRawValue(const char *msg, adc_channel_e hwChannel) {
-	return 0;
-}
-
-float adcGetRawVoltage(const char *msg, adc_channel_e hwChannel) {
-	return 0;
-}
-
-float adcGetScaledVoltage(const char *msg, adc_channel_e hwChannel) {
-	return 0;
-}
