@@ -2157,6 +2157,8 @@ float[BOOST_CURVE_SIZE] iatBoostAdder;;"", 1, 0, 0, 5, 2
 uint8_t[8] autoscale minimumOilPressureBins;;"RPM", 100, 0, 0, 25000, 0
 uint8_t[8] autoscale minimumOilPressureValues;;"kPa", 10, 0, 0, 1000, 0
 
+blend_table_s[TARGET_AFR_BLEND_COUNT iterate] targetAfrBlends
+
 @@BOARD_CONFIG_FROM_FILE@@
 
 end_struct

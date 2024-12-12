@@ -58,11 +58,24 @@ float FuelComputer::getStoichiometricRatio() const {
 
 
 float FuelComputer::getTargetLambda(float rpm, float load) const {
-	return interpolate3d(
+	float target = interpolate3d(
 		config->lambdaTable,
 		config->lambdaLoadBins, load,
 		config->lambdaRpmBins, rpm
 	);
+
+	// Add any blends if configured
+	for (size_t i = 0; i < efi::size(config->targetAfrBlends); i++) {
+		auto result = calculateBlend(config->targetAfrBlends[i], rpm, load);
+
+		engine->outputChannels.targetAfrBlendParameter[i] = result.BlendParameter;
+		engine->outputChannels.targetAfrBlendBias[i] = result.Bias;
+		engine->outputChannels.targetAfrBlendOutput[i] = result.Value;
+
+		target += result.Value;
+	}
+
+    return target;
 }
 
 float FuelComputer::getTargetLambdaLoadAxis(float defaultLoad) const {
