@@ -16,11 +16,17 @@ int adcGetRawValue(const char * /*msg*/, int /*hwChannel*/) {
 }
 
 // voltage in MCU universe, from zero to VDD
-float adcGetRawVoltage(const char *msg, adc_channel_e hwChannel) {
-	return adcRawValueToRawVoltage(adcGetRawValue(msg, hwChannel));
+expected<float> adcGetRawVoltage(const char *msg, adc_channel_e hwChannel) {
+	return expected(adcRawValueToRawVoltage(adcGetRawValue(msg, hwChannel)));
 }
 
 // voltage in ECU universe, with all input dividers and OpAmps gains taken into account, voltage at ECU connector pin
-float adcGetScaledVoltage(const char *msg, adc_channel_e hwChannel) {
-	return adcGetRawVoltage(msg, hwChannel) * engineConfiguration->analogInputDividerCoefficient;
+expected<float> adcGetScaledVoltage(const char *msg, adc_channel_e hwChannel) {
+	auto rawVoltage = adcGetRawVoltage(msg, hwChannel);
+
+	if (rawVoltage) {
+		return expected(rawVoltage.value_or(0) * engineConfiguration->analogInputDividerCoefficient);
+	}
+
+	return expected(rawVoltage);
 }
