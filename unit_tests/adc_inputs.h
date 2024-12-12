@@ -22,6 +22,10 @@ inline bool isAdcChannelValid(adc_channel_e hwChannel) {
 	return ((hwChannel > EFI_ADC_NONE) && (hwChannel < EFI_ADC_TOTAL_CHANNELS));
 }
 
+inline bool isAdcChannelOnChip(adc_channel_e hwChannel) {
+	return (isAdcChannelValid(hwChannel) && (hwChannel <= EFI_ADC_ONCHIP_LAST));
+}
+
 #define adcToVoltsDivided(adc) (adcToVolts(adc) * engineConfiguration->analogInputDividerCoefficient)
 #define GPT_FREQ_FAST 100000
 #define GPT_PERIOD_FAST 10
