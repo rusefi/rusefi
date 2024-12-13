@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="23156">
+    <page number="0" size="23344">
         <constant name="engineType">"MAVERICK_X3"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">1000.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
@@ -4786,9 +4786,61 @@ end</constant>
          0.0
          0.0
 </constant>
+        <constant cols="8" digits="1" name="targetAfrBlends2_table" rows="8">
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+</constant>
+        <constant cols="1" digits="0" name="targetAfrBlends2_loadBins" rows="8">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant cols="1" digits="0" name="targetAfrBlends2_rpmBins" rows="8">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant name="targetAfrBlends2_blendParameter">"Zero"</constant>
+        <constant name="targetAfrBlends2_yAxisOverride">"Zero"</constant>
+        <constant cols="1" digits="1" name="targetAfrBlends2_blendBins" rows="8">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant cols="1" digits="1" name="targetAfrBlends2_blendValues" rows="8">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20241210" nPages="1" signature="rusEFI master.2024.12.13.f407-discovery.3384054544" version="5.0"/>
+    <versionInfo firmwareInfo="20241210" nPages="1" signature="rusEFI master.2024.12.13.f407-discovery.3181801839" version="5.0"/>
     <bibliography author="rusEFI 20241210" writeDate="date"/>
     <settings/>
     <userComments/>
