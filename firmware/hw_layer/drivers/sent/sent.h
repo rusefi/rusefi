@@ -11,12 +11,12 @@
 
 #if EFI_SENT_SUPPORT
 
+#include "sent_decoder.h"
+
 /* SENT decoder init */
 void initSent();
 
-#define SENT_FLAG_HW_OVERFLOW	(1 << 0)
-
-/* ISR hook */
+/* decoder feed hook */
 void SENT_ISR_Handler(uint8_t channels, uint16_t clocks, uint8_t flags);
 
 /* Stop/Start for config update */

@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "logicdata_csv_reader.h"
-#include "sent_logic.h"
+#include "sent_decoder.h"
 
 // On STM32 we are running timer on 1/4 of cpu clock. Cpu clock is 168 MHz
 #define CORE_CLOCK				168'000'000
