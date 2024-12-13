@@ -6090,7 +6090,7 @@ struct persistent_config_s {
 	 */
 	blend_table_s targetAfrBlends[TARGET_AFR_BLEND_COUNT];
 };
-static_assert(sizeof(persistent_config_s) == 25152);
+static_assert(sizeof(persistent_config_s) == 25340);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt

@@ -6090,17 +6090,17 @@ struct persistent_config_s {
 	 */
 	blend_table_s targetAfrBlends[TARGET_AFR_BLEND_COUNT];
 	/**
-	 * offset 23152
+	 * offset 23340
 	 */
 	Gpio communityCommsLedPin;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 23154
+	 * offset 23342
 	 */
-	uint8_t alignmentFill_at_23154[2];
+	uint8_t alignmentFill_at_23342[2];
 };
-static_assert(sizeof(persistent_config_s) == 23156);
+static_assert(sizeof(persistent_config_s) == 23344);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt

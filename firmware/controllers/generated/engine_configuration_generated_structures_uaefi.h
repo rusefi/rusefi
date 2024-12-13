@@ -6090,21 +6090,21 @@ struct persistent_config_s {
 	 */
 	blend_table_s targetAfrBlends[TARGET_AFR_BLEND_COUNT];
 	/**
-	 * offset 23152
+	 * offset 23340
 	 */
 	uint8_t rainTimingAdjustment[TIMING_ADJUSTMENT_SIZE][TIMING_ADJUSTMENT_SIZE];
 	/**
 	 * units: RPM
-	 * offset 23168
+	 * offset 23356
 	 */
 	uint16_t rainTimingRpmBins[TIMING_ADJUSTMENT_SIZE];
 	/**
 	 * units: C
-	 * offset 23176
+	 * offset 23364
 	 */
 	float rainTimingPpsBins[TIMING_ADJUSTMENT_SIZE];
 };
-static_assert(sizeof(persistent_config_s) == 23192);
+static_assert(sizeof(persistent_config_s) == 23380);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt
