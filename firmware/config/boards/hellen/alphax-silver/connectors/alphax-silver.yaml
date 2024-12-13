@@ -49,6 +49,14 @@ pins:
     ts_name: ___ Idle Output
     color: yellow
 
+  - pin: 7A
+    function: CAN High
+    type: can
+
+  - pin: 8A
+    function: CAN
+    type: can
+
   - pin: 9A
     meta: MM100_IN_VBATT
     class: analog_inputs
