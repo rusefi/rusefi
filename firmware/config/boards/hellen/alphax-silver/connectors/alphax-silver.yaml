@@ -97,6 +97,18 @@ pins:
     ts_name: ___ Tach Output
     color: blue
 
+  - pin: 15A
+    function: Analog Ground
+    type: agnd
+
+  - pin: 16A
+    function: VR Discrete Negative
+
+  - pin: 17A
+    meta: MM100_IN_CAM
+    class: event_inputs
+    function: VR Discrete Positive
+
   - pin: 18A
     meta: MM100_IN_TPS_ANALOG
     class: analog_inputs
@@ -137,12 +149,21 @@ pins:
     type: av
     color: yellow
 
+  - pin: 22A
+    function: analog TODO
 
   - pin: 23A
     function: Sensor +5v Power Feed
     type: 5v
     color: orange
 
+  - pin: 24A
+    function: VR max9924 Negative
+
+  - pin: 25A
+    meta: MM100_IN_CRANK
+    class: event_inputs
+    function: VR max9924 Positive
 
   - pin: 26A
     function: Power Ground
@@ -153,7 +174,6 @@ pins:
     type: gnd
     color: black
 
-
   - pin: 28A
     id: TLE9104_1_OUT_3
     function: Fan Relay
@@ -161,6 +181,24 @@ pins:
     type: ls
     ts_name: ___ Fan Relay
     color: blue
+
+  - pin: 29A
+    function: heater WBO
+
+  - pin: 30A
+    function: WBO
+
+  - pin: 31A
+    function: WBO
+
+  - pin: 32A
+    function: WBO
+
+  - pin: 33A
+    function: WBO
+
+  - pin: 34A
+    function: knock
 
 info:
   cid: main
