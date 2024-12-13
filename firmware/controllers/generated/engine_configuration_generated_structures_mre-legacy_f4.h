@@ -6085,8 +6085,12 @@ struct persistent_config_s {
 	 * offset 24956
 	 */
 	scaled_channel<uint8_t, 1, 10> minimumOilPressureValues[8];
+	/**
+	 * offset 24964
+	 */
+	blend_table_s targetAfrBlends[TARGET_AFR_BLEND_COUNT];
 };
-static_assert(sizeof(persistent_config_s) == 24964);
+static_assert(sizeof(persistent_config_s) == 25152);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt

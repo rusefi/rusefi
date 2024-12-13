@@ -6086,103 +6086,107 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint8_t, 1, 10> minimumOilPressureValues[8];
 	/**
-	offset 22964 bit 0 */
+	 * offset 22964
+	 */
+	blend_table_s targetAfrBlends[TARGET_AFR_BLEND_COUNT];
+	/**
+	offset 23152 bit 0 */
 	bool boardUseTempPullUp : 1 {};
 	/**
-	offset 22964 bit 1 */
+	offset 23152 bit 1 */
 	bool boardUse2stepPullDown : 1 {};
 	/**
-	offset 22964 bit 2 */
+	offset 23152 bit 2 */
 	bool boardUseD2PullDown : 1 {};
 	/**
-	offset 22964 bit 3 */
+	offset 23152 bit 3 */
 	bool boardUseD3PullDown : 1 {};
 	/**
-	offset 22964 bit 4 */
+	offset 23152 bit 4 */
 	bool boardUseTachPullUp : 1 {};
 	/**
-	offset 22964 bit 5 */
-	bool unusedBit_220_5 : 1 {};
+	offset 23152 bit 5 */
+	bool unusedBit_221_5 : 1 {};
 	/**
-	offset 22964 bit 6 */
-	bool unusedBit_220_6 : 1 {};
+	offset 23152 bit 6 */
+	bool unusedBit_221_6 : 1 {};
 	/**
-	offset 22964 bit 7 */
-	bool unusedBit_220_7 : 1 {};
+	offset 23152 bit 7 */
+	bool unusedBit_221_7 : 1 {};
 	/**
-	offset 22964 bit 8 */
-	bool unusedBit_220_8 : 1 {};
+	offset 23152 bit 8 */
+	bool unusedBit_221_8 : 1 {};
 	/**
-	offset 22964 bit 9 */
-	bool unusedBit_220_9 : 1 {};
+	offset 23152 bit 9 */
+	bool unusedBit_221_9 : 1 {};
 	/**
-	offset 22964 bit 10 */
-	bool unusedBit_220_10 : 1 {};
+	offset 23152 bit 10 */
+	bool unusedBit_221_10 : 1 {};
 	/**
-	offset 22964 bit 11 */
-	bool unusedBit_220_11 : 1 {};
+	offset 23152 bit 11 */
+	bool unusedBit_221_11 : 1 {};
 	/**
-	offset 22964 bit 12 */
-	bool unusedBit_220_12 : 1 {};
+	offset 23152 bit 12 */
+	bool unusedBit_221_12 : 1 {};
 	/**
-	offset 22964 bit 13 */
-	bool unusedBit_220_13 : 1 {};
+	offset 23152 bit 13 */
+	bool unusedBit_221_13 : 1 {};
 	/**
-	offset 22964 bit 14 */
-	bool unusedBit_220_14 : 1 {};
+	offset 23152 bit 14 */
+	bool unusedBit_221_14 : 1 {};
 	/**
-	offset 22964 bit 15 */
-	bool unusedBit_220_15 : 1 {};
+	offset 23152 bit 15 */
+	bool unusedBit_221_15 : 1 {};
 	/**
-	offset 22964 bit 16 */
-	bool unusedBit_220_16 : 1 {};
+	offset 23152 bit 16 */
+	bool unusedBit_221_16 : 1 {};
 	/**
-	offset 22964 bit 17 */
-	bool unusedBit_220_17 : 1 {};
+	offset 23152 bit 17 */
+	bool unusedBit_221_17 : 1 {};
 	/**
-	offset 22964 bit 18 */
-	bool unusedBit_220_18 : 1 {};
+	offset 23152 bit 18 */
+	bool unusedBit_221_18 : 1 {};
 	/**
-	offset 22964 bit 19 */
-	bool unusedBit_220_19 : 1 {};
+	offset 23152 bit 19 */
+	bool unusedBit_221_19 : 1 {};
 	/**
-	offset 22964 bit 20 */
-	bool unusedBit_220_20 : 1 {};
+	offset 23152 bit 20 */
+	bool unusedBit_221_20 : 1 {};
 	/**
-	offset 22964 bit 21 */
-	bool unusedBit_220_21 : 1 {};
+	offset 23152 bit 21 */
+	bool unusedBit_221_21 : 1 {};
 	/**
-	offset 22964 bit 22 */
-	bool unusedBit_220_22 : 1 {};
+	offset 23152 bit 22 */
+	bool unusedBit_221_22 : 1 {};
 	/**
-	offset 22964 bit 23 */
-	bool unusedBit_220_23 : 1 {};
+	offset 23152 bit 23 */
+	bool unusedBit_221_23 : 1 {};
 	/**
-	offset 22964 bit 24 */
-	bool unusedBit_220_24 : 1 {};
+	offset 23152 bit 24 */
+	bool unusedBit_221_24 : 1 {};
 	/**
-	offset 22964 bit 25 */
-	bool unusedBit_220_25 : 1 {};
+	offset 23152 bit 25 */
+	bool unusedBit_221_25 : 1 {};
 	/**
-	offset 22964 bit 26 */
-	bool unusedBit_220_26 : 1 {};
+	offset 23152 bit 26 */
+	bool unusedBit_221_26 : 1 {};
 	/**
-	offset 22964 bit 27 */
-	bool unusedBit_220_27 : 1 {};
+	offset 23152 bit 27 */
+	bool unusedBit_221_27 : 1 {};
 	/**
-	offset 22964 bit 28 */
-	bool unusedBit_220_28 : 1 {};
+	offset 23152 bit 28 */
+	bool unusedBit_221_28 : 1 {};
 	/**
-	offset 22964 bit 29 */
-	bool unusedBit_220_29 : 1 {};
+	offset 23152 bit 29 */
+	bool unusedBit_221_29 : 1 {};
 	/**
-	offset 22964 bit 30 */
-	bool unusedBit_220_30 : 1 {};
+	offset 23152 bit 30 */
+	bool unusedBit_221_30 : 1 {};
 	/**
-	offset 22964 bit 31 */
-	bool unusedBit_220_31 : 1 {};
+	offset 23152 bit 31 */
+	bool unusedBit_221_31 : 1 {};
 };
-static_assert(sizeof(persistent_config_s) == 22968);
+static_assert(sizeof(persistent_config_s) == 23156);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt

@@ -6088,19 +6088,23 @@ struct persistent_config_s {
 	/**
 	 * offset 23412
 	 */
+	blend_table_s targetAfrBlends[TARGET_AFR_BLEND_COUNT];
+	/**
+	 * offset 23600
+	 */
 	uint8_t hondaKcltGaugeAdder;
 	/**
-	 * offset 23413
+	 * offset 23601
 	 */
 	uint8_t unusedConfigPadding[BOTTOM_PADDING];
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 23449
+	 * offset 23637
 	 */
-	uint8_t alignmentFill_at_23449[3];
+	uint8_t alignmentFill_at_23637[3];
 };
-static_assert(sizeof(persistent_config_s) == 23452);
+static_assert(sizeof(persistent_config_s) == 23640);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt

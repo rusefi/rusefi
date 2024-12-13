@@ -1174,7 +1174,7 @@ public class Fields {
 	public static final int PEDAL_TO_TPS_SIZE = 8;
 	public static final String pedalSensor_NAME = "Accelerator pedal";
 	public static final String pedalToTpsTbl_NAME = "ETB pedal target";
-	public static final int persistent_config_s_size = 22968;
+	public static final int persistent_config_s_size = 23156;
 	public static final int pid_s_size = 20;
 	public static final int pin_input_mode_e_PI_DEFAULT = 0;
 	public static final int pin_input_mode_e_PI_PULLDOWN = 2;
@@ -1267,6 +1267,7 @@ public class Fields {
 	public static final int TABLE_3_LOAD_SIZE = 8;
 	public static final int TABLE_3_RPM_SIZE = 8;
 	public static final int TABLE_4_RPM = 10;
+	public static final int TARGET_AFR_BLEND_COUNT = 1;
 	public static final int tChargeMode_e_TCHARGE_MODE_AIR_INTERP = 1;
 	public static final int tChargeMode_e_TCHARGE_MODE_AIR_INTERP_TABLE = 2;
 	public static final int tChargeMode_e_TCHARGE_MODE_RPM_TPS = 0;
@@ -1289,7 +1290,7 @@ public class Fields {
 	public static final int TORQUE_CURVE_SIZE = 6;
 	public static final int torqueReductionActivationMode_e_LAUNCH_BUTTON = 1;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON = 0;
-	public static final int TOTAL_CONFIG_SIZE = 22968;
+	public static final int TOTAL_CONFIG_SIZE = 23156;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int TPS_PPS_TOO_HIGH_THRESHOLD = 110;
 	public static final int TPS_PPS_TOO_LOW_THRESHOLD = -10;
@@ -1501,11 +1502,11 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.12.12.f407-discovery.2356688936";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.12.13.f407-discovery.3384054544";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1796;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1800;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_2_NAME = "Channel 2";
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;
@@ -3345,8 +3346,16 @@ public class Fields {
 	public static final Field IATBOOSTADDER = Field.create("IATBOOSTADDER", 22928, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field MINIMUMOILPRESSUREBINS = Field.create("MINIMUMOILPRESSUREBINS", 22948, FieldType.INT8).setScale(100.0).setBaseOffset(0);
 	public static final Field MINIMUMOILPRESSUREVALUES = Field.create("MINIMUMOILPRESSUREVALUES", 22956, FieldType.INT8).setScale(10.0).setBaseOffset(0);
-	public static final Field COMMUNITYCOMMSLEDPIN = Field.create("COMMUNITYCOMMSLEDPIN", 22964, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_22966 = Field.create("ALIGNMENTFILL_AT_22966", 22966, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field TARGETAFRBLENDS1_TABLE = Field.create("TARGETAFRBLENDS1_TABLE", 22964, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field TARGETAFRBLENDS1_LOADBINS = Field.create("TARGETAFRBLENDS1_LOADBINS", 23092, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field TARGETAFRBLENDS1_RPMBINS = Field.create("TARGETAFRBLENDS1_RPMBINS", 23108, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field TARGETAFRBLENDS1_BLENDPARAMETER = Field.create("TARGETAFRBLENDS1_BLENDPARAMETER", 23124, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
+	public static final Field TARGETAFRBLENDS1_YAXISOVERRIDE = Field.create("TARGETAFRBLENDS1_YAXISOVERRIDE", 23125, FieldType.INT8, gppwm_channel_e).setScale(1.0).setBaseOffset(0);
+	public static final Field TARGETAFRBLENDS1_BLENDBINS = Field.create("TARGETAFRBLENDS1_BLENDBINS", 23126, FieldType.INT16).setScale(0.1).setBaseOffset(0);
+	public static final Field TARGETAFRBLENDS1_BLENDVALUES = Field.create("TARGETAFRBLENDS1_BLENDVALUES", 23142, FieldType.INT8).setScale(0.5).setBaseOffset(0);
+	public static final Field TARGETAFRBLENDS1_ALIGNMENTFILL_AT_186 = Field.create("TARGETAFRBLENDS1_ALIGNMENTFILL_AT_186", 23150, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field COMMUNITYCOMMSLEDPIN = Field.create("COMMUNITYCOMMSLEDPIN", 23152, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_23154 = Field.create("ALIGNMENTFILL_AT_23154", 23154, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field[] VALUES = {
 	ENGINETYPE,
 	STARTBUTTONSUPPRESSONSTARTUPMS,
@@ -5079,7 +5088,15 @@ public class Fields {
 	IATBOOSTADDER,
 	MINIMUMOILPRESSUREBINS,
 	MINIMUMOILPRESSUREVALUES,
+	TARGETAFRBLENDS1_TABLE,
+	TARGETAFRBLENDS1_LOADBINS,
+	TARGETAFRBLENDS1_RPMBINS,
+	TARGETAFRBLENDS1_BLENDPARAMETER,
+	TARGETAFRBLENDS1_YAXISOVERRIDE,
+	TARGETAFRBLENDS1_BLENDBINS,
+	TARGETAFRBLENDS1_BLENDVALUES,
+	TARGETAFRBLENDS1_ALIGNMENTFILL_AT_186,
 	COMMUNITYCOMMSLEDPIN,
-	ALIGNMENTFILL_AT_22966,
+	ALIGNMENTFILL_AT_23154,
 	};
 }
