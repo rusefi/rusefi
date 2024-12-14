@@ -185,8 +185,6 @@ struct_no_prefix engine_configuration_s
 
 #define AUX_DIGITAL_VALVE_COUNT 2
 
-#define IAT_CURVE_SIZE 16
-
 #define VBAT_INJECTOR_CURVE_SIZE 8
 
 #define DWELL_CURVE_SIZE 8
@@ -1888,9 +1886,11 @@ uint16_t[IDLE_VE_SIZE x IDLE_VE_SIZE] autoscale idleVeTable;;"%", 0.1, 0, 0, 999
 custom lua_script_t @@LUA_SCRIPT_SIZE@@ string, ASCII, @OFFSET@, @@LUA_SCRIPT_SIZE@@
 lua_script_t luaScript;
 
-float[CLT_CURVE_SIZE] cltFuelCorrBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
-float[CLT_CURVE_SIZE] cltFuelCorr;;"ratio", 1, 0, 0, 5, 2
+#define CLT_FUEL_CURVE_SIZE 16
+float[CLT_FUEL_CURVE_SIZE] cltFuelCorrBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
+float[CLT_FUEL_CURVE_SIZE] cltFuelCorr;;"ratio", 1, 0, 0, 5, 2
 
+#define IAT_CURVE_SIZE 16
 float[IAT_CURVE_SIZE] iatFuelCorrBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
 float[IAT_CURVE_SIZE] iatFuelCorr;;"ratio", 1, 0, 0, 5, 2
 
