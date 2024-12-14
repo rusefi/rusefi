@@ -1908,9 +1908,11 @@ float[CLT_CURVE_SIZE] cltIdleCorr;    CLT-based idle position multiplier for sim
 float[MAF_DECODING_COUNT] mafDecoding;Also known as MAF transfer function.\nkg/hour value.\nBy the way 2.081989116 kg/h = 1 ft3/m;"kg/hour", 1, 0, -500, 4000, 2
 float[MAF_DECODING_COUNT] mafDecodingBins;;"V", 1, 0, -5, 150, 2
 
-int8_t[8 x 8] autoscale ignitionIatCorrTable;;"deg", 0.1, 0, -25, 25, 1
-int8_t[8] ignitionIatCorrTempBins;;"C", 1, 0, -40, 120, 0
-uint8_t[8] autoscale ignitionIatCorrLoadBins;;"Load", 5, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
+#define IAT_IGN_CORR_COUNT 8
+
+int8_t[IAT_IGN_CORR_COUNT x IAT_IGN_CORR_COUNT] autoscale ignitionIatCorrTable;;"deg", 0.1, 0, -25, 25, 1
+int8_t[IAT_IGN_CORR_COUNT] ignitionIatCorrTempBins;;"C", 1, 0, -40, 120, 0
+uint8_t[IAT_IGN_CORR_COUNT] autoscale ignitionIatCorrLoadBins;;"Load", 5, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
 
 int16_t[INJ_PHASE_LOAD_COUNT x INJ_PHASE_RPM_COUNT] injectionPhase;;"deg", 1, 0, -720, 720, 0
 uint16_t[INJ_PHASE_LOAD_COUNT] injPhaseLoadBins;;"Load", 1, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
