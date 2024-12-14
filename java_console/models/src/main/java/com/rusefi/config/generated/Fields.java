@@ -119,6 +119,7 @@ public class Fields {
 	public static final int bench_mode_e_HD_ACR2 = 29;
 	public static final int BENCH_STARTER_DURATION = 4000;
 	public static final int BENCH_VVT_DURATION = 300;
+	public static final int BLEND_TABLE_COUNT = 8;
 	public static final int blend_table_s_size = 188;
 	public static final int BLOCKING_FACTOR = 1024;
 	public static final int BOOST_BLEND_COUNT = 2;
@@ -1241,7 +1242,7 @@ public class Fields {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 326700892;
+	public static final int SIGNATURE_HASH = 910519334;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1505,7 +1506,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.12.14.f407-discovery.326700892";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.12.14.f407-discovery.910519334";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
