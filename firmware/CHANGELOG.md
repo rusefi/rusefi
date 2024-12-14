@@ -54,6 +54,7 @@ Release template (copy/paste this for new release):
 ### Breaking Changes
  - Lua: onCanRx parameter value to be use Lua-indexing #7110
  - After start enrichment Engine Cycles is now represented with U16 data type
+ - Shrink IAT CLT Correction table #7164
 
 ## November 2024 "Day 998"
 
