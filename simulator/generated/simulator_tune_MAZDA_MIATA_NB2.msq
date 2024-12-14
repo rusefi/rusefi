@@ -4844,7 +4844,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20241210" nPages="1" signature="rusEFI master.2024.12.14.f407-discovery.3343785283" version="5.0"/>
+    <versionInfo firmwareInfo="20241210" nPages="1" signature="rusEFI master.2024.12.14.f407-discovery.326700892" version="5.0"/>
     <bibliography author="rusEFI 20241210" writeDate="date"/>
     <settings/>
     <userComments/>
