@@ -184,10 +184,10 @@ pins:
     type: 5v
 
   - pin: 34
-    function: Knock input 1 on 0.4. Due to a hardware defect, knock hardware can't work on v0.3 :(
+    function: Knock input 1
 
   - pin: 35
-    function: Knock input 2 on 0.4
+    function: Knock input 2
 
 info:
   title: Proteus
