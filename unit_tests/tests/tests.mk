@@ -55,6 +55,7 @@ TESTS_SRC_CPP = \
 	tests/util/engine_config.cpp \
 	tests/util/test_persistent_configuration.cpp \
 	tests/util/test_engine_state.cpp \
+	tests/util/test_lua_script_executor.cpp \
 	tests/ac/ac_test_base.cpp \
 	tests/ac/ac_pressure_test.cpp \
 	tests/launch/launch_test_base.cpp \

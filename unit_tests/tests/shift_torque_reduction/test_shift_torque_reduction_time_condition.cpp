@@ -150,4 +150,41 @@ namespace {
         setMockState(TEST_TORQUE_REDUCTION_BUTTON_PIN, false);
         waitAndCheckTimeCondition(IMMEDIATELY, false, false, "Pin has just been deactvated");
     }
+
+	TEST_F(ShiftTorqueReductionTimeConditionTest, checkLuaExpiration) {
+		setUpEngineConfiguration(EngineConfig()
+			.setTorqueReductionEnabled(true)
+			.setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
+			.setTorqueReductionTriggerPin(Gpio::Unassigned)
+			.setLimitTorqueReductionTime(true)
+			.setTorqueReductionTime(TEST_TORQUE_REDUCTION_TIME)
+		);
+
+		waitAndCheckTimeCondition(IMMEDIATELY, false, false, "Initial state");
+
+		getTestLuaScriptExecutor().setTorqueReductionState(true);
+		waitAndCheckTimeCondition(IMMEDIATELY, true, true, "Pin has just been actvated");
+
+		waitAndCheckTimeCondition(TEST_TORQUE_REDUCTION_TIME, true, true, "Before timeout exriration");
+
+		waitAndCheckTimeCondition(EPS3D, true, false, "After timeout expiration");
+	}
+
+	TEST_F(ShiftTorqueReductionTimeConditionTest, checkLuaDeactivation) {
+		setUpEngineConfiguration(EngineConfig()
+			.setTorqueReductionEnabled(true)
+			.setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
+			.setTorqueReductionTriggerPin(Gpio::Unassigned)
+			.setLimitTorqueReductionTime(true)
+			.setTorqueReductionTime(TEST_TORQUE_REDUCTION_TIME)
+		);
+
+		getTestLuaScriptExecutor().setTorqueReductionState(true);
+		waitAndCheckTimeCondition(IMMEDIATELY, true, true, "Pin has just been actvated");
+
+		waitAndCheckTimeCondition(TEST_TORQUE_REDUCTION_TIME / 2, true, true, "Before pin deactivation");
+
+		getTestLuaScriptExecutor().setTorqueReductionState(false);
+		waitAndCheckTimeCondition(IMMEDIATELY, false, false, "Pin has just been deactvated");
+	}
 }

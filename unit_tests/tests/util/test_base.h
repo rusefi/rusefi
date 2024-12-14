@@ -7,6 +7,7 @@
 #include "test_engine_configuration.h"
 #include "test_engine_state.h"
 #include "test_persistent_configuration.h"
+#include "test_lua_script_executor.h"
 #include "engine_config.h"
 
 class TestBase : public testing::Test {
@@ -17,6 +18,7 @@ protected:
     TestEngineConfiguration& getTestEngineConfiguration();
     TestEngineState& getTestEngineState();
     TestPersistentConfiguration& getTestPersistentConfiguration();
+    TestLuaScriptExecutor& getTestLuaScriptExecutor();
 
     void setUpEngineConfiguration(const EngineConfig& config);
     void periodicFastCallback();

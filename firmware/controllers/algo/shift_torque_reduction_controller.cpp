@@ -15,8 +15,8 @@
 
 void ShiftTorqueReductionController::update() {
     if (engineConfiguration->torqueReductionEnabled) {
-		updateTriggerPinState();
-		updateTimeConditionSatisfied();
+        updateTriggerPinState();
+        updateTimeConditionSatisfied();
         updateRpmConditionSatisfied();
         updateAppConditionSatisfied();
 
@@ -38,14 +38,16 @@ void ShiftTorqueReductionController::updateTriggerPinState() {
         case TORQUE_REDUCTION_BUTTON: {
             updateTriggerPinState(
                 engineConfiguration->torqueReductionTriggerPin,
-                engineConfiguration->torqueReductionTriggerPinInverted
+                engineConfiguration->torqueReductionTriggerPinInverted,
+                engine->engineState.lua.torqueReductionState
             );
             break;
         }
         case LAUNCH_BUTTON: {
             updateTriggerPinState(
                 engineConfiguration->launchActivatePin,
-                engineConfiguration->launchActivateInverted
+                engineConfiguration->launchActivateInverted,
+                false
             );
             break;
         }
@@ -55,28 +57,32 @@ void ShiftTorqueReductionController::updateTriggerPinState() {
     }
 }
 
-void ShiftTorqueReductionController::updateTriggerPinState(const switch_input_pin_e pin, const bool isPinInverted) {
+void ShiftTorqueReductionController::updateTriggerPinState(
+    const switch_input_pin_e pin,
+    const bool isPinInverted,
+    const bool invalidPinState
+) {
 #if !EFI_SIMULATOR
     isTorqueReductionTriggerPinValid = isBrainPinValid(pin);
+    const bool previousTorqueReductionTriggerPinState = torqueReductionTriggerPinState;
     if (isTorqueReductionTriggerPinValid) {
-		const bool previousTorqueReductionTriggerPinState = torqueReductionTriggerPinState;
         torqueReductionTriggerPinState = isPinInverted ^ efiReadPin(pin);
-		if (!previousTorqueReductionTriggerPinState && torqueReductionTriggerPinState) {
-			m_pinTriggeredTimer.reset();
-		}
     } else {
-        torqueReductionTriggerPinState = false;
+        torqueReductionTriggerPinState = invalidPinState;
+    }
+    if (!previousTorqueReductionTriggerPinState && torqueReductionTriggerPinState) {
+    m_pinTriggeredTimer.reset();
     }
 #endif // !EFI_SIMULATOR
 }
 
 void ShiftTorqueReductionController::updateTimeConditionSatisfied() {
-	isTimeConditionSatisfied = torqueReductionTriggerPinState
-	    ? !engineConfiguration->limitTorqueReductionTime ||
-	        ((0.0f < engineConfiguration->torqueReductionTime)
-	            && !m_pinTriggeredTimer.hasElapsedMs(engineConfiguration->torqueReductionTime)
-	        )
-	    : false;
+    isTimeConditionSatisfied = torqueReductionTriggerPinState
+        ? !engineConfiguration->limitTorqueReductionTime ||
+            ((0.0f < engineConfiguration->torqueReductionTime)
+                && !m_pinTriggeredTimer.hasElapsedMs(engineConfiguration->torqueReductionTime)
+            )
+        : false;
 }
 
 void ShiftTorqueReductionController::updateRpmConditionSatisfied() {
@@ -85,7 +91,7 @@ void ShiftTorqueReductionController::updateRpmConditionSatisfied() {
 }
 
 void ShiftTorqueReductionController::updateAppConditionSatisfied() {
-	const SensorResult currentApp = Sensor::get(SensorType::DriverThrottleIntent);
+    const SensorResult currentApp = Sensor::get(SensorType::DriverThrottleIntent);
 
     if (currentApp.Valid) {
         isAppConditionSatisfied = (engineConfiguration->torqueReductionArmingApp <= currentApp.Value);

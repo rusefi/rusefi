@@ -22,6 +22,10 @@ TestPersistentConfiguration& TestBase::getTestPersistentConfiguration() {
     return TestPersistentConfiguration::getInstance();
 }
 
+TestLuaScriptExecutor& TestBase::getTestLuaScriptExecutor() {
+    return TestLuaScriptExecutor::getInstance();
+}
+
 TestEngineState& TestBase::getTestEngineState() {
     return TestEngineState::getInstance();
 }

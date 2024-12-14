@@ -923,6 +923,11 @@ void configureRusefiLuaHooks(lua_State* lState) {
 		return 0;
 	});
 
+	lua_register(lState, "setTorqueReductionState", [](lua_State* l) {
+		engine->engineState.lua.torqueReductionState = lua_toboolean(l, 1);
+		return 0;
+	});
+
 	lua_register(lState, "getCalibration", [](lua_State* l) {
 		auto propertyName = luaL_checklstring(l, 1, nullptr);
 		auto result = getConfigValueByName(propertyName);
