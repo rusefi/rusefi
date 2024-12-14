@@ -83,6 +83,7 @@ TEST(trigger, test1995FordInline6TriggerDecoder) {
 	ASSERT_EQ( 0,  getTriggerZeroEventIndex(engine_type_e::FORD_INLINE_6_1995)) << "triggerIndex ";
 
 	EngineTestHelper eth(engine_type_e::FORD_INLINE_6_1995);
+	setTable(config->ignitionIatCorrTable, 0);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 
 	engineConfiguration->minimumIgnitionTiming = -15;
@@ -105,10 +106,10 @@ TEST(trigger, test1995FordInline6TriggerDecoder) {
 	IgnitionEventList *ecl = &engine->ignitionEvents;
 	ASSERT_EQ(true,  ecl->isReady) << "ford inline ignition events size";
 
-	EXPECT_NEAR(ecl->elements[0].dwellAngle, 8.960f, 1e-3);
-	EXPECT_NEAR(ecl->elements[0].sparkAngle, 14.96f, 1e-3);
-	EXPECT_NEAR(ecl->elements[5].dwellAngle, 608.960f, 1e-3);
-	EXPECT_NEAR(ecl->elements[5].sparkAngle, 614.960f, 1e-3);
+	EXPECT_NEAR(ecl->elements[0].dwellAngle, 7, 1e-3);
+	EXPECT_NEAR(ecl->elements[0].sparkAngle, 13, 1e-3);
+	EXPECT_NEAR(ecl->elements[5].dwellAngle, 607, 1e-3);
+	EXPECT_NEAR(ecl->elements[5].sparkAngle, 613.0f, 1e-3);
 
 	ASSERT_FLOAT_EQ(0.5, engine->ignitionState.getSparkDwell(2000)) << "running dwell";
 }
