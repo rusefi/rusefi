@@ -177,6 +177,7 @@ public class Fields {
 	public static final int CanGpioType_NONE = 0;
 	public static final int CLT_CRANKING_CURVE_SIZE = 8;
 	public static final int CLT_CURVE_SIZE = 16;
+	public static final int CLT_FUEL_CURVE_SIZE = 16;
 	public static final int CLT_LIMITER_CURVE_SIZE = 4;
 	public static final int CLT_TIMING_CURVE_SIZE = 8;
 	public static final int CLT_UPPER_LIMIT = 250;
@@ -1240,6 +1241,7 @@ public class Fields {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
+	public static final int SIGNATURE_HASH = 326700892;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1503,7 +1505,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.12.14.f407-discovery.3343785283";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.12.14.f407-discovery.326700892";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
