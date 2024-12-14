@@ -1080,6 +1080,7 @@
 #define HPFP_TARGET_SIZE 10
 #define IAC_PID_MULT_SIZE 8
 #define IAT_CURVE_SIZE 16
+#define IAT_IGN_CORR_COUNT 8
 #define IDLE_ADVANCE_CURVE_SIZE 8
 #define idle_hardware_s_size 12
 #define idle_mode_e_auto_enum 0="IM_AUTO",1="IM_MANUAL"
@@ -1334,7 +1335,7 @@
 #define show_HellenNB1_presets false
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1528918901
+#define SIGNATURE_HASH 1284077008
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1796,7 +1797,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.12.13.hellenNA8_96.1528918901"
+#define TS_SIGNATURE "rusEFI master.2024.12.14.hellenNA8_96.1284077008"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
