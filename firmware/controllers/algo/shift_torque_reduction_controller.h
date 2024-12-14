@@ -13,7 +13,7 @@ public:
 	float getSparkSkipRatio() const;
 private:
 	void updateTriggerPinState();
-	void updateTriggerPinState(switch_input_pin_e pin, bool isPinInverted);
+	void updateTriggerPinState(switch_input_pin_e pin, bool isPinInverted, bool invalidPinState);
 
 	void updateTimeConditionSatisfied();
 	void updateRpmConditionSatisfied();

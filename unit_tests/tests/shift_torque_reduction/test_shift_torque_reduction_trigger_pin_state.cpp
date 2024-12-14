@@ -27,6 +27,10 @@ namespace {
             bool pinState,
             const ShiftTorqueReductionTriggerPinTestData& expected
         );
+        void checkShiftTorqueReductionStateWithLuaTorqueReductionState(
+            bool luaTorqueReductionState,
+            const ShiftTorqueReductionTriggerPinTestData& expected
+        );
     };
 
     void ShiftTorqueReductionTriggerPinTest::checkShiftTorqueReductionState(
@@ -56,6 +60,14 @@ namespace {
         const ShiftTorqueReductionTriggerPinTestData& expected
     ) {
         setMockState(triggerPin, pinState);
+        checkShiftTorqueReductionStateAfterPeriodicFastCallback(expected);
+    }
+
+    void ShiftTorqueReductionTriggerPinTest::checkShiftTorqueReductionStateWithLuaTorqueReductionState(
+        const bool luaTorqueReductionState,
+        const ShiftTorqueReductionTriggerPinTestData& expected
+    ) {
+        getTestLuaScriptExecutor().setTorqueReductionState(luaTorqueReductionState);
         checkShiftTorqueReductionStateAfterPeriodicFastCallback(expected);
     }
 
@@ -139,7 +151,7 @@ namespace {
             { "Launch activate pin is off", true, false }
         );
 
-        // Check that launch button pin switching does not switch shift torque reduction trigger pin:
+        // Check that launch button pin switching does not switch shift torque reduction state:
         checkShiftTorqueReductionStateWithPinState(
             TEST_TORQUE_REDUCTION_BUTTON_PIN,
             true,
@@ -150,7 +162,17 @@ namespace {
             false,
             { "Torque reduction trigger pin is off", true, false }
         );
-    }
+
+        // Check that Lua `setTorqueReductionState` hook does not switch shift torque reduction state:
+        checkShiftTorqueReductionStateWithLuaTorqueReductionState(
+            true,
+            { "Lua torque reduction state is on", true, false }
+        );
+        checkShiftTorqueReductionStateWithLuaTorqueReductionState(
+            false,
+            { "Lua torque reduction state is off", true, false }
+        );
+}
 
     TEST_F(ShiftTorqueReductionTriggerPinTest, checkTorqueReductionTriggerPinSwitchWithDisabledTorqueReduction) {
         setUpEngineConfiguration(EngineConfig()
@@ -180,6 +202,42 @@ namespace {
             TEST_LAUNCH_BUTTON_PIN,
             false,
             { "Launch activate pin is off", false, false }
+        );
+    }
+
+    TEST_F(ShiftTorqueReductionTriggerPinTest, checkTorqueReductionLuaSwitch) {
+        setUpEngineConfiguration(EngineConfig()
+            .setTorqueReductionEnabled(true)
+            .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
+            .setTorqueReductionTriggerPin(Gpio::Unassigned)
+        );
+
+        checkShiftTorqueReductionStateAfterPeriodicFastCallback({ "Default trigger pin state", false, false });
+        checkShiftTorqueReductionStateWithLuaTorqueReductionState(
+            true,
+            { "Lua torque reduction state is on", false, true }
+        );
+        checkShiftTorqueReductionStateWithLuaTorqueReductionState(
+            false,
+            { "Lua torque reduction state is off", false, false }
+        );
+    }
+
+    TEST_F(ShiftTorqueReductionTriggerPinTest, checkTorqueReductionLuaSwitchWithValidTorqueReductionButonPin) {
+        setUpEngineConfiguration(EngineConfig()
+            .setTorqueReductionEnabled(true)
+            .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
+            .setTorqueReductionTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+        );
+
+        checkShiftTorqueReductionStateAfterPeriodicFastCallback({ "Default trigger pin state", true, false });
+        checkShiftTorqueReductionStateWithLuaTorqueReductionState(
+            true,
+            { "Lua torque reduction state is on", true, false }
+        );
+        checkShiftTorqueReductionStateWithLuaTorqueReductionState(
+            false,
+            { "Lua torque reduction state is off", true, false }
         );
     }
 }
