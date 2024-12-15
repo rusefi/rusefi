@@ -190,6 +190,7 @@ public class EngineState {
 	public static final Field LUA_LUAFUELCUT = Field.create("LUA_LUAFUELCUT", 8, FieldType.BIT, 5).setBaseOffset(1212);
 	public static final Field LUA_CLUTCHDOWNSTATE = Field.create("LUA_CLUTCHDOWNSTATE", 8, FieldType.BIT, 6).setBaseOffset(1212);
 	public static final Field LUA_DISABLEDECELERATIONFUELCUTOFF = Field.create("LUA_DISABLEDECELERATIONFUELCUTOFF", 8, FieldType.BIT, 7).setBaseOffset(1212);
+	public static final Field LUA_TORQUEREDUCTIONSTATE = Field.create("LUA_TORQUEREDUCTIONSTATE", 8, FieldType.BIT, 8).setBaseOffset(1212);
 	public static final Field SD_TCHARGE = Field.create("SD_TCHARGE", 12, FieldType.INT16).setScale(0.01).setBaseOffset(1212);
 	public static final Field SD_ALIGNMENTFILL_AT_2 = Field.create("SD_ALIGNMENTFILL_AT_2", 14, FieldType.INT8).setScale(1.0).setBaseOffset(1212);
 	public static final Field SD_TCHARGEK = Field.create("SD_TCHARGEK", 16, FieldType.FLOAT).setBaseOffset(1212);
@@ -242,6 +243,7 @@ public class EngineState {
 	LUA_LUAFUELCUT,
 	LUA_CLUTCHDOWNSTATE,
 	LUA_DISABLEDECELERATIONFUELCUTOFF,
+	LUA_TORQUEREDUCTIONSTATE,
 	SD_TCHARGE,
 	SD_ALIGNMENTFILL_AT_2,
 	SD_TCHARGEK,

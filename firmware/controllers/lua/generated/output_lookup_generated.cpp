@@ -1321,6 +1321,9 @@ float getOutputValueByName(const char *name) {
 // lua.disableDecelerationFuelCutOff
 		case 1680936043:
 			return engine->engineState.lua.disableDecelerationFuelCutOff;
+// lua.torqueReductionState
+		case -1605036797:
+			return engine->engineState.lua.torqueReductionState;
 // sd.tCharge
 		case -893334680:
 			return engine->engineState.sd.tCharge;
