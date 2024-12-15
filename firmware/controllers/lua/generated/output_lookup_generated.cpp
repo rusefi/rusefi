@@ -1509,11 +1509,6 @@ float getOutputValueByName(const char *name) {
 		case -2065814304:
 			return ___engine.module<IdleController>().unmock().iacByTpsTaper;
 #endif
-// throttlePedalUpState
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case 767668487:
-			return ___engine.module<IdleController>().unmock().throttlePedalUpState;
-#endif
 // mightResetPid
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case 149945022:

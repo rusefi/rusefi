@@ -1273,7 +1273,7 @@ struct engine_configuration_s {
 	 * Throttle Pedal not pressed switch - used on some older vehicles like early Mazda Miata
 	 * offset 590
 	 */
-	switch_input_pin_e throttlePedalUpPin;
+	switch_input_pin_e unusedThrottlePedalUpPin;
 	/**
 	 * @see hasBaroSensor
 	 * offset 592
@@ -1495,7 +1495,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 731
 	 */
-	pin_input_mode_e throttlePedalUpPinMode;
+	pin_input_mode_e unusedThrottlePedalUpPinMode;
 	/**
 	 * Ratio between the wheels and your transmission output.
 	 * units: ratio

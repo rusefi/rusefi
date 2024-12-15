@@ -560,9 +560,6 @@ static const LogField fields[] = {
 	{___engine.module<IdleController>().unmock().iacByTpsTaper, "idle: iacByTpsTaper portion", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<IdleController>().unmock().throttlePedalUpState, "idle: throttlePedalUpState", "", 0},
-#endif
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{___engine.module<IdleController>().unmock().idleTarget, "Idle: Target RPM", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL

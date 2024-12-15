@@ -1242,7 +1242,6 @@ public class Fields {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 910519334;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1506,11 +1505,11 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.12.14.f407-discovery.910519334";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.12.15.f407-discovery.2571702013";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1804;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1800;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_2_NAME = "Channel 2";
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;
@@ -1767,7 +1766,6 @@ public class Fields {
 	public static final Field TLE6240_CS = Field.create("TLE6240_CS", 586, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field TLE6240_CSPINMODE = Field.create("TLE6240_CSPINMODE", 588, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field MC33810_CSPINMODE = Field.create("MC33810_CSPINMODE", 589, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
-	public static final Field THROTTLEPEDALUPPIN = Field.create("THROTTLEPEDALUPPIN", 590, FieldType.INT16, switch_input_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field BAROSENSOR_LOWVALUE = Field.create("BAROSENSOR_LOWVALUE", 592, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field BAROSENSOR_HIGHVALUE = Field.create("BAROSENSOR_HIGHVALUE", 596, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field BAROSENSOR_TYPE = Field.create("BAROSENSOR_TYPE", 600, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -1852,7 +1850,6 @@ public class Fields {
 	public static final Field TRIGGERINPUTPINS2 = Field.create("TRIGGERINPUTPINS2", 726, FieldType.INT16, brain_input_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field MC33_T_MIN_BOOST = Field.create("MC33_T_MIN_BOOST", 728, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field HIP9011CSPINMODE = Field.create("HIP9011CSPINMODE", 730, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
-	public static final Field THROTTLEPEDALUPPINMODE = Field.create("THROTTLEPEDALUPPINMODE", 731, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field FINALGEARRATIO = Field.create("FINALGEARRATIO", 732, FieldType.INT16).setScale(0.01).setBaseOffset(0);
 	public static final Field TCUINPUTSPEEDSENSORPIN = Field.create("TCUINPUTSPEEDSENSORPIN", 734, FieldType.INT16, brain_input_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field TCUINPUTSPEEDSENSORTEETH = Field.create("TCUINPUTSPEEDSENSORTEETH", 736, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -3546,7 +3543,6 @@ public class Fields {
 	TLE6240_CS,
 	TLE6240_CSPINMODE,
 	MC33810_CSPINMODE,
-	THROTTLEPEDALUPPIN,
 	BAROSENSOR_LOWVALUE,
 	BAROSENSOR_HIGHVALUE,
 	BAROSENSOR_TYPE,
@@ -3628,7 +3624,6 @@ public class Fields {
 	TRIGGERINPUTPINS2,
 	MC33_T_MIN_BOOST,
 	HIP9011CSPINMODE,
-	THROTTLEPEDALUPPINMODE,
 	FINALGEARRATIO,
 	TCUINPUTSPEEDSENSORPIN,
 	TCUINPUTSPEEDSENSORTEETH,
