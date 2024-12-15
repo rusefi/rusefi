@@ -35,6 +35,7 @@ Release template (copy/paste this for new release):
 ### Fixed
  - Critical error when using big values on Boost Control Open Loop with Y axis as MAP #7093
  - "Baro Correction" axis label
+ - unused "Throttle Up switch" is removed
 
 ### Breaking Changes
  - Lua: onCanRx parameter value to be use Lua-indexing #7110

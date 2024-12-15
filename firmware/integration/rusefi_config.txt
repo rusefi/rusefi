@@ -697,7 +697,7 @@ adc_channel_e throttlePedalPositionAdcChannel;Electronic throttle pedal position
 	pin_output_mode_e tle6240_csPinMode;
 	pin_output_mode_e mc33810_csPinMode;
 
-switch_input_pin_e throttlePedalUpPin;Throttle Pedal not pressed switch - used on some older vehicles like early Mazda Miata
+switch_input_pin_e unusedThrottlePedalUpPin;Throttle Pedal not pressed switch - used on some older vehicles like early Mazda Miata
 
 
 air_pressure_sensor_config_s baroSensor;@see hasBaroSensor
@@ -786,7 +786,7 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	uint16_t mc33_t_min_boost;Minimum allowed time for the boost phase. If the boost target current is reached before this time elapses, it is assumed that the injector has failed short circuit.;"us", 1, 0, 0, 10000, 0
 	pin_output_mode_e hip9011CsPinMode;
 
-  pin_input_mode_e throttlePedalUpPinMode;
+  pin_input_mode_e unusedThrottlePedalUpPinMode;
 
   uint16_t autoscale finalGearRatio;Ratio between the wheels and your transmission output. ;"ratio", 0.01, 0, 0, 10, 2
 

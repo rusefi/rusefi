@@ -262,12 +262,6 @@ extern bool kAcRequestState;
 		}
 	}
 
-#if EFI_IDLE_CONTROL
-	if (isBrainPinValid(engineConfiguration->throttlePedalUpPin)) {
-		engine->module<IdleController>().unmock().throttlePedalUpState = efiReadPin(engineConfiguration->throttlePedalUpPin);
-	}
-#endif // EFI_IDLE_CONTROL
-
 	pokeAuxDigital();
 
 #endif // EFI_GPIO_HARDWARE

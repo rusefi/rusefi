@@ -9,7 +9,6 @@ custom idle_state_e 4 bits, S32, @OFFSET@, [0:2], "not important"
     percent_t baseIdlePosition;"idle: base value\ncurrent position without adjustments (iacByTpsTaper, afterCrankingIACtaperDuration)"
 	percent_t idleClosedLoop;Idle: Closed loop
     percent_t iacByTpsTaper;idle: iacByTpsTaper portion
-    int throttlePedalUpState;idle: throttlePedalUpState\ntrue in IDLE throttle pedal state, false if driver is touching the pedal\ntodo: better name for this field?
 
     bit mightResetPid;idle: mightResetPid\nThe idea of 'mightResetPid' is to reset PID only once - each time when TPS > idlePidDeactivationTpsThreshold.\nThe throttle pedal can be pressed for a long time, making the PID data obsolete (thus the reset is required).\nWe set 'mightResetPid' to true only if PID was actually used (i.e. idlePid.getOutput() was called) to save some CPU resources.\nSee automaticIdleController().
 
