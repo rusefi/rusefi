@@ -210,7 +210,7 @@
         <constant name="acrPin">"NONE"</constant>
         <constant digits="1" name="driveWheelRevPerKm" units="revs/km">1000.0</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
-        <constant digits="0" name="byFirmwareVersion" units="index">2.0241214E7</constant>
+        <constant digits="0" name="byFirmwareVersion" units="index">2.0241215E7</constant>
         <constant name="tps1_1AdcChannel">"Disabled"</constant>
         <constant name="vbattAdcChannel">"Disabled"</constant>
         <constant name="fuelLevelSensor">"Disabled"</constant>
@@ -225,7 +225,7 @@
         <constant digits="0" name="boostControlSafeDutyCycle" units="%">0.0</constant>
         <constant name="mafAdcChannel">"Disabled"</constant>
         <constant digits="0" name="acrRevolutions" units="">5.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0241214E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0241215E7</constant>
         <constant digits="3" name="adcVcc" units="volts">3.0</constant>
         <constant digits="0" name="mapCamDetectionAnglePosition" units="Deg">0.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -243,7 +243,7 @@
         <constant name="tle6240_cs">"NONE"</constant>
         <constant name="tle6240_csPinMode">"default"</constant>
         <constant name="mc33810_csPinMode">"default"</constant>
-        <constant name="throttlePedalUpPin">"NONE"</constant>
+        <constant name="unusedThrottlePedalUpPin">"NONE"</constant>
         <constant digits="2" name="baroSensor_lowValue" units="kpa">0.0</constant>
         <constant digits="2" name="baroSensor_highValue" units="kpa">500.0</constant>
         <constant name="baroSensor_type">"Custom"</constant>
@@ -321,7 +321,7 @@
         <constant name="triggerInputPins2">"NONE"</constant>
         <constant digits="0" name="mc33_t_min_boost" units="us">100.0</constant>
         <constant name="hip9011CsPinMode">"default"</constant>
-        <constant name="throttlePedalUpPinMode">"DEFAULT"</constant>
+        <constant name="unusedThrottlePedalUpPinMode">"DEFAULT"</constant>
         <constant digits="2" name="finalGearRatio" units="ratio">1.0</constant>
         <constant name="tcuInputSpeedSensorPin">"NONE"</constant>
         <constant digits="0" name="tcuInputSpeedSensorTeeth" units="">1.0</constant>
@@ -4841,7 +4841,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20241210" nPages="1" signature="rusEFI master.2024.12.14.f407-discovery.910519334" version="5.0"/>
+    <versionInfo firmwareInfo="20241210" nPages="1" signature="rusEFI master.2024.12.15.f407-discovery.2571702013" version="5.0"/>
     <bibliography author="rusEFI 20241210" writeDate="date"/>
     <settings/>
     <userComments/>
