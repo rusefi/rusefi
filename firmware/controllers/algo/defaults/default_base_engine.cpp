@@ -62,6 +62,7 @@ static void setDefaultHPFP() {
 
 static void mc33810defaults() {
   engineConfiguration->mc33810Nomi = 5.5;
+  engineConfiguration->mc33810maxDwellTimer = mc33810maxDwellTimer_e::DWELL_8MS;
   engineConfiguration->mc33810Maxi = 14;
 }
 
