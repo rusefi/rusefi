@@ -48,17 +48,16 @@ pins:
     meta: H144_IN_D_3
     function: 'Exhaust Cam Sensor (2014: yellow)'
     class: event_inputs
-    ts_name: Exhaust Cam - K15
+    ts_name: Exhaust Cam - ___
 
   - pin: K16
     function: Analog Ground
 
-
-  - pin: K17b
+  - pin: K17
     function: Crank Sensor
     meta: H144_IN_D_1
     class: event_inputs
-    ts_name: Crank - K17
+    ts_name: Crank - ___
 
   - pin: K18
     function: BK2 WBO IP
@@ -426,7 +425,7 @@ info:
     - pin: K16
       x: 2940
       y: 660
-    - pin: K17c
+    - pin: K17
       x: 3011
       y: 660
     - pin: K18
