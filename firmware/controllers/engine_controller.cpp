@@ -525,6 +525,15 @@ bool validateConfigOnStartUpOrBurn() {
 		criticalError("Invalid cylinder count: %d", engineConfiguration->cylindersCount);
 		return false;
 	}
+#if EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)
+    int maxDwell = getMc33810maxDwellTimer(engineConfiguration->mc33810maxDwellTimer);
+    for (size_t i = 0;i<efi::size(config->sparkDwellValues);i++) {
+        float element = config->sparkDwellValues[i];
+        if (element > maxDwell) {
+            criticalError("Dwell %f while 33810 limit %d", element, maxDwell);
+        }
+    }
+#endif // EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)
 	if (engineConfiguration->adcVcc > 5.0f || engineConfiguration->adcVcc < 1.0f) {
     criticalError("Invalid adcVcc: %f", engineConfiguration->adcVcc);
 		return false;
