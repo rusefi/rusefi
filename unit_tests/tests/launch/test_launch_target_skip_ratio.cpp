@@ -23,8 +23,8 @@ namespace {
             TRACTION_CONTROL_ETB_DROP_SIZE * TRACTION_CONTROL_ETB_DROP_SIZE,
             static_cast<int8_t>(TEST_TRACTION_CONTROL_IGNITION_SKIP)
         );
-        getTestEngineState().setLuaSoftSparkSkip(TEST_LUA_SOFT_SPARK_SKIP);
-        getTestEngineState().setLuaHardSparkSkip(TEST_LUA_HARD_SPARK_SKIP);
+        getTestLuaScriptExecutor().setSparkSkipRatio(TEST_LUA_SOFT_SPARK_SKIP);
+        getTestLuaScriptExecutor().setSparkHardSkipRatio(TEST_LUA_HARD_SPARK_SKIP);
     }
 
     TEST_F(LaunchTargetSkipRatioTest, doNotUseSkipInTraction) {

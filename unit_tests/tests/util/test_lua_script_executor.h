@@ -9,6 +9,9 @@ public:
 	static TestLuaScriptExecutor& getInstance();
 
 	void setTorqueReductionState(bool state);
+	void setSparkSkipRatio(float sparkSkipRatio);
+	void setSparkHardSkipRatio(float sparkSkipRatio);
+	void setFuelAdd(float fuelAdd);
 private:
 	static TestLuaScriptExecutor instance;
 };
