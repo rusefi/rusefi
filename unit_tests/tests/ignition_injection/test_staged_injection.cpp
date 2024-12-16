@@ -54,7 +54,7 @@ namespace {
         };
         getTestPersistentConfiguration().setInjectorStagingTable(testInjectorStagingTable);
 
-        getTestEngineState().setLuaFuelAdd(TEST_INJECTION_MASS);
+        getTestLuaScriptExecutor().setFuelAdd(TEST_INJECTION_MASS);
     }
 
     TEST_F(StagedInjectionTest, checkDisabledStagedInjection) {
