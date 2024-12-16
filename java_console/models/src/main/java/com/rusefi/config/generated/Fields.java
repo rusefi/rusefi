@@ -1293,6 +1293,7 @@ public class Fields {
 	public static final int TORQUE_CURVE_SIZE = 6;
 	public static final int torqueReductionActivationMode_e_LAUNCH_BUTTON = 1;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON = 0;
+	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH = 2;
 	public static final int TOTAL_CONFIG_SIZE = 23344;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int TPS_PPS_TOO_HIGH_THRESHOLD = 110;
@@ -1505,7 +1506,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.12.16.f407-discovery.4042514931";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.12.16.f407-discovery.3442847442";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2551,7 +2552,7 @@ public class Fields {
 	public static final Field IDLETIMINGPID_MAXVALUE = Field.create("IDLETIMINGPID_MAXVALUE", 2386, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field IDLETIMINGSOFTENTRYTIME = Field.create("IDLETIMINGSOFTENTRYTIME", 2388, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field TORQUEREDUCTIONTRIGGERPINMODE = Field.create("TORQUEREDUCTIONTRIGGERPINMODE", 2392, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
-	public static final String[] torqueReductionActivationMode_e = {"Torque Reduction Button", "Launch Button"};
+	public static final String[] torqueReductionActivationMode_e = {"Torque Reduction Button", "Launch Button", "Clutch Down Switch"};
 	public static final Field TORQUEREDUCTIONACTIVATIONMODE = Field.create("TORQUEREDUCTIONACTIVATIONMODE", 2393, FieldType.INT8, torqueReductionActivationMode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSACCELFRACTIONPERIOD = Field.create("TPSACCELFRACTIONPERIOD", 2394, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TPSACCELFRACTIONDIVISOR = Field.create("TPSACCELFRACTIONDIVISOR", 2396, FieldType.FLOAT).setBaseOffset(0);

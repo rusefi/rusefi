@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Wed Nov 27 22:04:55 UTC 2024
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Mon Dec 16 17:29:42 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -869,6 +869,8 @@ case LAUNCH_BUTTON:
   return "LAUNCH_BUTTON";
 case TORQUE_REDUCTION_BUTTON:
   return "TORQUE_REDUCTION_BUTTON";
+case TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH:
+  return "TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH";
   }
  return NULL;
 }
