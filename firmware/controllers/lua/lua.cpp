@@ -81,6 +81,8 @@ public:
 		}
 
 		void *new_mem = alloc(nsize);
+
+		// Don't count the memory use if not allocated
 		if (new_mem) {
 			m_memoryUsed += nsize;
 		}
