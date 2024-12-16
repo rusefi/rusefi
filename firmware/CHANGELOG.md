@@ -36,6 +36,7 @@ Release template (copy/paste this for new release):
  - Critical error when using big values on Boost Control Open Loop with Y axis as MAP #7093
  - "Baro Correction" axis label
  - unused "Throttle Up switch" is removed
+ - Lua: fix heap used accumulator calculation: Do not increase if allocation failed #6924
 
 ### Breaking Changes
  - Lua: onCanRx parameter value to be use Lua-indexing #7110
