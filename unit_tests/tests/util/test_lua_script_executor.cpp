@@ -12,33 +12,36 @@ TestLuaScriptExecutor& TestLuaScriptExecutor::getInstance() {
 	return instance;
 }
 
+namespace {
+	constexpr const char* const LUA_TRUE = "true";
+	constexpr const char* const LUA_FALSE = "false";
+
+	const char* toLuaBoolean(const bool value) {
+		return (value ? LUA_TRUE : LUA_FALSE);
+	}
+}
+
 void TestLuaScriptExecutor::setClutchDownState(const bool state) {
-	char luaScript[256];
-	std::snprintf(luaScript, sizeof(luaScript), "setClutchDownState(%s);", state ? "true" : "false");
-	EXPECT_NO_THROW(testLuaExecString(luaScript));
+	executeFormattedLuaScript("setClutchDownState(%s);", toLuaBoolean(state));
 }
 
 void TestLuaScriptExecutor::setTorqueReductionState(const bool state) {
-	char luaScript[256];
-	std::snprintf(luaScript, sizeof(luaScript), "setTorqueReductionState(%s);", state ? "true" : "false");
-	EXPECT_NO_THROW(testLuaExecString(luaScript));
+	executeFormattedLuaScript("setTorqueReductionState(%s);", toLuaBoolean(state));
 }
 
 void TestLuaScriptExecutor::setSparkSkipRatio(const float sparkSkipRatio) {
-	char luaScript[256];
-	std::snprintf(luaScript, sizeof(luaScript), "setSparkSkipRatio(%f);", sparkSkipRatio);
-	EXPECT_NO_THROW(testLuaExecString(luaScript));
+	executeFormattedLuaScript("setSparkSkipRatio(%f);", sparkSkipRatio);
 }
 
 void TestLuaScriptExecutor::setSparkHardSkipRatio(const float sparkSkipRatio) {
-	char luaScript[256];
-	std::snprintf(luaScript, sizeof(luaScript), "setSparkHardSkipRatio(%f);", sparkSkipRatio);
-	EXPECT_NO_THROW(testLuaExecString(luaScript));
+	executeFormattedLuaScript("setSparkHardSkipRatio(%f);", sparkSkipRatio);
 }
 
 void TestLuaScriptExecutor::setFuelAdd(const float fuelAdd) {
-	char luaScript[256];
-	std::snprintf(luaScript, sizeof(luaScript), "setFuelAdd(%f);", fuelAdd);
+	executeFormattedLuaScript("setFuelAdd(%f);", fuelAdd);
+}
+
+void TestLuaScriptExecutor::executeLuaScript(const char* luaScript) {
 	EXPECT_NO_THROW(testLuaExecString(luaScript));
 }
 
