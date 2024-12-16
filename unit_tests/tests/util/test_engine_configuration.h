@@ -10,6 +10,9 @@ class TestEngineConfiguration {
 public:
     static TestEngineConfiguration& getInstance();
 
+    // Other Sensor Inputs
+    void configureClutchDownPin(std::optional<switch_input_pin_e> pin);
+
     // Launch Control Settings
     void configureLaunchControlEnabled(std::optional<bool> launchControlEnabled);
 

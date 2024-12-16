@@ -10,6 +10,9 @@ class EngineConfig {
 public:
     EngineConfig clone() const;
 
+    // Other Sensor Inputs
+    std::optional<switch_input_pin_e> getClutchDownPin() const { return m_clutchDownPin; }
+
     // Launch Control
     std::optional<switch_input_pin_e> getLaunchActivatePin() const { return m_launchActivatePin; }
     std::optional<bool> getLaunchActivateInverted() const { return m_launchActivateInverted; }
@@ -83,6 +86,9 @@ public:
     // We do not core about performance in tests, but we want to use builder-like style, so setters return new instance
     // of configuration:
 
+    // Other Sensor Inputs
+    EngineConfig setClutchDownPin(std::optional<switch_input_pin_e> value);
+
     // Launch Control
     EngineConfig setLaunchActivatePin(std::optional<switch_input_pin_e> value);
     EngineConfig setLaunchActivateInverted(std::optional<bool> value);
@@ -148,6 +154,9 @@ public:
     EngineConfig setNitrousFuelAdderPercent(std::optional<int8_t> value);
     EngineConfig setNitrousIgnitionRetard(std::optional<float> value);
 private:
+    // Other Sensor Inputs
+    std::optional<switch_input_pin_e> m_clutchDownPin;
+
     // Launch Control
     std::optional<switch_input_pin_e> m_launchActivatePin;
     std::optional<bool> m_launchActivateInverted;

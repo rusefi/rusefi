@@ -12,6 +12,12 @@ TestLuaScriptExecutor& TestLuaScriptExecutor::getInstance() {
 	return instance;
 }
 
+void TestLuaScriptExecutor::setClutchDownState(const bool state) {
+	char luaScript[256];
+	std::snprintf(luaScript, sizeof(luaScript), "setClutchDownState(%s);", state ? "true" : "false");
+	EXPECT_NO_THROW(testLuaExecString(luaScript));
+}
+
 void TestLuaScriptExecutor::setTorqueReductionState(const bool state) {
 	char luaScript[256];
 	std::snprintf(luaScript, sizeof(luaScript), "setTorqueReductionState(%s);", state ? "true" : "false");

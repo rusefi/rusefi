@@ -10,6 +10,11 @@ EngineConfig EngineConfig::clone() const {
     return *this;
 }
 
+EngineConfig EngineConfig::setClutchDownPin(const std::optional<switch_input_pin_e> value) {
+    m_clutchDownPin = value;
+    return *this;
+}
+
 EngineConfig EngineConfig::setLaunchActivatePin(const std::optional<switch_input_pin_e> value) {
     m_launchActivatePin = value;
     return *this;

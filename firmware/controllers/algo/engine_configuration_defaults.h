@@ -25,6 +25,9 @@ namespace engine_configuration_defaults {
     constexpr int8_t TORQUE_REDUCTION_IGNITION_CUT = 0;
     constexpr float TORQUE_REDUCTION_IGNITION_RETARD = 0.0f;
 
+    /* Other Sensor Inputs: */
+    constexpr switch_input_pin_e CLUTCH_DOWN_PIN = Gpio::Unassigned;
+
     /* Launch Control: */
     constexpr switch_input_pin_e LAUNCH_ACTIVATE_PIN = Gpio::Unassigned;
     constexpr bool LAUNCH_ACTIVATE_PIN_INVERTED = false;
