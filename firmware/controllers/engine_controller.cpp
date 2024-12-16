@@ -526,13 +526,19 @@ bool validateConfigOnStartUpOrBurn() {
 		return false;
 	}
 #if EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)
-    int maxDwell = getMc33810maxDwellTimer(engineConfiguration->mc33810maxDwellTimer);
-    for (size_t i = 0;i<efi::size(config->sparkDwellValues);i++) {
-        float element = config->sparkDwellValues[i];
-        if (element > maxDwell) {
-            criticalError("Dwell %f while 33810 limit %d", element, maxDwell);
-        }
+    float maxConfiguredCorr = config->dwellVoltageCorrValues[0];
+    for (size_t i = 0;i<efi::size(config->dwellVoltageCorrValues);i++) {
+        maxConfiguredCorr = std::max(maxConfiguredCorr, (float)config->dwellVoltageCorrValues[i]);
     }
+    float maxConfiguredDwell = config->sparkDwellValues[0];
+    for (size_t i = 0;i<efi::size(config->sparkDwellValues);i++) {
+        maxConfiguredDwell = std::max(maxConfiguredDwell, (float)config->sparkDwellValues[i]);
+    }
+    int maxAllowedDwell = getMc33810maxDwellTimer(engineConfiguration->mc33810maxDwellTimer);
+        if (maxConfiguredCorr * maxConfiguredDwell > maxAllowedDwell) {
+            criticalError("Dwell %f/corr while 33810 limit %d", maxConfiguredDwell, maxConfiguredDwell, maxAllowedDwell);
+        }
+
 #endif // EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)
 	if (engineConfiguration->adcVcc > 5.0f || engineConfiguration->adcVcc < 1.0f) {
     criticalError("Invalid adcVcc: %f", engineConfiguration->adcVcc);
