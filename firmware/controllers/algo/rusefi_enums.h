@@ -604,6 +604,7 @@ typedef enum __attribute__ ((__packed__)) {
 typedef enum __attribute__ ((__packed__)) {
 	TORQUE_REDUCTION_BUTTON = 0,
 	LAUNCH_BUTTON = 1,
+	TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH = 2,
 } torqueReductionActivationMode_e;
 
 typedef enum __attribute__ ((__packed__)) {

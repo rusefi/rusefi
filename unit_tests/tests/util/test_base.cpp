@@ -31,6 +31,9 @@ TestEngineState& TestBase::getTestEngineState() {
 }
 
 void TestBase::setUpEngineConfiguration(const EngineConfig& config) {
+    // Other Sensor Inputs
+    getTestEngineConfiguration().configureClutchDownPin(config.getClutchDownPin());
+
     // Launch Control
     getTestEngineConfiguration().configureLaunchActivatePin(config.getLaunchActivatePin());
     getTestEngineConfiguration().configureLaunchActivateInverted(config.getLaunchActivateInverted());

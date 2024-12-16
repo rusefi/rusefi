@@ -8,6 +8,7 @@ class TestLuaScriptExecutor {
 public:
 	static TestLuaScriptExecutor& getInstance();
 
+	void setClutchDownState(bool state);
 	void setTorqueReductionState(bool state);
 	void setSparkSkipRatio(float sparkSkipRatio);
 	void setSparkHardSkipRatio(float sparkSkipRatio);

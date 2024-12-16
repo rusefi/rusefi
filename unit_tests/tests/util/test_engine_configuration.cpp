@@ -12,6 +12,17 @@ TestEngineConfiguration& TestEngineConfiguration::getInstance() {
     return instance;
 }
 
+void TestEngineConfiguration::configureClutchDownPin(const std::optional<switch_input_pin_e> pin) {
+    if (pin.has_value()) {
+        engineConfiguration->clutchDownPin = pin.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->clutchDownPin,
+            engine_configuration_defaults::CLUTCH_DOWN_PIN
+        ); // check default value
+    }
+}
+
 void TestEngineConfiguration::configureLaunchControlEnabled(const std::optional<bool> launchControlEnabled) {
     if (launchControlEnabled.has_value()) {
         engineConfiguration->launchControlEnabled = launchControlEnabled.value();

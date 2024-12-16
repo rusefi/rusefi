@@ -9,6 +9,7 @@
 namespace {
     constexpr switch_input_pin_e TEST_TORQUE_REDUCTION_BUTTON_PIN = Gpio::F15;
     constexpr switch_input_pin_e TEST_LAUNCH_BUTTON_PIN = Gpio::G15;
+    constexpr switch_input_pin_e TEST_CLUTCH_DOWN_PIN = Gpio::E15;
 
     struct ShiftTorqueReductionTriggerPinTestData {
         const std::string context;
@@ -30,6 +31,10 @@ namespace {
         void checkShiftTorqueReductionStateWithLuaTorqueReductionState(
             bool luaTorqueReductionState,
             const ShiftTorqueReductionTriggerPinTestData& expected
+        );
+        void checkShiftTorqueReductionStateWithLuaClutchDownState(
+                bool luaClutchDownState,
+                const ShiftTorqueReductionTriggerPinTestData& expected
         );
     };
 
@@ -71,6 +76,14 @@ namespace {
         checkShiftTorqueReductionStateAfterPeriodicFastCallback(expected);
     }
 
+    void ShiftTorqueReductionTriggerPinTest::checkShiftTorqueReductionStateWithLuaClutchDownState(
+        const bool luaClutchDownState,
+        const ShiftTorqueReductionTriggerPinTestData& expected
+    ) {
+        getTestLuaScriptExecutor().setClutchDownState(luaClutchDownState);
+        checkShiftTorqueReductionStateAfterPeriodicFastCallback(expected);
+    }
+
     TEST_F(ShiftTorqueReductionTriggerPinTest, checkDefaultConfiguration) {
         setUpEngineConfiguration(EngineConfig());
 
@@ -102,6 +115,40 @@ namespace {
             TEST_LAUNCH_BUTTON_PIN,
             true,
             { "Launch activate pin is on", true, false }
+        );
+        checkShiftTorqueReductionStateWithPinState(
+            TEST_LAUNCH_BUTTON_PIN,
+            false,
+            { "Launch activate pin is off", true, false }
+        );
+    }
+
+        TEST_F(ShiftTorqueReductionTriggerPinTest, checkClutchDownPinSwitch) {
+        setUpEngineConfiguration(EngineConfig()
+            .setTorqueReductionEnabled(true)
+            .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH)
+            .setTorqueReductionTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
+            .setLaunchActivatePin(TEST_LAUNCH_BUTTON_PIN)
+            .setClutchDownPin(TEST_CLUTCH_DOWN_PIN)
+        );
+
+        checkShiftTorqueReductionStateAfterPeriodicFastCallback({ "Default trigger pin state", true, false });
+        checkShiftTorqueReductionStateWithPinState(
+            TEST_CLUTCH_DOWN_PIN,
+            true,
+            { "Clutch down pin is on", true, true }
+        );
+        checkShiftTorqueReductionStateWithPinState(
+            TEST_CLUTCH_DOWN_PIN,
+            false,
+            { "Clutch down pin is off", true, false }
+        );
+
+        // Check that launch button pin switching does not switch shift torque reduction trigger pin:
+        checkShiftTorqueReductionStateWithPinState(
+            TEST_LAUNCH_BUTTON_PIN,
+            true,
+            { "Clutch down pin is on", true, false }
         );
         checkShiftTorqueReductionStateWithPinState(
             TEST_LAUNCH_BUTTON_PIN,
@@ -220,6 +267,24 @@ namespace {
         checkShiftTorqueReductionStateWithLuaTorqueReductionState(
             false,
             { "Lua torque reduction state is off", false, false }
+        );
+    }
+
+    TEST_F(ShiftTorqueReductionTriggerPinTest, checkClutchDownLuaSwitch) {
+        setUpEngineConfiguration(EngineConfig()
+            .setTorqueReductionEnabled(true)
+            .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH)
+            .setClutchDownPin(Gpio::Unassigned)
+        );
+
+        checkShiftTorqueReductionStateAfterPeriodicFastCallback({ "Default trigger pin state", false, false });
+        checkShiftTorqueReductionStateWithLuaClutchDownState(
+            true,
+            { "Lua clutch down state is on", false, true }
+        );
+        checkShiftTorqueReductionStateWithLuaClutchDownState(
+            false,
+            { "Lua clutch down state is off", false, false }
         );
     }
 
