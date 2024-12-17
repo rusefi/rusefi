@@ -27,6 +27,7 @@ namespace engine_configuration_defaults {
 
     /* Other Sensor Inputs: */
     constexpr switch_input_pin_e CLUTCH_DOWN_PIN = Gpio::Unassigned;
+	constexpr bool CLUTCH_DOWN_PIN_INVERTED = false;
 
     /* Launch Control: */
     constexpr switch_input_pin_e LAUNCH_ACTIVATE_PIN = Gpio::Unassigned;
