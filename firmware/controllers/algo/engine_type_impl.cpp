@@ -321,7 +321,7 @@ void applyEngineType(engine_type_e engineType) {
 		testEngine6451();
 		break;
 
-#if defined(HW_FRANKENSO) || EFI_SIMULATOR
+#if defined(HW_FRANKENSO) || EFI_SIMULATOR || defined(HW_NUCLEO_F767) || defined(HW_NUCLEO_H743)
 	case engine_type_e::DEFAULT_FRANKENSO:
 		setFrankensoConfiguration();
 		break;
