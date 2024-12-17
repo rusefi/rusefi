@@ -2,16 +2,16 @@
  * @file	loggingcentral.cpp
  *
  * This file implements text logging.
- * 
+ *
  * Uses a queue of buffers so that the expensive printf operation doesn't require exclusive access
  * (ie, global system lock) to log.  In the past there have been serious performance problems caused
- * by heavy logging on a low prioriy thread that blocks the rest of the system running (trigger errors, etc).
- * 
+ * by heavy logging on a low priority thread that blocks the rest of the system running (trigger errors, etc).
+ *
  * Uses ChibiOS message queues to maintain one queue of free buffers, and one queue of used buffers.
  * When a thread wants to write, it acquires a free buffer, prints to it, and pushes it in to the
  * used queue. A dedicated thread then dequeues and writes lines from the used buffer in to the
  * large output buffer.
- * 
+ *
  * Later, the binary TS thread will request access to the output log buffer for reading, so a lock is taken,
  * buffers, swapped, and the back buffer returned.  This blocks neither output nor logging in any case, as
  * each operation operates on a different buffer.
@@ -230,7 +230,7 @@ void efiPrintfInternal(const char *format, ...) {
 /**
  * This method appends the content of specified thread-local logger into the global buffer
  * of logging content.
- * 
+ *
  * This is a legacy function, most normal logging should use efiPrintf
  */
 void scheduleLogging(Logging *logging) {
