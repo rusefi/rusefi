@@ -23,6 +23,17 @@ void TestEngineConfiguration::configureClutchDownPin(const std::optional<switch_
     }
 }
 
+void TestEngineConfiguration::configureClutchDownPinInverted(const std::optional<bool> pinInverted) {
+	if (pinInverted.has_value()) {
+		engineConfiguration->clutchDownPinInverted = pinInverted.value();
+	} else {
+		ASSERT_EQ(
+				engineConfiguration->clutchDownPinInverted,
+				engine_configuration_defaults::CLUTCH_DOWN_PIN_INVERTED
+		); // check default value
+	}
+}
+
 void TestEngineConfiguration::configureLaunchControlEnabled(const std::optional<bool> launchControlEnabled) {
     if (launchControlEnabled.has_value()) {
         engineConfiguration->launchControlEnabled = launchControlEnabled.value();

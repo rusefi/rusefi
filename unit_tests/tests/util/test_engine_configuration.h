@@ -12,6 +12,7 @@ public:
 
     // Other Sensor Inputs
     void configureClutchDownPin(std::optional<switch_input_pin_e> pin);
+	void configureClutchDownPinInverted(std::optional<bool> pinInverted);
 
     // Launch Control Settings
     void configureLaunchControlEnabled(std::optional<bool> launchControlEnabled);
