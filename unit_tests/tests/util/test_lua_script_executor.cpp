@@ -25,6 +25,10 @@ void TestLuaScriptExecutor::setClutchDownState(const bool state) {
 	executeFormattedLuaScript("setClutchDownState(%s);", toLuaBoolean(state));
 }
 
+void TestLuaScriptExecutor::setClutchUpState(const bool state) {
+	executeFormattedLuaScript("setClutchUpState(%s);", toLuaBoolean(state));
+}
+
 void TestLuaScriptExecutor::setTorqueReductionState(const bool state) {
 	executeFormattedLuaScript("setTorqueReductionState(%s);", toLuaBoolean(state));
 }

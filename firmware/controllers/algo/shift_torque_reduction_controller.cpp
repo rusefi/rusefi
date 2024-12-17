@@ -59,6 +59,14 @@ void ShiftTorqueReductionController::updateTriggerPinState() {
             );
             break;
         }
+        case TORQUE_REDUCTION_CLUTCH_UP_SWITCH: {
+            updateTriggerPinState(
+                engineConfiguration->clutchUpPin,
+                engineConfiguration->clutchUpPinInverted,
+                engine->engineState.lua.clutchUpState
+            );
+            break;
+        }
         default: {
             break; // we shouldn't be here!
         }

@@ -17,6 +17,7 @@ protected:
 	static constexpr switch_input_pin_e TEST_TORQUE_REDUCTION_BUTTON_PIN = Gpio::F15;
 	static constexpr switch_input_pin_e TEST_LAUNCH_BUTTON_PIN = Gpio::G15;
 	static constexpr switch_input_pin_e TEST_CLUTCH_DOWN_PIN = Gpio::E15;
+	static constexpr switch_input_pin_e TEST_CLUTCH_UP_PIN = Gpio::D15;
 
 	void SetUp() override;
 
