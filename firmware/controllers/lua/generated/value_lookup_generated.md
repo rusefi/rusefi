@@ -1942,6 +1942,9 @@ Retard timing to remove from actual final timing (after all corrections) due to 
 ### nitrousMinimumVehicleSpeed
 
 
+### fuelLevelAveragingAlpha
+Exponential Average Alpha filtering parameter
+
 ### tcu_shiftTime
 
 
