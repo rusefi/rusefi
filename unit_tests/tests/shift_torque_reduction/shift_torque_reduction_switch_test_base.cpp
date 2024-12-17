@@ -10,7 +10,8 @@ const EngineConfig ShiftTorqueReductionSwitchTestBase::TEST_ENGINE_CONFIG = Engi
 	.setTorqueReductionEnabled(true)
 	.setTorqueReductionTriggerPin(TEST_TORQUE_REDUCTION_BUTTON_PIN)
 	.setLaunchActivatePin(TEST_LAUNCH_BUTTON_PIN)
-	.setClutchDownPin(TEST_CLUTCH_DOWN_PIN);
+	.setClutchDownPin(TEST_CLUTCH_DOWN_PIN)
+	.setClutchUpPin(TEST_CLUTCH_UP_PIN);
 
 void ShiftTorqueReductionSwitchTestBase::SetUp() {
 	TestBase::SetUp();
@@ -54,6 +55,14 @@ void ShiftTorqueReductionSwitchTestBase::setPinState(const TestSwitchPin pin, co
 		}
 		case TestSwitchPin::LUA_CLUTCH_DOWN: {
 			getTestLuaScriptExecutor().setClutchDownState(state);
+			break;
+		}
+		case TestSwitchPin::CLUTCH_UP: {
+			setMockState(TEST_CLUTCH_UP_PIN, state);;
+			break;
+		}
+		case TestSwitchPin::LUA_CLUTCH_UP: {
+			getTestLuaScriptExecutor().setClutchUpState(state);
 			break;
 		}
 		default: {

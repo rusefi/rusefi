@@ -1445,7 +1445,7 @@ float tChargeAirDecrLimit;Maximum allowed rate of decrease allowed for the estim
 
     pin_input_mode_e torqueReductionTriggerPinMode;
 
-    #define torqueReductionActivationMode_e_enum "Torque Reduction Button", "Launch Button", "Clutch Down Switch"
+    #define torqueReductionActivationMode_e_enum "Torque Reduction Button", "Launch Button", "Clutch Down Switch", "Clutch Up Switch"
     custom torqueReductionActivationMode_e  1 bits, S08, @OFFSET@, [0:1], @@torqueReductionActivationMode_e_enum@@
     torqueReductionActivationMode_e torqueReductionActivationMode;
 

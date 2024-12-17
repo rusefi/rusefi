@@ -12,6 +12,8 @@ enum class TestSwitchPin {
 	LAUNCH,
 	CLUTCH_DOWN,
 	LUA_CLUTCH_DOWN,
+	CLUTCH_UP,
+	LUA_CLUTCH_UP,
 };
 
 struct ShiftTorqueReductionSwitchParams {
