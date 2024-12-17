@@ -9,7 +9,7 @@
 namespace {
     constexpr float TEST_TORQUE_REDUCTION_ARMING_APP = 17.0f;
 
-    class ShiftTorqueReductionAppConditionTest : public TestBase {
+    class ShiftTorqueReductionAppConditionTest : public TestBase<> {
     protected:
         void checkAppCondition(std::optional<float> rpm, bool expectedAppCondition, const char* context);
     };

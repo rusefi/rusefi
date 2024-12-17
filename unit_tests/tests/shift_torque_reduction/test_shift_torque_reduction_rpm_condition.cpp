@@ -9,7 +9,7 @@
 namespace {
     constexpr float TEST_TORQUE_REDUCTION_ARMING_RPM = 239.0f;
 
-    class ShiftTorqueReductionRpmConditionTest : public TestBase {
+    class ShiftTorqueReductionRpmConditionTest : public TestBase<> {
     protected:
         void checkRpmCondition(float rpm, bool expectedRpmCondition, const char* context);
     };

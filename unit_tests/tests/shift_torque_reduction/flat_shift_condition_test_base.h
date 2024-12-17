@@ -6,7 +6,7 @@
 
 #include "util/test_base.h"
 
-class FlatShiftConditionTestBase : public TestBase  {
+class FlatShiftConditionTestBase : public TestBase<> {
 protected:
     static constexpr switch_input_pin_e TEST_TORQUE_REDUCTION_BUTTON_PIN = Gpio::G10;
     static constexpr float TEST_TORQUE_REDUCTION_ARMING_APP = 7.89;

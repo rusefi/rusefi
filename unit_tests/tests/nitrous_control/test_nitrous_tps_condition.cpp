@@ -15,7 +15,7 @@ namespace {
         const char* const context;
     };
 
-    class NitrousTpsConditionTest : public TestBase {
+    class NitrousTpsConditionTest : public TestBase<> {
     protected:
         static constexpr int TEST_MIN_TPS = 34;
 

@@ -19,7 +19,7 @@ private:
     bool m_satisfyActivationSwithSpeedAndTpsConditions { false };
 };
 
-class LaunchTestBase : public TestBase {
+class LaunchTestBase : public TestBase<> {
 protected:
     void setUpTestConfig(const LaunchTestConfig& config);
 

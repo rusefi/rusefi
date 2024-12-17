@@ -15,7 +15,7 @@ namespace {
         const char* const context;
     };
 
-    class NitrousCltConditionTest : public TestBase {
+    class NitrousCltConditionTest : public TestBase<> {
     protected:
         static constexpr uint8_t TEST_MIN_CLT = 51;
 

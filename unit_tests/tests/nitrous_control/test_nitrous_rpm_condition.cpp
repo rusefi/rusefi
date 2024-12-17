@@ -15,7 +15,7 @@ namespace {
         const char* const context;
     };
 
-    class NitrousRpmConditionTest : public TestBase {
+    class NitrousRpmConditionTest : public TestBase<> {
     protected:
         static constexpr uint16_t TEST_ACTIVATION_RPM = 239;
         static constexpr uint16_t TEST_DEACTIVATION_RPM = 932;
