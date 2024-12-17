@@ -103,6 +103,8 @@ void setDefaultBaseEngine() {
 
   engineConfiguration->acrRevolutions = 5;
 
+  engineConfiguration->fuelLevelAveragingAlpha = 0.001;
+
     engineConfiguration->watchOutForLinearTime = true;
 
   setLinearCurve(engineConfiguration->tractionControlSlipBins, /*from*/0.9, /*to*/1.2, 0.05);
