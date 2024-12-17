@@ -22,7 +22,7 @@
  */
 
 #include "pch.h"
-
+#include "exp_average.h"
 
 
 #if EFI_MAP_AVERAGING
@@ -101,16 +101,12 @@ SensorResult MapAverager::submit(float volts) {
 	return result;
 }
 
+static ExpAverage expAverage;
+
 // huh? why is this killing unit tests _linking_ only on WINDOWS?! PUBLIC_API_WEAK
 float filterMapValue(float value) {
-  static float state = 0;
-  if (state == 0) {
-    state = value;
-    return value;
-  }
-  float result = state + engineConfiguration->mapExpAverageAlpha * (value - state);
-  state = result;
-  return result;
+  expAverage.setSmoothingFactor(engineConfiguration->mapExpAverageAlpha);
+  return expAverage.initOrAverage(value);
 }
 
 void MapAverager::stop() {
