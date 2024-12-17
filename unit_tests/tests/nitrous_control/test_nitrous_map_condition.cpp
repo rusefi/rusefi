@@ -13,7 +13,7 @@ namespace {
         const char* const context;
     };
 
-    class NitrousMapConditionTest : public TestBase {
+    class NitrousMapConditionTest : public TestBase<> {
     protected:
         static constexpr int TEST_MAX_MAP = 45;
 

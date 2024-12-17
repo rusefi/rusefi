@@ -11,7 +11,7 @@ namespace {
     constexpr float TEST_LUA_SOFT_SPARK_SKIP = 239.0f;
     constexpr float TEST_LUA_HARD_SPARK_SKIP = 174.0f;
 
-    class LaunchTargetSkipRatioTest : public TestBase {
+    class LaunchTargetSkipRatioTest : public TestBase<> {
     protected:
         void SetUp() override;
     };

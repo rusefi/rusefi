@@ -15,7 +15,7 @@ namespace {
         const char* const context;
     };
 
-    class NitrousAfrConditionTest : public TestBase {
+    class NitrousAfrConditionTest : public TestBase<> {
     protected:
         static constexpr float TEST_DEFAULT_LAMBDA1 = engine_configuration_defaults::NITROUS_MAXIMUM_AFR / STOICH_RATIO;
 

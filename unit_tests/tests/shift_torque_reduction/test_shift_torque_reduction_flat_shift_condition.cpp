@@ -7,7 +7,7 @@
 #include "util/test_base.h"
 
 namespace {
-    class ShiftTorqueReductionFlatShiftConditionTest : public TestBase {
+    class ShiftTorqueReductionFlatShiftConditionTest : public TestBase<> {
     protected:
         static constexpr switch_input_pin_e TEST_TORQUE_REDUCTION_BUTTON_PIN = Gpio::E13;
         static constexpr float TEST_TORQUE_REDUCTION_TIME = 123.45f;

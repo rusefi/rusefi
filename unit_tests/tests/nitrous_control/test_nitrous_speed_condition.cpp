@@ -15,7 +15,7 @@ namespace {
         const char* const context;
     };
 
-    class NitrousSpeedConditionTest : public TestBase {
+    class NitrousSpeedConditionTest : public TestBase<> {
     protected:
         static constexpr uint16_t TEST_MIN_VEHICLE_SPEED = 33;
 

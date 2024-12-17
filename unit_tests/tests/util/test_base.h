@@ -10,7 +10,8 @@
 #include "test_lua_script_executor.h"
 #include "engine_config.h"
 
-class TestBase : public testing::Test {
+template <class GtestBase = testing::Test>
+class TestBase : public GtestBase {
 protected:
     void SetUp() override;
     void TearDown() override;
@@ -42,6 +43,4 @@ private:
     std::unique_ptr<EngineTestHelper> eth;
 };
 
-template<typename ModuleType> ModuleType& TestBase::getModule() {
-    return engine->module<ModuleType>().unmock();
-}
+#include "test_base.hpp" // template methods implementation

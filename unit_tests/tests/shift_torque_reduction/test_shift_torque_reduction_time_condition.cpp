@@ -11,7 +11,7 @@ namespace {
     constexpr float TEST_TORQUE_REDUCTION_TIME = 239.17;
     constexpr float IMMEDIATELY = 0.0f;
 
-    class ShiftTorqueReductionTimeConditionTest : public TestBase {
+    class ShiftTorqueReductionTimeConditionTest : public TestBase<> {
     protected:
         void waitAndCheckTimeCondition(
             float timeoutInMs,

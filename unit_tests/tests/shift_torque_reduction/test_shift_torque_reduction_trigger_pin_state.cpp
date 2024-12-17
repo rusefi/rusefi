@@ -17,7 +17,7 @@ namespace {
         const bool torqueReductionTriggerPinState;
     };
 
-    class ShiftTorqueReductionTriggerPinTest : public TestBase {
+    class ShiftTorqueReductionTriggerPinTest : public TestBase<> {
     protected:
         void checkShiftTorqueReductionState(const ShiftTorqueReductionTriggerPinTestData& expected);
         void checkShiftTorqueReductionStateAfterPeriodicFastCallback(

@@ -6,7 +6,7 @@
 
 #include "util/test_base.h"
 
-class NitrousTestBase : public TestBase {
+class NitrousTestBase : public TestBase<> {
 protected:
     static constexpr switch_input_pin_e TEST_NITROUS_CONTROL_ARMING_PIN = Gpio::A13;
     static constexpr uint16_t TEST_MIN_VEHICLE_SPEED = 25;
