@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "hal.h"
 #include "flash_main.h"
 
 bool isIgnVoltage() {
