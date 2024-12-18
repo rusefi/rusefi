@@ -13,8 +13,8 @@ public class HwCiNucleoF7 {
             HighRevTest.class,
             NucleoPwmHardwareTest.class,
 			NucleoVssHardwareTest.class,
-            MiscTest.class,
-//            BurnCommandTest.class,
+//            MiscTest.class,
+            BurnCommandTest.class,
 //            CommonFunctionalTest.class,
         });
     }
