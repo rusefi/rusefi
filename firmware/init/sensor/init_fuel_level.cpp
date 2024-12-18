@@ -1,21 +1,11 @@
 #include "pch.h"
 
-#include "init.h"
 #include "adc_subscription.h"
-#include "functional_sensor.h"
-#include "table_func.h"
+#include "fuel_level_func.h"
 
 static FunctionalSensor fuelSensor(SensorType::FuelLevel, /* timeout = */ MS2NT(500));
 
-// extract the type of the elements in the bin/value arrays
-using BinType = std::remove_extent_t<decltype(config->fuelLevelBins)>;
-using ValueType = std::remove_extent_t<decltype(config->fuelLevelValues)>;
-
-static TableFunc
-	<BinType, ValueType, FUEL_LEVEL_TABLE_COUNT,
-		// Values are stored in percent
-		efi::ratio<1>>
-			fuelCurve(config->fuelLevelBins, config->fuelLevelValues);
+static FuelLevelFunc fuelCurve;
 
 void initFuelLevel() {
 	adc_channel_e channel = engineConfiguration->fuelLevelSensor;

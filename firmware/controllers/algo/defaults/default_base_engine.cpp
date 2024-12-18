@@ -3,6 +3,7 @@
 #include "defaults.h"
 #include "vr_pwm.h"
 #include "kline.h"
+#include "engine_configuration_defaults.h"
 #include <rusefi/manifest.h>
 #if HW_PROTEUS
 #include "proteus_meta.h"
@@ -103,9 +104,10 @@ void setDefaultBaseEngine() {
 
   engineConfiguration->acrRevolutions = 5;
 
-  engineConfiguration->fuelLevelAveragingAlpha = 0.001;
+  engineConfiguration->fuelLevelAveragingAlpha = engine_configuration_defaults::FUEL_LEVEL_AVERAGING_ALPHA;
+  engineConfiguration->fuelLevelUpdatePeriodSec = engine_configuration_defaults::FUEL_LEVEL_UPDATE_PERIOD_SEC;
 
-    engineConfiguration->watchOutForLinearTime = true;
+  engineConfiguration->watchOutForLinearTime = true;
 
   setLinearCurve(engineConfiguration->tractionControlSlipBins, /*from*/0.9, /*to*/1.2, 0.05);
 	setLinearCurve(engineConfiguration->tractionControlSpeedBins, /*from*/10, /*to*/120, 5);

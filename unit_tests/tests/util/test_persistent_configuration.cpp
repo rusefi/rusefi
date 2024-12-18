@@ -30,4 +30,14 @@ void TestPersistentConfiguration::setCltFuelCorrCurve(const CltFuelCorrCurve& cl
     std::copy(std::begin(cltFuelCorr), std::end(cltFuelCorr), std::begin(config->cltFuelCorr));
 }
 
+void TestPersistentConfiguration::setFuelLevelBinsCurve(const FuelLevelBinsCurve& fuelLevelBins) {
+	for (size_t i = 0; i < fuelLevelBins.size(); i++) {
+		config->fuelLevelBins[i] = fuelLevelBins[i];
+	}
+}
+
+void TestPersistentConfiguration::setFuelLevelValuesCurve(const FuelLevelValuesCurve& fuelLevelValues) {
+	std::copy(std::begin(fuelLevelValues), std::end(fuelLevelValues), std::begin(config->fuelLevelValues));
+}
+
 TestPersistentConfiguration TestPersistentConfiguration::instance;

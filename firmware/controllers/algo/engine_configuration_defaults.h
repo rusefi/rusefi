@@ -75,4 +75,7 @@ namespace engine_configuration_defaults {
     constexpr uint16_t NITROUS_DEACTIVATION_RPM_WINDOW = 500;
     constexpr int8_t NITROUS_FUEL_ADDER_PERCENT = 0;
     constexpr float NITROUS_IGNITION_RETARD = 0.0f;
+
+    constexpr float FUEL_LEVEL_AVERAGING_ALPHA = 0.001f;
+    constexpr float FUEL_LEVEL_UPDATE_PERIOD_SEC = 0.1f;
 }

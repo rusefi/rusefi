@@ -635,6 +635,28 @@ void TestEngineConfiguration::configureNitrousIgnitionRetard(const std::optional
     }
 }
 
+void TestEngineConfiguration::configureFuelLevelAveragingAlpha(const std::optional<float> alpha) {
+    if (alpha.has_value()) {
+        engineConfiguration->fuelLevelAveragingAlpha = alpha.value();
+    } else {
+        ASSERT_EQ(
+                engineConfiguration->fuelLevelAveragingAlpha,
+                engine_configuration_defaults::FUEL_LEVEL_AVERAGING_ALPHA
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureFuelLevelUpdatePeriodSec(const std::optional<float> seconds) {
+    if (seconds.has_value()) {
+        engineConfiguration->fuelLevelUpdatePeriodSec = seconds.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->fuelLevelUpdatePeriodSec,
+            engine_configuration_defaults::FUEL_LEVEL_UPDATE_PERIOD_SEC
+        ); // check default value
+    }
+}
+
 TestEngineConfiguration::TestEngineConfiguration() {
 }
 

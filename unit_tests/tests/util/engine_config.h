@@ -86,6 +86,9 @@ public:
     std::optional<int8_t> getNitrousFuelAdderPercent() const { return m_nitrousFuelAdderPercent; }
     std::optional<float> getNitrousIgnitionRetard() const { return m_nitrousIgnitionRetard; }
 
+    std::optional<float> getFuelLevelAveragingAlpha() const { return m_fuelLevelAveragingAlpha; }
+    std::optional<float> getFuelLevelUpdatePeriodSec() const { return m_fuelLevelUpdatePeriodSec; }
+
     // We do not core about performance in tests, but we want to use builder-like style, so setters return new instance
     // of configuration:
 
@@ -159,6 +162,9 @@ public:
     EngineConfig setNitrousDeactivationRpmWindow(std::optional<uint16_t> value);
     EngineConfig setNitrousFuelAdderPercent(std::optional<int8_t> value);
     EngineConfig setNitrousIgnitionRetard(std::optional<float> value);
+
+    EngineConfig setFuelLevelAveragingAlpha(std::optional<float> value);
+    EngineConfig setFuelLevelUpdatePeriodSec(std::optional<float> value);
 private:
     // Other Sensor Inputs
     std::optional<switch_input_pin_e> m_clutchDownPin;
@@ -230,4 +236,7 @@ private:
     std::optional<uint16_t> m_nitrousDeactivationRpmWindow;
     std::optional<int8_t> m_nitrousFuelAdderPercent;
     std::optional<float> m_nitrousIgnitionRetard;
+
+    std::optional<float> m_fuelLevelAveragingAlpha;
+    std::optional<float> m_fuelLevelUpdatePeriodSec;
 };

@@ -150,6 +150,7 @@ TESTS_SRC_CPP = \
 	tests/sensor/redundant.cpp \
 	tests/sensor/test_sensor_init.cpp \
 	tests/sensor/table_func.cpp \
+	tests/sensor/test_fuel_level_func.cpp \
 	tests/test_stft.cpp \
 	tests/test_hpfp.cpp \
 	tests/test_hpfp_integrated.cpp \
