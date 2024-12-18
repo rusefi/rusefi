@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "rusefi.h"
 #include "flash_main.h"
 
 bool isIgnVoltage() {
@@ -20,6 +21,7 @@ void IgnitionController::onSlowCallback() {
 		pendingSleepInner = 0;
 		restartFromSleep = 1;
 		m_timeSinceNotIgnVoltage.reset();
+		rebootNow();
 	}
 
 	if(hasIgnVoltage && secondsSinceNotIgnVoltage() > 0.2f && restartFromSleep) {
