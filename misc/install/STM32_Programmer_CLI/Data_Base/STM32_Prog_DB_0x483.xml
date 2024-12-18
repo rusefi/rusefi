@@ -11,22 +11,49 @@
 		<Configurations>
 			<!-- JTAG_SWD Interface -->
 			<Interface name="JTAG_SWD">
+				<!-- 1MB Single Bank -->
 				<Configuration number="0x0"> <!-- Security extension available -->
 					<SecurityEx>
 						<WriteRegister address="0x580244F4" value="0x2"/>
 						<ReadRegister address="0x58000528" mask="0x1" value="0x0"/>
 					</SecurityEx>
+					<flashSize> <ReadRegister address="0x1FF1E880" mask="0x00000FFF" value="0x400"/> </flashSize>
 				</Configuration>
 				<Configuration number="0x1"> <!-- Security extension not available -->
 					<SecurityEx>
 						<WriteRegister address="0x580244F4" value="0x2"/>
 						<ReadRegister address="0x58000528" mask="0x1" value="0x1"/>
 					</SecurityEx>
+					<flashSize> <ReadRegister address="0x1FF1E880" mask="0x00000FFF" value="0x400"/> </flashSize>
+				</Configuration>
+				<!-- 512kB Single Bank -->
+				<Configuration number="0x2"> <!-- Security extension available -->
+					<SecurityEx>
+						<WriteRegister address="0x580244F4" value="0x2"/>
+						<ReadRegister address="0x58000528" mask="0x1" value="0x0"/>
+					</SecurityEx>
+					<flashSize> <ReadRegister address="0x1FF1E880" mask="0x00000FFF" value="0x200"/> </flashSize>
+				</Configuration>
+				<Configuration number="0x3"> <!-- Security extension not available -->
+					<SecurityEx>
+						<WriteRegister address="0x580244F4" value="0x2"/>
+						<ReadRegister address="0x58000528" mask="0x1" value="0x1"/>
+					</SecurityEx>
+					<flashSize> <ReadRegister address="0x1FF1E880" mask="0x00000FFF" value="0x200"/> </flashSize>
 				</Configuration>
 			</Interface>
 			<!-- Bootloader Interface -->
 			<Interface name="Bootloader">
-				<Configuration number="0x0"> <!-- dummy always true, security extension is checked using dedicated cmd -->
+				<!-- 1MB Single Bank -->
+				<Configuration number="0x4"> <!-- Security extension available -->
+					<flashSize> <ReadRegister address="0x1FF1E880" mask="0x00000FFF" value="0x400"/> </flashSize>
+				</Configuration>
+				<!-- 512kB Single Bank -->
+				<Configuration number="0x5"> <!-- Security extension available -->
+					<flashSize> <ReadRegister address="0x1FF1E880" mask="0x00000FFF" value="0x200"/> </flashSize>
+				</Configuration>
+				<!-- Dummy  Config -->
+				<Configuration number="0x8"> <!-- dummy always true, security extension is checked using dedicated cmd -->
 					<Dummy>
 						<ReadRegister address="0x08000000" mask="0x0" value="0x0"/>
 					</Dummy>
@@ -64,7 +91,7 @@
 				<FlashSize address="0x1FF1E880" default="0x100000"/>
 				<BootloaderVersion address="0x1FF1E7FE"/>
 				<!-- 1MB Single Bank -->
-				<Configuration config="0,1">
+				<Configuration config="0,1,4,8">
 					<Parameters address="0x08000000" name="1 MBytes Single Bank Embedded Flash" size="0x100000"/>
 					<Description/>
 					<Organization>Single</Organization>
@@ -72,6 +99,18 @@
 					<Bank name="Bank 1">
 						<Field>
 							<Parameters address="0x08000000" name="sector0" occurrence="0x8" size="0x20000"/>
+						</Field>
+					</Bank>
+				</Configuration>
+				<!-- 512kB Single Bank -->
+				<Configuration config="2,3,5">
+					<Parameters address="0x08000000" name="512 KBytes Single Bank Embedded Flash" size="0x80000"/>
+					<Description/>
+					<Organization>Single</Organization>
+					<Alignment>0x20</Alignment>
+					<Bank name="Bank 1">
+						<Field>
+							<Parameters address="0x08000000" name="sector0" occurrence="0x4" size="0x20000"/>
 						</Field>
 					</Bank>
 				</Configuration>
@@ -87,7 +126,7 @@
 					<Category>
 						<Name>Read Out Protection</Name>
 						<Field>
-							<Parameters address="0x5200201C" name="FOPTSR_CUR" size="0x4"/>
+							<Parameters address="0x5200201C" name="FLASH_OPTSR_CUR" size="0x4"/>
 							<AssignedBits>
 								<Bit>
 									<Name>RDP</Name>
@@ -104,7 +143,7 @@
 							</AssignedBits>
 						</Field>
 						<Field>
-							<Parameters address="0x52002020" name="FOPTSR_PRG" size="0x4"/>
+							<Parameters address="0x52002020" name="FLASH_OPTSR_PRG" size="0x4"/>
 							<AssignedBits>
 								<Bit>
 									<Name>RDP</Name>
@@ -124,7 +163,7 @@
 					<Category>
 						<Name>BOR Level</Name>
 						<Field>
-							<Parameters address="0x5200201C" name="FOPTSR_CUR" size="0x4"/>
+							<Parameters address="0x5200201C" name="FLASH_OPTSR_CUR" size="0x4"/>
 							<AssignedBits>
 								<Bit>
 									<Name>BOR_LEV</Name>
@@ -142,7 +181,7 @@
 							</AssignedBits>
 						</Field>
 						<Field>
-							<Parameters address="0x52002020" name="FOPTSR_PRG" size="0x4"/>
+							<Parameters address="0x52002020" name="FLASH_OPTSR_PRG" size="0x4"/>
 							<AssignedBits>
 								<Bit>
 									<Name>BOR_LEV</Name>
@@ -163,7 +202,7 @@
 					<Category>
 						<Name>User Configuration</Name>
 						<Field>
-							<Parameters address="0x5200201C" name="FOPTSR_CUR" size="0x4"/>
+							<Parameters address="0x5200201C" name="FLASH_OPTSR_CUR" size="0x4"/>
 							<AssignedBits>
 								<Bit>
 									<Name>IWDG1_SW</Name>
@@ -245,7 +284,7 @@
 							</AssignedBits>
 						</Field>
 						<Field>
-							<Parameters address="0x52002020" name="FOPTSR_PRG" size="0x4"/>
+							<Parameters address="0x52002020" name="FLASH_OPTSR_PRG" size="0x4"/>
 							<AssignedBits>
 								<Bit>
 									<Name>IWDG1_SW</Name>
@@ -341,7 +380,7 @@
 					<Category>
 						<Name>Boot address Option Bytes</Name>
 						<Field>
-							<Parameters address="0x52002040" name="FBOOT7_CUR" size="0x4"/>
+							<Parameters address="0x52002040" name="FLASH_BOOT_CUR" size="0x4"/>
 							<AssignedBits>
 								<Bit>
 									<Name>BOOT_CM7_ADD0</Name>
@@ -362,7 +401,7 @@
 							</AssignedBits>
 						</Field>
 						<Field>
-							<Parameters address="0x52002044" name="FBOOT7_PRG" size="0x4"/>
+							<Parameters address="0x52002044" name="FLASH_BOOT_PRG" size="0x4"/>
 							<AssignedBits>
 								<Bit>
 									<Name>BOOT_CM7_ADD0</Name>
@@ -386,7 +425,7 @@
 					<Category>
 						<Name>PCROP Protection</Name>
 						<Field>
-							<Parameters address="0x52002028" name="FPRAR_CUR_A" size="0x4"/>
+							<Parameters address="0x52002028" name="FLASH_PRAR_CUR" size="0x4"/>
 							<AssignedBits>
 								<Bit>
 									<Name>PROT_AREA_START</Name>
@@ -418,7 +457,7 @@
 							</AssignedBits>
 						</Field>
 						<Field>
-							<Parameters address="0x5200202C" name="FPRAR_PRG_A" size="0x4"/>
+							<Parameters address="0x5200202C" name="FLASH_PRAR_PRG" size="0x4"/>
 							<AssignedBits>
 								<Bit>
 									<Name>PROT_AREA_START</Name>
@@ -453,7 +492,7 @@
 					<Category>
 						<Name>Secure Protection</Name>
 						<Field>
-							<Parameters address="0x5200201C" name="FOPTSR_CUR" size="0x4"/>
+							<Parameters address="0x5200201C" name="FLASH_OPTSR_CUR" size="0x4"/>
 							<AssignedBits>
 								<Bit config="0">
 									<Name>ST_RAM_SIZE</Name>
@@ -471,7 +510,7 @@
 							</AssignedBits>
 						</Field>
 						<Field>
-							<Parameters address="0x52002020" name="FOPTSR_PRG" size="0x4"/>
+							<Parameters address="0x52002020" name="FLASH_OPTSR_PRG" size="0x4"/>
 							<AssignedBits>
 								<Bit config="0">
 									<Name>ST_RAM_SIZE</Name>
@@ -531,7 +570,7 @@
 									<Access>W</Access>
 									<Equation multiplier="0x100" offset="0x08000000"/>
 								</Bit>
-								<Bit config="0">
+								<Bit config="0,2">
 									<Name>SEC_AREA_END</Name>
 									<Description>Flash secure area end address. If this address is equal to SEC_AREA_START, the whole flash memory is secure protected.If this address is lower than SEC_AREA_START, no protection is set on flash memory.</Description>
 									<BitOffset>0x10</BitOffset>
@@ -539,7 +578,7 @@
 									<Access>W</Access>
 									<Equation multiplier="0x100" offset="0x080000FF"/>
 								</Bit>
-								<Bit config="0">
+								<Bit config="0,2">
 									<Name>DMES</Name>
 									<Description/>
 									<BitOffset>0x1F</BitOffset>
@@ -556,10 +595,10 @@
 					<Category>
 						<Name>Write Protection</Name>
 						<Field>
-							<Parameters address="0x52002038" name="FWPSN_CUR_A" size="0x4"/>
+							<Parameters address="0x52002038" name="FLASH_WPSN_CUR" size="0x4"/>
 							<AssignedBits>
-								<Bit config="0,1">
-									<Name>nWRP0</Name>
+								<Bit>
+									<Name>WRPS</Name>
 									<Description/>
 									<BitOffset>0x0</BitOffset>
 									<BitWidth>0x8</BitWidth>
@@ -572,10 +611,10 @@
 							</AssignedBits>
 						</Field>
 						<Field>
-							<Parameters address="0x5200203C" name="FWPSN_PRG_A" size="0x4"/>
+							<Parameters address="0x5200203C" name="FLASH_WPSN_PRG" size="0x4"/>
 							<AssignedBits>
-								<Bit config="0,1">
-									<Name>nWRP0</Name>
+								<Bit>
+									<Name>WRPS</Name>
 									<Description/>
 									<BitOffset>0x0</BitOffset>
 									<BitWidth>0x8</BitWidth>

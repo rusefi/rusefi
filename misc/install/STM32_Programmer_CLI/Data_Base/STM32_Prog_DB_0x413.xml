@@ -14,11 +14,15 @@
 			<Interface name="JTAG_SWD">
 			<!-- 1MB -->
 				<Configuration number="0x0">
-					<DBANK reference="0x0"> <ReadRegister address="0x1FFF7A22" mask="0x000FFF" value="0x400"/> </DBANK>
+					<FlashSize> <ReadRegister address="0x1FFF7A22" mask="0x00000FFF" value="0x400"/> </FlashSize>
 				</Configuration>
 			<!-- 512kB -->
 				<Configuration number="0x1">
-					<DBANK reference="0x0"> <ReadRegister address="0x1FFF7A22" mask="0x000FFF" value="0x200"/> </DBANK>
+					<FlashSize> <ReadRegister address="0x1FFF7A22" mask="0x00000FFF" value="0x200"/> </FlashSize>
+				</Configuration>
+			<!-- dummy -->
+				<Configuration number="0x2">	
+					<dummy> <ReadRegister address="0x20000000" mask="0" value="0"/> </dummy>
 				</Configuration>
 			</Interface>
 			<!-- Bootloader Interface -->
@@ -55,7 +59,7 @@
 				<FlashSize address="0x1FFF7A22" default="0x100000"/>
 				<BootloaderVersion address="0x1FFF77DE"/>
 				<!-- 1024KB Single Bank -->
-				<Configuration config="0">
+				<Configuration config="0,2">
 					<Parameters address="0x08000000" name=" 1024 Kbytes Embedded Flash" size="0x100000"/>
 					<Description/>
 					<Organization>Single</Organization>
@@ -72,6 +76,7 @@
 						</Field>
 					</Bank>
 				</Configuration>
+				<!-- 512kB Single Bank -->
 				<Configuration config="1">
 					<Parameters address="0x08000000" name=" 512 Kbytes Embedded Flash" size="0x80000"/>
 					<Description/>
