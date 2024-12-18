@@ -2402,6 +2402,7 @@ end_struct
 #define ts_show_tle8888 false
 #define ts_show_l9779 false
 #define ts_show_mc33810 false
+#define ts_show_mc33810_cs false
 #define ts_show_hip9011 false
 #define ts_show_tps_sent false
 #define ts_show_fan2_settings true
