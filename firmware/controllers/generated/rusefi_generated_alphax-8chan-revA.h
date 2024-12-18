@@ -1333,7 +1333,7 @@
 #define show_8chan_presets true
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1155465588
+#define SIGNATURE_HASH 3201496738
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1784,6 +1784,7 @@
 #define ts_show_tps_sent true
 #define ts_show_trigger_advanced true
 #define ts_show_trigger_comparator false
+#define ts_show_trigger_gap_override_flag true
 #define ts_show_trigger_overrides true
 #define ts_show_trigger_pins true
 #define ts_show_tunerstudio_port true
@@ -1798,7 +1799,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.12.18.alphax-8chan-revA.1155465588"
+#define TS_SIGNATURE "rusEFI master.2024.12.18.alphax-8chan-revA.3201496738"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
