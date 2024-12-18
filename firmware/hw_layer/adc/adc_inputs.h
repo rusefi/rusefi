@@ -16,6 +16,8 @@
 #endif
 
 float getAnalogInputDividerCoefficient(adc_channel_e);
+/* optional, checks if measured voltage is valid */
+int boardGetAnalogInputDiagnostic(adc_channel_e, float voltage);
 
 inline bool isAdcChannelValid(adc_channel_e hwChannel) {
 	/* Compiler will optimize, keep following if as a reminder */
@@ -38,6 +40,7 @@ inline bool isAdcChannelOffChip(adc_channel_e hwChannel) {
 	return (isAdcChannelValid(hwChannel) && (hwChannel > EFI_ADC_ONCHIP_LAST));
 }
 
+int analogGetDiagnostic();
 
 #if !defined(GPT_FREQ_FAST) || !defined(GPT_PERIOD_FAST)
 

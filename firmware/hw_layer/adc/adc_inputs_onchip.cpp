@@ -30,13 +30,27 @@
 #include "protected_gpio.h"
 
 // voltage in MCU universe, from zero to Vref
-float adcGetRawVoltage(const char *msg, adc_channel_e hwChannel) {
-	return adcRawValueToRawVoltage(adcGetRawValue(msg, hwChannel));
+expected<float> adcGetRawVoltage(const char *msg, adc_channel_e hwChannel) {
+	float rawVoltage = adcRawValueToRawVoltage(adcGetRawValue(msg, hwChannel));
+	int inputStatus = boardGetAnalogInputDiagnostic(hwChannel, rawVoltage);
+
+	if (inputStatus == 0) {
+		return expected(rawVoltage);
+	}
+
+	/* TODO: convert inputStatus to unexpected? */
+	return unexpected;
 }
 
 // voltage in ECU universe, with all input dividers and OpAmps gains taken into account, voltage at ECU connector pin
-float adcGetScaledVoltage(const char *msg, adc_channel_e hwChannel) {
-	return adcGetRawVoltage(msg, hwChannel) * getAnalogInputDividerCoefficient(hwChannel);
+expected<float> adcGetScaledVoltage(const char *msg, adc_channel_e hwChannel) {
+	auto rawVoltage = adcGetRawVoltage(msg, hwChannel);
+
+	if (rawVoltage) {
+		return expected(rawVoltage.value_or(0) * getAnalogInputDividerCoefficient(hwChannel));
+	}
+
+	return expected(rawVoltage);
 }
 
 #if EFI_USE_FAST_ADC
