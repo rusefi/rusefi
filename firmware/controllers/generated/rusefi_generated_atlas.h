@@ -1792,7 +1792,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI testsDG.2024.12.06.atlas.3458839622"
+#define TS_SIGNATURE "rusEFI testsDG.2024.12.18.atlas.3458839622"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
