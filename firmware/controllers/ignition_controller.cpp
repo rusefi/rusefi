@@ -20,7 +20,7 @@ void IgnitionController::onSlowCallback() {
 		pendingSleepInner = 0;
 		restartFromSleep = 1;
 		m_timeSinceNotIgnVoltage.reset();
-		rebootNow();
+		NVIC_SystemReset();
 	}
 
 	if(hasIgnVoltage && secondsSinceNotIgnVoltage() > 0.2f && restartFromSleep) {
