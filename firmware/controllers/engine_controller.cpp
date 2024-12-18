@@ -536,7 +536,7 @@ bool validateConfigOnStartUpOrBurn() {
     }
     int maxAllowedDwell = getMc33810maxDwellTimer(engineConfiguration->mc33810maxDwellTimer);
         if (maxConfiguredCorr * maxConfiguredDwell > maxAllowedDwell) {
-            criticalError("Dwell=%f/corr=%f while 33810 limit %d", maxConfiguredDwell, maxConfiguredDwell, maxAllowedDwell);
+            criticalError("Dwell=%.2f/corr=%.2f while 33810 limit %d", maxConfiguredDwell, maxConfiguredCorr, maxAllowedDwell);
         }
 
 #endif // EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)
