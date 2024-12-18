@@ -12,10 +12,11 @@ name: Firmware at GHA
 #
 
 on:
-  workflow_run:
-    workflows: ["Configs & Live Docs"]
-    types:
-      - completed
+  push:
+#  workflow_run:
+#    workflows: ["Configs & Live Docs"]
+ #   types:
+ #     - completed
 jobs:
   build-libopenblt-linux:
     runs-on: ubuntu-latest
