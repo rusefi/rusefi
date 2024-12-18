@@ -288,3 +288,13 @@ EngineConfig EngineConfig::setNitrousIgnitionRetard(const std::optional<float> v
     m_nitrousIgnitionRetard = value;
     return *this;
 }
+
+EngineConfig EngineConfig::setFuelLevelAveragingAlpha(const std::optional<float> value) {
+    m_fuelLevelAveragingAlpha = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setFuelLevelUpdatePeriodSec(const std::optional<float> value) {
+    m_fuelLevelUpdatePeriodSec = value;
+    return *this;
+}

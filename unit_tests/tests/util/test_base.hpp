@@ -116,6 +116,8 @@ void TestBase<GtestBase>::setUpEngineConfiguration(const EngineConfig& config) {
 			config.getNitrousFuelAdderPercent()
 	);
 	getTestEngineConfiguration().configureNitrousIgnitionRetard(config.getNitrousIgnitionRetard());
+	getTestEngineConfiguration().configureFuelLevelAveragingAlpha(config.getFuelLevelAveragingAlpha());
+	getTestEngineConfiguration().configureFuelLevelUpdatePeriodSec(config.getFuelLevelUpdatePeriodSec());
 }
 
 template<class GtestBase>
