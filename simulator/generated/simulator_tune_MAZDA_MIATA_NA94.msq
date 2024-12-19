@@ -1686,11 +1686,8 @@
         <constant digits="2" name="nitrousIgnitionRetard" units="deg">0.0</constant>
         <constant digits="0" name="nitrousMinimumVehicleSpeed" units="Kph">0.0</constant>
         <constant digits="4" name="fuelLevelAveragingAlpha" units="">0.001</constant>
-        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="62">
-         0.0
-         0.0
-         0.0
-         0.0
+        <constant digits="3" name="fuelLevelUpdatePeriodSec" units="seconds">0.1</constant>
+        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="58">
          0.0
          0.0
          0.0
@@ -4840,7 +4837,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20241218" nPages="1" signature="rusEFI master.2024.12.19.f407-discovery.2804470095" version="5.0"/>
+    <versionInfo firmwareInfo="20241218" nPages="1" signature="rusEFI master.2024.12.19.f407-discovery.2790947160" version="5.0"/>
     <bibliography author="rusEFI 20241218" writeDate="date"/>
     <settings/>
     <userComments/>
