@@ -1,10 +1,14 @@
 package com.rusefi.binaryprotocol;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelImpl;
 import com.rusefi.core.SignatureHelper;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 public class RealIniFileProvider implements IniFileProvider {
+    private static final Logging log = getLogging(RealIniFileProvider.class);
     @Override
     public IniFileModel provide(String signature) {
         /**
@@ -14,6 +18,7 @@ public class RealIniFileProvider implements IniFileProvider {
          */
         String localIniFile = SignatureHelper.downloadIfNotAvailable(SignatureHelper.getUrl(signature));
         if (localIniFile == null) {
+            log.info("Failed to download " + signature + " maybe custom board?");
             // 4th option: current folder
             localIniFile = IniFileModelImpl.findIniFile(".");
         }
