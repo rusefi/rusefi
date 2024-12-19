@@ -58,15 +58,15 @@ public class RawIniFile {
         return lines;
     }
 
-    public int getSimpleIntegerProperty(String key) {
+    public int getSimpleIntegerProperty(String key) throws MandatoryLineMissing {
         Line line = asSet.get(key);
         if (line == null)
-            throw new IllegalStateException("Line not found: " + key);
+            throw new MandatoryLineMissing("Line not found: " + key);
         String value = line.getTokens()[1];
         return Integer.parseInt(value);
     }
 
-    public int getSimpleIntegerProperty(String key, int defaultValue) {
+    public int getSimpleIntegerProperty(String key, int defaultValue) throws MandatoryLineMissing {
         if (!asSet.containsKey(key))
             return defaultValue;
         return getSimpleIntegerProperty(key);
