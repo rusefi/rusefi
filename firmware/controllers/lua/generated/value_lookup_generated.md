@@ -1945,6 +1945,9 @@ Retard timing to remove from actual final timing (after all corrections) due to 
 ### fuelLevelAveragingAlpha
 Exponential Average Alpha filtering parameter
 
+### fuelLevelUpdatePeriodSec
+How often do we update fuel level gauge
+
 ### tcu_shiftTime
 
 

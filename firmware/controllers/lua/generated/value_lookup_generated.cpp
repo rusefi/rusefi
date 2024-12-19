@@ -1952,6 +1952,9 @@ float getConfigValueByName(const char *name) {
 // fuelLevelAveragingAlpha
 		case 2094922339:
 			return engineConfiguration->fuelLevelAveragingAlpha;
+// fuelLevelUpdatePeriodSec
+		case 128251338:
+			return engineConfiguration->fuelLevelUpdatePeriodSec;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -5204,6 +5207,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 2094922339:
 	{
 		engineConfiguration->fuelLevelAveragingAlpha = value;
+		return 1;
+	}
+		case 128251338:
+	{
+		engineConfiguration->fuelLevelUpdatePeriodSec = value;
 		return 1;
 	}
 		case -1658957891:

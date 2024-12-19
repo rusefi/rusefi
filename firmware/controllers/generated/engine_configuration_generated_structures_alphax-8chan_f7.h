@@ -4952,8 +4952,14 @@ struct engine_configuration_s {
 	 */
 	float fuelLevelAveragingAlpha;
 	/**
-	 * units: units
+	 * How often do we update fuel level gauge
+	 * units: seconds
 	 * offset 3996
+	 */
+	float fuelLevelUpdatePeriodSec;
+	/**
+	 * units: units
+	 * offset 4000
 	 */
 	uint8_t unusedOftenChangesDuringFirmwareUpdate[END_OF_CALIBRATION_PADDING];
 	/**

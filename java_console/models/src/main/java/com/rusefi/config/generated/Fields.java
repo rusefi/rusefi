@@ -320,7 +320,7 @@ public class Fields {
 	public static final int ego_sensor_e_ES_Innovate_MTX_L = 1;
 	public static final int ego_sensor_e_ES_PLX = 4;
 	public static final int EGT_CHANNEL_COUNT = 8;
-	public static final int END_OF_CALIBRATION_PADDING = 62;
+	public static final int END_OF_CALIBRATION_PADDING = 58;
 	public static final int engine_configuration_s_size = 4044;
 	public static final int engine_load_mode_e_LM_ALPHA_N = 2;
 	public static final int engine_load_mode_e_LM_LUA = 3;
@@ -1507,7 +1507,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.12.19.f407-discovery.2804470095";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.12.19.f407-discovery.2790947160";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -3023,6 +3023,7 @@ public class Fields {
 	public static final Field NITROUSMINIMUMVEHICLESPEED = Field.create("NITROUSMINIMUMVEHICLESPEED", 3972, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_3974 = Field.create("ALIGNMENTFILL_AT_3974", 3974, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field FUELLEVELAVERAGINGALPHA = Field.create("FUELLEVELAVERAGINGALPHA", 3976, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field FUELLEVELUPDATEPERIODSEC = Field.create("FUELLEVELUPDATEPERIODSEC", 3980, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_4042 = Field.create("ALIGNMENTFILL_AT_4042", 4042, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field POSTCRANKINGFACTOR = Field.create("POSTCRANKINGFACTOR", 4044, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field POSTCRANKINGDURATIONBINS = Field.create("POSTCRANKINGDURATIONBINS", 4188, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -4774,6 +4775,7 @@ public class Fields {
 	NITROUSMINIMUMVEHICLESPEED,
 	ALIGNMENTFILL_AT_3974,
 	FUELLEVELAVERAGINGALPHA,
+	FUELLEVELUPDATEPERIODSEC,
 	ALIGNMENTFILL_AT_4042,
 	POSTCRANKINGFACTOR,
 	POSTCRANKINGDURATIONBINS,
