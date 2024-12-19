@@ -24,8 +24,8 @@ public class IniFileMetaInfoImpl implements IniFileMetaInfo {
 
     public IniFileMetaInfoImpl(RawIniFile file) {
 
-        nPages = file.getSimpleIntegerProperty("nPages", 1);
         try {
+            nPages = file.getSimpleIntegerProperty("nPages", 1);
             ochBlockSize = file.getSimpleIntegerProperty("ochBlockSize");
 
             blockingFactor = file.getSimpleIntegerProperty("blockingFactor", DEFAULT_BLOCKING_FACTOR);
