@@ -1799,7 +1799,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2024.12.18.hellen154hyundai.2771245562"
+#define TS_SIGNATURE "rusEFI master.2024.12.19.hellen154hyundai.2771245562"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
