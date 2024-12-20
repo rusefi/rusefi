@@ -28,10 +28,12 @@
 
 #include "runtime_state.h"
 
+/* TODO: move to efifeatures.h */
 #ifndef EFI_STORAGE_MFS_EXTERNAL
 #define EFI_STORAGE_MFS_EXTERNAL FALSE
 #endif
 
+/* TODO: move to efifeatures.h */
 #ifndef EFI_FLASH_WRITE_THREAD
 #define EFI_FLASH_WRITE_THREAD FALSE
 #endif
@@ -43,13 +45,24 @@
 
 static bool needToWriteConfiguration = false;
 
+// IDs used as MFS record ids and internal RusEFI ids
+// Convert to enum/class
+#define EFI_SETTINGS_RECORD_ID		1
+
+// Flash status
+enum class FlashState {
+	Ok,
+	CrcFailed,
+	IncompatibleVersion,
+	// all is well, but we're on a fresh chip with blank memory
+	BlankChip,
+};
+
 /* if we use ChibiOS MFS for settings */
 #if EFI_STORAGE_MFS == TRUE
 
 /* Managed Flash Storage driver */
 MFSDriver mfsd;
-
-#define EFI_MFS_SETTINGS_RECORD_ID		1
 
 extern void boardInitMfs(void);
 extern const MFSConfig *boardGetMfsConfig(void);
@@ -64,7 +77,7 @@ extern const MFSConfig *boardGetMfsConfig(void);
  */
 
 #if (EFI_FLASH_WRITE_THREAD == TRUE)
-chibios_rt::BinarySemaphore flashWriteSemaphore(/*taken =*/ true);
+chibios_rt::Mailbox<msg_t, 16> flashWriterMb;
 
 #if EFI_STORAGE_MFS == TRUE
 /* in case of MFS we need more stack */
@@ -77,11 +90,20 @@ static void flashWriteThread(void*) {
 	chRegSetThreadName("flash writer");
 
 	while (true) {
+		msg_t ret;
+		msg_t msg;
 		// Wait for a request to come in
-		flashWriteSemaphore.wait();
+		ret = flashWriterMb.fetch(&msg, TIME_INFINITE);
+		if (ret != MSG_OK) {
+			continue;
+		}
 
-		// Do the actual flash write operation
-		writeToFlashNow();
+		// Do the actual flash write operation for given ID
+		if (msg == EFI_SETTINGS_RECORD_ID) {
+			writeToFlashNow();
+		} else {
+			efiPrintf("Requested to write unknown record id %ld", msg);
+		}
 	}
 }
 #endif // EFI_FLASH_WRITE_THREAD
@@ -100,7 +122,8 @@ void setNeedToWriteConfiguration() {
 #if (EFI_FLASH_WRITE_THREAD == TRUE)
 	if (allowFlashWhileRunning()) {
 		// Signal the flash writer thread to wake up and write at its leisure
-		flashWriteSemaphore.signal();
+		msg_t id = EFI_SETTINGS_RECORD_ID;
+		flashWriterMb.post(id, TIME_IMMEDIATE);
 	}
 #endif // EFI_FLASH_WRITE_THREAD
 }
@@ -155,16 +178,78 @@ int eraseAndFlashCopy(flashaddr_t storageAddress, const TStorage& data) {
 
 bool burnWithoutFlash = false;
 
+#if EFI_STORAGE_MFS == TRUE
+int mfsStorageWrite(int id, const uint8_t *ptr, size_t size) {
+	efiPrintf("Writing storage ID %d ... %d bytes", id, size);
+	efitick_t startNt = getTimeNowNt();
+
+	// TODO: add watchdog disable and enable in case MFS is on internal flash and one bank
+	mfs_error_t err = mfsWriteRecord(&mfsd, id, size, ptr);
+
+	efitick_t endNt = getTimeNowNt();
+	int elapsed_Ms = US2MS(NT2US(endNt - startNt));
+
+	if (err >= MFS_NO_ERROR) {
+		efiPrintf("Write done with no errors after %d mS MFS status %d", elapsed_Ms, err);
+	} else {
+		efiPrintf("Write FAILED after %d with MFS status %d", elapsed_Ms, err);
+
+		return -1;
+	}
+
+	return 0;
+}
+
+FlashState mfsStorageRead(int id, uint8_t *ptr, size_t size) {
+	efiPrintf("Reading storage ID %d ... %d bytes", id, size);
+
+	size_t readed_size = size;
+	mfs_error_t err = mfsReadRecord(&mfsd, id, &readed_size, ptr);
+
+	if (err >= MFS_NO_ERROR) {
+		if (readed_size != size) {
+			efiPrintf("Incorrect size expected %d readed %d", size, readed_size);
+			return FlashState::IncompatibleVersion;
+		}
+		efiPrintf("Reding done with no errors and MFS status %d", err);
+	} else {
+		efiPrintf("Read FAILED with MFS status %d", err);
+
+		// TODO: or corrupted?
+		return FlashState::BlankChip;
+	}
+	return FlashState::Ok;
+}
+
+int mfsStorageFormat()
+{
+	efitick_t startNt = getTimeNowNt();
+
+	mfs_error_t err;
+	err = mfsErase(&mfsd);
+
+	efitick_t endNt = getTimeNowNt();
+	int elapsed_Ms = US2MS(NT2US(endNt - startNt));
+	efiPrintf("MFS erase done %d mS err %d", elapsed_Ms, err);
+
+	return (err >= MFS_NO_ERROR) ? 0 : -1;
+}
+
+#endif //EFI_STORAGE_MFS
+
 void writeToFlashNow() {
 	engine->configBurnTimer.reset();
-	bool isSuccess = false;
 
 	if (burnWithoutFlash) {
 		needToWriteConfiguration = false;
 		return;
 	}
+
+#if EFI_STORAGE_INT_FLASH == TRUE
+	bool isSuccess = false;
 	efiPrintf("Writing pending configuration... %d bytes", sizeof(persistentState));
 	efitick_t startNt = getTimeNowNt();
+#endif
 
 	// Set up the container
 	persistentState.size = sizeof(persistentState);
@@ -175,17 +260,15 @@ void writeToFlashNow() {
 	// we just set a long timeout of 5 secs to wait until flash is done.
 	startWatchdog(WATCHDOG_FLASH_TIMEOUT_MS);
 
+	// Do actual write
 #if EFI_STORAGE_MFS == TRUE
-	mfs_error_t err;
 	/* In case of MFS:
 	 * do we need to have two copies?
 	 * do we need to protect it with CRC? */
-
-	err = mfsWriteRecord(&mfsd, EFI_MFS_SETTINGS_RECORD_ID,
-						 sizeof(persistentState), (uint8_t *)&persistentState);
-
-	if (err >= MFS_NO_ERROR)
-		isSuccess = true;
+	if (mfsStorageWrite(EFI_SETTINGS_RECORD_ID, (uint8_t *)&persistentState, sizeof(persistentState)) == 0) {
+		// Never used:
+		//isSuccess = true;
+	}
 #endif
 
 #if EFI_STORAGE_INT_FLASH == TRUE
@@ -204,18 +287,16 @@ void writeToFlashNow() {
 	// restart the watchdog with the default timeout
 	startWatchdog();
 
+#if EFI_STORAGE_INT_FLASH == TRUE
 	if (isSuccess) {
 		efitick_t endNt = getTimeNowNt();
 		int elapsed_Ms = US2MS(NT2US(endNt - startNt));
 
-#if EFI_STORAGE_MFS == TRUE
-		efiPrintf("FLASH_SUCCESS after %d mS MFS status %d", elapsed_Ms, err);
-#else
 		efiPrintf("FLASH_SUCCESS after %d mS", elapsed_Ms);
-#endif
 	} else {
 		efiPrintf("Flashing failed");
 	}
+#endif
 
 	resetMaxValues();
 
@@ -226,14 +307,6 @@ void writeToFlashNow() {
 static void doResetConfiguration() {
 	resetConfigurationExt(engineConfiguration->engineType);
 }
-
-enum class FlashState {
-	Ok,
-	CrcFailed,
-	IncompatibleVersion,
-	// all is well, but we're on a fresh chip with blank memory
-	BlankChip,
-};
 
 static FlashState validatePersistentState() {
 	auto flashCrc = persistentState.getCrc();
@@ -278,18 +351,13 @@ static FlashState readOneConfigurationCopy(flashaddr_t address) {
  */
 static FlashState readConfiguration() {
 #if EFI_STORAGE_MFS == TRUE
-	size_t settings_size = sizeof(persistentState);
-	mfs_error_t err = mfsReadRecord(&mfsd, EFI_MFS_SETTINGS_RECORD_ID,
-						&settings_size, (uint8_t *)&persistentState);
+	FlashState ret = mfsStorageRead(EFI_SETTINGS_RECORD_ID, (uint8_t *)&persistentState, sizeof(persistentState));
 
-	if (err >= MFS_NO_ERROR) {
-		// readed size is not exactly the same
-		if (settings_size != sizeof(persistentState))
-			return FlashState::IncompatibleVersion;
+	if (ret == FlashState::Ok) {
 		return validatePersistentState();
-	} else {
-		return FlashState::BlankChip;
 	}
+
+	return ret;
 #endif
 
 #if EFI_STORAGE_INT_FLASH == TRUE
@@ -351,15 +419,8 @@ static void rewriteConfig() {
 }
 
 #if EFI_STORAGE_MFS == TRUE
-static void eraseConfig() {
-	efitick_t startNt = getTimeNowNt();
-
-	mfs_error_t err;
-	err = mfsErase(&mfsd);
-
-	efitick_t endNt = getTimeNowNt();
-	int elapsed_Ms = US2MS(NT2US(endNt - startNt));
-	efiPrintf("erase done %d mS err %d", elapsed_Ms, err);
+static void eraseStorage() {
+	mfsStorageFormat();
 }
 #endif
 
@@ -375,7 +436,7 @@ void initFlash() {
 		/* hm...? */
 	}
 
-	addConsoleAction("eraseconfig", eraseConfig);
+	addConsoleAction("erasestorage", eraseStorage);
 #endif
 
 	addConsoleAction("readconfig", readFromFlash);
