@@ -1,9 +1,10 @@
 name: Generate Kicad Diffs
 
 on:
-  push:
-    paths:
-    - 'hardware/**'
+  workflow_dispatch:
+#  push:
+#    paths:
+#    - 'hardware/**'
 
 jobs:
   generate:
