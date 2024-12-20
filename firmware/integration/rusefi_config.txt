@@ -2422,7 +2422,7 @@ end_struct
 #define ts_show_etb true
 #define ts_show_etb_bias_curve true
 #define ts_show_etb_pins true
-#define ts_show_forced_induction true
+#define ts_show_forced_induction false
 #define ts_show_vehicle_weight false
 #define ts_show_compression_ratio false
 #define ts_show_injection_mode true
