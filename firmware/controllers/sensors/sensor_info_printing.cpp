@@ -2,6 +2,7 @@
 #include "stored_value_sensor.h"
 #include "proxy_sensor.h"
 #include "functional_sensor.h"
+#include "fuel_level_sensor.h"
 #include "redundant_sensor.h"
 #include "redundant_ford_tps.h"
 #include "fallback_sensor.h"
@@ -30,6 +31,11 @@ void FunctionalSensor::showInfo(const char* sensorName) const {
 	if (auto func = getFunction()) {
 		func->showInfo(getRaw());
 	}
+}
+
+void FuelLevelSensor::showInfo(const char* sensorName) const {
+	const auto value = get();
+	efiPrintf("Sensor \"%s\": Raw value: %.2f Valid: %s Converted value %.2f", sensorName, getRaw(), boolToString(value.Valid), value.Value);
 }
 
 #if EFI_CAN_SUPPORT || EFI_UNIT_TEST
