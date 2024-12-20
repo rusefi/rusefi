@@ -22,39 +22,11 @@
 #include "tunerstudio.h"
 #endif
 
-#if EFI_STORAGE_MFS == TRUE
-#include "hal_mfs.h"
-#endif
+#include "storage.h"
 
 #include "runtime_state.h"
 
-#ifndef EFI_STORAGE_MFS_EXTERNAL
-#define EFI_STORAGE_MFS_EXTERNAL FALSE
-#endif
-
-#ifndef EFI_FLASH_WRITE_THREAD
-#define EFI_FLASH_WRITE_THREAD FALSE
-#endif
-
-// Sanity check
-#if (EFI_STORAGE_MFS_EXTERNAL == TRUE) && (EFI_FLASH_WRITE_THREAD == FALSE)
-	#error EFI_FLASH_WRITE_THREAD should be enabled if MFS is used for external flash
-#endif
-
 static bool needToWriteConfiguration = false;
-
-/* if we use ChibiOS MFS for settings */
-#if EFI_STORAGE_MFS == TRUE
-
-/* Managed Flash Storage driver */
-MFSDriver mfsd;
-
-#define EFI_MFS_SETTINGS_RECORD_ID		1
-
-extern void boardInitMfs(void);
-extern const MFSConfig *boardGetMfsConfig(void);
-
-#endif
 
 /**
  * https://sourceforge.net/p/rusefi/tickets/335/
@@ -157,14 +129,11 @@ bool burnWithoutFlash = false;
 
 void writeToFlashNow() {
 	engine->configBurnTimer.reset();
-	bool isSuccess = false;
 
 	if (burnWithoutFlash) {
 		needToWriteConfiguration = false;
 		return;
 	}
-	efiPrintf("Writing pending configuration... %d bytes", sizeof(persistentState));
-	efitick_t startNt = getTimeNowNt();
 
 	// Set up the container
 	persistentState.size = sizeof(persistentState);
@@ -175,20 +144,22 @@ void writeToFlashNow() {
 	// we just set a long timeout of 5 secs to wait until flash is done.
 	startWatchdog(WATCHDOG_FLASH_TIMEOUT_MS);
 
+	// Do actual write
 #if EFI_STORAGE_MFS == TRUE
-	mfs_error_t err;
 	/* In case of MFS:
 	 * do we need to have two copies?
 	 * do we need to protect it with CRC? */
-
-	err = mfsWriteRecord(&mfsd, EFI_MFS_SETTINGS_RECORD_ID,
-						 sizeof(persistentState), (uint8_t *)&persistentState);
-
-	if (err >= MFS_NO_ERROR)
-		isSuccess = true;
+	if (storageWrite(EFI_SETTINGS_RECORD_ID, (uint8_t *)&persistentState, sizeof(persistentState)) == StorageStatus::Ok) {
+		// Never used:
+		//isSuccess = true;
+	}
 #endif
 
 #if EFI_STORAGE_INT_FLASH == TRUE
+	bool isSuccess = false;
+	efiPrintf("Writing pending configuration... %d bytes", sizeof(persistentState));
+	efitick_t startNt = getTimeNowNt();
+
 	// Flash two copies
 	int result1 = eraseAndFlashCopy(getFlashAddrFirstCopy(), persistentState);
 	int result2 = FLASH_RETURN_SUCCESS;
@@ -199,23 +170,19 @@ void writeToFlashNow() {
 
 	// handle success/failure
 	isSuccess = (result1 == FLASH_RETURN_SUCCESS) && (result2 == FLASH_RETURN_SUCCESS);
-#endif
-
-	// restart the watchdog with the default timeout
-	startWatchdog();
 
 	if (isSuccess) {
 		efitick_t endNt = getTimeNowNt();
 		int elapsed_Ms = US2MS(NT2US(endNt - startNt));
 
-#if EFI_STORAGE_MFS == TRUE
-		efiPrintf("FLASH_SUCCESS after %d mS MFS status %d", elapsed_Ms, err);
-#else
 		efiPrintf("FLASH_SUCCESS after %d mS", elapsed_Ms);
-#endif
 	} else {
 		efiPrintf("Flashing failed");
 	}
+#endif
+
+	// restart the watchdog with the default timeout
+	startWatchdog();
 
 	resetMaxValues();
 
@@ -227,28 +194,20 @@ static void doResetConfiguration() {
 	resetConfigurationExt(engineConfiguration->engineType);
 }
 
-enum class FlashState {
-	Ok,
-	CrcFailed,
-	IncompatibleVersion,
-	// all is well, but we're on a fresh chip with blank memory
-	BlankChip,
-};
-
-static FlashState validatePersistentState() {
+static StorageStatus validatePersistentState() {
 	auto flashCrc = persistentState.getCrc();
 
 	if (flashCrc != persistentState.crc) {
 		// If the stored crc is all 1s, that probably means the flash is actually blank, not that the crc failed.
 		if (persistentState.crc == ((decltype(persistentState.crc))-1)) {
-			return FlashState::BlankChip;
+			return StorageStatus::NotFound;
 		} else {
-			return FlashState::CrcFailed;
+			return StorageStatus::CrcFailed;
 		}
 	} else if (persistentState.version != FLASH_DATA_VERSION || persistentState.size != sizeof(persistentState)) {
-		return FlashState::IncompatibleVersion;
+		return StorageStatus::IncompatibleVersion;
 	} else {
-        return FlashState::Ok;
+        return StorageStatus::Ok;
     }
 }
 
@@ -256,12 +215,12 @@ static FlashState validatePersistentState() {
 /**
  * Read single copy of rusEFI configuration from interan flash using custom driver
  */
-static FlashState readOneConfigurationCopy(flashaddr_t address) {
+static StorageStatus readOneConfigurationCopy(flashaddr_t address) {
 	efiPrintf("readFromFlash %x", address);
 
 	// error already reported, return
 	if (!address) {
-		return FlashState::BlankChip;
+		return StorageStatus::NotFound;
 	}
 
 	intFlashRead(address, (char *) &persistentState, sizeof(persistentState));
@@ -276,28 +235,23 @@ static FlashState readOneConfigurationCopy(flashaddr_t address) {
  *
  * in this method we read first copy of configuration in flash. if that first copy has CRC or other issues we read second copy.
  */
-static FlashState readConfiguration() {
+static StorageStatus readConfiguration() {
 #if EFI_STORAGE_MFS == TRUE
-	size_t settings_size = sizeof(persistentState);
-	mfs_error_t err = mfsReadRecord(&mfsd, EFI_MFS_SETTINGS_RECORD_ID,
-						&settings_size, (uint8_t *)&persistentState);
+	StorageStatus ret = storageRead(EFI_SETTINGS_RECORD_ID, (uint8_t *)&persistentState, sizeof(persistentState));
 
-	if (err >= MFS_NO_ERROR) {
-		// readed size is not exactly the same
-		if (settings_size != sizeof(persistentState))
-			return FlashState::IncompatibleVersion;
+	if (ret == StorageStatus::Ok) {
 		return validatePersistentState();
-	} else {
-		return FlashState::BlankChip;
 	}
+
+	return ret;
 #endif
 
 #if EFI_STORAGE_INT_FLASH == TRUE
 	auto firstCopyAddr = getFlashAddrFirstCopy();
 
-	FlashState firstCopy = readOneConfigurationCopy(firstCopyAddr);
+	StorageStatus firstCopy = readOneConfigurationCopy(firstCopyAddr);
 
-	if (firstCopy == FlashState::Ok) {
+	if (firstCopy == StorageStatus::Ok) {
 		// First copy looks OK, don't even need to check second copy.
 		return firstCopy;
 	}
@@ -313,26 +267,27 @@ static FlashState readConfiguration() {
 #endif
 
 	// In case of neither of those cases, return that things went OK?
-	return FlashState::Ok;
+	return StorageStatus::Ok;
 }
 
 void readFromFlash() {
-	FlashState result = readConfiguration();
+	StorageStatus result = readConfiguration();
 
 	switch (result) {
-		case FlashState::CrcFailed:
+		case StorageStatus::CrcFailed:
 			warning(ObdCode::CUSTOM_ERR_FLASH_CRC_FAILED, "flash CRC failed");
 			efiPrintf("Need to reset flash to default due to CRC mismatch");
 			[[fallthrough]];
-		case FlashState::BlankChip:
+		case StorageStatus::NotFound:
+		case StorageStatus::Failed:
 			resetConfigurationExt(DEFAULT_ENGINE_TYPE);
 			break;
-		case FlashState::IncompatibleVersion:
+		case StorageStatus::IncompatibleVersion:
 			// Preserve engine type from old config
 			efiPrintf("Resetting due to version mismatch but preserving engine type [%d]", (int)engineConfiguration->engineType);
 			resetConfigurationExt(engineConfiguration->engineType);
 			break;
-		case FlashState::Ok:
+		case StorageStatus::Ok:
 			// At this point we know that CRC and version number is what we expect. Safe to assume it's a valid configuration.
 			applyNonPersistentConfiguration();
 			efiPrintf("Read valid configuration from flash!");
@@ -349,33 +304,9 @@ static void rewriteConfig() {
 	writeToFlashNow();
 }
 
-#if EFI_STORAGE_MFS == TRUE
-static void eraseConfig() {
-	efitick_t startNt = getTimeNowNt();
-
-	mfs_error_t err;
-	err = mfsErase(&mfsd);
-
-	efitick_t endNt = getTimeNowNt();
-	int elapsed_Ms = US2MS(NT2US(endNt - startNt));
-	efiPrintf("erase done %d mS err %d", elapsed_Ms, err);
-}
-#endif
-
 void initFlash() {
-#if EFI_STORAGE_MFS == TRUE
-	boardInitMfs();
-	const MFSConfig *mfsConfig = boardGetMfsConfig();
-
-	/* MFS */
-	mfsObjectInit(&mfsd);
-	mfs_error_t err = mfsStart(&mfsd, mfsConfig);
-	if (err < MFS_NO_ERROR) {
-		/* hm...? */
-	}
-
-	addConsoleAction("eraseconfig", eraseConfig);
-#endif
+	// Init storage(s) if any
+	initStorage();
 
 	addConsoleAction("readconfig", readFromFlash);
 	/**
