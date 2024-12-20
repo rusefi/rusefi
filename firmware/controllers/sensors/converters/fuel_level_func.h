@@ -4,22 +4,18 @@
 
 #pragma once
 
-#include "sensor_converter_func.h"
 #include "engine_configuration_defaults.h"
 
-class FuelLevelFunc final : public SensorConverter {
+class FuelLevelFunc {
 public:
-	SensorResult convert(float inputValue) const override;
+	SensorResult convert(float inputValue);
 private:
 	float getFuelLevelAlpha() const;
-	float filterFuelValue(float value) const;
+	float filterFuelValue(float value);
 
 	static constexpr float MIN_FUEL_LEVEL_UPDATE_PERIOD_SEC =
 		engine_configuration_defaults::FUEL_LEVEL_UPDATE_PERIOD_SEC;
 
-	// TODO: I really dislike the following mutable field, but I failed to find a more pleasant way to make
-	//  `convert` method constant :(((
-	// TODO2: shall we just not reuse whatever we are reusing here without enjoying it?!
-	mutable std::optional<float> m_filteredValue;
-	mutable Timer m_fuelLevelTimer;
+	std::optional<float> m_filteredValue;
+	Timer m_fuelLevelTimer;
 };

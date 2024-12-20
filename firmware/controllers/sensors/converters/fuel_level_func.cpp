@@ -6,7 +6,7 @@
 
 #include "fuel_level_func.h"
 
-SensorResult FuelLevelFunc::convert(const float inputValue) const {
+SensorResult FuelLevelFunc::convert(const float inputValue) {
 	const float filteredValue = filterFuelValue(inputValue);
 	const float fuelLevel = interpolate2d(filteredValue, config->fuelLevelBins, config->fuelLevelValues);
 	return fuelLevel;
@@ -17,7 +17,7 @@ float FuelLevelFunc::getFuelLevelAlpha() const {
 	return (0.0f < configuredAlpha ? configuredAlpha : engine_configuration_defaults::FUEL_LEVEL_AVERAGING_ALPHA);
 }
 
-float FuelLevelFunc::filterFuelValue(const float value) const {
+float FuelLevelFunc::filterFuelValue(const float value) {
 	if (m_fuelLevelTimer.hasElapsedSec(maxF(
 		engineConfiguration->fuelLevelUpdatePeriodSec,
 		MIN_FUEL_LEVEL_UPDATE_PERIOD_SEC
