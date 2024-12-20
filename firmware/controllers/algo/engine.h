@@ -57,6 +57,7 @@
 #include "efi_output.h"
 #include "vvt.h"
 #include "trip_odometer.h"
+#include "long_term_fuel_trim.h"
 
 #include <functional>
 
@@ -175,6 +176,10 @@ public:
 #if EFI_LAUNCH_CONTROL
         NitrousController,
 #endif // EFI_LAUNCH_CONTROL
+#if EFI_LTFT_CONTROL
+		LongTermFuelTrim,
+#endif
+
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 

@@ -42,6 +42,11 @@
 #define EFI_LAUNCH_CONTROL TRUE
 #endif
 
+/* Long Term Fuel Trims */
+#ifndef EFI_LTFT_CONTROL
+#define EFI_LTFT_CONTROL TRUE
+#endif
+
 #ifndef EFI_ANTILAG_SYSTEM
 #define EFI_ANTILAG_SYSTEM TRUE
 #endif
