@@ -56,9 +56,9 @@ struct BackupSramData {
 
 		critical_msg_t ErrorString;
 		critical_msg_t hardFile;
-	  int hardLine;
-	  int check;
-	  critical_msg_t rawMsg;
+		int hardLine;
+		int check;
+		critical_msg_t rawMsg;
 		port_extctx FaultCtx;
 		uint32_t FaultType;
 		uint32_t FaultAddress;
