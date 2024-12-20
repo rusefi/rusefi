@@ -298,7 +298,6 @@ static FlashState readConfiguration() {
 
 #if EFI_STORAGE_INT_FLASH == TRUE
 	auto firstCopyAddr = getFlashAddrFirstCopy();
-	auto secondyCopyAddr = getFlashAddrSecondCopy();
 
 	FlashState firstCopy = readOneConfigurationCopy(firstCopyAddr);
 
@@ -307,8 +306,9 @@ static FlashState readConfiguration() {
 		return firstCopy;
 	}
 
+	auto secondyCopyAddr = getFlashAddrSecondCopy();
 	/* no second copy? */
-	if (getFlashAddrSecondCopy() == 0x0) {
+	if (secondyCopyAddr == 0x0) {
 		return firstCopy;
 	}
 
