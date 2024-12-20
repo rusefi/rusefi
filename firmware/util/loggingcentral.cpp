@@ -136,9 +136,8 @@ public:
 			LogLineBuffer* line;
 			msg_t msg = filledBuffers.fetch(&line, TIME_INFINITE);
 
-			if (msg == MSG_RESET) {
-				// todo?
-				// what happens if MSG_RESET?
+			if (msg != MSG_OK) {
+				// This should be impossible - neither timeout or reset should happen
 			} else {
 				{
 					// Lock the buffer mutex - inhibit buffer swaps while writing
