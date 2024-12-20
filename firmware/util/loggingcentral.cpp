@@ -140,11 +140,13 @@ public:
 				// todo?
 				// what happens if MSG_RESET?
 			} else {
-				// Lock the buffer mutex - inhibit buffer swaps while writing
-				chibios_rt::MutexLocker lock(logBufferMutex);
+				{
+					// Lock the buffer mutex - inhibit buffer swaps while writing
+					chibios_rt::MutexLocker lock(logBufferMutex);
 
-				// Write the line out to the output buffer
-				writeBuffer->writeLine(line);
+					// Write the line out to the output buffer
+					writeBuffer->writeLine(line);
+				}
 
 				// Return this line buffer to the free list
 				freeBuffers.post(line, TIME_INFINITE);
