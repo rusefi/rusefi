@@ -591,7 +591,9 @@ bool EtbController::checkStatus() {
 	if (etbTpsErrorCounter > ETB_INTERMITTENT_LIMIT) {
 		localReason = TpsState::IntermittentTps;
 #if EFI_SHAFT_POSITION_INPUT
-	} else if (engineConfiguration->disableEtbWhenEngineStopped && !engine->triggerCentral.engineMovedRecently()) {
+	} else if (engineConfiguration->disableEtbWhenEngineStopped
+	  && !engine->triggerCentral.engineMovedRecently()
+	  && !engine->etbAutoTune) {
 		localReason = TpsState::EngineStopped;
 #endif // EFI_SHAFT_POSITION_INPUT
 	} else if (etbPpsErrorCounter > ETB_INTERMITTENT_LIMIT) {
