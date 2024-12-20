@@ -7,3 +7,7 @@ struct LtftState {
 	}
 	void load();
 };
+
+class LongTermFuelTrim : public EngineModule {
+
+};
