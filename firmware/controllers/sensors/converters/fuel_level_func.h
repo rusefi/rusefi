@@ -19,6 +19,7 @@ private:
 
 	// TODO: I really dislike the following mutable field, but I failed to find a more pleasant way to make
 	//  `convert` method constant :(((
+	// TODO2: shall we just not reuse whatever we are reusing here without enjoying it?!
 	mutable std::optional<float> m_filteredValue;
 	mutable Timer m_fuelLevelTimer;
 };
