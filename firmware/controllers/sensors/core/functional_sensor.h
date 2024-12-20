@@ -8,7 +8,7 @@
 #pragma once
 
 #include "converters/sensor_converter_func.h"
-#include "stored_value_sensor.h"
+#include "functional_sensor_base.h"
 
 #include <type_traits>
 
@@ -23,12 +23,12 @@
  * Register an instance of the new class with an interface
  * that provides and posts raw values so the sensor can update.
  */
-class FunctionalSensor : public StoredValueSensor {
+class FunctionalSensor : public FunctionalSensorBase {
 public:
 	FunctionalSensor(SensorType type, efidur_t timeoutPeriod)
-		: StoredValueSensor(type, timeoutPeriod) { }
+		: FunctionalSensorBase(type, timeoutPeriod) { }
 
-	void postRawValue(float inputValue, efitick_t timestamp);
+	void postRawValue(float inputValue, efitick_t timestamp) override;
 
 	void setFunction(SensorConverter& func) {
 		m_function = &func;

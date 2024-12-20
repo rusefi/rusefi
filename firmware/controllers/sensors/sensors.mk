@@ -1,5 +1,6 @@
 
 CONTROLLERS_SENSORS_SRC_CPP = \
+	$(PROJECT_DIR)/controllers/sensors/core/functional_sensor_base.cpp \
 	$(PROJECT_DIR)/controllers/sensors/core/functional_sensor.cpp \
 	$(PROJECT_DIR)/controllers/sensors/core/sensor.cpp \
  	$(PROJECT_DIR)/controllers/sensors/thermistors.cpp \

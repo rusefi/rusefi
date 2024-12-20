@@ -1,5 +1,6 @@
 #include "pch.h"
 
+#include "functional_sensor.h"
 #include "adc_subscription.h"
 #include "fuel_level_func.h"
 
