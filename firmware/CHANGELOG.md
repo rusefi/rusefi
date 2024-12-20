@@ -31,6 +31,7 @@ Release template (copy/paste this for new release):
 ### Added
  - Flex Fuel sensor settings should be under "Fuel sensor" #7097
  - GM SENT fuel pressure sensor #6997
+ - ETB calibration automatically enables ETB if needed #7197
 
 ### Fixed
  - Critical error when using big values on Boost Control Open Loop with Y axis as MAP #7093
