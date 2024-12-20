@@ -342,6 +342,9 @@ float getOutputValueByName(const char *name) {
 // rawAcPressure
 		case 2079600300:
 			return engine->outputChannels.rawAcPressure;
+// rawFuelLevel
+		case 1413130003:
+			return engine->outputChannels.rawFuelLevel;
 // fuelClosedLoopBinIdx
 		case 1342844099:
 			return engine->outputChannels.fuelClosedLoopBinIdx;

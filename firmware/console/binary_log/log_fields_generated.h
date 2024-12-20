@@ -100,6 +100,7 @@ static const LogField fields[] = {
 	{engine->outputChannels.rawIat, "rawIat", "V", 3},
 	{engine->outputChannels.rawOilPressure, "rawOilPressure", "V", 3},
 	{engine->outputChannels.rawAcPressure, "rawAcPressure", "V", 3},
+	{engine->outputChannels.rawFuelLevel, "rawFuelLevel", "V", 3},
 	{engine->outputChannels.fuelClosedLoopBinIdx, "fuelClosedLoopBinIdx", "", 0},
 	{engine->outputChannels.rawPpsPrimary, "rawPpsPrimary", "V", 3},
 	{engine->outputChannels.rawPpsSecondary, "rawPpsSecondary", "V", 3},
