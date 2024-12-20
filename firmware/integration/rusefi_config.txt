@@ -225,6 +225,9 @@ struct_no_prefix engine_configuration_s
 #define PEDAL_TO_TPS_SIZE 8
 #define FUEL_LEVEL_TABLE_COUNT 8
 
+#define FUEL_TRIM_RPM_COUNT 8
+#define FUEL_TRIM_LOAD_COUNT 8
+
 #define STFT_CELL_COUNT 4
 
 #define CAN_DEFAULT_BASE 0x200
@@ -1809,7 +1812,11 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 
     float fuelLevelAveragingAlpha;Exponential Average Alpha filtering parameter;"", 1, 0, 0.0001, 1, 4
     float fuelLevelUpdatePeriodSec;How often do we update fuel level gauge;"seconds", 1, 0, 0, 60000, 3
-#define END_OF_CALIBRATION_PADDING 58
+
+	uint8_t[FUEL_TRIM_RPM_COUNT] autoscale trimRpmBins;;"RPM", 100, 0, 0, 25000, 0
+	uint16_t[FUEL_TRIM_LOAD_COUNT] trimLoadBins;;"", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
+
+#define END_OF_CALIBRATION_PADDING 36
 uint8_t[END_OF_CALIBRATION_PADDING] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
