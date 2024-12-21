@@ -9,6 +9,10 @@ import java.util.Date;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * basic protocol client
+ * @see BinaryProtocolServerSandbox
+ */
 public class SerialSandbox {
     public static void main(String[] args) throws InterruptedException {
         boolean textPull = false;
