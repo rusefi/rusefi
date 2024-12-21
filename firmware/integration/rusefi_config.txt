@@ -2428,6 +2428,8 @@ end_struct
 #define ts_show_injection_mode true
 #define ts_show_maf true
 #define ts_show_full_pinout true
+! see also EFI_IDLE_PID_CIC which is usually FALSE
+#define ts_cic_idle false
 #define ts_show_egt true
 #define ts_show_k_line false
 #define ts_show_spi1_enable true
