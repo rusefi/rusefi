@@ -121,6 +121,11 @@ const engine_state_s* getLiveData(size_t) {
 }
 
 template<>
+const prime_injection_s* getLiveData(size_t) {
+	return &engine->module<PrimeController>().unmock();
+}
+
+template<>
 const tps_accel_state_s* getLiveData(size_t) {
 	return &engine->module<TpsAccelEnrichment>().unmock();
 }

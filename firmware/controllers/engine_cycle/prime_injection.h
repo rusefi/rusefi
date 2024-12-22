@@ -8,8 +8,9 @@
 #include "engine_module.h"
 #include "rusefi_types.h"
 #include "scheduler.h"
+#include "prime_injection_generated.h"
 
-class PrimeController : public EngineModule {
+class PrimeController : public EngineModule, public prime_injection_s {
 public:
 	void onIgnitionStateChanged(bool ignitionOn) override;
 	void onSlowCallback() override;
@@ -24,7 +25,6 @@ public:
 	}
 
 private:
-	bool m_isPriming = false;
 
 	static void onPrimeStartAdapter(PrimeController* instance) {
 		instance->onPrimeStart();

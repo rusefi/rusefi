@@ -1,0 +1,4 @@
+struct_no_prefix prime_injection_s
+  bit m_isPriming;"IsFuelPriming"
+end_struct
+
