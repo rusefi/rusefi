@@ -2,6 +2,7 @@
 decl_frag<output_channels_s>{},
 decl_frag<fuel_computer_s>{},
 decl_frag<ignition_state_s>{},
+decl_frag<prime_injection_s>{},
 decl_frag<knock_controller_s>{},
 decl_frag<tcu_controller_s>{},
 decl_frag<throttle_model_s>{},

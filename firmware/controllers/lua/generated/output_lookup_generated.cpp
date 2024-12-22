@@ -955,6 +955,9 @@ float getOutputValueByName(const char *name) {
 // luaIgnitionSkip
 		case -1916613921:
 			return engine->ignitionState.luaIgnitionSkip;
+// m_isPriming
+		case -612624925:
+			return ___engine.module<PrimeController>()->m_isPriming;
 // m_knockLevel
 		case -1571781441:
 			return ___engine.module<KnockController>()->m_knockLevel;

@@ -6,6 +6,7 @@
 // start of prime_injection_s
 struct prime_injection_s {
 	/**
+	 * "IsFuelPriming"
 	offset 0 bit 0 */
 	bool m_isPriming : 1 {};
 	/**
