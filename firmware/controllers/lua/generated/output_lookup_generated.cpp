@@ -955,9 +955,6 @@ float getOutputValueByName(const char *name) {
 // luaIgnitionSkip
 		case -1916613921:
 			return engine->ignitionState.luaIgnitionSkip;
-// m_isPriming
-		case -612624925:
-			return ___engine.module<PrimeController>()->m_isPriming;
 // m_knockLevel
 		case -1571781441:
 			return ___engine.module<KnockController>()->m_knockLevel;
@@ -985,6 +982,9 @@ float getOutputValueByName(const char *name) {
 // m_knockFuelTrimMultiplier
 		case 95716118:
 			return ___engine.module<KnockController>()->m_knockFuelTrimMultiplier;
+// m_isPriming
+		case -612624925:
+			return ___engine.module<PrimeController>()->m_isPriming;
 // m_deadtime
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case -1167844818:

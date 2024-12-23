@@ -6,8 +6,8 @@ typedef enum {
 LDS_output_channels,
 LDS_fuel_computer,
 LDS_ignition_state,
-LDS_prime_injection,
 LDS_knock_controller,
+LDS_prime_injection,
 LDS_tcu_controller,
 LDS_throttle_model,
 LDS_high_pressure_fuel_pump,
@@ -45,8 +45,8 @@ LDS_lambda_monitor,
 #define OUTPUT_CHANNELS_BASE_ADDRESS 0
 #define FUEL_COMPUTER_BASE_ADDRESS 860
 #define IGNITION_STATE_BASE_ADDRESS 912
-#define PRIME_INJECTION_BASE_ADDRESS 956
-#define KNOCK_CONTROLLER_BASE_ADDRESS 960
+#define KNOCK_CONTROLLER_BASE_ADDRESS 956
+#define PRIME_INJECTION_BASE_ADDRESS 1064
 #define TCU_CONTROLLER_BASE_ADDRESS 1068
 #define THROTTLE_MODEL_BASE_ADDRESS 1084
 #define HIGH_PRESSURE_FUEL_PUMP_BASE_ADDRESS 1096
