@@ -56,11 +56,16 @@ void ProtectedGpio::check(efitick_t /*nowNt*/) {
 		return;
 	}
 
-	float senseVolts = adcGetRawVoltage("protected", m_config->SenseChannel);
-	float amps = senseVolts * m_config->AmpsPerVolt;
+	auto senseVolts = adcGetRawVoltage("protected", m_config->SenseChannel);
+	if (senseVolts) {
+		float amps = senseVolts.value_or(0) * m_config->AmpsPerVolt;
 
-	// TODO: smarter state machine
-	if (amps > m_config->MaximumAllowedCurrent) {
+		// TODO: smarter state machine
+		if (amps > m_config->MaximumAllowedCurrent) {
+			m_output.setValue(false);
+		}
+	} else {
+		/* shutdown if failed to measure current */
 		m_output.setValue(false);
 	}
 }

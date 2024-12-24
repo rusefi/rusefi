@@ -9,14 +9,16 @@
 
 #include "boards.h"
 
-int adcGetRawValue(const char *msg, adc_channel_e hwChannel) {
+int adcGetRawValue(const char * /*msg*/, int /*hwChannel*/) {
 	return 0;
 }
 
-float adcGetRawVoltage(const char *msg, adc_channel_e hwChannel) {
-	return 0;
+// voltage in MCU universe, from zero to VDD
+expected<float> adcGetRawVoltage(const char *msg, adc_channel_e hwChannel) {
+	return expected(0.0f);
 }
 
-float adcGetScaledVoltage(const char *msg, adc_channel_e hwChannel) {
-	return 0;
+// voltage in ECU universe, with all input dividers and OpAmps gains taken into account, voltage at ECU connector pin
+expected<float> adcGetScaledVoltage(const char *msg, adc_channel_e hwChannel) {
+	return expected(0.0f);
 }
