@@ -32,26 +32,8 @@ namespace {
 			calculateNextFilteredValue(EXPECTED_FILTERED_VALUE_1, INPUT_VALUE_2, TEST_FUEL_LEVEL_ALPHA);
 		static constexpr uint8_t EXPECTED_FUEL_LEVEL_2 = 67;
 
-		static constexpr FuelLevelBinsCurve TEST_FUEL_LEVEL_BINS = {
-			1.932f,
-			11.932f,
-			21.932f,
-			31.932,
-			32.932,
-			EXPECTED_FILTERED_VALUE_2,
-			EXPECTED_FILTERED_VALUE_1,
-			EXPECTED_FILTERED_VALUE_0
-		};
-		static constexpr FuelLevelValuesCurve TEST_FUEL_LEVEL_VALUES = {
-			12,
-			23,
-			34,
-			45,
-			46,
-			EXPECTED_FUEL_LEVEL_2,
-			EXPECTED_FUEL_LEVEL_1,
-			EXPECTED_FUEL_LEVEL_0
-		};
+		static const FuelLevelBinsCurve TEST_FUEL_LEVEL_BINS;
+		static const FuelLevelValuesCurve TEST_FUEL_LEVEL_VALUES;
 
 		void SetUp() override;
 
@@ -59,15 +41,20 @@ namespace {
 
 		void checkThatNewValueIsIgnoredDuringUpdatePeriod(float previousValue);
 	private:
+		static FuelLevelBinsCurve getTestFuelLevelBins();
+		static FuelLevelValuesCurve getTestFuelLevelValues();
 		std::unique_ptr<FuelLevelFunc> m_fuelLevelFunc;
 	};
+
+	const FuelLevelBinsCurve FuelLevelFuncTest::TEST_FUEL_LEVEL_BINS = FuelLevelFuncTest::getTestFuelLevelBins();
+	const FuelLevelValuesCurve FuelLevelFuncTest::TEST_FUEL_LEVEL_VALUES = FuelLevelFuncTest::getTestFuelLevelValues();
 
 	void FuelLevelFuncTest::SetUp() {
 		TestBase::SetUp();
 
 		setUpEngineConfiguration(EngineConfig()
-			.setFuelLevelUpdatePeriodSec(TEST_FUEL_LEVEL_UPDATE_PERIOD_SEC)
-			.setFuelLevelAveragingAlpha(TEST_FUEL_LEVEL_ALPHA)
+				                         .setFuelLevelUpdatePeriodSec(TEST_FUEL_LEVEL_UPDATE_PERIOD_SEC)
+				                         .setFuelLevelAveragingAlpha(TEST_FUEL_LEVEL_ALPHA)
 		);
 
 		getTestPersistentConfiguration().setFuelLevelBinsCurve(TEST_FUEL_LEVEL_BINS);
@@ -90,16 +77,49 @@ namespace {
 		EXPECT_EQ(convert(11.1f), previousValue);
 	}
 
-	TEST_F(FuelLevelFuncTest, checkConversion) {
-		EXPECT_EQ(convert(INPUT_VALUE_0), EXPECTED_FUEL_LEVEL_0);
-		checkThatNewValueIsIgnoredDuringUpdatePeriod(EXPECTED_FUEL_LEVEL_0);
+	FuelLevelBinsCurve FuelLevelFuncTest::getTestFuelLevelBins() {
+		FuelLevelBinsCurve result;
+		const long binsCount = result.size();
+		float nextBin = 0.0f;
+		// Initialize first bins with arbitrary increasing values:
+		for (int i = 0; i < binsCount - 3; i++) {
+			nextBin += 0.1f;
+			result[i] = nextBin;
+		}
+		result[binsCount - 3] = EXPECTED_FILTERED_VALUE_2;
+		result[binsCount - 2] = EXPECTED_FILTERED_VALUE_1;
+		result[binsCount - 1] = EXPECTED_FILTERED_VALUE_0;
 
-		advanceTimeUs(1);
-		EXPECT_EQ(convert(INPUT_VALUE_1), EXPECTED_FUEL_LEVEL_1);
-		checkThatNewValueIsIgnoredDuringUpdatePeriod(EXPECTED_FUEL_LEVEL_1);
+		// Validate bins - they should be increasing
+		float latestBin = 0.0f;
+		for (const float bin: result) {
+			EXPECT_TRUE(latestBin < bin);
+			latestBin = bin;
+		}
 
-		advanceTimeUs(1);
-		EXPECT_EQ(convert(INPUT_VALUE_2), EXPECTED_FUEL_LEVEL_2);
-		checkThatNewValueIsIgnoredDuringUpdatePeriod(EXPECTED_FUEL_LEVEL_2);
+		return result;
 	}
+
+	FuelLevelValuesCurve FuelLevelFuncTest::getTestFuelLevelValues() {
+		FuelLevelValuesCurve result;
+		result.fill(12);
+		const long valuesCount = result.size();
+		result[valuesCount - 3] = EXPECTED_FUEL_LEVEL_2;
+		result[valuesCount - 2] = EXPECTED_FUEL_LEVEL_1;
+		result[valuesCount - 1] = EXPECTED_FUEL_LEVEL_0;
+		return result;
+	}
+
+	TEST_F(FuelLevelFuncTest, checkConversion) {
+	EXPECT_EQ(convert(INPUT_VALUE_0), EXPECTED_FUEL_LEVEL_0);
+	checkThatNewValueIsIgnoredDuringUpdatePeriod(EXPECTED_FUEL_LEVEL_0);
+
+	advanceTimeUs(1);
+	EXPECT_EQ(convert(INPUT_VALUE_1), EXPECTED_FUEL_LEVEL_1);
+	checkThatNewValueIsIgnoredDuringUpdatePeriod(EXPECTED_FUEL_LEVEL_1);
+
+	advanceTimeUs(1);
+	EXPECT_EQ(convert(INPUT_VALUE_2), EXPECTED_FUEL_LEVEL_2);
+	checkThatNewValueIsIgnoredDuringUpdatePeriod(EXPECTED_FUEL_LEVEL_2);
+}
 }
