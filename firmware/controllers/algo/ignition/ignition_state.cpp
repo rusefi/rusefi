@@ -1,5 +1,5 @@
 /**
- * @file	advance_map.cpp
+ * @file ignition_state.cpp
  *
  * @date Mar 27, 2013
  * @author Andrey Belomutskiy, (c) 2012-2020
@@ -20,7 +20,6 @@
 
 #include "pch.h"
 
-#include "advance_map.h"
 #include "idle_thread.h"
 #include "launch_control.h"
 #include "gppwm_channel.h"
