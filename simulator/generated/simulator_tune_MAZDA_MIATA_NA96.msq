@@ -215,7 +215,7 @@
         <constant name="vbattAdcChannel">"Disabled"</constant>
         <constant name="fuelLevelSensor">"Disabled"</constant>
         <constant name="tps2_1AdcChannel">"Disabled"</constant>
-        <constant digits="4" name="idle_derivativeFilterLoss" units="x">0.08</constant>
+        <constant digits="4" name="idle_derivativeFilterLoss" units="x">0.0</constant>
         <constant digits="0" name="trailingSparkAngle" units="angle">10.0</constant>
         <constant name="trigger_type">"Miata NA"</constant>
         <constant digits="0" name="trigger_customTotalToothCount" units="number">0.0</constant>
@@ -225,7 +225,7 @@
         <constant digits="0" name="boostControlSafeDutyCycle" units="%">0.0</constant>
         <constant name="mafAdcChannel">"Disabled"</constant>
         <constant digits="0" name="acrRevolutions" units="">5.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0241223E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0241224E7</constant>
         <constant digits="3" name="adcVcc" units="volts">3.0</constant>
         <constant digits="0" name="mapCamDetectionAnglePosition" units="Deg">0.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -316,7 +316,7 @@
         <constant name="throttlePedalPositionSecondAdcChannel">"Disabled"</constant>
         <constant name="afr_type">"14Point7"</constant>
         <constant name="mc33810_cs1">"NONE"</constant>
-        <constant digits="4" name="idle_antiwindupFreq" units="x">0.03</constant>
+        <constant digits="4" name="idle_antiwindupFreq" units="x">0.0</constant>
         <constant name="triggerInputPins1">"NONE"</constant>
         <constant name="triggerInputPins2">"NONE"</constant>
         <constant digits="0" name="mc33_t_min_boost" units="us">100.0</constant>
@@ -4837,7 +4837,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20241218" nPages="1" signature="rusEFI master.2024.12.23.f407-discovery.1198445042" version="5.0"/>
+    <versionInfo firmwareInfo="20241218" nPages="1" signature="rusEFI master.2024.12.24.f407-discovery.1198445042" version="5.0"/>
     <bibliography author="rusEFI 20241218" writeDate="date"/>
     <settings/>
     <userComments/>
