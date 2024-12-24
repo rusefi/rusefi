@@ -6,6 +6,7 @@ DOCS_ENUMS_INPUTS = \
   $(PROJECT_DIR)/controllers/engine_cycle/prime_injection.txt \
   $(PROJECT_DIR)/controllers/trigger/trigger_central.txt \
   $(PROJECT_DIR)/controllers/trigger/trigger_state.txt \
+  $(PROJECT_DIR)/controllers/algo/ignition_controller.txt \
   $(PROJECT_DIR)/controllers/actuators/idle_state.txt \
   $(PROJECT_DIR)/controllers/actuators/electronic_throttle.txt \
   $(PROJECT_DIR)/integration/LiveData.yaml \

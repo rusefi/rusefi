@@ -212,7 +212,7 @@ const idle_state_s* getLiveData(size_t) {
 }
 
 template<>
-const ignition_state_s* getLiveData(size_t) {
+const ignition_controller_s* getLiveData(size_t) {
 	return &engine->ignitionState;
 }
 

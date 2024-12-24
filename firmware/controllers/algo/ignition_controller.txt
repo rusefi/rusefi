@@ -1,6 +1,6 @@
 ! "units",scale,offset, min,max, digits,category
 
-struct_no_prefix ignition_state_s
+struct_no_prefix ignition_controller_s
     float baseDwell;"Ignition: base dwell";"ms", 1,0, 0,30, 1,@@GAUGE_CATEGORY_TIMING@@
 	floatms_t sparkDwell;@@GAUGE_COIL_DWELL_TIME@@;"ms", 1,0, 0,30, 1,@@GAUGE_CATEGORY_TIMING@@
 
