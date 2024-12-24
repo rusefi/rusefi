@@ -204,7 +204,7 @@ public:
 
 	// Returns true if syncEnginePhase has been called,
 	// i.e. if we have enough VVT information to have full sync on
-	// an indeterminite crank pattern
+	// an indeterminate crank pattern
 	bool hasSynchronizedPhase() const {
 		return m_hasSynchronizedPhase;
 	}
