@@ -14,7 +14,6 @@
 #include "pch.h"
 
 #include "GY6_139QMB.h"
-#include "advance_map.h"
 
 void setGy6139qmbDefaultEngineConfiguration() {
 //        engineConfiguration->map.sensor.type = MT_3V_SENSOR;

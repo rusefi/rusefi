@@ -10,7 +10,6 @@
 #include "fuel_math.h"
 #include "trigger_structure.h"
 #include "trigger_decoder.h"
-#include "advance_map.h"
 
 using ::testing::FloatNear;
 

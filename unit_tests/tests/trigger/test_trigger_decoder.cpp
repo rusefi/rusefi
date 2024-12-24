@@ -14,7 +14,6 @@
 #include "event_queue.h"
 #include "trigger_mazda.h"
 #include "trigger_chrysler.h"
-#include "advance_map.h"
 #include "speed_density.h"
 #include "fuel_math.h"
 #include "spark_logic.h"

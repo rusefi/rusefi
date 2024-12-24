@@ -9,7 +9,6 @@
 
 #include "speed_density.h"
 #include "maf.h"
-#include "advance_map.h"
 
 TEST(misc, testIgnitionPlanning) {
 	printf("*************************************************** testIgnitionPlanning\r\n");
