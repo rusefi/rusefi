@@ -60,8 +60,6 @@ struct_no_prefix engine_state_s
 	float luaHardSparkSkip
 	float tractionControlSparkSkip
 
-	int16_t desiredRpmLimit;User-defined RPM hard limit;"rpm", 1, 0, 0, 30000, 0
-
 	uint32_t fuelInjectionCounter;Fuel: Injection counter
 	uint32_t globalSparkCounter;Ign: Spark counter
 
