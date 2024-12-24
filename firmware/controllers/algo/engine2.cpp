@@ -81,9 +81,6 @@ EngineState::EngineState() {
 	timeSinceLastTChargeK.reset(getTimeNowNt());
 }
 
-void EngineState::updateSlowSensors() {
-}
-
 void EngineState::updateSparkSkip() {
 #if EFI_LAUNCH_CONTROL
 		engine->softSparkLimiter.updateTargetSkipRatio(luaSoftSparkSkip, tractionControlSparkSkip);
