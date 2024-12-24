@@ -9,18 +9,16 @@ TEST(realBQS, readAsPrimarySensor) {
 
 	EngineTestHelper eth(engine_type_e::ET_BOSCH_QUICK_START);
 
-	int eventCount = 0;
 	bool gotRpm = false;
 	while (reader.haveMore()) {
  		reader.processLine(&eth);
-		eventCount++;
 		engine->rpmCalculator.onSlowCallback();
 
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 		if (!gotRpm && rpm) {
 			gotRpm = true;
 
-			EXPECT_EQ(eventCount, 13);
+			EXPECT_EQ(reader.lineIndex(), 13);
 			EXPECT_NEAR(rpm, 2035.53466f, 0.1);
 			break;
 		}
@@ -40,7 +38,6 @@ TEST(realBQS, readAsCam) {
 	hwHandleShaftSignal(0, false, 3000000);
 	eth.assertRpm(3000);
 
-	int eventCount = 0;
 	  CsvReader reader(/*triggerCount*/0, /* vvtCount */ 1);
 	  reader.open("tests/trigger/resources/BQS-longer.csv");
 	  reader.flipVvtOnRead = true;
@@ -52,11 +49,10 @@ TEST(realBQS, readAsCam) {
 	bool gotVvt = false;
 	while (reader.haveMore()) {
  		reader.processLine(&eth);
-		eventCount++;
 
 		if (!gotVvt && vvtDecoder.getShaftSynchronized()) {
 			gotVvt = true;
-			EXPECT_EQ(eventCount, 13);
+			EXPECT_EQ(reader.lineIndex(), 13);
 		}
 	}
 	ASSERT_DOUBLE_EQ(-247.03125, tc->getVVTPosition(0, 0));

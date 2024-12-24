@@ -12,12 +12,10 @@ TEST(crankingGm24x_5, gmRealCrankingFromFile) {
 
 	eth.setTriggerType(trigger_type_e::TT_GM_24x_5);
 
-	int eventCount = 0;
 	bool gotRpm = false;
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
-		eventCount++;
 
 		engine->rpmCalculator.onSlowCallback();
 
@@ -30,7 +28,7 @@ TEST(crankingGm24x_5, gmRealCrankingFromFile) {
 			gotRpm = true;
 
 			// We should get first RPM on exactly the first sync point - this means the instant RPM pre-sync event copy all worked OK
-			EXPECT_EQ(eventCount, 23);
+			EXPECT_EQ(reader.lineIndex(), 23);
 			EXPECT_NEAR(rpm, 77.0f, 0.1);
 		}
 	}

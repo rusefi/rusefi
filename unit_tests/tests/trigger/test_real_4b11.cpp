@@ -16,12 +16,11 @@ TEST(real4b11, running) {
 
 	eth.setTriggerType(trigger_type_e::TT_36_2_1);
 
-	int eventCount = 0;
 	bool gotRpm = false;
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
-		eventCount++;
+
 		engine->rpmCalculator.onSlowCallback();
 
 		// Expect that all teeth are in the correct spot
@@ -33,7 +32,7 @@ TEST(real4b11, running) {
 			gotRpm = true;
 
 			// We should get first RPM on exactly the first sync point - this means the instant RPM pre-sync event copy all worked OK
-			EXPECT_EQ(eventCount, 30);
+			EXPECT_EQ(reader.lineIndex(), 30);
 			EXPECT_NEAR(rpm, 1436.23f, 0.1);
 		}
 	}
@@ -52,12 +51,12 @@ TEST(real4b11, runningDoubledEdge) {
 
 	eth.setTriggerType(trigger_type_e::TT_36_2_1);
 
-	int eventCount = 0;
+
 	bool gotRpm = false;
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
-		eventCount++;
+
 		engine->rpmCalculator.onSlowCallback();
 
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
@@ -65,7 +64,7 @@ TEST(real4b11, runningDoubledEdge) {
 			gotRpm = true;
 
 			// We should get first RPM on exactly the first sync point - this means the instant RPM pre-sync event copy all worked OK
-			EXPECT_EQ(eventCount, 30);
+			EXPECT_EQ(reader.lineIndex(), 30);
 			EXPECT_NEAR(rpm, 1436.23f, 0.1);
 		}
 	}

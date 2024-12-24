@@ -22,13 +22,12 @@ TEST(realCas24Plus1, spinningOnBench) {
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
 	eth.setTriggerType(trigger_type_e::TT_12_TOOTH_CRANK);
 
-	int eventCount = 0;
 	bool gotRpm = false;
 	bool gotFullSync = false;
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
-		eventCount++;
+
 		engine->rpmCalculator.onSlowCallback();
 
 		// Expect that all teeth are in the correct spot
@@ -40,7 +39,7 @@ TEST(realCas24Plus1, spinningOnBench) {
 			gotRpm = true;
 
 			// We should get first RPM on exactly the first (primary) sync point - this means the instant RPM pre-sync event copy all worked OK
-			EXPECT_EQ(eventCount, 7);
+			EXPECT_EQ(reader.lineIndex(), 7);
 			EXPECT_NEAR(rpm, 808.32f, 0.1);
 		}
 
@@ -49,7 +48,7 @@ TEST(realCas24Plus1, spinningOnBench) {
 			gotFullSync = true;
 
 			// Should get full sync on the first cam tooth
-			EXPECT_EQ(eventCount, 40);
+			EXPECT_EQ(reader.lineIndex(), 40);
 			EXPECT_NEAR(rpm, 915.08f, 0.1);
 		}
 
