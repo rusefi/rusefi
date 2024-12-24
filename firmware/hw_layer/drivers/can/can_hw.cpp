@@ -111,16 +111,6 @@ void setCanType(int type) {
 	canInfo();
 }
 
-#if EFI_TUNER_STUDIO
-void postCanState() {
-	if (!isCanEnabled) {
-		engine->outputChannels.canReadCounter = -1;
-		engine->outputChannels.canWriteOk = -1;
-		engine->outputChannels.canWriteNotOk = -1;
-	}
-}
-#endif /* EFI_TUNER_STUDIO */
-
 void stopCanPins() {
 	efiSetPadUnusedIfConfigurationChanged(canTxPin);
 	efiSetPadUnusedIfConfigurationChanged(canRxPin);
