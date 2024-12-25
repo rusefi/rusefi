@@ -141,9 +141,10 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 EngineTestHelper::~EngineTestHelper() {
 	// Write history to file
 	extern bool hasInitGtest;
+	auto testInfo = ::testing::UnitTest::GetInstance()->current_test_info();
 	if (hasInitGtest) {
     	std::stringstream filePath;
-    	filePath << "unittest_" << ::testing::UnitTest::GetInstance()->current_test_info()->name() << ".logicdata";
+    	filePath << "unittest_" << testInfo->test_case_name() << "_" << testInfo->name() << ".logicdata";
 	    writeEvents(filePath.str().c_str());
 	}
 
