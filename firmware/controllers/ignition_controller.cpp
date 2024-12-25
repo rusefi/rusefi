@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "sleep_controller.h"
 
 void sleepEnter() {
 	writeToFlashNow();
