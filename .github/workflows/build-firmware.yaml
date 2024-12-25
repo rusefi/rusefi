@@ -12,6 +12,7 @@ name: Firmware at GHA
 #
 
 on:
+  workflow_dispatch:
   push:
 #  workflow_run:
 #    workflows: ["Configs & Live Docs"]
