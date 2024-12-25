@@ -121,6 +121,7 @@
 #define bench_mode_e_HD_ACR2 29
 #define BENCH_STARTER_DURATION 4000
 #define BENCH_VVT_DURATION 300
+#define BLEND_TABLE_COUNT 8
 #define blend_table_s_size 188
 #define BLOCKING_FACTOR 1024
 #define BOARD_CONFIG_FROM_FILE 
@@ -204,6 +205,7 @@
 #define CanGpioType_NONE 0
 #define CLT_CRANKING_CURVE_SIZE 8
 #define CLT_CURVE_SIZE 16
+#define CLT_FUEL_CURVE_SIZE 16
 #define CLT_LIMITER_CURVE_SIZE 4
 #define CLT_TIMING_CURVE_SIZE 8
 #define CLT_UPPER_LIMIT 250
@@ -352,8 +354,8 @@
 #define ego_sensor_e_ES_Innovate_MTX_L 1
 #define ego_sensor_e_ES_PLX 4
 #define EGT_CHANNEL_COUNT 8
-#define END_OF_CALIBRATION_PADDING 72
-#define engine_configuration_s_size 4080
+#define END_OF_CALIBRATION_PADDING 58
+#define engine_configuration_s_size 4084
 #define engine_load_mode_e_auto_enum 0="LM_SPEED_DENSITY",2="LM_ALPHA_N",3="LM_LUA",100="LM_MOCK",1="LM_REAL_MAF"
 #define engine_load_mode_e_enum "Speed Density", "MAF Air Charge", "Alpha-N", "Lua"
 #define engine_load_mode_e_LM_ALPHA_N 2
@@ -1080,6 +1082,7 @@
 #define HPFP_TARGET_SIZE 10
 #define IAC_PID_MULT_SIZE 8
 #define IAT_CURVE_SIZE 16
+#define IAT_IGN_CORR_COUNT 8
 #define IDLE_ADVANCE_CURVE_SIZE 8
 #define idle_hardware_s_size 12
 #define idle_mode_e_auto_enum 0="IM_AUTO",1="IM_MANUAL"
@@ -1114,6 +1117,8 @@
 #define INDICATOR_NAME_BRAKE_DOWN "Brake switch"
 #define INDICATOR_NAME_CLUTCH_DOWN "Clutch: down"
 #define INDICATOR_NAME_CLUTCH_UP "Clutch: up"
+#define INJ_PHASE_LOAD_COUNT 16
+#define INJ_PHASE_RPM_COUNT 16
 #define INJ_STAGING_COUNT 6
 #define injection_mode_e_auto_enum 0="IM_SIMULTANEOUS",2="IM_BATCH",1="IM_SEQUENTIAL",3="IM_SINGLE_POINT"
 #define injection_mode_e_IM_BATCH 2
@@ -1139,7 +1144,6 @@
 #define InjectorNonlinearMode_INJ_None 0
 #define InjectorNonlinearMode_INJ_PolynomialAdder 1
 #define KNOCK_TABLE_SIZE 6
-#define LAMBDA_BLEND_COUNT 2
 #define launchActivationMode_e_ALWAYS_ACTIVE_LAUNCH 2
 #define launchActivationMode_e_auto_enum 0="SWITCH_INPUT_LAUNCH",2="ALWAYS_ACTIVE_LAUNCH",1="CLUTCH_INPUT_LAUNCH",3="STOP_INPUT_LAUNCH"
 #define launchActivationMode_e_CLUTCH_INPUT_LAUNCH 1
@@ -1250,7 +1254,7 @@
 #define pedalSensor_NAME "Accelerator pedal"
 #define pedalToTpsTbl_NAME "ETB pedal target"
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 24040
+#define persistent_config_s_size 24044
 #define pid_s_size 20
 #define pin_input_mode_e_auto_enum 0="PI_DEFAULT",2="PI_PULLDOWN",1="PI_PULLUP"
 #define pin_input_mode_e_enum "DEFAULT", "PULLUP", "PULLDOWN"
@@ -1331,7 +1335,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2318295048
+#define SIGNATURE_HASH 1448292996
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1365,6 +1369,7 @@
 #define TABLE_3_LOAD_SIZE 8
 #define TABLE_3_RPM_SIZE 8
 #define TABLE_4_RPM 10
+#define TARGET_AFR_BLEND_COUNT 2
 #define tChargeMode_e_auto_enum 0="TCHARGE_MODE_RPM_TPS",1="TCHARGE_MODE_AIR_INTERP",2="TCHARGE_MODE_AIR_INTERP_TABLE"
 #define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation", "Table"
 #define tChargeMode_e_TCHARGE_MODE_AIR_INTERP 1
@@ -1389,11 +1394,13 @@
 #define TOOTH_PACKET_SIZE 2
 #define TOP_DEAD_CENTER_MESSAGE "r"
 #define TORQUE_CURVE_SIZE 6
-#define torqueReductionActivationMode_e_auto_enum 0="TORQUE_REDUCTION_BUTTON",1="LAUNCH_BUTTON"
-#define torqueReductionActivationMode_e_enum "Torque Reduction Button", "Launch Button"
+#define torqueReductionActivationMode_e_auto_enum 0="TORQUE_REDUCTION_BUTTON",1="LAUNCH_BUTTON",2="TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH",3="TORQUE_REDUCTION_CLUTCH_UP_SWITCH"
+#define torqueReductionActivationMode_e_enum "Torque Reduction Button", "Launch Button", "Clutch Down Switch", "Clutch Up Switch"
 #define torqueReductionActivationMode_e_LAUNCH_BUTTON 1
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON 0
-#define TOTAL_CONFIG_SIZE 24040
+#define torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH 2
+#define torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_UP_SWITCH 3
+#define TOTAL_CONFIG_SIZE 24044
 #define TPS_2_BYTE_PACKING_MULT 100
 #define TPS_PPS_TOO_HIGH_THRESHOLD 110
 #define TPS_PPS_TOO_LOW_THRESHOLD -10
@@ -1544,6 +1551,7 @@
 #define TS_BURN_COMMAND_char B
 #define TS_CHUNK_WRITE_COMMAND 'C'
 #define TS_CHUNK_WRITE_COMMAND_char C
+#define ts_cic_idle false
 #define ts_command_e_TS_BENCH_CATEGORY 22
 #define ts_command_e_TS_BOARD_ACTION 29
 #define ts_command_e_TS_CLEAR_WARNINGS 17
@@ -1688,7 +1696,7 @@
 #define ts_show_final_ratio true
 #define ts_show_firing_order true
 #define ts_show_flex_inverted true
-#define ts_show_forced_induction true
+#define ts_show_forced_induction false
 #define ts_show_ford_toyota_tps_pps true
 #define ts_show_fuel_level_sensor true
 #define ts_show_fuel_pressure_sensor true
@@ -1733,6 +1741,7 @@
 #define ts_show_main_relay true
 #define ts_show_main_relay_microRusEFI_message false
 #define ts_show_mc33810 false
+#define ts_show_mc33810_cs false
 #define ts_show_multispark true
 #define ts_show_number_of_cylinders true
 #define ts_show_odd_fire true
@@ -1778,8 +1787,10 @@
 #define ts_show_tps_sent false
 #define ts_show_trigger_advanced true
 #define ts_show_trigger_comparator false
+#define ts_show_trigger_gap_override_flag true
 #define ts_show_trigger_overrides true
 #define ts_show_trigger_pins true
+#define ts_show_tsp_pps_limits true
 #define ts_show_tunerstudio_port true
 #define ts_show_vbatt true
 #define ts_show_vehicle_speed_sensor true
@@ -1792,14 +1803,14 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI testsDG.2024.12.25.f429-discovery.2318295048"
+#define TS_SIGNATURE "rusEFI testsDG.2024.12.25.f429-discovery.1448292996"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 1824
+#define TS_TOTAL_OUTPUT_SIZE 1828
 #define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "Channel 1"
 #define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "Channel 2"
 #define TS_TRIGGER_SCOPE_DISABLE 5

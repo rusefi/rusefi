@@ -54,8 +54,8 @@
 #define adc_channel_e_EFI_ADC_ERROR 50
 #define adc_channel_e_EFI_ADC_NONE 0
 #define adc_channel_e_EFI_ADC_TOTAL_CHANNELS 49
-#define adc_channel_e_enum 0="NONE",27="10A - Aux Analog 5",18="11A - Aux Analog 3",16="12A - Aux Analog 8",9="19A - Aux Analog 6",10="1A - Aux Analog 1",32="20A - Aux Analog 9",6="24 - Ignition Key Voltage",14="27A - IAT Sensor Input",30="28A - Aux Temp 1",29="28A - Aux Temp 2",13="29A - CLT Sensor Input",11="2A - MAP / Aux Analog 4",5="31A - TPS Sensor Input",4="32A - PPS Sensor Input",21="33A - TPS2 Sensor Input",20="34A - PPS2 Sensor Input",2="3A - Aux Analog 2",25="4A - Aux Analog 7",3="On-board MAP"
-#define adc_channel_e_fullenum "NONE","INVALID","3A - Aux Analog 2","On-board MAP","32A - PPS Sensor Input","31A - TPS Sensor Input","24 - Ignition Key Voltage","INVALID","INVALID","19A - Aux Analog 6","1A - Aux Analog 1","2A - MAP / Aux Analog 4","INVALID","29A - CLT Sensor Input","27A - IAT Sensor Input","INVALID","12A - Aux Analog 8","INVALID","11A - Aux Analog 3","INVALID","34A - PPS2 Sensor Input","33A - TPS2 Sensor Input","INVALID","INVALID","INVALID","4A - Aux Analog 7","INVALID","10A - Aux Analog 5","INVALID","28A - Aux Temp 2","28A - Aux Temp 1","INVALID","20A - Aux Analog 9"
+#define adc_channel_e_enum 0="NONE",27="10A - Aux Analog 5",18="11A - Aux Analog 3",16="12A - Aux Analog 8",9="19A - Aux Analog 6",10="1A - Aux Analog 1",32="20A - Aux Analog 9",6="24B - Ignition Key Voltage",14="27A - IAT Sensor Input",30="28A - Aux Temp 1",13="29A - CLT Sensor Input",11="2A - MAP / Aux Analog 4",29="30A - Aux Temp 2",5="31A - TPS Sensor Input",4="32A - PPS Sensor Input",21="33A - TPS2 Sensor Input",20="34A - PPS2 Sensor Input",2="3A - Aux Analog 2",25="4A - Aux Analog 7",3="On-board MAP"
+#define adc_channel_e_fullenum "NONE","INVALID","3A - Aux Analog 2","On-board MAP","32A - PPS Sensor Input","31A - TPS Sensor Input","24B - Ignition Key Voltage","INVALID","INVALID","19A - Aux Analog 6","1A - Aux Analog 1","2A - MAP / Aux Analog 4","INVALID","29A - CLT Sensor Input","27A - IAT Sensor Input","INVALID","12A - Aux Analog 8","INVALID","11A - Aux Analog 3","INVALID","34A - PPS2 Sensor Input","33A - TPS2 Sensor Input","INVALID","INVALID","INVALID","4A - Aux Analog 7","INVALID","10A - Aux Analog 5","INVALID","30A - Aux Temp 2","28A - Aux Temp 1","INVALID","20A - Aux Analog 9"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define air_pressure_sensor_config_s_size 12
@@ -121,6 +121,7 @@
 #define bench_mode_e_HD_ACR2 29
 #define BENCH_STARTER_DURATION 4000
 #define BENCH_VVT_DURATION 300
+#define BLEND_TABLE_COUNT 8
 #define blend_table_s_size 188
 #define BLOCKING_FACTOR 1024
 #define BOARD_CONSTANTS_EXTENSIONS_FROM_FILE 
@@ -142,8 +143,8 @@
 #define boostType_e_auto_enum 0="OPEN_LOOP",1="CLOSED_LOOP"
 #define boostType_e_CLOSED_LOOP 1
 #define boostType_e_OPEN_LOOP 0
-#define brain_input_pin_e_enum 0="NONE",86="13A - Hall Input 5",78="15A - Hall Input 1",12="1B - VR1-/Hall Input max9924",87="21B - Flex",79="23A - Hall Input 2",80="24A - Hall Input 3 / SENT",93="26A - VSS Hall",8="3B/4B - VR2",127="5B/6B - VR3",122="7B/13B - VR4",81="9A - Hall Input 4"
-#define brain_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","3B/4B - VR2","INVALID","INVALID","INVALID","1B - VR1-/Hall Input max9924","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","15A - Hall Input 1","23A - Hall Input 2","24A - Hall Input 3 / SENT","9A - Hall Input 4","INVALID","INVALID","INVALID","INVALID","13A - Hall Input 5","21B - Flex","INVALID","INVALID","INVALID","INVALID","INVALID","26A - VSS Hall","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","7B/13B - VR4","INVALID","INVALID","INVALID","INVALID","5B/6B - VR3"
+#define brain_input_pin_e_enum 0="NONE",86="13A - Hall Input 5",78="15A - Hall Input 1",12="1B - VR1-/Hall Input max9924",87="21A - Flex",79="23A - Hall Input 2",80="24A - Hall Input 3 / SENT",93="26A - VSS Hall",8="3B/4B - VR2",127="5B/6B - VR3",122="7B/13B - VR4",81="9A - Hall Input 4"
+#define brain_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","3B/4B - VR2","INVALID","INVALID","INVALID","1B - VR1-/Hall Input max9924","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","15A - Hall Input 1","23A - Hall Input 2","24A - Hall Input 3 / SENT","9A - Hall Input 4","INVALID","INVALID","INVALID","INVALID","13A - Hall Input 5","21A - Flex","INVALID","INVALID","INVALID","INVALID","INVALID","26A - VSS Hall","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","7B/13B - VR4","INVALID","INVALID","INVALID","INVALID","5B/6B - VR3"
 #define brain_pin_diag_e_PIN_DRIVER_OFF 0x20
 #define brain_pin_diag_e_PIN_DRIVER_OVERTEMP 0x10
 #define brain_pin_diag_e_PIN_OK 0
@@ -200,6 +201,7 @@
 #define CanGpioType_NONE 0
 #define CLT_CRANKING_CURVE_SIZE 8
 #define CLT_CURVE_SIZE 16
+#define CLT_FUEL_CURVE_SIZE 16
 #define CLT_LIMITER_CURVE_SIZE 4
 #define CLT_TIMING_CURVE_SIZE 8
 #define CLT_UPPER_LIMIT 250
@@ -347,8 +349,8 @@
 #define ego_sensor_e_ES_Innovate_MTX_L 1
 #define ego_sensor_e_ES_PLX 4
 #define EGT_CHANNEL_COUNT 8
-#define END_OF_CALIBRATION_PADDING 72
-#define engine_configuration_s_size 4096
+#define END_OF_CALIBRATION_PADDING 58
+#define engine_configuration_s_size 4100
 #define engine_load_mode_e_auto_enum 0="LM_SPEED_DENSITY",2="LM_ALPHA_N",3="LM_LUA",100="LM_MOCK",1="LM_REAL_MAF"
 #define engine_load_mode_e_enum "Speed Density", "MAF Air Charge", "Alpha-N", "Lua"
 #define engine_load_mode_e_LM_ALPHA_N 2
@@ -1075,6 +1077,7 @@
 #define HPFP_TARGET_SIZE 10
 #define IAC_PID_MULT_SIZE 8
 #define IAT_CURVE_SIZE 16
+#define IAT_IGN_CORR_COUNT 8
 #define IDLE_ADVANCE_CURVE_SIZE 8
 #define idle_hardware_s_size 12
 #define idle_mode_e_auto_enum 0="IM_AUTO",1="IM_MANUAL"
@@ -1109,6 +1112,8 @@
 #define INDICATOR_NAME_BRAKE_DOWN "Brake switch"
 #define INDICATOR_NAME_CLUTCH_DOWN "Clutch: down"
 #define INDICATOR_NAME_CLUTCH_UP "Clutch: up"
+#define INJ_PHASE_LOAD_COUNT 16
+#define INJ_PHASE_RPM_COUNT 16
 #define INJ_STAGING_COUNT 6
 #define injection_mode_e_auto_enum 0="IM_SIMULTANEOUS",2="IM_BATCH",1="IM_SEQUENTIAL",3="IM_SINGLE_POINT"
 #define injection_mode_e_IM_BATCH 2
@@ -1134,7 +1139,6 @@
 #define InjectorNonlinearMode_INJ_None 0
 #define InjectorNonlinearMode_INJ_PolynomialAdder 1
 #define KNOCK_TABLE_SIZE 6
-#define LAMBDA_BLEND_COUNT 2
 #define launchActivationMode_e_ALWAYS_ACTIVE_LAUNCH 2
 #define launchActivationMode_e_auto_enum 0="SWITCH_INPUT_LAUNCH",2="ALWAYS_ACTIVE_LAUNCH",1="CLUTCH_INPUT_LAUNCH",3="STOP_INPUT_LAUNCH"
 #define launchActivationMode_e_CLUTCH_INPUT_LAUNCH 1
@@ -1220,8 +1224,8 @@
 #define operation_mode_e_FOUR_STROKE_TWELVE_TIMES_CRANK_SENSOR 6
 #define operation_mode_e_OM_NONE 0
 #define operation_mode_e_TWO_STROKE 3
-#define output_pin_e_enum 0="NONE",57="10D - Fan",47="11C - Ignition 1",54="11D - Main Relay",102="12D - NOS",70="13C - Ignition 3",96="13D - Injector 8",68="14C - Ignition 5",40="14D - VVT 2",72="15C - Ignition 8",104="15D - Tachometer",64="16D - Low Side 1",52="17C - Low Side 5",71="19C - Ignition 2",119="19D - Injector 9",105="1D - Injector 1",69="20C - Ignition 4",41="20D - VVT 3",27="21C - Ignition 7",42="21D - VVT 4",43="22C - Boost",45="23C - Ignition 10",65="23D - Low Side 2",116="24D - Injector 12",109="25C - Low Side 6",117="25D - Injector 11",118="26D - Injector 10",26="28C - Ignition 6",44="29C - Ignition 9",106="2D - Injector 2",46="30C - Ignition 11",17="31C - Ignition 12",101="34C - Low Side 7",61="3D - Injector 3",60="4D - Injector 4",62="5C - High Side 1",59="5D - Injector 5",11="6C - High Side 2",94="6D - Injector 6",53="7C - High Side 3",95="7D - Injector 7",112="8C - Low Side 3",63="8D - VVT 1",103="9C - Low Side 4",108="9D - Fuel Pump"
-#define output_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","6C - High Side 2","INVALID","INVALID","INVALID","INVALID","INVALID","31C - Ignition 12","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","28C - Ignition 6","21C - Ignition 7","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","14D - VVT 2","20D - VVT 3","21D - VVT 4","22C - Boost","29C - Ignition 9","23C - Ignition 10","30C - Ignition 11","11C - Ignition 1","INVALID","INVALID","INVALID","INVALID","17C - Low Side 5","7C - High Side 3","11D - Main Relay","INVALID","INVALID","10D - Fan","INVALID","5D - Injector 5","4D - Injector 4","3D - Injector 3","5C - High Side 1","8D - VVT 1","16D - Low Side 1","23D - Low Side 2","INVALID","INVALID","14C - Ignition 5","20C - Ignition 4","13C - Ignition 3","19C - Ignition 2","15C - Ignition 8","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","6D - Injector 6","7D - Injector 7","13D - Injector 8","INVALID","INVALID","INVALID","INVALID","34C - Low Side 7","12D - NOS","9C - Low Side 4","15D - Tachometer","1D - Injector 1","2D - Injector 2","INVALID","9D - Fuel Pump","25C - Low Side 6","INVALID","INVALID","8C - Low Side 3","INVALID","INVALID","INVALID","24D - Injector 12","25D - Injector 11","26D - Injector 10","19D - Injector 9"
+#define output_pin_e_enum 0="NONE",57="10D - Fan",47="11C - Ignition 1",54="11D - Main Relay",102="12D - NOS",70="13C - Ignition 3",96="13D - Injector 8",68="14C - Ignition 5",40="14D - VVT 2",72="15C - Ignition 8",104="15D - Tachometer",64="16D - Low Side 1",52="17C - Low Side 5",71="19C - Ignition 2",119="19D - Injector 9",105="1D - Injector 1",69="20C - Ignition 4",41="20D - VVT 3",27="21C - Ignition 7",42="21D - VVT 4",43="22D - Boost",45="23C - Ignition 10",65="23D - Low Side 2",116="24D - Injector 12",109="25C - Low Side 6",117="25D - Injector 11",118="26D - Injector 10",26="28C - Ignition 6",44="29C - Ignition 9",106="2D - Injector 2",46="30C - Ignition 11",17="31C - Ignition 12",101="34C - Low Side 7",61="3D - Injector 3",60="4D - Injector 4",62="5C - High Side 1",59="5D - Injector 5",11="6C - High Side 2",94="6D - Injector 6",53="7C - High Side 3",95="7D - Injector 7",112="8C - Low Side 3",63="8D - VVT 1",103="9C - Low Side 4",108="9D - Fuel Pump"
+#define output_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","6C - High Side 2","INVALID","INVALID","INVALID","INVALID","INVALID","31C - Ignition 12","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","28C - Ignition 6","21C - Ignition 7","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","14D - VVT 2","20D - VVT 3","21D - VVT 4","22D - Boost","29C - Ignition 9","23C - Ignition 10","30C - Ignition 11","11C - Ignition 1","INVALID","INVALID","INVALID","INVALID","17C - Low Side 5","7C - High Side 3","11D - Main Relay","INVALID","INVALID","10D - Fan","INVALID","5D - Injector 5","4D - Injector 4","3D - Injector 3","5C - High Side 1","8D - VVT 1","16D - Low Side 1","23D - Low Side 2","INVALID","INVALID","14C - Ignition 5","20C - Ignition 4","13C - Ignition 3","19C - Ignition 2","15C - Ignition 8","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","6D - Injector 6","7D - Injector 7","13D - Injector 8","INVALID","INVALID","INVALID","INVALID","34C - Low Side 7","12D - NOS","9C - Low Side 4","15D - Tachometer","1D - Injector 1","2D - Injector 2","INVALID","9D - Fuel Pump","25C - Low Side 6","INVALID","INVALID","8C - Low Side 3","INVALID","INVALID","INVALID","24D - Injector 12","25D - Injector 11","26D - Injector 10","19D - Injector 9"
 #define PACK_ADD_TEMPERATURE 40
 #define PACK_MULT_AFR 1000
 #define PACK_MULT_AFR_CFG 10
@@ -1245,7 +1249,7 @@
 #define pedalSensor_NAME "Accelerator pedal"
 #define pedalToTpsTbl_NAME "ETB pedal target"
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 24060
+#define persistent_config_s_size 24064
 #define pid_s_size 20
 #define pin_input_mode_e_auto_enum 0="PI_DEFAULT",2="PI_PULLDOWN",1="PI_PULLUP"
 #define pin_input_mode_e_enum "DEFAULT", "PULLUP", "PULLDOWN"
@@ -1327,7 +1331,7 @@
 #define show_8chan_presets true
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 211939542
+#define SIGNATURE_HASH 1783957612
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1354,13 +1358,14 @@
 #define stft_cell_cfg_s_size 4
 #define STFT_CELL_COUNT 4
 #define stft_s_size 28
-#define switch_input_pin_e_enum 0="NONE",77="14A - Switch 2",87="21B - Flex",88="21B - Knock2 Input",35="22A - Switch 3",85="5A - Switch 4",75="6A - Switch 1"
-#define switch_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","22A - Switch 3","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","6A - Switch 1","INVALID","14A - Switch 2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","5A - Switch 4","INVALID","21B - Flex","21B - Knock2 Input"
+#define switch_input_pin_e_enum 0="NONE",77="14A - Switch 2",87="21A - Flex",88="21B - Knock2 Input",35="22A - Switch 3",85="5A - Switch 4",75="6A - Switch 1"
+#define switch_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","22A - Switch 3","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","6A - Switch 1","INVALID","14A - Switch 2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","5A - Switch 4","INVALID","21A - Flex","21B - Knock2 Input"
 #define TABLE_2_LOAD_SIZE 8
 #define TABLE_2_RPM_SIZE 8
 #define TABLE_3_LOAD_SIZE 8
 #define TABLE_3_RPM_SIZE 8
 #define TABLE_4_RPM 10
+#define TARGET_AFR_BLEND_COUNT 2
 #define tChargeMode_e_auto_enum 0="TCHARGE_MODE_RPM_TPS",1="TCHARGE_MODE_AIR_INTERP",2="TCHARGE_MODE_AIR_INTERP_TABLE"
 #define tChargeMode_e_enum "RPM+TPS (Default)", "Air Mass Interpolation", "Table"
 #define tChargeMode_e_TCHARGE_MODE_AIR_INTERP 1
@@ -1385,11 +1390,13 @@
 #define TOOTH_PACKET_SIZE 2
 #define TOP_DEAD_CENTER_MESSAGE "r"
 #define TORQUE_CURVE_SIZE 6
-#define torqueReductionActivationMode_e_auto_enum 0="TORQUE_REDUCTION_BUTTON",1="LAUNCH_BUTTON"
-#define torqueReductionActivationMode_e_enum "Torque Reduction Button", "Launch Button"
+#define torqueReductionActivationMode_e_auto_enum 0="TORQUE_REDUCTION_BUTTON",1="LAUNCH_BUTTON",2="TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH",3="TORQUE_REDUCTION_CLUTCH_UP_SWITCH"
+#define torqueReductionActivationMode_e_enum "Torque Reduction Button", "Launch Button", "Clutch Down Switch", "Clutch Up Switch"
 #define torqueReductionActivationMode_e_LAUNCH_BUTTON 1
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON 0
-#define TOTAL_CONFIG_SIZE 24060
+#define torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH 2
+#define torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_UP_SWITCH 3
+#define TOTAL_CONFIG_SIZE 24064
 #define TPS_2_BYTE_PACKING_MULT 100
 #define TPS_PPS_TOO_HIGH_THRESHOLD 110
 #define TPS_PPS_TOO_LOW_THRESHOLD -10
@@ -1540,6 +1547,7 @@
 #define TS_BURN_COMMAND_char B
 #define TS_CHUNK_WRITE_COMMAND 'C'
 #define TS_CHUNK_WRITE_COMMAND_char C
+#define ts_cic_idle false
 #define ts_command_e_TS_BENCH_CATEGORY 22
 #define ts_command_e_TS_BOARD_ACTION 29
 #define ts_command_e_TS_CLEAR_WARNINGS 17
@@ -1684,7 +1692,7 @@
 #define ts_show_final_ratio true
 #define ts_show_firing_order true
 #define ts_show_flex_inverted true
-#define ts_show_forced_induction true
+#define ts_show_forced_induction false
 #define ts_show_ford_toyota_tps_pps true
 #define ts_show_fuel_level_sensor true
 #define ts_show_fuel_pressure_sensor true
@@ -1709,7 +1717,7 @@
 #define ts_show_gdi false
 #define ts_show_gdi_low_level true
 #define ts_show_globalTriggerAngleOffset true
-#define ts_show_hardware_simulator false
+#define ts_show_hardware_simulator true
 #define ts_show_hbridge_function true
 #define ts_show_hd true
 #define ts_show_hip9011 false
@@ -1729,6 +1737,7 @@
 #define ts_show_main_relay true
 #define ts_show_main_relay_microRusEFI_message false
 #define ts_show_mc33810 false
+#define ts_show_mc33810_cs false
 #define ts_show_multispark true
 #define ts_show_number_of_cylinders true
 #define ts_show_odd_fire true
@@ -1774,8 +1783,10 @@
 #define ts_show_tps_sent true
 #define ts_show_trigger_advanced true
 #define ts_show_trigger_comparator false
+#define ts_show_trigger_gap_override_flag true
 #define ts_show_trigger_overrides true
 #define ts_show_trigger_pins true
+#define ts_show_tsp_pps_limits true
 #define ts_show_tunerstudio_port true
 #define ts_show_vbatt false
 #define ts_show_vehicle_speed_sensor true
@@ -1788,14 +1799,14 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI testsDG.2024.12.25.alphax-8chan.211939542"
+#define TS_SIGNATURE "rusEFI testsDG.2024.12.25.alphax-8chan.1783957612"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 1824
+#define TS_TOTAL_OUTPUT_SIZE 1828
 #define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "Channel 1"
 #define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "Channel 2"
 #define TS_TRIGGER_SCOPE_DISABLE 5

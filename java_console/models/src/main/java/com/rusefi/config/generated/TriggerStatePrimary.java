@@ -154,7 +154,6 @@ public class TriggerStatePrimary {
 	public static final String INDICATOR_NAME_BRAKE_DOWN = "Brake switch";
 	public static final String INDICATOR_NAME_CLUTCH_DOWN = "Clutch: down";
 	public static final String INDICATOR_NAME_CLUTCH_UP = "Clutch: up";
-	public static final int LAMBDA_BLEND_COUNT = 2;
 	public static final int LUA_ANALOG_INPUT_COUNT = 8;
 	public static final int LUA_GAUGE_COUNT = 8;
 	public static final int MAX_CYLINDER_COUNT = 12;
@@ -177,12 +176,13 @@ public class TriggerStatePrimary {
 	public static final int PACK_MULT_VOLTAGE = 1000;
 	public static final int PACK_MULT_VSS = 100;
 	public static final int STFT_BANK_COUNT = 2;
+	public static final int TARGET_AFR_BLEND_COUNT = 2;
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field CAMRESYNCCOUNTER = Field.create("CAMRESYNCCOUNTER", 0, FieldType.INT8).setScale(1.0).setBaseOffset(1608);
-	public static final Field ALIGNMENTFILL_AT_1 = Field.create("ALIGNMENTFILL_AT_1", 1, FieldType.INT8).setScale(1.0).setBaseOffset(1608);
-	public static final Field M_HASSYNCHRONIZEDPHASE = Field.create("M_HASSYNCHRONIZEDPHASE", 4, FieldType.BIT, 0).setBaseOffset(1608);
+	public static final Field CAMRESYNCCOUNTER = Field.create("CAMRESYNCCOUNTER", 0, FieldType.INT8).setScale(1.0).setBaseOffset(1616);
+	public static final Field ALIGNMENTFILL_AT_1 = Field.create("ALIGNMENTFILL_AT_1", 1, FieldType.INT8).setScale(1.0).setBaseOffset(1616);
+	public static final Field M_HASSYNCHRONIZEDPHASE = Field.create("M_HASSYNCHRONIZEDPHASE", 4, FieldType.BIT, 0).setBaseOffset(1616);
 	public static final Field[] VALUES = {
 	CAMRESYNCCOUNTER,
 	ALIGNMENTFILL_AT_1,

@@ -1196,7 +1196,7 @@ AEM X-Series EGT gauge kit or rusEFI EGT sensor from Wideband controller
 
 
 ### enableKnockSpectrogram
-
+"Available via TS Plugin see https://rusefi.com/s/knock"
 
 ### enableKnockSpectrogramFilter
 
@@ -1974,6 +1974,18 @@ Smooths the transition back from fuel cut. After fuel is restored, ramp timing b
 
 ### nitrousFuelAdderPercent
 
+
+### nitrousIgnitionRetard
+Retard timing to remove from actual final timing (after all corrections) due to additional air.
+
+### nitrousMinimumVehicleSpeed
+
+
+### fuelLevelAveragingAlpha
+Exponential Average Alpha filtering parameter
+
+### fuelLevelUpdatePeriodSec
+How often do we update fuel level gauge
 
 ### ltftEnabled
 

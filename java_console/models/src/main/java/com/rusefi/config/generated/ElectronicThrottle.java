@@ -154,7 +154,6 @@ public class ElectronicThrottle {
 	public static final String INDICATOR_NAME_BRAKE_DOWN = "Brake switch";
 	public static final String INDICATOR_NAME_CLUTCH_DOWN = "Clutch: down";
 	public static final String INDICATOR_NAME_CLUTCH_UP = "Clutch: up";
-	public static final int LAMBDA_BLEND_COUNT = 2;
 	public static final int LUA_ANALOG_INPUT_COUNT = 8;
 	public static final int LUA_GAUGE_COUNT = 8;
 	public static final int MAX_CYLINDER_COUNT = 12;
@@ -177,29 +176,31 @@ public class ElectronicThrottle {
 	public static final int PACK_MULT_VOLTAGE = 1000;
 	public static final int PACK_MULT_VSS = 100;
 	public static final int STFT_BANK_COUNT = 2;
+	public static final int TARGET_AFR_BLEND_COUNT = 2;
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field TARGETWITHIDLEPOSITION = Field.create("TARGETWITHIDLEPOSITION", 0, FieldType.FLOAT).setBaseOffset(1672);
-	public static final Field TRIM = Field.create("TRIM", 4, FieldType.FLOAT).setBaseOffset(1672);
-	public static final Field LUAADJUSTMENT = Field.create("LUAADJUSTMENT", 8, FieldType.FLOAT).setBaseOffset(1672);
-	public static final Field M_WASTEGATEPOSITION = Field.create("M_WASTEGATEPOSITION", 12, FieldType.FLOAT).setBaseOffset(1672);
-	public static final Field ETBFEEDFORWARD = Field.create("ETBFEEDFORWARD", 16, FieldType.FLOAT).setBaseOffset(1672);
-	public static final Field ETBINTEGRALERROR = Field.create("ETBINTEGRALERROR", 20, FieldType.FLOAT).setBaseOffset(1672);
-	public static final Field ETBCURRENTTARGET = Field.create("ETBCURRENTTARGET", 24, FieldType.FLOAT).setBaseOffset(1672);
-	public static final Field ETBCURRENTADJUSTEDTARGET = Field.create("ETBCURRENTADJUSTEDTARGET", 28, FieldType.FLOAT).setBaseOffset(1672);
-	public static final Field ETBREVLIMITACTIVE = Field.create("ETBREVLIMITACTIVE", 32, FieldType.BIT, 0).setBaseOffset(1672);
-	public static final Field JAMDETECTED = Field.create("JAMDETECTED", 32, FieldType.BIT, 1).setBaseOffset(1672);
-	public static final Field VALIDPLANTPOSITION = Field.create("VALIDPLANTPOSITION", 32, FieldType.BIT, 2).setBaseOffset(1672);
-	public static final Field ETBTPSERRORCOUNTER = Field.create("ETBTPSERRORCOUNTER", 36, FieldType.INT16).setScale(1.0).setBaseOffset(1672);
-	public static final Field ETBPPSERRORCOUNTER = Field.create("ETBPPSERRORCOUNTER", 38, FieldType.INT16).setScale(1.0).setBaseOffset(1672);
-	public static final Field ETBERRORCODE = Field.create("ETBERRORCODE", 40, FieldType.INT8).setScale(1.0).setBaseOffset(1672);
-	public static final Field ETBERRORCODEBLINKER = Field.create("ETBERRORCODEBLINKER", 41, FieldType.INT8).setScale(1.0).setBaseOffset(1672);
-	public static final Field TCETBDROP = Field.create("TCETBDROP", 42, FieldType.INT8).setScale(1.0).setBaseOffset(1672);
-	public static final Field ALIGNMENTFILL_AT_43 = Field.create("ALIGNMENTFILL_AT_43", 43, FieldType.INT8).setScale(1.0).setBaseOffset(1672);
-	public static final Field JAMTIMER = Field.create("JAMTIMER", 44, FieldType.INT16).setScale(0.01).setBaseOffset(1672);
-	public static final Field ADJUSTEDETBTARGET = Field.create("ADJUSTEDETBTARGET", 46, FieldType.INT8).setScale(1.0).setBaseOffset(1672);
-	public static final Field STATE = Field.create("STATE", 47, FieldType.INT8).setScale(1.0).setBaseOffset(1672);
+	public static final Field TARGETWITHIDLEPOSITION = Field.create("TARGETWITHIDLEPOSITION", 0, FieldType.FLOAT).setBaseOffset(1676);
+	public static final Field TRIM = Field.create("TRIM", 4, FieldType.FLOAT).setBaseOffset(1676);
+	public static final Field LUAADJUSTMENT = Field.create("LUAADJUSTMENT", 8, FieldType.FLOAT).setBaseOffset(1676);
+	public static final Field M_WASTEGATEPOSITION = Field.create("M_WASTEGATEPOSITION", 12, FieldType.FLOAT).setBaseOffset(1676);
+	public static final Field ETBFEEDFORWARD = Field.create("ETBFEEDFORWARD", 16, FieldType.FLOAT).setBaseOffset(1676);
+	public static final Field ETBINTEGRALERROR = Field.create("ETBINTEGRALERROR", 20, FieldType.FLOAT).setBaseOffset(1676);
+	public static final Field ETBCURRENTTARGET = Field.create("ETBCURRENTTARGET", 24, FieldType.FLOAT).setBaseOffset(1676);
+	public static final Field M_ADJUSTEDTARGET = Field.create("M_ADJUSTEDTARGET", 28, FieldType.INT16).setScale(0.01).setBaseOffset(1676);
+	public static final Field ALIGNMENTFILL_AT_30 = Field.create("ALIGNMENTFILL_AT_30", 30, FieldType.INT8).setScale(1.0).setBaseOffset(1676);
+	public static final Field ETBREVLIMITACTIVE = Field.create("ETBREVLIMITACTIVE", 32, FieldType.BIT, 0).setBaseOffset(1676);
+	public static final Field JAMDETECTED = Field.create("JAMDETECTED", 32, FieldType.BIT, 1).setBaseOffset(1676);
+	public static final Field VALIDPLANTPOSITION = Field.create("VALIDPLANTPOSITION", 32, FieldType.BIT, 2).setBaseOffset(1676);
+	public static final Field ETBTPSERRORCOUNTER = Field.create("ETBTPSERRORCOUNTER", 36, FieldType.INT16).setScale(1.0).setBaseOffset(1676);
+	public static final Field ETBPPSERRORCOUNTER = Field.create("ETBPPSERRORCOUNTER", 38, FieldType.INT16).setScale(1.0).setBaseOffset(1676);
+	public static final Field ETBERRORCODE = Field.create("ETBERRORCODE", 40, FieldType.INT8).setScale(1.0).setBaseOffset(1676);
+	public static final Field ETBERRORCODEBLINKER = Field.create("ETBERRORCODEBLINKER", 41, FieldType.INT8).setScale(1.0).setBaseOffset(1676);
+	public static final Field TCETBDROP = Field.create("TCETBDROP", 42, FieldType.INT8).setScale(1.0).setBaseOffset(1676);
+	public static final Field ALIGNMENTFILL_AT_43 = Field.create("ALIGNMENTFILL_AT_43", 43, FieldType.INT8).setScale(1.0).setBaseOffset(1676);
+	public static final Field JAMTIMER = Field.create("JAMTIMER", 44, FieldType.INT16).setScale(0.01).setBaseOffset(1676);
+	public static final Field ADJUSTEDETBTARGET = Field.create("ADJUSTEDETBTARGET", 46, FieldType.INT8).setScale(1.0).setBaseOffset(1676);
+	public static final Field STATE = Field.create("STATE", 47, FieldType.INT8).setScale(1.0).setBaseOffset(1676);
 	public static final Field[] VALUES = {
 	TARGETWITHIDLEPOSITION,
 	TRIM,
@@ -208,7 +209,8 @@ public class ElectronicThrottle {
 	ETBFEEDFORWARD,
 	ETBINTEGRALERROR,
 	ETBCURRENTTARGET,
-	ETBCURRENTADJUSTEDTARGET,
+	M_ADJUSTEDTARGET,
+	ALIGNMENTFILL_AT_30,
 	ETBREVLIMITACTIVE,
 	JAMDETECTED,
 	VALIDPLANTPOSITION,

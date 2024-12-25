@@ -192,9 +192,6 @@ float getOutputValueByName(const char *name) {
 // coilDutyCycle
 		case 1029096098:
 			return engine->outputChannels.coilDutyCycle;
-// etbTarget
-		case -2105094009:
-			return engine->outputChannels.etbTarget;
 // etb1DutyCycle
 		case 1021133095:
 			return engine->outputChannels.etb1DutyCycle;
@@ -345,6 +342,9 @@ float getOutputValueByName(const char *name) {
 // rawAcPressure
 		case 2079600300:
 			return engine->outputChannels.rawAcPressure;
+// rawFuelLevel
+		case 1413130003:
+			return engine->outputChannels.rawFuelLevel;
 // fuelClosedLoopBinIdx
 		case 1342844099:
 			return engine->outputChannels.fuelClosedLoopBinIdx;
@@ -997,6 +997,9 @@ float getOutputValueByName(const char *name) {
 // m_knockFuelTrimMultiplier
 		case 95716118:
 			return ___engine.module<KnockController>()->m_knockFuelTrimMultiplier;
+// m_isPriming
+		case -612624925:
+			return ___engine.module<PrimeController>()->m_isPriming;
 // m_deadtime
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case -1167844818:
@@ -1230,40 +1233,45 @@ float getOutputValueByName(const char *name) {
 // acPressureTooHigh
 		case -1220300524:
 			return engine->module<AcController>()->acPressureTooHigh;
-// isArmed
+// isNitrousArmed
 #if EFI_LAUNCH_CONTROL
-		case -1447071222:
-			return engine->module<NitrousController>()->isArmed;
+		case 595683774:
+			return engine->module<NitrousController>()->isNitrousArmed;
 #endif
-// isTpsConditionSatisfied
+// isNitrousSpeedCondition
 #if EFI_LAUNCH_CONTROL
-		case -1256912197:
-			return engine->module<NitrousController>()->isTpsConditionSatisfied;
+		case 2135736269:
+			return engine->module<NitrousController>()->isNitrousSpeedCondition;
 #endif
-// isCltConditionSatisfied
+// isNitrousTpsCondition
 #if EFI_LAUNCH_CONTROL
-		case -747236121:
-			return engine->module<NitrousController>()->isCltConditionSatisfied;
+		case 1400235571:
+			return engine->module<NitrousController>()->isNitrousTpsCondition;
 #endif
-// isMapConditionSatisfied
+// isNitrousCltCondition
 #if EFI_LAUNCH_CONTROL
-		case 1960789698:
-			return engine->module<NitrousController>()->isMapConditionSatisfied;
+		case 31747807:
+			return engine->module<NitrousController>()->isNitrousCltCondition;
 #endif
-// isAfrConditionSatisfied
+// isNitrousMapCondition
 #if EFI_LAUNCH_CONTROL
-		case 112999709:
-			return engine->module<NitrousController>()->isAfrConditionSatisfied;
+		case 541066842:
+			return engine->module<NitrousController>()->isNitrousMapCondition;
 #endif
-// isNitrousRpmConditionSatisfied
+// isNitrousAfrCondition
 #if EFI_LAUNCH_CONTROL
-		case 1138724839:
-			return engine->module<NitrousController>()->isNitrousRpmConditionSatisfied;
+		case 2008830549:
+			return engine->module<NitrousController>()->isNitrousAfrCondition;
 #endif
-// isNitrousConditionSatisfied
+// isNitrousRpmCondition
 #if EFI_LAUNCH_CONTROL
-		case 1700736632:
-			return engine->module<NitrousController>()->isNitrousConditionSatisfied;
+		case -649083733:
+			return engine->module<NitrousController>()->isNitrousRpmCondition;
+#endif
+// isNitrousCondition
+#if EFI_LAUNCH_CONTROL
+		case -454003684:
+			return engine->module<NitrousController>()->isNitrousCondition;
 #endif
 // cranking
 		case 182391090:
@@ -1340,6 +1348,9 @@ float getOutputValueByName(const char *name) {
 // lua.disableDecelerationFuelCutOff
 		case 1680936043:
 			return engine->engineState.lua.disableDecelerationFuelCutOff;
+// lua.torqueReductionState
+		case -1605036797:
+			return engine->engineState.lua.torqueReductionState;
 // sd.tCharge
 		case -893334680:
 			return engine->engineState.sd.tCharge;
@@ -1527,11 +1538,6 @@ float getOutputValueByName(const char *name) {
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case -2065814304:
 			return ___engine.module<IdleController>().unmock().iacByTpsTaper;
-#endif
-// throttlePedalUpState
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case 767668487:
-			return ___engine.module<IdleController>().unmock().throttlePedalUpState;
 #endif
 // mightResetPid
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
