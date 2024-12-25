@@ -70,7 +70,6 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/limp_manager.cpp \
 	$(CONTROLLERS_DIR)/hysteresis.cpp \
 	$(CONTROLLERS_DIR)/max_limit_with_hysteresis.cpp \
-	$(CONTROLLERS_DIR)/long_term_fuel_trim.cpp \
 
 CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR) \
