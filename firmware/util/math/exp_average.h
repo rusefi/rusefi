@@ -6,13 +6,25 @@
 
 class ExpAverage {
 public:
+    float initOrAverage(float value) {
+        if (current == 0) {
+           current = value;
+           return current;
+        }
+        return average(value);
+    }
+
     float average(float value) {
         current = smoothingFactor * value + (1 - smoothingFactor) * current;
         return current;
     }
 
     void init(int length) {
-        smoothingFactor = 2 / (length + 1.0);
+        setSmoothingFactor(2 / (length + 1.0));
+    }
+
+    void setSmoothingFactor(float p_smoothingFactor) {
+        smoothingFactor = p_smoothingFactor;
     }
 
     void reset() {

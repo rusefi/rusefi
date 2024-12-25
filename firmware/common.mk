@@ -29,13 +29,20 @@ ALLCPPSRC += \
 	$(CONTROLLERS_SRC_CPP) \
 	$(INIT_SRC_CPP) \
 
+# The headers from `$(BOARD_DIR)/generated/live_data_generated` folder are more preferable than the headers from
+# `$(PROJECT_DIR)/live_data_generated` folder
+ifneq ("$(wildcard $(BOARD_DIR)/board_unit_tests.mk)","")
+	# technical debt: this should be in a shared location for all private or custom repos!
+	LIVE_DATA_GENERATED_DIRS := $(BOARD_DIR)/generated/live_data_generated
+endif
+LIVE_DATA_GENERATED_DIRS += $(PROJECT_DIR)/live_data_generated
 
 ALLINC += \
 	$(CONSOLE_INC) \
  	$(DEVELOPMENT_DIR) \
 	$(ENGINES_INC) \
 	$(PROJECT_DIR)/config/engines \
-	$(PROJECT_DIR)/live_data_generated \
+	$(LIVE_DATA_GENERATED_DIRS) \
 	$(BOARDS_DIR) \
 	$(PROJECT_DIR)/hw_layer/algo \
     $(PROJECT_DIR)/init \

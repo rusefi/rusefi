@@ -27,8 +27,6 @@ void setMazdaMiata96() {
 	// below 20% this valve seems to be opening for fail-safe idle air
 	engineConfiguration->idleRpmPid.pFactor = 0.0065;
 	engineConfiguration->idleRpmPid.iFactor = 0.3;
-	engineConfiguration->idle_derivativeFilterLoss = 0.08;
-	engineConfiguration->idle_antiwindupFreq = 0.03;
 	engineConfiguration->idleRpmPid.dFactor = 0.002;
 	engineConfiguration->idleRpmPid.minValue = -20;
 	engineConfiguration->idleRpmPid.maxValue = 20;

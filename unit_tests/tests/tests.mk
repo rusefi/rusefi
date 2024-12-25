@@ -42,6 +42,7 @@ TESTS_SRC_CPP = \
 	tests/ignition_injection/injection_mode_transition.cpp \
 	tests/ignition_injection/test_startOfCrankingPrimingPulse.cpp \
 	tests/ignition_injection/test_multispark.cpp \
+	tests/ignition_injection/test_hd_cranking.cpp \
 	tests/ignition_injection/test_ignition_scheduling.cpp \
 	tests/ignition_injection/test_fuelCut.cpp \
 	tests/ignition_injection/test_fuel_computer.cpp \
@@ -55,6 +56,7 @@ TESTS_SRC_CPP = \
 	tests/util/engine_config.cpp \
 	tests/util/test_persistent_configuration.cpp \
 	tests/util/test_engine_state.cpp \
+	tests/util/test_lua_script_executor.cpp \
 	tests/ac/ac_test_base.cpp \
 	tests/ac/ac_pressure_test.cpp \
 	tests/launch/launch_test_base.cpp \
@@ -64,7 +66,10 @@ TESTS_SRC_CPP = \
 	tests/launch/test_ignition_angle_advance.cpp \
 	tests/launch/test_spark_skip_ratio.cpp \
 	tests/shift_torque_reduction/flat_shift_condition_test_base.cpp \
-	tests/shift_torque_reduction/test_shift_torque_reduction_trigger_pin_state.cpp \
+	tests/shift_torque_reduction/shift_torque_reduction_switch_params.cpp \
+	tests/shift_torque_reduction/shift_torque_reduction_switch_test_base.cpp \
+	tests/shift_torque_reduction/test_shift_torque_reduction_switch.cpp \
+	tests/shift_torque_reduction/test_shift_torque_reduction_inverted_switch.cpp \
 	tests/shift_torque_reduction/test_shift_torque_reduction_time_condition.cpp \
 	tests/shift_torque_reduction/test_shift_torque_reduction_rpm_condition.cpp \
 	tests/shift_torque_reduction/test_shift_torque_reduction_app_condition.cpp \
@@ -73,6 +78,7 @@ TESTS_SRC_CPP = \
 	tests/shift_torque_reduction/test_shift_torque_reduction_angle_advance.cpp \
 	tests/nitrous_control/nitrous_test_base.cpp \
 	tests/nitrous_control/test_nitrous_arming.cpp \
+	tests/nitrous_control/test_nitrous_speed_condition.cpp \
 	tests/nitrous_control/test_nitrous_tps_condition.cpp \
 	tests/nitrous_control/test_nitrous_clt_condition.cpp \
 	tests/nitrous_control/test_nitrous_map_condition.cpp \
@@ -80,6 +86,7 @@ TESTS_SRC_CPP = \
 	tests/nitrous_control/test_nitrous_rpm_condition.cpp \
 	tests/nitrous_control/test_nitrous_condition.cpp \
 	tests/nitrous_control/test_nitrous_fuel_adder.cpp \
+	tests/nitrous_control/test_nitrous_ignition_retard.cpp \
 	tests/test_fft.cpp \
 	tests/lua/test_lua_basic.cpp \
 	tests/lua/test_bit_range_msb.cpp \
@@ -144,6 +151,7 @@ TESTS_SRC_CPP = \
 	tests/sensor/redundant.cpp \
 	tests/sensor/test_sensor_init.cpp \
 	tests/sensor/table_func.cpp \
+	tests/sensor/test_fuel_level_func.cpp \
 	tests/test_stft.cpp \
 	tests/test_hpfp.cpp \
 	tests/test_hpfp_integrated.cpp \

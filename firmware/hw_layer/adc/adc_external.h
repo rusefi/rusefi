@@ -11,6 +11,9 @@
 
 #include "mcp3208.h"
 
-#define getAdcValue(channel) getMcp3208adc(channel)
-#define adcToVoltsDivided(adc) (5.0f / 4095 * (adc))
-#define getVoltageDivided(msg, channel) (isAdcChannelValid(channel) ? adcToVoltsDivided(getAdcValue(msg, channel), channel) : 66.66)
+/* 12 bits, 5V reference */
+#define adcRawValueToScaledVoltage(adc) (5.0f / 4095 * (adc))
+
+#define adcGetRawValue(channel) getMcp3208adc(channel)
+/* NOTE: no call to getAnalogInputDividerCoefficient() */
+#define adcGetScaledVoltage(msg, channel) (isAdcChannelValid(channel) ? adcRawValueToScaledVoltage(adcGetRawValue(msg, channel), channel) : 66.66)

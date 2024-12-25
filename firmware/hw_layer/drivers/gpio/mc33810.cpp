@@ -845,6 +845,25 @@ void mc33810_req_init() {
 	}
 }
 
+int getMc33810maxDwellTimer(mc33810maxDwellTimer_e value) {
+switch(value) {
+case DWELL_16MS:
+  return 16;
+case DWELL_2MS:
+  return 2;
+case DWELL_32MS:
+  return 32;
+case DWELL_4MS:
+  return 4;
+case DWELL_64MS:
+  return 64;
+case DWELL_8MS:
+  return 8;
+  }
+ return 0;
+}
+
+
 #else /* BOARD_MC33810_COUNT > 0 */
 
 int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg)

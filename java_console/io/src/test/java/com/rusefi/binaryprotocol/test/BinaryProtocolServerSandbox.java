@@ -17,6 +17,7 @@ import java.io.File;
 /**
  * Starts a fake device with TCP connector at {@link BinaryProtocolServer#DEFAULT_PROXY_PORT} port
  * @see TcpServerSandbox what's the difference?
+ * BinaryProtocolServer#DEFAULT_PROXY_PORT
  */
 class BinaryProtocolServerSandbox {
 

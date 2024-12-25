@@ -22,18 +22,6 @@ floatms_t TestEngineState::getInjectionDurationStage2() const {
     return engine->engineState.injectionDurationStage2;
 }
 
-void TestEngineState::setLuaSoftSparkSkip(const float value) {
-    engine->engineState.luaSoftSparkSkip = value;
-}
-
-void TestEngineState::setLuaHardSparkSkip(const float value) {
-    engine->engineState.luaHardSparkSkip = value;
-}
-
-void TestEngineState::setLuaFuelAdd(const float value) {
-    engine->engineState.lua.fuelAdd = value;
-}
-
 TestEngineState::TestEngineState() {
 }
 

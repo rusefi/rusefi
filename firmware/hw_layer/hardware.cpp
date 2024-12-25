@@ -283,17 +283,18 @@ void onFastAdcComplete(adcsample_t*) {
 
 #if EFI_SENSOR_CHART && EFI_SHAFT_POSITION_INPUT
 	if (getEngineState()->sensorChartMode == SC_AUX_FAST1) {
-		float voltage = getAdcValue("fAux1", engineConfiguration->auxFastSensor1_adcChannel);
+		/* Why we use raw value here? */
+		float voltage = adcGetRawValue("fAux1", engineConfiguration->auxFastSensor1_adcChannel);
 		scAddData(engine->triggerCentral.getCurrentEnginePhase(getTimeNowNt()).value_or(0), voltage);
 	}
 #endif /* EFI_SENSOR_CHART */
 
 #if EFI_MAP_AVERAGING
-	mapAveragingAdcCallback(adcToVoltsDivided(getFastAdc(fastMapSampleIndex), engineConfiguration->map.sensor.hwChannel));
+	mapAveragingAdcCallback(adcRawValueToScaledVoltage(getFastAdc(fastMapSampleIndex), engineConfiguration->map.sensor.hwChannel));
 #endif /* EFI_MAP_AVERAGING */
 #if EFI_HIP_9011
 	if (engineConfiguration->isHip9011Enabled) {
-		hipAdcCallback(adcToVoltsDivided(getFastAdc(hipSampleIndex), engineConfiguration->hipOutputChannel));
+		hipAdcCallback(adcRawValueToScaledVoltage(getFastAdc(hipSampleIndex), engineConfiguration->hipOutputChannel));
 	}
 #endif /* EFI_HIP_9011 */
 }

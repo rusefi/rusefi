@@ -109,7 +109,7 @@ TEST(TriggerDecoder, FindsSyncPointMultipleRevolutions) {
 	doTooth(dut, shape, cfg, t);
 	EXPECT_TRUE(dut.getShaftSynchronized());
 	EXPECT_EQ(0, dut.currentCycle.current_index);
-	EXPECT_EQ(0, dut.getCrankSynchronizationCounter());
+	EXPECT_EQ(0, dut.getSynchronizationCounter());
 
 	// Do 100 turns and make sure we stay synchronized
 	for (int i = 0; i < 100; i++) {
@@ -131,7 +131,7 @@ TEST(TriggerDecoder, FindsSyncPointMultipleRevolutions) {
 		EXPECT_FALSE(dut.someSortOfTriggerError());
 
 		// We do one revolution per loop iteration
-		EXPECT_EQ(i + 1, dut.getCrankSynchronizationCounter());
+		EXPECT_EQ(i + 1, dut.getSynchronizationCounter());
 	}
 }
 

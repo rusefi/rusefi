@@ -12,6 +12,50 @@ TestEngineConfiguration& TestEngineConfiguration::getInstance() {
     return instance;
 }
 
+void TestEngineConfiguration::configureClutchDownPin(const std::optional<switch_input_pin_e> pin) {
+    if (pin.has_value()) {
+        engineConfiguration->clutchDownPin = pin.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->clutchDownPin,
+            engine_configuration_defaults::CLUTCH_DOWN_PIN
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureClutchDownPinInverted(const std::optional<bool> pinInverted) {
+    if (pinInverted.has_value()) {
+        engineConfiguration->clutchDownPinInverted = pinInverted.value();
+    } else {
+        ASSERT_EQ(
+                engineConfiguration->clutchDownPinInverted,
+                engine_configuration_defaults::CLUTCH_DOWN_PIN_INVERTED
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureClutchUpPin(const std::optional<switch_input_pin_e> pin) {
+    if (pin.has_value()) {
+        engineConfiguration->clutchUpPin = pin.value();
+    } else {
+        ASSERT_EQ(
+                engineConfiguration->clutchUpPin,
+                engine_configuration_defaults::CLUTCH_UP_PIN
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureClutchUpPinInverted(const std::optional<bool> pinInverted) {
+    if (pinInverted.has_value()) {
+        engineConfiguration->clutchUpPinInverted = pinInverted.value();
+    } else {
+        ASSERT_EQ(
+                engineConfiguration->clutchUpPinInverted,
+                engine_configuration_defaults::CLUTCH_UP_PIN_INVERTED
+        ); // check default value
+    }
+}
+
 void TestEngineConfiguration::configureLaunchControlEnabled(const std::optional<bool> launchControlEnabled) {
     if (launchControlEnabled.has_value()) {
         engineConfiguration->launchControlEnabled = launchControlEnabled.value();
@@ -477,6 +521,19 @@ void TestEngineConfiguration::configureNitrousLuaGaugeArmingValue(const std::opt
     }
 }
 
+void TestEngineConfiguration::configureNitrousMinimumVehicleSpeed(
+    const std::optional<uint16_t> nitrousMinimumVehicleSpeed
+) {
+    if (nitrousMinimumVehicleSpeed.has_value()) {
+        engineConfiguration->nitrousMinimumVehicleSpeed = nitrousMinimumVehicleSpeed.value();
+    } else {
+        ASSERT_EQ(
+                engineConfiguration->nitrousMinimumVehicleSpeed,
+                engine_configuration_defaults::NITROUS_MINIMUM_VEHICLE_SPEED
+        ); // check default value
+    }
+}
+
 void TestEngineConfiguration::configureNitrousMinimumTps(const std::optional<int> nitrousMinimumTps) {
     if (nitrousMinimumTps.has_value()) {
         engineConfiguration->nitrousMinimumTps = nitrousMinimumTps.value();
@@ -563,6 +620,39 @@ void TestEngineConfiguration::configureNitrousFuelAdderPercent(const std::option
         ASSERT_EQ(
                 engineConfiguration->nitrousFuelAdderPercent,
                 engine_configuration_defaults::NITROUS_FUEL_ADDER_PERCENT
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureNitrousIgnitionRetard(const std::optional<float> nitrousIgnitionRetard) {
+    if (nitrousIgnitionRetard.has_value()) {
+        engineConfiguration->nitrousIgnitionRetard = nitrousIgnitionRetard.value();
+    } else {
+        ASSERT_EQ(
+                engineConfiguration->nitrousIgnitionRetard,
+                engine_configuration_defaults::NITROUS_IGNITION_RETARD
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureFuelLevelAveragingAlpha(const std::optional<float> alpha) {
+    if (alpha.has_value()) {
+        engineConfiguration->fuelLevelAveragingAlpha = alpha.value();
+    } else {
+        ASSERT_EQ(
+                engineConfiguration->fuelLevelAveragingAlpha,
+                engine_configuration_defaults::FUEL_LEVEL_AVERAGING_ALPHA
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureFuelLevelUpdatePeriodSec(const std::optional<float> seconds) {
+    if (seconds.has_value()) {
+        engineConfiguration->fuelLevelUpdatePeriodSec = seconds.value();
+    } else {
+        ASSERT_EQ(
+            engineConfiguration->fuelLevelUpdatePeriodSec,
+            engine_configuration_defaults::FUEL_LEVEL_UPDATE_PERIOD_SEC
         ); // check default value
     }
 }

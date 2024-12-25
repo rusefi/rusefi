@@ -1,11 +1,11 @@
 ! units,scale,offset,min,max,digits
 
 struct_no_prefix electronic_throttle_s
-	float targetWithIdlePosition;"ETB: target with idle";"per", 1,0, 0,10, 2,@@GAUGE_CATEGORY_ETB@@
+	float targetWithIdlePosition;"ETB: target with idle";"%", 1,0, 0,10, 2,@@GAUGE_CATEGORY_ETB@@
 	float trim;"ETB: trim"
-	float luaAdjustment;"ETB: luaAdjustment";"per", 1,0, 0,3, 2,@@GAUGE_CATEGORY_ETB@@
+	float luaAdjustment;"ETB: luaAdjustment";"%", 1,0, 0,3, 2,@@GAUGE_CATEGORY_ETB@@
 
-	float m_wastegatePosition;"DC: wastegatePosition";"per", 1,0, 0,3, 2,@@GAUGE_CATEGORY_ETB@@
+	float m_wastegatePosition;"DC: wastegatePosition";"%", 1,0, 0,3, 2,@@GAUGE_CATEGORY_ETB@@
 
 
 	custom percent_t 4 scalar, F32, @OFFSET@, "", 1, 0, 0, 100, 2
@@ -13,7 +13,7 @@ struct_no_prefix electronic_throttle_s
 	percent_t etbFeedForward
 	float etbIntegralError;;"", 1, 0, -10000, 10000, 3
 	float etbCurrentTarget;ETB: target for current pedal;"%", 1, 0, -10000, 10000, 3
-	float etbCurrentAdjustedTarget;;"%", 1, 0, -10000, 10000, 3
+	int16_t autoscale m_adjustedTarget;Adjusted target;"%", 0.01, 0, -100, 100, 2
 
 	bit etbRevLimitActive
 	bit jamDetected

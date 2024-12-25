@@ -19,6 +19,13 @@ void setVwAba() {
 	setFrankensoConfiguration();
 	engineConfiguration->camInputs[0] = Gpio::E0; // a random unused pin needed for happy HW CI
 
+  // default PC1-5 ADC pins conflict with the ethernet module on F767, used on HW CI
+	engineConfiguration->tps1_1AdcChannel = EFI_ADC_32;
+	engineConfiguration->vbattAdcChannel = EFI_ADC_33;
+	engineConfiguration->clt.adcChannel = EFI_ADC_34;
+	engineConfiguration->iat.adcChannel = EFI_ADC_35;
+	engineConfiguration->afr.hwChannel = EFI_ADC_36;
+
 	setWholeTimingTable(20);
 	// set cranking_timing_angle 10
 	engineConfiguration->crankingTimingAngle = 10;

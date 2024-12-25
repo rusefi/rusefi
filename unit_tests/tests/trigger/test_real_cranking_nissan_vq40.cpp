@@ -13,6 +13,7 @@ static void test(int engineSyncCam, float camOffsetAdd) {
 
 	reader.open("tests/trigger/resources/nissan_vq40_cranking-1.csv");
 	EngineTestHelper eth (engine_type_e::HELLEN_121_NISSAN_6_CYL);
+	setTable(config->ignitionIatCorrTable, 0);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engineConfiguration->alwaysInstantRpm = true;
 

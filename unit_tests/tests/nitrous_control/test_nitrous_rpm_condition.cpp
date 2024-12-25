@@ -15,7 +15,7 @@ namespace {
         const char* const context;
     };
 
-    class NitrousRpmConditionTest : public TestBase {
+    class NitrousRpmConditionTest : public TestBase<> {
     protected:
         static constexpr uint16_t TEST_ACTIVATION_RPM = 239;
         static constexpr uint16_t TEST_DEACTIVATION_RPM = 932;
@@ -46,7 +46,7 @@ namespace {
     void NitrousRpmConditionTest::checkRpmCondition(const std::vector<RpmConditionTestData>& testData) {
         for (const RpmConditionTestData& item: testData) {
             updateRpm(item.rpm, &TestBase::periodicSlowCallback);
-            EXPECT_EQ(getModule<NitrousController>().isNitrousRpmConditionSatisfied, item.expectedRpmCondition)
+            EXPECT_EQ(getModule<NitrousController>().isNitrousRpmCondition, item.expectedRpmCondition)
                 << item.context;
         }
     }

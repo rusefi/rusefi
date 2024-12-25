@@ -10,6 +10,26 @@ EngineConfig EngineConfig::clone() const {
     return *this;
 }
 
+EngineConfig EngineConfig::setClutchDownPin(const std::optional<switch_input_pin_e> value) {
+    m_clutchDownPin = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setClutchDownPinInverted(const std::optional<bool> value) {
+    m_clutchDownPinInverted = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setClutchUpPin(const std::optional<switch_input_pin_e> value) {
+    m_clutchUpPin = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setClutchUpPinInverted(const std::optional<bool> value) {
+    m_clutchUpPinInverted = value;
+    return *this;
+}
+
 EngineConfig EngineConfig::setLaunchActivatePin(const std::optional<switch_input_pin_e> value) {
     m_launchActivatePin = value;
     return *this;
@@ -219,6 +239,11 @@ EngineConfig EngineConfig::setNitrousLuaGaugeArmingValue(const std::optional<flo
     return *this;
 }
 
+EngineConfig EngineConfig::setNitrousMinimumVehicleSpeed(const std::optional<uint16_t> value) {
+    m_nitrousMinimumVehicleSpeed = value;
+    return *this;
+}
+
 EngineConfig EngineConfig::setNitrousMinimumTps(const std::optional<int> value) {
     m_nitrousMinimumTps = value;
     return *this;
@@ -256,5 +281,20 @@ EngineConfig EngineConfig::setNitrousDeactivationRpmWindow(const std::optional<u
 
 EngineConfig EngineConfig::setNitrousFuelAdderPercent(const std::optional<int8_t> value) {
     m_nitrousFuelAdderPercent = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setNitrousIgnitionRetard(const std::optional<float> value) {
+    m_nitrousIgnitionRetard = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setFuelLevelAveragingAlpha(const std::optional<float> value) {
+    m_fuelLevelAveragingAlpha = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setFuelLevelUpdatePeriodSec(const std::optional<float> value) {
+    m_fuelLevelUpdatePeriodSec = value;
     return *this;
 }

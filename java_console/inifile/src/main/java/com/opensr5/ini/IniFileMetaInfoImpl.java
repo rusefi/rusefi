@@ -15,7 +15,7 @@ public class IniFileMetaInfoImpl implements IniFileMetaInfo {
 
     private int totalSize;
     private final List<Integer> pageSizes = new ArrayList<>();
-    private int ochBlockSize;
+    private final int ochBlockSize;
 
     /**
      * read maximum chunk size
@@ -24,29 +24,29 @@ public class IniFileMetaInfoImpl implements IniFileMetaInfo {
 
     public IniFileMetaInfoImpl(RawIniFile file) {
 
-        nPages = file.getSimpleIntegerProperty("nPages", 1);
         try {
+            nPages = file.getSimpleIntegerProperty("nPages", 1);
             ochBlockSize = file.getSimpleIntegerProperty("ochBlockSize");
-        } catch (Throwable e) {
-            throw new IllegalStateException("Error while reading " + file.msg);
+
+            blockingFactor = file.getSimpleIntegerProperty("blockingFactor", DEFAULT_BLOCKING_FACTOR);
+
+            signature = file.getValues("signature").get(0);
+
+            List<String> individualPageSizes = file.getValues("pageSize");
+
+            if (individualPageSizes.size() != nPages)
+                throw new IllegalStateException("Unexpected individual sizes: " + individualPageSizes);
+
+            for (String value : individualPageSizes) {
+                int size = Integer.parseInt(value);
+                pageSizes.add(size);
+                totalSize += size;
+            }
+
+            pageReadCommands = file.getValues("pageReadCommand");
+        } catch (MandatoryLineMissing e) {
+            throw new RuntimeException("While reading " + file.msg, e);
         }
-
-        blockingFactor = file.getSimpleIntegerProperty("blockingFactor", DEFAULT_BLOCKING_FACTOR);
-
-        signature = file.getValues("signature").get(0);
-
-        List<String> individualPageSizes = file.getValues("pageSize");
-
-        if (individualPageSizes.size() != nPages)
-            throw new IllegalStateException("Unexpected individual sizes: " + individualPageSizes);
-
-        for (String value : individualPageSizes) {
-            int size = Integer.parseInt(value);
-            pageSizes.add(size);
-            totalSize += size;
-        }
-
-        pageReadCommands = file.getValues("pageReadCommand");
     }
 
     public int getnPages() {

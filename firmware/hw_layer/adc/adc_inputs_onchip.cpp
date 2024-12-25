@@ -29,20 +29,14 @@
 #include "periodic_thread_controller.h"
 #include "protected_gpio.h"
 
-// Board voltage, with divider coefficient accounted for
-float getVoltageDivided(const char *msg, adc_channel_e hwChannel) {
-	return getVoltage(msg, hwChannel) * getAnalogInputDividerCoefficient(hwChannel);
+// voltage in MCU universe, from zero to Vref
+float adcGetRawVoltage(const char *msg, adc_channel_e hwChannel) {
+	return adcRawValueToRawVoltage(adcGetRawValue(msg, hwChannel));
 }
 
-float PUBLIC_API_WEAK boardAdjustVoltage(float voltage, adc_channel_e hwChannel) {
-  // a hack useful when we do not trust voltage just after board EN was turned on. is this just hiding electrical design flaws?
-  return voltage;
-}
-
-// voltage in MCU universe, from zero to VDD
-float getVoltage(const char *msg, adc_channel_e hwChannel) {
-	float voltage = adcToVolts(getAdcValue(msg, hwChannel));
-	return boardAdjustVoltage(voltage, hwChannel);
+// voltage in ECU universe, with all input dividers and OpAmps gains taken into account, voltage at ECU connector pin
+float adcGetScaledVoltage(const char *msg, adc_channel_e hwChannel) {
+	return adcGetRawVoltage(msg, hwChannel) * getAnalogInputDividerCoefficient(hwChannel);
 }
 
 #if EFI_USE_FAST_ADC

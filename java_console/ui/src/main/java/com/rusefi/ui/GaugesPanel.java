@@ -39,7 +39,7 @@ public class GaugesPanel {
 //            Sensor.baseFuel,
 //            Sensor.runningFuel,
 
-            Sensor.etbTarget,
+//            Sensor.etbTarget,
             Sensor.lastErrorCode,
             Sensor.Lambda1,
             Sensor.VBATT,

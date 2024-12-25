@@ -34,7 +34,6 @@ static const LogField fields[] = {
 	{engine->outputChannels.currentIgnitionMode, "Ignition: Mode", "", 0},
 	{engine->outputChannels.currentInjectionMode, "Fuel: Injection mode", "", 0},
 	{engine->outputChannels.coilDutyCycle, "Ignition: coil duty cycle", "%", 0},
-	{engine->outputChannels.etbTarget, "ETB Target", "%", 2},
 	{engine->outputChannels.etb1DutyCycle, "ETB: Duty", "%", 1},
 	{engine->outputChannels.fuelTankLevel, "Fuel level", "%", 0},
 	{engine->outputChannels.totalFuelConsumption, "Fuel: Total consumed", "grams", 1},
@@ -101,6 +100,7 @@ static const LogField fields[] = {
 	{engine->outputChannels.rawIat, "rawIat", "V", 3},
 	{engine->outputChannels.rawOilPressure, "rawOilPressure", "V", 3},
 	{engine->outputChannels.rawAcPressure, "rawAcPressure", "V", 3},
+	{engine->outputChannels.rawFuelLevel, "rawFuelLevel", "V", 3},
 	{engine->outputChannels.fuelClosedLoopBinIdx, "fuelClosedLoopBinIdx", "", 0},
 	{engine->outputChannels.rawPpsPrimary, "rawPpsPrimary", "V", 3},
 	{engine->outputChannels.rawPpsSecondary, "rawPpsSecondary", "V", 3},
@@ -264,6 +264,12 @@ static const LogField fields[] = {
 	{engine->outputChannels.boostClosedLoopBlendBias[1], "boostClosedLoopBlendBias 2", "%", 1},
 	{engine->outputChannels.boostClosedLoopBlendOutput[0], "boostClosedLoopBlendOutput 1", "%", 1},
 	{engine->outputChannels.boostClosedLoopBlendOutput[1], "boostClosedLoopBlendOutput 2", "%", 1},
+	{engine->outputChannels.targetAfrBlendParameter[0], "targetAfrBlendParameter 1", "", 1},
+	{engine->outputChannels.targetAfrBlendParameter[1], "targetAfrBlendParameter 2", "", 1},
+	{engine->outputChannels.targetAfrBlendBias[0], "targetAfrBlendBias 1", "%", 1},
+	{engine->outputChannels.targetAfrBlendBias[1], "targetAfrBlendBias 2", "%", 1},
+	{engine->outputChannels.targetAfrBlendOutput[0], "targetAfrBlendOutput 1", "%", 1},
+	{engine->outputChannels.targetAfrBlendOutput[1], "targetAfrBlendOutput 2", "%", 1},
 	{engine->outputChannels.outputRequestPeriod, "outputRequestPeriod", "", 0},
 	{engine->outputChannels.mapFast, "mapFast", "", 0},
 	{engine->outputChannels.luaGauges[0], "Lua: Gauge 1", "value", 3},
@@ -560,9 +566,6 @@ static const LogField fields[] = {
 	{___engine.module<IdleController>().unmock().iacByTpsTaper, "idle: iacByTpsTaper portion", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<IdleController>().unmock().throttlePedalUpState, "idle: throttlePedalUpState", "", 0},
-#endif
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{___engine.module<IdleController>().unmock().idleTarget, "Idle: Target RPM", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
@@ -577,8 +580,8 @@ static const LogField fields[] = {
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{___engine.module<IdleController>().unmock().luaAdd, "idle: Lua Adder", "", 0},
 #endif
-	{engine->dc_motors.dcOutput0, "DC: output0", "per", 2, "ETB more"},
-	{engine->dc_motors.isEnabled0_int, "DC: en0", "per", 2, "ETB more"},
+	{engine->dc_motors.dcOutput0, "DC: output0", "%", 2, "ETB more"},
+	{engine->dc_motors.isEnabled0_int, "DC: en0", "%", 2, "ETB more"},
 #if EFI_VVT_PID
 	{___engine.module<VvtController1>()->vvtTarget, "vvtTarget", "deg", 1},
 #endif

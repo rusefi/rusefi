@@ -6,7 +6,7 @@
 
 #include "util/test_base.h"
 
-class BoostTestBase : public TestBase {
+class BoostTestBase : public TestBase<> {
 protected:
     using ValueByIndexRetriever = std::function<std::optional<float>(int)>;
 

@@ -234,7 +234,7 @@ expected<percent_t> EtbController::getSetpointIdleValve() const {
 	// VW ETB idle mode uses an ETB only for idle (a mini-ETB sets the lower stop, and a normal cable
 	// can pull the throttle up off the stop.), so we directly control the throttle with the idle position.
 #if EFI_TUNER_STUDIO && (EFI_PROD_CODE || EFI_SIMULATOR)
-	engine->outputChannels.etbTarget = m_idlePosition;
+	// todo: where do we want to log this? engine->outputChannels.etbTarget = m_idlePosition;
 #endif // EFI_TUNER_STUDIO
 	return clampPercentValue(m_idlePosition);
 }
@@ -329,13 +329,7 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	maxPosition = std::min(maxPosition, 100.0f);
 
 	targetPosition = clampF(minPosition, targetPosition, maxPosition);
-	etbCurrentAdjustedTarget = targetPosition;
-
-#if EFI_TUNER_STUDIO
-	if (m_function == DC_Throttle1) {
-		engine->outputChannels.etbTarget = targetPosition;
-	}
-#endif // EFI_TUNER_STUDIO
+	m_adjustedTarget = targetPosition;
 
 	return targetPosition;
 }
@@ -591,7 +585,9 @@ bool EtbController::checkStatus() {
 	if (etbTpsErrorCounter > ETB_INTERMITTENT_LIMIT) {
 		localReason = TpsState::IntermittentTps;
 #if EFI_SHAFT_POSITION_INPUT
-	} else if (engineConfiguration->disableEtbWhenEngineStopped && !engine->triggerCentral.engineMovedRecently()) {
+	} else if (engineConfiguration->disableEtbWhenEngineStopped
+	  && !engine->triggerCentral.engineMovedRecently()
+	  && !engine->etbAutoTune) {
 		localReason = TpsState::EngineStopped;
 #endif // EFI_SHAFT_POSITION_INPUT
 	} else if (etbPpsErrorCounter > ETB_INTERMITTENT_LIMIT) {

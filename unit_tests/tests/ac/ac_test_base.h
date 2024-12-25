@@ -24,7 +24,7 @@ private:
     std::optional<float> m_AcPressureEnableHysteresis;
 };
 
-class AcTestBase : public TestBase {
+class AcTestBase : public TestBase<> {
 protected:
     void updateAcPressure(float acPressure);
 

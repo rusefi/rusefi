@@ -8,12 +8,7 @@ TODO: one day we shall merge java_console and java_tools, right after we come up
 
 ``configuration_definition`` is the most valuable subproject: that code reads
 
-
 gcc_map_reader reads the .map file produced by GCC and prints some details on what is RAM used for
-
-ts2c reads a piece of TunerStudio map and produces a matching C language piece of code
-
-version2header creates a C language header containting current SVN version
 
 enum2string
 

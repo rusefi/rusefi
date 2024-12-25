@@ -12,6 +12,26 @@ float PUBLIC_API_WEAK getAnalogInputDividerCoefficient(adc_channel_e) {
     return engineConfiguration->analogInputDividerCoefficient;
 }
 
+/* overall analog health state
+ * return negative in case of any problems
+ * return 0 if everything is ok or no diagnostic is available */
+int PUBLIC_API_WEAK boardGetAnalogDiagnostic() {
+	return 0;
+}
+
+/* simple implementation if board does not provide advanced diagnostic */
+int PUBLIC_API_WEAK boardGetAnalogInputDiagnostic(adc_channel_e channel, float) {
+#if EFI_PROD_CODE
+	/* for on-chip ADC inputs we check common analog health */
+	if (isAdcChannelOnChip(channel)) {
+		return boardGetAnalogDiagnostic();
+	}
+#endif // EFI_PROD_CODE
+
+	/* input is outside chip/ECU */
+	return 0;
+}
+
 #if HAL_USE_ADC
 
 #include "adc_subscription.h"
@@ -63,9 +83,9 @@ static void printAdcValue(int channel) {
 		efiPrintf("Invalid ADC channel %d", channel);
 		return;
 	}
-	int value = getAdcValue("print", (adc_channel_e)channel);
-	float volts = adcToVoltsDivided(value, (adc_channel_e)channel);
-	efiPrintf("adc %d voltage : %.3f", channel, volts);
+	int adcValue = adcGetRawValue("print", (adc_channel_e)channel);
+	float voltsInput = adcRawValueToScaledVoltage(adcValue, (adc_channel_e)channel);
+	efiPrintf("adc %d input %.3fV", channel, voltsInput);
 }
 
 static void printAdcChannedReport(const char *prefix, int internalIndex, adc_channel_e hwChannel)
@@ -73,14 +93,14 @@ static void printAdcChannedReport(const char *prefix, int internalIndex, adc_cha
 	if (isAdcChannelValid(hwChannel)) {
 		ioportid_t port = getAdcChannelPort("print", hwChannel);
 		int pin = getAdcChannelPin(hwChannel);
-		int adcValue = getAdcValue("print", hwChannel);
-		float volts = getVoltage("print", hwChannel);
-		float voltsDivided = getVoltageDivided("print", hwChannel);
+		int adcValue = adcGetRawValue("print", hwChannel);
+		float volts = adcGetRawVoltage("print", hwChannel);
+		float voltsInput = adcGetScaledVoltage("print", hwChannel);
 		/* Human index starts from 1 */
-		efiPrintf(" %s ch[%2d] @ %s%d ADC%d 12bit=%4d %.3fV (input %.3fV)",
+		efiPrintf(" %s ch[%2d] @ %s%d ADC%d 12bit=%4d %.3fV input %.3fV",
 			prefix, internalIndex, portname(port), pin,
 			/* TODO: */ hwChannel - EFI_ADC_0 + 1,
-			adcValue, volts, voltsDivided);
+			adcValue, volts, voltsInput);
 	}
 }
 
@@ -235,12 +255,13 @@ void printFullAdcReportIfNeeded(void) {
 
 #else /* not HAL_USE_ADC */
 
-__attribute__((weak)) float getVoltageDivided(const char*, adc_channel_e) {
+// voltage in MCU universe, from zero to VDD
+__attribute__((weak)) float adcGetRawVoltage(const char*, adc_channel_e) {
 	return 0;
 }
 
-// voltage in MCU universe, from zero to VDD
-__attribute__((weak)) float getVoltage(const char*, adc_channel_e) {
+// voltage in ECU universe, with all input dividers and OpAmps gains taken into account, voltage at ECU connector pin
+__attribute__((weak)) float adcGetScaledVoltage(const char*, adc_channel_e) {
 	return 0;
 }
 

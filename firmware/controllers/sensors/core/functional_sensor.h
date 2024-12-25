@@ -8,9 +8,7 @@
 #pragma once
 
 #include "converters/sensor_converter_func.h"
-#include "stored_value_sensor.h"
-
-#include <type_traits>
+#include "functional_sensor_impl.h"
 
 /**
  * @brief Class for sensors that convert from some raw floating point
@@ -23,30 +21,9 @@
  * Register an instance of the new class with an interface
  * that provides and posts raw values so the sensor can update.
  */
-class FunctionalSensor : public StoredValueSensor {
+class FunctionalSensor : public FunctionalSensorImpl<SensorConverter> {
 public:
-	FunctionalSensor(SensorType type, efidur_t timeoutPeriod)
-		: StoredValueSensor(type, timeoutPeriod) { }
-
-	void postRawValue(float inputValue, efitick_t timestamp);
-
-	void setFunction(SensorConverter& func) {
-		m_function = &func;
-	}
-
-	SensorConverter* getFunction() const {
-	  return m_function;
-	}
-
-	float getRaw() const override final {
-		return m_rawValue;
-	}
+	FunctionalSensor(SensorType type, efidur_t timeoutPeriod);
 
 	void showInfo(const char* sensorName) const override;
-
-private:
-	// Conversion function for this sensor
-	SensorConverter* m_function = nullptr;
-
-	float m_rawValue = 0;
 };

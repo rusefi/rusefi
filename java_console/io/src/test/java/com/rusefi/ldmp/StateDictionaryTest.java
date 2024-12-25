@@ -16,11 +16,13 @@ public class StateDictionaryTest {
     }
 
     @Test
-    public void testOffset() {
+    public void testKnockControllerGoesAfterIgnitionAndFuelComputer() {
         int outputsSize = StateDictionary.getSize(TsOutputs.VALUES);
+        int fuelComputerSize = StateDictionary.getSize(FuelComputer.VALUES);
+        int ignitionStateSize = StateDictionary.getSize(IgnitionState.VALUES);
         assertEquals(outputsSize
-                + StateDictionary.getSize(FuelComputer.VALUES)
-                        + StateDictionary.getSize(IgnitionState.VALUES)
+                + fuelComputerSize
+                        + ignitionStateSize
                 , StateDictionary.INSTANCE.getOffset(live_data_e.LDS_knock_controller));
     }
 }

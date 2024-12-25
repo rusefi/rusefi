@@ -7,9 +7,11 @@
 #include "test_engine_configuration.h"
 #include "test_engine_state.h"
 #include "test_persistent_configuration.h"
+#include "test_lua_script_executor.h"
 #include "engine_config.h"
 
-class TestBase : public testing::Test {
+template <class GtestBase = testing::Test>
+class TestBase : public GtestBase {
 protected:
     void SetUp() override;
     void TearDown() override;
@@ -17,12 +19,17 @@ protected:
     TestEngineConfiguration& getTestEngineConfiguration();
     TestEngineState& getTestEngineState();
     TestPersistentConfiguration& getTestPersistentConfiguration();
+    TestLuaScriptExecutor& getTestLuaScriptExecutor();
 
     void setUpEngineConfiguration(const EngineConfig& config);
     void periodicFastCallback();
 public:
     void periodicSlowCallback();
 protected:
+    void updateVehicleSpeed(
+        std::optional<float> speed,
+        void (TestBase::*postAction)() = &TestBase::periodicFastCallback
+    );
     void updateRpm(std::optional<float> rpm, void (TestBase::*postAction)() = &TestBase::periodicFastCallback);
     void updateApp(std::optional<float> app, void (TestBase::*postAction)() = &TestBase::periodicFastCallback);
     void updateClt(std::optional<float> clt, void (TestBase::*postAction)() = &TestBase::periodicFastCallback);
@@ -36,6 +43,4 @@ private:
     std::unique_ptr<EngineTestHelper> eth;
 };
 
-template<typename ModuleType> ModuleType& TestBase::getModule() {
-    return engine->module<ModuleType>().unmock();
-}
+#include "test_base.hpp" // template methods implementation

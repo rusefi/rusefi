@@ -25,6 +25,12 @@ namespace engine_configuration_defaults {
     constexpr int8_t TORQUE_REDUCTION_IGNITION_CUT = 0;
     constexpr float TORQUE_REDUCTION_IGNITION_RETARD = 0.0f;
 
+    /* Other Sensor Inputs: */
+    constexpr switch_input_pin_e CLUTCH_DOWN_PIN = Gpio::Unassigned;
+    constexpr bool CLUTCH_DOWN_PIN_INVERTED = false;
+    constexpr switch_input_pin_e CLUTCH_UP_PIN = Gpio::Unassigned;
+    constexpr bool CLUTCH_UP_PIN_INVERTED = false;
+
     /* Launch Control: */
     constexpr switch_input_pin_e LAUNCH_ACTIVATE_PIN = Gpio::Unassigned;
     constexpr bool LAUNCH_ACTIVATE_PIN_INVERTED = false;
@@ -59,6 +65,7 @@ namespace engine_configuration_defaults {
     constexpr lua_gauge_meaning_e NITROUS_LUA_GAUGE_MEANING = LUA_GAUGE_LOWER_BOUND;
     constexpr float NITROUS_LUA_GAUGE_ARMING_VALUE = 0.0f;
 
+    constexpr uint16_t NITROUS_MINIMUM_VEHICLE_SPEED = 0;
     constexpr int NITROUS_MINIMUM_TPS = 80;
     constexpr uint8_t NITROUS_MINIMUM_CLT = 60;
     constexpr uint16_t NITROUS_MAXIMUM_MAP = 0;
@@ -67,4 +74,8 @@ namespace engine_configuration_defaults {
     constexpr uint16_t NITROUS_DEACTIVATION_RPM = 7000;
     constexpr uint16_t NITROUS_DEACTIVATION_RPM_WINDOW = 500;
     constexpr int8_t NITROUS_FUEL_ADDER_PERCENT = 0;
+    constexpr float NITROUS_IGNITION_RETARD = 0.0f;
+
+    constexpr float FUEL_LEVEL_AVERAGING_ALPHA = 0.001f;
+    constexpr float FUEL_LEVEL_UPDATE_PERIOD_SEC = 0.1f;
 }

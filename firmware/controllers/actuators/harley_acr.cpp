@@ -25,7 +25,7 @@ static bool getAcrState() {
 		return false;
 	}
 
-	int revCount = getTriggerCentral()->triggerState.getCrankSynchronizationCounter();
+	int revCount = getTriggerCentral()->triggerState.getSynchronizationCounter();
 	if (revCount > engineConfiguration->acrRevolutions) {
 		// Enough revs have elapsed that we're done with ACR
 		return false;

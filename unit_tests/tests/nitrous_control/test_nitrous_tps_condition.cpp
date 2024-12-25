@@ -15,7 +15,7 @@ namespace {
         const char* const context;
     };
 
-    class NitrousTpsConditionTest : public TestBase {
+    class NitrousTpsConditionTest : public TestBase<> {
     protected:
         static constexpr int TEST_MIN_TPS = 34;
 
@@ -25,7 +25,7 @@ namespace {
     void NitrousTpsConditionTest::checkTpsCondition(const std::vector<TpsConditionTestData>& testData) {
         for (const TpsConditionTestData& item: testData) {
             updateApp(item.tps, &TestBase::periodicSlowCallback);
-            EXPECT_EQ(getModule<NitrousController>().isTpsConditionSatisfied, item.expectedTpsCondition)
+            EXPECT_EQ(getModule<NitrousController>().isNitrousTpsCondition, item.expectedTpsCondition)
                 << item.context;
         }
     }

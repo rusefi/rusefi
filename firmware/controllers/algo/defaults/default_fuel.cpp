@@ -129,6 +129,14 @@ static void setDefaultVETable() {
 		setLinearCurve(blend.blendBins, 0, 100);
 		setLinearCurve(blend.blendValues, 0, 100);
 	}
+
+	for (size_t i = 0; i < efi::size(config->targetAfrBlends); i++) {
+		auto& blend = config->targetAfrBlends[i];
+		setLinearCurve(blend.rpmBins, 0, 7000);
+
+		setLinearCurve(blend.blendBins, 0, 100);
+		setLinearCurve(blend.blendValues, 0, 100);
+	}
 }
 
 static void setDefaultFuelCutParameters() {

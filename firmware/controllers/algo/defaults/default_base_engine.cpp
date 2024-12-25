@@ -3,6 +3,7 @@
 #include "defaults.h"
 #include "vr_pwm.h"
 #include "kline.h"
+#include "engine_configuration_defaults.h"
 #include <rusefi/manifest.h>
 #if HW_PROTEUS
 #include "proteus_meta.h"
@@ -62,6 +63,7 @@ static void setDefaultHPFP() {
 
 static void mc33810defaults() {
   engineConfiguration->mc33810Nomi = 5.5;
+  engineConfiguration->mc33810maxDwellTimer = mc33810maxDwellTimer_e::DWELL_8MS;
   engineConfiguration->mc33810Maxi = 14;
 }
 
@@ -102,7 +104,10 @@ void setDefaultBaseEngine() {
 
   engineConfiguration->acrRevolutions = 5;
 
-    engineConfiguration->watchOutForLinearTime = true;
+  engineConfiguration->fuelLevelAveragingAlpha = engine_configuration_defaults::FUEL_LEVEL_AVERAGING_ALPHA;
+  engineConfiguration->fuelLevelUpdatePeriodSec = engine_configuration_defaults::FUEL_LEVEL_UPDATE_PERIOD_SEC;
+
+  engineConfiguration->watchOutForLinearTime = true;
 
   setLinearCurve(engineConfiguration->tractionControlSlipBins, /*from*/0.9, /*to*/1.2, 0.05);
 	setLinearCurve(engineConfiguration->tractionControlSpeedBins, /*from*/10, /*to*/120, 5);

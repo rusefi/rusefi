@@ -41,10 +41,10 @@ public class RawIniFile {
     }
 
     @NotNull
-    public Line getMandatoryLine(String key) {
+    public Line getMandatoryLine(String key) throws MandatoryLineMissing {
         Line result = getByKey(key);
         if (result == null)
-            throw new IllegalStateException("Line not found: " + key);
+            throw new MandatoryLineMissing("Line not found: " + key);
         assert result.tokens.length > 1;
         return result;
     }
@@ -58,21 +58,21 @@ public class RawIniFile {
         return lines;
     }
 
-    public int getSimpleIntegerProperty(String key) {
+    public int getSimpleIntegerProperty(String key) throws MandatoryLineMissing {
         Line line = asSet.get(key);
         if (line == null)
-            throw new IllegalStateException("Line not found: " + key);
+            throw new MandatoryLineMissing("Line not found: " + key);
         String value = line.getTokens()[1];
         return Integer.parseInt(value);
     }
 
-    public int getSimpleIntegerProperty(String key, int defaultValue) {
+    public int getSimpleIntegerProperty(String key, int defaultValue) throws MandatoryLineMissing {
         if (!asSet.containsKey(key))
             return defaultValue;
         return getSimpleIntegerProperty(key);
     }
 
-    public List<String> getValues(String key) {
+    public List<String> getValues(String key) throws MandatoryLineMissing {
         RawIniFile.Line line = getMandatoryLine(key);
         return Arrays.asList(line.getTokens()).subList(1, line.getTokens().length);
     }

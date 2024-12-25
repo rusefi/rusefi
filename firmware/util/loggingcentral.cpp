@@ -2,16 +2,16 @@
  * @file	loggingcentral.cpp
  *
  * This file implements text logging.
- * 
+ *
  * Uses a queue of buffers so that the expensive printf operation doesn't require exclusive access
  * (ie, global system lock) to log.  In the past there have been serious performance problems caused
- * by heavy logging on a low prioriy thread that blocks the rest of the system running (trigger errors, etc).
- * 
+ * by heavy logging on a low priority thread that blocks the rest of the system running (trigger errors, etc).
+ *
  * Uses ChibiOS message queues to maintain one queue of free buffers, and one queue of used buffers.
  * When a thread wants to write, it acquires a free buffer, prints to it, and pushes it in to the
  * used queue. A dedicated thread then dequeues and writes lines from the used buffer in to the
  * large output buffer.
- * 
+ *
  * Later, the binary TS thread will request access to the output log buffer for reading, so a lock is taken,
  * buffers, swapped, and the back buffer returned.  This blocks neither output nor logging in any case, as
  * each operation operates on a different buffer.
@@ -47,7 +47,7 @@ size_t LogBuffer<TBufferSize>::length() const {
 template <size_t TBufferSize>
 void LogBuffer<TBufferSize>::reset() {
 	m_writePtr = m_buffer;
-	memset(m_buffer, 0, TBufferSize);
+	*m_writePtr = '\0';
 }
 
 template <size_t TBufferSize>
@@ -63,11 +63,10 @@ void LogBuffer<TBufferSize>::writeInternal(const char* buffer) {
 
 	// If we can't fit the whole thing, write as much as we can
 	len = minI(available, len);
+	// Ensure the output buffer is always null terminated (in case we did a partial write)
+	*(m_writePtr + len) = '\0';
 	memcpy(m_writePtr, buffer, len);
 	m_writePtr += len;
-
-	// Ensure the output buffer is always null terminated (in case we did a partial write)
-	*m_writePtr = '\0';
 }
 
 // for unit tests
@@ -137,15 +136,16 @@ public:
 			LogLineBuffer* line;
 			msg_t msg = filledBuffers.fetch(&line, TIME_INFINITE);
 
-			if (msg == MSG_RESET) {
-				// todo?
-				// what happens if MSG_RESET?
+			if (msg != MSG_OK) {
+				// This should be impossible - neither timeout or reset should happen
 			} else {
-				// Lock the buffer mutex - inhibit buffer swaps while writing
-				chibios_rt::MutexLocker lock(logBufferMutex);
+				{
+					// Lock the buffer mutex - inhibit buffer swaps while writing
+					chibios_rt::MutexLocker lock(logBufferMutex);
 
-				// Write the line out to the output buffer
-				writeBuffer->writeLine(line);
+					// Write the line out to the output buffer
+					writeBuffer->writeLine(line);
+				}
 
 				// Return this line buffer to the free list
 				freeBuffers.post(line, TIME_INFINITE);
@@ -231,7 +231,7 @@ void efiPrintfInternal(const char *format, ...) {
 /**
  * This method appends the content of specified thread-local logger into the global buffer
  * of logging content.
- * 
+ *
  * This is a legacy function, most normal logging should use efiPrintf
  */
 void scheduleLogging(Logging *logging) {

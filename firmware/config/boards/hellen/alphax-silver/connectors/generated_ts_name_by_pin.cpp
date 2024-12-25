@@ -6,6 +6,8 @@
 // see comments at declaration in pin_repository.h
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
+		case Gpio::A6: return "VR Discrete Positive";
+		case Gpio::B1: return "VR max9924 Positive";
 		case Gpio::C13: return "13A Coil 1";
 		case Gpio::E3: return "10A Coil 4";
 		case Gpio::E4: return "11A Coil 3";

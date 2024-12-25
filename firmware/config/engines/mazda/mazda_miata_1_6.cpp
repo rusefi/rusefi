@@ -245,10 +245,6 @@ void setMiataNA6_MAP_Frankenso() {
 	engineConfiguration->clutchDownPin = Gpio::A3;
 	engineConfiguration->clutchDownPinMode = PI_PULLUP;
 
-
-	// 110mm red wire from 1N/W14 to bottom of W45
-	engineConfiguration->throttlePedalUpPin = Gpio::A7;
-
 	// green wire from 1Q/W17 to bottom of W46
 	engineConfiguration->acSwitch = Gpio::A6;
 
@@ -264,6 +260,15 @@ void setMiataNA6_MAP_Frankenso() {
 	engineConfiguration->ignitionPins[1] = Gpio::Unassigned;
 	engineConfiguration->ignitionPins[2] = Gpio::C7; // Frankenso high side - pin 1H
 	engineConfiguration->ignitionPins[3] = Gpio::Unassigned;
+
+#if defined(HW_NUCLEO_F767) || defined(HW_NUCLEO_H743)
+    // default PA1-6 ADC pins conflict with the ethernet module on F767, used on HW CI
+    engineConfiguration->afr.hwChannel = EFI_ADC_36;
+    engineConfiguration->map.sensor.hwChannel = EFI_ADC_39;
+    engineConfiguration->acSwitch = Gpio::Unassigned;
+    engineConfiguration->camInputs[0] = Gpio::E0;
+#endif
+
 }
 
 void setMazdaMiataNA94() {

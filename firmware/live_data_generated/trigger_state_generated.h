@@ -6,11 +6,10 @@
 // start of trigger_state_s
 struct trigger_state_s {
 	/**
-	 * sync: Crank sync counter
-	 * Usually matches crank revolutions
+	 * sync: trigger wheel sync counter
 	 * offset 0
 	 */
-	uint32_t crankSynchronizationCounter = (uint32_t)0;
+	uint32_t synchronizationCounter = (uint32_t)0;
 	/**
 	 * units: us
 	 * offset 4
@@ -36,15 +35,11 @@ struct trigger_state_s {
 	 */
 	uint8_t triggerStateIndex = (uint8_t)0;
 	/**
-	 * offset 33
-	 */
-	uint8_t vvtStateIndex = (uint8_t)0;
-	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 34
+	 * offset 33
 	 */
-	uint8_t alignmentFill_at_34[2];
+	uint8_t alignmentFill_at_33[3];
 };
 static_assert(sizeof(trigger_state_s) == 36);
 

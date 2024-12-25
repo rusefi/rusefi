@@ -15,7 +15,7 @@ static Biquad flexTempFilter;
 
 static Timer flexFreq, flexPulse;
 
-static int flexCallbackCounter = 0;
+int flexCallbackCounter = 0;
 static int lowFlexCallbackCounter = 0;
 static float frequency;
 static float pulseWidthUs;

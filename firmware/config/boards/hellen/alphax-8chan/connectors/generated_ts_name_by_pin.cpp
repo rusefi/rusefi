@@ -22,7 +22,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::C6: return "14D - VVT 2";
 		case Gpio::C7: return "20D - VVT 3";
 		case Gpio::C8: return "21D - VVT 4";
-		case Gpio::C9: return "22C - Boost";
+		case Gpio::C9: return "22D - Boost";
 		case Gpio::D10: return "4D - Injector 4";
 		case Gpio::D11: return "3D - Injector 3";
 		case Gpio::D12: return "5C - High Side 1";
@@ -51,7 +51,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::F14: return "13D - Injector 8";
 		case Gpio::F3: return "5A - Switch 4";
 		case Gpio::F4: return "13A - Hall Input 5";
-		case Gpio::F5: return "21B - Flex";
+		case Gpio::F5: return "21A - Flex";
 		case Gpio::F6: return "21B - Knock2 Input";
 		case Gpio::G10: return "9D - Fuel Pump";
 		case Gpio::G11: return "25C - Low Side 6";

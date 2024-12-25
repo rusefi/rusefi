@@ -10,6 +10,12 @@ class EngineConfig {
 public:
     EngineConfig clone() const;
 
+    // Other Sensor Inputs
+    std::optional<switch_input_pin_e> getClutchDownPin() const { return m_clutchDownPin; }
+    std::optional<bool> getClutchDownPinInverted() const { return m_clutchDownPinInverted; }
+    std::optional<switch_input_pin_e> getClutchUpPin() const { return m_clutchUpPin; }
+    std::optional<bool> getClutchUpPinInverted() const { return m_clutchUpPinInverted; }
+
     // Launch Control
     std::optional<switch_input_pin_e> getLaunchActivatePin() const { return m_launchActivatePin; }
     std::optional<bool> getLaunchActivateInverted() const { return m_launchActivateInverted; }
@@ -69,6 +75,7 @@ public:
     std::optional<lua_gauge_meaning_e> getNitrousLuaGaugeMeaning() const { return m_nitrousLuaGaugeMeaning; }
     std::optional<float> getNitrousLuaGaugeArmingValue() const { return m_nitrousLuaGaugeArmingValue; }
 
+    std::optional<uint16_t> getNitrousMinimumVehicleSpeed() const { return m_nitrousMinimumVehicleSpeed; }
     std::optional<int> getNitrousMinimumTps() const { return  m_nitrousMinimumTps; }
     std::optional<uint8_t> getNitrousMinimumClt() const { return  m_nitrousMinimumClt; }
     std::optional<uint16_t> getNitrousMaximumMap() const { return  m_nitrousMaximumMap; }
@@ -77,9 +84,19 @@ public:
     std::optional<uint16_t> getNitrousDeactivationRpm() const { return  m_nitrousDeactivationRpm; }
     std::optional<uint16_t> getNitrousDeactivationRpmWindow() const { return  m_nitrousDeactivationRpmWindow; }
     std::optional<int8_t> getNitrousFuelAdderPercent() const { return m_nitrousFuelAdderPercent; }
+    std::optional<float> getNitrousIgnitionRetard() const { return m_nitrousIgnitionRetard; }
+
+    std::optional<float> getFuelLevelAveragingAlpha() const { return m_fuelLevelAveragingAlpha; }
+    std::optional<float> getFuelLevelUpdatePeriodSec() const { return m_fuelLevelUpdatePeriodSec; }
 
     // We do not core about performance in tests, but we want to use builder-like style, so setters return new instance
     // of configuration:
+
+    // Other Sensor Inputs
+    EngineConfig setClutchDownPin(std::optional<switch_input_pin_e> value);
+    EngineConfig setClutchDownPinInverted(std::optional<bool> value);
+    EngineConfig setClutchUpPin(std::optional<switch_input_pin_e> value);
+    EngineConfig setClutchUpPinInverted(std::optional<bool> value);
 
     // Launch Control
     EngineConfig setLaunchActivatePin(std::optional<switch_input_pin_e> value);
@@ -135,6 +152,7 @@ public:
     EngineConfig setNitrousLuaGaugeMeaning(std::optional<lua_gauge_meaning_e> value);
     EngineConfig setNitrousLuaGaugeArmingValue(std::optional<float> value);
 
+    EngineConfig setNitrousMinimumVehicleSpeed(std::optional<uint16_t> value);
     EngineConfig setNitrousMinimumTps(std::optional<int> value);
     EngineConfig setNitrousMinimumClt(std::optional<uint8_t> value);
     EngineConfig setNitrousMaximumMap(std::optional<uint16_t> value);
@@ -143,7 +161,17 @@ public:
     EngineConfig setNitrousDeactivationRpm(std::optional<uint16_t> value);
     EngineConfig setNitrousDeactivationRpmWindow(std::optional<uint16_t> value);
     EngineConfig setNitrousFuelAdderPercent(std::optional<int8_t> value);
+    EngineConfig setNitrousIgnitionRetard(std::optional<float> value);
+
+    EngineConfig setFuelLevelAveragingAlpha(std::optional<float> value);
+    EngineConfig setFuelLevelUpdatePeriodSec(std::optional<float> value);
 private:
+    // Other Sensor Inputs
+    std::optional<switch_input_pin_e> m_clutchDownPin;
+    std::optional<bool> m_clutchDownPinInverted;
+    std::optional<switch_input_pin_e> m_clutchUpPin;
+    std::optional<bool> m_clutchUpPinInverted;
+
     // Launch Control
     std::optional<switch_input_pin_e> m_launchActivatePin;
     std::optional<bool> m_launchActivateInverted;
@@ -198,6 +226,7 @@ private:
     std::optional<lua_gauge_meaning_e> m_nitrousLuaGaugeMeaning;
     std::optional<float> m_nitrousLuaGaugeArmingValue;
 
+    std::optional<uint16_t> m_nitrousMinimumVehicleSpeed;
     std::optional<int> m_nitrousMinimumTps;
     std::optional<uint8_t> m_nitrousMinimumClt;
     std::optional<uint16_t> m_nitrousMaximumMap;
@@ -206,4 +235,8 @@ private:
     std::optional<uint16_t> m_nitrousDeactivationRpm;
     std::optional<uint16_t> m_nitrousDeactivationRpmWindow;
     std::optional<int8_t> m_nitrousFuelAdderPercent;
+    std::optional<float> m_nitrousIgnitionRetard;
+
+    std::optional<float> m_fuelLevelAveragingAlpha;
+    std::optional<float> m_fuelLevelUpdatePeriodSec;
 };

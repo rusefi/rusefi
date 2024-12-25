@@ -7,7 +7,7 @@
 struct electronic_throttle_s {
 	/**
 	 * "ETB: target with idle"
-	 * units: per
+	 * units: %
 	 * offset 0
 	 */
 	float targetWithIdlePosition = (float)0;
@@ -18,13 +18,13 @@ struct electronic_throttle_s {
 	float trim = (float)0;
 	/**
 	 * "ETB: luaAdjustment"
-	 * units: per
+	 * units: %
 	 * offset 8
 	 */
 	float luaAdjustment = (float)0;
 	/**
 	 * "DC: wastegatePosition"
-	 * units: per
+	 * units: %
 	 * offset 12
 	 */
 	float m_wastegatePosition = (float)0;
@@ -43,10 +43,17 @@ struct electronic_throttle_s {
 	 */
 	float etbCurrentTarget = (float)0;
 	/**
+	 * Adjusted target
 	 * units: %
 	 * offset 28
 	 */
-	float etbCurrentAdjustedTarget = (float)0;
+	scaled_channel<int16_t, 100, 1> m_adjustedTarget = (int16_t)0;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 30
+	 */
+	uint8_t alignmentFill_at_30[2];
 	/**
 	offset 32 bit 0 */
 	bool etbRevLimitActive : 1 {};
@@ -58,91 +65,91 @@ struct electronic_throttle_s {
 	bool validPlantPosition : 1 {};
 	/**
 	offset 32 bit 3 */
-	bool unusedBit_11_3 : 1 {};
+	bool unusedBit_12_3 : 1 {};
 	/**
 	offset 32 bit 4 */
-	bool unusedBit_11_4 : 1 {};
+	bool unusedBit_12_4 : 1 {};
 	/**
 	offset 32 bit 5 */
-	bool unusedBit_11_5 : 1 {};
+	bool unusedBit_12_5 : 1 {};
 	/**
 	offset 32 bit 6 */
-	bool unusedBit_11_6 : 1 {};
+	bool unusedBit_12_6 : 1 {};
 	/**
 	offset 32 bit 7 */
-	bool unusedBit_11_7 : 1 {};
+	bool unusedBit_12_7 : 1 {};
 	/**
 	offset 32 bit 8 */
-	bool unusedBit_11_8 : 1 {};
+	bool unusedBit_12_8 : 1 {};
 	/**
 	offset 32 bit 9 */
-	bool unusedBit_11_9 : 1 {};
+	bool unusedBit_12_9 : 1 {};
 	/**
 	offset 32 bit 10 */
-	bool unusedBit_11_10 : 1 {};
+	bool unusedBit_12_10 : 1 {};
 	/**
 	offset 32 bit 11 */
-	bool unusedBit_11_11 : 1 {};
+	bool unusedBit_12_11 : 1 {};
 	/**
 	offset 32 bit 12 */
-	bool unusedBit_11_12 : 1 {};
+	bool unusedBit_12_12 : 1 {};
 	/**
 	offset 32 bit 13 */
-	bool unusedBit_11_13 : 1 {};
+	bool unusedBit_12_13 : 1 {};
 	/**
 	offset 32 bit 14 */
-	bool unusedBit_11_14 : 1 {};
+	bool unusedBit_12_14 : 1 {};
 	/**
 	offset 32 bit 15 */
-	bool unusedBit_11_15 : 1 {};
+	bool unusedBit_12_15 : 1 {};
 	/**
 	offset 32 bit 16 */
-	bool unusedBit_11_16 : 1 {};
+	bool unusedBit_12_16 : 1 {};
 	/**
 	offset 32 bit 17 */
-	bool unusedBit_11_17 : 1 {};
+	bool unusedBit_12_17 : 1 {};
 	/**
 	offset 32 bit 18 */
-	bool unusedBit_11_18 : 1 {};
+	bool unusedBit_12_18 : 1 {};
 	/**
 	offset 32 bit 19 */
-	bool unusedBit_11_19 : 1 {};
+	bool unusedBit_12_19 : 1 {};
 	/**
 	offset 32 bit 20 */
-	bool unusedBit_11_20 : 1 {};
+	bool unusedBit_12_20 : 1 {};
 	/**
 	offset 32 bit 21 */
-	bool unusedBit_11_21 : 1 {};
+	bool unusedBit_12_21 : 1 {};
 	/**
 	offset 32 bit 22 */
-	bool unusedBit_11_22 : 1 {};
+	bool unusedBit_12_22 : 1 {};
 	/**
 	offset 32 bit 23 */
-	bool unusedBit_11_23 : 1 {};
+	bool unusedBit_12_23 : 1 {};
 	/**
 	offset 32 bit 24 */
-	bool unusedBit_11_24 : 1 {};
+	bool unusedBit_12_24 : 1 {};
 	/**
 	offset 32 bit 25 */
-	bool unusedBit_11_25 : 1 {};
+	bool unusedBit_12_25 : 1 {};
 	/**
 	offset 32 bit 26 */
-	bool unusedBit_11_26 : 1 {};
+	bool unusedBit_12_26 : 1 {};
 	/**
 	offset 32 bit 27 */
-	bool unusedBit_11_27 : 1 {};
+	bool unusedBit_12_27 : 1 {};
 	/**
 	offset 32 bit 28 */
-	bool unusedBit_11_28 : 1 {};
+	bool unusedBit_12_28 : 1 {};
 	/**
 	offset 32 bit 29 */
-	bool unusedBit_11_29 : 1 {};
+	bool unusedBit_12_29 : 1 {};
 	/**
 	offset 32 bit 30 */
-	bool unusedBit_11_30 : 1 {};
+	bool unusedBit_12_30 : 1 {};
 	/**
 	offset 32 bit 31 */
-	bool unusedBit_11_31 : 1 {};
+	bool unusedBit_12_31 : 1 {};
 	/**
 	 * "ETB TPS error counter"
 	 * units: count

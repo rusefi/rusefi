@@ -111,7 +111,8 @@ public:
 	std::unique_ptr<::testing::NiceMock<MockAirmass>> mockAirmass;
 
 private:
-	void writeEvents(const char *fileName);
+	void writeEventsLogicData(const char *fileName);
+	void writeEvents2(const char *fileName);
 };
 
 void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, injection_mode_e injMode = IM_BATCH);

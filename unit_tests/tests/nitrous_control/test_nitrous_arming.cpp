@@ -7,8 +7,7 @@
 #include "util/test_base.h"
 
 namespace {
-    class NitrousArmingTest: public TestBase
-    {
+    class NitrousArmingTest: public TestBase<> {
     protected:
         static constexpr switch_input_pin_e TEST_NITROUS_CONTROL_ARMING_PIN = Gpio::A13;
         static constexpr lua_gauge_e TEST_NITROUS_LUA_GAUGE = LUA_GAUGE_3;
@@ -28,7 +27,7 @@ namespace {
     void NitrousArmingTest::checkArmingAfterPeriodicFastCallback(const bool shouldBeArmed, const char* const context) {
         periodicSlowCallback();
 
-        EXPECT_EQ(getModule<NitrousController>().isArmed, shouldBeArmed) << context;
+        EXPECT_EQ(getModule<NitrousController>().isNitrousArmed, shouldBeArmed) << context;
     }
 
     TEST_F(NitrousArmingTest, checkDefault) {

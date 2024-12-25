@@ -15,7 +15,7 @@ namespace {
         const char* const context;
     };
 
-    class NitrousCltConditionTest : public TestBase {
+    class NitrousCltConditionTest : public TestBase<> {
     protected:
         static constexpr uint8_t TEST_MIN_CLT = 51;
 
@@ -25,7 +25,7 @@ namespace {
     void NitrousCltConditionTest::checkCltCondition(const std::vector<CltConditionTestData>& testData) {
         for (const CltConditionTestData& item: testData) {
             updateClt(item.clt, &TestBase::periodicSlowCallback);
-            EXPECT_EQ(getModule<NitrousController>().isCltConditionSatisfied, item.expectedCltCondition)
+            EXPECT_EQ(getModule<NitrousController>().isNitrousCltCondition, item.expectedCltCondition)
                 << item.context;
         }
     }

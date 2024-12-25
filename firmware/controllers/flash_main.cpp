@@ -63,10 +63,6 @@ extern const MFSConfig *boardGetMfsConfig(void);
  * should be in a different sector of flash since complete flash sectors are erased on write.
  */
 
-static uint32_t flashStateCrc(const persistent_config_container_s& state) {
-	return crc32(&state.persistentConfiguration, sizeof(persistent_config_s));
-}
-
 #if (EFI_FLASH_WRITE_THREAD == TRUE)
 chibios_rt::BinarySemaphore flashWriteSemaphore(/*taken =*/ true);
 
@@ -173,7 +169,7 @@ void writeToFlashNow() {
 	// Set up the container
 	persistentState.size = sizeof(persistentState);
 	persistentState.version = FLASH_DATA_VERSION;
-	persistentState.crc = flashStateCrc(persistentState);
+	persistentState.crc = persistentState.getCrc();
 
 	// there's no wdgStop() for STM32, so we cannot disable it.
 	// we just set a long timeout of 5 secs to wait until flash is done.
@@ -246,7 +242,7 @@ enum class FlashState {
 };
 
 static FlashState validatePersistentState() {
-	auto flashCrc = flashStateCrc(persistentState);
+	auto flashCrc = persistentState.getCrc();
 
 	if (flashCrc != persistentState.crc) {
 		// If the stored crc is all 1s, that probably means the flash is actually blank, not that the crc failed.
@@ -304,7 +300,6 @@ static FlashState readConfiguration() {
 
 #if EFI_STORAGE_INT_FLASH == TRUE
 	auto firstCopyAddr = getFlashAddrFirstCopy();
-	auto secondyCopyAddr = getFlashAddrSecondCopy();
 
 	FlashState firstCopy = readOneConfigurationCopy(firstCopyAddr);
 
@@ -313,8 +308,9 @@ static FlashState readConfiguration() {
 		return firstCopy;
 	}
 
+	auto secondyCopyAddr = getFlashAddrSecondCopy();
 	/* no second copy? */
-	if (getFlashAddrSecondCopy() == 0x0) {
+	if (secondyCopyAddr == 0x0) {
 		return firstCopy;
 	}
 

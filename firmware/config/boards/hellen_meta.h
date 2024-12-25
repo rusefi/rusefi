@@ -34,6 +34,8 @@ void setHellenVbatt();
 int detectHellenBoardId();
 void detectHellenBoardType();
 
+int boardGetAnalogDiagnostic();
+
 // stm32 UART8
 #define H144_UART8_RX Gpio::E0
 #define H144_UART8_TX Gpio::E1

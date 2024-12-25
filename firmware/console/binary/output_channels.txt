@@ -100,7 +100,6 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 
 	uint16_t autoscale coilDutyCycle;@@GAUGE_NAME_DWELL_DUTY@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
 ! ETB
-	int16_t autoscale etbTarget;ETB Target;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 	int16_t autoscale etb1DutyCycle;@@GAUGE_NAME_ETB_DUTY@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 1
 ! Fuel system
 	int16_t autoscale fuelTankLevel;Fuel level;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0
@@ -188,6 +187,7 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	int16_t autoscale rawIat;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	int16_t autoscale rawOilPressure;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	int16_t autoscale rawAcPressure;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
+	int16_t autoscale rawFuelLevel;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
 	uint8_t fuelClosedLoopBinIdx;;"", 1, 0, 0, 0, 0
 
@@ -316,10 +316,6 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	uint8_t[IGN_BLEND_COUNT iterate] autoscale ignBlendBias;;"%", 0.5, 0, 0, 100, 1
 	int16_t[IGN_BLEND_COUNT iterate] autoscale ignBlendOutput;;"deg", 0.01, 0, -300, 300, 2
 
-	int16_t[LAMBDA_BLEND_COUNT iterate] autoscale lambdaBlendParameter;;"", 0.1, 0, -1000, 1000, 1
-	uint8_t[LAMBDA_BLEND_COUNT iterate] autoscale lambdaBlendBias;;"%", 0.5, 0, 0, 100, 1
-	int16_t[LAMBDA_BLEND_COUNT iterate] autoscale lambdaBlendOutput;;"deg", 0.01, 0, -300, 300, 2
-
 	int16_t[VE_BLEND_COUNT iterate] autoscale veBlendParameter;;"", 0.1, 0, -1000, 1000, 1
 	uint8_t[VE_BLEND_COUNT iterate] autoscale veBlendBias;;"%", 0.5, 0, 0, 100, 1
 	int16_t[VE_BLEND_COUNT iterate] autoscale veBlendOutput;;"%", 0.01, 0, -50, 50, 2
@@ -331,6 +327,10 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	int16_t[BOOST_BLEND_COUNT iterate] autoscale boostClosedLoopBlendParameter;;"", 0.1, 0, -1000, 1000, 1
 	uint8_t[BOOST_BLEND_COUNT iterate] autoscale boostClosedLoopBlendBias;;"%", 0.5, 0, 0, 100, 1
 	int16_t[BOOST_BLEND_COUNT iterate] autoscale boostClosedLoopBlendOutput;;"%", 0.1, 0, -1000, 1000, 1
+
+	int16_t[TARGET_AFR_BLEND_COUNT iterate] autoscale targetAfrBlendParameter;;"", 0.1, 0, -1000, 1000, 1
+	uint8_t[TARGET_AFR_BLEND_COUNT iterate] autoscale targetAfrBlendBias;;"%", 0.5, 0, 0, 100, 1
+	int16_t[TARGET_AFR_BLEND_COUNT iterate] autoscale targetAfrBlendOutput;;"%", 0.1, 0, -1000, 1000, 1
 
 bit coilState1
 bit coilState2

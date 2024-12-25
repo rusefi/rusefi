@@ -6,9 +6,10 @@
 
 #include "util/test_base.h"
 
-class NitrousTestBase : public TestBase {
+class NitrousTestBase : public TestBase<> {
 protected:
     static constexpr switch_input_pin_e TEST_NITROUS_CONTROL_ARMING_PIN = Gpio::A13;
+    static constexpr uint16_t TEST_MIN_VEHICLE_SPEED = 25;
     static constexpr int TEST_MIN_TPS = 34;
     static constexpr uint8_t TEST_MIN_CLT = 51;
     static constexpr int TEST_MAX_MAP = 45;
@@ -20,9 +21,13 @@ protected:
     static constexpr uint16_t TEST_DEACTIVATION_RPM = 932;
     static constexpr uint16_t TEST_DEACTIVATION_RPM_WINDOW = 17;
 
-    void setUpTestConfiguration(std::optional<int8_t> nitrousFuelAdderPercent = {});
+    void setUpTestConfiguration(
+        std::optional<int8_t> nitrousFuelAdderPercent = {},
+        std::optional<float> nitrousIgnitionRetard = {}
+    );
 
     void armNitrousControl();
+    void satisfySpeedCondition();
     void satisfyTpsCondition();
     void satisfyCltCondition();
     void satisfyMapCondition();
@@ -32,6 +37,7 @@ protected:
     void activateNitrousControl();
 
     void unarmNitrousControl();
+    void unsatisfySpeedCondition();
     void unsatisfyTpsCondition();
     void unsatisfyCltCondition();
     void unsatisfyMapCondition();

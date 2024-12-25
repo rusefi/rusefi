@@ -81,7 +81,11 @@ public:
 		}
 
 		void *new_mem = alloc(nsize);
-		m_memoryUsed += nsize;
+
+		// Don't count the memory use if not allocated
+		if (new_mem) {
+			m_memoryUsed += nsize;
+		}
 
 		if (!ptr) {
 			// No old pointer passed in, simply return allocated block

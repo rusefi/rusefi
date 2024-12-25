@@ -10,6 +10,12 @@ class TestEngineConfiguration {
 public:
     static TestEngineConfiguration& getInstance();
 
+    // Other Sensor Inputs
+    void configureClutchDownPin(std::optional<switch_input_pin_e> pin);
+    void configureClutchDownPinInverted(std::optional<bool> pinInverted);
+    void configureClutchUpPin(std::optional<switch_input_pin_e> pin);
+    void configureClutchUpPinInverted(std::optional<bool> pinInverted);
+
     // Launch Control Settings
     void configureLaunchControlEnabled(std::optional<bool> launchControlEnabled);
 
@@ -72,6 +78,7 @@ public:
     void configureNitrousLuaGaugeMeaning(std::optional<lua_gauge_meaning_e> luaGaugeMeaning);
     void configureNitrousLuaGaugeArmingValue(std::optional<float> luaGaugeArmingValue);
 
+    void configureNitrousMinimumVehicleSpeed(std::optional<uint16_t> nitrousMinimumVehicleSpeed);
     void configureNitrousMinimumTps(std::optional<int> nitrousMinimumTps);
     void configureNitrousMinimumClt(std::optional<uint8_t> nitrousMinimumClt);
     void configureNitrousMaximumMap(std::optional<uint16_t> nitrousMaximumMap);
@@ -80,6 +87,10 @@ public:
     void configureNitrousDeactivationRpm(std::optional<uint16_t> nitrousDeactivationRpm);
     void configureNitrousDeactivationRpmWindow(std::optional<uint16_t> nitrousDeactivationRpmWindow);
     void configureNitrousFuelAdderPercent(std::optional<int8_t> nitrousFuelAdderPercent);
+    void configureNitrousIgnitionRetard(std::optional<float> nitrousIgnitionRetard);
+
+    void configureFuelLevelAveragingAlpha(std::optional<float> alpha);
+    void configureFuelLevelUpdatePeriodSec(std::optional<float> seconds);
 private:
     TestEngineConfiguration();
     static TestEngineConfiguration instance;

@@ -27,7 +27,7 @@ public class BinarySensorLogSandbox {
                 Sensor.tpsAccelFuel,
                 Sensor.PPS,
                 Sensor.veValue,
-                Sensor.etbTarget,
+//                Sensor.etbTarget,
                 Sensor.etb1DutyCycle,
                 Sensor.totalTriggerErrorCounter,
                 Sensor.Lambda1,

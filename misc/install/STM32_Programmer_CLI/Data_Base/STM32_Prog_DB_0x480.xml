@@ -102,12 +102,12 @@
 					<Alignment>0x20</Alignment>
 					<Bank name="Bank 1">
 						<Field>
-							<Parameters address="0x08000000" name="sector0" occurrence="0x80" size="0x2000"/>
+							<Parameters address="0x08000000" name="sector0" occurrence="0x40" size="0x2000"/>
 						</Field>
 					</Bank>
 					<Bank name="Bank 2">
 						<Field>
-							<Parameters address="0x08080000" name="sector64" occurrence="0x80" size="0x2000"/>
+							<Parameters address="0x08080000" name="sector64" occurrence="0x40" size="0x2000"/>
 						</Field>
 					</Bank>
 				</Configuration>

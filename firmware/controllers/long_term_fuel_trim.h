@@ -1,10 +1,13 @@
 #pragma once
 
-struct LimpState {
-  int ecuRestartCounter = 0;
-  void save() {
-    ecuRestartCounter++;
-  }
-  void load();
+struct LtftState {
+	int ecuRestartCounter = 0;
+	void save() {
+		ecuRestartCounter++;
+	}
+	void load();
 };
 
+class LongTermFuelTrim : public EngineModule {
+
+};

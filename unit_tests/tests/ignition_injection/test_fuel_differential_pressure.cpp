@@ -26,7 +26,7 @@ namespace {
         .setFuelReferencePressure(TEST_PRIMARY_INJECTOR_FUEL_REFERENCE_PRESSURE)
         .setSecondaryInjectorFuelReferencePressure(TEST_SECONDARY_INJECTOR_FUEL_REFERENCE_PRESSURE);
 
-    class FuelDifferentialPressureTest : public TestBase {
+    class FuelDifferentialPressureTest : public TestBase<> {
     protected:
         void SetUp() override;
 

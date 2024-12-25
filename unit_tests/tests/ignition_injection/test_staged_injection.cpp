@@ -38,7 +38,7 @@ namespace {
         .setInjectorSecondaryFlow(TEST_SECONDARY_INJECTOR_FLOW)
         .setInjectorSecondaryBattLagCorr(TEST_SECONDARY_INJECTOR_BATT_LAG_CORR_CURVE);
 
-    class StagedInjectionTest : public TestBase {
+    class StagedInjectionTest : public TestBase<> {
     protected:
         void SetUp() override;
     };
@@ -54,7 +54,7 @@ namespace {
         };
         getTestPersistentConfiguration().setInjectorStagingTable(testInjectorStagingTable);
 
-        getTestEngineState().setLuaFuelAdd(TEST_INJECTION_MASS);
+        getTestLuaScriptExecutor().setFuelAdd(TEST_INJECTION_MASS);
     }
 
     TEST_F(StagedInjectionTest, checkDisabledStagedInjection) {

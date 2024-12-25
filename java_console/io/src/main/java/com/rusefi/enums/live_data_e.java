@@ -9,6 +9,7 @@ public enum live_data_e {
 	LDS_fuel_computer,
 	LDS_ignition_state,
 	LDS_knock_controller,
+	LDS_prime_injection,
 	LDS_tcu_controller,
 	LDS_throttle_model,
 	LDS_high_pressure_fuel_pump,

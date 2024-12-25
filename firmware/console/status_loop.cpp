@@ -481,6 +481,7 @@ static void updateRawSensors() {
 	engine->outputChannels.rawAuxTemp2 = Sensor::getRaw(SensorType::AuxTemp2);
 	engine->outputChannels.rawAmbientTemp = Sensor::getRaw(SensorType::AmbientTemperature);
 	engine->outputChannels.rawOilPressure = Sensor::getRaw(SensorType::OilPressure);
+	engine->outputChannels.rawFuelLevel = Sensor::getRaw(SensorType::FuelLevel);
   engine->outputChannels.rawAcPressure = Sensor::getRaw(SensorType::AcPressure);
 	engine->outputChannels.rawLowFuelPressure = Sensor::getRaw(SensorType::FuelPressureLow);
 	engine->outputChannels.rawHighFuelPressure = Sensor::getRaw(SensorType::FuelPressureHigh);
@@ -494,6 +495,11 @@ static void updateRawSensors() {
 	engine->outputChannels.rawAuxAnalog3 = Sensor::getRaw(SensorType::AuxAnalog3);
 	engine->outputChannels.rawAuxAnalog4 = Sensor::getRaw(SensorType::AuxAnalog4);
 
+#if EFI_PROD_CODE
+extern int flexCallbackCounter;
+	engine->outputChannels.rawFlexFreq = flexCallbackCounter;
+#endif // EFI_PROD_CODE
+
   for (size_t i = 0;i<LUA_GAUGE_COUNT;i++) {
 	  engine->outputChannels.luaGauges[i] = Sensor::getOrZero(luaGaugeTypes[i]);
   }
@@ -501,12 +507,12 @@ static void updateRawSensors() {
 	for (int i = 0; i < LUA_ANALOG_INPUT_COUNT; i++) {
 		adc_channel_e channel = engineConfiguration->auxAnalogInputs[i];
 		if (isAdcChannelValid(channel)) {
-			engine->outputChannels.rawAnalogInput[i] = getVoltageDivided("raw aux", channel);
+			engine->outputChannels.rawAnalogInput[i] = adcGetScaledVoltage("raw aux", channel);
 		}
 	}
 
 	// TODO: transition AFR to new sensor model
-	engine->outputChannels.rawAfr = (engineConfiguration->afr.hwChannel == EFI_ADC_NONE) ? 0 : getVoltageDivided("ego", engineConfiguration->afr.hwChannel);
+	engine->outputChannels.rawAfr = (engineConfiguration->afr.hwChannel == EFI_ADC_NONE) ? 0 : adcGetScaledVoltage("ego", engineConfiguration->afr.hwChannel);
 }
 static void updatePressures() {
 	engine->outputChannels.baroPressure = Sensor::getOrZero(SensorType::BarometricPressure);

@@ -13,7 +13,7 @@ namespace {
     using AlternatorVoltageTargetValues = float[ALTERNATOR_VOLTAGE_TARGET_SIZE][ALTERNATOR_VOLTAGE_TARGET_SIZE];
     using AlternatorVoltageTargetBins = uint16_t[ALTERNATOR_VOLTAGE_TARGET_SIZE];
 
-    class AlternatorVoltageTargetSetPointTest : public TestBase {
+    class AlternatorVoltageTargetSetPointTest : public TestBase<> {
     protected:
         virtual void SetUp() override;
 

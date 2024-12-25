@@ -43,6 +43,14 @@ Usages:
     constexpr: "___engine.module<KnockController>()"
     isPtr: true
 
+  - name: prime_injection
+    cppFileName: prime_injection
+    java: PrimeController.java
+    folder: controllers/engine_cycle
+    prepend: integration/rusefi_config_shared.txt
+    constexpr: "___engine.module<PrimeController>()"
+    isPtr: true
+
   - name: tcu_controller
     java: TcuController.java
     folder: controllers/tcu

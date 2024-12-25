@@ -370,7 +370,7 @@ static void writeChannelDataFooter() {
 	write(numChannels);
 }
 
-static int getChannelState(int ch, const CompositeEvent* event) {
+int getChannelState(int ch, const CompositeEvent* event) {
 	switch (ch) {
 	case 0:
 		return event->primaryTrigger;
@@ -486,7 +486,7 @@ static void writeFooter() {
 	writeTimingMarker();
 }
 
-void writeFile(const char * fileName, const std::vector<CompositeEvent>& events) {
+void writeLogicDataFile(const char * fileName, const std::vector<CompositeEvent>& events) {
 
 	ptr = fopen(fileName, "wb");
 

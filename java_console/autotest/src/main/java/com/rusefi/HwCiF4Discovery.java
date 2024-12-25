@@ -27,7 +27,7 @@ public class HwCiF4Discovery {
             BurnCommandTest.class,
             MiscTest.class,
             CommonFunctionalTest.class,
-            PwmHardwareTest.class,
+            DiscoveryPwmHardwareTest.class,
             VssHardwareLoopTest.class,
             HighRevTest.class,
     };

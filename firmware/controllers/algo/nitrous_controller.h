@@ -15,6 +15,7 @@ public:
     float getFuelCoefficient() const;
 private:
     void updateArmingState();
+    void updateSpeedConditionSatisfied();
     void updateTpsConditionSatisfied();
     void updateCltConditionSatisfied();
     void updateMapConditionSatisfied();

@@ -10,24 +10,25 @@
 void NitrousController::onSlowCallback() {
     if (engineConfiguration->nitrousControlEnabled) {
         updateArmingState();
+        updateSpeedConditionSatisfied();
         updateTpsConditionSatisfied();
         updateCltConditionSatisfied();
         updateMapConditionSatisfied();
         updateAfrConditionSatisfied();
         updateRpmConditionSatisfied();
-        isNitrousConditionSatisfied = (
-            isArmed && isTpsConditionSatisfied && isCltConditionSatisfied && isMapConditionSatisfied
-                && isAfrConditionSatisfied && isNitrousRpmConditionSatisfied
+        isNitrousCondition = (
+            isNitrousArmed && isNitrousSpeedCondition && isNitrousTpsCondition && isNitrousCltCondition
+                && isNitrousMapCondition && isNitrousAfrCondition && isNitrousRpmCondition
         );
     } else {
-        isNitrousConditionSatisfied = false;
+        isNitrousCondition = false;
     }
-    enginePins.nitrousRelay.setValue(isNitrousConditionSatisfied);
+    enginePins.nitrousRelay.setValue(isNitrousCondition);
 }
 
 float NitrousController::getFuelCoefficient() const {
     float result = 1.0f;
-    if (engineConfiguration->nitrousControlEnabled && isNitrousConditionSatisfied) {
+    if (engineConfiguration->nitrousControlEnabled && isNitrousCondition) {
         result += engineConfiguration->nitrousFuelAdderPercent / 100.0f;
     }
     return result;
@@ -36,44 +37,53 @@ float NitrousController::getFuelCoefficient() const {
 void NitrousController::updateArmingState() {
     switch (engineConfiguration->nitrousControlArmingMethod) {
         case DIGITAL_SWITCH_INPUT: {
-            isArmed = checkTriggerPinState();
+            isNitrousArmed = checkTriggerPinState();
             break;
         }
         case LUA_GAUGE: {
-            isArmed = checkLuaGauge();
+            isNitrousArmed = checkLuaGauge();
             break;
         }
         default: { // Unexpected value!!!
-            isArmed = false;
+            isNitrousArmed = false;
             break;
         }
+    }
+}
+
+void NitrousController::updateSpeedConditionSatisfied() {
+    if (engineConfiguration->nitrousMinimumVehicleSpeed != 0) {
+        const expected<float> speed = Sensor::get(SensorType::VehicleSpeed);
+        isNitrousSpeedCondition = speed.Valid && (engineConfiguration->nitrousMinimumVehicleSpeed <= speed.Value);
+    } else {
+        isNitrousSpeedCondition = true;
     }
 }
 
 void NitrousController::updateTpsConditionSatisfied() {
     if (engineConfiguration->nitrousMinimumTps != 0) {
         const expected<float> tps = Sensor::get(SensorType::DriverThrottleIntent);
-        isTpsConditionSatisfied = tps.Valid && (engineConfiguration->nitrousMinimumTps <= tps.Value);
+        isNitrousTpsCondition = tps.Valid && (engineConfiguration->nitrousMinimumTps <= tps.Value);
     } else {
-        isTpsConditionSatisfied = true;
+        isNitrousTpsCondition = true;
     }
 }
 
 void NitrousController::updateCltConditionSatisfied() {
     if (engineConfiguration->nitrousMinimumClt != 0) {
         const expected<float> clt = Sensor::get(SensorType::Clt);
-        isCltConditionSatisfied = clt.Valid && (engineConfiguration->nitrousMinimumClt <= clt.Value);
+        isNitrousCltCondition = clt.Valid && (engineConfiguration->nitrousMinimumClt <= clt.Value);
     } else {
-        isCltConditionSatisfied = true;
+        isNitrousCltCondition = true;
     }
 }
 
 void NitrousController::updateMapConditionSatisfied() {
     if (engineConfiguration->nitrousMaximumMap != 0) {
         const expected<float> map = Sensor::get(SensorType::Map);
-        isMapConditionSatisfied = map.Valid && (map.Value <= engineConfiguration->nitrousMaximumMap);
+        isNitrousMapCondition = map.Valid && (map.Value <= engineConfiguration->nitrousMaximumMap);
     } else {
-        isMapConditionSatisfied = true;
+        isNitrousMapCondition = true;
     }
 }
 
@@ -82,12 +92,12 @@ void NitrousController::updateAfrConditionSatisfied() {
         const expected<float> lambda1 = Sensor::get(SensorType::Lambda1);
         if (lambda1.Valid) {
             const float afr = lambda1.Value * STOICH_RATIO;
-            isAfrConditionSatisfied = (afr <= static_cast<float>(engineConfiguration->nitrousMaximumAfr));
+            isNitrousAfrCondition = (afr <= static_cast<float>(engineConfiguration->nitrousMaximumAfr));
         } else {
-            isAfrConditionSatisfied = false;
+            isNitrousAfrCondition = false;
         }
     } else {
-        isAfrConditionSatisfied = true;
+        isNitrousAfrCondition = true;
     }
 }
 
@@ -104,12 +114,12 @@ void NitrousController::updateRpmConditionSatisfied() {
                 engineConfiguration->nitrousDeactivationRpm,
                 engineConfiguration->nitrousDeactivationRpmWindow
         )) {
-            isNitrousRpmConditionSatisfied = false;
+            isNitrousRpmCondition = false;
         } else {
-            isNitrousRpmConditionSatisfied = (engineConfiguration->nitrousActivationRpm <= rpm);
+            isNitrousRpmCondition = (engineConfiguration->nitrousActivationRpm <= rpm);
         }
     } else {
-        isNitrousRpmConditionSatisfied = false;
+        isNitrousRpmCondition = false;
     }
 }
 

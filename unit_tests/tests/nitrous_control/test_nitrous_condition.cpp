@@ -17,37 +17,49 @@ namespace {
 
         setUpTestConfiguration();
 
-        EXPECT_FALSE(getModule<NitrousController>().isArmed);
-        EXPECT_FALSE(getModule<NitrousController>().isTpsConditionSatisfied);
-        EXPECT_FALSE(getModule<NitrousController>().isCltConditionSatisfied);
-        EXPECT_FALSE(getModule<NitrousController>().isMapConditionSatisfied);
-        EXPECT_FALSE(getModule<NitrousController>().isAfrConditionSatisfied);
-        EXPECT_FALSE(getModule<NitrousController>().isNitrousRpmConditionSatisfied);
+        EXPECT_FALSE(getModule<NitrousController>().isNitrousArmed);
+        EXPECT_FALSE(getModule<NitrousController>().isNitrousSpeedCondition);
+        EXPECT_FALSE(getModule<NitrousController>().isNitrousTpsCondition);
+        EXPECT_FALSE(getModule<NitrousController>().isNitrousCltCondition);
+        EXPECT_FALSE(getModule<NitrousController>().isNitrousMapCondition);
+        EXPECT_FALSE(getModule<NitrousController>().isNitrousAfrCondition);
+        EXPECT_FALSE(getModule<NitrousController>().isNitrousRpmCondition);
 
         checkNitrousCondition(false, "No conditions are satisfied");
 
         armNitrousControl();
         checkNitrousCondition(false, "Armed condition is satisfied");
 
+        satisfySpeedCondition();
+        checkNitrousCondition(false, "Armed + Speed conditions are satisfied");
+
         satisfyTpsCondition();
-        checkNitrousCondition(false, "Armed + TPS conditions are satisfied");
+        checkNitrousCondition(false, "Armed + Speed + TPS conditions are satisfied");
 
         satisfyCltCondition();
-        checkNitrousCondition(false, "Armed + TPS + CLT conditions are satisfied");
+        checkNitrousCondition(false, "Armed + Speed + TPS + CLT conditions are satisfied");
 
         satisfyMapCondition();
-        checkNitrousCondition(false, "Armed + TPS + CLT + MAP conditions are satisfied");
+        checkNitrousCondition(false, "Armed + Speed + TPS + CLT + MAP conditions are satisfied");
 
         satisfyAfrCondition();
-        checkNitrousCondition(false, "Armed + TPS + CLT + MAP + AFR conditions are satisfied");
+        checkNitrousCondition(false, "Armed + Speed + TPS + CLT + MAP + AFR conditions are satisfied");
 
         satisfyRpmCondition();
-        checkNitrousCondition(true, "Armed + TPS + CLT + MAP + AFR + RPM conditions are satisfied");
+        checkNitrousCondition(
+            true,
+            "Armed + Speed + TPS + CLT + MAP + AFR + RPM conditions are satisfied"
+        );
     }
 
     TEST_F(NitrousConditionTest, checkWithoutArmedNitrousControl) {
         unarmNitrousControl();
         checkNitrousCondition(false, "Without armed condition");
+    }
+
+    TEST_F(NitrousConditionTest, checkWithoutSatisfiedSpeedCondition) {
+        unsatisfySpeedCondition();
+        checkNitrousCondition(false, "Without speed condition");
     }
 
     TEST_F(NitrousConditionTest, checkWithoutSatisfiedTpsCondition) {
