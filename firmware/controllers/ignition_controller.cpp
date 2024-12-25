@@ -20,12 +20,7 @@ void IgnitionController::onSlowCallback() {
 	if (hasIgnVoltage == m_lastState) {
 		if(hasIgnVoltage) {
 			m_timeSinceIgnVoltage.reset();
-		}
-		return;
-	} else {
-		m_lastState = hasIgnVoltage;
-		engine->engineModules.apply_all([&](auto& m) { m.onIgnitionStateChanged(hasIgnVoltage); });
-		if(!hasIgnVoltage) {
+		} else {
 			if(secondsSinceIgnVoltage() < float(engineConfiguration->standbyTimeout)){
 				return;
 			} else {
@@ -34,6 +29,13 @@ void IgnitionController::onSlowCallback() {
 				sleepEnter();
 				return;
 			}
+		}
+		return;
+	} else {
+		m_lastState = hasIgnVoltage;
+		engine->engineModules.apply_all([&](auto& m) { m.onIgnitionStateChanged(hasIgnVoltage); });
+		if(hasIgnVoltage) {
+			m_timeSinceIgnVoltage.reset();
 		}
 	}
 
