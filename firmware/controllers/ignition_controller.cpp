@@ -1,5 +1,4 @@
 #include "pch.h"
-#include "hal.h"
 #include "flash_main.h"
 
 bool isIgnVoltage() {
@@ -21,7 +20,6 @@ void IgnitionController::onSlowCallback() {
 		pendingSleepInner = 0;
 		restartFromSleep = 1;
 		m_timeSinceNotIgnVoltage.reset();
-		NVIC_SystemReset();
 	}
 
 	if(hasIgnVoltage && secondsSinceNotIgnVoltage() > 0.2f && restartFromSleep) {

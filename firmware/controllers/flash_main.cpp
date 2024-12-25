@@ -230,6 +230,7 @@ void writeToFlashNow() {
 		engine->module<IgnitionController>()->resetPendingSleep();
 		onBoardStandBy();
 		stm32_standby();
+		NVIC_SystemReset();
 	}
 }
 
