@@ -22,6 +22,7 @@ public:
 	}
 	~CsvReader();
 
+  /* when reading two cam channels it's either on intake one exhaust or two intakes on different banks */
 	bool twoBanksSingleCamMode = true;
 
 	void open(const char *fileName, const int* triggerColumnIndeces = NORMAL_ORDER, const int *vvtColumnIndeces = NORMAL_ORDER);
