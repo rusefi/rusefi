@@ -21,13 +21,10 @@ void IgnitionController::onSlowCallback() {
 		if(hasIgnVoltage) {
 			m_timeSinceIgnVoltage.reset();
 		} else {
-			if(secondsSinceIgnVoltage() < float(engineConfiguration->standbyTimeout)){
-				return;
-			} else {
+			if(secondsSinceIgnVoltage() >= float(engineConfiguration->standbyTimeout)){
 				m_timeSinceIgnVoltage.reset();
 				m_pendingSleep = true;
 				sleepEnter();
-				return;
 			}
 		}
 		return;
@@ -37,6 +34,7 @@ void IgnitionController::onSlowCallback() {
 		if(hasIgnVoltage) {
 			m_timeSinceIgnVoltage.reset();
 		}
+		return;
 	}
 
 }
