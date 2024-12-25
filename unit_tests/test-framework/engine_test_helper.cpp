@@ -138,6 +138,15 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	rememberCurrentConfiguration();
 }
 
+static void writeEventsToFile(const char * fileName, const std::vector<CompositeEvent>& events) {
+  FILE *ptr = fopen(fileName, "wb");
+  size_t count = events.size();
+
+  fprintf(ptr, "count=%d\n", count);
+
+	fclose(ptr);
+}
+
 EngineTestHelper::~EngineTestHelper() {
 	// Write history to file
 	extern bool hasInitGtest;
@@ -145,7 +154,12 @@ EngineTestHelper::~EngineTestHelper() {
 	if (hasInitGtest) {
     	std::stringstream filePath;
     	filePath << "unittest_" << testInfo->test_case_name() << "_" << testInfo->name() << ".logicdata";
-	    writeEvents(filePath.str().c_str());
+	    writeEventsLogicData(filePath.str().c_str());
+	}
+	if (hasInitGtest) {
+    	std::stringstream filePath;
+    	filePath << "unittest_" << testInfo->test_case_name() << "_" << testInfo->name() << ".events.txt";
+	    writeEvents2(filePath.str().c_str());
 	}
 
 	// Cleanup
@@ -155,14 +169,24 @@ EngineTestHelper::~EngineTestHelper() {
 	memset(mockPinStates, 0, sizeof(mockPinStates));
 }
 
-void EngineTestHelper::writeEvents(const char *fileName) {
+void EngineTestHelper::writeEventsLogicData(const char *fileName) {
 	const auto& events = getCompositeEvents();
 	if (events.size() < 2) {
 		printf("Not enough data for %s\n", fileName);
 		return;
 	}
 	printf("Writing %d records to %s\n", events.size(), fileName);
-	writeFile(fileName, events);
+	writeLogicDataFile(fileName, events);
+}
+
+void EngineTestHelper::writeEvents2(const char *fileName) {
+	const auto& events = getCompositeEvents();
+	if (events.size() < 2) {
+		printf("Not enough data for %s\n", fileName);
+		return;
+	}
+	printf("Writing %d records to %s\n", events.size(), fileName);
+	writeEventsToFile(fileName, events);
 }
 
 /**

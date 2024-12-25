@@ -486,7 +486,7 @@ static void writeFooter() {
 	writeTimingMarker();
 }
 
-void writeFile(const char * fileName, const std::vector<CompositeEvent>& events) {
+void writeLogicDataFile(const char * fileName, const std::vector<CompositeEvent>& events) {
 
 	ptr = fopen(fileName, "wb");
 

@@ -20,4 +20,4 @@ struct CompositeEvent {
     bool injector;
 };
 
-void writeFile(const char * fileName, const std::vector<CompositeEvent>& events);
+void writeLogicDataFile(const char * fileName, const std::vector<CompositeEvent>& events);
