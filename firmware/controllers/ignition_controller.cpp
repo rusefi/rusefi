@@ -26,11 +26,11 @@ void IgnitionController::onSlowCallback() {
 		m_lastState = hasIgnVoltage;
 		engine->engineModules.apply_all([&](auto& m) { m.onIgnitionStateChanged(hasIgnVoltage); });
 		if(!hasIgnVoltage) {
-			if(secondsSinceIgnVoltage() < engineConfiguration->standbyTimeout){
+			if(secondsSinceIgnVoltage() < float(engineConfiguration->standbyTimeout)){
 				return;
 			} else {
 				m_timeSinceIgnVoltage.reset();
-				m_pendingSleep = 1;
+				m_pendingSleep = true;
 				sleepEnter();
 				return;
 			}
