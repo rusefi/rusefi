@@ -18,10 +18,6 @@ float StepperMotorBase::getTargetPosition() const {
 void StepperMotorBase::setTargetPosition(float targetPositionSteps) {
 	// When the IAC position value change is insignificant (lower than this threshold), leave the poor valve alone
 	// When we get a larger change, actually update the target stepper position
-	if(engine->module<IgnitionController>()->getRestartFromSleep()) {
-		initialPositionSet = false;
-		m_currentPosition = -1;
-	}
 	if (std::abs(m_targetPosition - targetPositionSteps) >= 1) {
 		m_targetPosition = targetPositionSteps;
 	}
@@ -176,8 +172,11 @@ void StepDirectionStepper::setDirection(bool isIncrementing) {
 }
 
 bool StepDirectionStepper::pulse() {
-	// we move the motor only of it is powered from the main relay
-	if (!engine->isMainRelayEnabled())
+	// stepper requires +12V
+	if (!isIgnVoltage()) {
+	  	initialPositionSet = false;
+		m_currentPosition = -1;
+		m_hw->pause();
 		return false;
 
 	enablePin.setValue(false); // enable stepper
