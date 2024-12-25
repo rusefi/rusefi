@@ -138,11 +138,30 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	rememberCurrentConfiguration();
 }
 
-static void writeEventsToFile(const char * fileName, const std::vector<CompositeEvent>& events) {
-  FILE *ptr = fopen(fileName, "wb");
-  size_t count = events.size();
+static void writeEventsToFile(const char *fileName,
+		const std::vector<CompositeEvent> &events) {
+	FILE *ptr = fopen(fileName, "wb");
+	size_t count = events.size();
 
-  fprintf(ptr, "count=%d\n", count);
+	// todo: move magic keywords to something.txt and reuse magic constants from C and java, once we have java converter
+	fprintf(ptr, "count,%d\n", count);
+
+#define numChannels 6 // todo: clean-up
+
+	for (size_t i = 0; i < count; i++) {
+		const CompositeEvent *event = &events[i];
+
+		uint32_t ts = event->timestamp;
+		fprintf(ptr, "timestamp,%d\n", ts);
+
+		for (int ch = 0; ch < numChannels; ch++) {
+			int chState = getChannelState(ch, event);
+			fprintf(ptr, "state,%d,%d\n", ch, chState);
+
+		}
+
+	}
+
 
 	fclose(ptr);
 }

@@ -370,7 +370,7 @@ static void writeChannelDataFooter() {
 	write(numChannels);
 }
 
-static int getChannelState(int ch, const CompositeEvent* event) {
+int getChannelState(int ch, const CompositeEvent* event) {
 	switch (ch) {
 	case 0:
 		return event->primaryTrigger;

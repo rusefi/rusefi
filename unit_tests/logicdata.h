@@ -20,4 +20,6 @@ struct CompositeEvent {
     bool injector;
 };
 
+int getChannelState(int ch, const CompositeEvent* event);
+
 void writeLogicDataFile(const char * fileName, const std::vector<CompositeEvent>& events);
