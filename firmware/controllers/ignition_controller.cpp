@@ -1,6 +1,10 @@
 #include "pch.h"
 #include "sleep_controller.h"
 
+void sleepEnter() {
+	writeToFlashNow();
+}
+
 bool isIgnVoltage() {
 #if defined(IGN_KEY_DIVIDER)
   return Sensor::getOrZero(SensorType::IgnKeyVoltage) > 5;

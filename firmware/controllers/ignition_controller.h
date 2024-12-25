@@ -36,3 +36,4 @@ private:
 
 // USB power or vehicle power?
 bool isIgnVoltage();
+void sleepEnter();
