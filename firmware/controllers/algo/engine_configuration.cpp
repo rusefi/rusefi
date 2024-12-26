@@ -719,10 +719,6 @@ void applyNonPersistentConfiguration() {
 #endif // EFI_ENGINE_CONTROL
 }
 
-void setTwoStrokeOperationMode() {
-	engineConfiguration->twoStroke = true;
-}
-
 void setCamOperationMode() {
 	engineConfiguration->skippedWheelOnCam = true;
 }

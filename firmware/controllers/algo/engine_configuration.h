@@ -31,7 +31,6 @@
 
 void setCrankOperationMode();
 void setCamOperationMode();
-void setTwoStrokeOperationMode();
 
 void prepareVoidConfiguration(engine_configuration_s *activeConfiguration);
 void setTargetRpmCurve(float rpm);

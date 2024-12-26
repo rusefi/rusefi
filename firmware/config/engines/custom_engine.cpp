@@ -625,8 +625,7 @@ void setRotary() {
 	engineConfiguration->firingOrder = FO_1_2;
 
 	engineConfiguration->trigger.type = trigger_type_e::TT_36_2_2_2;
-	// todo: fix UI to make this possible via TS
-	setTwoStrokeOperationMode();
+	engineConfiguration->twoStroke = true;
 
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
 	strcpy(engineConfiguration->engineCode, "13B");
