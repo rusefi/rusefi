@@ -243,6 +243,22 @@ static void SetNextCompositeEntry(efitick_t timestamp) {
 #endif // EFI_UNIT_TEST
 
 void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp) {
+
+
+#if EFI_UNIT_TEST
+extern FILE *jsonTrace;
+//static efitick_t risingTimestamp = 0;
+    if (jsonTrace != nullptr) {
+      if (tooth == SHAFT_PRIMARY_RISING) {
+        fprintf(jsonTrace, ",\n");
+        fprintf(jsonTrace, "{\"name\":\"trg0\",\"ph\":\"B\",\"tid\":0,\"pid\":54,\"ts\":%f}", timestamp / 1000.0);
+      } else if (tooth == SHAFT_PRIMARY_FALLING) {
+        fprintf(jsonTrace, ",\n");
+        fprintf(jsonTrace, "{\"name\":\"trg0\",\"ph\":\"E\",\"tid\":0,\"pid\":54,\"ts\":%f}", timestamp / 1000.0);
+      }
+    }
+#endif // EFI_UNIT_TEST
+
     efiAssertVoid(ObdCode::CUSTOM_ERR_6650, hasLotsOfRemainingStack(), "l-t-t");
 	// bail if we aren't enabled
 	if (!ToothLoggerEnabled) {
