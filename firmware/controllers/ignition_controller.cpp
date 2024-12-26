@@ -25,7 +25,7 @@ void IgnitionController::onSlowCallback() {
 		if(hasIgnVoltage) {
 			m_timeSinceIgnVoltage.reset();
 		} else {
-			if(secondsSinceIgnVoltage() >= float(engineConfiguration->standbyTimeout) && !isUsbVoltage()){
+			if(secondsSinceIgnVoltage() >= float(engineConfiguration->standbyTimeout) && float(engineConfiguration->standbyTimeout) > 180 && !isUsbVoltage()){
 				m_timeSinceIgnVoltage.reset();
 				m_pendingSleep = true;
 				sleepEnter();
