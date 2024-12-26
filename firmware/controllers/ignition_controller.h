@@ -10,6 +10,8 @@ class IgnitionController : public EngineModule {
 public:
 	using interface_t = IgnitionController;
 
+	IgnitionController();
+
 	void onSlowCallback() override;
 
 	virtual bool getIgnState() const {
@@ -29,7 +31,6 @@ public:
 	}
 
 private:
-	IgnitionController();
 	Timer m_timeSinceIgnVoltage;
 	bool m_lastState = false;
 	bool m_pendingSleep = false;
