@@ -5,11 +5,15 @@ void sleepEnter() {
 	writeToFlashNow();
 }
 
+bool isUsbVoltage() {
+	return (Sensor::getOrZero(SensorType::BatteryVoltage) > 4 && Sensor::getOrZero(SensorType::BatteryVoltage) < 6);
+}
+
 bool isIgnVoltage() {
 #if defined(IGN_KEY_DIVIDER)
-  return Sensor::getOrZero(SensorType::IgnKeyVoltage) > 5;
+  return Sensor::getOrZero(SensorType::IgnKeyVoltage) > 6;
 #endif
-  return Sensor::getOrZero(SensorType::BatteryVoltage) > 5;
+  return Sensor::getOrZero(SensorType::BatteryVoltage) > 6;
 }
 
 void IgnitionController::onSlowCallback() {
@@ -21,7 +25,7 @@ void IgnitionController::onSlowCallback() {
 		if(hasIgnVoltage) {
 			m_timeSinceIgnVoltage.reset();
 		} else {
-			if(secondsSinceIgnVoltage() >= float(engineConfiguration->standbyTimeout)){
+			if(secondsSinceIgnVoltage() >= float(engineConfiguration->standbyTimeout) && !isUsbVoltage()){
 				m_timeSinceIgnVoltage.reset();
 				m_pendingSleep = true;
 				sleepEnter();
