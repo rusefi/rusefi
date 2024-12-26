@@ -871,6 +871,13 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		}
 
 		break;
+#else
+	case TS_PERF_TRACE_BEGIN:
+    criticalError("TS_PERF_TRACE not supported");
+    break;
+	case TS_PERF_TRACE_GET_BUFFER:
+    criticalError("TS_PERF_TRACE_GET_BUFFER not supported");
+    break;
 #endif /* ENABLE_PERF_TRACE */
 	case TS_GET_CONFIG_ERROR: {
 		const char* configError = getCriticalErrorMessage();
