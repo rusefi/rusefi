@@ -39,7 +39,7 @@ Usages:
     folder: controllers/engine_cycle
     prepend: integration/rusefi_config_shared.txt
     output_name: knock
-    constexpr: "___engine.module<KnockController>()"
+    constexpr: "engine->module<KnockController>()"
     isPtr: true
 
   - name: prime_injection
@@ -47,7 +47,7 @@ Usages:
     java: PrimeController.java
     folder: controllers/engine_cycle
     prepend: integration/rusefi_config_shared.txt
-    constexpr: "___engine.module<PrimeController>()"
+    constexpr: "engine->module<PrimeController>()"
     isPtr: true
 
   - name: tcu_controller
@@ -70,7 +70,7 @@ Usages:
     java: InjectorModel.java
     folder: controllers/algo/fuel
     prepend: integration/rusefi_config_shared.txt
-    constexpr: "___engine.module<InjectorModelPrimary>()"
+    constexpr: "engine->module<InjectorModelPrimary>()"
     isPtr: true
     # working around unmock() in simulator
     conditional_compilation: "EFI_PROD_CODE && EFI_IDLE_CONTROL"
@@ -101,7 +101,7 @@ Usages:
     folder: controllers/actuators
     prepend: integration/rusefi_config_shared.txt
     output_name: boost
-    constexpr: "___engine.module<BoostController>()"
+    constexpr: "engine->module<BoostController>()"
     isPtr: true
     conditional_compilation: "EFI_BOOST_CONTROL"
 
@@ -124,7 +124,7 @@ Usages:
     java: FanControl.java
     folder: controllers/actuators
     output_name: [ "fan1", "fan2" ]
-    constexpr: "___engine.module<FanControl1>()"
+    constexpr: "engine->module<FanControl1>()"
     isPtr: true
 
   - name: fuel_pump_control
@@ -189,7 +189,7 @@ Usages:
     java: IdleState.java
     folder: controllers/actuators
     prepend: integration/rusefi_config_shared.txt
-    constexpr: "___engine.module<IdleController>().unmock()"
+    constexpr: "engine->module<IdleController>().unmock()"
     output_name: idle
 # working around unmock() in simulator
     conditional_compilation: "EFI_PROD_CODE && EFI_IDLE_CONTROL"
@@ -221,12 +221,12 @@ Usages:
   - name: vvt
     java: VvtState.java
     folder: controllers/actuators
-    constexpr: "___engine.module<VvtController1>()"
+    constexpr: "engine->module<VvtController1>()"
     isPtr: true
     conditional_compilation: "EFI_VVT_PID"
 
   - name: lambda_monitor
     java: LambdaMonitor.java
     folder: controllers/math
-    constexpr: "___engine.lambdaMonitor"
+    constexpr: "engine->lambdaMonitor"
     conditional_compilation: "EFI_SHAFT_POSITION_INPUT"
