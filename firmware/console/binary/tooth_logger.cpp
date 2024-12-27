@@ -335,12 +335,17 @@ void LogTriggerCoilState(efitick_t timestamp, bool state) {
 	//SetNextCompositeEntry(timestamp, trigger1, trigger2, trigger);
 }
 
-void LogTriggerInjectorState(efitick_t timestamp, bool state) {
+void LogTriggerInjectorState(efitick_t timestamp, size_t index, bool state) {
 	if (!ToothLoggerEnabled) {
 		return;
 	}
 	currentInjectorState = state;
 	UNUSED(timestamp);
+
+#if EFI_UNIT_TEST
+	jsonTraceEntry("inj", 10 + index, state, timestamp);
+#endif // EFI_UNIT_TEST
+
 	//SetNextCompositeEntry(timestamp, trigger1, trigger2, trigger);
 }
 
