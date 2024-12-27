@@ -2,7 +2,4 @@
 build*/
 gcov_working_area
 triggers
-unittest*.logicdata
-unittest*.events.txt
-unittest*.json
 /.idea/
