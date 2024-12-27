@@ -7,9 +7,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "rusefi_enums.h"
-
 #pragma once
+
+#include "rusefi_enums.h"
 
 /**
  * thank you https://www.ingenieriaymecanicaautomotriz.com/firing-order-its-purpose-and-order-in-different-numbers-of-cylinders/
@@ -83,3 +83,6 @@ typedef enum __attribute__ ((__packed__)) {
 	// next value to use: 35
 
 } firing_order_e;
+
+size_t getFiringOrderCylinderId(size_t index);
+size_t getNextFiringCylinderId(size_t prevCylinderId);
