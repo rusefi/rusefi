@@ -5,7 +5,7 @@
 typedef enum {
 LDS_output_channels,
 LDS_fuel_computer,
-LDS_ignition_state,
+LDS_ignition_controller,
 LDS_knock_controller,
 LDS_prime_injection,
 LDS_tcu_controller,
@@ -44,7 +44,7 @@ LDS_lambda_monitor,
 } live_data_e;
 #define OUTPUT_CHANNELS_BASE_ADDRESS 0
 #define FUEL_COMPUTER_BASE_ADDRESS 860
-#define IGNITION_STATE_BASE_ADDRESS 912
+#define IGNITION_CONTROLLER_BASE_ADDRESS 912
 #define KNOCK_CONTROLLER_BASE_ADDRESS 956
 #define PRIME_INJECTION_BASE_ADDRESS 1064
 #define TCU_CONTROLLER_BASE_ADDRESS 1068
