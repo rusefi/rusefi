@@ -27,8 +27,6 @@
 #include "trigger_central.h"
 #include "script_impl.h"
 #include "idle_thread.h"
-#include "hardware.h"
-#include "advance_map.h"
 #include "main_trigger_callback.h"
 #include "flash_main.h"
 #include "bench_test.h"

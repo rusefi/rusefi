@@ -28,10 +28,9 @@ Usages:
     constexpr: "engine->fuelComputer"
     conditional_compilation: "EFI_ENGINE_CONTROL"
 
-  - name: ignition_controller
-    cppFileName: advance_map
+  - name: ignition_state
+    folder: controllers/algo/ignition
     java: IgnitionState.java
-    folder: controllers/algo
     prepend: integration/rusefi_config_shared.txt
     constexpr: "engine->ignitionState"
 

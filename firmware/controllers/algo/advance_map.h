@@ -7,8 +7,6 @@
 
 #pragma once
 
-#include "ignition_controller_generated.h"
-
 angle_t getWrappedAdvance(float rpm, float engineLoad);
 angle_t getCylinderIgnitionTrim(size_t cylinderNumber, float rpm, float ignitionLoad);
 /**
@@ -22,8 +20,3 @@ angle_t getAdvanceCorrections(float engineLoad);
 
 size_t getMultiSparkCount(float rpm);
 void initIgnitionAdvanceControl();
-
-class IgnitionState : public ignition_controller_s {
-public:
-	floatms_t getSparkDwell(float rpm);
-};

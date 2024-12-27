@@ -80,6 +80,7 @@ CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR)/algo/airmass \
 	$(CONTROLLERS_DIR)/algo/defaults \
 	$(CONTROLLERS_DIR)/algo/fuel \
+	$(CONTROLLERS_DIR)/algo/ignition \
 	$(CONTROLLERS_DIR)/engine_cycle \
 	$(CONTROLLERS_DIR)/trigger/decoders \
 	$(CONTROLLERS_DIR)/tcu \

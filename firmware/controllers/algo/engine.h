@@ -47,6 +47,7 @@
 #include "fuel_computer.h"
 #include "gear_detector.h"
 #include "advance_map.h"
+#include "ignition_state.h"
 #include "fan_control.h"
 #include "sensor_checker.h"
 #include "fuel_schedule.h"
