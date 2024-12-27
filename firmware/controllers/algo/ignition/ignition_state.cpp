@@ -130,6 +130,19 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 	return advanceAngle;
 }
 
+angle_t getCltTimingCorrection() {
+	const auto clt = Sensor::get(SensorType::Clt);
+
+	if (!clt)
+		return 0; // this error should be already reported somewhere else, let's just handle it
+
+	return interpolate2d(clt.Value, config->cltTimingBins, config->cltTimingExtra);
+}
+
+void IgnitionState::updateAdvanceCorrections() {
+	cltTimingCorrection = getCltTimingCorrection();
+}
+
 angle_t getAdvanceCorrections(float engineLoad) {
 	auto iat = Sensor::get(SensorType::Iat);
 

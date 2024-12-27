@@ -366,15 +366,6 @@ float getCltFuelCorrection() {
 	return interpolate2d(clt.Value, config->cltFuelCorrBins, config->cltFuelCorr);
 }
 
-angle_t getCltTimingCorrection() {
-	const auto clt = Sensor::get(SensorType::Clt);
-
-	if (!clt)
-		return 0; // this error should be already reported somewhere else, let's just handle it
-
-	return interpolate2d(clt.Value, config->cltTimingBins, config->cltTimingExtra);
-}
-
 float getIatFuelCorrection() {
 	const auto iat = Sensor::get(SensorType::Iat);
 

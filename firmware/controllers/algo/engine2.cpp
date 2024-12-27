@@ -144,7 +144,7 @@ void EngineState::periodicFastCallback() {
 	}
 	engine->fuelComputer.running.postCrankingFuelCorrection = m_postCrankingFactor;
 
-	engine->ignitionState.cltTimingCorrection = getCltTimingCorrection();
+	engine->ignitionState.updateAdvanceCorrections();
 
 	baroCorrection = getBaroCorrection();
 
