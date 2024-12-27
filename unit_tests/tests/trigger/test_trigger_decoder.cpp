@@ -110,7 +110,8 @@ TEST(trigger, test1995FordInline6TriggerDecoder) {
 	EXPECT_NEAR(ecl->elements[5].dwellAngle, 607, 1e-3);
 	EXPECT_NEAR(ecl->elements[5].sparkAngle, 613.0f, 1e-3);
 
-	ASSERT_FLOAT_EQ(0.5, engine->ignitionState.getSparkDwell(2000)) << "running dwell";
+	engine->ignitionState.updateDwell(2000);
+	ASSERT_FLOAT_EQ(0.5, engine->ignitionState.getDwell()) << "running dwell";
 }
 
 TEST(misc, testGetCoilDutyCycleIssue977) {
@@ -118,7 +119,8 @@ TEST(misc, testGetCoilDutyCycleIssue977) {
 
 	float rpm = 2000;
 	engine->rpmCalculator.setRpmValue(rpm);
-	ASSERT_EQ( 4,  engine->ignitionState.getSparkDwell(rpm)) << "running dwell";
+	engine->ignitionState.updateDwell(rpm);
+	ASSERT_EQ( 4,  engine->ignitionState.getDwell()) << "running dwell";
 
 	ASSERT_NEAR( 26.66666, getCoilDutyCycle(rpm), 0.0001);
 }
@@ -136,10 +138,12 @@ TEST(misc, testFordAspire) {
 
 	int rpm = 2000;
 	engine->rpmCalculator.setRpmValue(rpm);
-	ASSERT_EQ( 4,  engine->ignitionState.getSparkDwell(rpm)) << "running dwell";
+	engine->ignitionState.updateDwell(rpm);
+	ASSERT_EQ( 4,  engine->ignitionState.getDwell()) << "running dwell";
 
 	engine->rpmCalculator.setRpmValue(6000);
-	assertEqualsM("higher rpm dwell", 3.25, engine->ignitionState.getSparkDwell(6000));
+	engine->ignitionState.updateDwell(6000);
+	assertEqualsM("higher rpm dwell", 3.25, engine->ignitionState.getDwell());
 
 }
 

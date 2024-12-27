@@ -247,7 +247,7 @@ if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
 	// now that we've just fired a coil let's prepare the new schedule for the next engine revolution
 
 	angle_t dwellAngleDuration = engine->ignitionState.dwellDurationAngle;
-	floatms_t sparkDwell = engine->ignitionState.sparkDwell;
+	floatms_t sparkDwell = engine->ignitionState.getDwell();
 	if (std::isnan(dwellAngleDuration) || std::isnan(sparkDwell)) {
 		// we are here if engine has just stopped
 		return;
@@ -489,7 +489,7 @@ static void scheduleSparkEvent(bool limitedSpark, IgnitionEvent *event,
 void initializeIgnitionActions() {
 	IgnitionEventList *list = &engine->ignitionEvents;
 	angle_t dwellAngle = engine->ignitionState.dwellDurationAngle;
-	floatms_t sparkDwell = engine->ignitionState.sparkDwell;
+	floatms_t sparkDwell = engine->ignitionState.getDwell();
 	if (std::isnan(engine->engineState.timingAdvance[0]) || std::isnan(dwellAngle)) {
 		// error should already be reported
 		// need to invalidate previous ignition schedule
@@ -542,7 +542,7 @@ void onTriggerEventSparkLogic(float rpm, efitick_t edgeTimestamp, float currentP
 	engine->outputChannels.sparkCutReason = (int8_t)limitedSparkState.reason;
 	bool limitedSpark = !limitedSparkState.value;
 
-	const floatms_t dwellMs = engine->ignitionState.sparkDwell;
+	const floatms_t dwellMs = engine->ignitionState.getDwell();
 	if (std::isnan(dwellMs) || dwellMs <= 0) {
 		warning(ObdCode::CUSTOM_DWELL, "invalid dwell to handle: %.2f", dwellMs);
 		return;
@@ -666,7 +666,7 @@ int getNumberOfSparks(ignition_mode_e mode) {
  * @see getInjectorDutyCycle
  */
 percent_t getCoilDutyCycle(float rpm) {
-	floatms_t totalPerCycle = engine->ignitionState.sparkDwell * getNumberOfSparks(getCurrentIgnitionMode());
+	floatms_t totalPerCycle = engine->ignitionState.getDwell() * getNumberOfSparks(getCurrentIgnitionMode());
 	floatms_t engineCycleDuration = getCrankshaftRevolutionTimeMs(rpm) * (getEngineRotationState()->getOperationMode() == TWO_STROKE ? 1 : 2);
 	return 100 * totalPerCycle / engineCycleDuration;
 }

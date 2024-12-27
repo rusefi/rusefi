@@ -312,4 +312,13 @@ floatms_t IgnitionState::getSparkDwell(float rpm) {
 	return dwellMs;
 }
 
+void IgnitionState::updateDwell(float rpm) {
+	sparkDwell = getSparkDwell(rpm);
+	dwellDurationAngle = std::isnan(rpm) ? NAN : getDwell() / getOneDegreeTimeMs(rpm);
+}
+
+floatms_t IgnitionState::getDwell() const {
+	return sparkDwell;
+}
+
 #endif // EFI_ENGINE_CONTROL
