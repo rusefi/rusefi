@@ -38,7 +38,7 @@ public enum debug_mode_e {
 	DBG_ION,
 	DBG_TLE8888,
 	DBG_32,
-	DBG_DWELL_METRIC,
+	DBG_33,
 	DBG_34,
 	DBG_35,
 	DBG_36,

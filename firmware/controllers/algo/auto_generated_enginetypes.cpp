@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Oct 09 23:14:35 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Fri Dec 27 21:04:11 UTC 2024
 // see also gen_config_and_enums.bat
 
 
@@ -108,6 +108,8 @@ case DBG_29:
   return "DBG_29";
 case DBG_32:
   return "DBG_32";
+case DBG_33:
+  return "DBG_33";
 case DBG_34:
   return "DBG_34";
 case DBG_35:
@@ -134,8 +136,6 @@ case DBG_9:
   return "DBG_9";
 case DBG_COMPOSITE_LOG:
   return "DBG_COMPOSITE_LOG";
-case DBG_DWELL_METRIC:
-  return "DBG_DWELL_METRIC";
 case DBG_DYNO_VIEW:
   return "DBG_DYNO_VIEW";
 case DBG_ELECTRONIC_THROTTLE_PID:

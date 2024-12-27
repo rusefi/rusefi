@@ -281,7 +281,7 @@
 #define dc_function_e_DC_Wastegate 4
 #define dc_io_size 8
 #define DC_PER_STEPPER 2
-#define debug_mode_e_auto_enum 0="DBG_0",1="DBG_1",10="DBG_10",11="DBG_11",12="DBG_12",13="DBG_13",16="DBG_16",19="DBG_19",2="DBG_2",20="DBG_20",21="DBG_21",22="DBG_22",24="DBG_24",25="DBG_25",26="DBG_26",27="DBG_27",29="DBG_29",32="DBG_32",34="DBG_34",35="DBG_35",36="DBG_36",37="DBG_37",38="DBG_38",43="DBG_43",46="DBG_46",5="DBG_5",6="DBG_6",7="DBG_7",8="DBG_8",9="DBG_9",40="DBG_COMPOSITE_LOG",33="DBG_DWELL_METRIC",44="DBG_DYNO_VIEW",17="DBG_ELECTRONIC_THROTTLE_PID",4="DBG_EL_ACCEL",39="DBG_ETB_AUTOTUNE",18="DBG_EXECUTOR",30="DBG_ION",15="DBG_KNOCK",45="DBG_LOGIC_ANALYZER",48="DBG_LUA",28="DBG_METRICS",14="DBG_SR5_PROTOCOL",3="DBG_STEPPER_IDLE_CONTROL",47="DBG_TCU",31="DBG_TLE8888",41="DBG_UNUSED41",42="DBG_UNUSED_42",23="UNUSED23"
+#define debug_mode_e_auto_enum 0="DBG_0",1="DBG_1",10="DBG_10",11="DBG_11",12="DBG_12",13="DBG_13",16="DBG_16",19="DBG_19",2="DBG_2",20="DBG_20",21="DBG_21",22="DBG_22",24="DBG_24",25="DBG_25",26="DBG_26",27="DBG_27",29="DBG_29",32="DBG_32",33="DBG_33",34="DBG_34",35="DBG_35",36="DBG_36",37="DBG_37",38="DBG_38",43="DBG_43",46="DBG_46",5="DBG_5",6="DBG_6",7="DBG_7",8="DBG_8",9="DBG_9",40="DBG_COMPOSITE_LOG",44="DBG_DYNO_VIEW",17="DBG_ELECTRONIC_THROTTLE_PID",4="DBG_EL_ACCEL",39="DBG_ETB_AUTOTUNE",18="DBG_EXECUTOR",30="DBG_ION",15="DBG_KNOCK",45="DBG_LOGIC_ANALYZER",48="DBG_LUA",28="DBG_METRICS",14="DBG_SR5_PROTOCOL",3="DBG_STEPPER_IDLE_CONTROL",47="DBG_TCU",31="DBG_TLE8888",41="DBG_UNUSED41",42="DBG_UNUSED_42",23="UNUSED23"
 #define debug_mode_e_DBG_0 0
 #define debug_mode_e_DBG_1 1
 #define debug_mode_e_DBG_10 10
@@ -300,6 +300,7 @@
 #define debug_mode_e_DBG_27 27
 #define debug_mode_e_DBG_29 29
 #define debug_mode_e_DBG_32 32
+#define debug_mode_e_DBG_33 33
 #define debug_mode_e_DBG_34 34
 #define debug_mode_e_DBG_35 35
 #define debug_mode_e_DBG_36 36
@@ -313,7 +314,6 @@
 #define debug_mode_e_DBG_8 8
 #define debug_mode_e_DBG_9 9
 #define debug_mode_e_DBG_COMPOSITE_LOG 40
-#define debug_mode_e_DBG_DWELL_METRIC 33
 #define debug_mode_e_DBG_DYNO_VIEW 44
 #define debug_mode_e_DBG_EL_ACCEL 4
 #define debug_mode_e_DBG_ELECTRONIC_THROTTLE_PID 17

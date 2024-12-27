@@ -271,6 +271,7 @@ public class Fields {
 	public static final int debug_mode_e_DBG_27 = 27;
 	public static final int debug_mode_e_DBG_29 = 29;
 	public static final int debug_mode_e_DBG_32 = 32;
+	public static final int debug_mode_e_DBG_33 = 33;
 	public static final int debug_mode_e_DBG_34 = 34;
 	public static final int debug_mode_e_DBG_35 = 35;
 	public static final int debug_mode_e_DBG_36 = 36;
@@ -284,7 +285,6 @@ public class Fields {
 	public static final int debug_mode_e_DBG_8 = 8;
 	public static final int debug_mode_e_DBG_9 = 9;
 	public static final int debug_mode_e_DBG_COMPOSITE_LOG = 40;
-	public static final int debug_mode_e_DBG_DWELL_METRIC = 33;
 	public static final int debug_mode_e_DBG_DYNO_VIEW = 44;
 	public static final int debug_mode_e_DBG_EL_ACCEL = 4;
 	public static final int debug_mode_e_DBG_ELECTRONIC_THROTTLE_PID = 17;
