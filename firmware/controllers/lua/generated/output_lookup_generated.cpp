@@ -1411,9 +1411,6 @@ float getOutputValueByName(const char *name) {
 // tractionControlSparkSkip
 		case -1555684830:
 			return engine->engineState.tractionControlSparkSkip;
-// desiredRpmLimit
-		case -505351565:
-			return engine->engineState.desiredRpmLimit;
 // fuelInjectionCounter
 		case -1839290700:
 			return engine->engineState.fuelInjectionCounter;

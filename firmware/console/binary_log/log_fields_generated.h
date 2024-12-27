@@ -497,7 +497,6 @@ static const LogField fields[] = {
 	{engine->engineState.luaSoftSparkSkip, "luaSoftSparkSkip", "", 0},
 	{engine->engineState.luaHardSparkSkip, "luaHardSparkSkip", "", 0},
 	{engine->engineState.tractionControlSparkSkip, "tractionControlSparkSkip", "", 0},
-	{engine->engineState.desiredRpmLimit, "User-defined RPM hard limit", "rpm", 0},
 	{engine->engineState.fuelInjectionCounter, "Fuel: Injection counter", "", 0},
 	{engine->engineState.globalSparkCounter, "Ign: Spark counter", "", 0},
 	{engine->engineState.fuelingLoad, "Fuel: Load", "", 0},

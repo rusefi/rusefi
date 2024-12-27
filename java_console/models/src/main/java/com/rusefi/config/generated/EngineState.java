@@ -221,17 +221,15 @@ public class EngineState {
 	public static final Field LUASOFTSPARKSKIP = Field.create("LUASOFTSPARKSKIP", 60, FieldType.FLOAT).setBaseOffset(1220);
 	public static final Field LUAHARDSPARKSKIP = Field.create("LUAHARDSPARKSKIP", 64, FieldType.FLOAT).setBaseOffset(1220);
 	public static final Field TRACTIONCONTROLSPARKSKIP = Field.create("TRACTIONCONTROLSPARKSKIP", 68, FieldType.FLOAT).setBaseOffset(1220);
-	public static final Field DESIREDRPMLIMIT = Field.create("DESIREDRPMLIMIT", 72, FieldType.INT16).setScale(1.0).setBaseOffset(1220);
-	public static final Field ALIGNMENTFILL_AT_74 = Field.create("ALIGNMENTFILL_AT_74", 74, FieldType.INT8).setScale(1.0).setBaseOffset(1220);
-	public static final Field FUELINJECTIONCOUNTER = Field.create("FUELINJECTIONCOUNTER", 76, FieldType.INT).setScale(1.0).setBaseOffset(1220);
-	public static final Field GLOBALSPARKCOUNTER = Field.create("GLOBALSPARKCOUNTER", 80, FieldType.INT).setScale(1.0).setBaseOffset(1220);
-	public static final Field FUELINGLOAD = Field.create("FUELINGLOAD", 84, FieldType.FLOAT).setBaseOffset(1220);
-	public static final Field IGNITIONLOAD = Field.create("IGNITIONLOAD", 88, FieldType.FLOAT).setBaseOffset(1220);
-	public static final Field VETABLEYAXIS = Field.create("VETABLEYAXIS", 92, FieldType.INT16).setScale(0.01).setBaseOffset(1220);
-	public static final Field OVERDWELLCOUNTER = Field.create("OVERDWELLCOUNTER", 94, FieldType.INT8).setScale(1.0).setBaseOffset(1220);
-	public static final Field OVERDWELLNOTSCHEDULEDCOUNTER = Field.create("OVERDWELLNOTSCHEDULEDCOUNTER", 95, FieldType.INT8).setScale(1.0).setBaseOffset(1220);
-	public static final Field SPARKOUTOFORDERCOUNTER = Field.create("SPARKOUTOFORDERCOUNTER", 96, FieldType.INT8).setScale(1.0).setBaseOffset(1220);
-	public static final Field ALIGNMENTFILL_AT_97 = Field.create("ALIGNMENTFILL_AT_97", 97, FieldType.INT8).setScale(1.0).setBaseOffset(1220);
+	public static final Field FUELINJECTIONCOUNTER = Field.create("FUELINJECTIONCOUNTER", 72, FieldType.INT).setScale(1.0).setBaseOffset(1220);
+	public static final Field GLOBALSPARKCOUNTER = Field.create("GLOBALSPARKCOUNTER", 76, FieldType.INT).setScale(1.0).setBaseOffset(1220);
+	public static final Field FUELINGLOAD = Field.create("FUELINGLOAD", 80, FieldType.FLOAT).setBaseOffset(1220);
+	public static final Field IGNITIONLOAD = Field.create("IGNITIONLOAD", 84, FieldType.FLOAT).setBaseOffset(1220);
+	public static final Field VETABLEYAXIS = Field.create("VETABLEYAXIS", 88, FieldType.INT16).setScale(0.01).setBaseOffset(1220);
+	public static final Field OVERDWELLCOUNTER = Field.create("OVERDWELLCOUNTER", 90, FieldType.INT8).setScale(1.0).setBaseOffset(1220);
+	public static final Field OVERDWELLNOTSCHEDULEDCOUNTER = Field.create("OVERDWELLNOTSCHEDULEDCOUNTER", 91, FieldType.INT8).setScale(1.0).setBaseOffset(1220);
+	public static final Field SPARKOUTOFORDERCOUNTER = Field.create("SPARKOUTOFORDERCOUNTER", 92, FieldType.INT8).setScale(1.0).setBaseOffset(1220);
+	public static final Field ALIGNMENTFILL_AT_93 = Field.create("ALIGNMENTFILL_AT_93", 93, FieldType.INT8).setScale(1.0).setBaseOffset(1220);
 	public static final Field[] VALUES = {
 	LUA_FUELADD,
 	LUA_FUELMULT,
@@ -274,8 +272,6 @@ public class EngineState {
 	LUASOFTSPARKSKIP,
 	LUAHARDSPARKSKIP,
 	TRACTIONCONTROLSPARKSKIP,
-	DESIREDRPMLIMIT,
-	ALIGNMENTFILL_AT_74,
 	FUELINJECTIONCOUNTER,
 	GLOBALSPARKCOUNTER,
 	FUELINGLOAD,
@@ -284,6 +280,6 @@ public class EngineState {
 	OVERDWELLCOUNTER,
 	OVERDWELLNOTSCHEDULEDCOUNTER,
 	SPARKOUTOFORDERCOUNTER,
-	ALIGNMENTFILL_AT_97,
+	ALIGNMENTFILL_AT_93,
 	};
 }

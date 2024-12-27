@@ -345,62 +345,50 @@ struct engine_state_s {
 	 */
 	float tractionControlSparkSkip = (float)0;
 	/**
-	 * User-defined RPM hard limit
-	 * units: rpm
-	 * offset 72
-	 */
-	int16_t desiredRpmLimit = (int16_t)0;
-	/**
-	 * need 4 byte alignment
-	 * units: units
-	 * offset 74
-	 */
-	uint8_t alignmentFill_at_74[2];
-	/**
 	 * Fuel: Injection counter
-	 * offset 76
+	 * offset 72
 	 */
 	uint32_t fuelInjectionCounter = (uint32_t)0;
 	/**
 	 * Ign: Spark counter
-	 * offset 80
+	 * offset 76
 	 */
 	uint32_t globalSparkCounter = (uint32_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_LOAD@@
-	 * offset 84
+	 * offset 80
 	 */
 	float fuelingLoad = (float)0;
 	/**
 	 * @@GAUGE_NAME_IGNITION_LOAD@@
-	 * offset 88
+	 * offset 84
 	 */
 	float ignitionLoad = (float)0;
 	/**
 	 * units: %
-	 * offset 92
+	 * offset 88
 	 */
 	scaled_channel<uint16_t, 100, 1> veTableYAxis = (uint16_t)0;
 	/**
-	 * offset 94
+	 * offset 90
 	 */
 	uint8_t overDwellCounter = (uint8_t)0;
 	/**
-	 * offset 95
+	 * offset 91
 	 */
 	uint8_t overDwellNotScheduledCounter = (uint8_t)0;
 	/**
-	 * offset 96
+	 * offset 92
 	 */
 	uint8_t sparkOutOfOrderCounter = (uint8_t)0;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 97
+	 * offset 93
 	 */
-	uint8_t alignmentFill_at_97[3];
+	uint8_t alignmentFill_at_93[3];
 };
-static_assert(sizeof(engine_state_s) == 100);
+static_assert(sizeof(engine_state_s) == 96);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt
