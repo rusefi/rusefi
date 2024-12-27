@@ -34,7 +34,7 @@ void LogTriggerTopDeadCenter(efitick_t timestamp);
 
 void LogTriggerCoilState(efitick_t timestamp, bool state);
 
-void LogTriggerInjectorState(efitick_t timestamp, bool state);
+void LogTriggerInjectorState(efitick_t timestamp, size_t index, bool state);
 
 typedef struct __attribute__ ((packed)) {
 	// the whole order of all packet bytes is reversed, not just the 'endian-swap' integers
