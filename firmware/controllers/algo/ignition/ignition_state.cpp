@@ -279,4 +279,37 @@ void initIgnitionAdvanceControl() {
 	tcSparkSkipTable.initTable(engineConfiguration->tractionControlIgnitionSkip, engineConfiguration->tractionControlSlipBins, engineConfiguration->tractionControlSpeedBins);
 }
 
+/**
+ * @return Spark dwell time, in milliseconds. 0 if tables are not ready.
+ */
+floatms_t IgnitionState::getSparkDwell(float rpm) {
+	float dwellMs;
+	if (engine->rpmCalculator.isCranking()) {
+		dwellMs = engineConfiguration->ignitionDwellForCrankingMs;
+	} else {
+		efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(rpm), "invalid rpm", NAN);
+
+		baseDwell = interpolate2d(rpm, config->sparkDwellRpmBins, config->sparkDwellValues);
+		dwellVoltageCorrection = interpolate2d(
+				Sensor::getOrZero(SensorType::BatteryVoltage),
+				config->dwellVoltageCorrVoltBins,
+				config->dwellVoltageCorrValues
+		);
+
+		// for compat (table full of zeroes)
+		if (dwellVoltageCorrection < 0.1f) {
+			dwellVoltageCorrection = 1;
+		}
+
+		dwellMs = baseDwell * dwellVoltageCorrection;
+	}
+
+	if (std::isnan(dwellMs) || dwellMs <= 0) {
+		// this could happen during engine configuration reset
+		warning(ObdCode::CUSTOM_ERR_DWELL_DURATION, "invalid dwell: %.2f at rpm=%.0f", dwellMs, rpm);
+		return 0;
+	}
+	return dwellMs;
+}
+
 #endif // EFI_ENGINE_CONTROL
