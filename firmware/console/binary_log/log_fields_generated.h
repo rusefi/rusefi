@@ -405,77 +405,77 @@ static const LogField fields[] = {
 	{engine->ignitionState.dwellVoltageCorrection, "Ign: Dwell voltage correction", "", 0},
 	{engine->ignitionState.luaTimingAdd, "Ign: Lua timing add", "deg", 2, "Timing"},
 	{engine->ignitionState.luaTimingMult, "Ign: Lua timing mult", "deg", 2, "Timing"},
-	{___engine.module<KnockController>()->m_knockLevel, "Knock: Current level", "Volts", 2},
-	{___engine.module<KnockController>()->m_knockCyl[0], "Knock: Cyl 1", "dBv", 0},
-	{___engine.module<KnockController>()->m_knockCyl[1], "Knock: Cyl 2", "dBv", 0},
-	{___engine.module<KnockController>()->m_knockCyl[2], "Knock: Cyl 3", "dBv", 0},
-	{___engine.module<KnockController>()->m_knockCyl[3], "Knock: Cyl 4", "dBv", 0},
-	{___engine.module<KnockController>()->m_knockCyl[4], "Knock: Cyl 5", "dBv", 0},
-	{___engine.module<KnockController>()->m_knockCyl[5], "Knock: Cyl 6", "dBv", 0},
-	{___engine.module<KnockController>()->m_knockCyl[6], "Knock: Cyl 7", "dBv", 0},
-	{___engine.module<KnockController>()->m_knockCyl[7], "Knock: Cyl 8", "dBv", 0},
-	{___engine.module<KnockController>()->m_knockCyl[8], "Knock: Cyl 9", "dBv", 0},
-	{___engine.module<KnockController>()->m_knockCyl[9], "Knock: Cyl 10", "dBv", 0},
-	{___engine.module<KnockController>()->m_knockCyl[10], "Knock: Cyl 11", "dBv", 0},
-	{___engine.module<KnockController>()->m_knockCyl[11], "Knock: Cyl 12", "dBv", 0},
-	{___engine.module<KnockController>()->m_knockRetard, "Knock: Retard", "deg", 1},
-	{___engine.module<KnockController>()->m_knockThreshold, "Knock: Threshold", "", 0},
-	{___engine.module<KnockController>()->m_knockCount, "Knock: Count", "", 0},
-	{___engine.module<KnockController>()->m_maximumRetard, "Knock: Max retard", "", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[0], "Knock: SpectrumData 1", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[1], "Knock: SpectrumData 2", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[2], "Knock: SpectrumData 3", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[3], "Knock: SpectrumData 4", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[4], "Knock: SpectrumData 5", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[5], "Knock: SpectrumData 6", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[6], "Knock: SpectrumData 7", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[7], "Knock: SpectrumData 8", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[8], "Knock: SpectrumData 9", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[9], "Knock: SpectrumData 10", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[10], "Knock: SpectrumData 11", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[11], "Knock: SpectrumData 12", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[12], "Knock: SpectrumData 13", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[13], "Knock: SpectrumData 14", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[14], "Knock: SpectrumData 15", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[15], "Knock: SpectrumData 16", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrumChannelCyl, "Knock: ChannelAndCylNumber", "compressed N + N", 0},
-	{___engine.module<KnockController>()->m_knockFrequencyStart, "Knock: Start Freq", "Hz", 0},
-	{___engine.module<KnockController>()->m_knockFrequencyStep, "Knock: Step Freq", "Hz", 0},
-	{___engine.module<KnockController>()->m_knockFuelTrimMultiplier, "Knock: Fuel trim when knock", "multiplier", 0},
+	{engine->module<KnockController>()->m_knockLevel, "Knock: Current level", "Volts", 2},
+	{engine->module<KnockController>()->m_knockCyl[0], "Knock: Cyl 1", "dBv", 0},
+	{engine->module<KnockController>()->m_knockCyl[1], "Knock: Cyl 2", "dBv", 0},
+	{engine->module<KnockController>()->m_knockCyl[2], "Knock: Cyl 3", "dBv", 0},
+	{engine->module<KnockController>()->m_knockCyl[3], "Knock: Cyl 4", "dBv", 0},
+	{engine->module<KnockController>()->m_knockCyl[4], "Knock: Cyl 5", "dBv", 0},
+	{engine->module<KnockController>()->m_knockCyl[5], "Knock: Cyl 6", "dBv", 0},
+	{engine->module<KnockController>()->m_knockCyl[6], "Knock: Cyl 7", "dBv", 0},
+	{engine->module<KnockController>()->m_knockCyl[7], "Knock: Cyl 8", "dBv", 0},
+	{engine->module<KnockController>()->m_knockCyl[8], "Knock: Cyl 9", "dBv", 0},
+	{engine->module<KnockController>()->m_knockCyl[9], "Knock: Cyl 10", "dBv", 0},
+	{engine->module<KnockController>()->m_knockCyl[10], "Knock: Cyl 11", "dBv", 0},
+	{engine->module<KnockController>()->m_knockCyl[11], "Knock: Cyl 12", "dBv", 0},
+	{engine->module<KnockController>()->m_knockRetard, "Knock: Retard", "deg", 1},
+	{engine->module<KnockController>()->m_knockThreshold, "Knock: Threshold", "", 0},
+	{engine->module<KnockController>()->m_knockCount, "Knock: Count", "", 0},
+	{engine->module<KnockController>()->m_maximumRetard, "Knock: Max retard", "", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[0], "Knock: SpectrumData 1", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[1], "Knock: SpectrumData 2", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[2], "Knock: SpectrumData 3", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[3], "Knock: SpectrumData 4", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[4], "Knock: SpectrumData 5", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[5], "Knock: SpectrumData 6", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[6], "Knock: SpectrumData 7", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[7], "Knock: SpectrumData 8", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[8], "Knock: SpectrumData 9", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[9], "Knock: SpectrumData 10", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[10], "Knock: SpectrumData 11", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[11], "Knock: SpectrumData 12", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[12], "Knock: SpectrumData 13", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[13], "Knock: SpectrumData 14", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[14], "Knock: SpectrumData 15", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[15], "Knock: SpectrumData 16", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrumChannelCyl, "Knock: ChannelAndCylNumber", "compressed N + N", 0},
+	{engine->module<KnockController>()->m_knockFrequencyStart, "Knock: Start Freq", "Hz", 0},
+	{engine->module<KnockController>()->m_knockFrequencyStep, "Knock: Step Freq", "Hz", 0},
+	{engine->module<KnockController>()->m_knockFuelTrimMultiplier, "Knock: Fuel trim when knock", "multiplier", 0},
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<InjectorModelPrimary>()->m_deadtime, "Fuel: injector lag", "ms", 3},
+	{engine->module<InjectorModelPrimary>()->m_deadtime, "Fuel: injector lag", "ms", 3},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<InjectorModelPrimary>()->pressureDelta, "Fuel: Injector pressure delta", "kPa", 1},
+	{engine->module<InjectorModelPrimary>()->pressureDelta, "Fuel: Injector pressure delta", "kPa", 1},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<InjectorModelPrimary>()->pressureRatio, "Fuel: Injector pressure ratio", "", 3},
+	{engine->module<InjectorModelPrimary>()->pressureRatio, "Fuel: Injector pressure ratio", "", 3},
 #endif
 #if EFI_LAUNCH_CONTROL
 	{engine->launchController.retardThresholdRpm, "retardThresholdRpm", "", 0},
 #endif
 #if EFI_BOOST_CONTROL
-	{___engine.module<BoostController>()->luaTargetAdd, "Boost: Lua target add", "v", 1, "Boost Control"},
+	{engine->module<BoostController>()->luaTargetAdd, "Boost: Lua target add", "v", 1, "Boost Control"},
 #endif
 #if EFI_BOOST_CONTROL
-	{___engine.module<BoostController>()->boostOutput, "Boost: Output", "percent", 2, "Boost Control"},
+	{engine->module<BoostController>()->boostOutput, "Boost: Output", "percent", 2, "Boost Control"},
 #endif
 #if EFI_BOOST_CONTROL
-	{___engine.module<BoostController>()->luaTargetMult, "Boost: Lua target mult", "v", 1, "Boost Control"},
+	{engine->module<BoostController>()->luaTargetMult, "Boost: Lua target mult", "v", 1, "Boost Control"},
 #endif
 #if EFI_BOOST_CONTROL
-	{___engine.module<BoostController>()->openLoopPart, "Boost: Open loop", "v", 1, "Boost Control"},
+	{engine->module<BoostController>()->openLoopPart, "Boost: Open loop", "v", 1, "Boost Control"},
 #endif
 #if EFI_BOOST_CONTROL
-	{___engine.module<BoostController>()->luaOpenLoopAdd, "Boost: Lua open loop add", "v", 1, "Boost Control"},
+	{engine->module<BoostController>()->luaOpenLoopAdd, "Boost: Lua open loop add", "v", 1, "Boost Control"},
 #endif
 #if EFI_BOOST_CONTROL
-	{___engine.module<BoostController>()->boostControllerClosedLoopPart, "Boost: Closed loop", "%", 1, "Boost Control"},
+	{engine->module<BoostController>()->boostControllerClosedLoopPart, "Boost: Closed loop", "%", 1, "Boost Control"},
 #endif
 #if EFI_BOOST_CONTROL
-	{___engine.module<BoostController>()->boostControlTarget, "Boost: Target", "kPa", 1, "Boost Control"},
+	{engine->module<BoostController>()->boostControlTarget, "Boost: Target", "kPa", 1, "Boost Control"},
 #endif
-	{___engine.module<FanControl1>()->radiatorFanStatus, "radiatorFanStatus", "", 0},
+	{engine->module<FanControl1>()->radiatorFanStatus, "radiatorFanStatus", "", 0},
 	{engine->engineState.lua.fuelAdd, "Lua: Fuel add", "g", 3},
 	{engine->engineState.lua.fuelMult, "Lua: Fuel mult", "", 0},
 	{engine->engineState.sd.tCharge, "Air: Charge temperature estimate", "deg C", 1},
@@ -548,41 +548,41 @@ static const LogField fields[] = {
 	{engine->triggerCentral.triggerElapsedUs, "triggerElapsedUs", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<IdleController>().unmock().currentIdlePosition, "Idle: Position", "%", 1},
+	{engine->module<IdleController>().unmock().currentIdlePosition, "Idle: Position", "%", 1},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<IdleController>().unmock().baseIdlePosition, "idle: base value", "", 0},
+	{engine->module<IdleController>().unmock().baseIdlePosition, "idle: base value", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<IdleController>().unmock().idleClosedLoop, "Idle: Closed loop", "", 0},
+	{engine->module<IdleController>().unmock().idleClosedLoop, "Idle: Closed loop", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<IdleController>().unmock().iacByTpsTaper, "idle: iacByTpsTaper portion", "", 0},
+	{engine->module<IdleController>().unmock().iacByTpsTaper, "idle: iacByTpsTaper portion", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<IdleController>().unmock().idleTarget, "Idle: Target RPM", "", 0},
+	{engine->module<IdleController>().unmock().idleTarget, "Idle: Target RPM", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<IdleController>().unmock().targetRpmByClt, "Idle: Target RPM base", "", 0},
+	{engine->module<IdleController>().unmock().targetRpmByClt, "Idle: Target RPM base", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<IdleController>().unmock().targetRpmAc, "Idle: Target A/C RPM", "", 0},
+	{engine->module<IdleController>().unmock().targetRpmAc, "Idle: Target A/C RPM", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<IdleController>().unmock().iacByRpmTaper, "idle: iacByRpmTaper portion", "", 0},
+	{engine->module<IdleController>().unmock().iacByRpmTaper, "idle: iacByRpmTaper portion", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<IdleController>().unmock().luaAdd, "idle: Lua Adder", "", 0},
+	{engine->module<IdleController>().unmock().luaAdd, "idle: Lua Adder", "", 0},
 #endif
 	{engine->dc_motors.dcOutput0, "DC: output0", "%", 2, "ETB more"},
 	{engine->dc_motors.isEnabled0_int, "DC: en0", "%", 2, "ETB more"},
 #if EFI_VVT_PID
-	{___engine.module<VvtController1>()->vvtTarget, "vvtTarget", "deg", 1},
+	{engine->module<VvtController1>()->vvtTarget, "vvtTarget", "deg", 1},
 #endif
 #if EFI_VVT_PID
-	{___engine.module<VvtController1>()->vvtOutput, "vvtOutput", "%", 0},
+	{engine->module<VvtController1>()->vvtOutput, "vvtOutput", "%", 0},
 #endif
 #if EFI_SHAFT_POSITION_INPUT
-	{___engine.lambdaMonitor.lambdaTimeSinceGood, "lambdaTimeSinceGood", "sec", 2},
+	{engine->lambdaMonitor.lambdaTimeSinceGood, "lambdaTimeSinceGood", "sec", 2},
 #endif
 };
