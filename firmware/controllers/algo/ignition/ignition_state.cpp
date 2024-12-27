@@ -282,9 +282,9 @@ void initIgnitionAdvanceControl() {
 /**
  * @return Spark dwell time, in milliseconds. 0 if tables are not ready.
  */
-floatms_t IgnitionState::getSparkDwell(float rpm) {
+floatms_t IgnitionState::getSparkDwell(float rpm, bool isCranking) {
 	float dwellMs;
-	if (engine->rpmCalculator.isCranking()) {
+	if (isCranking) {
 		dwellMs = engineConfiguration->ignitionDwellForCrankingMs;
 	} else {
 		efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(rpm), "invalid rpm", NAN);
@@ -312,8 +312,8 @@ floatms_t IgnitionState::getSparkDwell(float rpm) {
 	return dwellMs;
 }
 
-void IgnitionState::updateDwell(float rpm) {
-	sparkDwell = getSparkDwell(rpm);
+void IgnitionState::updateDwell(float rpm, bool isCranking) {
+	sparkDwell = getSparkDwell(rpm, isCranking);
 	dwellDurationAngle = std::isnan(rpm) ? NAN : getDwell() / getOneDegreeTimeMs(rpm);
 }
 
