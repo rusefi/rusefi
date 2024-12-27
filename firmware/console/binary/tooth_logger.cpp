@@ -258,8 +258,18 @@ static void SetNextCompositeEntry(efitick_t timestamp) {
 #define JSON_TRG_PID 4
 #define JSON_CAM_PID 10
 
+void LogTriggerSync(bool isSync, efitick_t timestamp) {
+#if EFI_UNIT_TEST
+        jsonTraceEntry("sync", 3, /*isEnter*/isSync, timestamp);
+#else
+#endif
+}
+
 void LogTriggerCamTooth(bool isRising, efitick_t timestamp, int index) {
+#if EFI_UNIT_TEST
         jsonTraceEntry("cam", JSON_CAM_PID + index, /*isEnter*/isRising, timestamp);
+#else
+#endif
 }
 
 void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp) {

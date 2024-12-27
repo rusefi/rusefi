@@ -47,6 +47,12 @@ bool TriggerDecoderBase::getShaftSynchronized() {
 }
 
 void TriggerDecoderBase::setShaftSynchronized(bool value) {
+#if EFI_UNIT_TEST
+	if (value != shaft_is_synchronized) {
+		LogTriggerSync(value, getTimeNowNt());
+	}
+#endif
+
 	if (value) {
 		if (!shaft_is_synchronized) {
 			// just got synchronized
