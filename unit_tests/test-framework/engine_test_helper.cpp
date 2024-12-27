@@ -15,6 +15,9 @@
 #include "tooth_logger.h"
 #include "logicdata.h"
 #include "hardware.h"
+// https://stackoverflow.com/questions/23427804/cant-find-mkdir-function-in-dirent-h-for-windows
+#include <sys/types.h>
+#include <sys/stat.h>
 
 bool unitTestBusyWaitHack;
 
@@ -75,6 +78,8 @@ int EngineTestHelper::getWarningCounter() {
 
 FILE *jsonTrace = nullptr;
 
+#define TEST_RESULTS_DIR "test_results"
+
 EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t configurationCallback, const std::unordered_map<SensorType, float>& sensorValues) :
 	EngineTestHelperBase(&engine, &persistentConfig.engineConfiguration, &persistentConfig)
 {
@@ -85,8 +90,14 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	auto testInfo = ::testing::UnitTest::GetInstance()->current_test_info();
 extern bool hasInitGtest;
 	if (hasInitGtest) {
+	#if IS_WINDOWS_COMPILER
+     mkdir(TEST_RESULTS_DIR);
+  #else
+     mkdir(TEST_RESULTS_DIR, 0777);
+  #endif
+
     	std::stringstream filePath;
-    	filePath << "unittest_" << testInfo->test_case_name() << "_" << testInfo->name() << "_trace.json";
+    	filePath << TEST_RESULTS_DIR << "/unittest_" << testInfo->test_case_name() << "_" << testInfo->name() << "_trace.json";
     	// fun fact: ASAN says not to extract 'fileName' into a variable, we must be doing something a bit not right?
     	jsonTrace = fopen(filePath.str().c_str(), "wb");
     	if (jsonTrace == nullptr) {
@@ -194,12 +205,12 @@ EngineTestHelper::~EngineTestHelper() {
 	auto testInfo = ::testing::UnitTest::GetInstance()->current_test_info();
 	if (hasInitGtest) {
     	std::stringstream filePath;
-    	filePath << "unittest_" << testInfo->test_case_name() << "_" << testInfo->name() << ".logicdata";
+    	filePath << TEST_RESULTS_DIR << "/unittest_" << testInfo->test_case_name() << "_" << testInfo->name() << ".logicdata";
 	    writeEventsLogicData(filePath.str().c_str());
 	}
 	if (hasInitGtest) {
     	std::stringstream filePath;
-    	filePath << "unittest_" << testInfo->test_case_name() << "_" << testInfo->name() << ".events.txt";
+    	filePath << TEST_RESULTS_DIR << "/unittest_" << testInfo->test_case_name() << "_" << testInfo->name() << ".events.txt";
 	    writeEvents2(filePath.str().c_str());
 	}
 
