@@ -29,10 +29,11 @@ bool IsToothLoggerEnabled();
 
 // A new tooth has arrived! Log to the buffer if enabled.
 void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp);
+void LogTriggerCamTooth(bool isRising, efitick_t timestamp, int index);
 
 void LogTriggerTopDeadCenter(efitick_t timestamp);
 
-void LogTriggerCoilState(efitick_t timestamp, bool state);
+void LogTriggerCoilState(efitick_t timestamp, size_t index, bool state);
 
 void LogTriggerInjectorState(efitick_t timestamp, size_t index, bool state);
 

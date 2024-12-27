@@ -255,14 +255,20 @@ static void SetNextCompositeEntry(efitick_t timestamp) {
 
 #endif // not EFI_UNIT_TEST
 
-void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp) {
+#define JSON_TRG_PID 4
+#define JSON_CAM_PID 10
 
+void LogTriggerCamTooth(bool isRising, efitick_t timestamp, int index) {
+        jsonTraceEntry("cam", JSON_CAM_PID + index, /*isEnter*/isRising, timestamp);
+}
+
+void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp) {
 
 #if EFI_UNIT_TEST
      if (tooth == SHAFT_PRIMARY_RISING) {
-        jsonTraceEntry("trg0", 54, /*isEnter*/true, timestamp);
+        jsonTraceEntry("trg0", JSON_TRG_PID, /*isEnter*/true, timestamp);
       } else if (tooth == SHAFT_PRIMARY_FALLING) {
-        jsonTraceEntry("trg0", 54, /*isEnter*/false, timestamp);
+        jsonTraceEntry("trg0", JSON_TRG_PID, /*isEnter*/false, timestamp);
       }
 #endif // EFI_UNIT_TEST
 
@@ -326,7 +332,10 @@ void LogTriggerTopDeadCenter(efitick_t timestamp) {
 	SetNextCompositeEntry(timestamp + 10);
 }
 
-void LogTriggerCoilState(efitick_t timestamp, bool state) {
+void LogTriggerCoilState(efitick_t timestamp, size_t index, bool state) {
+#if EFI_UNIT_TEST
+	jsonTraceEntry("coil", 20 + index, state, timestamp);
+#endif // EFI_UNIT_TEST
 	if (!ToothLoggerEnabled) {
 		return;
 	}
@@ -336,16 +345,14 @@ void LogTriggerCoilState(efitick_t timestamp, bool state) {
 }
 
 void LogTriggerInjectorState(efitick_t timestamp, size_t index, bool state) {
+#if EFI_UNIT_TEST
+	jsonTraceEntry("inj", 30 + index, state, timestamp);
+#endif // EFI_UNIT_TEST
 	if (!ToothLoggerEnabled) {
 		return;
 	}
 	currentInjectorState = state;
 	UNUSED(timestamp);
-
-#if EFI_UNIT_TEST
-	jsonTraceEntry("inj", 10 + index, state, timestamp);
-#endif // EFI_UNIT_TEST
-
 	//SetNextCompositeEntry(timestamp, trigger1, trigger2, trigger);
 }
 

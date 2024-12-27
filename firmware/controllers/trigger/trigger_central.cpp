@@ -243,7 +243,7 @@ static void logVvtFront(bool useOnlyRise, bool isImportantFront, TriggerValue fr
 		addEngineSnifferVvtEvent(index, front == TriggerValue::RISE ? FrontDirection::UP : FrontDirection::DOWN);
 
 #if EFI_TOOTH_LOGGER
-		LogTriggerTooth(front == TriggerValue::RISE ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING, nowNt);
+		LogTriggerCamTooth(front == TriggerValue::RISE, nowNt, index);
 #endif /* EFI_TOOTH_LOGGER */
 	} else {
 		if (isImportantFront) {
@@ -252,8 +252,8 @@ static void logVvtFront(bool useOnlyRise, bool isImportantFront, TriggerValue fr
 			addEngineSnifferVvtEvent(index, FrontDirection::DOWN);
 
 #if EFI_TOOTH_LOGGER
-			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt);
-			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt);
+			LogTriggerCamTooth(true, nowNt, index);
+			LogTriggerCamTooth(false, nowNt, index);
 #endif /* EFI_TOOTH_LOGGER */
 		}
 	}

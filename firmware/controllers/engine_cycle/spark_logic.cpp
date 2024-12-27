@@ -210,7 +210,7 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 	efitick_t nowNt = getTimeNowNt();
 
 #if EFI_TOOTH_LOGGER
-	LogTriggerCoilState(nowNt, false);
+	LogTriggerCoilState(nowNt, false, event->coilIndex);
 #endif // EFI_TOOTH_LOGGER
 
 	float actualDwellMs = event->actualDwellTimer.getElapsedSeconds(nowNt) * 1e3;
@@ -222,28 +222,6 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
     engine->outputChannels.sadDwellRatioCounter++;
 	}
 
-#if !EFI_UNIT_TEST
-if (engineConfiguration->debugMode == DBG_DWELL_METRIC) {
-#if EFI_TUNER_STUDIO
-	// todo: smarted solution for index to field mapping
-	switch (event->cylinderIndex) {
-	case 0:
-		engine->outputChannels.debugFloatField1 = ratio;
-		break;
-	case 1:
-		engine->outputChannels.debugFloatField2 = ratio;
-		break;
-	case 2:
-		engine->outputChannels.debugFloatField3 = ratio;
-		break;
-	case 3:
-		engine->outputChannels.debugFloatField4 = ratio;
-		break;
-	}
-#endif
-
-	}
-#endif /* EFI_UNIT_TEST */
 	// now that we've just fired a coil let's prepare the new schedule for the next engine revolution
 
 	angle_t dwellAngleDuration = engine->ignitionState.dwellDurationAngle;
@@ -358,7 +336,7 @@ void turnSparkPinHighStartCharging(IgnitionEvent *event) {
 #endif
 
 #if EFI_TOOTH_LOGGER
-  	LogTriggerCoilState(nowNt, true);
+  	LogTriggerCoilState(nowNt, true, event->coilIndex);
 #endif // EFI_TOOTH_LOGGER
   }
 
