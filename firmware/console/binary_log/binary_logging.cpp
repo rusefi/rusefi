@@ -35,22 +35,6 @@ static constexpr uint16_t computeFieldsRecordLength() {
 
 static uint64_t binaryLogCount = 0;
 
-extern bool main_loop_started;
-
-void writeSdLogLine(Writer& bufferedWriter) {
-	if (!main_loop_started)
-		return;
-
-	if (binaryLogCount == 0) {
-		writeFileHeader(bufferedWriter);
-	} else {
-		updateTunerStudioState();
-		writeSdBlock(bufferedWriter);
-	}
-
-	binaryLogCount++;
-}
-
 static const uint16_t recordLength = computeFieldsRecordLength();
 
 void writeFileHeader(Writer& outBuffer) {
@@ -101,9 +85,7 @@ void writeFileHeader(Writer& outBuffer) {
 
 static uint8_t blockRollCounter = 0;
 
-//static efitimeus_t prevSdCardLineTime = 0;
-
-void writeSdBlock(Writer& outBuffer) {
+static void writeSdBlock(Writer& outBuffer) {
 	static char buffer[16];
 
 	// Offset 0 = Block type, standard data block in this case
@@ -140,5 +122,33 @@ void writeSdBlock(Writer& outBuffer) {
 	// 1 byte checksum footer
 	outBuffer.write(buffer, 1);
 }
+
+#if EFI_PROD_CODE
+extern bool main_loop_started;
+#endif //EFI_PROD_CODE
+
+void writeSdLogLine(Writer& bufferedWriter) {
+#if EFI_PROD_CODE
+	if (!main_loop_started)
+		return;
+#endif //EFI_PROD_CODE
+
+	if (binaryLogCount == 0) {
+		writeFileHeader(bufferedWriter);
+	} else {
+		updateTunerStudioState();
+		writeSdBlock(bufferedWriter);
+	}
+
+	binaryLogCount++;
+}
+
+#if EFI_UNIT_TEST
+void resetFileLogging() {
+  binaryLogCount();
+  blockRollCounter = 0;
+}
+
+#endif // EFI_UNIT_TEST
 
 #endif /* EFI_FILE_LOGGING */

@@ -7,6 +7,8 @@
 #include "buffered_writer.h"
 
 int getSdCardFieldsCount();
-void writeFileHeader(Writer& buffer);
+
 void writeSdLogLine(Writer& buffer);
-void writeSdBlock(Writer& outBuffer);
+#if EFI_UNIT_TEST
+void resetFileLogging();
+#endif // EFI_UNIT_TEST
