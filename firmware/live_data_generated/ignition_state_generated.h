@@ -3,7 +3,7 @@
 // begin
 #pragma once
 #include "rusefi_types.h"
-// start of ignition_controller_s
+// start of ignition_state_s
 struct ignition_state_s {
 	/**
 	 * "Ignition: base dwell"
