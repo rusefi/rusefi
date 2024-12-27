@@ -7,7 +7,6 @@
 
 #pragma once
 
-angle_t getWrappedAdvance(float rpm, float engineLoad);
 angle_t getCylinderIgnitionTrim(size_t cylinderNumber, float rpm, float ignitionLoad);
 /**
  * this method is used to build default advance map

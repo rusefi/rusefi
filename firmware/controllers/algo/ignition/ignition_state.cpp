@@ -179,8 +179,7 @@ angle_t getCrankingAdvance(float rpm, float engineLoad) {
 }
 #endif // EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 
-angle_t getAdvance(float rpm, float engineLoad) {
-#if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
+angle_t IgnitionState::getAdvance(float rpm, float engineLoad) {
 	if (std::isnan(engineLoad)) {
 		return 0; // any error should already be reported
 	}
@@ -217,13 +216,10 @@ angle_t getAdvance(float rpm, float engineLoad) {
 
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(angle), "_AngleN5", 0);
 	return angle;
-#else
-	return 0;
-#endif
 }
 
-angle_t getWrappedAdvance(const float rpm, const float engineLoad) {
-    angle_t angle = getAdvance(rpm, engineLoad) * engine->ignitionState.luaTimingMult + engine->ignitionState.luaTimingAdd;
+angle_t IgnitionState::getWrappedAdvance(const float rpm, const float engineLoad) {
+    angle_t angle = getAdvance(rpm, engineLoad) * luaTimingMult + luaTimingAdd;
     wrapAngle(angle, "getWrappedAdvance", ObdCode::CUSTOM_ERR_ADCANCE_CALC_ANGLE);
     return angle;
 }
