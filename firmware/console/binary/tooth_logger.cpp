@@ -34,6 +34,19 @@ static bool currentCoilState = false;
 static bool currentInjectorState = false;
 
 #if EFI_UNIT_TEST
+
+void jsonTraceEntry(const char* name, int pid, bool isEnter, efitick_t timestamp) {
+extern FILE *jsonTrace;
+  if (jsonTrace != nullptr) {
+    fprintf(jsonTrace, ",\n");
+    fprintf(jsonTrace, "{\"name\":\"%s\",\"ph\":\"%s\",\"tid\":0,\"pid\":%d,\"ts\":%f}",
+      name,
+      isEnter ? "B" : "E",
+      pid,
+    timestamp / 1000.0);
+  }
+}
+
 #include "logicdata.h"
 
 static std::vector<CompositeEvent> events;
@@ -240,23 +253,17 @@ static void SetNextCompositeEntry(efitick_t timestamp) {
 	}
 }
 
-#endif // EFI_UNIT_TEST
+#endif // not EFI_UNIT_TEST
 
 void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp) {
 
 
 #if EFI_UNIT_TEST
-extern FILE *jsonTrace;
-//static efitick_t risingTimestamp = 0;
-    if (jsonTrace != nullptr) {
-      if (tooth == SHAFT_PRIMARY_RISING) {
-        fprintf(jsonTrace, ",\n");
-        fprintf(jsonTrace, "{\"name\":\"trg0\",\"ph\":\"B\",\"tid\":0,\"pid\":54,\"ts\":%f}", timestamp / 1000.0);
+     if (tooth == SHAFT_PRIMARY_RISING) {
+        jsonTraceEntry("trg0", 54, /*isEnter*/true, timestamp);
       } else if (tooth == SHAFT_PRIMARY_FALLING) {
-        fprintf(jsonTrace, ",\n");
-        fprintf(jsonTrace, "{\"name\":\"trg0\",\"ph\":\"E\",\"tid\":0,\"pid\":54,\"ts\":%f}", timestamp / 1000.0);
+        jsonTraceEntry("trg0", 54, /*isEnter*/false, timestamp);
       }
-    }
 #endif // EFI_UNIT_TEST
 
     efiAssertVoid(ObdCode::CUSTOM_ERR_6650, hasLotsOfRemainingStack(), "l-t-t");

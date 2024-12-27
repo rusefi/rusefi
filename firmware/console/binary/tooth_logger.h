@@ -14,6 +14,7 @@
 #if EFI_UNIT_TEST
 #include "logicdata.h"
 const std::vector<CompositeEvent>& getCompositeEvents();
+void jsonTraceEntry(const char* name, int pid, bool isEnter, efitick_t timestamp);
 #endif // EFI_UNIT_TEST
 
 void EnableToothLoggerIfNotEnabled();
