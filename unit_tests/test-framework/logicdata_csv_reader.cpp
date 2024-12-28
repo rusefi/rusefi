@@ -148,4 +148,5 @@ void CsvReader::readLine(EngineTestHelper *eth) {
 	if (!haveMore())
 		return;
 	processLine(eth);
+	engine->periodicSlowCallback();
 }

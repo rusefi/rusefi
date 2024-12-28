@@ -28,8 +28,6 @@ TEST(realCas24Plus1, spinningOnBench) {
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 
-		engine->periodicSlowCallback();
-
 		// Expect that all teeth are in the correct spot
 		float angleError = getTriggerCentral()->triggerToothAngleError;
 		EXPECT_TRUE(angleError < 3 && angleError > -3) << "tooth angle of " << angleError << " at timestamp " << (getTimeNowNt() / 1e8);

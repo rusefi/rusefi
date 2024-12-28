@@ -16,8 +16,6 @@ TEST(harley, crankingSomethingCam) {
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 
-		engine->periodicSlowCallback();
-
     // whole pattern is a copy-paste from test_real_4b11.cpp, is better API possible?
     auto rpm = Sensor::getOrZero(SensorType::Rpm);
 		if (!gotRpm && rpm) {

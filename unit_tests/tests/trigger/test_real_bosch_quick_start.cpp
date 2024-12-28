@@ -13,8 +13,6 @@ TEST(realBQS, realHarleyCranking) {
 	bool gotRpm = false;
 	while (reader.haveMore()) {
  		reader.processLine(&eth);
-		engine->periodicSlowCallback();
-
 
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 		if (gotRpm) {
@@ -45,7 +43,6 @@ TEST(realBQS, readAsPrimarySensor) {
 	bool gotRpm = false;
 	while (reader.haveMore()) {
  		reader.processLine(&eth);
-		engine->periodicSlowCallback();
 
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 		if (!gotRpm && rpm) {
