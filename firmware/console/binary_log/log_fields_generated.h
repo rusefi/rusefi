@@ -547,6 +547,15 @@ static const LogField fields[] = {
 #if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.triggerElapsedUs, "triggerElapsedUs", "", 0},
 #endif
+	{engine->triggerCentral.triggerState.synchronizationCounter, "sync: trigger wheel sync counter", "", 0},
+	{engine->triggerCentral.triggerState.vvtToothDurations0, "vvtToothDurations0", "us", 3},
+	{engine->triggerCentral.triggerState.vvtCurrentPosition, "sync: Primary Cam Position", "", 3},
+	{engine->triggerCentral.triggerState.vvtToothPosition[0], "sync: Cam Tooth Position 1", "", 3},
+	{engine->triggerCentral.triggerState.vvtToothPosition[1], "sync: Cam Tooth Position 2", "", 3},
+	{engine->triggerCentral.triggerState.vvtToothPosition[2], "sync: Cam Tooth Position 3", "", 3},
+	{engine->triggerCentral.triggerState.vvtToothPosition[3], "sync: Cam Tooth Position 4", "", 3},
+	{engine->triggerCentral.triggerState.triggerSyncGapRatio, "Sync: Trigger Latest Ratio", "", 3},
+	{engine->triggerCentral.triggerState.triggerStateIndex, "triggerStateIndex", "", 0},
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{engine->module<IdleController>().unmock().currentIdlePosition, "Idle: Position", "%", 1},
 #endif
