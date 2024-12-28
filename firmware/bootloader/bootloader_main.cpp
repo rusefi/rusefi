@@ -152,7 +152,7 @@ void efiSetPadMode(const char* msg, brain_pin_e brainPin, iomode_t mode) {
 	ioportid_t port = getHwPort(msg, brainPin);
 	ioportmask_t pin = getHwPin(msg, brainPin);
 	/* paranoid */
-	if (port == GPIO_NULL) {
+	if (!port) {
 		return;
 	}
 

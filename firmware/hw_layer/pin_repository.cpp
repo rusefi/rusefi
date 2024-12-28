@@ -198,7 +198,7 @@ __attribute__((weak)) const char * getBoardSpecificPinName(brain_pin_e /*brainPi
 
 const char *hwOnChipPhysicalPinName(ioportid_t hwPort, int hwPin) {
   portNameStream.eos = 0; // reset
-	if (hwPort == GPIO_NULL) {
+	if (!hwPort) {
 		return "NONE";
 	}
 	chprintf((BaseSequentialStream *) &portNameStream, "%s%d", portname(hwPort), hwPin);

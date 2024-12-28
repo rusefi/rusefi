@@ -740,7 +740,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e p_brainPin, pin_output_mode
 		m_pin = getHwPin(msg, p_brainPin);
 
 		// Validate port
-		if (m_port == GPIO_NULL) {
+		if (!m_port) {
 			criticalError("OutputPin::initPin got invalid port for pin idx %d", static_cast<int>(p_brainPin));
 			return;
 		}
