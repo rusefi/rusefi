@@ -58,7 +58,7 @@ public:
 
 	// Write the field's data to the buffer.
 	// Returns the number of bytes written.
-	size_t writeData(char* buffer) const;
+	size_t writeData(char* buffer, void *offset) const;
 
 private:
 	template<typename T>

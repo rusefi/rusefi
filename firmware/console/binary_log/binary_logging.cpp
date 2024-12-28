@@ -109,7 +109,15 @@ static void writeSdBlock(Writer& outBuffer) {
 
 	uint8_t sum = 0;
 	for (size_t fieldIndex = 0; fieldIndex < efi::size(fields); fieldIndex++) {
-		size_t entrySize = fields[fieldIndex].writeData(buffer);
+
+	#if EFI_UNIT_TEST
+	  // dark magic: all elements of log_fields_generated.h were const-evaluated against 'nullptr' engine, let's add it!
+		void *offset = fieldIndex == 0 ? nullptr : engine;
+	#else
+	  void *offset = nullptr;
+	#endif
+
+		size_t entrySize = fields[fieldIndex].writeData(buffer, offset);
 
 		for (size_t byteIndex = 0; byteIndex < entrySize; byteIndex++) {
 			// "CRC" at the end is just the sum of all bytes

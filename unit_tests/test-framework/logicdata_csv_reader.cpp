@@ -143,7 +143,7 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 		currentVvtState[vvtIndex] = newVvtState[vvtIndex];
 
 	}
-	// todo! writeUnitTestLogLine();
+	writeUnitTestLogLine();
 }
 
 void CsvReader::readLine(EngineTestHelper *eth) {
