@@ -115,7 +115,9 @@ struct MicrosecondTimerWatchdogController : public PeriodicController<256> {
 
 	void PeriodicTask(efitick_t nowNt) override {
 		// 2 seconds of inactivity would not look right
-		efiAssertVoid(ObdCode::CUSTOM_TIMER_WATCHDOG, nowNt < lastSetTimerTimeNt + 2 * CORE_CLOCK, "Watchdog: no events for 2 seconds!");
+		if (nowNt > lastSetTimerTimeNt + MS2NT(2000)) {
+			firmwareError(ObdCode::CUSTOM_TIMER_WATCHDOG, "Watchdog: no events for 2 seconds!");
+		}
 	}
 };
 

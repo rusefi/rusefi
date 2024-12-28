@@ -34,9 +34,8 @@
 #define VALUE(x) VALUE_TO_STRING(x)
 #define VAR_NAME_VALUE(var) #var "="  VALUE(var)
 
+// todo: very odd placement for very weird define, do we even need it? used in SENT
 #define CORE_CLOCK STM32_SYSCLK
-//#pragma message(VAR_NAME_VALUE(CORE_CLOCK))
-
 
 /**
  * project-wide default thread stack size
