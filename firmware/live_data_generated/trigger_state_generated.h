@@ -6,7 +6,7 @@
 // start of trigger_state_s
 struct trigger_state_s {
 	/**
-	 * sync: trigger wheel sync counter
+	 * sync: wheel sync counter
 	 * offset 0
 	 */
 	uint32_t synchronizationCounter = (uint32_t)0;
@@ -16,12 +16,12 @@ struct trigger_state_s {
 	 */
 	uint32_t vvtToothDurations0 = (uint32_t)0;
 	/**
-	 * "sync: Primary Cam Position"
+	 * "sync: Primary Position"
 	 * offset 8
 	 */
 	float vvtCurrentPosition = (float)0;
 	/**
-	 * "sync: Cam Tooth Position"
+	 * "sync: Cam Position"
 	 * offset 12
 	 */
 	float vvtToothPosition[4];
