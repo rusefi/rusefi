@@ -153,6 +153,12 @@ public class LiveDataProcessor {
                 Objects.requireNonNull(outFolder);
                 // TODO: use outputNames
 
+                if (constexpr != null) {
+                    if (outputNames.length != constexpr.length) {
+                        throw new IllegalStateException(Arrays.toString(outputNames) + " vs " + Arrays.toString(constexpr));
+                    }
+                }
+
                 stateDictionaryGenerator.onEntry(name, javaName, outputNames, cppFileName);
 
                 log.info("Starting " + name + " at " + startingPosition + " with [" + conditional + "]");
@@ -198,7 +204,8 @@ public class LiveDataProcessor {
                 state.addDestination(new FileJavaFieldsConsumer(state, JAVA_DESTINATION + javaName, baseOffset, fileFactory));
 
                 if (constexpr != null) {
-                    sdCardFieldsConsumer.home = constexpr[0];
+                    sdCardFieldsConsumer.home = constexpr;
+                    sdCardFieldsConsumer.names = outputNames;
                     sdCardFieldsConsumer.conditional = conditional;
                     sdCardFieldsConsumer.isPtr = isPtr;
                     state.addDestination(sdCardFieldsConsumer::handleEndStruct);
