@@ -168,7 +168,7 @@ public class LiveDataProcessor {
                 gaugeConsumer.outputNames = outputNames;
 
                 List<JavaSensorsConsumer> javaSensorsConsumers = new ArrayList<>();
-                for (int i = 0; i < tempLimit(outputNames); i++) {
+                for (int i = 0; i < outputNames.length; i++) {
                     JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer(startingPosition.get());
                     state.addDestination(javaSensorsConsumer);
                     javaSensorsConsumers.add(javaSensorsConsumer);
@@ -181,7 +181,7 @@ public class LiveDataProcessor {
 
                 List<FragmentDialogConsumer> fragmentConsumers = new ArrayList<>();
 
-                for (int i = 0; i < tempLimit(outputNames); i++) {
+                for (int i = 0; i < outputNames.length; i++) {
 
                     String variableNameSuffix = outputNames.length > 1 ? Integer.toString(i) : "";
                     FragmentDialogConsumer fragmentDialogConsumer = new FragmentDialogConsumer(name, variableNameSuffix);
@@ -281,7 +281,7 @@ public class LiveDataProcessor {
                     .append(type)
                     .append(">{},\n");
             } else {
-                for (int i = 0; i < tempLimit(outputNamesArr); i++) {
+                for (int i = 0; i < outputNamesArr.length; i++) {
                     enumContent.append(enumName + i + ",\n");
                 }
 
@@ -353,10 +353,6 @@ public class LiveDataProcessor {
         try (LazyFile fw = fileFactory.create(getDataFragmentsH())) {
             fw.write(fragmentsContent.toString());
         }
-    }
-
-    public static int tempLimit(String[] outputs) {
-        return outputs.length;
     }
 
     public static boolean needComment(int index) {

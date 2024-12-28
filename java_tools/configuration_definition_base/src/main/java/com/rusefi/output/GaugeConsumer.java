@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.rusefi.ldmp.LiveDataProcessor.tempLimit;
 import static com.rusefi.output.DataLogConsumer.getHumanGaugeName;
 
 public class GaugeConsumer implements ConfigurationConsumer {
@@ -27,7 +26,7 @@ public class GaugeConsumer implements ConfigurationConsumer {
     @Override
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         if (readerState.isStackEmpty()) {
-            for (int i = 0; i < tempLimit(outputNames); i++) {
+            for (int i = 0; i < outputNames.length; i++) {
 
                 String variableNameSuffix = outputNames.length > 1 ? Integer.toString(i) : "";
 
