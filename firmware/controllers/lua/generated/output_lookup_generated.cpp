@@ -1650,6 +1650,101 @@ float getOutputValueByName(const char *name) {
 		case 206059088:
 			return engine->module<IdleController>().unmock().luaAdd;
 #endif
+// targetWithIdlePosition
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+		case -379647813:
+			return getLiveData<electronic_throttle_s>(0)->targetWithIdlePosition;
+#endif
+// trim
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+		case 2090770017:
+			return getLiveData<electronic_throttle_s>(0)->trim;
+#endif
+// luaAdjustment
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+		case -279143898:
+			return getLiveData<electronic_throttle_s>(0)->luaAdjustment;
+#endif
+// m_wastegatePosition
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+		case 369781963:
+			return getLiveData<electronic_throttle_s>(0)->m_wastegatePosition;
+#endif
+// etbFeedForward
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+		case -774593527:
+			return getLiveData<electronic_throttle_s>(0)->etbFeedForward;
+#endif
+// etbIntegralError
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+		case 402010976:
+			return getLiveData<electronic_throttle_s>(0)->etbIntegralError;
+#endif
+// etbCurrentTarget
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+		case -349799446:
+			return getLiveData<electronic_throttle_s>(0)->etbCurrentTarget;
+#endif
+// m_adjustedTarget
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+		case 722763468:
+			return getLiveData<electronic_throttle_s>(0)->m_adjustedTarget;
+#endif
+// etbRevLimitActive
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+		case -365205400:
+			return getLiveData<electronic_throttle_s>(0)->etbRevLimitActive;
+#endif
+// jamDetected
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+		case 53307391:
+			return getLiveData<electronic_throttle_s>(0)->jamDetected;
+#endif
+// validPlantPosition
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+		case 1136799785:
+			return getLiveData<electronic_throttle_s>(0)->validPlantPosition;
+#endif
+// etbTpsErrorCounter
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+		case 471499073:
+			return getLiveData<electronic_throttle_s>(0)->etbTpsErrorCounter;
+#endif
+// etbPpsErrorCounter
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+		case -1896035779:
+			return getLiveData<electronic_throttle_s>(0)->etbPpsErrorCounter;
+#endif
+// etbErrorCode
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+		case 532705701:
+			return getLiveData<electronic_throttle_s>(0)->etbErrorCode;
+#endif
+// etbErrorCodeBlinker
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+		case -1199038708:
+			return getLiveData<electronic_throttle_s>(0)->etbErrorCodeBlinker;
+#endif
+// tcEtbDrop
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+		case -1939104212:
+			return getLiveData<electronic_throttle_s>(0)->tcEtbDrop;
+#endif
+// jamTimer
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+		case -2139665346:
+			return getLiveData<electronic_throttle_s>(0)->jamTimer;
+#endif
+// adjustedEtbTarget
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+		case 680567995:
+			return getLiveData<electronic_throttle_s>(0)->adjustedEtbTarget;
+#endif
+// state
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+		case 274811398:
+			return getLiveData<electronic_throttle_s>(0)->state;
+#endif
 // dcOutput0
 		case 1242329357:
 			return engine->dc_motors.dcOutput0;

@@ -90,6 +90,11 @@ private:
 };
 
 template<>
+constexpr LogField::Type LogField::resolveType<const uint8_t>() {
+	return Type::U08;
+}
+
+template<>
 constexpr LogField::Type LogField::resolveType<uint8_t>() {
 	return Type::U08;
 }
@@ -100,7 +105,18 @@ constexpr LogField::Type LogField::resolveType<int8_t>() {
 }
 
 template<>
+constexpr LogField::Type LogField::resolveType<const int8_t>() {
+	return Type::S08;
+}
+
+template<>
 constexpr LogField::Type LogField::resolveType<uint16_t>() {
+	return Type::U16;
+}
+
+
+template<>
+constexpr LogField::Type LogField::resolveType<const uint16_t>() {
 	return Type::U16;
 }
 
@@ -130,5 +146,10 @@ constexpr LogField::Type LogField::resolveType<int32_t>() {
 
 template<>
 constexpr LogField::Type LogField::resolveType<float>() {
+	return Type::F32;
+}
+
+template<>
+constexpr LogField::Type LogField::resolveType<const float>() {
 	return Type::F32;
 }

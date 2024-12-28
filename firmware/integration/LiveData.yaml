@@ -201,6 +201,9 @@ Usages:
     folder: controllers/actuators
     prepend: integration/rusefi_config_shared.txt
     output_name: [ "etb1", "etb2" ]
+    constexpr: ["getLiveData<electronic_throttle_s>(0)", "getLiveData<electronic_throttle_s>(1)"]
+    isPtr: true
+    conditional_compilation: "EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY"
 
   - name: wideband_state
     cppFileName: AemXSeriesLambda

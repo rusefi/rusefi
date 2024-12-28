@@ -59,6 +59,7 @@
 #include "vvt.h"
 #include "trip_odometer.h"
 #include "long_term_fuel_trim.h"
+#include "electronic_throttle_generated.h"
 
 #include <functional>
 
