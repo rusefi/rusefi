@@ -19,7 +19,7 @@ public class LiveDataProcessorTest {
                 "    folder: console/binary\n" +
                 "    cppFileName: status_loop\n" +
                 "    output_name: [ \"wb1\", \"wb2\" ]\n" +
-                "    constexpr: \"engine->outputChannels\"\n" +
+                "    constexpr: \"engine->wbo1\"\n" +
         "#  output_channels always goes first at least because it has protocol version at well-known offset\n" +
                 "  - name: output_channels\n" +
                 "    java: TsOutputs.java\n" +
@@ -120,8 +120,8 @@ public class LiveDataProcessorTest {
                 "#include \"board_lookup.h\"\n" +
                 "static const LogField fields[] = {\n" +
                 "{packedTime, GAUGE_NAME_TIME, \"sec\", 0},\n" +
-                "\t{engine->outputChannels.tempC, \"WBO: Temperature\", \"C\", 0, \"cate\"},\n" +
-                "\t{engine->outputChannels.esr, \"WBO: ESR\", \"ohm\", 0},\n" +
+                "\t{engine->wbo1.tempC, \"WBO: Temperature\", \"C\", 0, \"cate\"},\n" +
+                "\t{engine->wbo1.esr, \"WBO: ESR\", \"ohm\", 0},\n" +
                 "\t{engine->outputChannels.oootempC, \"Temperature\", \"C\", 0},\n" +
                 "\t{engine->outputChannels.oooesr, \"ESR\", \"ohm\", 0},\n" +
                 "};\n",
