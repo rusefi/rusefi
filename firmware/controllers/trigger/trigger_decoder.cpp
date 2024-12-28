@@ -124,7 +124,7 @@ void TriggerFormDetails::prepareEventAngles(TriggerWaveform *shape) {
 
 	size_t length = shape->getLength();
 
-	memset(eventAngles, 0, sizeof(eventAngles));
+	setArrayValues(eventAngles, 0);
 
 	// this may be <length for some triggers like symmetrical crank Miata NB
 	size_t triggerShapeLength = shape->getSize();
