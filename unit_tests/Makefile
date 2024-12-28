@@ -44,6 +44,7 @@ CPPSRC += $(ALLCPPSRC) \
 	$(PROJECT_DIR)/config/boards/hellen/hellen_board_id.cpp \
 	$(PROJECT_DIR)/hw_layer/drivers/can/can_hw.cpp \
 	$(PROJECT_DIR)/../unit_tests/logicdata.cpp \
+	$(PROJECT_DIR)/../unit_tests/test-framework/unit_test_logger.cpp \
 	$(PROJECT_DIR)/../unit_tests/main.cpp \
 	$(PROJECT_DIR)/../unit_tests/global_mocks.cpp \
 	$(PROJECT_DIR)/../unit_tests/mocks.cpp \

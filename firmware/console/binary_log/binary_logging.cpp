@@ -10,7 +10,7 @@
 #include "buffered_writer.h"
 #include "tunerstudio.h"
 
-#if EFI_FILE_LOGGING
+#if EFI_FILE_LOGGING || EFI_UNIT_TEST
 
 #define TIME_PRECISION 1000
 
@@ -145,7 +145,7 @@ void writeSdLogLine(Writer& bufferedWriter) {
 
 #if EFI_UNIT_TEST
 void resetFileLogging() {
-  binaryLogCount();
+  binaryLogCount = 0;
   blockRollCounter = 0;
 }
 

@@ -7,6 +7,7 @@
 
 #include "pch.h"
 #include "logicdata_csv_reader.h"
+#include "unit_test_logger.h"
 
 static char* trim(char *str) {
 	while (str != nullptr && str[0] == ' ') {
@@ -142,6 +143,7 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 		currentVvtState[vvtIndex] = newVvtState[vvtIndex];
 
 	}
+	// todo! writeUnitTestLogLine();
 }
 
 void CsvReader::readLine(EngineTestHelper *eth) {

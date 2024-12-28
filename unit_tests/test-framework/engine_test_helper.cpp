@@ -14,6 +14,7 @@
 #include "advance_map.h"
 #include "tooth_logger.h"
 #include "logicdata.h"
+#include "unit_test_logger.h"
 #include "hardware.h"
 // https://stackoverflow.com/questions/23427804/cant-find-mkdir-function-in-dirent-h-for-windows
 #include <sys/types.h>
@@ -78,8 +79,6 @@ int EngineTestHelper::getWarningCounter() {
 
 FILE *jsonTrace = nullptr;
 
-#define TEST_RESULTS_DIR "test_results"
-
 EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t configurationCallback, const std::unordered_map<SensorType, float>& sensorValues) :
 	EngineTestHelperBase(&engine, &persistentConfig.engineConfiguration, &persistentConfig)
 {
@@ -95,6 +94,7 @@ extern bool hasInitGtest;
   #else
      mkdir(TEST_RESULTS_DIR, 0777);
   #endif
+  createUnitTestLog();
 
     	std::stringstream filePath;
     	filePath << TEST_RESULTS_DIR << "/unittest_" << testInfo->test_case_name() << "_" << testInfo->name() << "_trace.json";
@@ -219,6 +219,7 @@ EngineTestHelper::~EngineTestHelper() {
     fclose(jsonTrace);
     jsonTrace = nullptr;
   }
+  closeUnitTestLog();
 
 	// Cleanup
 	enginePins.reset();
