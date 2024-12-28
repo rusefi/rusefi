@@ -17,7 +17,7 @@ TEST(crankingGm24x_5, gmRealCrankingFromFile) {
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 
-		engine->rpmCalculator.onSlowCallback();
+		engine->periodicSlowCallback();
 
 		// Expect that all teeth are in the correct spot
 		float angleError = getTriggerCentral()->triggerToothAngleError;

@@ -21,7 +21,7 @@ TEST(real4b11, running) {
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 
-		engine->rpmCalculator.onSlowCallback();
+		engine->periodicSlowCallback();
 
 		// Expect that all teeth are in the correct spot
 		float angleError = getTriggerCentral()->triggerToothAngleError;
@@ -57,7 +57,7 @@ TEST(real4b11, runningDoubledEdge) {
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 
-		engine->rpmCalculator.onSlowCallback();
+		engine->periodicSlowCallback();
 
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 		if (!gotRpm && rpm) {

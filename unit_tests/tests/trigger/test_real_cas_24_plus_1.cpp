@@ -28,7 +28,7 @@ TEST(realCas24Plus1, spinningOnBench) {
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 
-		engine->rpmCalculator.onSlowCallback();
+		engine->periodicSlowCallback();
 
 		// Expect that all teeth are in the correct spot
 		float angleError = getTriggerCentral()->triggerToothAngleError;

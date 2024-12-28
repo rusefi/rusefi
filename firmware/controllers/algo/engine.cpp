@@ -400,10 +400,10 @@ void Engine::setConfig() {
  * This code asserts that we do not have unexpected gaps in time flow with the exception of internal flash burn.
  */
 static void assertTimeIsLinear() {
+#if ! EFI_UNIT_TEST
 	static efitimems_t mostRecentMs = 0;
 	efitimems_t msNow = getTimeNowMs();
 	if (engineConfiguration->watchOutForLinearTime && engine->configBurnTimer.hasElapsedSec(5)) {
-
 		if (mostRecentMs != 0) {
 			efitimems_t gapInMs = msNow - mostRecentMs;
 			// todo: lower gapInMs threshold?
@@ -414,6 +414,7 @@ static void assertTimeIsLinear() {
 		}
 	}
 	mostRecentMs = msNow;
+#endif
 }
 
 void Engine::efiWatchdog() {

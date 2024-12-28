@@ -3,7 +3,7 @@
 #include "pch.h"
 #include "logicdata_csv_reader.h"
 
-TEST(harley, cranking) {
+TEST(harley, crankingSomethingCam) {
 	CsvReader reader(1, /* vvtCount */ 1);
 	reader.open("tests/ignition_injection/resources/hd-req-sync_3.csv");
 
@@ -16,7 +16,7 @@ TEST(harley, cranking) {
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 
-		engine->rpmCalculator.onSlowCallback();
+		engine->periodicSlowCallback();
 
     // whole pattern is a copy-paste from test_real_4b11.cpp, is better API possible?
     auto rpm = Sensor::getOrZero(SensorType::Rpm);
