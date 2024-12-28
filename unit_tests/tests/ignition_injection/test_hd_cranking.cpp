@@ -23,7 +23,7 @@ TEST(harley, crankingSomethingCam) {
 
 			// We should get first RPM on exactly the first sync point - this means the instant RPM pre-sync event copy all worked OK
 			EXPECT_EQ(reader.lineIndex(), 56);
-			EXPECT_NEAR(rpm, 87, 1);
+			EXPECT_NEAR(rpm, 177, 1);
 		}
 
 		if (!gotSync && engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
@@ -37,5 +37,5 @@ TEST(harley, crankingSomethingCam) {
 		}
 	}
 
-	ASSERT_EQ(6, engine->triggerCentral.triggerState.camResyncCounter); // interesting!
+	ASSERT_EQ(12, engine->triggerCentral.triggerState.camResyncCounter); // interesting!
 }

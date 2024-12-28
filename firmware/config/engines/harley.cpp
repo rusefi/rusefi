@@ -38,6 +38,7 @@ void setHarley() {
 	engineConfiguration->maximumIgnitionTiming = 90;
   engineConfiguration->minimumIgnitionTiming = -90;
 
+  engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_32_2;
 	engineConfiguration->vvtMode[0] = VVT_MAP_V_TWIN;
 
   engineConfiguration->oddFireEngine = true;
