@@ -16,7 +16,8 @@ DDEFS += -DEFI_MAX_31855=TRUE
 
 
 
-
+# ohh we are running our of flash :( MAYBE give up on OpenBLT for 1mb targets?
+DDEFS += -DEFI_LUA_LOOKUP=FALSE
 
 
 
