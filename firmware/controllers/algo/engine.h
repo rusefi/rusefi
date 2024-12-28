@@ -98,7 +98,7 @@ public:
 	StartStopState startStopState;
 
 #if ! EFI_PROD_CODE
-	// todo: technical debt: enableOverdwellProtection #3553
+	// todo: technical debt: remove legacy enableOverdwellProtection #3553
 	bool enableOverdwellProtection = true;
 #endif
 
@@ -112,7 +112,6 @@ public:
 	// used by HW CI
 	bool isPwmEnabled = true;
 
-	const char *prevOutputName = nullptr;
 	/**
 	 * ELM327 cannot handle both RX and TX at the same time, we have to stay quite once first ISO/TP packet was detected
 	 * this is a pretty temporary hack only while we are trying ELM327, long term ISO/TP and rusEFI broadcast should find a way to coexists
