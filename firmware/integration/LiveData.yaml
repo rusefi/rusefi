@@ -172,6 +172,7 @@ Usages:
     folder: controllers/trigger
     prepend: integration/rusefi_config_shared.txt
     output_name: [ "trg", "vvt1i", "vvt1e", "vvt2i", "vvt2e" ]
+    constexpr: "engine->triggerCentral.triggerState"
 
   - name: trigger_state_primary
     cppFileName: trigger_decoder
