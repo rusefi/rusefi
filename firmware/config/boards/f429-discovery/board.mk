@@ -9,6 +9,9 @@ DDEFS += -DFIRMWARE_ID=\"stm32f429\"
 IS_STM32F429 = yes
 EFI_HAS_EXT_SDRAM = yes
 
+# ohh we are running our of flash :( MAYBE give up on OpenBLT for 1mb targets?
+DDEFS += -DEFI_LUA_LOOKUP=FALSE
+
 #LED
 DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::G14
 

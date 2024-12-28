@@ -38,6 +38,8 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 	DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_ALPHAX_4CHAN
 	DDEFS += $(PRIMARY_COMMUNICATION_PORT_USART2)
+	# ohh we are running our of flash :( MAYBE give up on OpenBLT for 1mb targets?
+  DDEFS += -DEFI_LUA_LOOKUP=FALSE
 else
 $(error Unsupported PROJECT_CPU [$(PROJECT_CPU)])
 endif

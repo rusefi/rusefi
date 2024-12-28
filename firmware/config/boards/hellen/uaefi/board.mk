@@ -14,6 +14,8 @@ DDEFS += -DEFI_SOFTWARE_KNOCK=TRUE -DSTM32_ADC_USE_ADC3=TRUE
 DDEFS += -DEFI_MAX_31855=TRUE
 
 DDEFS += -DHELLEN_BOARD_ID_DEBUG
+# ohh we are running our of flash :( MAYBE give up on OpenBLT for 1mb targets?
+DDEFS += -DEFI_LUA_LOOKUP=FALSE
 
 # on the one hand we do not use boardID YET and it takes 350ms, on the other hand who knows what the future would bring
 # as long as we only have one boardID for all units the only consumer of boardID is HW QC process
