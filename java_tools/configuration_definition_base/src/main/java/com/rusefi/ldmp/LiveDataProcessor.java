@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.rusefi.*;
 import com.rusefi.output.*;
 import com.rusefi.util.LazyFile;
+import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -131,7 +132,7 @@ public class LiveDataProcessor {
     }
 
     interface EntryHandler {
-        void onEntry(String name, String javaName, String inFolder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, String engineModule, Boolean isPtr, String cppFileName, String outFolder) throws IOException;
+        void onEntry(String name, String javaName, String inFolder, String prepend, boolean withCDefines, String[] outputNames, String[] constexpr, String conditional, String engineModule, Boolean isPtr, String cppFileName, String outFolder) throws IOException;
     }
 
     public int handleYaml(List<LinkedHashMap> liveDocs) throws IOException {
@@ -148,7 +149,7 @@ public class LiveDataProcessor {
 
         EntryHandler handler = new EntryHandler() {
             @Override
-            public void onEntry(String name, String javaName, String inFolder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, String engineModule, Boolean isPtr, String cppFileName, String outFolder) throws IOException {
+            public void onEntry(String name, String javaName, String inFolder, String prepend, boolean withCDefines, String[] outputNames, String[] constexpr, String conditional, String engineModule, Boolean isPtr, String cppFileName, String outFolder) throws IOException {
                 Objects.requireNonNull(outFolder);
                 // TODO: use outputNames
 
@@ -197,12 +198,12 @@ public class LiveDataProcessor {
                 state.addDestination(new FileJavaFieldsConsumer(state, JAVA_DESTINATION + javaName, baseOffset, fileFactory));
 
                 if (constexpr != null) {
-                    sdCardFieldsConsumer.home = constexpr;
+                    sdCardFieldsConsumer.home = constexpr[0];
                     sdCardFieldsConsumer.conditional = conditional;
                     sdCardFieldsConsumer.isPtr = isPtr;
                     state.addDestination(sdCardFieldsConsumer::handleEndStruct);
 
-                    outputValueConsumer.currentSectionPrefix = constexpr;
+                    outputValueConsumer.currentSectionPrefix = constexpr[0];
                     outputValueConsumer.moduleMode = false;
                     outputValueConsumer.conditional = conditional;
                     outputValueConsumer.isPtr = isPtr;
@@ -244,7 +245,7 @@ public class LiveDataProcessor {
             String inputOutputFolder = (String) entry.get("folder");
             String inputFolder = (String) entry.get("input_folder");
             String prepend = (String) entry.get("prepend");
-            String constexpr = (String) entry.get("constexpr");
+            Object constexprValue = entry.get("constexpr");
             String engineModule = (String) entry.get("engineModule");
             String cppFileName = (String) entry.get("cppFileName");
             if (cppFileName == null)
@@ -258,16 +259,8 @@ public class LiveDataProcessor {
 
             Object outputNames = entry.get("output_name");
 
-            String[] outputNamesArr;
-            if (outputNames == null) {
-                outputNamesArr = new String[]{""};
-            } else if (outputNames instanceof String) {
-                outputNamesArr = new String[]{(String) outputNames};
-            } else {
-                ArrayList<String> nameList = (ArrayList<String>) outputNames;
-                outputNamesArr = new String[nameList.size()];
-                nameList.toArray(outputNamesArr);
-            }
+            String[] outputNamesArr = getStrings(outputNames);
+            String[] constexpr = constexprValue == null ? null : getStrings(constexprValue);
 
             if (inputFolder != null) {
                 log.info("Only inputFolder " + inputFolder);
@@ -334,6 +327,20 @@ public class LiveDataProcessor {
         writeFiles();
 
         return startingPosition.get();
+    }
+
+    private static String @NotNull [] getStrings(Object value) {
+        String[] output;
+        if (value == null) {
+            output = new String[]{""};
+        } else if (value instanceof String) {
+            output = new String[]{(String) value};
+        } else {
+            ArrayList<String> nameList = (ArrayList<String>) value;
+            output = new String[nameList.size()];
+            nameList.toArray(output);
+        }
+        return output;
     }
 
     private void writeFiles() throws IOException {

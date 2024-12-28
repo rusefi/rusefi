@@ -19,7 +19,7 @@ public class LiveDataProcessorTest {
                 "    folder: console/binary\n" +
                 "    cppFileName: status_loop\n" +
                 "    output_name: [ \"wb1\", \"wb2\" ]\n" +
-                "    constexpr: \"engine->wbo1\"\n" +
+                "    constexpr: [\"engine->wbo1\", \"engine->wbo2\"]\n" +
         "#  output_channels always goes first at least because it has protocol version at well-known offset\n" +
                 "  - name: output_channels\n" +
                 "    java: TsOutputs.java\n" +
