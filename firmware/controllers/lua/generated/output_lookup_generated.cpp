@@ -1491,20 +1491,30 @@ float getOutputValueByName(const char *name) {
 			return engine->triggerCentral.triggerElapsedUs;
 #endif
 // synchronizationCounter
+#if EFI_SHAFT_POSITION_INPUT
 		case 1783280791:
 			return engine->triggerCentral.triggerState.synchronizationCounter;
+#endif
 // vvtToothDurations0
+#if EFI_SHAFT_POSITION_INPUT
 		case 270372348:
 			return engine->triggerCentral.triggerState.vvtToothDurations0;
+#endif
 // vvtCurrentPosition
+#if EFI_SHAFT_POSITION_INPUT
 		case -1496890691:
 			return engine->triggerCentral.triggerState.vvtCurrentPosition;
+#endif
 // triggerSyncGapRatio
+#if EFI_SHAFT_POSITION_INPUT
 		case 19770157:
 			return engine->triggerCentral.triggerState.triggerSyncGapRatio;
+#endif
 // triggerStateIndex
+#if EFI_SHAFT_POSITION_INPUT
 		case -704123054:
 			return engine->triggerCentral.triggerState.triggerStateIndex;
+#endif
 // idleState
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case 1886060228:

@@ -547,15 +547,33 @@ static const LogField fields[] = {
 #if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.triggerElapsedUs, "triggerElapsedUs", "", 0},
 #endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.triggerState.synchronizationCounter, "sync: wheel sync counter", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.triggerState.vvtToothDurations0, "vvtToothDurations0", "us", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.triggerState.vvtCurrentPosition, "sync: Primary Position", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.triggerState.vvtToothPosition[0], "sync: Cam Position 1", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.triggerState.vvtToothPosition[1], "sync: Cam Position 2", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.triggerState.vvtToothPosition[2], "sync: Cam Position 3", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.triggerState.vvtToothPosition[3], "sync: Cam Position 4", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.triggerState.triggerSyncGapRatio, "Sync: Trigger Latest Ratio", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.triggerState.triggerStateIndex, "triggerStateIndex", "", 0},
+#endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{engine->module<IdleController>().unmock().currentIdlePosition, "Idle: Position", "%", 1},
 #endif
