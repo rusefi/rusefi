@@ -39,6 +39,15 @@ void setHarley() {
   engineConfiguration->minimumIgnitionTiming = -90;
 
   engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL_32_2;
+  engineConfiguration->overrideTriggerGaps = true;
+  engineConfiguration->gapTrackingLengthOverride = 3;
+  engineConfiguration->triggerGapOverrideFrom[0] = 0.75;
+  engineConfiguration->triggerGapOverrideTo[0] = 1.25;
+  engineConfiguration->triggerGapOverrideFrom[1] = 0.05; // this one is custom
+  engineConfiguration->triggerGapOverrideTo[1] = 0.5;
+  engineConfiguration->triggerGapOverrideFrom[2] = 1.850; // this one is custom
+  engineConfiguration->triggerGapOverrideTo[2] = 6;
+
 	engineConfiguration->vvtMode[0] = VVT_MAP_V_TWIN;
 
   engineConfiguration->oddFireEngine = true;

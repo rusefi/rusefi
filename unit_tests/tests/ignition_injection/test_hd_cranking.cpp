@@ -8,6 +8,8 @@ TEST(harley, crankingSomethingCam) {
 	reader.open("tests/ignition_injection/resources/hd-req-sync_3.csv");
 
 	EngineTestHelper eth(engine_type_e::HARLEY);
+	engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
+	eth.applyTriggerWaveform();
 
   bool gotRpm = false;
   bool gotSync = false;
@@ -22,12 +24,12 @@ TEST(harley, crankingSomethingCam) {
 			gotRpm = true;
 
 			// We should get first RPM on exactly the first sync point - this means the instant RPM pre-sync event copy all worked OK
-			EXPECT_EQ(reader.lineIndex(), 56);
-			EXPECT_NEAR(rpm, 177, 1);
+			EXPECT_EQ(reader.lineIndex(), 60);
+			EXPECT_NEAR(rpm, 184, 1);
 		}
 
 		if (!gotSync && engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
-		  EXPECT_EQ(reader.lineIndex(), 83);
+		  EXPECT_EQ(reader.lineIndex(), 269);
 		  gotSync = true;
 		}
 
@@ -37,5 +39,5 @@ TEST(harley, crankingSomethingCam) {
 		}
 	}
 
-	ASSERT_EQ(12, engine->triggerCentral.triggerState.camResyncCounter); // interesting!
+	ASSERT_EQ(2, engine->triggerCentral.triggerState.camResyncCounter); // interesting!
 }

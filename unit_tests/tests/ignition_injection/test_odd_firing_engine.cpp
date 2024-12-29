@@ -33,6 +33,8 @@ TEST(OddFireRunningMode, hd) {
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
 	engineConfiguration->camInputs[0] = Gpio::Unassigned;
+	engineConfiguration->overrideTriggerGaps = false;
+
 	eth.setTriggerType(trigger_type_e::TT_HALF_MOON);
 	// end of configuration
 
