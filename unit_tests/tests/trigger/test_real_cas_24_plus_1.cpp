@@ -22,7 +22,6 @@ TEST(realCas24Plus1, spinningOnBench) {
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
 	eth.setTriggerType(trigger_type_e::TT_12_TOOTH_CRANK);
 
-	bool gotRpm = false;
 	bool gotFullSync = false;
 
 	while (reader.haveMore()) {

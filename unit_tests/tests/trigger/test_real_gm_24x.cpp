@@ -1,9 +1,9 @@
 #include "pch.h"
 
-#include "logicdata_csv_reader.h"
+#include "engine_csv_reader.h"
 
 TEST(crankingGm24x_5, gmRealCrankingFromFile) {
-	CsvReader reader(1, /* vvtCount */ 0);
+	EngineCsvReader reader(1, /* vvtCount */ 0);
 
 	reader.open("tests/trigger/resources/gm_24x_cranking.csv");
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
@@ -12,8 +12,6 @@ TEST(crankingGm24x_5, gmRealCrankingFromFile) {
 
 	eth.setTriggerType(trigger_type_e::TT_GM_24x_5);
 
-	bool gotRpm = false;
-
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 
@@ -21,14 +19,7 @@ TEST(crankingGm24x_5, gmRealCrankingFromFile) {
 		float angleError = getTriggerCentral()->triggerToothAngleError;
 		EXPECT_TRUE(angleError < 3 && angleError > -3) << "tooth angle of " << angleError << " at timestamp " << (getTimeNowNt() / 1e8);
 
-		auto rpm = Sensor::getOrZero(SensorType::Rpm);
-		if (!gotRpm && rpm) {
-			gotRpm = true;
-
-			// We should get first RPM on exactly the first sync point - this means the instant RPM pre-sync event copy all worked OK
-			EXPECT_EQ(reader.lineIndex(), 23);
-			EXPECT_NEAR(rpm, 77.0f, 0.1);
-		}
+		reader.assertFirstRpm(77, 23);
 	}
 
 	ASSERT_EQ( 0, eth.recentWarnings()->getCount())<< "warningCounter#vwRealCranking";

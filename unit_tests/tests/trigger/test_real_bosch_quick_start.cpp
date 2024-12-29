@@ -1,61 +1,41 @@
 #include "pch.h"
 
-#include "logicdata_csv_reader.h"
+#include "engine_csv_reader.h"
 
 TEST(realBQS, realHarleyCranking) {
-  CsvReader reader(/*triggerCount*/1, /* vvtCount */ 0);
-  reader.readingOffset = 1;
+  EngineCsvReader reader(/*triggerCount*/1, /* vvtCount */ 0);
+  reader.setReadingOffset(1);
 	reader.open("tests/ignition_injection/resources/hd-req-sync_3.csv");
-  reader.flipOnRead = true;
+  reader.setFlipOnRead(true);
 
 	EngineTestHelper eth(engine_type_e::ET_BOSCH_QUICK_START);
 
-	bool gotRpm = false;
 	while (reader.haveMore()) {
  		reader.processLine(&eth);
 
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
-		if (gotRpm) {
+		if (reader.gotRpm) {
 			  ASSERT_TRUE(Sensor::get(SensorType::Rpm).Valid);
 		}
-
-		if (!gotRpm && rpm) {
-			gotRpm = true;
-
-			EXPECT_EQ(reader.lineIndex(), 163);
-			EXPECT_NEAR(rpm, 184, 1);
-			break;
-		}
-
-
+    reader.assertFirstRpm(184, 163);
   }
   ASSERT_TRUE(Sensor::get(SensorType::Rpm).Valid);
 
 }
 
 TEST(realBQS, readAsPrimarySensor) {
-  CsvReader reader(/*triggerCount*/1, /* vvtCount */ 0);
+  EngineCsvReader reader(/*triggerCount*/1, /* vvtCount */ 0);
   reader.open("tests/trigger/resources/BQS-longer.csv");
-  reader.flipOnRead = true;
+  reader.setFlipOnRead(true);
 
 	EngineTestHelper eth(engine_type_e::ET_BOSCH_QUICK_START);
 
-	bool gotRpm = false;
 	while (reader.haveMore()) {
  		reader.processLine(&eth);
-
-		auto rpm = Sensor::getOrZero(SensorType::Rpm);
-		if (!gotRpm && rpm) {
-			gotRpm = true;
-
-			EXPECT_EQ(reader.lineIndex(), 13);
-			EXPECT_NEAR(rpm, 2035.53466f, 0.1);
-			break;
-		}
-
+ 		reader.assertFirstRpm(2036, 13);
   }
   ASSERT_TRUE(Sensor::get(SensorType::Rpm).Valid);
-  ASSERT_FLOAT_EQ(Sensor::get(SensorType::Rpm).Value, 2035.53467);
+  ASSERT_NEAR(Sensor::get(SensorType::Rpm).Value, 1874, 1);
 
 }
 

@@ -30,6 +30,14 @@ public:
   	  return cvsReader.lineIndex();
   	}
 
+  	void setReadingOffset(int offset) {
+  	  cvsReader.readingOffset = offset;
+  	}
+
+  	void setFlipOnRead(bool v) {
+  	  cvsReader.flipOnRead = v;
+  	}
+
   void processLine(EngineTestHelper *eth) {
     cvsReader.processLine(eth);
   }
