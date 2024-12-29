@@ -122,14 +122,14 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	}
 }
 
-void Engine::updateTriggerWaveform() {
+void Engine::updateTriggerConfiguration() {
 
 
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	// we have a confusing threading model so some synchronization would not hurt
 	chibios_rt::CriticalSectionLocker csl;
 
-	engine->triggerCentral.updateWaveform();
+	engine->triggerCentral.applyShapesConfiguration();
 
 
 	if (!engine->triggerCentral.triggerShape.shapeDefinitionError) {

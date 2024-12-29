@@ -427,7 +427,7 @@ void EngineTestHelper::assertEvent(const char *msg, int index, void *callback, e
 
 
 void EngineTestHelper::applyTriggerWaveform() {
-	engine.updateTriggerWaveform();
+	engine.updateTriggerConfiguration();
 
 	incrementGlobalConfigurationVersion("helper");
 }

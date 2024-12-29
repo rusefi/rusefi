@@ -313,7 +313,7 @@ public:
 	void periodicSlowCallback();
 	void updateSlowSensors();
 	void updateSwitchInputs();
-	void updateTriggerWaveform();
+	void updateTriggerConfiguration();
 
 	bool isRunningPwmTest = false;
 

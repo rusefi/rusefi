@@ -1030,7 +1030,7 @@ void onConfigurationChangeTriggerCallback() {
 
 	if (changed) {
 	#if EFI_ENGINE_CONTROL
-		engine->updateTriggerWaveform();
+		engine->updateTriggerConfiguration();
 		getTriggerCentral()->noiseFilter.resetAccumSignalData();
 	#endif
 	}
@@ -1085,7 +1085,7 @@ static void calculateTriggerSynchPoint(
 
 TriggerDecoderBase initState("init");
 
-void TriggerCentral::updateWaveform() {
+void TriggerCentral::applyShapesConfiguration() {
 	// Re-read config in case it's changed
 	primaryTriggerConfiguration.update();
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
