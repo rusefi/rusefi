@@ -9,8 +9,6 @@ const int NORMAL_ORDER[2] = {0, 1};
 
 const int REVERSE_ORDER[2] = {1, 0};
 
-
-
 class CsvReader {
 public:
 	CsvReader(size_t triggerCount, size_t vvtCount) : CsvReader(triggerCount, vvtCount, 0.0) {}
