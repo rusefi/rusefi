@@ -1259,32 +1259,50 @@ float getOutputValueByName(const char *name) {
 			return engine->module<NitrousController>()->isNitrousCondition;
 #endif
 // cranking
+#if FULL_SD_LOGS
 		case 182391090:
 			return engine->module<FanControl1>()->cranking;
+#endif
 // notRunning
+#if FULL_SD_LOGS
 		case -496961865:
 			return engine->module<FanControl1>()->notRunning;
+#endif
 // disabledWhileEngineStopped
+#if FULL_SD_LOGS
 		case 142778571:
 			return engine->module<FanControl1>()->disabledWhileEngineStopped;
+#endif
 // brokenClt
+#if FULL_SD_LOGS
 		case 545954889:
 			return engine->module<FanControl1>()->brokenClt;
+#endif
 // enabledForAc
+#if FULL_SD_LOGS
 		case 291043035:
 			return engine->module<FanControl1>()->enabledForAc;
+#endif
 // hot
+#if FULL_SD_LOGS
 		case 193494032:
 			return engine->module<FanControl1>()->hot;
+#endif
 // cold
+#if FULL_SD_LOGS
 		case 2090155911:
 			return engine->module<FanControl1>()->cold;
+#endif
 // disabledBySpeed
+#if FULL_SD_LOGS
 		case 2105103113:
 			return engine->module<FanControl1>()->disabledBySpeed;
+#endif
 // radiatorFanStatus
+#if FULL_SD_LOGS
 		case -1987291756:
 			return engine->module<FanControl1>()->radiatorFanStatus;
+#endif
 // isPrime
 		case -1429286498:
 			return engine->module<FuelPumpController>()->isPrime;
@@ -1491,27 +1509,27 @@ float getOutputValueByName(const char *name) {
 			return engine->triggerCentral.triggerElapsedUs;
 #endif
 // synchronizationCounter
-#if EFI_SHAFT_POSITION_INPUT
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 		case 1783280791:
 			return engine->triggerCentral.triggerState.synchronizationCounter;
 #endif
 // vvtToothDurations0
-#if EFI_SHAFT_POSITION_INPUT
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 		case 270372348:
 			return engine->triggerCentral.triggerState.vvtToothDurations0;
 #endif
 // vvtCurrentPosition
-#if EFI_SHAFT_POSITION_INPUT
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 		case -1496890691:
 			return engine->triggerCentral.triggerState.vvtCurrentPosition;
 #endif
 // triggerSyncGapRatio
-#if EFI_SHAFT_POSITION_INPUT
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 		case 19770157:
 			return engine->triggerCentral.triggerState.triggerSyncGapRatio;
 #endif
 // triggerStateIndex
-#if EFI_SHAFT_POSITION_INPUT
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 		case -704123054:
 			return engine->triggerCentral.triggerState.triggerStateIndex;
 #endif
@@ -1651,97 +1669,97 @@ float getOutputValueByName(const char *name) {
 			return engine->module<IdleController>().unmock().luaAdd;
 #endif
 // targetWithIdlePosition
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 		case -379647813:
 			return getLiveData<electronic_throttle_s>(0)->targetWithIdlePosition;
 #endif
 // trim
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 		case 2090770017:
 			return getLiveData<electronic_throttle_s>(0)->trim;
 #endif
 // luaAdjustment
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 		case -279143898:
 			return getLiveData<electronic_throttle_s>(0)->luaAdjustment;
 #endif
 // m_wastegatePosition
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 		case 369781963:
 			return getLiveData<electronic_throttle_s>(0)->m_wastegatePosition;
 #endif
 // etbFeedForward
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 		case -774593527:
 			return getLiveData<electronic_throttle_s>(0)->etbFeedForward;
 #endif
 // etbIntegralError
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 		case 402010976:
 			return getLiveData<electronic_throttle_s>(0)->etbIntegralError;
 #endif
 // etbCurrentTarget
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 		case -349799446:
 			return getLiveData<electronic_throttle_s>(0)->etbCurrentTarget;
 #endif
 // m_adjustedTarget
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 		case 722763468:
 			return getLiveData<electronic_throttle_s>(0)->m_adjustedTarget;
 #endif
 // etbRevLimitActive
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 		case -365205400:
 			return getLiveData<electronic_throttle_s>(0)->etbRevLimitActive;
 #endif
 // jamDetected
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 		case 53307391:
 			return getLiveData<electronic_throttle_s>(0)->jamDetected;
 #endif
 // validPlantPosition
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 		case 1136799785:
 			return getLiveData<electronic_throttle_s>(0)->validPlantPosition;
 #endif
 // etbTpsErrorCounter
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 		case 471499073:
 			return getLiveData<electronic_throttle_s>(0)->etbTpsErrorCounter;
 #endif
 // etbPpsErrorCounter
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 		case -1896035779:
 			return getLiveData<electronic_throttle_s>(0)->etbPpsErrorCounter;
 #endif
 // etbErrorCode
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 		case 532705701:
 			return getLiveData<electronic_throttle_s>(0)->etbErrorCode;
 #endif
 // etbErrorCodeBlinker
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 		case -1199038708:
 			return getLiveData<electronic_throttle_s>(0)->etbErrorCodeBlinker;
 #endif
 // tcEtbDrop
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 		case -1939104212:
 			return getLiveData<electronic_throttle_s>(0)->tcEtbDrop;
 #endif
 // jamTimer
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 		case -2139665346:
 			return getLiveData<electronic_throttle_s>(0)->jamTimer;
 #endif
 // adjustedEtbTarget
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 		case 680567995:
 			return getLiveData<electronic_throttle_s>(0)->adjustedEtbTarget;
 #endif
 // state
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 		case 274811398:
 			return getLiveData<electronic_throttle_s>(0)->state;
 #endif
