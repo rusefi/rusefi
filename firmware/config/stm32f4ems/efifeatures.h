@@ -384,6 +384,11 @@
 #define EFI_LUA TRUE
 #endif
 
+#ifndef FULL_SD_LOGS
+// reduce RAM usage? todo: optimize RAM consumption so that all builds have full logs?
+#define FULL_SD_LOGS FALSE
+#endif
+
 #ifndef EFI_LUA_LOOKUP
 #define EFI_LUA_LOOKUP TRUE
 #endif

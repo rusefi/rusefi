@@ -50,6 +50,10 @@
 #define EFI_USE_UART_DMA FALSE
 #endif
 
+#ifndef FULL_SD_LOGS
+#define FULL_SD_LOGS TRUE
+#endif
+
 // F7 may have dual bank, so flash on its own (low priority) thread so as to not block any other operations
 #ifndef EFI_FLASH_WRITE_THREAD
 #define EFI_FLASH_WRITE_THREAD TRUE

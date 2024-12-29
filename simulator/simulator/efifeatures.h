@@ -21,6 +21,7 @@
 #define EFI_AUX_VALVES FALSE
 
 #define EFI_TS_TUNNEL_CAN TRUE
+#define FULL_SD_LOGS TRUE
 
 #define EFI_HD_ACR TRUE
 
