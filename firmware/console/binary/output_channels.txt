@@ -332,8 +332,9 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	uint8_t[TARGET_AFR_BLEND_COUNT iterate] autoscale targetAfrBlendBias;;"%", 0.5, 0, 0, 100, 1
 	int16_t[TARGET_AFR_BLEND_COUNT iterate] autoscale targetAfrBlendOutput;;"%", 0.1, 0, -1000, 1000, 1
 
-bit coilState1
-bit coilState2
+! todo SD card bit datapoints #7227
+uint8_t coilState1
+uint8_t coilState2
 bit coilState3
 bit coilState4
 bit coilState5
@@ -344,8 +345,9 @@ bit coilState9
 bit coilState10
 bit coilState11
 bit coilState12
-bit injectorState1
-bit injectorState2
+! SD card bit datapoints #7227
+uint8_t injectorState1
+uint8_t injectorState2
 bit injectorState3
 bit injectorState4
 bit injectorState5
