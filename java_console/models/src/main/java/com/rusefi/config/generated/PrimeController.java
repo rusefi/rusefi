@@ -180,7 +180,7 @@ public class PrimeController {
 	public static final int TCU_GEAR_COUNT = 10;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int VE_BLEND_COUNT = 4;
-	public static final Field M_ISPRIMING = Field.create("M_ISPRIMING", 0, FieldType.BIT, 0).setBaseOffset(1064);
+	public static final Field M_ISPRIMING = Field.create("M_ISPRIMING", 0, FieldType.BIT, 0).setBaseOffset(1076);
 	public static final Field[] VALUES = {
 	M_ISPRIMING,
 	};
