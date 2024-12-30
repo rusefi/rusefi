@@ -612,7 +612,7 @@
         <constant digits="0" name="tps2SecondaryMax" units="ADC">0.0</constant>
         <constant name="widebandOnSecondBus">"1"</constant>
         <constant name="fuelClosedLoopCorrectionEnabled">"false"</constant>
-        <constant name="oddFireEngine">"false"</constant>
+        <constant name="unusedOfoddFireEngine">"false"</constant>
         <constant name="alwaysWriteSdCard">"false"</constant>
         <constant name="knockDetectionUseDoubleFrequency">"second harmonic"</constant>
         <constant name="yesUnderstandLocking">"no"</constant>
@@ -4838,7 +4838,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20241218" nPages="1" signature="rusEFI master.2024.12.30.f407-discovery.3941492451" version="5.0"/>
+    <versionInfo firmwareInfo="20241218" nPages="1" signature="rusEFI master.2024.12.30.f407-discovery.630329118" version="5.0"/>
     <bibliography author="rusEFI 20241218" writeDate="date"/>
     <settings/>
     <userComments/>
