@@ -50,7 +50,6 @@ void setHarley() {
 
 	engineConfiguration->vvtMode[0] = VVT_MAP_V_TWIN;
 
-  engineConfiguration->oddFireEngine = true;
 	engineConfiguration->mainRelayPin = Gpio::Unassigned;
 	engineConfiguration->mapCamDetectionAnglePosition = 50;
 
