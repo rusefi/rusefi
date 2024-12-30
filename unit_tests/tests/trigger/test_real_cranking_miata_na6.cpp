@@ -9,8 +9,6 @@
 
 #include "logicdata_csv_reader.h"
 
-extern WarningCodeState unitTestWarningCodeState;
-
 static void fireTriggerEvent(EngineTestHelper*eth, double timestampS, TriggerWheel channel, bool isFall) {
 	trigger_event_e event;
 	// in this trigger data file second channel is the primary
@@ -159,7 +157,7 @@ TEST(cranking, hardcodedRealCranking) {
 	/* 133 */ EVENT(/* timestamp*/3.00650825, TriggerWheel::T_SECONDARY, /*value*/true);
 	/* 134 */ EVENT(/* timestamp*/3.031735, TriggerWheel::T_PRIMARY, /*value*/true);
 
-	EXPECT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#realCranking";
+	EXPECT_EQ( 0,  getRecentWarnings()->getCount()) << "warningCounter#realCranking";
 
 	EXPECT_EQ(623,  round(Sensor::getOrZero(SensorType::Rpm))) << "RPM at the end";
 }

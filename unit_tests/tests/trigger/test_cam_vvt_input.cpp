@@ -7,8 +7,6 @@
 
 #include "pch.h"
 
-extern WarningCodeState unitTestWarningCodeState;
-
 #include "engine_sniffer.h"
 extern WaveChart waveChart;
 
@@ -20,7 +18,7 @@ TEST(trigger, testNoStartUpWarningsNoSynchronizationTrigger) {
 
 	eth.fireTriggerEvents2(/*count*/10, /*duration*/50);
 	ASSERT_EQ(1200,  round(Sensor::getOrZero(SensorType::Rpm))) << "testNoStartUpWarnings RPM";
-	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testNoStartUpWarningsNoSynchronizationTrigger";
+	ASSERT_EQ( 0,  getRecentWarnings()->getCount()) << "warningCounter#testNoStartUpWarningsNoSynchronizationTrigger";
 }
 
 TEST(trigger, testNoStartUpWarnings) {
@@ -39,7 +37,7 @@ TEST(trigger, testNoStartUpWarnings) {
 	}
 
 	ASSERT_EQ(400,  round(Sensor::getOrZero(SensorType::Rpm))) << "testNoStartUpWarnings RPM";
-	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testNoStartUpWarnings";
+	ASSERT_EQ( 0,  getRecentWarnings()->getCount()) << "warningCounter#testNoStartUpWarnings";
 	// now let's post something unneeded
 	eth.fireRise(50);
 	eth.fireFall(50);
@@ -53,8 +51,8 @@ TEST(trigger, testNoStartUpWarnings) {
 		eth.fireRise(50);
 		eth.fireFall(150);
 	}
-	EXPECT_EQ( 1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testNoStartUpWarnings CUSTOM_SYNC_COUNT_MISMATCH expected";
-	EXPECT_EQ(ObdCode::CUSTOM_PRIMARY_TOO_MANY_TEETH, unitTestWarningCodeState.recentWarnings.get(0).Code);
+	EXPECT_EQ( 1,  getRecentWarnings()->getCount()) << "warningCounter#testNoStartUpWarnings CUSTOM_SYNC_COUNT_MISMATCH expected";
+	EXPECT_EQ(ObdCode::CUSTOM_PRIMARY_TOO_MANY_TEETH, getRecentWarnings()->get(0).Code);
 }
 
 TEST(trigger, testNoisyInput) {
@@ -72,8 +70,8 @@ TEST(trigger, testNoisyInput) {
 	eth.firePrimaryTriggerFall();
 	ASSERT_EQ(0, Sensor::getOrZero(SensorType::Rpm));
 
-	EXPECT_EQ(1, unitTestWarningCodeState.recentWarnings.getCount());
-	EXPECT_EQ(ObdCode::CUSTOM_PRIMARY_NOT_ENOUGH_TEETH, unitTestWarningCodeState.recentWarnings.get(0).Code);
+	EXPECT_EQ(1, getRecentWarnings()->getCount());
+	EXPECT_EQ(ObdCode::CUSTOM_PRIMARY_NOT_ENOUGH_TEETH, getRecentWarnings()->get(0).Code);
 }
 
 TEST(trigger, testCamInput) {
@@ -96,7 +94,7 @@ TEST(trigger, testCamInput) {
 	}
 
 	ASSERT_EQ(1200,  round(Sensor::getOrZero(SensorType::Rpm)));
-	ASSERT_EQ(0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput";
+	ASSERT_EQ(0,  getRecentWarnings()->getCount()) << "warningCounter#testCamInput";
 
 	for (int i = 0; i < 600;i++) {
 		eth.fireRise(25);
@@ -104,9 +102,9 @@ TEST(trigger, testCamInput) {
 	}
 
 	// asserting that lack of camshaft signal would be detecting
-	ASSERT_EQ(1,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #2";
-	ASSERT_EQ(ObdCode::OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, unitTestWarningCodeState.recentWarnings.get(0).Code) << "@0";
-	unitTestWarningCodeState.recentWarnings.clear();
+	ASSERT_EQ(1,  getRecentWarnings()->getCount()) << "warningCounter#testCamInput #2";
+	ASSERT_EQ(ObdCode::OBD_Camshaft_Position_Sensor_Circuit_Range_Performance, getRecentWarnings()->get(0).Code) << "@0";
+	getRecentWarnings()->clear();
 
 	for (int i = 0; i < 600;i++) {
 		eth.moveTimeForwardUs(MS2US(10));
@@ -126,7 +124,7 @@ TEST(trigger, testCamInput) {
 	}
 
 	// asserting that error code has cleared
-	ASSERT_EQ(0, unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testCamInput #3";
+	ASSERT_EQ(0, getRecentWarnings()->getCount()) << "warningCounter#testCamInput #3";
 	EXPECT_NEAR_M3(71, engine->triggerCentral.getVVTPosition(0, 0));
 }
 

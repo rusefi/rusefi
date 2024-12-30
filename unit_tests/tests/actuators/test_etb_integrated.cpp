@@ -39,13 +39,11 @@ TEST(etb, integrated) {
 	etb->update();
 }
 
-extern WarningCodeState unitTestWarningCodeState;
-
 TEST(etb, intermittentTps) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
 	EtbController *etb = initEtbIntegratedTest();
-	warningBuffer_t &recentWarnings = unitTestWarningCodeState.recentWarnings;
-	recentWarnings.clear();
+	warningBuffer_t *recentWarnings = getRecentWarnings();
+	recentWarnings->clear();
 
 	// Tell the sensor checker that the ignition is on
 	engine->module<SensorChecker>()->onIgnitionStateChanged(true);
@@ -54,7 +52,7 @@ TEST(etb, intermittentTps) {
 	engine->module<SensorChecker>()->onSlowCallback();
 	// todo: fix me https://github.com/rusefi/rusefi/issues/5233
 	// EXPECT_EQ( 3,  recentWarnings.getCount()) << "intermittentTps";
-	EXPECT_TRUE( recentWarnings.getCount() > 0) << "intermittentTps";
+	EXPECT_TRUE( recentWarnings->getCount() > 0) << "intermittentTps";
 
 	ASSERT_TRUE(engine->module<SensorChecker>()->analogSensorsShouldWork());
 
@@ -91,7 +89,7 @@ TEST(etb, intermittentTps) {
 
 	// todo: fix me https://github.com/rusefi/rusefi/issues/5233
 	// EXPECT_EQ( 3,  recentWarnings.getCount()) << "intermittentTps";
-	EXPECT_TRUE( recentWarnings.getCount() > 0) << "intermittentTps";
+	EXPECT_TRUE( recentWarnings->getCount() > 0) << "intermittentTps";
 	// todo: fix me https://github.com/rusefi/rusefi/issues/5233
 //	EXPECT_EQ(OBD_PPS_Correlation, recentWarnings.get(0).Code);
 //	EXPECT_EQ(OBD_TPS1_Primary_Timeout, recentWarnings.get(1).Code);

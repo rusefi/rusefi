@@ -471,3 +471,7 @@ void setVerboseTrigger(bool isEnabled) {
 	printTriggerDebug = isEnabled;
 	printTriggerTrace = isEnabled;
 }
+
+warningBuffer_t * getRecentWarnings() {
+  return &unitTestWarningCodeState.recentWarnings;
+}

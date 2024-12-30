@@ -21,8 +21,6 @@
 
 using ::testing::_;
 
-extern WarningCodeState unitTestWarningCodeState;
-
 extern "C" {
 void sendOutConfirmation(char *value, int i);
 }
@@ -764,7 +762,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 ////	assertInjectorDownEvent("8@8", 8, MS2US(45), 1);
 ////	assertInjectorDownEvent("8@9", 9, MS2US(55), 0);
 
-	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testFuelSchedulerBug299smallAndMedium";
+	ASSERT_EQ( 0,  getRecentWarnings()->getCount()) << "warningCounter#testFuelSchedulerBug299smallAndMedium";
 }
 
 void setInjectionMode(int value) {
@@ -1003,7 +1001,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 
 	eth.moveTimeForwardUs(MS2US(20));
 	eth.executeActions();
-	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#testFuelSchedulerBug299smallAndLarge";
+	ASSERT_EQ( 0,  getRecentWarnings()->getCount()) << "warningCounter#testFuelSchedulerBug299smallAndLarge";
 }
 
 TEST(big, testSparkReverseOrderBug319) {
@@ -1106,9 +1104,9 @@ TEST(big, testSparkReverseOrderBug319) {
 	eth.fireFall(20);
 	eth.executeActions();
 	ASSERT_EQ( 1,  engine->engineState.sparkOutOfOrderCounter) << "out-of-order #8";
-	ASSERT_EQ( 2,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#SparkReverseOrderBug319";
-	ASSERT_EQ(ObdCode::CUSTOM_DWELL_TOO_LONG, unitTestWarningCodeState.recentWarnings.get(0).Code) << "warning @0";
-	ASSERT_EQ(ObdCode::CUSTOM_OUT_OF_ORDER_COIL, unitTestWarningCodeState.recentWarnings.get(1).Code);
+	ASSERT_EQ( 2,  getRecentWarnings()->getCount()) << "warningCounter#SparkReverseOrderBug319";
+	ASSERT_EQ(ObdCode::CUSTOM_DWELL_TOO_LONG, getRecentWarnings()->get(0).Code) << "warning @0";
+	ASSERT_EQ(ObdCode::CUSTOM_OUT_OF_ORDER_COIL, getRecentWarnings()->get(1).Code);
 }
 
 // https://sourceforge.net/p/rusefi/tickets/299/
@@ -1122,7 +1120,7 @@ TEST(big, testAssertWeAreNotMissingASpark299) {
 	engineConfiguration->isIgnitionEnabled = true;
 	engineConfiguration->isInjectionEnabled = false;
 
-	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#0";
+	ASSERT_EQ( 0,  getRecentWarnings()->getCount()) << "warningCounter#0";
 
   // todo: migrate to 'smartFireRise' see header which explains the difference
 	eth.fireRise(20);
@@ -1194,5 +1192,5 @@ TEST(big, testAssertWeAreNotMissingASpark299) {
 	eth.fireFall(20);
 	eth.executeActions();
 
-	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#1";
+	ASSERT_EQ( 0,  getRecentWarnings()->getCount()) << "warningCounter#1";
 }
