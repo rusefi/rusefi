@@ -766,9 +766,6 @@ Select which bus the wideband controller is attached to.
 ### fuelClosedLoopCorrectionEnabled
 Enables lambda sensor closed loop feedback for fuelling.
 
-### oddFireEngine
-On even fire engines with even number of cylinders we go wasted spark during cranking. Use this setting to disable wasted spark cranking on odd fire engines.
-
 ### alwaysWriteSdCard
 Write SD card log even when powered by USB
 

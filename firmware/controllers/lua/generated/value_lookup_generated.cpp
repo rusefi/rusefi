@@ -773,9 +773,6 @@ float getConfigValueByName(const char *name) {
 // fuelClosedLoopCorrectionEnabled
 		case 1611799720:
 			return engineConfiguration->fuelClosedLoopCorrectionEnabled;
-// oddFireEngine
-		case -111377544:
-			return engineConfiguration->oddFireEngine;
 // alwaysWriteSdCard
 		case 787397010:
 			return engineConfiguration->alwaysWriteSdCard;
@@ -3242,11 +3239,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1611799720:
 	{
 		engineConfiguration->fuelClosedLoopCorrectionEnabled = (int)value;
-		return 1;
-	}
-		case -111377544:
-	{
-		engineConfiguration->oddFireEngine = (int)value;
 		return 1;
 	}
 		case 787397010:

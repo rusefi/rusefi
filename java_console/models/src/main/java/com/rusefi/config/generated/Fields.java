@@ -1242,6 +1242,7 @@ public class Fields {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
+	public static final int SIGNATURE_HASH = 630329118;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1507,7 +1508,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2024.12.30.f407-discovery.3941492451";
+	public static final String TS_SIGNATURE = "rusEFI master.2024.12.30.f407-discovery.630329118";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -2138,7 +2139,6 @@ public class Fields {
 	public static final Field TPS2SECONDARYMAX = Field.create("TPS2SECONDARYMAX", 1314, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field WIDEBANDONSECONDBUS = Field.create("WIDEBANDONSECONDBUS", 1316, FieldType.BIT, 0).setBaseOffset(0);
 	public static final Field FUELCLOSEDLOOPCORRECTIONENABLED = Field.create("FUELCLOSEDLOOPCORRECTIONENABLED", 1316, FieldType.BIT, 1).setBaseOffset(0);
-	public static final Field ODDFIREENGINE = Field.create("ODDFIREENGINE", 1316, FieldType.BIT, 2).setBaseOffset(0);
 	public static final Field ALWAYSWRITESDCARD = Field.create("ALWAYSWRITESDCARD", 1316, FieldType.BIT, 3).setBaseOffset(0);
 	public static final Field KNOCKDETECTIONUSEDOUBLEFREQUENCY = Field.create("KNOCKDETECTIONUSEDOUBLEFREQUENCY", 1316, FieldType.BIT, 4).setBaseOffset(0);
 	public static final Field YESUNDERSTANDLOCKING = Field.create("YESUNDERSTANDLOCKING", 1316, FieldType.BIT, 5).setBaseOffset(0);
@@ -3911,7 +3911,6 @@ public class Fields {
 	TPS2SECONDARYMAX,
 	WIDEBANDONSECONDBUS,
 	FUELCLOSEDLOOPCORRECTIONENABLED,
-	ODDFIREENGINE,
 	ALWAYSWRITESDCARD,
 	KNOCKDETECTIONUSEDOUBLEFREQUENCY,
 	YESUNDERSTANDLOCKING,

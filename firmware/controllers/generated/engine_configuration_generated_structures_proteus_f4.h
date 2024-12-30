@@ -2344,9 +2344,8 @@ struct engine_configuration_s {
 	offset 1316 bit 1 */
 	bool fuelClosedLoopCorrectionEnabled : 1 {};
 	/**
-	 * On even fire engines with even number of cylinders we go wasted spark during cranking. Use this setting to disable wasted spark cranking on odd fire engines.
 	offset 1316 bit 2 */
-	bool oddFireEngine : 1 {};
+	bool unusedOfoddFireEngine : 1 {};
 	/**
 	 * Write SD card log even when powered by USB
 	offset 1316 bit 3 */
