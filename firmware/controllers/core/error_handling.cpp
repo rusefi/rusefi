@@ -158,10 +158,6 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 
 #endif // EFI_PROD_CODE
 }
-
-#else
-WarningCodeState unitTestWarningCodeState;
-
 #endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 
 /**
@@ -174,12 +170,12 @@ bool warning(ObdCode code, const char *fmt, ...) {
 		return true;
   }
 
-#if EFI_SIMULATOR || EFI_PROD_CODE
 	bool known = engine->engineState.warnings.isWarningNow(code);
 
 	// if known - just reset timer
 	engine->engineState.warnings.addWarningCode(code);
 
+#if EFI_SIMULATOR || EFI_PROD_CODE
 	// we just had this same warning, let's not spam
 	if (known) {
 		return true;
@@ -203,8 +199,6 @@ bool warning(ObdCode code, const char *fmt, ...) {
 
 	efiPrintf("WARNING: %s", warningBuffer);
 #else
-	// todo: we need access to 'engine' here so that we can migrate to real 'engine->engineState.warnings'
-	unitTestWarningCodeState.addWarningCode(code);
 	printf("unit_test_warning: ");
 	va_list ap;
 	va_start(ap, fmt);

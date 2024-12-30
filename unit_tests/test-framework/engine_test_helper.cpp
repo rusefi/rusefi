@@ -27,7 +27,6 @@ bool unitTestBusyWaitHack;
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
-extern WarningCodeState unitTestWarningCodeState;
 extern engine_configuration_s & activeConfiguration;
 extern PinRepository pinRepository;
 extern bool printTriggerDebug;
@@ -70,11 +69,11 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, const std::unordere
 }
 
 warningBuffer_t *EngineTestHelper::recentWarnings() {
-	return &unitTestWarningCodeState.recentWarnings;
+	return getRecentWarnings();
 }
 
 int EngineTestHelper::getWarningCounter() {
-	return unitTestWarningCodeState.warningCounter;
+	return engine.engineState.warnings.warningCounter;
 }
 
 FILE *jsonTrace = nullptr;
@@ -119,8 +118,6 @@ extern bool hasInitGtest;
 	for (const auto& [s, v] : sensorValues) {
 		Sensor::setMockValue(s, v);
 	}
-
-	unitTestWarningCodeState.clear();
 
 	memset(&activeConfiguration, 0, sizeof(activeConfiguration));
 
@@ -473,5 +470,5 @@ void setVerboseTrigger(bool isEnabled) {
 }
 
 warningBuffer_t * getRecentWarnings() {
-  return &unitTestWarningCodeState.recentWarnings;
+  return &engine->engineState.warnings.recentWarnings;
 }
