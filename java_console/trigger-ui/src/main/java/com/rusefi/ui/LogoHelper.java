@@ -10,7 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class LogoHelper {
-    public static final String LINK_TEXT = "rusEFI (c) 2012-2024";
+    public static final String LINK_TEXT = "rusEFI (c) 2012-2025";
     public static final String URI = "http://rusefi.com/?java_console";
 
     public static JLabel createLogoLabel() {
