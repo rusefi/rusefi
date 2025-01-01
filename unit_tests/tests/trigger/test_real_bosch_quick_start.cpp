@@ -46,7 +46,7 @@ TEST(realBQS, readAsCam) {
 	hwHandleShaftSignal(0, false, 1000000);
 	hwHandleShaftSignal(0, true, 2000000);
 	hwHandleShaftSignal(0, false, 3000000);
-	eth.assertRpm(3000);
+	ASSERT_EQ(3000, Sensor::getOrZero(SensorType::Rpm));
 
 	  CsvReader reader(/*triggerCount*/0, /* vvtCount */ 1);
 	  reader.open("tests/trigger/resources/BQS-longer.csv");

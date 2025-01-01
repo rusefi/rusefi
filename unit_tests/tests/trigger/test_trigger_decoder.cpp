@@ -96,7 +96,7 @@ TEST(trigger, test1995FordInline6TriggerDecoder) {
 
 	engine->periodicFastCallback();
 	eth.fireTriggerEvents(48);
-	eth.assertRpm(2000, "rpm");
+	ASSERT_EQ(2000, Sensor::getOrZero(SensorType::Rpm));
 	engine->periodicFastCallback();
 	eth.fireTriggerEvents(48);
 
@@ -212,7 +212,7 @@ TEST(misc, testRpmCalculator) {
 
 	eth.fireTriggerEvents(/* count */ 48);
 
-	eth.assertRpm(1500);
+	ASSERT_EQ(1500, Sensor::getOrZero(SensorType::Rpm));
 	ASSERT_EQ( 14,  engine->triggerCentral.triggerState.getCurrentIndex()) << "index #1";
 
 
@@ -236,7 +236,7 @@ TEST(misc, testRpmCalculator) {
 	assertEqualsM("injection angle", 499.095, ie0->injectionStartAngle);
 
 	eth.firePrimaryTriggerRise();
-	eth.assertRpm(1500);
+	ASSERT_EQ(1500, Sensor::getOrZero(SensorType::Rpm));
 
 	assertEqualsM("dwell", eth.timeToAngle(FORD_INLINE_DWELL), engine->ignitionState.dwellDurationAngle);
 	assertEqualsM("fuel #2", 4.5450, engine->engineState.injectionDuration);
@@ -291,7 +291,7 @@ TEST(misc, testRpmCalculator) {
 
 	assertEqualsM("dwell", eth.timeToAngle(FORD_INLINE_DWELL), engine->ignitionState.dwellDurationAngle);
 	assertEqualsM("fuel #3", 4.5450, engine->engineState.injectionDuration);
-	eth.assertRpm(1500);
+	ASSERT_EQ(1500, Sensor::getOrZero(SensorType::Rpm));
 
 
 	ASSERT_EQ( 6,  engine->triggerCentral.triggerState.getCurrentIndex()) << "index #4";
@@ -411,13 +411,13 @@ static void setTestBug299(EngineTestHelper *eth) {
 	Engine *engine = &eth->engine;
 
 
-	eth->assertRpm(0, "RPM=0");
+	ASSERT_EQ(0, Sensor::getOrZero(SensorType::Rpm));
 
 	eth->fireTriggerEventsWithDuration(20);
 	// still no RPM since need to cycles measure cycle duration
-	eth->assertRpm(0, "setTestBug299: RPM#1");
+	ASSERT_EQ(0, Sensor::getOrZero(SensorType::Rpm));
 	eth->fireTriggerEventsWithDuration(20);
-	eth->assertRpm(3000, "setTestBug299: RPM#2");
+	ASSERT_EQ(3000, Sensor::getOrZero(SensorType::Rpm));
 
 	eth->clearQueue();
 

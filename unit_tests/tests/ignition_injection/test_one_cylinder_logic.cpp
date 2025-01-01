@@ -25,11 +25,11 @@ TEST(issues, issueOneCylinderSpecialCase968) {
 	ASSERT_EQ( 0,  engine->scheduler.size()) << "start";
 
 	eth.fireTriggerEvents2(/* count */ 2, 50 /* ms */);
-	eth.assertRpm(0);
+	ASSERT_EQ(0, Sensor::getOrZero(SensorType::Rpm));
 	ASSERT_EQ( 0,  engine->scheduler.size()) << "first revolution(s)";
 
 	eth.fireTriggerEvents2(/* count */ 1, 50 /* ms */);
-	eth.assertRpm(600, "RPM");
+	ASSERT_EQ(600, Sensor::getOrZero(SensorType::Rpm));
 	ASSERT_EQ(engine->triggerCentral.currentEngineDecodedPhase, 90 + Gy6139_globalTriggerAngleOffset);
 	ASSERT_EQ(engine->engineState.timingAdvance[0], timing);
 
