@@ -426,7 +426,7 @@
  * Do we need Malfunction Indicator blinking logic?
  */
 #ifndef EFI_MALFUNCTION_INDICATOR
-#define EFI_MALFUNCTION_INDICATOR TRUE
+#define EFI_MALFUNCTION_INDICATOR FALSE
 #endif
 
 #ifndef CONSOLE_MAX_ACTIONS

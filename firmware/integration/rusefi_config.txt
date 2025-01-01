@@ -2453,7 +2453,7 @@ end_struct
 #define ts_show_fuel_relay_pin true
 #define ts_show_cylinder_bank true
 #define ts_show_fuel_strategy true
-#define ts_show_check_engine true
+#define ts_show_check_engine false
 #define ts_show_debug_mode false
 #define ts_show_number_of_cylinders true
 #define ts_show_firing_order true

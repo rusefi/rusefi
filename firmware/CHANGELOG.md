@@ -39,6 +39,7 @@ Release template (copy/paste this for new release):
  - "Baro Correction" axis label
  - unused "Throttle Up switch" is removed
  - Lua: fix heap used accumulator calculation: Do not increase if allocation failed #6924
+ - Check Engine output hidden since the whole feature pretty much does not exist
 
 ### Breaking Changes
  - Lua: onCanRx parameter value to be use Lua-indexing #7110
