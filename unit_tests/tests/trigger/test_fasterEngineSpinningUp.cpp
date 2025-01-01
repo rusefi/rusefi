@@ -38,7 +38,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	ASSERT_EQ(SPINNING_UP, engine->rpmCalculator.getState());
 	ASSERT_NEAR(0, getInjectionMass(200), EPS5D);
 	// check RPM
-	eth.assertRpm( 0, "RPM=0");
+	ASSERT_EQ(0, Sensor::getOrZero(SensorType::Rpm));
 	// the queue should be empty, no trigger events yet
 	ASSERT_EQ(0, engine->scheduler.size()) << "plain#1";
 
@@ -50,7 +50,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// check if the mode is changed
 	ASSERT_EQ(SPINNING_UP, engine->rpmCalculator.getState());
 	// due to isFasterEngineSpinUp=true, we should have already detected RPM!
-	eth.assertRpm( 300, "spinning-RPM#1");
+	ASSERT_EQ(300, Sensor::getOrZero(SensorType::Rpm));
 	// two simultaneous injections
 	ASSERT_EQ(4, engine->scheduler.size()) << "plain#2";
 	// test if they are simultaneous
@@ -75,7 +75,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// check if the mode is changed when fully synched
 	ASSERT_EQ(CRANKING, engine->rpmCalculator.getState());
 	// check RPM
-	eth.assertRpm(200, "RPM#2");
+	EXPECT_NEAR(200, Sensor::getOrZero(SensorType::Rpm), 0.01);
 	// test if they are simultaneous in cranking mode too
 	ASSERT_EQ(IM_SIMULTANEOUS, getCurrentInjectionMode());
 	// Should still be in wasted spark since we don't have cam sync yet
@@ -103,7 +103,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	// check if the mode is now changed to 'running' at higher RPM
 	ASSERT_EQ(RUNNING, engine->rpmCalculator.getState());
 	// check RPM
-	eth.assertRpm( 1000, "RPM#3");
+	ASSERT_EQ(1000, Sensor::getOrZero(SensorType::Rpm));
 	// check if the injection mode is back to sequential now
 	ASSERT_EQ(IM_SEQUENTIAL, getCurrentInjectionMode());
 	ASSERT_NEAR(0.0, getInjectionMass(200), EPS3D); // in this test fuel calculation is not active in running mode
