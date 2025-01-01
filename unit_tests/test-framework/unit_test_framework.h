@@ -24,8 +24,6 @@ using ::testing::Return;
 #define EPS5D 0.00001
 
 // todo: migrate to googletest, use EXPECT_* and ASSERT_*
-// along the lines of ASSERT_EQ(x, y) << msg;
-void assertEqualsM2(const char *msg, float expected, float actual, float EPS);
 void assertEqualsM(const char *msg, float expected, float actual);
 void assertEqualsLM(const char *msg, long expected, long actual);
 void assertEqualsM4(const char *prefix, const char *msg, float expected, float actual);
