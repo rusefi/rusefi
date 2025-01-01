@@ -98,7 +98,7 @@ public class TSProjectConsumerTest {
             "\t * units: units\n" +
             "\t * offset 22\n" +
             "\t */\n" +
-            "\tuint8_t alignmentFill_at_22[2];\n" +
+            "\tuint8_t alignmentFill_at_22[2] = {};\n" +
             "};\n" +
             "static_assert(sizeof(pid_s) == 24);\n" +
             "\n", consumer.getContent());

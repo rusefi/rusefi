@@ -43,7 +43,7 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
             }
             cEntry += ";" + EOL;
         } else {
-            cEntry += "\t" + typeName + " " + configField.getName() + "[" + configField.getArraySizeVariableName() + "];" + EOL;
+            cEntry += "\t" + typeName + " " + configField.getName() + "[" + configField.getArraySizeVariableName() + "] = {};" + EOL;
         }
         return cEntry;
     }

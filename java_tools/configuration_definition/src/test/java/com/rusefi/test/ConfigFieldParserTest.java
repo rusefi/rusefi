@@ -368,7 +368,7 @@ public class ConfigFieldParserTest {
                 "\t * units: units\n" +
                 "\t * offset 3\n" +
                 "\t */\n" +
-                "\tuint8_t alignmentFill_at_3[1];\n" +
+                "\tuint8_t alignmentFill_at_3[1] = {};\n" +
                 "\t/**\n" +
                 "\t * PID dTime\n" +
                 "\t * units: ms\n" +
@@ -497,7 +497,7 @@ public class ConfigFieldParserTest {
             "\t * units: units\n" +
             "\t * offset 1\n" +
             "\t */\n" +
-            "\tuint8_t alignmentFill_at_1[1];\n" +
+            "\tuint8_t alignmentFill_at_1[1] = {};\n" +
             "\t/**\n" +
             "\t * offset 2\n" +
             "\t */\n" +
@@ -515,7 +515,7 @@ public class ConfigFieldParserTest {
             "\t * units: units\n" +
             "\t * offset 9\n" +
             "\t */\n" +
-            "\tuint8_t alignmentFill_at_9[3];\n" +
+            "\tuint8_t alignmentFill_at_9[3] = {};\n" +
             "\t/**\n" +
             "\toffset 12 bit 0 */\n" +
             "\tbool periodMs : 1 {};\n" +
@@ -636,7 +636,7 @@ public class ConfigFieldParserTest {
             "\t * units: ratio\n" +
             "\t * offset 0\n" +
             "\t */\n" +
-            "\tscaled_channel<int, 100, 1> field[ERROR_BUFFER_SIZE];\n" +
+            "\tscaled_channel<int, 100, 1> field[ERROR_BUFFER_SIZE] = {};\n" +
             "};\n" +
             "static_assert(sizeof(pid_s) == 4);\n" +
             "\n", consumer.getContent());
@@ -676,7 +676,7 @@ public class ConfigFieldParserTest {
                 "\t * units: units\n" +
                 "\t * offset 1\n" +
                 "\t */\n" +
-                "\tuint8_t alignmentFill_at_1[3];\n" +
+                "\tuint8_t alignmentFill_at_1[3] = {};\n" +
                 "\t/**\n" +
                 "\t * offset 4\n" +
                 "\t */\n" +
@@ -713,7 +713,7 @@ public class ConfigFieldParserTest {
                 "\t * units: units\n" +
                 "\t * offset 2\n" +
                 "\t */\n" +
-                "\tuint8_t alignmentFill_at_2[2];\n" +
+                "\tuint8_t alignmentFill_at_2[2] = {};\n" +
                 "};\n" +
                 "static_assert(sizeof(pid_s) == 4);\n" +
                 "\n",
