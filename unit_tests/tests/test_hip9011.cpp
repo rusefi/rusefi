@@ -12,12 +12,12 @@ using ::testing::_;
 TEST(hip9011, lookup) {
 	HIP9011 instance(NULL);
 
-	assertEqualsM2("", 3183.1013, instance.getRpmByAngleWindowAndTimeUs(600, 360), 0.1);
-	assertEqualsM2("40us", 47746.5195, instance.getRpmByAngleWindowAndTimeUs(40, 360), 0.1);
+	ASSERT_NEAR(3183.1013, instance.getRpmByAngleWindowAndTimeUs(600, 360), 0.1);
+    ASSERT_NEAR(47746.5195, instance.getRpmByAngleWindowAndTimeUs(40, 360), 0.1) << "40us";
 
-	assertEqualsM2("600us 50 degree", 442.0974, instance.getRpmByAngleWindowAndTimeUs(600, 50), 0.1);
-	assertEqualsM2("240us 50 degree", 1105.2435, instance.getRpmByAngleWindowAndTimeUs(240, 50), 0.1);
-	assertEqualsM2("240us 50 degree", 6631.4619, instance.getRpmByAngleWindowAndTimeUs(40, 50), 0.1);
+	ASSERT_NEAR(442.0974, instance.getRpmByAngleWindowAndTimeUs(600, 50), 0.1) << "600us 50 degree";
+	ASSERT_NEAR(1105.2435, instance.getRpmByAngleWindowAndTimeUs(240, 50), 0.1) << "240us 50 degree";
+    ASSERT_NEAR(6631.4619, instance.getRpmByAngleWindowAndTimeUs(40, 50), 0.1) << "40us 50 degree";
 
 	EXPECT_EQ(0, instance.getGainIndex(/*cylinderBore*/NAN, /*hip9011Gain*/3, 0, NAN, NAN));
 	EXPECT_EQ(0, instance.getGainIndex(/*cylinderBore*/NAN, /*hip9011Gain*/2, 0, NAN, NAN));
