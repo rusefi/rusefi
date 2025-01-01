@@ -6,15 +6,11 @@ import com.rusefi.core.FindFileHelper;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.FileUtil;
-import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.core.ui.AutoupdateUtil;
-import com.rusefi.core.ui.FrameHelper;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -24,8 +20,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Properties;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 
@@ -49,7 +43,6 @@ public class Autoupdate {
         }
     }
 
-    private static final String AUTOUPDATE_MODE = "autoupdate";
     private static final String COM_RUSEFI_LAUNCHER = "com.rusefi.Launcher";
 
     public static void main(String[] args) {
@@ -96,22 +89,16 @@ public class Autoupdate {
     private static Optional<DownloadedAutoupdateFileInfo> downloadFreshZipFile(String[] args, String firstArgument, BundleUtil.BundleInfo bundleInfo) {
         Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile = Optional.empty();
         if (firstArgument.equalsIgnoreCase("basic-ui")) {
-            downloadedAutoupdateFile = doDownload(bundleInfo, UpdateMode.ALWAYS);
+            downloadedAutoupdateFile = doDownload(bundleInfo);
         } else if (args.length > 0 && args[0].equalsIgnoreCase("release")) {
             // this branch needs progress for custom boards!
             log.info("Release update requested");
             downloadedAutoupdateFile = downloadAutoupdateZipFile(
                 bundleInfo,
-                UpdateMode.ALWAYS,
                 ConnectionAndMeta.BASE_URL_RELEASE
             );
         } else {
-            UpdateMode mode = getMode();
-            if (mode != UpdateMode.NEVER) {
-                downloadedAutoupdateFile = doDownload(bundleInfo, mode);
-            } else {
-                log.info("Update mode: NEVER");
-            }
+            downloadedAutoupdateFile = doDownload(bundleInfo);
         }
         return downloadedAutoupdateFile;
     }
@@ -166,15 +153,12 @@ public class Autoupdate {
 
     private static final Predicate<ZipEntry> isConsoleJar = zipEntry -> consoleJarZipEntry.equals(zipEntry.getName());
 
-    private static Optional<DownloadedAutoupdateFileInfo> doDownload(
-        final BundleUtil.BundleInfo bundleInfo,
-        final UpdateMode mode
-    ) {
+    private static Optional<DownloadedAutoupdateFileInfo> doDownload(final BundleUtil.BundleInfo bundleInfo) {
         if (bundleInfo.isMaster()) {
             log.info("Snapshot requested");
-            return downloadAutoupdateZipFile(bundleInfo, mode, ConnectionAndMeta.getBaseUrl() + ConnectionAndMeta.AUTOUPDATE);
+            return downloadAutoupdateZipFile(bundleInfo, ConnectionAndMeta.getBaseUrl() + ConnectionAndMeta.AUTOUPDATE);
         } else {
-            return downloadAutoupdateZipFile(bundleInfo, mode, ConnectionAndMeta.getBaseUrl() + "/lts/" + bundleInfo.getBranchName() + ConnectionAndMeta.AUTOUPDATE);
+            return downloadAutoupdateZipFile(bundleInfo, ConnectionAndMeta.getBaseUrl() + "/lts/" + bundleInfo.getBranchName() + ConnectionAndMeta.AUTOUPDATE);
         }
     }
 
@@ -221,15 +205,6 @@ public class Autoupdate {
         setter.invoke(null, ConnectionAndMeta.getProperties());
     }
 
-    private static UpdateMode getMode() {
-        String value = PersistentConfiguration.getConfig().getRoot().getProperty(AUTOUPDATE_MODE);
-        try {
-            return UpdateMode.valueOf(value);
-        } catch (Throwable e) {
-            return UpdateMode.ASK;
-        }
-    }
-
     private static class DownloadedAutoupdateFileInfo {
         final String zipFileName;
         final long lastModified;
@@ -242,7 +217,6 @@ public class Autoupdate {
 
     private static Optional<DownloadedAutoupdateFileInfo> downloadAutoupdateZipFile(
         final BundleUtil.BundleInfo info,
-        final UpdateMode mode,
         final String baseUrl
     ) {
         try {
@@ -255,12 +229,6 @@ public class Autoupdate {
             if (AutoupdateUtil.hasExistingFile(zipFileName, connectionAndMeta.getCompleteFileSize(), connectionAndMeta.getLastModified())) {
                 log.info("We already have latest update " + new Date(connectionAndMeta.getLastModified()));
                 return Optional.empty();
-            }
-
-            if (mode != UpdateMode.ALWAYS) {
-                boolean doUpdate = askUserIfUpdateIsDesired();
-                if (!doUpdate)
-                    return Optional.empty();
             }
 
             // todo: user could have waited hours to respond to question above, we probably need to re-establish connection
@@ -290,97 +258,4 @@ public class Autoupdate {
         }
         return Optional.empty();
     }
-
-    private static boolean askUserIfUpdateIsDesired() {
-        CountDownLatch frameClosed = new CountDownLatch(1);
-
-        if (AutoupdateUtil.runHeadless) {
-            // todo: command line ask for options
-            return true;
-        }
-
-        return askUserIfUpdateIsDesiredWithGUI(frameClosed);
-    }
-
-    private static boolean askUserIfUpdateIsDesiredWithGUI(CountDownLatch frameClosed) {
-        AtomicBoolean doUpdate = new AtomicBoolean();
-
-        FrameHelper frameHelper = new FrameHelper() {
-            @Override
-            protected void onWindowClosed() {
-                frameClosed.countDown();
-            }
-        };
-        JFrame frame = frameHelper.getFrame();
-        frame.setTitle(TITLE);
-        // huh? sometimes we are making icon from logo and sometimes we have dedicated icon file?!
-        ImageIcon icon = AutoupdateUtil.loadIcon(LOGO);
-        if (icon != null)
-            frame.setIconImage(icon.getImage());
-        JPanel choice = new JPanel(new BorderLayout());
-
-        choice.add(new JLabel("Do you want to update bundle to latest version?"), BorderLayout.NORTH);
-
-        JPanel middle = new JPanel(new FlowLayout());
-
-        JButton never = new JButton("Never");
-        never.setBackground(Color.red);
-        never.addActionListener(new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                PersistentConfiguration.getConfig().getRoot().setProperty(AUTOUPDATE_MODE, UpdateMode.NEVER.toString());
-                frame.dispose();
-            }
-        });
-        middle.add(never);
-
-        JButton no = new JButton("No");
-        no.setBackground(Color.red);
-        no.addActionListener(new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                frame.dispose();
-            }
-        });
-        middle.add(no);
-
-        JButton once = new JButton("Once");
-        once.addActionListener(new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                doUpdate.set(true);
-                frame.dispose();
-            }
-        });
-        middle.add(once);
-
-        JButton always = new JButton("Always");
-        always.setBackground(Color.green);
-        always.addActionListener(new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                PersistentConfiguration.getConfig().getRoot().setProperty(AUTOUPDATE_MODE, UpdateMode.ALWAYS.toString());
-                doUpdate.set(true);
-                frame.dispose();
-            }
-        });
-        middle.add(always);
-
-        choice.add(middle, BorderLayout.CENTER);
-
-        frameHelper.showFrame(choice, true);
-        try {
-            frameClosed.await();
-        } catch (InterruptedException e) {
-            // ignore
-        }
-        return doUpdate.get();
-    }
-
-    enum UpdateMode {
-        ALWAYS,
-        NEVER,
-        ASK
-    }
-
 }
