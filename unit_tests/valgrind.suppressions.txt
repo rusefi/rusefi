@@ -1,6 +1,0 @@
-{
-   open_question_why_this_happens_do_we_have_a_bug
-   Memcheck:Param
-   write(buf)
-   fun:write
-}
