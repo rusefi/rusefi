@@ -128,7 +128,7 @@ struct speed_density_s {
 	 * units: units
 	 * offset 2
 	 */
-	uint8_t alignmentFill_at_2[2];
+	uint8_t alignmentFill_at_2[2] = {};
 	/**
 	 * Air: Charge temperature estimate K
 	 * offset 4
@@ -165,7 +165,7 @@ struct cranking_fuel_s {
 	 * units: units
 	 * offset 14
 	 */
-	uint8_t alignmentFill_at_14[2];
+	uint8_t alignmentFill_at_14[2] = {};
 };
 static_assert(sizeof(cranking_fuel_s) == 16);
 
@@ -230,7 +230,7 @@ struct engine_state_s {
 	 * units: units
 	 * offset 49
 	 */
-	uint8_t alignmentFill_at_49[3];
+	uint8_t alignmentFill_at_49[3] = {};
 	/**
 	offset 52 bit 0 */
 	bool startStopPhysicalState : 1 {};
@@ -386,7 +386,7 @@ struct engine_state_s {
 	 * units: units
 	 * offset 93
 	 */
-	uint8_t alignmentFill_at_93[3];
+	uint8_t alignmentFill_at_93[3] = {};
 };
 static_assert(sizeof(engine_state_s) == 96);
 

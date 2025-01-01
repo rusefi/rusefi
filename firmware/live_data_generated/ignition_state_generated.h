@@ -73,7 +73,7 @@ struct ignition_state_s {
 	 * units: units
 	 * offset 26
 	 */
-	uint8_t alignmentFill_at_26[2];
+	uint8_t alignmentFill_at_26[2] = {};
 	/**
 	 * Ign: Dwell voltage correction
 	 * offset 28

@@ -10,7 +10,7 @@ struct trigger_central_s {
 	 * Hardware events since boot
 	 * offset 0
 	 */
-	uint16_t hwEventCounters[HW_EVENT_TYPES];
+	uint16_t hwEventCounters[HW_EVENT_TYPES] = {};
 	/**
 	 * Sync: total cams front counter
 	 * offset 8
@@ -21,7 +21,7 @@ struct trigger_central_s {
 	 * units: units
 	 * offset 10
 	 */
-	uint8_t alignmentFill_at_10[2];
+	uint8_t alignmentFill_at_10[2] = {};
 	/**
 	 * InstantMAP at readout angle
 	 * units: kPa
@@ -50,7 +50,7 @@ struct trigger_central_s {
 	 * units: units
 	 * offset 22
 	 */
-	uint8_t alignmentFill_at_22[2];
+	uint8_t alignmentFill_at_22[2] = {};
 	/**
 	 * Sync: Engine Phase
 	 * units: deg
@@ -72,7 +72,7 @@ struct trigger_central_s {
 	 * units: units
 	 * offset 33
 	 */
-	uint8_t alignmentFill_at_33[3];
+	uint8_t alignmentFill_at_33[3] = {};
 	/**
 	 * Sync: MAP: prev angle
 	 * units: deg

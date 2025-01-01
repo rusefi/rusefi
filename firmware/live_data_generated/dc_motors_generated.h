@@ -22,7 +22,7 @@ struct dc_motors_s {
 	 * units: units
 	 * offset 5
 	 */
-	uint8_t alignmentFill_at_5[3];
+	uint8_t alignmentFill_at_5[3] = {};
 	/**
 	offset 8 bit 0 */
 	bool isEnabled0 : 1 {};

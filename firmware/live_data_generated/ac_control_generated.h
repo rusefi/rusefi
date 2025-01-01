@@ -15,7 +15,7 @@ struct ac_control_s {
 	 * units: units
 	 * offset 1
 	 */
-	uint8_t alignmentFill_at_1[3];
+	uint8_t alignmentFill_at_1[3] = {};
 	/**
 	 * AC enabled
 	offset 4 bit 0 */

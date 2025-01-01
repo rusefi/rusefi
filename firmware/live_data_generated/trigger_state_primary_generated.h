@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -15,7 +15,7 @@ struct trigger_state_primary_s {
 	 * units: units
 	 * offset 1
 	 */
-	uint8_t alignmentFill_at_1[3];
+	uint8_t alignmentFill_at_1[3] = {};
 	/**
 	 * sync: Known Engine Phase
 	offset 4 bit 0 */
@@ -117,4 +117,4 @@ struct trigger_state_primary_s {
 static_assert(sizeof(trigger_state_primary_s) == 8);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/trigger/trigger_state_primary.txt

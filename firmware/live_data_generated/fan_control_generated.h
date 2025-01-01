@@ -110,7 +110,7 @@ struct fan_control_s {
 	 * units: units
 	 * offset 5
 	 */
-	uint8_t alignmentFill_at_5[3];
+	uint8_t alignmentFill_at_5[3] = {};
 };
 static_assert(sizeof(fan_control_s) == 8);
 

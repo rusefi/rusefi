@@ -386,7 +386,7 @@ struct output_channels_s {
 	 * units: units
 	 * offset 78
 	 */
-	uint8_t alignmentFill_at_78[2];
+	uint8_t alignmentFill_at_78[2] = {};
 	/**
 	 * @@GAUGE_NAME_UPTIME@@
 	 * units: sec
@@ -502,7 +502,7 @@ struct output_channels_s {
 	 * units: units
 	 * offset 122
 	 */
-	uint8_t alignmentFill_at_122[2];
+	uint8_t alignmentFill_at_122[2] = {};
 	/**
 	 * offset 124
 	 */
@@ -534,7 +534,7 @@ struct output_channels_s {
 	 * units: error
 	 * offset 140
 	 */
-	uint16_t recentErrorCode[8];
+	uint16_t recentErrorCode[8] = {};
 	/**
 	 * units: val
 	 * offset 156
@@ -600,7 +600,7 @@ struct output_channels_s {
 	 * units: deg C
 	 * offset 200
 	 */
-	scaled_channel<int16_t, 4, 1> egt[EGT_CHANNEL_COUNT];
+	scaled_channel<int16_t, 4, 1> egt[EGT_CHANNEL_COUNT] = {};
 	/**
 	 * units: V
 	 * offset 216
@@ -640,7 +640,7 @@ struct output_channels_s {
 	 * units: units
 	 * offset 229
 	 */
-	uint8_t alignmentFill_at_229[3];
+	uint8_t alignmentFill_at_229[3] = {};
 	/**
 	 * units: V
 	 * offset 232
@@ -713,7 +713,7 @@ struct output_channels_s {
 	 * units: %
 	 * offset 264
 	 */
-	scaled_channel<int16_t, 100, 1> fuelPidCorrection[STFT_BANK_COUNT];
+	scaled_channel<int16_t, 100, 1> fuelPidCorrection[STFT_BANK_COUNT] = {};
 	/**
 	 * units: V
 	 * offset 268
@@ -745,7 +745,7 @@ struct output_channels_s {
 	 * units: deg
 	 * offset 278
 	 */
-	int8_t vvtTargets[4];
+	int8_t vvtTargets[4] = {};
 	/**
 	 * @@GAUGE_NAME_TURBO_SPEED@@
 	 * units: hz
@@ -757,7 +757,7 @@ struct output_channels_s {
 	 * units: deg
 	 * offset 284
 	 */
-	scaled_channel<int16_t, 50, 1> ignitionAdvanceCyl[MAX_CYLINDER_COUNT];
+	scaled_channel<int16_t, 50, 1> ignitionAdvanceCyl[MAX_CYLINDER_COUNT] = {};
 	/**
 	 * units: %
 	 * offset 308
@@ -817,7 +817,7 @@ struct output_channels_s {
 	 * units: units
 	 * offset 326
 	 */
-	uint8_t alignmentFill_at_326[2];
+	uint8_t alignmentFill_at_326[2] = {};
 	/**
 	 * offset 328
 	 */
@@ -893,7 +893,7 @@ struct output_channels_s {
 	 * units: units
 	 * offset 374
 	 */
-	uint8_t alignmentFill_at_374[2];
+	uint8_t alignmentFill_at_374[2] = {};
 	/**
 	 * offset 376
 	 */
@@ -966,7 +966,7 @@ struct output_channels_s {
 	/**
 	 * offset 484
 	 */
-	pid_status_s vvtStatus[CAM_INPUTS_COUNT];
+	pid_status_s vvtStatus[CAM_INPUTS_COUNT] = {};
 	/**
 	 * Aux speed 1
 	 * units: s
@@ -989,21 +989,21 @@ struct output_channels_s {
 	 * units: V
 	 * offset 554
 	 */
-	scaled_channel<int16_t, 1000, 1> rawAnalogInput[LUA_ANALOG_INPUT_COUNT];
+	scaled_channel<int16_t, 1000, 1> rawAnalogInput[LUA_ANALOG_INPUT_COUNT] = {};
 	/**
 	 * GPPWM Output
 	 * units: %
 	 * offset 570
 	 */
-	scaled_channel<uint8_t, 2, 1> gppwmOutput[4];
+	scaled_channel<uint8_t, 2, 1> gppwmOutput[4] = {};
 	/**
 	 * offset 574
 	 */
-	scaled_channel<int16_t, 1, 1> gppwmXAxis[4];
+	scaled_channel<int16_t, 1, 1> gppwmXAxis[4] = {};
 	/**
 	 * offset 582
 	 */
-	scaled_channel<int16_t, 10, 1> gppwmYAxis[4];
+	scaled_channel<int16_t, 10, 1> gppwmYAxis[4] = {};
 	/**
 	 * units: V
 	 * offset 590
@@ -1012,73 +1012,73 @@ struct output_channels_s {
 	/**
 	 * offset 592
 	 */
-	scaled_channel<int16_t, 10, 1> ignBlendParameter[IGN_BLEND_COUNT];
+	scaled_channel<int16_t, 10, 1> ignBlendParameter[IGN_BLEND_COUNT] = {};
 	/**
 	 * units: %
 	 * offset 600
 	 */
-	scaled_channel<uint8_t, 2, 1> ignBlendBias[IGN_BLEND_COUNT];
+	scaled_channel<uint8_t, 2, 1> ignBlendBias[IGN_BLEND_COUNT] = {};
 	/**
 	 * units: deg
 	 * offset 604
 	 */
-	scaled_channel<int16_t, 100, 1> ignBlendOutput[IGN_BLEND_COUNT];
+	scaled_channel<int16_t, 100, 1> ignBlendOutput[IGN_BLEND_COUNT] = {};
 	/**
 	 * offset 612
 	 */
-	scaled_channel<int16_t, 10, 1> veBlendParameter[VE_BLEND_COUNT];
+	scaled_channel<int16_t, 10, 1> veBlendParameter[VE_BLEND_COUNT] = {};
 	/**
 	 * units: %
 	 * offset 620
 	 */
-	scaled_channel<uint8_t, 2, 1> veBlendBias[VE_BLEND_COUNT];
+	scaled_channel<uint8_t, 2, 1> veBlendBias[VE_BLEND_COUNT] = {};
 	/**
 	 * units: %
 	 * offset 624
 	 */
-	scaled_channel<int16_t, 100, 1> veBlendOutput[VE_BLEND_COUNT];
+	scaled_channel<int16_t, 100, 1> veBlendOutput[VE_BLEND_COUNT] = {};
 	/**
 	 * offset 632
 	 */
-	scaled_channel<int16_t, 10, 1> boostOpenLoopBlendParameter[BOOST_BLEND_COUNT];
+	scaled_channel<int16_t, 10, 1> boostOpenLoopBlendParameter[BOOST_BLEND_COUNT] = {};
 	/**
 	 * units: %
 	 * offset 636
 	 */
-	scaled_channel<uint8_t, 2, 1> boostOpenLoopBlendBias[BOOST_BLEND_COUNT];
+	scaled_channel<uint8_t, 2, 1> boostOpenLoopBlendBias[BOOST_BLEND_COUNT] = {};
 	/**
 	 * units: %
 	 * offset 638
 	 */
-	scaled_channel<int8_t, 1, 1> boostOpenLoopBlendOutput[BOOST_BLEND_COUNT];
+	scaled_channel<int8_t, 1, 1> boostOpenLoopBlendOutput[BOOST_BLEND_COUNT] = {};
 	/**
 	 * offset 640
 	 */
-	scaled_channel<int16_t, 10, 1> boostClosedLoopBlendParameter[BOOST_BLEND_COUNT];
+	scaled_channel<int16_t, 10, 1> boostClosedLoopBlendParameter[BOOST_BLEND_COUNT] = {};
 	/**
 	 * units: %
 	 * offset 644
 	 */
-	scaled_channel<uint8_t, 2, 1> boostClosedLoopBlendBias[BOOST_BLEND_COUNT];
+	scaled_channel<uint8_t, 2, 1> boostClosedLoopBlendBias[BOOST_BLEND_COUNT] = {};
 	/**
 	 * units: %
 	 * offset 646
 	 */
-	scaled_channel<int16_t, 10, 1> boostClosedLoopBlendOutput[BOOST_BLEND_COUNT];
+	scaled_channel<int16_t, 10, 1> boostClosedLoopBlendOutput[BOOST_BLEND_COUNT] = {};
 	/**
 	 * offset 650
 	 */
-	scaled_channel<int16_t, 10, 1> targetAfrBlendParameter[TARGET_AFR_BLEND_COUNT];
+	scaled_channel<int16_t, 10, 1> targetAfrBlendParameter[TARGET_AFR_BLEND_COUNT] = {};
 	/**
 	 * units: %
 	 * offset 654
 	 */
-	scaled_channel<uint8_t, 2, 1> targetAfrBlendBias[TARGET_AFR_BLEND_COUNT];
+	scaled_channel<uint8_t, 2, 1> targetAfrBlendBias[TARGET_AFR_BLEND_COUNT] = {};
 	/**
 	 * units: %
 	 * offset 656
 	 */
-	scaled_channel<int16_t, 10, 1> targetAfrBlendOutput[TARGET_AFR_BLEND_COUNT];
+	scaled_channel<int16_t, 10, 1> targetAfrBlendOutput[TARGET_AFR_BLEND_COUNT] = {};
 	/**
 	 * offset 660
 	 */
@@ -1092,7 +1092,7 @@ struct output_channels_s {
 	 * units: units
 	 * offset 662
 	 */
-	uint8_t alignmentFill_at_662[2];
+	uint8_t alignmentFill_at_662[2] = {};
 	/**
 	offset 664 bit 0 */
 	bool coilState3 : 1 {};
@@ -1202,7 +1202,7 @@ struct output_channels_s {
 	 * units: units
 	 * offset 670
 	 */
-	uint8_t alignmentFill_at_670[2];
+	uint8_t alignmentFill_at_670[2] = {};
 	/**
 	offset 672 bit 0 */
 	bool injectorState3 : 1 {};
@@ -1316,7 +1316,7 @@ struct output_channels_s {
 	 * units: value
 	 * offset 684
 	 */
-	float luaGauges[LUA_GAUGE_COUNT];
+	float luaGauges[LUA_GAUGE_COUNT] = {};
 	/**
 	 * units: V
 	 * offset 716
@@ -1410,7 +1410,7 @@ struct output_channels_s {
 	 * units: units
 	 * offset 750
 	 */
-	uint8_t alignmentFill_at_750[2];
+	uint8_t alignmentFill_at_750[2] = {};
 	/**
 	 * offset 752
 	 */
@@ -1418,11 +1418,11 @@ struct output_channels_s {
 	/**
 	 * offset 756
 	 */
-	uint8_t ignitorDiagnostic[MAX_CYLINDER_COUNT];
+	uint8_t ignitorDiagnostic[MAX_CYLINDER_COUNT] = {};
 	/**
 	 * offset 768
 	 */
-	uint8_t injectorDiagnostic[MAX_CYLINDER_COUNT];
+	uint8_t injectorDiagnostic[MAX_CYLINDER_COUNT] = {};
 	/**
 	 * @@GAUGE_NAME_FUEL_LAST_INJECTION_STAGE_2@@
 	 * units: ms
@@ -1468,7 +1468,7 @@ struct output_channels_s {
 	 * units: units
 	 * offset 791
 	 */
-	uint8_t alignmentFill_at_791[1];
+	uint8_t alignmentFill_at_791[1] = {};
 	/**
 	 * @@GAUGE_NAME_AC_PRESSURE@@
 	 * units: kPa
@@ -1533,13 +1533,13 @@ struct output_channels_s {
 	/**
 	 * offset 818
 	 */
-	uint8_t unusedAtTheEnd[52];
+	uint8_t unusedAtTheEnd[52] = {};
 	/**
 	 * need 4 byte alignment
 	 * units: units
 	 * offset 870
 	 */
-	uint8_t alignmentFill_at_870[2];
+	uint8_t alignmentFill_at_870[2] = {};
 };
 static_assert(sizeof(output_channels_s) == 872);
 

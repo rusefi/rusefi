@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/boost_control.txt Fri Jan 05 01:19:47 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/boost_control.txt
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -142,7 +142,7 @@ struct boost_control_s {
 	 * units: units
 	 * offset 21
 	 */
-	uint8_t alignmentFill_at_21[1];
+	uint8_t alignmentFill_at_21[1] = {};
 	/**
 	 * @@GAUGE_NAME_BOOST_TARGET@@
 	 * units: kPa
@@ -153,4 +153,4 @@ struct boost_control_s {
 static_assert(sizeof(boost_control_s) == 24);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/actuators/boost_control.txt Fri Jan 05 01:19:47 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/boost_control.txt

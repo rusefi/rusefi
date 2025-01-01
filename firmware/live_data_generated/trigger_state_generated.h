@@ -24,7 +24,7 @@ struct trigger_state_s {
 	 * "sync: Cam Position"
 	 * offset 12
 	 */
-	float vvtToothPosition[4];
+	float vvtToothPosition[4] = {};
 	/**
 	 * @@GAUGE_NAME_TRG_GAP@@
 	 * offset 28
@@ -39,7 +39,7 @@ struct trigger_state_s {
 	 * units: units
 	 * offset 33
 	 */
-	uint8_t alignmentFill_at_33[3];
+	uint8_t alignmentFill_at_33[3] = {};
 };
 static_assert(sizeof(trigger_state_s) == 36);
 
