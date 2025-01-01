@@ -1,5 +1,6 @@
 package com.rusefi.core.preferences.storage;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.core.FileUtil;
 
 import java.beans.XMLDecoder;
@@ -8,7 +9,10 @@ import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 public class PersistentConfiguration {
+    private static final Logging log = getLogging(PersistentConfiguration.class);
     private static final PersistentConfiguration INSTANCE = new PersistentConfiguration();
 
     private static boolean hookRegistered;
@@ -37,9 +41,9 @@ public class PersistentConfiguration {
             return;
         }
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            System.out.println("Shutdown hook...");
+            log.info("Shutdown hook...");
             getConfig().save();
-            System.out.println("Shutdown hook!");
+            log.info("Shutdown hook!");
         }));
         hookRegistered = true;
     }
@@ -55,7 +59,7 @@ public class PersistentConfiguration {
     @SuppressWarnings("unchecked")
     public void load() {
         if (!config.isEmpty()) {
-            System.out.println("Configuration already loaded");
+            log.info("Configuration already loaded");
             return;
         }
         try {
@@ -68,9 +72,9 @@ public class PersistentConfiguration {
             }, PersistentConfiguration.class.getClassLoader());
             config = (Map<String, Object>) e.readObject();
             e.close();
-            System.out.println("Console configuration from " + CONFIG_FILE_NAME);
+            log.info("Console configuration from " + CONFIG_FILE_NAME);
         } catch (Throwable e) {
-            System.out.println("Console configuration not found " + CONFIG_FILE_NAME + ", using defaults");
+            log.info("Console configuration not found " + CONFIG_FILE_NAME + ", using defaults");
         }
         isLoaded = true;
     }
@@ -87,9 +91,9 @@ public class PersistentConfiguration {
             XMLEncoder e = new XMLEncoder(new BufferedOutputStream(new FileOutputStream(CONFIG_FILE_NAME)));
             e.writeObject(config);
             e.close();
-            System.out.println("Saved settings to " + CONFIG_FILE_NAME);
+            log.info("Saved settings to " + CONFIG_FILE_NAME);
         } catch (FileNotFoundException e) {
-            System.out.println("Error saving " + CONFIG_FILE_NAME + e);
+            log.info("Error saving " + CONFIG_FILE_NAME + e);
         }
     }
 
