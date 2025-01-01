@@ -715,6 +715,10 @@ void updateTunerStudioState() {
 	tsOutputChannels->accelerationLon = engine->sensors.accelerometer.lon;
 	tsOutputChannels->accelerationVert = engine->sensors.accelerometer.vert;
 	tsOutputChannels->gyroYaw = engine->sensors.accelerometer.yawRate;
+    tsOutputChannels->vvtTargets[0] = 0;
+    tsOutputChannels->vvtTargets[1] = 0;
+    tsOutputChannels->vvtTargets[2] = 0;
+    tsOutputChannels->vvtTargets[3] = 0;
 
 #if EFI_DYNO_VIEW
 	tsOutputChannels->VssAcceleration = getDynoviewAcceleration();

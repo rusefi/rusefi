@@ -108,7 +108,7 @@ static void writeSdBlock(Writer& outBuffer) {
 	packedTime = getTimeNowMs() * 1.0 / TIME_PRECISION;
 
 	uint8_t sum = 0;
-	for (size_t fieldIndex = 0; fieldIndex < efi::size(fields) && fieldIndex < 121; fieldIndex++) {
+	for (size_t fieldIndex = 0; fieldIndex < efi::size(fields) && fieldIndex < 301; fieldIndex++) {
 
 	#if EFI_UNIT_TEST
 	  // dark magic: all elements of log_fields_generated.h were const-evaluated against 'nullptr' engine, let's add it!
