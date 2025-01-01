@@ -65,7 +65,7 @@ TEST(OddFireRunningMode, hd) {
 	angle_t expectedAngle5 = -180 + cylinderTwo - timing;
 	eth.assertEvent5("spark down#5", 5, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(expectedAngle5));
 
-	eth.assertRpm( 500, "spinning-RPM#1");
+	ASSERT_EQ(500, Sensor::getOrZero(SensorType::Rpm));
 
 	engine->scheduler.executeAll(getTimeNowUs() + MS2US(1000000));
 

@@ -165,7 +165,7 @@ TEST(ignition, negativeAdvance) {
 	// run the ignition math
 	engine->periodicFastCallback();
 
-	eth.assertRpm(0);
+	ASSERT_EQ(0, Sensor::getOrZero(SensorType::Rpm));
 
 	ASSERT_EQ(DEFAULT_CRANKING_ANGLE, getCrankingAdvance(rpm, load));
 	ASSERT_EQ(0, getAdvanceCorrections(load));
@@ -188,7 +188,7 @@ TEST(ignition, negativeAdvance2stroke) {
 	// run the ignition math
 	engine->periodicFastCallback();
 
-	eth.assertRpm(0);
+	ASSERT_EQ(0, Sensor::getOrZero(SensorType::Rpm));
 	ASSERT_EQ(347, engine->ignitionState.getWrappedAdvance(rpm, load));
 
 	ASSERT_NEAR(-13, engine->ignitionState.correctedIgnitionAdvance, EPS4D);
