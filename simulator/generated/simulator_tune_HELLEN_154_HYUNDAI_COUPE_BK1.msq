@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="23348">
+    <page number="0" size="23228">
         <constant name="engineType">"HELLEN_154_HYUNDAI_COUPE_BK1"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">0.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
@@ -243,7 +243,6 @@
         <constant name="tle6240_cs">"NONE"</constant>
         <constant name="tle6240_csPinMode">"default"</constant>
         <constant name="mc33810_csPinMode">"default"</constant>
-        <constant name="unusedThrottlePedalUpPin">"NONE"</constant>
         <constant digits="2" name="baroSensor_lowValue" units="kpa">0.0</constant>
         <constant digits="2" name="baroSensor_highValue" units="kpa">500.0</constant>
         <constant name="baroSensor_type">"Custom"</constant>
@@ -321,7 +320,6 @@
         <constant name="triggerInputPins2">"NONE"</constant>
         <constant digits="0" name="mc33_t_min_boost" units="us">100.0</constant>
         <constant name="hip9011CsPinMode">"default"</constant>
-        <constant name="unusedThrottlePedalUpPinMode">"DEFAULT"</constant>
         <constant digits="2" name="finalGearRatio" units="ratio">1.0</constant>
         <constant name="tcuInputSpeedSensorPin">"NONE"</constant>
         <constant digits="0" name="tcuInputSpeedSensorTeeth" units="">1.0</constant>
@@ -457,7 +455,6 @@
         <constant name="consumeObdSensors">"false"</constant>
         <constant name="enableCanVss">"false"</constant>
         <constant name="suppressWboWorkaround7048">"false"</constant>
-        <constant name="showHumanReadableWarning">"false"</constant>
         <constant name="stftIgnoreErrorMagnitude">"false"</constant>
         <constant name="vvtBooleanForVerySpecialCases">"false"</constant>
         <constant name="enableSoftwareKnock">"true"</constant>
@@ -611,7 +608,6 @@
         <constant digits="0" name="tps2SecondaryMax" units="ADC">0.0</constant>
         <constant name="widebandOnSecondBus">"1"</constant>
         <constant name="fuelClosedLoopCorrectionEnabled">"false"</constant>
-        <constant name="unusedOfoddFireEngine">"false"</constant>
         <constant name="alwaysWriteSdCard">"false"</constant>
         <constant name="knockDetectionUseDoubleFrequency">"second harmonic"</constant>
         <constant name="yesUnderstandLocking">"no"</constant>
@@ -4884,7 +4880,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20250101" nPages="1" signature="rusEFI master.2025.01.02.f407-discovery.2312220954" version="5.0"/>
+    <versionInfo firmwareInfo="20250101" nPages="1" signature="rusEFI master.2025.01.02.f407-discovery.3932081579" version="5.0"/>
     <bibliography author="rusEFI 20250101" writeDate="date"/>
     <settings/>
     <userComments/>
