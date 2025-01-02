@@ -880,7 +880,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
     break;
 #endif /* ENABLE_PERF_TRACE */
 	case TS_GET_CONFIG_ERROR: {
-		const char* configError = getCriticalErrorMessage();
+	  const char* configError = hasFirmwareError()? getCriticalErrorMessage() : getConfigErrorMessage();
 		tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(configError), strlen(configError), true);
 		break;
 	}

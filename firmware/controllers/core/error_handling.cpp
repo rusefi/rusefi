@@ -16,10 +16,12 @@
 
 static critical_msg_t warningBuffer;
 static critical_msg_t criticalErrorMessageBuffer;
+static critical_msg_t configErrorMessageBuffer; // recoverable configuration error, non-critical
 
 extern int warningEnabled;
 
-bool hasFirmwareErrorFlag = false;
+bool hasCriticalFirmwareErrorFlag = false;
+static bool hasConfigErrorFlag = false;
 
 const char *dbg_panic_file;
 int dbg_panic_line;
@@ -31,6 +33,18 @@ void efiCriticalError(const char *message) {
 
 const char* getCriticalErrorMessage() {
 	return criticalErrorMessageBuffer;
+}
+
+bool hasConfigError() {
+  return hasConfigErrorFlag;
+}
+
+void clearConfigErrorMessage() {
+  hasConfigErrorFlag = false;
+}
+
+const char* getConfigErrorMessageBuffer() {
+	return configErrorMessageBuffer;
 }
 
 #if EFI_PROD_CODE
@@ -166,7 +180,7 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
  * @returns TRUE in case there were warnings recently
  */
 bool warning(ObdCode code, const char *fmt, ...) {
-	if (hasFirmwareErrorFlag) {
+	if (hasCriticalFirmwareErrorFlag) {
 		return true;
   }
 
@@ -252,11 +266,23 @@ void onUnlockHook(void) {
 #include <stdexcept>
 #endif
 
+void configError(ObdCode code, const char *fmt, ...) {
+		va_list ap;
+		va_start(ap, fmt);
+		chvsnprintf(configErrorMessageBuffer, sizeof(configErrorMessageBuffer), fmt, ap);
+		va_end(ap);
+		hasConfigErrorFlag = true;
+}
+
+const char* getConfigErrorMessage() {
+	return configErrorMessageBuffer;
+}
+
 void firmwareError(ObdCode code, const char *fmt, ...) {
 #if EFI_PROD_CODE
-	if (hasFirmwareErrorFlag)
+	if (hasCriticalFirmwareErrorFlag)
 		return;
-	hasFirmwareErrorFlag = true;
+	hasCriticalFirmwareErrorFlag = true;
 #if EFI_ENGINE_CONTROL
 	getLimpManager()->fatalError();
 #endif // EFI_ENGINE_CONTROL
