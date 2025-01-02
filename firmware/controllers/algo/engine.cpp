@@ -324,8 +324,6 @@ void Engine::preCalculate() {
 	// we have a hack here - we rely on the fact that engineMake is the first of three relevant fields
 	engine->outputChannels.engineMakeCodeNameCrc16 = crc32(engineConfiguration->engineMake, 3 * VEHICLE_INFO_SIZE);
 
-	// we need and can empty warning message for CRC purposes
-	memset(config->warning_message, 0, sizeof(config->warning_message));
 	engine->outputChannels.tuneCrc16 = crc32(config, sizeof(persistent_config_s));
 #endif /* EFI_TUNER_STUDIO */
 }

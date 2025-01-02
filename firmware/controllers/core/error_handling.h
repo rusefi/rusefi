@@ -41,7 +41,6 @@ extern bool hasFirmwareErrorFlag;
 #define hasFirmwareError() hasFirmwareErrorFlag
 
 const char* getCriticalErrorMessage();
-const char* getWarningMessage();
 
 // todo: better place for this shared declaration?
 int getRusEfiVersion();
