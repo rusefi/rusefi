@@ -384,7 +384,7 @@ scheduling_s * EngineTestHelper::assertEvent5(const char *msg, int index, void *
 	TestExecutor *executor = &engine.scheduler;
 	EXPECT_TRUE(executor->size() > index) << msg << " valid index";
 	scheduling_s *event = executor->getForUnitTest(index);
-	assertEqualsM4(msg, " callback up/down", (void*)event->action.getCallback() == (void*) callback, 1);
+	EXPECT_NEAR_M4((void*)event->action.getCallback() == (void*) callback, 1) << msg << " callback up/down";
 	efitimeus_t start = getTimeNowUs();
 	EXPECT_NEAR(expectedTimestamp, event->getMomentUs() - start,/*3us precision to address rounding etc*/3) << msg;
 	return event;
@@ -418,7 +418,7 @@ void EngineTestHelper::assertEvent(const char *msg, int index, void *callback, e
 
 	InjectionEvent *actualEvent = (InjectionEvent *)event->action.getArgument();
 
-	assertEqualsLM(msg, (uintptr_t)expectedEvent->outputs[0], (uintptr_t)actualEvent->outputs[0]);
+	ASSERT_EQ(expectedEvent->outputs[0], actualEvent->outputs[0]) << msg;
 // but this would not work	assertEqualsLM(msg, expectedPair, (long)eventPair);
 }
 
