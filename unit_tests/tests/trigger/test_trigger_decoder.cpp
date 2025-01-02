@@ -66,7 +66,7 @@ TEST(trigger, testSomethingWeird) {
 
 	for (int i = 2; i < 10; i += 2) {
 		sta->decodeTriggerEvent("t", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
-		assertEqualsM("even", i, sta->getCurrentIndex());
+		ASSERT_NEAR(i, sta->getCurrentIndex(), 0.0001) << "even";
 	}
 
 	sta->decodeTriggerEvent("test", engine->triggerCentral.triggerShape, /* override */ nullptr, triggerConfiguration, SHAFT_PRIMARY_RISING, r++);
@@ -141,7 +141,7 @@ TEST(misc, testFordAspire) {
 
 	engine->rpmCalculator.setRpmValue(6000);
 	engine->ignitionState.updateDwell(6000, false);
-	assertEqualsM("higher rpm dwell", 3.25, engine->ignitionState.getDwell());
+	ASSERT_NEAR(3.25, engine->ignitionState.getDwell(), 0.0001) << "higher rpm dwell";
 
 }
 
@@ -169,7 +169,7 @@ static void assertREquals(void *expected, void *actual) {
 }
 
 static void assertREqualsM(const char *msg, void *expected, void *actual) {
-	assertEqualsM(msg, (float)(uint64_t)expected, (float)(uint64_t)actual);
+	ASSERT_NEAR(reinterpret_cast<uint64_t>(expected), reinterpret_cast<uint64_t>(actual), EPS4D) << msg;
 }
 
 extern bool debugSignalExecutor;
@@ -231,16 +231,16 @@ TEST(misc, testRpmCalculator) {
 
 	ASSERT_NEAR(engine->engineState.timingAdvance[0], 720 + timingAdvance, 0.1f);
 
-	assertEqualsM("fuel #1", 4.5450, engine->engineState.injectionDuration);
+	ASSERT_NEAR(4.5450, engine->engineState.injectionDuration, EPS4D) << "fuel #1";
 	InjectionEvent *ie0 = &engine->injectionEvents.elements[0];
-	assertEqualsM("injection angle", 499.095, ie0->injectionStartAngle);
+	ASSERT_NEAR(499.095, ie0->injectionStartAngle, EPS4D) << "injection angle";
 
 	eth.firePrimaryTriggerRise();
 	ASSERT_EQ(1500, Sensor::getOrZero(SensorType::Rpm));
 
-	assertEqualsM("dwell", eth.timeToAngle(FORD_INLINE_DWELL), engine->ignitionState.dwellDurationAngle);
-	assertEqualsM("fuel #2", 4.5450, engine->engineState.injectionDuration);
-	assertEqualsM("one degree", 111.1111, engine->rpmCalculator.oneDegreeUs);
+	ASSERT_NEAR(eth.timeToAngle(FORD_INLINE_DWELL), engine->ignitionState.dwellDurationAngle, EPS4D) << "dwell";
+	ASSERT_NEAR(4.5450, engine->engineState.injectionDuration, EPS4D) << "fuel #2";
+	ASSERT_NEAR(111.1111, engine->rpmCalculator.oneDegreeUs, EPS4D) << "one degree";
 	ASSERT_EQ( 1,  ilist->isReady) << "size #2";
 	EXPECT_NEAR(ilist->elements[0].dwellAngle, 8.5f, 1e-3);
 	EXPECT_NEAR(ilist->elements[0].sparkAngle, 13.0f, 1e-3);
@@ -289,8 +289,8 @@ TEST(misc, testRpmCalculator) {
 	eth.fireRise(5);
 	ASSERT_EQ( 4,  engine->scheduler.size()) << "queue size 4.3";
 
-	assertEqualsM("dwell", eth.timeToAngle(FORD_INLINE_DWELL), engine->ignitionState.dwellDurationAngle);
-	assertEqualsM("fuel #3", 4.5450, engine->engineState.injectionDuration);
+	ASSERT_NEAR(eth.timeToAngle(FORD_INLINE_DWELL), engine->ignitionState.dwellDurationAngle, EPS4D) << "dwell";
+	ASSERT_NEAR(4.5450, engine->engineState.injectionDuration, EPS4D) << "fuel #3";
 	ASSERT_EQ(1500, Sensor::getOrZero(SensorType::Rpm));
 
 
@@ -335,7 +335,7 @@ TEST(trigger, testTriggerDecoder) {
 		TriggerWaveform * s = &engine->triggerCentral.triggerShape;
 
 		initializeSkippedToothTrigger(s, 2, 0, FOUR_STROKE_CAM_SENSOR, SyncEdge::Rise);
-		assertEqualsM("shape size", s->getSize(), 4);
+		ASSERT_EQ(4, s->getSize()) << "shape size";
 		ASSERT_EQ(s->wave.getSwitchTime(0), 0.25);
 		ASSERT_EQ(s->wave.getSwitchTime(1), 0.5);
 		ASSERT_EQ(s->wave.getSwitchTime(2), 0.75);
@@ -510,8 +510,8 @@ static void setTestBug299(EngineTestHelper *eth) {
 
 	ASSERT_EQ( 3000,  round(Sensor::getOrZero(SensorType::Rpm))) << "setTestBug299: RPM";
 
-	assertEqualsM("fuel#1", 1.5, engine->engineState.injectionDuration);
-	assertEqualsM("duty for maf=0", 7.5, getInjectorDutyCycle(round(Sensor::getOrZero(SensorType::Rpm))));
+	ASSERT_NEAR(1.5, engine->engineState.injectionDuration, EPS4D) << "fuel #1";
+	ASSERT_NEAR(7.5, getInjectorDutyCycle(round(Sensor::getOrZero(SensorType::Rpm))), EPS4D) << "duty for maf=0";
 }
 
 #define assertInjectors(msg, value0, value1) \
@@ -550,7 +550,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	EXPECT_CALL(im, getInjectionDuration(_)).WillRepeatedly(Return(12.5f));
 	engine->module<InjectorModelPrimary>().set(&im);
 
-	assertEqualsM("duty for maf=3", 62.5, getInjectorDutyCycle(round(Sensor::getOrZero(SensorType::Rpm))));
+	ASSERT_NEAR(62.5, getInjectorDutyCycle(round(Sensor::getOrZero(SensorType::Rpm))), EPS4D) << "duty for maf=3";
 
 	ASSERT_EQ( 4,  engine->scheduler.size()) << "qs#1";
 	eth.moveTimeForwardUs(MS2US(20));
@@ -711,7 +711,7 @@ void doTestFuelSchedulerBug299smallAndMedium(int startUpDelayMs) {
 	engine->module<InjectorModelPrimary>().set(&im2);
 
 	// duty cycle above 75% is a special use-case because 'special' fuel event overlappes the next normal event in batch mode
-	assertEqualsM("duty for maf=3", 87.5, getInjectorDutyCycle(round(Sensor::getOrZero(SensorType::Rpm))));
+	ASSERT_NEAR(87.5, getInjectorDutyCycle(round(Sensor::getOrZero(SensorType::Rpm))), EPS4D) << "duty for maf=3";
 
 
 	assertInjectionEventBatch("#03", &t->elements[0], 0, 3, 0, 315);
@@ -906,7 +906,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	EXPECT_CALL(im, getInjectionDuration(_)).WillRepeatedly(Return(17.5f));
 	engine->module<InjectorModelPrimary>().set(&im);
 
-	assertEqualsM("Lduty for maf=3", 87.5, getInjectorDutyCycle(round(Sensor::getOrZero(SensorType::Rpm))));
+	ASSERT_NEAR(87.5, getInjectorDutyCycle(round(Sensor::getOrZero(SensorType::Rpm))), EPS4D) << "Lduty for maf=3";
 
 
 	ASSERT_EQ( 4,  engine->scheduler.size()) << "Lqs#1";
