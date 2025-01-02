@@ -508,6 +508,8 @@ void commonInitEngineController() {
 
 	initTachometer();
 	initSpeedometer();
+
+	initLtft();
 }
 
 PUBLIC_API_WEAK bool validateBoardConfig() {
