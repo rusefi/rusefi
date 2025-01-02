@@ -109,9 +109,6 @@ static inline void commonPassatB6() {
 
 	engineConfiguration->idle.solenoidPin = Gpio::Unassigned;
 	engineConfiguration->fanPin = Gpio::Unassigned;
-
-	engineConfiguration->injectionMode = IM_SEQUENTIAL;
-	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 }
 #endif // HW_MICRO_RUSEFI || HW_PROTEUS
 

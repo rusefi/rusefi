@@ -140,6 +140,8 @@ void setGmSbc() {
 }
 
 static void setGmEcotec3() {
+  engineConfiguration->globalTriggerAngleOffset = 360 + 90;
+  engineConfiguration->hpfpCamLobes = 4;
   engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
   engineConfiguration->vvtMode[1] = VVT_BOSCH_QUICK_START;
   engineConfiguration->lowPressureFuel.hwChannel = EFI_ADC_NONE;

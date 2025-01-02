@@ -69,8 +69,6 @@ void setHyundaiPb() {
 	set201xHyundai();
 	// Injectors flow 1214 cc/min at 100 bar pressure
 	engineConfiguration->injector.flow = 1214;
-	engineConfiguration->injectionMode = IM_SEQUENTIAL;
-   	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 
 	setCustomMap(/*lowValue*/ 20, /*mapLowValueVoltage*/ 0.79, /*highValue*/ 101.3, /*mapHighValueVoltage*/ 4);
 
@@ -79,8 +77,6 @@ void setHyundaiPb() {
 
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
 	engineConfiguration->vvtMode[1] = VVT_SINGLE_TOOTH;
-
-    engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
     engineConfiguration->hpfpCamLobes = 4;
     engineConfiguration->rethrowHardFault = true;
