@@ -190,13 +190,6 @@ bool warning(ObdCode code, const char *fmt, ...) {
 	chvsnprintf(warningBuffer + size, sizeof(warningBuffer) - size, fmt, ap);
 	va_end(ap);
 
-	if (engineConfiguration->showHumanReadableWarning) {
-#if EFI_TUNER_STUDIO
-	// TODO: does this work? Fix or remove
-	memcpy(persistentState.persistentConfiguration.warning_message, warningBuffer, sizeof(warningBuffer));
-#endif /* EFI_TUNER_STUDIO */
-	}
-
 	efiPrintf("WARNING: %s", warningBuffer);
 #else
 	printf("unit_test_warning: ");
@@ -209,11 +202,6 @@ bool warning(ObdCode code, const char *fmt, ...) {
 #endif /* EFI_SIMULATOR || EFI_PROD_CODE */
 	return false;
 }
-
-const char* getWarningMessage() {
-	return warningBuffer;
-}
-
 
 #if EFI_CLOCK_LOCKS
 uint32_t lastLockTime;
@@ -273,14 +261,6 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 	getLimpManager()->fatalError();
 #endif // EFI_ENGINE_CONTROL
 	engine->engineState.warnings.addWarningCode(code);
-#ifdef EFI_PRINT_ERRORS_AS_WARNINGS
-	{
-	    va_list ap;
-	    va_start(ap, fmt);
-	    chvsnprintf(warningBuffer, sizeof(warningBuffer), fmt, ap);
-	    va_end(ap);
-	}
-#endif // EFI_PRINT_ERRORS_AS_WARNINGS
     criticalShutdown();
 	enginePins.communicationLedPin.setValue(1, /*force*/true);
 

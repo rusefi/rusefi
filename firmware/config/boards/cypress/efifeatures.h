@@ -340,11 +340,6 @@
 
 #define EFI_BACKUP_SRAM FALSE
 
-#define EFI_PRINT_ERRORS_AS_WARNINGS TRUE
-//#define EFI_PRINT_MESSAGES_TO_TERMINAL TRUE
-
-//#define PWM_PHASE_MAX_COUNT 122
-
 //!!!!!!!!!!!!!!!!!!!!!!
 #define debugLog(fmt,...) { \
 	extern int __debugEnabled; \
