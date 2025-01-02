@@ -197,7 +197,6 @@ int CountFreeStackSpace(const void* wabase) {
  */
 static void cmd_threads() {
 #if CH_DBG_THREADS_PROFILING && CH_DBG_FILL_THREADS
-
 	thread_t* tp = chRegFirstThread();
 
 	efiPrintf("name\twabase\ttime\tfree stack");
@@ -213,8 +212,13 @@ static void cmd_threads() {
 		tp = chRegNextThread(tp);
 	}
 
-	int isrSpace = CountFreeStackSpace(reinterpret_cast<void*>(0x20000000));
+#if EFI_PROD_CODE
+	// isr stack base
+	extern uint32_t __main_stack_base__;
+
+	int isrSpace = CountFreeStackSpace(reinterpret_cast<void*>(&__main_stack_base__));
 	efiPrintf("isr\t0\t0\t%d", isrSpace);
+#endif // EFI_PROD_CODE
 
 #else // CH_DBG_THREADS_PROFILING && CH_DBG_FILL_THREADS
 
