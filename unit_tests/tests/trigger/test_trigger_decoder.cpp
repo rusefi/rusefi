@@ -21,14 +21,6 @@
 
 using ::testing::_;
 
-extern "C" {
-void sendOutConfirmation(char *value, int i);
-}
-
-void sendOutConfirmation(char *value, int i) {
-	// test implementation
-}
-
 static int getTriggerZeroEventIndex(engine_type_e engineType) {
 	EngineTestHelper eth(engineType);
 
