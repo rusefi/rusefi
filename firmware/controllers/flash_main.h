@@ -8,6 +8,15 @@
 
 #pragma once
 
+// Flash status
+enum class FlashState {
+	Ok,
+	CrcFailed,
+	IncompatibleVersion,
+	// all is well, but we're on a fresh chip with blank memory
+	BlankChip,
+};
+
 void readFromFlash();
 void initFlash();
 

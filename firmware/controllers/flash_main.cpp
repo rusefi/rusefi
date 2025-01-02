@@ -24,6 +24,8 @@
 
 #if EFI_STORAGE_MFS == TRUE
 #include "hal_mfs.h"
+
+#include "mfs_storage.h"
 #endif
 
 #include "runtime_state.h"
@@ -44,19 +46,6 @@
 #endif
 
 static bool needToWriteConfiguration = false;
-
-// IDs used as MFS record ids and internal RusEFI ids
-// Convert to enum/class
-#define EFI_SETTINGS_RECORD_ID		1
-
-// Flash status
-enum class FlashState {
-	Ok,
-	CrcFailed,
-	IncompatibleVersion,
-	// all is well, but we're on a fresh chip with blank memory
-	BlankChip,
-};
 
 /* if we use ChibiOS MFS for settings */
 #if EFI_STORAGE_MFS == TRUE
@@ -109,7 +98,7 @@ static void flashWriteThread(void*) {
 #endif // EFI_FLASH_WRITE_THREAD
 
 // Allow saving setting to flash while engine is runnig.
-bool allowFlashWhileRunning() {
+static bool allowFlashWhileRunning() {
 	// either MCU supports flashing while executing
 	// either we store settings in external storage
 	return (mcuCanFlashWhileRunning() || (EFI_STORAGE_MFS_EXTERNAL == TRUE));
