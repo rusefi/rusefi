@@ -57,7 +57,7 @@ int efiExtiEnablePin(const char *msg, brain_pin_e brainPin, uint32_t mode, ExtiC
 
 	/* is this index already used? */
 	if (channel.Callback) {
-		firmwareError(ObdCode::CUSTOM_ERR_PIN_ALREADY_USED_2, "%s: pin %s/index %d: exti index already used by %s",
+		firmwareError(ObdCode::CUSTOM_ERR_PIN_ALREADY_USED_2, "%s: pin %s/index %d: exti index already used by %s (stm32 limitation, cannot use those two pins as event inputs simultaneously)",
 			msg,
 			hwPortname(brainPin),
 			index,
