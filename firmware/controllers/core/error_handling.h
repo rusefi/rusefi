@@ -43,7 +43,7 @@ extern bool hasCriticalFirmwareErrorFlag;
 const char* getCriticalErrorMessage();
 
 // report recoverable configuration error
-void configError(ObdCode code, const char *fmt, ...);
+void configError(const char *fmt, ...);
 void clearConfigErrorMessage();
 const char* getConfigErrorMessage();
 bool hasConfigError();

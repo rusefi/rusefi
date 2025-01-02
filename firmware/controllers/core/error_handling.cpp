@@ -266,7 +266,7 @@ void onUnlockHook(void) {
 #include <stdexcept>
 #endif
 
-void configError(ObdCode code, const char *fmt, ...) {
+void configError(const char *fmt, ...) {
 		va_list ap;
 		va_start(ap, fmt);
 		chvsnprintf(configErrorMessageBuffer, sizeof(configErrorMessageBuffer), fmt, ap);
