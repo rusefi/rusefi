@@ -508,6 +508,10 @@ void commonInitEngineController() {
 
 	initTachometer();
 	initSpeedometer();
+
+#if EFI_LTFT_CONTROL
+	initLtft();
+#endif
 }
 
 PUBLIC_API_WEAK bool validateBoardConfig() {
