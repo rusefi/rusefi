@@ -36,11 +36,17 @@ void firmwareError(ObdCode code, const char *fmt, ...);
 
 #define criticalError(...) firmwareError(ObdCode::OBD_PCM_Processor_Fault, __VA_ARGS__)
 
-extern bool hasFirmwareErrorFlag;
+extern bool hasCriticalFirmwareErrorFlag;
 
-#define hasFirmwareError() hasFirmwareErrorFlag
+#define hasFirmwareError() hasCriticalFirmwareErrorFlag
 
 const char* getCriticalErrorMessage();
+
+// report recoverable configuration error
+void configError(ObdCode code, const char *fmt, ...);
+void clearConfigErrorMessage();
+const char* getConfigErrorMessage();
+bool hasConfigError();
 
 // todo: better place for this shared declaration?
 int getRusEfiVersion();
