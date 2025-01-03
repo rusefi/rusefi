@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="23228">
+    <page number="0" size="23252">
         <constant name="engineType">"POLARIS_RZR"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">1000.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
@@ -4828,9 +4828,29 @@ end</constant>
          85.5
          100.0
 </constant>
+        <constant cols="1" digits="0" name="trimRpmBins" rows="8">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant cols="1" digits="0" name="trimLoadBins" rows="8">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20250101" nPages="1" signature="rusEFI master.2025.01.03.f407-discovery.902389725" version="5.0"/>
+    <versionInfo firmwareInfo="20250101" nPages="1" signature="rusEFI master.2025.01.03.f407-discovery.4073362" version="5.0"/>
     <bibliography author="rusEFI 20250101" writeDate="date"/>
     <settings/>
     <userComments/>
