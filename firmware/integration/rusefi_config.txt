@@ -1314,7 +1314,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	float tChargeMinRpmMinTps;;"", 1, 0, 0, 3, 4
 	float tChargeMinRpmMaxTps;;"", 1, 0, 0, 3, 4
 	float tChargeMaxRpmMinTps;;"", 1, 0, 0, 3, 4
-	float tChargeMaxRpmMaxTps;;"", 1, 0, 0, 3, 4
+	uint8_t autoscale tChargeMaxRpmMaxTps;;"", 0.005, 0, 0, 1, 3
 
 custom pwm_freq_t 2 scalar, U16, @OFFSET@, "Hz", 1, 0, 0, 3000, 0
 	pwm_freq_t vvtOutputFrequency
