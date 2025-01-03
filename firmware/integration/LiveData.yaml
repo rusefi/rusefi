@@ -161,9 +161,7 @@ Usages:
   - name: trigger_central
     java: TriggerCentral.java
     folder: controllers/trigger
-    withCDefines: true
-# something special about 'error: "ts_show_vbatt" redefined'' why is trigger.h special?
-#    prepend: integration/rusefi_config.txt
+    prepend: integration/rusefi_config_shared.txt
     constexpr: "engine->triggerCentral"
     conditional_compilation: "EFI_SHAFT_POSITION_INPUT"
 

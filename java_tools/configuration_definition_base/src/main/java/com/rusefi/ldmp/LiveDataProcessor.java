@@ -260,10 +260,8 @@ public class LiveDataProcessor {
             if (cppFileName == null)
                 cppFileName = name;
             String conditional = (String) entry.get("conditional_compilation");
-            Boolean withCDefines = (Boolean) entry.get("withCDefines");
             Boolean isPtr = (Boolean) entry.get("isPtr");
-            // Defaults to false if not specified
-            withCDefines = withCDefines != null && withCDefines;
+            boolean withCDefines = false;
             isPtr = isPtr != null && isPtr;
 
             Object outputNames = entry.get("output_name");
