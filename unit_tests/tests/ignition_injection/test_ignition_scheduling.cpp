@@ -48,14 +48,6 @@ TEST(ignition, twoCoils) {
 TEST(ignition, trailingSpark) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
-	extern bool unitTestBusyWaitHack;
-	unitTestBusyWaitHack = true;
-
-	/**
-	// TODO #3220: this feature makes this test sad, eventually remove this line (and the ability to disable it altogether)
-	 * I am pretty sure that it's about usage of improper method clearQueue() below see it's comment
-	 */
-	engine->enableOverdwellProtection = false;
 
 	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
@@ -77,12 +69,11 @@ TEST(ignition, trailingSpark) {
 	// still no RPM since need to cycles measure cycle duration
 	eth.fireTriggerEventsWithDuration(20);
 	ASSERT_EQ( 3000,  Sensor::getOrZero(SensorType::Rpm)) << "RPM#0";
-	eth.clearQueue();
 
 	/**
 	 * Trigger up - scheduling fuel for full engine cycle
 	 */
-	eth.fireRise(20);
+	eth.smartFireRise(20);
 
 	// Primary coil should be high
 	EXPECT_EQ(enginePins.coils[0].getLogicValue(), true);
