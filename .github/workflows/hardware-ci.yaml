@@ -61,7 +61,7 @@ jobs:
     - uses: actions/setup-java@v4
       with:
         distribution: 'zulu'
-        java-version: '11'
+        java-version: '17'
 
     - uses: actions/checkout@v4
 
@@ -82,6 +82,17 @@ jobs:
     # Make sure the compiler works
     - name: Test/Identify Compiler
       run: arm-none-eabi-gcc -v
+
+    - name: Configuration Definition and Enum to String CI, without pushing new .jar
+      working-directory: ./java_tools
+      run: |
+        ./gradlew :config_definition:shadowJar
+        ./gradlew :config_definition_base:shadowJar
+        ./gradlew :enum_to_string:shadowJar
+
+    - name: Generate All Configs
+      working-directory: ./firmware/
+      run: bash gen_config.sh
 
     - name: Build Firmware
 #      run: .github/workflows/hw-ci/build_for_hw_ci.sh config/boards/f407-discovery f407-discovery
