@@ -851,7 +851,7 @@
         <constant name="vvtPins3">"NONE"</constant>
         <constant name="vvtPins4">"NONE"</constant>
         <constant digits="0" name="crankingIACposition" units="percent">50.0</constant>
-        <constant digits="4" name="tChargeMinRpmMinTps" units="">0.25</constant>
+        <constant digits="3" name="tChargeMinRpmMinTps" units="">0.25</constant>
         <constant digits="4" name="tChargeMinRpmMaxTps" units="">0.25</constant>
         <constant digits="4" name="tChargeMaxRpmMinTps" units="">0.25</constant>
         <constant digits="3" name="tChargeMaxRpmMaxTps" units="">0.9</constant>
@@ -4831,7 +4831,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20250101" nPages="1" signature="rusEFI master.2025.01.03.f407-discovery.2404164640" version="5.0"/>
+    <versionInfo firmwareInfo="20250101" nPages="1" signature="rusEFI master.2025.01.03.f407-discovery.902389725" version="5.0"/>
     <bibliography author="rusEFI 20250101" writeDate="date"/>
     <settings/>
     <userComments/>
