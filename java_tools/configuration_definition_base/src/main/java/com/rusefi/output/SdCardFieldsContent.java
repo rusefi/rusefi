@@ -47,7 +47,7 @@ public class SdCardFieldsContent {
         PerFieldWithStructuresIterator.Strategy strategy = new PerFieldWithStructuresIterator.Strategy() {
             @Override
             public String process(ReaderState state, ConfigField configField, String prefix, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator) {
-                return processOutput(configField, prefix, currentPosition, perFieldWithStructuresIterator, namePrefix, expression, structureStartingTsPosition);
+                return processOutput(configField, prefix, currentPosition, perFieldWithStructuresIterator, namePrefix, expression);
             }
 
             @Override
@@ -62,7 +62,7 @@ public class SdCardFieldsContent {
         body.append(content);
     }
 
-    private String processOutput(ConfigField configField, String prefix, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator, String namePrefix, String expression, int structureStartingTsPosition) {
+    private String processOutput(ConfigField configField, String prefix, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator, String namePrefix, String expression) {
         if (configField.isUnusedField())
             return "";
 
@@ -73,13 +73,6 @@ public class SdCardFieldsContent {
 
     private static String getLine(ConfigField configField, String prefix, String namePrefix, String name, String expression, Boolean isPtr, String conditional, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator, int structureStartingTsPosition) {
         String humanName = DataLogConsumer.getHumanGaugeName(prefix, configField, namePrefix);
-        if (configField.isBit()) {
-            // 'structureStartingTsPosition' is about fragment list see fragments.h
-            int offsetWithinCurrentStructure = currentPosition - structureStartingTsPosition;
-            if (offsetWithinCurrentStructure < 0)
-                throw new IllegalStateException(humanName + " seems broken: " + currentPosition + " vs " + structureStartingTsPosition);
-            return "// structureStartingTsPosition " + structureStartingTsPosition + " " + expression + "/" + humanName + ", skipping bit " + namePrefix + " at " + currentPosition + " " + offsetWithinCurrentStructure + "@" + perFieldWithStructuresIterator.bitState.get() + "\n";
-        }
 
         String categoryStr = configField.getCategory();
 
@@ -96,9 +89,26 @@ public class SdCardFieldsContent {
         String before = conditional == null ? "" : "#if " + conditional + "\n";
         String after = conditional == null ? "" : "#endif\n";
 
-        return before
+        if (configField.isBit()) {
+            // 'structureStartingTsPosition' is about fragment list see fragments.h
+            int offsetWithinCurrentStructure = currentPosition - structureStartingTsPosition;
+            if (offsetWithinCurrentStructure < 0)
+                throw new IllegalStateException(humanName + " seems broken: " + currentPosition + " vs " + structureStartingTsPosition);
+            return before
                 + "\t{" +
-            expression + (isPtr ? "->" : ".") + name +
+                (isPtr ? "*" : "") + expression +
+                ", " + offsetWithinCurrentStructure +
+                ", " + perFieldWithStructuresIterator.bitState.get() + ", "
+                + humanName +
+                ", " +
+                quote(configField.getUnits()) +
+                categoryStr +
+                "},\n" +
+                after;
+        } else {
+            return before
+                + "\t{" +
+                expression + (isPtr ? "->" : ".") + name +
                 ", "
                 + humanName +
                 ", " +
@@ -108,6 +118,7 @@ public class SdCardFieldsContent {
                 categoryStr +
                 "},\n" +
                 after;
+        }
     }
 
     public String getBody() {
