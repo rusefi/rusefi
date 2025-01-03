@@ -727,6 +727,7 @@ void updateTunerStudioState() {
 	tsOutputChannels->vssEdgeCounter = vehicleSpeedSensor.eventCounter;
 
 	tsOutputChannels->hasCriticalError = hasFirmwareError() || hasConfigError();
+	tsOutputChannels->triggerPageRefreshFlag = wasPresetJustApplied();
 
 	tsOutputChannels->isWarnNow = engine->engineState.warnings.isWarningNow();
 #if EFI_HIP_9011_DEBUG

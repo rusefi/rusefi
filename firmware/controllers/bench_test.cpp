@@ -518,13 +518,9 @@ static void handleCommandX14(uint16_t index) {
 
 extern bool rebootForPresetPending;
 
-void fatalErrorForPresetApply() {
-	rebootForPresetPending = true;
-	firmwareError(ObdCode::OBD_PCM_Processor_Fault,
-		"\n\nTo complete preset apply:\n"
-		"   1. Close TunerStudio\n"
-		"   2. Power cycle ECU\n"
-		"   3. Open TunerStudio and reconnect\n\n");
+static void applyPreset(int index) {
+	engine->configBurnTimer.reset();
+  setEngineType(index);
 }
 
 PUBLIC_API_WEAK void boardTsAction(uint16_t index) { }
@@ -584,8 +580,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		break;
 
 	case TS_SET_ENGINE_TYPE:
-		fatalErrorForPresetApply();
-		setEngineType(index);
+		applyPreset(index);
 		break;
 
   case TS_BOARD_ACTION:
@@ -593,8 +588,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		break;
 
 	case TS_SET_DEFAULT_ENGINE:
-		fatalErrorForPresetApply();
-		setEngineType((int)DEFAULT_ENGINE_TYPE);
+		applyPreset((int)DEFAULT_ENGINE_TYPE);
 		break;
 
 	case 0x79:

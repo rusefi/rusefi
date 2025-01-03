@@ -27,12 +27,6 @@ bool validateOffsetCount(size_t offset, size_t count, TsChannelBase* tsChannel) 
 	return false;
 }
 
-
-// This is used to prevent TS from reading/writing when we have just applied a preset, to prevent TS getting confused.
-// At the same time an ECU reboot is forced by triggering a fatal error, informing the user to please restart
-// the ECU.  Forcing a reboot will force TS to re-read the tune CRC,
-bool rebootForPresetPending = false;
-
 static Timer channelsRequestTimer;
 
 int getSecondsSinceChannelsRequest() {

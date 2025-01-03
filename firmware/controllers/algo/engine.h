@@ -287,6 +287,7 @@ public:
 	RpmCalculator rpmCalculator;
 
 	Timer configBurnTimer;
+	Timer engineTypeChangeTimer;
 
 	/**
 	 * This counter is incremented every time user adjusts ECU parameters online (either via rusEfi console or other
