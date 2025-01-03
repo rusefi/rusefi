@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="23248">
+    <page number="0" size="23240">
         <constant name="engineType">"MAZDA_MIATA_NB1"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">0.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
@@ -855,7 +855,7 @@
         <constant digits="0" name="crankingIACposition" units="percent">60.0</constant>
         <constant digits="3" name="tChargeMinRpmMinTps" units="">0.25</constant>
         <constant digits="3" name="tChargeMinRpmMaxTps" units="">0.25</constant>
-        <constant digits="4" name="tChargeMaxRpmMinTps" units="">0.25</constant>
+        <constant digits="3" name="tChargeMaxRpmMinTps" units="">0.25</constant>
         <constant digits="3" name="tChargeMaxRpmMaxTps" units="">0.9</constant>
         <constant digits="0" name="vvtOutputFrequency" units="Hz">300.0</constant>
         <constant digits="0" name="minimumIgnitionTiming" units="deg BTDC">-10.0</constant>
@@ -4853,7 +4853,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20250101" nPages="1" signature="rusEFI master.2025.01.03.f407-discovery.721792990" version="5.0"/>
+    <versionInfo firmwareInfo="20250101" nPages="1" signature="rusEFI master.2025.01.03.f407-discovery.2442443351" version="5.0"/>
     <bibliography author="rusEFI 20250101" writeDate="date"/>
     <settings/>
     <userComments/>
