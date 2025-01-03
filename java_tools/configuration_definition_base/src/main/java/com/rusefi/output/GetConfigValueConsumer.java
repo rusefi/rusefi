@@ -70,7 +70,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
         if (state.isStackEmpty()) {
             PerFieldWithStructuresIterator.Strategy strategy = new PerFieldWithStructuresIterator.Strategy() {
                 @Override
-                public String process(ReaderState state, ConfigField cf, String prefix) {
+                public String process(ReaderState state, ConfigField cf, String prefix, int bitIndex) {
                     return processConfig(cf, prefix);
                 }
 

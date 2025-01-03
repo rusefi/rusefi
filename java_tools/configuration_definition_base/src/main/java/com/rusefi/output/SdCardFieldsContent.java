@@ -36,8 +36,8 @@ public class SdCardFieldsContent {
         if (state.isStackEmpty()) {
             PerFieldWithStructuresIterator.Strategy strategy = new PerFieldWithStructuresIterator.Strategy() {
                 @Override
-                public String process(ReaderState state, ConfigField configField, String prefix) {
-                    return processOutput(configField, prefix);
+                public String process(ReaderState state, ConfigField configField, String prefix, int bitIndex) {
+                    return processOutput(configField, prefix, bitIndex);
                 }
 
                 @Override
@@ -53,12 +53,10 @@ public class SdCardFieldsContent {
         }
     }
 
-    private String processOutput(ConfigField configField, String prefix) {
+    private String processOutput(ConfigField configField, String prefix, int bitIndex) {
         if (configField.getName().startsWith(ConfigStructureImpl.ALIGNMENT_FILL_AT))
             return "";
         if (configField.getName().startsWith(ConfigStructure.UNUSED_ANYTHING_PREFIX))
-            return "";
-        if (configField.isBit())
             return "";
 
         String name = configField.getOriginalArrayName();
@@ -66,13 +64,23 @@ public class SdCardFieldsContent {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < home.length; i++) {
             String namePrefix = (names == null || names.length <= 1) ? "" : names[i];
-            sb.append(getLine(configField, prefix, namePrefix, prefix + name, home[i], isPtr, conditional));
+            sb.append(getLine(
+                configField,
+                prefix,
+                namePrefix,
+                prefix + name,
+                home[i],
+                isPtr,
+                conditional,
+                0, // TODO: we need pass bits block offset here!!!
+                bitIndex
+            ));
         }
 
         return sb.toString();
     }
 
-    private static String getLine(ConfigField configField, String prefix, String namePrefix, String name, String home, Boolean isPtr, String conditional) {
+    private static String getLine(ConfigField configField, String prefix, String namePrefix, String name, String home, Boolean isPtr, String conditional, int bitsBlockOffset, int bitNumberInBitsBlock) {
         String categoryStr = configField.getCategory();
 
         if (categoryStr == null) {
@@ -88,18 +96,32 @@ public class SdCardFieldsContent {
         String before = conditional == null ? "" : "#if " + conditional + "\n";
         String after = conditional == null ? "" : "#endif\n";
 
-        return before
-                + "\t{" +
-            home + (isPtr ? "->" : ".") + name +
-                ", "
-                + DataLogConsumer.getHumanGaugeName(prefix, configField, namePrefix) +
-                ", " +
-                quote(configField.getUnits()) +
-                ", " +
-                configField.getDigits() +
-                categoryStr +
-                "},\n" +
-                after;
+        if (configField.isBit()) {
+            return before
+                    + "\t/*{" +
+                home +
+                    ", " + Integer.toString(bitsBlockOffset) +
+                    ", " + Integer.toString(bitNumberInBitsBlock) + ", "
+                    + DataLogConsumer.getHumanGaugeName(prefix, configField, namePrefix) +
+                    ", " +
+                    quote(configField.getUnits()) +
+                    categoryStr +
+                    "},*/\n" +
+                    after;
+        } else {
+            return before
+                    + "\t{" +
+                home + (isPtr ? "->" : ".") + name +
+                    ", "
+                    + DataLogConsumer.getHumanGaugeName(prefix, configField, namePrefix) +
+                    ", " +
+                    quote(configField.getUnits()) +
+                    ", " +
+                    configField.getDigits() +
+                    categoryStr +
+                    "},\n" +
+                    after;
+        }
     }
 
     public String getBody() {

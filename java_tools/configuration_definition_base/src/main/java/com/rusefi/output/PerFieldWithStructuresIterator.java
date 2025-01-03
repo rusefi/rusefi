@@ -44,7 +44,7 @@ class PerFieldWithStructuresIterator extends FieldIterator {
                 content = fieldIterator.sb.toString();
             }
         } else {
-            content = strategy.process(state, cf, variableNamePrefix);
+            content = strategy.process(state, cf, variableNamePrefix, bitState.get());
         }
         sb.append(content);
         super.end();
@@ -55,7 +55,7 @@ class PerFieldWithStructuresIterator extends FieldIterator {
     }
 
     interface Strategy {
-        String process(ReaderState state, ConfigField configField, String prefix);
+        String process(ReaderState state, ConfigField configField, String prefix, int bitIndex);
 
         default String getArrayElementName(ConfigField cf) {
             return cf.getName();

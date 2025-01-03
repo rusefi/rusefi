@@ -31,7 +31,7 @@ public class GaugeConsumer implements ConfigurationConsumer {
                 String variableNameSuffix = outputNames.length > 1 ? Integer.toString(i) : "";
 
                 PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(readerState, structure.getTsFields(), "",
-                        (state, configField, prefix) -> handle(configField, prefix, variableNameSuffix));
+                        (state, configField, prefix, bitIndex) -> handle(configField, prefix, variableNameSuffix));
                 iterator.loop();
             }
         }

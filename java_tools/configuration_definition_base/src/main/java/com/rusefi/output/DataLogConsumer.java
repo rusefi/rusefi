@@ -50,7 +50,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
 
                 PerFieldWithStructuresIterator.Strategy strategy = new PerFieldWithStructuresIterator.Strategy() {
                     @Override
-                    public String process(ReaderState state, ConfigField configField, String prefix) {
+                    public String process(ReaderState state, ConfigField configField, String prefix, int bitIndex) {
                         return handle(configField, prefix, temporaryLineComment, variableNameSuffix);
                     }
 
