@@ -1032,6 +1032,7 @@ public class Fields {
 	public static final int HPFP_DEADTIME_SIZE = 8;
 	public static final int HPFP_LOBE_PROFILE_SIZE = 16;
 	public static final int HPFP_TARGET_SIZE = 10;
+	public static final int HW_EVENT_TYPES = 4;
 	public static final int IAC_PID_MULT_SIZE = 8;
 	public static final int IAT_CURVE_SIZE = 16;
 	public static final int IAT_IGN_CORR_COUNT = 8;
@@ -1507,7 +1508,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.01.03.f407-discovery.3553152997";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.01.03.f407-discovery.2404164640";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';

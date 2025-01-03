@@ -3,7 +3,6 @@
 // begin
 #pragma once
 #include "rusefi_types.h"
-#define HW_EVENT_TYPES 4
 // start of trigger_central_s
 struct trigger_central_s {
 	/**
