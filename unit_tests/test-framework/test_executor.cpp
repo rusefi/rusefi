@@ -40,6 +40,7 @@ void TestExecutor::schedule(const char *msg, scheduling_s* scheduling, efitick_t
 		m_mockExecutor->schedule(msg, scheduling, timeNt, action);
 		return;
 	}
+	// technical debt: NT -> US -> NT in unit test scheduler #7245
   // by the way we have loss of precision while converting NT to integer US
   // technical debt: looks like our unit tests were all created with us precision?
   efitimeus_t timeUs = NT2US(timeNt);
