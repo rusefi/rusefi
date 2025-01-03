@@ -96,6 +96,9 @@ float getOutputValueByName(const char *name) {
 // isMapValid
 		case 43183663:
 			return engine->outputChannels.isMapValid;
+// triggerPageRefreshFlag
+		case -1708884225:
+			return engine->outputChannels.triggerPageRefreshFlag;
 // RPMValue
 		case 1699696209:
 			return engine->outputChannels.RPMValue;

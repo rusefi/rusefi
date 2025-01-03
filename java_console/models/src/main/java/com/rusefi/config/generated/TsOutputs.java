@@ -211,6 +211,7 @@ public class TsOutputs {
 	public static final Field SD_ACTIVE_WR = Field.create("SD_ACTIVE_WR", 0, FieldType.BIT, 27).setBaseOffset(0);
 	public static final Field SD_ACTIVE_RD = Field.create("SD_ACTIVE_RD", 0, FieldType.BIT, 28).setBaseOffset(0);
 	public static final Field ISMAPVALID = Field.create("ISMAPVALID", 0, FieldType.BIT, 29).setBaseOffset(0);
+	public static final Field TRIGGERPAGEREFRESHFLAG = Field.create("TRIGGERPAGEREFRESHFLAG", 0, FieldType.BIT, 30).setBaseOffset(0);
 	public static final Field RPMVALUE = Field.create("RPMVALUE", 4, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field RPMACCELERATION = Field.create("RPMACCELERATION", 6, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field SPEEDTORPMRATIO = Field.create("SPEEDTORPMRATIO", 8, FieldType.INT16).setScale(0.01).setBaseOffset(0);
@@ -648,6 +649,7 @@ public class TsOutputs {
 	SD_ACTIVE_WR,
 	SD_ACTIVE_RD,
 	ISMAPVALID,
+	TRIGGERPAGEREFRESHFLAG,
 	RPMVALUE,
 	RPMACCELERATION,
 	SPEEDTORPMRATIO,
