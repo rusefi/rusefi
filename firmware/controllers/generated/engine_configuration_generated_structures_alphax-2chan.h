@@ -6129,103 +6129,112 @@ struct persistent_config_s {
 	 */
 	blend_table_s targetAfrBlends[TARGET_AFR_BLEND_COUNT] = {};
 	/**
-	offset 23224 bit 0 */
+	 * units: RPM
+	 * offset 23224
+	 */
+	scaled_channel<uint8_t, 1, 100> trimRpmBins[FUEL_TRIM_RPM_COUNT] = {};
+	/**
+	 * offset 23232
+	 */
+	uint16_t trimLoadBins[FUEL_TRIM_LOAD_COUNT] = {};
+	/**
+	offset 23248 bit 0 */
 	bool boardUseTachPullUp : 1 {};
 	/**
-	offset 23224 bit 1 */
+	offset 23248 bit 1 */
 	bool boardUseTempPullUp : 1 {};
 	/**
-	offset 23224 bit 2 */
+	offset 23248 bit 2 */
 	bool boardUseCrankPullUp : 1 {};
 	/**
-	offset 23224 bit 3 */
+	offset 23248 bit 3 */
 	bool boardUse2stepPullDown : 1 {};
 	/**
-	offset 23224 bit 4 */
+	offset 23248 bit 4 */
 	bool boardUseCamPullDown : 1 {};
 	/**
-	offset 23224 bit 5 */
-	bool unusedBit_220_5 : 1 {};
+	offset 23248 bit 5 */
+	bool unusedBit_222_5 : 1 {};
 	/**
-	offset 23224 bit 6 */
-	bool unusedBit_220_6 : 1 {};
+	offset 23248 bit 6 */
+	bool unusedBit_222_6 : 1 {};
 	/**
-	offset 23224 bit 7 */
-	bool unusedBit_220_7 : 1 {};
+	offset 23248 bit 7 */
+	bool unusedBit_222_7 : 1 {};
 	/**
-	offset 23224 bit 8 */
-	bool unusedBit_220_8 : 1 {};
+	offset 23248 bit 8 */
+	bool unusedBit_222_8 : 1 {};
 	/**
-	offset 23224 bit 9 */
-	bool unusedBit_220_9 : 1 {};
+	offset 23248 bit 9 */
+	bool unusedBit_222_9 : 1 {};
 	/**
-	offset 23224 bit 10 */
-	bool unusedBit_220_10 : 1 {};
+	offset 23248 bit 10 */
+	bool unusedBit_222_10 : 1 {};
 	/**
-	offset 23224 bit 11 */
-	bool unusedBit_220_11 : 1 {};
+	offset 23248 bit 11 */
+	bool unusedBit_222_11 : 1 {};
 	/**
-	offset 23224 bit 12 */
-	bool unusedBit_220_12 : 1 {};
+	offset 23248 bit 12 */
+	bool unusedBit_222_12 : 1 {};
 	/**
-	offset 23224 bit 13 */
-	bool unusedBit_220_13 : 1 {};
+	offset 23248 bit 13 */
+	bool unusedBit_222_13 : 1 {};
 	/**
-	offset 23224 bit 14 */
-	bool unusedBit_220_14 : 1 {};
+	offset 23248 bit 14 */
+	bool unusedBit_222_14 : 1 {};
 	/**
-	offset 23224 bit 15 */
-	bool unusedBit_220_15 : 1 {};
+	offset 23248 bit 15 */
+	bool unusedBit_222_15 : 1 {};
 	/**
-	offset 23224 bit 16 */
-	bool unusedBit_220_16 : 1 {};
+	offset 23248 bit 16 */
+	bool unusedBit_222_16 : 1 {};
 	/**
-	offset 23224 bit 17 */
-	bool unusedBit_220_17 : 1 {};
+	offset 23248 bit 17 */
+	bool unusedBit_222_17 : 1 {};
 	/**
-	offset 23224 bit 18 */
-	bool unusedBit_220_18 : 1 {};
+	offset 23248 bit 18 */
+	bool unusedBit_222_18 : 1 {};
 	/**
-	offset 23224 bit 19 */
-	bool unusedBit_220_19 : 1 {};
+	offset 23248 bit 19 */
+	bool unusedBit_222_19 : 1 {};
 	/**
-	offset 23224 bit 20 */
-	bool unusedBit_220_20 : 1 {};
+	offset 23248 bit 20 */
+	bool unusedBit_222_20 : 1 {};
 	/**
-	offset 23224 bit 21 */
-	bool unusedBit_220_21 : 1 {};
+	offset 23248 bit 21 */
+	bool unusedBit_222_21 : 1 {};
 	/**
-	offset 23224 bit 22 */
-	bool unusedBit_220_22 : 1 {};
+	offset 23248 bit 22 */
+	bool unusedBit_222_22 : 1 {};
 	/**
-	offset 23224 bit 23 */
-	bool unusedBit_220_23 : 1 {};
+	offset 23248 bit 23 */
+	bool unusedBit_222_23 : 1 {};
 	/**
-	offset 23224 bit 24 */
-	bool unusedBit_220_24 : 1 {};
+	offset 23248 bit 24 */
+	bool unusedBit_222_24 : 1 {};
 	/**
-	offset 23224 bit 25 */
-	bool unusedBit_220_25 : 1 {};
+	offset 23248 bit 25 */
+	bool unusedBit_222_25 : 1 {};
 	/**
-	offset 23224 bit 26 */
-	bool unusedBit_220_26 : 1 {};
+	offset 23248 bit 26 */
+	bool unusedBit_222_26 : 1 {};
 	/**
-	offset 23224 bit 27 */
-	bool unusedBit_220_27 : 1 {};
+	offset 23248 bit 27 */
+	bool unusedBit_222_27 : 1 {};
 	/**
-	offset 23224 bit 28 */
-	bool unusedBit_220_28 : 1 {};
+	offset 23248 bit 28 */
+	bool unusedBit_222_28 : 1 {};
 	/**
-	offset 23224 bit 29 */
-	bool unusedBit_220_29 : 1 {};
+	offset 23248 bit 29 */
+	bool unusedBit_222_29 : 1 {};
 	/**
-	offset 23224 bit 30 */
-	bool unusedBit_220_30 : 1 {};
+	offset 23248 bit 30 */
+	bool unusedBit_222_30 : 1 {};
 	/**
-	offset 23224 bit 31 */
-	bool unusedBit_220_31 : 1 {};
+	offset 23248 bit 31 */
+	bool unusedBit_222_31 : 1 {};
 };
-static_assert(sizeof(persistent_config_s) == 23228);
+static_assert(sizeof(persistent_config_s) == 23252);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt

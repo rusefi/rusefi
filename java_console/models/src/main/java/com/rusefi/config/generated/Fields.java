@@ -460,6 +460,8 @@ public class Fields {
 	public static final int fuel_pressure_sensor_mode_e_FPM_Differential = 2;
 	public static final int fuel_pressure_sensor_mode_e_FPM_Gauge = 1;
 	public static final int FUEL_RPM_COUNT = 16;
+	public static final int FUEL_TRIM_LOAD_COUNT = 8;
+	public static final int FUEL_TRIM_RPM_COUNT = 8;
 	public static final int FUEL_TRIM_SIZE = 4;
 	public static final int GAP_TRACKING_LENGTH = 18;
 	public static final String GAUGE_CATEGORY_BOOST_CONTROL = "Boost Control";
@@ -1178,7 +1180,7 @@ public class Fields {
 	public static final int PEDAL_TO_TPS_SIZE = 8;
 	public static final String pedalSensor_NAME = "Accelerator pedal";
 	public static final String pedalToTpsTbl_NAME = "ETB pedal target";
-	public static final int persistent_config_s_size = 23228;
+	public static final int persistent_config_s_size = 23252;
 	public static final int pid_s_size = 20;
 	public static final int pin_input_mode_e_PI_DEFAULT = 0;
 	public static final int pin_input_mode_e_PI_PULLDOWN = 2;
@@ -1243,7 +1245,7 @@ public class Fields {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 902389725;
+	public static final int SIGNATURE_HASH = 4073362;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1297,7 +1299,7 @@ public class Fields {
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON = 0;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH = 2;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_UP_SWITCH = 3;
-	public static final int TOTAL_CONFIG_SIZE = 23228;
+	public static final int TOTAL_CONFIG_SIZE = 23252;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int TPS_PPS_TOO_HIGH_THRESHOLD = 110;
 	public static final int TPS_PPS_TOO_LOW_THRESHOLD = -10;
@@ -1509,7 +1511,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.01.03.f407-discovery.902389725";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.01.03.f407-discovery.4073362";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -3373,8 +3375,10 @@ public class Fields {
 	public static final Field TARGETAFRBLENDS2_BLENDBINS = Field.create("TARGETAFRBLENDS2_BLENDBINS", 23198, FieldType.INT16).setScale(0.1).setBaseOffset(0);
 	public static final Field TARGETAFRBLENDS2_BLENDVALUES = Field.create("TARGETAFRBLENDS2_BLENDVALUES", 23214, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field TARGETAFRBLENDS2_ALIGNMENTFILL_AT_186 = Field.create("TARGETAFRBLENDS2_ALIGNMENTFILL_AT_186", 23222, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field COMMUNITYCOMMSLEDPIN = Field.create("COMMUNITYCOMMSLEDPIN", 23224, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_23226 = Field.create("ALIGNMENTFILL_AT_23226", 23226, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field TRIMRPMBINS = Field.create("TRIMRPMBINS", 23224, FieldType.INT8).setScale(100.0).setBaseOffset(0);
+	public static final Field TRIMLOADBINS = Field.create("TRIMLOADBINS", 23232, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field COMMUNITYCOMMSLEDPIN = Field.create("COMMUNITYCOMMSLEDPIN", 23248, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_23250 = Field.create("ALIGNMENTFILL_AT_23250", 23250, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field[] VALUES = {
 	ENGINETYPE,
 	STARTBUTTONSUPPRESSONSTARTUPMS,
@@ -5127,7 +5131,9 @@ public class Fields {
 	TARGETAFRBLENDS2_BLENDBINS,
 	TARGETAFRBLENDS2_BLENDVALUES,
 	TARGETAFRBLENDS2_ALIGNMENTFILL_AT_186,
+	TRIMRPMBINS,
+	TRIMLOADBINS,
 	COMMUNITYCOMMSLEDPIN,
-	ALIGNMENTFILL_AT_23226,
+	ALIGNMENTFILL_AT_23250,
 	};
 }
