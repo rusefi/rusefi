@@ -3290,7 +3290,13 @@ struct engine_configuration_s {
 	/**
 	 * offset 1648
 	 */
-	float tChargeMinRpmMinTps;
+	scaled_channel<uint8_t, 200, 1> tChargeMinRpmMinTps;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 1649
+	 */
+	uint8_t alignmentFill_at_1649[3] = {};
 	/**
 	 * offset 1652
 	 */

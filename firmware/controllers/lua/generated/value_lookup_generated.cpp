@@ -4065,7 +4065,7 @@ bool setConfigValueByName(const char *name, float value) {
 	}
 		case -557658095:
 	{
-		engineConfiguration->tChargeMinRpmMinTps = value;
+		engineConfiguration->tChargeMinRpmMinTps = (int)value;
 		return 1;
 	}
 		case -566786093:
