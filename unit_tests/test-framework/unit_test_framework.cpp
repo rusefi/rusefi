@@ -9,14 +9,6 @@
 
 #include <stdlib.h>
 
-void assertEqualsM4(const char *prefix, const char *msg, float expected, float actual) {
-	ASSERT_NEAR(expected, actual, 0.0001f) << prefix << msg;
-}
-
-void assertEqualsM(const char *msg, float expected, float actual) {
-	EXPECT_NEAR_M4(expected, actual) << msg;
-}
-
 void chDbgAssert(int c, char *msg, void *arg) {
 	if (!c) {
 		printf("assert failed: %s\r\n", msg);

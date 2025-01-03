@@ -23,10 +23,5 @@ using ::testing::Return;
 #define EPS4D 0.0001
 #define EPS5D 0.00001
 
-// todo: migrate to googletest, use EXPECT_* and ASSERT_*
-void assertEqualsM(const char *msg, float expected, float actual);
-void assertEqualsLM(const char *msg, long expected, long actual);
-void assertEqualsM4(const char *prefix, const char *msg, float expected, float actual);
-
 #define EXPECT_NO_FATAL_ERROR EXPECT_NO_THROW
 #define EXPECT_FATAL_ERROR(expr) EXPECT_THROW((expr), std::logic_error)

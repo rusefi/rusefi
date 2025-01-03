@@ -401,10 +401,10 @@ const AngleBasedEvent * EngineTestHelper::assertTriggerEvent(const char *msg,
 	auto event = engine.module<TriggerScheduler>()->getElementAtIndexForUnitTest(index);
 
 	if (callback) {
-		assertEqualsM4(msg, " callback up/down", (void*)event->action.getCallback() == (void*) callback, 1);
+		EXPECT_EQ(reinterpret_cast<void*>(event->action.getCallback()), reinterpret_cast<void*>(callback)) << " callback up/down";
 	}
 
-	assertEqualsM4(msg, " angle", enginePhase, event->getAngle());
+	EXPECT_NEAR(enginePhase, event->getAngle(), EPS4D) << " angle";
 	return event;
 }
 
