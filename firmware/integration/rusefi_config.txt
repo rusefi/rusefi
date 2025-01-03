@@ -1312,7 +1312,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 
 	int crankingIACposition;This is the IAC position during cranking, some engines start better if given more air during cranking to improve cylinder filling.;"percent", 1, 0, -100, 100, 0
 	uint8_t autoscale tChargeMinRpmMinTps;;"", 0.005, 0, 0, 1, 3
-	float tChargeMinRpmMaxTps;;"", 1, 0, 0, 3, 4
+	uint8_t autoscale tChargeMinRpmMaxTps;;"", 0.005, 0, 0, 1, 3
 	float tChargeMaxRpmMinTps;;"", 1, 0, 0, 3, 4
 	uint8_t autoscale tChargeMaxRpmMaxTps;;"", 0.005, 0, 0, 1, 3
 
