@@ -210,7 +210,7 @@
         <constant name="acrPin">"NONE"</constant>
         <constant digits="1" name="driveWheelRevPerKm" units="revs/km">1000.0</constant>
         <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
-        <constant digits="0" name="byFirmwareVersion" units="index">2.0250102E7</constant>
+        <constant digits="0" name="byFirmwareVersion" units="index">2.0250103E7</constant>
         <constant name="tps1_1AdcChannel">"Disabled"</constant>
         <constant name="vbattAdcChannel">"Disabled"</constant>
         <constant name="fuelLevelSensor">"Disabled"</constant>
@@ -225,7 +225,7 @@
         <constant digits="0" name="boostControlSafeDutyCycle" units="%">0.0</constant>
         <constant name="mafAdcChannel">"Disabled"</constant>
         <constant digits="0" name="acrRevolutions" units="">5.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0250102E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0250103E7</constant>
         <constant digits="3" name="adcVcc" units="volts">3.0</constant>
         <constant digits="0" name="mapCamDetectionAnglePosition" units="Deg">0.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -854,7 +854,7 @@
         <constant digits="4" name="tChargeMinRpmMinTps" units="">0.25</constant>
         <constant digits="4" name="tChargeMinRpmMaxTps" units="">0.25</constant>
         <constant digits="4" name="tChargeMaxRpmMinTps" units="">0.25</constant>
-        <constant digits="4" name="tChargeMaxRpmMaxTps" units="">0.9</constant>
+        <constant digits="3" name="tChargeMaxRpmMaxTps" units="">0.9</constant>
         <constant digits="0" name="vvtOutputFrequency" units="Hz">300.0</constant>
         <constant digits="0" name="minimumIgnitionTiming" units="deg BTDC">-10.0</constant>
         <constant digits="0" name="maximumIgnitionTiming" units="deg BTDC">60.0</constant>
@@ -4831,7 +4831,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20250101" nPages="1" signature="rusEFI master.2025.01.02.f407-discovery.1665591801" version="5.0"/>
+    <versionInfo firmwareInfo="20250101" nPages="1" signature="rusEFI master.2025.01.03.f407-discovery.3553152997" version="5.0"/>
     <bibliography author="rusEFI 20250101" writeDate="date"/>
     <settings/>
     <userComments/>
