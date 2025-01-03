@@ -195,8 +195,10 @@ public class LiveDataProcessor {
                     state.addDestination(fragmentDialogConsumer);
                 }
 
-                if (extraPrepend != null)
+                if (extraPrepend != null) {
+                    log.info("extraPrepend=" + extraPrepend);
                     state.addPrepend(extraPrepend);
+                }
                 state.addPrepend(prepend);
                 state.addCHeaderDestination(outFolder + File.separator + name + "_generated.h");
 
