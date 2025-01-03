@@ -280,10 +280,13 @@ void applyEngineType(engine_type_e engineType) {
         break;
 #endif
 
-#if defined(HW_HELLEN_121_VAG) || EFI_SIMULATOR
+#if defined(HW_HELLEN_121_VAG) || defined(HW_HELLEN_UAEFI) || defined(HW_HELLEN_UAEFI121) || EFI_SIMULATOR
 	case engine_type_e::VAG_5_CYL:
 	    setVag_5_cyl();
         break;
+#endif
+
+#if defined(HW_HELLEN_121_VAG) || EFI_SIMULATOR
 	case engine_type_e::HELLEN_121_VAG_V6_CYL:
 	    setHellen121Vag_v6_cyl();
         break;
