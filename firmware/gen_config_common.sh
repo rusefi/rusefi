@@ -68,4 +68,5 @@ COMMON_GEN_CONFIG="
  -prepend integration/rusefi_config_trigger.txt \
  -prepend ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/total_live_data_generated.h \
  -prepend ${BOARD_DIR}/prepend.txt \
+ -prepend integration/rusefi_config_shared.txt \
  -board ${BOARD_DIR}"

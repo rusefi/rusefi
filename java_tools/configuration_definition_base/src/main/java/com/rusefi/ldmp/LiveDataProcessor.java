@@ -196,8 +196,12 @@ public class LiveDataProcessor {
                 }
 
                 if (extraPrepend != null) {
-                    log.info("extraPrepend=" + extraPrepend);
-                    state.addPrepend(extraPrepend);
+                    if (new File(extraPrepend).exists()) {
+                        log.info("extraPrepend=" + extraPrepend);
+                        state.addPrepend(extraPrepend);
+                    } else {
+                        log.info("extraPrepend=" + extraPrepend + " does not exist, skipping");
+                    }
                 }
                 state.addPrepend(prepend);
                 state.addCHeaderDestination(outFolder + File.separator + name + "_generated.h");
