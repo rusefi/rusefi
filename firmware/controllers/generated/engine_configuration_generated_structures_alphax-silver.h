@@ -3302,23 +3302,35 @@ struct engine_configuration_s {
 	/**
 	 * offset 1660
 	 */
-	float tChargeMaxRpmMaxTps;
+	scaled_channel<uint8_t, 200, 1> tChargeMaxRpmMaxTps;
 	/**
-	 * offset 1664
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 1661
+	 */
+	uint8_t alignmentFill_at_1661[1] = {};
+	/**
+	 * offset 1662
 	 */
 	pwm_freq_t vvtOutputFrequency;
 	/**
 	 * Minimim timing advance allowed. No spark on any cylinder will ever fire after this angle BTDC. For example, setting -10 here means no spark ever fires later than 10 deg ATDC. Note that this only concerns the primary spark: any trailing sparks or multispark may violate this constraint.
 	 * units: deg BTDC
-	 * offset 1666
+	 * offset 1664
 	 */
 	int8_t minimumIgnitionTiming;
 	/**
 	 * Maximum timing advance allowed. No spark on any cylinder will ever fire before this angle BTDC. For example, setting 45 here means no spark ever fires earlier than 45 deg BTDC
 	 * units: deg BTDC
-	 * offset 1667
+	 * offset 1665
 	 */
 	int8_t maximumIgnitionTiming;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 1666
+	 */
+	uint8_t alignmentFill_at_1666[2] = {};
 	/**
 	 * units: Hz
 	 * offset 1668
@@ -4650,97 +4662,97 @@ struct engine_configuration_s {
 	bool boardUseTempPullUp : 1 {};
 	/**
 	offset 3904 bit 1 */
-	bool unusedBit_881_1 : 1 {};
+	bool unusedBit_883_1 : 1 {};
 	/**
 	offset 3904 bit 2 */
-	bool unusedBit_881_2 : 1 {};
+	bool unusedBit_883_2 : 1 {};
 	/**
 	offset 3904 bit 3 */
-	bool unusedBit_881_3 : 1 {};
+	bool unusedBit_883_3 : 1 {};
 	/**
 	offset 3904 bit 4 */
-	bool unusedBit_881_4 : 1 {};
+	bool unusedBit_883_4 : 1 {};
 	/**
 	offset 3904 bit 5 */
-	bool unusedBit_881_5 : 1 {};
+	bool unusedBit_883_5 : 1 {};
 	/**
 	offset 3904 bit 6 */
-	bool unusedBit_881_6 : 1 {};
+	bool unusedBit_883_6 : 1 {};
 	/**
 	offset 3904 bit 7 */
-	bool unusedBit_881_7 : 1 {};
+	bool unusedBit_883_7 : 1 {};
 	/**
 	offset 3904 bit 8 */
-	bool unusedBit_881_8 : 1 {};
+	bool unusedBit_883_8 : 1 {};
 	/**
 	offset 3904 bit 9 */
-	bool unusedBit_881_9 : 1 {};
+	bool unusedBit_883_9 : 1 {};
 	/**
 	offset 3904 bit 10 */
-	bool unusedBit_881_10 : 1 {};
+	bool unusedBit_883_10 : 1 {};
 	/**
 	offset 3904 bit 11 */
-	bool unusedBit_881_11 : 1 {};
+	bool unusedBit_883_11 : 1 {};
 	/**
 	offset 3904 bit 12 */
-	bool unusedBit_881_12 : 1 {};
+	bool unusedBit_883_12 : 1 {};
 	/**
 	offset 3904 bit 13 */
-	bool unusedBit_881_13 : 1 {};
+	bool unusedBit_883_13 : 1 {};
 	/**
 	offset 3904 bit 14 */
-	bool unusedBit_881_14 : 1 {};
+	bool unusedBit_883_14 : 1 {};
 	/**
 	offset 3904 bit 15 */
-	bool unusedBit_881_15 : 1 {};
+	bool unusedBit_883_15 : 1 {};
 	/**
 	offset 3904 bit 16 */
-	bool unusedBit_881_16 : 1 {};
+	bool unusedBit_883_16 : 1 {};
 	/**
 	offset 3904 bit 17 */
-	bool unusedBit_881_17 : 1 {};
+	bool unusedBit_883_17 : 1 {};
 	/**
 	offset 3904 bit 18 */
-	bool unusedBit_881_18 : 1 {};
+	bool unusedBit_883_18 : 1 {};
 	/**
 	offset 3904 bit 19 */
-	bool unusedBit_881_19 : 1 {};
+	bool unusedBit_883_19 : 1 {};
 	/**
 	offset 3904 bit 20 */
-	bool unusedBit_881_20 : 1 {};
+	bool unusedBit_883_20 : 1 {};
 	/**
 	offset 3904 bit 21 */
-	bool unusedBit_881_21 : 1 {};
+	bool unusedBit_883_21 : 1 {};
 	/**
 	offset 3904 bit 22 */
-	bool unusedBit_881_22 : 1 {};
+	bool unusedBit_883_22 : 1 {};
 	/**
 	offset 3904 bit 23 */
-	bool unusedBit_881_23 : 1 {};
+	bool unusedBit_883_23 : 1 {};
 	/**
 	offset 3904 bit 24 */
-	bool unusedBit_881_24 : 1 {};
+	bool unusedBit_883_24 : 1 {};
 	/**
 	offset 3904 bit 25 */
-	bool unusedBit_881_25 : 1 {};
+	bool unusedBit_883_25 : 1 {};
 	/**
 	offset 3904 bit 26 */
-	bool unusedBit_881_26 : 1 {};
+	bool unusedBit_883_26 : 1 {};
 	/**
 	offset 3904 bit 27 */
-	bool unusedBit_881_27 : 1 {};
+	bool unusedBit_883_27 : 1 {};
 	/**
 	offset 3904 bit 28 */
-	bool unusedBit_881_28 : 1 {};
+	bool unusedBit_883_28 : 1 {};
 	/**
 	offset 3904 bit 29 */
-	bool unusedBit_881_29 : 1 {};
+	bool unusedBit_883_29 : 1 {};
 	/**
 	offset 3904 bit 30 */
-	bool unusedBit_881_30 : 1 {};
+	bool unusedBit_883_30 : 1 {};
 	/**
 	offset 3904 bit 31 */
-	bool unusedBit_881_31 : 1 {};
+	bool unusedBit_883_31 : 1 {};
 	/**
 	 * Below TPS value all knock suppression will be disabled.
 	 * units: %

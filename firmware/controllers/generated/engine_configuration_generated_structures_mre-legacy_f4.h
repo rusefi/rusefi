@@ -3302,23 +3302,35 @@ struct engine_configuration_s {
 	/**
 	 * offset 1660
 	 */
-	float tChargeMaxRpmMaxTps;
+	scaled_channel<uint8_t, 200, 1> tChargeMaxRpmMaxTps;
 	/**
-	 * offset 1664
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 1661
+	 */
+	uint8_t alignmentFill_at_1661[1] = {};
+	/**
+	 * offset 1662
 	 */
 	pwm_freq_t vvtOutputFrequency;
 	/**
 	 * Minimim timing advance allowed. No spark on any cylinder will ever fire after this angle BTDC. For example, setting -10 here means no spark ever fires later than 10 deg ATDC. Note that this only concerns the primary spark: any trailing sparks or multispark may violate this constraint.
 	 * units: deg BTDC
-	 * offset 1666
+	 * offset 1664
 	 */
 	int8_t minimumIgnitionTiming;
 	/**
 	 * Maximum timing advance allowed. No spark on any cylinder will ever fire before this angle BTDC. For example, setting 45 here means no spark ever fires earlier than 45 deg BTDC
 	 * units: deg BTDC
-	 * offset 1667
+	 * offset 1665
 	 */
 	int8_t maximumIgnitionTiming;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 1666
+	 */
+	uint8_t alignmentFill_at_1666[2] = {};
 	/**
 	 * units: Hz
 	 * offset 1668
