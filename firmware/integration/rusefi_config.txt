@@ -2158,9 +2158,8 @@ uint8_t[8] autoscale minimumOilPressureValues;;"kPa", 10, 0, 0, 1000, 0
 
 blend_table_s[TARGET_AFR_BLEND_COUNT iterate] targetAfrBlends
 
-	uint8_t[FUEL_TRIM_RPM_COUNT] autoscale trimRpmBins;;"RPM", 100, 0, 0, 25000, 0
-	uint16_t[FUEL_TRIM_LOAD_COUNT] trimLoadBins;;"", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
-
+uint8_t[FUEL_TRIM_RPM_COUNT] autoscale trimRpmBins;;"RPM", 100, 0, 0, 25000, 0
+uint16_t[FUEL_TRIM_LOAD_COUNT] trimLoadBins;;"", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
 
 @@BOARD_CONFIG_FROM_FILE@@
 
