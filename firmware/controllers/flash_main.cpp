@@ -36,7 +36,7 @@ static bool needToWriteConfiguration = false;
  */
 
 #if (EFI_FLASH_WRITE_THREAD == TRUE)
-chibios_rt::BinarySemaphore flashWriteSemaphore(/*taken =*/ true);
+chibios_rt::Mailbox<msg_t, 16> flashWriterMb;
 
 #if EFI_STORAGE_MFS == TRUE
 /* in case of MFS we need more stack */
@@ -49,11 +49,20 @@ static void flashWriteThread(void*) {
 	chRegSetThreadName("flash writer");
 
 	while (true) {
+		msg_t ret;
+		msg_t msg;
 		// Wait for a request to come in
-		flashWriteSemaphore.wait();
+		ret = flashWriterMb.fetch(&msg, TIME_INFINITE);
+		if (ret != MSG_OK) {
+			continue;
+		}
 
-		// Do the actual flash write operation
-		writeToFlashNow();
+		// Do the actual flash write operation for given ID
+		if (msg == EFI_SETTINGS_RECORD_ID) {
+			writeToFlashNow();
+		} else {
+			efiPrintf("Requested to write unknown record id %ld", msg);
+		}
 	}
 }
 #endif // EFI_FLASH_WRITE_THREAD
@@ -72,7 +81,8 @@ void setNeedToWriteConfiguration() {
 #if (EFI_FLASH_WRITE_THREAD == TRUE)
 	if (allowFlashWhileRunning()) {
 		// Signal the flash writer thread to wake up and write at its leisure
-		flashWriteSemaphore.signal();
+		msg_t id = EFI_SETTINGS_RECORD_ID;
+		flashWriterMb.post(id, TIME_IMMEDIATE);
 	}
 #endif // EFI_FLASH_WRITE_THREAD
 }
