@@ -60,6 +60,8 @@ static void flashWriteThread(void*) {
 		// Do the actual flash write operation for given ID
 		if (msg == EFI_SETTINGS_RECORD_ID) {
 			writeToFlashNow();
+		} else if (msg == EFI_LTFT_RECORD_ID) {
+			engine->module<LongTermFuelTrim>()->store();
 		} else {
 			efiPrintf("Requested to write unknown record id %ld", msg);
 		}
@@ -82,6 +84,16 @@ void setNeedToWriteConfiguration() {
 	if (allowFlashWhileRunning()) {
 		// Signal the flash writer thread to wake up and write at its leisure
 		msg_t id = EFI_SETTINGS_RECORD_ID;
+		flashWriterMb.post(id, TIME_IMMEDIATE);
+	}
+#endif // EFI_FLASH_WRITE_THREAD
+}
+
+void settingsLtftRequestWriteToFlash() {
+#if (EFI_FLASH_WRITE_THREAD == TRUE)
+	if (allowFlashWhileRunning()) {
+		// Signal the flash writer thread to wake up and write at its leisure
+		msg_t id = EFI_LTFT_RECORD_ID;
 		flashWriterMb.post(id, TIME_IMMEDIATE);
 	}
 #endif // EFI_FLASH_WRITE_THREAD
@@ -323,6 +335,8 @@ void initFlash() {
 	 * This would write NOW (you should not be doing this while connected to real engine)
 	 */
 	addConsoleAction(CMD_WRITECONFIG, writeToFlashNow);
+
+	addConsoleAction("ltftwrite", settingsLtftRequestWriteToFlash);
 #if EFI_TUNER_STUDIO
 	/**
 	 * This would schedule write to flash once the engine is stopped
