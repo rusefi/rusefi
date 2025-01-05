@@ -1802,6 +1802,10 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 
     float fuelLevelAveragingAlpha;Exponential Average Alpha filtering parameter;"", 1, 0, 0.0001, 1, 4
     float fuelLevelUpdatePeriodSec;How often do we update fuel level gauge;"seconds", 1, 0, 0, 60000, 3
+
+	float fuelLevelLowThresholdVoltage;Error below specified value;"v", 1, 0, 0, 10, 2
+	float fuelLevelHighThresholdVoltage;Error above specified value;"v", 1, 0, 0, 10, 2
+
 #define END_OF_CALIBRATION_PADDING 58
 uint8_t[END_OF_CALIBRATION_PADDING] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 

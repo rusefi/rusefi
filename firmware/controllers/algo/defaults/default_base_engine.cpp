@@ -110,6 +110,8 @@ void setDefaultBaseEngine() {
 
   engineConfiguration->fuelLevelAveragingAlpha = engine_configuration_defaults::FUEL_LEVEL_AVERAGING_ALPHA;
   engineConfiguration->fuelLevelUpdatePeriodSec = engine_configuration_defaults::FUEL_LEVEL_UPDATE_PERIOD_SEC;
+  engineConfiguration->fuelLevelLowThresholdVoltage = 0.25;
+  engineConfiguration->fuelLevelHighThresholdVoltage = 4.5;
 
   engineConfiguration->watchOutForLinearTime = true;
 
