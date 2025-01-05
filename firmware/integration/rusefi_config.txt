@@ -1892,7 +1892,8 @@ uint16_t[BOOST_LOAD_COUNT] boostLoadBins;;"", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
 uint8_t[PEDAL_TO_TPS_SIZE x PEDAL_TO_TPS_SIZE] pedalToTpsTable;;"%", 1, 0, 0, 100, 0
 uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsPedalBins;;"%", 1, 0, 0, 120, 0
 uint8_t[PEDAL_TO_TPS_SIZE] autoscale pedalToTpsRpmBins;;"RPM", 100, 0, 0, 25000, 0
-uint8_t[PEDAL_TO_TPS_SIZE] autoscale etbMaxSpeed;;"%/s", 1, 0, 0, 255, 0
+uint8_t[PEDAL_TO_TPS_SIZE] autoscale etbMaxSpeedOpen;;"%/s", 10, 0, 0, 2500, 0
+uint8_t[PEDAL_TO_TPS_SIZE] autoscale etbMaxSpeedClose;;"%/s", 10, 0, 0, 2500, 0
 
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorrBins;CLT-based cranking position multiplier for simple manual idle controller;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorr    ;CLT-based cranking position multiplier for simple manual idle controller;"%", 1, 0, 0, 500, 2
