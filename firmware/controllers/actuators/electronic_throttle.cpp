@@ -326,8 +326,8 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	m_timeSinceLastUpdate.reset();
 	float maxAllowedVariation = interpolate2d(rpm, config->pedalToTpsRpmBins, config->etbMaxSpeed);
 
-	if(abs(targetPosition - m_lastPosition) > timePast * maxAllowedVariation) {
-		targetPosition = m_lastPosition + maxAllowedVariation * ((targetPosition - m_lastPosition)/abs(targetPosition - m_lastPosition));
+	if(abs(targetPosition - m_adjustedTarget) > timePast * maxAllowedVariation) {
+		targetPosition = m_adjustedTarget + maxAllowedVariation * timePast * ((targetPosition - m_adjustedTarget)/abs(targetPosition - m_adjustedTarget));
 	}
 
 	float minPosition = engineConfiguration->etbMinimumPosition;
