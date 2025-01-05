@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="23240">
+    <page number="0" size="23248">
         <constant name="engineType">"MAZDA_MIATA_NA6"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">0.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
@@ -1683,6 +1683,8 @@
         <constant digits="0" name="nitrousMinimumVehicleSpeed" units="Kph">0.0</constant>
         <constant digits="4" name="fuelLevelAveragingAlpha" units="">0.001</constant>
         <constant digits="3" name="fuelLevelUpdatePeriodSec" units="seconds">0.1</constant>
+        <constant digits="2" name="fuelLevelLowThresholdVoltage" units="v">0.25</constant>
+        <constant digits="2" name="fuelLevelHighThresholdVoltage" units="v">4.5</constant>
         <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="58">
          0.0
          0.0
@@ -4853,7 +4855,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20250101" nPages="1" signature="rusEFI master.2025.01.05.f407-discovery.3533824538" version="5.0"/>
+    <versionInfo firmwareInfo="20250101" nPages="1" signature="rusEFI master.2025.01.05.f407-discovery.447162130" version="5.0"/>
     <bibliography author="rusEFI 20250101" writeDate="date"/>
     <settings/>
     <userComments/>
