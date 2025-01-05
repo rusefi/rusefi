@@ -7,6 +7,9 @@
 #include "fuel_level_func.h"
 
 SensorResult FuelLevelFunc::convert(const float inputValue) {
+  if (std::isnan(inputValue)) {
+    criticalError("temp error FuelLevelFunc NaN input");
+  }
 	const float filteredValue = filterFuelValue(inputValue);
 	const float fuelLevel = interpolate2d(filteredValue, config->fuelLevelBins, config->fuelLevelValues);
 	return fuelLevel;
