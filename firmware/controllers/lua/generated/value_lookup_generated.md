@@ -1942,6 +1942,12 @@ Exponential Average Alpha filtering parameter
 ### fuelLevelUpdatePeriodSec
 How often do we update fuel level gauge
 
+### fuelLevelLowThresholdVoltage
+Error below specified value
+
+### fuelLevelHighThresholdVoltage
+Error above specified value
+
 ### tcu_shiftTime
 
 

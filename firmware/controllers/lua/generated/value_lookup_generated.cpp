@@ -1949,6 +1949,12 @@ float getConfigValueByName(const char *name) {
 // fuelLevelUpdatePeriodSec
 		case 128251338:
 			return engineConfiguration->fuelLevelUpdatePeriodSec;
+// fuelLevelLowThresholdVoltage
+		case 1697484698:
+			return engineConfiguration->fuelLevelLowThresholdVoltage;
+// fuelLevelHighThresholdVoltage
+		case 2012123720:
+			return engineConfiguration->fuelLevelHighThresholdVoltage;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -5196,6 +5202,16 @@ bool setConfigValueByName(const char *name, float value) {
 		case 128251338:
 	{
 		engineConfiguration->fuelLevelUpdatePeriodSec = value;
+		return 1;
+	}
+		case 1697484698:
+	{
+		engineConfiguration->fuelLevelLowThresholdVoltage = value;
+		return 1;
+	}
+		case 2012123720:
+	{
+		engineConfiguration->fuelLevelHighThresholdVoltage = value;
 		return 1;
 	}
 		case -1658957891:
