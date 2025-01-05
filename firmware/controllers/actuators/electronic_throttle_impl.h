@@ -80,6 +80,8 @@ public:
 protected:
 	// This is set if an automatic TPS calibration should be run
 	bool m_isAutocal = false;
+	int m_lastPosition = 0;
+	Timer m_timeSinceLastUpdate;
 
 	bool hadTpsError = false;
 	bool hadPpsError = false;

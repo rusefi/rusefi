@@ -321,6 +321,15 @@ expected<percent_t> EtbController::getSetpointEtb() {
 		etbRevLimitActive = std::abs(targetPosition - targetPositionBefore) > 0.1f;
 	}
 
+	// limit max throtle variation in time
+	float timePast = m_timeSinceLastUpdate.getElapsedSeconds();
+	m_timeSinceLastUpdate.reset();
+	float maxAllowedVariation = interpolate2d(rpm, config->pedalToTpsRpmBins, config->etbMaxSpeed);
+
+	if(abs(targetPosition - m_lastPosition) > timePast * maxAllowedVariation) {
+		targetPosition = m_lastPosition + maxAllowedVariation * ((targetPosition - m_lastPosition)/abs(targetPosition - m_lastPosition));
+	}
+
 	float minPosition = engineConfiguration->etbMinimumPosition;
 
 	// Keep the throttle just barely off the lower stop, and less than the user-configured maximum
