@@ -13,8 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.rusefi.output.ConfigStructureImpl.ALIGNMENT_FILL_AT;
-import static com.rusefi.output.DataLogConsumer.UNUSED;
 import static com.rusefi.output.GetConfigValueConsumer.getCompareName;
 
 /**
@@ -49,7 +47,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
     }
 
     private String processOutput(ConfigField cf, String prefix) {
-        if (cf.getName().contains(UNUSED) || cf.getName().contains(ALIGNMENT_FILL_AT))
+        if (cf.isUnusedField())
             return "";
 
         if (cf.isArray() || cf.isFromIterate() || cf.isDirective())

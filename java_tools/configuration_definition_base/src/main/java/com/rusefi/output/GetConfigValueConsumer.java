@@ -92,7 +92,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     }
 
     private String processConfig(ConfigField cf, String prefix) {
-        if (cf.getName().contains(UNUSED) || cf.getName().contains(ALIGNMENT_FILL_AT))
+        if (cf.isUnusedField())
             return "";
 
         if (cf.isArray() || cf.isFromIterate() || cf.isDirective())

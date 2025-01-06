@@ -3,6 +3,9 @@ package com.rusefi;
 import com.rusefi.core.Pair;
 import com.rusefi.output.ConfigStructure;
 
+import static com.rusefi.output.ConfigStructureImpl.ALIGNMENT_FILL_AT;
+import static com.rusefi.output.DataLogConsumer.UNUSED;
+
 public interface ConfigField {
     ConfigField VOID = new ConfigField() {
         @Override
@@ -154,6 +157,10 @@ public interface ConfigField {
             return null;
         }
     };
+
+    default boolean isUnusedField() {
+        return getName().contains(UNUSED) || getName().contains(ALIGNMENT_FILL_AT);
+    }
 
     default String getOriginalArrayName() {
         if (isFromIterate()) {

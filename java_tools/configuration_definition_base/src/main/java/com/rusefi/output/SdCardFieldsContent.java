@@ -54,9 +54,7 @@ public class SdCardFieldsContent {
     }
 
     private String processOutput(ConfigField configField, String prefix) {
-        if (configField.getName().startsWith(ConfigStructureImpl.ALIGNMENT_FILL_AT))
-            return "";
-        if (configField.getName().startsWith(ConfigStructure.UNUSED_ANYTHING_PREFIX))
+        if (configField.isUnusedField())
             return "";
         if (configField.isBit())
             return "";

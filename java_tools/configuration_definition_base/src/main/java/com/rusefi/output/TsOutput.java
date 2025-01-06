@@ -55,11 +55,11 @@ public class TsOutput {
                  */
                 if (!usedNames.add(nameWithPrefix)
                         && !isConstantsSection
-                        && !configField.getName().startsWith(ConfigStructureImpl.ALIGNMENT_FILL_AT)
-                        && !configField.getName().startsWith(ConfigStructure.UNUSED_ANYTHING_PREFIX)) {
+                        && !configField.isUnusedField()) {
                     throw new IllegalStateException(nameWithPrefix + " already present: " + configField);
                 }
 
+                // note that we need to handle account for unused bits size below!
                 if (configField.getName().startsWith(ConfigStructureImpl.ALIGNMENT_FILL_AT)) {
                     tsPosition += configField.getSize(next);
                     return tsPosition;
