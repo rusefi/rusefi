@@ -206,8 +206,8 @@ public class LiveDataProcessor {
                 state.addPrepend(prepend);
                 state.addCHeaderDestination(outFolder + File.separator + name + "_generated.h");
 
-                int baseOffset = outputsSections.getBaseOffset();
-                state.addDestination(new FileJavaFieldsConsumer(state, JAVA_DESTINATION + javaName, baseOffset, fileFactory));
+                sdCardFieldsConsumer.structureStartingTsPosition = outputsSections.getBaseOffset();
+                state.addDestination(new FileJavaFieldsConsumer(state, JAVA_DESTINATION + javaName, outputsSections.getBaseOffset(), fileFactory));
 
                 if (constexpr != null) {
                     sdCardFieldsConsumer.home = constexpr;
