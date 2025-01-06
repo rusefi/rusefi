@@ -18,9 +18,9 @@ public abstract class FieldsStrategy {
         return structureStartingTsPosition;
     }
 
-    protected int writeFields(List<ConfigField> tsFields, String prefix, int tsPosition) {
-        FieldIterator iterator = new FieldIterator(tsFields);
-        for (int i = 0; i < tsFields.size(); i++) {
+    protected int writeFields(List<ConfigField> fields, String prefix, int tsPosition) {
+        FieldIterator iterator = new FieldIterator(fields);
+        for (int i = 0; i < fields.size(); i++) {
             iterator.start(i);
             tsPosition = writeOneField(iterator, prefix, tsPosition);
 
