@@ -6,6 +6,8 @@ import com.rusefi.ReaderState;
 import java.util.List;
 
 /**
+ * TODO java code: two or three classes with potential code duplication #7259
+ *
  * @see PerFieldWithStructuresIterator#strategy
  */
 public abstract class FieldsStrategy {

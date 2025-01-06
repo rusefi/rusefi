@@ -226,6 +226,9 @@ public interface ConfigField {
 
     int getIterateIndex();
 
+    /**
+     * this is about array syntax: sometimes we handle those as arrays and sometimes we expand into field1, field2, field3
+     */
     boolean isFromIterate();
 
     String getCommentTemplated();

@@ -6,6 +6,8 @@ import com.rusefi.ConfigField;
 import java.util.List;
 
 /**
+ * TODO java code: two or three classes with potential code duplication #7259
+ *
  * custom iterator with references to previous and next elements
  * @see PerFieldWithStructuresIterator is there a duplication?
  */
