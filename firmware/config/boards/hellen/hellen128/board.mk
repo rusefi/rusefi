@@ -9,7 +9,7 @@ ifeq ($(VAR_DEF_ENGINE_TYPE),)
 endif
 
 
-DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
+
 
 # Add them all together
 DDEFS += -DFIRMWARE_ID=\"hellen128\" $(VAR_DEF_ENGINE_TYPE)

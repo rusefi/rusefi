@@ -2,7 +2,7 @@
 
 # Target ECU board design
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
-DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
+
 
 # This board has trigger scope hardware!
 DDEFS += -DTRIGGER_SCOPE

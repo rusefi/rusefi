@@ -6,7 +6,7 @@ ifeq ($(VAR_DEF_ENGINE_TYPE),)
   VAR_DEF_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=engine_type_e::MAZDA_MIATA_NB1
 endif
 
-DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
+
 
 # Add them all together
 DDEFS += -DFIRMWARE_ID=\"hellenNB1\" $(VAR_DEF_ENGINE_TYPE)

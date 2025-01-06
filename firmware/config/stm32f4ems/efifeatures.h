@@ -312,7 +312,7 @@
  * Control the main power relay based on measured ignition voltage (Vbatt)
  */
 #ifndef EFI_MAIN_RELAY_CONTROL
-#define EFI_MAIN_RELAY_CONTROL FALSE
+#define EFI_MAIN_RELAY_CONTROL TRUE
 #endif
 
 #ifndef EFI_VEHICLE_SPEED
