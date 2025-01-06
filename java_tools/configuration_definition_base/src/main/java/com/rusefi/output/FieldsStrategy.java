@@ -5,12 +5,15 @@ import com.rusefi.ReaderState;
 
 import java.util.List;
 
+/**
+ * @see PerFieldWithStructuresIterator#strategy
+ */
 public abstract class FieldsStrategy {
-    public int run(ReaderState state, ConfigStructure structure, int sensorTsPosition) {
+    public int run(ReaderState state, ConfigStructure structure, int structureStartingTsPosition) {
         if (state.isStackEmpty()) {
-            return writeFields(structure.getTsFields(), "", sensorTsPosition);
+            return writeFields(structure.getTsFields(), "", structureStartingTsPosition);
         }
-        return sensorTsPosition;
+        return structureStartingTsPosition;
     }
 
     protected int writeFields(List<ConfigField> tsFields, String prefix, int tsPosition) {

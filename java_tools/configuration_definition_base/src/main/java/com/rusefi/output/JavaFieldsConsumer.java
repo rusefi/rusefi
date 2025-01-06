@@ -1,6 +1,5 @@
 package com.rusefi.output;
 
-import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelImpl;
 import com.rusefi.*;
 import com.rusefi.parse.TypesHelper;
@@ -17,11 +16,11 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
     private final StringBuilder content = new StringBuilder();
     protected final StringBuffer allFields = new StringBuffer();
     protected final ReaderState state;
-    private final int baseOffset;
+    private final int structureStartingTsPosition;
 
-    public JavaFieldsConsumer(ReaderState state, int baseOffset) {
+    public JavaFieldsConsumer(ReaderState state, int structureStartingTsPosition) {
         this.state = state;
-        this.baseOffset = baseOffset;
+        this.structureStartingTsPosition = structureStartingTsPosition;
     }
 
     public String getContent() {
@@ -129,7 +128,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
     }
 
     private String terminateField() {
-        return ".setBaseOffset(" + baseOffset + ")" +
+        return ".setBaseOffset(" + structureStartingTsPosition + ")" +
                 ";" + EOL;
     }
 }

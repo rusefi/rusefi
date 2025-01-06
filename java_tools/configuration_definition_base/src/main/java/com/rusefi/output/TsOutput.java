@@ -40,7 +40,7 @@ public class TsOutput {
         return settingContextHelp.toString();
     }
 
-    public int run(ReaderState state, ConfigStructure structure, int sensorTsPosition, String temporaryLineComment, String variableNameSuffix) {
+    public int run(ReaderState state, ConfigStructure structure, int structureStartingTsPosition, String temporaryLineComment, String variableNameSuffix) {
         FieldsStrategy strategy = new FieldsStrategy() {
             @Override
             public int writeOneField(FieldIterator it, String prefix, int tsPosition) {
@@ -146,12 +146,12 @@ public class TsOutput {
                 return tsPosition;
             }
         };
-        sensorTsPosition = strategy.run(state, structure, sensorTsPosition);
+        structureStartingTsPosition = strategy.run(state, structure, structureStartingTsPosition);
 
         if (state.isStackEmpty()) {
-            tsHeader.append("; total TS size = " + sensorTsPosition + EOL);
+            tsHeader.append("; total TS size = " + structureStartingTsPosition + EOL);
         }
-        return sensorTsPosition;
+        return structureStartingTsPosition;
     }
 
     private String handleTsInfo(ConfigField configField, String tsInfo, int multiplierIndex) {
