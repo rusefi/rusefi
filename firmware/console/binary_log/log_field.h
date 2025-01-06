@@ -20,6 +20,9 @@ public:
 		, m_name(name)
 		, m_units(units)
 		, m_category(category)
+		, m_isBitField(false)
+		, m_bitsBlockOffset(0)
+		, m_bitNumber(0)
 	{
 	}
 
@@ -35,8 +38,33 @@ public:
 		, m_name(name)
 		, m_units(units)
 		, m_category(category)
+		, m_isBitField(false)
+		, m_bitsBlockOffset(0)
+		, m_bitNumber(0)
 	{
 	}
+
+	// Bit channel
+	template <typename TValue>
+	constexpr LogField(
+		TValue& toRead,
+		const uint32_t bitsBlockOffset,
+		const uint8_t bitNumber,
+		const char* name,
+		const char* units,
+		const char* category = "none"
+	): m_multiplier(1)
+		, m_addr(&toRead)
+		, m_type(Type::U08)
+		, m_digits(0)
+		, m_size(1)
+		, m_name(name)
+		, m_units(units)
+		, m_category(category)
+		, m_isBitField(true)
+		, m_bitsBlockOffset(bitsBlockOffset)
+		, m_bitNumber(bitNumber)
+	{}
 
 	enum class Type : uint8_t {
 		U08 = 0,
@@ -87,6 +115,10 @@ private:
 	const char* const m_name;
 	const char* const m_units;
 	const char* const m_category;
+
+	const bool m_isBitField;
+	const uint32_t m_bitsBlockOffset; // only for bit log fields
+	const uint8_t m_bitNumber; // only for bit log fields
 };
 
 template<>

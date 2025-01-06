@@ -57,9 +57,14 @@ void LogField::writeHeader(Writer& outBuffer) const {
 }
 
 size_t LogField::writeData(char* buffer, void *offset) const {
-	size_t size = m_size;
+    if (m_isBitField) {
+        const char* const bytesBlock = static_cast<const char*>(m_addr);
+        const unsigned char byteWithBit = *(bytesBlock + m_bitsBlockOffset + m_bitNumber / 8);
+        const uint8_t bitNumberInByte = m_bitNumber % 8;
+        buffer[0] = static_cast<char>(static_cast<bool>(byteWithBit & (1 << bitNumberInByte)));
+    } else {
+        memcpy_swapend(buffer, m_addr, m_size, offset);
+    }
 
-	memcpy_swapend(buffer, m_addr, size, offset);
-
-	return size;
+	return m_size;
 }
