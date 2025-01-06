@@ -39,8 +39,20 @@ public class FieldIterator {
     }
 
     public void loop() {
+        FieldsStrategy empty = new FieldsStrategy() {
+            @Override
+            int writeOneField(FieldIterator iterator, String prefix, int tsPosition) {
+                return 0;
+            }
+        };
+//
+//        empty.writeFields(fields, "", 0);
+
+        FieldIterator iterator = new FieldIterator(fields);
+
         for (int i = 0; i < fields.size(); i++) {
             start(i);
+            empty.writeOneField(iterator, "", 0);
             end();
         }
     }
