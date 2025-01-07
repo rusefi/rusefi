@@ -14,7 +14,7 @@ public abstract class FieldsStrategy {
     static final FieldsStrategy VOID = new FieldsStrategy() {
         @Override
         int writeOneField(FieldIterator iterator, String prefix, int tsPosition) {
-            return 0;
+            return iterator.adjustSize(tsPosition);
         }
     };
 
@@ -33,9 +33,10 @@ public abstract class FieldsStrategy {
     protected int loopIterator(List<ConfigField> fields, String prefix, int tsPosition, FieldIterator iterator) {
         for (int i = 0; i < fields.size(); i++) {
             iterator.start(i);
+            int currentPosition = tsPosition;
             tsPosition = writeOneField(iterator, prefix, tsPosition);
 
-            iterator.end();
+            iterator.end(currentPosition);
         }
         return tsPosition;
     }

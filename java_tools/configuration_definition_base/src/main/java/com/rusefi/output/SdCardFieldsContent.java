@@ -37,8 +37,8 @@ public class SdCardFieldsContent {
         if (state.isStackEmpty()) {
             PerFieldWithStructuresIterator.Strategy strategy = new PerFieldWithStructuresIterator.Strategy() {
                 @Override
-                public String process(ReaderState state, ConfigField configField, String prefix) {
-                    return processOutput(configField, prefix);
+                public String process(ReaderState state, ConfigField configField, String prefix, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator) {
+                    return processOutput(configField, prefix, currentPosition, perFieldWithStructuresIterator);
                 }
 
                 @Override
@@ -54,11 +54,11 @@ public class SdCardFieldsContent {
         }
     }
 
-    private String processOutput(ConfigField configField, String prefix) {
+    private String processOutput(ConfigField configField, String prefix, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator) {
         if (configField.isUnusedField())
             return "";
         if (configField.isBit())
-            return "";
+            return "// skipping bit at " + currentPosition + "@" + perFieldWithStructuresIterator.bitState.get() + "\n";
 
         String name = configField.getOriginalArrayName();
 

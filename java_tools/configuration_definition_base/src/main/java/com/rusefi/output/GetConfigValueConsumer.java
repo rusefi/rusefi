@@ -14,9 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.rusefi.output.ConfigStructureImpl.ALIGNMENT_FILL_AT;
-import static com.rusefi.output.DataLogConsumer.UNUSED;
-
 /**
  * Here we generate C++ code for https://github.com/rusefi/rusefi/wiki/Lua-Scripting#getcalibrationname
  * @see GetOutputValueConsumer
@@ -70,7 +67,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
         if (state.isStackEmpty()) {
             PerFieldWithStructuresIterator.Strategy strategy = new PerFieldWithStructuresIterator.Strategy() {
                 @Override
-                public String process(ReaderState state, ConfigField cf, String prefix) {
+                public String process(ReaderState state, ConfigField cf, String prefix, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator) {
                     return processConfig(cf, prefix);
                 }
 

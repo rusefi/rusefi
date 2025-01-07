@@ -80,12 +80,13 @@ public class BaseCHeaderConsumer implements ConfigurationConsumer {
         content.append("struct " + structure.getName() + " {" + EOL);
 
         FieldIteratorWithOffset iterator = new FieldIteratorWithOffset(structure.getcFields());
+        // todo: reuse FieldsStrategy#loopIterator?
         for (int i = 0; i < structure.getcFields().size(); i++) {
             iterator.start(i);
             content.append(getHeaderText(iterator));
 
             iterator.currentOffset += iterator.cf.getSize(iterator.next);
-            iterator.end();
+            iterator.end(0);
         }
 
         content.append("};" + EOL);

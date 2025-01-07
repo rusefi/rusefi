@@ -72,8 +72,8 @@ public class ConfigStructureImpl implements ConfigStructure {
          */
         FieldIteratorWithOffset iterator = new FieldIteratorWithOffset(cFields) {
             @Override
-            public void end() {
-                super.end();
+            public void end(int currentPosition) {
+                super.end(currentPosition);
                 currentOffset += cf.getSize(next);
             }
         };
