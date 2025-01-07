@@ -120,7 +120,7 @@ public class LiveDataProcessor {
     }
 
     public String getOutputsSectionFileName() {
-        return getTsOutputsDestination() + "output_channels.ini";
+        return getTsOutputsDestination() + "live_data_fragments.ini";
     }
 
     private void end(int sensorTsPosition) throws IOException {
