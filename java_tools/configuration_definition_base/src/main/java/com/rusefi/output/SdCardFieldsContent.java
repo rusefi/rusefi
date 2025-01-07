@@ -48,7 +48,7 @@ public class SdCardFieldsContent {
             };
             PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.getTsFields(), "",
                     strategy, ".");
-            iterator.loop();
+            iterator.loop(structureStartingTsPosition);
             String content = iterator.getContent();
             body.append(content);
         }
@@ -57,21 +57,23 @@ public class SdCardFieldsContent {
     private String processOutput(ConfigField configField, String prefix, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator) {
         if (configField.isUnusedField())
             return "";
-        if (configField.isBit())
-            return "// skipping bit at " + currentPosition + "@" + perFieldWithStructuresIterator.bitState.get() + "\n";
 
         String name = configField.getOriginalArrayName();
 
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < home.length; i++) {
             String namePrefix = (names == null || names.length <= 1) ? "" : names[i];
-            sb.append(getLine(configField, prefix, namePrefix, prefix + name, home[i], isPtr, conditional));
+            sb.append(getLine(configField, prefix, namePrefix, prefix + name, home[i], isPtr, conditional, currentPosition, perFieldWithStructuresIterator));
         }
 
         return sb.toString();
     }
 
-    private static String getLine(ConfigField configField, String prefix, String namePrefix, String name, String home, Boolean isPtr, String conditional) {
+    private static String getLine(ConfigField configField, String prefix, String namePrefix, String name, String home, Boolean isPtr, String conditional, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator) {
+        if (configField.isBit()) {
+            return "// skipping bit " + namePrefix + " at " + currentPosition + "@" + perFieldWithStructuresIterator.bitState.get() + "\n";
+        }
+
         String categoryStr = configField.getCategory();
 
         if (categoryStr == null) {

@@ -78,7 +78,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
             };
             PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.getTsFields(), "",
                     strategy, ".");
-            iterator.loop();
+            iterator.loop(0);
         }
     }
 

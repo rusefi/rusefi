@@ -32,7 +32,7 @@ public class GaugeConsumer implements ConfigurationConsumer {
 
                 PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(readerState, structure.getTsFields(), "",
                         (state, configField, prefix, currentPosition, perFieldWithStructuresIterator) -> handle(configField, prefix, variableNameSuffix));
-                iterator.loop();
+                iterator.loop(0);
             }
         }
     }

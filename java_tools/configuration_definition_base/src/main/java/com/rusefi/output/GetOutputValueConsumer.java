@@ -42,7 +42,7 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
         if (state.isStackEmpty()) {
             PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.getTsFields(), "",
                     (readerState, cf, prefix, currentPosition, perFieldWithStructuresIterator) -> processOutput(cf, prefix), ".");
-            iterator.loop();
+            iterator.loop(0);
         }
     }
 

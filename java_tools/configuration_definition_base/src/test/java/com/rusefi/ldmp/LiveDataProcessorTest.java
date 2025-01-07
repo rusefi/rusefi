@@ -122,7 +122,8 @@ public class LiveDataProcessorTest {
                 "{packedTime, GAUGE_NAME_TIME, \"sec\", 0},\n" +
                 "\t{engine->wbo1.tempC, \"WBO: Temperaturewb1\", \"C\", 0, \"cate\"},\n" +
                 "\t{engine->wbo2.tempC, \"WBO: Temperaturewb2\", \"C\", 0, \"cate\"},\n" +
-                "// skipping bit at 4@0\n" +
+                "// skipping bit wb1 at 4@0\n" +
+                "// skipping bit wb2 at 4@0\n" +
                 "\t{engine->wbo1.esr, \"WBO: ESRwb1\", \"ohm\", 0},\n" +
                 "\t{engine->wbo2.esr, \"WBO: ESRwb2\", \"ohm\", 0},\n" +
                 "\t{engine->outputChannels.oootempC, \"Temperature\", \"C\", 0},\n" +

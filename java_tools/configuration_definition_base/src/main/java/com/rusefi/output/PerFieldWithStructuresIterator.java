@@ -40,7 +40,7 @@ class PerFieldWithStructuresIterator extends FieldIterator {
                 // java side of things does not care for 'cs.withPrefix'
                 String extraPrefix = variableNamePrefix + strategy.getArrayElementName(cf) + prefixSeparator;
                 PerFieldWithStructuresIterator fieldIterator = new PerFieldWithStructuresIterator(state, cs.getTsFields(), extraPrefix, strategy, prefixSeparator);
-                fieldIterator.loop();
+                fieldIterator.loop(0);
                 content = fieldIterator.sb.toString();
             }
         } else {

@@ -77,7 +77,7 @@ public class ConfigStructureImpl implements ConfigStructure {
                 currentOffset += cf.getSize(next);
             }
         };
-        iterator.loop();
+        iterator.loop(0);
 
         totalSize = iterator.currentOffset;
         int fillSize = totalSize % alignment == 0 ? 0 : alignment - (totalSize % alignment);

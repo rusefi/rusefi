@@ -61,7 +61,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
                 };
                 PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(readerState, structure.getTsFields(), "",
                         strategy);
-                iterator.loop();
+                iterator.loop(0);
                 String content = iterator.getContent();
                 tsWriter.append(content);
             }
