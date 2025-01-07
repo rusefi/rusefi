@@ -2,37 +2,37 @@
 #include "board_lookup.h"
 static const LogField fields[] = {
 {packedTime, GAUGE_NAME_TIME, "sec", 0},
-// skipping bit  at 0@0
-// skipping bit  at 0@1
-// skipping bit  at 0@2
-// skipping bit  at 0@3
-// skipping bit  at 0@4
-// skipping bit  at 0@5
-// skipping bit  at 0@6
-// skipping bit  at 0@7
-// skipping bit  at 0@8
-// skipping bit  at 0@9
-// skipping bit  at 0@10
-// skipping bit  at 0@11
-// skipping bit  at 0@12
-// skipping bit  at 0@13
-// skipping bit  at 0@14
-// skipping bit  at 0@15
-// skipping bit  at 0@16
-// skipping bit  at 0@17
-// skipping bit  at 0@18
-// skipping bit  at 0@19
-// skipping bit  at 0@20
-// skipping bit  at 0@21
-// skipping bit  at 0@22
-// skipping bit  at 0@23
-// skipping bit  at 0@24
-// skipping bit  at 0@25
-// skipping bit  at 0@26
-// skipping bit  at 0@27
-// skipping bit  at 0@28
-// skipping bit  at 0@29
-// skipping bit  at 0@30
+// structureStartingTsPosition 0, skipping bit  at 0@0
+// structureStartingTsPosition 0, skipping bit  at 0@1
+// structureStartingTsPosition 0, skipping bit  at 0@2
+// structureStartingTsPosition 0, skipping bit  at 0@3
+// structureStartingTsPosition 0, skipping bit  at 0@4
+// structureStartingTsPosition 0, skipping bit  at 0@5
+// structureStartingTsPosition 0, skipping bit  at 0@6
+// structureStartingTsPosition 0, skipping bit  at 0@7
+// structureStartingTsPosition 0, skipping bit  at 0@8
+// structureStartingTsPosition 0, skipping bit  at 0@9
+// structureStartingTsPosition 0, skipping bit  at 0@10
+// structureStartingTsPosition 0, skipping bit  at 0@11
+// structureStartingTsPosition 0, skipping bit  at 0@12
+// structureStartingTsPosition 0, skipping bit  at 0@13
+// structureStartingTsPosition 0, skipping bit  at 0@14
+// structureStartingTsPosition 0, skipping bit  at 0@15
+// structureStartingTsPosition 0, skipping bit  at 0@16
+// structureStartingTsPosition 0, skipping bit  at 0@17
+// structureStartingTsPosition 0, skipping bit  at 0@18
+// structureStartingTsPosition 0, skipping bit  at 0@19
+// structureStartingTsPosition 0, skipping bit  at 0@20
+// structureStartingTsPosition 0, skipping bit  at 0@21
+// structureStartingTsPosition 0, skipping bit  at 0@22
+// structureStartingTsPosition 0, skipping bit  at 0@23
+// structureStartingTsPosition 0, skipping bit  at 0@24
+// structureStartingTsPosition 0, skipping bit  at 0@25
+// structureStartingTsPosition 0, skipping bit  at 0@26
+// structureStartingTsPosition 0, skipping bit  at 0@27
+// structureStartingTsPosition 0, skipping bit  at 0@28
+// structureStartingTsPosition 0, skipping bit  at 0@29
+// structureStartingTsPosition 0, skipping bit  at 0@30
 	{engine->outputChannels.RPMValue, "RPM", "RPM", 0},
 	{engine->outputChannels.rpmAcceleration, "dRPM", "RPM acceleration/Rate of Change/ROC", 2},
 	{engine->outputChannels.speedToRpmRatio, "Gearbox Ratio", "value", 2},
@@ -303,34 +303,34 @@ static const LogField fields[] = {
 	{engine->outputChannels.targetAfrBlendOutput[1], "targetAfrBlendOutput 2", "%", 1},
 	{engine->outputChannels.coilState1, "coilState1", "", 0},
 	{engine->outputChannels.coilState2, "coilState2", "", 0},
-// skipping bit  at 664@0
-// skipping bit  at 664@1
-// skipping bit  at 664@2
-// skipping bit  at 664@3
-// skipping bit  at 664@4
-// skipping bit  at 664@5
-// skipping bit  at 664@6
-// skipping bit  at 664@7
-// skipping bit  at 664@8
-// skipping bit  at 664@9
+// structureStartingTsPosition 0, skipping bit  at 664@0
+// structureStartingTsPosition 0, skipping bit  at 664@1
+// structureStartingTsPosition 0, skipping bit  at 664@2
+// structureStartingTsPosition 0, skipping bit  at 664@3
+// structureStartingTsPosition 0, skipping bit  at 664@4
+// structureStartingTsPosition 0, skipping bit  at 664@5
+// structureStartingTsPosition 0, skipping bit  at 664@6
+// structureStartingTsPosition 0, skipping bit  at 664@7
+// structureStartingTsPosition 0, skipping bit  at 664@8
+// structureStartingTsPosition 0, skipping bit  at 664@9
 	{engine->outputChannels.injectorState1, "injectorState1", "", 0},
 	{engine->outputChannels.injectorState2, "injectorState2", "", 0},
-// skipping bit  at 672@0
-// skipping bit  at 672@1
-// skipping bit  at 672@2
-// skipping bit  at 672@3
-// skipping bit  at 672@4
-// skipping bit  at 672@5
-// skipping bit  at 672@6
-// skipping bit  at 672@7
-// skipping bit  at 672@8
-// skipping bit  at 672@9
-// skipping bit  at 672@10
-// skipping bit  at 672@11
-// skipping bit  at 672@12
-// skipping bit  at 672@13
-// skipping bit  at 672@14
-// skipping bit  at 672@15
+// structureStartingTsPosition 0, skipping bit  at 672@0
+// structureStartingTsPosition 0, skipping bit  at 672@1
+// structureStartingTsPosition 0, skipping bit  at 672@2
+// structureStartingTsPosition 0, skipping bit  at 672@3
+// structureStartingTsPosition 0, skipping bit  at 672@4
+// structureStartingTsPosition 0, skipping bit  at 672@5
+// structureStartingTsPosition 0, skipping bit  at 672@6
+// structureStartingTsPosition 0, skipping bit  at 672@7
+// structureStartingTsPosition 0, skipping bit  at 672@8
+// structureStartingTsPosition 0, skipping bit  at 672@9
+// structureStartingTsPosition 0, skipping bit  at 672@10
+// structureStartingTsPosition 0, skipping bit  at 672@11
+// structureStartingTsPosition 0, skipping bit  at 672@12
+// structureStartingTsPosition 0, skipping bit  at 672@13
+// structureStartingTsPosition 0, skipping bit  at 672@14
+// structureStartingTsPosition 0, skipping bit  at 672@15
 	{engine->outputChannels.outputRequestPeriod, "outputRequestPeriod", "", 0},
 	{engine->outputChannels.mapFast, "mapFast", "", 0},
 	{engine->outputChannels.luaGauges[0], "Lua: Gauge 1", "value", 3},
@@ -453,7 +453,7 @@ static const LogField fields[] = {
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.idealEngineTorque, "idealEngineTorque", "", 0},
 #endif
-// skipping bit  at 920@0
+// structureStartingTsPosition 872, skipping bit  at 920@0
 	{engine->ignitionState.baseDwell, "Ignition: base dwell", "ms", 1, "Timing"},
 	{engine->ignitionState.sparkDwell, "Ignition: coil charge time", "ms", 1, "Timing"},
 	{engine->ignitionState.dwellDurationAngle, "Ignition: dwell duration", "deg", 1, "Timing"},
@@ -467,7 +467,7 @@ static const LogField fields[] = {
 	{engine->ignitionState.dwellVoltageCorrection, "Ign: Dwell voltage correction", "", 0},
 	{engine->ignitionState.luaTimingAdd, "Ign: Lua timing add", "deg", 2, "Timing"},
 	{engine->ignitionState.luaTimingMult, "Ign: Lua timing mult", "deg", 2, "Timing"},
-// skipping bit  at 964@0
+// structureStartingTsPosition 924, skipping bit  at 964@0
 	{engine->module<KnockController>()->m_knockLevel, "Knock: Current level", "Volts", 2},
 	{engine->module<KnockController>()->m_knockCyl[0], "Knock: Cyl 1", "dBv", 0},
 	{engine->module<KnockController>()->m_knockCyl[1], "Knock: Cyl 2", "dBv", 0},
@@ -505,7 +505,7 @@ static const LogField fields[] = {
 	{engine->module<KnockController>()->m_knockFrequencyStart, "Knock: Start Freq", "Hz", 0},
 	{engine->module<KnockController>()->m_knockFrequencyStep, "Knock: Step Freq", "Hz", 0},
 	{engine->module<KnockController>()->m_knockFuelTrimMultiplier, "Knock: Fuel trim when knock", "multiplier", 0},
-// skipping bit  at 1076@0
+// structureStartingTsPosition 1076, skipping bit  at 1076@0
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{engine->module<InjectorModelPrimary>()->m_deadtime, "Fuel: injector lag", "ms", 3},
 #endif
@@ -518,35 +518,35 @@ static const LogField fields[] = {
 #if EFI_LAUNCH_CONTROL
 	{engine->launchController.retardThresholdRpm, "retardThresholdRpm", "", 0},
 #endif
-// skipping bit  at 1152@0
-// skipping bit  at 1152@1
-// skipping bit  at 1152@2
-// skipping bit  at 1152@3
-// skipping bit  at 1152@4
-// skipping bit  at 1152@5
-// skipping bit  at 1152@6
-// skipping bit  at 1152@7
-// skipping bit  at 1152@8
-// skipping bit  at 1152@9
-// skipping bit  at 1152@10
-// skipping bit  at 1152@11
-// skipping bit  at 1156@0
-// skipping bit  at 1156@1
-// skipping bit  at 1156@2
-// skipping bit  at 1156@3
-// skipping bit  at 1156@4
-// skipping bit  at 1156@5
-// skipping bit  at 1172@0
-// skipping bit  at 1172@1
-// skipping bit  at 1172@2
-// skipping bit  at 1172@3
-// skipping bit  at 1172@4
-// skipping bit  at 1172@5
-// skipping bit  at 1172@6
-// skipping bit  at 1172@7
-// skipping bit  at 1172@8
-// skipping bit  at 1172@9
-// skipping bit  at 1172@10
+// structureStartingTsPosition 1148, skipping bit  at 1152@0
+// structureStartingTsPosition 1148, skipping bit  at 1152@1
+// structureStartingTsPosition 1148, skipping bit  at 1152@2
+// structureStartingTsPosition 1148, skipping bit  at 1152@3
+// structureStartingTsPosition 1148, skipping bit  at 1152@4
+// structureStartingTsPosition 1148, skipping bit  at 1152@5
+// structureStartingTsPosition 1148, skipping bit  at 1152@6
+// structureStartingTsPosition 1148, skipping bit  at 1152@7
+// structureStartingTsPosition 1148, skipping bit  at 1152@8
+// structureStartingTsPosition 1148, skipping bit  at 1152@9
+// structureStartingTsPosition 1148, skipping bit  at 1152@10
+// structureStartingTsPosition 1148, skipping bit  at 1152@11
+// structureStartingTsPosition 1156, skipping bit  at 1156@0
+// structureStartingTsPosition 1156, skipping bit  at 1156@1
+// structureStartingTsPosition 1156, skipping bit  at 1156@2
+// structureStartingTsPosition 1156, skipping bit  at 1156@3
+// structureStartingTsPosition 1156, skipping bit  at 1156@4
+// structureStartingTsPosition 1156, skipping bit  at 1156@5
+// structureStartingTsPosition 1172, skipping bit  at 1172@0
+// structureStartingTsPosition 1172, skipping bit  at 1172@1
+// structureStartingTsPosition 1172, skipping bit  at 1172@2
+// structureStartingTsPosition 1172, skipping bit  at 1172@3
+// structureStartingTsPosition 1172, skipping bit  at 1172@4
+// structureStartingTsPosition 1172, skipping bit  at 1172@5
+// structureStartingTsPosition 1172, skipping bit  at 1172@6
+// structureStartingTsPosition 1172, skipping bit  at 1172@7
+// structureStartingTsPosition 1172, skipping bit  at 1172@8
+// structureStartingTsPosition 1172, skipping bit  at 1172@9
+// structureStartingTsPosition 1172, skipping bit  at 1172@10
 #if EFI_BOOST_CONTROL
 	{engine->module<BoostController>()->luaTargetAdd, "Boost: Lua target add", "v", 1, "Boost Control"},
 #endif
@@ -568,39 +568,39 @@ static const LogField fields[] = {
 #if EFI_BOOST_CONTROL
 	{engine->module<BoostController>()->boostControlTarget, "Boost: Target", "kPa", 1, "Boost Control"},
 #endif
-// skipping bit fan1 at 1208@0
-// skipping bit fan2 at 1208@0
-// skipping bit fan1 at 1208@1
-// skipping bit fan2 at 1208@1
-// skipping bit fan1 at 1208@2
-// skipping bit fan2 at 1208@2
-// skipping bit fan1 at 1208@3
-// skipping bit fan2 at 1208@3
-// skipping bit fan1 at 1208@4
-// skipping bit fan2 at 1208@4
-// skipping bit fan1 at 1208@5
-// skipping bit fan2 at 1208@5
-// skipping bit fan1 at 1208@6
-// skipping bit fan2 at 1208@6
-// skipping bit fan1 at 1208@7
-// skipping bit fan2 at 1208@7
+// structureStartingTsPosition 1208, skipping bit fan1 at 1208@0
+// structureStartingTsPosition 1208, skipping bit fan1 at 1208@1
+// structureStartingTsPosition 1208, skipping bit fan1 at 1208@2
+// structureStartingTsPosition 1208, skipping bit fan1 at 1208@3
+// structureStartingTsPosition 1208, skipping bit fan1 at 1208@4
+// structureStartingTsPosition 1208, skipping bit fan1 at 1208@5
+// structureStartingTsPosition 1208, skipping bit fan1 at 1208@6
+// structureStartingTsPosition 1208, skipping bit fan1 at 1208@7
 #if FULL_SD_LOGS
 	{engine->module<FanControl1>()->radiatorFanStatus, "radiatorFanStatusfan1", "", 0},
 #endif
+// structureStartingTsPosition 1216, skipping bit fan2 at 1216@0
+// structureStartingTsPosition 1216, skipping bit fan2 at 1216@1
+// structureStartingTsPosition 1216, skipping bit fan2 at 1216@2
+// structureStartingTsPosition 1216, skipping bit fan2 at 1216@3
+// structureStartingTsPosition 1216, skipping bit fan2 at 1216@4
+// structureStartingTsPosition 1216, skipping bit fan2 at 1216@5
+// structureStartingTsPosition 1216, skipping bit fan2 at 1216@6
+// structureStartingTsPosition 1216, skipping bit fan2 at 1216@7
 #if FULL_SD_LOGS
 	{engine->module<FanControl2>()->radiatorFanStatus, "radiatorFanStatusfan2", "", 0},
 #endif
 	{engine->engineState.lua.fuelAdd, "Lua: Fuel add", "g", 3},
 	{engine->engineState.lua.fuelMult, "Lua: Fuel mult", "", 0},
-// skipping bit  at 8@0
-// skipping bit  at 8@1
-// skipping bit  at 8@2
-// skipping bit  at 8@3
-// skipping bit  at 8@4
-// skipping bit  at 8@5
-// skipping bit  at 8@6
-// skipping bit  at 8@7
-// skipping bit  at 8@8
+// structureStartingTsPosition 1232, skipping bit  at 8@0
+// structureStartingTsPosition 1232, skipping bit  at 8@1
+// structureStartingTsPosition 1232, skipping bit  at 8@2
+// structureStartingTsPosition 1232, skipping bit  at 8@3
+// structureStartingTsPosition 1232, skipping bit  at 8@4
+// structureStartingTsPosition 1232, skipping bit  at 8@5
+// structureStartingTsPosition 1232, skipping bit  at 8@6
+// structureStartingTsPosition 1232, skipping bit  at 8@7
+// structureStartingTsPosition 1232, skipping bit  at 8@8
 	{engine->engineState.sd.tCharge, "Air: Charge temperature estimate", "deg C", 1},
 	{engine->engineState.sd.tChargeK, "Air: Charge temperature estimate K", "", 0},
 	{engine->engineState.crankingFuel.coolantTemperatureCoefficient, "Fuel: cranking CLT mult", "", 0},
@@ -616,14 +616,14 @@ static const LogField fields[] = {
 	{engine->engineState.smartChipState, "smartChipState", "", 0},
 	{engine->engineState.smartChipRestartCounter, "smartChipRestartCounter", "", 0},
 	{engine->engineState.smartChipAliveCounter, "smartChipAliveCounter", "", 0},
-// skipping bit  at 1284@0
-// skipping bit  at 1284@1
-// skipping bit  at 1284@2
-// skipping bit  at 1284@3
-// skipping bit  at 1284@4
-// skipping bit  at 1284@5
-// skipping bit  at 1284@6
-// skipping bit  at 1284@7
+// structureStartingTsPosition 1232, skipping bit  at 1284@0
+// structureStartingTsPosition 1232, skipping bit  at 1284@1
+// structureStartingTsPosition 1232, skipping bit  at 1284@2
+// structureStartingTsPosition 1232, skipping bit  at 1284@3
+// structureStartingTsPosition 1232, skipping bit  at 1284@4
+// structureStartingTsPosition 1232, skipping bit  at 1284@5
+// structureStartingTsPosition 1232, skipping bit  at 1284@6
+// structureStartingTsPosition 1232, skipping bit  at 1284@7
 	{engine->engineState.startStopStateToggleCounter, "startStopStateToggleCounter", "", 0},
 	{engine->engineState.luaSoftSparkSkip, "luaSoftSparkSkip", "", 0},
 	{engine->engineState.luaHardSparkSkip, "luaHardSparkSkip", "", 0},
@@ -675,7 +675,7 @@ static const LogField fields[] = {
 #if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.mapCamPrevToothAngle, "Sync: MAP: prev angle", "deg", 2},
 #endif
-// skipping bit  at 1416@0
+// structureStartingTsPosition 1376, skipping bit  at 1416@0
 #if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.triggerElapsedUs, "triggerElapsedUs", "", 0},
 #endif
@@ -683,133 +683,133 @@ static const LogField fields[] = {
 	{engine->triggerCentral.triggerState.synchronizationCounter, "sync: wheel sync countertrg", "", 0},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[0][0].synchronizationCounter, "sync: wheel sync countervvt1i", "", 0},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[0][1].synchronizationCounter, "sync: wheel sync countervvt1e", "", 0},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[1][0].synchronizationCounter, "sync: wheel sync countervvt2i", "", 0},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[1][1].synchronizationCounter, "sync: wheel sync countervvt2e", "", 0},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 	{engine->triggerCentral.triggerState.vvtToothDurations0, "vvtToothDurations0trg", "us", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[0][0].vvtToothDurations0, "vvtToothDurations0vvt1i", "us", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[0][1].vvtToothDurations0, "vvtToothDurations0vvt1e", "us", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[1][0].vvtToothDurations0, "vvtToothDurations0vvt2i", "us", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[1][1].vvtToothDurations0, "vvtToothDurations0vvt2e", "us", 3},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 	{engine->triggerCentral.triggerState.vvtCurrentPosition, "sync: Primary Positiontrg", "", 3},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[0][0].vvtCurrentPosition, "sync: Primary Positionvvt1i", "", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[0][1].vvtCurrentPosition, "sync: Primary Positionvvt1e", "", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[1][0].vvtCurrentPosition, "sync: Primary Positionvvt2i", "", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[1][1].vvtCurrentPosition, "sync: Primary Positionvvt2e", "", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 	{engine->triggerCentral.triggerState.vvtToothPosition[0], "sync: Cam Position 1trg", "", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[0][0].vvtToothPosition[0], "sync: Cam Position 1vvt1i", "", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[0][1].vvtToothPosition[0], "sync: Cam Position 1vvt1e", "", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[1][0].vvtToothPosition[0], "sync: Cam Position 1vvt2i", "", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[1][1].vvtToothPosition[0], "sync: Cam Position 1vvt2e", "", 3},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 	{engine->triggerCentral.triggerState.vvtToothPosition[1], "sync: Cam Position 2trg", "", 3},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[0][0].vvtToothPosition[1], "sync: Cam Position 2vvt1i", "", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[0][1].vvtToothPosition[1], "sync: Cam Position 2vvt1e", "", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[1][0].vvtToothPosition[1], "sync: Cam Position 2vvt2i", "", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[1][1].vvtToothPosition[1], "sync: Cam Position 2vvt2e", "", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 	{engine->triggerCentral.triggerState.vvtToothPosition[2], "sync: Cam Position 3trg", "", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[0][0].vvtToothPosition[2], "sync: Cam Position 3vvt1i", "", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[0][1].vvtToothPosition[2], "sync: Cam Position 3vvt1e", "", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[1][0].vvtToothPosition[2], "sync: Cam Position 3vvt2i", "", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[1][1].vvtToothPosition[2], "sync: Cam Position 3vvt2e", "", 3},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 	{engine->triggerCentral.triggerState.vvtToothPosition[3], "sync: Cam Position 4trg", "", 3},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[0][0].vvtToothPosition[3], "sync: Cam Position 4vvt1i", "", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[0][1].vvtToothPosition[3], "sync: Cam Position 4vvt1e", "", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[1][0].vvtToothPosition[3], "sync: Cam Position 4vvt2i", "", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[1][1].vvtToothPosition[3], "sync: Cam Position 4vvt2e", "", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 	{engine->triggerCentral.triggerState.triggerSyncGapRatio, "Sync: Trigger Latest Ratiotrg", "", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[0][0].triggerSyncGapRatio, "Sync: Trigger Latest Ratiovvt1i", "", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[0][1].triggerSyncGapRatio, "Sync: Trigger Latest Ratiovvt1e", "", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[1][0].triggerSyncGapRatio, "Sync: Trigger Latest Ratiovvt2i", "", 3},
-#endif
-#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
-	{engine->triggerCentral.vvtState[1][1].triggerSyncGapRatio, "Sync: Trigger Latest Ratiovvt2e", "", 3},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 	{engine->triggerCentral.triggerState.triggerStateIndex, "triggerStateIndextrg", "", 0},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][0].synchronizationCounter, "sync: wheel sync countervvt1i", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][0].vvtToothDurations0, "vvtToothDurations0vvt1i", "us", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][0].vvtCurrentPosition, "sync: Primary Positionvvt1i", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][0].vvtToothPosition[0], "sync: Cam Position 1vvt1i", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][0].vvtToothPosition[1], "sync: Cam Position 2vvt1i", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][0].vvtToothPosition[2], "sync: Cam Position 3vvt1i", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][0].vvtToothPosition[3], "sync: Cam Position 4vvt1i", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][0].triggerSyncGapRatio, "Sync: Trigger Latest Ratiovvt1i", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 	{engine->triggerCentral.vvtState[0][0].triggerStateIndex, "triggerStateIndexvvt1i", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][1].synchronizationCounter, "sync: wheel sync countervvt1e", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][1].vvtToothDurations0, "vvtToothDurations0vvt1e", "us", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][1].vvtCurrentPosition, "sync: Primary Positionvvt1e", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][1].vvtToothPosition[0], "sync: Cam Position 1vvt1e", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][1].vvtToothPosition[1], "sync: Cam Position 2vvt1e", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][1].vvtToothPosition[2], "sync: Cam Position 3vvt1e", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][1].vvtToothPosition[3], "sync: Cam Position 4vvt1e", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][1].triggerSyncGapRatio, "Sync: Trigger Latest Ratiovvt1e", "", 3},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 	{engine->triggerCentral.vvtState[0][1].triggerStateIndex, "triggerStateIndexvvt1e", "", 0},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][0].synchronizationCounter, "sync: wheel sync countervvt2i", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][0].vvtToothDurations0, "vvtToothDurations0vvt2i", "us", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][0].vvtCurrentPosition, "sync: Primary Positionvvt2i", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][0].vvtToothPosition[0], "sync: Cam Position 1vvt2i", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][0].vvtToothPosition[1], "sync: Cam Position 2vvt2i", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][0].vvtToothPosition[2], "sync: Cam Position 3vvt2i", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][0].vvtToothPosition[3], "sync: Cam Position 4vvt2i", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][0].triggerSyncGapRatio, "Sync: Trigger Latest Ratiovvt2i", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 	{engine->triggerCentral.vvtState[1][0].triggerStateIndex, "triggerStateIndexvvt2i", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][1].synchronizationCounter, "sync: wheel sync countervvt2e", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][1].vvtToothDurations0, "vvtToothDurations0vvt2e", "us", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][1].vvtCurrentPosition, "sync: Primary Positionvvt2e", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][1].vvtToothPosition[0], "sync: Cam Position 1vvt2e", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][1].vvtToothPosition[1], "sync: Cam Position 2vvt2e", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][1].vvtToothPosition[2], "sync: Cam Position 3vvt2e", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][1].vvtToothPosition[3], "sync: Cam Position 4vvt2e", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][1].triggerSyncGapRatio, "Sync: Trigger Latest Ratiovvt2e", "", 3},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 	{engine->triggerCentral.vvtState[1][1].triggerStateIndex, "triggerStateIndexvvt2e", "", 0},
@@ -826,23 +826,23 @@ static const LogField fields[] = {
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{engine->module<IdleController>().unmock().iacByTpsTaper, "idle: iacByTpsTaper portion", "", 0},
 #endif
-// skipping bit  at 1640@0
-// skipping bit  at 1640@1
-// skipping bit  at 1640@2
-// skipping bit  at 1640@3
-// skipping bit  at 1640@4
-// skipping bit  at 1640@5
-// skipping bit  at 1640@6
-// skipping bit  at 1640@7
-// skipping bit  at 1640@8
-// skipping bit  at 1640@9
-// skipping bit  at 1640@10
-// skipping bit  at 1640@11
-// skipping bit  at 1640@12
-// skipping bit  at 1640@13
-// skipping bit  at 1640@14
-// skipping bit  at 1640@15
-// skipping bit  at 1640@16
+// structureStartingTsPosition 1620, skipping bit  at 1640@0
+// structureStartingTsPosition 1620, skipping bit  at 1640@1
+// structureStartingTsPosition 1620, skipping bit  at 1640@2
+// structureStartingTsPosition 1620, skipping bit  at 1640@3
+// structureStartingTsPosition 1620, skipping bit  at 1640@4
+// structureStartingTsPosition 1620, skipping bit  at 1640@5
+// structureStartingTsPosition 1620, skipping bit  at 1640@6
+// structureStartingTsPosition 1620, skipping bit  at 1640@7
+// structureStartingTsPosition 1620, skipping bit  at 1640@8
+// structureStartingTsPosition 1620, skipping bit  at 1640@9
+// structureStartingTsPosition 1620, skipping bit  at 1640@10
+// structureStartingTsPosition 1620, skipping bit  at 1640@11
+// structureStartingTsPosition 1620, skipping bit  at 1640@12
+// structureStartingTsPosition 1620, skipping bit  at 1640@13
+// structureStartingTsPosition 1620, skipping bit  at 1640@14
+// structureStartingTsPosition 1620, skipping bit  at 1640@15
+// structureStartingTsPosition 1620, skipping bit  at 1640@16
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{engine->module<IdleController>().unmock().idleTarget, "Idle: Target RPM", "", 0},
 #endif
@@ -862,115 +862,115 @@ static const LogField fields[] = {
 	{getLiveData<electronic_throttle_s>(0)->targetWithIdlePosition, "ETB: target with idleetb1", "%", 2, "ETB more"},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(1)->targetWithIdlePosition, "ETB: target with idleetb2", "%", 2, "ETB more"},
-#endif
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(0)->trim, "ETB: trimetb1", "", 0},
-#endif
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(1)->trim, "ETB: trimetb2", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(0)->luaAdjustment, "ETB: luaAdjustmentetb1", "%", 2, "ETB more"},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(1)->luaAdjustment, "ETB: luaAdjustmentetb2", "%", 2, "ETB more"},
-#endif
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(0)->m_wastegatePosition, "DC: wastegatePositionetb1", "%", 2, "ETB more"},
-#endif
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(1)->m_wastegatePosition, "DC: wastegatePositionetb2", "%", 2, "ETB more"},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(0)->etbFeedForward, "etbFeedForwardetb1", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(1)->etbFeedForward, "etbFeedForwardetb2", "", 0},
-#endif
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(0)->etbIntegralError, "etbIntegralErroretb1", "", 3},
-#endif
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(1)->etbIntegralError, "etbIntegralErroretb2", "", 3},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(0)->etbCurrentTarget, "ETB: target for current pedaletb1", "%", 3},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(1)->etbCurrentTarget, "ETB: target for current pedaletb2", "%", 3},
-#endif
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(0)->m_adjustedTarget, "Adjusted targetetb1", "%", 2},
 #endif
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(1)->m_adjustedTarget, "Adjusted targetetb2", "%", 2},
-#endif
-// skipping bit etb1 at 1696@0
-// skipping bit etb2 at 1696@0
-// skipping bit etb1 at 1696@1
-// skipping bit etb2 at 1696@1
-// skipping bit etb1 at 1696@2
-// skipping bit etb2 at 1696@2
+// structureStartingTsPosition 1664, skipping bit etb1 at 1696@0
+// structureStartingTsPosition 1664, skipping bit etb1 at 1696@1
+// structureStartingTsPosition 1664, skipping bit etb1 at 1696@2
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(0)->etbTpsErrorCounter, "ETB TPS error counteretb1", "count", 0, "ETB more"},
-#endif
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(1)->etbTpsErrorCounter, "ETB TPS error counteretb2", "count", 0, "ETB more"},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(0)->etbPpsErrorCounter, "ETB pedal error counteretb1", "count", 0, "ETB more"},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(1)->etbPpsErrorCounter, "ETB pedal error counteretb2", "count", 0, "ETB more"},
-#endif
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(0)->etbErrorCode, "etbErrorCodeetb1", "", 0},
-#endif
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(1)->etbErrorCode, "etbErrorCodeetb2", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(0)->etbErrorCodeBlinker, "etbErrorCodeBlinkeretb1", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(1)->etbErrorCodeBlinker, "etbErrorCodeBlinkeretb2", "", 0},
-#endif
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(0)->tcEtbDrop, "ETB traction controletb1", "%", 0},
-#endif
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(1)->tcEtbDrop, "ETB traction controletb2", "%", 0},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(0)->jamTimer, "ETB jam timeretb1", "sec", 2},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(1)->jamTimer, "ETB jam timeretb2", "sec", 2},
-#endif
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(0)->adjustedEtbTarget, "ETB with adjustmentsetb1", "%", 0},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(1)->adjustedEtbTarget, "ETB with adjustmentsetb2", "%", 0},
+	{getLiveData<electronic_throttle_s>(0)->state, "stateetb1", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(0)->state, "stateetb1", "", 0},
+	{getLiveData<electronic_throttle_s>(1)->targetWithIdlePosition, "ETB: target with idleetb2", "%", 2, "ETB more"},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->trim, "ETB: trimetb2", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->luaAdjustment, "ETB: luaAdjustmentetb2", "%", 2, "ETB more"},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->m_wastegatePosition, "DC: wastegatePositionetb2", "%", 2, "ETB more"},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->etbFeedForward, "etbFeedForwardetb2", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->etbIntegralError, "etbIntegralErroretb2", "", 3},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->etbCurrentTarget, "ETB: target for current pedaletb2", "%", 3},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->m_adjustedTarget, "Adjusted targetetb2", "%", 2},
+#endif
+// structureStartingTsPosition 1712, skipping bit etb2 at 1744@0
+// structureStartingTsPosition 1712, skipping bit etb2 at 1744@1
+// structureStartingTsPosition 1712, skipping bit etb2 at 1744@2
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->etbTpsErrorCounter, "ETB TPS error counteretb2", "count", 0, "ETB more"},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->etbPpsErrorCounter, "ETB pedal error counteretb2", "count", 0, "ETB more"},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->etbErrorCode, "etbErrorCodeetb2", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->etbErrorCodeBlinker, "etbErrorCodeBlinkeretb2", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->tcEtbDrop, "ETB traction controletb2", "%", 0},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->jamTimer, "ETB jam timeretb2", "sec", 2},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->adjustedEtbTarget, "ETB with adjustmentsetb2", "%", 0},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(1)->state, "stateetb2", "", 0},
 #endif
 	{engine->dc_motors.dcOutput0, "DC: output0", "%", 2, "ETB more"},
 	{engine->dc_motors.isEnabled0_int, "DC: en0", "%", 2, "ETB more"},
-// skipping bit  at 1792@0
+// structureStartingTsPosition 1784, skipping bit  at 1792@0
 #if EFI_VVT_PID
 	{engine->module<VvtController1>()->vvtTarget, "vvtTarget", "deg", 1},
 #endif
 #if EFI_VVT_PID
 	{engine->module<VvtController1>()->vvtOutput, "vvtOutput", "%", 0},
 #endif
-// skipping bit  at 1808@0
-// skipping bit  at 1808@1
+// structureStartingTsPosition 1808, skipping bit  at 1808@0
+// structureStartingTsPosition 1808, skipping bit  at 1808@1
 #if EFI_SHAFT_POSITION_INPUT
 	{engine->lambdaMonitor.lambdaTimeSinceGood, "lambdaTimeSinceGood", "sec", 2},
 #endif
