@@ -39,27 +39,16 @@ public class FieldIterator {
     }
 
     public void loop() {
-        FieldsStrategy empty = new FieldsStrategy() {
-            @Override
-            int writeOneField(FieldIterator iterator, String prefix, int tsPosition) {
-                return 0;
-            }
-        };
-//
-//        empty.writeFields(fields, "", 0);
-
-        FieldIterator iterator = new FieldIterator(fields);
-
-        for (int i = 0; i < fields.size(); i++) {
-            start(i);
-            empty.writeOneField(iterator, "", 0);
-            end();
-        }
+        FieldsStrategy.VOID.loopIterator(fields, "", 0, this);
     }
 
     public void end() {
         if (!cf.isDirective())
             prev = cf;
         bitState.incrementBitIndex(cf, next);
+    }
+
+    public int adjustSize(int tsPosition) {
+        return tsPosition + cf.getSize(next);
     }
 }

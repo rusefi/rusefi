@@ -79,8 +79,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                         writeJavaFieldName(nameWithPrefix, tsPosition);
                         content.append("FieldType.BIT, " + bitIndex + ")" + terminateField());
                     }
-                    tsPosition += configField.getSize(next);
-                    return tsPosition;
+                    return iterator.adjustSize(tsPosition);
                 }
 
                 if (TypesHelper.isFloat(configField.getTypeName())) {
@@ -115,9 +114,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                     }
                 }
 
-                tsPosition += configField.getSize(next);
-
-                return tsPosition;
+                return iterator.adjustSize(tsPosition);
             }
         };
         fieldsStrategy.run(state, structure, 0);

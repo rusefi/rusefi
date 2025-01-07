@@ -11,6 +11,13 @@ import java.util.List;
  * @see PerFieldWithStructuresIterator#strategy
  */
 public abstract class FieldsStrategy {
+    static final FieldsStrategy VOID = new FieldsStrategy() {
+        @Override
+        int writeOneField(FieldIterator iterator, String prefix, int tsPosition) {
+            return 0;
+        }
+    };
+
     public int run(ReaderState state, ConfigStructure structure, int structureStartingTsPosition) {
         if (state.isStackEmpty()) {
             return writeFields(structure.getTsFields(), "", structureStartingTsPosition);
@@ -20,6 +27,10 @@ public abstract class FieldsStrategy {
 
     protected int writeFields(List<ConfigField> fields, String prefix, int tsPosition) {
         FieldIterator iterator = new FieldIterator(fields);
+        return loopIterator(fields, prefix, tsPosition, iterator);
+    }
+
+    protected int loopIterator(List<ConfigField> fields, String prefix, int tsPosition, FieldIterator iterator) {
         for (int i = 0; i < fields.size(); i++) {
             iterator.start(i);
             tsPosition = writeOneField(iterator, prefix, tsPosition);

@@ -61,8 +61,7 @@ public class TsOutput {
 
                 // note that we need to handle account for unused bits size below!
                 if (configField.getName().startsWith(ConfigStructureImpl.ALIGNMENT_FILL_AT)) {
-                    tsPosition += configField.getSize(next);
-                    return tsPosition;
+                    return it.adjustSize(tsPosition);
                 }
 
                 if (configField.isDirective() && configField.getComment() != null) {
@@ -94,8 +93,7 @@ public class TsOutput {
                         tsHeader.append(EOL);
                     }
 
-                    tsPosition += configField.getSize(next);
-                    return tsPosition;
+                    return it.adjustSize(tsPosition);
                 }
 
                 if (configField.getState().getTsCustomLine().containsKey(configField.getTypeName())) {
