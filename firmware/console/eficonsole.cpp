@@ -144,6 +144,20 @@ static void sayHello() {
 	efiPrintf("STM32_PCLK1=%d", STM32_PCLK1);
 	efiPrintf("STM32_PCLK2=%d", STM32_PCLK2);
 #endif
+#ifdef STM32_RTCSEL
+	if (1) {
+		#define STM32_RTCSEL_SHIFT 8
+		const char * rtcsel_names[4] = {"no clock", "LSE", "LSI", "HSE"};
+
+		int rtcsel = (RCC->BDCR & STM32_RTCSEL_MASK) >> STM32_RTCSEL_SHIFT;
+		efiPrintf("STM32_RTCSEL=%d %s actual=%d %s",
+			STM32_RTCSEL >> STM32_RTCSEL_SHIFT, rtcsel_names[STM32_RTCSEL >> STM32_RTCSEL_SHIFT], rtcsel, rtcsel_names[rtcsel]);
+#ifdef RUSEFI_STM32_LSE_WAIT_MAX_RTCSEL
+		efiPrintf("RUSEFI_STM32_LSE_WAIT_MAX_RTCSEL=%d %s",
+			RUSEFI_STM32_LSE_WAIT_MAX_RTCSEL >> STM32_RTCSEL_SHIFT, rtcsel_names[RUSEFI_STM32_LSE_WAIT_MAX_RTCSEL >> STM32_RTCSEL_SHIFT]);
+#endif
+	}
+#endif
 
 	efiPrintf("PORT_IDLE_THREAD_STACK_SIZE=%d", PORT_IDLE_THREAD_STACK_SIZE);
 
