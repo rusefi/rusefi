@@ -32,15 +32,22 @@ endif
 ifeq ($(AUTOMATION_LTS),true)
 ifneq (,$(AUTOMATION_REF))
   BRANCH_PART_OF_FOLDER=$(AUTOMATION_REF)
+  BRANCH_REF_FOR_BUNDLE=$(AUTOMATION_REF)
 else
   BRANCH_PART_OF_FOLDER=lts_unknown
+  BRANCH_REF_FOR_BUNDLE=lts_unknown
 endif
 else
   # todo: (as long as not Windows linux?) invoke bin/find_branch_name_or_snapshot.sh instead?
   BRANCH_PART_OF_FOLDER=snapshot
+  BRANCH_REF_FOR_BUNDLE=development
 endif
 
-FOLDER = rusefi.$(BRANCH_PART_OF_FOLDER).$(BUNDLE_NAME)
+# todo: replace all usages of $(FOLDER) with $(STAGING_FOLDER) just to make code search simpler
+FOLDER         = rusefi.$(BRANCH_PART_OF_FOLDER).$(BUNDLE_NAME)
+STAGING_FOLDER = rusefi.$(BRANCH_PART_OF_FOLDER).$(BUNDLE_NAME)
+
+BRANCH_REF_FILE = $(STAGING_FOLDER)/release.txt
 
 DELIVER = deliver
 ARTIFACTS = ../artifacts
@@ -67,6 +74,7 @@ endif
 
 UPDATE_CONSOLE_FOLDER_SOURCES = \
   $(CONSOLE_OUT) \
+  $(BRANCH_REF_FILE) \
   $(TS_PLUGIN_LAUNCHER_OUT) \
   $(AUTOUPDATE_OUT)
 
@@ -215,8 +223,11 @@ $(OBFUSCATED_OUT): .obfuscated-sentinel
 $(ST_DRIVERS): | $(DRIVERS_FOLDER)
 	wget https://rusefi.com/build_server/st_files/silent_st_drivers2.exe -P $(dir $@)
 
-$(DELIVER) $(ARTIFACTS) $(FOLDER) $(CONSOLE_FOLDER) $(DRIVERS_FOLDER):
+$(DELIVER) $(ARTIFACTS) $(STAGING_FOLDER) $(CONSOLE_FOLDER) $(DRIVERS_FOLDER):
 	mkdir -p $@
+
+$(BRANCH_REF_FILE):
+	echo "release=$(BRANCH_REF_FOR_BUNDLE)" >> $(BRANCH_REF_FILE)
 
 $(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME).zip: $(BUNDLE_FILES) | $(ARTIFACTS)
 	zip -r $@ $(BUNDLE_FILES)
