@@ -73,7 +73,9 @@ public class SdCardFieldsContent {
 
     private static String getLine(ConfigField configField, String prefix, String namePrefix, String name, String expression, Boolean isPtr, String conditional, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator, int structureStartingTsPosition) {
         if (configField.isBit()) {
-            return "// structureStartingTsPosition " + structureStartingTsPosition + " " + expression + "/" + DataLogConsumer.getHumanGaugeName(prefix, configField, namePrefix) + ", skipping bit " + namePrefix + " at " + currentPosition + "@" + perFieldWithStructuresIterator.bitState.get() + "\n";
+            // 'structureStartingTsPosition' is about fragment list see fragments.h
+            int offsetWithinCurrentStructure = currentPosition - structureStartingTsPosition;
+            return "// structureStartingTsPosition " + structureStartingTsPosition + " " + expression + "/" + DataLogConsumer.getHumanGaugeName(prefix, configField, namePrefix) + ", skipping bit " + namePrefix + " at " + currentPosition + " " + offsetWithinCurrentStructure + "@" + perFieldWithStructuresIterator.bitState.get() + "\n";
         }
 
         String categoryStr = configField.getCategory();
