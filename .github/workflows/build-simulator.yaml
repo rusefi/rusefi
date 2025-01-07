@@ -30,6 +30,7 @@ jobs:
     - uses: actions/setup-java@v4
       with:
         distribution: 'zulu'
+        # using version 21 here just for fun. See build-tsplugin-body.yaml
         java-version: '17'
 
     - name: Generate docs and enums
