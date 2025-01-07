@@ -71,7 +71,7 @@ $(CONFIG_FILES): .config-sentinel ;
 
 # CONFIG_DEFINITION is always rebuilt, but the file will only be updated if it needs to be,
 # so it won't trigger a config file generation unless it needs to.
-.config-sentinel: $(CONFIG_INPUTS) $(CONFIG_DEFINITION) $(TGT_SENTINEL)
+.config-sentinel: $(CONFIG_INPUTS) $(CONFIG_DEFINITION_JAR) $(TGT_SENTINEL)
 ifneq (,$(CUSTOM_GEN_CONFIG))
 	bash $(BOARD_DIR)/$(CUSTOM_GEN_CONFIG)
 else

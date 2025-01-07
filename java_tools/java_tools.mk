@@ -11,37 +11,37 @@ FLOCK = flock -o /tmp/java.lock
 
 FIELDS =   $(PROJECT_DIR)/../java_console/models/src/main/java/com/rusefi/config/generated/Fields.java
 
-CONFIG_DEFINITION = $(JAVA_TOOLS)/configuration_definition/build/libs/config_definition-all.jar
-CONFIG_DEFINITION_BASE = $(JAVA_TOOLS)/configuration_definition_base/build/libs/config_definition_base-all.jar
-ENUM_TO_STRING = $(JAVA_TOOLS)/enum_to_string/build/libs/enum_to_string-all.jar
-TUNE_TOOLS = $(JAVA_TOOLS)/tune-tools/build/libs/tune-tools-all.jar
-TS_PLUGIN_LAUNCHER_OUT = $(JAVA_TOOLS)/ts_plugin_launcher/build/jar/rusefi_ts_plugin_launcher.jar
-CONSOLE_OUT = $(PROJECT_DIR)/../java_console_binary/rusefi_console.jar
-AUTOUPDATE_OUT = $(PROJECT_DIR)/../java_console_binary/rusefi_autoupdate.jar
+CONFIG_DEFINITION_JAR = $(JAVA_TOOLS)/configuration_definition/build/libs/config_definition-all.jar
+CONFIG_DEFINITION_BASE_JAR = $(JAVA_TOOLS)/configuration_definition_base/build/libs/config_definition_base-all.jar
+ENUM_TO_STRING_JAR = $(JAVA_TOOLS)/enum_to_string/build/libs/enum_to_string-all.jar
+# TUNE_TOOLS_JAR = $(JAVA_TOOLS)/tune-tools/build/libs/tune-tools-all.jar
+TS_PLUGIN_LAUNCHER_JAR = $(JAVA_TOOLS)/ts_plugin_launcher/build/jar/rusefi_ts_plugin_launcher.jar
+CONSOLE_JAR = $(PROJECT_DIR)/../java_console_binary/rusefi_console.jar
+AUTOUPDATE_JAR = $(PROJECT_DIR)/../java_console_binary/rusefi_autoupdate.jar
 
 # We use .FORCE to always rebuild these tools. Gradle won't actually touch the jars if it doesn't need to,
 # so we don't have to worry about triggering rebuilds of things that have these tools as a prerequisite.
 
-$(CONFIG_DEFINITION): .FORCE
+$(CONFIG_DEFINITION_JAR): .FORCE
 	cd $(JAVA_TOOLS) && $(FLOCK) ./gradlew :config_definition:shadowJar
 
-$(CONFIG_DEFINITION_BASE): .FORCE
+$(CONFIG_DEFINITION_BASE_JAR): .FORCE
 	cd $(JAVA_TOOLS) && $(FLOCK) ./gradlew :config_definition_base:shadowJar
 
-$(ENUM_TO_STRING): .FORCE
+$(ENUM_TO_STRING_JAR): .FORCE
 	cd $(JAVA_TOOLS) && $(FLOCK) ./gradlew :enum_to_string:shadowJar
 
-$(TUNE_TOOLS):
-	cd $(JAVA_TOOLS) && $(FLOCK) ./gradlew :tune-tools:shadowJar
+#$(TUNE_TOOLS_JAR):
+	#cd $(JAVA_TOOLS) && $(FLOCK) ./gradlew :tune-tools:shadowJar
 
-$(TS_PLUGIN_LAUNCHER_OUT): .FORCE
+$(TS_PLUGIN_LAUNCHER_JAR): .FORCE
 	cd $(JAVA_TOOLS) && $(FLOCK) ./gradlew :ts_plugin_launcher:shadowJar
 
 # The console depends on Fields.java.
-$(CONSOLE_OUT): $(FIELDS) .FORCE
+$(CONSOLE_JAR): $(FIELDS) .FORCE
 	cd $(JAVA_TOOLS) && $(FLOCK) ./gradlew :ui:shadowJar
 
-$(AUTOUPDATE_OUT): .FORCE
+$(AUTOUPDATE_JAR): .FORCE
 	cd $(JAVA_TOOLS) && $(FLOCK) ./gradlew :autoupdate:jar
 
 .FORCE:
