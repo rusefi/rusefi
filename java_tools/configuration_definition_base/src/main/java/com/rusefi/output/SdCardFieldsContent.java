@@ -71,9 +71,9 @@ public class SdCardFieldsContent {
         return getLine(configField, prefix, namePrefix, prefix + name, expression, isPtr, conditional, currentPosition, perFieldWithStructuresIterator, structureStartingTsPosition);
     }
 
-    private static String getLine(ConfigField configField, String prefix, String namePrefix, String name, String home, Boolean isPtr, String conditional, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator, int structureStartingTsPosition) {
+    private static String getLine(ConfigField configField, String prefix, String namePrefix, String name, String expression, Boolean isPtr, String conditional, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator, int structureStartingTsPosition) {
         if (configField.isBit()) {
-            return "// structureStartingTsPosition " + structureStartingTsPosition + ", skipping bit " + namePrefix + " at " + currentPosition + "@" + perFieldWithStructuresIterator.bitState.get() + "\n";
+            return "// structureStartingTsPosition " + structureStartingTsPosition + " " + expression + "/" + DataLogConsumer.getHumanGaugeName(prefix, configField, namePrefix) + ", skipping bit " + namePrefix + " at " + currentPosition + "@" + perFieldWithStructuresIterator.bitState.get() + "\n";
         }
 
         String categoryStr = configField.getCategory();
@@ -93,7 +93,7 @@ public class SdCardFieldsContent {
 
         return before
                 + "\t{" +
-            home + (isPtr ? "->" : ".") + name +
+            expression + (isPtr ? "->" : ".") + name +
                 ", "
                 + DataLogConsumer.getHumanGaugeName(prefix, configField, namePrefix) +
                 ", " +

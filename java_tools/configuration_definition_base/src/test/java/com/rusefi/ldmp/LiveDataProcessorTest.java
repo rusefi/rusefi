@@ -128,12 +128,12 @@ public class LiveDataProcessorTest {
                 "static const LogField fields[] = {\n" +
                 "{packedTime, GAUGE_NAME_TIME, \"sec\", 0},\n" +
                 "\t{engine->wbo1.tempC, \"WBO: Temperaturewb1\", \"C\", 0, \"cate\"},\n" +
-                "// structureStartingTsPosition 0, skipping bit wb1 at 4@0\n" +
-                "// structureStartingTsPosition 0, skipping bit wb1 at 4@1\n" +
+                "// structureStartingTsPosition 0 engine->wbo1/\"bitName1wb1\", skipping bit wb1 at 4@0\n" +
+                "// structureStartingTsPosition 0 engine->wbo1/\"bitName2wb1\", skipping bit wb1 at 4@1\n" +
                 "\t{engine->wbo1.esr, \"WBO: ESRwb1\", \"ohm\", 0},\n" +
                 "\t{engine->wbo2.tempC, \"WBO: Temperaturewb2\", \"C\", 0, \"cate\"},\n" +
-                "// structureStartingTsPosition 12, skipping bit wb2 at 16@0\n" +
-                "// structureStartingTsPosition 12, skipping bit wb2 at 16@1\n" +
+                "// structureStartingTsPosition 12 engine->wbo2/\"bitName1wb2\", skipping bit wb2 at 16@0\n" +
+                "// structureStartingTsPosition 12 engine->wbo2/\"bitName2wb2\", skipping bit wb2 at 16@1\n" +
                 "\t{engine->wbo2.esr, \"WBO: ESRwb2\", \"ohm\", 0},\n" +
                 "\t{engine->outputChannels.oootempC, \"Temperature\", \"C\", 0},\n" +
                 "\t{engine->outputChannels.oooesr, \"ESR\", \"ohm\", 0},\n" +
