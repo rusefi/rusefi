@@ -45,7 +45,8 @@ public class LiveDataProcessorTest {
                 } else {
                     return new StringReader("struct_no_prefix wideband_state_s\n" +
                             "\tuint16_t tempC;WBO: Temperature;\"C\", 1, 0, 500, 1000, 0, \"cate\"\n" +
-                            "bit bitName\n" +
+                            "bit bitName1\n" +
+                            "bit bitName2\n" +
                             "\tuint16_t esr;WBO: ESR;\"ohm\", 1, 0, 0, 10000, 0\n" +
                             "end_struct");
 
@@ -56,11 +57,13 @@ public class LiveDataProcessorTest {
         assertEquals(14, captor.fileCapture.size());
 
         captor.assertOutput("tempC0 = scalar, U16, 0, \"C\", 1, 0\n" +
-            "bitName0 = bits, U32, 4, [0:0]\n" +
+            "bitName10 = bits, U32, 4, [0:0]\n" +
+            "bitName20 = bits, U32, 4, [1:1]\n" +
             "esr0 = scalar, U16, 8, \"ohm\", 1, 0\n" +
             "; total TS size = 12\n" +
             "tempC1 = scalar, U16, 12, \"C\", 1, 0\n" +
-            "bitName1 = bits, U32, 16, [0:0]\n" +
+            "bitName11 = bits, U32, 16, [0:0]\n" +
+            "bitName21 = bits, U32, 16, [1:1]\n" +
             "esr1 = scalar, U16, 20, \"ohm\", 1, 0\n" +
             "; total TS size = 24\n" +
             "oootempC = scalar, U16, 24, \"C\", 1, 0\n" +
@@ -68,10 +71,12 @@ public class LiveDataProcessorTest {
             "; total TS size = 28\n", liveDataProcessor.getOutputsSectionFileName());
 
         captor.assertOutput("entry = tempC0, \"WBO: Temperature0\", int,    \"%d\"\n" +
-            "entry = bitName0, \"bitName0\", int,    \"%d\"\n" +
+            "entry = bitName10, \"bitName10\", int,    \"%d\"\n" +
+            "entry = bitName20, \"bitName20\", int,    \"%d\"\n" +
             "entry = esr0, \"WBO: ESR0\", int,    \"%d\"\n" +
             "entry = tempC1, \"WBO: Temperature1\", int,    \"%d\"\n" +
-            "entry = bitName1, \"bitName1\", int,    \"%d\"\n" +
+            "entry = bitName11, \"bitName11\", int,    \"%d\"\n" +
+            "entry = bitName21, \"bitName21\", int,    \"%d\"\n" +
             "entry = esr1, \"WBO: ESR1\", int,    \"%d\"\n" +
             "entry = oootempC, \"Temperature\", int,    \"%d\"\n" +
             "entry = oooesr, \"ESR\", int,    \"%d\"\n", liveDataProcessor.getDataLogFileName());
@@ -83,7 +88,8 @@ public class LiveDataProcessorTest {
             "decl_frag<output_channels_s>{},\n", liveDataProcessor.getDataFragmentsH());
 
         captor.assertOutput("indicatorPanel = wbo_channels0IndicatorPanel, 2\n" +
-            "\tindicator = {bitName0}, \"bitName No\", \"bitName Yes\"\n" +
+            "\tindicator = {bitName10}, \"bitName1 No\", \"bitName1 Yes\"\n" +
+            "\tindicator = {bitName20}, \"bitName2 No\", \"bitName2 Yes\"\n" +
             "\n" +
             "dialog = wbo_channels0Dialog, \"wbo_channels0\"\n" +
             "\tpanel = wbo_channels0IndicatorPanel\n" +
@@ -92,7 +98,8 @@ public class LiveDataProcessorTest {
             "\t\tgraphLine = esr0\n" +
             "\n" +
             "indicatorPanel = wbo_channels1IndicatorPanel, 2\n" +
-            "\tindicator = {bitName1}, \"bitName No\", \"bitName Yes\"\n" +
+            "\tindicator = {bitName11}, \"bitName1 No\", \"bitName1 Yes\"\n" +
+            "\tindicator = {bitName21}, \"bitName2 No\", \"bitName2 Yes\"\n" +
             "\n" +
             "dialog = wbo_channels1Dialog, \"wbo_channels1\"\n" +
             "\tpanel = wbo_channels1IndicatorPanel\n" +
@@ -121,10 +128,12 @@ public class LiveDataProcessorTest {
                 "static const LogField fields[] = {\n" +
                 "{packedTime, GAUGE_NAME_TIME, \"sec\", 0},\n" +
                 "\t{engine->wbo1.tempC, \"WBO: Temperaturewb1\", \"C\", 0, \"cate\"},\n" +
-                "\t{engine->wbo2.tempC, \"WBO: Temperaturewb2\", \"C\", 0, \"cate\"},\n" +
-                "// skipping bit wb1 at 4@0\n" +
-                "// skipping bit wb2 at 4@0\n" +
+                "// structureStartingTsPosition 0, skipping bit wb1 at 4@0\n" +
+                "// structureStartingTsPosition 0, skipping bit wb1 at 4@1\n" +
                 "\t{engine->wbo1.esr, \"WBO: ESRwb1\", \"ohm\", 0},\n" +
+                "\t{engine->wbo2.tempC, \"WBO: Temperaturewb2\", \"C\", 0, \"cate\"},\n" +
+                "// structureStartingTsPosition 12, skipping bit wb2 at 16@0\n" +
+                "// structureStartingTsPosition 12, skipping bit wb2 at 16@1\n" +
                 "\t{engine->wbo2.esr, \"WBO: ESRwb2\", \"ohm\", 0},\n" +
                 "\t{engine->outputChannels.oootempC, \"Temperature\", \"C\", 0},\n" +
                 "\t{engine->outputChannels.oooesr, \"ESR\", \"ohm\", 0},\n" +

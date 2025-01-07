@@ -40,10 +40,10 @@ public class SdCardFieldsGeneratorTest {
     @Test
     public void bitAndAlignment() {
         String expectedOutput = "\t{test->reference.RPMValue, \"feee\", \"RPM\", 2},\n" +
-            "// skipping bit  at 4@0\n" +
+            "// structureStartingTsPosition 0, skipping bit  at 4@0\n" +
             "\t{test->reference.Value, \"feee\", \"RPM\", 2},\n" +
-            "// skipping bit  at 12@0\n" +
-            "// skipping bit  at 12@1\n";
+            "// structureStartingTsPosition 0, skipping bit  at 12@0\n" +
+            "// structureStartingTsPosition 0, skipping bit  at 12@1\n";
 
         processAndAssert("struct_no_prefix output_channels_s\n" +
                 "uint16_t autoscale RPMValue;feee;\"RPM\",1, 0, 0, 8000, 2\n" +

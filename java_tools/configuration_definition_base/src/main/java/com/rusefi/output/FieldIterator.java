@@ -39,8 +39,8 @@ public class FieldIterator {
         cf = fields.get(index);
     }
 
-    public void loop(int tsPosition) {
-        FieldsStrategy.VOID.loopIterator(fields, "", tsPosition, this);
+    public int loop(int tsPosition) {
+        return FieldsStrategy.VOID.loopIterator(fields, "", tsPosition, this);
     }
 
     public void end(int currentPosition) {

@@ -210,7 +210,7 @@ public class LiveDataProcessor {
                 state.addDestination(new FileJavaFieldsConsumer(state, JAVA_DESTINATION + javaName, outputsSections.getBaseOffset(), fileFactory));
 
                 if (constexpr != null) {
-                    sdCardFieldsConsumer.home = constexpr;
+                    sdCardFieldsConsumer.expressions = constexpr;
                     sdCardFieldsConsumer.names = outputNames;
                     sdCardFieldsConsumer.conditional = conditional;
                     sdCardFieldsConsumer.isPtr = isPtr;

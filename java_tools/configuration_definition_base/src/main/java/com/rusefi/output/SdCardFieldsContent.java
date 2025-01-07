@@ -18,7 +18,7 @@ public class SdCardFieldsContent {
     public static final String BOARD_LOOKUP_H = "#include \"board_lookup.h\"\n";
     private final StringBuilder body = new StringBuilder();
 
-    public String[] home = new String[] {"test->reference"}; // technical debt: default value is only used by unit tests
+    public String[] expressions = new String[] {"test->reference"}; // technical debt: default value is only used by unit tests
     public String conditional;
     public Boolean isPtr = false;
     public String[] names;
@@ -35,43 +35,45 @@ public class SdCardFieldsContent {
 
     public void handleEndStruct(ReaderState state, ConfigStructure structure) throws IOException {
         if (state.isStackEmpty()) {
-            PerFieldWithStructuresIterator.Strategy strategy = new PerFieldWithStructuresIterator.Strategy() {
-                @Override
-                public String process(ReaderState state, ConfigField configField, String prefix, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator) {
-                    return processOutput(configField, prefix, currentPosition, perFieldWithStructuresIterator);
-                }
-
-                @Override
-                public String getArrayElementName(ConfigField cf) {
-                    return cf.getOriginalArrayName();
-                }
-            };
-            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.getTsFields(), "",
-                    strategy, ".");
-            iterator.loop(structureStartingTsPosition);
-            String content = iterator.getContent();
-            body.append(content);
+            for (int i = 0; i < expressions.length; i++) {
+                String namePrefix = (names == null || names.length <= 1) ? "" : names[i];
+                String expression = expressions[i];
+                appendFields(state, structure, namePrefix, expression);
+            }
         }
     }
 
-    private String processOutput(ConfigField configField, String prefix, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator) {
+    private void appendFields(ReaderState state, ConfigStructure structure, String namePrefix, String expression) {
+        PerFieldWithStructuresIterator.Strategy strategy = new PerFieldWithStructuresIterator.Strategy() {
+            @Override
+            public String process(ReaderState state, ConfigField configField, String prefix, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator) {
+                return processOutput(configField, prefix, currentPosition, perFieldWithStructuresIterator, namePrefix, expression, structureStartingTsPosition);
+            }
+
+            @Override
+            public String getArrayElementName(ConfigField cf) {
+                return cf.getOriginalArrayName();
+            }
+        };
+        PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.getTsFields(), "",
+                strategy, ".");
+        structureStartingTsPosition = iterator.loop(structureStartingTsPosition);
+        String content = iterator.getContent();
+        body.append(content);
+    }
+
+    private String processOutput(ConfigField configField, String prefix, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator, String namePrefix, String expression, int structureStartingTsPosition) {
         if (configField.isUnusedField())
             return "";
 
         String name = configField.getOriginalArrayName();
 
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < home.length; i++) {
-            String namePrefix = (names == null || names.length <= 1) ? "" : names[i];
-            sb.append(getLine(configField, prefix, namePrefix, prefix + name, home[i], isPtr, conditional, currentPosition, perFieldWithStructuresIterator));
-        }
-
-        return sb.toString();
+        return getLine(configField, prefix, namePrefix, prefix + name, expression, isPtr, conditional, currentPosition, perFieldWithStructuresIterator, structureStartingTsPosition);
     }
 
-    private static String getLine(ConfigField configField, String prefix, String namePrefix, String name, String home, Boolean isPtr, String conditional, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator) {
+    private static String getLine(ConfigField configField, String prefix, String namePrefix, String name, String home, Boolean isPtr, String conditional, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator, int structureStartingTsPosition) {
         if (configField.isBit()) {
-            return "// skipping bit " + namePrefix + " at " + currentPosition + "@" + perFieldWithStructuresIterator.bitState.get() + "\n";
+            return "// structureStartingTsPosition " + structureStartingTsPosition + ", skipping bit " + namePrefix + " at " + currentPosition + "@" + perFieldWithStructuresIterator.bitState.get() + "\n";
         }
 
         String categoryStr = configField.getCategory();
