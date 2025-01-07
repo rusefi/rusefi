@@ -2,6 +2,37 @@
 #include "board_lookup.h"
 static const LogField fields[] = {
 {packedTime, GAUGE_NAME_TIME, "sec", 0},
+// skipping bit  at 0@0
+// skipping bit  at 0@1
+// skipping bit  at 0@2
+// skipping bit  at 0@3
+// skipping bit  at 0@4
+// skipping bit  at 0@5
+// skipping bit  at 0@6
+// skipping bit  at 0@7
+// skipping bit  at 0@8
+// skipping bit  at 0@9
+// skipping bit  at 0@10
+// skipping bit  at 0@11
+// skipping bit  at 0@12
+// skipping bit  at 0@13
+// skipping bit  at 0@14
+// skipping bit  at 0@15
+// skipping bit  at 0@16
+// skipping bit  at 0@17
+// skipping bit  at 0@18
+// skipping bit  at 0@19
+// skipping bit  at 0@20
+// skipping bit  at 0@21
+// skipping bit  at 0@22
+// skipping bit  at 0@23
+// skipping bit  at 0@24
+// skipping bit  at 0@25
+// skipping bit  at 0@26
+// skipping bit  at 0@27
+// skipping bit  at 0@28
+// skipping bit  at 0@29
+// skipping bit  at 0@30
 	{engine->outputChannels.RPMValue, "RPM", "RPM", 0},
 	{engine->outputChannels.rpmAcceleration, "dRPM", "RPM acceleration/Rate of Change/ROC", 2},
 	{engine->outputChannels.speedToRpmRatio, "Gearbox Ratio", "value", 2},
@@ -272,8 +303,34 @@ static const LogField fields[] = {
 	{engine->outputChannels.targetAfrBlendOutput[1], "targetAfrBlendOutput 2", "%", 1},
 	{engine->outputChannels.coilState1, "coilState1", "", 0},
 	{engine->outputChannels.coilState2, "coilState2", "", 0},
+// skipping bit  at 664@0
+// skipping bit  at 664@1
+// skipping bit  at 664@2
+// skipping bit  at 664@3
+// skipping bit  at 664@4
+// skipping bit  at 664@5
+// skipping bit  at 664@6
+// skipping bit  at 664@7
+// skipping bit  at 664@8
+// skipping bit  at 664@9
 	{engine->outputChannels.injectorState1, "injectorState1", "", 0},
 	{engine->outputChannels.injectorState2, "injectorState2", "", 0},
+// skipping bit  at 672@0
+// skipping bit  at 672@1
+// skipping bit  at 672@2
+// skipping bit  at 672@3
+// skipping bit  at 672@4
+// skipping bit  at 672@5
+// skipping bit  at 672@6
+// skipping bit  at 672@7
+// skipping bit  at 672@8
+// skipping bit  at 672@9
+// skipping bit  at 672@10
+// skipping bit  at 672@11
+// skipping bit  at 672@12
+// skipping bit  at 672@13
+// skipping bit  at 672@14
+// skipping bit  at 672@15
 	{engine->outputChannels.outputRequestPeriod, "outputRequestPeriod", "", 0},
 	{engine->outputChannels.mapFast, "mapFast", "", 0},
 	{engine->outputChannels.luaGauges[0], "Lua: Gauge 1", "value", 3},
@@ -396,6 +453,7 @@ static const LogField fields[] = {
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.idealEngineTorque, "idealEngineTorque", "", 0},
 #endif
+// skipping bit  at 920@0
 	{engine->ignitionState.baseDwell, "Ignition: base dwell", "ms", 1, "Timing"},
 	{engine->ignitionState.sparkDwell, "Ignition: coil charge time", "ms", 1, "Timing"},
 	{engine->ignitionState.dwellDurationAngle, "Ignition: dwell duration", "deg", 1, "Timing"},
@@ -409,6 +467,7 @@ static const LogField fields[] = {
 	{engine->ignitionState.dwellVoltageCorrection, "Ign: Dwell voltage correction", "", 0},
 	{engine->ignitionState.luaTimingAdd, "Ign: Lua timing add", "deg", 2, "Timing"},
 	{engine->ignitionState.luaTimingMult, "Ign: Lua timing mult", "deg", 2, "Timing"},
+// skipping bit  at 964@0
 	{engine->module<KnockController>()->m_knockLevel, "Knock: Current level", "Volts", 2},
 	{engine->module<KnockController>()->m_knockCyl[0], "Knock: Cyl 1", "dBv", 0},
 	{engine->module<KnockController>()->m_knockCyl[1], "Knock: Cyl 2", "dBv", 0},
@@ -446,6 +505,7 @@ static const LogField fields[] = {
 	{engine->module<KnockController>()->m_knockFrequencyStart, "Knock: Start Freq", "Hz", 0},
 	{engine->module<KnockController>()->m_knockFrequencyStep, "Knock: Step Freq", "Hz", 0},
 	{engine->module<KnockController>()->m_knockFuelTrimMultiplier, "Knock: Fuel trim when knock", "multiplier", 0},
+// skipping bit  at 1076@0
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{engine->module<InjectorModelPrimary>()->m_deadtime, "Fuel: injector lag", "ms", 3},
 #endif
@@ -458,6 +518,35 @@ static const LogField fields[] = {
 #if EFI_LAUNCH_CONTROL
 	{engine->launchController.retardThresholdRpm, "retardThresholdRpm", "", 0},
 #endif
+// skipping bit  at 1152@0
+// skipping bit  at 1152@1
+// skipping bit  at 1152@2
+// skipping bit  at 1152@3
+// skipping bit  at 1152@4
+// skipping bit  at 1152@5
+// skipping bit  at 1152@6
+// skipping bit  at 1152@7
+// skipping bit  at 1152@8
+// skipping bit  at 1152@9
+// skipping bit  at 1152@10
+// skipping bit  at 1152@11
+// skipping bit  at 1156@0
+// skipping bit  at 1156@1
+// skipping bit  at 1156@2
+// skipping bit  at 1156@3
+// skipping bit  at 1156@4
+// skipping bit  at 1156@5
+// skipping bit  at 1172@0
+// skipping bit  at 1172@1
+// skipping bit  at 1172@2
+// skipping bit  at 1172@3
+// skipping bit  at 1172@4
+// skipping bit  at 1172@5
+// skipping bit  at 1172@6
+// skipping bit  at 1172@7
+// skipping bit  at 1172@8
+// skipping bit  at 1172@9
+// skipping bit  at 1172@10
 #if EFI_BOOST_CONTROL
 	{engine->module<BoostController>()->luaTargetAdd, "Boost: Lua target add", "v", 1, "Boost Control"},
 #endif
@@ -479,6 +568,22 @@ static const LogField fields[] = {
 #if EFI_BOOST_CONTROL
 	{engine->module<BoostController>()->boostControlTarget, "Boost: Target", "kPa", 1, "Boost Control"},
 #endif
+// skipping bit fan1 at 1208@0
+// skipping bit fan2 at 1208@0
+// skipping bit fan1 at 1208@1
+// skipping bit fan2 at 1208@1
+// skipping bit fan1 at 1208@2
+// skipping bit fan2 at 1208@2
+// skipping bit fan1 at 1208@3
+// skipping bit fan2 at 1208@3
+// skipping bit fan1 at 1208@4
+// skipping bit fan2 at 1208@4
+// skipping bit fan1 at 1208@5
+// skipping bit fan2 at 1208@5
+// skipping bit fan1 at 1208@6
+// skipping bit fan2 at 1208@6
+// skipping bit fan1 at 1208@7
+// skipping bit fan2 at 1208@7
 #if FULL_SD_LOGS
 	{engine->module<FanControl1>()->radiatorFanStatus, "radiatorFanStatusfan1", "", 0},
 #endif
@@ -487,6 +592,15 @@ static const LogField fields[] = {
 #endif
 	{engine->engineState.lua.fuelAdd, "Lua: Fuel add", "g", 3},
 	{engine->engineState.lua.fuelMult, "Lua: Fuel mult", "", 0},
+// skipping bit  at 8@0
+// skipping bit  at 8@1
+// skipping bit  at 8@2
+// skipping bit  at 8@3
+// skipping bit  at 8@4
+// skipping bit  at 8@5
+// skipping bit  at 8@6
+// skipping bit  at 8@7
+// skipping bit  at 8@8
 	{engine->engineState.sd.tCharge, "Air: Charge temperature estimate", "deg C", 1},
 	{engine->engineState.sd.tChargeK, "Air: Charge temperature estimate K", "", 0},
 	{engine->engineState.crankingFuel.coolantTemperatureCoefficient, "Fuel: cranking CLT mult", "", 0},
@@ -502,6 +616,14 @@ static const LogField fields[] = {
 	{engine->engineState.smartChipState, "smartChipState", "", 0},
 	{engine->engineState.smartChipRestartCounter, "smartChipRestartCounter", "", 0},
 	{engine->engineState.smartChipAliveCounter, "smartChipAliveCounter", "", 0},
+// skipping bit  at 1284@0
+// skipping bit  at 1284@1
+// skipping bit  at 1284@2
+// skipping bit  at 1284@3
+// skipping bit  at 1284@4
+// skipping bit  at 1284@5
+// skipping bit  at 1284@6
+// skipping bit  at 1284@7
 	{engine->engineState.startStopStateToggleCounter, "startStopStateToggleCounter", "", 0},
 	{engine->engineState.luaSoftSparkSkip, "luaSoftSparkSkip", "", 0},
 	{engine->engineState.luaHardSparkSkip, "luaHardSparkSkip", "", 0},
@@ -553,6 +675,7 @@ static const LogField fields[] = {
 #if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.mapCamPrevToothAngle, "Sync: MAP: prev angle", "deg", 2},
 #endif
+// skipping bit  at 1416@0
 #if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.triggerElapsedUs, "triggerElapsedUs", "", 0},
 #endif
@@ -703,6 +826,23 @@ static const LogField fields[] = {
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{engine->module<IdleController>().unmock().iacByTpsTaper, "idle: iacByTpsTaper portion", "", 0},
 #endif
+// skipping bit  at 1640@0
+// skipping bit  at 1640@1
+// skipping bit  at 1640@2
+// skipping bit  at 1640@3
+// skipping bit  at 1640@4
+// skipping bit  at 1640@5
+// skipping bit  at 1640@6
+// skipping bit  at 1640@7
+// skipping bit  at 1640@8
+// skipping bit  at 1640@9
+// skipping bit  at 1640@10
+// skipping bit  at 1640@11
+// skipping bit  at 1640@12
+// skipping bit  at 1640@13
+// skipping bit  at 1640@14
+// skipping bit  at 1640@15
+// skipping bit  at 1640@16
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{engine->module<IdleController>().unmock().idleTarget, "Idle: Target RPM", "", 0},
 #endif
@@ -766,6 +906,12 @@ static const LogField fields[] = {
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(1)->m_adjustedTarget, "Adjusted targetetb2", "%", 2},
 #endif
+// skipping bit etb1 at 1696@0
+// skipping bit etb2 at 1696@0
+// skipping bit etb1 at 1696@1
+// skipping bit etb2 at 1696@1
+// skipping bit etb1 at 1696@2
+// skipping bit etb2 at 1696@2
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(0)->etbTpsErrorCounter, "ETB TPS error counteretb1", "count", 0, "ETB more"},
 #endif
@@ -816,12 +962,15 @@ static const LogField fields[] = {
 #endif
 	{engine->dc_motors.dcOutput0, "DC: output0", "%", 2, "ETB more"},
 	{engine->dc_motors.isEnabled0_int, "DC: en0", "%", 2, "ETB more"},
+// skipping bit  at 1792@0
 #if EFI_VVT_PID
 	{engine->module<VvtController1>()->vvtTarget, "vvtTarget", "deg", 1},
 #endif
 #if EFI_VVT_PID
 	{engine->module<VvtController1>()->vvtOutput, "vvtOutput", "%", 0},
 #endif
+// skipping bit  at 1808@0
+// skipping bit  at 1808@1
 #if EFI_SHAFT_POSITION_INPUT
 	{engine->lambdaMonitor.lambdaTimeSinceGood, "lambdaTimeSinceGood", "sec", 2},
 #endif
