@@ -24,7 +24,8 @@ jobs:
     - uses: actions/setup-java@v4
       with:
         distribution: 'zulu'
-        java-version: '17'
+        # using version 21 here just for fun. See build-tsplugin-body.yaml
+        java-version: '21'
 
     - name: Test Compiler
       run: javac -version
