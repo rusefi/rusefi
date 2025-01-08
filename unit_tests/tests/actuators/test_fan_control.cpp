@@ -48,6 +48,16 @@ TEST(Actuators, Fan) {
 	updateFans();
 	EXPECT_EQ(false, enginePins.fanRelay.getLogicValue());
 
+	// Break the CLT sensor - fan turns on
+	Sensor::setInvalidMockValue(SensorType::Clt);
+	updateFans();
+	EXPECT_EQ(true, enginePins.fanRelay.getLogicValue());
+
+	// CLT sensor back to normal, fan turns off
+	Sensor::setMockValue(SensorType::Clt, 75);
+	updateFans();
+	EXPECT_EQ(false, enginePins.fanRelay.getLogicValue());
+
 	engineConfiguration->enableFan1WithAc = true;
 	// Now AC is on, fan should turn on!
 	mockAc.acState = true;
