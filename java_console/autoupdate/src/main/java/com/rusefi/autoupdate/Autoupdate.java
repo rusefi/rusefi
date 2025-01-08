@@ -69,15 +69,11 @@ public class Autoupdate {
     }
 
     private static void autoupdate(String[] args) {
-        String bundleFullName = BundleUtil.readBundleFullName();
-        if (bundleFullName == null) {
+        BundleUtil.BundleInfo bundleInfo = BundleUtil.readBundleFullNameNotNull();
+        if (BundleUtil.BundleInfo.isUndefined(bundleInfo)) {
             log.error("ERROR: Autoupdate: unable to perform without bundleFullName (check parent folder name)");
             System.exit(-1);
         }
-        log.info("Handling parent folder name [" + bundleFullName + "]");
-
-        BundleUtil.BundleInfo bundleInfo = BundleUtil.parse(bundleFullName);
-        // todo: huh unused? String branchName = bundleInfo.getBranchName();
 
         @NotNull String firstArgument = args.length > 0 ? args[0] : "";
 

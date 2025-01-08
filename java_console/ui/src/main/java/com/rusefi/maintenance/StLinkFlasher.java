@@ -75,7 +75,7 @@ public class StLinkFlasher {
 
     @NotNull
     public static HwPlatform getHardwareKind() {
-        String bundle = BundleUtil.readBundleFullNameNotNull();
+        String bundle = BundleUtil.readBundleFullNameNotNull().getTarget();
         if (bundle.contains("h7"))
             return HwPlatform.H7;
         if (bundle.contains("f7"))
