@@ -9,7 +9,7 @@
 #include "log_field.h"
 
 namespace {
-class TestBitLoggerField : public ::testing::Test {
+class BitLoggerFieldTest : public ::testing::Test {
     protected:
         void SetUp() override;
 
@@ -21,7 +21,7 @@ class TestBitLoggerField : public ::testing::Test {
         std::array<char, 6> m_buffer;
     };
 
-    void TestBitLoggerField::SetUp() {
+    void BitLoggerFieldTest::SetUp() {
         m_testOutputChannels = std::make_unique<output_channels_s>();
 
         const uint32_t testCoilStateBlockOffset = (
@@ -39,16 +39,16 @@ class TestBitLoggerField : public ::testing::Test {
         ASSERT_THAT(m_buffer, ::testing::ElementsAre(0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA));
     }
 
-    void TestBitLoggerField::checkBitLoggerField(const bool expected, const char* const context) {
+    void BitLoggerFieldTest::checkBitLoggerField(const bool expected, const char* const context) {
         EXPECT_EQ(1, m_logField->writeData(m_buffer.data(), nullptr)) << context;
         EXPECT_THAT(m_buffer, ::testing::ElementsAre((expected ? 0x01 : 0x00), 0xAA, 0xAA, 0xAA, 0xAA, 0xAA));
     }
 
-    void TestBitLoggerField::updateTestBit(const bool value) {
+    void BitLoggerFieldTest::updateTestBit(const bool value) {
         m_testOutputChannels->coilState12 = value;
     }
 
-    TEST_F(TestBitLoggerField, checkBitSwitching) {
+    TEST_F(BitLoggerFieldTest, checkBitSwitching) {
         checkBitLoggerField(false, "default");
 
         updateTestBit(true);
