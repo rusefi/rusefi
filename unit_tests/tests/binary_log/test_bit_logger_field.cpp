@@ -24,15 +24,16 @@ class TestBitLoggerField : public ::testing::Test {
     void TestBitLoggerField::SetUp() {
         m_testOutputChannels = std::make_unique<output_channels_s>();
 
-        const uint32_t testCoilStateBlockOffset = (reinterpret_cast<const char*>(&m_testOutputChannels->injectorState1)
-            - reinterpret_cast<const char*>(m_testOutputChannels.get())
+        const uint32_t testCoilStateBlockOffset = (
+			reinterpret_cast<const char*>(&m_testOutputChannels->outputRequestPeriod)
+				- reinterpret_cast<const char*>(m_testOutputChannels.get())
         ) - sizeof(uint32_t);
         ASSERT_EQ(
             testCoilStateBlockOffset,
-            664
+            660
         ) << "`output_channels_generated.h` header was modified significantly. "
-             << "Please check that coil state bits block precedes `injectorState1` field.";
-        m_logField = std::make_unique<LogField>(*m_testOutputChannels, testCoilStateBlockOffset, 9, "coilState12", "");
+             << "Please check that coil state bits block precedes `outputRequestPeriod` field.";
+        m_logField = std::make_unique<LogField>(*m_testOutputChannels, testCoilStateBlockOffset, 11, "coilState12", "");
 
         m_buffer.fill(0xAA);
         ASSERT_THAT(m_buffer, ::testing::ElementsAre(0xAA, 0xAA, 0xAA, 0xAA, 0xAA, 0xAA));
