@@ -199,7 +199,7 @@ public class StartupFrame {
 
         JPanel rightPanel = new JPanel(new VerticalFlowLayout());
 
-        if (BundleUtil.readBundleFullNameNotNull().contains("proteus_f7")) {
+        if (BundleUtil.readBundleFullNameNotNull().getTarget().contains("proteus_f7")) {
             String text = "WARNING: Proteus F7";
             URLLabel urlLabel = new URLLabel(text, "https://github.com/rusefi/rusefi/wiki/F7-requires-full-erase");
             new Timer(500, new ActionListener() {
@@ -245,7 +245,7 @@ public class StartupFrame {
             jLabel.setForeground(Color.red);
         } else {
             final Date binaryModificationDate = new Date(binaryModificationTimestamp);
-            final String branchNameToDisplay = UiBundleUtil.readBranchNameToDisplay();
+            final String branchNameToDisplay = BundleUtil.readBundleFullNameNotNull().getTarget();
             jLabel = new JLabel(String.format(
                 "<html><center>%s files<br/>%s</center></html>",
                 branchNameToDisplay,
