@@ -12,14 +12,9 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Checkout Submodules
+    - name: Checkout Submodules Without ChibiOS
       run: |
-        git submodule update --init --depth=1 unit_tests/googletest
-        git submodule update --init --depth=1 firmware/libfirmware
-        git submodule update --init --depth=1 firmware/ext/lua
-        git submodule update --init --depth=1 firmware/controllers/lua/luaaa
-        git submodule update --init --depth=1 firmware/controllers/can/wideband_firmware
-        git submodule update --init --depth=1 java_console/peak-can-basic
+        misc/git_scripts/common_submodule_init_without_chibios.sh
 
     - uses: actions/setup-java@v4
       with:
@@ -38,9 +33,7 @@ jobs:
     - name: Configuration Definition and Enum to String CI, without pushing new .jar
       working-directory: ./java_tools
       run: |
-        ./gradlew :config_definition:shadowJar
-        ./gradlew :config_definition_base:shadowJar
-        ./gradlew :enum_to_string:shadowJar
+        ./gradlew shadowJar
 
     - name: Generate Live Documentation
       working-directory: ./firmware/

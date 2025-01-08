@@ -32,11 +32,10 @@ jobs:
           sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
           sudo bash misc/actions/ubuntu-install-tools.sh
 
-      - name: Build Config Definition Base and Enum to String
+      - name: Build All Java
         working-directory: ./java_tools/
         run: |
-          ./gradlew :config_definition_base:shadowJar
-          ./gradlew :enum_to_string:shadowJar
+          ./gradlew shadowJar
 
       - name: Generate Enums & Live Documentation
         working-directory: ./firmware/
@@ -45,7 +44,7 @@ jobs:
       - name: Print GCC version
         run: gcc -v
 
-      - name: Test console
+      - name: All Java Tests
         # at the moment 'jar' task does not depend on tests?! maybe because tests take some time?
         working-directory: ./java_tools
         run: ./gradlew test
@@ -63,29 +62,6 @@ jobs:
         with:
           name: gradle junit
           path: '**/build/test-results/test/TEST-*.xml'
-
-      - name: Build console
-        working-directory: ./java_tools
-        run: ./gradlew :ui:shadowJar
-
-      - name: Attach Ant console junit results
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: console junit
-          path: ./java_console/build/*.txt
-
-      - name: Configuration Definition CI, without pushing new .jar
-        working-directory: ./java_tools
-        run: ./gradlew :config_definition:shadowJar
-
-      - name: Test everything java_tools gradle while we are here
-        working-directory: ./java_tools
-        run: ./gradlew test
-
-      - name: Configuration Definition and other tools CI, without pushing new .jars
-        working-directory: ./java_tools
-        run: ./gradlew shadowJar
 
       # this job focuses of tool validation so we do not push fresh enums here
       - name: Generate Enums using freshly compiled tool

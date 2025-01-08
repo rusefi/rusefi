@@ -39,7 +39,7 @@ jobs:
 
     - name: Gradle autotest java Using freshly generated java code
       working-directory: ./java_tools
-      run: ./gradlew :autotest:shadowJar
+      run: ./gradlew shadowJar
 
     - name: Compile Linux Simulator
       working-directory: ./simulator/
@@ -57,10 +57,6 @@ jobs:
       run: |
         git status
         ls -l simulator/generated/
-
-    - name: Gradle tune-tools
-      working-directory: ./java_tools
-      run: ./gradlew :tune-tools:shadowJar
 
     - name: Convert .bin from Linux Simulator into .xml
       working-directory: ./simulator/
