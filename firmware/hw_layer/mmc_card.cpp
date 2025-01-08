@@ -183,12 +183,8 @@ static void prepareLogFileName() {
 	strcpy(logName, RUSEFI_LOG_PREFIX);
 	char *ptr;
 
-#if HAL_USE_USB_MSD
+	// TS SD protocol supports only short 8 symbol file names, good thing that we do not use TS SD protocol!
 	bool result = dateToStringShort(&logName[PREFIX_LEN]);
-#else
-	// TS SD protocol supports only short 8 symbol file names :(
-	bool result = false;
-#endif
 
 	if (result) {
 		ptr = &logName[PREFIX_LEN + SHORT_TIME_LEN];
