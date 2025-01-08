@@ -5,13 +5,13 @@
 using ::testing::StrictMock;
 using ::testing::Return;
 
-TEST(Vvt, TestSetPoint) {
+TEST(VVT, Setpoint) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Set up a mock target map
 	StrictMock<MockVp3d> targetMap;
 	EXPECT_CALL(targetMap, getValue(4321, 55))
-		.WillOnce(Return(20));
+		.WillRepeatedly(Return(20));
 
 	// Mock necessary inputs
 	engine->engineState.fuelingLoad = 55;
@@ -20,11 +20,25 @@ TEST(Vvt, TestSetPoint) {
 	VvtController dut(0);
 	dut.init(&targetMap, nullptr);
 
+	setTimeNowUs(0);
+
 	// Test dut
+	EXPECT_EQ(20, dut.getSetpoint().value_or(0));
+
+	// Apply position bump
+	dut.setTargetOffset(10);
+	EXPECT_EQ(20 + 10, dut.getSetpoint().value_or(0));
+
+	// 1.9 seconds: still bumped
+	setTimeNowUs(1.9e6);
+	EXPECT_EQ(20 + 10, dut.getSetpoint().value_or(0));
+
+	// 2.1 seconds: things go back to normal
+	setTimeNowUs(2.1e6);
 	EXPECT_EQ(20, dut.getSetpoint().value_or(0));
 }
 
-TEST(Vvt, observePlant) {
+TEST(VVT, ObservePlant) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engine->triggerCentral.vvtPosition[0][0] = 23;
@@ -35,14 +49,14 @@ TEST(Vvt, observePlant) {
 	EXPECT_EQ(23, dut.observePlant().value_or(0));
 }
 
-TEST(Vvt, openLoop) {
-	VvtController dut(0);
+TEST(VVT, OpenLoop) {
+	VvtController dut(0, 0, 0);
 
 	// No open loop for now
 	EXPECT_EQ(dut.getOpenLoop(10), 0);
 }
 
-TEST(Vvt, ClosedLoopNotInverted) {
+TEST(VVT, ClosedLoopNotInverted) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	VvtController dut(/* second cam on second bank*/3);
@@ -59,7 +73,7 @@ TEST(Vvt, ClosedLoopNotInverted) {
 	EXPECT_EQ(dut.getClosedLoop(30, 20).value_or(0), 15);
 }
 
-TEST(Vvt, ClosedLoopInverted) {
+TEST(VVT, ClosedLoopInverted) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	VvtController dut(/*first cam on second bank*/2);
