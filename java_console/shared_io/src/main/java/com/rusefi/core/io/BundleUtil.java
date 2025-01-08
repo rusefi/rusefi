@@ -17,7 +17,7 @@ import static com.devexperts.logging.Logging.getLogging;
 public class BundleUtil {
     private static final Logging log = getLogging(BundleUtil.class);
 
-    private static final String SNAPSHOT = "snapshot";
+    private static final String DEVELOPMENT = "development";
     private static final String BRANCH_REF_FILE = "release.txt";
 
     /**
@@ -50,9 +50,9 @@ public class BundleUtil {
     }
 
     public static BundleInfo parse(List<@NotNull String> info) {
-        Map<String, String> keyValues = new TreeMap(String.CASE_INSENSITIVE_ORDER);
+        Map<String, String> keyValues = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
         for (String line : info) {
-            String pair[] = line.split("=", 2);
+            String[] pair = line.split("=", 2);
             keyValues.put(pair[0], pair[1]);
         }
         String target = keyValues.get("platform");
@@ -84,7 +84,7 @@ public class BundleUtil {
         }
 
         public boolean isMaster() {
-            return SNAPSHOT.equals(branchName);
+            return DEVELOPMENT.equals(branchName);
         }
 
         public String getTarget() {
