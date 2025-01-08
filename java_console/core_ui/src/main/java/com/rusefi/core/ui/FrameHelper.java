@@ -32,7 +32,7 @@ public class FrameHelper {
 
     @NotNull
     public static String appendBundleName(String title) {
-        String bundleName = BundleUtil.readBundleFullNameNotNull();
+        String bundleName = BundleUtil.readBundleFullNameNotNull().getUiLabel();
         return title + " " + bundleName;
     }
 

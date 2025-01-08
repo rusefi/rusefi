@@ -26,7 +26,7 @@ public class LogoHelper {
 
     @Nullable
     public static ImageIcon getBundleSpecificIcon() {
-        String bundle = BundleUtil.readBundleFullNameNotNull();
+        String bundle = BundleUtil.readBundleFullNameNotNull().getTarget();
         String logoName;
         // these should be about 213px wide
         if (bundle.contains("proteus")) {
