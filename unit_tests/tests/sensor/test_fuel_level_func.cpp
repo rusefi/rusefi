@@ -16,7 +16,14 @@ namespace {
 	class FuelLevelFuncTest: public TestBase<> {
 	protected:
 		static constexpr float TEST_FUEL_LEVEL_UPDATE_PERIOD_SEC = 0.932f;
+		static constexpr float TEST_FUEL_LEVEL_UPDATE_PERIOD_USEC = static_cast<int>(
+			TEST_FUEL_LEVEL_UPDATE_PERIOD_SEC * 1000000.0f
+		);
 		static constexpr float TEST_FUEL_LEVEL_ALPHA = 0.17f;
+		static constexpr float TEST_FUEL_LEVEL_LOW_THRESHOLD_VOLTAGE = 0.01f;
+		static constexpr float TEST_FUEL_LEVEL_HIGH_THRESHOLD_VOLTAGE = 100.0f;
+
+		static constexpr uint8_t TEST_DEFAULT_FUEL_LEVEL = 12;
 
 		static constexpr float INPUT_VALUE_0 = 51.932f;
 		static constexpr float EXPECTED_FILTERED_VALUE_0 = INPUT_VALUE_0;
@@ -38,6 +45,7 @@ namespace {
 		void SetUp() override;
 
 		float convert(float newValue);
+		UnexpectedCode invalidConvert(float newValue);
 
 		void checkThatNewValueIsIgnoredDuringUpdatePeriod(float previousValue);
 	private:
@@ -55,6 +63,8 @@ namespace {
 		setUpEngineConfiguration(EngineConfig()
 			.setFuelLevelUpdatePeriodSec(TEST_FUEL_LEVEL_UPDATE_PERIOD_SEC)
 			.setFuelLevelAveragingAlpha(TEST_FUEL_LEVEL_ALPHA)
+			.setFuelLevelLowThresholdVoltage(TEST_FUEL_LEVEL_LOW_THRESHOLD_VOLTAGE)
+			.setFuelLevelHighThresholdVoltage(TEST_FUEL_LEVEL_HIGH_THRESHOLD_VOLTAGE)
 		);
 
 		getTestPersistentConfiguration().setFuelLevelBinsCurve(TEST_FUEL_LEVEL_BINS);
@@ -69,11 +79,17 @@ namespace {
 		return result.Value;
 	}
 
+	UnexpectedCode FuelLevelFuncTest::invalidConvert(const float newValue) {
+		const SensorResult result = m_fuelLevelFunc->convert(newValue);
+		EXPECT_FALSE(result.Valid);
+		return result.Code;
+	}
+
 	void FuelLevelFuncTest::checkThatNewValueIsIgnoredDuringUpdatePeriod(const float previousValue) {
 		advanceTimeUs(1);
 		EXPECT_EQ(convert(99.9f), previousValue);
 
-		advanceTimeUs(static_cast<int>(TEST_FUEL_LEVEL_UPDATE_PERIOD_SEC * 1000000.0f) - 1);
+		advanceTimeUs(TEST_FUEL_LEVEL_UPDATE_PERIOD_USEC - 1);
 		EXPECT_EQ(convert(11.1f), previousValue);
 	}
 
@@ -102,7 +118,7 @@ namespace {
 
 	FuelLevelValuesCurve FuelLevelFuncTest::getTestFuelLevelValues() {
 		FuelLevelValuesCurve result;
-		result.fill(12);
+		result.fill(TEST_DEFAULT_FUEL_LEVEL);
 		const long valuesCount = result.size();
 		result[valuesCount - 3] = EXPECTED_FUEL_LEVEL_2;
 		result[valuesCount - 2] = EXPECTED_FUEL_LEVEL_1;
@@ -121,5 +137,17 @@ namespace {
 		advanceTimeUs(1);
 		EXPECT_EQ(convert(INPUT_VALUE_2), EXPECTED_FUEL_LEVEL_2);
 		checkThatNewValueIsIgnoredDuringUpdatePeriod(EXPECTED_FUEL_LEVEL_2);
+	}
+
+	TEST_F(FuelLevelFuncTest, checkThresholds) {
+		EXPECT_EQ(convert(TEST_FUEL_LEVEL_LOW_THRESHOLD_VOLTAGE), TEST_DEFAULT_FUEL_LEVEL);
+		EXPECT_EQ(invalidConvert(TEST_FUEL_LEVEL_LOW_THRESHOLD_VOLTAGE - EPS5D), UnexpectedCode::Low);
+
+		// conversion result is not affected by previous successful conversion result:
+		EXPECT_EQ(convert(INPUT_VALUE_0), EXPECTED_FUEL_LEVEL_0);
+
+		EXPECT_EQ(invalidConvert(TEST_FUEL_LEVEL_HIGH_THRESHOLD_VOLTAGE + EPS5D), UnexpectedCode::High);
+		// conversion result is not affected by previous successful conversion result:
+		EXPECT_EQ(convert(TEST_FUEL_LEVEL_HIGH_THRESHOLD_VOLTAGE), EXPECTED_FUEL_LEVEL_0);
 	}
 }

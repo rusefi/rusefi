@@ -298,3 +298,14 @@ EngineConfig EngineConfig::setFuelLevelUpdatePeriodSec(const std::optional<float
     m_fuelLevelUpdatePeriodSec = value;
     return *this;
 }
+
+EngineConfig EngineConfig::setFuelLevelLowThresholdVoltage(const std::optional<float> value) {
+    m_fuelLevelLowThresholdVoltage = value;
+    return *this;
+}
+
+EngineConfig EngineConfig::setFuelLevelHighThresholdVoltage(const std::optional<float> value) {
+    m_fuelLevelHighThresholdVoltage = value;
+    return *this;
+}
+

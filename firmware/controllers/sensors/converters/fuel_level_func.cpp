@@ -9,10 +9,19 @@
 SensorResult FuelLevelFunc::convert(const float inputValue) {
 	if (std::isnan(inputValue)) {
 		criticalError("temp error FuelLevelFunc NaN input");
+		m_filteredValue.reset();
+		return UnexpectedCode::Unknown;
+	} else if (inputValue < engineConfiguration->fuelLevelLowThresholdVoltage) {
+		m_filteredValue.reset();
+		return UnexpectedCode::Low;
+	} else if (engineConfiguration->fuelLevelHighThresholdVoltage < inputValue) {
+		m_filteredValue.reset();
+		return UnexpectedCode::High;
+	} else {
+		const float filteredValue = filterFuelValue(inputValue);
+		const float fuelLevel = interpolate2d(filteredValue, config->fuelLevelBins, config->fuelLevelValues);
+		return fuelLevel;
 	}
-	const float filteredValue = filterFuelValue(inputValue);
-	const float fuelLevel = interpolate2d(filteredValue, config->fuelLevelBins, config->fuelLevelValues);
-	return fuelLevel;
 }
 
 float FuelLevelFunc::getFuelLevelAlpha() const {
@@ -21,18 +30,22 @@ float FuelLevelFunc::getFuelLevelAlpha() const {
 }
 
 float FuelLevelFunc::filterFuelValue(const float value) {
-	if (m_fuelLevelTimer.hasElapsedSec(maxF(
-		engineConfiguration->fuelLevelUpdatePeriodSec,
-		MIN_FUEL_LEVEL_UPDATE_PERIOD_SEC
-	))) {
-		if (m_filteredValue.has_value()) {
+	if (m_filteredValue.has_value()) {
+		if (m_fuelLevelTimer.hasElapsedSec(maxF(
+				engineConfiguration->fuelLevelUpdatePeriodSec,
+				MIN_FUEL_LEVEL_UPDATE_PERIOD_SEC
+		))) {
 			const float prevFilteredValue = m_filteredValue.value();
 			const float diff = value - prevFilteredValue;
-			m_filteredValue = prevFilteredValue + getFuelLevelAlpha() * diff;
-		} else {
-			m_filteredValue = value;
+			updateFilteredValue(prevFilteredValue + getFuelLevelAlpha() * diff);
 		}
-		m_fuelLevelTimer.reset();
+	} else {
+		updateFilteredValue(value);
 	}
 	return m_filteredValue.value();
+}
+
+void FuelLevelFunc::updateFilteredValue(const float value) {
+	m_filteredValue = value;
+	m_fuelLevelTimer.reset();
 }
