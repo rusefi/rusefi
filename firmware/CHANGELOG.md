@@ -33,6 +33,7 @@ Release template (copy/paste this for new release):
  - GM SENT fuel pressure sensor #6997
  - ETB calibration automatically enables ETB if needed #7197
  - Fuel Level Sensor should have a RAW option #6979
+ - SD card bit data points #7227
 
 ### Fixed
  - Critical error when using big values on Boost Control Open Loop with Y axis as MAP #7093
