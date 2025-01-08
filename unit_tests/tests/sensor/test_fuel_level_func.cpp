@@ -53,8 +53,8 @@ namespace {
 		TestBase::SetUp();
 
 		setUpEngineConfiguration(EngineConfig()
-				                         .setFuelLevelUpdatePeriodSec(TEST_FUEL_LEVEL_UPDATE_PERIOD_SEC)
-				                         .setFuelLevelAveragingAlpha(TEST_FUEL_LEVEL_ALPHA)
+			.setFuelLevelUpdatePeriodSec(TEST_FUEL_LEVEL_UPDATE_PERIOD_SEC)
+			.setFuelLevelAveragingAlpha(TEST_FUEL_LEVEL_ALPHA)
 		);
 
 		getTestPersistentConfiguration().setFuelLevelBinsCurve(TEST_FUEL_LEVEL_BINS);
@@ -111,15 +111,15 @@ namespace {
 	}
 
 	TEST_F(FuelLevelFuncTest, checkConversion) {
-	EXPECT_EQ(convert(INPUT_VALUE_0), EXPECTED_FUEL_LEVEL_0);
-	checkThatNewValueIsIgnoredDuringUpdatePeriod(EXPECTED_FUEL_LEVEL_0);
+		EXPECT_EQ(convert(INPUT_VALUE_0), EXPECTED_FUEL_LEVEL_0);
+		checkThatNewValueIsIgnoredDuringUpdatePeriod(EXPECTED_FUEL_LEVEL_0);
 
-	advanceTimeUs(1);
-	EXPECT_EQ(convert(INPUT_VALUE_1), EXPECTED_FUEL_LEVEL_1);
-	checkThatNewValueIsIgnoredDuringUpdatePeriod(EXPECTED_FUEL_LEVEL_1);
+		advanceTimeUs(1);
+		EXPECT_EQ(convert(INPUT_VALUE_1), EXPECTED_FUEL_LEVEL_1);
+		checkThatNewValueIsIgnoredDuringUpdatePeriod(EXPECTED_FUEL_LEVEL_1);
 
-	advanceTimeUs(1);
-	EXPECT_EQ(convert(INPUT_VALUE_2), EXPECTED_FUEL_LEVEL_2);
-	checkThatNewValueIsIgnoredDuringUpdatePeriod(EXPECTED_FUEL_LEVEL_2);
-}
+		advanceTimeUs(1);
+		EXPECT_EQ(convert(INPUT_VALUE_2), EXPECTED_FUEL_LEVEL_2);
+		checkThatNewValueIsIgnoredDuringUpdatePeriod(EXPECTED_FUEL_LEVEL_2);
+	}
 }
