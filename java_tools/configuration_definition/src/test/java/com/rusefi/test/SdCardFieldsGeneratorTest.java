@@ -25,16 +25,32 @@ public class SdCardFieldsGeneratorTest {
                 "\tfloat autoscale internalMcuTemperature\n" +
                 "uint16_t autoscale RPMValue;@@GAUGE_NAME_RPM@@;\"RPM\",1, 0, 0, 8000, 2, \"myCategory\"\n" +
                 "\n" +
+            "\t\tfloat fu2elAdd;Lua: Fuel add;\"g\", 1, 0, 0, 1, 3\n" +
+            "\t\tfloat fue2lMult;Lua: Fuel mult;\n" +
                 "uint16_t rpmAcceleration;dRPM;\"RPM/s\",1, 0, 0, 5, 2\n" +
-                "\n" +
+            "\tstruct LuaAdjustments\n" +
+            "\t\tfloat fuelMult;Lua: Fuel mult;\n" +
+            "\n" +
+            "\t\tbit clutchUpState\n" +
+            "\t\tbit brakePedalState\n" +
+            "\t\tbit disableDecelerationFuelCutOff\n" +
+            "\t\tbit torqueReductionState\n" +
+            "\tend_struct\n" +
+                "LuaAdjustments lua\n" +
                 "\tuint16_t autoscale speedToRpmRatio;@@GAUGE_NAME_GEAR_RATIO@@;\"value\",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0\n" +
                 "end_struct";
 
         processAndAssert(test, "\t{test->reference.internalMcuTemperature, \"internalMcuTemperature\", \"\", 0},\n" +
-                "\t{test->reference.RPMValue, \"hello\", \"RPM\", 2, \"myCategory\"},\n" +
-                "\t{test->reference.rpmAcceleration, \"dRPM\", \"RPM/s\", 2},\n" +
-                "\t{test->reference.speedToRpmRatio, \"ra\", \"value\", 0},\n" +
-                "", actor, false);
+            "\t{test->reference.RPMValue, \"hello\", \"RPM\", 2, \"myCategory\"},\n" +
+            "\t{test->reference.fu2elAdd, \"Lua: Fuel add\", \"g\", 3},\n" +
+            "\t{test->reference.fue2lMult, \"Lua: Fuel mult\", \"\", 0},\n" +
+            "\t{test->reference.rpmAcceleration, \"dRPM\", \"RPM/s\", 2},\n" +
+            "\t{test->reference.lua.fuelMult, \"Lua: Fuel mult\", \"\", 0},\n" +
+            "// structureStartingTsPosition 0 test->reference/\"lua.clutchUpState\", skipping bit  at 4 4@0\n" +
+            "// structureStartingTsPosition 0 test->reference/\"lua.brakePedalState\", skipping bit  at 4 4@1\n" +
+            "// structureStartingTsPosition 0 test->reference/\"lua.disableDecelerationFuelCutOff\", skipping bit  at 4 4@2\n" +
+            "// structureStartingTsPosition 0 test->reference/\"lua.torqueReductionState\", skipping bit  at 4 4@3\n" +
+            "\t{test->reference.speedToRpmRatio, \"ra\", \"value\", 0},\n", actor, false);
     }
 
     @Test

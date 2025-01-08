@@ -72,10 +72,13 @@ public class SdCardFieldsContent {
     }
 
     private static String getLine(ConfigField configField, String prefix, String namePrefix, String name, String expression, Boolean isPtr, String conditional, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator, int structureStartingTsPosition) {
+        String humanName = DataLogConsumer.getHumanGaugeName(prefix, configField, namePrefix);
         if (configField.isBit()) {
             // 'structureStartingTsPosition' is about fragment list see fragments.h
             int offsetWithinCurrentStructure = currentPosition - structureStartingTsPosition;
-            return "// structureStartingTsPosition " + structureStartingTsPosition + " " + expression + "/" + DataLogConsumer.getHumanGaugeName(prefix, configField, namePrefix) + ", skipping bit " + namePrefix + " at " + currentPosition + " " + offsetWithinCurrentStructure + "@" + perFieldWithStructuresIterator.bitState.get() + "\n";
+//            if (offsetWithinCurrentStructure < 0)
+//                throw new IllegalStateException(humanName + " seems broken: " + currentPosition + " vs " + structureStartingTsPosition);
+            return "// structureStartingTsPosition " + structureStartingTsPosition + " " + expression + "/" + humanName + ", skipping bit " + namePrefix + " at " + currentPosition + " " + offsetWithinCurrentStructure + "@" + perFieldWithStructuresIterator.bitState.get() + "\n";
         }
 
         String categoryStr = configField.getCategory();
@@ -97,7 +100,7 @@ public class SdCardFieldsContent {
                 + "\t{" +
             expression + (isPtr ? "->" : ".") + name +
                 ", "
-                + DataLogConsumer.getHumanGaugeName(prefix, configField, namePrefix) +
+                + humanName +
                 ", " +
                 quote(configField.getUnits()) +
                 ", " +
