@@ -46,6 +46,7 @@ TEST_F(SensorConverted, TestValid) {
 		auto s = Sensor::get(SensorType::Clt);
 		EXPECT_TRUE(s.Valid);
 		EXPECT_FLOAT_EQ(s.Value, 50);
+		EXPECT_FLOAT_EQ(Sensor::getRaw(SensorType::Clt), 25);
 	}
 }
 
@@ -65,4 +66,7 @@ TEST_F(SensorConverted, TestInvalid) {
 		auto s = Sensor::get(SensorType::Clt);
 		EXPECT_FALSE(s.Valid);
 	}
+
+	// Raw value works even when sensor is invalid
+	EXPECT_FLOAT_EQ(Sensor::getRaw(SensorType::Clt), -25);
 }
