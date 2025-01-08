@@ -592,15 +592,15 @@ static const LogField fields[] = {
 #endif
 	{engine->engineState.lua.fuelAdd, "Lua: Fuel add", "g", 3},
 	{engine->engineState.lua.fuelMult, "Lua: Fuel mult", "", 0},
-// structureStartingTsPosition 1232 engine->engineState/"lua.clutchUpState", skipping bit  at 8 -1224@0
-// structureStartingTsPosition 1232 engine->engineState/"lua.brakePedalState", skipping bit  at 8 -1224@1
-// structureStartingTsPosition 1232 engine->engineState/"lua.acRequestState", skipping bit  at 8 -1224@2
-// structureStartingTsPosition 1232 engine->engineState/"lua.luaDisableEtb", skipping bit  at 8 -1224@3
-// structureStartingTsPosition 1232 engine->engineState/"lua.luaIgnCut", skipping bit  at 8 -1224@4
-// structureStartingTsPosition 1232 engine->engineState/"lua.luaFuelCut", skipping bit  at 8 -1224@5
-// structureStartingTsPosition 1232 engine->engineState/"lua.clutchDownState", skipping bit  at 8 -1224@6
-// structureStartingTsPosition 1232 engine->engineState/"lua.disableDecelerationFuelCutOff", skipping bit  at 8 -1224@7
-// structureStartingTsPosition 1232 engine->engineState/"lua.torqueReductionState", skipping bit  at 8 -1224@8
+// structureStartingTsPosition 1232 engine->engineState/"lua.clutchUpState", skipping bit  at 1240 8@0
+// structureStartingTsPosition 1232 engine->engineState/"lua.brakePedalState", skipping bit  at 1240 8@1
+// structureStartingTsPosition 1232 engine->engineState/"lua.acRequestState", skipping bit  at 1240 8@2
+// structureStartingTsPosition 1232 engine->engineState/"lua.luaDisableEtb", skipping bit  at 1240 8@3
+// structureStartingTsPosition 1232 engine->engineState/"lua.luaIgnCut", skipping bit  at 1240 8@4
+// structureStartingTsPosition 1232 engine->engineState/"lua.luaFuelCut", skipping bit  at 1240 8@5
+// structureStartingTsPosition 1232 engine->engineState/"lua.clutchDownState", skipping bit  at 1240 8@6
+// structureStartingTsPosition 1232 engine->engineState/"lua.disableDecelerationFuelCutOff", skipping bit  at 1240 8@7
+// structureStartingTsPosition 1232 engine->engineState/"lua.torqueReductionState", skipping bit  at 1240 8@8
 	{engine->engineState.sd.tCharge, "Air: Charge temperature estimate", "deg C", 1},
 	{engine->engineState.sd.tChargeK, "Air: Charge temperature estimate K", "", 0},
 	{engine->engineState.crankingFuel.coolantTemperatureCoefficient, "Fuel: cranking CLT mult", "", 0},
