@@ -91,6 +91,8 @@ public:
 
     void configureFuelLevelAveragingAlpha(std::optional<float> alpha);
     void configureFuelLevelUpdatePeriodSec(std::optional<float> seconds);
+    void configureFuelLevelLowThresholdVoltage(std::optional<float> thresholdVoltage);
+    void configureFuelLevelHighThresholdVoltage(std::optional<float> thresholdVoltage);
 private:
     TestEngineConfiguration();
     static TestEngineConfiguration instance;

@@ -1,7 +1,7 @@
 template<class GtestBase>
 template<typename ModuleType>
 ModuleType& TestBase<GtestBase>::getModule() {
-    return engine->module<ModuleType>().unmock();
+	return engine->module<ModuleType>().unmock();
 }
 
 template<class GtestBase>
@@ -118,6 +118,8 @@ void TestBase<GtestBase>::setUpEngineConfiguration(const EngineConfig& config) {
 	getTestEngineConfiguration().configureNitrousIgnitionRetard(config.getNitrousIgnitionRetard());
 	getTestEngineConfiguration().configureFuelLevelAveragingAlpha(config.getFuelLevelAveragingAlpha());
 	getTestEngineConfiguration().configureFuelLevelUpdatePeriodSec(config.getFuelLevelUpdatePeriodSec());
+	getTestEngineConfiguration().configureFuelLevelLowThresholdVoltage(config.getFuelLevelLowThresholdVoltage());
+	getTestEngineConfiguration().configureFuelLevelHighThresholdVoltage(config.getFuelLevelHighThresholdVoltage());
 }
 
 template<class GtestBase>

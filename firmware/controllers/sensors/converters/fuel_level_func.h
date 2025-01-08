@@ -12,6 +12,7 @@ public:
 private:
 	float getFuelLevelAlpha() const;
 	float filterFuelValue(float value);
+	void updateFilteredValue(float value);
 
 	static constexpr float MIN_FUEL_LEVEL_UPDATE_PERIOD_SEC =
 		engine_configuration_defaults::FUEL_LEVEL_UPDATE_PERIOD_SEC;
