@@ -27,8 +27,14 @@ extern "C" int _gettimeofday(timeval* tv, void* tzvp) {
 #endif // EFI_PROD_CODE
 
 #if EFI_RTC
+
+void PUBLIC_API_WEAK hal_lld_rtc_fixup(void) {
+    /* nop */
+}
+
 void initRtc() {
 	efiPrintf("initRtc()");
+	hal_lld_rtc_fixup();
 	printDateTime(); // this would test RTC, see #311
 }
 

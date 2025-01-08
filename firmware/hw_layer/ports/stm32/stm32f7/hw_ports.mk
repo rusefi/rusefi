@@ -5,6 +5,7 @@ HW_LAYER_PORT += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f7/stm32f7xx_hal_flash
 
 HW_LAYER_PORT_CPP += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f7/mpu_util.cpp \
 					$(PROJECT_DIR)/hw_layer/ports/stm32/stm32_adc_v2.cpp \
+					$(PROJECT_DIR)/hw_layer/ports/stm32/stm32f7/stm32f7xx_rtc.cpp \
 
 # This MCU has a cache, align functions to a cache line for maximum cache efficiency
 USE_OPT += -falign-functions=16
