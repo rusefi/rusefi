@@ -203,34 +203,33 @@ public class EngineState {
 	public static final Field BAROCORRECTION = Field.create("BAROCORRECTION", 36, FieldType.FLOAT).setBaseOffset(1232);
 	public static final Field HELLENBOARDID = Field.create("HELLENBOARDID", 40, FieldType.INT16).setScale(1.0).setBaseOffset(1232);
 	public static final Field CLUTCHUPSTATE = Field.create("CLUTCHUPSTATE", 42, FieldType.INT8).setScale(1.0).setBaseOffset(1232);
-	public static final Field CLUTCHDOWNSTATE = Field.create("CLUTCHDOWNSTATE", 43, FieldType.INT8).setScale(1.0).setBaseOffset(1232);
-	public static final Field BRAKEPEDALSTATE = Field.create("BRAKEPEDALSTATE", 44, FieldType.INT8).setScale(1.0).setBaseOffset(1232);
-	public static final Field STARTSTOPSTATE = Field.create("STARTSTOPSTATE", 45, FieldType.INT8).setScale(1.0).setBaseOffset(1232);
-	public static final Field SMARTCHIPSTATE = Field.create("SMARTCHIPSTATE", 46, FieldType.INT8).setScale(1.0).setBaseOffset(1232);
-	public static final Field SMARTCHIPRESTARTCOUNTER = Field.create("SMARTCHIPRESTARTCOUNTER", 47, FieldType.INT8).setScale(1.0).setBaseOffset(1232);
-	public static final Field SMARTCHIPALIVECOUNTER = Field.create("SMARTCHIPALIVECOUNTER", 48, FieldType.INT8).setScale(1.0).setBaseOffset(1232);
-	public static final Field ALIGNMENTFILL_AT_49 = Field.create("ALIGNMENTFILL_AT_49", 49, FieldType.INT8).setScale(1.0).setBaseOffset(1232);
-	public static final Field STARTSTOPPHYSICALSTATE = Field.create("STARTSTOPPHYSICALSTATE", 52, FieldType.BIT, 0).setBaseOffset(1232);
-	public static final Field ACRACTIVE = Field.create("ACRACTIVE", 52, FieldType.BIT, 1).setBaseOffset(1232);
-	public static final Field ACRENGINEMOVEDRECENTLY = Field.create("ACRENGINEMOVEDRECENTLY", 52, FieldType.BIT, 2).setBaseOffset(1232);
-	public static final Field HEATERCONTROLENABLED = Field.create("HEATERCONTROLENABLED", 52, FieldType.BIT, 3).setBaseOffset(1232);
-	public static final Field LUADIGITALSTATE0 = Field.create("LUADIGITALSTATE0", 52, FieldType.BIT, 4).setBaseOffset(1232);
-	public static final Field LUADIGITALSTATE1 = Field.create("LUADIGITALSTATE1", 52, FieldType.BIT, 5).setBaseOffset(1232);
-	public static final Field LUADIGITALSTATE2 = Field.create("LUADIGITALSTATE2", 52, FieldType.BIT, 6).setBaseOffset(1232);
-	public static final Field LUADIGITALSTATE3 = Field.create("LUADIGITALSTATE3", 52, FieldType.BIT, 7).setBaseOffset(1232);
-	public static final Field STARTSTOPSTATETOGGLECOUNTER = Field.create("STARTSTOPSTATETOGGLECOUNTER", 56, FieldType.INT).setScale(1.0).setBaseOffset(1232);
-	public static final Field LUASOFTSPARKSKIP = Field.create("LUASOFTSPARKSKIP", 60, FieldType.FLOAT).setBaseOffset(1232);
-	public static final Field LUAHARDSPARKSKIP = Field.create("LUAHARDSPARKSKIP", 64, FieldType.FLOAT).setBaseOffset(1232);
-	public static final Field TRACTIONCONTROLSPARKSKIP = Field.create("TRACTIONCONTROLSPARKSKIP", 68, FieldType.FLOAT).setBaseOffset(1232);
-	public static final Field FUELINJECTIONCOUNTER = Field.create("FUELINJECTIONCOUNTER", 72, FieldType.INT).setScale(1.0).setBaseOffset(1232);
-	public static final Field GLOBALSPARKCOUNTER = Field.create("GLOBALSPARKCOUNTER", 76, FieldType.INT).setScale(1.0).setBaseOffset(1232);
-	public static final Field FUELINGLOAD = Field.create("FUELINGLOAD", 80, FieldType.FLOAT).setBaseOffset(1232);
-	public static final Field IGNITIONLOAD = Field.create("IGNITIONLOAD", 84, FieldType.FLOAT).setBaseOffset(1232);
-	public static final Field VETABLEYAXIS = Field.create("VETABLEYAXIS", 88, FieldType.INT16).setScale(0.01).setBaseOffset(1232);
-	public static final Field OVERDWELLCOUNTER = Field.create("OVERDWELLCOUNTER", 90, FieldType.INT8).setScale(1.0).setBaseOffset(1232);
-	public static final Field OVERDWELLNOTSCHEDULEDCOUNTER = Field.create("OVERDWELLNOTSCHEDULEDCOUNTER", 91, FieldType.INT8).setScale(1.0).setBaseOffset(1232);
-	public static final Field SPARKOUTOFORDERCOUNTER = Field.create("SPARKOUTOFORDERCOUNTER", 92, FieldType.INT8).setScale(1.0).setBaseOffset(1232);
-	public static final Field ALIGNMENTFILL_AT_93 = Field.create("ALIGNMENTFILL_AT_93", 93, FieldType.INT8).setScale(1.0).setBaseOffset(1232);
+	public static final Field BRAKEPEDALSTATE = Field.create("BRAKEPEDALSTATE", 43, FieldType.INT8).setScale(1.0).setBaseOffset(1232);
+	public static final Field STARTSTOPSTATE = Field.create("STARTSTOPSTATE", 44, FieldType.INT8).setScale(1.0).setBaseOffset(1232);
+	public static final Field SMARTCHIPSTATE = Field.create("SMARTCHIPSTATE", 45, FieldType.INT8).setScale(1.0).setBaseOffset(1232);
+	public static final Field SMARTCHIPRESTARTCOUNTER = Field.create("SMARTCHIPRESTARTCOUNTER", 46, FieldType.INT8).setScale(1.0).setBaseOffset(1232);
+	public static final Field SMARTCHIPALIVECOUNTER = Field.create("SMARTCHIPALIVECOUNTER", 47, FieldType.INT8).setScale(1.0).setBaseOffset(1232);
+	public static final Field STARTSTOPPHYSICALSTATE = Field.create("STARTSTOPPHYSICALSTATE", 48, FieldType.BIT, 0).setBaseOffset(1232);
+	public static final Field ACRACTIVE = Field.create("ACRACTIVE", 48, FieldType.BIT, 1).setBaseOffset(1232);
+	public static final Field ACRENGINEMOVEDRECENTLY = Field.create("ACRENGINEMOVEDRECENTLY", 48, FieldType.BIT, 2).setBaseOffset(1232);
+	public static final Field HEATERCONTROLENABLED = Field.create("HEATERCONTROLENABLED", 48, FieldType.BIT, 3).setBaseOffset(1232);
+	public static final Field LUADIGITALSTATE0 = Field.create("LUADIGITALSTATE0", 48, FieldType.BIT, 4).setBaseOffset(1232);
+	public static final Field LUADIGITALSTATE1 = Field.create("LUADIGITALSTATE1", 48, FieldType.BIT, 5).setBaseOffset(1232);
+	public static final Field LUADIGITALSTATE2 = Field.create("LUADIGITALSTATE2", 48, FieldType.BIT, 6).setBaseOffset(1232);
+	public static final Field LUADIGITALSTATE3 = Field.create("LUADIGITALSTATE3", 48, FieldType.BIT, 7).setBaseOffset(1232);
+	public static final Field CLUTCHDOWNSTATE = Field.create("CLUTCHDOWNSTATE", 48, FieldType.BIT, 8).setBaseOffset(1232);
+	public static final Field STARTSTOPSTATETOGGLECOUNTER = Field.create("STARTSTOPSTATETOGGLECOUNTER", 52, FieldType.INT).setScale(1.0).setBaseOffset(1232);
+	public static final Field LUASOFTSPARKSKIP = Field.create("LUASOFTSPARKSKIP", 56, FieldType.FLOAT).setBaseOffset(1232);
+	public static final Field LUAHARDSPARKSKIP = Field.create("LUAHARDSPARKSKIP", 60, FieldType.FLOAT).setBaseOffset(1232);
+	public static final Field TRACTIONCONTROLSPARKSKIP = Field.create("TRACTIONCONTROLSPARKSKIP", 64, FieldType.FLOAT).setBaseOffset(1232);
+	public static final Field FUELINJECTIONCOUNTER = Field.create("FUELINJECTIONCOUNTER", 68, FieldType.INT).setScale(1.0).setBaseOffset(1232);
+	public static final Field GLOBALSPARKCOUNTER = Field.create("GLOBALSPARKCOUNTER", 72, FieldType.INT).setScale(1.0).setBaseOffset(1232);
+	public static final Field FUELINGLOAD = Field.create("FUELINGLOAD", 76, FieldType.FLOAT).setBaseOffset(1232);
+	public static final Field IGNITIONLOAD = Field.create("IGNITIONLOAD", 80, FieldType.FLOAT).setBaseOffset(1232);
+	public static final Field VETABLEYAXIS = Field.create("VETABLEYAXIS", 84, FieldType.INT16).setScale(0.01).setBaseOffset(1232);
+	public static final Field OVERDWELLCOUNTER = Field.create("OVERDWELLCOUNTER", 86, FieldType.INT8).setScale(1.0).setBaseOffset(1232);
+	public static final Field OVERDWELLNOTSCHEDULEDCOUNTER = Field.create("OVERDWELLNOTSCHEDULEDCOUNTER", 87, FieldType.INT8).setScale(1.0).setBaseOffset(1232);
+	public static final Field SPARKOUTOFORDERCOUNTER = Field.create("SPARKOUTOFORDERCOUNTER", 88, FieldType.INT8).setScale(1.0).setBaseOffset(1232);
+	public static final Field ALIGNMENTFILL_AT_89 = Field.create("ALIGNMENTFILL_AT_89", 89, FieldType.INT8).setScale(1.0).setBaseOffset(1232);
 	public static final Field[] VALUES = {
 	LUA_FUELADD,
 	LUA_FUELMULT,
@@ -254,13 +253,11 @@ public class EngineState {
 	BAROCORRECTION,
 	HELLENBOARDID,
 	CLUTCHUPSTATE,
-	CLUTCHDOWNSTATE,
 	BRAKEPEDALSTATE,
 	STARTSTOPSTATE,
 	SMARTCHIPSTATE,
 	SMARTCHIPRESTARTCOUNTER,
 	SMARTCHIPALIVECOUNTER,
-	ALIGNMENTFILL_AT_49,
 	STARTSTOPPHYSICALSTATE,
 	ACRACTIVE,
 	ACRENGINEMOVEDRECENTLY,
@@ -269,6 +266,7 @@ public class EngineState {
 	LUADIGITALSTATE1,
 	LUADIGITALSTATE2,
 	LUADIGITALSTATE3,
+	CLUTCHDOWNSTATE,
 	STARTSTOPSTATETOGGLECOUNTER,
 	LUASOFTSPARKSKIP,
 	LUAHARDSPARKSKIP,
@@ -281,6 +279,6 @@ public class EngineState {
 	OVERDWELLCOUNTER,
 	OVERDWELLNOTSCHEDULEDCOUNTER,
 	SPARKOUTOFORDERCOUNTER,
-	ALIGNMENTFILL_AT_93,
+	ALIGNMENTFILL_AT_89,
 	};
 }

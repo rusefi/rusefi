@@ -1378,9 +1378,6 @@ float getOutputValueByName(const char *name) {
 // clutchUpState
 		case -797965330:
 			return engine->engineState.clutchUpState;
-// clutchDownState
-		case 724244513:
-			return engine->engineState.clutchDownState;
 // brakePedalState
 		case -705383759:
 			return engine->engineState.brakePedalState;
@@ -1420,6 +1417,9 @@ float getOutputValueByName(const char *name) {
 // luaDigitalState3
 		case 945288537:
 			return engine->engineState.luaDigitalState3;
+// clutchDownState
+		case 724244513:
+			return engine->engineState.clutchDownState;
 // startStopStateToggleCounter
 		case -960645892:
 			return engine->engineState.startStopStateToggleCounter;
