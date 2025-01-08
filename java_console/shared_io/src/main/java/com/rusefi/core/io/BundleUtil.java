@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.InvalidPathException;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.TreeMap;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -54,8 +55,12 @@ public class BundleUtil {
             String pair[] = line.split("=", 2);
             keyValues.put(pair[0], pair[1]);
         }
-        String target = keyValues.get("target");
+        String target = keyValues.get("platform");
         String branchName = keyValues.get("release");
+        if (target == null || branchName == null) {
+            log.info(BRANCH_REF_FILE + " says " + keyValues);
+            return BundleInfo.UNKNOWN;
+        }
         return new BundleInfo(branchName, target);
     }
 
@@ -66,8 +71,8 @@ public class BundleUtil {
         private final String target;
 
         public BundleInfo(String branchName, String target) {
-            this.branchName = branchName;
-            this.target = target;
+            this.branchName = Objects.requireNonNull(branchName, "branchName");
+            this.target = Objects.requireNonNull(target, "target");
         }
 
         public static boolean isUndefined(BundleInfo bundleInfo) {
