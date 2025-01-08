@@ -212,7 +212,7 @@ pins:
   - pin: 33a
     meta: MM100_MEGA_UAEFI_IN_AUX3
     class: switch_inputs
-    ts_name: DIN
+    ts_name: ___ Digital input signal
     function: Digital input signal
 
   - pin: 34a
