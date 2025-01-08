@@ -46,10 +46,10 @@ public class SdCardFieldsGeneratorTest {
             "\t{test->reference.fue2lMult, \"Lua: Fuel mult\", \"\", 0},\n" +
             "\t{test->reference.rpmAcceleration, \"dRPM\", \"RPM/s\", 2},\n" +
             "\t{test->reference.lua.fuelMult, \"Lua: Fuel mult\", \"\", 0},\n" +
-            "// structureStartingTsPosition 0 test->reference/\"lua.clutchUpState\", skipping bit  at 4 4@0\n" +
-            "// structureStartingTsPosition 0 test->reference/\"lua.brakePedalState\", skipping bit  at 4 4@1\n" +
-            "// structureStartingTsPosition 0 test->reference/\"lua.disableDecelerationFuelCutOff\", skipping bit  at 4 4@2\n" +
-            "// structureStartingTsPosition 0 test->reference/\"lua.torqueReductionState\", skipping bit  at 4 4@3\n" +
+            "// structureStartingTsPosition 0 test->reference/\"lua.clutchUpState\", skipping bit  at 24 24@0\n" +
+            "// structureStartingTsPosition 0 test->reference/\"lua.brakePedalState\", skipping bit  at 24 24@1\n" +
+            "// structureStartingTsPosition 0 test->reference/\"lua.disableDecelerationFuelCutOff\", skipping bit  at 24 24@2\n" +
+            "// structureStartingTsPosition 0 test->reference/\"lua.torqueReductionState\", skipping bit  at 24 24@3\n" +
             "\t{test->reference.speedToRpmRatio, \"ra\", \"value\", 0},\n", actor, false);
     }
 

@@ -76,8 +76,8 @@ public class SdCardFieldsContent {
         if (configField.isBit()) {
             // 'structureStartingTsPosition' is about fragment list see fragments.h
             int offsetWithinCurrentStructure = currentPosition - structureStartingTsPosition;
-//            if (offsetWithinCurrentStructure < 0)
-//                throw new IllegalStateException(humanName + " seems broken: " + currentPosition + " vs " + structureStartingTsPosition);
+            if (offsetWithinCurrentStructure < 0)
+                throw new IllegalStateException(humanName + " seems broken: " + currentPosition + " vs " + structureStartingTsPosition);
             return "// structureStartingTsPosition " + structureStartingTsPosition + " " + expression + "/" + humanName + ", skipping bit " + namePrefix + " at " + currentPosition + " " + offsetWithinCurrentStructure + "@" + perFieldWithStructuresIterator.bitState.get() + "\n";
         }
 

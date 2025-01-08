@@ -164,10 +164,10 @@ public class LiveDataProcessorTest {
                 "\t{engine->outputChannels.oootempC, \"Temperature\", \"C\", 0},\n" +
                 "\t{engine->outputChannels.oooesr, \"ESR\", \"ohm\", 0},\n" +
                 "\t{engine->outputChannels.lua.fuelMult, \"Lua: Fuel mult\", \"\", 0},\n" +
-                "// structureStartingTsPosition 24 engine->outputChannels/\"lua.clutchUpState\", skipping bit  at 4 -20@0\n" +
-                "// structureStartingTsPosition 24 engine->outputChannels/\"lua.brakePedalState\", skipping bit  at 4 -20@1\n" +
-                "// structureStartingTsPosition 24 engine->outputChannels/\"lua.disableDecelerationFuelCutOff\", skipping bit  at 4 -20@2\n" +
-                "// structureStartingTsPosition 24 engine->outputChannels/\"lua.torqueReductionState\", skipping bit  at 4 -20@3\n" +
+                "// structureStartingTsPosition 24 engine->outputChannels/\"lua.clutchUpState\", skipping bit  at 32 8@0\n" +
+                "// structureStartingTsPosition 24 engine->outputChannels/\"lua.brakePedalState\", skipping bit  at 32 8@1\n" +
+                "// structureStartingTsPosition 24 engine->outputChannels/\"lua.disableDecelerationFuelCutOff\", skipping bit  at 32 8@2\n" +
+                "// structureStartingTsPosition 24 engine->outputChannels/\"lua.torqueReductionState\", skipping bit  at 32 8@3\n" +
                 "};\n",
             destinationFolder + SdCardFieldsContent.SD_CARD_OUTPUT_FILE_NAME);
 
