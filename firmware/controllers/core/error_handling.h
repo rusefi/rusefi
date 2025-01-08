@@ -21,10 +21,6 @@ bool warning(ObdCode code, const char *fmt, ...);
 
 using critical_msg_t = char[CRITICAL_BUFFER_SIZE];
 
-#define criticalShutdown() \
-    TURN_FATAL_LED(); \
-    turnAllPinsOff();
-
 /**
  * Something really bad had happened - firmware cannot function, we cannot run the engine
  * We definitely use this critical error approach in case of invalid configuration. If user sets a self-contradicting
