@@ -13,7 +13,6 @@
 int getCylinderKnockBank(uint8_t cylinderNumber) {
 	// C/C++ can't index in to bit fields, we have to provide lookup ourselves
 	switch (cylinderNumber) {
-#if EFI_PROD_CODE
 		case 0:
 			return engineConfiguration->knockBankCyl1;
 		case 1:
@@ -38,7 +37,6 @@ int getCylinderKnockBank(uint8_t cylinderNumber) {
 			return engineConfiguration->knockBankCyl11;
 		case 11:
 			return engineConfiguration->knockBankCyl12;
-#endif
 		default:
 			return 0;
 	}
