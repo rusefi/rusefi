@@ -245,7 +245,7 @@ public class StartupFrame {
             jLabel.setForeground(Color.red);
         } else {
             final Date binaryModificationDate = new Date(binaryModificationTimestamp);
-            final String branchNameToDisplay = BundleUtil.readBundleFullNameNotNull().getTarget();
+            final String branchNameToDisplay = BundleUtil.readBundleFullNameNotNull().getBranchName();
             jLabel = new JLabel(String.format(
                 "<html><center>%s files<br/>%s</center></html>",
                 branchNameToDisplay,
