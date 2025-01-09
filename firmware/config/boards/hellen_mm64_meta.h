@@ -14,6 +14,7 @@
 #define MM64_IN_ADC0 A0
 #define MM64_IN_ADC0_ANALOG EFI_ADC_0
 
+// PA1
 #define MM64_IN_ADC1 A1
 #define MM64_IN_ADC1_ANALOG EFI_ADC_1
 
