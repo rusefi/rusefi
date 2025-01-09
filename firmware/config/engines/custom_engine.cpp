@@ -198,10 +198,6 @@ void setEtbTestConfiguration() {
 	// no analog dividers - all sensors with 3v supply, naked discovery bench setup
 	engineConfiguration->analogInputDividerCoefficient = 1;
 
-	// EFI_ADC_15 = PC5
-	engineConfiguration->clt.adcChannel = EFI_ADC_15;
-	set10K_4050K(&engineConfiguration->clt, 10000);
-
 	// see also setDefaultEtbBiasCurve
 }
 
