@@ -56,7 +56,7 @@ TEST(etb, intermittentTps) {
 
 	ASSERT_TRUE(engine->module<SensorChecker>()->analogSensorsShouldWork());
 
-	ASSERT_FALSE(isTps1Error());
+	ASSERT_TRUE(Sensor::get(SensorType::Tps1).Valid);
 
 	etb->update();
 
@@ -68,7 +68,7 @@ TEST(etb, intermittentTps) {
 	// Do some bad/good/bad/good cycles, make sure count keeps up
 	for (size_t i = 0; i < 50; i++) {
 		Sensor::setInvalidMockValue(SensorType::Tps1);
-		ASSERT_TRUE(isTps1Error());
+		ASSERT_FALSE(Sensor::get(SensorType::Tps1).Valid);
 		etb->update();
 
 		badCount++;
@@ -76,13 +76,13 @@ TEST(etb, intermittentTps) {
 		EXPECT_EQ((int)TpsState::TpsError, etb->etbErrorCode);
 
 		Sensor::setMockValue(SensorType::Tps1, 20);
-		ASSERT_FALSE(isTps1Error());
+		ASSERT_TRUE(Sensor::get(SensorType::Tps1).Valid);
 		etb->update();
 	}
 
 	// 51st bad TPS should set etbErrorCode
 	Sensor::setInvalidMockValue(SensorType::Tps1);
-	ASSERT_TRUE(isTps1Error());
+	ASSERT_FALSE(Sensor::get(SensorType::Tps1).Valid);
 	etb->update();
 
 	EXPECT_NE(0, etb->etbErrorCode);
@@ -110,7 +110,7 @@ TEST(etb, intermittentPps) {
 
 	ASSERT_TRUE(engine->module<SensorChecker>()->analogSensorsShouldWork());
 
-	ASSERT_FALSE(isPedalError());
+	ASSERT_TRUE(Sensor::get(SensorType::AcceleratorPedal).Valid);
 
 	etb->update();
 
@@ -122,7 +122,7 @@ TEST(etb, intermittentPps) {
 	// Do some bad/good/bad/good cycles, make sure count keeps up
 	for (size_t i = 0; i < 50; i++) {
 		Sensor::setInvalidMockValue(SensorType::AcceleratorPedal);
-		ASSERT_TRUE(isPedalError());
+		ASSERT_FALSE(Sensor::get(SensorType::AcceleratorPedal).Valid);
 		etb->update();
 
 		badCount++;
@@ -130,13 +130,13 @@ TEST(etb, intermittentPps) {
 		EXPECT_EQ(0, etb->etbErrorCode);
 
 		Sensor::setMockValue(SensorType::AcceleratorPedal, 20);
-		ASSERT_FALSE(isPedalError());
+		ASSERT_TRUE(Sensor::get(SensorType::AcceleratorPedal).Valid);
 		etb->update();
 	}
 
 	// 51st bad TPS should set etbErrorCode
 	Sensor::setInvalidMockValue(SensorType::AcceleratorPedal);
-	ASSERT_TRUE(isPedalError());
+	ASSERT_FALSE(Sensor::get(SensorType::AcceleratorPedal).Valid);
 	etb->update();
 	EXPECT_NE(0, etb->etbErrorCode);
 }

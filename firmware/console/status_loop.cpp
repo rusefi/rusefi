@@ -382,12 +382,12 @@ static void updateThrottles() {
 	SensorResult tps2 = Sensor::get(SensorType::Tps2);
 	engine->outputChannels.TPS2Value = tps2.value_or(0);
 	// If we don't have a TPS2 at all, don't turn on the failure light
-	engine->outputChannels.isTps2Error = isTps2Error();
+	engine->outputChannels.isTps2Error = !tps2.Valid;
 
 	SensorResult pedal = Sensor::get(SensorType::AcceleratorPedal);
 	engine->outputChannels.throttlePedalPosition = pedal.value_or(0);
 	// Only report fail if you have one (many people don't)
-	engine->outputChannels.isPedalError = isPedalError();
+	engine->outputChannels.isPedalError = !pedal.Valid;
 
 	// TPS 1 pri/sec split
 	engine->outputChannels.tps1Split = Sensor::getOrZero(SensorType::Tps1Primary) - Sensor::getOrZero(SensorType::Tps1Secondary);
