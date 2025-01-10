@@ -194,7 +194,11 @@ void TunerStudio::sendErrorCode(TsChannelBase* tsChannel, uint8_t code, const ch
 bool validateOffsetCount(size_t offset, size_t count, TsChannelBase* tsChannel);
 
 bool wasPresetJustApplied() {
-  return !engine->configBurnTimer.hasElapsedSec(1);
+  return !engine->engineTypeChangeTimer.hasElapsedSec(1);
+}
+
+void onApplyPreset() {
+  engine->engineTypeChangeTimer.reset();
 }
 
 /**

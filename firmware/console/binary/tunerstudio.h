@@ -54,6 +54,7 @@ void updateTunerStudioState();
 
 void startTunerStudioConnectivity();
 bool wasPresetJustApplied();
+void onApplyPreset();
 
 typedef struct {
 	uint16_t offset;

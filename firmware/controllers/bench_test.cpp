@@ -21,6 +21,7 @@
  */
 
 #include "pch.h"
+#include "tunerstudio.h"
 
 static bool isRunningBench = false;
 static OutputPin *outputOnTheBenchTest = nullptr;
@@ -519,7 +520,7 @@ static void handleCommandX14(uint16_t index) {
 extern bool rebootForPresetPending;
 
 static void applyPreset(int index) {
-	engine->configBurnTimer.reset();
+	onApplyPreset();
   setEngineType(index);
 }
 
