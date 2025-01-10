@@ -170,36 +170,47 @@ static void sdStatistics() {
 
 static void incLogFileName() {
 	memset(&FDLogFile, 0, sizeof(FIL));						// clear the memory
-	FRESULT err = f_open(&FDLogFile, LOG_INDEX_FILENAME, FA_READ);				// This file has the index for next log file name
+	FRESULT ret = f_open(&FDLogFile, LOG_INDEX_FILENAME, FA_READ);				// This file has the index for next log file name
 
 	char data[_MAX_FILLER];
-	UINT result = 0;
-	if (err != FR_OK && err != FR_EXIST) {
-			logFileIndex = MIN_FILE_INDEX;
-			efiPrintf("%s: not found or error: %d", LOG_INDEX_FILENAME, err);
-	} else {
-		f_read(&FDLogFile, (void*)data, sizeof(data), &result);
+	memset(data, 0, sizeof(data));
 
-		efiPrintf("Got content [%s] size %d", data, result);
-		f_close(&FDLogFile);
-		if (result < 5) {
-            data[result] = 0;
+	if (ret != FR_OK && ret != FR_EXIST) {
+		printError("log index file open", ret);
+		efiPrintf("%s: not found or error: %d", LOG_INDEX_FILENAME, ret);
+		logFileIndex = MIN_FILE_INDEX;
+	} else {
+		UINT readed = 0;
+		// leave one byte for terminating 0
+		ret = f_read(&FDLogFile, (void*)data, sizeof(data) - 1, &readed);
+
+		if (ret != FR_OK) {
+			printError("log index file read", ret);
+			logFileIndex = MIN_FILE_INDEX;
+		} else {
+			efiPrintf("Got content [%s] size %d", data, readed);
 			logFileIndex = maxI(MIN_FILE_INDEX, atoi(data));
 			if (absI(logFileIndex) == ATOI_ERROR_CODE) {
 				logFileIndex = MIN_FILE_INDEX;
 			} else {
 				logFileIndex++; // next file would use next file name
 			}
-		} else {
-			logFileIndex = MIN_FILE_INDEX;
 		}
+		f_close(&FDLogFile);
 	}
 
-	err = f_open(&FDLogFile, LOG_INDEX_FILENAME, FA_OPEN_ALWAYS | FA_WRITE);
-	itoa10(data, logFileIndex);
-	f_write(&FDLogFile, (void*)data, strlen(data), &result);
-	f_close(&FDLogFile);
-	efiPrintf("Done %d", logFileIndex);
+	// truncate or create new
+	ret = f_open(&FDLogFile, LOG_INDEX_FILENAME, FA_CREATE_ALWAYS | FA_WRITE);
+	if (ret == FR_OK) {
+		UINT writen = 0;
+		size_t len = itoa10(data, logFileIndex) - data;
+		f_write(&FDLogFile, (void*)data, len, &writen);
+		f_close(&FDLogFile);
+	} else {
+		printError("log index file write", ret);
+	}
+
+	efiPrintf("New log file index %d", logFileIndex);
 }
 
 static void prepareLogFileName() {
