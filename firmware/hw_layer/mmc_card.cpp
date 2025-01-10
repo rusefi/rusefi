@@ -106,6 +106,30 @@ static void setSdCardReady(bool value) {
 	fs_ready = value;
 }
 
+/* See ff.h FRESULT enum */
+static const char *fatErrors[] = {
+	"FR_OK: Succeeded",
+	"FR_DISK_ERR: A hard error occurred in the low level disk I/O layer",
+	"FR_INT_ERR: Assertion failed",
+	"FR_NOT_READY: The physical drive cannot work",
+	"FR_NO_FILE: Could not find the file",
+	"FR_NO_PATH: Could not find the path",
+	"FR_INVALID_NAME: The path name format is invalid",
+	"FR_DENIED: Access denied due to prohibited access or directory full",
+	"FR_EXIST: Access denied due to prohibited access",
+	"FR_INVALID_OBJECT: The file/directory object is invalid",
+	"FR_WRITE_PROTECTED: The physical drive is write protected",
+	"FR_INVALID_DRIVE: The logical drive number is invalid",
+	"FR_NOT_ENABLED: The volume has no work area",
+	"FR_NO_FILESYSTEM: There is no valid FAT volume",
+	"FR_MKFS_ABORTED: The f_mkfs() aborted due to any problem",
+	"FR_TIMEOUT: Could not get a grant to access the volume within defined period",
+	"FR_LOCKED: The operation is rejected according to the file sharing policy",
+	"FR_NOT_ENOUGH_CORE: LFN working buffer could not be allocated",
+	"FR_TOO_MANY_OPEN_FILES: Number of open files > FF_FS_LOCK",
+	"FR_INVALID_PARAMETER: Given parameter is invalid"
+};
+
 // print FAT error function
 static void printError(const char *str, FRESULT f_error) {
 	if (fatFsErrors++ > 16) {
@@ -113,7 +137,7 @@ static void printError(const char *str, FRESULT f_error) {
 		return;
 	}
 
-	efiPrintf("FATfs Error \"%s\" %d", str, f_error);
+	efiPrintf("FATfs Error \"%s\" %d %s", str, f_error, f_error <= FR_INVALID_PARAMETER ? fatErrors[f_error] : "unknown");
 }
 
 static FIL FDLogFile NO_CACHE;
@@ -212,7 +236,7 @@ static void createLogFile() {
 	if (err != FR_OK && err != FR_EXIST) {
 		sdStatus = SD_STATE_OPEN_FAILED;
 		warning(ObdCode::CUSTOM_ERR_SD_MOUNT_FAILED, "SD: mount failed");
-		printError("FS mount failed", err);	// else - show error
+		printError("log file create", err);	// else - show error
 		return;
 	}
 
@@ -220,7 +244,7 @@ static void createLogFile() {
 	if (err) {
 		sdStatus = SD_STATE_SEEK_FAILED;
 		warning(ObdCode::CUSTOM_ERR_SD_SEEK_FAILED, "SD: seek failed");
-		printError("Seek error", err);
+		printError("log file seek", err);
 		return;
 	}
 	f_sync(&FDLogFile);
@@ -451,7 +475,7 @@ struct SdLogBufferWriter final : public BufferedWriter<512> {
 		FRESULT err = f_write(&FDLogFile, buffer, count, &bytesWritten);
 
 		if (bytesWritten != count) {
-			printError("write error or disk full", err);
+			printError("log file write", err);
 
 			// Close file and unmount volume
 			mmcUnMount();
