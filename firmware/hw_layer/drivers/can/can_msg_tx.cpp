@@ -55,7 +55,7 @@ CanTxMessage::CanTxMessage(CanCategory p_category, uint32_t eid, uint8_t dlc, si
 
 	setBus(bus);
 
-	memset(m_frame.data8, 0, sizeof(m_frame.data8));
+	setArrayValues(m_frame.data8, 0);
 #endif // HAS_CAN_FRAME
 }
 
