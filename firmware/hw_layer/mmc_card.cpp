@@ -25,7 +25,6 @@ static bool fs_ready = false;
 #if EFI_PROD_CODE
 
 int totalLoggedBytes = 0;
-static int fileCreatedCounter = 0;
 static int writeCounter = 0;
 static int totalWritesCounter = 0;
 static int totalSyncCounter = 0;
@@ -433,7 +432,6 @@ static bool mountMmc() {
 		sdStatus = SD_STATE_MOUNTED;
 		incLogFileName();
 		createLogFile();
-		fileCreatedCounter++;
 		efiPrintf("MMC/SD mounted!");
 		return true;
 	} else {
