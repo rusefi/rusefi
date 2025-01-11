@@ -44,19 +44,38 @@ static int totalSyncCounter = 0;
 // cause simulator fail to build.
 extern void errorHandlerWriteReportFile(FIL *fd, int index);
 
-#define SD_STATE_INIT "init"
-#define SD_STATE_MOUNTED "MOUNTED"
-#define SD_STATE_MOUNT_FAILED "MOUNT_FAILED"
-#define SD_STATE_OPEN_FAILED "OPEN_FAILED"
-#define SD_STATE_SEEK_FAILED "SEEK_FAILED"
-#define SD_STATE_NOT_INSERTED "NOT_INSERTED"
-#define SD_STATE_CONNECTING "CONNECTING"
-#define SD_STATE_MSD "MSD"
-#define SD_STATE_NOT_CONNECTED "NOT_CONNECTED"
-#define SD_STATE_MMC_FAILED "MMC_CONNECT_FAILED"
+typedef enum {
+	SD_STATUS_INIT = 0,
+	SD_STATUS_MOUNTED,
+	SD_STATUS_MOUNT_FAILED,
+	SD_STATUS_OPEN_FAILED,
+	SD_STATUS_SEEK_FAILED,
+	SD_STATUS_NOT_INSERTED,
+	SD_STATUS_CONNECTING,
+	SD_STATUS_MSD,
+	SD_STATUS_MMC_FAILED
+} SD_STATUS;
 
 // todo: shall we migrate to enum with enum2string for consistency? maybe not until we start reading sdStatus?
-static const char *sdStatus = SD_STATE_INIT;
+static const char *sdStatusNames[] =
+{
+	"INIT",
+	"MOUNTED",
+	"MOUNT_FAILED",
+	"OPEN_FAILED",
+	"SEEK_FAILED",
+	"NOT_INSERTED",
+	"CONNECTING",
+	"MSD",
+	"MMC_CONNECT_FAILED"
+};
+
+static const char *sdStatusName(SD_STATUS status)
+{
+	return sdStatusNames[status];
+}
+
+static SD_STATUS sdStatus = SD_STATUS_INIT;
 
 // at about 20Hz we write about 2Kb per second, looks like we flush once every ~2 seconds
 #define F_SYNC_FREQUENCY 10
@@ -158,7 +177,7 @@ static void printMmcPinout() {
 static void sdStatistics() {
 	printMmcPinout();
 	efiPrintf("SD enabled=%s status=%s", boolToString(engineConfiguration->isSdCardEnabled),
-			sdStatus);
+			sdStatusName(sdStatus));
 	printSpiConfig("SD", mmcSpiDevice);
 #if HAL_USE_MMC_SPI && (defined(STM32F4XX) || defined(STM32F7XX))
 	efiPrintf("HS clock %d Hz", spiGetBaseClock(mmccfg.spip) / (2 << ((mmc_hs_spicfg.cr1 & SPI_CR1_BR_Msk) >> SPI_CR1_BR_Pos)));
@@ -206,7 +225,7 @@ static void createLogFile() {
 	// Create new file. If file is exist - truncate and overwrite, we need header to be at zero offset.
 	FRESULT err = f_open(&FDLogFile, logName, FA_CREATE_ALWAYS | FA_WRITE);
 	if (err != FR_OK && err != FR_EXIST) {
-		sdStatus = SD_STATE_OPEN_FAILED;
+		sdStatus = SD_STATUS_OPEN_FAILED;
 		warning(ObdCode::CUSTOM_ERR_SD_MOUNT_FAILED, "SD: mount failed");
 		printError("log file create", err);	// else - show error
 		return;
@@ -292,9 +311,8 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 
 	// Performs the initialization procedure on the inserted card.
 	LOCK_SD_SPI();
-	sdStatus = SD_STATE_CONNECTING;
 	if (blkConnect(&MMCD1) != HAL_SUCCESS) {
-		sdStatus = SD_STATE_MMC_FAILED;
+		sdStatus = SD_STATUS_MMC_FAILED;
 		UNLOCK_SD_SPI();
 		return nullptr;
 	}
@@ -320,9 +338,7 @@ static const SDCConfig sdcConfig = {
  */
 static BaseBlockDevice* initializeMmcBlockDevice() {
 	sdcStart(&EFI_SDC_DEVICE, &sdcConfig);
-	sdStatus = SD_STATE_CONNECTING;
 	if (blkConnect(&EFI_SDC_DEVICE) != HAL_SUCCESS) {
-		sdStatus = SD_STATE_NOT_CONNECTED;
 		return nullptr;
 	}
 
@@ -375,12 +391,12 @@ static bool mountMmc() {
 	// We were able to connect the SD card, mount the filesystem
 	memset(&MMC_FS, 0, sizeof(FATFS));
 	if (f_mount(&MMC_FS, "/", 1) != FR_OK) {
-		sdStatus = SD_STATE_MOUNT_FAILED;
+		sdStatus = SD_STATUS_MOUNT_FAILED;
 		return false;
 	}
 
 	efiPrintf("MMC/SD mounted!");
-	sdStatus = SD_STATE_MOUNTED;
+	sdStatus = SD_STATUS_MOUNTED;
 
 #if EFI_TUNER_STUDIO
 	engine->outputChannels.sd_logging_internal = true;
@@ -493,8 +509,10 @@ static THD_FUNCTION(MMCmonThread, arg) {
 	chThdSleepMilliseconds(300);
 #endif
 
+	sdStatus = SD_STATUS_CONNECTING;
 	if (!initMmc()) {
 		efiPrintf("Card is not preset/failed to init");
+		sdStatus = SD_STATUS_NOT_INSERTED;
 		// give up until next boot
 		goto die;
 	}
@@ -508,7 +526,7 @@ static THD_FUNCTION(MMCmonThread, arg) {
 		// Mount the real card to USB
 		attachMsdSdCard(cardBlockDevice);
 
-		sdStatus = SD_STATE_MSD;
+		sdStatus = SD_STATUS_MSD;
 		// At this point we're done: don't try to write files ourselves
 	}
 #endif
@@ -528,6 +546,7 @@ static THD_FUNCTION(MMCmonThread, arg) {
 			}
 		} else {
 			efiPrintf("failed to mount SD card for logging");
+			sdStatus = SD_STATUS_MOUNT_FAILED;
 		}
 	}
 
