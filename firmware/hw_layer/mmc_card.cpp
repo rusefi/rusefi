@@ -570,19 +570,25 @@ static THD_FUNCTION(MMCmonThread, arg) {
   chThdSleepMilliseconds(300);
 #endif
 
-	if (!mountMmc()) {
+	if (mountMmc()) {
+		#if EFI_TUNER_STUDIO
+			engine->outputChannels.sd_logging_internal = true;
+		#endif
+
+		if (engineConfiguration->sdTriggerLog) {
+			sdTriggerLogger();
+		} else {
+			mlgLogger();
+		}
+	} else {
 		// no card present (or mounted via USB), don't do internal logging
-		return;
 	}
 
-	#if EFI_TUNER_STUDIO
-		engine->outputChannels.sd_logging_internal = true;
-	#endif
+	efiPrintf("SD logger has died!");
 
-	if (engineConfiguration->sdTriggerLog) {
-		sdTriggerLogger();
-	} else {
-		mlgLogger();
+	// exiting thread will create zombie!
+	while(1) {
+		chThdSleepMilliseconds(100);
 	}
 }
 
