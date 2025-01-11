@@ -232,6 +232,7 @@ static void createLogFile() {
 	memset(&FDLogFile, 0, sizeof(FIL));						// clear the memory
 	prepareLogFileName();
 
+	efiPrintf("starting log file %s", logName);
 	FRESULT err = f_open(&FDLogFile, logName, FA_OPEN_ALWAYS | FA_WRITE);				// Create new file
 	if (err != FR_OK && err != FR_EXIST) {
 		sdStatus = SD_STATE_OPEN_FAILED;
@@ -453,10 +454,10 @@ static bool mountMmc() {
 	// We were able to connect the SD card, mount the filesystem
 	memset(&MMC_FS, 0, sizeof(FATFS));
 	if (f_mount(&MMC_FS, "/", 1) == FR_OK) {
+		efiPrintf("MMC/SD mounted!");
 		sdStatus = SD_STATE_MOUNTED;
 		incLogFileName();
 		createLogFile();
-		efiPrintf("MMC/SD mounted!");
 		return true;
 	} else {
 		sdStatus = SD_STATE_MOUNT_FAILED;
