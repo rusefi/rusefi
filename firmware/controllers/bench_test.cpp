@@ -512,6 +512,18 @@ static void handleCommandX14(uint16_t index) {
 			burnWithoutFlash = true;
 		#endif /* EFI_PROD_CODE && EFI_CONFIGURATION_STORAGE */
 		return;
+
+#if EFI_FILE_LOGGING
+	case TS_SD_MOUNT_PC:
+		return;
+	case TS_SD_MOUNT_ECU:
+		return;
+	case TS_SD_UNMOUNT:
+		return;
+	case TS_SD_FORMAT:
+		return;
+#endif // EFI_FILE_LOGGING
+
 	default:
 		criticalError("Unexpected bench x14 %d", index);
 	}

@@ -257,6 +257,10 @@ typedef enum {
 	TS_ETB_DISABLE_JAM_DETECT = 0x14,
 	TS_BURN_WITHOUT_FLASH = 0x15,
 	TS_RESET_MC33810 = 0x16,
+	TS_SD_MOUNT_PC = 0x17,
+	TS_SD_MOUNT_ECU = 0x18,
+	TS_SD_UNMOUNT = 0x19,
+	TS_SD_FORMAT = 0x1A,
 } ts_14_command;
 
 typedef enum {
