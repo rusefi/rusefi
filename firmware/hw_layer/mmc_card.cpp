@@ -462,6 +462,8 @@ private:
 
 static NO_CACHE SdLogBufferWriter logBuffer;
 
+#if EFI_PROD_CODE
+
 // Log 'regular' ECU log to MLG file
 static void mlgLogger();
 
@@ -586,6 +588,8 @@ static void sdTriggerLogger() {
 #endif /* EFI_TOOTH_LOGGER */
 }
 
+#endif // EFI_PROD_CODE
+
 bool isSdCardAlive(void) {
 	return fs_ready;
 }
@@ -624,7 +628,9 @@ void initMmcCard() {
 		// do not even bother starting the thread if SD card is not enabled & configured on start-up
 		return;
 	}
+#if EFI_PROD_CODE
 	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), PRIO_MMC, (tfunc_t)(void*) MMCmonThread, NULL);
+#endif // EFI_PROD_CODE
 }
 
 #endif /* EFI_FILE_LOGGING */
