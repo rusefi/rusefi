@@ -273,20 +273,20 @@ static void removeFile(const char *pathx) {
 }
 
 int mystrncasecmp(const char *s1, const char *s2, size_t n) {
-           if (n != 0) {
-                    const char *us1 = (const char *)s1;
-                    const char *us2 = (const char *)s2;
+	if (n != 0) {
+		const char *us1 = (const char *)s1;
+		const char *us2 = (const char *)s2;
 
-                   do {
-                            if (mytolower(*us1) != mytolower(*us2))
-                                    return (mytolower(*us1) - mytolower(*us2));
-                           if (*us1++ == '\0')
-                                   break;
-                            us2++;
-                    } while (--n != 0);
-            }
-            return (0);
-    }
+		do {
+			if (mytolower(*us1) != mytolower(*us2))
+				return (mytolower(*us1) - mytolower(*us2));
+			if (*us1++ == '\0')
+				break;
+			us2++;
+		} while (--n != 0);
+	}
+	return (0);
+}
 
 static void listDirectory(const char *path) {
 
@@ -674,10 +674,10 @@ static bool isSdCardEnabled() {
 }
 
 void initMmcCard() {
-  if (!isSdCardEnabled()) {
-    // do not even bother starting the thread if SD card is not enabled & configured on start-up
-    return;
-  }
+	if (!isSdCardEnabled()) {
+		// do not even bother starting the thread if SD card is not enabled & configured on start-up
+		return;
+	}
 	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), PRIO_MMC, (tfunc_t)(void*) MMCmonThread, NULL);
 }
 
