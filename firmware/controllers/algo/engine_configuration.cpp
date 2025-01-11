@@ -722,6 +722,7 @@ void setCamOperationMode() {
 }
 
 void setCrankOperationMode() {
+	// this is related to 'setDefaultBaseEngine' having 'skippedWheelOnCam = true' which is a weird fact by itself
 	engineConfiguration->skippedWheelOnCam = false;
 }
 

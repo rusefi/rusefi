@@ -16,17 +16,14 @@
 #include "GY6_139QMB.h"
 
 void setGy6139qmbDefaultEngineConfiguration() {
-//        engineConfiguration->map.sensor.type = MT_3V_SENSOR;
 	engineConfiguration->rpmHardLimit = 9000;
 	engineConfiguration->cranking.rpm = 1100;
 	setTargetRpmCurve(2000);
-	engineConfiguration->analogInputDividerCoefficient = 1;
+
 	engineConfiguration->globalTriggerAngleOffset = Gy6139_globalTriggerAngleOffset;
 	engineConfiguration->displacement = 0.072; // 72cc
 	engineConfiguration->cylindersCount = 1;
 	setCrankOperationMode();
-	// this is related to 'setDefaultBaseEngine' having 'skippedWheelOnCam = true' which is a weird fact by itself
-	engineConfiguration->skippedWheelOnCam = false;
 
 	engineConfiguration->firingOrder = FO_1;
 
@@ -36,9 +33,6 @@ void setGy6139qmbDefaultEngineConfiguration() {
 	engineConfiguration->trigger.type = trigger_type_e::TT_TOOTHED_WHEEL;
 	engineConfiguration->trigger.customTotalToothCount = 8;
 	engineConfiguration->trigger.customSkippedToothCount = 1;
-
-	engineConfiguration->injectionPins[0] = Gpio::C9;
-	engineConfiguration->ignitionPins[0] = Gpio::C8;
 
 	// set injection_mode 1
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
