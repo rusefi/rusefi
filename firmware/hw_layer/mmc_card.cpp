@@ -264,15 +264,10 @@ void onUsbConnectedNotifyMmcI() {
 
 #if HAL_USE_MMC_SPI
 /*
- * Attempts to initialize the MMC card.
+ * Attempts to initialize the MMC card connected over SPI.
  * Returns a BaseBlockDevice* corresponding to the SD card if successful, otherwise nullptr.
  */
 static BaseBlockDevice* initializeMmcBlockDevice() {
-	// Don't try to mount SD card in case of fatal error - hardware may be in an unexpected state
-	if (hasFirmwareError()) {
-		return nullptr;
-	}
-
 	// Configures and activates the MMC peripheral.
 	mmcSpiDevice = engineConfiguration->sdCardSpiDevice;
 
@@ -319,6 +314,10 @@ static const SDCConfig sdcConfig = {
 	.bus_width = RE_SDC_MODE
 };
 
+/*
+ * Attempts to initialize the MMC card connected over SDIO.
+ * Returns a BaseBlockDevice* corresponding to the SD card if successful, otherwise nullptr.
+ */
 static BaseBlockDevice* initializeMmcBlockDevice() {
 	sdcStart(&EFI_SDC_DEVICE, &sdcConfig);
 	sdStatus = SD_STATE_CONNECTING;
@@ -346,48 +345,48 @@ static bool useMsdMode() {
 }
 #endif // HAL_USE_USB_MSD
 
-// Initialize and mount the SD card.
-// Returns true if the filesystem was successfully mounted for writing.
-static bool mountMmc() {
-	auto cardBlockDevice = initializeMmcBlockDevice();
+static BaseBlockDevice* cardBlockDevice = nullptr;
+
+// Initialize SD card.
+static bool initMmc() {
+	// Don't try to mount SD card in case of fatal error - hardware may be in an unexpected state
+	if (hasFirmwareError()) {
+		return false;
+	}
+
+	cardBlockDevice = initializeMmcBlockDevice();
 
 #if EFI_TUNER_STUDIO
 	// If not null, card is present
 	engine->outputChannels.sd_present = cardBlockDevice != nullptr;
 #endif
 
+	return (cardBlockDevice != nullptr);
+}
+
+// Mount the SD card.
+// Returns true if the filesystem was successfully mounted for writing.
+static bool mountMmc() {
 	// if no card, don't try to mount FS
 	if (!cardBlockDevice) {
 		return false;
 	}
 
-#if HAL_USE_USB_MSD
-	// If we have a device AND USB is connected, mount the card to USB, otherwise
-	// mount the null device and try to mount the filesystem ourselves
-	if (useMsdMode()) {
-		// Mount the real card to USB
-		attachMsdSdCard(cardBlockDevice);
-
-		sdStatus = SD_STATE_MSD;
-		// At this point we're done: don't try to write files ourselves
-		return false;
-	}
-#endif
-
 	// We were able to connect the SD card, mount the filesystem
 	memset(&MMC_FS, 0, sizeof(FATFS));
-	if (f_mount(&MMC_FS, "/", 1) == FR_OK) {
-		efiPrintf("MMC/SD mounted!");
-		sdStatus = SD_STATE_MOUNTED;
-		incLogFileName();
-		errorHandlerWriteReportFile(&FDLogFile, logFileIndex);
-		f_setlabel(SD_CARD_LABEL);
-		createLogFile();
-		return true;
-	} else {
+	if (f_mount(&MMC_FS, "/", 1) != FR_OK) {
 		sdStatus = SD_STATE_MOUNT_FAILED;
 		return false;
 	}
+
+	efiPrintf("MMC/SD mounted!");
+	sdStatus = SD_STATE_MOUNTED;
+
+#if EFI_TUNER_STUDIO
+	engine->outputChannels.sd_logging_internal = true;
+#endif
+
+	return true;
 }
 
 struct SdLogBufferWriter final : public BufferedWriter<512> {
@@ -429,6 +428,11 @@ struct SdLogBufferWriter final : public BufferedWriter<512> {
 
 #include <fstream>
 
+bool initMmc() {
+	// Stub so the loop thinks the MMC is present
+	return true;
+}
+
 bool mountMmc() {
 	// Stub so the loop thinks the MMC mounted OK
 	return true;
@@ -467,6 +471,9 @@ static void sdTriggerLogger();
 static THD_WORKING_AREA(mmcThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
 static THD_FUNCTION(MMCmonThread, arg) {
 	(void)arg;
+
+	bool hasUsb = false;
+
 	chRegSetThreadName("MMC Card Logger");
 
 #if HW_HELLEN && EFI_PROD_CODE
@@ -484,20 +491,45 @@ static THD_FUNCTION(MMCmonThread, arg) {
 	chThdSleepMilliseconds(300);
 #endif
 
-	if (mountMmc()) {
-		#if EFI_TUNER_STUDIO
-			engine->outputChannels.sd_logging_internal = true;
-		#endif
-
-		if (engineConfiguration->sdTriggerLog) {
-			sdTriggerLogger();
-		} else {
-			mlgLogger();
-		}
-	} else {
-		// no card present (or mounted via USB), don't do internal logging
+	if (!initMmc()) {
+		efiPrintf("Card is not preset/failed to init");
+		// give up until next boot
+		goto die;
 	}
 
+#if HAL_USE_USB_MSD
+	// Wait for the USB stack to wake up, or a 15 second timeout, whichever occurs first
+	// If we have a device AND USB is connected, mount the card to USB, otherwise
+	// mount the null device and try to mount the filesystem ourselves
+	if (useMsdMode()) {
+		hasUsb = true;
+		// Mount the real card to USB
+		attachMsdSdCard(cardBlockDevice);
+
+		sdStatus = SD_STATE_MSD;
+		// At this point we're done: don't try to write files ourselves
+	}
+#endif
+
+	if (!hasUsb) {
+		if (mountMmc()) {
+			incLogFileName();
+			// TODO: Do this independently of SD mode, somewhere in the start of this task!
+			errorHandlerWriteReportFile(&FDLogFile, logFileIndex);
+			f_setlabel(SD_CARD_LABEL);
+			createLogFile();
+
+			if (engineConfiguration->sdTriggerLog) {
+				sdTriggerLogger();
+			} else {
+				mlgLogger();
+			}
+		} else {
+			efiPrintf("failed to mount SD card for logging");
+		}
+	}
+
+die:
 	efiPrintf("SD logger has died!");
 
 	// exiting thread will create zombie!
