@@ -520,7 +520,9 @@ static void handleCommandX14(uint16_t index) {
 extern bool rebootForPresetPending;
 
 static void applyPreset(int index) {
+#if EFI_TUNER_STUDIO
 	onApplyPreset();
+#endif // EFI_TUNER_STUDIO
   setEngineType(index);
 }
 
