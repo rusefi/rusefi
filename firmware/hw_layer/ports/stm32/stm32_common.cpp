@@ -138,14 +138,11 @@ void tryResetWatchdog() {
 #endif // HAL_USE_WDG
 }
 
-void baseMCUInit(void) {
+void baseMCUInit() {
 	// looks like this holds a random value on start? Let's set a nice clean zero
 	DWT->CYCCNT = 0;
 
 	BOR_Set(BOR_Level_1); // one step above default value
-
-	setWatchdogResetPeriod(WATCHDOG_RESET_MS);
-	startWatchdog();
 }
 
 extern uint32_t __main_stack_base__;

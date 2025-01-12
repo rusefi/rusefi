@@ -179,13 +179,17 @@ void runRusEfi() {
 	startLoggingProcessor();
 #endif
 
+#if HAL_USE_WDG
+	setWatchdogResetPeriod(WATCHDOG_RESET_MS);
+	startWatchdog();
+#endif // HAL_USE_WDG
+
 #if EFI_PROD_CODE
   // see also: checkLastResetCause
 	checkLastBootError();
 #endif
 
 #if defined(STM32F4) || defined(STM32F7)
-//	addConsoleAction("stm32_stop", stm32_stop);
 	addConsoleAction("stm32_standby", stm32_standby);
 #endif
 
