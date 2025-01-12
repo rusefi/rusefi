@@ -82,3 +82,5 @@ void checkLastBootError();
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
+
+// todo log red LED reason on SD card #7290 bool isRuntimeCritical(ObdCode error);
