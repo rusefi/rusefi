@@ -1051,6 +1051,16 @@ void configureRusefiLuaHooks(lua_State* lState) {
 	lua_register(lState, "txCan", lua_txCan);
 #endif
 
+#if EFI_PROD_CODE
+  /* todo: hasCriticalReportFile method #7291
+	lua_register(lState, "hasCriticalReportFile", [](lua_State*) {
+		// todo: actual method to scan SD card for error report files
+		lua_pushnumber(l, hasCriticalReportFile());
+	  return 1;
+  }
+*/
+#endif // EFI_PROD_CODE
+
 #if EFI_PROD_CODE && HW_HELLEN
 	lua_register(lState, "hellenEnablePower", [](lua_State*) {
 		hellenEnableEn("Lua");
