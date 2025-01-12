@@ -430,5 +430,8 @@ float mapFast
 	int8_t sparkCutReasonBlinker
 	int8_t fuelCutReasonBlinker
 
+	! only RUNTIME_CRITICAL goes to critical report files while any software error goes here
+	! uint16_t softRebootReason
+
 	uint8_t[52 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct
