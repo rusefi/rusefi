@@ -23,7 +23,7 @@ void tryResetWatchdog() {
 void setWatchdogResetPeriod(int) {
 }
 
-void baseMCUInit(void) {
+void baseMCUInit() {
 }
 
 void _unhandled_exception(void) {

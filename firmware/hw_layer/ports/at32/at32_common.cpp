@@ -143,7 +143,7 @@ void tryResetWatchdog() {
 void setWatchdogResetPeriod(int) {
 }
 
-void baseMCUInit(void) {
+void baseMCUInit() {
     // looks like this holds a random value on start? Let's set a nice clean zero
     DWT->CYCCNT = 0;
 
