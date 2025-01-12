@@ -680,6 +680,8 @@ int getSpiPrescaler(spi_speed_e speed, spi_device_e device) {
 void checkLastResetCause() {
 #if EFI_PROD_CODE
 	Reset_Cause_t cause = getMCUResetCause();
+	// checkLastBootError
+	// see also Err.ErrorString
 	const char *causeStr = getMCUResetCause(cause);
 	efiPrintf("Last Reset Cause: %s", causeStr);
 

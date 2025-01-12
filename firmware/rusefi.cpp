@@ -180,6 +180,7 @@ void runRusEfi() {
 #endif
 
 #if EFI_PROD_CODE
+  // see also: checkLastResetCause
 	checkLastBootError();
 #endif
 
@@ -225,6 +226,7 @@ void runRusEfi() {
 	 */
 	initializeConsole();
 
+  // see also: checkLastBootError
 	checkLastResetCause();
 
 	// Read configuration from flash memory
