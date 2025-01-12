@@ -28,18 +28,6 @@
 #include "console_io.h"
 #include "mpu_util.h"
 
-static void testCritical() {
-	chDbgCheck(0);
-}
-
-static void myerror() {
-	firmwareError(ObdCode::CUSTOM_ERR_TEST_ERROR, "firmwareError: %d", getRusEfiVersion());
-}
-
-static void testHardFault() {
-	causeHardFault();
-}
-
 #if defined(STM32F4) || defined(STM32F7) || defined(STM32H7)
 static void printUid() {
 	uint32_t *uid = ((uint32_t *)UID_BASE);
@@ -288,9 +276,10 @@ void initializeConsole() {
 	addConsoleAction("reset", scheduleReset);
 #endif
 
-	addConsoleAction("critical", testCritical);
-	addConsoleAction("error", myerror);
-	addConsoleAction("hard_fault", testHardFault);
+  // see https://github.com/rusefi/rusefi/wiki/Resilience
+	addConsoleAction("chibi_fault", [](){ chDbgCheck(0); } );
+	addConsoleAction("soft_fault", [](){ firmwareError(ObdCode::CUSTOM_ERR_TEST_ERROR, "firmwareError: %d", getRusEfiVersion()); });
+	addConsoleAction("hard_fault", [](){ causeHardFault(); } );
 	addConsoleAction("threadsinfo", cmd_threads);
 
 #if HAL_USE_WDG
