@@ -1245,7 +1245,7 @@ public class Fields {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 1145008826;
+	public static final int SIGNATURE_HASH = 664651728;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1434,6 +1434,10 @@ public class Fields {
 	public static final int ts_14_command_TS_GRAB_PEDAL_WOT = 7;
 	public static final int ts_14_command_TS_RESET_MC33810 = 0x16;
 	public static final int ts_14_command_TS_RESET_TLE8888 = 8;
+	public static final int ts_14_command_TS_SD_FORMAT = 0x1A;
+	public static final int ts_14_command_TS_SD_MOUNT_ECU = 0x18;
+	public static final int ts_14_command_TS_SD_MOUNT_PC = 0x17;
+	public static final int ts_14_command_TS_SD_UNMOUNT = 0x19;
 	public static final int ts_14_command_TS_TRIGGER_STIMULATOR_DISABLE = 0x0F;
 	public static final int ts_14_command_TS_TRIGGER_STIMULATOR_ENABLE = 0x0D;
 	public static final int ts_14_command_TS_WIDEBAND_UPDATE = 0x12;
@@ -1511,7 +1515,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.01.12.f407-discovery.1145008826";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.01.12.f407-discovery.664651728";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';

@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Fri Dec 27 21:04:11 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sun Jan 12 13:29:17 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -394,6 +394,14 @@ case TS_RESET_MC33810:
   return "TS_RESET_MC33810";
 case TS_RESET_TLE8888:
   return "TS_RESET_TLE8888";
+case TS_SD_FORMAT:
+  return "TS_SD_FORMAT";
+case TS_SD_MOUNT_ECU:
+  return "TS_SD_MOUNT_ECU";
+case TS_SD_MOUNT_PC:
+  return "TS_SD_MOUNT_PC";
+case TS_SD_UNMOUNT:
+  return "TS_SD_UNMOUNT";
 case TS_TRIGGER_STIMULATOR_DISABLE:
   return "TS_TRIGGER_STIMULATOR_DISABLE";
 case TS_TRIGGER_STIMULATOR_ENABLE:
