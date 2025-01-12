@@ -60,6 +60,10 @@ const OutputPin *getOutputOnTheBenchTest() {
 #include "gpio/tle8888.h"
 #endif // BOARD_TLE8888_COUNT
 
+#if EFI_FILE_LOGGING
+#include "mmc_card.h"
+#endif
+
 static scheduling_s benchSchedStart;
 static scheduling_s benchSchedEnd;
 
@@ -515,12 +519,16 @@ static void handleCommandX14(uint16_t index) {
 
 #if EFI_FILE_LOGGING
 	case TS_SD_MOUNT_PC:
+		sdCardRequestMode(SD_MODE_PC);
 		return;
 	case TS_SD_MOUNT_ECU:
+		sdCardRequestMode(SD_MODE_ECU);
 		return;
 	case TS_SD_UNMOUNT:
+		sdCardRequestMode(SD_MODE_UNMOUNT);
 		return;
 	case TS_SD_FORMAT:
+		sdCardRequestMode(SD_MODE_FORMAT);
 		return;
 #endif // EFI_FILE_LOGGING
 

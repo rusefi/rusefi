@@ -84,6 +84,15 @@ void attachMsdSdCard(BaseBlockDevice* blkdev) {
 #endif
 }
 
+void deattachMsdSdCard(void) {
+	msd.attachLun(1, (BaseBlockDevice*)&ND1, blkbuf1, &sdCardInquiry, nullptr);
+
+#if EFI_TUNER_STUDIO
+	// SD MSD attached, enable indicator in TS
+	engine->outputChannels.sd_msd = false;
+#endif
+}
+
 static BaseBlockDevice* getRamdiskDevice() {
 #if EFI_EMBED_INI_MSD
 #if EFI_USE_COMPRESSED_INI_MSD
