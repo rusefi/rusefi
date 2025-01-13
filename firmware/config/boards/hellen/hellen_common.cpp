@@ -32,8 +32,8 @@ void setHellenAnalogDividers() {
 	engineConfiguration->adcVcc = 3.29f;
 }
 
-void setHellenAnalogDividers() {
-  setHellenDividers();
+void setHellenVbatt() {
+  setHellenAnalogDividers();
 
 	engineConfiguration->vbattAdcChannel = H144_IN_VBATT;
 
