@@ -47,10 +47,15 @@ const char* getConfigErrorMessageBuffer() {
 	return configErrorMessageBuffer;
 }
 
+#if EFI_BACKUP_SRAM
+ErrorCookie errorCookieOnStart;
+#endif // EFI_BACKUP_SRAM
+
 #if EFI_PROD_CODE
 void checkLastBootError() {
 #if EFI_BACKUP_SRAM
 	auto sramState = getBackupSram();
+	errorCookieOnStart = sramState->Err.Cookie; // preserving value since we will reset it soon
 
 	switch (sramState->Err.Cookie) {
 	case ErrorCookie::FirmwareError:
@@ -77,7 +82,7 @@ void checkLastBootError() {
 		efiPrintf("pc  0x%lx", ctx->pc);
 		efiPrintf("xpsr  0x%lx", ctx->xpsr);
 
-		/* FPU registers - not very usefull for debug */
+		/* FPU registers - not very useful for debug */
 		if (0) {
 			// Print rest the context as a sequence of uintptr
 			uintptr_t* data = reinterpret_cast<uintptr_t*>(&sramState->Err.FaultCtx);

@@ -68,8 +68,8 @@ void incLogFileName() {
 
 bool needsToWriteReportFile() {
 #if EFI_BACKUP_SRAM
-  auto sramState = getBackupSram();
-  return sramState->Err.Cookie == ErrorCookie::HardFault;
+extern ErrorCookie errorCookieOnStart;
+  return errorCookieOnStart == ErrorCookie::HardFault;
 #else
   return false;
 #endif // EFI_BACKUP_SRAM
@@ -81,9 +81,10 @@ PUBLIC_API_WEAK void onBoardWriteErrorFile(FIL *file) {
 
 void writeErrorReportFile() {
 #if EFI_BACKUP_SRAM
+extern ErrorCookie errorCookieOnStart;
   static char fileName[_MAX_FILLER + 20];
   auto sramState = getBackupSram();
-  if (sramState->Err.Cookie == ErrorCookie::HardFault) {
+  if (errorCookieOnStart == ErrorCookie::HardFault) {
   	memset(&FDLogFile, 0, sizeof(FIL));						// clear the memory
   	sprintf(fileName, "%s%d.txt", HARD_FAULT_PREFIX, logFileIndex);
   	FRESULT ret = f_open(&FDLogFile, fileName, FA_CREATE_ALWAYS | FA_WRITE);
