@@ -15,7 +15,7 @@
 
 void initEarlyMmcCard();
 void initMmcCard();
-bool isSdCardAlive(void);
+bool isSdCardAlive();
 
 void onUsbConnectedNotifyMmcI(void);
 
