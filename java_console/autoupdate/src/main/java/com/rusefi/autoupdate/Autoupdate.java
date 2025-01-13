@@ -170,8 +170,29 @@ public class Autoupdate {
             log.info("Snapshot requested");
             return downloadAutoupdateZipFile(bundleInfo, mode, ConnectionAndMeta.getBaseUrl() + ConnectionAndMeta.AUTOUPDATE);
         } else {
-            return downloadAutoupdateZipFile(bundleInfo, mode, ConnectionAndMeta.getBaseUrl() + "/lts/" + bundleInfo.getBranchName() + ConnectionAndMeta.AUTOUPDATE);
+            final String branchName = selectBranchName(bundleInfo);
+            return downloadAutoupdateZipFile(bundleInfo, mode, ConnectionAndMeta.getBaseUrl() + "/lts/" + branchName + ConnectionAndMeta.AUTOUPDATE);
         }
+    }
+
+    private static String selectBranchName(BundleUtil.BundleInfo bundleInfo) {
+        final String branchName = bundleInfo.getBranchName();
+        final String nextBranchName = bundleInfo.getNextBranchName();
+        if (nextBranchName != null && !nextBranchName.isBlank()) {
+            if (JOptionPane.showConfirmDialog(
+                null,
+                String.format("A new version `%s` is available!\nWould you like to update from `%s` to `%s` now?",
+                    nextBranchName,
+                    branchName,
+                    nextBranchName
+                ),
+                "Release selection",
+                JOptionPane.YES_NO_OPTION
+            ) == JOptionPane.YES_OPTION) {
+                return nextBranchName;
+            }
+        }
+        return branchName;
     }
 
     private static URLClassLoader prepareClassLoaderToStartConsole() {
