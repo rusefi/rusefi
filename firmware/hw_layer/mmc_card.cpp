@@ -339,6 +339,11 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 		return nullptr;
 	}
 
+	// max SPI rate is 25 MHz after init
+	spiCalcClockDiv(mmccfg.spip, &mmc_hs_spicfg, 25 * 1000 * 1000);
+	// and 250 KHz during initialization
+	spiCalcClockDiv(mmccfg.spip, &mmc_ls_spicfg, 250 * 1000);
+
 	// We think we have everything for the card, let's try to mount it!
 	mmcObjectInit(&MMCD1);
 	mmcStart(&MMCD1, &mmccfg);
