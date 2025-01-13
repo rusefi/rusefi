@@ -418,6 +418,7 @@ static bool mountMmc() {
 		efiPrintf("MMC/SD mounted!");
 		sdStatus = SD_STATE_MOUNTED;
 		incLogFileName();
+		writeErrorReportFile();
 		createLogFile();
 		return true;
 	} else {

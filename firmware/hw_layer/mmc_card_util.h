@@ -4,3 +4,4 @@
 
 void incLogFileName();
 void printError(const char *str, FRESULT f_error);
+void writeErrorReportFile();
