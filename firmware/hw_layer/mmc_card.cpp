@@ -379,6 +379,21 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 }
 #endif /* EFI_SDC_DEVICE */
 
+#if HAL_USE_USB_MSD
+static bool useMsdMode() {
+  if (needsToWriteReportFile()) {
+    return false;
+  }
+  if (engineConfiguration->alwaysWriteSdCard) {
+    return false;
+  }
+	// Wait for the USB stack to wake up, or a 15 second timeout, whichever occurs first
+	msg_t usbResult = usbConnectedSemaphore.wait(TIME_MS2I(15000));
+
+	return usbResult == MSG_OK;
+}
+#endif // HAL_USE_USB_MSD
+
 // Initialize and mount the SD card.
 // Returns true if the filesystem was successfully mounted for writing.
 static bool mountMmc() {
@@ -390,14 +405,9 @@ static bool mountMmc() {
 #endif
 
 #if HAL_USE_USB_MSD
-	// Wait for the USB stack to wake up, or a 15 second timeout, whichever occurs first
-	msg_t usbResult = engineConfiguration->alwaysWriteSdCard ? MSG_RESET : usbConnectedSemaphore.wait(TIME_MS2I(15000));
-
-	bool hasUsb = usbResult == MSG_OK;
-
 	// If we have a device AND USB is connected, mount the card to USB, otherwise
 	// mount the null device and try to mount the filesystem ourselves
-	if (cardBlockDevice && hasUsb) {
+	if (cardBlockDevice && useMsdMode()) {
 		// Mount the real card to USB
 		attachMsdSdCard(cardBlockDevice);
 

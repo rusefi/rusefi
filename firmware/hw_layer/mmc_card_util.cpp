@@ -60,6 +60,15 @@ void incLogFileName() {
 	efiPrintf("New log file index %d", logFileIndex);
 }
 
+bool needsToWriteReportFile() {
+#if EFI_BACKUP_SRAM
+  auto sramState = getBackupSram();
+  return sramState->Err.Cookie == ErrorCookie::HardFault;
+#else
+  return false;
+#endif // EFI_BACKUP_SRAM
+}
+
 void writeErrorReportFile() {
 #if EFI_BACKUP_SRAM
   static char fileName[_MAX_FILLER + 20];
