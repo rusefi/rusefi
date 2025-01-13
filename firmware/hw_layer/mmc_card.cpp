@@ -404,10 +404,15 @@ static bool mountMmc() {
 	engine->outputChannels.sd_present = cardBlockDevice != nullptr;
 #endif
 
+	// if no card, don't try to mount FS
+	if (!cardBlockDevice) {
+		return false;
+	}
+
 #if HAL_USE_USB_MSD
 	// If we have a device AND USB is connected, mount the card to USB, otherwise
 	// mount the null device and try to mount the filesystem ourselves
-	if (cardBlockDevice && useMsdMode()) {
+	if (useMsdMode()) {
 		// Mount the real card to USB
 		attachMsdSdCard(cardBlockDevice);
 
@@ -416,11 +421,6 @@ static bool mountMmc() {
 		return false;
 	}
 #endif
-
-	// if no card, don't try to mount FS
-	if (!cardBlockDevice) {
-		return false;
-	}
 
 	// We were able to connect the SD card, mount the filesystem
 	memset(&MMC_FS, 0, sizeof(FATFS));
