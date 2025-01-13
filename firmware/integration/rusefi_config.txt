@@ -2465,7 +2465,7 @@ end_struct
 #define ts_show_gdi false
 #define ts_show_fuel_level_sensor true
 #define ts_show_popular_vehicles true
-#define ts_show_reset_calibrations false
+#define ts_show_reset_calibrations true
 #define ts_show_air_conditioning true
 #define ts_show_oil_pressure_sensor true
 #define ts_show_oil_temp_sensor true
