@@ -1,6 +1,6 @@
 struct_no_prefix main_relay_s
-	bit isBenchTest
-	bit hasIgnitionVoltage
-	bit mainRelayState
-	bit delayedShutoffRequested
+	bit isBenchTest;Main relay: Bench test
+	bit hasIgnitionVoltage;Main relay: Has IGN voltage
+	bit mainRelayState;Main relay: On
+	bit delayedShutoffRequested;Main relay: Delayed shutoff
 end_struct
