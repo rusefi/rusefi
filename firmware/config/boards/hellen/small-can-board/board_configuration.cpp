@@ -12,11 +12,7 @@ void setBoardConfigOverrides() {
 	engineConfiguration->can2RxPin = Gpio::B5;
  	engineConfiguration->can2TxPin = Gpio::B6;
 
-	// 4.7k high side/4.7k low side = 2.0 ratio divider
-	engineConfiguration->analogInputDividerCoefficient = 2.0f;
-
-	// 33k / 6.8k = 5.835
-	engineConfiguration->vbattDividerCoeff = (33 + 6.8) / 6.8;
+	setHellenAnalogDividers();
 	engineConfiguration->vbattAdcChannel = EFI_ADC_11;
 }
 

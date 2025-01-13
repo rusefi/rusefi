@@ -22,17 +22,20 @@ static bool is5vpInit = false;
 #endif // DIAG_5VP_PIN
 }
 
-void setHellenVbatt() {
+void setHellenAnalogDividers() {
 	// 4.7k high side/4.7k low side = 2.0 ratio divider
 	engineConfiguration->analogInputDividerCoefficient = 2.0f;
 
 	// set vbatt_divider 5.835
 	// 33k / 6.8k
 	engineConfiguration->vbattDividerCoeff = (33 + 6.8) / 6.8; // 5.835
+	engineConfiguration->adcVcc = 3.29f;
+}
+
+void setHellenAnalogDividers() {
+  setHellenDividers();
 
 	engineConfiguration->vbattAdcChannel = H144_IN_VBATT;
-
-	engineConfiguration->adcVcc = 3.29f;
 
   init5vpDiag(); // piggy back on popular 'setHellenVbatt' method
 }

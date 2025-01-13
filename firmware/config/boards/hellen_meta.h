@@ -29,6 +29,7 @@ void configureHellenCanTerminator();
 void setHellenCan();
 void setHellen64Can();
 
+void setHellenAnalogDividers();
 void setHellenVbatt();
 
 int detectHellenBoardId();
