@@ -75,9 +75,8 @@
 //GP1 = PWR_EN
 #define MM64_GP1 C13
 
-// todo: remove H64 usages!
-#define H64_LED1_RED Gpio::B0
-#define H64_LED2_BLUE Gpio::B1
+#define H64_LED1_RED B0
+#define H64_LED2_BLUE B1
 
 #define MM64_LED1_RED B0
 #define MM64_LED2_BLUE B1
