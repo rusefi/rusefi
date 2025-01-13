@@ -203,7 +203,8 @@ static void createLogFile() {
 	prepareLogFileName();
 
 	efiPrintf("starting log file %s", logName);
-	FRESULT err = f_open(&FDLogFile, logName, FA_OPEN_ALWAYS | FA_WRITE);				// Create new file
+	// Create new file. If file is exist - truncate and overwrite, we need header to be at zero offset.
+	FRESULT err = f_open(&FDLogFile, logName, FA_CREATE_ALWAYS | FA_WRITE);
 	if (err != FR_OK && err != FR_EXIST) {
 		sdStatus = SD_STATE_OPEN_FAILED;
 		warning(ObdCode::CUSTOM_ERR_SD_MOUNT_FAILED, "SD: mount failed");
@@ -211,14 +212,6 @@ static void createLogFile() {
 		return;
 	}
 
-	err = f_lseek(&FDLogFile, f_size(&FDLogFile)); // Move to end of the file to append data
-	if (err) {
-		sdStatus = SD_STATE_SEEK_FAILED;
-		warning(ObdCode::CUSTOM_ERR_SD_SEEK_FAILED, "SD: seek failed");
-		printError("log file seek", err);
-		return;
-	}
-	f_sync(&FDLogFile);
 	setSdCardReady(true);						// everything Ok
 }
 
