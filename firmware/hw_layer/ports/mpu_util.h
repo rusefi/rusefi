@@ -68,6 +68,8 @@ void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
 void initSpiCsNoOccupy(SPIConfig *spiConfig, brain_pin_e csPin);
 void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin);
 void turnOnSpi(spi_device_e device);
+int spiGetBaseClock(SPIDriver *spip);
+int spiCalcClockDiv(SPIDriver *spip, SPIConfig *spiConfig, unsigned int clk);
 #endif // HAL_USE_SPI
 
 #if HAL_USE_ICU
