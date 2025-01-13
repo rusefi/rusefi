@@ -27,8 +27,6 @@ Gpio getCommsLedPin() {
 void setBoardDefaultConfiguration() {
 	setCrankOperationMode();
 
-	engineConfiguration->useNoiselessTriggerDecoder = true;
-
 	setAlgorithm(LM_SPEED_DENSITY);
 
 	engineConfiguration->cylindersCount = 4;
@@ -38,21 +36,10 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SIMULTANEOUS;
 
-	engineConfiguration->globalTriggerAngleOffset = 114;	// the end of 19th tooth?
-
-	engineConfiguration->displacement = 1.645;
-	engineConfiguration->injector.flow = 200;
-
-	engineConfiguration->cranking.baseFuel = 25;		// ???
-	engineConfiguration->cranking.rpm = 600;
-
 	engineConfiguration->map.sensor.type = MT_MPX4250A;
 
 	engineConfiguration->idleStepperReactionTime = 10;
 	engineConfiguration->stepperDirectionPinMode = OM_INVERTED;
-	engineConfiguration->idle.stepperDirectionPin = Gpio::Unassigned;
-	engineConfiguration->idle.stepperStepPin = Gpio::Unassigned;
-	engineConfiguration->stepperEnablePin = Gpio::Unassigned;
 
 	engineConfiguration->useLinearCltSensor = true;
 	// todo:
@@ -76,27 +63,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->afr.hwChannel = EFI_ADC_4;
 	engineConfiguration->vbattAdcChannel = EFI_ADC_2;
 
-#if 0
-	engineConfiguration->tps1_1AdcChannel = EFI_ADC_NONE;
-	engineConfiguration->vbattAdcChannel = EFI_ADC_NONE;
-	engineConfiguration->clt.adcChannel = EFI_ADC_NONE;
-	engineConfiguration->iat.adcChannel = EFI_ADC_NONE;
-	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
-#endif
-
-	engineConfiguration->auxFastSensor1_adcChannel = EFI_ADC_NONE;
-	engineConfiguration->tps1_2AdcChannel = EFI_ADC_NONE;
-	engineConfiguration->tps2_2AdcChannel = EFI_ADC_NONE;
-	engineConfiguration->throttlePedalPositionSecondAdcChannel = EFI_ADC_NONE;
-
-
-	engineConfiguration->hipOutputChannel = EFI_ADC_NONE;
-	engineConfiguration->fuelLevelSensor = EFI_ADC_NONE;
-	engineConfiguration->oilPressure.hwChannel = EFI_ADC_NONE;
-
-	engineConfiguration->acSwitch = Gpio::Unassigned;
 	engineConfiguration->triggerInputPins[0] = Gpio::B0;
-	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
 
 #if 0
 
