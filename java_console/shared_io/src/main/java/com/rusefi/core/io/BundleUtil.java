@@ -57,21 +57,24 @@ public class BundleUtil {
         }
         String target = keyValues.get("platform");
         String branchName = keyValues.get("release");
+        String nextBranchName = keyValues.get("nextRelease");
         if (target == null || branchName == null) {
             log.info(BRANCH_REF_FILE + " says " + keyValues);
             return BundleInfo.UNKNOWN;
         }
-        return new BundleInfo(branchName, target);
+        return new BundleInfo(branchName, nextBranchName, target);
     }
 
     public static class BundleInfo {
-        static final BundleInfo UNKNOWN = new BundleInfo("unknown", "unknown");
+        static final BundleInfo UNKNOWN = new BundleInfo("unknown", null, "unknown");
 
         private final String branchName;
+        private final String nextBranchName;
         private final String target;
 
-        public BundleInfo(String branchName, String target) {
+        public BundleInfo(String branchName, String nextBranchName, String target) {
             this.branchName = Objects.requireNonNull(branchName, "branchName");
+            this.nextBranchName = nextBranchName;
             this.target = Objects.requireNonNull(target, "target");
         }
 
@@ -81,6 +84,10 @@ public class BundleUtil {
 
         public String getBranchName() {
             return branchName;
+        }
+
+        public String getNextBranchName() {
+            return nextBranchName;
         }
 
         public boolean isMaster() {
@@ -95,6 +102,7 @@ public class BundleUtil {
         public String toString() {
             return "BundleInfo{" +
                 "branchName='" + branchName + '\'' +
+                "nextBranchName='" + nextBranchName + '\'' +
                 ", target='" + target + '\'' +
                 '}';
         }
