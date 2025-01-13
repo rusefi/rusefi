@@ -324,6 +324,12 @@ void applyEngineType(engine_type_e engineType) {
 		testEngine6451();
 		break;
 
+#if defined(HW_FRANKENSO) || EFI_SIMULATOR || defined(HW_NUCLEO_F767) || defined(HW_NUCLEO_H743) || defined(SUPPORT_GY6)
+	case engine_type_e::GY6_139QMB:
+		setGy6139qmbDefaultEngineConfiguration();
+		break;
+#endif
+
 #if defined(HW_FRANKENSO) || EFI_SIMULATOR || defined(HW_NUCLEO_F767) || defined(HW_NUCLEO_H743)
 	case engine_type_e::DEFAULT_FRANKENSO:
 		setFrankensoConfiguration();
@@ -373,9 +379,6 @@ void applyEngineType(engine_type_e engineType) {
 	    break;
 	case engine_type_e::FORD_INLINE_6_1995:
 		setFordInline6();
-		break;
-	case engine_type_e::GY6_139QMB:
-		setGy6139qmbDefaultEngineConfiguration();
 		break;
 	case engine_type_e::HONDA_600:
 		setHonda600();
