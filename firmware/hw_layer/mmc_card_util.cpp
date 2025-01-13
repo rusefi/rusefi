@@ -4,16 +4,18 @@
 
 #include "ff.h"
 #include "mmc_card_util.h"
+#include "backup_ram.h"
 
 #define LOG_INDEX_FILENAME "index.txt"
+#define HARD_FAULT_PREFIX "hard_"
 
 // 10 because we want at least 4 character name (is that about TS protocol which we do not use any more?)
 #define MIN_FILE_INDEX 10
 int logFileIndex = MIN_FILE_INDEX;
 
-void incLogFileName() {
-  static FIL FDLogFile NO_CACHE;
+static FIL FDLogFile NO_CACHE;
 
+void incLogFileName() {
 	memset(&FDLogFile, 0, sizeof(FIL));						// clear the memory
 	FRESULT ret = f_open(&FDLogFile, LOG_INDEX_FILENAME, FA_READ);				// This file has the index for next log file name
 
@@ -56,6 +58,23 @@ void incLogFileName() {
 	}
 
 	efiPrintf("New log file index %d", logFileIndex);
+}
+
+void writeErrorReportFile() {
+#if EFI_BACKUP_SRAM
+  static char fileName[_MAX_FILLER + 20];
+  auto sramState = getBackupSram();
+  if (sramState->Err.Cookie == ErrorCookie::HardFault) {
+  	memset(&FDLogFile, 0, sizeof(FIL));						// clear the memory
+  	sprintf(fileName, "%s%d.txt", HARD_FAULT_PREFIX, logFileIndex);
+  	FRESULT ret = f_open(&FDLogFile, fileName, FA_CREATE_ALWAYS | FA_WRITE);
+  	if (ret == FR_OK) {
+  	  f_printf(&FDLogFile, "type=%d\n", sramState->Err.FaultType);
+  	  // todo: figure out what else would be useful
+  	  f_close(&FDLogFile);
+  	}
+  }
+#endif // EFI_BACKUP_SRAM
 }
 
 #endif // EFI_PROD_CODE && EFI_FILE_LOGGING
