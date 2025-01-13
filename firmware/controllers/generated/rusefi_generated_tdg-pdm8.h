@@ -1351,10 +1351,6 @@
 #define spi_device_e_SPI_DEVICE_5 5
 #define spi_device_e_SPI_DEVICE_6 6
 #define spi_device_e_SPI_NONE 0
-#define spi_speed_e__150KHz 3
-#define spi_speed_e__1_25MHz 2
-#define spi_speed_e__2_5MHz 1
-#define spi_speed_e__5MHz 0
 #define stepper_num_micro_steps_e_auto_enum 0="STEPPER_FULL",8="STEPPER_EIGHTH",4="STEPPER_FOURTH",2="STEPPER_HALF"
 #define stepper_num_micro_steps_e_enum "Full-Step (Default)", "INVALID", "Half-Step", "INVALID", "1/4 Micro-Step", "INVALID", "INVALID", "INVALID", "1/8 Micro-Step"
 #define stepper_num_micro_steps_e_STEPPER_EIGHTH 8

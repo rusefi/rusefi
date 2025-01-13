@@ -1257,10 +1257,6 @@ public class Fields {
 	public static final int spi_device_e_SPI_DEVICE_5 = 5;
 	public static final int spi_device_e_SPI_DEVICE_6 = 6;
 	public static final int spi_device_e_SPI_NONE = 0;
-	public static final int spi_speed_e__150KHz = 3;
-	public static final int spi_speed_e__1_25MHz = 2;
-	public static final int spi_speed_e__2_5MHz = 1;
-	public static final int spi_speed_e__5MHz = 0;
 	public static final int stepper_num_micro_steps_e_STEPPER_EIGHTH = 8;
 	public static final int stepper_num_micro_steps_e_STEPPER_FOURTH = 4;
 	public static final int stepper_num_micro_steps_e_STEPPER_FULL = 0;
