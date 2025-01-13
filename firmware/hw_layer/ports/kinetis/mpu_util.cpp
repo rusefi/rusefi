@@ -159,6 +159,18 @@ void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
 	//efiSetPadMode("chip select", csPin, PAL_MODE_OUTPUT_OPENDRAIN);
 }
 
+int spiGetBaseClock(SPIDriver*)
+{
+	// TODO: implement
+	return 0;
+}
+
+int spiCalcClockDiv(SPIDriver*, SPIConfig*, unsigned int)
+{
+	// TODO: implement
+	return -1;
+}
+
 #endif /* HAL_USE_SPI */
 
 BOR_Level_t BOR_Get(void) {

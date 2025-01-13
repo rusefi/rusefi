@@ -251,6 +251,18 @@ void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
 	efiSetPadMode("chip select", csPin, PAL_STM32_MODE_OUTPUT);
 }
 
+int spiGetBaseClock(SPIDriver*)
+{
+	// TODO: implement
+	return 0;
+}
+
+int spiCalcClockDiv(SPIDriver*, SPIConfig*, unsigned int)
+{
+	// TODO: implement
+	return -1;
+}
+
 // SD cards are good up to 25MHz in "slow" mode, and 50MHz in "fast" mode
 // 168mhz F4:
 // Slow mode is 10.5 or 5.25 MHz, depending on which SPI device

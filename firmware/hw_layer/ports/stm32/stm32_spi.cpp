@@ -170,6 +170,97 @@ void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
 	efiSetPadMode("chip select", csPin, PAL_STM32_MODE_OUTPUT);
 }
 
+int spiGetBaseClock(SPIDriver *spip)
+{
+#if STM32_SPI_USE_SPI1
+	if (spip == &SPID1) {
+		// APB2
+		return STM32_PCLK2;
+	}
+#endif
+#if STM32_SPI_USE_SPI2
+	if (spip == &SPID2) {
+		// APB1
+		return STM32_PCLK1;
+	}
+#endif
+#if STM32_SPI_USE_SPI3
+	if (spip == &SPID3) {
+		// APB1
+		return STM32_PCLK1;
+	}
+#endif
+#if STM32_SPI_USE_SPI4
+	if (spip == &SPID4) {
+		// APB2
+		return STM32_PCLK2;
+	}
+#endif
+#if STM32_SPI_USE_SPI5
+	if (spip == &SPID5) {
+		// APB2
+		return STM32_PCLK2;
+	}
+#endif
+#if STM32_SPI_USE_SPI6
+	if (spip == &SPID6) {
+		// APB2
+		return STM32_PCLK2;
+	}
+#endif
+
+	return 0;
+}
+
+#ifdef STM32H7XX
+
+int spiCalcClockDiv(SPIDriver*, SPIConfig*, unsigned int)
+{
+	// TODO: implement
+	return -1;
+}
+
+#else
+
+int spiCalcClockDiv(SPIDriver *spip, SPIConfig *spiConfig, unsigned int clk)
+{
+	if (clk == 0) {
+		return -1;
+	}
+
+	unsigned int baseClock = spiGetBaseClock(spip);
+
+	if (baseClock == 0) {
+		return -1;
+	}
+
+	// round down
+	int div = (baseClock + clk - 1) / clk;
+
+	spiConfig->cr1 &= ~SPI_CR1_BR_Msk;
+	if (div <= 2) {
+		spiConfig->cr1 |= SPI_BaudRatePrescaler_2;
+	} else if (div <= 4) {
+		spiConfig->cr1 |= SPI_BaudRatePrescaler_4;
+	} else if (div <= 8) {
+		spiConfig->cr1 |= SPI_BaudRatePrescaler_8;
+	} else if (div <= 16) {
+		spiConfig->cr1 |= SPI_BaudRatePrescaler_16;
+	} else if (div <= 32) {
+		spiConfig->cr1 |= SPI_BaudRatePrescaler_32;
+	} else if (div <= 64) {
+		spiConfig->cr1 |= SPI_BaudRatePrescaler_64;
+	} else if (div <= 128) {
+		spiConfig->cr1 |= SPI_BaudRatePrescaler_128;
+	} else {
+		spiConfig->cr1 |= SPI_BaudRatePrescaler_256;
+	}
+
+	return 0;
+}
+
+#endif
+
 #ifdef STM32H7XX
 // H7 SPI clock is set to 80MHz
 // fast mode is 80mhz/2 = 40MHz
