@@ -69,6 +69,10 @@ bool needsToWriteReportFile() {
 #endif // EFI_BACKUP_SRAM
 }
 
+PUBLIC_API_WEAK void onBoardWriteErrorFile(FIL *file) {
+  UNUSED(file);
+}
+
 void writeErrorReportFile() {
 #if EFI_BACKUP_SRAM
   static char fileName[_MAX_FILLER + 20];
@@ -78,6 +82,7 @@ void writeErrorReportFile() {
   	sprintf(fileName, "%s%d.txt", HARD_FAULT_PREFIX, logFileIndex);
   	FRESULT ret = f_open(&FDLogFile, fileName, FA_CREATE_ALWAYS | FA_WRITE);
   	if (ret == FR_OK) {
+  	  onBoardWriteErrorFile(&FDLogFile);
   	  f_printf(&FDLogFile, "type=%d\n", sramState->Err.FaultType);
   	  // todo: figure out what else would be useful
   	  f_close(&FDLogFile);
