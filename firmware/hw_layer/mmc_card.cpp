@@ -33,6 +33,7 @@ static int totalSyncCounter = 0;
 #include <string.h>
 #include "mmc_card.h"
 #include "ff.h"
+#include "mmc_card_util.h"
 #include "mass_storage_init.h"
 #include "hellen_meta.h"
 
@@ -61,13 +62,10 @@ static const char *sdStatus = SD_STATE_INIT;
  */
 static spi_device_e mmcSpiDevice = SPI_NONE;
 
-#define LOG_INDEX_FILENAME "index.txt"
-
 #define RUSEFI_LOG_PREFIX "re_"
 #define PREFIX_LEN 3
 #define SHORT_TIME_LEN 13
 
-#define LS_RESPONSE "ls_result"
 #define FILE_LIST_MAX_COUNT 20
 
 #if HAL_USE_MMC_SPI
@@ -131,7 +129,7 @@ static const char *fatErrors[] = {
 };
 
 // print FAT error function
-static void printError(const char *str, FRESULT f_error) {
+void printError(const char *str, FRESULT f_error) {
 	if (fatFsErrors++ > 16) {
 		// no reason to spam the console
 		return;
@@ -142,9 +140,7 @@ static void printError(const char *str, FRESULT f_error) {
 
 static FIL FDLogFile NO_CACHE;
 
-// 10 because we want at least 4 character name
-#define MIN_FILE_INDEX 10
-static int logFileIndex = MIN_FILE_INDEX;
+extern int logFileIndex;
 static char logName[_MAX_FILLER + 20];
 
 static void printMmcPinout() {
@@ -166,51 +162,6 @@ static void sdStatistics() {
 #if EFI_FILE_LOGGING
   efiPrintf("%d SD card fields", getSdCardFieldsCount());
 #endif
-}
-
-static void incLogFileName() {
-	memset(&FDLogFile, 0, sizeof(FIL));						// clear the memory
-	FRESULT ret = f_open(&FDLogFile, LOG_INDEX_FILENAME, FA_READ);				// This file has the index for next log file name
-
-	char data[_MAX_FILLER];
-	memset(data, 0, sizeof(data));
-
-	if (ret != FR_OK && ret != FR_EXIST) {
-		printError("log index file open", ret);
-		efiPrintf("%s: not found or error: %d", LOG_INDEX_FILENAME, ret);
-		logFileIndex = MIN_FILE_INDEX;
-	} else {
-		UINT readed = 0;
-		// leave one byte for terminating 0
-		ret = f_read(&FDLogFile, (void*)data, sizeof(data) - 1, &readed);
-
-		if (ret != FR_OK) {
-			printError("log index file read", ret);
-			logFileIndex = MIN_FILE_INDEX;
-		} else {
-			efiPrintf("Got content [%s] size %d", data, readed);
-			logFileIndex = maxI(MIN_FILE_INDEX, atoi(data));
-			if (absI(logFileIndex) == ATOI_ERROR_CODE) {
-				logFileIndex = MIN_FILE_INDEX;
-			} else {
-				logFileIndex++; // next file would use next file name
-			}
-		}
-		f_close(&FDLogFile);
-	}
-
-	// truncate or create new
-	ret = f_open(&FDLogFile, LOG_INDEX_FILENAME, FA_CREATE_ALWAYS | FA_WRITE);
-	if (ret == FR_OK) {
-		UINT writen = 0;
-		size_t len = itoa10(data, logFileIndex) - data;
-		f_write(&FDLogFile, (void*)data, len, &writen);
-		f_close(&FDLogFile);
-	} else {
-		printError("log index file write", ret);
-	}
-
-	efiPrintf("New log file index %d", logFileIndex);
 }
 
 static void prepareLogFileName() {
@@ -288,6 +239,7 @@ int mystrncasecmp(const char *s1, const char *s2, size_t n) {
 	return (0);
 }
 
+// todo: shall we remove this method?
 static void listDirectory(const char *path) {
 
 	if (!isSdCardAlive()) {
@@ -302,8 +254,6 @@ static void listDirectory(const char *path) {
 		efiPrintf("Error opening directory %s", path);
 		return;
 	}
-
-	efiPrintf(LS_RESPONSE);
 
 	for (int count = 0;count < FILE_LIST_MAX_COUNT;) {
 		FILINFO fno;

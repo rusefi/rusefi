@@ -20,6 +20,7 @@ HW_LAYER_CPP = \
 	$(PROJECT_DIR)/hw_layer/ports/arm_common.cpp \
 	$(PROJECT_DIR)/hw_layer/kline.cpp \
 	$(PROJECT_DIR)/hw_layer/mmc_card.cpp \
+	$(PROJECT_DIR)/hw_layer/mmc_card_util.cpp \
 	$(PROJECT_DIR)/hw_layer/adc/adc_inputs.cpp \
 	$(PROJECT_DIR)/hw_layer/adc/adc_inputs_onchip.cpp \
 	$(PROJECT_DIR)/hw_layer/adc/adc_subscription.cpp \
