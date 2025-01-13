@@ -156,11 +156,15 @@ static void sdStatistics() {
 	efiPrintf("SD enabled=%s status=%s", boolToString(engineConfiguration->isSdCardEnabled),
 			sdStatus);
 	printSpiConfig("SD", mmcSpiDevice);
+#if defined(STM32F4XX) || defined(STM32F7XX)
+	efiPrintf("HS clock %d Hz", spiGetBaseClock(mmccfg.spip) / (2 << ((mmc_hs_spicfg.cr1 & SPI_CR1_BR_Msk) >> SPI_CR1_BR_Pos)));
+	efiPrintf("LS clock %d Hz", spiGetBaseClock(mmccfg.spip) / (2 << ((mmc_ls_spicfg.cr1 & SPI_CR1_BR_Msk) >> SPI_CR1_BR_Pos)));
+#endif
 	if (isSdCardAlive()) {
 		efiPrintf("filename=%s size=%d", logName, totalLoggedBytes);
 	}
 #if EFI_FILE_LOGGING
-  efiPrintf("%d SD card fields", getSdCardFieldsCount());
+	efiPrintf("%d SD card fields", getSdCardFieldsCount());
 #endif
 }
 
