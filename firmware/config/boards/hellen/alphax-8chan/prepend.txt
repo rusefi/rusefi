@@ -25,3 +25,5 @@
 #define show_8chan_presets true
 
 #define VR_THRESHOLD_COUNT 3
+
+#define LUA_SCRIPT_SIZE 10000
