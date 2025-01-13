@@ -837,7 +837,7 @@ void initPrimaryPins() {
  * This method is part of fatal error handling.
  * The whole method is pretty naive, but that's at least something.
  */
-void turnAllPinsOff(void) {
+void turnAllPinsOff() {
 	for (int i = 0; i < MAX_CYLINDER_COUNT; i++) {
 		enginePins.injectors[i].setValue(false);
 		enginePins.coils[i].setValue(false);
