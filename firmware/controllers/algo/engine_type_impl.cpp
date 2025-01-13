@@ -53,9 +53,11 @@ static_assert(libPROTEUS_STIM_QC == (int)engine_type_e::PROTEUS_STIM_QC);
 static_assert(libHELLEN_2CHAN_STIM_QC == (int)engine_type_e::HELLEN_2CHAN_STIM_QC);
 static_assert(libHELLEN_4CHAN_STIM_QC == (int)engine_type_e::HELLEN_4CHAN_STIM_QC);
 
-PUBLIC_API_WEAK_SOMETHING_WEIRD void applyEngineTypeExt(engine_type_e engineType) {
+PUBLIC_API_WEAK_SOMETHING_WEIRD void applyUnknownEngineType(engine_type_e engineType) {
 		firmwareError(ObdCode::CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", (int)engineType);
 }
+
+PUBLIC_API_WEAK void boardAfterTuneDefaults(engine_type_e engineType) { }
 
 void applyEngineType(engine_type_e engineType) {
 	/**
@@ -417,8 +419,9 @@ void applyEngineType(engine_type_e engineType) {
 		break;
 #endif //HW_SUBARU_EG33
 	default:
-	  applyEngineTypeExt(engineType);
+	  applyUnknownEngineType(engineType);
 	}
+	boardAfterTuneDefaults(engineType);
 }
 
 PUBLIC_API_WEAK_SOMETHING_WEIRD engine_type_e getLastEngineType() {
