@@ -361,14 +361,6 @@ typedef enum __attribute__ ((__packed__)) {
 	UART_DEVICE_4 = 4,
 } uart_device_e;
 
-typedef enum __attribute__ ((__packed__)) {
-	_5MHz,
-	_2_5MHz,
-	_1_25MHz,
-	_150KHz
-} spi_speed_e;
-
-
 /**
  * See spi3mosiPin
  * See spi2MisoMode
