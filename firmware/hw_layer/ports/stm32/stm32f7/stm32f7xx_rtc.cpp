@@ -63,11 +63,11 @@ void hal_lld_rtc_fixup(void)
 		// LSE is failed to start
 		efiPrintf("LSE in not ready after restart attemp");
 		// Keep initing
-    RCC->BDCR |= RUSEFI_STM32_LSE_WAIT_MAX_RTCSEL;
+	RCC->BDCR |= RUSEFI_STM32_LSE_WAIT_MAX_RTCSEL;
 	}
 
-  /* RTC clock enabled.*/
-  RCC->BDCR |= RCC_BDCR_RTCEN;
+	/* RTC clock enabled.*/
+	RCC->BDCR |= RCC_BDCR_RTCEN;
 
 	// init RTC again
 	rtcInit();
