@@ -22,11 +22,7 @@ void incLogFileName() {
 	char data[_MAX_FILLER];
 	memset(data, 0, sizeof(data));
 
-	if (ret != FR_OK && ret != FR_EXIST) {
-		printError("log index file open", ret);
-		efiPrintf("%s: not found or error: %d", LOG_INDEX_FILENAME, ret);
-		logFileIndex = MIN_FILE_INDEX;
-	} else {
+	if (ret == FR_OK) {
 		UINT readed = 0;
 		// leave one byte for terminating 0
 		ret = f_read(&FDLogFile, (void*)data, sizeof(data) - 1, &readed);
@@ -44,6 +40,13 @@ void incLogFileName() {
 			}
 		}
 		f_close(&FDLogFile);
+	} else if (ret == FR_NO_FILE) {
+		// no index file - this is not an error, just an empty SD
+		logFileIndex = MIN_FILE_INDEX;
+	} else {
+		printError("log index file open", ret);
+		efiPrintf("%s: not found or error: %d", LOG_INDEX_FILENAME, ret);
+		logFileIndex = MIN_FILE_INDEX;
 	}
 
 	// truncate or create new
@@ -51,7 +54,10 @@ void incLogFileName() {
 	if (ret == FR_OK) {
 		UINT writen = 0;
 		size_t len = itoa10(data, logFileIndex) - data;
-		f_write(&FDLogFile, (void*)data, len, &writen);
+		ret = f_write(&FDLogFile, (void*)data, len, &writen);
+		if ((ret != FR_OK) || (len != writen)) {
+			printError("log index write", ret);
+		}
 		f_close(&FDLogFile);
 	} else {
 		printError("log index file write", ret);
