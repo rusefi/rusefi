@@ -235,6 +235,12 @@ static void createLogFile() {
 		return;
 	}
 
+	//pre-allocate data ahead
+	err = f_expand(&FDLogFile, 32 * 1024 * 1024, 1);
+	if (err != FR_OK) {
+		printError("pre-allocate", err);
+	}
+
 	setSdCardReady(true);						// everything Ok
 }
 
@@ -551,6 +557,8 @@ static void sdLoggerStart(void)
 
 static void sdLoggerStop(void)
 {
+	// TODO: truncate file to actual size
+
 	f_close(&FDLogFile);						// close file
 	f_sync(&FDLogFile);							// sync ALL
 
