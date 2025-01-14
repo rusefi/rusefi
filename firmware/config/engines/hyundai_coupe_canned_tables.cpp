@@ -24,7 +24,7 @@ static void cannedcltIdleCorr() {
 }
 
 static void couplecannedveTable() {
-#if (IGN_LOAD_COUNT == 16) && (IGN_RPM_COUNT == 16)
+#if (VE_LOAD_COUNT == 16) && (VE_RPM_COUNT == 16)
 	static const float hardCodedveTable[16][16] = {
 {52.000,	54.000,	54.000,	56.000,	61.000,	55.000,	55.000,	65.000,	65.000,	60.000,	60.000,	60.000,	60.000,	60.000,	60.000,	60.000,	},
 {51.500,	54.500,	54.400,	56.000,	61.000,	68.100,	66.800,	67.600,	68.200,	63.400,	63.400,	63.400,	63.400,	63.400,	63.400,	63.400,	},

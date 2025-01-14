@@ -25,6 +25,7 @@ TEST(misc, testEngineMath) {
 
 	// todo: let's see if we can make 'engine' unneeded in this test?
 	EngineTestHelper eth(engine_type_e::FORD_ESCORT_GT);
+	setTable(config->veTable, 80);
 
     setCamOperationMode();
 	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
@@ -63,7 +64,7 @@ TEST(misc, testEngineMath) {
 	// calc. airFlow using airMass, and find tCharge
 	engine->periodicFastCallback();
 	ASSERT_NEAR(59.12f, engine->engineState.sd.tCharge, EPS4D);
-	ASSERT_NEAR(56.9758f/*kg/h*/, engine->engineState.airflowEstimate, EPS4D);
+	ASSERT_NEAR(46.2747f/*kg/h*/, engine->engineState.airflowEstimate, EPS4D);
 }
 
 typedef enum {

@@ -215,6 +215,8 @@ struct_no_prefix engine_configuration_s
 
 #define VEHICLE_INFO_SIZE 32
 
+#define VE_RPM_COUNT 16
+#define VE_LOAD_COUNT 16
 #define FUEL_RPM_COUNT 16
 #define FUEL_LOAD_COUNT 16
 #define INJ_PHASE_RPM_COUNT 16
@@ -1937,9 +1939,9 @@ int16_t[IGN_LOAD_COUNT x IGN_RPM_COUNT] autoscale ignitionTable;;"deg", 0.1, 0, 
 uint16_t[IGN_LOAD_COUNT] ignitionLoadBins;;"Load", 1, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
 uint16_t[IGN_RPM_COUNT] ignitionRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
-uint16_t[FUEL_LOAD_COUNT x FUEL_RPM_COUNT] autoscale veTable;;"%", 0.1, 0, 0, 999, 1
-uint16_t[FUEL_LOAD_COUNT] veLoadBins;;{bitStringValue(fuelUnits, fuelAlgorithm) },	1, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
-uint16_t[FUEL_RPM_COUNT] veRpmBins;;"RPM",	   1, 0, 0, 18000, 0
+uint16_t[VE_LOAD_COUNT x VE_RPM_COUNT] autoscale veTable;;"%", 0.1, 0, 0, 999, 1
+uint16_t[VE_LOAD_COUNT] veLoadBins;;{bitStringValue(fuelUnits, fuelAlgorithm) },	1, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
+uint16_t[VE_RPM_COUNT] veRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
 #if LAMBDA
 uint8_t[FUEL_LOAD_COUNT x FUEL_RPM_COUNT] autoscale lambdaTable;;"lambda", {1/@@PACK_MULT_LAMBDA_CFG@@}, 0, 0.6, 1.5, 2
