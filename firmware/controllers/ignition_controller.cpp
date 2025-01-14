@@ -37,9 +37,7 @@ void IgnitionController::onSlowCallback() {
 		}
 		return;
 	} else {
-		m_lastState = hasIgnVoltage;
-		engine->engineModules.apply_all([&](auto& m) { m.onIgnitionStateChanged(hasIgnVoltage); });
-		if(hasIgnVoltage) {
+    	if(hasIgnVoltage) {
 			#if !EFI_SIMULATOR
 				if(!m_startup){
 					scheduleReboot();
@@ -49,6 +47,8 @@ void IgnitionController::onSlowCallback() {
 			#endif
 			m_timeSinceIgnVoltage.reset();
 		}
+		m_lastState = hasIgnVoltage;
+		engine->engineModules.apply_all([&](auto& m) { m.onIgnitionStateChanged(hasIgnVoltage); });
 		return;
 	}
 
