@@ -16,8 +16,8 @@
 
 // Ignore following (and similar) errors
 // error: 'strncpy' output may be truncated copying 119 bytes from a string of length 119
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstringop-truncation"
+_Pragma("GCC diagnostic push")
+_Pragma("GCC diagnostic ignored \"-Wstringop-truncation\"")
 
 static critical_msg_t warningBuffer;
 static critical_msg_t criticalErrorMessageBuffer;
@@ -443,4 +443,4 @@ void criticalErrorM(const char *msg) {
 	criticalError(msg);
 }
 
-#pragma GCC diagnostic pop
+_Pragma("GCC diagnostic pop")
