@@ -60,7 +60,7 @@ void HardFault_Handler_C(void* sp) {
 	logHardFault(faultType, faultAddress, &ctx, SCB->CFSR >> SCB_CFSR_BUSFAULTSR_Pos);
 
 	// check if debugger is connected
-	if (CoreDebug->DHCSR & 1)
+	if (CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk)
 	{
 		bkpt();
 	}
@@ -94,7 +94,7 @@ void UsageFault_Handler_C(void* sp) {
 	logHardFault(faultType, 0, &ctx, SCB->CFSR);
 
 	// check if debugger is connected
-	if (CoreDebug->DHCSR & 1)
+	if (CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk)
 	{
 		bkpt();
 	}
@@ -129,7 +129,7 @@ void MemManage_Handler_C(void* sp) {
 	logHardFault(faultType, faultAddress, &ctx, SCB->CFSR);
 
 	// check if debugger is connected
-	if (CoreDebug->DHCSR & 1)
+	if (CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk)
 	{
 		bkpt();
 	}
