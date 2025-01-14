@@ -119,9 +119,6 @@ void applyEngineType(engine_type_e engineType) {
 #endif
 
 #if HW_MICRO_RUSEFI
-	case engine_type_e::MRE_VW_B6:
-		setMreVwPassatB6();
-		break;
 	case engine_type_e::MRE_SECONDARY_CAN:
 		mreSecondaryCan();
 		break;
