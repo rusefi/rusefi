@@ -185,8 +185,8 @@ void runRusEfi() {
 #endif // HAL_USE_WDG
 
 #if EFI_PROD_CODE
-  // see also: checkLastResetCause
-	checkLastBootError();
+	errorHandlerInit();
+	errorHandlerShowBootReasonAndErrors();
 #endif
 
 #if defined(STM32F4) || defined(STM32F7)
@@ -229,9 +229,6 @@ void runRusEfi() {
 	 * Next we should initialize serial port console, it's important to know what's going on
 	 */
 	initializeConsole();
-
-  // see also: checkLastBootError
-	checkLastResetCause();
 
 	// Read configuration from flash memory
 	loadConfiguration();

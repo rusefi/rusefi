@@ -52,8 +52,6 @@ void initHardwareNoConfig();
 // Initialize hardware with configuration loaded
 void initHardware();
 
-void checkLastResetCause();
-
 // todo: can we do simpler here? move conditional compilation into debounce.h?
 #if EFI_PROD_CODE
 #include "debounce.h"

@@ -4,5 +4,4 @@
 
 void incLogFileName();
 void printError(const char *str, FRESULT f_error);
-bool needsToWriteReportFile();
 void writeErrorReportFile();

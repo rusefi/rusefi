@@ -138,6 +138,7 @@ void printError(const char *str, FRESULT f_error) {
 	efiPrintf("FATfs Error \"%s\" %d %s", str, f_error, f_error <= FR_INVALID_PARAMETER ? fatErrors[f_error] : "unknown");
 }
 
+// Warning: shared between all FS users, please release it after use
 static FIL FDLogFile NO_CACHE;
 
 extern int logFileIndex;
@@ -334,7 +335,7 @@ static BaseBlockDevice* initializeMmcBlockDevice() {
 
 #if HAL_USE_USB_MSD
 static bool useMsdMode() {
-  if (needsToWriteReportFile()) {
+  if (errorHandlerIsStartFromError()) {
     return false;
   }
   if (engineConfiguration->alwaysWriteSdCard) {
@@ -381,7 +382,7 @@ static bool mountMmc() {
 		efiPrintf("MMC/SD mounted!");
 		sdStatus = SD_STATE_MOUNTED;
 		incLogFileName();
-		writeErrorReportFile();
+		errorHandlerWriteReportFile(&FDLogFile);
 		createLogFile();
 		return true;
 	} else {
@@ -576,7 +577,8 @@ void initEarlyMmcCard() {
 
 	addConsoleAction("sdinfo", sdStatistics);
 	addConsoleActionS("del", removeFile);
-	addConsoleAction("incfilename", incLogFileName);
+	//incLogFileName() use same shared FDLogFile, calling it while FDLogFile is used by log writer will cause damage
+	//addConsoleAction("incfilename", incLogFileName);
 #endif // EFI_PROD_CODE
 }
 
