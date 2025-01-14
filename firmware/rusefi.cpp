@@ -168,7 +168,7 @@ void onAssertionFailure() {
 	longjmp(jmpEnv, 1);
 }
 
-void runRusEfiWithConfig();
+void initEfiWithConfig();
 __NO_RETURN void runMainLoop();
 
 void runRusEfi() {
@@ -245,7 +245,7 @@ void runRusEfi() {
 	startSerialChannels();
 #endif // EFI_TUNER_STUDIO
 
-	runRusEfiWithConfig();
+	initEfiWithConfig();
 
 	// periodic events need to be initialized after fuel&spark pins to avoid a warning
 	initPeriodicEvents();
@@ -253,7 +253,7 @@ void runRusEfi() {
 	runMainLoop();
 }
 
-void runRusEfiWithConfig() {
+void initEfiWithConfig() {
 	// If some config operation caused an OS assertion failure, return immediately
 	// This sets the "unwind point" that we can jump back to later with longjmp if we have
 	// an assertion failure. If that happens, setjmp() will return non-zero, so we will
