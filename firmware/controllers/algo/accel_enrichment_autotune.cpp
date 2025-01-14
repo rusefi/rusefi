@@ -32,6 +32,7 @@ void TpsAccelEnrichmentAutoTune::onSlowCallback() {
 
 void TpsAccelEnrichmentAutoTune::applyUpdate() {
 	pendingUpdate = false;
+  return;
 
 	// Check if the conditions are valid
 	float ect = Sensor::getOrZero(SensorType::Clt);
