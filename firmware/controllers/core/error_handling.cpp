@@ -135,8 +135,7 @@ do {																\
 		break;														\
 	}																\
 																	\
-	PRINT("Last error type %s cookie 0x%08lx",						\
-		errorCookieToName(err->Cookie), (uint32_t)err->Cookie);		\
+	PRINT("Last error type %s", errorCookieToName(err->Cookie));	\
 																	\
 	switch (err->Cookie) {											\
 	case ErrorCookie::FirmwareError:								\
