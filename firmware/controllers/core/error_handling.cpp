@@ -108,94 +108,138 @@ bool errorHandlerIsStartFromError() {
 #endif
 }
 
+static const char *errorCookieToName(ErrorCookie cookie)
+{
+	switch (cookie) {
+	case ErrorCookie::None:
+		return "No error";
+	case ErrorCookie::FirmwareError:
+		return "firmware";
+	case ErrorCookie::HardFault:
+		return "HardFault";
+	case ErrorCookie::ChibiOsPanic:
+		return "ChibiOS panic";
+	}
+
+	return "Unknown";
+}
+
+#define printResetReason()											\
+	PRINT("Reset Cause: %s", getMCUResetCause(getMCUResetCause()))
+
+#define printErrorState()											\
+do {																\
+	PRINT("Power cycle count: %lu", bootCount);						\
+																	\
+	if (err->Cookie == ErrorCookie::None) {							\
+		break;														\
+	}																\
+																	\
+	PRINT("Last error type %s cookie 0x%08lx",						\
+		errorCookieToName(err->Cookie), (uint32_t)err->Cookie);		\
+																	\
+	switch (err->Cookie) {											\
+	case ErrorCookie::FirmwareError:								\
+		{															\
+			PRINT("%s", err->msg);									\
+		}															\
+		break;														\
+	case ErrorCookie::HardFault:									\
+		{															\
+			PRINT("type: 0x%08lx addr: 0x%08lx CSFR: 0x%08lx",		\
+				err->FaultType, err->FaultAddress, err->Csfr);		\
+																	\
+			auto ctx = &err->FaultCtx;								\
+			PRINT("r0  0x%08lx", ctx->r0);							\
+			PRINT("r1  0x%08lx", ctx->r1);							\
+			PRINT("r2  0x%08lx", ctx->r2);							\
+			PRINT("r3  0x%08lx", ctx->r3);							\
+			PRINT("r12 0x%08lx", ctx->r12);							\
+			PRINT("lr (thread)  0x%08lx", ctx->lr_thd);				\
+			PRINT("pc  0x%08lx", ctx->pc);							\
+			PRINT("xpsr  0x%08lx", ctx->xpsr);						\
+																	\
+			/* FPU registers - not very useful for debug */			\
+			if (0) {												\
+				/* Print rest the context as a sequence of uintptr */	\
+				uintptr_t* data = reinterpret_cast<uintptr_t*>(&err->FaultCtx);	\
+				for (size_t i = 8; i < sizeof(port_extctx) / sizeof(uintptr_t); i++) {	\
+					PRINT("Fault ctx %d: 0x%08x", i, data[i]);		\
+				}													\
+			}														\
+		}															\
+		break;														\
+	case ErrorCookie::ChibiOsPanic:									\
+		{															\
+			PRINT("msg %s", err->msg);								\
+			PRINT("file %s", err->file);							\
+			PRINT("line %d", err->line);							\
+		}															\
+		break;														\
+	default:														\
+		/* No cookie stored or invalid cookie (ie, backup RAM contains random garbage) */	\
+		break;														\
+	}																\
+} while(0)
+
 // TODO: reuse this code for writing crash report file
 void errorHandlerShowBootReasonAndErrors() {
-	efiPrintf("Reset Cause: %s", getMCUResetCause(getMCUResetCause()));
+	//this is console print
+	#define PRINT(...) efiPrintf(__VA_ARGS__)
+
+	printResetReason();
 
 #if EFI_BACKUP_SRAM
-	auto sramState = getBackupSram();
 	backupErrorState *err = &lastBootError;
 
-	efiPrintf("Power cycle count: %lu", sramState->BootCount);
-
-	if (err->Cookie == ErrorCookie::None) {
-		return;
-	}
-
-	efiPrintf("Last error cookie 0x%08lx", (uint32_t)err->Cookie);
-
-	switch (err->Cookie) {
-	case ErrorCookie::FirmwareError:
-		{
-			efiPrintf("Firmware error: %s", err->msg);
-		}
-		break;
-	case ErrorCookie::HardFault:
-		{
-			efiPrintf("HardFault");
-			efiPrintf("type: 0x%08lx addr: 0x%08lx CSFR: 0x%08lx",
-				err->FaultType, err->FaultAddress, err->Csfr);
-
-			auto ctx = &err->FaultCtx;
-			efiPrintf("r0  0x%08lx", ctx->r0);
-			efiPrintf("r1  0x%08lx", ctx->r1);
-			efiPrintf("r2  0x%08lx", ctx->r2);
-			efiPrintf("r3  0x%08lx", ctx->r3);
-			efiPrintf("r12 0x%08lx", ctx->r12);
-			efiPrintf("lr (thread)  0x%08lx", ctx->lr_thd);
-			efiPrintf("pc  0x%08lx", ctx->pc);
-			efiPrintf("xpsr  0x%08lx", ctx->xpsr);
-
-			/* FPU registers - not very useful for debug */
-			if (0) {
-				// Print rest the context as a sequence of uintptr
-				uintptr_t* data = reinterpret_cast<uintptr_t*>(&err->FaultCtx);
-				for (size_t i = 8; i < sizeof(port_extctx) / sizeof(uintptr_t); i++) {
-					efiPrintf("Fault ctx %d: 0x%08x", i, data[i]);
-				}
-			}
-		}
-		break;
-	case ErrorCookie::ChibiOsPanic:
-		{
-			efiPrintf("ChibiOS panic");
-			efiPrintf("msg %s", err->msg);
-			efiPrintf("file %s", err->file);
-			efiPrintf("line %d", err->line);
-		}
-		break;
-	default:
-		// No cookie stored or invalid cookie (ie, backup RAM contains random garbage)
-		break;
-	}
+	printErrorState();
 #endif // EFI_BACKUP_SRAM
+	#undef PRINT
 }
 
 #if EFI_FILE_LOGGING
 #include "ff.h"
 
-#define BOOT_REPORT_PREFIX "boot_"
+#define FAIL_REPORT_PREFIX	"fail_report_"
 
 PUBLIC_API_WEAK void onBoardWriteErrorFile(FIL *) {
 }
 
 void errorHandlerWriteReportFile(FIL *fd) {
+	// generate file on good boot to?
+	bool needReport = false;
 #if EFI_BACKUP_SRAM
 	backupErrorState *err = &lastBootError;
-
 	if (err->Cookie != ErrorCookie::None) {
+		needReport = true;
+	}
+#endif
+
+	auto cause = getMCUResetCause();
+	if ((cause != Reset_Cause_NRST_Pin) && (cause != Reset_Cause_BOR) && (cause != Reset_Cause_Unknown)) {
+		// not an expected cause
+		needReport = true;
+	}
+
+	if (needReport) {
 		char fileName[_MAX_FILLER + 20];
 		memset(fd, 0, sizeof(FIL));						// clear the memory
-		sprintf(fileName, "%s%ld.txt", BOOT_REPORT_PREFIX, bootCount);
+		//TODO: use date + time for file name?
+		sprintf(fileName, "%s%ld.txt", FAIL_REPORT_PREFIX, bootCount);
 		FRESULT ret = f_open(fd, fileName, FA_CREATE_ALWAYS | FA_WRITE);
 		if (ret == FR_OK) {
+			//this is file print
+			#define PRINT(format, ...) f_printf(fd, format "\r\n", __VA_ARGS__)
+			printResetReason();
+#if EFI_BACKUP_SRAM
+			printErrorState();
+#endif // EFI_BACKUP_SRAM
+			// additional board-specific data
 			onBoardWriteErrorFile(fd);
-			f_printf(fd, "type=%d\n", err->FaultType);
 			// todo: figure out what else would be useful
 			f_close(fd);
 		}
 	}
-#endif // EFI_BACKUP_SRAM
 }
 #endif
 
