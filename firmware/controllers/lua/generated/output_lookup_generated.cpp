@@ -18,9 +18,6 @@ float getOutputValueByName(const char *name) {
 // antilagTriggered
 		case 1155330306:
 			return engine->outputChannels.antilagTriggered;
-// isFanOn
-		case -1441751117:
-			return engine->outputChannels.isFanOn;
 // isO2HeaterOn
 		case 438683128:
 			return engine->outputChannels.isO2HeaterOn;
@@ -33,9 +30,6 @@ float getOutputValueByName(const char *name) {
 // sd_msd
 		case 459787871:
 			return engine->outputChannels.sd_msd;
-// isFan2On
-		case -333212891:
-			return engine->outputChannels.isFan2On;
 // toothLogReady
 		case -1662199734:
 			return engine->outputChannels.toothLogReady;
@@ -1297,6 +1291,11 @@ float getOutputValueByName(const char *name) {
 #if FULL_SD_LOGS
 		case 2105103113:
 			return engine->module<FanControl1>()->disabledBySpeed;
+#endif
+// m_state
+#if FULL_SD_LOGS
+		case -1337468622:
+			return engine->module<FanControl1>()->m_state;
 #endif
 // radiatorFanStatus
 #if FULL_SD_LOGS

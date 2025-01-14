@@ -49,110 +49,108 @@ struct output_channels_s {
 	offset 0 bit 3 */
 	bool antilagTriggered : 1 {};
 	/**
-	 * Radiator Fan
 	offset 0 bit 4 */
-	bool isFanOn : 1 {};
-	/**
-	offset 0 bit 5 */
 	bool isO2HeaterOn : 1 {};
 	/**
-	offset 0 bit 6 */
+	offset 0 bit 5 */
 	bool checkEngine : 1 {};
 	/**
-	offset 0 bit 7 */
+	offset 0 bit 6 */
 	bool needBurn : 1 {};
 	/**
 	 * SD: MSD
-	offset 0 bit 8 */
+	offset 0 bit 7 */
 	bool sd_msd : 1 {};
 	/**
-	 * Radiator Fan 2
-	offset 0 bit 9 */
-	bool isFan2On : 1 {};
-	/**
 	 * Tooth Logger Ready
-	offset 0 bit 10 */
+	offset 0 bit 8 */
 	bool toothLogReady : 1 {};
 	/**
 	 * Error: TPS
-	offset 0 bit 11 */
+	offset 0 bit 9 */
 	bool isTpsError : 1 {};
 	/**
 	 * Error: CLT
-	offset 0 bit 12 */
+	offset 0 bit 10 */
 	bool isCltError : 1 {};
 	/**
 	 * Error: MAP
-	offset 0 bit 13 */
+	offset 0 bit 11 */
 	bool isMapError : 1 {};
 	/**
 	 * Error: IAT
-	offset 0 bit 14 */
+	offset 0 bit 12 */
 	bool isIatError : 1 {};
 	/**
 	 * Error: Trigger
-	offset 0 bit 15 */
+	offset 0 bit 13 */
 	bool isTriggerError : 1 {};
 	/**
 	 * Error: Active
-	offset 0 bit 16 */
+	offset 0 bit 14 */
 	bool hasCriticalError : 1 {};
 	/**
 	 * Warning: Active
-	offset 0 bit 17 */
+	offset 0 bit 15 */
 	bool isWarnNow : 1 {};
 	/**
 	 * Error: Pedal
-	offset 0 bit 18 */
+	offset 0 bit 16 */
 	bool isPedalError : 1 {};
 	/**
-	offset 0 bit 19 */
+	offset 0 bit 17 */
 	bool isKnockChipOk : 1 {};
 	/**
 	 * Launch Control Triggered
-	offset 0 bit 20 */
+	offset 0 bit 18 */
 	bool launchTriggered : 1 {};
 	/**
 	 * Error: TPS2
-	offset 0 bit 21 */
+	offset 0 bit 19 */
 	bool isTps2Error : 1 {};
 	/**
 	 * Injector Fault
-	offset 0 bit 22 */
+	offset 0 bit 20 */
 	bool injectorFault : 1 {};
 	/**
 	 * Ignition Fault
-	offset 0 bit 23 */
+	offset 0 bit 21 */
 	bool ignitionFault : 1 {};
 	/**
 	 * isUsbConnected
 	 * Original reason for this is to check if USB is connected from Lua
-	offset 0 bit 24 */
+	offset 0 bit 22 */
 	bool isUsbConnected : 1 {};
 	/**
-	offset 0 bit 25 */
+	offset 0 bit 23 */
 	bool dfcoActive : 1 {};
 	/**
 	 * SD card writing
-	offset 0 bit 26 */
+	offset 0 bit 24 */
 	bool sd_active_wr : 1 {};
 	/**
 	 * SD card reading
-	offset 0 bit 27 */
+	offset 0 bit 25 */
 	bool sd_active_rd : 1 {};
 	/**
 	 * MAP from sensor seems valid
-	offset 0 bit 28 */
+	offset 0 bit 26 */
 	bool isMapValid : 1 {};
 	/**
-	offset 0 bit 29 */
+	offset 0 bit 27 */
 	bool triggerPageRefreshFlag : 1 {};
 	/**
+	offset 0 bit 28 */
+	bool unusedBit_28_28 : 1 {};
+	/**
+	offset 0 bit 29 */
+	bool unusedBit_28_29 : 1 {};
+	/**
 	offset 0 bit 30 */
-	bool unusedBit_30_30 : 1 {};
+	bool unusedBit_28_30 : 1 {};
 	/**
 	offset 0 bit 31 */
-	bool unusedBit_30_31 : 1 {};
+	bool unusedBit_28_31 : 1 {};
 	/**
 	 * @@GAUGE_NAME_RPM@@
 	 * units: RPM
