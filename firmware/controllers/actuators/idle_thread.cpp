@@ -160,6 +160,12 @@ percent_t IdleController::getOpenLoop(Phase phase, float rpm, float clt, SensorR
 
 	isCranking = phase == Phase::Cranking;
 	isIdleCoasting = phase == Phase::Coasting;
+	isRunning = phase == Phase::Running;
+
+	percent_t CoastingIACPosition = interpolate2d(rpm, config->iacCoastingRpmBins, config->iacCoasting) * interpolate2d(clt, config->cltIdleCorrBins, config->cltIdleCorr);
+	CoastingIACPosition += engine->module<AcController>().unmock().acButtonState ? engineConfiguration->acIdleExtraOffset : 0;
+	CoastingIACPosition += enginePins.fanRelay.getLogicValue() ? engineConfiguration->fan1ExtraIdle : 0;
+	CoastingIACPosition += enginePins.fanRelay2.getLogicValue() ? engineConfiguration->fan2ExtraIdle : 0;
 
 	// if we're cranking, nothing more to do.
 	if (isCranking) {
@@ -167,15 +173,8 @@ percent_t IdleController::getOpenLoop(Phase phase, float rpm, float clt, SensorR
 	}
 
 	// If coasting (and enabled), use the coasting position table instead of normal open loop
-	isIacTableForCoasting = engineConfiguration->useIacTableForCoasting && isIdleCoasting;
+	isIacTableForCoasting = engineConfiguration->useIacTableForCoasting && (isIdleCoasting || isRunning);
 	if (isIacTableForCoasting) {
-		percent_t CoastingIACPosition = interpolate2d(rpm, config->iacCoastingRpmBins, config->iacCoasting) * interpolate2d(clt, config->cltIdleCorrBins, config->cltIdleCorr);
-
-		// Now we bump it by the AC/fan amount if necessary
-		CoastingIACPosition += engine->module<AcController>().unmock().acButtonState ? engineConfiguration->acIdleExtraOffset : 0;
-		CoastingIACPosition += enginePins.fanRelay.getLogicValue() ? engineConfiguration->fan1ExtraIdle : 0;
-		CoastingIACPosition += enginePins.fanRelay2.getLogicValue() ? engineConfiguration->fan2ExtraIdle : 0;
-
 		return CoastingIACPosition;
 	}
 

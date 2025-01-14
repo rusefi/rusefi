@@ -250,7 +250,8 @@ struct_no_prefix engine_configuration_s
 
 #define TPS_TPS_ACCEL_TABLE 8
 #define ADC_CHANNEL_NONE 0
-#define TPS_TPS_ACCEL_CLT_CORR_TABLE 4
+#define TPS_TPS_ACCEL_RPM_CORR_TABLE 4
+#define TPS_TPS_ACCEL_CLT_CORR_TABLE 8
 
 #define BARO_CORR_SIZE 4
 
@@ -535,10 +536,10 @@ int16_t autoscale deltaLoadSmoothingThreshold;Minimum engine load that correctio
 bit enableAdvanceSmoothing;Activate this to increment or decrement ignition angle after fast TPS variation, can improve drivability;
 uint8_t strenghtAdvanceSmoothing;Strenght of advance correction;"%", 1, 0, 0, 100, 0
 
-uint8_t Fan1AcThresholdOn;Theshold to enable fan 1 after ac enable; "sec", 1, 0, 0, 100, 0
-uint8_t Fan1AcThresholdOff;Theshold to disable fan 1 after ac disable; "sec", 1, 0, 0, 100, 0
-uint8_t Fan2AcThresholdOn;Theshold to enable fan 2 after ac enable; "sec", 1, 0, 0, 100, 0
-uint8_t Fan2AcThresholdOff;Theshold to disable fan 1 after ac disable; "sec", 1, 0, 0, 100, 0
+uint8_t Fan1AcThresholdOn;Theshold to enable fan 1 after ac turned on; "sec", 1, 0, 0, 100, 0
+uint8_t Fan1AcThresholdOff;Theshold to disable fan 1 after ac tuned off; "sec", 1, 0, 0, 100, 0
+uint8_t Fan2AcThresholdOn;Theshold to enable fan 2 after ac turned on; "sec", 1, 0, 0, 100, 0
+uint8_t Fan2AcThresholdOff;Theshold to disable fan 2 after ac tuned off; "sec", 1, 0, 0, 100, 0
 
 bit useIdleAdvanceWhileCoasting;Use idle ignition table while coasting;
 
@@ -1272,9 +1273,6 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	uint32_t uartConsoleSerialSpeed;Band rate for primary TTL;"BPs", 1, 0, 0, 1000000, 0
 	float tpsDecelEnleanmentThreshold;For decel we simply multiply delta of TPS and tFor decel we do not use table?!;"roc", 1, 0, 0, 200, 1
 	float tpsDecelEnleanmentMultiplier;Magic multiplier, we multiply delta of TPS and get fuel squirt duration;"coeff", 1, 0, 0, 200, 2
-
-	uint8_t[8] autoscale tpsAcelEctBins;;"C", 1, 0, -40, 200, 0
-	uint8_t[8] autoscale tpsAcelEctValues;;"multiplier", 0.02, 0, 0, 5, 2
 
 	float torqueReductionIgnitionRetard;How many degrees of timing advance will be reduced during the Torque Reduction Time;"deg", 1, 0, -180, 180, 2
 
@@ -2156,8 +2154,11 @@ uint8_t[HPFP_COMPENSATION_SIZE] autoscale hpfpCompensationRpmBins;;"RPM", 50, 0,
 uint16_t[ENGINE_NOISE_CURVE_SIZE] knockNoiseRpmBins;;"RPM", 1, 0, 0, 30000, 0
 int8_t[ENGINE_NOISE_CURVE_SIZE] autoscale knockBaseNoise;Knock sensor output knock detection threshold depending on current RPM.;"dB", 0.5, 0, -99, 10, 1
 
-uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValuesBins;;"RPM", 50, 0, 0, 17500, 0
-uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValues;;"multiplier", 0.02, 0, 0, 5, 2
+uint8_t[TPS_TPS_ACCEL_RPM_CORR_TABLE] autoscale tpsTspCorrValuesBins;;"RPM", 50, 0, 0, 17500, 0
+uint8_t[TPS_TPS_ACCEL_RPM_CORR_TABLE] autoscale tpsTspCorrValues;;"multiplier", 0.02, 0, 0, 5, 2
+
+uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsAcelEctBins;;"C", 1, 0, -40, 200, 0
+uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsAcelEctValues;;"multiplier", 0.02, 0, 0, 5, 2
 
 int8_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpmBins;;"C", 1, 0, -40, 120, 0
 uint16_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpm;;"RPM", 1, 0, 0, 20000, 0

@@ -188,16 +188,16 @@ Activate this to increment or decrement ignition angle after fast TPS variation,
 Strenght of advance correction
 
 ### Fan1AcThresholdOn
-Theshold to enable fan 1 after ac enable
+Theshold to enable fan 1 after ac turned on
 
 ### Fan1AcThresholdOff
-Theshold to disable fan 1 after ac disable
+Theshold to disable fan 1 after ac tuned off
 
 ### Fan2AcThresholdOn
-Theshold to enable fan 2 after ac enable
+Theshold to enable fan 2 after ac turned on
 
 ### Fan2AcThresholdOff
-Theshold to disable fan 1 after ac disable
+Theshold to disable fan 2 after ac tuned off
 
 ### useIdleAdvanceWhileCoasting
 Use idle ignition table while coasting;

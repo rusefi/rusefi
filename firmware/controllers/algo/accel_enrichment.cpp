@@ -44,8 +44,13 @@ float TpsAccelEnrichment::getTpsEnrichment() {
 		extraFuel = valueFromTable;
 		m_timeSinceAccel.reset();
 	} else if (isBelowDecelThreshold) {
-		valueFromTable = tpsTpsMap.getValue(tpsFrom, tpsTo);
-		extraFuel = -valueFromTable;
+		if(engineConfiguration->tpsDecelEnleanmentMultiplier > 0) {
+			extraFuel = deltaTps * engineConfiguration->tpsDecelEnleanmentMultiplier * 0.01f;
+		} else {
+			valueFromTable = tpsTpsMap.getValue(tpsFrom, tpsTo);
+			extraFuel = -valueFromTable;
+		}
+
 		m_timeSinceAccel.reset();
 	} else {
 		extraFuel = 0;
@@ -78,8 +83,8 @@ float TpsAccelEnrichment::getTpsEnrichment() {
 
 	float mult = interpolate2d(rpm, config->tpsTspCorrValuesBins,
 						config->tpsTspCorrValues) * 
-				 interpolate2d(ect, engineConfiguration->tpsAcelEctBins,
-						engineConfiguration->tpsAcelEctValues);
+				 interpolate2d(ect, config->tpsAcelEctBins,
+						config->tpsAcelEctValues);
 	if (mult != 0 && (mult < 0.01 || mult > 100)) {
 		mult = 1;
 	}

@@ -1614,6 +1614,11 @@ float getOutputValueByName(const char *name) {
 		case -2079775742:
 			return ___engine.module<IdleController>().unmock().looksLikeCrankToIdle;
 #endif
+// isRunning
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+		case 991480578:
+			return ___engine.module<IdleController>().unmock().isRunning;
+#endif
 // isIdleCoasting
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case 2141275671:
