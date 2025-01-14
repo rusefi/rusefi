@@ -257,11 +257,13 @@ void logHardFault(uint32_t type, uintptr_t faultAddress, port_extctx* ctx, uint3
 #if EFI_BACKUP_SRAM
     auto bkpram = getBackupSram();
 	auto err = &bkpram->err;
-	err->Cookie = ErrorCookie::HardFault;
-	err->FaultType = type;
-	err->FaultAddress = faultAddress;
-	err->Csfr = csfr;
-	memcpy(&err->FaultCtx, ctx, sizeof(port_extctx));
+	if (err->Cookie == ErrorCookie::None) {
+		err->FaultType = type;
+		err->FaultAddress = faultAddress;
+		err->Csfr = csfr;
+		memcpy(&err->FaultCtx, ctx, sizeof(port_extctx));
+		err->Cookie = ErrorCookie::HardFault;
+	}
 #endif // EFI_BACKUP_SRAM
 }
 
@@ -278,10 +280,12 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 #if EFI_BACKUP_SRAM
     auto bkpram = getBackupSram();
 	auto err = &bkpram->err;
-	strncpy(err->file, file, efi::size(err->file) - 1);
-	err->line = line;
-	strncpy(err->msg, msg, efi::size(err->msg) - 1);
-	err->Cookie = ErrorCookie::ChibiOsPanic;
+	if (err->Cookie == ErrorCookie::None) {
+		strncpy(err->file, file, efi::size(err->file) - 1);
+		err->line = line;
+		strncpy(err->msg, msg, efi::size(err->msg) - 1);
+		err->Cookie = ErrorCookie::ChibiOsPanic;
+	}
 #endif // EFI_BACKUP_SRAM
 
 	if (hasOsPanicError())
@@ -462,8 +466,10 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 #if EFI_BACKUP_SRAM
     auto bkpram = getBackupSram();
 	auto err = &bkpram->err;
-	strncpy(err->msg, criticalErrorMessageBuffer, sizeof(err->msg) - 1);
-	err->Cookie = ErrorCookie::FirmwareError;
+	if (err->Cookie == ErrorCookie::None) {
+		strncpy(err->msg, criticalErrorMessageBuffer, sizeof(err->msg) - 1);
+		err->Cookie = ErrorCookie::FirmwareError;
+	}
 #endif // EFI_BACKUP_SRAM
 #else
 
