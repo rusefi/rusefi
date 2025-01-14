@@ -4,8 +4,8 @@ struct_no_prefix fan_control_s
 	bit disabledWhileEngineStopped
 	bit brokenClt
 	bit enabledForAc
-	bit enabledAcOld
-	uint32_t acEnableTime
+	bit m_enabledAc
+	bit m_enabledByAc
 	bit hot
 	bit cold
 	bit disabledBySpeed

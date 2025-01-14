@@ -26,6 +26,6 @@
 
 
 
-#define LUA_SCRIPT_SIZE 11500
+#define LUA_SCRIPT_SIZE 9000
 
 #define IGN_KEY_DIVIDER 3

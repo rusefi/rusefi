@@ -1,10 +1,8 @@
 struct_no_prefix tps_accel_state_s
 
-custom percent_t 4 scalar, F32, @OFFSET@, "", 1, 0, 0, 100, 2
-
-percent_t tpsFrom;Fuel: TPS AE from
-percent_t tpsTo;Fuel: TPS AE to
-percent_t deltaTps;Fuel: TPS AE change
+float tpsFrom;Fuel: TPS AE from
+float tpsTo;Fuel: TPS AE to
+float deltaTps;Fuel: TPS AE change
 
 	floatms_t extraFuel;
 	float valueFromTable;

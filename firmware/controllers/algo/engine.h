@@ -15,6 +15,7 @@
 #include "table_helper.h"
 #include "listener_array.h"
 #include "accel_enrichment.h"
+#include "accel_enrichment_autotune.h"
 #include "trigger_central.h"
 #include "local_version_holder.h"
 #include "buttonshift.h"
@@ -173,6 +174,7 @@ public:
 		BoostController,
 #endif // EFI_BOOST_CONTROL
 		TpsAccelEnrichment,
+		TpsAccelEnrichmentAutoTune,
 		LongTermFuelTrim,
 #if EFI_LAUNCH_CONTROL
         NitrousController,

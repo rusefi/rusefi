@@ -20,17 +20,22 @@ bool FanController::getState(bool acActive, bool lastState) {
 	notRunning = true;
 #endif
 
-	if(enabledAcOld != acActive) {
-		if(acActive) {
-			acEnableTime = getTimeNowS();
-		}
-		enabledAcOld = acActive;
+	if(m_enabledAc != acActive) {
+		m_timeSinceAcSwitch.reset();
+		m_enabledAc = acActive;
 	}
 
-	if(enableWithAc() && acActive && getTimeNowS() - acEnableTime >= fanAcThreshold()) {
+	if(enableWithAc() && acActive && m_timeSinceAcSwitch.getElapsedSeconds() >= fanAcOnThreshold() && !m_enabledByAc) {
 		enabledForAc = 1;
-	} else {
+		m_enabledByAc = 1;
+	} else if (enableWithAc() && !acActive && m_timeSinceAcSwitch.getElapsedSeconds() >= fanAcOffThreshold() && m_enabledByAc) {
 		enabledForAc = 0;
+		m_enabledByAc = 0;
+	} else if (!enableWithAc() && m_enabledByAc){
+		enabledForAc = 0;
+		m_enabledByAc = 0;
+	} else {
+		enabledForAc = m_enabledByAc;
 	}
 
 	disabledBySpeed = disableAtSpeed() > 0 && vss.Valid && vss.Value > disableAtSpeed();

@@ -1288,12 +1288,12 @@ float getOutputValueByName(const char *name) {
 // enabledForAc
 		case 291043035:
 			return ___engine.module<FanControl1>()->enabledForAc;
-// enabledAcOld
-		case 284679283:
-			return ___engine.module<FanControl1>()->enabledAcOld;
-// acEnableTime
-		case 493236703:
-			return ___engine.module<FanControl1>()->acEnableTime;
+// m_enabledAc
+		case -998842464:
+			return ___engine.module<FanControl1>()->m_enabledAc;
+// m_enabledByAc
+		case -1112654213:
+			return ___engine.module<FanControl1>()->m_enabledByAc;
 // hot
 		case 193494032:
 			return ___engine.module<FanControl1>()->hot;

@@ -7,6 +7,7 @@ CONTROLLERS_ALGO_SRC_CPP = $(PROJECT_DIR)/controllers/algo/advance_map.cpp \
 	$(GENERATED_ENUMS_DIR)/auto_generated_engine_type_e.cpp \
 	$(PROJECT_DIR)/controllers/algo/fuel_math.cpp \
 	$(PROJECT_DIR)/controllers/algo/accel_enrichment.cpp \
+	$(PROJECT_DIR)/controllers/algo/accel_enrichment_autotune.cpp \
 	$(PROJECT_DIR)/controllers/algo/wall_fuel.cpp \
 	$(PROJECT_DIR)/controllers/algo/launch_control.cpp \
 	$(PROJECT_DIR)/controllers/algo/shift_torque_reduction_controller.cpp \

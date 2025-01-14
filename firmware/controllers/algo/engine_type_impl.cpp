@@ -42,7 +42,6 @@
 #include "sachs.h"
 #include "harley.h"
 #include "vw.h"
-#include "vw_b6.h"
 #include "toyota_jz.h"
 #include "toyota_1NZ_FE.h"
 #include "mitsubishi_3A92.h"
@@ -210,9 +209,6 @@ void applyEngineType(engine_type_e engineType) {
 		break;
 	case engine_type_e::PROTEUS_GM_LS_4:
 		setProteusGmLs4();
-		break;
-	case engine_type_e::PROTEUS_VW_B6:
-		setProteusVwPassatB6();
 		break;
 	case engine_type_e::PROTEUS_QC_TEST_BOARD:
 		proteusBoardTest();

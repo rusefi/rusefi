@@ -187,11 +187,17 @@ Activate this to increment or decrement ignition angle after fast TPS variation,
 ### strenghtAdvanceSmoothing
 Strenght of advance correction
 
-### Fan1AcThreshold
+### Fan1AcThresholdOn
 Theshold to enable fan 1 after ac enable
 
-### Fan2AcThreshold
+### Fan1AcThresholdOff
+Theshold to disable fan 1 after ac disable
+
+### Fan2AcThresholdOn
 Theshold to enable fan 2 after ac enable
+
+### Fan2AcThresholdOff
+Theshold to disable fan 1 after ac disable
 
 ### useIdleAdvanceWhileCoasting
 Use idle ignition table while coasting;
@@ -731,7 +737,7 @@ Output Min Duty Cycle
 Output Max Duty Cycle
 
 ### standbyTimeout
-
+How long it takes to enter standby mode, in seconds. Any value below 60 will cause the ECU to not enter standby, with an average consumption of 80mA
 
 ### boostPwmFrequency
 

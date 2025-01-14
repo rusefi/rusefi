@@ -29,7 +29,7 @@ void IgnitionController::onSlowCallback() {
 		if(hasIgnVoltage) {
 			m_timeSinceIgnVoltage.reset();
 		} else {
-			if(secondsSinceIgnVoltage() >= float(engineConfiguration->standbyTimeout) && float(engineConfiguration->standbyTimeout) >= 180 && !isUsbVoltage()){
+			if(secondsSinceIgnVoltage() >= float(engineConfiguration->standbyTimeout) && float(engineConfiguration->standbyTimeout) >= 60 && !isUsbVoltage()){
 				m_timeSinceIgnVoltage.reset();
 				m_pendingSleep = true;
 				sleepEnter();
@@ -40,6 +40,13 @@ void IgnitionController::onSlowCallback() {
 		m_lastState = hasIgnVoltage;
 		engine->engineModules.apply_all([&](auto& m) { m.onIgnitionStateChanged(hasIgnVoltage); });
 		if(hasIgnVoltage) {
+			#if !EFI_SIMULATOR
+				if(!m_startup){
+					scheduleReboot();
+				} else {
+					m_startup = false;
+				}
+			#endif
 			m_timeSinceIgnVoltage.reset();
 		}
 		return;

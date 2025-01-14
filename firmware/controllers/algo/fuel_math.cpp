@@ -332,6 +332,9 @@ float getInjectionMass(float rpm) {
 	float tpsAccelEnrich = engine->module<TpsAccelEnrichment>()->getTpsEnrichment();
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(tpsAccelEnrich), "NaN tpsAccelEnrich", 0);
 	engine->engineState.tpsAccelEnrich = tpsAccelEnrich;
+	if(tpsAccelEnrich != 0) {
+		engine->module<TpsAccelEnrichmentAutoTune>()->onNewValue();
+	}
 
 	float tpsAccelPerInjection = durationMultiplier * tpsAccelEnrich;
 

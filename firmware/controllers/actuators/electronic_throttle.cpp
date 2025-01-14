@@ -324,8 +324,8 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	// limit max throtle variation in time
 	float timePast = m_timeSinceLastUpdate.getElapsedSeconds();
 	m_timeSinceLastUpdate.reset();
-	float maxAllowedVariationOpen = interpolate2d(rpm, config->pedalToTpsRpmBins, config->etbMaxSpeedOpen);
-	float maxAllowedVariationClose = interpolate2d(rpm, config->pedalToTpsRpmBins, config->etbMaxSpeedClose);
+	float maxAllowedVariationOpen = interpolate2d(m_adjustedTarget, config->pedalToTpsPedalSpeedBins, config->etbMaxSpeedOpen);
+	float maxAllowedVariationClose = interpolate2d(m_adjustedTarget, config->pedalToTpsPedalSpeedBins, config->etbMaxSpeedClose);
 
 	if((targetPosition - m_adjustedTarget) > timePast * maxAllowedVariationOpen) {
 		targetPosition = m_adjustedTarget + maxAllowedVariationOpen * timePast;

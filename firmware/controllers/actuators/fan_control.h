@@ -1,6 +1,7 @@
 #pragma once
 
 #include "fan_control_generated.h"
+#include <rusefi/timer.h>
 
 enum class RadiatorFanState : uint8_t {
   None, // 0
@@ -21,13 +22,15 @@ struct FanController : public EngineModule, public fan_control_s {
 
 private:
 	bool getState(bool acActive, bool lastState);
+	Timer m_timeSinceAcSwitch;
 
 protected:
 	virtual OutputPin& getPin() = 0;
 	virtual float getFanOnTemp() = 0;
 	virtual float getFanOffTemp() = 0;
 	virtual bool enableWithAc() = 0;
-	virtual uint32_t fanAcThreshold() = 0;
+	virtual uint32_t fanAcOnThreshold() = 0;
+	virtual uint32_t fanAcOffThreshold() = 0;
 	virtual bool disableWhenStopped() = 0;
 	virtual int disableAtSpeed() = 0;
 };
@@ -49,8 +52,12 @@ struct FanControl1 : public FanController {
 		return engineConfiguration->enableFan1WithAc;
 	}
 
-	uint32_t fanAcThreshold() {
-		return uint32_t(engineConfiguration->Fan1AcThreshold);
+	uint32_t fanAcOnThreshold() {
+		return uint32_t(engineConfiguration->Fan1AcThresholdOn);
+	}
+
+	uint32_t fanAcOffThreshold() {
+		return uint32_t(engineConfiguration->Fan1AcThresholdOff);
 	}
 
 	bool disableWhenStopped() {
@@ -79,8 +86,12 @@ struct FanControl2 : public FanController {
 		return engineConfiguration->enableFan2WithAc;
 	}
 
-	uint32_t fanAcThreshold() {
-		return uint32_t(engineConfiguration->Fan2AcThreshold);
+	uint32_t fanAcOnThreshold() {
+		return uint32_t(engineConfiguration->Fan2AcThresholdOn);
+	}
+
+	uint32_t fanAcOffThreshold() {
+		return uint32_t(engineConfiguration->Fan2AcThresholdOff);
 	}
 
 	bool disableWhenStopped() {

@@ -32,6 +32,7 @@ public:
 
 private:
 	Timer m_timeSinceIgnVoltage;
+	bool m_startup = true;
 	bool m_lastState = false;
 	bool m_pendingSleep = false;
 };
@@ -40,3 +41,5 @@ private:
 bool isUsbVoltage();
 bool isIgnVoltage();
 void sleepEnter();
+void scheduleReboot();
+

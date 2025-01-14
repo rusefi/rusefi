@@ -194,12 +194,18 @@ float getConfigValueByName(const char *name) {
 // strenghtAdvanceSmoothing
 		case -1950180290:
 			return engineConfiguration->strenghtAdvanceSmoothing;
-// Fan1AcThreshold
-		case -1424475428:
-			return engineConfiguration->Fan1AcThreshold;
-// Fan2AcThreshold
-		case -603219907:
-			return engineConfiguration->Fan2AcThreshold;
+// Fan1AcThresholdOn
+		case -770543463:
+			return engineConfiguration->Fan1AcThresholdOn;
+// Fan1AcThresholdOff
+		case 341869335:
+			return engineConfiguration->Fan1AcThresholdOff;
+// Fan2AcThresholdOn
+		case 223521338:
+			return engineConfiguration->Fan2AcThresholdOn;
+// Fan2AcThresholdOff
+		case -1213730600:
+			return engineConfiguration->Fan2AcThresholdOff;
 // useIdleAdvanceWhileCoasting
 		case 586887955:
 			return engineConfiguration->useIdleAdvanceWhileCoasting;
@@ -2339,14 +2345,24 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->strenghtAdvanceSmoothing = (int)value;
 		return 1;
 	}
-		case -1424475428:
+		case -770543463:
 	{
-		engineConfiguration->Fan1AcThreshold = (int)value;
+		engineConfiguration->Fan1AcThresholdOn = (int)value;
 		return 1;
 	}
-		case -603219907:
+		case 341869335:
 	{
-		engineConfiguration->Fan2AcThreshold = (int)value;
+		engineConfiguration->Fan1AcThresholdOff = (int)value;
+		return 1;
+	}
+		case 223521338:
+	{
+		engineConfiguration->Fan2AcThresholdOn = (int)value;
+		return 1;
+	}
+		case -1213730600:
+	{
+		engineConfiguration->Fan2AcThresholdOff = (int)value;
 		return 1;
 	}
 		case 586887955:

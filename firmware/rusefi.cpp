@@ -156,9 +156,9 @@ void rebootNow() {
  * Once day we will write graceful shutdown, but that would be one day.
  */
 void scheduleReboot() {
-	efiPrintf("Rebooting in 3 seconds...");
+	efiPrintf("Rebooting in 20 mseconds...");
 	chibios_rt::CriticalSectionLocker csl;
-	chVTSetI(&resetTimer, TIME_MS2I(3000), (vtfunc_t) rebootNow, NULL);
+	chVTSetI(&resetTimer, TIME_MS2I(20), (vtfunc_t) rebootNow, NULL);
 }
 
 static jmp_buf jmpEnv;

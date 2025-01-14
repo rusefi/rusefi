@@ -44,7 +44,8 @@ float TpsAccelEnrichment::getTpsEnrichment() {
 		extraFuel = valueFromTable;
 		m_timeSinceAccel.reset();
 	} else if (isBelowDecelThreshold) {
-		extraFuel = deltaTps * engineConfiguration->tpsDecelEnleanmentMultiplier;
+		valueFromTable = tpsTpsMap.getValue(tpsFrom, tpsTo);
+		extraFuel = -valueFromTable;
 		m_timeSinceAccel.reset();
 	} else {
 		extraFuel = 0;
@@ -73,8 +74,12 @@ float TpsAccelEnrichment::getTpsEnrichment() {
 		resetFractionValues();
 	}
 
+	float ect = Sensor::getOrZero(SensorType::Clt);
+
 	float mult = interpolate2d(rpm, config->tpsTspCorrValuesBins,
-						config->tpsTspCorrValues);
+						config->tpsTspCorrValues) * 
+				 interpolate2d(ect, engineConfiguration->tpsAcelEctBins,
+						engineConfiguration->tpsAcelEctValues);
 	if (mult != 0 && (mult < 0.01 || mult > 100)) {
 		mult = 1;
 	}
@@ -173,8 +178,6 @@ void TpsAccelEnrichment::onNewValue(float currentValue) {
 
 	// Update threshold detection
 	isAboveAccelThreshold = deltaTps > engineConfiguration->tpsAccelEnrichmentThreshold;
-
-	// TODO: can deltaTps actually be negative? Will this ever trigger?
 	isBelowDecelThreshold = deltaTps < -engineConfiguration->tpsDecelEnleanmentThreshold;
 }
 

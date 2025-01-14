@@ -535,8 +535,10 @@ int16_t autoscale deltaLoadSmoothingThreshold;Minimum engine load that correctio
 bit enableAdvanceSmoothing;Activate this to increment or decrement ignition angle after fast TPS variation, can improve drivability;
 uint8_t strenghtAdvanceSmoothing;Strenght of advance correction;"%", 1, 0, 0, 100, 0
 
-uint8_t Fan1AcThreshold;Theshold to enable fan 1 after ac enable; "sec", 1, 0, 0, 100, 0
-uint8_t Fan2AcThreshold;Theshold to enable fan 2 after ac enable; "sec", 1, 0, 0, 100, 0
+uint8_t Fan1AcThresholdOn;Theshold to enable fan 1 after ac enable; "sec", 1, 0, 0, 100, 0
+uint8_t Fan1AcThresholdOff;Theshold to disable fan 1 after ac disable; "sec", 1, 0, 0, 100, 0
+uint8_t Fan2AcThresholdOn;Theshold to enable fan 2 after ac enable; "sec", 1, 0, 0, 100, 0
+uint8_t Fan2AcThresholdOff;Theshold to disable fan 1 after ac disable; "sec", 1, 0, 0, 100, 0
 
 bit useIdleAdvanceWhileCoasting;Use idle ignition table while coasting;
 
@@ -1020,7 +1022,7 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
     boostType_e boostType;
     pin_input_mode_e ignitionKeyDigitalPinMode
     Gpio ignitionKeyDigitalPin
-	uint16_t standbyTimeout;;"s", 1, 0, 180, 3600, 0
+	uint16_t standbyTimeout;How long it takes to enter standby mode, in seconds. Any value below 60 will cause the ECU to not enter standby, with an average consumption of 80mA;"s", 1, 0, 0, 3600, 0
     int boostPwmFrequency;;"Hz", 1, 0, 0, 3000, 0
 
 	#define launchActivationMode_e_enum "Launch Button", "Clutch Down Switch", "Speed Based", "Brake Pedal"
@@ -1270,6 +1272,9 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	uint32_t uartConsoleSerialSpeed;Band rate for primary TTL;"BPs", 1, 0, 0, 1000000, 0
 	float tpsDecelEnleanmentThreshold;For decel we simply multiply delta of TPS and tFor decel we do not use table?!;"roc", 1, 0, 0, 200, 1
 	float tpsDecelEnleanmentMultiplier;Magic multiplier, we multiply delta of TPS and get fuel squirt duration;"coeff", 1, 0, 0, 200, 2
+
+	uint8_t[8] autoscale tpsAcelEctBins;;"C", 1, 0, -40, 200, 0
+	uint8_t[8] autoscale tpsAcelEctValues;;"multiplier", 0.02, 0, 0, 5, 2
 
 	float torqueReductionIgnitionRetard;How many degrees of timing advance will be reduced during the Torque Reduction Time;"deg", 1, 0, -180, 180, 2
 
@@ -1891,6 +1896,7 @@ uint16_t[BOOST_LOAD_COUNT] boostLoadBins;;"", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
 
 uint8_t[PEDAL_TO_TPS_SIZE x PEDAL_TO_TPS_SIZE] pedalToTpsTable;;"%", 1, 0, 0, 100, 0
 uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsPedalBins;;"%", 1, 0, 0, 120, 0
+uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsPedalSpeedBins;;"%", 1, 0, 0, 120, 0
 uint8_t[PEDAL_TO_TPS_SIZE] autoscale pedalToTpsRpmBins;;"RPM", 100, 0, 0, 25000, 0
 uint8_t[PEDAL_TO_TPS_SIZE] autoscale etbMaxSpeedOpen;;"%/s", 10, 0, 0, 2500, 0
 uint8_t[PEDAL_TO_TPS_SIZE] autoscale etbMaxSpeedClose;;"%/s", 10, 0, 0, 2500, 0

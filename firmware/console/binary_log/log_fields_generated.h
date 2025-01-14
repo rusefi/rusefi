@@ -473,7 +473,6 @@ static const LogField fields[] = {
 #if EFI_BOOST_CONTROL
 	{___engine.module<BoostController>()->boostControlTarget, "Boost: Target", "kPa", 1, "Boost Control"},
 #endif
-	{___engine.module<FanControl1>()->acEnableTime, "acEnableTime", "", 0},
 	{___engine.module<FanControl1>()->radiatorFanStatus, "radiatorFanStatus", "", 0},
 	{engine->engineState.lua.fuelAdd, "Lua: Fuel add", "g", 3},
 	{engine->engineState.lua.fuelMult, "Lua: Fuel mult", "", 0},

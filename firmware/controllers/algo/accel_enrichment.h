@@ -36,6 +36,12 @@ public:
 	 * @return Extra fuel squirt duration for TPS acceleration
 	 */
 	floatms_t getTpsEnrichment();
+	float getTpsTo() {
+		return tpsTo;
+	}
+	float getTpsFrom() {
+		return tpsFrom;
+	}
 	void onEngineCycleTps();
 	void resetFractionValues();
 	void resetAE();
