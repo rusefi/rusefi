@@ -847,7 +847,7 @@ void turnAllPinsOff() {
 	enginePins.fuelPumpRelay.setValue(false);
 	enginePins.checkEnginePin.setValue(true); // yes this one can go ON
 #if EFI_PROD_CODE && HW_HELLEN
-  hellenDisableEn("fatal");
+	hellenDisableEn("fatal");
 #endif
 }
 #endif /* EFI_GPIO_HARDWARE */

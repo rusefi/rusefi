@@ -81,8 +81,10 @@ void hellenEnableEn(const char *msg) {
   setHellenEnValue(1);
 }
 
-void hellenDisableEn(const char *msg) {
-  efiPrintf("Turning board off [%s]", msg);
+void hellenDisableEn(const char *) {
+	// this function is calld from criticalShutdown() that may be called from hardFault handler
+	// please no call to OS fucntions!
+	//efiPrintf("Turning board off [%s]", msg);
 	setHellenEnValue(0);
 }
 
