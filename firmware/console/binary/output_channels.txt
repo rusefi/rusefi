@@ -13,13 +13,11 @@ bit sd_present;SD: Present
 bit sd_logging_internal;SD: Logging
 bit triggerScopeReady
 bit antilagTriggered
-bit isFanOn;Radiator Fan
 bit isO2HeaterOn;
 bit checkEngine;
 bit needBurn;
 
 bit sd_msd;SD: MSD
-bit isFan2On;Radiator Fan 2
 bit toothLogReady;Tooth Logger Ready
 bit isTpsError;Error: TPS
 bit isCltError;Error: CLT
