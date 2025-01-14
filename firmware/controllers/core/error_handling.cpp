@@ -14,6 +14,11 @@
 #include "log_hard_fault.h"
 #include "rusefi/critical_error.h"
 
+// Ignore following (and similar) errors
+// error: 'strncpy' output may be truncated copying 119 bytes from a string of length 119
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wstringop-truncation"
+
 static critical_msg_t warningBuffer;
 static critical_msg_t criticalErrorMessageBuffer;
 static critical_msg_t configErrorMessageBuffer; // recoverable configuration error, non-critical
@@ -437,3 +442,5 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 void criticalErrorM(const char *msg) {
 	criticalError(msg);
 }
+
+#pragma GCC diagnostic pop
