@@ -47,80 +47,172 @@ const char* getConfigErrorMessageBuffer() {
 	return configErrorMessageBuffer;
 }
 
-#if EFI_BACKUP_SRAM
-ErrorCookie errorCookieOnStart;
-#endif // EFI_BACKUP_SRAM
-
 #if EFI_PROD_CODE
-void checkLastBootError() {
+
+#if EFI_BACKUP_SRAM
+static backupErrorState lastBootError;
+static uint32_t bootCount = 0;
+#endif
+
+void errorHandlerInit() {
+#if EFI_BACKUP_SRAM
+	/* copy error state from backup RAM and clear it in backup RAM.
+	 * so few users can access previous error state and we should not care about who sohuld clear backup ram. */
+	auto sramState = getBackupSram();
+	memcpy(&lastBootError, &sramState->err, sizeof(backupErrorState));
+	memset(&sramState->err, 0x00, sizeof(sramState->err));
+	// Reset cookie so we don't report it again.
+	sramState->err.Cookie = ErrorCookie::None;
+
+	//bootcount
+	if (sramState->BootCountCookie != 0xdeadbeef) {
+		sramState->BootCountCookie = 0xdeadbeef;
+		sramState->BootCount = 0;
+	}
+	// save current bootcounter
+	bootCount = sramState->BootCount;
+
+	sramState->BootCount++;
+
+	if (engineConfiguration->rethrowHardFault) {
+		backupErrorState *err = &lastBootError;
+		if (err->Cookie == ErrorCookie::HardFault) {
+		    criticalError("Last boot had hard fault type: %lx addr: %lx CSFR: %lx",
+		    	err->FaultType, err->FaultAddress, err->Csfr);
+		}
+	}
+
+	Reset_Cause_t cause = getMCUResetCause();
+	// if reset by watchdog, signal a fatal error
+	if ((cause == Reset_Cause_IWatchdog) || (cause == Reset_Cause_WWatchdog)) {
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Watchdog Reset");
+	}
+#endif
+
+	// see https://github.com/rusefi/rusefi/wiki/Resilience
+	addConsoleAction("chibi_fault", [](){ chDbgCheck(0); } );
+	addConsoleAction("soft_fault", [](){ firmwareError(ObdCode::RUNTIME_CRITICAL_TEST_ERROR, "firmwareError: %d", getRusEfiVersion()); });
+	addConsoleAction("hard_fault", [](){ causeHardFault(); } );
+}
+
+bool errorHandlerIsStartFromError() {
+#if EFI_BACKUP_SRAM
+	return (lastBootError.Cookie != ErrorCookie::None);
+#else
+	return 0;
+#endif
+}
+
+// TODO: reuse this code for writing crash report file
+void errorHandlerShowBootReasonAndErrors() {
+	efiPrintf("Reset Cause: %s", getMCUResetCause(getMCUResetCause()));
+
 #if EFI_BACKUP_SRAM
 	auto sramState = getBackupSram();
-	errorCookieOnStart = sramState->Err.Cookie; // preserving value since we will reset it soon
+	backupErrorState *err = &lastBootError;
 
-	switch (sramState->Err.Cookie) {
+	efiPrintf("Power cycle count: %lu", sramState->BootCount);
+
+	if (err->Cookie == ErrorCookie::None) {
+		return;
+	}
+
+	efiPrintf("Last error cookie 0x%08lx", (uint32_t)err->Cookie);
+
+	switch (err->Cookie) {
 	case ErrorCookie::FirmwareError:
-		efiPrintf("Last boot had firmware error: %s", sramState->Err.ErrorString);
-		break;
-	case ErrorCookie::HardFault: {
-		efiPrintf("Last boot had raw: %s", sramState->Err.rawMsg);
-		efiPrintf("Last boot had hardFile: %s", sramState->Err.hardFile);
-		efiPrintf("Last boot had line: %d", sramState->Err.hardLine);
-		efiPrintf("Last boot had check: %d", sramState->Err.check);
-		efiPrintf("Last boot had error: %s", sramState->Err.ErrorString);
-		efiPrintf("Last boot had hard fault type: %lx addr: %lx CSFR: %lx", sramState->Err.FaultType, sramState->Err.FaultAddress, sramState->Err.Csfr);
-		if (engineConfiguration->rethrowHardFault) {
-		    criticalError("Last boot had hard fault type: %lx addr: %lx CSFR: %lx", sramState->Err.FaultType, sramState->Err.FaultAddress, sramState->Err.Csfr);
+		{
+			efiPrintf("Firmware error: %s", err->msg);
 		}
+		break;
+	case ErrorCookie::HardFault:
+		{
+			efiPrintf("HardFault");
+			efiPrintf("type: 0x%08lx addr: 0x%08lx CSFR: 0x%08lx",
+				err->FaultType, err->FaultAddress, err->Csfr);
 
-		auto ctx = &sramState->Err.FaultCtx;
-		efiPrintf("r0  0x%lx", ctx->r0);
-		efiPrintf("r1  0x%lx", ctx->r1);
-		efiPrintf("r2  0x%lx", ctx->r2);
-		efiPrintf("r3  0x%lx", ctx->r3);
-		efiPrintf("r12 0x%lx", ctx->r12);
-		efiPrintf("lr (thread)  0x%lx", ctx->lr_thd);
-		efiPrintf("pc  0x%lx", ctx->pc);
-		efiPrintf("xpsr  0x%lx", ctx->xpsr);
+			auto ctx = &err->FaultCtx;
+			efiPrintf("r0  0x%08lx", ctx->r0);
+			efiPrintf("r1  0x%08lx", ctx->r1);
+			efiPrintf("r2  0x%08lx", ctx->r2);
+			efiPrintf("r3  0x%08lx", ctx->r3);
+			efiPrintf("r12 0x%08lx", ctx->r12);
+			efiPrintf("lr (thread)  0x%08lx", ctx->lr_thd);
+			efiPrintf("pc  0x%08lx", ctx->pc);
+			efiPrintf("xpsr  0x%08lx", ctx->xpsr);
 
-		/* FPU registers - not very useful for debug */
-		if (0) {
-			// Print rest the context as a sequence of uintptr
-			uintptr_t* data = reinterpret_cast<uintptr_t*>(&sramState->Err.FaultCtx);
-			for (size_t i = 8; i < sizeof(port_extctx) / sizeof(uintptr_t); i++) {
-				efiPrintf("Fault ctx %d: %x", i, data[i]);
+			/* FPU registers - not very useful for debug */
+			if (0) {
+				// Print rest the context as a sequence of uintptr
+				uintptr_t* data = reinterpret_cast<uintptr_t*>(&err->FaultCtx);
+				for (size_t i = 8; i < sizeof(port_extctx) / sizeof(uintptr_t); i++) {
+					efiPrintf("Fault ctx %d: 0x%08x", i, data[i]);
+				}
 			}
 		}
-
 		break;
-	}
+	case ErrorCookie::ChibiOsPanic:
+		{
+			efiPrintf("ChibiOS panic");
+			efiPrintf("msg %s", err->msg);
+			efiPrintf("file %s", err->file);
+			efiPrintf("line %d", err->line);
+		}
+		break;
 	default:
 		// No cookie stored or invalid cookie (ie, backup RAM contains random garbage)
 		break;
 	}
-
-	// Reset cookie so we don't print it again.
-	sramState->Err.Cookie = ErrorCookie::None;
-
-	if (sramState->Err.BootCountCookie != 0xdeadbeef) {
-		sramState->Err.BootCountCookie = 0xdeadbeef;
-		sramState->Err.BootCount = 0;
-	}
-
-	efiPrintf("Power cycle count: %lu", sramState->Err.BootCount);
-	sramState->Err.BootCount++;
 #endif // EFI_BACKUP_SRAM
+}
+
+#if EFI_FILE_LOGGING
+#include "ff.h"
+
+#define BOOT_REPORT_PREFIX "boot_"
+
+PUBLIC_API_WEAK void onBoardWriteErrorFile(FIL *) {
+}
+
+void errorHandlerWriteReportFile(FIL *fd) {
+#if EFI_BACKUP_SRAM
+	backupErrorState *err = &lastBootError;
+
+	if (err->Cookie != ErrorCookie::None) {
+		char fileName[_MAX_FILLER + 20];
+		memset(fd, 0, sizeof(FIL));						// clear the memory
+		sprintf(fileName, "%s%ld.txt", BOOT_REPORT_PREFIX, bootCount);
+		FRESULT ret = f_open(fd, fileName, FA_CREATE_ALWAYS | FA_WRITE);
+		if (ret == FR_OK) {
+			onBoardWriteErrorFile(fd);
+			f_printf(fd, "type=%d\n", err->FaultType);
+			// todo: figure out what else would be useful
+			f_close(fd);
+		}
+	}
+#endif // EFI_BACKUP_SRAM
+}
+#endif
+
+backupErrorState *errorHandlerGetLastErrorDescriptor(void)
+{
+#ifdef EFI_BACKUP_SRAM
+	return &lastBootError;
+#else
+	return nullptr;
+#endif
 }
 
 void logHardFault(uint32_t type, uintptr_t faultAddress, port_extctx* ctx, uint32_t csfr) {
     criticalShutdown();
 #if EFI_BACKUP_SRAM
-	auto sramState = getBackupSram();
-	sramState->Err.Cookie = ErrorCookie::HardFault;
-	sramState->Err.check = 321;
-	sramState->Err.FaultType = type;
-	sramState->Err.FaultAddress = faultAddress;
-	sramState->Err.Csfr = csfr;
-	memcpy(&sramState->Err.FaultCtx, ctx, sizeof(port_extctx));
+    auto bkpram = getBackupSram();
+	auto err = &bkpram->err;
+	err->Cookie = ErrorCookie::HardFault;
+	err->FaultType = type;
+	err->FaultAddress = faultAddress;
+	err->Csfr = csfr;
+	memcpy(&err->FaultCtx, ctx, sizeof(port_extctx));
 #endif // EFI_BACKUP_SRAM
 }
 
@@ -135,11 +227,12 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 #endif
 
 #if EFI_BACKUP_SRAM
-	auto sramState = getBackupSram();
-	strncpy(sramState->Err.hardFile, file, efi::size(sramState->Err.hardFile) - 1);
-	sramState->Err.hardLine = line;
-	sramState->Err.check = 123;
-	strncpy(sramState->Err.rawMsg, msg, efi::size(sramState->Err.rawMsg) - 1);
+    auto bkpram = getBackupSram();
+	auto err = &bkpram->err;
+	strncpy(err->file, file, efi::size(err->file) - 1);
+	err->line = line;
+	strncpy(err->msg, msg, efi::size(err->msg) - 1);
+	err->Cookie = ErrorCookie::ChibiOsPanic;
 #endif // EFI_BACKUP_SRAM
 
 	if (hasOsPanicError())
@@ -187,7 +280,7 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 bool warning(ObdCode code, const char *fmt, ...) {
 	if (hasCriticalFirmwareErrorFlag) {
 		return true;
-  }
+	}
 
 	bool known = engine->engineState.warnings.isWarningNow(code);
 
@@ -318,9 +411,10 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 	}
 
 #if EFI_BACKUP_SRAM
-	auto sramState = getBackupSram();
-	strncpy(sramState->Err.ErrorString, criticalErrorMessageBuffer, efi::size(sramState->Err.ErrorString));
-	sramState->Err.Cookie = ErrorCookie::FirmwareError;
+    auto bkpram = getBackupSram();
+	auto err = &bkpram->err;
+	strncpy(err->msg, criticalErrorMessageBuffer, sizeof(err->msg) - 1);
+	err->Cookie = ErrorCookie::FirmwareError;
 #endif // EFI_BACKUP_SRAM
 #else
 
@@ -341,5 +435,5 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 }
 
 void criticalErrorM(const char *msg) {
-  criticalError(msg);
+	criticalError(msg);
 }

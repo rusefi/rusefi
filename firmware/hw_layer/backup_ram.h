@@ -40,34 +40,12 @@ void backupRamSave(backup_ram_e idx, uint32_t value);
 // make sure that all changes are saved before we shutdown the MCU
 void backupRamFlush(void);
 
-// These use very specific values to avoid interpreting random garbage memory as a real value
-enum class ErrorCookie : uint32_t {
-	None = 0,
-	FirmwareError = 0xcafebabe,
-	HardFault = 0xdeadbeef,
-};
-
 #if EFI_PROD_CODE
 struct BackupSramData {
+	uint32_t BootCount;
+	uint32_t BootCountCookie;
 
-	// Error handling/recovery/reporting information
-	struct {
-		ErrorCookie Cookie;
-
-		critical_msg_t ErrorString;
-		critical_msg_t hardFile;
-		int hardLine;
-		int check;
-		critical_msg_t rawMsg;
-		port_extctx FaultCtx;
-		uint32_t FaultType;
-		uint32_t FaultAddress;
-		uint32_t Csfr;
-
-		uint32_t BootCount;
-		uint32_t BootCountCookie;
-	} Err;
-
+	backupErrorState err;
 };
 
 BackupSramData* getBackupSram();

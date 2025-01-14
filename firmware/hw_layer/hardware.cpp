@@ -654,18 +654,3 @@ void initHardware() {
 
 	efiPrintf("initHardware() OK!");
 }
-
-void checkLastResetCause() {
-#if EFI_PROD_CODE
-	Reset_Cause_t cause = getMCUResetCause();
-	// checkLastBootError
-	// see also Err.ErrorString
-	const char *causeStr = getMCUResetCause(cause);
-	efiPrintf("Last Reset Cause: %s", causeStr);
-
-	// if reset by watchdog, signal a fatal error
-	if (cause == Reset_Cause_IWatchdog || cause == Reset_Cause_WWatchdog) {
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Watchdog Reset");
-	}
-#endif // EFI_PROD_CODE
-}

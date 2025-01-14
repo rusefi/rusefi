@@ -75,8 +75,44 @@ extern "C"
 
 #if EFI_PROD_CODE
 
+// for port_extctx
+#include "ch.h"
+
+// These use very specific values to avoid interpreting random garbage memory as a real value
+enum class ErrorCookie : uint32_t {
+    None = 0,
+    FirmwareError = 0xcafebabe,
+    HardFault = 0xdeadbeef,
+    ChibiOsPanic = 0xdeadfa11,
+};
+
+// Error handling/recovery/reporting information
+typedef struct {
+    ErrorCookie Cookie;
+
+    critical_msg_t msg;
+    critical_msg_t file;
+    int line;
+    port_extctx FaultCtx;
+    uint32_t FaultType;
+    uint32_t FaultAddress;
+    uint32_t Csfr;
+} backupErrorState;
+
+// reads backup ram and checks for any error report
+void errorHandlerInit();
+// true if we just started from some crash
+bool errorHandlerIsStartFromError();
 // If there was an error on the last boot, print out information about it now and reset state.
-void checkLastBootError();
+void errorHandlerShowBootReasonAndErrors();
+#if EFI_FILE_LOGGING
+// for FIL
+#include "ff.h"
+
+// write error report to file
+void errorHandlerWriteReportFile(FIL *fd);
+#endif
+
 #endif // EFI_PROD_CODE
 
 #ifdef __cplusplus
