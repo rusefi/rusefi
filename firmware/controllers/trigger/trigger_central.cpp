@@ -258,12 +258,26 @@ static void logVvtFront(bool useOnlyRise, bool isImportantFront, TriggerValue fr
 	}
 }
 
+static bool tooSoonToHandleSignal() {
+#if EFI_PROD_CODE
+extern bool main_loop_started;
+	if (!main_loop_started) {
+	  warning(ObdCode::CUSTOM_ERR_INPUT_DURING_INITIALISATION, "event too early");
+		return true;
+	}
+#endif //EFI_PROD_CODE
+  return false;
+}
+
 void hwHandleVvtCamSignal(bool isRising, efitick_t timestamp, int index) {
 	hwHandleVvtCamSignal(isRising ? TriggerValue::RISE : TriggerValue::FALL, timestamp, index);
 }
 
 // 'invertCamVVTSignal' is already accounted by the time this method is invoked
 void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
+  if (tooSoonToHandleSignal()) {
+    return;
+  }
 	TriggerCentral *tc = getTriggerCentral();
 	if (tc->directSelfStimulation || !tc->hwTriggerInputEnabled) {
 		// sensor noise + self-stim = loss of trigger sync
@@ -432,6 +446,9 @@ uint32_t triggerMaxDuration = 0;
  *  - Trigger replay from CSV (unit tests)
  */
 void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
+  if (tooSoonToHandleSignal()) {
+    return;
+  }
 	TriggerCentral *tc = getTriggerCentral();
 	ScopePerf perf(PE::HandleShaftSignal);
 

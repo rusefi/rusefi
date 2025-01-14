@@ -131,12 +131,9 @@ static void writeSdBlock(Writer& outBuffer) {
 	outBuffer.write(buffer, 1);
 }
 
-#if EFI_PROD_CODE
-extern bool main_loop_started;
-#endif //EFI_PROD_CODE
-
 void writeSdLogLine(Writer& bufferedWriter) {
 #if EFI_PROD_CODE
+extern bool main_loop_started;
 	if (!main_loop_started)
 		return;
 #endif //EFI_PROD_CODE
