@@ -20,6 +20,7 @@ bool isBoardWithPowerManagement();
 bool getHellenBoardEnabled();
 void hellenEnableEn(const char *msg = "");
 void hellenDisableEn(const char *msg = "");
+void hellenDisableEnSilently(); // this version is called by fatal error handler meaning no OS access
 
 void hellenBoardStandBy();
 void hellenMegaSdWithAccelerometer();
