@@ -30,9 +30,6 @@
 // todo: reset this between cranking attempts?! #2735
 float minCrankingRpm = 0;
 
-static Map3D<TRACTION_CONTROL_ETB_DROP_SIZE, TRACTION_CONTROL_ETB_DROP_SIZE, int8_t, uint16_t, uint8_t> tcTimingDropTable{"tct"};
-static Map3D<TRACTION_CONTROL_ETB_DROP_SIZE, TRACTION_CONTROL_ETB_DROP_SIZE, int8_t, uint16_t, uint8_t> tcSparkSkipTable{"tcs"};
-
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 
 /**
@@ -55,8 +52,16 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 
   float vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);
   float wheelSlip = Sensor::getOrZero(SensorType::WheelSlipRatio);
-  engine->ignitionState.tractionAdvanceDrop = tcTimingDropTable.getValue(wheelSlip, vehicleSpeed);
-  engine->engineState.tractionControlSparkSkip = tcSparkSkipTable.getValue(wheelSlip, vehicleSpeed);
+  engine->ignitionState.tractionAdvanceDrop = interpolate3d(
+    engineConfiguration->tractionControlTimingDrop,
+    engineConfiguration->tractionControlSpeedBins, vehicleSpeed
+    engineConfiguration->tractionControlSlipBins, wheelSlip);
+
+  engine->engineState.tractionControlSparkSkip = interpolate3d(
+    engineConfiguration->tractionControlIgnitionSkip,
+    engineConfiguration->tractionControlSpeedBins, vehicleSpeed,
+    engineConfiguration->tractionControlSlipBins, wheelSlip);
+
   engine->engineState.updateSparkSkip();
 
   advanceAngle += engine->ignitionState.tractionAdvanceDrop;
@@ -281,11 +286,6 @@ size_t getMultiSparkCount(float rpm) {
 	} else {
 		return 0;
 	}
-}
-
-void initIgnitionAdvanceControl() {
-	tcTimingDropTable.initTable(engineConfiguration->tractionControlTimingDrop, engineConfiguration->tractionControlSlipBins, engineConfiguration->tractionControlSpeedBins);
-	tcSparkSkipTable.initTable(engineConfiguration->tractionControlIgnitionSkip, engineConfiguration->tractionControlSlipBins, engineConfiguration->tractionControlSpeedBins);
 }
 
 /**

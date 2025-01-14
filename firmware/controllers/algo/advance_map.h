@@ -18,4 +18,3 @@ angle_t getRunningAdvance(float rpm, float engineLoad);
 angle_t getAdvanceCorrections(float engineLoad);
 
 size_t getMultiSparkCount(float rpm);
-void initIgnitionAdvanceControl();
