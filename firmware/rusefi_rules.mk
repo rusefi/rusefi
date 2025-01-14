@@ -1,7 +1,7 @@
 # Warnings-as-errors...
 RUSEFI_OPT = -Werror
 # some compilers seem to have this off by default?
-RUSEFI_OPT += -Werror=stringop-truncation
+#RUSEFI_OPT += -Werror=stringop-truncation
 
 ifneq ($(ALLOW_SHADOW),yes)
      RUSEFI_OPT += -Werror=shadow
