@@ -300,14 +300,14 @@ static void setCommonMazdaNB() {
 	// Tach
 	engineConfiguration->tachPulsePerRev = 2;
 
-#if (FUEL_RPM_COUNT == 16) && (FUEL_LOAD_COUNT == 16)
+#if (VE_RPM_COUNT == 16) && (VE_LOAD_COUNT == 16)
 	// Tables
 	copyArray(config->veRpmBins, mazda_miata_nb2_RpmBins);
 	copyArray(config->veLoadBins, mazda_miata_nb2_LoadBins);
+	copyTable(config->veTable, mapBased18vvtVeTable_NB_fuel_rail);
 #endif
 
 #if (IGN_RPM_COUNT == 16) && (IGN_LOAD_COUNT == 16)
-	copyTable(config->veTable, mapBased18vvtVeTable_NB_fuel_rail);
 	copyArray(config->ignitionRpmBins, ignition18vvtRpmBins);
 	copyArray(config->ignitionLoadBins, ignition18vvtLoadBins);
 	copyTable(config->ignitionTable, mapBased18vvtTimingTable);

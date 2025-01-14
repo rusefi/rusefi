@@ -71,7 +71,7 @@ void setFordEscortGt() {
 	engineConfiguration->displacement = 1.839;
 	setAlgorithm(LM_SPEED_DENSITY);
 
-#if (IGN_RPM_COUNT == 16) && (IGN_LOAD_COUNT == 16)
+#if (VE_LOAD_COUNT == 16) && (VE_RPM_COUNT == 16)
 	static const uint16_t veRpmBins[] =
 	{
 		800,
