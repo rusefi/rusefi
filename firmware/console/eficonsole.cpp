@@ -74,9 +74,9 @@ static void sayHello() {
   printUid();
 
 #if defined(STM32F4) && !defined(AT32F4XX)
-	efiPrintf("can read 0x20000010 %d", ramReadProbe((const char *)0x20000010));
-	efiPrintf("can read 0x20020010 %d", ramReadProbe((const char *)0x20020010));
-	efiPrintf("can read 0x20070010 %d", ramReadProbe((const char *)0x20070010));
+//	efiPrintf("ramReadProbe 0x20000010 %d", ramReadProbe((const char *)0x20000010));
+//	efiPrintf("ramReadProbe 0x20020010 %d", ramReadProbe((const char *)0x20020010));
+//	efiPrintf("ramReadProbe 0x20070010 %d", ramReadProbe((const char *)0x20070010));
 
 	efiPrintf("isStm32F42x %s", boolToString(isStm32F42x()));
 #endif // STM32F4
@@ -155,22 +155,6 @@ static void sayHello() {
 #endif
 	efiPrintf("CH_DBG_SYSTEM_STATE_CHECK=%d", CH_DBG_SYSTEM_STATE_CHECK);
 	efiPrintf("CH_DBG_ENABLE_STACK_CHECK=%d", CH_DBG_ENABLE_STACK_CHECK);
-
-#ifdef EFI_LOGIC_ANALYZER
-	efiPrintf("EFI_LOGIC_ANALYZER=%d", EFI_LOGIC_ANALYZER);
-#endif
-#ifdef EFI_TUNER_STUDIO
-	efiPrintf("EFI_TUNER_STUDIO=%d", EFI_TUNER_STUDIO);
-#else
-	efiPrintf("EFI_TUNER_STUDIO=%d", 0);
-#endif
-
-#if defined(EFI_SHAFT_POSITION_INPUT)
-	efiPrintf("EFI_SHAFT_POSITION_INPUT=%d", EFI_SHAFT_POSITION_INPUT);
-#endif
-#ifdef EFI_INTERNAL_ADC
-	efiPrintf("EFI_INTERNAL_ADC=%d", EFI_INTERNAL_ADC);
-#endif
 
 	/**
 	 * Time to finish output. This is needed to avoid mix-up of this methods output and console command confirmation
