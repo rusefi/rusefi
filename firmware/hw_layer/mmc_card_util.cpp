@@ -80,6 +80,7 @@ PUBLIC_API_WEAK void onBoardWriteErrorFile(FIL *file) {
   UNUSED(file);
 }
 
+#if EFI_BACKUP_SRAM
 // todo: unit test? or better file stdlib method to do same?
 static int mystrncasecmp(const char *s1, const char *s2, size_t n) {
 	if (n != 0) {
@@ -138,6 +139,7 @@ static bool findFile(const char *path, const char *prefix) {
 	}
 	return false;
 }
+#endif // EFI_BACKUP_SRAM
 
 void writeErrorReportFile() {
 #if EFI_BACKUP_SRAM
