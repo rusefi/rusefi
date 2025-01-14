@@ -66,13 +66,4 @@ void incLogFileName() {
 	efiPrintf("New log file index %d", logFileIndex);
 }
 
-bool needsToWriteReportFile() {
-#if EFI_BACKUP_SRAM
-extern ErrorCookie errorCookieOnStart;
-  return errorCookieOnStart == ErrorCookie::HardFault;
-#else
-  return false;
-#endif // EFI_BACKUP_SRAM
-}
-
 #endif // EFI_PROD_CODE && EFI_FILE_LOGGING
