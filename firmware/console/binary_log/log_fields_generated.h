@@ -26,13 +26,12 @@ static const LogField fields[] = {
 	{engine->outputChannels, 0, 21, "Error: TPS2", ""},
 	{engine->outputChannels, 0, 22, "Injector Fault", ""},
 	{engine->outputChannels, 0, 23, "Ignition Fault", ""},
-	{engine->outputChannels, 0, 24, "isMainRelayOn", ""},
-	{engine->outputChannels, 0, 25, "isUsbConnected", ""},
-	{engine->outputChannels, 0, 26, "dfcoActive", ""},
-	{engine->outputChannels, 0, 27, "SD card writing", ""},
-	{engine->outputChannels, 0, 28, "SD card reading", ""},
-	{engine->outputChannels, 0, 29, "MAP from sensor seems valid", ""},
-	{engine->outputChannels, 0, 30, "triggerPageRefreshFlag", ""},
+	{engine->outputChannels, 0, 24, "isUsbConnected", ""},
+	{engine->outputChannels, 0, 25, "dfcoActive", ""},
+	{engine->outputChannels, 0, 26, "SD card writing", ""},
+	{engine->outputChannels, 0, 27, "SD card reading", ""},
+	{engine->outputChannels, 0, 28, "MAP from sensor seems valid", ""},
+	{engine->outputChannels, 0, 29, "triggerPageRefreshFlag", ""},
 	{engine->outputChannels.RPMValue, "RPM", "RPM", 0},
 	{engine->outputChannels.rpmAcceleration, "dRPM", "RPM acceleration/Rate of Change/ROC", 2},
 	{engine->outputChannels.speedToRpmRatio, "Gearbox Ratio", "value", 2},
@@ -518,7 +517,7 @@ static const LogField fields[] = {
 	{engine->module<InjectorModelPrimary>()->pressureRatio, "Fuel: Injector pressure ratio", "", 3},
 #endif
 #if EFI_LAUNCH_CONTROL
-	{engine->launchController.retardThresholdRpm, "retardThresholdRpm", "", 0},
+	{engine->launchController.retardThresholdRpm, "Launch: Retard threshold RPM", "", 0},
 #endif
 #if EFI_LAUNCH_CONTROL
 	{engine->launchController, 4, 0, "launchActivatePinState", ""},
@@ -527,22 +526,22 @@ static const LogField fields[] = {
 	{engine->launchController, 4, 1, "isPreLaunchCondition", ""},
 #endif
 #if EFI_LAUNCH_CONTROL
-	{engine->launchController, 4, 2, "isLaunchCondition", ""},
+	{engine->launchController, 4, 2, "Launch: isLaunchCondition", ""},
 #endif
 #if EFI_LAUNCH_CONTROL
-	{engine->launchController, 4, 3, "isSwitchActivated", ""},
+	{engine->launchController, 4, 3, "Launch: isSwitchActivated", ""},
 #endif
 #if EFI_LAUNCH_CONTROL
-	{engine->launchController, 4, 4, "isClutchActivated", ""},
+	{engine->launchController, 4, 4, "Launch: isClutchActivated", ""},
 #endif
 #if EFI_LAUNCH_CONTROL
 	{engine->launchController, 4, 5, "isBrakePedalActivated", ""},
 #endif
 #if EFI_LAUNCH_CONTROL
-	{engine->launchController, 4, 6, "isValidInputPin", ""},
+	{engine->launchController, 4, 6, "Launch: isValidInputPin", ""},
 #endif
 #if EFI_LAUNCH_CONTROL
-	{engine->launchController, 4, 7, "activateSwitchCondition", ""},
+	{engine->launchController, 4, 7, "Launch: activateSwitchCondition", ""},
 #endif
 #if EFI_LAUNCH_CONTROL
 	{engine->launchController, 4, 8, "rpmLaunchCondition", ""},
@@ -551,10 +550,10 @@ static const LogField fields[] = {
 	{engine->launchController, 4, 9, "rpmPreLaunchCondition", ""},
 #endif
 #if EFI_LAUNCH_CONTROL
-	{engine->launchController, 4, 10, "speedCondition", ""},
+	{engine->launchController, 4, 10, "Launch: speedCondition", ""},
 #endif
 #if EFI_LAUNCH_CONTROL
-	{engine->launchController, 4, 11, "tpsCondition", ""},
+	{engine->launchController, 4, 11, "Launch: tpsCondition", ""},
 #endif
 #if EFI_LAUNCH_CONTROL
 	{engine->shiftTorqueReductionController, 0, 0, "isTorqueReductionTriggerPinValid", ""},

@@ -125,34 +125,34 @@ struct output_channels_s {
 	offset 0 bit 23 */
 	bool ignitionFault : 1 {};
 	/**
-	offset 0 bit 24 */
-	bool isMainRelayOn : 1 {};
-	/**
 	 * isUsbConnected
 	 * Original reason for this is to check if USB is connected from Lua
-	offset 0 bit 25 */
+	offset 0 bit 24 */
 	bool isUsbConnected : 1 {};
 	/**
-	offset 0 bit 26 */
+	offset 0 bit 25 */
 	bool dfcoActive : 1 {};
 	/**
 	 * SD card writing
-	offset 0 bit 27 */
+	offset 0 bit 26 */
 	bool sd_active_wr : 1 {};
 	/**
 	 * SD card reading
-	offset 0 bit 28 */
+	offset 0 bit 27 */
 	bool sd_active_rd : 1 {};
 	/**
 	 * MAP from sensor seems valid
-	offset 0 bit 29 */
+	offset 0 bit 28 */
 	bool isMapValid : 1 {};
 	/**
-	offset 0 bit 30 */
+	offset 0 bit 29 */
 	bool triggerPageRefreshFlag : 1 {};
 	/**
+	offset 0 bit 30 */
+	bool unusedBit_30_30 : 1 {};
+	/**
 	offset 0 bit 31 */
-	bool unusedBit_31_31 : 1 {};
+	bool unusedBit_30_31 : 1 {};
 	/**
 	 * @@GAUGE_NAME_RPM@@
 	 * units: RPM

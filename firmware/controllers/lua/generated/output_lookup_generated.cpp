@@ -78,9 +78,6 @@ float getOutputValueByName(const char *name) {
 // ignitionFault
 		case -1158382750:
 			return engine->outputChannels.ignitionFault;
-// isMainRelayOn
-		case -822552576:
-			return engine->outputChannels.isMainRelayOn;
 // isUsbConnected
 		case 1836976702:
 			return engine->outputChannels.isUsbConnected;

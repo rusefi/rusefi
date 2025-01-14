@@ -463,7 +463,7 @@ di_nextStart("GDI: next start", SensorCategory.SENSOR_INPUTS, FieldType.INT, 112
 m_deadtime("Fuel: injector lag", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1124, 1.0, 0.0, 0.0, "ms"),
 pressureDelta("Fuel: Injector pressure delta", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1128, 1.0, -1000.0, 1000.0, "kPa"),
 pressureRatio("Fuel: Injector pressure ratio", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1132, 1.0, 0.0, 100.0, ""),
-retardThresholdRpm("retardThresholdRpm", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1136, 1.0, -1.0, -1.0, ""),
+retardThresholdRpm("Launch: Retard threshold RPM", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1136, 1.0, -1.0, -1.0, ""),
 fuelALSCorrection("fuelALSCorrection", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1152, 1.0, -1.0, -1.0, ""),
 timingALSCorrection("timingALSCorrection", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1156, 0.01, -20.0, 20.0, "deg"),
 timingALSSkip("timingALSSkip", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1158, 0.01, 0.0, 50.0, "deg"),

@@ -205,13 +205,12 @@ public class TsOutputs {
 	public static final Field ISTPS2ERROR = Field.create("ISTPS2ERROR", 0, FieldType.BIT, 21).setBaseOffset(0);
 	public static final Field INJECTORFAULT = Field.create("INJECTORFAULT", 0, FieldType.BIT, 22).setBaseOffset(0);
 	public static final Field IGNITIONFAULT = Field.create("IGNITIONFAULT", 0, FieldType.BIT, 23).setBaseOffset(0);
-	public static final Field ISMAINRELAYON = Field.create("ISMAINRELAYON", 0, FieldType.BIT, 24).setBaseOffset(0);
-	public static final Field ISUSBCONNECTED = Field.create("ISUSBCONNECTED", 0, FieldType.BIT, 25).setBaseOffset(0);
-	public static final Field DFCOACTIVE = Field.create("DFCOACTIVE", 0, FieldType.BIT, 26).setBaseOffset(0);
-	public static final Field SD_ACTIVE_WR = Field.create("SD_ACTIVE_WR", 0, FieldType.BIT, 27).setBaseOffset(0);
-	public static final Field SD_ACTIVE_RD = Field.create("SD_ACTIVE_RD", 0, FieldType.BIT, 28).setBaseOffset(0);
-	public static final Field ISMAPVALID = Field.create("ISMAPVALID", 0, FieldType.BIT, 29).setBaseOffset(0);
-	public static final Field TRIGGERPAGEREFRESHFLAG = Field.create("TRIGGERPAGEREFRESHFLAG", 0, FieldType.BIT, 30).setBaseOffset(0);
+	public static final Field ISUSBCONNECTED = Field.create("ISUSBCONNECTED", 0, FieldType.BIT, 24).setBaseOffset(0);
+	public static final Field DFCOACTIVE = Field.create("DFCOACTIVE", 0, FieldType.BIT, 25).setBaseOffset(0);
+	public static final Field SD_ACTIVE_WR = Field.create("SD_ACTIVE_WR", 0, FieldType.BIT, 26).setBaseOffset(0);
+	public static final Field SD_ACTIVE_RD = Field.create("SD_ACTIVE_RD", 0, FieldType.BIT, 27).setBaseOffset(0);
+	public static final Field ISMAPVALID = Field.create("ISMAPVALID", 0, FieldType.BIT, 28).setBaseOffset(0);
+	public static final Field TRIGGERPAGEREFRESHFLAG = Field.create("TRIGGERPAGEREFRESHFLAG", 0, FieldType.BIT, 29).setBaseOffset(0);
 	public static final Field RPMVALUE = Field.create("RPMVALUE", 4, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field RPMACCELERATION = Field.create("RPMACCELERATION", 6, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field SPEEDTORPMRATIO = Field.create("SPEEDTORPMRATIO", 8, FieldType.INT16).setScale(0.01).setBaseOffset(0);
@@ -641,7 +640,6 @@ public class TsOutputs {
 	ISTPS2ERROR,
 	INJECTORFAULT,
 	IGNITIONFAULT,
-	ISMAINRELAYON,
 	ISUSBCONNECTED,
 	DFCOACTIVE,
 	SD_ACTIVE_WR,
