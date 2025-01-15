@@ -86,6 +86,8 @@ enum class ErrorCookie : uint32_t {
     ChibiOsPanic = 0xdeadfa11,
 };
 
+const char *errorCookieToName(ErrorCookie cookie);
+
 // Error handling/recovery/reporting information
 typedef struct {
     ErrorCookie Cookie;
