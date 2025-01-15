@@ -92,7 +92,7 @@ static const uint8_t SCRIPT_TABLE_vvt_target[VVT_TABLE_SIZE][VVT_TABLE_SIZE] = {
 };
 #endif
 
-#if (FUEL_LOAD_COUNT == 16) && (FUEL_RPM_COUNT == 16)
+#if (VE_RPM_COUNT == 16) && (VE_LOAD_COUNT == 16)
 const float mazda_miata_nb2_RpmBins[FUEL_RPM_COUNT] = {700.0, 820.0, 950.0, 1100.0,
 		1300.0, 1550.0, 1800.0, 2150.0,
 		2500.0, 3000.0, 3500.0, 4150.0,
