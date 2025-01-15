@@ -1245,7 +1245,7 @@ public class Fields {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 1315429315;
+	public static final int SIGNATURE_HASH = 288407113;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1511,7 +1511,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.01.14.f407-discovery.1315429315";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.01.15.f407-discovery.288407113";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1545,11 +1545,13 @@ public class Fields {
 	public static final int UiMode_TUNING = 2;
 	public static final int VBAT_INJECTOR_CURVE_SIZE = 8;
 	public static final int VE_BLEND_COUNT = 4;
+	public static final int VE_LOAD_COUNT = 16;
 	public static final String VE_MENU_MAP_NAME = "VE 3D view";
 	public static final String VE_MENU_NAME = "VE";
 	public static final int ve_override_e_VE_MAP = 1;
 	public static final int ve_override_e_VE_None = 0;
 	public static final int ve_override_e_VE_TPS = 2;
+	public static final int VE_RPM_COUNT = 16;
 	public static final String VE_TABLE_NAME = "VE Table";
 	public static final int VEHICLE_INFO_SIZE = 32;
 	public static final int VIN_NUMBER_SIZE = 17;

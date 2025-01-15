@@ -1335,7 +1335,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1643352116
+#define SIGNATURE_HASH 1050998206
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1803,7 +1803,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.01.14.alphax-silver.1643352116"
+#define TS_SIGNATURE "rusEFI master.2025.01.15.alphax-silver.1050998206"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
@@ -1843,6 +1843,7 @@
 #define UiMode_TUNING 2
 #define VBAT_INJECTOR_CURVE_SIZE 8
 #define VE_BLEND_COUNT 4
+#define VE_LOAD_COUNT 16
 #define VE_MENU_MAP_NAME "VE 3D view"
 #define VE_MENU_NAME "VE"
 #define ve_override_e_auto_enum 0="VE_None",1="VE_MAP",2="VE_TPS"
@@ -1850,6 +1851,7 @@
 #define ve_override_e_VE_MAP 1
 #define ve_override_e_VE_None 0
 #define ve_override_e_VE_TPS 2
+#define VE_RPM_COUNT 16
 #define VE_TABLE_NAME "VE Table"
 #define VEHICLE_INFO_SIZE 32
 #define VIN_NUMBER_SIZE 17

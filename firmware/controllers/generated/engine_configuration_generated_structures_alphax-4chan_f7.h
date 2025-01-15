@@ -5482,17 +5482,17 @@ struct persistent_config_s {
 	 * units: %
 	 * offset 16508
 	 */
-	scaled_channel<uint16_t, 10, 1> veTable[FUEL_LOAD_COUNT][FUEL_RPM_COUNT] = {};
+	scaled_channel<uint16_t, 10, 1> veTable[VE_LOAD_COUNT][VE_RPM_COUNT] = {};
 	/**
 	 * units: {bitStringValue(fuelUnits, fuelAlgorithm) }
 	 * offset 17020
 	 */
-	uint16_t veLoadBins[FUEL_LOAD_COUNT] = {};
+	uint16_t veLoadBins[VE_LOAD_COUNT] = {};
 	/**
 	 * units: RPM
 	 * offset 17052
 	 */
-	uint16_t veRpmBins[FUEL_RPM_COUNT] = {};
+	uint16_t veRpmBins[VE_RPM_COUNT] = {};
 	/**
 	 * units: lambda
 	 * offset 17084
