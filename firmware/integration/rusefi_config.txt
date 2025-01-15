@@ -2176,6 +2176,7 @@ end_struct
 #define pedalToTpsTbl_NAME "ETB pedal target"
 #define pedalSensor_NAME "Accelerator pedal"
 #define ts_show_charge_estimation true
+#define ts_show_jam_detection true
 #define ts_show_acr_pins true
 #define VE_MENU_NAME "VE"
 #define VE_TABLE_NAME "VE Table"
