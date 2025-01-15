@@ -108,7 +108,7 @@ bool errorHandlerIsStartFromError() {
 #endif
 }
 
-static const char *errorCookieToName(ErrorCookie cookie)
+const char *errorCookieToName(ErrorCookie cookie)
 {
 	switch (cookie) {
 	case ErrorCookie::None:
@@ -204,7 +204,7 @@ void errorHandlerShowBootReasonAndErrors() {
 PUBLIC_API_WEAK void onBoardWriteErrorFile(FIL *) {
 }
 
-void errorHandlerWriteReportFile(FIL *fd) {
+void errorHandlerWriteReportFile(FIL *fd, int index) {
 	// generate file on good boot to?
 	bool needReport = false;
 #if EFI_BACKUP_SRAM
@@ -224,7 +224,11 @@ void errorHandlerWriteReportFile(FIL *fd) {
 		char fileName[_MAX_FILLER + 20];
 		memset(fd, 0, sizeof(FIL));						// clear the memory
 		//TODO: use date + time for file name?
+#if EFI_BACKUP_SRAM
 		sprintf(fileName, "%s%ld.txt", FAIL_REPORT_PREFIX, bootCount);
+#else
+		sprintf(fileName, "%s%d.txt", FAIL_REPORT_PREFIX, index);
+#endif
 		FRESULT ret = f_open(fd, fileName, FA_CREATE_ALWAYS | FA_WRITE);
 		if (ret == FR_OK) {
 			//this is file print
@@ -244,7 +248,7 @@ void errorHandlerWriteReportFile(FIL *fd) {
 
 backupErrorState *errorHandlerGetLastErrorDescriptor(void)
 {
-#ifdef EFI_BACKUP_SRAM
+#if EFI_BACKUP_SRAM
 	return &lastBootError;
 #else
 	return nullptr;
