@@ -39,6 +39,11 @@ static int totalSyncCounter = 0;
 
 #include "rtc_helper.h"
 
+// This is dirty workaround to fix compilation without adding this function prototype
+// to error_handling.h file that will also need to add "ff.h" include to same file and
+// cause simulator fail to build.
+extern void errorHandlerWriteReportFile(FIL *fd);
+
 #define SD_STATE_INIT "init"
 #define SD_STATE_MOUNTED "MOUNTED"
 #define SD_STATE_MOUNT_FAILED "MOUNT_FAILED"
