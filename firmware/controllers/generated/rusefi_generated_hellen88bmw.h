@@ -1339,7 +1339,7 @@
 #define show_Hellen88bmw_presets true
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2201743953
+#define SIGNATURE_HASH 2493327155
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1739,6 +1739,7 @@
 #define ts_show_injectionPinMode false
 #define ts_show_intake_cam_edge true
 #define ts_show_intake_vvt_direction true
+#define ts_show_jam_detection true
 #define ts_show_k_line false
 #define ts_show_l9779 false
 #define ts_show_maf true
@@ -1807,7 +1808,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.01.15.hellen88bmw.2201743953"
+#define TS_SIGNATURE "rusEFI master.2025.01.15.hellen88bmw.2493327155"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
