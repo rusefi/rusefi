@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.FileLog.isWindows;
+import static com.rusefi.StartupFrame.newReleaseAnnounce;
 
 /**
  * Focuses on firmware updater
@@ -68,6 +69,14 @@ public class BasicStartupFrame {
     public BasicStartupFrame() {
         JPanel panel = new JPanel(new VerticalFlowLayout());
         if (isWindows()) {
+            final Optional<JPanel> newReleaseNotification = newReleaseAnnounce(
+                "rusefi_updater.exe",
+                "center",
+                () -> 0
+            );
+            if (newReleaseNotification.isPresent()) {
+                panel.add(newReleaseNotification.get());
+            }
             panel.add(ToolButtons.createShowDeviceManagerButton());
             panel.add(StartupFrame.binaryModificationControl());
 

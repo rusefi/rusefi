@@ -25,6 +25,8 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
@@ -137,6 +139,14 @@ public class StartupFrame {
 
         connectButton.addActionListener(e -> connectButtonAction(comboSpeeds));
 
+        final Optional<JPanel> newReleaseNotification = newReleaseAnnounce(
+            "rusefi_autoupdate.exe",
+            "left",
+            () -> realHardwarePanel.getPreferredSize().width
+        );
+        if (newReleaseNotification.isPresent()) {
+            leftPanel.add(newReleaseNotification.get());
+        }
         leftPanel.add(realHardwarePanel);
         if (UiProperties.useSimulator()) {
             leftPanel.add(miscPanel);
@@ -235,6 +245,38 @@ public class StartupFrame {
         for (Component component : getAllComponents(frame)) {
             component.addKeyListener(hwTestEasterEgg);
         }
+    }
+
+    public static @NotNull Optional<JPanel> newReleaseAnnounce(
+        final String upgradeExeFileName,
+        final String textAlign,
+        final Supplier<Integer> minWidthSupplier
+    ) {
+        final String nextBranchName = BundleUtil.readBundleFullNameNotNull().getNextBranchName();
+        if (nextBranchName != null && !nextBranchName.isBlank()) {
+            final JLabel newReleaseAmmomceMessage = new JLabel(
+                String.format(
+                    "<html><p style=\"text-align: %s;font-weight: bold;color:red\">New release `%s` is available!<br/>To upgrade please restart `%s`.</p></html>",
+                    textAlign,
+                    nextBranchName,
+                    upgradeExeFileName
+                )
+            );
+            final JPanel newReleaseAnnouncePanel = new JPanel(new MigLayout()) {
+                @Override
+                public Dimension getPreferredSize() {
+                    Dimension size = super.getPreferredSize();
+                    return new Dimension(Math.max(size.width, minWidthSupplier.get()), size.height);
+                }
+            };
+            newReleaseAnnouncePanel.setBorder(new TitledBorder(
+                BorderFactory.createLineBorder(Color.darkGray),
+                ""
+            ));
+            newReleaseAnnouncePanel.add(newReleaseAmmomceMessage);
+            return Optional.of(newReleaseAnnouncePanel);
+        }
+        return Optional.empty();
     }
 
     public static @NotNull JLabel binaryModificationControl() {
