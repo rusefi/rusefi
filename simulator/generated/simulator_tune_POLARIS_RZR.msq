@@ -23,7 +23,7 @@
         <constant name="canRxPin">"NONE"</constant>
         <constant name="torqueReductionTriggerPin">"NONE"</constant>
         <constant digits="0" name="launchFuelAdderPercent" units="%">0.0</constant>
-        <constant digits="2" name="etbJamTimeout" units="sec">1.0</constant>
+        <constant digits="2" name="etbJamTimeout" units="sec">0.0</constant>
         <constant name="tachOutputPin">"NONE"</constant>
         <constant name="tachOutputPinMode">"default"</constant>
         <constant digits="0" name="acIdleExtraOffset" units="%">15.0</constant>
@@ -4852,7 +4852,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20250108" nPages="1" signature="rusEFI master.2025.01.15.f407-discovery.288407113" version="5.0"/>
+    <versionInfo firmwareInfo="20250108" nPages="1" signature="rusEFI master.2025.01.15.f407-discovery.110521131" version="5.0"/>
     <bibliography author="rusEFI 20250108" writeDate="date"/>
     <settings/>
     <userComments/>
