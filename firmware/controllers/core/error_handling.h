@@ -105,13 +105,8 @@ void errorHandlerInit();
 bool errorHandlerIsStartFromError();
 // If there was an error on the last boot, print out information about it now and reset state.
 void errorHandlerShowBootReasonAndErrors();
-#if EFI_FILE_LOGGING
-// for FIL
-#include "ff.h"
 
-// write error report to file
-void errorHandlerWriteReportFile(FIL *fd);
-#endif
+//void errorHandlerWriteReportFile(FIL *fd);
 
 #endif // EFI_PROD_CODE
 
