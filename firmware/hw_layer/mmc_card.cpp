@@ -42,7 +42,7 @@ static int totalSyncCounter = 0;
 // This is dirty workaround to fix compilation without adding this function prototype
 // to error_handling.h file that will also need to add "ff.h" include to same file and
 // cause simulator fail to build.
-extern void errorHandlerWriteReportFile(FIL *fd);
+extern void errorHandlerWriteReportFile(FIL *fd, int index);
 
 #define SD_STATE_INIT "init"
 #define SD_STATE_MOUNTED "MOUNTED"
@@ -387,7 +387,7 @@ static bool mountMmc() {
 		efiPrintf("MMC/SD mounted!");
 		sdStatus = SD_STATE_MOUNTED;
 		incLogFileName();
-		errorHandlerWriteReportFile(&FDLogFile);
+		errorHandlerWriteReportFile(&FDLogFile, logFileIndex);
 		createLogFile();
 		return true;
 	} else {
