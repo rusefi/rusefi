@@ -1,1 +1,1 @@
-nextRelease=
+nextRelease=lts-25houston
