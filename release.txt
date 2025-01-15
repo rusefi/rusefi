@@ -1,1 +1,1 @@
-nextRelease=
+nextRelease=lts-test-new-release
