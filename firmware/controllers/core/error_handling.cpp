@@ -14,10 +14,21 @@
 #include "log_hard_fault.h"
 #include "rusefi/critical_error.h"
 
-// Ignore following (and similar) errors
-// error: 'strncpy' output may be truncated copying 119 bytes from a string of length 119
-_Pragma("GCC diagnostic push")
-_Pragma("GCC diagnostic ignored \"-Wstringop-truncation\"")
+// see strncpy man page
+// this implementation helps avoiding following gcc error/warning:
+// error: 'strncpy' output may be truncated copying xxx bytes from a string of length xxx
+
+char *strlncpy(char *dest, const char *src, size_t size)
+{
+	size_t i;
+
+	for (i = 0; (i < (size - 1)) && (src[i] != '\0'); i++)
+		dest[i] = src[i];
+	for ( ; i < size; i++)
+		dest[i] = '\0';
+
+	return dest;
+}
 
 static critical_msg_t warningBuffer;
 static critical_msg_t criticalErrorMessageBuffer;
@@ -284,9 +295,9 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
     auto bkpram = getBackupSram();
 	auto err = &bkpram->err;
 	if (err->Cookie == ErrorCookie::None) {
-		strncpy(err->file, file, efi::size(err->file) - 1);
+		strlncpy(err->file, file, efi::size(err->file));
 		err->line = line;
-		strncpy(err->msg, msg, efi::size(err->msg) - 1);
+		strlncpy(err->msg, msg, efi::size(err->msg));
 		err->Cookie = ErrorCookie::ChibiOsPanic;
 	}
 #endif // EFI_BACKUP_SRAM
@@ -449,7 +460,7 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 		 * in case of simple error message let's reduce stack usage
 		 * chvsnprintf could cause an overflow if we're already low
 		 */
-		strncpy((char*) criticalErrorMessageBuffer, fmt, sizeof(criticalErrorMessageBuffer) - 1);
+		strlncpy((char*) criticalErrorMessageBuffer, fmt, sizeof(criticalErrorMessageBuffer));
 		criticalErrorMessageBuffer[sizeof(criticalErrorMessageBuffer) - 1] = 0; // just to be sure
 	} else {
 		va_list ap;
@@ -470,7 +481,8 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
     auto bkpram = getBackupSram();
 	auto err = &bkpram->err;
 	if (err->Cookie == ErrorCookie::None) {
-		strncpy(err->msg, criticalErrorMessageBuffer, sizeof(err->msg) - 1);
+		err->msg[sizeof(err->msg) - 1] = '\0';
+		strlncpy(err->msg, criticalErrorMessageBuffer, sizeof(err->msg));
 		err->Cookie = ErrorCookie::FirmwareError;
 	}
 #endif // EFI_BACKUP_SRAM
@@ -495,5 +507,3 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 void criticalErrorM(const char *msg) {
 	criticalError(msg);
 }
-
-_Pragma("GCC diagnostic pop")
