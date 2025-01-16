@@ -142,13 +142,13 @@ const char *errorCookieToName(ErrorCookie cookie)
 do {																\
 	PRINT("Power cycle count: %lu", bootCount);						\
 																	\
-	if (err->Cookie == ErrorCookie::None) {							\
+	if (cookie == ErrorCookie::None) {								\
 		break;														\
 	}																\
 																	\
 	PRINT("Last error type %s", errorCookieToName(err->Cookie));	\
 																	\
-	switch (err->Cookie) {											\
+	switch (cookie) {												\
 	case ErrorCookie::FirmwareError:								\
 		{															\
 			PRINT("%s", err->msg);									\
@@ -201,6 +201,7 @@ void errorHandlerShowBootReasonAndErrors() {
 
 #if EFI_BACKUP_SRAM
 	backupErrorState *err = &lastBootError;
+	ErrorCookie cookie = err->Cookie;
 
 	printErrorState();
 #endif // EFI_BACKUP_SRAM
@@ -210,9 +211,25 @@ void errorHandlerShowBootReasonAndErrors() {
 #if EFI_FILE_LOGGING
 #include "ff.h"
 
-#define FAIL_REPORT_PREFIX	"fail_report_"
+#define FAIL_REPORT_PREFIX	"fail"
 
 PUBLIC_API_WEAK void onBoardWriteErrorFile(FIL *) {
+}
+
+static const char *errorHandlerGetErrorName(ErrorCookie cookie)
+{
+	switch (cookie) {
+	case ErrorCookie::None:
+		return "none";
+	case ErrorCookie::FirmwareError:
+		return "FWerror";
+	case ErrorCookie::HardFault:
+		return "HardFault";
+	case ErrorCookie::ChibiOsPanic:
+		return "OSpanic";
+	}
+
+	return "unknown";
 }
 
 void errorHandlerWriteReportFile(FIL *fd, int index) {
@@ -220,10 +237,14 @@ void errorHandlerWriteReportFile(FIL *fd, int index) {
 	bool needReport = false;
 #if EFI_BACKUP_SRAM
 	backupErrorState *err = &lastBootError;
-	if (err->Cookie != ErrorCookie::None) {
+	ErrorCookie cookie = err->Cookie;
+#else
+	ErrorCookie cookie = ErrorCookie::None;
+#endif
+
+	if (cookie != ErrorCookie::None) {
 		needReport = true;
 	}
-#endif
 
 	auto cause = getMCUResetCause();
 	if ((cause != Reset_Cause_NRST_Pin) && (cause != Reset_Cause_BOR) && (cause != Reset_Cause_Unknown)) {
@@ -236,10 +257,11 @@ void errorHandlerWriteReportFile(FIL *fd, int index) {
 		memset(fd, 0, sizeof(FIL));						// clear the memory
 		//TODO: use date + time for file name?
 #if EFI_BACKUP_SRAM
-		sprintf(fileName, "%s%ld.txt", FAIL_REPORT_PREFIX, bootCount);
-#else
-		sprintf(fileName, "%s%d.txt", FAIL_REPORT_PREFIX, index);
+		index = bootCount;
 #endif
+		sprintf(fileName, "%05d_%s_%s.txt",
+			index, FAIL_REPORT_PREFIX, errorHandlerGetErrorName(cookie));
+
 		FRESULT ret = f_open(fd, fileName, FA_CREATE_ALWAYS | FA_WRITE);
 		if (ret == FR_OK) {
 			//this is file print
