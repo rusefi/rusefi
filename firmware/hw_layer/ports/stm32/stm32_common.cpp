@@ -112,6 +112,10 @@ void startWatchdog(int timeoutMs) {
 	static WDGConfig wdgcfg;
 	wdgcfg.pr = STM32_IWDG_PR_64;	// t = (1/32768) * 64 = ~2 ms
 	wdgcfg.rlr = STM32_IWDG_RL((uint32_t)((32.768f / 64.0f) * timeoutMs));
+#if STM32_IWDG_IS_WINDOWED
+	wdgcfg.winr = 0xfff; // don't use window
+#endif
+
   efiPrintf("Starting watchdog...");
 	wdgStart(&WDGD1, &wdgcfg);
 #endif // HAL_USE_WDG
