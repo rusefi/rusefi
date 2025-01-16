@@ -6042,7 +6042,7 @@ FRESULT f_mkfs (
 #if FF_FS_EXFAT
 	if (fsty == FS_EXFAT) {	/* Create an exFAT volume */
 		DWORD szb_bit, szb_case, sum, nbit, clu, clen[3];
-		WCHAR ch, si;
+		WCHAR _ch, si;
 		UINT j, st;
 
 		if (sz_vol < 0x1000) LEAVE_MKFS(FR_MKFS_ABORTED);	/* Too small volume for exFAT? */
@@ -6074,27 +6074,27 @@ FRESULT f_mkfs (
 		do {
 			switch (st) {
 			case 0:
-				ch = (WCHAR)ff_wtoupper(si);	/* Get an up-case char */
-				if (ch != si) {
+				_ch = (WCHAR)ff_wtoupper(si);	/* Get an up-case char */
+				if (_ch != si) {
 					si++; break;		/* Store the up-case char if exist */
 				}
 				for (j = 1; (WCHAR)(si + j) && (WCHAR)(si + j) == ff_wtoupper((WCHAR)(si + j)); j++) ;	/* Get run length of no-case block */
 				if (j >= 128) {
-					ch = 0xFFFF; st = 2; break;	/* Compress the no-case block if run is >= 128 chars */
+					_ch = 0xFFFF; st = 2; break;	/* Compress the no-case block if run is >= 128 chars */
 				}
 				st = 1;			/* Do not compress short run */
 				/* FALLTHROUGH */
 			case 1:
-				ch = si++;		/* Fill the short run */
+				_ch = si++;		/* Fill the short run */
 				if (--j == 0) st = 0;
 				break;
 
 			default:
-				ch = (WCHAR)j; si += (WCHAR)j;	/* Number of chars to skip */
+				_ch = (WCHAR)j; si += (WCHAR)j;	/* Number of chars to skip */
 				st = 0;
 			}
-			sum = xsum32(buf[i + 0] = (BYTE)ch, sum);	/* Put it into the write buffer */
-			sum = xsum32(buf[i + 1] = (BYTE)(ch >> 8), sum);
+			sum = xsum32(buf[i + 0] = (BYTE)_ch, sum);	/* Put it into the write buffer */
+			sum = xsum32(buf[i + 1] = (BYTE)(_ch >> 8), sum);
 			i += 2; szb_case += 2;
 			if (si == 0 || i == sz_buf * ss) {		/* Write buffered data when buffer full or end of process */
 				n = (i + ss - 1) / ss;
