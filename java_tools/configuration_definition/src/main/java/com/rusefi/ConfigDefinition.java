@@ -12,6 +12,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
+import static com.rusefi.output.TSProjectConsumer.getTsFileInputName;
+
 /**
  * Andrey Belomutskiy, (c) 2013-2020
  * 1/12/15
@@ -62,7 +64,7 @@ public class ConfigDefinition {
     public static void doJob(String[] args, ReaderStateImpl state) throws IOException {
         log.info(ConfigDefinition.class + " Invoked with " + Arrays.toString(args));
 
-        String tsInputFileFolder = null;
+        String tsInputFile = null;
 
         DefinitionsState parseState = state.getEnumsReader().parseState;
         String signatureDestination = null;
@@ -82,7 +84,7 @@ public class ConfigDefinition {
                     state.setDefinitionInputFile(args[i + 1]);
                     break;
                 case KEY_TS_TEMPLATE:
-                    tsInputFileFolder = args[i + 1];
+                    tsInputFile = getTsFileInputName(args[i + 1]);
                     break;
                 case KEY_C_DESTINATION:
                     state.addCHeaderDestination(args[i + 1]);
@@ -162,24 +164,24 @@ public class ConfigDefinition {
             }
         }
 
-        if (tsInputFileFolder != null) {
+        if (tsInputFile != null) {
             // used to update .ini files
-            state.addInputFile(TSProjectConsumer.getTsFileInputName(tsInputFileFolder));
+            state.addInputFile(tsInputFile);
         }
 
         log.info(state.getEnumsReader().getEnums().size() + " total enumsReader");
 
         // Add the variable for the config signature
         FirmwareVersion uniqueId = new FirmwareVersion(IoUtil2.getCrc32(state.getInputFiles()));
-        SignatureConsumer.storeUniqueBuildId(state, parseState, tsInputFileFolder, uniqueId);
+        SignatureConsumer.storeUniqueBuildId(state, parseState, tsInputFile, uniqueId);
 
 
         if (pinoutLogic != null) {
             pinoutLogic.registerBoardSpecificPinNames(state.getVariableRegistry(), parseState, state.getEnumsReader());
         }
 
-        if (tsInputFileFolder != null) {
-            state.addDestination(new TSProjectConsumer(tsInputFileFolder, state));
+        if (tsInputFile != null) {
+            state.addDestination(new TSProjectConsumer(tsInputFile, state));
 
             VariableRegistry tmpRegistry = new VariableRegistry();
             // store the CRC32 as a built-in variable
