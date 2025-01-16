@@ -73,7 +73,6 @@ public class TSProjectConsumer implements ConfigurationConsumer {
 
     /**
      * tunerstudio.template.ini has all the content of the future .ini file with the exception of data page
-     * TODO: start generating [outputs] section as well
      */
     private TsFileContent readTsTemplateInputFile(String tsPath) throws IOException {
         String fileName = getTsFileInputName(tsPath);
