@@ -112,8 +112,20 @@ void startWatchdog(int timeoutMs) {
 	static WDGConfig wdgcfg;
 	wdgcfg.pr = STM32_IWDG_PR_64;	// t = (1/32768) * 64 = ~2 ms
 	wdgcfg.rlr = STM32_IWDG_RL((uint32_t)((32.768f / 64.0f) * timeoutMs));
-  efiPrintf("Starting watchdog...");
-	wdgStart(&WDGD1, &wdgcfg);
+#if STM32_IWDG_IS_WINDOWED
+	wdgcfg.winr = 0xfff; // don't use window
+#endif
+
+    static bool isStarted = false;
+    if (!isStarted) {
+		efiPrintf("Starting watchdog with timeout %d ms...", timeoutMs);
+		wdgStart(&WDGD1, &wdgcfg);
+		isStarted = true;
+	} else {
+		efiPrintf("Changing watchdog timeout to %d ms...", timeoutMs);
+		// wdgStart() uses kernel lock, thus we cannot call it here from locked or ISR code
+		wdg_lld_start(&WDGD1);
+	}
 #endif // HAL_USE_WDG
 }
 
