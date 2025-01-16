@@ -212,6 +212,7 @@ void setDefaultBaseEngine() {
 	config->tcuSolenoidTable[5][1] = 51;
 	config->tcuSolenoidTable[5][5] = 55;
 
+  // [tag:runNotSquareTest] huh why is this not a unit test?!
 	config->scriptTable4[0][0] = 140;
 	config->scriptTable4[0][1] = 141;
 	config->scriptTable4[0][2] = 142;

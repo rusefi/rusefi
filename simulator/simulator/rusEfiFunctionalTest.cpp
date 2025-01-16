@@ -147,6 +147,7 @@ static void assertNear(float actual, float expected) {
 }
 
 static void	runNotSquareTest() {
+    // [tag:runNotSquareTest]
     assertNear(getscriptTable(3)->getValue(0, 20), 140);
     assertNear(getscriptTable(3)->getValue(0, 30), 240);
 
