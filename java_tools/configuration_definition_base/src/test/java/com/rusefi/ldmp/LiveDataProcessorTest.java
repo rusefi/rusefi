@@ -153,14 +153,14 @@ public class LiveDataProcessorTest {
                 "#include \"board_lookup.h\"\n" +
                 "static const LogField fields[] = {\n" +
                 "{packedTime, GAUGE_NAME_TIME, \"sec\", 0},\n" +
-                "\t{engine->wbo1.tempC, \"WBO: Temperaturewb1\", \"C\", 0, \"cate\"},\n" +
-                "\t{engine->wbo1, 4, 0, \"bitName1wb1\", \"\"},\n" +
-                "\t{engine->wbo1, 4, 1, \"bitName2wb1\", \"\"},\n" +
-                "\t{engine->wbo1.esr, \"WBO: ESRwb1\", \"ohm\", 0},\n" +
-                "\t{engine->wbo2.tempC, \"WBO: Temperaturewb2\", \"C\", 0, \"cate\"},\n" +
-                "\t{engine->wbo2, 4, 0, \"bitName1wb2\", \"\"},\n" +
-                "\t{engine->wbo2, 4, 1, \"bitName2wb2\", \"\"},\n" +
-                "\t{engine->wbo2.esr, \"WBO: ESRwb2\", \"ohm\", 0},\n" +
+                "\t{engine->wbo1.tempC, \"wb1WBO: Temperature\", \"C\", 0, \"cate\"},\n" +
+                "\t{engine->wbo1, 4, 0, \"wb1bitName1\", \"\"},\n" +
+                "\t{engine->wbo1, 4, 1, \"wb1bitName2\", \"\"},\n" +
+                "\t{engine->wbo1.esr, \"wb1WBO: ESR\", \"ohm\", 0},\n" +
+                "\t{engine->wbo2.tempC, \"wb2WBO: Temperature\", \"C\", 0, \"cate\"},\n" +
+                "\t{engine->wbo2, 4, 0, \"wb2bitName1\", \"\"},\n" +
+                "\t{engine->wbo2, 4, 1, \"wb2bitName2\", \"\"},\n" +
+                "\t{engine->wbo2.esr, \"wb2WBO: ESR\", \"ohm\", 0},\n" +
                 "\t{engine->outputChannels.oootempC, \"Temperature\", \"C\", 0},\n" +
                 "\t{engine->outputChannels.oooesr, \"ESR\", \"ohm\", 0},\n" +
                 "\t{engine->outputChannels.lua.fuelMult, \"Lua: Fuel mult\", \"\", 0},\n" +

@@ -71,8 +71,8 @@ public class SdCardFieldsContent {
         return getLine(configField, prefix, namePrefix, prefix + name, expression, isPtr, conditional, currentPosition, perFieldWithStructuresIterator, structureStartingTsPosition);
     }
 
-    private static String getLine(ConfigField configField, String prefix, String namePrefix, String name, String expression, Boolean isPtr, String conditional, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator, int structureStartingTsPosition) {
-        String humanName = DataLogConsumer.getHumanGaugeName("", prefix, configField, namePrefix);
+    private static String getLine(ConfigField configField, String prefix, String outputNamePrefix, String name, String expression, Boolean isPtr, String conditional, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator, int structureStartingTsPosition) {
+        String humanName = DataLogConsumer.getHumanGaugeName(outputNamePrefix, prefix, configField, "");
 
         String categoryStr = configField.getCategory();
 
