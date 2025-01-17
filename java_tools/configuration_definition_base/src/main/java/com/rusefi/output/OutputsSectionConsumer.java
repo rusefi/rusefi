@@ -43,10 +43,10 @@ public class OutputsSectionConsumer implements ConfigurationConsumer {
         for (int i = 0; i < outputNames.length; i++) {
             String temporaryLineComment = needComment(i) ? ";" : "";
 
-            String variableNameSuffix = outputNames.length > 1 ? Integer.toString(i) : "";
+            String variableNamePrefix = outputNames.length > 1 ? outputNames[i] : "";
 
 
-            sensorTsPosition = tsOutput.run(readerState, structure, sensorTsPosition, temporaryLineComment, variableNameSuffix);
+            sensorTsPosition = tsOutput.run(readerState, structure, sensorTsPosition, temporaryLineComment, variableNamePrefix);
 
             if (readerState.isStackEmpty()) {
                 if (tsOutputsSectionFileName != null) {

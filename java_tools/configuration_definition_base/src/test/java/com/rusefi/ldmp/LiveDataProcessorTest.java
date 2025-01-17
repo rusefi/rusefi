@@ -65,15 +65,15 @@ public class LiveDataProcessorTest {
         liveDataProcessor.handleYaml(data);
         assertEquals(14, captor.fileCapture.size());
 
-        captor.assertOutput("tempC0 = scalar, U16, 0, \"C\", 1, 0\n" +
-            "bitName10 = bits, U32, 4, [0:0]\n" +
-            "bitName20 = bits, U32, 4, [1:1]\n" +
-            "esr0 = scalar, U16, 8, \"ohm\", 1, 0\n" +
+        captor.assertOutput("wb1tempC = scalar, U16, 0, \"C\", 1, 0\n" +
+            "wb1bitName1 = bits, U32, 4, [0:0]\n" +
+            "wb1bitName2 = bits, U32, 4, [1:1]\n" +
+            "wb1esr = scalar, U16, 8, \"ohm\", 1, 0\n" +
             "; total TS size = 12\n" +
-            "tempC1 = scalar, U16, 12, \"C\", 1, 0\n" +
-            "bitName11 = bits, U32, 16, [0:0]\n" +
-            "bitName21 = bits, U32, 16, [1:1]\n" +
-            "esr1 = scalar, U16, 20, \"ohm\", 1, 0\n" +
+            "wb2tempC = scalar, U16, 12, \"C\", 1, 0\n" +
+            "wb2bitName1 = bits, U32, 16, [0:0]\n" +
+            "wb2bitName2 = bits, U32, 16, [1:1]\n" +
+            "wb2esr = scalar, U16, 20, \"ohm\", 1, 0\n" +
             "; total TS size = 24\n" +
             "oootempC = scalar, U16, 24, \"C\", 1, 0\n" +
             "oooesr = scalar, U16, 26, \"ohm\", 1, 0\n" +

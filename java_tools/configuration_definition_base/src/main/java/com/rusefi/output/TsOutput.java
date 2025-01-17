@@ -40,14 +40,14 @@ public class TsOutput {
         return settingContextHelp.toString();
     }
 
-    public int run(ReaderState state, ConfigStructure structure, int structureStartingTsPosition, String temporaryLineComment, String variableNameSuffix) {
+    public int run(ReaderState state, ConfigStructure structure, int structureStartingTsPosition, String temporaryLineComment, String variableNamePrefix) {
         FieldsStrategy strategy = new FieldsStrategy() {
             @Override
             public int writeOneField(FieldIterator it, String prefix, int tsPosition) {
                 ConfigField configField = it.cf;
                 ConfigField next = it.next;
                 int bitIndex = it.bitState.get();
-                String nameWithPrefix = prefix + configField.getName() + variableNameSuffix;
+                String nameWithPrefix = prefix + variableNamePrefix + configField.getName();
 
                 /**
                  * in 'Constants' section we have conditional sections and this check is not smart enough to handle those right
