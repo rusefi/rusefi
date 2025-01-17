@@ -84,14 +84,14 @@ public class LiveDataProcessorTest {
             "lua_torqueReductionState = bits, U32, 32, [3:3]\n" +
             "; total TS size = 36\n", liveDataProcessor.getOutputsSectionFileName());
 
-        captor.assertOutput("entry = tempC, \"wb1WBO: Temperature\", int,    \"%d\"\n" +
-            "entry = bitName1, \"wb1bitName1\", int,    \"%d\"\n" +
-            "entry = bitName2, \"wb1bitName2\", int,    \"%d\"\n" +
-            "entry = esr, \"wb1WBO: ESR\", int,    \"%d\"\n" +
-            "entry = tempC, \"wb2WBO: Temperature\", int,    \"%d\"\n" +
-            "entry = bitName1, \"wb2bitName1\", int,    \"%d\"\n" +
-            "entry = bitName2, \"wb2bitName2\", int,    \"%d\"\n" +
-            "entry = esr, \"wb2WBO: ESR\", int,    \"%d\"\n" +
+        captor.assertOutput("entry = wb1tempC, \"wb1WBO: Temperature\", int,    \"%d\"\n" +
+            "entry = wb1bitName1, \"wb1bitName1\", int,    \"%d\"\n" +
+            "entry = wb1bitName2, \"wb1bitName2\", int,    \"%d\"\n" +
+            "entry = wb1esr, \"wb1WBO: ESR\", int,    \"%d\"\n" +
+            "entry = wb2tempC, \"wb2WBO: Temperature\", int,    \"%d\"\n" +
+            "entry = wb2bitName1, \"wb2bitName1\", int,    \"%d\"\n" +
+            "entry = wb2bitName2, \"wb2bitName2\", int,    \"%d\"\n" +
+            "entry = wb2esr, \"wb2WBO: ESR\", int,    \"%d\"\n" +
             "entry = oootempC, \"Temperature\", int,    \"%d\"\n" +
             "entry = oooesr, \"ESR\", int,    \"%d\"\n" +
             "entry = lua_fuelMult, \"Lua: Fuel mult\", float,  \"%.3f\"\n" +

@@ -49,7 +49,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
                 PerFieldWithStructuresIterator.Strategy strategy = new PerFieldWithStructuresIterator.Strategy() {
                     @Override
                     public String process(ReaderState state, ConfigField configField, String variableNamePrefixForEmptyComment, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator) {
-                        return handle(configField, variableNamePrefixForEmptyComment, temporaryLineComment, "", outputNamePrefix);
+                        return handle(configField, variableNamePrefixForEmptyComment, temporaryLineComment, outputNamePrefix);
                     }
 
                     @Override
@@ -79,7 +79,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
         }
     }
 
-    private String handle(ConfigField configField, String variableNamePrefixForEmptyComment, String temporaryLineComment, String variableNameSuffix, String outputNamePrefix) {
+    private String handle(ConfigField configField, String variableNamePrefixForEmptyComment, String temporaryLineComment, String outputNamePrefix) {
         if (configField.getName().contains(UNUSED))
             return "";
 
@@ -98,12 +98,12 @@ public class DataLogConsumer implements ConfigurationConsumer {
             typeString = "int,    \"%d\"";
         }
 
-        String comment = getHumanGaugeName(outputNamePrefix, variableNamePrefixForEmptyComment, configField, variableNameSuffix);
+        String comment = getHumanGaugeName(outputNamePrefix, variableNamePrefixForEmptyComment, configField, "");
 
         if (comments.contains(comment))
             throw new IllegalStateException(comment + " already present in the outputs! " + configField);
         comments.add(comment);
-        return temporaryLineComment + "entry = " + variableNamePrefixForEmptyComment + configField.getName() + variableNameSuffix + ", " + comment + ", " + typeString + "\n";
+        return temporaryLineComment + "entry = " + outputNamePrefix + variableNamePrefixForEmptyComment + configField.getName() + ", " + comment + ", " + typeString + "\n";
     }
 
     /**
