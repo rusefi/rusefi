@@ -72,7 +72,7 @@ public class SdCardFieldsContent {
     }
 
     private static String getLine(ConfigField configField, String prefix, String namePrefix, String name, String expression, Boolean isPtr, String conditional, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator, int structureStartingTsPosition) {
-        String humanName = DataLogConsumer.getHumanGaugeName(prefix, configField, namePrefix);
+        String humanName = DataLogConsumer.getHumanGaugeName("", prefix, configField, namePrefix);
 
         String categoryStr = configField.getCategory();
 

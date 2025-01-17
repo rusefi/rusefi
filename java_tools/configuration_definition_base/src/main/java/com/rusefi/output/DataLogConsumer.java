@@ -44,14 +44,12 @@ public class DataLogConsumer implements ConfigurationConsumer {
             for (int i = 0; i < outputNames.length; i++) {
                 String temporaryLineComment = needComment(i) ? ";" : "";
 
-                String variableNameSuffix = outputNames.length > 1 ? Integer.toString(i) : "";
-
-
+                String outputNamePrefix = outputNames.length > 1 ? outputNames[i] : "";
 
                 PerFieldWithStructuresIterator.Strategy strategy = new PerFieldWithStructuresIterator.Strategy() {
                     @Override
                     public String process(ReaderState state, ConfigField configField, String variableNamePrefixForEmptyComment, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator) {
-                        return handle(configField, variableNamePrefixForEmptyComment, temporaryLineComment, variableNameSuffix);
+                        return handle(configField, variableNamePrefixForEmptyComment, temporaryLineComment, "", outputNamePrefix);
                     }
 
                     @Override
@@ -81,7 +79,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
         }
     }
 
-    private String handle(ConfigField configField, String variableNamePrefixForEmptyComment, String temporaryLineComment, String variableNameSuffix) {
+    private String handle(ConfigField configField, String variableNamePrefixForEmptyComment, String temporaryLineComment, String variableNameSuffix, String outputNamePrefix) {
         if (configField.getName().contains(UNUSED))
             return "";
 
@@ -100,7 +98,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
             typeString = "int,    \"%d\"";
         }
 
-        String comment = getHumanGaugeName(variableNamePrefixForEmptyComment, configField, variableNameSuffix);
+        String comment = getHumanGaugeName(outputNamePrefix, variableNamePrefixForEmptyComment, configField, variableNameSuffix);
 
         if (comments.contains(comment))
             throw new IllegalStateException(comment + " already present in the outputs! " + configField);
@@ -113,7 +111,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
      * More detailed technical explanation should be placed in consecutive lines
      */
     @NotNull
-    public static String getHumanGaugeName(String variableNamePrefixForEmptyComment, ConfigField configField, String variableNameSuffix) {
+    public static String getHumanGaugeName(String outputNamePrefix, String variableNamePrefixForEmptyComment, ConfigField configField, String variableNameSuffix) {
         String comment = configField.getCommentTemplated();
         comment = getFirstLine(comment);
 
@@ -123,7 +121,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
              */
             comment = variableNamePrefixForEmptyComment + unquote(configField.getName());
         }
-        comment = comment + variableNameSuffix;
+        comment = outputNamePrefix + comment + variableNameSuffix;
         if (comment.length() > MSQ_LENGTH_LIMIT)
             throw new IllegalStateException("[" + comment + "] is too long for log files at " + comment.length() + " limit " + MSQ_LENGTH_LIMIT);
 
