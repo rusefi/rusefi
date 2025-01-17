@@ -14,6 +14,11 @@
 #include "log_hard_fault.h"
 #include "rusefi/critical_error.h"
 
+/**
+ * Executes the BKPT instruction that causes the debugger to stop.
+ */
+#define bkpt() __asm volatile("BKPT #0\n")
+
 // see strncpy man page
 // this implementation helps avoiding following gcc error/warning:
 // error: 'strncpy' output may be truncated copying xxx bytes from a string of length xxx
@@ -312,7 +317,7 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 	// Attempt to break in to the debugger, if attached
 	if (CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk)
 	{
-		__asm volatile("BKPT #0\n");
+		bkpt();
 	}
 #endif
 
