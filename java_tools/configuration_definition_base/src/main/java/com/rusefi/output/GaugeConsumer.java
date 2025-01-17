@@ -28,10 +28,10 @@ public class GaugeConsumer implements ConfigurationConsumer {
         if (readerState.isStackEmpty()) {
             for (int i = 0; i < outputNames.length; i++) {
 
-                String variableNameSuffix = outputNames.length > 1 ? Integer.toString(i) : "";
+                String variableNamePrefix = outputNames.length > 1 ? outputNames[i] : "";
 
-                PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(readerState, structure.getTsFields(), "",
-                        (state, configField, prefix, currentPosition, perFieldWithStructuresIterator) -> handle(configField, prefix, variableNameSuffix));
+                PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(readerState, structure.getTsFields(), variableNamePrefix,
+                        (state, configField, prefix, currentPosition, perFieldWithStructuresIterator) -> handle(configField, prefix, ""));
                 iterator.loop(0);
             }
         }
