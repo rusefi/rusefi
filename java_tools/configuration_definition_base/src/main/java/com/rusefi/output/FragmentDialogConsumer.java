@@ -14,13 +14,15 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
     private final StringBuilder indicatorPanel = new StringBuilder();
     private final String fragmentName;
     private final String variableNameSuffix;
+    private final String variableNamePrefix;
     private boolean hasIndicators;
     private int graphLinesCounter;
     private int linesInCurrentGraph;
     private int currentGraphIndex;
 
-    public FragmentDialogConsumer(String fragmentName, String variableNameSuffix) {
+    public FragmentDialogConsumer(String fragmentName, String variableNamePrefix, String variableNameSuffix) {
         this.fragmentName = fragmentName;
+        this.variableNamePrefix = variableNamePrefix;
         this.variableNameSuffix = variableNameSuffix;
     }
 
@@ -45,7 +47,7 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
                         hasIndicators = true;
                         indicatorPanel.append("indicatorPanel = " + getPanelName() + ", 2\n");
                     }
-                    indicatorPanel.append("\tindicator = {" + prefix + configField.getName() + variableNameSuffix + "}, " +
+                    indicatorPanel.append("\tindicator = {" + prefix + variableNamePrefix + configField.getName() + "}, " +
                             "\"" + configField.getName() + " No\", " +
                             "\"" + configField.getName() + " Yes\"" +
                             "\n");
@@ -61,7 +63,7 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
                     startNewGraph();
                 }
 
-                graphList.append("\t\tgraphLine = " + prefix + configField.getName() + variableNameSuffix + "\n");
+                graphList.append("\t\tgraphLine = " + prefix + variableNamePrefix + configField.getName() + "\n");
                 linesInCurrentGraph++;
 
 

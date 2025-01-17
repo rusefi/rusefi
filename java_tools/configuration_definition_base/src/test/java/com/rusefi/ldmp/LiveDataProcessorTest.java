@@ -107,24 +107,24 @@ public class LiveDataProcessorTest {
             "decl_frag<output_channels_s>{},\n", liveDataProcessor.getDataFragmentsH());
 
         captor.assertOutput("indicatorPanel = wbo_channels0IndicatorPanel, 2\n" +
-            "\tindicator = {bitName10}, \"bitName1 No\", \"bitName1 Yes\"\n" +
-            "\tindicator = {bitName20}, \"bitName2 No\", \"bitName2 Yes\"\n" +
+            "\tindicator = {wb1bitName1}, \"bitName1 No\", \"bitName1 Yes\"\n" +
+            "\tindicator = {wb1bitName2}, \"bitName2 No\", \"bitName2 Yes\"\n" +
             "\n" +
             "dialog = wbo_channels0Dialog, \"wbo_channels0\"\n" +
             "\tpanel = wbo_channels0IndicatorPanel\n" +
             "\tliveGraph = wbo_channels0_1_Graph, \"Graph\", South\n" +
-            "\t\tgraphLine = tempC0\n" +
-            "\t\tgraphLine = esr0\n" +
+            "\t\tgraphLine = wb1tempC\n" +
+            "\t\tgraphLine = wb1esr\n" +
             "\n" +
             "indicatorPanel = wbo_channels1IndicatorPanel, 2\n" +
-            "\tindicator = {bitName11}, \"bitName1 No\", \"bitName1 Yes\"\n" +
-            "\tindicator = {bitName21}, \"bitName2 No\", \"bitName2 Yes\"\n" +
+            "\tindicator = {wb2bitName1}, \"bitName1 No\", \"bitName1 Yes\"\n" +
+            "\tindicator = {wb2bitName2}, \"bitName2 No\", \"bitName2 Yes\"\n" +
             "\n" +
             "dialog = wbo_channels1Dialog, \"wbo_channels1\"\n" +
             "\tpanel = wbo_channels1IndicatorPanel\n" +
             "\tliveGraph = wbo_channels1_1_Graph, \"Graph\", South\n" +
-            "\t\tgraphLine = tempC1\n" +
-            "\t\tgraphLine = esr1\n" +
+            "\t\tgraphLine = wb2tempC\n" +
+            "\t\tgraphLine = wb2esr\n" +
             "\n" +
             "indicatorPanel = output_channelsIndicatorPanel, 2\n" +
             "\tindicator = {lua_clutchUpState}, \"clutchUpState No\", \"clutchUpState Yes\"\n" +

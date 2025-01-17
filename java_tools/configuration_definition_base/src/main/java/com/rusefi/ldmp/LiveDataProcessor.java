@@ -190,7 +190,8 @@ public class LiveDataProcessor {
                 for (int i = 0; i < outputNames.length; i++) {
 
                     String variableNameSuffix = outputNames.length > 1 ? Integer.toString(i) : "";
-                    FragmentDialogConsumer fragmentDialogConsumer = new FragmentDialogConsumer(name, variableNameSuffix);
+                    String variableNamePrefix = outputNames.length > 1 ? outputNames[i] : "";
+                    FragmentDialogConsumer fragmentDialogConsumer = new FragmentDialogConsumer(name, variableNamePrefix, variableNameSuffix);
                     fragmentConsumers.add(fragmentDialogConsumer);
                     state.addDestination(fragmentDialogConsumer);
                 }
