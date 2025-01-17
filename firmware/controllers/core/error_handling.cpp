@@ -310,7 +310,10 @@ void logHardFault(uint32_t type, uintptr_t faultAddress, port_extctx* ctx, uint3
 void chDbgPanic3(const char *msg, const char * file, int line) {
 #if EFI_PROD_CODE
 	// Attempt to break in to the debugger, if attached
-	__asm volatile("BKPT #0\n");
+	if (CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk)
+	{
+		__asm volatile("BKPT #0\n");
+	}
 #endif
 
 #if EFI_BACKUP_SRAM
