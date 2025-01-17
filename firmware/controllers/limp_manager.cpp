@@ -113,7 +113,7 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 
 	// Force fuel limiting on the fault rev limit
 	if (rpm > m_faultRevLimit) {
-		allowFuel.clear(ClearReason::FaultRevLimit);
+		allowFuel.clear(m_rpmLimitReason);
 	}
 
 	// Limit fuel only on boost pressure (limiting spark bends valves)
@@ -249,7 +249,7 @@ void LimpManager::onIgnitionStateChanged(bool ignitionOn) {
 
 void LimpManager::reportEtbProblem() {
 	m_allowEtb.clear(ClearReason::EtbProblem);
-	setFaultRevLimit(/*rpm*/1500);
+	setFaultRevLimit(/*rpm*/1500, ClearReason::EtbFaultRevLimit);
 }
 
 void LimpManager::fatalError() {
@@ -258,13 +258,16 @@ void LimpManager::fatalError() {
 	m_allowInjection.clear(ClearReason::Fatal);
 	m_allowTriggerInput.clear(ClearReason::Fatal);
 
-	setFaultRevLimit(/*rpm*/0);
+	setFaultRevLimit(/*rpm*/0, ClearReason::FatalErrorRevLimit);
 }
 
-void LimpManager::setFaultRevLimit(int limit) {
+void LimpManager::setFaultRevLimit(int limit, ClearReason rpmLimitReason) {
 	// Only allow decreasing the limit
 	// aka uses the limit of the worst fault to yet occur
-	m_faultRevLimit = minI(m_faultRevLimit, limit);
+	if (limit < m_faultRevLimit) {
+	  m_faultRevLimit = limit;
+	  m_rpmLimitReason = rpmLimitReason;
+	}
 }
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
