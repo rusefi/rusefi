@@ -12,7 +12,6 @@
 
 /**
  * Executes the BKPT instruction that causes the debugger to stop.
- * If no debugger is attached, this will be ignored
  */
 #define bkpt() __asm volatile("BKPT #0\n")
 
