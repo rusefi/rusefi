@@ -35,11 +35,11 @@ public class LiveDataProcessor {
 
     private final StringBuilder totalSensors = new StringBuilder();
 
-    private final StringBuilder fancyNewStuff = new StringBuilder();
+    private final StringBuilder liveDataIniContent = new StringBuilder();
 
     public final StateDictionaryGenerator stateDictionaryGenerator;
 
-    private final StringBuilder fancyNewMenu = new StringBuilder();
+    private final StringBuilder liveDataMenuContent = new StringBuilder();
 
     private final StringBuilder fragmentsContent = new StringBuilder(header);
 
@@ -107,7 +107,7 @@ public class LiveDataProcessor {
         return getTsOutputsDestination() + "live_data_fragments.h";
     }
 
-    public String getFancyContentIni() {
+    public String getLiveDataIniFileName() {
         return getTsOutputsDestination() + "fancy_content.ini";
     }
 
@@ -239,8 +239,8 @@ public class LiveDataProcessor {
                 state.doJob();
 
                 for (FragmentDialogConsumer fragmentDialogConsumer : fragmentConsumers) {
-                    fancyNewStuff.append(fragmentDialogConsumer.getContent());
-                    fancyNewMenu.append(fragmentDialogConsumer.menuLine());
+                    liveDataIniContent.append(fragmentDialogConsumer.getContent());
+                    liveDataMenuContent.append(fragmentDialogConsumer.menuLine());
                 }
 
                 for (JavaSensorsConsumer javaSensorsConsumer : javaSensorsConsumers) {
@@ -324,12 +324,12 @@ public class LiveDataProcessor {
             fw.write(totalSensors.toString());
         }
 
-        try (LazyFile fw = fileFactory.create(getFancyContentIni())) {
-            fw.write(fancyNewStuff.toString());
+        try (LazyFile fw = fileFactory.create(getLiveDataIniFileName())) {
+            fw.write(liveDataIniContent.toString());
         }
 
         try (LazyFile fw = fileFactory.create(getFancyMenuIni())) {
-            fw.write(fancyNewMenu.toString());
+            fw.write(liveDataMenuContent.toString());
         }
 
         GetConfigValueConsumer.writeStringToFile(STATE_DICTIONARY_FACTORY_JAVA, stateDictionaryGenerator.getCompleteClass(), fileFactory);

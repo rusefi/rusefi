@@ -138,7 +138,7 @@ public class LiveDataProcessorTest {
             "\t\tgraphLine = oootempC\n" +
             "\t\tgraphLine = oooesr\n" +
             "\t\tgraphLine = lua_fuelMult\n" +
-            "\n", liveDataProcessor.getFancyContentIni());
+            "\n", liveDataProcessor.getLiveDataIniFileName());
 
         captor.assertOutput("\t\t\tsubMenu = wbo_channels0Dialog, \"wbo_channels0\"\n" +
             "\t\t\tsubMenu = wbo_channels1Dialog, \"wbo_channels1\"\n" +
