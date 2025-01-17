@@ -1,7 +1,6 @@
 package com.rusefi;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.core.ui.FrameHelper;
@@ -10,6 +9,7 @@ import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.*;
 import com.rusefi.ui.BasicLogoHelper;
 import com.rusefi.ui.LogoHelper;
+import com.rusefi.ui.duplicates.ConsoleBundleUtil;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
@@ -209,7 +209,7 @@ public class StartupFrame {
 
         JPanel rightPanel = new JPanel(new VerticalFlowLayout());
 
-        if (BundleUtil.readBundleFullNameNotNull().getTarget().contains("proteus_f7")) {
+        if (ConsoleBundleUtil.readBundleFullNameNotNull().getTarget().contains("proteus_f7")) {
             String text = "WARNING: Proteus F7";
             URLLabel urlLabel = new URLLabel(text, "https://github.com/rusefi/rusefi/wiki/F7-requires-full-erase");
             new Timer(500, new ActionListener() {
@@ -252,7 +252,7 @@ public class StartupFrame {
         final String textAlign,
         final Supplier<Integer> minWidthSupplier
     ) {
-        final String nextBranchName = BundleUtil.readBundleFullNameNotNull().getNextBranchName();
+        final String nextBranchName = ConsoleBundleUtil.readBundleFullNameNotNull().getNextBranchName();
         if (nextBranchName != null && !nextBranchName.isBlank()) {
             final JLabel newReleaseAmmomceMessage = new JLabel(
                 String.format(
@@ -287,7 +287,7 @@ public class StartupFrame {
             jLabel.setForeground(Color.red);
         } else {
             final Date binaryModificationDate = new Date(binaryModificationTimestamp);
-            final String branchNameToDisplay = BundleUtil.readBundleFullNameNotNull().getBranchName();
+            final String branchNameToDisplay = ConsoleBundleUtil.readBundleFullNameNotNull().getBranchName();
             jLabel = new JLabel(String.format(
                 "<html><center>%s files<br/>%s</center></html>",
                 branchNameToDisplay,
