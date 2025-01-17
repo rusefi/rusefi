@@ -50,8 +50,8 @@ public class DataLogConsumer implements ConfigurationConsumer {
 
                 PerFieldWithStructuresIterator.Strategy strategy = new PerFieldWithStructuresIterator.Strategy() {
                     @Override
-                    public String process(ReaderState state, ConfigField configField, String prefix, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator) {
-                        return handle(configField, prefix, temporaryLineComment, variableNameSuffix);
+                    public String process(ReaderState state, ConfigField configField, String variableNamePrefixForEmptyComment, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator) {
+                        return handle(configField, variableNamePrefixForEmptyComment, temporaryLineComment, variableNameSuffix);
                     }
 
                     @Override
@@ -81,7 +81,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
         }
     }
 
-    private String handle(ConfigField configField, String variableNamePrefix, String temporaryLineComment, String variableNameSuffix) {
+    private String handle(ConfigField configField, String variableNamePrefixForEmptyComment, String temporaryLineComment, String variableNameSuffix) {
         if (configField.getName().contains(UNUSED))
             return "";
 
@@ -100,12 +100,12 @@ public class DataLogConsumer implements ConfigurationConsumer {
             typeString = "int,    \"%d\"";
         }
 
-        String comment = getHumanGaugeName(variableNamePrefix, configField, variableNameSuffix);
+        String comment = getHumanGaugeName(variableNamePrefixForEmptyComment, configField, variableNameSuffix);
 
         if (comments.contains(comment))
             throw new IllegalStateException(comment + " already present in the outputs! " + configField);
         comments.add(comment);
-        return temporaryLineComment + "entry = " + variableNamePrefix + configField.getName() + variableNameSuffix + ", " + comment + ", " + typeString + "\n";
+        return temporaryLineComment + "entry = " + variableNamePrefixForEmptyComment + configField.getName() + variableNameSuffix + ", " + comment + ", " + typeString + "\n";
     }
 
     /**
@@ -113,7 +113,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
      * More detailed technical explanation should be placed in consecutive lines
      */
     @NotNull
-    public static String getHumanGaugeName(String variableNamePrefix, ConfigField configField, String variableNameSuffix) {
+    public static String getHumanGaugeName(String variableNamePrefixForEmptyComment, ConfigField configField, String variableNameSuffix) {
         String comment = configField.getCommentTemplated();
         comment = getFirstLine(comment);
 
@@ -121,7 +121,7 @@ public class DataLogConsumer implements ConfigurationConsumer {
             /**
              * @see ConfigFieldImpl#getCommentOrName()
              */
-            comment = variableNamePrefix + unquote(configField.getName());
+            comment = variableNamePrefixForEmptyComment + unquote(configField.getName());
         }
         comment = comment + variableNameSuffix;
         if (comment.length() > MSQ_LENGTH_LIMIT)
