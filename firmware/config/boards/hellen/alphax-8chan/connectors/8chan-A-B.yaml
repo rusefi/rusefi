@@ -240,7 +240,7 @@ pins:
     type: av
     function: PPS2 Sensor Input
     ts_name: 34A - PPS2 Sensor Input
-
+    color: white
 
   - pin: 1B
     function: VR1-/Hall Input max9924
