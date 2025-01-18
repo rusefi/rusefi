@@ -2198,7 +2198,6 @@ end_struct
 #define ts_show_vvt_output_pin true
 #define ts_show_hbridge_function true
 #define ts_show_aux_sensors true
-#define ts_show_tps2_error true
 #define ts_show_clutch_up true
 #define ts_show_clutch_down true
 #define ts_show_clutch_up_pin true
