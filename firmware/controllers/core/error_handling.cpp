@@ -101,7 +101,7 @@ void errorHandlerInit() {
 	Reset_Cause_t cause = getMCUResetCause();
 	// if reset by watchdog, signal a fatal error
 	if ((cause == Reset_Cause_IWatchdog) || (cause == Reset_Cause_WWatchdog)) {
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Watchdog Reset");
+		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Watchdog Reset detected! Check SD card for report file.");
 	}
 #endif
 
