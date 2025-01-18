@@ -143,7 +143,6 @@ static void setGmEcotec3() {
   engineConfiguration->globalTriggerAngleOffset = 360 + 90;
   engineConfiguration->hpfpCamLobes = 4;
   engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
-  engineConfiguration->vvtMode[1] = VVT_BOSCH_QUICK_START;
   engineConfiguration->lowPressureFuel.hwChannel = EFI_ADC_NONE;
   gmRailSensor();
   engineConfiguration->EtbSentInput = SentInput::INPUT1;
@@ -172,19 +171,29 @@ static void setGmEcotec3() {
   setTPS1Inputs(EFI_ADC_NONE, EFI_ADC_NONE);
   setPPSCalibration(1, 4.25, 0.5, 2.14);
 
-	setInline4();
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_GM);
 	setGDIFueling();
 }
 
-void setGmLcv() {
+static void set4CylGmEcotec3() {
   setGmEcotec3();
+  engineConfiguration->vvtMode[1] = VVT_BOSCH_QUICK_START;
+	setInline4();
+}
+
+void setGmLcv() {
+  set4CylGmEcotec3();
   engineConfiguration->displacement = 2.5;
   strcpy(engineConfiguration->engineCode, "LCV");
 }
 
 void setGmLtg() {
-  setGmEcotec3();
+  set4CylGmEcotec3();
   engineConfiguration->displacement = 2.0;
   strcpy(engineConfiguration->engineCode, "LTG");
+}
+
+void setGmSbcGen5() {
+  setGmEcotec3();
+  engineConfiguration->displacement = 5.3;
 }
