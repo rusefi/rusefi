@@ -2460,6 +2460,7 @@ end_struct
 #define ts_show_idle_hardware true
 #define ts_show_throttle_switch true
 #define ts_show_brake_pedal_pin true
+#define ts_show_brake_pedal_indicator true
 #define ts_show_hd true
 #define ts_show_odd_fire true
 #define ts_show_rotary true
