@@ -100,9 +100,10 @@ public class BundleUtil {
 
         @Override
         public String toString() {
+            String nextBranchString = nextBranchName != null && !nextBranchName.isEmpty() ? "nextBranchName='" + nextBranchName + '\'' : "";
             return "BundleInfo{" +
                 "branchName='" + branchName + '\'' +
-                "nextBranchName='" + nextBranchName + '\'' +
+                nextBranchString +
                 ", target='" + target + '\'' +
                 '}';
         }
