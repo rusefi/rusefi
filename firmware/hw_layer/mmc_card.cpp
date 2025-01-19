@@ -103,8 +103,6 @@ static NO_CACHE FATFS MMC_FS;
 
 static int fatFsErrors = 0;
 
-static void mmcUnMount();
-
 static void setSdCardReady(bool value) {
 	fs_ready = value;
 }
@@ -236,7 +234,7 @@ static void removeFile(const char *pathx) {
 /*
  * MMC card un-mount.
  */
-static void mmcUnMount() {
+void mmcUnMount() {
 	if (!isSdCardAlive()) {
 		efiPrintf("Error: No File system is mounted. \"mountsd\" first");
 		return;

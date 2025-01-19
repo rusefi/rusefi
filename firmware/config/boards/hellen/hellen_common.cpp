@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "hellen_meta.h"
 #include "adc_subscription.h"
+#include "mmc_card.h"
 
 void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
@@ -82,6 +83,10 @@ void hellenEnableEn(const char *msg) {
 }
 
 void hellenDisableEn(const char *msg) {
+#if EFI_FILE_LOGGING && EFI_PROD_CODE
+  // un-mount before turning power off SD card
+  mmcUnMount();
+#endif
   efiPrintf("Turning board off [%s]", msg);
   hellenDisableEnSilently();
 }
