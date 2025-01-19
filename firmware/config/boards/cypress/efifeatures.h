@@ -134,6 +134,7 @@
 
 #ifndef EFI_HIP_9011
 #define EFI_HIP_9011 FALSE
+#define EFI_HIP_9011_LOGIC				FALSE
 #endif
 
 #if !defined(EFI_ONBOARD_MEMS) || defined(__DOXYGEN__)
