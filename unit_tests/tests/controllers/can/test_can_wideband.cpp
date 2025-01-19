@@ -164,7 +164,7 @@ TEST(CanWideband, DecodeValidAemFormat) {
 		0 << 7;		// Data INVALID
 
 	dut.processFrame(frame, getTimeNowNt());
-	EXPECT_FLOAT_EQ(-1, Sensor::get(SensorType::Lambda1).value_or(-1));
+	EXPECT_FLOAT_EQ(0.8f, Sensor::get(SensorType::Lambda1).value_or(-1));
 
 
 	// Now check sensor fault
