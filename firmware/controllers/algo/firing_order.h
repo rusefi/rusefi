@@ -86,3 +86,4 @@ typedef enum __attribute__ ((__packed__)) {
 
 size_t getFiringOrderCylinderId(size_t index);
 size_t getNextFiringCylinderId(size_t prevCylinderId);
+size_t getCylinderNumberAtIndex(size_t cylinderIndex);

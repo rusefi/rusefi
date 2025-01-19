@@ -96,7 +96,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	}
 
 	const int index = getIgnitionPinForIndex(event->cylinderIndex, ignitionMode);
-	const int coilIndex = ID2INDEX(getFiringOrderCylinderId(index));
+	const int coilIndex = getCylinderNumberAtIndex(index);
 	angle_t finalIgnitionTiming =	getEngineState()->timingAdvance[coilIndex];
 	// Stash which cylinder we're scheduling so that knock sensing knows which
 	// cylinder just fired
@@ -140,7 +140,7 @@ static void prepareCylinderIgnitionSchedule(angle_t dwellAngleDuration, floatms_
 	bool isTwoWireWasted = engineConfiguration->twoWireBatchIgnition || (engineConfiguration->ignitionMode == IM_INDIVIDUAL_COILS);
 	if (ignitionMode == IM_WASTED_SPARK && isTwoWireWasted) {
 		int secondIndex = index + engineConfiguration->cylindersCount / 2;
-		int secondCoilIndex = ID2INDEX(getFiringOrderCylinderId(secondIndex));
+		int secondCoilIndex = getCylinderNumberAtIndex(secondIndex);
 		secondOutput = &enginePins.coils[secondCoilIndex];
 		assertPinAssigned(secondOutput);
 	} else {

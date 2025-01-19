@@ -271,3 +271,7 @@ size_t getNextFiringCylinderId(size_t prevCylinderId) {
 
 	return 1;
 }
+
+size_t getCylinderNumberAtIndex(size_t cylinderIndex) {
+  return ID2INDEX(getFiringOrderCylinderId(cylinderIndex));
+}
