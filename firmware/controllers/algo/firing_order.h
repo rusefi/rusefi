@@ -84,6 +84,8 @@ typedef enum __attribute__ ((__packed__)) {
 
 } firing_order_e;
 
-size_t getFiringOrderCylinderId(size_t index);
+#if EFI_HIP_9011_LOGIC
 size_t getNextFiringCylinderId(size_t prevCylinderId);
+#endif // EFI_HIP_9011_LOGIC
+
 size_t getCylinderNumberAtIndex(size_t cylinderIndex);
