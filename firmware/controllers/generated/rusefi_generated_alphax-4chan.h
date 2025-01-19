@@ -1337,7 +1337,7 @@
 #define show_4chan_presets true
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1410909761
+#define SIGNATURE_HASH 3641033667
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1728,6 +1728,7 @@
 #define ts_show_hbridge_function true
 #define ts_show_hd true
 #define ts_show_hip9011 false
+#define ts_show_iat true
 #define ts_show_idle_hardware true
 #define ts_show_ign_key_analog_input true
 #define ts_show_ign_key_switch false
@@ -1806,7 +1807,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.01.18.alphax-4chan.1410909761"
+#define TS_SIGNATURE "rusEFI master.2025.01.19.alphax-4chan.3641033667"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
