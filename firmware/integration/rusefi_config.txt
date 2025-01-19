@@ -2521,6 +2521,7 @@ end_struct
 #define ts_show_can_bitrate true
 #define ts_show_vbatt true
 #define ts_show_clt_iat_pullup true
+#define ts_show_iat true
 #define ts_show_tunerstudio_port true
 #define ts_show_trigger_comparator false
 #define ts_show_auxserial_pins true
