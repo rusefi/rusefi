@@ -130,21 +130,9 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 	return advanceAngle;
 }
 
-angle_t getCltTimingCorrection() {
-	const auto clt = Sensor::get(SensorType::Clt);
-
-	if (!clt)
-		return 0; // this error should be already reported somewhere else, let's just handle it
-
-	return interpolate2d(clt.Value, config->cltTimingBins, config->cltTimingExtra);
-}
-
-void IgnitionState::updateAdvanceCorrections() {
-	cltTimingCorrection = getCltTimingCorrection();
-}
-
 angle_t getAdvanceCorrections(float engineLoad) {
 	auto iat = Sensor::get(SensorType::Iat);
+	auto clt = Sensor::get(SensorType::Clt);
 
 	if (!iat) {
 		engine->ignitionState.timingIatCorrection = 0;
@@ -154,6 +142,12 @@ angle_t getAdvanceCorrections(float engineLoad) {
 			config->ignitionIatCorrLoadBins, engineLoad,
 			config->ignitionIatCorrTempBins, iat.Value
 		);
+	}
+
+    if(!clt){
+		engine->ignitionState.cltTimingCorrection = 0;
+	} else {
+		engine->ignitionState.cltTimingCorrection = interpolate2d(clt.Value, config->cltTimingBins, config->cltTimingExtra);
 	}
 
 #if EFI_IDLE_CONTROL

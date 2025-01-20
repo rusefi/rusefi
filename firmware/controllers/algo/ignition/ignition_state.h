@@ -5,7 +5,6 @@
 class IgnitionState : public ignition_state_s {
 public:
 	void updateDwell(float rpm, bool isCranking);
-	void updateAdvanceCorrections();
 
   floatms_t getDwell() const;
   angle_t getWrappedAdvance(const float rpm, const float engineLoad);
