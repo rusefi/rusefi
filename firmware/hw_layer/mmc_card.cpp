@@ -572,7 +572,8 @@ static BYTE formatBuff[FATFS_CLUSTER_SIZE];
 
 static bool sdFormat()
 {
-	FRESULT ret = f_mkfs("", FM_ANY, 1024, formatBuff, sizeof(formatBuff));
+	//FRESULT ret = f_mkfs("", FM_ANY, 1024, formatBuff, sizeof(formatBuff));
+	FRESULT ret = f_mkfs("", FM_FAT | FM_FAT32, 1024, formatBuff, sizeof(formatBuff));
 
 	if (ret) {
 		printError("format failed", ret);
