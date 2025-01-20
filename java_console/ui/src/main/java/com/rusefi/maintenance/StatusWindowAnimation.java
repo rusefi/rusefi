@@ -8,7 +8,7 @@ public class StatusWindowAnimation {
         animation = new StatusAnimation(new StatusAnimation.StatusConsumer() {
             @Override
             public void onStatus(String niceStatus) {
-                wnd.setStatus(niceStatus);
+                wnd.getContent().setStatus(niceStatus);
             }
         }, "Working");
     }
