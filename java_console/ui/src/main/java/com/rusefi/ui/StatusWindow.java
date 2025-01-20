@@ -50,7 +50,7 @@ public class StatusWindow implements StatusConsumer {
     }
 
     @Override
-    public void append(final String string, final boolean breakLineOnTextArea, final boolean sendToLogger) {
+    public void appendStatus(final String string, final boolean breakLineOnTextArea, final boolean sendToLogger) {
         content.append(string, breakLineOnTextArea, sendToLogger);
     }
 }

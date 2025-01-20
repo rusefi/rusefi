@@ -19,8 +19,8 @@ public interface StatusConsumer {
     };
 
     default void append(String status) {
-        append(status, true, true);
+        appendStatus(status, true, true);
     }
 
-    void append(String status, boolean breakLineOnTextArea, boolean sendToLogger);
+    void appendStatus(String status, boolean breakLineOnTextArea, boolean sendToLogger);
 }
