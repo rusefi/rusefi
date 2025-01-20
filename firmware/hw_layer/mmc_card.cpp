@@ -233,11 +233,12 @@ static void removeFile(const char *pathx) {
 
 /*
  * MMC card un-mount.
+ * @return true if we had SD card alive
  */
-void mmcUnMount() {
+bool mmcUnMount() {
 	if (!isSdCardAlive()) {
 		efiPrintf("Error: No File system is mounted. \"mountsd\" first");
-		return;
+		return false;
 	}
 	f_close(&FDLogFile);						// close file
 	f_sync(&FDLogFile);							// sync ALL
@@ -255,6 +256,7 @@ void mmcUnMount() {
 	memset(&FDLogFile, 0, sizeof(FIL));			// clear FDLogFile
 	setSdCardReady(false);						// status = false
 	efiPrintf("MMC/SD card removed");
+	return true;
 }
 
 #if HAL_USE_USB_MSD
