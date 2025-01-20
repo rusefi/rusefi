@@ -16,7 +16,7 @@ public enum AsyncJobExecutor {
     }
 
     public void executeJob(final AsyncJob job, UpdateOperationCallbacks secondary) {
-        final UpdateOperationCallbacks callbacks = new UpdateStatusWindow(appendBundleName(job.getName() + " " + Launcher.CONSOLE_VERSION));
+        final UpdateOperationCallbacks callbacks = new UpdateStatusWindow(appendBundleName(job.getName() + " " + Launcher.CONSOLE_VERSION)).getContent();
         final UpdateOperationCallbacks doubleCallbacks = new DoubleCallbacks(callbacks, secondary);
         final Runnable jobWithSuspendedPortScanning = () -> job.doJob(doubleCallbacks);
         ExecHelper.submitAction(jobWithSuspendedPortScanning, "mx");
