@@ -31,7 +31,7 @@ public class MassUpdater {
         SerialPortScanner.INSTANCE.addListener(currentHardware -> {
 
             if (!isUsingDfu.get() && currentHardware.isDfuFound() != previousDfuState.get()) {
-                mainStatus.append(currentHardware.isDfuFound() ? "I see a DFU device!" : "No DFU...");
+                mainStatus.appendStatus(currentHardware.isDfuFound() ? "I see a DFU device!" : "No DFU...");
                 if (currentHardware.isDfuFound()) {
                     isUsingDfu.set(true);
                     UpdateOperationCallbacks releaseSemaphore = new UpdateOperationCallbacks() {
@@ -60,14 +60,14 @@ public class MassUpdater {
             for (Iterator<String> it = knownBlts.iterator(); it.hasNext(); ) {
                 String port = it.next();
                 if (!currentSet.contains(port)) {
-                    mainStatus.append(port + ": No longer present");
+                    mainStatus.appendStatus(port + ": No longer present");
                     it.remove();
                 }
             }
             for (SerialPortScanner.PortResult openBltPort : currentBltList) {
                 if (!knownBlts.contains(openBltPort.port)) {
                     knownBlts.add(openBltPort.port);
-                    mainStatus.append("New OpenBlt " + openBltPort);
+                    mainStatus.appendStatus("New OpenBlt " + openBltPort);
 
                     SwingUtilities.invokeLater(() -> AsyncJobExecutor.INSTANCE.executeJob(new OpenBltManualJob(openBltPort, mainStatus.getContent())));
                 }
