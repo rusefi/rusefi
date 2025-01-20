@@ -1,11 +1,9 @@
 package com.rusefi.tools;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.config.generated.Integration;
 import com.rusefi.io.serial.AbstractIoStream;
 import com.rusefi.io.serial.RateCounter;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
-import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.ui.StatusConsumer;
 
@@ -23,9 +21,9 @@ public class CANConnectorStartup {
 
         String signature = BinaryProtocol.getSignature(tsStream);
         if (signature == null) {
-            statusListener.append("Error: no ECU signature from " + tsStream);
+            statusListener.appendStatus("Error: no ECU signature from " + tsStream);
         } else {
-            statusListener.append("Got [" + signature + "] ECU signature via " + tsStream);
+            statusListener.appendStatus("Got [" + signature + "] ECU signature via " + tsStream);
         }
         Map<Byte, RateCounter> rateCounters = new HashMap<>();
 
@@ -35,7 +33,7 @@ public class CANConnectorStartup {
                 for (Map.Entry<Byte, RateCounter> e : rateCounters.entrySet()) {
                     String name = BinaryProtocol.findCommand(e.getKey());
 
-                    statusListener.append(new Date() + ": Command " + name + ": " + e.getValue().getCurrentRate());
+                    statusListener.appendStatus(new Date() + ": Command " + name + ": " + e.getValue().getCurrentRate());
                 }
             }
         });
