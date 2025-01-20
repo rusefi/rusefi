@@ -1213,6 +1213,7 @@ public class Fields {
 	public static final int SCRIPT_SETTING_COUNT = 8;
 	public static final int SCRIPT_TABLE_8 = 8;
 	public static final int SCRIPT_TABLE_COUNT = 4;
+	public static final String SD_CARD_LABEL = "rusEFI logs";
 	public static final int SelectedGear_Drive = 6;
 	public static final int SelectedGear_Invalid = 0;
 	public static final int SelectedGear_Low = 11;
@@ -1245,7 +1246,6 @@ public class Fields {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 465469821;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1511,7 +1511,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.01.20.f407-discovery.465469821";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.01.20.f407-discovery.2905380100";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
