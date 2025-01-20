@@ -10,7 +10,7 @@ public class UpdateStatusWindow extends StatusWindow implements UpdateOperationC
 
     @Override
     public void log(final String message, final boolean breakLineOnTextArea, boolean sendToLogger) {
-        appendStatus(message, breakLineOnTextArea, sendToLogger);
+        getContent().appendStatus(message, breakLineOnTextArea, sendToLogger);
     }
 
     @Override

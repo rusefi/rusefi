@@ -5,6 +5,7 @@ import com.rusefi.FileLog;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.ui.StatusConsumer;
 import com.rusefi.ui.StatusWindow;
 import com.rusefi.ui.util.UiUtils;
 
@@ -14,7 +15,7 @@ import java.awt.datatransfer.StringSelection;
 
 import static com.devexperts.logging.Logging.getLogging;
 
-public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
+public class StatusPanel extends JPanel implements UpdateOperationCallbacks, StatusConsumer {
     private static final Logging log = getLogging(StatusWindow.class);
 
     private static final Color LIGHT_RED = new Color(255, 102, 102);
@@ -95,5 +96,10 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
 
     public void setStatus(String status) {
         bottomStatusLabel.setText(status);
+    }
+
+    @Override
+    public void appendStatus(final String string, final boolean breakLineOnTextArea, final boolean sendToLogger) {
+        append(string, breakLineOnTextArea, sendToLogger);
     }
 }
