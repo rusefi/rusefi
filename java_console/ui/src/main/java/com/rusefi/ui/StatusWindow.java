@@ -29,15 +29,6 @@ public class StatusWindow implements StatusConsumer {
         return content;
     }
 
-
-    public void setErrorState() {
-        content.setErrorState();
-    }
-
-  public void setSuccessState() {
-        content.setSuccessState();
-    }
-
     public JFrame getFrame() {
         return frameHelper.getFrame();
     }
