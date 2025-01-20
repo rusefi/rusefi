@@ -11,7 +11,7 @@ import javax.swing.*;
  * Andrey Belomutskiy, (c) 2013-2020
  * 3/7/2015
  */
-public class StatusWindow implements StatusConsumer {
+public class StatusWindow {
     // todo: extract driver from console bundle? find a separate driver bundle?
     StatusPanel content = new StatusPanel();
     @NotNull
@@ -38,10 +38,5 @@ public class StatusWindow implements StatusConsumer {
         frameHelper.showFrame(content, false);
         UiUtils.centerWindow(frameHelper.getFrame());
         content.clear(); // let's remove stuff from previous invocation
-    }
-
-    @Override
-    public void appendStatus(final String string, final boolean breakLineOnTextArea, final boolean sendToLogger) {
-        content.append(string, breakLineOnTextArea, sendToLogger);
     }
 }
