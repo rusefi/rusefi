@@ -37,7 +37,7 @@ public class DriverInstall {
                 if (dialogResult != JOptionPane.YES_OPTION)
                     return;
 
-                final UpdateOperationCallbacks wnd = new UpdateStatusWindow("Windows rusEFI ST Drivers");
+                final UpdateOperationCallbacks wnd = new UpdateStatusWindow("Windows rusEFI ST Drivers").getContent();
 
                 ExecHelper.submitAction(() -> installDrivers(wnd), getClass() + " thread");
 
