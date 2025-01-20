@@ -388,6 +388,7 @@ static bool mountMmc() {
 		sdStatus = SD_STATE_MOUNTED;
 		incLogFileName();
 		errorHandlerWriteReportFile(&FDLogFile, logFileIndex);
+		f_setlabel(SD_CARD_LABEL);
 		createLogFile();
 		return true;
 	} else {

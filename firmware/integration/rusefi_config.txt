@@ -2193,6 +2193,8 @@ end_struct
 #define INJECTOR_1_NAME "Injector #1"
 #define INJECTOR_2_NAME "Injector #2"
 
+#define SD_CARD_LABEL "rusEFI logs"
+
 #define ts_show_etb_extra_monitoring
 #define ts_show_can_wbo true
 #define ts_show_vvt_output_pin true
