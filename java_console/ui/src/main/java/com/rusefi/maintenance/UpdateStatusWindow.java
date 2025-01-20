@@ -15,11 +15,11 @@ public class UpdateStatusWindow extends StatusWindow implements UpdateOperationC
 
     @Override
     public void done() {
-        setSuccessState();
+        getContent().setSuccessState();
     }
 
     @Override
     public void error() {
-        setErrorState();
+        getContent().setErrorState();
     }
 }
