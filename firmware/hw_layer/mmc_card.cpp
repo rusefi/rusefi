@@ -649,7 +649,7 @@ static void sdLoggerStop(void)
 // TODO: optimal cluster size?
 // buffer is needed only for f_mkfs, use some shared buffer?
 #define FATFS_CLUSTER_SIZE	1024
-static BYTE formatBuff[FATFS_CLUSTER_SIZE];
+static NO_CACHE BYTE formatBuff[FATFS_CLUSTER_SIZE];
 
 static bool sdFormat()
 {
