@@ -15,10 +15,14 @@ public enum AsyncJobExecutor {
         executeJobWithStatusWindow(job, UpdateOperationCallbacks.DUMMY);
     }
 
-    public void executeJobWithStatusWindow(final AsyncJob job, UpdateOperationCallbacks secondary) {
+    public void executeJobWithStatusWindow(final AsyncJob job, final UpdateOperationCallbacks secondary) {
         final UpdateOperationCallbacks callbacks = StatusWindow.createAndShowFrame(appendBundleName(job.getName() + " " + Launcher.CONSOLE_VERSION));
         final UpdateOperationCallbacks doubleCallbacks = new DoubleCallbacks(callbacks, secondary);
-        final Runnable jobWithSuspendedPortScanning = () -> job.doJob(doubleCallbacks);
+        executeJob(job, doubleCallbacks);
+    }
+
+    public void executeJob(final AsyncJob job, final UpdateOperationCallbacks callbacks) {
+        final Runnable jobWithSuspendedPortScanning = () -> job.doJob(callbacks);
         ExecHelper.submitAction(jobWithSuspendedPortScanning, "mx");
     }
 }
