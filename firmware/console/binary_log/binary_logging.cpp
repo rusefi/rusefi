@@ -105,6 +105,7 @@ static size_t writeSdBlock(Writer& outBuffer) {
 	buffer[2] = timestamp >> 8;
 	buffer[3] = timestamp & 0xFF;
 
+	// TODO: check ret value!
 	outBuffer.write(buffer, 4);
 	writen += 4;
 
@@ -128,6 +129,7 @@ static size_t writeSdBlock(Writer& outBuffer) {
 			// "CRC" at the end is just the sum of all bytes
 			sum += buffer[byteIndex];
 		}
+		// TODO: check ret value!
 		outBuffer.write(buffer, entrySize);
 		writen += entrySize;
 	}
