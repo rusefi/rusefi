@@ -20,14 +20,18 @@
 #include "status_loop.h"
 #include "binary_logging.h"
 
+// Divide logs into 32Mb chunks.
+// With this opstion defined SW will pre-allocate file with given size and
+// should not touch FAT structures until file is fully filled
+// This should protect FS from corruption at sudden power loss
+#define LOGGER_MAX_FILE_SIZE	(32 * 1024 * 1024)
+
+// at about 20Hz we write about 2Kb per second, looks like we flush once every ~2 seconds
+#define F_SYNC_FREQUENCY 10
+
 static bool sdLoggerReady = false;
 
 #if EFI_PROD_CODE
-
-int totalLoggedBytes = 0;
-static int writeCounter = 0;
-static int totalWritesCounter = 0;
-static int totalSyncCounter = 0;
 
 #include <stdio.h>
 #include <string.h>
@@ -38,6 +42,107 @@ static int totalSyncCounter = 0;
 #include "hellen_meta.h"
 
 #include "rtc_helper.h"
+
+// TODO: do we need this additioal layer of buffering?
+// FIL structure already have buffer of FF_MAX_SS size
+// check if it is better to increase FF_MAX_SS and drop BufferedWriter?
+struct SdLogBufferWriter final : public BufferedWriter<512> {
+	bool failed = false;
+
+	int start(FIL *fd) {
+		if (m_fd) {
+			efiPrintf("SD logger already started!");
+			return -1;
+		}
+
+		totalLoggedBytes = 0;
+		writeCounter = 0;
+
+		m_fd = fd;
+	}
+
+	void stop() {
+		m_fd = NULL;
+
+		flush();
+
+		totalLoggedBytes = 0;
+		writeCounter = 0;
+	}
+
+	size_t writen() {
+		return totalLoggedBytes;
+	}
+
+	size_t writeInternal(const char* buffer, size_t count) override {
+		if ((!m_fd) || (failed)) {
+			return 0;
+		}
+
+		size_t bytesWritten;
+
+		FRESULT err = f_write(m_fd, buffer, count, &bytesWritten);
+
+		if (err) {
+			printError("log file write", err);
+			failed = true;
+			return 0;
+		} else if (bytesWritten != count) {
+			printError("log file write partitial", err);
+			failed = true;
+			return 0;
+		} else {
+			writeCounter++;
+			totalLoggedBytes += count;
+			if (writeCounter >= F_SYNC_FREQUENCY) {
+				/**
+				 * Performance optimization: not f_sync after each line, f_sync is probably a heavy operation
+				 * todo: one day someone should actually measure the relative cost of f_sync
+				 */
+				f_sync(m_fd);
+				writeCounter = 0;
+			}
+		}
+
+		return bytesWritten;
+	}
+
+private:
+	FIL *m_fd;
+
+	size_t totalLoggedBytes = 0;
+	size_t writeCounter = 0;
+};
+
+#else // not EFI_PROD_CODE (simulator)
+
+#include <fstream>
+
+class SdLogBufferWriter final : public BufferedWriter<512> {
+public:
+	bool failed = false;
+
+	SdLogBufferWriter()
+		: m_stream("rusefi_simulator_log.mlg", std::ios::binary | std::ios::trunc)
+	{
+		sdLoggerReady = true;
+	}
+
+	size_t writeInternal(const char* buffer, size_t count) override {
+		m_stream.write(buffer, count);
+		m_stream.flush();
+		return count;
+	}
+
+private:
+	std::ofstream m_stream;
+};
+
+#endif
+
+static NO_CACHE SdLogBufferWriter logBuffer;
+
+#if EFI_PROD_CODE
 
 // This is dirty workaround to fix compilation without adding this function prototype
 // to error_handling.h file that will also need to add "ff.h" include to same file and
@@ -80,9 +185,6 @@ static SD_STATUS sdStatus = SD_STATUS_INIT;
 static SD_MODE sdMode = SD_MODE_IDLE;
 // by default we want SD card for logs
 static SD_MODE sdTargerMode = SD_MODE_ECU;
-
-// at about 20Hz we write about 2Kb per second, looks like we flush once every ~2 seconds
-#define F_SYNC_FREQUENCY 10
 
 /**
  * on't re-read SD card spi device after boot - it could change mid transaction (TS thread could preempt),
@@ -192,7 +294,7 @@ static void sdStatistics() {
 	efiPrintf("LS clock %d Hz", spiGetBaseClock(mmccfg.spip) / (2 << ((mmc_ls_spicfg.cr1 & SPI_CR1_BR_Msk) >> SPI_CR1_BR_Pos)));
 #endif
 	if (sdLoggerIsReady()) {
-		efiPrintf("filename=%s size=%d", logName, totalLoggedBytes);
+		efiPrintf("filename=%s size=%d", logName, logBuffer.writen());
 	}
 #if EFI_FILE_LOGGING
 	efiPrintf("%d SD card fields", getSdCardFieldsCount());
@@ -440,44 +542,7 @@ static void unmountMmc() {
 	efiPrintf("SD card unmounted");
 }
 
-struct SdLogBufferWriter final : public BufferedWriter<512> {
-	bool failed = false;
-
-	size_t writeInternal(const char* buffer, size_t count) override {
-		size_t bytesWritten;
-
-		FRESULT err = f_write(&FDLogFile, buffer, count, &bytesWritten);
-
-		if (err) {
-			printError("log file write", err);
-			failed = true;
-			return 0;
-		} else if (bytesWritten != count) {
-			printError("log file write partitial", err);
-			failed = true;
-			return 0;
-		} else {
-			writeCounter++;
-			totalWritesCounter++;
-			totalLoggedBytes += count;
-			if (writeCounter >= F_SYNC_FREQUENCY) {
-				/**
-				 * Performance optimization: not f_sync after each line, f_sync is probably a heavy operation
-				 * todo: one day someone should actually measure the relative cost of f_sync
-				 */
-				f_sync(&FDLogFile);
-				totalSyncCounter++;
-				writeCounter = 0;
-			}
-		}
-
-		return bytesWritten;
-	}
-};
-
 #else // not EFI_PROD_CODE (simulator)
-
-#include <fstream>
 
 bool initMmc() {
 	// Stub so the loop thinks the MMC is present
@@ -489,29 +554,7 @@ bool mountMmc() {
 	return true;
 }
 
-class SdLogBufferWriter final : public BufferedWriter<512> {
-public:
-	bool failed = false;
-
-	SdLogBufferWriter()
-		: m_stream("rusefi_simulator_log.mlg", std::ios::binary | std::ios::trunc)
-	{
-		sdLoggerReady = true;
-	}
-
-	size_t writeInternal(const char* buffer, size_t count) override {
-		m_stream.write(buffer, count);
-		m_stream.flush();
-		return count;
-	}
-
-private:
-	std::ofstream m_stream;
-};
-
 #endif // EFI_PROD_CODE
-
-static NO_CACHE SdLogBufferWriter logBuffer;
 
 #if EFI_PROD_CODE
 
