@@ -14,6 +14,13 @@ import javax.swing.*;
 public class StatusWindow {
     // todo: extract driver from console bundle? find a separate driver bundle?
     StatusPanel content = new StatusPanel();
+
+    public static StatusWindow createAndShowFrame(final String frameTitle) {
+        final StatusWindow result = new StatusWindow();
+        result.showFrame(frameTitle);
+        return result;
+    }
+
     @NotNull
     protected final FrameHelper frameHelper = new FrameHelper();
 
