@@ -412,7 +412,7 @@ static bool mountMmc() {
 static void unmountMmc() {
 	if (!isSdCardAlive()) {
 		efiPrintf("Error: No File system is mounted. \"mountsd\" first");
-		return false;
+		return;
 	}
 
 	f_mount(NULL, 0, 0);						// FATFS: Unregister work area prior to discard it
