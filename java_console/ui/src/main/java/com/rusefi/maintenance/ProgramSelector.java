@@ -7,7 +7,6 @@ import com.rusefi.UiProperties;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.FindFileHelper;
 import com.rusefi.FileLog;
-import com.rusefi.Launcher;
 import com.rusefi.SerialPortScanner;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.binaryprotocol.BinaryProtocol;
@@ -29,7 +28,6 @@ import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.SerialPortScanner.SerialPortType.OpenBlt;
-import static com.rusefi.core.ui.FrameHelper.appendBundleName;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 import static com.rusefi.maintenance.UpdateMode.*;
 import static com.rusefi.ui.util.UiUtils.trueLayout;
@@ -110,7 +108,7 @@ public class ProgramSelector {
                 throw new IllegalArgumentException("How did you " + selectedMode);
         }
 
-        AsyncJobExecutor.INSTANCE.executeJob(job);
+        AsyncJobExecutor.INSTANCE.executeJobWithStatusWindow(job);
     }
 
     public static void rebootToDfu(JComponent parent, String selectedPort, UpdateOperationCallbacks callbacks) {

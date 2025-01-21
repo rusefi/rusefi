@@ -50,7 +50,7 @@ public class MassUpdater {
                             isUsingDfu.set(false);
                         }
                     };
-                    SwingUtilities.invokeLater(() -> AsyncJobExecutor.INSTANCE.executeJob(new DfuManualJob(), releaseSemaphore));
+                    SwingUtilities.invokeLater(() -> AsyncJobExecutor.INSTANCE.executeJobWithStatusWindow(new DfuManualJob(), releaseSemaphore));
                 }
                 previousDfuState.set(currentHardware.isDfuFound());
             }
@@ -69,7 +69,7 @@ public class MassUpdater {
                     knownBlts.add(openBltPort.port);
                     mainStatus.getContent().appendStatus("New OpenBlt " + openBltPort);
 
-                    SwingUtilities.invokeLater(() -> AsyncJobExecutor.INSTANCE.executeJob(new OpenBltManualJob(openBltPort, mainStatus.getContent())));
+                    SwingUtilities.invokeLater(() -> AsyncJobExecutor.INSTANCE.executeJobWithStatusWindow(new OpenBltManualJob(openBltPort, mainStatus.getContent())));
                 }
             }
         });

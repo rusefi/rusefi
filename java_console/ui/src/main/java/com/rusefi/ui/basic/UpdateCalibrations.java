@@ -32,7 +32,7 @@ public class UpdateCalibrations {
                 final ConfigurationImage calibrationsImage = ConfigurationImageFile.readFromFile(
                     selectedFile.getAbsolutePath()
                 );
-                AsyncJobExecutor.INSTANCE.executeJob(
+                AsyncJobExecutor.INSTANCE.executeJobWithStatusWindow(
                     new JobWithSuspendedSerialPortScanner(new UpdateCalibrationsJob(port, calibrationsImage))
                 );
             } catch (final IOException e) {
