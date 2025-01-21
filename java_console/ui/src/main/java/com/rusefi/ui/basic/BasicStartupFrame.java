@@ -7,6 +7,7 @@ import com.rusefi.maintenance.StatusAnimation;
 import com.rusefi.ui.BasicLogoHelper;
 import com.rusefi.ui.util.DefaultExceptionHandler;
 import com.rusefi.ui.util.UiUtils;
+import com.rusefi.ui.widgets.StatusPanel;
 
 import javax.swing.*;
 
@@ -18,8 +19,11 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class BasicStartupFrame {
     private final String whiteLabel = ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties());
+
+    private final StatusPanel statusPanel = new StatusPanel();
     private final BasicUpdaterPanel basicUpdaterPanel = new BasicUpdaterPanel(
-        ConnectionAndMeta.isDefaultWhitelabel(whiteLabel)
+        ConnectionAndMeta.isDefaultWhitelabel(whiteLabel),
+        statusPanel
     );
     private final FrameHelper frame = FrameHelper.createFrame(
         whiteLabel + " basic console " + Launcher.CONSOLE_VERSION
@@ -39,6 +43,7 @@ public class BasicStartupFrame {
     public BasicStartupFrame() {
         final JPanel panel = new JPanel();
         panel.add(basicUpdaterPanel);
+        panel.add(statusPanel);
 
         SerialPortScanner.INSTANCE.addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
             onHardwareUpdated(currentHardware);

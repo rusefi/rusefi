@@ -5,6 +5,7 @@ import com.rusefi.*;
 import com.rusefi.core.FindFileHelper;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.ui.AutoupdateUtil;
+import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.ProgramSelector;
 import com.rusefi.maintenance.jobs.*;
 import com.rusefi.ui.LogoHelper;
@@ -27,6 +28,8 @@ import static com.rusefi.StartupFrame.newReleaseAnnounce;
 public class BasicUpdaterPanel extends JPanel {
     private static final Logging log = getLogging(BasicUpdaterPanel.class);
 
+    final UpdateOperationCallbacks updateOperationCallbacks;
+
     private final boolean isObfuscated = FindFileHelper.isObfuscated();
 
     private final JLabel statusMessage = new JLabel();
@@ -39,8 +42,11 @@ public class BasicUpdaterPanel extends JPanel {
     private volatile Optional<AsyncJob> updateFirmwareJob = Optional.empty();
     private volatile Optional<SerialPortScanner.PortResult> portToUpdateCalibrations = Optional.empty();
 
-    BasicUpdaterPanel(final boolean showUrlLabel) {
+    BasicUpdaterPanel(final boolean showUrlLabel, final UpdateOperationCallbacks updateOperationCallbacks) {
         super(new VerticalFlowLayout());
+
+        this.updateOperationCallbacks = updateOperationCallbacks;
+
         if (isWindows()) {
             final Optional<JPanel> newReleaseNotification = newReleaseAnnounce(
                 "rusefi_updater.exe",
@@ -220,7 +226,7 @@ public class BasicUpdaterPanel extends JPanel {
 
     private void onUpdateFirmwareButtonClicked(final ActionEvent actionEvent) {
         CompatibilityOptional.ifPresentOrElse(updateFirmwareJob,
-            AsyncJobExecutor.INSTANCE::executeJobWithStatusWindow,
+            value -> AsyncJobExecutor.INSTANCE.executeJob(value, updateOperationCallbacks),
             () -> log.error("Update firmware job is is not defined.")
         );
     }
