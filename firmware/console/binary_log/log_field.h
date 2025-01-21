@@ -82,7 +82,8 @@ public:
 	}
 
 	// Write the header data describing this field.
-	void writeHeader(Writer& outBuffer) const;
+	// Returns the number of bytes written.
+	size_t writeHeader(Writer& outBuffer) const;
 
 	// Write the field's data to the buffer.
 	// Returns the number of bytes written.

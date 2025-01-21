@@ -8,5 +8,5 @@
 
 int getSdCardFieldsCount();
 
-void writeSdLogLine(Writer& buffer);
+size_t writeSdLogLine(Writer& buffer);
 void resetFileLogging();
