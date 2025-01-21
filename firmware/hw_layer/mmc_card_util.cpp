@@ -13,11 +13,11 @@
 #define MIN_FILE_INDEX 10
 int logFileIndex = MIN_FILE_INDEX;
 
-static FIL FDLogFile NO_CACHE;
-
-void incLogFileName() {
-	memset(&FDLogFile, 0, sizeof(FIL));						// clear the memory
-	FRESULT ret = f_open(&FDLogFile, LOG_INDEX_FILENAME, FA_READ);				// This file has the index for next log file name
+void incLogFileName(FIL *fd) {
+	// clear the memory
+	memset(fd, 0, sizeof(FIL));
+	// This file has the index for next log file name
+	FRESULT ret = f_open(fd, LOG_INDEX_FILENAME, FA_READ);
 
 	char data[_MAX_FILLER];
 	memset(data, 0, sizeof(data));
@@ -25,7 +25,7 @@ void incLogFileName() {
 	if (ret == FR_OK) {
 		UINT readed = 0;
 		// leave one byte for terminating 0
-		ret = f_read(&FDLogFile, (void*)data, sizeof(data) - 1, &readed);
+		ret = f_read(fd, (void*)data, sizeof(data) - 1, &readed);
 
 		if (ret != FR_OK) {
 			printError("log index file read", ret);
@@ -36,10 +36,11 @@ void incLogFileName() {
 			if (absI(logFileIndex) == ATOI_ERROR_CODE) {
 				logFileIndex = MIN_FILE_INDEX;
 			} else {
-				logFileIndex++; // next file would use next file name
+				// next file would use next file name
+				logFileIndex++;
 			}
 		}
-		f_close(&FDLogFile);
+		f_close(fd);
 	} else if (ret == FR_NO_FILE) {
 		// no index file - this is not an error, just an empty SD
 		logFileIndex = MIN_FILE_INDEX;
@@ -50,15 +51,15 @@ void incLogFileName() {
 	}
 
 	// truncate or create new
-	ret = f_open(&FDLogFile, LOG_INDEX_FILENAME, FA_CREATE_ALWAYS | FA_WRITE);
+	ret = f_open(fd, LOG_INDEX_FILENAME, FA_CREATE_ALWAYS | FA_WRITE);
 	if (ret == FR_OK) {
 		UINT writen = 0;
 		size_t len = itoa10(data, logFileIndex) - data;
-		ret = f_write(&FDLogFile, (void*)data, len, &writen);
+		ret = f_write(fd, (void*)data, len, &writen);
 		if ((ret != FR_OK) || (len != writen)) {
 			printError("log index write", ret);
 		}
-		f_close(&FDLogFile);
+		f_close(fd);
 	} else {
 		printError("log index file write", ret);
 	}
