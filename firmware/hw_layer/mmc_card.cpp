@@ -806,14 +806,16 @@ bool isSdCardAlive(void) {
 }
 
 void updateSdCardLiveFlags() {
-#if HAL_USE_MMC_SPI
-	engine->outputChannels.sd_active_wr = (MMCD1.state == BLK_WRITING);
-	engine->outputChannels.sd_active_rd = (MMCD1.state == BLK_READING);
-#endif
-#ifdef EFI_SDC_DEVICE
-	engine->outputChannels.sd_active_wr = (EFI_SDC_DEVICE.state == BLK_WRITING);
-	engine->outputChannels.sd_active_rd = (EFI_SDC_DEVICE.state == BLK_READING);
-#endif
+#if EFI_PROD_CODE
+	if (cardBlockDevice) {
+		engine->outputChannels.sd_active_wr = (blkGetDriverState(cardBlockDevice) == BLK_WRITING);
+		engine->outputChannels.sd_active_rd = (blkGetDriverState(cardBlockDevice) == BLK_READING);
+	} else
+#endif // EFI_PROD_CODE
+	{
+		engine->outputChannels.sd_active_wr = false;
+		engine->outputChannels.sd_active_rd = false;
+	}
 }
 
 // Pre-config load init
