@@ -534,6 +534,7 @@ static int sdLogger()
 
 		incLogFileName(&FDLogFile);
 		sdLoggerCreateFile(&FDLogFile);
+		resetFileLogging();
 		sdLoggerInitDone = true;
 	}
 
