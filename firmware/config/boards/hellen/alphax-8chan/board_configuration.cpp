@@ -132,7 +132,7 @@ void setBoardDefaultConfiguration() {
 
     setHellenMMbaro();
 
-//	engineConfiguration->mainRelayPin = Gpio::H144_OUT_IO10;
+	engineConfiguration->mainRelayPin = Gpio::MM176_GP1;
 //	engineConfiguration->fanPin = Gpio::H144_OUT_IO11;
 //	engineConfiguration->fuelPumpPin = Gpio::H144_OUT_IO12;
 //    engineConfiguration->tachOutputPin = Gpio::H144_OUT_IO13;
