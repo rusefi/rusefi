@@ -862,8 +862,8 @@ static int mlgLogger() {
 }
 
 static int sdTriggerLogger() {
-#if EFI_TOOTH_LOGGER
 	size_t toWrite = 0;
+#if EFI_TOOTH_LOGGER
 	auto buffer = GetToothLoggerBufferBlocking();
 
 	// can return nullptr
