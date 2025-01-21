@@ -21,7 +21,7 @@ static scaled_channel<uint32_t, TIME_PRECISION> packedTime;
 #include "log_fields_generated.h"
 
 int getSdCardFieldsCount() {
-  return efi::size(fields);
+	return efi::size(fields);
 }
 
 static constexpr uint16_t computeFieldsRecordLength() {
@@ -80,6 +80,7 @@ void writeFileHeader(Writer& outBuffer) {
 	// Write the actual logger fields, offset 22
 	for (size_t i = 0; i < efi::size(fields); i++) {
 		fields[i].writeHeader(outBuffer);
+
 	}
 }
 
@@ -109,13 +110,12 @@ static void writeSdBlock(Writer& outBuffer) {
 
 	uint8_t sum = 0;
 	for (size_t fieldIndex = 0; fieldIndex < efi::size(fields); fieldIndex++) {
-
-	#if EFI_UNIT_TEST
-	  // dark magic: all elements of log_fields_generated.h were const-evaluated against 'nullptr' engine, let's add it!
-		void *offset = fieldIndex == 0 ? nullptr : engine;
-	#else
-	  void *offset = nullptr;
-	#endif
+		#if EFI_UNIT_TEST
+			// dark magic: all elements of log_fields_generated.h were const-evaluated against 'nullptr' engine, let's add it!
+			void *offset = fieldIndex == 0 ? nullptr : engine;
+		#else
+			void *offset = nullptr;
+		#endif
 
 		size_t entrySize = fields[fieldIndex].writeData(buffer, offset);
 
@@ -150,8 +150,8 @@ extern bool main_loop_started;
 
 #if EFI_UNIT_TEST
 void resetFileLogging() {
-  binaryLogCount = 0;
-  blockRollCounter = 0;
+	binaryLogCount = 0;
+	blockRollCounter = 0;
 }
 
 #endif // EFI_UNIT_TEST
