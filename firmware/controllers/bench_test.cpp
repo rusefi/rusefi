@@ -517,7 +517,7 @@ static void handleCommandX14(uint16_t index) {
 		#endif /* EFI_PROD_CODE && EFI_CONFIGURATION_STORAGE */
 		return;
 
-#if EFI_FILE_LOGGING
+#if EFI_PROD_CODE && EFI_FILE_LOGGING
 	case TS_SD_MOUNT_PC:
 		sdCardRequestMode(SD_MODE_PC);
 		return;
