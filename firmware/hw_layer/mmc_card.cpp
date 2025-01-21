@@ -59,6 +59,8 @@ struct SdLogBufferWriter final : public BufferedWriter<512> {
 		writeCounter = 0;
 
 		m_fd = fd;
+
+		return 0;
 	}
 
 	void stop() {
@@ -342,12 +344,14 @@ static void sdLoggerCreateFile(FIL *fd) {
 		return;
 	}
 
+#ifdef LOGGER_MAX_FILE_SIZE
 	//pre-allocate data ahead
 	err = f_expand(fd, LOGGER_MAX_FILE_SIZE, /* Find and allocate */ 1);
 	if (err != FR_OK) {
 		printError("pre-allocate", err);
 		// this is not critical
 	}
+#endif
 
 	// SD logger is ok
 	sdLoggerSetReady(true);
@@ -355,6 +359,11 @@ static void sdLoggerCreateFile(FIL *fd) {
 
 static void sdLoggerCloseFile(FIL *fd)
 {
+#ifdef LOGGER_MAX_FILE_SIZE
+	// truncate file to actual size
+	f_truncate(fd);
+#endif
+
 	// close file
 	f_close(fd);
 
@@ -577,6 +586,7 @@ static int sdLogger()
 
 		incLogFileName(&FDLogFile);
 		sdLoggerCreateFile(&FDLogFile);
+		logBuffer.start(&FDLogFile);
 		resetFileLogging();
 		sdLoggerInitDone = true;
 	}
@@ -592,6 +602,22 @@ static int sdLogger()
 	if (ret < 0) {
 		sdLoggerFailed = true;
 	}
+
+#ifdef LOGGER_MAX_FILE_SIZE
+	// check if we need to start next log file
+	// in next write (assume same size as current) will cross LOGGER_MAX_FILE_SIZE boundary
+	// TODO: use f_tell() instead ?
+	if (logBuffer.writen() + ret > LOGGER_MAX_FILE_SIZE) {
+		logBuffer.stop();
+		sdLoggerCloseFile(&FDLogFile);
+
+		//start new file
+		incLogFileName(&FDLogFile);
+		sdLoggerCreateFile(&FDLogFile);
+		logBuffer.start(&FDLogFile);
+		resetFileLogging();
+	}
+#endif
 
 	return ret;
 }
@@ -803,7 +829,7 @@ die:
 	}
 }
 
-int mlgLogger() {
+static int mlgLogger() {
 	// TODO: move this check somewhere out of here!
 	// if the SPI device got un-picked somehow, cancel SD card
 	// Don't do this check at all if using SDMMC interface instead of SPI
@@ -815,7 +841,7 @@ int mlgLogger() {
 
 	systime_t before = chVTGetSystemTime();
 
-	writeSdLogLine(logBuffer);
+	size_t writen = writeSdLogLine(logBuffer);
 
 	// Something went wrong (already handled), so cancel further writes
 	if (logBuffer.failed) {
@@ -832,26 +858,26 @@ int mlgLogger() {
 	systime_t period = CH_CFG_ST_FREQUENCY / freq;
 	chThdSleepUntilWindowed(before, before + period);
 
-	return 0;
+	return writen;
 }
 
 static int sdTriggerLogger() {
 #if EFI_TOOTH_LOGGER
+	size_t toWrite = 0;
 	auto buffer = GetToothLoggerBufferBlocking();
 
 	// can return nullptr
 	if (buffer) {
-		size_t ret = logBuffer.write(reinterpret_cast<const char*>(buffer->buffer), buffer->nextIdx * sizeof(composite_logger_s));
-
-		ReturnToothLoggerBuffer(buffer);
-
-		// Nothing is written
-		if (ret == 0) {
+		toWrite = buffer->nextIdx * sizeof(composite_logger_s);
+		logBuffer.write(reinterpret_cast<const char*>(buffer->buffer), toWrite);
+		if (logBuffer.failed) {
 			return -1;
 		}
+
+		ReturnToothLoggerBuffer(buffer);
 	}
 #endif /* EFI_TOOTH_LOGGER */
-	return 0;
+	return toWrite;
 }
 
 #endif // EFI_PROD_CODE
