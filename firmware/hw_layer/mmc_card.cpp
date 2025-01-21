@@ -20,7 +20,7 @@
 #include "status_loop.h"
 #include "binary_logging.h"
 
-static bool fs_ready = false;
+static bool sdLoggerReady = false;
 
 #if EFI_PROD_CODE
 
@@ -124,10 +124,12 @@ static MMCConfig mmccfg = {
  */
 static NO_CACHE FATFS MMC_FS;
 
-static int fatFsErrors = 0;
+static void sdLoggerSetReady(bool value) {
+	sdLoggerReady = value;
+}
 
-static void setSdCardReady(bool value) {
-	fs_ready = value;
+static bool sdLoggerIsReady(void) {
+	return sdLoggerReady;
 }
 
 /* See ff.h FRESULT enum */
@@ -156,6 +158,8 @@ static const char *fatErrors[] = {
 
 // print FAT error function
 void printError(const char *str, FRESULT f_error) {
+	static int fatFsErrors = 0;
+
 	if (fatFsErrors++ > 16) {
 		// no reason to spam the console
 		return;
@@ -187,7 +191,7 @@ static void sdStatistics() {
 	efiPrintf("HS clock %d Hz", spiGetBaseClock(mmccfg.spip) / (2 << ((mmc_hs_spicfg.cr1 & SPI_CR1_BR_Msk) >> SPI_CR1_BR_Pos)));
 	efiPrintf("LS clock %d Hz", spiGetBaseClock(mmccfg.spip) / (2 << ((mmc_ls_spicfg.cr1 & SPI_CR1_BR_Msk) >> SPI_CR1_BR_Pos)));
 #endif
-	if (isSdCardAlive()) {
+	if (sdLoggerIsReady()) {
 		efiPrintf("filename=%s size=%d", logName, totalLoggedBytes);
 	}
 #if EFI_FILE_LOGGING
@@ -241,15 +245,12 @@ static void createLogFile() {
 		printError("pre-allocate", err);
 	}
 
-	setSdCardReady(true);						// everything Ok
+	// SD logger is ok
+	sdLoggerSetReady(true);
 }
 
-static void removeFile(const char *pathx) {
-	if (!isSdCardAlive()) {
-		efiPrintf("Error: No File system is mounted");
-		return;
-	}
 
+static void removeFile(const char *pathx) {
 	f_unlink(pathx);
 }
 
@@ -416,13 +417,8 @@ static bool mountMmc() {
  * @return true if we had SD card alive
  */
 static void unmountMmc() {
-	if (!isSdCardAlive()) {
-		efiPrintf("Error: No File system is mounted. \"mountsd\" first");
-		return;
-	}
-
-	f_mount(NULL, 0, 0);						// FATFS: Unregister work area prior to discard it
-	setSdCardReady(false);						// status = false
+	// FATFS: Unregister work area prior to discard it
+	f_mount(NULL, 0, 0);
 
 #if EFI_TUNER_STUDIO
 	engine->outputChannels.sd_logging_internal = false;
@@ -487,7 +483,7 @@ public:
 	SdLogBufferWriter()
 		: m_stream("rusefi_simulator_log.mlg", std::ios::binary | std::ios::trunc)
 	{
-		fs_ready = true;
+		sdLoggerReady = true;
 	}
 
 	size_t writeInternal(const char* buffer, size_t count) override {
@@ -807,10 +803,6 @@ static int sdTriggerLogger() {
 }
 
 #endif // EFI_PROD_CODE
-
-bool isSdCardAlive(void) {
-	return fs_ready;
-}
 
 void updateSdCardLiveFlags() {
 #if EFI_PROD_CODE
