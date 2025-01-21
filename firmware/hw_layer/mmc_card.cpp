@@ -225,13 +225,14 @@ static void prepareLogFileName() {
  * This function saves the name of the file in a global variable
  * so that we can later append to that file
  */
-static void createLogFile() {
-	memset(&FDLogFile, 0, sizeof(FIL));						// clear the memory
+static void sdLoggerCreateFile(FIL *fd) {
+	// clear the memory
+	memset(fd, 0, sizeof(FIL));
 	prepareLogFileName();
 
 	efiPrintf("starting log file %s", logName);
 	// Create new file. If file is exist - truncate and overwrite, we need header to be at zero offset.
-	FRESULT err = f_open(&FDLogFile, logName, FA_CREATE_ALWAYS | FA_WRITE);
+	FRESULT err = f_open(fd, logName, FA_CREATE_ALWAYS | FA_WRITE);
 	if (err != FR_OK && err != FR_EXIST) {
 		sdStatus = SD_STATUS_OPEN_FAILED;
 		warning(ObdCode::CUSTOM_ERR_SD_MOUNT_FAILED, "SD: mount failed");
@@ -240,15 +241,27 @@ static void createLogFile() {
 	}
 
 	//pre-allocate data ahead
-	err = f_expand(&FDLogFile, 32 * 1024 * 1024, 1);
+	err = f_expand(fd, LOGGER_MAX_FILE_SIZE, /* Find and allocate */ 1);
 	if (err != FR_OK) {
 		printError("pre-allocate", err);
+		// this is not critical
 	}
 
 	// SD logger is ok
 	sdLoggerSetReady(true);
 }
 
+static void sdLoggerCloseFile(FIL *fd)
+{
+	// close file
+	f_close(fd);
+
+	// f_sync is called internally
+	//f_sync(&FDLogFile);
+
+	// SD logger is inactive
+	sdLoggerSetReady(false);
+}
 
 static void removeFile(const char *pathx) {
 	f_unlink(pathx);
@@ -516,10 +529,11 @@ static int sdLogger()
 	int ret = 0;
 
 	if (!sdLoggerInitDone) {
-		incLogFileName();
 		// TODO: Do this independently of SD mode, somewhere in the start of this task!
 		errorHandlerWriteReportFile(&FDLogFile, logFileIndex);
-		createLogFile();
+
+		incLogFileName(&FDLogFile);
+		sdLoggerCreateFile(&FDLogFile);
 		sdLoggerInitDone = true;
 	}
 
@@ -553,13 +567,7 @@ static void sdLoggerStart(void)
 
 static void sdLoggerStop(void)
 {
-	// TODO: truncate file to actual size
-
-	f_close(&FDLogFile);						// close file
-	f_sync(&FDLogFile);							// sync ALL
-
-	memset(&FDLogFile, 0, sizeof(FIL));			// clear FDLogFile
-
+	sdLoggerCloseFile(&FDLogFile);
 #if EFI_TOOTH_LOGGER
 	// TODO: cache this config option untill sdLoggerStop()
 	if (engineConfiguration->sdTriggerLog) {

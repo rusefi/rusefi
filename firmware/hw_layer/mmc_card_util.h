@@ -2,6 +2,6 @@
 
 #pragma once
 
-void incLogFileName();
+void incLogFileName(FIL *fd);
 void printError(const char *str, FRESULT f_error);
 void writeErrorReportFile();
