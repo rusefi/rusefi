@@ -1,6 +1,7 @@
 package com.rusefi.ui;
 
 import com.rusefi.core.ui.FrameHelper;
+import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.ui.util.UiUtils;
 import com.rusefi.ui.widgets.StatusPanel;
 import org.jetbrains.annotations.NotNull;
@@ -15,10 +16,10 @@ public class StatusWindow {
     // todo: extract driver from console bundle? find a separate driver bundle?
     StatusPanel content = new StatusPanel();
 
-    public static StatusWindow createAndShowFrame(final String frameTitle) {
-        final StatusWindow result = new StatusWindow();
-        result.showFrame(frameTitle);
-        return result;
+    public static UpdateOperationCallbacks createAndShowFrame(final String frameTitle) {
+        final StatusWindow statusWindow = new StatusWindow();
+        statusWindow.showFrame(frameTitle);
+        return statusWindow.getContent();
     }
 
     @NotNull
