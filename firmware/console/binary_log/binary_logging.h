@@ -9,6 +9,4 @@
 int getSdCardFieldsCount();
 
 void writeSdLogLine(Writer& buffer);
-#if EFI_UNIT_TEST
 void resetFileLogging();
-#endif // EFI_UNIT_TEST

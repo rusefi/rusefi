@@ -148,12 +148,9 @@ extern bool main_loop_started;
 	binaryLogCount++;
 }
 
-#if EFI_UNIT_TEST
 void resetFileLogging() {
 	binaryLogCount = 0;
 	blockRollCounter = 0;
 }
-
-#endif // EFI_UNIT_TEST
 
 #endif /* EFI_FILE_LOGGING */
