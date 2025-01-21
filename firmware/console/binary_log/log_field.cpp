@@ -17,7 +17,7 @@ static void copyFloat(char* buffer, float value) {
 	memcpy_swapend(buffer, reinterpret_cast<char*>(&value), sizeof(float), nullptr);
 }
 
-void LogField::writeHeader(Writer& outBuffer) const {
+size_t LogField::writeHeader(Writer& outBuffer) const {
 	char buffer[MLQ_FIELD_HEADER_SIZE];
 
 	// Offset 0, length 1 = type
@@ -54,6 +54,8 @@ void LogField::writeHeader(Writer& outBuffer) const {
 
 	// Total size = 89
 	outBuffer.write(buffer, MLQ_FIELD_HEADER_SIZE);
+
+	return MLQ_FIELD_HEADER_SIZE;
 }
 
 size_t LogField::writeData(char* buffer, void *offset) const {

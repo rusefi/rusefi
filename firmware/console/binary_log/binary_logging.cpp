@@ -37,7 +37,8 @@ static uint64_t binaryLogCount = 0;
 
 static const uint16_t recordLength = computeFieldsRecordLength();
 
-void writeFileHeader(Writer& outBuffer) {
+static size_t writeFileHeader(Writer& outBuffer) {
+	size_t writen = 0;
 	char buffer[MLQ_HEADER_SIZE];
 	// File format: MLVLG\0
 	strncpy(buffer, "MLVLG", 6);
@@ -76,17 +77,20 @@ void writeFileHeader(Writer& outBuffer) {
 	buffer[23] = fieldsCount;
 
 	outBuffer.write(buffer, MLQ_HEADER_SIZE);
+	writen += MLQ_HEADER_SIZE;
 
 	// Write the actual logger fields, offset 22
 	for (size_t i = 0; i < efi::size(fields); i++) {
-		fields[i].writeHeader(outBuffer);
-
+		writen += fields[i].writeHeader(outBuffer);
 	}
+
+	return writen;
 }
 
 static uint8_t blockRollCounter = 0;
 
-static void writeSdBlock(Writer& outBuffer) {
+static size_t writeSdBlock(Writer& outBuffer) {
+	size_t writen = 0;
 	static char buffer[16];
 
 	// Offset 0 = Block type, standard data block in this case
@@ -102,6 +106,7 @@ static void writeSdBlock(Writer& outBuffer) {
 	buffer[3] = timestamp & 0xFF;
 
 	outBuffer.write(buffer, 4);
+	writen += 4;
 
 	// todo: add a log field for SD card period
 //	prevSdCardLineTime = nowUs;
@@ -124,28 +129,34 @@ static void writeSdBlock(Writer& outBuffer) {
 			sum += buffer[byteIndex];
 		}
 		outBuffer.write(buffer, entrySize);
+		writen += entrySize;
 	}
 
 	buffer[0] = sum;
 	// 1 byte checksum footer
 	outBuffer.write(buffer, 1);
+	writen += 1;
+
+	return writen;
 }
 
-void writeSdLogLine(Writer& bufferedWriter) {
+size_t writeSdLogLine(Writer& bufferedWriter) {
 #if EFI_PROD_CODE
 extern bool main_loop_started;
 	if (!main_loop_started)
-		return;
+		return 0;
 #endif //EFI_PROD_CODE
 
 	if (binaryLogCount == 0) {
-		writeFileHeader(bufferedWriter);
-	} else {
-		updateTunerStudioState();
-		writeSdBlock(bufferedWriter);
-	}
+		binaryLogCount++;
 
-	binaryLogCount++;
+		return writeFileHeader(bufferedWriter);
+	} else {
+		binaryLogCount++;
+
+		updateTunerStudioState();
+		return writeSdBlock(bufferedWriter);
+	}
 }
 
 void resetFileLogging() {
