@@ -62,6 +62,7 @@ pins:
 
   - pin: 9A
     function: Hall Input 4
+    type: hall
     meta: MM176_IN_D4
     class: event_inputs
     ts_name: 9A - Hall Input 4
@@ -91,6 +92,7 @@ pins:
 
   - pin: 13A
     function: Hall Input 5
+    type: hall
     meta: MM176_IN_SENS2
     class: event_inputs
     ts_name: 13A - Hall Input 5
@@ -105,6 +107,7 @@ pins:
 
   - pin: 15A
     function: Hall Input 1
+    type: hall
     meta: MM176_IN_D1
     class: event_inputs
     ts_name: 15A - Hall Input 1
@@ -157,6 +160,7 @@ pins:
 
   - pin: 23A
     function: Hall Input 2 (cannot be used simultaneously with VR3)
+    type: hall
     meta: MM176_IN_D2
     class: event_inputs
     ts_name: ___ - Hall Input 2
@@ -164,6 +168,7 @@ pins:
 
   - pin: 24A
     function: Hall Input 3 / SENT
+    type: hall
     meta: MM176_IN_D3
     class: event_inputs
     ts_name: 24A - Hall Input 3 / SENT
@@ -176,6 +181,7 @@ pins:
 
   - pin: 26A
     function: VSS Hall Input
+    type: hall
     meta: MM176_IN_VSS
     class: event_inputs
     ts_name: 26A - VSS Hall

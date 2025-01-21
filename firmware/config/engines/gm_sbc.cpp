@@ -210,6 +210,8 @@ void setGmSbcGen5() {
 	engineConfiguration->ignitionPins[6] = Gpio::MM176_IGN7;
 	engineConfiguration->ignitionPins[7] = Gpio::MM176_IGN8;
 
+	engineConfiguration->starterControlPin = Gpio::MM176_SPI3_SCK; // 29C - Ignition 9
+
   engineConfiguration->vvtMode[1] = VVT_INACTIVE;
   engineConfiguration->camInputs[1] = Gpio::Unassigned;
 #endif // HW_HELLEN_8CHAN
