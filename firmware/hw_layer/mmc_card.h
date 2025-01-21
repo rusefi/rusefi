@@ -23,7 +23,6 @@ typedef enum {
 
 void initEarlyMmcCard();
 void initMmcCard();
-bool unmountMmc();
 bool isSdCardAlive();
 
 void onUsbConnectedNotifyMmcI(void);

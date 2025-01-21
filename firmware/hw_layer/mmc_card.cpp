@@ -409,7 +409,7 @@ static bool mountMmc() {
  * MMC card un-mount.
  * @return true if we had SD card alive
  */
-bool unmountMmc() {
+static void unmountMmc() {
 	if (!isSdCardAlive()) {
 		efiPrintf("Error: No File system is mounted. \"mountsd\" first");
 		return false;
@@ -423,7 +423,6 @@ bool unmountMmc() {
 #endif
 
 	efiPrintf("SD card unmounted");
-	return true;
 }
 
 struct SdLogBufferWriter final : public BufferedWriter<512> {
