@@ -85,7 +85,7 @@ void hellenEnableEn(const char *msg) {
 void hellenDisableEn(const char *msg) {
 #if EFI_FILE_LOGGING && EFI_PROD_CODE
   // un-mount before turning power off SD card
-  if (mmcUnMount()) {
+  if (unmountMmc()) {
     // trying worst case just to test things
     chThdSleepMilliseconds(1000);
   }
