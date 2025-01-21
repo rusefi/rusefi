@@ -58,7 +58,7 @@ pins:
   - pin: 8A
     function: Analog Ground
     type: agnd
-    color: green
+    color: black
 
   - pin: 9A
     function: Hall Input 4
@@ -108,7 +108,7 @@ pins:
     meta: MM176_IN_D1
     class: event_inputs
     ts_name: 15A - Hall Input 1
-    color: orange
+    color: orange/brown
 
   - pin: 16A
     function: +5v sensors
@@ -118,13 +118,13 @@ pins:
   - pin: 17A
     function: Analog Ground
     type: agnd
-    color: orange
+    color: black
 
 
   - pin: 18A
     function: Power Ground
     type: gnd
-    color: blue
+    color: black
 
   - pin: 19A
     meta: MM176_IN_AUX1_ANALOG
@@ -350,8 +350,8 @@ pins:
 
   - pin: 23B
     function: +5v sensors
-    color: green
-    type: av
+    color: red
+    type: 5v
 
   - pin: 24B
     meta: MM176_IN_VBATT
