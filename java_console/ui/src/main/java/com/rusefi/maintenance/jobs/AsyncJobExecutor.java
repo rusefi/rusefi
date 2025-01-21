@@ -11,11 +11,11 @@ import static com.rusefi.core.ui.FrameHelper.appendBundleName;
 public enum AsyncJobExecutor {
     INSTANCE;
 
-    public void executeJob(final AsyncJob job) {
-        executeJob(job, UpdateOperationCallbacks.DUMMY);
+    public void executeJobWithStatusWindow(final AsyncJob job) {
+        executeJobWithStatusWindow(job, UpdateOperationCallbacks.DUMMY);
     }
 
-    public void executeJob(final AsyncJob job, UpdateOperationCallbacks secondary) {
+    public void executeJobWithStatusWindow(final AsyncJob job, UpdateOperationCallbacks secondary) {
         final UpdateOperationCallbacks callbacks = StatusWindow.createAndShowFrame(appendBundleName(job.getName() + " " + Launcher.CONSOLE_VERSION));
         final UpdateOperationCallbacks doubleCallbacks = new DoubleCallbacks(callbacks, secondary);
         final Runnable jobWithSuspendedPortScanning = () -> job.doJob(doubleCallbacks);

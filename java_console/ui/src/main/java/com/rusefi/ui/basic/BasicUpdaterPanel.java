@@ -6,7 +6,6 @@ import com.rusefi.core.FindFileHelper;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.maintenance.ProgramSelector;
-import com.rusefi.maintenance.StatusAnimation;
 import com.rusefi.maintenance.jobs.*;
 import com.rusefi.ui.LogoHelper;
 import com.rusefi.ui.util.HorizontalLine;
@@ -221,7 +220,7 @@ public class BasicUpdaterPanel extends JPanel {
 
     private void onUpdateFirmwareButtonClicked(final ActionEvent actionEvent) {
         CompatibilityOptional.ifPresentOrElse(updateFirmwareJob,
-            AsyncJobExecutor.INSTANCE::executeJob,
+            AsyncJobExecutor.INSTANCE::executeJobWithStatusWindow,
             () -> log.error("Update firmware job is is not defined.")
         );
     }
