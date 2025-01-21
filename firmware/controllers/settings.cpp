@@ -739,13 +739,12 @@ void setEngineType(int value, bool isWriteToFlash) {
 		engineConfiguration->engineType = (engine_type_e)value;
 		resetConfigurationExt((engine_type_e)value);
 		engine->resetEngineSnifferIfInTestMode();
-
+    }
 #if EFI_CONFIGURATION_STORAGE
 		if (isWriteToFlash) {
 			writeToFlashNow();
 		}
 #endif /* EFI_CONFIGURATION_STORAGE */
-	}
 	incrementGlobalConfigurationVersion("engineType");
 #if EFI_ENGINE_CONTROL && ! EFI_UNIT_TEST
 	printConfiguration();
