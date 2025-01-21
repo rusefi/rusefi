@@ -843,11 +843,14 @@ void initMmcCard() {
 #endif // EFI_PROD_CODE
 }
 
+#if EFI_PROD_CODE
+
 void sdCardRequestMode(SD_MODE mode)
 {
 	if (sdTargerMode == SD_MODE_IDLE) {
 		sdTargerMode = mode;
 	}
 }
+#endif // EFI_PROD_CODE
 
 #endif /* EFI_FILE_LOGGING */
