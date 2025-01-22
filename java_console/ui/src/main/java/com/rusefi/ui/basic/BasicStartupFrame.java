@@ -22,8 +22,7 @@ public class BasicStartupFrame {
 
     // Temporary feature flag for testing #7199
     // TODO: get rid of this feature flag after #7199 is completed
-    private final boolean doNotUseStatusWindow =
-        "false".equals(System.getenv("RUSEFI_USE_STATUS_WINDOW_FOR_JOBS"));
+    private final boolean doNotUseStatusWindow = true;
 
     private final StatusPanel statusPanel = new StatusPanel();
     private final BasicUpdaterPanel basicUpdaterPanel = new BasicUpdaterPanel(
