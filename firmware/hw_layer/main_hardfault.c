@@ -29,7 +29,7 @@ typedef enum  {
 	UsageFault = 6,
 } FaultType;
 
-void logHardFault(uint32_t type, uintptr_t faultAddress, struct port_extctx* ctx, uint32_t csfr);
+void logHardFault(uint32_t type, uintptr_t faultAddress, void* sp, struct port_extctx* ctx, uint32_t csfr);
 
 void HardFault_Handler_C(void* sp) {
 	//Copy to local variables (not pointers) to allow GDB "i loc" to directly show the info
@@ -56,7 +56,7 @@ void HardFault_Handler_C(void* sp) {
 	(void)isFaultOnStacking;
 	(void)isFaultAddressValid;
 
-	logHardFault(faultType, faultAddress, &ctx, SCB->CFSR >> SCB_CFSR_BUSFAULTSR_Pos);
+	logHardFault(faultType, faultAddress, sp, &ctx, SCB->CFSR >> SCB_CFSR_BUSFAULTSR_Pos);
 
 	// check if debugger is connected
 	if (CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk)
@@ -90,7 +90,7 @@ void UsageFault_Handler_C(void* sp) {
 	(void)isUnalignedAccessFault;
 	(void)isDivideByZeroFault;
 
-	logHardFault(faultType, 0, &ctx, SCB->CFSR);
+	logHardFault(faultType, 0, sp, &ctx, SCB->CFSR);
 
 	// check if debugger is connected
 	if (CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk)
@@ -125,7 +125,7 @@ void MemManage_Handler_C(void* sp) {
 	(void)isExceptionStackingFault;
 	(void)isFaultAddressValid;
 
-	logHardFault(faultType, faultAddress, &ctx, SCB->CFSR);
+	logHardFault(faultType, faultAddress, sp, &ctx, SCB->CFSR);
 
 	// check if debugger is connected
 	if (CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk)

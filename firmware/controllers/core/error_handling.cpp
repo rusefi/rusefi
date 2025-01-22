@@ -314,7 +314,7 @@ static void errorHandlerSaveStack(backupErrorState *err, uint32_t *sp)
 	}
 }
 
-void logHardFault(uint32_t type, uintptr_t faultAddress, port_extctx* ctx, uint32_t csfr) {
+void logHardFault(uint32_t type, uintptr_t faultAddress, void* sp, port_extctx* ctx, uint32_t csfr) {
     criticalShutdown();
 #if EFI_BACKUP_SRAM
     auto bkpram = getBackupSram();
@@ -325,6 +325,8 @@ void logHardFault(uint32_t type, uintptr_t faultAddress, port_extctx* ctx, uint3
 		err->Csfr = csfr;
 		memcpy(&err->FaultCtx, ctx, sizeof(port_extctx));
 		err->Cookie = ErrorCookie::HardFault;
+		// copy stack last as it can be corrupted and cause another exeption
+		errorHandlerSaveStack(err, (uint32_t *)sp);
 	}
 #endif // EFI_BACKUP_SRAM
 }
