@@ -503,6 +503,9 @@ const char* getConfigErrorMessage() {
 }
 
 void firmwareError(ObdCode code, const char *fmt, ...) {
+	// following is allocated on stack
+	// add some marker
+	uint32_t tmp = 0xfaaaaa11;
 #if EFI_PROD_CODE
 	if (hasCriticalFirmwareErrorFlag)
 		return;
@@ -543,6 +546,9 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 		err->msg[sizeof(err->msg) - 1] = '\0';
 		strlncpy(err->msg, criticalErrorMessageBuffer, sizeof(err->msg));
 		err->Cookie = ErrorCookie::FirmwareError;
+		// copy stack last as it can be corrupted and cause another exeption
+		uint32_t *sp = &tmp;
+		errorHandlerSaveStack(err, sp);
 	}
 #endif // EFI_BACKUP_SRAM
 #else
