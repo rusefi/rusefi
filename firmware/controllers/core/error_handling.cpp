@@ -73,7 +73,7 @@ const char* getConfigErrorMessageBuffer() {
 #if EFI_BACKUP_SRAM
 static backupErrorState lastBootError;
 static uint32_t bootCount = 0;
-#endif
+#endif // EFI_BACKUP_SRAM
 
 void errorHandlerInit() {
 #if EFI_BACKUP_SRAM
@@ -108,7 +108,7 @@ void errorHandlerInit() {
 	if ((cause == Reset_Cause_IWatchdog) || (cause == Reset_Cause_WWatchdog)) {
 		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Watchdog Reset detected! Check SD card for report file.");
 	}
-#endif
+#endif // EFI_PROD_CODE
 
 	// see https://github.com/rusefi/rusefi/wiki/Resilience
 	addConsoleAction("chibi_fault", [](){ chDbgCheck(0); } );
@@ -321,7 +321,7 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 	{
 		bkpt();
 	}
-#endif
+#endif // EFI_PROD_CODE
 
 #if EFI_BACKUP_SRAM
     auto bkpram = getBackupSram();
@@ -518,7 +518,7 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 		err->Cookie = ErrorCookie::FirmwareError;
 	}
 #endif // EFI_BACKUP_SRAM
-#else
+#else // EFI_PROD_CODE
 
   // large buffer on stack is risky we better use normal memory
 	static char errorBuffer[200];
@@ -530,10 +530,8 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 
 	printf("\x1B[31m>>>>>>>>>> firmwareError [%s]\r\n\x1B[0m\r\n", errorBuffer);
 
-#if EFI_SIMULATOR || EFI_UNIT_TEST
 	throw std::logic_error(errorBuffer);
-#endif /* EFI_SIMULATOR */
-#endif
+#endif // EFI_PROD_CODE
 }
 
 void criticalErrorM(const char *msg) {
