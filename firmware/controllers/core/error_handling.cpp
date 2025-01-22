@@ -309,7 +309,9 @@ static void errorHandlerSaveStack(backupErrorState *err, uint32_t *sp)
 {
 	err->sp = (uint32_t)sp;
 	for (size_t i = 0; i < ERROR_STACK_DEPTH; i++) {
-		err->stack[i] = *sp;
+		// avoid optimizatio and usage of __builtin_memcpy
+		// to avoid "error: '__builtin_memcpy' reading 128 bytes from a region of size 4"
+		err->stack[i] = *(volatile uint32_t *)sp;
 		sp++;
 	}
 }
