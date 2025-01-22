@@ -52,7 +52,11 @@ public class BasicUpdaterPanel extends JPanel {
         super(new VerticalFlowLayout());
 
         this.updateOperationCallbacks = updateOperationCallbacks;
-        singleAsyncJobExecutor = new SingleAsyncJobExecutor(updateOperationCallbacks, doNotUseStatusWindow);
+        singleAsyncJobExecutor = new SingleAsyncJobExecutor(
+            updateOperationCallbacks,
+            doNotUseStatusWindow,
+            () -> SwingUtilities.invokeLater(this::refreshButtons)
+        );
         updateCalibrations = new UpdateCalibrations(singleAsyncJobExecutor);
 
         if (isWindows()) {
@@ -171,7 +175,7 @@ public class BasicUpdaterPanel extends JPanel {
     private void setUpdateFirmwareJob(final AsyncJob updateFirmwareJob) {
         this.updateFirmwareJob = Optional.of(updateFirmwareJob);
         hideStatusMessage();
-        updateFirmwareButton.setEnabled(true);
+        refreshButtons();
         Optional<String> updateFirmwareButtonText = Optional.empty();
         if (updateFirmwareJob instanceof OpenBltAutoJob) {
             updateFirmwareButtonText = Optional.of("Auto Update Firmware");
@@ -224,7 +228,7 @@ public class BasicUpdaterPanel extends JPanel {
 
     private void setPortToUpdateCalibrations(final SerialPortScanner.PortResult port) {
         portToUpdateCalibrations = Optional.of(port);
-        updateCalibrationsButton.setEnabled(true);
+        refreshButtons();
     }
 
     private void resetPortToUpdateCalibrations() {
@@ -233,15 +237,18 @@ public class BasicUpdaterPanel extends JPanel {
     }
 
     private void onUpdateFirmwareButtonClicked(final ActionEvent actionEvent) {
+        disableButtons();
         CompatibilityOptional.ifPresentOrElse(updateFirmwareJob,
             value -> {
                 singleAsyncJobExecutor.startJob(value, updateFirmwareButton);
             },
             () -> log.error("Update firmware job is is not defined.")
         );
+        refreshButtons();
     }
 
     private void onUpdateCalibrationsButtonClicked(final ActionEvent actionEvent) {
+        disableButtons();
         CompatibilityOptional.ifPresentOrElse(portToUpdateCalibrations,
             port -> {
                 updateCalibrations.updateCalibrationsAction(port, updateCalibrationsButton);
@@ -254,5 +261,16 @@ public class BasicUpdaterPanel extends JPanel {
                 );
             }
         );
+        refreshButtons();
+    }
+
+    private void refreshButtons() {
+        updateFirmwareButton.setEnabled(updateFirmwareJob.isPresent() && singleAsyncJobExecutor.isNotInProgress());
+        updateCalibrationsButton.setEnabled(portToUpdateCalibrations.isPresent() && singleAsyncJobExecutor.isNotInProgress());
+    }
+
+    private void disableButtons() {
+        updateFirmwareButton.setEnabled(false);
+        updateCalibrationsButton.setEnabled(false);
     }
 }
