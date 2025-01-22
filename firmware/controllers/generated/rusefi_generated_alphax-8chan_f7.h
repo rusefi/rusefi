@@ -1335,7 +1335,7 @@
 #define show_8chan_presets true
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2165626677
+#define SIGNATURE_HASH 2592962868
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1358,8 +1358,8 @@
 #define stft_cell_cfg_s_size 4
 #define STFT_CELL_COUNT 4
 #define stft_s_size 28
-#define switch_input_pin_e_enum 0="NONE",77="14A - Switch 2",87="21A - Flex",88="21B - Knock2 Input",35="22A - Switch 3",85="5A - Switch 4",75="6A - Switch 1"
-#define switch_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","22A - Switch 3","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","6A - Switch 1","INVALID","14A - Switch 2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","5A - Switch 4","INVALID","21A - Flex","21B - Knock2 Input"
+#define switch_input_pin_e_enum 0="NONE",86="13A - Hall Input 5",77="14A - Switch 2",78="15A - Hall Input 1",87="21A - Flex",88="21B - Knock2 Input",35="22A - Switch 3",79="23A - Hall Input 2",80="24A - Hall Input 3 / SENT",93="26A - VSS Hall",85="5A - Switch 4",75="6A - Switch 1",81="9A - Hall Input 4"
+#define switch_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","22A - Switch 3","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","6A - Switch 1","INVALID","14A - Switch 2","15A - Hall Input 1","23A - Hall Input 2","24A - Hall Input 3 / SENT","9A - Hall Input 4","INVALID","INVALID","INVALID","5A - Switch 4","13A - Hall Input 5","21A - Flex","21B - Knock2 Input","INVALID","INVALID","INVALID","INVALID","26A - VSS Hall"
 #define TABLE_2_LOAD_SIZE 8
 #define TABLE_2_RPM_SIZE 8
 #define TABLE_3_LOAD_SIZE 8
@@ -1805,7 +1805,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.01.22.alphax-8chan_f7.2165626677"
+#define TS_SIGNATURE "rusEFI master.2025.01.22.alphax-8chan_f7.2592962868"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
