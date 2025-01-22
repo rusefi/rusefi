@@ -336,10 +336,10 @@ void logHardFault(uint32_t type, uintptr_t faultAddress, void* sp, port_extctx* 
 #if EFI_SIMULATOR || EFI_PROD_CODE
 
 void chDbgPanic3(const char *msg, const char * file, int line) {
+#if EFI_PROD_CODE
 	// following is allocated on stack
 	// add some marker
 	uint32_t tmp = 0xfffffa11;
-#if EFI_PROD_CODE
 	// Attempt to break in to the debugger, if attached
 	if (CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk)
 	{
@@ -503,10 +503,11 @@ const char* getConfigErrorMessage() {
 }
 
 void firmwareError(ObdCode code, const char *fmt, ...) {
+
+#if EFI_PROD_CODE
 	// following is allocated on stack
 	// add some marker
 	uint32_t tmp = 0xfaaaaa11;
-#if EFI_PROD_CODE
 	if (hasCriticalFirmwareErrorFlag)
 		return;
 	hasCriticalFirmwareErrorFlag = true;
