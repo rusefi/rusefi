@@ -229,11 +229,8 @@ adcsample_t AdcDevice::getAvgAdcValue(adc_channel_e hwChannel) {
 
 	for (size_t i = 0; i < depth; i++) {
 		adcsample_t sample = samples[index];
-//		if (sample > 0x1FFF) {
-//			// 12bit ADC expected right now, make this configurable one day
-//			criticalError("fast ADC unexpected sample %d", sample);
-//		} else
 		if (sample > ADC_MAX_VALUE) {
+		  // 12bit ADC expected right now. An error here usually means major RAM corruption?
  			criticalError("ADC unexpected sample %d at %ld uptime.",
 				sample,
 				(uint32_t)getTimeNowS());
