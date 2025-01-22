@@ -252,7 +252,9 @@ void errorHandlerWriteReportFile(FIL *fd, int index) {
 	}
 
 	auto cause = getMCUResetCause();
-	if ((cause != Reset_Cause_NRST_Pin) && (cause != Reset_Cause_BOR) && (cause != Reset_Cause_Unknown)) {
+	// TODO: should we also report Unknown?
+	if ((cause != Reset_Cause_NRST_Pin) && (cause != Reset_Cause_BOR) &&
+		(cause != Reset_Cause_POR) && (cause != Reset_Cause_Unknown)) {
 		// not an expected cause
 		needReport = true;
 	}
