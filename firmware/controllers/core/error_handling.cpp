@@ -197,6 +197,14 @@ do {																\
 	}																\
 } while(0)
 
+#define printErrorStack()											\
+do {																\
+	PRINT("SP 0x%08lx", err->sp);									\
+	for (size_t i = 0; i < ERROR_STACK_DEPTH; i++) {				\
+		PRINT(" 0x%08lx: 0x%08lx", err->sp - i * 4, err->stack[i]);	\
+	}																\
+} while(0)
+
 // TODO: reuse this code for writing crash report file
 void errorHandlerShowBootReasonAndErrors() {
 	//this is console print
@@ -209,6 +217,7 @@ void errorHandlerShowBootReasonAndErrors() {
 	ErrorCookie cookie = err->Cookie;
 
 	printErrorState();
+	printErrorStack();
 #endif // EFI_BACKUP_SRAM
 	#undef PRINT
 }
@@ -276,6 +285,7 @@ void errorHandlerWriteReportFile(FIL *fd, int index) {
 			printResetReason();
 #if EFI_BACKUP_SRAM
 			printErrorState();
+			printErrorStack();
 #endif // EFI_BACKUP_SRAM
 			// additional board-specific data
 			onBoardWriteErrorFile(fd);
@@ -293,6 +303,15 @@ backupErrorState *errorHandlerGetLastErrorDescriptor(void)
 #else
 	return nullptr;
 #endif
+}
+
+static void errorHandlerSaveStack(backupErrorState *err, uint32_t *sp)
+{
+	err->sp = (uint32_t)sp;
+	for (size_t i = 0; i < ERROR_STACK_DEPTH; i++) {
+		err->stack[i] = *sp;
+		sp++;
+	}
 }
 
 void logHardFault(uint32_t type, uintptr_t faultAddress, port_extctx* ctx, uint32_t csfr) {
@@ -315,6 +334,9 @@ void logHardFault(uint32_t type, uintptr_t faultAddress, port_extctx* ctx, uint3
 #if EFI_SIMULATOR || EFI_PROD_CODE
 
 void chDbgPanic3(const char *msg, const char * file, int line) {
+	// following is allocated on stack
+	// add some marker
+	uint32_t tmp = 0xfffffa11;
 #if EFI_PROD_CODE
 	// Attempt to break in to the debugger, if attached
 	if (CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk)
@@ -331,6 +353,9 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 		err->line = line;
 		strlncpy(err->msg, msg, efi::size(err->msg));
 		err->Cookie = ErrorCookie::ChibiOsPanic;
+		// copy stack last as it can be corrupted and cause another exeption
+		uint32_t *sp = &tmp;
+		errorHandlerSaveStack(err, sp);
 	}
 #endif // EFI_BACKUP_SRAM
 
