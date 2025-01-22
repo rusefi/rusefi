@@ -35,9 +35,7 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks, Sta
         };
         super.add(messagesScroll, BorderLayout.CENTER);
         super.add(bottomStatusLabel, BorderLayout.SOUTH);
-        appendLine("Console version " + rusEFIVersion.CONSOLE_VERSION);
-        appendLine(FileLog.getOsName() + " " + System.getProperty("os.version"));
-        appendLine("Bundle " + BundleUtil.readBundleFullNameNotNull());
+        clear();
     }
 
     public void setErrorState() {
@@ -73,8 +71,13 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks, Sta
         appendLine("hint: error state is already in your clipboard, please use PASTE or Ctrl-V while reporting issues");
     }
 
+    @Override
     public void clear() {
         logTextArea.setText("");
+        logTextArea.setBackground(Color.WHITE);
+        appendLine("Console version " + rusEFIVersion.CONSOLE_VERSION);
+        appendLine(FileLog.getOsName() + " " + System.getProperty("os.version"));
+        appendLine("Bundle " + BundleUtil.readBundleFullNameNotNull());
     }
 
     @Override

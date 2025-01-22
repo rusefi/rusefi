@@ -29,6 +29,7 @@ public class SingleAsyncJobExecutor {
     void startJob(final AsyncJob job, final Component parent) {
         final Optional<AsyncJob> prevJobInProgress = setJobInProgressIfEmpty(job);
         if (!prevJobInProgress.isPresent()) {
+            updateOperationCallbacks.clear();
             if (doNotUseStatusWindow) {
                 AsyncJobExecutor.INSTANCE.executeJob(job, updateOperationCallbacks, this::handleJobInProgressFinished);
             } else {

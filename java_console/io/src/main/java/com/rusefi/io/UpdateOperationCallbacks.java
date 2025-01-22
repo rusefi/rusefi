@@ -18,6 +18,8 @@ public interface UpdateOperationCallbacks {
     void done();
     void error();
 
+    void clear();
+
     UpdateOperationCallbacks DUMMY = new UpdateOperationCallbacks() {
         @Override
         public void log(final String message, final boolean breakLineOnTextArea, boolean sendToLogger) {
@@ -29,6 +31,10 @@ public interface UpdateOperationCallbacks {
 
         @Override
         public void error() {
+        }
+
+        @Override
+        public void clear() {
         }
     };
 }
