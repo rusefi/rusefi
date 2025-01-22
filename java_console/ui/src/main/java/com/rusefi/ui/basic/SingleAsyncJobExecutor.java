@@ -19,7 +19,8 @@ public class SingleAsyncJobExecutor {
 
     SingleAsyncJobExecutor(
         final UpdateOperationCallbacks updateOperationCallbacks,
-        final boolean doNotUseStatusWindow
+        final boolean doNotUseStatusWindow,
+        final Runnable onJobInProgressFinished
     ) {
         this.updateOperationCallbacks = updateOperationCallbacks;
         this.doNotUseStatusWindow = doNotUseStatusWindow;
@@ -29,12 +30,12 @@ public class SingleAsyncJobExecutor {
         final Optional<AsyncJob> prevJobInProgress = setJobInProgressIfEmpty(job);
         if (!prevJobInProgress.isPresent()) {
             if (doNotUseStatusWindow) {
-                AsyncJobExecutor.INSTANCE.executeJob(job, updateOperationCallbacks, this::resetJobInProgress);
+                AsyncJobExecutor.INSTANCE.executeJob(job, updateOperationCallbacks, this::handleJobInProgressFinished);
             } else {
                 AsyncJobExecutor.INSTANCE.executeJobWithStatusWindow(
                     job,
                     updateOperationCallbacks,
-                    this::resetJobInProgress
+                    this::handleJobInProgressFinished
                 );
             }
         } else {
@@ -47,6 +48,10 @@ public class SingleAsyncJobExecutor {
         }
     }
 
+    public synchronized boolean isNotInProgress() {
+        return !jobInProgress.isPresent();
+    }
+
     private synchronized Optional<AsyncJob> setJobInProgressIfEmpty(final AsyncJob job) {
         final Optional<AsyncJob> prevJobInProgress = jobInProgress;
         if (!prevJobInProgress.isPresent()) {
@@ -57,5 +62,9 @@ public class SingleAsyncJobExecutor {
 
     private synchronized void resetJobInProgress() {
         jobInProgress = Optional.empty();
+    }
+
+    private void handleJobInProgressFinished() {
+        resetJobInProgress();
     }
 }
