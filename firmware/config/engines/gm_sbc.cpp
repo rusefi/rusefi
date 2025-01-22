@@ -214,5 +214,8 @@ void setGmSbcGen5() {
 
   engineConfiguration->vvtMode[1] = VVT_INACTIVE;
   engineConfiguration->camInputs[1] = Gpio::Unassigned;
+
+  engineConfiguration->flexSensorPin = Gpio::MM176_IN_SENS3;
+  engineConfiguration->map.sensor.hwChannel = MM176_IN_MAP1_ANALOG; // 2A Aux Analog 4 / External MAP
 #endif // HW_HELLEN_8CHAN
 }
