@@ -316,9 +316,15 @@ static void errorHandlerSaveStack(backupErrorState *err, uint32_t *sp)
 		sp++;
 	}
 }
-#endif
+#endif // EFI_BACKUP_SRAM
+
+// todo: revisit very questionable code!
+    // todo: reuse hasCriticalFirmwareErrorFlag? something?
+bool isInHardFaultHandler = false;
 
 void logHardFault(uint32_t type, uintptr_t faultAddress, void* sp, port_extctx* ctx, uint32_t csfr) {
+    // todo: reuse hasCriticalFirmwareErrorFlag? something?
+    isInHardFaultHandler = true;
     criticalShutdown();
 #if EFI_BACKUP_SRAM
     auto bkpram = getBackupSram();

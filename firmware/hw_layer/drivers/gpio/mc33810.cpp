@@ -670,8 +670,7 @@ static THD_FUNCTION(mc33810_driver_thread, p) {
 /* Driver exported functions.												*/
 /*==========================================================================*/
 
-int Mc33810::writePad(size_t pin, int value)
-{
+int Mc33810::writePad(size_t pin, int value) {
 	if (pin >= MC33810_OUTPUTS) {
 		return -12;
 	}
