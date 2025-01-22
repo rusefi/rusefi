@@ -305,6 +305,7 @@ backupErrorState *errorHandlerGetLastErrorDescriptor(void)
 #endif
 }
 
+#if EFI_BACKUP_SRAM
 static void errorHandlerSaveStack(backupErrorState *err, uint32_t *sp)
 {
 	err->sp = (uint32_t)sp;
@@ -315,6 +316,7 @@ static void errorHandlerSaveStack(backupErrorState *err, uint32_t *sp)
 		sp++;
 	}
 }
+#endif
 
 void logHardFault(uint32_t type, uintptr_t faultAddress, void* sp, port_extctx* ctx, uint32_t csfr) {
     criticalShutdown();
@@ -339,9 +341,11 @@ void logHardFault(uint32_t type, uintptr_t faultAddress, void* sp, port_extctx* 
 
 void chDbgPanic3(const char *msg, const char * file, int line) {
 #if EFI_PROD_CODE
+#if EFI_BACKUP_SRAM
 	// following is allocated on stack
 	// add some marker
 	uint32_t tmp = 0xfffffa11;
+#endif
 	// Attempt to break in to the debugger, if attached
 	if (CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk)
 	{
@@ -505,11 +509,12 @@ const char* getConfigErrorMessage() {
 }
 
 void firmwareError(ObdCode code, const char *fmt, ...) {
-
 #if EFI_PROD_CODE
+#if EFI_BACKUP_SRAM
 	// following is allocated on stack
 	// add some marker
 	uint32_t tmp = 0xfaaaaa11;
+#endif
 	if (hasCriticalFirmwareErrorFlag)
 		return;
 	hasCriticalFirmwareErrorFlag = true;
