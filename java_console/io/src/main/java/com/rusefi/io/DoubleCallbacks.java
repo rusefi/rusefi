@@ -26,4 +26,10 @@ public class DoubleCallbacks implements UpdateOperationCallbacks {
         one.error();
         two.error();
     }
+
+    @Override
+    public void clear() {
+        one.clear();
+        two.clear();
+    }
 }

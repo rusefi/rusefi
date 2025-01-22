@@ -49,6 +49,9 @@ public class MassUpdater {
                         public void error() {
                             isUsingDfu.set(false);
                         }
+
+                        @Override
+                        public void clear() {}
                     };
                     SwingUtilities.invokeLater(() -> AsyncJobExecutor.INSTANCE.executeJobWithStatusWindow(
                         new DfuManualJob(),
