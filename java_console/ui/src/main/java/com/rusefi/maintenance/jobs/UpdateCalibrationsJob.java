@@ -11,11 +11,12 @@ public class UpdateCalibrationsJob extends AsyncJobWithContext<UpdateCalibration
     }
 
     @Override
-    public void doJob(final UpdateOperationCallbacks callbacks) {
+    public void doJob(final UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
         CalibrationsUpdater.INSTANCE.updateCalibrations(
             context.getPort().port,
             context.getCalibrations(),
-            callbacks
+            callbacks,
+            onJobFinished
         );
     }
 }

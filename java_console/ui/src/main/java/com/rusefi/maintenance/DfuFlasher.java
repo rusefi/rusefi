@@ -11,6 +11,7 @@ import com.rusefi.io.BootloaderHelper;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.io.serial.BufferedSerialIoStream;
+import com.rusefi.maintenance.jobs.JobHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,28 +39,41 @@ public class DfuFlasher {
         return new File(BOOTLOADER_BIN_FILE).exists();
     }
 
-    public static void doAutoDfu(JComponent parent, String port, UpdateOperationCallbacks callbacks) {
-        if (port == null) {
-            JOptionPane.showMessageDialog(parent, "Failed to locate serial ports");
-            return;
-        }
-
-        AtomicBoolean isSignatureValidated = rebootToDfu(parent, port, callbacks, Integration.CMD_REBOOT_DFU);
-        if (isSignatureValidated == null)
-            return;
-        if (isSignatureValidated.get()) {
-            if (!FileLog.isWindows()) {
-                callbacks.appendLine("Switched to DFU mode!");
-                callbacks.appendLine("rusEFI console can only program on Windows");
+    public static void doAutoDfu(JComponent parent, String port, UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
+        boolean isJobDelegatedToAnotherThread = false;
+        try {
+            if (port == null) {
+                JOptionPane.showMessageDialog(parent, "Failed to locate serial ports");
                 return;
             }
 
-            submitAction(() -> {
-                timeForDfuSwitch(callbacks);
-                executeDFU(callbacks, FindFileHelper.FIRMWARE_BIN_FILE);
-            });
-        } else {
-            callbacks.logLine("Please use manual DFU to change bundle type.");
+            AtomicBoolean isSignatureValidated = rebootToDfu(parent, port, callbacks, Integration.CMD_REBOOT_DFU);
+            if (isSignatureValidated == null)
+                return;
+            if (isSignatureValidated.get()) {
+                if (!FileLog.isWindows()) {
+                    callbacks.appendLine("Switched to DFU mode!");
+                    callbacks.appendLine("rusEFI console can only program on Windows");
+                    return;
+                }
+
+                submitAction(() -> {
+                    JobHelper.doJob(
+                        () -> {
+                            timeForDfuSwitch(callbacks);
+                            executeDFU(callbacks, FindFileHelper.FIRMWARE_BIN_FILE);
+                        },
+                        onJobFinished
+                    );
+                });
+                isJobDelegatedToAnotherThread = true;
+            } else {
+                callbacks.logLine("Please use manual DFU to change bundle type.");
+            }
+        } finally {
+            if (!isJobDelegatedToAnotherThread) {
+                onJobFinished.run();
+            }
         }
     }
 
@@ -115,11 +129,15 @@ public class DfuFlasher {
         return isSignatureValidated;
     }
 
-    public static void runDfuEraseAsync(UpdateOperationCallbacks callbacks) {
+    public static void runDfuEraseAsync(UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
         submitAction(() -> {
-            runDfuErase(callbacks);
-            // it's a lengthy operation let's signal end
-            Toolkit.getDefaultToolkit().beep();
+            JobHelper.doJob(() -> {
+                    runDfuErase(callbacks);
+                    // it's a lengthy operation let's signal end
+                    Toolkit.getDefaultToolkit().beep();
+                },
+                onJobFinished
+            );
         });
     }
 
@@ -134,12 +152,19 @@ public class DfuFlasher {
         }
     }
 
-    public static void runDfuProgramming(UpdateOperationCallbacks callbacks) {
-        submitAction(() -> executeDFU(callbacks, FindFileHelper.FIRMWARE_BIN_FILE));
+    public static void runDfuProgramming(UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
+        submitAction(() -> {
+            JobHelper.doJob(() -> executeDFU(callbacks, FindFileHelper.FIRMWARE_BIN_FILE), onJobFinished);
+        });
     }
 
-    public static void runOpenBltInitialProgramming(UpdateOperationCallbacks callbacks) {
-        submitAction(() -> executeDFU(callbacks, DfuFlasher.BOOTLOADER_BIN_FILE));
+    public static void runOpenBltInitialProgramming(UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
+        submitAction(() -> {
+            JobHelper.doJob(
+                () -> executeDFU(callbacks, DfuFlasher.BOOTLOADER_BIN_FILE),
+                onJobFinished
+            );
+        });
     }
 
     private static void executeDFU(UpdateOperationCallbacks callbacks, String firmwareBinFile) {

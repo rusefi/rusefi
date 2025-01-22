@@ -38,13 +38,11 @@ public class BasicUpdaterPanel extends JPanel {
         "Update Calibrations",
         AutoupdateUtil.loadIcon("writeconfig48.png")
     );
-    private final UpdateCalibrations updateCalibrations = new UpdateCalibrations();
+
+    private final SingleAsyncJobExecutor singleAsyncJobExecutor;
+    private final UpdateCalibrations updateCalibrations;
     private volatile Optional<AsyncJob> updateFirmwareJob = Optional.empty();
     private volatile Optional<SerialPortScanner.PortResult> portToUpdateCalibrations = Optional.empty();
-
-    // Temporary feature flag for testing #7199
-    // TODO: get rid of this feature flag after #7199 is completed
-    private final boolean doNotUseStatusWindow;
 
     BasicUpdaterPanel(
         final boolean showUrlLabel,
@@ -54,7 +52,8 @@ public class BasicUpdaterPanel extends JPanel {
         super(new VerticalFlowLayout());
 
         this.updateOperationCallbacks = updateOperationCallbacks;
-        this.doNotUseStatusWindow = doNotUseStatusWindow;
+        singleAsyncJobExecutor = new SingleAsyncJobExecutor(updateOperationCallbacks, doNotUseStatusWindow);
+        updateCalibrations = new UpdateCalibrations(singleAsyncJobExecutor);
 
         if (isWindows()) {
             final Optional<JPanel> newReleaseNotification = newReleaseAnnounce(
@@ -236,11 +235,7 @@ public class BasicUpdaterPanel extends JPanel {
     private void onUpdateFirmwareButtonClicked(final ActionEvent actionEvent) {
         CompatibilityOptional.ifPresentOrElse(updateFirmwareJob,
             value -> {
-                if (doNotUseStatusWindow) {
-                    AsyncJobExecutor.INSTANCE.executeJob(value, updateOperationCallbacks);
-                } else {
-                    AsyncJobExecutor.INSTANCE.executeJobWithStatusWindow(value, updateOperationCallbacks);
-                }
+                singleAsyncJobExecutor.startJob(value, updateFirmwareButton);
             },
             () -> log.error("Update firmware job is is not defined.")
         );

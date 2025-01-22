@@ -2,9 +2,9 @@ package com.rusefi.maintenance;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
-import com.rusefi.SerialPortScanner;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.maintenance.jobs.JobHelper;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -17,6 +17,17 @@ public enum CalibrationsUpdater {
     private static final Logging log = getLogging(CalibrationsUpdater.class);
 
     public synchronized void updateCalibrations(
+        final String port,
+        final ConfigurationImage calibrationsImage,
+        final UpdateOperationCallbacks callbacks,
+        final Runnable onJobFinished
+    ) {
+        JobHelper.doJob(() -> {
+            updateCalibrations(port, calibrationsImage, callbacks);
+        }, onJobFinished);
+    }
+
+    private synchronized void updateCalibrations(
         final String port,
         final ConfigurationImage calibrationsImage,
         final UpdateOperationCallbacks callbacks

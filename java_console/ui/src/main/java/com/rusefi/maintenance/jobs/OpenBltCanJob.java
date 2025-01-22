@@ -11,7 +11,7 @@ public class OpenBltCanJob extends AsyncJobWithContext<ParentComponentContext> {
     }
 
     @Override
-    public void doJob(final UpdateOperationCallbacks callbacks) {
-        ProgramSelector.flashOpenBltCan(context.getParent(), callbacks);
+    public void doJob(final UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
+        JobHelper.doJob(() -> ProgramSelector.flashOpenBltCan(context.getParent(), callbacks), onJobFinished);
     }
 }

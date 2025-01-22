@@ -50,7 +50,11 @@ public class MassUpdater {
                             isUsingDfu.set(false);
                         }
                     };
-                    SwingUtilities.invokeLater(() -> AsyncJobExecutor.INSTANCE.executeJobWithStatusWindow(new DfuManualJob(), releaseSemaphore));
+                    SwingUtilities.invokeLater(() -> AsyncJobExecutor.INSTANCE.executeJobWithStatusWindow(
+                        new DfuManualJob(),
+                        releaseSemaphore,
+                        () -> {}
+                    ));
                 }
                 previousDfuState.set(currentHardware.isDfuFound());
             }

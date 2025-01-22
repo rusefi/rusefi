@@ -9,7 +9,7 @@ public class InstallOpenBltJob extends AsyncJob {
     }
 
     @Override
-    public void doJob(final UpdateOperationCallbacks callbacks) {
-        DfuFlasher.runOpenBltInitialProgramming(callbacks);
+    public void doJob(final UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
+        DfuFlasher.runOpenBltInitialProgramming(callbacks, onJobFinished);
     }
 }

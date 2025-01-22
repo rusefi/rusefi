@@ -20,8 +20,12 @@ public class UpdateCalibrations {
     private static final Logging log = getLogging(UpdateCalibrations.class);
 
     private static final String BINARY_IMAGE_DEFAULT_DIRECTORY_PROPERTY_NAME = "binary_image_default_directory";
-
+    private final SingleAsyncJobExecutor singleAsyncJobExecutor;
     private final JFileChooser calibrationsFileChooser = UpdateCalibrations.createConfigurationImageFileChooser();
+
+    UpdateCalibrations(final SingleAsyncJobExecutor singleAsyncJobExecutor) {
+        this.singleAsyncJobExecutor = singleAsyncJobExecutor;
+    }
 
     void updateCalibrationsAction(SerialPortScanner.PortResult port, JComponent parent) {
         final int selectedOption = calibrationsFileChooser.showOpenDialog(parent);
@@ -32,8 +36,9 @@ public class UpdateCalibrations {
                 final ConfigurationImage calibrationsImage = ConfigurationImageFile.readFromFile(
                     selectedFile.getAbsolutePath()
                 );
-                AsyncJobExecutor.INSTANCE.executeJobWithStatusWindow(
-                    new JobWithSuspendedSerialPortScanner(new UpdateCalibrationsJob(port, calibrationsImage))
+                singleAsyncJobExecutor.startJob(
+                    new JobWithSuspendedSerialPortScanner(new UpdateCalibrationsJob(port, calibrationsImage)),
+                    parent
                 );
             } catch (final IOException e) {
                 final String errorMsg = String.format(

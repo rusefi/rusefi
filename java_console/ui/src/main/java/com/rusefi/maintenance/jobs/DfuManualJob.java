@@ -9,7 +9,7 @@ public class DfuManualJob extends AsyncJob {
     }
 
     @Override
-    public void doJob(final UpdateOperationCallbacks callbacks) {
-        DfuFlasher.runDfuProgramming(callbacks);
+    public void doJob(final UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
+        DfuFlasher.runDfuProgramming(callbacks, onJobFinished);
     }
 }
