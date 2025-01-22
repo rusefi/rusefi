@@ -325,9 +325,9 @@ bool isInHardFaultHandler = false;
 void logHardFault(uint32_t type, uintptr_t faultAddress, void* sp, port_extctx* ctx, uint32_t csfr) {
     // todo: reuse hasCriticalFirmwareErrorFlag? something?
     isInHardFaultHandler = true;
-    criticalShutdown();
+	// Evidence first!
 #if EFI_BACKUP_SRAM
-    auto bkpram = getBackupSram();
+	auto bkpram = getBackupSram();
 	auto err = &bkpram->err;
 	if (err->Cookie == ErrorCookie::None) {
 		err->FaultType = type;
@@ -339,6 +339,9 @@ void logHardFault(uint32_t type, uintptr_t faultAddress, void* sp, port_extctx* 
 		errorHandlerSaveStack(err, (uint32_t *)sp);
 	}
 #endif // EFI_BACKUP_SRAM
+	// criticalShutdown() shutdown can cause cascaded fault.
+	// So we first save some valuable evidence and only after try to gracefully shutdown HW
+	criticalShutdown();
 }
 
 #endif /* EFI_PROD_CODE */
@@ -524,11 +527,27 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 	if (hasCriticalFirmwareErrorFlag)
 		return;
 	hasCriticalFirmwareErrorFlag = true;
+
+	// Evidence first!
+#if EFI_BACKUP_SRAM
+	auto bkpram = getBackupSram();
+	auto err = &bkpram->err;
+	if (err->Cookie == ErrorCookie::None) {
+		err->msg[sizeof(err->msg) - 1] = '\0';
+		strlncpy(err->msg, criticalErrorMessageBuffer, sizeof(err->msg));
+		err->Cookie = ErrorCookie::FirmwareError;
+		// copy stack last as it can be corrupted and cause another exeption
+		uint32_t *sp = &tmp;
+		errorHandlerSaveStack(err, sp);
+	}
+#endif // EFI_BACKUP_SRAM
 #if EFI_ENGINE_CONTROL
 	getLimpManager()->fatalError();
 #endif // EFI_ENGINE_CONTROL
 	engine->engineState.warnings.addWarningCode(code);
-    criticalShutdown();
+	// criticalShutdown() shutdown can cause cascaded fault.
+	// So we first save some valuable evidence and only after try to gracefully shutdown HW
+	criticalShutdown();
 	enginePins.communicationLedPin.setValue(1, /*force*/true);
 
 	if (indexOf(fmt, '%') == -1) {
@@ -552,19 +571,6 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 	if (errorMessageSize + strlen(versionBuffer) < sizeof(criticalErrorMessageBuffer)) {
 		strcpy((char*)(criticalErrorMessageBuffer) + errorMessageSize, versionBuffer);
 	}
-
-#if EFI_BACKUP_SRAM
-    auto bkpram = getBackupSram();
-	auto err = &bkpram->err;
-	if (err->Cookie == ErrorCookie::None) {
-		err->msg[sizeof(err->msg) - 1] = '\0';
-		strlncpy(err->msg, criticalErrorMessageBuffer, sizeof(err->msg));
-		err->Cookie = ErrorCookie::FirmwareError;
-		// copy stack last as it can be corrupted and cause another exeption
-		uint32_t *sp = &tmp;
-		errorHandlerSaveStack(err, sp);
-	}
-#endif // EFI_BACKUP_SRAM
 #else // EFI_PROD_CODE
 
   // large buffer on stack is risky we better use normal memory
