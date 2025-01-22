@@ -14,7 +14,8 @@ public class JobWithSuspendedSerialPortScanner extends AsyncJob {
     }
 
     @Override
-    public void doJob(UpdateOperationCallbacks callbacks) {
+    public void doJob(UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
+        boolean isJobDelegated = false;
         try {
             callbacks.logLine("Suspending port scanning...");
             try {
@@ -26,11 +27,15 @@ public class JobWithSuspendedSerialPortScanner extends AsyncJob {
                 return;
             }
 
-            innerJob.doJob(callbacks);
+            innerJob.doJob(callbacks, onJobFinished);
+            isJobDelegated = true;
         } finally {
             callbacks.logLine("Resuming port scanning...");
             SerialPortScanner.INSTANCE.resume();
             callbacks.logLine("Port scanning is resumed.");
+            if (!isJobDelegated) {
+                onJobFinished.run();
+            }
         }
     }
 }

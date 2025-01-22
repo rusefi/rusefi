@@ -13,5 +13,5 @@ public abstract class AsyncJob {
         return name;
     }
 
-    public abstract void doJob(final UpdateOperationCallbacks callbacks);
+    public abstract void doJob(final UpdateOperationCallbacks callbacks, final Runnable onJobFinished);
 }

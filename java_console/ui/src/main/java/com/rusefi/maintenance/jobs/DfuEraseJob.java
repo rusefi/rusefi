@@ -9,7 +9,7 @@ public class DfuEraseJob extends AsyncJob {
     }
 
     @Override
-    public void doJob(UpdateOperationCallbacks callbacks) {
-        DfuFlasher.runDfuEraseAsync(callbacks);
+    public void doJob(UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
+        DfuFlasher.runDfuEraseAsync(callbacks, onJobFinished);
     }
 }

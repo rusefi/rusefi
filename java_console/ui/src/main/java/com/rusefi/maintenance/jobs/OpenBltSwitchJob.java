@@ -12,7 +12,10 @@ public class OpenBltSwitchJob extends AsyncJobWithContext<SerialPortWithParentCo
     }
 
     @Override
-    public void doJob(final UpdateOperationCallbacks callbacks) {
-        ProgramSelector.rebootToOpenblt(context.getParent(), context.getPort().port, callbacks);
+    public void doJob(final UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
+        JobHelper.doJob(
+            () -> ProgramSelector.rebootToOpenblt(context.getParent(), context.getPort().port, callbacks),
+            onJobFinished
+        );
     }
 }

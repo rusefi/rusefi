@@ -3,6 +3,7 @@ package com.rusefi.maintenance;
 import com.rusefi.Launcher;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.maintenance.jobs.JobHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -29,8 +30,11 @@ public class StLinkFlasher {
     public static final String DONE = "DONE!";
     private static final String WMIC_STLINK_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%STLink%'\" get Caption,ConfigManagerErrorCode /format:list";
 
-    public static void doUpdateFirmware(String fileName, UpdateOperationCallbacks callbacks) {
-        ExecHelper.submitAction(() -> doFlashFirmware(callbacks, fileName), StLinkFlasher.class + " extProcessThread");
+    public static void doUpdateFirmware(String fileName, UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
+        ExecHelper.submitAction(
+            () -> JobHelper.doJob(() -> doFlashFirmware(callbacks, fileName), onJobFinished),
+            StLinkFlasher.class + " extProcessThread"
+        );
     }
 
     public static String getOpenocdCommand() {
