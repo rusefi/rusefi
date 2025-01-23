@@ -94,9 +94,4 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
     public void setStatus(String status) {
         bottomStatusLabel.setText(status);
     }
-
-    @Override
-    public void logLine(final String string) {
-        log(string, true, true);
-    }
 }
