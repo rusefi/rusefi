@@ -52,7 +52,7 @@ static const scsi_inquiry_response_t iniDriveInquiry = {
     0x80,           /* removable                      */
     0x04,           /* SPC-2                          */
     0x02,           /* response data format           */
-    0x20,           /* response has 0x20 + 4 bytes    */
+    sizeof(scsi_inquiry_response_t) - 5,	// size of this struct, minus bytes up to and including this one
     0x00,
     0x00,
     0x00,
@@ -66,7 +66,7 @@ static const scsi_inquiry_response_t sdCardInquiry = {
     0x80,           /* removable                      */
     0x04,           /* SPC-2                          */
     0x02,           /* response data format           */
-    0x20,           /* response has 0x20 + 4 bytes    */
+    sizeof(scsi_inquiry_response_t) - 5,	// size of this struct, minus bytes up to and including this one
     0x00,
     0x00,
     0x00,
