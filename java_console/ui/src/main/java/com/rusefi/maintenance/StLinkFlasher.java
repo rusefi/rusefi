@@ -50,7 +50,7 @@ public class StLinkFlasher {
 
     private static void doFlashFirmware(UpdateOperationCallbacks wnd, String fileName) {
         if (!new File(fileName).exists()) {
-            wnd.appendLine(fileName + " not found, cannot proceed !!!");
+            wnd.logLine(fileName + " not found, cannot proceed !!!");
             wnd.error();
             return;
         }
@@ -60,16 +60,16 @@ public class StLinkFlasher {
                 fileName +
                 " verify reset exit 0x08000000\"", wnd);
       } catch (FileNotFoundException e) {
-        wnd.appendLine(e.toString());
+        wnd.logLine(e.toString());
         wnd.error();
         return;
       }
       if (error.contains(SUCCESS_MESSAGE_TAG) && !error.toLowerCase().contains(FAILED_MESSAGE_TAG)) {
-            wnd.appendLine("Flashing looks good!");
+            wnd.logLine("Flashing looks good!");
             wnd.done();
         } else {
             wnd.error();
-            wnd.appendLine("!!! FIRMWARE FLASH: DOES NOT LOOK RIGHT !!!");
+            wnd.logLine("!!! FIRMWARE FLASH: DOES NOT LOOK RIGHT !!!");
         }
     }
 
