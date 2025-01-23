@@ -55,10 +55,10 @@ public class PCanIoStream extends AbstractIoStream {
         PCANBasic can = PCanHelper.create();
         TPCANStatus status = PCanHelper.init(can);
         if (status != TPCANStatus.PCAN_ERROR_OK) {
-            statusListener.appendStatus("Error initializing PCAN: " + status);
+            statusListener.logLine("Error initializing PCAN: " + status);
             return null;
         }
-        statusListener.appendStatus("Creating PCAN stream...");
+        statusListener.logLine("Creating PCAN stream...");
         return new PCanIoStream(can, statusListener);
     }
 
@@ -71,7 +71,7 @@ public class PCanIoStream extends AbstractIoStream {
 
         TPCANStatus status = PCanHelper.send(can, isoTpConnector.canId(), payLoad);
         if (status != TPCANStatus.PCAN_ERROR_OK) {
-            statusListener.appendStatus("Unable to write the CAN message: " + status);
+            statusListener.logLine("Unable to write the CAN message: " + status);
             System.exit(0);
         }
 //        log.info("Send OK! length=" + payLoad.length);

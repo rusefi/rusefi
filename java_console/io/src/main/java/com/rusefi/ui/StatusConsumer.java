@@ -13,5 +13,5 @@ public interface StatusConsumer {
     StatusConsumer ANONYMOUS = (status) -> log.info(status);
     StatusConsumer VOID = (status) -> {};
 
-    void appendStatus(String status);
+    void logLine(String status);
 }
