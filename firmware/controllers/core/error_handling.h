@@ -90,7 +90,7 @@ const char *errorCookieToName(ErrorCookie cookie);
 
 // Error handling/recovery/reporting information
 
-#define ERROR_STACK_DEPTH   32
+#define ERROR_STACK_DEPTH   96
 
 typedef struct {
     ErrorCookie Cookie;
