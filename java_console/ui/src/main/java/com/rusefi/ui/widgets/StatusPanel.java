@@ -97,7 +97,7 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks, Sta
     }
 
     @Override
-    public void appendStatus(final String string) {
+    public void logLine(final String string) {
         log(string, true, true);
     }
 }

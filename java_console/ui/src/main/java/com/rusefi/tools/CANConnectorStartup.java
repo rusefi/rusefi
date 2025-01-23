@@ -21,9 +21,9 @@ public class CANConnectorStartup {
 
         String signature = BinaryProtocol.getSignature(tsStream);
         if (signature == null) {
-            statusListener.appendStatus("Error: no ECU signature from " + tsStream);
+            statusListener.logLine("Error: no ECU signature from " + tsStream);
         } else {
-            statusListener.appendStatus("Got [" + signature + "] ECU signature via " + tsStream);
+            statusListener.logLine("Got [" + signature + "] ECU signature via " + tsStream);
         }
         Map<Byte, RateCounter> rateCounters = new HashMap<>();
 
@@ -33,7 +33,7 @@ public class CANConnectorStartup {
                 for (Map.Entry<Byte, RateCounter> e : rateCounters.entrySet()) {
                     String name = BinaryProtocol.findCommand(e.getKey());
 
-                    statusListener.appendStatus(new Date() + ": Command " + name + ": " + e.getValue().getCurrentRate());
+                    statusListener.logLine(new Date() + ": Command " + name + ": " + e.getValue().getCurrentRate());
                 }
             }
         });
