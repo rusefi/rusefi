@@ -90,6 +90,9 @@ float getOutputValueByName(const char *name) {
 // triggerPageRefreshFlag
 		case -1708884225:
 			return engine->outputChannels.triggerPageRefreshFlag;
+// hasFaultReportFile
+		case -1502616231:
+			return engine->outputChannels.hasFaultReportFile;
 // RPMValue
 		case 1699696209:
 			return engine->outputChannels.RPMValue;

@@ -141,16 +141,16 @@ struct output_channels_s {
 	bool triggerPageRefreshFlag : 1 {};
 	/**
 	offset 0 bit 28 */
-	bool unusedBit_28_28 : 1 {};
+	bool hasFaultReportFile : 1 {};
 	/**
 	offset 0 bit 29 */
-	bool unusedBit_28_29 : 1 {};
+	bool unusedBit_29_29 : 1 {};
 	/**
 	offset 0 bit 30 */
-	bool unusedBit_28_30 : 1 {};
+	bool unusedBit_29_30 : 1 {};
 	/**
 	offset 0 bit 31 */
-	bool unusedBit_28_31 : 1 {};
+	bool unusedBit_29_31 : 1 {};
 	/**
 	 * @@GAUGE_NAME_RPM@@
 	 * units: RPM
