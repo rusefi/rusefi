@@ -40,7 +40,7 @@ bit sd_active_rd;SD card reading
 
 bit isMapValid;MAP from sensor seems valid
 bit triggerPageRefreshFlag
-! 1 unused bit left here
+bit hasFaultReportFile
 
 
 uint16_t RPMValue;@@GAUGE_NAME_RPM@@;"RPM",1, 0, 0, 8000, 0

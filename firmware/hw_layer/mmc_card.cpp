@@ -149,7 +149,8 @@ static NO_CACHE SdLogBufferWriter logBuffer;
 // This is dirty workaround to fix compilation without adding this function prototype
 // to error_handling.h file that will also need to add "ff.h" include to same file and
 // cause simulator fail to build.
-extern void errorHandlerWriteReportFile(FIL *fd, int index);
+extern void errorHandlerWriteReportFile(FIL *fd);
+extern int errorHandlerCheckReportFiles();
 
 typedef enum {
 	SD_STATUS_INIT = 0,
@@ -467,12 +468,9 @@ static void deinitializeMmcBlockDevide() {
 
 #if HAL_USE_USB_MSD
 static bool useMsdMode() {
-  if (errorHandlerIsStartFromError()) {
-    return false;
-  }
-  if (engineConfiguration->alwaysWriteSdCard) {
-    return false;
-  }
+	if (engineConfiguration->alwaysWriteSdCard) {
+		return false;
+	}
 	// Wait for the USB stack to wake up, or a 15 second timeout, whichever occurs first
 	msg_t usbResult = usbConnectedSemaphore.wait(TIME_MS2I(15000));
 
@@ -581,9 +579,6 @@ static int sdLogger()
 	int ret = 0;
 
 	if (!sdLoggerInitDone) {
-		// TODO: Do this independently of SD mode, somewhere in the start of this task!
-		errorHandlerWriteReportFile(&FDLogFile, logFileIndex);
-
 		incLogFileName(&FDLogFile);
 		sdLoggerCreateFile(&FDLogFile);
 		logBuffer.start(&FDLogFile);
@@ -774,6 +769,25 @@ static int sdModeExecuter()
 	return 0;
 }
 
+static int sdReportStorageInit()
+{
+	if (mountMmc()) {
+		// write error report file if needed
+		errorHandlerWriteReportFile(&FDLogFile);
+
+		// check for any exist reports
+		errorHandlerCheckReportFiles();
+
+		// done with SD card
+		unmountMmc();
+
+		return 0;
+	}
+
+	// card is failed to mount
+	return -1;
+}
+
 static THD_WORKING_AREA(mmcThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
 static THD_FUNCTION(MMCmonThread, arg) {
 	(void)arg;
@@ -802,6 +816,9 @@ static THD_FUNCTION(MMCmonThread, arg) {
 		// give up until next boot
 		goto die;
 	}
+
+	// Try to mount SD card, drop critical report if needed and check for previously stored reports
+	sdReportStorageInit();
 
 #if HAL_USE_USB_MSD
 	// Wait for the USB stack to wake up, or a 15 second timeout, whichever occurs first

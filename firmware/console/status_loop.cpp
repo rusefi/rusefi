@@ -724,6 +724,7 @@ void updateTunerStudioState() {
 	tsOutputChannels->vssEdgeCounter = vehicleSpeedSensor.eventCounter;
 
 	tsOutputChannels->hasCriticalError = hasFirmwareError() || hasConfigError();
+	tsOutputChannels->hasFaultReportFile = hasErrorReportFile();
 	tsOutputChannels->triggerPageRefreshFlag = wasPresetJustApplied();
 
 	tsOutputChannels->isWarnNow = engine->engineState.warnings.isWarningNow();

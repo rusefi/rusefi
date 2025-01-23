@@ -43,6 +43,7 @@ extern int warningEnabled;
 
 bool hasCriticalFirmwareErrorFlag = false;
 static bool hasConfigErrorFlag = false;
+static bool hasReportFile = false;
 
 const char *dbg_panic_file;
 int dbg_panic_line;
@@ -62,6 +63,10 @@ bool hasConfigError() {
 
 void clearConfigErrorMessage() {
   hasConfigErrorFlag = false;
+}
+
+bool hasErrorReportFile() {
+	return hasReportFile;
 }
 
 const char* getConfigErrorMessageBuffer() {
@@ -246,7 +251,7 @@ static const char *errorHandlerGetErrorName(ErrorCookie cookie)
 	return "unknown";
 }
 
-void errorHandlerWriteReportFile(FIL *fd, int index) {
+void errorHandlerWriteReportFile(FIL *fd) {
 	// generate file on good boot to?
 	bool needReport = false;
 #if EFI_BACKUP_SRAM
@@ -273,10 +278,12 @@ void errorHandlerWriteReportFile(FIL *fd, int index) {
 		memset(fd, 0, sizeof(FIL));						// clear the memory
 		//TODO: use date + time for file name?
 #if EFI_BACKUP_SRAM
-		index = bootCount;
+		sprintf(fileName, "%05ld_%s_%s.txt",
+			bootCount, FAIL_REPORT_PREFIX, errorHandlerGetErrorName(cookie));
+#else
+		sprintf(fileName, "last_%s_%s.txt",
+			FAIL_REPORT_PREFIX, errorHandlerGetErrorName(cookie));
 #endif
-		sprintf(fileName, "%05d_%s_%s.txt",
-			index, FAIL_REPORT_PREFIX, errorHandlerGetErrorName(cookie));
 
 		FRESULT ret = f_open(fd, fileName, FA_CREATE_ALWAYS | FA_WRITE);
 		if (ret == FR_OK) {
@@ -293,6 +300,31 @@ void errorHandlerWriteReportFile(FIL *fd, int index) {
 			f_close(fd);
 		}
 	}
+}
+
+static int errorHandlerIsReportExist(ErrorCookie cookie) {
+	bool exist = false;
+	FRESULT fr;     /* Return value */
+	DIR dj;         /* Directory object */
+	FILINFO fno;    /* File information */
+	TCHAR pattern[32];
+
+	sprintf(pattern, "*%s*", errorHandlerGetErrorName(cookie));
+
+	fr = f_findfirst(&dj, &fno, "", pattern);
+	exist = ((fr == FR_OK) && (fno.fname[0]));
+	f_closedir(&dj);
+
+	return exist;
+}
+
+int errorHandlerCheckReportFiles() {
+	hasReportFile =
+		(errorHandlerIsReportExist(ErrorCookie::FirmwareError) > 0) ||
+		(errorHandlerIsReportExist(ErrorCookie::HardFault) > 0) ||
+		(errorHandlerIsReportExist(ErrorCookie::ChibiOsPanic) > 0);
+
+	return hasReportFile;
 }
 #endif
 
