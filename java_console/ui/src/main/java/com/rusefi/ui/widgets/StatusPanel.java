@@ -102,7 +102,7 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks, Sta
     }
 
     @Override
-    public void appendStatus(final String string, final boolean breakLineOnTextArea, final boolean sendToLogger) {
-        append(string, breakLineOnTextArea, sendToLogger);
+    public void appendStatus(final String string) {
+        append(string, true, true);
     }
 }
