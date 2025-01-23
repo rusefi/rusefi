@@ -116,8 +116,16 @@ void startWatchdog(int timeoutMs) {
 	wdgcfg.winr = 0xfff; // don't use window
 #endif
 
-  efiPrintf("Starting watchdog...");
-	wdgStart(&WDGD1, &wdgcfg);
+    static bool isStarted = false;
+    if (!isStarted) {
+		efiPrintf("Starting watchdog with timeout %d ms...", timeoutMs);
+		wdgStart(&WDGD1, &wdgcfg);
+		isStarted = true;
+	} else {
+		efiPrintf("Changing watchdog timeout to %d ms...", timeoutMs);
+		// wdgStart() uses kernel lock, thus we cannot call it here from locked or ISR code
+		wdg_lld_start(&WDGD1);
+	}
 #endif // HAL_USE_WDG
 }
 
