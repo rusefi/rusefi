@@ -47,6 +47,7 @@ void configError(const char *fmt, ...);
 void clearConfigErrorMessage();
 const char* getConfigErrorMessage();
 bool hasConfigError();
+bool hasErrorReportFile();
 
 // todo: better place for this shared declaration?
 int getRusEfiVersion();
