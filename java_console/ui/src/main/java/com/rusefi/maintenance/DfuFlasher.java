@@ -52,8 +52,8 @@ public class DfuFlasher {
                 return;
             if (isSignatureValidated.get()) {
                 if (!FileLog.isWindows()) {
-                    callbacks.appendLine("Switched to DFU mode!");
-                    callbacks.appendLine("rusEFI console can only program on Windows");
+                    callbacks.logLine("Switched to DFU mode!");
+                    callbacks.logLine("rusEFI console can only program on Windows");
                     return;
                 }
 
@@ -93,14 +93,14 @@ public class DfuFlasher {
                     return null;
                 });
                 if (signature.get() == null) {
-                    callbacks.appendLine("");
-                    callbacks.appendLine("");
-                    callbacks.appendLine("");
-                    callbacks.appendLine("Make sure TUNERSTUDIO IS DISCONNECTED FROM ECU");
-                    callbacks.appendLine("");
-                    callbacks.appendLine("");
-                    callbacks.appendLine("");
-                    callbacks.appendLine("*** ERROR *** rusEFI has not responded on selected " + port + "\n" +
+                    callbacks.logLine("");
+                    callbacks.logLine("");
+                    callbacks.logLine("");
+                    callbacks.logLine("Make sure TUNERSTUDIO IS DISCONNECTED FROM ECU");
+                    callbacks.logLine("");
+                    callbacks.logLine("");
+                    callbacks.logLine("");
+                    callbacks.logLine("*** ERROR *** rusEFI has not responded on selected " + port + "\n" +
                         "Maybe try automatic serial port detection?");
                     callbacks.error();
                     return null;
@@ -119,11 +119,11 @@ public class DfuFlasher {
                 return null;
             }).getSerialPort();
             if (port == null) {
-                callbacks.appendLine("*** ERROR *** rusEFI serial port not detected");
+                callbacks.logLine("*** ERROR *** rusEFI serial port not detected");
                 callbacks.error();
                 return null;
             } else {
-                callbacks.appendLine("Detected rusEFI on " + port + "\n");
+                callbacks.logLine("Detected rusEFI on " + port + "\n");
             }
         }
         return isSignatureValidated;
@@ -170,7 +170,7 @@ public class DfuFlasher {
     private static void executeDFU(UpdateOperationCallbacks callbacks, String firmwareBinFile) {
         boolean driverIsHappy = detectSTM32BootloaderDriverState(callbacks);
         if (!driverIsHappy) {
-            callbacks.appendLine("*** DRIVER ERROR? *** Did you have a chance to try 'Install Drivers' button on top of rusEFI console start screen?");
+            callbacks.logLine("*** DRIVER ERROR? *** Did you have a chance to try 'Install Drivers' button on top of rusEFI console start screen?");
             callbacks.error();
             return;
         }
@@ -193,10 +193,10 @@ public class DfuFlasher {
             callbacks.logLine("Please power cycle device to exit DFU mode");
             callbacks.done();
         } else if (stdout.toString().contains("Target device not found")) {
-            callbacks.appendLine("ERROR: Device not connected or STM32 Bootloader driver not installed?");
+            callbacks.logLine("ERROR: Device not connected or STM32 Bootloader driver not installed?");
             appendWindowsVersion(callbacks);
-            callbacks.appendLine("ERROR: Please try installing drivers using 'Install Drivers' button on rusEFI splash screen");
-            callbacks.appendLine("ERROR: Alternatively please install drivers using Device Manager pointing at 'drivers/silent_st_drivers/DFU_Driver' folder");
+            callbacks.logLine("ERROR: Please try installing drivers using 'Install Drivers' button on rusEFI splash screen");
+            callbacks.logLine("ERROR: Alternatively please install drivers using Device Manager pointing at 'drivers/silent_st_drivers/DFU_Driver' folder");
             appendDeviceReport(callbacks);
             callbacks.error();
         } else {

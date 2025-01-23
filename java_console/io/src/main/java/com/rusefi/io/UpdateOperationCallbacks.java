@@ -7,14 +7,6 @@ public interface UpdateOperationCallbacks {
         log(message, true, true);
     }
 
-    default void append(final String message, final boolean breakLineOnTextArea, final boolean sendToLogger) {
-      log(message, breakLineOnTextArea, sendToLogger);
-    }
-
-    default void appendLine(final String message) {
-        append(message, true, true);
-    }
-
     void done();
     void error();
 

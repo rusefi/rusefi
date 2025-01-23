@@ -44,11 +44,6 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks, Sta
     }
 
     @Override
-    public void log(final String message, final boolean breakLineOnTextArea, final boolean sendToLogger) {
-        append(message, breakLineOnTextArea, sendToLogger);
-    }
-
-    @Override
     public void done() {
         setSuccessState();
     }
@@ -68,20 +63,20 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks, Sta
         SwingUtilities.invokeLater(() -> Toolkit.getDefaultToolkit().getSystemClipboard()
             .setContents(new StringSelection(logTextArea.getText()), null));
 
-        appendLine("hint: error state is already in your clipboard, please use PASTE or Ctrl-V while reporting issues");
+        logLine("hint: error state is already in your clipboard, please use PASTE or Ctrl-V while reporting issues");
     }
 
     @Override
     public void clear() {
         logTextArea.setText("");
         logTextArea.setBackground(Color.WHITE);
-        appendLine("Console version " + rusEFIVersion.CONSOLE_VERSION);
-        appendLine(FileLog.getOsName() + " " + System.getProperty("os.version"));
-        appendLine("Bundle " + BundleUtil.readBundleFullNameNotNull());
+        logLine("Console version " + rusEFIVersion.CONSOLE_VERSION);
+        logLine(FileLog.getOsName() + " " + System.getProperty("os.version"));
+        logLine("Bundle " + BundleUtil.readBundleFullNameNotNull());
     }
 
     @Override
-    public void append(final String string, final boolean breakLineOnTextArea, final boolean sendToLogger) {
+    public void log(final String string, final boolean breakLineOnTextArea, final boolean sendToLogger) {
         // todo: check if AWT thread and do not invokeLater if already on AWT thread
         SwingUtilities.invokeLater(() -> {
             String s = string.replaceAll(Character.toString((char) 219), "");
@@ -103,6 +98,6 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks, Sta
 
     @Override
     public void appendStatus(final String string) {
-        append(string, true, true);
+        log(string, true, true);
     }
 }
