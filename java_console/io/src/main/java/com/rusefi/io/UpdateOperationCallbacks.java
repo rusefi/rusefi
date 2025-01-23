@@ -1,8 +1,11 @@
 package com.rusefi.io;
 
-public interface UpdateOperationCallbacks {
+import com.rusefi.ui.StatusConsumer;
+
+public interface UpdateOperationCallbacks extends StatusConsumer {
     void log(String message, boolean breakLineOnTextArea, boolean sendToLogger);
 
+    @Override
     default void logLine(final String message) {
         log(message, true, true);
     }
