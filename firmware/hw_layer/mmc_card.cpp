@@ -151,6 +151,7 @@ static NO_CACHE SdLogBufferWriter logBuffer;
 // cause simulator fail to build.
 extern void errorHandlerWriteReportFile(FIL *fd);
 extern int errorHandlerCheckReportFiles();
+extern void errorHandlerDeleteReports();
 
 typedef enum {
 	SD_STATUS_INIT = 0,
@@ -304,6 +305,16 @@ static void sdStatistics() {
 #endif
 }
 
+static void sdSetMode(const char *mode) {
+	if (strcmp(mode, "pc") == 0) {
+		sdCardRequestMode(SD_MODE_PC);
+	} else if (strcmp(mode, "ecu") == 0) {
+		sdCardRequestMode(SD_MODE_ECU);
+	} else {
+		efiPrintf("Invalid mode %s allowed modes pc and ecu", mode);
+	}
+}
+
 static void prepareLogFileName() {
 	strcpy(logName, RUSEFI_LOG_PREFIX);
 	char *ptr;
@@ -376,6 +387,11 @@ static void sdLoggerCloseFile(FIL *fd)
 }
 
 static void removeFile(const char *pathx) {
+	if (sdMode != SD_MODE_ECU) {
+		efiPrintf("SD card should be mounted to ECU");
+		return;
+	}
+
 	f_unlink(pathx);
 }
 
@@ -919,6 +935,8 @@ void initEarlyMmcCard() {
 
 	addConsoleAction("sdinfo", sdStatistics);
 	addConsoleActionS("del", removeFile);
+	addConsoleActionS("sdmode", sdSetMode);
+	addConsoleAction("delreports", sdCardRemoveReportFiles);
 	//incLogFileName() use same shared FDLogFile, calling it while FDLogFile is used by log writer will cause damage
 	//addConsoleAction("incfilename", incLogFileName);
 #endif // EFI_PROD_CODE
@@ -948,6 +966,16 @@ void sdCardRequestMode(SD_MODE mode)
 		sdTargerMode = mode;
 	}
 }
+
+void sdCardRemoveReportFiles() {
+	if (sdMode != SD_MODE_ECU) {
+		efiPrintf("SD card should be mounted to ECU");
+		return;
+	}
+
+	errorHandlerDeleteReports();
+}
+
 #endif // EFI_PROD_CODE
 
 #endif /* EFI_FILE_LOGGING */

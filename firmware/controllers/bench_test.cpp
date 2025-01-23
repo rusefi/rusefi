@@ -530,6 +530,9 @@ static void handleCommandX14(uint16_t index) {
 	case TS_SD_FORMAT:
 		sdCardRequestMode(SD_MODE_FORMAT);
 		return;
+	case TS_SD_DELETE_REPORTS:
+		sdCardRemoveReportFiles();
+		return;
 #endif // EFI_FILE_LOGGING
 
 	default:

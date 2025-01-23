@@ -32,3 +32,4 @@ struct USBDriver;
 bool msd_request_hook_new(USBDriver *usbp);
 
 void sdCardRequestMode(SD_MODE mode);
+void sdCardRemoveReportFiles();

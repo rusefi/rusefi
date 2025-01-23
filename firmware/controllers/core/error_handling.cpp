@@ -326,6 +326,42 @@ int errorHandlerCheckReportFiles() {
 
 	return hasReportFile;
 }
+
+static void errorHandlerDeleteTypedReport(ErrorCookie cookie) {
+	bool failed = false;
+	FRESULT fr;     /* Return value */
+	DIR dj;         /* Directory object */
+	FILINFO fno;    /* File information */
+	TCHAR pattern[32];
+
+	sprintf(pattern, "*%s*", errorHandlerGetErrorName(cookie));
+
+	do {
+		fr = f_findfirst(&dj, &fno, "", pattern);
+		f_closedir(&dj);
+
+		if ((fr == FR_OK) && (fno.fname[0])) {
+			efiPrintf("deleting %s", fno.fname);
+			FRESULT ret = f_unlink(fno.fname);
+			if (ret != FR_OK) {
+				efiPrintf("Faield to delete %s: %d", fno.fname, ret);
+				failed = true;
+			} else {
+				efiPrintf("%s removed", fno.fname);
+			}
+		}
+	} while ((!failed) && (fr == FR_OK) && (fno.fname[0]));
+}
+
+void errorHandlerDeleteReports() {
+	errorHandlerDeleteTypedReport(ErrorCookie::FirmwareError);
+	errorHandlerDeleteTypedReport(ErrorCookie::HardFault);
+	errorHandlerDeleteTypedReport(ErrorCookie::ChibiOsPanic);
+
+	// update
+	errorHandlerCheckReportFiles();
+}
+
 #endif
 
 backupErrorState *errorHandlerGetLastErrorDescriptor(void)
