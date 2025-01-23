@@ -48,11 +48,7 @@ public class PCanIoStream extends AbstractIoStream {
 
     @Nullable
     public static PCanIoStream createStream() {
-        return createStream((message, breakLineOnTextArea, sendToLogger) -> {
-            if (sendToLogger) {
-                log.info(message);
-            }
-        });
+        return createStream((message) -> log.info(message));
     }
 
     public static PCanIoStream createStream(StatusConsumer statusListener) {
