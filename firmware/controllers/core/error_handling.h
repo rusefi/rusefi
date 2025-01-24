@@ -34,7 +34,7 @@ using critical_msg_t = char[CRITICAL_BUFFER_SIZE];
  */
 void firmwareError(ObdCode code, const char *fmt, ...);
 
-#define criticalError(...) firmwareError(ObdCode::OBD_PCM_Processor_Fault, __VA_ARGS__)
+void criticalError(const char *fmt, ...);
 
 extern bool hasCriticalFirmwareErrorFlag;
 

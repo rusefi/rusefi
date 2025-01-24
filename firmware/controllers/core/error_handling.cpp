@@ -537,3 +537,10 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 void criticalErrorM(const char *msg) {
 	criticalError(msg);
 }
+
+void criticalError(const char *fmt, ...) {
+	va_list ap;
+	va_start(ap, fmt);
+	firmwareError(ObdCode::OBD_PCM_Processor_Fault, fmt, ap);
+	va_end(ap);
+}

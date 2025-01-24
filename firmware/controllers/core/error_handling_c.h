@@ -10,6 +10,8 @@ extern "C"
 
 void criticalErrorM(const char *msg);
 
+void criticalError(const char *fmt, ...);
+
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */

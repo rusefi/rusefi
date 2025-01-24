@@ -206,11 +206,11 @@
 
 #include "error_handling_c.h"
 
-#define LIMITED_WHILE_LOOP(msg, condition) \
+#define LIMITED_WHILE_LOOP(condition, ...) \
   { int limit = 1000000 ;                  \
     while (condition) {                    \
       if (limit-- == 0) {                  \
-        criticalErrorM(msg);               \
+        criticalError(__VA_ARGS__);        \
         break;                             \
       }                                    \
     }                                      \
