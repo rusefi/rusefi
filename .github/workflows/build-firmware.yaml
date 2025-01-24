@@ -291,6 +291,19 @@ jobs:
         cd ${META_OUTPUT_ROOT_FOLDER}tunerstudio/generated
         ${OLDPWD}/tunerstudio/upload_ini.sh ${{ secrets.RUSEFI_ONLINE_FTP_USER }} "${{ secrets.RUSEFI_ONLINE_FTP_PASS }}" ${{ secrets.RUSEFI_FTP_SERVER }}
 
+    - name: elf2text
+      if: ${{ env.upload == 'gha_artifact' }}
+      working-directory: ./firmware/build
+      run: |
+        arm-none-eabi-objdump -d rusefi.elf > rusefi.txt
+
+    - name: Upload github action text artifact
+      if: ${{ env.upload == 'gha_artifact' }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: rusefi_${{matrix.build-target}}.txt
+        path: ./firmware/build/rusefi.txt
+
     - name: Upload github action elf artifact
       if: ${{ env.upload == 'gha_artifact' }}
       uses: actions/upload-artifact@v4
