@@ -32,4 +32,5 @@ public enum ts_14_command {
 	TS_SD_MOUNT_ECU,
 	TS_SD_UNMOUNT,
 	TS_SD_FORMAT,
+	TS_SD_DELETE_REPORTS,
 }
