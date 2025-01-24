@@ -215,6 +215,10 @@ void setGmSbcGen5() {
   engineConfiguration->vvtMode[1] = VVT_INACTIVE;
   engineConfiguration->camInputs[1] = Gpio::Unassigned;
 
+  engineConfiguration->oilPressure.hwChannel = MM176_IN_MAP1_ANALOG; // 2A Aux Analog 4 / External MAP
+  engineConfiguration->fuelLevelSensor = MM176_IN_O2S_ANALOG; // 3A - Aux Analog 2
+  // engineConfiguration->lowPressureFuel.hwChannel =
+  // engineConfiguration->acPressure.hwChannel
   engineConfiguration->flexSensorPin = Gpio::MM176_IN_SENS3;
   engineConfiguration->map.sensor.hwChannel = MM176_IN_CRANK_ANALOG; // 1A Aux Analog 1. Important to use analog without muxing!
 #endif // HW_HELLEN_8CHAN
