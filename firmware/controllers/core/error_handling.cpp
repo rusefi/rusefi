@@ -603,28 +603,7 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 		return;
 	hasCriticalFirmwareErrorFlag = true;
 
-	// Evidence first!
-#if EFI_BACKUP_SRAM
-	auto bkpram = getBackupSram();
-	auto err = &bkpram->err;
-	if (err->Cookie == ErrorCookie::None) {
-		err->msg[sizeof(err->msg) - 1] = '\0';
-		strlncpy(err->msg, criticalErrorMessageBuffer, sizeof(err->msg));
-		err->Cookie = ErrorCookie::FirmwareError;
-		// copy stack last as it can be corrupted and cause another exeption
-		uint32_t *sp = &tmp;
-		errorHandlerSaveStack(err, sp);
-	}
-#endif // EFI_BACKUP_SRAM
-#if EFI_ENGINE_CONTROL
-	getLimpManager()->fatalError();
-#endif // EFI_ENGINE_CONTROL
-	engine->engineState.warnings.addWarningCode(code);
-	// criticalShutdown() shutdown can cause cascaded fault.
-	// So we first save some valuable evidence and only after try to gracefully shutdown HW
-	criticalShutdown();
-	enginePins.communicationLedPin.setValue(1, /*force*/true);
-
+	// construct error message
 	if (indexOf(fmt, '%') == -1) {
 		/**
 		 * in case of simple error message let's reduce stack usage
@@ -646,9 +625,32 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 	if (errorMessageSize + strlen(versionBuffer) < sizeof(criticalErrorMessageBuffer)) {
 		strcpy((char*)(criticalErrorMessageBuffer) + errorMessageSize, versionBuffer);
 	}
+
+	// Evidence first!
+#if EFI_BACKUP_SRAM
+	auto bkpram = getBackupSram();
+	auto err = &bkpram->err;
+	if (err->Cookie == ErrorCookie::None) {
+		err->msg[sizeof(err->msg) - 1] = '\0';
+		strlncpy(err->msg, criticalErrorMessageBuffer, sizeof(err->msg));
+		err->Cookie = ErrorCookie::FirmwareError;
+		// copy stack last as it can be corrupted and cause another exeption
+		uint32_t *sp = &tmp;
+		errorHandlerSaveStack(err, sp);
+	}
+#endif // EFI_BACKUP_SRAM
+
+#if EFI_ENGINE_CONTROL
+	getLimpManager()->fatalError();
+#endif // EFI_ENGINE_CONTROL
+	engine->engineState.warnings.addWarningCode(code);
+	// criticalShutdown() shutdown can cause cascaded fault.
+	// So we first save some valuable evidence and only after try to gracefully shutdown HW
+	criticalShutdown();
+	enginePins.communicationLedPin.setValue(1, /*force*/true);
 #else // EFI_PROD_CODE
 
-  // large buffer on stack is risky we better use normal memory
+	// large buffer on stack is risky we better use normal memory
 	static char errorBuffer[200];
 
 	va_list ap;
