@@ -631,7 +631,6 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 	auto bkpram = getBackupSram();
 	auto err = &bkpram->err;
 	if (err->Cookie == ErrorCookie::None) {
-		err->msg[sizeof(err->msg) - 1] = '\0';
 		strlncpy(err->msg, criticalErrorMessageBuffer, sizeof(err->msg));
 		err->Cookie = ErrorCookie::FirmwareError;
 		// copy stack last as it can be corrupted and cause another exeption
