@@ -36,12 +36,18 @@
 static Reset_Cause_t readMCUResetCause() {
 #ifdef STM32H7XX
 	uint32_t cause = RCC->RSR; // Read the Reset Status Register
+	// keep reset reason visible to main app
+#ifndef EFI_BOOTLOADER
 	// Clear reset flags for future reset detection
 	RCC->RSR |= RCC_RSR_RMVF;
+#endif
 #else
 	uint32_t cause = RCC->CSR; // Read the Control/Status Register
+	// keep reset reason visible to main app
+#ifndef EFI_BOOTLOADER
 	// Clear reset flags for future reset detection
 	RCC->CSR |= RCC_CSR_RMVF;
+#endif
 #endif
 
 	if (cause & BORRSTF) {
