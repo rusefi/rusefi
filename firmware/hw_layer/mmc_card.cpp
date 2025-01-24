@@ -190,6 +190,8 @@ static SD_MODE sdMode = SD_MODE_IDLE;
 // by default we want SD card for logs
 static SD_MODE sdTargerMode = SD_MODE_ECU;
 
+static bool sdNeedRemoveReports = false;
+
 /**
  * on't re-read SD card spi device after boot - it could change mid transaction (TS thread could preempt),
  * which will cause disaster (usually multiple-unlock of the same mutex in UNLOCK_SD_SPI)
@@ -778,6 +780,10 @@ static int sdModeExecuter()
 		chThdSleepMilliseconds(TIME_MS2I(100));
 		return 0;
 	case SD_MODE_ECU:
+		if (sdNeedRemoveReports) {
+			errorHandlerDeleteReports();
+			sdNeedRemoveReports = false;
+		}
 		// execute logger
 		return sdLogger();
 	}
@@ -973,7 +979,7 @@ void sdCardRemoveReportFiles() {
 		return;
 	}
 
-	errorHandlerDeleteReports();
+	sdNeedRemoveReports = true;
 }
 
 #endif // EFI_PROD_CODE
