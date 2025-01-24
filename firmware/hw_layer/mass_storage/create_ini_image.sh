@@ -17,7 +17,6 @@ FS_SIZE=$3
 SHORT_BOARD_NAME=$4
 BOARD_SPECIFIC_URL=$5
 
-IMAGE=ramdisk.image
 ZIP=rusefi.ini.zip
 
 # mkfs.fat and fatlabel are privileged on some systems
@@ -26,14 +25,6 @@ PATH="$PATH:/usr/sbin"
 echo "create_ini_image: ini $FULL_INI to $H_OUTPUT size $FS_SIZE for $SHORT_BOARD_NAME [$BOARD_SPECIFIC_URL]"
 
 rm -f $ZIP $IMAGE
-
-# copy *FS_SIZE*KB of zeroes
-dd if=/dev/zero of=$IMAGE bs=1024 count=$FS_SIZE
-
-# create a FAT filesystem inside, name it RUSEFI
-mkfs.fat -v -r 64 $IMAGE
-# labels can be no longer than 11 characters
-fatlabel $IMAGE RUSEFI
 
 # -j option dumps all files in the root of the zip (instead of inside directories)
 zip -j $ZIP $FULL_INI
@@ -56,21 +47,11 @@ echo "URL=${BOARD_SPECIFIC_URL}" >> "${WIKI_FILE_PATH}"
 cp hw_layer/mass_storage/filesystem_contents/README.template.txt "${README_FILE_PATH}"
 echo ${BOARD_SPECIFIC_URL}       >> "${README_FILE_PATH}"
 
-# Put the zip inside the filesystem
-mcopy -i $IMAGE $ZIP ::
-# Put a readme text file in there too
-mcopy -i $IMAGE "${README_FILE_PATH}" ::
-mcopy -i $IMAGE hw_layer/mass_storage/filesystem_contents/rusEFI\ Forum.url ::
-mcopy -i $IMAGE hw_layer/mass_storage/filesystem_contents/rusEFI\ Quick\ Start.url ::
-mcopy -i $IMAGE "${WIKI_FILE_PATH}" ::
 
 
+EXTRA_FILES_TO_COPY_ON_IMAGE=("hw_layer/mass_storage/filesystem_contents/rusEFI Forum.url" "hw_layer/mass_storage/filesystem_contents/rusEFI Quick Start.url" "${WIKI_FILE_PATH}")
 
+hw_layer/mass_storage/create_image.sh $H_OUTPUT $FS_SIZE false $ZIP "${README_FILE_PATH}" "${EXTRA_FILES_TO_COPY_ON_IMAGE[@]}"
 
-# write out as a C array, with "static const" tacked on the front
-xxd -i $IMAGE \
-    | cat <(echo -n "static const ") - \
-    > $H_OUTPUT
-
-rm $ZIP $IMAGE "${README_FILE_PATH}" "${WIKI_FILE_PATH}"
+rm $ZIP "${README_FILE_PATH}" "${WIKI_FILE_PATH}"
 exit 0
