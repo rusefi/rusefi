@@ -90,6 +90,14 @@ void errorHandlerInit() {
 	// Reset cookie so we don't report it again.
 	sramState->err.Cookie = ErrorCookie::None;
 
+	// Cookie can be some random value at first power on
+	// reset to None to avoid generating 'Unknown' fail report
+	if ((lastBootError.Cookie != ErrorCookie::FirmwareError) &&
+		(lastBootError.Cookie != ErrorCookie::HardFault) &&
+		(lastBootError.Cookie != ErrorCookie::ChibiOsPanic)) {
+		lastBootError.Cookie = ErrorCookie::None;
+	}
+
 	//bootcount
 	if (sramState->BootCountCookie != 0xdeadbeef) {
 		sramState->BootCountCookie = 0xdeadbeef;
