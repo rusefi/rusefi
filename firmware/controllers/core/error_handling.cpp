@@ -38,11 +38,13 @@ static critical_msg_t warningBuffer;
 static critical_msg_t criticalErrorMessageBuffer;
 static critical_msg_t configErrorMessageBuffer; // recoverable configuration error, non-critical
 
-extern int warningEnabled;
-
 bool hasCriticalFirmwareErrorFlag = false;
 static bool hasConfigErrorFlag = false;
 static bool hasReportFile = false;
+
+// todo: revisit very questionable code!
+// todo: reuse hasCriticalFirmwareErrorFlag? something?
+bool isInHardFaultHandler = false;
 
 const char *dbg_panic_file;
 int dbg_panic_line;
@@ -57,11 +59,11 @@ const char* getCriticalErrorMessage() {
 }
 
 bool hasConfigError() {
-  return hasConfigErrorFlag;
+	return hasConfigErrorFlag;
 }
 
 void clearConfigErrorMessage() {
-  hasConfigErrorFlag = false;
+	hasConfigErrorFlag = false;
 }
 
 bool hasErrorReportFile() {
@@ -371,15 +373,6 @@ void errorHandlerDeleteReports() {
 
 #endif
 
-backupErrorState *errorHandlerGetLastErrorDescriptor(void)
-{
-#if EFI_BACKUP_SRAM
-	return &lastBootError;
-#else
-	return nullptr;
-#endif
-}
-
 #if EFI_BACKUP_SRAM
 static void errorHandlerSaveStack(backupErrorState *err, uint32_t *sp)
 {
@@ -392,10 +385,6 @@ static void errorHandlerSaveStack(backupErrorState *err, uint32_t *sp)
 	}
 }
 #endif // EFI_BACKUP_SRAM
-
-// todo: revisit very questionable code!
-    // todo: reuse hasCriticalFirmwareErrorFlag? something?
-bool isInHardFaultHandler = false;
 
 void logHardFault(uint32_t type, uintptr_t faultAddress, void* sp, port_extctx* ctx, uint32_t csfr) {
     // todo: reuse hasCriticalFirmwareErrorFlag? something?
