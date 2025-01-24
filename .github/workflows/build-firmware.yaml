@@ -291,6 +291,8 @@ jobs:
         cd ${META_OUTPUT_ROOT_FOLDER}tunerstudio/generated
         ${OLDPWD}/tunerstudio/upload_ini.sh ${{ secrets.RUSEFI_ONLINE_FTP_USER }} "${{ secrets.RUSEFI_ONLINE_FTP_PASS }}" ${{ secrets.RUSEFI_FTP_SERVER }}
 
+# sad: we have duplication with custom-board-build/action.yaml :(
+      # todo: is this insanity? does not gcc produce similar file directly?
     - name: elf2text
       if: ${{ env.upload == 'gha_artifact' }}
       working-directory: ./firmware/build

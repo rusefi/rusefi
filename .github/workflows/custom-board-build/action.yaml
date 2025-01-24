@@ -454,6 +454,22 @@ runs:
         name: rusefi.map
         path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.map
 
+    # sad: we have duplication with build-firmware.yaml :(
+    # todo: is this insanity? does not gcc produce similar file directly?
+    - name: elf2text
+      shell: bash
+      if: ${{ contains(inputs.artifacts, 'elf') }}
+      working-directory: ${{inputs.rusefi_dir}}/firmware/build
+      run: |
+        arm-none-eabi-objdump -d rusefi.elf > rusefi.txt
+
+    - name: Upload github action text artifact
+      if: ${{ contains(inputs.artifacts, 'elf') }}
+      uses: actions/upload-artifact@v4
+      with:
+        name: rusefi.txt
+        path: ${{inputs.rusefi_dir}}/firmware/build/rusefi*.txt
+
     - name: Upload github action elf artifact
       if: ${{ contains(inputs.artifacts, 'elf') }}
       uses: actions/upload-artifact@v4
