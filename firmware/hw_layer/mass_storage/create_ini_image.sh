@@ -38,11 +38,6 @@ fatlabel $IMAGE RUSEFI
 # -j option dumps all files in the root of the zip (instead of inside directories)
 zip -j $ZIP $FULL_INI
 
-cp hw_layer/mass_storage/filesystem_contents/rusEFI_Wiki_template.url hw_layer/mass_storage/wiki.temp
-echo "URL=${BOARD_SPECIFIC_URL}" >> hw_layer/mass_storage/wiki.temp
-cp hw_layer/mass_storage/filesystem_contents/README.template.txt hw_layer/mass_storage/readme.temp
-echo ${BOARD_SPECIFIC_URL}       >> hw_layer/mass_storage/readme.temp
-
 if [[ $OSTYPE == 'darwin'* ]]; then
   # Mac OS comes with Bash version 3 which is quite limiting and lack key features
   current_date='huh-MAC'
@@ -53,13 +48,21 @@ else
   echo "create_ini_image.sh says [${current_date}]"
 fi
 
+README_FILE_PATH=hw_layer/mass_storage/README-${current_date}.txt
+WIKI_FILE_PATH=hw_layer/mass_storage/rusEFI\ ${SHORT_BOARD_NAME}\ Wiki.url
+
+cp hw_layer/mass_storage/filesystem_contents/rusEFI_Wiki_template.url "${WIKI_FILE_PATH}"
+echo "URL=${BOARD_SPECIFIC_URL}" >> "${WIKI_FILE_PATH}"
+cp hw_layer/mass_storage/filesystem_contents/README.template.txt "${README_FILE_PATH}"
+echo ${BOARD_SPECIFIC_URL}       >> "${README_FILE_PATH}"
+
 # Put the zip inside the filesystem
 mcopy -i $IMAGE $ZIP ::
 # Put a readme text file in there too
-mcopy -i $IMAGE hw_layer/mass_storage/readme.temp ::README-${current_date}.txt
+mcopy -i $IMAGE "${README_FILE_PATH}" ::
 mcopy -i $IMAGE hw_layer/mass_storage/filesystem_contents/rusEFI\ Forum.url ::
 mcopy -i $IMAGE hw_layer/mass_storage/filesystem_contents/rusEFI\ Quick\ Start.url ::
-mcopy -i $IMAGE hw_layer/mass_storage/wiki.temp ::rusEFI\ ${SHORT_BOARD_NAME}\ Wiki.url
+mcopy -i $IMAGE "${WIKI_FILE_PATH}" ::
 
 
 
@@ -69,5 +72,5 @@ xxd -i $IMAGE \
     | cat <(echo -n "static const ") - \
     > $H_OUTPUT
 
-rm $ZIP $IMAGE
+rm $ZIP $IMAGE "${README_FILE_PATH}" "${WIKI_FILE_PATH}"
 exit 0
