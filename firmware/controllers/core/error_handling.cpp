@@ -10,7 +10,6 @@
 #include "os_util.h"
 #include "backup_ram.h"
 #include "error_handling_led.h"
-#include "error_handling_c.h"
 #include "log_hard_fault.h"
 #include "rusefi/critical_error.h"
 
