@@ -1004,8 +1004,8 @@
         <constant name="lowPressureFuel_hwChannel">"Disabled"</constant>
         <constant digits="2" name="lowPressureFuel_v1" units="volts">0.0</constant>
         <constant digits="2" name="lowPressureFuel_value1" units="">0.0</constant>
-        <constant digits="2" name="lowPressureFuel_v2" units="volts">0.0</constant>
-        <constant digits="2" name="lowPressureFuel_value2" units="">0.0</constant>
+        <constant digits="2" name="lowPressureFuel_v2" units="volts">5.0</constant>
+        <constant digits="2" name="lowPressureFuel_value2" units="">100.0</constant>
         <constant digits="3" name="tChargeAirCoefMin" units="">0.098</constant>
         <constant digits="3" name="tChargeAirCoefMax" units="">0.902</constant>
         <constant digits="1" name="tChargeAirFlowMax" units="kg/h">153.6</constant>
@@ -1601,8 +1601,8 @@
         <constant name="acPressure_hwChannel">"Disabled"</constant>
         <constant digits="2" name="acPressure_v1" units="volts">0.0</constant>
         <constant digits="2" name="acPressure_value1" units="">0.0</constant>
-        <constant digits="2" name="acPressure_v2" units="volts">0.0</constant>
-        <constant digits="2" name="acPressure_value2" units="">0.0</constant>
+        <constant digits="2" name="acPressure_v2" units="volts">5.0</constant>
+        <constant digits="2" name="acPressure_value2" units="">100.0</constant>
         <constant digits="0" name="minAcPressure" units="kPa">100.0</constant>
         <constant digits="0" name="maxAcPressure" units="kPa">300.0</constant>
         <constant digits="1" name="minimumOilPressureTimeout" units="sec">0.5</constant>
