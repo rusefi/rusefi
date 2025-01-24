@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # from firmware folder:
-# hw_layer/mass_storage/create_ini_image.sh tunerstudio/generated/rusefi.ini hw_layer/mass_storage/ramdisk_image.h  112 test https://rusefi.com/s/test
+# hw_layer/mass_storage/create_ini_image.sh tunerstudio/generated/rusefi.ini hw_layer/mass_storage/ramdisk_image.h  256 test https://rusefi.com/s/test
 
 # fail on error
 set -e
