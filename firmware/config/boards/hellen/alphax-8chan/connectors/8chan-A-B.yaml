@@ -10,14 +10,14 @@ pins:
 
   - pin: 1A
     meta: MM176_IN_CRANK_ANALOG
-    function: Aux Analog 1
+    function: Aux Analog 1 / External MAP
     class: analog_inputs
     ts_name: 1A - Aux Analog 1
     color: blue
 
   - pin: 2A
     meta: MM176_IN_MAP1_ANALOG
-    function: Aux Analog 4 / External MAP
+    function: Aux Analog 4
     class: analog_inputs
     ts_name: 2A - MAP / Aux Analog 4
     color: blue
