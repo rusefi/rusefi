@@ -107,6 +107,11 @@ void setDefaultBaseEngine() {
   engineConfiguration->magicNumberAvailableForDevTricks = 1;
 
   engineConfiguration->acrRevolutions = 5;
+	engineConfiguration->acPressure.v2 = 5;
+	engineConfiguration->acPressure.value2 = 100;
+
+	engineConfiguration->lowPressureFuel.v2 = 5;
+	engineConfiguration->lowPressureFuel.value2 = 100;
 
   engineConfiguration->fuelLevelAveragingAlpha = engine_configuration_defaults::FUEL_LEVEL_AVERAGING_ALPHA;
   engineConfiguration->fuelLevelUpdatePeriodSec = engine_configuration_defaults::FUEL_LEVEL_UPDATE_PERIOD_SEC;

@@ -20,14 +20,14 @@ pins:
     function: Aux Analog 4
     class: analog_inputs
     ts_name: 2A - MAP / Aux Analog 4
-    color: blue
+    color: violet
 
   - pin: 3A
     meta: MM176_IN_O2S_ANALOG
     function: Aux Analog 2
     class: analog_inputs
     ts_name: 3A - Aux Analog 2
-    color: blue
+    color: yellow
 
   - pin: 4A
     meta: MM176_IN_AUX2_ANALOG

@@ -184,6 +184,7 @@ static void set4CylGmEcotec3() {
 void setGmLcv() {
   set4CylGmEcotec3();
   engineConfiguration->displacement = 2.5;
+	engineConfiguration->map.sensor.type = MT_GM_1_BAR;
   strcpy(engineConfiguration->engineCode, "LCV");
 }
 
@@ -198,6 +199,7 @@ void setGmSbcGen5() {
   engineConfiguration->displacement = 5.3;
 	engineConfiguration->cylindersCount = 8;
 	engineConfiguration->firingOrder = FO_1_8_7_2_6_5_4_3;
+	engineConfiguration->map.sensor.type = MT_GM_1_BAR;
 
 #ifdef HW_HELLEN_8CHAN
 	engineConfiguration->injectionPins[4] = Gpio::MM176_INJ5;
@@ -215,10 +217,12 @@ void setGmSbcGen5() {
   engineConfiguration->vvtMode[1] = VVT_INACTIVE;
   engineConfiguration->camInputs[1] = Gpio::Unassigned;
 
+  engineConfiguration->fuelPumpPin = Gpio::MM176_OUT_IO2; // 6C - High Side 2
+
   engineConfiguration->oilPressure.hwChannel = MM176_IN_MAP1_ANALOG; // 2A Aux Analog 4 / External MAP
   engineConfiguration->fuelLevelSensor = MM176_IN_O2S_ANALOG; // 3A - Aux Analog 2
-  // engineConfiguration->lowPressureFuel.hwChannel =
-  // engineConfiguration->acPressure.hwChannel
+  engineConfiguration->lowPressureFuel.hwChannel = MM176_IN_AUX2_ANALOG; // 	4A - Aux Analog 7
+  engineConfiguration->acPressure.hwChannel = MM176_IN_MAP2_ANALOG;// 10A - Aux Analog 5
   engineConfiguration->flexSensorPin = Gpio::MM176_IN_SENS3;
   engineConfiguration->map.sensor.hwChannel = MM176_IN_CRANK_ANALOG; // 1A Aux Analog 1. Important to use analog without muxing!
 #endif // HW_HELLEN_8CHAN
