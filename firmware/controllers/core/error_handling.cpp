@@ -260,9 +260,9 @@ static const char *errorHandlerGetErrorName(ErrorCookie cookie)
 	return "unknown";
 }
 
+bool needErrorReportFile = false;
+
 void errorHandlerWriteReportFile(FIL *fd) {
-	// generate file on good boot to?
-	bool needReport = false;
 #if EFI_BACKUP_SRAM
 	backupErrorState *err = &lastBootError;
 	ErrorCookie cookie = err->Cookie;
@@ -271,7 +271,7 @@ void errorHandlerWriteReportFile(FIL *fd) {
 #endif
 
 	if (cookie != ErrorCookie::None) {
-		needReport = true;
+		needErrorReportFile = true;
 	}
 
 	auto cause = getMCUResetCause();
@@ -279,10 +279,10 @@ void errorHandlerWriteReportFile(FIL *fd) {
 	if ((cause != Reset_Cause_NRST_Pin) && (cause != Reset_Cause_BOR) &&
 		(cause != Reset_Cause_POR) && (cause != Reset_Cause_Unknown)) {
 		// not an expected cause
-		needReport = true;
+		needErrorReportFile = true;
 	}
 
-	if (needReport) {
+	if (needErrorReportFile) {
 		char fileName[_MAX_FILLER + 20];
 		memset(fd, 0, sizeof(FIL));						// clear the memory
 		//TODO: use date + time for file name?
@@ -307,6 +307,7 @@ void errorHandlerWriteReportFile(FIL *fd) {
 			onBoardWriteErrorFile(fd);
 			// todo: figure out what else would be useful
 			f_close(fd);
+			enginePins.warningLedPin.setValue(1);
 		}
 	}
 }

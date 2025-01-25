@@ -278,7 +278,15 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 		} else if (counter % 2 == 0) {
 			enginePins.communicationLedPin.setValue(0, /*force*/true);
 
-			enginePins.warningLedPin.setValue(0);
+#if EFI_FILE_LOGGING
+  extern bool needErrorReportFile;
+#else
+#define needErrorReportFile false
+#endif // EFI_FILE_LOGGING
+      // todo: properly encapsulate warning LED logic!
+      if (!needErrorReportFile) {
+			  enginePins.warningLedPin.setValue(0);
+			}
 		} else {
 #define BLINKING_PERIOD_MS 33
 
