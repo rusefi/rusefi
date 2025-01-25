@@ -303,6 +303,7 @@ void errorHandlerWriteReportFile(FIL *fd) {
 			printErrorState();
 			printErrorStack();
 #endif // EFI_BACKUP_SRAM
+      f_printf(fd, "rusEFI v%d@%u", getRusEfiVersion(), /*do we have a working way to print 64 bit values?!*/(int)SIGNATURE_HASH);
 			// additional board-specific data
 			onBoardWriteErrorFile(fd);
 			// todo: figure out what else would be useful
