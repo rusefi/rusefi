@@ -82,7 +82,7 @@ struct SdLogBufferWriter final : public BufferedWriter<512> {
 		}
 
 		size_t bytesWritten;
-
+    efiAssert(ObdCode::CUSTOM_STACK_6627, hasLotsOfRemainingStack(), "sdlow#3", 0);
 		FRESULT err = f_write(m_fd, buffer, count, &bytesWritten);
 
 		if (err) {

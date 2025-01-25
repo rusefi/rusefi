@@ -48,7 +48,7 @@
 #define UTILITY_THREAD_STACK_SIZE 400
 #endif /* UTILITY_THREAD_STACK_SIZE */
 
-// see also validateStack
+// CH_DBG_ENABLE_STACK_CHECK
 #define getCurrentRemainingStack() getRemainingStack(chThdGetSelfX())
 
 #define EFI_ERROR_CODE 0xffffffff
