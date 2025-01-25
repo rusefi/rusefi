@@ -264,7 +264,7 @@ static int rtcStartTime;
 
 static void timeInfo() {
 	efiPrintf("chTimeNow as seconds = %d", getTimeNowS());
-	efiPrintf("hal seconds = %d", halTime.get() / (long)CORE_CLOCK);
+	efiPrintf("hal seconds = %d", halTime.get() / (long)STM32_SYSCLK);
 
 #if EFI_RTC
 	int unix = rtcGetTimeUnixSec(&RTCD1) - rtcStartTime;
