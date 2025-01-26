@@ -49,7 +49,13 @@ echo ${BOARD_SPECIFIC_URL}       >> "${README_FILE_PATH}"
 
 
 
-EXTRA_FILES_TO_COPY_ON_IMAGE=("hw_layer/mass_storage/filesystem_contents/rusEFI Forum.url" "hw_layer/mass_storage/filesystem_contents/rusEFI Quick Start.url" "${WIKI_FILE_PATH}")
+if [[ -z "${EXTRA_FILES_TO_COPY_ON_IMAGE_FOLDER}" ]]; then
+  EXTRA_FILES_TO_COPY_ON_IMAGE=("hw_layer/mass_storage/filesystem_contents/rusEFI Forum.url" "hw_layer/mass_storage/filesystem_contents/rusEFI Quick Start.url" "${WIKI_FILE_PATH}")
+  echo "We are using default files to copy on image: ${EXTRA_FILES_TO_COPY_ON_IMAGE[@]}"
+else
+  EXTRA_FILES_TO_COPY_ON_IMAGE=(${EXTRA_FILE_TO_COPY_ON_IMAGE_FOLDER}/*)
+  echo "We are using files from ${EXTRA_FILES_TO_COPY_ON_IMAGE_FOLDER} folder to copy on image: ${EXTRA_FILES_TO_COPY_ON_IMAGE[@]}"
+fi
 
 hw_layer/mass_storage/create_image.sh $H_OUTPUT $FS_SIZE false $ZIP "${README_FILE_PATH}" "${EXTRA_FILES_TO_COPY_ON_IMAGE[@]}"
 
