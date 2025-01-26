@@ -20,6 +20,10 @@ static void setDefaultAlternatorParameters() {
 #endif // EFI_ALTERNATOR_CONTROL
 
 void setGDIFueling() {
+#ifdef HW_HELLEN_8CHAN
+  engineConfiguration->externalRusEfiGdiModule = true;
+#endif
+
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
