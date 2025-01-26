@@ -77,7 +77,10 @@ inputs:
     description: '.properties file to store GHA outputs (unfortunately GHA outputs do not work for nested GHA - see https://github.com/actions/runner/issues/2009#issuecomment-1793565031)'
     required: false
     default: ''
-
+  extra_files_to_copy_on_image_folder:
+    description: 'Relative path to the folder with extra files to copy on image (from rusefi/firmware folder)'
+    required: false
+    default: ''
 runs:
   using: "composite"
   steps:
@@ -181,6 +184,7 @@ runs:
         echo "BUNDLE_NAME=$BUNDLE_NAME" >> $GITHUB_ENV
         echo "current_date=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
         echo "EXTRA_LIVE_DATA_FILE=${{inputs.EXTRA_LIVE_DATA_FILE}}" >> $GITHUB_ENV
+        echo "EXTRA_FILES_TO_COPY_ON_IMAGE_FOLDER=${{inputs.extra_files_to_copy_on_image_folder}}" >> $GITHUB_ENV
 
 
     - name: Set Build Env Variables
