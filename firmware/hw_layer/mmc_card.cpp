@@ -64,7 +64,7 @@ struct SdLogBufferWriter final : public BufferedWriter<512> {
 	}
 
 	void stop() {
-		m_fd = NULL;
+		m_fd = nullptr;
 
 		flush();
 
@@ -110,7 +110,7 @@ struct SdLogBufferWriter final : public BufferedWriter<512> {
 	}
 
 private:
-	FIL *m_fd;
+	FIL *m_fd = nullptr;
 
 	size_t totalLoggedBytes = 0;
 	size_t writeCounter = 0;
