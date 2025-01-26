@@ -141,7 +141,6 @@ void setGmSbc() {
 
 static void setGmEcotec3() {
   engineConfiguration->globalTriggerAngleOffset = 360 + 90;
-  engineConfiguration->hpfpCamLobes = 4;
   engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
   engineConfiguration->lowPressureFuel.hwChannel = EFI_ADC_NONE;
   gmRailSensor();
@@ -177,6 +176,7 @@ static void setGmEcotec3() {
 
 static void set4CylGmEcotec3() {
   setGmEcotec3();
+  engineConfiguration->hpfpCamLobes = 4;
   engineConfiguration->vvtMode[1] = VVT_BOSCH_QUICK_START;
 	setInline4();
 }
@@ -196,6 +196,7 @@ void setGmLtg() {
 
 void setGmSbcGen5() {
   setGmEcotec3();
+  engineConfiguration->hpfpCamLobes = 3;
   engineConfiguration->displacement = 5.3;
 	engineConfiguration->cylindersCount = 8;
 	engineConfiguration->firingOrder = FO_1_8_7_2_6_5_4_3;
