@@ -171,6 +171,7 @@ static void setGmEcotec3() {
   setPPSCalibration(1, 4.25, 0.5, 2.14);
 
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_GM);
+	engineConfiguration->etbFunctions[1] = DC_None;
 	setGDIFueling();
 }
 
@@ -216,6 +217,7 @@ void setGmSbcGen5() {
 
 	engineConfiguration->starterControlPin = Gpio::MM176_SPI3_SCK; // 29C - Ignition 9
 
+	engineConfiguration->invertPrimaryTriggerSignal = true;
   engineConfiguration->vvtMode[1] = VVT_INACTIVE;
   engineConfiguration->camInputs[1] = Gpio::Unassigned;
 
