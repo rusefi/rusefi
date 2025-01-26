@@ -1,5 +1,7 @@
 -- communication with https://github.com/rusefi/rusefi-hardware/tree/main/GDI-4ch/firmware
 
+busIndex = 1
+
 -- see can_common.h
 GDI4_BASE_ADDRESS = 0xBB20
 GDI_CHANGE_ADDRESS = GDI4_BASE_ADDRESS + 0x10
@@ -49,6 +51,11 @@ function setTwoBytesLsb(data, offset, value)
 end
 
 function onCanConfiguration1(bus, id, dlc, data)
+  if bus ~= busIndex then
+    print("******************* WRONG GDI BUS ************************** " .. bus)
+    return
+  end
+
 	print("Received configuration1 "..arrayToString(data))
 	print("GDI4 says BoostVoltage  "..getTwoBytesLSB(data, 0, 1) )
 	print("GDI4 says BoostCurrent  "..getTwoBytesLSB(data, 2, 1 / 128) )
@@ -116,7 +123,7 @@ function onTick()
 	  setTwoBytesLsb(data_set_settings, 3, boostCurrent * FIXED_POINT)
 	  setTwoBytesLsb(data_set_settings, 5, TBoostMin)
 --	print('Will be sending ' ..arrayToString(data_set_settings))
-	  txCan(1, GDI_CHANGE_ADDRESS, 1, data_set_settings)
+	  txCan(busIndex, GDI_CHANGE_ADDRESS, 1, data_set_settings)
 	end
 
   if (counter % packet_kinds) == 1 then
@@ -130,7 +137,7 @@ function onTick()
 	  setTwoBytesLsb(data_set_settings, 3, peakCurrent * FIXED_POINT)
 	  setTwoBytesLsb(data_set_settings, 5, TpeakDuration)
 --	print('Will be sending ' ..arrayToString(data_set_settings))
-  	txCan(1, GDI_CHANGE_ADDRESS + 1, 1, data_set_settings)
+  	txCan(busIndex, GDI_CHANGE_ADDRESS + 1, 1, data_set_settings)
   end
 
   if (counter % packet_kinds) == 2 then
@@ -144,7 +151,7 @@ function onTick()
 	  setTwoBytesLsb(data_set_settings, 3, Tbypass)
 	  setTwoBytesLsb(data_set_settings, 5, holdCurrent * FIXED_POINT)
 --	print('Will be sending ' ..arrayToString(data_set_settings))
-  	txCan(1, GDI_CHANGE_ADDRESS + 2, 1, data_set_settings)
+  	txCan(busIndex, GDI_CHANGE_ADDRESS + 2, 1, data_set_settings)
   end
 
   if (counter % packet_kinds) == 3 then
@@ -157,7 +164,7 @@ function onTick()
 -- set mc33_hpfp_i_peak 6
 	  setTwoBytesLsb(data_set_settings, 5, pumpPeakCurrent * FIXED_POINT)
 --	print('Will be sending ' ..arrayToString(data_set_settings))
-	  txCan(1, GDI_CHANGE_ADDRESS + 3, 1, data_set_settings)
+	  txCan(busIndex, GDI_CHANGE_ADDRESS + 3, 1, data_set_settings)
 	end
 
   if (counter % packet_kinds) == 4 then
@@ -167,7 +174,7 @@ function onTick()
 	  outputCanID = GDI4_BASE_ADDRESS
 	  setTwoBytesLsb(data_set_settings, 3, outputCanID)
 --	print('Will be sending ' ..arrayToString(data_set_settings))
-	  txCan(1, GDI_CHANGE_ADDRESS + 4, 1, data_set_settings)
+	  txCan(busIndex, GDI_CHANGE_ADDRESS + 4, 1, data_set_settings)
 	end
 
 	-- selfStimulateRPM(3000)
