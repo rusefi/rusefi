@@ -543,8 +543,9 @@ int lua_canRxAdd(lua_State* l) {
 	// defaults if not passed
 	int bus = ANY_BUS;
 	int callback = NO_CALLBACK;
+	int argumentCount = lua_gettop(l);
 
-	switch (lua_gettop(l)) {
+	switch (argumentCount) {
 		case 1:
 			// handle canRxAdd(id)
 			eid = luaL_checkinteger(l, 1);
@@ -572,7 +573,7 @@ int lua_canRxAdd(lua_State* l) {
 			callback = getLuaFunc(l);
 			break;
 		default:
-			return luaL_error(l, "Wrong number of arguments to canRxAdd. Got %d, expected 1, 2, or 3.");
+			return luaL_error(l, "Wrong number of arguments to canRxAdd. Got %d, expected 1, 2, or 3.", argumentCount);
 	}
 
 	addLuaCanRxFilter(eid, FILTER_SPECIFIC, bus, callback);
