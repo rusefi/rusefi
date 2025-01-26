@@ -207,6 +207,7 @@ void setGmSbcGen5() {
 	engineConfiguration->injectionPins[5] = Gpio::MM176_INJ6;
 	engineConfiguration->injectionPins[6] = Gpio::MM176_INJ7;
 	engineConfiguration->injectionPins[7] = Gpio::MM176_INJ8;
+  engineConfiguration->hpfpValvePin = Gpio::MM176_GP17; // 19D Injector 9
 
 	engineConfiguration->ignitionPins[4] = Gpio::MM176_IGN5;
 	engineConfiguration->ignitionPins[5] = Gpio::MM176_IGN6;
