@@ -203,7 +203,13 @@ void setGmSbcGen5() {
 	engineConfiguration->firingOrder = FO_1_8_7_2_6_5_4_3;
 	engineConfiguration->map.sensor.type = MT_GM_1_BAR;
 
+  // todo: real flow!
+	engineConfiguration->injector.flow = 1214;
+
 #ifdef HW_HELLEN_8CHAN
+  engineConfiguration->mc33_hpfp_i_peak = 15;
+  engineConfiguration->mc33_hpfp_i_hold = 7;
+
 	engineConfiguration->injectionPins[4] = Gpio::MM176_INJ5;
 	engineConfiguration->injectionPins[5] = Gpio::MM176_INJ6;
 	engineConfiguration->injectionPins[6] = Gpio::MM176_INJ7;
@@ -217,6 +223,7 @@ void setGmSbcGen5() {
 
 	engineConfiguration->starterControlPin = Gpio::MM176_SPI3_SCK; // 29C - Ignition 9
 
+  engineConfiguration->invertCamVVTSignal = true;
 	engineConfiguration->invertPrimaryTriggerSignal = true;
   engineConfiguration->vvtMode[1] = VVT_INACTIVE;
   engineConfiguration->camInputs[1] = Gpio::Unassigned;
