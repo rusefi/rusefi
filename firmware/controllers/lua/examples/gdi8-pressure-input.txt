@@ -27,13 +27,19 @@ function arrayToString(arr)
 	return str
 end
 
+function getTwoBytesLSB(data, offset, factor)
+	return (data[offset + 2] * 256 + data[offset + 1]) * factor
+end
+
 function onSensorData(bus, id, dlc, data)
   if data[8] ~= 0xDE then
     print ("invalid data: " ..arrayToString(data))
     return
   end
-  print ("valid data: " ..arrayToString(data))
-  -- sensor : set(packet / 512)
+--  print ("valid data: " ..arrayToString(data))
+  local pressureBar = getTwoBytesLSB(data, 0, 10)
+  sensor : set(pressureBar)
+  print ("valid pressureBar: " ..pressureBar)
 end
 
 -- bus index '1' on most rusEFI boards, '1' or '2' on Proteus
