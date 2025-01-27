@@ -83,7 +83,7 @@ static int sentTest_feedWithFile(sent_channel &channel, const char *file)
 			printf("Pause pulses %d\n", statistic.PauseCnt);
 			printf("Interval errors %d short, %d long\n", statistic.ShortIntervalErr, statistic.LongIntervalErr);
 			printf("Total frames %d with CRC error %d (%f%%)\n", statistic.FrameCnt, statistic.CrcErrCnt, statistic.CrcErrCnt * 100.0 / statistic.FrameCnt);
-			printf("Total slow channel messages %d with crc6 errors %d (%f%%)\n", statistic.sc, statistic.scCrcErr, statistic.scCrcErr * 100.0 / statistic.sc);
+			printf("Total slow channel messages %d with crc6 errors %d (%f%%)\n", statistic.sc12 + statistic.sc16, statistic.scCrcErr, (statistic.sc12 + statistic.sc16) ? statistic.scCrcErr * 100.0 / (statistic.sc12 + statistic.sc16) : 0);
 			printf("Sync errors %d\n", statistic.SyncErr);
 		#endif
 	}
