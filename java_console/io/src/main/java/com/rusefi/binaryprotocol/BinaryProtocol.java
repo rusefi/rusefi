@@ -6,7 +6,6 @@ import com.opensr5.ConfigurationImageMetaVersion0_0;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.IniFileModelImpl;
 import com.opensr5.io.ConfigurationImageFile;
 import com.opensr5.io.DataListener;
 import com.rusefi.ConfigurationImageDiff;
@@ -299,7 +298,7 @@ public class BinaryProtocol {
             offset = range.second;
         }
         burn();
-        setController(newVersion);
+        setConfigurationImage(newVersion);
     }
 
     private static byte[] receivePacket(String msg, IoStream stream) throws IOException {
@@ -320,7 +319,7 @@ public class BinaryProtocol {
             if (image == null)
                 return;
         }
-        setController(image);
+        setConfigurationImage(image);
         log.info("Got configuration from controller " + meta.getImageSize() + " byte(s)");
         ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
     }
@@ -552,15 +551,15 @@ public class BinaryProtocol {
         isBurnPending = false;
     }
 
-    public void setController(ConfigurationImage controller) {
-        state.setController(controller);
+    public void setConfigurationImage(ConfigurationImage controller) {
+        state.setConfigurationImage(controller);
     }
 
     /**
      * Configuration as it is in the controller to the best of our knowledge
      */
     public ConfigurationImage getControllerConfiguration() {
-        return state.getControllerConfiguration();
+        return state.getConfigurationImage();
     }
 
     /**

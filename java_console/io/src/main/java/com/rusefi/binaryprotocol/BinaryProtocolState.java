@@ -2,19 +2,20 @@ package com.rusefi.binaryprotocol;
 
 import com.opensr5.ConfigurationImage;
 import com.rusefi.config.generated.Fields;
+import org.jetbrains.annotations.Nullable;
 
 public class BinaryProtocolState {
     private final Object imageLock = new Object();
-    private ConfigurationImage controller;
+    private ConfigurationImage configurationImage;
     /**
      * Snapshot of current gauges status
      * @see Fields#TS_OUTPUT_COMMAND
      */
     private byte[] currentOutputs;
 
-    public void setController(ConfigurationImage controller) {
+    public void setConfigurationImage(ConfigurationImage configurationImage) {
         synchronized (imageLock) {
-            this.controller = controller.clone();
+            this.configurationImage = configurationImage.clone();
         }
     }
 
@@ -26,17 +27,18 @@ public class BinaryProtocolState {
         this.currentOutputs = currentOutputs;
     }
 
-    public ConfigurationImage getControllerConfiguration() {
+    @Nullable
+    public ConfigurationImage getConfigurationImage() {
         synchronized (imageLock) {
-            if (controller == null)
+            if (configurationImage == null)
                 return null;
-            return controller.clone();
+            return configurationImage.clone();
         }
     }
 
     public void setRange(byte[] src, int scrPos, int offset, int count) {
         synchronized (imageLock) {
-            System.arraycopy(src, scrPos, controller.getContent(), offset, count);
+            System.arraycopy(src, scrPos, configurationImage.getContent(), offset, count);
         }
     }
 }

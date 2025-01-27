@@ -12,8 +12,6 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.tune.xml.Constant;
 
-import java.io.File;
-
 /**
  * Starts a fake device with TCP connector at {@link BinaryProtocolServer#DEFAULT_PROXY_PORT} port
  * @see TcpServerSandbox what's the difference?
@@ -32,7 +30,7 @@ class BinaryProtocolServerSandbox {
         ConfigurationImage controller = new ConfigurationImage(new byte[model.getMetaInfo().getTotalSize()]);
         ScalarIniField iniField = TestHelper.createIniField(Fields.TWOSTROKE);
         iniField.setValue(controller, new Constant(iniField.getName(), "", "1", iniField.getDigits()));
-        state.setController(controller);
+        state.setConfigurationImage(controller);
         state.setCurrentOutputs(new byte[1 + Fields.TS_TOTAL_OUTPUT_SIZE]);
 
         LinkManager linkManager = new LinkManager();

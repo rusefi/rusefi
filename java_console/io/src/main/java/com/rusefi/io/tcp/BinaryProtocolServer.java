@@ -317,7 +317,7 @@ public class BinaryProtocolServer {
             byte[] response = new byte[1 + count];
             response[0] = (byte) TS_OK.charAt(0);
             Objects.requireNonNull(bp, "bp");
-            ConfigurationImage configurationImage = bp.getControllerConfiguration();
+            ConfigurationImage configurationImage = bp.getConfigurationImage();
             Objects.requireNonNull(configurationImage, "configurationImage");
             System.arraycopy(configurationImage.getContent(), offset, response, 1, count);
             stream.sendPacket(response);
@@ -327,7 +327,7 @@ public class BinaryProtocolServer {
     private void handleCrc(LinkManager linkManager, TcpIoStream stream) throws IOException {
         log.info("CRC check");
         BinaryProtocolState bp = linkManager.getBinaryProtocolState();
-        byte[] content = bp.getControllerConfiguration().getContent();
+        byte[] content = bp.getConfigurationImage().getContent();
         byte[] packet = createCrcResponse(content);
         stream.sendPacket(packet);
     }

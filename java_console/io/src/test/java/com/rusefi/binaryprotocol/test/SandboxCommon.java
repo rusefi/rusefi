@@ -2,7 +2,6 @@ package com.rusefi.binaryprotocol.test;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
-import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelImpl;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
@@ -45,7 +44,7 @@ public class SandboxCommon {
                     log.info("No BinaryProtocol");
                 } else {
                     BinaryProtocolState binaryProtocolState = currentStreamState.getBinaryProtocolState();
-                    ConfigurationImage ci = binaryProtocolState.getControllerConfiguration();
+                    ConfigurationImage ci = binaryProtocolState.getConfigurationImage();
                     configurationImageAtomicReference.set(ci);
                     imageLatch.countDown();
                 }

@@ -58,7 +58,7 @@ public class TestHelper extends MockitoTestHelper {
     @NotNull
     public static BinaryProtocolServer createVirtualController(ConfigurationImage ci, int port, Listener serverSocketCreationCallback, BinaryProtocolServer.Context context) throws IOException {
         BinaryProtocolState state = new BinaryProtocolState();
-        state.setController(ci);
+        state.setConfigurationImage(ci);
         byte[] currentOutputs = new byte[Fields.TS_TOTAL_OUTPUT_SIZE];
         ByteBuffer buffer = FileUtil.littleEndianWrap(currentOutputs, TS_FILE_VERSION_OFFSET, 4);
         buffer.putInt(TS_FILE_VERSION);
