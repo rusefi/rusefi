@@ -52,7 +52,7 @@ public class BinaryProtocol {
     private static final Logging log = getLogging(BinaryProtocol.class);
     private static final ThreadFactory THREAD_FACTORY = new NamedThreadFactory("ECU text pull", true);
 
-    private static final String CONFIGURATION_RUSEFI_BINARY = "current_configuration.binary_image";
+    private static final String CONFIGURATION_RUSEFI_BINARY = "current_configuration.zip";
     private static final String CONFIGURATION_RUSEFI_XML = "current_configuration.msq";
 
     private final LinkManager linkManager;
