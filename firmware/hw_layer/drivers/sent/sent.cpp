@@ -36,13 +36,14 @@ void sent_channel::Info() {
 		efiPrintf("Last valid fast msg Status 0x%01x Sig0 0x%03x Sig1 0x%03x", stat, sig0, sig1);
 	}
 
-	if (scMsgFlags) {
-		efiPrintf("Slow channels:");
-		for (int i = 0; i < SENT_SLOW_CHANNELS_MAX; i++) {
-			if (scMsgFlags & BIT(i)) {
-				efiPrintf(" ID %d: %d", scMsg[i].id, scMsg[i].data);
-			}
-		}
+	efiPrintf("Slow channels:");
+	/* run for all possible slow channel IDs (8 bit) */
+	for (int i = 0; i < 256; i++) {
+		int value;
+		value = GetSlowChannelValue(i);
+		if (value < 0)
+			continue;
+		efiPrintf(" ID %d: %d\n", i, value);
 	}
 
 	#if SENT_STATISTIC_COUNTERS
@@ -52,7 +53,7 @@ void sent_channel::Info() {
 		efiPrintf("Restarts %lu", statistic.RestartCnt);
 		efiPrintf("Interval errors %lu short, %lu long", statistic.ShortIntervalErr, statistic.LongIntervalErr);
 		efiPrintf("Total frames %lu with CRC error %lu (%f%%)", statistic.FrameCnt, statistic.CrcErrCnt, statistic.CrcErrCnt * 100.0 / statistic.FrameCnt);
-		efiPrintf("Total slow channel messages %lu with crc6 errors %lu (%f%%)", statistic.sc, statistic.scCrcErr, statistic.scCrcErr * 100.0 / statistic.sc);
+		efiPrintf("Total slow channel messages %lu with crc6 errors %lu (%f%%)", statistic.sc12 + statistic.sc16, statistic.scCrcErr, (statistic.sc12 + statistic.sc16) ? statistic.scCrcErr * 100.0 / (statistic.sc12 + statistic.sc16) : 0);
 		efiPrintf("Sync errors %lu", statistic.SyncErr);
 	#endif
 }
