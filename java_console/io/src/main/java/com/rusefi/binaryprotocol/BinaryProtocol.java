@@ -417,7 +417,7 @@ public class BinaryProtocol {
         try {
             localCached = ConfigurationImageFile.readFromFile(CONFIGURATION_RUSEFI_BINARY);
         } catch (IOException e) {
-            System.err.println("Error reading " + CONFIGURATION_RUSEFI_BINARY + ": no worries " + e);
+            log.error("Error reading " + CONFIGURATION_RUSEFI_BINARY + ": no worries " + e);
             return null;
         }
 
@@ -425,6 +425,7 @@ public class BinaryProtocol {
             int crcOfLocallyCachedConfiguration = IoHelper.getCrc32(localCached.getContent());
             log.info(String.format(CONFIGURATION_RUSEFI_BINARY + " Local cache CRC %x\n", crcOfLocallyCachedConfiguration));
 
+            // there is a local file! let's request CRC from controller so that we can compare it to local file (validate)
             int crcFromController = getCrcFromController(localCached.getSize());
 
             if (crcOfLocallyCachedConfiguration == crcFromController) {
@@ -551,8 +552,8 @@ public class BinaryProtocol {
         isBurnPending = false;
     }
 
-    public void setConfigurationImage(ConfigurationImage controller) {
-        state.setConfigurationImage(controller);
+    public void setConfigurationImage(ConfigurationImage configurationImage) {
+        state.setConfigurationImage(configurationImage);
     }
 
     /**

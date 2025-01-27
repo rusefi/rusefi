@@ -303,25 +303,6 @@ public class ConsoleTools {
         });
     }
 
-    private static void writeTune(String[] args) throws Exception {
-        if (args.length < 2) {
-            System.out.println("No tune file name specified");
-            return;
-        }
-
-        String fileName = args[1];
-        Msq msq = Msq.readTune(fileName);
-
-        startAndConnect(linkManager -> {
-            ConfigurationImage ci = msq.asImage(IniFileModelImpl.getInstance());
-            linkManager.getConnector().getBinaryProtocol().uploadChanges(ci);
-
-            //System.exit(0);
-            return null;
-        });
-
-    }
-
     private static void invokeCallback(String callback) {
         if (callback == null)
             return;
