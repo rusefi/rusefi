@@ -40,7 +40,7 @@ WIKI_FILE_PATH=hw_layer/mass_storage/rusEFI\ ${SHORT_BOARD_NAME}\ Wiki.url
 
 cp hw_layer/mass_storage/filesystem_contents/rusEFI_Wiki_template.url "${WIKI_FILE_PATH}"
 echo "URL=${BOARD_SPECIFIC_URL}" >> "${WIKI_FILE_PATH}"
-cp hw_layer/mass_storage/filesystem_contents/README.template.txt "${README_FILE_PATH}"
+cp hw_layer/mass_storage/filesystem_contents/README.nozip.template.txt "${README_FILE_PATH}"
 echo ${BOARD_SPECIFIC_URL}       >> "${README_FILE_PATH}"
 
 if [[ -z "${EXTRA_FILES_TO_COPY_ON_IMAGE_FOLDER}" ]]; then
