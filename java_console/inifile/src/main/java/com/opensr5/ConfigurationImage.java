@@ -4,6 +4,7 @@ import com.rusefi.core.FileUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
+import java.util.Objects;
 
 /**
  * immutable presentation of ECU calibrations
@@ -20,12 +21,16 @@ public class ConfigurationImage {
     }
 
     public ConfigurationImage(byte[] content) {
-        this.content = content;
+        this.content = Objects.requireNonNull(content);
     }
 
     @NotNull
     public ByteBuffer getByteBuffer(int offset, int size) {
         return FileUtil.littleEndianWrap(content, offset, size);
+    }
+
+    public boolean isEmpty() {
+        return content.length == 0;
     }
 
     public int getSize() {

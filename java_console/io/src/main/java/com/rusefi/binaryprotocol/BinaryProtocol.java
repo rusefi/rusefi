@@ -337,7 +337,8 @@ public class BinaryProtocol {
         final Arguments arguments,
         final ConfigurationImageMeta meta
     ) {
-        final ConfigurationImageWithMeta image = new ConfigurationImageWithMeta(meta);
+        final ConfigurationImageWithMeta imageWithMeta = new ConfigurationImageWithMeta(meta);
+        final ConfigurationImage image = imageWithMeta.getConfigurationImage();
 
         int offset = 0;
 
@@ -376,7 +377,7 @@ public class BinaryProtocol {
         if (arguments != null && arguments.saveFile) {
             try {
                 if (ConnectionAndMeta.saveSettingsToFile()) {
-                    ConfigurationImageFile.saveToFile(image, CONFIGURATION_RUSEFI_BINARY);
+                    ConfigurationImageFile.saveToFile(imageWithMeta, CONFIGURATION_RUSEFI_BINARY);
                 }
                 Msq tune = MsqFactory.valueOf(image, iniFile);
                 tune.writeXmlFile(CONFIGURATION_RUSEFI_XML);
@@ -410,12 +411,13 @@ public class BinaryProtocol {
         return response[0] & 0xff;
     }
 
+    @Nullable
     private ConfigurationImage getAndValidateLocallyCached() {
         if (DISABLE_LOCAL_CONFIGURATION_CACHE)
             return null;
         ConfigurationImage localCached;
         try {
-            localCached = ConfigurationImageFile.readFromFile(CONFIGURATION_RUSEFI_BINARY);
+            localCached = ConfigurationImageFile.readFromFile(CONFIGURATION_RUSEFI_BINARY).getConfigurationImage();
         } catch (IOException e) {
             log.error("Error reading " + CONFIGURATION_RUSEFI_BINARY + ": no worries " + e);
             return null;

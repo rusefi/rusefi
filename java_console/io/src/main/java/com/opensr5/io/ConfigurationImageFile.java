@@ -6,6 +6,7 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageWithMeta;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -22,7 +23,7 @@ import java.util.zip.ZipOutputStream;
  * 2. <b>${CONFIGURATION_IMAGE_META}.yaml</b> - a yaml file with an image binary metadata, where
  *    ${CONFIGURATION_IMAGE_META} is a name of the corresponding class, inherited from {@link ConfigurationImageMeta}
  *    class. Currently, we support only {@link ConfigurationImageMetaVersion0_0} value for ${CONFIGURATION_IMAGE_META},
- *    but in th future we could extend list of supported image binary metadata formats.
+ *    but in the future we could extend list of supported image binary metadata formats.
  * <p>
  * Andrey Belomutskiy, (c) 2013-2020
  * 6/20/2015.
@@ -35,6 +36,7 @@ public class ConfigurationImageFile {
     private ConfigurationImageFile() {
     }
 
+    @NotNull
     public static ConfigurationImageWithMeta readFromFile(final String fileName) throws IOException {
         try (final ZipFile zipFile = new ZipFile(fileName)) {
             Optional<ConfigurationImageMeta> meta = Optional.empty();
@@ -70,7 +72,7 @@ public class ConfigurationImageFile {
             } else {
                 log.warn(String.format("Meta is not found in file `%s`", fileName));
             }
-            return null;
+            return ConfigurationImageWithMeta.VOID;
         }
     }
 
@@ -100,9 +102,9 @@ public class ConfigurationImageFile {
         final ConfigurationImageWithMeta configurationImage,
         final String fileName
     ) throws IOException {
-        log.info(String.format("Saving %d bytes of configuration into %s", configurationImage.getSize(), fileName));
+        log.info(String.format("Saving %d bytes of configuration into %s", configurationImage.getConfigurationImage().getSize(), fileName));
         final File outputFile = new File(fileName);
-        final byte[] calibrationsFileContent = getFileContent(configurationImage);
+        final byte[] calibrationsFileContent = getFileContent(configurationImage.getConfigurationImage());
         final int calibrationsFileSize = calibrationsFileContent.length;
         try (
             final FileOutputStream fos = new FileOutputStream(outputFile);

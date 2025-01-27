@@ -160,7 +160,7 @@ public class ConsoleTools {
 
     private static void calcBinaryImageTuneCrc(String... args) throws IOException {
         String fileName = args[1];
-        ConfigurationImage image = ConfigurationImageFile.readFromFile(fileName);
+        ConfigurationImage image = ConfigurationImageFile.readFromFile(fileName).getConfigurationImage();
         printCrc(image);
     }
 
@@ -343,17 +343,17 @@ public class ConsoleTools {
 
     private static void convertBinaryToXml(String[] args) throws IOException, JAXBException {
         if (args.length < 2) {
-            System.err.println("Binary file input expected");
+            log.error("Binary file input expected");
             System.exit(-1);
         }
         String inputBinaryFileName = args[1];
-        ConfigurationImage image = ConfigurationImageFile.readFromFile(inputBinaryFileName);
-        System.out.println("Got " + image.getSize() + " of configuration from " + inputBinaryFileName);
+        ConfigurationImage image = ConfigurationImageFile.readFromFile(inputBinaryFileName).getConfigurationImage();
+        log.info("Got " + image.getSize() + " of configuration from " + inputBinaryFileName);
 
         Msq tune = MsqFactory.valueOf(image, IniFileModelImpl.getInstance());
         tune.writeXmlFile(Online.outputXmlFileName);
         String authToken = AuthTokenPanel.getAuthToken();
-        System.out.println("Using " + authToken);
+        log.info("Using " + authToken);
         Online.upload(new File(Online.outputXmlFileName), authToken);
     }
 

@@ -2,6 +2,7 @@ package com.rusefi.ui.basic;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.SerialPortScanner;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
@@ -33,7 +34,7 @@ public class UpdateCalibrations {
             final File selectedFile = calibrationsFileChooser.getSelectedFile();
             UpdateCalibrations.saveBinaryImageDefaultDirectory(selectedFile.getParent());
             try {
-                final ConfigurationImage calibrationsImage = ConfigurationImageFile.readFromFile(
+                final ConfigurationImageWithMeta calibrationsImage = ConfigurationImageFile.readFromFile(
                     selectedFile.getAbsolutePath()
                 );
                 singleAsyncJobExecutor.startJob(
