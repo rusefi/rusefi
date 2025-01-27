@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Objects;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -44,6 +45,7 @@ public class PortHolder {
      * @return true if OK, false if error
      */
     void connectAndReadConfiguration(BinaryProtocol.Arguments arguments) {
+        Objects.requireNonNull(arguments);
         IoStream stream = ioStreamFactory.call();
         if (stream == null) {
             // error already reported

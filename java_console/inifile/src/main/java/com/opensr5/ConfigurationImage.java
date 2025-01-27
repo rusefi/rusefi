@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 import java.util.Objects;
 
 /**
- * immutable presentation of ECU calibrations
+ * mutable presentation of ECU calibrations
  * in the MCU firmware that's config/engineConfiguration
  *
  * Andrey Belomutskiy, (c) 2013-2020

@@ -226,15 +226,12 @@ public class BinaryProtocol {
             @Override
             public void run() {
                 while (!stream.isClosed()) {
-//                    FileLog.rlog("queue: " + LinkManager.COMMUNICATION_QUEUE.toString());
                     if (linkManager.COMMUNICATION_QUEUE.isEmpty() && linkManager.getNeedPullData()) {
                         linkManager.submit(new Runnable() {
-                            private final boolean verbose = false; // todo: programmatically detect run under gradle?
                             @Override
                             public void run() {
                                 isGoodOutputChannels = requestOutputChannels();
-                                if (verbose)
-                                    System.out.println("requestOutputChannels " + isGoodOutputChannels);
+                                log.debug("requestOutputChannels " + isGoodOutputChannels);
                                 if (isGoodOutputChannels)
                                     HeartBeatListeners.onDataArrived();
                                 binaryProtocolLogger.compositeLogic(BinaryProtocol.this);
@@ -242,16 +239,14 @@ public class BinaryProtocol {
                                     String text = requestPendingTextMessages();
                                     if (text != null) {
                                         textListener.onDataArrived((text + "\r\n").getBytes());
-                                        if (verbose)
-                                            System.out.println("textListener");
+                                        log.debug("textListener");
                                     }
                                 }
 
                                 if (linkManager.isNeedPullLiveData()) {
                                     LiveDocsRegistry.LiveDataProvider liveDataProvider = LiveDocsRegistry.getLiveDataProvider();
                                     LiveDocsRegistry.INSTANCE.refresh(liveDataProvider);
-                                    if (verbose)
-                                        System.out.println("Got livedata");
+                                    log.info("Got livedata");
                                 }
                             }
                         });
@@ -312,14 +307,14 @@ public class BinaryProtocol {
      * read complete tune from physical data stream
      */
     public void readImage(final Arguments arguments, final ConfigurationImageMeta meta) {
-        ConfigurationImage image = getAndValidateLocallyCached();
+        ConfigurationImageWithMeta image = getAndValidateLocallyCached();
 
-        if (image == null) {
+        if (image.isEmpty()) {
             image = readFullImageFromController(arguments, meta);
-            if (image == null)
+            if (image.isEmpty())
                 return;
         }
-        setConfigurationImage(image);
+        setConfigurationImage(image.getConfigurationImage());
         log.info("Got configuration from controller " + meta.getImageSize() + " byte(s)");
         ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
     }
@@ -332,11 +327,12 @@ public class BinaryProtocol {
         }
     }
 
-    @Nullable
-    private ConfigurationImage readFullImageFromController(
+    @NotNull
+    private ConfigurationImageWithMeta readFullImageFromController(
         final Arguments arguments,
         final ConfigurationImageMeta meta
     ) {
+        Objects.requireNonNull(arguments);
         final ConfigurationImageWithMeta imageWithMeta = new ConfigurationImageWithMeta(meta);
         final ConfigurationImage image = imageWithMeta.getConfigurationImage();
 
@@ -347,7 +343,7 @@ public class BinaryProtocol {
 
         while (offset < image.getSize() && (System.currentTimeMillis() - start < Timeouts.READ_IMAGE_TIMEOUT)) {
             if (stream.isClosed())
-                return null;
+                return ConfigurationImageWithMeta.VOID;
 
             int remainingSize = image.getSize() - offset;
             int requestSize = Math.min(remainingSize, Fields.BLOCKING_FACTOR);
@@ -374,7 +370,7 @@ public class BinaryProtocol {
 
             offset += requestSize;
         }
-        if (arguments != null && arguments.saveFile) {
+        if (arguments.saveFile) {
             try {
                 if (ConnectionAndMeta.saveSettingsToFile()) {
                     ConfigurationImageFile.saveToFile(imageWithMeta, CONFIGURATION_RUSEFI_BINARY);
@@ -382,10 +378,10 @@ public class BinaryProtocol {
                 Msq tune = MsqFactory.valueOf(image, iniFile);
                 tune.writeXmlFile(CONFIGURATION_RUSEFI_XML);
             } catch (Exception e) {
-                System.err.println("Ignoring " + e);
+                log.error("Ignoring " + e);
             }
         }
-        return image;
+        return imageWithMeta;
     }
 
     private static String getCode(byte[] response) {
@@ -411,31 +407,31 @@ public class BinaryProtocol {
         return response[0] & 0xff;
     }
 
-    @Nullable
-    private ConfigurationImage getAndValidateLocallyCached() {
+    @NotNull
+    private ConfigurationImageWithMeta getAndValidateLocallyCached() {
         if (DISABLE_LOCAL_CONFIGURATION_CACHE)
-            return null;
-        ConfigurationImage localCached;
+            return ConfigurationImageWithMeta.VOID;
+        ConfigurationImageWithMeta localCached;
         try {
-            localCached = ConfigurationImageFile.readFromFile(CONFIGURATION_RUSEFI_BINARY).getConfigurationImage();
+            localCached = ConfigurationImageFile.readFromFile(CONFIGURATION_RUSEFI_BINARY);
         } catch (IOException e) {
             log.error("Error reading " + CONFIGURATION_RUSEFI_BINARY + ": no worries " + e);
-            return null;
+            return ConfigurationImageWithMeta.VOID;
         }
 
-        if (localCached != null) {
-            int crcOfLocallyCachedConfiguration = IoHelper.getCrc32(localCached.getContent());
+        if (!localCached.isEmpty()) {
+            int crcOfLocallyCachedConfiguration = IoHelper.getCrc32(localCached.getConfigurationImage().getContent());
             log.info(String.format(CONFIGURATION_RUSEFI_BINARY + " Local cache CRC %x\n", crcOfLocallyCachedConfiguration));
 
             // there is a local file! let's request CRC from controller so that we can compare it to local file (validate)
-            int crcFromController = getCrcFromController(localCached.getSize());
+            int crcFromController = getCrcFromController(localCached.getConfigurationImage().getSize());
 
             if (crcOfLocallyCachedConfiguration == crcFromController) {
                 return localCached;
             }
 
         }
-        return null;
+        return ConfigurationImageWithMeta.VOID;
     }
 
     public int getCrcFromController(int configSize) {

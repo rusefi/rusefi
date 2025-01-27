@@ -8,6 +8,8 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
 
+import java.util.Objects;
+
 import static com.devexperts.logging.Logging.getLogging;
 
 /**
@@ -28,6 +30,7 @@ public class StreamConnector implements LinkConnector {
 
     @Override
     public void connectAndReadConfiguration(BinaryProtocol.Arguments arguments, ConnectionStateListener listener) {
+        Objects.requireNonNull(arguments);
         log.info("StreamConnector: connecting");
         portHolder.listener = listener;
         log.info("scheduleOpening");

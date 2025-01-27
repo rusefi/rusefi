@@ -32,4 +32,8 @@ public class ConfigurationImageWithMeta {
     public ConfigurationImage getConfigurationImage() {
         return image.isEmpty() ? null : image;
     }
+
+    public boolean isEmpty() {
+        return image.isEmpty();
+    }
 }
