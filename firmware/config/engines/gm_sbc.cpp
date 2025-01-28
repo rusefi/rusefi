@@ -203,8 +203,12 @@ void setGmSbcGen5() {
 	engineConfiguration->firingOrder = FO_1_8_7_2_6_5_4_3;
 	engineConfiguration->map.sensor.type = MT_GM_1_BAR;
 
+  // engineConfiguration->hpfpPumpVolume = 0.623; // LT4
+	engineConfiguration->hpfpPumpVolume = 0.49; // cc per stroke
+
+  // LT 17.7 g/sec at 100bar which 1440
   // todo: real flow!
-	engineConfiguration->injector.flow = 1214;
+	engineConfiguration->injector.flow = 990; // 12.6g/sec
 
 #ifdef HW_HELLEN_8CHAN
   engineConfiguration->mc33_hpfp_i_peak = 15;
