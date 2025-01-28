@@ -328,11 +328,7 @@ public class BinaryProtocol {
     }
 
     @NotNull
-    private ConfigurationImageWithMeta readFullImageFromController(
-        final Arguments arguments,
-        final ConfigurationImageMeta meta
-    ) {
-        Objects.requireNonNull(arguments);
+    public ConfigurationImageWithMeta readFullImageFromController(final ConfigurationImageMeta meta) {
         final ConfigurationImageWithMeta imageWithMeta = new ConfigurationImageWithMeta(meta);
         final ConfigurationImage image = imageWithMeta.getConfigurationImage();
 
@@ -370,12 +366,22 @@ public class BinaryProtocol {
 
             offset += requestSize;
         }
+        return imageWithMeta;
+    }
+
+    @NotNull
+    private ConfigurationImageWithMeta readFullImageFromController(
+        final Arguments arguments,
+        final ConfigurationImageMeta meta
+    ) {
+        Objects.requireNonNull(arguments);
+        final ConfigurationImageWithMeta imageWithMeta = readFullImageFromController(meta);
         if (arguments.saveFile) {
             try {
                 if (ConnectionAndMeta.saveSettingsToFile()) {
                     ConfigurationImageFile.saveToFile(imageWithMeta, CONFIGURATION_RUSEFI_BINARY);
                 }
-                Msq tune = MsqFactory.valueOf(image, iniFile);
+                Msq tune = MsqFactory.valueOf(imageWithMeta.getConfigurationImage(), iniFile);
                 tune.writeXmlFile(CONFIGURATION_RUSEFI_XML);
             } catch (Exception e) {
                 log.error("Ignoring " + e);
