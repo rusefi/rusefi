@@ -28,6 +28,7 @@ import com.rusefi.ui.livedocs.LiveDocsRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -378,16 +379,30 @@ public class BinaryProtocol {
         final ConfigurationImageWithMeta imageWithMeta = readFullImageFromController(meta);
         if (arguments.saveFile) {
             try {
-                if (ConnectionAndMeta.saveSettingsToFile()) {
-                    ConfigurationImageFile.saveToFile(imageWithMeta, CONFIGURATION_RUSEFI_BINARY);
-                }
-                Msq tune = MsqFactory.valueOf(imageWithMeta.getConfigurationImage(), iniFile);
-                tune.writeXmlFile(CONFIGURATION_RUSEFI_XML);
+                saveConfigurationImageToFiles(
+                    imageWithMeta,
+                    (ConnectionAndMeta.saveSettingsToFile() ? CONFIGURATION_RUSEFI_BINARY : null),
+                    CONFIGURATION_RUSEFI_XML
+                );
             } catch (Exception e) {
                 log.error("Ignoring " + e);
             }
         }
         return imageWithMeta;
+    }
+
+    public void saveConfigurationImageToFiles(
+        final ConfigurationImageWithMeta imageWithMeta,
+        @Nullable final String binaryFileName,
+        @Nullable final String xmlFileName
+    ) throws JAXBException, IOException {
+        if (binaryFileName != null) {
+            ConfigurationImageFile.saveToFile(imageWithMeta, binaryFileName);
+        }
+        if (xmlFileName != null) {
+            final Msq tune = MsqFactory.valueOf(imageWithMeta.getConfigurationImage(), iniFile);
+            tune.writeXmlFile(xmlFileName);
+        }
     }
 
     private static String getCode(byte[] response) {
