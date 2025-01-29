@@ -54,7 +54,7 @@ public class UpdateCalibrations {
     private static JFileChooser createConfigurationImageFileChooser() {
         final JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fc.setFileFilter(new FileNameExtensionFilter("Binary image files (.binary_image)", "binary_image"));
+        fc.setFileFilter(new FileNameExtensionFilter("Calibrations files (.zip)", "zip"));
 
         final String currentDirectory = loadBinaryImageDefaultDirectory();
         if (currentDirectory != null) {
