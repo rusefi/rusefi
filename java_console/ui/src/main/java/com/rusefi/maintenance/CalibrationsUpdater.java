@@ -40,7 +40,13 @@ public enum CalibrationsUpdater {
 
                 callbacks.logLine(String.format("Connecting to port %s...", port));
                 try {
-                    linkManager.connect(port).await(60, TimeUnit.SECONDS);
+                    if (!linkManager.connect(port).await(60, TimeUnit.SECONDS)) {
+                        final String errorMsg = String.format("Failed to connect to port %s in a minute", port);
+                        log.error(errorMsg);
+                        callbacks.logLine(errorMsg);
+                        callbacks.error();
+                        return;
+                    }
                 } catch (final InterruptedException e) {
                     final String errorMsg = String.format("Failed to connect to port %s", port);
                     log.error(errorMsg, e);
