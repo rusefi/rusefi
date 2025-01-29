@@ -234,6 +234,23 @@ void setGmSbcGen5() {
 
   engineConfiguration->fuelPumpPin = Gpio::MM176_OUT_IO2; // 6C - High Side 2
 
+  // early models before SENT
+  // todo: early gen5 LS engines have redundant high pressure sensors #7364
+	engineConfiguration->highPressureFuel.v1 = 0.57; /* volts */;
+	engineConfiguration->highPressureFuel.value1 = 500;
+	engineConfiguration->highPressureFuel.v2 = 2.25; /* volts */;
+	engineConfiguration->highPressureFuel.value2 = 10900;
+
+	engineConfiguration->lowPressureFuel.v1 = 2.9; /* volts */;
+	engineConfiguration->lowPressureFuel.value1 = 435;
+	engineConfiguration->lowPressureFuel.v2 = 3.7; /* volts */;
+	engineConfiguration->lowPressureFuel.value2 = 576;
+
+	engineConfiguration->oilPressure.v1 = 0.6;
+	engineConfiguration->oilPressure.value1 = 0; // 100 kPa absolute
+	engineConfiguration->oilPressure.v2 = 2.6f;
+	engineConfiguration->oilPressure.value2 = 420; // 520 kPa absolute
+
   engineConfiguration->oilPressure.hwChannel = MM176_IN_MAP1_ANALOG; // 2A Aux Analog 4 / External MAP
   engineConfiguration->fuelLevelSensor = MM176_IN_O2S_ANALOG; // 3A - Aux Analog 2
   engineConfiguration->lowPressureFuel.hwChannel = MM176_IN_AUX2_ANALOG; // 	4A - Aux Analog 7
