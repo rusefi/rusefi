@@ -8,11 +8,12 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import java.io.*;
 
 public class ConfigurationImageMetaYamlUtil {
+    // `dump` method is not responsible for closing output stream, passed as argument
     static void dump(final ConfigurationImageMeta meta, final OutputStream os) throws IOException {
         final Yaml yaml = new Yaml(getDumperOptions());
-        try (final PrintWriter osw = new PrintWriter(os)) {
-            yaml.dump(meta, osw);
-        }
+        // We do not want print writer to close an output stream, so we do not use try-with-resources statement below:
+        final PrintWriter osw = new PrintWriter(os);
+        yaml.dump(meta, osw);
     }
 
     static <MetaType extends ConfigurationImageMeta> MetaType loadMeta(
