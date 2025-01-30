@@ -31,7 +31,7 @@ public class WriteSimulatorConfiguration {
         if (args.length != 1)
             throw new IllegalArgumentException("One argument expected: .ini file name");
         String iniFileName = args[0];
-        IniFileModelImpl ini = new IniFileModelImpl().readIniFile(iniFileName);
+        IniFileModelImpl ini = IniFileModelImpl.readIniFile(iniFileName);
         BinaryProtocol.iniFileProvider = signature -> ini;
 
         log.info("ROOT_FOLDER=" + ROOT_FOLDER);

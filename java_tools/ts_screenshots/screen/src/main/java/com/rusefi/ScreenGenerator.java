@@ -27,7 +27,7 @@ public class ScreenGenerator {
     private static final String DESTINATION = "images" + File.separator;
 
     static ContentModel contentModel = new ContentModel();
-    static IniFileModel iniFileModel = new IniFileModel();
+    static IniFileModel iniFileModel = null;
 
     static Map<String, com.opensr5.ini.DialogModel.Field> byCleanUiName = new TreeMap<>();
 
@@ -37,7 +37,7 @@ public class ScreenGenerator {
             System.exit(-1);
         }
 
-        iniFileModel.readIniFile(".");
+        iniFileModel = IniFileModelImpl.readIniFile(".");
 
         for (Map.Entry<String, com.opensr5.ini.DialogModel.Field> a : iniFileModel.getAllFields().entrySet()) {
             String cleanUiName = cleanName(a.getValue().getUiName());
