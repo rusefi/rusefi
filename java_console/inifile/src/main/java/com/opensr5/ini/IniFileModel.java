@@ -7,8 +7,6 @@ import java.util.Map;
 import java.util.Set;
 
 public interface IniFileModel {
-    IniFileModelImpl findAndReadIniFile(String iniFilePath);
-
     Map<String, List<String>> getDefines();
 
     Map<String, IniField> getAllIniFields();

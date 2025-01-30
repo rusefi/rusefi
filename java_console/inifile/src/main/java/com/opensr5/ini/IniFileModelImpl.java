@@ -46,10 +46,9 @@ public class IniFileModelImpl implements IniFileModel {
     private boolean isInSettingContextHelp = false;
     private boolean isInsidePageDefinition;
 
-    @Override
-    public IniFileModelImpl findAndReadIniFile(String iniFilePath) {
-        String fileName = findMetaInfoFile(iniFilePath);
-        return readIniFile(fileName);
+    public static IniFileModelImpl findAndReadIniFile(String iniFilePath) {
+        final String fileName = findMetaInfoFile(iniFilePath);
+        return new IniFileModelImpl().readIniFile(fileName);
     }
 
     @Override
@@ -345,8 +344,7 @@ public class IniFileModelImpl implements IniFileModel {
 
     public static synchronized IniFileModelImpl getInstance() {
         if (INSTANCE == null) {
-            INSTANCE = new IniFileModelImpl();
-            INSTANCE.findAndReadIniFile(INI_FILE_PATH);
+            INSTANCE = IniFileModelImpl.findAndReadIniFile(INI_FILE_PATH);
         }
         return INSTANCE;
     }
