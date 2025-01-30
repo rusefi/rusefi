@@ -15,6 +15,8 @@ public interface IniFileModel {
 
     IniFileMetaInfo getMetaInfo();
 
+    String getIniFilePath();
+
     Map<String, String> getTooltips();
 
     Map<String, DialogModel.Field> getFieldsInUiOrder();
