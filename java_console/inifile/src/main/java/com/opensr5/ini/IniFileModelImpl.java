@@ -42,6 +42,7 @@ public class IniFileModelImpl implements IniFileModel {
     private final Map<String, String> xBinsByZBins = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, String> yBinsByZBins = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final IniFileMetaInfo metaInfo;
+    private final String iniFilePath;
 
     private boolean isInSettingContextHelp = false;
     private boolean isInsidePageDefinition;
@@ -51,8 +52,9 @@ public class IniFileModelImpl implements IniFileModel {
         return IniFileModelImpl.readIniFile(fileName);
     }
 
-    private IniFileModelImpl(@Nullable final IniFileMetaInfoImpl metaInfo) {
+    private IniFileModelImpl(@Nullable final IniFileMetaInfoImpl metaInfo, final String iniFilePath) {
         this.metaInfo = metaInfo;
+        this.iniFilePath = iniFilePath;
     }
 
     @Override
@@ -78,6 +80,11 @@ public class IniFileModelImpl implements IniFileModel {
     }
 
     @Override
+    public String getIniFilePath() {
+        return Objects.requireNonNull(iniFilePath, "iniFilePath");
+    }
+
+    @Override
     public Map<String, String> getTooltips() {
         return tooltips;
     }
@@ -92,7 +99,7 @@ public class IniFileModelImpl implements IniFileModel {
         log.info("Reading " + fileName);
         File input = new File(fileName);
         RawIniFile content = IniFileReader.read(input);
-        return readIniFile(content, true);
+        return readIniFile(content, true, fileName);
     }
 
     /**
@@ -100,8 +107,15 @@ public class IniFileModelImpl implements IniFileModel {
      *                 on attempt to create IniFileMetaInfoImpl instance from test data; to avoid this exception such
      *                 tests should use `false` as value for this parameter
      */
-    public static IniFileModelImpl readIniFile(final RawIniFile content, final boolean initMeta) {
-        final IniFileModelImpl result = new IniFileModelImpl(initMeta ? new IniFileMetaInfoImpl(content) : null);
+    public static IniFileModelImpl readIniFile(
+        final RawIniFile content,
+        final boolean initMeta,
+        final String iniFilePath
+    ) {
+        final IniFileModelImpl result = new IniFileModelImpl(
+            initMeta ? new IniFileMetaInfoImpl(content) : null,
+            iniFilePath
+        );
         for (RawIniFile.Line line : content.getLines()) {
             result.handleLine(line);
         }
