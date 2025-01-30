@@ -48,7 +48,7 @@ public class IniFileModelImpl implements IniFileModel {
 
     public static IniFileModelImpl findAndReadIniFile(String iniFilePath) {
         final String fileName = findMetaInfoFile(iniFilePath);
-        return new IniFileModelImpl().readIniFile(fileName);
+        return IniFileModelImpl.readIniFile(fileName);
     }
 
     @Override
@@ -83,23 +83,24 @@ public class IniFileModelImpl implements IniFileModel {
         return fieldsInUiOrder;
     }
 
-    public IniFileModelImpl readIniFile(String fileName) {
+    public static IniFileModelImpl readIniFile(String fileName) {
         Objects.requireNonNull(fileName, "fileName");
         log.info("Reading " + fileName);
         File input = new File(fileName);
         RawIniFile content = IniFileReader.read(input);
-        metaInfo = new IniFileMetaInfoImpl(content);
+        final IniFileModelImpl result = readIniFile(content);
+        result.metaInfo = new IniFileMetaInfoImpl(content);
 
-        readIniFile(content);
-        return this;
+        return result;
     }
 
-    public IniFileModelImpl readIniFile(RawIniFile content) {
+    public static IniFileModelImpl readIniFile(RawIniFile content) {
+        final IniFileModelImpl result = new IniFileModelImpl();
         for (RawIniFile.Line line : content.getLines()) {
-            handleLine(line);
+            result.handleLine(line);
         }
-        finishDialog();
-        return this;
+        result.finishDialog();
+        return result;
     }
 
     private static String findMetaInfoFile(String iniFilePath) {

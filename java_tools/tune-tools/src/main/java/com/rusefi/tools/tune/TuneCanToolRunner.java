@@ -15,7 +15,7 @@ public class TuneCanToolRunner extends TuneCanTool {
     }
 
     protected static void initialize(String iniFileForSimulator) {
-        ini = new IniFileModelImpl().readIniFile(iniFileForSimulator);
+        ini = IniFileModelImpl.readIniFile(iniFileForSimulator);
         if (ini == null)
             throw new IllegalStateException("Not found " + iniFileForSimulator);
 /*

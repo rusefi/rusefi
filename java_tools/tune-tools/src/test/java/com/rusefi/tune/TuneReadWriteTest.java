@@ -29,7 +29,7 @@ public class TuneReadWriteTest {
     private static final String TEST_BINARY_FILE = PATH + "current_configuration.binary_image";
     private static final int LEGACY_TOTAL_CONFIG_SIZE = 20000;
 
-    private final IniFileModelImpl model = new IniFileModelImpl().readIniFile(TEST_INI);
+    private final IniFileModelImpl model = IniFileModelImpl.readIniFile(TEST_INI);
 
     @Test
     public void testIniReader() throws IOException {

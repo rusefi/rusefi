@@ -19,7 +19,7 @@ public class SimulatorFunctionalTestLauncher {
             System.exit(66);
         });
         String iniFileName = args[0];
-        BinaryProtocol.iniFileProvider = signature -> new IniFileModelImpl().readIniFile(iniFileName);
+        BinaryProtocol.iniFileProvider = signature -> IniFileModelImpl.readIniFile(iniFileName);
         boolean startSimulator = args.length > 1 && args[1].equalsIgnoreCase("start");
 
 //        if (startSimulator) {

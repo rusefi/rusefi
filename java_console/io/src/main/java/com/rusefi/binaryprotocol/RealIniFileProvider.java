@@ -28,6 +28,6 @@ public class RealIniFileProvider implements IniFileProvider {
         }
         if (localIniFile == null)
             throw new IllegalStateException("Failed to locate .ini file in five different places!");
-        return new IniFileModelImpl().readIniFile(localIniFile);
+        return IniFileModelImpl.readIniFile(localIniFile);
     }
 }

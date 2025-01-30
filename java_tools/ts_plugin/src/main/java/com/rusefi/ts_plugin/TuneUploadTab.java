@@ -177,7 +177,7 @@ public class TuneUploadTab {
     }
 
     private void subscribeToUpdates(String configurationName, ControllerAccess controllerAccess) {
-        IniFileModelImpl model = new IniFileModelImpl().readIniFile(TsTuneReader.getProjectModeFileName(configurationName));
+        IniFileModelImpl model = IniFileModelImpl.readIniFile(TsTuneReader.getProjectModeFileName(configurationName));
         Map<String, IniField> allIniFields = model.allIniFields;
         if (model.allIniFields == null)
             return;

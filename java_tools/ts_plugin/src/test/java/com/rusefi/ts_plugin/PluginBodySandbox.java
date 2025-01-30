@@ -27,7 +27,7 @@ public class PluginBodySandbox {
 
     public static void main(String[] args) throws ControllerException {
         String iniFile = TsTuneReader.getProjectModeFileName(PROJECT_NAME);
-        IniFileModelImpl model = new IniFileModelImpl().readIniFile(iniFile);
+        IniFileModelImpl model = IniFileModelImpl.readIniFile(iniFile);
         Objects.requireNonNull(model, "model");
         java.util.List<String> fieldNamesList = new ArrayList<>(model.allIniFields.keySet());
         String[] parameterNames = fieldNamesList.toArray(new String[0]);
