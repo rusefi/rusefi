@@ -41,7 +41,7 @@ public class IniFileModelImpl implements IniFileModel {
     private String currentXBins;
     private final Map<String, String> xBinsByZBins = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, String> yBinsByZBins = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    private IniFileMetaInfo metaInfo;
+    private final IniFileMetaInfo metaInfo;
 
     private boolean isInSettingContextHelp = false;
     private boolean isInsidePageDefinition;
@@ -49,6 +49,10 @@ public class IniFileModelImpl implements IniFileModel {
     public static IniFileModelImpl findAndReadIniFile(String iniFilePath) {
         final String fileName = findMetaInfoFile(iniFilePath);
         return IniFileModelImpl.readIniFile(fileName);
+    }
+
+    private IniFileModelImpl(@Nullable final IniFileMetaInfoImpl metaInfo) {
+        this.metaInfo = metaInfo;
     }
 
     @Override
@@ -88,14 +92,16 @@ public class IniFileModelImpl implements IniFileModel {
         log.info("Reading " + fileName);
         File input = new File(fileName);
         RawIniFile content = IniFileReader.read(input);
-        final IniFileModelImpl result = readIniFile(content);
-        result.metaInfo = new IniFileMetaInfoImpl(content);
-
-        return result;
+        return readIniFile(content, true);
     }
 
-    public static IniFileModelImpl readIniFile(RawIniFile content) {
-        final IniFileModelImpl result = new IniFileModelImpl();
+    /**
+     * @param initMeta - part of our tests do not use `getMetaInfo` getter and will throw MandatoryLineMissing exception
+     *                 on attempt to create IniFileMetaInfoImpl instance from test data; to avoid this exception such
+     *                 tests should use `false` as value for this parameter
+     */
+    public static IniFileModelImpl readIniFile(final RawIniFile content, final boolean initMeta) {
+        final IniFileModelImpl result = new IniFileModelImpl(initMeta ? new IniFileMetaInfoImpl(content) : null);
         for (RawIniFile.Line line : content.getLines()) {
             result.handleLine(line);
         }
