@@ -219,14 +219,14 @@ void HpfpController::scheduleNextCycle() {
 		return;
 	}
 
-	angle_t lobe = m_lobe.findNextLobe();
+	angle_t lobeAngle = m_lobe.findNextLobe();
 	//TODO: integrate livedata into HpfpLobe
 	nextLobe = m_lobe.m_lobe_index;
 	angle_t angle_requested = m_requested_pump;
 
 	angleAboveMin = angle_requested > engineConfiguration->hpfpMinAngle;
 	if (angleAboveMin) {
-		di_nextStart = lobe - angle_requested - m_deadtime;
+		di_nextStart = lobeAngle - angle_requested - m_deadtime;
 		wrapAngle(di_nextStart, "di_nextStart", ObdCode::CUSTOM_ERR_6557);
 
 
@@ -241,13 +241,13 @@ void HpfpController::scheduleNextCycle() {
 
 		// Off will be scheduled after turning the valve on
 	} else {
-	    wrapAngle(lobe, "lobe", ObdCode::CUSTOM_ERR_6557);
+	    wrapAngle(lobeAngle, "lobe", ObdCode::CUSTOM_ERR_6557);
 		// Schedule this, even if we aren't opening the valve this time, since this
 		// will schedule the next lobe.
 		// todo: would it have been cleaner to schedule 'scheduleNextCycle' directly?
 		engine->module<TriggerScheduler>()->schedule(
 			HPFP_CONTROLLER,
-			&m_event, lobe,
+			&m_event, lobeAngle,
 			{ pinTurnOff, this });
 	}
 }
