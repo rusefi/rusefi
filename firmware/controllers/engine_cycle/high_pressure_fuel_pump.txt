@@ -5,7 +5,7 @@ float fuel_requested_percent;"GDI: requested_percent"
 float fuel_requested_percent_pi;"GDI: percent_pi"
 bit noValve;GDI: noValve
 bit angleAboveMin;GDI: angleAboveMin
-bit isHpfpInactive;GDI: HPFS inactive
+bit isHpfpActive;GDI: HPFP Active
 float m_pressureTarget_kPa;"GDI: target pressure"
 angle_t nextLobe;"GDI: nextLobe"
 float di_nextStart;GDI: next start;"v", 1, 0, 0, 100, 0
