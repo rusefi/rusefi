@@ -165,7 +165,7 @@ void HpfpController::onFastCallback() {
 	if (!isHpfpActive) {
 		m_quantity.reset();
 		m_requested_pump = 0;
-		m_deadtime = 0;
+		m_deadangle = 0;
 	} else {
 #if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
 		criticalAssertVoid(engine->triggerCentral.triggerShape.getSize() > engineConfiguration->hpfpCamLobes * 6, "Too few trigger tooth for this number of HPFP lobes");
@@ -175,7 +175,7 @@ void HpfpController::onFastCallback() {
 			Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE),
 			config->hpfpDeadtimeVoltsBins,
 			config->hpfpDeadtimeMS);
-		m_deadtime = deadtime_ms * rpm * (360.f / 60.f / 1000.f);
+		m_deadangle = deadtime_ms * rpm * (360.f / 60.f / 1000.f);
 
 		// We set deadtime first, then pump, in case pump used to be 0.  Pump is what
 		// determines whether we do anything or not.
@@ -200,7 +200,7 @@ void HpfpController::pinTurnOn(HpfpController *self) {
 	scheduleByAngle(&self->m_event.eventScheduling,
 			self->m_event.eventScheduling.getMomentNt(),
 			/* TODO: why fixed engineConfiguration->hpfpActivationAngle? but not calculated m_requested_pump? */
-			self->m_deadtime + engineConfiguration->hpfpActivationAngle,
+			self->m_deadangle + engineConfiguration->hpfpActivationAngle,
 			{ pinTurnOff, self });
 }
 
@@ -226,7 +226,7 @@ void HpfpController::scheduleNextCycle() {
 
 	angleAboveMin = angle_requested > engineConfiguration->hpfpMinAngle;
 	if (angleAboveMin) {
-		di_nextStart = lobeAngle - angle_requested - m_deadtime;
+		di_nextStart = lobeAngle - angle_requested - m_deadangle;
 		wrapAngle(di_nextStart, "di_nextStart", ObdCode::CUSTOM_ERR_6557);
 
 
