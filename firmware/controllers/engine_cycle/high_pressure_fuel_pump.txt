@@ -10,7 +10,7 @@ bit HpfpValveState;GDI: HPFP Valve state
 float m_pressureTarget_kPa;"GDI: target pressure"
 angle_t nextLobe;"GDI: next lobe N"
 float di_nextStart;GDI: valve activation angle;"v", 1, 0, 0, 100, 0
-angle_t HpfdActivationAngle;"GDI: HPFP activation angle"
-angle_t HpfdDeactivationAngle;"GDI: HPFP deactivation angle"
+float HpfdActivationPhase;"GDI: HPFP activation angle"
+float HpfdDeactivationPhase;"GDI: HPFP deactivation angle"
 
 end_struct
