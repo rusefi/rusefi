@@ -226,6 +226,7 @@ void HpfpController::scheduleNextCycle() {
 
 	angleAboveMin = angle_requested > engineConfiguration->hpfpMinAngle;
 	if (angleAboveMin) {
+		// TODO: som manuals suggest also substracting peak time (converted to angle)
 		di_nextStart = lobeAngle - angle_requested - m_deadangle;
 		wrapAngle(di_nextStart, "di_nextStart", ObdCode::CUSTOM_ERR_6557);
 
