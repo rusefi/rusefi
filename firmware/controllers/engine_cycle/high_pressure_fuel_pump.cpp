@@ -192,6 +192,7 @@ void HpfpController::onFastCallback() {
 
 void HpfpController::pinTurnOn(HpfpController *self) {
 	enginePins.hpfpValve.setHigh(HPFP_CONTROLLER);
+	self->HpfpValveState = true;
 
 	// By scheduling the close after we already open, we don't have to worry if the engine
 	// stops, the valve will be turned off in a certain amount of time regardless.
@@ -203,6 +204,7 @@ void HpfpController::pinTurnOn(HpfpController *self) {
 
 void HpfpController::pinTurnOff(HpfpController *self) {
 	enginePins.hpfpValve.setLow(HPFP_CONTROLLER);
+	self->HpfpValveState = false;
 
 	self->scheduleNextCycle();
 }
