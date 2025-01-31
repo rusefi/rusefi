@@ -215,6 +215,8 @@ void HpfpController::scheduleNextCycle() {
 	}
 
 	angle_t lobe = m_lobe.findNextLobe();
+	//TODO: integrate livedata into HpfpLobe
+	nextLobe = m_lobe.m_lobe_index;
 	angle_t angle_requested = m_requested_pump;
 
 	angleAboveMin = angle_requested > engineConfiguration->hpfpMinAngle;
