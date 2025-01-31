@@ -61,9 +61,9 @@ angle_t HpfpLobe::findNextLobe() {
 	// Calculate impact of VVT
 	angle_t vvt = 0;
 	if (engineConfiguration->hpfpCam != HPFP_CAM_NONE) {
-  	// pump operates in cam-angle domain which is different speed from crank-angle domain on 4 stroke engines
-  	int mult = (int)getEngineCycle(getEngineRotationState()->getOperationMode()) / 360;
-	  int camIndex = engineConfiguration->hpfpCam - 1;
+		// pump operates in cam-angle domain which is different speed from crank-angle domain on 4 stroke engines
+		int mult = (int)getEngineCycle(getEngineRotationState()->getOperationMode()) / 360;
+		int camIndex = engineConfiguration->hpfpCam - 1;
 		// TODO: Is the sign correct here?  + means ATDC?
 		vvt = engine->triggerCentral.getVVTPosition(
 			BANK_BY_INDEX(camIndex),
@@ -239,7 +239,7 @@ void HpfpController::scheduleNextCycle() {
 		// will schedule the next lobe.
 		// todo: would it have been cleaner to schedule 'scheduleNextCycle' directly?
 		engine->module<TriggerScheduler>()->schedule(
-		    "hpfp",
+			HPFP_CONTROLLER,
 			&m_event, lobe,
 			{ pinTurnOff, this });
 	}
