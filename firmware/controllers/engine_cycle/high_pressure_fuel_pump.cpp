@@ -157,12 +157,12 @@ void HpfpController::onFastCallback() {
 	// Pressure current/target calculation
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 
-	isHpfpInactive = rpm < rpm_spinning_cutoff ||
+	isHpfpActive = !(rpm < rpm_spinning_cutoff ||
 		    !isGdiEngine() ||
 		    engineConfiguration->hpfpPumpVolume == 0 ||
-		    !enginePins.hpfpValve.isInitialized();
+		    !enginePins.hpfpValve.isInitialized());
 	// What conditions can we not handle?
-	if (isHpfpInactive) {
+	if (!isHpfpActive) {
 		m_quantity.reset();
 		m_requested_pump = 0;
 		m_deadtime = 0;
