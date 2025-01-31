@@ -16,6 +16,8 @@ public class HighPressureFuelPump {
 	public static final Field M_PRESSURETARGET_KPA = Field.create("M_PRESSURETARGET_KPA", 16, FieldType.FLOAT).setBaseOffset(1096);
 	public static final Field NEXTLOBE = Field.create("NEXTLOBE", 20, FieldType.FLOAT).setBaseOffset(1096);
 	public static final Field DI_NEXTSTART = Field.create("DI_NEXTSTART", 24, FieldType.FLOAT).setBaseOffset(1096);
+	public static final Field HPFDACTIVATIONPHASE = Field.create("HPFDACTIVATIONPHASE", 28, FieldType.FLOAT).setBaseOffset(1096);
+	public static final Field HPFDDEACTIVATIONPHASE = Field.create("HPFDDEACTIVATIONPHASE", 32, FieldType.FLOAT).setBaseOffset(1096);
 	public static final Field[] VALUES = {
 	M_REQUESTED_PUMP,
 	FUEL_REQUESTED_PERCENT,
@@ -27,5 +29,7 @@ public class HighPressureFuelPump {
 	M_PRESSURETARGET_KPA,
 	NEXTLOBE,
 	DI_NEXTSTART,
+	HPFDACTIVATIONPHASE,
+	HPFDDEACTIVATIONPHASE,
 	};
 }

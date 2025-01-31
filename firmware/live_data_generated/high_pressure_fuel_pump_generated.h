@@ -138,8 +138,18 @@ struct high_pressure_fuel_pump_s {
 	 * offset 24
 	 */
 	float di_nextStart = (float)0;
+	/**
+	 * "GDI: HPFP activation angle"
+	 * offset 28
+	 */
+	float HpfdActivationPhase = (float)0;
+	/**
+	 * "GDI: HPFP deactivation angle"
+	 * offset 32
+	 */
+	float HpfdDeactivationPhase = (float)0;
 };
-static_assert(sizeof(high_pressure_fuel_pump_s) == 28);
+static_assert(sizeof(high_pressure_fuel_pump_s) == 36);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/engine_cycle/high_pressure_fuel_pump.txt
