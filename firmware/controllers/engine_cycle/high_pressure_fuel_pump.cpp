@@ -199,6 +199,7 @@ void HpfpController::pinTurnOn(HpfpController *self) {
 	// stops, the valve will be turned off in a certain amount of time regardless.
 	scheduleByAngle(&self->m_event.eventScheduling,
 			self->m_event.eventScheduling.getMomentNt(),
+			/* TODO: why fixed engineConfiguration->hpfpActivationAngle? but not calculated m_requested_pump? */
 			self->m_deadtime + engineConfiguration->hpfpActivationAngle,
 			{ pinTurnOff, self });
 }
