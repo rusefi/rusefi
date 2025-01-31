@@ -11,7 +11,8 @@ public class HighPressureFuelPump {
 	public static final Field FUEL_REQUESTED_PERCENT_PI = Field.create("FUEL_REQUESTED_PERCENT_PI", 8, FieldType.FLOAT).setBaseOffset(1096);
 	public static final Field NOVALVE = Field.create("NOVALVE", 12, FieldType.BIT, 0).setBaseOffset(1096);
 	public static final Field ANGLEABOVEMIN = Field.create("ANGLEABOVEMIN", 12, FieldType.BIT, 1).setBaseOffset(1096);
-	public static final Field ISHPFPINACTIVE = Field.create("ISHPFPINACTIVE", 12, FieldType.BIT, 2).setBaseOffset(1096);
+	public static final Field ISHPFPACTIVE = Field.create("ISHPFPACTIVE", 12, FieldType.BIT, 2).setBaseOffset(1096);
+	public static final Field HPFPVALVESTATE = Field.create("HPFPVALVESTATE", 12, FieldType.BIT, 3).setBaseOffset(1096);
 	public static final Field M_PRESSURETARGET_KPA = Field.create("M_PRESSURETARGET_KPA", 16, FieldType.FLOAT).setBaseOffset(1096);
 	public static final Field NEXTLOBE = Field.create("NEXTLOBE", 20, FieldType.FLOAT).setBaseOffset(1096);
 	public static final Field DI_NEXTSTART = Field.create("DI_NEXTSTART", 24, FieldType.FLOAT).setBaseOffset(1096);
@@ -21,7 +22,8 @@ public class HighPressureFuelPump {
 	FUEL_REQUESTED_PERCENT_PI,
 	NOVALVE,
 	ANGLEABOVEMIN,
-	ISHPFPINACTIVE,
+	ISHPFPACTIVE,
+	HPFPVALVESTATE,
 	M_PRESSURETARGET_KPA,
 	NEXTLOBE,
 	DI_NEXTSTART,
