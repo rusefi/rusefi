@@ -8,7 +8,7 @@ bit angleAboveMin
 bit isHpfpInactive
 float m_pressureTarget_kPa;"GDI: target pressure"
 angle_t nextLobe;"GDI: nextLobe"
-    float di_nextStart;GDI: next start;"v", 1, 0, 0, 100, 0
+float di_nextStart;GDI: next start;"v", 1, 0, 0, 100, 0
 
 
 end_struct
