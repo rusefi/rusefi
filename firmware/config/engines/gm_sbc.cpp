@@ -161,7 +161,8 @@ static void setGmEcotec3() {
   engineConfiguration->sentInputPins[0] = Gpio::MM176_IN_D3;
   engineConfiguration->starterControlPin = Gpio::MM176_IGN5; // 14C
 
-  engineConfiguration->fuelPumpPin = Gpio::MM176_OUT_IO2; // 6C - High Side 2
+  engineConfiguration->map.sensor.hwChannel = MM176_IN_CRANK_ANALOG; // 1A Aux Analog 1. Important to use analog without muxing!
+  engineConfiguration->fuelPumpPin = Gpio::MM176_OUT_IO2; // 6C - High Side 2 orange/brown
 
 	engineConfiguration->camInputs[2] = Gpio::Unassigned;
 	engineConfiguration->camInputs[3] = Gpio::Unassigned;
@@ -194,6 +195,10 @@ void setGmLcv() {
 void setGmLtg() {
   set4CylGmEcotec3();
   engineConfiguration->displacement = 2.0;
+#ifdef HW_HELLEN_8CHAN
+  engineConfiguration->oilPressure.hwChannel = MM176_IN_MAP1_ANALOG; // 2A Aux Analog 4
+  engineConfiguration->invertCamVVTSignal = true;
+#endif // HW_HELLEN_8CHAN
   strcpy(engineConfiguration->engineCode, "LTG");
 }
 
@@ -251,11 +256,10 @@ void setGmSbcGen5() {
 	engineConfiguration->oilPressure.v2 = 2.6f;
 	engineConfiguration->oilPressure.value2 = 420; // 520 kPa absolute
 
-  engineConfiguration->oilPressure.hwChannel = MM176_IN_MAP1_ANALOG; // 2A Aux Analog 4 / External MAP
+  engineConfiguration->oilPressure.hwChannel = MM176_IN_MAP1_ANALOG; // 2A Aux Analog 4
   engineConfiguration->fuelLevelSensor = MM176_IN_O2S_ANALOG; // 3A - Aux Analog 2
   engineConfiguration->lowPressureFuel.hwChannel = MM176_IN_AUX2_ANALOG; // 	4A - Aux Analog 7
   engineConfiguration->acPressure.hwChannel = MM176_IN_MAP2_ANALOG;// 10A - Aux Analog 5
   engineConfiguration->flexSensorPin = Gpio::MM176_IN_SENS3;
-  engineConfiguration->map.sensor.hwChannel = MM176_IN_CRANK_ANALOG; // 1A Aux Analog 1. Important to use analog without muxing!
 #endif // HW_HELLEN_8CHAN
 }
