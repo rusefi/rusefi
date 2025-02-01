@@ -161,6 +161,8 @@ static void setGmEcotec3() {
   engineConfiguration->sentInputPins[0] = Gpio::MM176_IN_D3;
   engineConfiguration->starterControlPin = Gpio::MM176_IGN5; // 14C
 
+  engineConfiguration->fuelPumpPin = Gpio::MM176_OUT_IO2; // 6C - High Side 2
+
 	engineConfiguration->camInputs[2] = Gpio::Unassigned;
 	engineConfiguration->camInputs[3] = Gpio::Unassigned;
 	config->boardUseCrankPullUp = true;
@@ -231,8 +233,6 @@ void setGmSbcGen5() {
 	engineConfiguration->invertPrimaryTriggerSignal = true;
   engineConfiguration->vvtMode[1] = VVT_INACTIVE;
   engineConfiguration->camInputs[1] = Gpio::Unassigned;
-
-  engineConfiguration->fuelPumpPin = Gpio::MM176_OUT_IO2; // 6C - High Side 2
 
   // early models before SENT
   // todo: early gen5 LS engines have redundant high pressure sensors #7364

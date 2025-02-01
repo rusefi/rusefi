@@ -31,8 +31,6 @@ case engine_type_e::ET_BOSCH_QUICK_START:
   return "ET_BOSCH_QUICK_START";
 case engine_type_e::ET_TEST_WITH_BOSCH_QUICK_START:
   return "ET_TEST_WITH_BOSCH_QUICK_START";
-case engine_type_e::ET_UNUSED_55:
-  return "ET_UNUSED_55";
 case engine_type_e::ET_UNUSED_56:
   return "ET_UNUSED_56";
 case engine_type_e::FERRARI_F136:
