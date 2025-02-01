@@ -5030,12 +5030,12 @@ struct blend_table_s {
 	/**
 	 * offset 162
 	 */
-	scaled_channel<int16_t, 10, 1> blendBins[8] = {};
+	scaled_channel<int16_t, 10, 1> blendBins[BLEND_FACTOR_SIZE] = {};
 	/**
 	 * units: %
 	 * offset 178
 	 */
-	scaled_channel<uint8_t, 2, 1> blendValues[8] = {};
+	scaled_channel<uint8_t, 2, 1> blendValues[BLEND_FACTOR_SIZE] = {};
 	/**
 	 * need 4 byte alignment
 	 * units: units
@@ -5737,47 +5737,47 @@ struct persistent_config_s {
 	 * units: deg
 	 * offset 18684
 	 */
-	scaled_channel<int16_t, 10, 1> ALSTimingRetardTable[4][4] = {};
+	scaled_channel<int16_t, 10, 1> ALSTimingRetardTable[ALS_SIZE][ALS_SIZE] = {};
 	/**
 	 * units: TPS
 	 * offset 18716
 	 */
-	uint16_t alsIgnRetardLoadBins[4] = {};
+	uint16_t alsIgnRetardLoadBins[ALS_SIZE] = {};
 	/**
 	 * units: RPM
 	 * offset 18724
 	 */
-	uint16_t alsIgnRetardrpmBins[4] = {};
+	uint16_t alsIgnRetardrpmBins[ALS_SIZE] = {};
 	/**
 	 * units: percent
 	 * offset 18732
 	 */
-	scaled_channel<int16_t, 10, 1> ALSFuelAdjustment[4][4] = {};
+	scaled_channel<int16_t, 10, 1> ALSFuelAdjustment[ALS_SIZE][ALS_SIZE] = {};
 	/**
 	 * units: TPS
 	 * offset 18764
 	 */
-	uint16_t alsFuelAdjustmentLoadBins[4] = {};
+	uint16_t alsFuelAdjustmentLoadBins[ALS_SIZE] = {};
 	/**
 	 * units: RPM
 	 * offset 18772
 	 */
-	uint16_t alsFuelAdjustmentrpmBins[4] = {};
+	uint16_t alsFuelAdjustmentrpmBins[ALS_SIZE] = {};
 	/**
 	 * units: ratio
 	 * offset 18780
 	 */
-	scaled_channel<int16_t, 1, 10> ALSIgnSkipTable[4][4] = {};
+	scaled_channel<int16_t, 1, 10> ALSIgnSkipTable[ALS_SIZE][ALS_SIZE] = {};
 	/**
 	 * units: TPS
 	 * offset 18812
 	 */
-	uint16_t alsIgnSkipLoadBins[4] = {};
+	uint16_t alsIgnSkipLoadBins[ALS_SIZE] = {};
 	/**
 	 * units: RPM
 	 * offset 18820
 	 */
-	uint16_t alsIgnSkiprpmBins[4] = {};
+	uint16_t alsIgnSkiprpmBins[ALS_SIZE] = {};
 	/**
 	 * offset 18828
 	 */
@@ -5790,13 +5790,13 @@ struct persistent_config_s {
 	 * units: %
 	 * offset 20332
 	 */
-	scaled_channel<uint16_t, 10, 1> throttleEstimateEffectiveAreaBins[12] = {};
+	scaled_channel<uint16_t, 10, 1> throttleEstimateEffectiveAreaBins[THR_EST_SIZE] = {};
 	/**
 	 * In units of g/s normalized to choked flow conditions
 	 * units: g/s
 	 * offset 20356
 	 */
-	scaled_channel<uint16_t, 10, 1> throttleEstimateEffectiveAreaValues[12] = {};
+	scaled_channel<uint16_t, 10, 1> throttleEstimateEffectiveAreaValues[THR_EST_SIZE] = {};
 	/**
 	 * offset 20380
 	 */
@@ -5864,16 +5864,16 @@ struct persistent_config_s {
 	 * units: lambda
 	 * offset 21396
 	 */
-	scaled_channel<uint8_t, 100, 1> lambdaMaxDeviationTable[4][4] = {};
+	scaled_channel<uint8_t, 100, 1> lambdaMaxDeviationTable[LAM_SIZE][LAM_SIZE] = {};
 	/**
 	 * offset 21412
 	 */
-	uint16_t lambdaMaxDeviationLoadBins[4] = {};
+	uint16_t lambdaMaxDeviationLoadBins[LAM_SIZE] = {};
 	/**
 	 * units: RPM
 	 * offset 21420
 	 */
-	uint16_t lambdaMaxDeviationRpmBins[4] = {};
+	uint16_t lambdaMaxDeviationRpmBins[LAM_SIZE] = {};
 	/**
 	 * units: %
 	 * offset 21428

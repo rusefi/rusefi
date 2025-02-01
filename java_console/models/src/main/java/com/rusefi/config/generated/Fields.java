@@ -76,6 +76,7 @@ public class Fields {
 	public static final int air_pressure_sensor_type_e_MT_MPXH6400 = 14;
 	public static final int air_pressure_sensor_type_e_MT_SUBY_DENSO = 5;
 	public static final int air_pressure_sensor_type_e_MT_TOYOTA_89420_02010 = 8;
+	public static final int ALS_SIZE = 4;
 	public static final int ALTERNATOR_VOLTAGE_TARGET_SIZE = 4;
 	public static final int antiLagActivationMode_e_ALWAYS_ON_ANTILAG = 1;
 	public static final int antiLagActivationMode_e_SWITCH_INPUT_ANTILAG = 0;
@@ -119,6 +120,7 @@ public class Fields {
 	public static final int bench_mode_e_HD_ACR2 = 29;
 	public static final int BENCH_STARTER_DURATION = 4000;
 	public static final int BENCH_VVT_DURATION = 300;
+	public static final int BLEND_FACTOR_SIZE = 8;
 	public static final int BLEND_TABLE_COUNT = 8;
 	public static final int blend_table_s_size = 188;
 	public static final int BLOCKING_FACTOR = 1024;
@@ -1091,6 +1093,7 @@ public class Fields {
 	public static final int InjectorNonlinearMode_INJ_None = 0;
 	public static final int InjectorNonlinearMode_INJ_PolynomialAdder = 1;
 	public static final int KNOCK_TABLE_SIZE = 6;
+	public static final int LAM_SIZE = 4;
 	public static final int launchActivationMode_e_ALWAYS_ACTIVE_LAUNCH = 2;
 	public static final int launchActivationMode_e_CLUTCH_INPUT_LAUNCH = 1;
 	public static final int launchActivationMode_e_STOP_INPUT_LAUNCH = 3;
@@ -1246,7 +1249,7 @@ public class Fields {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 702340491;
+	public static final int SIGNATURE_HASH = 1622605219;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1281,6 +1284,7 @@ public class Fields {
 	public static final int TCU_TABLE_WIDTH = 8;
 	public static final int thermistor_conf_s_size = 28;
 	public static final int ThermistorConf_size = 32;
+	public static final int THR_EST_SIZE = 12;
 	public static final int timing_mode_e_TM_DYNAMIC = 0;
 	public static final int timing_mode_e_TM_FIXED = 1;
 	public static final int tle8888_mode_e_TL_AUTO = 0;
@@ -1513,7 +1517,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.02.01.f407-discovery.702340491";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.02.01.f407-discovery.1622605219";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';

@@ -76,6 +76,7 @@
 #define air_pressure_sensor_type_e_MT_MPXH6400 14
 #define air_pressure_sensor_type_e_MT_SUBY_DENSO 5
 #define air_pressure_sensor_type_e_MT_TOYOTA_89420_02010 8
+#define ALS_SIZE 4
 #define ALTERNATOR_VOLTAGE_TARGET_SIZE 4
 #define antiLagActivationMode_e_ALWAYS_ON_ANTILAG 1
 #define antiLagActivationMode_e_auto_enum 0="SWITCH_INPUT_ANTILAG",1="ALWAYS_ON_ANTILAG"
@@ -121,6 +122,7 @@
 #define bench_mode_e_HD_ACR2 29
 #define BENCH_STARTER_DURATION 4000
 #define BENCH_VVT_DURATION 300
+#define BLEND_FACTOR_SIZE 8
 #define BLEND_TABLE_COUNT 8
 #define blend_table_s_size 188
 #define BLOCKING_FACTOR 1024
@@ -1147,6 +1149,7 @@
 #define InjectorNonlinearMode_INJ_None 0
 #define InjectorNonlinearMode_INJ_PolynomialAdder 1
 #define KNOCK_TABLE_SIZE 6
+#define LAM_SIZE 4
 #define launchActivationMode_e_ALWAYS_ACTIVE_LAUNCH 2
 #define launchActivationMode_e_auto_enum 0="SWITCH_INPUT_LAUNCH",2="ALWAYS_ACTIVE_LAUNCH",1="CLUTCH_INPUT_LAUNCH",3="STOP_INPUT_LAUNCH"
 #define launchActivationMode_e_CLUTCH_INPUT_LAUNCH 1
@@ -1340,7 +1343,7 @@
 #define show_HellenNA6_presets true
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1572992982
+#define SIGNATURE_HASH 346806270
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1382,6 +1385,7 @@
 #define TCU_TABLE_WIDTH 8
 #define thermistor_conf_s_size 28
 #define ThermistorConf_size 32
+#define THR_EST_SIZE 12
 #define timing_mode_e_auto_enum 0="TM_DYNAMIC",1="TM_FIXED"
 #define timing_mode_e_TM_DYNAMIC 0
 #define timing_mode_e_TM_FIXED 1
@@ -1811,7 +1815,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.02.01.hellenNA6.1572992982"
+#define TS_SIGNATURE "rusEFI master.2025.02.01.hellenNA6.346806270"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
