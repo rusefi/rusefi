@@ -351,7 +351,6 @@ public class Fields {
 	public static final int engine_type_e_EEPROM_BENCH_ENGINE = 61;
 	public static final int engine_type_e_ET_BOSCH_QUICK_START = 21;
 	public static final int engine_type_e_ET_TEST_WITH_BOSCH_QUICK_START = 24;
-	public static final int engine_type_e_ET_UNUSED_55 = 55;
 	public static final int engine_type_e_ET_UNUSED_56 = 56;
 	public static final int engine_type_e_ETB_BENCH_ENGINE = 58;
 	public static final int engine_type_e_FERRARI_F136 = 105;
@@ -364,6 +363,7 @@ public class Fields {
 	public static final int engine_type_e_FRANKENSO_TEST_33810 = 59;
 	public static final int engine_type_e_FUEL_BENCH = 15;
 	public static final int engine_type_e_GM_LCV = 47;
+	public static final int engine_type_e_GM_LTG = 55;
 	public static final int engine_type_e_GM_SBC = 98;
 	public static final int engine_type_e_GM_SBC_GEN5 = 49;
 	public static final int engine_type_e_GY6_139QMB = 8;
@@ -1512,7 +1512,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.01.31.f407-discovery.2824024419";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.02.01.f407-discovery.2824024419";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
