@@ -95,16 +95,14 @@ void initSoftwareKnock() {
 		float frequencyHz = 1000 * bore2frequency(engineConfiguration->cylinderBore);
 		frequencyHz = engineConfiguration->knockDetectionUseDoubleFrequency ? 2 * frequencyHz : frequencyHz;
 
-		if(engineConfiguration->knockFrequency > 0.01)
-		{
+		if (engineConfiguration->knockFrequency > 0.01) {
 			frequencyHz = engineConfiguration->knockFrequency;
 		}
 
 		knockFilter.configureBandpass(KNOCK_SAMPLE_RATE, frequencyHz, 3);
 
 	#ifdef KNOCK_SPECTROGRAM
-		if(engineConfiguration->enableKnockSpectrogram)
-		{
+		if (engineConfiguration->enableKnockSpectrogram) {
 
 			// TODO: use big buffer
 			//buffer = getBigBuffer(BigBufferUser::KnockSpectrogram);
@@ -200,10 +198,9 @@ static void processLastKnockEvent() {
 	if (engineConfiguration->enableKnockSpectrogram) {
 		ScopePerf perf(PE::KnockAnalyzer);
 
-		if(engineConfiguration->enableKnockSpectrogramFilter) {
+		if (engineConfiguration->enableKnockSpectrogramFilter) {
 			fft::fft_adc_sample_filtered(knockFilter, spectrogramData->window, ratio, engineConfiguration->knockSpectrumSensitivity, sampleBuffer, spectrogramData->fftBuffer, FFT_SIZE);
-		}
-		else {
+		} else {
 			fft::fft_adc_sample(spectrogramData->window, ratio, engineConfiguration->knockSpectrumSensitivity, sampleBuffer, spectrogramData->fftBuffer, FFT_SIZE);
 		}
 
