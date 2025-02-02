@@ -332,4 +332,8 @@ typedef enum {
 	BENCH_AUXOUT7,
 	HD_ACR,
 	HD_ACR2,
+	LUA_COMMAND_1,
+	LUA_COMMAND_2,
+	LUA_COMMAND_3,
+	LUA_COMMAND_4,
 } bench_mode_e;

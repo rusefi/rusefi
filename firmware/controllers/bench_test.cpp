@@ -340,6 +340,8 @@ static void hdAcrBench(int index) {
 }
 #endif // EFI_HD_ACR
 
+int luaCommandCounters[4] = {};
+
 void handleBenchCategory(uint16_t index) {
 	switch(index) {
 	case BENCH_VVT0_VALVE:
@@ -377,6 +379,18 @@ void handleBenchCategory(uint16_t index) {
 		return;
 	case BENCH_AUXOUT7:
 	    auxOutBench(7);
+		return;
+	case LUA_COMMAND_1:
+		luaCommandCounters[0]++;
+		return;
+	case LUA_COMMAND_2:
+		luaCommandCounters[1]++;
+		return;
+	case LUA_COMMAND_3:
+		luaCommandCounters[2]++;
+		return;
+	case LUA_COMMAND_4:
+		luaCommandCounters[3]++;
 		return;
 #if EFI_HD_ACR
 	case HD_ACR:
