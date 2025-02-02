@@ -5867,3 +5867,115 @@ event 4 0 1 436.00 1.224490
 event 5 0 0 436.00 nan
 event 6 0 1 676.00 1.000000
 event 7 0 0 676.00 nan
+TRIGGERTYPE 87 88 TT_HONDA_J30A2_24_1_1 0.00
+knownOperationMode=true
+crankBased=true
+hasSecondChannel=false
+isSecondWheelCam=false
+cycleDuration=360
+gapsCount=7
+syncEdge=RiseOnly
+isSynchronizationNeeded=1
+gapFrom.0=1.600000
+gapTo.0=4.000000
+gapFrom.1=0.650000
+gapTo.1=1.400000
+gapFrom.2=0.650000
+gapTo.2=1.400000
+gapFrom.3=0.650000
+gapTo.3=1.400000
+gapFrom.4=0.650000
+gapTo.4=1.400000
+gapFrom.5=0.650000
+gapTo.5=1.400000
+gapFrom.6=0.200000
+gapTo.6=0.550000
+# end of meta section
+event 0 0 1 0.00 2.000000
+event 1 0 0 0.00 nan
+event 2 0 1 15.00 0.500000
+event 3 0 0 15.00 nan
+event 4 0 1 30.00 1.000000
+event 5 0 0 30.00 nan
+event 6 0 1 45.00 1.000000
+event 7 0 0 45.00 nan
+event 8 0 1 60.00 1.000000
+event 9 0 0 60.00 nan
+event 10 0 1 75.00 1.000000
+event 11 0 0 75.00 nan
+event 12 0 1 90.00 1.000000
+event 13 0 0 90.00 nan
+event 14 0 1 105.00 1.000000
+event 15 0 0 105.00 nan
+event 16 0 1 120.00 1.000000
+event 17 0 0 120.00 nan
+event 18 0 1 135.00 1.000000
+event 19 0 0 135.00 nan
+event 20 0 1 150.00 1.000000
+event 21 0 0 150.00 nan
+event 22 0 1 165.00 1.000000
+event 23 0 0 165.00 nan
+event 24 0 1 180.00 1.000000
+event 25 0 0 180.00 nan
+event 26 0 1 195.00 1.000000
+event 27 0 0 195.00 nan
+event 28 0 1 210.00 1.000000
+event 29 0 0 210.00 nan
+event 30 0 1 240.00 2.000000
+event 31 0 0 240.00 nan
+event 32 0 1 255.00 0.500000
+event 33 0 0 255.00 nan
+event 34 0 1 270.00 1.000000
+event 35 0 0 270.00 nan
+event 36 0 1 285.00 1.000000
+event 37 0 0 285.00 nan
+event 38 0 1 300.00 1.000000
+event 39 0 0 300.00 nan
+event 40 0 1 315.00 1.000000
+event 41 0 0 315.00 nan
+event 42 0 1 330.00 1.000000
+event 43 0 0 330.00 nan
+event 44 0 1 360.00 nan
+event 45 0 0 360.00 nan
+event 46 0 1 375.00 nan
+event 47 0 0 375.00 nan
+event 48 0 1 390.00 nan
+event 49 0 0 390.00 nan
+event 50 0 1 405.00 nan
+event 51 0 0 405.00 nan
+event 52 0 1 420.00 nan
+event 53 0 0 420.00 nan
+event 54 0 1 435.00 nan
+event 55 0 0 435.00 nan
+event 56 0 1 450.00 nan
+event 57 0 0 450.00 nan
+event 58 0 1 465.00 nan
+event 59 0 0 465.00 nan
+event 60 0 1 480.00 nan
+event 61 0 0 480.00 nan
+event 62 0 1 495.00 nan
+event 63 0 0 495.00 nan
+event 64 0 1 510.00 nan
+event 65 0 0 510.00 nan
+event 66 0 1 525.00 nan
+event 67 0 0 525.00 nan
+event 68 0 1 540.00 nan
+event 69 0 0 540.00 nan
+event 70 0 1 555.00 nan
+event 71 0 0 555.00 nan
+event 72 0 1 570.00 nan
+event 73 0 0 570.00 nan
+event 74 0 1 600.00 nan
+event 75 0 0 600.00 nan
+event 76 0 1 615.00 nan
+event 77 0 0 615.00 nan
+event 78 0 1 630.00 nan
+event 79 0 0 630.00 nan
+event 80 0 1 645.00 nan
+event 81 0 0 645.00 nan
+event 82 0 1 660.00 nan
+event 83 0 0 660.00 nan
+event 84 0 1 675.00 nan
+event 85 0 0 675.00 nan
+event 86 0 1 690.00 nan
+event 87 0 0 690.00 nan
