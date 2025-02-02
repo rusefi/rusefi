@@ -163,6 +163,7 @@ static void setGmEcotec3() {
 
   engineConfiguration->map.sensor.hwChannel = MM176_IN_CRANK_ANALOG; // 1A Aux Analog 1. Important to use analog without muxing!
   engineConfiguration->fuelPumpPin = Gpio::MM176_OUT_IO2; // 6C - High Side 2 orange/brown
+  engineConfiguration->hpfpValvePin = Gpio::MM176_GP17; // 19D Injector 9
 
 	engineConfiguration->camInputs[2] = Gpio::Unassigned;
 	engineConfiguration->camInputs[3] = Gpio::Unassigned;
@@ -225,7 +226,6 @@ void setGmSbcGen5() {
 	engineConfiguration->injectionPins[5] = Gpio::MM176_INJ6;
 	engineConfiguration->injectionPins[6] = Gpio::MM176_INJ7;
 	engineConfiguration->injectionPins[7] = Gpio::MM176_INJ8;
-  engineConfiguration->hpfpValvePin = Gpio::MM176_GP17; // 19D Injector 9
 
 	engineConfiguration->ignitionPins[4] = Gpio::MM176_IGN5;
 	engineConfiguration->ignitionPins[5] = Gpio::MM176_IGN6;
