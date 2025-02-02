@@ -188,6 +188,7 @@ pins:
     class: outputs
     type: inj
     ts_name: 26D - Injector 10
+    color: yellow
 
 info:
   title: AlphaX Platinum

@@ -11,7 +11,7 @@ startPwm(finderIndex, 100, 0)
 
 function onTick()
 	if isOn and t : getElapsedSeconds() > 0.5 then
-		setPwmDuty(finderIndex, 100)
+		setPwmDuty(finderIndex, 0)
 		isOn = false
 		setLuaGauge(2, 0)
 		print("Turning OFF")

@@ -199,6 +199,11 @@ void setGmLtg() {
 #ifdef HW_HELLEN_8CHAN
   engineConfiguration->oilPressure.hwChannel = MM176_IN_MAP1_ANALOG; // 2A Aux Analog 4
   engineConfiguration->invertCamVVTSignal = true;
+
+  engineConfiguration->triggerInputPins[0] = Gpio::MM176_IN_D4; // 9A - Hall Input 4
+
+  engineConfiguration->luaOutputPins[0] = Gpio::MM176_OUT_IO1; // 7C - High Side 3 - unusual starter
+  engineConfiguration->luaOutputPins[1] = Gpio::MM176_OUT_IO4, // 9C - Low Side 4 - unusual starter
 #endif // HW_HELLEN_8CHAN
   strcpy(engineConfiguration->engineCode, "LTG");
 }

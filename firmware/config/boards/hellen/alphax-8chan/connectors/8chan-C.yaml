@@ -55,6 +55,7 @@ pins:
     meta: MM176_OUT_IO4
     class: outputs
     ts_name: 9C - Low Side 4
+    color: yellow
 
 
   - pin: 10C
