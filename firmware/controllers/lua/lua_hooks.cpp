@@ -12,6 +12,7 @@
 #include "tunerstudio.h"
 #include "lua_pid.h"
 #include "start_stop.h"
+#include "tinymt32.h" // TL,DR: basic implementation of 'random'
 
 #if EFI_PROD_CODE && HW_HELLEN
 #include "hellen_meta.h"
@@ -634,8 +635,17 @@ int lua_canRxAddMask(lua_State* l) {
 
 PUBLIC_API_WEAK void boardConfigureLuaHooks(lua_State* lState) { }
 
+static tinymt32_t tinymt;
+
 void configureRusefiLuaHooks(lua_State* lState) {
   boardConfigureLuaHooks(lState);
+
+  tinymt32_init(&tinymt, 1534525); // todo: share instance with launch_control? probably not?
+	lua_register(lState, "random", [](lua_State* l) {
+	  auto random = tinymt32_generate_float(&tinymt);
+		lua_pushnumber(l, random);
+		return 1;
+	});
 
 	LuaClass<Timer> luaTimer(lState, "Timer");
 	luaTimer
