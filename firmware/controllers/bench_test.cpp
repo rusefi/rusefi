@@ -703,7 +703,15 @@ void initBenchTest() {
 	addConsoleAction(CMD_MIL_BENCH, milBench);
 	addConsoleAction(CMD_HPFP_BENCH, hpfpValveBench);
 
-	addConsoleActionFFFF("luabench2", luaOutBench2);
+#if EFI_LUA
+  // this commands facilitates TS Lua Button scripts development
+  addConsoleActionI("lua_button", [](int index) {
+    if (index < 0 || index > LUA_BUTTON_COUNT)
+      return;
+    luaCommandCounters[index - 1]++;
+  });
+  addConsoleActionFFFF("luabench2", luaOutBench2);
+#endif // EFI_LUA
 	instance.start();
 	onConfigurationChangeBenchTest();
 }
