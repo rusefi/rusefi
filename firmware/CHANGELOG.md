@@ -37,6 +37,7 @@ Release template (copy/paste this for new release):
  - stm32 build-in watchdog for F7/H7 #1339
  - improvements to SD card management #7327
  - FatFS: update to latest R0.15a version #7315
+ - Honda J30 trigger wheel
 
 ### Fixed
  - Critical error when using big values on Boost Control Open Loop with Y axis as MAP #7093
