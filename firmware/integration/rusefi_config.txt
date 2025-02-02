@@ -2222,6 +2222,8 @@ end_struct
 #define GAUGE_NAME_LUA_6 "Lua Gauge 7"
 #define GAUGE_NAME_LUA_7 "Lua Gauge 8"
 
+#define LUA_BUTTON_COUNT 4
+
 #define GAUGE_LUA_FROM_0 -30000
 #define GAUGE_LUA_FROM_1 -30000
 #define GAUGE_LUA_FROM_2 -30000

@@ -746,6 +746,21 @@ void configureRusefiLuaHooks(lua_State* lState) {
 		return 1;
 	});
 
+#if EFI_PROD_CODE
+extern int luaCommandCounters[LUA_BUTTON_COUNT];
+
+	lua_register(lState, "getTsButtonCount",
+			[](lua_State* l) {
+			auto humanIndex = luaL_checkinteger(l, 1);
+			if (humanIndex < 1 || humanIndex > LUA_BUTTON_COUNT) {
+			  luaL_error(l, "Invalid button index: %d", humanIndex);
+			  return 0;
+			}
+			lua_pushnumber(l, luaCommandCounters[humanIndex - 1]);
+			return 1;
+	});
+#endif // EFI_PROD_CODE
+
 #if EFI_PROD_CODE && EFI_SENT_SUPPORT
 	lua_register(lState, "getSentValue",
 			[](lua_State* l) {
