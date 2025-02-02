@@ -68,3 +68,41 @@ void configureHondaK_4_1(TriggerWaveform *s) {
 
 	s->addToothRiseFall(360, 7);
 }
+
+void initialize_one_of_24_2_2(TriggerWaveform *s, int firstCount, int secondCount) {
+	s->initialize(FOUR_STROKE_CRANK_SENSOR, SyncEdge::RiseOnly);
+
+	float narrow = 360 / 24;
+	float wide = narrow * 2;
+
+	float base = 0;
+
+	for (int i = 0; i < firstCount; i++) {
+		s->addToothFallRise(base + narrow, narrow / 2);
+		base += narrow;
+	}
+
+	s->addToothFallRise(base + wide, wide / 2);
+	base += wide;
+
+	for (int i = 0; i < secondCount; i++) {
+		s->addToothFallRise(base + narrow, narrow / 2);
+		base += narrow;
+	}
+
+       s->addToothFallRise(360, narrow/2);
+}
+
+void configureHondaJ30A2_24_1_1(TriggerWaveform *s) {
+	initialize_one_of_24_2_2(s, 6, 14);
+
+    size_t count = 6;
+
+    s->tdcPosition = 0;
+
+ s->setTriggerSynchronizationGap3(/*gapIndex*/0, 1.6, 4);
+  for (size_t i = 1 ; i < count ; i++) {
+    s->setTriggerSynchronizationGap3(/*gapIndex*/i, 0.65, 1.4);
+  }
+  s->setTriggerSynchronizationGap3(/*gapIndex*/count, 0.2, 0.55);
+  }
