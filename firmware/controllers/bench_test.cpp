@@ -244,13 +244,6 @@ static void tcuSolenoidBench(float humanIndex, float onTime, float offTimeMs, fl
 	doRunSolenoidBench((int)humanIndex, onTime, offTimeMs, (int)count);
 }
 
-/**
- * channel #1, 5ms ON, 1000ms OFF, repeat 3 times
- */
-static void luaOutBench2(float humanIndex, float onTime, float offTimeMs, float count) {
-	doRunBenchTestLuaOutput((int)humanIndex, onTime, offTimeMs, (int)count);
-}
-
 static void fanBenchExt(float onTimeMs) {
 	pinbench(onTimeMs, 100.0, 1, &enginePins.fanRelay);
 }
@@ -710,7 +703,9 @@ void initBenchTest() {
       return;
     luaCommandCounters[index - 1]++;
   });
-  addConsoleActionFFFF("luabench2", luaOutBench2);
+  addConsoleActionFFFF("luabench2", [](float humanIndex, float onTime, float offTimeMs, float count) {
+	  doRunBenchTestLuaOutput((int)humanIndex, onTime, offTimeMs, (int)count);
+  });
 #endif // EFI_LUA
 	instance.start();
 	onConfigurationChangeBenchTest();
