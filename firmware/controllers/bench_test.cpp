@@ -340,7 +340,7 @@ static void hdAcrBench(int index) {
 }
 #endif // EFI_HD_ACR
 
-int luaCommandCounters[4] = {};
+int luaCommandCounters[LUA_BUTTON_COUNT] = {};
 
 void handleBenchCategory(uint16_t index) {
 	switch(index) {

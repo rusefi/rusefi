@@ -1111,6 +1111,7 @@ public class Fields {
 	public static final String LOG_DELIMITER = "`";
 	public static final int LOGIC_ANALYZER_CHANNEL_COUNT = 4;
 	public static final int LUA_ANALOG_INPUT_COUNT = 8;
+	public static final int LUA_BUTTON_COUNT = 4;
 	public static final int LUA_DIGITAL_INPUT_COUNT = 8;
 	public static final int LUA_GAUGE_COUNT = 8;
 	public static final int lua_gauge_e_LUA_GAUGE_1 = 0;
@@ -1520,7 +1521,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.02.02.f407-discovery.4265569405";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.02.02.f407-discovery.2835458026";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
