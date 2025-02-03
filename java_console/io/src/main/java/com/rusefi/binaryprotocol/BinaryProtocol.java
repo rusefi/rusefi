@@ -382,6 +382,7 @@ public class BinaryProtocol {
             try {
                 saveConfigurationImageToFiles(
                     imageWithMeta,
+                    iniFile,
                     (ConnectionAndMeta.saveSettingsToFile() ? CONFIGURATION_RUSEFI_BINARY : null),
                     CONFIGURATION_RUSEFI_XML
                 );
@@ -392,8 +393,9 @@ public class BinaryProtocol {
         return imageWithMeta;
     }
 
-    public void saveConfigurationImageToFiles(
+    public static void saveConfigurationImageToFiles(
         final ConfigurationImageWithMeta imageWithMeta,
+        final IniFileModel ini,
         @Nullable final String binaryFileName,
         @Nullable final String xmlFileName
     ) throws JAXBException, IOException {
@@ -401,7 +403,7 @@ public class BinaryProtocol {
             ConfigurationImageFile.saveToFile(imageWithMeta, binaryFileName);
         }
         if (xmlFileName != null) {
-            final Msq tune = MsqFactory.valueOf(imageWithMeta.getConfigurationImage(), iniFile);
+            final Msq tune = MsqFactory.valueOf(imageWithMeta.getConfigurationImage(), ini);
             tune.writeXmlFile(xmlFileName);
         }
     }
