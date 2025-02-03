@@ -20,9 +20,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class CalibrationsBackuper {
     private static final Logging log = getLogging(CalibrationsBackuper.class);
-    private static final String PREVIOUS_CALIBRATIONS_INI = "prev_calibrations.ini";
-    private static final String PREVIOUS_CALIBRATIONS_BINARY = "prev_calibrations.zip";
-    private static final String PREVIOUS_CALIBRATIONS_XML = "prev_calibrations.msq";
+    private static final String PREVIOUS_CALIBRATIONS_FILE_NAME = "prev_calibrations";
 
     static Optional<CalibrationsInfo> readCalibrationsInfo(
         final BinaryProtocol binaryProtocol,
@@ -45,6 +43,47 @@ public class CalibrationsBackuper {
         }
     }
 
+    static boolean backUpCalibrationsInfo(
+        final BinaryProtocol binaryProtocol,
+        final CalibrationsInfo calibrationsInfo,
+        final String fileName,
+        final UpdateOperationCallbacks callbacks
+    ) {
+        try {
+            final String iniFileName = String.format("%s.ini", fileName);
+            final Path iniFilePath = Paths.get(calibrationsInfo.getIniFile().getIniFilePath());
+            callbacks.logLine(String.format("Backing up current ini-file `%s`...", iniFilePath));
+            Files.copy(
+                iniFilePath,
+                Paths.get(iniFileName),
+                REPLACE_EXISTING
+            );
+            callbacks.logLine(String.format(
+                "`%s` ini-file is backed up as `%s`",
+                iniFilePath.getFileName(),
+                iniFileName
+            ));
+            final String zipFileName = String.format("%s.zip", fileName);
+            final String msqFileName = String.format("%s.msq", fileName);
+            callbacks.logLine(String.format(
+                "Backing up calibrations to files `%s` and `%s`...",
+                zipFileName,
+                msqFileName
+            ));
+            binaryProtocol.saveConfigurationImageToFiles(calibrationsInfo.getImage(), zipFileName, msqFileName);
+            callbacks.logLine(String.format(
+                "Calibrations are backed up to files `%s` and `%s`",
+                zipFileName,
+                msqFileName
+            ));
+            return true;
+        } catch (final Exception e) {
+            log.error("Backing up calibrations failed:", e);
+            callbacks.logLine("Backing up current calibrations failed");
+            return false;
+        }
+    }
+
     public static boolean backUpCurrentCalibrations(
         final PortResult ecuPort,
         final UpdateOperationCallbacks callbacks
@@ -57,22 +96,12 @@ public class CalibrationsBackuper {
                     final Optional<CalibrationsInfo> calibrationsInfo = readCalibrationsInfo(binaryProtocol, callbacks);
                     if (calibrationsInfo.isPresent()) {
                         final CalibrationsInfo receivedCalibrations = calibrationsInfo.get();
-                        final Path iniFilePath = Paths.get(receivedCalibrations.getIniFile().getIniFilePath());
-                        callbacks.logLine(String.format("Backing up current file %s...", iniFilePath));
-                        Files.copy(
-                            iniFilePath,
-                            Paths.get(PREVIOUS_CALIBRATIONS_INI),
-                            REPLACE_EXISTING
+                        return backUpCalibrationsInfo(
+                            binaryProtocol,
+                            receivedCalibrations,
+                            PREVIOUS_CALIBRATIONS_FILE_NAME,
+                            callbacks
                         );
-                        callbacks.logLine(String.format("%s file is backed up", iniFilePath.getFileName()));
-                        callbacks.logLine("Save current calibrations to files...");
-                        binaryProtocol.saveConfigurationImageToFiles(
-                            receivedCalibrations.getImage(),
-                            PREVIOUS_CALIBRATIONS_BINARY,
-                            PREVIOUS_CALIBRATIONS_XML
-                        );
-                        callbacks.logLine("Current calibrations are backed up to files");
-                        return true;
                     } else {
                         return false;
                     }
