@@ -213,6 +213,7 @@ public class ProgramSelector {
     }
 
     private static final String PREVIOUS_CALIBRATIONS_FILE_NAME = "prev_calibrations";
+    private static final String UPDATED_CALIBRATIONS_FILE_NAME = "updated_calibrations";
 
     public static void flashOpenbltSerialAutomatic(JComponent parent, PortResult ecuPort, UpdateOperationCallbacks callbacks) {
         AutoupdateUtil.assertNotAwtThread();
@@ -267,6 +268,17 @@ public class ProgramSelector {
         callbacks.logLine("Serial port " + openbltPort + " appeared, programming firmware...");
 
         flashOpenbltSerialJni(parent, openbltPort, callbacks);
+
+        final Optional<CalibrationsInfo> updatedCalibrations = readAndBackupCurrentCalibrations(
+            ecuPort,
+            callbacks,
+            UPDATED_CALIBRATIONS_FILE_NAME
+        );
+        if (updatedCalibrations.isEmpty()) {
+            callbacks.logLine("Failed to back up updated calibrations...");
+            callbacks.error();
+            return;
+        }
     }
 
     private static OpenbltJni.OpenbltCallbacks makeOpenbltCallbacks(UpdateOperationCallbacks callbacks) {
