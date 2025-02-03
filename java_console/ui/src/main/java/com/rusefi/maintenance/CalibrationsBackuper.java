@@ -20,7 +20,6 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class CalibrationsBackuper {
     private static final Logging log = getLogging(CalibrationsBackuper.class);
-    private static final String PREVIOUS_CALIBRATIONS_FILE_NAME = "prev_calibrations";
 
     static Optional<CalibrationsInfo> readCalibrationsInfo(
         final BinaryProtocol binaryProtocol,
@@ -84,9 +83,10 @@ public class CalibrationsBackuper {
         }
     }
 
-    public static boolean backUpCurrentCalibrations(
+    public static Optional<CalibrationsInfo> readAndBackupCurrentCalibrations(
         final PortResult ecuPort,
-        final UpdateOperationCallbacks callbacks
+        final UpdateOperationCallbacks callbacks,
+        final String backupFileName
     ) {
         return BinaryProtocolExecutor.executeWithSuspendedPortScanner(
             ecuPort.port,
@@ -96,21 +96,23 @@ public class CalibrationsBackuper {
                     final Optional<CalibrationsInfo> calibrationsInfo = readCalibrationsInfo(binaryProtocol, callbacks);
                     if (calibrationsInfo.isPresent()) {
                         final CalibrationsInfo receivedCalibrations = calibrationsInfo.get();
-                        return backUpCalibrationsInfo(
+                        if (backUpCalibrationsInfo(
                             binaryProtocol,
                             receivedCalibrations,
-                            PREVIOUS_CALIBRATIONS_FILE_NAME,
+                            backupFileName,
                             callbacks
-                        );
-                    } else {
-                        return false;
+                        )) {
+                            return calibrationsInfo;
+                        }
                     }
+                    return Optional.empty();
                 } catch (final Exception e) {
                     log.error("Back up current calibrations failed:", e);
                     callbacks.logLine("Back up current calibrations failed");
-                    return false;
+                    return Optional.empty();
                 }
-            }
+            },
+            Optional.empty()
         );
     }
 }
