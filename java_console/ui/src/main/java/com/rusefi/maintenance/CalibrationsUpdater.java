@@ -34,7 +34,7 @@ public enum CalibrationsUpdater {
             result = BinaryProtocolExecutor.executeWithSuspendedPortScanner(port, callbacks, binaryProtocol -> {
                 binaryProtocol.uploadChanges(calibrationsImage);
                 return true;
-            });
+            }, false);
             if (result) {
                 callbacks.logLine(String.format(
                     "Configuration image (%d bytes) has been uploaded to port %s",
