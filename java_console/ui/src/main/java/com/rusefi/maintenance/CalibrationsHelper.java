@@ -18,8 +18,8 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.BinaryProtocol.iniFileProvider;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
-public class CalibrationsBackuper {
-    private static final Logging log = getLogging(CalibrationsBackuper.class);
+public class CalibrationsHelper {
+    private static final Logging log = getLogging(CalibrationsHelper.class);
 
     static Optional<CalibrationsInfo> readCalibrationsInfo(
         final BinaryProtocol binaryProtocol,
