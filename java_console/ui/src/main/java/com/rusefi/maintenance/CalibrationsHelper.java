@@ -16,6 +16,7 @@ import java.util.Optional;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.BinaryProtocol.iniFileProvider;
+import static com.rusefi.binaryprotocol.BinaryProtocol.saveConfigurationImageToFiles;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class CalibrationsHelper {
@@ -43,14 +44,14 @@ public class CalibrationsHelper {
     }
 
     static boolean backUpCalibrationsInfo(
-        final BinaryProtocol binaryProtocol,
         final CalibrationsInfo calibrationsInfo,
         final String fileName,
         final UpdateOperationCallbacks callbacks
     ) {
         try {
             final String iniFileName = String.format("%s.ini", fileName);
-            final Path iniFilePath = Paths.get(calibrationsInfo.getIniFile().getIniFilePath());
+            final IniFileModel ini = calibrationsInfo.getIniFile();
+            final Path iniFilePath = Paths.get(ini.getIniFilePath());
             callbacks.logLine(String.format("Backing up current ini-file `%s`...", iniFilePath));
             Files.copy(
                 iniFilePath,
@@ -69,7 +70,7 @@ public class CalibrationsHelper {
                 zipFileName,
                 msqFileName
             ));
-            binaryProtocol.saveConfigurationImageToFiles(calibrationsInfo.getImage(), zipFileName, msqFileName);
+            saveConfigurationImageToFiles(calibrationsInfo.getImage(), ini, zipFileName, msqFileName);
             callbacks.logLine(String.format(
                 "Calibrations are backed up to files `%s` and `%s`",
                 zipFileName,
@@ -97,7 +98,6 @@ public class CalibrationsHelper {
                     if (calibrationsInfo.isPresent()) {
                         final CalibrationsInfo receivedCalibrations = calibrationsInfo.get();
                         if (backUpCalibrationsInfo(
-                            binaryProtocol,
                             receivedCalibrations,
                             backupFileName,
                             callbacks
