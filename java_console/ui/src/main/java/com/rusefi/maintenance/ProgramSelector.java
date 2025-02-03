@@ -23,13 +23,14 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.SerialPortScanner.SerialPortType.OpenBlt;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
-import static com.rusefi.maintenance.CalibrationsBackuper.backUpCurrentCalibrations;
+import static com.rusefi.maintenance.CalibrationsBackuper.readAndBackupCurrentCalibrations;
 import static com.rusefi.maintenance.UpdateMode.*;
 import static com.rusefi.ui.util.UiUtils.trueLayout;
 
@@ -211,10 +212,17 @@ public class ProgramSelector {
         return newPorts;
     }
 
+    private static final String PREVIOUS_CALIBRATIONS_FILE_NAME = "prev_calibrations";
+
     public static void flashOpenbltSerialAutomatic(JComponent parent, PortResult ecuPort, UpdateOperationCallbacks callbacks) {
         AutoupdateUtil.assertNotAwtThread();
 
-        if (!backUpCurrentCalibrations(ecuPort, callbacks)) {
+        final Optional<CalibrationsInfo> prevCalibrations = readAndBackupCurrentCalibrations(
+            ecuPort,
+            callbacks,
+            PREVIOUS_CALIBRATIONS_FILE_NAME
+        );
+        if (prevCalibrations.isEmpty()) {
             callbacks.logLine("Failed to back up current calibrations...");
             callbacks.error();
             return;
