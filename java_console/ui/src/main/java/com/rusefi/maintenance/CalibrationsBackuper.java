@@ -24,17 +24,7 @@ public class CalibrationsBackuper {
     private static final String PREVIOUS_CALIBRATIONS_BINARY = "prev_calibrations.zip";
     private static final String PREVIOUS_CALIBRATIONS_XML = "prev_calibrations.msq";
 
-    private static class CalibrationsMeta {
-        private final String iniFilePath;
-        private final ConfigurationImageMetaVersion0_0 meta;
-
-        CalibrationsMeta(final String iniFilePath, final ConfigurationImageMetaVersion0_0 meta) {
-            this.iniFilePath = iniFilePath;
-            this.meta = meta;
-        }
-    }
-
-    private static Optional<CalibrationsMeta> readMeta(
+    static Optional<CalibrationsInfo> readCalibrationsInfo(
         final BinaryProtocol binaryProtocol,
         final UpdateOperationCallbacks callbacks
     ) {
@@ -44,10 +34,10 @@ public class CalibrationsBackuper {
             final IniFileModel iniFile = iniFileProvider.provide(signature);
             final int pageSize = iniFile.getMetaInfo().getTotalSize();
             callbacks.logLine(String.format("Page size is %d", pageSize));
-            return Optional.of(new CalibrationsMeta(
-                iniFile.getIniFilePath(),
-                new ConfigurationImageMetaVersion0_0(pageSize, signature)
-            ));
+            final ConfigurationImageMetaVersion0_0 meta = new ConfigurationImageMetaVersion0_0(pageSize, signature);
+            callbacks.logLine("Reading current calibrations...");
+            final ConfigurationImageWithMeta image = binaryProtocol.readFullImageFromController(meta);
+            return Optional.of(new CalibrationsInfo(iniFile, image));
         } catch (final IOException e) {
             log.error("Failed to read meta:", e);
             callbacks.logLine("Failed to read meta");
@@ -64,14 +54,10 @@ public class CalibrationsBackuper {
             callbacks,
             (binaryProtocol) -> {
                 try {
-                    final Optional<CalibrationsMeta> meta = readMeta(binaryProtocol, callbacks);
-                    if (meta.isPresent()) {
-                        final CalibrationsMeta receivedMeta = meta.get();
-                        callbacks.logLine("Reading current calibrations...");
-                        final ConfigurationImageWithMeta image = binaryProtocol.readFullImageFromController(
-                            receivedMeta.meta
-                        );
-                        final Path iniFilePath = Paths.get(receivedMeta.iniFilePath);
+                    final Optional<CalibrationsInfo> calibrationsInfo = readCalibrationsInfo(binaryProtocol, callbacks);
+                    if (calibrationsInfo.isPresent()) {
+                        final CalibrationsInfo receivedCalibrations = calibrationsInfo.get();
+                        final Path iniFilePath = Paths.get(receivedCalibrations.getIniFile().getIniFilePath());
                         callbacks.logLine(String.format("Backing up current file %s...", iniFilePath));
                         Files.copy(
                             iniFilePath,
@@ -81,7 +67,7 @@ public class CalibrationsBackuper {
                         callbacks.logLine(String.format("%s file is backed up", iniFilePath.getFileName()));
                         callbacks.logLine("Save current calibrations to files...");
                         binaryProtocol.saveConfigurationImageToFiles(
-                            image,
+                            receivedCalibrations.getImage(),
                             PREVIOUS_CALIBRATIONS_BINARY,
                             PREVIOUS_CALIBRATIONS_XML
                         );
