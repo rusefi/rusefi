@@ -7,19 +7,20 @@ import com.rusefi.io.UpdateOperationCallbacks;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class BinaryProtocolExecutor {
     @FunctionalInterface
-    public interface BinaryProtocolAction {
-        boolean doWithBinaryProtocol(BinaryProtocol binaryProtocol);
+    public interface BinaryProtocolAction<T> {
+        T doWithBinaryProtocol(BinaryProtocol binaryProtocol);
     }
-    private static boolean execute(
+    private static <T> T execute(
         final String port,
         final UpdateOperationCallbacks callbacks,
-        final BinaryProtocolAction bpAction
+        final BinaryProtocolAction<T> bpAction,
+        final T failureResult
     ) {
-        final AtomicBoolean executionResult = new AtomicBoolean(false);
+        final AtomicReference<T> executionResult = new AtomicReference<>(failureResult);
         try (LinkManager linkManager = new LinkManager()
             .setNeedPullText(false)
             .setNeedPullLiveData(true)
@@ -53,10 +54,11 @@ public class BinaryProtocolExecutor {
         return executionResult.get();
     }
 
-    public static boolean executeWithSuspendedPortScanner(
+    public static <T> T executeWithSuspendedPortScanner(
         final String port,
         final UpdateOperationCallbacks callbacks,
-        final BinaryProtocolAction bpAction
+        final BinaryProtocolAction<T> bpAction,
+        final T failureResult
     ) {
         try {
             callbacks.logLine("Suspending port scanning...");
@@ -65,9 +67,9 @@ public class BinaryProtocolExecutor {
                 callbacks.logLine("Port scanning is suspended.");
             } catch (final InterruptedException e) {
                 callbacks.logLine("Failed to  suspend port scanning in a minute.");
-                return false;
+                return failureResult;
             }
-            return execute(port, callbacks, bpAction);
+            return execute(port, callbacks, bpAction, failureResult);
         } finally {
             callbacks.logLine("Resuming port scanning...");
             SerialPortScanner.INSTANCE.resume();
