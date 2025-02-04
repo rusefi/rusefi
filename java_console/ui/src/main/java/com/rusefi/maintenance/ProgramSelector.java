@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.SerialPortScanner.SerialPortType.OpenBlt;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
-import static com.rusefi.maintenance.CalibrationsHelper.readAndBackupCurrentCalibrations;
+import static com.rusefi.maintenance.CalibrationsHelper.*;
 import static com.rusefi.maintenance.UpdateMode.*;
 import static com.rusefi.ui.util.UiUtils.trueLayout;
 
@@ -279,6 +279,18 @@ public class ProgramSelector {
             callbacks.error();
             return;
         }
+        final CalibrationsInfo mergedCalibrations = mergeCalibrations(
+            prevCalibrations.get(),
+            updatedCalibrations.get(),
+            callbacks
+        );
+        backUpCalibrationsInfo(mergedCalibrations, "merged_calibrations", callbacks);
+        CalibrationsUpdater.INSTANCE.updateCalibrations(
+            ecuPort.port,
+            mergedCalibrations.getImage().getConfigurationImage(),
+            callbacks,
+            () -> {}
+        );
     }
 
     private static OpenbltJni.OpenbltCallbacks makeOpenbltCallbacks(UpdateOperationCallbacks callbacks) {

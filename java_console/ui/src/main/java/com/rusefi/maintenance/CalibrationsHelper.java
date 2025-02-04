@@ -1,22 +1,28 @@
 package com.rusefi.maintenance;
 
 import com.devexperts.logging.Logging;
+import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageMetaVersion0_0;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.field.*;
 import com.rusefi.SerialPortScanner.PortResult;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.core.Pair;
 import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.tune.xml.Constant;
+import com.rusefi.tune.xml.Msq;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Optional;
+import java.util.*;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.BinaryProtocol.iniFileProvider;
 import static com.rusefi.binaryprotocol.BinaryProtocol.saveConfigurationImageToFiles;
+import static com.rusefi.maintenance.IniFieldsAnalizer.findValuesToUpdate;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class CalibrationsHelper {
@@ -113,6 +119,36 @@ public class CalibrationsHelper {
                 }
             },
             Optional.empty()
+        );
+    }
+
+    public static CalibrationsInfo mergeCalibrations(
+        final CalibrationsInfo prevCalibrations,
+        final CalibrationsInfo newCalibrations,
+        final UpdateOperationCallbacks callbacks
+    ) {
+        final IniFileModel prevIniFile = prevCalibrations.getIniFile();
+        final Msq prevMsq = prevCalibrations.generateMsq();
+        final IniFileModel newIniFile = newCalibrations.getIniFile();
+        final Msq newMsq = newCalibrations.generateMsq();
+
+        final List<Pair<IniField, Constant>> valuesToUpdate = findValuesToUpdate(
+            prevIniFile,
+            prevMsq.getConstantsAsMap(),
+            newIniFile,
+            newMsq.getConstantsAsMap()
+        );
+
+        final ConfigurationImage mergedImage = newCalibrations.getImage().getConfigurationImage().clone();
+        for (final Pair<IniField, Constant> valueToUpdate: valuesToUpdate) {
+            final IniField fieldToUpdate = valueToUpdate.first;
+            final Constant value = valueToUpdate.second;
+            fieldToUpdate.setValue(mergedImage, value);
+            callbacks.logLine(String.format("Field `%s` is set to %s", fieldToUpdate.getName(), value.getValue()));
+        }
+        return new CalibrationsInfo(
+            newIniFile,
+            new ConfigurationImageWithMeta(newCalibrations.getImage().getMeta(), mergedImage.getContent())
         );
     }
 }
