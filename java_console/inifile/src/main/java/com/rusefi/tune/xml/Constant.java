@@ -2,6 +2,7 @@ package com.rusefi.tune.xml;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlValue;
+import java.util.Objects;
 
 public class Constant {
     private String name;
