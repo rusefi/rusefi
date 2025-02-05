@@ -172,6 +172,7 @@ int boardGetAnalogDiagnostic();
 
 
 #define H144_IN_AUX1 EFI_ADC_8
+#define H144_IN_AUX1_DIGITAL B0
 #define H144_IN_AUX2 EFI_ADC_14
 // fun fact: same input goes to TWO stm32 pins so that we can use it both as analog and ICU capture
 //#define H144_IN_AUX2_DIGITAL C4
