@@ -284,7 +284,11 @@ public class ProgramSelector {
             updatedCalibrations.get(),
             callbacks
         );
-        backUpCalibrationsInfo(mergedCalibrations, "merged_calibrations", callbacks);
+        if (!backUpCalibrationsInfo(mergedCalibrations, "merged_calibrations", callbacks)) {
+            callbacks.logLine("Failed to back up merged calibrations...");
+            callbacks.error();
+            return;
+        }
         if (!CalibrationsUpdater.INSTANCE.updateCalibrations(
             ecuPort.port,
             mergedCalibrations.getImage().getConfigurationImage(),
