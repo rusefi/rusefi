@@ -15,15 +15,19 @@ public enum CalibrationsUpdater {
         final Runnable onJobFinished
     ) {
         JobHelper.doJob(() -> {
-            updateCalibrations(port, calibrationsImage, validateConfigVersionOnConnect, callbacks);
+            if (updateCalibrations(port, calibrationsImage, callbacks, validateConfigVersionOnConnect)) {
+                callbacks.done();
+            } else {
+                callbacks.error();
+            }
         }, onJobFinished);
     }
 
-    private synchronized void updateCalibrations(
+    public synchronized boolean updateCalibrations(
         final String port,
         final ConfigurationImage calibrationsImage,
-        final boolean validateConfigVersionOnConnect,
-        final UpdateOperationCallbacks callbacks
+        final UpdateOperationCallbacks callbacks,
+        final boolean validateConfigVersionOnConnect
     ) {
         boolean result = false;
         if (calibrationsImage != null) {
@@ -53,10 +57,6 @@ public enum CalibrationsUpdater {
         } else {
             callbacks.logLine("ERROR: Calibrations to update are undefined");
         }
-        if (result) {
-            callbacks.done();
-        } else {
-            callbacks.error();
-        }
+        return result;
     }
 }
