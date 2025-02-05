@@ -17,6 +17,7 @@ public class UpdateCalibrationsJob extends AsyncJobWithContext<UpdateCalibration
             context.getPort().port,
             context.getCalibrations().getConfigurationImage(),
             callbacks,
+            true,
             onJobFinished
         );
     }
