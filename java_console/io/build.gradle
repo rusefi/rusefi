@@ -23,7 +23,7 @@ dependencies {
     implementation group: 'tel.schich', name: 'javacan-core', version: "$javaCanVersion"
     implementation group: 'tel.schich', name: 'javacan-core', version: "$javaCanVersion", classifier: 'x86_64'
     implementation global_libs.json
-    implementation ts_plugin_libs.httpclient
+    api ts_plugin_libs.httpclient
 
     testFixturesApi global_libs.mockito
     testFixturesApi global_libs.annotations

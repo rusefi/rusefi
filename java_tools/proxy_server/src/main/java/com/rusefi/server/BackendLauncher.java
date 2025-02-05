@@ -1,6 +1,5 @@
 package com.rusefi.server;
 
-import com.rusefi.proxy.client.LocalApplicationProxy;
 import com.rusefi.tools.online.HttpUtil;
 import com.rusefi.tools.online.ProxyClient;
 

@@ -97,7 +97,7 @@ public class LocalApplicationProxy implements Closeable {
         }
 
         AbstractIoStream authenticatorToProxyStream = new TcpIoStream("authenticatorToProxyStream ", rusEFISSLContext.getSSLSocket(HttpUtil.RUSEFI_PROXY_HOSTNAME, context.serverPortForRemoteApplications()), disconnectListener);
-        LocalApplicationProxy.sendHello(authenticatorToProxyStream, applicationRequest);
+        sendHello(authenticatorToProxyStream, applicationRequest);
 
         AtomicLong lastActivity = new AtomicLong(System.currentTimeMillis());
         BinaryProtocolProxy.ClientApplicationActivityListener clientApplicationActivityListener = (BinaryProtocolServer.Packet clientRequest) -> lastActivity.set(System.currentTimeMillis());
