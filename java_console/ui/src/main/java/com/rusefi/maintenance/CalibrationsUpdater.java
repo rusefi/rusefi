@@ -11,11 +11,10 @@ public enum CalibrationsUpdater {
         final String port,
         final ConfigurationImage calibrationsImage,
         final UpdateOperationCallbacks callbacks,
-        final boolean validateConfigVersionOnConnect,
         final Runnable onJobFinished
     ) {
         JobHelper.doJob(() -> {
-            if (updateCalibrations(port, calibrationsImage, callbacks, validateConfigVersionOnConnect)) {
+            if (updateCalibrations(port, calibrationsImage, callbacks, true)) {
                 callbacks.done();
             } else {
                 callbacks.error();
