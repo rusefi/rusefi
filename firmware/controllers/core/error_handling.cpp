@@ -640,10 +640,7 @@ static void firmwareErrorV(ObdCode code, const char *fmt, va_list ap) {
 	// large buffer on stack is risky we better use normal memory
 	static char errorBuffer[200];
 
-	va_list ap;
-	va_start(ap, fmt);
 	vsnprintf(errorBuffer, sizeof(errorBuffer), fmt, ap);
-	va_end(ap);
 
 	printf("\x1B[31m>>>>>>>>>> firmwareError [%s]\r\n\x1B[0m\r\n", errorBuffer);
 
