@@ -61,6 +61,7 @@ public class BinaryProtocol {
     private boolean isBurnPending;
     public String signature;
     public boolean isGoodOutputChannels;
+    // NotNull once connected
     private IniFileModel iniFile;
 
     private final BinaryProtocolState state = new BinaryProtocolState();
@@ -70,8 +71,8 @@ public class BinaryProtocol {
     public static boolean DISABLE_LOCAL_CONFIGURATION_CACHE;
     public static IniFileProvider iniFileProvider = new RealIniFileProvider();
 
-    public IniFileModel getIniFile() {
-        return iniFile;
+    public @NotNull IniFileModel getIniFile() {
+        return Objects.requireNonNull(iniFile);
     }
 
     public static String findCommand(byte command) {
@@ -178,7 +179,7 @@ public class BinaryProtocol {
         } catch (IOException e) {
             return "Failed to read signature " + e;
         }
-        iniFile = iniFileProvider.provide(signature);
+        iniFile = Objects.requireNonNull(iniFileProvider.provide(signature));
 
         String errorMessage = validateConfigVersion();
         if (errorMessage != null)

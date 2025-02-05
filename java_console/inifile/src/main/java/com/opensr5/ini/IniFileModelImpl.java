@@ -3,6 +3,7 @@ package com.opensr5.ini;
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.field.*;
 import com.rusefi.core.FindFileHelper;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -107,6 +108,7 @@ public class IniFileModelImpl implements IniFileModel {
      *                 on attempt to create IniFileMetaInfoImpl instance from test data; to avoid this exception such
      *                 tests should use `false` as value for this parameter
      */
+    @NotNull
     public static IniFileModelImpl readIniFile(
         final RawIniFile content,
         final boolean initMeta,
