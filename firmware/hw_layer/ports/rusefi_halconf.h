@@ -215,7 +215,7 @@
   { int limit = 1000000 ;                  \
     while (condition) {                    \
       if (limit-- == 0) {                  \
-        criticalError(__VA_ARGS__);        \
+        criticalErrorC(__VA_ARGS__);       \
         break;                             \
       }                                    \
     }                                      \
