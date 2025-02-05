@@ -78,7 +78,7 @@ public class MainFrame {
         }));
 
         final LinkManager linkManager = consoleUI.uiContext.getLinkManager();
-        linkManager.getConnector().connectAndReadConfiguration(new BinaryProtocol.Arguments(true), new ConnectionStateListener() {
+        linkManager.getConnector().connectAndReadConfiguration(new BinaryProtocol.Arguments(true, true), new ConnectionStateListener() {
             @Override
             public void onConnectionFailed(String errorMessage) {
                 log.error("onConnectionFailed " + errorMessage);

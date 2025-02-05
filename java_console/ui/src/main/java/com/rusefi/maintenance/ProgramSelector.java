@@ -289,6 +289,7 @@ public class ProgramSelector {
             ecuPort.port,
             mergedCalibrations.getImage().getConfigurationImage(),
             callbacks,
+            false,
             () -> {}
         );
     }

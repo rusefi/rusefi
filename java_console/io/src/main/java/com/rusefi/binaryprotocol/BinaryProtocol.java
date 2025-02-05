@@ -181,9 +181,11 @@ public class BinaryProtocol {
         }
         iniFile = Objects.requireNonNull(iniFileProvider.provide(signature));
 
-        String errorMessage = validateConfigVersion();
-        if (errorMessage != null)
-            return errorMessage;
+        if (arguments.validateConfigVersionOnConnect) {
+            final String errorMessage = validateConfigVersion();
+            if (errorMessage != null)
+                return errorMessage;
+        }
 
         int pageSize = iniFile.getMetaInfo().getTotalSize();
         log.info("pageSize=" + pageSize);
@@ -323,9 +325,11 @@ public class BinaryProtocol {
 
     public static class Arguments {
         final boolean saveFile;
+        final boolean validateConfigVersionOnConnect;
 
-        public Arguments(boolean saveFile) {
+        public Arguments(final boolean saveFile, final boolean validateConfigVersionOnConnect) {
             this.saveFile = saveFile;
+            this.validateConfigVersionOnConnect = validateConfigVersionOnConnect;
         }
     }
 

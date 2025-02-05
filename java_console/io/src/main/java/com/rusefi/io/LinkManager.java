@@ -62,7 +62,15 @@ public class LinkManager implements Closeable {
     private Thread communicationThread;
     private boolean isDisconnectedByUser;
 
+    private final boolean validateConfigVersionOnConnect;
+
     public LinkManager() {
+        this(true);
+    }
+
+    public LinkManager(final boolean validateConfigVersionInConnect) {
+        this.validateConfigVersionOnConnect = validateConfigVersionInConnect;
+
         Future<?> future = submit(() -> {
             communicationThread = Thread.currentThread();
             log.info("communicationThread lookup DONE");
@@ -220,10 +228,16 @@ public class LinkManager implements Closeable {
      */
     public static boolean isSimulationMode;
 
-    public void startAndConnect(String port, ConnectionStateListener stateListener) {
+    public void startAndConnect(
+        final String port,
+        final ConnectionStateListener stateListener
+    ) {
         Objects.requireNonNull(port, "port");
         start(port, stateListener);
-        connector.connectAndReadConfiguration(new BinaryProtocol.Arguments(true), stateListener);
+        connector.connectAndReadConfiguration(
+            new BinaryProtocol.Arguments(true, validateConfigVersionOnConnect),
+            stateListener
+        );
     }
 
     @NotNull
