@@ -215,7 +215,11 @@ public class ProgramSelector {
     private static final String PREVIOUS_CALIBRATIONS_FILE_NAME = "prev_calibrations";
     private static final String UPDATED_CALIBRATIONS_FILE_NAME = "updated_calibrations";
 
-    public static void flashOpenbltSerialAutomatic(JComponent parent, PortResult ecuPort, UpdateOperationCallbacks callbacks) {
+    public static boolean flashOpenbltSerialAutomatic(
+        JComponent parent,
+        PortResult ecuPort,
+        UpdateOperationCallbacks callbacks
+    ) {
         AutoupdateUtil.assertNotAwtThread();
 
         final Optional<CalibrationsInfo> prevCalibrations = readAndBackupCurrentCalibrations(
@@ -225,8 +229,7 @@ public class ProgramSelector {
         );
         if (prevCalibrations.isEmpty()) {
             callbacks.logLine("Failed to back up current calibrations...");
-            callbacks.error();
-            return;
+            return false;
         }
         final List<PortResult> openBltPortsBefore = SerialPortScanner.INSTANCE.getCurrentHardware().getKnownPorts(OpenBlt);
 
@@ -240,8 +243,7 @@ public class ProgramSelector {
             callbacks.logLine("");
             callbacks.logLine("Try closing and opening console again");
             callbacks.logLine("");
-            callbacks.error();
-            return;
+            return false;
         }
 
         final List<PortResult> newItems = waitForNewOpenBltPortAppeared(openBltPortsBefore, callbacks);
@@ -249,8 +251,7 @@ public class ProgramSelector {
         // Check that exactly one thing appeared in the "after" list
         if (newItems.isEmpty()) {
             callbacks.logLine("Looks like your ECU disappeared during the update process. Please try again.");
-            callbacks.error();
-            return;
+            return false;
         }
 
         if (newItems.size() > 1) {
@@ -259,8 +260,7 @@ public class ProgramSelector {
                 "Unable to find ECU after reboot as multiple serial ports appeared. Before: "
                     + openBltPortsBefore.size()
             );
-            callbacks.error();
-            return;
+            return false;
         }
 
         final String openbltPort = newItems.get(0).port;
@@ -268,8 +268,7 @@ public class ProgramSelector {
         callbacks.logLine("Serial port " + openbltPort + " appeared, programming firmware...");
 
         if (!flashOpenbltSerialJni(parent, openbltPort, callbacks)) {
-            callbacks.error();
-            return;
+            return false;
         }
 
         final Optional<CalibrationsInfo> updatedCalibrations = readAndBackupCurrentCalibrations(
@@ -279,8 +278,7 @@ public class ProgramSelector {
         );
         if (updatedCalibrations.isEmpty()) {
             callbacks.logLine("Failed to back up updated calibrations...");
-            callbacks.error();
-            return;
+            return false;
         }
         final CalibrationsInfo mergedCalibrations = mergeCalibrations(
             prevCalibrations.get(),
@@ -289,19 +287,14 @@ public class ProgramSelector {
         );
         if (!backUpCalibrationsInfo(mergedCalibrations, "merged_calibrations", callbacks)) {
             callbacks.logLine("Failed to back up merged calibrations...");
-            callbacks.error();
-            return;
+            return false;
         }
-        if (!CalibrationsUpdater.INSTANCE.updateCalibrations(
+        return CalibrationsUpdater.INSTANCE.updateCalibrations(
             ecuPort.port,
             mergedCalibrations.getImage().getConfigurationImage(),
             callbacks,
             false
-        )) {
-            callbacks.error();
-            return;
-        }
-        callbacks.done();
+        );
     }
 
     private static OpenbltJni.OpenbltCallbacks makeOpenbltCallbacks(UpdateOperationCallbacks callbacks) {
