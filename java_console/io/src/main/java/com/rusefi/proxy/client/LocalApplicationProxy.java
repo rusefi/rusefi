@@ -58,10 +58,6 @@ public class LocalApplicationProxy implements Closeable {
         this.authenticatorToProxyStream = authenticatorToProxyStream;
     }
 
-    public IoStream getAuthenticatorToProxyStream() {
-        return authenticatorToProxyStream;
-    }
-
     public static HttpResponse requestSoftwareUpdate(int httpPort, ApplicationRequest applicationRequest, UpdateType type) throws IOException {
         HttpPost httpPost = new HttpPost(ProxyClient.getHttpAddress(httpPort) + ProxyClient.UPDATE_CONNECTOR_SOFTWARE);
 
@@ -114,7 +110,7 @@ public class LocalApplicationProxy implements Closeable {
                 while (true) {
                     sleep(context.gaugePokingPeriod());
                     if (isTimeForApplicationToConnect(lastActivity.get(), BINARY_IO_TIMEOUT / 2)) {
-                        // TODO: why is this logic duplicated from BinaryProtocol?
+                        // TODO: migrate to BinaryProtocol with proper .ini!
                         byte[] commandPacket = new byte[5];
                         commandPacket[0] = Integration.TS_OUTPUT_COMMAND;
                         System.arraycopy(GetOutputsCommand.createRequest(), 0, commandPacket, 1, 4);

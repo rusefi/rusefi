@@ -45,14 +45,14 @@ public class PluginEntry implements TsPluginBody {
 
         TuneUploadTab tuneUploadTab = new TuneUploadTab(controllerAccessSupplier);
         LogUploadSelector logUploadTab = new LogUploadSelector(controllerAccessSupplier);
-        BroadcastTab broadcastTab = new BroadcastTab();
-        RemoteTab remoteTab = new RemoteTab();
+        //BroadcastTab broadcastTab = new BroadcastTab();
+        //RemoteTab remoteTab = new RemoteTab();
         KnockAnalyzerTab knockAnalyzerTab = new KnockAnalyzerTab(controllerAccessSupplier);
 
         tabbedPane.addTab("Tune Upload", tuneUploadTab.getContent());
         tabbedPane.addTab("Log Upload", logUploadTab.getContent());
-        tabbedPane.addTab("Broadcast", broadcastTab.getContent());
-        tabbedPane.addTab("Remote ECU", remoteTab.getContent());
+//        tabbedPane.addTab("Broadcast", broadcastTab.getContent());
+//        tabbedPane.addTab("Remote ECU", remoteTab.getContent());
         tabbedPane.addTab("Knock Analyzer", knockAnalyzerTab.getContent());
 
         this.content.add(tabbedPane);

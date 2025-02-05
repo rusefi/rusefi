@@ -10,7 +10,6 @@ import com.rusefi.io.tcp.ServerSocketReference;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.proxy.client.LocalApplicationProxy;
-import com.rusefi.proxy.client.LocalApplicationProxyContextImpl;
 import com.rusefi.proxy.client.UpdateType;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.server.ApplicationRequest;
@@ -45,6 +44,7 @@ import static com.rusefi.core.preferences.storage.PersistentConfiguration.getCon
  * @see RemoteTabSandbox
  * @see PluginEntry
  */
+/*
 public class RemoteTab {
     private static final String APPLICATION_PORT = "application_port";
     public static final String HOWTO_REMOTE_TUNING = "https://github.com/rusefi/rusefi/wiki/HOWTO-Remote-Tuning";
@@ -356,3 +356,4 @@ public class RemoteTab {
         void onConnected();
     }
 }
+*/
