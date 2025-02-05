@@ -267,7 +267,10 @@ public class ProgramSelector {
 
         callbacks.logLine("Serial port " + openbltPort + " appeared, programming firmware...");
 
-        flashOpenbltSerialJni(parent, openbltPort, callbacks);
+        if (!flashOpenbltSerialJni(parent, openbltPort, callbacks)) {
+            callbacks.error();
+            return;
+        }
 
         final Optional<CalibrationsInfo> updatedCalibrations = readAndBackupCurrentCalibrations(
             ecuPort,
@@ -330,10 +333,10 @@ public class ProgramSelector {
             "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    public static void flashOpenbltSerialJni(JComponent parent, String port, UpdateOperationCallbacks callbacks) {
+    public static boolean flashOpenbltSerialJni(JComponent parent, String port, UpdateOperationCallbacks callbacks) {
         if (FileLog.is32bitJava()) {
             showError32bitJava(parent);
-            return;
+            return false;
         }
 
         OpenbltJni.OpenbltCallbacks cb = makeOpenbltCallbacks(callbacks);
@@ -341,18 +344,17 @@ public class ProgramSelector {
         String fileName = FindFileHelper.findSrecFile();
         if (fileName == null) {
             callbacks.logLine(".srec image file not found");
-            callbacks.error();
-            return;
+            return false;
         }
         try {
             callbacks.logLine("flashSerial " + fileName);
             OpenbltJni.flashSerial(fileName, port, cb);
 
             callbacks.logLine("Update completed successfully!");
-            callbacks.done();
+            return true;
         } catch (Throwable e) {
             callbacks.logLine("Error: " + e);
-            callbacks.error();
+            return false;
         } finally {
             OpenbltJni.stop(cb);
         }
