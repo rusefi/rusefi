@@ -14,7 +14,13 @@ public class OpenBltAutoJob extends AsyncJobWithContext<SerialPortWithParentComp
     @Override
     public void doJob(final UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
         JobHelper.doJob(
-            () -> ProgramSelector.flashOpenbltSerialAutomatic(context.getParent(), context.getPort(), callbacks),
+            () -> {
+                if (ProgramSelector.flashOpenbltSerialAutomatic(context.getParent(), context.getPort(), callbacks)) {
+                    callbacks.done();
+                } else {
+                    callbacks.error();
+                }
+            },
             onJobFinished
         );
     }
