@@ -285,13 +285,16 @@ public class ProgramSelector {
             callbacks
         );
         backUpCalibrationsInfo(mergedCalibrations, "merged_calibrations", callbacks);
-        CalibrationsUpdater.INSTANCE.updateCalibrations(
+        if (!CalibrationsUpdater.INSTANCE.updateCalibrations(
             ecuPort.port,
             mergedCalibrations.getImage().getConfigurationImage(),
             callbacks,
-            false,
-            () -> {}
-        );
+            false
+        )) {
+            callbacks.error();
+            return;
+        }
+        callbacks.done();
     }
 
     private static OpenbltJni.OpenbltCallbacks makeOpenbltCallbacks(UpdateOperationCallbacks callbacks) {
