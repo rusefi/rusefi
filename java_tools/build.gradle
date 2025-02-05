@@ -1,5 +1,5 @@
 plugins {
-  id 'com.github.johnrengelman.shadow' version "${shadowVersion}"  apply false
+  id 'com.gradleup.shadow' version "${shadowVersion}"  apply false
 }
 
 apply from: 'dependencies.gradle'
@@ -56,5 +56,5 @@ subprojects {
 
   apply plugin: 'java-library'
   apply plugin: 'java-test-fixtures'
-  apply plugin: 'com.github.johnrengelman.shadow'
+  apply plugin: 'com.gradleup.shadow'
 }
