@@ -1,7 +1,4 @@
-plugins {
-    id 'java-library'
-    id 'java-test-fixtures'
-}
+
 
 apply from: '../../android/dependencies.gradle'
 apply from: '../../java_tools/dependencies.gradle'

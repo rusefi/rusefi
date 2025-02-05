@@ -1,3 +1,6 @@
+plugins {
+  id 'com.github.johnrengelman.shadow' version "${shadowVersion}"  apply false
+}
 
 apply from: 'dependencies.gradle'
 
@@ -50,4 +53,8 @@ tasks.named('wrapper') {
 // gradlew allDeps
 subprojects {
     task allDeps(type: DependencyReportTask) {}
+
+  apply plugin: 'java-library'
+  apply plugin: 'java-test-fixtures'
+  apply plugin: 'com.github.johnrengelman.shadow'
 }

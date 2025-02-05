@@ -1,7 +1,3 @@
-plugins {
-    id 'java-library'
-    id 'java'
-}
 
 // this CORE module cannot depend on model/ini!
 

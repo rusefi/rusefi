@@ -1,5 +1,4 @@
 plugins {
-    id 'java-library'
     id 'java-test-fixtures'
     id 'com.github.johnrengelman.shadow' version "${shadowVersion}"
 }

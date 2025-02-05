@@ -1,8 +1,3 @@
-plugins {
-    id 'java-library'
-    id 'com.github.johnrengelman.shadow' version "${shadowVersion}"
-}
-
 apply from: '../../java_tools/dependencies.gradle'
 
 defaultTasks 'shadowJar'

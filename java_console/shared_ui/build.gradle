@@ -1,6 +1,4 @@
-plugins {
-    id 'java-library'
-}
+
 
 apply from: '../../java_tools/dependencies.gradle'
 
