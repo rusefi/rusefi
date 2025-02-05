@@ -6,6 +6,7 @@ import com.opensr5.ini.*;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.MsqFactory;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.enums.engine_type_e;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
@@ -37,7 +38,7 @@ public class WriteSimulatorConfiguration {
         log.info("ROOT_FOLDER=" + ROOT_FOLDER);
         try {
             try {
-                readBinaryWriteXmlTune(iniFileName, Fields.SIMULATOR_TUNE_BIN_FILE_NAME, ENGINE_TUNE_OUTPUT_FOLDER + TuneCanTool.DEFAULT_TUNE, ini);
+                readBinaryWriteXmlTune(iniFileName, Integration.SIMULATOR_TUNE_BIN_FILE_NAME, ENGINE_TUNE_OUTPUT_FOLDER + TuneCanTool.DEFAULT_TUNE, ini);
             } catch (Throwable e) {
                 throw new IllegalStateException("White default tune", e);
             }
@@ -56,7 +57,7 @@ public class WriteSimulatorConfiguration {
 
     private static void writeSpecificEngineType(String iniFileName, engine_type_e engineType, IniFileModelImpl ini) {
         try {
-            String in = Fields.SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX + "_" + engineType.ordinal() + Fields.SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX;
+            String in = Integration.SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX + "_" + engineType.ordinal() + Integration.SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX;
             readBinaryWriteXmlTune(iniFileName, in,
                 TuneCanTool.getDefaultTuneOutputFileName(engineType), ini);
         } catch (Throwable e) {

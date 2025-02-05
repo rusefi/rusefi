@@ -2392,10 +2392,6 @@ end_struct
 #define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "Channel 1"
 #define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "Channel 2"
 
-#define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
-#define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
-#define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
-
 ! some board files override this value using prepend file
 #define ts_show_ign_key_switch false
 #define ts_show_ford_toyota_tps_pps true

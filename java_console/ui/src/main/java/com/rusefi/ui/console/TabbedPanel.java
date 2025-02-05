@@ -2,6 +2,7 @@ package com.rusefi.ui.console;
 
 import com.rusefi.PaneSettings;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.ui.LogDownloader;
@@ -53,7 +54,7 @@ public class TabbedPanel {
 
     public TabbedPanel(UIContext uiContext) {
         MessagesCentral.getInstance().addListener((clazz, message) -> {
-            if (message.startsWith(Fields.CRITICAL_PREFIX))
+            if (message.startsWith(Integration.CRITICAL_PREFIX))
                 criticalError = message;
         });
 

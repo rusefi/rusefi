@@ -37,6 +37,10 @@
 
 #define REBOOT_COMMAND 0xbb
 
+#define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
+#define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
+#define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
+
 #define TS_COMPOSITE_ENABLE 1
 #define TS_COMPOSITE_DISABLE 2
 #define TS_COMPOSITE_READ 3

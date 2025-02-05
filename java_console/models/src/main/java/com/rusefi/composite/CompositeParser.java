@@ -23,7 +23,7 @@ public class CompositeParser {
 
         List<CompositeEvent> events = new ArrayList<>();
 
-        while (ptr + Fields.COMPOSITE_PACKET_SIZE <= response.length) {
+        while (ptr + Integration.COMPOSITE_PACKET_SIZE <= response.length) {
 
             // Convert the int to a long since java can't do unsigned ints,
             // so we have to use a long (but still only want 32 bits read)
