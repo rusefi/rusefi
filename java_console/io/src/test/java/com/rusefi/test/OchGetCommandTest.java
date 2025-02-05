@@ -2,7 +2,6 @@ package com.rusefi.test;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IoHelper;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.io.commands.GetOutputsCommand;
 //import org.apache.commons.codec.binary.Hex;

@@ -6,7 +6,6 @@ import com.opensr5.ini.IniFileModelImpl;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.util.HexBinary;
@@ -78,7 +77,7 @@ public class SandboxCommon {
     static void verifySignature(IoStream tsStream, String prefix, String suffix) throws IOException {
         String signature = BinaryProtocol.getSignature(tsStream);
         log.info(prefix + "Got " + signature + " signature via " + suffix);
-        if (signature == null || !signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX))
+        if (signature == null || !signature.startsWith(Integration.PROTOCOL_SIGNATURE_PREFIX))
             throw new IllegalStateException("Unexpected S " + signature);
     }
 

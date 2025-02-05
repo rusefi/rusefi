@@ -3,7 +3,7 @@ package com.rusefi.binaryprotocol.test;
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.AbstractIoStream;
 import com.rusefi.io.can.PCanIoStream;
@@ -28,7 +28,7 @@ public class PCanSandbox {
         for (int i = 0; i < 17; i++) {
             String signature = BinaryProtocol.getSignature(tsStream);
             System.out.println("Got " + i + " " + signature + " signature via PCAN");
-            if (signature == null || !signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX))
+            if (signature == null || !signature.startsWith(Integration.PROTOCOL_SIGNATURE_PREFIX))
                 throw new IllegalStateException("Unexpected S " + signature);
         }
         log.info("****************************************");

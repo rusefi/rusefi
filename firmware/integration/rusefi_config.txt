@@ -108,8 +108,6 @@
 ! this offset is part of console compatibility mechanism, please DO NOT change this offset
 #define TS_FILE_VERSION_OFFSET 124
 
-#define LOG_DELIMITER "`"
-
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
 
@@ -142,7 +140,6 @@ struct_no_prefix engine_configuration_s
 #define GAP_TRACKING_LENGTH 18
 #define VVT_TRACKING_LENGTH 4
 
-#define CONSOLE_DATA_PROTOCOL_TAG " @"
 #define MAIN_HELP_URL "http://www.rusefi.com/"
 
 #define ETB_BIAS_CURVE_LENGTH 8
@@ -150,8 +147,6 @@ struct_no_prefix engine_configuration_s
 #define TOOTH_PACKET_COUNT 1000
 #define TOOTH_PACKET_SIZE 2
 #define TOOTH_DATA_LENGTH @@TOOTH_PACKET_SIZE@@*@@TOOTH_PACKET_COUNT@@
-
-#define COMPOSITE_PACKET_SIZE 5
 
 #define MAP_ANGLE_SIZE 8
 #define MAP_WINDOW_SIZE 8
@@ -947,7 +942,6 @@ custom maf_sensor_type_e 1 bits, S08, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 
 #define CAN_RX_PREFIX "CAN_rx"
 
-#define CRITICAL_PREFIX "CRITICAL"
 #define WARNING_BUFFER_SIZE 120
 #define CRITICAL_BUFFER_SIZE 120
 

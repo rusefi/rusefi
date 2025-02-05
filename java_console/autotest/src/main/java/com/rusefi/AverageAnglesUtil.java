@@ -2,7 +2,7 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.Logger;
-import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -17,7 +17,7 @@ import java.io.IOException;
 public class AverageAnglesUtil {
     private final static Logging log = Logging.getLogging(AverageAnglesUtil.class);
 
-    public static final String KEY = Fields.PROTOCOL_ANALOG_CHART;
+    public static final String KEY = Integration.PROTOCOL_ANALOG_CHART;
     public static final String ANALOG_CHART = KEY + ",";
 
     private static int currentRpm = -1;

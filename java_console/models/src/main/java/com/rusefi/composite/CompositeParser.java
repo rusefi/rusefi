@@ -3,6 +3,7 @@ package com.rusefi.composite;
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.field.EnumIniField;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -37,7 +38,7 @@ public class CompositeParser {
             boolean coil = EnumIniField.getBit(flags, 4);
             boolean injector  = EnumIniField.getBit(flags, 5);
 
-            ptr += Fields.COMPOSITE_PACKET_SIZE;
+            ptr += Integration.COMPOSITE_PACKET_SIZE;
 
             // If the timestamp went down, that means we just witnessed an integer overflow
             if (timestamp < prevTime) {

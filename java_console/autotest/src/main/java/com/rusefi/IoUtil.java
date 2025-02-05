@@ -153,7 +153,7 @@ public class IoUtil {
          * TCP connector is blocking
          */
         linkManager.startAndConnect("" + TcpConnector.DEFAULT_PORT, ConnectionStateListener.VOID);
-        linkManager.getEngineState().registerStringValueAction(Fields.PROTOCOL_VERSION_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
+        linkManager.getEngineState().registerStringValueAction(Integration.PROTOCOL_VERSION_TAG, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
         waitForFirstResponse();
     }
 

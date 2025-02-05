@@ -1,6 +1,6 @@
 package com.rusefi.io;
 
-import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
@@ -36,7 +36,7 @@ public class ConnectionStatusLogic {
         MessagesCentral.getInstance().addListener(new MessagesCentral.MessageListener() {
             @Override
             public void onMessage(Class clazz, String message) {
-                if (message.startsWith(Fields.CRITICAL_PREFIX))
+                if (message.startsWith(Integration.CRITICAL_PREFIX))
                     markConnected();
             }
         });

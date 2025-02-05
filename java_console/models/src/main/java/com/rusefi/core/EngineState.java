@@ -2,7 +2,7 @@ package com.rusefi.core;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.Logger;
-import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.io.LinkDecoder;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,7 +36,7 @@ public class EngineState {
 
         public StringActionPair(String key, ValueCallback<String> second) {
             super(key, second);
-            prefix = key.toLowerCase() + Fields.LOG_DELIMITER;
+            prefix = key.toLowerCase() + Integration.LOG_DELIMITER;
         }
 
         @Override
@@ -67,7 +67,7 @@ public class EngineState {
         }
         );
 
-        registerStringValueAction(Fields.PROTOCOL_MSG, value -> MessagesCentral.getInstance().postMessage(ENGINE_STATE_CLASS, value));
+        registerStringValueAction(Integration.PROTOCOL_MSG, value -> MessagesCentral.getInstance().postMessage(ENGINE_STATE_CLASS, value));
     }
 
     /**
@@ -137,13 +137,13 @@ public class EngineState {
         }
         if (originalResponse.length() == response.length()) {
             log.info("EngineState.unknown: " + response);
-            int keyEnd = response.indexOf(Fields.LOG_DELIMITER);
+            int keyEnd = response.indexOf(Integration.LOG_DELIMITER);
             if (keyEnd == -1) {
                 // discarding invalid line
                 return "";
             }
             String unknownKey = response.substring(0, keyEnd);
-            int valueEnd = response.indexOf(Fields.LOG_DELIMITER, keyEnd + 1);
+            int valueEnd = response.indexOf(Integration.LOG_DELIMITER, keyEnd + 1);
             if (valueEnd == -1) {
                 // discarding invalid line
                 return "";
@@ -151,25 +151,25 @@ public class EngineState {
             String value = response.substring(keyEnd, valueEnd);
             log.info("Invalid key [" + unknownKey + "] value [" + value + "]");
             // trying to process the rest of the line
-            response = response.substring(valueEnd + Fields.LOG_DELIMITER.length());
+            response = response.substring(valueEnd + Integration.LOG_DELIMITER.length());
         }
         return response;
     }
 
     public static String skipToken(String string) {
-        int keyEnd = string.indexOf(Fields.LOG_DELIMITER);
+        int keyEnd = string.indexOf(Integration.LOG_DELIMITER);
         if (keyEnd == -1) {
             // discarding invalid line
             return "";
         }
-        return string.substring(keyEnd + Fields.LOG_DELIMITER.length());
+        return string.substring(keyEnd + Integration.LOG_DELIMITER.length());
     }
 
     public static String handleStringActionPair(String response, StringActionPair pair, EngineStateListener listener) {
         if (startWithIgnoreCase(response, pair.prefix)) {
             String key = pair.first;
             int beginIndex = key.length() + 1;
-            int endIndex = response.indexOf(Fields.LOG_DELIMITER, beginIndex);
+            int endIndex = response.indexOf(Integration.LOG_DELIMITER, beginIndex);
             if (endIndex == -1)
                 endIndex = response.length();
 

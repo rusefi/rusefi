@@ -2,7 +2,6 @@ package com.rusefi.io;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.Listener;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.util.IoUtils;
 import org.jetbrains.annotations.NotNull;

@@ -1,7 +1,6 @@
 package com.rusefi.io.commands;
 
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 
 import static com.rusefi.binaryprotocol.IoHelper.checkResponseCode;

@@ -387,7 +387,7 @@ public class ConsoleTools {
             EngineState.ValueCallback<String> callback = new EngineState.ValueCallback<String>() {
                 @Override
                 public void onUpdate(String value) {
-                    if (value.startsWith(Fields.PROTOCOL_HELLO_PREFIX)) {
+                    if (value.startsWith(Integration.PROTOCOL_HELLO_PREFIX)) {
                         messages.append(value);
                         messages.append("\n");
                     }
@@ -395,7 +395,7 @@ public class ConsoleTools {
             };
             while (!unpack.isEmpty()) {
                 String original = unpack;
-                unpack = EngineState.handleStringActionPair(unpack, new EngineState.StringActionPair(Fields.PROTOCOL_MSG, callback), null);
+                unpack = EngineState.handleStringActionPair(unpack, new EngineState.StringActionPair(Integration.PROTOCOL_MSG, callback), null);
                 if (original.length() == unpack.length()) {
                     // skip key
                     unpack = EngineState.skipToken(unpack);

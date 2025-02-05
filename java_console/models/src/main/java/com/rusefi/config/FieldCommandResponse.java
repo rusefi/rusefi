@@ -1,23 +1,23 @@
 package com.rusefi.config;
 
-import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.core.Pair;
 
 import static com.rusefi.config.FieldType.*;
 
 public class FieldCommandResponse {
-    private static final String BIT_VALUE_PREFIX = "bit" + Fields.CONSOLE_DATA_PROTOCOL_TAG;
-    private static final String INT_VALUE_PREFIX = INT_TYPE_STRING + Fields.CONSOLE_DATA_PROTOCOL_TAG;
-    private static final String FLOAT_VALUE_PREFIX = FLOAT_TYPE_STRING + Fields.CONSOLE_DATA_PROTOCOL_TAG;
+    private static final String BIT_VALUE_PREFIX = "bit" + Integration.CONSOLE_DATA_PROTOCOL_TAG;
+    private static final String INT_VALUE_PREFIX = INT_TYPE_STRING + Integration.CONSOLE_DATA_PROTOCOL_TAG;
+    private static final String FLOAT_VALUE_PREFIX = FLOAT_TYPE_STRING + Integration.CONSOLE_DATA_PROTOCOL_TAG;
 
     public static Pair<Integer, ?> parseResponse(String message) {
         try {
-            int atPosition = message.indexOf(Fields.CONSOLE_DATA_PROTOCOL_TAG);
+            int atPosition = message.indexOf(Integration.CONSOLE_DATA_PROTOCOL_TAG);
             if (atPosition == -1)
                 return null;
             String firstToken = message.substring(0, atPosition);
             if (firstToken.equals(INT_TYPE_STRING) || firstToken.equals(BYTE_TYPE_STRING) || firstToken.equals(SHORT_TYPE_STRING)) {
-                message = message.substring(atPosition + Fields.CONSOLE_DATA_PROTOCOL_TAG.length());
+                message = message.substring(atPosition + Integration.CONSOLE_DATA_PROTOCOL_TAG.length());
                 String[] a = message.split(" is ");
                 if (a.length != 2)
                     return null;

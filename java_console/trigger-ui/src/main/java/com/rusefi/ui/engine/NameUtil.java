@@ -1,6 +1,5 @@
 package com.rusefi.ui.engine;
 
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.Sensor;
 
@@ -17,11 +16,11 @@ public class NameUtil {
             return name;
         if (name.charAt(0) == Integration.PROTOCOL_CRANK1.charAt(0))
             return "Trigger #" + name.substring(1);
-        if (name.charAt(0) == Fields.PROTOCOL_COIL_SHORT_PREFIX.charAt(0))
+        if (name.charAt(0) == Integration.PROTOCOL_COIL_SHORT_PREFIX.charAt(0))
             return "Coil #" + name.substring(1);
-        if (name.charAt(0) == Fields.PROTOCOL_INJ_SHORT_PREFIX.charAt(0))
+        if (name.charAt(0) == Integration.PROTOCOL_INJ_SHORT_PREFIX.charAt(0))
             return "Injector #" + name.substring(1);
-        if (name.charAt(0) == Fields.PROTOCOL_INJ_STAGE2_SHORT_PREFIX.charAt(0))
+        if (name.charAt(0) == Integration.PROTOCOL_INJ_STAGE2_SHORT_PREFIX.charAt(0))
             return "Injector Second Stage #" + name.substring(1);
         return name;
     }
