@@ -583,7 +583,7 @@ const char* getConfigErrorMessage() {
 	return configErrorMessageBuffer;
 }
 
-void firmwareError(ObdCode code, const char *fmt, ...) {
+static void firmwareErrorV(ObdCode code, const char *fmt, va_list ap) {
 #if EFI_PROD_CODE
 #if EFI_BACKUP_SRAM
 	// following is allocated on stack
@@ -603,10 +603,7 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 		strlncpy((char*) criticalErrorMessageBuffer, fmt, sizeof(criticalErrorMessageBuffer));
 		criticalErrorMessageBuffer[sizeof(criticalErrorMessageBuffer) - 1] = 0; // just to be sure
 	} else {
-		va_list ap;
-		va_start(ap, fmt);
 		chvsnprintf(criticalErrorMessageBuffer, sizeof(criticalErrorMessageBuffer), fmt, ap);
-		va_end(ap);
 	}
 
 	int errorMessageSize = strlen((char*)criticalErrorMessageBuffer);
@@ -654,13 +651,21 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 #endif // EFI_PROD_CODE
 }
 
-void criticalErrorM(const char *msg) {
-	criticalError(msg);
-}
-
-void criticalError(const char *fmt, ...) {
+void firmwareError(ObdCode code, const char *fmt, ...) {
 	va_list ap;
 	va_start(ap, fmt);
-	firmwareError(ObdCode::OBD_PCM_Processor_Fault, fmt, ap);
+	firmwareErrorV(code, fmt, ap);
+	va_end(ap);
+}
+
+// This is critical error for plain C use.
+// From plain C file we cannot use somethings like this:
+// #define criticalError(...) firmwareError(ObdCode::OBD_PCM_Processor_Fault, __VA_ARGS__)
+// because of ObdCode::
+// Also we can not write some wrapper that will pass variable length argument list to another variable length argument list function
+void criticalErrorC(const char *fmt, ...) {
+	va_list ap;
+	va_start(ap, fmt);
+	firmwareErrorV(ObdCode::OBD_PCM_Processor_Fault, fmt, ap);
 	va_end(ap);
 }

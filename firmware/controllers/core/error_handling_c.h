@@ -8,9 +8,7 @@ extern "C"
 {
 #endif /* __cplusplus */
 
-void criticalErrorM(const char *msg);
-
-void criticalError(const char *fmt, ...);
+void criticalErrorC(const char *fmt, ...);
 
 #ifdef __cplusplus
 }
