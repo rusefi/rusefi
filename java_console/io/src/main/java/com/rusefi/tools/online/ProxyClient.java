@@ -1,6 +1,5 @@
 package com.rusefi.tools.online;
 
-import com.rusefi.proxy.client.LocalApplicationProxy;
 import com.rusefi.server.ControllerInfo;
 import com.rusefi.server.SessionDetails;
 import com.rusefi.server.UserDetails;

@@ -9,8 +9,6 @@ import com.rusefi.io.serial.StreamStatistics;
 import com.rusefi.io.tcp.ServerSocketReference;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.proxy.NetworkConnector;
-import com.rusefi.proxy.client.LocalApplicationProxy;
-import com.rusefi.proxy.client.UpdateType;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.server.ApplicationRequest;
 import com.rusefi.server.ControllerInfo;

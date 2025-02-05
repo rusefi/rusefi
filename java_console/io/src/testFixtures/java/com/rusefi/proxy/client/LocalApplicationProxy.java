@@ -4,7 +4,7 @@ import com.devexperts.logging.Logging;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.io.IoStream;
-import com.rusefi.io.commands.GetOutputsCommand;
+import com.rusefi.io.commands.GetOutputsCommandBrokenHelper;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.serial.AbstractIoStream;
 import com.rusefi.io.serial.StreamStatistics;
@@ -113,7 +113,7 @@ public class LocalApplicationProxy implements Closeable {
                         // TODO: migrate to BinaryProtocol with proper .ini!
                         byte[] commandPacket = new byte[5];
                         commandPacket[0] = Integration.TS_OUTPUT_COMMAND;
-                        System.arraycopy(GetOutputsCommand.createRequest(), 0, commandPacket, 1, 4);
+                        System.arraycopy(GetOutputsCommandBrokenHelper.createRequest(), 0, commandPacket, 1, 4);
 
                         // we do not really need the data, we just need to take response from the socket
                         authenticatorToProxyStream.sendAndGetPacket(commandPacket, "Gauge Poker");

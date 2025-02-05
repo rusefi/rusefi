@@ -6,7 +6,7 @@ import com.rusefi.Timeouts;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.io.IoStream;
-import com.rusefi.io.commands.GetOutputsCommand;
+import com.rusefi.io.commands.GetOutputsCommandBrokenHelper;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.ServerSocketReference;
@@ -95,7 +95,7 @@ public class LocalApplicationProxyTest {
                 // TODO: why is this logic duplicated from BinaryProtocol?
                 byte[] commandPacket = new byte[5];
                 commandPacket[0] = Integration.TS_OUTPUT_COMMAND;
-                System.arraycopy(GetOutputsCommand.createRequest(), 0, commandPacket, 1, 4);
+                System.arraycopy(GetOutputsCommandBrokenHelper.createRequest(), 0, commandPacket, 1, 4);
 
                 applicationConnection.sendPacket(commandPacket);
                 BinaryProtocolServer.Packet response = applicationConnection.readPacket();
@@ -156,7 +156,7 @@ public class LocalApplicationProxyTest {
                     if (packet.getPacket().length != 5)
                         throw new IllegalStateException("Unexpected length " + packet.getPacket().length);
 
-                    GetOutputsCommand.sendOutput(applicationClientStream);
+                    GetOutputsCommandBrokenHelper.sendOutput(applicationClientStream);
                     gaugePokes.countDown();
                 }
             } catch (IOException e) {

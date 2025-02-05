@@ -3,7 +3,7 @@ package com.rusefi;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.io.IoStream;
-import com.rusefi.io.commands.GetOutputsCommand;
+import com.rusefi.io.commands.GetOutputsCommandBrokenHelper;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpConnector;
@@ -205,7 +205,7 @@ covered by FullServerTest
                     super.handleCommand(packet, stream);
 
                     if (packet.getPacket()[0] == Integration.TS_OUTPUT_COMMAND) {
-                        GetOutputsCommand.sendOutput(stream);
+                        GetOutputsCommandBrokenHelper.sendOutput(stream);
                     }
                 }
             };

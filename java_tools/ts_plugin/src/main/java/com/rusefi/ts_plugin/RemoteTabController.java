@@ -1,6 +1,5 @@
 package com.rusefi.ts_plugin;
 
-import com.rusefi.proxy.client.LocalApplicationProxy;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 

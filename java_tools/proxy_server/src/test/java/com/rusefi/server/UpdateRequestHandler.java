@@ -1,7 +1,6 @@
 package com.rusefi.server;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.proxy.client.UpdateType;
 import com.rusefi.tools.online.ProxyClient;
 import org.takes.Request;

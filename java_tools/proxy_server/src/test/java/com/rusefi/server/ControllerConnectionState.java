@@ -1,7 +1,6 @@
 package com.rusefi.server;
 
 import com.devexperts.logging.Logging;
-import com.opensr5.ini.IniFileModel;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.SignatureHelper;
 import com.rusefi.auth.AuthTokenUtil;
@@ -10,7 +9,7 @@ import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Pair;
 import com.rusefi.core.SensorsHolder;
 import com.rusefi.io.IoStream;
-import com.rusefi.io.commands.GetOutputsCommand;
+import com.rusefi.io.commands.GetOutputsCommandBrokenHelper;
 import com.rusefi.io.commands.HelloCommand;
 import com.rusefi.io.tcp.TcpIoStream;
 import com.rusefi.core.FileUtil;
@@ -132,7 +131,7 @@ public class ControllerConnectionState {
         // TODO: why is this logic duplicated from BinaryProtocol?
         byte[] commandPacket = new byte[5];
         commandPacket[0] = Integration.TS_OUTPUT_COMMAND;
-        System.arraycopy(GetOutputsCommand.createRequest(), 0, commandPacket, 1, 4);
+        System.arraycopy(GetOutputsCommandBrokenHelper.createRequest(), 0, commandPacket, 1, 4);
 
         long start = System.currentTimeMillis();
         stream.sendPacket(commandPacket);

@@ -1,8 +1,5 @@
 package com.rusefi.server;
 
-import com.rusefi.tools.online.HttpUtil;
-import com.rusefi.tools.online.ProxyClient;
-
 import java.io.IOException;
 
 public class BackendLauncher {
