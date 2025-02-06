@@ -68,7 +68,7 @@ public class IniFieldsAnalizer {
                                 prevValue,
                                 newValue
                             ));
-                        } else if (canValueBeMigrated(prevFieldEntry.getValue(), newField)) {
+                        } else if (canValueBeMigrated(prevFieldEntry.getValue(), newField, prevValue.getValue())) {
                             log.info(String.format(
                                 "Field `%s` will be updated: %s -> %s",
                                 prevFieldName,
@@ -93,7 +93,11 @@ public class IniFieldsAnalizer {
         return result;
     }
 
-    private static boolean canValueBeMigrated(final IniField prevField, final IniField newField) {
+    private static boolean canValueBeMigrated(
+        final IniField prevField,
+        final IniField newField,
+        final String prevValue
+    ) {
         boolean result = false;
         final String prevFieldName = prevField.getName();
         if (prevField instanceof ScalarIniField) {
@@ -120,7 +124,7 @@ public class IniFieldsAnalizer {
             }
         } else if (prevField instanceof EnumIniField) {
             if (newField instanceof EnumIniField) {
-                result = canEnumValueBeMigrated((EnumIniField) prevField, (EnumIniField) newField);
+                result = canEnumValueBeMigrated((EnumIniField) prevField, (EnumIniField) newField, prevValue);
             } else {
                 log.warn(String.format(
                     "Field `%s` cannot be migrated because it is no longer enum in new .ini file: %s -> %s",
@@ -168,7 +172,11 @@ public class IniFieldsAnalizer {
         return result;
     }
 
-    private static boolean canEnumValueBeMigrated(final EnumIniField prevField, final EnumIniField newField) {
+    private static boolean canEnumValueBeMigrated(
+        final EnumIniField prevField,
+        final EnumIniField newField,
+        final String prevValue
+    ) {
         boolean result = false;
         //TODO: Should we check if `enums` map is updated?
         if (!Objects.equals(prevField.getType(), newField.getType())) {
@@ -182,6 +190,13 @@ public class IniFieldsAnalizer {
         } else if (!Objects.equals(prevField.getBitSize0(), newField.getBitSize0())) {
             log.warn(String.format(
                 "Field cannot be migrated because bit size 0 is updated: %s -> %s",
+                prevField,
+                newField
+            ));
+        } else if (newField.getEnums().indexOf(prevValue) == -1) {
+            log.warn(String.format(
+                "Field cannot be migrated because previous value `%s` disappeared: %s -> %s",
+                prevValue,
                 prevField,
                 newField
             ));
