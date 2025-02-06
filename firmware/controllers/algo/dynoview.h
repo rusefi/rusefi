@@ -31,6 +31,8 @@ struct DynoPoint {
     float hp;
 };
 
+#define window_size 7
+
 class DynoView {
 public:
 
@@ -70,8 +72,6 @@ private:
     DynoPoint dynoViewPointPrev;
 
     int count = 0;
-
-    static constexpr int window_size = 7;
 
     float tail_hp[window_size];
     float tail_torque[window_size];
