@@ -103,7 +103,7 @@
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date! It is required to also update TS_SIGNATURE above
 ! when this happens.
-#define FLASH_DATA_VERSION 2501
+#define FLASH_DATA_VERSION 250206
 
 ! this offset is part of console compatibility mechanism, please DO NOT change this offset
 #define TS_FILE_VERSION_OFFSET 124
@@ -161,6 +161,7 @@ struct_no_prefix engine_configuration_s
 #define CRANKING_CYCLE_CLT_SIZE 4
 #define IDLE_ADVANCE_CURVE_SIZE 8
 #define CRANKING_ADVANCE_CURVE_SIZE 4
+#define TRAILING_SPARK_SIZE 4
 
 #define ENGINE_NOISE_CURVE_SIZE 16
 #define CLT_TIMING_CURVE_SIZE 8
@@ -649,7 +650,7 @@ adc_channel_e fuelLevelSensor;This is the processor pin that your fuel level sen
 
 
 	float idle_derivativeFilterLoss;0.1 is a good default value;"x", 1, 0, -1000000, 1000000, 4
-	int trailingSparkAngle;just a temporary solution;"angle", 1, 0, 0, 720, 0
+	int unusedTrailingSparkAngle
 
 struct trigger_config_s
 
@@ -2187,6 +2188,10 @@ int16_t dynoCarCarMassKg;
 int16_t dynoCarCargoMassKg;
 float   dynoCarCoeffOfDrag;
 float   dynoCarFrontalAreaM2;
+
+int8_t[TRAILING_SPARK_SIZE x TRAILING_SPARK_SIZE] autoscale trailingSparkTable;;"deg", 0.1, 0, 0, 20, 1
+uint8_t[TRAILING_SPARK_SIZE] autoscale trailingSparkRpmBins;;"rpm", 50, 0, 0, 12000, 0
+uint8_t[TRAILING_SPARK_SIZE] autoscale trailingSparkLoadBins;;"Load", 5, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
 
 @@BOARD_CONFIG_FROM_FILE@@
 
