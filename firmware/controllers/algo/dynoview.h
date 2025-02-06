@@ -34,12 +34,13 @@ struct DynoPoint {
 class DynoView {
 public:
 
-    DynoView();
+    void init();
     void update();
     bool onRpm(int rpm, float time, float tps);
 
     float currentTorque;
     float currentHP;
+    bool isInitialized = false;
 
 private:
 
