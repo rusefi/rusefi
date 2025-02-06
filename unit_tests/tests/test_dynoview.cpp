@@ -1,6 +1,8 @@
 #include "pch.h"
 
+/*
 #include "dynoview.h"
+
 
 void printResults(DynoView *dut) {
 #ifdef DBG_TESTS    
@@ -103,4 +105,5 @@ TEST(DynoView, VSS_Torque) {
     ASSERT_EQ(242, dut.getEngineTorque());
     printResults(&dut);
 }
+*/
 

@@ -1,8 +1,8 @@
 /*
  * @file dynoview.cpp
  *
- * @date Nov 29, 2020
- * @author Alexandru Miculescu, (c) 2012-2020
+ * @date Jan 05, 2025
+ * @author Alexey Ershov, (c) 2012-2025
  */
 
 #include "pch.h"
@@ -12,155 +12,139 @@
 
 static DynoView dynoInstance;
 
-void DynoView::update(vssSrc src) {
+DynoView::DynoView()
+{
+    wheelOverallDiameterMm = (uint16_t)(config->dynoCarWheelDiaInch * 25.4 + config->dynoCarWheelTireWidthMm * config->dynoCarWheelAspectRatio * 0.01 * 2);
 
-    efitimeus_t timeNow, deltaTime = 0.0;
-    float speed,deltaSpeed = 0.0;
-    timeNow = getTimeNowUs();
-    speed = Sensor::getOrZero(SensorType::VehicleSpeed);
-    if (src == ICU) {
-        speed = efiRound(speed,1.0);
-    } else {
-        //use speed with 0.001 precision from source CAN
-        speed = efiRound(speed,0.001);
+    saeVaporPressure = 6.1078 * pow(10.0, (7.5 * config->dynoSaeTemperatureC) / (237.3 + config->dynoSaeTemperatureC)) * .02953 * (config->dynoSaeRelativeHumidity / 100.0);
+    saeBaroMmhg = 29.23 * (config->dynoSaeBaro / 100.0);
+    saeBaroCorrectionFactor = 29.23 / (saeBaroMmhg - saeVaporPressure);
+    saeTempCorrectionFactor = pow(((config->dynoSaeTemperatureC + 273.0) / 298.0), 0.5);
+    saeCorrectionFactor = 1.176 * (saeBaroCorrectionFactor * saeTempCorrectionFactor) - .176;
+
+    reset();
+}
+
+void DynoView::update()
+{
+    float rpm = Sensor::getOrZero(SensorType::Rpm);
+    rpm = efiRound(rpm, 1.0);
+    int intRpm = (int)rpm;
+
+    float tps = Sensor::getOrZero(SensorType::Tps1);
+
+    if(intRpm > 0) {
+        efitimeus_t timeStamp = getTimeNowUs();
+        float timeInSec = (float)(timeStamp) / US_PER_SECOND;
+
+        onRpm(intRpm, timeInSec, tps);
+    }
+}
+
+void DynoView::reset()
+{
+    dynoViewPointPrev.rpm = -1;
+    dynoViewPointPrev.time = -1;
+    dynoViewPointPrev.tps = -1;
+    count = 0;
+    currentTorque = 0;
+    currentHP = 0;
+}
+
+bool DynoView::onRpm(int rpm, float time, float tps)
+{
+    if(tps < dynoViewPointPrev.tps || tps < 80) {
+        reset();
+        return false;
     }
 
-    if(timeStamp != 0) {
+    if (dynoViewPointPrev.rpm > 0 && dynoViewPointPrev.time > 0)
+    {
+        if(time < dynoViewPointPrev.time || rpm < dynoViewPointPrev.rpm)
+        {
+            return false;
+        }
 
-        if (vss != speed) {
-            deltaTime = timeNow - timeStamp;
-            if (vss > speed) {
-                deltaSpeed = (vss - speed);
-                direction = 1; //decceleration
-            } else {
-                deltaSpeed = speed - vss;
-                direction = 0; //acceleration
+        int rpmDiff = rpm - dynoViewPointPrev.rpm;
+
+        if (rpmDiff < config->dynoRpmStep)
+        {
+            return false;
+        }
+    }
+
+    dynoViewPoint.rpm = rpm;
+    dynoViewPoint.time = time;
+    dynoViewPoint.tps = tps;
+
+    dynoViewPoint.engineRps = dynoViewPoint.rpm / 60.0;
+    dynoViewPoint.axleRps = dynoViewPoint.engineRps / (config->dynoCarGearPrimaryEduction * config->dynoCarGearRatio * config->dynoCarGearFinalDrive);
+    dynoViewPoint.vMs = dynoViewPoint.axleRps * (wheelOverallDiameterMm / 1000.f) * 3.1416;
+    dynoViewPoint.mph = dynoViewPoint.vMs * 2.2369363;
+
+    if (dynoViewPointPrev.rpm > 0 && dynoViewPointPrev.time > 0)
+    {
+        dynoViewPoint.distanceM = ((dynoViewPoint.vMs + dynoViewPointPrev.vMs) / 2.0) * (dynoViewPoint.time - dynoViewPointPrev.time);
+        dynoViewPoint.aMs2 = (dynoViewPoint.vMs - dynoViewPointPrev.vMs) / (dynoViewPoint.time - dynoViewPointPrev.time);
+        dynoViewPoint.forceN = (config->dynoCarCargoMassKg + config->dynoCarCarMassKg) * dynoViewPoint.aMs2;
+        dynoViewPoint.forceDragN = 0.5 * airDensityKgM3 * (dynoViewPoint.vMs * dynoViewPoint.vMs) * config->dynoCarFrontalAreaM2 * config->dynoCarCoeffOfDrag;
+
+        dynoViewPoint.forceDragN = dynoViewPoint.forceDragN * saeCorrectionFactor;
+
+        dynoViewPoint.forceTotalN = dynoViewPoint.forceN + dynoViewPoint.forceDragN;
+        dynoViewPoint.torqueWheelNm = dynoViewPoint.forceTotalN * ((wheelOverallDiameterMm / 2.0) / 1000.0);
+        dynoViewPoint.torqueNm = dynoViewPoint.torqueWheelNm / (config->dynoCarGearPrimaryEduction * config->dynoCarGearRatio * config->dynoCarGearFinalDrive);
+        dynoViewPoint.torqueLbFt = dynoViewPoint.torqueNm * 0.737562;
+        dynoViewPoint.hp = dynoViewPoint.torqueLbFt * dynoViewPoint.rpm / 5252.0;
+
+        for(int i = 0; i < window_size-1; ++i)
+        {
+            memcpy(&tail_hp[i], &tail_hp[i + 1], sizeof(float));
+            memcpy(&tail_torque[i], &tail_torque[i + 1], sizeof(float));
+        }
+
+        tail_torque[window_size-1] = dynoViewPoint.torqueNm;
+        tail_hp[window_size-1] = dynoViewPoint.hp;
+
+        if(count == 0)
+        {
+            for(int i = 0; i < window_size-1; ++i) {
+                memcpy(&tail_hp[i], &tail_hp[window_size-1], sizeof(float));
+                memcpy(&tail_torque[i], &tail_torque[window_size-1], sizeof(float));
             }
-
-            //save data
-            timeStamp = timeNow;
-            vss = speed;
         }
 
-        //updating here would display acceleration = 0 at constant speed
-        updateAcceleration(deltaTime, deltaSpeed);
-#if EFI_TUNER_STUDIO
-	    if (engineConfiguration->debugMode == DBG_LOGIC_ANALYZER) {
-		    engine->outputChannels.debugIntField1 = deltaTime;
-		    engine->outputChannels.debugFloatField1 = vss;
-		    engine->outputChannels.debugFloatField2 = speed;
-		    engine->outputChannels.debugFloatField3 = deltaSpeed;
-            engine->outputChannels.debugFloatField4 = acceleration;
-	    }
-#endif /* EFI_TUNER_STUDIO */
-        updateHP();
+        int accumulate_window_size = std::min(count, window_size);
 
-    } else {
-        //ensure we grab init values
-        timeStamp = timeNow;
-        vss = speed;
-    }
-}
+        currentTorque = accumulate_window(accumulate_window_size, tail_torque);
+        currentHP = accumulate_window(accumulate_window_size, tail_hp);
 
-/**
- * input units: deltaSpeed in km/h
- *              deltaTime in uS
- */
-void DynoView::updateAcceleration(efitimeus_t deltaTime, float deltaSpeed) {
-    // todo: explain why do we compare float with zero without threshold?
-    if (deltaSpeed != 0.0) {
-        acceleration = ((deltaSpeed / 3.6) / (deltaTime / US_PER_SECOND_F));
-        if (direction) {
-            //decceleration
-            acceleration *= -1;
+        if(count < window_size) {
+            ++count;
         }
-    } else {
-        acceleration = 0.0;
-    }
-}
 
-/**
- * E = m*a
- * ex. 900 (kg) * 1.5 (m/s^2) = 1350N
- * P = F*V
- * 1350N * 35(m/s) = 47250Watt (35 m/s is the final velocity)
- * 47250 * (1HP/746W) = 63HP
- * https://www.youtube.com/watch?v=FnN2asvFmIs
- * we do not take resistence into account right now.
- */
-void DynoView::updateHP() {
-
-    //these are actually at the wheel
-    //we would need final drive to calcualte the correct torque at the wheel
-    if (acceleration != 0) {
-        engineForce = engineConfiguration->vehicleWeight * acceleration;
-        enginePower = engineForce * (vss / 3.6);
-        engineHP = enginePower / 746;
-        if (Sensor::getOrZero(SensorType::Rpm) > 0) {
-            engineTorque = ((engineHP * 5252) / Sensor::getOrZero(SensorType::Rpm));
-        }
-    } else {
-        //we should calculate static power
+        dynoViewPointPrev = dynoViewPoint;
+        return true;
     }
 
+    dynoViewPointPrev = dynoViewPoint;
+
+    return false;
 }
 
-#if EFI_UNIT_TEST
-void DynoView::setAcceleration(float a) {
-    acceleration = a;
-}
-#endif
-
-float DynoView::getAcceleration() {
-    return acceleration;
+int getDynoviewHP() {
+    return dynoInstance.currentHP;
 }
 
-int DynoView::getEngineForce() {
-    return engineForce;
-}
-
-int DynoView::getEnginePower() {
-    return (enginePower/1000);
-}
-
-int DynoView::getEngineHP() {
-    return engineHP;
-}
-
-int DynoView::getEngineTorque() {
-    return (engineTorque/0.73756);
-}
-
-
-float getDynoviewAcceleration() {
-    return dynoInstance.getAcceleration();
-}
-
-int getDynoviewPower() {
-    return dynoInstance.getEnginePower();
+int getDynoviewTorque() {
+    return dynoInstance.currentTorque;
 }
 
 /**
  * Periodic update function called from SlowCallback.
- * Only updates if we have Vss from input pin.
  */
 void updateDynoView() {
-	if (isBrainPinValid(engineConfiguration->vehicleSpeedSensorInputPin) &&
-		(!engineConfiguration->enableCanVss)) {
-		dynoInstance.update(ICU);
-	}
-}
-
-/**
- * This function is called after every CAN msg received, we process it
- * as soon as we can to be more acurate.
- */
-void updateDynoViewCan() {
-    if (!engineConfiguration->enableCanVss) {
-        return;
-    }
-
-    dynoInstance.update(CAN);
+    dynoInstance.update();
 }
 
 #endif /* EFI_DYNO_VIEW */
