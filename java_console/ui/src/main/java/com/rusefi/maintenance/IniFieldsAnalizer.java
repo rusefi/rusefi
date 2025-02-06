@@ -6,15 +6,14 @@ import com.opensr5.ini.field.*;
 import com.rusefi.core.Pair;
 import com.rusefi.tune.xml.Constant;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 import static com.devexperts.logging.Logging.getLogging;
 
 public class IniFieldsAnalizer {
     private static final Logging log = getLogging(IniFieldsAnalizer.class);
+
+    private static final Set<String> INI_FIELDS_TO_IGNORE = Set.of("byFirmwareVersion", "hash3");
 
     public static List<Pair<IniField, Constant>> findValuesToUpdate(
         final IniFileModel prevIni,
@@ -100,52 +99,54 @@ public class IniFieldsAnalizer {
     ) {
         boolean result = false;
         final String prevFieldName = prevField.getName();
-        if (prevField instanceof ScalarIniField) {
-            if (newField instanceof ScalarIniField) {
-                result = canScalarValueBeMigrated((ScalarIniField) prevField, (ScalarIniField) newField);
+        if (!INI_FIELDS_TO_IGNORE.contains(prevFieldName)) {
+            if (prevField instanceof ScalarIniField) {
+                if (newField instanceof ScalarIniField) {
+                    result = canScalarValueBeMigrated((ScalarIniField) prevField, (ScalarIniField) newField);
+                } else {
+                    log.warn(String.format(
+                        "Field `%s` cannot be migrated because it is no is no longer scalar in new .ini file: %s -> %s",
+                        prevFieldName,
+                        prevField,
+                        newField
+                    ));
+                }
+            } else if (prevField instanceof StringIniField) {
+                if (newField instanceof StringIniField) {
+                    result = true;
+                } else {
+                    log.warn(String.format(
+                        "Field `%s` cannot be migrated because it is no longer string in new .ini file: %s -> %s",
+                        prevFieldName,
+                        prevField,
+                        newField
+                    ));
+                }
+            } else if (prevField instanceof EnumIniField) {
+                if (newField instanceof EnumIniField) {
+                    result = canEnumValueBeMigrated((EnumIniField) prevField, (EnumIniField) newField, prevValue);
+                } else {
+                    log.warn(String.format(
+                        "Field `%s` cannot be migrated because it is no longer enum in new .ini file: %s -> %s",
+                        prevFieldName,
+                        prevField,
+                        newField
+                    ));
+                }
+            } else if (prevField instanceof ArrayIniField) {
+                if (newField instanceof ArrayIniField) {
+                    result = canArrayValueBeMigrated((ArrayIniField) prevField, (ArrayIniField) newField);
+                } else {
+                    log.warn(String.format(
+                        "Field `%s` cannot be migrated because it is no longer array in new .ini file: %s -> %s",
+                        prevFieldName,
+                        prevField,
+                        newField
+                    ));
+                }
             } else {
-                log.warn(String.format(
-                    "Field `%s` cannot be migrated because it is no is no longer scalar in new .ini file: %s -> %s",
-                    prevFieldName,
-                    prevField,
-                    newField
-                ));
+                log.error(String.format("Unexpected field type: %s", prevField.getClass()));
             }
-        } else if (prevField instanceof StringIniField) {
-            if (newField instanceof StringIniField) {
-                result = true;
-            } else {
-                log.warn(String.format(
-                    "Field `%s` cannot be migrated because it is no longer string in new .ini file: %s -> %s",
-                    prevFieldName,
-                    prevField,
-                    newField
-                ));
-            }
-        } else if (prevField instanceof EnumIniField) {
-            if (newField instanceof EnumIniField) {
-                result = canEnumValueBeMigrated((EnumIniField) prevField, (EnumIniField) newField, prevValue);
-            } else {
-                log.warn(String.format(
-                    "Field `%s` cannot be migrated because it is no longer enum in new .ini file: %s -> %s",
-                    prevFieldName,
-                    prevField,
-                    newField
-                ));
-            }
-        } else if (prevField instanceof ArrayIniField) {
-            if (newField instanceof ArrayIniField) {
-                result = canArrayValueBeMigrated((ArrayIniField) prevField, (ArrayIniField) newField);
-            } else {
-                log.warn(String.format(
-                    "Field `%s` cannot be migrated because it is no longer array in new .ini file: %s -> %s",
-                    prevFieldName,
-                    prevField,
-                    newField
-                ));
-            }
-        } else {
-            log.error(String.format("Unexpected field type: %s", prevField.getClass()));
         }
         return result;
     }
