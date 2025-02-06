@@ -81,6 +81,12 @@ void setDefaultBaseEngine() {
 	engineConfiguration->knockDetectionUseDoubleFrequency = true;
 	setInline4();
 
+  config->dynoCarCarMassKg = 1000;
+  config->dynoCarCargoMassKg = 95;
+  config->dynoCarCoeffOfDrag = 0.3;
+
+
+
   for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
     // one knock sensor by default. See also 'setLeftRightBanksNeedBetterName()'
     // zero-based index
