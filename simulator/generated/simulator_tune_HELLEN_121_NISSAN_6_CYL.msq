@@ -5015,20 +5015,20 @@ canRxAdd(IN_35D, onCanRxAc)</constant>
          0.0
          0.0
 </constant>
-        <constant digits="0" name="dynoRpmStep" units="">0.0</constant>
-        <constant digits="0" name="dynoSaeTemperatureC" units="">0.0</constant>
-        <constant digits="0" name="dynoSaeRelativeHumidity" units="">0.0</constant>
-        <constant digits="0" name="dynoSaeBaro" units="">0.0</constant>
-        <constant digits="0" name="dynoCarWheelDiaInch" units="">0.0</constant>
-        <constant digits="0" name="dynoCarWheelAspectRatio" units="">0.0</constant>
-        <constant digits="0" name="dynoCarWheelTireWidthMm" units="">0.0</constant>
-        <constant digits="0" name="dynoCarGearPrimaryEduction" units="">0.0</constant>
-        <constant digits="0" name="dynoCarGearRatio" units="">0.0</constant>
-        <constant digits="0" name="dynoCarGearFinalDrive" units="">0.0</constant>
+        <constant digits="0" name="dynoRpmStep" units="">100.0</constant>
+        <constant digits="0" name="dynoSaeTemperatureC" units="">20.0</constant>
+        <constant digits="0" name="dynoSaeRelativeHumidity" units="">80.0</constant>
+        <constant digits="0" name="dynoSaeBaro" units="">101.33</constant>
+        <constant digits="0" name="dynoCarWheelDiaInch" units="">18.0</constant>
+        <constant digits="0" name="dynoCarWheelAspectRatio" units="">40.0</constant>
+        <constant digits="0" name="dynoCarWheelTireWidthMm" units="">235.0</constant>
+        <constant digits="0" name="dynoCarGearPrimaryEduction" units="">1.0</constant>
+        <constant digits="0" name="dynoCarGearRatio" units="">1.0</constant>
+        <constant digits="0" name="dynoCarGearFinalDrive" units="">4.2</constant>
         <constant digits="0" name="dynoCarCarMassKg" units="">1000.0</constant>
         <constant digits="0" name="dynoCarCargoMassKg" units="">95.0</constant>
-        <constant digits="0" name="dynoCarCoeffOfDrag" units="">0.3</constant>
-        <constant digits="0" name="dynoCarFrontalAreaM2" units="">0.0</constant>
+        <constant digits="0" name="dynoCarCoeffOfDrag" units="">0.29</constant>
+        <constant digits="0" name="dynoCarFrontalAreaM2" units="">1.85</constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
     <versionInfo firmwareInfo="20250126" nPages="1" signature="rusEFI master.2025.02.06.f407-discovery.12931782" version="5.0"/>
