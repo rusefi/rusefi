@@ -138,7 +138,8 @@ public class CalibrationsHelper {
             prevIniFile,
             prevMsq.getConstantsAsMap(),
             newIniFile,
-            newMsq.getConstantsAsMap()
+            newMsq.getConstantsAsMap(),
+            callbacks
         );
         if (!valuesToUpdate.isEmpty()) {
             final ConfigurationImage mergedImage = newCalibrations.getImage().getConfigurationImage().clone();
