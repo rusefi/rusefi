@@ -427,5 +427,8 @@ float mapFast
 	int8_t sparkCutReasonBlinker
 	int8_t fuelCutReasonBlinker
 
-	uint8_t[52 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+    int16_t hp
+    int16_t torque
+
+	uint8_t[48 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct
