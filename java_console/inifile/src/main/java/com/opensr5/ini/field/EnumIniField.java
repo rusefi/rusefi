@@ -216,7 +216,7 @@ public class EnumIniField extends IniField {
                 if (e.getValue().equals(value))
                     return e.getKey();
             }
-            throw new IllegalArgumentException("Nothing for " + value);
+            return -1;
         }
     }
 
