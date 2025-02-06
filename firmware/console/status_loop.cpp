@@ -722,7 +722,8 @@ void updateTunerStudioState() {
 	tsOutputChannels->gyroYaw = engine->sensors.accelerometer.yawRate;
 
 #if EFI_DYNO_VIEW
-	tsOutputChannels->VssAcceleration = getDynoviewAcceleration();
+	tsOutputChannels->hp = getDynoviewHP();
+    tsOutputChannels->torque = getDynoviewTorque();
 #endif
 
 	tsOutputChannels->turboSpeed = Sensor::getOrZero(SensorType::TurbochargerSpeed);
