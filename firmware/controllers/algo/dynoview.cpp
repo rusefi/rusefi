@@ -10,10 +10,12 @@
 #if EFI_DYNO_VIEW
 #include "dynoview.h"
 
-static DynoView dynoInstance;
-
-DynoView::DynoView()
+void DynoView::init()
 {
+  if (isInitialized) {
+    return;
+  }
+  isInitialized = true;
     wheelOverallDiameterMm = (uint16_t)(config->dynoCarWheelDiaInch * 25.4 + config->dynoCarWheelTireWidthMm * config->dynoCarWheelAspectRatio * 0.01 * 2);
 
     saeVaporPressure = 6.1078 * pow(10.0, (7.5 * config->dynoSaeTemperatureC) / (237.3 + config->dynoSaeTemperatureC)) * .02953 * (config->dynoSaeRelativeHumidity / 100.0);
@@ -27,6 +29,7 @@ DynoView::DynoView()
 
 void DynoView::update()
 {
+  init();
     float rpm = Sensor::getOrZero(SensorType::Rpm);
     rpm = efiRound(rpm, 1.0);
     int intRpm = (int)rpm;
@@ -133,18 +136,18 @@ bool DynoView::onRpm(int rpm, float time, float tps)
 }
 
 int getDynoviewHP() {
-    return dynoInstance.currentHP;
+    return engine->dynoInstance.currentHP;
 }
 
 int getDynoviewTorque() {
-    return dynoInstance.currentTorque;
+    return engine->dynoInstance.currentTorque;
 }
 
 /**
  * Periodic update function called from SlowCallback.
  */
 void updateDynoView() {
-    dynoInstance.update();
+    engine->dynoInstance.update();
 }
 
 #endif /* EFI_DYNO_VIEW */
