@@ -1407,7 +1407,15 @@ struct output_channels_s {
 	/**
 	 * offset 806
 	 */
-	uint8_t unusedAtTheEnd[52] = {};
+	int16_t hp = (int16_t)0;
+	/**
+	 * offset 808
+	 */
+	int16_t torque = (int16_t)0;
+	/**
+	 * offset 810
+	 */
+	uint8_t unusedAtTheEnd[48] = {};
 	/**
 	 * need 4 byte alignment
 	 * units: units

@@ -6134,15 +6134,77 @@ struct persistent_config_s {
 	/**
 	 * offset 23244
 	 */
+	uint8_t dynoRpmStep;
+	/**
+	 * offset 23245
+	 */
+	int8_t dynoSaeTemperatureC;
+	/**
+	 * offset 23246
+	 */
+	uint8_t dynoSaeRelativeHumidity;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 23247
+	 */
+	uint8_t alignmentFill_at_23247[1] = {};
+	/**
+	 * offset 23248
+	 */
+	float dynoSaeBaro;
+	/**
+	 * offset 23252
+	 */
+	int8_t dynoCarWheelDiaInch;
+	/**
+	 * offset 23253
+	 */
+	int8_t dynoCarWheelAspectRatio;
+	/**
+	 * offset 23254
+	 */
+	int16_t dynoCarWheelTireWidthMm;
+	/**
+	 * offset 23256
+	 */
+	float dynoCarGearPrimaryEduction;
+	/**
+	 * offset 23260
+	 */
+	float dynoCarGearRatio;
+	/**
+	 * offset 23264
+	 */
+	float dynoCarGearFinalDrive;
+	/**
+	 * offset 23268
+	 */
+	int16_t dynoCarCarMassKg;
+	/**
+	 * offset 23270
+	 */
+	int16_t dynoCarCargoMassKg;
+	/**
+	 * offset 23272
+	 */
+	float dynoCarCoeffOfDrag;
+	/**
+	 * offset 23276
+	 */
+	float dynoCarFrontalAreaM2;
+	/**
+	 * offset 23280
+	 */
 	Gpio communityCommsLedPin;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 23246
+	 * offset 23282
 	 */
-	uint8_t alignmentFill_at_23246[2] = {};
+	uint8_t alignmentFill_at_23282[2] = {};
 };
-static_assert(sizeof(persistent_config_s) == 23248);
+static_assert(sizeof(persistent_config_s) == 23284);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt

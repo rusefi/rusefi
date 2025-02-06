@@ -1951,3 +1951,45 @@ Error above specified value
 ### tcu_shiftTime
 
 
+### dynoRpmStep
+
+
+### dynoSaeTemperatureC
+
+
+### dynoSaeRelativeHumidity
+
+
+### dynoSaeBaro
+
+
+### dynoCarWheelDiaInch
+
+
+### dynoCarWheelAspectRatio
+
+
+### dynoCarWheelTireWidthMm
+
+
+### dynoCarGearPrimaryEduction
+
+
+### dynoCarGearRatio
+
+
+### dynoCarGearFinalDrive
+
+
+### dynoCarCarMassKg
+
+
+### dynoCarCargoMassKg
+
+
+### dynoCarCoeffOfDrag
+
+
+### dynoCarFrontalAreaM2
+
+

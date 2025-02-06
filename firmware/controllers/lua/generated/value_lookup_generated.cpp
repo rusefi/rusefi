@@ -1958,6 +1958,48 @@ float getConfigValueByName(const char *name) {
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
+// dynoRpmStep
+		case -1085712470:
+			return config->dynoRpmStep;
+// dynoSaeTemperatureC
+		case 903483241:
+			return config->dynoSaeTemperatureC;
+// dynoSaeRelativeHumidity
+		case 1509051617:
+			return config->dynoSaeRelativeHumidity;
+// dynoSaeBaro
+		case -391393956:
+			return config->dynoSaeBaro;
+// dynoCarWheelDiaInch
+		case 1541525498:
+			return config->dynoCarWheelDiaInch;
+// dynoCarWheelAspectRatio
+		case -1404613719:
+			return config->dynoCarWheelAspectRatio;
+// dynoCarWheelTireWidthMm
+		case 1000921080:
+			return config->dynoCarWheelTireWidthMm;
+// dynoCarGearPrimaryEduction
+		case -424301261:
+			return config->dynoCarGearPrimaryEduction;
+// dynoCarGearRatio
+		case 589242035:
+			return config->dynoCarGearRatio;
+// dynoCarGearFinalDrive
+		case 220694456:
+			return config->dynoCarGearFinalDrive;
+// dynoCarCarMassKg
+		case -1343193327:
+			return config->dynoCarCarMassKg;
+// dynoCarCargoMassKg
+		case 183555079:
+			return config->dynoCarCargoMassKg;
+// dynoCarCoeffOfDrag
+		case -1121870933:
+			return config->dynoCarCoeffOfDrag;
+// dynoCarFrontalAreaM2
+		case -1661556925:
+			return config->dynoCarFrontalAreaM2;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -5217,6 +5259,76 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1658957891:
 	{
 		config->tcu_shiftTime = value;
+		return 1;
+	}
+		case -1085712470:
+	{
+		config->dynoRpmStep = (int)value;
+		return 1;
+	}
+		case 903483241:
+	{
+		config->dynoSaeTemperatureC = (int)value;
+		return 1;
+	}
+		case 1509051617:
+	{
+		config->dynoSaeRelativeHumidity = (int)value;
+		return 1;
+	}
+		case -391393956:
+	{
+		config->dynoSaeBaro = value;
+		return 1;
+	}
+		case 1541525498:
+	{
+		config->dynoCarWheelDiaInch = (int)value;
+		return 1;
+	}
+		case -1404613719:
+	{
+		config->dynoCarWheelAspectRatio = (int)value;
+		return 1;
+	}
+		case 1000921080:
+	{
+		config->dynoCarWheelTireWidthMm = (int)value;
+		return 1;
+	}
+		case -424301261:
+	{
+		config->dynoCarGearPrimaryEduction = value;
+		return 1;
+	}
+		case 589242035:
+	{
+		config->dynoCarGearRatio = value;
+		return 1;
+	}
+		case 220694456:
+	{
+		config->dynoCarGearFinalDrive = value;
+		return 1;
+	}
+		case -1343193327:
+	{
+		config->dynoCarCarMassKg = (int)value;
+		return 1;
+	}
+		case 183555079:
+	{
+		config->dynoCarCargoMassKg = (int)value;
+		return 1;
+	}
+		case -1121870933:
+	{
+		config->dynoCarCoeffOfDrag = value;
+		return 1;
+	}
+		case -1661556925:
+	{
+		config->dynoCarFrontalAreaM2 = value;
 		return 1;
 	}
 	}

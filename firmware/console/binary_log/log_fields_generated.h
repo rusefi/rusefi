@@ -403,6 +403,8 @@ static const LogField fields[] = {
 	{engine->outputChannels.rtcUnixEpochTime, "rtcUnixEpochTime", "", 0},
 	{engine->outputChannels.sparkCutReasonBlinker, "sparkCutReasonBlinker", "", 0},
 	{engine->outputChannels.fuelCutReasonBlinker, "fuelCutReasonBlinker", "", 0},
+	{engine->outputChannels.hp, "hp", "", 0},
+	{engine->outputChannels.torque, "torque", "", 0},
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},
 #endif

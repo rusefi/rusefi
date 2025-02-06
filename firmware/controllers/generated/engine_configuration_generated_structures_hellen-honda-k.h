@@ -6134,19 +6134,81 @@ struct persistent_config_s {
 	/**
 	 * offset 23692
 	 */
-	uint8_t hondaKcltGaugeAdder;
+	uint8_t dynoRpmStep;
 	/**
 	 * offset 23693
+	 */
+	int8_t dynoSaeTemperatureC;
+	/**
+	 * offset 23694
+	 */
+	uint8_t dynoSaeRelativeHumidity;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 23695
+	 */
+	uint8_t alignmentFill_at_23695[1] = {};
+	/**
+	 * offset 23696
+	 */
+	float dynoSaeBaro;
+	/**
+	 * offset 23700
+	 */
+	int8_t dynoCarWheelDiaInch;
+	/**
+	 * offset 23701
+	 */
+	int8_t dynoCarWheelAspectRatio;
+	/**
+	 * offset 23702
+	 */
+	int16_t dynoCarWheelTireWidthMm;
+	/**
+	 * offset 23704
+	 */
+	float dynoCarGearPrimaryEduction;
+	/**
+	 * offset 23708
+	 */
+	float dynoCarGearRatio;
+	/**
+	 * offset 23712
+	 */
+	float dynoCarGearFinalDrive;
+	/**
+	 * offset 23716
+	 */
+	int16_t dynoCarCarMassKg;
+	/**
+	 * offset 23718
+	 */
+	int16_t dynoCarCargoMassKg;
+	/**
+	 * offset 23720
+	 */
+	float dynoCarCoeffOfDrag;
+	/**
+	 * offset 23724
+	 */
+	float dynoCarFrontalAreaM2;
+	/**
+	 * offset 23728
+	 */
+	uint8_t hondaKcltGaugeAdder;
+	/**
+	 * offset 23729
 	 */
 	uint8_t unusedConfigPadding[BOTTOM_PADDING] = {};
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 23729
+	 * offset 23765
 	 */
-	uint8_t alignmentFill_at_23729[3] = {};
+	uint8_t alignmentFill_at_23765[3] = {};
 };
-static_assert(sizeof(persistent_config_s) == 23732);
+static_assert(sizeof(persistent_config_s) == 23768);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt

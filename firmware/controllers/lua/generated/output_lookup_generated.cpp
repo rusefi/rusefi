@@ -825,6 +825,12 @@ float getOutputValueByName(const char *name) {
 // fuelCutReasonBlinker
 		case 1745186508:
 			return engine->outputChannels.fuelCutReasonBlinker;
+// hp
+		case 5863453:
+			return engine->outputChannels.hp;
+// torque
+		case 512655621:
+			return engine->outputChannels.torque;
 // totalFuelCorrection
 #if EFI_ENGINE_CONTROL
 		case -1779658835:

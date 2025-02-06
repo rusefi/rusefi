@@ -6131,8 +6131,70 @@ struct persistent_config_s {
 	 * offset 22728
 	 */
 	uint16_t trimLoadBins[FUEL_TRIM_LOAD_COUNT] = {};
+	/**
+	 * offset 22744
+	 */
+	uint8_t dynoRpmStep;
+	/**
+	 * offset 22745
+	 */
+	int8_t dynoSaeTemperatureC;
+	/**
+	 * offset 22746
+	 */
+	uint8_t dynoSaeRelativeHumidity;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 22747
+	 */
+	uint8_t alignmentFill_at_22747[1] = {};
+	/**
+	 * offset 22748
+	 */
+	float dynoSaeBaro;
+	/**
+	 * offset 22752
+	 */
+	int8_t dynoCarWheelDiaInch;
+	/**
+	 * offset 22753
+	 */
+	int8_t dynoCarWheelAspectRatio;
+	/**
+	 * offset 22754
+	 */
+	int16_t dynoCarWheelTireWidthMm;
+	/**
+	 * offset 22756
+	 */
+	float dynoCarGearPrimaryEduction;
+	/**
+	 * offset 22760
+	 */
+	float dynoCarGearRatio;
+	/**
+	 * offset 22764
+	 */
+	float dynoCarGearFinalDrive;
+	/**
+	 * offset 22768
+	 */
+	int16_t dynoCarCarMassKg;
+	/**
+	 * offset 22770
+	 */
+	int16_t dynoCarCargoMassKg;
+	/**
+	 * offset 22772
+	 */
+	float dynoCarCoeffOfDrag;
+	/**
+	 * offset 22776
+	 */
+	float dynoCarFrontalAreaM2;
 };
-static_assert(sizeof(persistent_config_s) == 22744);
+static_assert(sizeof(persistent_config_s) == 22780);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt

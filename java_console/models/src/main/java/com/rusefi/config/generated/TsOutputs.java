@@ -613,6 +613,8 @@ public class TsOutputs {
 	public static final Field RTCUNIXEPOCHTIME = Field.create("RTCUNIXEPOCHTIME", 800, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field SPARKCUTREASONBLINKER = Field.create("SPARKCUTREASONBLINKER", 804, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field FUELCUTREASONBLINKER = Field.create("FUELCUTREASONBLINKER", 805, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field HP = Field.create("HP", 806, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field TORQUE = Field.create("TORQUE", 808, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_858 = Field.create("ALIGNMENTFILL_AT_858", 858, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field[] VALUES = {
 	SD_PRESENT,
@@ -1047,6 +1049,8 @@ public class TsOutputs {
 	RTCUNIXEPOCHTIME,
 	SPARKCUTREASONBLINKER,
 	FUELCUTREASONBLINKER,
+	HP,
+	TORQUE,
 	ALIGNMENTFILL_AT_858,
 	};
 }
