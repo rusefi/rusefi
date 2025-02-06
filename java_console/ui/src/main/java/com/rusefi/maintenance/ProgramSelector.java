@@ -280,21 +280,25 @@ public class ProgramSelector {
             callbacks.logLine("Failed to back up updated calibrations...");
             return false;
         }
-        final CalibrationsInfo mergedCalibrations = mergeCalibrations(
+        final Optional<CalibrationsInfo> mergedCalibrations = mergeCalibrations(
             prevCalibrations.get(),
             updatedCalibrations.get(),
             callbacks
         );
-        if (!backUpCalibrationsInfo(mergedCalibrations, "merged_calibrations", callbacks)) {
-            callbacks.logLine("Failed to back up merged calibrations...");
-            return false;
+        if (mergedCalibrations.isPresent()) {
+            if (!backUpCalibrationsInfo(mergedCalibrations.get(), "merged_calibrations", callbacks)) {
+                callbacks.logLine("Failed to back up merged calibrations...");
+                return false;
+            }
+            return CalibrationsUpdater.INSTANCE.updateCalibrations(
+                ecuPort.port,
+                mergedCalibrations.get().getImage().getConfigurationImage(),
+                callbacks,
+                false
+            );
+        } else {
+            return true;
         }
-        return CalibrationsUpdater.INSTANCE.updateCalibrations(
-            ecuPort.port,
-            mergedCalibrations.getImage().getConfigurationImage(),
-            callbacks,
-            false
-        );
     }
 
     private static OpenbltJni.OpenbltCallbacks makeOpenbltCallbacks(UpdateOperationCallbacks callbacks) {

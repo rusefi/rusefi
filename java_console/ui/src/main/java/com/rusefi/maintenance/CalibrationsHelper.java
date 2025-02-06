@@ -123,11 +123,12 @@ public class CalibrationsHelper {
         );
     }
 
-    public static CalibrationsInfo mergeCalibrations(
+    public static Optional<CalibrationsInfo> mergeCalibrations(
         final CalibrationsInfo prevCalibrations,
         final CalibrationsInfo newCalibrations,
         final UpdateOperationCallbacks callbacks
     ) {
+        Optional<CalibrationsInfo> result = Optional.empty();
         final IniFileModel prevIniFile = prevCalibrations.getIniFile();
         final Msq prevMsq = prevCalibrations.generateMsq();
         final IniFileModel newIniFile = newCalibrations.getIniFile();
@@ -139,17 +140,25 @@ public class CalibrationsHelper {
             newIniFile,
             newMsq.getConstantsAsMap()
         );
-
-        final ConfigurationImage mergedImage = newCalibrations.getImage().getConfigurationImage().clone();
-        for (final Pair<IniField, Constant> valueToUpdate: valuesToUpdate) {
-            final IniField fieldToUpdate = valueToUpdate.first;
-            final Constant value = valueToUpdate.second;
-            fieldToUpdate.setValue(mergedImage, value);
-            callbacks.logLine(String.format("Field `%s` is set to %s", fieldToUpdate.getName(), value.getValue()));
+        if (!valuesToUpdate.isEmpty()) {
+            final ConfigurationImage mergedImage = newCalibrations.getImage().getConfigurationImage().clone();
+            for (final Pair<IniField, Constant> valueToUpdate : valuesToUpdate) {
+                final IniField fieldToUpdate = valueToUpdate.first;
+                final Constant value = valueToUpdate.second;
+                fieldToUpdate.setValue(mergedImage, value);
+                callbacks.logLine(String.format(
+                    "To restore previous calibrations we are going to update the field `%s` with a value %s",
+                    fieldToUpdate.getName(),
+                    value.getValue()
+                ));
+            }
+            result = Optional.of(new CalibrationsInfo(
+                newIniFile,
+                new ConfigurationImageWithMeta(newCalibrations.getImage().getMeta(), mergedImage.getContent())
+            ));
+        } else {
+            callbacks.logLine("It looks like we do not need to update any fields to restore previous calibrations.");
         }
-        return new CalibrationsInfo(
-            newIniFile,
-            new ConfigurationImageWithMeta(newCalibrations.getImage().getMeta(), mergedImage.getContent())
-        );
+        return result;
     }
 }
