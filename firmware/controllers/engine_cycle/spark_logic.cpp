@@ -252,7 +252,7 @@ void fireSparkAndPrepareNextSchedule(IgnitionEvent *event) {
 
 			// Trailing sparks are enabled - schedule an event for the corresponding trailing coil
 			scheduleByAngle(
-				&event->trailingSparkFire, nowNt, engine->engineState.trailingSparkAngle,
+				&event->trailingSparkFire, nowNt, engine->ignitionState.trailingSparkAngle,
 				{ &fireTrailingSpark, &enginePins.trailingCoils[event->coilIndex] }
 			);
 		}
@@ -345,7 +345,7 @@ void turnSparkPinHighStartCharging(IgnitionEvent *event) {
 		IgnitionOutputPin *output = &enginePins.trailingCoils[event->coilIndex];
 		// Trailing sparks are enabled - schedule an event for the corresponding trailing coil
 		scheduleByAngle(
-			&event->trailingSparkCharge, nowNt, engine->engineState.trailingSparkAngle,
+			&event->trailingSparkCharge, nowNt, engine->ignitionState.trailingSparkAngle,
 			{ &chargeTrailingSpark, output }
 		);
 	}

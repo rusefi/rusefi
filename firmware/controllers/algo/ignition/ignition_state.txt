@@ -22,5 +22,7 @@ float dwellVoltageCorrection;Ign: Dwell voltage correction
     float luaTimingMult;Ign: Lua timing mult;"deg",1, 0, -20, 20, 2, @@GAUGE_CATEGORY_TIMING@@
 bit luaIgnitionSkip;Ign: Lua Spark Skip
 
+    int16_t autoscale trailingSparkAngle;Ign: Trailing spark deg;"deg",{1/@@PACK_MULT_PERCENT@@},0, -20,20, 2,@@GAUGE_CATEGORY_TIMING@@
+
 end_struct
 

@@ -30,6 +30,16 @@ static void setDefaultIatTimingCorrection() {
 	copyArray(config->ignitionIatCorrTable[2], {0, 0, 0, 0, 0, 0, -1, -2});
 }
 
+static void setDefaultTrailingSparkTable() {
+	copyArray(config->trailingSparkLoadBins, {20,60,100,150});
+    copyArray(config->trailingSparkRpmBins, {1000,3000,5000,7000});
+
+	for (size_t i = 0; i < TRAILING_SPARK_SIZE; i++) {
+		copyArray(config->trailingSparkTable[i], {7,9,10,12});
+	}
+
+}
+
 static float getAdvanceForRpm(float rpm, float advanceMax) {
 	if (rpm >= 3000) {
 		return advanceMax;
@@ -97,7 +107,7 @@ void setDefaultIgnition() {
 	setTimingRpmBin(800, 7000);
 	buildTimingMap(35);
 
-	engineConfiguration->trailingSparkAngle = 10;
+	setDefaultTrailingSparkTable();
 
 	// CLT correction
 	setLinearCurve(config->cltTimingBins, CLT_CURVE_RANGE_FROM, 120, 1);
