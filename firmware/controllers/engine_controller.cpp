@@ -43,6 +43,7 @@
 #include "can_bench_test.h"
 #include "engine_emulator.h"
 #include "fuel_math.h"
+#include "defaults.h"
 #include "spark_logic.h"
 #include "status_loop.h"
 #include "aux_valves.h"
@@ -522,6 +523,9 @@ PUBLIC_API_WEAK bool validateBoardConfig() {
 bool validateConfigOnStartUpOrBurn() {
   if (!validateBoardConfig()) {
     return false;
+  }
+  if (config->dynoCarCarMassKg == 0) {
+    setDynoDefaults();
   }
 	if (engineConfiguration->cylindersCount > MAX_CYLINDER_COUNT) {
 		criticalError("Invalid cylinder count: %d", engineConfiguration->cylindersCount);

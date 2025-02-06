@@ -12,6 +12,7 @@ void setDefaultCranking();
 void setGDIFueling();
 void setGdiWallWetting();
 void setInline4();
+void setDynoDefaults();
 void setupTLE9201(Gpio controlPin, Gpio direction, Gpio disable, int dcIndex = 0);
 void setupTLE9201IncludingStepper(Gpio controlPin, Gpio direction, Gpio disable, int dcIndex = 0);
 

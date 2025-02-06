@@ -75,15 +75,34 @@ static void mc33810defaults() {
   engineConfiguration->mc33810Maxi = 14;
 }
 
+void setDynoDefaults() {
+    config->dynoRpmStep = 100;
+
+    config->dynoSaeTemperatureC = 20;
+    config->dynoSaeBaro = 101.33;
+    config->dynoSaeRelativeHumidity = 80;
+
+    config->dynoCarWheelDiaInch = 18;
+    config->dynoCarWheelTireWidthMm = 235;
+    config->dynoCarWheelAspectRatio = 40;
+
+    config->dynoCarGearPrimaryEduction = 1;
+    config->dynoCarGearRatio = 1.0;
+    config->dynoCarGearFinalDrive = 4.2;
+
+    config->dynoCarCarMassKg = 1000;
+    config->dynoCarCargoMassKg = 95;
+    config->dynoCarCoeffOfDrag = 0.29;
+    config->dynoCarFrontalAreaM2 = 1.85;
+ }
+
 void setDefaultBaseEngine() {
 	// Base Engine Settings
 	engineConfiguration->displacement = 2;
 	engineConfiguration->knockDetectionUseDoubleFrequency = true;
 	setInline4();
 
-  config->dynoCarCarMassKg = 1000;
-  config->dynoCarCargoMassKg = 95;
-  config->dynoCarCoeffOfDrag = 0.3;
+  setDynoDefaults();
 
 
 
