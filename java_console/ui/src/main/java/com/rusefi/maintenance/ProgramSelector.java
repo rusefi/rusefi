@@ -285,7 +285,13 @@ public class ProgramSelector {
             updatedCalibrations.get(),
             callbacks
         );
-        if (mergedCalibrations.isPresent()) {
+        if (mergedCalibrations.isPresent() && (JOptionPane.showConfirmDialog(
+            parent,
+            "Some calibrations fields were overwritten with default values.\n" +
+                "Would you like to restore previous calibrations?",
+            "Restore previous calibrations",
+            JOptionPane.YES_NO_OPTION
+        ) == JOptionPane.YES_OPTION)) {
             if (!backUpCalibrationsInfo(mergedCalibrations.get(), "merged_calibrations", callbacks)) {
                 callbacks.logLine("Failed to back up merged calibrations...");
                 return false;
