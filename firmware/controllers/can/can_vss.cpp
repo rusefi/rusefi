@@ -183,10 +183,6 @@ void processCanRxVss(const CANRxFrame& frame, efitick_t nowNt) {
 	if (CAN_SID(frame) == filterVssCanID) {
 	  if (auto speed = processCanRxVssImpl(frame, nowNt)) {
 		  canSpeed.setValidValue(speed.Value * engineConfiguration->canVssScaling, nowNt);
-
-#if EFI_DYNO_VIEW
-	  	updateDynoViewCan();
-#endif
   	}
 	}
 
