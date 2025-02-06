@@ -35,7 +35,7 @@ static void printPacket(const size_t busIndex, const CANRxFrame &rx) {
 	if (CAN_ISX(rx)) {
 		// print extended IDs in hex only
 		efiPrintf("CAN%d RX: ID %07x DLC %d: %02x %02x %02x %02x %02x %02x %02x %02x",
-				busIndex,
+				busIndex + 1,
 				id,
 				rx.DLC,
 				rx.data8[0], rx.data8[1], rx.data8[2], rx.data8[3],
@@ -43,7 +43,7 @@ static void printPacket(const size_t busIndex, const CANRxFrame &rx) {
 	} else {
 		// internet people use both hex and decimal to discuss packed IDs, for usability it's better to print both right here
 		efiPrintf("CAN%d RX: ID %03x(%d) DLC %d: %02x %02x %02x %02x %02x %02x %02x %02x",
-				busIndex,
+				busIndex + 1,
 				id,	id, // once in hex, once in dec
 				rx.DLC,
 				rx.data8[0], rx.data8[1], rx.data8[2], rx.data8[3],
