@@ -33,7 +33,7 @@ public class SandboxCommon {
 
         StreamConnector streamConnector = new StreamConnector(linkManager, () -> tsStream);
         linkManager.setConnector(streamConnector);
-        streamConnector.connectAndReadConfiguration(new BinaryProtocol.Arguments(false, true), new ConnectionStateListener() {
+        streamConnector.connectAndReadConfiguration(new BinaryProtocol.Arguments(false), new ConnectionStateListener() {
             @Override
             public void onConnectionEstablished() {
                 log.info("onConnectionEstablished");

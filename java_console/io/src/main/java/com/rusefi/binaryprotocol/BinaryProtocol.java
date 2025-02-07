@@ -294,11 +294,9 @@ public class BinaryProtocol {
 
     public static class Arguments {
         final boolean saveFile;
-        final boolean validateConfigVersionOnConnect;
 
-        public Arguments(final boolean saveFile, final boolean validateConfigVersionOnConnect) {
+        public Arguments(final boolean saveFile) {
             this.saveFile = saveFile;
-            this.validateConfigVersionOnConnect = validateConfigVersionOnConnect;
         }
     }
 

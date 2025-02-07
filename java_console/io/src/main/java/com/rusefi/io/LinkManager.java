@@ -235,7 +235,7 @@ public class LinkManager implements Closeable {
         Objects.requireNonNull(port, "port");
         start(port, stateListener);
         connector.connectAndReadConfiguration(
-            new BinaryProtocol.Arguments(true, validateConfigVersionOnConnect),
+            new BinaryProtocol.Arguments(true),
             stateListener
         );
     }
