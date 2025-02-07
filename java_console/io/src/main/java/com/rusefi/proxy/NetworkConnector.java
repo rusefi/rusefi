@@ -2,9 +2,10 @@ package com.rusefi.proxy;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ini.field.StringIniField;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.config.generated.Fields;
+import com.rusefi.config.Field;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.io.AbstractConnectionStateListener;
 import com.rusefi.io.IoStream;
@@ -23,9 +24,11 @@ import org.jetbrains.annotations.NotNull;
 import java.io.Closeable;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
 
@@ -178,11 +181,18 @@ public class NetworkConnector implements Closeable {
             throw new IOException("Error getting hello response");
         String controllerSignature = helloResponse.trim();
 
-        ConfigurationImage image = linkManager.getConnector().getBinaryProtocol().getControllerConfiguration();
-        String vehicleName = Fields.VEHICLENAME.getStringValue(image);
-        String engineMake = Fields.ENGINEMAKE.getStringValue(image);
-        String engineCode = Fields.ENGINECODE.getStringValue(image);
+        BinaryProtocol binaryProtocol = linkManager.getConnector().getBinaryProtocol();
+        String vehicleName = getStringValue(binaryProtocol, "vehicleName");
+        String engineMake = getStringValue(binaryProtocol, "engineMake");
+        String engineCode = getStringValue(binaryProtocol, "engineCode");
         return new ControllerInfo(vehicleName, engineMake, engineCode, controllerSignature);
+    }
+
+    private static String getStringValue(BinaryProtocol binaryProtocol, String key) {
+        StringIniField field = (StringIniField) binaryProtocol.getIniFile().getIniField(key);
+        Objects.requireNonNull(field, () -> key + " not found");
+        ConfigurationImage image = binaryProtocol.getControllerConfiguration();
+        return Field.getString(image, field.getOffset(), field.getSize());
     }
 
     @Override
