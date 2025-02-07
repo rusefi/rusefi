@@ -92,7 +92,7 @@ public class MainFrame {
                 ConnectionWatchdog.init(linkManager);
 
                 SwingUtilities.invokeLater(() -> {
-                    tabbedPane.settingsTab.showContent(linkManager);
+//                    tabbedPane.settingsTab.showContent(linkManager);
                     tabbedPane.logsManager.showContent();
                     /**
                      * todo: we are definitely not handling reconnect properly, no code to shut down old instance of server

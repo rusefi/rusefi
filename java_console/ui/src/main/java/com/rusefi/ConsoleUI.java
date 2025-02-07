@@ -133,8 +133,8 @@ public class ConsoleUI {
 //        tabbedPane.addTab("live map adjustment", new Live3DReport().getControl());
 //        tabbedPane.add("Wizards", new Wizard().createPane());
 
-        if (!linkManager.isLogViewer())
-            tabbedPane.addTab("Settings", tabbedPane.settingsTab.createPane());
+//        if (!linkManager.isLogViewer())
+//            tabbedPane.addTab("Settings", tabbedPane.settingsTab.createPane());
         if (!linkManager.isLogViewer()) {
             tabbedPane.addTab("Live Data", LiveDataPane.createLazy(uiContext).getContent());
             tabbedPane.addTab("Sensors Live Data", new SensorsLiveDataPane(uiContext).getContent());
