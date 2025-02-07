@@ -403,9 +403,4 @@ public enum Sensor implements BinaryLogEntry {
 
         return Double.toString(value);
     }
-
-    static {
-        if (TS_FILE_VERSION_OFFSET != TsOutputs.TSCONFIGVERSION.getOffset())
-            throw new IllegalStateException("static assert failed TS_FILE_VERSION_OFFSET");
-    }
 }
