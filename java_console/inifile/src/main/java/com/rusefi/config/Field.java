@@ -269,8 +269,12 @@ public class Field {
         Objects.requireNonNull(image, "image");
         if (type != STRING)
             throw new IllegalStateException("Not a string parameter " + name);
-        ByteBuffer bb = image.getByteBuffer(offset, stringSize);
-        byte[] bytes = new byte[stringSize];
+        return getString(image, offset, stringSize);
+    }
+
+    public static @NotNull String getString(ConfigurationImage image, int offset, int size) {
+        ByteBuffer bb = image.getByteBuffer(offset, size);
+        byte[] bytes = new byte[size];
         bb.get(bytes);
         return new String(bytes).trim();
     }
