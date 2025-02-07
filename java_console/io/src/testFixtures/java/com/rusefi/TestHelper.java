@@ -30,8 +30,6 @@ import java.util.concurrent.TimeUnit;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.Timeouts.READ_IMAGE_TIMEOUT;
-import static com.rusefi.config.generated.Fields.TS_FILE_VERSION;
-import static com.rusefi.config.generated.Fields.TS_FILE_VERSION_OFFSET;
 import static com.rusefi.io.tcp.TcpConnector.LOCALHOST;
 
 public class TestHelper extends MockitoTestHelper {
@@ -59,8 +57,6 @@ public class TestHelper extends MockitoTestHelper {
     public static BinaryProtocolServer createVirtualController(ConfigurationImage ci, int port, Listener serverSocketCreationCallback, BinaryProtocolServer.Context context) throws IOException {
         BinaryProtocolState state = new BinaryProtocolState();
         state.setConfigurationImage(ci);
-        byte[] currentOutputs = new byte[Fields.TS_TOTAL_OUTPUT_SIZE];
-        state.setCurrentOutputs(currentOutputs);
 
         LinkManager linkManager = new LinkManager();
         linkManager.setConnector(LinkConnector.getDetachedConnector(state));
