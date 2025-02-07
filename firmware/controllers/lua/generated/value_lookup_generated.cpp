@@ -335,9 +335,6 @@ float getConfigValueByName(const char *name) {
 // idle_derivativeFilterLoss
 		case -1269130308:
 			return engineConfiguration->idle_derivativeFilterLoss;
-// trailingSparkAngle
-		case 274318471:
-			return engineConfiguration->trailingSparkAngle;
 // trigger.customTotalToothCount
 		case 1212570205:
 			return engineConfiguration->trigger.customTotalToothCount;
@@ -2554,11 +2551,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1269130308:
 	{
 		engineConfiguration->idle_derivativeFilterLoss = value;
-		return 1;
-	}
-		case 274318471:
-	{
-		engineConfiguration->trailingSparkAngle = (int)value;
 		return 1;
 	}
 		case 1212570205:

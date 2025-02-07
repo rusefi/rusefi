@@ -188,8 +188,20 @@ struct ignition_state_s {
 	/**
 	offset 40 bit 31 */
 	bool unusedBit_15_31 : 1 {};
+	/**
+	 * Ign: Trailing spark deg
+	 * units: deg
+	 * offset 44
+	 */
+	scaled_channel<int16_t, 100, 1> trailingSparkAngle = (int16_t)0;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 46
+	 */
+	uint8_t alignmentFill_at_46[2] = {};
 };
-static_assert(sizeof(ignition_state_s) == 44);
+static_assert(sizeof(ignition_state_s) == 48);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/ignition/ignition_state.txt

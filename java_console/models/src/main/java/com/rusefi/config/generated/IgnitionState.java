@@ -196,6 +196,8 @@ public class IgnitionState {
 	public static final Field LUATIMINGADD = Field.create("LUATIMINGADD", 32, FieldType.FLOAT).setBaseOffset(912);
 	public static final Field LUATIMINGMULT = Field.create("LUATIMINGMULT", 36, FieldType.FLOAT).setBaseOffset(912);
 	public static final Field LUAIGNITIONSKIP = Field.create("LUAIGNITIONSKIP", 40, FieldType.BIT, 0).setBaseOffset(912);
+	public static final Field TRAILINGSPARKANGLE = Field.create("TRAILINGSPARKANGLE", 44, FieldType.INT16).setScale(0.01).setBaseOffset(912);
+	public static final Field ALIGNMENTFILL_AT_46 = Field.create("ALIGNMENTFILL_AT_46", 46, FieldType.INT8).setScale(1.0).setBaseOffset(912);
 	public static final Field[] VALUES = {
 	BASEDWELL,
 	SPARKDWELL,
@@ -212,5 +214,7 @@ public class IgnitionState {
 	LUATIMINGADD,
 	LUATIMINGMULT,
 	LUAIGNITIONSKIP,
+	TRAILINGSPARKANGLE,
+	ALIGNMENTFILL_AT_46,
 	};
 }

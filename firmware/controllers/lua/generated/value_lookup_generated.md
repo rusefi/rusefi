@@ -328,9 +328,6 @@ CANbus thread period in ms
 ### idle_derivativeFilterLoss
 0.1 is a good default value
 
-### trailingSparkAngle
-just a temporary solution
-
 ### trigger.customTotalToothCount
 
 

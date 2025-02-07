@@ -1186,11 +1186,9 @@ struct engine_configuration_s {
 	 */
 	float idle_derivativeFilterLoss;
 	/**
-	 * just a temporary solution
-	 * units: angle
 	 * offset 520
 	 */
-	int trailingSparkAngle;
+	int unusedTrailingSparkAngle;
 	/**
 	 * offset 524
 	 */
@@ -6194,17 +6192,32 @@ struct persistent_config_s {
 	 */
 	float dynoCarFrontalAreaM2;
 	/**
+	 * units: deg
 	 * offset 23280
+	 */
+	scaled_channel<int8_t, 10, 1> trailingSparkTable[TRAILING_SPARK_SIZE][TRAILING_SPARK_SIZE] = {};
+	/**
+	 * units: rpm
+	 * offset 23296
+	 */
+	scaled_channel<uint8_t, 1, 50> trailingSparkRpmBins[TRAILING_SPARK_SIZE] = {};
+	/**
+	 * units: Load
+	 * offset 23300
+	 */
+	scaled_channel<uint8_t, 1, 5> trailingSparkLoadBins[TRAILING_SPARK_SIZE] = {};
+	/**
+	 * offset 23304
 	 */
 	Gpio communityCommsLedPin;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 23282
+	 * offset 23306
 	 */
-	uint8_t alignmentFill_at_23282[2] = {};
+	uint8_t alignmentFill_at_23306[2] = {};
 };
-static_assert(sizeof(persistent_config_s) == 23284);
+static_assert(sizeof(persistent_config_s) == 23308);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt

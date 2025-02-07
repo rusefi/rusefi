@@ -470,6 +470,7 @@ static const LogField fields[] = {
 	{engine->ignitionState.luaTimingAdd, "Ign: Lua timing add", "deg", 2, "Timing"},
 	{engine->ignitionState.luaTimingMult, "Ign: Lua timing mult", "deg", 2, "Timing"},
 	{engine->ignitionState, 40, 0, "Ign: Lua Spark Skip", ""},
+	{engine->ignitionState.trailingSparkAngle, "Ign: Trailing spark deg", "deg", 2, "Timing"},
 	{engine->module<KnockController>()->m_knockLevel, "Knock: Current level", "Volts", 2},
 	{engine->module<KnockController>()->m_knockCyl[0], "Knock: Cyl 1", "dBv", 0},
 	{engine->module<KnockController>()->m_knockCyl[1], "Knock: Cyl 2", "dBv", 0},

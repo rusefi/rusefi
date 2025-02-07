@@ -958,6 +958,9 @@ float getOutputValueByName(const char *name) {
 // luaIgnitionSkip
 		case -1916613921:
 			return engine->ignitionState.luaIgnitionSkip;
+// trailingSparkAngle
+		case 274318471:
+			return engine->ignitionState.trailingSparkAngle;
 // m_knockLevel
 		case -1571781441:
 			return engine->module<KnockController>()->m_knockLevel;

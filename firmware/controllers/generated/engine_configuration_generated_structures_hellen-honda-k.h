@@ -1186,11 +1186,9 @@ struct engine_configuration_s {
 	 */
 	float idle_derivativeFilterLoss;
 	/**
-	 * just a temporary solution
-	 * units: angle
 	 * offset 520
 	 */
-	int trailingSparkAngle;
+	int unusedTrailingSparkAngle;
 	/**
 	 * offset 524
 	 */
@@ -6194,21 +6192,36 @@ struct persistent_config_s {
 	 */
 	float dynoCarFrontalAreaM2;
 	/**
+	 * units: deg
 	 * offset 23728
+	 */
+	scaled_channel<int8_t, 10, 1> trailingSparkTable[TRAILING_SPARK_SIZE][TRAILING_SPARK_SIZE] = {};
+	/**
+	 * units: rpm
+	 * offset 23744
+	 */
+	scaled_channel<uint8_t, 1, 50> trailingSparkRpmBins[TRAILING_SPARK_SIZE] = {};
+	/**
+	 * units: Load
+	 * offset 23748
+	 */
+	scaled_channel<uint8_t, 1, 5> trailingSparkLoadBins[TRAILING_SPARK_SIZE] = {};
+	/**
+	 * offset 23752
 	 */
 	uint8_t hondaKcltGaugeAdder;
 	/**
-	 * offset 23729
+	 * offset 23753
 	 */
 	uint8_t unusedConfigPadding[BOTTOM_PADDING] = {};
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 23765
+	 * offset 23789
 	 */
-	uint8_t alignmentFill_at_23765[3] = {};
+	uint8_t alignmentFill_at_23789[3] = {};
 };
-static_assert(sizeof(persistent_config_s) == 23768);
+static_assert(sizeof(persistent_config_s) == 23792);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt
