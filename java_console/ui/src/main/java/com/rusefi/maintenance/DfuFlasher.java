@@ -39,26 +39,27 @@ public class DfuFlasher {
         return new File(BOOTLOADER_BIN_FILE).exists();
     }
 
-    public static void doAutoDfu(JComponent parent, String port, UpdateOperationCallbacks callbacks) {
+    public static boolean doAutoDfu(JComponent parent, String port, UpdateOperationCallbacks callbacks) {
         if (port == null) {
             JOptionPane.showMessageDialog(parent, "Failed to locate serial ports");
-            return;
+            return false;
         }
 
         AtomicBoolean isSignatureValidated = rebootToDfu(parent, port, callbacks, Integration.CMD_REBOOT_DFU);
         if (isSignatureValidated == null)
-            return;
+            return false;
         if (isSignatureValidated.get()) {
             if (!FileLog.isWindows()) {
                 callbacks.logLine("Switched to DFU mode!");
                 callbacks.logLine("rusEFI console can only program on Windows");
-                return;
+                return false;
             }
 
             timeForDfuSwitch(callbacks);
-            executeDfuAndPaintStatusPanel(callbacks, FindFileHelper.FIRMWARE_BIN_FILE);
+            return executeDFU(callbacks, FindFileHelper.FIRMWARE_BIN_FILE);
         } else {
             callbacks.logLine("Please use manual DFU to change bundle type.");
+            return false;
         }
     }
 
