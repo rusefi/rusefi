@@ -2,6 +2,7 @@ package com.rusefi.ui.lua;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ini.field.StringIniField;
 import com.rusefi.ConnectionTab;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
@@ -251,7 +252,8 @@ public class LuaScriptPanel {
             setText("No configuration image");
             return;
         }
-        ByteBuffer luaScriptBuffer = image.getByteBuffer(Fields.LUASCRIPT.getOffset(), Fields.LUA_SCRIPT_SIZE);
+        StringIniField luaScript = (StringIniField) bp.getIniFile().getIniField("luaScript"); // todo: do we have "luaScript" as code-generated constant anywhere?
+        ByteBuffer luaScriptBuffer = image.getByteBuffer(luaScript.getOffset(), luaScript.getSize());
 
         byte[] scriptArr = new byte[Fields.LUA_SCRIPT_SIZE];
         luaScriptBuffer.get(scriptArr);
