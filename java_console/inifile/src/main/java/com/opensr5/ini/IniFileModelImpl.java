@@ -68,6 +68,11 @@ public class IniFileModelImpl implements IniFileModel {
         return allIniFields;
     }
 
+    @Override
+    public IniField getIniField(String key) {
+        IniField result = allIniFields.get(key);
+        return Objects.requireNonNull(result, () -> key + " field not found");
+    }
 
     @Override
     public Map<String, String> getProtocolMeta() {

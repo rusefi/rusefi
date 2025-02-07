@@ -11,6 +11,8 @@ public interface IniFileModel {
 
     Map<String, IniField> getAllIniFields();
 
+    IniField getIniField(String key);
+
     Map<String, String> getProtocolMeta();
 
     IniFileMetaInfo getMetaInfo();
