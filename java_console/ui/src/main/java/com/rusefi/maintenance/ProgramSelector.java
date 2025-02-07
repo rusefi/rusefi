@@ -231,43 +231,7 @@ public class ProgramSelector {
             callbacks.logLine("Failed to back up current calibrations...");
             return false;
         }
-        final List<PortResult> openBltPortsBefore = SerialPortScanner.INSTANCE.getCurrentHardware().getKnownPorts(OpenBlt);
-
-        rebootToOpenblt(parent, ecuPort.port, callbacks);
-
-        // invoking blocking method
-        final boolean isEcuPortDisappeared = waitForEcuPortDisappeared(ecuPort, callbacks);
-
-        if (!isEcuPortDisappeared) {
-            callbacks.logLine("Looks like your ECU still haven't rebooted to OpenBLT");
-            callbacks.logLine("");
-            callbacks.logLine("Try closing and opening console again");
-            callbacks.logLine("");
-            return false;
-        }
-
-        final List<PortResult> newItems = waitForNewOpenBltPortAppeared(openBltPortsBefore, callbacks);
-
-        // Check that exactly one thing appeared in the "after" list
-        if (newItems.isEmpty()) {
-            callbacks.logLine("Looks like your ECU disappeared during the update process. Please try again.");
-            return false;
-        }
-
-        if (newItems.size() > 1) {
-            // More than one port appeared? whattt?
-            callbacks.logLine(
-                "Unable to find ECU after reboot as multiple serial ports appeared. Before: "
-                    + openBltPortsBefore.size()
-            );
-            return false;
-        }
-
-        final String openbltPort = newItems.get(0).port;
-
-        callbacks.logLine("Serial port " + openbltPort + " appeared, programming firmware...");
-
-        if (!flashOpenbltSerialJni(parent, openbltPort, callbacks)) {
+        if (!bltUpdateFirmware(parent, ecuPort, callbacks)) {
             return false;
         }
 
@@ -305,6 +269,46 @@ public class ProgramSelector {
         } else {
             return true;
         }
+    }
+
+    private static boolean bltUpdateFirmware(JComponent parent, PortResult ecuPort, UpdateOperationCallbacks callbacks) {
+        final List<PortResult> openBltPortsBefore = SerialPortScanner.INSTANCE.getCurrentHardware().getKnownPorts(OpenBlt);
+
+        rebootToOpenblt(parent, ecuPort.port, callbacks);
+
+        // invoking blocking method
+        final boolean isEcuPortDisappeared = waitForEcuPortDisappeared(ecuPort, callbacks);
+
+        if (!isEcuPortDisappeared) {
+            callbacks.logLine("Looks like your ECU still haven't rebooted to OpenBLT");
+            callbacks.logLine("");
+            callbacks.logLine("Try closing and opening console again");
+            callbacks.logLine("");
+            return false;
+        }
+
+        final List<PortResult> newItems = waitForNewOpenBltPortAppeared(openBltPortsBefore, callbacks);
+
+        // Check that exactly one thing appeared in the "after" list
+        if (newItems.isEmpty()) {
+            callbacks.logLine("Looks like your ECU disappeared during the update process. Please try again.");
+            return false;
+        }
+
+        if (newItems.size() > 1) {
+            // More than one port appeared? whattt?
+            callbacks.logLine(
+                "Unable to find ECU after reboot as multiple serial ports appeared. Before: "
+                    + openBltPortsBefore.size()
+            );
+            return false;
+        }
+
+        final String openbltPort = newItems.get(0).port;
+
+        callbacks.logLine("Serial port " + openbltPort + " appeared, programming firmware...");
+
+        return flashOpenbltSerialJni(parent, openbltPort, callbacks);
     }
 
     private static OpenbltJni.OpenbltCallbacks makeOpenbltCallbacks(UpdateOperationCallbacks callbacks) {
