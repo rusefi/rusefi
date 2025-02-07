@@ -61,7 +61,7 @@ public class DfuFlasher {
                     JobHelper.doJob(
                         () -> {
                             timeForDfuSwitch(callbacks);
-                            executeDFU(callbacks, FindFileHelper.FIRMWARE_BIN_FILE);
+                            executeDfuAndPaintStatusPanel(callbacks, FindFileHelper.FIRMWARE_BIN_FILE);
                         },
                         onJobFinished
                     );
@@ -154,25 +154,38 @@ public class DfuFlasher {
 
     public static void runDfuProgramming(UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
         submitAction(() -> {
-            JobHelper.doJob(() -> executeDFU(callbacks, FindFileHelper.FIRMWARE_BIN_FILE), onJobFinished);
+            JobHelper.doJob(
+                () -> executeDfuAndPaintStatusPanel(callbacks, FindFileHelper.FIRMWARE_BIN_FILE),
+                onJobFinished
+            );
         });
     }
 
     public static void runOpenBltInitialProgramming(UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
         submitAction(() -> {
             JobHelper.doJob(
-                () -> executeDFU(callbacks, DfuFlasher.BOOTLOADER_BIN_FILE),
+                () -> executeDfuAndPaintStatusPanel(callbacks, DfuFlasher.BOOTLOADER_BIN_FILE),
                 onJobFinished
             );
         });
     }
 
-    private static void executeDFU(UpdateOperationCallbacks callbacks, String firmwareBinFile) {
+    private static void executeDfuAndPaintStatusPanel(
+        final UpdateOperationCallbacks callbacks,
+        final String firmwareBinFile
+    ) {
+        if (executeDFU(callbacks, firmwareBinFile)) {
+            callbacks.done();
+        } else {
+            callbacks.error();
+        }
+    }
+
+    private static boolean executeDFU(UpdateOperationCallbacks callbacks, String firmwareBinFile) {
         boolean driverIsHappy = detectSTM32BootloaderDriverState(callbacks);
         if (!driverIsHappy) {
             callbacks.logLine("*** DRIVER ERROR? *** Did you have a chance to try 'Install Drivers' button on top of rusEFI console start screen?");
-            callbacks.error();
-            return;
+            return false;
         }
 
         StringBuffer stdout = new StringBuffer();
@@ -183,27 +196,26 @@ public class DfuFlasher {
                 DFU_CMD_TOOL, callbacks, stdout);
         } catch (FileNotFoundException e) {
             callbacks.logLine("ERROR: " + e);
-            callbacks.error();
-            return;
+            return false;
         }
 
         if (stdout.toString().contains("Download verified successfully")) {
             // looks like sometimes we are not catching the last line of the response? 'Upgrade' happens before 'Verify'
             callbacks.logLine("SUCCESS!");
             callbacks.logLine("Please power cycle device to exit DFU mode");
-            callbacks.done();
+            return true;
         } else if (stdout.toString().contains("Target device not found")) {
             callbacks.logLine("ERROR: Device not connected or STM32 Bootloader driver not installed?");
             appendWindowsVersion(callbacks);
             callbacks.logLine("ERROR: Please try installing drivers using 'Install Drivers' button on rusEFI splash screen");
             callbacks.logLine("ERROR: Alternatively please install drivers using Device Manager pointing at 'drivers/silent_st_drivers/DFU_Driver' folder");
             appendDeviceReport(callbacks);
-            callbacks.error();
+            return false;
         } else {
             appendWindowsVersion(callbacks);
             appendDeviceReport(callbacks);
             callbacks.logLine(stdout.length() + " / " + errorResponse.length());
-            callbacks.error();
+            return false;
         }
     }
 
