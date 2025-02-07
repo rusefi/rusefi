@@ -1265,7 +1265,7 @@
 #define pedalSensor_NAME "Accelerator pedal"
 #define pedalToTpsTbl_NAME "ETB pedal target"
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 23304
+#define persistent_config_s_size 22644
 #define pid_s_size 20
 #define pin_input_mode_e_auto_enum 0="PI_DEFAULT",2="PI_PULLDOWN",1="PI_PULLUP"
 #define pin_input_mode_e_enum "DEFAULT", "PULLUP", "PULLDOWN"
@@ -1297,11 +1297,11 @@
 #define PROTOCOL_VERSION_TAG "rusEfiVersion"
 #define RANGE_INPUT_COUNT 6
 #define REBOOT_COMMAND 0xbb
-#define SCRIPT_CURVE_16 16
+#define SCRIPT_CURVE_16 2
 #define SCRIPT_CURVE_8 8
 #define SCRIPT_CURVE_COUNT 6
 #define SCRIPT_SETTING_COUNT 8
-#define SCRIPT_TABLE_8 8
+#define SCRIPT_TABLE_8 2
 #define SCRIPT_TABLE_COUNT 4
 #define SD_CARD_LABEL "rusEFI logs"
 #define SelectedGear_Drive 6
@@ -1347,7 +1347,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2317767333
+#define SIGNATURE_HASH 1006016626
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1409,14 +1409,14 @@
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON 0
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH 2
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_UP_SWITCH 3
-#define TOTAL_CONFIG_SIZE 23304
+#define TOTAL_CONFIG_SIZE 22644
 #define TPS_2_BYTE_PACKING_MULT 100
 #define TPS_PPS_TOO_HIGH_THRESHOLD 110
 #define TPS_PPS_TOO_LOW_THRESHOLD -10
 #define TPS_TPS_ACCEL_CLT_CORR_TABLE 4
 #define TPS_TPS_ACCEL_TABLE 8
 #define TRACTION_CONTROL_ETB_DROP_SIZE 6
-#define TRAILING_SPARK_SIZE 4
+#define TRAILING_SPARK_SIZE 2
 #define transmission_controller_e_enum "None", "Simple Transmission", "Generic 4-Speed", "GM 4L6X"
 #define TransmissionControllerMode_auto_enum 0="None",2="Generic4",3="Gm4l6x",1="SimpleTransmissionController"
 #define TransmissionControllerMode_Generic4 2
@@ -1822,7 +1822,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.02.07.subaru_eg33_f7.2317767333"
+#define TS_SIGNATURE "rusEFI master.2025.02.07.subaru_eg33_f7.1006016626"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
