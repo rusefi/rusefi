@@ -2,6 +2,7 @@ package com.rusefi.maintenance;
 
 import com.rusefi.FileLog;
 import com.rusefi.Launcher;
+import com.rusefi.SerialPortScanner;
 import com.rusefi.Timeouts;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autodetect.SerialAutoChecker;
@@ -39,7 +40,24 @@ public class DfuFlasher {
         return new File(BOOTLOADER_BIN_FILE).exists();
     }
 
-    public static boolean doAutoDfu(JComponent parent, String port, UpdateOperationCallbacks callbacks) {
+    public static boolean doAutoDfu(
+        final JComponent parent,
+        final SerialPortScanner.PortResult port,
+        final UpdateOperationCallbacks callbacks
+    ) {
+        return CalibrationsHelper.updateFirmwareAndRestorePreviousCalibrations(
+            parent,
+            port,
+            callbacks,
+            () -> dfuUpdateFirmware(parent, port.port, callbacks)
+        );
+    }
+
+    private static boolean dfuUpdateFirmware(
+        final JComponent parent,
+        final String port,
+        final UpdateOperationCallbacks callbacks
+    ) {
         if (port == null) {
             JOptionPane.showMessageDialog(parent, "Failed to locate serial ports");
             return false;
