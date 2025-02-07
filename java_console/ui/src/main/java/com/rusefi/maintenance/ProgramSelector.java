@@ -23,7 +23,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -212,63 +211,17 @@ public class ProgramSelector {
         return newPorts;
     }
 
-    private static final String PREVIOUS_CALIBRATIONS_FILE_NAME = "prev_calibrations";
-    private static final String UPDATED_CALIBRATIONS_FILE_NAME = "updated_calibrations";
-
     public static boolean flashOpenbltSerialAutomatic(
         JComponent parent,
         PortResult ecuPort,
         UpdateOperationCallbacks callbacks
     ) {
-        AutoupdateUtil.assertNotAwtThread();
-
-        final Optional<CalibrationsInfo> prevCalibrations = readAndBackupCurrentCalibrations(
-            ecuPort,
-            callbacks,
-            PREVIOUS_CALIBRATIONS_FILE_NAME
-        );
-        if (prevCalibrations.isEmpty()) {
-            callbacks.logLine("Failed to back up current calibrations...");
-            return false;
-        }
-        if (!bltUpdateFirmware(parent, ecuPort, callbacks)) {
-            return false;
-        }
-
-        final Optional<CalibrationsInfo> updatedCalibrations = readAndBackupCurrentCalibrations(
-            ecuPort,
-            callbacks,
-            UPDATED_CALIBRATIONS_FILE_NAME
-        );
-        if (updatedCalibrations.isEmpty()) {
-            callbacks.logLine("Failed to back up updated calibrations...");
-            return false;
-        }
-        final Optional<CalibrationsInfo> mergedCalibrations = mergeCalibrations(
-            prevCalibrations.get(),
-            updatedCalibrations.get(),
-            callbacks
-        );
-        if (mergedCalibrations.isPresent() && (JOptionPane.showConfirmDialog(
+        return updateFirmwareAndRestorePreviousCalibrations(
             parent,
-            "Some calibrations fields were overwritten with default values.\n" +
-                "Would you like to restore previous calibrations?",
-            "Restore previous calibrations",
-            JOptionPane.YES_NO_OPTION
-        ) == JOptionPane.YES_OPTION)) {
-            if (!backUpCalibrationsInfo(mergedCalibrations.get(), "merged_calibrations", callbacks)) {
-                callbacks.logLine("Failed to back up merged calibrations...");
-                return false;
-            }
-            return CalibrationsUpdater.INSTANCE.updateCalibrations(
-                ecuPort.port,
-                mergedCalibrations.get().getImage().getConfigurationImage(),
-                callbacks,
-                false
-            );
-        } else {
-            return true;
-        }
+            ecuPort,
+            callbacks,
+            () -> bltUpdateFirmware(parent, ecuPort, callbacks)
+        );
     }
 
     private static boolean bltUpdateFirmware(JComponent parent, PortResult ecuPort, UpdateOperationCallbacks callbacks) {
