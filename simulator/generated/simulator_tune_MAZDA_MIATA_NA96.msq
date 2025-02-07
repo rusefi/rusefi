@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="23284">
+    <page number="0" size="23308">
         <constant name="engineType">"MAZDA_MIATA_NA96"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">0.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
@@ -216,7 +216,7 @@
         <constant name="fuelLevelSensor">"Disabled"</constant>
         <constant name="tps2_1AdcChannel">"Disabled"</constant>
         <constant digits="4" name="idle_derivativeFilterLoss" units="x">0.0</constant>
-        <constant digits="0" name="trailingSparkAngle" units="angle">10.0</constant>
+        <constant digits="0" name="unusedTrailingSparkAngle" units="">0.0</constant>
         <constant name="trigger_type">"Miata NA"</constant>
         <constant digits="0" name="trigger_customTotalToothCount" units="number">0.0</constant>
         <constant digits="0" name="trigger_customSkippedToothCount" units="number">0.0</constant>
@@ -4867,6 +4867,24 @@ end</constant>
         <constant digits="0" name="dynoCarCargoMassKg" units="">95.0</constant>
         <constant digits="0" name="dynoCarCoeffOfDrag" units="">0.29</constant>
         <constant digits="0" name="dynoCarFrontalAreaM2" units="">1.85</constant>
+        <constant cols="4" digits="1" name="trailingSparkTable" rows="4">
+         7.0 9.0 10.0 12.0
+         7.0 9.0 10.0 12.0
+         7.0 9.0 10.0 12.0
+         7.0 9.0 10.0 12.0
+</constant>
+        <constant cols="1" digits="0" name="trailingSparkRpmBins" rows="4">
+         1000.0
+         3000.0
+         5000.0
+         7000.0
+</constant>
+        <constant cols="1" digits="0" name="trailingSparkLoadBins" rows="4">
+         20.0
+         60.0
+         100.0
+         150.0
+</constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
     <versionInfo firmwareInfo="20250206" nPages="1" signature="rusEFI master.2025.02.07.f407-discovery.2990287915" version="5.0"/>
