@@ -111,7 +111,6 @@ public enum Sensor implements BinaryLogEntry {
     TIME_SECONDS(GAUGE_NAME_TIME, SensorCategory.OPERATIONS, FieldType.INT, TsOutputs.SECONDS, 1, 0, 5, ""),
 //    engineMode("mode", SensorCategory.OPERATIONS, FieldType.INT, 116, 0, 5),
     FIRMWARE_VERSION(GAUGE_NAME_VERSION, SensorCategory.OPERATIONS, FieldType.INT, TsOutputs.FIRMWAREVERSION, 1, 0, 100, "version_f"),
-    TS_CONFIG_VERSION(".ini version", SensorCategory.OPERATIONS, FieldType.INT, TsOutputs.TSCONFIGVERSION),
 
 //    engineMakeCodeNameCrc16("engine crc16", SensorCategory.STATUS, FieldType.UINT16, 138, 0, 5),
     // Errors
