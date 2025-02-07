@@ -13,6 +13,9 @@ public class DfuAutoJob extends AsyncJobWithContext<SerialPortWithParentComponen
 
     @Override
     public void doJob(final UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
-        DfuFlasher.doAutoDfu(context.getParent(), context.getPort().port, callbacks, onJobFinished);
+        JobHelper.doJob(
+            () -> DfuFlasher.doAutoDfu(context.getParent(), context.getPort().port, callbacks),
+            onJobFinished
+        );
     }
 }
