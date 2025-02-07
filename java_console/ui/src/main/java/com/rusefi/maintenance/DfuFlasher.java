@@ -40,7 +40,6 @@ public class DfuFlasher {
     }
 
     public static void doAutoDfu(JComponent parent, String port, UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
-        boolean isJobDelegatedToAnotherThread = false;
         try {
             if (port == null) {
                 JOptionPane.showMessageDialog(parent, "Failed to locate serial ports");
@@ -57,23 +56,13 @@ public class DfuFlasher {
                     return;
                 }
 
-                submitAction(() -> {
-                    JobHelper.doJob(
-                        () -> {
-                            timeForDfuSwitch(callbacks);
-                            executeDfuAndPaintStatusPanel(callbacks, FindFileHelper.FIRMWARE_BIN_FILE);
-                        },
-                        onJobFinished
-                    );
-                });
-                isJobDelegatedToAnotherThread = true;
+                timeForDfuSwitch(callbacks);
+                executeDfuAndPaintStatusPanel(callbacks, FindFileHelper.FIRMWARE_BIN_FILE);
             } else {
                 callbacks.logLine("Please use manual DFU to change bundle type.");
             }
         } finally {
-            if (!isJobDelegatedToAnotherThread) {
-                onJobFinished.run();
-            }
+            onJobFinished.run();
         }
     }
 
