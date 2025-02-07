@@ -34,9 +34,11 @@ static void setDefaultTrailingSparkTable() {
 	copyArray(config->trailingSparkLoadBins, {20,60,100,150});
     copyArray(config->trailingSparkRpmBins, {1000,3000,5000,7000});
 
+#if TRAILING_SPARK_SIZE == 4
 	for (size_t i = 0; i < TRAILING_SPARK_SIZE; i++) {
 		copyArray(config->trailingSparkTable[i], {7,9,10,12});
 	}
+#endif
 
 }
 
