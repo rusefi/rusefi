@@ -9,15 +9,18 @@ import com.opensr5.ini.field.*;
 import com.rusefi.SerialPortScanner.PortResult;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.Pair;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.function.Supplier;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.BinaryProtocol.iniFileProvider;
@@ -28,7 +31,69 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 public class CalibrationsHelper {
     private static final Logging log = getLogging(CalibrationsHelper.class);
 
-    static Optional<CalibrationsInfo> readCalibrationsInfo(
+    private static final String PREVIOUS_CALIBRATIONS_FILE_NAME = "prev_calibrations";
+    private static final String UPDATED_CALIBRATIONS_FILE_NAME = "updated_calibrations";
+
+
+    public static boolean updateFirmwareAndRestorePreviousCalibrations(
+        final JComponent parent,
+        final PortResult ecuPort,
+        final UpdateOperationCallbacks callbacks,
+        final Supplier<Boolean> updateFirmware
+    ) {
+        AutoupdateUtil.assertNotAwtThread();
+
+        final Optional<CalibrationsInfo> prevCalibrations = readAndBackupCurrentCalibrations(
+            ecuPort,
+            callbacks,
+            PREVIOUS_CALIBRATIONS_FILE_NAME
+        );
+        if (prevCalibrations.isEmpty()) {
+            callbacks.logLine("Failed to back up current calibrations...");
+            return false;
+        }
+
+        if (!updateFirmware.get()) {
+            return false;
+        }
+
+        final Optional<CalibrationsInfo> updatedCalibrations = readAndBackupCurrentCalibrations(
+            ecuPort,
+            callbacks,
+            UPDATED_CALIBRATIONS_FILE_NAME
+        );
+        if (updatedCalibrations.isEmpty()) {
+            callbacks.logLine("Failed to back up updated calibrations...");
+            return false;
+        }
+        final Optional<CalibrationsInfo> mergedCalibrations = mergeCalibrations(
+            prevCalibrations.get(),
+            updatedCalibrations.get(),
+            callbacks
+        );
+        if (mergedCalibrations.isPresent() && (JOptionPane.showConfirmDialog(
+            parent,
+            "Some calibrations fields were overwritten with default values.\n" +
+                "Would you like to restore previous calibrations?",
+            "Restore previous calibrations",
+            JOptionPane.YES_NO_OPTION
+        ) == JOptionPane.YES_OPTION)) {
+            if (!backUpCalibrationsInfo(mergedCalibrations.get(), "merged_calibrations", callbacks)) {
+                callbacks.logLine("Failed to back up merged calibrations...");
+                return false;
+            }
+            return CalibrationsUpdater.INSTANCE.updateCalibrations(
+                ecuPort.port,
+                mergedCalibrations.get().getImage().getConfigurationImage(),
+                callbacks,
+                false
+            );
+        } else {
+            return true;
+        }
+    }
+
+    private static Optional<CalibrationsInfo> readCalibrationsInfo(
         final BinaryProtocol binaryProtocol,
         final UpdateOperationCallbacks callbacks
     ) {
@@ -49,7 +114,7 @@ public class CalibrationsHelper {
         }
     }
 
-    static boolean backUpCalibrationsInfo(
+    private static boolean backUpCalibrationsInfo(
         final CalibrationsInfo calibrationsInfo,
         final String fileName,
         final UpdateOperationCallbacks callbacks
@@ -90,7 +155,7 @@ public class CalibrationsHelper {
         }
     }
 
-    public static Optional<CalibrationsInfo> readAndBackupCurrentCalibrations(
+    private static Optional<CalibrationsInfo> readAndBackupCurrentCalibrations(
         final PortResult ecuPort,
         final UpdateOperationCallbacks callbacks,
         final String backupFileName
@@ -123,7 +188,7 @@ public class CalibrationsHelper {
         );
     }
 
-    public static Optional<CalibrationsInfo> mergeCalibrations(
+    private static Optional<CalibrationsInfo> mergeCalibrations(
         final CalibrationsInfo prevCalibrations,
         final CalibrationsInfo newCalibrations,
         final UpdateOperationCallbacks callbacks
