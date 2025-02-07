@@ -60,8 +60,6 @@ public class TestHelper extends MockitoTestHelper {
         BinaryProtocolState state = new BinaryProtocolState();
         state.setConfigurationImage(ci);
         byte[] currentOutputs = new byte[Fields.TS_TOTAL_OUTPUT_SIZE];
-        ByteBuffer buffer = FileUtil.littleEndianWrap(currentOutputs, TS_FILE_VERSION_OFFSET, 4);
-        buffer.putInt(TS_FILE_VERSION);
         state.setCurrentOutputs(currentOutputs);
 
         LinkManager linkManager = new LinkManager();
