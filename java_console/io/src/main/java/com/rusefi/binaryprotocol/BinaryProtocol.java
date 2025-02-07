@@ -22,7 +22,6 @@ import com.rusefi.io.commands.BurnCommand;
 import com.rusefi.io.commands.ByteRange;
 import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.commands.HelloCommand;
-import com.rusefi.core.FileUtil;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.livedocs.LiveDocsRegistry;
 import org.jetbrains.annotations.NotNull;
@@ -181,12 +180,6 @@ public class BinaryProtocol {
         }
         iniFile = Objects.requireNonNull(iniFileProvider.provide(signature));
 
-        if (arguments.validateConfigVersionOnConnect) {
-            final String errorMessage = validateConfigVersion();
-            if (errorMessage != null)
-                return errorMessage;
-        }
-
         int pageSize = iniFile.getMetaInfo().getTotalSize();
         log.info("pageSize=" + pageSize);
         readImage(arguments, new ConfigurationImageMetaVersion0_0(pageSize, signature));
@@ -195,30 +188,6 @@ public class BinaryProtocol {
 
         startPullThread(listener);
         binaryProtocolLogger.start();
-        return null;
-    }
-
-    /**
-     * @return null if everything is good, error message otherwise
-     */
-    private String validateConfigVersion() {
-        int requestSize = 4;
-        byte[] packet = GetOutputsCommand.createRequest(TS_FILE_VERSION_OFFSET, requestSize);
-
-        String msg = "load TS_CONFIG_VERSION";
-        byte[] response = executeCommand(Integration.TS_OUTPUT_COMMAND, packet, msg);
-        if (!checkResponseCode(response) || response.length != requestSize + 1) {
-            close();
-            return "Failed to " + msg;
-        }
-        int actualVersion = FileUtil.littleEndianWrap(response, 1, requestSize).getInt();
-        if (actualVersion != TS_FILE_VERSION) {
-			String errorMessage =
-				"Incompatible firmware format=" + actualVersion + " while format " + TS_FILE_VERSION + " expected" + "\n"
-				+ "recommended fix: use a compatible console version  OR  flash new firmware";
-            log.error(errorMessage);
-            return errorMessage;
-        }
         return null;
     }
 
