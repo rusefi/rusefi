@@ -1969,7 +1969,7 @@ Error above specified value
 ### dynoCarWheelTireWidthMm
 
 
-### dynoCarGearPrimaryEduction
+### dynoCarGearPrimaryReduction
 
 
 ### dynoCarGearRatio

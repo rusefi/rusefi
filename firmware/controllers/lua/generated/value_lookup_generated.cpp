@@ -1976,9 +1976,9 @@ float getConfigValueByName(const char *name) {
 // dynoCarWheelTireWidthMm
 		case 1000921080:
 			return config->dynoCarWheelTireWidthMm;
-// dynoCarGearPrimaryEduction
-		case -424301261:
-			return config->dynoCarGearPrimaryEduction;
+// dynoCarGearPrimaryReduction
+		case -1607465307:
+			return config->dynoCarGearPrimaryReduction;
 // dynoCarGearRatio
 		case 589242035:
 			return config->dynoCarGearRatio;
@@ -5288,9 +5288,9 @@ bool setConfigValueByName(const char *name, float value) {
 		config->dynoCarWheelTireWidthMm = (int)value;
 		return 1;
 	}
-		case -424301261:
+		case -1607465307:
 	{
-		config->dynoCarGearPrimaryEduction = value;
+		config->dynoCarGearPrimaryReduction = value;
 		return 1;
 	}
 		case 589242035:

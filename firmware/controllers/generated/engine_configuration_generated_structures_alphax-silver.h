@@ -6263,7 +6263,7 @@ struct persistent_config_s {
 	/**
 	 * offset 23260
 	 */
-	float dynoCarGearPrimaryEduction;
+	float dynoCarGearPrimaryReduction;
 	/**
 	 * offset 23264
 	 */
