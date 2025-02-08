@@ -273,9 +273,6 @@ float getOutputValueByName(const char *name) {
 // idleStepperTargetPosition
 		case 356548450:
 			return engine->outputChannels.idleStepperTargetPosition;
-// tsConfigVersion
-		case 1299611400:
-			return engine->outputChannels.tsConfigVersion;
 // totalTriggerErrorCounter
 		case 2018173863:
 			return engine->outputChannels.totalTriggerErrorCounter;
