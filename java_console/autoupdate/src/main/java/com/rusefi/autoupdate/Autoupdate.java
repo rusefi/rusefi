@@ -28,7 +28,7 @@ import static com.rusefi.core.FindFileHelper.findSrecFile;
 
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
-    private static final int AUTOUPDATE_VERSION = 20241004; // separate from rusEFIVersion#CONSOLE_VERSION
+    private static final int AUTOUPDATE_VERSION = 20250208; // separate from rusEFIVersion#CONSOLE_VERSION
 
     private static final String LOGO_PATH = "/com/rusefi/";
     private static final String LOGO = LOGO_PATH + "logo.png";
@@ -79,6 +79,8 @@ public class Autoupdate {
 
         Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile = downloadFreshZipFile(args, firstArgument, bundleInfo);
         URLClassLoader jarClassLoader = safeUnzipMakingSureClassloaderIsHappy(downloadedAutoupdateFile);
+        // extremely dark magic: XML binding seems to depend on this
+        Thread.currentThread().setContextClassLoader(jarClassLoader);
         startConsole(args, jarClassLoader);
     }
 
