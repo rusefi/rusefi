@@ -31,8 +31,8 @@ static void setDefaultIatTimingCorrection() {
 }
 
 static void setDefaultTrailingSparkTable() {
-	copyArray(config->trailingSparkLoadBins, {20,60,100,150});
-    copyArray(config->trailingSparkRpmBins, {1000,3000,5000,7000});
+	setLinearCurve(config->trailingSparkLoadBins, 20, 100, 1);
+	setRpmTableBin(config->trailingSparkRpmBins);
 
 #if TRAILING_SPARK_SIZE == 4
 	for (size_t i = 0; i < TRAILING_SPARK_SIZE; i++) {
