@@ -2170,7 +2170,7 @@ int8_t  dynoCarWheelDiaInch;
 int8_t  dynoCarWheelAspectRatio;
 int16_t dynoCarWheelTireWidthMm;
 
-float   dynoCarGearPrimaryEduction;;"", 1, 0, 0, 300, 4
+float   dynoCarGearPrimaryReduction;;"", 1, 0, 0, 300, 4
 float   dynoCarGearRatio;;"", 1, 0, 0, 300, 4
 float   dynoCarGearFinalDrive;;"", 1, 0, 0, 300, 4
 

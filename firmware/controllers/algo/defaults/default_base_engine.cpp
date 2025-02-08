@@ -86,7 +86,7 @@ void setDynoDefaults() {
     config->dynoCarWheelTireWidthMm = 235;
     config->dynoCarWheelAspectRatio = 40;
 
-    config->dynoCarGearPrimaryEduction = 1;
+    config->dynoCarGearPrimaryReduction = 1;
     config->dynoCarGearRatio = 1.0;
     config->dynoCarGearFinalDrive = 4.2;
 
