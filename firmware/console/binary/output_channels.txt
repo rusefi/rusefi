@@ -150,10 +150,6 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	uint8_t calibrationMode;;"", 1, 0, 0, 0, 0
 	uint8_t idleStepperTargetPosition;Idle: Stepper target position;"", 1, 0, 0, 0, 0
 
-! todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
-! rusEFI console from TS_FILE_VERSION to TS_SIGNATURE :(
-	uint32_t tsConfigVersion;;"", 1, 0, 0, 0, 0
-
 ! Errors
 	uint32_t totalTriggerErrorCounter;@@GAUGE_NAME_TRG_ERR@@;"counter",1, 0, 0, 0, 0
 	uint32_t orderingErrorCounter;;"",1, 0, 0, 0, 0
