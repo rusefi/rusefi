@@ -11,7 +11,7 @@ import com.rusefi.enums.engine_type_e;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
