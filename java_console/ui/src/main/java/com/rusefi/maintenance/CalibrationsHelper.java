@@ -150,7 +150,7 @@ public class CalibrationsHelper {
             return true;
         } catch (final Exception e) {
             log.error("Backing up calibrations failed:", e);
-            callbacks.logLine("Backing up current calibrations failed");
+            callbacks.logLine("Backing up current calibrations failed: " + e);
             return false;
         }
     }
