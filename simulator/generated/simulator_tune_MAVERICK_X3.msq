@@ -4853,17 +4853,17 @@ end</constant>
         <constant digits="0" name="dynoRpmStep" units="">100.0</constant>
         <constant digits="0" name="dynoSaeTemperatureC" units="">20.0</constant>
         <constant digits="0" name="dynoSaeRelativeHumidity" units="">80.0</constant>
-        <constant digits="0" name="dynoSaeBaro" units="">101.33</constant>
+        <constant digits="2" name="dynoSaeBaro" units="kPa">101.33</constant>
         <constant digits="0" name="dynoCarWheelDiaInch" units="">18.0</constant>
         <constant digits="0" name="dynoCarWheelAspectRatio" units="">40.0</constant>
         <constant digits="0" name="dynoCarWheelTireWidthMm" units="">235.0</constant>
-        <constant digits="0" name="dynoCarGearPrimaryEduction" units="">1.0</constant>
-        <constant digits="0" name="dynoCarGearRatio" units="">1.0</constant>
-        <constant digits="0" name="dynoCarGearFinalDrive" units="">4.2</constant>
+        <constant digits="4" name="dynoCarGearPrimaryEduction" units="">1.0</constant>
+        <constant digits="4" name="dynoCarGearRatio" units="">1.0</constant>
+        <constant digits="4" name="dynoCarGearFinalDrive" units="">4.2</constant>
         <constant digits="0" name="dynoCarCarMassKg" units="">1000.0</constant>
         <constant digits="0" name="dynoCarCargoMassKg" units="">95.0</constant>
-        <constant digits="0" name="dynoCarCoeffOfDrag" units="">0.29</constant>
-        <constant digits="0" name="dynoCarFrontalAreaM2" units="">1.85</constant>
+        <constant digits="4" name="dynoCarCoeffOfDrag" units="">0.29</constant>
+        <constant digits="4" name="dynoCarFrontalAreaM2" units="">1.85</constant>
         <constant cols="4" digits="1" name="trailingSparkTable" rows="4">
          7.0 9.0 10.0 12.0
          7.0 9.0 10.0 12.0
