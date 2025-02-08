@@ -2164,20 +2164,20 @@ uint8_t dynoRpmStep;
 
 int8_t  dynoSaeTemperatureC;
 uint8_t dynoSaeRelativeHumidity;
-float   dynoSaeBaro;
+float   dynoSaeBaro;;"kPa", 1, 0, 0, 300, 2
 
 int8_t  dynoCarWheelDiaInch;
 int8_t  dynoCarWheelAspectRatio;
 int16_t dynoCarWheelTireWidthMm;
 
-float   dynoCarGearPrimaryEduction;
-float   dynoCarGearRatio;
-float   dynoCarGearFinalDrive;
+float   dynoCarGearPrimaryEduction;;"", 1, 0, 0, 300, 4
+float   dynoCarGearRatio;;"", 1, 0, 0, 300, 4
+float   dynoCarGearFinalDrive;;"", 1, 0, 0, 300, 4
 
 int16_t dynoCarCarMassKg;
 int16_t dynoCarCargoMassKg;
-float   dynoCarCoeffOfDrag;
-float   dynoCarFrontalAreaM2;
+float   dynoCarCoeffOfDrag;;"", 1, 0, 0, 300, 4
+float   dynoCarFrontalAreaM2;;"", 1, 0, 0, 300, 4
 
 int8_t[TRAILING_SPARK_SIZE x TRAILING_SPARK_SIZE] autoscale trailingSparkTable;;"deg", 0.1, 0, 0, 20, 1
 uint8_t[TRAILING_SPARK_SIZE] autoscale trailingSparkRpmBins;;"rpm", 50, 0, 0, 12000, 0
