@@ -93,20 +93,10 @@
 !
 ! units,scale,offset,min,max,digits
 
-!
-! this is used to confirm that firmware and TunerStudio are using the same rusefi.ini version
-! todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
-! rusEFI console from TS_FILE_VERSION to TS_SIGNATURE :(
-#define TS_FILE_VERSION 20250101
-
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
-! update this string to the current date! It is required to also update TS_SIGNATURE above
-! when this happens.
+! update this string to the current date!
 #define FLASH_DATA_VERSION 250206
-
-! this offset is part of console compatibility mechanism, please DO NOT change this offset
-#define TS_FILE_VERSION_OFFSET 124
 
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
