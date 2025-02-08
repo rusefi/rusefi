@@ -6148,6 +6148,7 @@ struct persistent_config_s {
 	 */
 	uint8_t alignmentFill_at_41247[1] = {};
 	/**
+	 * units: kPa
 	 * offset 41248
 	 */
 	float dynoSaeBaro;
