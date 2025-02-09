@@ -530,9 +530,6 @@ float getConfigValueByName(const char *name) {
 // finalIgnitionCutPercentBeforeLaunch
 		case 47348059:
 			return engineConfiguration->finalIgnitionCutPercentBeforeLaunch;
-// vehicleWeight
-		case 1549866701:
-			return engineConfiguration->vehicleWeight;
 // idlePidRpmUpperLimit
 		case 1962548154:
 			return engineConfiguration->idlePidRpmUpperLimit;
@@ -2876,11 +2873,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case 47348059:
 	{
 		engineConfiguration->finalIgnitionCutPercentBeforeLaunch = (int)value;
-		return 1;
-	}
-		case 1549866701:
-	{
-		engineConfiguration->vehicleWeight = (int)value;
 		return 1;
 	}
 		case 1962548154:

@@ -523,9 +523,6 @@ Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon
 ### finalIgnitionCutPercentBeforeLaunch
 
 
-### vehicleWeight
-
-
 ### idlePidRpmUpperLimit
 How far above idle speed do we consider idling, i.e. coasting detection threshold.\nFor example, if target = 800, this param = 200, then anything below 1000 RPM is considered idle.
 
