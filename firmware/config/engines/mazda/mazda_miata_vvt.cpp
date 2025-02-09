@@ -250,7 +250,7 @@ static void setCommonMazdaNB() {
 
 	engineConfiguration->cylinderBore = 83;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_MAZDA);
-	engineConfiguration->vehicleWeight = 1070;
+	config->dynoCarCarMassKg = 1070;
 
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;

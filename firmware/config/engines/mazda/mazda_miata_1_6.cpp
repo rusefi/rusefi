@@ -102,7 +102,7 @@ void miataNAcommonEngineSettings() {
 	engineConfiguration->compressionRatio = 9.1;
 	engineConfiguration->cranking.rpm = 400;
 	engineConfiguration->cylinderBore = 78;
-	engineConfiguration->vehicleWeight = 950;
+	config->dynoCarCarMassKg = 950;
 //	engineConfiguration->totalGearsCount = 5;
 
 	engineConfiguration->rpmHardLimit = 7200;
