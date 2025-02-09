@@ -348,6 +348,34 @@
 #define display_mode_e_DM_HD44780_OVER_PCF8574 2
 #define display_mode_e_DM_NONE 0
 #define DWELL_CURVE_SIZE 8
+#define DYNO_CAR_CAR_MASS_TOOLTIP "Full car mass"
+#define DYNO_CAR_CAR_MASS_UNITS "Kg"
+#define DYNO_CAR_CARGO_MASS_TOOLTIP "Mass of passengers and cargo"
+#define DYNO_CAR_CARGO_MASS_UNITS "Kg"
+#define DYNO_CAR_COEFF_OF_DRAG_STEP_UNITS "Coeff"
+#define DYNO_CAR_COEFF_OF_DRAG_TOOLTIP "Resistance of an car in air, for example see list of popular cars: https://ecomodder.com/wiki/Vehicle_Coefficient_of_Drag_List"
+#define DYNO_CAR_FRONTAL_AREA_TOOLTIP "The frontal area A represents the frontal projection of the car's area"
+#define DYNO_CAR_FRONTAL_AREA_UNITS "m2"
+#define DYNO_CAR_GEAR_FINAL_DRIVE_TOOLTIP "Final drive gear ratio"
+#define DYNO_CAR_GEAR_FINAL_DRIVE_UNITS "Units"
+#define DYNO_CAR_GEAR_PRIMARY_REDUCTION_TOOLTIP "Primary reduction"
+#define DYNO_CAR_GEAR_PRIMARY_REDUCTION_UNITS "Units"
+#define DYNO_CAR_GEAR_RATIO_TOOLTIP "Ratio of the gear on which the measurement will be carried out, usually the gear is selected whose ratio is closest to 1"
+#define DYNO_CAR_GEAR_RATIO_UNITS "Units"
+#define DYNO_CAR_WHEEL_ASPECT_RATIO_TOOLTIP "Tyre height"
+#define DYNO_CAR_WHEEL_ASPECT_RATIO_UNITS "Aspect Ratio (height)"
+#define DYNO_CAR_WHEEL_DIA_INCH_TOOLTIP "Disc diameter"
+#define DYNO_CAR_WHEEL_DIA_INCH_UNITS "Inch"
+#define DYNO_CAR_WHEEL_TIRE_WIDTH_TOOLTIP "Tyre width"
+#define DYNO_CAR_WHEEL_TIRE_WIDTH_UNITS "Width mm"
+#define DYNO_RPM_STEP_TOOLTIP "RPM Trim Window, Leave on 100 if you dont know what this does"
+#define DYNO_RPM_STEP_UNITS "Rpm"
+#define DYNO_SAE_BARO_TOOLTIP "Atmospheric pressure"
+#define DYNO_SAE_BARO_UNITS "KPa"
+#define DYNO_SAE_RELATIVE_HUMIDITY_TOOLTIP "Relative humidity of air"
+#define DYNO_SAE_RELATIVE_HUMIDITY_UNITS "%"
+#define DYNO_SAE_TEMPERATURE_C_TOOLTIP "Air temperature"
+#define DYNO_SAE_TEMPERATURE_C_UNITS "C"
 #define ego_sensor_e_auto_enum 0="ES_BPSX_D1",2="ES_14Point7_Free",6="ES_AEM",5="ES_Custom",1="ES_Innovate_MTX_L",4="ES_PLX"
 #define ego_sensor_e_enum "BPSX", "Innovate", "14Point7", "INVALID", "PLX", "Custom", "AEM"
 #define ego_sensor_e_ES_14Point7_Free 2
@@ -1347,7 +1375,7 @@
 #define show_2chan_presets true
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1768471668
+#define SIGNATURE_HASH 131313637
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1819,7 +1847,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.02.09.alphax-2chan.1768471668"
+#define TS_SIGNATURE "rusEFI master.2025.02.09.alphax-2chan.131313637"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

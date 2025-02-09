@@ -6130,17 +6130,23 @@ struct persistent_config_s {
 	 */
 	uint16_t trimLoadBins[FUEL_TRIM_LOAD_COUNT] = {};
 	/**
+	 * @@DYNO_RPM_STEP_TOOLTIP@@
+	 * units: Rpm
 	 * offset 41244
 	 */
-	uint8_t dynoRpmStep;
+	scaled_channel<uint8_t, 1, 1> dynoRpmStep;
 	/**
+	 * @@DYNO_SAE_TEMPERATURE_C_TOOLTIP@@
+	 * units: C
 	 * offset 41245
 	 */
-	int8_t dynoSaeTemperatureC;
+	scaled_channel<int8_t, 1, 1> dynoSaeTemperatureC;
 	/**
+	 * @@DYNO_SAE_RELATIVE_HUMIDITY_TOOLTIP@@
+	 * units: %
 	 * offset 41246
 	 */
-	uint8_t dynoSaeRelativeHumidity;
+	scaled_channel<uint8_t, 1, 1> dynoSaeRelativeHumidity;
 	/**
 	 * need 4 byte alignment
 	 * units: units
@@ -6148,50 +6154,71 @@ struct persistent_config_s {
 	 */
 	uint8_t alignmentFill_at_41247[1] = {};
 	/**
-	 * units: kPa
+	 * @@DYNO_SAE_BARO_TOOLTIP@@
+	 * units: KPa
 	 * offset 41248
 	 */
-	float dynoSaeBaro;
+	scaled_channel<float, 1, 1> dynoSaeBaro;
 	/**
+	 * @@DYNO_CAR_WHEEL_DIA_INCH_TOOLTIP@@
+	 * units: Inch
 	 * offset 41252
 	 */
-	int8_t dynoCarWheelDiaInch;
+	scaled_channel<int8_t, 1, 1> dynoCarWheelDiaInch;
 	/**
+	 * @@DYNO_CAR_WHEEL_ASPECT_RATIO_TOOLTIP@@
+	 * units: Aspect Ratio (height)
 	 * offset 41253
 	 */
-	int8_t dynoCarWheelAspectRatio;
+	scaled_channel<int8_t, 1, 1> dynoCarWheelAspectRatio;
 	/**
+	 * @@DYNO_CAR_WHEEL_TIRE_WIDTH_TOOLTIP@@
+	 * units: Width mm
 	 * offset 41254
 	 */
-	int16_t dynoCarWheelTireWidthMm;
+	scaled_channel<int16_t, 1, 1> dynoCarWheelTireWidthMm;
 	/**
+	 * @@DYNO_CAR_GEAR_PRIMARY_REDUCTION_TOOLTIP@@
+	 * units: Units
 	 * offset 41256
 	 */
-	float dynoCarGearPrimaryReduction;
+	scaled_channel<float, 1, 1> dynoCarGearPrimaryReduction;
 	/**
+	 * @@DYNO_CAR_GEAR_RATIO_TOOLTIP@@
+	 * units: Units
 	 * offset 41260
 	 */
-	float dynoCarGearRatio;
+	scaled_channel<float, 1, 1> dynoCarGearRatio;
 	/**
+	 * @@DYNO_CAR_GEAR_FINAL_DRIVE_TOOLTIP@@
+	 * units: Units
 	 * offset 41264
 	 */
-	float dynoCarGearFinalDrive;
+	scaled_channel<float, 1, 1> dynoCarGearFinalDrive;
 	/**
+	 * @@DYNO_CAR_CAR_MASS_TOOLTIP@@
+	 * units: Kg
 	 * offset 41268
 	 */
-	int16_t dynoCarCarMassKg;
+	scaled_channel<int16_t, 1, 1> dynoCarCarMassKg;
 	/**
+	 * @@DYNO_CAR_CARGO_MASS_TOOLTIP@@
+	 * units: Kg
 	 * offset 41270
 	 */
-	int16_t dynoCarCargoMassKg;
+	scaled_channel<int16_t, 1, 1> dynoCarCargoMassKg;
 	/**
+	 * @@DYNO_CAR_COEFF_OF_DRAG_TOOLTIP@@
+	 * units: Coeff
 	 * offset 41272
 	 */
-	float dynoCarCoeffOfDrag;
+	scaled_channel<float, 1, 1> dynoCarCoeffOfDrag;
 	/**
+	 * @@DYNO_CAR_FRONTAL_AREA_TOOLTIP@@
+	 * units: m2
 	 * offset 41276
 	 */
-	float dynoCarFrontalAreaM2;
+	scaled_channel<float, 1, 1> dynoCarFrontalAreaM2;
 	/**
 	 * units: deg
 	 * offset 41280

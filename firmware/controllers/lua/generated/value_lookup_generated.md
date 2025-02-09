@@ -1949,44 +1949,44 @@ Error above specified value
 
 
 ### dynoRpmStep
-
+@@DYNO_RPM_STEP_TOOLTIP@@
 
 ### dynoSaeTemperatureC
-
+@@DYNO_SAE_TEMPERATURE_C_TOOLTIP@@
 
 ### dynoSaeRelativeHumidity
-
+@@DYNO_SAE_RELATIVE_HUMIDITY_TOOLTIP@@
 
 ### dynoSaeBaro
-
+@@DYNO_SAE_BARO_TOOLTIP@@
 
 ### dynoCarWheelDiaInch
-
+@@DYNO_CAR_WHEEL_DIA_INCH_TOOLTIP@@
 
 ### dynoCarWheelAspectRatio
-
+@@DYNO_CAR_WHEEL_ASPECT_RATIO_TOOLTIP@@
 
 ### dynoCarWheelTireWidthMm
-
+@@DYNO_CAR_WHEEL_TIRE_WIDTH_TOOLTIP@@
 
 ### dynoCarGearPrimaryReduction
-
+@@DYNO_CAR_GEAR_PRIMARY_REDUCTION_TOOLTIP@@
 
 ### dynoCarGearRatio
-
+@@DYNO_CAR_GEAR_RATIO_TOOLTIP@@
 
 ### dynoCarGearFinalDrive
-
+@@DYNO_CAR_GEAR_FINAL_DRIVE_TOOLTIP@@
 
 ### dynoCarCarMassKg
-
+@@DYNO_CAR_CAR_MASS_TOOLTIP@@
 
 ### dynoCarCargoMassKg
-
+@@DYNO_CAR_CARGO_MASS_TOOLTIP@@
 
 ### dynoCarCoeffOfDrag
-
+@@DYNO_CAR_COEFF_OF_DRAG_TOOLTIP@@
 
 ### dynoCarFrontalAreaM2
-
+@@DYNO_CAR_FRONTAL_AREA_TOOLTIP@@
 
