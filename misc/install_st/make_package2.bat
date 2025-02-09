@@ -1,9 +1,6 @@
 rem Depends on ST Link and ST VCP being installed manually
 
-rm -rf silent_st_drivers/ST-LINK_USB_V2_1_Driver
-rm -rf silent_st_drivers/"Virtual comport driver"
-rem Just safer not to have the folder at all
-rm -rf silent_st_drivers/DFU_Driver
+call clean_staging_folder.bat
 
 cp -r "C:\Program Files (x86)\STMicroelectronics\STM32 ST-LINK Utility\ST-LINK_USB_V2_1_Driver" silent_st_drivers
 rem https://github.com/rusefi/rusefi_external_utils/blob/master/stsw-stm32102_1_4_0.zip
