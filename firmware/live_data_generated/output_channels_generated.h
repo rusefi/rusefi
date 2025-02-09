@@ -143,14 +143,15 @@ struct output_channels_s {
 	offset 0 bit 28 */
 	bool hasFaultReportFile : 1 {};
 	/**
+	 * Analog sensors supply failure
 	offset 0 bit 29 */
-	bool unusedBit_29_29 : 1 {};
+	bool isAnalogFailure : 1 {};
 	/**
 	offset 0 bit 30 */
-	bool unusedBit_29_30 : 1 {};
+	bool unusedBit_30_30 : 1 {};
 	/**
 	offset 0 bit 31 */
-	bool unusedBit_29_31 : 1 {};
+	bool unusedBit_30_31 : 1 {};
 	/**
 	 * @@GAUGE_NAME_RPM@@
 	 * units: RPM

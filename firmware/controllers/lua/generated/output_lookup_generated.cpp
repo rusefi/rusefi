@@ -93,6 +93,9 @@ float getOutputValueByName(const char *name) {
 // hasFaultReportFile
 		case -1502616231:
 			return engine->outputChannels.hasFaultReportFile;
+// isAnalogFailure
+		case -1383513733:
+			return engine->outputChannels.isAnalogFailure;
 // RPMValue
 		case 1699696209:
 			return engine->outputChannels.RPMValue;
