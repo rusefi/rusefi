@@ -45,6 +45,7 @@ cd ../..
 echo Done installing VCP silently
 pwd
 
+if exist if exist ST-LINK_USB_V2_1_Driver\ (
 echo Let's install ST-Link driver silently
 cd ST-LINK_USB_V2_1_Driver
 
@@ -59,11 +60,20 @@ start "" dpinst_amd64.exe /sw
 
 cd ..
 echo Done installing ST-Link silently
+) else (
+  echo ST-LINK_USB_V2_1_Driver Not Found
+)
 pwd
+
+
+if exist if exist DFU_Driver\ (
 
 cd DFU_Driver
 echo "Now installing stm32bootloader driver"
 install_elevated_STM32Bootloader.bat
 cd ..
+) else (
+  echo DFU_Driver Not Found
+)
 
 exit
