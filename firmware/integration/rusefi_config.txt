@@ -96,7 +96,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 250206
+#define FLASH_DATA_VERSION 250209
 
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
@@ -852,7 +852,6 @@ pin_output_mode_e hip9011IntHoldPinMode;
  	custom imu_type_e 1 bits, U08, @OFFSET@, [0:4], "None", "VAG", "MM5.10", "type 3", "type 4"
 	imu_type_e imuType
 
-	uint16_t vehicleWeight;;"kg", 1, 0, 0, 10000, 0
 	int16_t idlePidRpmUpperLimit;How far above idle speed do we consider idling, i.e. coasting detection threshold.\nFor example, if target = 800, this param = 200, then anything below 1000 RPM is considered idle.;"RPM", 1, 0, 0, 500, 0
 
 	uint16_t autoscale applyNonlinearBelowPulse;Apply nonlinearity correction below a pulse of this duration. Pulses longer than this duration will receive no adjustment.;"ms", {1/1000}, 0, 0, 30, 3
@@ -2474,7 +2473,6 @@ end_struct
 #define ts_show_etb_bias_curve true
 #define ts_show_etb_pins true
 #define ts_show_forced_induction false
-#define ts_show_vehicle_weight false
 #define ts_show_compression_ratio false
 #define ts_show_injection_mode true
 #define ts_show_maf true
