@@ -69,7 +69,7 @@ TEST(hip9011, configurationCommands) {
 	EXPECT_CALL(mock, sendSyncCommand(SET_GAIN_CMD(0xE), 0)).Times(1);
 	EXPECT_CALL(mock, sendSyncCommand(SET_INTEGRATOR_CMD(0x1C), 0)).Times(1);
 	EXPECT_CALL(mock, sendSyncCommand(SET_BAND_PASS_CMD(0x2A), 0)).Times(1);
-	EXPECT_CALL(mock, sendSyncCommand(SET_PRESCALER_CMD(6), 0)).Times(1);
+	EXPECT_CALL(mock, sendSyncCommand(SET_PRESCALER_CMD(HIP_8MHZ_PRESCALER), 0)).Times(1);
 	instance.handleSettings(PARAMETERS);
 
 	// initialization is over, no commands should be sent
