@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="23308">
+    <page number="0" size="23304">
         <constant name="engineType">"HONDA_K"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">0.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
@@ -381,7 +381,6 @@
         <constant name="boostOpenLoopYAxis">"TPS"</constant>
         <constant name="l9779spiDevice">"Off"</constant>
         <constant name="imuType">"None"</constant>
-        <constant digits="0" name="vehicleWeight" units="kg">0.0</constant>
         <constant digits="0" name="idlePidRpmUpperLimit" units="RPM">300.0</constant>
         <constant digits="3" name="applyNonlinearBelowPulse" units="ms">0.0</constant>
         <constant name="lps25BaroSensorScl">"NONE"</constant>
@@ -4887,7 +4886,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20250206" nPages="1" signature="rusEFI master.2025.02.09.f407-discovery.2533534289" version="5.0"/>
+    <versionInfo firmwareInfo="20250206" nPages="1" signature="rusEFI master.2025.02.09.f407-discovery.2358099780" version="5.0"/>
     <bibliography author="rusEFI 20250206" writeDate="date"/>
     <settings/>
     <userComments/>
