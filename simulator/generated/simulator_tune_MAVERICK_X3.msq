@@ -4850,20 +4850,20 @@ end</constant>
          0.0
          0.0
 </constant>
-        <constant digits="0" name="dynoRpmStep" units="">100.0</constant>
-        <constant digits="0" name="dynoSaeTemperatureC" units="">20.0</constant>
-        <constant digits="0" name="dynoSaeRelativeHumidity" units="">80.0</constant>
-        <constant digits="2" name="dynoSaeBaro" units="kPa">101.33</constant>
-        <constant digits="0" name="dynoCarWheelDiaInch" units="">18.0</constant>
-        <constant digits="0" name="dynoCarWheelAspectRatio" units="">40.0</constant>
-        <constant digits="0" name="dynoCarWheelTireWidthMm" units="">235.0</constant>
-        <constant digits="4" name="dynoCarGearPrimaryReduction" units="">1.0</constant>
-        <constant digits="4" name="dynoCarGearRatio" units="">1.0</constant>
-        <constant digits="4" name="dynoCarGearFinalDrive" units="">4.2</constant>
-        <constant digits="0" name="dynoCarCarMassKg" units="">1000.0</constant>
-        <constant digits="0" name="dynoCarCargoMassKg" units="">95.0</constant>
-        <constant digits="4" name="dynoCarCoeffOfDrag" units="">0.29</constant>
-        <constant digits="4" name="dynoCarFrontalAreaM2" units="">1.85</constant>
+        <constant digits="0" name="dynoRpmStep" units="Rpm">100.0</constant>
+        <constant digits="0" name="dynoSaeTemperatureC" units="C">20.0</constant>
+        <constant digits="0" name="dynoSaeRelativeHumidity" units="%">80.0</constant>
+        <constant digits="3" name="dynoSaeBaro" units="KPa">101.33</constant>
+        <constant digits="1" name="dynoCarWheelDiaInch" units="Inch">18.0</constant>
+        <constant digits="0" name="dynoCarWheelAspectRatio" units="Aspect Ratio (height)">40.0</constant>
+        <constant digits="0" name="dynoCarWheelTireWidthMm" units="Width mm">235.0</constant>
+        <constant digits="3" name="dynoCarGearPrimaryReduction" units="Units">1.0</constant>
+        <constant digits="3" name="dynoCarGearRatio" units="Units">1.0</constant>
+        <constant digits="3" name="dynoCarGearFinalDrive" units="Units">4.2</constant>
+        <constant digits="0" name="dynoCarCarMassKg" units="Kg">1000.0</constant>
+        <constant digits="0" name="dynoCarCargoMassKg" units="Kg">95.0</constant>
+        <constant digits="3" name="dynoCarCoeffOfDrag" units="Coeff">0.29</constant>
+        <constant digits="2" name="dynoCarFrontalAreaM2" units="m2">1.85</constant>
         <constant cols="4" digits="1" name="trailingSparkTable" rows="4">
          7.0 9.0 10.0 12.0
          7.0 9.0 10.0 12.0
@@ -4884,7 +4884,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20250206" nPages="1" signature="rusEFI master.2025.02.09.f407-discovery.4027962387" version="5.0"/>
+    <versionInfo firmwareInfo="20250206" nPages="1" signature="rusEFI master.2025.02.09.f407-discovery.1182085053" version="5.0"/>
     <bibliography author="rusEFI 20250206" writeDate="date"/>
     <settings/>
     <userComments/>
