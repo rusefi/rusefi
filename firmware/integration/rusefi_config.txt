@@ -96,7 +96,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 250209
+#define FLASH_DATA_VERSION 250210
 
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
@@ -643,7 +643,6 @@ adc_channel_e fuelLevelSensor;This is the processor pin that your fuel level sen
 
 
 	float idle_derivativeFilterLoss;0.1 is a good default value;"x", 1, 0, -1000000, 1000000, 4
-	int unusedTrailingSparkAngle
 
 struct trigger_config_s
 
@@ -1130,7 +1129,6 @@ bit watchOutForLinearTime
 	int16_t warningPeriod;set warningPeriod X;"seconds", 1, 0, 0, 60, 0
 
 	float knockDetectionWindowStart;;"angle", 1, 0, -1000, 1000, 2
-	uint32_t unusedKnockWindow
 
 
 float idleStepperReactionTime;;"ms", 1, 0, 1, 300, 0
