@@ -1,6 +1,6 @@
 package com.rusefi.ui;
 
-import com.rusefi.ui.util.UiUtils;
+import com.rusefi.core.ui.AutoupdateUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +14,7 @@ public abstract class InitOnFirstPaintPanel {
             if (isFirstPaint) {
                 content.removeAll();
                 content.add(createContent(), BorderLayout.CENTER);
-                UiUtils.trueRepaint(content);
+                AutoupdateUtil.trueLayoutAndRepaint(content);
                 isFirstPaint = false;
             }
             super.paint(g);

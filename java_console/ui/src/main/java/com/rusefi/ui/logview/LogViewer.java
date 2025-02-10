@@ -3,17 +3,14 @@ package com.rusefi.ui.logview;
 import com.devexperts.logging.FileLogger;
 import com.devexperts.logging.Logging;
 import com.rusefi.ConsoleUI;
-import com.rusefi.FileLog;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.EngineState;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.file.FileUtils;
-import com.rusefi.sensor_logs.BinarySensorLogRestarter;
 import com.rusefi.ui.ChartRepository;
 import com.rusefi.ui.LogDownloader;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.engine.EngineSnifferPanel;
-import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -113,7 +110,7 @@ public class LogViewer extends JPanel {
         descPanel.removeAll();
         descPanel.add(new JLabel("Total digital charts: "));
         descPanel.add(new JLabel("" + ChartRepository.getInstance().getSize()));
-        UiUtils.trueRepaint(descPanel);
+        AutoupdateUtil.trueLayoutAndRepaint(descPanel);
     }
 
     private void openFolder(String folderName) {

@@ -6,6 +6,7 @@ import com.opensr5.ini.field.StringIniField;
 import com.rusefi.ConnectionTab;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.MessagesPanel;
@@ -25,10 +26,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.ui.util.UiUtils.trueLayout;
 
 public class LuaScriptPanel {
     private static final Logging log = getLogging(LuaScriptPanel.class);
@@ -145,7 +144,7 @@ public class LuaScriptPanel {
         mainPanel.add(upperPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
 
-        trueLayout(mainPanel);
+        AutoupdateUtil.trueLayoutAndRepaint(mainPanel);
         SwingUtilities.invokeLater(() -> centerPanel.setDividerLocation(centerPanel.getSize().width / 2));
     }
 

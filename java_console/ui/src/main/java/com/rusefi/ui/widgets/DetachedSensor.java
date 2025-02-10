@@ -2,6 +2,7 @@ package com.rusefi.ui.widgets;
 
 import com.rusefi.SensorTypeHelper;
 import com.rusefi.core.Sensor;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.enums.SensorType;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.IMethodInvocation;
@@ -9,7 +10,6 @@ import com.rusefi.io.InvocationConfirmationListener;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.UIContext;
 import com.rusefi.core.preferences.storage.Node;
-import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -113,7 +113,7 @@ public class DetachedSensor {
             Component mockComponent = createMockValueSlider(uiContext.getCommandQueue(), sensor);
             mockControlPanel.add(mockComponent);
         }
-        UiUtils.trueLayout(content);
+        AutoupdateUtil.trueLayoutAndRepaint(content);
         int size = width;
         int h = isMockable ? (int) (size * 1.5) : size;
         frame.setSize(size, h);

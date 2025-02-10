@@ -2,6 +2,7 @@ package com.rusefi.ui;
 
 import com.rusefi.ConsoleUI;
 import com.rusefi.core.MessagesCentral;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ui.logview.LogViewer;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
@@ -60,7 +61,7 @@ public class LogDownloader {
                     JPanel logFileEntry = createFilePanel(message.substring(colonIndex + 1), size);
 
                     logFiles.add(logFileEntry);
-                    UiUtils.trueLayout(logFiles.getParent());
+                    AutoupdateUtil.trueLayoutAndRepaint(logFiles.getParent());
                 }
             }
         });

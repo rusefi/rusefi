@@ -115,7 +115,7 @@ public class AutoupdateUtil {
         );
     }
 
-    public static void trueLayout(Component component) {
+    public static void trueLayoutAndRepaint(Component component) {
         assertAwtThread();
         if (component == null)
             return;
@@ -189,9 +189,9 @@ public class AutoupdateUtil {
     }
 
     public static void pack(Window window) {
-        trueLayout(window);
+        trueLayoutAndRepaint(window);
         if (window != null)
             window.pack();
-        trueLayout(window);
+        trueLayoutAndRepaint(window);
     }
 }

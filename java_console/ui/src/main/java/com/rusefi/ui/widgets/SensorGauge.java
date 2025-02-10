@@ -3,6 +3,7 @@ package com.rusefi.ui.widgets;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCategory;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ui.GaugesPanel;
 import com.rusefi.ui.UIContext;
 import com.rusefi.ui.util.UiUtils;
@@ -80,7 +81,7 @@ public class SensorGauge {
         wrapper.removeAllChildrenAndListeners();
         wrapper.addMouseListener(mouseListener);
         wrapper.add(gauge, BorderLayout.CENTER);
-        UiUtils.trueLayout(wrapper.getParent());
+        AutoupdateUtil.trueLayoutAndRepaint(wrapper.getParent());
     }
 
     private static void showPopupMenu(UIContext uiContext, MouseEvent e, JPanelWithListener wrapper, GaugeChangeListener listener,

@@ -1,5 +1,6 @@
 package com.rusefi.trigger;
 
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.enums.trigger_type_e;
 import com.rusefi.ui.LogoHelper;
 import com.rusefi.ui.engine.UpDownImage;
@@ -131,7 +132,7 @@ public class TriggerImage {
             f.showFrame(content);
             f.getFrame().setSize(900, 700);
 
-            UiUtils.trueRepaint(content);
+            AutoupdateUtil.trueLayoutAndRepaint(content);
         });
 
         SwingUtilities.invokeAndWait(() -> {
@@ -161,8 +162,8 @@ public class TriggerImage {
             topPanel.add(secondWheelControl);
         }
 
-        UiUtils.trueLayout(topPanel);
-        UiUtils.trueLayout(content);
+        AutoupdateUtil.trueLayoutAndRepaint(topPanel);
+        AutoupdateUtil.trueLayoutAndRepaint(content);
 
         triggerPanel.tdcPosition = triggerWheelInfo.getTdcPosition();
         triggerPanel.gaps = triggerWheelInfo.getGaps();
@@ -202,8 +203,8 @@ public class TriggerImage {
         triggerPanel.name = getTriggerName(triggerWheelInfo);
 //        triggerPanel.id = "#" + triggerWheelInfo.id;
 
-        UiUtils.trueLayout(triggerPanel);
-        UiUtils.trueRepaint(triggerPanel);
+        AutoupdateUtil.trueLayoutAndRepaint(triggerPanel);
+        AutoupdateUtil.trueLayoutAndRepaint(triggerPanel);
         content.paintImmediately(content.getVisibleRect());
         new File(OUTPUT_FOLDER).mkdir();
         UiUtils.saveImage(OUTPUT_FOLDER + File.separator + "trigger_" + findByOrdinal(triggerWheelInfo.getId()) + ".png", content);

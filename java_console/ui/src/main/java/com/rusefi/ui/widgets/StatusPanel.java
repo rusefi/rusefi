@@ -4,9 +4,9 @@ import com.devexperts.logging.Logging;
 import com.rusefi.FileLog;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.rusEFIVersion;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.ui.StatusWindow;
-import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -91,7 +91,7 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
                 stringForTestArea += "\r\n";
             }
             logTextArea.append(stringForTestArea);
-            UiUtils.trueLayout(logTextArea);
+            AutoupdateUtil.trueLayoutAndRepaint(logTextArea);
         });
     }
 

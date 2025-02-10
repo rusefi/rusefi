@@ -31,7 +31,6 @@ import static com.rusefi.SerialPortScanner.SerialPortType.OpenBlt;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 import static com.rusefi.maintenance.CalibrationsHelper.*;
 import static com.rusefi.maintenance.UpdateMode.*;
-import static com.rusefi.ui.util.UiUtils.trueLayout;
 
 public class ProgramSelector {
     private static final Logging log = getLogging(ProgramSelector.class);
@@ -371,8 +370,8 @@ public class ProgramSelector {
             }
         }
 
-        trueLayout(updateModeComboBox);
-        trueLayout(content);
+        AutoupdateUtil.trueLayoutAndRepaint(updateModeComboBox);
+        AutoupdateUtil.trueLayoutAndRepaint(content);
     }
 
   @NotNull
