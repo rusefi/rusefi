@@ -248,9 +248,9 @@ float getConfigValueByName(const char *name) {
 // launchTimingRetard
 		case 1226423210:
 			return engineConfiguration->launchTimingRetard;
-// hip9011PrescalerAndSDO
-		case -1310663509:
-			return engineConfiguration->hip9011PrescalerAndSDO;
+// hip9011Prescaler
+		case 1548430930:
+			return engineConfiguration->hip9011Prescaler;
 // alternator_iTermMin
 		case 107641733:
 			return engineConfiguration->alternator_iTermMin;
@@ -950,9 +950,6 @@ float getConfigValueByName(const char *name) {
 // knockDetectionWindowStart
 		case -339821344:
 			return engineConfiguration->knockDetectionWindowStart;
-// knockDetectionWindowEnd
-		case -1562133783:
-			return engineConfiguration->knockDetectionWindowEnd;
 // idleStepperReactionTime
 		case 1145888170:
 			return engineConfiguration->idleStepperReactionTime;
@@ -2405,9 +2402,9 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->launchTimingRetard = value;
 		return 1;
 	}
-		case -1310663509:
+		case 1548430930:
 	{
-		engineConfiguration->hip9011PrescalerAndSDO = (int)value;
+		engineConfiguration->hip9011Prescaler = (int)value;
 		return 1;
 	}
 		case 107641733:
@@ -3573,11 +3570,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -339821344:
 	{
 		engineConfiguration->knockDetectionWindowStart = value;
-		return 1;
-	}
-		case -1562133783:
-	{
-		engineConfiguration->knockDetectionWindowEnd = value;
 		return 1;
 	}
 		case 1145888170:

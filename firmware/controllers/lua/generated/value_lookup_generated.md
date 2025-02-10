@@ -241,7 +241,7 @@ Pull-up resistor value on your board
 ### launchTimingRetard
 
 
-### hip9011PrescalerAndSDO
+### hip9011Prescaler
 value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into two bit fields
 
 ### alternator_iTermMin
@@ -941,9 +941,6 @@ Idle target speed when A/C is enabled. Some cars need the extra speed to keep th
 set warningPeriod X
 
 ### knockDetectionWindowStart
-
-
-### knockDetectionWindowEnd
 
 
 ### idleStepperReactionTime
