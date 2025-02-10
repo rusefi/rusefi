@@ -7,6 +7,7 @@ ifeq ($(VAR_DEF_ENGINE_TYPE),)
   VAR_DEF_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=engine_type_e::HELLEN_121_VAG_4_CYL
 endif
 
+DDEFS += -DLUA_USER_HEAP=28000
 
 
 # Add them all together
