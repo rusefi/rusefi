@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="23304">
+    <page number="0" size="23296">
         <constant name="engineType">"HONDA_K"</constant>
         <constant digits="0" name="startButtonSuppressOnStartUpMs" units="">0.0</constant>
         <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
@@ -175,7 +175,10 @@
         <constant digits="1" name="iat_bias_resistor" units="Ohm">2700.0</constant>
         <constant name="iat_adcChannel">"Disabled"</constant>
         <constant digits="2" name="launchTimingRetard" units="deg">0.0</constant>
-        <constant digits="0" name="hip9011PrescalerAndSDO" units="integer">0.0</constant>
+        <constant digits="0" name="hip9011Prescaler" units="integer">0.0</constant>
+        <constant digits="0" name="unusedHip0" units="">0.0</constant>
+        <constant digits="0" name="unusedHip1" units="">0.0</constant>
+        <constant digits="0" name="unusedHip2" units="">0.0</constant>
         <constant digits="0" name="alternator_iTermMin" units="">0.0</constant>
         <constant digits="0" name="alternator_iTermMax" units="">0.0</constant>
         <constant digits="3" name="displacement" units="L">2.4</constant>
@@ -216,7 +219,6 @@
         <constant name="fuelLevelSensor">"Disabled"</constant>
         <constant name="tps2_1AdcChannel">"Disabled"</constant>
         <constant digits="4" name="idle_derivativeFilterLoss" units="x">0.0</constant>
-        <constant digits="0" name="unusedTrailingSparkAngle" units="">0.0</constant>
         <constant name="trigger_type">"Honda K 12+1"</constant>
         <constant digits="0" name="trigger_customTotalToothCount" units="number">0.0</constant>
         <constant digits="0" name="trigger_customSkippedToothCount" units="number">0.0</constant>
@@ -225,7 +227,7 @@
         <constant digits="0" name="boostControlSafeDutyCycle" units="%">0.0</constant>
         <constant name="mafAdcChannel">"Disabled"</constant>
         <constant digits="0" name="acrRevolutions" units="">5.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0250209E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.025021E7</constant>
         <constant digits="3" name="adcVcc" units="volts">3.0</constant>
         <constant digits="0" name="mapCamDetectionAnglePosition" units="Deg">0.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -677,7 +679,6 @@
         <constant digits="0" name="acIdleRpmTarget" units="RPM">900.0</constant>
         <constant digits="0" name="warningPeriod" units="seconds">0.0</constant>
         <constant digits="2" name="knockDetectionWindowStart" units="angle">20.0</constant>
-        <constant digits="2" name="knockDetectionWindowEnd" units="angle">60.0</constant>
         <constant digits="0" name="idleStepperReactionTime" units="ms">3.0</constant>
         <constant digits="0" name="idleStepperTotalSteps" units="count">200.0</constant>
         <constant digits="0" name="torqueReductionArmingApp" units="">0.0</constant>
@@ -4886,7 +4887,7 @@ end</constant>
 </constant>
         <constant name="communityCommsLedPin">"NONE"</constant>
     </page>
-    <versionInfo firmwareInfo="20250206" nPages="1" signature="rusEFI master.2025.02.09.f407-discovery.2358099780" version="5.0"/>
+    <versionInfo firmwareInfo="20250206" nPages="1" signature="rusEFI master.2025.02.09.f407-discovery.2145358373" version="5.0"/>
     <bibliography author="rusEFI 20250206" writeDate="date"/>
     <settings/>
     <userComments/>
