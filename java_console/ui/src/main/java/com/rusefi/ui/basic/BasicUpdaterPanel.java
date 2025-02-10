@@ -15,6 +15,7 @@ import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
 import java.awt.event.ActionEvent;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +35,8 @@ public class BasicUpdaterPanel extends JPanel {
 
     private final JLabel statusMessage = new JLabel();
     private final JButton updateFirmwareButton = ProgramSelector.createUpdateFirmwareButton();
+
+    private final JButton displayClipboardButton = new JButton("Display Clipboard");
     private final JButton updateCalibrationsButton = new JButton(
         "Update Calibrations",
         AutoupdateUtil.loadIcon("writeconfig48.png")
@@ -90,6 +93,26 @@ public class BasicUpdaterPanel extends JPanel {
 
         updateCalibrationsButton.addActionListener(this::onUpdateCalibrationsButtonClicked);
         updateCalibrationsButton.setEnabled(false);
+        super.add(displayClipboardButton);
+        displayClipboardButton.addActionListener(event -> {
+            try {
+                final String clipboardContent = Toolkit.getDefaultToolkit().getSystemClipboard()
+                    .getContents(null).getTransferData(DataFlavor.stringFlavor).toString();
+                JOptionPane.showMessageDialog(
+                    null,
+                    clipboardContent,
+                    "Clipboard Content",
+                    JOptionPane.INFORMATION_MESSAGE
+                );
+            } catch (final Exception e) {
+                JOptionPane.showMessageDialog(
+                    null,
+                    e.getMessage(),
+                    "Clipboard Content",
+                    JOptionPane.ERROR_MESSAGE
+                );
+            }
+        });
         if (ConnectionAndMeta.showUpdateCalibrations()) {
             super.add(updateCalibrationsButton);
         }
