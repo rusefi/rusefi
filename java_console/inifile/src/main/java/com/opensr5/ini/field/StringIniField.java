@@ -27,6 +27,14 @@ public class StringIniField extends IniField {
         return value;
     }
 
+    @Override
+    public String toString() {
+        return "StringIniField{" +
+            "offset=" + getOffset() +
+            ", size=" + size +
+            '}';
+    }
+
     @NotNull
     private static String trimAtZeroSymbol(String value) {
         for (int i = 0; i < value.length(); i++) {
