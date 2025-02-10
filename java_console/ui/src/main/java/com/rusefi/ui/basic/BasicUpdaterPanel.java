@@ -137,24 +137,24 @@ public class BasicUpdaterPanel extends JPanel {
                 case 1: {
                     final SerialPortScanner.PortResult portToUpdateFirmware = portsToUpdateFirmware.get(0);
                     AsyncJob job = null;
-                    if (isObfuscated) {
-                        final SerialPortScanner.SerialPortType portType = portToUpdateFirmware.type;
-                        switch (portType) {
-                            case EcuWithOpenblt: {
-                                job = new OpenBltAutoJob(portToUpdateFirmware, updateFirmwareButton);
-                                break;
-                            }
-                            case OpenBlt: {
-                                job = new OpenBltManualJob(portToUpdateFirmware, updateFirmwareButton);
-                                break;
-                            }
-                            default: {
-                                log.error(String.format("Unexpected port type: %s", portType));
-                                break;
-                            }
+                    final SerialPortScanner.SerialPortType portType = portToUpdateFirmware.type;
+                    switch (portType) {
+                        case Ecu: {
+                            job = new DfuAutoJob(portToUpdateFirmware, updateFirmwareButton);
+                            break;
                         }
-                    } else {
-                        job = new DfuAutoJob(portToUpdateFirmware, updateFirmwareButton);
+                        case EcuWithOpenblt: {
+                            job = new OpenBltAutoJob(portToUpdateFirmware, updateFirmwareButton);
+                            break;
+                        }
+                        case OpenBlt: {
+                            job = new OpenBltManualJob(portToUpdateFirmware, updateFirmwareButton);
+                            break;
+                        }
+                        default: {
+                            log.error(String.format("Unexpected port type: %s", portType));
+                            break;
+                        }
                     }
                     setUpdateFirmwareJob(job);
                     break;
