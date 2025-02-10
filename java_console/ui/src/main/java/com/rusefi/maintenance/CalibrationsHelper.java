@@ -8,6 +8,7 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.*;
 import com.rusefi.SerialPortScanner.PortResult;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.binaryprotocol.BinaryProtocolLocalCache;
 import com.rusefi.core.Pair;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.UpdateOperationCallbacks;
@@ -31,9 +32,8 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 public class CalibrationsHelper {
     private static final Logging log = getLogging(CalibrationsHelper.class);
 
-    private static final String PREVIOUS_CALIBRATIONS_FILE_NAME = "prev_calibrations";
-    private static final String UPDATED_CALIBRATIONS_FILE_NAME = "updated_calibrations";
-
+    private static final String PREVIOUS_CALIBRATIONS_FILE_NAME = BinaryProtocolLocalCache.STATE_FOLDER + "prev_calibrations";
+    private static final String UPDATED_CALIBRATIONS_FILE_NAME = BinaryProtocolLocalCache.STATE_FOLDER + "updated_calibrations";
 
     public static boolean updateFirmwareAndRestorePreviousCalibrations(
         final JComponent parent,
