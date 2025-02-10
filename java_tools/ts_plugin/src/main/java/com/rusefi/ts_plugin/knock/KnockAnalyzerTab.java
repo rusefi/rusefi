@@ -28,12 +28,7 @@ public class KnockAnalyzerTab {
     JComponent allDraw = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
 
     JComponent canvasesComponent = new JPanel(new VerticalFlowLayout(VerticalFlowLayout.TOP, 5, 5));
-    private final JLabel status = new JLabel();
     private final JButton buttonStartStop = new JButton("Start");
-
-    private final JButton buttonAll = new JButton("All");
-    private final JButton buttonSensors = new JButton("Sensors");
-    private final JButton buttonCylinders = new JButton("Cylinders");
 
     private boolean started = false;
     private boolean flushed = false;
@@ -174,27 +169,34 @@ public class KnockAnalyzerTab {
 
         JComponent buttons = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
 
+        JLabel status = new JLabel();
         buttons.add(status);
         buttons.add(buttonStartStop);
+        JButton buttonAll = new JButton("All");
         buttons.add(buttonAll);
+        JButton buttonSensors = new JButton("Sensors");
         buttons.add(buttonSensors);
+        JButton buttonCylinders = new JButton("Cylinders");
         buttons.add(buttonCylinders);
 
         buttonAll.addActionListener(e -> {
             canvasType = CanvasType.CT_ALL;
             createCanvas(canvasType);
+            // todo: address this hack!!!
             buttonStartStop.doClick();
             buttonStartStop.doClick();
         });
         buttonSensors.addActionListener(e -> {
             canvasType = CanvasType.CT_SENSORS;
             createCanvas(canvasType);
+            // todo: address this hack!!!
             buttonStartStop.doClick();
             buttonStartStop.doClick();
         });
         buttonCylinders.addActionListener(e -> {
             canvasType = CanvasType.CT_CYLINDERS;
             createCanvas(canvasType);
+            // todo: address this hack!!!
             buttonStartStop.doClick();
             buttonStartStop.doClick();
         });
@@ -236,7 +238,7 @@ public class KnockAnalyzerTab {
             case CT_ALL:
                 canvases.forEach(canvas -> {
                     canvas.processValues(values);
-                    canvas.getComponent().repaint();
+                    AutoupdateUtil.trueLayoutAndRepaint(canvas.getComponent());
                 });
                 break;
             case CT_SENSORS:
@@ -250,12 +252,10 @@ public class KnockAnalyzerTab {
         }
 
         canvases.forEach(canvas -> {
-            canvas.getComponent().repaint();
+            AutoupdateUtil.trueLayoutAndRepaint(canvas.getComponent());
         });
 
-        for (int i = 0; i < values.length; ++i) {
-            values[i] = 0;
-        }
+        Arrays.fill(values, 0);
 
         flushed = true;
     }
