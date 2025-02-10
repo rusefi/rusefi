@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 
 import static com.devexperts.logging.Logging.getLogging;
+import static com.rusefi.ToolUtil.EOL;
 
 public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
     private static final Logging log = getLogging(StatusWindow.class);
@@ -59,8 +60,11 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
     public void copyContentToClipboard() {
         // kludge: due to 'append' method using invokeLater even while on AWT thread we also need invokeLater to
         // actually get overall status message
-        SwingUtilities.invokeLater(() -> Toolkit.getDefaultToolkit().getSystemClipboard()
-            .setContents(new StringSelection(logTextArea.getText()), null));
+        SwingUtilities.invokeLater(() -> {
+            final String contentWithoutNullTerminators = logTextArea.getText().replace("\0", EOL);
+            Toolkit.getDefaultToolkit().getSystemClipboard()
+                .setContents(new StringSelection(contentWithoutNullTerminators), null);
+        });
 
         logLine("hint: error state is already in your clipboard, please use PASTE or Ctrl-V while reporting issues");
     }
