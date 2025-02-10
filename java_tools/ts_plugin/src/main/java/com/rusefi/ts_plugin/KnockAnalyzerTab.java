@@ -2,7 +2,6 @@ package com.rusefi.ts_plugin;
 
 import com.efiAnalytics.plugin.ecu.*;
 import com.rusefi.core.ui.AutoupdateUtil;
-import com.rusefi.models.Utils;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -261,11 +260,10 @@ public class KnockAnalyzerTab {
         flushed = true;
     }
 
-    private void initCanvas(KnockMotionListener kmml, KnockMouseListener kml, KnockKeyListener l, JComponent canvas) {
+    private void initCanvas(KnockMotionListener kmml, KnockMouseListener kml, JComponent canvas) {
         canvas.setFocusTraversalKeysEnabled(false);
         canvas.addMouseMotionListener(kmml);
         canvas.addMouseListener(kml);
-        canvas.addKeyListener(l);
         canvas.setFocusable(true);
         canvas.setFocusTraversalKeysEnabled(false);
         canvas.setFocusable(true);
@@ -310,8 +308,7 @@ public class KnockAnalyzerTab {
         KnockCanvas canvas = new KnockCanvas(number, divider);
         KnockMouseListener kml = new KnockMouseListener(canvas);
         KnockMotionListener kmml = new KnockMotionListener(canvas, this.magnituges);
-        KnockKeyListener l = new KnockKeyListener();
-        initCanvas(kmml, kml, l, canvas.getComponent());
+        initCanvas(kmml, kml, canvas.getComponent());
         canvasesComponent.add(canvas.getComponent());
         canvases.add(canvas);
     }
@@ -365,36 +362,8 @@ public class KnockAnalyzerTab {
         refreshCanvases();
     }
 
-    public boolean getStartState() {
-        return this.started;
-    }
-
     public JComponent getContent() {
         return content;
-    }
-
-    public class KnockKeyListener extends KeyAdapter implements ActionListener {
-
-        @Override
-        public void keyPressed(KeyEvent e) {
-            if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-
-            }
-            if (e.getKeyCode() == KeyEvent.VK_UP) {
-
-            }
-            if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-
-            }
-            if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-
-            }
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            //drawPanel.repaint();
-        }
     }
 
     public class KnockMotionListener implements MouseMotionListener {
@@ -423,9 +392,9 @@ public class KnockAnalyzerTab {
         }
     }
 
-    public class KnockMouseListener implements MouseListener {
+    public class KnockMouseListener extends MouseAdapter {
 
-        private KnockCanvas knockCanvas;
+        private final KnockCanvas knockCanvas;
 
         KnockMouseListener(KnockCanvas canvas) {
             knockCanvas = canvas;
@@ -434,26 +403,6 @@ public class KnockAnalyzerTab {
         @Override
         public void mouseClicked(MouseEvent e) {
             knockCanvas.setupFrequencyByClick(e.getX(), e.getY());
-        }
-
-        @Override
-        public void mousePressed(MouseEvent e) {
-
-        }
-
-        @Override
-        public void mouseReleased(MouseEvent e) {
-
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent e) {
-
-        }
-
-        @Override
-        public void mouseExited(MouseEvent e) {
-
         }
     }
 }
