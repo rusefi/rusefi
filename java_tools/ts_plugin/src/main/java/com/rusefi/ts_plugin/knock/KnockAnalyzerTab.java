@@ -1,4 +1,4 @@
-package com.rusefi.ts_plugin;
+package com.rusefi.ts_plugin.knock;
 
 import com.efiAnalytics.plugin.ecu.*;
 import com.rusefi.core.ui.AutoupdateUtil;
