@@ -161,11 +161,17 @@ void tryResetWatchdog() {
 #endif // HAL_USE_WDG
 }
 
+uint32_t getMcuSerial() {
+	uint32_t *uid = ((uint32_t *)UID_BASE);
+    return uid[0] + uid[1] + uid[2];
+}
+
 void baseMCUInit() {
 	// looks like this holds a random value on start? Let's set a nice clean zero
 	DWT->CYCCNT = 0;
 
 	BOR_Set(BOR_Level_1); // one step above default value
+	engine->outputChannels.mcuSerial = getMcuSerial();
 }
 
 extern uint32_t __main_stack_base__;

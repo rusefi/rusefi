@@ -428,5 +428,7 @@ float mapFast
 	int16_t hp
 	int16_t torque
 
+  uint32_t mcuSerial;;"", 1, 0, 0, 4294967295, 0
+
 	uint8_t[48 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct
