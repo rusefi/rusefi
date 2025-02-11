@@ -163,7 +163,7 @@ void tryResetWatchdog() {
 
 uint32_t getMcuSerial() {
 	uint32_t *uid = ((uint32_t *)UID_BASE);
-    return uid[0] + uid[1] + uid[2];
+	return uid[0] + uid[1] + uid[2];
 }
 
 void baseMCUInit() {
@@ -171,7 +171,9 @@ void baseMCUInit() {
 	DWT->CYCCNT = 0;
 
 	BOR_Set(BOR_Level_1); // one step above default value
+#ifndef EFI_BOOTLOADER
 	engine->outputChannels.mcuSerial = getMcuSerial();
+#endif // EFI_BOOTLOADER
 }
 
 extern uint32_t __main_stack_base__;
