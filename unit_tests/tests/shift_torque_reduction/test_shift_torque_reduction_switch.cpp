@@ -170,7 +170,7 @@ namespace {
 				/* config = */ ShiftTorqueReductionSwitchTestBase::TEST_ENGINE_CONFIG.clone()
 					.setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH)
 					.setClutchDownPin(Gpio::Unassigned)
-					.setClutchDownPinMode(PI_DEFAULT),
+					.setClutchDownPinMode(PI_INVERTED_DEFAULT),
 				/* expectedIsTorqueReductionTriggerPinValid = */ false,
 				/* description = */ "LUA_CLUTCH_DOWN (pinInverted = true)"
 			},
