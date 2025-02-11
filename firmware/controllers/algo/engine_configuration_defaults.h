@@ -27,7 +27,7 @@ namespace engine_configuration_defaults {
 
     /* Other Sensor Inputs: */
     constexpr switch_input_pin_e CLUTCH_DOWN_PIN = Gpio::Unassigned;
-    constexpr bool CLUTCH_DOWN_PIN_INVERTED = false;
+    constexpr pin_input_mode_e CLUTCH_DOWN_PIN_MODE = PI_PULLUP;
     constexpr switch_input_pin_e CLUTCH_UP_PIN = Gpio::Unassigned;
     constexpr bool CLUTCH_UP_PIN_INVERTED = false;
 

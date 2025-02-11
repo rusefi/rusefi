@@ -23,13 +23,13 @@ void TestEngineConfiguration::configureClutchDownPin(const std::optional<switch_
     }
 }
 
-void TestEngineConfiguration::configureClutchDownPinInverted(const std::optional<bool> pinInverted) {
-    if (pinInverted.has_value()) {
-        engineConfiguration->clutchDownPinInverted = pinInverted.value();
+void TestEngineConfiguration::configureClutchDownPinMode(const std::optional<pin_input_mode_e> pinMode) {
+    if (pinMode.has_value()) {
+        engineConfiguration->clutchDownPinMode = pinMode.value();
     } else {
         ASSERT_EQ(
-                engineConfiguration->clutchDownPinInverted,
-                engine_configuration_defaults::CLUTCH_DOWN_PIN_INVERTED
+                engineConfiguration->clutchDownPinMode,
+                engine_configuration_defaults::CLUTCH_DOWN_PIN_MODE
         ); // check default value
     }
 }

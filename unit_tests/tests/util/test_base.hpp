@@ -38,7 +38,7 @@ template<class GtestBase>
 void TestBase<GtestBase>::setUpEngineConfiguration(const EngineConfig& config) {
 	// Other Sensor Inputs
 	getTestEngineConfiguration().configureClutchDownPin(config.getClutchDownPin());
-	getTestEngineConfiguration().configureClutchDownPinInverted(config.getClutchDownPinInverted());
+	getTestEngineConfiguration().configureClutchDownPinMode(config.getClutchDownPinMode());
 	getTestEngineConfiguration().configureClutchUpPin(config.getClutchUpPin());
 	getTestEngineConfiguration().configureClutchUpPinInverted(config.getClutchUpPinInverted());
 

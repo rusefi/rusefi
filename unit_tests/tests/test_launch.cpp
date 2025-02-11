@@ -118,8 +118,7 @@ TEST(LaunchControl, SwitchInputCondition) {
 	engine->updateSwitchInputs();
 	EXPECT_FALSE(dut.isInsideSwitchCondition());
 
-	engineConfiguration->clutchDownPinMode = PI_PULLDOWN;
-	engineConfiguration->clutchDownPinInverted = true;
+	engineConfiguration->clutchDownPinMode = PI_INVERTED_PULLDOWN;
 	setMockState(engineConfiguration->clutchDownPin, false);
 	engine->updateSwitchInputs();
 	EXPECT_TRUE(dut.isInsideSwitchCondition());
