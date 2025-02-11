@@ -144,7 +144,7 @@ public class LuaScriptPanel {
         mainPanel.add(upperPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
 
-        AutoupdateUtil.trueLayoutAndRepaint(mainPanel);
+        AutoupdateUtil.trueLayout(mainPanel);
         SwingUtilities.invokeLater(() -> centerPanel.setDividerLocation(centerPanel.getSize().width / 2));
     }
 

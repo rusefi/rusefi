@@ -370,8 +370,8 @@ public class ProgramSelector {
             }
         }
 
-        AutoupdateUtil.trueLayoutAndRepaint(updateModeComboBox);
-        AutoupdateUtil.trueLayoutAndRepaint(content);
+        AutoupdateUtil.trueLayout(updateModeComboBox);
+        AutoupdateUtil.trueLayout(content);
     }
 
   @NotNull

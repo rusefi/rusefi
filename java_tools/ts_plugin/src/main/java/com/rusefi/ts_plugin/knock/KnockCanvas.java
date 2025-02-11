@@ -138,7 +138,7 @@ public class KnockCanvas {
 
     public KnockCanvas(int number, int divider) {
 
-        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayoutAndRepaint(component));
+        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayout(component));
 
         this.number = number;
         SPECTROGRAM_X_AXIS_SIZE = SPECTROGRAM_X_AXIS_SIZE_BASE / divider;

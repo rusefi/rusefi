@@ -35,7 +35,7 @@ public class PcanConnectorUI {
             String stringForTextArea = string;
             stringForTextArea += "\r\n";
             logTextArea.append(stringForTextArea);
-            AutoupdateUtil.trueLayoutAndRepaint(logTextArea);
+            AutoupdateUtil.trueLayout(logTextArea);
         });
 
         new NamedThreadFactory("PCAN-connector").newThread(() -> {

@@ -151,7 +151,7 @@ public class EngineSnifferPanel {
             /**
              * We have scroll pane size which depends on zoom, that's a long chain of dependencies
              */
-            AutoupdateUtil.trueLayoutAndRepaint(imagePanel.getParent());
+            AutoupdateUtil.trueLayout(imagePanel.getParent());
         };
 
         resetImagePanel();
@@ -225,7 +225,7 @@ public class EngineSnifferPanel {
         }
 
         // Repaint now that we've updated state
-        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayoutAndRepaint(imagePanel));
+        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayout(imagePanel));
     }
 
     public JPanel getPanel() {

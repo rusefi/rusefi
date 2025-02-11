@@ -55,7 +55,7 @@ public class SensorSnifferPane {
                         unpackValues(message, values);
                         if (!paused) {
                             processValues();
-                            AutoupdateUtil.trueLayoutAndRepaint(canvas);
+                            AutoupdateUtil.trueLayout(canvas);
                         }
                     }
                 });
@@ -70,7 +70,7 @@ public class SensorSnifferPane {
             @Override
             public void actionPerformed(ActionEvent e) {
                 clear();
-                AutoupdateUtil.trueLayoutAndRepaint(canvas);
+                AutoupdateUtil.trueLayout(canvas);
                 setPaused(pauseButton, false);
             }
         });

@@ -224,7 +224,7 @@ public class KnockAnalyzerTab {
         boolean enabled = this.getEnabledEcu();
         this.setStartState(enabled);
 
-        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayoutAndRepaint(content));
+        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayout(content));
     }
 
     private void flush() {
@@ -238,7 +238,7 @@ public class KnockAnalyzerTab {
             case CT_ALL:
                 canvases.forEach(canvas -> {
                     canvas.processValues(values);
-                    AutoupdateUtil.trueLayoutAndRepaint(canvas.getComponent());
+                    AutoupdateUtil.trueLayout(canvas.getComponent());
                 });
                 break;
             case CT_SENSORS:
@@ -252,7 +252,7 @@ public class KnockAnalyzerTab {
         }
 
         canvases.forEach(canvas -> {
-            AutoupdateUtil.trueLayoutAndRepaint(canvas.getComponent());
+            AutoupdateUtil.trueLayout(canvas.getComponent());
         });
 
         Arrays.fill(values, 0);
@@ -300,8 +300,8 @@ public class KnockAnalyzerTab {
     }
 
     public void refreshCanvases() {
-        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayoutAndRepaint(canvasesComponent));
-        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayoutAndRepaint(content));
+        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayout(canvasesComponent));
+        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayout(content));
     }
 
     public void createCanvas(int number, int divider) {

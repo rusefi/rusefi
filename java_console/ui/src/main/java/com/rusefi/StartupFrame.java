@@ -330,7 +330,7 @@ public class StartupFrame {
         noPortsMessage.setVisible(ports.isEmpty() || !hasEcuOrBootloader);
 
 
-        AutoupdateUtil.trueLayoutAndRepaint(connectPanel);
+        AutoupdateUtil.trueLayout(connectPanel);
     }
 
     public static void setFrameIcon(Frame frame) {
@@ -398,7 +398,7 @@ public class StartupFrame {
             comboPorts.setSelectedItem(defaultPort);
         }
 
-        AutoupdateUtil.trueLayoutAndRepaint(comboPorts);
+        AutoupdateUtil.trueLayout(comboPorts);
         return hasEcuOrBootloader;
     }
 

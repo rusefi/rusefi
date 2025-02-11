@@ -14,7 +14,7 @@ public abstract class InitOnFirstPaintPanel {
             if (isFirstPaint) {
                 content.removeAll();
                 content.add(createContent(), BorderLayout.CENTER);
-                AutoupdateUtil.trueLayoutAndRepaint(content);
+                AutoupdateUtil.trueLayout(content);
                 isFirstPaint = false;
             }
             super.paint(g);

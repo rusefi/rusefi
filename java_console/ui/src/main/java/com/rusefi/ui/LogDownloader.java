@@ -61,7 +61,7 @@ public class LogDownloader {
                     JPanel logFileEntry = createFilePanel(message.substring(colonIndex + 1), size);
 
                     logFiles.add(logFileEntry);
-                    AutoupdateUtil.trueLayoutAndRepaint(logFiles.getParent());
+                    AutoupdateUtil.trueLayout(logFiles.getParent());
                 }
             }
         });
