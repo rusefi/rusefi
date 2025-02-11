@@ -54,7 +54,11 @@ void ShiftTorqueReductionController::updateTriggerPinState() {
         case TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH: {
             updateTriggerPinState(
                 engineConfiguration->clutchDownPin,
+#if !EFI_SIMULATOR
                 efiIsInputPinInverted(engineConfiguration->clutchDownPinMode),
+#else
+                false,
+#endif
                 engine->engineState.lua.clutchDownState
             );
             break;
