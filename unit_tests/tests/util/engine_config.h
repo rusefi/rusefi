@@ -12,7 +12,7 @@ public:
 
     // Other Sensor Inputs
     std::optional<switch_input_pin_e> getClutchDownPin() const { return m_clutchDownPin; }
-    std::optional<bool> getClutchDownPinInverted() const { return m_clutchDownPinInverted; }
+    std::optional<pin_input_mode_e> getClutchDownPinMode() const { return m_clutchDownPinMode; }
     std::optional<switch_input_pin_e> getClutchUpPin() const { return m_clutchUpPin; }
     std::optional<bool> getClutchUpPinInverted() const { return m_clutchUpPinInverted; }
 
@@ -96,7 +96,7 @@ public:
 
     // Other Sensor Inputs
     EngineConfig setClutchDownPin(std::optional<switch_input_pin_e> value);
-    EngineConfig setClutchDownPinInverted(std::optional<bool> value);
+    EngineConfig setClutchDownPinMode(const std::optional<pin_input_mode_e> value);
     EngineConfig setClutchUpPin(std::optional<switch_input_pin_e> value);
     EngineConfig setClutchUpPinInverted(std::optional<bool> value);
 
@@ -172,7 +172,7 @@ public:
 private:
     // Other Sensor Inputs
     std::optional<switch_input_pin_e> m_clutchDownPin;
-    std::optional<bool> m_clutchDownPinInverted;
+    std::optional<pin_input_mode_e> m_clutchDownPinMode;
     std::optional<switch_input_pin_e> m_clutchUpPin;
     std::optional<bool> m_clutchUpPinInverted;
 

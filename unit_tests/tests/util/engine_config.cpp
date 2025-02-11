@@ -15,8 +15,8 @@ EngineConfig EngineConfig::setClutchDownPin(const std::optional<switch_input_pin
     return *this;
 }
 
-EngineConfig EngineConfig::setClutchDownPinInverted(const std::optional<bool> value) {
-    m_clutchDownPinInverted = value;
+EngineConfig EngineConfig::setClutchDownPinMode(const std::optional<pin_input_mode_e> value) {
+    m_clutchDownPinMode = value;
     return *this;
 }
 

@@ -12,7 +12,7 @@ public:
 
     // Other Sensor Inputs
     void configureClutchDownPin(std::optional<switch_input_pin_e> pin);
-    void configureClutchDownPinInverted(std::optional<bool> pinInverted);
+    void configureClutchDownPinMode(const std::optional<pin_input_mode_e> pinMode);
     void configureClutchUpPin(std::optional<switch_input_pin_e> pin);
     void configureClutchUpPinInverted(std::optional<bool> pinInverted);
 

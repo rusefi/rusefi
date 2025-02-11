@@ -56,7 +56,7 @@ namespace {
 				/* inputPin = */ TestSwitchPin::CLUTCH_DOWN,
 				/* config = */ ShiftTorqueReductionSwitchTestBase::TEST_ENGINE_CONFIG.clone()
 					.setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH)
-					.setClutchDownPinInverted(true),
+					.setClutchDownPinMode(PI_INVERTED_DEFAULT),
 				/* expectedIsTorqueReductionTriggerPinValid = */ true,
 				/* description = */ "CLUTCH_DOWN"
 			},
