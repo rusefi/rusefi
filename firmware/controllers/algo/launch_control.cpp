@@ -26,7 +26,7 @@ bool LaunchControlBase::isInsideSwitchCondition() {
 	if (isSwitchActivated) {
 #if !EFI_SIMULATOR
 		if (isBrainPinValid(engineConfiguration->launchActivatePin)) {
-			launchActivatePinState = engineConfiguration->launchActivateInverted ^ efiReadPin(engineConfiguration->launchActivatePin);
+			launchActivatePinState = efiReadPin(engineConfiguration->launchActivatePin, engineConfiguration->launchActivatePinMode);
 		}
 #endif // EFI_PROD_CODE
 		return launchActivatePinState;
