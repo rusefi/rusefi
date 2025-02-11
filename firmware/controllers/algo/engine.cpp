@@ -218,7 +218,7 @@ bool getClutchDownState() {
 static bool getClutchUpState() {
 #if EFI_GPIO_HARDWARE
 	if (isBrainPinValid(engineConfiguration->clutchUpPin)) {
-		return engineConfiguration->clutchUpPinInverted ^ efiReadPin(engineConfiguration->clutchUpPin);
+		return efiReadPin(engineConfiguration->clutchUpPin, engineConfiguration->clutchUpPinMode);
 	}
 #endif // EFI_GPIO_HARDWARE
 	// todo: boolean sensors should leverage sensor framework #6342
@@ -228,7 +228,7 @@ static bool getClutchUpState() {
 bool getBrakePedalState() {
 #if EFI_GPIO_HARDWARE
 	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
-		return engineConfiguration->brakePedalPinInverted ^ efiReadPin(engineConfiguration->brakePedalPin);
+		return efiReadPin(engineConfiguration->brakePedalPin, engineConfiguration->brakePedalPinMode);
 	}
 #endif // EFI_GPIO_HARDWARE
 	// todo: boolean sensors should leverage sensor framework #6342

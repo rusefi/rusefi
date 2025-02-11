@@ -38,8 +38,7 @@ void ShiftTorqueReductionController::updateTriggerPinState() {
         case TORQUE_REDUCTION_BUTTON: {
             updateTriggerPinState(
                 engineConfiguration->torqueReductionTriggerPin,
-                // hack until Inverted merged into Mode
-                engineConfiguration->torqueReductionTriggerPinInverted ? PI_INVERTED_DEFAULT : PI_DEFAULT,
+                engineConfiguration->torqueReductionTriggerPinMode,
                 engine->engineState.lua.torqueReductionState
             );
             break;
@@ -47,8 +46,7 @@ void ShiftTorqueReductionController::updateTriggerPinState() {
         case LAUNCH_BUTTON: {
             updateTriggerPinState(
                 engineConfiguration->launchActivatePin,
-                // hack until Inverted merged into Mode
-                engineConfiguration->launchActivateInverted ? PI_INVERTED_DEFAULT : PI_DEFAULT,
+                engineConfiguration->launchActivatePinMode,
                 false
             );
             break;
@@ -64,8 +62,7 @@ void ShiftTorqueReductionController::updateTriggerPinState() {
         case TORQUE_REDUCTION_CLUTCH_UP_SWITCH: {
             updateTriggerPinState(
                 engineConfiguration->clutchUpPin,
-                // hack until Inverted merged into Mode
-                engineConfiguration->clutchUpPinInverted ? PI_INVERTED_DEFAULT : PI_DEFAULT,
+                engineConfiguration->clutchUpPinMode,
                 engine->engineState.lua.clutchUpState
             );
             break;
