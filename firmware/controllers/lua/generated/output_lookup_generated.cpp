@@ -831,6 +831,9 @@ float getOutputValueByName(const char *name) {
 // torque
 		case 512655621:
 			return engine->outputChannels.torque;
+// mcuSerial
+		case 714144074:
+			return engine->outputChannels.mcuSerial;
 // totalFuelCorrection
 #if EFI_ENGINE_CONTROL
 		case -1779658835:
