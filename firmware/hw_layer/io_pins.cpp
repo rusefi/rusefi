@@ -103,10 +103,13 @@ bool efiReadPin(brain_pin_e pin) {
 iomode_t getInputMode(pin_input_mode_e mode) {
 	switch (mode) {
 	case PI_PULLUP:
+	case PI_INVERTED_PULLUP:
 		return PAL_MODE_INPUT_PULLUP;
 	case PI_PULLDOWN:
+	case PI_INVERTED_PULLDOWN:
 		return PAL_MODE_INPUT_PULLDOWN;
 	case PI_DEFAULT:
+	case PI_INVERTED_DEFAULT:
 	default:
 		return PAL_MODE_INPUT;
 	}
