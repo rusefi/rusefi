@@ -208,7 +208,7 @@ void Engine::updateSlowSensors() {
 bool getClutchDownState() {
 #if EFI_GPIO_HARDWARE
 	if (isBrainPinValid(engineConfiguration->clutchDownPin)) {
-		return engineConfiguration->clutchDownPinInverted ^ efiReadPin(engineConfiguration->clutchDownPin);
+		return efiReadPin(engineConfiguration->clutchDownPin, engineConfiguration->clutchDownPinMode);
 	}
 #endif // EFI_GPIO_HARDWARE
 	// todo: boolean sensors should leverage sensor framework #6342
