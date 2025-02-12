@@ -14,11 +14,11 @@ public:
     std::optional<switch_input_pin_e> getClutchDownPin() const { return m_clutchDownPin; }
     std::optional<pin_input_mode_e> getClutchDownPinMode() const { return m_clutchDownPinMode; }
     std::optional<switch_input_pin_e> getClutchUpPin() const { return m_clutchUpPin; }
-    std::optional<bool> getClutchUpPinInverted() const { return m_clutchUpPinInverted; }
+    std::optional<pin_input_mode_e> getClutchUpPinMode() const { return m_clutchUpPinMode; }
 
     // Launch Control
     std::optional<switch_input_pin_e> getLaunchActivatePin() const { return m_launchActivatePin; }
-    std::optional<bool> getLaunchActivateInverted() const { return m_launchActivateInverted; }
+    std::optional<pin_input_mode_e> getLaunchActivatePinMode() const { return m_launchActivatePinMode; }
     std::optional<bool> getLaunchControlEnabled() const { return m_launchControlEnabled; }
 
     std::optional<int> getLaunchRpm() const { return m_launchRpm; }
@@ -39,7 +39,7 @@ public:
         return m_torqueReductionActivationMode;
     }
     std::optional<switch_input_pin_e> getTorqueReductionTriggerPin() const { return m_torqueReductionTriggerPin; }
-    std::optional<bool> getTorqueReductionTriggerPinInverted() const { return m_torqueReductionTriggerPinInverted; }
+    std::optional<pin_input_mode_e> getTorqueReductionTriggerPinMode() const { return m_torqueReductionTriggerPinMode; }
     std::optional<bool> getLimitTorqueReductionTime() const { return m_limitTorqueReductionTime; }
     std::optional<float> getTorqueReductionTime() const { return m_torqueReductionTime; }
     std::optional<float> getTorqueReductionArmingRpm() const { return m_torqueReductionArmingRpm; }
@@ -69,7 +69,6 @@ public:
     std::optional<bool> getNitrousControlEnabled() const { return m_nitrousControlEnabled; }
     std::optional<nitrous_arming_method_e> getNitrousControlArmingMethod() const { return m_nitrousControlArmingMethod; }
     std::optional<switch_input_pin_e> getNitrousControlTriggerPin() const { return m_nitrousControlTriggerPin; }
-    std::optional<bool> getNitrousControlTriggerPinInverted() const { return m_nitrousControlTriggerPinInverted; }
     std::optional<pin_input_mode_e> getNitrousControlTriggerPinMode() const { return m_nitrousControlTriggerPinMode; }
     std::optional<lua_gauge_e> getNitrousLuaGauge() const { return m_nitrousLuaGauge; }
     std::optional<lua_gauge_meaning_e> getNitrousLuaGaugeMeaning() const { return m_nitrousLuaGaugeMeaning; }
@@ -98,11 +97,11 @@ public:
     EngineConfig setClutchDownPin(std::optional<switch_input_pin_e> value);
     EngineConfig setClutchDownPinMode(const std::optional<pin_input_mode_e> value);
     EngineConfig setClutchUpPin(std::optional<switch_input_pin_e> value);
-    EngineConfig setClutchUpPinInverted(std::optional<bool> value);
+    EngineConfig setClutchUpPinMode(std::optional<pin_input_mode_e> value);
 
     // Launch Control
     EngineConfig setLaunchActivatePin(std::optional<switch_input_pin_e> value);
-    EngineConfig setLaunchActivateInverted(std::optional<bool> value);
+    EngineConfig setLaunchActivatePinMode(const std::optional<pin_input_mode_e> value);
     EngineConfig setLaunchControlEnabled(std::optional<bool> value);
     EngineConfig setLaunchRpm(std::optional<int> value);
     EngineConfig setLaunchRpmWindow(std::optional<int> value);
@@ -118,7 +117,7 @@ public:
     EngineConfig setTorqueReductionEnabled(std::optional<bool> value);
     EngineConfig setTorqueReductionActivationMode(std::optional<torqueReductionActivationMode_e> value);
     EngineConfig setTorqueReductionTriggerPin(std::optional<switch_input_pin_e> value);
-    EngineConfig setTorqueReductionTriggerPinInverted(std::optional<bool> value);
+    EngineConfig setTorqueReductionTriggerPinMode(std::optional<pin_input_mode_e> value);
     EngineConfig setLimitTorqueReductionTime(std::optional<bool> value);
     EngineConfig setTorqueReductionTime(std::optional<float> value);
     EngineConfig setTorqueReductionArmingRpm(std::optional<float> value);
@@ -148,7 +147,6 @@ public:
     EngineConfig setNitrousControlEnabled(std::optional<bool> value);
     EngineConfig setNitrousControlArmingMethod(std::optional<nitrous_arming_method_e> value);
     EngineConfig setNitrousControlTriggerPin(std::optional<switch_input_pin_e> value);
-    EngineConfig setNitrousControlTriggerPinInverted(std::optional<bool> value);
     EngineConfig setNitrousControlTriggerPinMode(std::optional<pin_input_mode_e> value);
     EngineConfig setNitrousLuaGauge(std::optional<lua_gauge_e> value);
     EngineConfig setNitrousLuaGaugeMeaning(std::optional<lua_gauge_meaning_e> value);
@@ -174,11 +172,11 @@ private:
     std::optional<switch_input_pin_e> m_clutchDownPin;
     std::optional<pin_input_mode_e> m_clutchDownPinMode;
     std::optional<switch_input_pin_e> m_clutchUpPin;
-    std::optional<bool> m_clutchUpPinInverted;
+    std::optional<pin_input_mode_e> m_clutchUpPinMode;
 
     // Launch Control
     std::optional<switch_input_pin_e> m_launchActivatePin;
-    std::optional<bool> m_launchActivateInverted;
+    std::optional<pin_input_mode_e> m_launchActivatePinMode;
     std::optional<bool> m_launchControlEnabled;
     std::optional<int> m_launchRpm;
     std::optional<int> m_launchRpmWindow;
@@ -194,7 +192,7 @@ private:
     std::optional<bool> m_isTorqueReductionEnabled;
     std::optional<torqueReductionActivationMode_e> m_torqueReductionActivationMode;
     std::optional<switch_input_pin_e> m_torqueReductionTriggerPin;
-    std::optional<bool> m_torqueReductionTriggerPinInverted;
+    std::optional<pin_input_mode_e> m_torqueReductionTriggerPinMode;
     std::optional<bool> m_limitTorqueReductionTime;
     std::optional<float> m_torqueReductionTime;
     std::optional<float> m_torqueReductionArmingRpm;
@@ -224,7 +222,6 @@ private:
     std::optional<bool> m_nitrousControlEnabled;
     std::optional<nitrous_arming_method_e> m_nitrousControlArmingMethod;
     std::optional<switch_input_pin_e> m_nitrousControlTriggerPin;
-    std::optional<bool> m_nitrousControlTriggerPinInverted;
     std::optional<pin_input_mode_e> m_nitrousControlTriggerPinMode;
     std::optional<lua_gauge_e> m_nitrousLuaGauge;
     std::optional<lua_gauge_meaning_e> m_nitrousLuaGaugeMeaning;
