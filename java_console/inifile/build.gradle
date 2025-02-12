@@ -4,6 +4,7 @@ dependencies {
     api project(':logging-api')
     api project(':core_io')
     // intention is to have happy self-contained shadowJar compatible both with java 8 and 11+
-    api global_libs.jaxb
+    api "jakarta.xml.bind:jakarta.xml.bind-api:3.0.0"
+    api "com.sun.xml.bind:jaxb-impl:3.0.0"
     api 'javax.activation:activation:1.1.1'
 }

@@ -13,7 +13,7 @@ import com.rusefi.tune.xml.Msq;
 import com.rusefi.xml.XmlUtil;
 import org.jetbrains.annotations.NotNull;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
