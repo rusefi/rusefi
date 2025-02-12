@@ -943,8 +943,8 @@ custom maf_sensor_type_e 1 bits, S08, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	custom vehicle_info_t @@VEHICLE_INFO_SIZE@@ string, ASCII, @OFFSET@, @@VEHICLE_INFO_SIZE@@
 	custom gppwm_note_t @@GPPWM_NOTE_SIZE@@ string, ASCII, @OFFSET@, @@GPPWM_NOTE_SIZE@@
 
-	bit dead003
-	bit dead000
+	bit unused920_0
+	bit unused920_1
 	bit useHbridgesToDriveIdleStepper;If enabled we use two H-bridges to drive stepper idle air valve
 	bit multisparkEnable
 	bit enableLaunchRetard
@@ -1068,11 +1068,11 @@ bit cutSparkOnHardLimit,"yes","no";Be careful enabling this: some engines are kn
 bit launchFuelCutEnable
 bit launchSparkCutEnable;This is the Cut Mode normally used
 	bit torqueReductionEnabled
-	bit dead001
+	bit unused1308_20
 	bit limitTorqueReductionTime
 bit verboseIsoTp;Are you a developer troubleshooting TS over CAN ISO/TP?
 bit engineSnifferFocusOnInputs
-bit dead002
+bit unused1308_24
 bit twoStroke,"Two Stroke","Four Stroke"
 bit skippedWheelOnCam,"On camshaft","On crankshaft";Where is your primary skipped wheel located?
 
@@ -1113,7 +1113,7 @@ bit invertVvtControlIntake,"retard","advance";If increased VVT duty cycle increa
 bit invertVvtControlExhaust,"retard","advance";If increased VVT duty cycle increases the indicated VVT angle, set this to 'advance'. If it decreases, set this to 'retard'. Most intake cams use 'advance', and most exhaust cams use 'retard'.
 bit useBiQuadOnAuxSpeedSensors
 bit sdTriggerLog,"trigger","normal";'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Normal' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
-bit dead005
+bit unused1320_28
 bit stepper_dc_use_two_wires
 bit watchOutForLinearTime
 
