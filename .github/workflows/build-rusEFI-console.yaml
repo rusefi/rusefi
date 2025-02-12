@@ -13,6 +13,9 @@ jobs:
         run: |
           misc/git_scripts/common_submodule_init_without_chibios.sh
 
+      # as of 2025 TS unfortunately still uses java 8
+      # we use JDK11 but sourceCompatibility/targetCompatibility 8 so that rusEFI TS plugin is compatible with TS
+      #  [tag:java8]
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
