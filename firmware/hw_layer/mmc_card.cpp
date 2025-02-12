@@ -538,7 +538,7 @@ static bool mountMmc() {
 	}
 
 #if EFI_TUNER_STUDIO
-	engine->outputChannels.sd_logging_internal = ret;
+	engine->outputChannels.sd_logging = ret;
 #endif
 
 	return ret;
@@ -553,7 +553,7 @@ static void unmountMmc() {
 	f_mount(NULL, 0, 0);
 
 #if EFI_TUNER_STUDIO
-	engine->outputChannels.sd_logging_internal = false;
+	engine->outputChannels.sd_logging = false;
 #endif
 
 	efiPrintf("SD card unmounted");
@@ -584,7 +584,7 @@ static int sdTriggerLogger();
 static bool sdLoggerInitDone = false;
 static bool sdLoggerFailed = false;
 
-static int sdLogger()
+static int sdLoggerWrite()
 {
 	int ret = 0;
 
@@ -791,7 +791,7 @@ static int sdModeExecuter()
 			sdNeedRemoveReports = false;
 		}
 		// execute logger
-		return sdLogger();
+		return sdLoggerWrite();
 	}
 
 	return 0;

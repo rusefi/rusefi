@@ -10,7 +10,7 @@
 struct_no_prefix output_channels_s
 
 bit sd_present;SD: Present
-bit sd_logging_internal;SD: Logging
+bit sd_logging;SD: Logging
 bit triggerScopeReady
 bit antilagTriggered
 bit isO2HeaterOn;
