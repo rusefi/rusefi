@@ -8,7 +8,7 @@ import com.rusefi.tools.online.UploadResult;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 import java.util.concurrent.LinkedBlockingDeque;

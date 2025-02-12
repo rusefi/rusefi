@@ -31,7 +31,7 @@ import com.rusefi.io.UiLinkManagerHelper;
 import com.rusefi.ui.basic.BasicStartupFrame;
 import org.jetbrains.annotations.Nullable;
 
-import javax.xml.bind.JAXBException;
+import jakarta.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
