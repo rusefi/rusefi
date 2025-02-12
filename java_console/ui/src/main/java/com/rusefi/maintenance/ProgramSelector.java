@@ -335,6 +335,7 @@ public class ProgramSelector {
         boolean hasSerialPorts = !currentHardware.getKnownPorts().isEmpty();
         boolean hasDfuDevice = currentHardware.isDfuFound();
 
+        Object updateModeToRestore = updateModeComboBox.getSelectedItem();
         updateModeComboBox.removeAllItems();
         if (FileLog.isWindows()) {
             boolean requireBlt = FindFileHelper.isObfuscated();
@@ -366,9 +367,11 @@ public class ProgramSelector {
 
             List<PortResult> listOfBootloaders = currentHardware.getKnownPorts().stream().filter(portResult -> portResult.type == OpenBlt).collect(Collectors.toList());
             if (!listOfBootloaders.isEmpty()) {
-                updateModeComboBox.setSelectedItem(OPENBLT_MANUAL);
+                updateModeToRestore = OPENBLT_MANUAL;
             }
         }
+
+        updateModeComboBox.setSelectedItem(updateModeToRestore);
 
         AutoupdateUtil.trueLayout(updateModeComboBox);
         AutoupdateUtil.trueLayout(content);
