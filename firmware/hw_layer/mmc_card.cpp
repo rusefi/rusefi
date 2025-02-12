@@ -190,6 +190,8 @@ static SD_MODE sdMode = SD_MODE_IDLE;
 // by default we want SD card for logs
 static SD_MODE sdTargerMode = SD_MODE_ECU;
 
+static bool sdAutoModeSwitching = false;
+
 static bool sdNeedRemoveReports = false;
 
 /**
@@ -381,9 +383,6 @@ static void sdLoggerCloseFile(FIL *fd)
 	// close file
 	f_close(fd);
 
-	// f_sync is called internally
-	//f_sync(&FDLogFile);
-
 	// SD logger is inactive
 	sdLoggerSetReady(false);
 }
@@ -399,10 +398,15 @@ static void removeFile(const char *pathx) {
 
 #if HAL_USE_USB_MSD
 
-static chibios_rt::BinarySemaphore usbConnectedSemaphore(/* taken =*/ true);
+static volatile bool usbConnectedFlags = false;
 
 void onUsbConnectedNotifyMmcI() {
-	usbConnectedSemaphore.signalI();
+	usbConnectedFlags = true;
+}
+
+void onUsbDisconnectedNotifyMmcI() {
+	// swtich back to auto mode selection, if allowed
+	usbConnectedFlags = false;
 }
 
 #endif /* HAL_USE_USB_MSD */
@@ -484,23 +488,6 @@ static void deinitializeMmcBlockDevide() {
 
 #endif /* EFI_SDC_DEVICE */
 
-#if HAL_USE_USB_MSD
-static bool useMsdMode() {
-	if (engineConfiguration->alwaysWriteSdCard) {
-		return false;
-	}
-	if (isIgnVoltage()) {
-	  // if we have battery voltage let's give priority to logging not reading
-	  // this gives us a chance to SD card log cranking
-	  return false;
-	}
-	// Wait for the USB stack to wake up, or a 15 second timeout, whichever occurs first
-	msg_t usbResult = usbConnectedSemaphore.wait(TIME_MS2I(15000));
-
-	return usbResult == MSG_OK;
-}
-#endif // HAL_USE_USB_MSD
-
 static BaseBlockDevice* cardBlockDevice = nullptr;
 
 // Initialize SD card.
@@ -551,7 +538,7 @@ static bool mountMmc() {
 	}
 
 #if EFI_TUNER_STUDIO
-	engine->outputChannels.sd_logging_internal = ret;
+	engine->outputChannels.sd_logging = ret;
 #endif
 
 	return ret;
@@ -566,7 +553,7 @@ static void unmountMmc() {
 	f_mount(NULL, 0, 0);
 
 #if EFI_TUNER_STUDIO
-	engine->outputChannels.sd_logging_internal = false;
+	engine->outputChannels.sd_logging = false;
 #endif
 
 	efiPrintf("SD card unmounted");
@@ -597,7 +584,7 @@ static int sdTriggerLogger();
 static bool sdLoggerInitDone = false;
 static bool sdLoggerFailed = false;
 
-static int sdLogger()
+static int sdLoggerWrite()
 {
 	int ret = 0;
 
@@ -615,15 +602,19 @@ static int sdLogger()
 		} else {
 			ret = mlgLogger();
 		}
+	} else {
+		// Nothing to do here, we have failed
+		return -1;
 	}
 
 	if (ret < 0) {
 		sdLoggerFailed = true;
+		return ret;
 	}
 
 #ifdef LOGGER_MAX_FILE_SIZE
 	// check if we need to start next log file
-	// in next write (assume same size as current) will cross LOGGER_MAX_FILE_SIZE boundary
+	// if next write (assume same size as current) will cross LOGGER_MAX_FILE_SIZE boundary
 	// TODO: use f_tell() instead ?
 	if (logBuffer.writen() + ret > LOGGER_MAX_FILE_SIZE) {
 		logBuffer.stop();
@@ -714,7 +705,21 @@ static int sdModeSwitchToIdle(SD_MODE from)
 static int sdModeSwitcher()
 {
 	if (sdTargerMode == SD_MODE_IDLE) {
+#if HAL_USE_USB_MSD
+		// Check if we allowed to automaticly switch modes
+		if (!sdAutoModeSwitching) {
+			return 0;
+		}
+
+		if (usbConnectedFlags) {
+			// USB is connected
+			sdTargerMode = SD_MODE_PC;
+		} else {
+			sdTargerMode = SD_MODE_ECU;
+		}
+#else
 		return 0;
+#endif
 	}
 
 	if (sdMode == sdTargerMode) {
@@ -776,6 +781,8 @@ static int sdModeSwitcher()
 
 static int sdModeExecuter()
 {
+	int ret = 0;
+
 	switch (sdMode) {
 	case SD_MODE_IDLE:
 	case SD_MODE_PC:
@@ -790,7 +797,20 @@ static int sdModeExecuter()
 			sdNeedRemoveReports = false;
 		}
 		// execute logger
-		return sdLogger();
+		ret = sdLoggerWrite();
+
+#if EFI_TUNER_STUDIO
+		engine->outputChannels.sd_logging = (ret >= 0);
+		// sticky flag
+		engine->outputChannels.sd_logging_failed = (ret < 0);
+#endif
+
+		if (ret < 0) {
+			//logger have failed, and will be in failed state until restart
+			//do not waste CPU time, as sdLoggerWrite() no longer sleeps
+			//sleep here
+			chThdSleepMilliseconds(TIME_MS2I(100));
+		}
 	}
 
 	return 0;
@@ -821,6 +841,8 @@ static THD_FUNCTION(MMCmonThread, arg) {
 
 	chRegSetThreadName("MMC Card Logger");
 
+	sdAutoModeSwitching = engineConfiguration->sdAutoModeSwitching;
+
 #if HW_HELLEN && EFI_PROD_CODE
 	// on mega-module we manage SD card power supply
 	while (!getHellenBoardEnabled()) {
@@ -834,7 +856,7 @@ static THD_FUNCTION(MMCmonThread, arg) {
 		}
 	}
 #endif
-  // probably multiple reasons for this sad wait, including making sure that we have VBatt info for 'useMsdMode' logic
+	// probably multiple reasons for this sad wait, including making sure that we have VBatt info for 'useMsdMode' logic
 	chThdSleepMilliseconds(200);
 
 	sdStatus = SD_STATUS_CONNECTING;
@@ -848,18 +870,17 @@ static THD_FUNCTION(MMCmonThread, arg) {
 	// Try to mount SD card, drop critical report if needed and check for previously stored reports
 	sdReportStorageInit();
 
-#if HAL_USE_USB_MSD
-	// Wait for the USB stack to wake up, or a 15 second timeout, whichever occurs first
-	// If we have a device AND USB is connected, mount the card to USB, otherwise
-	// mount the null device and try to mount the filesystem ourselves
-	if (useMsdMode()) {
-		sdTargerMode = SD_MODE_PC;
+	if (isIgnVoltage()) {
+		// if we have battery voltage let's give priority to logging not reading
+		// this gives us a chance to SD card log cranking
+		sdAutoModeSwitching = false;
+		sdTargerMode = SD_MODE_ECU;
 	}
-#endif
 
 	while (1) {
-		sdModeSwitcher();
-		sdModeExecuter();
+		if (sdModeSwitcher() == 0) {
+			sdModeExecuter();
+		}
 	}
 
 die:
@@ -975,6 +996,8 @@ void initMmcCard() {
 void sdCardRequestMode(SD_MODE mode)
 {
 	if (sdTargerMode == SD_MODE_IDLE) {
+		// disable auto-switching
+		sdAutoModeSwitching = false;
 		sdTargerMode = mode;
 	}
 }

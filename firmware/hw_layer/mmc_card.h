@@ -25,6 +25,7 @@ void initEarlyMmcCard();
 void initMmcCard();
 
 void onUsbConnectedNotifyMmcI(void);
+void onUsbDisconnectedNotifyMmcI(void);
 
 void updateSdCardLiveFlags(void);
 

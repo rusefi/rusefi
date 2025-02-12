@@ -10,7 +10,7 @@
 struct_no_prefix output_channels_s
 
 bit sd_present;SD: Present
-bit sd_logging_internal;SD: Logging
+bit sd_logging;SD: Logging
 bit triggerScopeReady
 bit antilagTriggered
 bit isO2HeaterOn;
@@ -42,6 +42,7 @@ bit isMapValid;MAP from sensor seems valid
 bit triggerPageRefreshFlag
 bit hasFaultReportFile
 bit isAnalogFailure;Analog sensors supply failure
+bit sd_logging_failed;Log write to SD card have failed
 ! 1 unused bit left here
 
 
