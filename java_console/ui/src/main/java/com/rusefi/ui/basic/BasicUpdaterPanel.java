@@ -15,7 +15,7 @@ import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.awt.event.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -83,8 +83,10 @@ public class BasicUpdaterPanel extends JPanel {
 
         super.add(new HorizontalLine());
         JLabel logoLabel = LogoHelper.createLogoLabel();
-        if (logoLabel != null)
+        if (logoLabel != null) {
+            logoLabel.setComponentPopupMenu(new LogoLabelPopupMenu());
             super.add(logoLabel);
+        }
         if (showUrlLabel)
             super.add(LogoHelper.createUrlLabel());
 
