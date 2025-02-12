@@ -602,10 +602,14 @@ static int sdLoggerWrite()
 		} else {
 			ret = mlgLogger();
 		}
+	} else {
+		// Nothing to do here, we have failed
+		return -1;
 	}
 
 	if (ret < 0) {
 		sdLoggerFailed = true;
+		return ret;
 	}
 
 #ifdef LOGGER_MAX_FILE_SIZE
@@ -777,6 +781,8 @@ static int sdModeSwitcher()
 
 static int sdModeExecuter()
 {
+	int ret = 0;
+
 	switch (sdMode) {
 	case SD_MODE_IDLE:
 	case SD_MODE_PC:
@@ -791,7 +797,20 @@ static int sdModeExecuter()
 			sdNeedRemoveReports = false;
 		}
 		// execute logger
-		return sdLoggerWrite();
+		ret = sdLoggerWrite();
+
+#if EFI_TUNER_STUDIO
+		engine->outputChannels.sd_logging = (ret >= 0);
+		// sticky flag
+		engine->outputChannels.sd_logging_failed = (ret < 0);
+#endif
+
+		if (ret < 0) {
+			//logger have failed, and will be in failed state until restart
+			//do not waste CPU time, as sdLoggerWrite() no longer sleeps
+			//sleep here
+			chThdSleepMilliseconds(TIME_MS2I(100));
+		}
 	}
 
 	return 0;

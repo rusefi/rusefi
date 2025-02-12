@@ -42,6 +42,7 @@ bit isMapValid;MAP from sensor seems valid
 bit triggerPageRefreshFlag
 bit hasFaultReportFile
 bit isAnalogFailure;Analog sensors supply failure
+bit sd_logging_failed;Log write to SD card have failed
 ! 1 unused bit left here
 
 
