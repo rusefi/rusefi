@@ -404,6 +404,11 @@ static void usb_event(USBDriver *usbp, usbevent_t event) {
     /* Disconnection event on suspend.*/
     sduSuspendHookI(&SDU1);
 
+    #if HAL_USE_USB_MSD
+        // Tell the MMC thread to wake up and mount the card as a log storage
+        onUsbDisconnectedNotifyMmcI();
+    #endif
+
     chSysUnlockFromISR();
     return;
   case USB_EVENT_WAKEUP:

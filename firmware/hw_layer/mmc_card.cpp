@@ -190,6 +190,8 @@ static SD_MODE sdMode = SD_MODE_IDLE;
 // by default we want SD card for logs
 static SD_MODE sdTargerMode = SD_MODE_ECU;
 
+static bool sdAutoModeSwitching = false;
+
 static bool sdNeedRemoveReports = false;
 
 /**
@@ -396,10 +398,15 @@ static void removeFile(const char *pathx) {
 
 #if HAL_USE_USB_MSD
 
-static chibios_rt::BinarySemaphore usbConnectedSemaphore(/* taken =*/ true);
+static volatile bool usbConnectedFlags = false;
 
 void onUsbConnectedNotifyMmcI() {
-	usbConnectedSemaphore.signalI();
+	usbConnectedFlags = true;
+}
+
+void onUsbDisconnectedNotifyMmcI() {
+	// swtich back to auto mode selection, if allowed
+	usbConnectedFlags = false;
 }
 
 #endif /* HAL_USE_USB_MSD */
@@ -480,23 +487,6 @@ static void deinitializeMmcBlockDevide() {
 }
 
 #endif /* EFI_SDC_DEVICE */
-
-#if HAL_USE_USB_MSD
-static bool useMsdMode() {
-	if (engineConfiguration->alwaysWriteSdCard) {
-		return false;
-	}
-	if (isIgnVoltage()) {
-	  // if we have battery voltage let's give priority to logging not reading
-	  // this gives us a chance to SD card log cranking
-	  return false;
-	}
-	// Wait for the USB stack to wake up, or a 15 second timeout, whichever occurs first
-	msg_t usbResult = usbConnectedSemaphore.wait(TIME_MS2I(15000));
-
-	return usbResult == MSG_OK;
-}
-#endif // HAL_USE_USB_MSD
 
 static BaseBlockDevice* cardBlockDevice = nullptr;
 
@@ -711,7 +701,21 @@ static int sdModeSwitchToIdle(SD_MODE from)
 static int sdModeSwitcher()
 {
 	if (sdTargerMode == SD_MODE_IDLE) {
+#if HAL_USE_USB_MSD
+		// Check if we allowed to automaticly switch modes
+		if (!sdAutoModeSwitching) {
+			return 0;
+		}
+
+		if (usbConnectedFlags) {
+			// USB is connected
+			sdTargerMode = SD_MODE_PC;
+		} else {
+			sdTargerMode = SD_MODE_ECU;
+		}
+#else
 		return 0;
+#endif
 	}
 
 	if (sdMode == sdTargerMode) {
@@ -818,6 +822,8 @@ static THD_FUNCTION(MMCmonThread, arg) {
 
 	chRegSetThreadName("MMC Card Logger");
 
+	sdAutoModeSwitching = engineConfiguration->sdAutoModeSwitching;
+
 #if HW_HELLEN && EFI_PROD_CODE
 	// on mega-module we manage SD card power supply
 	while (!getHellenBoardEnabled()) {
@@ -831,7 +837,7 @@ static THD_FUNCTION(MMCmonThread, arg) {
 		}
 	}
 #endif
-  // probably multiple reasons for this sad wait, including making sure that we have VBatt info for 'useMsdMode' logic
+	// probably multiple reasons for this sad wait, including making sure that we have VBatt info for 'useMsdMode' logic
 	chThdSleepMilliseconds(200);
 
 	sdStatus = SD_STATUS_CONNECTING;
@@ -845,14 +851,12 @@ static THD_FUNCTION(MMCmonThread, arg) {
 	// Try to mount SD card, drop critical report if needed and check for previously stored reports
 	sdReportStorageInit();
 
-#if HAL_USE_USB_MSD
-	// Wait for the USB stack to wake up, or a 15 second timeout, whichever occurs first
-	// If we have a device AND USB is connected, mount the card to USB, otherwise
-	// mount the null device and try to mount the filesystem ourselves
-	if (useMsdMode()) {
-		sdTargerMode = SD_MODE_PC;
+	if (isIgnVoltage()) {
+		// if we have battery voltage let's give priority to logging not reading
+		// this gives us a chance to SD card log cranking
+		sdAutoModeSwitching = false;
+		sdTargerMode = SD_MODE_ECU;
 	}
-#endif
 
 	while (1) {
 		sdModeSwitcher();
@@ -972,6 +976,8 @@ void initMmcCard() {
 void sdCardRequestMode(SD_MODE mode)
 {
 	if (sdTargerMode == SD_MODE_IDLE) {
+		// disable auto-switching
+		sdAutoModeSwitching = false;
 		sdTargerMode = mode;
 	}
 }

@@ -1049,7 +1049,7 @@ end_struct
 
 	bit widebandOnSecondBus,"2","1";Select which bus the wideband controller is attached to.
 	bit fuelClosedLoopCorrectionEnabled;Enables lambda sensor closed loop feedback for fuelling.
-	bit alwaysWriteSdCard;Write SD card log even when powered by USB
+	bit unused1308_2
 	bit knockDetectionUseDoubleFrequency,"second harmonic","first harmonic";Second harmonic (aka double) is usually quieter background noise
 	bit yesUnderstandLocking,"yes","no"
 	bit silentTriggerError;Sometimes we have a performance issue while printing error
@@ -1075,6 +1075,7 @@ bit engineSnifferFocusOnInputs
 bit unused1308_24
 bit twoStroke,"Two Stroke","Four Stroke"
 bit skippedWheelOnCam,"On camshaft","On crankshaft";Where is your primary skipped wheel located?
+bit sdAutoModeSwitching;Automaticly switch to MSD mode when USB is attached and switch to Logging mode when USB disconnected
 
 	adc_channel_e hipOutputChannel;
 	switch_input_pin_e acSwitch;A/C button input;
