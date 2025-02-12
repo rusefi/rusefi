@@ -40,7 +40,7 @@ namespace {
 				/* inputPin = */ TestSwitchPin::TORQUE_REDUCTION,
 				/* config = */ ShiftTorqueReductionSwitchTestBase::TEST_ENGINE_CONFIG.clone()
 					.setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
-					.setTorqueReductionTriggerPinInverted(true),
+					.setTorqueReductionTriggerPinMode(PI_INVERTED_DEFAULT),
 				/* expectedIsTorqueReductionTriggerPinValid = */ true,
 				/* description = */ "TORQUE_REDUCTION"
 			},
@@ -48,7 +48,7 @@ namespace {
 				/* inputPin = */ TestSwitchPin::LAUNCH,
 				/* config = */ ShiftTorqueReductionSwitchTestBase::TEST_ENGINE_CONFIG.clone()
 					.setTorqueReductionActivationMode(torqueReductionActivationMode_e::LAUNCH_BUTTON)
-					.setLaunchActivateInverted(true),
+					.setLaunchActivatePinMode(PI_INVERTED_DEFAULT),
 				/* expectedIsTorqueReductionTriggerPinValid = */ true,
 				/* description = */ "LAUNCH"
 			},
@@ -64,7 +64,7 @@ namespace {
 				/* inputPin = */ TestSwitchPin::CLUTCH_UP,
 				/* config = */ ShiftTorqueReductionSwitchTestBase::TEST_ENGINE_CONFIG.clone()
 					.setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_CLUTCH_UP_SWITCH)
-					.setClutchUpPinInverted(true),
+					.setClutchUpPinMode(PI_INVERTED_DEFAULT),
 				/* expectedIsTorqueReductionTriggerPinValid = */ true,
 				/* description = */ "CLUTCH_UP"
 			}

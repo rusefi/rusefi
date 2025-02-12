@@ -17,7 +17,7 @@ namespace engine_configuration_defaults {
     constexpr bool ENABLE_SHIFT_TORQUE_REDUCTION = false;
     constexpr torqueReductionActivationMode_e TORQUE_REDUCTION_ACTIVATION_MODE = TORQUE_REDUCTION_BUTTON;
     constexpr switch_input_pin_e TORQUE_REDUCTION_TRIGGER_PIN = Gpio::Unassigned;
-    constexpr bool TORQUE_REDUCTION_TRIGGER_PIN_INVERTED = false;
+    constexpr pin_input_mode_e TORQUE_REDUCTION_TRIGGER_PIN_MODE = PI_DEFAULT;
     constexpr float TORQUE_REDUCTION_TIME = 0.0f;
     constexpr bool LIMIT_TORQUE_REDUCTION_TIME = false;
     constexpr float TORQUE_REDUCTION_ARMING_RPM = 0.0f;
@@ -29,11 +29,11 @@ namespace engine_configuration_defaults {
     constexpr switch_input_pin_e CLUTCH_DOWN_PIN = Gpio::Unassigned;
     constexpr pin_input_mode_e CLUTCH_DOWN_PIN_MODE = PI_PULLUP;
     constexpr switch_input_pin_e CLUTCH_UP_PIN = Gpio::Unassigned;
-    constexpr bool CLUTCH_UP_PIN_INVERTED = false;
+    constexpr pin_input_mode_e CLUTCH_UP_PIN_MODE = PI_PULLUP;
 
     /* Launch Control: */
     constexpr switch_input_pin_e LAUNCH_ACTIVATE_PIN = Gpio::Unassigned;
-    constexpr bool LAUNCH_ACTIVATE_PIN_INVERTED = false;
+    constexpr pin_input_mode_e LAUNCH_ACTIVATE_PIN_MODE = PI_DEFAULT;
     constexpr launchActivationMode_e LAUNCH_ACTIVATION_MODE = SWITCH_INPUT_LAUNCH;
     constexpr int LAUNCH_SPEED_THRESHOLD = 0;
 
@@ -59,7 +59,6 @@ namespace engine_configuration_defaults {
     constexpr bool NITROUS_CONTROL_ENABLED = false;
     constexpr nitrous_arming_method_e NITROUS_CONTROL_ARMING_METHOD = DIGITAL_SWITCH_INPUT;
     constexpr switch_input_pin_e NITROUS_CONTROL_TRIGGER_PIN = Gpio::Unassigned;
-    constexpr bool NITROUS_CONTROL_TRIGGER_PIN_INVERTED = false;
     constexpr pin_input_mode_e NITROUS_CONTROL_TRIGGER_PIN_MODE = PI_DEFAULT;
     constexpr lua_gauge_e NITROUS_LUA_GAUGE = LUA_GAUGE_1;
     constexpr lua_gauge_meaning_e NITROUS_LUA_GAUGE_MEANING = LUA_GAUGE_LOWER_BOUND;

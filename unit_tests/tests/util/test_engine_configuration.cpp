@@ -45,13 +45,13 @@ void TestEngineConfiguration::configureClutchUpPin(const std::optional<switch_in
     }
 }
 
-void TestEngineConfiguration::configureClutchUpPinInverted(const std::optional<bool> pinInverted) {
-    if (pinInverted.has_value()) {
-        engineConfiguration->clutchUpPinInverted = pinInverted.value();
+void TestEngineConfiguration::configureClutchUpPinMode(const std::optional<pin_input_mode_e> pinMode) {
+    if (pinMode.has_value()) {
+        engineConfiguration->clutchUpPinMode = pinMode.value();
     } else {
         ASSERT_EQ(
-                engineConfiguration->clutchUpPinInverted,
-                engine_configuration_defaults::CLUTCH_UP_PIN_INVERTED
+                engineConfiguration->clutchUpPinMode,
+                engine_configuration_defaults::CLUTCH_UP_PIN_MODE
         ); // check default value
     }
 }
@@ -197,13 +197,13 @@ void TestEngineConfiguration::configureTorqueReductionTriggerPin(const std::opti
     }
 }
 
-void TestEngineConfiguration::configureTorqueReductionButtonInverted(const std::optional<bool> pinInverted) {
-    if (pinInverted.has_value()) {
-        engineConfiguration->torqueReductionTriggerPinInverted = pinInverted.value();
+void TestEngineConfiguration::configureTorqueReductionButtonMode(const std::optional<pin_input_mode_e> pinMode) {
+    if (pinMode.has_value()) {
+        engineConfiguration->torqueReductionTriggerPinMode = pinMode.value();
     } else {
         ASSERT_EQ(
-            engineConfiguration->torqueReductionTriggerPinInverted,
-            engine_configuration_defaults::TORQUE_REDUCTION_TRIGGER_PIN_INVERTED
+            engineConfiguration->torqueReductionTriggerPinMode,
+            engine_configuration_defaults::TORQUE_REDUCTION_TRIGGER_PIN_MODE
         ); // check default value
     }
 }
@@ -219,13 +219,13 @@ void TestEngineConfiguration::configureLaunchActivatePin(const std::optional<swi
     }
 }
 
-void TestEngineConfiguration::configureLaunchActivateInverted(const std::optional<bool> pinInverted) {
-    if (pinInverted.has_value()) {
-        engineConfiguration->launchActivateInverted = pinInverted.value();
+void TestEngineConfiguration::configureLaunchActivateMode(const std::optional<pin_input_mode_e> pinMode) {
+    if (pinMode.has_value()) {
+        engineConfiguration->launchActivatePinMode = pinMode.value();
     } else {
         ASSERT_EQ(
-            engineConfiguration->launchActivateInverted,
-            engine_configuration_defaults::LAUNCH_ACTIVATE_PIN_INVERTED
+            engineConfiguration->launchActivatePinMode,
+            engine_configuration_defaults::LAUNCH_ACTIVATE_PIN_MODE
         ); // check default value
     }
 }
@@ -464,22 +464,9 @@ void TestEngineConfiguration::configureNitrousControlTriggerPin(const std::optio
         ); // check default value
     }
 }
-void TestEngineConfiguration::configureNitrousControlTriggerPinInverted(const std::optional<bool> triggerPinInverted) {
-    if (triggerPinInverted.has_value()) {
-        engineConfiguration->nitrousControlTriggerPinInverted = triggerPinInverted.value();
-    } else {
-        ASSERT_EQ(
-            engineConfiguration->nitrousControlTriggerPinInverted,
-            engine_configuration_defaults::NITROUS_CONTROL_TRIGGER_PIN_INVERTED
-        ); // check default value
-    }
-}
-
-void TestEngineConfiguration::configureNitrousControlTriggerPinMode(
-    const std::optional<pin_input_mode_e> triggerPinMode
-) {
-    if (triggerPinMode.has_value()) {
-        engineConfiguration->nitrousControlTriggerPinMode = triggerPinMode.value();
+void TestEngineConfiguration::configureNitrousControlTriggerPinMode(const std::optional<pin_input_mode_e> pinMode) {
+    if (pinMode.has_value()) {
+        engineConfiguration->nitrousControlTriggerPinMode = pinMode.value();
     } else {
         ASSERT_EQ(
             engineConfiguration->nitrousControlTriggerPinMode,
