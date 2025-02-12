@@ -227,7 +227,7 @@
         <constant digits="0" name="boostControlSafeDutyCycle" units="%">0.0</constant>
         <constant name="mafAdcChannel">"Disabled"</constant>
         <constant digits="0" name="acrRevolutions" units="">5.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0250211E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0250212E7</constant>
         <constant digits="3" name="adcVcc" units="volts">3.0</constant>
         <constant digits="0" name="mapCamDetectionAnglePosition" units="Deg">0.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -447,8 +447,8 @@
         <constant name="consoleUartDevice">"Off"</constant>
         <constant name="sensorChartMode">"none"</constant>
         <constant name="mafSensorType">"v1"</constant>
-        <constant name="clutchUpPinInverted">"Normal"</constant>
-        <constant name="clutchDownPinInverted">"Normal"</constant>
+        <constant name="unused920_0">"false"</constant>
+        <constant name="unused920_1">"false"</constant>
         <constant name="useHbridgesToDriveIdleStepper">"false"</constant>
         <constant name="multisparkEnable">"false"</constant>
         <constant name="enableLaunchRetard">"false"</constant>
@@ -627,11 +627,11 @@
         <constant name="launchFuelCutEnable">"false"</constant>
         <constant name="launchSparkCutEnable">"false"</constant>
         <constant name="torqueReductionEnabled">"false"</constant>
-        <constant name="torqueReductionTriggerPinInverted">"false"</constant>
+        <constant name="unused1308_20">"false"</constant>
         <constant name="limitTorqueReductionTime">"false"</constant>
         <constant name="verboseIsoTp">"false"</constant>
         <constant name="engineSnifferFocusOnInputs">"false"</constant>
-        <constant name="launchActivateInverted">"false"</constant>
+        <constant name="unused1308_24">"false"</constant>
         <constant name="twoStroke">"Four Stroke"</constant>
         <constant name="skippedWheelOnCam">"On crankshaft"</constant>
         <constant name="hipOutputChannel">"Disabled"</constant>
@@ -667,7 +667,7 @@
         <constant name="invertVvtControlExhaust">"advance"</constant>
         <constant name="useBiQuadOnAuxSpeedSensors">"false"</constant>
         <constant name="sdTriggerLog">"normal"</constant>
-        <constant name="ALSActivateInverted">"false"</constant>
+        <constant name="unused1320_28">"false"</constant>
         <constant name="stepper_dc_use_two_wires">"false"</constant>
         <constant name="watchOutForLinearTime">"true"</constant>
         <constant digits="0" name="engineChartSize" units="count">200.0</constant>
@@ -747,7 +747,7 @@
         <constant name="enableAemXSeriesEgt">"false"</constant>
         <constant name="startRequestPinInverted">"Normal"</constant>
         <constant name="tcu_rangeSensorPulldown">"false"</constant>
-        <constant name="brakePedalPinInverted">"Normal"</constant>
+        <constant name="devBit01">"false"</constant>
         <constant name="devBit0">"false"</constant>
         <constant name="devBit1">"false"</constant>
         <constant name="devBit2">"false"</constant>
@@ -1630,7 +1630,7 @@
         <constant name="FuelHighPressureSentInput">"None"</constant>
         <constant name="FuelHighPressureSentType">"None"</constant>
         <constant name="nitrousControlEnabled">"false"</constant>
-        <constant name="nitrousControlTriggerPinInverted">"false"</constant>
+        <constant name="unusedFancy2">"false"</constant>
         <constant name="unusedFancy3">"false"</constant>
         <constant name="unusedFancy4">"false"</constant>
         <constant name="unusedFancy5">"false"</constant>
