@@ -489,6 +489,11 @@ static bool useMsdMode() {
 	if (engineConfiguration->alwaysWriteSdCard) {
 		return false;
 	}
+	if (isIgnVoltage()) {
+	  // if we have battery voltage let's give priority to logging not reading
+	  // this gives us a chance to SD card log cranking
+	  return false;
+	}
 	// Wait for the USB stack to wake up, or a 15 second timeout, whichever occurs first
 	msg_t usbResult = usbConnectedSemaphore.wait(TIME_MS2I(15000));
 
@@ -828,8 +833,9 @@ static THD_FUNCTION(MMCmonThread, arg) {
 			break;
 		}
 	}
-	chThdSleepMilliseconds(300);
 #endif
+  // probably multiple reasons for this sad wait, including making sure that we have VBatt info for 'useMsdMode' logic
+	chThdSleepMilliseconds(200);
 
 	sdStatus = SD_STATUS_CONNECTING;
 	if (!initMmc()) {
