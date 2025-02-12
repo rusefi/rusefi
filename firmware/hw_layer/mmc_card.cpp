@@ -859,8 +859,9 @@ static THD_FUNCTION(MMCmonThread, arg) {
 	}
 
 	while (1) {
-		sdModeSwitcher();
-		sdModeExecuter();
+		if (sdModeSwitcher() == 0) {
+			sdModeExecuter();
+		}
 	}
 
 die:
