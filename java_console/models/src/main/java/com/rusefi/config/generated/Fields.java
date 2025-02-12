@@ -1221,6 +1221,9 @@ public class Fields {
 	public static final int persistent_config_s_size = 23296;
 	public static final int pid_s_size = 20;
 	public static final int pin_input_mode_e_PI_DEFAULT = 0;
+	public static final int pin_input_mode_e_PI_INVERTED_DEFAULT = 4;
+	public static final int pin_input_mode_e_PI_INVERTED_PULLDOWN = 6;
+	public static final int pin_input_mode_e_PI_INVERTED_PULLUP = 5;
 	public static final int pin_input_mode_e_PI_PULLDOWN = 2;
 	public static final int pin_input_mode_e_PI_PULLUP = 1;
 	public static final int pin_output_mode_e_OM_DEFAULT = 0;
@@ -1551,7 +1554,7 @@ public class Fields {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.02.11.f407-discovery.3657295439";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.02.12.f407-discovery.3394362884";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1872,7 +1875,7 @@ public class Fields {
 	public static final Field CLUTCHDOWNPIN = Field.create("CLUTCHDOWNPIN", 684, FieldType.INT16, switch_input_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field ALTERNATORCONTROLPIN = Field.create("ALTERNATORCONTROLPIN", 686, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field ALTERNATORCONTROLPINMODE = Field.create("ALTERNATORCONTROLPINMODE", 688, FieldType.INT8, pin_output_mode_e).setScale(1.0).setBaseOffset(0);
-	public static final String[] pin_input_mode_e = {"DEFAULT", "PULLUP", "PULLDOWN"};
+	public static final String[] pin_input_mode_e = {"DEFAULT", "PULLUP", "PULLDOWN", "INVALID", "INVERTED DEFAULT", "INVERTED PULLUP", "INVERTED PULLDOWN"};
 	public static final Field CLUTCHDOWNPINMODE = Field.create("CLUTCHDOWNPINMODE", 689, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field DIGITALPOTENTIOMETERCHIPSELECT1 = Field.create("DIGITALPOTENTIOMETERCHIPSELECT1", 690, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field DIGITALPOTENTIOMETERCHIPSELECT2 = Field.create("DIGITALPOTENTIOMETERCHIPSELECT2", 692, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
@@ -2037,8 +2040,6 @@ public class Fields {
 	public static final String[] maf_sensor_type_e = {"v0", "v1", "v2", "v3"};
 	public static final Field MAFSENSORTYPE = Field.create("MAFSENSORTYPE", 918, FieldType.INT8, maf_sensor_type_e).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_919 = Field.create("ALIGNMENTFILL_AT_919", 919, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field CLUTCHUPPININVERTED = Field.create("CLUTCHUPPININVERTED", 920, FieldType.BIT, 0).setBaseOffset(0);
-	public static final Field CLUTCHDOWNPININVERTED = Field.create("CLUTCHDOWNPININVERTED", 920, FieldType.BIT, 1).setBaseOffset(0);
 	public static final Field USEHBRIDGESTODRIVEIDLESTEPPER = Field.create("USEHBRIDGESTODRIVEIDLESTEPPER", 920, FieldType.BIT, 2).setBaseOffset(0);
 	public static final Field MULTISPARKENABLE = Field.create("MULTISPARKENABLE", 920, FieldType.BIT, 3).setBaseOffset(0);
 	public static final Field ENABLELAUNCHRETARD = Field.create("ENABLELAUNCHRETARD", 920, FieldType.BIT, 4).setBaseOffset(0);
@@ -2200,11 +2201,9 @@ public class Fields {
 	public static final Field LAUNCHFUELCUTENABLE = Field.create("LAUNCHFUELCUTENABLE", 1308, FieldType.BIT, 17).setBaseOffset(0);
 	public static final Field LAUNCHSPARKCUTENABLE = Field.create("LAUNCHSPARKCUTENABLE", 1308, FieldType.BIT, 18).setBaseOffset(0);
 	public static final Field TORQUEREDUCTIONENABLED = Field.create("TORQUEREDUCTIONENABLED", 1308, FieldType.BIT, 19).setBaseOffset(0);
-	public static final Field TORQUEREDUCTIONTRIGGERPININVERTED = Field.create("TORQUEREDUCTIONTRIGGERPININVERTED", 1308, FieldType.BIT, 20).setBaseOffset(0);
 	public static final Field LIMITTORQUEREDUCTIONTIME = Field.create("LIMITTORQUEREDUCTIONTIME", 1308, FieldType.BIT, 21).setBaseOffset(0);
 	public static final Field VERBOSEISOTP = Field.create("VERBOSEISOTP", 1308, FieldType.BIT, 22).setBaseOffset(0);
 	public static final Field ENGINESNIFFERFOCUSONINPUTS = Field.create("ENGINESNIFFERFOCUSONINPUTS", 1308, FieldType.BIT, 23).setBaseOffset(0);
-	public static final Field LAUNCHACTIVATEINVERTED = Field.create("LAUNCHACTIVATEINVERTED", 1308, FieldType.BIT, 24).setBaseOffset(0);
 	public static final Field TWOSTROKE = Field.create("TWOSTROKE", 1308, FieldType.BIT, 25).setBaseOffset(0);
 	public static final Field SKIPPEDWHEELONCAM = Field.create("SKIPPEDWHEELONCAM", 1308, FieldType.BIT, 26).setBaseOffset(0);
 	public static final Field HIPOUTPUTCHANNEL = Field.create("HIPOUTPUTCHANNEL", 1312, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
@@ -2242,7 +2241,6 @@ public class Fields {
 	public static final Field INVERTVVTCONTROLEXHAUST = Field.create("INVERTVVTCONTROLEXHAUST", 1320, FieldType.BIT, 25).setBaseOffset(0);
 	public static final Field USEBIQUADONAUXSPEEDSENSORS = Field.create("USEBIQUADONAUXSPEEDSENSORS", 1320, FieldType.BIT, 26).setBaseOffset(0);
 	public static final Field SDTRIGGERLOG = Field.create("SDTRIGGERLOG", 1320, FieldType.BIT, 27).setBaseOffset(0);
-	public static final Field ALSACTIVATEINVERTED = Field.create("ALSACTIVATEINVERTED", 1320, FieldType.BIT, 28).setBaseOffset(0);
 	public static final Field STEPPER_DC_USE_TWO_WIRES = Field.create("STEPPER_DC_USE_TWO_WIRES", 1320, FieldType.BIT, 29).setBaseOffset(0);
 	public static final Field WATCHOUTFORLINEARTIME = Field.create("WATCHOUTFORLINEARTIME", 1320, FieldType.BIT, 30).setBaseOffset(0);
 	public static final Field ENGINECHARTSIZE = Field.create("ENGINECHARTSIZE", 1324, FieldType.INT).setScale(1.0).setBaseOffset(0);
@@ -2324,7 +2322,7 @@ public class Fields {
 	public static final Field ENABLEAEMXSERIESEGT = Field.create("ENABLEAEMXSERIESEGT", 1492, FieldType.BIT, 13).setBaseOffset(0);
 	public static final Field STARTREQUESTPININVERTED = Field.create("STARTREQUESTPININVERTED", 1492, FieldType.BIT, 14).setBaseOffset(0);
 	public static final Field TCU_RANGESENSORPULLDOWN = Field.create("TCU_RANGESENSORPULLDOWN", 1492, FieldType.BIT, 15).setBaseOffset(0);
-	public static final Field BRAKEPEDALPININVERTED = Field.create("BRAKEPEDALPININVERTED", 1492, FieldType.BIT, 16).setBaseOffset(0);
+	public static final Field DEVBIT01 = Field.create("DEVBIT01", 1492, FieldType.BIT, 16).setBaseOffset(0);
 	public static final Field DEVBIT0 = Field.create("DEVBIT0", 1492, FieldType.BIT, 17).setBaseOffset(0);
 	public static final Field DEVBIT1 = Field.create("DEVBIT1", 1492, FieldType.BIT, 18).setBaseOffset(0);
 	public static final Field DEVBIT2 = Field.create("DEVBIT2", 1492, FieldType.BIT, 19).setBaseOffset(0);
@@ -3034,7 +3032,6 @@ public class Fields {
 	public static final Field FUELHIGHPRESSURESENTTYPE = Field.create("FUELHIGHPRESSURESENTTYPE", 3902, FieldType.INT8, SentFuelHighPressureType).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_3903 = Field.create("ALIGNMENTFILL_AT_3903", 3903, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field NITROUSCONTROLENABLED = Field.create("NITROUSCONTROLENABLED", 3904, FieldType.BIT, 0).setBaseOffset(0);
-	public static final Field NITROUSCONTROLTRIGGERPININVERTED = Field.create("NITROUSCONTROLTRIGGERPININVERTED", 3904, FieldType.BIT, 1).setBaseOffset(0);
 	public static final String[] nitrous_arming_method_e = {"Digital Switch Input", "Lua Gauge"};
 	public static final Field NITROUSCONTROLARMINGMETHOD = Field.create("NITROUSCONTROLARMINGMETHOD", 3908, FieldType.INT8, nitrous_arming_method_e).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_3909 = Field.create("ALIGNMENTFILL_AT_3909", 3909, FieldType.INT8).setScale(1.0).setBaseOffset(0);
@@ -3829,8 +3826,6 @@ public class Fields {
 	SENSORCHARTMODE,
 	MAFSENSORTYPE,
 	ALIGNMENTFILL_AT_919,
-	CLUTCHUPPININVERTED,
-	CLUTCHDOWNPININVERTED,
 	USEHBRIDGESTODRIVEIDLESTEPPER,
 	MULTISPARKENABLE,
 	ENABLELAUNCHRETARD,
@@ -3990,11 +3985,9 @@ public class Fields {
 	LAUNCHFUELCUTENABLE,
 	LAUNCHSPARKCUTENABLE,
 	TORQUEREDUCTIONENABLED,
-	TORQUEREDUCTIONTRIGGERPININVERTED,
 	LIMITTORQUEREDUCTIONTIME,
 	VERBOSEISOTP,
 	ENGINESNIFFERFOCUSONINPUTS,
-	LAUNCHACTIVATEINVERTED,
 	TWOSTROKE,
 	SKIPPEDWHEELONCAM,
 	HIPOUTPUTCHANNEL,
@@ -4032,7 +4025,6 @@ public class Fields {
 	INVERTVVTCONTROLEXHAUST,
 	USEBIQUADONAUXSPEEDSENSORS,
 	SDTRIGGERLOG,
-	ALSACTIVATEINVERTED,
 	STEPPER_DC_USE_TWO_WIRES,
 	WATCHOUTFORLINEARTIME,
 	ENGINECHARTSIZE,
@@ -4114,7 +4106,7 @@ public class Fields {
 	ENABLEAEMXSERIESEGT,
 	STARTREQUESTPININVERTED,
 	TCU_RANGESENSORPULLDOWN,
-	BRAKEPEDALPININVERTED,
+	DEVBIT01,
 	DEVBIT0,
 	DEVBIT1,
 	DEVBIT2,
@@ -4806,7 +4798,6 @@ public class Fields {
 	FUELHIGHPRESSURESENTTYPE,
 	ALIGNMENTFILL_AT_3903,
 	NITROUSCONTROLENABLED,
-	NITROUSCONTROLTRIGGERPININVERTED,
 	NITROUSCONTROLARMINGMETHOD,
 	ALIGNMENTFILL_AT_3909,
 	NITROUSCONTROLTRIGGERPIN,

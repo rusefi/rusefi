@@ -581,12 +581,6 @@ float getConfigValueByName(const char *name) {
 // lambdaProtectionTimeout
 		case -1645106444:
 			return engineConfiguration->lambdaProtectionTimeout;
-// clutchUpPinInverted
-		case -1171325035:
-			return engineConfiguration->clutchUpPinInverted;
-// clutchDownPinInverted
-		case -675074552:
-			return engineConfiguration->clutchDownPinInverted;
 // useHbridgesToDriveIdleStepper
 		case 13806936:
 			return engineConfiguration->useHbridgesToDriveIdleStepper;
@@ -818,9 +812,6 @@ float getConfigValueByName(const char *name) {
 // torqueReductionEnabled
 		case -618104323:
 			return engineConfiguration->torqueReductionEnabled;
-// torqueReductionTriggerPinInverted
-		case 1931913358:
-			return engineConfiguration->torqueReductionTriggerPinInverted;
 // limitTorqueReductionTime
 		case -819413824:
 			return engineConfiguration->limitTorqueReductionTime;
@@ -830,9 +821,6 @@ float getConfigValueByName(const char *name) {
 // engineSnifferFocusOnInputs
 		case 465982216:
 			return engineConfiguration->engineSnifferFocusOnInputs;
-// launchActivateInverted
-		case -1884116782:
-			return engineConfiguration->launchActivateInverted;
 // twoStroke
 		case 38719415:
 			return engineConfiguration->twoStroke;
@@ -926,9 +914,6 @@ float getConfigValueByName(const char *name) {
 // sdTriggerLog
 		case -105464622:
 			return engineConfiguration->sdTriggerLog;
-// ALSActivateInverted
-		case -1027820105:
-			return engineConfiguration->ALSActivateInverted;
 // stepper_dc_use_two_wires
 		case 2136379132:
 			return engineConfiguration->stepper_dc_use_two_wires;
@@ -1118,9 +1103,9 @@ float getConfigValueByName(const char *name) {
 // tcu_rangeSensorPulldown
 		case -2079591860:
 			return engineConfiguration->tcu_rangeSensorPulldown;
-// brakePedalPinInverted
-		case -1969589096:
-			return engineConfiguration->brakePedalPinInverted;
+// devBit01
+		case 1049496900:
+			return engineConfiguration->devBit01;
 // devBit0
 		case 161953459:
 			return engineConfiguration->devBit0;
@@ -1892,9 +1877,6 @@ float getConfigValueByName(const char *name) {
 // nitrousControlEnabled
 		case -582951931:
 			return engineConfiguration->nitrousControlEnabled;
-// nitrousControlTriggerPinInverted
-		case -1483164266:
-			return engineConfiguration->nitrousControlTriggerPinInverted;
 // nitrousLuaGaugeArmingValue
 		case -1760115393:
 			return engineConfiguration->nitrousLuaGaugeArmingValue;
@@ -2957,16 +2939,6 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->lambdaProtectionTimeout = (int)value;
 		return 1;
 	}
-		case -1171325035:
-	{
-		engineConfiguration->clutchUpPinInverted = (int)value;
-		return 1;
-	}
-		case -675074552:
-	{
-		engineConfiguration->clutchDownPinInverted = (int)value;
-		return 1;
-	}
 		case 13806936:
 	{
 		engineConfiguration->useHbridgesToDriveIdleStepper = (int)value;
@@ -3352,11 +3324,6 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->torqueReductionEnabled = (int)value;
 		return 1;
 	}
-		case 1931913358:
-	{
-		engineConfiguration->torqueReductionTriggerPinInverted = (int)value;
-		return 1;
-	}
 		case -819413824:
 	{
 		engineConfiguration->limitTorqueReductionTime = (int)value;
@@ -3370,11 +3337,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case 465982216:
 	{
 		engineConfiguration->engineSnifferFocusOnInputs = (int)value;
-		return 1;
-	}
-		case -1884116782:
-	{
-		engineConfiguration->launchActivateInverted = (int)value;
 		return 1;
 	}
 		case 38719415:
@@ -3530,11 +3492,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -105464622:
 	{
 		engineConfiguration->sdTriggerLog = (int)value;
-		return 1;
-	}
-		case -1027820105:
-	{
-		engineConfiguration->ALSActivateInverted = (int)value;
 		return 1;
 	}
 		case 2136379132:
@@ -3852,9 +3809,9 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->tcu_rangeSensorPulldown = (int)value;
 		return 1;
 	}
-		case -1969589096:
+		case 1049496900:
 	{
-		engineConfiguration->brakePedalPinInverted = (int)value;
+		engineConfiguration->devBit01 = (int)value;
 		return 1;
 	}
 		case 161953459:
@@ -5140,11 +5097,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -582951931:
 	{
 		engineConfiguration->nitrousControlEnabled = (int)value;
-		return 1;
-	}
-		case -1483164266:
-	{
-		engineConfiguration->nitrousControlTriggerPinInverted = (int)value;
 		return 1;
 	}
 		case -1760115393:

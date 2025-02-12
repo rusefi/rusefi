@@ -2028,10 +2028,10 @@ struct engine_configuration_s {
 	uint8_t alignmentFill_at_919[1] = {};
 	/**
 	offset 920 bit 0 */
-	bool clutchUpPinInverted : 1 {};
+	bool unused920_0 : 1 {};
 	/**
 	offset 920 bit 1 */
-	bool clutchDownPinInverted : 1 {};
+	bool unused920_1 : 1 {};
 	/**
 	 * If enabled we use two H-bridges to drive stepper idle air valve
 	offset 920 bit 2 */
@@ -2410,7 +2410,7 @@ struct engine_configuration_s {
 	bool torqueReductionEnabled : 1 {};
 	/**
 	offset 1308 bit 20 */
-	bool torqueReductionTriggerPinInverted : 1 {};
+	bool unused1308_20 : 1 {};
 	/**
 	offset 1308 bit 21 */
 	bool limitTorqueReductionTime : 1 {};
@@ -2423,7 +2423,7 @@ struct engine_configuration_s {
 	bool engineSnifferFocusOnInputs : 1 {};
 	/**
 	offset 1308 bit 24 */
-	bool launchActivateInverted : 1 {};
+	bool unused1308_24 : 1 {};
 	/**
 	offset 1308 bit 25 */
 	bool twoStroke : 1 {};
@@ -2593,7 +2593,7 @@ struct engine_configuration_s {
 	bool sdTriggerLog : 1 {};
 	/**
 	offset 1320 bit 28 */
-	bool ALSActivateInverted : 1 {};
+	bool unused1320_28 : 1 {};
 	/**
 	offset 1320 bit 29 */
 	bool stepper_dc_use_two_wires : 1 {};
@@ -2867,7 +2867,7 @@ struct engine_configuration_s {
 	bool tcu_rangeSensorPulldown : 1 {};
 	/**
 	offset 1492 bit 16 */
-	bool brakePedalPinInverted : 1 {};
+	bool devBit01 : 1 {};
 	/**
 	offset 1492 bit 17 */
 	bool devBit0 : 1 {};
@@ -4716,7 +4716,7 @@ struct engine_configuration_s {
 	bool nitrousControlEnabled : 1 {};
 	/**
 	offset 3904 bit 1 */
-	bool nitrousControlTriggerPinInverted : 1 {};
+	bool unusedFancy2 : 1 {};
 	/**
 	offset 3904 bit 2 */
 	bool unusedFancy3 : 1 {};

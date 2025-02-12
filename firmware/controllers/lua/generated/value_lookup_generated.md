@@ -574,12 +574,6 @@ Maximum time to crank starter when start/stop button is pressed
 ### lambdaProtectionTimeout
 Only respond once lambda is out of range for this period of time. Use to avoid transients triggering lambda protection when not needed
 
-### clutchUpPinInverted
-
-
-### clutchDownPinInverted
-
-
 ### useHbridgesToDriveIdleStepper
 If enabled we use two H-bridges to drive stepper idle air valve
 
@@ -811,9 +805,6 @@ This is the Cut Mode normally used
 ### torqueReductionEnabled
 
 
-### torqueReductionTriggerPinInverted
-
-
 ### limitTorqueReductionTime
 
 
@@ -821,9 +812,6 @@ This is the Cut Mode normally used
 Are you a developer troubleshooting TS over CAN ISO/TP?
 
 ### engineSnifferFocusOnInputs
-
-
-### launchActivateInverted
 
 
 ### twoStroke
@@ -918,9 +906,6 @@ If increased VVT duty cycle increases the indicated VVT angle, set this to 'adva
 
 ### sdTriggerLog
 'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Normal' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
-
-### ALSActivateInverted
-
 
 ### stepper_dc_use_two_wires
 
@@ -1111,7 +1096,7 @@ AEM X-Series EGT gauge kit or rusEFI EGT sensor from Wideband controller
 ### tcu_rangeSensorPulldown
 
 
-### brakePedalPinInverted
+### devBit01
 
 
 ### devBit0
@@ -1883,9 +1868,6 @@ Fuel trim when knock, max 30%
 This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.
 
 ### nitrousControlEnabled
-
-
-### nitrousControlTriggerPinInverted
 
 
 ### nitrousLuaGaugeArmingValue

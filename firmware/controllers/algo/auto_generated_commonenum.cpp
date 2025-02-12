@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Feb 09 03:15:30 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Wed Feb 12 12:51:12 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -754,6 +754,12 @@ const char *getPin_input_mode_e(pin_input_mode_e value){
 switch(value) {
 case PI_DEFAULT:
   return "PI_DEFAULT";
+case PI_INVERTED_DEFAULT:
+  return "PI_INVERTED_DEFAULT";
+case PI_INVERTED_PULLDOWN:
+  return "PI_INVERTED_PULLDOWN";
+case PI_INVERTED_PULLUP:
+  return "PI_INVERTED_PULLUP";
 case PI_PULLDOWN:
   return "PI_PULLDOWN";
 case PI_PULLUP:
