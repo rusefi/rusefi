@@ -381,9 +381,6 @@ static void sdLoggerCloseFile(FIL *fd)
 	// close file
 	f_close(fd);
 
-	// f_sync is called internally
-	//f_sync(&FDLogFile);
-
 	// SD logger is inactive
 	sdLoggerSetReady(false);
 }
@@ -623,7 +620,7 @@ static int sdLogger()
 
 #ifdef LOGGER_MAX_FILE_SIZE
 	// check if we need to start next log file
-	// in next write (assume same size as current) will cross LOGGER_MAX_FILE_SIZE boundary
+	// if next write (assume same size as current) will cross LOGGER_MAX_FILE_SIZE boundary
 	// TODO: use f_tell() instead ?
 	if (logBuffer.writen() + ret > LOGGER_MAX_FILE_SIZE) {
 		logBuffer.stop();
