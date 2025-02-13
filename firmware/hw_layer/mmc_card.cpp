@@ -967,11 +967,11 @@ void initEarlyMmcCard() {
 }
 
 void initMmcCard() {
+#if EFI_PROD_CODE
 	if (!isSdCardEnabled()) {
 		// do not even bother starting the thread if SD card is not enabled & configured on start-up
 		return;
 	}
-#if EFI_PROD_CODE
 	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), PRIO_MMC, (tfunc_t)(void*) MMCmonThread, NULL);
 #endif // EFI_PROD_CODE
 }
