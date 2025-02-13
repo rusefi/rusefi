@@ -1,4 +1,8 @@
 # List of all the board related files.
+
+# this board has 2Mb chip
+include $(PROJECT_DIR)/hw_layer/ports/stm32/2mb_flash.mk
+
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp \
   $(BOARD_DIR)/board_storage.cpp
 
