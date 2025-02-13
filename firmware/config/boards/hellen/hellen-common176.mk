@@ -9,5 +9,5 @@ DDEFS += $(LED_CRITICAL_ERROR_BRAIN_PIN)
 
 DDEFS += -DHELLEN_BOARD_ID_PIN_1=Gpio::F0 -DHELLEN_BOARD_ID_PIN_2=Gpio::F1
 
-BOARDCPPSRC += $(BOARDS_DIR)/hellen/hellen_leds_144.cpp
+# older mcu-176 has custom LEDs while mm-176 matches mm-144
 include $(BOARDS_DIR)/hellen/hellen-common.mk
