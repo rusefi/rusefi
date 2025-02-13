@@ -72,7 +72,7 @@ public class EnumIniField extends IniField {
     @Override
     public void setValue(ConfigurationImage image, Constant constant) {
         String v = constant.getValue();
-        int ordinal = enums.indexOf(isQuoted(v) ? ObjectName.unquote(v) : v);
+        int ordinal = enums.indexOf(v);
         if (ordinal == -1)
             throw new IllegalArgumentException("Not found " + v);
         int value = getByteBuffer(image).getInt();
@@ -212,8 +212,9 @@ public class EnumIniField extends IniField {
         }
 
         public int indexOf(String value) {
+            final String valueToSearch = isQuoted(value) ? ObjectName.unquote(value) : value;
             for (Map.Entry<Integer, String> e : keyValues.entrySet()) {
-                if (e.getValue().equals(value))
+                if (e.getValue().equals(valueToSearch))
                     return e.getKey();
             }
             return -1;
