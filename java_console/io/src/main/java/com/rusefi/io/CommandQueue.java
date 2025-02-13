@@ -7,10 +7,7 @@ import com.rusefi.util.IoUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.function.Consumer;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -33,7 +30,8 @@ public class CommandQueue {
     private final LinkManager linkManager;
 
     private final BlockingQueue<IMethodInvocation> pendingCommands = new LinkedBlockingQueue<>();
-    private final List<Consumer<String>> commandListeners = new ArrayList<>();
+    // we have concurrent access here at least in autotests
+    private final List<Consumer<String>> commandListeners = new CopyOnWriteArrayList<>();
 
     private final Runnable runnable;
 
