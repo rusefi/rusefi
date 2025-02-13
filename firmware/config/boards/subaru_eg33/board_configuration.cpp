@@ -181,6 +181,7 @@ void setBoardDefaultConfiguration() {
 
 	/* SD card is located on SDIO interface */
 	engineConfiguration->isSdCardEnabled = true;
+	engineConfiguration->sdCardCsPin = Gpio::Unassigned;
 
 	/* Knock sensor */
 	/* Interface settings */
