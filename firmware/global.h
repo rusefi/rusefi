@@ -49,7 +49,12 @@
 #endif /* UTILITY_THREAD_STACK_SIZE */
 
 // CH_DBG_ENABLE_STACK_CHECK
+#if CORTEX_MODEL == 7
+// F7/H7 use MPU guard pages, so we don't need to check for stack overflow
+#define getCurrentRemainingStack() 100000
+#else
 #define getCurrentRemainingStack() getRemainingStack(chThdGetSelfX())
+#endif
 
 #define EFI_ERROR_CODE 0xffffffff
 
