@@ -161,7 +161,7 @@ static const scsi_unit_serial_number_inquiry_response_t default_scsi_unit_serial
 };
 
 void MassStorageController::attachLun(uint8_t lunIndex,
-						BaseBlockDevice *blkdev, uint8_t *blkbuf,
+						BaseBlockDevice *blkdev, uint8_t *blkbuf, size_t blkbufsize,
 						const scsi_inquiry_response_t *inquiry,
 						const scsi_unit_serial_number_inquiry_response_t *serialInquiry) {
 	chibios_rt::MutexLocker lock(m_lunMutex);
@@ -182,6 +182,7 @@ void MassStorageController::attachLun(uint8_t lunIndex,
 		lun.config.unit_serial_number_inquiry_response = serialInquiry;
 	}
 	lun.config.blkbuf = blkbuf;
+	lun.config.blkbufsize = blkbufsize;
 	lun.config.blkdev = blkdev;
 	lun.config.transport = &m_scsiTransport;
 
