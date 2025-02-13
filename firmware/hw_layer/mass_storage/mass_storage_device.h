@@ -16,7 +16,7 @@ class MassStorageController : public ThreadController<USB_MSD_THREAD_WA_SIZE> {
 public:
 	MassStorageController(USBDriver* usb);
 
-	void attachLun(uint8_t lunIndex, BaseBlockDevice *blkdev, uint8_t *blkbuf,
+	void attachLun(uint8_t lunIndex, BaseBlockDevice *blkdev, uint8_t *blkbuf, size_t blkbufsize,
 					const scsi_inquiry_response_t *inquiry,
 					const scsi_unit_serial_number_inquiry_response_t *serialInquiry);
 protected:
