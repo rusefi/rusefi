@@ -179,9 +179,8 @@ void setBoardDefaultConfiguration() {
 	/* User can disable this bus */
 	engineConfiguration->is_enabled_spi_2 = true;
 
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
-	engineConfiguration->sdCardCsPin = Gpio::A2;
-	engineConfiguration->isSdCardEnabled = false;
+	/* SD card is located on SDIO interface */
+	engineConfiguration->isSdCardEnabled = true;
 
 	/* Knock sensor */
 	/* Interface settings */
