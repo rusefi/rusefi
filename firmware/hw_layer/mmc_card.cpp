@@ -827,27 +827,25 @@ static int sdReportStorageInit()
 	return -1;
 }
 
+PUBLIC_API_WEAK bool boardSdCardEnable() {
+	// assume powered and ready
+	return true;
+}
+
+PUBLIC_API_WEAK bool boardSdCardDisable() {
+	return true;
+}
+
 static THD_WORKING_AREA(mmcThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
 static THD_FUNCTION(MMCmonThread, arg) {
 	(void)arg;
 
 	chRegSetThreadName("MMC Card Logger");
 
-#if HW_HELLEN && EFI_PROD_CODE
-	// on mega-module we manage SD card power supply
-	while (!getHellenBoardEnabled()) {
+	while (!boardSdCardEnable()) {
 		// wait until board enables peripheral
 		chThdSleepMilliseconds(100);
-		if (getTimeNowS() > 4 && !isIgnVoltage()) {
-			// looks like vehicle is OFF and we are hooked to USB - turn on peripheral to get Mass Storage Device USB profile
-			efiPrintf("    *** turning board ON to power SD card ***");
-			hellenEnableEn();
-			break;
-		}
 	}
-#endif
-  // probably multiple reasons for this sad wait, including making sure that we have VBatt info for 'useMsdMode' logic
-	chThdSleepMilliseconds(200);
 
 	sdStatus = SD_STATUS_CONNECTING;
 	if (!initMmc()) {
@@ -877,6 +875,7 @@ static THD_FUNCTION(MMCmonThread, arg) {
 die:
 	// bring SD interface to safe state
 	deinitMmc();
+	boardSdCardDisable();
 
 	efiPrintf("SD logger has died!");
 
