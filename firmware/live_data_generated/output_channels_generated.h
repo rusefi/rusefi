@@ -143,14 +143,15 @@ struct output_channels_s {
 	offset 0 bit 28 */
 	bool hasFaultReportFile : 1 {};
 	/**
+	 * Analog sensors supply failure
 	offset 0 bit 29 */
-	bool unusedBit_29_29 : 1 {};
+	bool isAnalogFailure : 1 {};
 	/**
 	offset 0 bit 30 */
-	bool unusedBit_29_30 : 1 {};
+	bool unusedBit_30_30 : 1 {};
 	/**
 	offset 0 bit 31 */
-	bool unusedBit_29_31 : 1 {};
+	bool unusedBit_30_31 : 1 {};
 	/**
 	 * @@GAUGE_NAME_RPM@@
 	 * units: RPM
@@ -1409,17 +1410,21 @@ struct output_channels_s {
 	 */
 	int16_t torque = (int16_t)0;
 	/**
-	 * offset 806
-	 */
-	uint8_t unusedAtTheEnd[48] = {};
-	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 854
+	 * offset 806
 	 */
-	uint8_t alignmentFill_at_854[2] = {};
+	uint8_t alignmentFill_at_806[2] = {};
+	/**
+	 * offset 808
+	 */
+	uint32_t mcuSerial = (uint32_t)0;
+	/**
+	 * offset 812
+	 */
+	uint8_t unusedAtTheEnd[48] = {};
 };
-static_assert(sizeof(output_channels_s) == 856);
+static_assert(sizeof(output_channels_s) == 860);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt

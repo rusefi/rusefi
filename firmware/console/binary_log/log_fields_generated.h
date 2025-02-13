@@ -31,6 +31,7 @@ static const LogField fields[] = {
 	{engine->outputChannels, 0, 26, "MAP from sensor seems valid", ""},
 	{engine->outputChannels, 0, 27, "triggerPageRefreshFlag", ""},
 	{engine->outputChannels, 0, 28, "hasFaultReportFile", ""},
+	{engine->outputChannels, 0, 29, "Analog sensors supply failure", ""},
 	{engine->outputChannels.RPMValue, "RPM", "RPM", 0},
 	{engine->outputChannels.rpmAcceleration, "dRPM", "RPM acceleration/Rate of Change/ROC", 2},
 	{engine->outputChannels.speedToRpmRatio, "Gearbox Ratio", "value", 2},
@@ -404,6 +405,7 @@ static const LogField fields[] = {
 	{engine->outputChannels.fuelCutReasonBlinker, "fuelCutReasonBlinker", "", 0},
 	{engine->outputChannels.hp, "hp", "", 0},
 	{engine->outputChannels.torque, "torque", "", 0},
+	{engine->outputChannels.mcuSerial, "mcuSerial", "", 0},
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},
 #endif

@@ -38,13 +38,13 @@ template<class GtestBase>
 void TestBase<GtestBase>::setUpEngineConfiguration(const EngineConfig& config) {
 	// Other Sensor Inputs
 	getTestEngineConfiguration().configureClutchDownPin(config.getClutchDownPin());
-	getTestEngineConfiguration().configureClutchDownPinInverted(config.getClutchDownPinInverted());
+	getTestEngineConfiguration().configureClutchDownPinMode(config.getClutchDownPinMode());
 	getTestEngineConfiguration().configureClutchUpPin(config.getClutchUpPin());
-	getTestEngineConfiguration().configureClutchUpPinInverted(config.getClutchUpPinInverted());
+	getTestEngineConfiguration().configureClutchUpPinMode(config.getClutchUpPinMode());
 
 	// Launch Control
 	getTestEngineConfiguration().configureLaunchActivatePin(config.getLaunchActivatePin());
-	getTestEngineConfiguration().configureLaunchActivateInverted(config.getLaunchActivateInverted());
+	getTestEngineConfiguration().configureLaunchActivateMode(config.getLaunchActivatePinMode());
 	getTestEngineConfiguration().configureLaunchControlEnabled(config.getLaunchControlEnabled());
 	getTestEngineConfiguration().configureLaunchRpm(config.getLaunchRpm());
 	getTestEngineConfiguration().configureLaunchRpmWindow(config.getLaunchRpmWindow());
@@ -60,7 +60,7 @@ void TestBase<GtestBase>::setUpEngineConfiguration(const EngineConfig& config) {
 	getTestEngineConfiguration().configureTorqueReductionEnabled(config.getTorqueReductionEnabled());
 	getTestEngineConfiguration().configureTorqueReductionActivationMode(config.getTorqueReductionActivationMode());
 	getTestEngineConfiguration().configureTorqueReductionTriggerPin(config.getTorqueReductionTriggerPin());
-	getTestEngineConfiguration().configureTorqueReductionButtonInverted(config.getTorqueReductionTriggerPinInverted());
+	getTestEngineConfiguration().configureTorqueReductionButtonMode(config.getTorqueReductionTriggerPinMode());
 	getTestEngineConfiguration().configureLimitTorqueReductionTime(config.getLimitTorqueReductionTime());
 	getTestEngineConfiguration().configureTorqueReductionTime(config.getTorqueReductionTime());
 	getTestEngineConfiguration().configureTorqueReductionArmingRpm(config.getTorqueReductionArmingRpm());
@@ -94,8 +94,7 @@ void TestBase<GtestBase>::setUpEngineConfiguration(const EngineConfig& config) {
 	getTestEngineConfiguration().configureNitrousControlEnabled(config.getNitrousControlEnabled());
 	getTestEngineConfiguration().configureNitrousControlArmingMethod(config.getNitrousControlArmingMethod());
 	getTestEngineConfiguration().configureNitrousControlTriggerPin(config.getNitrousControlTriggerPin());
-	getTestEngineConfiguration().configureNitrousControlTriggerPinInverted(
-			config.getNitrousControlTriggerPinInverted()
+	getTestEngineConfiguration().configureNitrousControlTriggerPinMode(config.getNitrousControlTriggerPinMode()
 	);
 	getTestEngineConfiguration().configureNitrousControlTriggerPinMode(config.getNitrousControlTriggerPinMode());
 	getTestEngineConfiguration().configureNitrousLuaGauge(config.getNitrousLuaGauge());

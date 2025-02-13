@@ -52,9 +52,6 @@ public class BinaryProtocol {
     private static final Logging log = getLogging(BinaryProtocol.class);
     private static final ThreadFactory THREAD_FACTORY = new NamedThreadFactory("ECU text pull", true);
 
-    private static final String CONFIGURATION_RUSEFI_BINARY = "current_configuration.zip";
-    private static final String CONFIGURATION_RUSEFI_XML = "current_configuration.msq";
-
     private final LinkManager linkManager;
     private final IoStream stream;
     private boolean isBurnPending;
@@ -67,7 +64,6 @@ public class BinaryProtocol {
 
 
     private final BinaryProtocolLogger binaryProtocolLogger;
-    public static boolean DISABLE_LOCAL_CONFIGURATION_CACHE;
     public static IniFileProvider iniFileProvider = new RealIniFileProvider();
 
     public @NotNull IniFileModel getIniFile() {
@@ -280,7 +276,7 @@ public class BinaryProtocol {
      * read complete tune from physical data stream
      */
     public void readImage(final Arguments arguments, final ConfigurationImageMeta meta) {
-        ConfigurationImageWithMeta image = getAndValidateLocallyCached();
+        ConfigurationImageWithMeta image = BinaryProtocolLocalCache.getAndValidateLocallyCached(this);
 
         if (image.isEmpty()) {
             image = readFullImageFromController(arguments, meta);
@@ -354,8 +350,8 @@ public class BinaryProtocol {
                 saveConfigurationImageToFiles(
                     imageWithMeta,
                     iniFile,
-                    (ConnectionAndMeta.saveSettingsToFile() ? CONFIGURATION_RUSEFI_BINARY : null),
-                    CONFIGURATION_RUSEFI_XML
+                    (ConnectionAndMeta.saveSettingsToFile() ? BinaryProtocolLocalCache.CONFIGURATION_RUSEFI_BINARY : null),
+                    BinaryProtocolLocalCache.CONFIGURATION_RUSEFI_XML
                 );
             } catch (Exception e) {
                 log.error("Ignoring " + e);
@@ -400,33 +396,6 @@ public class BinaryProtocol {
         if (response == null || response.length < 1)
             return -1;
         return response[0] & 0xff;
-    }
-
-    @NotNull
-    private ConfigurationImageWithMeta getAndValidateLocallyCached() {
-        if (DISABLE_LOCAL_CONFIGURATION_CACHE)
-            return ConfigurationImageWithMeta.VOID;
-        ConfigurationImageWithMeta localCached;
-        try {
-            localCached = ConfigurationImageFile.readFromFile(CONFIGURATION_RUSEFI_BINARY);
-        } catch (IOException e) {
-            log.error("Error reading " + CONFIGURATION_RUSEFI_BINARY + ": no worries " + e);
-            return ConfigurationImageWithMeta.VOID;
-        }
-
-        if (!localCached.isEmpty()) {
-            int crcOfLocallyCachedConfiguration = IoHelper.getCrc32(localCached.getConfigurationImage().getContent());
-            log.info(String.format(CONFIGURATION_RUSEFI_BINARY + " Local cache CRC %x\n", crcOfLocallyCachedConfiguration));
-
-            // there is a local file! let's request CRC from controller so that we can compare it to local file (validate)
-            int crcFromController = getCrcFromController(localCached.getConfigurationImage().getSize());
-
-            if (crcOfLocallyCachedConfiguration == crcFromController) {
-                return localCached;
-            }
-
-        }
-        return ConfigurationImageWithMeta.VOID;
     }
 
     public int getCrcFromController(int configSize) {

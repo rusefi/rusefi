@@ -7,6 +7,7 @@ import com.rusefi.config.generated.Integration;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ui.*;
 import com.rusefi.ui.config.BitConfigField;
 import com.rusefi.ui.config.ConfigUiField;
@@ -150,7 +151,7 @@ public class EngineSnifferPanel {
             /**
              * We have scroll pane size which depends on zoom, that's a long chain of dependencies
              */
-            UiUtils.trueLayout(imagePanel.getParent());
+            AutoupdateUtil.trueLayout(imagePanel.getParent());
         };
 
         resetImagePanel();
@@ -224,7 +225,7 @@ public class EngineSnifferPanel {
         }
 
         // Repaint now that we've updated state
-        SwingUtilities.invokeLater(() -> UiUtils.trueRepaint(imagePanel));
+        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayout(imagePanel));
     }
 
     public JPanel getPanel() {

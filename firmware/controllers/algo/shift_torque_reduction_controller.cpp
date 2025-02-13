@@ -38,7 +38,7 @@ void ShiftTorqueReductionController::updateTriggerPinState() {
         case TORQUE_REDUCTION_BUTTON: {
             updateTriggerPinState(
                 engineConfiguration->torqueReductionTriggerPin,
-                engineConfiguration->torqueReductionTriggerPinInverted,
+                engineConfiguration->torqueReductionTriggerPinMode,
                 engine->engineState.lua.torqueReductionState
             );
             break;
@@ -46,7 +46,7 @@ void ShiftTorqueReductionController::updateTriggerPinState() {
         case LAUNCH_BUTTON: {
             updateTriggerPinState(
                 engineConfiguration->launchActivatePin,
-                engineConfiguration->launchActivateInverted,
+                engineConfiguration->launchActivatePinMode,
                 false
             );
             break;
@@ -54,7 +54,7 @@ void ShiftTorqueReductionController::updateTriggerPinState() {
         case TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH: {
             updateTriggerPinState(
                 engineConfiguration->clutchDownPin,
-                engineConfiguration->clutchDownPinInverted,
+                engineConfiguration->clutchDownPinMode,
                 engine->engineState.lua.clutchDownState
             );
             break;
@@ -62,7 +62,7 @@ void ShiftTorqueReductionController::updateTriggerPinState() {
         case TORQUE_REDUCTION_CLUTCH_UP_SWITCH: {
             updateTriggerPinState(
                 engineConfiguration->clutchUpPin,
-                engineConfiguration->clutchUpPinInverted,
+                engineConfiguration->clutchUpPinMode,
                 engine->engineState.lua.clutchUpState
             );
             break;
@@ -75,14 +75,14 @@ void ShiftTorqueReductionController::updateTriggerPinState() {
 
 void ShiftTorqueReductionController::updateTriggerPinState(
     const switch_input_pin_e pin,
-    const bool isPinInverted,
+    const pin_input_mode_e mode,
     const bool invalidPinState
 ) {
 #if !EFI_SIMULATOR
     isTorqueReductionTriggerPinValid = isBrainPinValid(pin);
     const bool previousTorqueReductionTriggerPinState = torqueReductionTriggerPinState;
     if (isTorqueReductionTriggerPinValid) {
-        torqueReductionTriggerPinState = isPinInverted ^ efiReadPin(pin);
+        torqueReductionTriggerPinState = efiReadPin(pin, mode);
     } else {
         torqueReductionTriggerPinState = invalidPinState;
     }

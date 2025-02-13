@@ -5,12 +5,12 @@ import com.rusefi.*;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.EngineState;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.*;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.core.ui.FrameHelper;
-import com.rusefi.ui.util.UiUtils;
 import com.rusefi.util.IoUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -66,7 +66,8 @@ public class MainFrame {
         setTitle();
         ConnectionStatusLogic.INSTANCE.addListener(isConnected -> SwingUtilities.invokeLater(() -> {
             setTitle();
-            UiUtils.trueRepaint(tabbedPane.tabbedPane); // this would repaint status label
+            // this would repaint status label
+            AutoupdateUtil.trueLayout(tabbedPane.tabbedPane);
             if (ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED) {
                 LocalDateTime dateTime = LocalDateTime.now(ZoneOffset.systemDefault());
                 String isoDateTime = dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);

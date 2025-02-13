@@ -197,11 +197,12 @@ void SensorChecker::onSlowCallback() {
 
 	check(SensorType::FuelEthanolPercent);
 
-// only bother checking these if we have GPIO chips actually capable of reporting an error
-#if BOARD_EXT_GPIOCHIPS > 0 && EFI_PROD_CODE
+#if EFI_PROD_CODE
 	TunerStudioOutputChannels *state = getTunerStudioOutputChannels();
-	// Check injectors
+	// only bother checking these if we have GPIO chips actually capable of reporting an error
+#if BOARD_EXT_GPIOCHIPS > 0
 #if EFI_ENGINE_CONTROL
+	// Check injectors
 	int unhappyInjector = 0;
 	for (size_t i = 0; i < efi::size(enginePins.injectors); i++) {
 		InjectorOutputPin& pin = enginePins.injectors[i];
@@ -248,6 +249,17 @@ void SensorChecker::onSlowCallback() {
 		state->ignitorDiagnostic[i] = getTSErrorCode(diag);
 	}
 #endif // BOARD_EXT_GPIOCHIPS > 0
+
+	// Check ADC(s) and analog inputs
+	if (analogGetDiagnostic() < 0) {
+		/* TODO: map to more OBD codes? */
+		warning(ObdCode::OBD_Sensor_Refence_Voltate_A_Open, "Analog subsystem fault");
+		state->isAnalogFailure = true;
+	} else {
+		state->isAnalogFailure = false;
+	}
+#endif // EFI_PROD_CODE
+
   boardSensorChecker();
 }
 

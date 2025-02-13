@@ -96,7 +96,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 250206
+#define FLASH_DATA_VERSION 250210
 
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
@@ -362,8 +362,8 @@ custom output_pin_e 2 bits, U16, @OFFSET@, [0:8], $output_pin_e_list
 #define pin_output_mode_e_enum "default", "default inverted", "open collector", "open collector inverted"
 custom pin_output_mode_e 1 bits, U08, @OFFSET@, [0:1], @@pin_output_mode_e_enum@@
 
-#define pin_input_mode_e_enum "DEFAULT", "PULLUP", "PULLDOWN"
-custom pin_input_mode_e 1 bits, U08,	@OFFSET@,	[0:1], @@pin_input_mode_e_enum@@
+#define pin_input_mode_e_enum "DEFAULT", "PULLUP", "PULLDOWN", "INVALID", "INVERTED DEFAULT", "INVERTED PULLUP", "INVERTED PULLDOWN"
+custom pin_input_mode_e 1 bits, U08,	@OFFSET@,	[0:2], @@pin_input_mode_e_enum@@
 
 #define gppwm_channel_e_enum "Zero", "TPS", "MAP", "CLT", "IAT", "Fuel Load", "Ignition Load", "Aux Temp 1", "Aux Temp 2", "Accel Pedal", "Battery Voltage", "VVT 1 I", "VVT 1 E", "VVT 2 I", "VVT 2 E", "Ethanol (Flex) %", "Aux Linear 1", "Aux Linear 2", "GPPWM Output 1", "GPPWM Output 2", "GPPWM Output 3", "GPPWM Output 4", "Lua Gauge 1", "Lua Gauge 2", "RPM", "Gear (detected)", "Baro pressure", "EGT 1", "EGT 2", "Aux Linear 3", "Aux Linear 4", "Vehicle speed", "Oil pressure", "Oil temp"
 custom gppwm_channel_e 1 bits, U08, @OFFSET@, [0:5], @@gppwm_channel_e_enum@@
@@ -538,7 +538,10 @@ ThermistorConf clt;todo: merge with channel settings, use full-scale Thermistor 
 ThermistorConf iat;
 
 	float launchTimingRetard;;"deg", 1, 0, -180, 180, 2
-	int hip9011PrescalerAndSDO;value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into two bit fields;"integer", 1, 0, 0, 32, 0
+	uint8_t hip9011Prescaler;value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into two bit fields;"integer", 1, 0, 0, 32, 0
+	uint8_t unusedHip0
+	uint8_t unusedHip1
+	uint8_t unusedHip2
 	int16_t alternator_iTermMin;iTerm min value;"", 1, 0, -30000, 30000, 0
 	int16_t alternator_iTermMax;iTerm max value;"", 1, 0, -30000, 30000, 0
 
@@ -640,7 +643,6 @@ adc_channel_e fuelLevelSensor;This is the processor pin that your fuel level sen
 
 
 	float idle_derivativeFilterLoss;0.1 is a good default value;"x", 1, 0, -1000000, 1000000, 4
-	int unusedTrailingSparkAngle
 
 struct trigger_config_s
 
@@ -852,7 +854,6 @@ pin_output_mode_e hip9011IntHoldPinMode;
  	custom imu_type_e 1 bits, U08, @OFFSET@, [0:4], "None", "VAG", "MM5.10", "type 3", "type 4"
 	imu_type_e imuType
 
-	uint16_t vehicleWeight;;"kg", 1, 0, 0, 10000, 0
 	int16_t idlePidRpmUpperLimit;How far above idle speed do we consider idling, i.e. coasting detection threshold.\nFor example, if target = 800, this param = 200, then anything below 1000 RPM is considered idle.;"RPM", 1, 0, 0, 500, 0
 
 	uint16_t autoscale applyNonlinearBelowPulse;Apply nonlinearity correction below a pulse of this duration. Pulses longer than this duration will receive no adjustment.;"ms", {1/1000}, 0, 0, 30, 3
@@ -942,8 +943,8 @@ custom maf_sensor_type_e 1 bits, S08, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	custom vehicle_info_t @@VEHICLE_INFO_SIZE@@ string, ASCII, @OFFSET@, @@VEHICLE_INFO_SIZE@@
 	custom gppwm_note_t @@GPPWM_NOTE_SIZE@@ string, ASCII, @OFFSET@, @@GPPWM_NOTE_SIZE@@
 
-	bit clutchUpPinInverted,"Inverted","Normal"
-	bit clutchDownPinInverted,"Inverted","Normal"
+	bit unused920_0
+	bit unused920_1
 	bit useHbridgesToDriveIdleStepper;If enabled we use two H-bridges to drive stepper idle air valve
 	bit multisparkEnable
 	bit enableLaunchRetard
@@ -1067,11 +1068,11 @@ bit cutSparkOnHardLimit,"yes","no";Be careful enabling this: some engines are kn
 bit launchFuelCutEnable
 bit launchSparkCutEnable;This is the Cut Mode normally used
 	bit torqueReductionEnabled
-	bit torqueReductionTriggerPinInverted
+	bit unused1308_20
 	bit limitTorqueReductionTime
 bit verboseIsoTp;Are you a developer troubleshooting TS over CAN ISO/TP?
 bit engineSnifferFocusOnInputs
-bit launchActivateInverted
+bit unused1308_24
 bit twoStroke,"Two Stroke","Four Stroke"
 bit skippedWheelOnCam,"On camshaft","On crankshaft";Where is your primary skipped wheel located?
 
@@ -1112,7 +1113,7 @@ bit invertVvtControlIntake,"retard","advance";If increased VVT duty cycle increa
 bit invertVvtControlExhaust,"retard","advance";If increased VVT duty cycle increases the indicated VVT angle, set this to 'advance'. If it decreases, set this to 'retard'. Most intake cams use 'advance', and most exhaust cams use 'retard'.
 bit useBiQuadOnAuxSpeedSensors
 bit sdTriggerLog,"trigger","normal";'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Normal' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
-bit ALSActivateInverted
+bit unused1320_28
 bit stepper_dc_use_two_wires
 bit watchOutForLinearTime
 
@@ -1128,7 +1129,6 @@ bit watchOutForLinearTime
 	int16_t warningPeriod;set warningPeriod X;"seconds", 1, 0, 0, 60, 0
 
 	float knockDetectionWindowStart;;"angle", 1, 0, -1000, 1000, 2
-	float knockDetectionWindowEnd;;"angle", 1, 0, -1000, 1000, 2
 
 
 float idleStepperReactionTime;;"ms", 1, 0, 1, 300, 0
@@ -1199,7 +1199,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	bit enableAemXSeriesEgt;AEM X-Series EGT gauge kit or rusEFI EGT sensor from Wideband controller
 	bit startRequestPinInverted,"Inverted","Normal"
 	bit tcu_rangeSensorPulldown
-	bit brakePedalPinInverted,"Inverted","Normal"
+	bit devBit01
 	bit devBit0
 	bit devBit1
 	bit devBit2
@@ -1717,7 +1717,7 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
     SentFuelHighPressureType FuelHighPressureSentType;If you have SENT High Pressure Fuel Sensor please select type. For analog TPS leave None
 
 	bit nitrousControlEnabled
-	bit nitrousControlTriggerPinInverted
+	bit unusedFancy2
 	bit unusedFancy3
 	bit unusedFancy4
 	bit unusedFancy5
@@ -2459,6 +2459,7 @@ end_struct
 #define ts_show_tps_sent false
 #define ts_show_fan2_settings true
 #define ts_show_inj_diag false
+#define ts_show_analog_diag false
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_2 false
 #define ts_show_experimental true
@@ -2473,7 +2474,6 @@ end_struct
 #define ts_show_etb_bias_curve true
 #define ts_show_etb_pins true
 #define ts_show_forced_induction false
-#define ts_show_vehicle_weight false
 #define ts_show_compression_ratio false
 #define ts_show_injection_mode true
 #define ts_show_maf true

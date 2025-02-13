@@ -241,7 +241,7 @@ Pull-up resistor value on your board
 ### launchTimingRetard
 
 
-### hip9011PrescalerAndSDO
+### hip9011Prescaler
 value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into two bit fields
 
 ### alternator_iTermMin
@@ -523,9 +523,6 @@ Minimum MAP before closed loop boost is enabled. Use to prevent misbehavior upon
 ### finalIgnitionCutPercentBeforeLaunch
 
 
-### vehicleWeight
-
-
 ### idlePidRpmUpperLimit
 How far above idle speed do we consider idling, i.e. coasting detection threshold.\nFor example, if target = 800, this param = 200, then anything below 1000 RPM is considered idle.
 
@@ -576,12 +573,6 @@ Maximum time to crank starter when start/stop button is pressed
 
 ### lambdaProtectionTimeout
 Only respond once lambda is out of range for this period of time. Use to avoid transients triggering lambda protection when not needed
-
-### clutchUpPinInverted
-
-
-### clutchDownPinInverted
-
 
 ### useHbridgesToDriveIdleStepper
 If enabled we use two H-bridges to drive stepper idle air valve
@@ -814,9 +805,6 @@ This is the Cut Mode normally used
 ### torqueReductionEnabled
 
 
-### torqueReductionTriggerPinInverted
-
-
 ### limitTorqueReductionTime
 
 
@@ -824,9 +812,6 @@ This is the Cut Mode normally used
 Are you a developer troubleshooting TS over CAN ISO/TP?
 
 ### engineSnifferFocusOnInputs
-
-
-### launchActivateInverted
 
 
 ### twoStroke
@@ -922,9 +907,6 @@ If increased VVT duty cycle increases the indicated VVT angle, set this to 'adva
 ### sdTriggerLog
 'Trigger' mode will write a high speed log of trigger events (warning: uses lots of space!). 'Normal' mode will write a standard MLG of sensors, engine function, etc. similar to the one captured in TunerStudio.
 
-### ALSActivateInverted
-
-
 ### stepper_dc_use_two_wires
 
 
@@ -944,9 +926,6 @@ Idle target speed when A/C is enabled. Some cars need the extra speed to keep th
 set warningPeriod X
 
 ### knockDetectionWindowStart
-
-
-### knockDetectionWindowEnd
 
 
 ### idleStepperReactionTime
@@ -1117,7 +1096,7 @@ AEM X-Series EGT gauge kit or rusEFI EGT sensor from Wideband controller
 ### tcu_rangeSensorPulldown
 
 
-### brakePedalPinInverted
+### devBit01
 
 
 ### devBit0
@@ -1889,9 +1868,6 @@ Fuel trim when knock, max 30%
 This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.
 
 ### nitrousControlEnabled
-
-
-### nitrousControlTriggerPinInverted
 
 
 ### nitrousLuaGaugeArmingValue

@@ -88,35 +88,35 @@ namespace {
 				/* inputPin = */ TestSwitchPin::TORQUE_REDUCTION,
 				/* config = */ ShiftTorqueReductionSwitchTestBase::TEST_ENGINE_CONFIG.clone()
 					.setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
-					.setTorqueReductionTriggerPinInverted(false),
+					.setTorqueReductionTriggerPinMode(PI_DEFAULT),
 				/* expectedIsTorqueReductionTriggerPinValid = */ true,
-				/* description = */ "TORQUE_REDUCTION (pinInverted = false)"
+				/* description = */ "TORQUE_REDUCTION (pinMode = PI_DEFAULT)"
 			},
 			ShiftTorqueReductionSwitchParams {
 				/* inputPin = */ TestSwitchPin::LUA_TORQUE_REDUCTION,
 				/* config = */ ShiftTorqueReductionSwitchTestBase::TEST_ENGINE_CONFIG.clone()
-					.setTorqueReductionTriggerPin(Gpio::Unassigned)
-					.setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON),
+					.setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
+					.setTorqueReductionTriggerPin(Gpio::Unassigned),
 				/* expectedIsTorqueReductionTriggerPinValid = */ false,
 				/* description = */ "LUA_TORQUE_REDUCTION"
 			},
 			ShiftTorqueReductionSwitchParams {
 				/* inputPin = */ TestSwitchPin::LUA_TORQUE_REDUCTION,
 				/* config = */ ShiftTorqueReductionSwitchTestBase::TEST_ENGINE_CONFIG.clone()
-					.setTorqueReductionTriggerPin(Gpio::Unassigned)
 					.setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
-					.setTorqueReductionTriggerPinInverted(false),
+					.setTorqueReductionTriggerPin(Gpio::Unassigned)
+					.setTorqueReductionTriggerPinMode(PI_DEFAULT),
 				/* expectedIsTorqueReductionTriggerPinValid = */ false,
-				/* description = */ "LUA_TORQUE_REDUCTION (pinInverted = false)"
+				/* description = */ "LUA_TORQUE_REDUCTION (pinMode = PI_DEFAULT)"
 			},
 			ShiftTorqueReductionSwitchParams {
 				/* inputPin = */ TestSwitchPin::LUA_TORQUE_REDUCTION,
 				/* config = */ ShiftTorqueReductionSwitchTestBase::TEST_ENGINE_CONFIG.clone()
-					.setTorqueReductionTriggerPin(Gpio::Unassigned)
 					.setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_BUTTON)
-					.setTorqueReductionTriggerPinInverted(true),
+					.setTorqueReductionTriggerPin(Gpio::Unassigned)
+					.setTorqueReductionTriggerPinMode(PI_INVERTED_DEFAULT),
 				/* expectedIsTorqueReductionTriggerPinValid = */ false,
-				/* description = */ "LUA_TORQUE_REDUCTION (pinInverted = true)"
+				/* description = */ "LUA_TORQUE_REDUCTION (pinMode = PI_INVERTED_DEFAULT)"
 			},
 			ShiftTorqueReductionSwitchParams {
 				/* inputPin = */ TestSwitchPin::LAUNCH,
@@ -129,9 +129,9 @@ namespace {
 				/* inputPin = */ TestSwitchPin::LAUNCH,
 				/* config = */ ShiftTorqueReductionSwitchTestBase::TEST_ENGINE_CONFIG.clone()
 					.setTorqueReductionActivationMode(torqueReductionActivationMode_e::LAUNCH_BUTTON)
-					.setLaunchActivateInverted(false),
+					.setLaunchActivatePinMode(PI_DEFAULT),
 				/* expectedIsTorqueReductionTriggerPinValid = */ true,
-				/* description = */ "LAUNCH (pinInverted = false)"
+				/* description = */ "LAUNCH (pinMode = PI_DEFAULT)"
 			},
 			ShiftTorqueReductionSwitchParams {
 				/* inputPin = */ TestSwitchPin::CLUTCH_DOWN,
@@ -144,15 +144,15 @@ namespace {
 				/* inputPin = */ TestSwitchPin::CLUTCH_DOWN,
 				/* config = */ ShiftTorqueReductionSwitchTestBase::TEST_ENGINE_CONFIG.clone()
 					.setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH)
-					.setClutchDownPinInverted(false),
+					.setClutchDownPinMode(PI_DEFAULT),
 				/* expectedIsTorqueReductionTriggerPinValid = */ true,
-				/* description = */ "CLUTCH_DOWN (pinInverted = false)"
+				/* description = */ "CLUTCH_DOWN (pinMode = PI_DEFAULT)"
 			},
 			ShiftTorqueReductionSwitchParams {
 				/* inputPin = */ TestSwitchPin::LUA_CLUTCH_DOWN,
 				/* config = */ ShiftTorqueReductionSwitchTestBase::TEST_ENGINE_CONFIG.clone()
-					.setClutchDownPin(Gpio::Unassigned)
-					.setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH),
+					.setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH)
+					.setClutchDownPin(Gpio::Unassigned),
 				/* expectedIsTorqueReductionTriggerPinValid = */ false,
 				/* description = */ "LUA_CLUTCH_DOWN"
 			},
@@ -161,18 +161,18 @@ namespace {
 				/* config = */ ShiftTorqueReductionSwitchTestBase::TEST_ENGINE_CONFIG.clone()
 					.setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH)
 					.setClutchDownPin(Gpio::Unassigned)
-					.setClutchDownPinInverted(false),
+					.setClutchDownPinMode(PI_DEFAULT),
 				/* expectedIsTorqueReductionTriggerPinValid = */ false,
-				/* description = */ "LUA_CLUTCH_DOWN (pinInverted = false)"
+				/* description = */ "LUA_CLUTCH_DOWN (pinMode = PI_DEFAULT)"
 			},
 			ShiftTorqueReductionSwitchParams {
 				/* inputPin = */ TestSwitchPin::LUA_CLUTCH_DOWN,
 				/* config = */ ShiftTorqueReductionSwitchTestBase::TEST_ENGINE_CONFIG.clone()
 					.setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH)
 					.setClutchDownPin(Gpio::Unassigned)
-					.setClutchDownPinInverted(true),
+					.setClutchDownPinMode(PI_INVERTED_DEFAULT),
 				/* expectedIsTorqueReductionTriggerPinValid = */ false,
-				/* description = */ "LUA_CLUTCH_DOWN (pinInverted = true)"
+				/* description = */ "LUA_CLUTCH_DOWN (pinMode = PI_INVERTED_DEFAULT)"
 			},
 			ShiftTorqueReductionSwitchParams {
 					/* inputPin = */ TestSwitchPin::CLUTCH_UP,
@@ -185,15 +185,15 @@ namespace {
 					/* inputPin = */ TestSwitchPin::CLUTCH_UP,
 					/* config = */ ShiftTorqueReductionSwitchTestBase::TEST_ENGINE_CONFIG.clone()
 						.setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_CLUTCH_UP_SWITCH)
-						.setClutchUpPinInverted(false),
+						.setClutchUpPinMode(PI_DEFAULT),
 					/* expectedIsTorqueReductionTriggerPinValid = */ true,
-					/* description = */ "CLUTCH_UP (pinInverted = false)"
+					/* description = */ "CLUTCH_UP (pinMode = PI_DEFAULT)"
 			},
 			ShiftTorqueReductionSwitchParams {
 					/* inputPin = */ TestSwitchPin::LUA_CLUTCH_UP,
 					/* config = */ ShiftTorqueReductionSwitchTestBase::TEST_ENGINE_CONFIG.clone()
-						.setClutchUpPin(Gpio::Unassigned)
-						.setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_CLUTCH_UP_SWITCH),
+						.setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_CLUTCH_UP_SWITCH)
+						.setClutchUpPin(Gpio::Unassigned),
 					/* expectedIsTorqueReductionTriggerPinValid = */ false,
 					/* description = */ "LUA_CLUTCH_UP"
 			},
@@ -202,18 +202,18 @@ namespace {
 					/* config = */ ShiftTorqueReductionSwitchTestBase::TEST_ENGINE_CONFIG.clone()
 		                 .setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_CLUTCH_UP_SWITCH)
 		                 .setClutchUpPin(Gpio::Unassigned)
-		                 .setClutchUpPinInverted(false),
+		                 .setClutchUpPinMode(PI_DEFAULT),
 					/* expectedIsTorqueReductionTriggerPinValid = */ false,
-					/* description = */ "LUA_CLUTCH_UP (pinInverted = false)"
+					/* description = */ "LUA_CLUTCH_UP (pinMode = PI_DEFAULT)"
 			},
 			ShiftTorqueReductionSwitchParams {
 					/* inputPin = */ TestSwitchPin::LUA_CLUTCH_UP,
 					/* config = */ ShiftTorqueReductionSwitchTestBase::TEST_ENGINE_CONFIG.clone()
 						.setTorqueReductionActivationMode(torqueReductionActivationMode_e::TORQUE_REDUCTION_CLUTCH_UP_SWITCH)
 						.setClutchUpPin(Gpio::Unassigned)
-						.setClutchUpPinInverted(true),
+						.setClutchUpPinMode(PI_INVERTED_DEFAULT),
 					/* expectedIsTorqueReductionTriggerPinValid = */ false,
-					/* description = */ "LUA_CLUTCH_UP (pinInverted = true)"
+					/* description = */ "LUA_CLUTCH_UP (pinMode = PI_INVERTED_DEFAULT)"
 			}
 		)
 	);

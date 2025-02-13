@@ -57,7 +57,7 @@ namespace {
         TEST_ENGINE_CONFIG.clone()
                 .setNitrousControlEnabled({ true })
                 .setNitrousControlArmingMethod({ DIGITAL_SWITCH_INPUT })
-                .setNitrousControlTriggerPinInverted({ true })
+                .setNitrousControlTriggerPinMode({ PI_INVERTED_DEFAULT })
         );
 
         checkArmingAfterPeriodicFastCallback(true, "default");

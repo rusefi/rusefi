@@ -74,7 +74,13 @@ public class DfuFlasher {
             }
 
             timeForDfuSwitch(callbacks);
-            return executeDFU(callbacks, FindFileHelper.FIRMWARE_BIN_FILE);
+            if (executeDFU(callbacks, FindFileHelper.FIRMWARE_BIN_FILE)) {
+                // We need to wait to allow connection to ECU port (see #7403)
+                timeForDfuSwitch(callbacks);
+                return true;
+            } else {
+                return false;
+            }
         } else {
             callbacks.logLine("Please use manual DFU to change bundle type.");
             return false;

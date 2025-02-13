@@ -1,4 +1,4 @@
-package com.rusefi.ts_plugin;
+package com.rusefi.ts_plugin.knock;
 
 import com.rusefi.core.ui.AutoupdateUtil;
 
@@ -100,49 +100,40 @@ public class KnockCanvas {
         }
     };
 
-    private ComponentListener componentListener = new ComponentAdapter() {
-        @Override
-        public void componentResized(ComponentEvent e) {
-            bufferedImage = new BufferedImage(component.getWidth(), component.getHeight(), BufferedImage.TYPE_INT_RGB);
-            bufferedGraphics = bufferedImage.createGraphics();
-        }
-    };
-
     private BufferedImage bufferedImage;
     private Graphics2D bufferedGraphics;
 
-    int SPECTROGRAM_X_AXIS_SIZE_BASE = 1024 * 4;
-    int SPECTROGRAM_X_AXIS_SIZE = SPECTROGRAM_X_AXIS_SIZE_BASE;
-    float[][] specrtogram;
-    Color[] colorspace;
+    private int SPECTROGRAM_X_AXIS_SIZE_BASE = 1024 * 4;
+    private int SPECTROGRAM_X_AXIS_SIZE = SPECTROGRAM_X_AXIS_SIZE_BASE;
+    private float[][] specrtogram;
+    private Color[] colorspace;
 
-    int spectrogramYAxisSize;
+    private int spectrogramYAxisSize;
 
-    int currentIndexXAxis = 0;
+    private int currentIndexXAxis = 0;
 
-    int number = 1;
+    private int number = 1;
 
 
     public double yAxisHz[];
-    int yAxisFequencyStart = -1;
-    float yAxisFequencyStep = -1;
+    private int yAxisFequencyStart = -1;
+    private float yAxisFequencyStep = -1;
 
 
-    float currentFrequency = 0;
-    float currentAmplitude = 0;
+    private float currentFrequency = 0;
+    private float currentAmplitude = 0;
 
 
-    int peakX = 0;
-    int peakY = 0;
-    float peakFrequency = 0;
-    float peakAmplitude = 0;
-    int peakAmplitudeCol = 0;
+    private int peakY = 0;
+    private float peakFrequency = 0;
+    private float peakAmplitude = 0;
+    private int peakAmplitudeCol = 0;
 
 
     int mouse_x = 0;
     int mouse_y = 0;
-    float mouseFrequency = 0;
-    float mouseAmplitude = 0;
+    private float mouseFrequency = 0;
+    private float mouseAmplitude = 0;
 
 
     public KnockCanvas(int number, int divider) {
@@ -154,6 +145,13 @@ public class KnockCanvas {
 
         bufferedImage = new BufferedImage(640,480, BufferedImage.TYPE_INT_RGB);
         bufferedGraphics = bufferedImage.createGraphics();
+        ComponentListener componentListener = new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                bufferedImage = new BufferedImage(component.getWidth(), component.getHeight(), BufferedImage.TYPE_INT_RGB);
+                bufferedGraphics = bufferedImage.createGraphics();
+            }
+        };
         component.addComponentListener(componentListener);
 
         //linear-gradient(to right, #000000, #290d1a, #490b32, #670353, #81007b, #a60085, #ca008b, #ef008f, #ff356b, #ff6947, #ff9a22, #ffc700);
@@ -216,12 +214,9 @@ public class KnockCanvas {
         }
     }
 
-    public void processValues(float values[]) {
+    public void processValues(float[] values) {
 
-        //mainFrequency = 0;
-
-        for(int i = 0; i < spectrogramYAxisSize; ++i) {
-
+        for (int i = 0; i < spectrogramYAxisSize; ++i) {
             specrtogram[currentIndexXAxis][i] = values[i];
         }
 
@@ -268,14 +263,12 @@ public class KnockCanvas {
         if(peakAmplitudeCol == currentIndexXAxis) {
             peakFrequency = 0;
             peakAmplitude = 0;
-            peakX = 0;
             peakY = 0;
         }
 
         if(currentAmplitude > peakAmplitude) {
             peakFrequency = currentFrequency;
             peakAmplitude = currentAmplitude;
-            peakX = maxX;
             peakY = maxY;
             peakAmplitudeCol = currentIndexXAxis;
         }
@@ -326,7 +319,6 @@ public class KnockCanvas {
     void resetPeak() {
         peakFrequency = 0;
         peakAmplitude = 0;
-        peakX = 0;
         peakY = 0;
     }
 

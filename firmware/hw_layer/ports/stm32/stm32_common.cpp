@@ -116,6 +116,17 @@ void startWatchdog(int timeoutMs) {
 	wdgcfg.winr = 0xfff; // don't use window
 #endif
 
+#ifndef __OPTIMIZE__ // gcc-specific built-in define
+	// if no optimizations, then it's most likely a debug version,
+	// and we need to enable a special watchdog feature to allow debugging
+	efiPrintf("Enabling 'debug freeze' watchdog feature...");
+#ifdef STM32H7XX
+    DBGMCU->APB4FZ1 |= DBGMCU_APB4FZ1_DBG_IWDG1;
+#else // F4 & F7
+	DBGMCU->APB1FZ |= DBGMCU_APB1_FZ_DBG_IWDG_STOP;
+#endif // STM32H7XX
+#endif // __OPTIMIZE__
+
     static bool isStarted = false;
     if (!isStarted) {
 		efiPrintf("Starting watchdog with timeout %d ms...", timeoutMs);
@@ -150,11 +161,19 @@ void tryResetWatchdog() {
 #endif // HAL_USE_WDG
 }
 
+uint32_t getMcuSerial() {
+	uint32_t *uid = ((uint32_t *)UID_BASE);
+	return uid[0] + uid[1] + uid[2];
+}
+
 void baseMCUInit() {
 	// looks like this holds a random value on start? Let's set a nice clean zero
 	DWT->CYCCNT = 0;
 
 	BOR_Set(BOR_Level_1); // one step above default value
+#ifndef EFI_BOOTLOADER
+	engine->outputChannels.mcuSerial = getMcuSerial();
+#endif // EFI_BOOTLOADER
 }
 
 extern uint32_t __main_stack_base__;

@@ -3,6 +3,7 @@ package com.rusefi.ts_plugin;
 import com.efiAnalytics.plugin.ecu.ControllerAccess;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ts_plugin.auth.InstanceAuthContext;
+import com.rusefi.ts_plugin.knock.KnockAnalyzerTab;
 import com.rusefi.ts_plugin.util.ManifestHelper;
 import com.rusefi.tune.xml.Constant;
 

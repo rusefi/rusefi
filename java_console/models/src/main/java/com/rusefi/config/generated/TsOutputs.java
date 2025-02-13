@@ -210,6 +210,7 @@ public class TsOutputs {
 	public static final Field ISMAPVALID = Field.create("ISMAPVALID", 0, FieldType.BIT, 26).setBaseOffset(0);
 	public static final Field TRIGGERPAGEREFRESHFLAG = Field.create("TRIGGERPAGEREFRESHFLAG", 0, FieldType.BIT, 27).setBaseOffset(0);
 	public static final Field HASFAULTREPORTFILE = Field.create("HASFAULTREPORTFILE", 0, FieldType.BIT, 28).setBaseOffset(0);
+	public static final Field ISANALOGFAILURE = Field.create("ISANALOGFAILURE", 0, FieldType.BIT, 29).setBaseOffset(0);
 	public static final Field RPMVALUE = Field.create("RPMVALUE", 4, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field RPMACCELERATION = Field.create("RPMACCELERATION", 6, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field SPEEDTORPMRATIO = Field.create("SPEEDTORPMRATIO", 8, FieldType.INT16).setScale(0.01).setBaseOffset(0);
@@ -614,7 +615,8 @@ public class TsOutputs {
 	public static final Field FUELCUTREASONBLINKER = Field.create("FUELCUTREASONBLINKER", 801, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field HP = Field.create("HP", 802, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TORQUE = Field.create("TORQUE", 804, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_854 = Field.create("ALIGNMENTFILL_AT_854", 854, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_806 = Field.create("ALIGNMENTFILL_AT_806", 806, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field MCUSERIAL = Field.create("MCUSERIAL", 808, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field[] VALUES = {
 	SD_PRESENT,
 	SD_LOGGING_INTERNAL,
@@ -645,6 +647,7 @@ public class TsOutputs {
 	ISMAPVALID,
 	TRIGGERPAGEREFRESHFLAG,
 	HASFAULTREPORTFILE,
+	ISANALOGFAILURE,
 	RPMVALUE,
 	RPMACCELERATION,
 	SPEEDTORPMRATIO,
@@ -1049,6 +1052,7 @@ public class TsOutputs {
 	FUELCUTREASONBLINKER,
 	HP,
 	TORQUE,
-	ALIGNMENTFILL_AT_854,
+	ALIGNMENTFILL_AT_806,
+	MCUSERIAL,
 	};
 }

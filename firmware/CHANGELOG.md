@@ -28,6 +28,9 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
+### Added
+ - SD card mode selection: do not wait for USB if vbatt voltage #7424
+
 ## February 2025 "Day 1075"
 
 ### Added

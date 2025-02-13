@@ -389,7 +389,7 @@
 #define ego_sensor_e_ES_PLX 4
 #define EGT_CHANNEL_COUNT 8
 #define END_OF_CALIBRATION_PADDING 58
-#define engine_configuration_s_size 4040
+#define engine_configuration_s_size 4028
 #define engine_load_mode_e_auto_enum 0="LM_SPEED_DENSITY",2="LM_ALPHA_N",3="LM_LUA",100="LM_MOCK",1="LM_REAL_MAF"
 #define engine_load_mode_e_enum "Speed Density", "MAF Air Charge", "Alpha-N", "Lua"
 #define engine_load_mode_e_LM_ALPHA_N 2
@@ -523,7 +523,7 @@
 #define ETB_BIAS_CURVE_LENGTH 8
 #define ETB_COUNT 2
 #define ETB_HW_MAX_FREQUENCY 3000
-#define FLASH_DATA_VERSION 250206
+#define FLASH_DATA_VERSION 250210
 #define FRONTEND_TITLE_BAR_NAME "rusEFI"
 #define fuel_cyl_trim_s_size 16
 #define FUEL_LEVEL_TABLE_COUNT 8
@@ -1295,11 +1295,14 @@
 #define pedalSensor_NAME "Accelerator pedal"
 #define pedalToTpsTbl_NAME "ETB pedal target"
 #define PERCENT_TRIM_BYTE_PACKING_DIV 0.02
-#define persistent_config_s_size 23304
+#define persistent_config_s_size 23292
 #define pid_s_size 20
-#define pin_input_mode_e_auto_enum 0="PI_DEFAULT",2="PI_PULLDOWN",1="PI_PULLUP"
-#define pin_input_mode_e_enum "DEFAULT", "PULLUP", "PULLDOWN"
+#define pin_input_mode_e_auto_enum 0="PI_DEFAULT",4="PI_INVERTED_DEFAULT",6="PI_INVERTED_PULLDOWN",5="PI_INVERTED_PULLUP",2="PI_PULLDOWN",1="PI_PULLUP"
+#define pin_input_mode_e_enum "DEFAULT", "PULLUP", "PULLDOWN", "INVALID", "INVERTED DEFAULT", "INVERTED PULLUP", "INVERTED PULLDOWN"
 #define pin_input_mode_e_PI_DEFAULT 0
+#define pin_input_mode_e_PI_INVERTED_DEFAULT 4
+#define pin_input_mode_e_PI_INVERTED_PULLDOWN 6
+#define pin_input_mode_e_PI_INVERTED_PULLUP 5
 #define pin_input_mode_e_PI_PULLDOWN 2
 #define pin_input_mode_e_PI_PULLUP 1
 #define pin_mode_e_enum "default", "INVALID", "INVALID", "INVALID", "opendrain", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLUP", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "PULLDOWN"
@@ -1379,7 +1382,7 @@
 #define show_HellenNB1_presets false
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2735297727
+#define SIGNATURE_HASH 1100396183
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1441,7 +1444,7 @@
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON 0
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH 2
 #define torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_UP_SWITCH 3
-#define TOTAL_CONFIG_SIZE 23304
+#define TOTAL_CONFIG_SIZE 23292
 #define TPS_2_BYTE_PACKING_MULT 100
 #define TPS_PPS_TOO_HIGH_THRESHOLD 110
 #define TPS_PPS_TOO_LOW_THRESHOLD -10
@@ -1692,6 +1695,7 @@
 #define ts_show_acr_pins true
 #define ts_show_air_conditioning true
 #define ts_show_alternator true
+#define ts_show_analog_diag false
 #define ts_show_analog_divider false
 #define ts_show_analog_ego true
 #define ts_show_analog_input_settings true
@@ -1842,7 +1846,6 @@
 #define ts_show_tunerstudio_port true
 #define ts_show_vbatt true
 #define ts_show_vehicle_speed_sensor true
-#define ts_show_vehicle_weight false
 #define ts_show_vr_threshold_2 false
 #define ts_show_vr_threshold_all false
 #define ts_show_vr_threshold_pins true
@@ -1851,14 +1854,14 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.02.09.hellenNA8_96.2735297727"
+#define TS_SIGNATURE "rusEFI master.2025.02.13.hellenNA8_96.1100396183"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 1808
+#define TS_TOTAL_OUTPUT_SIZE 1812
 #define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "Channel 1"
 #define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "Channel 2"
 #define TS_TRIGGER_SCOPE_DISABLE 5

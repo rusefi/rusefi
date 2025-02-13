@@ -1,14 +1,12 @@
 package com.rusefi.ui;
 
-import com.rusefi.ui.util.UiUtils;
+import com.rusefi.core.ui.AutoupdateUtil;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SizeSelectorPanel extends JPanel {
     public static final int WIDTH = 5;
@@ -26,8 +24,8 @@ public class SizeSelectorPanel extends JPanel {
                 Element selected = (Element) e.getSource();
                 selectedColumn = selected.column;
                 selectedRow = selected.row;
-                UiUtils.trueLayout(SizeSelectorPanel.this);
-                UiUtils.trueRepaint(SizeSelectorPanel.this);
+                AutoupdateUtil.trueLayout(SizeSelectorPanel.this);
+                AutoupdateUtil.trueLayout(SizeSelectorPanel.this);
                 System.out.println(selectedColumn + " r=" + selectedRow);
             }
 

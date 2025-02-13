@@ -4,7 +4,6 @@ import com.devexperts.logging.Logging;
 import com.rusefi.AverageAnglesUtil;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.ui.AutoupdateUtil;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.ui.util.UiUtils;
@@ -171,7 +170,7 @@ public class RecentCommands {
                         content.add(createButton(uiContext, reentrant, entry.command));
                     }
                 }
-                UiUtils.trueLayout(content.getParent());
+                AutoupdateUtil.trueLayout(content.getParent());
             }
         });
         getConfig().getRoot().setProperty(KEY, pack());

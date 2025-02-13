@@ -115,7 +115,13 @@ public class AutoupdateUtil {
         );
     }
 
+    @Deprecated //
     public static void trueLayout(Component component) {
+        // todo: inline in Aug of 2025
+        trueLayoutAndRepaint(component);
+    }
+
+    public static void trueLayoutAndRepaint(Component component) {
         assertAwtThread();
         if (component == null)
             return;
@@ -189,9 +195,9 @@ public class AutoupdateUtil {
     }
 
     public static void pack(Window window) {
-        trueLayout(window);
+        trueLayoutAndRepaint(window);
         if (window != null)
             window.pack();
-        trueLayout(window);
+        trueLayoutAndRepaint(window);
     }
 }

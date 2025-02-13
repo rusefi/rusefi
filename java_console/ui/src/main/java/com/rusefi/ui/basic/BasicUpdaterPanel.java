@@ -15,7 +15,7 @@ import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.awt.event.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -83,8 +83,10 @@ public class BasicUpdaterPanel extends JPanel {
 
         super.add(new HorizontalLine());
         JLabel logoLabel = LogoHelper.createLogoLabel();
-        if (logoLabel != null)
+        if (logoLabel != null) {
+            logoLabel.setComponentPopupMenu(new LogoLabelPopupMenu());
             super.add(logoLabel);
+        }
         if (showUrlLabel)
             super.add(LogoHelper.createUrlLabel());
 
@@ -137,24 +139,24 @@ public class BasicUpdaterPanel extends JPanel {
                 case 1: {
                     final SerialPortScanner.PortResult portToUpdateFirmware = portsToUpdateFirmware.get(0);
                     AsyncJob job = null;
-                    if (isObfuscated) {
-                        final SerialPortScanner.SerialPortType portType = portToUpdateFirmware.type;
-                        switch (portType) {
-                            case EcuWithOpenblt: {
-                                job = new OpenBltAutoJob(portToUpdateFirmware, updateFirmwareButton);
-                                break;
-                            }
-                            case OpenBlt: {
-                                job = new OpenBltManualJob(portToUpdateFirmware, updateFirmwareButton);
-                                break;
-                            }
-                            default: {
-                                log.error(String.format("Unexpected port type: %s", portType));
-                                break;
-                            }
+                    final SerialPortScanner.SerialPortType portType = portToUpdateFirmware.type;
+                    switch (portType) {
+                        case Ecu: {
+                            job = new DfuAutoJob(portToUpdateFirmware, updateFirmwareButton);
+                            break;
                         }
-                    } else {
-                        job = new DfuAutoJob(portToUpdateFirmware, updateFirmwareButton);
+                        case EcuWithOpenblt: {
+                            job = new OpenBltAutoJob(portToUpdateFirmware, updateFirmwareButton);
+                            break;
+                        }
+                        case OpenBlt: {
+                            job = new OpenBltManualJob(portToUpdateFirmware, updateFirmwareButton);
+                            break;
+                        }
+                        default: {
+                            log.error(String.format("Unexpected port type: %s", portType));
+                            break;
+                        }
                     }
                     setUpdateFirmwareJob(job);
                     break;

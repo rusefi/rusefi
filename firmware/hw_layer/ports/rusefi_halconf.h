@@ -1,3 +1,5 @@
+// file rusefi_halconf.h
+
 #pragma once
 
 #define _CHIBIOS_HAL_CONF_
@@ -109,13 +111,6 @@
  */
 #if !defined(HAL_USE_SDC) || defined(__DOXYGEN__)
 #define HAL_USE_SDC                         FALSE
-#endif
-
-/**
- * @brief   Enables the WDG subsystem.
- */
-#if !defined(HAL_USE_WDG) || defined(__DOXYGEN__)
-#define HAL_USE_WDG                 FALSE
 #endif
 
 /*===========================================================================*/

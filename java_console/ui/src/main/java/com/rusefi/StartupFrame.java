@@ -3,6 +3,7 @@ package com.rusefi;
 import com.devexperts.logging.Logging;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
@@ -329,7 +330,7 @@ public class StartupFrame {
         noPortsMessage.setVisible(ports.isEmpty() || !hasEcuOrBootloader);
 
 
-        UiUtils.trueLayout(connectPanel);
+        AutoupdateUtil.trueLayout(connectPanel);
     }
 
     public static void setFrameIcon(Frame frame) {
@@ -397,7 +398,7 @@ public class StartupFrame {
             comboPorts.setSelectedItem(defaultPort);
         }
 
-        trueLayout(comboPorts);
+        AutoupdateUtil.trueLayout(comboPorts);
         return hasEcuOrBootloader;
     }
 

@@ -93,6 +93,9 @@ float getOutputValueByName(const char *name) {
 // hasFaultReportFile
 		case -1502616231:
 			return engine->outputChannels.hasFaultReportFile;
+// isAnalogFailure
+		case -1383513733:
+			return engine->outputChannels.isAnalogFailure;
 // RPMValue
 		case 1699696209:
 			return engine->outputChannels.RPMValue;
@@ -828,6 +831,9 @@ float getOutputValueByName(const char *name) {
 // torque
 		case 512655621:
 			return engine->outputChannels.torque;
+// mcuSerial
+		case 714144074:
+			return engine->outputChannels.mcuSerial;
 // totalFuelCorrection
 #if EFI_ENGINE_CONTROL
 		case -1779658835:

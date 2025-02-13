@@ -31,7 +31,6 @@ import static com.rusefi.SerialPortScanner.SerialPortType.OpenBlt;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
 import static com.rusefi.maintenance.CalibrationsHelper.*;
 import static com.rusefi.maintenance.UpdateMode.*;
-import static com.rusefi.ui.util.UiUtils.trueLayout;
 
 public class ProgramSelector {
     private static final Logging log = getLogging(ProgramSelector.class);
@@ -336,6 +335,7 @@ public class ProgramSelector {
         boolean hasSerialPorts = !currentHardware.getKnownPorts().isEmpty();
         boolean hasDfuDevice = currentHardware.isDfuFound();
 
+        Object updateModeToRestore = updateModeComboBox.getSelectedItem();
         updateModeComboBox.removeAllItems();
         if (FileLog.isWindows()) {
             boolean requireBlt = FindFileHelper.isObfuscated();
@@ -367,12 +367,14 @@ public class ProgramSelector {
 
             List<PortResult> listOfBootloaders = currentHardware.getKnownPorts().stream().filter(portResult -> portResult.type == OpenBlt).collect(Collectors.toList());
             if (!listOfBootloaders.isEmpty()) {
-                updateModeComboBox.setSelectedItem(OPENBLT_MANUAL);
+                updateModeToRestore = OPENBLT_MANUAL;
             }
         }
 
-        trueLayout(updateModeComboBox);
-        trueLayout(content);
+        updateModeComboBox.setSelectedItem(updateModeToRestore);
+
+        AutoupdateUtil.trueLayout(updateModeComboBox);
+        AutoupdateUtil.trueLayout(content);
     }
 
   @NotNull

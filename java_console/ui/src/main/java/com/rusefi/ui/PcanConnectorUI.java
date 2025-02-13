@@ -3,10 +3,10 @@ package com.rusefi.ui;
 import com.devexperts.logging.Logging;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.can.PCanIoStream;
 import com.rusefi.tools.CANConnectorStartup;
 import com.rusefi.core.ui.FrameHelper;
-import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -35,7 +35,7 @@ public class PcanConnectorUI {
             String stringForTextArea = string;
             stringForTextArea += "\r\n";
             logTextArea.append(stringForTextArea);
-            UiUtils.trueLayout(logTextArea);
+            AutoupdateUtil.trueLayout(logTextArea);
         });
 
         new NamedThreadFactory("PCAN-connector").newThread(() -> {
