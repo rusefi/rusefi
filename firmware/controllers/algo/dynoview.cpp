@@ -119,14 +119,14 @@ bool DynoView::onRpm(int rpm, float time, float tps)
             }
         }
 
+        if (count < window_size) {
+            ++count;
+        }
+
         int accumulate_window_size = std::min(count, window_size);
 
         currentTorque = accumulate_window(accumulate_window_size, tail_torque);
         currentHP = accumulate_window(accumulate_window_size, tail_hp);
-
-        if(count < window_size) {
-            ++count;
-        }
 
         dynoViewPointPrev = dynoViewPoint;
         return true;
