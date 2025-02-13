@@ -30,11 +30,20 @@ extern "C" {
 #if EFI_PROD_CODE
 #include "mpu_util.h"
 #include "backup_ram.h"
-#endif /* EFI_PROD_CODE */
 
-#if EFI_PROD_CODE
+#ifndef ALLOW_JUMP_WITH_IGNITION_VOLTAGE
+// stm32 bootloader might touch uart ports which we cannot allow on boards where uart pins are used to control engine coils etc
+#define ALLOW_JUMP_WITH_IGNITION_VOLTAGE TRUE
+#endif
 
 static void reset_and_jump(void) {
+#if !ALLOW_JUMP_WITH_IGNITION_VOLTAGE
+  if (isIgnVoltage()) {
+    criticalError("Not allowed with ignition power");
+    return;
+  }
+#endif
+
 	#ifdef STM32H7XX
 		// H7 needs a forcible reset of the USB peripheral(s) in order for the bootloader to work properly.
 		// If you don't do this, the bootloader will execute, but USB doesn't work (nobody knows why)
