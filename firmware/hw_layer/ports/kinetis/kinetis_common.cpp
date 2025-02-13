@@ -149,7 +149,7 @@ void jump_to_bootloader() {
 }
 #endif /* EFI_DFU_JUMP */
 
-EXTERNC int getRemainingStack(thread_t *otp) {
+int getRemainingStack(thread_t *otp) {
     // todo: would stm32 code actually work here since similar Cortex?
     return 888888;
 }
