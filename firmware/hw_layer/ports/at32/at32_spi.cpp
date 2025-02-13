@@ -217,17 +217,17 @@ void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
 		criticalError("Incorrect SPI pin configuration");
 	}
 
-	efiSetPadMode("SPI clock", sck,
+	efiSetPadMode("SPI CLK ", sck,
 		PAL_MODE_ALTERNATE(sckAf) | sckMode | PAL_STM32_OSPEED_HIGHEST);
 
-	efiSetPadMode("SPI master out", mosi,
+	efiSetPadMode("SPI MOSI", mosi,
 		PAL_MODE_ALTERNATE(mosiAf) | mosiMode | PAL_STM32_OSPEED_HIGHEST);
 
 	// Activate the internal pullup on MISO: SD cards indicate "busy" by holding MOSI low,
 	// so in case there is no SD card installed, the line could float low and indicate that
 	// the (non existent) card is busy.  We pull the line high to indicate "not busy" in case
 	// of a missing card.
-	efiSetPadMode("SPI master in ", miso,
+	efiSetPadMode("SPI MISO ", miso,
 		PAL_MODE_ALTERNATE(misoAf) | misoMode | PAL_STM32_OSPEED_HIGHEST | PAL_STM32_PUPDR_PULLUP);
 }
 
