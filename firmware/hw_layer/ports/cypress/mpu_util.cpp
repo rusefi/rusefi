@@ -139,10 +139,10 @@ void initSpiModule(SPIDriver *driver, brain_pin_e sck, brain_pin_e miso,
 	 * Info on the silicon defect can be found in this document, section 2.5.2:
 	 * https://www.st.com/content/ccc/resource/technical/document/errata_sheet/0a/98/58/84/86/b6/47/a2/DM00037591.pdf/files/DM00037591.pdf/jcr:content/translations/en.DM00037591.pdf
 	 */
-	efiSetPadMode("SPI clock", sck,	PAL_MODE_ALTERNATE(getSpiAf(driver)) /*| sckMode | PAL_STM32_OSPEED_HIGHEST*/);
+	efiSetPadMode("SPI CLK ", sck,	PAL_MODE_ALTERNATE(getSpiAf(driver)) /*| sckMode | PAL_STM32_OSPEED_HIGHEST*/);
 
-	efiSetPadMode("SPI master out", mosi, PAL_MODE_ALTERNATE(getSpiAf(driver)) /*| mosiMode | PAL_STM32_OSPEED_HIGHEST*/);
-	efiSetPadMode("SPI master in ", miso, PAL_MODE_ALTERNATE(getSpiAf(driver)) /*| misoMode | PAL_STM32_OSPEED_HIGHEST*/);
+	efiSetPadMode("SPI MOSI", mosi, PAL_MODE_ALTERNATE(getSpiAf(driver)) /*| mosiMode | PAL_STM32_OSPEED_HIGHEST*/);
+	efiSetPadMode("SPI MISO ", miso, PAL_MODE_ALTERNATE(getSpiAf(driver)) /*| misoMode | PAL_STM32_OSPEED_HIGHEST*/);
 }
 
 void initSpiCsNoOccupy(SPIConfig *spiConfig, brain_pin_e csPin) {
