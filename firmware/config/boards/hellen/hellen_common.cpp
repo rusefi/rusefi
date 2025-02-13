@@ -57,25 +57,6 @@ bool getHellenBoardEnabled() {
   return !isBoardWithPowerManagement() || megaEn.getLogicValue();
 }
 
-bool boardSdCardEnable() {
-	// on mega-module we manage SD card power supply
-	if (getHellenBoardEnabled()) {
-		return true;
-	}
-
-	if (getTimeNowS() > 4 && !isIgnVoltage()) {
-		// looks like vehicle is OFF and we are hooked to USB - turn on peripheral to get Mass Storage Device USB profile
-		efiPrintf("    *** turning board ON to power SD card ***");
-		hellenEnableEn();
-		chThdSleepMilliseconds(200);
-
-		//check state
-		return getHellenBoardEnabled();
-	}
-
-	return false;
-}
-
 bool boardEnableSendWidebandInfo() {
   // when board is powered down we should be more CANbus silent
     return getHellenBoardEnabled();
@@ -199,3 +180,24 @@ int boardGetAnalogDiagnostic()
 	return 0;
 #endif
 }
+
+#ifndef EFI_BOOTLOADER
+bool boardSdCardEnable() {
+	// on mega-module we manage SD card power supply
+	if (getHellenBoardEnabled()) {
+		return true;
+	}
+
+	if (getTimeNowS() > 4 && !isIgnVoltage()) {
+		// looks like vehicle is OFF and we are hooked to USB - turn on peripheral to get Mass Storage Device USB profile
+		efiPrintf("    *** turning board ON to power SD card ***");
+		hellenEnableEn();
+		chThdSleepMilliseconds(200);
+
+		//check state
+		return getHellenBoardEnabled();
+	}
+
+	return false;
+}
+#endif // ! EFI_BOOTLOADER
