@@ -719,7 +719,10 @@ void updateTunerStudioState() {
 
 #if EFI_DYNO_VIEW
 	tsOutputChannels->hp = getDynoviewHP();
-    tsOutputChannels->torque = getDynoviewTorque();
+  tsOutputChannels->torque = getDynoviewTorque();
+#else
+	tsOutputChannels->hp = -1;
+  tsOutputChannels->torque = -1;
 #endif
 
 	tsOutputChannels->turboSpeed = Sensor::getOrZero(SensorType::TurbochargerSpeed);
