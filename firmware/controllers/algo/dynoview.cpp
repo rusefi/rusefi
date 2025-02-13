@@ -7,6 +7,10 @@
 
 #include "pch.h"
 
+#ifndef DYNO_TPS_THRESHOLD
+#define DYNO_TPS_THRESHOLD 80
+#endif
+
 #if EFI_DYNO_VIEW
 #include "dynoview.h"
 
@@ -56,13 +60,12 @@ void DynoView::reset()
 
 bool DynoView::onRpm(int rpm, float time, float tps)
 {
-    if(tps < dynoViewPointPrev.tps || tps < 80) {
+    if (tps < dynoViewPointPrev.tps || tps < DYNO_TPS_THRESHOLD) {
         reset();
         return false;
     }
 
-    if (dynoViewPointPrev.rpm > 0 && dynoViewPointPrev.time > 0)
-    {
+    if (dynoViewPointPrev.rpm > 0 && dynoViewPointPrev.time > 0) {
         if(time < dynoViewPointPrev.time || rpm < dynoViewPointPrev.rpm)
         {
             return false;
@@ -70,8 +73,7 @@ bool DynoView::onRpm(int rpm, float time, float tps)
 
         int rpmDiff = rpm - dynoViewPointPrev.rpm;
 
-        if (rpmDiff < config->dynoRpmStep)
-        {
+        if (rpmDiff < config->dynoRpmStep) {
             return false;
         }
     }
