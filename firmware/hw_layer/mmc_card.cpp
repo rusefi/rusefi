@@ -408,6 +408,13 @@ void onUsbConnectedNotifyMmcI() {
 #endif /* HAL_USE_USB_MSD */
 
 #if HAL_USE_MMC_SPI
+
+static bool isSdCardEnabled() {
+	return ((engineConfiguration->isSdCardEnabled) &&
+			(engineConfiguration->sdCardSpiDevice != SPI_NONE) &&
+			(isBrainPinValid(engineConfiguration->sdCardCsPin)));
+}
+
 /*
  * Attempts to initialize the MMC card connected over SPI.
  * Returns a BaseBlockDevice* corresponding to the SD card if successful, otherwise nullptr.
@@ -463,6 +470,10 @@ static void deinitializeMmcBlockDevide() {
 static const SDCConfig sdcConfig = {
 	.bus_width = RE_SDC_MODE
 };
+
+static bool isSdCardEnabled() {
+	return (engineConfiguration->isSdCardEnabled);
+}
 
 /*
  * Attempts to initialize the MMC card connected over SDIO.
@@ -952,12 +963,6 @@ void initEarlyMmcCard() {
 	//incLogFileName() use same shared FDLogFile, calling it while FDLogFile is used by log writer will cause damage
 	//addConsoleAction("incfilename", incLogFileName);
 #endif // EFI_PROD_CODE
-}
-
-static bool isSdCardEnabled() {
-  return engineConfiguration->isSdCardEnabled &&
-    engineConfiguration->sdCardSpiDevice != SPI_NONE &&
-    isBrainPinValid(engineConfiguration->sdCardCsPin);
 }
 
 void initMmcCard() {
