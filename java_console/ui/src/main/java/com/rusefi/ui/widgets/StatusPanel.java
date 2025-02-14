@@ -86,7 +86,8 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
             if (sendToLogger) {
                 log.info(s);
             }
-            String stringForTestArea = s;
+            // We do not want to print null-terminator on text area to avoid problems like #7402 and #7431:
+            String stringForTestArea = s.replaceAll("\0", "");
             if (breakLineOnTextArea) {
                 stringForTestArea += "\r\n";
             }
