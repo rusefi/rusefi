@@ -1707,11 +1707,6 @@ float getOutputValueByName(const char *name) {
 		case -774593527:
 			return getLiveData<electronic_throttle_s>(0)->etbFeedForward;
 #endif
-// etbIntegralError
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-		case 402010976:
-			return getLiveData<electronic_throttle_s>(0)->etbIntegralError;
-#endif
 // etbCurrentTarget
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 		case -349799446:
