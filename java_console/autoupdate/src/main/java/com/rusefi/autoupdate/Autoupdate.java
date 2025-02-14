@@ -107,7 +107,8 @@ public class Autoupdate {
                 // technical dept here, guilty as charged!
                 boolean installedIntoProgramFilesHack = new File("uninstall.exe").exists();
                 log.info("installedIntoProgramFilesHack " + installedIntoProgramFilesHack);
-                String pathname = installedIntoProgramFilesHack ? "." : "..";
+                //String pathname = installedIntoProgramFilesHack ? "." : "..";
+                String pathname = ".";
                 // todo: flatten folder while unzipping in installedIntoProgramFilesHack mode?
 
                 log.info("unzipping everything else into " + pathname);
