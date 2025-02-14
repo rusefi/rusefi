@@ -104,9 +104,15 @@ public class Autoupdate {
         URLClassLoader jarClassLoader = prepareClassLoaderToStartConsole();
         downloadedAutoupdateFile.ifPresent(autoupdateFile -> {
             try {
+                // technical dept here, guilty as charged!
+                boolean installedIntoProgramFilesHack = new File("uninstall.exe").exists();
+                log.info("installedIntoProgramFilesHack " + installedIntoProgramFilesHack);
+                String pathname = installedIntoProgramFilesHack ? "." : "..";
+                // todo: flatten folder while unzipping in installedIntoProgramFilesHack mode?
+
                 // We've already prepared class loader, so now we can unzip rusefi_autoupdate.jar and other files
                 // except already unzipped rusefi_console.jar (see #6777):
-                FileUtil.unzip(autoupdateFile.zipFileName, new File(".."), isConsoleJar.negate());
+                FileUtil.unzip(autoupdateFile.zipFileName, new File(pathname), isConsoleJar.negate());
                 final String srecFile = findSrecFile();
                 new File(srecFile == null ? FindFileHelper.FIRMWARE_BIN_FILE : srecFile)
                     .setLastModified(autoupdateFile.lastModified);
@@ -127,6 +133,7 @@ public class Autoupdate {
 
     private static void unzipFreshConsole(DownloadedAutoupdateFileInfo autoupdateFile) {
         try {
+            log.info("unzipFreshConsole " + autoupdateFile.zipFileName);
             // We cannot unzip rusefi_autoupdate.jar file because we need the old one to prepare class loader below
             // (otherwise we get `ZipFile invalid LOC header (bad signature)` exception, see #6777). So now we unzip
             // only rusefi_console.jar:
