@@ -2486,7 +2486,7 @@ end_struct
 #define ts_show_spi1_pins true
 #define ts_show_spi2_enable true
 #define ts_show_spi2_pins true
-#define ts_show_spi2_enable true
+#define ts_show_spi3_enable true
 #define ts_show_spi3_pins true
 #define ts_show_spi4_enable true
 #define ts_show_spi4_pins false
