@@ -67,7 +67,7 @@ public class Autoupdate {
     }
 
     private static void autoupdate(String[] args) {
-        BundleUtil.BundleInfo bundleInfo = BundleUtil.readBundleFullNameNotNull();
+        BundleUtil.BundleInfo bundleInfo = new BundleUtil.BundleInfo("development", null, "uaefi");
         if (BundleUtil.BundleInfo.isUndefined(bundleInfo)) {
             log.error("ERROR: Autoupdate: unable to perform without bundleFullName (check parent folder name)");
             System.exit(-1);
