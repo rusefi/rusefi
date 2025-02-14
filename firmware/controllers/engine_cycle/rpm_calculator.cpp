@@ -203,13 +203,8 @@ void RpmCalculator::setRpmValue(float value) {
 	// This presumably fixes injection mode change for cranking-to-running transition.
 	// 'isSimultaneous' flag should be updated for events if injection modes differ for cranking and running.
 	if (state != oldState && engineConfiguration->crankingInjectionMode != engineConfiguration->injectionMode) {
-		// Reset the state of all injectors: when we change fueling modes, we could
-		// immediately reschedule an injection that's currently underway.  That will cause
-		// the injector's overlappingCounter to get out of sync with reality.  As the fix,
-		// every injector's state is forcibly reset just before we could cause that to happen.
-		engine->injectionEvents.resetOverlapping();
-
-		// reschedule all injection events now that we've reset them
+		// Rebuild future events for the new mode. In-flight actions retain their
+		// output mask and must be allowed to close their original injectors.
 		engine->injectionEvents.addFuelEvents();
 	}
 #endif

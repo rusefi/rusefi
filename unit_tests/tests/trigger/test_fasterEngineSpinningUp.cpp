@@ -62,8 +62,8 @@ TEST(cranking, testFasterEngineSpinningUp) {
 
 	float expectedSimultaneousTimestamp = eth.angleToTimeUs(360 - phase);
 
-	auto const startSimultaneousInjectionAction{ action_s::make<startSimultaneousInjection>() };
-	auto const endSimultaneousInjectionAction{ action_s::make<endSimultaneousInjection>((InjectionEvent*){})};
+	auto const startSimultaneousInjectionAction{ action_s::make<startInjection>(scheduler_arg_t{}) };
+	auto const endSimultaneousInjectionAction{ action_s::make<endInjection>(scheduler_arg_t{})};
 
 	eth.assertEvent5("inj start#1", 0, startSimultaneousInjectionAction, expectedSimultaneousTimestamp - MS2US(engine->engineState.injectionDuration));
 	eth.assertEvent5("inj end#1", 1, endSimultaneousInjectionAction, expectedSimultaneousTimestamp);
@@ -120,8 +120,8 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	expectedSimultaneousTimestamp = eth.angleToTimeUs(phase);
 	ASSERT_EQ(180, eth.timeToAngle(30.000));
 
-	auto const turnInjectionPinHighAction{ action_s::make<turnInjectionPinHigh>(uintptr_t{}) };
-	auto const turnInjectionPinLowAction{ action_s::make<turnInjectionPinLow>((InjectionEvent*){})};
+	auto const turnInjectionPinHighAction{ action_s::make<startInjection>(scheduler_arg_t{}) };
+	auto const turnInjectionPinLowAction{ action_s::make<endInjection>(scheduler_arg_t{})};
 	eth.assertEvent5("inj start#3", 0, turnInjectionPinHighAction, -expectedSimultaneousTimestamp - 1625);
 	eth.assertEvent5("inj end#3", 1, turnInjectionPinLowAction, -expectedSimultaneousTimestamp);
 }

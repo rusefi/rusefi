@@ -407,7 +407,7 @@ TEST(trigger, testTriggerDecoder) {
 }
 
 static void assertInjectionEventBase(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset) {
-	EXPECT_EQ(injectorIndex, ev->outputs[0]->injectorIndex) << msg << "inj index";
+	EXPECT_NE(0, ev->calculateInjectorOutputMask() & (1u << injectorIndex)) << msg << "inj index";
 	EXPECT_NEAR_M4(angleOffset, ev->injectionStartAngle) << msg << "inj index";
 }
 
@@ -415,17 +415,14 @@ static void assertInjectionEventBase(const char *msg, InjectionEvent *ev, int in
 static void assertInjectionEvent(const char *msg, InjectionEvent *ev, int injectorIndex, int eventIndex, angle_t angleOffset) {
 	assertInjectionEventBase(msg, ev, injectorIndex, eventIndex, angleOffset);
 
-	// There should NOT be a second injector configured
-	EXPECT_EQ(nullptr, ev->outputs[1]);
+	EXPECT_EQ(1u << injectorIndex, ev->calculateInjectorOutputMask());
 }
 #endif //FUEL_RPM_COUNT == 16
 
 static void assertInjectionEventBatch(const char *msg, InjectionEvent *ev, int injectorIndex, int secondInjectorIndex, int eventIndex, angle_t angleOffset) {
 	assertInjectionEventBase(msg, ev, injectorIndex, eventIndex, angleOffset);
 
-	// There should be a second injector - confirm it's the correct one
-	ASSERT_NE(nullptr, ev->outputs[1]);
-	EXPECT_EQ(secondInjectorIndex, ev->outputs[1]->injectorIndex);
+	EXPECT_EQ((1u << injectorIndex) | (1u << secondInjectorIndex), ev->calculateInjectorOutputMask());
 }
 
 // https://sourceforge.net/p/rusefi/tickets/299/

@@ -69,21 +69,20 @@ TEST(fuelControl, transitionIssue1592) {
 
 	{
 		// Injector 2 should be scheduled to open then close
-		auto inj2 = &engine->injectionEvents.elements[1];
-		auto const taggedPointer{TaggedPointer<decltype(this)>::make(inj2, false)};
-		auto const aHigh{ action_s::make<turnInjectionPinHigh>( taggedPointer.getRaw() ) };
-		auto const aLow{ action_s::make<turnInjectionPinLow>( inj2 ) };
+		const InjectorContext ctx((1u << 1) | (1u << 2), 1, false);
+		auto const aHigh{ action_s::make<startInjection>(ctx.raw) };
+		auto const aLow{ action_s::make<endInjection>(ctx.raw) };
 
 		ASSERT_EQ(engine->scheduler.size(), 2);
 
 		// Check that the action is correct - we don't care about the timing necessarily
 		auto sched_open = engine->scheduler.getForUnitTest(0);
-		ASSERT_EQ(sched_open->action.getArgumentRaw(), taggedPointer.getRaw());
+		ASSERT_EQ(sched_open->action.getArgumentRaw(), ctx.raw);
 		ASSERT_EQ(sched_open->action.getCallback(), aHigh.getCallback());
 
 		auto sched_close = engine->scheduler.getForUnitTest(1);
 		// Next action should be closing the same injector
-		ASSERT_EQ(sched_close->action.getArgumentRaw(), taggedPointer.getRaw());
+		ASSERT_EQ(sched_close->action.getArgumentRaw(), ctx.raw);
 		ASSERT_EQ(sched_close->action.getCallback(), aLow.getCallback());
 	}
 
@@ -104,13 +103,13 @@ TEST(fuelControl, transitionIssue1592) {
 
 namespace {
 enum class StagedBatchTransition {
-	DuringPulse, // Reproduce the fault by changing modes with both stages open.
+	DuringPulse, // Change modes with both stages open.
 	AfterPulse, // Control: change modes only after both stages have closed.
 	KeepCranking, // Control: let the batch pulse finish without changing modes.
 };
 
-// ECU-010: DuringPulse deliberately asserts the current defect. Change its
-// expectations with the subsequent fix, per CLAUDE.md coverage-first guidance.
+// ECU-010: closing a staged batch pulse must retain its original output mask
+// even when the RPM transition rebuilds the event in sequential mode.
 void checkStagedBatchTransition(StagedBatchTransition transition) {
 	// SETUP: prepare a staged batch pulse that can span the running threshold.
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
@@ -167,7 +166,7 @@ void checkStagedBatchTransition(StagedBatchTransition transition) {
 	ASSERT_NEAR(11, engine->module<InjectorModelSecondary>()->getInjectionDuration(0.01f), 0.001f);
 	engine->injectionEvents.addFuelEvents();
 	auto& event = engine->injectionEvents.elements[0];
-	ASSERT_EQ(&enginePins.injectorsStage2[3], event.outputsStage2[1]);
+	ASSERT_EQ((1u << 0) | (1u << 3), event.calculateInjectorOutputMask());
 	event.injectionStartAngle = 0;
 	// END OF SETUP. All three cases start with the same configured batch event.
 
@@ -179,17 +178,20 @@ void checkStagedBatchTransition(StagedBatchTransition transition) {
 	ASSERT_EQ(2, engine->scheduler.size());
 	ASSERT_TRUE(enginePins.injectorsStage2[0].getLogicValue());
 	ASSERT_TRUE(enginePins.injectorsStage2[3].getLogicValue());
+	for (size_t i = 0; i < 2; i++) {
+		const InjectorContext ctx(engine->scheduler.getForUnitTest(i)->action.getArgumentRaw());
+		EXPECT_EQ((1u << 0) | (1u << 3), ctx.outputsMask());
+		EXPECT_TRUE(ctx.stage2Active());
+	}
 
-	const bool orphanedSecondary = transition == StagedBatchTransition::DuringPulse;
-	if (orphanedSecondary) {
+	if (transition == StagedBatchTransition::DuringPulse) {
 		// Only 1 ms has passed, so neither closing callback has run. The real
-		// RPM transition resets primary outputs and rebuilds the event mapping.
-		// Cylinder 4 disappears from outputsStage2, although its secondary pin
-		// is still open and its queued close reads this same mutable event.
+		// RPM transition rebuilds the event mapping in sequential mode, while
+		// the queued close callbacks retain the batch output mask.
 		eth.moveTimeForwardUs(1000);
 		engine->rpmCalculator.setRpmValue(410);
 		ASSERT_FALSE(engine->rpmCalculator.isCranking());
-		ASSERT_EQ(nullptr, event.outputsStage2[1]);
+		ASSERT_EQ(1u << 0, event.calculateInjectorOutputMask());
 	}
 	// Advance beyond the pulse and explicitly run both closing callbacks.
 	// An empty queue establishes that a remaining high output is not simply
@@ -200,14 +202,11 @@ void checkStagedBatchTransition(StagedBatchTransition transition) {
 	for (const auto& pin : enginePins.injectors) {
 		EXPECT_FALSE(pin.getLogicValue());
 	}
-	// DEFECT ASSERTIONS: DuringPulse expects cylinder 4's secondary pin to
-	// remain high with overlap count 1 despite the completed close callbacks.
-	// That is the reproduced bug; correct behavior would be low/count 0 for
-	// every secondary pin. Both controls already expect those correct values.
+	// The close callbacks must release every secondary pin opened by the
+	// batch pulse, including cylinder 4 after the mode transition.
 	for (size_t i = 0; i < efi::size(enginePins.injectorsStage2); i++) {
-		const bool remainsOpen = orphanedSecondary && i == 3;
-		EXPECT_EQ(remainsOpen, enginePins.injectorsStage2[i].getLogicValue()) << i;
-		EXPECT_EQ(remainsOpen ? 1 : 0, enginePins.injectorsStage2[i].getOverlappingCounter()) << i;
+		EXPECT_FALSE(enginePins.injectorsStage2[i].getLogicValue()) << i;
+		EXPECT_EQ(0, enginePins.injectorsStage2[i].getOverlappingCounter()) << i;
 	}
 
 	if (transition == StagedBatchTransition::KeepCranking) {
@@ -216,35 +215,30 @@ void checkStagedBatchTransition(StagedBatchTransition transition) {
 	}
 	if (transition == StagedBatchTransition::AfterPulse) {
 		// This control makes the same RPM/mapping change after the batch
-		// outputs have closed, leaving no open secondary output to orphan.
+		// outputs have closed.
 		engine->rpmCalculator.setRpmValue(410);
 		ASSERT_FALSE(engine->rpmCalculator.isCranking());
-		ASSERT_EQ(nullptr, event.outputsStage2[1]);
+		ASSERT_EQ(1u << 0, event.calculateInjectorOutputMask());
 	}
 
 	// Schedule a normal sequential pulse for cylinder 4 (firing-order index 2).
-	// Its open increments the orphaned counter from 1 to 2 in the reproduction;
-	// in the AfterPulse control, the counter starts at 0 and increments to 1.
+	// Its open increments the secondary pin's counter from 0 to 1.
 	auto& nextEvent = engine->injectionEvents.elements[2];
-	ASSERT_EQ(&enginePins.injectorsStage2[3], nextEvent.outputsStage2[0]);
+	ASSERT_EQ(1u << 3, nextEvent.calculateInjectorOutputMask());
 	nextEvent.injectionStartAngle = 0;
 	nextEvent.onTriggerTooth(getTimeNowNt(), 0, 10);
 	ASSERT_EQ(1, eth.executeActions());
 	ASSERT_TRUE(enginePins.injectorsStage2[3].getLogicValue());
-	ASSERT_EQ(orphanedSecondary ? 2 : 1, enginePins.injectorsStage2[3].getOverlappingCounter());
+	ASSERT_EQ(1, enginePins.injectorsStage2[3].getOverlappingCounter());
 	eth.moveTimeForwardUs(20000);
 	ASSERT_EQ(2, eth.executeActions());
 	EXPECT_EQ(nullptr, engine->scheduler.getHead());
-	// PERSISTENCE ASSERTIONS: the matching sequential close only undoes its
-	// own open. DuringPulse is still high/count 1 with no callbacks pending;
-	// AfterPulse returns to low/count 0. A later normal pulse cannot repair
-	// the unmatched batch open. Update the defect expectations with the fix.
-	EXPECT_EQ(orphanedSecondary, enginePins.injectorsStage2[3].getLogicValue());
-	EXPECT_EQ(orphanedSecondary ? 1 : 0, enginePins.injectorsStage2[3].getOverlappingCounter());
+	EXPECT_FALSE(enginePins.injectorsStage2[3].getLogicValue());
+	EXPECT_EQ(0, enginePins.injectorsStage2[3].getOverlappingCounter());
 }
 } // namespace
 
-TEST(fuelControl, CrankingToRunningLeavesSecondaryBatchInjectorOpen) {
+TEST(fuelControl, CrankingToRunningClosesSecondaryBatchInjector) {
 	checkStagedBatchTransition(StagedBatchTransition::DuringPulse);
 }
 

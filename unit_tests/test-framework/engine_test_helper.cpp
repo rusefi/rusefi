@@ -454,13 +454,13 @@ void EngineTestHelper::fireTriggerEvents(int count) {
 
 void EngineTestHelper::assertInjectorUpEvent(const char *msg, int eventIndex, efitimeus_t momentUs, long injectorIndex) {
 	InjectionEvent *event = &engine.injectionEvents.elements[injectorIndex];
-	auto const expected_action{ action_s::make<turnInjectionPinHigh>(uintptr_t{}) };
+	auto const expected_action{ action_s::make<startInjection>(scheduler_arg_t{}) };
 	assertEvent(msg, eventIndex, expected_action, momentUs, event);
 }
 
 void EngineTestHelper::assertInjectorDownEvent(const char *msg, int eventIndex, efitimeus_t momentUs, long injectorIndex) {
 	InjectionEvent *event = &engine.injectionEvents.elements[injectorIndex];
-	auto const expected_action{ action_s::make<turnInjectionPinLow>((InjectionEvent*){}) };
+	auto const expected_action{ action_s::make<endInjection>(scheduler_arg_t{}) };
 	assertEvent(msg, eventIndex, expected_action, momentUs, event);
 }
 
@@ -505,9 +505,8 @@ scheduling_s * EngineTestHelper::assertScheduling(const char *msg, int index, sc
 void EngineTestHelper::assertEvent(const char *msg, int index, action_s const& action, efitimeus_t momentUs, InjectionEvent *expectedEvent) {
 	scheduling_s *event = assertEvent5(msg, index, action, momentUs);
 
-	auto const actualEvent{ event->action.getArgument<InjectionEvent*>() };
-
-	ASSERT_EQ(expectedEvent->outputs[0], actualEvent->outputs[0]) << msg;
+	const InjectorContext ctx(event->action.getArgumentRaw());
+	ASSERT_EQ(expectedEvent->getIndex(), ctx.eventIndex()) << msg;
 // but this would not work	assertEqualsLM(msg, expectedPair, (long)eventPair);
 }
 
