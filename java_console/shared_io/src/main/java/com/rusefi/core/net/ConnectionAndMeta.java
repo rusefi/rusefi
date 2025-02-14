@@ -46,7 +46,7 @@ public class ConnectionAndMeta {
     }
 
     public static String getRusEfiConsoleJarName() {
-        String defaultValue = JarFileUtil.getJarFileNamePrefix() + "_console.jar";
+        String defaultValue =  "rusefi" + "_console.jar";
         // why would we need this configurable? if we need it for development under IDE it should probably be done differently?
         //return getStringProperty(getProperties(), "console_jar", defaultValue);
         return defaultValue;
