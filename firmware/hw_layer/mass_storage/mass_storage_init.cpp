@@ -43,7 +43,8 @@
 
 // One block buffer per LUN
 static NO_CACHE uint8_t blkbuf0[MMCSD_BLOCK_SIZE];
-static NO_CACHE uint8_t blkbuf1[MMCSD_BLOCK_SIZE];
+// Speed-up SD card
+static NO_CACHE uint8_t blkbuf1[4 * MMCSD_BLOCK_SIZE];
 
 static MassStorageController msd(usb_driver);
 
@@ -76,7 +77,7 @@ static const scsi_inquiry_response_t sdCardInquiry = {
 };
 
 void attachMsdSdCard(BaseBlockDevice* blkdev) {
-	msd.attachLun(1, blkdev, blkbuf1, &sdCardInquiry, nullptr);
+	msd.attachLun(1, blkdev, blkbuf1, sizeof(blkbuf1), &sdCardInquiry, nullptr);
 
 #if EFI_TUNER_STUDIO
 	// SD MSD attached, enable indicator in TS
@@ -85,7 +86,7 @@ void attachMsdSdCard(BaseBlockDevice* blkdev) {
 }
 
 void deattachMsdSdCard(void) {
-	msd.attachLun(1, (BaseBlockDevice*)&ND1, blkbuf1, &sdCardInquiry, nullptr);
+	msd.attachLun(1, (BaseBlockDevice*)&ND1, blkbuf1, sizeof(blkbuf1), &sdCardInquiry, nullptr);
 
 #if EFI_TUNER_STUDIO
 	// SD MSD attached, enable indicator in TS
@@ -123,10 +124,10 @@ static BaseBlockDevice* getRamdiskDevice() {
 
 void initUsbMsd() {
 	// Attach the ini ramdisk
-	msd.attachLun(0, getRamdiskDevice(), blkbuf0, &iniDriveInquiry, nullptr);
+	msd.attachLun(0, getRamdiskDevice(), blkbuf0, sizeof(blkbuf0), &iniDriveInquiry, nullptr);
 
 	// attach a null device in place of the SD card for now - the SD thread may replace it later
-	msd.attachLun(1, (BaseBlockDevice*)&ND1, blkbuf1, &sdCardInquiry, nullptr);
+	msd.attachLun(1, (BaseBlockDevice*)&ND1, blkbuf1, sizeof(blkbuf1), &sdCardInquiry, nullptr);
 
 	// start the mass storage thread
 	msd.start();
