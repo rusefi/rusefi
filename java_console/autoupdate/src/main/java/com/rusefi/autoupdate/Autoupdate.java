@@ -77,13 +77,13 @@ public class Autoupdate {
 
         Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile = downloadFreshZipFile(args, firstArgument, bundleInfo);
         URLClassLoader jarClassLoader = safeUnzipMakingSureClassloaderIsHappy(downloadedAutoupdateFile);
-        // extremely dark magic: XML binding seems to depend on this
+        log.info("extremely dark magic: XML binding seems to depend on this");
         Thread.currentThread().setContextClassLoader(jarClassLoader);
         startConsole(args, jarClassLoader);
     }
 
     private static Optional<DownloadedAutoupdateFileInfo> downloadFreshZipFile(String[] args, String firstArgument, BundleUtil.BundleInfo bundleInfo) {
-        Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile = Optional.empty();
+        Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile;
         if (firstArgument.equalsIgnoreCase("basic-ui")) {
             downloadedAutoupdateFile = doDownload(bundleInfo);
         } else if (args.length > 0 && args[0].equalsIgnoreCase("release")) {
@@ -110,6 +110,7 @@ public class Autoupdate {
                 String pathname = installedIntoProgramFilesHack ? "." : "..";
                 // todo: flatten folder while unzipping in installedIntoProgramFilesHack mode?
 
+                log.info("unzipping everything else into " + pathname);
                 // We've already prepared class loader, so now we can unzip rusefi_autoupdate.jar and other files
                 // except already unzipped rusefi_console.jar (see #6777):
                 FileUtil.unzip(autoupdateFile.zipFileName, new File(pathname), isConsoleJar.negate());
@@ -133,7 +134,7 @@ public class Autoupdate {
 
     private static void unzipFreshConsole(DownloadedAutoupdateFileInfo autoupdateFile) {
         try {
-            log.info("unzipFreshConsole " + autoupdateFile.zipFileName);
+            log.info("unzipFreshConsole " + autoupdateFile.zipFileName + " only " + consoleJarZipEntry);
             // We cannot unzip rusefi_autoupdate.jar file because we need the old one to prepare class loader below
             // (otherwise we get `ZipFile invalid LOC header (bad signature)` exception, see #6777). So now we unzip
             // only rusefi_console.jar:

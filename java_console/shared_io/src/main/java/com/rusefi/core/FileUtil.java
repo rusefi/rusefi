@@ -1,5 +1,6 @@
 package com.rusefi.core;
 
+import com.devexperts.logging.Logging;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -9,10 +10,13 @@ import java.util.function.Predicate;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 /**
  * Minor mess: we also have FileUtils in io
  */
 public class FileUtil {
+    private static final Logging log = getLogging(FileUtil.class);
     public static final String RUSEFI_SETTINGS_FOLDER = System.getProperty("user.home") + File.separator + ".rusEFI";
 
     public static void unzip(
@@ -33,9 +37,10 @@ public class FileUtil {
                 File newFile = newFile(destDir, zipEntry);
                 if (zipEntry.isDirectory()) {
                     if (!newFile.isDirectory()) {
-                        // we already have a file with name matching directory name
+                        log.info("we already have a file with name matching directory name: " + newFile);
                         newFile.delete();
                     }
+                    log.info("mkdirs " + newFile);
                     newFile.mkdirs();
                 } else {
                     unzipFile(buffer, zis, newFile);
@@ -45,11 +50,11 @@ public class FileUtil {
         }
         zis.closeEntry();
         zis.close();
-        System.out.println("Unzip " + zipFileName + " to " + destDir + " worked!");
+        log.info("Unzip " + zipFileName + " to " + destDir + " worked!");
     }
 
     private static void unzipFile(byte[] buffer, ZipInputStream zis, File newFile) throws IOException {
-        System.out.println("Unzipping " + newFile);
+        log.info("Unzipping " + newFile);
         FileOutputStream fos = new FileOutputStream(newFile);
         int len;
         while ((len = zis.read(buffer)) > 0) {
