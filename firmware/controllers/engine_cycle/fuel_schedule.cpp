@@ -8,25 +8,58 @@
 
 #if EFI_ENGINE_CONTROL
 
-void turnInjectionPinHigh(scheduler_arg_t const arg) {
-	auto const nowNt{ getTimeNowNt() };
+void startInjection(scheduler_arg_t arg) {
+	const InjectorContext ctx(arg);
+	const auto nowNt = getTimeNowNt();
+	for (uint16_t mask = ctx.outputsMask(), i = 0; mask; mask >>= 1, i++) {
+		if (mask & 1u) {
+			enginePins.injectors[i].open(nowNt);
+			if (ctx.stage2Active()) {
+				enginePins.injectorsStage2[i].open(nowNt);
+			}
+		}
+	}
+}
 
-	auto const taggedPointer{ TaggedPointer<InjectionEvent>::fromRaw(arg) };
-	auto const event{ taggedPointer.getOriginalPointer() };
-	auto const hasStage2Injection{ taggedPointer.getFlag() };
-
-	for (auto const& output: event->outputs) {
-		if (output) {
-			output->open(nowNt);
+void endInjection(scheduler_arg_t arg) {
+	const InjectorContext ctx(arg);
+	const auto nowNt = getTimeNowNt();
+	for (uint16_t mask = ctx.outputsMask(), i = 0; mask; mask >>= 1, i++) {
+		if (mask & 1u) {
+			enginePins.injectors[i].close(nowNt);
 		}
 	}
 
-	if (hasStage2Injection) {
-		for (auto const& output: event->outputsStage2) {
-			if (output) {
-				output->open(nowNt);
-			}
+	if (ctx.eventIndex() < MAX_CYLINDER_COUNT) {
+		getFuelSchedule()->elements[ctx.eventIndex()].update();
+	}
+}
+
+void endInjectionStage2(scheduler_arg_t arg) {
+	const InjectorContext ctx(arg);
+	const auto nowNt = getTimeNowNt();
+	for (uint16_t mask = ctx.outputsMask(), i = 0; mask; mask >>= 1, i++) {
+		if (mask & 1u) {
+			enginePins.injectorsStage2[i].close(nowNt);
 		}
+	}
+}
+
+uint16_t InjectionEvent::calculateInjectorOutputMask() const {
+	switch (m_injectionMode) {
+		case IM_SIMULTANEOUS:
+			return (1u << engineConfiguration->cylindersCount) - 1;
+		case IM_SINGLE_POINT:
+			return 1;
+		case IM_BATCH: {
+			const auto count = engineConfiguration->cylindersCount;
+			const auto twin = getCylinderNumberAtIndex((ownIndex + count / 2) % count);
+			return (1u << cylinderNumber) | (1u << twin);
+		}
+		case IM_SEQUENTIAL:
+			return 1u << cylinderNumber;
+		default:
+			return 0;
 	}
 }
 
@@ -38,12 +71,6 @@ FuelSchedule::FuelSchedule() {
 
 void FuelSchedule::invalidate() {
 	isReady = false;
-}
-
-void FuelSchedule::resetOverlapping() {
-	for (auto& inj : enginePins.injectors) {
-		inj.reset();
-	}
 }
 
 // Determines how much to adjust injection opening angle based on the injection's duration and the current phasing mode
@@ -160,35 +187,11 @@ bool InjectionEvent::update() {
 		injectorIndex = 0;
 	}
 
-	InjectorOutputPin *secondOutput;
-	InjectorOutputPin* secondOutputStage2;
-
-	if (mode == IM_BATCH) {
-		/**
-		 * also fire the 2nd half of the injectors so that we can implement a batch mode on individual wires
-		 */
-		// Compute the position of this cylinder's twin in the firing order
-		// Each injector gets fired as a primary (the same as sequential), but also
-		// fires the injector 360 degrees later in the firing order.
-		int secondOrder = (ownIndex + (engineConfiguration->cylindersCount / 2)) % engineConfiguration->cylindersCount;
-		int secondIndex = getCylinderNumberAtIndex(secondOrder);
-		secondOutput = &enginePins.injectors[secondIndex];
-		secondOutputStage2 = &enginePins.injectorsStage2[secondIndex];
-	} else {
-		secondOutput = nullptr;
-		secondOutputStage2 = nullptr;
-	}
-
 	InjectorOutputPin *output = &enginePins.injectors[injectorIndex];
-
-	outputs[0] = output;
-	outputs[1] = secondOutput;
 	isSimultaneous = mode == IM_SIMULTANEOUS;
+	m_injectionMode = mode;
 	// Stash the cylinder number so we can select the correct fueling bank later
 	cylinderNumber = injectorIndex;
-
-	outputsStage2[0] = &enginePins.injectorsStage2[injectorIndex];
-	outputsStage2[1] = secondOutputStage2;
 
 	if (!isSimultaneous && !output->isInitialized()) {
 		// todo: extract method for this index math

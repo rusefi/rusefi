@@ -26,7 +26,7 @@ TEST(test_utils, assertEventExistsAtEnginePhase){
     // two simultaneous injections
     ASSERT_EQ( 4,  engine->scheduler.size()) << "plain#2";
 
-    auto const startSimultaneousInjectionAction{ action_s::make<startSimultaneousInjection>() };
+    auto const startSimultaneousInjectionAction{ action_s::make<startInjection>(scheduler_arg_t{}) };
 
     // old event assert:
     eth.assertEvent5("sim start", 0, startSimultaneousInjectionAction, 100000 - 1625);

@@ -4,7 +4,6 @@
 
 #include "pch.h"
 #include "prime_injection.h"
-#include "injection_gpio.h"
 #include "sensor.h"
 #include "backup_ram.h"
 #if EFI_PROD_CODE
@@ -126,12 +125,13 @@ void PrimeController::onPrimeStart() {
 
 	// Open all injectors, schedule closing later
 	m_isPriming = true;
-	startSimultaneousInjection();
+	m_primeOutputsMask = (1u << engineConfiguration->cylindersCount) - 1;
+	startInjection(InjectorContext(m_primeOutputsMask, 0xF, false).raw);
 	getScheduler()->schedule("onPrimeStart", nullptr, endTime, action_s::make<onPrimeEndAdapter>( this ));
 }
 
 void PrimeController::onPrimeEnd() {
-	endSimultaneousInjectionOnlyTogglePins();
+	endInjection(InjectorContext(m_primeOutputsMask, 0xF, false).raw);
 
 	m_isPriming = false;
 }

@@ -6,9 +6,6 @@
 
 #include "efi_output.h"
 
-void startSimultaneousInjection();
-void endSimultaneousInjectionOnlyTogglePins();
-
 class InjectorOutputPin final : public NamedOutputPin {
 public:
 	InjectorOutputPin();

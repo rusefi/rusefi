@@ -77,7 +77,7 @@ TEST(OddFireRunningMode, hd) {
 	ASSERT_NEAR(0.0069257142022, getInjectionMass(200), EPS3D);
 
 	ASSERT_EQ( 8,  engine->scheduler.size());
-	auto const turnInjectionPinLowAction{ action_s::make<turnInjectionPinLow>((InjectionEvent*){})};
+	auto const turnInjectionPinLowAction{ action_s::make<endInjection>(scheduler_arg_t{})};
 	eth.assertEvent5("fuel down2#2", 2, turnInjectionPinLowAction, eth.angleToTimeUs(180 + PORT_INJECTION_OFFSET + cylinderOne));
 	eth.assertEvent5("spark down2#4", 4, fireSparkAndPrepareNextScheduleAction, eth.angleToTimeUs(-180 + cylinderOne - timing));
 	eth.assertEvent5("fuel down2#7", 7, turnInjectionPinLowAction, eth.angleToTimeUs(540 + PORT_INJECTION_OFFSET + cylinderTwo));

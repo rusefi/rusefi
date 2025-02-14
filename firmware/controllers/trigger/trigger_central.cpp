@@ -154,11 +154,6 @@ angle_t TriggerCentral::syncEnginePhaseAndReport(int divider, int remainder) {
 		m_lastToothPhaseFromSyncPoint = wrapAngleMethod(m_lastToothPhaseFromSyncPoint - totalShift, "syncEnginePhase", ObdCode::CUSTOM_ERR_6555);
 		triggerToothAngleError = 0;
 
-#if EFI_ENGINE_CONTROL
-		// Reset schedulers to avoid "out-of-order" warnings/errors when transitioning phase
-		engine->injectionEvents.resetOverlapping();
-#endif // EFI_ENGINE_CONTROL
-
 		// On a crank-speed trigger the sync counter parity picks which trigger cycle starts the
 		// engine cycle, so a parity-changing shift means the next trigger index 0 is no longer one
 		// full engine cycle after the previous one - that cycle-RPM sample must be discarded.

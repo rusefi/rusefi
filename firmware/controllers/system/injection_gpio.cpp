@@ -6,20 +6,6 @@
 
 extern bool printFuelDebug;
 
-void startSimultaneousInjection() {
-	efitick_t nowNt = getTimeNowNt();
-	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
-		enginePins.injectors[i].open(nowNt);
-	}
-}
-
-void endSimultaneousInjectionOnlyTogglePins() {
-	efitick_t nowNt = getTimeNowNt();
-	for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
-		enginePins.injectors[i].close(nowNt);
-	}
-}
-
 InjectorOutputPin::InjectorOutputPin() : NamedOutputPin() {
 	overlappingCounter = 1; // Force update in reset
 	reset();
