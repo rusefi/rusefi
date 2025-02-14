@@ -182,6 +182,10 @@ public class Autoupdate {
     private static URLClassLoader prepareClassLoaderToStartConsole() {
         final URLClassLoader jarClassLoader;
         String consoleJarFileName = ConnectionAndMeta.getRusEfiConsoleJarName();
+        if (!new File(consoleJarFileName).exists()) {
+            throw log.log(new RuntimeException("Looks like corrupted installation: " + consoleJarFileName + " not found"));
+        }
+
         try {
             jarClassLoader = AutoupdateUtil.getClassLoaderByJar(consoleJarFileName);
         } catch (MalformedURLException e) {
@@ -192,10 +196,11 @@ public class Autoupdate {
         // since we are overriding file we cannot just use static java classpath while launching
         try {
             hackProperties(jarClassLoader);
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
+        } catch (ClassNotFoundException e) {
+            throw log.log(new IllegalStateException("Class not found: " + e, e));
+        } catch (NoSuchMethodException | InvocationTargetException |
                  IllegalAccessException e) {
-            log.error("Failed to start", e);
-            throw new IllegalStateException("Failed to update properties", e);
+            throw log.log(new IllegalStateException("Failed to update properties: " + e, e));
         }
         return jarClassLoader;
     }
