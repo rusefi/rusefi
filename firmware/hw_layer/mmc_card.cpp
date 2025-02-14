@@ -276,8 +276,15 @@ void printError(const char *str, FRESULT f_error) {
 	efiPrintf("FATfs Error \"%s\" %d %s", str, f_error, f_error <= FR_INVALID_PARAMETER ? fatErrors[f_error] : "unknown");
 }
 
-// Warning: shared between all FS users, please release it after use
-static FIL FDLogFile NO_CACHE;
+// format and file access are used exclusively, we can union.
+// TODO: also add MSD's blkbuf1 to this union
+static union {
+	// Warning: shared between all FS users, please release it after use
+	FIL fd;
+	// TODO: optimal cluster size?
+	#define FATFS_CLUSTER_SIZE	1024
+	BYTE formatBuff[FATFS_CLUSTER_SIZE];
+} resources NO_CACHE;
 
 extern int logFileIndex;
 static char logName[_MAX_FILLER + 20];
@@ -380,9 +387,6 @@ static void sdLoggerCloseFile(FIL *fd)
 
 	// close file
 	f_close(fd);
-
-	// f_sync is called internally
-	//f_sync(&FDLogFile);
 
 	// SD logger is inactive
 	sdLoggerSetReady(false);
@@ -609,14 +613,14 @@ static int sdTriggerLogger();
 static bool sdLoggerInitDone = false;
 static bool sdLoggerFailed = false;
 
-static int sdLogger()
+static int sdLogger(FIL *fd)
 {
 	int ret = 0;
 
 	if (!sdLoggerInitDone) {
-		incLogFileName(&FDLogFile);
-		sdLoggerCreateFile(&FDLogFile);
-		logBuffer.start(&FDLogFile);
+		incLogFileName(fd);
+		sdLoggerCreateFile(fd);
+		logBuffer.start(fd);
 		resetFileLogging();
 		sdLoggerInitDone = true;
 	}
@@ -639,12 +643,12 @@ static int sdLogger()
 	// TODO: use f_tell() instead ?
 	if (logBuffer.writen() + ret > LOGGER_MAX_FILE_SIZE) {
 		logBuffer.stop();
-		sdLoggerCloseFile(&FDLogFile);
+		sdLoggerCloseFile(fd);
 
 		//start new file
-		incLogFileName(&FDLogFile);
-		sdLoggerCreateFile(&FDLogFile);
-		logBuffer.start(&FDLogFile);
+		incLogFileName(fd);
+		sdLoggerCreateFile(fd);
+		logBuffer.start(fd);
 		resetFileLogging();
 	}
 #endif
@@ -667,7 +671,7 @@ static void sdLoggerStart(void)
 
 static void sdLoggerStop(void)
 {
-	sdLoggerCloseFile(&FDLogFile);
+	sdLoggerCloseFile(&resources.fd);
 #if EFI_TOOTH_LOGGER
 	// TODO: cache this config option untill sdLoggerStop()
 	if (engineConfiguration->sdTriggerLog) {
@@ -676,15 +680,10 @@ static void sdLoggerStop(void)
 #endif
 }
 
-// TODO: optimal cluster size?
-// buffer is needed only for f_mkfs, use some shared buffer?
-#define FATFS_CLUSTER_SIZE	1024
-static NO_CACHE BYTE formatBuff[FATFS_CLUSTER_SIZE];
-
 static bool sdFormat()
 {
-	//FRESULT ret = f_mkfs("", nullptr, formatBuff, sizeof(formatBuff));
-	FRESULT ret = f_mkfs("", nullptr, formatBuff, sizeof(formatBuff));
+	//FRESULT ret = f_mkfs("", nullptr, resources.formatBuff, sizeof(resources.formatBuff));
+	FRESULT ret = f_mkfs("", nullptr, resources.formatBuff, sizeof(resources.formatBuff));
 
 	if (ret) {
 		printError("format failed", ret);
@@ -802,7 +801,7 @@ static int sdModeExecuter()
 			sdNeedRemoveReports = false;
 		}
 		// execute logger
-		return sdLogger();
+		return sdLogger(&resources.fd);
 	}
 
 	return 0;
@@ -812,7 +811,7 @@ static int sdReportStorageInit()
 {
 	if (mountMmc()) {
 		// write error report file if needed
-		errorHandlerWriteReportFile(&FDLogFile);
+		errorHandlerWriteReportFile(&resources.fd);
 
 		// check for any exist reports
 		errorHandlerCheckReportFiles();
