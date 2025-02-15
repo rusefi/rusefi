@@ -14,7 +14,7 @@ import static com.devexperts.logging.Logging.getLogging;
 public class IniFieldsAnalizer {
     private static final Logging log = getLogging(IniFieldsAnalizer.class);
 
-    private static final Set<String> INI_FIELDS_TO_IGNORE = Set.of("byFirmwareVersion", "hash3");
+    private static final Set<String> INI_FIELDS_TO_IGNORE = Set.of("byFirmwareVersion", "hash3", "signature");
 
     public static List<Pair<IniField, Constant>> findValuesToUpdate(
         final IniFileModel prevIni,
