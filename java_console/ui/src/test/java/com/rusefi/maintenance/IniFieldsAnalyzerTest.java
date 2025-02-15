@@ -17,7 +17,7 @@ import java.util.Map;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class IniFieldsAnalizerTest {
+public class IniFieldsAnalyzerTest {
     Map<String, Constant> prevMsq;
     IniFileModel prevIni;
     Map<String, Constant> updatedMsq;
@@ -32,7 +32,7 @@ public class IniFieldsAnalizerTest {
         updatedMsq = Msq.readTune("src/test/java/com/rusefi/maintenance/test_data/updated_calibrations.msq").getConstantsAsMap();
         updatedIni = IniFileModelImpl.readIniFile("src/test/java/com/rusefi/maintenance/test_data/updated_calibrations.ini");
         testCallbacks = new TestCallbacks();
-        valuesToUpdate = IniFieldsAnalizer.findValuesToUpdate(
+        valuesToUpdate = IniFieldsAnalyzer.findValuesToUpdate(
             prevIni,
             prevMsq,
             updatedIni,
@@ -118,7 +118,7 @@ public class IniFieldsAnalizerTest {
 
     @Test
     public void testWarnings() {
-        final List<Pair<IniField, Constant>> valuesToUpdate = IniFieldsAnalizer.findValuesToUpdate(
+        final List<Pair<IniField, Constant>> valuesToUpdate = IniFieldsAnalyzer.findValuesToUpdate(
             prevIni,
             prevMsq,
             updatedIni,

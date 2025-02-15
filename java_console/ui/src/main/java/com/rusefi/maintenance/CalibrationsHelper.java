@@ -26,7 +26,7 @@ import java.util.function.Supplier;
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.BinaryProtocol.iniFileProvider;
 import static com.rusefi.binaryprotocol.BinaryProtocol.saveConfigurationImageToFiles;
-import static com.rusefi.maintenance.IniFieldsAnalizer.findValuesToUpdate;
+import static com.rusefi.maintenance.IniFieldsAnalyzer.findValuesToUpdate;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class CalibrationsHelper {

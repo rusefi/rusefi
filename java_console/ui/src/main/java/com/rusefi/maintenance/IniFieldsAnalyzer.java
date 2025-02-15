@@ -12,12 +12,14 @@ import java.util.*;
 
 import static com.devexperts.logging.Logging.getLogging;
 
-public class IniFieldsAnalizer {
-    private static final Logging log = getLogging(IniFieldsAnalizer.class);
+public class IniFieldsAnalyzer {
+    private static final Logging log = getLogging(IniFieldsAnalyzer.class);
 
     private static final Set<String> INI_FIELDS_TO_IGNORE = CompatibilitySet.of(
         "byFirmwareVersion",
+        // todo INI_FIELDS_TO_IGNORE should be dynamic https://github.com/rusefi/rusefi/issues/7454
         "hash3",
+        // todo: looks like a defect? there is no 'signature' field, do we maybe have a defect in IniFileModel?
         "signature"
     );
 
