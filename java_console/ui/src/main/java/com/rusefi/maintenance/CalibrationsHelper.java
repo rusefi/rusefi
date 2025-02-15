@@ -213,7 +213,7 @@ public class CalibrationsHelper {
                 final Constant value = valueToUpdate.second;
                 fieldToUpdate.setValue(mergedImage, value);
                 callbacks.logLine(String.format(
-                    "To restore previous calibrations we are going to update the field `%s` with a value %s",
+                    "To restore previous calibrations we are going to update the field `%s` with a value `%s`",
                     fieldToUpdate.getName(),
                     value.getValue()
                 ));
