@@ -11,4 +11,12 @@ public class CompatibilitySet {
         result.add(e2);
         return result;
     }
+
+    public static <E> Set<E> of(E e1, E e2, E e3) {
+        Set<E> result = new HashSet<>();
+        result.add(e1);
+        result.add(e2);
+        result.add(e3);
+        return result;
+    }
 }
