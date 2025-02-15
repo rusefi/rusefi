@@ -3,6 +3,7 @@ package com.rusefi.maintenance;
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.*;
+import com.rusefi.CompatibilitySet;
 import com.rusefi.core.Pair;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.tune.xml.Constant;
@@ -14,7 +15,11 @@ import static com.devexperts.logging.Logging.getLogging;
 public class IniFieldsAnalizer {
     private static final Logging log = getLogging(IniFieldsAnalizer.class);
 
-    private static final Set<String> INI_FIELDS_TO_IGNORE = Set.of("byFirmwareVersion", "hash3", "signature");
+    private static final Set<String> INI_FIELDS_TO_IGNORE = CompatibilitySet.of(
+        "byFirmwareVersion",
+        "hash3",
+        "signature"
+    );
 
     public static List<Pair<IniField, Constant>> findValuesToUpdate(
         final IniFileModel prevIni,
