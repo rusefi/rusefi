@@ -4,6 +4,8 @@ dependencies {
     api project(':logging-api')
     api project(':core_io')
     // intention is to have happy self-contained shadowJar compatible both with java 8 and 11+
-    api global_libs.jaxb
+    api 'org.glassfish.jaxb:jaxb-xjc:4.0.3'
+    api 'org.glassfish.jaxb:jaxb-runtime:4.0.3'
+    api 'org.glassfish.jaxb:jaxb-core:4.0.3'
     api 'javax.activation:activation:1.1.1'
 }
