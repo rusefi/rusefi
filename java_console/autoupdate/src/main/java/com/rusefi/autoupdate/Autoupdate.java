@@ -104,12 +104,13 @@ public class Autoupdate {
         URLClassLoader jarClassLoader = prepareClassLoaderToStartConsole();
         downloadedAutoupdateFile.ifPresent(autoupdateFile -> {
             try {
+/*
                 // technical dept here, guilty as charged!
                 boolean installedIntoProgramFilesHack = new File("uninstall.exe").exists();
                 log.info("installedIntoProgramFilesHack " + installedIntoProgramFilesHack);
                 String pathname = installedIntoProgramFilesHack ? "." : "..";
-                // todo: flatten folder while unzipping in installedIntoProgramFilesHack mode?
-
+*/
+                String pathname = "..";
                 log.info("unzipping everything else into " + pathname);
                 // We've already prepared class loader, so now we can unzip rusefi_autoupdate.jar and other files
                 // except already unzipped rusefi_console.jar (see #6777):
