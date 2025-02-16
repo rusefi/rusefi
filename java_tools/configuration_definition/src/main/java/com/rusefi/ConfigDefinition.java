@@ -97,7 +97,7 @@ public class ConfigDefinition {
                     state.destCDefinesFileName = args[i + 1];
                     break;
                 case KEY_JAVA_DESTINATION:
-                    state.addJavaDestination(args[i + 1]);
+                    state.addJavaDestination(args[i + 1] + "Fields.java");
                     break;
                 case "-field_lookup_file": {
                     String cppFile = args[i + 1];
