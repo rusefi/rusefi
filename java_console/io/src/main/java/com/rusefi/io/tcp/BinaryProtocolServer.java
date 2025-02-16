@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.config.generated.Fields.*;
+import static com.rusefi.config.generated.VariableRegistryValues.*;
 
 /**
  * This class makes rusEfi console a proxy for other tuning software, this way we can have two tools connected via same
@@ -161,7 +161,7 @@ public class BinaryProtocolServer {
             log.info("Got command " + BinaryProtocol.findCommand(command));
 
             if (command == Integration.TS_HELLO_COMMAND) {
-                new HelloCommand(Fields.TS_SIGNATURE).handle(stream);
+                new HelloCommand(TS_SIGNATURE).handle(stream);
             } else if (command == Integration.TS_GET_PROTOCOL_VERSION_COMMAND_F) {
                 stream.sendPacket((TS_OK + TS_PROTOCOL).getBytes());
             } else if (command == Integration.TS_GET_FIRMWARE_VERSION) {

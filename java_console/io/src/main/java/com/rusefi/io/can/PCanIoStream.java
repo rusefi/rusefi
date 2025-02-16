@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.opensr5.io.DataListener;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.util.HexBinary;
 import com.rusefi.io.can.isotp.IsoTpCanDecoder;
 import com.rusefi.io.can.isotp.IsoTpConnector;
@@ -19,7 +20,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.config.generated.Fields.CAN_ECU_SERIAL_TX_ID;
+import static com.rusefi.config.generated.VariableRegistryValues.CAN_ECU_SERIAL_TX_ID;
 
 public class PCanIoStream extends AbstractIoStream {
     private static final int INFO_SKIP_RATE = 3-00;
@@ -38,7 +39,7 @@ public class PCanIoStream extends AbstractIoStream {
         }
     };
 
-    private final IsoTpConnector isoTpConnector = new IsoTpConnector(Fields.CAN_ECU_SERIAL_RX_ID) {
+    private final IsoTpConnector isoTpConnector = new IsoTpConnector(VariableRegistryValues.CAN_ECU_SERIAL_RX_ID) {
         @Override
         public void sendCanData(byte[] total) {
             sendCanPacket(total);

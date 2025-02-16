@@ -7,6 +7,7 @@ import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.TestHelper;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.BinaryProtocolServer;
@@ -31,7 +32,7 @@ class BinaryProtocolServerSandbox {
         ScalarIniField iniField = TestHelper.createIniField(Fields.TWOSTROKE);
         iniField.setValue(controller, new Constant(iniField.getName(), "", "1", iniField.getDigits()));
         state.setConfigurationImage(controller);
-        state.setCurrentOutputs(new byte[1 + Fields.TS_TOTAL_OUTPUT_SIZE]);
+        state.setCurrentOutputs(new byte[1 + VariableRegistryValues.TS_TOTAL_OUTPUT_SIZE]);
 
         LinkManager linkManager = new LinkManager();
         linkManager.setConnector(LinkConnector.getDetachedConnector(state));

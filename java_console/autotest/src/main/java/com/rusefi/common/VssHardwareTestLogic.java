@@ -10,7 +10,7 @@ import com.rusefi.functional_tests.EcuTestHelper;
 
 import static com.rusefi.IoUtil.getEnableCommand;
 import static com.rusefi.binaryprotocol.BinaryProtocol.sleep;
-import static com.rusefi.config.generated.Fields.*;
+import static com.rusefi.config.generated.Integration.*;
 
 public class VssHardwareTestLogic {
     private static final int FREQUENCY = 160;
