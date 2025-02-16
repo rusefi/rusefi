@@ -3,8 +3,8 @@ package com.rusefi.proxy.client;
 import com.rusefi.BackendTestHelper;
 import com.rusefi.TestHelper;
 import com.rusefi.Timeouts;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
+import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.GetOutputsCommandBrokenHelper;
 import com.rusefi.io.commands.HelloCommand;
@@ -55,7 +55,7 @@ public class LocalApplicationProxyTest {
         }, parameter -> backendCreated.countDown(), StatusConsumer.ANONYMOUS);
         assertLatch(backendCreated);
 
-        SessionDetails sessionDetails = TestHelper.createTestSession(TEST_TOKEN_1, Fields.TS_SIGNATURE);
+        SessionDetails sessionDetails = TestHelper.createTestSession(TEST_TOKEN_1, VariableRegistryValues.TS_SIGNATURE);
         ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, BackendTestHelper.createTestUserResolver().apply(TEST_TOKEN_1));
 
         CountDownLatch disconnected = new CountDownLatch(1);
@@ -71,7 +71,7 @@ public class LocalApplicationProxyTest {
         CountDownLatch gaugePokes = new CountDownLatch(3);
 
         try (ServerSocketReference ignored1 = createMockBackend(context, gaugePokes)) {
-            SessionDetails sessionDetails = TestHelper.createTestSession(TEST_TOKEN_1, Fields.TS_SIGNATURE);
+            SessionDetails sessionDetails = TestHelper.createTestSession(TEST_TOKEN_1, VariableRegistryValues.TS_SIGNATURE);
             ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, BackendTestHelper.createTestUserResolver().apply(TEST_TOKEN_1));
 
             try (ServerSocketReference ignored2 = LocalApplicationProxy.startAndRun(context, applicationRequest, -1, TcpIoStream.DisconnectListener.VOID, LocalApplicationProxy.ConnectionListener.VOID)) {
@@ -99,7 +99,7 @@ public class LocalApplicationProxyTest {
 
                 applicationConnection.sendPacket(commandPacket);
                 BinaryProtocolServer.Packet response = applicationConnection.readPacket();
-                assertEquals(Fields.TS_TOTAL_OUTPUT_SIZE + 1, response.getPacket().length);
+                assertEquals(VariableRegistryValues.TS_TOTAL_OUTPUT_SIZE + 1, response.getPacket().length);
             }
         }
     }
@@ -112,7 +112,7 @@ public class LocalApplicationProxyTest {
 
         try (ServerSocketReference ignored1 = createMockBackend(context, gaugePokes)) {
 
-            SessionDetails sessionDetails = TestHelper.createTestSession(TEST_TOKEN_1, Fields.TS_SIGNATURE);
+            SessionDetails sessionDetails = TestHelper.createTestSession(TEST_TOKEN_1, VariableRegistryValues.TS_SIGNATURE);
             ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, BackendTestHelper.createTestUserResolver().apply(TEST_TOKEN_1));
 
             CountDownLatch disconnected = new CountDownLatch(1);

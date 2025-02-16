@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
+import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.GetOutputsCommandBrokenHelper;
 import com.rusefi.io.commands.HelloCommand;
@@ -177,7 +178,7 @@ covered by FullServerTest
 
             BackendTestHelper.runApplicationConnectorBlocking(backend, serverPortForRemoteUsers);
 
-            SessionDetails sessionDetails = TestHelper.createTestSession(TestHelper.TEST_TOKEN_1, Fields.TS_SIGNATURE);
+            SessionDetails sessionDetails = TestHelper.createTestSession(TestHelper.TEST_TOKEN_1, VariableRegistryValues.TS_SIGNATURE);
             ApplicationRequest applicationRequest = new ApplicationRequest(sessionDetails, BackendTestHelper.createTestUserResolver().apply(TestHelper.TEST_TOKEN_1));
 
             // start authenticator

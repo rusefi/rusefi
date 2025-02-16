@@ -2,6 +2,9 @@ package com.rusefi.autotune;
 
 import com.rusefi.config.generated.Fields;
 
+import static com.rusefi.config.generated.VariableRegistryValues.FUEL_LOAD_COUNT;
+import static com.rusefi.config.generated.VariableRegistryValues.FUEL_RPM_COUNT;
+
 /**
  * Air/Fuel ratio data point
  *
@@ -19,9 +22,9 @@ public class AfrDataPoint {
     public AfrDataPoint(double afr, int rpmIndex, int engineLoadIndex, int rpm, double engineLoad) {
         this.rpm = rpm;
         this.engineLoad = engineLoad;
-        if (rpmIndex < 0 || rpmIndex >= Fields.FUEL_RPM_COUNT)
+        if (rpmIndex < 0 || rpmIndex >= FUEL_RPM_COUNT)
             throw new IllegalStateException("rpmIndex " + rpmIndex);
-        if (engineLoadIndex < 0 || engineLoadIndex >= Fields.FUEL_LOAD_COUNT)
+        if (engineLoadIndex < 0 || engineLoadIndex >= FUEL_LOAD_COUNT)
             throw new IllegalStateException("engineLoadIndex " + engineLoadIndex);
         this.afr = afr;
         this.rpmIndex = rpmIndex;
@@ -29,10 +32,10 @@ public class AfrDataPoint {
     }
 
     public static AfrDataPoint valueOf(double afr, int rpm, double engineLoad) {
-        int rpmIndex = (int) (rpm / 7000.0 * Fields.FUEL_RPM_COUNT);
-        if (rpmIndex < 0 || rpmIndex >= Fields.FUEL_RPM_COUNT)
+        int rpmIndex = (int) (rpm / 7000.0 * FUEL_RPM_COUNT);
+        if (rpmIndex < 0 || rpmIndex >= FUEL_RPM_COUNT)
             return null;
-        int engineLoadIndex = (int) (engineLoad / 120.0 * Fields.FUEL_LOAD_COUNT);
+        int engineLoadIndex = (int) (engineLoad / 120.0 * FUEL_LOAD_COUNT);
         return new AfrDataPoint(afr, rpmIndex, engineLoadIndex, rpm, engineLoad);
     }
 

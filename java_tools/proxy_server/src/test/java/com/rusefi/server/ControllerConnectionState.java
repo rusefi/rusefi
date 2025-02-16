@@ -2,6 +2,7 @@ package com.rusefi.server;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.config.generated.Integration;
+import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.core.SignatureHelper;
 import com.rusefi.auth.AuthTokenUtil;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
@@ -140,7 +141,7 @@ public class ControllerConnectionState {
         outputRoundAroundDuration = (int) (System.currentTimeMillis() - start);
         if (packet == null)
             throw new IOException("getOutputs: No response");
-        if (packet.length != 1 + Fields.TS_TOTAL_OUTPUT_SIZE)
+        if (packet.length != 1 + VariableRegistryValues.TS_TOTAL_OUTPUT_SIZE)
             throw new IOException("getOutputs: unexpected package length " + packet.length);
         sensorsHolder.grabSensorValues(packet);
     }

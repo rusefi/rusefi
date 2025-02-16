@@ -7,6 +7,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.MsqFactory;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
+import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.enums.engine_type_e;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
@@ -80,7 +81,7 @@ public class WriteSimulatorConfiguration {
         Msq m = MsqFactory.valueOf(configuration, ini);
         String name = Fields.KNOCKNOISERPMBINS.getName();
         Constant noiseRpmBins = m.page.get(1).getConstantsAsMap().get(name);
-        if (!noiseRpmBins.getValue().contains(Fields.DEFAULT_RPM_AXIS_HIGH_VALUE + ".0"))
+        if (!noiseRpmBins.getValue().contains(VariableRegistryValues.DEFAULT_RPM_AXIS_HIGH_VALUE + ".0"))
             throw new IllegalStateException(name + " canary wonders if everything is fine?");
         m.writeXmlFile(outputXmlFileName);
 

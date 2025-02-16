@@ -4,6 +4,7 @@ import com.opensr5.ConfigurationImage;
 import com.rusefi.config.Field;
 import com.rusefi.config.FieldCommandResponse;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.core.Pair;
 import org.junit.jupiter.api.Test;
 
@@ -31,7 +32,7 @@ public class FieldTest {
 
     @Test
     public void setBooleanValue() {
-        byte[] config = new byte[Fields.persistent_config_s_size];
+        byte[] config = new byte[VariableRegistryValues.persistent_config_s_size];
         ConfigurationImage ci = new ConfigurationImage(config);
 
         assertFalse(Fields.ISFORCEDINDUCTION.getBooleanValue(ci));

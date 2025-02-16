@@ -3,6 +3,7 @@ package com.rusefi.ui;
 import com.devexperts.logging.Logging;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.can.PCanIoStream;
 import com.rusefi.tools.CANConnectorStartup;
@@ -21,7 +22,7 @@ public class PcanConnectorUI {
         FrameHelper frame = new FrameHelper(WindowConstants.EXIT_ON_CLOSE);
 
         JPanel panel = new JPanel(new BorderLayout());
-        panel.add(new JLabel("Running PCAN connector for TS: RX on " + Integer.toString(Fields.CAN_ECU_SERIAL_RX_ID, 16)), BorderLayout.NORTH);
+        panel.add(new JLabel("Running PCAN connector for TS: RX on " + Integer.toString(VariableRegistryValues.CAN_ECU_SERIAL_RX_ID, 16)), BorderLayout.NORTH);
         JTextArea logTextArea = new JTextArea();
         JPanel panelForScroll = new JPanel(new BorderLayout());
         panelForScroll.add(logTextArea, BorderLayout.CENTER);

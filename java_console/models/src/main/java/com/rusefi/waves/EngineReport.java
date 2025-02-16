@@ -8,8 +8,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static com.rusefi.config.generated.Fields.PROTOCOL_ES_DOWN;
-import static com.rusefi.config.generated.Fields.PROTOCOL_ES_UP;
+import static com.rusefi.config.generated.VariableRegistryValues.PROTOCOL_ES_DOWN;
+import static com.rusefi.config.generated.VariableRegistryValues.PROTOCOL_ES_UP;
 
 /**
  * A model of a digital signal represented as a sequence of {@link UpDown}

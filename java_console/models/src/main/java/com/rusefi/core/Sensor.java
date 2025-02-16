@@ -16,7 +16,7 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static com.rusefi.config.generated.Fields.*;
+import static com.rusefi.config.generated.VariableRegistryValues.*;
 
 /**
  * @author Andrey Belomutskiy
@@ -83,7 +83,7 @@ public enum Sensor implements BinaryLogEntry {
 //    // TPS/load AE
 //    engineLoadAccelDelta("load accel delta", SensorCategory.FUEL, FieldType.INT16, 76, 1.0 / PACK_MULT_PERCENT, -5, 5, "ratio"),
 //    deltaTps(Fields.GAUGE_NAME_FUEL_TPS_ROC, SensorCategory.FUEL, FieldType.INT16, 78, 1.0 / PACK_MULT_PERCENT, -100, 100, "%"),
-    tpsAccelFuel(Fields.GAUGE_NAME_FUEL_TPS_EXTRA, SensorCategory.FUEL, FieldType.INT16, TsOutputs.TPSACCELFUEL, 1.0 / PACK_MULT_MS, 0, 200, "ms"),
+    tpsAccelFuel(GAUGE_NAME_FUEL_TPS_EXTRA, SensorCategory.FUEL, FieldType.INT16, TsOutputs.TPSACCELFUEL, 1.0 / PACK_MULT_MS, 0, 200, "ms"),
 //
 //    // Ignition
 //    ignitionAdvance("ignition timing", SensorCategory.OPERATIONS, FieldType.INT16, 84, 1.0 / PACK_MULT_ANGLE, 30, 140, "deg"),

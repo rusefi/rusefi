@@ -9,6 +9,7 @@ import com.opensr5.ini.field.IniField;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.TsTuneReader;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.tools.online.Online;
 import com.rusefi.tools.online.UploadResult;
 import com.rusefi.ts_plugin.util.ManifestHelper;
@@ -182,7 +183,7 @@ public class TuneUploadTab {
         if (model.allIniFields == null)
             return;
         for (Map.Entry<String, IniField> field : allIniFields.entrySet()) {
-            boolean isOnlineTuneField = field.getValue().getOffset() >= Fields.engine_configuration_s_size;
+            boolean isOnlineTuneField = field.getValue().getOffset() >= VariableRegistryValues.engine_configuration_s_size;
             if (!isOnlineTuneField) {
                 try {
                     controllerAccess.getControllerParameterServer().subscribe(configurationName, field.getKey(), listener);

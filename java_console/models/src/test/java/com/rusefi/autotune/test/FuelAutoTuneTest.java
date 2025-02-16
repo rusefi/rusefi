@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.rusefi.config.generated.VariableRegistryValues.FUEL_LOAD_COUNT;
+import static com.rusefi.config.generated.VariableRegistryValues.FUEL_RPM_COUNT;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
@@ -111,7 +113,7 @@ public class FuelAutoTuneTest {
     }
 
     static double[][] createVeTable(double value) {
-        double veMap[][] = new double[Fields.FUEL_LOAD_COUNT][Fields.FUEL_RPM_COUNT];
+        double veMap[][] = new double[FUEL_LOAD_COUNT][FUEL_RPM_COUNT];
         MathUtil.setArray2D(veMap, value);
         return veMap;
     }
