@@ -6,7 +6,6 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.StringIniField;
 import com.rusefi.ConnectionTab;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.ConnectionStatusLogic;
@@ -40,7 +39,7 @@ public class LuaScriptPanel {
     private final Node config;
     private final JPanel mainPanel = new JPanel(new BorderLayout());
     private final AnyCommand command;
-    private final TextEditor scriptText;
+    private final LuaTextEditor scriptText;
     private final MessagesPanel mp;
 
     public LuaScriptPanel(UIContext context, Node config) {
@@ -122,10 +121,8 @@ public class LuaScriptPanel {
 
         // Center panel - script editor and log
         JPanel scriptPanel = new JPanel(new BorderLayout());
-        BinaryProtocol bp = context.getLinkManager().getCurrentStreamState();
 
-        StringIniField field = getLuaScriptField(bp);
-        scriptText = new TextEditor(field.getSize());
+        scriptText = new LuaTextEditor(context);
         scriptPanel.add(scriptText.getControl(), BorderLayout.CENTER);
 
         //centerPanel.add(, BorderLayout.WEST);
@@ -271,7 +268,7 @@ public class LuaScriptPanel {
         setText(new String(scriptArr, 0, i, StandardCharsets.US_ASCII));
     }
 
-    private static StringIniField getLuaScriptField(BinaryProtocol bp) {
+    static StringIniField getLuaScriptField(BinaryProtocol bp) {
         Objects.requireNonNull(bp, "BinaryProtocol");
         // todo: do we have "luaScript" as code-generated constant anywhere?
         IniFileModel iniFile = bp.getIniFile();

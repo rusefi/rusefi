@@ -2,7 +2,7 @@ package com.rusefi;
 
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.ui.UIContext;
-import com.rusefi.ui.lua.TextEditor;
+import com.rusefi.ui.lua.LuaTextEditor;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
@@ -45,14 +45,14 @@ public class ConnectionTab {
     public static void installConnectAndDisconnect(UIContext uiContext, JComponent control) {
         KeyStroke disconnectKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_D, InputEvent.CTRL_MASK);
         KeyStroke connectKeyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_R, InputEvent.CTRL_MASK);
-        TextEditor.installKeyAction(connectKeyStroke, "connectCommand", control, new AbstractAction() {
+        LuaTextEditor.installKeyAction(connectKeyStroke, "connectCommand", control, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 reconnect(uiContext);
             }
         });
 
-        TextEditor.installKeyAction(disconnectKeyStroke, "disconnectCommand", control, new AbstractAction() {
+        LuaTextEditor.installKeyAction(disconnectKeyStroke, "disconnectCommand", control, new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 disconnect(uiContext);

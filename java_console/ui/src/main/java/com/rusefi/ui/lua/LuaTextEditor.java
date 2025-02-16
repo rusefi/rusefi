@@ -1,5 +1,9 @@
 package com.rusefi.ui.lua;
 
+import com.opensr5.ini.field.StringIniField;
+import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.io.LinkManager;
+import com.rusefi.ui.UIContext;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,19 +28,19 @@ import java.awt.event.KeyEvent;
  * <p>
  * todo: Find text feature?
  */
-public class TextEditor {
+public class LuaTextEditor {
     private final JPanel area = new JPanel(new BorderLayout());
     private final JTextArea textArea = new JTextArea();
     private final JLabel sizeLabel = new JLabel();
     private final JLabel locationLabel = new JLabel();
-    private final int limit;
+    private final UIContext context;
 
-    public TextEditor(int limit) {
-        this.limit = limit;
+    public LuaTextEditor(UIContext context) {
+        this.context = context;
         textArea.setTabSize(2);
 
         AbstractDocument pDoc = (AbstractDocument) textArea.getDocument();
-        pDoc.setDocumentFilter(new DocumentSizeFilter(limit));
+        pDoc.setDocumentFilter(new DocumentSizeFilter(context));
         pDoc.addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -85,6 +89,12 @@ public class TextEditor {
     }
 
     private void updateSize() {
+        LinkManager linkManager = context.getLinkManager();
+        BinaryProtocol bp = linkManager.getBinaryProtocol();
+        if (bp == null)
+            return;
+        StringIniField field = LuaScriptPanel.getLuaScriptField(bp);
+        int limit = field.getSize();
         sizeLabel.setText(textArea.getText().length() + "/" + limit);
     }
 
