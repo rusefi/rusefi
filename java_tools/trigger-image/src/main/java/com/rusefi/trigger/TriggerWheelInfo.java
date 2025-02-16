@@ -8,7 +8,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.rusefi.config.generated.TriggerMeta.*;
+
+import static com.rusefi.config.generated.TriggerVariableRegistryValues.*;
 
 public class TriggerWheelInfo {
     private static final Logging log = Logging.getLogging(TriggerWheelInfo.class);

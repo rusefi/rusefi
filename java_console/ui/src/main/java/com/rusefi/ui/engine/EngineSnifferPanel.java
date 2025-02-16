@@ -200,7 +200,7 @@ public class EngineSnifferPanel {
     public void displayChart(String value) {
         EngineChart map = EngineChartParser.unpackToMap(value);
 
-        StringBuilder revolutions = map.get(Fields.TOP_DEAD_CENTER_MESSAGE);
+        StringBuilder revolutions = map.get(TOP_DEAD_CENTER_MESSAGE);
 
         statusPanel.setRevolutions(revolutions);
 

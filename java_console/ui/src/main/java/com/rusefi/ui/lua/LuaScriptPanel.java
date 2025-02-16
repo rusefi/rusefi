@@ -6,6 +6,7 @@ import com.opensr5.ini.field.StringIniField;
 import com.rusefi.ConnectionTab;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
@@ -298,7 +299,7 @@ public class LuaScriptPanel {
             log.info("Sending " + field);
             do {
                 remaining = paddedScript.length - idx;
-                int thisWrite = Math.min(remaining, Fields.BLOCKING_FACTOR);
+                int thisWrite = Math.min(remaining, VariableRegistryValues.BLOCKING_FACTOR);
 
                 bp.writeData(paddedScript, idx, field.getOffset() + idx, thisWrite);
 
