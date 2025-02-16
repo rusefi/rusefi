@@ -2,6 +2,7 @@ package com.rusefi.ui.lua;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.StringIniField;
 import com.rusefi.ConnectionTab;
 import com.rusefi.binaryprotocol.BinaryProtocol;
@@ -27,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -270,8 +272,11 @@ public class LuaScriptPanel {
     }
 
     private static StringIniField getLuaScriptField(BinaryProtocol bp) {
+        Objects.requireNonNull(bp, "BinaryProtocol");
         // todo: do we have "luaScript" as code-generated constant anywhere?
-        return (StringIniField) bp.getIniFile().getIniField("luaScript");
+        IniFileModel iniFile = bp.getIniFile();
+        Objects.requireNonNull(iniFile, "iniFile");
+        return (StringIniField) iniFile.getIniField("luaScript");
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
