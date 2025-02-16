@@ -7,6 +7,10 @@ import java.util.Map;
 import java.util.Set;
 
 public interface IniFileModel {
+    String getSignature();
+
+    int getBlockingFactor();
+
     Map<String, List<String>> getDefines();
 
     Map<String, IniField> getAllIniFields();

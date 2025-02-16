@@ -46,6 +46,8 @@ public class IniFileModelImpl implements IniFileModel {
 
     private boolean isInSettingContextHelp = false;
     private boolean isInsidePageDefinition;
+    private String signature;
+    private int blockingFactor;
 
     public static IniFileModelImpl findAndReadIniFile(String iniFilePath) {
         final String fileName = findMetaInfoFile(iniFilePath);
@@ -55,6 +57,16 @@ public class IniFileModelImpl implements IniFileModel {
     private IniFileModelImpl(@Nullable final IniFileMetaInfoImpl metaInfo, final String iniFilePath) {
         this.metaInfo = metaInfo;
         this.iniFilePath = iniFilePath;
+    }
+
+    @Override
+    public String getSignature() {
+        return signature;
+    }
+
+    @Override
+    public int getBlockingFactor() {
+        return blockingFactor;
     }
 
     @Override
@@ -193,6 +205,13 @@ public class IniFileModelImpl implements IniFileModel {
                 return;
 
             String first = list.getFirst();
+
+            if (first.equalsIgnoreCase("signature")) {
+                signature = list.get(1);
+            } else if (first.equalsIgnoreCase("blockingFactor")) {
+                blockingFactor = Integer.valueOf(list.get(1));
+            }
+
 
             if (first.startsWith("[") && first.endsWith("]")) {
                 log.info("Section " + first);
