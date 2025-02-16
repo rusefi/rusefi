@@ -23,6 +23,7 @@ public class LoadOlderTuneTest {
         Msq lessOldDefaultTune = Msq.readTune(LoadOlderTuneTest.class.getResource("/simulator_tune-2023-06.xml").getFile());
 
         IniFileModel ini = IniFileModelImpl.readIniFile(TuneReadWriteTest.TEST_INI);
+        assertEquals(256, ini.getBlockingFactor());
         assertFalse(ini.getFieldsInUiOrder().isEmpty());
 
         RootHolder.ROOT = "../../firmware/";
