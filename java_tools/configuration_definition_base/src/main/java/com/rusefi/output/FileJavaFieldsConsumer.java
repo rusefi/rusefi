@@ -33,15 +33,19 @@ public class FileJavaFieldsConsumer extends JavaFieldsConsumer {
 
     @Override
     public void startFile() {
-        writePackageLine(javaFields);
-        javaFields.write("// this file " + state.getHeader() + ToolUtil.EOL + EOL);
-        javaFields.write("// by " + getClass() + EOL);
-        javaFields.write("import com.rusefi.config.*;" + EOL + EOL);
-        writeClassOpenLine(javaFields, className);
+        startJavaFile(javaFields, className, state, getClass());
     }
 
-    public static void writeClassOpenLine(LazyFile lazyFile, String className1) {
-        lazyFile.write("public class " + className1 + " {" + ToolUtil.EOL);
+    static void startJavaFile(LazyFile file, String className, ReaderState state, Class<?> clazz) {
+        writePackageLine(file);
+        file.write("// this file " + state.getHeader() + ToolUtil.EOL + EOL);
+        file.write("// by " + clazz + EOL);
+        file.write("import com.rusefi.config.*;" + EOL + EOL);
+        writeClassOpenLine(file, className);
+    }
+
+    public static void writeClassOpenLine(LazyFile lazyFile, String className) {
+        lazyFile.write("public class " + className + " {" + ToolUtil.EOL);
     }
 
     public static void writePackageLine(LazyFile lazyFile) {
@@ -49,7 +53,6 @@ public class FileJavaFieldsConsumer extends JavaFieldsConsumer {
     }
 
     public void endFile() throws IOException {
-        javaFields.write(state.getVariableRegistry().getJavaConstants());
         javaFields.write(getContent());
 
         if (allFields.length() > 0) {

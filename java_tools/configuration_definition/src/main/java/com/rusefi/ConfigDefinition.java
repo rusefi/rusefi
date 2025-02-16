@@ -97,7 +97,9 @@ public class ConfigDefinition {
                     state.destCDefinesFileName = args[i + 1];
                     break;
                 case KEY_JAVA_DESTINATION:
-                    state.addJavaDestination(args[i + 1] + "Fields.java");
+                    String folderName = args[i + 1];
+                    state.addJavaDestination(folderName + "Fields.java");
+                    state.addDestination(new FileJavaVariableRegistryConsumer(state, folderName, LazyFile.REAL, "VariableRegistryValues"));
                     break;
                 case "-field_lookup_file": {
                     String cppFile = args[i + 1];

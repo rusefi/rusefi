@@ -37,7 +37,7 @@ import java.util.concurrent.*;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.IoHelper.*;
-import static com.rusefi.config.generated.Fields.*;
+import static com.rusefi.config.generated.VariableRegistryValues.*;
 
 /**
  * This object represents logical state of physical connection.
@@ -311,7 +311,7 @@ public class BinaryProtocol {
                 return ConfigurationImageWithMeta.VOID;
 
             int remainingSize = image.getSize() - offset;
-            int requestSize = Math.min(remainingSize, Fields.BLOCKING_FACTOR);
+            int requestSize = Math.min(remainingSize, BLOCKING_FACTOR);
 
             byte[] packet = new byte[4];
             ByteRange.packOffsetAndSize(offset, requestSize, packet);
@@ -591,7 +591,7 @@ public class BinaryProtocol {
 
         while (remaining > 0) {
             // If less than one full chunk left, do a smaller read
-            int chunkSize = Math.min(remaining, Fields.BLOCKING_FACTOR);
+            int chunkSize = Math.min(remaining, BLOCKING_FACTOR);
 
             byte[] response = executeCommand(
                 Integration.TS_OUTPUT_COMMAND,
