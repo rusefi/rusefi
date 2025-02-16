@@ -2,15 +2,12 @@ package com.rusefi.tools;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
-import com.opensr5.ini.IniFileModelImpl;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.*;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
-import com.rusefi.binaryprotocol.MsqFactory;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.*;
 import com.rusefi.io.ConnectionStateListener;
@@ -24,14 +21,12 @@ import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.ServerSocketReference;
 import com.rusefi.maintenance.ExecHelper;
 import com.rusefi.tools.online.Online;
-import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
 import com.rusefi.ui.StatusConsumer;
 import com.rusefi.io.UiLinkManagerHelper;
 import com.rusefi.ui.basic.BasicStartupFrame;
 import org.jetbrains.annotations.Nullable;
 
-import javax.xml.bind.JAXBException;
 import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
@@ -65,10 +60,10 @@ public class ConsoleTools {
         registerTool("basic-ui", BasicStartupFrame::runTool, "Basic UI");
 
         registerTool("functional_test", ConsoleTools::runFunctionalTest, "NOT A USER TOOL. Development tool related to functional testing");
-        registerTool("convert_binary_configuration_to_xml", ConsoleTools::convertBinaryToXml, "NOT A USER TOOL. Development tool to convert binary configuration into XML form.");
+//        registerTool("convert_binary_configuration_to_xml", ConsoleTools::convertBinaryToXml, "NOT A USER TOOL. Development tool to convert binary configuration into XML form.");
 
         registerTool("get_image_tune_crc", ConsoleTools::calcBinaryImageTuneCrc, "Calculate tune CRC for given binary tune");
-        registerTool("get_xml_tune_crc", ConsoleTools::calcXmlImageTuneCrc, "Calculate tune CRC for given XML tune");
+//        registerTool("get_xml_tune_crc", ConsoleTools::calcXmlImageTuneCrc, "Calculate tune CRC for given XML tune");
 
 //        registerTool("network_connector", strings -> NetworkConnectorStartup.start(), "Connect your rusEFI ECU to rusEFI Online");
 //        registerTool("network_authenticator", strings -> LocalApplicationProxy.start(), "rusEFI Online Authenticator");
@@ -147,14 +142,7 @@ public class ConsoleTools {
         System.setProperty("ini_file_path", "../firmware/tunerstudio");
 //        calcBinaryImageTuneCrc(null, "current_configuration.rusefi_binary");
 
-        calcXmlImageTuneCrc(null, "CurrentTune.msq");
-    }
-
-    private static void calcXmlImageTuneCrc(String... args) throws Exception {
-        String fileName = args[1];
-        Msq msq = Msq.readTune(fileName);
-        ConfigurationImage image = msq.asImage(IniFileModelImpl.getInstance());
-        printCrc(image);
+//        calcXmlImageTuneCrc(null, "CurrentTune.msq");
     }
 
     private static void calcBinaryImageTuneCrc(String... args) throws IOException {
@@ -338,22 +326,6 @@ public class ConsoleTools {
             return null;
         }
         return autoDetectedPort;
-    }
-
-    private static void convertBinaryToXml(String[] args) throws IOException, JAXBException {
-        if (args.length < 2) {
-            log.error("Binary file input expected");
-            System.exit(-1);
-        }
-        String inputBinaryFileName = args[1];
-        ConfigurationImage image = ConfigurationImageFile.readFromFile(inputBinaryFileName).getConfigurationImage();
-        log.info("Got " + image.getSize() + " of configuration from " + inputBinaryFileName);
-
-        Msq tune = MsqFactory.valueOf(image, IniFileModelImpl.getInstance());
-        tune.writeXmlFile(Online.outputXmlFileName);
-        String authToken = AuthTokenPanel.getAuthToken();
-        log.info("Using " + authToken);
-        Online.upload(new File(Online.outputXmlFileName), authToken);
     }
 
     static void detect(String[] strings) throws IOException {

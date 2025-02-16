@@ -26,7 +26,6 @@ public class IniFileModelImpl implements IniFileModel {
 
     private final Map<String, List<String>> defines = new TreeMap<>();
 
-    private static IniFileModelImpl INSTANCE;
     private String dialogId;
     private String dialogUiName;
     private final Map<String, DialogModel> dialogs = new TreeMap<>();
@@ -368,13 +367,6 @@ public class IniFileModelImpl implements IniFileModel {
                 return field;
         }
         return null;
-    }
-
-    public static synchronized IniFileModelImpl getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = IniFileModelImpl.findAndReadIniFile(INI_FILE_PATH);
-        }
-        return INSTANCE;
     }
 
     @Override
