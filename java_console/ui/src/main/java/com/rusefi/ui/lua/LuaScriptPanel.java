@@ -37,7 +37,7 @@ public class LuaScriptPanel {
     private final Node config;
     private final JPanel mainPanel = new JPanel(new BorderLayout());
     private final AnyCommand command;
-    private final TextEditor scriptText = new TextEditor();
+    private final TextEditor scriptText;
     private final MessagesPanel mp;
 
     public LuaScriptPanel(UIContext context, Node config) {
@@ -119,6 +119,10 @@ public class LuaScriptPanel {
 
         // Center panel - script editor and log
         JPanel scriptPanel = new JPanel(new BorderLayout());
+        BinaryProtocol bp = context.getLinkManager().getCurrentStreamState();
+
+        StringIniField field = getLuaScriptField(bp);
+        scriptText = new TextEditor(field.getSize());
         scriptPanel.add(scriptText.getControl(), BorderLayout.CENTER);
 
         //centerPanel.add(, BorderLayout.WEST);

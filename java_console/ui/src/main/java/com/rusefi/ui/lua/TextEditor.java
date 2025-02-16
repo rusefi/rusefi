@@ -1,6 +1,5 @@
 package com.rusefi.ui.lua;
 
-import com.rusefi.config.generated.Fields;
 import com.rusefi.ui.util.UiUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -30,12 +29,14 @@ public class TextEditor {
     private final JTextArea textArea = new JTextArea();
     private final JLabel sizeLabel = new JLabel();
     private final JLabel locationLabel = new JLabel();
+    private final int limit;
 
-    public TextEditor() {
+    public TextEditor(int limit) {
+        this.limit = limit;
         textArea.setTabSize(2);
 
         AbstractDocument pDoc = (AbstractDocument) textArea.getDocument();
-        pDoc.setDocumentFilter(new DocumentSizeFilter(Fields.LUA_SCRIPT_SIZE));
+        pDoc.setDocumentFilter(new DocumentSizeFilter(limit));
         pDoc.addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -84,7 +85,7 @@ public class TextEditor {
     }
 
     private void updateSize() {
-        sizeLabel.setText(textArea.getText().length() + "/" + Fields.LUA_SCRIPT_SIZE);
+        sizeLabel.setText(textArea.getText().length() + "/" + limit);
     }
 
     private void installUndoRedoKeystrokes() {
