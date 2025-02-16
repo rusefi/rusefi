@@ -13,7 +13,6 @@ import com.rusefi.NamedThreadFactory;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.Timeouts;
 import com.rusefi.binaryprotocol.test.Bug3923;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Pair;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.net.ConnectionAndMeta;
@@ -311,7 +310,7 @@ public class BinaryProtocol {
                 return ConfigurationImageWithMeta.VOID;
 
             int remainingSize = image.getSize() - offset;
-            int requestSize = Math.min(remainingSize, BLOCKING_FACTOR);
+            int requestSize = Math.min(remainingSize, iniFile.getBlockingFactor());
 
             byte[] packet = new byte[4];
             ByteRange.packOffsetAndSize(offset, requestSize, packet);
@@ -591,7 +590,7 @@ public class BinaryProtocol {
 
         while (remaining > 0) {
             // If less than one full chunk left, do a smaller read
-            int chunkSize = Math.min(remaining, BLOCKING_FACTOR);
+            int chunkSize = Math.min(remaining, iniFile.getBlockingFactor());
 
             byte[] response = executeCommand(
                 Integration.TS_OUTPUT_COMMAND,
