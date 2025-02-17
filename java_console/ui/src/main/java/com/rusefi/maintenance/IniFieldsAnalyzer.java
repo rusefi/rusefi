@@ -3,8 +3,8 @@ package com.rusefi.maintenance;
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.*;
-import com.rusefi.CompatibilitySet;
 import com.rusefi.core.Pair;
+import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.tune.xml.Constant;
 
@@ -15,13 +15,10 @@ import static com.devexperts.logging.Logging.getLogging;
 public class IniFieldsAnalyzer {
     private static final Logging log = getLogging(IniFieldsAnalyzer.class);
 
-    private static final Set<String> INI_FIELDS_TO_IGNORE = CompatibilitySet.of(
-        "byFirmwareVersion",
-        // todo INI_FIELDS_TO_IGNORE should be dynamic https://github.com/rusefi/rusefi/issues/7454
-        "hash3",
-        // todo: looks like a defect? there is no 'signature' field, do we maybe have a defect in IniFileModel?
-        "signature"
-    );
+    // ini fields to ignore on all boards
+    private static final Set<String> INI_FIELDS_TO_IGNORE = new HashSet<>();
+
+    private static final Set<String> boardSpecificIniFieldsToIgnore = ConnectionAndMeta.getNonMigratableIniFields();
 
     public static List<Pair<IniField, Constant>> findValuesToUpdate(
         final IniFileModel prevIni,
@@ -114,7 +111,7 @@ public class IniFieldsAnalyzer {
     ) {
         boolean result = false;
         final String prevFieldName = prevField.getName();
-        if (!INI_FIELDS_TO_IGNORE.contains(prevFieldName)) {
+        if (!INI_FIELDS_TO_IGNORE.contains(prevFieldName) && !boardSpecificIniFieldsToIgnore.contains(prevFieldName)) {
             if (prevField instanceof ScalarIniField) {
                 if (newField instanceof ScalarIniField) {
                     result = canScalarValueBeMigrated((ScalarIniField) prevField, (ScalarIniField) newField, callbacks);
