@@ -13,7 +13,8 @@ enum class RadiatorFanState : uint8_t {
   Hot, // 7
   Cold, // 8
   Previous, // 9
-  Bench
+  Bench, // 10
+  BoardForcedOn // 11
 };
 
 struct FanController : public EngineModule, public fan_control_s {
