@@ -169,7 +169,7 @@ info:
   directory: hellen/alphax-platinum
   name: AlphaX Gold
   image:
-    file: 60pins.jpg
+    file: 34pins-3k.jpg
   pins:
     - pin: 1A
       x: 95
