@@ -223,6 +223,11 @@ pins:
     ts_name: Injector 3Z
     function: Injector #4
 
+  - pin: onboard
+    id: EFI_ADC_14
+    class: analog_inputs
+    ts_name: Analog VBatt
+
 info:
   cid: Frankenso
   directory: frankenso
