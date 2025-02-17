@@ -95,6 +95,7 @@ pins:
 
 info:
   order: 0
+  cid: main
   title: lambda-x2
   name: lambda-x2
   board_url: https://github.com/rusefi/rusefi-hardware/blob/main/lambda-x2/readme.md

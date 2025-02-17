@@ -224,5 +224,6 @@ pins:
     ts_name: Aux BARO
 
 info:
+  cid: main
   title: Hellen 88 BMW
   directory: hellen/hellen88bmw

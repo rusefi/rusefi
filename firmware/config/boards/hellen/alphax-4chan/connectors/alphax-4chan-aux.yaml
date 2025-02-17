@@ -65,6 +65,7 @@ pins:
 
 info:
   directory: hellen/alphax-4chan
+  cid: aux
   title: AlphaX 4chan
   image:
     file: alphax-4chan-aux.jpg

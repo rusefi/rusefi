@@ -192,6 +192,7 @@ pins:
 
 info:
   title: AlphaX Platinum
+  cid: d
   directory: hellen/alphax-platinum
   name: AlphaX Platinum
   image:

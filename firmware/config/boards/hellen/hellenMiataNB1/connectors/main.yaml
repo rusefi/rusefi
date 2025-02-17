@@ -359,6 +359,7 @@ pins:
 
 
 info:
+  cid: main
   title: Hellen Miata NB1
   directory: hellen/hellen-nb1
   image:

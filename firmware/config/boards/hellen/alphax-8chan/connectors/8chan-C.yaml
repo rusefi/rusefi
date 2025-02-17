@@ -223,6 +223,7 @@ pins:
 
 info:
   title: AlphaX Platinum
+  cid: c
   # directory see D.yaml
   name: AlphaX Platinum
   image:

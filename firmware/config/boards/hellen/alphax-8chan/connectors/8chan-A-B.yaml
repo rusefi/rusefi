@@ -377,6 +377,7 @@ pins:
 
 info:
   title: AlphaX Platinum
+  cid: ab
   name: AlphaX Platinum
   # directory see D.yaml
   board_url: https://rusefi.com/s/8chan
