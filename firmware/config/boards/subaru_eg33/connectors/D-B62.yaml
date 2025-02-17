@@ -171,3 +171,5 @@ pins:
     function: Injector 4
     ts_name: D26 - Injector 4
     type: inj
+info:
+  cid: d

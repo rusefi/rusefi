@@ -195,6 +195,7 @@ pins:
 info:
   title: AlphaX 4K-GDI
   name: AlphaX 4K-GDI
+  cid: a
   directory: hellen/alphax-4K-GDI
   order: 0
   board_url: https://rusefi.com/s/4K-GDI

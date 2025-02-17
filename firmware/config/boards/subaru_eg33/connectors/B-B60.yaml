@@ -75,3 +75,5 @@ pins:
     function: IGN Din
     ts_name: B12 - IGN Din
     type: av
+info:
+  cid: b

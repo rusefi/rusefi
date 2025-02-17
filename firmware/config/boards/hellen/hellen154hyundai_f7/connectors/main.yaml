@@ -371,6 +371,7 @@ info:
   directory: hellen/hellen154hyundai_revD
   title: Hellen 154 Hyundai
   order: 0
+  cid: main
   image:
     file: main.jpg
   pins:

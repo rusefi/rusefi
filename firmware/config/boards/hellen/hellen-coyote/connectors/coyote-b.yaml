@@ -140,6 +140,7 @@ pins:
 info:
   title: coyote
   name: B
+  cid: b
   directory: hellen/coyote
   image:
     file: ford-198-b.jpg

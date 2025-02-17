@@ -127,3 +127,6 @@ pins:
   - pin: 22
     function: Power GND
     type: pgnd
+
+info:
+  cid: a
