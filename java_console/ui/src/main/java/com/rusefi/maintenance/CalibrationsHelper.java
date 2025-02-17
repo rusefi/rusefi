@@ -34,6 +34,7 @@ public class CalibrationsHelper {
 
     private static final String PREVIOUS_CALIBRATIONS_FILE_NAME = BinaryProtocolLocalCache.STATE_FOLDER + "prev_calibrations";
     private static final String UPDATED_CALIBRATIONS_FILE_NAME = BinaryProtocolLocalCache.STATE_FOLDER + "updated_calibrations";
+    private static final String MERGED_CALIBRATIONS_FILE_NAME = BinaryProtocolLocalCache.STATE_FOLDER + "merged_calibrations";
 
     public static boolean updateFirmwareAndRestorePreviousCalibrations(
         final JComponent parent,
@@ -78,7 +79,7 @@ public class CalibrationsHelper {
             "Restore previous calibrations",
             JOptionPane.YES_NO_OPTION
         ) == JOptionPane.YES_OPTION)) {
-            if (!backUpCalibrationsInfo(mergedCalibrations.get(), "merged_calibrations", callbacks)) {
+            if (!backUpCalibrationsInfo(mergedCalibrations.get(), MERGED_CALIBRATIONS_FILE_NAME, callbacks)) {
                 callbacks.logLine("Failed to back up merged calibrations...");
                 return false;
             }
