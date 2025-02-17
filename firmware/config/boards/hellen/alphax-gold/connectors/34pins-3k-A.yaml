@@ -1,0 +1,276 @@
+meta: config/boards/hellen_meta.h
+
+pins:
+  - pin: 1A
+    function: Injector 4 Output
+    class: outputs
+    type: ls
+    ts_name: ___ - Injector 4
+    color: orange
+
+  - pin: 2A
+    function: Injector 3 Output
+    class: outputs
+    type: ls
+    ts_name: ___ - Injector 3
+    color: blue
+
+  - pin: 3A
+    function: Injector 2 Output
+    class: outputs
+    type: ls
+    ts_name: ___ - Injector 2
+    color: white
+
+  - pin: 4A
+    function: Injector 1 Output
+    class: outputs
+    type: ls
+    ts_name: ___ - Injector 1
+    color: green
+
+  - pin: 5A
+    function: Fuel Pump Relay
+    class: outputs
+    type: ls
+    ts_name: ___ Fuel Pump Relay
+    color: white
+
+  - pin: 6A
+    function: Idle Output
+    class: outputs
+    type: ls
+    ts_name: ___ Idle Output
+    color: yellow
+
+  - pin: 7A
+    function: CAN High
+    type: can
+
+  - pin: 8A
+    function: CAN
+    type: can
+
+  - pin: 9A
+    meta: H144_IN_VBATT
+    class: analog_inputs
+    function: ECU power supply
+    ts_name: ___ Battery Sense
+    type: 12v
+
+  - pin: 10A
+    meta: H144_IGN_4
+    class: outputs
+    ts_name: ___ Coil 4
+    color: orange
+
+  - pin: 11A
+    meta: H144_IGN_3
+    class: outputs
+    ts_name: ___ Coil 3
+    color: blue
+
+  - pin: 12A
+    meta: H144_IGN_2
+    class: outputs
+    ts_name: ___ Coil 2
+    color: white
+
+  - pin: 13A
+    meta: H144_IGN_1
+    class: outputs
+    ts_name: ___ Coil 1
+    color: green
+
+  - pin: 14A
+    function:
+
+  - pin: 15A
+    function:
+
+  - pin: 16A
+    function: VR Discrete Negative
+
+  - pin: 17A
+    function:
+
+  - pin: 18A
+    meta: H144_IN_TPS
+    class: analog_inputs
+    function: TPS Sensor Input
+    ts_name: ___ - TPS
+    type: av
+    color: orange
+
+
+  - pin: 19A
+    meta: H144_IN_CLT
+    class: analog_inputs
+    function: CLT Sensor Input
+    ts_name: ___ - CLT
+    type: av
+    color: grey
+
+
+  - pin: 20A
+    meta: H144_IN_IAT
+    class: analog_inputs
+    function: IAT Sensor Input
+    ts_name: ___ - IAT
+    color: blue
+
+  - pin: 21A
+    function:
+
+  - pin: 22A
+    function:
+
+  - pin: 23A
+    function:
+
+  - pin: 24A
+    function:
+
+  - pin: 25A
+    function:
+
+  - pin: 26A
+    function:
+
+  - pin: 27A
+    function:
+
+  - pin: 28A
+    function:
+
+  - pin: 29A
+    function:
+
+  - pin: 30A
+    function:
+
+  - pin: 31A
+    function:
+
+  - pin: 32A
+    function:
+
+  - pin: 33A
+    function:
+
+  - pin: 34A
+    function:
+
+
+info:
+  cid: main
+  order: 0
+  title: AlphaX Gold
+  directory: hellen/alphax-platinum
+  name: AlphaX Gold
+  image:
+    file: 60pins.jpg
+  pins:
+    - pin: 1A
+      x: 95
+      y: 90
+    - pin: 2A
+      x: 120
+      y: 90
+    - pin: 3A
+      x: 155
+      y: 90
+    - pin: 4A
+      x: 180
+      y: 90
+    - pin: 5A
+      x: 205
+      y: 90
+    - pin: 6A
+      x: 230
+      y: 90
+    - pin: 7A
+      x: 255
+      y: 90
+    - pin: 8A
+      x: 280
+      y: 90
+    - pin: 9A
+      x: 305
+      y: 90
+    - pin: 10A
+      x: 110
+      y: 120
+    - pin: 11A
+      x: 135
+      y: 120
+    - pin: 12A
+      x: 160
+      y: 120
+    - pin: 13A
+      x: 185
+      y: 120
+    - pin: 14A
+      x: 210
+      y: 120
+    - pin: 15A
+      x: 235
+      y: 120
+    - pin: 16A
+      x: 260
+      y: 120
+    - pin: 17A
+      x: 285
+      y: 120
+    - pin: 18A
+      x: 110
+      y: 150
+    - pin: 19A
+      x: 135
+      y: 150
+    - pin: 20A
+      x: 160
+      y: 150
+    - pin: 21A
+      x: 185
+      y: 150
+    - pin: 22A
+      x: 210
+      y: 150
+    - pin: 23A
+      x: 235
+      y: 150
+    - pin: 24A
+      x: 260
+      y: 150
+    - pin: 25A
+      x: 285
+      y: 150
+    - pin: 26A
+      x: 95
+      y: 180
+    - pin: 27A
+      x: 120
+      y: 180
+    - pin: 28A
+      x: 155
+      y: 180
+    - pin: 29A
+      x: 180
+      y: 180
+    - pin: 30A
+      x: 205
+      y: 180
+    - pin: 31A
+      x: 230
+      y: 180
+    - pin: 32A
+      x: 255
+      y: 180
+    - pin: 33A
+      x: 280
+      y: 180
+    - pin: 34A
+      x: 305
+      y: 180
+
