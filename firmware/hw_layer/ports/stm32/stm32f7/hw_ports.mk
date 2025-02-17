@@ -12,6 +12,8 @@ USE_OPT += -falign-functions=16
 
 DDEFS += -DSTM32F767xx
 MCU = cortex-m7
+USE_FPU = hard
+USE_FPU_OPT = -mfloat-abi=$(USE_FPU) -mfpu=fpv5-d16
 LDSCRIPT = $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f7/STM32F7.ld
 # kludge: while we the very generic ChibiOS board.c we use our custom board.h from current folder!
 ifeq ($(BOARD_C),)

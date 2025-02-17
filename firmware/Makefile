@@ -174,11 +174,6 @@ ifeq ($(USE_EXCEPTIONS_STACKSIZE),)
   USE_EXCEPTIONS_STACKSIZE = 0x1000
 endif
 
-# Enables the use of FPU on Cortex-M4 (no, softfp, hard).
-ifeq ($(USE_FPU),)
-  USE_FPU = hard
-endif
-
 # and this is not working for be :( See https://github.com/rusefi/rusefi/issues/638
 # use -j4 unless some value was specified
 NUMJOBS=${NUMJOBS:-" -j4 "}
