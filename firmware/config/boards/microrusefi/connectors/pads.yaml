@@ -18,6 +18,7 @@ pins:
     ts_name: AUX J18 PB7
 
 info:
+  cid: aux
   image:
     file: pads.jpg
   pins:
