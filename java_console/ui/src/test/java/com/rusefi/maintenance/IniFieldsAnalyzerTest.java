@@ -4,7 +4,6 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelImpl;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.core.Pair;
-import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import org.junit.jupiter.api.BeforeEach;
@@ -159,33 +158,5 @@ public class IniFieldsAnalyzerTest {
             }
         }
         assertTrue(result, String.format("Values to update must contain %s -> %s", expectedField, prevValue));
-    }
-
-    private static class TestCallbacks implements UpdateOperationCallbacks {
-
-        @Override
-        public void log(String message, boolean breakLineOnTextArea, boolean sendToLogger) {
-            content.append(message.replaceAll(Character.toString((char) 219), ""));
-            if (breakLineOnTextArea) {
-                content.append("\r\n");
-            }
-        }
-
-        @Override
-        public void done() {}
-
-        @Override
-        public void error() {}
-
-        @Override
-        public void clear() {
-            content.setLength(0);
-        }
-
-        String getContent() {
-            return content.toString();
-        }
-
-        private StringBuilder content = new StringBuilder();
     }
 }
