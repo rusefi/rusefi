@@ -276,14 +276,15 @@ void printError(const char *str, FRESULT f_error) {
 	efiPrintf("FATfs Error \"%s\" %d %s", str, f_error, f_error <= FR_INVALID_PARAMETER ? fatErrors[f_error] : "unknown");
 }
 
-// format and file access are used exclusively, we can union.
-// TODO: also add MSD's blkbuf1 to this union
+// format, file access and MSD are used exclusively, we can union.
 static union {
 	// Warning: shared between all FS users, please release it after use
 	FIL fd;
 	// TODO: optimal cluster size?
 	#define FATFS_CLUSTER_SIZE	1024
 	BYTE formatBuff[FATFS_CLUSTER_SIZE];
+	// MSD read/write buffer
+	uint8_t blkbuf[4 * MMCSD_BLOCK_SIZE];
 } resources NO_CACHE;
 
 extern int logFileIndex;
@@ -551,6 +552,8 @@ static bool mountMmc() {
 
 	// if no card, don't try to mount FS
 	if (cardBlockDevice != nullptr) {
+		// clean shared buffer
+		memset(&resources, 0x00, sizeof(resources));
 		// We were able to connect the SD card, mount the filesystem
 		memset(&MMC_FS, 0, sizeof(FATFS));
 		ret = (f_mount(&MMC_FS, "/", /* Mount immediately */ 1) == FR_OK);
@@ -766,7 +769,7 @@ static int sdModeSwitcher()
 		sdTargerMode = SD_MODE_IDLE;
 		return 0;
 	case SD_MODE_PC:
-		attachMsdSdCard(cardBlockDevice);
+		attachMsdSdCard(cardBlockDevice, resources.blkbuf, sizeof(resources.blkbuf));
 		sdStatus = SD_STATUS_MSD;
 		sdMode = SD_MODE_PC;
 		sdTargerMode = SD_MODE_IDLE;
