@@ -30,6 +30,7 @@ Release template (copy/paste this for new release):
 
 ### Added
  - SD card mode selection: do not wait for USB if vbatt voltage #7424
+ - SD card mass storage read access performance improvements
 
 ## February 2025 "Day 1075"
 
