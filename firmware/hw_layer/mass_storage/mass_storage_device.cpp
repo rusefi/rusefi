@@ -99,8 +99,6 @@ void MassStorageController::ThreadTask() {
 		}
 
 		if (cbwValid(m_cbw, status) && cbwMeaningful(m_cbw)) {
-			chibios_rt::MutexLocker lock(m_lunMutex);
-
 			auto target = &m_luns[m_cbw.lun].target;
 			if (SCSI_SUCCESS == scsiExecCmd(target, m_cbw.cmd_data)) {
 				sendCsw(CSW_STATUS_PASSED, 0);
