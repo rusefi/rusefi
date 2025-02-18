@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import javax.xml.bind.JAXBException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 public class ALSTimingRetardTableTest {
     final String ALS_TIMING_RETARD_TABLE_FIELD_NAME = "ALSTimingRetardTable";
@@ -54,9 +53,7 @@ public class ALSTimingRetardTableTest {
 
         alsTimingRetardTableField.setValue(testImage,  cloneWithNewValue(prevValue, TEST_ALS_TIMING_RETARD_TABLE));
 
-        /* We are expecting to read the value that we have just set: */
-        // todo: fix me?!
-        assertNotEquals(TEST_ALS_TIMING_RETARD_TABLE, alsTimingRetardTableField.getValue(testImage));
+        assertEquals(TEST_ALS_TIMING_RETARD_TABLE, alsTimingRetardTableField.getValue(testImage));
     }
 
     private static Constant cloneWithNewValue(final Constant origin, final String newValue) {
