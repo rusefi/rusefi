@@ -1,42 +1,33 @@
 package com.rusefi.maintenance;
 
-import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.IniFileModelImpl;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.core.Pair;
-import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.tune.xml.Constant;
-import com.rusefi.tune.xml.Msq;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.xml.bind.JAXBException;
 import java.util.List;
-import java.util.Map;
 
+import static com.rusefi.maintenance.CalibrationsTestData.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class IniFieldsAnalyzerTest {
-    Map<String, Constant> prevMsq;
-    IniFileModel prevIni;
-    Map<String, Constant> updatedMsq;
-    IniFileModel updatedIni;
+    CalibrationsTestData testData;
+
     TestCallbacks testCallbacks;
     List<Pair<IniField, Constant>> valuesToUpdate;
 
     @BeforeEach
     public void setUp() throws JAXBException {
-        prevMsq = Msq.readTune("src/test/java/com/rusefi/maintenance/test_data/prev_calibrations.msq").getConstantsAsMap();
-        prevIni = IniFileModelImpl.readIniFile("src/test/java/com/rusefi/maintenance/test_data/prev_calibrations.ini");
-        updatedMsq = Msq.readTune("src/test/java/com/rusefi/maintenance/test_data/updated_calibrations.msq").getConstantsAsMap();
-        updatedIni = IniFileModelImpl.readIniFile("src/test/java/com/rusefi/maintenance/test_data/updated_calibrations.ini");
+        testData = CalibrationsTestData.load();
         testCallbacks = new TestCallbacks();
         valuesToUpdate = IniFieldsAnalyzer.findValuesToUpdate(
-            prevIni,
-            prevMsq,
-            updatedIni,
-            updatedMsq,
+            testData.getPrevIni(),
+            testData.getPrevMsq(),
+            testData.getUpdatedIni(),
+            testData.getUpdatedMsq(),
             testCallbacks
         );
     }
@@ -117,12 +108,17 @@ public class IniFieldsAnalyzerTest {
     }
 
     @Test
+    public void testIgnitionTable() {
+        checkValueToUpdateExist(IGNITION_TABLE_FIELD_NAME, PREV_IGNITION_TABLE_VALUE, UPDATED_IGNITION_TABLE_VALUE);
+    }
+
+    @Test
     public void testWarnings() {
         final List<Pair<IniField, Constant>> valuesToUpdate = IniFieldsAnalyzer.findValuesToUpdate(
-            prevIni,
-            prevMsq,
-            updatedIni,
-            updatedMsq,
+            testData.getPrevIni(),
+            testData.getPrevMsq(),
+            testData.getUpdatedIni(),
+            testData.getUpdatedMsq(),
             testCallbacks
         );
         assertEquals(
@@ -140,7 +136,7 @@ public class IniFieldsAnalyzerTest {
         final String expectedUpdatedFieldValue
     ) {
         boolean result = false;
-        final Constant prevValue = prevMsq.get(fieldName);
+        final Constant prevValue = testData.getPrevValue(fieldName);
         assertEquals(
             expectedPrevFieldValue,
             prevValue.getValue(),
@@ -148,10 +144,10 @@ public class IniFieldsAnalyzerTest {
         );
         assertEquals(
             expectedUpdatedFieldValue,
-            updatedMsq.get(fieldName).getValue(),
+            testData.getUpdatedValue(fieldName).getValue(),
             String.format("Unexpected updated value for `%s` field.", fieldName)
         );
-        final IniField expectedField = updatedIni.getIniField(fieldName);
+        final IniField expectedField = testData.getUpdatedIni().getIniField(fieldName);
         for (final Pair<IniField, Constant> item: valuesToUpdate) {
             if (item.first.equals(expectedField) && item.second.equals(prevValue)) {
                 result = true;
@@ -159,33 +155,5 @@ public class IniFieldsAnalyzerTest {
             }
         }
         assertTrue(result, String.format("Values to update must contain %s -> %s", expectedField, prevValue));
-    }
-
-    private static class TestCallbacks implements UpdateOperationCallbacks {
-
-        @Override
-        public void log(String message, boolean breakLineOnTextArea, boolean sendToLogger) {
-            content.append(message.replaceAll(Character.toString((char) 219), ""));
-            if (breakLineOnTextArea) {
-                content.append("\r\n");
-            }
-        }
-
-        @Override
-        public void done() {}
-
-        @Override
-        public void error() {}
-
-        @Override
-        public void clear() {
-            content.setLength(0);
-        }
-
-        String getContent() {
-            return content.toString();
-        }
-
-        private StringBuilder content = new StringBuilder();
     }
 }
