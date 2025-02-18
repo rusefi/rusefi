@@ -189,7 +189,7 @@ public class CalibrationsHelper {
         );
     }
 
-    private static Optional<CalibrationsInfo> mergeCalibrations(
+    public static Optional<CalibrationsInfo> mergeCalibrations(
         final CalibrationsInfo prevCalibrations,
         final CalibrationsInfo newCalibrations,
         final UpdateOperationCallbacks callbacks

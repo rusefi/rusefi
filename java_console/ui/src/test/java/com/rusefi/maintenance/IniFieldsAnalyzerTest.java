@@ -130,7 +130,7 @@ public class IniFieldsAnalyzerTest {
         final String expectedUpdatedFieldValue
     ) {
         boolean result = false;
-        final Constant prevValue = testData.getPrevMsq().get(fieldName);
+        final Constant prevValue = testData.getPrevValue(fieldName);
         assertEquals(
             expectedPrevFieldValue,
             prevValue.getValue(),
@@ -138,7 +138,7 @@ public class IniFieldsAnalyzerTest {
         );
         assertEquals(
             expectedUpdatedFieldValue,
-            testData.getUpdatedMsq().get(fieldName).getValue(),
+            testData.getUpdatedValue(fieldName).getValue(),
             String.format("Unexpected updated value for `%s` field.", fieldName)
         );
         final IniField expectedField = testData.getUpdatedIni().getIniField(fieldName);
