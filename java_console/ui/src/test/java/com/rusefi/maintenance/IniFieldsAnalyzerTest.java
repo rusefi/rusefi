@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import javax.xml.bind.JAXBException;
 import java.util.List;
 
+import static com.rusefi.maintenance.CalibrationsTestData.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -104,6 +105,11 @@ public class IniFieldsAnalyzerTest {
     @Test
     public void testCan2RxPin() {
         checkValueToUpdateExist("can2RxPin", "\"NONE\"", "\"PB12\"");
+    }
+
+    @Test
+    public void testIgnitionTable() {
+        checkValueToUpdateExist(IGNITION_TABLE_FIELD_NAME, PREV_IGNITION_TABLE_VALUE, UPDATED_IGNITION_TABLE_VALUE);
     }
 
     @Test

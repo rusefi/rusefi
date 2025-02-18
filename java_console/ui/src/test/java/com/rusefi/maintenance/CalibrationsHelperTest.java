@@ -9,6 +9,7 @@ import javax.xml.bind.JAXBException;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.rusefi.maintenance.CalibrationsTestData.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -115,6 +116,11 @@ public class CalibrationsHelperTest {
     @Test
     public void testAuxTempSensor2BiasResistor() {
         checkField("auxTempSensor2_bias_resistor", "0.0", "4700.0");
+    }
+
+    @Test
+    public void testIgnitionTable() {
+        checkField(IGNITION_TABLE_FIELD_NAME, PREV_IGNITION_TABLE_VALUE, UPDATED_IGNITION_TABLE_VALUE);
     }
 
     private void checkField(final String fieldName, final String expectedPrevValue, final String expectedUpdatedValue) {
