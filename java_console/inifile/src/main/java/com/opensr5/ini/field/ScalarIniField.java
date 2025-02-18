@@ -70,11 +70,11 @@ public class ScalarIniField extends IniField {
 //            int packed = wrapped.getInt();
 //            value = (packed >> bitOffset) & 1;
         } else if (type == INT8 || type == UINT8) {
-            wrapped.put((byte) v);
+            wrapped.put((byte) Math.round(v));
         } else if (type == INT) {
-            wrapped.putInt((int) v);
+            wrapped.putInt((int) Math.round(v));
         } else if (type == INT16 || type == UINT16) {
-            wrapped.putShort((short) v);
+            wrapped.putShort((short) Math.round(v));
         } else {
             wrapped.putFloat((float) v);
         }
