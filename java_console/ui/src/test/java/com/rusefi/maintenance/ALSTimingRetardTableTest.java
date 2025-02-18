@@ -53,6 +53,7 @@ public class ALSTimingRetardTableTest {
 
         alsTimingRetardTableField.setValue(testImage,  cloneWithNewValue(prevValue, TEST_ALS_TIMING_RETARD_TABLE));
 
+        /* We are expecting to read the value that we have just set: */
         assertEquals(TEST_ALS_TIMING_RETARD_TABLE, alsTimingRetardTableField.getValue(testImage));
     }
 
