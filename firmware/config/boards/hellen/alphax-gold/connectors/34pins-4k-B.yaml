@@ -2,100 +2,213 @@ meta: config/boards/hellen_meta.h
 
 pins:
   - pin: 1B
-    function:
+    function: Injector 8 Output
+    class: outputs
+    type: ls
+    id: TLE9104_1_OUT_3
+    ts_name: ___ - Injector 8
+    color: green
+
   - pin: 2B
-    function:
+    function: Injector 7 Output
+    class: outputs
+    type: ls
+    id: TLE9104_1_OUT_2
+    ts_name: ___ - Injector 7
+    color: white
+
   - pin: 3B
-    function:
+    function: Injector 6 Output
+    class: outputs
+    type: ls
+    id: TLE9104_1_OUT_1
+    ts_name: ___ - Injector 6
+    color: yellow
+
   - pin: 4B
-    function:
+    function: Injector 5 Output
+    class: outputs
+    type: ls
+    id: TLE9104_1_OUT_0
+    ts_name: ___ - Injector 5
+    color: brown
 
   - pin: 5B
-    function:
+    function: Fuel Pump Relay
+    class: outputs
+    type: ls
+    id: TLE9104_3_OUT_3
+    ts_name: ___ Main Relay
 
   - pin: 6B
-    function:
+    function: Low-Side 3 output
+    class: outputs
+    type: ls
+    id: TLE9104_3_OUT_1
+    ts_name: ___ LS3
+
   - pin: 7B
-    function:
+    function: Low-Side 4 output
+    class: outputs
+    type: ls
+    id: TLE9104_3_OUT_2
+    ts_name: ___ LS4
+
   - pin: 8B
-    function:
+    function: Low-Side 5 output
+    class: outputs
+    type: ls
+    id: TLE9104_3_OUT_0
+    ts_name: ___ LS5
 
   - pin: 9B
-    function:
-
+    meta: H144_IN_VBATT
+    class: analog_inputs
+    color: red
+    function: Ignition Switch / Battery Voltage Analog Input
+    ts_name: ___ Voltage From Key
 
   - pin: 10B
-    function:
-  - pin: 11B
-    function:
-  - pin: 12B
-    function:
+    meta: H144_IGN_8
+    class: outputs
+    ts_name: ___ Coil 8
 
+  - pin: 11B
+    meta: H144_IGN_7
+    class: outputs
+    ts_name: ___ Coil 7
+
+  - pin: 12B
+    meta: H144_IGN_6
+    class: outputs
+    ts_name: ___ Coil 6
 
   - pin: 13B
-    function:
+    meta: H144_IGN_5
+    class: outputs
+    ts_name: ___ Coil 5
 
   - pin: 14B
-    function:
-
+    meta: H144_IN_D_1
+    class: event_inputs
+    function: HALL1 Sensor
+    ts_name: ___ HALL1
+    type: hall
 
   - pin: 15B
-    function:
+    meta: H144_IN_D_2
+    class: event_inputs
+    function: HALL2 Sensor
+    ts_name: ___ HALL2
+    type: hall
 
   - pin: 16B
+    meta: H144_IN_D_AUX3
+    class: switch_inputs
+    ts_name: ___ AUX DIN2
+    function: AUX DIN input 2
+    type: av
     function:
 
   - pin: 17B
-    function:
+    class: outputs
+    ts_name: ETB+
+    function: ETB+ output
+    color: blue
+    type: etb
 
   - pin: 18B
-    function:
+    class: outputs
+    ts_name: DC+
+    function: DC+ output
+    color: blue
+    type: etb
 
   - pin: 19B
-    function:
+    class: analog_inputs
+    meta: H144_IN_PPS
+    ts_name: ___ PPS1
+    function: PPS input 1
+    type: av
+    color: white
 
   - pin: 20B
-    function:
+    class: analog_inputs
+    meta: H144_IN_PPS2
+    ts_name: ___ PPS2
+    function: PPS input 2
+    type: av
+    color: white
 
   - pin: 21B
-    function:
+    class: analog_inputs
+    ts_name: ___ KNOCK 1
+    function: KNOCK 1 sensor
 
   - pin: 22B
-    function:
+    class: analog_inputs
+    ts_name: ___ KNOCK 2
+    function: KNOCK 2 sensor
+
   - pin: 23B
-    function:
+    ts_name: ___ VR_DISCRETE-
+    function: VR_DISCRETE negative input
+    type: vr
+
   - pin: 24B
-    function:
+    meta: H144_IN_CAM
+    class: event_inputs
+    ts_name: ___ VR_DISCRETE+
+    function: VR_DISCRETE positive input
+    type: vr
 
   - pin: 25B
-    function:
+    class: outputs
+    ts_name: ___ ETB-
+    function: ETB- output
+    color: white
+    type: etb
 
   - pin: 26B
-    function:
+    class: outputs
+    ts_name: ___ DC-
+    function: DC- output
+    type: etb
+
 
   - pin: 27B
-    function:
+    class: event_inputs
+    meta: H144_IN_D_3
+    ts_name: ___ Flex Fuel
+    function: Flex Fuel Input
 
   - pin: 28B
-    function:
+    function: GND
+    type: GND
 
   - pin: 29B
-    function:
+    function: WBO2 Heater Control sensor pin 3
+    color: white
 
   - pin: 30B
-    function:
+    function: WBO2 VM sensor pin 2
+    color: yellow
 
   - pin: 31B
-    function:
+    function: WBO2 IP sensor pin 1
+    color: red
 
   - pin: 32B
-    function:
+    function: WBO2 cal R sensor pin 5
+    color: green
 
   - pin: 33B
-    function:
+    function: WBO2 VS sensor pin 6
+    color: black
 
   - pin: 34B
-    function:
+    function: WBO2 Heater Power pin 4
+    color: grey
 
 info:
   cid: 34-4

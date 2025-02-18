@@ -5,6 +5,7 @@ pins:
     function: Injector 4 Output
     class: outputs
     type: ls
+    id: TLE9104_0_OUT_3
     ts_name: ___ - Injector 4
     color: orange
 
@@ -12,6 +13,7 @@ pins:
     function: Injector 3 Output
     class: outputs
     type: ls
+    id: TLE9104_0_OUT_2
     ts_name: ___ - Injector 3
     color: blue
 
@@ -19,6 +21,7 @@ pins:
     function: Injector 2 Output
     class: outputs
     type: ls
+    id: TLE9104_0_OUT_1
     ts_name: ___ - Injector 2
     color: white
 
@@ -26,6 +29,7 @@ pins:
     function: Injector 1 Output
     class: outputs
     type: ls
+    id: TLE9104_0_OUT_0
     ts_name: ___ - Injector 1
     color: green
 
@@ -33,6 +37,7 @@ pins:
     function: Fuel Pump Relay
     class: outputs
     type: ls
+    id: TLE9104_2_OUT_0
     ts_name: ___ Fuel Pump Relay
     color: white
 
@@ -40,6 +45,7 @@ pins:
     function: Idle Output
     class: outputs
     type: ls
+    id: TLE9104_2_OUT_1
     ts_name: ___ Idle Output
     color: yellow
 
@@ -48,15 +54,12 @@ pins:
     type: can
 
   - pin: 8A
-    function: CAN
+    function: CAN Low
     type: can
 
   - pin: 9A
-    meta: H144_IN_VBATT
-    class: analog_inputs
-    function: ECU power supply
-    ts_name: ___ Battery Sense
-    type: 12v
+    function: +12v Bat+
+    type: 12V
 
   - pin: 10A
     meta: H144_IGN_4
@@ -83,16 +86,27 @@ pins:
     color: green
 
   - pin: 14A
-    function:
+    function: Tachometer Output
+    class: outputs
+    type: ls
+    id: TLE9104_2_OUT_3
+    ts_name: ___ - Tachometer Output
+    color:
 
   - pin: 15A
-    function:
+    meta: H144_IN_SENS1
+    class: switch_inputs
+    function: Digital Input 1
+    ts_name: ___ - Digital In 1
+    color: green
 
   - pin: 16A
     function: VR Discrete Negative
 
   - pin: 17A
-    function:
+    meta: H144_IN_CRANK
+    function: VR Discrete Positive
+    ts_name: ___ Crank Sensor VR
 
   - pin: 18A
     meta: H144_IN_TPS
@@ -120,46 +134,72 @@ pins:
     color: blue
 
   - pin: 21A
-    function:
+    meta: H144_IN_O2S2
+    class: analog_inputs
+    ts_name: ___ MAP
+    function: MAP input
+    type: av
+    color: yellow
 
   - pin: 22A
-    function:
+    meta: H144_IN_TPS2
+    class: analog_inputs
+    ts_name: ___ TPS2
+    function: TPS input 2
+    type: av
+    color: blue
 
   - pin: 23A
-    function:
+    function: VR_9924 negative input
 
   - pin: 24A
-    function:
+    meta: H144_IN_VSS
+    class: event_inputs
+    ts_name: ___ VR_9924+
+    function: VR_9924 positive input
 
   - pin: 25A
     function:
 
   - pin: 26A
-    function:
+    function: GND
+    type: GND
 
   - pin: 27A
-    function:
+    function: GNDA
+    type: gnd
+    color: black
 
   - pin: 28A
-    function:
+    meta: H144_IN_AUX1
+    class: analog_inputs
+    ts_name: ___ AUX1
+    function: AUX input 1
+    type: av
 
   - pin: 29A
-    function:
+    function: WBO1 Heater Control sensor pin 3
+    color: white
 
   - pin: 30A
-    function:
+    function: WBO1 VM sensor pin 2
+    color: yellow
 
   - pin: 31A
-    function:
+    function: WBO1 IP sensor pin 1
+    color: red
 
   - pin: 32A
-    function:
+    function: WBO1 cal R sensor pin 5
+    color: green
 
   - pin: 33A
-    function:
+    function: WBO1 VS sensor pin 6
+    color: black
 
   - pin: 34A
-    function:
+    function: WBO1 Heater Power pin 4
+    color: grey
 
 
 info:
