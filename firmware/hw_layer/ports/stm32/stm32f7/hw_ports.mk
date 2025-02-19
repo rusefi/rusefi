@@ -10,7 +10,10 @@ HW_LAYER_PORT_CPP += $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f7/mpu_util.cpp \
 # This MCU has a cache, align functions to a cache line for maximum cache efficiency
 USE_OPT += -falign-functions=16
 
-DDEFS += -DSTM32F767xx
+ifeq ($(CHIBIOS_MCU_TYPE),)
+	CHIBIOS_MCU_TYPE=STM32F767xx
+endif
+DDEFS += -D$(CHIBIOS_MCU_TYPE)
 MCU = cortex-m7
 USE_FPU = hard
 USE_FPU_OPT = -mfloat-abi=$(USE_FPU) -mfpu=fpv5-d16
