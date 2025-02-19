@@ -41,6 +41,10 @@ board_id_t getBoardId() {
         // a way to test harness patch cord
         return STATIC_BOARD_ID_PLATINUM_SBC;
     }
+    if (engineConfiguration->engineType == engine_type_e::GM_SBC_GEN5) {
+        // a way to test harness patch cord
+        return STATIC_BOARD_ID_8CHAN_E92;
+    }
 #endif
 
 #if HW_HELLEN_UAEFI121
