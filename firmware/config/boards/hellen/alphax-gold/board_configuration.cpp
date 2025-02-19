@@ -279,14 +279,14 @@ static Gpio OUTPUTS[] = {
 	Gpio::TLE9104_3_OUT_1, // 7B - OUT_AUX_LS4
 	Gpio::TLE9104_3_OUT_0, // 8B - OUT_AUX_LS5
 	Gpio::TLE9104_2_OUT_2, // P1
-	Gpio::H144_IGN1,
-	Gpio::H144_IGN2,
-	Gpio::H144_IGN3,
-	Gpio::H144_IGN4,
-	Gpio::H144_IGN5,
-	Gpio::H144_IGN6,
-	Gpio::H144_IGN7,
-	Gpio::H144_IGN8,
+	Gpio::H144_IGN_1,
+	Gpio::H144_IGN_2,
+	Gpio::H144_IGN_3,
+	Gpio::H144_IGN_4,
+	Gpio::H144_IGN_5,
+	Gpio::H144_IGN_6,
+	Gpio::H144_IGN_7,
+	Gpio::H144_IGN_8,
 };
 
 int getBoardMetaOutputsCount() {
