@@ -51,10 +51,12 @@ pins:
 
   - pin: 7A
     function: CAN High
+    color: green
     type: can
 
   - pin: 8A
-    function: CAN
+    function: CAN Low
+    color: blue
     type: can
 
   - pin: 9A
@@ -62,6 +64,7 @@ pins:
     class: analog_inputs
     function: ECU power supply
     ts_name: ___ Battery Sense
+    color: red
     type: 12v
 
   - pin: 10A
@@ -99,6 +102,7 @@ pins:
 
   - pin: 15A
     function: Analog Ground
+    color: black
     type: agnd
 
   - pin: 16A

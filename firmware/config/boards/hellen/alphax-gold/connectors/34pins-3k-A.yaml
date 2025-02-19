@@ -51,14 +51,17 @@ pins:
 
   - pin: 7A
     function: CAN High
+    color: green
     type: can
 
   - pin: 8A
     function: CAN Low
+    color: blue
     type: can
 
   - pin: 9A
     function: +12v Bat+
+    color: red
     type: 12V
 
   - pin: 10A
