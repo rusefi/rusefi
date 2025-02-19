@@ -22,7 +22,7 @@ dependencies {
 
 shadowJar {
     base {
-        archivesName = "${rootDir}/../java_console_binary/rusefi_console"
+        archivesName = "${rootDir}/../console/rusefi_console"
         archiveClassifier = ''
     }
 

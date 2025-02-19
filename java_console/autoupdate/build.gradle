@@ -27,7 +27,7 @@ jar {
     base {
         archivesName = 'rusefi_autoupdate'
     }
-    destinationDirectory = file("$rootDir/../java_console_binary")
+    destinationDirectory = file("$rootDir/../console")
 
     // lame 'shadowJar' manual implementation causes logo.png to be include both as source ans outputs? weird
     // todo: why do we not use proper shadowJar here?
