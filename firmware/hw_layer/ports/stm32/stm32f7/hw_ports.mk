@@ -17,7 +17,9 @@ DDEFS += -D$(CHIBIOS_MCU_TYPE)
 MCU = cortex-m7
 USE_FPU = hard
 USE_FPU_OPT = -mfloat-abi=$(USE_FPU) -mfpu=fpv5-d16
-LDSCRIPT = $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f7/STM32F7.ld
+ifeq ($(LDSCRIPT),)
+	LDSCRIPT = $(PROJECT_DIR)/hw_layer/ports/stm32/stm32f7/STM32F7.ld
+endif
 # kludge: while we the very generic ChibiOS board.c we use our custom board.h from current folder!
 ifeq ($(BOARD_C),)
 	BOARD_C = $(CHIBIOS)/os/hal/boards/ST_NUCLEO144_F767ZI/board.c
