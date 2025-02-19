@@ -216,6 +216,10 @@ int boardGetAnalogDiagnostic();
 // A20 AIN20
 #define H144_IN_D_AUX4 A7
 
+// CAN
+#define H144_CAN_RX Gpio::D0
+#define H144_CAN_TX Gpio::D1
+
 #define H176_LS_1 Gpio::G7
 #define H176_LS_2 Gpio::G8
 #define H176_LS_3 Gpio::D11
@@ -234,8 +238,8 @@ int boardGetAnalogDiagnostic();
 #define H176_OUT_IO10 Gpio::I0
 
 // same pins 144 and 176
-#define H176_CAN_RX Gpio::D0
-#define H176_CAN_TX Gpio::D1
+#define H176_CAN_RX H144_CAN_RX
+#define H176_CAN_TX H144_CAN_TX
 
 #define H176_IN_A16 Gpio::F10
 
