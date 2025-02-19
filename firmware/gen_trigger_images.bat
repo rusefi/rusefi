@@ -9,7 +9,7 @@ if not exist build/rusefi_test.exe exit -1
 
 rem This is me using Cygwin on all my Windows devices
 ls -l build/rusefi_test.exe
- 
+
 
 del triggers.txt
 build\rusefi_test.exe
@@ -18,4 +18,4 @@ pwd
 if not exist triggers.txt echo triggers.txt generation FAILED
 if not exist triggers.txt exit -1
 
-java -cp ../java_console_binary/rusefi_console.jar com.rusefi.TriggerImage
+java -cp ../console/rusefi_console.jar com.rusefi.TriggerImage

@@ -4,7 +4,7 @@ rem flashes DFU
 rem
 
 echo Sending rusEFI DFU request
-java -jar ../java_console_binary/rusefi_console.jar reboot_dfu
+java -jar ../console/rusefi_console.jar reboot_dfu
 echo Now sleeping before DFU
 sleep 5
 echo Invoking DFU process
