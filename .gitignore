@@ -15,7 +15,7 @@ Debug/
 doxygen/
 /.idea
 workspace.xml
-java_console_binary
+console
 .vscode/.*
 *.cmp
 *.net

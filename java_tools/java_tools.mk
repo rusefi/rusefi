@@ -16,8 +16,8 @@ CONFIG_DEFINITION_BASE_JAR = $(JAVA_TOOLS)/configuration_definition_base/build/l
 ENUM_TO_STRING_JAR = $(JAVA_TOOLS)/enum_to_string/build/libs/enum_to_string-all.jar
 # TUNE_TOOLS_JAR = $(JAVA_TOOLS)/tune-tools/build/libs/tune-tools-all.jar
 TS_PLUGIN_LAUNCHER_JAR = $(JAVA_TOOLS)/ts_plugin_launcher/build/jar/rusefi_ts_plugin_launcher.jar
-CONSOLE_JAR = $(PROJECT_DIR)/../java_console_binary/rusefi_console.jar
-AUTOUPDATE_JAR = $(PROJECT_DIR)/../java_console_binary/rusefi_autoupdate.jar
+CONSOLE_JAR = $(PROJECT_DIR)/../console/rusefi_console.jar
+AUTOUPDATE_JAR = $(PROJECT_DIR)/../console/rusefi_autoupdate.jar
 
 # We use .FORCE to always rebuild these tools. Gradle won't actually touch the jars if it doesn't need to,
 # so we don't have to worry about triggering rebuilds of things that have these tools as a prerequisite.
