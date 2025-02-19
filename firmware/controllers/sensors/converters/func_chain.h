@@ -47,7 +47,7 @@ public:
 		if (currentStep.Valid) {
 			return TBase::convert(currentStep.Value);
 		} else {
-			return unexpected;
+			return SensorResult(currentStep.Code);
 		}
 	}
 
