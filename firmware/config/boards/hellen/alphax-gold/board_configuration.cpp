@@ -261,3 +261,42 @@ void boardInitHardware(void)
 void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
 	alphaTempPullUp.setValue(engineConfiguration->boardUseTempPullUp);
 }
+
+static Gpio OUTPUTS[] = {
+	Gpio::TLE9104_0_OUT_3, // 1A - Injector 4
+	Gpio::TLE9104_0_OUT_2, // 2A - Injector 3
+	Gpio::TLE9104_0_OUT_1, // 3A - Injector 2
+	Gpio::TLE9104_0_OUT_0, // 4A - Injector 1
+	Gpio::TLE9104_2_OUT_3, // 14A - OUT_TACH
+	Gpio::TLE9104_2_OUT_1, // 5A - OUT_AUX_LS1
+	Gpio::TLE9104_2_OUT_0, // 6A - OUT_AUX_LS2
+	Gpio::TLE9104_1_OUT_3, // 1B - Injector 8
+	Gpio::TLE9104_1_OUT_2, // 2B - Injector 7
+	Gpio::TLE9104_1_OUT_1, // 3B - Injector 6
+	Gpio::TLE9104_1_OUT_0, // 4B - Injector 5
+	Gpio::TLE9104_3_OUT_3, // 5B - OUT_MAIN_RELAY
+	Gpio::TLE9104_3_OUT_2, // 6B - OUT_AUX_LS3
+	Gpio::TLE9104_3_OUT_1, // 7B - OUT_AUX_LS4
+	Gpio::TLE9104_3_OUT_0, // 8B - OUT_AUX_LS5
+	Gpio::TLE9104_2_OUT_2, // P1
+	Gpio::H144_IGN1,
+	Gpio::H144_IGN2,
+	Gpio::H144_IGN3,
+	Gpio::H144_IGN4,
+	Gpio::H144_IGN5,
+	Gpio::H144_IGN6,
+	Gpio::H144_IGN7,
+	Gpio::H144_IGN8,
+};
+
+int getBoardMetaOutputsCount() {
+    return efi::size(OUTPUTS);
+}
+
+int getBoardMetaLowSideOutputsCount() {
+    return getBoardMetaOutputsCount() - 8;
+}
+
+Gpio* getBoardMetaOutputs() {
+    return OUTPUTS;
+}
