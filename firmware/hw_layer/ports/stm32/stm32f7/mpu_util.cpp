@@ -10,8 +10,12 @@
 #include "flash_int.h"
 
 static bool isDualBank() {
+#ifdef FLASH_OPTCR_nDBANK
 	// cleared bit indicates dual bank
 	return (FLASH->OPTCR & FLASH_OPTCR_nDBANK) == 0;
+#else
+	return 0;
+#endif
 }
 
 static uint16_t flashSize() {
