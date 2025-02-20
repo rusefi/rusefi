@@ -43,7 +43,7 @@ public class InstanceNameEditor {
         }
     }
 
-    private String loadInstanceName() {
+    public static String loadInstanceName() {
         return getConfig().getRoot().getProperty(INSTANCE_NAME, "");
     }
 
@@ -64,7 +64,7 @@ public class InstanceNameEditor {
             }
 
             private String getAllowedStringToInsert(final String originalString) {
-                final String filteredString = originalString.replaceAll("[^0-9a-zA-Z \t]+", "");
+                final String filteredString = PanamaArgumentValidator.secureInstanceName(originalString);
                 final int allowedLengthToInsert = MAX_LENGTH - getLength();
                 final String result = filteredString.substring(0, Math.min(allowedLengthToInsert, filteredString.length()));
                 if (!result.equals(originalString)) {

@@ -24,7 +24,9 @@ import java.util.stream.Collectors;
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.FileLog.isWindows;
 import static com.rusefi.StartupFrame.newReleaseAnnounce;
+import static com.rusefi.core.net.ConnectionAndMeta.getProperties;
 
+// todo: composition better than inheritance!
 public class BasicUpdaterPanel extends JPanel {
     private static final Logging log = getLogging(BasicUpdaterPanel.class);
 
@@ -84,7 +86,10 @@ public class BasicUpdaterPanel extends JPanel {
         super.add(new HorizontalLine());
         JLabel logoLabel = LogoHelper.createLogoLabel();
         if (logoLabel != null) {
-            logoLabel.setComponentPopupMenu(new LogoLabelPopupMenu());
+            String panamaUrl = getProperties().getProperty("panama_url");
+            if (panamaUrl != null) {
+                logoLabel.setComponentPopupMenu(new LogoLabelPopupMenu(panamaUrl));
+            }
             super.add(logoLabel);
         }
         if (showUrlLabel)
