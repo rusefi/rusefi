@@ -14,10 +14,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class IniFieldsAnalyzerTest {
-    CalibrationsTestData testData;
+    private CalibrationsTestData testData;
 
-    TestCallbacks testCallbacks;
-    List<Pair<IniField, Constant>> valuesToUpdate;
+    private TestCallbacks testCallbacks;
+    private List<Pair<IniField, Constant>> valuesToUpdate;
 
     @BeforeEach
     public void setUp() throws JAXBException {
@@ -114,7 +114,7 @@ public class IniFieldsAnalyzerTest {
 
     @Test
     public void testWarnings() {
-        final List<Pair<IniField, Constant>> valuesToUpdate = IniFieldsAnalyzer.findValuesToUpdate(
+        IniFieldsAnalyzer.findValuesToUpdate(
             testData.getPrevIni(),
             testData.getPrevMsq(),
             testData.getUpdatedIni(),
