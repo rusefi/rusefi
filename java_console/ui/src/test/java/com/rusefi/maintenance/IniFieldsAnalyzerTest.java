@@ -113,9 +113,9 @@ public class IniFieldsAnalyzerTest {
     }
 
     @Test
-    public void testWarnings() {
+    public void testContent() {
         assertEquals(
-            "WARNING! Field `enableKnockSpectrogram` cannot be migrated because value `\"false\"` has disappeared\r\n" +
+            "We aren't going to restore field `enableKnockSpectrogram`: it looks like its value is just renamed: `\"false\"` -> `\"no\"`\r\n" +
             "WARNING! Field `unusedOftenChangesDuringFirmwareUpdate` cannot be updated because its row count is updated: `198` -> `58`\r\n",
             testCallbacks.getContent()
         );

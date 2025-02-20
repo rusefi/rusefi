@@ -1,5 +1,7 @@
 package com.rusefi.maintenance;
 
+import com.opensr5.ini.field.EnumIniField;
+import com.rusefi.config.FieldType;
 import com.rusefi.tune.xml.Constant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -10,8 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.rusefi.maintenance.CalibrationsTestData.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CalibrationsHelperTest {
     CalibrationsTestData testData;
@@ -123,7 +124,31 @@ public class CalibrationsHelperTest {
         checkField(IGNITION_TABLE_FIELD_NAME, PREV_IGNITION_TABLE_VALUE, UPDATED_IGNITION_TABLE_VALUE);
     }
 
-    private void checkField(final String fieldName, final String expectedPrevValue, final String expectedUpdatedValue) {
+    @Test
+    public void testEnableKnockSpectrogram() {
+        final EnumIniField prevIniField = (EnumIniField) testData.getPrevIni().getIniField(ENABLE_KNOCK_SPECTROGRAM_FIELD_NAME);
+        assertEquals(FieldType.INT, prevIniField.getType());
+
+        final EnumIniField updatedIniField = (EnumIniField) testData.getUpdatedIni().getIniField(ENABLE_KNOCK_SPECTROGRAM_FIELD_NAME);
+        assertEquals(FieldType.INT, updatedIniField.getType());
+
+        // bit position is updated!
+        assertNotEquals(prevIniField.getBitPosition(), updatedIniField.getBitPosition());
+
+        checkField(
+            ENABLE_KNOCK_SPECTROGRAM_FIELD_NAME,
+            PREV_ENABLE_KNOCK_SPECTROGRAM_VALUE,
+            UPDATED_ENABLE_KNOCK_SPECTROGRAM_VALUE,
+            UPDATED_ENABLE_KNOCK_SPECTROGRAM_VALUE
+        );
+    }
+
+    private void checkField(
+        final String fieldName,
+        final String expectedPrevValue,
+        final String expectedUpdatedValue,
+        final String expectedMergedValue
+    ) {
         assertEquals(
             expectedPrevValue,
             testData.getPrevValue(fieldName).getValue(),
@@ -136,9 +161,17 @@ public class CalibrationsHelperTest {
         );
         final Map<String, Constant> mergedConstants = mergedCalibrations.generateMsq().getConstantsAsMap();
         assertEquals(
-            expectedPrevValue,
+            expectedMergedValue,
             mergedConstants.get(fieldName).getValue(),
             String.format("Unexpected merged `%s` field value", fieldName)
         );
+    }
+
+    private void checkField(
+        final String fieldName,
+        final String expectedPrevValue,
+        final String expectedUpdatedValue
+    ) {
+        checkField(fieldName, expectedPrevValue, expectedUpdatedValue, expectedPrevValue);
     }
 }
