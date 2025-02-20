@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="23296">
+    <page number="0" size="23268">
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
         <constant name="accelerometerSpiDevice">"Off"</constant>
@@ -725,26 +725,6 @@
          80.0
 </constant>
         <constant name="cltSensorPulldown">"false"</constant>
-        <constant cols="1" digits="1" name="cltTimingBins" rows="8">
-         -40.0
-         -17.0
-         6.0
-         29.0
-         51.0
-         74.0
-         97.0
-         120.0
-</constant>
-        <constant cols="1" digits="0" name="cltTimingExtra" rows="8">
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-</constant>
         <constant name="clutchDownPin">"NONE"</constant>
         <constant name="clutchDownPinMode">"PULLUP"</constant>
         <constant name="clutchUpPin">"NONE"</constant>
@@ -1970,6 +1950,27 @@
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
 </constant>
         <constant name="ignBlends4_yAxisOverride">"Zero"</constant>
+        <constant cols="1" digits="0" name="ignitionCltCorrLoadBins" rows="5">
+         0.0
+         35.0
+         70.0
+         105.0
+         140.0
+</constant>
+        <constant cols="5" digits="1" name="ignitionCltCorrTable" rows="5">
+         0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0
+</constant>
+        <constant cols="1" digits="0" name="ignitionCltCorrTempBins" rows="5">
+         -20.0
+         0.0
+         20.0
+         40.0
+         60.0
+</constant>
         <constant digits="1" name="ignitionDwellForCrankingMs" units="ms">4.0</constant>
         <constant cols="1" digits="0" name="ignitionIatCorrLoadBins" rows="8">
          0.0
@@ -4887,7 +4888,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250216" nPages="1" signature="rusEFI master.2025.02.20.f407-discovery.909464281" version="5.0"/>
+    <versionInfo firmwareInfo="20250216" nPages="1" signature="rusEFI master.2025.02.20.f407-discovery.3621983256" version="5.0"/>
     <bibliography author="rusEFI 20250216" writeDate="date"/>
     <settings/>
     <userComments/>
