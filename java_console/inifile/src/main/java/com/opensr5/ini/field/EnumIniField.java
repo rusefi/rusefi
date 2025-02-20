@@ -164,6 +164,11 @@ public class EnumIniField extends IniField {
             this.keyValues = keyValues;
         }
 
+        public boolean isBitField() {
+            return (keyValues.size() == 2)
+                && (keyValues.keySet().stream().allMatch(ordinal -> (0 <= ordinal) && (ordinal <= 1)));
+        }
+
         public static EnumKeyValueMap valueOf(String rawText, IniFileModel iniFileModel) {
             Map<Integer, String> keyValues = new TreeMap<>();
 

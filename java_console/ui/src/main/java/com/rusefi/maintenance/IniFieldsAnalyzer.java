@@ -11,6 +11,7 @@ import com.rusefi.tune.xml.Constant;
 import java.util.*;
 
 import static com.devexperts.logging.Logging.getLogging;
+import static javax.management.ObjectName.quote;
 
 public class IniFieldsAnalyzer {
     private static final Logging log = getLogging(IniFieldsAnalyzer.class);
@@ -84,14 +85,24 @@ public class IniFieldsAnalyzer {
                                 callbacks
                             );
                             if (migratedValue.isPresent()) {
-                                log.info(String.format(
-                                    "Field `%s` is going to be restored: `%s` -> `%s`",
-                                    prevFieldName,
-                                    prevValue.getValue(),
-                                    newValue.getValue()
-                                ));
+                                final String valueToRestore = migratedValue.get();
+                                if (!valueToRestore.equals(newValue.getValue())) {
+                                    log.info(String.format(
+                                        "Field `%s` is going to be restored: `%s` -> `%s`",
+                                        prevFieldName,
+                                        prevValue.getValue(),
+                                        newValue.getValue()
+                                    ));
 
-                                result.add(new Pair<>(newField, newValue.cloneWithValue(migratedValue.get())));
+                                    result.add(new Pair<>(newField, newValue.cloneWithValue(valueToRestore)));
+                                } else {
+                                    callbacks.logLine(String.format(
+                                        "We aren't going to restore field `%s`: it looks like its value is just renamed: `%s` -> `%s`",
+                                        prevFieldName,
+                                        prevValue.getValue(),
+                                        newValue.getValue()
+                                    ));
+                                }
                             } else {
                                 log.warn(String.format(
                                     "Field `%s` cannot be updated: `%s` -> `%s`",
@@ -225,14 +236,32 @@ public class IniFieldsAnalyzer {
                 prevField.getBitSize0(),
                 newField.getBitSize0()
             ));
-        } else if (newField.getEnums().indexOf(prevValue) == -1) {
-            callbacks.logLine(String.format(
-                "WARNING! Field `%s` cannot be migrated because value `%s` has disappeared",
-                prevField.getName(),
-                prevValue
-            ));
         } else {
-            result = Optional.of(prevValue);
+            final EnumIniField.EnumKeyValueMap newFieldKeyValues = newField.getEnums();
+            if (newFieldKeyValues.indexOf(prevValue) == -1) {
+                if (newFieldKeyValues.isBitField()) {
+                   final int prevValueOrdinal = prevField.getEnums().indexOf(prevValue);
+                   final String migratedValue = newFieldKeyValues.get(prevValueOrdinal);
+                   if (migratedValue != null) {
+                       result = Optional.of(quote(migratedValue));
+                   } else {
+                       callbacks.logLine(String.format(
+                           "WARNING! Field `%s` cannot be migrated because of internal error: " +
+                               "new enum doesn't value with ordinal %d",
+                           prevField.getName(),
+                           prevValueOrdinal
+                       ));
+                   }
+                } else {
+                    callbacks.logLine(String.format(
+                        "WARNING! Field `%s` cannot be migrated because value `%s` has disappeared",
+                        prevField.getName(),
+                        prevValue
+                    ));
+                }
+            } else {
+                result = Optional.of(prevValue);
+            }
         }
         return result;
     }

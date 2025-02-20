@@ -52,6 +52,12 @@ class CalibrationsTestData {
         "         10.5 12.1 15.2 18.3 21.5 24.6 27.7 30.8 34.0 35.0 35.0 35.0 35.0 35.0 35.0 35.0\n" +
         "         10.5 12.1 15.2 18.3 21.5 24.6 27.7 30.8 34.0 35.0 35.0 35.0 35.0 35.0 35.0 35.0\n";
 
+    static final String ENABLE_KNOCK_SPECTROGRAM_FIELD_NAME = "enableKnockSpectrogram";
+
+    static final String PREV_ENABLE_KNOCK_SPECTROGRAM_VALUE = "\"false\"";
+
+    static final String UPDATED_ENABLE_KNOCK_SPECTROGRAM_VALUE = "\"no\"";
+
     static CalibrationsTestData load() throws JAXBException {
         final CalibrationsTestData result = new CalibrationsTestData(
             Msq.readTune("src/test/java/com/rusefi/maintenance/test_data/prev_calibrations.msq"),
@@ -66,6 +72,14 @@ class CalibrationsTestData {
         assertEquals(
             UPDATED_IGNITION_TABLE_VALUE,
             result.getUpdatedValue(IGNITION_TABLE_FIELD_NAME).getValue()
+        );
+        assertEquals(
+            PREV_ENABLE_KNOCK_SPECTROGRAM_VALUE,
+            result.getPrevValue(ENABLE_KNOCK_SPECTROGRAM_FIELD_NAME).getValue()
+        );
+        assertEquals(
+            UPDATED_ENABLE_KNOCK_SPECTROGRAM_VALUE,
+            result.getUpdatedValue(ENABLE_KNOCK_SPECTROGRAM_FIELD_NAME).getValue()
         );
 
         return result;
