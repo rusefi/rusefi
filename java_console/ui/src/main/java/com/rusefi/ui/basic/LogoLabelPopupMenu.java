@@ -19,6 +19,7 @@ public class LogoLabelPopupMenu extends JPopupMenu {
         JMenuItem uploadAction = new JMenuItem();
         uploadAction.addActionListener(e -> uploadTune(panamaUrl));
 
+        add(uploadAction);
         add(instanceNameMenuItem);
     }
 
