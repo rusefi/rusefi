@@ -76,26 +76,30 @@ public class IniFieldsAnalyzer {
                                 prevValue.getRows(),
                                 newValue.getRows()
                             ));
-                        } else if (canValueBeMigrated(
-                            prevFieldEntry.getValue(),
-                            newField,
-                            prevValue.getValue(),
-                            callbacks
-                        )) {
-                            log.info(String.format(
-                                "Field `%s` is going to be restored: `%s` -> `%s`",
-                                prevFieldName,
-                                prevValue.getValue(),
-                                newValue.getValue()
-                            ));
-                            result.add(new Pair<>(newField, prevValue));
                         } else {
-                            log.warn(String.format(
-                                "Field `%s` cannot be updated: `%s` -> `%s`",
-                                prevFieldName,
+                            final Optional<String> migratedValue = tryMigrateValue(
                                 prevFieldEntry.getValue(),
-                                newField
-                            ));
+                                newField,
+                                prevValue.getValue(),
+                                callbacks
+                            );
+                            if (migratedValue.isPresent()) {
+                                log.info(String.format(
+                                    "Field `%s` is going to be restored: `%s` -> `%s`",
+                                    prevFieldName,
+                                    prevValue.getValue(),
+                                    newValue.getValue()
+                                ));
+
+                                result.add(new Pair<>(newField, newValue.cloneWithValue(migratedValue.get())));
+                            } else {
+                                log.warn(String.format(
+                                    "Field `%s` cannot be updated: `%s` -> `%s`",
+                                    prevFieldName,
+                                    prevFieldEntry.getValue(),
+                                    newField
+                                ));
+                            }
                         }
                     }
                 } else {
@@ -106,18 +110,20 @@ public class IniFieldsAnalyzer {
         return result;
     }
 
-    private static boolean canValueBeMigrated(
+    private static Optional<String> tryMigrateValue(
         final IniField prevField,
         final IniField newField,
         final String prevValue,
         final UpdateOperationCallbacks callbacks
     ) {
-        boolean result = false;
+        Optional<String> result = Optional.empty();
         final String prevFieldName = prevField.getName();
         if (!INI_FIELDS_TO_IGNORE.contains(prevFieldName)) {
             if (prevField instanceof ScalarIniField) {
                 if (newField instanceof ScalarIniField) {
-                    result = canScalarValueBeMigrated((ScalarIniField) prevField, (ScalarIniField) newField, callbacks);
+                    if (canScalarValueBeMigrated((ScalarIniField) prevField, (ScalarIniField) newField, callbacks)) {
+                        result = Optional.of(prevValue);
+                    }
                 } else {
                     callbacks.logLine(String.format(
                         "WARNING! Field `%s` cannot be migrated because it is no is no longer scalar in new .ini file",
@@ -126,7 +132,7 @@ public class IniFieldsAnalyzer {
                 }
             } else if (prevField instanceof StringIniField) {
                 if (newField instanceof StringIniField) {
-                    result = true;
+                    result = Optional.of(prevValue);
                 } else {
                     callbacks.logLine(String.format(
                         "WARNING! Field `%s` cannot be migrated because it is no longer string in new .ini file",
@@ -135,7 +141,7 @@ public class IniFieldsAnalyzer {
                 }
             } else if (prevField instanceof EnumIniField) {
                 if (newField instanceof EnumIniField) {
-                    result = canEnumValueBeMigrated(
+                    result = tryMigrateEnumValue(
                         (EnumIniField) prevField,
                         (EnumIniField) newField,
                         prevValue,
@@ -149,7 +155,9 @@ public class IniFieldsAnalyzer {
                 }
             } else if (prevField instanceof ArrayIniField) {
                 if (newField instanceof ArrayIniField) {
-                    result = canArrayValueBeMigrated((ArrayIniField) prevField, (ArrayIniField) newField, callbacks);
+                    if (canArrayValueBeMigrated((ArrayIniField) prevField, (ArrayIniField) newField, callbacks)) {
+                        result = Optional.of(prevValue);
+                    }
                 } else {
                     callbacks.logLine(String.format(
                         "WARNING! Field `%s` cannot be migrated because it is no longer array in new .ini file",
@@ -196,13 +204,13 @@ public class IniFieldsAnalyzer {
         return result;
     }
 
-    private static boolean canEnumValueBeMigrated(
+    private static Optional<String> tryMigrateEnumValue(
         final EnumIniField prevField,
         final EnumIniField newField,
         final String prevValue,
         final UpdateOperationCallbacks callbacks
     ) {
-        boolean result = false;
+        Optional<String> result = Optional.empty();
         if (!Objects.equals(prevField.getType(), newField.getType())) {
             callbacks.logLine(String.format(
                 "WARNING! Field `%s` cannot be migrated because type is updated: `%s` -> `%s`",
@@ -224,7 +232,7 @@ public class IniFieldsAnalyzer {
                 prevValue
             ));
         } else {
-            result = true;
+            result = Optional.of(prevValue);
         }
         return result;
     }
