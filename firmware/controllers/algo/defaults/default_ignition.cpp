@@ -30,6 +30,15 @@ static void setDefaultIatTimingCorrection() {
 	copyArray(config->ignitionIatCorrTable[2], {0, 0, 0, 0, 0, 0, -1, -2});
 }
 
+static void setDefaultCltTimingCorrection() {
+	copyArray(config->ignitionCltCorrTempBins, { -20, 0, 20, 40, 60});
+	setLinearCurve(config->ignitionCltCorrLoadBins, /*from=*/ 0, /*to*/ 140, 1);
+
+	for (size_t i = 0; i < CLT_TIMING_CURVE_SIZE; i++) {
+		copyArray(config->ignitionCltCorrTable[i], {0, 0, 0, 0, 0});
+	}
+}
+
 static void setDefaultTrailingSparkTable() {
 	setLinearCurve(config->trailingSparkLoadBins, 20, 100, 1);
 	setRpmTableBin(config->trailingSparkRpmBins);
@@ -112,8 +121,7 @@ void setDefaultIgnition() {
 	setDefaultTrailingSparkTable();
 
 	// CLT correction
-	setLinearCurve(config->cltTimingBins, CLT_CURVE_RANGE_FROM, 120, 1);
-	setArrayValues(config->cltTimingExtra, 0.0f);
+	setDefaultCltTimingCorrection();
 
 	// IAT correction
 	setDefaultIatTimingCorrection();

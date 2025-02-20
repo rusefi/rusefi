@@ -144,8 +144,6 @@ void EngineState::periodicFastCallback() {
 	}
 	engine->fuelComputer.running.postCrankingFuelCorrection = m_postCrankingFactor;
 
-	engine->ignitionState.updateAdvanceCorrections();
-
 	baroCorrection = getBaroCorrection();
 
 	auto tps = Sensor::get(SensorType::Tps1);
@@ -175,6 +173,7 @@ void EngineState::periodicFastCallback() {
 #endif //EFI_LAUNCH_CONTROL
 
 	float l_ignitionLoad = getIgnitionLoad();
+	engine->ignitionState.updateAdvanceCorrections(l_ignitionLoad);
 	float baseAdvance = engine->ignitionState.getWrappedAdvance(rpm, l_ignitionLoad);
 	float corrections = engineConfiguration->timingMode == TM_DYNAMIC ?
 			// Pull any extra timing for knock retard
