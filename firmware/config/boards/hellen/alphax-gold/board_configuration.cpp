@@ -253,10 +253,8 @@ static void board_init_ext_gpios() {
 
 /**
  * @brief Board-specific initialization code.
- * @todo  Add your board-specific code, if any.
  */
-void boardInitHardware(void)
-{
+void boardInitHardware() {
 	alphaTempPullUp.initPin("a-temp", Gpio::H144_GP_IO3);	// TEMP_PULLUP <- IO3
 	board_init_ext_gpios();
 }

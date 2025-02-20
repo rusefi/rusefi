@@ -369,9 +369,7 @@ static void board_init_ext_gpios()
 
 /**
  * @brief Board-specific initialization code.
- * @todo  Add your board-specific code, if any.
  */
-void boardInit(void)
-{
+void boardInit() {
 	board_init_ext_gpios();
 }
