@@ -115,7 +115,7 @@ public class IniFieldsAnalyzerTest {
     @Test
     public void testWarnings() {
         assertEquals(
-            "WARNING! Field `enableKnockSpectrogram` cannot be migrated because bit position is updated: `30` -> `26`\r\n" +
+            "WARNING! Field `enableKnockSpectrogram` cannot be migrated because value `\"false\"` has disappeared\r\n" +
             "WARNING! Field `unusedOftenChangesDuringFirmwareUpdate` cannot be updated because its row count is updated: `198` -> `58`\r\n",
             testCallbacks.getContent()
         );
