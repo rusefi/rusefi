@@ -210,13 +210,6 @@ public class IniFieldsAnalyzer {
                 prevField.getType(),
                 newField.getType()
             ));
-        } else if (!Objects.equals(prevField.getBitPosition(), newField.getBitPosition())) {
-            callbacks.logLine(String.format(
-                "WARNING! Field `%s` cannot be migrated because bit position is updated: `%s` -> `%s`",
-                prevField.getName(),
-                prevField.getBitPosition(),
-                newField.getBitPosition()
-            ));
         } else if (!Objects.equals(prevField.getBitSize0(), newField.getBitSize0())) {
             callbacks.logLine(String.format(
                 "WARNING! Field `%s` cannot be migrated because bit size 0 is updated: `%s` -> `%s`",
