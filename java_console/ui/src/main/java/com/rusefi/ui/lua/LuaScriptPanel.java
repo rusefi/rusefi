@@ -6,6 +6,7 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.StringIniField;
 import com.rusefi.ConnectionTab;
 import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.ConnectionStatusLogic;
@@ -273,7 +274,7 @@ public class LuaScriptPanel {
         // todo: do we have "luaScript" as code-generated constant anywhere?
         IniFileModel iniFile = bp.getIniFile();
         Objects.requireNonNull(iniFile, "iniFile");
-        return (StringIniField) iniFile.getIniField("luaScript");
+        return (StringIniField) iniFile.getIniField(Fields.LUASCRIPT);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

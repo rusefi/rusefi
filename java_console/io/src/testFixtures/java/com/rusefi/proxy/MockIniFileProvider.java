@@ -20,12 +20,7 @@ public class MockIniFileProvider {
 
         IniFileModel mockModel = mock(IniFileModel.class);
         when(mockModel.getMetaInfo()).thenReturn(mockMeta);
-        when(mockModel.getIniField(any())).then(new Answer<Object>() {
-            @Override
-            public Object answer(InvocationOnMock invocationOnMock) throws Throwable {
-                return new StringIniField("mockStringIniField", 0, 12);
-            }
-        });
+        when(mockModel.getIniField(anyString())).then(invocationOnMock -> new StringIniField("mockStringIniField", 0, 12));
 
         return signature -> mockModel;
     }

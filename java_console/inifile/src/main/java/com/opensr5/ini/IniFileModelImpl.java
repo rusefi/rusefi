@@ -2,6 +2,7 @@ package com.opensr5.ini;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.field.*;
+import com.rusefi.config.Field;
 import com.rusefi.core.FindFileHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,7 +32,7 @@ public class IniFileModelImpl implements IniFileModel {
     private final Map<String, DialogModel> dialogs = new TreeMap<>();
     // this is only used while reading model - TODO extract reader
     private final List<DialogModel.Field> fieldsOfCurrentDialog = new ArrayList<>();
-    public Map<String, IniField> allIniFields = new LinkedHashMap<>();
+    public Map<String, IniField> allIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public final Map<String, DialogModel.Field> fieldsInUiOrder = new LinkedHashMap<>();
 
     public Map</*field name*/String, String> tooltips = new TreeMap<>();
@@ -79,6 +80,11 @@ public class IniFileModelImpl implements IniFileModel {
     @Override
     public Map<String, IniField> getAllIniFields() {
         return allIniFields;
+    }
+
+    @Override
+    public IniField getIniField(Field field) {
+        return getIniField(field.getName());
     }
 
     @Override
