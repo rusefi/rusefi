@@ -2,7 +2,9 @@ package com.rusefi.tune;
 
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelImpl;
+import com.opensr5.ini.field.StringIniField;
 import com.rusefi.*;
+import com.rusefi.config.generated.Fields;
 import com.rusefi.tools.tune.TuneCanTool;
 import com.rusefi.tools.tune.TuneTools;
 import com.rusefi.tune.xml.Msq;
@@ -10,8 +12,7 @@ import com.rusefi.tune.xml.Page;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LoadOlderTuneTest {
     @Test
@@ -144,5 +145,12 @@ public class LoadOlderTuneTest {
 
         assertEquals(0, TuneTools.resolveEnumByName(tsCustomLine, "Single coil"));
         assertEquals(3, TuneTools.resolveEnumByName(tsCustomLine, "Two Distributors"));
+    }
+
+    @Test
+    public void findFieldByName() {
+        IniFileModel ini = IniFileModelImpl.readIniFile(TuneReadWriteTest.TEST_INI);
+        StringIniField field = (StringIniField) ini.getIniField(Fields.ENGINEMAKE);
+        assertNotNull(field);
     }
 }

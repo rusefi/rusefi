@@ -1,6 +1,7 @@
 package com.opensr5.ini;
 
 import com.opensr5.ini.field.IniField;
+import com.rusefi.config.Field;
 
 import java.util.List;
 import java.util.Map;
@@ -15,6 +16,9 @@ public interface IniFileModel {
 
     Map<String, IniField> getAllIniFields();
 
+    IniField getIniField(Field field);
+
+    @Deprecated // always use 'Field' generated parameter with code-generated name?
     IniField getIniField(String key);
 
     Map<String, String> getProtocolMeta();
