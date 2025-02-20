@@ -47,7 +47,7 @@ public class BasicStartupFrame {
 
     public BasicStartupFrame() {
         final JPanel panel = new JPanel();
-        panel.add(basicUpdaterPanel);
+        panel.add(basicUpdaterPanel.getContent());
         if (doNotUseStatusWindow) {
             panel.add(statusPanel);
         }

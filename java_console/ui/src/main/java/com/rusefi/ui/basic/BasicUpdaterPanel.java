@@ -26,11 +26,10 @@ import static com.rusefi.FileLog.isWindows;
 import static com.rusefi.StartupFrame.newReleaseAnnounce;
 import static com.rusefi.core.net.ConnectionAndMeta.getProperties;
 
-// todo: composition better than inheritance!
-public class BasicUpdaterPanel extends JPanel {
+public class BasicUpdaterPanel {
     private static final Logging log = getLogging(BasicUpdaterPanel.class);
 
-    final UpdateOperationCallbacks updateOperationCallbacks;
+    private final JPanel content = new JPanel(new VerticalFlowLayout());
 
     private final boolean isObfuscated = FindFileHelper.isObfuscated();
 
@@ -51,9 +50,6 @@ public class BasicUpdaterPanel extends JPanel {
         final UpdateOperationCallbacks updateOperationCallbacks,
         final boolean doNotUseStatusWindow
     ) {
-        super(new VerticalFlowLayout());
-
-        this.updateOperationCallbacks = updateOperationCallbacks;
         singleAsyncJobExecutor = new SingleAsyncJobExecutor(
             updateOperationCallbacks,
             doNotUseStatusWindow,
@@ -68,37 +64,37 @@ public class BasicUpdaterPanel extends JPanel {
                 () -> 0
             );
             if (newReleaseNotification.isPresent()) {
-                super.add(newReleaseNotification.get());
+                content.add(newReleaseNotification.get());
             }
-            super.add(ToolButtons.createShowDeviceManagerButton());
-            super.add(StartupFrame.binaryModificationControl());
+            content.add(ToolButtons.createShowDeviceManagerButton());
+            content.add(StartupFrame.binaryModificationControl());
 
             updateFirmwareButton.addActionListener(this::onUpdateFirmwareButtonClicked);
             updateFirmwareButton.setEnabled(false);
 
             statusMessage.setForeground(Color.red);
-            super.add(statusMessage);
-            super.add(updateFirmwareButton);
+            content.add(statusMessage);
+            content.add(updateFirmwareButton);
         } else {
-            super.add(new JLabel("Sorry only works on Windows"));
+            content.add(new JLabel("Sorry only works on Windows"));
         }
 
-        super.add(new HorizontalLine());
+        content.add(new HorizontalLine());
         JLabel logoLabel = LogoHelper.createLogoLabel();
         if (logoLabel != null) {
             String panamaUrl = getProperties().getProperty("panama_url");
             if (panamaUrl != null) {
                 logoLabel.setComponentPopupMenu(new LogoLabelPopupMenu(panamaUrl));
             }
-            super.add(logoLabel);
+            content.add(logoLabel);
         }
         if (showUrlLabel)
-            super.add(LogoHelper.createUrlLabel());
+            content.add(LogoHelper.createUrlLabel());
 
         updateCalibrationsButton.addActionListener(this::onUpdateCalibrationsButtonClicked);
         updateCalibrationsButton.setEnabled(false);
         if (ConnectionAndMeta.showUpdateCalibrations()) {
-            super.add(updateCalibrationsButton);
+            content.add(updateCalibrationsButton);
         }
     }
 
@@ -279,5 +275,9 @@ public class BasicUpdaterPanel extends JPanel {
     private void disableButtons() {
         updateFirmwareButton.setEnabled(false);
         updateCalibrationsButton.setEnabled(false);
+    }
+
+    public Component getContent() {
+        return content;
     }
 }
