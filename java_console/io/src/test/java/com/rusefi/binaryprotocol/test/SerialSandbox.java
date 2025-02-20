@@ -3,13 +3,11 @@ package com.rusefi.binaryprotocol.test;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autodetect.SerialAutoChecker;
-import com.rusefi.config.generated.TsOutputs;
-import com.rusefi.core.ISensorHolder;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.HeartBeatListeners;
 import com.rusefi.io.LinkManager;
+import com.rusefi.panama.PanamaHelper;
 
-import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
@@ -44,15 +42,14 @@ public class SerialSandbox {
             throw new IllegalStateException("Not connected in time");
         }
 
-        IniField mcuSerialField = linkManager.getBinaryProtocol().getIniFile().getOutputChannel(TsOutputs.MCUSERIAL.getName());
+        IniField mcuSerialField = PanamaHelper.getIniField(linkManager);
         if (mcuSerialField == null) {
             throw new IllegalStateException("Older unit without MCUSERIAL?");
         }
         Objects.requireNonNull(mcuSerialField);
 
         SensorCentral.getInstance().addListener(() -> {
-            ByteBuffer bb = ISensorHolder.getByteBuffer(SensorCentral.getInstance().getResponse(), "error", mcuSerialField.getOffset());
-            int mcuSerial = bb.getInt();
+            int mcuSerial = PanamaHelper.getMcuSerial(mcuSerialField);
             System.out.println("mcuSerial " + mcuSerial);
         });
 
@@ -66,7 +63,5 @@ public class SerialSandbox {
             }
         });
         latch.await(1, TimeUnit.MINUTES);
-
-
     }
 }
