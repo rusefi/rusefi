@@ -11,6 +11,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
  * <p/>
  * Date: 1/6/13
  * Andrey Belomutskiy, (c) 2013-2020
+ *
  * @see SensorLog
  */
 public class SensorCentral implements ISensorCentral {
@@ -18,7 +19,8 @@ public class SensorCentral implements ISensorCentral {
 
     private final SensorsHolder sensorsHolder = new SensorsHolder();
 
-    private final Map<Sensor, List<SensorListener>> allListeners = new EnumMap<>(Sensor.class);
+    private final Map<Sensor, List<SensorListener>> sensorListeners = new EnumMap<>(Sensor.class);
+    private final List<ResponseListener> listeners = new CopyOnWriteArrayList<>();
     private byte[] response;
 
     public static SensorCentral getInstance() {
@@ -32,6 +34,8 @@ public class SensorCentral implements ISensorCentral {
     public void grabSensorValues(byte[] response) {
         this.response = response;
         ISensorCentral.super.grabSensorValues(response);
+        for (ResponseListener listener : listeners)
+            listener.onSensorUpdate();
     }
 
     public byte[] getResponse() {
@@ -47,8 +51,8 @@ public class SensorCentral implements ISensorCentral {
     public boolean setValue(double value, final Sensor sensor) {
         boolean isUpdated = sensorsHolder.setValue(value, sensor);
         List<SensorListener> listeners;
-        synchronized (allListeners) {
-            listeners = allListeners.get(sensor);
+        synchronized (sensorListeners) {
+            listeners = sensorListeners.get(sensor);
         }
 
         if (listeners == null)
@@ -58,14 +62,18 @@ public class SensorCentral implements ISensorCentral {
         return isUpdated;
     }
 
+    public void addListener(ResponseListener listener) {
+        listeners.add(listener);
+    }
+
     @Override
     public ListenerToken addListener(Sensor sensor, SensorListener listener) {
         List<SensorListener> listeners;
-        synchronized (allListeners) {
-            listeners = allListeners.get(sensor);
+        synchronized (sensorListeners) {
+            listeners = sensorListeners.get(sensor);
             if (listeners == null)
                 listeners = new CopyOnWriteArrayList<>();
-            allListeners.put(sensor, listeners);
+            sensorListeners.put(sensor, listeners);
         }
         listeners.add(listener);
 
@@ -75,8 +83,8 @@ public class SensorCentral implements ISensorCentral {
     @Override
     public void removeListener(Sensor sensor, SensorListener listener) {
         List<SensorListener> listeners;
-        synchronized (allListeners) {
-            listeners = allListeners.get(sensor);
+        synchronized (sensorListeners) {
+            listeners = sensorListeners.get(sensor);
         }
         if (listeners != null)
             listeners.remove(listener);
@@ -89,5 +97,9 @@ public class SensorCentral implements ISensorCentral {
 
     public interface SensorListener {
         void onSensorUpdate(double value);
+    }
+
+    public interface ResponseListener {
+        void onSensorUpdate();
     }
 }

@@ -1,10 +1,15 @@
 package com.rusefi.binaryprotocol.test;
 
+import com.opensr5.ini.field.IniField;
 import com.rusefi.autodetect.PortDetector;
 import com.rusefi.autodetect.SerialAutoChecker;
+import com.rusefi.config.generated.TsOutputs;
+import com.rusefi.core.ISensorHolder;
+import com.rusefi.core.SensorCentral;
 import com.rusefi.io.HeartBeatListeners;
 import com.rusefi.io.LinkManager;
 
+import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -36,6 +41,17 @@ public class SerialSandbox {
         } catch (InterruptedException e) {
             throw new IllegalStateException("Not connected in time");
         }
+
+        IniField mcuSerialField = linkManager.getBinaryProtocol().getIniFile().getIniField(TsOutputs.MCUSERIAL);
+
+        SensorCentral.getInstance().addListener(() -> {
+
+            ByteBuffer bb = ISensorHolder.getByteBuffer(SensorCentral.getInstance().getResponse(), "error", mcuSerialField.getOffset());
+            int mcuSerial = bb.getInt();
+            System.out.println("mcuSerial " + mcuSerial);
+        });
+
+
         CountDownLatch latch = new CountDownLatch(1);
         linkManager.execute(new Runnable() {
             @Override
@@ -46,5 +62,7 @@ public class SerialSandbox {
             }
         });
         latch.await(1, TimeUnit.MINUTES);
+
+
     }
 }

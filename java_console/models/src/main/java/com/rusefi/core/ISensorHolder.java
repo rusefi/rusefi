@@ -1,5 +1,7 @@
 package com.rusefi.core;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.nio.ByteBuffer;
 
 import static com.rusefi.core.FileUtil.littleEndianWrap;
@@ -12,17 +14,26 @@ public interface ISensorHolder {
                 continue;
             }
 
-            int offset = 1 + sensor.getOffset();
-            int size = 4;
-            if (offset + size > response.length) {
-                throw new IllegalArgumentException(sensor + String.format(" but %d+%d in %d", offset, size, response.length));
-            }
-            ByteBuffer bb = littleEndianWrap(response, offset, size);
+            ByteBuffer bb = getByteBufferForSensor(response, sensor);
 
             double rawValue = sensor.getValueForChannel(bb);
             double scaledValue = rawValue * sensor.getScale();
             setValue(scaledValue, sensor);
         }
+    }
+
+    @Deprecated
+    static @NotNull ByteBuffer getByteBufferForSensor(byte[] response, Sensor sensor) {
+        return getByteBuffer(response, sensor.toString(), sensor.getOffset());
+    }
+
+    static @NotNull ByteBuffer getByteBuffer(byte[] response, String message, int fieldOffset) {
+        int offset = fieldOffset + 1; // first byte is response code
+        int size = 4;
+        if (offset + size > response.length) {
+            throw new IllegalArgumentException(message + String.format(" but %d+%d in %d", offset, size, response.length));
+        }
+        return littleEndianWrap(response, offset, size);
     }
 
     double getValue(Sensor sensor);

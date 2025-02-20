@@ -181,6 +181,8 @@ public enum Sensor implements BinaryLogEntry {
     LUAGAUGE1("Lua gauge 1", SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, TsOutputs.LUAGAUGES1, 1, 4, 18000, "value"),
     LUAGAUGE2("Lua gauge 2", SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, TsOutputs.LUAGAUGES2, 1, 4, 18000, "value"),
 
+    MCUSERIAL(SensorCategory.OPERATIONS, TsOutputs.MCUSERIAL),
+
     // Synthetic (console only) channels
     ETB_CONTROL_QUALITY("ETB metric", SensorCategory.SNIFFING, "", 100),
     ;
@@ -219,8 +221,8 @@ public enum Sensor implements BinaryLogEntry {
         this(name, category, type, field, 1.0, minValue, maxValue, "n/a");
     }
 
-    Sensor(String name, SensorCategory category, FieldType type, Field field) {
-        this(name, category, type, field, 0, 100);
+    Sensor(SensorCategory category, Field field) {
+        this(field.getName(), category, field.getType(), field, 0, 100);
     }
 
     /**
@@ -350,6 +352,7 @@ public enum Sensor implements BinaryLogEntry {
         return maxValue;
     }
 
+    @Deprecated // this takes (wrong!) hard-coded offset, TODO migrate to IniModel approach!
     public int getOffset() {
         return offset;
     }
