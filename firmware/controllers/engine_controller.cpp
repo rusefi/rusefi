@@ -606,7 +606,8 @@ bool validateConfigOnStartUpOrBurn() {
 		ensureArrayIsAscendingOrDefault("Ign Trim Rpm", config->ignTrimRpmBins);
    		ensureArrayIsAscendingOrDefault("Ign Trim Load", config->ignTrimLoadBins);
 
-		ensureArrayIsAscending("Ignition CLT corr", config->cltTimingBins);
+		ensureArrayIsAscending("Ignition CLT corr CLT", config->ignitionCltCorrTempBins);
+  		ensureArrayIsAscending("Ignition CLT corr Load", config->ignitionCltCorrLoadBins);
 
 		ensureArrayIsAscending("Ignition IAT corr IAT", config->ignitionIatCorrTempBins);
 		ensureArrayIsAscending("Ignition IAT corr Load", config->ignitionIatCorrLoadBins);
