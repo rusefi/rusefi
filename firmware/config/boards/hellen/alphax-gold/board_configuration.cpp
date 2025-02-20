@@ -7,14 +7,14 @@
 static OutputPin alphaTempPullUp;
 
 static void setInjectorPins() {
-	engineConfiguration->injectionPins[0] = Gpio::H144_LS_1;
-	engineConfiguration->injectionPins[1] = Gpio::H144_LS_2;
-	engineConfiguration->injectionPins[2] = Gpio::H144_LS_3;
-	engineConfiguration->injectionPins[3] = Gpio::H144_LS_4;
-	engineConfiguration->injectionPins[4] = Gpio::H144_LS_5;
-	engineConfiguration->injectionPins[5] = Gpio::H144_LS_6;
-	engineConfiguration->injectionPins[6] = Gpio::H144_LS_7;
-	engineConfiguration->injectionPins[7] = Gpio::H144_LS_8;
+	engineConfiguration->injectionPins[0] = Gpio::TLE9104_0_OUT_0;
+	engineConfiguration->injectionPins[1] = Gpio::TLE9104_0_OUT_1;
+	engineConfiguration->injectionPins[2] = Gpio::TLE9104_0_OUT_2;
+	engineConfiguration->injectionPins[3] = Gpio::TLE9104_0_OUT_3;
+	engineConfiguration->injectionPins[4] = Gpio::TLE9104_1_OUT_3;
+	engineConfiguration->injectionPins[5] = Gpio::TLE9104_1_OUT_2;
+	engineConfiguration->injectionPins[6] = Gpio::TLE9104_1_OUT_1;
+	engineConfiguration->injectionPins[7] = Gpio::TLE9104_1_OUT_0;
 }
 
 static void setIgnitionPins() {
