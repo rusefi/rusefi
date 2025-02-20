@@ -51,21 +51,9 @@ public class ALSTimingRetardTableTest {
     void updateALSTimingRetardTable() {
         final ConfigurationImage testImage = prevImage.clone();
 
-        alsTimingRetardTableField.setValue(testImage,  cloneWithNewValue(prevValue, TEST_ALS_TIMING_RETARD_TABLE));
+        alsTimingRetardTableField.setValue(testImage, prevValue.cloneWithValue(TEST_ALS_TIMING_RETARD_TABLE));
 
         /* We are expecting to read the value that we have just set: */
         assertEquals(TEST_ALS_TIMING_RETARD_TABLE, alsTimingRetardTableField.getValue(testImage));
-    }
-
-    private static Constant cloneWithNewValue(final Constant origin, final String newValue) {
-        final Constant result = new Constant(
-            origin.getName(),
-            origin.getUnits(),
-            newValue,
-            origin.getDigits()
-        );
-        result.setRows(origin.getRows());
-        result.setCols(origin.getCols());
-        return result;
     }
 }
