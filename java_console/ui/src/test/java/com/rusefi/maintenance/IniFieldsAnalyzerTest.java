@@ -114,16 +114,7 @@ public class IniFieldsAnalyzerTest {
 
     @Test
     public void testWarnings() {
-        IniFieldsAnalyzer.findValuesToUpdate(
-            testData.getPrevIni(),
-            testData.getPrevMsq(),
-            testData.getUpdatedIni(),
-            testData.getUpdatedMsq(),
-            testCallbacks
-        );
         assertEquals(
-            "WARNING! Field `enableKnockSpectrogram` cannot be migrated because bit position is updated: `30` -> `26`\r\n" +
-            "WARNING! Field `unusedOftenChangesDuringFirmwareUpdate` cannot be updated because its row count is updated: `198` -> `58`\r\n" +
             "WARNING! Field `enableKnockSpectrogram` cannot be migrated because bit position is updated: `30` -> `26`\r\n" +
             "WARNING! Field `unusedOftenChangesDuringFirmwareUpdate` cannot be updated because its row count is updated: `198` -> `58`\r\n",
             testCallbacks.getContent()
