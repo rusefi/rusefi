@@ -29,7 +29,7 @@ public class PluginBodySandbox {
         String iniFile = TsTuneReader.getProjectModeFileName(PROJECT_NAME);
         IniFileModelImpl model = IniFileModelImpl.readIniFile(iniFile);
         Objects.requireNonNull(model, "model");
-        java.util.List<String> fieldNamesList = new ArrayList<>(model.allIniFields.keySet());
+        java.util.List<String> fieldNamesList = new ArrayList<>(model.getAllIniFields().keySet());
         String[] parameterNames = fieldNamesList.toArray(new String[0]);
 
         ControllerParameterServer controllerParameterServer = mock(ControllerParameterServer.class, NEGATIVE_ANSWER);

@@ -179,8 +179,8 @@ public class TuneUploadTab {
 
     private void subscribeToUpdates(String configurationName, ControllerAccess controllerAccess) {
         IniFileModelImpl model = IniFileModelImpl.readIniFile(TsTuneReader.getProjectModeFileName(configurationName));
-        Map<String, IniField> allIniFields = model.allIniFields;
-        if (model.allIniFields == null)
+        Map<String, IniField> allIniFields = model.getAllIniFields();
+        if (model.getAllIniFields() == null)
             return;
         for (Map.Entry<String, IniField> field : allIniFields.entrySet()) {
             boolean isOnlineTuneField = field.getValue().getOffset() >= VariableRegistryValues.engine_configuration_s_size;

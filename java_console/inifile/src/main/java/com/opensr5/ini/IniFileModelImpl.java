@@ -32,12 +32,14 @@ public class IniFileModelImpl implements IniFileModel {
     private final Map<String, DialogModel> dialogs = new TreeMap<>();
     // this is only used while reading model - TODO extract reader
     private final List<DialogModel.Field> fieldsOfCurrentDialog = new ArrayList<>();
-    public Map<String, IniField> allIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private Map<String, IniField> allIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private Map<String, IniField> allOutputChannels = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public final Map<String, DialogModel.Field> fieldsInUiOrder = new LinkedHashMap<>();
 
     public Map</*field name*/String, String> tooltips = new TreeMap<>();
     public Map<String, String> protocolMeta = new TreeMap<>();
     private boolean isConstantsSection;
+    private boolean isOutputChannelsSection;
     private String currentYBins;
     private String currentXBins;
     private final Map<String, String> xBinsByZBins = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
@@ -90,6 +92,12 @@ public class IniFileModelImpl implements IniFileModel {
     @Override
     public IniField getIniField(String key) {
         IniField result = allIniFields.get(key);
+        return Objects.requireNonNull(result, () -> key + " field not found");
+    }
+
+    @Override
+    public IniField getOutputChannel(String key) {
+        IniField result = allOutputChannels.get(key);
         return Objects.requireNonNull(result, () -> key + " field not found");
     }
 
@@ -224,18 +232,22 @@ public class IniFileModelImpl implements IniFileModel {
             if (first.startsWith("[") && first.endsWith("]")) {
                 log.info("Section " + first);
                 isConstantsSection = first.equals("[Constants]");
+                isOutputChannelsSection = first.equals("[OutputChannels]");
             }
 
             if (isConstantsSection) {
                 if (isInsidePageDefinition) {
                     if (list.size() > 1)
-                        handleFieldDefinition(list, line);
+                        handleConstantFieldDefinition(list, line);
                     return;
                 } else {
                     if (list.size() > 1) {
                         protocolMeta.put(list.get(0), list.get(1));
                     }
                 }
+            } else if (isOutputChannelsSection) {
+                handleOutputChannelDefinition(list);
+                return;
             }
 
 
@@ -264,6 +276,21 @@ public class IniFileModelImpl implements IniFileModel {
             }
         } catch (RuntimeException e) {
             throw new IllegalStateException("Failed to handle [" + rawText + "]: " + e, e);
+        }
+    }
+
+    private void handleOutputChannelDefinition(LinkedList<String> list) {
+        if (list.size() < 2)
+            return;
+        String name = list.get(0);
+        String channelType = list.get(1);
+        switch (channelType) {
+            case FIELD_TYPE_SCALAR: {
+                String scalarType = list.get(2);
+                int offset = Integer.parseInt(list.get(3));
+                // todo: reuse ScalarIniField#parse but would need changes?
+                allOutputChannels.put(name, new ScalarIniField(name, offset, scalarType, null, 1, "0"));
+            }
         }
     }
 
@@ -314,7 +341,7 @@ public class IniFileModelImpl implements IniFileModel {
         String tableName = list.removeFirst();
     }
 
-    private void handleFieldDefinition(LinkedList<String> list, RawIniFile.Line line) {
+    private void handleConstantFieldDefinition(LinkedList<String> list, RawIniFile.Line line) {
         switch (list.get(1)) {
             case FIELD_TYPE_SCALAR:
                 registerField(ScalarIniField.parse(list));

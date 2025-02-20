@@ -11,11 +11,13 @@ import com.rusefi.io.LinkManager;
 
 import java.nio.ByteBuffer;
 import java.util.Date;
+import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 /**
  * basic protocol client
+ *
  * @see BinaryProtocolServerSandbox
  */
 public class SerialSandbox {
@@ -33,8 +35,8 @@ public class SerialSandbox {
         });
 
         LinkManager linkManager = new LinkManager()
-                .setNeedPullText(textPull) // todo: open issue #2
-                .setNeedPullLiveData(true);
+            .setNeedPullText(textPull) // todo: open issue #2
+            .setNeedPullLiveData(true);
 
         try {
             linkManager.connect(port).await(60, TimeUnit.SECONDS);
@@ -42,15 +44,17 @@ public class SerialSandbox {
             throw new IllegalStateException("Not connected in time");
         }
 
-        IniField mcuSerialField = linkManager.getBinaryProtocol().getIniFile().getIniField(TsOutputs.MCUSERIAL);
+        IniField mcuSerialField = linkManager.getBinaryProtocol().getIniFile().getOutputChannel(TsOutputs.MCUSERIAL.getName());
+        if (mcuSerialField == null) {
+            throw new IllegalStateException("Older unit without MCUSERIAL?");
+        }
+        Objects.requireNonNull(mcuSerialField);
 
         SensorCentral.getInstance().addListener(() -> {
-
             ByteBuffer bb = ISensorHolder.getByteBuffer(SensorCentral.getInstance().getResponse(), "error", mcuSerialField.getOffset());
             int mcuSerial = bb.getInt();
             System.out.println("mcuSerial " + mcuSerial);
         });
-
 
         CountDownLatch latch = new CountDownLatch(1);
         linkManager.execute(new Runnable() {
