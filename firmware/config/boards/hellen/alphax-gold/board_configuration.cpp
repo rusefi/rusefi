@@ -73,6 +73,9 @@ void setBoardDefaultConfiguration() {
 	setDefaultSensorInputs();
 	setDefaultETBPins();
 
+	engineConfiguration->cylindersCount = 8;
+	engineConfiguration->firingOrder = FO_1_8_7_2_6_5_4_3;
+
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 	engineConfiguration->isSdCardEnabled = true;
 
