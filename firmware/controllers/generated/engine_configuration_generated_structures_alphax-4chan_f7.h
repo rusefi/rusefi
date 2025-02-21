@@ -18,7 +18,9 @@ struct stft_cell_cfg_s {
 	 */
 	int8_t maxRemove;
 	/**
+	 * Commonly referred as Integral gain.
 	 * Time constant for correction while in this cell: this sets responsiveness of the closed loop correction. A value of 5.0 means it will try to make most of the correction within 5 seconds, and a value of 1.0 will try to correct within 1 second.
+	 * Lower values makes the correction more sensitive, higher values slow the correction down.
 	 * units: sec
 	 * offset 2
 	 */
@@ -42,12 +44,14 @@ struct stft_s {
 	uint8_t alignmentFill_at_1[1] = {};
 	/**
 	 * Below this engine load, the overrun region is active
+	 * When tuning by MAP the units are kPa, e.g. 30 would mean 30kPa. When tuning TPS, 30 would be 30%
 	 * units: load
 	 * offset 2
 	 */
 	uint16_t maxOverrunLoad;
 	/**
 	 * Above this engine load, the power region is active
+	 * When tuning by MAP the units are kPa
 	 * units: load
 	 * offset 4
 	 */

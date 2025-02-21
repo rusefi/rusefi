@@ -719,10 +719,10 @@ null
 Below this RPM, the idle region is active, idle+300 would be a good value
 
 ### stft.maxOverrunLoad
-Below this engine load, the overrun region is active
+Below this engine load, the overrun region is active\nWhen tuning by MAP the units are kPa, e.g. 30 would mean 30kPa. When tuning TPS, 30 would be 30%
 
 ### stft.minPowerLoad
-Above this engine load, the power region is active
+Above this engine load, the power region is active\nWhen tuning by MAP the units are kPa
 
 ### stft.deadband
 When close to correct AFR, pause correction. This can improve stability by not changing the adjustment if the error is extremely small, but is not required.
