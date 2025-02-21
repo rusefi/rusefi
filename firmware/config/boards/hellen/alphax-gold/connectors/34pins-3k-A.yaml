@@ -153,16 +153,18 @@ pins:
     color: blue
 
   - pin: 23A
-    function: VR_9924 negative input
+    function: Sensor +5v Power Feed
+    type: 5v
+    color: orange
 
   - pin: 24A
+    function: VR_9924 negative input
+
+  - pin: 25A
     meta: H144_IN_VSS
     class: event_inputs
     ts_name: ___ VR_9924+
     function: VR_9924 positive input
-
-  - pin: 25A
-    function:
 
   - pin: 26A
     function: GND
