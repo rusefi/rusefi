@@ -49,7 +49,7 @@ public class CalibrationsHelper {
             callbacks,
             PREVIOUS_CALIBRATIONS_FILE_NAME
         );
-        if (prevCalibrations.isEmpty()) {
+        if (!prevCalibrations.isPresent()) {
             callbacks.logLine("Failed to back up current calibrations...");
             return false;
         }
@@ -63,7 +63,7 @@ public class CalibrationsHelper {
             callbacks,
             UPDATED_CALIBRATIONS_FILE_NAME
         );
-        if (updatedCalibrations.isEmpty()) {
+        if (!updatedCalibrations.isPresent()) {
             callbacks.logLine("Failed to back up updated calibrations...");
             return false;
         }
