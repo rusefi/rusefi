@@ -267,8 +267,8 @@ end_struct
 
 struct stft_s
 	uint8_t autoscale maxIdleRegionRpm;Below this RPM, the idle region is active, idle+300 would be a good value;"RPM", 50, 0, 0, 12000, 0
-	uint16_t maxOverrunLoad;Below this engine load, the overrun region is active;"load", 1, 0, 0, 250, 0
-	uint16_t minPowerLoad;Above this engine load, the power region is active;"load", 1, 0, 0, 250, 0
+	uint16_t maxOverrunLoad;Below this engine load, the overrun region is active\nWhen tuning by MAP the units are kPa, e.g. 30 would mean 30kPa. When tuning TPS, 30 would be 30%;"load", 1, 0, 0, 250, 0
+	uint16_t minPowerLoad;Above this engine load, the power region is active\nWhen tuning by MAP the units are kPa;"load", 1, 0, 0, 250, 0
 	uint8_t autoscale deadband;When close to correct AFR, pause correction. This can improve stability by not changing the adjustment if the error is extremely small, but is not required.;"%", 0.1, 0, 0, 3, 1
 
 	int8_t minClt;Below this temperature, correction is disabled.;"C", 1, 0, -20, 100, 0
