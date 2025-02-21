@@ -111,12 +111,24 @@ pins:
     color: green
 
   - pin: 16A
-    function: VR Discrete Negative
+    id: [H144_IN_MAP1_DIGITAL, H144_IN_MAP1_DIGITAL, H144_IN_MAP1]
+    class: [event_inputs, switch_inputs, analog_inputs]
+    type: hall
+    ts_name: ___ - Digital/analog input 2
+    function: Digital/event/analog input (cannot be used simultaneously with VR1)
 
   - pin: 17A
+    id: [H144_IN_SENS4, H144_IN_SENS4]
+    class: [event_inputs, switch_inputs]
+    type: hall
+    ts_name: ___ - Digital input 1
+    function: Digital/event input (cannot be used simultaneously with VR1)
+
+  - pin: 17A16A
     meta: H144_IN_CRANK
-    function: VR Discrete Positive
-    ts_name: ___ Crank Sensor VR
+    function: VR1 (cannot be used simultaneously with Hall1 and Hall2)
+    type: vr
+    ts_name: 17A/17B VR Input 1 (Discrete)
 
   - pin: 18A
     meta: H144_IN_TPS
@@ -165,13 +177,24 @@ pins:
     color: orange
 
   - pin: 24A
-    function: VR_9924 negative input
+    id: [H144_IN_D_4, H144_IN_D_4]
+    class: [event_inputs, switch_inputs]
+    type: hall
+    ts_name: ___ - Digital Input 6
+    function: Digital Input 6 (cannot be used simultaneously with VR3)
 
   - pin: 25A
+    id: [H144_IN_AUX3_DIGITAL, H144_IN_AUX3_DIGITAL, H144_IN_AUX3]
+    class: [event_inputs, switch_inputs, analog_inputs]
+    type: hall
+    ts_name: ___ - Digital/analog Input 5
+    function: Digital/analog Input 5 (cannot be used simultaneously with VR3)
+
+  - pin: 24A25A
     meta: H144_IN_VSS
-    class: event_inputs
-    ts_name: ___ VR_9924+
-    function: VR_9924 positive input
+    function: VR3 (cannot be used simultaneously with Hall5 and Hall6)
+    type: vr
+    ts_name: 24A/25A VR Input 3 (MAX9924)
 
   - pin: 26A
     function: GND
