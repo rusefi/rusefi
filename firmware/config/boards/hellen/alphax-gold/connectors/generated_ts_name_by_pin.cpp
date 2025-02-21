@@ -20,7 +20,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::E4: return "11A Coil 3";
 		case Gpio::E5: return "12A Coil 2";
 		case Gpio::E6: return "10B Coil 8";
-		case Gpio::F11: return "24A VR_9924+";
+		case Gpio::F11: return "25A VR_9924+";
 		case Gpio::F3: return "15A - Digital In 1";
 		case Gpio::TLE9104_0_OUT_0: return "4A - Injector 1";
 		case Gpio::TLE9104_0_OUT_1: return "3A - Injector 2";
