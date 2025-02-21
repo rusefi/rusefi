@@ -1201,7 +1201,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	bit tcu_rangeSensorPulldown
 	bit devBit01
 	bit devBit0
-	bit devBit1
+	bit debugOdometer
 	bit devBit2
 	bit devBit3
 	bit devBit4
