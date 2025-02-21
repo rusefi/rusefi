@@ -204,6 +204,8 @@ struct_no_prefix engine_configuration_s
 #define IGN_TRIM_1_NAME "Ignition trim cyl 1"
 #define IGN_TRIM_2_NAME "Ignition trim cyl 2"
 #define ts_show_knock_cylinder_mapping true
+#define ts_show_injection_hardware true
+#define ts_show_ignitionOutputs true
 
 #define VEHICLE_INFO_SIZE 32
 
