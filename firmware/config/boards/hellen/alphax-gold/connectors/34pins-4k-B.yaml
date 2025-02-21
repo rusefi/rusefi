@@ -91,22 +91,22 @@ pins:
   - pin: 14B
     meta: H144_IN_D_1
     class: event_inputs
-    function: HALL1 Sensor
-    ts_name: ___ HALL1
+    function: Hall Input 1
+    ts_name: ___ Hall Input 1
     type: hall
 
   - pin: 15B
     meta: H144_IN_D_2
     class: event_inputs
-    function: HALL2 Sensor
-    ts_name: ___ HALL2
+    function: Hall Input 2
+    ts_name: ___ Hall Input 2
     type: hall
 
   - pin: 16B
-    meta: H144_IN_D_AUX3
-    class: switch_inputs
-    ts_name: ___ AUX DIN2
-    function: AUX DIN input 2
+    id: [H144_IN_AUX4_DIGITAL, H144_IN_AUX4_DIGITAL, H144_IN_AUX4]
+    class: [event_inputs, switch_inputs, analog_inputs]
+    ts_name: ___ AUX 2
+    function: AUX input 2
     type: av
     function:
 
@@ -142,25 +142,33 @@ pins:
 
   - pin: 21B
     class: analog_inputs
-    ts_name: ___ KNOCK 1
-    function: KNOCK 1 sensor
+    ts_name: ___ Knock 1
+    function: Knock sensor 1
 
   - pin: 22B
     class: analog_inputs
-    ts_name: ___ KNOCK 2
-    function: KNOCK 2 sensor
+    ts_name: ___ Knock 2
+    function: Knock sensor 2
 
   - pin: 23B
-    ts_name: ___ VR_DISCRETE-
-    function: VR_DISCRETE negative input
-    type: vr
+    id: [H144_IN_AUX2_DIGITAL, H144_IN_AUX2_DIGITAL, H144_IN_AUX2]
+    class: [event_inputs, switch_inputs, analog_inputs]
+    type: hall
+    ts_name: ___ - Digital/analog Input 4
+    function: Digital/analog Input 4 (cannot be used simultaneously with VR2)
 
   - pin: 24B
+    id: [H144_IN_MAP3_DIGITAL, H144_IN_MAP3_DIGITAL, H144_IN_MAP3]
+    class: [event_inputs, switch_inputs, analog_inputs]
+    type: hall
+    ts_name: ___ - Digital/analog Input 3
+    function: Digital/analog Input 3 (cannot be used simultaneously with VR2)
+
+  - pin: 23B24B
     meta: H144_IN_CAM
-    class: event_inputs
-    ts_name: ___ VR_DISCRETE+
-    function: VR_DISCRETE positive input
+    function: VR2 (cannot be used simultaneously with Hall3 and Hall4)
     type: vr
+    ts_name: 23B/24B VR Input 2 (Discrete)
 
   - pin: 25B
     class: outputs
