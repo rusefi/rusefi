@@ -174,7 +174,7 @@ pins:
     ts_name: ___ DC-
     function: DC- output
     type: etb
-
+    color: white
 
   - pin: 27B
     class: event_inputs

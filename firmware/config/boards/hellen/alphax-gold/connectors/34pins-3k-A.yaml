@@ -1,6 +1,13 @@
 meta: config/boards/hellen_meta.h
 
 pins:
+  - pin: on_board
+    meta: H144_IN_MAP2
+    class: analog_inputs
+    function: On-board MAP Sensor
+    ts_name: On-board MAP Sensor
+    color: orange
+
   - pin: 1A
     function: Injector 4 Output
     class: outputs

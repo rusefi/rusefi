@@ -29,13 +29,14 @@ static void setIgnitionPins() {
 }
 
 static void setDefaultSensorInputs() {
-	engineConfiguration->tps1_1AdcChannel = MM100_IN_TPS_ANALOG;
+	setTPS1Inputs(H144_IN_TPS, H144_IN_TPS2);
+	setPPSInputs(H144_IN_PPS, H144_IN_PPS2);
 
     engineConfiguration->boardUseTempPullUp = true;
 
 
-//	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP1; // external MAP
-	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2; // On-board MAP
+	engineConfiguration->map.sensor.hwChannel = H144_IN_O2S2; // external MAP
+//	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2; // On-board MAP
 	engineConfiguration->map.sensor.type = MT_MPXH6400;
 
 	engineConfiguration->clt.adcChannel = H144_IN_CLT;
