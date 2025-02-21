@@ -2919,7 +2919,8 @@ struct engine_configuration_s {
 	offset 1492 bit 31 */
 	bool unusedBit_517_31 : 1 {};
 	/**
-	 * This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.\Should be 100 once tune is better
+	 * This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.
+	 * Should be 100 once tune is better
 	 * units: cycles
 	 * offset 1496
 	 */
