@@ -54,8 +54,8 @@
 #define adc_channel_e_EFI_ADC_ERROR 50
 #define adc_channel_e_EFI_ADC_NONE 0
 #define adc_channel_e_EFI_ADC_TOTAL_CHANNELS 49
-#define adc_channel_e_enum 0="NONE",5="18A - TPS",13="19A - CLT",4="19B PPS1",14="20A - IAT",20="20B PPS2",2="21A MAP",21="22A TPS2",9="28A AUX1",6="9B Voltage From Key",12="On-board MAP Sensor"
-#define adc_channel_e_fullenum "NONE","INVALID","21A MAP","INVALID","19B PPS1","18A - TPS","9B Voltage From Key","INVALID","INVALID","28A AUX1","INVALID","INVALID","On-board MAP Sensor","19A - CLT","20A - IAT","INVALID","INVALID","INVALID","INVALID","INVALID","20B PPS2","22A TPS2"
+#define adc_channel_e_enum 0="NONE",11="16A - Digital/analog input 2",16="16B AUX 2",5="18A - TPS",13="19A - CLT",4="19B PPS1",14="20A - IAT",20="20B PPS2",2="21A MAP",21="22A TPS2",15="23B - Digital/analog Input 4",3="24B - Digital/analog Input 3",8="25A - Digital/analog Input 5",9="28A AUX1",6="9B Voltage From Key",12="On-board MAP Sensor"
+#define adc_channel_e_fullenum "NONE","INVALID","21A MAP","24B - Digital/analog Input 3","19B PPS1","18A - TPS","9B Voltage From Key","INVALID","25A - Digital/analog Input 5","28A AUX1","INVALID","16A - Digital/analog input 2","On-board MAP Sensor","19A - CLT","20A - IAT","23B - Digital/analog Input 4","16B AUX 2","INVALID","INVALID","INVALID","20B PPS2","22A TPS2"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define air_pressure_sensor_config_s_size 12
@@ -137,8 +137,6 @@
 #define BOARD_DIAG_PANEL2_FROM_FILE 
 #define BOARD_GAUGES_FROM_FILE 
 #define BOARD_INDICATORS_FROM_FILE 
-#define BOARD_MENU_FROM_FILE 
-#define BOARD_OPTIONS_FROM_FILE 
 #define BOARD_PANELS_FROM_FILE 
 #define BOARD_PC_VARIABLES_FROM_FILE 
 #define BOARD_POPULAR_VEHICLES_FILE 
@@ -152,8 +150,8 @@
 #define boostType_e_auto_enum 0="OPEN_LOOP",1="CLOSED_LOOP"
 #define boostType_e_CLOSED_LOOP 1
 #define boostType_e_OPEN_LOOP 0
-#define brain_input_pin_e_enum 0="NONE",78="14B HALL1",79="15B HALL2",8="24B VR_DISCRETE+",93="25A VR_9924+",80="27B Flex Fuel"
-#define brain_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","24B VR_DISCRETE+","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","14B HALL1","15B HALL2","27B Flex Fuel","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","25A VR_9924+"
+#define brain_input_pin_e_enum 0="NONE",78="14B Hall Input 1",79="15B Hall Input 2",34="16A - Digital/analog input 2",39="16B AUX 2",88="17A - Digital input 1",86="21B Knock 1 / Digital input 7",87="22B Knock 2 / Digital input 8",75="23B - Digital/analog Input 4",81="24A - Digital Input 6",4="24B - Digital/analog Input 3",9="25A - Digital/analog Input 5",80="27B Flex Fuel"
+#define brain_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","24B - Digital/analog Input 3","INVALID","INVALID","INVALID","INVALID","25A - Digital/analog Input 5","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","16A - Digital/analog input 2","INVALID","INVALID","INVALID","INVALID","16B AUX 2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","23B - Digital/analog Input 4","INVALID","INVALID","14B Hall Input 1","15B Hall Input 2","27B Flex Fuel","24A - Digital Input 6","INVALID","INVALID","INVALID","INVALID","21B Knock 1 / Digital input 7","22B Knock 2 / Digital input 8","17A - Digital input 1"
 #define brain_pin_diag_e_PIN_DRIVER_OFF 0x20
 #define brain_pin_diag_e_PIN_DRIVER_OVERTEMP 0x10
 #define brain_pin_diag_e_PIN_OK 0
@@ -1379,7 +1377,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 912193315
+#define SIGNATURE_HASH 1739295438
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1402,8 +1400,8 @@
 #define stft_cell_cfg_s_size 4
 #define STFT_CELL_COUNT 4
 #define stft_s_size 28
-#define switch_input_pin_e_enum 0="NONE",85="15A - Digital In 1",39="16B AUX DIN2"
-#define switch_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","16B AUX DIN2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","15A - Digital In 1"
+#define switch_input_pin_e_enum 0="NONE",85="15A - Digital In 1",34="16A - Digital/analog input 2",39="16B AUX 2",88="17A - Digital input 1",86="21B Knock 1 / Digital input 7",87="22B Knock 2 / Digital input 8",75="23B - Digital/analog Input 4",81="24A - Digital Input 6",4="24B - Digital/analog Input 3",9="25A - Digital/analog Input 5"
+#define switch_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","24B - Digital/analog Input 3","INVALID","INVALID","INVALID","INVALID","25A - Digital/analog Input 5","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","16A - Digital/analog input 2","INVALID","INVALID","INVALID","INVALID","16B AUX 2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","23B - Digital/analog Input 4","INVALID","INVALID","INVALID","INVALID","INVALID","24A - Digital Input 6","INVALID","INVALID","INVALID","15A - Digital In 1","21B Knock 1 / Digital input 7","22B Knock 2 / Digital input 8","17A - Digital input 1"
 #define TABLE_2_LOAD_SIZE 8
 #define TABLE_2_RPM_SIZE 8
 #define TABLE_3_LOAD_SIZE 8
@@ -1852,7 +1850,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.02.21.alphax-gold.912193315"
+#define TS_SIGNATURE "rusEFI master.2025.02.21.alphax-gold.1739295438"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

@@ -4637,100 +4637,100 @@ struct engine_configuration_s {
 	linear_sensor_s auxLinear4;
 	/**
 	offset 3880 bit 0 */
-	bool boardUseTempPullUp : 1 {};
+	bool boardEnTempPullUp : 1 {};
 	/**
 	offset 3880 bit 1 */
-	bool unusedBit_880_1 : 1 {};
+	bool boardEnKnock1PullUp : 1 {};
 	/**
 	offset 3880 bit 2 */
-	bool unusedBit_880_2 : 1 {};
+	bool boardEnKnock2PullUp : 1 {};
 	/**
 	offset 3880 bit 3 */
-	bool unusedBit_880_3 : 1 {};
+	bool boardSelTachPullUp : 1 {};
 	/**
 	offset 3880 bit 4 */
-	bool unusedBit_880_4 : 1 {};
+	bool boardEnHall1PullUp : 1 {};
 	/**
 	offset 3880 bit 5 */
-	bool unusedBit_880_5 : 1 {};
+	bool boardEnHall2PullUp : 1 {};
 	/**
 	offset 3880 bit 6 */
-	bool unusedBit_880_6 : 1 {};
+	bool boardEnHall3PullUp : 1 {};
 	/**
 	offset 3880 bit 7 */
-	bool unusedBit_880_7 : 1 {};
+	bool boardEnHall4PullUp : 1 {};
 	/**
 	offset 3880 bit 8 */
-	bool unusedBit_880_8 : 1 {};
+	bool boardEnHall5PullUp : 1 {};
 	/**
 	offset 3880 bit 9 */
-	bool unusedBit_880_9 : 1 {};
+	bool boardEnHall6PullUp : 1 {};
 	/**
 	offset 3880 bit 10 */
-	bool unusedBit_880_10 : 1 {};
+	bool unusedBit_889_10 : 1 {};
 	/**
 	offset 3880 bit 11 */
-	bool unusedBit_880_11 : 1 {};
+	bool unusedBit_889_11 : 1 {};
 	/**
 	offset 3880 bit 12 */
-	bool unusedBit_880_12 : 1 {};
+	bool unusedBit_889_12 : 1 {};
 	/**
 	offset 3880 bit 13 */
-	bool unusedBit_880_13 : 1 {};
+	bool unusedBit_889_13 : 1 {};
 	/**
 	offset 3880 bit 14 */
-	bool unusedBit_880_14 : 1 {};
+	bool unusedBit_889_14 : 1 {};
 	/**
 	offset 3880 bit 15 */
-	bool unusedBit_880_15 : 1 {};
+	bool unusedBit_889_15 : 1 {};
 	/**
 	offset 3880 bit 16 */
-	bool unusedBit_880_16 : 1 {};
+	bool unusedBit_889_16 : 1 {};
 	/**
 	offset 3880 bit 17 */
-	bool unusedBit_880_17 : 1 {};
+	bool unusedBit_889_17 : 1 {};
 	/**
 	offset 3880 bit 18 */
-	bool unusedBit_880_18 : 1 {};
+	bool unusedBit_889_18 : 1 {};
 	/**
 	offset 3880 bit 19 */
-	bool unusedBit_880_19 : 1 {};
+	bool unusedBit_889_19 : 1 {};
 	/**
 	offset 3880 bit 20 */
-	bool unusedBit_880_20 : 1 {};
+	bool unusedBit_889_20 : 1 {};
 	/**
 	offset 3880 bit 21 */
-	bool unusedBit_880_21 : 1 {};
+	bool unusedBit_889_21 : 1 {};
 	/**
 	offset 3880 bit 22 */
-	bool unusedBit_880_22 : 1 {};
+	bool unusedBit_889_22 : 1 {};
 	/**
 	offset 3880 bit 23 */
-	bool unusedBit_880_23 : 1 {};
+	bool unusedBit_889_23 : 1 {};
 	/**
 	offset 3880 bit 24 */
-	bool unusedBit_880_24 : 1 {};
+	bool unusedBit_889_24 : 1 {};
 	/**
 	offset 3880 bit 25 */
-	bool unusedBit_880_25 : 1 {};
+	bool unusedBit_889_25 : 1 {};
 	/**
 	offset 3880 bit 26 */
-	bool unusedBit_880_26 : 1 {};
+	bool unusedBit_889_26 : 1 {};
 	/**
 	offset 3880 bit 27 */
-	bool unusedBit_880_27 : 1 {};
+	bool unusedBit_889_27 : 1 {};
 	/**
 	offset 3880 bit 28 */
-	bool unusedBit_880_28 : 1 {};
+	bool unusedBit_889_28 : 1 {};
 	/**
 	offset 3880 bit 29 */
-	bool unusedBit_880_29 : 1 {};
+	bool unusedBit_889_29 : 1 {};
 	/**
 	offset 3880 bit 30 */
-	bool unusedBit_880_30 : 1 {};
+	bool unusedBit_889_30 : 1 {};
 	/**
 	offset 3880 bit 31 */
-	bool unusedBit_880_31 : 1 {};
+	bool unusedBit_889_31 : 1 {};
 	/**
 	 * Below TPS value all knock suppression will be disabled.
 	 * units: %
