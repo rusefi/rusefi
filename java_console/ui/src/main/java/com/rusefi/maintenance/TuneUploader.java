@@ -13,6 +13,7 @@ public enum TuneUploader {
         final String panamaUrl,
         final UpdateOperationCallbacks callbacks
     ) {
+        boolean result = false;
         // todo!
         // IniField mcuSerialField = PanamaHelper.getIniField(linkManager);
 //        if (mcuSerialField == null) {
@@ -22,11 +23,15 @@ public enum TuneUploader {
 // todo: grab current calibrations and save fresh MSQ
         int mcuSerial = 1231234; // todo
 
-        PanamaClient.uploadFile(panamaUrl,
+        if (PanamaClient.uploadFile(panamaUrl,
             /* todo MSQ file */ null,
             InstanceNameEditor.loadInstanceName(),
             mcuSerial
-        );
-        return true;
+        )) {
+            result = true;
+        } else {
+            callbacks.logLine(String.format("Failed to upload file to %s", panamaUrl));
+        }
+        return result;
     }
 }

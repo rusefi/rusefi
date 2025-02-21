@@ -19,7 +19,7 @@ public class PanamaClient {
 
     private final static Logging log = Logging.getLogging(PanamaClient.class);
 
-    public static void uploadFile(String url, File file, String userName, int mcuSerial) {
+    public static boolean uploadFile(String url, File file, String userName, int mcuSerial) {
         try {
             HttpPost httppost = new HttpPost(url);
 
@@ -46,8 +46,10 @@ public class PanamaClient {
                 }
                 EntityUtils.consume(resEntity);
             }
+            return true;
         } catch (Throwable e) {
             log.error("Error uploading", e);
+            return false;
         }
     }
 }
