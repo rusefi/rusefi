@@ -33,12 +33,16 @@ public class BasicUpdaterPanel {
 
     private final boolean isObfuscated = FindFileHelper.isObfuscated();
 
+    private final String panamaUrl = getProperties().getProperty("panama_url");
+
     private final JLabel statusMessage = new JLabel();
     private final JButton updateFirmwareButton = ProgramSelector.createUpdateFirmwareButton();
     private final JButton updateCalibrationsButton = new JButton(
         "Update Calibrations",
         AutoupdateUtil.loadIcon("writeconfig48.png")
     );
+
+    private LogoLabelPopupMenu logoLabelPopupMenu = null;
 
     private final SingleAsyncJobExecutor singleAsyncJobExecutor;
     private final UpdateCalibrations updateCalibrations;
@@ -82,9 +86,9 @@ public class BasicUpdaterPanel {
         content.add(new HorizontalLine());
         JLabel logoLabel = LogoHelper.createLogoLabel();
         if (logoLabel != null) {
-            String panamaUrl = getProperties().getProperty("panama_url");
             if (panamaUrl != null) {
-                logoLabel.setComponentPopupMenu(new LogoLabelPopupMenu(panamaUrl));
+                logoLabelPopupMenu = new LogoLabelPopupMenu(panamaUrl);
+                logoLabel.setComponentPopupMenu(logoLabelPopupMenu);
             }
             content.add(logoLabel);
         }
