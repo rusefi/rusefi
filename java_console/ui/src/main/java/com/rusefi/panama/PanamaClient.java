@@ -15,6 +15,8 @@ import org.apache.http.util.EntityUtils;
 import java.io.File;
 
 public class PanamaClient {
+    public static final String FILES_API = "/api/files";
+
     private final static Logging log = Logging.getLogging(PanamaClient.class);
 
     public static void uploadFile(String url, File file, String userName, int mcuSerial) {

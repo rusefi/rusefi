@@ -35,9 +35,11 @@ public class LogoLabelPopupMenu extends JPopupMenu {
     }
 
     private static void doUploadTune(String panamaUrl) {
+        // todo: grab current calibrations and save fresh MSQ
         int mcuSerial = 1231234; // todo
+
         PanamaClient.uploadFile(panamaUrl,
-            /* todo */ null,
+            /* todo MSQ file */ null,
             InstanceNameEditor.loadInstanceName(),
             mcuSerial
         );
