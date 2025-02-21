@@ -842,7 +842,6 @@
 </constant>
         <constant digits="0" name="customSentTpsMax" units="">0.0</constant>
         <constant digits="0" name="customSentTpsMin" units="">0.0</constant>
-        <constant name="cutFuelInAcr">"false"</constant>
         <constant name="cutFuelOnHardLimit">"yes"</constant>
         <constant name="cutSparkOnHardLimit">"yes"</constant>
         <constant digits="0" name="cylinderBankSelect1" units="">0.0</constant>
@@ -4304,6 +4303,7 @@ end</constant>
         <constant name="unused32nd">"false"</constant>
         <constant name="unused920_0">"false"</constant>
         <constant name="unused920_1">"false"</constant>
+        <constant name="unusedCutFuelInAcr">"false"</constant>
         <constant name="unusedFancy10">"false"</constant>
         <constant name="unusedFancy11">"false"</constant>
         <constant name="unusedFancy12">"false"</constant>
@@ -4885,7 +4885,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250216" nPages="1" signature="rusEFI master.2025.02.21.f407-discovery.1241357035" version="5.0"/>
+    <versionInfo firmwareInfo="20250216" nPages="1" signature="rusEFI master.2025.02.21.f407-discovery.3648506621" version="5.0"/>
     <bibliography author="rusEFI 20250216" writeDate="date"/>
     <settings/>
     <userComments/>
