@@ -141,14 +141,16 @@ pins:
     color: white
 
   - pin: 21B
-    class: analog_inputs
-    ts_name: ___ Knock 1
-    function: Knock sensor 1
+    id: [H144_IN_SENS2, H144_IN_SENS2]
+    class: [event_inputs, switch_inputs]
+    ts_name: ___ Knock 1 / Digital input 7
+    function: Knock sensor 1 / AUX digital (TODO analog) input 7
 
   - pin: 22B
-    class: analog_inputs
-    ts_name: ___ Knock 2
-    function: Knock sensor 2
+    id: [H144_IN_SENS3, H144_IN_SENS3]
+    class: [event_inputs, switch_inputs]
+    ts_name: ___ Knock 2 / Digital input 8
+    function: Knock sensor 2 / AUX digital (TODO analog) input 8
 
   - pin: 23B
     id: [H144_IN_AUX2_DIGITAL, H144_IN_AUX2_DIGITAL, H144_IN_AUX2]
