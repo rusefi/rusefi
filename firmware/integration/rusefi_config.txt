@@ -206,6 +206,10 @@ struct_no_prefix engine_configuration_s
 #define ts_show_knock_cylinder_mapping true
 #define ts_show_injection_hardware true
 #define ts_show_ignitionOutputs true
+#define ts_show_flood_clear true
+#define ts_show_faster_spin_up true
+#define ts_show_AdvanceCorrectionsForCranking true
+#define ts_show_useRunningMathForCranking true
 
 #define VEHICLE_INFO_SIZE 32
 
