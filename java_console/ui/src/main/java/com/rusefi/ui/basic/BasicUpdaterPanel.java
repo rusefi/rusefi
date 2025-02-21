@@ -43,7 +43,7 @@ public class BasicUpdaterPanel {
     private final SingleAsyncJobExecutor singleAsyncJobExecutor;
     private final UpdateCalibrations updateCalibrations;
     private volatile Optional<AsyncJob> updateFirmwareJob = Optional.empty();
-    private volatile Optional<SerialPortScanner.PortResult> portToUpdateCalibrations = Optional.empty();
+    private volatile Optional<SerialPortScanner.PortResult> ecuPortToUse = Optional.empty();
 
     BasicUpdaterPanel(
         final boolean showUrlLabel,
@@ -111,7 +111,7 @@ public class BasicUpdaterPanel {
         hideStatusMessage();
 
         updateUpdateFirmwareJob(currentHardware);
-        updatePortToUpdateCalibrations(currentHardware);
+        updateEcuPortToUse(currentHardware);
     }
 
     private void updateUpdateFirmwareJob(final AvailableHardware currentHardware) {
@@ -200,27 +200,27 @@ public class BasicUpdaterPanel {
         statusMessage.setText(reason);
     }
 
-    private void updatePortToUpdateCalibrations(final AvailableHardware currentHardware) {
-        final List<SerialPortScanner.PortResult> ecuPortsToUpdateCalibrations = currentHardware.getKnownPorts(CompatibilitySet.of(
+    private void updateEcuPortToUse(final AvailableHardware currentHardware) {
+        final List<SerialPortScanner.PortResult> ecuPortsToUse = currentHardware.getKnownPorts(CompatibilitySet.of(
             SerialPortScanner.SerialPortType.Ecu,
             SerialPortScanner.SerialPortType.EcuWithOpenblt
         ));
 
-        switch (ecuPortsToUpdateCalibrations.size()) {
+        switch (ecuPortsToUse.size()) {
             case 0: {
-                resetPortToUpdateCalibrations();
-                log.info("No ECU ports to update calibrations found");
+                resetEcuPortToUse();
+                log.info("No ECU ports to use found");
                 break;
             }
             case 1: {
-                setPortToUpdateCalibrations(ecuPortsToUpdateCalibrations.get(0));
+                setEcuPortToUse(ecuPortsToUse.get(0));
                 break;
             }
             default: {
-                resetPortToUpdateCalibrations();
+                resetEcuPortToUse();
                 log.info(String.format(
-                    "Multiple ECU ports to update calibrations found on: %s",
-                    ecuPortsToUpdateCalibrations.stream()
+                    "Multiple ECU ports to use found on: %s",
+                    ecuPortsToUse.stream()
                         .map(portResult -> portResult.port)
                         .collect(Collectors.joining(", "))
                 ));
@@ -229,13 +229,13 @@ public class BasicUpdaterPanel {
         }
     }
 
-    private void setPortToUpdateCalibrations(final SerialPortScanner.PortResult port) {
-        portToUpdateCalibrations = Optional.of(port);
+    private void setEcuPortToUse(final SerialPortScanner.PortResult port) {
+        ecuPortToUse = Optional.of(port);
         refreshButtons();
     }
 
-    private void resetPortToUpdateCalibrations() {
-        portToUpdateCalibrations = Optional.empty();
+    private void resetEcuPortToUse() {
+        ecuPortToUse = Optional.empty();
         updateCalibrationsButton.setEnabled(false);
     }
 
@@ -252,7 +252,7 @@ public class BasicUpdaterPanel {
 
     private void onUpdateCalibrationsButtonClicked(final ActionEvent actionEvent) {
         disableButtons();
-        CompatibilityOptional.ifPresentOrElse(portToUpdateCalibrations,
+        CompatibilityOptional.ifPresentOrElse(ecuPortToUse,
             port -> {
                 updateCalibrations.updateCalibrationsAction(port, updateCalibrationsButton);
             }, () -> {
@@ -269,7 +269,7 @@ public class BasicUpdaterPanel {
 
     private void refreshButtons() {
         updateFirmwareButton.setEnabled(updateFirmwareJob.isPresent() && singleAsyncJobExecutor.isNotInProgress());
-        updateCalibrationsButton.setEnabled(portToUpdateCalibrations.isPresent() && singleAsyncJobExecutor.isNotInProgress());
+        updateCalibrationsButton.setEnabled(ecuPortToUse.isPresent() && singleAsyncJobExecutor.isNotInProgress());
     }
 
     private void disableButtons() {
