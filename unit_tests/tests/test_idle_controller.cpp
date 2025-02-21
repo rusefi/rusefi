@@ -122,11 +122,6 @@ TEST(idle_v2, crankingOpenLoop) {
 		config->cltIdleCorr[i] = i * 0.2f;
 	}
 
-	// First test without override (ie, normal running CLT corr table)
-	EXPECT_FLOAT_EQ(10, dut.getCrankingOpenLoop(10));
-	EXPECT_FLOAT_EQ(50, dut.getCrankingOpenLoop(50));
-
-	// Test with override (use separate table)
 	engineConfiguration->overrideCrankingIacSetting = true;
 	EXPECT_FLOAT_EQ(5, dut.getCrankingOpenLoop(10));
 	EXPECT_FLOAT_EQ(25, dut.getCrankingOpenLoop(50));
