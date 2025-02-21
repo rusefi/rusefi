@@ -1,18 +1,11 @@
 package com.rusefi.ui.basic;
 
-import com.rusefi.NamedThreadFactory;
-import com.rusefi.panama.PanamaClient;
-
 import javax.swing.*;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
 public class LogoLabelPopupMenu extends JPopupMenu {
-    private final static Executor UPLOAD_EXECUTOR = Executors.newSingleThreadExecutor(new NamedThreadFactory("panama client"));
-
     private final JMenuItem uploadTuneMenuItem;
 
-    public LogoLabelPopupMenu(final String panamaUrl) {
+    public LogoLabelPopupMenu(final Runnable onUploadTuneMenuItemSelected) {
         JMenuItem instanceNameMenuItem = new JMenuItem("Instance name");
         instanceNameMenuItem.addActionListener(
             e -> InstanceNameEditor.INSTANCE.editInstanceName(instanceNameMenuItem)
@@ -20,7 +13,7 @@ public class LogoLabelPopupMenu extends JPopupMenu {
 
         uploadTuneMenuItem = new JMenuItem("Upload Tune");
         uploadTuneMenuItem.setEnabled(false);
-        uploadTuneMenuItem.addActionListener(e -> uploadTune(panamaUrl));
+        uploadTuneMenuItem.addActionListener(e -> onUploadTuneMenuItemSelected.run());
 
         add(uploadTuneMenuItem);
         add(instanceNameMenuItem);
@@ -29,26 +22,5 @@ public class LogoLabelPopupMenu extends JPopupMenu {
     public void refreshUploadTuneMenuItem(final boolean canBeEnabled) {
         final boolean enableUploadTuneMenuItem = (canBeEnabled ? InstanceNameEditor.loadInstanceName() != null : false);
         uploadTuneMenuItem.setEnabled(enableUploadTuneMenuItem);
-    }
-
-    private static void uploadTune(String panamaUrl) {
-        UPLOAD_EXECUTOR.execute(() -> doUploadTune(panamaUrl));
-    }
-
-    private static void doUploadTune(String panamaUrl) {
-        // todo!
-        // IniField mcuSerialField = PanamaHelper.getIniField(linkManager);
-//        if (mcuSerialField == null) {
-//           addMessage("Please update firmware to use this feature");
-        // return;
-//        }
-// todo: grab current calibrations and save fresh MSQ
-        int mcuSerial = 1231234; // todo
-
-        PanamaClient.uploadFile(panamaUrl,
-            /* todo MSQ file */ null,
-            InstanceNameEditor.loadInstanceName(),
-            mcuSerial
-        );
     }
 }
