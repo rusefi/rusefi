@@ -4,7 +4,21 @@
 #include "smart_gpio.h"
 #include "drivers/gpio/tle9104.h"
 
+// Configurable 4.7K pull-ups to 5V
 static OutputPin alphaTempPullUp;
+static OutputPin alphaKnock1PullUp;
+static OutputPin alphaKnock2PullUp;
+
+// Configurable 750R pull-up to 5V
+static OutputPin alphaTachPullUp;
+
+// Configurable 4.470K pull-ups to 12V
+static OutputPin alphaHall1PullUp;
+static OutputPin alphaHall2PullUp;
+static OutputPin alphaHall3PullUp;
+static OutputPin alphaHall4PullUp;
+static OutputPin alphaHall5PullUp;
+static OutputPin alphaHall6PullUp;
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = Gpio::TLE9104_0_OUT_0;
@@ -32,13 +46,27 @@ static void setDefaultSensorInputs() {
 	setTPS1Inputs(H144_IN_TPS, H144_IN_TPS2);
 	setPPSInputs(H144_IN_PPS, H144_IN_PPS2);
 
-    engineConfiguration->boardUseTempPullUp = true;
+	engineConfiguration->boardEnTempPullUp = true;
+	engineConfiguration->boardEnKnock1PullUp = false;
+	engineConfiguration->boardEnKnock2PullUp = false;
+	engineConfiguration->boardEnTachPullUp = true;
+	engineConfiguration->boardEnHall1PullUp = false;
+	engineConfiguration->boardEnHall2PullUp = false;
+	engineConfiguration->boardEnHall3PullUp = false;
+	engineConfiguration->boardEnHall4PullUp = false;
+	engineConfiguration->boardEnHall5PullUp = false;
+	engineConfiguration->boardEnHall6PullUp = false;
 
+	// A18 + A22
+	setTPS1Inputs(H144_IN_TPS, H144_IN_TPS2);
+	// B19 + B20
+	setPPSInputs(H144_IN_PPS, H144_IN_PPS2);
 
 	engineConfiguration->map.sensor.hwChannel = H144_IN_O2S2; // external MAP
 //	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2; // On-board MAP
 	engineConfiguration->map.sensor.type = MT_MPXH6400;
 
+	engineConfiguration->afr.hwChannel = EFI_ADC_NONE;
 	engineConfiguration->clt.adcChannel = H144_IN_CLT;
 	engineConfiguration->iat.adcChannel = H144_IN_IAT;
 }
@@ -96,6 +124,9 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->spi2mosiPin = H_SPI2_MOSI;
 	engineConfiguration->spi2misoPin = H_SPI2_MISO;
 	engineConfiguration->spi2sckPin = H_SPI2_SCK;
+
+	engineConfiguration->vrThreshold[0].pin = Gpio::H144_OUT_PWM7;
+	engineConfiguration->vrThreshold[1].pin = Gpio::H144_OUT_PWM8;
 }
 
 /*
@@ -256,12 +287,41 @@ static void board_init_ext_gpios() {
  * @brief Board-specific initialization code.
  */
 void boardInitHardware() {
-	alphaTempPullUp.initPin("a-temp", Gpio::H144_GP_IO3);	// TEMP_PULLUP <- IO3
+	// TEMP_PULLUP
+	alphaTempPullUp.initPin("Temp PullUp", Gpio::H144_GP_IO3);
+	// IN_KNOCK1_PULLUP
+	alphaKnock1PullUp.initPin("Knock1 PullUp", Gpio::H144_GP_IO4);
+	// IN_KNOCK2_PULL
+	alphaKnock2PullUp.initPin("Knock2 PullUp", Gpio::H144_GP_IO5);
+	// TACH_PULLUP
+	alphaTachPullUp.initPin("Tach PullUp", Gpio::H144_OUT_IO9);
+	// VR_DISCRETE1+_PULLUP
+	alphaHall1PullUp.initPin("Hall 1 PullUp", Gpio::H144_OUT_IO10);
+	// VR_DISCRETE11_PULLUP
+	alphaHall2PullUp.initPin("Hall 2 PullUp", Gpio::H144_OUT_IO11);
+	// VR_DISCRETE2+_PULLUP
+	alphaHall3PullUp.initPin("Hall 3 PullUp", Gpio::H144_OUT_IO12);
+	// VR_DISCRETE2-_PULLUP
+	alphaHall4PullUp.initPin("Hall 4 PullUp", Gpio::H144_OUT_IO13);
+	// VR_9924+_PULLUP
+	alphaHall5PullUp.initPin("Hall 5 PullUp", Gpio::H144_GP_IO2);
+	// VR_9924+-_PULLUP
+	alphaHall6PullUp.initPin("Hall 6 PullUp", Gpio::H144_GP_IO1);
+
 	board_init_ext_gpios();
 }
 
 void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
-	alphaTempPullUp.setValue(engineConfiguration->boardUseTempPullUp);
+	alphaTempPullUp.setValue(engineConfiguration->boardEnTempPullUp);
+	alphaKnock1PullUp.setValue(engineConfiguration->boardEnKnock1PullUp);
+	alphaKnock2PullUp.setValue(engineConfiguration->boardEnKnock2PullUp);
+	alphaTachPullUp.setValue(engineConfiguration->boardEnTachPullUp);
+	alphaHall1PullUp.setValue(engineConfiguration->boardEnHall1PullUp);
+	alphaHall2PullUp.setValue(engineConfiguration->boardEnHall2PullUp);
+	alphaHall3PullUp.setValue(engineConfiguration->boardEnHall3PullUp);
+	alphaHall4PullUp.setValue(engineConfiguration->boardEnHall4PullUp);
+	alphaHall5PullUp.setValue(engineConfiguration->boardEnHall5PullUp);
+	alphaHall6PullUp.setValue(engineConfiguration->boardEnHall6PullUp);
 }
 
 static Gpio OUTPUTS[] = {
