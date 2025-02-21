@@ -156,7 +156,7 @@ public class CalibrationsHelper {
         }
     }
 
-    private static Optional<CalibrationsInfo> readAndBackupCurrentCalibrations(
+    public static Optional<CalibrationsInfo> readAndBackupCurrentCalibrations(
         final PortResult ecuPort,
         final UpdateOperationCallbacks callbacks,
         final String backupFileName
