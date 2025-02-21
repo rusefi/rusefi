@@ -1,7 +1,9 @@
 package com.rusefi.maintenance;
 
+import com.opensr5.ini.field.IniField;
 import com.rusefi.SerialPortScanner;
 import com.rusefi.binaryprotocol.BinaryProtocolLocalCache;
+import com.rusefi.config.generated.TsOutputs;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.panama.PanamaClient;
 import com.rusefi.ui.basic.InstanceNameEditor;
@@ -39,13 +41,12 @@ public enum TuneUploader {
             return false;
         }
 
-        // todo!
-        // IniField mcuSerialField = PanamaHelper.getIniField(linkManager);
-//        if (mcuSerialField == null) {
-//           addMessage("Please update firmware to use this feature");
-        // return;
-//        }
-        int mcuSerial = 1231234; // todo
+        final Optional<Integer> receivedMcuSerial = OutputChannelsHelper.readMcuSerial(ecuPort, callbacks);
+        if (!receivedMcuSerial.isPresent()) {
+            callbacks.logLine("Failed to read `MCUSERIAL` output channel");
+            return false;
+        }
+        final int mcuSerial = receivedMcuSerial.get();
 
         final String calibrationsToUploadFileName = CALIBRATIONS_TO_UPLOAD_FILE_NAME + ".msq";
         if (PanamaClient.uploadFile(panamaUrl,
@@ -54,18 +55,20 @@ public enum TuneUploader {
             mcuSerial
         )) {
             callbacks.logLine(String.format(
-                "File `%s` is successfully uploaded to `%s` for `%s`",
+                "File `%s` is successfully uploaded to `%s` for `%s` (MCUSERIAL=%d)",
                 calibrationsToUploadFileName,
                 panamaUrl,
-                instanceName
+                instanceName,
+                mcuSerial
             ));
             result = true;
         } else {
             callbacks.logLine(String.format(
-                "Failed to upload file `%s` to `%s` for `%s`",
+                "Failed to upload file `%s` to `%s` for `%s` (MCUSERIAL=%d)",
                 calibrationsToUploadFileName,
                 panamaUrl,
-                instanceName
+                instanceName,
+                mcuSerial
             ));
         }
         return result;
