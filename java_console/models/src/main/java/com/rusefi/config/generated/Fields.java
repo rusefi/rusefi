@@ -598,7 +598,6 @@ public class Fields {
 	public static final Field ISWAVEANALYZERENABLED = Field.create("ISWAVEANALYZERENABLED", 1320, FieldType.BIT, 8).setBaseOffset(0);
 	public static final Field USESEPARATEVEFORIDLE = Field.create("USESEPARATEVEFORIDLE", 1320, FieldType.BIT, 9).setBaseOffset(0);
 	public static final Field VERBOSETRIGGERSYNCHDETAILS = Field.create("VERBOSETRIGGERSYNCHDETAILS", 1320, FieldType.BIT, 10).setBaseOffset(0);
-	public static final Field CUTFUELINACR = Field.create("CUTFUELINACR", 1320, FieldType.BIT, 11).setBaseOffset(0);
 	public static final Field HONDAK = Field.create("HONDAK", 1320, FieldType.BIT, 12).setBaseOffset(0);
 	public static final Field TWOWIREBATCHIGNITION = Field.create("TWOWIREBATCHIGNITION", 1320, FieldType.BIT, 13).setBaseOffset(0);
 	public static final Field USEFIXEDBAROCORRFROMMAP = Field.create("USEFIXEDBAROCORRFROMMAP", 1320, FieldType.BIT, 14).setBaseOffset(0);
@@ -2384,7 +2383,6 @@ public class Fields {
 	ISWAVEANALYZERENABLED,
 	USESEPARATEVEFORIDLE,
 	VERBOSETRIGGERSYNCHDETAILS,
-	CUTFUELINACR,
 	HONDAK,
 	TWOWIREBATCHIGNITION,
 	USEFIXEDBAROCORRFROMMAP,

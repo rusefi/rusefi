@@ -2530,7 +2530,7 @@ struct engine_configuration_s {
 	bool verboseTriggerSynchDetails : 1 {};
 	/**
 	offset 1320 bit 11 */
-	bool cutFuelInAcr : 1 {};
+	bool unusedCutFuelInAcr : 1 {};
 	/**
 	offset 1320 bit 12 */
 	bool hondaK : 1 {};
