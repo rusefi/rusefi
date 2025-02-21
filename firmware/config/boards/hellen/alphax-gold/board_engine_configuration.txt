@@ -1,7 +1,7 @@
 bit boardEnTempPullUp,"With Pull Ups","Piggyback Mode"
 bit boardEnKnock1PullUp,"Enable","Disable"
 bit boardEnKnock2PullUp,"Enable","Disable"
-bit boardEnTachPullUp,"Enable","Disable"
+bit boardSelTachPullUp,"+12V","+5V"
 bit boardEnHall1PullUp,"Enable","Disable"
 bit boardEnHall2PullUp,"Enable","Disable"
 bit boardEnHall3PullUp,"Enable","Disable"
