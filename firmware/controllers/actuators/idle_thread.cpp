@@ -91,11 +91,7 @@ float IdleController::getCrankingTaperFraction() const {
 
 float IdleController::getCrankingOpenLoop(float clt) const {
 	float mult =
-		engineConfiguration->overrideCrankingIacSetting
-		// Override to separate table
-	 	? interpolate2d(clt, config->cltCrankingCorrBins, config->cltCrankingCorr)
-		// Otherwise use plain running table
-		: interpolate2d(clt, config->cltIdleCorrBins, config->cltIdleCorr);
+		interpolate2d(clt, config->cltCrankingCorrBins, config->cltCrankingCorr);
 
 	return engineConfiguration->crankingIACposition * mult;
 }
