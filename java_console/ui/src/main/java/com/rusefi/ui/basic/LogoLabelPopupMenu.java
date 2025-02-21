@@ -11,11 +11,7 @@ public class LogoLabelPopupMenu extends JPopupMenu {
     private final static Executor UPLOAD_EXECUTOR = Executors.newSingleThreadExecutor(new NamedThreadFactory("panama client"));
 
     public LogoLabelPopupMenu(String panamaUrl) {
-        // todo!
-        // IniField mcuSerialField = PanamaHelper.getIniField(linkManager);
-//        if (mcuSerialField == null) {
-//            add(new JMenuItem("Please update firmware"));
-//        }
+
 
         JMenuItem instanceNameMenuItem = new JMenuItem("Instance name");
         instanceNameMenuItem.addActionListener(
@@ -35,7 +31,13 @@ public class LogoLabelPopupMenu extends JPopupMenu {
     }
 
     private static void doUploadTune(String panamaUrl) {
-        // todo: grab current calibrations and save fresh MSQ
+        // todo!
+        // IniField mcuSerialField = PanamaHelper.getIniField(linkManager);
+//        if (mcuSerialField == null) {
+//           addMessage("Please update firmware to use this feature");
+        // return;
+//        }
+// todo: grab current calibrations and save fresh MSQ
         int mcuSerial = 1231234; // todo
 
         PanamaClient.uploadFile(panamaUrl,
