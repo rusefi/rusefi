@@ -1089,6 +1089,8 @@ public class VariableRegistryValues {
 	public static final int ign_cyl_trim_s_size = 16;
 	public static final int IGN_LOAD_COUNT = 16;
 	public static final int IGN_RPM_COUNT = 16;
+	public static final String IGN_TRIM_1_NAME = "Ignition trim cyl 1";
+	public static final String IGN_TRIM_2_NAME = "Ignition trim cyl 2";
 	public static final int IGN_TRIM_SIZE = 4;
 	public static final int ignition_mode_e_IM_INDIVIDUAL_COILS = 1;
 	public static final int ignition_mode_e_IM_ONE_COIL = 0;
@@ -1554,7 +1556,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.02.21.f407-discovery.3827626456";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.02.21.f407-discovery.3072878039";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
