@@ -9,8 +9,8 @@ static OutputPin alphaTempPullUp;
 static OutputPin alphaKnock1PullUp;
 static OutputPin alphaKnock2PullUp;
 
-// Configurable 750R pull-up to 5V
-static OutputPin alphaTachPullUp;
+// Configurable 750R pull-up to 5V or 220+750R to 12V
+static OutputPin alphaTachSelPullUp;
 
 // Configurable 4.470K pull-ups to 12V
 static OutputPin alphaHall1PullUp;
@@ -49,7 +49,8 @@ static void setDefaultSensorInputs() {
 	engineConfiguration->boardEnTempPullUp = true;
 	engineConfiguration->boardEnKnock1PullUp = false;
 	engineConfiguration->boardEnKnock2PullUp = false;
-	engineConfiguration->boardEnTachPullUp = true;
+	// default is 5V pull-up
+	engineConfiguration->boardSelTachPullUp = false;
 	engineConfiguration->boardEnHall1PullUp = false;
 	engineConfiguration->boardEnHall2PullUp = false;
 	engineConfiguration->boardEnHall3PullUp = false;
@@ -294,7 +295,7 @@ void boardInitHardware() {
 	// IN_KNOCK2_PULL
 	alphaKnock2PullUp.initPin("Knock2 PullUp", Gpio::H144_GP_IO5);
 	// TACH_PULLUP
-	alphaTachPullUp.initPin("Tach PullUp", Gpio::H144_OUT_IO9);
+	alphaTachSelPullUp.initPin("Tach PullUp", Gpio::H144_OUT_IO9);
 	// VR_DISCRETE1+_PULLUP
 	alphaHall1PullUp.initPin("Hall 1 PullUp", Gpio::H144_OUT_IO10);
 	// VR_DISCRETE11_PULLUP
@@ -315,7 +316,7 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 	alphaTempPullUp.setValue(engineConfiguration->boardEnTempPullUp);
 	alphaKnock1PullUp.setValue(engineConfiguration->boardEnKnock1PullUp);
 	alphaKnock2PullUp.setValue(engineConfiguration->boardEnKnock2PullUp);
-	alphaTachPullUp.setValue(engineConfiguration->boardEnTachPullUp);
+	alphaTachSelPullUp.setValue(engineConfiguration->boardSelTachPullUp);
 	alphaHall1PullUp.setValue(engineConfiguration->boardEnHall1PullUp);
 	alphaHall2PullUp.setValue(engineConfiguration->boardEnHall2PullUp);
 	alphaHall3PullUp.setValue(engineConfiguration->boardEnHall3PullUp);
