@@ -241,6 +241,9 @@ public class BasicUpdaterPanel {
     private void resetEcuPortToUse() {
         ecuPortToUse = Optional.empty();
         updateCalibrationsButton.setEnabled(false);
+        if (logoLabelPopupMenu != null) {
+            logoLabelPopupMenu.refreshUploadTuneMenuItem(false);
+        }
     }
 
     private void onUpdateFirmwareButtonClicked(final ActionEvent actionEvent) {
@@ -273,12 +276,19 @@ public class BasicUpdaterPanel {
 
     private void refreshButtons() {
         updateFirmwareButton.setEnabled(updateFirmwareJob.isPresent() && singleAsyncJobExecutor.isNotInProgress());
-        updateCalibrationsButton.setEnabled(ecuPortToUse.isPresent() && singleAsyncJobExecutor.isNotInProgress());
+        final boolean isEcuPortJobPossible = ecuPortToUse.isPresent() && singleAsyncJobExecutor.isNotInProgress();
+        updateCalibrationsButton.setEnabled(isEcuPortJobPossible);
+        if (logoLabelPopupMenu != null) {
+            logoLabelPopupMenu.refreshUploadTuneMenuItem(isEcuPortJobPossible);
+        }
     }
 
     private void disableButtons() {
         updateFirmwareButton.setEnabled(false);
         updateCalibrationsButton.setEnabled(false);
+        if (logoLabelPopupMenu != null) {
+            logoLabelPopupMenu.refreshUploadTuneMenuItem(false);
+        }
     }
 
     public Component getContent() {

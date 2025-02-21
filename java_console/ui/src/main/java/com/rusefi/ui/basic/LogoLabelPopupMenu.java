@@ -10,20 +10,25 @@ import java.util.concurrent.Executors;
 public class LogoLabelPopupMenu extends JPopupMenu {
     private final static Executor UPLOAD_EXECUTOR = Executors.newSingleThreadExecutor(new NamedThreadFactory("panama client"));
 
-    public LogoLabelPopupMenu(String panamaUrl) {
+    private final JMenuItem uploadTuneMenuItem;
 
-
+    public LogoLabelPopupMenu(final String panamaUrl) {
         JMenuItem instanceNameMenuItem = new JMenuItem("Instance name");
         instanceNameMenuItem.addActionListener(
             e -> InstanceNameEditor.INSTANCE.editInstanceName(instanceNameMenuItem)
         );
 
-        JMenuItem uploadAction = new JMenuItem("Upload Tune");
-        uploadAction.setEnabled(InstanceNameEditor.loadInstanceName() != null);
-        uploadAction.addActionListener(e -> uploadTune(panamaUrl));
+        uploadTuneMenuItem = new JMenuItem("Upload Tune");
+        uploadTuneMenuItem.setEnabled(false);
+        uploadTuneMenuItem.addActionListener(e -> uploadTune(panamaUrl));
 
-        add(uploadAction);
+        add(uploadTuneMenuItem);
         add(instanceNameMenuItem);
+    }
+
+    public void refreshUploadTuneMenuItem(final boolean canBeEnabled) {
+        final boolean enableUploadTuneMenuItem = (canBeEnabled ? InstanceNameEditor.loadInstanceName() != null : false);
+        uploadTuneMenuItem.setEnabled(enableUploadTuneMenuItem);
     }
 
     private static void uploadTune(String panamaUrl) {
