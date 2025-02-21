@@ -8,6 +8,7 @@ import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.ProgramSelector;
 import com.rusefi.maintenance.jobs.*;
+import com.rusefi.panama.PanamaClient;
 import com.rusefi.ui.LogoHelper;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.widgets.ToolButtons;
@@ -19,6 +20,8 @@ import java.awt.event.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -87,7 +90,7 @@ public class BasicUpdaterPanel {
         JLabel logoLabel = LogoHelper.createLogoLabel();
         if (logoLabel != null) {
             if (panamaUrl != null) {
-                logoLabelPopupMenu = new LogoLabelPopupMenu(panamaUrl);
+                logoLabelPopupMenu = new LogoLabelPopupMenu(this::uploadTune);
                 logoLabel.setComponentPopupMenu(logoLabelPopupMenu);
             }
             content.add(logoLabel);
@@ -289,6 +292,23 @@ public class BasicUpdaterPanel {
         if (logoLabelPopupMenu != null) {
             logoLabelPopupMenu.refreshUploadTuneMenuItem(false);
         }
+    }
+
+    private void uploadTune() {
+        disableButtons();
+        CompatibilityOptional.ifPresentOrElse(ecuPortToUse,
+            port -> {
+                singleAsyncJobExecutor.startJob(new UploadTuneJob(port, panamaUrl), logoLabelPopupMenu);
+            }, () -> {
+                JOptionPane.showMessageDialog(
+                    updateCalibrationsButton,
+                    "Device is not connected",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+                );
+            }
+        );
+        refreshButtons();
     }
 
     public Component getContent() {
