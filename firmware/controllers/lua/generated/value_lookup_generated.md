@@ -1133,7 +1133,7 @@ AEM X-Series EGT gauge kit or rusEFI EGT sensor from Wideband controller
 This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.\nShould be 100 once tune is better
 
 ### iacByTpsTaper
-IAC Value added when coasting and transitioning into idle.
+This value is an added for base idle value. Idle Value added when coasting and transitioning into idle.
 
 ### coastingFuelCutVssLow
 Below this speed, disable DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.
@@ -1673,7 +1673,7 @@ Hysterisis: if hard cut is 240kpa, and boostCutPressureHyst is 20, when the ECU 
 How many test bench pulses do you want
 
 ### iacByTpsHoldTime
-How long initial IAC adder is held before starting to decay.
+How long initial idle adder is held before starting to decay.
 
 ### iacByTpsDecayTime
 How long it takes to remove initial IAC adder to return to normal idle.

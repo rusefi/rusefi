@@ -2926,7 +2926,7 @@ struct engine_configuration_s {
 	 */
 	int16_t afterCrankingIACtaperDuration;
 	/**
-	 * IAC Value added when coasting and transitioning into idle.
+	 * This value is an added for base idle value. Idle Value added when coasting and transitioning into idle.
 	 * units: percent
 	 * offset 1514
 	 */
@@ -4322,7 +4322,7 @@ struct engine_configuration_s {
 	 */
 	uint32_t benchTestCount;
 	/**
-	 * How long initial IAC adder is held before starting to decay.
+	 * How long initial idle adder is held before starting to decay.
 	 * units: seconds
 	 * offset 3412
 	 */

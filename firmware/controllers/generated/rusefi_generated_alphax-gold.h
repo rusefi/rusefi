@@ -1181,6 +1181,7 @@
 #define InjectorNonlinearMode_INJ_FordModel 2
 #define InjectorNonlinearMode_INJ_None 0
 #define InjectorNonlinearMode_INJ_PolynomialAdder 1
+#define KNOCK_RPM_TABLE_NAME "Engine Knock Threshold RPM Based"
 #define KNOCK_TABLE_SIZE 6
 #define LAM_SIZE 4
 #define launchActivationMode_e_ALWAYS_ACTIVE_LAUNCH 2
@@ -1379,7 +1380,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2109567552
+#define SIGNATURE_HASH 1424563507
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1690,6 +1691,7 @@
 #define TS_SET_LOGGER_SWITCH 'l'
 #define TS_SET_LOGGER_SWITCH_char l
 #define ts_show_acr_pins true
+#define ts_show_AdvanceCorrectionsForCranking true
 #define ts_show_air_conditioning true
 #define ts_show_alternator true
 #define ts_show_analog_diag false
@@ -1743,9 +1745,11 @@
 #define ts_show_exhaust_vvt true
 #define ts_show_experimental true
 #define ts_show_fan2_settings true
+#define ts_show_faster_spin_up true
 #define ts_show_final_ratio true
 #define ts_show_firing_order true
 #define ts_show_flex_inverted true
+#define ts_show_flood_clear true
 #define ts_show_forced_induction false
 #define ts_show_ford_toyota_tps_pps true
 #define ts_show_fuel_level_sensor true
@@ -1754,6 +1758,7 @@
 #define ts_show_fuel_relay_pin true
 #define ts_show_fuel_strategy true
 #define ts_show_fuel_temp_sensor true
+#define ts_show_fuel_threshold true
 #define ts_show_fuel_trim_cylinder_1 true
 #define ts_show_fuel_trim_cylinder_10 true
 #define ts_show_fuel_trim_cylinder_11 true
@@ -1801,6 +1806,7 @@
 #define ts_show_number_of_cylinders true
 #define ts_show_odd_fire true
 #define ts_show_oil_pressure_sensor true
+#define ts_show_oil_sensors true
 #define ts_show_oil_temp_sensor true
 #define ts_show_onboard_accelerometer false
 #define ts_show_output_diag false
@@ -1811,6 +1817,7 @@
 #define ts_show_sd_card true
 #define ts_show_sd_pins true
 #define ts_show_second_bank true
+#define ts_show_sent true
 #define ts_show_software_knock true
 #define ts_show_speedo_settings true
 #define ts_show_spi false
@@ -1847,6 +1854,8 @@
 #define ts_show_trigger_pins true
 #define ts_show_tsp_pps_limits true
 #define ts_show_tunerstudio_port true
+#define ts_show_useRunningMathForCranking true
+#define ts_show_useSeparateVeForIdle true
 #define ts_show_vbatt false
 #define ts_show_vehicle_speed_sensor true
 #define ts_show_vr_threshold_2 true
@@ -1857,7 +1866,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.02.21.alphax-gold.2109567552"
+#define TS_SIGNATURE "rusEFI master.2025.02.21.alphax-gold.1424563507"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

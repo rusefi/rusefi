@@ -1128,6 +1128,7 @@ public class VariableRegistryValues {
 	public static final int InjectorNonlinearMode_INJ_FordModel = 2;
 	public static final int InjectorNonlinearMode_INJ_None = 0;
 	public static final int InjectorNonlinearMode_INJ_PolynomialAdder = 1;
+	public static final String KNOCK_RPM_TABLE_NAME = "Engine Knock Threshold RPM Based";
 	public static final int KNOCK_TABLE_SIZE = 6;
 	public static final int LAM_SIZE = 4;
 	public static final int launchActivationMode_e_ALWAYS_ACTIVE_LAUNCH = 2;
@@ -1556,7 +1557,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.02.21.f407-discovery.3648506621";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.02.21.f407-discovery.4028867982";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
