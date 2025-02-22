@@ -51,7 +51,7 @@
 ** \return    none.
 **
 ****************************************************************************************/
-void BackDoorInitHook(void)
+__attribute__((weak)) void BackDoorInitHook(void)
 {
 } /*** end of BackDoorInitHook ***/
 
