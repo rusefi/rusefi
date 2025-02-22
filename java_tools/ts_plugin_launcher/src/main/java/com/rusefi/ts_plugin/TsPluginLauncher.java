@@ -16,12 +16,12 @@ import static com.devexperts.logging.Logging.getLogging;
  *
  * by the way TS installs stuff into %user%\.efianalytics\TunerStudio\plugins folder
  * @see PluginLauncherSandbox sandbox for this
- * see PluginEntry
+ * @see PluginEntry
  * @see Updater
  */
 public class TsPluginLauncher implements ApplicationPlugin {
-    public static final int BUILD_VERSION = 5;
-    static final String VERSION = "2024.alpha." + BUILD_VERSION;
+    public static final int BUILD_VERSION = 6;
+    static final String VERSION = "2025.alpha." + BUILD_VERSION;
     private static final Logging log = getLogging(TsPluginLauncher.class);
     private static final String HELP_URL = "https://github.com/rusefi/rusefi/wiki/TS-Plugin";
 
