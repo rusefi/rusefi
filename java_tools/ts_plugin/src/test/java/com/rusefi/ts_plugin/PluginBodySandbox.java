@@ -5,7 +5,6 @@ import com.efiAnalytics.plugin.ecu.ControllerException;
 import com.efiAnalytics.plugin.ecu.ControllerParameter;
 import com.efiAnalytics.plugin.ecu.servers.ControllerParameterServer;
 import com.efiAnalytics.plugin.ecu.servers.OutputChannelServer;
-import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelImpl;
 import com.rusefi.TsTuneReader;
 import com.rusefi.core.ui.FrameHelper;
@@ -27,13 +26,18 @@ import static org.mockito.Mockito.*;
 public class PluginBodySandbox {
 
     private static final String PROJECT_NAME = "dev";
-    public static final ControllerParameter result = new ControllerParameter() {
+    public static final ControllerParameter cylinderResult = new ControllerParameter() {
         @Override
         public double getScalarValue() {
             return 2;
         }
     };
-
+    public static final ControllerParameter result2 = new ControllerParameter() {
+        @Override
+        public String getStringValue() {
+            return "true";
+        }
+    };
     public static void main(String[] args) throws ControllerException {
         String iniFile = TsTuneReader.getProjectModeFileName(PROJECT_NAME);
         IniFileModelImpl model = IniFileModelImpl.readIniFile(iniFile);
@@ -47,7 +51,8 @@ public class PluginBodySandbox {
 
         ControllerParameterServer controllerParameterServer = mock(ControllerParameterServer.class, NEGATIVE_ANSWER);
         doReturn(parameterNames).when(controllerParameterServer).getParameterNames(any());
-        doReturn(result).when(controllerParameterServer).getControllerParameter(any(), eq(KnockAnalyzerTab.CYLINDERS_COUNT));
+        doReturn(cylinderResult).when(controllerParameterServer).getControllerParameter(any(), eq(KnockAnalyzerTab.CYLINDERS_COUNT));
+        doReturn(result2).when(controllerParameterServer).getControllerParameter(any(), eq(KnockAnalyzerTab.ENABLE_KNOCK_SPECTROGRAM));
         doNothing().when(controllerParameterServer).subscribe(any(), any(), any());
 
         ControllerAccess controllerAccess = mock(ControllerAccess.class, NEGATIVE_ANSWER);

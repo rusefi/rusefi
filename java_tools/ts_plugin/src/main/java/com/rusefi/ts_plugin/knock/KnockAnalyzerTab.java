@@ -1,5 +1,6 @@
 package com.rusefi.ts_plugin.knock;
 
+import com.devexperts.logging.Logging;
 import com.efiAnalytics.plugin.ecu.*;
 import com.rusefi.core.ui.AutoupdateUtil;
 import org.putgemin.VerticalFlowLayout;
@@ -12,10 +13,14 @@ import java.util.Arrays;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 
 public class KnockAnalyzerTab {
+    private static final Logging log = getLogging(KnockAnalyzerTab.class);
 
     public static final String CYLINDERS_COUNT = "cylindersCount";
+    public static final String ENABLE_KNOCK_SPECTROGRAM = "enableKnockSpectrogram";
 
     private enum CanvasType {
         CT_ALL,
@@ -39,13 +44,13 @@ public class KnockAnalyzerTab {
     private int channel = 0;
     private int cylinder = 0;
 
-    private float[] values = new float[64];
+    private final float[] values = new float[64];
 
     private int cylindersCount = 0;
 
     private CanvasType canvasType = CanvasType.CT_ALL;
 
-    private ArrayList<KnockCanvas> canvases = new ArrayList<>();
+    private final ArrayList<KnockCanvas> canvases = new ArrayList<>();
     private final KnockMagnitudeCanvas magnituges = new KnockMagnitudeCanvas();
 
     public KnockAnalyzerTab(Supplier<ControllerAccess> controllerAccessSupplier) {
@@ -63,7 +68,7 @@ public class KnockAnalyzerTab {
                 }
             });
         } catch (ControllerException ee) {
-            System.out.println(ee.getMessage());
+            log.error(ee.getMessage());
         }
 
         try {
@@ -76,8 +81,8 @@ public class KnockAnalyzerTab {
                     magnituges.setFrequencyStep(frequencyStep);
                 }
             });
-        } catch (ControllerException ee) {
-            System.out.println(ee.getMessage());
+        } catch (ControllerException e) {
+            log.error(e.getMessage());
         }
 
         try {
@@ -90,8 +95,8 @@ public class KnockAnalyzerTab {
                 KnockAnalyzerTab.this.channel = (int) (value >>> 8) & 0xFF;
                 KnockAnalyzerTab.this.cylinder = (int) (value & 0xFF);
             });
-        } catch (ControllerException ee) {
-            System.out.println(ee.getMessage());
+        } catch (ControllerException e) {
+            log.error(e.getMessage());
         }
 
         try {
@@ -100,8 +105,8 @@ public class KnockAnalyzerTab {
                 double value = cylindersCountParameter.getScalarValue();
                 KnockAnalyzerTab.this.cylindersCount = (int) (value);
             }
-        } catch (ControllerException ee) {
-            System.out.println(ee.getMessage());
+        } catch (ControllerException e) {
+            log.error(e.getMessage());
         }
 
         try {
@@ -117,6 +122,7 @@ public class KnockAnalyzerTab {
                 checksum += i;
             }
 
+            if (outputChannelNames.length!=0)
             for (int i = 0; i < 16; ++i) {
                 try {
 
@@ -154,12 +160,12 @@ public class KnockAnalyzerTab {
                         }
                     });
                 } catch (ControllerException ee) {
-                    System.out.println(ee.getMessage());
+                    log.error(ee.getMessage());
                 }
             }
 
         } catch (ControllerException e) {
-
+            log.error(e.getMessage());
         }
 
         buttonStartStop.addActionListener(e -> {
@@ -327,11 +333,11 @@ public class KnockAnalyzerTab {
     public boolean getEnabledEcu() {
         try {
             String ecuControllerName = this.controllerAccessSupplier.get().getEcuConfigurationNames()[0];
-            ControllerParameter enable = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(ecuControllerName, "enableKnockSpectrogram");
+            ControllerParameter enable = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(ecuControllerName, ENABLE_KNOCK_SPECTROGRAM);
             String enabled = enable.getStringValue();
             return enabled.indexOf("true") > 0;
         } catch (ControllerException ee) {
-            System.out.println(ee.getMessage());
+            log.error(ee.getMessage());
         }
 
         return false;
@@ -342,7 +348,7 @@ public class KnockAnalyzerTab {
             String ecuControllerName = this.controllerAccessSupplier.get().getEcuConfigurationNames()[0];
             controllerAccessSupplier.get().getControllerParameterServer().updateParameter(ecuControllerName, "enableKnockSpectrogram", enabled ? 1.0 : 0.0);
         } catch (ControllerException ee) {
-            System.out.println(ee.getMessage());
+            log.error(ee.getMessage());
         }
     }
 
