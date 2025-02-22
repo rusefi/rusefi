@@ -48,7 +48,7 @@ public class OutputChannelsHelper {
             mcuSerial.set(PanamaHelper.getMcuSerial(mcuSerialField));
         });
         if (binaryProtocol.requestOutputChannels()) {
-            callbacks.logLine(String.format("`MCUSERIAL` is %d", mcuSerial.get()));
+            callbacks.logLine(String.format(PanamaHelper.MCUSERIAL + " is %d", mcuSerial.get()));
             return Optional.of(mcuSerial.get());
         } else {
             callbacks.logLine("Failed to request output channels...");

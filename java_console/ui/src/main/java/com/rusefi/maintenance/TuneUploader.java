@@ -1,11 +1,10 @@
 package com.rusefi.maintenance;
 
-import com.opensr5.ini.field.IniField;
 import com.rusefi.SerialPortScanner;
 import com.rusefi.binaryprotocol.BinaryProtocolLocalCache;
-import com.rusefi.config.generated.TsOutputs;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.panama.PanamaClient;
+import com.rusefi.panama.PanamaHelper;
 import com.rusefi.ui.basic.InstanceNameEditor;
 
 import java.io.File;
@@ -47,7 +46,7 @@ public enum TuneUploader {
 
         final Optional<Integer> receivedMcuSerial = OutputChannelsHelper.readMcuSerial(ecuPort, callbacks);
         if (!receivedMcuSerial.isPresent()) {
-            callbacks.logLine("Failed to read `MCUSERIAL` output channel - please update firmware first!");
+            callbacks.logLine("Failed to read " + PanamaHelper.MCUSERIAL + " output channel - please update firmware first!");
             return false;
         }
         final int mcuSerial = receivedMcuSerial.get();
@@ -59,7 +58,7 @@ public enum TuneUploader {
             mcuSerial
         )) {
             callbacks.logLine(String.format(
-                "File `%s` is successfully uploaded to `%s` for `%s` (MCUSERIAL=%d)",
+                "File `%s` is successfully uploaded to `%s` for `%s` (" + PanamaHelper.MCUSERIAL + "=%d)",
                 calibrationsToUploadFileName,
                 panamaUrl,
                 instanceName,
@@ -68,7 +67,7 @@ public enum TuneUploader {
             result = true;
         } else {
             callbacks.logLine(String.format(
-                "Failed to upload file `%s` to `%s` for `%s` (MCUSERIAL=%d)",
+                "Failed to upload file `%s` to `%s` for `%s` (" + PanamaHelper.MCUSERIAL + "=%d)",
                 calibrationsToUploadFileName,
                 panamaUrl,
                 instanceName,
