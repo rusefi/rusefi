@@ -2246,6 +2246,7 @@ end_struct
 #define pedalToTpsTbl_NAME "ETB pedal target"
 #define pedalSensor_NAME "Accelerator pedal"
 #define ts_show_charge_estimation true
+#define ts_show_ve_blend true
 #define ts_show_FractionDivisor true
 #define ts_show_fuel_threshold true
 #define ts_show_jam_detection true
