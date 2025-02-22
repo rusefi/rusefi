@@ -122,7 +122,6 @@ TEST(idle_v2, crankingOpenLoop) {
 		config->cltIdleCorr[i] = i * 0.2f;
 	}
 
-	engineConfiguration->overrideCrankingIacSetting = true;
 	EXPECT_FLOAT_EQ(5, dut.getCrankingOpenLoop(10));
 	EXPECT_FLOAT_EQ(25, dut.getCrankingOpenLoop(50));
 }
@@ -248,8 +247,6 @@ struct MockOpenLoopIdler : public IdleController {
 TEST(idle_v2, testOpenLoopCranking) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	StrictMock<MockOpenLoopIdler> dut;
-
-	engineConfiguration->overrideCrankingIacSetting = true;
 
 	EXPECT_CALL(dut, getCrankingOpenLoop(30)).WillOnce(Return(44));
 

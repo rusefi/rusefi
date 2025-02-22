@@ -299,8 +299,6 @@ static void commonGenesisCoupe() {
     engineConfiguration->crankingIACposition = 70;
     // default 200.0
     engineConfiguration->afterCrankingIACtaperDuration = 100;
-    // default "false"
-    engineConfiguration->overrideCrankingIacSetting = true;
     // default 0.0
     engineConfiguration->tpsAccelLookback = 0.3;
     // default 40.0
