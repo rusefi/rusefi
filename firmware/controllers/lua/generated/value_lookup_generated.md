@@ -841,9 +841,6 @@ RPM is measured based on last 720 degrees while instant RPM is measured based on
 ### isMapAveragingEnabled
 
 
-### overrideCrankingIacSetting
-If enabled, use separate temperature multiplier table for cranking idle position.\nIf disabled, use normal running multiplier table applied to the cranking base position.
-
 ### useSeparateAdvanceForIdle
 This activates a separate ignition timing table for idle conditions, this can help idle stability by using ignition retard and advance either side of the desired idle speed. Extra advance at low idle speeds will prevent stalling and extra retard at high idle speeds can help reduce engine power and slow the idle speed.
 

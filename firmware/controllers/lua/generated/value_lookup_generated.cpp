@@ -848,9 +848,6 @@ float getConfigValueByName(const char *name) {
 // isMapAveragingEnabled
 		case 285726462:
 			return engineConfiguration->isMapAveragingEnabled;
-// overrideCrankingIacSetting
-		case -1500666851:
-			return engineConfiguration->overrideCrankingIacSetting;
 // useSeparateAdvanceForIdle
 		case 216872574:
 			return engineConfiguration->useSeparateAdvanceForIdle;
@@ -3379,11 +3376,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case 285726462:
 	{
 		engineConfiguration->isMapAveragingEnabled = (int)value;
-		return 1;
-	}
-		case -1500666851:
-	{
-		engineConfiguration->overrideCrankingIacSetting = (int)value;
 		return 1;
 	}
 		case 216872574:

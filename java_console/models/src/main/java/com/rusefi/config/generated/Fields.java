@@ -593,7 +593,6 @@ public class Fields {
 	public static final Field COMPLEXWALLMODEL = Field.create("COMPLEXWALLMODEL", 1320, FieldType.BIT, 3).setBaseOffset(0);
 	public static final Field ALWAYSINSTANTRPM = Field.create("ALWAYSINSTANTRPM", 1320, FieldType.BIT, 4).setBaseOffset(0);
 	public static final Field ISMAPAVERAGINGENABLED = Field.create("ISMAPAVERAGINGENABLED", 1320, FieldType.BIT, 5).setBaseOffset(0);
-	public static final Field OVERRIDECRANKINGIACSETTING = Field.create("OVERRIDECRANKINGIACSETTING", 1320, FieldType.BIT, 6).setBaseOffset(0);
 	public static final Field USESEPARATEADVANCEFORIDLE = Field.create("USESEPARATEADVANCEFORIDLE", 1320, FieldType.BIT, 7).setBaseOffset(0);
 	public static final Field ISWAVEANALYZERENABLED = Field.create("ISWAVEANALYZERENABLED", 1320, FieldType.BIT, 8).setBaseOffset(0);
 	public static final Field USESEPARATEVEFORIDLE = Field.create("USESEPARATEVEFORIDLE", 1320, FieldType.BIT, 9).setBaseOffset(0);
@@ -2378,7 +2377,6 @@ public class Fields {
 	COMPLEXWALLMODEL,
 	ALWAYSINSTANTRPM,
 	ISMAPAVERAGINGENABLED,
-	OVERRIDECRANKINGIACSETTING,
 	USESEPARATEADVANCEFORIDLE,
 	ISWAVEANALYZERENABLED,
 	USESEPARATEVEFORIDLE,

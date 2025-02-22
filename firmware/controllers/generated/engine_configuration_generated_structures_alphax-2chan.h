@@ -2511,7 +2511,7 @@ struct engine_configuration_s {
 	 * If enabled, use separate temperature multiplier table for cranking idle position.
 	 * If disabled, use normal running multiplier table applied to the cranking base position.
 	offset 1320 bit 6 */
-	bool overrideCrankingIacSetting : 1 {};
+	bool unusedOverrideCrankingIacSetting : 1 {};
 	/**
 	 * This activates a separate ignition timing table for idle conditions, this can help idle stability by using ignition retard and advance either side of the desired idle speed. Extra advance at low idle speeds will prevent stalling and extra retard at high idle speeds can help reduce engine power and slow the idle speed.
 	offset 1320 bit 7 */
