@@ -1,6 +1,7 @@
 package com.rusefi.maintenance;
 
 import com.devexperts.logging.Logging;
+import com.opensr5.ini.IniMemberNotFound;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.SerialPortScanner;
 import com.rusefi.binaryprotocol.BinaryProtocol;
@@ -15,6 +16,7 @@ import static com.devexperts.logging.Logging.getLogging;
 
 public class OutputChannelsHelper {
     private static final Logging log = getLogging(OutputChannelsHelper.class);
+    private static final String MCUSERIAL = PanamaHelper.MCUSERIAL;
 
     public static Optional<Integer> readMcuSerial(
         final SerialPortScanner.PortResult ecuPort,
@@ -23,15 +25,7 @@ public class OutputChannelsHelper {
         return BinaryProtocolExecutor.executeWithSuspendedPortScanner(
             ecuPort.port,
             callbacks,
-            (binaryProtocol) -> {
-                try {
-                    return readMcuSerial(binaryProtocol, callbacks);
-                } catch (final Exception e) {
-                    log.error("Reading `MCUSERIAL` output channel failed:", e);
-                    callbacks.logLine("Reading `MCUSERIAL` output channel failed");
-                    return Optional.empty();
-                }
-            },
+            (binaryProtocol) -> readMcuSerial(binaryProtocol, callbacks),
             Optional.empty(),
             false
         );
@@ -41,24 +35,25 @@ public class OutputChannelsHelper {
         final BinaryProtocol binaryProtocol,
         final UpdateOperationCallbacks callbacks
     ) {
-        callbacks.logLine("Reading `MCUSERIAL` output channel...");
-        Optional<Integer> result = Optional.empty();
-        final IniField mcuSerialField = PanamaHelper.getIniField(binaryProtocol);
-        if (mcuSerialField != null) {
-            final AtomicInteger mcuSerial = new AtomicInteger();
-            SensorCentral.getInstance().addListener(() -> {
-                mcuSerial.set(PanamaHelper.getMcuSerial(mcuSerialField));
-            });
-            if (binaryProtocol.requestOutputChannels()) {
-                callbacks.logLine(String.format("`MCUSERIAL` is %d", mcuSerial.get()));
-                result = Optional.of(mcuSerial.get());
-            } else {
-                callbacks.logLine("Failed to request output channels...");
-            }
-        } else {
+        callbacks.logLine("Reading `" + MCUSERIAL + "` output channel...");
+        IniField mcuSerialField;
+        try {
+            mcuSerialField = PanamaHelper.getIniField(binaryProtocol);
+        } catch (IniMemberNotFound e) {
             callbacks.logLine("Please update firmware to use this feature...");
+            return Optional.empty();
         }
-        return result;
+        final AtomicInteger mcuSerial = new AtomicInteger();
+        SensorCentral.getInstance().addListener(() -> {
+            mcuSerial.set(PanamaHelper.getMcuSerial(mcuSerialField));
+        });
+        if (binaryProtocol.requestOutputChannels()) {
+            callbacks.logLine(String.format("`MCUSERIAL` is %d", mcuSerial.get()));
+            return Optional.of(mcuSerial.get());
+        } else {
+            callbacks.logLine("Failed to request output channels...");
+            return Optional.empty();
+        }
     }
 
 }

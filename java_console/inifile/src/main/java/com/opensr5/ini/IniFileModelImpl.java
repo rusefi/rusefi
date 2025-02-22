@@ -96,9 +96,11 @@ public class IniFileModelImpl implements IniFileModel {
     }
 
     @Override
-    public IniField getOutputChannel(String key) {
+    public IniField getOutputChannel(String key) throws IniMemberNotFound {
         IniField result = allOutputChannels.get(key);
-        return Objects.requireNonNull(result, () -> key + " field not found");
+        if (result == null)
+            throw new IniMemberNotFound(key + " field not found");
+        return result;
     }
 
     @Override

@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
  * @see BinaryProtocolServerSandbox
  */
 public class SerialSandbox {
-    public static void main(String[] args) throws InterruptedException {
+    public static void main(String[] args) throws Exception {
         boolean textPull = false;
         long startTime = System.currentTimeMillis();
 

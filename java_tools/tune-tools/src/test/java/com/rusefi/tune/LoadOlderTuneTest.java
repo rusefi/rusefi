@@ -2,6 +2,7 @@ package com.rusefi.tune;
 
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelImpl;
+import com.opensr5.ini.IniMemberNotFound;
 import com.opensr5.ini.field.ScalarIniField;
 import com.opensr5.ini.field.StringIniField;
 import com.rusefi.*;
@@ -150,7 +151,7 @@ public class LoadOlderTuneTest {
     }
 
     @Test
-    public void findFieldByName() {
+    public void findFieldByName() throws IniMemberNotFound {
         IniFileModel ini = IniFileModelImpl.readIniFile(TuneReadWriteTest.TEST_INI);
         StringIniField make = (StringIniField) ini.getIniField(Fields.ENGINEMAKE);
         assertNotNull(make);

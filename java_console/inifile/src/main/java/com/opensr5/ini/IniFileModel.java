@@ -21,7 +21,7 @@ public interface IniFileModel {
     @Deprecated // always use 'Field' generated parameter with code-generated name?
     IniField getIniField(String key);
 
-    IniField getOutputChannel(String key);
+    IniField getOutputChannel(String key) throws IniMemberNotFound;
 
     Map<String, String> getProtocolMeta();
 

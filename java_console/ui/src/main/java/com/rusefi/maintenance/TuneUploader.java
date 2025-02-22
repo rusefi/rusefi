@@ -18,6 +18,9 @@ public enum TuneUploader {
 
     private static final String CALIBRATIONS_TO_UPLOAD_FILE_NAME = BinaryProtocolLocalCache.STATE_FOLDER + "calibrations_to_upload";
 
+    /**
+     * @return true in case of success, false otherwise
+     */
     public synchronized boolean uploadTune(
         final SerialPortScanner.PortResult ecuPort,
         final String panamaUrl,
@@ -29,6 +32,7 @@ public enum TuneUploader {
         if (instanceName == null || instanceName.isEmpty()) {
             callbacks.logLine("Instance name is not defined!");
             callbacks.logLine("Please right-click on logo and use `Instance name` context menu  to specify an instance name.");
+            return false;
         }
 
         final Optional<CalibrationsInfo> calibrationsToUpload = readAndBackupCurrentCalibrations(
@@ -43,7 +47,7 @@ public enum TuneUploader {
 
         final Optional<Integer> receivedMcuSerial = OutputChannelsHelper.readMcuSerial(ecuPort, callbacks);
         if (!receivedMcuSerial.isPresent()) {
-            callbacks.logLine("Failed to read `MCUSERIAL` output channel");
+            callbacks.logLine("Failed to read `MCUSERIAL` output channel - please update firmware first!");
             return false;
         }
         final int mcuSerial = receivedMcuSerial.get();
