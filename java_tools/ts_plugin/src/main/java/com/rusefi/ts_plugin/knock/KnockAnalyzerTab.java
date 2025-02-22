@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 
 public class KnockAnalyzerTab {
 
+    public static final String CYLINDERS_COUNT = "cylindersCount";
+
     private enum CanvasType {
         CT_ALL,
         CT_SENSORS,
@@ -55,7 +57,7 @@ public class KnockAnalyzerTab {
                 @Override
                 public void setCurrentOutputChannelValue(String name, double v) {
 
-                    int frequency = (int)v;
+                    int frequency = (int) v;
                     canvases.forEach(c -> c.setFrequencyStart(frequency));
                     magnituges.setFrequencyStart(frequency);
                 }
@@ -69,7 +71,7 @@ public class KnockAnalyzerTab {
                 @Override
                 public void setCurrentOutputChannelValue(String name, double v) {
 
-                    float frequencyStep = (float)v;
+                    float frequencyStep = (float) v;
                     canvases.forEach(c -> c.setFrequencyStep(frequencyStep));
                     magnituges.setFrequencyStep(frequencyStep);
                 }
@@ -81,22 +83,22 @@ public class KnockAnalyzerTab {
         try {
             controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName, "m_knockSpectrumChannelCyl", (name, v) -> {
 
-                long value = (long)v;
+                long value = (long) v;
 
                 flush();
 
-                KnockAnalyzerTab.this.channel = (int)(value >>> 8) & 0xFF;
-                KnockAnalyzerTab.this.cylinder =  (int)(value & 0xFF);
+                KnockAnalyzerTab.this.channel = (int) (value >>> 8) & 0xFF;
+                KnockAnalyzerTab.this.cylinder = (int) (value & 0xFF);
             });
         } catch (ControllerException ee) {
             System.out.println(ee.getMessage());
         }
 
         try {
-            ControllerParameter cylindersCountParameter = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(ecuControllerName, "cylindersCount");
-            if(cylindersCountParameter != null) {
+            ControllerParameter cylindersCountParameter = controllerAccessSupplier.get().getControllerParameterServer().getControllerParameter(ecuControllerName, CYLINDERS_COUNT);
+            if (cylindersCountParameter != null) {
                 double value = cylindersCountParameter.getScalarValue();
-                KnockAnalyzerTab.this.cylindersCount = (int)(value);
+                KnockAnalyzerTab.this.cylindersCount = (int) (value);
             }
         } catch (ControllerException ee) {
             System.out.println(ee.getMessage());
@@ -111,18 +113,17 @@ public class KnockAnalyzerTab {
                 .toArray(new String[0]);
 
             int checksum = 0;
-            for (int i = 0; i< 16; ++i) {
+            for (int i = 0; i < 16; ++i) {
                 checksum += i;
             }
 
-            for (int i = 0; i< 16; ++i){
+            for (int i = 0; i < 16; ++i) {
                 try {
 
                     String name = spectrums[i];
                     int finalChecksum = checksum;
                     controllerAccessSupplier.get().getOutputChannelServer().subscribe(ecuControllerName, name, (name1, v) -> {
-                        if(!started)
-                        {
+                        if (!started) {
                             // SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayout(content));
                             return;
                         }
@@ -132,12 +133,12 @@ public class KnockAnalyzerTab {
                         String indexStr = name1.substring(15);
                         int index = Integer.parseInt(indexStr) - 1;
 
-                        long value = (long)v;
+                        long value = (long) v;
 
                         long a = (value >>> 24) & 0xFF;
                         long b = (value >>> 16) & 0xFF;
                         long c = (value >>> 8) & 0xFF;
-                        long d =  value & 0xFF;
+                        long d = value & 0xFF;
 
                         values[index * 4] = a;
                         values[(index * 4) + 1] = b;
@@ -145,7 +146,7 @@ public class KnockAnalyzerTab {
                         values[(index * 4) + 3] = d;
 
                         line_sum_index[0] += index;
-                        if(line_sum_index[0] >= finalChecksum) {
+                        if (line_sum_index[0] >= finalChecksum) {
 
                             flush();
 
@@ -162,9 +163,9 @@ public class KnockAnalyzerTab {
         }
 
         buttonStartStop.addActionListener(e -> {
-                boolean enabled = this.getEnabledEcu();
-                KnockAnalyzerTab.this.setStartState(!enabled);
-                KnockAnalyzerTab.this.setEnabledEcu(!enabled);
+            boolean enabled = this.getEnabledEcu();
+            KnockAnalyzerTab.this.setStartState(!enabled);
+            KnockAnalyzerTab.this.setEnabledEcu(!enabled);
         });
 
         JComponent buttons = new JPanel(new FlowLayout(FlowLayout.LEFT, 5, 5));
@@ -229,8 +230,7 @@ public class KnockAnalyzerTab {
 
     private void flush() {
 
-        if(!started || flushed)
-        {
+        if (!started || flushed) {
             return;
         }
 
@@ -278,7 +278,7 @@ public class KnockAnalyzerTab {
 
         switch (canvasType) {
             case CT_ALL:
-                createCanvas(1,1);
+                createCanvas(1, 1);
                 break;
             case CT_SENSORS:
                 createCanvasSensors();
@@ -319,7 +319,7 @@ public class KnockAnalyzerTab {
     }
 
     public void createCanvasCylinders() {
-        for(int i = 0; i < this.cylindersCount; ++i){
+        for (int i = 0; i < this.cylindersCount; ++i) {
             this.createCanvas(i + 1, this.cylindersCount);
         }
     }
@@ -353,7 +353,7 @@ public class KnockAnalyzerTab {
 
         this.line_sum_index[0] = 0;
 
-        if(this.started) {
+        if (this.started) {
             canvases.forEach(canvas -> {
                 canvas.resetPeak();
             });
