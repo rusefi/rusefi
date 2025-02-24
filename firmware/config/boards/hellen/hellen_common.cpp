@@ -71,6 +71,13 @@ static bool hellenEnPinInitialized = false;
 PUBLIC_API_WEAK void onHellenEnChange(int value) {
 }
 
+// Board specific helper to enable SD card only
+PUBLIC_API_WEAK bool onHellenSdChange(int value) {
+	// most Hellen board have no separate SD card power control
+	// return false and let MegaEn to be enabled
+	return false;
+}
+
 static void setHellenEnValue(int value) {
 	megaEn.setValue(value, /*isForce*/ true);
 	onHellenEnChange(value);
@@ -193,6 +200,12 @@ int boardGetAnalogDiagnostic()
 bool boardSdCardEnable() {
 	// on mega-module we manage SD card power supply
 	if (getHellenBoardEnabled()) {
+		return true;
+	}
+
+	// Board can enable SD card power without enabling WBOs
+	if (onHellenSdChange(1)) {
+		efiPrintf("    *** turning SD power ONLY ***");
 		return true;
 	}
 
