@@ -1,6 +1,10 @@
 /*
  * file can_bench_test.cpp
  * see also https://github.com/rusefi/rusefi/wiki/CAN BENCH_TEST_BASE_ADDRESS 0x770000
+ *
+ * primary recipient is https://github.com/rusefi/rusefi-hardware/tree/main/digital-inputs/firmware
+ *
+ * todo: shall we not broadcast by default but wait until stim firmware wakes us up?
  */
 
 #include "pch.h"
