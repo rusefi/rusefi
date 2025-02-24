@@ -1,3 +1,7 @@
+/*
+ * file can_bench_test.cpp
+ * see also https://github.com/rusefi/rusefi/wiki/CAN BENCH_TEST_BASE_ADDRESS 0x770000
+ */
 
 #include "pch.h"
 #include "bench_test.h"
