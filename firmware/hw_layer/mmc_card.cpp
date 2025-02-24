@@ -188,7 +188,7 @@ static SD_STATUS sdStatus = SD_STATUS_INIT;
 
 static SD_MODE sdMode = SD_MODE_IDLE;
 // by default we want SD card for logs
-static SD_MODE sdTargerMode = SD_MODE_ECU;
+static SD_MODE sdTargetMode = SD_MODE_ECU;
 
 static bool sdNeedRemoveReports = false;
 
@@ -727,13 +727,13 @@ static int sdModeSwitchToIdle(SD_MODE from)
 
 static int sdModeSwitcher()
 {
-	if (sdTargerMode == SD_MODE_IDLE) {
+	if (sdTargetMode == SD_MODE_IDLE) {
 		return 0;
 	}
 
-	if (sdMode == sdTargerMode) {
+	if (sdMode == sdTargetMode) {
 		// already here
-		sdTargerMode = SD_MODE_IDLE;
+		sdTargetMode = SD_MODE_IDLE;
 		return 0;
 	}
 
@@ -750,13 +750,13 @@ static int sdModeSwitcher()
 	}
 
 	// Now SD card is in idle state, we can switch into target state
-	switch (sdTargerMode) {
+	switch (sdTargetMode) {
 	case SD_MODE_IDLE:
 		return 0;
 	case SD_MODE_UNMOUNT:
 		// everithing is done in sdModeSwitchToIdle();
 		sdMode = SD_MODE_UNMOUNT;
-		sdTargerMode = SD_MODE_IDLE;
+		sdTargetMode = SD_MODE_IDLE;
 		return 0;
 	case SD_MODE_ECU:
 		if (mountMmc()) {
@@ -766,13 +766,13 @@ static int sdModeSwitcher()
 			// failed to mount SD card to ECU, go to idle
 			sdMode = SD_MODE_IDLE;
 		}
-		sdTargerMode = SD_MODE_IDLE;
+		sdTargetMode = SD_MODE_IDLE;
 		return 0;
 	case SD_MODE_PC:
 		attachMsdSdCard(cardBlockDevice, resources.blkbuf, sizeof(resources.blkbuf));
 		sdStatus = SD_STATUS_MSD;
 		sdMode = SD_MODE_PC;
-		sdTargerMode = SD_MODE_IDLE;
+		sdTargetMode = SD_MODE_IDLE;
 		return 0;
 	case SD_MODE_FORMAT:
 		if (sdFormat()) {
@@ -780,7 +780,7 @@ static int sdModeSwitcher()
 		}
 		sdMode = SD_MODE_IDLE;
 		// TODO: return to mode that was used before format was requested!
-		sdTargerMode = SD_MODE_IDLE;
+		sdTargetMode = SD_MODE_IDLE;
 		return 0;
 	}
 
@@ -865,7 +865,7 @@ static THD_FUNCTION(MMCmonThread, arg) {
 	// If we have a device AND USB is connected, mount the card to USB, otherwise
 	// mount the null device and try to mount the filesystem ourselves
 	if (useMsdMode()) {
-		sdTargerMode = SD_MODE_PC;
+		sdTargetMode = SD_MODE_PC;
 	}
 #endif
 
@@ -980,9 +980,9 @@ void initMmcCard() {
 #if EFI_PROD_CODE
 
 void sdCardRequestMode(SD_MODE mode) {
-	if (sdTargerMode == SD_MODE_IDLE) {
+	if (sdTargetMode == SD_MODE_IDLE) {
     efiPrintf("sdCardRequestMode %d", (int)mode);
-		sdTargerMode = mode;
+		sdTargetMode = mode;
 	}
 }
 
