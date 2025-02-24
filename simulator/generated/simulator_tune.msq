@@ -514,7 +514,7 @@
         <constant digits="0" name="brakeMeanEffectivePressureDifferential" units="">0.0</constant>
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
-        <constant digits="0" name="byFirmwareVersion" units="index">2.0250223E7</constant>
+        <constant digits="0" name="byFirmwareVersion" units="index">2.0250224E7</constant>
         <constant digits="0" name="calibrationBirthday" units="">2.0250224E7</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="">95.0</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40.0</constant>
