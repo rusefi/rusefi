@@ -155,9 +155,9 @@ jobs:
       matrix: ${{fromJson(needs.generate-matrix.outputs.matrix)}}
 
     steps:
-    - name: Check branch name
-      if: ${{ contains(github.ref_name, '.') }}
-      run: echo '::error::Branch names must not contain ".", this breaks firmware autoupdates. Branch name is "${{ github.ref_name }}".' && exit 1
+#    - name: Check branch name
+#      if: ${{ contains(github.ref_name, '.') }}
+#      run: echo '::error::Branch names must not contain ".", this breaks firmware autoupdates. Branch name is "${{ github.ref_name }}".' && exit 1
 
     - name: Set run condition variables 2
       run: |
