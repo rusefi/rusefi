@@ -979,9 +979,9 @@ void initMmcCard() {
 
 #if EFI_PROD_CODE
 
-void sdCardRequestMode(SD_MODE mode)
-{
+void sdCardRequestMode(SD_MODE mode) {
 	if (sdTargerMode == SD_MODE_IDLE) {
+    efiPrintf("sdCardRequestMode %d", (int)mode);
 		sdTargerMode = mode;
 	}
 }
