@@ -979,11 +979,18 @@ void initMmcCard() {
 
 #if EFI_PROD_CODE
 
-void sdCardRequestMode(SD_MODE mode) {
+void sdCardRequestMode(SD_MODE mode)
+{
+	// Check if SD is not in transition state...
 	if (sdTargetMode == SD_MODE_IDLE) {
-    efiPrintf("sdCardRequestMode %d", (int)mode);
+		efiPrintf("sdCardRequestMode %d", (int)mode);
 		sdTargetMode = mode;
 	}
+}
+
+SD_MODE sdCardGetCurrentMode(void)
+{
+	return sdMode;
 }
 
 void sdCardRemoveReportFiles() {
