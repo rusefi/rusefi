@@ -85,9 +85,17 @@ void hellenEnableEn(const char *msg) {
 void hellenDisableEn(const char *msg) {
 #if EFI_FILE_LOGGING && EFI_PROD_CODE
 	// un-mount before turning power off SD card
-	sdCardRequestMode(SD_MODE_UNMOUNT);
-	efiPrintf("Long sleep for SD card unmount");
-	chThdSleepMilliseconds(1000);
+	// wait up to 1 second for SD card to become unmounted
+	efiPrintf("Long poll for SD card unmount");
+	int timeout = 1000;
+	do {
+		sdCardRequestMode(SD_MODE_UNMOUNT);
+		chThdSleepMilliseconds(10);
+		if (sdCardGetCurrentMode() == SD_MODE_IDLE) {
+			break;
+		}
+		timeout -= 10;
+	} while (timeout > 0);
 #endif
   efiPrintf("Turning board off [%s]", msg);
   hellenDisableEnSilently();
