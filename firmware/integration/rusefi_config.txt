@@ -171,6 +171,7 @@ struct_no_prefix engine_configuration_s
 
 #define AUX_DIGITAL_VALVE_COUNT 2
 
+#define VBAT_INJECTOR_CURVE_PRESSURE_SIZE 2
 #define VBAT_INJECTOR_CURVE_SIZE 8
 
 #define DWELL_CURVE_SIZE 8
@@ -489,6 +490,7 @@ uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this r
 
 struct injector_s
 	float flow;This is your injector flow at the fuel pressure used in the vehicle\nSee units setting below;"", 1, 0, 0, 99999, 2
+! todo: make this a table using VBAT_INJECTOR_CURVE_PRESSURE_SIZE for second coordinate. yes, default value '2'
     float[VBAT_INJECTOR_CURVE_SIZE] battLagCorrBins;;"volts", 1, 0, 0, 20, 2
     float[VBAT_INJECTOR_CURVE_SIZE] battLagCorr;ms delay between injector open and close dead times;"ms", 1, 0, 0, 50, 2
 end_struct
