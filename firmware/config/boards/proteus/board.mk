@@ -68,9 +68,8 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
 	DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_PROTEUS_F4
 	DDEFS += -DRAM_UNUSED_SIZE=100
-	# todo: https://github.com/rusefi/rusefi/pull/7505
-	# you would think that removal of below like would reduce flash usage but somehow it increased it somehow?!
-	DDEFS += -DKNOCK_SPECTROGRAM=TRUE
+  # todo: KNOCK_SPECTROGRAM to use big_buffer
+#	DDEFS += -DKNOCK_SPECTROGRAM=TRUE
 else ifeq ($(PROJECT_CPU),ARCH_STM32H7)
 	DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_PROTEUS_H7
 else
