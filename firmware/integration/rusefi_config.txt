@@ -96,7 +96,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 250220
+#define FLASH_DATA_VERSION 250224
 
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
@@ -1834,7 +1834,7 @@ engine_configuration_s engineConfiguration;
 	int8_t[CLT_CURVE_SIZE] autoscale cltIdleRpmBins;CLT-based target RPM for automatic idle controller;"C", 2, 0, -40, @@CLT_UPPER_LIMIT@@, 0
 	uint8_t[CLT_CURVE_SIZE] autoscale cltIdleRpm;See idleRpmPid;"RPM", 20, 0, 0, 5000, 0
 
-	int8_t[CLT_TIMING_CURVE_SIZE x CLT_TIMING_CURVE_SIZE] autoscale ignitionCltCorrTable;;"deg", 0.1, 0, -25, 25, 1
+	float[CLT_TIMING_CURVE_SIZE x CLT_TIMING_CURVE_SIZE] ignitionCltCorrTable;;"deg",1, 0, -25, 25, 1
     int8_t[CLT_TIMING_CURVE_SIZE] ignitionCltCorrTempBins;CLT-based timing correction;"C", 1, 0, -40, @@CLT_UPPER_LIMIT@@, 0
     uint8_t[CLT_TIMING_CURVE_SIZE] autoscale ignitionCltCorrLoadBins;;"Load", 5, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
 
@@ -1912,7 +1912,7 @@ float[MAF_DECODING_COUNT] mafDecodingBins;;"V", 1, 0, -5, 150, 2
 
 #define IAT_IGN_CORR_COUNT 8
 
-int8_t[IAT_IGN_CORR_COUNT x IAT_IGN_CORR_COUNT] autoscale ignitionIatCorrTable;;"deg", 0.1, 0, -25, 25, 1
+float[IAT_IGN_CORR_COUNT x IAT_IGN_CORR_COUNT] ignitionIatCorrTable;;"deg",1, 0, -25, 25, 1
 int8_t[IAT_IGN_CORR_COUNT] ignitionIatCorrTempBins;;"C", 1, 0, -40, 120, 0
 uint8_t[IAT_IGN_CORR_COUNT] autoscale ignitionIatCorrLoadBins;;"Load", 5, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
 

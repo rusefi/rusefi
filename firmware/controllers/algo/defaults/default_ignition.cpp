@@ -22,12 +22,12 @@ static void setDefaultIatTimingCorrection() {
 	// top 5 rows are the same
 	for (size_t i = 3; i < 8; i++) {
 		//                                                         40  50  60 deg C
-		copyArray(config->ignitionIatCorrTable[i], {0, 0, 0, 0, 0, -1, -2, -3});
+		copyArray(config->ignitionIatCorrTable[i], {0.0, 0.0, 0.0, 0.0, 0.0, -1.0, -2.0, -3.0});
 	}
 
 	// 6th row tapers out
 	//                                                        40  50  60 deg C
-	copyArray(config->ignitionIatCorrTable[2], {0, 0, 0, 0, 0, 0, -1, -2});
+	copyArray(config->ignitionIatCorrTable[2], {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0, -2.0});
 }
 
 static void setDefaultCltTimingCorrection() {
@@ -35,7 +35,7 @@ static void setDefaultCltTimingCorrection() {
 	setLinearCurve(config->ignitionCltCorrLoadBins, /*from=*/ 0, /*to*/ 140, 1);
 
 	for (size_t i = 0; i < CLT_TIMING_CURVE_SIZE; i++) {
-		copyArray(config->ignitionCltCorrTable[i], {0, 0, 0, 0, 0});
+		copyArray(config->ignitionCltCorrTable[i], {0.0, 0.0, 0.0, 0.0, 0.0});
 	}
 }
 
