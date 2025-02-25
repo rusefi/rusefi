@@ -16,11 +16,12 @@ static void setDefaultMultisparkParameters() {
 }
 
 static void setDefaultIatTimingCorrection() {
-	copyArray(config->ignitionIatCorrTempBins, { -40, 0, 10, 20, 30, 40, 50, 60});
 	setLinearCurve(config->ignitionIatCorrLoadBins, /*from=*/ 0, /*to*/ 140, 1);
+#if IAT_IGN_CORR_COUNT == 8
+	copyArray(config->ignitionIatCorrTempBins, { -40, 0, 10, 20, 30, 40, 50, 60});
 
 	// top 5 rows are the same
-	for (size_t i = 3; i < 8; i++) {
+	for (size_t i = 3; i < IAT_IGN_CORR_COUNT; i++) {
 		//                                                         40  50  60 deg C
 		copyArray(config->ignitionIatCorrTable[i], {0.0, 0.0, 0.0, 0.0, 0.0, -1.0, -2.0, -3.0});
 	}
@@ -28,15 +29,20 @@ static void setDefaultIatTimingCorrection() {
 	// 6th row tapers out
 	//                                                        40  50  60 deg C
 	copyArray(config->ignitionIatCorrTable[2], {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0, -2.0});
+#endif
 }
 
 static void setDefaultCltTimingCorrection() {
-	copyArray(config->ignitionCltCorrTempBins, { -20, 0, 20, 40, 60});
 	setLinearCurve(config->ignitionCltCorrLoadBins, /*from=*/ 0, /*to*/ 140, 1);
 
+#if CLT_TIMING_CURVE_SIZE == 5
+	copyArray(config->ignitionCltCorrTempBins, { -20, 0, 20, 40, 60});
+
 	for (size_t i = 0; i < CLT_TIMING_CURVE_SIZE; i++) {
+	  // huh? use setArrayValues? and we probably get all zeros by default anyway?
 		copyArray(config->ignitionCltCorrTable[i], {0.0, 0.0, 0.0, 0.0, 0.0});
 	}
+#endif
 }
 
 static void setDefaultTrailingSparkTable() {
