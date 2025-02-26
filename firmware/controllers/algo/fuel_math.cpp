@@ -378,7 +378,7 @@ float getIatFuelCorrection() {
 float getBaroCorrection() {
 	if (Sensor::hasSensor(SensorType::BarometricPressure)) {
 		// Default to 1atm if failed
-		float pressure = Sensor::get(SensorType::BarometricPressure).value_or(101.325f);
+		float pressure = Sensor::get(SensorType::BarometricPressure).value_or(STD_ATMOSPHERE);
 
 		float correction = interpolate3d(
 			config->baroCorrTable,
@@ -433,7 +433,7 @@ float getStandardAirCharge() {
 
 	// Calculation of 100% VE air mass in g/cyl - 1 cylinder filling at 1.204/L
 	// 101.325kpa, 20C
-	return idealGasLaw(cylDisplacement, 101.325f, 273.15f + 20.0f);
+	return idealGasLaw(cylDisplacement, STD_ATMOSPHERE, 273.15f + 20.0f);
 }
 
 PUBLIC_API_WEAK_SOMETHING_WEIRD

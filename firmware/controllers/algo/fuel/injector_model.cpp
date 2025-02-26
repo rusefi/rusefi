@@ -81,7 +81,7 @@ expected<float> InjectorModelWithConfig::getFuelDifferentialPressure() const {
 
 	float baroKpa = baro.Value;
 	if (!baro || baro.Value > 120 || baro.Value < 50) {
-		baroKpa = 101.325f;
+		baroKpa = STD_ATMOSPHERE;
 	}
 
 	switch (getInjectorCompensationMode()) {
@@ -89,7 +89,7 @@ expected<float> InjectorModelWithConfig::getFuelDifferentialPressure() const {
 			// Add barometric pressure, as "fixed" really means "fixed pressure above atmosphere"
 			return getFuelReferencePressure()
 				+ baroKpa
-				- map.value_or(101.325);
+				- map.value_or(STD_ATMOSPHERE);
 		case ICM_SensedRailPressure: {
 			if (!Sensor::hasSensor(SensorType::FuelPressureInjector)) {
 				warning(ObdCode::OBD_Fuel_Pressure_Sensor_Missing, "Fuel pressure compensation is set to use a pressure sensor, but none is configured.");

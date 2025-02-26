@@ -110,7 +110,7 @@ TEST(DynoView, Base) {
     config->dynoRpmStep = 100;
 
     config->dynoSaeTemperatureC = 20;
-    config->dynoSaeBaro = 101.33;
+    config->dynoSaeBaro = STD_ATMOSPHERE;
     config->dynoSaeRelativeHumidity = 80;
 
     config->dynoCarWheelDiaInch = 18;
@@ -155,7 +155,7 @@ TEST(DynoView, SlowCallback) {
     config->dynoRpmStep = 100;
 
     config->dynoSaeTemperatureC = 20;
-    config->dynoSaeBaro = 101.33;
+    config->dynoSaeBaro = STD_ATMOSPHERE;
     config->dynoSaeRelativeHumidity = 80;
 
     config->dynoCarWheelDiaInch = 18;

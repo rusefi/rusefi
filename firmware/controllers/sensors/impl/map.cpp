@@ -65,7 +65,7 @@ static void printMAPInfo() {
 void initMapDecoder() {
 	if (engineConfiguration->useFixedBaroCorrFromMap) {
 		// Read initial MAP sensor value and store it for Baro correction.
-		float storedInitialBaroPressure = Sensor::get(SensorType::MapSlow).value_or(101.325);
+		float storedInitialBaroPressure = Sensor::get(SensorType::MapSlow).value_or(STD_ATMOSPHERE);
 		efiPrintf("Get initial baro MAP pressure = %.2fkPa", storedInitialBaroPressure);
 		// validate if it's within a reasonable range (the engine should not be spinning etc.)
 		storedInitialBaroPressure = validateBaroMap(storedInitialBaroPressure);
