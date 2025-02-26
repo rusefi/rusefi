@@ -2243,6 +2243,7 @@ uint8_t[TRAILING_SPARK_SIZE] autoscale trailingSparkLoadBins;;"Load", 5, 0, 0,  
 
 end_struct
 
+#define VE_BLEND1_TABLE_NAME "VE blend 1"
 #define HD_MENU_NAME "Harley"
 #define smLaunchControl_NAME "Launch Control"
 #define pedalToTpsTbl_NAME "ETB pedal target"
