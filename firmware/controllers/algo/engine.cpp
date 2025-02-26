@@ -205,8 +205,8 @@ void Engine::updateSlowSensors() {
 
 #if EFI_PROD_CODE
 	// todo: extract method? do better? see https://github.com/rusefi/rusefi/issues/7511 for details
-	engine->module<InjectorModelSecondary>()->pressureCorrectionReference = engine->module<InjectorModelSecondary>()->getFuelDifferentialPressure().Value + Sensor::get(SensorType::Map).value_or(STD_ATMOSPHERE);
-	engine->module<InjectorModelPrimary>()->pressureCorrectionReference = engine->module<InjectorModelPrimary>()->getFuelDifferentialPressure().Value + Sensor::get(SensorType::Map).value_or(STD_ATMOSPHERE);
+	engine->module<InjectorModelSecondary>()->pressureCorrectionReference = engine->module<InjectorModelSecondary>()->getFuelPressure()().Value;
+	engine->module<InjectorModelPrimary>()->pressureCorrectionReference = engine->module<InjectorModelPrimary>()->getFuelPressure()().Value;
 #endif // EFI_PROD_CODE
 
 #if EFI_SHAFT_POSITION_INPUT

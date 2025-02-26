@@ -10,6 +10,7 @@ public:
 	MOCK_METHOD(float, getBaseFlowRate, (), (const, override));
 	MOCK_METHOD(float, getInjectorFlowRatio, (), (override));
 	MOCK_METHOD(expected<float>, getFuelDifferentialPressure, (), (const, override));
+	MOCK_METHOD(expected<float>, getFuelPressure, (), (const, override));
 	MOCK_METHOD(float, getSmallPulseFlowRate, (), (const, override));
 	MOCK_METHOD(float, getSmallPulseBreakPoint, (), (const, override));
 	MOCK_METHOD(InjectorNonlinearMode, getNonlinearMode, (), (const, override));
