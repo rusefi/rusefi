@@ -926,7 +926,7 @@
         <constant digits="1" name="dynoCarWheelDiaInch" units="Inch">18.0</constant>
         <constant digits="0" name="dynoCarWheelTireWidthMm" units="Width mm">235.0</constant>
         <constant digits="0" name="dynoRpmStep" units="Rpm">100.0</constant>
-        <constant digits="3" name="dynoSaeBaro" units="KPa">101.33</constant>
+        <constant digits="3" name="dynoSaeBaro" units="KPa">101.325</constant>
         <constant digits="0" name="dynoSaeRelativeHumidity" units="%">80.0</constant>
         <constant digits="0" name="dynoSaeTemperatureC" units="C">20.0</constant>
         <constant digits="2" name="egoValueShift" units="value">0.0</constant>
