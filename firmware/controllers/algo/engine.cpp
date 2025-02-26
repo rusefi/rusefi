@@ -138,6 +138,10 @@ void Engine::updateTriggerConfiguration() {
 #endif /* EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 }
 
+PUBLIC_API_WEAK void boardPeriodicSlowCallback() {
+
+}
+
 void Engine::periodicSlowCallback() {
 	ScopePerf perf(PE::EnginePeriodicSlowCallback);
 
@@ -189,6 +193,7 @@ void Engine::periodicSlowCallback() {
 	void baroLps25Update();
 	baroLps25Update();
 #endif // EFI_PROD_CODE
+  boardPeriodicSlowCallback();
 }
 
 /**
