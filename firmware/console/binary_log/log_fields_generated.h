@@ -519,6 +519,9 @@ static const LogField fields[] = {
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{engine->module<InjectorModelPrimary>()->pressureRatio, "Fuel: Injector pressure ratio", "", 3},
 #endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<InjectorModelPrimary>()->pressureCorrectionReference, "Fuel: corr reference pressure", "kPa", 1},
+#endif
 #if EFI_LAUNCH_CONTROL
 	{engine->launchController.retardThresholdRpm, "Launch: Retard threshold RPM", "", 0},
 #endif

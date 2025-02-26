@@ -617,6 +617,7 @@
 #define GAUGE_NAME_FUEL_CHARGE_TEMP "Fuel: Estimated charge temperature"
 #define GAUGE_NAME_FUEL_CLT_CORR "Fuel: CLT correction"
 #define GAUGE_NAME_FUEL_CONSUMPTION "Fuel: Total consumed"
+#define GAUGE_NAME_FUEL_CORRECTION_REFERENCE_PRESSURE "Fuel: corr reference pressure"
 #define GAUGE_NAME_FUEL_CRANKING "Fuel: cranking"
 #define GAUGE_NAME_FUEL_FLOW "Fuel: Flow rate"
 #define GAUGE_NAME_FUEL_IAT_CORR "Fuel: IAT correction"
@@ -1381,7 +1382,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3639395850
+#define SIGNATURE_HASH 1041015100
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1873,14 +1874,14 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.02.26.small-can-board.3639395850"
+#define TS_SIGNATURE "rusEFI master.2025.02.26.small-can-board.1041015100"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
 #define TS_SINGLE_WRITE_COMMAND_char W
 #define TS_TEST_COMMAND 't'
 #define TS_TEST_COMMAND_char t
-#define TS_TOTAL_OUTPUT_SIZE 1804
+#define TS_TOTAL_OUTPUT_SIZE 1808
 #define TS_TRIGGER_SCOPE_CHANNEL_1_NAME "Channel 1"
 #define TS_TRIGGER_SCOPE_CHANNEL_2_NAME "Channel 2"
 #define TS_TRIGGER_SCOPE_DISABLE 5

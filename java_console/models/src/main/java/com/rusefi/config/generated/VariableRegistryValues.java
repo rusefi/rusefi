@@ -579,6 +579,7 @@ public class VariableRegistryValues {
 	public static final String GAUGE_NAME_FUEL_CHARGE_TEMP = "Fuel: Estimated charge temperature";
 	public static final String GAUGE_NAME_FUEL_CLT_CORR = "Fuel: CLT correction";
 	public static final String GAUGE_NAME_FUEL_CONSUMPTION = "Fuel: Total consumed";
+	public static final String GAUGE_NAME_FUEL_CORRECTION_REFERENCE_PRESSURE = "Fuel: corr reference pressure";
 	public static final String GAUGE_NAME_FUEL_CRANKING = "Fuel: cranking";
 	public static final String GAUGE_NAME_FUEL_FLOW = "Fuel: Flow rate";
 	public static final String GAUGE_NAME_FUEL_IAT_CORR = "Fuel: IAT correction";
@@ -1290,6 +1291,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
+	public static final int SIGNATURE_HASH = 1927814909;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1557,11 +1559,11 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.02.26.f407-discovery.2483583435";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.02.26.f407-discovery.1927814909";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1804;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1808;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_2_NAME = "Channel 2";
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;
