@@ -555,7 +555,9 @@ ThermistorConf iat;
 	uint8_t hip9011Prescaler;value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into two bit fields;"integer", 1, 0, 0, 32, 0
 	uint8_t unusedHip0
 	uint8_t unusedHip1
-	uint8_t unusedHip2
+! we use this offset to increase changes of default value during configuration migration
+#define TUNING_DETECTOR_PERSISTENCE_OFFSET 1
+	uint8_t tuningDetector;Zero value means do not detect tuning;"seconds", 1, @@TUNING_DETECTOR_PERSISTENCE_OFFSET@@, 0, 250, 0
 	int16_t alternator_iTermMin;iTerm min value;"", 1, 0, -30000, 30000, 0
 	int16_t alternator_iTermMax;iTerm max value;"", 1, 0, -30000, 30000, 0
 

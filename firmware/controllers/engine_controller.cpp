@@ -527,6 +527,9 @@ bool validateConfigOnStartUpOrBurn() {
   if (config->dynoCarCarMassKg == 0) {
     setDynoDefaults();
   }
+  if (engineConfiguration->tuningDetector == 0) {
+    engineConfiguration->tuningDetector = TUNING_DETECTOR_PERSISTENCE_OFFSET;
+  }
 	if (engineConfiguration->cylindersCount > MAX_CYLINDER_COUNT) {
 		criticalError("Invalid cylinder count: %d", engineConfiguration->cylindersCount);
 		return false;
