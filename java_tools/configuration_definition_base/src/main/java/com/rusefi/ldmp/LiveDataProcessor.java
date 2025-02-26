@@ -146,7 +146,7 @@ public class LiveDataProcessor {
 
         SdCardFieldsContent sdCardFieldsConsumer = new SdCardFieldsContent();
 
-        GetOutputValueConsumer outputValueConsumer = new GetOutputValueConsumer("controllers/lua/generated/output_lookup_generated.cpp", fileFactory);
+        GetOutputValueConsumer outputValueConsumer = new GetOutputValueConsumer(getOutputLookupFileName(), fileFactory);
 
         EntryHandler handler = new EntryHandler() {
             @Override
@@ -339,6 +339,10 @@ public class LiveDataProcessor {
         writeFiles();
 
         return startingPosition.get();
+    }
+
+    public static @NotNull String getOutputLookupFileName() {
+        return "controllers/lua/generated/output_lookup_generated.cpp";
     }
 
     private static String @NotNull [] getStrings(Object value) {

@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Test;
 
 import static com.rusefi.AssertCompatibility.assertEquals;
 
+/**
+ * @see LiveDataProcessorTest for most integrated test
+ */
 public class GetOutputValueConsumerTest {
     @Test
     public void generateGetOutputs() {
