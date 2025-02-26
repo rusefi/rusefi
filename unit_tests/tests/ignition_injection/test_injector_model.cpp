@@ -133,17 +133,24 @@ TEST(InjectorModel, Deadtime) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Some test data in the injector correction table
-	for (size_t i = 0; i < efi::size(engineConfiguration->injector.battLagCorr); i++) {
-		engineConfiguration->injector.battLagCorr[i] = 2 * i;
-		engineConfiguration->injector.battLagCorrBins[i] = i;
-	}
+	static const float injectorLagPressureBins[VBAT_INJECTOR_CURVE_PRESSURE_SIZE] = { 300, 600 };
+	static const float injectorLagVbattBins[VBAT_INJECTOR_CURVE_PRESSURE_SIZE] = { 11.0, 15.0 };
+	static const float injectorLagCorrection[VBAT_INJECTOR_CURVE_PRESSURE_SIZE][VBAT_INJECTOR_CURVE_PRESSURE_SIZE] = {
+		{ 6, 1.20 },
+		{ 14, 1.20 },
+	};
+
+	copyArray(engineConfiguration->injector.battLagCorrBattBins, injectorLagVbattBins);
+	copyArray(engineConfiguration->injector.battLagCorrPressBins, injectorLagPressureBins);
+	copyTable(engineConfiguration->injector.battLagCorrTable, injectorLagCorrection);
 
 	InjectorModelPrimary dut;
+    dut.pressureCorrectionReference = 300;
 
-	Sensor::setMockValue(SensorType::BatteryVoltage, 3);
+	Sensor::setMockValue(SensorType::BatteryVoltage, 11);
 	EXPECT_EQ(dut.getDeadtime(), 6);
 
-	Sensor::setMockValue(SensorType::BatteryVoltage, 7);
+	Sensor::setMockValue(SensorType::BatteryVoltage, 15);
 	EXPECT_EQ(dut.getDeadtime(), 14);
 }
 

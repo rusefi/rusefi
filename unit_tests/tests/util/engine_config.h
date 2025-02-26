@@ -51,14 +51,14 @@ public:
 
     // Injector
     std::optional<float> getInjectorFlow() const { return m_injectorFlow; }
-    std::optional<BattLagCorrCurve> getInjectorBattLagCorr() const { return m_injectorBattLagCorrCurve; }
+    std::optional<BattLagCorrTable> getInjectorBattLagCorr() const { return m_injectorBattLagCorrCurve; }
     std::optional<bool> getInjectorFlowAsMassFlow() const { return m_injectorFlowAsMassFlow; }
     std::optional<float> getFuelReferencePressure() const { return m_fuelReferencePressure; }
     std::optional<injector_compensation_mode_e> getInjectorCompensationMode() const { return m_injectorCompensationMode; }
 
     // Secondary injector
     std::optional<float> getInjectorSecondaryFlow() const { return m_injectorSecondaryFlow; }
-    std::optional<BattLagCorrCurve> getInjectorSecondaryBattLagCorr() const { return m_injectorSecondaryBattLagCorrCurve; }
+    std::optional<BattLagCorrTable> getInjectorSecondaryBattLagCorr() const { return m_injectorSecondaryBattLagCorrCurve; }
     std::optional<float> getSecondaryInjectorFuelReferencePressure() const { return m_secondaryInjectorFuelReferencePressure; }
     std::optional<injector_compensation_mode_e> getSecondaryInjectorCompensationMode() const { return m_secondaryInjectorCompensationMode; }
 
@@ -130,13 +130,13 @@ public:
     // Injector
     EngineConfig setInjectorFlowAsMassFlow(std::optional<bool> injectorFlowAsMassFlow);
     EngineConfig setInjectorFlow(std::optional<float> flow);
-    EngineConfig setInjectorBattLagCorr(std::optional<BattLagCorrCurve> battLagCorr);
+    EngineConfig setInjectorBattLagCorr(std::optional<BattLagCorrTable> battLagCorr);
     EngineConfig setFuelReferencePressure(std::optional<float> value);
     EngineConfig setInjectorCompensationMode(std::optional<injector_compensation_mode_e> value);
 
     // Secondary injector
     EngineConfig setInjectorSecondaryFlow(std::optional<float> flow);
-    EngineConfig setInjectorSecondaryBattLagCorr(std::optional<BattLagCorrCurve> battLagCorr);
+    EngineConfig setInjectorSecondaryBattLagCorr(std::optional<BattLagCorrTable> battLagCorr);
     EngineConfig setSecondaryInjectorFuelReferencePressure(std::optional<float> value);
     EngineConfig setSecondaryInjectorCompensationMode(std::optional<injector_compensation_mode_e> value);
 
@@ -204,14 +204,14 @@ private:
 
     // Injector
     std::optional<float> m_injectorFlow;
-    std::optional<BattLagCorrCurve> m_injectorBattLagCorrCurve;
+    std::optional<BattLagCorrTable> m_injectorBattLagCorrCurve;
     std::optional<bool> m_injectorFlowAsMassFlow;;
     std::optional<float> m_fuelReferencePressure;
     std::optional<injector_compensation_mode_e> m_injectorCompensationMode;
 
     // Secondary injector
     std::optional<float> m_injectorSecondaryFlow;
-    std::optional<BattLagCorrCurve> m_injectorSecondaryBattLagCorrCurve;
+    std::optional<BattLagCorrTable> m_injectorSecondaryBattLagCorrCurve;
     std::optional<float> m_secondaryInjectorFuelReferencePressure;
     std::optional<injector_compensation_mode_e> m_secondaryInjectorCompensationMode;
 

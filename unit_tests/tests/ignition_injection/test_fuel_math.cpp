@@ -238,7 +238,7 @@ TEST(FuelMath, deadtime) {
 	EXPECT_FLOAT_EQ( 20,  engine->engineState.injectionDuration);
 
 	// Now add some deadtime
-	setArrayValues(engineConfiguration->injector.battLagCorr, 2.0f);
+	setFlatInjectorLag(2.0f);
 
 	// Should have deadtime now!
 	engine->periodicFastCallback();
