@@ -951,9 +951,11 @@ struct engine_configuration_s {
 	 */
 	uint8_t unusedHip1;
 	/**
+	 * Zero value means do not detect tuning
+	 * units: seconds
 	 * offset 427
 	 */
-	uint8_t unusedHip2;
+	uint8_t tuningDetector;
 	/**
 	 * iTerm min value
 	 * offset 428

@@ -36,6 +36,7 @@ public class TsOutputs {
 	public static final Field TRIGGERPAGEREFRESHFLAG = Field.create("TRIGGERPAGEREFRESHFLAG", 0, FieldType.BIT, 27).setBaseOffset(0);
 	public static final Field HASFAULTREPORTFILE = Field.create("HASFAULTREPORTFILE", 0, FieldType.BIT, 28).setBaseOffset(0);
 	public static final Field ISANALOGFAILURE = Field.create("ISANALOGFAILURE", 0, FieldType.BIT, 29).setBaseOffset(0);
+	public static final Field ISTUNINGNOW = Field.create("ISTUNINGNOW", 0, FieldType.BIT, 30).setBaseOffset(0);
 	public static final Field RPMVALUE = Field.create("RPMVALUE", 4, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field RPMACCELERATION = Field.create("RPMACCELERATION", 6, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field SPEEDTORPMRATIO = Field.create("SPEEDTORPMRATIO", 8, FieldType.INT16).setScale(0.01).setBaseOffset(0);
@@ -473,6 +474,7 @@ public class TsOutputs {
 	TRIGGERPAGEREFRESHFLAG,
 	HASFAULTREPORTFILE,
 	ISANALOGFAILURE,
+	ISTUNINGNOW,
 	RPMVALUE,
 	RPMACCELERATION,
 	SPEEDTORPMRATIO,

@@ -148,10 +148,10 @@ struct output_channels_s {
 	bool isAnalogFailure : 1 {};
 	/**
 	offset 0 bit 30 */
-	bool unusedBit_30_30 : 1 {};
+	bool isTuningNow : 1 {};
 	/**
 	offset 0 bit 31 */
-	bool unusedBit_30_31 : 1 {};
+	bool unusedBit_31_31 : 1 {};
 	/**
 	 * @@GAUGE_NAME_RPM@@
 	 * units: RPM

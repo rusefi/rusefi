@@ -96,6 +96,9 @@ float getOutputValueByName(const char *name) {
 // isAnalogFailure
 		case -1383513733:
 			return engine->outputChannels.isAnalogFailure;
+// isTuningNow
+		case 1109228234:
+			return engine->outputChannels.isTuningNow;
 // RPMValue
 		case 1699696209:
 			return engine->outputChannels.RPMValue;

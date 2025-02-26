@@ -32,6 +32,7 @@ static const LogField fields[] = {
 	{engine->outputChannels, 0, 27, "triggerPageRefreshFlag", ""},
 	{engine->outputChannels, 0, 28, "hasFaultReportFile", ""},
 	{engine->outputChannels, 0, 29, "Analog sensors supply failure", ""},
+	{engine->outputChannels, 0, 30, "isTuningNow", ""},
 	{engine->outputChannels.RPMValue, "RPM", "RPM", 0},
 	{engine->outputChannels.rpmAcceleration, "dRPM", "RPM acceleration/Rate of Change/ROC", 2},
 	{engine->outputChannels.speedToRpmRatio, "Gearbox Ratio", "value", 2},

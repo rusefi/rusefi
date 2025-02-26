@@ -1291,7 +1291,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 1927814909;
+	public static final int SIGNATURE_HASH = 88997625;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1559,7 +1559,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.02.26.f407-discovery.1927814909";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.02.26.f407-discovery.88997625";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1583,6 +1583,7 @@ public class VariableRegistryValues {
 	public static final int TsCalMode_Tps2Min = 9;
 	public static final int TsCalMode_Tps2SecondaryMax = 10;
 	public static final int TsCalMode_Tps2SecondaryMin = 11;
+	public static final int TUNING_DETECTOR_PERSISTENCE_OFFSET = 1;
 	public static final int uart_device_e_UART_DEVICE_1 = 1;
 	public static final int uart_device_e_UART_DEVICE_2 = 2;
 	public static final int uart_device_e_UART_DEVICE_3 = 3;

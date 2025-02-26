@@ -251,6 +251,9 @@ float getConfigValueByName(const char *name) {
 // hip9011Prescaler
 		case 1548430930:
 			return engineConfiguration->hip9011Prescaler;
+// tuningDetector
+		case 1082602292:
+			return engineConfiguration->tuningDetector;
 // alternator_iTermMin
 		case 107641733:
 			return engineConfiguration->alternator_iTermMin;
@@ -2381,6 +2384,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1548430930:
 	{
 		engineConfiguration->hip9011Prescaler = (int)value;
+		return 1;
+	}
+		case 1082602292:
+	{
+		engineConfiguration->tuningDetector = (int)value;
 		return 1;
 	}
 		case 107641733:

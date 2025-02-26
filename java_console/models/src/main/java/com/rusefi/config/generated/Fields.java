@@ -117,6 +117,7 @@ public class Fields {
 	public static final Field IAT_ALIGNMENTFILL_AT_29 = Field.create("IAT_ALIGNMENTFILL_AT_29", 417, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field LAUNCHTIMINGRETARD = Field.create("LAUNCHTIMINGRETARD", 420, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field HIP9011PRESCALER = Field.create("HIP9011PRESCALER", 424, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field TUNINGDETECTOR = Field.create("TUNINGDETECTOR", 427, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field ALTERNATOR_ITERMMIN = Field.create("ALTERNATOR_ITERMMIN", 428, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field ALTERNATOR_ITERMMAX = Field.create("ALTERNATOR_ITERMMAX", 430, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field DISPLACEMENT = Field.create("DISPLACEMENT", 432, FieldType.INT16).setScale(0.001).setBaseOffset(0);
@@ -1911,6 +1912,7 @@ public class Fields {
 	IAT_ALIGNMENTFILL_AT_29,
 	LAUNCHTIMINGRETARD,
 	HIP9011PRESCALER,
+	TUNINGDETECTOR,
 	ALTERNATOR_ITERMMIN,
 	ALTERNATOR_ITERMMAX,
 	DISPLACEMENT,

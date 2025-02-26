@@ -244,6 +244,9 @@ Pull-up resistor value on your board
 ### hip9011Prescaler
 value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into two bit fields
 
+### tuningDetector
+Zero value means do not detect tuning
+
 ### alternator_iTermMin
 iTerm min value
 
