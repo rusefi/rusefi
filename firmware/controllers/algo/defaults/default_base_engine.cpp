@@ -36,7 +36,7 @@ void setGDIFueling() {
 	// Reference rail pressure is 10 000 kPa = 100 bar
 	engineConfiguration->fuelReferencePressure = 10000;
 	//setting "flat" 0.2 ms injector's lag time
-	setArrayValues(engineConfiguration->injector.battLagCorr, 0.2);
+	setTable(engineConfiguration->injector.battLagCorrTable, 0.2);
 
 	setTable(config->injectionPhase, -200.0f);
 	engineConfiguration->injectionTimingMode = InjectionTimingMode::Center;

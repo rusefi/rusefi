@@ -5,30 +5,20 @@
 #include "mazda_miata_vvt.h"
 
 static void setBosch02880155868(injector_s& cfg) {
-	// http://www.boschdealer.com/specsheets/0280155868cs.jpg
-	cfg.battLagCorrBins[0] = 6;
-	cfg.battLagCorr[0] = 3.371;
+	// http://www.boschdealer.com/specsheets/0280155868cs.jpg (use web.archive.org)
 
-	cfg.battLagCorrBins[1] = 8;
-	cfg.battLagCorr[1] = 1.974;
+    static const float vBattBins[2] = { 10, 14 };
+	static const float pressureBins[2] = { 206.843, 413.685 };
 
-	cfg.battLagCorrBins[2] = 10;
-	cfg.battLagCorr[2] = 1.383;
+    // result from FNPW_OFFSET * FNPW_OFFCOMP
+    static const float corrBins[2][2] = {
+       { 1.383 * 0.9651, 0.726 * 0.9651 },
+       { 1.383 * 1.1152, 0.726 * 1.1152 }
+    };
 
-	cfg.battLagCorrBins[3] = 11;
-	cfg.battLagCorr[3] = 1.194;
-
-	cfg.battLagCorrBins[4] = 12;
-	cfg.battLagCorr[4] = 1.04;
-
-	cfg.battLagCorrBins[5] = 13;
-	cfg.battLagCorr[5] = 0.914;
-
-	cfg.battLagCorrBins[6] = 14;
-	cfg.battLagCorr[6] = 0.797;
-
-	cfg.battLagCorrBins[7] = 15;
-	cfg.battLagCorr[7] = 0.726;
+	copyArray(cfg.battLagCorrBattBins, vBattBins);
+	copyArray(cfg.battLagCorrPressBins,pressureBins);
+	copyTable(cfg.battLagCorrTable, corrBins);
 }
 
 static void setDefaultWarmupFuelEnrichment() {
