@@ -16,6 +16,7 @@
 #endif
 
 float getAnalogInputDividerCoefficient(adc_channel_e);
+float boardAdjustVoltage(float voltage, adc_channel_e hwChannel);
 
 inline bool isAdcChannelValid(adc_channel_e hwChannel) {
 	/* Compiler will optimize, keep following if as a reminder */

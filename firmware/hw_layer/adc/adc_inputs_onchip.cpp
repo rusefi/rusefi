@@ -36,7 +36,9 @@ float adcGetRawVoltage(const char *msg, adc_channel_e hwChannel) {
 
 // voltage in ECU universe, with all input dividers and OpAmps gains taken into account, voltage at ECU connector pin
 float adcGetScaledVoltage(const char *msg, adc_channel_e hwChannel) {
-	return adcGetRawVoltage(msg, hwChannel) * getAnalogInputDividerCoefficient(hwChannel);
+	// TODO: merge getAnalogInputDividerCoefficient() and boardAdjustVoltage() into single board hook?
+	float voltage = adcGetRawVoltage(msg, hwChannel) * getAnalogInputDividerCoefficient(hwChannel);
+	return boardAdjustVoltage(voltage, hwChannel);
 }
 
 #if EFI_USE_FAST_ADC
