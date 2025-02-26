@@ -1,6 +1,8 @@
 See https://github.com/rusefi/rusefi/wiki/Dev-Quality-Control
 
-TL, DR: just follow [tests](tests) folder as examples. gcc/makefile/gtest
+TL, DR: just follow [tests](tests) folder as examples. [tests/nitrous_control](tests/nitrous_control) is a great starting point!
+
+gcc/makefile/gtest
 
 1. Run 'make' to build desktop binary.
 2. Execute rusefi_test binary on your PC/Mac, it's expected to say SUCCESS and not fail :) Googletest will also print results summary.
