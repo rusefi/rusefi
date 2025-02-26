@@ -357,6 +357,8 @@ void requestBurn() {
 
 #if EFI_TUNER_STUDIO
 
+Timer calibrationsWriteTimer;
+
 /**
  * 'Burn' command is a command to commit the changes
  */
@@ -741,12 +743,14 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 	case TS_CHUNK_WRITE_COMMAND:
 		// command with no page argument, default page = 0
 		handleWriteChunkCommand(tsChannel, page, offset, count, data + sizeof(TunerStudioRWChunkRequest));
+		calibrationsWriteTimer.reset();
 		break;
 	case TS_SINGLE_WRITE_COMMAND:
 		// command with no page argument, default page = 0
 		// This command writes 1 byte
 		count = 1;
 		handleWriteChunkCommand(tsChannel, page, offset, count, data + sizeof(offset));
+		calibrationsWriteTimer.reset();
 		break;
 	case TS_GET_SCATTERED_GET_COMMAND:
 #if EFI_TS_SCATTER
