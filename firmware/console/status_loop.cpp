@@ -429,11 +429,6 @@ static void updateFuelSensors() {
 	engine->outputChannels.highFuelPressure = KPA2BAR(Sensor::getOrZero(SensorType::FuelPressureHigh));
 
 	engine->outputChannels.flexPercent = Sensor::getOrZero(SensorType::FuelEthanolPercent);
-#if EFI_PROD_CODE
-	// todo: extract method? do better? see https://github.com/rusefi/rusefi/issues/7511 for details
-	engine->module<InjectorModelSecondary>()->pressureCorrectionReference = engine->module<InjectorModelSecondary>()->getFuelDifferentialPressure().Value + Sensor::get(SensorType::Map).value_or(STD_ATMOSPHERE);
-	engine->module<InjectorModelPrimary>()->pressureCorrectionReference = engine->module<InjectorModelPrimary>()->getFuelDifferentialPressure().Value + Sensor::get(SensorType::Map).value_or(STD_ATMOSPHERE);
-#endif // EFI_PROD_CODE
 
 	engine->outputChannels.fuelTankLevel = Sensor::getOrZero(SensorType::FuelLevel);
 }
@@ -652,9 +647,11 @@ static void updateWarningCodes() {
 // sensor state for EFI Analytics Tuner Studio
 // todo: the 'let's copy internal state for external consumers' approach is DEPRECATED
 // As of 2022 it's preferred to leverage LiveData where all state is exposed
+// this method is invoked ONLY if we SD card log or have serial connection with some frontend app
 void updateTunerStudioState() {
 	TunerStudioOutputChannels *tsOutputChannels = &engine->outputChannels;
 #if EFI_USB_SERIAL
+  // pretty much SD card logs know if specifically USB serial is active
 	engine->outputChannels.isUsbConnected =	is_usb_serial_ready();
 #endif // EFI_USB_SERIAL
 
