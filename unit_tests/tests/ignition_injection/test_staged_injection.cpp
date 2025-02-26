@@ -18,16 +18,17 @@ namespace {
     constexpr float TEST_SECONDARY_INJECTOR_FLOW = 174.17f;
     constexpr float TEST_SECONDARY_INJECTOR_BASE_DURATION = TEST_INJECTION_MASS / TEST_SECONDARY_INJECTOR_FLOW * 1000;
 
-    BattLagCorrCurve generateConstantBattLagCorrCurve(const float value) {
-        BattLagCorrCurve testBattLagCorrCurve;
-        testBattLagCorrCurve.fill(value);
-        return testBattLagCorrCurve;
+    BattLagCorrTable generateConstantBattLagCorrCurve(const float value) {
+        BattLagCorrTable testBattLagCorrTable;
+        testBattLagCorrTable[0].fill(value);
+        testBattLagCorrTable[1].fill(value);
+        return testBattLagCorrTable;
     }
 
-    const BattLagCorrCurve TEST_PRIMARY_INJECTOR_BATT_LAG_CORR_CURVE = generateConstantBattLagCorrCurve(
+    const BattLagCorrTable TEST_PRIMARY_INJECTOR_BATT_LAG_CORR_CURVE = generateConstantBattLagCorrCurve(
         TEST_PRIMARY_INJECTOR_DEAD_TIME
     );
-    const BattLagCorrCurve TEST_SECONDARY_INJECTOR_BATT_LAG_CORR_CURVE = generateConstantBattLagCorrCurve(
+    const BattLagCorrTable TEST_SECONDARY_INJECTOR_BATT_LAG_CORR_CURVE = generateConstantBattLagCorrCurve(
         TEST_SECONDARY_INJECTOR_DEAD_TIME
     );
 

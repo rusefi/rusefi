@@ -42,13 +42,13 @@ namespace engine_configuration_defaults {
     /* Injector */
     constexpr bool INJECTOR_FLOW_AS_MASS_FLOW = false;
     constexpr float INJECTOR_FLOW = 200.0f;
-    constexpr BattLagCorrCurve INJECTOR_BATT_LAG_CURR { 3.371f, 1.974f, 1.383f, 1.194f, 1.04f, 0.914f, 0.797f, 0.726 };
+    constexpr BattLagCorrTable INJECTOR_BATT_LAG_CURR { { 1.383 * 0.9651, 0.726 * 0.9651 } };
     constexpr float FUEL_REFERENCE_PRESSURE = 300.0f;
     constexpr injector_compensation_mode_e INJECTOR_COMPENSATION_MODE = ICM_None;
 
     /* Secondary injector: */
     constexpr float INJECTOR_SECONDARY_FLOW = INJECTOR_FLOW;
-    constexpr BattLagCorrCurve INJECTOR_SECONDARY_BATT_LAG_CURR = INJECTOR_BATT_LAG_CURR;
+    constexpr BattLagCorrTable INJECTOR_SECONDARY_BATT_LAG_CURR { { 1.383 * 0.9651, 0.726 * 0.9651 } };
     constexpr float SECONDARY_INJECTOR_FUEL_REFERENCE_PRESSURE = 0.0f;
     constexpr injector_compensation_mode_e SECONDARY_INJECTOR_COMPENSATION_MODE = INJECTOR_COMPENSATION_MODE;
 

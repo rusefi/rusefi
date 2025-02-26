@@ -328,21 +328,22 @@ void TestEngineConfiguration::configureInjectorFlow(const std::optional<float> f
     }
 }
 
-void TestEngineConfiguration::configureInjectorBattLagCorr(const std::optional<BattLagCorrCurve> battLagCorr) {
+void TestEngineConfiguration::configureInjectorBattLagCorr(const std::optional<BattLagCorrTable> battLagCorr) {
     if (battLagCorr.has_value()) {
-        std::copy(
-            std::begin(battLagCorr.value()),
-            std::end(battLagCorr.value()),
-            std::begin(engineConfiguration->injector.battLagCorr)
-        );
+        for (size_t i = 0; i < VBAT_INJECTOR_CURVE_PRESSURE_SIZE; i++) {
+            std::copy(
+                std::begin(battLagCorr.value()[i]),
+                std::end(battLagCorr.value()[i]),
+                std::begin(engineConfiguration->injector.battLagCorrTable[i])
+            );
+        }
     } else {
         EXPECT_THAT(
-            engineConfiguration->injector.battLagCorr,
-            testing::ElementsAreArray(engine_configuration_defaults::INJECTOR_BATT_LAG_CURR)
+            engineConfiguration->injector.battLagCorrTable[0],
+            testing::ElementsAreArray(engine_configuration_defaults::INJECTOR_BATT_LAG_CURR[0])
         );
     }
 }
-
 void TestEngineConfiguration::configureFuelReferencePressure(const std::optional<float> fuelReferencePressure) {
     if (fuelReferencePressure.has_value()) {
         engineConfiguration->fuelReferencePressure = fuelReferencePressure.value();
@@ -378,17 +379,19 @@ void TestEngineConfiguration::configureInjectorSecondaryFlow(const std::optional
     }
 }
 
-void TestEngineConfiguration::configureInjectorSecondaryBattLagCorr(const std::optional<BattLagCorrCurve> battLagCorr) {
+void TestEngineConfiguration::configureInjectorSecondaryBattLagCorr(const std::optional<BattLagCorrTable> battLagCorr) {
     if (battLagCorr.has_value()) {
-        std::copy(
-            std::begin(battLagCorr.value()),
-            std::end(battLagCorr.value()),
-            std::begin(engineConfiguration->injectorSecondary.battLagCorr)
-        );
+        for (size_t i = 0; i < VBAT_INJECTOR_CURVE_PRESSURE_SIZE; i++) {
+            std::copy(
+                std::begin(battLagCorr.value()[i]),
+                std::end(battLagCorr.value()[i]),
+                std::begin(engineConfiguration->injectorSecondary.battLagCorrTable[i])
+            );
+        }
     } else {
-        EXPECT_THAT(
-            engineConfiguration->injectorSecondary.battLagCorr,
-            testing::ElementsAreArray(engine_configuration_defaults::INJECTOR_SECONDARY_BATT_LAG_CURR)
+       EXPECT_THAT(
+            engineConfiguration->injectorSecondary.battLagCorrTable[0],
+            testing::ElementsAreArray(engine_configuration_defaults::INJECTOR_SECONDARY_BATT_LAG_CURR[0])
         );
     }
 }

@@ -52,14 +52,14 @@ public:
 
     // Injector
     void configureInjectorFlow(std::optional<float> flow);
-    void configureInjectorBattLagCorr(std::optional<BattLagCorrCurve> battLagCorr);
+    void configureInjectorBattLagCorr(std::optional<BattLagCorrTable> battLagCorr);
     void configureInjectorFlowAsMassFlow(std::optional<bool> injectorFlowAsMassFlow);
     void configureFuelReferencePressure(std::optional<float> fuelReferencePressure);
     void configureInjectorCompensationMode(std::optional<injector_compensation_mode_e> injectorCompensationMode);
 
     // Secondary Injector
     void configureInjectorSecondaryFlow(std::optional<float> flow);
-    void configureInjectorSecondaryBattLagCorr(std::optional<BattLagCorrCurve> battLagCorr);
+    void configureInjectorSecondaryBattLagCorr(std::optional<BattLagCorrTable> battLagCorr);
     void configureSecondaryInjectorFuelReferencePressure(std::optional<float> secondaryInjectorFuelReferencePressure);
     void configureSecondaryInjectorCompensationMode(
         std::optional<injector_compensation_mode_e> secondaryInjectorCompensationMode

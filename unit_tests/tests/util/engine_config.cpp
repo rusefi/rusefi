@@ -157,7 +157,7 @@ EngineConfig EngineConfig::setInjectorFlow(const std::optional<float> flow) {
     return *this;
 }
 
-EngineConfig EngineConfig::setInjectorBattLagCorr(const std::optional<BattLagCorrCurve> battLagCorr) {
+EngineConfig EngineConfig::setInjectorBattLagCorr(const std::optional<BattLagCorrTable> battLagCorr) {
     m_injectorBattLagCorrCurve = battLagCorr;
     return *this;
 }
@@ -177,7 +177,7 @@ EngineConfig EngineConfig::setInjectorSecondaryFlow(const std::optional<float> f
     return *this;
 }
 
-EngineConfig EngineConfig::setInjectorSecondaryBattLagCorr(const std::optional<BattLagCorrCurve> battLagCorr) {
+EngineConfig EngineConfig::setInjectorSecondaryBattLagCorr(const std::optional<BattLagCorrTable> battLagCorr) {
     m_injectorSecondaryBattLagCorrCurve = battLagCorr;
     return *this;
 }

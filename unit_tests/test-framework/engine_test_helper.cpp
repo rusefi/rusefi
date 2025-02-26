@@ -444,7 +444,7 @@ void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e inject
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 
 	setArrayValues(config->cltFuelCorrBins, 1.0f);
-	setArrayValues(engineConfiguration->injector.battLagCorr, 0.0f);
+	setFlatInjectorLag(0.0);
 	// this is needed to update injectorLag
 	engine->updateSlowSensors();
 

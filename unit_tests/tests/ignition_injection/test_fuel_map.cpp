@@ -17,10 +17,7 @@ TEST(misc, testFuelMap) {
 	printf("Setting up FORD_ASPIRE_1996\r\n");
 	EngineTestHelper eth(engine_type_e::FORD_ASPIRE_1996);
 
-	for (int i = 0; i < VBAT_INJECTOR_CURVE_SIZE; i++) {
-		engineConfiguration->injector.battLagCorrBins[i] = i;
-		engineConfiguration->injector.battLagCorr[i] = 0.5 + 2 * i;
-	}
+	setFlatInjectorLag(0.2);
 
 	eth.engine.updateSlowSensors();
 
