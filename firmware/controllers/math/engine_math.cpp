@@ -153,7 +153,7 @@ void setAlgorithm(engine_load_mode_e algo) {
 }
 
 void setFlatInjectorLag(float value) {
-	setArrayValues(engineConfiguration->injector.battLagCorr, value);
+	setTable(engineConfiguration->injector.battLagCorrTable, value);
 }
 
 BlendResult calculateBlend(blend_table_s& cfg, float rpm, float load) {

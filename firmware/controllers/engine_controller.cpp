@@ -564,7 +564,8 @@ bool validateConfigOnStartUpOrBurn() {
   	engineConfiguration->alternator_iTermMax = 1000;
 	}
 
-	ensureArrayIsAscending("Injector deadtime", engineConfiguration->injector.battLagCorrBins);
+	ensureArrayIsAscending("Injector deadtime vBATT", engineConfiguration->injector.battLagCorrBattBins);
+	ensureArrayIsAscending("Injector deadtime Pressure", engineConfiguration->injector.battLagCorrPressBins);
 
 #if EFI_ENGINE_CONTROL
 	// Fueling
