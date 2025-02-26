@@ -80,6 +80,7 @@ expected<float> InjectorModelWithConfig::getFuelDifferentialPressure() const {
 	auto baro = Sensor::get(SensorType::BarometricPressure);
 
 	float baroKpa = baro.Value;
+	// todo: extract baro sensor validation logic
 	if (!baro || baro.Value > 120 || baro.Value < 50) {
 		baroKpa = STD_ATMOSPHERE;
 	}

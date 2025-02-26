@@ -429,6 +429,10 @@ static void updateFuelSensors() {
 	engine->outputChannels.highFuelPressure = KPA2BAR(Sensor::getOrZero(SensorType::FuelPressureHigh));
 
 	engine->outputChannels.flexPercent = Sensor::getOrZero(SensorType::FuelEthanolPercent);
+#if EFI_PROD_CODE
+	// todo: extract method? do better?
+	engine->module<InjectorModelSecondary>()->pressureCorrectionReference = engine->module<InjectorModelSecondary>()->getFuelDifferentialPressure().Value + Sensor::get(SensorType::Map).value_or(STD_ATMOSPHERE);
+#endif // EFI_PROD_CODE
 
 	engine->outputChannels.fuelTankLevel = Sensor::getOrZero(SensorType::FuelLevel);
 }
