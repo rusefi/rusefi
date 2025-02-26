@@ -164,10 +164,10 @@ float InjectorModelWithConfig::getInjectorFlowRatio() {
 }
 
 float InjectorModelWithConfig::getDeadtime() const {
-	return interpolate2d(
-		Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE),
-		m_cfg->battLagCorrBins,
-		m_cfg->battLagCorr
+	return interpolate3d(
+		m_cfg->battLagCorrTable,
+      	m_cfg->battLagCorrBattBins, Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE),
+      	m_cfg->battLagCorrPressBins, pressureCorrectionReference
 	);
 }
 
