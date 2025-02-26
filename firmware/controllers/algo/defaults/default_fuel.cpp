@@ -7,13 +7,12 @@
 static void setBosch02880155868(injector_s& cfg) {
 	// http://www.boschdealer.com/specsheets/0280155868cs.jpg (use web.archive.org)
 
-    static const float vBattBins[2] = { 10, 14 };
+    static const float vBattBins[8] = { 6.0, 8.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0 };
 	static const float pressureBins[2] = { 206.843, 413.685 };
 
-    // result from FNPW_OFFSET * FNPW_OFFCOMP
-    static const float corrBins[2][2] = {
-       { 1.383 * 0.9651, 0.726 * 0.9651 },
-       { 1.383 * 1.1152, 0.726 * 1.1152 }
+    static const float corrBins[2][8] = {
+	    { 3.371, 1.974, 1.383, 1.194, 1.040, 0.914, 0.767, 0.726 },
+		{ 3.371, 1.974, 1.383, 1.194, 1.040, 0.914, 0.767, 0.726 },
     };
 
 	copyArray(cfg.battLagCorrBattBins, vBattBins);
