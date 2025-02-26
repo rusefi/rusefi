@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_type_e.h"
-// was generated automatically by rusEFI tool  from engine_type_e.h // by enum_to_string.jar tool on Sat Feb 01 01:29:30 UTC 2025
+// was generated automatically by rusEFI tool  from engine_type_e.h // by enum_to_string.jar tool on Wed Feb 26 20:20:51 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -31,8 +31,6 @@ case engine_type_e::ET_BOSCH_QUICK_START:
   return "ET_BOSCH_QUICK_START";
 case engine_type_e::ET_TEST_WITH_BOSCH_QUICK_START:
   return "ET_TEST_WITH_BOSCH_QUICK_START";
-case engine_type_e::ET_UNUSED_56:
-  return "ET_UNUSED_56";
 case engine_type_e::FERRARI_F136:
   return "FERRARI_F136";
 case engine_type_e::FORD_ASPIRE_1996:
@@ -173,6 +171,8 @@ case engine_type_e::SACHS:
   return "SACHS";
 case engine_type_e::SIMULATOR_CONFIG:
   return "SIMULATOR_CONFIG";
+case engine_type_e::SUBARU_2011:
+  return "SUBARU_2011";
 case engine_type_e::SUBARU_EG33:
   return "SUBARU_EG33";
 case engine_type_e::TCU_4R70W:

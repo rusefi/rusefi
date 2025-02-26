@@ -385,7 +385,6 @@ public class VariableRegistryValues {
 	public static final int engine_type_e_EEPROM_BENCH_ENGINE = 61;
 	public static final int engine_type_e_ET_BOSCH_QUICK_START = 21;
 	public static final int engine_type_e_ET_TEST_WITH_BOSCH_QUICK_START = 24;
-	public static final int engine_type_e_ET_UNUSED_56 = 56;
 	public static final int engine_type_e_ETB_BENCH_ENGINE = 58;
 	public static final int engine_type_e_FERRARI_F136 = 105;
 	public static final int engine_type_e_FORD_ASPIRE_1996 = 3;
@@ -457,6 +456,7 @@ public class VariableRegistryValues {
 	public static final int engine_type_e_PROTEUS_VW_B6 = 39;
 	public static final int engine_type_e_SACHS = 29;
 	public static final int engine_type_e_SIMULATOR_CONFIG = 92;
+	public static final int engine_type_e_SUBARU_2011 = 56;
 	public static final int engine_type_e_SUBARU_EG33 = 70;
 	public static final int engine_type_e_TCU_4R70W = 17;
 	public static final int engine_type_e_TEST_100 = 100;
