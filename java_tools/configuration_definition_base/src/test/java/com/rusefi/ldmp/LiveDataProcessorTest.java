@@ -92,18 +92,30 @@ public class LiveDataProcessorTest {
             "float getOutputValueByName(const char *name) {\n" +
             "\tint hash = djb2lowerCase(name);\n" +
             "\tswitch(hash) {\n" +
-            "// tempC\n" +
-            "\t\tcase 275471198:\n" +
+            "// wb1tempC\n" +
+            "\t\tcase 1087480456:\n" +
             "\t\t\treturn engine->wbo1.tempC;\n" +
-            "// bitName1\n" +
-            "\t\tcase -1776438954:\n" +
+            "// wb1bitName1\n" +
+            "\t\tcase -607543232:\n" +
             "\t\t\treturn engine->wbo1.bitName1;\n" +
-            "// bitName2\n" +
-            "\t\tcase -1776438953:\n" +
+            "// wb1bitName2\n" +
+            "\t\tcase -607543231:\n" +
             "\t\t\treturn engine->wbo1.bitName2;\n" +
-            "// esr\n" +
-            "\t\tcase 193490895:\n" +
+            "// wb1esr\n" +
+            "\t\tcase 612295801:\n" +
             "\t\t\treturn engine->wbo1.esr;\n" +
+            "// wb2tempC\n" +
+            "\t\tcase 1126615849:\n" +
+            "\t\t\treturn engine->wbo2.tempC;\n" +
+            "// wb2bitName1\n" +
+            "\t\tcase 1346769217:\n" +
+            "\t\t\treturn engine->wbo2.bitName1;\n" +
+            "// wb2bitName2\n" +
+            "\t\tcase 1346769218:\n" +
+            "\t\t\treturn engine->wbo2.bitName2;\n" +
+            "// wb2esr\n" +
+            "\t\tcase 612331738:\n" +
+            "\t\t\treturn engine->wbo2.esr;\n" +
             "// oootempC\n" +
             "\t\tcase 1477961803:\n" +
             "\t\t\treturn engine->outputChannels.oootempC;\n" +

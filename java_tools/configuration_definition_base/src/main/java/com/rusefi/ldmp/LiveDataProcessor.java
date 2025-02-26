@@ -218,7 +218,8 @@ public class LiveDataProcessor {
                     sdCardFieldsConsumer.isPtr = isPtr;
                     state.addDestination(sdCardFieldsConsumer::handleEndStruct);
 
-                    outputValueConsumer.currentSectionPrefix = constexpr[0];
+                    outputValueConsumer.expressions = constexpr;
+                    outputValueConsumer.names = outputNames;
                     outputValueConsumer.moduleMode = false;
                     outputValueConsumer.conditional = conditional;
                     outputValueConsumer.isPtr = isPtr;
