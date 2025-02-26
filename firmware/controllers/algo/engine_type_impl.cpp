@@ -67,7 +67,7 @@ void applyEngineType(engine_type_e engineType) {
 	case engine_type_e::FORD_COYOTE:
 	case engine_type_e::MAZDA_MIATA_NC:
 	case engine_type_e::DISCOVERY_PDM:
-	case engine_type_e::ET_UNUSED_56:
+	case engine_type_e::SUBARU_2011:
 	case engine_type_e::UNUSED_65:
 	case engine_type_e::UNUSED67:
 	case engine_type_e::UNUSED94:
