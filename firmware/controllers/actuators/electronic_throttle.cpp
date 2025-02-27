@@ -693,7 +693,7 @@ struct EtbImpl final : public TBase {
 
 		auto motor = TBase::getMotor();
 		if (!motor) {
-		  efiPrintf(" ****************** ERROR: No motor ********************");
+		  efiPrintf(" ****************** ERROR: No DC motor ********************");
 			TBase::m_isAutocal = false;
 			return;
 		}
