@@ -500,6 +500,12 @@ static void handleCommandX14(uint16_t index) {
 	case TS_ETB_AUTOCAL_1:
 			etbAutocal(1);
 		return;
+	case TS_ETB_AUTOCAL_0_FAST:
+			etbAutocal(0, false);
+		return;
+	case TS_ETB_AUTOCAL_1_FAST:
+			etbAutocal(1, false);
+		return;
 	case TS_ETB_START_AUTOTUNE:
 			engine->etbAutoTune = true;
 		return;
