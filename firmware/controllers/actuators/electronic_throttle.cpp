@@ -169,7 +169,7 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 			return false;
 		}
 
-		if (!Sensor::isRedundant(m_positionSensor)) {
+		if (!isBoardAllowingLackOfPps() && !Sensor::isRedundant(m_positionSensor)) {
 			etbErrorCode = (int8_t)TpsState::Redundancy;
 			return false;
 		}
