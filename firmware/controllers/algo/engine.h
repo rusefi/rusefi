@@ -335,11 +335,6 @@ public:
 	sent_state_s sent_state;
 #endif
 
-	/**
-	 * idle blip is a development tool: alternator PID research for instance have benefited from a repetitive change of RPM
-	 */
-	percent_t blipIdlePosition;
-	efitimeus_t timeToStopBlip = 0;
 	efitimeus_t timeToStopIdleTest = 0;
 
 	SensorsState sensors;

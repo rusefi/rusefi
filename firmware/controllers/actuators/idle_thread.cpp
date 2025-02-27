@@ -205,12 +205,6 @@ static void finishIdleTestIfNeeded() {
 		engine->timeToStopIdleTest = 0;
 }
 
-static void undoIdleBlipIfNeeded() {
-	if (engine->timeToStopBlip != 0 && getTimeNowUs() > engine->timeToStopBlip) {
-		engine->timeToStopBlip = 0;
-	}
-}
-
 /**
  * @return idle valve position percentage for automatic closed loop mode
  */
@@ -340,17 +334,9 @@ float IdleController::getIdlePosition(float rpm) {
 		m_lastPhase = phase;
 
 		finishIdleTestIfNeeded();
-		undoIdleBlipIfNeeded();
 
-		percent_t iacPosition;
-
-		isBlipping = engine->timeToStopBlip != 0;
-		if (isBlipping) {
-			iacPosition = engine->blipIdlePosition;
-			idleState = BLIP;
-		} else {
 			// Always apply open loop correction
-			iacPosition = getOpenLoop(phase, rpm, clt, tps, crankingTaper);
+		percent_t iacPosition = getOpenLoop(phase, rpm, clt, tps, crankingTaper);
 			baseIdlePosition = iacPosition;
 
 			useClosedLoop = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
@@ -362,7 +348,6 @@ float IdleController::getIdlePosition(float rpm) {
 			}
 
 			iacPosition = clampPercentValue(iacPosition);
-		}
 
 #if EFI_TUNER_STUDIO && (EFI_PROD_CODE || EFI_SIMULATOR)
 		isIdleClosedLoop = phase == Phase::Idling;
