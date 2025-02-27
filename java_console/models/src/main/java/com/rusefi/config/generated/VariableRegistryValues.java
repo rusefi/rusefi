@@ -1291,7 +1291,6 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 1343967360;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1469,7 +1468,9 @@ public class VariableRegistryValues {
 	public static final int ts_14_command_COMMAND_X14_UNUSED_9 = 0x09;
 	public static final int ts_14_command_TS_BURN_WITHOUT_FLASH = 0x15;
 	public static final int ts_14_command_TS_ETB_AUTOCAL_0 = 0x0E;
+	public static final int ts_14_command_TS_ETB_AUTOCAL_0_FAST = 0x1C;
 	public static final int ts_14_command_TS_ETB_AUTOCAL_1 = 0x11;
+	public static final int ts_14_command_TS_ETB_AUTOCAL_1_FAST = 0x1D;
 	public static final int ts_14_command_TS_ETB_DISABLE_JAM_DETECT = 0x14;
 	public static final int ts_14_command_TS_ETB_RESET = 0x0B;
 	public static final int ts_14_command_TS_ETB_START_AUTOTUNE = 0x0C;
@@ -1559,7 +1560,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.02.27.f407-discovery.1343967360";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.02.27.f407-discovery.3885408334";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
