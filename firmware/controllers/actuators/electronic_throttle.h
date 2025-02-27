@@ -35,6 +35,8 @@ void unregisterEtbPins();
 void setProteusHitachiEtbDefaults();
 
 void etbAutocal(size_t throttleIndex, bool reportToTs = true);
+void etbStartAutoTune(size_t throttleIndex);
+void etbStopAutoTune(size_t throttleIndex);
 
 float getSanitizedPedal();
 
@@ -68,6 +70,8 @@ public:
 	virtual void setWastegatePosition(percent_t pos) = 0;
 	virtual void update() = 0;
 	virtual void autoCalibrateTps(bool reportToTs = true) = 0;
+	virtual void startAutoTune() = 0;
+	virtual void stopAutoTune() = 0;
 	virtual bool isEtbMode() const = 0;
 
 	virtual const pid_state_s& getPidState() const = 0;
