@@ -3,6 +3,7 @@
 #include "closed_loop_fuel.h"
 #include "closed_loop_fuel_cell.h"
 #include "deadband.h"
+#include "tunerstudio.h"
 
 #if EFI_ENGINE_CONTROL
 
@@ -50,11 +51,26 @@ size_t computeStftBin(float rpm, float load, stft_s& cfg) {
 }
 
 namespace {
+	bool checkIfTuningIsNow() {
+#if EFI_TUNER_STUDIO
+		const bool result = isTuningNow();
+#else
+		const bool result = false;
+#endif /* EFI_TUNER_STUDIO */
+		engine->outputChannels.isTuningNow = result;
+		return result;
+	}
+
 	bool shouldCorrect() {
 		const auto& cfg = engineConfiguration->stft;
 
 		// User disable bit
 		if (!engineConfiguration->fuelClosedLoopCorrectionEnabled) {
+			return false;
+		}
+
+		// Don't correct if tuning seens to be happening
+		if (checkIfTuningIsNow()) {
 			return false;
 		}
 
