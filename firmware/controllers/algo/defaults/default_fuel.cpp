@@ -10,9 +10,10 @@ static void setBosch02880155868(injector_s& cfg) {
     static const float vBattBins[8] = { 6.0, 8.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0 };
 	static const float pressureBins[2] = { 206.843, 413.685 };
 
+    // see https://github.com/rusefi/rusefi/issues/7521 for adding more values
     static const float corrBins[2][8] = {
-	    { 3.371, 1.974, 1.383, 1.194, 1.040, 0.914, 0.767, 0.726 },
-		{ 3.371, 1.974, 1.383, 1.194, 1.040, 0.914, 0.767, 0.726 },
+	    { 4.240, 2.483, 1.739, 1.501, 1.308, 1.149, 0.964, 0.913 },
+		{ 3.084, 1.641, 1.149, 1.194, 0.992, 0.759, 0.637, 0.603 },
     };
 
 	copyArray(cfg.battLagCorrBattBins, vBattBins);
