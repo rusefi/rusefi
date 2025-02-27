@@ -82,6 +82,7 @@
 #include "bench_test.h"
 #include "status_loop.h"
 #include "mmc_card.h"
+#include "tuner_detector_utils.h"
 
 #if EFI_SIMULATOR
 #include "rusEfiFunctionalTest.h"
@@ -914,8 +915,8 @@ static char tsErrorBuff[80];
 #endif // EFI_PROD_CODE || EFI_SIMULATOR
 
 bool isTuningNow() {
-	return (engineConfiguration->tuningDetector != 0) &&
-		!calibrationsWriteTimer.hasElapsedSec(engineConfiguration->tuningDetector);
+	return (!TunerDetectorUtils::isTuningDetectorUndefined()) &&
+		!calibrationsWriteTimer.hasElapsedSec(TunerDetectorUtils::getUserEnteredTuningDetector());
 }
 
 void startTunerStudioConnectivity() {
