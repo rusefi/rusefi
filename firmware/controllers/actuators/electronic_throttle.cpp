@@ -593,11 +593,13 @@ bool EtbController::checkStatus() {
 	  localReason = TpsState::JamDetected;
 	} else if(!isBoardAllowingLackOfPps() && !Sensor::isRedundant(SensorType::AcceleratorPedal)) {
 		localReason = TpsState::Redundancy;
+	} else if (m_isAutotune) {
+		localReason = TpsState::AutoTune;
 	}
 
 	etbErrorCode = (int8_t)localReason;
 
-	return localReason == TpsState::None;
+	return ((localReason == TpsState::None) || (localReason == TpsState::AutoTune));
 }
 
 void EtbController::update() {
@@ -787,13 +789,9 @@ static_assert(ETB_COUNT == 2);
 static EtbController* etbControllers[] = { &etb1, &etb2 };
 
 void blinkEtbErrorCodes(bool blinkPhase) {
-  for (int i = 0;i<ETB_COUNT;i++) {
-    int8_t etbErrorCode = etbControllers[i]->etbErrorCode;
-    //if (etbErrorCode && m_isAutotune) {
-    //  etbErrorCode = (int8_t)TpsState::AutoTune;
-    //}
-    etbControllers[i]->etbErrorCodeBlinker = blinkPhase ? 0 : etbErrorCode;
-  }
+	for (int i = 0; i < ETB_COUNT; i++) {
+		etbControllers[i]->etbErrorCodeBlinker = blinkPhase ? 0 : etbControllers[i]->etbErrorCode;
+	}
 }
 
 #if !EFI_UNIT_TEST
