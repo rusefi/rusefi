@@ -357,7 +357,9 @@ void requestBurn() {
 
 #if EFI_TUNER_STUDIO
 
-Timer calibrationsWriteTimer;
+namespace {
+	Timer calibrationsWriteTimer;
+}
 
 /**
  * 'Burn' command is a command to commit the changes
@@ -910,6 +912,11 @@ static char tsErrorBuff[80];
 }
 
 #endif // EFI_PROD_CODE || EFI_SIMULATOR
+
+bool isTuningNow() {
+	return (engineConfiguration->tuningDetector != 0) &&
+		!calibrationsWriteTimer.hasElapsedSec(engineConfiguration->tuningDetector);
+}
 
 void startTunerStudioConnectivity() {
 	// Assert tune & output channel struct sizes
