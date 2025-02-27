@@ -16,11 +16,13 @@ static Deadband<25> idleDeadband;
 static Deadband<2> overrunDeadband;
 static Deadband<2> loadDeadband;
 
-static SensorType getSensorForBankIndex(size_t index) {
-	switch (index) {
-		case 0: return SensorType::Lambda1;
-		case 1: return SensorType::Lambda2;
-		default: return SensorType::Invalid;
+namespace {
+	SensorType getSensorForBankIndex(size_t index) {
+		switch (index) {
+			case 0: return SensorType::Lambda1;
+			case 1: return SensorType::Lambda2;
+			default: return SensorType::Invalid;
+		}
 	}
 }
 
@@ -47,32 +49,34 @@ size_t computeStftBin(float rpm, float load, stft_s& cfg) {
 	return 3;
 }
 
-static bool shouldCorrect() {
-	const auto& cfg = engineConfiguration->stft;
+namespace {
+	bool shouldCorrect() {
+		const auto& cfg = engineConfiguration->stft;
 
-	// User disable bit
-	if (!engineConfiguration->fuelClosedLoopCorrectionEnabled) {
-		return false;
+		// User disable bit
+		if (!engineConfiguration->fuelClosedLoopCorrectionEnabled) {
+			return false;
+		}
+
+		// Don't correct if not running
+		if (!engine->rpmCalculator.isRunning()) {
+			return false;
+		}
+
+		// Startup delay - allow O2 sensor to warm up, etc
+		if (cfg.startupDelay > engine->fuelComputer.running.timeSinceCrankingInSecs) {
+			return false;
+		}
+
+		// Check that the engine is hot enough (and clt not failed)
+		auto clt = Sensor::get(SensorType::Clt);
+		if (!clt.Valid || clt.Value < cfg.minClt) {
+			return false;
+		}
+
+		// If all was well, then we're enabled!
+		return true;
 	}
-
-	// Don't correct if not running
-	if (!engine->rpmCalculator.isRunning()) {
-		return false;
-	}
-
-	// Startup delay - allow O2 sensor to warm up, etc
-	if (cfg.startupDelay > engine->fuelComputer.running.timeSinceCrankingInSecs) {
-		return false;
-	}
-
-	// Check that the engine is hot enough (and clt not failed)
-	auto clt = Sensor::get(SensorType::Clt);
-	if (!clt.Valid || clt.Value < cfg.minClt) {
-		return false;
-	}
-
-	// If all was well, then we're enabled!
-	return true;
 }
 
 bool shouldUpdateCorrection(SensorType sensor) {
