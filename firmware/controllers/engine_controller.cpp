@@ -62,6 +62,7 @@
 #include "vr_pwm.h"
 #include "adc_subscription.h"
 #include "gc_generic.h"
+#include "tuner_detector_utils.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -527,8 +528,8 @@ bool validateConfigOnStartUpOrBurn() {
   if (config->dynoCarCarMassKg == 0) {
     setDynoDefaults();
   }
-  if (engineConfiguration->tuningDetector == 0) {
-    engineConfiguration->tuningDetector = TUNING_DETECTOR_PERSISTENCE_OFFSET + 10;
+  if (TunerDetectorUtils::isTuningDetectorUndefined()) {
+  	TunerDetectorUtils::setUserEnteredTuningDetector(10);
   }
 	if (engineConfiguration->cylindersCount > MAX_CYLINDER_COUNT) {
 		criticalError("Invalid cylinder count: %d", engineConfiguration->cylindersCount);
