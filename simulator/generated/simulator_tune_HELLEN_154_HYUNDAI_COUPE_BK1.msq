@@ -2219,8 +2219,8 @@
          413.7
 </constant>
         <constant cols="8" digits="2" name="injector_battLagCorrTable" rows="2">
-         3.37 1.97 1.38 1.19 1.04 0.91 0.77 0.73
-         3.37 1.97 1.38 1.19 1.04 0.91 0.77 0.73
+         4.24 2.48 1.74 1.5 1.31 1.15 0.96 0.91
+         3.08 1.64 1.15 1.19 0.99 0.76 0.64 0.6
 </constant>
         <constant digits="2" name="injector_flow" units="">354.19</constant>
         <constant name="injectorCompensationMode">"Fixed rail pressure"</constant>
@@ -2250,8 +2250,8 @@
          413.7
 </constant>
         <constant cols="8" digits="2" name="injectorSecondary_battLagCorrTable" rows="2">
-         3.37 1.97 1.38 1.19 1.04 0.91 0.77 0.73
-         3.37 1.97 1.38 1.19 1.04 0.91 0.77 0.73
+         4.24 2.48 1.74 1.5 1.31 1.15 0.96 0.91
+         3.08 1.64 1.15 1.19 0.99 0.76 0.64 0.6
 </constant>
         <constant digits="2" name="injectorSecondary_flow" units="">200.0</constant>
         <constant cols="1" digits="0" name="injectorStagingLoadBins" rows="6">
