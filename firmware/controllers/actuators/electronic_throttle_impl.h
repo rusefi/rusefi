@@ -60,7 +60,7 @@ public:
 	const pid_state_s& getPidState() const override { return m_pid; };
 
 	// Use the throttle to automatically calibrate the relevant throttle position sensor(s).
-	void autoCalibrateTps() override;
+	void autoCalibrateTps(bool reportToTs = true) override;
 
 	// Override if this throttle needs special per-throttle adjustment (bank-to-bank trim, for example)
 	virtual percent_t getThrottleTrim(float /*rpm*/, percent_t /*targetPosition*/) const {
@@ -80,6 +80,8 @@ public:
 protected:
 	// This is set if an automatic TPS calibration should be run
 	bool m_isAutocal = false;
+	// Report calibated values to TS, if false - set directrly to config
+	bool m_isAutocalTs = true;
 
 	bool hadTpsError = false;
 	bool hadPpsError = false;

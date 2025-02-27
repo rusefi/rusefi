@@ -655,10 +655,11 @@ void EtbController::checkJam(percent_t setpoint, percent_t observation) {
 	}
 }
 
-void EtbController::autoCalibrateTps() {
+void EtbController::autoCalibrateTps(bool reportToTs) {
 	// Only auto calibrate throttles
 	if (m_function == DC_Throttle1 || m_function == DC_Throttle2) {
 		m_isAutocal = true;
+		m_isAutocalTs = reportToTs;
 		efiPrintf("m_isAutocal");
 	}
 }
@@ -682,7 +683,6 @@ struct EtbImpl final : public TBase {
 	EtbImpl(TArgs&&... args) : TBase(std::forward<TArgs>(args)...) { }
 
 	void update() override {
-#if EFI_TUNER_STUDIO
 	if (TBase::m_isAutocal) {
 		// Don't allow if engine is running!
 		if (Sensor::getOrZero(SensorType::Rpm) > 0) {
@@ -729,27 +729,43 @@ struct EtbImpl final : public TBase {
 			return;
 		}
 
-		// Write out the learned values to TS, waiting briefly after setting each to let TS grab it
-		engine->outputChannels.calibrationMode = (uint8_t)functionToCalModePriMax(myFunction);
-		engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(primaryMax);
-		chThdSleepMilliseconds(500);
-		engine->outputChannels.calibrationMode = (uint8_t)functionToCalModePriMin(myFunction);
-		engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(primaryMin);
-		chThdSleepMilliseconds(500);
+		if (!TBase::m_isAutocalTs) {
+			if (myFunction == DC_Throttle1) {
+		    engineConfiguration->tpsMin = convertVoltageTo10bitADC(primaryMin);
+		    engineConfiguration->tpsMax = convertVoltageTo10bitADC(primaryMax);
+		    engineConfiguration->tps1SecondaryMin = convertVoltageTo10bitADC(secondaryMin);
+		    engineConfiguration->tps1SecondaryMax = convertVoltageTo10bitADC(secondaryMax);
+		  } else {
+		    engineConfiguration->tps2Min = convertVoltageTo10bitADC(primaryMin);
+		    engineConfiguration->tps2Max = convertVoltageTo10bitADC(primaryMax);
+		    engineConfiguration->tps2SecondaryMin = convertVoltageTo10bitADC(secondaryMin);
+		    engineConfiguration->tps2SecondaryMax = convertVoltageTo10bitADC(secondaryMax);
+		  }
+		}
+#if EFI_TUNER_STUDIO
+		if (TBase::m_isAutocalTs) {
+			// Write out the learned values to TS, waiting briefly after setting each to let TS grab it
+			engine->outputChannels.calibrationMode = (uint8_t)functionToCalModePriMax(myFunction);
+			engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(primaryMax);
+			chThdSleepMilliseconds(500);
+			engine->outputChannels.calibrationMode = (uint8_t)functionToCalModePriMin(myFunction);
+			engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(primaryMin);
+			chThdSleepMilliseconds(500);
 
-		engine->outputChannels.calibrationMode = (uint8_t)functionToCalModeSecMax(myFunction);
-		engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(secondaryMax);
-		chThdSleepMilliseconds(500);
-		engine->outputChannels.calibrationMode = (uint8_t)functionToCalModeSecMin(myFunction);
-		engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(secondaryMin);
-		chThdSleepMilliseconds(500);
+			engine->outputChannels.calibrationMode = (uint8_t)functionToCalModeSecMax(myFunction);
+			engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(secondaryMax);
+			chThdSleepMilliseconds(500);
+			engine->outputChannels.calibrationMode = (uint8_t)functionToCalModeSecMin(myFunction);
+			engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(secondaryMin);
+			chThdSleepMilliseconds(500);
 
-		engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::None;
+			engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::None;
+		}
+#endif /* EFI_TUNER_STUDIO */
 
 		TBase::m_isAutocal = false;
 		return;
 	}
-#endif /* EFI_TUNER_STUDIO */
 
 		TBase::update();
 	}
@@ -800,14 +816,14 @@ void etbPidReset() {
 	}
 }
 
-void etbAutocal(size_t throttleIndex) {
+void etbAutocal(size_t throttleIndex, bool reportToTs) {
 	if (throttleIndex >= ETB_COUNT) {
 		return;
 	}
 
 	if (auto etb = engine->etbControllers[throttleIndex]) {
 	  assertNotNullVoid(etb);
-		etb->autoCalibrateTps();
+		etb->autoCalibrateTps(reportToTs);
 		// todo fix root cause! work-around: make sure not to write bad tune since that would brick requestBurn();
 	}
 }
