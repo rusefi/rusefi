@@ -597,7 +597,7 @@ bool EtbController::checkStatus() {
 	} else if (!getLimpManager()->allowElectronicThrottle()) {
 	  localReason = TpsState::JamDetected;
 	} else if(!isBoardAllowingLackOfPps() && !Sensor::isRedundant(SensorType::AcceleratorPedal)) {
-		etbErrorCode = (int8_t)TpsState::Redundancy;
+		localReason = TpsState::Redundancy;
 	}
 
 	etbErrorCode = (int8_t)localReason;
