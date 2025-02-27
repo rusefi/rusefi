@@ -264,6 +264,8 @@ typedef enum {
 	TS_SD_UNMOUNT = 0x19,
 	TS_SD_FORMAT = 0x1A,
 	TS_SD_DELETE_REPORTS = 0x1B,
+	TS_ETB_AUTOCAL_0_FAST = 0x1C,
+	TS_ETB_AUTOCAL_1_FAST = 0x1D,
 } ts_14_command;
 
 typedef enum {
