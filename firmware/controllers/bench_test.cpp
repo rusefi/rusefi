@@ -507,13 +507,10 @@ static void handleCommandX14(uint16_t index) {
 			etbAutocal(1, false);
 		return;
 	case TS_ETB_START_AUTOTUNE:
-			engine->etbAutoTune = true;
+			etbStartAutoTune(0);
 		return;
 	case TS_ETB_STOP_AUTOTUNE:
-			engine->etbAutoTune = false;
-			#if EFI_TUNER_STUDIO
-				engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::None;
-			#endif // EFI_TUNER_STUDIO
+			etbStopAutoTune(0);
 		return;
 	case TS_ETB_DISABLE_JAM_DETECT:
 		engine->etbIgnoreJamProtection = true;

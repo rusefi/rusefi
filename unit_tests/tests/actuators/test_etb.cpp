@@ -748,9 +748,6 @@ TEST(etb, closedLoopPid) {
 	EtbController etb;
 	etb.init(DC_Throttle1, nullptr, &pid, nullptr);
 
-	// Disable autotune for now
-	engine->etbAutoTune = false;
-
 	// Setpoint greater than actual, should be positive output
 	EXPECT_FLOAT_EQ(etb.getClosedLoop(50, 40).value_or(-1), 50);
 	// Likewise but negative

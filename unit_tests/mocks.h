@@ -26,6 +26,8 @@ public:
 	MOCK_METHOD(void, setIdlePosition, (percent_t pos), (override));
 	MOCK_METHOD(void, setWastegatePosition, (percent_t pos), (override));
 	MOCK_METHOD(void, autoCalibrateTps, (bool), (override));
+	MOCK_METHOD(void, startAutoTune, (), (override));
+	MOCK_METHOD(void, stopAutoTune, (), (override));
 	MOCK_METHOD(const pid_state_s&, getPidState, (), (const, override));
 	MOCK_METHOD(float, getCurrentTarget, (), (const, override));
 	MOCK_METHOD(void, setLuaAdjustment, (percent_t adjustment), (override));

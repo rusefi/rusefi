@@ -397,8 +397,6 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 		// Math is for Åström–Hägglund (relay) auto tuning
 		// https://warwick.ac.uk/fac/cross_fac/iatl/reinvention/archive/volume5issue2/hornsey
 
-		// Publish to TS state
-#if EFI_TUNER_STUDIO
 		// Amplitude of input (duty cycle %)
 		float b = 2 * autotuneAmplitude;
 
@@ -412,6 +410,8 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 		float ki = 0.25f * ku / m_tu;
 		float kd = 0.08f * ku * m_tu;
 
+		// Publish to TS state
+#if EFI_TUNER_STUDIO
 		// Every 5 cycles (of the throttle), cycle to the next value
 		if (m_autotuneCounter >= 5) {
 			m_autotuneCounter = 0;
@@ -420,17 +420,17 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 
 		m_autotuneCounter++;
 
-		// Multiplex 3 signals on to the {mode, value} format
-		engine->outputChannels.calibrationMode = (uint8_t)static_cast<TsCalMode>((uint8_t)TsCalMode::EtbKp + m_autotuneCurrentParam);
-
 		switch (m_autotuneCurrentParam) {
 		case 0:
+			engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::EtbKp;
 			engine->outputChannels.calibrationValue = kp;
 			break;
 		case 1:
+			engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::EtbKi;
 			engine->outputChannels.calibrationValue = ki;
 			break;
 		case 2:
+			engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::EtbKd;
 			engine->outputChannels.calibrationValue = kd;
 			break;
 		}
@@ -450,6 +450,7 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 			engine->outputChannels.debugFloatField7 = kd;
 		}
 #endif
+		// TODO: directly update PID settings in engineConfiguration
 	}
 
 	m_lastIsPositive = isPositive;
@@ -545,11 +546,12 @@ bool EtbController::checkStatus() {
 	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
 	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
 
-	// Only allow autotune with stopped engine, and on the first throttle
-	// Update local state about autotune
-	m_isAutotune = Sensor::getOrZero(SensorType::Rpm) == 0
-		&& engine->etbAutoTune
-		&& m_function == DC_Throttle1;
+	bool engineMovedRecently = getTriggerCentral()->engineMovedRecently();
+	if (engineMovedRecently) {
+		// Disable all calibration if engine is running
+		m_isAutocal = false;
+		stopAutoTune();
+	}
 
 	bool shouldCheckSensorFunction = engine->module<SensorChecker>()->analogSensorsShouldWork();
 
@@ -582,27 +584,31 @@ bool EtbController::checkStatus() {
 #endif
 
 	TpsState localReason = TpsState::None;
+
 	if (etbTpsErrorCounter > ETB_INTERMITTENT_LIMIT) {
 		localReason = TpsState::IntermittentTps;
-#if EFI_SHAFT_POSITION_INPUT
-	} else if (engineConfiguration->disableEtbWhenEngineStopped
-	  && !engine->triggerCentral.engineMovedRecently()
-	  && !engine->etbAutoTune) {
-		localReason = TpsState::EngineStopped;
-#endif // EFI_SHAFT_POSITION_INPUT
 	} else if (etbPpsErrorCounter > ETB_INTERMITTENT_LIMIT) {
 		localReason = TpsState::IntermittentPps;
-	} else if (engine->engineState.lua.luaDisableEtb) {
-		localReason = TpsState::Lua;
 	} else if (!getLimpManager()->allowElectronicThrottle()) {
 	  localReason = TpsState::JamDetected;
 	} else if(!isBoardAllowingLackOfPps() && !Sensor::isRedundant(SensorType::AcceleratorPedal)) {
 		localReason = TpsState::Redundancy;
+	} else if (engine->engineState.lua.luaDisableEtb) {
+		localReason = TpsState::Lua;
+	} else if (m_isAutotune) {
+		localReason = TpsState::AutoTune;
 	}
+#if EFI_SHAFT_POSITION_INPUT
+	else if (engineConfiguration->disableEtbWhenEngineStopped
+	  && !engineMovedRecently
+	  && !m_isAutotune) {
+		localReason = TpsState::EngineStopped;
+	}
+#endif // EFI_SHAFT_POSITION_INPUT
 
 	etbErrorCode = (int8_t)localReason;
 
-	return localReason == TpsState::None;
+	return ((localReason == TpsState::None) || (localReason == TpsState::AutoTune));
 }
 
 void EtbController::update() {
@@ -664,6 +670,22 @@ void EtbController::autoCalibrateTps(bool reportToTs) {
 	}
 }
 
+void EtbController::startAutoTune() {
+	// Only allow autotune with stopped engine, and on the first throttle
+	// Update local state about autotune
+	m_isAutotune = ((Sensor::getOrZero(SensorType::Rpm) == 0)
+		&& (m_function == DC_Throttle1));
+}
+
+void EtbController::stopAutoTune() {
+	// Only allow autotune with stopped engine, and on the first throttle
+	// Update local state about autotune
+	m_isAutotune = false;
+	#if EFI_TUNER_STUDIO
+		engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::None;
+	#endif // EFI_TUNER_STUDIO
+}
+
 #if !EFI_UNIT_TEST
 /**
  * Things running on a timer (instead of a thread) don't participate it the RTOS's thread priority system,
@@ -697,6 +719,8 @@ struct EtbImpl final : public TBase {
 			TBase::m_isAutocal = false;
 			return;
 		}
+
+		TBase::etbErrorCode = (uint8_t)TpsState::AutoCalibrate;
 
 		auto myFunction = TBase::getFunction();
 
@@ -779,13 +803,9 @@ static_assert(ETB_COUNT == 2);
 static EtbController* etbControllers[] = { &etb1, &etb2 };
 
 void blinkEtbErrorCodes(bool blinkPhase) {
-  for (int i = 0;i<ETB_COUNT;i++) {
-    int8_t etbErrorCode = etbControllers[i]->etbErrorCode;
-    if (etbErrorCode && engine->etbAutoTune) {
-      etbErrorCode = (int8_t)TpsState::AutoTune;
-    }
-    etbControllers[i]->etbErrorCodeBlinker = blinkPhase ? 0 : etbErrorCode;
-  }
+	for (int i = 0; i < ETB_COUNT; i++) {
+		etbControllers[i]->etbErrorCodeBlinker = blinkPhase ? 0 : etbControllers[i]->etbErrorCode;
+	}
 }
 
 #if !EFI_UNIT_TEST
@@ -826,6 +846,45 @@ void etbAutocal(size_t throttleIndex, bool reportToTs) {
 		etb->autoCalibrateTps(reportToTs);
 		// todo fix root cause! work-around: make sure not to write bad tune since that would brick requestBurn();
 	}
+}
+
+void etbStartAutoTune(size_t throttleIndex)
+{
+	if (throttleIndex >= ETB_COUNT) {
+		return;
+	}
+
+	if (auto etb = engine->etbControllers[throttleIndex]) {
+		assertNotNullVoid(etb);
+		etb->startAutoTune();
+		// todo fix root cause! work-around: make sure not to write bad tune since that would brick requestBurn();
+	}
+}
+
+void etbStopAutoTune(size_t throttleIndex)
+{
+	if (throttleIndex >= ETB_COUNT) {
+		return;
+	}
+
+	if (auto etb = engine->etbControllers[throttleIndex]) {
+		assertNotNullVoid(etb);
+		etb->stopAutoTune();
+		// todo fix root cause! work-around: make sure not to write bad tune since that would brick requestBurn();
+	}
+
+	#if EFI_TUNER_STUDIO
+		engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::None;
+	#endif // EFI_TUNER_STUDIO
+}
+
+TpsState etbGetState(size_t throttleIndex)
+{
+	if (throttleIndex >= ETB_COUNT) {
+		return TpsState::NotConfigured;
+	}
+
+	return (TpsState)etbControllers[throttleIndex]->etbErrorCode;
 }
 
 /**
@@ -999,7 +1058,7 @@ void initElectronicThrottle() {
 	});
 
 	addConsoleAction("etbinfo", [](){
-	  efiPrintf("etbAutoTune=%d", engine->etbAutoTune);
+//	  efiPrintf("etbAutoTune=%d", engine->etbAutoTune);
 	  efiPrintf("TPS=%.2f", Sensor::getOrZero(SensorType::Tps1));
 
 	  efiPrintf("ETB1 duty=%.2f",
