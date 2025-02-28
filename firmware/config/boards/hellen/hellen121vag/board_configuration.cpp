@@ -11,9 +11,12 @@
  */
 
 #include "pch.h"
-#include "electronic_throttle.h"
 #include "hellen_meta.h"
 #include "defaults.h"
+
+#ifndef EFI_BOOTLOADER
+#include "electronic_throttle.h"
+#endif
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = H176_LS_1; // 96 - INJ_1
@@ -83,7 +86,9 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->etbIo[0].controlPin = Gpio::A8; // ETB_EN out_io12
 	engineConfiguration->etb_use_two_wires = true;
 
+#ifndef EFI_BOOTLOADER
 	setBoschVAGETB();
+#endif
 
 	engineConfiguration->globalTriggerAngleOffset = 93;
 
