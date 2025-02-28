@@ -545,6 +545,13 @@ bool EtbController::checkStatus() {
 	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
 	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
 
+	bool engineMovedRecently = getTriggerCentral()->engineMovedRecently();
+	if (engineMovedRecently) {
+		// Disable all calibration if engine is running
+		m_isAutocal = false;
+		m_isAutotune = false;
+	}
+
 	bool shouldCheckSensorFunction = engine->module<SensorChecker>()->analogSensorsShouldWork();
 
 	if (!m_isAutotune && shouldCheckSensorFunction) {
