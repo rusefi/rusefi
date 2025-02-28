@@ -154,7 +154,7 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 	if (function == DC_None) {
 		// if not configured, don't init.
 		state = (uint8_t)EtbState::NotEbt;
-		etbErrorCode = (int8_t)TpsState::None;
+		etbErrorCode = (int8_t)TpsState::NotConfigured;
 		return false;
 	}
 
