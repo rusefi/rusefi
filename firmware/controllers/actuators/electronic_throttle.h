@@ -35,6 +35,7 @@ void unregisterEtbPins();
 void setProteusHitachiEtbDefaults();
 
 void etbAutocal(size_t throttleIndex, bool reportToTs = true);
+TpsState etbGetState(size_t throttleIndex);
 
 float getSanitizedPedal();
 

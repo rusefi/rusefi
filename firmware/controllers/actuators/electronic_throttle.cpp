@@ -831,6 +831,15 @@ void etbAutocal(size_t throttleIndex, bool reportToTs) {
 	}
 }
 
+TpsState etbGetState(size_t throttleIndex)
+{
+	if (throttleIndex >= ETB_COUNT) {
+		return TpsState::NotConfigured;
+	}
+
+	return (TpsState)etbControllers[throttleIndex]->etbErrorCode;
+}
+
 /**
  * This specific throttle has default position of about 7% open
  */
