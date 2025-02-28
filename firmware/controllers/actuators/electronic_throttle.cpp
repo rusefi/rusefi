@@ -586,23 +586,24 @@ bool EtbController::checkStatus() {
 
 	if (etbTpsErrorCounter > ETB_INTERMITTENT_LIMIT) {
 		localReason = TpsState::IntermittentTps;
-#if EFI_SHAFT_POSITION_INPUT
-	} else if (engineConfiguration->disableEtbWhenEngineStopped
-	  && !engine->triggerCentral.engineMovedRecently()
-	  && !m_isAutotune) {
-		localReason = TpsState::EngineStopped;
-#endif // EFI_SHAFT_POSITION_INPUT
 	} else if (etbPpsErrorCounter > ETB_INTERMITTENT_LIMIT) {
 		localReason = TpsState::IntermittentPps;
-	} else if (engine->engineState.lua.luaDisableEtb) {
-		localReason = TpsState::Lua;
 	} else if (!getLimpManager()->allowElectronicThrottle()) {
 	  localReason = TpsState::JamDetected;
 	} else if(!isBoardAllowingLackOfPps() && !Sensor::isRedundant(SensorType::AcceleratorPedal)) {
 		localReason = TpsState::Redundancy;
+	} else if (engine->engineState.lua.luaDisableEtb) {
+		localReason = TpsState::Lua;
 	} else if (m_isAutotune) {
 		localReason = TpsState::AutoTune;
 	}
+#if EFI_SHAFT_POSITION_INPUT
+	else if (engineConfiguration->disableEtbWhenEngineStopped
+	  && !engineMovedRecently
+	  && !m_isAutotune) {
+		localReason = TpsState::EngineStopped;
+	}
+#endif // EFI_SHAFT_POSITION_INPUT
 
 	etbErrorCode = (int8_t)localReason;
 
