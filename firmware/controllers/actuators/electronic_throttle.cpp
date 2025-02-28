@@ -549,7 +549,7 @@ bool EtbController::checkStatus() {
 	if (engineMovedRecently) {
 		// Disable all calibration if engine is running
 		m_isAutocal = false;
-		m_isAutotune = false;
+		stopAutoTune();
 	}
 
 	bool shouldCheckSensorFunction = engine->module<SensorChecker>()->analogSensorsShouldWork();
@@ -680,6 +680,9 @@ void EtbController::stopAutoTune() {
 	// Only allow autotune with stopped engine, and on the first throttle
 	// Update local state about autotune
 	m_isAutotune = false;
+	#if EFI_TUNER_STUDIO
+		engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::None;
+	#endif // EFI_TUNER_STUDIO
 }
 
 #if !EFI_UNIT_TEST
