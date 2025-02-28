@@ -42,7 +42,7 @@ enum class TpsState : uint8_t {
 	IntermittentTps, // 4
 	AutoTune, // 5
 	Lua, // 6
-	Unused7, // 7
+	AutoCalibrate, // 7
 	NotConfigured, // 8
 	Redundancy, // 9
 	IntermittentPps, // 10
