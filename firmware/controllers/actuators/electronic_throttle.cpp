@@ -699,6 +699,8 @@ struct EtbImpl final : public TBase {
 			return;
 		}
 
+		TBase::etbErrorCode = (uint8_t)TpsState::AutoCalibrate;
+
 		auto myFunction = TBase::getFunction();
 
 		// First grab open
