@@ -128,8 +128,10 @@ private:
 	float m_a = 8;
 	float m_tu = 0.1f;
 
+#if EFI_TUNER_STUDIO
 	uint8_t m_autotuneCounter = 0;
 	uint8_t m_autotuneCurrentParam = 0;
+#endif
 
 	Timer m_luaAdjustmentTimer;
 };

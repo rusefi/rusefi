@@ -397,8 +397,6 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 		// Math is for Åström–Hägglund (relay) auto tuning
 		// https://warwick.ac.uk/fac/cross_fac/iatl/reinvention/archive/volume5issue2/hornsey
 
-		// Publish to TS state
-#if EFI_TUNER_STUDIO
 		// Amplitude of input (duty cycle %)
 		float b = 2 * autotuneAmplitude;
 
@@ -412,6 +410,8 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 		float ki = 0.25f * ku / m_tu;
 		float kd = 0.08f * ku * m_tu;
 
+		// Publish to TS state
+#if EFI_TUNER_STUDIO
 		// Every 5 cycles (of the throttle), cycle to the next value
 		if (m_autotuneCounter >= 5) {
 			m_autotuneCounter = 0;
@@ -420,17 +420,17 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 
 		m_autotuneCounter++;
 
-		// Multiplex 3 signals on to the {mode, value} format
-		engine->outputChannels.calibrationMode = (uint8_t)static_cast<TsCalMode>((uint8_t)TsCalMode::EtbKp + m_autotuneCurrentParam);
-
 		switch (m_autotuneCurrentParam) {
 		case 0:
+			engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::EtbKp;
 			engine->outputChannels.calibrationValue = kp;
 			break;
 		case 1:
+			engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::EtbKi;
 			engine->outputChannels.calibrationValue = ki;
 			break;
 		case 2:
+			engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::EtbKd;
 			engine->outputChannels.calibrationValue = kd;
 			break;
 		}
@@ -450,6 +450,7 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 			engine->outputChannels.debugFloatField7 = kd;
 		}
 #endif
+		// TODO: directly update PID settings in engineConfiguration
 	}
 
 	m_lastIsPositive = isPositive;
