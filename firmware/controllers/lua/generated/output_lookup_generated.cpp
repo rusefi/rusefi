@@ -366,15 +366,21 @@ float getOutputValueByName(const char *name) {
 // AFRValue
 		case -1093429509:
 			return engine->outputChannels.AFRValue;
+// AFRValue2
+		case -1723435379:
+			return engine->outputChannels.AFRValue2;
+// SmoothedAFRValue
+		case -1845821506:
+			return engine->outputChannels.SmoothedAFRValue;
+// SmoothedAFRValue2
+		case -782567504:
+			return engine->outputChannels.SmoothedAFRValue2;
 // VssAcceleration
 		case -513494613:
 			return engine->outputChannels.VssAcceleration;
 // lambdaValue2
 		case 1718832245:
 			return engine->outputChannels.lambdaValue2;
-// AFRValue2
-		case -1723435379:
-			return engine->outputChannels.AFRValue2;
 // vvtPositionB1E
 		case 1384666002:
 			return engine->outputChannels.vvtPositionB1E;

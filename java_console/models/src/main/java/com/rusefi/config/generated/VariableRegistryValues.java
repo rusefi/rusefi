@@ -1295,6 +1295,8 @@ public class VariableRegistryValues {
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
 	public static final String smLaunchControl_NAME = "Launch Control";
+	public static final String SMOOTHED_GAUGE_NAME_AFR = "Smoothed Air/Fuel Ratio";
+	public static final String SMOOTHED_GAUGE_NAME_AFR2 = "Smoothed Air/Fuel Ratio 2";
 	public static final int spi_device_e_SPI_DEVICE_1 = 1;
 	public static final int spi_device_e_SPI_DEVICE_2 = 2;
 	public static final int spi_device_e_SPI_DEVICE_3 = 3;
@@ -1560,11 +1562,11 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.03.01.f407-discovery.2175356466";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.03.01.f407-discovery.4096759887";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
-	public static final int TS_TOTAL_OUTPUT_SIZE = 1812;
+	public static final int TS_TOTAL_OUTPUT_SIZE = 1816;
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_1_NAME = "Channel 1";
 	public static final String TS_TRIGGER_SCOPE_CHANNEL_2_NAME = "Channel 2";
 	public static final int TS_TRIGGER_SCOPE_DISABLE = 5;
