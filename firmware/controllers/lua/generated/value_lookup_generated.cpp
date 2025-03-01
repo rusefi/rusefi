@@ -518,6 +518,9 @@ float getConfigValueByName(const char *name) {
 // enableAemXSeries
 		case 259909218:
 			return engineConfiguration->enableAemXSeries;
+// modeledFlowIdle
+		case 600643125:
+			return engineConfiguration->modeledFlowIdle;
 // verboseCanBaseAddress
 		case 6238478:
 			return engineConfiguration->verboseCanBaseAddress;
@@ -1049,6 +1052,9 @@ float getConfigValueByName(const char *name) {
 // idlePidRpmDeadZone
 		case -528043591:
 			return engineConfiguration->idlePidRpmDeadZone;
+// idleMaximumAirmass
+		case -1671871759:
+			return engineConfiguration->idleMaximumAirmass;
 // torqueReductionTime
 		case -1417275359:
 			return engineConfiguration->torqueReductionTime;
@@ -2831,6 +2837,11 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->enableAemXSeries = (int)value;
 		return 1;
 	}
+		case 600643125:
+	{
+		engineConfiguration->modeledFlowIdle = (int)value;
+		return 1;
+	}
 		case 6238478:
 	{
 		engineConfiguration->verboseCanBaseAddress = (int)value;
@@ -3714,6 +3725,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -528043591:
 	{
 		engineConfiguration->idlePidRpmDeadZone = (int)value;
+		return 1;
+	}
+		case -1671871759:
+	{
+		engineConfiguration->idleMaximumAirmass = (int)value;
 		return 1;
 	}
 		case -1417275359:

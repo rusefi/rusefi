@@ -511,6 +511,9 @@ Disable the electronic throttle motor and DC idle motor for testing.\nThis mode 
 ### enableAemXSeries
 AEM X-Series or rusEFI Wideband
 
+### modeledFlowIdle
+
+
 ### verboseCanBaseAddress
 
 
@@ -1041,6 +1044,9 @@ on IGN voltage detection turn fuel pump on to build fuel pressure
 
 ### idlePidRpmDeadZone
 If the RPM closer to target than this value, disable closed loop idle correction to prevent oscillation
+
+### idleMaximumAirmass
+Maximum commanded airmass for the idle controller.
 
 ### torqueReductionTime
 For how long after the pin has been triggered will the cut/reduction stay active. After that, even if the pin is still triggered, torque is re-introduced
