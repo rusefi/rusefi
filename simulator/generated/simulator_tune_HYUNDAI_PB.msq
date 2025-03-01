@@ -2233,7 +2233,7 @@
         <constant digits="4" name="injectorCorrectionPolynomial6" units="">0.0</constant>
         <constant digits="4" name="injectorCorrectionPolynomial7" units="">0.0</constant>
         <constant digits="4" name="injectorCorrectionPolynomial8" units="">0.0</constant>
-        <constant name="injectorFlowAsMassFlow">"volumetric flow"</constant>
+        <constant name="injectorFlowAsMassFlow">"cc/min"</constant>
         <constant name="injectorNonlinearMode">"None"</constant>
         <constant name="injectorPressureType">"High"</constant>
         <constant cols="1" digits="2" name="injectorSecondary_battLagCorrBattBins" rows="8">
@@ -4972,7 +4972,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250221" nPages="1" signature="rusEFI master.2025.03.01.f407-discovery.4096759887" version="5.0"/>
+    <versionInfo firmwareInfo="20250221" nPages="1" signature="rusEFI master.2025.03.01.f407-discovery.3636594285" version="5.0"/>
     <bibliography author="rusEFI 20250221" writeDate="date"/>
     <settings/>
     <userComments/>
