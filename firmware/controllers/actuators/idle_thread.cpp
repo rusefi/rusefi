@@ -191,7 +191,9 @@ float IdleController::getIdleTimingAdjustment(float rpm, float targetRpm, Phase 
 		return 0;
 	}
 
-	if (engineConfiguration->idleTimingSoftEntryTime > 0.0f) {
+	if (engineConfiguration->modeledFlowIdle) {
+		return m_modeledFlowIdleTiming;
+	} elseif (engineConfiguration->idleTimingSoftEntryTime > 0.0f) {
 		// Use interpolation for correction taper
 		m_timingPid.setErrorAmplification(interpolateClamped(m_crankTaperEndTime, 0.0f, m_idleTimingSoftEntryEndTime, 1.0f, engine->fuelComputer.running.timeSinceCrankingInSecs));
 	}
@@ -310,6 +312,8 @@ float IdleController::getIdlePosition(float rpm) {
 			return engineConfiguration->manIdlePosition;
 		#endif
 
+	bool useModeledFlow = engineConfiguration->modeledFlowIdle;
+
 	/*
 	 * Here we have idle logic thread - actual stepper movement is implemented in a separate
 	 * working thread see stepper.cpp
@@ -325,8 +329,8 @@ float IdleController::getIdlePosition(float rpm) {
 		auto targetRpm = getTargetRpm(clt);
 		m_lastTargetRpm = targetRpm;
 
-		// Determine cranking taper
-		float crankingTaper = getCrankingTaperFraction();
+	// Determine cranking taper
+	float crankingTaper = getCrankingTaperFraction(clt);
 
 		// Determine what operation phase we're in - idling or not
 		float vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);
@@ -339,34 +343,33 @@ float IdleController::getIdlePosition(float rpm) {
 		percent_t iacPosition = getOpenLoop(phase, rpm, clt, tps, crankingTaper);
 			baseIdlePosition = iacPosition;
 
-			useClosedLoop = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
-			// If TPS is working and automatic mode enabled, add any closed loop correction
-			if (useClosedLoop) {
-				auto closedLoop = getClosedLoop(phase, tps.Value, rpm, targetRpm);
-				idleClosedLoop = closedLoop;
-				iacPosition += closedLoop;
-			}
+	// If TPS is working and automatic mode enabled, add any closed loop correction
+	if (tps.Valid && engineConfiguration->idleMode == IM_AUTO) {
+		auto closedLoop = getClosedLoop(phase, tps.Value, rpm, targetRpm);
+		idleClosedLoop = closedLoop;
+		iacPosition += closedLoop;
+	} else {
+		idleClosedLoop = 0;
+	}
 
 			iacPosition = clampPercentValue(iacPosition);
 
 #if EFI_TUNER_STUDIO && (EFI_PROD_CODE || EFI_SIMULATOR)
-		isIdleClosedLoop = phase == Phase::Idling;
-
-		if (engineConfiguration->idleMode == IM_AUTO) {
-			// see also tsOutputChannels->idlePosition
-			getIdlePid()->postState(engine->outputChannels.idleStatus);
-		}
+	if (engineConfiguration->idleMode == IM_AUTO) {
+		// see also tsOutputChannels->idlePosition
+		m_pid.postState(engine->outputChannels.idleStatus);
+	}
 
 		extern StepperMotor iacMotor;
 		engine->outputChannels.idleStepperTargetPosition = iacMotor.getTargetPosition();
 #endif /* EFI_TUNER_STUDIO */
 
-		currentIdlePosition = iacPosition;
-		return iacPosition;
+	currentIdlePosition = iacPosition;
+	isIdleClosedLoop = phase == Phase::Idling;
+	return iacPosition;
 #else
 		return 0;
 #endif // EFI_SHAFT_POSITION_INPUT
-
 }
 
 void IdleController::onSlowCallback() {
@@ -388,7 +391,6 @@ void IdleController::init() {
 	mightResetPid = false;
 	wasResetPid = false;
 	m_timingPid.initPidClass(&engineConfiguration->idleTimingPid);
-	getIdlePid()->initPidClass(&engineConfiguration->idleRpmPid);
 }
 
 #endif /* EFI_IDLE_CONTROL */
