@@ -921,67 +921,61 @@ static const LogField fields[] = {
 	{engine->triggerCentral.vvtState[1][1].triggerStateIndex, "vvt2etriggerStateIndex", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock().currentIdlePosition, "Idle: Position", "%", 1},
-#endif
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{engine->module<IdleController>().unmock().baseIdlePosition, "idle: base value", "", 0},
-#endif
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock().idleClosedLoop, "Idle: Closed loop", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{engine->module<IdleController>().unmock().iacByTpsTaper, "idle: iacByTpsTaper portion", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 0, "idle: mightResetPid", ""},
+	{engine->module<IdleController>().unmock(), 12, 0, "idle: mightResetPid", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 1, "Idle: shouldResetPid", ""},
+	{engine->module<IdleController>().unmock(), 12, 1, "Idle: shouldResetPid", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 2, "Idle: wasResetPid", ""},
+	{engine->module<IdleController>().unmock(), 12, 2, "Idle: wasResetPid", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 3, "Idle: mustResetPid", ""},
+	{engine->module<IdleController>().unmock(), 12, 3, "Idle: mustResetPid", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 4, "Idle: cranking", ""},
+	{engine->module<IdleController>().unmock(), 12, 4, "Idle: cranking", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 5, "isIacTableForCoasting", ""},
+	{engine->module<IdleController>().unmock(), 12, 5, "isIacTableForCoasting", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 6, "notIdling", ""},
+	{engine->module<IdleController>().unmock(), 12, 6, "notIdling", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 7, "Idle: reset", ""},
+	{engine->module<IdleController>().unmock(), 12, 7, "Idle: reset", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 8, "Idle: dead zone", ""},
+	{engine->module<IdleController>().unmock(), 12, 8, "Idle: dead zone", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 9, "isBlipping", ""},
+	{engine->module<IdleController>().unmock(), 12, 9, "isBlipping", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 10, "useClosedLoop", ""},
+	{engine->module<IdleController>().unmock(), 12, 10, "useClosedLoop", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 11, "badTps", ""},
+	{engine->module<IdleController>().unmock(), 12, 11, "badTps", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 12, "looksLikeRunning", ""},
+	{engine->module<IdleController>().unmock(), 12, 12, "looksLikeRunning", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 13, "looksLikeCoasting", ""},
+	{engine->module<IdleController>().unmock(), 12, 13, "looksLikeCoasting", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 14, "looksLikeCrankToIdle", ""},
+	{engine->module<IdleController>().unmock(), 12, 14, "looksLikeCrankToIdle", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 15, "Idle: coasting", ""},
+	{engine->module<IdleController>().unmock(), 12, 15, "Idle: coasting", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 16, "Idle: Closed loop active", ""},
+	{engine->module<IdleController>().unmock(), 12, 16, "Idle: Closed loop active", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{engine->module<IdleController>().unmock().idleTarget, "Idle: Target RPM", "", 0},
@@ -997,6 +991,18 @@ static const LogField fields[] = {
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{engine->module<IdleController>().unmock().luaAdd, "idle: Lua Adder", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock().idleClosedLoop, "Closed loop", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock().currentIdlePosition, "Idle: Position", "%", 1},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock().idleTargetAirmass, "Target airmass", "mg", 0},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock().idleTargetFlow, "Target airflow", "kg/h", 2},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(0)->targetWithIdlePosition, "etb1ETB: target with idle", "%", 2, "ETB more"},

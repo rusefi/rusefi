@@ -1722,20 +1722,10 @@ float getOutputValueByName(const char *name) {
 		case 1886060228:
 			return engine->module<IdleController>().unmock().idleState;
 #endif
-// currentIdlePosition
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case -1149240133:
-			return engine->module<IdleController>().unmock().currentIdlePosition;
-#endif
 // baseIdlePosition
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case -580955469:
 			return engine->module<IdleController>().unmock().baseIdlePosition;
-#endif
-// idleClosedLoop
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-		case 1267620087:
-			return engine->module<IdleController>().unmock().idleClosedLoop;
 #endif
 // iacByTpsTaper
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
@@ -1851,6 +1841,26 @@ float getOutputValueByName(const char *name) {
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 		case 206059088:
 			return engine->module<IdleController>().unmock().luaAdd;
+#endif
+// idleClosedLoop
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+		case 1267620087:
+			return engine->module<IdleController>().unmock().idleClosedLoop;
+#endif
+// currentIdlePosition
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+		case -1149240133:
+			return engine->module<IdleController>().unmock().currentIdlePosition;
+#endif
+// idleTargetAirmass
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+		case 1805437050:
+			return engine->module<IdleController>().unmock().idleTargetAirmass;
+#endif
+// idleTargetFlow
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+		case -1190004798:
+			return engine->module<IdleController>().unmock().idleTargetFlow;
 #endif
 // etb1targetWithIdlePosition
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
