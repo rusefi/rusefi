@@ -1814,7 +1814,10 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 	float fuelLevelLowThresholdVoltage;Error below specified value;"v", 1, 0, 0, 10, 2
 	float fuelLevelHighThresholdVoltage;Error above specified value;"v", 1, 0, 0, 10, 2
 
-#define END_OF_CALIBRATION_PADDING 58
+    float mapExpAverageAfr;;"", 1, 0, 0, 1, 3
+
+
+#define END_OF_CALIBRATION_PADDING 54
 uint8_t[END_OF_CALIBRATION_PADDING] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
