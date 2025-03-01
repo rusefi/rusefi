@@ -5,10 +5,8 @@ custom idle_state_e 4 bits, S32, @OFFSET@, [0:2], "not important"
 
 	custom percent_t 4 scalar, F32, @OFFSET@, "", 1, 0, 0, 100, 2
 
-    percent_t currentIdlePosition;@@GAUGE_NAME_IAC@@;"%", 1, 0, 0, 0, 1
     percent_t baseIdlePosition;"idle: base value\ncurrent position without adjustments (iacByTpsTaper, afterCrankingIACtaperDuration)"
-	percent_t idleClosedLoop;Idle: Closed loop
-    percent_t iacByTpsTaper;idle: iacByTpsTaper portion
+	  percent_t iacByTpsTaper;idle: iacByTpsTaper portion
 
     bit mightResetPid;idle: mightResetPid\nThe idea of 'mightResetPid' is to reset PID only once - each time when TPS > idlePidDeactivationTpsThreshold.\nThe throttle pedal can be pressed for a long time, making the PID data obsolete (thus the reset is required).\nWe set 'mightResetPid' to true only if PID was actually used (i.e. idlePid.getOutput() was called) to save some CPU resources.\nSee automaticIdleController().
 
@@ -37,5 +35,12 @@ custom idle_state_e 4 bits, S32, @OFFSET@, [0:2], "not important"
 
     percent_t luaAdd;idle: Lua Adder
 
-! end of idle_state_s structure definition
+	! Closed loop
+	percent_t idleClosedLoop;Closed loop
+
+	! Final output
+	percent_t currentIdlePosition;@@GAUGE_NAME_IAC@@;"%", 1, 0, 0, 0, 1
+
+	uint16_t idleTargetAirmass;Target airmass;"mg", 1, 0, 0, 0, 0
+	uint16_t autoscale idleTargetFlow;Target airflow;"kg/h", 0.01, 0, 0, 0, 2
 end_struct
