@@ -2842,6 +2842,7 @@ end</constant>
          93.33
          100.0
 </constant>
+        <constant digits="3" name="mapExpAverageAfr" units="">0.0</constant>
         <constant digits="3" name="mapExpAverageAlpha" units="">0.0</constant>
         <constant digits="2" name="mapHighValueVoltage" units="v">4.0</constant>
         <constant digits="2" name="mapLowValueVoltage" units="v">0.79</constant>
@@ -4427,11 +4428,7 @@ end</constant>
         <constant name="unusedFancy9">"false"</constant>
         <constant digits="0" name="unusedHip0" units="">0.0</constant>
         <constant digits="0" name="unusedHip1" units="">0.0</constant>
-        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="58">
-         0.0
-         0.0
-         0.0
-         0.0
+        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="54">
          0.0
          0.0
          0.0
@@ -4975,7 +4972,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250221" nPages="1" signature="rusEFI master.2025.03.01.f407-discovery.2366766210" version="5.0"/>
+    <versionInfo firmwareInfo="20250221" nPages="1" signature="rusEFI master.2025.03.01.f407-discovery.2175356466" version="5.0"/>
     <bibliography author="rusEFI 20250221" writeDate="date"/>
     <settings/>
     <userComments/>
