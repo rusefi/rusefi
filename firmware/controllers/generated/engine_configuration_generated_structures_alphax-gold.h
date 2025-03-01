@@ -5083,8 +5083,12 @@ struct engine_configuration_s {
 	 */
 	float fuelLevelHighThresholdVoltage;
 	/**
-	 * units: units
 	 * offset 3960
+	 */
+	float mapExpAverageAfr;
+	/**
+	 * units: units
+	 * offset 3964
 	 */
 	uint8_t unusedOftenChangesDuringFirmwareUpdate[END_OF_CALIBRATION_PADDING] = {};
 	/**

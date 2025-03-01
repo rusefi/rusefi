@@ -1931,6 +1931,9 @@ float getConfigValueByName(const char *name) {
 // fuelLevelHighThresholdVoltage
 		case 2012123720:
 			return engineConfiguration->fuelLevelHighThresholdVoltage;
+// mapExpAverageAfr
+		case -163403196:
+			return engineConfiguration->mapExpAverageAfr;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -5190,6 +5193,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 2012123720:
 	{
 		engineConfiguration->fuelLevelHighThresholdVoltage = value;
+		return 1;
+	}
+		case -163403196:
+	{
+		engineConfiguration->mapExpAverageAfr = value;
 		return 1;
 	}
 		case -1658957891:

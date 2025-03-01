@@ -1,6 +1,6 @@
 #include "global.h"
 #include "sensor_type.h"
-// was generated automatically by rusEFI tool  from sensor_type.h // by enum_to_string.jar tool on Thu Sep 05 02:27:57 UTC 2024
+// was generated automatically by rusEFI tool  from sensor_type.h // by enum_to_string.jar tool on Sat Mar 01 05:31:38 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -165,6 +165,10 @@ case SensorType::RangeInput6:
   return "RangeInput6";
 case SensorType::Rpm:
   return "Rpm";
+case SensorType::SmoothedLambda1:
+  return "SmoothedLambda1";
+case SensorType::SmoothedLambda2:
+  return "SmoothedLambda2";
 case SensorType::ThrottleInletPressure:
   return "ThrottleInletPressure";
 case SensorType::Tps1:
