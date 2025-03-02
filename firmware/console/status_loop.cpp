@@ -735,7 +735,7 @@ void updateTunerStudioState() {
 
 	tsOutputChannels->hasCriticalError = hasFirmwareError() || hasConfigError();
 	tsOutputChannels->hasFaultReportFile = hasErrorReportFile();
-	tsOutputChannels->triggerPageRefreshFlag = wasPresetJustApplied();
+	tsOutputChannels->triggerPageRefreshFlag = needToTriggerTsRefresh();
 
 	tsOutputChannels->isWarnNow = engine->engineState.warnings.isWarningNow();
 #if EFI_HIP_9011_DEBUG

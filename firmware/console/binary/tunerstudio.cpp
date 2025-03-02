@@ -194,7 +194,7 @@ void TunerStudio::sendErrorCode(TsChannelBase* tsChannel, uint8_t code, const ch
 
 bool validateOffsetCount(size_t offset, size_t count, TsChannelBase* tsChannel);
 
-bool wasPresetJustApplied() {
+bool needToTriggerTsRefresh() {
   return !engine->engineTypeChangeTimer.hasElapsedSec(1);
 }
 
@@ -225,7 +225,7 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 		}
 
 		// Skip the write if a preset was just loaded - we don't want to overwrite it
-		if (!wasPresetJustApplied()) {
+		if (!needToTriggerTsRefresh()) {
 			uint8_t * addr = (uint8_t *) (getWorkingPageAddr() + offset);
 			memcpy(addr, content, count);
 		}
@@ -375,7 +375,7 @@ static void handleBurnCommand(TsChannelBase* tsChannel) {
 	validateConfigOnStartUpOrBurn();
 
 	// Skip the burn if a preset was just loaded - we don't want to overwrite it
-	if (!wasPresetJustApplied()) {
+	if (!needToTriggerTsRefresh()) {
 		requestBurn();
 	}
 

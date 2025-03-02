@@ -55,7 +55,7 @@ void updateTunerStudioState();
 
 bool isTuningNow();
 void startTunerStudioConnectivity();
-bool wasPresetJustApplied();
+bool needToTriggerTsRefresh();
 void onApplyPreset();
 
 typedef struct {
