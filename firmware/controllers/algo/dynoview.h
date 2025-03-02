@@ -40,13 +40,19 @@ public:
 
     float currentTorque;
     float currentHP;
-    bool isInitialized = false;
 
 private:
 
     void reset();
 
-    static inline float accumulate_window(int size, const float* data)
+    static inline void move(uint8_t size, float* data) {
+        for(int i = size - 1; i > 0; --i)
+        {
+            memcpy(&data[i], &data[i - 1], sizeof(float));
+        }
+    }
+
+    static inline float accumulate_window(uint8_t size, const float* data)
     {
         float sum = 0.0;
 
@@ -54,7 +60,7 @@ private:
             sum += data[size - i - 1];
         }
 
-        return sum  / window_size;
+        return sum  / (float)size;
     }
 
     float airDensityKgM3 = 1.225; // 15C
@@ -71,9 +77,20 @@ private:
     DynoPoint dynoViewPointPrev;
 
     int count = 0;
+    int count_rpm = 0;
+    int prev_rpm = 0;
 
-    static constexpr int window_size = 7;
+    static constexpr int dyno_view_window_size = 7;
+    static constexpr int dyno_view_window_size_rpm = 10;
+    static constexpr int dyno_view_tps_min_for_run = 30;
+    static constexpr int dyno_view_rpm_diff_smooth = 30;
+    static constexpr float dyno_view_log_time_smooth_sec = 0.05f;
+    static constexpr int dyno_view_tps_diff_to_reset_run = 10;
+    static constexpr int dyno_view_rpm_fall_to_reset_run = 60;
 
-    float tail_hp[window_size];
-    float tail_torque[window_size];
+    float tail_hp[dyno_view_window_size];
+    float tail_torque[dyno_view_window_size];
+    float tail_rpm[dyno_view_window_size_rpm];
+
+    bool isInitialized = false;
 };
