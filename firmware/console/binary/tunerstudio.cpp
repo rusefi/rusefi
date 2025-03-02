@@ -194,6 +194,10 @@ void TunerStudio::sendErrorCode(TsChannelBase* tsChannel, uint8_t code, const ch
 
 bool validateOffsetCount(size_t offset, size_t count, TsChannelBase* tsChannel);
 
+PUBLIC_API_WEAK bool isBoardAskingTriggerTsRefresh() {
+  return false;
+}
+
 bool needToTriggerTsRefresh() {
   return !engine->engineTypeChangeTimer.hasElapsedSec(1);
 }
