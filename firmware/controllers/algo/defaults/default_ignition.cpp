@@ -34,10 +34,9 @@ static void setDefaultIatTimingCorrection() {
 
 static void setDefaultCltTimingCorrection() {
 	setLinearCurve(config->ignitionCltCorrLoadBins, /*from=*/ 0, /*to*/ 140, 1);
+  setLinearCurve(config->ignitionCltCorrTempBins, -20, 60, 1);
 
 #if CLT_TIMING_CURVE_SIZE == 5
-	copyArray(config->ignitionCltCorrTempBins, { -20, 0, 20, 40, 60});
-
 	for (size_t i = 0; i < CLT_TIMING_CURVE_SIZE; i++) {
 	  // huh? use setArrayValues? and we probably get all zeros by default anyway?
 		copyArray(config->ignitionCltCorrTable[i], {0.0, 0.0, 0.0, 0.0, 0.0});
