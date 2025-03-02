@@ -1,11 +1,10 @@
 package com.opensr5.io;
 
+import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImageMeta;
 import com.opensr5.ConfigurationImageMetaVersion0_0;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageWithMeta;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -15,6 +14,8 @@ import java.util.Optional;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipOutputStream;
+
+import static com.devexperts.logging.Logging.getLogging;
 
 /**
  * Utility class to read/write {@link ConfigurationImage} into a file.
@@ -29,7 +30,7 @@ import java.util.zip.ZipOutputStream;
  * 6/20/2015.
  */
 public class ConfigurationImageFile {
-    private static final Log log = LogFactory.getLog(ConfigurationImageFile.class);
+    private static final Logging log = getLogging(ConfigurationImageFile.class);
 
     private static final String IMAGE_ZIP_ENTRY_NAME = "Image.bin";
 
