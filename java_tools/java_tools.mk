@@ -42,7 +42,7 @@ $(CONSOLE_JAR): $(FIELDS) .FORCE
 	cd $(JAVA_TOOLS) && $(FLOCK) ./gradlew :ui:shadowJar
 
 $(AUTOUPDATE_JAR): .FORCE
-	cd $(JAVA_TOOLS) && $(FLOCK) ./gradlew :autoupdate:jar
+	cd $(JAVA_TOOLS) && $(FLOCK) ./gradlew :autoupdate:shadowJar
 
 .FORCE:
 
