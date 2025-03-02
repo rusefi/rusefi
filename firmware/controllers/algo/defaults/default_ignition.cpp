@@ -29,6 +29,8 @@ static void setDefaultIatTimingCorrection() {
 	// 6th row tapers out
 	//                                                        40  50  60 deg C
 	copyArray(config->ignitionIatCorrTable[2], {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -1.0, -2.0});
+#else
+  setLinearCurve(config->ignitionIatCorrTempBins, /*from=*/ -40, /*to*/ 60, 1);
 #endif
 }
 
