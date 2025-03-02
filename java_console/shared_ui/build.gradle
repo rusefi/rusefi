@@ -7,6 +7,5 @@ dependencies {
     api project(':ecu_io')
     api project(':models')
     api ts_plugin_libs.httpclient
-    api ts_plugin_libs.httpmime
     api global_libs.json
 }
