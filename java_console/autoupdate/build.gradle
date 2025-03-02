@@ -6,21 +6,12 @@ configurations {
 }
 
 dependencies {
-    api global_libs.javaxJson
     api project(':core_ui')
 
     api global_libs.jcip
-    api global_libs.json
 
     // xml binding drama #7430 we do not understand this hack but it seems to help :(
     api global_libs.jaxb
-
-    // not 'api' since Android would use own implementation
-    implementation ts_plugin_libs.httpclient
-
-    // junit 4.13 does not mix well with httpclient :(
-    testImplementation group: 'junit', name: 'junit', version: '4.8.2'
-    testImplementation global_libs.mockito
 }
 
 // yes nasty sorry
