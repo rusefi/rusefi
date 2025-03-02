@@ -11,6 +11,10 @@ dependencies {
 
     api global_libs.jcip
     api global_libs.json
+
+    // xml binding drama #7430 we do not understand this hack but it seems to help :(
+    api global_libs.jaxb
+
     // not 'api' since Android would use own implementation
     implementation ts_plugin_libs.httpclient
 
