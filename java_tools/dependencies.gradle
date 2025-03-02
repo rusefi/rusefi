@@ -17,6 +17,7 @@ ext {
   ]
 
   ts_plugin_libs = [
+      // todo: migrating to httpclient5 #7551
           httpclient  : "org.apache.httpcomponents:httpclient:4.5.14",
           httpcore    : "org.apache.httpcomponents:httpcore:4.4.16",
           httpmime    : "org.apache.httpcomponents:httpmime:4.5.14",
