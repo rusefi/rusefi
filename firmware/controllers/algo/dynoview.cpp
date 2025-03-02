@@ -7,33 +7,33 @@
 
 #include "pch.h"
 
-#ifndef DYNO_TPS_THRESHOLD
-#define DYNO_TPS_THRESHOLD 80
-#endif
-
 #if EFI_DYNO_VIEW
 #include "dynoview.h"
 
 void DynoView::init()
 {
-  if (isInitialized) {
-    return;
-  }
-  isInitialized = true;
-    wheelOverallDiameterMm = (uint16_t)(config->dynoCarWheelDiaInch * 25.4 + config->dynoCarWheelTireWidthMm * config->dynoCarWheelAspectRatio * 0.01 * 2);
+    if (isInitialized) {
+        return;
+    }
+    isInitialized = true;
 
-    saeVaporPressure = 6.1078 * pow(10.0, (7.5 * config->dynoSaeTemperatureC) / (237.3 + config->dynoSaeTemperatureC)) * .02953 * (config->dynoSaeRelativeHumidity / 100.0);
-    saeBaroMmhg = 29.23 * (config->dynoSaeBaro / 100.0);
-    saeBaroCorrectionFactor = 29.23 / (saeBaroMmhg - saeVaporPressure);
-    saeTempCorrectionFactor = pow(((config->dynoSaeTemperatureC + 273.0) / 298.0), 0.5);
-    saeCorrectionFactor = 1.176 * (saeBaroCorrectionFactor * saeTempCorrectionFactor) - .176;
+    //config->dynoSaeBaro = Sensor::get(SensorType::BarometricPressure).value_or(config->dynoSaeBaro);
+
+    wheelOverallDiameterMm = (uint16_t)((float)config->dynoCarWheelDiaInch * 25.4f + (float)config->dynoCarWheelTireWidthMm * (float)config->dynoCarWheelAspectRatio * 0.01f * 2.0f);
+
+    saeVaporPressure = 6.1078f * pow(10.0f, (7.5f * (float)config->dynoSaeTemperatureC) / (237.3f + (float)config->dynoSaeTemperatureC)) * .02953f * ((float)config->dynoSaeRelativeHumidity / 100.0f);
+    saeBaroMmhg = 29.23f * (config->dynoSaeBaro / 100.0f);
+    saeBaroCorrectionFactor = 29.23f / (saeBaroMmhg - saeVaporPressure);
+    saeTempCorrectionFactor = pow((((float)config->dynoSaeTemperatureC + 273.0f) / 298.0f), 0.5f);
+    saeCorrectionFactor = 1.176f * (saeBaroCorrectionFactor * saeTempCorrectionFactor) - .176f;
 
     reset();
 }
 
 void DynoView::update()
 {
-  init();
+    init();
+
     float rpm = Sensor::getOrZero(SensorType::Rpm);
     rpm = efiRound(rpm, 1.0);
     int intRpm = (int)rpm;
@@ -54,31 +54,62 @@ void DynoView::reset()
     dynoViewPointPrev.time = -1;
     dynoViewPointPrev.tps = -1;
     count = 0;
+    count_rpm = 0;
     currentTorque = 0;
     currentHP = 0;
 }
 
 bool DynoView::onRpm(int rpm, float time, float tps)
 {
-    if (tps < dynoViewPointPrev.tps || tps < DYNO_TPS_THRESHOLD) {
+    if(tps < dyno_view_tps_min_for_run || dynoViewPointPrev.tps - tps > dyno_view_tps_diff_to_reset_run) {
         reset();
         return false;
     }
 
-    if (dynoViewPointPrev.rpm > 0 && dynoViewPointPrev.time > 0) {
-        if(time < dynoViewPointPrev.time || rpm < dynoViewPointPrev.rpm)
+    if (dynoViewPointPrev.rpm > 0 && dynoViewPointPrev.time > 0)
+    {
+        if(abs(rpm - prev_rpm) < 1) {
+            return false;
+        }
+        prev_rpm = rpm;
+
+        // more smoothly
+        if((time - dynoViewPointPrev.time) < dyno_view_log_time_smooth_sec)
         {
             return false;
         }
 
-        int rpmDiff = rpm - dynoViewPointPrev.rpm;
+        int rpmDiffSmooth = abs(rpm - dynoViewPointPrev.rpm);
 
-        if (rpmDiff < config->dynoRpmStep) {
+        if(rpmDiffSmooth < dyno_view_rpm_diff_smooth) {
             return false;
         }
+
+        DynoView::move(dyno_view_window_size_rpm, tail_rpm);
+        tail_rpm[0] = rpm;
+
+        count_rpm++;
+        int accumulate_window_size = std::min(count_rpm, dyno_view_window_size_rpm);
+        dynoViewPoint.rpm = (int)accumulate_window(accumulate_window_size, tail_rpm);
+
+        if(dynoViewPoint.rpm + dyno_view_rpm_fall_to_reset_run < dynoViewPointPrev.rpm)
+        {
+            reset();
+            return false;
+        }
+
+        int rpmDiffStep = abs(dynoViewPoint.rpm - dynoViewPointPrev.rpm);
+
+        if (rpmDiffStep < config->dynoRpmStep)
+        {
+            return false;
+        }
+
+    } else {
+        dynoViewPoint.rpm = rpm;
     }
 
-    dynoViewPoint.rpm = rpm;
+    //dynoViewPoint.rpm = rpm;
     dynoViewPoint.time = time;
     dynoViewPoint.tps = tps;
 
@@ -91,6 +122,9 @@ bool DynoView::onRpm(int rpm, float time, float tps)
     {
         dynoViewPoint.distanceM = ((dynoViewPoint.vMs + dynoViewPointPrev.vMs) / 2.0) * (dynoViewPoint.time - dynoViewPointPrev.time);
         dynoViewPoint.aMs2 = (dynoViewPoint.vMs - dynoViewPointPrev.vMs) / (dynoViewPoint.time - dynoViewPointPrev.time);
+        if(dynoViewPoint.aMs2 < 0) {
+            dynoViewPoint.aMs2 = 0;
+        }
         dynoViewPoint.forceN = (config->dynoCarCargoMassKg + config->dynoCarCarMassKg) * dynoViewPoint.aMs2;
         dynoViewPoint.forceDragN = 0.5 * airDensityKgM3 * (dynoViewPoint.vMs * dynoViewPoint.vMs) * config->dynoCarFrontalAreaM2 * config->dynoCarCoeffOfDrag;
 
@@ -102,28 +136,17 @@ bool DynoView::onRpm(int rpm, float time, float tps)
         dynoViewPoint.torqueLbFt = dynoViewPoint.torqueNm * 0.737562;
         dynoViewPoint.hp = dynoViewPoint.torqueLbFt * dynoViewPoint.rpm / 5252.0;
 
-        for(int i = 0; i < window_size-1; ++i)
-        {
-            memcpy(&tail_hp[i], &tail_hp[i + 1], sizeof(float));
-            memcpy(&tail_torque[i], &tail_torque[i + 1], sizeof(float));
-        }
+        DynoView::move(dyno_view_window_size, tail_hp);
+        DynoView::move(dyno_view_window_size, tail_torque);
 
-        tail_torque[window_size-1] = dynoViewPoint.torqueNm;
-        tail_hp[window_size-1] = dynoViewPoint.hp;
+        tail_torque[0] = dynoViewPoint.torqueNm;
+        tail_hp[0] = dynoViewPoint.hp;
 
-        if(count == 0)
-        {
-            for(int i = 0; i < window_size-1; ++i) {
-                memcpy(&tail_hp[i], &tail_hp[window_size-1], sizeof(float));
-                memcpy(&tail_torque[i], &tail_torque[window_size-1], sizeof(float));
-            }
-        }
-
-        if (count < window_size) {
+        if(count < dyno_view_window_size) {
             ++count;
         }
 
-        int accumulate_window_size = std::min(count, window_size);
+        int accumulate_window_size = std::min(count, dyno_view_window_size);
 
         currentTorque = accumulate_window(accumulate_window_size, tail_torque);
         currentHP = accumulate_window(accumulate_window_size, tail_hp);
@@ -138,11 +161,11 @@ bool DynoView::onRpm(int rpm, float time, float tps)
 }
 
 int getDynoviewHP() {
-    return engine->dynoInstance.currentHP;
+    return (int)engine->dynoInstance.currentHP;
 }
 
 int getDynoviewTorque() {
-    return engine->dynoInstance.currentTorque;
+    return (int)engine->dynoInstance.currentTorque;
 }
 
 /**
