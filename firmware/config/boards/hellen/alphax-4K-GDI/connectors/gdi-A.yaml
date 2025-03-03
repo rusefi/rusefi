@@ -2,195 +2,178 @@ meta: config/boards/hellen_meta.h
 
 pins:
   - pin: 1A
-    function: HPFP Positive
-    meta: H144_LS_6
-    color: green
+    id: TLE9104_0_OUT_3
     class: outputs
+    ts_name: ___ Port injector 4
+    function: Port injector 4
+    color: orange/brown
+    type: ls
 
   - pin: 2A
-    function: GDI Injector 4 Positive
-    color: brown
+    id: TLE9104_0_OUT_2
+    class: outputs
+    ts_name: ___ Port injector 3
+    function: Port injector 3
+    color: blue
+    type: ls
 
   - pin: 3A
-    function: GDI Injector 4 Negative
-    ts_name: ___ GDI Injector 4
+    id: TLE9104_0_OUT_1
     class: outputs
-    meta: H144_LS_4
-    color: brown
+    ts_name: ___ Port injector 2
+    function: Port injector 2
+    color: white
     type: ls
 
   - pin: 4A
-    function: GDI Injector 3 Positive
-    color: blue
+    id: TLE9104_0_OUT_0
+    class: outputs
+    ts_name: ___ Port injector 1
+    function: Port injector 1
+    color: green
+    type: ls
 
   - pin: 5A
-    function: GDI Injector 3 Negative
-    ts_name: ___ GDI Injector 3
+    id: TLE9104_1_OUT_0
     class: outputs
-    meta: H144_LS_3
-    color: blue
+    ts_name: ___ Main Relay Control
+    function: Main relay control
     type: ls
+    color: grey
 
   - pin: 6A
-    function: GDI Injector 2 Positive
-    color: white
+    meta: H144_IN_VBATT
+    class: analog_inputs
+    function: ECU power supply / Ignition Key Power
+    ts_name: ___ Battery Sense
+    type: 12v
 
   - pin: 7A
-    function: GDI Injector 2 Negative
+    id: TLE9104_1_OUT_1
     class: outputs
-    ts_name: ___ GDI Injector 2
-    meta: H144_LS_2
-    color: white
+    function: Fuel Pump Relay Output
     type: ls
+    ts_name: ___ Fuel Pump
 
   - pin: 8A
-    function: GDI Injector 1 Positive
-    color: green
+    id: TLE9104_1_OUT_2
+    class: outputs
+    function: Fan 1
+    type: ls
+    ts_name: ___ Fan 1
 
   - pin: 9A
-    function: GDI Injector 1 Negative
+    id: TLE9104_1_OUT_3
     class: outputs
-    ts_name: ___ GDI Injector 1
-    meta: H144_LS_1
+    function: Fan 2
+    color: yellow
     type: ls
-    color: green
+    ts_name: ___ Fan 2
 
   - pin: 10A
-    function: HPFP Negative
-    color:
+    meta: H144_IN_CRANK
+    class: event_inputs
+    function: Crank / VR 9924 Negative
+    ts_name: ___ VR Negative
 
   - pin: 11A
-    meta: H144_IGN_4
-    class: outputs
-    function: Smart Ignition Coil 4
-    type: ign
-    ts_name: ___ Ignition 4
-    color: orange/brown
-
-  - pin: 12A
-    meta: H144_IGN_3
-    class: outputs
-    function: Smart Ignition Coil 3
-    type: ign
-    ts_name: ___ Ignition 3
-    color: blue
-
-  - pin: 13A
-    meta: H144_IGN_2
-    class: outputs
-    function: Smart Ignition Coil 2
-    type: ign
-    ts_name: ___ Ignition 2
-    color: white
-
-  - pin: 14A
-    meta: H144_IGN_1
-    class: outputs
-    function: Smart Ignition Coil 1
-    type: ign
-    ts_name: ___ Ignition 1
-    color: green
-
-  - pin: 15A
-    function: CAN bus high (CANH)
-    type: can
-    color: green
+    function: Crank / VR 9924 Positive
 
   - pin: 16A
-    function: CAN1 bus low (CANL)
-    type: can
-    color: blue
-
-  - pin: 17A
-    function: ETB negative
-    type: etb
-    color: white
-
-  - pin: 18A
-    function: +12V from main relay
-    type: 12v
-    color: red
+    function: Knock Input
 
   - pin: 19A
-    function: TPS 1 signal
-    ts_name: ___ TPS1
-    meta: H144_IN_TPS
-    color: green
+    function: PPS 1
     type: av
+    meta: H144_IN_PPS
     class: analog_inputs
+    ts_name: ___ PPS1
+    color: white
 
   - pin: 20A
-    function: TPS 2 signal
-    ts_name: ___ TPS2
-    meta: H144_IN_TPS2
-    color: blue
+    function: PPS 2
     type: av
+    meta: H144_IN_PPS2
     class: analog_inputs
-
+    ts_name: ___ PPS2
+    color: orange/brown
 
   - pin: 21A
-    function: ECT CLT Coolant
-    color: grey
-    type: at
-    meta: H144_IN_CLT
-    class: analog_inputs
-
+    id: [H144_IN_SENS1, H144_IN_SENS1]
+    class: [event_inputs, switch_inputs]
+    function: Digital Input 1
+    ts_name: ___ Digital Input 1
+    color: white
 
   - pin: 22A
-    function: IAT
-    color: blue
-    type: at
-    meta: H144_IN_IAT
-    class: analog_inputs
+    id: [H144_IN_AUX2_DIGITAL, H144_IN_AUX2_DIGITAL, H144_IN_AUX2]
+    class: [event_inputs, switch_inputs, analog_inputs]
+    function: Input 2 Digital / Analog / SENT
+    ts_name: ___ Input 2
+    color: yellow
 
   - pin: 23A
-    function: MAP Signal
+    function: Fuel Low Pressure
     type: av
-    color: yellow
-    meta: H144_IN_MAP1
+    meta: H144_IN_AUX4
     class: analog_inputs
+    ts_name: ___ Fuel Low Pressure
 
   - pin: 24A
-    function: Sensor +5v Power Feed
-    type: 5v
-    color: orange
-
-  - pin: 25A
-    function: ETB positive
-    type: etb
-    color: blue
-
+    function: Fuel High Pressure
+    type: av
+    meta: H144_IN_MAP3
+    class: analog_inputs
+    ts_name: ___ Fuel High Pressure
 
   - pin: 26A
     function: Power GND
     type: gnd
-    color: black
 
   - pin: 27A
-    function: Sensor GND
-    type: agnd
-    color: black
+    id: [H144_IN_SENS2, H144_IN_SENS2]
+    class: [event_inputs, switch_inputs]
+    function: Digital Input 3
+    ts_name: ___ Digital Input 3
+    color: yellow
 
   - pin: 28A
-    function: 28A input
-    ts_name: ___ input
-    id: [H144_IN_O2S2_DIGITAL, H144_IN_O2S2]
-    class: [switch_inputs, analog_inputs]
-    type: av
+    id: [H144_IN_SENS3, H144_IN_SENS3]
+    class: [event_inputs, switch_inputs]
+    function: Digital Input 4
+    ts_name: ___ Digital Input 4
 
-  - pin: 33A
-    function: Wastegate Low Side
-    ts_name: ___ Wastegate Solenoid
+  - pin: 29A
+    id: TLE9104_2_OUT_0
     class: outputs
-    id: TLE9104_3_OUT_0
+    ts_name: ___ VVT1
+    function: VVT1
     type: ls
+    color: orange
 
-  - pin: 34A
-    function: AC Low Side
-    ts_name: ___ AC Control
+  - pin: 30A
+    id: TLE9104_2_OUT_1
     class: outputs
-    id: TLE9104_3_OUT_1
+    ts_name: ___ VVT2
+    function: VVT2
     type: ls
+    color: blue
+
+  - pin: 31A
+    id: TLE9104_2_OUT_2
+    class: outputs
+    ts_name: ___ VVT3
+    function: VVT3
+    type: ls
+    color: white
+
+  - pin: 32A
+    id: TLE9104_2_OUT_3
+    class: outputs
+    ts_name: ___ VVT4
+    function: VVT4
+    type: ls
+    color: green
 
 info:
   title: AlphaX 4K-GDI
