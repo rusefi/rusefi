@@ -357,13 +357,30 @@
 	#define LUA_USER_HEAP (1 * 1024 * 1024)
 #elif defined(EFI_IS_F42x)
 	// F42x has more memory, so we can:
-	//  - use compressed USB MSD image (requires 32k of memory)
+	//  - use compressed USB MSD image (requires 32k of ram memory and 760k flash memory)
 	//  - use perf trace (requires ~16k of memory)
 	//  - use spectorgram (requires ~12k of memory), need disable perf trace or compressed USB MSD image
-	#ifndef KNOCK_SPECTROGRAM
-		#define EFI_USE_COMPRESSED_INI_MSD TRUE
-	#endif
+
+    #ifndef EFI_USE_COMPRESSED_INI_MSD
+	#define EFI_USE_COMPRESSED_INI_MSD TRUE
+	#endif // EFI_USE_COMPRESSED_INI_MSD
+
+    #ifndef EFI_DYNO_VIEW
+	#define EFI_DYNO_VIEW FALSE
+	#endif // EFI_DYNO_VIEW
+
+    #ifndef KNOCK_SPECTROGRAM
+	#define KNOCK_SPECTROGRAM FALSE
+	#endif // KNOCK_SPECTROGRAM
+
+	#ifndef ENABLE_PERF_TRACE
 	#define ENABLE_PERF_TRACE TRUE
+	#endif // ENABLE_PERF_TRACE
+
+    #ifdef LUA_SCRIPT_SIZE
+    #undef LUA_SCRIPT_SIZE
+    #define LUA_SCRIPT_SIZE 12000
+    #endif
 
 	#define LUA_USER_HEAP 25000
 #else

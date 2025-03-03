@@ -28,8 +28,4 @@
 #define CLT_TIMING_CURVE_SIZE 3
 #define IAT_IGN_CORR_COUNT 4
 
-! f4 does not like this #define LUA_SCRIPT_SIZE 32000
-! TODO what we need is a way to define one LUA_SCRIPT_SIZE for F4 and different one for F7
-! todo: maybe some integration between meta_info and prepend?
-#define LUA_SCRIPT_SIZE 13500
-
+#define LUA_SCRIPT_SIZE 32000

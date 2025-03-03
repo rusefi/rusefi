@@ -1,0 +1,3 @@
+include $(BOARD_DIR)/../board.mk
+
+DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_PROTEUS_H7
