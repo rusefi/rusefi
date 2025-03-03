@@ -9,6 +9,7 @@
 const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 	switch(brainPin) {
 		case Gpio::A1: return "28B input";
+		case Gpio::A6: return "12A VR Negative";
 		case Gpio::B1: return "10A VR Negative";
 		case Gpio::C13: return "14B Ignition 1";
 		case Gpio::D10: return "3B GDI Injector 4";
@@ -17,10 +18,12 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::E4: return "12B Ignition 3";
 		case Gpio::E5: return "13B Ignition 2";
 		case Gpio::E9: return "22A Input 2";
+		case Gpio::F11: return "14A VR Negative";
 		case Gpio::F12: return "HPFP Positive";
 		case Gpio::F3: return "21A Digital Input 1";
 		case Gpio::F4: return "27A Digital Input 3";
 		case Gpio::F5: return "28A Digital Input 4";
+		case Gpio::F6: return "18A Flex Input 1";
 		case Gpio::G7: return "9B GDI Injector 1";
 		case Gpio::G8: return "7B GDI Injector 2";
 		case Gpio::MSIOBOX_0_OUT_1: return "MS IO-Box 0 OUT 1";
@@ -39,8 +42,8 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::TLE9104_2_OUT_1: return "30A VVT2";
 		case Gpio::TLE9104_2_OUT_2: return "31A VVT3";
 		case Gpio::TLE9104_2_OUT_3: return "32A VVT4";
-		case Gpio::TLE9104_3_OUT_0: return "33B Wastegate Solenoid";
-		case Gpio::TLE9104_3_OUT_1: return "34B AC Control";
+		case Gpio::TLE9104_3_OUT_0: return "33A Wastegate Solenoid";
+		case Gpio::TLE9104_3_OUT_1: return "34A AC Control";
 		default: return nullptr;
 	}
 	return nullptr;

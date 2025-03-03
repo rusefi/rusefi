@@ -18,12 +18,12 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::TLE9104_2_OUT_1, // 30A VVT2
 	Gpio::TLE9104_2_OUT_2, // 31A VVT3
 	Gpio::TLE9104_2_OUT_3, // 32A VVT4
+	Gpio::TLE9104_3_OUT_0, // 33A Wastegate Solenoid
+	Gpio::TLE9104_3_OUT_1, // 34A AC Control
 	Gpio::H144_LS_4, // 3B GDI Injector 4
 	Gpio::H144_LS_3, // 5B GDI Injector 3
 	Gpio::H144_LS_2, // 7B GDI Injector 2
 	Gpio::H144_LS_1, // 9B GDI Injector 1
-	Gpio::TLE9104_3_OUT_0, // 33B Wastegate Solenoid
-	Gpio::TLE9104_3_OUT_1, // 34B AC Control
 	Gpio::H144_LS_6, // HPFP Positive
 	Gpio::H144_IGN_4, // 11B Ignition 4
 	Gpio::H144_IGN_3, // 12B Ignition 3
@@ -45,12 +45,12 @@ Gpio GENERATED_OUTPUTS = {
 // "30A VVT2",
 // "31A VVT3",
 // "32A VVT4",
+// "33A Wastegate Solenoid",
+// "34A AC Control",
 // "3B GDI Injector 4",
 // "5B GDI Injector 3",
 // "7B GDI Injector 2",
 // "9B GDI Injector 1",
-// "33B Wastegate Solenoid",
-// "34B AC Control",
 // "HPFP Positive",
 // "11B Ignition 4",
 // "12B Ignition 3",
