@@ -32,6 +32,7 @@ Release template (copy/paste this for new release):
  - SD card mode selection: do not wait for USB if vbatt voltage #7424
  - SD card mass storage read access performance improvements
  - migrate injector lag is now a table #7522
+ - Allow fractional tachometer pulse ratio for fine tachometer calibration
 
 ## February 2025 "Day 1075"
 
