@@ -4,6 +4,8 @@
 #include "hellen_meta.h"
 #include "drivers/gpio/tle9104.h"
 
+static OutputPin tempPullUp;
+
 void setBoardConfigOverrides() {
     setHellenSdCardSpi1Hardware();
 	setHellenVbatt();
@@ -31,6 +33,8 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->injectionPins[1] = Gpio::H144_LS_2;
 	engineConfiguration->injectionPins[2] = Gpio::H144_LS_3;
 	engineConfiguration->injectionPins[3] = Gpio::H144_LS_4;
+
+  config->boardUseTempPullUp = true;
 
 	hellenWbo();
 	setGDIFueling();
@@ -216,6 +220,7 @@ static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
     }
 
   initAll9104(tle9104_cfg);
+	tempPullUp.initPin("Temp PullUp", Gpio::MM176_OUT_IO12);
 }
 
 static Gpio OUTPUTS[] = {
