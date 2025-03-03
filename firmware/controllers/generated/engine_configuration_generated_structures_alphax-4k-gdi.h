@@ -6260,8 +6260,104 @@ struct persistent_config_s {
 	 * offset 41336
 	 */
 	scaled_channel<uint8_t, 1, 5> trailingSparkLoadBins[TRAILING_SPARK_SIZE] = {};
+	/**
+	offset 41340 bit 0 */
+	bool boardUseTempPullUp : 1 {};
+	/**
+	offset 41340 bit 1 */
+	bool unusedBit_237_1 : 1 {};
+	/**
+	offset 41340 bit 2 */
+	bool unusedBit_237_2 : 1 {};
+	/**
+	offset 41340 bit 3 */
+	bool unusedBit_237_3 : 1 {};
+	/**
+	offset 41340 bit 4 */
+	bool unusedBit_237_4 : 1 {};
+	/**
+	offset 41340 bit 5 */
+	bool unusedBit_237_5 : 1 {};
+	/**
+	offset 41340 bit 6 */
+	bool unusedBit_237_6 : 1 {};
+	/**
+	offset 41340 bit 7 */
+	bool unusedBit_237_7 : 1 {};
+	/**
+	offset 41340 bit 8 */
+	bool unusedBit_237_8 : 1 {};
+	/**
+	offset 41340 bit 9 */
+	bool unusedBit_237_9 : 1 {};
+	/**
+	offset 41340 bit 10 */
+	bool unusedBit_237_10 : 1 {};
+	/**
+	offset 41340 bit 11 */
+	bool unusedBit_237_11 : 1 {};
+	/**
+	offset 41340 bit 12 */
+	bool unusedBit_237_12 : 1 {};
+	/**
+	offset 41340 bit 13 */
+	bool unusedBit_237_13 : 1 {};
+	/**
+	offset 41340 bit 14 */
+	bool unusedBit_237_14 : 1 {};
+	/**
+	offset 41340 bit 15 */
+	bool unusedBit_237_15 : 1 {};
+	/**
+	offset 41340 bit 16 */
+	bool unusedBit_237_16 : 1 {};
+	/**
+	offset 41340 bit 17 */
+	bool unusedBit_237_17 : 1 {};
+	/**
+	offset 41340 bit 18 */
+	bool unusedBit_237_18 : 1 {};
+	/**
+	offset 41340 bit 19 */
+	bool unusedBit_237_19 : 1 {};
+	/**
+	offset 41340 bit 20 */
+	bool unusedBit_237_20 : 1 {};
+	/**
+	offset 41340 bit 21 */
+	bool unusedBit_237_21 : 1 {};
+	/**
+	offset 41340 bit 22 */
+	bool unusedBit_237_22 : 1 {};
+	/**
+	offset 41340 bit 23 */
+	bool unusedBit_237_23 : 1 {};
+	/**
+	offset 41340 bit 24 */
+	bool unusedBit_237_24 : 1 {};
+	/**
+	offset 41340 bit 25 */
+	bool unusedBit_237_25 : 1 {};
+	/**
+	offset 41340 bit 26 */
+	bool unusedBit_237_26 : 1 {};
+	/**
+	offset 41340 bit 27 */
+	bool unusedBit_237_27 : 1 {};
+	/**
+	offset 41340 bit 28 */
+	bool unusedBit_237_28 : 1 {};
+	/**
+	offset 41340 bit 29 */
+	bool unusedBit_237_29 : 1 {};
+	/**
+	offset 41340 bit 30 */
+	bool unusedBit_237_30 : 1 {};
+	/**
+	offset 41340 bit 31 */
+	bool unusedBit_237_31 : 1 {};
 };
-static_assert(sizeof(persistent_config_s) == 41340);
+static_assert(sizeof(persistent_config_s) == 41344);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt
