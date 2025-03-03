@@ -32,7 +32,7 @@ jobs:
       - name: Build All Java
         working-directory: ./java_tools/
         run: |
-          ./gradlew shadowJar
+          ./gradlew jar :config_definition_base:shadowJar :enum_to_string:shadowJar
 
       - name: Generate Enums & Live Documentation
         working-directory: ./firmware/
