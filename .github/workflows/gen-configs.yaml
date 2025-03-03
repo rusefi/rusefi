@@ -33,7 +33,7 @@ jobs:
     - name: Configuration Definition and Enum to String CI, without pushing new .jar
       working-directory: ./java_tools
       run: |
-        ./gradlew shadowJar
+        ./gradlew jar :config_definition_base:shadowJar :enum_to_string:shadowJar
 
     - name: Generate Live Documentation
       working-directory: ./firmware/
