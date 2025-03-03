@@ -78,9 +78,38 @@ pins:
 
   - pin: 11A
     function: Crank / VR 9924 Positive
+    
+  - pin: 12A
+    meta: H144_IN_CAM
+    class: event_inputs
+    function: CAM / VR Discrete 1 Negative
+    ts_name: ___ VR Negative
+
+  - pin: 13A
+    function: CAM / VR Discrete 1 Positive
+    
+  - pin: 14A
+    meta: H144_IN_VSS
+    class: event_inputs
+    function: VSS / VR Discrete 2 Negative
+    ts_name: ___ VR Negative
+
+  - pin: 15A
+    function: VSS / VR Discrete 2 Positive
 
   - pin: 16A
     function: Knock Input
+    
+  - pin: 17A
+    function: DC negative
+    type: etb
+    color: white
+
+  - pin: 18A
+    id: [H144_IN_SENS4, H144_IN_SENS4]
+    class: [event_inputs, switch_inputs]
+    function: Flex Input
+    ts_name: ___ Flex Input 1
 
   - pin: 19A
     function: PPS 1
@@ -126,6 +155,11 @@ pins:
     class: analog_inputs
     ts_name: ___ Fuel High Pressure
 
+  - pin: 25A
+    function: DC positive
+    type: etb
+    color: blue
+    
   - pin: 26A
     function: Power GND
     type: gnd
@@ -174,6 +208,20 @@ pins:
     function: VVT4
     type: ls
     color: green
+    
+  - pin: 33A
+    function: Wastegate Low Side
+    ts_name: ___ Wastegate Solenoid
+    class: outputs
+    id: TLE9104_3_OUT_0
+    type: ls
+
+  - pin: 34A
+    function: AC Low Side
+    ts_name: ___ AC Control
+    class: outputs
+    id: TLE9104_3_OUT_1
+    type: ls
 
 info:
   title: AlphaX 4K-GDI

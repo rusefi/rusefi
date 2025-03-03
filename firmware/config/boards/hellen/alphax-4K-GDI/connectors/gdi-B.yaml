@@ -178,19 +178,29 @@ pins:
     class: [switch_inputs, analog_inputs]
     type: av
 
+  - pin: 29B
+    function: WBO Heater Positive
+    type: wbo
+    
+  - pin: 30B
+    function: WBO Heater Negative
+    type: wbo
+    
+  - pin: 31B
+    function: WBO Vm
+    type: wbo
+    
+  - pin: 32B
+    function: WBO Ip
+    type: wbo
+    
   - pin: 33B
-    function: Wastegate Low Side
-    ts_name: ___ Wastegate Solenoid
-    class: outputs
-    id: TLE9104_3_OUT_0
-    type: ls
-
+    function: WBO Rtrim
+    type: wbo
+    
   - pin: 34B
-    function: AC Low Side
-    ts_name: ___ AC Control
-    class: outputs
-    id: TLE9104_3_OUT_1
-    type: ls
+    function: WBO Un
+    type: wbo
 
 
 info:
