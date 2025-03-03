@@ -12,9 +12,9 @@
 
 #include "tachometer.h"
 
-static SimplePwm tachControl("tach"); 
-static float tachFreq;  
-static float duty;   
+static SimplePwm tachControl("tach");
+static float tachFreq;
+static float duty;
 
 #if EFI_UNIT_TEST
 float getTachFreq() {
@@ -35,10 +35,10 @@ void tachUpdate() {
 	}
 
 	// How many tach pulse periods do we have?
-	int periods = engineConfiguration->tachPulsePerRev;
+	float periods = engineConfiguration->tachPulsePerRev;
 
 	if (periods == 0 || periods > 10) {
-		firmwareError(ObdCode::CUSTOM_ERR_6709, "Invalid tachometer pulse per rev: %d", periods);
+		firmwareError(ObdCode::CUSTOM_ERR_6709, "Invalid tachometer pulse per rev: %.2f", periods);
 		return;
 	}
 
@@ -46,7 +46,7 @@ void tachUpdate() {
 	float cycleTimeMs = 60000.0f / Sensor::getOrZero(SensorType::Rpm);
 	float periodTimeMs = cycleTimeMs / periods;
 	tachFreq = 1000.0f / periodTimeMs;
-	
+
 	if (engineConfiguration->tachPulseDurationAsDutyCycle) {
 		// Simple case - duty explicitly set
 		duty = engineConfiguration->tachPulseDuractionMs;
@@ -59,7 +59,7 @@ void tachUpdate() {
 	if (tachFreq < 1) {
 		tachFreq = NAN;
 	}
-	
+
 	tachControl.setSimplePwmDutyCycle(duty);
 	tachControl.setFrequency(tachFreq);
 }
