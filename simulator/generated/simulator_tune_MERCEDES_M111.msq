@@ -3410,7 +3410,7 @@ end</constant>
         <constant name="tachOutputPinMode">"default"</constant>
         <constant digits="2" name="tachPulseDuractionMs" units="">0.5</constant>
         <constant name="tachPulseDurationAsDutyCycle">"Duty cycle"</constant>
-        <constant digits="0" name="tachPulsePerRev" units="Pulse">1.0</constant>
+        <constant digits="3" name="tachPulsePerRev" units="">1.0</constant>
         <constant cols="1" digits="1" name="targetAfrBlends1_blendBins" rows="8">
          0.0
          14.3
@@ -4882,7 +4882,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250221" nPages="1" signature="rusEFI master.2025.03.04.f407-discovery.1790201752" version="5.0"/>
+    <versionInfo firmwareInfo="20250221" nPages="1" signature="rusEFI master.2025.03.04.f407-discovery.1036621192" version="5.0"/>
     <bibliography author="rusEFI 20250221" writeDate="date"/>
     <settings/>
     <userComments/>
