@@ -308,8 +308,7 @@ float IdleController::getIdlePosition(float rpm) {
 		// Simplify hardware CI: we borrow the idle valve controller as a PWM source for various stimulation tasks
 		// The logic in this function is solidly unit tested, so it's not necessary to re-test the particulars on real hardware.
 		#ifdef HARDWARE_CI
-	//TODO: UPDATE CLT BINS
-			return engineConfiguration->manIdlePosition;
+			return config->cltIdleCorr[0];
 		#endif
 
 	/*
