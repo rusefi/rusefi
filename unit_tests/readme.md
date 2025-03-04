@@ -26,3 +26,12 @@ Step 1: Invoke unit_tests. One of the unit_tests artifacts is triggers.txt
 
 Step 2: Once we have triggers.txt updated by unit_tests we can invoke firmware/gen_trigger_images.bat in order
 to generate actual trigger images.
+
+### Two-step TDD
+
+We are trying to https://en.wikipedia.org/wiki/Test-driven_development
+
+Ideal change happens as two commits:
+
+* first we add coverage for _current_ behaviour. In case of a defect we add *green* coverage confirming defect.
+* second step would be change in production code alongside of *change* in coverage.
