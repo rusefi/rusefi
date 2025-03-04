@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="23344">
+    <page number="0" size="23340">
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
         <constant name="accelerometerSpiDevice">"Off"</constant>
@@ -641,22 +641,22 @@
          110.0
 </constant>
         <constant cols="1" digits="2" name="cltIdleCorr" rows="16">
-         1.400002
-         1.32
-         1.260002
-         1.209999
-         1.169998
-         1.050003
-         1.029999
-         1.019997
-         1.029999
-         1.019997
-         1.010002
-         1.0
-         0.990002
-         0.990002
-         0.990002
-         0.990002
+         28.0
+         26.4
+         25.2
+         24.19
+         23.39
+         21.0
+         20.59
+         20.39
+         20.59
+         20.39
+         20.2
+         20.0
+         19.8
+         19.8
+         19.8
+         19.8
 </constant>
         <constant cols="1" digits="2" name="cltIdleCorrBins" rows="16">
          -40.0
@@ -2650,7 +2650,6 @@ end</constant>
         <constant name="mainRelayPinMode">"default"</constant>
         <constant name="malfunctionIndicatorPin">"NONE"</constant>
         <constant name="malfunctionIndicatorPinMode">"default"</constant>
-        <constant digits="0" name="manIdlePosition" units="%">20.0</constant>
         <constant cols="1" digits="2" name="map_samplingAngle" rows="8">
          100.0
          104.0
@@ -4883,7 +4882,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250221" nPages="1" signature="rusEFI master.2025.03.04.f407-discovery.3536359543" version="5.0"/>
+    <versionInfo firmwareInfo="20250221" nPages="1" signature="rusEFI master.2025.03.04.f407-discovery.4003632162" version="5.0"/>
     <bibliography author="rusEFI 20250221" writeDate="date"/>
     <settings/>
     <userComments/>

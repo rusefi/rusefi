@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="23344">
+    <page number="0" size="23340">
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
         <constant name="accelerometerSpiDevice">"Off"</constant>
@@ -2697,7 +2697,6 @@ end</constant>
         <constant name="mainRelayPinMode">"default"</constant>
         <constant name="malfunctionIndicatorPin">"NONE"</constant>
         <constant name="malfunctionIndicatorPinMode">"default"</constant>
-        <constant digits="0" name="manIdlePosition" units="%">50.0</constant>
         <constant cols="1" digits="2" name="map_samplingAngle" rows="8">
          100.0
          104.0
@@ -4929,7 +4928,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250221" nPages="1" signature="rusEFI master.2025.03.04.f407-discovery.3536359543" version="5.0"/>
+    <versionInfo firmwareInfo="20250221" nPages="1" signature="rusEFI master.2025.03.04.f407-discovery.4003632162" version="5.0"/>
     <bibliography author="rusEFI 20250221" writeDate="date"/>
     <settings/>
     <userComments/>

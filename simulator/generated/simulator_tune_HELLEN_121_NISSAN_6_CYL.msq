@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="23344">
+    <page number="0" size="23340">
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
         <constant name="accelerometerSpiDevice">"Off"</constant>
@@ -641,22 +641,22 @@
          110.0
 </constant>
         <constant cols="1" digits="2" name="cltIdleCorr" rows="16">
-         1.5
-         1.5
-         1.333333
-         1.333333
-         1.333333
-         1.333333
-         1.333333
-         1.333333
-         1.333333
-         1.233333
-         1.166667
-         1.1
-         1.0
-         1.0
-         1.0
-         1.0
+         75.0
+         75.0
+         70.0
+         70.0
+         70.0
+         65.0
+         65.0
+         65.0
+         60.0
+         60.0
+         60.0
+         55.0
+         55.0
+         55.0
+         50.0
+         50.0
 </constant>
         <constant cols="1" digits="2" name="cltIdleCorrBins" rows="16">
          -40.0
@@ -2812,7 +2812,6 @@ canRxAdd(IN_35D, onCanRxAc)</constant>
         <constant name="mainRelayPinMode">"default"</constant>
         <constant name="malfunctionIndicatorPin">"NONE"</constant>
         <constant name="malfunctionIndicatorPinMode">"default"</constant>
-        <constant digits="0" name="manIdlePosition" units="%">50.0</constant>
         <constant cols="1" digits="2" name="map_samplingAngle" rows="8">
          100.0
          104.0
@@ -5044,7 +5043,7 @@ canRxAdd(IN_35D, onCanRxAc)</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250221" nPages="1" signature="rusEFI master.2025.03.04.f407-discovery.3536359543" version="5.0"/>
+    <versionInfo firmwareInfo="20250221" nPages="1" signature="rusEFI master.2025.03.04.f407-discovery.4003632162" version="5.0"/>
     <bibliography author="rusEFI 20250221" writeDate="date"/>
     <settings/>
     <userComments/>
