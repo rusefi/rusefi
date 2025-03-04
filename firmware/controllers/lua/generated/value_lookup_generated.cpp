@@ -56,9 +56,6 @@ float getConfigValueByName(const char *name) {
 // acIdleExtraOffset
 		case 1933500210:
 			return engineConfiguration->acIdleExtraOffset;
-// manIdlePosition
-		case 1401746228:
-			return engineConfiguration->manIdlePosition;
 // multisparkMaxSparkingAngle
 		case 402092253:
 			return engineConfiguration->multisparkMaxSparkingAngle;
@@ -2068,11 +2065,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1933500210:
 	{
 		engineConfiguration->acIdleExtraOffset = (int)value;
-		return 1;
-	}
-		case 1401746228:
-	{
-		engineConfiguration->manIdlePosition = value;
 		return 1;
 	}
 		case 402092253:

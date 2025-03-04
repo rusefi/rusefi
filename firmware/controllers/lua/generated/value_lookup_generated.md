@@ -49,9 +49,6 @@ Time after which the throttle is considered jammed.
 ### acIdleExtraOffset
 Additional idle % while A/C is active
 
-### manIdlePosition
-Value between 0 and 100 used in Manual mode
-
 ### multisparkMaxSparkingAngle
 This parameter sets the latest that the last multispark can occur after the main ignition event. For example, if the ignition timing is 30 degrees BTDC, and this parameter is set to 45, no multispark will ever be fired after 15 degrees ATDC.
 
