@@ -160,23 +160,45 @@ TEST(idle_v2, runningFanAcBump) {
 
 	// Turn on AC!
 	engine->module<AcController>()->acButtonState = true;
-	EXPECT_FLOAT_EQ(50 + 9, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 0, 10, 0));
+	EXPECT_FLOAT_EQ(50 + 9, dut.getRunningOpenLoop(IIdleController::Phase::Idling, 0, 10, 0));
 	engine->module<AcController>()->acButtonState = false;
 
 	// Turn the fan on!
 	enginePins.fanRelay.setValue(1);
-	EXPECT_FLOAT_EQ(50 + 7, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 0, 10, 0));
+	EXPECT_FLOAT_EQ(50 + 7, dut.getRunningOpenLoop(IIdleController::Phase::Idling, 0, 10, 0));
 	enginePins.fanRelay.setValue(0);
 
 	// Turn on the other fan!
 	enginePins.fanRelay2.setValue(1);
-	EXPECT_FLOAT_EQ(50 + 3, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 0, 10, 0));
+	EXPECT_FLOAT_EQ(50 + 3, dut.getRunningOpenLoop(IIdleController::Phase::Idling, 0, 10, 0));
 
 	// Turn on everything!
 	engine->module<AcController>()->acButtonState = true;
 	enginePins.fanRelay.setValue(1);
 	enginePins.fanRelay2.setValue(1);
-	EXPECT_FLOAT_EQ(50 + 9 + 7 + 3, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 0, 10, 0));
+	EXPECT_FLOAT_EQ(50 + 9 + 7 + 3, dut.getRunningOpenLoop(IIdleController::Phase::Idling, 0, 10, 0));
+}
+
+// This can be seen as a kind of some close-loop logic, please read:
+// https://github.com/rusefi/rusefi/issues/6977
+TEST(idle_v2, idleAdderShouldNotAffectNonIdleAreas) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	IdleController dut;
+
+	engineConfiguration->manIdlePosition = 50;
+	engineConfiguration->acIdleExtraOffset = 9;
+
+	setArrayValues(config->cltIdleCorr, 1.0f);
+
+	// Should be base position
+	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 0, 10, 0));
+
+	// [A/C ON && Phase::Cranking] => should be equal to base time
+	engine->module<AcController>()->acButtonState = true;
+	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 0, 10, 0));
+
+	// [A/C ON && Phase::Running] => should be equal to base time plus a/c extra offset
+	EXPECT_FLOAT_EQ(50 + 9, dut.getRunningOpenLoop(IIdleController::Phase::Idling, 0, 10, 0));
 }
 
 TEST(idle_v2, runningOpenLoopTpsTaper) {
