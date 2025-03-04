@@ -5,7 +5,7 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.*;
 import com.rusefi.core.Pair;
 import com.rusefi.io.UpdateOperationCallbacks;
-import com.rusefi.maintenance.migration.DefaultIniFieldMigrator;
+import com.rusefi.maintenance.migration.ComposedIniFieldMigrator;
 import com.rusefi.tune.xml.Constant;
 
 import java.util.*;
@@ -69,7 +69,7 @@ public class IniFieldsAnalyzer {
                                 newValue.getRows()
                             ));
                         } else {
-                            final Optional<String> migratedValue = DefaultIniFieldMigrator.INSTANCE.tryMigrateValue(
+                            final Optional<String> migratedValue = ComposedIniFieldMigrator.INSTANCE.tryMigrateValue(
                                 prevFieldEntry.getValue(),
                                 newField,
                                 prevValue.getValue(),
