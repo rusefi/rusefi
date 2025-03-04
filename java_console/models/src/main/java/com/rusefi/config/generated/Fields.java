@@ -657,8 +657,7 @@ public class Fields {
 	public static final Field STARTSTOPBUTTONMODE = Field.create("STARTSTOPBUTTONMODE", 1406, FieldType.INT8, pin_input_mode_e).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_1407 = Field.create("ALIGNMENTFILL_AT_1407", 1407, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field MC33816_FLAG0 = Field.create("MC33816_FLAG0", 1408, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
-	public static final Field TACHPULSEPERREV = Field.create("TACHPULSEPERREV", 1410, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_1411 = Field.create("ALIGNMENTFILL_AT_1411", 1411, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field TACHPULSEPERREV = Field.create("TACHPULSEPERREV", 1410, FieldType.INT16).setScale(0.001).setBaseOffset(0);
 	public static final Field MAPERRORDETECTIONTOOLOW = Field.create("MAPERRORDETECTIONTOOLOW", 1412, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field MAPERRORDETECTIONTOOHIGH = Field.create("MAPERRORDETECTIONTOOHIGH", 1416, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field MULTISPARKSPARKDURATION = Field.create("MULTISPARKSPARKDURATION", 1420, FieldType.INT16).setScale(0.001).setBaseOffset(0);
@@ -2448,7 +2447,6 @@ public class Fields {
 	ALIGNMENTFILL_AT_1407,
 	MC33816_FLAG0,
 	TACHPULSEPERREV,
-	ALIGNMENTFILL_AT_1411,
 	MAPERRORDETECTIONTOOLOW,
 	MAPERRORDETECTIONTOOHIGH,
 	MULTISPARKSPARKDURATION,

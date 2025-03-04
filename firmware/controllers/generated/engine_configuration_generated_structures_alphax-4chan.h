@@ -2728,16 +2728,9 @@ struct engine_configuration_s {
 	 */
 	Gpio mc33816_flag0;
 	/**
-	 * units: Pulse
 	 * offset 1410
 	 */
-	uint8_t tachPulsePerRev;
-	/**
-	 * need 4 byte alignment
-	 * units: units
-	 * offset 1411
-	 */
-	uint8_t alignmentFill_at_1411[1] = {};
+	scaled_channel<uint16_t, 1000, 1> tachPulsePerRev;
 	/**
 	 * kPa value which is too low to be true
 	 * units: kPa
@@ -2928,16 +2921,16 @@ struct engine_configuration_s {
 	bool enableKnockSpectrogramFilter : 1 {};
 	/**
 	offset 1480 bit 28 */
-	bool unusedBit_519_28 : 1 {};
+	bool unusedBit_518_28 : 1 {};
 	/**
 	offset 1480 bit 29 */
-	bool unusedBit_519_29 : 1 {};
+	bool unusedBit_518_29 : 1 {};
 	/**
 	offset 1480 bit 30 */
-	bool unusedBit_519_30 : 1 {};
+	bool unusedBit_518_30 : 1 {};
 	/**
 	offset 1480 bit 31 */
-	bool unusedBit_519_31 : 1 {};
+	bool unusedBit_518_31 : 1 {};
 	/**
 	 * This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.
 	 * Should be 100 once tune is better
@@ -3105,76 +3098,76 @@ struct engine_configuration_s {
 	bool can2ListenMode : 1 {};
 	/**
 	offset 1536 bit 8 */
-	bool unusedBit_556_8 : 1 {};
+	bool unusedBit_555_8 : 1 {};
 	/**
 	offset 1536 bit 9 */
-	bool unusedBit_556_9 : 1 {};
+	bool unusedBit_555_9 : 1 {};
 	/**
 	offset 1536 bit 10 */
-	bool unusedBit_556_10 : 1 {};
+	bool unusedBit_555_10 : 1 {};
 	/**
 	offset 1536 bit 11 */
-	bool unusedBit_556_11 : 1 {};
+	bool unusedBit_555_11 : 1 {};
 	/**
 	offset 1536 bit 12 */
-	bool unusedBit_556_12 : 1 {};
+	bool unusedBit_555_12 : 1 {};
 	/**
 	offset 1536 bit 13 */
-	bool unusedBit_556_13 : 1 {};
+	bool unusedBit_555_13 : 1 {};
 	/**
 	offset 1536 bit 14 */
-	bool unusedBit_556_14 : 1 {};
+	bool unusedBit_555_14 : 1 {};
 	/**
 	offset 1536 bit 15 */
-	bool unusedBit_556_15 : 1 {};
+	bool unusedBit_555_15 : 1 {};
 	/**
 	offset 1536 bit 16 */
-	bool unusedBit_556_16 : 1 {};
+	bool unusedBit_555_16 : 1 {};
 	/**
 	offset 1536 bit 17 */
-	bool unusedBit_556_17 : 1 {};
+	bool unusedBit_555_17 : 1 {};
 	/**
 	offset 1536 bit 18 */
-	bool unusedBit_556_18 : 1 {};
+	bool unusedBit_555_18 : 1 {};
 	/**
 	offset 1536 bit 19 */
-	bool unusedBit_556_19 : 1 {};
+	bool unusedBit_555_19 : 1 {};
 	/**
 	offset 1536 bit 20 */
-	bool unusedBit_556_20 : 1 {};
+	bool unusedBit_555_20 : 1 {};
 	/**
 	offset 1536 bit 21 */
-	bool unusedBit_556_21 : 1 {};
+	bool unusedBit_555_21 : 1 {};
 	/**
 	offset 1536 bit 22 */
-	bool unusedBit_556_22 : 1 {};
+	bool unusedBit_555_22 : 1 {};
 	/**
 	offset 1536 bit 23 */
-	bool unusedBit_556_23 : 1 {};
+	bool unusedBit_555_23 : 1 {};
 	/**
 	offset 1536 bit 24 */
-	bool unusedBit_556_24 : 1 {};
+	bool unusedBit_555_24 : 1 {};
 	/**
 	offset 1536 bit 25 */
-	bool unusedBit_556_25 : 1 {};
+	bool unusedBit_555_25 : 1 {};
 	/**
 	offset 1536 bit 26 */
-	bool unusedBit_556_26 : 1 {};
+	bool unusedBit_555_26 : 1 {};
 	/**
 	offset 1536 bit 27 */
-	bool unusedBit_556_27 : 1 {};
+	bool unusedBit_555_27 : 1 {};
 	/**
 	offset 1536 bit 28 */
-	bool unusedBit_556_28 : 1 {};
+	bool unusedBit_555_28 : 1 {};
 	/**
 	offset 1536 bit 29 */
-	bool unusedBit_556_29 : 1 {};
+	bool unusedBit_555_29 : 1 {};
 	/**
 	offset 1536 bit 30 */
-	bool unusedBit_556_30 : 1 {};
+	bool unusedBit_555_30 : 1 {};
 	/**
 	offset 1536 bit 31 */
-	bool unusedBit_556_31 : 1 {};
+	bool unusedBit_555_31 : 1 {};
 	/**
 	 * offset 1540
 	 */
