@@ -1176,7 +1176,8 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	output_pin_e starterControlPin;See also startStopButtonPin
 	pin_input_mode_e startStopButtonMode;
 	Gpio mc33816_flag0;
-	uint8_t tachPulsePerRev;;"Pulse", 1, 0, 1, 255, 0
+
+  uint16_t autoscale tachPulsePerRev;;"", 0.001, 0, 1, 15, 3
 
 ! todo: mapErrorDetectionIdleTooLow? 30kPa is usually lowest on idle
 	float mapErrorDetectionTooLow;kPa value which is too low to be true;"kPa", 1, 0, -100, 100, 2
