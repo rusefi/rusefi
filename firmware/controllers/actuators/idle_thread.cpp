@@ -97,9 +97,7 @@ float IdleController::getCrankingOpenLoop(float clt) const {
 }
 
 percent_t IdleController::getRunningOpenLoop(IIdleController::Phase phase, float rpm, float clt, SensorResult tps) {
-	float running =
-		engineConfiguration->manIdlePosition		// Base idle position (slider)
-		* interpolate2d(clt, config->cltIdleCorrBins, config->cltIdleCorr);
+	float running = interpolate2d(clt, config->cltIdleCorrBins, config->cltIdleCorr);
 
 	// Now we bump it by the AC/fan amount if necessary
     if(engine->module<AcController>().unmock().acButtonState && phase == Phase::Idling) {
@@ -310,6 +308,7 @@ float IdleController::getIdlePosition(float rpm) {
 		// Simplify hardware CI: we borrow the idle valve controller as a PWM source for various stimulation tasks
 		// The logic in this function is solidly unit tested, so it's not necessary to re-test the particulars on real hardware.
 		#ifdef HARDWARE_CI
+	//TODO: UPDATE CLT BINS
 			return engineConfiguration->manIdlePosition;
 		#endif
 
