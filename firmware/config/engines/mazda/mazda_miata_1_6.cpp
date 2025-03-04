@@ -119,7 +119,6 @@ void miataNAcommonEngineSettings() {
 #endif
 
 
-	engineConfiguration->manIdlePosition = 20;
 
 	miataNA_setCltIdleCorrBins();
 	miataNA_setCltIdleRpmBins();

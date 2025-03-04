@@ -522,7 +522,7 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->idle.solenoidFrequency = DEFAULT_SOLENOID_FREQUENCY;
 	// set idle_position 50
-	engineConfiguration->manIdlePosition = 50;
+	setLinearCurve(config->cltIdleCorr, 75.0, 50, 5);
 //	engineConfiguration->idleMode = IM_AUTO;
 	engineConfiguration->idleMode = IM_MANUAL;
 
