@@ -129,8 +129,7 @@ TEST(idle_v2, crankingOpenLoop) {
 TEST(idle_v2, runningOpenLoopBasic) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	IdleController dut;
-	// this config would be removed (cltIdleCorr will contain the position not the multiplier)
-	engineConfiguration->manIdlePosition = 1;
+
 
 	for (size_t i = 0; i < efi::size(config->cltIdleCorrBins); i++) {
 		config->cltIdleCorrBins[i] = i * 10;
@@ -145,7 +144,6 @@ TEST(idle_v2, runningFanAcBump) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	IdleController dut;
 
-	engineConfiguration->manIdlePosition = 1;
 	engineConfiguration->acIdleExtraOffset = 9;
 	engineConfiguration->fan1ExtraIdle = 7;
 	engineConfiguration->fan2ExtraIdle = 3;
@@ -185,7 +183,6 @@ TEST(idle_v2, idleAdderShouldNotAffectNonIdleAreas) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	IdleController dut;
 
-	engineConfiguration->manIdlePosition = 1;
 	engineConfiguration->acIdleExtraOffset = 9;
 
 	setArrayValues(config->cltIdleCorr, 50.0f);
