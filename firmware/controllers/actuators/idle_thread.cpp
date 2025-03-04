@@ -102,7 +102,10 @@ percent_t IdleController::getRunningOpenLoop(IIdleController::Phase phase, float
 		* interpolate2d(clt, config->cltIdleCorrBins, config->cltIdleCorr);
 
 	// Now we bump it by the AC/fan amount if necessary
-	running += engine->module<AcController>().unmock().acButtonState ? engineConfiguration->acIdleExtraOffset : 0;
+    if(engine->module<AcController>().unmock().acButtonState && phase == Phase::Idling) {
+    	running += engineConfiguration->acIdleExtraOffset;
+    }
+
 	running += enginePins.fanRelay.getLogicValue() ? engineConfiguration->fan1ExtraIdle : 0;
 	running += enginePins.fanRelay2.getLogicValue() ? engineConfiguration->fan2ExtraIdle : 0;
 
