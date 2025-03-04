@@ -166,7 +166,7 @@ void setDodgeNeonNGCEngineConfiguration() {
 	engineConfiguration->wwaeBeta = 0;
 
 	engineConfiguration->isSdCardEnabled = false;
-	engineConfiguration->manIdlePosition = 36; // set_idle_pwm 40
+	setArrayValues(config->cltIdleCorr, 36.0);
 
 	// end of setDodgeNeonNGCEngineConfiguration
 }

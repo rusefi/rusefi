@@ -271,7 +271,6 @@ static void setCommonMazdaNB() {
 
 	// Idle
 	engineConfiguration->idleMode = IM_AUTO;
-	engineConfiguration->manIdlePosition = 20;
 	engineConfiguration->iacByTpsTaper = 6;
 	engineConfiguration->acIdleExtraOffset = 15;
 
