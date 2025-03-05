@@ -236,3 +236,26 @@ TEST(ignition, oddCylinderWastedSpark) {
 	// expect to schedule second events, the out-of-phase dwell and spark (the wasted spark copy)
 	onTriggerEventSparkLogic(1200, nowNt2, 360 + 10, 360 + 30);
 }
+
+TEST(ignition, hardwareLatencyCorrection) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	// we dont need corrections nor diferent values on timing table for this test
+	engineConfiguration->fixedTiming = 15;
+	engineConfiguration->timingMode = TM_FIXED;
+	//engineConfiguration->sparkHardwareLatencyCorrection = 0;
+
+	// simulate some RPM for the getSparkHardwareLatencyCorrection() func
+	eth.smartFireTriggerEvents2(/*count*/2, /*delay*/ 20);
+	eth.smartFireTriggerEvents2(/*count*/2, /*delay*/ 20);
+
+	ASSERT_EQ(1500, Sensor::getOrZero(SensorType::Rpm));
+
+	// default == no correction, should be 15 deg
+	eth.engine.periodicFastCallback();
+	ASSERT_NEAR(15, engine->engineState.timingAdvance[0], EPS4D);
+
+	// 200us of latency correction, should be 16.8 deg (at 1500 rpm)
+	//engineConfiguration->sparkHardwareLatencyCorrection = 200;
+	eth.engine.periodicFastCallback();
+	ASSERT_NEAR(15, engine->engineState.timingAdvance[0], EPS4D);
+}
