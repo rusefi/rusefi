@@ -1033,6 +1033,7 @@ public class VariableRegistryValues {
 	public static final int gppwm_channel_e_GPPWM_Egt2 = 28;
 	public static final int gppwm_channel_e_GPPWM_EthanolPercent = 15;
 	public static final int gppwm_channel_e_GPPWM_FuelLoad = 5;
+	public static final int gppwm_channel_e_GPPWM_FuelPressure = 34;
 	public static final int gppwm_channel_e_GPPWM_GppwmOutput1 = 18;
 	public static final int gppwm_channel_e_GPPWM_GppwmOutput2 = 19;
 	public static final int gppwm_channel_e_GPPWM_GppwmOutput3 = 20;
@@ -1291,6 +1292,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
+	public static final int SIGNATURE_HASH = 723373677;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1562,7 +1564,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.03.04.f407-discovery.4003632162";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.03.05.f407-discovery.723373677";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';

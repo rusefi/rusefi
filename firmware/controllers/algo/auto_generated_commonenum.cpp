@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Wed Feb 12 12:51:12 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Wed Mar 05 00:15:53 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -476,6 +476,8 @@ case GPPWM_EthanolPercent:
   return "GPPWM_EthanolPercent";
 case GPPWM_FuelLoad:
   return "GPPWM_FuelLoad";
+case GPPWM_FuelPressure:
+  return "GPPWM_FuelPressure";
 case GPPWM_GppwmOutput1:
   return "GPPWM_GppwmOutput1";
 case GPPWM_GppwmOutput2:
