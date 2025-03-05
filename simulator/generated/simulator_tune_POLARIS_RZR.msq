@@ -3308,6 +3308,7 @@ end</constant>
          2.88
          2.8
 </constant>
+        <constant digits="0" name="sparkHardwareLatencyCorrection" units="uS">0.0</constant>
         <constant name="speedometerOutputPin">"NONE"</constant>
         <constant digits="0" name="speedometerPulsePerKm" units="">0.0</constant>
         <constant name="spi1MisoMode">"default"</constant>
@@ -4334,8 +4335,7 @@ end</constant>
         <constant name="unusedFancy9">"false"</constant>
         <constant digits="0" name="unusedHip0" units="">0.0</constant>
         <constant digits="0" name="unusedHip1" units="">0.0</constant>
-        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="54">
-         0.0
+        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="53">
          0.0
          0.0
          0.0
@@ -4878,7 +4878,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250221" nPages="1" signature="rusEFI master.2025.03.05.f407-discovery.723373677" version="5.0"/>
+    <versionInfo firmwareInfo="20250221" nPages="1" signature="rusEFI master.2025.03.05.f407-discovery.2021184212" version="5.0"/>
     <bibliography author="rusEFI 20250221" writeDate="date"/>
     <settings/>
     <userComments/>
