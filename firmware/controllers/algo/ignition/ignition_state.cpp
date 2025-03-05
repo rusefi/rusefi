@@ -346,4 +346,14 @@ floatms_t IgnitionState::getDwell() const {
 	);
 }
 
+angle_t IgnitionState::getSparkHardwareLatencyCorrection(){
+	// time => degree
+	angle_t correction = engineConfiguration->sparkHardwareLatencyCorrection / engine->rpmCalculator.oneDegreeUs;
+
+	if (!std::isnan(correction)) {
+		return correction;
+	}
+	return 0;
+}
+
 #endif // EFI_ENGINE_CONTROL

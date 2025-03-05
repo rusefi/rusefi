@@ -242,7 +242,7 @@ TEST(ignition, hardwareLatencyCorrection) {
 	// we dont need corrections nor diferent values on timing table for this test
 	engineConfiguration->fixedTiming = 15;
 	engineConfiguration->timingMode = TM_FIXED;
-	//engineConfiguration->sparkHardwareLatencyCorrection = 0;
+	engineConfiguration->sparkHardwareLatencyCorrection = 0;
 
 	// simulate some RPM for the getSparkHardwareLatencyCorrection() func
 	eth.smartFireTriggerEvents2(/*count*/2, /*delay*/ 20);
@@ -255,7 +255,7 @@ TEST(ignition, hardwareLatencyCorrection) {
 	ASSERT_NEAR(15, engine->engineState.timingAdvance[0], EPS4D);
 
 	// 200us of latency correction, should be 16.8 deg (at 1500 rpm)
-	//engineConfiguration->sparkHardwareLatencyCorrection = 200;
+	engineConfiguration->sparkHardwareLatencyCorrection = 200;
 	eth.engine.periodicFastCallback();
-	ASSERT_NEAR(15, engine->engineState.timingAdvance[0], EPS4D);
+	ASSERT_NEAR(16.8, engine->engineState.timingAdvance[0], EPS4D);
 }

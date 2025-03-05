@@ -1816,8 +1816,8 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 
     float mapExpAverageAfr;;"", 1, 0, 0, 1, 3
 
-
-#define END_OF_CALIBRATION_PADDING 54
+uint8_t autoscale sparkHardwareLatencyCorrection;Time in uS substracted from final spark advance for compensate spark hardware latency / timing drift;"uS", 1, 0, 0, 250, 0
+#define END_OF_CALIBRATION_PADDING 53
 uint8_t[END_OF_CALIBRATION_PADDING] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s

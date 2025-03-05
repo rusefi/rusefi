@@ -203,8 +203,13 @@ void EngineState::periodicFastCallback() {
 
 		// Apply both per-bank and per-cylinder trims
 		engine->engineState.injectionMass[i] = untrimmedInjectionMass * bankTrim * cylinderTrim * knockTrim;
-    // todo: is it OK to apply cylinder trim with FIXED timing?
-		timingAdvance[i] = correctedIgnitionAdvance + getCylinderIgnitionTrim(i, rpm, l_ignitionLoad);
+
+		// todo: is it OK to apply cylinder trim with FIXED timing?
+		timingAdvance[i] = correctedIgnitionAdvance
+									+ getCylinderIgnitionTrim(i, rpm, l_ignitionLoad)
+									// spark hardware latency correction, for implementation details see:
+									// https://github.com/rusefi/rusefi/issues/6832:
+									+ engine->ignitionState.getSparkHardwareLatencyCorrection();
 	}
 
 	shouldUpdateInjectionTiming = getInjectorDutyCycle(rpm) < 90;
