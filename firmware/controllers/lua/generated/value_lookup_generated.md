@@ -1924,6 +1924,9 @@ Error above specified value
 ### mapExpAverageAfr
 
 
+### sparkHardwareLatencyCorrection
+Compensates for trigger delay due to belt stretch, or other electromechanical issues. beware that raising this value advances ignition timing!
+
 ### tcu_shiftTime
 
 

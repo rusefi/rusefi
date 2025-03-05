@@ -1931,6 +1931,9 @@ float getConfigValueByName(const char *name) {
 // mapExpAverageAfr
 		case -163403196:
 			return engineConfiguration->mapExpAverageAfr;
+// sparkHardwareLatencyCorrection
+		case 756523164:
+			return engineConfiguration->sparkHardwareLatencyCorrection;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -5190,6 +5193,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -163403196:
 	{
 		engineConfiguration->mapExpAverageAfr = value;
+		return 1;
+	}
+		case 756523164:
+	{
+		engineConfiguration->sparkHardwareLatencyCorrection = (int)value;
 		return 1;
 	}
 		case -1658957891:

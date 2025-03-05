@@ -4978,8 +4978,14 @@ struct engine_configuration_s {
 	 */
 	float mapExpAverageAfr;
 	/**
-	 * units: units
+	 * Compensates for trigger delay due to belt stretch, or other electromechanical issues. beware that raising this value advances ignition timing!
+	 * units: uS
 	 * offset 3956
+	 */
+	scaled_channel<uint8_t, 1, 1> sparkHardwareLatencyCorrection;
+	/**
+	 * units: units
+	 * offset 3957
 	 */
 	uint8_t unusedOftenChangesDuringFirmwareUpdate[END_OF_CALIBRATION_PADDING] = {};
 	/**
