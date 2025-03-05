@@ -88,6 +88,8 @@ expected<float> readGppwmChannel(gppwm_channel_e channel) {
 		return Sensor::get(SensorType::OilPressure);
 	case GPPWM_OilTemp:
 		return Sensor::get(SensorType::OilTemperature);
+	case GPPWM_FuelPressure:
+		return Sensor::get(SensorType::FuelPressureInjector);
 	}
 	return unexpected;
 }
