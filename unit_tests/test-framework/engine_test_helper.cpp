@@ -21,6 +21,7 @@
 #include <sys/stat.h>
 
 bool unitTestBusyWaitHack;
+bool unitTestTaskPrecisionHack;
 
 #if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
@@ -360,7 +361,12 @@ void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTimeUs) {
 			break;
 		}
 		setTimeNowUs(nextEventTime);
-		engine.scheduler.executeAll(getTimeNowUs());
+		extern bool unitTestTaskPrecisionHack;
+		if (unitTestTaskPrecisionHack) {
+			engine.scheduler.executeAll(getTimeNowUs());
+		} else {
+			engine.scheduler.executeAll(getTimeNowNt());
+		}
 	}
 
 	setTimeNowUs(targetTimeUs);
