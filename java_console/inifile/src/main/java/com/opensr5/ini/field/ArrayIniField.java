@@ -4,6 +4,7 @@ import com.opensr5.ConfigurationImage;
 import com.rusefi.config.Field;
 import com.rusefi.config.FieldType;
 import com.rusefi.tune.xml.Constant;
+import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
@@ -13,14 +14,30 @@ public class ArrayIniField extends IniField {
     private final int cols;
     private final int rows;
     private final double multiplier;
+    @Nullable
+    private final String min;
+    @Nullable
+    private final String max;
     private final String digits;
 
-    public ArrayIniField(String name, int offset, FieldType type, int cols, int rows, String unit, double multiplier, String digits) {
+    public ArrayIniField(
+        final String name,
+        final int offset,
+        final FieldType type,
+        final int cols,
+        final int rows,
+        final String unit,
+        final double multiplier,
+        final String min,
+        final String max,
+        String digits) {
         super(name, offset);
         this.type = type;
         this.cols = cols;
         this.rows = rows;
         this.multiplier = multiplier;
+        this.min = min;
+        this.max = max;
         this.digits = digits;
     }
 
@@ -34,6 +51,14 @@ public class ArrayIniField extends IniField {
 
     public int getRows() {
         return rows;
+    }
+
+    public String getMin() {
+        return min;
+    }
+
+    public String getMax() {
+        return max;
     }
 
     @Override
@@ -125,6 +150,8 @@ public class ArrayIniField extends IniField {
         int offset = Integer.parseInt(list.get(3));
         String size = list.get(4);
         String unit = list.size() > 5 ? list.get(5) : "error";
+        final String min = list.size() > 8 ? list.get(8) : null;
+        final String max = list.size() > 9 ? list.get(9) : null;
         String digits = list.size() > 10 ? list.get(10) : "0";
         double multiplier = IniField.parseDouble(list.size() > 6 ? list.get(6) : "1");
 
@@ -142,6 +169,6 @@ public class ArrayIniField extends IniField {
             throw new IllegalStateException("Unexpected " + size);
         }
 
-        return new ArrayIniField(name, offset, type, cols, rows, unit, multiplier, digits);
+        return new ArrayIniField(name, offset, type, cols, rows, unit, multiplier, min, max, digits);
     }
 }
