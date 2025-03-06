@@ -3,6 +3,8 @@
 #include "logicdata_csv_reader.h"
 
 TEST(arctic, realStartFromFile) {
+	extern bool unitTestTaskPrecisionHack;
+	unitTestTaskPrecisionHack = true;
 	CsvReader reader(1, /* vvtCount */ 0);
 
 	reader.open("tests/trigger/resources/arctic-cat.csv");

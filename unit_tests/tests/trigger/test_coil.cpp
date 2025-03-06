@@ -48,6 +48,8 @@ static void prepareToScheduleOverdwellSparkDown(EngineTestHelper& eth) {
 }
 
 TEST(coil, testOverdwellProtection) {
+	extern bool unitTestTaskPrecisionHack;
+	unitTestTaskPrecisionHack = true;
 	printf("*************************************************** testOverdwellProtection\r\n");
 
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);

@@ -28,7 +28,9 @@ TEST(fordCoyote, intakeCam) {
 }
 
 TEST(fordCoyote, intakeCamInverted) {
-  runCoyoteIntakeCam(true, 3, 1018);
+	extern bool unitTestTaskPrecisionHack;
+	unitTestTaskPrecisionHack = true;
+  	runCoyoteIntakeCam(true, 3, 1018);
 }
 
 static void runCoyoteExhaustCam(bool invertPrimaryTriggerSignal, int warningCount, int rpm) {
@@ -56,5 +58,7 @@ TEST(fordCoyote, exhaustCam) {
 }
 
 TEST(fordCoyote, exhaustCamInverted) {
-  runCoyoteExhaustCam(true, 2, 1046);
+	extern bool unitTestTaskPrecisionHack;
+	unitTestTaskPrecisionHack = true;
+  	runCoyoteExhaustCam(true, 2, 1046);
 }

@@ -7,6 +7,8 @@
 #include "engine_csv_reader.h"
 
 TEST(realCas24Plus1, spinningOnBench) {
+	extern bool unitTestTaskPrecisionHack;
+	unitTestTaskPrecisionHack = true;
 	EngineCsvReader reader(/*triggerCount*/1, /* vvtCount */ 1);
 
 	reader.open("tests/trigger/resources/cas_nissan_24_plus_1.csv");
