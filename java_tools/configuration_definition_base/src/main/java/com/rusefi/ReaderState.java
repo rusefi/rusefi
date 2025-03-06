@@ -21,6 +21,8 @@ public interface ReaderState {
 
     void addPrepend(String fileName);
 
+    void addSoftPrepend(String fileName);
+
     void addPostponedPrependNotInput(String fileName);
 
     void addDestination(ConfigurationConsumer... consumers);

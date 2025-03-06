@@ -13,8 +13,15 @@ CONFIG_INPUTS = \
   $(PROJECT_DIR)/${META_OUTPUT_ROOT_FOLDER}console/binary/generated/live_data_fragments.ini \
   $(PROJECT_DIR)/${META_OUTPUT_ROOT_FOLDER}console/binary/generated/data_logs.ini \
   $(PROJECT_DIR)/${META_OUTPUT_ROOT_FOLDER}console/binary/generated/fancy_content.ini \
-  $(PROJECT_DIR)/${META_OUTPUT_ROOT_FOLDER}console/binary/generated/gauges.ini \
-  $(BOARD_DIR)/prepend.txt
+  $(PROJECT_DIR)/${META_OUTPUT_ROOT_FOLDER}console/binary/generated/gauges.ini
+
+ifneq ("$(wildcard $(BOARD_DIR)/prepend.txt)","")
+  CONFIG_INPUTS += $(BOARD_DIR)/prepend.txt
+endif
+
+ifneq ("$(wildcard $(BOARD_DIR)/prepend_$(SHORT_BOARD_NAME).txt)","")
+  CONFIG_INPUTS += $(BOARD_DIR)/prepend_$(SHORT_BOARD_NAME).txt
+endif
 
 ifneq ("$(wildcard $(BOARD_DIR)/board_options.ini)","")
   CONFIG_INPUTS += $(BOARD_DIR)/board_options.ini
