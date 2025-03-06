@@ -30,6 +30,7 @@ public class ConfigDefinition {
     private static final String KEY_JAVA_DESTINATION = "-java_destination";
     private static final String KEY_FIRING = "-firing_order";
     public static final String KEY_PREPEND = "-prepend";
+    public static final String KEY_SOFT_PREPEND = "-soft_prepend";
     private static final String KEY_SIGNATURE = "-signature";
     private static final String KEY_SIGNATURE_DESTINATION = "-signature_destination";
     private static final String KEY_ZERO_INIT = "-initialize_to_zero";
@@ -132,6 +133,9 @@ public class ConfigDefinition {
                     break;
                 case KEY_PREPEND:
                     state.addPrepend(args[i + 1].trim());
+                    break;
+                case KEY_SOFT_PREPEND:
+                    state.addSoftPrepend(args[i + 1].trim());
                     break;
                 case KEY_SIGNATURE:
                     signaturePrependFile = args[i + 1];

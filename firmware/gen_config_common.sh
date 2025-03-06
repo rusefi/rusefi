@@ -67,6 +67,7 @@ COMMON_GEN_CONFIG="
  -ts_output_name generated/${INI} \
  -prepend integration/rusefi_config_trigger.txt \
  -prepend ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/total_live_data_generated.h \
- -prepend ${BOARD_DIR}/prepend.txt \
+ -soft_prepend ${BOARD_DIR}/prepend.txt \
+ -soft_prepend ${BOARD_DIR}/prepend_${SHORT_BOARD_NAME}.txt \
  -prepend integration/rusefi_config_shared.txt \
  -board ${BOARD_DIR}"
