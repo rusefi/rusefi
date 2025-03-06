@@ -10,8 +10,10 @@ import java.util.Optional;
 public enum ComposedIniFieldMigrator implements IniFieldMigrator {
     INSTANCE;
 
-    private final List<IniFieldMigrator> iniFieldMigrators = Arrays.asList(DefaultIniFieldMigrator.INSTANCE);
-
+    private final List<IniFieldMigrator> iniFieldMigrators = Arrays.asList(
+        VeTableExtensionMigrator.INSTANCE,
+        DefaultIniFieldMigrator.INSTANCE
+    );
 
     @Override
     public Optional<String> tryMigrateValue(
