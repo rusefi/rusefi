@@ -7,6 +7,8 @@
 #include "engine_csv_reader.h"
 
 TEST(real4b11, running) {
+	extern bool unitTestTaskPrecisionHack;
+	unitTestTaskPrecisionHack = true;
 	EngineCsvReader reader(1, /* vvtCount */ 0);
 
 	reader.open("tests/trigger/resources/4b11-running.csv");
@@ -30,6 +32,8 @@ TEST(real4b11, running) {
 }
 
 TEST(real4b11, runningDoubledEdge) {
+	extern bool unitTestTaskPrecisionHack;
+	unitTestTaskPrecisionHack = true;
 	EngineCsvReader reader(1, /* vvtCount */ 0);
 
 	// This log has an extra duplicate edge at 5.393782 seconds (hand added)
