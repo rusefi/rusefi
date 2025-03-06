@@ -2,7 +2,7 @@ package com.rusefi.maintenance;
 
 import com.rusefi.io.UpdateOperationCallbacks;
 
-class TestCallbacks implements UpdateOperationCallbacks {
+public class TestCallbacks implements UpdateOperationCallbacks {
 
     @Override
     public void log(String message, boolean breakLineOnTextArea, boolean sendToLogger) {
@@ -23,7 +23,7 @@ class TestCallbacks implements UpdateOperationCallbacks {
         content.setLength(0);
     }
 
-    String getContent() {
+    public String getContent() {
         return content.toString();
     }
 
