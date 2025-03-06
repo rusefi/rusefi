@@ -24,6 +24,7 @@ public class IniFieldsParsingTest {
         assertEquals(16544, veTableIniField.getOffset());
         assertEquals(16, veTableIniField.getCols());
         assertEquals(16, veTableIniField.getRows());
+        assertEquals(0.1, veTableIniField.getMultiplier());
         assertEquals("0", veTableIniField.getMin());
         assertEquals("999", veTableIniField.getMax());
         assertEquals("1", veTableIniField.getDigits());
@@ -36,6 +37,7 @@ public class IniFieldsParsingTest {
         assertEquals(17088, veTableIniField.getOffset());
         assertEquals(1, veTableIniField.getCols());
         assertEquals(16, veTableIniField.getRows());
+        assertEquals(1, veTableIniField.getMultiplier());
         assertEquals("0", veTableIniField.getMin());
         assertEquals("18000", veTableIniField.getMax());
         assertEquals("0", veTableIniField.getDigits());
@@ -48,6 +50,7 @@ public class IniFieldsParsingTest {
         assertEquals(17056, veTableIniField.getOffset());
         assertEquals(1, veTableIniField.getCols());
         assertEquals(16, veTableIniField.getRows());
+        assertEquals(1, veTableIniField.getMultiplier());
         assertEquals("0", veTableIniField.getMin());
         assertEquals("1000", veTableIniField.getMax());
         assertEquals("0", veTableIniField.getDigits());
