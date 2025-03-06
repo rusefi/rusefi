@@ -53,6 +53,10 @@ public class ArrayIniField extends IniField {
         return rows;
     }
 
+    public double getMultiplier() {
+        return multiplier;
+    }
+
     public String getMin() {
         return min;
     }
