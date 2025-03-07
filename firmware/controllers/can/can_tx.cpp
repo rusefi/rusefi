@@ -40,9 +40,14 @@ static CI roundTxPeriodToCycle(uint16_t period) {
 
 PUBLIC_API_WEAK bool boardEnableSendWidebandInfo() { return true; }
 
+static uint16_t m_cycleCount = 0;
+
+/* public API for custom boards */ void resetCanWriteCycle() {
+  m_cycleCount = 0;
+}
+
 // this is invoked at CAN_CYCLE_FREQ frequency
 void CanWrite::PeriodicTask(efitick_t) {
-	static uint16_t m_cycleCount = 0;
 	CanCycle cycle(m_cycleCount);
 
 	//in case we have Verbose Can enabled, we should keep user configured period
