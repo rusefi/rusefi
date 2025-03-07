@@ -96,7 +96,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 250302
+#define FLASH_DATA_VERSION 250306
 
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
@@ -1877,9 +1877,10 @@ uint8_t[CLT_CURVE_SIZE] autoscale iacCoasting;    RPM-based idle position for co
 
 uint8_t[BOOST_LOAD_COUNT x BOOST_RPM_COUNT] autoscale boostTableOpenLoop;;"", {1/2}, 0, 0, 100, 1
 uint8_t[BOOST_RPM_COUNT] autoscale boostRpmBins;;"RPM", 100, 0, 0, 25000, 0
+uint16_t[BOOST_LOAD_COUNT] boostOpenLoopLoadBins;;"", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
 
 uint8_t[BOOST_LOAD_COUNT x BOOST_RPM_COUNT] autoscale boostTableClosedLoop;;"", 2, 0, 0, 3000, 0
-uint16_t[BOOST_LOAD_COUNT] boostLoadBins;;"", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
+uint16_t[BOOST_LOAD_COUNT] boostClosedLoopLoadBins;;"", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
 
 uint8_t[PEDAL_TO_TPS_SIZE x PEDAL_TO_TPS_SIZE] pedalToTpsTable;;"%", 1, 0, 0, 100, 0
 uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsPedalBins;;"%", 1, 0, 0, 120, 0

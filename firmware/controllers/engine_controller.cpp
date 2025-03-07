@@ -658,8 +658,9 @@ bool validateConfigOnStartUpOrBurn() {
 
 #if EFI_BOOST_CONTROL
 	// Boost
-	ensureArrayIsAscending("Boost control Load", config->boostLoadBins);
-	ensureArrayIsAscending("Boost control RPM", config->boostRpmBins);
+	ensureArrayIsAscending("Boost control Load [open loop]", config->boostOpenLoopLoadBins);
+	ensureArrayIsAscending("Boost control Load [closed loop]", config->boostClosedLoopLoadBins);
+	ensureArrayIsAscending("Boost control RPM [open+closed loop]", config->boostRpmBins);
 #endif // EFI_BOOST_CONTROL
 
 #if EFI_ANTILAG_SYSTEM
