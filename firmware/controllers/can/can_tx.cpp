@@ -30,10 +30,6 @@ PUBLIC_API_WEAK bool boardEnableSendWidebandInfo() { return true; }
 
 static uint16_t m_cycleCount = 0;
 
-void resetCanWriteCycle() {
-  m_cycleCount = 0;
-}
-
 void CanWrite::PeriodicTask(efitick_t nowNt) {
 	UNUSED(nowNt);
 	CanCycle cycle(m_cycleCount);
