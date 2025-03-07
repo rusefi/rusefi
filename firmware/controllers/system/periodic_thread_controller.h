@@ -1,6 +1,6 @@
 /**
  *  @file periodic_thread_controller.h
- * 
+ *
  *  @date Jan 5, 2019
  *  @author Matthew Kennedy, (c) 2019
  */
@@ -13,18 +13,18 @@
 
 /**
  * @brief Base class for a controller that needs to run periodically to perform work.
- * 
+ *
  * For example, if we have some PID loop that needs to run at a specified frequency,
  * inherit this class, and perform your period update in PeriodicTask.  Any one-time
  * setup work can be performed in OnStarted().
- * 
+ *
  * Each instance has one underlying thread meaning that task could be blocking/synchronous.
  * This class effectively implements this functionality:
- * 
+ *
  * void thread()
  * {
  *     OnStarted();
- * 
+ *
  *     while(true)
  *     {
  *         PeriodicTask(getTimeNowNt());
@@ -38,12 +38,8 @@ class PeriodicController : public ThreadController<TStackSize>
 private:
 	// time in ChibiOS time units, see CH_CFG_ST_FREQUENCY
     systime_t m_period;
-    
+
 protected:
-    /**
-     * The target period between calls to PeriodicTask.
-     */
-//    const float m_periodSeconds;
 
     /**
      * @brief Called before running the periodic task.  Optionally override this method to set up.
@@ -87,9 +83,6 @@ public:
         : ThreadController<TStackSize>(name, priority)
         // First compute the period in systime_t
         , m_period(CH_CFG_ST_FREQUENCY / frequencyHz)
-        // Then compute the float period off of the integer one to
-        //  get the ACTUAL period, which may be slightly different than requested.
-//        , m_periodSeconds(m_period / (float)CH_CFG_ST_FREQUENCY)
     {
     }
 
