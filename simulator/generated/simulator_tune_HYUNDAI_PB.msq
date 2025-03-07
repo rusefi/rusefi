@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="23340">
+    <page number="0" size="23356">
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
         <constant name="accelerometerSpiDevice">"Off"</constant>
@@ -349,15 +349,7 @@
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
 </constant>
         <constant name="boostClosedLoopBlends2_yAxisOverride">"Zero"</constant>
-        <constant digits="0" name="boostControlMinMap" units="">110.0</constant>
-        <constant digits="0" name="boostControlMinRpm" units="">2000.0</constant>
-        <constant digits="0" name="boostControlMinTps" units="">30.0</constant>
-        <constant name="boostControlPin">"NONE"</constant>
-        <constant name="boostControlPinMode">"default"</constant>
-        <constant digits="0" name="boostControlSafeDutyCycle" units="%">0.0</constant>
-        <constant digits="0" name="boostCutPressure" units="kPa (absolute)">300.0</constant>
-        <constant digits="1" name="boostCutPressureHyst" units="kPa (absolute)">20.0</constant>
-        <constant cols="1" digits="0" name="boostLoadBins" rows="8">
+        <constant cols="1" digits="0" name="boostClosedLoopLoadBins" rows="8">
          0.0
          14.0
          29.0
@@ -367,6 +359,14 @@
          86.0
          100.0
 </constant>
+        <constant digits="0" name="boostControlMinMap" units="">110.0</constant>
+        <constant digits="0" name="boostControlMinRpm" units="">2000.0</constant>
+        <constant digits="0" name="boostControlMinTps" units="">30.0</constant>
+        <constant name="boostControlPin">"NONE"</constant>
+        <constant name="boostControlPinMode">"default"</constant>
+        <constant digits="0" name="boostControlSafeDutyCycle" units="%">0.0</constant>
+        <constant digits="0" name="boostCutPressure" units="kPa (absolute)">300.0</constant>
+        <constant digits="1" name="boostCutPressureHyst" units="kPa (absolute)">20.0</constant>
         <constant cols="1" digits="1" name="boostOpenLoopBlends1_blendBins" rows="8">
          0.0
          0.0
@@ -471,6 +471,16 @@
          0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
 </constant>
         <constant name="boostOpenLoopBlends2_yAxisOverride">"Zero"</constant>
+        <constant cols="1" digits="0" name="boostOpenLoopLoadBins" rows="8">
+         0.0
+         14.0
+         29.0
+         43.0
+         57.0
+         71.0
+         86.0
+         100.0
+</constant>
         <constant name="boostOpenLoopYAxis">"TPS"</constant>
         <constant digits="4" name="boostPid_dFactor" units="">0.0</constant>
         <constant digits="4" name="boostPid_iFactor" units="">0.3</constant>
@@ -4971,7 +4981,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250221" nPages="1" signature="rusEFI master.2025.03.07.f407-discovery.1717721160" version="5.0"/>
+    <versionInfo firmwareInfo="20250221" nPages="1" signature="rusEFI master.2025.03.07.f407-discovery.1741957886" version="5.0"/>
     <bibliography author="rusEFI 20250221" writeDate="date"/>
     <settings/>
     <userComments/>
