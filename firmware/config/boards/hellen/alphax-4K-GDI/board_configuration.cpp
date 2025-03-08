@@ -220,7 +220,7 @@ static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
     }
 
   initAll9104(tle9104_cfg);
-	tempPullUp.initPin("Temp PullUp", Gpio::MM176_OUT_IO12);
+	tempPullUp.initPin("Temp PullUp", Gpio::MM176_USB1ID);
 }
 
 static Gpio OUTPUTS[] = {
