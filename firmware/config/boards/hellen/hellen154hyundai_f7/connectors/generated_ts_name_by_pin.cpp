@@ -20,6 +20,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::F11: return "K40 VSS";
 		case Gpio::F12: return "VVT2";
 		case Gpio::F13: return "K47 BK1 Wastegate Solenoid";
+		case Gpio::F14: return "K48 OUT_RCV";
 		case Gpio::F4: return "X9 Digital1";
 		case Gpio::F5: return "X7 Digital2";
 		case Gpio::F6: return "X4 Digital3";

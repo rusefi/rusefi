@@ -17,6 +17,7 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::H144_OUT_IO10, // K87 AC Relay
 	Gpio::H144_OUT_PWM8, // MIL
 	Gpio::H144_LS_7, // K47 BK1 Wastegate Solenoid
+	Gpio::H144_LS_8, // K48 OUT_RCV
 	Gpio::H144_OUT_IO7, // Fan Relay Low
 	Gpio::H144_LS_5, // VVT1
 	Gpio::H144_LS_6, // VVT2
@@ -38,6 +39,7 @@ Gpio GENERATED_OUTPUTS = {
 // "K87 AC Relay",
 // "MIL",
 // "K47 BK1 Wastegate Solenoid",
+// "K48 OUT_RCV",
 // "Fan Relay Low",
 // "VVT1",
 // "VVT2",
