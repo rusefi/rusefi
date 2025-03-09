@@ -101,7 +101,7 @@ percent_t IdleController::getRunningOpenLoop(IIdleController::Phase phase, float
 		config->cltIdleCorrTable,
 		config->rpmIdleCorrBins, rpm,
 		config->cltIdleCorrBins, clt
-	)
+	);
 
 	// Now we bump it by the AC/fan amount if necessary
     if(engine->module<AcController>().unmock().acButtonState) {
