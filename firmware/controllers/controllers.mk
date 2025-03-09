@@ -50,10 +50,12 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/can/can_verbose.cpp \
 	$(CONTROLLERS_DIR)/can/can_rx.cpp \
 	$(CONTROLLERS_DIR)/can/can_bench_test.cpp \
+	$(CONTROLLERS_DIR)/can/sandero_eletro_pump.cpp \
 	$(CONTORLLERS_DIR)/can/rusefi_wideband.cpp \
 	$(CONTROLLERS_DIR)/can/can_tx.cpp \
 	$(CONTROLLERS_DIR)/can/can_dash.cpp \
 	$(CONTROLLERS_DIR)/can/can_dash_ms.cpp \
+	$(CONTROLLERS_DIR)/can/can_dash_mk65_fiesta.cpp \
 	$(CONTROLLERS_DIR)/can/can_dash_nissan.cpp \
 	$(CONTROLLERS_DIR)/can/can_vss.cpp \
  	$(CONTROLLERS_DIR)/engine_controller.cpp \
