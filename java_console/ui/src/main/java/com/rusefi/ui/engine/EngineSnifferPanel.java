@@ -3,9 +3,11 @@ package com.rusefi.ui.engine;
 import com.devexperts.logging.Logging;
 import com.rusefi.FileLog;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ui.*;
 import com.rusefi.ui.config.BitConfigField;
 import com.rusefi.ui.config.ConfigUiField;
@@ -25,7 +27,7 @@ import java.util.*;
 import java.util.List;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.config.generated.Fields.*;
+import static com.rusefi.config.generated.Integration.*;
 
 /**
  * Engine Sniffer control consists of a set of {@link UpDownImage}
@@ -68,7 +70,7 @@ public class EngineSnifferPanel {
 
     private final ZoomControl zoomControl = new ZoomControl();
     private final EngineSnifferStatusPanel statusPanel = new EngineSnifferStatusPanel();
-    private final UpDownImage crank = createImage(Fields.PROTOCOL_CRANK1);
+    private final UpDownImage crank = createImage(Integration.PROTOCOL_CRANK1);
     private final ChartScrollControl scrollControl;
     private AnyCommand command;
 
@@ -149,12 +151,12 @@ public class EngineSnifferPanel {
             /**
              * We have scroll pane size which depends on zoom, that's a long chain of dependencies
              */
-            UiUtils.trueLayout(imagePanel.getParent());
+            AutoupdateUtil.trueLayout(imagePanel.getParent());
         };
 
         resetImagePanel();
 
-        uiContext.getLinkManager().getEngineState().registerStringValueAction(Fields.PROTOCOL_ENGINE_SNIFFER, new EngineState.ValueCallback<String>() {
+        uiContext.getLinkManager().getEngineState().registerStringValueAction(Integration.PROTOCOL_ENGINE_SNIFFER, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
                 if (isPaused)
@@ -173,7 +175,7 @@ public class EngineSnifferPanel {
     }
 
     public void setOutpinListener(EngineState engineState) {
-        engineState.registerStringValueAction(Fields.PROTOCOL_OUTPIN, new EngineState.ValueCallback<String>() {
+        engineState.registerStringValueAction(Integration.PROTOCOL_OUTPIN, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String value) {
                 String[] pinInfo = value.split("@");
@@ -192,13 +194,13 @@ public class EngineSnifferPanel {
     private void resetImagePanel() {
         imagePanel.removeAll();
         imagePanel.add(crank);
-        images.put(Fields.PROTOCOL_CRANK1, crank);
+        images.put(Integration.PROTOCOL_CRANK1, crank);
     }
 
     public void displayChart(String value) {
         EngineChart map = EngineChartParser.unpackToMap(value);
 
-        StringBuilder revolutions = map.get(Fields.TOP_DEAD_CENTER_MESSAGE);
+        StringBuilder revolutions = map.get(TOP_DEAD_CENTER_MESSAGE);
 
         statusPanel.setRevolutions(revolutions);
 
@@ -223,7 +225,7 @@ public class EngineSnifferPanel {
         }
 
         // Repaint now that we've updated state
-        SwingUtilities.invokeLater(() -> UiUtils.trueRepaint(imagePanel));
+        SwingUtilities.invokeLater(() -> AutoupdateUtil.trueLayout(imagePanel));
     }
 
     public JPanel getPanel() {
@@ -237,7 +239,7 @@ public class EngineSnifferPanel {
         }
 
         // Don't render a row for the TDC mark
-        if (Fields.TOP_DEAD_CENTER_MESSAGE.equalsIgnoreCase(name)) {
+        if (Integration.TOP_DEAD_CENTER_MESSAGE.equalsIgnoreCase(name)) {
             return;
         }
 

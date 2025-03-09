@@ -2,6 +2,7 @@ package com.rusefi.tune.xml;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlValue;
+import java.util.Objects;
 
 public class Constant {
     private String name;
@@ -19,6 +20,19 @@ public class Constant {
         this.units = units;
         this.value = value;
         this.digits = digits;
+    }
+
+    private Constant(
+        final String name,
+        final String units,
+        final String value,
+        final String digits,
+        final String rows,
+        final String cols
+    ) {
+        this(name, units, value, digits);
+        this.rows = rows;
+        this.cols = cols;
     }
 
     @XmlAttribute
@@ -75,11 +89,30 @@ public class Constant {
         this.value = value;
     }
 
+    public Constant cloneWithValue(final String newValue) {
+        return new Constant(getName(), getUnits(), newValue, getDigits(), getRows(), getCols());
+    }
+
     @Override
     public String toString() {
         return "Constant{" +
                 "name='" + name + '\'' +
                 ", value='" + value + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Constant constant = (Constant) o;
+        return Objects.equals(getName(), constant.getName()) && Objects.equals(getUnits(), constant.getUnits())
+            && Objects.equals(getValue(), constant.getValue()) && Objects.equals(getDigits(), constant.getDigits())
+            && Objects.equals(getRows(), constant.getRows()) && Objects.equals(getCols(), constant.getCols());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getName(), getUnits(), getValue(), getDigits(), getRows(), getCols());
     }
 }

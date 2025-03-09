@@ -31,7 +31,7 @@ static float flowCorrections(float pressureRatio, float p_up, float iat) {
 
 	// Inlet density correction
 	float tempCorrection = sqrt(273 / (iat + 273));
-	float pressureCorrection = p_up / 101.325;
+	float pressureCorrection = p_up / STD_ATMOSPHERE;
 	float densityCorrection = tempCorrection * pressureCorrection;
 
 	return prCorrectionFactor * densityCorrection;
@@ -127,7 +127,7 @@ expected<float> ThrottleModelBase::estimateThrottleFlow(float map, float tps) {
 	// TODO: have a real TIP sensor
 	auto tip = 	Sensor::hasSensor(SensorType::ThrottleInletPressure) ? Sensor::get(SensorType::ThrottleInletPressure) :
 				Sensor::hasSensor(SensorType::BarometricPressure) ? Sensor::get(SensorType::BarometricPressure) :
-				SensorResult(101.325f);
+				SensorResult(STD_ATMOSPHERE);
 
 	if (!tip || !iat) {
 		return unexpected;

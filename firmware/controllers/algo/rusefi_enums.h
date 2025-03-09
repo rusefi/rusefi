@@ -259,7 +259,13 @@ typedef enum __attribute__ ((__packed__)) {
 typedef enum __attribute__ ((__packed__)) {
 	PI_DEFAULT = 0,
 	PI_PULLUP = 1,
-	PI_PULLDOWN = 2
+	PI_PULLDOWN = 2,
+	/**
+	 * bit 2 is used as inverted flag, so skip one here
+	 */
+	PI_INVERTED_DEFAULT = 4,
+	PI_INVERTED_PULLUP = 5,
+	PI_INVERTED_PULLDOWN = 6
 } pin_input_mode_e;
 
 /**
@@ -659,6 +665,9 @@ typedef enum __attribute__ ((__packed__)) {
 	GPPWM_AuxLinear3 = 29,
 	GPPWM_AuxLinear4 = 30,
 	GPPWM_VehicleSpeed = 31,
+	GPPWM_OilPressure = 32,
+	GPPWM_OilTemp = 33,
+	GPPWM_FuelPressure = 34,
 	// remember to manually sync 'pwmAxisLabels' in tunerstudio.template.ini
 	// todo: rename 'pwmAxisLabels' and maybe even gppwm_channel_e since we now use wider than just 'gppwm'?
 } gppwm_channel_e;

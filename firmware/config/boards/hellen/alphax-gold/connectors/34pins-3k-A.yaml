@@ -1,0 +1,351 @@
+meta: config/boards/hellen_meta.h
+
+pins:
+  - pin: on_board
+    meta: H144_IN_MAP2
+    class: analog_inputs
+    function: On-board MAP Sensor
+    ts_name: On-board MAP Sensor
+    color: orange
+
+  - pin: 1A
+    function: Injector 4 Output
+    class: outputs
+    type: ls
+    id: TLE9104_0_OUT_3
+    ts_name: ___ - Injector 4
+    color: orange
+
+  - pin: 2A
+    function: Injector 3 Output
+    class: outputs
+    type: ls
+    id: TLE9104_0_OUT_2
+    ts_name: ___ - Injector 3
+    color: blue
+
+  - pin: 3A
+    function: Injector 2 Output
+    class: outputs
+    type: ls
+    id: TLE9104_0_OUT_1
+    ts_name: ___ - Injector 2
+    color: white
+
+  - pin: 4A
+    function: Injector 1 Output
+    class: outputs
+    type: ls
+    id: TLE9104_0_OUT_0
+    ts_name: ___ - Injector 1
+    color: green
+
+  - pin: 5A
+    function: Fuel Pump Relay
+    class: outputs
+    type: ls
+    id: TLE9104_2_OUT_0
+    ts_name: ___ Fuel Pump Relay
+    color: white
+
+  - pin: 6A
+    function: Idle Output
+    class: outputs
+    type: ls
+    id: TLE9104_2_OUT_1
+    ts_name: ___ Idle Output
+    color: yellow
+
+  - pin: 7A
+    function: CAN High
+    color: green
+    type: can
+
+  - pin: 8A
+    function: CAN Low
+    color: blue
+    type: can
+
+  - pin: 9A
+    function: +12v Bat+
+    color: red
+    type: 12V
+
+  - pin: 10A
+    meta: H144_IGN_4
+    class: outputs
+    ts_name: ___ Coil 4
+    color: orange
+
+  - pin: 11A
+    meta: H144_IGN_3
+    class: outputs
+    ts_name: ___ Coil 3
+    color: blue
+
+  - pin: 12A
+    meta: H144_IGN_2
+    class: outputs
+    ts_name: ___ Coil 2
+    color: white
+
+  - pin: 13A
+    meta: H144_IGN_1
+    class: outputs
+    ts_name: ___ Coil 1
+    color: green
+
+  - pin: 14A
+    function: Tachometer Output
+    class: outputs
+    type: ls
+    id: TLE9104_2_OUT_3
+    ts_name: ___ - Tachometer Output
+    color:
+
+  - pin: 15A
+    meta: H144_IN_SENS1
+    class: switch_inputs
+    function: Digital Input 1
+    ts_name: ___ - Digital In 1
+    color: green
+
+  - pin: 16A
+    id: [H144_IN_MAP1_DIGITAL, H144_IN_MAP1_DIGITAL, H144_IN_MAP1]
+    class: [event_inputs, switch_inputs, analog_inputs]
+    type: hall
+    ts_name: ___ - Digital/analog input 2
+    function: Digital/event/analog input (cannot be used simultaneously with VR1)
+
+  - pin: 17A
+    id: [H144_IN_SENS4, H144_IN_SENS4]
+    class: [event_inputs, switch_inputs]
+    type: hall
+    ts_name: ___ - Digital input 1
+    function: Digital/event input (cannot be used simultaneously with VR1)
+
+  - pin: 17A16A
+    meta: H144_IN_CRANK
+    function: VR1 (cannot be used simultaneously with Hall1 and Hall2)
+    type: vr
+    ts_name: 17A/17B VR Input 1 (Discrete)
+
+  - pin: 18A
+    meta: H144_IN_TPS
+    class: analog_inputs
+    function: TPS Sensor Input
+    ts_name: ___ - TPS
+    type: av
+    color: orange
+
+
+  - pin: 19A
+    meta: H144_IN_CLT
+    class: analog_inputs
+    function: CLT Sensor Input
+    ts_name: ___ - CLT
+    type: av
+    color: grey
+
+
+  - pin: 20A
+    meta: H144_IN_IAT
+    class: analog_inputs
+    function: IAT Sensor Input
+    ts_name: ___ - IAT
+    color: blue
+
+  - pin: 21A
+    meta: H144_IN_O2S2
+    class: analog_inputs
+    ts_name: ___ MAP
+    function: MAP input
+    type: av
+    color: yellow
+
+  - pin: 22A
+    meta: H144_IN_TPS2
+    class: analog_inputs
+    ts_name: ___ TPS2
+    function: TPS input 2
+    type: av
+    color: blue
+
+  - pin: 23A
+    function: Sensor +5v Power Feed
+    type: 5v
+    color: orange
+
+  - pin: 24A
+    id: [H144_IN_D_4, H144_IN_D_4]
+    class: [event_inputs, switch_inputs]
+    type: hall
+    ts_name: ___ - Digital Input 6
+    function: Digital Input 6 (cannot be used simultaneously with VR3)
+
+  - pin: 25A
+    id: [H144_IN_AUX3_DIGITAL, H144_IN_AUX3_DIGITAL, H144_IN_AUX3]
+    class: [event_inputs, switch_inputs, analog_inputs]
+    type: hall
+    ts_name: ___ - Digital/analog Input 5
+    function: Digital/analog Input 5 (cannot be used simultaneously with VR3)
+
+  - pin: 24A25A
+    meta: H144_IN_VSS
+    function: VR3 (cannot be used simultaneously with Hall5 and Hall6)
+    type: vr
+    ts_name: 24A/25A VR Input 3 (MAX9924)
+
+  - pin: 26A
+    function: GND
+    type: GND
+
+  - pin: 27A
+    function: GNDA
+    type: gnd
+    color: black
+
+  - pin: 28A
+    meta: H144_IN_AUX1
+    class: analog_inputs
+    ts_name: ___ AUX1
+    function: AUX input 1
+    type: av
+
+  - pin: 29A
+    function: WBO1 Heater Control sensor pin 3
+    color: white
+
+  - pin: 30A
+    function: WBO1 VM sensor pin 2
+    color: yellow
+
+  - pin: 31A
+    function: WBO1 IP sensor pin 1
+    color: red
+
+  - pin: 32A
+    function: WBO1 cal R sensor pin 5
+    color: green
+
+  - pin: 33A
+    function: WBO1 VS sensor pin 6
+    color: black
+
+  - pin: 34A
+    function: WBO1 Heater Power pin 4
+    color: grey
+
+
+info:
+  cid: main
+  order: 0
+  title: AlphaX Gold
+  directory: hellen/alphax-gold
+  name: AlphaX Gold
+  image:
+    file: 34pins-3k.jpg
+  pins:
+    - pin: 1A
+      x: 95
+      y: 90
+    - pin: 2A
+      x: 120
+      y: 90
+    - pin: 3A
+      x: 155
+      y: 90
+    - pin: 4A
+      x: 180
+      y: 90
+    - pin: 5A
+      x: 205
+      y: 90
+    - pin: 6A
+      x: 230
+      y: 90
+    - pin: 7A
+      x: 255
+      y: 90
+    - pin: 8A
+      x: 280
+      y: 90
+    - pin: 9A
+      x: 305
+      y: 90
+    - pin: 10A
+      x: 110
+      y: 120
+    - pin: 11A
+      x: 135
+      y: 120
+    - pin: 12A
+      x: 160
+      y: 120
+    - pin: 13A
+      x: 185
+      y: 120
+    - pin: 14A
+      x: 210
+      y: 120
+    - pin: 15A
+      x: 235
+      y: 120
+    - pin: 16A
+      x: 260
+      y: 120
+    - pin: 17A
+      x: 285
+      y: 120
+    - pin: 18A
+      x: 110
+      y: 150
+    - pin: 19A
+      x: 135
+      y: 150
+    - pin: 20A
+      x: 160
+      y: 150
+    - pin: 21A
+      x: 185
+      y: 150
+    - pin: 22A
+      x: 210
+      y: 150
+    - pin: 23A
+      x: 235
+      y: 150
+    - pin: 24A
+      x: 260
+      y: 150
+    - pin: 25A
+      x: 285
+      y: 150
+    - pin: 26A
+      x: 95
+      y: 180
+    - pin: 27A
+      x: 120
+      y: 180
+    - pin: 28A
+      x: 155
+      y: 180
+    - pin: 29A
+      x: 180
+      y: 180
+    - pin: 30A
+      x: 205
+      y: 180
+    - pin: 31A
+      x: 230
+      y: 180
+    - pin: 32A
+      x: 255
+      y: 180
+    - pin: 33A
+      x: 280
+      y: 180
+    - pin: 34A
+      x: 305
+      y: 180
+

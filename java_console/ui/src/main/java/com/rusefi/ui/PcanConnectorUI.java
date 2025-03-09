@@ -3,10 +3,11 @@ package com.rusefi.ui;
 import com.devexperts.logging.Logging;
 import com.rusefi.NamedThreadFactory;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.VariableRegistryValues;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.can.PCanIoStream;
 import com.rusefi.tools.CANConnectorStartup;
 import com.rusefi.core.ui.FrameHelper;
-import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +22,7 @@ public class PcanConnectorUI {
         FrameHelper frame = new FrameHelper(WindowConstants.EXIT_ON_CLOSE);
 
         JPanel panel = new JPanel(new BorderLayout());
-        panel.add(new JLabel("Running PCAN connector for TS: RX on " + Integer.toString(Fields.CAN_ECU_SERIAL_RX_ID, 16)), BorderLayout.NORTH);
+        panel.add(new JLabel("Running PCAN connector for TS: RX on " + Integer.toString(VariableRegistryValues.CAN_ECU_SERIAL_RX_ID, 16)), BorderLayout.NORTH);
         JTextArea logTextArea = new JTextArea();
         JPanel panelForScroll = new JPanel(new BorderLayout());
         panelForScroll.add(logTextArea, BorderLayout.CENTER);
@@ -30,16 +31,12 @@ public class PcanConnectorUI {
 
         panel.add(scrollPane, BorderLayout.CENTER);
 
-        StatusConsumer statusConsumer = (string, breakLineOnTextArea, sendToLogger) -> SwingUtilities.invokeLater(() -> {
-            if (sendToLogger) {
-                log.info(string);
-            }
+        StatusConsumer statusConsumer = (string) -> SwingUtilities.invokeLater(() -> {
+            log.info(string);
             String stringForTextArea = string;
-            if (breakLineOnTextArea) {
-                stringForTextArea += "\r\n";
-            }
+            stringForTextArea += "\r\n";
             logTextArea.append(stringForTextArea);
-            UiUtils.trueLayout(logTextArea);
+            AutoupdateUtil.trueLayout(logTextArea);
         });
 
         new NamedThreadFactory("PCAN-connector").newThread(() -> {
@@ -48,7 +45,7 @@ public class PcanConnectorUI {
                 if (stream != null)
                     CANConnectorStartup.start(stream, statusConsumer);
             } catch (IOException e) {
-                statusConsumer.appendStatus("Error " + e);
+                statusConsumer.logLine("Error " + e);
             }
         }).start();
 

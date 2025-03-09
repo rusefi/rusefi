@@ -7,6 +7,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.config.Field;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkConnector;
@@ -17,28 +18,24 @@ import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.server.ControllerInfo;
 import com.rusefi.server.SessionDetails;
 import com.rusefi.server.rusEFISSLContext;
-import com.rusefi.core.FileUtil;
 import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 
 import java.io.IOException;
 import java.net.Socket;
-import java.nio.ByteBuffer;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.Timeouts.READ_IMAGE_TIMEOUT;
-import static com.rusefi.config.generated.Fields.TS_FILE_VERSION;
-import static com.rusefi.config.generated.Fields.TS_FILE_VERSION_OFFSET;
 import static com.rusefi.io.tcp.TcpConnector.LOCALHOST;
 
 public class TestHelper extends MockitoTestHelper {
     private static final Logging log = getLogging(TestHelper.class);
     public static final String TEST_SIGNATURE_1 = "rusEFI master.2020.07.06.frankenso_na6.2468827536";
     public static final String TEST_SIGNATURE_2 = "rusEFI master.2020.07.11.proteus_f4.1986715563";
-    public static final ControllerInfo CONTROLLER_INFO = new ControllerInfo("name", "make", "code", Fields.TS_SIGNATURE);
+    public static final ControllerInfo CONTROLLER_INFO = new ControllerInfo("name", "make", "code", VariableRegistryValues.TS_SIGNATURE);
     public static final String TEST_TOKEN_1 = "00000000-1234-1234-1234-123456789012";
     public static final String TEST_TOKEN_3 = "33333333-3333-1234-1234-123456789012";
 
@@ -58,10 +55,8 @@ public class TestHelper extends MockitoTestHelper {
     @NotNull
     public static BinaryProtocolServer createVirtualController(ConfigurationImage ci, int port, Listener serverSocketCreationCallback, BinaryProtocolServer.Context context) throws IOException {
         BinaryProtocolState state = new BinaryProtocolState();
-        state.setController(ci);
-        byte[] currentOutputs = new byte[Fields.TS_TOTAL_OUTPUT_SIZE];
-        ByteBuffer buffer = FileUtil.littleEndianWrap(currentOutputs, TS_FILE_VERSION_OFFSET, 4);
-        buffer.putInt(TS_FILE_VERSION);
+        state.setConfigurationImage(ci);
+        byte[] currentOutputs = new byte[VariableRegistryValues.TS_TOTAL_OUTPUT_SIZE];
         state.setCurrentOutputs(currentOutputs);
 
         LinkManager linkManager = new LinkManager();

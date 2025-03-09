@@ -14,7 +14,8 @@
 #define ts_show_sd_pins false
 #define ts_show_vbatt false
 #define ts_show_clt_iat_pullup false
-#define ts_show_tcu true
+! we are short on RAM or flash on F4 :( TODO split F4 config from F7 config
+#define ts_show_tcu false
 #define ts_show_gdi true
 
 
@@ -24,8 +25,6 @@
 ! just for a test does not mean EFI_ONBOARD_MEMS
 #define ts_show_onboard_accelerometer true
 
-
-
-#define LUA_SCRIPT_SIZE 9000
-
 #define IGN_KEY_DIVIDER 3
+#define CLT_TIMING_CURVE_SIZE 3
+#define IAT_IGN_CORR_COUNT 4

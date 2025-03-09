@@ -2,6 +2,8 @@
 #include "logicdata_csv_reader.h"
 
 TEST(Toyota3ToothCam, RealEngineRunning) {
+	extern bool unitTestTaskPrecisionHack;
+	unitTestTaskPrecisionHack = true;
 	CsvReader reader(1, /* vvtCount */ 1);
 
 	reader.open("tests/trigger/resources/toyota_3_tooth_cam.csv");

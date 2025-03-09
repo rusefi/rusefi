@@ -12,6 +12,11 @@ float PUBLIC_API_WEAK getAnalogInputDividerCoefficient(adc_channel_e) {
     return engineConfiguration->analogInputDividerCoefficient;
 }
 
+float PUBLIC_API_WEAK boardAdjustVoltage(float voltage, adc_channel_e hwChannel) {
+	// a hack useful when we do not trust voltage just after board EN was turned on. is this just hiding electrical design flaws?
+	return voltage;
+}
+
 /* overall analog health state
  * return negative in case of any problems
  * return 0 if everything is ok or no diagnostic is available */
@@ -30,6 +35,13 @@ int PUBLIC_API_WEAK boardGetAnalogInputDiagnostic(adc_channel_e channel, float) 
 
 	/* input is outside chip/ECU */
 	return 0;
+}
+
+/* Get analog part diagnostic */
+int analogGetDiagnostic()
+{
+	/* TODO: debounce? */
+	return boardGetAnalogDiagnostic();
 }
 
 #if HAL_USE_ADC

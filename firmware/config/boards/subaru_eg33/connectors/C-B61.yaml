@@ -87,3 +87,5 @@ pins:
 
 info:
   directory: subaru_eg33
+  cid: c
+

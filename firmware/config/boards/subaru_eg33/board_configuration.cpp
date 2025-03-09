@@ -179,9 +179,9 @@ void setBoardDefaultConfiguration() {
 	/* User can disable this bus */
 	engineConfiguration->is_enabled_spi_2 = true;
 
-	engineConfiguration->sdCardSpiDevice = SPI_DEVICE_1;
-	engineConfiguration->sdCardCsPin = Gpio::A2;
-	engineConfiguration->isSdCardEnabled = false;
+	/* SD card is located on SDIO interface */
+	engineConfiguration->isSdCardEnabled = true;
+	engineConfiguration->sdCardCsPin = Gpio::Unassigned;
 
 	/* Knock sensor */
 	/* Interface settings */
@@ -194,8 +194,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->isHip9011Enabled = true;
 	/* this board has TPIC8101, that supports advanced mode */
 	engineConfiguration->useTpicAdvancedMode = true;
-	/* Chip settings */
-	engineConfiguration->hip9011PrescalerAndSDO = (0x6 << 1); //HIP_16MHZ_PRESCALER;
+	/* HIP9011 chip settings */
 	engineConfiguration->hip9011Gain = 1.0;
 	engineConfiguration->cylinderBore = 96.9;
 
@@ -254,6 +253,9 @@ void setBoardConfigOverrides() {
 	engineConfiguration->spi5MisoMode = PO_DEFAULT;
 	/* This is mandatory to have this bus enabled */
 	engineConfiguration->is_enabled_spi_5 = true;
+
+	/* HIP9011 gets fixed 16MHz clock from STM32, this is not configurable */
+	engineConfiguration->hip9011Prescaler = 0x6; //HIP_16MHZ_PRESCALER;
 }
 
 /* Schematic RefDef DA3 */
@@ -367,9 +369,7 @@ static void board_init_ext_gpios()
 
 /**
  * @brief Board-specific initialization code.
- * @todo  Add your board-specific code, if any.
  */
-void boardInit(void)
-{
+void boardInit() {
 	board_init_ext_gpios();
 }

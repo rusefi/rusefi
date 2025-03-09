@@ -1,10 +1,10 @@
 package com.rusefi.ui;
 
 import com.rusefi.FileLog;
-import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.core.preferences.storage.Node;
-import com.rusefi.ui.util.UiUtils;
+import com.rusefi.core.ui.AutoupdateUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,7 +23,7 @@ public class WarningPanel {
         @Override
         public void actionPerformed(ActionEvent e) {
             label.setVisible(!label.isVisible());
-            UiUtils.trueRepaint(label);
+            AutoupdateUtil.trueLayout(label);
         }
     });
 
@@ -51,7 +51,7 @@ public class WarningPanel {
                 if (haveFatalError)
                     return;
 
-                if (message.startsWith(Fields.CRITICAL_PREFIX)) {
+                if (message.startsWith(Integration.CRITICAL_PREFIX)) {
                     haveFatalError = true;
                     criticalErrorBlinking.start();
                     label.setText(message);

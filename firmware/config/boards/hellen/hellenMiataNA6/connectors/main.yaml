@@ -371,6 +371,7 @@ pins:
 
 
 info:
+  cid: main
   title: Hellen Miata NA6
   directory: hellen/hellen64_miataNA6_94
   image:

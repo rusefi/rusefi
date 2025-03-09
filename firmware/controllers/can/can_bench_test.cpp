@@ -1,3 +1,11 @@
+/*
+ * file can_bench_test.cpp
+ * see also https://github.com/rusefi/rusefi/wiki/CAN BENCH_TEST_BASE_ADDRESS 0x770000
+ *
+ * primary recipient is https://github.com/rusefi/rusefi-hardware/tree/main/digital-inputs/firmware
+ *
+ * todo: shall we not broadcast by default but wait until stim firmware wakes us up?
+ */
 
 #include "pch.h"
 #include "bench_test.h"
@@ -50,9 +58,9 @@ void setHwQcMode() {
 
 #if EFI_CAN_SUPPORT
 
-static void directWritePad(Gpio pin, int value) {
+static void directWritePad(Gpio pin, int value, const char *msg = "") {
   if (!isBrainPinValid(pin)) {
-    criticalError("QC of invalid pin %d", (int)pin);
+    criticalError("QC of invalid pin %d %s", (int)pin, msg);
     return;
   }
 
@@ -71,25 +79,25 @@ static void qcSetEtbState(uint8_t dcIndex, uint8_t direction) {
 	setHwQcMode();
 	const dc_io *io = &engineConfiguration->etbIo[dcIndex];
 	Gpio controlPin = io->controlPin;
-  directWritePad(controlPin, 1);
+  directWritePad(controlPin, 1, "DC control");
 	if (engineConfiguration->etb_use_two_wires) {
 	  // TLE7209 and L6205
 	  // let's force proper pin mode to work around potentially uninitialized subsystem
 	  efiSetPadModeWithoutOwnershipAcquisition("QC_ETB_1", io->directionPin1, PAL_MODE_OUTPUT_PUSHPULL);
 	  efiSetPadModeWithoutOwnershipAcquisition("QC_ETB_2", io->directionPin2, PAL_MODE_OUTPUT_PUSHPULL);
 
-	  directWritePad(io->directionPin1, direction);
-	  directWritePad(io->directionPin2, !direction);
+	  directWritePad(io->directionPin1, direction, "DC dir1");
+	  directWritePad(io->directionPin2, !direction, "DC dir2");
 	} else {
 	  // TLE9201 and VNH2SP30
 	  efiSetPadModeWithoutOwnershipAcquisition("QC_ETB", controlPin, PAL_MODE_OUTPUT_PUSHPULL);
-	  directWritePad(io->directionPin1, direction);
-	  directWritePad(io->disablePin, 0); // disable pin is inverted - here we ENABLE. direct pin access due to qcDirectPinControlMode
-    }
+	  directWritePad(io->directionPin1, direction, "DC dir");
+	  directWritePad(io->disablePin, 0, "DC dis"); // disable pin is inverted - here we ENABLE. direct pin access due to qcDirectPinControlMode
+  }
 }
 
 static void setPin(const CANRxFrame& frame, int value) {
-		int outputIndex = frame.data8[2];
+		size_t outputIndex = frame.data8[2];
 		if (outputIndex >= getBoardMetaOutputsCount()) {
 		  criticalError("QC pin index %d out of range", outputIndex);
 			return;

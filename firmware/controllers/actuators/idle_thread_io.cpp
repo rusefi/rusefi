@@ -37,7 +37,7 @@ void setManualIdleValvePosition(int positionPercent) {
 		return;
 	efiPrintf("setting idle valve position %d", positionPercent);
 	// todo: this is not great that we have to write into configuration here
-	engineConfiguration->manIdlePosition = positionPercent;
+	setArrayValues(config->cltIdleCorr, positionPercent);
 }
 
 #endif /* EFI_UNIT_TEST */
@@ -130,19 +130,6 @@ void setDefaultIdleParameters() {
 	engineConfiguration->idlePidRpmDeadZone = 50;
 }
 
-/**
- * I use this questionable feature to tune acceleration enrichment
- */
-static void blipIdle(int idlePosition, int durationMs) {
-#if ! EFI_UNIT_TEST
-	if (engine->timeToStopBlip != 0) {
-		return; // already in idle blip
-	}
-	engine->blipIdlePosition = idlePosition;
-	engine->timeToStopBlip = getTimeNowUs() + 1000 * durationMs;
-#endif // EFI_UNIT_TEST
-}
-
 void startIdleThread() {
 	// Force the idle controller to use 0 offset, as this is handled by the open loop table instead.
 	engineConfiguration->idleRpmPid.offset = 0;
@@ -162,9 +149,6 @@ void startIdleThread() {
 	controller->currentIdlePosition = -100.0f;
 
 #if ! EFI_UNIT_TEST
-
-	addConsoleActionII("blipidle", blipIdle);
-
 	// split this whole file into manual controller and auto controller? move these commands into the file
 	// which would be dedicated to just auto-controller?
 

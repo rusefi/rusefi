@@ -144,8 +144,6 @@ void EngineState::periodicFastCallback() {
 	}
 	engine->fuelComputer.running.postCrankingFuelCorrection = m_postCrankingFactor;
 
-	engine->ignitionState.updateAdvanceCorrections();
-
 	baroCorrection = getBaroCorrection();
 
 	auto tps = Sensor::get(SensorType::Tps1);
@@ -176,6 +174,7 @@ void EngineState::periodicFastCallback() {
 #endif //EFI_LAUNCH_CONTROL
 
 	float l_ignitionLoad = getIgnitionLoad();
+	engine->ignitionState.updateAdvanceCorrections(l_ignitionLoad);
 	float baseAdvance = engine->ignitionState.getWrappedAdvance(rpm, l_ignitionLoad);
 	float corrections = engineConfiguration->timingMode == TM_DYNAMIC ?
 			// Pull any extra timing for knock retard
@@ -207,14 +206,18 @@ void EngineState::periodicFastCallback() {
 
 		// Apply both per-bank and per-cylinder trims
 		engine->engineState.injectionMass[i] = untrimmedInjectionMass * bankTrim * cylinderTrim * knockTrim;
-    // todo: is it OK to apply cylinder trim with FIXED timing?
-		timingAdvance[i] = correctedIgnitionAdvance + getCylinderIgnitionTrim(i, rpm, l_ignitionLoad);
+
+		// todo: is it OK to apply cylinder trim with FIXED timing?
+		timingAdvance[i] = correctedIgnitionAdvance
+									+ getCylinderIgnitionTrim(i, rpm, l_ignitionLoad)
+									// spark hardware latency correction, for implementation details see:
+									// https://github.com/rusefi/rusefi/issues/6832:
+									+ engine->ignitionState.getSparkHardwareLatencyCorrection();
 	}
 
 	shouldUpdateInjectionTiming = getInjectorDutyCycle(rpm) < 90;
 
-	// TODO: calculate me from a table!
-	trailingSparkAngle = engineConfiguration->trailingSparkAngle;
+	engine->ignitionState.trailingSparkAngle = engine->ignitionState.getTrailingSparkAngle(rpm, l_ignitionLoad);
 
 	multispark.count = getMultiSparkCount(rpm);
 

@@ -278,7 +278,15 @@ class CommunicationBlinkingTask : public PeriodicTimerController {
 		} else if (counter % 2 == 0) {
 			enginePins.communicationLedPin.setValue(0, /*force*/true);
 
-			enginePins.warningLedPin.setValue(0);
+#if EFI_FILE_LOGGING
+  extern bool needErrorReportFile;
+#else
+#define needErrorReportFile false
+#endif // EFI_FILE_LOGGING
+      // todo: properly encapsulate warning LED logic!
+      if (!needErrorReportFile) {
+			  enginePins.warningLedPin.setValue(0);
+			}
 		} else {
 #define BLINKING_PERIOD_MS 33
 
@@ -382,7 +390,7 @@ static void updateThrottles() {
 	SensorResult tps2 = Sensor::get(SensorType::Tps2);
 	engine->outputChannels.TPS2Value = tps2.value_or(0);
 	// If we don't have a TPS2 at all, don't turn on the failure light
-	engine->outputChannels.isTps2Error = !tps2.Valid;
+	engine->outputChannels.isTps2Error = Sensor::hasSensor(SensorType::Tps2Primary) ? !tps2.Valid : false;
 
 	SensorResult pedal = Sensor::get(SensorType::AcceleratorPedal);
 	engine->outputChannels.throttlePedalPosition = pedal.value_or(0);
@@ -640,9 +648,11 @@ static void updateWarningCodes() {
 // sensor state for EFI Analytics Tuner Studio
 // todo: the 'let's copy internal state for external consumers' approach is DEPRECATED
 // As of 2022 it's preferred to leverage LiveData where all state is exposed
+// this method is invoked ONLY if we SD card log or have serial connection with some frontend app
 void updateTunerStudioState() {
 	TunerStudioOutputChannels *tsOutputChannels = &engine->outputChannels;
 #if EFI_USB_SERIAL
+  // pretty much SD card logs know if specifically USB serial is active
 	engine->outputChannels.isUsbConnected =	is_usb_serial_ready();
 #endif // EFI_USB_SERIAL
 
@@ -671,10 +681,6 @@ void updateTunerStudioState() {
 #if EFI_PROD_CODE
 	executorStatistics();
 #endif /* EFI_PROD_CODE */
-
-	// header
-	tsOutputChannels->tsConfigVersion = TS_FILE_VERSION;
-	static_assert(offsetof (TunerStudioOutputChannels, tsConfigVersion) == TS_FILE_VERSION_OFFSET);
 
 	DcHardware *dc = getPrimaryDCHardwareForLogging();
 	engine->dc_motors.dcOutput0 = dc->dcMotor.get();
@@ -715,7 +721,11 @@ void updateTunerStudioState() {
 	tsOutputChannels->gyroYaw = engine->sensors.accelerometer.yawRate;
 
 #if EFI_DYNO_VIEW
-	tsOutputChannels->VssAcceleration = getDynoviewAcceleration();
+	tsOutputChannels->hp = getDynoviewHP();
+  tsOutputChannels->torque = getDynoviewTorque();
+#else
+	tsOutputChannels->hp = -1;
+  tsOutputChannels->torque = -1;
 #endif
 
 	tsOutputChannels->turboSpeed = Sensor::getOrZero(SensorType::TurbochargerSpeed);
@@ -725,7 +735,8 @@ void updateTunerStudioState() {
 	tsOutputChannels->vssEdgeCounter = vehicleSpeedSensor.eventCounter;
 
 	tsOutputChannels->hasCriticalError = hasFirmwareError() || hasConfigError();
-	tsOutputChannels->triggerPageRefreshFlag = wasPresetJustApplied();
+	tsOutputChannels->hasFaultReportFile = hasErrorReportFile();
+	tsOutputChannels->triggerPageRefreshFlag = needToTriggerTsRefresh();
 
 	tsOutputChannels->isWarnNow = engine->engineState.warnings.isWarningNow();
 #if EFI_HIP_9011_DEBUG

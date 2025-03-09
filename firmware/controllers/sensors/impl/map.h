@@ -18,8 +18,10 @@ void initMapDecoder();
 #define BAR2KPA(bar) (100 * (bar))
 #define KPA2BAR(kpa) (0.01f * (kpa))
 
+#define STD_ATMOSPHERE 101.32500411216164f
+
 // PSI (relative to atmosphere) to kPa (relative to vacuum)
-#define PSI2KPA_RELATIVE(psi)  (101.32500411216164f + PSI2KPA(psi))
+#define PSI2KPA_RELATIVE(psi)  (STD_ATMOSPHERE + PSI2KPA(psi))
 
 #define INHG2KPA(inhg) ((inhg) * 3.386375f)
 #define KPA2INHG(kpa) ((kpa) / 3.386375f)

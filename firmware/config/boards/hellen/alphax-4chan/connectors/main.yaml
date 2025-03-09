@@ -397,6 +397,7 @@ pins:
 info:
   title: AlphaX 4chan
   order: 0
+  cid: main
   name: AlphaX 4chan
   board_url: https://rusefi.com/s/4chan
   directory: hellen/alphax-4chan

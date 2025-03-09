@@ -92,7 +92,7 @@ private:
 	HpfpLobe     m_lobe;
 
 	volatile bool m_running = false; ///< Whether events are being scheduled or not
-	volatile angle_t m_deadtime = 0; ///< Computed solenoid deadtime in degrees
+	volatile angle_t m_deadangle = 0; ///< Computed solenoid deadtime in degrees
 
 	void scheduleNextCycle();
 

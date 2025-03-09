@@ -1,1 +1,1 @@
-# empty?
+BUNDLE_OPENOCD = yes

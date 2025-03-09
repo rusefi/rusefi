@@ -154,7 +154,7 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 	if (function == DC_None) {
 		// if not configured, don't init.
 		state = (uint8_t)EtbState::NotEbt;
-		etbErrorCode = (int8_t)TpsState::None;
+		etbErrorCode = (int8_t)TpsState::NotConfigured;
 		return false;
 	}
 
@@ -169,7 +169,7 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 			return false;
 		}
 
-		if (!Sensor::isRedundant(m_positionSensor)) {
+		if (!isBoardAllowingLackOfPps() && !Sensor::isRedundant(m_positionSensor)) {
 			etbErrorCode = (int8_t)TpsState::Redundancy;
 			return false;
 		}
@@ -409,8 +409,6 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 		// Math is for Åström–Hägglund (relay) auto tuning
 		// https://warwick.ac.uk/fac/cross_fac/iatl/reinvention/archive/volume5issue2/hornsey
 
-		// Publish to TS state
-#if EFI_TUNER_STUDIO
 		// Amplitude of input (duty cycle %)
 		float b = 2 * autotuneAmplitude;
 
@@ -424,6 +422,8 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 		float ki = 0.25f * ku / m_tu;
 		float kd = 0.08f * ku * m_tu;
 
+		// Publish to TS state
+#if EFI_TUNER_STUDIO
 		// Every 5 cycles (of the throttle), cycle to the next value
 		if (m_autotuneCounter >= 5) {
 			m_autotuneCounter = 0;
@@ -432,17 +432,17 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 
 		m_autotuneCounter++;
 
-		// Multiplex 3 signals on to the {mode, value} format
-		engine->outputChannels.calibrationMode = (uint8_t)static_cast<TsCalMode>((uint8_t)TsCalMode::EtbKp + m_autotuneCurrentParam);
-
 		switch (m_autotuneCurrentParam) {
 		case 0:
+			engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::EtbKp;
 			engine->outputChannels.calibrationValue = kp;
 			break;
 		case 1:
+			engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::EtbKi;
 			engine->outputChannels.calibrationValue = ki;
 			break;
 		case 2:
+			engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::EtbKd;
 			engine->outputChannels.calibrationValue = kd;
 			break;
 		}
@@ -462,6 +462,7 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 			engine->outputChannels.debugFloatField7 = kd;
 		}
 #endif
+		// TODO: directly update PID settings in engineConfiguration
 	}
 
 	m_lastIsPositive = isPositive;
@@ -609,7 +610,7 @@ bool EtbController::checkStatus() {
 	} else if (!getLimpManager()->allowElectronicThrottle()) {
 	  localReason = TpsState::JamDetected;
 	} else if(!isBoardAllowingLackOfPps() && !Sensor::isRedundant(SensorType::AcceleratorPedal)) {
-		etbErrorCode = (int8_t)TpsState::Redundancy;
+		localReason = TpsState::Redundancy;
 	}
 
 	etbErrorCode = (int8_t)localReason;
@@ -667,10 +668,11 @@ void EtbController::checkJam(percent_t setpoint, percent_t observation) {
 	}
 }
 
-void EtbController::autoCalibrateTps() {
+void EtbController::autoCalibrateTps(bool reportToTs) {
 	// Only auto calibrate throttles
 	if (m_function == DC_Throttle1 || m_function == DC_Throttle2) {
 		m_isAutocal = true;
+		m_isAutocalTs = reportToTs;
 		efiPrintf("m_isAutocal");
 	}
 }
@@ -694,7 +696,6 @@ struct EtbImpl final : public TBase {
 	EtbImpl(TArgs&&... args) : TBase(std::forward<TArgs>(args)...) { }
 
 	void update() override {
-#if EFI_TUNER_STUDIO
 	if (TBase::m_isAutocal) {
 		// Don't allow if engine is running!
 		if (Sensor::getOrZero(SensorType::Rpm) > 0) {
@@ -705,10 +706,12 @@ struct EtbImpl final : public TBase {
 
 		auto motor = TBase::getMotor();
 		if (!motor) {
-		  efiPrintf(" ****************** ERROR: No motor ********************");
+		  efiPrintf(" ****************** ERROR: No DC motor ********************");
 			TBase::m_isAutocal = false;
 			return;
 		}
+
+		TBase::etbErrorCode = (uint8_t)TpsState::AutoCalibrate;
 
 		auto myFunction = TBase::getFunction();
 
@@ -741,27 +744,43 @@ struct EtbImpl final : public TBase {
 			return;
 		}
 
-		// Write out the learned values to TS, waiting briefly after setting each to let TS grab it
-		engine->outputChannels.calibrationMode = (uint8_t)functionToCalModePriMax(myFunction);
-		engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(primaryMax);
-		chThdSleepMilliseconds(500);
-		engine->outputChannels.calibrationMode = (uint8_t)functionToCalModePriMin(myFunction);
-		engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(primaryMin);
-		chThdSleepMilliseconds(500);
+		if (!TBase::m_isAutocalTs) {
+			if (myFunction == DC_Throttle1) {
+		    engineConfiguration->tpsMin = convertVoltageTo10bitADC(primaryMin);
+		    engineConfiguration->tpsMax = convertVoltageTo10bitADC(primaryMax);
+		    engineConfiguration->tps1SecondaryMin = convertVoltageTo10bitADC(secondaryMin);
+		    engineConfiguration->tps1SecondaryMax = convertVoltageTo10bitADC(secondaryMax);
+		  } else {
+		    engineConfiguration->tps2Min = convertVoltageTo10bitADC(primaryMin);
+		    engineConfiguration->tps2Max = convertVoltageTo10bitADC(primaryMax);
+		    engineConfiguration->tps2SecondaryMin = convertVoltageTo10bitADC(secondaryMin);
+		    engineConfiguration->tps2SecondaryMax = convertVoltageTo10bitADC(secondaryMax);
+		  }
+		}
+#if EFI_TUNER_STUDIO
+		if (TBase::m_isAutocalTs) {
+			// Write out the learned values to TS, waiting briefly after setting each to let TS grab it
+			engine->outputChannels.calibrationMode = (uint8_t)functionToCalModePriMax(myFunction);
+			engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(primaryMax);
+			chThdSleepMilliseconds(500);
+			engine->outputChannels.calibrationMode = (uint8_t)functionToCalModePriMin(myFunction);
+			engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(primaryMin);
+			chThdSleepMilliseconds(500);
 
-		engine->outputChannels.calibrationMode = (uint8_t)functionToCalModeSecMax(myFunction);
-		engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(secondaryMax);
-		chThdSleepMilliseconds(500);
-		engine->outputChannels.calibrationMode = (uint8_t)functionToCalModeSecMin(myFunction);
-		engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(secondaryMin);
-		chThdSleepMilliseconds(500);
+			engine->outputChannels.calibrationMode = (uint8_t)functionToCalModeSecMax(myFunction);
+			engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(secondaryMax);
+			chThdSleepMilliseconds(500);
+			engine->outputChannels.calibrationMode = (uint8_t)functionToCalModeSecMin(myFunction);
+			engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(secondaryMin);
+			chThdSleepMilliseconds(500);
 
-		engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::None;
+			engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::None;
+		}
+#endif /* EFI_TUNER_STUDIO */
 
 		TBase::m_isAutocal = false;
 		return;
 	}
-#endif /* EFI_TUNER_STUDIO */
 
 		TBase::update();
 	}
@@ -812,16 +831,25 @@ void etbPidReset() {
 	}
 }
 
-void etbAutocal(size_t throttleIndex) {
+void etbAutocal(size_t throttleIndex, bool reportToTs) {
 	if (throttleIndex >= ETB_COUNT) {
 		return;
 	}
 
 	if (auto etb = engine->etbControllers[throttleIndex]) {
 	  assertNotNullVoid(etb);
-		etb->autoCalibrateTps();
+		etb->autoCalibrateTps(reportToTs);
 		// todo fix root cause! work-around: make sure not to write bad tune since that would brick requestBurn();
 	}
+}
+
+TpsState etbGetState(size_t throttleIndex)
+{
+	if (throttleIndex >= ETB_COUNT) {
+		return TpsState::NotConfigured;
+	}
+
+	return (TpsState)etbControllers[throttleIndex]->etbErrorCode;
 }
 
 /**

@@ -7,7 +7,7 @@ pins:
     class: outputs
     type: inj
     ts_name: ___ - Injector 1
-    color: purple
+    color: green
 
   - pin: 2D
     meta: MM176_INJ2
@@ -15,7 +15,7 @@ pins:
     class: outputs
     type: inj
     ts_name: ___ - Injector 2
-    color: purple
+    color: white
 
   - pin: 3D
     meta: MM176_INJ3
@@ -23,7 +23,7 @@ pins:
     class: outputs
     type: inj
     ts_name: ___ - Injector 3
-    color: green
+    color: blue
 
   - pin: 4D
     meta: MM176_INJ4
@@ -31,7 +31,7 @@ pins:
     class: outputs
     type: inj
     ts_name: ___ - Injector 4
-    color: green
+    color: orange/brown
 
   - pin: 5D
     meta: MM176_INJ5
@@ -47,7 +47,7 @@ pins:
     class: outputs
     type: inj
     ts_name: ___ - Injector 6
-    color: green
+    color: white
 
   - pin: 7D
     meta: MM176_INJ7
@@ -55,7 +55,7 @@ pins:
     class: outputs
     type: inj
     ts_name: ___ - Injector 7
-
+    color: blue
 
   - pin: 8D
     function: VVT 1
@@ -98,7 +98,7 @@ pins:
     class: outputs
     type: inj
     ts_name: ___ - Injector 8
-    color: purple
+    color: orange/brown
 
 
   - pin: 14D
@@ -188,9 +188,11 @@ pins:
     class: outputs
     type: inj
     ts_name: 26D - Injector 10
+    color: yellow
 
 info:
   title: AlphaX Platinum
+  cid: d
   directory: hellen/alphax-platinum
   name: AlphaX Platinum
   image:

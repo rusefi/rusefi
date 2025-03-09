@@ -2,7 +2,9 @@ package com.opensr5.ini;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.field.*;
+import com.rusefi.config.Field;
 import com.rusefi.core.FindFileHelper;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -25,31 +27,51 @@ public class IniFileModelImpl implements IniFileModel {
 
     private final Map<String, List<String>> defines = new TreeMap<>();
 
-    private static IniFileModelImpl INSTANCE;
     private String dialogId;
     private String dialogUiName;
     private final Map<String, DialogModel> dialogs = new TreeMap<>();
     // this is only used while reading model - TODO extract reader
     private final List<DialogModel.Field> fieldsOfCurrentDialog = new ArrayList<>();
-    public Map<String, IniField> allIniFields = new LinkedHashMap<>();
+    private Map<String, IniField> allIniFields = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+    private Map<String, IniField> allOutputChannels = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     public final Map<String, DialogModel.Field> fieldsInUiOrder = new LinkedHashMap<>();
 
     public Map</*field name*/String, String> tooltips = new TreeMap<>();
     public Map<String, String> protocolMeta = new TreeMap<>();
     private boolean isConstantsSection;
+    private boolean isOutputChannelsSection;
     private String currentYBins;
     private String currentXBins;
     private final Map<String, String> xBinsByZBins = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
     private final Map<String, String> yBinsByZBins = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
-    private IniFileMetaInfo metaInfo;
+    private final IniFileMetaInfo metaInfo;
+    private final String iniFilePath;
 
     private boolean isInSettingContextHelp = false;
     private boolean isInsidePageDefinition;
+    private String signature;
+    private int blockingFactor;
+
+    public static IniFileModelImpl findAndReadIniFile(String iniFilePath) {
+        final String fileName = findMetaInfoFile(iniFilePath);
+        return IniFileModelImpl.readIniFile(fileName);
+    }
+
+    private IniFileModelImpl(@Nullable final IniFileMetaInfoImpl metaInfo, final String iniFilePath) {
+        this.metaInfo = metaInfo;
+        this.iniFilePath = iniFilePath;
+    }
 
     @Override
-    public IniFileModelImpl findAndReadIniFile(String iniFilePath) {
-        String fileName = findMetaInfoFile(iniFilePath);
-        return readIniFile(fileName);
+    public String getSignature() {
+        return signature;
+    }
+
+    @Override
+    public int getBlockingFactor() {
+        if (blockingFactor == 0)
+            throw new IllegalStateException("blockingFactor not found in " + iniFilePath);
+        return blockingFactor;
     }
 
     @Override
@@ -62,6 +84,24 @@ public class IniFileModelImpl implements IniFileModel {
         return allIniFields;
     }
 
+    @Override
+    public IniField getIniField(Field field) {
+        return getIniField(field.getName());
+    }
+
+    @Override
+    public IniField getIniField(String key) {
+        IniField result = allIniFields.get(key);
+        return Objects.requireNonNull(result, () -> key + " field not found");
+    }
+
+    @Override
+    public IniField getOutputChannel(String key) throws IniMemberNotFound {
+        IniField result = allOutputChannels.get(key);
+        if (result == null)
+            throw new IniMemberNotFound(key + " field not found");
+        return result;
+    }
 
     @Override
     public Map<String, String> getProtocolMeta() {
@@ -75,6 +115,11 @@ public class IniFileModelImpl implements IniFileModel {
     }
 
     @Override
+    public String getIniFilePath() {
+        return Objects.requireNonNull(iniFilePath, "iniFilePath");
+    }
+
+    @Override
     public Map<String, String> getTooltips() {
         return tooltips;
     }
@@ -84,23 +129,34 @@ public class IniFileModelImpl implements IniFileModel {
         return fieldsInUiOrder;
     }
 
-    public IniFileModelImpl readIniFile(String fileName) {
+    public static IniFileModelImpl readIniFile(String fileName) {
         Objects.requireNonNull(fileName, "fileName");
         log.info("Reading " + fileName);
         File input = new File(fileName);
         RawIniFile content = IniFileReader.read(input);
-        metaInfo = new IniFileMetaInfoImpl(content);
-
-        readIniFile(content);
-        return this;
+        return readIniFile(content, true, fileName);
     }
 
-    public IniFileModelImpl readIniFile(RawIniFile content) {
+    /**
+     * @param initMeta - part of our tests do not use `getMetaInfo` getter and will throw MandatoryLineMissing exception
+     *                 on attempt to create IniFileMetaInfoImpl instance from test data; to avoid this exception such
+     *                 tests should use `false` as value for this parameter
+     */
+    @NotNull
+    public static IniFileModelImpl readIniFile(
+        final RawIniFile content,
+        final boolean initMeta,
+        final String iniFilePath
+    ) {
+        final IniFileModelImpl result = new IniFileModelImpl(
+            initMeta ? new IniFileMetaInfoImpl(content) : null,
+            iniFilePath
+        );
         for (RawIniFile.Line line : content.getLines()) {
-            handleLine(line);
+            result.handleLine(line);
         }
-        finishDialog();
-        return this;
+        result.finishDialog();
+        return result;
     }
 
     private static String findMetaInfoFile(String iniFilePath) {
@@ -168,21 +224,32 @@ public class IniFileModelImpl implements IniFileModel {
 
             String first = list.getFirst();
 
+            if (first.equalsIgnoreCase("signature")) {
+                signature = list.get(1);
+            } else if (first.equalsIgnoreCase("blockingFactor")) {
+                blockingFactor = Integer.valueOf(list.get(1));
+            }
+
+
             if (first.startsWith("[") && first.endsWith("]")) {
                 log.info("Section " + first);
                 isConstantsSection = first.equals("[Constants]");
+                isOutputChannelsSection = first.equals("[OutputChannels]");
             }
 
             if (isConstantsSection) {
                 if (isInsidePageDefinition) {
                     if (list.size() > 1)
-                        handleFieldDefinition(list, line);
+                        handleConstantFieldDefinition(list, line);
                     return;
                 } else {
                     if (list.size() > 1) {
                         protocolMeta.put(list.get(0), list.get(1));
                     }
                 }
+            } else if (isOutputChannelsSection) {
+                handleOutputChannelDefinition(list);
+                return;
             }
 
 
@@ -211,6 +278,21 @@ public class IniFileModelImpl implements IniFileModel {
             }
         } catch (RuntimeException e) {
             throw new IllegalStateException("Failed to handle [" + rawText + "]: " + e, e);
+        }
+    }
+
+    private void handleOutputChannelDefinition(LinkedList<String> list) {
+        if (list.size() < 2)
+            return;
+        String name = list.get(0);
+        String channelType = list.get(1);
+        switch (channelType) {
+            case FIELD_TYPE_SCALAR: {
+                String scalarType = list.get(2);
+                int offset = Integer.parseInt(list.get(3));
+                // todo: reuse ScalarIniField#parse but would need changes?
+                allOutputChannels.put(name, new ScalarIniField(name, offset, scalarType, null, 1, "0"));
+            }
         }
     }
 
@@ -261,7 +343,7 @@ public class IniFileModelImpl implements IniFileModel {
         String tableName = list.removeFirst();
     }
 
-    private void handleFieldDefinition(LinkedList<String> list, RawIniFile.Line line) {
+    private void handleConstantFieldDefinition(LinkedList<String> list, RawIniFile.Line line) {
         switch (list.get(1)) {
             case FIELD_TYPE_SCALAR:
                 registerField(ScalarIniField.parse(list));
@@ -341,14 +423,6 @@ public class IniFileModelImpl implements IniFileModel {
                 return field;
         }
         return null;
-    }
-
-    public static synchronized IniFileModelImpl getInstance() {
-        if (INSTANCE == null) {
-            INSTANCE = new IniFileModelImpl();
-            INSTANCE.findAndReadIniFile(INI_FILE_PATH);
-        }
-        return INSTANCE;
     }
 
     @Override

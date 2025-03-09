@@ -1,54 +1,96 @@
 /*
  * @file dynoview.h
  *
- * @date Nov 29, 2020
- * @author Alexandru Miculescu, (c) 2012-2020
+ * @date Jan 05, 2025
+ * @author Alexey Ershov, (c) 2012-2025
  */
 
 #pragma once
 
-
 void updateDynoView();
-void updateDynoViewCan();
-float getDynoviewAcceleration();
-int getDynoviewPower();
+int getDynoviewHP();
+int getDynoviewTorque();
 
-typedef enum{
-    ICU = 0,
-    CAN,
-}vssSrc;
+struct DynoPoint {
+    int rpm;
+    float time;
+    float tps;
+
+    float engineRps;
+    float axleRps;
+    float vMs;
+    float mph;
+    float distanceM;
+    float aMs2;
+    float forceN;
+    float forceDragN;
+    float forceTotalN;
+    float torqueWheelNm;
+    float torqueNm;
+    float torqueLbFt;
+    float hp;
+};
 
 class DynoView {
 public:
-	// Update the state of the launch control system
-	void update(vssSrc src);
-    void updateAcceleration(efitimeus_t deltaTime, float deltaSpeed);
-    void updateHP();
-    float getAcceleration();
-    int getEngineForce();
-    //in KW
-    int getEnginePower();
 
-    int getEngineHP();
-    //in NM
-    int getEngineTorque();
-#if EFI_UNIT_TEST
-    void setAcceleration(float a);
-#endif
+    void init();
+    void update();
+    bool onRpm(int rpm, float time, float tps);
+
+    float currentTorque;
+    float currentHP;
+
 private:
-	efitimeus_t timeStamp = 0;
-    //km/h unit
-    float vss = 0;
-    //m/s/s unit
-    float acceleration = 0;
-    //engine force in N
-    int engineForce;
-    //engine power in W
-    int enginePower;
-    //engine powerin HP
-    int engineHP;
-    //Torque in lb-ft
-    int engineTorque;
-    //sign
-    uint8_t direction;
+
+    void reset();
+
+    static inline void move(uint8_t size, float* data) {
+        for(int i = size - 1; i > 0; --i)
+        {
+            memcpy(&data[i], &data[i - 1], sizeof(float));
+        }
+    }
+
+    static inline float accumulate_window(uint8_t size, const float* data)
+    {
+        float sum = 0.0;
+
+        for(int i = 0; i < size; ++i) {
+            sum += data[size - i - 1];
+        }
+
+        return sum  / (float)size;
+    }
+
+    float airDensityKgM3 = 1.225; // 15C
+    uint16_t wheelOverallDiameterMm = 0;
+
+    // SAE corrections
+    float saeBaroCorrectionFactor;
+    float saeBaroMmhg;
+    float saeTempCorrectionFactor;
+    float saeVaporPressure;
+    float saeCorrectionFactor;
+
+    DynoPoint dynoViewPoint;
+    DynoPoint dynoViewPointPrev;
+
+    int count = 0;
+    int count_rpm = 0;
+    int prev_rpm = 0;
+
+    static constexpr int dyno_view_window_size = 7;
+    static constexpr int dyno_view_window_size_rpm = 10;
+    static constexpr int dyno_view_tps_min_for_run = 30;
+    static constexpr int dyno_view_rpm_diff_smooth = 30;
+    static constexpr float dyno_view_log_time_smooth_sec = 0.05f;
+    static constexpr int dyno_view_tps_diff_to_reset_run = 10;
+    static constexpr int dyno_view_rpm_fall_to_reset_run = 60;
+
+    float tail_hp[dyno_view_window_size];
+    float tail_torque[dyno_view_window_size];
+    float tail_rpm[dyno_view_window_size_rpm];
+
+    bool isInitialized = false;
 };

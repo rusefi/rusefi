@@ -24,7 +24,7 @@ AirmassResult AlphaNAirmass::getAirmass(float rpm, bool postState) {
 	// TODO: should this be barometric pressure and/or temperature compensated?
 	mass_t airmass = getAirmassImpl(
 		ve,
-		101.325f,		// std atmosphere pressure
+		STD_ATMOSPHERE,
 		iatK
 	);
 

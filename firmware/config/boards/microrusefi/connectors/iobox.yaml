@@ -79,3 +79,6 @@ pins:
 # MSIOBOX_0_SW_4 is not exist
 
 # TODO: add ADC inputs
+
+info:
+  cid: iobox

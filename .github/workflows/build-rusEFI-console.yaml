@@ -13,6 +13,9 @@ jobs:
         run: |
           misc/git_scripts/common_submodule_init_without_chibios.sh
 
+      # as of 2025 TS unfortunately still uses java 8
+      # we use JDK11 but sourceCompatibility/targetCompatibility 8 so that rusEFI TS plugin is compatible with TS
+      #  [tag:java8]
       - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
@@ -29,7 +32,7 @@ jobs:
       - name: Build All Java
         working-directory: ./java_tools/
         run: |
-          ./gradlew shadowJar
+          ./gradlew jar :config_definition_base:shadowJar :enum_to_string:shadowJar
 
       - name: Generate Enums & Live Documentation
         working-directory: ./firmware/
@@ -64,4 +67,4 @@ jobs:
 
       - name: Upload rusEFI server
         working-directory: .
-        run: java_console/upload_file.sh ${{ secrets.RUSEFI_SSH_USER }} ${{ secrets.RUSEFI_SSH_PASS }} ${{ secrets.RUSEFI_SSH_SERVER }} build_server/autoupdate java_console_binary/rusefi_server.jar
+        run: java_console/upload_file.sh ${{ secrets.RUSEFI_SSH_USER }} ${{ secrets.RUSEFI_SSH_PASS }} ${{ secrets.RUSEFI_SSH_SERVER }} build_server/autoupdate console/rusefi_server.jar

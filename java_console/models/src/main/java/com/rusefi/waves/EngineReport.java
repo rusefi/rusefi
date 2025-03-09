@@ -1,6 +1,6 @@
 package com.rusefi.waves;
 
-import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -8,8 +8,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static com.rusefi.config.generated.Fields.PROTOCOL_ES_DOWN;
-import static com.rusefi.config.generated.Fields.PROTOCOL_ES_UP;
+import static com.rusefi.config.generated.VariableRegistryValues.PROTOCOL_ES_DOWN;
+import static com.rusefi.config.generated.VariableRegistryValues.PROTOCOL_ES_UP;
 
 /**
  * A model of a digital signal represented as a sequence of {@link UpDown}
@@ -24,7 +24,7 @@ public class EngineReport {
     /**
      * number of Engine Sniffer ticks per ms
      */
-    public static final double ENGINE_SNIFFER_TICKS_PER_MS = 1000 / Fields.ENGINE_SNIFFER_UNIT_US;
+    public static final double ENGINE_SNIFFER_TICKS_PER_MS = 1000 / Integration.ENGINE_SNIFFER_UNIT_US;
     public static final double RATIO = 0.05;
 
     private final List<UpDown> list;

@@ -64,7 +64,7 @@ struct SdLogBufferWriter final : public BufferedWriter<512> {
 	}
 
 	void stop() {
-		m_fd = NULL;
+		m_fd = nullptr;
 
 		flush();
 
@@ -82,7 +82,7 @@ struct SdLogBufferWriter final : public BufferedWriter<512> {
 		}
 
 		size_t bytesWritten;
-
+		efiAssert(ObdCode::CUSTOM_STACK_6627, hasLotsOfRemainingStack(), "sdlow#3", 0);
 		FRESULT err = f_write(m_fd, buffer, count, &bytesWritten);
 
 		if (err) {
@@ -110,7 +110,7 @@ struct SdLogBufferWriter final : public BufferedWriter<512> {
 	}
 
 private:
-	FIL *m_fd;
+	FIL *m_fd = nullptr;
 
 	size_t totalLoggedBytes = 0;
 	size_t writeCounter = 0;
@@ -149,7 +149,9 @@ static NO_CACHE SdLogBufferWriter logBuffer;
 // This is dirty workaround to fix compilation without adding this function prototype
 // to error_handling.h file that will also need to add "ff.h" include to same file and
 // cause simulator fail to build.
-extern void errorHandlerWriteReportFile(FIL *fd, int index);
+extern void errorHandlerWriteReportFile(FIL *fd);
+extern int errorHandlerCheckReportFiles();
+extern void errorHandlerDeleteReports();
 
 typedef enum {
 	SD_STATUS_INIT = 0,
@@ -186,7 +188,9 @@ static SD_STATUS sdStatus = SD_STATUS_INIT;
 
 static SD_MODE sdMode = SD_MODE_IDLE;
 // by default we want SD card for logs
-static SD_MODE sdTargerMode = SD_MODE_ECU;
+static SD_MODE sdTargetMode = SD_MODE_ECU;
+
+static bool sdNeedRemoveReports = false;
 
 /**
  * on't re-read SD card spi device after boot - it could change mid transaction (TS thread could preempt),
@@ -272,8 +276,16 @@ void printError(const char *str, FRESULT f_error) {
 	efiPrintf("FATfs Error \"%s\" %d %s", str, f_error, f_error <= FR_INVALID_PARAMETER ? fatErrors[f_error] : "unknown");
 }
 
-// Warning: shared between all FS users, please release it after use
-static FIL FDLogFile NO_CACHE;
+// format, file access and MSD are used exclusively, we can union.
+static union {
+	// Warning: shared between all FS users, please release it after use
+	FIL fd;
+	// TODO: optimal cluster size?
+	#define FATFS_CLUSTER_SIZE	1024
+	BYTE formatBuff[FATFS_CLUSTER_SIZE];
+	// MSD read/write buffer
+	uint8_t blkbuf[4 * MMCSD_BLOCK_SIZE];
+} resources NO_CACHE;
 
 extern int logFileIndex;
 static char logName[_MAX_FILLER + 20];
@@ -301,6 +313,16 @@ static void sdStatistics() {
 #if EFI_FILE_LOGGING
 	efiPrintf("%d SD card fields", getSdCardFieldsCount());
 #endif
+}
+
+static void sdSetMode(const char *mode) {
+	if (strcmp(mode, "pc") == 0) {
+		sdCardRequestMode(SD_MODE_PC);
+	} else if (strcmp(mode, "ecu") == 0) {
+		sdCardRequestMode(SD_MODE_ECU);
+	} else {
+		efiPrintf("Invalid mode %s allowed modes pc and ecu", mode);
+	}
 }
 
 static void prepareLogFileName() {
@@ -367,14 +389,16 @@ static void sdLoggerCloseFile(FIL *fd)
 	// close file
 	f_close(fd);
 
-	// f_sync is called internally
-	//f_sync(&FDLogFile);
-
 	// SD logger is inactive
 	sdLoggerSetReady(false);
 }
 
 static void removeFile(const char *pathx) {
+	if (sdMode != SD_MODE_ECU) {
+		efiPrintf("SD card should be mounted to ECU");
+		return;
+	}
+
 	f_unlink(pathx);
 }
 
@@ -389,6 +413,13 @@ void onUsbConnectedNotifyMmcI() {
 #endif /* HAL_USE_USB_MSD */
 
 #if HAL_USE_MMC_SPI
+
+static bool isSdCardEnabled() {
+	return ((engineConfiguration->isSdCardEnabled) &&
+			(engineConfiguration->sdCardSpiDevice != SPI_NONE) &&
+			(isBrainPinValid(engineConfiguration->sdCardCsPin)));
+}
+
 /*
  * Attempts to initialize the MMC card connected over SPI.
  * Returns a BaseBlockDevice* corresponding to the SD card if successful, otherwise nullptr.
@@ -435,15 +466,20 @@ static void deinitializeMmcBlockDevide() {
 }
 #endif /* HAL_USE_MMC_SPI */
 
-#ifndef RE_SDC_MODE
-#define RE_SDC_MODE SDC_MODE_4BIT
-#endif // RE_SDC_MODE
-
 // Some ECUs are wired for SDIO/SDMMC instead of SPI
 #ifdef EFI_SDC_DEVICE
+
+#ifndef RE_SDC_MODE
+	#define RE_SDC_MODE SDC_MODE_4BIT
+#endif // RE_SDC_MODE
+
 static const SDCConfig sdcConfig = {
 	.bus_width = RE_SDC_MODE
 };
+
+static bool isSdCardEnabled() {
+	return (engineConfiguration->isSdCardEnabled);
+}
 
 /*
  * Attempts to initialize the MMC card connected over SDIO.
@@ -467,12 +503,14 @@ static void deinitializeMmcBlockDevide() {
 
 #if HAL_USE_USB_MSD
 static bool useMsdMode() {
-  if (errorHandlerIsStartFromError()) {
-    return false;
-  }
-  if (engineConfiguration->alwaysWriteSdCard) {
-    return false;
-  }
+	if (engineConfiguration->alwaysWriteSdCard) {
+		return false;
+	}
+	if (isIgnVoltage()) {
+	  // if we have battery voltage let's give priority to logging not reading
+	  // this gives us a chance to SD card log cranking
+	  return false;
+	}
 	// Wait for the USB stack to wake up, or a 15 second timeout, whichever occurs first
 	msg_t usbResult = usbConnectedSemaphore.wait(TIME_MS2I(15000));
 
@@ -514,6 +552,8 @@ static bool mountMmc() {
 
 	// if no card, don't try to mount FS
 	if (cardBlockDevice != nullptr) {
+		// clean shared buffer
+		memset(&resources, 0x00, sizeof(resources));
 		// We were able to connect the SD card, mount the filesystem
 		memset(&MMC_FS, 0, sizeof(FATFS));
 		ret = (f_mount(&MMC_FS, "/", /* Mount immediately */ 1) == FR_OK);
@@ -576,17 +616,14 @@ static int sdTriggerLogger();
 static bool sdLoggerInitDone = false;
 static bool sdLoggerFailed = false;
 
-static int sdLogger()
+static int sdLogger(FIL *fd)
 {
 	int ret = 0;
 
 	if (!sdLoggerInitDone) {
-		// TODO: Do this independently of SD mode, somewhere in the start of this task!
-		errorHandlerWriteReportFile(&FDLogFile, logFileIndex);
-
-		incLogFileName(&FDLogFile);
-		sdLoggerCreateFile(&FDLogFile);
-		logBuffer.start(&FDLogFile);
+		incLogFileName(fd);
+		sdLoggerCreateFile(fd);
+		logBuffer.start(fd);
 		resetFileLogging();
 		sdLoggerInitDone = true;
 	}
@@ -609,12 +646,12 @@ static int sdLogger()
 	// TODO: use f_tell() instead ?
 	if (logBuffer.writen() + ret > LOGGER_MAX_FILE_SIZE) {
 		logBuffer.stop();
-		sdLoggerCloseFile(&FDLogFile);
+		sdLoggerCloseFile(fd);
 
 		//start new file
-		incLogFileName(&FDLogFile);
-		sdLoggerCreateFile(&FDLogFile);
-		logBuffer.start(&FDLogFile);
+		incLogFileName(fd);
+		sdLoggerCreateFile(fd);
+		logBuffer.start(fd);
 		resetFileLogging();
 	}
 #endif
@@ -637,7 +674,7 @@ static void sdLoggerStart(void)
 
 static void sdLoggerStop(void)
 {
-	sdLoggerCloseFile(&FDLogFile);
+	sdLoggerCloseFile(&resources.fd);
 #if EFI_TOOTH_LOGGER
 	// TODO: cache this config option untill sdLoggerStop()
 	if (engineConfiguration->sdTriggerLog) {
@@ -646,15 +683,10 @@ static void sdLoggerStop(void)
 #endif
 }
 
-// TODO: optimal cluster size?
-// buffer is needed only for f_mkfs, use some shared buffer?
-#define FATFS_CLUSTER_SIZE	1024
-static BYTE formatBuff[FATFS_CLUSTER_SIZE];
-
 static bool sdFormat()
 {
-	//FRESULT ret = f_mkfs("", FM_ANY, 1024, formatBuff, sizeof(formatBuff));
-	FRESULT ret = f_mkfs("", FM_FAT | FM_FAT32, 1024, formatBuff, sizeof(formatBuff));
+	//FRESULT ret = f_mkfs("", nullptr, resources.formatBuff, sizeof(resources.formatBuff));
+	FRESULT ret = f_mkfs("", nullptr, resources.formatBuff, sizeof(resources.formatBuff));
 
 	if (ret) {
 		printError("format failed", ret);
@@ -695,13 +727,13 @@ static int sdModeSwitchToIdle(SD_MODE from)
 
 static int sdModeSwitcher()
 {
-	if (sdTargerMode == SD_MODE_IDLE) {
+	if (sdTargetMode == SD_MODE_IDLE) {
 		return 0;
 	}
 
-	if (sdMode == sdTargerMode) {
+	if (sdMode == sdTargetMode) {
 		// already here
-		sdTargerMode = SD_MODE_IDLE;
+		sdTargetMode = SD_MODE_IDLE;
 		return 0;
 	}
 
@@ -718,13 +750,13 @@ static int sdModeSwitcher()
 	}
 
 	// Now SD card is in idle state, we can switch into target state
-	switch (sdTargerMode) {
+	switch (sdTargetMode) {
 	case SD_MODE_IDLE:
 		return 0;
 	case SD_MODE_UNMOUNT:
 		// everithing is done in sdModeSwitchToIdle();
 		sdMode = SD_MODE_UNMOUNT;
-		sdTargerMode = SD_MODE_IDLE;
+		sdTargetMode = SD_MODE_IDLE;
 		return 0;
 	case SD_MODE_ECU:
 		if (mountMmc()) {
@@ -734,13 +766,13 @@ static int sdModeSwitcher()
 			// failed to mount SD card to ECU, go to idle
 			sdMode = SD_MODE_IDLE;
 		}
-		sdTargerMode = SD_MODE_IDLE;
+		sdTargetMode = SD_MODE_IDLE;
 		return 0;
 	case SD_MODE_PC:
-		attachMsdSdCard(cardBlockDevice);
+		attachMsdSdCard(cardBlockDevice, resources.blkbuf, sizeof(resources.blkbuf));
 		sdStatus = SD_STATUS_MSD;
 		sdMode = SD_MODE_PC;
-		sdTargerMode = SD_MODE_IDLE;
+		sdTargetMode = SD_MODE_IDLE;
 		return 0;
 	case SD_MODE_FORMAT:
 		if (sdFormat()) {
@@ -748,7 +780,7 @@ static int sdModeSwitcher()
 		}
 		sdMode = SD_MODE_IDLE;
 		// TODO: return to mode that was used before format was requested!
-		sdTargerMode = SD_MODE_IDLE;
+		sdTargetMode = SD_MODE_IDLE;
 		return 0;
 	}
 
@@ -767,11 +799,43 @@ static int sdModeExecuter()
 		chThdSleepMilliseconds(TIME_MS2I(100));
 		return 0;
 	case SD_MODE_ECU:
+		if (sdNeedRemoveReports) {
+			errorHandlerDeleteReports();
+			sdNeedRemoveReports = false;
+		}
 		// execute logger
-		return sdLogger();
+		return sdLogger(&resources.fd);
 	}
 
 	return 0;
+}
+
+static int sdReportStorageInit()
+{
+	if (mountMmc()) {
+		// write error report file if needed
+		errorHandlerWriteReportFile(&resources.fd);
+
+		// check for any exist reports
+		errorHandlerCheckReportFiles();
+
+		// done with SD card
+		unmountMmc();
+
+		return 0;
+	}
+
+	// card is failed to mount
+	return -1;
+}
+
+PUBLIC_API_WEAK bool boardSdCardEnable() {
+	// assume powered and ready
+	return true;
+}
+
+PUBLIC_API_WEAK bool boardSdCardDisable() {
+	return true;
 }
 
 static THD_WORKING_AREA(mmcThreadStack, 3 * UTILITY_THREAD_STACK_SIZE);		// MMC monitor thread
@@ -780,20 +844,10 @@ static THD_FUNCTION(MMCmonThread, arg) {
 
 	chRegSetThreadName("MMC Card Logger");
 
-#if HW_HELLEN && EFI_PROD_CODE
-	// on mega-module we manage SD card power supply
-	while (!getHellenBoardEnabled()) {
+	while (!boardSdCardEnable()) {
 		// wait until board enables peripheral
 		chThdSleepMilliseconds(100);
-		if (getTimeNowS() > 4 && !isIgnVoltage()) {
-			// looks like vehicle is OFF and we are hooked to USB - turn on peripheral to get Mass Storage Device USB profile
-			efiPrintf("    *** turning board ON to power SD card ***");
-			hellenEnableEn();
-			break;
-		}
 	}
-	chThdSleepMilliseconds(300);
-#endif
 
 	sdStatus = SD_STATUS_CONNECTING;
 	if (!initMmc()) {
@@ -803,12 +857,15 @@ static THD_FUNCTION(MMCmonThread, arg) {
 		goto die;
 	}
 
+	// Try to mount SD card, drop critical report if needed and check for previously stored reports
+	sdReportStorageInit();
+
 #if HAL_USE_USB_MSD
 	// Wait for the USB stack to wake up, or a 15 second timeout, whichever occurs first
 	// If we have a device AND USB is connected, mount the card to USB, otherwise
 	// mount the null device and try to mount the filesystem ourselves
 	if (useMsdMode()) {
-		sdTargerMode = SD_MODE_PC;
+		sdTargetMode = SD_MODE_PC;
 	}
 #endif
 
@@ -820,6 +877,7 @@ static THD_FUNCTION(MMCmonThread, arg) {
 die:
 	// bring SD interface to safe state
 	deinitMmc();
+	boardSdCardDisable();
 
 	efiPrintf("SD logger has died!");
 
@@ -902,23 +960,19 @@ void initEarlyMmcCard() {
 
 	addConsoleAction("sdinfo", sdStatistics);
 	addConsoleActionS("del", removeFile);
+	addConsoleActionS("sdmode", sdSetMode);
+	addConsoleAction("delreports", sdCardRemoveReportFiles);
 	//incLogFileName() use same shared FDLogFile, calling it while FDLogFile is used by log writer will cause damage
 	//addConsoleAction("incfilename", incLogFileName);
 #endif // EFI_PROD_CODE
 }
 
-static bool isSdCardEnabled() {
-  return engineConfiguration->isSdCardEnabled &&
-    engineConfiguration->sdCardSpiDevice != SPI_NONE &&
-    isBrainPinValid(engineConfiguration->sdCardCsPin);
-}
-
 void initMmcCard() {
+#if EFI_PROD_CODE
 	if (!isSdCardEnabled()) {
 		// do not even bother starting the thread if SD card is not enabled & configured on start-up
 		return;
 	}
-#if EFI_PROD_CODE
 	chThdCreateStatic(mmcThreadStack, sizeof(mmcThreadStack), PRIO_MMC, (tfunc_t)(void*) MMCmonThread, NULL);
 #endif // EFI_PROD_CODE
 }
@@ -927,10 +981,27 @@ void initMmcCard() {
 
 void sdCardRequestMode(SD_MODE mode)
 {
-	if (sdTargerMode == SD_MODE_IDLE) {
-		sdTargerMode = mode;
+	// Check if SD is not in transition state...
+	if (sdTargetMode == SD_MODE_IDLE) {
+		efiPrintf("sdCardRequestMode %d", (int)mode);
+		sdTargetMode = mode;
 	}
 }
+
+SD_MODE sdCardGetCurrentMode(void)
+{
+	return sdMode;
+}
+
+void sdCardRemoveReportFiles() {
+	if (sdMode != SD_MODE_ECU) {
+		efiPrintf("SD card should be mounted to ECU");
+		return;
+	}
+
+	sdNeedRemoveReports = true;
+}
+
 #endif // EFI_PROD_CODE
 
 #endif /* EFI_FILE_LOGGING */

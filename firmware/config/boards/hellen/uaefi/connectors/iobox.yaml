@@ -19,3 +19,5 @@ pins:
     class: outputs
     ts_name: MS IO-Box 0 OUT 4
 
+info:
+  cid: iobox

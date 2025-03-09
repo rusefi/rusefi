@@ -82,6 +82,7 @@
 #include "bench_test.h"
 #include "status_loop.h"
 #include "mmc_card.h"
+#include "tuner_detector_utils.h"
 
 #if EFI_SIMULATOR
 #include "rusEfiFunctionalTest.h"
@@ -193,7 +194,11 @@ void TunerStudio::sendErrorCode(TsChannelBase* tsChannel, uint8_t code, const ch
 
 bool validateOffsetCount(size_t offset, size_t count, TsChannelBase* tsChannel);
 
-bool wasPresetJustApplied() {
+PUBLIC_API_WEAK bool isBoardAskingTriggerTsRefresh() {
+  return false;
+}
+
+bool needToTriggerTsRefresh() {
   return !engine->engineTypeChangeTimer.hasElapsedSec(1);
 }
 
@@ -224,7 +229,7 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 		}
 
 		// Skip the write if a preset was just loaded - we don't want to overwrite it
-		if (!wasPresetJustApplied()) {
+		if (!needToTriggerTsRefresh()) {
 			uint8_t * addr = (uint8_t *) (getWorkingPageAddr() + offset);
 			memcpy(addr, content, count);
 		}
@@ -357,6 +362,10 @@ void requestBurn() {
 
 #if EFI_TUNER_STUDIO
 
+namespace {
+	Timer calibrationsWriteTimer;
+}
+
 /**
  * 'Burn' command is a command to commit the changes
  */
@@ -370,7 +379,7 @@ static void handleBurnCommand(TsChannelBase* tsChannel) {
 	validateConfigOnStartUpOrBurn();
 
 	// Skip the burn if a preset was just loaded - we don't want to overwrite it
-	if (!wasPresetJustApplied()) {
+	if (!needToTriggerTsRefresh()) {
 		requestBurn();
 	}
 
@@ -741,12 +750,14 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 	case TS_CHUNK_WRITE_COMMAND:
 		// command with no page argument, default page = 0
 		handleWriteChunkCommand(tsChannel, page, offset, count, data + sizeof(TunerStudioRWChunkRequest));
+		calibrationsWriteTimer.reset();
 		break;
 	case TS_SINGLE_WRITE_COMMAND:
 		// command with no page argument, default page = 0
 		// This command writes 1 byte
 		count = 1;
 		handleWriteChunkCommand(tsChannel, page, offset, count, data + sizeof(offset));
+		calibrationsWriteTimer.reset();
 		break;
 	case TS_GET_SCATTERED_GET_COMMAND:
 #if EFI_TS_SCATTER
@@ -906,6 +917,11 @@ static char tsErrorBuff[80];
 }
 
 #endif // EFI_PROD_CODE || EFI_SIMULATOR
+
+bool isTuningNow() {
+	return (!TunerDetectorUtils::isTuningDetectorUndefined()) &&
+		!calibrationsWriteTimer.hasElapsedSec(TunerDetectorUtils::getUserEnteredTuningDetector());
+}
 
 void startTunerStudioConnectivity() {
 	// Assert tune & output channel struct sizes

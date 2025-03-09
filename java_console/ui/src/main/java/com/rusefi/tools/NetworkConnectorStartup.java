@@ -11,6 +11,7 @@ import com.rusefi.ui.AuthTokenPanel;
 
 import java.io.IOException;
 
+/*
 public class NetworkConnectorStartup {
     private final static Logging log = Logging.getLogging(NetworkConnectorStartup.class);
 
@@ -49,3 +50,4 @@ public class NetworkConnectorStartup {
         log.info("Running with oneTimeToken=" + networkConnectorResult.getOneTimeToken());
     }
 }
+*/

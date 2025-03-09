@@ -1,8 +1,7 @@
 package com.rusefi.binaryprotocol.test;
 
 import com.macfaq.io.LittleEndianOutputStream;
-import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.IniFileModelImpl;
+import com.opensr5.ini.IniFileModeSingleton;
 import com.rusefi.CompatibleFunction;
 import com.rusefi.Listener;
 import com.rusefi.binaryprotocol.BinaryProtocol;
@@ -10,6 +9,7 @@ import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.config.generated.TsOutputs;
+import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.ByteRange;
 import com.rusefi.io.commands.HelloCommand;
@@ -23,6 +23,8 @@ import java.io.IOException;
 import java.net.Socket;
 
 import static com.rusefi.config.generated.Fields.*;
+import static com.rusefi.config.generated.VariableRegistryValues.HIGH_SPEED_COUNT;
+import static com.rusefi.config.generated.VariableRegistryValues.TS_PROTOCOL;
 import static com.rusefi.io.tcp.BinaryProtocolServer.TS_OK;
 import static com.rusefi.io.tcp.BinaryProtocolServer.getOutputCommandResponse;
 
@@ -34,7 +36,7 @@ import static com.rusefi.io.tcp.BinaryProtocolServer.getOutputCommandResponse;
  * @see BinaryProtocolServerSandbox what's the difference?
  */
 public class TcpServerSandbox {
-    private final static byte[] TOTALLY_EMPTY_CONFIGURATION = new byte[IniFileModelImpl.getInstance().getMetaInfo().getTotalSize()];
+    private final static byte[] TOTALLY_EMPTY_CONFIGURATION = new byte[IniFileModeSingleton.getInstance().getMetaInfo().getTotalSize()];
 
     public static void main(String[] args) throws IOException {
         Listener serverSocketCreationCallback = parameter -> System.out.println("serverSocketCreationCallback");
@@ -75,7 +77,7 @@ public class TcpServerSandbox {
     }
 
     static class EcuState {
-        private final byte[] outputs = new byte[Fields.TS_TOTAL_OUTPUT_SIZE];
+        private final byte[] outputs = new byte[VariableRegistryValues.TS_TOTAL_OUTPUT_SIZE];
 
         final long startUpTime = System.currentTimeMillis();
 
@@ -97,7 +99,7 @@ public class TcpServerSandbox {
         byte command = payload[0];
 
         if (command == Integration.TS_HELLO_COMMAND) {
-            new HelloCommand(Fields.TS_SIGNATURE).handle(stream);
+            new HelloCommand(VariableRegistryValues.TS_SIGNATURE).handle(stream);
         } else if (command == Integration.TS_GET_PROTOCOL_VERSION_COMMAND_F) {
             stream.sendPacket((TS_OK + TS_PROTOCOL).getBytes());
         } else if (command == Integration.TS_CRC_CHECK_COMMAND) {

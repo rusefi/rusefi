@@ -18,6 +18,7 @@ DDEFS += -DEFI_SENT_SUPPORT=TRUE
 # we have hellen board id BOARD_ID_GDI4CHAN_A
 
 DDEFS += -DHW_HELLEN_4K_GDI=1
+DDEFS += -DLUA_STM32_STANDBY=1
 
 include $(BOARDS_DIR)/hellen/hellen-common-mega144.mk
 

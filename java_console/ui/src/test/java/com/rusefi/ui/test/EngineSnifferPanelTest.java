@@ -1,6 +1,7 @@
 package com.rusefi.ui.test;
 
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.ui.engine.EngineSnifferPanel;
 import com.rusefi.ui.engine.NameUtil;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ public class EngineSnifferPanelTest {
     @Test
     public void testInsertIndex() {
         Set<String> names = new TreeSet<>();
-        names.add(Fields.PROTOCOL_CRANK1);
+        names.add(Integration.PROTOCOL_CRANK1);
 
         String name;
 

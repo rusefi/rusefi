@@ -4,7 +4,6 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.field.IniField;
 import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.config.FieldType;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.tune.xml.Constant;
 import org.junit.jupiter.api.Test;
 

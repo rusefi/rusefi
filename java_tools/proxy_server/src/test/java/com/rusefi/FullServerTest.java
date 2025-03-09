@@ -11,7 +11,6 @@ import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpConnector;
 import com.rusefi.io.tcp.TcpIoStream;
-import com.rusefi.proxy.MockIniFileProvider;
 import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.proxy.NetworkConnectorContext;
 import com.rusefi.proxy.client.LocalApplicationProxy;
@@ -71,6 +70,7 @@ public class FullServerTest {
         UserDetailsResolver userDetailsResolver = authToken -> new UserDetails(authToken.substring(0, 5), userId);
         int httpPort = 8103;
         int applicationTimeout = 7 * SECOND;
+        log.info("Creating backend " + httpPort);
         try (Backend backend = new Backend(userDetailsResolver, httpPort, applicationTimeout) {
             @Override
             public void register(ControllerConnectionState controllerConnectionState) {
@@ -88,13 +88,14 @@ public class FullServerTest {
             int serverPortForControllers = 7001;
 
 
-            // first start backend server
+            log.info("first start backend server");
             BackendTestHelper.runControllerConnectorBlocking(backend, serverPortForControllers);
             BackendTestHelper.runApplicationConnectorBlocking(backend, localApplicationProxyContext.serverPortForRemoteApplications());
 
-            // create virtual controller to which "rusEFI network connector" connects to
+            log.info("create virtual controller to which \"rusEFI network connector\" connects to");
             int controllerPort = 7002;
             ConfigurationImage controllerImage = prepareImage(value, createIniField(Fields.CYLINDERSCOUNT));
+            log.info("Connecting " + controllerPort);
             TestHelper.createVirtualController(controllerPort, controllerImage, new BinaryProtocolServer.Context());
 
             CountDownLatch softwareUpdateRequest = new CountDownLatch(1);

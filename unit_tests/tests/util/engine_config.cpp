@@ -15,8 +15,8 @@ EngineConfig EngineConfig::setClutchDownPin(const std::optional<switch_input_pin
     return *this;
 }
 
-EngineConfig EngineConfig::setClutchDownPinInverted(const std::optional<bool> value) {
-    m_clutchDownPinInverted = value;
+EngineConfig EngineConfig::setClutchDownPinMode(const std::optional<pin_input_mode_e> value) {
+    m_clutchDownPinMode = value;
     return *this;
 }
 
@@ -25,8 +25,8 @@ EngineConfig EngineConfig::setClutchUpPin(const std::optional<switch_input_pin_e
     return *this;
 }
 
-EngineConfig EngineConfig::setClutchUpPinInverted(const std::optional<bool> value) {
-    m_clutchUpPinInverted = value;
+EngineConfig EngineConfig::setClutchUpPinMode(const std::optional<pin_input_mode_e> value) {
+    m_clutchUpPinMode = value;
     return *this;
 }
 
@@ -35,8 +35,8 @@ EngineConfig EngineConfig::setLaunchActivatePin(const std::optional<switch_input
     return *this;
 }
 
-EngineConfig EngineConfig::setLaunchActivateInverted(const std::optional<bool> value) {
-    m_launchActivateInverted = value;
+EngineConfig EngineConfig::setLaunchActivatePinMode(const std::optional<pin_input_mode_e> value) {
+    m_launchActivatePinMode = value;
     return *this;
 }
 
@@ -107,8 +107,8 @@ EngineConfig EngineConfig::setTorqueReductionTriggerPin(const std::optional<swit
     return *this;
 }
 
-EngineConfig EngineConfig::setTorqueReductionTriggerPinInverted(const std::optional<bool> value) {
-    m_torqueReductionTriggerPinInverted = value;
+EngineConfig EngineConfig::setTorqueReductionTriggerPinMode(const std::optional<pin_input_mode_e> value) {
+    m_torqueReductionTriggerPinMode = value;
     return *this;
 }
 
@@ -157,7 +157,7 @@ EngineConfig EngineConfig::setInjectorFlow(const std::optional<float> flow) {
     return *this;
 }
 
-EngineConfig EngineConfig::setInjectorBattLagCorr(const std::optional<BattLagCorrCurve> battLagCorr) {
+EngineConfig EngineConfig::setInjectorBattLagCorr(const std::optional<BattLagCorrTable> battLagCorr) {
     m_injectorBattLagCorrCurve = battLagCorr;
     return *this;
 }
@@ -177,7 +177,7 @@ EngineConfig EngineConfig::setInjectorSecondaryFlow(const std::optional<float> f
     return *this;
 }
 
-EngineConfig EngineConfig::setInjectorSecondaryBattLagCorr(const std::optional<BattLagCorrCurve> battLagCorr) {
+EngineConfig EngineConfig::setInjectorSecondaryBattLagCorr(const std::optional<BattLagCorrTable> battLagCorr) {
     m_injectorSecondaryBattLagCorrCurve = battLagCorr;
     return *this;
 }
@@ -211,11 +211,6 @@ EngineConfig EngineConfig::setNitrousControlArmingMethod(const std::optional<nit
 
 EngineConfig EngineConfig::setNitrousControlTriggerPin(const std::optional<switch_input_pin_e> value) {
     m_nitrousControlTriggerPin = value;
-    return *this;
-}
-
-EngineConfig EngineConfig::setNitrousControlTriggerPinInverted(const std::optional<bool> value) {
-    m_nitrousControlTriggerPinInverted = value;
     return *this;
 }
 

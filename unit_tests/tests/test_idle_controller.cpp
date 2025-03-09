@@ -122,12 +122,6 @@ TEST(idle_v2, crankingOpenLoop) {
 		config->cltIdleCorr[i] = i * 0.2f;
 	}
 
-	// First test without override (ie, normal running CLT corr table)
-	EXPECT_FLOAT_EQ(10, dut.getCrankingOpenLoop(10));
-	EXPECT_FLOAT_EQ(50, dut.getCrankingOpenLoop(50));
-
-	// Test with override (use separate table)
-	engineConfiguration->overrideCrankingIacSetting = true;
 	EXPECT_FLOAT_EQ(5, dut.getCrankingOpenLoop(10));
 	EXPECT_FLOAT_EQ(25, dut.getCrankingOpenLoop(50));
 }
@@ -136,11 +130,10 @@ TEST(idle_v2, runningOpenLoopBasic) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	IdleController dut;
 
-	engineConfiguration->manIdlePosition = 50;
 
 	for (size_t i = 0; i < efi::size(config->cltIdleCorrBins); i++) {
 		config->cltIdleCorrBins[i] = i * 10;
-		config->cltIdleCorr[i] = i * 0.1f;
+		config->cltIdleCorr[i] = 50 * (i * 0.1f);
 	}
 
 	EXPECT_FLOAT_EQ(5, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 0, 10, 0));
@@ -151,12 +144,11 @@ TEST(idle_v2, runningFanAcBump) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	IdleController dut;
 
-	engineConfiguration->manIdlePosition = 50;
 	engineConfiguration->acIdleExtraOffset = 9;
 	engineConfiguration->fan1ExtraIdle = 7;
 	engineConfiguration->fan2ExtraIdle = 3;
 
-	setArrayValues(config->cltIdleCorr, 1.0f);
+	setArrayValues(config->cltIdleCorr, 50.0f);
 
 	// Start with fan off
 	enginePins.fanRelay.setValue(0);
@@ -166,23 +158,44 @@ TEST(idle_v2, runningFanAcBump) {
 
 	// Turn on AC!
 	engine->module<AcController>()->acButtonState = true;
-	EXPECT_FLOAT_EQ(50 + 9, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 0, 10, 0));
+	EXPECT_FLOAT_EQ(50 + 9, dut.getRunningOpenLoop(IIdleController::Phase::Idling, 0, 10, 0));
 	engine->module<AcController>()->acButtonState = false;
 
 	// Turn the fan on!
 	enginePins.fanRelay.setValue(1);
-	EXPECT_FLOAT_EQ(50 + 7, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 0, 10, 0));
+	EXPECT_FLOAT_EQ(50 + 7, dut.getRunningOpenLoop(IIdleController::Phase::Idling, 0, 10, 0));
 	enginePins.fanRelay.setValue(0);
 
 	// Turn on the other fan!
 	enginePins.fanRelay2.setValue(1);
-	EXPECT_FLOAT_EQ(50 + 3, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 0, 10, 0));
+	EXPECT_FLOAT_EQ(50 + 3, dut.getRunningOpenLoop(IIdleController::Phase::Idling, 0, 10, 0));
 
 	// Turn on everything!
 	engine->module<AcController>()->acButtonState = true;
 	enginePins.fanRelay.setValue(1);
 	enginePins.fanRelay2.setValue(1);
-	EXPECT_FLOAT_EQ(50 + 9 + 7 + 3, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 0, 10, 0));
+	EXPECT_FLOAT_EQ(50 + 9 + 7 + 3, dut.getRunningOpenLoop(IIdleController::Phase::Idling, 0, 10, 0));
+}
+
+// This can be seen as a kind of some close-loop logic, please read:
+// https://github.com/rusefi/rusefi/issues/6977
+TEST(idle_v2, idleAdderShouldNotAffectNonIdleAreas) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	IdleController dut;
+
+	engineConfiguration->acIdleExtraOffset = 9;
+
+	setArrayValues(config->cltIdleCorr, 50.0f);
+
+	// Should be base position
+	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 0, 10, 0));
+
+	// [A/C ON && Phase::Cranking] => should be equal to base time
+	engine->module<AcController>()->acButtonState = true;
+	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 0, 10, 0));
+
+	// [A/C ON && Phase::Running] => should be equal to base time plus a/c extra offset
+	EXPECT_FLOAT_EQ(50 + 9, dut.getRunningOpenLoop(IIdleController::Phase::Idling, 0, 10, 0));
 }
 
 TEST(idle_v2, runningOpenLoopTpsTaper) {
@@ -253,8 +266,6 @@ struct MockOpenLoopIdler : public IdleController {
 TEST(idle_v2, testOpenLoopCranking) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	StrictMock<MockOpenLoopIdler> dut;
-
-	engineConfiguration->overrideCrankingIacSetting = true;
 
 	EXPECT_CALL(dut, getCrankingOpenLoop(30)).WillOnce(Return(44));
 

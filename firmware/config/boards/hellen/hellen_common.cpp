@@ -71,6 +71,13 @@ static bool hellenEnPinInitialized = false;
 PUBLIC_API_WEAK void onHellenEnChange(int value) {
 }
 
+// Board specific helper to enable SD card only
+PUBLIC_API_WEAK bool onHellenSdChange(int value) {
+	// most Hellen board have no separate SD card power control
+	// return false and let MegaEn to be enabled
+	return false;
+}
+
 static void setHellenEnValue(int value) {
 	megaEn.setValue(value, /*isForce*/ true);
 	onHellenEnChange(value);
@@ -85,9 +92,17 @@ void hellenEnableEn(const char *msg) {
 void hellenDisableEn(const char *msg) {
 #if EFI_FILE_LOGGING && EFI_PROD_CODE
 	// un-mount before turning power off SD card
-	sdCardRequestMode(SD_MODE_UNMOUNT);
-  // trying worst case just to test things
-	chThdSleepMilliseconds(1000);
+	// wait up to 1 second for SD card to become unmounted
+	efiPrintf("Long poll for SD card unmount");
+	int timeout = 1000;
+	do {
+		sdCardRequestMode(SD_MODE_UNMOUNT);
+		chThdSleepMilliseconds(10);
+		if (sdCardGetCurrentMode() == SD_MODE_IDLE) {
+			break;
+		}
+		timeout -= 10;
+	} while (timeout > 0);
 #endif
   efiPrintf("Turning board off [%s]", msg);
   hellenDisableEnSilently();
@@ -180,3 +195,30 @@ int boardGetAnalogDiagnostic()
 	return 0;
 #endif
 }
+
+#ifndef EFI_BOOTLOADER
+bool boardSdCardEnable() {
+	// on mega-module we manage SD card power supply
+	if (getHellenBoardEnabled()) {
+		return true;
+	}
+
+	// Board can enable SD card power without enabling WBOs
+	if (onHellenSdChange(1)) {
+		efiPrintf("    *** turning SD power ONLY ***");
+		return true;
+	}
+
+	if (getTimeNowS() > 4 && !isIgnVoltage()) {
+		// looks like vehicle is OFF and we are hooked to USB - turn on peripheral to get Mass Storage Device USB profile
+		efiPrintf("    *** turning board ON to power SD card ***");
+		hellenEnableEn();
+		chThdSleepMilliseconds(200);
+
+		//check state
+		return getHellenBoardEnabled();
+	}
+
+	return false;
+}
+#endif // ! EFI_BOOTLOADER

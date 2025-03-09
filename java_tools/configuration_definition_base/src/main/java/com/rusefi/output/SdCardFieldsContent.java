@@ -18,7 +18,7 @@ public class SdCardFieldsContent {
     public static final String BOARD_LOOKUP_H = "#include \"board_lookup.h\"\n";
     private final StringBuilder body = new StringBuilder();
 
-    public String[] expressions = new String[] {"test->reference"}; // technical debt: default value is only used by unit tests
+    public String[] expressions = {"test->reference"}; // technical debt: default value is only used by unit tests
     public String conditional;
     public Boolean isPtr = false;
     public String[] names;
@@ -36,11 +36,15 @@ public class SdCardFieldsContent {
     public void handleEndStruct(ReaderState state, ConfigStructure structure) throws IOException {
         if (state.isStackEmpty()) {
             for (int i = 0; i < expressions.length; i++) {
-                String namePrefix = (names == null || names.length <= 1) ? "" : names[i];
+                String namePrefix = getNamePrefix(i, names);
                 String expression = expressions[i];
                 appendFields(state, structure, namePrefix, expression);
             }
         }
+    }
+
+    public static String getNamePrefix(int i, String[] names) {
+        return (names == null || names.length <= 1) ? "" : names[i];
     }
 
     private void appendFields(ReaderState state, ConfigStructure structure, String namePrefix, String expression) {

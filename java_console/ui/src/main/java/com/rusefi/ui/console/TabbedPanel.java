@@ -2,6 +2,7 @@ package com.rusefi.ui.console;
 
 import com.rusefi.PaneSettings;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.ui.LogDownloader;
@@ -16,7 +17,7 @@ public class TabbedPanel {
     // todo: the logic around 'criticalError' could be implemented nicer
     private String criticalError;
 
-    public final SettingsTab settingsTab;
+//    public final SettingsTab settingsTab;
     public final LogDownloader logsManager;
     public final PaneSettings paneSettings = new PaneSettings(getConfig().getRoot().getChild("panes"));
 
@@ -53,11 +54,11 @@ public class TabbedPanel {
 
     public TabbedPanel(UIContext uiContext) {
         MessagesCentral.getInstance().addListener((clazz, message) -> {
-            if (message.startsWith(Fields.CRITICAL_PREFIX))
+            if (message.startsWith(Integration.CRITICAL_PREFIX))
                 criticalError = message;
         });
 
-        settingsTab = new SettingsTab(uiContext);
+//        settingsTab = new SettingsTab(uiContext);
         logsManager = new LogDownloader(uiContext);
     }
 

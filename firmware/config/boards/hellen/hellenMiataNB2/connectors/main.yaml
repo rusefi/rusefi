@@ -603,6 +603,7 @@ pins:
 
 
 info:
+  cid: main
   title: Hellen Miata NB2
   directory: hellen/hellen72
   image:

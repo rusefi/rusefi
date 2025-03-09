@@ -3,15 +3,14 @@ package com.rusefi.ui.console;
 import com.devexperts.logging.Logging;
 import com.rusefi.*;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.EngineState;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.*;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.maintenance.VersionChecker;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.core.ui.FrameHelper;
-import com.rusefi.ui.util.UiUtils;
 import com.rusefi.util.IoUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -67,7 +66,8 @@ public class MainFrame {
         setTitle();
         ConnectionStatusLogic.INSTANCE.addListener(isConnected -> SwingUtilities.invokeLater(() -> {
             setTitle();
-            UiUtils.trueRepaint(tabbedPane.tabbedPane); // this would repaint status label
+            // this would repaint status label
+            AutoupdateUtil.trueLayout(tabbedPane.tabbedPane);
             if (ConnectionStatusLogic.INSTANCE.getValue() == ConnectionStatusValue.CONNECTED) {
                 LocalDateTime dateTime = LocalDateTime.now(ZoneOffset.systemDefault());
                 String isoDateTime = dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME);
@@ -92,7 +92,7 @@ public class MainFrame {
                 ConnectionWatchdog.init(linkManager);
 
                 SwingUtilities.invokeLater(() -> {
-                    tabbedPane.settingsTab.showContent(linkManager);
+//                    tabbedPane.settingsTab.showContent(linkManager);
                     tabbedPane.logsManager.showContent();
                     /**
                      * todo: we are definitely not handling reconnect properly, no code to shut down old instance of server
@@ -104,7 +104,7 @@ public class MainFrame {
             }
         });
 
-        consoleUI.uiContext.getLinkManager().getEngineState().registerStringValueAction(Fields.PROTOCOL_VERSION_TAG, new EngineState.ValueCallback<String>() {
+        consoleUI.uiContext.getLinkManager().getEngineState().registerStringValueAction(Integration.PROTOCOL_VERSION_TAG, new EngineState.ValueCallback<String>() {
             @Override
             public void onUpdate(String firmwareVersion) {
                 Launcher.firmwareVersion.set(firmwareVersion);

@@ -244,13 +244,6 @@ static void tcuSolenoidBench(float humanIndex, float onTime, float offTimeMs, fl
 	doRunSolenoidBench((int)humanIndex, onTime, offTimeMs, (int)count);
 }
 
-/**
- * channel #1, 5ms ON, 1000ms OFF, repeat 3 times
- */
-static void luaOutBench2(float humanIndex, float onTime, float offTimeMs, float count) {
-	doRunBenchTestLuaOutput((int)humanIndex, onTime, offTimeMs, (int)count);
-}
-
 static void fanBenchExt(float onTimeMs) {
 	pinbench(onTimeMs, 100.0, 1, &enginePins.fanRelay);
 }
@@ -340,6 +333,8 @@ static void hdAcrBench(int index) {
 }
 #endif // EFI_HD_ACR
 
+int luaCommandCounters[LUA_BUTTON_COUNT] = {};
+
 void handleBenchCategory(uint16_t index) {
 	switch(index) {
 	case BENCH_VVT0_VALVE:
@@ -377,6 +372,18 @@ void handleBenchCategory(uint16_t index) {
 		return;
 	case BENCH_AUXOUT7:
 	    auxOutBench(7);
+		return;
+	case LUA_COMMAND_1:
+		luaCommandCounters[0]++;
+		return;
+	case LUA_COMMAND_2:
+		luaCommandCounters[1]++;
+		return;
+	case LUA_COMMAND_3:
+		luaCommandCounters[2]++;
+		return;
+	case LUA_COMMAND_4:
+		luaCommandCounters[3]++;
 		return;
 #if EFI_HD_ACR
 	case HD_ACR:
@@ -493,6 +500,12 @@ static void handleCommandX14(uint16_t index) {
 	case TS_ETB_AUTOCAL_1:
 			etbAutocal(1);
 		return;
+	case TS_ETB_AUTOCAL_0_FAST:
+			etbAutocal(0, false);
+		return;
+	case TS_ETB_AUTOCAL_1_FAST:
+			etbAutocal(1, false);
+		return;
 	case TS_ETB_START_AUTOTUNE:
 			engine->etbAutoTune = true;
 		return;
@@ -529,6 +542,9 @@ static void handleCommandX14(uint16_t index) {
 		return;
 	case TS_SD_FORMAT:
 		sdCardRequestMode(SD_MODE_FORMAT);
+		return;
+	case TS_SD_DELETE_REPORTS:
+		sdCardRemoveReportFiles();
 		return;
 #endif // EFI_FILE_LOGGING
 
@@ -686,7 +702,17 @@ void initBenchTest() {
 	addConsoleAction(CMD_MIL_BENCH, milBench);
 	addConsoleAction(CMD_HPFP_BENCH, hpfpValveBench);
 
-	addConsoleActionFFFF("luabench2", luaOutBench2);
+#if EFI_LUA
+  // this commands facilitates TS Lua Button scripts development
+  addConsoleActionI("lua_button", [](int index) {
+    if (index < 0 || index > LUA_BUTTON_COUNT)
+      return;
+    luaCommandCounters[index - 1]++;
+  });
+  addConsoleActionFFFF("luabench2", [](float humanIndex, float onTime, float offTimeMs, float count) {
+	  doRunBenchTestLuaOutput((int)humanIndex, onTime, offTimeMs, (int)count);
+  });
+#endif // EFI_LUA
 	instance.start();
 	onConfigurationChangeBenchTest();
 }

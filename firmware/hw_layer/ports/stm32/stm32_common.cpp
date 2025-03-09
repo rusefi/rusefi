@@ -30,11 +30,20 @@ extern "C" {
 #if EFI_PROD_CODE
 #include "mpu_util.h"
 #include "backup_ram.h"
-#endif /* EFI_PROD_CODE */
 
-#if EFI_PROD_CODE
+#ifndef ALLOW_JUMP_WITH_IGNITION_VOLTAGE
+// stm32 bootloader might touch uart ports which we cannot allow on boards where uart pins are used to control engine coils etc
+#define ALLOW_JUMP_WITH_IGNITION_VOLTAGE TRUE
+#endif
 
 static void reset_and_jump(void) {
+#if !ALLOW_JUMP_WITH_IGNITION_VOLTAGE
+  if (isIgnVoltage()) {
+    criticalError("Not allowed with ignition power");
+    return;
+  }
+#endif
+
 	#ifdef STM32H7XX
 		// H7 needs a forcible reset of the USB peripheral(s) in order for the bootloader to work properly.
 		// If you don't do this, the bootloader will execute, but USB doesn't work (nobody knows why)
@@ -112,8 +121,31 @@ void startWatchdog(int timeoutMs) {
 	static WDGConfig wdgcfg;
 	wdgcfg.pr = STM32_IWDG_PR_64;	// t = (1/32768) * 64 = ~2 ms
 	wdgcfg.rlr = STM32_IWDG_RL((uint32_t)((32.768f / 64.0f) * timeoutMs));
-  efiPrintf("Starting watchdog...");
-	wdgStart(&WDGD1, &wdgcfg);
+#if STM32_IWDG_IS_WINDOWED
+	wdgcfg.winr = 0xfff; // don't use window
+#endif
+
+#ifndef __OPTIMIZE__ // gcc-specific built-in define
+	// if no optimizations, then it's most likely a debug version,
+	// and we need to enable a special watchdog feature to allow debugging
+	efiPrintf("Enabling 'debug freeze' watchdog feature...");
+#ifdef STM32H7XX
+    DBGMCU->APB4FZ1 |= DBGMCU_APB4FZ1_DBG_IWDG1;
+#else // F4 & F7
+	DBGMCU->APB1FZ |= DBGMCU_APB1_FZ_DBG_IWDG_STOP;
+#endif // STM32H7XX
+#endif // __OPTIMIZE__
+
+    static bool isStarted = false;
+    if (!isStarted) {
+		efiPrintf("Starting watchdog with timeout %d ms...", timeoutMs);
+		wdgStart(&WDGD1, &wdgcfg);
+		isStarted = true;
+	} else {
+		efiPrintf("Changing watchdog timeout to %d ms...", timeoutMs);
+		// wdgStart() uses kernel lock, thus we cannot call it here from locked or ISR code
+		wdg_lld_start(&WDGD1);
+	}
 #endif // HAL_USE_WDG
 }
 
@@ -138,18 +170,26 @@ void tryResetWatchdog() {
 #endif // HAL_USE_WDG
 }
 
+uint32_t getMcuSerial() {
+	uint32_t *uid = ((uint32_t *)UID_BASE);
+	return uid[0] + uid[1] + uid[2];
+}
+
 void baseMCUInit() {
 	// looks like this holds a random value on start? Let's set a nice clean zero
 	DWT->CYCCNT = 0;
 
 	BOR_Set(BOR_Level_1); // one step above default value
+#ifndef EFI_BOOTLOADER
+	engine->outputChannels.mcuSerial = getMcuSerial();
+#endif // EFI_BOOTLOADER
 }
 
 extern uint32_t __main_stack_base__;
 
 typedef struct port_intctx intctx_t;
 
-EXTERNC int getRemainingStack(thread_t *otp) {
+int getRemainingStack(thread_t *otp) {
 #if CH_DBG_ENABLE_STACK_CHECK
 	// this would dismiss coverity warning - see http://rusefi.com/forum/viewtopic.php?f=5&t=655
 	// coverity[uninit_use]

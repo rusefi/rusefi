@@ -18,7 +18,7 @@ bool AntilagSystemBase::isInsideALSSwitchCondition() {
 	if (isALSSwitchActivated) {
 		if (isBrainPinValid(engineConfiguration->ALSActivatePin)) {
 #if EFI_PROD_CODE
-			ALSActivatePinState = engineConfiguration->ALSActivateInverted ^ efiReadPin(engineConfiguration->ALSActivatePin);
+			ALSActivatePinState = efiReadPin(engineConfiguration->ALSActivatePin, engineConfiguration->ALSActivatePinMode);
 #else
 			ALSActivatePinState = false;
 #endif

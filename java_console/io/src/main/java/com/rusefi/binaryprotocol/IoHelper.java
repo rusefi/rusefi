@@ -1,7 +1,6 @@
 package com.rusefi.binaryprotocol;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.util.HexBinary;
 

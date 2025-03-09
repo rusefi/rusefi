@@ -10,7 +10,6 @@
 #include "os_util.h"
 #include "backup_ram.h"
 #include "error_handling_led.h"
-#include "error_handling_c.h"
 #include "log_hard_fault.h"
 #include "rusefi/critical_error.h"
 
@@ -39,10 +38,13 @@ static critical_msg_t warningBuffer;
 static critical_msg_t criticalErrorMessageBuffer;
 static critical_msg_t configErrorMessageBuffer; // recoverable configuration error, non-critical
 
-extern int warningEnabled;
-
 bool hasCriticalFirmwareErrorFlag = false;
 static bool hasConfigErrorFlag = false;
+static bool hasReportFile = false;
+
+// todo: revisit very questionable code!
+// todo: reuse hasCriticalFirmwareErrorFlag? something?
+bool isInHardFaultHandler = false;
 
 const char *dbg_panic_file;
 int dbg_panic_line;
@@ -57,11 +59,15 @@ const char* getCriticalErrorMessage() {
 }
 
 bool hasConfigError() {
-  return hasConfigErrorFlag;
+	return hasConfigErrorFlag;
 }
 
 void clearConfigErrorMessage() {
-  hasConfigErrorFlag = false;
+	hasConfigErrorFlag = false;
+}
+
+bool hasErrorReportFile() {
+	return hasReportFile;
 }
 
 const char* getConfigErrorMessageBuffer() {
@@ -73,7 +79,7 @@ const char* getConfigErrorMessageBuffer() {
 #if EFI_BACKUP_SRAM
 static backupErrorState lastBootError;
 static uint32_t bootCount = 0;
-#endif
+#endif // EFI_BACKUP_SRAM
 
 void errorHandlerInit() {
 #if EFI_BACKUP_SRAM
@@ -84,6 +90,14 @@ void errorHandlerInit() {
 	memset(&sramState->err, 0x00, sizeof(sramState->err));
 	// Reset cookie so we don't report it again.
 	sramState->err.Cookie = ErrorCookie::None;
+
+	// Cookie can be some random value at first power on
+	// reset to None to avoid generating 'Unknown' fail report
+	if ((lastBootError.Cookie != ErrorCookie::FirmwareError) &&
+		(lastBootError.Cookie != ErrorCookie::HardFault) &&
+		(lastBootError.Cookie != ErrorCookie::ChibiOsPanic)) {
+		lastBootError.Cookie = ErrorCookie::None;
+	}
 
 	//bootcount
 	if (sramState->BootCountCookie != 0xdeadbeef) {
@@ -108,7 +122,7 @@ void errorHandlerInit() {
 	if ((cause == Reset_Cause_IWatchdog) || (cause == Reset_Cause_WWatchdog)) {
 		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Watchdog Reset detected! Check SD card for report file.");
 	}
-#endif
+#endif // EFI_PROD_CODE
 
 	// see https://github.com/rusefi/rusefi/wiki/Resilience
 	addConsoleAction("chibi_fault", [](){ chDbgCheck(0); } );
@@ -197,6 +211,14 @@ do {																\
 	}																\
 } while(0)
 
+#define printErrorStack()											\
+do {																\
+	PRINT("SP 0x%08lx", err->sp);									\
+	for (size_t i = 0; i < ERROR_STACK_DEPTH; i++) {				\
+		PRINT(" 0x%08lx: 0x%08lx", err->sp - i * 4, err->stack[i]);	\
+	}																\
+} while(0)
+
 // TODO: reuse this code for writing crash report file
 void errorHandlerShowBootReasonAndErrors() {
 	//this is console print
@@ -209,6 +231,7 @@ void errorHandlerShowBootReasonAndErrors() {
 	ErrorCookie cookie = err->Cookie;
 
 	printErrorState();
+	printErrorStack();
 #endif // EFI_BACKUP_SRAM
 	#undef PRINT
 }
@@ -237,9 +260,9 @@ static const char *errorHandlerGetErrorName(ErrorCookie cookie)
 	return "unknown";
 }
 
-void errorHandlerWriteReportFile(FIL *fd, int index) {
-	// generate file on good boot to?
-	bool needReport = false;
+bool needErrorReportFile = false;
+
+void errorHandlerWriteReportFile(FIL *fd) {
 #if EFI_BACKUP_SRAM
 	backupErrorState *err = &lastBootError;
 	ErrorCookie cookie = err->Cookie;
@@ -248,24 +271,28 @@ void errorHandlerWriteReportFile(FIL *fd, int index) {
 #endif
 
 	if (cookie != ErrorCookie::None) {
-		needReport = true;
+		needErrorReportFile = true;
 	}
 
 	auto cause = getMCUResetCause();
-	if ((cause != Reset_Cause_NRST_Pin) && (cause != Reset_Cause_BOR) && (cause != Reset_Cause_Unknown)) {
+	// TODO: should we also report Unknown?
+	if ((cause != Reset_Cause_NRST_Pin) && (cause != Reset_Cause_BOR) &&
+		(cause != Reset_Cause_POR) && (cause != Reset_Cause_Unknown)) {
 		// not an expected cause
-		needReport = true;
+		needErrorReportFile = true;
 	}
 
-	if (needReport) {
+	if (needErrorReportFile) {
 		char fileName[_MAX_FILLER + 20];
 		memset(fd, 0, sizeof(FIL));						// clear the memory
 		//TODO: use date + time for file name?
 #if EFI_BACKUP_SRAM
-		index = bootCount;
+		sprintf(fileName, "%05ld_%s_%s.txt",
+			bootCount, FAIL_REPORT_PREFIX, errorHandlerGetErrorName(cookie));
+#else
+		sprintf(fileName, "last_%s_%s.txt",
+			FAIL_REPORT_PREFIX, errorHandlerGetErrorName(cookie));
 #endif
-		sprintf(fileName, "%05d_%s_%s.txt",
-			index, FAIL_REPORT_PREFIX, errorHandlerGetErrorName(cookie));
 
 		FRESULT ret = f_open(fd, fileName, FA_CREATE_ALWAYS | FA_WRITE);
 		if (ret == FR_OK) {
@@ -274,29 +301,99 @@ void errorHandlerWriteReportFile(FIL *fd, int index) {
 			printResetReason();
 #if EFI_BACKUP_SRAM
 			printErrorState();
+			printErrorStack();
 #endif // EFI_BACKUP_SRAM
+      f_printf(fd, "rusEFI v%d@%u", getRusEfiVersion(), /*do we have a working way to print 64 bit values?!*/(int)SIGNATURE_HASH);
 			// additional board-specific data
 			onBoardWriteErrorFile(fd);
 			// todo: figure out what else would be useful
 			f_close(fd);
+			enginePins.warningLedPin.setValue(1);
 		}
 	}
 }
-#endif
 
-backupErrorState *errorHandlerGetLastErrorDescriptor(void)
-{
-#if EFI_BACKUP_SRAM
-	return &lastBootError;
-#else
-	return nullptr;
-#endif
+static int errorHandlerIsReportExist(ErrorCookie cookie) {
+	bool exist = false;
+	FRESULT fr;     /* Return value */
+	DIR dj;         /* Directory object */
+	FILINFO fno;    /* File information */
+	TCHAR pattern[32];
+
+	sprintf(pattern, "*%s*", errorHandlerGetErrorName(cookie));
+
+	fr = f_findfirst(&dj, &fno, "", pattern);
+	exist = ((fr == FR_OK) && (fno.fname[0]));
+	f_closedir(&dj);
+
+	return exist;
 }
 
-void logHardFault(uint32_t type, uintptr_t faultAddress, port_extctx* ctx, uint32_t csfr) {
-    criticalShutdown();
+int errorHandlerCheckReportFiles() {
+	hasReportFile =
+		(errorHandlerIsReportExist(ErrorCookie::FirmwareError) > 0) ||
+		(errorHandlerIsReportExist(ErrorCookie::HardFault) > 0) ||
+		(errorHandlerIsReportExist(ErrorCookie::ChibiOsPanic) > 0);
+
+	return hasReportFile;
+}
+
+static void errorHandlerDeleteTypedReport(ErrorCookie cookie) {
+	bool failed = false;
+	FRESULT fr;     /* Return value */
+	DIR dj;         /* Directory object */
+	FILINFO fno;    /* File information */
+	TCHAR pattern[32];
+
+	sprintf(pattern, "*%s*", errorHandlerGetErrorName(cookie));
+
+	do {
+		fr = f_findfirst(&dj, &fno, "", pattern);
+		f_closedir(&dj);
+
+		if ((fr == FR_OK) && (fno.fname[0])) {
+			efiPrintf("deleting %s", fno.fname);
+			FRESULT ret = f_unlink(fno.fname);
+			if (ret != FR_OK) {
+				efiPrintf("Faield to delete %s: %d", fno.fname, ret);
+				failed = true;
+			} else {
+				efiPrintf("%s removed", fno.fname);
+			}
+		}
+	} while ((!failed) && (fr == FR_OK) && (fno.fname[0]));
+}
+
+void errorHandlerDeleteReports() {
+	errorHandlerDeleteTypedReport(ErrorCookie::FirmwareError);
+	errorHandlerDeleteTypedReport(ErrorCookie::HardFault);
+	errorHandlerDeleteTypedReport(ErrorCookie::ChibiOsPanic);
+
+	// update
+	errorHandlerCheckReportFiles();
+}
+
+#endif
+
 #if EFI_BACKUP_SRAM
-    auto bkpram = getBackupSram();
+static void errorHandlerSaveStack(backupErrorState *err, uint32_t *sp)
+{
+	err->sp = (uint32_t)sp;
+	for (size_t i = 0; i < ERROR_STACK_DEPTH; i++) {
+		// avoid optimizatio and usage of __builtin_memcpy
+		// to avoid "error: '__builtin_memcpy' reading 128 bytes from a region of size 4"
+		err->stack[i] = *(volatile uint32_t *)sp;
+		sp++;
+	}
+}
+#endif // EFI_BACKUP_SRAM
+
+void logHardFault(uint32_t type, uintptr_t faultAddress, void* sp, port_extctx* ctx, uint32_t csfr) {
+    // todo: reuse hasCriticalFirmwareErrorFlag? something?
+    isInHardFaultHandler = true;
+	// Evidence first!
+#if EFI_BACKUP_SRAM
+	auto bkpram = getBackupSram();
 	auto err = &bkpram->err;
 	if (err->Cookie == ErrorCookie::None) {
 		err->FaultType = type;
@@ -304,8 +401,13 @@ void logHardFault(uint32_t type, uintptr_t faultAddress, port_extctx* ctx, uint3
 		err->Csfr = csfr;
 		memcpy(&err->FaultCtx, ctx, sizeof(port_extctx));
 		err->Cookie = ErrorCookie::HardFault;
+		// copy stack last as it can be corrupted and cause another exeption
+		errorHandlerSaveStack(err, (uint32_t *)sp);
 	}
 #endif // EFI_BACKUP_SRAM
+	// criticalShutdown() shutdown can cause cascaded fault.
+	// So we first save some valuable evidence and only after try to gracefully shutdown HW
+	criticalShutdown();
 }
 
 #endif /* EFI_PROD_CODE */
@@ -314,12 +416,17 @@ void logHardFault(uint32_t type, uintptr_t faultAddress, port_extctx* ctx, uint3
 
 void chDbgPanic3(const char *msg, const char * file, int line) {
 #if EFI_PROD_CODE
+#if EFI_BACKUP_SRAM
+	// following is allocated on stack
+	// add some marker
+	uint32_t tmp = 0xfffffa11;
+#endif
 	// Attempt to break in to the debugger, if attached
 	if (CoreDebug->DHCSR & CoreDebug_DHCSR_C_DEBUGEN_Msk)
 	{
 		bkpt();
 	}
-#endif
+#endif // EFI_PROD_CODE
 
 #if EFI_BACKUP_SRAM
     auto bkpram = getBackupSram();
@@ -329,6 +436,9 @@ void chDbgPanic3(const char *msg, const char * file, int line) {
 		err->line = line;
 		strlncpy(err->msg, msg, efi::size(err->msg));
 		err->Cookie = ErrorCookie::ChibiOsPanic;
+		// copy stack last as it can be corrupted and cause another exeption
+		uint32_t *sp = &tmp;
+		errorHandlerSaveStack(err, sp);
 	}
 #endif // EFI_BACKUP_SRAM
 
@@ -473,18 +583,18 @@ const char* getConfigErrorMessage() {
 	return configErrorMessageBuffer;
 }
 
-void firmwareError(ObdCode code, const char *fmt, ...) {
+static void firmwareErrorV(ObdCode code, const char *fmt, va_list ap) {
 #if EFI_PROD_CODE
+#if EFI_BACKUP_SRAM
+	// following is allocated on stack
+	// add some marker
+	uint32_t tmp = 0xfaaaaa11;
+#endif
 	if (hasCriticalFirmwareErrorFlag)
 		return;
 	hasCriticalFirmwareErrorFlag = true;
-#if EFI_ENGINE_CONTROL
-	getLimpManager()->fatalError();
-#endif // EFI_ENGINE_CONTROL
-	engine->engineState.warnings.addWarningCode(code);
-    criticalShutdown();
-	enginePins.communicationLedPin.setValue(1, /*force*/true);
 
+	// construct error message
 	if (indexOf(fmt, '%') == -1) {
 		/**
 		 * in case of simple error message let's reduce stack usage
@@ -493,10 +603,7 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 		strlncpy((char*) criticalErrorMessageBuffer, fmt, sizeof(criticalErrorMessageBuffer));
 		criticalErrorMessageBuffer[sizeof(criticalErrorMessageBuffer) - 1] = 0; // just to be sure
 	} else {
-		va_list ap;
-		va_start(ap, fmt);
 		chvsnprintf(criticalErrorMessageBuffer, sizeof(criticalErrorMessageBuffer), fmt, ap);
-		va_end(ap);
 	}
 
 	int errorMessageSize = strlen((char*)criticalErrorMessageBuffer);
@@ -507,33 +614,55 @@ void firmwareError(ObdCode code, const char *fmt, ...) {
 		strcpy((char*)(criticalErrorMessageBuffer) + errorMessageSize, versionBuffer);
 	}
 
+	// Evidence first!
 #if EFI_BACKUP_SRAM
-    auto bkpram = getBackupSram();
+	auto bkpram = getBackupSram();
 	auto err = &bkpram->err;
 	if (err->Cookie == ErrorCookie::None) {
-		err->msg[sizeof(err->msg) - 1] = '\0';
 		strlncpy(err->msg, criticalErrorMessageBuffer, sizeof(err->msg));
 		err->Cookie = ErrorCookie::FirmwareError;
+		// copy stack last as it can be corrupted and cause another exeption
+		uint32_t *sp = &tmp;
+		errorHandlerSaveStack(err, sp);
 	}
 #endif // EFI_BACKUP_SRAM
-#else
 
-  // large buffer on stack is risky we better use normal memory
+#if EFI_ENGINE_CONTROL
+	getLimpManager()->fatalError();
+#endif // EFI_ENGINE_CONTROL
+	engine->engineState.warnings.addWarningCode(code);
+	// criticalShutdown() shutdown can cause cascaded fault.
+	// So we first save some valuable evidence and only after try to gracefully shutdown HW
+	criticalShutdown();
+	enginePins.communicationLedPin.setValue(1, /*force*/true);
+#else // EFI_PROD_CODE
+
+	// large buffer on stack is risky we better use normal memory
 	static char errorBuffer[200];
 
-	va_list ap;
-	va_start(ap, fmt);
 	vsnprintf(errorBuffer, sizeof(errorBuffer), fmt, ap);
-	va_end(ap);
 
 	printf("\x1B[31m>>>>>>>>>> firmwareError [%s]\r\n\x1B[0m\r\n", errorBuffer);
 
-#if EFI_SIMULATOR || EFI_UNIT_TEST
 	throw std::logic_error(errorBuffer);
-#endif /* EFI_SIMULATOR */
-#endif
+#endif // EFI_PROD_CODE
 }
 
-void criticalErrorM(const char *msg) {
-	criticalError(msg);
+void firmwareError(ObdCode code, const char *fmt, ...) {
+	va_list ap;
+	va_start(ap, fmt);
+	firmwareErrorV(code, fmt, ap);
+	va_end(ap);
+}
+
+// This is critical error for plain C use.
+// From plain C file we cannot use somethings like this:
+// #define criticalError(...) firmwareError(ObdCode::OBD_PCM_Processor_Fault, __VA_ARGS__)
+// because of ObdCode::
+// Also we can not write some wrapper that will pass variable length argument list to another variable length argument list function
+void criticalErrorC(const char *fmt, ...) {
+	va_list ap;
+	va_start(ap, fmt);
+	firmwareErrorV(ObdCode::OBD_PCM_Processor_Fault, fmt, ap);
+	va_end(ap);
 }

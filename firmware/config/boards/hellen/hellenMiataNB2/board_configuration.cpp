@@ -89,7 +89,7 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->vehicleSpeedSensorInputPin = Gpio::H144_IN_VSS;
 	engineConfiguration->clutchDownPin = Gpio::H144_IN_RES3;
-	engineConfiguration->clutchDownPinInverted = true;
+	engineConfiguration->clutchDownPinMode = PI_INVERTED_DEFAULT;
 
 	engineConfiguration->fuelPumpPin = Gpio::G2;	// OUT_IO9
 	engineConfiguration->idle.solenoidPin = Gpio::D14;	// OUT_PWM5

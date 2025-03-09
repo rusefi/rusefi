@@ -20,6 +20,7 @@
 #include "local_version_holder.h"
 #include "buttonshift.h"
 #include "gear_controller.h"
+#include "dynoview.h"
 #include "high_pressure_fuel_pump.h"
 #include "limp_manager.h"
 #include "pin_repository.h"
@@ -119,6 +120,11 @@ public:
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	IEtbController *etbControllers[ETB_COUNT] = {nullptr};
 #endif // EFI_ELECTRONIC_THROTTLE_BODY
+
+
+#if EFI_DYNO_VIEW
+  DynoView dynoInstance;
+#endif
 
 #if EFI_ENGINE_CONTROL
 	FuelComputer fuelComputer;
@@ -328,11 +334,6 @@ public:
 	sent_state_s sent_state;
 #endif
 
-	/**
-	 * idle blip is a development tool: alternator PID research for instance have benefited from a repetitive change of RPM
-	 */
-	percent_t blipIdlePosition;
-	efitimeus_t timeToStopBlip = 0;
 	efitimeus_t timeToStopIdleTest = 0;
 
 	SensorsState sensors;

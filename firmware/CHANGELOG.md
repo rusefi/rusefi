@@ -29,12 +29,24 @@ Release template (copy/paste this for new release):
 ## Unreleased
 
 ### Added
+ - SD card mode selection: do not wait for USB if vbatt voltage #7424
+ - SD card mass storage read access performance improvements
+ - migrate injector lag is now a table #7522
+ - Allow fractional tachometer pulse ratio for fine tachometer calibration #7547
+ - separate boost control open loop axis from closed loop axis #7580
+
+## February 2025 "Day 1075"
+
+### Added
  - Flex Fuel sensor settings should be under "Fuel sensor" #7097
  - GM SENT fuel pressure sensor #6997
  - ETB calibration automatically enables ETB if needed #7197
  - Fuel Level Sensor should have a RAW option #6979
  - SD card bit data points #7227
  - stm32 build-in watchdog for F7/H7 #1339
+ - improvements to SD card management #7327
+ - FatFS: update to latest R0.15a version #7315
+ - Honda J30 trigger wheel
 
 ### Fixed
  - Critical error when using big values on Boost Control Open Loop with Y axis as MAP #7093

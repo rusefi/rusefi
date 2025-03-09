@@ -45,7 +45,6 @@
 
 #define EFI_CONFIGURATION_STORAGE	(EFI_STORAGE_INT_FLASH == TRUE) || (EFI_STORAGE_MFS == TRUE)
 
-// see also validateStack
 #define hasLotsOfRemainingStack() (getCurrentRemainingStack() > EXPECTED_REMAINING_STACK)
 
 // this macro helps locate all board Public API methods

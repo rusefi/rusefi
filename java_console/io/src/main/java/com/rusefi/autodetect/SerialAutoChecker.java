@@ -2,7 +2,7 @@ package com.rusefi.autodetect;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
-import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.Integration;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.commands.HelloCommand;
@@ -60,7 +60,7 @@ public class SerialAutoChecker {
     }
 
     private static boolean isSignatureWithValidPrefix(String signature) {
-        if (signature.startsWith(Fields.PROTOCOL_SIGNATURE_PREFIX))
+        if (signature.startsWith(Integration.PROTOCOL_SIGNATURE_PREFIX))
             return true;
         String signatureWhiteLabel = ConnectionAndMeta.getSignatureWhiteLabel();
         return signatureWhiteLabel != null && signature.startsWith(signatureWhiteLabel + " ");

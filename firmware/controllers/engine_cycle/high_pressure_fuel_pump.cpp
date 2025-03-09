@@ -61,9 +61,9 @@ angle_t HpfpLobe::findNextLobe() {
 	// Calculate impact of VVT
 	angle_t vvt = 0;
 	if (engineConfiguration->hpfpCam != HPFP_CAM_NONE) {
-  	// pump operates in cam-angle domain which is different speed from crank-angle domain on 4 stroke engines
-  	int mult = (int)getEngineCycle(getEngineRotationState()->getOperationMode()) / 360;
-	  int camIndex = engineConfiguration->hpfpCam - 1;
+		// pump operates in cam-angle domain which is different speed from crank-angle domain on 4 stroke engines
+		int mult = (int)getEngineCycle(getEngineRotationState()->getOperationMode()) / 360;
+		int camIndex = engineConfiguration->hpfpCam - 1;
 		// TODO: Is the sign correct here?  + means ATDC?
 		vvt = engine->triggerCentral.getVVTPosition(
 			BANK_BY_INDEX(camIndex),
@@ -157,15 +157,15 @@ void HpfpController::onFastCallback() {
 	// Pressure current/target calculation
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 
-	isHpfpInactive = rpm < rpm_spinning_cutoff ||
+	isHpfpActive = !(rpm < rpm_spinning_cutoff ||
 		    !isGdiEngine() ||
 		    engineConfiguration->hpfpPumpVolume == 0 ||
-		    !enginePins.hpfpValve.isInitialized();
+		    !enginePins.hpfpValve.isInitialized());
 	// What conditions can we not handle?
-	if (isHpfpInactive) {
+	if (!isHpfpActive) {
 		m_quantity.reset();
 		m_requested_pump = 0;
-		m_deadtime = 0;
+		m_deadangle = 0;
 	} else {
 #if EFI_PROD_CODE && EFI_SHAFT_POSITION_INPUT
 		criticalAssertVoid(engine->triggerCentral.triggerShape.getSize() > engineConfiguration->hpfpCamLobes * 6, "Too few trigger tooth for this number of HPFP lobes");
@@ -175,7 +175,7 @@ void HpfpController::onFastCallback() {
 			Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE),
 			config->hpfpDeadtimeVoltsBins,
 			config->hpfpDeadtimeMS);
-		m_deadtime = deadtime_ms * rpm * (360.f / 60.f / 1000.f);
+		m_deadangle = deadtime_ms * rpm * (360.f / 60.f / 1000.f);
 
 		// We set deadtime first, then pump, in case pump used to be 0.  Pump is what
 		// determines whether we do anything or not.
@@ -192,17 +192,21 @@ void HpfpController::onFastCallback() {
 
 void HpfpController::pinTurnOn(HpfpController *self) {
 	enginePins.hpfpValve.setHigh(HPFP_CONTROLLER);
+	self->HpfpValveState = true;
+	self->HpfdActivationPhase = getTriggerCentral()->getCurrentEnginePhase(getTimeNowNt()).value_or(-1);
 
 	// By scheduling the close after we already open, we don't have to worry if the engine
 	// stops, the valve will be turned off in a certain amount of time regardless.
 	scheduleByAngle(&self->m_event.eventScheduling,
 			self->m_event.eventScheduling.getMomentNt(),
-			self->m_deadtime + engineConfiguration->hpfpActivationAngle,
+			self->m_deadangle + engineConfiguration->hpfpActivationAngle,
 			{ pinTurnOff, self });
 }
 
 void HpfpController::pinTurnOff(HpfpController *self) {
 	enginePins.hpfpValve.setLow(HPFP_CONTROLLER);
+	self->HpfpValveState = false;
+	self->HpfdDeactivationPhase = getTriggerCentral()->getCurrentEnginePhase(getTimeNowNt()).value_or(-1);
 
 	self->scheduleNextCycle();
 }
@@ -214,12 +218,15 @@ void HpfpController::scheduleNextCycle() {
 		return;
 	}
 
-	angle_t lobe = m_lobe.findNextLobe();
+	angle_t lobeAngle = m_lobe.findNextLobe();
+	//TODO: integrate livedata into HpfpLobe
+	nextLobe = m_lobe.m_lobe_index;
 	angle_t angle_requested = m_requested_pump;
 
 	angleAboveMin = angle_requested > engineConfiguration->hpfpMinAngle;
 	if (angleAboveMin) {
-		di_nextStart = lobe - angle_requested - m_deadtime;
+		// TODO: som manuals suggest also substracting peak time (converted to angle)
+		di_nextStart = lobeAngle - angle_requested - m_deadangle;
 		wrapAngle(di_nextStart, "di_nextStart", ObdCode::CUSTOM_ERR_6557);
 
 
@@ -234,13 +241,13 @@ void HpfpController::scheduleNextCycle() {
 
 		// Off will be scheduled after turning the valve on
 	} else {
-	    wrapAngle(lobe, "lobe", ObdCode::CUSTOM_ERR_6557);
+	    wrapAngle(lobeAngle, "lobe", ObdCode::CUSTOM_ERR_6557);
 		// Schedule this, even if we aren't opening the valve this time, since this
 		// will schedule the next lobe.
 		// todo: would it have been cleaner to schedule 'scheduleNextCycle' directly?
 		engine->module<TriggerScheduler>()->schedule(
-		    "hpfp",
-			&m_event, lobe,
+			HPFP_CONTROLLER,
+			&m_event, lobeAngle,
 			{ pinTurnOff, this });
 	}
 }

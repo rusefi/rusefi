@@ -30,6 +30,9 @@ static const LogField fields[] = {
 	{engine->outputChannels, 0, 25, "SD card reading", ""},
 	{engine->outputChannels, 0, 26, "MAP from sensor seems valid", ""},
 	{engine->outputChannels, 0, 27, "triggerPageRefreshFlag", ""},
+	{engine->outputChannels, 0, 28, "hasFaultReportFile", ""},
+	{engine->outputChannels, 0, 29, "Analog sensors supply failure", ""},
+	{engine->outputChannels, 0, 30, "isTuningNow", ""},
 	{engine->outputChannels.RPMValue, "RPM", "RPM", 0},
 	{engine->outputChannels.rpmAcceleration, "dRPM", "RPM acceleration/Rate of Change/ROC", 2},
 	{engine->outputChannels.speedToRpmRatio, "Gearbox Ratio", "value", 2},
@@ -90,7 +93,6 @@ static const LogField fields[] = {
 	{engine->outputChannels.calibrationValue, "calibrationValue", "", 0},
 	{engine->outputChannels.calibrationMode, "calibrationMode", "", 0},
 	{engine->outputChannels.idleStepperTargetPosition, "Idle: Stepper target position", "", 0},
-	{engine->outputChannels.tsConfigVersion, "tsConfigVersion", "", 0},
 	{engine->outputChannels.totalTriggerErrorCounter, "Trigger Error Counter", "counter", 0},
 	{engine->outputChannels.orderingErrorCounter, "orderingErrorCounter", "", 0},
 	{engine->outputChannels.warningCounter, "Warning: counter", "count", 0},
@@ -136,9 +138,11 @@ static const LogField fields[] = {
 	{engine->outputChannels.rawRawPpsSecondary, "rawRawPpsSecondary", "V", 3},
 	{engine->outputChannels.idlePositionSensor, "Idle: Position sensor", "%", 2},
 	{engine->outputChannels.AFRValue, "Air/Fuel Ratio", "AFR", 2},
+	{engine->outputChannels.AFRValue2, "Air/Fuel Ratio 2", "AFR", 2},
+	{engine->outputChannels.SmoothedAFRValue, "Smoothed Air/Fuel Ratio", "AFR", 2},
+	{engine->outputChannels.SmoothedAFRValue2, "Smoothed Air/Fuel Ratio 2", "AFR", 2},
 	{engine->outputChannels.VssAcceleration, "Vss Accel", "m/s2", 2},
 	{engine->outputChannels.lambdaValue2, "Lambda 2", "", 3},
-	{engine->outputChannels.AFRValue2, "Air/Fuel Ratio 2", "AFR", 2},
 	{engine->outputChannels.vvtPositionB1E, "VVT: bank 1 exhaust", "deg", 1},
 	{engine->outputChannels.vvtPositionB2I, "VVT: bank 2 intake", "deg", 1},
 	{engine->outputChannels.vvtPositionB2E, "VVT: bank 2 exhaust", "deg", 1},
@@ -397,6 +401,9 @@ static const LogField fields[] = {
 	{engine->outputChannels.rtcUnixEpochTime, "rtcUnixEpochTime", "", 0},
 	{engine->outputChannels.sparkCutReasonBlinker, "sparkCutReasonBlinker", "", 0},
 	{engine->outputChannels.fuelCutReasonBlinker, "fuelCutReasonBlinker", "", 0},
+	{engine->outputChannels.hp, "hp", "", 0},
+	{engine->outputChannels.torque, "torque", "", 0},
+	{engine->outputChannels.mcuSerial, "mcuSerial", "", 0},
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},
 #endif
@@ -462,10 +469,7 @@ static const LogField fields[] = {
 	{engine->ignitionState.luaTimingAdd, "Ign: Lua timing add", "deg", 2, "Timing"},
 	{engine->ignitionState.luaTimingMult, "Ign: Lua timing mult", "deg", 2, "Timing"},
 	{engine->ignitionState, 40, 0, "Ign: Lua Spark Skip", ""},
-	{engine->ignitionState, 40, 1, "accelThresholdThrigger", ""},
-	{engine->ignitionState.accelDeltaLOADPersist, "accelDeltaLOADPersist", "", 0},
-	{engine->ignitionState.accelDeltaCycleThriger, "accelDeltaCycleThriger", "", 0},
-	{engine->ignitionState.oldLoadValue, "oldLoadValue", "", 0},
+	{engine->ignitionState.trailingSparkAngle, "Ign: Trailing spark deg", "deg", 2, "Timing"},
 	{engine->module<KnockController>()->m_knockLevel, "Knock: Current level", "Volts", 2},
 	{engine->module<KnockController>()->m_knockCyl[0], "Knock: Cyl 1", "dBv", 0},
 	{engine->module<KnockController>()->m_knockCyl[1], "Knock: Cyl 2", "dBv", 0},
@@ -512,6 +516,9 @@ static const LogField fields[] = {
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{engine->module<InjectorModelPrimary>()->pressureRatio, "Fuel: Injector pressure ratio", "", 3},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<InjectorModelPrimary>()->pressureCorrectionReference, "Fuel: corr reference pressure", "kPa", 1},
 #endif
 #if EFI_LAUNCH_CONTROL
 	{engine->launchController.retardThresholdRpm, "Launch: Retard threshold RPM", "", 0},
@@ -917,70 +924,61 @@ static const LogField fields[] = {
 	{engine->triggerCentral.vvtState[1][1].triggerStateIndex, "vvt2etriggerStateIndex", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock().currentIdlePosition, "Idle: Position", "%", 1},
-#endif
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{engine->module<IdleController>().unmock().baseIdlePosition, "idle: base value", "", 0},
-#endif
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock().idleClosedLoop, "Idle: Closed loop", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{engine->module<IdleController>().unmock().iacByTpsTaper, "idle: iacByTpsTaper portion", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 0, "idle: mightResetPid", ""},
+	{engine->module<IdleController>().unmock(), 12, 0, "idle: mightResetPid", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 1, "Idle: shouldResetPid", ""},
+	{engine->module<IdleController>().unmock(), 12, 1, "Idle: shouldResetPid", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 2, "Idle: wasResetPid", ""},
+	{engine->module<IdleController>().unmock(), 12, 2, "Idle: wasResetPid", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 3, "Idle: mustResetPid", ""},
+	{engine->module<IdleController>().unmock(), 12, 3, "Idle: mustResetPid", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 4, "Idle: cranking", ""},
+	{engine->module<IdleController>().unmock(), 12, 4, "Idle: cranking", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 5, "isIacTableForCoasting", ""},
+	{engine->module<IdleController>().unmock(), 12, 5, "isIacTableForCoasting", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 6, "notIdling", ""},
+	{engine->module<IdleController>().unmock(), 12, 6, "notIdling", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 7, "Idle: reset", ""},
+	{engine->module<IdleController>().unmock(), 12, 7, "Idle: reset", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 8, "Idle: dead zone", ""},
+	{engine->module<IdleController>().unmock(), 12, 8, "Idle: dead zone", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 9, "isBlipping", ""},
+	{engine->module<IdleController>().unmock(), 12, 9, "isBlipping", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 10, "useClosedLoop", ""},
+	{engine->module<IdleController>().unmock(), 12, 10, "useClosedLoop", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 11, "badTps", ""},
+	{engine->module<IdleController>().unmock(), 12, 11, "badTps", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 12, "looksLikeRunning", ""},
+	{engine->module<IdleController>().unmock(), 12, 12, "looksLikeRunning", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 13, "looksLikeCoasting", ""},
+	{engine->module<IdleController>().unmock(), 12, 13, "looksLikeCoasting", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 14, "looksLikeCrankToIdle", ""},
+	{engine->module<IdleController>().unmock(), 12, 14, "looksLikeCrankToIdle", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 15, "Idle: running", ""},
+	{engine->module<IdleController>().unmock(), 12, 15, "Idle: coasting", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 16, "Idle: coasting", ""},
-#endif
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{engine->module<IdleController>().unmock(), 20, 17, "Idle: Closed loop active", ""},
+	{engine->module<IdleController>().unmock(), 12, 16, "Idle: Closed loop active", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{engine->module<IdleController>().unmock().idleTarget, "Idle: Target RPM", "", 0},
@@ -996,6 +994,18 @@ static const LogField fields[] = {
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{engine->module<IdleController>().unmock().luaAdd, "idle: Lua Adder", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock().idleClosedLoop, "Closed loop", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock().currentIdlePosition, "Idle: Position", "%", 1},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock().idleTargetAirmass, "Target airmass", "mg", 0},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock().idleTargetFlow, "Target airflow", "kg/h", 2},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(0)->targetWithIdlePosition, "etb1ETB: target with idle", "%", 2, "ETB more"},
@@ -1013,22 +1023,19 @@ static const LogField fields[] = {
 	{getLiveData<electronic_throttle_s>(0)->etbFeedForward, "etb1etbFeedForward", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(0)->etbIntegralError, "etb1etbIntegralError", "", 3},
-#endif
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(0)->etbCurrentTarget, "etb1ETB: target for current pedal", "%", 3},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(0)->m_adjustedTarget, "etb1Adjusted target", "%", 2},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{*getLiveData<electronic_throttle_s>(0), 32, 0, "etb1etbRevLimitActive", ""},
+	{*getLiveData<electronic_throttle_s>(0), 28, 0, "etb1etbRevLimitActive", ""},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{*getLiveData<electronic_throttle_s>(0), 32, 1, "etb1jamDetected", ""},
+	{*getLiveData<electronic_throttle_s>(0), 28, 1, "etb1jamDetected", ""},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{*getLiveData<electronic_throttle_s>(0), 32, 2, "etb1validPlantPosition", ""},
+	{*getLiveData<electronic_throttle_s>(0), 28, 2, "etb1validPlantPosition", ""},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(0)->etbTpsErrorCounter, "etb1ETB TPS error counter", "count", 0, "ETB more"},
@@ -1070,22 +1077,19 @@ static const LogField fields[] = {
 	{getLiveData<electronic_throttle_s>(1)->etbFeedForward, "etb2etbFeedForward", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{getLiveData<electronic_throttle_s>(1)->etbIntegralError, "etb2etbIntegralError", "", 3},
-#endif
-#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(1)->etbCurrentTarget, "etb2ETB: target for current pedal", "%", 3},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(1)->m_adjustedTarget, "etb2Adjusted target", "%", 2},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{*getLiveData<electronic_throttle_s>(1), 32, 0, "etb2etbRevLimitActive", ""},
+	{*getLiveData<electronic_throttle_s>(1), 28, 0, "etb2etbRevLimitActive", ""},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{*getLiveData<electronic_throttle_s>(1), 32, 1, "etb2jamDetected", ""},
+	{*getLiveData<electronic_throttle_s>(1), 28, 1, "etb2jamDetected", ""},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
-	{*getLiveData<electronic_throttle_s>(1), 32, 2, "etb2validPlantPosition", ""},
+	{*getLiveData<electronic_throttle_s>(1), 28, 2, "etb2validPlantPosition", ""},
 #endif
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 	{getLiveData<electronic_throttle_s>(1)->etbTpsErrorCounter, "etb2ETB TPS error counter", "count", 0, "ETB more"},

@@ -5,30 +5,20 @@
 #include "mazda_miata_vvt.h"
 
 static void setBosch02880155868(injector_s& cfg) {
-	// http://www.boschdealer.com/specsheets/0280155868cs.jpg
-	cfg.battLagCorrBins[0] = 6;
-	cfg.battLagCorr[0] = 3.371;
+	// http://www.boschdealer.com/specsheets/0280155868cs.jpg (use web.archive.org)
 
-	cfg.battLagCorrBins[1] = 8;
-	cfg.battLagCorr[1] = 1.974;
+    static const float vBattBins[8] = { 6.0, 8.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0 };
+	static const float pressureBins[2] = { 206.843, 413.685 };
 
-	cfg.battLagCorrBins[2] = 10;
-	cfg.battLagCorr[2] = 1.383;
+    // see https://github.com/rusefi/rusefi/issues/7521 for adding more values
+    static const float corrBins[2][8] = {
+	    { 4.240, 2.483, 1.739, 1.501, 1.308, 1.149, 0.964, 0.913 },
+		{ 3.084, 1.641, 1.149, 1.194, 0.992, 0.759, 0.637, 0.603 },
+    };
 
-	cfg.battLagCorrBins[3] = 11;
-	cfg.battLagCorr[3] = 1.194;
-
-	cfg.battLagCorrBins[4] = 12;
-	cfg.battLagCorr[4] = 1.04;
-
-	cfg.battLagCorrBins[5] = 13;
-	cfg.battLagCorr[5] = 0.914;
-
-	cfg.battLagCorrBins[6] = 14;
-	cfg.battLagCorr[6] = 0.797;
-
-	cfg.battLagCorrBins[7] = 15;
-	cfg.battLagCorr[7] = 0.726;
+	copyArray(cfg.battLagCorrBattBins, vBattBins);
+	copyArray(cfg.battLagCorrPressBins,pressureBins);
+	copyTable(cfg.battLagCorrTable, corrBins);
 }
 
 static void setDefaultWarmupFuelEnrichment() {

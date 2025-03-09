@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.opensr5.io.DataListener;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.util.HexBinary;
 import com.rusefi.io.can.isotp.IsoTpCanDecoder;
 import com.rusefi.io.can.isotp.IsoTpConnector;
@@ -19,7 +20,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.config.generated.Fields.CAN_ECU_SERIAL_TX_ID;
+import static com.rusefi.config.generated.VariableRegistryValues.CAN_ECU_SERIAL_TX_ID;
 
 public class PCanIoStream extends AbstractIoStream {
     private static final int INFO_SKIP_RATE = 3-00;
@@ -38,7 +39,7 @@ public class PCanIoStream extends AbstractIoStream {
         }
     };
 
-    private final IsoTpConnector isoTpConnector = new IsoTpConnector(Fields.CAN_ECU_SERIAL_RX_ID) {
+    private final IsoTpConnector isoTpConnector = new IsoTpConnector(VariableRegistryValues.CAN_ECU_SERIAL_RX_ID) {
         @Override
         public void sendCanData(byte[] total) {
             sendCanPacket(total);
@@ -48,21 +49,17 @@ public class PCanIoStream extends AbstractIoStream {
 
     @Nullable
     public static PCanIoStream createStream() {
-        return createStream((message, breakLineOnTextArea, sendToLogger) -> {
-            if (sendToLogger) {
-                log.info(message);
-            }
-        });
+        return createStream((message) -> log.info(message));
     }
 
     public static PCanIoStream createStream(StatusConsumer statusListener) {
         PCANBasic can = PCanHelper.create();
         TPCANStatus status = PCanHelper.init(can);
         if (status != TPCANStatus.PCAN_ERROR_OK) {
-            statusListener.appendStatus("Error initializing PCAN: " + status);
+            statusListener.logLine("Error initializing PCAN: " + status);
             return null;
         }
-        statusListener.appendStatus("Creating PCAN stream...");
+        statusListener.logLine("Creating PCAN stream...");
         return new PCanIoStream(can, statusListener);
     }
 
@@ -75,7 +72,7 @@ public class PCanIoStream extends AbstractIoStream {
 
         TPCANStatus status = PCanHelper.send(can, isoTpConnector.canId(), payLoad);
         if (status != TPCANStatus.PCAN_ERROR_OK) {
-            statusListener.appendStatus("Unable to write the CAN message: " + status);
+            statusListener.logLine("Unable to write the CAN message: " + status);
             System.exit(0);
         }
 //        log.info("Send OK! length=" + payLoad.length);

@@ -12,7 +12,7 @@
 #include "boost_control.h"
 #include "launch_control.h"
 #include "engine_state.h"
-#include "tinymt32.h"
+#include "tinymt32.h" // TL,DR: basic implementation of 'random'
 
 /**
  * We can have active condition from switch or from clutch.
@@ -26,7 +26,7 @@ bool LaunchControlBase::isInsideSwitchCondition() {
 	if (isSwitchActivated) {
 #if !EFI_SIMULATOR
 		if (isBrainPinValid(engineConfiguration->launchActivatePin)) {
-			launchActivatePinState = engineConfiguration->launchActivateInverted ^ efiReadPin(engineConfiguration->launchActivatePin);
+			launchActivatePinState = efiReadPin(engineConfiguration->launchActivatePin, engineConfiguration->launchActivatePinMode);
 		}
 #endif // EFI_PROD_CODE
 		return launchActivatePinState;
@@ -201,8 +201,8 @@ bool SoftSparkLimiter::shouldSkip()  {
 		return false;
 	}
 
-	float r = tinymt32_generate_float(&tinymt);
-	wasJustSkipped = r < (allowHardCut ? 1 : 2) * targetSkipRatio;
+	float random = tinymt32_generate_float(&tinymt);
+	wasJustSkipped = random < (allowHardCut ? 1 : 2) * targetSkipRatio;
 	return wasJustSkipped;
 }
 

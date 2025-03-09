@@ -21,6 +21,7 @@
 #include <sys/stat.h>
 
 bool unitTestBusyWaitHack;
+bool unitTestTaskPrecisionHack;
 
 #if EFI_ENGINE_SNIFFER
 #include "engine_sniffer.h"
@@ -360,7 +361,12 @@ void EngineTestHelper::setTimeAndInvokeEventsUs(int targetTimeUs) {
 			break;
 		}
 		setTimeNowUs(nextEventTime);
-		engine.scheduler.executeAll(getTimeNowUs());
+		extern bool unitTestTaskPrecisionHack;
+		if (unitTestTaskPrecisionHack) {
+			engine.scheduler.executeAll(getTimeNowUs());
+		} else {
+			engine.scheduler.executeAll(getTimeNowNt());
+		}
 	}
 
 	setTimeNowUs(targetTimeUs);
@@ -444,7 +450,7 @@ void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e inject
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 
 	setArrayValues(config->cltFuelCorrBins, 1.0f);
-	setArrayValues(engineConfiguration->injector.battLagCorr, 0.0f);
+	setFlatInjectorLag(0.0);
 	// this is needed to update injectorLag
 	engine->updateSlowSensors();
 

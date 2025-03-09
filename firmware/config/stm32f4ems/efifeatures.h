@@ -361,7 +361,9 @@
 	//  - use perf trace (requires ~16k of memory)
 	//  - use spectorgram (requires ~12k of memory), need disable perf trace or compressed USB MSD image
 	#ifndef KNOCK_SPECTROGRAM
+	  #ifndef EFI_USE_COMPRESSED_INI_MSD
 		#define EFI_USE_COMPRESSED_INI_MSD TRUE
+		#endif
 	#endif
 	#define ENABLE_PERF_TRACE TRUE
 

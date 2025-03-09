@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sun Jan 12 13:29:17 UTC 2025
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Thu Feb 27 16:09:21 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -67,6 +67,14 @@ case HD_ACR:
   return "HD_ACR";
 case HD_ACR2:
   return "HD_ACR2";
+case LUA_COMMAND_1:
+  return "LUA_COMMAND_1";
+case LUA_COMMAND_2:
+  return "LUA_COMMAND_2";
+case LUA_COMMAND_3:
+  return "LUA_COMMAND_3";
+case LUA_COMMAND_4:
+  return "LUA_COMMAND_4";
   }
  return NULL;
 }
@@ -241,6 +249,8 @@ case trigger_type_e::TT_HALF_MOON:
   return "TT_HALF_MOON";
 case trigger_type_e::TT_HONDA_CBR_600:
   return "TT_HONDA_CBR_600";
+case trigger_type_e::TT_HONDA_J30A2_24_1_1:
+  return "TT_HONDA_J30A2_24_1_1";
 case trigger_type_e::TT_HONDA_K_CAM_4_1:
   return "TT_HONDA_K_CAM_4_1";
 case trigger_type_e::TT_HONDA_K_CRANK_12_1:
@@ -374,8 +384,12 @@ case TS_BURN_WITHOUT_FLASH:
   return "TS_BURN_WITHOUT_FLASH";
 case TS_ETB_AUTOCAL_0:
   return "TS_ETB_AUTOCAL_0";
+case TS_ETB_AUTOCAL_0_FAST:
+  return "TS_ETB_AUTOCAL_0_FAST";
 case TS_ETB_AUTOCAL_1:
   return "TS_ETB_AUTOCAL_1";
+case TS_ETB_AUTOCAL_1_FAST:
+  return "TS_ETB_AUTOCAL_1_FAST";
 case TS_ETB_DISABLE_JAM_DETECT:
   return "TS_ETB_DISABLE_JAM_DETECT";
 case TS_ETB_RESET:
@@ -394,6 +408,8 @@ case TS_RESET_MC33810:
   return "TS_RESET_MC33810";
 case TS_RESET_TLE8888:
   return "TS_RESET_TLE8888";
+case TS_SD_DELETE_REPORTS:
+  return "TS_SD_DELETE_REPORTS";
 case TS_SD_FORMAT:
   return "TS_SD_FORMAT";
 case TS_SD_MOUNT_ECU:

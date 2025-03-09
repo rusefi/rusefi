@@ -3,5 +3,6 @@ float m_deadtime;@@GAUGE_NAME_INJECTOR_LAG@@;"ms",1, 0, 0, 0, 3
 
 float pressureDelta;Fuel: Injector pressure delta;"kPa", 1, 0, -1000, 1000, 1
 float pressureRatio;Fuel: Injector pressure ratio;"", 1, 0, 0, 100, 3
+float pressureCorrectionReference;@@GAUGE_NAME_FUEL_CORRECTION_REFERENCE_PRESSURE@@;"kPa", 1, 0, 0, 1000, 1
 
 end_struct

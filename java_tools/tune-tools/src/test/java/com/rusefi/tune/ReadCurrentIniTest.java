@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 public class ReadCurrentIniTest {
     @Test
     public void test() {
-        IniFileModel ini = new IniFileModelImpl().readIniFile("../" + LocalIniFileProvider.INI_FILE_FOR_SIMULATOR);
+        IniFileModel ini = IniFileModelImpl.readIniFile("../" + LocalIniFileProvider.INI_FILE_FOR_SIMULATOR);
         Assertions.assertNotNull(ini);
     }
 }

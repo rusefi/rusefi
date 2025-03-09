@@ -2,7 +2,12 @@ package com.rusefi.tune;
 
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelImpl;
+import com.opensr5.ini.IniMemberNotFound;
+import com.opensr5.ini.field.ScalarIniField;
+import com.opensr5.ini.field.StringIniField;
 import com.rusefi.*;
+import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.TsOutputs;
 import com.rusefi.tools.tune.TuneCanTool;
 import com.rusefi.tools.tune.TuneTools;
 import com.rusefi.tune.xml.Msq;
@@ -10,8 +15,7 @@ import com.rusefi.tune.xml.Page;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class LoadOlderTuneTest {
     @Test
@@ -22,7 +26,8 @@ public class LoadOlderTuneTest {
 
         Msq lessOldDefaultTune = Msq.readTune(LoadOlderTuneTest.class.getResource("/simulator_tune-2023-06.xml").getFile());
 
-        IniFileModel ini = new IniFileModelImpl().readIniFile(TuneReadWriteTest.TEST_INI);
+        IniFileModel ini = IniFileModelImpl.readIniFile(TuneReadWriteTest.TEST_INI);
+        assertEquals(256, ini.getBlockingFactor());
         assertFalse(ini.getFieldsInUiOrder().isEmpty());
 
         RootHolder.ROOT = "../../firmware/";
@@ -99,12 +104,8 @@ public class LoadOlderTuneTest {
             "    engineConfiguration->idleTimingPid.maxValue = 0;\n" +
             "    // default \"false\"\n" +
             "    engineConfiguration->isHip9011Enabled = true;\n" +
-            "    // default 0.0\n" +
-            "    engineConfiguration->hip9011PrescalerAndSDO = 6;\n" +
             "    // default 20.0\n" +
             "    engineConfiguration->knockDetectionWindowStart = 35;\n" +
-            "    // default 60.0\n" +
-            "    engineConfiguration->knockDetectionWindowEnd = 135;\n" +
             "    // default 33.0\n" +
             "    engineConfiguration->auxPid[0].offset = 0;\n" +
             "    // default 2.0\n" +
@@ -126,7 +127,10 @@ public class LoadOlderTuneTest {
             "    // default \"true\"\n" +
             "    engineConfiguration->canReadEnabled = false;\n" +
             "    // default \"None\"\n" +
-            "   ", sb.substring(0, 3500));
+            "    engineConfiguration->canNbcType = CAN_BUS_MAZDA_RX8;\n" +
+            "    // default \"Speed Density\"\n" +
+            "    engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;\n" +
+            "    ", sb.substring(0, 3500));
     }
 
     @Test
@@ -144,5 +148,14 @@ public class LoadOlderTuneTest {
 
         assertEquals(0, TuneTools.resolveEnumByName(tsCustomLine, "Single coil"));
         assertEquals(3, TuneTools.resolveEnumByName(tsCustomLine, "Two Distributors"));
+    }
+
+    @Test
+    public void findFieldByName() throws IniMemberNotFound {
+        IniFileModel ini = IniFileModelImpl.readIniFile(TuneReadWriteTest.TEST_INI);
+        StringIniField make = (StringIniField) ini.getIniField(Fields.ENGINEMAKE);
+        assertNotNull(make);
+        ScalarIniField tps = (ScalarIniField) ini.getOutputChannel(TsOutputs.RPMVALUE.getName());
+        assertNotNull(tps);
     }
 }

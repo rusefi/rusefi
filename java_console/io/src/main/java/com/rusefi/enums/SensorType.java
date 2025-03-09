@@ -32,6 +32,8 @@ public enum SensorType {
 	AuxTemp2,
 	Lambda1,
 	Lambda2,
+	SmoothedLambda1,
+	SmoothedLambda2,
 	WastegatePosition,
 	IdlePosition,
 	FuelEthanolPercent,

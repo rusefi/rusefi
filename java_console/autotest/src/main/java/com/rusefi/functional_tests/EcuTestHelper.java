@@ -4,7 +4,6 @@ import com.devexperts.logging.Logging;
 import com.rusefi.autotest.ControllerConnectorState;
 import com.rusefi.IoUtil;
 import com.rusefi.Timeouts;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.ISensorCentral;
 import com.rusefi.core.Sensor;

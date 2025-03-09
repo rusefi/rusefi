@@ -155,17 +155,21 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 	return advanceAngle;
 }
 
-angle_t getCltTimingCorrection() {
+angle_t getCltTimingCorrection(float engineLoad) {
 	const auto clt = Sensor::get(SensorType::Clt);
 
 	if (!clt)
 		return 0; // this error should be already reported somewhere else, let's just handle it
 
-	return interpolate2d(clt.Value, config->cltTimingBins, config->cltTimingExtra);
+	return interpolate3d(
+			config->ignitionCltCorrTable,
+			config->ignitionCltCorrLoadBins, engineLoad,
+			config->ignitionCltCorrTempBins, clt.Value
+	);
 }
 
-void IgnitionState::updateAdvanceCorrections() {
-	cltTimingCorrection = getCltTimingCorrection();
+void IgnitionState::updateAdvanceCorrections(float engineLoad) {
+	cltTimingCorrection = getCltTimingCorrection(engineLoad);
 }
 
 angle_t getAdvanceCorrections(float engineLoad) {
@@ -322,6 +326,28 @@ void IgnitionState::onNewValue(float currentValue) {
 	}
 	oldLoadValue = currentValue;
 
+}
+
+  angle_t IgnitionState::getTrailingSparkAngle(const float rpm, const float engineLoad){
+	if (std::isnan(engineLoad)) {
+		// default value from: https://github.com/rusefi/rusefi/commit/86683afca22ed1a8af8fd5ac9231442e2124646e#diff-6e80cdd8c55add68105618ad9e8954170a47f59814201dadd2b888509d6b2e39R176
+		return 10;
+	}
+	return interpolate3d(
+			config->trailingSparkTable,
+			config->trailingSparkLoadBins, engineLoad,
+			config->trailingSparkRpmBins, rpm
+	);
+}
+
+angle_t IgnitionState::getSparkHardwareLatencyCorrection(){
+	// time => degree
+	angle_t correction = engineConfiguration->sparkHardwareLatencyCorrection / engine->rpmCalculator.oneDegreeUs;
+
+	if (!std::isnan(correction)) {
+		return correction;
+	}
+	return 0;
 }
 
 #endif // EFI_ENGINE_CONTROL

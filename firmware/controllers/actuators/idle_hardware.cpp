@@ -160,7 +160,7 @@ void initIdleHardware() {
 		startSimplePwm(&idleSolenoidOpen, "Idle Valve Open",
 			&engine->scheduler,
 			&enginePins.idleSolenoidPin,
-			engineConfiguration->idle.solenoidFrequency, PERCENT_TO_DUTY(engineConfiguration->manIdlePosition));
+			engineConfiguration->idle.solenoidFrequency, PERCENT_TO_DUTY(config->cltIdleCorr[0]));
 
 		if (engineConfiguration->isDoubleSolenoidIdle) {
 			if (!isBrainPinValid(engineConfiguration->secondSolenoidPin)) {
@@ -171,7 +171,7 @@ void initIdleHardware() {
 			startSimplePwm(&idleSolenoidClose, "Idle Valve Close",
 				&engine->scheduler,
 				&enginePins.secondIdleSolenoidPin,
-				engineConfiguration->idle.solenoidFrequency, PERCENT_TO_DUTY(engineConfiguration->manIdlePosition));
+				engineConfiguration->idle.solenoidFrequency, PERCENT_TO_DUTY(config->cltIdleCorr[0]));
 		}
 	}
 }

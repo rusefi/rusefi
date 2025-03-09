@@ -28,10 +28,8 @@ import static com.rusefi.core.FindFileHelper.findSrecFile;
 
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
-    private static final int AUTOUPDATE_VERSION = 20241004; // separate from rusEFIVersion#CONSOLE_VERSION
+    private static final int AUTOUPDATE_VERSION = 20250213; // separate from rusEFIVersion#CONSOLE_VERSION
 
-    private static final String LOGO_PATH = "/com/rusefi/";
-    private static final String LOGO = LOGO_PATH + "logo.png";
     private static final String TITLE = getTitle();
 
     private static String getTitle() {
@@ -79,11 +77,13 @@ public class Autoupdate {
 
         Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile = downloadFreshZipFile(args, firstArgument, bundleInfo);
         URLClassLoader jarClassLoader = safeUnzipMakingSureClassloaderIsHappy(downloadedAutoupdateFile);
+        log.info("extremely dark magic: XML binding seems to depend on this");
+        Thread.currentThread().setContextClassLoader(jarClassLoader);
         startConsole(args, jarClassLoader);
     }
 
     private static Optional<DownloadedAutoupdateFileInfo> downloadFreshZipFile(String[] args, String firstArgument, BundleUtil.BundleInfo bundleInfo) {
-        Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile = Optional.empty();
+        Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile;
         if (firstArgument.equalsIgnoreCase("basic-ui")) {
             downloadedAutoupdateFile = doDownload(bundleInfo);
         } else if (args.length > 0 && args[0].equalsIgnoreCase("release")) {
@@ -104,9 +104,17 @@ public class Autoupdate {
         URLClassLoader jarClassLoader = prepareClassLoaderToStartConsole();
         downloadedAutoupdateFile.ifPresent(autoupdateFile -> {
             try {
+/*
+                // technical dept here, guilty as charged!
+                boolean installedIntoProgramFilesHack = new File("uninstall.exe").exists();
+                log.info("installedIntoProgramFilesHack " + installedIntoProgramFilesHack);
+                String pathname = installedIntoProgramFilesHack ? "." : "..";
+*/
+                String pathname = "..";
+                log.info("unzipping everything else into " + pathname);
                 // We've already prepared class loader, so now we can unzip rusefi_autoupdate.jar and other files
                 // except already unzipped rusefi_console.jar (see #6777):
-                FileUtil.unzip(autoupdateFile.zipFileName, new File(".."), isConsoleJar.negate());
+                FileUtil.unzip(autoupdateFile.zipFileName, new File(pathname), isConsoleJar.negate());
                 final String srecFile = findSrecFile();
                 new File(srecFile == null ? FindFileHelper.FIRMWARE_BIN_FILE : srecFile)
                     .setLastModified(autoupdateFile.lastModified);
@@ -127,6 +135,7 @@ public class Autoupdate {
 
     private static void unzipFreshConsole(DownloadedAutoupdateFileInfo autoupdateFile) {
         try {
+            log.info("unzipFreshConsole " + autoupdateFile.zipFileName + " only " + consoleJarZipEntry);
             // We cannot unzip rusefi_autoupdate.jar file because we need the old one to prepare class loader below
             // (otherwise we get `ZipFile invalid LOC header (bad signature)` exception, see #6777). So now we unzip
             // only rusefi_console.jar:
@@ -182,6 +191,10 @@ public class Autoupdate {
     private static URLClassLoader prepareClassLoaderToStartConsole() {
         final URLClassLoader jarClassLoader;
         String consoleJarFileName = ConnectionAndMeta.getRusEfiConsoleJarName();
+        if (!new File(consoleJarFileName).exists()) {
+            throw log.log(new RuntimeException("Looks like corrupted installation: " + consoleJarFileName + " not found"));
+        }
+
         try {
             jarClassLoader = AutoupdateUtil.getClassLoaderByJar(consoleJarFileName);
         } catch (MalformedURLException e) {
@@ -192,10 +205,11 @@ public class Autoupdate {
         // since we are overriding file we cannot just use static java classpath while launching
         try {
             hackProperties(jarClassLoader);
-        } catch (ClassNotFoundException | NoSuchMethodException | InvocationTargetException |
+        } catch (ClassNotFoundException e) {
+            throw log.log(new IllegalStateException("Class not found: " + e, e));
+        } catch (NoSuchMethodException | InvocationTargetException |
                  IllegalAccessException e) {
-            log.error("Failed to start", e);
-            throw new IllegalStateException("Failed to update properties", e);
+            throw log.log(new IllegalStateException("Failed to update properties: " + e, e));
         }
         return jarClassLoader;
     }

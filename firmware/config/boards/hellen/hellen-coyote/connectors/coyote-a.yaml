@@ -121,6 +121,7 @@ pins:
 info:
   title: coyote
   name: A
+  cid: a
   directory: hellen/coyote
   order: 0
   image:

@@ -420,6 +420,19 @@ public class ReaderStateImpl implements ReaderState {
     }
 
     @Override
+    public void addSoftPrepend(String fileName){
+        if (fileName == null || fileName.isEmpty()) {
+            return;
+        }
+        File file = new File(IoUtil3.prependIfNotAbsolute(RootHolder.ROOT, fileName));
+        if (!file.exists()){
+            return;
+        }
+        variableRegistry.readPrependValues(fileName, false);
+        inputFiles.add(fileName);
+    }
+
+    @Override
     public void addPostponedPrependNotInput(String fileName) {
         prependFiles.add(fileName);
     }

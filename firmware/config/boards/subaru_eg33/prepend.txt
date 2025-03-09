@@ -27,5 +27,11 @@
 #define ts_show_spi6_pins false
 
 #define CLT_UPPER_LIMIT 125
+#define TRAILING_SPARK_SIZE 2
+! lack of flash drama big time?!
+#define SCRIPT_CURVE_16 2
+#define SCRIPT_TABLE_8 2
+
+#define BLEND_TABLE_COUNT 2
 
 #define TS_BLOCK_READ_TIMEOUT 300

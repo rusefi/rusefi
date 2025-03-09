@@ -12,6 +12,7 @@
 #include "tunerstudio.h"
 #include "lua_pid.h"
 #include "start_stop.h"
+#include "tinymt32.h" // TL,DR: basic implementation of 'random'
 
 #if EFI_PROD_CODE && HW_HELLEN
 #include "hellen_meta.h"
@@ -543,8 +544,9 @@ int lua_canRxAdd(lua_State* l) {
 	// defaults if not passed
 	int bus = ANY_BUS;
 	int callback = NO_CALLBACK;
+	int argumentCount = lua_gettop(l);
 
-	switch (lua_gettop(l)) {
+	switch (argumentCount) {
 		case 1:
 			// handle canRxAdd(id)
 			eid = luaL_checkinteger(l, 1);
@@ -572,7 +574,7 @@ int lua_canRxAdd(lua_State* l) {
 			callback = getLuaFunc(l);
 			break;
 		default:
-			return luaL_error(l, "Wrong number of arguments to canRxAdd. Got %d, expected 1, 2, or 3.");
+			return luaL_error(l, "Wrong number of arguments to canRxAdd. Got %d, expected 1, 2, or 3.", argumentCount);
 	}
 
 	addLuaCanRxFilter(eid, FILTER_SPECIFIC, bus, callback);
@@ -633,8 +635,17 @@ int lua_canRxAddMask(lua_State* l) {
 
 PUBLIC_API_WEAK void boardConfigureLuaHooks(lua_State* lState) { }
 
+static tinymt32_t tinymt;
+
 void configureRusefiLuaHooks(lua_State* lState) {
   boardConfigureLuaHooks(lState);
+
+  tinymt32_init(&tinymt, 1534525); // todo: share instance with launch_control? probably not?
+	lua_register(lState, "random", [](lua_State* l) {
+	  auto random = tinymt32_generate_float(&tinymt);
+		lua_pushnumber(l, random);
+		return 1;
+	});
 
 	LuaClass<Timer> luaTimer(lState, "Timer");
 	luaTimer
@@ -744,6 +755,21 @@ void configureRusefiLuaHooks(lua_State* lState) {
 		lua_pushnumber(l, result);
 		return 1;
 	});
+
+#if EFI_PROD_CODE
+extern int luaCommandCounters[LUA_BUTTON_COUNT];
+
+	lua_register(lState, "getTsButtonCount",
+			[](lua_State* l) {
+			auto humanIndex = luaL_checkinteger(l, 1);
+			if (humanIndex < 1 || humanIndex > LUA_BUTTON_COUNT) {
+			  luaL_error(l, "Invalid button index: %d", humanIndex);
+			  return 0;
+			}
+			lua_pushnumber(l, luaCommandCounters[humanIndex - 1]);
+			return 1;
+	});
+#endif // EFI_PROD_CODE
 
 #if EFI_PROD_CODE && EFI_SENT_SUPPORT
 	lua_register(lState, "getSentValue",

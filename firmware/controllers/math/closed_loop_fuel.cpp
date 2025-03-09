@@ -4,6 +4,7 @@
 #include "closed_loop_fuel_cell.h"
 #include "deadband.h"
 #include "flash_main.h"
+#include "tunerstudio.h"
 
 #if EFI_ENGINE_CONTROL
 
@@ -91,6 +92,13 @@ static SensorType getSensorForBankIndex(size_t index) {
 		case 0: return SensorType::Lambda1;
 		case 1: return SensorType::Lambda2;
 		default: return SensorType::Invalid;
+namespace {
+	SensorType getSensorForBankIndex(size_t index) {
+		switch (index) {
+			case 0: return SensorType::Lambda1;
+			case 1: return SensorType::Lambda2;
+			default: return SensorType::Invalid;
+		}
 	}
 }
 
@@ -117,33 +125,49 @@ size_t computeStftBin(float rpm, float load, stft_s& cfg) {
 	return 3;
 }
 
-static bool shouldCorrect() {
-	const auto& cfg = engineConfiguration->stft;
-
-	// User disable bit
-	if (!engineConfiguration->fuelClosedLoopCorrectionEnabled) {
-		return false;
+namespace {
+	bool checkIfTuningIsNow() {
+#if EFI_TUNER_STUDIO
+		const bool result = isTuningNow();
+#else
+		const bool result = false;
+#endif /* EFI_TUNER_STUDIO */
+		engine->outputChannels.isTuningNow = result;
+		return result;
 	}
 
-	// Don't correct if not running
-	if (!engine->rpmCalculator.isRunning()) {
+	bool shouldCorrect() {
+		const auto& cfg = engineConfiguration->stft;
 
-		return false;
+		// User disable bit
+		if (!engineConfiguration->fuelClosedLoopCorrectionEnabled) {
+			return false;
+		}
+
+		// Don't correct if tuning seens to be happening
+		if (checkIfTuningIsNow()) {
+			return false;
+		}
+
+		// Don't correct if not running
+		if (!engine->rpmCalculator.isRunning()) {
+			return false;
+		}
+
+		// Startup delay - allow O2 sensor to warm up, etc
+		if (cfg.startupDelay > engine->fuelComputer.running.timeSinceCrankingInSecs) {
+			return false;
+		}
+
+		// Check that the engine is hot enough (and clt not failed)
+		auto clt = Sensor::get(SensorType::Clt);
+		if (!clt.Valid || clt.Value < cfg.minClt) {
+			return false;
+		}
+
+		// If all was well, then we're enabled!
+		return true;
 	}
-
-	// Startup delay - allow O2 sensor to warm up, etc
-	if (cfg.startupDelay > engine->fuelComputer.running.timeSinceCrankingInSecs) {
-		return false;
-	}
-
-	// Check that the engine is hot enough (and clt not failed)
-	auto clt = Sensor::get(SensorType::Clt);
-	if (!clt.Valid || clt.Value < cfg.minClt) {
-		return false;
-	}
-
-	// If all was well, then we're enabled!
-	return true;
 }
 
 bool shouldUpdateCorrection(SensorType sensor) {

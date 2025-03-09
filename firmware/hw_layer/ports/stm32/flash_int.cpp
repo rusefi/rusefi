@@ -122,8 +122,12 @@ static bool intFlashUnlock(void) {
 
 #ifdef STM32F7XX
 static bool isDualBank(void) {
+#ifdef FLASH_OPTCR_nDBANK
 	// cleared bit indicates dual bank
 	return (FLASH->OPTCR & FLASH_OPTCR_nDBANK) == 0;
+#else
+	return 0;
+#endif
 }
 #endif
 

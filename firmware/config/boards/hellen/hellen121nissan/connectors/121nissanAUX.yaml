@@ -71,6 +71,7 @@ pins:
 
 info:
   name: Aux
+  cid: aux
   image:
     file: 121nissanAUX.jpg
   pins:

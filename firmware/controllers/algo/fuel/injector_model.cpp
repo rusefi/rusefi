@@ -75,13 +75,22 @@ InjectorNonlinearMode InjectorModelSecondary::getNonlinearMode() const {
 	return InjectorNonlinearMode::INJ_None;
 }
 
+void InjectorModelWithConfig::updateState() {
+  pressureCorrectionReference = getFuelPressure().Value;
+}
+
+expected<float> InjectorModelWithConfig::getFuelPressure() const {
+  return getFuelDifferentialPressure().Value + Sensor::get(SensorType::Map).value_or(STD_ATMOSPHERE);
+}
+
 expected<float> InjectorModelWithConfig::getFuelDifferentialPressure() const {
 	auto map = Sensor::get(SensorType::Map);
 	auto baro = Sensor::get(SensorType::BarometricPressure);
 
 	float baroKpa = baro.Value;
+	// todo: extract baro sensor validation logic
 	if (!baro || baro.Value > 120 || baro.Value < 50) {
-		baroKpa = 101.325f;
+		baroKpa = STD_ATMOSPHERE;
 	}
 
 	switch (getInjectorCompensationMode()) {
@@ -89,7 +98,7 @@ expected<float> InjectorModelWithConfig::getFuelDifferentialPressure() const {
 			// Add barometric pressure, as "fixed" really means "fixed pressure above atmosphere"
 			return getFuelReferencePressure()
 				+ baroKpa
-				- map.value_or(101.325);
+				- map.value_or(STD_ATMOSPHERE);
 		case ICM_SensedRailPressure: {
 			if (!Sensor::hasSensor(SensorType::FuelPressureInjector)) {
 				warning(ObdCode::OBD_Fuel_Pressure_Sensor_Missing, "Fuel pressure compensation is set to use a pressure sensor, but none is configured.");
@@ -163,10 +172,10 @@ float InjectorModelWithConfig::getInjectorFlowRatio() {
 }
 
 float InjectorModelWithConfig::getDeadtime() const {
-	return interpolate2d(
-		Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE),
-		m_cfg->battLagCorrBins,
-		m_cfg->battLagCorr
+	return interpolate3d(
+		m_cfg->battLagCorrTable,
+      	m_cfg->battLagCorrPressBins, pressureCorrectionReference,
+      	m_cfg->battLagCorrBattBins, Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE)
 	);
 }
 

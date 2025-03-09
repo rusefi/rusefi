@@ -127,8 +127,9 @@ bool NitrousController::checkTriggerPinState() const {
     bool result = false;
 #if !EFI_SIMULATOR
     const switch_input_pin_e triggerPin = engineConfiguration->nitrousControlTriggerPin;
+    const pin_input_mode_e triggerPinMode = engineConfiguration->nitrousControlTriggerPinMode;
     if (isBrainPinValid(triggerPin)) {
-        result = engineConfiguration->nitrousControlTriggerPinInverted ^ efiReadPin(triggerPin);
+        result = efiReadPin(triggerPin, triggerPinMode);
     }
 #endif // !EFI_SIMULATOR
     return result;

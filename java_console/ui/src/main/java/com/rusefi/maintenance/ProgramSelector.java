@@ -29,14 +29,13 @@ import java.util.stream.Collectors;
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.SerialPortScanner.SerialPortType.OpenBlt;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
+import static com.rusefi.maintenance.CalibrationsHelper.*;
 import static com.rusefi.maintenance.UpdateMode.*;
-import static com.rusefi.ui.util.UiUtils.trueLayout;
 
 public class ProgramSelector {
     private static final Logging log = getLogging(ProgramSelector.class);
     private static final int ONE_DOT_DURATION_MS = 200;
     private static final int TOTAL_WAIT_SECONDS = 60;
-
     private final JPanel content = new JPanel(new BorderLayout());
     private final JLabel noHardware = new JLabel("Nothing detected");
     private final JPanel updateModeAndButton = new JPanel(new FlowLayout());
@@ -211,9 +210,20 @@ public class ProgramSelector {
         return newPorts;
     }
 
-    public static void flashOpenbltSerialAutomatic(JComponent parent, PortResult ecuPort, UpdateOperationCallbacks callbacks) {
-        AutoupdateUtil.assertNotAwtThread();
+    public static boolean flashOpenbltSerialAutomatic(
+        JComponent parent,
+        PortResult ecuPort,
+        UpdateOperationCallbacks callbacks
+    ) {
+        return updateFirmwareAndRestorePreviousCalibrations(
+            parent,
+            ecuPort,
+            callbacks,
+            () -> bltUpdateFirmware(parent, ecuPort, callbacks)
+        );
+    }
 
+    private static boolean bltUpdateFirmware(JComponent parent, PortResult ecuPort, UpdateOperationCallbacks callbacks) {
         final List<PortResult> openBltPortsBefore = SerialPortScanner.INSTANCE.getCurrentHardware().getKnownPorts(OpenBlt);
 
         rebootToOpenblt(parent, ecuPort.port, callbacks);
@@ -226,8 +236,7 @@ public class ProgramSelector {
             callbacks.logLine("");
             callbacks.logLine("Try closing and opening console again");
             callbacks.logLine("");
-            callbacks.error();
-            return;
+            return false;
         }
 
         final List<PortResult> newItems = waitForNewOpenBltPortAppeared(openBltPortsBefore, callbacks);
@@ -235,8 +244,7 @@ public class ProgramSelector {
         // Check that exactly one thing appeared in the "after" list
         if (newItems.isEmpty()) {
             callbacks.logLine("Looks like your ECU disappeared during the update process. Please try again.");
-            callbacks.error();
-            return;
+            return false;
         }
 
         if (newItems.size() > 1) {
@@ -245,15 +253,14 @@ public class ProgramSelector {
                 "Unable to find ECU after reboot as multiple serial ports appeared. Before: "
                     + openBltPortsBefore.size()
             );
-            callbacks.error();
-            return;
+            return false;
         }
 
         final String openbltPort = newItems.get(0).port;
 
         callbacks.logLine("Serial port " + openbltPort + " appeared, programming firmware...");
 
-        flashOpenbltSerialJni(parent, openbltPort, callbacks);
+        return flashOpenbltSerialJni(parent, openbltPort, callbacks);
     }
 
     private static OpenbltJni.OpenbltCallbacks makeOpenbltCallbacks(UpdateOperationCallbacks callbacks) {
@@ -285,10 +292,10 @@ public class ProgramSelector {
             "Error", JOptionPane.ERROR_MESSAGE);
     }
 
-    public static void flashOpenbltSerialJni(JComponent parent, String port, UpdateOperationCallbacks callbacks) {
+    public static boolean flashOpenbltSerialJni(JComponent parent, String port, UpdateOperationCallbacks callbacks) {
         if (FileLog.is32bitJava()) {
             showError32bitJava(parent);
-            return;
+            return false;
         }
 
         OpenbltJni.OpenbltCallbacks cb = makeOpenbltCallbacks(callbacks);
@@ -296,18 +303,17 @@ public class ProgramSelector {
         String fileName = FindFileHelper.findSrecFile();
         if (fileName == null) {
             callbacks.logLine(".srec image file not found");
-            callbacks.error();
-            return;
+            return false;
         }
         try {
             callbacks.logLine("flashSerial " + fileName);
             OpenbltJni.flashSerial(fileName, port, cb);
 
             callbacks.logLine("Update completed successfully!");
-            callbacks.done();
+            return true;
         } catch (Throwable e) {
             callbacks.logLine("Error: " + e);
-            callbacks.error();
+            return false;
         } finally {
             OpenbltJni.stop(cb);
         }
@@ -329,6 +335,7 @@ public class ProgramSelector {
         boolean hasSerialPorts = !currentHardware.getKnownPorts().isEmpty();
         boolean hasDfuDevice = currentHardware.isDfuFound();
 
+        Object updateModeToRestore = updateModeComboBox.getSelectedItem();
         updateModeComboBox.removeAllItems();
         if (FileLog.isWindows()) {
             boolean requireBlt = FindFileHelper.isObfuscated();
@@ -360,12 +367,16 @@ public class ProgramSelector {
 
             List<PortResult> listOfBootloaders = currentHardware.getKnownPorts().stream().filter(portResult -> portResult.type == OpenBlt).collect(Collectors.toList());
             if (!listOfBootloaders.isEmpty()) {
-                updateModeComboBox.setSelectedItem(OPENBLT_MANUAL);
+                updateModeToRestore = OPENBLT_MANUAL;
             }
         }
 
-        trueLayout(updateModeComboBox);
-        trueLayout(content);
+        if (updateModeToRestore != null) {
+            updateModeComboBox.setSelectedItem(updateModeToRestore);
+        }
+
+        AutoupdateUtil.trueLayout(updateModeComboBox);
+        AutoupdateUtil.trueLayout(content);
     }
 
   @NotNull

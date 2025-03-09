@@ -9,7 +9,9 @@ public:
 	MOCK_METHOD(floatms_t, getDeadtime, (), (const, override));
 	MOCK_METHOD(float, getBaseFlowRate, (), (const, override));
 	MOCK_METHOD(float, getInjectorFlowRatio, (), (override));
+	MOCK_METHOD(void, updateState, (), (override));
 	MOCK_METHOD(expected<float>, getFuelDifferentialPressure, (), (const, override));
+	MOCK_METHOD(expected<float>, getFuelPressure, (), (const, override));
 	MOCK_METHOD(float, getSmallPulseFlowRate, (), (const, override));
 	MOCK_METHOD(float, getSmallPulseBreakPoint, (), (const, override));
 	MOCK_METHOD(InjectorNonlinearMode, getNonlinearMode, (), (const, override));
@@ -133,18 +135,25 @@ TEST(InjectorModel, Deadtime) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Some test data in the injector correction table
-	for (size_t i = 0; i < efi::size(engineConfiguration->injector.battLagCorr); i++) {
-		engineConfiguration->injector.battLagCorr[i] = 2 * i;
-		engineConfiguration->injector.battLagCorrBins[i] = i;
-	}
+	static const float injectorLagPressureBins[VBAT_INJECTOR_CURVE_PRESSURE_SIZE] = { 300, 600 };
+	static const float injectorLagVbattBins[VBAT_INJECTOR_CURVE_SIZE] = { 6.0, 8.0, 10.0, 11.0, 12.0, 13.0, 14.0, 15.0 };
+	static const float injectorLagCorrection[VBAT_INJECTOR_CURVE_PRESSURE_SIZE][VBAT_INJECTOR_CURVE_SIZE] = {
+		{ 3.371, 1.974, 1.383, 1.194, 1.040, 0.914, 0.767, 0.726 },
+		{ 3.371, 1.974, 1.383, 1.194, 1.040, 0.914, 0.767, 0.726 },
+	};
+
+	copyArray(engineConfiguration->injector.battLagCorrBattBins, injectorLagVbattBins);
+	copyArray(engineConfiguration->injector.battLagCorrPressBins, injectorLagPressureBins);
+	copyTable(engineConfiguration->injector.battLagCorrTable, injectorLagCorrection);
 
 	InjectorModelPrimary dut;
+    dut.pressureCorrectionReference = 300;
 
-	Sensor::setMockValue(SensorType::BatteryVoltage, 3);
-	EXPECT_EQ(dut.getDeadtime(), 6);
+	Sensor::setMockValue(SensorType::BatteryVoltage, 11);
+	EXPECT_NEAR(dut.getDeadtime(), 1.18, EPS2D);
 
-	Sensor::setMockValue(SensorType::BatteryVoltage, 7);
-	EXPECT_EQ(dut.getDeadtime(), 14);
+	Sensor::setMockValue(SensorType::BatteryVoltage, 15);
+	EXPECT_NEAR(dut.getDeadtime(), 0.72, EPS2D);
 }
 
 struct TesterGetFlowRate : public InjectorModelPrimary {

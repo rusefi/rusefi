@@ -5,7 +5,7 @@ import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCategory;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.preferences.storage.Node;
-import com.rusefi.ui.util.UiUtils;
+import com.rusefi.core.ui.AutoupdateUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -91,7 +91,7 @@ public class SensorLiveGraph extends JPanel {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                UiUtils.trueRepaint(SensorLiveGraph.this);
+                AutoupdateUtil.trueLayout(SensorLiveGraph.this);
             }
         });
     }

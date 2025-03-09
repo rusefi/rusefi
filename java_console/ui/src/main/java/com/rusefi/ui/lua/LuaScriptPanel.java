@@ -2,9 +2,13 @@ package com.rusefi.ui.lua;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
+import com.opensr5.ini.IniFileModel;
+import com.opensr5.ini.field.StringIniField;
 import com.rusefi.ConnectionTab;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.config.generated.VariableRegistryValues;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.MessagesPanel;
@@ -24,10 +28,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
+import java.util.Objects;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.ui.util.UiUtils.trueLayout;
 
 public class LuaScriptPanel {
     private static final Logging log = getLogging(LuaScriptPanel.class);
@@ -37,7 +40,7 @@ public class LuaScriptPanel {
     private final Node config;
     private final JPanel mainPanel = new JPanel(new BorderLayout());
     private final AnyCommand command;
-    private final TextEditor scriptText = new TextEditor();
+    private final LuaTextEditor scriptText;
     private final MessagesPanel mp;
 
     public LuaScriptPanel(UIContext context, Node config) {
@@ -119,6 +122,8 @@ public class LuaScriptPanel {
 
         // Center panel - script editor and log
         JPanel scriptPanel = new JPanel(new BorderLayout());
+
+        scriptText = new LuaTextEditor(context);
         scriptPanel.add(scriptText.getControl(), BorderLayout.CENTER);
 
         //centerPanel.add(, BorderLayout.WEST);
@@ -144,7 +149,7 @@ public class LuaScriptPanel {
         mainPanel.add(upperPanel, BorderLayout.NORTH);
         mainPanel.add(centerPanel, BorderLayout.CENTER);
 
-        trueLayout(mainPanel);
+        AutoupdateUtil.trueLayout(mainPanel);
         SwingUtilities.invokeLater(() -> centerPanel.setDividerLocation(centerPanel.getSize().width / 2));
     }
 
@@ -180,8 +185,11 @@ public class LuaScriptPanel {
                 }
             });
 
-            if (newLua.length() >= Fields.LUA_SCRIPT_SIZE) {
-                setText(newLua.length() + " bytes would not fit sorry current limit " + Fields.LUA_SCRIPT_SIZE);
+            BinaryProtocol bp = context.getLinkManager().getCurrentStreamState();
+            StringIniField luaScript = getLuaScriptField(bp);
+
+            if (newLua.length() >= luaScript.getSize()) {
+                setText(newLua.length() + " bytes would not fit sorry current limit " + luaScript.getSize());
             } else {
                 setText(newLua);
                 // and send to ECU (without burn!)
@@ -251,13 +259,22 @@ public class LuaScriptPanel {
             setText("No configuration image");
             return;
         }
-        ByteBuffer luaScriptBuffer = image.getByteBuffer(Fields.LUASCRIPT.getOffset(), Fields.LUA_SCRIPT_SIZE);
+        StringIniField luaScript = getLuaScriptField(bp);
+        ByteBuffer luaScriptBuffer = image.getByteBuffer(luaScript.getOffset(), luaScript.getSize());
 
-        byte[] scriptArr = new byte[Fields.LUA_SCRIPT_SIZE];
+        byte[] scriptArr = new byte[luaScript.getSize()];
         luaScriptBuffer.get(scriptArr);
 
         int i = findNullTerminator(scriptArr);
         setText(new String(scriptArr, 0, i, StandardCharsets.US_ASCII));
+    }
+
+    static StringIniField getLuaScriptField(BinaryProtocol bp) {
+        Objects.requireNonNull(bp, "BinaryProtocol");
+        // todo: do we have "luaScript" as code-generated constant anywhere?
+        IniFileModel iniFile = bp.getIniFile();
+        Objects.requireNonNull(iniFile, "iniFile");
+        return (StringIniField) iniFile.getIniField(Fields.LUASCRIPT);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -275,18 +292,19 @@ public class LuaScriptPanel {
         linkManager.submit(() -> {
             BinaryProtocol bp = linkManager.getCurrentStreamState();
 
-            byte[] paddedScript = new byte[Fields.LUA_SCRIPT_SIZE];
-            byte[] scriptBytes = script.getBytes(StandardCharsets.US_ASCII);
-            System.arraycopy(scriptBytes, 0, paddedScript, 0, scriptBytes.length);
+            StringIniField field = getLuaScriptField(bp);
+
+            byte[] paddedScript = getScriptBytes(field, script);
 
             int idx = 0;
             int remaining;
 
+            log.info("Sending " + field);
             do {
                 remaining = paddedScript.length - idx;
-                int thisWrite = Math.min(remaining, Fields.BLOCKING_FACTOR);
+                int thisWrite = Math.min(remaining, VariableRegistryValues.BLOCKING_FACTOR);
 
-                bp.writeData(paddedScript, idx, Fields.LUASCRIPT.getOffset() + idx, thisWrite);
+                bp.writeData(paddedScript, idx, field.getOffset() + idx, thisWrite);
 
                 idx += thisWrite;
 
@@ -303,6 +321,13 @@ public class LuaScriptPanel {
         });
         // resume messages on 'write new script to ECU'
         mp.setPaused(false);
+    }
+
+    private static byte @NotNull [] getScriptBytes(StringIniField luaScript, String script) {
+        byte[] paddedScript = new byte[luaScript.getSize()];
+        byte[] scriptBytes = script.getBytes(StandardCharsets.US_ASCII);
+        System.arraycopy(scriptBytes, 0, paddedScript, 0, scriptBytes.length);
+        return paddedScript;
     }
 
     private String getScript() {

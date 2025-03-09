@@ -8,6 +8,10 @@ PUBLIC_API_WEAK bool fansDisabledByBoardStatus() {
   return false;
 }
 
+PUBLIC_API_WEAK bool fansEnabledByBoardStatus() {
+  return false;
+}
+
 bool FanController::getState(bool acActive, bool lastState) {
 	auto clt = Sensor::get(SensorType::Clt);
 	auto vss = Sensor::get(SensorType::VehicleSpeed);
@@ -44,7 +48,10 @@ bool FanController::getState(bool acActive, bool lastState) {
 	hot = clt.value_or(0) > getFanOnTemp();
 	cold = clt.value_or(0) < getFanOffTemp();
 
-	if (cranking) {
+	if (fansEnabledByBoardStatus()) {
+		radiatorFanStatus = (int)RadiatorFanState::BoardForcedOn;
+		return true;
+	} else if (cranking) {
 		// Inhibit while cranking
 		radiatorFanStatus = (int)RadiatorFanState::Cranking;
 		return false;

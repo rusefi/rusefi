@@ -55,8 +55,8 @@ public class LiveDataProcessor {
     }
 
     public static void main(String[] args) throws IOException {
-        if (args.length != 5) {
-            System.err.println("Five arguments expected: name of live data yaml input file and else but got " + args.length + ": " + Arrays.toString(args));
+        if (args.length != 6) {
+            System.err.println("Six arguments expected: name of live data yaml input file and else but got " + args.length + ": " + Arrays.toString(args));
             System.exit(-1);
         }
         log.info("Invoked with " + Arrays.toString(args));
@@ -64,9 +64,10 @@ public class LiveDataProcessor {
         log.info("yamlFileNames=" + yamlFileNames);
         String definitionInputFileName = args[1];
         String headerFileName = args[2];
-        String javaDestinationFileName = args[3];
-        String destinationFolder = args[4];
-        TriggerMetaGenerator.doJob(definitionInputFileName, headerFileName, javaDestinationFileName);
+        String javaDestinationFolder = args[3];
+        String javaDestinationFileName = args[4];
+        String destinationFolder = args[5];
+        TriggerMetaGenerator.doJob(definitionInputFileName, headerFileName, javaDestinationFolder, javaDestinationFileName);
         List<LinkedHashMap> totalContent = new ArrayList<>();
         for (String fileName : yamlFileNames.split(",")) {
             List<LinkedHashMap> yamlContent = getStringObjectMap(new FileReader(fileName));
@@ -145,7 +146,7 @@ public class LiveDataProcessor {
 
         SdCardFieldsContent sdCardFieldsConsumer = new SdCardFieldsContent();
 
-        GetOutputValueConsumer outputValueConsumer = new GetOutputValueConsumer("controllers/lua/generated/output_lookup_generated.cpp", fileFactory);
+        GetOutputValueConsumer outputValueConsumer = new GetOutputValueConsumer(getOutputLookupFileName(), fileFactory);
 
         EntryHandler handler = new EntryHandler() {
             @Override
@@ -217,7 +218,8 @@ public class LiveDataProcessor {
                     sdCardFieldsConsumer.isPtr = isPtr;
                     state.addDestination(sdCardFieldsConsumer::handleEndStruct);
 
-                    outputValueConsumer.currentSectionPrefix = constexpr[0];
+                    outputValueConsumer.expressions = constexpr;
+                    outputValueConsumer.names = outputNames;
                     outputValueConsumer.moduleMode = false;
                     outputValueConsumer.conditional = conditional;
                     outputValueConsumer.isPtr = isPtr;
@@ -338,6 +340,10 @@ public class LiveDataProcessor {
         writeFiles();
 
         return startingPosition.get();
+    }
+
+    public static @NotNull String getOutputLookupFileName() {
+        return "controllers/lua/generated/output_lookup_generated.cpp";
     }
 
     private static String @NotNull [] getStrings(Object value) {

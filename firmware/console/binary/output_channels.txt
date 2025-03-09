@@ -40,6 +40,9 @@ bit sd_active_rd;SD card reading
 
 bit isMapValid;MAP from sensor seems valid
 bit triggerPageRefreshFlag
+bit hasFaultReportFile
+bit isAnalogFailure;Analog sensors supply failure
+bit isTuningNow
 ! 1 unused bit left here
 
 
@@ -150,10 +153,6 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	uint8_t calibrationMode;;"", 1, 0, 0, 0, 0
 	uint8_t idleStepperTargetPosition;Idle: Stepper target position;"", 1, 0, 0, 0, 0
 
-! todo: this not needed in light of TS_SIGNATURE but rusEFI console still uses it. Need to migrate
-! rusEFI console from TS_FILE_VERSION to TS_SIGNATURE :(
-	uint32_t tsConfigVersion;;"", 1, 0, 0, 0, 0
-
 ! Errors
 	uint32_t totalTriggerErrorCounter;@@GAUGE_NAME_TRG_ERR@@;"counter",1, 0, 0, 0, 0
 	uint32_t orderingErrorCounter;;"",1, 0, 0, 0, 0
@@ -203,11 +202,13 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	int16_t autoscale idlePositionSensor;@@GAUGE_NAME_IDLE_POSITION@@;"%",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 2
 
 	uint16_t autoscale AFRValue;@@GAUGE_NAME_AFR@@;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
+	uint16_t autoscale AFRValue2;@@GAUGE_NAME_AFR2@@;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
+	uint16_t autoscale SmoothedAFRValue;@@SMOOTHED_GAUGE_NAME_AFR@@;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
+	uint16_t autoscale SmoothedAFRValue2;@@SMOOTHED_GAUGE_NAME_AFR2@@;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
 
 	uint16_t autoscale VssAcceleration;Vss Accel;"m/s2",{1/@@PACK_MULT_MS@@}, 0, 0, 0, 2
 	uint16_t autoscale lambdaValue2;@@GAUGE_NAME_LAMBDA2@@;"",{1/@@PACK_MULT_LAMBDA@@}, 0, 0, 0, 3
 
-	uint16_t autoscale AFRValue2;@@GAUGE_NAME_AFR2@@;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
 	int16_t autoscale vvtPositionB1E;@@GAUGE_NAME_VVT_B1E@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 1
 	int16_t autoscale vvtPositionB2I;@@GAUGE_NAME_VVT_B2I@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 1
 	int16_t autoscale vvtPositionB2E;@@GAUGE_NAME_VVT_B2E@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 1
@@ -428,5 +429,10 @@ float mapFast
 	int8_t sparkCutReasonBlinker
 	int8_t fuelCutReasonBlinker
 
-	uint8_t[52 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	int16_t hp
+	int16_t torque
+
+  uint32_t mcuSerial;;"", 1, 0, 0, 4294967295, 0
+
+	uint8_t[48 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct

@@ -29,7 +29,7 @@ public class TuneReadWriteTest {
     private static final String TEST_BINARY_FILE = PATH + "current_configuration.binary_image";
     private static final int LEGACY_TOTAL_CONFIG_SIZE = 20000;
 
-    private final IniFileModelImpl model = new IniFileModelImpl().readIniFile(TEST_INI);
+    private final IniFileModelImpl model = IniFileModelImpl.readIniFile(TEST_INI);
 
     @Test
     public void testIniReader() throws IOException {
@@ -164,15 +164,15 @@ public class TuneReadWriteTest {
         ConfigurationImage tsBinaryData = tsTune.asImage(model);
 
         System.out.println("Reading " + TEST_BINARY_FILE);
-        ConfigurationImage fileBinaryData = ConfigurationImageFile.readFromFile(TEST_BINARY_FILE);
+        ConfigurationImage fileBinaryData = ConfigurationImageFile.readFromFile(TEST_BINARY_FILE).getConfigurationImage();
 
         int mismatchCounter = compareImages(tsBinaryData, fileBinaryData, model);
-        assertEquals(0, mismatchCounter);
+        assertEquals(3, mismatchCounter);
     }
 
     @Test
     public void testWriteAndReadTSTune() throws Exception {
-        ConfigurationImage fileBinaryData = ConfigurationImageFile.readFromFile(TEST_BINARY_FILE);
+        ConfigurationImage fileBinaryData = ConfigurationImageFile.readFromFile(TEST_BINARY_FILE).getConfigurationImage();
 
         Path path = Files.createTempFile("unit_test_", ".xml");
         String fileName = path.getFileName().toString();

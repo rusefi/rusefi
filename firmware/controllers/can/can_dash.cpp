@@ -467,9 +467,9 @@ void canDashboardHaltech(CanCycle cycle) {
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x361, 8);
 			/* Fuel pressure */
-			msg.setShortValueMsb((Sensor::getOrZero(SensorType::FuelPressureLow) + 101.3) * 10, 0);
+			msg.setShortValueMsb((Sensor::getOrZero(SensorType::FuelPressureLow) + STD_ATMOSPHERE) * 10, 0);
 			/* Oil pressure */
-			msg.setShortValueMsb((Sensor::getOrZero(SensorType::OilPressure) + 101.3) * 10, 2);
+			msg.setShortValueMsb((Sensor::getOrZero(SensorType::OilPressure) + STD_ATMOSPHERE) * 10, 2);
 			/* Engine Demand */
 			msg.setShortValueMsb(Sensor::getOrZero(SensorType::Map), 4);
 			/* Wastegate Pressure */
@@ -1077,7 +1077,7 @@ struct Aim5f4 {
 
 static void populateFrame(Aim5f4& msg) {
 	float deltaKpa = Sensor::getOrZero(SensorType::Map)
-		- Sensor::get(SensorType::BarometricPressure).value_or(101.325);
+		- Sensor::get(SensorType::BarometricPressure).value_or(STD_ATMOSPHERE);
 	float boostBar = deltaKpa / 100;
 
 	float gPerSecond = engine->module<TripOdometer>()->getConsumptionGramPerSecond();

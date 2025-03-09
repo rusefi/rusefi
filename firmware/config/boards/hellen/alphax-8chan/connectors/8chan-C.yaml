@@ -55,6 +55,7 @@ pins:
     meta: MM176_OUT_IO4
     class: outputs
     ts_name: 9C - Low Side 4
+    color: yellow
 
 
   - pin: 10C
@@ -68,7 +69,7 @@ pins:
     function: Smart Ignition 1 Output
     type: ign
     ts_name: 11C - Ignition 1
-    color: yellow
+    color: green
 
   - pin: 12C
     function: Power GND
@@ -81,7 +82,7 @@ pins:
     function: Smart Ignition 3 Output
     type: ign
     ts_name: 13C - Ignition 3
-    color: yellow
+    color: blue
 
   - pin: 14C
     meta: MM176_IGN5
@@ -89,6 +90,7 @@ pins:
     function: Smart Ignition 5 Output
     type: ign
     ts_name: 14C - Ignition 5
+    color: green
 
   - pin: 15C
     meta: MM176_IGN8
@@ -96,7 +98,7 @@ pins:
     function: Smart Ignition 8 Output
     type: ign
     ts_name: 15C - Ignition 8
-    color: orange
+    color: orange/brown
 
   - pin: 16C
     function: CAN2 bus low (CAN2L)
@@ -120,7 +122,7 @@ pins:
     function: Smart Ignition 2 Output
     type: ign
     ts_name: 19C - Ignition 2
-    color: yellow
+    color: white
 
   - pin: 20C
     meta: MM176_IGN4
@@ -128,7 +130,7 @@ pins:
     function: Smart Ignition 4 Output
     type: ign
     ts_name: 20C - Ignition 4
-    color: yellow
+    color: orange/brown
 
   - pin: 21C
     meta: MM176_IGN7
@@ -136,7 +138,7 @@ pins:
     function: Smart Ignition 7 Output
     type: ign
     ts_name: 21C - Ignition 7
-    color: yellow
+    color: blue
 
   - pin: 22C
     function: Power GND
@@ -179,7 +181,7 @@ pins:
     function: Smart Ignition 6 Output
     type: ign
     ts_name: 28C - Ignition 6
-    color: blue
+    color: white
 
   - pin: 29C
     meta: MM176_SPI3_SCK
@@ -187,7 +189,6 @@ pins:
     function: Smart Ignition 9 Output
     type: ign
     ts_name: 29C - Ignition 9
-    color: blue
 
   - pin: 30C
     meta: MM176_SPI3_MOSI
@@ -222,6 +223,7 @@ pins:
 
 info:
   title: AlphaX Platinum
+  cid: c
   # directory see D.yaml
   name: AlphaX Platinum
   image:

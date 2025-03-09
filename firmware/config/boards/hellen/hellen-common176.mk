@@ -1,6 +1,7 @@
 
 # 176 package MCU
 ifeq ($(LED_CRITICAL_ERROR_BRAIN_PIN),)
+
   LED_CRITICAL_ERROR_BRAIN_PIN = -DLED_CRITICAL_ERROR_BRAIN_PIN=H176_MCU_NOT_MEGA_LED1_RED
 endif
 
@@ -8,4 +9,5 @@ DDEFS += $(LED_CRITICAL_ERROR_BRAIN_PIN)
 
 DDEFS += -DHELLEN_BOARD_ID_PIN_1=Gpio::F0 -DHELLEN_BOARD_ID_PIN_2=Gpio::F1
 
+# older mcu-176 has custom LEDs while mm-176 matches mm-144
 include $(BOARDS_DIR)/hellen/hellen-common.mk

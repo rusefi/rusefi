@@ -10,3 +10,4 @@ https://www.geeksforgeeks.org/gdb-step-by-step-introduction/
 arm-none-eabi-gdb
 target remote localhost:3333
 
+openocd -f interface/stlink.cfg -f target/stm32f7x.cfg -c '$_TARGETNAME configure -rtos auto'

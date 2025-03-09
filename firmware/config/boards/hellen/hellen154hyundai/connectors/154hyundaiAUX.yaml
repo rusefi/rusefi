@@ -75,6 +75,7 @@ pins:
 
 info:
   directory: hellen/hellen154hyundai
+  cid: aux
   title: Hellen 154 Hyundai
   image:
     file: 154hyundaiAUX.jpg

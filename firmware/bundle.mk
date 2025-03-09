@@ -83,8 +83,6 @@ UPDATE_CONSOLE_FOLDER_SOURCES = \
 CONSOLE_FOLDER_SOURCES = \
   ../misc/console_launcher/rusefi_autoupdate.exe \
   ../misc/console_launcher/rusefi_console.exe \
-  ../misc/install/openocd \
-  ../misc/install/STM32_Programmer_CLI \
   $(wildcard ../java_console/*.dll) \
   ../firmware/ext/openblt/Host/libopenblt.dll \
   ../firmware/ext/openblt/Host/BootCommander.exe \
@@ -94,6 +92,15 @@ CONSOLE_FOLDER_SOURCES = \
   ../firmware/ext/openblt/Host/libopenblt_jni.so \
   ../firmware/ext/openblt/Host/libopenblt_jni.dylib \
   $(SIMULATOR_EXE)
+
+# yes, this one is inverted
+ifneq ($(DO_NOT_BUNDLE_STM32_PROG),yes)
+  CONSOLE_FOLDER_SOURCES += ../misc/install/STM32_Programmer_CLI
+endif
+
+ifeq ($(BUNDLE_OPENOCD),yes)
+  CONSOLE_FOLDER_SOURCES += ../misc/install/openocd
+endif
 
 BOOTLOADER_BIN = bootloader/blbuild/openblt_$(PROJECT_BOARD).bin
 BOOTLOADER_HEX = bootloader/blbuild/openblt_$(PROJECT_BOARD).hex

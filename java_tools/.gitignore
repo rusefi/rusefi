@@ -1,4 +1,5 @@
-current_configuration.binary_image
+current_configuration.zip
+current_configuration.msq
 downloaded_tunes
 .gradle
 **/rusefi_tool.log

@@ -3,6 +3,7 @@ package com.rusefi.maintenance;
 import com.rusefi.Launcher;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.maintenance.jobs.JobHelper;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -29,8 +30,11 @@ public class StLinkFlasher {
     public static final String DONE = "DONE!";
     private static final String WMIC_STLINK_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%STLink%'\" get Caption,ConfigManagerErrorCode /format:list";
 
-    public static void doUpdateFirmware(String fileName, UpdateOperationCallbacks callbacks) {
-        ExecHelper.submitAction(() -> doFlashFirmware(callbacks, fileName), StLinkFlasher.class + " extProcessThread");
+    public static void doUpdateFirmware(String fileName, UpdateOperationCallbacks callbacks, final Runnable onJobFinished) {
+        ExecHelper.submitAction(
+            () -> JobHelper.doJob(() -> doFlashFirmware(callbacks, fileName), onJobFinished),
+            StLinkFlasher.class + " extProcessThread"
+        );
     }
 
     public static String getOpenocdCommand() {
@@ -46,7 +50,7 @@ public class StLinkFlasher {
 
     private static void doFlashFirmware(UpdateOperationCallbacks wnd, String fileName) {
         if (!new File(fileName).exists()) {
-            wnd.appendLine(fileName + " not found, cannot proceed !!!");
+            wnd.logLine(fileName + " not found, cannot proceed !!!");
             wnd.error();
             return;
         }
@@ -56,16 +60,16 @@ public class StLinkFlasher {
                 fileName +
                 " verify reset exit 0x08000000\"", wnd);
       } catch (FileNotFoundException e) {
-        wnd.appendLine(e.toString());
+        wnd.logLine(e.toString());
         wnd.error();
         return;
       }
       if (error.contains(SUCCESS_MESSAGE_TAG) && !error.toLowerCase().contains(FAILED_MESSAGE_TAG)) {
-            wnd.appendLine("Flashing looks good!");
+            wnd.logLine("Flashing looks good!");
             wnd.done();
         } else {
             wnd.error();
-            wnd.appendLine("!!! FIRMWARE FLASH: DOES NOT LOOK RIGHT !!!");
+            wnd.logLine("!!! FIRMWARE FLASH: DOES NOT LOOK RIGHT !!!");
         }
     }
 

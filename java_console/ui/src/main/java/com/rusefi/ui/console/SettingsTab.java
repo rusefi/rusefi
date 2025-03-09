@@ -3,7 +3,6 @@ package com.rusefi.ui.console;
 import com.opensr5.ini.DialogModel;
 import com.rusefi.config.Field;
 import com.rusefi.config.FieldType;
-import com.rusefi.config.FieldsMap;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.io.LinkManager;
 import com.rusefi.ui.RecentCommands;
@@ -25,6 +24,7 @@ import static com.opensr5.ini.IniFileModelImpl.RUSEFI_INI_SUFFIX;
 /**
  * @see EnumConfigField
  */
+/*
 public class SettingsTab {
     private final JPanel content = new JPanel(new BorderLayout());
     private final JPanel panel = new JPanel(new GridLayout(1, 3));
@@ -164,3 +164,4 @@ public class SettingsTab {
         UiUtils.trueLayout(dialogBody);
     }
 }
+*/

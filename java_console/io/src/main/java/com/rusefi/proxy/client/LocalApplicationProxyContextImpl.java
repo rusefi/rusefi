@@ -4,6 +4,7 @@ import com.rusefi.tools.online.HttpUtil;
 
 import java.io.IOException;
 
+/*
 public abstract class LocalApplicationProxyContextImpl implements LocalApplicationProxyContext {
     @Override
     public String executeGet(String url) throws IOException {
@@ -15,3 +16,4 @@ public abstract class LocalApplicationProxyContextImpl implements LocalApplicati
         return LocalApplicationProxy.SERVER_PORT_FOR_APPLICATIONS;
     }
 }
+*/

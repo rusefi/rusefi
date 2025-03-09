@@ -19,7 +19,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.config.generated.Fields.CAN_ECU_SERIAL_TX_ID;
+import static com.rusefi.config.generated.VariableRegistryValues.*;
 
 public class SocketCANIoStream extends AbstractIoStream {
     static Logging log = getLogging(SocketCANIoStream.class);
@@ -33,7 +33,7 @@ public class SocketCANIoStream extends AbstractIoStream {
         }
     };
 
-    private final IsoTpConnector isoTpConnector = new IsoTpConnector(Fields.CAN_ECU_SERIAL_RX_ID) {
+    private final IsoTpConnector isoTpConnector = new IsoTpConnector(CAN_ECU_SERIAL_RX_ID) {
         @Override
         public void sendCanData(byte[] total) {
             sendCanPacket(total);

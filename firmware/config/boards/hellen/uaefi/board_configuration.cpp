@@ -60,6 +60,17 @@ void setBoardConfigOverrides() {
 
 }
 
+bool validateBoardConfig() {
+#ifndef HW_HELLEN_UAEFI121
+  // this same file is used for both uaefi and uaefi121
+  if (engineConfiguration->can2RxPin != Gpio::B12) {
+	  engineConfiguration->can2RxPin = Gpio::B12;
+	  engineConfiguration->can2TxPin = Gpio::B13;
+  }
+#endif
+  return true;
+}
+
 static void setDefaultETBPins() {
   // users would want to override those if using H-bridges for stepper idle control
   setupTLE9201IncludingStepper(/*PWM controlPin*/Gpio::MM100_OUT_PWM3, Gpio::MM100_OUT_PWM4, Gpio::MM100_SPI2_MISO);
@@ -88,6 +99,11 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->canTxPin = Gpio::MM100_CAN_TX;
 	engineConfiguration->canRxPin = Gpio::MM100_CAN_RX;
+#ifndef HW_HELLEN_UAEFI121
+  // this same file is used for both uaefi and uaefi121
+	engineConfiguration->can2RxPin = Gpio::B12;
+	engineConfiguration->can2TxPin = Gpio::B13;
+#endif
 
   engineConfiguration->mainRelayPin = Gpio::MM100_IGN7;
  	engineConfiguration->fanPin = Gpio::MM100_IGN8;

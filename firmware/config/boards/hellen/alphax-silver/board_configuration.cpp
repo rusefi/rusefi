@@ -147,10 +147,8 @@ static void board_init_ext_gpios() {
 
 /**
  * @brief Board-specific initialization code.
- * @todo  Add your board-specific code, if any.
  */
-void boardInitHardware(void)
-{
+void boardInitHardware() {
 	alphaTempPullUp.initPin("a-temp", Gpio::MM100_IGN8); //  E6
 	board_init_ext_gpios();
 	boardOnConfigurationChange(nullptr); // TODO? invoke this from main firmware code not from board file?

@@ -49,6 +49,7 @@ pins:
 
 
 info:
+  cid: aux
   title: AlphaX 2chan
   name: AlphaX 2chan
   board_url: https://rusefi.com/s/2chan

@@ -150,6 +150,7 @@ pins:
 
 info:
   title: Small CAN
+  cid: small
   name: Small CAN
   board_url: https://rusefi.com/s/scan
   directory: hellen/small-can-board

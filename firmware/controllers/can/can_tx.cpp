@@ -26,16 +26,28 @@ CanWrite::CanWrite()
 {
 }
 
+static CI roundTxPeriodToCycle(uint16_t period) {
+	if (period < 10) return CI::_5ms;
+	else if (period < 20) return CI::_10ms;
+	else if (period < 50) return CI::_20ms;
+	else if (period < 100) return CI::_50ms;
+	else if (period < 200) return CI::_100ms;
+	else if (period < 250) return CI::_200ms;
+	else if (period < 500) return CI::_250ms;
+	else if (period < 1000) return CI::_500ms;
+	else return CI::_1000ms;
+}
+
 PUBLIC_API_WEAK bool boardEnableSendWidebandInfo() { return true; }
 
 static uint16_t m_cycleCount = 0;
 
-void resetCanWriteCycle() {
+/* public API for custom boards */ void resetCanWriteCycle() {
   m_cycleCount = 0;
 }
 
-void CanWrite::PeriodicTask(efitick_t nowNt) {
-	UNUSED(nowNt);
+// this is invoked at CAN_CYCLE_FREQ frequency
+void CanWrite::PeriodicTask(efitick_t) {
 	CanCycle cycle(m_cycleCount);
 
 	//in case we have Verbose Can enabled, we should keep user configured period
@@ -43,12 +55,10 @@ void CanWrite::PeriodicTask(efitick_t nowNt) {
 	  // slow down verbose CAN while in serial CAN
     int canSleepPeriodMs = (engine->pauseCANdueToSerial ? 5 : 1) * engineConfiguration->canSleepPeriodMs;
 
-		uint16_t cycleCountsPeriodMs = m_cycleCount * CAN_CYCLE_PERIOD;
-		if (0 != engineConfiguration->canSleepPeriodMs) {
-			if (cycleCountsPeriodMs % canSleepPeriodMs) {
+		auto roundedInterval = roundTxPeriodToCycle(canSleepPeriodMs);
+		if (cycle.isInterval(roundedInterval)) {
 				void sendCanVerbose();
 				sendCanVerbose();
-			}
 		}
 	}
 

@@ -10,24 +10,24 @@ pins:
 
   - pin: 1A
     meta: MM176_IN_CRANK_ANALOG
-    function: Aux Analog 1
+    function: Aux Analog 1 / External MAP
     class: analog_inputs
     ts_name: 1A - Aux Analog 1
     color: blue
 
   - pin: 2A
     meta: MM176_IN_MAP1_ANALOG
-    function: Aux Analog 4 / External MAP
+    function: Aux Analog 4
     class: analog_inputs
-    ts_name: 2A - MAP / Aux Analog 4
-    color: blue
+    ts_name: 2A - Aux Analog 4
+    color: violet
 
   - pin: 3A
     meta: MM176_IN_O2S_ANALOG
     function: Aux Analog 2
     class: analog_inputs
     ts_name: 3A - Aux Analog 2
-    color: blue
+    color: yellow
 
   - pin: 4A
     meta: MM176_IN_AUX2_ANALOG
@@ -58,12 +58,13 @@ pins:
   - pin: 8A
     function: Analog Ground
     type: agnd
-    color: green
+    color: black
 
   - pin: 9A
     function: Hall Input 4
-    meta: MM176_IN_D4
-    class: event_inputs
+    type: hall
+    id: [MM176_IN_D4, MM176_IN_D4]
+    class: [event_inputs, switch_inputs]
     ts_name: 9A - Hall Input 4
     color: green
 
@@ -91,8 +92,9 @@ pins:
 
   - pin: 13A
     function: Hall Input 5
-    meta: MM176_IN_SENS2
-    class: event_inputs
+    type: hall
+    id: [MM176_IN_SENS2, MM176_IN_SENS2]
+    class: [event_inputs, switch_inputs]
     ts_name: 13A - Hall Input 5
     color: yellow
 
@@ -105,10 +107,11 @@ pins:
 
   - pin: 15A
     function: Hall Input 1
-    meta: MM176_IN_D1
-    class: event_inputs
+    type: hall
+    id: [MM176_IN_D1, MM176_IN_D1]
+    class: [event_inputs, switch_inputs]
     ts_name: 15A - Hall Input 1
-    color: orange
+    color: orange/brown
 
   - pin: 16A
     function: +5v sensors
@@ -118,13 +121,13 @@ pins:
   - pin: 17A
     function: Analog Ground
     type: agnd
-    color: orange
+    color: black
 
 
   - pin: 18A
     function: Power Ground
     type: gnd
-    color: blue
+    color: black
 
   - pin: 19A
     meta: MM176_IN_AUX1_ANALOG
@@ -157,15 +160,17 @@ pins:
 
   - pin: 23A
     function: Hall Input 2 (cannot be used simultaneously with VR3)
-    meta: MM176_IN_D2
-    class: event_inputs
+    type: hall
+    id: [MM176_IN_D2, MM176_IN_D2]
+    class: [event_inputs, switch_inputs]
     ts_name: ___ - Hall Input 2
     color: white
 
   - pin: 24A
     function: Hall Input 3 / SENT
-    meta: MM176_IN_D3
-    class: event_inputs
+    type: hall
+    id: [MM176_IN_D3, MM176_IN_D3]
+    class: [event_inputs, switch_inputs]
     ts_name: 24A - Hall Input 3 / SENT
     color: black
 
@@ -176,8 +181,9 @@ pins:
 
   - pin: 26A
     function: VSS Hall Input
-    meta: MM176_IN_VSS
-    class: event_inputs
+    type: hall
+    id: [MM176_IN_VSS, MM176_IN_VSS]
+    class: [event_inputs, switch_inputs]
     ts_name: 26A - VSS Hall
     color: purple
 
@@ -350,8 +356,8 @@ pins:
 
   - pin: 23B
     function: +5v sensors
-    color: green
-    type: av
+    color: red
+    type: 5v
 
   - pin: 24B
     meta: MM176_IN_VBATT
@@ -371,6 +377,7 @@ pins:
 
 info:
   title: AlphaX Platinum
+  cid: ab
   name: AlphaX Platinum
   # directory see D.yaml
   board_url: https://rusefi.com/s/8chan

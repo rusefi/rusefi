@@ -15,7 +15,6 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 
 import static com.rusefi.ui.util.LocalizedMessages.CLEAR;
@@ -90,21 +89,6 @@ public class UiUtils {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         Dimension frameSize = w.getSize();
         w.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
-    }
-
-    /**
-     * This does not make any sense :( That's an attempt
-     * to hack http://rusefi.com/forum/viewtopic.php?f=2&t=631&p=10083#p10081
-     */
-    public static void trueRepaint(JComponent control) {
-        trueLayout(control);
-    }
-
-    /**
-     * todo: one 'trueXXX' method should be enough, which one?
-     */
-    public static void trueLayout(Component component) {
-        AutoupdateUtil.trueLayout(component);
     }
 
     public static java.util.List<Component> getAllComponents(final Container c) {

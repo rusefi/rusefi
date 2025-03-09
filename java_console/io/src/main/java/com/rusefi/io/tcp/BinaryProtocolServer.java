@@ -32,7 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.devexperts.logging.Logging.getLogging;
-import static com.rusefi.config.generated.Fields.*;
+import static com.rusefi.config.generated.VariableRegistryValues.*;
 
 /**
  * This class makes rusEfi console a proxy for other tuning software, this way we can have two tools connected via same
@@ -97,7 +97,7 @@ public class BinaryProtocolServer {
     public static ServerSocketReference tcpServerSocket(int port, String threadName, CompatibleFunction<Socket, Runnable> socketRunnableFactory, Listener serverSocketCreationCallback, StatusConsumer statusConsumer) throws IOException {
         return tcpServerSocket(socketRunnableFactory, port, threadName, serverSocketCreationCallback, p -> {
             ServerSocket serverSocket = new ServerSocket(p);
-            statusConsumer.appendStatus("ServerSocket " + p + " created. Feel free to point TS at IP Address 'localhost' port " + p);
+            statusConsumer.logLine("ServerSocket " + p + " created. Feel free to point TS at IP Address 'localhost' port " + p);
             return serverSocket;
         });
     }
@@ -161,7 +161,7 @@ public class BinaryProtocolServer {
             log.info("Got command " + BinaryProtocol.findCommand(command));
 
             if (command == Integration.TS_HELLO_COMMAND) {
-                new HelloCommand(Fields.TS_SIGNATURE).handle(stream);
+                new HelloCommand(TS_SIGNATURE).handle(stream);
             } else if (command == Integration.TS_GET_PROTOCOL_VERSION_COMMAND_F) {
                 stream.sendPacket((TS_OK + TS_PROTOCOL).getBytes());
             } else if (command == Integration.TS_GET_FIRMWARE_VERSION) {
@@ -317,7 +317,7 @@ public class BinaryProtocolServer {
             byte[] response = new byte[1 + count];
             response[0] = (byte) TS_OK.charAt(0);
             Objects.requireNonNull(bp, "bp");
-            ConfigurationImage configurationImage = bp.getControllerConfiguration();
+            ConfigurationImage configurationImage = bp.getConfigurationImage();
             Objects.requireNonNull(configurationImage, "configurationImage");
             System.arraycopy(configurationImage.getContent(), offset, response, 1, count);
             stream.sendPacket(response);
@@ -327,7 +327,7 @@ public class BinaryProtocolServer {
     private void handleCrc(LinkManager linkManager, TcpIoStream stream) throws IOException {
         log.info("CRC check");
         BinaryProtocolState bp = linkManager.getBinaryProtocolState();
-        byte[] content = bp.getControllerConfiguration().getContent();
+        byte[] content = bp.getConfigurationImage().getContent();
         byte[] packet = createCrcResponse(content);
         stream.sendPacket(packet);
     }

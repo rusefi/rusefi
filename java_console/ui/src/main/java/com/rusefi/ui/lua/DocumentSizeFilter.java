@@ -35,44 +35,63 @@ package com.rusefi.ui.lua;
 
 /* A 1.4 class used by TextComponentDemo.java. */
 
+import com.opensr5.ini.field.StringIniField;
+import com.rusefi.binaryprotocol.BinaryProtocol;
+import com.rusefi.io.LinkManager;
+import com.rusefi.ui.UIContext;
+
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import javax.swing.text.DocumentFilter;
 import java.awt.*;
 
 public class DocumentSizeFilter extends DocumentFilter {
-    final int maxCharacters;
+    private final UIContext context;
 
-    public DocumentSizeFilter(int maxChars) {
-        maxCharacters = maxChars;
+    public DocumentSizeFilter(UIContext context) {
+        this.context = context;
     }
 
     public void insertString(FilterBypass fb, int offs,
                              String str, AttributeSet a)
             throws BadLocationException {
+        boolean isAllowed = checkIfAllowed(fb.getDocument(), str, 0);
 
         //This rejects the entire insertion if it would make
         //the contents too long. Another option would be
         //to truncate the inserted string so the contents
         //would be exactly maxCharacters in length.
-        if ((fb.getDocument().getLength() + str.length()) <= maxCharacters)
+        if (isAllowed) {
             super.insertString(fb, offs, str, a);
-        else
+        } else {
             Toolkit.getDefaultToolkit().beep();
+        }
+    }
+
+    private boolean checkIfAllowed(Document document, String str, int delta) {
+        LinkManager linkManager = context.getLinkManager();
+        BinaryProtocol bp = linkManager.getBinaryProtocol();
+        if (bp == null)
+            return true;
+        StringIniField field = LuaScriptPanel.getLuaScriptField(bp);
+        int limit = field.getSize();
+        return (document.getLength() + str.length() + delta) <= limit;
     }
 
     public void replace(FilterBypass fb, int offs,
                         int length,
                         String str, AttributeSet a)
             throws BadLocationException {
+        boolean isAllowed = checkIfAllowed(fb.getDocument(), str, -length);
         //This rejects the entire replacement if it would make
         //the contents too long. Another option would be
         //to truncate the replacement string so the contents
         //would be exactly maxCharacters in length.
-        if ((fb.getDocument().getLength() + str.length()
-                - length) <= maxCharacters)
+        if (isAllowed) {
             super.replace(fb, offs, length, str, a);
-        else
+        } else {
             Toolkit.getDefaultToolkit().beep();
+        }
     }
 }

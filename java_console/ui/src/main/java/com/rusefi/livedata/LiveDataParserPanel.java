@@ -57,7 +57,7 @@ public class LiveDataParserPanel {
             BinaryProtocolState bps = binaryProtocol.getBinaryProtocolState();
             if (bps == null)
                 return;
-            ConfigurationImage ci = bps.getControllerConfiguration();
+            ConfigurationImage ci = bps.getConfigurationImage();
             if (ci == null)
                 return;
 

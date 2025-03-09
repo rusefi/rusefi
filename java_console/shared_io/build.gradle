@@ -1,7 +1,4 @@
-plugins {
-  id 'java-library'
-  id 'java'
-}
+
 
 apply from: '../../android/dependencies.gradle'
 

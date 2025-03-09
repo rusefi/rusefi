@@ -55,7 +55,7 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame& msg, efitick_t
 void registerCanListener(CanListener& listener);
 void registerCanSensor(CanSensorBase& sensor);
 
-class CanWrite final : public PeriodicController<512> {
+class CanWrite final : public PeriodicController</*TStackSize*/512> {
 public:
 	CanWrite();
 	void PeriodicTask(efitick_t nowNt) override;

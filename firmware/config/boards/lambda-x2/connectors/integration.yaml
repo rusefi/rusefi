@@ -24,6 +24,7 @@ pins:
     color: yellow
 
 info:
+  cid: integration
   image:
     file: integration.png
   pins:

@@ -89,10 +89,23 @@ void setSubaruEG33Defaults() {
 	engineConfiguration->mapMinBufferLength = 4;
 
 	/* idle configuration */
-	engineConfiguration->manIdlePosition = 30;
+	setArrayValues(config->cltIdleCorr, 30.0);
 
 	engineConfiguration->maxAcRpm = 3000;
 
 	/* Check this */
 	engineConfiguration->tachPulsePerRev = 2;
+}
+
+void setSubaru2011() {
+  engineConfiguration->allowIdenticalPps = true;
+  engineConfiguration->throttlePedalUpVoltage = 1;
+  engineConfiguration->throttlePedalSecondaryUpVoltage = 1;
+  engineConfiguration->throttlePedalWOTVoltage = 3.3;
+  engineConfiguration->throttlePedalSecondaryWOTVoltage = 3.3;
+
+	engineConfiguration->tpsMin = convertVoltageTo10bitADC(0.68);
+	engineConfiguration->tpsMax = convertVoltageTo10bitADC(3.96);
+  engineConfiguration->tps1SecondaryMin = convertVoltageTo10bitADC(1.55);
+  engineConfiguration->tps1SecondaryMax = convertVoltageTo10bitADC(4.17);
 }

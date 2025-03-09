@@ -47,6 +47,7 @@ void configError(const char *fmt, ...);
 void clearConfigErrorMessage();
 const char* getConfigErrorMessage();
 bool hasConfigError();
+bool hasErrorReportFile();
 
 // todo: better place for this shared declaration?
 int getRusEfiVersion();
@@ -89,6 +90,9 @@ enum class ErrorCookie : uint32_t {
 const char *errorCookieToName(ErrorCookie cookie);
 
 // Error handling/recovery/reporting information
+
+#define ERROR_STACK_DEPTH   96
+
 typedef struct {
     ErrorCookie Cookie;
 
@@ -99,6 +103,8 @@ typedef struct {
     uint32_t FaultType;
     uint32_t FaultAddress;
     uint32_t Csfr;
+    uint32_t sp;
+    uint32_t stack[ERROR_STACK_DEPTH];
 } backupErrorState;
 
 // reads backup ram and checks for any error report

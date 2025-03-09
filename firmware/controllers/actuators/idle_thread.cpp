@@ -91,22 +91,19 @@ float IdleController::getCrankingTaperFraction() const {
 
 float IdleController::getCrankingOpenLoop(float clt) const {
 	float mult =
-		engineConfiguration->overrideCrankingIacSetting
-		// Override to separate table
-	 	? interpolate2d(clt, config->cltCrankingCorrBins, config->cltCrankingCorr)
-		// Otherwise use plain running table
-		: interpolate2d(clt, config->cltIdleCorrBins, config->cltIdleCorr);
+		interpolate2d(clt, config->cltCrankingCorrBins, config->cltCrankingCorr);
 
 	return engineConfiguration->crankingIACposition * mult;
 }
 
 percent_t IdleController::getRunningOpenLoop(IIdleController::Phase phase, float rpm, float clt, SensorResult tps) {
-	float running =
-		engineConfiguration->manIdlePosition		// Base idle position (slider)
-		* interpolate2d(clt, config->cltIdleCorrBins, config->cltIdleCorr);
+	float running = interpolate2d(clt, config->cltIdleCorrBins, config->cltIdleCorr);
 
 	// Now we bump it by the AC/fan amount if necessary
-	running += engine->module<AcController>().unmock().acButtonState ? engineConfiguration->acIdleExtraOffset : 0;
+    if(engine->module<AcController>().unmock().acButtonState && phase == Phase::Idling) {
+    	running += engineConfiguration->acIdleExtraOffset;
+    }
+
 	running += enginePins.fanRelay.getLogicValue() ? engineConfiguration->fan1ExtraIdle : 0;
 	running += enginePins.fanRelay2.getLogicValue() ? engineConfiguration->fan2ExtraIdle : 0;
 
@@ -215,12 +212,6 @@ static void finishIdleTestIfNeeded() {
 		engine->timeToStopIdleTest = 0;
 }
 
-static void undoIdleBlipIfNeeded() {
-	if (engine->timeToStopBlip != 0 && getTimeNowUs() > engine->timeToStopBlip) {
-		engine->timeToStopBlip = 0;
-	}
-}
-
 /**
  * @return idle valve position percentage for automatic closed loop mode
  */
@@ -323,7 +314,7 @@ float IdleController::getIdlePosition(float rpm) {
 		// Simplify hardware CI: we borrow the idle valve controller as a PWM source for various stimulation tasks
 		// The logic in this function is solidly unit tested, so it's not necessary to re-test the particulars on real hardware.
 		#ifdef HARDWARE_CI
-			return engineConfiguration->manIdlePosition;
+			return config->cltIdleCorr[0];
 		#endif
 
 	/*
@@ -350,17 +341,9 @@ float IdleController::getIdlePosition(float rpm) {
 		m_lastPhase = phase;
 
 		finishIdleTestIfNeeded();
-		undoIdleBlipIfNeeded();
 
-		percent_t iacPosition;
-
-		isBlipping = engine->timeToStopBlip != 0;
-		if (isBlipping) {
-			iacPosition = engine->blipIdlePosition;
-			idleState = BLIP;
-		} else {
 			// Always apply open loop correction
-			iacPosition = getOpenLoop(phase, rpm, clt, tps, crankingTaper);
+		percent_t iacPosition = getOpenLoop(phase, rpm, clt, tps, crankingTaper);
 			baseIdlePosition = iacPosition;
 
 			useClosedLoop = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
@@ -372,7 +355,6 @@ float IdleController::getIdlePosition(float rpm) {
 			}
 
 			iacPosition = clampPercentValue(iacPosition);
-		}
 
 #if EFI_TUNER_STUDIO && (EFI_PROD_CODE || EFI_SIMULATOR)
 		isIdleClosedLoop = phase == Phase::Idling;

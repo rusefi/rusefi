@@ -2,6 +2,7 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.config.generated.Fields;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ui.RpmLabel;
 import com.rusefi.ui.RpmModel;
 import com.rusefi.ui.UIContext;
@@ -54,7 +55,7 @@ public class SensorSnifferPane {
                         unpackValues(message, values);
                         if (!paused) {
                             processValues();
-                            UiUtils.trueRepaint(canvas);
+                            AutoupdateUtil.trueLayout(canvas);
                         }
                     }
                 });
@@ -69,7 +70,7 @@ public class SensorSnifferPane {
             @Override
             public void actionPerformed(ActionEvent e) {
                 clear();
-                UiUtils.trueRepaint(canvas);
+                AutoupdateUtil.trueLayout(canvas);
                 setPaused(pauseButton, false);
             }
         });

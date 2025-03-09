@@ -6,14 +6,13 @@ import javax.net.ssl.*;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.security.CodeSource;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.security.cert.X509Certificate;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
+import java.util.stream.Collectors;
+
 import com.devexperts.logging.Logging;
 
 public class ConnectionAndMeta {
@@ -147,6 +146,14 @@ public class ConnectionAndMeta {
 
     public static boolean saveReadmeHtmlToFile() {
         return Boolean.TRUE.toString().equalsIgnoreCase(getStringProperty(getProperties(), "write_readme_html", "false"));
+    }
+
+    public static Set<String> getNonMigratableIniFields() {
+        final String nonMergeableIniFields = getStringProperty(getProperties(), "non_migratable_ini_fields", "");
+        return Arrays.stream(nonMergeableIniFields.split(","))
+            .map(String::trim)
+            .filter(s -> !s.isEmpty())
+            .collect(Collectors.toSet());
     }
 
     public HttpURLConnection getHttpConnection() {

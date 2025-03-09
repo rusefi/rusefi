@@ -20,6 +20,7 @@ import java.awt.event.ActionListener;
 /**
  * @see PluginEntry
  */
+/*
 public class BroadcastTab {
     private final JComponent content = new JPanel(new VerticalFlowLayout());
 
@@ -125,3 +126,4 @@ public class BroadcastTab {
         return content;
     }
 }
+*/

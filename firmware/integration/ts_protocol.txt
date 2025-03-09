@@ -37,6 +37,10 @@
 
 #define REBOOT_COMMAND 0xbb
 
+#define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
+#define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
+#define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
+
 #define TS_COMPOSITE_ENABLE 1
 #define TS_COMPOSITE_DISABLE 2
 #define TS_COMPOSITE_READ 3
@@ -157,6 +161,15 @@
 ! Engine Sniffer channel names
 #define PROTOCOL_CRANK1 "t1"
 #define PROTOCOL_CRANK2 "t2"
+
+#define CRITICAL_PREFIX "CRITICAL"
+#define COMPOSITE_PACKET_SIZE 5
+#define CONSOLE_DATA_PROTOCOL_TAG " @"
+#define LOG_DELIMITER "`"
+
+#define PROTOCOL_COIL_SHORT_PREFIX "c"
+#define PROTOCOL_INJ_SHORT_PREFIX "i"
+#define PROTOCOL_INJ_STAGE2_SHORT_PREFIX "j"
 
 #define MLQ_HEADER_SIZE 24
 #define MLQ_FIELD_HEADER_SIZE 89

@@ -17,6 +17,8 @@ static void assertToggleCounterExtra(EngineTestHelper *eth, size_t extra, const 
 }
 
 TEST(HPFP, IntegratedSchedule) {
+	extern bool unitTestTaskPrecisionHack;
+	unitTestTaskPrecisionHack = true;
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE, [](engine_configuration_s* engineConfiguration) {
 		engineConfiguration->hpfpValvePin = Gpio::A2; // arbitrary
 	});

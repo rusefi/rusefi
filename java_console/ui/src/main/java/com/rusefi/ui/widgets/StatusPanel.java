@@ -4,18 +4,18 @@ import com.devexperts.logging.Logging;
 import com.rusefi.FileLog;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.rusEFIVersion;
+import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.UpdateOperationCallbacks;
-import com.rusefi.ui.StatusConsumer;
 import com.rusefi.ui.StatusWindow;
-import com.rusefi.ui.util.UiUtils;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.StringSelection;
 
 import static com.devexperts.logging.Logging.getLogging;
+import static com.rusefi.ToolUtil.EOL;
 
-public class StatusPanel extends JPanel implements UpdateOperationCallbacks, StatusConsumer {
+public class StatusPanel extends JPanel implements UpdateOperationCallbacks {
     private static final Logging log = getLogging(StatusWindow.class);
 
     private static final Color LIGHT_RED = new Color(255, 102, 102);
@@ -35,19 +35,12 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks, Sta
         };
         super.add(messagesScroll, BorderLayout.CENTER);
         super.add(bottomStatusLabel, BorderLayout.SOUTH);
-        appendLine("Console version " + rusEFIVersion.CONSOLE_VERSION);
-        appendLine(FileLog.getOsName() + " " + System.getProperty("os.version"));
-        appendLine("Bundle " + BundleUtil.readBundleFullNameNotNull());
+        clear();
     }
 
     public void setErrorState() {
         logTextArea.setBackground(LIGHT_RED);
         copyContentToClipboard();
-    }
-
-    @Override
-    public void log(final String message, final boolean breakLineOnTextArea, final boolean sendToLogger) {
-        append(message, breakLineOnTextArea, sendToLogger);
     }
 
     @Override
@@ -67,39 +60,43 @@ public class StatusPanel extends JPanel implements UpdateOperationCallbacks, Sta
     public void copyContentToClipboard() {
         // kludge: due to 'append' method using invokeLater even while on AWT thread we also need invokeLater to
         // actually get overall status message
-        SwingUtilities.invokeLater(() -> Toolkit.getDefaultToolkit().getSystemClipboard()
-            .setContents(new StringSelection(logTextArea.getText()), null));
+        SwingUtilities.invokeLater(() -> {
+            final String contentWithoutNullTerminators = logTextArea.getText().replace("\0", EOL);
+            Toolkit.getDefaultToolkit().getSystemClipboard()
+                .setContents(new StringSelection(contentWithoutNullTerminators), null);
+        });
 
-        appendLine("hint: error state is already in your clipboard, please use PASTE or Ctrl-V while reporting issues");
-    }
-
-    public void clear() {
-        logTextArea.setText("");
+        logLine("hint: error state is already in your clipboard, please use PASTE or Ctrl-V while reporting issues");
     }
 
     @Override
-    public void append(final String string, final boolean breakLineOnTextArea, final boolean sendToLogger) {
+    public void clear() {
+        logTextArea.setText("");
+        logTextArea.setBackground(Color.WHITE);
+        logLine("Console version " + rusEFIVersion.CONSOLE_VERSION);
+        logLine(FileLog.getOsName() + " " + System.getProperty("os.version"));
+        logLine("Bundle " + BundleUtil.readBundleFullNameNotNull());
+    }
+
+    @Override
+    public void log(final String string, final boolean breakLineOnTextArea, final boolean sendToLogger) {
         // todo: check if AWT thread and do not invokeLater if already on AWT thread
         SwingUtilities.invokeLater(() -> {
             String s = string.replaceAll(Character.toString((char) 219), "");
             if (sendToLogger) {
                 log.info(s);
             }
-            String stringForTestArea = s;
+            // We do not want to print null-terminator on text area to avoid problems like #7402 and #7431:
+            String stringForTestArea = s.replaceAll("\0", "");
             if (breakLineOnTextArea) {
                 stringForTestArea += "\r\n";
             }
             logTextArea.append(stringForTestArea);
-            UiUtils.trueLayout(logTextArea);
+            AutoupdateUtil.trueLayout(logTextArea);
         });
     }
 
     public void setStatus(String status) {
         bottomStatusLabel.setText(status);
-    }
-
-    @Override
-    public void appendStatus(final String string, final boolean breakLineOnTextArea, final boolean sendToLogger) {
-        append(string, breakLineOnTextArea, sendToLogger);
     }
 }

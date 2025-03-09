@@ -39,7 +39,7 @@ jobs:
 
     - name: Gradle autotest java Using freshly generated java code
       working-directory: ./java_tools
-      run: ./gradlew shadowJar
+      run: ./gradlew :autotest:shadowJar :tune-tools:shadowJar
 
     - name: Compile Linux Simulator
       working-directory: ./simulator/

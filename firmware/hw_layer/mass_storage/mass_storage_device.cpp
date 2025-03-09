@@ -44,6 +44,25 @@ static uint32_t scsi_transport_transmit(const SCSITransport *transport,
 		return 0;
 }
 
+static uint32_t scsi_transport_transmit_start(const SCSITransport *transport,
+											  const uint8_t *data, size_t len) {
+	usb_scsi_transport_handler_t *trp = reinterpret_cast<usb_scsi_transport_handler_t*>(transport->handler);
+	msg_t status = usbTransmitStart(trp->usbp, trp->ep, data, len);
+	if (MSG_OK == status)
+		return len;
+	else
+		return 0;
+}
+
+static uint32_t scsi_transport_transmit_wait(const SCSITransport *transport) {
+	usb_scsi_transport_handler_t *trp = reinterpret_cast<usb_scsi_transport_handler_t*>(transport->handler);
+	msg_t status = usbTransmitWait(trp->usbp, trp->ep);
+	if (MSG_OK == status)
+		return 0;
+	else
+		return 1;
+}
+
 static uint32_t scsi_transport_receive(const SCSITransport *transport,
 										uint8_t *data, size_t len) {
 	usb_scsi_transport_handler_t *trp = reinterpret_cast<usb_scsi_transport_handler_t*>(transport->handler);
@@ -65,6 +84,8 @@ MassStorageController::MassStorageController(USBDriver* usb)
 	m_scsiTransportHandler.ep = USB_MSD_DATA_EP;
 	m_scsiTransport.handler  = &m_scsiTransportHandler;
 	m_scsiTransport.transmit = scsi_transport_transmit;
+	m_scsiTransport.transmit_start = scsi_transport_transmit_start;
+	m_scsiTransport.transmit_wait = scsi_transport_transmit_wait;
 	m_scsiTransport.receive  = scsi_transport_receive;
 }
 
@@ -78,8 +99,6 @@ void MassStorageController::ThreadTask() {
 		}
 
 		if (cbwValid(m_cbw, status) && cbwMeaningful(m_cbw)) {
-			chibios_rt::MutexLocker lock(m_lunMutex);
-
 			auto target = &m_luns[m_cbw.lun].target;
 			if (SCSI_SUCCESS == scsiExecCmd(target, m_cbw.cmd_data)) {
 				sendCsw(CSW_STATUS_PASSED, 0);
@@ -161,7 +180,7 @@ static const scsi_unit_serial_number_inquiry_response_t default_scsi_unit_serial
 };
 
 void MassStorageController::attachLun(uint8_t lunIndex,
-						BaseBlockDevice *blkdev, uint8_t *blkbuf,
+						BaseBlockDevice *blkdev, uint8_t *blkbuf, size_t blkbufsize,
 						const scsi_inquiry_response_t *inquiry,
 						const scsi_unit_serial_number_inquiry_response_t *serialInquiry) {
 	chibios_rt::MutexLocker lock(m_lunMutex);
@@ -182,6 +201,7 @@ void MassStorageController::attachLun(uint8_t lunIndex,
 		lun.config.unit_serial_number_inquiry_response = serialInquiry;
 	}
 	lun.config.blkbuf = blkbuf;
+	lun.config.blkbufsize = blkbufsize;
 	lun.config.blkdev = blkdev;
 	lun.config.transport = &m_scsiTransport;
 

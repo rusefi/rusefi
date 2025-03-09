@@ -4,9 +4,11 @@ import com.rusefi.core.FileUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.ByteBuffer;
+import java.util.Objects;
 
 /**
- * inside C/C++ that's config/engineConfiguration
+ * mutable presentation of ECU calibrations
+ * in the MCU firmware that's config/engineConfiguration
  *
  * Andrey Belomutskiy, (c) 2013-2020
  * 3/6/2015
@@ -19,12 +21,16 @@ public class ConfigurationImage {
     }
 
     public ConfigurationImage(byte[] content) {
-        this.content = content;
+        this.content = Objects.requireNonNull(content);
     }
 
     @NotNull
     public ByteBuffer getByteBuffer(int offset, int size) {
         return FileUtil.littleEndianWrap(content, offset, size);
+    }
+
+    public boolean isEmpty() {
+        return content.length == 0;
     }
 
     public int getSize() {

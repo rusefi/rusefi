@@ -6,7 +6,6 @@ import com.opensr5.ConfigurationImageMetaVersion0_0;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.IniFileModelImpl;
 import com.opensr5.io.ConfigurationImageFile;
 import com.opensr5.io.DataListener;
 import com.rusefi.ConfigurationImageDiff;
@@ -23,12 +22,12 @@ import com.rusefi.io.commands.BurnCommand;
 import com.rusefi.io.commands.ByteRange;
 import com.rusefi.io.commands.GetOutputsCommand;
 import com.rusefi.io.commands.HelloCommand;
-import com.rusefi.core.FileUtil;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.livedocs.LiveDocsRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -38,7 +37,7 @@ import java.util.concurrent.*;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.IoHelper.*;
-import static com.rusefi.config.generated.Fields.*;
+import static com.rusefi.config.generated.VariableRegistryValues.*;
 
 /**
  * This object represents logical state of physical connection.
@@ -53,25 +52,22 @@ public class BinaryProtocol {
     private static final Logging log = getLogging(BinaryProtocol.class);
     private static final ThreadFactory THREAD_FACTORY = new NamedThreadFactory("ECU text pull", true);
 
-    private static final String CONFIGURATION_RUSEFI_BINARY = "current_configuration.binary_image";
-    private static final String CONFIGURATION_RUSEFI_XML = "current_configuration.msq";
-
     private final LinkManager linkManager;
     private final IoStream stream;
     private boolean isBurnPending;
     public String signature;
     public boolean isGoodOutputChannels;
+    // NotNull once connected
     private IniFileModel iniFile;
 
     private final BinaryProtocolState state = new BinaryProtocolState();
 
 
     private final BinaryProtocolLogger binaryProtocolLogger;
-    public static boolean DISABLE_LOCAL_CONFIGURATION_CACHE;
     public static IniFileProvider iniFileProvider = new RealIniFileProvider();
 
-    public IniFileModel getIniFile() {
-        return iniFile;
+    public @NotNull IniFileModel getIniFile() {
+        return Objects.requireNonNull(iniFile);
     }
 
     public static String findCommand(byte command) {
@@ -178,11 +174,7 @@ public class BinaryProtocol {
         } catch (IOException e) {
             return "Failed to read signature " + e;
         }
-        iniFile = iniFileProvider.provide(signature);
-
-        String errorMessage = validateConfigVersion();
-        if (errorMessage != null)
-            return errorMessage;
+        iniFile = Objects.requireNonNull(iniFileProvider.provide(signature));
 
         int pageSize = iniFile.getMetaInfo().getTotalSize();
         log.info("pageSize=" + pageSize);
@@ -195,30 +187,6 @@ public class BinaryProtocol {
         return null;
     }
 
-    /**
-     * @return null if everything is good, error message otherwise
-     */
-    private String validateConfigVersion() {
-        int requestSize = 4;
-        byte[] packet = GetOutputsCommand.createRequest(TS_FILE_VERSION_OFFSET, requestSize);
-
-        String msg = "load TS_CONFIG_VERSION";
-        byte[] response = executeCommand(Integration.TS_OUTPUT_COMMAND, packet, msg);
-        if (!checkResponseCode(response) || response.length != requestSize + 1) {
-            close();
-            return "Failed to " + msg;
-        }
-        int actualVersion = FileUtil.littleEndianWrap(response, 1, requestSize).getInt();
-        if (actualVersion != TS_FILE_VERSION) {
-			String errorMessage =
-				"Incompatible firmware format=" + actualVersion + " while format " + TS_FILE_VERSION + " expected" + "\n"
-				+ "recommended fix: use a compatible console version  OR  flash new firmware";
-            log.error(errorMessage);
-            return errorMessage;
-        }
-        return null;
-    }
-
     private void startPullThread(final DataListener textListener) {
         if (!linkManager.COMMUNICATION_QUEUE.isEmpty()) {
             log.info("Current queue size: " + linkManager.COMMUNICATION_QUEUE.size());
@@ -227,15 +195,12 @@ public class BinaryProtocol {
             @Override
             public void run() {
                 while (!stream.isClosed()) {
-//                    FileLog.rlog("queue: " + LinkManager.COMMUNICATION_QUEUE.toString());
                     if (linkManager.COMMUNICATION_QUEUE.isEmpty() && linkManager.getNeedPullData()) {
                         linkManager.submit(new Runnable() {
-                            private final boolean verbose = false; // todo: programmatically detect run under gradle?
                             @Override
                             public void run() {
                                 isGoodOutputChannels = requestOutputChannels();
-                                if (verbose)
-                                    System.out.println("requestOutputChannels " + isGoodOutputChannels);
+                                log.debug("requestOutputChannels " + isGoodOutputChannels);
                                 if (isGoodOutputChannels)
                                     HeartBeatListeners.onDataArrived();
                                 binaryProtocolLogger.compositeLogic(BinaryProtocol.this);
@@ -243,16 +208,14 @@ public class BinaryProtocol {
                                     String text = requestPendingTextMessages();
                                     if (text != null) {
                                         textListener.onDataArrived((text + "\r\n").getBytes());
-                                        if (verbose)
-                                            System.out.println("textListener");
+                                        log.debug("textListener");
                                     }
                                 }
 
                                 if (linkManager.isNeedPullLiveData()) {
                                     LiveDocsRegistry.LiveDataProvider liveDataProvider = LiveDocsRegistry.getLiveDataProvider();
                                     LiveDocsRegistry.INSTANCE.refresh(liveDataProvider);
-                                    if (verbose)
-                                        System.out.println("Got livedata");
+                                    log.info("Got livedata");
                                 }
                             }
                         });
@@ -299,7 +262,7 @@ public class BinaryProtocol {
             offset = range.second;
         }
         burn();
-        setController(newVersion);
+        setConfigurationImage(newVersion);
     }
 
     private static byte[] receivePacket(String msg, IoStream stream) throws IOException {
@@ -313,14 +276,14 @@ public class BinaryProtocol {
      * read complete tune from physical data stream
      */
     public void readImage(final Arguments arguments, final ConfigurationImageMeta meta) {
-        ConfigurationImage image = getAndValidateLocallyCached();
+        ConfigurationImageWithMeta image = BinaryProtocolLocalCache.getAndValidateLocallyCached(this);
 
-        if (image == null) {
+        if (image.isEmpty()) {
             image = readFullImageFromController(arguments, meta);
-            if (image == null)
+            if (image.isEmpty())
                 return;
         }
-        setController(image);
+        setConfigurationImage(image.getConfigurationImage());
         log.info("Got configuration from controller " + meta.getImageSize() + " byte(s)");
         ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
     }
@@ -328,17 +291,15 @@ public class BinaryProtocol {
     public static class Arguments {
         final boolean saveFile;
 
-        public Arguments(boolean saveFile) {
+        public Arguments(final boolean saveFile) {
             this.saveFile = saveFile;
         }
     }
 
-    @Nullable
-    private ConfigurationImage readFullImageFromController(
-        final Arguments arguments,
-        final ConfigurationImageMeta meta
-    ) {
-        final ConfigurationImageWithMeta image = new ConfigurationImageWithMeta(meta);
+    @NotNull
+    public ConfigurationImageWithMeta readFullImageFromController(final ConfigurationImageMeta meta) {
+        final ConfigurationImageWithMeta imageWithMeta = new ConfigurationImageWithMeta(meta);
+        final ConfigurationImage image = imageWithMeta.getConfigurationImage();
 
         int offset = 0;
 
@@ -347,10 +308,10 @@ public class BinaryProtocol {
 
         while (offset < image.getSize() && (System.currentTimeMillis() - start < Timeouts.READ_IMAGE_TIMEOUT)) {
             if (stream.isClosed())
-                return null;
+                return ConfigurationImageWithMeta.VOID;
 
             int remainingSize = image.getSize() - offset;
-            int requestSize = Math.min(remainingSize, Fields.BLOCKING_FACTOR);
+            int requestSize = Math.min(remainingSize, BLOCKING_FACTOR);
 
             byte[] packet = new byte[4];
             ByteRange.packOffsetAndSize(offset, requestSize, packet);
@@ -374,18 +335,44 @@ public class BinaryProtocol {
 
             offset += requestSize;
         }
-        if (arguments != null && arguments.saveFile) {
+        return imageWithMeta;
+    }
+
+    @NotNull
+    private ConfigurationImageWithMeta readFullImageFromController(
+        final Arguments arguments,
+        final ConfigurationImageMeta meta
+    ) {
+        Objects.requireNonNull(arguments);
+        final ConfigurationImageWithMeta imageWithMeta = readFullImageFromController(meta);
+        if (arguments.saveFile) {
             try {
-                if (ConnectionAndMeta.saveSettingsToFile()) {
-                    ConfigurationImageFile.saveToFile(image, CONFIGURATION_RUSEFI_BINARY);
-                }
-                Msq tune = MsqFactory.valueOf(image, iniFile);
-                tune.writeXmlFile(CONFIGURATION_RUSEFI_XML);
+                saveConfigurationImageToFiles(
+                    imageWithMeta,
+                    iniFile,
+                    (ConnectionAndMeta.saveSettingsToFile() ? BinaryProtocolLocalCache.CONFIGURATION_RUSEFI_BINARY : null),
+                    BinaryProtocolLocalCache.CONFIGURATION_RUSEFI_XML
+                );
             } catch (Exception e) {
-                System.err.println("Ignoring " + e);
+                log.error("Ignoring " + e);
             }
         }
-        return image;
+        return imageWithMeta;
+    }
+
+    public static void saveConfigurationImageToFiles(
+        final ConfigurationImageWithMeta imageWithMeta,
+        final IniFileModel ini,
+        @Nullable final String binaryFileName,
+        @Nullable final String xmlFileName
+    ) throws JAXBException, IOException {
+        if (binaryFileName != null) {
+            ConfigurationImageFile.saveToFile(imageWithMeta, binaryFileName);
+        }
+        if (xmlFileName != null) {
+            final Msq tune = MsqFactory.valueOf(imageWithMeta.getConfigurationImage(), ini);
+            tune.writeXmlFile(xmlFileName);
+        }
     }
 
     private static String getCode(byte[] response) {
@@ -409,31 +396,6 @@ public class BinaryProtocol {
         if (response == null || response.length < 1)
             return -1;
         return response[0] & 0xff;
-    }
-
-    private ConfigurationImage getAndValidateLocallyCached() {
-        if (DISABLE_LOCAL_CONFIGURATION_CACHE)
-            return null;
-        ConfigurationImage localCached;
-        try {
-            localCached = ConfigurationImageFile.readFromFile(CONFIGURATION_RUSEFI_BINARY);
-        } catch (IOException e) {
-            System.err.println("Error reading " + CONFIGURATION_RUSEFI_BINARY + ": no worries " + e);
-            return null;
-        }
-
-        if (localCached != null) {
-            int crcOfLocallyCachedConfiguration = IoHelper.getCrc32(localCached.getContent());
-            log.info(String.format(CONFIGURATION_RUSEFI_BINARY + " Local cache CRC %x\n", crcOfLocallyCachedConfiguration));
-
-            int crcFromController = getCrcFromController(localCached.getSize());
-
-            if (crcOfLocallyCachedConfiguration == crcFromController) {
-                return localCached;
-            }
-
-        }
-        return null;
     }
 
     public int getCrcFromController(int configSize) {
@@ -552,15 +514,15 @@ public class BinaryProtocol {
         isBurnPending = false;
     }
 
-    public void setController(ConfigurationImage controller) {
-        state.setController(controller);
+    public void setConfigurationImage(ConfigurationImage configurationImage) {
+        state.setConfigurationImage(configurationImage);
     }
 
     /**
      * Configuration as it is in the controller to the best of our knowledge
      */
     public ConfigurationImage getControllerConfiguration() {
-        return state.getControllerConfiguration();
+        return state.getConfigurationImage();
     }
 
     /**
@@ -629,7 +591,7 @@ public class BinaryProtocol {
 
         while (remaining > 0) {
             // If less than one full chunk left, do a smaller read
-            int chunkSize = Math.min(remaining, Fields.BLOCKING_FACTOR);
+            int chunkSize = Math.min(remaining, BLOCKING_FACTOR);
 
             byte[] response = executeCommand(
                 Integration.TS_OUTPUT_COMMAND,

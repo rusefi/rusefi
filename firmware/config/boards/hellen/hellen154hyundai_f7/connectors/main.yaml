@@ -170,6 +170,12 @@ pins:
     ts_name: ___ BK1 Wastegate Solenoid
     function: BK1 Wastegate Solenoid
 
+  - pin: K48
+    meta: H144_LS_8
+    class: outputs
+    ts_name: ___ OUT_RCV
+    function: OUT_RCV
+
   - pin: K53
     meta: H144_IN_IAT
     class: analog_inputs
@@ -371,6 +377,7 @@ info:
   directory: hellen/hellen154hyundai_revD
   title: Hellen 154 Hyundai
   order: 0
+  cid: main
   image:
     file: main.jpg
   pins:

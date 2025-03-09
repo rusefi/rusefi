@@ -138,6 +138,10 @@ void Engine::updateTriggerConfiguration() {
 #endif /* EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 }
 
+PUBLIC_API_WEAK void boardPeriodicSlowCallback() {
+
+}
+
 void Engine::periodicSlowCallback() {
 	ScopePerf perf(PE::EnginePeriodicSlowCallback);
 
@@ -190,6 +194,7 @@ void Engine::periodicSlowCallback() {
 	void baroLps25Update();
 	baroLps25Update();
 #endif // EFI_PROD_CODE
+  boardPeriodicSlowCallback();
 }
 
 /**
@@ -198,6 +203,12 @@ void Engine::periodicSlowCallback() {
  */
 void Engine::updateSlowSensors() {
 	updateSwitchInputs();
+
+#if EFI_PROD_CODE
+	// todo: extract method? do better? see https://github.com/rusefi/rusefi/issues/7511 for details
+	engine->module<InjectorModelSecondary>()->updateState();
+	engine->module<InjectorModelPrimary>()->updateState();
+#endif // EFI_PROD_CODE
 
 #if EFI_SHAFT_POSITION_INPUT
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
@@ -209,7 +220,7 @@ void Engine::updateSlowSensors() {
 bool getClutchDownState() {
 #if EFI_GPIO_HARDWARE
 	if (isBrainPinValid(engineConfiguration->clutchDownPin)) {
-		return engineConfiguration->clutchDownPinInverted ^ efiReadPin(engineConfiguration->clutchDownPin);
+		return efiReadPin(engineConfiguration->clutchDownPin, engineConfiguration->clutchDownPinMode);
 	}
 #endif // EFI_GPIO_HARDWARE
 	// todo: boolean sensors should leverage sensor framework #6342
@@ -219,7 +230,7 @@ bool getClutchDownState() {
 static bool getClutchUpState() {
 #if EFI_GPIO_HARDWARE
 	if (isBrainPinValid(engineConfiguration->clutchUpPin)) {
-		return engineConfiguration->clutchUpPinInverted ^ efiReadPin(engineConfiguration->clutchUpPin);
+		return efiReadPin(engineConfiguration->clutchUpPin, engineConfiguration->clutchUpPinMode);
 	}
 #endif // EFI_GPIO_HARDWARE
 	// todo: boolean sensors should leverage sensor framework #6342
@@ -229,7 +240,7 @@ static bool getClutchUpState() {
 bool getBrakePedalState() {
 #if EFI_GPIO_HARDWARE
 	if (isBrainPinValid(engineConfiguration->brakePedalPin)) {
-		return engineConfiguration->brakePedalPinInverted ^ efiReadPin(engineConfiguration->brakePedalPin);
+		return efiReadPin(engineConfiguration->brakePedalPin, engineConfiguration->brakePedalPinMode);
 	}
 #endif // EFI_GPIO_HARDWARE
 	// todo: boolean sensors should leverage sensor framework #6342

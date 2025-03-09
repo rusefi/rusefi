@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.rusefi.output.GetConfigValueConsumer.getCompareName;
+import static com.rusefi.output.SdCardFieldsContent.getNamePrefix;
 
 /**
  * here we generate C++ code needed for https://github.com/rusefi/rusefi/wiki/Lua-Scripting#getoutputname implementation
@@ -26,7 +27,8 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
     private final String fileName;
     private final LazyFile.LazyFileFactory fileFactory;
 
-    public String currentSectionPrefix = "engine->outputChannels";
+    public String[] expressions = {"engine->outputChannels"};
+    public String[] names;
     public boolean moduleMode;
     public String currentEngineModule;
     public String conditional;
@@ -40,13 +42,17 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
     @Override
     public void handleEndStruct(ReaderState state, ConfigStructure structure) throws IOException {
         if (state.isStackEmpty()) {
-            PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.getTsFields(), "",
-                    (readerState, cf, prefix, currentPosition, perFieldWithStructuresIterator) -> processOutput(cf, prefix), ".");
-            iterator.loop(0);
+            for (int i = 0; i < expressions.length; i++) {
+                String namePrefix = getNamePrefix(i, names);
+                String expression = expressions[i];
+                PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.getTsFields(), "",
+                    (readerState, cf, prefix, currentPosition, perFieldWithStructuresIterator) -> processOutput(cf, prefix, expression, namePrefix), ".");
+                iterator.loop(0);
+            }
         }
     }
 
-    private String processOutput(ConfigField cf, String prefix) {
+    private String processOutput(ConfigField cf, String prefix, String expression, String namePrefix) {
         if (cf.isUnusedField())
             return "";
 
@@ -56,12 +62,12 @@ public class GetOutputValueConsumer implements ConfigurationConsumer {
             return "";
         }
 
-        String userName = prefix + cf.getName();
+        String userName = namePrefix + prefix + cf.getName();
         String javaName;
         if (moduleMode) {
             javaName = "engine->module<" + currentEngineModule + ">()->" + prefix;
         } else {
-            javaName = currentSectionPrefix + (isPtr ? "->" : ".") + prefix;
+            javaName = expression + (isPtr ? "->" : ".") + prefix;
         }
 
         getterPairs.add(new VariableRecord(userName, javaName + cf.getName(), null, conditional));

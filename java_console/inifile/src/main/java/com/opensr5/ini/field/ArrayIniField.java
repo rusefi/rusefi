@@ -4,6 +4,7 @@ import com.opensr5.ConfigurationImage;
 import com.rusefi.config.Field;
 import com.rusefi.config.FieldType;
 import com.rusefi.tune.xml.Constant;
+import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
@@ -13,14 +14,30 @@ public class ArrayIniField extends IniField {
     private final int cols;
     private final int rows;
     private final double multiplier;
+    @Nullable
+    private final String min;
+    @Nullable
+    private final String max;
     private final String digits;
 
-    public ArrayIniField(String name, int offset, FieldType type, int cols, int rows, String unit, double multiplier, String digits) {
+    public ArrayIniField(
+        final String name,
+        final int offset,
+        final FieldType type,
+        final int cols,
+        final int rows,
+        final String unit,
+        final double multiplier,
+        final String min,
+        final String max,
+        String digits) {
         super(name, offset);
         this.type = type;
         this.cols = cols;
         this.rows = rows;
         this.multiplier = multiplier;
+        this.min = min;
+        this.max = max;
         this.digits = digits;
     }
 
@@ -36,6 +53,18 @@ public class ArrayIniField extends IniField {
         return rows;
     }
 
+    public double getMultiplier() {
+        return multiplier;
+    }
+
+    public String getMin() {
+        return min;
+    }
+
+    public String getMax() {
+        return max;
+    }
+
     @Override
     public String getDigits() {
         return digits;
@@ -46,36 +75,64 @@ public class ArrayIniField extends IniField {
         return type.getStorageSize() * cols * rows;
     }
 
-    @Override
-    public String getValue(ConfigurationImage image) {
+    public String formatValue(final String[][] values) {
         StringBuilder sb = new StringBuilder();
-        for (int rowIndex = 0; rowIndex < rows; rowIndex++) {
+        for (final String[] row : values) {
             sb.append("\n        ");
-            for (int colIndex = 0; colIndex < cols; colIndex++) {
-              Field f = new Field(getName() + "_" + colIndex, getOffset(rowIndex, colIndex), getType());
+            for (final String element : row) {
                 sb.append(' ');
-                sb.append(f.getAnyValue(image, multiplier));
+                sb.append(element);
             }
         }
         sb.append("\n");
         return sb.toString();
     }
 
+    @Override
+    public String getValue(final ConfigurationImage image) {
+        final String[][] values = new String[rows][cols];
+        for (int rowIndex = 0; rowIndex < rows; rowIndex++) {
+            for (int colIndex = 0; colIndex < cols; colIndex++) {
+                final Field f = new Field(getName() + "_" + colIndex, getOffset(rowIndex, colIndex), getType());
+                values[rowIndex][colIndex] = f.getAnyValue(image, multiplier);
+            }
+        }
+        return formatValue(values);
+    }
+
     private int getOffset(int rowIndex, int colIndex) {
         return getOffset() + (rowIndex * cols + colIndex) * getType().getStorageSize();
     }
 
+    public String[][] getValues(final String value) {
+        final String[] values = value.trim().split("\\s+");
+        if (values.length != rows * cols) {
+            throw new IllegalStateException(values.length + " values while expecting " + getRows() + " by " + getCols() + " total " + rows * cols);
+        } else {
+            final String[][] result = new String[rows][cols];
+            for (int i = 0; i < values.length; i++) {
+                final int rowIndex = i / cols;
+                final int colIndex = i % cols;
+                result[rowIndex][colIndex] = values[i];
+            }
+            return result;
+        }
+    }
+
     @Override
     public void setValue(ConfigurationImage image, Constant constant) {
-        String[] values = constant.getValue().trim().split("\\s+");
-        if (values.length != getRows() * getCols())
-            throw new IllegalStateException(values.length + " values while expecting " + getRows() + " by " + getCols() + " total " + getRows() * getCols());
-
-        for (int rowIndex = 0; rowIndex < rows; rowIndex++) {
-            for (int colIndex = 0; colIndex < cols; colIndex++) {
-                String value = values[rowIndex * cols + colIndex];
+        final String[][] values = getValues(constant.getValue());
+        for (int rowIndex = 0; rowIndex < values.length; rowIndex++) {
+            final String[] row = values[rowIndex];
+            for (int colIndex = 0; colIndex < row.length; colIndex++) {
                 ByteBuffer wrapped = image.getByteBuffer(getOffset(rowIndex, colIndex), type.getStorageSize());
-                ScalarIniField.setValue(wrapped, type, value, Field.NO_BIT_OFFSET, multiplier);
+                ScalarIniField.setValue(
+                    wrapped,
+                    type,
+                    values[rowIndex][colIndex],
+                    Field.NO_BIT_OFFSET,
+                    multiplier
+                );
             }
         }
     }
@@ -97,6 +154,8 @@ public class ArrayIniField extends IniField {
         int offset = Integer.parseInt(list.get(3));
         String size = list.get(4);
         String unit = list.size() > 5 ? list.get(5) : "error";
+        final String min = list.size() > 8 ? list.get(8) : null;
+        final String max = list.size() > 9 ? list.get(9) : null;
         String digits = list.size() > 10 ? list.get(10) : "0";
         double multiplier = IniField.parseDouble(list.size() > 6 ? list.get(6) : "1");
 
@@ -114,6 +173,6 @@ public class ArrayIniField extends IniField {
             throw new IllegalStateException("Unexpected " + size);
         }
 
-        return new ArrayIniField(name, offset, type, cols, rows, unit, multiplier, digits);
+        return new ArrayIniField(name, offset, type, cols, rows, unit, multiplier, min, max, digits);
     }
 }

@@ -18,7 +18,9 @@ public:
 	float getFuelMassForDuration(floatms_t duration) const override;
 
 	virtual float getInjectorFlowRatio() = 0;
+	virtual void updateState() = 0;
 	virtual expected<float> getFuelDifferentialPressure() const = 0;
+	virtual expected<float> getFuelPressure() const = 0;
 
 	virtual float getBaseFlowRate() const = 0;
 
@@ -51,7 +53,9 @@ public:
 	floatms_t getDeadtime() const override;
 	float getBaseFlowRate() const override;
 	float getInjectorFlowRatio() override;
+	void updateState() override;
 	expected<float> getFuelDifferentialPressure() const override;
+	expected<float> getFuelPressure() const override;
 
 	using interface_t = IInjectorModel; // Mock interface
 private:

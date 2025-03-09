@@ -43,6 +43,7 @@
 #include "can_bench_test.h"
 #include "engine_emulator.h"
 #include "fuel_math.h"
+#include "defaults.h"
 #include "spark_logic.h"
 #include "status_loop.h"
 #include "aux_valves.h"
@@ -61,6 +62,7 @@
 #include "vr_pwm.h"
 #include "adc_subscription.h"
 #include "gc_generic.h"
+#include "tuner_detector_utils.h"
 
 #if EFI_SENSOR_CHART
 #include "sensor_chart.h"
@@ -523,6 +525,12 @@ bool validateConfigOnStartUpOrBurn() {
   if (!validateBoardConfig()) {
     return false;
   }
+  if (config->dynoCarCarMassKg == 0) {
+    setDynoDefaults();
+  }
+  if (TunerDetectorUtils::isTuningDetectorUndefined()) {
+  	TunerDetectorUtils::setUserEnteredTuningDetector(10);
+  }
 	if (engineConfiguration->cylindersCount > MAX_CYLINDER_COUNT) {
 		criticalError("Invalid cylinder count: %d", engineConfiguration->cylindersCount);
 		return false;
@@ -557,7 +565,8 @@ bool validateConfigOnStartUpOrBurn() {
   	engineConfiguration->alternator_iTermMax = 1000;
 	}
 
-	ensureArrayIsAscending("Injector deadtime", engineConfiguration->injector.battLagCorrBins);
+	ensureArrayIsAscending("Injector deadtime vBATT", engineConfiguration->injector.battLagCorrBattBins);
+	ensureArrayIsAscending("Injector deadtime Pressure", engineConfiguration->injector.battLagCorrPressBins);
 
 #if EFI_ENGINE_CONTROL
 	// Fueling
@@ -602,7 +611,8 @@ bool validateConfigOnStartUpOrBurn() {
 		ensureArrayIsAscendingOrDefault("Ign Trim Rpm", config->ignTrimRpmBins);
    		ensureArrayIsAscendingOrDefault("Ign Trim Load", config->ignTrimLoadBins);
 
-		ensureArrayIsAscending("Ignition CLT corr", config->cltTimingBins);
+		ensureArrayIsAscending("Ignition CLT corr CLT", config->ignitionCltCorrTempBins);
+  		ensureArrayIsAscending("Ignition CLT corr Load", config->ignitionCltCorrLoadBins);
 
 		ensureArrayIsAscending("Ignition IAT corr IAT", config->ignitionIatCorrTempBins);
 		ensureArrayIsAscending("Ignition IAT corr Load", config->ignitionIatCorrLoadBins);
@@ -648,8 +658,9 @@ bool validateConfigOnStartUpOrBurn() {
 
 #if EFI_BOOST_CONTROL
 	// Boost
-	ensureArrayIsAscending("Boost control Load", config->boostLoadBins);
-	ensureArrayIsAscending("Boost control RPM", config->boostRpmBins);
+	ensureArrayIsAscending("Boost control Load [open loop]", config->boostOpenLoopLoadBins);
+	ensureArrayIsAscending("Boost control Load [closed loop]", config->boostClosedLoopLoadBins);
+	ensureArrayIsAscending("Boost control RPM [open+closed loop]", config->boostRpmBins);
 #endif // EFI_BOOST_CONTROL
 
 #if EFI_ANTILAG_SYSTEM

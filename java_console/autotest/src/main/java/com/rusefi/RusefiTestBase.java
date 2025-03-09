@@ -18,7 +18,7 @@ public class RusefiTestBase {
 
     @Before
     public void startUp() {
-        BinaryProtocol.iniFileProvider = signature -> new IniFileModelImpl().readIniFile(LocalIniFileProvider.INI_FILE_FOR_SIMULATOR_ROOT_PATH);
+        BinaryProtocol.iniFileProvider = signature -> IniFileModelImpl.readIniFile(LocalIniFileProvider.INI_FILE_FOR_SIMULATOR_ROOT_PATH);
         try {
             ecu = EcuTestHelper.createInstance(needsHardwareTriggerInput());
         } catch (Throwable e) {

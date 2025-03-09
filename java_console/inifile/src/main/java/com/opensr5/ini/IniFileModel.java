@@ -1,21 +1,33 @@
 package com.opensr5.ini;
 
 import com.opensr5.ini.field.IniField;
+import com.rusefi.config.Field;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public interface IniFileModel {
-    IniFileModelImpl findAndReadIniFile(String iniFilePath);
+    String getSignature();
+
+    int getBlockingFactor();
 
     Map<String, List<String>> getDefines();
 
     Map<String, IniField> getAllIniFields();
 
+    IniField getIniField(Field field);
+
+    @Deprecated // always use 'Field' generated parameter with code-generated name?
+    IniField getIniField(String key);
+
+    IniField getOutputChannel(String key) throws IniMemberNotFound;
+
     Map<String, String> getProtocolMeta();
 
     IniFileMetaInfo getMetaInfo();
+
+    String getIniFilePath();
 
     Map<String, String> getTooltips();
 

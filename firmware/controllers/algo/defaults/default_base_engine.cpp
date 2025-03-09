@@ -20,6 +20,10 @@ static void setDefaultAlternatorParameters() {
 #endif // EFI_ALTERNATOR_CONTROL
 
 void setGDIFueling() {
+#ifdef HW_HELLEN_8CHAN
+  engineConfiguration->externalRusEfiGdiModule = true;
+#endif
+
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
@@ -32,7 +36,7 @@ void setGDIFueling() {
 	// Reference rail pressure is 10 000 kPa = 100 bar
 	engineConfiguration->fuelReferencePressure = 10000;
 	//setting "flat" 0.2 ms injector's lag time
-	setArrayValues(engineConfiguration->injector.battLagCorr, 0.2);
+	setTable(engineConfiguration->injector.battLagCorrTable, 0.2);
 
 	setTable(config->injectionPhase, -200.0f);
 	engineConfiguration->injectionTimingMode = InjectionTimingMode::Center;
@@ -71,11 +75,36 @@ static void mc33810defaults() {
   engineConfiguration->mc33810Maxi = 14;
 }
 
+void setDynoDefaults() {
+    config->dynoRpmStep = 100;
+
+    config->dynoSaeTemperatureC = 20;
+    config->dynoSaeBaro = STD_ATMOSPHERE;
+    config->dynoSaeRelativeHumidity = 80;
+
+    config->dynoCarWheelDiaInch = 18;
+    config->dynoCarWheelTireWidthMm = 235;
+    config->dynoCarWheelAspectRatio = 40;
+
+    config->dynoCarGearPrimaryReduction = 1;
+    config->dynoCarGearRatio = 1.0;
+    config->dynoCarGearFinalDrive = 4.2;
+
+    config->dynoCarCarMassKg = 1000;
+    config->dynoCarCargoMassKg = 95;
+    config->dynoCarCoeffOfDrag = 0.29;
+    config->dynoCarFrontalAreaM2 = 1.85;
+ }
+
 void setDefaultBaseEngine() {
 	// Base Engine Settings
 	engineConfiguration->displacement = 2;
 	engineConfiguration->knockDetectionUseDoubleFrequency = true;
 	setInline4();
+
+  setDynoDefaults();
+
+
 
   for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
     // one knock sensor by default. See also 'setLeftRightBanksNeedBetterName()'
@@ -107,6 +136,11 @@ void setDefaultBaseEngine() {
   engineConfiguration->magicNumberAvailableForDevTricks = 1;
 
   engineConfiguration->acrRevolutions = 5;
+	engineConfiguration->acPressure.v2 = 5;
+	engineConfiguration->acPressure.value2 = 100;
+
+	engineConfiguration->lowPressureFuel.v2 = 5;
+	engineConfiguration->lowPressureFuel.value2 = 100;
 
   engineConfiguration->fuelLevelAveragingAlpha = engine_configuration_defaults::FUEL_LEVEL_AVERAGING_ALPHA;
   engineConfiguration->fuelLevelUpdatePeriodSec = engine_configuration_defaults::FUEL_LEVEL_UPDATE_PERIOD_SEC;

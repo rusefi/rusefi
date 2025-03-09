@@ -172,6 +172,7 @@ int boardGetAnalogDiagnostic();
 
 
 #define H144_IN_AUX1 EFI_ADC_8
+#define H144_IN_AUX1_DIGITAL B0
 #define H144_IN_AUX2 EFI_ADC_14
 // fun fact: same input goes to TWO stm32 pins so that we can use it both as analog and ICU capture
 //#define H144_IN_AUX2_DIGITAL C4
@@ -183,7 +184,7 @@ int boardGetAnalogDiagnostic();
 #define H144_IN_AUX3_DIGITAL A7
 // AIN22 PC5
 #define H144_IN_AUX4 EFI_ADC_15
-#define H144_IN_AUX4_DIGITAL С5
+#define H144_IN_AUX4_DIGITAL C5
 
 // A1 AIN1 no code to use ADC3 as analog, ADC3_IN9 for knock
 #define H144_IN_SENS1 F3
@@ -215,6 +216,10 @@ int boardGetAnalogDiagnostic();
 // A20 AIN20
 #define H144_IN_D_AUX4 A7
 
+// CAN
+#define H144_CAN_RX Gpio::D0
+#define H144_CAN_TX Gpio::D1
+
 #define H176_LS_1 Gpio::G7
 #define H176_LS_2 Gpio::G8
 #define H176_LS_3 Gpio::D11
@@ -233,8 +238,8 @@ int boardGetAnalogDiagnostic();
 #define H176_OUT_IO10 Gpio::I0
 
 // same pins 144 and 176
-#define H176_CAN_RX Gpio::D0
-#define H176_CAN_TX Gpio::D1
+#define H176_CAN_RX H144_CAN_RX
+#define H176_CAN_TX H144_CAN_TX
 
 #define H176_IN_A16 Gpio::F10
 

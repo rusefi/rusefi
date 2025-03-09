@@ -1,0 +1,333 @@
+meta: config/boards/hellen_meta.h
+
+pins:
+  - pin: 1B
+    function: Injector 8 Output
+    class: outputs
+    type: ls
+    id: TLE9104_1_OUT_3
+    ts_name: ___ - Injector 8
+    color: green
+
+  - pin: 2B
+    function: Injector 7 Output
+    class: outputs
+    type: ls
+    id: TLE9104_1_OUT_2
+    ts_name: ___ - Injector 7
+    color: white
+
+  - pin: 3B
+    function: Injector 6 Output
+    class: outputs
+    type: ls
+    id: TLE9104_1_OUT_1
+    ts_name: ___ - Injector 6
+    color: yellow
+
+  - pin: 4B
+    function: Injector 5 Output
+    class: outputs
+    type: ls
+    id: TLE9104_1_OUT_0
+    ts_name: ___ - Injector 5
+    color: brown
+
+  - pin: 5B
+    function: Fuel Pump Relay
+    class: outputs
+    type: ls
+    id: TLE9104_3_OUT_3
+    ts_name: ___ Main Relay
+
+  - pin: 6B
+    function: Low-Side 3 output
+    class: outputs
+    type: ls
+    id: TLE9104_3_OUT_1
+    ts_name: ___ LS3
+
+  - pin: 7B
+    function: Low-Side 4 output
+    class: outputs
+    type: ls
+    id: TLE9104_3_OUT_2
+    ts_name: ___ LS4
+
+  - pin: 8B
+    function: Low-Side 5 output
+    class: outputs
+    type: ls
+    id: TLE9104_3_OUT_0
+    ts_name: ___ LS5
+
+  - pin: 9B
+    meta: H144_IN_VBATT
+    class: analog_inputs
+    color: red
+    function: Ignition Switch / Battery Voltage Analog Input
+    ts_name: ___ Voltage From Key
+
+  - pin: 10B
+    meta: H144_IGN_8
+    class: outputs
+    ts_name: ___ Coil 8
+
+  - pin: 11B
+    meta: H144_IGN_7
+    class: outputs
+    ts_name: ___ Coil 7
+
+  - pin: 12B
+    meta: H144_IGN_6
+    class: outputs
+    ts_name: ___ Coil 6
+
+  - pin: 13B
+    meta: H144_IGN_5
+    class: outputs
+    ts_name: ___ Coil 5
+
+  - pin: 14B
+    meta: H144_IN_D_1
+    class: event_inputs
+    function: Hall Input 1
+    ts_name: ___ Hall Input 1
+    type: hall
+
+  - pin: 15B
+    meta: H144_IN_D_2
+    class: event_inputs
+    function: Hall Input 2
+    ts_name: ___ Hall Input 2
+    type: hall
+
+  - pin: 16B
+    id: [H144_IN_AUX4_DIGITAL, H144_IN_AUX4_DIGITAL, H144_IN_AUX4]
+    class: [event_inputs, switch_inputs, analog_inputs]
+    ts_name: ___ AUX 2
+    function: AUX input 2
+    type: av
+    function:
+
+  - pin: 17B
+    class: outputs
+    ts_name: ETB+
+    function: ETB+ output
+    color: blue
+    type: etb
+
+  - pin: 18B
+    class: outputs
+    ts_name: DC+
+    function: DC+ output
+    color: blue
+    type: etb
+
+  - pin: 19B
+    class: analog_inputs
+    meta: H144_IN_PPS
+    ts_name: ___ PPS1
+    function: PPS input 1
+    type: av
+    color: white
+
+  - pin: 20B
+    class: analog_inputs
+    meta: H144_IN_PPS2
+    ts_name: ___ PPS2
+    function: PPS input 2
+    type: av
+    color: white
+
+  - pin: 21B
+    id: [H144_IN_SENS2, H144_IN_SENS2]
+    class: [event_inputs, switch_inputs]
+    ts_name: ___ Knock 1 / Digital input 7
+    function: Knock sensor 1 / AUX digital (TODO analog) input 7
+
+  - pin: 22B
+    id: [H144_IN_SENS3, H144_IN_SENS3]
+    class: [event_inputs, switch_inputs]
+    ts_name: ___ Knock 2 / Digital input 8
+    function: Knock sensor 2 / AUX digital (TODO analog) input 8
+
+  - pin: 23B
+    id: [H144_IN_AUX2_DIGITAL, H144_IN_AUX2_DIGITAL, H144_IN_AUX2]
+    class: [event_inputs, switch_inputs, analog_inputs]
+    type: hall
+    ts_name: ___ - Digital/analog Input 4
+    function: Digital/analog Input 4 (cannot be used simultaneously with VR2)
+
+  - pin: 24B
+    id: [H144_IN_MAP3_DIGITAL, H144_IN_MAP3_DIGITAL, H144_IN_MAP3]
+    class: [event_inputs, switch_inputs, analog_inputs]
+    type: hall
+    ts_name: ___ - Digital/analog Input 3
+    function: Digital/analog Input 3 (cannot be used simultaneously with VR2)
+
+  - pin: 23B24B
+    meta: H144_IN_CAM
+    function: VR2 (cannot be used simultaneously with Hall3 and Hall4)
+    type: vr
+    ts_name: 23B/24B VR Input 2 (Discrete)
+
+  - pin: 25B
+    class: outputs
+    ts_name: ___ ETB-
+    function: ETB- output
+    color: white
+    type: etb
+
+  - pin: 26B
+    class: outputs
+    ts_name: ___ DC-
+    function: DC- output
+    type: etb
+    color: white
+
+  - pin: 27B
+    class: event_inputs
+    meta: H144_IN_D_3
+    ts_name: ___ Flex Fuel
+    function: Flex Fuel Input
+
+  - pin: 28B
+    function: GND
+    type: GND
+
+  - pin: 29B
+    function: WBO2 Heater Control sensor pin 3
+    color: white
+
+  - pin: 30B
+    function: WBO2 VM sensor pin 2
+    color: yellow
+
+  - pin: 31B
+    function: WBO2 IP sensor pin 1
+    color: red
+
+  - pin: 32B
+    function: WBO2 cal R sensor pin 5
+    color: green
+
+  - pin: 33B
+    function: WBO2 VS sensor pin 6
+    color: black
+
+  - pin: 34B
+    function: WBO2 Heater Power pin 4
+    color: grey
+
+info:
+  cid: 34-4
+  order: 1
+  title: AlphaX Gold
+  directory: hellen/alphax-gold
+  name: AlphaX Gold
+  image:
+    file: 34pins-4k.jpg
+  pins:
+    - pin: 1B
+      x: 75
+      y: 90
+    - pin: 2B
+      x: 95
+      y: 90
+    - pin: 3B
+      x: 120
+      y: 90
+    - pin: 4B
+      x: 145
+      y: 90
+    - pin: 5B
+      x: 165
+      y: 90
+    - pin: 6B
+      x: 190
+      y: 90
+    - pin: 7B
+      x: 215
+      y: 90
+    - pin: 8B
+      x: 240
+      y: 90
+    - pin: 9B
+      x: 265
+      y: 90
+    - pin: 10B
+      x: 85
+      y: 120
+    - pin: 11B
+      x: 105
+      y: 120
+    - pin: 12B
+      x: 130
+      y: 120
+    - pin: 13B
+      x: 155
+      y: 120
+    - pin: 14B
+      x: 180
+      y: 120
+    - pin: 15B
+      x: 205
+      y: 120
+    - pin: 16B
+      x: 225
+      y: 120
+    - pin: 17B
+      x: 245
+      y: 120
+    - pin: 18B
+      x: 85
+      y: 150
+    - pin: 19B
+      x: 110
+      y: 150
+    - pin: 20B
+      x: 130
+      y: 150
+    - pin: 21B
+      x: 155
+      y: 150
+    - pin: 22B
+      x: 180
+      y: 150
+    - pin: 23B
+      x: 205
+      y: 150
+    - pin: 24B
+      x: 225
+      y: 150
+    - pin: 25B
+      x: 245
+      y: 150
+    - pin: 26B
+      x: 74
+      y: 180
+    - pin: 27B
+      x: 98
+      y: 180
+    - pin: 28B
+      x: 122
+      y: 180
+    - pin: 29B
+      x: 146
+      y: 180
+    - pin: 30B
+      x: 170
+      y: 180
+    - pin: 31B
+      x: 195
+      y: 180
+    - pin: 32B
+      x: 220
+      y: 180
+    - pin: 33B
+      x: 245
+      y: 180
+    - pin: 34B
+      x: 265
+      y: 180

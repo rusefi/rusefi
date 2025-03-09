@@ -398,7 +398,7 @@ TEST(misc, testMisc) {
 }
 
 int getRusEfiVersion() {
-	return TS_FILE_VERSION;
+	return 123123;
 }
 
 TEST(util, PeakDetect) {

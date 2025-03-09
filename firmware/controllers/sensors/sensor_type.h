@@ -66,6 +66,8 @@ enum class SensorType : unsigned char {
   // this becomes AFR once we multiply by STOICH_RATIO
 	Lambda1,
 	Lambda2,
+	SmoothedLambda1,
+	SmoothedLambda2,
 
 	WastegatePosition,
 	IdlePosition,

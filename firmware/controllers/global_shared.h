@@ -17,7 +17,7 @@
  * main stack (currently 0x400=1024 bytes), where the ISR actually runs.
  * see also __main_stack_size__
  * see also __process_stack_size__
- * 
+ *
  * see also http://www.chibios.org/dokuwiki/doku.php?id=chibios:kb:stacks
  *
  * In the firmware we are using 'extern *Engine' - in the firmware Engine is a singleton
@@ -30,7 +30,7 @@
 /*
  * Stack debugging
  */
-EXTERNC int getRemainingStack(thread_t *otp);
+int getRemainingStack(thread_t *otp);
 int CountFreeStackSpace(const void* wabase);
 
 #define assertStackVoid(message, code, desiredAvailableStack) { if (getCurrentRemainingStack() < desiredAvailableStack) { firmwareError(code, "stack: %s", message); return; } }

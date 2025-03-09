@@ -26,7 +26,7 @@
 /* TODO: get at runtime */
 /* Max timer clock for most timers on STM32 is CPU clock / 2 */
 #define SENT_TIMER_CLOCK_DIV	2
-#define SENT_ICU_FREQ			(CORE_CLOCK / SENT_TIMER_CLOCK_DIV) // == CPU freq / 2
+#define SENT_ICU_FREQ			(STM32_SYSCLK / SENT_TIMER_CLOCK_DIV) // == CPU freq / 2
 
 static uint16_t lastPulse[SENT_INPUT_COUNT];
 static bool overcapture[SENT_INPUT_COUNT];

@@ -18,7 +18,9 @@
 static scaled_channel<uint32_t, TIME_PRECISION> packedTime;
 
 // The list of logged fields lives in a separate file so it can eventually be tool-generated
-#include "log_fields_generated.h"
+// We use angle brackets instead of quotes because for some boards we want to use header different from the one in this
+// directory
+#include <log_fields_generated.h>
 
 int getSdCardFieldsCount() {
 	return efi::size(fields);

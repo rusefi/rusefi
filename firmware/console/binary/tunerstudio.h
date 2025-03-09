@@ -43,6 +43,7 @@ void sendErrorCode(TsChannelBase *tsChannel, uint8_t code, /*empty line by defau
 uint8_t* getWorkingPageAddr();
 
 void requestBurn();
+
 // Lua script might want to know how long since last TS request to see if unit is being actively monitored
 int getSecondsSinceChannelsRequest();
 
@@ -52,8 +53,9 @@ int getSecondsSinceChannelsRequest();
 
 void updateTunerStudioState();
 
+bool isTuningNow();
 void startTunerStudioConnectivity();
-bool wasPresetJustApplied();
+bool needToTriggerTsRefresh();
 void onApplyPreset();
 
 typedef struct {

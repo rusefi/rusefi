@@ -398,6 +398,7 @@ info:
   board_url: https://github.com/rusefi/rusefi/wiki/Hellen-154-Hyundai
   directory: hellen/hellen154hyundai
   title: Hellen 154 Hyundai
+  cid: main
   order: 0
   image:
     file: main.jpg

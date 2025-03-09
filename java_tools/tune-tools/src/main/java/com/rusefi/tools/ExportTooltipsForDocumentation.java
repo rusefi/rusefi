@@ -12,7 +12,7 @@ public class ExportTooltipsForDocumentation {
     public static void main(String[] args) throws IOException {
 //        RootHolder.ROOT = "../firmware/";
 
-        IniFileModel ini = new IniFileModelImpl().readIniFile(LocalIniFileProvider.INI_FILE_FOR_SIMULATOR);
+        IniFileModel ini = IniFileModelImpl.readIniFile(LocalIniFileProvider.INI_FILE_FOR_SIMULATOR);
 
         try (FileWriter fw = new FileWriter("all_fields.md")) {
 

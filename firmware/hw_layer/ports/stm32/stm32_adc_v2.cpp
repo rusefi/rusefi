@@ -8,6 +8,10 @@
 
 #include "pch.h"
 
+#ifdef EFI_SOFTWARE_KNOCK
+#include "knock_config.h"
+#endif
+
 #if HAL_USE_ADC
 
 /* Depth of the conversion buffer, channels are sampled X times each.*/
@@ -53,9 +57,9 @@ void portInitAdc() {
 	}
 #endif
 
-	#ifdef KNOCK_ADC
+#ifdef EFI_SOFTWARE_KNOCK
 	adcStart(&KNOCK_ADC, nullptr);
-	#endif // KNOCK_ADC
+#endif // EFI_SOFTWARE_KNOCK
 }
 
 /*
@@ -232,7 +236,6 @@ adcsample_t getFastAdc(AdcToken token) {
 #endif
 
 #ifdef EFI_SOFTWARE_KNOCK
-#include "knock_config.h"
 
 static void knockCompletionCallback(ADCDriver* adcp) {
 	if (adcp->state == ADC_COMPLETE) {

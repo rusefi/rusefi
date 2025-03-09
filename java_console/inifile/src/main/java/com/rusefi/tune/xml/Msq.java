@@ -32,6 +32,10 @@ public class Msq {
         versionInfo = new VersionInfo(Integer.toString(rusEFIVersion.CONSOLE_VERSION));
     }
 
+    static {
+        log.info("java=" + System.getProperty("java.version"));
+    }
+
     @NotNull
     public static Msq valueOf(ConfigurationImage image, int totalConfigSize, String tsSignature, IniFileModel ini) {
         Msq tune = create(totalConfigSize, tsSignature);

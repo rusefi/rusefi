@@ -1,12 +1,10 @@
 package com.rusefi.ui.basic;
 
 import com.devexperts.logging.Logging;
-import com.opensr5.ConfigurationImage;
+import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.io.ConfigurationImageFile;
 import com.rusefi.SerialPortScanner;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
-import com.rusefi.maintenance.jobs.AsyncJobExecutor;
-import com.rusefi.maintenance.jobs.JobWithSuspendedSerialPortScanner;
 import com.rusefi.maintenance.jobs.UpdateCalibrationsJob;
 
 import javax.swing.*;
@@ -20,8 +18,12 @@ public class UpdateCalibrations {
     private static final Logging log = getLogging(UpdateCalibrations.class);
 
     private static final String BINARY_IMAGE_DEFAULT_DIRECTORY_PROPERTY_NAME = "binary_image_default_directory";
-
+    private final SingleAsyncJobExecutor singleAsyncJobExecutor;
     private final JFileChooser calibrationsFileChooser = UpdateCalibrations.createConfigurationImageFileChooser();
+
+    UpdateCalibrations(final SingleAsyncJobExecutor singleAsyncJobExecutor) {
+        this.singleAsyncJobExecutor = singleAsyncJobExecutor;
+    }
 
     void updateCalibrationsAction(SerialPortScanner.PortResult port, JComponent parent) {
         final int selectedOption = calibrationsFileChooser.showOpenDialog(parent);
@@ -29,12 +31,10 @@ public class UpdateCalibrations {
             final File selectedFile = calibrationsFileChooser.getSelectedFile();
             UpdateCalibrations.saveBinaryImageDefaultDirectory(selectedFile.getParent());
             try {
-                final ConfigurationImage calibrationsImage = ConfigurationImageFile.readFromFile(
+                final ConfigurationImageWithMeta calibrationsImage = ConfigurationImageFile.readFromFile(
                     selectedFile.getAbsolutePath()
                 );
-                AsyncJobExecutor.INSTANCE.executeJobWithStatusWindow(
-                    new JobWithSuspendedSerialPortScanner(new UpdateCalibrationsJob(port, calibrationsImage))
-                );
+                singleAsyncJobExecutor.startJob(new UpdateCalibrationsJob(port, calibrationsImage), parent);
             } catch (final IOException e) {
                 final String errorMsg = String.format(
                     "Failed to load calibrations from file %s",
@@ -54,7 +54,7 @@ public class UpdateCalibrations {
     private static JFileChooser createConfigurationImageFileChooser() {
         final JFileChooser fc = new JFileChooser();
         fc.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fc.setFileFilter(new FileNameExtensionFilter("Binary image files (.binary_image)", "binary_image"));
+        fc.setFileFilter(new FileNameExtensionFilter("Calibrations files (.zip)", "zip"));
 
         final String currentDirectory = loadBinaryImageDefaultDirectory();
         if (currentDirectory != null) {

@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Mon Jan 13 14:25:49 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Wed Mar 05 00:15:53 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -476,6 +476,8 @@ case GPPWM_EthanolPercent:
   return "GPPWM_EthanolPercent";
 case GPPWM_FuelLoad:
   return "GPPWM_FuelLoad";
+case GPPWM_FuelPressure:
+  return "GPPWM_FuelPressure";
 case GPPWM_GppwmOutput1:
   return "GPPWM_GppwmOutput1";
 case GPPWM_GppwmOutput2:
@@ -494,6 +496,10 @@ case GPPWM_LuaGauge2:
   return "GPPWM_LuaGauge2";
 case GPPWM_Map:
   return "GPPWM_Map";
+case GPPWM_OilPressure:
+  return "GPPWM_OilPressure";
+case GPPWM_OilTemp:
+  return "GPPWM_OilTemp";
 case GPPWM_Rpm:
   return "GPPWM_Rpm";
 case GPPWM_Tps:
@@ -750,6 +756,12 @@ const char *getPin_input_mode_e(pin_input_mode_e value){
 switch(value) {
 case PI_DEFAULT:
   return "PI_DEFAULT";
+case PI_INVERTED_DEFAULT:
+  return "PI_INVERTED_DEFAULT";
+case PI_INVERTED_PULLDOWN:
+  return "PI_INVERTED_PULLDOWN";
+case PI_INVERTED_PULLUP:
+  return "PI_INVERTED_PULLUP";
 case PI_PULLDOWN:
   return "PI_PULLDOWN";
 case PI_PULLUP:

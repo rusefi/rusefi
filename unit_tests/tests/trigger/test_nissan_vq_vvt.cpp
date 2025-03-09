@@ -70,6 +70,8 @@ static void scheduleTriggerEvents(TriggerWaveform *shape,
 
 
 TEST(nissan, vq_vvt) {
+	extern bool unitTestTaskPrecisionHack;
+	unitTestTaskPrecisionHack = true;
 	// hold a reference to the heap allocated scheduling events until the test is done
 	std::vector<std::shared_ptr<TriggerCallback>> ptrs;
 

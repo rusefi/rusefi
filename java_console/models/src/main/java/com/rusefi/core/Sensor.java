@@ -16,7 +16,7 @@ import java.util.Comparator;
 import java.util.Set;
 import java.util.TreeSet;
 
-import static com.rusefi.config.generated.Fields.*;
+import static com.rusefi.config.generated.VariableRegistryValues.*;
 
 /**
  * @author Andrey Belomutskiy
@@ -83,7 +83,7 @@ public enum Sensor implements BinaryLogEntry {
 //    // TPS/load AE
 //    engineLoadAccelDelta("load accel delta", SensorCategory.FUEL, FieldType.INT16, 76, 1.0 / PACK_MULT_PERCENT, -5, 5, "ratio"),
 //    deltaTps(Fields.GAUGE_NAME_FUEL_TPS_ROC, SensorCategory.FUEL, FieldType.INT16, 78, 1.0 / PACK_MULT_PERCENT, -100, 100, "%"),
-    tpsAccelFuel(Fields.GAUGE_NAME_FUEL_TPS_EXTRA, SensorCategory.FUEL, FieldType.INT16, TsOutputs.TPSACCELFUEL, 1.0 / PACK_MULT_MS, 0, 200, "ms"),
+    tpsAccelFuel(GAUGE_NAME_FUEL_TPS_EXTRA, SensorCategory.FUEL, FieldType.INT16, TsOutputs.TPSACCELFUEL, 1.0 / PACK_MULT_MS, 0, 200, "ms"),
 //
 //    // Ignition
 //    ignitionAdvance("ignition timing", SensorCategory.OPERATIONS, FieldType.INT16, 84, 1.0 / PACK_MULT_ANGLE, 30, 140, "deg"),
@@ -111,7 +111,6 @@ public enum Sensor implements BinaryLogEntry {
     TIME_SECONDS(GAUGE_NAME_TIME, SensorCategory.OPERATIONS, FieldType.INT, TsOutputs.SECONDS, 1, 0, 5, ""),
 //    engineMode("mode", SensorCategory.OPERATIONS, FieldType.INT, 116, 0, 5),
     FIRMWARE_VERSION(GAUGE_NAME_VERSION, SensorCategory.OPERATIONS, FieldType.INT, TsOutputs.FIRMWAREVERSION, 1, 0, 100, "version_f"),
-    TS_CONFIG_VERSION(".ini version", SensorCategory.OPERATIONS, FieldType.INT, TsOutputs.TSCONFIGVERSION),
 
 //    engineMakeCodeNameCrc16("engine crc16", SensorCategory.STATUS, FieldType.UINT16, 138, 0, 5),
     // Errors
@@ -182,6 +181,8 @@ public enum Sensor implements BinaryLogEntry {
     LUAGAUGE1("Lua gauge 1", SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, TsOutputs.LUAGAUGES1, 1, 4, 18000, "value"),
     LUAGAUGE2("Lua gauge 2", SensorCategory.SENSOR_INPUTS, FieldType.FLOAT, TsOutputs.LUAGAUGES2, 1, 4, 18000, "value"),
 
+    MCUSERIAL(SensorCategory.OPERATIONS, TsOutputs.MCUSERIAL),
+
     // Synthetic (console only) channels
     ETB_CONTROL_QUALITY("ETB metric", SensorCategory.SNIFFING, "", 100),
     ;
@@ -220,8 +221,8 @@ public enum Sensor implements BinaryLogEntry {
         this(name, category, type, field, 1.0, minValue, maxValue, "n/a");
     }
 
-    Sensor(String name, SensorCategory category, FieldType type, Field field) {
-        this(name, category, type, field, 0, 100);
+    Sensor(SensorCategory category, Field field) {
+        this(field.getName(), category, field.getType(), field, 0, 100);
     }
 
     /**
@@ -351,6 +352,7 @@ public enum Sensor implements BinaryLogEntry {
         return maxValue;
     }
 
+    @Deprecated // this takes (wrong!) hard-coded offset, TODO migrate to IniModel approach!
     public int getOffset() {
         return offset;
     }
@@ -402,10 +404,5 @@ public enum Sensor implements BinaryLogEntry {
         }
 
         return Double.toString(value);
-    }
-
-    static {
-        if (TS_FILE_VERSION_OFFSET != TsOutputs.TSCONFIGVERSION.getOffset())
-            throw new IllegalStateException("static assert failed TS_FILE_VERSION_OFFSET");
     }
 }

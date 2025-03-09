@@ -1,5 +1,5 @@
 rem
 rem auto-detects connected running rusEfi serial port and downloads performance trace
-rem 
+rem
 
-java -jar ../java_console_binary/rusefi_console.jar get_performance_trace
+java -jar ../console/rusefi_console.jar get_performance_trace

@@ -23,13 +23,13 @@ void TestEngineConfiguration::configureClutchDownPin(const std::optional<switch_
     }
 }
 
-void TestEngineConfiguration::configureClutchDownPinInverted(const std::optional<bool> pinInverted) {
-    if (pinInverted.has_value()) {
-        engineConfiguration->clutchDownPinInverted = pinInverted.value();
+void TestEngineConfiguration::configureClutchDownPinMode(const std::optional<pin_input_mode_e> pinMode) {
+    if (pinMode.has_value()) {
+        engineConfiguration->clutchDownPinMode = pinMode.value();
     } else {
         ASSERT_EQ(
-                engineConfiguration->clutchDownPinInverted,
-                engine_configuration_defaults::CLUTCH_DOWN_PIN_INVERTED
+                engineConfiguration->clutchDownPinMode,
+                engine_configuration_defaults::CLUTCH_DOWN_PIN_MODE
         ); // check default value
     }
 }
@@ -45,13 +45,13 @@ void TestEngineConfiguration::configureClutchUpPin(const std::optional<switch_in
     }
 }
 
-void TestEngineConfiguration::configureClutchUpPinInverted(const std::optional<bool> pinInverted) {
-    if (pinInverted.has_value()) {
-        engineConfiguration->clutchUpPinInverted = pinInverted.value();
+void TestEngineConfiguration::configureClutchUpPinMode(const std::optional<pin_input_mode_e> pinMode) {
+    if (pinMode.has_value()) {
+        engineConfiguration->clutchUpPinMode = pinMode.value();
     } else {
         ASSERT_EQ(
-                engineConfiguration->clutchUpPinInverted,
-                engine_configuration_defaults::CLUTCH_UP_PIN_INVERTED
+                engineConfiguration->clutchUpPinMode,
+                engine_configuration_defaults::CLUTCH_UP_PIN_MODE
         ); // check default value
     }
 }
@@ -197,13 +197,13 @@ void TestEngineConfiguration::configureTorqueReductionTriggerPin(const std::opti
     }
 }
 
-void TestEngineConfiguration::configureTorqueReductionButtonInverted(const std::optional<bool> pinInverted) {
-    if (pinInverted.has_value()) {
-        engineConfiguration->torqueReductionTriggerPinInverted = pinInverted.value();
+void TestEngineConfiguration::configureTorqueReductionButtonMode(const std::optional<pin_input_mode_e> pinMode) {
+    if (pinMode.has_value()) {
+        engineConfiguration->torqueReductionTriggerPinMode = pinMode.value();
     } else {
         ASSERT_EQ(
-            engineConfiguration->torqueReductionTriggerPinInverted,
-            engine_configuration_defaults::TORQUE_REDUCTION_TRIGGER_PIN_INVERTED
+            engineConfiguration->torqueReductionTriggerPinMode,
+            engine_configuration_defaults::TORQUE_REDUCTION_TRIGGER_PIN_MODE
         ); // check default value
     }
 }
@@ -219,13 +219,13 @@ void TestEngineConfiguration::configureLaunchActivatePin(const std::optional<swi
     }
 }
 
-void TestEngineConfiguration::configureLaunchActivateInverted(const std::optional<bool> pinInverted) {
-    if (pinInverted.has_value()) {
-        engineConfiguration->launchActivateInverted = pinInverted.value();
+void TestEngineConfiguration::configureLaunchActivateMode(const std::optional<pin_input_mode_e> pinMode) {
+    if (pinMode.has_value()) {
+        engineConfiguration->launchActivatePinMode = pinMode.value();
     } else {
         ASSERT_EQ(
-            engineConfiguration->launchActivateInverted,
-            engine_configuration_defaults::LAUNCH_ACTIVATE_PIN_INVERTED
+            engineConfiguration->launchActivatePinMode,
+            engine_configuration_defaults::LAUNCH_ACTIVATE_PIN_MODE
         ); // check default value
     }
 }
@@ -328,21 +328,22 @@ void TestEngineConfiguration::configureInjectorFlow(const std::optional<float> f
     }
 }
 
-void TestEngineConfiguration::configureInjectorBattLagCorr(const std::optional<BattLagCorrCurve> battLagCorr) {
+void TestEngineConfiguration::configureInjectorBattLagCorr(const std::optional<BattLagCorrTable> battLagCorr) {
     if (battLagCorr.has_value()) {
-        std::copy(
-            std::begin(battLagCorr.value()),
-            std::end(battLagCorr.value()),
-            std::begin(engineConfiguration->injector.battLagCorr)
-        );
+        for (size_t i = 0; i < VBAT_INJECTOR_CURVE_PRESSURE_SIZE; i++) {
+            std::copy(
+                std::begin(battLagCorr.value()[i]),
+                std::end(battLagCorr.value()[i]),
+                std::begin(engineConfiguration->injector.battLagCorrTable[i])
+            );
+        }
     } else {
         EXPECT_THAT(
-            engineConfiguration->injector.battLagCorr,
-            testing::ElementsAreArray(engine_configuration_defaults::INJECTOR_BATT_LAG_CURR)
+            engineConfiguration->injector.battLagCorrTable[0],
+            testing::ElementsAreArray(engine_configuration_defaults::INJECTOR_BATT_LAG_CURR[0])
         );
     }
 }
-
 void TestEngineConfiguration::configureFuelReferencePressure(const std::optional<float> fuelReferencePressure) {
     if (fuelReferencePressure.has_value()) {
         engineConfiguration->fuelReferencePressure = fuelReferencePressure.value();
@@ -378,17 +379,19 @@ void TestEngineConfiguration::configureInjectorSecondaryFlow(const std::optional
     }
 }
 
-void TestEngineConfiguration::configureInjectorSecondaryBattLagCorr(const std::optional<BattLagCorrCurve> battLagCorr) {
+void TestEngineConfiguration::configureInjectorSecondaryBattLagCorr(const std::optional<BattLagCorrTable> battLagCorr) {
     if (battLagCorr.has_value()) {
-        std::copy(
-            std::begin(battLagCorr.value()),
-            std::end(battLagCorr.value()),
-            std::begin(engineConfiguration->injectorSecondary.battLagCorr)
-        );
+        for (size_t i = 0; i < VBAT_INJECTOR_CURVE_PRESSURE_SIZE; i++) {
+            std::copy(
+                std::begin(battLagCorr.value()[i]),
+                std::end(battLagCorr.value()[i]),
+                std::begin(engineConfiguration->injectorSecondary.battLagCorrTable[i])
+            );
+        }
     } else {
-        EXPECT_THAT(
-            engineConfiguration->injectorSecondary.battLagCorr,
-            testing::ElementsAreArray(engine_configuration_defaults::INJECTOR_SECONDARY_BATT_LAG_CURR)
+       EXPECT_THAT(
+            engineConfiguration->injectorSecondary.battLagCorrTable[0],
+            testing::ElementsAreArray(engine_configuration_defaults::INJECTOR_SECONDARY_BATT_LAG_CURR[0])
         );
     }
 }
@@ -464,22 +467,9 @@ void TestEngineConfiguration::configureNitrousControlTriggerPin(const std::optio
         ); // check default value
     }
 }
-void TestEngineConfiguration::configureNitrousControlTriggerPinInverted(const std::optional<bool> triggerPinInverted) {
-    if (triggerPinInverted.has_value()) {
-        engineConfiguration->nitrousControlTriggerPinInverted = triggerPinInverted.value();
-    } else {
-        ASSERT_EQ(
-            engineConfiguration->nitrousControlTriggerPinInverted,
-            engine_configuration_defaults::NITROUS_CONTROL_TRIGGER_PIN_INVERTED
-        ); // check default value
-    }
-}
-
-void TestEngineConfiguration::configureNitrousControlTriggerPinMode(
-    const std::optional<pin_input_mode_e> triggerPinMode
-) {
-    if (triggerPinMode.has_value()) {
-        engineConfiguration->nitrousControlTriggerPinMode = triggerPinMode.value();
+void TestEngineConfiguration::configureNitrousControlTriggerPinMode(const std::optional<pin_input_mode_e> pinMode) {
+    if (pinMode.has_value()) {
+        engineConfiguration->nitrousControlTriggerPinMode = pinMode.value();
     } else {
         ASSERT_EQ(
             engineConfiguration->nitrousControlTriggerPinMode,

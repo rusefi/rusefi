@@ -1,3 +1,5 @@
+// file rusefi_halconf.h
+
 #pragma once
 
 #define _CHIBIOS_HAL_CONF_
@@ -111,13 +113,6 @@
 #define HAL_USE_SDC                         FALSE
 #endif
 
-/**
- * @brief   Enables the WDG subsystem.
- */
-#if !defined(HAL_USE_WDG) || defined(__DOXYGEN__)
-#define HAL_USE_WDG                 FALSE
-#endif
-
 /*===========================================================================*/
 /* SERIAL driver related settings.                                           */
 /*===========================================================================*/
@@ -206,11 +201,16 @@
 
 #include "error_handling_c.h"
 
-#define LIMITED_WHILE_LOOP(msg, condition) \
+// WARNING:
+// this while loop has non-determinited timeout! Current value is almost random.
+// Please consider CPU speed, IRQ load, expected and worst case event wait time!
+// Currently this is used instead of simple while (condition) loop in polling SPI driver.
+// We exect problems when SPI clock is low and CPU speed is high
+#define LIMITED_WHILE_LOOP(condition, ...) \
   { int limit = 1000000 ;                  \
     while (condition) {                    \
       if (limit-- == 0) {                  \
-        criticalErrorM(msg);               \
+        criticalErrorC(__VA_ARGS__);       \
         break;                             \
       }                                    \
     }                                      \

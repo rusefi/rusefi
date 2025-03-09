@@ -1,8 +1,3 @@
-plugins {
-    id 'java'
-    id 'com.github.johnrengelman.shadow' version "${shadowVersion}"
-}
-
 configurations {
     // icu4j is huge: https://en.wikipedia.org/wiki/International_Components_for_Unicode
     all*.exclude group: 'com.ibm.icu', module: 'icu4j'
@@ -27,7 +22,7 @@ dependencies {
 
 shadowJar {
     base {
-        archivesName = "${rootDir}/../java_console_binary/rusefi_console"
+        archivesName = "${rootDir}/../console/rusefi_console"
         archiveClassifier = ''
     }
 
