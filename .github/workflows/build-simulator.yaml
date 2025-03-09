@@ -1,6 +1,6 @@
 name: Simulator
 
-on: [push, pull_request]
+on: [workflow_dispatch, push, pull_request]
 
 env:
   AUTOMATION_REF: ${{github.ref_name}}
