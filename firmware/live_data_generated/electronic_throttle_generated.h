@@ -53,7 +53,7 @@ struct electronic_throttle_s {
 	 * units: units
 	 * offset 30
 	 */
-	uint8_t alignmentFill_at_30[2];
+	uint8_t alignmentFill_at_30[2] = {};
 	/**
 	offset 32 bit 0 */
 	bool etbRevLimitActive : 1 {};
@@ -181,7 +181,7 @@ struct electronic_throttle_s {
 	 * units: units
 	 * offset 43
 	 */
-	uint8_t alignmentFill_at_43[1];
+	uint8_t alignmentFill_at_43[1] = {};
 	/**
 	 * ETB jam timer
 	 * units: sec

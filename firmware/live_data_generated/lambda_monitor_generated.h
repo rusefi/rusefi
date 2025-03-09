@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/math/lambda_monitor.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/math/lambda_monitor.txt
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -111,9 +111,9 @@ struct lambda_monitor_s {
 	 * units: units
 	 * offset 6
 	 */
-	uint8_t alignmentFill_at_6[2];
+	uint8_t alignmentFill_at_6[2] = {};
 };
 static_assert(sizeof(lambda_monitor_s) == 8);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/math/lambda_monitor.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/math/lambda_monitor.txt

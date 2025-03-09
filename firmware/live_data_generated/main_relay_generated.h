@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/main_relay.txt Sun Apr 17 20:27:25 UTC 2022
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/main_relay.txt
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -6,15 +6,19 @@
 // start of main_relay_s
 struct main_relay_s {
 	/**
+	 * Main relay: Bench test
 	offset 0 bit 0 */
 	bool isBenchTest : 1 {};
 	/**
+	 * Main relay: Has IGN voltage
 	offset 0 bit 1 */
 	bool hasIgnitionVoltage : 1 {};
 	/**
+	 * Main relay: On
 	offset 0 bit 2 */
 	bool mainRelayState : 1 {};
 	/**
+	 * Main relay: Delayed shutoff
 	offset 0 bit 3 */
 	bool delayedShutoffRequested : 1 {};
 	/**
@@ -105,4 +109,4 @@ struct main_relay_s {
 static_assert(sizeof(main_relay_s) == 4);
 
 // end
-// this section was generated automatically by rusEFI tool ConfigDefinition.jar based on (unknown script) controllers/actuators/main_relay.txt Sun Apr 17 20:27:25 UTC 2022
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/actuators/main_relay.txt

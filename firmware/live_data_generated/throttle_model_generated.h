@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/math/throttle_model.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/math/throttle_model.txt
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -113,7 +113,7 @@ struct throttle_model_s {
 	 * units: units
 	 * offset 6
 	 */
-	uint8_t alignmentFill_at_6[2];
+	uint8_t alignmentFill_at_6[2] = {};
 	/**
 	 * Air: Throttle flow estimate
 	 * units: g/s
@@ -124,4 +124,4 @@ struct throttle_model_s {
 static_assert(sizeof(throttle_model_s) == 12);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/math/throttle_model.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/math/throttle_model.txt

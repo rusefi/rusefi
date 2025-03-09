@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/sensors//wideband_state.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/sensors//wideband_state.txt
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -27,7 +27,7 @@ struct wideband_state_s {
 	 * units: units
 	 * offset 3
 	 */
-	uint8_t alignmentFill_at_3[1];
+	uint8_t alignmentFill_at_3[1] = {};
 	/**
 	 * WBO: Temperature
 	 * units: C
@@ -51,9 +51,9 @@ struct wideband_state_s {
 	 * units: units
 	 * offset 10
 	 */
-	uint8_t alignmentFill_at_10[2];
+	uint8_t alignmentFill_at_10[2] = {};
 };
 static_assert(sizeof(wideband_state_s) == 12);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/sensors//wideband_state.txt Wed Jan 03 20:30:10 UTC 2024
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/sensors//wideband_state.txt

@@ -170,30 +170,6 @@ float getConfigValueByName(const char *name) {
 // enableStagedInjection
 		case 1160459527:
 			return engineConfiguration->enableStagedInjection;
-// maxAdvanceSmoothing
-		case -484675851:
-			return engineConfiguration->maxAdvanceSmoothing;
-// minAdvanceSmoothing
-		case -1756713997:
-			return engineConfiguration->minAdvanceSmoothing;
-// increaseAdvanceSmoothing
-		case 2023934585:
-			return engineConfiguration->increaseAdvanceSmoothing;
-// decreaseAdvanceSmoothing
-		case 1680925515:
-			return engineConfiguration->decreaseAdvanceSmoothing;
-// timeoutAdvanceSmoothing
-		case 1607780662:
-			return engineConfiguration->timeoutAdvanceSmoothing;
-// deltaLoadSmoothingThreshold
-		case 1689333460:
-			return engineConfiguration->deltaLoadSmoothingThreshold;
-// enableAdvanceSmoothing
-		case 644314390:
-			return engineConfiguration->enableAdvanceSmoothing;
-// strenghtAdvanceSmoothing
-		case -1950180290:
-			return engineConfiguration->strenghtAdvanceSmoothing;
 // Fan1AcThresholdOn
 		case -770543463:
 			return engineConfiguration->Fan1AcThresholdOn;
@@ -653,9 +629,6 @@ float getConfigValueByName(const char *name) {
 // suppressWboWorkaround7048
 		case -1190865359:
 			return engineConfiguration->suppressWboWorkaround7048;
-// showHumanReadableWarning
-		case 2046602309:
-			return engineConfiguration->showHumanReadableWarning;
 // stftIgnoreErrorMagnitude
 		case 1838375282:
 			return engineConfiguration->stftIgnoreErrorMagnitude;
@@ -818,9 +791,6 @@ float getConfigValueByName(const char *name) {
 // fuelClosedLoopCorrectionEnabled
 		case 1611799720:
 			return engineConfiguration->fuelClosedLoopCorrectionEnabled;
-// oddFireEngine
-		case -111377544:
-			return engineConfiguration->oddFireEngine;
 // alwaysWriteSdCard
 		case 787397010:
 			return engineConfiguration->alwaysWriteSdCard;
@@ -2000,6 +1970,12 @@ float getConfigValueByName(const char *name) {
 // fuelLevelUpdatePeriodSec
 		case 128251338:
 			return engineConfiguration->fuelLevelUpdatePeriodSec;
+// fuelLevelLowThresholdVoltage
+		case 1697484698:
+			return engineConfiguration->fuelLevelLowThresholdVoltage;
+// fuelLevelHighThresholdVoltage
+		case 2012123720:
+			return engineConfiguration->fuelLevelHighThresholdVoltage;
 // ltftEnabled
 		case -518141238:
 			return config->ltftEnabled;
@@ -2303,46 +2279,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1160459527:
 	{
 		engineConfiguration->enableStagedInjection = (int)value;
-		return 1;
-	}
-		case -484675851:
-	{
-		engineConfiguration->maxAdvanceSmoothing = value;
-		return 1;
-	}
-		case -1756713997:
-	{
-		engineConfiguration->minAdvanceSmoothing = value;
-		return 1;
-	}
-		case 2023934585:
-	{
-		engineConfiguration->increaseAdvanceSmoothing = value;
-		return 1;
-	}
-		case 1680925515:
-	{
-		engineConfiguration->decreaseAdvanceSmoothing = value;
-		return 1;
-	}
-		case 1607780662:
-	{
-		engineConfiguration->timeoutAdvanceSmoothing = (int)value;
-		return 1;
-	}
-		case 1689333460:
-	{
-		engineConfiguration->deltaLoadSmoothingThreshold = (int)value;
-		return 1;
-	}
-		case 644314390:
-	{
-		engineConfiguration->enableAdvanceSmoothing = (int)value;
-		return 1;
-	}
-		case -1950180290:
-	{
-		engineConfiguration->strenghtAdvanceSmoothing = (int)value;
 		return 1;
 	}
 		case -770543463:
@@ -3110,11 +3046,6 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->suppressWboWorkaround7048 = (int)value;
 		return 1;
 	}
-		case 2046602309:
-	{
-		engineConfiguration->showHumanReadableWarning = (int)value;
-		return 1;
-	}
 		case 1838375282:
 	{
 		engineConfiguration->stftIgnoreErrorMagnitude = (int)value;
@@ -3383,11 +3314,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1611799720:
 	{
 		engineConfiguration->fuelClosedLoopCorrectionEnabled = (int)value;
-		return 1;
-	}
-		case -111377544:
-	{
-		engineConfiguration->oddFireEngine = (int)value;
 		return 1;
 	}
 		case 787397010:
@@ -4222,22 +4148,22 @@ bool setConfigValueByName(const char *name, float value) {
 	}
 		case -557658095:
 	{
-		engineConfiguration->tChargeMinRpmMinTps = value;
+		engineConfiguration->tChargeMinRpmMinTps = (int)value;
 		return 1;
 	}
 		case -566786093:
 	{
-		engineConfiguration->tChargeMinRpmMaxTps = value;
+		engineConfiguration->tChargeMinRpmMaxTps = (int)value;
 		return 1;
 	}
 		case -599338669:
 	{
-		engineConfiguration->tChargeMaxRpmMinTps = value;
+		engineConfiguration->tChargeMaxRpmMinTps = (int)value;
 		return 1;
 	}
 		case -608466667:
 	{
-		engineConfiguration->tChargeMaxRpmMaxTps = value;
+		engineConfiguration->tChargeMaxRpmMaxTps = (int)value;
 		return 1;
 	}
 		case 298649674:
@@ -5353,6 +5279,16 @@ bool setConfigValueByName(const char *name, float value) {
 		case 128251338:
 	{
 		engineConfiguration->fuelLevelUpdatePeriodSec = value;
+		return 1;
+	}
+		case 1697484698:
+	{
+		engineConfiguration->fuelLevelLowThresholdVoltage = value;
+		return 1;
+	}
+		case 2012123720:
+	{
+		engineConfiguration->fuelLevelHighThresholdVoltage = value;
 		return 1;
 	}
 		case -518141238:

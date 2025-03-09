@@ -16,7 +16,7 @@ struct knock_controller_s {
 	 * units: dBv
 	 * offset 4
 	 */
-	int8_t m_knockCyl[12];
+	int8_t m_knockCyl[12] = {};
 	/**
 	 * @@GAUGE_NAME_KNOCK_RETARD@@
 	 * units: deg
@@ -43,7 +43,7 @@ struct knock_controller_s {
 	 * units: compressed data
 	 * offset 32
 	 */
-	uint32_t m_knockSpectrum[16];
+	uint32_t m_knockSpectrum[16] = {};
 	/**
 	 * Knock: ChannelAndCylNumber
 	 * units: compressed N + N

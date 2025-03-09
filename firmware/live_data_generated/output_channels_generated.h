@@ -49,110 +49,108 @@ struct output_channels_s {
 	offset 0 bit 3 */
 	bool antilagTriggered : 1 {};
 	/**
-	 * Radiator Fan
 	offset 0 bit 4 */
-	bool isFanOn : 1 {};
-	/**
-	offset 0 bit 5 */
 	bool isO2HeaterOn : 1 {};
 	/**
-	offset 0 bit 6 */
+	offset 0 bit 5 */
 	bool checkEngine : 1 {};
 	/**
-	offset 0 bit 7 */
+	offset 0 bit 6 */
 	bool needBurn : 1 {};
 	/**
 	 * SD: MSD
-	offset 0 bit 8 */
+	offset 0 bit 7 */
 	bool sd_msd : 1 {};
 	/**
-	 * Radiator Fan 2
-	offset 0 bit 9 */
-	bool isFan2On : 1 {};
-	/**
 	 * Tooth Logger Ready
-	offset 0 bit 10 */
+	offset 0 bit 8 */
 	bool toothLogReady : 1 {};
 	/**
 	 * Error: TPS
-	offset 0 bit 11 */
+	offset 0 bit 9 */
 	bool isTpsError : 1 {};
 	/**
 	 * Error: CLT
-	offset 0 bit 12 */
+	offset 0 bit 10 */
 	bool isCltError : 1 {};
 	/**
 	 * Error: MAP
-	offset 0 bit 13 */
+	offset 0 bit 11 */
 	bool isMapError : 1 {};
 	/**
 	 * Error: IAT
-	offset 0 bit 14 */
+	offset 0 bit 12 */
 	bool isIatError : 1 {};
 	/**
 	 * Error: Trigger
-	offset 0 bit 15 */
+	offset 0 bit 13 */
 	bool isTriggerError : 1 {};
 	/**
 	 * Error: Active
-	offset 0 bit 16 */
+	offset 0 bit 14 */
 	bool hasCriticalError : 1 {};
 	/**
 	 * Warning: Active
-	offset 0 bit 17 */
+	offset 0 bit 15 */
 	bool isWarnNow : 1 {};
 	/**
 	 * Error: Pedal
-	offset 0 bit 18 */
+	offset 0 bit 16 */
 	bool isPedalError : 1 {};
 	/**
-	offset 0 bit 19 */
+	offset 0 bit 17 */
 	bool isKnockChipOk : 1 {};
 	/**
 	 * Launch Control Triggered
-	offset 0 bit 20 */
+	offset 0 bit 18 */
 	bool launchTriggered : 1 {};
 	/**
 	 * Error: TPS2
-	offset 0 bit 21 */
+	offset 0 bit 19 */
 	bool isTps2Error : 1 {};
 	/**
 	 * Injector Fault
-	offset 0 bit 22 */
+	offset 0 bit 20 */
 	bool injectorFault : 1 {};
 	/**
 	 * Ignition Fault
-	offset 0 bit 23 */
+	offset 0 bit 21 */
 	bool ignitionFault : 1 {};
-	/**
-	offset 0 bit 24 */
-	bool isMainRelayOn : 1 {};
 	/**
 	 * isUsbConnected
 	 * Original reason for this is to check if USB is connected from Lua
-	offset 0 bit 25 */
+	offset 0 bit 22 */
 	bool isUsbConnected : 1 {};
 	/**
-	offset 0 bit 26 */
+	offset 0 bit 23 */
 	bool dfcoActive : 1 {};
 	/**
 	 * SD card writing
-	offset 0 bit 27 */
+	offset 0 bit 24 */
 	bool sd_active_wr : 1 {};
 	/**
 	 * SD card reading
-	offset 0 bit 28 */
+	offset 0 bit 25 */
 	bool sd_active_rd : 1 {};
 	/**
 	 * MAP from sensor seems valid
-	offset 0 bit 29 */
+	offset 0 bit 26 */
 	bool isMapValid : 1 {};
 	/**
+	offset 0 bit 27 */
+	bool triggerPageRefreshFlag : 1 {};
+	/**
+	offset 0 bit 28 */
+	bool unusedBit_28_28 : 1 {};
+	/**
+	offset 0 bit 29 */
+	bool unusedBit_28_29 : 1 {};
+	/**
 	offset 0 bit 30 */
-	bool unusedBit_30_30 : 1 {};
+	bool unusedBit_28_30 : 1 {};
 	/**
 	offset 0 bit 31 */
-	bool unusedBit_30_31 : 1 {};
+	bool unusedBit_28_31 : 1 {};
 	/**
 	 * @@GAUGE_NAME_RPM@@
 	 * units: RPM
@@ -386,7 +384,7 @@ struct output_channels_s {
 	 * units: units
 	 * offset 78
 	 */
-	uint8_t alignmentFill_at_78[2];
+	uint8_t alignmentFill_at_78[2] = {};
 	/**
 	 * @@GAUGE_NAME_UPTIME@@
 	 * units: sec
@@ -502,7 +500,7 @@ struct output_channels_s {
 	 * units: units
 	 * offset 122
 	 */
-	uint8_t alignmentFill_at_122[2];
+	uint8_t alignmentFill_at_122[2] = {};
 	/**
 	 * offset 124
 	 */
@@ -534,7 +532,7 @@ struct output_channels_s {
 	 * units: error
 	 * offset 140
 	 */
-	uint16_t recentErrorCode[8];
+	uint16_t recentErrorCode[8] = {};
 	/**
 	 * units: val
 	 * offset 156
@@ -600,7 +598,7 @@ struct output_channels_s {
 	 * units: deg C
 	 * offset 200
 	 */
-	scaled_channel<int16_t, 4, 1> egt[EGT_CHANNEL_COUNT];
+	scaled_channel<int16_t, 4, 1> egt[EGT_CHANNEL_COUNT] = {};
 	/**
 	 * units: V
 	 * offset 216
@@ -640,7 +638,7 @@ struct output_channels_s {
 	 * units: units
 	 * offset 229
 	 */
-	uint8_t alignmentFill_at_229[3];
+	uint8_t alignmentFill_at_229[3] = {};
 	/**
 	 * units: V
 	 * offset 232
@@ -713,7 +711,7 @@ struct output_channels_s {
 	 * units: %
 	 * offset 264
 	 */
-	scaled_channel<int16_t, 100, 1> fuelPidCorrection[STFT_BANK_COUNT];
+	scaled_channel<int16_t, 100, 1> fuelPidCorrection[STFT_BANK_COUNT] = {};
 	/**
 	 * units: V
 	 * offset 268
@@ -745,7 +743,7 @@ struct output_channels_s {
 	 * units: deg
 	 * offset 278
 	 */
-	int8_t vvtTargets[4];
+	int8_t vvtTargets[4] = {};
 	/**
 	 * @@GAUGE_NAME_TURBO_SPEED@@
 	 * units: hz
@@ -757,7 +755,7 @@ struct output_channels_s {
 	 * units: deg
 	 * offset 284
 	 */
-	scaled_channel<int16_t, 50, 1> ignitionAdvanceCyl[MAX_CYLINDER_COUNT];
+	scaled_channel<int16_t, 50, 1> ignitionAdvanceCyl[MAX_CYLINDER_COUNT] = {};
 	/**
 	 * units: %
 	 * offset 308
@@ -817,7 +815,7 @@ struct output_channels_s {
 	 * units: units
 	 * offset 326
 	 */
-	uint8_t alignmentFill_at_326[2];
+	uint8_t alignmentFill_at_326[2] = {};
 	/**
 	 * offset 328
 	 */
@@ -893,7 +891,7 @@ struct output_channels_s {
 	 * units: units
 	 * offset 374
 	 */
-	uint8_t alignmentFill_at_374[2];
+	uint8_t alignmentFill_at_374[2] = {};
 	/**
 	 * offset 376
 	 */
@@ -966,7 +964,7 @@ struct output_channels_s {
 	/**
 	 * offset 484
 	 */
-	pid_status_s vvtStatus[CAM_INPUTS_COUNT];
+	pid_status_s vvtStatus[CAM_INPUTS_COUNT] = {};
 	/**
 	 * Aux speed 1
 	 * units: s
@@ -989,21 +987,21 @@ struct output_channels_s {
 	 * units: V
 	 * offset 554
 	 */
-	scaled_channel<int16_t, 1000, 1> rawAnalogInput[LUA_ANALOG_INPUT_COUNT];
+	scaled_channel<int16_t, 1000, 1> rawAnalogInput[LUA_ANALOG_INPUT_COUNT] = {};
 	/**
 	 * GPPWM Output
 	 * units: %
 	 * offset 570
 	 */
-	scaled_channel<uint8_t, 2, 1> gppwmOutput[4];
+	scaled_channel<uint8_t, 2, 1> gppwmOutput[4] = {};
 	/**
 	 * offset 574
 	 */
-	scaled_channel<int16_t, 1, 1> gppwmXAxis[4];
+	scaled_channel<int16_t, 1, 1> gppwmXAxis[4] = {};
 	/**
 	 * offset 582
 	 */
-	scaled_channel<int16_t, 10, 1> gppwmYAxis[4];
+	scaled_channel<int16_t, 10, 1> gppwmYAxis[4] = {};
 	/**
 	 * units: V
 	 * offset 590
@@ -1012,79 +1010,79 @@ struct output_channels_s {
 	/**
 	 * offset 592
 	 */
-	scaled_channel<int16_t, 10, 1> ignBlendParameter[IGN_BLEND_COUNT];
+	scaled_channel<int16_t, 10, 1> ignBlendParameter[IGN_BLEND_COUNT] = {};
 	/**
 	 * units: %
 	 * offset 596
 	 */
-	scaled_channel<uint8_t, 2, 1> ignBlendBias[IGN_BLEND_COUNT];
+	scaled_channel<uint8_t, 2, 1> ignBlendBias[IGN_BLEND_COUNT] = {};
 	/**
 	 * units: deg
 	 * offset 598
 	 */
-	scaled_channel<int16_t, 100, 1> ignBlendOutput[IGN_BLEND_COUNT];
+	scaled_channel<int16_t, 100, 1> ignBlendOutput[IGN_BLEND_COUNT] = {};
 	/**
 	 * offset 602
 	 */
-	scaled_channel<int16_t, 10, 1> veBlendParameter[VE_BLEND_COUNT];
+	scaled_channel<int16_t, 10, 1> veBlendParameter[VE_BLEND_COUNT] = {};
 	/**
 	 * units: %
 	 * offset 610
 	 */
-	scaled_channel<uint8_t, 2, 1> veBlendBias[VE_BLEND_COUNT];
+	scaled_channel<uint8_t, 2, 1> veBlendBias[VE_BLEND_COUNT] = {};
 	/**
 	 * units: %
 	 * offset 614
 	 */
-	scaled_channel<int16_t, 100, 1> veBlendOutput[VE_BLEND_COUNT];
+	scaled_channel<int16_t, 100, 1> veBlendOutput[VE_BLEND_COUNT] = {};
 	/**
 	 * offset 622
 	 */
-	scaled_channel<int16_t, 10, 1> boostOpenLoopBlendParameter[BOOST_BLEND_COUNT];
+	scaled_channel<int16_t, 10, 1> boostOpenLoopBlendParameter[BOOST_BLEND_COUNT] = {};
 	/**
 	 * units: %
 	 * offset 626
 	 */
-	scaled_channel<uint8_t, 2, 1> boostOpenLoopBlendBias[BOOST_BLEND_COUNT];
+	scaled_channel<uint8_t, 2, 1> boostOpenLoopBlendBias[BOOST_BLEND_COUNT] = {};
 	/**
 	 * units: %
 	 * offset 628
 	 */
-	scaled_channel<int8_t, 1, 1> boostOpenLoopBlendOutput[BOOST_BLEND_COUNT];
+	scaled_channel<int8_t, 1, 1> boostOpenLoopBlendOutput[BOOST_BLEND_COUNT] = {};
 	/**
 	 * offset 630
 	 */
-	scaled_channel<int16_t, 10, 1> boostClosedLoopBlendParameter[BOOST_BLEND_COUNT];
+	scaled_channel<int16_t, 10, 1> boostClosedLoopBlendParameter[BOOST_BLEND_COUNT] = {};
 	/**
 	 * units: %
 	 * offset 634
 	 */
-	scaled_channel<uint8_t, 2, 1> boostClosedLoopBlendBias[BOOST_BLEND_COUNT];
+	scaled_channel<uint8_t, 2, 1> boostClosedLoopBlendBias[BOOST_BLEND_COUNT] = {};
 	/**
 	 * units: %
 	 * offset 636
 	 */
-	scaled_channel<int16_t, 10, 1> boostClosedLoopBlendOutput[BOOST_BLEND_COUNT];
+	scaled_channel<int16_t, 10, 1> boostClosedLoopBlendOutput[BOOST_BLEND_COUNT] = {};
 	/**
 	 * offset 640
 	 */
-	scaled_channel<int16_t, 10, 1> targetAfrBlendParameter[TARGET_AFR_BLEND_COUNT];
+	scaled_channel<int16_t, 10, 1> targetAfrBlendParameter[TARGET_AFR_BLEND_COUNT] = {};
 	/**
 	 * units: %
 	 * offset 644
 	 */
-	scaled_channel<uint8_t, 2, 1> targetAfrBlendBias[TARGET_AFR_BLEND_COUNT];
+	scaled_channel<uint8_t, 2, 1> targetAfrBlendBias[TARGET_AFR_BLEND_COUNT] = {};
 	/**
 	 * units: %
 	 * offset 646
 	 */
-	scaled_channel<int16_t, 10, 1> targetAfrBlendOutput[TARGET_AFR_BLEND_COUNT];
+	scaled_channel<int16_t, 10, 1> targetAfrBlendOutput[TARGET_AFR_BLEND_COUNT] = {};
 	/**
 	 * need 4 byte alignment
 	 * units: units
 	 * offset 650
 	 */
-	uint8_t alignmentFill_at_650[2];
+	uint8_t alignmentFill_at_650[2] = {};
 	/**
 	offset 652 bit 0 */
 	bool coilState1 : 1 {};
@@ -1198,7 +1196,7 @@ struct output_channels_s {
 	 * units: value
 	 * offset 664
 	 */
-	float luaGauges[LUA_GAUGE_COUNT];
+	float luaGauges[LUA_GAUGE_COUNT] = {};
 	/**
 	 * units: V
 	 * offset 696
@@ -1299,11 +1297,11 @@ struct output_channels_s {
 	/**
 	 * offset 736
 	 */
-	uint8_t ignitorDiagnostic[MAX_CYLINDER_COUNT];
+	uint8_t ignitorDiagnostic[MAX_CYLINDER_COUNT] = {};
 	/**
 	 * offset 748
 	 */
-	uint8_t injectorDiagnostic[MAX_CYLINDER_COUNT];
+	uint8_t injectorDiagnostic[MAX_CYLINDER_COUNT] = {};
 	/**
 	 * @@GAUGE_NAME_FUEL_LAST_INJECTION_STAGE_2@@
 	 * units: ms
@@ -1349,7 +1347,7 @@ struct output_channels_s {
 	 * units: units
 	 * offset 771
 	 */
-	uint8_t alignmentFill_at_771[1];
+	uint8_t alignmentFill_at_771[1] = {};
 	/**
 	 * @@GAUGE_NAME_AC_PRESSURE@@
 	 * units: kPa
@@ -1414,13 +1412,13 @@ struct output_channels_s {
 	/**
 	 * offset 798
 	 */
-	uint8_t unusedAtTheEnd[52];
+	uint8_t unusedAtTheEnd[52] = {};
 	/**
 	 * need 4 byte alignment
 	 * units: units
 	 * offset 850
 	 */
-	uint8_t alignmentFill_at_850[2];
+	uint8_t alignmentFill_at_850[2] = {};
 };
 static_assert(sizeof(output_channels_s) == 852);
 

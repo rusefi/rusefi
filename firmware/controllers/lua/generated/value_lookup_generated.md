@@ -163,30 +163,6 @@ If enabled - use onboard SPI Accelerometer, otherwise listen for CAN messages
 ### enableStagedInjection
 
 
-### maxAdvanceSmoothing
-Maximum absolute ignition timing while smothering
-
-### minAdvanceSmoothing
-Minimum absolute ignition timing while smothering
-
-### increaseAdvanceSmoothing
-Maximum ignition timing increase while smothering
-
-### decreaseAdvanceSmoothing
-Maximum ignition timing decrease while smothering
-
-### timeoutAdvanceSmoothing
-Engine cicles that the advance correction will stay on
-
-### deltaLoadSmoothingThreshold
-Minimum engine load that corrections will occour
-
-### enableAdvanceSmoothing
-Activate this to increment or decrement ignition angle after fast TPS variation, can improve drivability;
-
-### strenghtAdvanceSmoothing
-Strenght of advance correction
-
 ### Fan1AcThresholdOn
 Theshold to enable fan 1 after ac turned on
 
@@ -646,9 +622,6 @@ Read VSS from OEM CAN bus according to selected CAN vehicle configuration.
 ### suppressWboWorkaround7048
 
 
-### showHumanReadableWarning
-
-
 ### stftIgnoreErrorMagnitude
 If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise.
 
@@ -810,9 +783,6 @@ Select which bus the wideband controller is attached to.
 
 ### fuelClosedLoopCorrectionEnabled
 Enables lambda sensor closed loop feedback for fuelling.
-
-### oddFireEngine
-On even fire engines with even number of cylinders we go wasted spark during cranking. Use this setting to disable wasted spark cranking on odd fire engines.
 
 ### alwaysWriteSdCard
 Write SD card log even when powered by USB
@@ -1992,6 +1962,12 @@ Exponential Average Alpha filtering parameter
 
 ### fuelLevelUpdatePeriodSec
 How often do we update fuel level gauge
+
+### fuelLevelLowThresholdVoltage
+Error below specified value
+
+### fuelLevelHighThresholdVoltage
+Error above specified value
 
 ### ltftEnabled
 
