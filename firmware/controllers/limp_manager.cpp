@@ -158,7 +158,7 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 		}
 
 		// check the maximum oil pressure
-		float maxOilPressure = engineConfiguration->maxOilPressure;
+		float maxOilPressure = interpolate2d(rpm, config->maximumOilPressureBins, config->maximumOilPressureValues);
 		if (maxOilPressure > 0 && hasOilpSensor) {
 			if (oilp.Value < maxOilPressure) {
 				m_highOilPressureTimer.reset(nowNt);
