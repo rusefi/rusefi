@@ -570,20 +570,14 @@ void mreBoardNewTest() {
 
 }
 
-static const float hardCodedHpfpLobeProfileQuantityBins[16] = {0.0, 1.0, 4.5, 9.5,
+static const float hardCodedHpfpLobeProfileQuantityBins[HpfpLobeProfile_SIZE] = {0.0, 1.0, 4.5, 9.5,
 16.5, 25.0, 34.5, 45.0 ,
 55.0, 65.5, 75.0, 83.5,
 90.5, 95.5, 99.0, 100.0};
 
-static const float hardCodedHpfpLobeProfileAngle[16] = {0.0, 7.5, 16.5, 24.0,
-32.0 , 40.0, 48.0, 56.0,
-64.0 , 72.0, 80.0, 88.0,
-96.0 , 103.5, 112.5, 120.0
-};
-
 void setBoschHDEV_5_injectors() {
 	copyArray(config->hpfpLobeProfileQuantityBins, hardCodedHpfpLobeProfileQuantityBins);
-	copyArray(config->hpfpLobeProfileAngle, hardCodedHpfpLobeProfileAngle);
+	setHpfpLobeProfileAngle(3);
 	setLinearCurve(config->hpfpDeadtimeVoltsBins, 8, 16, 0.5);
 
 	setRpmTableBin(config->hpfpTargetRpmBins);
@@ -678,7 +672,6 @@ void setTest33816EngineConfiguration() {
 	engineConfiguration->isSdCardEnabled = false;
 
 	engineConfiguration->mc33816spiDevice = SPI_DEVICE_3;
-	setBoschHDEV_5_injectors();
 }
 
 void proteusLuaDemo() {
