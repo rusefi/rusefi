@@ -9,5 +9,6 @@ struct_no_prefix fan_control_s
 	bit disabledBySpeed
 	bit m_state;On
 	uint8_t radiatorFanStatus
-	bit m_enabledForAc;Enable for AC Memory
+	bit m_enabledByAc;Enable for AC Memory
+	bit m_enabledAc;Enabled AC Memory
 end_struct
