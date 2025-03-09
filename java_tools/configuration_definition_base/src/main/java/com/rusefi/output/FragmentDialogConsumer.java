@@ -14,13 +14,15 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
     private final StringBuilder indicatorPanel = new StringBuilder();
     private final String fragmentName;
     private final String variableNameSuffix;
+    private final String variableNamePrefix;
     private boolean hasIndicators;
     private int graphLinesCounter;
     private int linesInCurrentGraph;
     private int currentGraphIndex;
 
-    public FragmentDialogConsumer(String fragmentName, String variableNameSuffix) {
+    public FragmentDialogConsumer(String fragmentName, String variableNamePrefix, String variableNameSuffix) {
         this.fragmentName = fragmentName;
+        this.variableNamePrefix = variableNamePrefix;
         this.variableNameSuffix = variableNameSuffix;
     }
 
@@ -31,7 +33,7 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
             int writeOneField(FieldIterator iterator, String prefix, int tsPosition) {
                 ConfigField configField = iterator.cf;
 
-                if (configField.getName().startsWith(ConfigStructureImpl.ALIGNMENT_FILL_AT))
+                if (configField.isUnusedField())
                     return 0;
 
                 ConfigStructure cs = configField.getStructureType();
@@ -40,15 +42,12 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
                     return writeFields(cs.getTsFields(), prefix + extraPrefix, tsPosition);
                 }
 
-                if (configField.getName().startsWith(ConfigStructureImpl.UNUSED_BIT_PREFIX))
-                    return 0;
-
                 if (configField.isBit()) {
                     if (!hasIndicators) {
                         hasIndicators = true;
                         indicatorPanel.append("indicatorPanel = " + getPanelName() + ", 2\n");
                     }
-                    indicatorPanel.append("\tindicator = {" + prefix + configField.getName() + variableNameSuffix + "}, " +
+                    indicatorPanel.append("\tindicator = {" + prefix + variableNamePrefix + configField.getName() + "}, " +
                             "\"" + configField.getName() + " No\", " +
                             "\"" + configField.getName() + " Yes\"" +
                             "\n");
@@ -64,7 +63,7 @@ public class FragmentDialogConsumer implements ConfigurationConsumer {
                     startNewGraph();
                 }
 
-                graphList.append("\t\tgraphLine = " + prefix + configField.getName() + variableNameSuffix + "\n");
+                graphList.append("\t\tgraphLine = " + prefix + variableNamePrefix + configField.getName() + "\n");
                 linesInCurrentGraph++;
 
 

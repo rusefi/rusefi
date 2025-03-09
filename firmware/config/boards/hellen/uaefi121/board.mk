@@ -3,7 +3,7 @@
 # Target ECU board design
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration_uaefi121.cpp
 
-DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
+
 
 #no mux on mm100
 

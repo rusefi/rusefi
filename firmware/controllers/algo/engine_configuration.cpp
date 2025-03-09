@@ -22,9 +22,7 @@
 
 #include "pch.h"
 
-
 #include "speed_density.h"
-#include "advance_map.h"
 #include "flash_main.h"
 
 #include "bench_test.h"
@@ -121,7 +119,7 @@ void onBurnRequest() {
  * this hook is about https://github.com/rusefi/rusefi/wiki/Custom-Firmware and https://github.com/rusefi/rusefi/wiki/Canned-Tune-Process
  * todo: why two hooks? is one already dead?
  */
-PUBLIC_API_WEAK void boardTuneDefaults() { }
+PUBLIC_API_WEAK void boardBeforeTuneDefaults() { }
 
 // Weak link a stub so that every board doesn't have to implement this function
 PUBLIC_API_WEAK void boardOnConfigurationChange(engine_configuration_s* /*previousConfiguration*/) { }
@@ -680,7 +678,7 @@ void resetConfigurationExt(configuration_callback_t boardCallback, engine_type_e
 	/**
 	 * custom board engine defaults. Yes, this overlaps with (older) engine_type_e approach.
 	 */
-	boardTuneDefaults();
+	boardBeforeTuneDefaults();
 
 	// set initial pin groups
 	setDefaultBasePins();
@@ -715,12 +713,8 @@ void applyNonPersistentConfiguration() {
 #endif
 
 #if EFI_ENGINE_CONTROL
-	engine->updateTriggerWaveform();
+	engine->updateTriggerConfiguration();
 #endif // EFI_ENGINE_CONTROL
-}
-
-void setTwoStrokeOperationMode() {
-	engineConfiguration->twoStroke = true;
 }
 
 void setCamOperationMode() {
@@ -728,6 +722,7 @@ void setCamOperationMode() {
 }
 
 void setCrankOperationMode() {
+	// this is related to 'setDefaultBaseEngine' having 'skippedWheelOnCam = true' which is a weird fact by itself
 	engineConfiguration->skippedWheelOnCam = false;
 }
 

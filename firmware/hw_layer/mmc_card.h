@@ -13,9 +13,16 @@
 
 #define DOT_MLG ".mlg"
 
+typedef enum {
+	SD_MODE_IDLE = 0,
+	SD_MODE_ECU,
+	SD_MODE_PC,
+	SD_MODE_UNMOUNT,
+	SD_MODE_FORMAT,
+} SD_MODE;
+
 void initEarlyMmcCard();
 void initMmcCard();
-bool isSdCardAlive(void);
 
 void onUsbConnectedNotifyMmcI(void);
 
@@ -23,3 +30,5 @@ void updateSdCardLiveFlags(void);
 
 struct USBDriver;
 bool msd_request_hook_new(USBDriver *usbp);
+
+void sdCardRequestMode(SD_MODE mode);

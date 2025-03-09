@@ -11,6 +11,8 @@
 #include "knock_logic.h"
 #include "hip9011_logic.h"
 
+#if EFI_HIP_9011_LOGIC
+
 /*==========================================================================*/
 /* Local definitions.														*/
 /*==========================================================================*/
@@ -252,3 +254,5 @@ int HIP9011::readValueAndHandleChannel(DEFINE_HIP_PARAMS) {
 	/* return digital integrator value */
 	return (rx[0] | (rx[1]  << 8));
 }
+
+#endif // EFI_HIP_9011_LOGIC

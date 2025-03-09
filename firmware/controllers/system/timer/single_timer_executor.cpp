@@ -54,7 +54,7 @@ void SingleTimerExecutor::schedule(const char *msg, scheduling_s* scheduling, ef
 	if (deltaTimeNt >= TOO_FAR_INTO_FUTURE_NT) {
 		// we are trying to set callback for too far into the future. This does not look right at all
 		int32_t intDeltaTimeNt = (int32_t)deltaTimeNt;
-		firmwareError(ObdCode::CUSTOM_ERR_TASK_TIMER_OVERFLOW, "schedule() too far: %ld %s", intDeltaTimeNt, msg);
+		firmwareError(ObdCode::RUNTIME_CRITICAL_TASK_TIMER_OVERFLOW, "schedule() too far: %ld %s", intDeltaTimeNt, msg);
 		return;
 	}
 #endif

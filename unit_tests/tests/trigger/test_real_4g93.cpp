@@ -5,10 +5,10 @@
 
 #include "pch.h"
 
-#include "logicdata_csv_reader.h"
+#include "engine_csv_reader.h"
 
 TEST(real4g93, cranking) {
-	CsvReader reader(1, /* vvtCount */ 1);
+	EngineCsvReader reader(1, /* vvtCount */ 1);
 
 	reader.open("tests/trigger/resources/4g93-cranking.csv");
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
@@ -20,9 +20,6 @@ TEST(real4g93, cranking) {
 	engineConfiguration->vvtMode[0] = VVT_MITSUBISHI_4G63;
 
 	eth.setTriggerType(trigger_type_e::TT_MITSU_4G63_CRANK);
-
-	bool gotRpm = false;
-	bool gotSync = false;
 
 	static const float gapRatios[2][4] = {
 		{ 0, NAN, INFINITY, 0.89f }, // no sync
@@ -37,23 +34,16 @@ TEST(real4g93, cranking) {
 
     TriggerCentral *tc = getTriggerCentral();
 
-		auto rpm = Sensor::getOrZero(SensorType::Rpm);
-		if (!gotRpm && rpm) {
-			gotRpm = true;
-
 			// We should get first RPM on exactly the first sync point - this means the instant RPM pre-sync event copy all worked OK
-			EXPECT_EQ(reader.lineIndex(), 6);
-			EXPECT_NEAR(rpm, 132.77f, 0.1);
-		}
+    reader.assertFirstRpm(133, 6);
+		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 
-		if (!gotSync && tc->triggerState.hasSynchronizedPhase()) {
-			gotSync = true;
+		if (!reader.gotSync && tc->triggerState.hasSynchronizedPhase()) {
+			reader.gotSync = true;
 
 			EXPECT_EQ(reader.lineIndex(), 17);
 			EXPECT_NEAR(rpm, 204.01f, 0.1);
 		}
-//		float instantRpm = tc->instantRpm.getInstantRpm();
-// not looking too bad horrible		printf("rpm=%f instant=%f\n", rpm, instantRpm);
 
   TriggerDecoderBase& vvtDecoder = tc->vvtState[/*bankIndex*/0][/*camIndex*/0];
 
@@ -68,14 +58,14 @@ TEST(real4g93, cranking) {
 		}
 	}
 
-	ASSERT_TRUE(gotRpm);
-	ASSERT_TRUE(gotSync);
+	ASSERT_TRUE(reader.gotRpm);
+	ASSERT_TRUE(reader.gotSync);
 
 	ASSERT_EQ(0, eth.recentWarnings()->getCount());
 }
 
 TEST(real4g93, crankingOn11) {
-	CsvReader reader(2, /* vvtCount */ 0);
+	EngineCsvReader reader(2, /* vvtCount */ 0);
 
 	reader.open("tests/trigger/resources/4g93-cranking.csv");
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
@@ -85,26 +75,14 @@ TEST(real4g93, crankingOn11) {
 
 	eth.setTriggerType(trigger_type_e::TT_MAZDA_MIATA_NA);
 
-	bool gotRpm = false;
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
-
-		auto rpm = Sensor::getOrZero(SensorType::Rpm);
-		if (!gotRpm && rpm) {
-			gotRpm = true;
-
-			// We should get first RPM on exactly the first sync point - this means the instant RPM pre-sync event copy all worked OK
-			EXPECT_EQ(reader.lineIndex(), 7);
-			EXPECT_NEAR(rpm, 168.43f, 0.1);
-		}
-
-//		float instantRpm = engine->triggerCentral.instantRpm.getInstantRpm();
-//		printf("%d rpm=%f instant=%f\n", reader.lineIndex(), rpm, instantRpm);
+		reader.assertFirstRpm(168, 7);
 	}
 }
 
 TEST(real4g93, crankingCamOnly) {
-	CsvReader reader(1, /* vvtCount */ 0);
+	EngineCsvReader reader(1, /* vvtCount */ 0);
 
 	reader.open("tests/trigger/resources/4g93-cranking-cam-only.csv");
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
@@ -113,31 +91,28 @@ TEST(real4g93, crankingCamOnly) {
 
 	eth.setTriggerType(trigger_type_e::TT_MITSU_4G9x_CAM);
 
-	bool gotRpm = false;
-	bool gotSync = false;
-
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
 
 		// Expect that all teeth are in the correct spot
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
-		if (!gotRpm && rpm) {
-			gotRpm = true;
+		if (!reader.gotRpm && rpm) {
+			reader.gotRpm = true;
 
 			// We should get first RPM on exactly the first sync point - this means the instant RPM pre-sync event copy all worked OK
 			EXPECT_EQ(reader.lineIndex(), 17);
 			EXPECT_NEAR(rpm, 194.61f, 0.1);
 		}
 
-		if (!gotSync && engine->triggerCentral.triggerState.getShaftSynchronized() && engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
-			gotSync = true;
+		if (!reader.gotSync && engine->triggerCentral.triggerState.getShaftSynchronized() && engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
+			reader.gotSync = true;
 
 			EXPECT_EQ(reader.lineIndex(), 17);
 		}
 	}
 
-	ASSERT_TRUE(gotRpm);
-	ASSERT_TRUE(gotSync);
+	ASSERT_TRUE(reader.gotRpm);
+	ASSERT_TRUE(reader.gotSync);
 
 	ASSERT_EQ(1, eth.recentWarnings()->getCount());
 }

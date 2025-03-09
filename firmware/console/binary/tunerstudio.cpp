@@ -193,7 +193,13 @@ void TunerStudio::sendErrorCode(TsChannelBase* tsChannel, uint8_t code, const ch
 
 bool validateOffsetCount(size_t offset, size_t count, TsChannelBase* tsChannel);
 
-extern bool rebootForPresetPending;
+bool wasPresetJustApplied() {
+  return !engine->engineTypeChangeTimer.hasElapsedSec(1);
+}
+
+void onApplyPreset() {
+  engine->engineTypeChangeTimer.reset();
+}
 
 /**
  * This command is needed to make the whole transfer a bit faster
@@ -218,7 +224,7 @@ void TunerStudio::handleWriteChunkCommand(TsChannelBase* tsChannel, uint16_t pag
 		}
 
 		// Skip the write if a preset was just loaded - we don't want to overwrite it
-		if (!rebootForPresetPending) {
+		if (!wasPresetJustApplied()) {
 			uint8_t * addr = (uint8_t *) (getWorkingPageAddr() + offset);
 			memcpy(addr, content, count);
 		}
@@ -315,11 +321,6 @@ void TunerStudio::handlePageReadCommand(TsChannelBase* tsChannel, uint16_t page,
 	efiPrintf("TS <- Page %d read chunk offset %d count %d", page, offset, count);
 
 	if (page == 0) {
-		if (rebootForPresetPending) {
-			sendErrorCode(tsChannel, TS_RESPONSE_UNRECOGNIZED_COMMAND, "reboot");
-			return;
-		}
-
 		if (validateOffsetCount(offset, count, tsChannel)) {
 			tunerStudioError(tsChannel, "ERROR: RD out of range");
 			sendErrorCode(tsChannel, TS_RESPONSE_OUT_OF_RANGE);
@@ -369,7 +370,7 @@ static void handleBurnCommand(TsChannelBase* tsChannel) {
 	validateConfigOnStartUpOrBurn();
 
 	// Skip the burn if a preset was just loaded - we don't want to overwrite it
-	if (!rebootForPresetPending) {
+	if (!wasPresetJustApplied()) {
 		requestBurn();
 	}
 
@@ -871,9 +872,16 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 		}
 
 		break;
+#else
+	case TS_PERF_TRACE_BEGIN:
+    criticalError("TS_PERF_TRACE not supported");
+    break;
+	case TS_PERF_TRACE_GET_BUFFER:
+    criticalError("TS_PERF_TRACE_GET_BUFFER not supported");
+    break;
 #endif /* ENABLE_PERF_TRACE */
 	case TS_GET_CONFIG_ERROR: {
-		const char* configError = getCriticalErrorMessage();
+	  const char* configError = hasFirmwareError()? getCriticalErrorMessage() : getConfigErrorMessage();
 		tsChannel->sendResponse(TS_CRC, reinterpret_cast<const uint8_t*>(configError), strlen(configError), true);
 		break;
 	}
@@ -899,7 +907,7 @@ static char tsErrorBuff[80];
 
 #endif // EFI_PROD_CODE || EFI_SIMULATOR
 
-void startTunerStudioConnectivity(void) {
+void startTunerStudioConnectivity() {
 	// Assert tune & output channel struct sizes
 	static_assert(sizeof(persistent_config_s) == TOTAL_CONFIG_SIZE, "TS datapage size mismatch");
 // useful trick if you need to know how far off is the static_assert

@@ -273,7 +273,7 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 			getIgnitionEvents()->isReady = false; // we need to rebuild complete ignition schedule
 			getFuelSchedule()->isReady = false;
 			// moved 'triggerIndexByAngle' into trigger initialization (why was it invoked from here if it's only about trigger shape & optimization?)
-			// see updateTriggerWaveform() -> prepareOutputSignals()
+			// see updateTriggerConfiguration() -> prepareOutputSignals()
 
 			// we need this to apply new 'triggerIndexByAngle' values
 			engine->periodicFastCallback();

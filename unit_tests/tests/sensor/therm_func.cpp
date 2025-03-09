@@ -33,8 +33,8 @@ TEST(thermistor, ThermistorNeon) {
 	ASSERT_TRUE(t.Valid);
 	ASSERT_NEAR(-2.7983, t.Value, EPS4D);
 
-	assertEqualsM("A", 0.0009, tf.m_a);
-	assertEqualsM("B", 0.0003, tf.m_b);
+	ASSERT_NEAR(0.0009, tf.m_a, EPS4D) << "A";
+	ASSERT_NEAR(0.0003, tf.m_b, EPS4D) << "B";
 	ASSERT_NEAR(0.0, tf.m_c, EPS4D);
 }
 

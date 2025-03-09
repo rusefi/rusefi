@@ -40,14 +40,14 @@ public class TsOutput {
         return settingContextHelp.toString();
     }
 
-    public int run(ReaderState state, ConfigStructure structure, int sensorTsPosition, String temporaryLineComment, String variableNameSuffix) {
+    public int run(ReaderState state, ConfigStructure structure, int structureStartingTsPosition, String temporaryLineComment, String variableNamePrefix) {
         FieldsStrategy strategy = new FieldsStrategy() {
             @Override
             public int writeOneField(FieldIterator it, String prefix, int tsPosition) {
                 ConfigField configField = it.cf;
                 ConfigField next = it.next;
                 int bitIndex = it.bitState.get();
-                String nameWithPrefix = prefix + configField.getName() + variableNameSuffix;
+                String nameWithPrefix = prefix + variableNamePrefix + configField.getName();
 
                 /**
                  * in 'Constants' section we have conditional sections and this check is not smart enough to handle those right
@@ -55,14 +55,13 @@ public class TsOutput {
                  */
                 if (!usedNames.add(nameWithPrefix)
                         && !isConstantsSection
-                        && !configField.getName().startsWith(ConfigStructureImpl.ALIGNMENT_FILL_AT)
-                        && !configField.getName().startsWith(ConfigStructure.UNUSED_ANYTHING_PREFIX)) {
+                        && !configField.isUnusedField()) {
                     throw new IllegalStateException(nameWithPrefix + " already present: " + configField);
                 }
 
+                // note that we need to handle account for unused bits size below!
                 if (configField.getName().startsWith(ConfigStructureImpl.ALIGNMENT_FILL_AT)) {
-                    tsPosition += configField.getSize(next);
-                    return tsPosition;
+                    return it.adjustSize(tsPosition);
                 }
 
                 if (configField.isDirective() && configField.getComment() != null) {
@@ -94,8 +93,7 @@ public class TsOutput {
                         tsHeader.append(EOL);
                     }
 
-                    tsPosition += configField.getSize(next);
-                    return tsPosition;
+                    return it.adjustSize(tsPosition);
                 }
 
                 if (configField.getState().getTsCustomLine().containsKey(configField.getTypeName())) {
@@ -146,12 +144,12 @@ public class TsOutput {
                 return tsPosition;
             }
         };
-        sensorTsPosition = strategy.run(state, structure, sensorTsPosition);
+        structureStartingTsPosition = strategy.run(state, structure, structureStartingTsPosition);
 
         if (state.isStackEmpty()) {
-            tsHeader.append("; total TS size = " + sensorTsPosition + EOL);
+            tsHeader.append("; total TS size = " + structureStartingTsPosition + EOL);
         }
-        return sensorTsPosition;
+        return structureStartingTsPosition;
     }
 
     private String handleTsInfo(ConfigField configField, String tsInfo, int multiplierIndex) {

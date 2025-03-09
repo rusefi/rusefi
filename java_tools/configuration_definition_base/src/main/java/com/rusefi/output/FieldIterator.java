@@ -6,7 +6,10 @@ import com.rusefi.ConfigField;
 import java.util.List;
 
 /**
+ * TODO java code: two or three classes with potential code duplication #7259
+ * <p>
  * custom iterator with references to previous and next elements
+ *
  * @see PerFieldWithStructuresIterator is there a duplication?
  */
 public class FieldIterator {
@@ -36,16 +39,17 @@ public class FieldIterator {
         cf = fields.get(index);
     }
 
-    public void loop() {
-        for (int i = 0; i < fields.size(); i++) {
-            start(i);
-            end();
-        }
+    public int loop(int tsPosition) {
+        return FieldsStrategy.VOID.loopIterator(fields, "", tsPosition, this);
     }
 
-    public void end() {
+    public void end(int currentPosition) {
         if (!cf.isDirective())
             prev = cf;
         bitState.incrementBitIndex(cf, next);
+    }
+
+    public int adjustSize(int tsPosition) {
+        return tsPosition + cf.getSize(next);
     }
 }

@@ -20,6 +20,9 @@ public:
 		, m_name(name)
 		, m_units(units)
 		, m_category(category)
+		, m_isBitField(false)
+		, m_bitsBlockOffset(0)
+		, m_bitNumber(0)
 	{
 	}
 
@@ -35,8 +38,33 @@ public:
 		, m_name(name)
 		, m_units(units)
 		, m_category(category)
+		, m_isBitField(false)
+		, m_bitsBlockOffset(0)
+		, m_bitNumber(0)
 	{
 	}
+
+	// Bit channel
+	template <typename TValue>
+	constexpr LogField(
+		TValue& toRead,
+		const uint32_t bitsBlockOffset,
+		const uint8_t bitNumber,
+		const char* name,
+		const char* units,
+		const char* category = "none"
+	): m_multiplier(1)
+		, m_addr(&toRead)
+		, m_type(Type::U08)
+		, m_digits(0)
+		, m_size(1)
+		, m_name(name)
+		, m_units(units)
+		, m_category(category)
+		, m_isBitField(true)
+		, m_bitsBlockOffset(bitsBlockOffset)
+		, m_bitNumber(bitNumber)
+	{}
 
 	enum class Type : uint8_t {
 		U08 = 0,
@@ -54,11 +82,12 @@ public:
 	}
 
 	// Write the header data describing this field.
-	void writeHeader(Writer& outBuffer) const;
+	// Returns the number of bytes written.
+	size_t writeHeader(Writer& outBuffer) const;
 
 	// Write the field's data to the buffer.
 	// Returns the number of bytes written.
-	size_t writeData(char* buffer) const;
+	size_t writeData(char* buffer, void *offset) const;
 
 private:
 	template<typename T>
@@ -87,7 +116,16 @@ private:
 	const char* const m_name;
 	const char* const m_units;
 	const char* const m_category;
+
+	const bool m_isBitField;
+	const uint32_t m_bitsBlockOffset; // only for bit log fields
+	const uint8_t m_bitNumber; // only for bit log fields
 };
+
+template<>
+constexpr LogField::Type LogField::resolveType<const uint8_t>() {
+	return Type::U08;
+}
 
 template<>
 constexpr LogField::Type LogField::resolveType<uint8_t>() {
@@ -100,7 +138,18 @@ constexpr LogField::Type LogField::resolveType<int8_t>() {
 }
 
 template<>
+constexpr LogField::Type LogField::resolveType<const int8_t>() {
+	return Type::S08;
+}
+
+template<>
 constexpr LogField::Type LogField::resolveType<uint16_t>() {
+	return Type::U16;
+}
+
+
+template<>
+constexpr LogField::Type LogField::resolveType<const uint16_t>() {
 	return Type::U16;
 }
 
@@ -130,5 +179,10 @@ constexpr LogField::Type LogField::resolveType<int32_t>() {
 
 template<>
 constexpr LogField::Type LogField::resolveType<float>() {
+	return Type::F32;
+}
+
+template<>
+constexpr LogField::Type LogField::resolveType<const float>() {
 	return Type::F32;
 }

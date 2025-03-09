@@ -3,6 +3,9 @@ package com.rusefi;
 import com.rusefi.core.Pair;
 import com.rusefi.output.ConfigStructure;
 
+import static com.rusefi.output.ConfigStructureImpl.ALIGNMENT_FILL_AT;
+import static com.rusefi.output.DataLogConsumer.UNUSED;
+
 public interface ConfigField {
     ConfigField VOID = new ConfigField() {
         @Override
@@ -155,6 +158,10 @@ public interface ConfigField {
         }
     };
 
+    default boolean isUnusedField() {
+        return getName().contains(UNUSED) || getName().contains(ALIGNMENT_FILL_AT);
+    }
+
     default String getOriginalArrayName() {
         if (isFromIterate()) {
             return getIterateOriginalName() + "[" + (getIterateIndex() - 1) + "]";
@@ -219,6 +226,9 @@ public interface ConfigField {
 
     int getIterateIndex();
 
+    /**
+     * this is about array syntax: sometimes we handle those as arrays and sometimes we expand into field1, field2, field3
+     */
     boolean isFromIterate();
 
     String getCommentTemplated();

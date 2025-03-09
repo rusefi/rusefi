@@ -47,7 +47,7 @@ public class TSProjectConsumerTest {
                 "";
 
         ReaderStateImpl state = new ReaderStateImpl();
-        TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
+        TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
 
 
@@ -98,7 +98,7 @@ public class TSProjectConsumerTest {
             "\t * units: units\n" +
             "\t * offset 22\n" +
             "\t */\n" +
-            "\tuint8_t alignmentFill_at_22[2];\n" +
+            "\tuint8_t alignmentFill_at_22[2] = {};\n" +
             "};\n" +
             "static_assert(sizeof(pid_s) == 24);\n" +
             "\n", consumer.getContent());
@@ -111,7 +111,7 @@ public class TSProjectConsumerTest {
                 "";
 
         ReaderStateImpl state = new ReaderStateImpl();
-        TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
+        TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
         JavaFieldsConsumer javaFieldsConsumer = new TestJavaFieldsConsumer(state);
 
 
@@ -133,7 +133,7 @@ public class TSProjectConsumerTest {
 
     @Test
     public void testReaderKeepComments() throws IOException {
-        TSProjectConsumer consumer = new TestTSProjectConsumer(null, new ReaderStateImpl());
+        TSProjectConsumer consumer = new TestTSProjectConsumer(new ReaderStateImpl());
         TsFileContent content = consumer.getTsFileContent(new StringBufferInputStream(smallContent));
         assertEquals(smallContent, content.getPrefix());
         assertEquals("", content.getPostfix());
@@ -142,7 +142,7 @@ public class TSProjectConsumerTest {
     @Test
     public void testReaderDropComments() throws IOException {
         ReaderStateImpl state = new ReaderStateImpl();
-        TSProjectConsumer consumer = new TestTSProjectConsumer(null, state);
+        TSProjectConsumer consumer = new TestTSProjectConsumer(state);
         state.getVariableRegistry().put(TSProjectConsumer.TS_DROP_TEMPLATE_COMMENTS, "true");
         TsFileContent content = consumer.getTsFileContent(new StringBufferInputStream(smallContent));
         assertEquals("hello = \";\"\n" +

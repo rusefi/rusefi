@@ -43,6 +43,8 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/engine_cycle/aux_valves.cpp \
 	$(CONTROLLERS_DIR)/engine_cycle/fuel_schedule.cpp \
 	$(CONTROLLERS_DIR)/flash_main.cpp \
+	$(CONTROLLERS_DIR)/storage.cpp \
+	$(CONTROLLERS_DIR)/mfs_storage.cpp \
 	$(CONTROLLERS_DIR)/bench_test.cpp \
 	$(CONTROLLERS_DIR)/can/obd2.cpp \
 	$(CONTROLLERS_DIR)/can/can_verbose.cpp \
@@ -79,6 +81,7 @@ CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR)/algo/airmass \
 	$(CONTROLLERS_DIR)/algo/defaults \
 	$(CONTROLLERS_DIR)/algo/fuel \
+	$(CONTROLLERS_DIR)/algo/ignition \
 	$(CONTROLLERS_DIR)/engine_cycle \
 	$(CONTROLLERS_DIR)/trigger/decoders \
 	$(CONTROLLERS_DIR)/tcu \

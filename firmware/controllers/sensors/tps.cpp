@@ -44,18 +44,6 @@ void grabPedalIsWideOpen() {
 	onGrabPedal();
 }
 
-bool isTps1Error() {
-	return !Sensor::get(SensorType::Tps1).Valid;
-}
-
-bool isTps2Error() {
-    return !Sensor::get(SensorType::Tps2).Valid && Sensor::hasSensor(SensorType::Tps2Primary);
-}
-
-bool isPedalError() {
-    return !Sensor::get(SensorType::AcceleratorPedal).Valid && Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
-}
-
 #if EFI_SENT_SUPPORT
 
 extern SentTps sentTps;

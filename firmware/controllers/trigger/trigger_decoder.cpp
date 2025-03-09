@@ -47,6 +47,12 @@ bool TriggerDecoderBase::getShaftSynchronized() {
 }
 
 void TriggerDecoderBase::setShaftSynchronized(bool value) {
+#if EFI_UNIT_TEST
+	if (value != shaft_is_synchronized) {
+		LogTriggerSync(value, getTimeNowNt());
+	}
+#endif
+
 	if (value) {
 		if (!shaft_is_synchronized) {
 			// just got synchronized
@@ -118,12 +124,12 @@ void TriggerFormDetails::prepareEventAngles(TriggerWaveform *shape) {
 
 	size_t length = shape->getLength();
 
-	memset(eventAngles, 0, sizeof(eventAngles));
+	setArrayValues(eventAngles, 0);
 
 	// this may be <length for some triggers like symmetrical crank Miata NB
 	size_t triggerShapeLength = shape->getSize();
 
-	assertAngleRange(shape->triggerShapeSynchPointIndex, "triggerShapeSynchPointIndex", ObdCode::CUSTOM_TRIGGER_SYNC_ANGLE2);
+	assertAngleRange(triggerShapeSynchPointIndex, "triggerShapeSynchPointIndex", ObdCode::CUSTOM_TRIGGER_SYNC_ANGLE2);
 	efiAssertVoid(ObdCode::CUSTOM_TRIGGER_CYCLE, getTriggerCentral()->engineCycleEventCount != 0, "zero engineCycleEventCount");
 
 	for (size_t eventIndex = 0; eventIndex < length; eventIndex++) {
@@ -134,7 +140,7 @@ void TriggerFormDetails::prepareEventAngles(TriggerWaveform *shape) {
 			eventAngles[1] = 0;
 		} else {
 			// Rotate the trigger around so that the sync point is at position 0
-			auto wrappedIndex = (shape->triggerShapeSynchPointIndex + eventIndex) % length;
+			auto wrappedIndex = (triggerShapeSynchPointIndex + eventIndex) % length;
 
 			// Compute this tooth's position within the trigger definition
 			// (wrap, as the trigger def may be smaller than total trigger length)

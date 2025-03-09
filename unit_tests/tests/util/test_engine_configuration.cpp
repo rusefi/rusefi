@@ -657,6 +657,28 @@ void TestEngineConfiguration::configureFuelLevelUpdatePeriodSec(const std::optio
     }
 }
 
+void TestEngineConfiguration::configureFuelLevelLowThresholdVoltage(const std::optional<float> thresholdVoltage) {
+    if (thresholdVoltage.has_value()) {
+        engineConfiguration->fuelLevelLowThresholdVoltage = thresholdVoltage.value();
+    } else {
+        ASSERT_EQ(
+                engineConfiguration->fuelLevelLowThresholdVoltage,
+                engine_configuration_defaults::FUEL_LEVEL_LOW_THRESHOLD_VOLTAGE
+        ); // check default value
+    }
+}
+
+void TestEngineConfiguration::configureFuelLevelHighThresholdVoltage(const std::optional<float> thresholdVoltage) {
+    if (thresholdVoltage.has_value()) {
+        engineConfiguration->fuelLevelHighThresholdVoltage = thresholdVoltage.value();
+    } else {
+        ASSERT_EQ(
+                engineConfiguration->fuelLevelHighThresholdVoltage,
+                engine_configuration_defaults::FUEL_LEVEL_HIGH_THRESHOLD_VOLTAGE
+        ); // check default value
+    }
+}
+
 TestEngineConfiguration::TestEngineConfiguration() {
 }
 

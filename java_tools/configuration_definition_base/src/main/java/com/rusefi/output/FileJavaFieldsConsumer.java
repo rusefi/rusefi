@@ -48,7 +48,6 @@ public class FileJavaFieldsConsumer extends JavaFieldsConsumer {
         lazyFile.write("package " + JAVA_PACKAGE + ";" + ToolUtil.EOL + ToolUtil.EOL);
     }
 
-    @Override
     public void endFile() throws IOException {
         javaFields.write(state.getVariableRegistry().getJavaConstants());
         javaFields.write(getContent());

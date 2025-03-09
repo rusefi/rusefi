@@ -6,7 +6,6 @@ import com.rusefi.output.FileJavaFieldsConsumer;
 import java.util.Date;
 
 import static com.rusefi.VariableRegistry.quote;
-import static com.rusefi.ldmp.LiveDataProcessor.tempLimit;
 
 /**
  * generator for {@link StateDictionaryFactory}
@@ -24,7 +23,7 @@ import static com.rusefi.ldmp.LiveDataProcessor.tempLimit;
         if (outputNames.length < 2) {
             append(name, javaName, cppFileName, "");
         } else {
-            for (int i = 0; i < tempLimit(outputNames); i++) {
+            for (int i = 0; i < outputNames.length; i++) {
                 append(name, javaName, cppFileName, Integer.toString(i));
             }
         }

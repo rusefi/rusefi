@@ -36,12 +36,17 @@ void firmwareError(ObdCode code, const char *fmt, ...);
 
 #define criticalError(...) firmwareError(ObdCode::OBD_PCM_Processor_Fault, __VA_ARGS__)
 
-extern bool hasFirmwareErrorFlag;
+extern bool hasCriticalFirmwareErrorFlag;
 
-#define hasFirmwareError() hasFirmwareErrorFlag
+#define hasFirmwareError() hasCriticalFirmwareErrorFlag
 
 const char* getCriticalErrorMessage();
-const char* getWarningMessage();
+
+// report recoverable configuration error
+void configError(const char *fmt, ...);
+void clearConfigErrorMessage();
+const char* getConfigErrorMessage();
+bool hasConfigError();
 
 // todo: better place for this shared declaration?
 int getRusEfiVersion();
@@ -70,10 +75,45 @@ extern "C"
 
 #if EFI_PROD_CODE
 
+// for port_extctx
+#include "ch.h"
+
+// These use very specific values to avoid interpreting random garbage memory as a real value
+enum class ErrorCookie : uint32_t {
+    None = 0,
+    FirmwareError = 0xcafebabe,
+    HardFault = 0xdeadbeef,
+    ChibiOsPanic = 0xdeadfa11,
+};
+
+const char *errorCookieToName(ErrorCookie cookie);
+
+// Error handling/recovery/reporting information
+typedef struct {
+    ErrorCookie Cookie;
+
+    critical_msg_t msg;
+    critical_msg_t file;
+    int line;
+    port_extctx FaultCtx;
+    uint32_t FaultType;
+    uint32_t FaultAddress;
+    uint32_t Csfr;
+} backupErrorState;
+
+// reads backup ram and checks for any error report
+void errorHandlerInit();
+// true if we just started from some crash
+bool errorHandlerIsStartFromError();
 // If there was an error on the last boot, print out information about it now and reset state.
-void checkLastBootError();
+void errorHandlerShowBootReasonAndErrors();
+
+//void errorHandlerWriteReportFile(FIL *fd);
+
 #endif // EFI_PROD_CODE
 
 #ifdef __cplusplus
 }
 #endif /* __cplusplus */
+
+// todo log red LED reason on SD card #7290 bool isRuntimeCritical(ObdCode error);

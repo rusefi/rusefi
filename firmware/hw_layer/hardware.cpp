@@ -654,38 +654,3 @@ void initHardware() {
 
 	efiPrintf("initHardware() OK!");
 }
-
-#if HAL_USE_SPI
-// this is F4 implementation but we will keep it here for now for simplicity
-int getSpiPrescaler(spi_speed_e speed, spi_device_e device) {
-	switch (speed) {
-	case _5MHz:
-		return device == SPI_DEVICE_1 ? SPI_BaudRatePrescaler_16 : SPI_BaudRatePrescaler_8;
-	case _2_5MHz:
-		return device == SPI_DEVICE_1 ? SPI_BaudRatePrescaler_32 : SPI_BaudRatePrescaler_16;
-	case _1_25MHz:
-		return device == SPI_DEVICE_1 ? SPI_BaudRatePrescaler_64 : SPI_BaudRatePrescaler_32;
-
-	case _150KHz:
-		// SPI1 does not support 150KHz, it would be 300KHz for SPI1
-		return SPI_BaudRatePrescaler_256;
-	default:
-		// unexpected
-		return 0;
-	}
-}
-
-#endif /* HAL_USE_SPI */
-
-void checkLastResetCause() {
-#if EFI_PROD_CODE
-	Reset_Cause_t cause = getMCUResetCause();
-	const char *causeStr = getMCUResetCause(cause);
-	efiPrintf("Last Reset Cause: %s", causeStr);
-
-	// if reset by watchdog, signal a fatal error
-	if (cause == Reset_Cause_IWatchdog || cause == Reset_Cause_WWatchdog) {
-		firmwareError(ObdCode::OBD_PCM_Processor_Fault, "Watchdog Reset");
-	}
-#endif // EFI_PROD_CODE
-}

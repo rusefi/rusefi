@@ -6,7 +6,6 @@
  */
 
 #include "pch.h"
-#include "advance_map.h"
 
 TEST(Multispark, DefaultConfiguration) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);

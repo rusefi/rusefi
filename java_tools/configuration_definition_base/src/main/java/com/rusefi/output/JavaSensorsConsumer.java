@@ -62,7 +62,7 @@ public class JavaSensorsConsumer implements ConfigurationConsumer {
 
 
                 }
-                tsPosition += configField.getSize(next);
+                tsPosition = iterator.adjustSize(tsPosition);
                 // this value would be consumed by LiveDataProcessor
                 // todo: too many variables that's fragile shall we move tsPosition to iterator state?
                 structSize = tsPosition - sensorTsPosition;

@@ -4,10 +4,10 @@
 
 #include "pch.h"
 
-#include "logicdata_csv_reader.h"
+#include "engine_csv_reader.h"
 
 TEST(realCas24Plus1, spinningOnBench) {
-	CsvReader reader(/*triggerCount*/1, /* vvtCount */ 1);
+	EngineCsvReader reader(/*triggerCount*/1, /* vvtCount */ 1);
 
 	reader.open("tests/trigger/resources/cas_nissan_24_plus_1.csv");
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
@@ -22,26 +22,18 @@ TEST(realCas24Plus1, spinningOnBench) {
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
 	eth.setTriggerType(trigger_type_e::TT_12_TOOTH_CRANK);
 
-	bool gotRpm = false;
 	bool gotFullSync = false;
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
-
-		engine->rpmCalculator.onSlowCallback();
 
 		// Expect that all teeth are in the correct spot
 		float angleError = getTriggerCentral()->triggerToothAngleError;
 		EXPECT_TRUE(angleError < 3 && angleError > -3) << "tooth angle of " << angleError << " at timestamp " << (getTimeNowNt() / 1e8);
 
 		auto rpm = Sensor::getOrZero(SensorType::Rpm);
-		if (!gotRpm && rpm) {
-			gotRpm = true;
-
 			// We should get first RPM on exactly the first (primary) sync point - this means the instant RPM pre-sync event copy all worked OK
-			EXPECT_EQ(reader.lineIndex(), 7);
-			EXPECT_NEAR(rpm, 808.32f, 0.1);
-		}
+		reader.assertFirstRpm(808, 7);
 
 		bool hasFullSync = getTriggerCentral()->triggerState.hasSynchronizedPhase();
 		if (!gotFullSync && hasFullSync) {

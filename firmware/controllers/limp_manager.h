@@ -11,7 +11,7 @@ enum class ClearReason : uint8_t {
 	Fatal, // 1
 	Settings, // 2
 	HardLimit, // 3
-	FaultRevLimit,
+	EtbFaultRevLimit, // 4 means 1500 RPM limit in case of ETB fault
 	BoostCut, // 5
 	OilPressure, // 6
 	StopRequested, // 7
@@ -25,8 +25,9 @@ enum class ClearReason : uint8_t {
 	Lua, // 15
 	ACR, // 16 - Harley Automatic Compression Release
 	LambdaProtection, // 17
-	GdiComms,
-	PleaseBrake,
+	GdiComms, // 18
+	PleaseBrake, // 19
+	FatalErrorRevLimit, // 20
 
 	// Keep this list in sync with fuelIgnCutCodeList in tunerstudio.template.ini!
 	// todo: add a code generator between ClearReason and fuelIgnCutCodeList in tunerstudio.template.ini
@@ -114,7 +115,7 @@ public:
 	Timer externalGdiCanBusComms;
 
 private:
-	void setFaultRevLimit(int limit);
+	void setFaultRevLimit(int limit, ClearReason rpmLimitReason);
 
 	Hysteresis m_revLimitHysteresis;
 	MaxLimitWithHysteresis<> m_boostCutHysteresis;
@@ -141,6 +142,7 @@ private:
 
 	// todo: migrate to engineState->desiredRpmLimit to get this variable logged
 	float m_revLimit;
+	ClearReason m_rpmLimitReason = ClearReason::None;
 	float resumeRpm;
 
 	// Tracks how long since a cut (ignition or fuel) was active for any reason

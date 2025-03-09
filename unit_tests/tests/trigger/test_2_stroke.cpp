@@ -2,7 +2,7 @@
 
 TEST(trigger, twoStrokeSingleToothAsSkippedWheel) {
 	EngineTestHelper eth(engine_type_e::TEST_CRANK_ENGINE);
-	setTwoStrokeOperationMode();
+	engineConfiguration->twoStroke = true;
 
     engineConfiguration->trigger.customTotalToothCount = 1;
     engineConfiguration->trigger.customSkippedToothCount = 0;
@@ -14,7 +14,7 @@ TEST(trigger, twoStrokeSingleToothAsSkippedWheel) {
 
 TEST(trigger, twoStrokeSingleToothTrigger) {
 	EngineTestHelper eth(engine_type_e::TEST_CRANK_ENGINE);
-	setTwoStrokeOperationMode();
+	engineConfiguration->twoStroke = true;
 
     eth.setTriggerType(trigger_type_e::TT_HALF_MOON);
 

@@ -13,13 +13,11 @@ bit sd_present;SD: Present
 bit sd_logging_internal;SD: Logging
 bit triggerScopeReady
 bit antilagTriggered
-bit isFanOn;Radiator Fan
 bit isO2HeaterOn;
 bit checkEngine;
 bit needBurn;
 
 bit sd_msd;SD: MSD
-bit isFan2On;Radiator Fan 2
 bit toothLogReady;Tooth Logger Ready
 bit isTpsError;Error: TPS
 bit isCltError;Error: CLT
@@ -34,7 +32,6 @@ bit launchTriggered;Launch Control Triggered
 bit isTps2Error;Error: TPS2
 bit injectorFault;Injector Fault
 bit ignitionFault;Ignition Fault
-bit isMainRelayOn;
 bit isUsbConnected;isUsbConnected\nOriginal reason for this is to check if USB is connected from Lua
 bit dfcoActive;
 
@@ -42,7 +39,8 @@ bit sd_active_wr;SD card writing
 bit sd_active_rd;SD card reading
 
 bit isMapValid;MAP from sensor seems valid
-! 2 unused bits left here
+bit triggerPageRefreshFlag
+! 1 unused bit left here
 
 
 uint16_t RPMValue;@@GAUGE_NAME_RPM@@;"RPM",1, 0, 0, 8000, 0

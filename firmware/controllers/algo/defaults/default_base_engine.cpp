@@ -20,6 +20,10 @@ static void setDefaultAlternatorParameters() {
 #endif // EFI_ALTERNATOR_CONTROL
 
 void setGDIFueling() {
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
+	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
+
   setGdiWallWetting();
 	// Use high pressure sensor
 	engineConfiguration->injectorPressureType = IPT_High;
@@ -106,6 +110,8 @@ void setDefaultBaseEngine() {
 
   engineConfiguration->fuelLevelAveragingAlpha = engine_configuration_defaults::FUEL_LEVEL_AVERAGING_ALPHA;
   engineConfiguration->fuelLevelUpdatePeriodSec = engine_configuration_defaults::FUEL_LEVEL_UPDATE_PERIOD_SEC;
+  engineConfiguration->fuelLevelLowThresholdVoltage = engine_configuration_defaults::FUEL_LEVEL_LOW_THRESHOLD_VOLTAGE;
+  engineConfiguration->fuelLevelHighThresholdVoltage = engine_configuration_defaults::FUEL_LEVEL_HIGH_THRESHOLD_VOLTAGE;
 
   engineConfiguration->watchOutForLinearTime = true;
 
@@ -206,6 +212,7 @@ void setDefaultBaseEngine() {
 	config->tcuSolenoidTable[5][1] = 51;
 	config->tcuSolenoidTable[5][5] = 55;
 
+  // [tag:runNotSquareTest] huh why is this not a unit test?!
 	config->scriptTable4[0][0] = 140;
 	config->scriptTable4[0][1] = 141;
 	config->scriptTable4[0][2] = 142;

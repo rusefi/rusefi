@@ -28,18 +28,6 @@
 #include "console_io.h"
 #include "mpu_util.h"
 
-static void testCritical() {
-	chDbgCheck(0);
-}
-
-static void myerror() {
-	firmwareError(ObdCode::CUSTOM_ERR_TEST_ERROR, "firmwareError: %d", getRusEfiVersion());
-}
-
-static void testHardFault() {
-	causeHardFault();
-}
-
 #if defined(STM32F4) || defined(STM32F7) || defined(STM32H7)
 static void printUid() {
 	uint32_t *uid = ((uint32_t *)UID_BASE);
@@ -86,9 +74,9 @@ static void sayHello() {
   printUid();
 
 #if defined(STM32F4) && !defined(AT32F4XX)
-	efiPrintf("can read 0x20000010 %d", ramReadProbe((const char *)0x20000010));
-	efiPrintf("can read 0x20020010 %d", ramReadProbe((const char *)0x20020010));
-	efiPrintf("can read 0x20070010 %d", ramReadProbe((const char *)0x20070010));
+//	efiPrintf("ramReadProbe 0x20000010 %d", ramReadProbe((const char *)0x20000010));
+//	efiPrintf("ramReadProbe 0x20020010 %d", ramReadProbe((const char *)0x20020010));
+//	efiPrintf("ramReadProbe 0x20070010 %d", ramReadProbe((const char *)0x20070010));
 
 	efiPrintf("isStm32F42x %s", boolToString(isStm32F42x()));
 #endif // STM32F4
@@ -144,6 +132,20 @@ static void sayHello() {
 	efiPrintf("STM32_PCLK1=%d", STM32_PCLK1);
 	efiPrintf("STM32_PCLK2=%d", STM32_PCLK2);
 #endif
+#ifdef STM32_RTCSEL
+	if (1) {
+		#define STM32_RTCSEL_SHIFT 8
+		const char * rtcsel_names[4] = {"no clock", "LSE", "LSI", "HSE"};
+
+		int rtcsel = (RCC->BDCR & STM32_RTCSEL_MASK) >> STM32_RTCSEL_SHIFT;
+		efiPrintf("STM32_RTCSEL=%d %s actual=%d %s",
+			STM32_RTCSEL >> STM32_RTCSEL_SHIFT, rtcsel_names[STM32_RTCSEL >> STM32_RTCSEL_SHIFT], rtcsel, rtcsel_names[rtcsel]);
+#ifdef RUSEFI_STM32_LSE_WAIT_MAX_RTCSEL
+		efiPrintf("RUSEFI_STM32_LSE_WAIT_MAX_RTCSEL=%d %s",
+			RUSEFI_STM32_LSE_WAIT_MAX_RTCSEL >> STM32_RTCSEL_SHIFT, rtcsel_names[RUSEFI_STM32_LSE_WAIT_MAX_RTCSEL >> STM32_RTCSEL_SHIFT]);
+#endif
+	}
+#endif
 
 	efiPrintf("PORT_IDLE_THREAD_STACK_SIZE=%d", PORT_IDLE_THREAD_STACK_SIZE);
 
@@ -153,22 +155,6 @@ static void sayHello() {
 #endif
 	efiPrintf("CH_DBG_SYSTEM_STATE_CHECK=%d", CH_DBG_SYSTEM_STATE_CHECK);
 	efiPrintf("CH_DBG_ENABLE_STACK_CHECK=%d", CH_DBG_ENABLE_STACK_CHECK);
-
-#ifdef EFI_LOGIC_ANALYZER
-	efiPrintf("EFI_LOGIC_ANALYZER=%d", EFI_LOGIC_ANALYZER);
-#endif
-#ifdef EFI_TUNER_STUDIO
-	efiPrintf("EFI_TUNER_STUDIO=%d", EFI_TUNER_STUDIO);
-#else
-	efiPrintf("EFI_TUNER_STUDIO=%d", 0);
-#endif
-
-#if defined(EFI_SHAFT_POSITION_INPUT)
-	efiPrintf("EFI_SHAFT_POSITION_INPUT=%d", EFI_SHAFT_POSITION_INPUT);
-#endif
-#ifdef EFI_INTERNAL_ADC
-	efiPrintf("EFI_INTERNAL_ADC=%d", EFI_INTERNAL_ADC);
-#endif
 
 	/**
 	 * Time to finish output. This is needed to avoid mix-up of this methods output and console command confirmation
@@ -197,7 +183,6 @@ int CountFreeStackSpace(const void* wabase) {
  */
 static void cmd_threads() {
 #if CH_DBG_THREADS_PROFILING && CH_DBG_FILL_THREADS
-
 	thread_t* tp = chRegFirstThread();
 
 	efiPrintf("name\twabase\ttime\tfree stack");
@@ -213,8 +198,13 @@ static void cmd_threads() {
 		tp = chRegNextThread(tp);
 	}
 
-	int isrSpace = CountFreeStackSpace(reinterpret_cast<void*>(0x20000000));
+#if EFI_PROD_CODE
+	// isr stack base
+	extern uint32_t __main_stack_base__;
+
+	int isrSpace = CountFreeStackSpace(reinterpret_cast<void*>(&__main_stack_base__));
 	efiPrintf("isr\t0\t0\t%d", isrSpace);
+#endif // EFI_PROD_CODE
 
 #else // CH_DBG_THREADS_PROFILING && CH_DBG_FILL_THREADS
 
@@ -270,9 +260,6 @@ void initializeConsole() {
 	addConsoleAction("reset", scheduleReset);
 #endif
 
-	addConsoleAction("critical", testCritical);
-	addConsoleAction("error", myerror);
-	addConsoleAction("hard_fault", testHardFault);
 	addConsoleAction("threadsinfo", cmd_threads);
 
 #if HAL_USE_WDG

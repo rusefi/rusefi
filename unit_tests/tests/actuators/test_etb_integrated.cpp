@@ -39,13 +39,11 @@ TEST(etb, integrated) {
 	etb->update();
 }
 
-extern WarningCodeState unitTestWarningCodeState;
-
 TEST(etb, intermittentTps) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE); // we have a destructor so cannot move EngineTestHelper into utility method
 	EtbController *etb = initEtbIntegratedTest();
-	warningBuffer_t &recentWarnings = unitTestWarningCodeState.recentWarnings;
-	recentWarnings.clear();
+	warningBuffer_t *recentWarnings = getRecentWarnings();
+	recentWarnings->clear();
 
 	// Tell the sensor checker that the ignition is on
 	engine->module<SensorChecker>()->onIgnitionStateChanged(true);
@@ -54,11 +52,11 @@ TEST(etb, intermittentTps) {
 	engine->module<SensorChecker>()->onSlowCallback();
 	// todo: fix me https://github.com/rusefi/rusefi/issues/5233
 	// EXPECT_EQ( 3,  recentWarnings.getCount()) << "intermittentTps";
-	EXPECT_TRUE( recentWarnings.getCount() > 0) << "intermittentTps";
+	EXPECT_TRUE( recentWarnings->getCount() > 0) << "intermittentTps";
 
 	ASSERT_TRUE(engine->module<SensorChecker>()->analogSensorsShouldWork());
 
-	ASSERT_FALSE(isTps1Error());
+	ASSERT_TRUE(Sensor::get(SensorType::Tps1).Valid);
 
 	etb->update();
 
@@ -70,7 +68,7 @@ TEST(etb, intermittentTps) {
 	// Do some bad/good/bad/good cycles, make sure count keeps up
 	for (size_t i = 0; i < 50; i++) {
 		Sensor::setInvalidMockValue(SensorType::Tps1);
-		ASSERT_TRUE(isTps1Error());
+		ASSERT_FALSE(Sensor::get(SensorType::Tps1).Valid);
 		etb->update();
 
 		badCount++;
@@ -78,20 +76,20 @@ TEST(etb, intermittentTps) {
 		EXPECT_EQ((int)TpsState::TpsError, etb->etbErrorCode);
 
 		Sensor::setMockValue(SensorType::Tps1, 20);
-		ASSERT_FALSE(isTps1Error());
+		ASSERT_TRUE(Sensor::get(SensorType::Tps1).Valid);
 		etb->update();
 	}
 
 	// 51st bad TPS should set etbErrorCode
 	Sensor::setInvalidMockValue(SensorType::Tps1);
-	ASSERT_TRUE(isTps1Error());
+	ASSERT_FALSE(Sensor::get(SensorType::Tps1).Valid);
 	etb->update();
 
 	EXPECT_NE(0, etb->etbErrorCode);
 
 	// todo: fix me https://github.com/rusefi/rusefi/issues/5233
 	// EXPECT_EQ( 3,  recentWarnings.getCount()) << "intermittentTps";
-	EXPECT_TRUE( recentWarnings.getCount() > 0) << "intermittentTps";
+	EXPECT_TRUE( recentWarnings->getCount() > 0) << "intermittentTps";
 	// todo: fix me https://github.com/rusefi/rusefi/issues/5233
 //	EXPECT_EQ(OBD_PPS_Correlation, recentWarnings.get(0).Code);
 //	EXPECT_EQ(OBD_TPS1_Primary_Timeout, recentWarnings.get(1).Code);
@@ -112,7 +110,7 @@ TEST(etb, intermittentPps) {
 
 	ASSERT_TRUE(engine->module<SensorChecker>()->analogSensorsShouldWork());
 
-	ASSERT_FALSE(isPedalError());
+	ASSERT_TRUE(Sensor::get(SensorType::AcceleratorPedal).Valid);
 
 	etb->update();
 
@@ -124,7 +122,7 @@ TEST(etb, intermittentPps) {
 	// Do some bad/good/bad/good cycles, make sure count keeps up
 	for (size_t i = 0; i < 50; i++) {
 		Sensor::setInvalidMockValue(SensorType::AcceleratorPedal);
-		ASSERT_TRUE(isPedalError());
+		ASSERT_FALSE(Sensor::get(SensorType::AcceleratorPedal).Valid);
 		etb->update();
 
 		badCount++;
@@ -132,13 +130,13 @@ TEST(etb, intermittentPps) {
 		EXPECT_EQ(0, etb->etbErrorCode);
 
 		Sensor::setMockValue(SensorType::AcceleratorPedal, 20);
-		ASSERT_FALSE(isPedalError());
+		ASSERT_TRUE(Sensor::get(SensorType::AcceleratorPedal).Valid);
 		etb->update();
 	}
 
 	// 51st bad TPS should set etbErrorCode
 	Sensor::setInvalidMockValue(SensorType::AcceleratorPedal);
-	ASSERT_TRUE(isPedalError());
+	ASSERT_FALSE(Sensor::get(SensorType::AcceleratorPedal).Valid);
 	etb->update();
 	EXPECT_NE(0, etb->etbErrorCode);
 }

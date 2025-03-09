@@ -4,10 +4,10 @@
 
 #include "pch.h"
 
-#include "logicdata_csv_reader.h"
+#include "engine_csv_reader.h"
 
 TEST(real4b11, running) {
-	CsvReader reader(1, /* vvtCount */ 0);
+	EngineCsvReader reader(1, /* vvtCount */ 0);
 
 	reader.open("tests/trigger/resources/4b11-running.csv");
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
@@ -16,32 +16,21 @@ TEST(real4b11, running) {
 
 	eth.setTriggerType(trigger_type_e::TT_36_2_1);
 
-	bool gotRpm = false;
-
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
-
-		engine->rpmCalculator.onSlowCallback();
 
 		// Expect that all teeth are in the correct spot
 		float angleError = getTriggerCentral()->triggerToothAngleError;
 		EXPECT_TRUE(angleError < 3 && angleError > -3) << "tooth angle of " << angleError << " at timestamp " << (getTimeNowNt() / 1e8);
 
-		auto rpm = Sensor::getOrZero(SensorType::Rpm);
-		if (!gotRpm && rpm) {
-			gotRpm = true;
-
-			// We should get first RPM on exactly the first sync point - this means the instant RPM pre-sync event copy all worked OK
-			EXPECT_EQ(reader.lineIndex(), 30);
-			EXPECT_NEAR(rpm, 1436.23f, 0.1);
-		}
+		reader.assertFirstRpm(1436, 30);
 	}
 
 	ASSERT_EQ(0, eth.recentWarnings()->getCount());
 }
 
 TEST(real4b11, runningDoubledEdge) {
-	CsvReader reader(1, /* vvtCount */ 0);
+	EngineCsvReader reader(1, /* vvtCount */ 0);
 
 	// This log has an extra duplicate edge at 5.393782 seconds (hand added)
 	reader.open("tests/trigger/resources/4b11-running-doubled-edge.csv");
@@ -51,22 +40,9 @@ TEST(real4b11, runningDoubledEdge) {
 
 	eth.setTriggerType(trigger_type_e::TT_36_2_1);
 
-
-	bool gotRpm = false;
-
 	while (reader.haveMore()) {
 		reader.processLine(&eth);
-
-		engine->rpmCalculator.onSlowCallback();
-
-		auto rpm = Sensor::getOrZero(SensorType::Rpm);
-		if (!gotRpm && rpm) {
-			gotRpm = true;
-
-			// We should get first RPM on exactly the first sync point - this means the instant RPM pre-sync event copy all worked OK
-			EXPECT_EQ(reader.lineIndex(), 30);
-			EXPECT_NEAR(rpm, 1436.23f, 0.1);
-		}
+		reader.assertFirstRpm(1436, 30);
 	}
 
 	// Should get a warning for the doubled edge, but NOT one for a trigger error!

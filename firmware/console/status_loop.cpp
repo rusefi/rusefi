@@ -40,7 +40,6 @@
 #include "malfunction_central.h"
 #include "speed_density.h"
 
-#include "advance_map.h"
 #include "tunerstudio.h"
 #include "fuel_math.h"
 #include "main_trigger_callback.h"
@@ -383,12 +382,12 @@ static void updateThrottles() {
 	SensorResult tps2 = Sensor::get(SensorType::Tps2);
 	engine->outputChannels.TPS2Value = tps2.value_or(0);
 	// If we don't have a TPS2 at all, don't turn on the failure light
-	engine->outputChannels.isTps2Error = isTps2Error();
+	engine->outputChannels.isTps2Error = !tps2.Valid;
 
 	SensorResult pedal = Sensor::get(SensorType::AcceleratorPedal);
 	engine->outputChannels.throttlePedalPosition = pedal.value_or(0);
 	// Only report fail if you have one (many people don't)
-	engine->outputChannels.isPedalError = isPedalError();
+	engine->outputChannels.isPedalError = !pedal.Valid;
 
 	// TPS 1 pri/sec split
 	engine->outputChannels.tps1Split = Sensor::getOrZero(SensorType::Tps1Primary) - Sensor::getOrZero(SensorType::Tps1Secondary);
@@ -594,9 +593,6 @@ static void updateIgnition(float rpm) {
 }
 
 static void updateFlags() {
-	engine->outputChannels.isMainRelayOn = enginePins.mainRelay.getLogicValue();
-	engine->outputChannels.isFanOn = enginePins.fanRelay.getLogicValue();
-	engine->outputChannels.isFan2On = enginePins.fanRelay2.getLogicValue();
 	engine->outputChannels.isO2HeaterOn = enginePins.o2heater.getLogicValue();
 	// todo: eliminate state copy logic by giving DfcoController it's owm xxx.txt and leveraging LiveData
 	engine->outputChannels.dfcoActive = engine->module<DfcoController>()->cutFuel();
@@ -728,7 +724,8 @@ void updateTunerStudioState() {
 	extern FrequencySensor vehicleSpeedSensor;
 	tsOutputChannels->vssEdgeCounter = vehicleSpeedSensor.eventCounter;
 
-	tsOutputChannels->hasCriticalError = hasFirmwareError();
+	tsOutputChannels->hasCriticalError = hasFirmwareError() || hasConfigError();
+	tsOutputChannels->triggerPageRefreshFlag = wasPresetJustApplied();
 
 	tsOutputChannels->isWarnNow = engine->engineState.warnings.isWarningNow();
 #if EFI_HIP_9011_DEBUG
@@ -748,9 +745,6 @@ void updateTunerStudioState() {
 
 
 	tsOutputChannels->revolutionCounterSinceStart = engine->rpmCalculator.getRevolutionCounterSinceStart();
-#if EFI_CAN_SUPPORT
-	postCanState();
-#endif /* EFI_CAN_SUPPORT */
 
 #if EFI_CLOCK_LOCKS
 	tsOutputChannels->maxLockedDuration = NT2US(maxLockedDuration);

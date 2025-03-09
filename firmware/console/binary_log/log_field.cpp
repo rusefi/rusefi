@@ -1,23 +1,23 @@
+#include "pch.h"
 #include "log_field.h"
 #include "buffered_writer.h"
 
 #include <cstring>
 
-static void memcpy_swapend(void* dest, const void* src, size_t num) {
+static void memcpy_swapend(void* dest, const void* src, size_t num, void *offset) {
 	const char* src2 = reinterpret_cast<const char*>(src);
 	char* dest2 = reinterpret_cast<char*>(dest);
-	
 	for (size_t i = 0; i < num; i++) {
 		// Endian swap - copy the end to the beginning
-		dest2[i] = src2[num - 1 - i];
+		dest2[i] = src2[num - 1 - i + (uint64_t)offset];
 	}
 }
 
 static void copyFloat(char* buffer, float value) {
-	memcpy_swapend(buffer, reinterpret_cast<char*>(&value), sizeof(float));
+	memcpy_swapend(buffer, reinterpret_cast<char*>(&value), sizeof(float), nullptr);
 }
 
-void LogField::writeHeader(Writer& outBuffer) const {
+size_t LogField::writeHeader(Writer& outBuffer) const {
 	char buffer[MLQ_FIELD_HEADER_SIZE];
 
 	// Offset 0, length 1 = type
@@ -54,12 +54,21 @@ void LogField::writeHeader(Writer& outBuffer) const {
 
 	// Total size = 89
 	outBuffer.write(buffer, MLQ_FIELD_HEADER_SIZE);
+
+	return MLQ_FIELD_HEADER_SIZE;
 }
 
-size_t LogField::writeData(char* buffer) const {
-	size_t size = m_size;
+size_t LogField::writeData(char* buffer, void *offset) const {
+    if (m_isBitField) {
+        const char* const bitsBlockAddr = static_cast<const char*>(m_addr) + m_bitsBlockOffset;
+        const char* const byteWithBitAddr = bitsBlockAddr + m_bitNumber / 8;
+        unsigned char byteWithBit = 0;
+        memcpy_swapend(&byteWithBit, byteWithBitAddr, 1, offset);
+        const uint8_t bitNumberInByte = m_bitNumber % 8;
+        buffer[0] = static_cast<char>(static_cast<bool>(byteWithBit & (1 << bitNumberInByte)));
+    } else {
+        memcpy_swapend(buffer, m_addr, m_size, offset);
+    }
 
-	memcpy_swapend(buffer, m_addr, size);
-
-	return size;
+	return m_size;
 }

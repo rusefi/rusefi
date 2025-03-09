@@ -119,3 +119,5 @@ void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, inject
 void setupSimpleTestEngineWithMaf(EngineTestHelper *eth, injection_mode_e injectionMode, trigger_type_e trigger);
 
 void setVerboseTrigger(bool isEnabled);
+
+warningBuffer_t * getRecentWarnings();

@@ -14,9 +14,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static com.rusefi.output.ConfigStructureImpl.ALIGNMENT_FILL_AT;
-import static com.rusefi.output.DataLogConsumer.UNUSED;
-
 /**
  * Here we generate C++ code for https://github.com/rusefi/rusefi/wiki/Lua-Scripting#getcalibrationname
  * @see GetOutputValueConsumer
@@ -70,7 +67,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
         if (state.isStackEmpty()) {
             PerFieldWithStructuresIterator.Strategy strategy = new PerFieldWithStructuresIterator.Strategy() {
                 @Override
-                public String process(ReaderState state, ConfigField cf, String prefix) {
+                public String process(ReaderState state, ConfigField cf, String prefix, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator) {
                     return processConfig(cf, prefix);
                 }
 
@@ -81,7 +78,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
             };
             PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(state, structure.getTsFields(), "",
                     strategy, ".");
-            iterator.loop();
+            iterator.loop(0);
         }
     }
 
@@ -92,7 +89,7 @@ public class GetConfigValueConsumer implements ConfigurationConsumer {
     }
 
     private String processConfig(ConfigField cf, String prefix) {
-        if (cf.getName().contains(UNUSED) || cf.getName().contains(ALIGNMENT_FILL_AT))
+        if (cf.isUnusedField())
             return "";
 
         if (cf.isArray() || cf.isFromIterate() || cf.isDirective())

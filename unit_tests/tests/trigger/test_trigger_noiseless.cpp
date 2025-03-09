@@ -103,7 +103,7 @@ static void testNoiselessDecoderProcedure(EngineTestHelper &eth, int errorTolera
 	// add noise1 - 1 spike in the middle of the 2nd rising pulse
 	fireNoisyCycle60_2(&eth, 2, 1000, 2, 10, 500, 1);
 
-	assertEqualsM("testNoiselessDecoder noise#1", errorToleranceCnt, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
+	ASSERT_NEAR(errorToleranceCnt, engine->triggerCentral.triggerState.totalTriggerErrorCounter, EPS4D) << "testNoiselessDecoder noise#1";
 
 	resetTrigger(eth);
 
@@ -120,7 +120,7 @@ static void testNoiselessDecoderProcedure(EngineTestHelper &eth, int errorTolera
 	fireNoisyCycle60_2(&eth, 2, 1000, 114, 10, 1500, 1);
 
 	// so everything runs smoothly!
-	assertEqualsM("noise#3", errorToleranceCnt, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
+	ASSERT_NEAR(errorToleranceCnt, engine->triggerCentral.triggerState.totalTriggerErrorCounter, EPS4D) << "noise#3";
 
 	resetTrigger(eth);
 
@@ -129,14 +129,14 @@ static void testNoiselessDecoderProcedure(EngineTestHelper &eth, int errorTolera
 	fireNoisyCycle60_2(&eth, 2, 1000, 4, 10, 980, 1);
 
 	// and we won't get out of sync!
-	assertEqualsM("noise#4", errorToleranceCnt, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
+	ASSERT_NEAR(errorToleranceCnt, engine->triggerCentral.triggerState.totalTriggerErrorCounter, EPS4D) << "noise#4";
 
 	resetTrigger(eth);
 
 	// add noise5 - one very long 333us noise spike
 	fireNoisyCycle60_2(&eth, 2, 1000, 4, 333, 10, 1);
 	// still ok
-	assertEqualsM("noise#5", errorToleranceCnt, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
+	ASSERT_NEAR(errorToleranceCnt, engine->triggerCentral.triggerState.totalTriggerErrorCounter, EPS4D) << "noise#5";
 
 	resetTrigger(eth);
 
@@ -145,7 +145,7 @@ static void testNoiselessDecoderProcedure(EngineTestHelper &eth, int errorTolera
 	fireNoisyCycle60_2(&eth, 2, 1000, 4, 5, 10, failProofNumSpikes);
 
 	// we barely survived this time
-	assertEqualsM("testNoiselessDecoder noise#6", errorToleranceCnt, engine->triggerCentral.triggerState.totalTriggerErrorCounter);
+	ASSERT_NEAR(errorToleranceCnt, engine->triggerCentral.triggerState.totalTriggerErrorCounter, EPS4D) << "testNoiselessDecoder noise#6";
 
 	resetTrigger(eth);
 

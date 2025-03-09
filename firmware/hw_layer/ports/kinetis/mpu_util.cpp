@@ -23,7 +23,7 @@ void tryResetWatchdog() {
 void setWatchdogResetPeriod(int) {
 }
 
-void baseMCUInit(void) {
+void baseMCUInit() {
 }
 
 void _unhandled_exception(void) {
@@ -157,6 +157,18 @@ void initSpiCs(SPIConfig *spiConfig, brain_pin_e csPin) {
 	initSpiCsNoOccupy(spiConfig, csPin);
 	// CS is controlled inside 'hal_spi_lld' driver using both software and hardware methods.
 	//efiSetPadMode("chip select", csPin, PAL_MODE_OUTPUT_OPENDRAIN);
+}
+
+int spiGetBaseClock(SPIDriver*)
+{
+	// TODO: implement
+	return 0;
+}
+
+int spiCalcClockDiv(SPIDriver*, SPIConfig*, unsigned int)
+{
+	// TODO: implement
+	return -1;
 }
 
 #endif /* HAL_USE_SPI */

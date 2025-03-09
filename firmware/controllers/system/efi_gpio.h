@@ -18,7 +18,7 @@ void initPrimaryPins();
 void initMiscOutputPins();
 
 #if EFI_GPIO_HARDWARE
-void turnAllPinsOff(void);
+void turnAllPinsOff();
 #else /* EFI_GPIO_HARDWARE */
 #define turnAllPinsOff() {}
 #endif /* EFI_GPIO_HARDWARE */

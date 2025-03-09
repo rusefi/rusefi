@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.rusefi.*;
 import com.rusefi.output.*;
 import com.rusefi.util.LazyFile;
+import org.jetbrains.annotations.NotNull;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.*;
@@ -34,11 +35,11 @@ public class LiveDataProcessor {
 
     private final StringBuilder totalSensors = new StringBuilder();
 
-    private final StringBuilder fancyNewStuff = new StringBuilder();
+    private final StringBuilder liveDataIniContent = new StringBuilder();
 
     public final StateDictionaryGenerator stateDictionaryGenerator;
 
-    private final StringBuilder fancyNewMenu = new StringBuilder();
+    private final StringBuilder liveDataMenuContent = new StringBuilder();
 
     private final StringBuilder fragmentsContent = new StringBuilder(header);
 
@@ -106,7 +107,7 @@ public class LiveDataProcessor {
         return getTsOutputsDestination() + "live_data_fragments.h";
     }
 
-    public String getFancyContentIni() {
+    public String getLiveDataIniFileName() {
         return getTsOutputsDestination() + "fancy_content.ini";
     }
 
@@ -119,7 +120,7 @@ public class LiveDataProcessor {
     }
 
     public String getOutputsSectionFileName() {
-        return getTsOutputsDestination() + "output_channels.ini";
+        return getTsOutputsDestination() + "live_data_fragments.ini";
     }
 
     private void end(int sensorTsPosition) throws IOException {
@@ -131,7 +132,7 @@ public class LiveDataProcessor {
     }
 
     interface EntryHandler {
-        void onEntry(String name, String javaName, String inFolder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, String engineModule, Boolean isPtr, String cppFileName, String outFolder) throws IOException;
+        void onEntry(String name, String javaName, String inFolder, String prepend, String[] outputNames, String[] constexpr, String conditional, String engineModule, Boolean isPtr, String cppFileName, String outFolder) throws IOException;
     }
 
     public int handleYaml(List<LinkedHashMap> liveDocs) throws IOException {
@@ -148,9 +149,15 @@ public class LiveDataProcessor {
 
         EntryHandler handler = new EntryHandler() {
             @Override
-            public void onEntry(String name, String javaName, String inFolder, String prepend, boolean withCDefines, String[] outputNames, String constexpr, String conditional, String engineModule, Boolean isPtr, String cppFileName, String outFolder) throws IOException {
+            public void onEntry(String name, String javaName, String inFolder, String prepend, String[] outputNames, String[] constexpr, String conditional, String engineModule, Boolean isPtr, String cppFileName, String outFolder) throws IOException {
                 Objects.requireNonNull(outFolder);
                 // TODO: use outputNames
+
+                if (constexpr != null) {
+                    if (outputNames.length != constexpr.length) {
+                        throw new IllegalStateException(Arrays.toString(outputNames) + " vs " + Arrays.toString(constexpr));
+                    }
+                }
 
                 stateDictionaryGenerator.onEntry(name, javaName, outputNames, cppFileName);
 
@@ -160,14 +167,14 @@ public class LiveDataProcessor {
 
                 ReaderState state = new ReaderStateImpl(readerProvider, fileFactory);
                 state.setDefinitionInputFile(inFolder + File.separator + name + ".txt");
-                state.setWithC_Defines(withCDefines);
+                state.setWithC_Defines(false);
 
                 outputsSections.outputNames = outputNames;
                 dataLogConsumer.outputNames = outputNames;
                 gaugeConsumer.outputNames = outputNames;
 
                 List<JavaSensorsConsumer> javaSensorsConsumers = new ArrayList<>();
-                for (int i = 0; i < tempLimit(outputNames); i++) {
+                for (int i = 0; i < outputNames.length; i++) {
                     JavaSensorsConsumer javaSensorsConsumer = new JavaSensorsConsumer(startingPosition.get());
                     state.addDestination(javaSensorsConsumer);
                     javaSensorsConsumers.add(javaSensorsConsumer);
@@ -180,29 +187,37 @@ public class LiveDataProcessor {
 
                 List<FragmentDialogConsumer> fragmentConsumers = new ArrayList<>();
 
-                for (int i = 0; i < tempLimit(outputNames); i++) {
+                for (int i = 0; i < outputNames.length; i++) {
 
                     String variableNameSuffix = outputNames.length > 1 ? Integer.toString(i) : "";
-                    FragmentDialogConsumer fragmentDialogConsumer = new FragmentDialogConsumer(name, variableNameSuffix);
+                    String variableNamePrefix = outputNames.length > 1 ? outputNames[i] : "";
+                    FragmentDialogConsumer fragmentDialogConsumer = new FragmentDialogConsumer(name, variableNamePrefix, variableNameSuffix);
                     fragmentConsumers.add(fragmentDialogConsumer);
                     state.addDestination(fragmentDialogConsumer);
                 }
 
-                if (extraPrepend != null)
-                    state.addPrepend(extraPrepend);
+                if (extraPrepend != null) {
+                    if (new File(extraPrepend).exists()) {
+                        log.info("extraPrepend=" + extraPrepend);
+                        state.addPrepend(extraPrepend);
+                    } else {
+                        log.info("extraPrepend=" + extraPrepend + " does not exist, skipping");
+                    }
+                }
                 state.addPrepend(prepend);
                 state.addCHeaderDestination(outFolder + File.separator + name + "_generated.h");
 
-                int baseOffset = outputsSections.getBaseOffset();
-                state.addDestination(new FileJavaFieldsConsumer(state, JAVA_DESTINATION + javaName, baseOffset, fileFactory));
+                sdCardFieldsConsumer.structureStartingTsPosition = outputsSections.getBaseOffset();
+                state.addDestination(new FileJavaFieldsConsumer(state, JAVA_DESTINATION + javaName, outputsSections.getBaseOffset(), fileFactory));
 
                 if (constexpr != null) {
-                    sdCardFieldsConsumer.home = constexpr;
+                    sdCardFieldsConsumer.expressions = constexpr;
+                    sdCardFieldsConsumer.names = outputNames;
                     sdCardFieldsConsumer.conditional = conditional;
                     sdCardFieldsConsumer.isPtr = isPtr;
                     state.addDestination(sdCardFieldsConsumer::handleEndStruct);
 
-                    outputValueConsumer.currentSectionPrefix = constexpr;
+                    outputValueConsumer.currentSectionPrefix = constexpr[0];
                     outputValueConsumer.moduleMode = false;
                     outputValueConsumer.conditional = conditional;
                     outputValueConsumer.isPtr = isPtr;
@@ -225,8 +240,8 @@ public class LiveDataProcessor {
                 state.doJob();
 
                 for (FragmentDialogConsumer fragmentDialogConsumer : fragmentConsumers) {
-                    fancyNewStuff.append(fragmentDialogConsumer.getContent());
-                    fancyNewMenu.append(fragmentDialogConsumer.menuLine());
+                    liveDataIniContent.append(fragmentDialogConsumer.getContent());
+                    liveDataMenuContent.append(fragmentDialogConsumer.menuLine());
                 }
 
                 for (JavaSensorsConsumer javaSensorsConsumer : javaSensorsConsumers) {
@@ -244,30 +259,19 @@ public class LiveDataProcessor {
             String inputOutputFolder = (String) entry.get("folder");
             String inputFolder = (String) entry.get("input_folder");
             String prepend = (String) entry.get("prepend");
-            String constexpr = (String) entry.get("constexpr");
+            Object constexprValue = entry.get("constexpr");
             String engineModule = (String) entry.get("engineModule");
             String cppFileName = (String) entry.get("cppFileName");
             if (cppFileName == null)
                 cppFileName = name;
             String conditional = (String) entry.get("conditional_compilation");
-            Boolean withCDefines = (Boolean) entry.get("withCDefines");
             Boolean isPtr = (Boolean) entry.get("isPtr");
-            // Defaults to false if not specified
-            withCDefines = withCDefines != null && withCDefines;
             isPtr = isPtr != null && isPtr;
 
             Object outputNames = entry.get("output_name");
 
-            String[] outputNamesArr;
-            if (outputNames == null) {
-                outputNamesArr = new String[]{""};
-            } else if (outputNames instanceof String) {
-                outputNamesArr = new String[]{(String) outputNames};
-            } else {
-                ArrayList<String> nameList = (ArrayList<String>) outputNames;
-                outputNamesArr = new String[nameList.size()];
-                nameList.toArray(outputNamesArr);
-            }
+            String[] outputNamesArr = getStrings(outputNames);
+            String[] constexpr = constexprValue == null ? null : getStrings(constexprValue);
 
             if (inputFolder != null) {
                 log.info("Only inputFolder " + inputFolder);
@@ -276,7 +280,7 @@ public class LiveDataProcessor {
                 inputFolder = inputOutputFolder;
             }
 
-            handler.onEntry(name, java, inputFolder, prepend, withCDefines, outputNamesArr, constexpr, conditional, engineModule, isPtr, cppFileName, "live_data_generated");
+            handler.onEntry(name, java, inputFolder, prepend, outputNamesArr, constexpr, conditional, engineModule, isPtr, cppFileName, "live_data_generated");
 
             String enumName = "LDS_" + name;
             String type = name + "_s"; // convention
@@ -288,7 +292,7 @@ public class LiveDataProcessor {
                     .append(type)
                     .append(">{},\n");
             } else {
-                for (int i = 0; i < tempLimit(outputNamesArr); i++) {
+                for (int i = 0; i < outputNamesArr.length; i++) {
                     enumContent.append(enumName + i + ",\n");
                 }
 
@@ -321,12 +325,12 @@ public class LiveDataProcessor {
             fw.write(totalSensors.toString());
         }
 
-        try (LazyFile fw = fileFactory.create(getFancyContentIni())) {
-            fw.write(fancyNewStuff.toString());
+        try (LazyFile fw = fileFactory.create(getLiveDataIniFileName())) {
+            fw.write(liveDataIniContent.toString());
         }
 
         try (LazyFile fw = fileFactory.create(getFancyMenuIni())) {
-            fw.write(fancyNewMenu.toString());
+            fw.write(liveDataMenuContent.toString());
         }
 
         GetConfigValueConsumer.writeStringToFile(STATE_DICTIONARY_FACTORY_JAVA, stateDictionaryGenerator.getCompleteClass(), fileFactory);
@@ -334,6 +338,20 @@ public class LiveDataProcessor {
         writeFiles();
 
         return startingPosition.get();
+    }
+
+    private static String @NotNull [] getStrings(Object value) {
+        String[] output;
+        if (value == null) {
+            output = new String[]{""};
+        } else if (value instanceof String) {
+            output = new String[]{(String) value};
+        } else {
+            ArrayList<String> nameList = (ArrayList<String>) value;
+            output = new String[nameList.size()];
+            nameList.toArray(output);
+        }
+        return output;
     }
 
     private void writeFiles() throws IOException {
@@ -346,10 +364,6 @@ public class LiveDataProcessor {
         try (LazyFile fw = fileFactory.create(getDataFragmentsH())) {
             fw.write(fragmentsContent.toString());
         }
-    }
-
-    public static int tempLimit(String[] outputs) {
-        return outputs.length;
     }
 
     public static boolean needComment(int index) {

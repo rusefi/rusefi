@@ -56,7 +56,7 @@ typedef enum __attribute__ ((__packed__)) {
 	DBG_ION = 30,
 	DBG_TLE8888 = 31,
 	DBG_32 = 32,
-	DBG_DWELL_METRIC = 33,
+	DBG_33 = 33,
 	DBG_34 = 34,
 	DBG_35 = 35,
 	DBG_36 = 36,
@@ -257,6 +257,10 @@ typedef enum {
 	TS_ETB_DISABLE_JAM_DETECT = 0x14,
 	TS_BURN_WITHOUT_FLASH = 0x15,
 	TS_RESET_MC33810 = 0x16,
+	TS_SD_MOUNT_PC = 0x17,
+	TS_SD_MOUNT_ECU = 0x18,
+	TS_SD_UNMOUNT = 0x19,
+	TS_SD_FORMAT = 0x1A,
 } ts_14_command;
 
 typedef enum {

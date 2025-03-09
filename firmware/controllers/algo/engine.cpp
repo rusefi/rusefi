@@ -122,14 +122,14 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	}
 }
 
-void Engine::updateTriggerWaveform() {
+void Engine::updateTriggerConfiguration() {
 
 
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	// we have a confusing threading model so some synchronization would not hurt
 	chibios_rt::CriticalSectionLocker csl;
 
-	engine->triggerCentral.updateWaveform();
+	engine->triggerCentral.applyShapesConfiguration();
 
 
 	if (!engine->triggerCentral.triggerShape.shapeDefinitionError) {
@@ -203,8 +203,6 @@ void Engine::updateSlowSensors() {
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	triggerCentral.isEngineSnifferEnabled = rpm < engineConfiguration->engineSnifferRpmThreshold;
 	getEngineState()->sensorChartMode = rpm < engineConfiguration->sensorSnifferRpmThreshold ? engineConfiguration->sensorChartMode : SC_OFF;
-
-	engineState.updateSlowSensors();
 #endif // EFI_SHAFT_POSITION_INPUT
 }
 
@@ -327,8 +325,6 @@ void Engine::preCalculate() {
 	// we have a hack here - we rely on the fact that engineMake is the first of three relevant fields
 	engine->outputChannels.engineMakeCodeNameCrc16 = crc32(engineConfiguration->engineMake, 3 * VEHICLE_INFO_SIZE);
 
-	// we need and can empty warning message for CRC purposes
-	memset(config->warning_message, 0, sizeof(config->warning_message));
 	engine->outputChannels.tuneCrc16 = crc32(config, sizeof(persistent_config_s));
 #endif /* EFI_TUNER_STUDIO */
 }
@@ -403,20 +399,21 @@ void Engine::setConfig() {
  * This code asserts that we do not have unexpected gaps in time flow with the exception of internal flash burn.
  */
 static void assertTimeIsLinear() {
+#if ! EFI_UNIT_TEST
 	static efitimems_t mostRecentMs = 0;
 	efitimems_t msNow = getTimeNowMs();
 	if (engineConfiguration->watchOutForLinearTime && engine->configBurnTimer.hasElapsedSec(5)) {
-
 		if (mostRecentMs != 0) {
 			efitimems_t gapInMs = msNow - mostRecentMs;
 			// todo: lower gapInMs threshold?
 			if (gapInMs > 200) {
-				firmwareError(ObdCode::WATCH_DOG_SECONDS, "gap in time: mostRecentMs %lumS, now=%lumS, gap=%lumS",
+				firmwareError(ObdCode::RUNTIME_CRITICAL_WATCH_DOG_SECONDS, "gap in time: mostRecentMs %lumS, now=%lumS, gap=%lumS",
 					mostRecentMs, msNow, gapInMs);
 			}
 		}
 	}
 	mostRecentMs = msNow;
+#endif
 }
 
 void Engine::efiWatchdog() {

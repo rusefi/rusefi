@@ -61,7 +61,6 @@ int TriggerCentral::getHwEventCounter(int index) const {
 	return hwEventCounters[index];
 }
 
-
 angle_t TriggerCentral::getVVTPosition(uint8_t bankIndex, uint8_t camIndex) {
 	if (bankIndex >= BANKS_COUNT || camIndex >= CAMS_PER_BANK) {
 		return NAN;
@@ -243,7 +242,7 @@ static void logVvtFront(bool useOnlyRise, bool isImportantFront, TriggerValue fr
 		addEngineSnifferVvtEvent(index, front == TriggerValue::RISE ? FrontDirection::UP : FrontDirection::DOWN);
 
 #if EFI_TOOTH_LOGGER
-		LogTriggerTooth(front == TriggerValue::RISE ? SHAFT_SECONDARY_RISING : SHAFT_SECONDARY_FALLING, nowNt);
+		LogTriggerCamTooth(front == TriggerValue::RISE, nowNt, index);
 #endif /* EFI_TOOTH_LOGGER */
 	} else {
 		if (isImportantFront) {
@@ -252,11 +251,22 @@ static void logVvtFront(bool useOnlyRise, bool isImportantFront, TriggerValue fr
 			addEngineSnifferVvtEvent(index, FrontDirection::DOWN);
 
 #if EFI_TOOTH_LOGGER
-			LogTriggerTooth(SHAFT_SECONDARY_RISING, nowNt);
-			LogTriggerTooth(SHAFT_SECONDARY_FALLING, nowNt);
+			LogTriggerCamTooth(true, nowNt, index);
+			LogTriggerCamTooth(false, nowNt, index);
 #endif /* EFI_TOOTH_LOGGER */
 		}
 	}
+}
+
+static bool tooSoonToHandleSignal() {
+#if EFI_PROD_CODE
+extern bool main_loop_started;
+	if (!main_loop_started) {
+	  warning(ObdCode::CUSTOM_ERR_INPUT_DURING_INITIALISATION, "event too early");
+		return true;
+	}
+#endif //EFI_PROD_CODE
+  return false;
 }
 
 void hwHandleVvtCamSignal(bool isRising, efitick_t timestamp, int index) {
@@ -265,6 +275,9 @@ void hwHandleVvtCamSignal(bool isRising, efitick_t timestamp, int index) {
 
 // 'invertCamVVTSignal' is already accounted by the time this method is invoked
 void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
+  if (tooSoonToHandleSignal()) {
+    return;
+  }
 	TriggerCentral *tc = getTriggerCentral();
 	if (tc->directSelfStimulation || !tc->hwTriggerInputEnabled) {
 		// sensor noise + self-stim = loss of trigger sync
@@ -433,6 +446,9 @@ uint32_t triggerMaxDuration = 0;
  *  - Trigger replay from CSV (unit tests)
  */
 void hwHandleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
+  if (tooSoonToHandleSignal()) {
+    return;
+  }
 	TriggerCentral *tc = getTriggerCentral();
 	ScopePerf perf(PE::HandleShaftSignal);
 
@@ -1030,7 +1046,7 @@ void onConfigurationChangeTriggerCallback() {
 
 	if (changed) {
 	#if EFI_ENGINE_CONTROL
-		engine->updateTriggerWaveform();
+		engine->updateTriggerConfiguration();
 		getTriggerCentral()->noiseFilter.resetAccumSignalData();
 	#endif
 	}
@@ -1085,7 +1101,7 @@ static void calculateTriggerSynchPoint(
 
 TriggerDecoderBase initState("init");
 
-void TriggerCentral::updateWaveform() {
+void TriggerCentral::applyShapesConfiguration() {
 	// Re-read config in case it's changed
 	primaryTriggerConfiguration.update();
 	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {

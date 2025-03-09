@@ -10,13 +10,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Checkout Submodules
+      - name: Checkout Submodules Without ChibiOS
         run: |
-          git submodule update --init --depth=1 unit_tests/googletest
-          git submodule update --init --depth=1 firmware/libfirmware
-          git submodule update --init --depth=1 firmware/ext/lua
-          git submodule update --init --depth=1 firmware/controllers/lua/luaaa
-          git submodule update --init --depth=1 firmware/controllers/can/wideband_firmware
+          misc/git_scripts/common_submodule_init_without_chibios.sh
 
       - uses: actions/setup-java@v4
         with:

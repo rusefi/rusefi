@@ -8,5 +8,3 @@ controllers/algo/rusefi_enums.h
 integration/rusefi_config.txt
 -firing_order
 controllers/algo/firing_order.h
--prepend
-integration/rusefi_config_shared.txt

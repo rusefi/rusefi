@@ -14,6 +14,7 @@
 #if EFI_UNIT_TEST
 #include "logicdata.h"
 const std::vector<CompositeEvent>& getCompositeEvents();
+void jsonTraceEntry(const char* name, int pid, bool isEnter, efitick_t timestamp);
 #endif // EFI_UNIT_TEST
 
 void EnableToothLoggerIfNotEnabled();
@@ -28,12 +29,13 @@ bool IsToothLoggerEnabled();
 
 // A new tooth has arrived! Log to the buffer if enabled.
 void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp);
+void LogTriggerCamTooth(bool isRising, efitick_t timestamp, int index);
 
 void LogTriggerTopDeadCenter(efitick_t timestamp);
+void LogTriggerSync(bool isSync, efitick_t timestamp);
+void LogTriggerCoilState(efitick_t timestamp, size_t index, bool state);
 
-void LogTriggerCoilState(efitick_t timestamp, bool state);
-
-void LogTriggerInjectorState(efitick_t timestamp, bool state);
+void LogTriggerInjectorState(efitick_t timestamp, size_t index, bool state);
 
 typedef struct __attribute__ ((packed)) {
 	// the whole order of all packet bytes is reversed, not just the 'endian-swap' integers

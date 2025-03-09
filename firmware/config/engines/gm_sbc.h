@@ -9,3 +9,6 @@ void setGmSbc();
 void setGmLcv();
 // https://en.wikipedia.org/wiki/GM_Ecotec_engine#LTG
 void setGmLtg();
+
+// https://en.wikipedia.org/wiki/General_Motors_LS-based_small-block_engine#Generation_V_(2013%E2%80%93present)
+void setGmSbcGen5();

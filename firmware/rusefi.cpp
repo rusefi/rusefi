@@ -168,7 +168,7 @@ void onAssertionFailure() {
 	longjmp(jmpEnv, 1);
 }
 
-void runRusEfiWithConfig();
+void initEfiWithConfig();
 __NO_RETURN void runMainLoop();
 
 void runRusEfi() {
@@ -179,12 +179,17 @@ void runRusEfi() {
 	startLoggingProcessor();
 #endif
 
+#if HAL_USE_WDG
+	setWatchdogResetPeriod(WATCHDOG_RESET_MS);
+	startWatchdog();
+#endif // HAL_USE_WDG
+
 #if EFI_PROD_CODE
-	checkLastBootError();
+	errorHandlerInit();
+	errorHandlerShowBootReasonAndErrors();
 #endif
 
 #if defined(STM32F4) || defined(STM32F7)
-//	addConsoleAction("stm32_stop", stm32_stop);
 	addConsoleAction("stm32_standby", stm32_standby);
 #endif
 
@@ -225,8 +230,6 @@ void runRusEfi() {
 	 */
 	initializeConsole();
 
-	checkLastResetCause();
-
 	// Read configuration from flash memory
 	loadConfiguration();
 
@@ -239,7 +242,7 @@ void runRusEfi() {
 	startSerialChannels();
 #endif // EFI_TUNER_STUDIO
 
-	runRusEfiWithConfig();
+	initEfiWithConfig();
 
 	// periodic events need to be initialized after fuel&spark pins to avoid a warning
 	initPeriodicEvents();
@@ -247,7 +250,7 @@ void runRusEfi() {
 	runMainLoop();
 }
 
-void runRusEfiWithConfig() {
+void initEfiWithConfig() {
 	// If some config operation caused an OS assertion failure, return immediately
 	// This sets the "unwind point" that we can jump back to later with longjmp if we have
 	// an assertion failure. If that happens, setjmp() will return non-zero, so we will

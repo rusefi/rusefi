@@ -3,6 +3,7 @@ package com.rusefi.maintenance;
 import com.devexperts.logging.Logging;
 import com.rusefi.FileLog;
 import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.ui.StatusWindow;
 
 import javax.swing.*;
 import java.awt.*;
@@ -37,7 +38,7 @@ public class DriverInstall {
                 if (dialogResult != JOptionPane.YES_OPTION)
                     return;
 
-                final UpdateOperationCallbacks wnd = new UpdateStatusWindow("Windows rusEFI ST Drivers");
+                final UpdateOperationCallbacks wnd = StatusWindow.createAndShowFrame("Windows rusEFI ST Drivers");
 
                 ExecHelper.submitAction(() -> installDrivers(wnd), getClass() + " thread");
 

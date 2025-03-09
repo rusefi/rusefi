@@ -52,9 +52,11 @@ static_assert(libPROTEUS_STIM_QC == (int)engine_type_e::PROTEUS_STIM_QC);
 static_assert(libHELLEN_2CHAN_STIM_QC == (int)engine_type_e::HELLEN_2CHAN_STIM_QC);
 static_assert(libHELLEN_4CHAN_STIM_QC == (int)engine_type_e::HELLEN_4CHAN_STIM_QC);
 
-PUBLIC_API_WEAK_SOMETHING_WEIRD void applyEngineTypeExt(engine_type_e engineType) {
+PUBLIC_API_WEAK_SOMETHING_WEIRD void applyUnknownEngineType(engine_type_e engineType) {
 		firmwareError(ObdCode::CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", (int)engineType);
 }
+
+PUBLIC_API_WEAK void boardAfterTuneDefaults(engine_type_e engineType) { }
 
 void applyEngineType(engine_type_e engineType) {
 	/**
@@ -64,7 +66,6 @@ void applyEngineType(engine_type_e engineType) {
 	case engine_type_e::FORD_COYOTE:
 	case engine_type_e::MAZDA_MIATA_NC:
 	case engine_type_e::DISCOVERY_PDM:
-	case engine_type_e::UNUSED49:
 	case engine_type_e::ET_UNUSED_55:
 	case engine_type_e::ET_UNUSED_56:
 	case engine_type_e::UNUSED_65:
@@ -196,6 +197,9 @@ void applyEngineType(engine_type_e engineType) {
 	case engine_type_e::GM_LCV:
 	  setGmLcv();
 		break;
+	case engine_type_e::GM_SBC_GEN5:
+	  setGmSbcGen5();
+		break;
 
 #if HW_PROTEUS || EFI_SIMULATOR
     case engine_type_e::WASTEGATE_PROTEUS_TEST:
@@ -273,10 +277,13 @@ void applyEngineType(engine_type_e engineType) {
         break;
 #endif
 
-#if defined(HW_HELLEN_121_VAG) || EFI_SIMULATOR
+#if defined(HW_HELLEN_121_VAG) || defined(HW_HELLEN_UAEFI) || defined(HW_HELLEN_UAEFI121) || EFI_SIMULATOR
 	case engine_type_e::VAG_5_CYL:
 	    setVag_5_cyl();
         break;
+#endif
+
+#if defined(HW_HELLEN_121_VAG) || EFI_SIMULATOR
 	case engine_type_e::HELLEN_121_VAG_V6_CYL:
 	    setHellen121Vag_v6_cyl();
         break;
@@ -313,6 +320,12 @@ void applyEngineType(engine_type_e engineType) {
 	case engine_type_e::TEST_ISSUE_6451:
 		testEngine6451();
 		break;
+
+#if defined(HW_FRANKENSO) || EFI_SIMULATOR || defined(HW_NUCLEO_F767) || defined(HW_NUCLEO_H743) || defined(SUPPORT_GY6)
+	case engine_type_e::GY6_139QMB:
+		setGy6139qmbDefaultEngineConfiguration();
+		break;
+#endif
 
 #if defined(HW_FRANKENSO) || EFI_SIMULATOR || defined(HW_NUCLEO_F767) || defined(HW_NUCLEO_H743)
 	case engine_type_e::DEFAULT_FRANKENSO:
@@ -364,9 +377,6 @@ void applyEngineType(engine_type_e engineType) {
 	case engine_type_e::FORD_INLINE_6_1995:
 		setFordInline6();
 		break;
-	case engine_type_e::GY6_139QMB:
-		setGy6139qmbDefaultEngineConfiguration();
-		break;
 	case engine_type_e::HONDA_600:
 		setHonda600();
 		break;
@@ -404,8 +414,9 @@ void applyEngineType(engine_type_e engineType) {
 		break;
 #endif //HW_SUBARU_EG33
 	default:
-	  applyEngineTypeExt(engineType);
+	  applyUnknownEngineType(engineType);
 	}
+	boardAfterTuneDefaults(engineType);
 }
 
 PUBLIC_API_WEAK_SOMETHING_WEIRD engine_type_e getLastEngineType() {

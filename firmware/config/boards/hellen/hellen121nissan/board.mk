@@ -7,7 +7,7 @@ ifeq ($(VAR_DEF_ENGINE_TYPE),)
   VAR_DEF_ENGINE_TYPE = -DDEFAULT_ENGINE_TYPE=engine_type_e::HELLEN_121_NISSAN_6_CYL
 endif
 
-DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
+
 
 # Add them all together
 DDEFS += -DFIRMWARE_ID=\"hellen121nissan\" $(VAR_DEF_ENGINE_TYPE)

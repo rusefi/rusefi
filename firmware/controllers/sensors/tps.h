@@ -27,10 +27,6 @@ void grabTPSIsWideOpen();
 void grabPedalIsUp();
 void grabPedalIsWideOpen();
 
-bool isTps1Error();
-bool isTps2Error();
-bool isPedalError();
-
 #if EFI_SENT_SUPPORT
 
 struct SentTps : public StoredValueSensor {

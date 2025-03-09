@@ -10,7 +10,6 @@
 #include "fuel_math.h"
 #include "trigger_structure.h"
 #include "trigger_decoder.h"
-#include "advance_map.h"
 
 using ::testing::FloatNear;
 
@@ -135,12 +134,12 @@ TEST(misc, testAngleResolver) {
 
 	TriggerWaveform * ts = &engine->triggerCentral.triggerShape;
 	TriggerFormDetails *triggerFormDetails = &engine->triggerCentral.triggerFormDetails;
-	engine->updateTriggerWaveform();
+	engine->updateTriggerConfiguration();
 
-	assertEqualsM("index 2", 52.76, triggerFormDetails->eventAngles[3]); // this angle is relation to synch point
-	assertEqualsM("time 2", 0.3233, ts->wave.getSwitchTime(2));
-	assertEqualsM("index 5", 412.76, triggerFormDetails->eventAngles[6]);
-	assertEqualsM("time 5", 0.5733, ts->wave.getSwitchTime(5));
+	ASSERT_NEAR(52.76, triggerFormDetails->eventAngles[3], EPS4D) << "index 2"; // this angle is relation to synch point
+	ASSERT_NEAR(0.3233, ts->wave.getSwitchTime(2), EPS4D) << "time 2";
+	ASSERT_NEAR(412.76, triggerFormDetails->eventAngles[6], EPS4D) << "index 5";
+	ASSERT_NEAR(0.5733, ts->wave.getSwitchTime(5), EPS4D) << "time 5";
 
 	ASSERT_EQ(4, ts->getTriggerWaveformSynchPointIndex());
 

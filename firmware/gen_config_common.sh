@@ -34,7 +34,7 @@ set_board_file BOARD_VE_FILE "${BOARD_DIR}/board_ve.ini"
 
 COMMON_GEN_CONFIG="
  -prepend integration/ts_protocol.txt \
- -readfile OUTPUTS_SECTION_FROM_FILE ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/output_channels.ini \
+ -readfile OUTPUTS_SECTION_FROM_FILE ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/live_data_fragments.ini \
  -readfile DATALOG_SECTION_FROM_FILE ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/data_logs.ini \
  -readfile LIVE_DATA_MENU_FROM_FILE ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/fancy_menu.ini \
  -readfile LIVE_DATA_PANELS_FROM_FILE ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/fancy_content.ini \
@@ -68,4 +68,5 @@ COMMON_GEN_CONFIG="
  -prepend integration/rusefi_config_trigger.txt \
  -prepend ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/total_live_data_generated.h \
  -prepend ${BOARD_DIR}/prepend.txt \
+ -prepend integration/rusefi_config_shared.txt \
  -board ${BOARD_DIR}"

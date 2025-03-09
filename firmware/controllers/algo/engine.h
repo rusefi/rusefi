@@ -48,6 +48,7 @@
 #include "fuel_computer.h"
 #include "gear_detector.h"
 #include "advance_map.h"
+#include "ignition_state.h"
 #include "fan_control.h"
 #include "sensor_checker.h"
 #include "fuel_schedule.h"
@@ -59,6 +60,7 @@
 #include "vvt.h"
 #include "trip_odometer.h"
 #include "closed_loop_fuel.h"
+#include "electronic_throttle_generated.h"
 
 #include <functional>
 
@@ -97,10 +99,6 @@ public:
 
 	StartStopState startStopState;
 
-#if ! EFI_PROD_CODE
-	// todo: technical debt: enableOverdwellProtection #3553
-	bool enableOverdwellProtection = true;
-#endif
 
 	TunerStudioOutputChannels outputChannels;
 
@@ -112,7 +110,6 @@ public:
 	// used by HW CI
 	bool isPwmEnabled = true;
 
-	const char *prevOutputName = nullptr;
 	/**
 	 * ELM327 cannot handle both RX and TX at the same time, we have to stay quite once first ISO/TP packet was detected
 	 * this is a pretty temporary hack only while we are trying ELM327, long term ISO/TP and rusEFI broadcast should find a way to coexists
@@ -289,6 +286,7 @@ public:
 	RpmCalculator rpmCalculator;
 
 	Timer configBurnTimer;
+	Timer engineTypeChangeTimer;
 
 	/**
 	 * This counter is incremented every time user adjusts ECU parameters online (either via rusEfi console or other
@@ -311,7 +309,7 @@ public:
 	void periodicSlowCallback();
 	void updateSlowSensors();
 	void updateSwitchInputs();
-	void updateTriggerWaveform();
+	void updateTriggerConfiguration();
 
 	bool isRunningPwmTest = false;
 

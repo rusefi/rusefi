@@ -186,7 +186,7 @@ public class OutputsTest {
         String test = "struct total\n" +
                 "\tint[3 iterate] triggerSimulatorPins;Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\\nSee also directSelfStimulation which is different.\n" +
                 "end_struct\n";
-        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
         state.readBufferedReader(test, tsProjectConsumer);
         assertEquals(
 "\ttriggerSimulatorPins1 = \"Each rusEFI piece can provide synthetic trigger signal for external ECU. Sometimes these wires are routed back into trigger inputs of the same rusEFI board.\\nSee also directSelfStimulation which is different. 1\"\n" +

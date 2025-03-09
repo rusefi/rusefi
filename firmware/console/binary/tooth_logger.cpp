@@ -34,6 +34,19 @@ static bool currentCoilState = false;
 static bool currentInjectorState = false;
 
 #if EFI_UNIT_TEST
+
+void jsonTraceEntry(const char* name, int pid, bool isEnter, efitick_t timestamp) {
+extern FILE *jsonTrace;
+  if (jsonTrace != nullptr) {
+    fprintf(jsonTrace, ",\n");
+    fprintf(jsonTrace, "{\"name\":\"%s\",\"ph\":\"%s\",\"tid\":0,\"pid\":%d,\"ts\":%f}",
+      name,
+      isEnter ? "B" : "E",
+      pid,
+    timestamp / 1000.0);
+  }
+}
+
 #include "logicdata.h"
 
 static std::vector<CompositeEvent> events;
@@ -240,9 +253,35 @@ static void SetNextCompositeEntry(efitick_t timestamp) {
 	}
 }
 
-#endif // EFI_UNIT_TEST
+#endif // not EFI_UNIT_TEST
+
+#define JSON_TRG_PID 4
+#define JSON_CAM_PID 10
+
+void LogTriggerSync(bool isSync, efitick_t timestamp) {
+#if EFI_UNIT_TEST
+        jsonTraceEntry("sync", 3, /*isEnter*/isSync, timestamp);
+#else
+#endif
+}
+
+void LogTriggerCamTooth(bool isRising, efitick_t timestamp, int index) {
+#if EFI_UNIT_TEST
+        jsonTraceEntry("cam", JSON_CAM_PID + index, /*isEnter*/isRising, timestamp);
+#else
+#endif
+}
 
 void LogTriggerTooth(trigger_event_e tooth, efitick_t timestamp) {
+
+#if EFI_UNIT_TEST
+     if (tooth == SHAFT_PRIMARY_RISING) {
+        jsonTraceEntry("trg0", JSON_TRG_PID, /*isEnter*/true, timestamp);
+      } else if (tooth == SHAFT_PRIMARY_FALLING) {
+        jsonTraceEntry("trg0", JSON_TRG_PID, /*isEnter*/false, timestamp);
+      }
+#endif // EFI_UNIT_TEST
+
     efiAssertVoid(ObdCode::CUSTOM_ERR_6650, hasLotsOfRemainingStack(), "l-t-t");
 	// bail if we aren't enabled
 	if (!ToothLoggerEnabled) {
@@ -303,7 +342,10 @@ void LogTriggerTopDeadCenter(efitick_t timestamp) {
 	SetNextCompositeEntry(timestamp + 10);
 }
 
-void LogTriggerCoilState(efitick_t timestamp, bool state) {
+void LogTriggerCoilState(efitick_t timestamp, size_t index, bool state) {
+#if EFI_UNIT_TEST
+	jsonTraceEntry("coil", 20 + index, state, timestamp);
+#endif // EFI_UNIT_TEST
 	if (!ToothLoggerEnabled) {
 		return;
 	}
@@ -312,7 +354,10 @@ void LogTriggerCoilState(efitick_t timestamp, bool state) {
 	//SetNextCompositeEntry(timestamp, trigger1, trigger2, trigger);
 }
 
-void LogTriggerInjectorState(efitick_t timestamp, bool state) {
+void LogTriggerInjectorState(efitick_t timestamp, size_t index, bool state) {
+#if EFI_UNIT_TEST
+	jsonTraceEntry("inj", 30 + index, state, timestamp);
+#endif // EFI_UNIT_TEST
 	if (!ToothLoggerEnabled) {
 		return;
 	}

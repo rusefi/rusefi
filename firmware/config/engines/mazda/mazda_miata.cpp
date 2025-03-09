@@ -16,7 +16,6 @@
 #include "pch.h"
 
 #include "mazda_miata.h"
-#include "advance_map.h"
 #include "custom_engine.h"
 
 

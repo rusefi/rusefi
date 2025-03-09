@@ -29,7 +29,7 @@ class PerFieldWithStructuresIterator extends FieldIterator {
     }
 
     @Override
-    public void end() {
+    public void end(int currentPosition) {
         ConfigStructure cs = cf.getState().getStructures().get(cf.getTypeName());
         String content;
         if (cs != null) {
@@ -40,14 +40,14 @@ class PerFieldWithStructuresIterator extends FieldIterator {
                 // java side of things does not care for 'cs.withPrefix'
                 String extraPrefix = variableNamePrefix + strategy.getArrayElementName(cf) + prefixSeparator;
                 PerFieldWithStructuresIterator fieldIterator = new PerFieldWithStructuresIterator(state, cs.getTsFields(), extraPrefix, strategy, prefixSeparator);
-                fieldIterator.loop();
+                fieldIterator.loop(currentPosition);
                 content = fieldIterator.sb.toString();
             }
         } else {
-            content = strategy.process(state, cf, variableNamePrefix);
+            content = strategy.process(state, cf, variableNamePrefix, currentPosition, this);
         }
         sb.append(content);
-        super.end();
+        super.end(currentPosition);
     }
 
     public String getContent() {
@@ -55,7 +55,7 @@ class PerFieldWithStructuresIterator extends FieldIterator {
     }
 
     interface Strategy {
-        String process(ReaderState state, ConfigField configField, String prefix);
+        String process(ReaderState state, ConfigField configField, String prefix, int currentPosition, PerFieldWithStructuresIterator perFieldWithStructuresIterator);
 
         default String getArrayElementName(ConfigField cf) {
             return cf.getName();

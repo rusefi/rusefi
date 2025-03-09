@@ -886,7 +886,7 @@ void setDefaultEtbParameters() {
 	engineConfiguration->etb_iTermMax = 30;
 
 	engineConfiguration->etbJamDetectThreshold = 10;
-	engineConfiguration->etbJamTimeout = 1;
+//	engineConfiguration->etbJamTimeout = 1;
 }
 
 void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *previousConfiguration) {

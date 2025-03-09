@@ -6,9 +6,7 @@
 
 using ::testing::_;
 
-extern WarningCodeState unitTestWarningCodeState;
-
-// Magic below is the simpliest way to schedule overdwell sparkDown that I found in
+// Magic below is the simplest way to schedule overdwell sparkDown that I found in
 // testAssertWeAreNotMissingASpark299.
 //
 // eth.smartFireFall(20);
@@ -21,7 +19,7 @@ static void prepareToScheduleOverdwellSparkDown(EngineTestHelper& eth) {
 	engineConfiguration->isIgnitionEnabled = true;
 	engineConfiguration->isInjectionEnabled = false;
 
-	ASSERT_EQ( 0,  unitTestWarningCodeState.recentWarnings.getCount()) << "warningCounter#0";
+	ASSERT_EQ( 0,  getRecentWarnings()->getCount()) << "warningCounter#0";
 
 	eth.smartFireRise(20);
 	ASSERT_EQ( 0,  engine->triggerCentral.triggerState.currentCycle.current_index) << "ci#0";

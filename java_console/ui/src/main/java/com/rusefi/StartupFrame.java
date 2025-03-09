@@ -1,7 +1,6 @@
 package com.rusefi;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.core.ui.FrameHelper;
@@ -10,6 +9,7 @@ import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.*;
 import com.rusefi.ui.BasicLogoHelper;
 import com.rusefi.ui.LogoHelper;
+import com.rusefi.ui.duplicates.ConsoleBundleUtil;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;
@@ -25,6 +25,8 @@ import java.awt.datatransfer.StringSelection;
 import java.awt.event.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.preferences.storage.PersistentConfiguration.getConfig;
@@ -137,6 +139,14 @@ public class StartupFrame {
 
         connectButton.addActionListener(e -> connectButtonAction(comboSpeeds));
 
+        final Optional<JPanel> newReleaseNotification = newReleaseAnnounce(
+            "rusefi_autoupdate.exe",
+            "left",
+            () -> realHardwarePanel.getPreferredSize().width
+        );
+        if (newReleaseNotification.isPresent()) {
+            leftPanel.add(newReleaseNotification.get());
+        }
         leftPanel.add(realHardwarePanel);
         if (UiProperties.useSimulator()) {
             leftPanel.add(miscPanel);
@@ -199,7 +209,7 @@ public class StartupFrame {
 
         JPanel rightPanel = new JPanel(new VerticalFlowLayout());
 
-        if (BundleUtil.readBundleFullNameNotNull().contains("proteus_f7")) {
+        if (ConsoleBundleUtil.readBundleFullNameNotNull().getTarget().contains("proteus_f7")) {
             String text = "WARNING: Proteus F7";
             URLLabel urlLabel = new URLLabel(text, "https://github.com/rusefi/rusefi/wiki/F7-requires-full-erase");
             new Timer(500, new ActionListener() {
@@ -237,6 +247,38 @@ public class StartupFrame {
         }
     }
 
+    public static @NotNull Optional<JPanel> newReleaseAnnounce(
+        final String upgradeExeFileName,
+        final String textAlign,
+        final Supplier<Integer> minWidthSupplier
+    ) {
+        final String nextBranchName = ConsoleBundleUtil.readBundleFullNameNotNull().getNextBranchName();
+        if (nextBranchName != null && !nextBranchName.isBlank()) {
+            final JLabel newReleaseAmmomceMessage = new JLabel(
+                String.format(
+                    "<html><p style=\"text-align: %s;font-weight: bold;color:red\">New release `%s` is available!<br/>To upgrade please restart `%s`.</p></html>",
+                    textAlign,
+                    nextBranchName,
+                    upgradeExeFileName
+                )
+            );
+            final JPanel newReleaseAnnouncePanel = new JPanel(new MigLayout()) {
+                @Override
+                public Dimension getPreferredSize() {
+                    Dimension size = super.getPreferredSize();
+                    return new Dimension(Math.max(size.width, minWidthSupplier.get()), size.height);
+                }
+            };
+            newReleaseAnnouncePanel.setBorder(new TitledBorder(
+                BorderFactory.createLineBorder(Color.darkGray),
+                ""
+            ));
+            newReleaseAnnouncePanel.add(newReleaseAmmomceMessage);
+            return Optional.of(newReleaseAnnouncePanel);
+        }
+        return Optional.empty();
+    }
+
     public static @NotNull JLabel binaryModificationControl() {
         final long binaryModificationTimestamp = MaintenanceUtil.getBinaryModificationTimestamp();
         JLabel jLabel;
@@ -245,7 +287,7 @@ public class StartupFrame {
             jLabel.setForeground(Color.red);
         } else {
             final Date binaryModificationDate = new Date(binaryModificationTimestamp);
-            final String branchNameToDisplay = UiBundleUtil.readBranchNameToDisplay();
+            final String branchNameToDisplay = ConsoleBundleUtil.readBundleFullNameNotNull().getBranchName();
             jLabel = new JLabel(String.format(
                 "<html><center>%s files<br/>%s</center></html>",
                 branchNameToDisplay,

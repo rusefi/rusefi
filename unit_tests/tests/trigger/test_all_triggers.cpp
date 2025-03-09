@@ -77,7 +77,7 @@ extern TriggerDecoderBase initState;
 
 	TriggerWaveform *shape = &engine->triggerCentral.triggerShape;
 	TriggerFormDetails *triggerFormDetails = &engine->triggerCentral.triggerFormDetails;
-	engine->updateTriggerWaveform();
+	engine->updateTriggerConfiguration();
 
 	ASSERT_FALSE(shape->shapeDefinitionError) << "Trigger shapeDefinitionError";
 

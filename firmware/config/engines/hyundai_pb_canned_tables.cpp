@@ -55,6 +55,7 @@ static void pbcannedignitionTable() {
 }
 
 static void pbcannedveTable() {
+#if (VE_LOAD_COUNT == 16) && (VE_RPM_COUNT == 16)
 	static const float hardCodedveTable[16][16] = {
 {70.300,	70.300,	70.400,	70.500,	70.600,	70.600,	70.300,	29.900,	29.800,	29.900,	30.400,	31.400,	33.000,	35.100,	37.700,	40.900,	},
 {70.800,	71.500,	72.100,	72.900,	73.300,	72.800,	72.000,	31.300,	31.200,	31.500,	32.200,	33.500,	35.300,	37.700,	40.500,	43.900,	},
@@ -74,6 +75,7 @@ static void pbcannedveTable() {
 {127.600,	127.600,	127.600,	127.600,	127.600,	127.600,	127.600,	127.600,	127.600,	127.600,	127.600,	127.600,	127.600,	127.600,	127.600,	127.600,	},
 };
 	copyTable(config->veTable, hardCodedveTable);
+#endif
 }
 
 static void pbcannedinjectionPhase() {

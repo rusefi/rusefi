@@ -740,7 +740,7 @@ void OutputPin::initPin(const char *msg, brain_pin_e p_brainPin, pin_output_mode
 		m_pin = getHwPin(msg, p_brainPin);
 
 		// Validate port
-		if (m_port == GPIO_NULL) {
+		if (!m_port) {
 			criticalError("OutputPin::initPin got invalid port for pin idx %d", static_cast<int>(p_brainPin));
 			return;
 		}
@@ -837,7 +837,7 @@ void initPrimaryPins() {
  * This method is part of fatal error handling.
  * The whole method is pretty naive, but that's at least something.
  */
-void turnAllPinsOff(void) {
+void turnAllPinsOff() {
 	for (int i = 0; i < MAX_CYLINDER_COUNT; i++) {
 		enginePins.injectors[i].setValue(false);
 		enginePins.coils[i].setValue(false);
@@ -846,6 +846,9 @@ void turnAllPinsOff(void) {
 	enginePins.mainRelay.setValue(false);
 	enginePins.fuelPumpRelay.setValue(false);
 	enginePins.checkEnginePin.setValue(true); // yes this one can go ON
+#if EFI_PROD_CODE && HW_HELLEN
+  hellenDisableEnSilently();
+#endif
 }
 #endif /* EFI_GPIO_HARDWARE */
 

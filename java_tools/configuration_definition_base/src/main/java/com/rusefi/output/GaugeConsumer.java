@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.rusefi.ldmp.LiveDataProcessor.tempLimit;
 import static com.rusefi.output.DataLogConsumer.getHumanGaugeName;
 
 public class GaugeConsumer implements ConfigurationConsumer {
@@ -27,13 +26,13 @@ public class GaugeConsumer implements ConfigurationConsumer {
     @Override
     public void handleEndStruct(ReaderState readerState, ConfigStructure structure) throws IOException {
         if (readerState.isStackEmpty()) {
-            for (int i = 0; i < tempLimit(outputNames); i++) {
+            for (int i = 0; i < outputNames.length; i++) {
 
-                String variableNameSuffix = outputNames.length > 1 ? Integer.toString(i) : "";
+                String variableNamePrefix = outputNames.length > 1 ? outputNames[i] : "";
 
-                PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(readerState, structure.getTsFields(), "",
-                        (state, configField, prefix) -> handle(configField, prefix, variableNameSuffix));
-                iterator.loop();
+                PerFieldWithStructuresIterator iterator = new PerFieldWithStructuresIterator(readerState, structure.getTsFields(), variableNamePrefix,
+                        (state, configField, prefix, currentPosition, perFieldWithStructuresIterator) -> handle(configField, prefix, ""));
+                iterator.loop(0);
             }
         }
     }
@@ -48,7 +47,7 @@ public class GaugeConsumer implements ConfigurationConsumer {
     }
 
     private String handle(ConfigField configField, String prefix, String variableNameSuffix) {
-        String comment = getHumanGaugeName("", configField, variableNameSuffix);
+        String comment = getHumanGaugeName("", "", configField, variableNameSuffix);
         comment = ConfigFieldImpl.unquote(comment);
         if (!prefix.isEmpty()) {
             comment = prefix + " " + comment;

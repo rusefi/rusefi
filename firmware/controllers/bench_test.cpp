@@ -21,6 +21,7 @@
  */
 
 #include "pch.h"
+#include "tunerstudio.h"
 
 static bool isRunningBench = false;
 static OutputPin *outputOnTheBenchTest = nullptr;
@@ -58,6 +59,10 @@ const OutputPin *getOutputOnTheBenchTest() {
 #if (BOARD_TLE8888_COUNT > 0)
 #include "gpio/tle8888.h"
 #endif // BOARD_TLE8888_COUNT
+
+#if EFI_FILE_LOGGING
+#include "mmc_card.h"
+#endif
 
 static scheduling_s benchSchedStart;
 static scheduling_s benchSchedEnd;
@@ -511,6 +516,22 @@ static void handleCommandX14(uint16_t index) {
 			burnWithoutFlash = true;
 		#endif /* EFI_PROD_CODE && EFI_CONFIGURATION_STORAGE */
 		return;
+
+#if EFI_PROD_CODE && EFI_FILE_LOGGING
+	case TS_SD_MOUNT_PC:
+		sdCardRequestMode(SD_MODE_PC);
+		return;
+	case TS_SD_MOUNT_ECU:
+		sdCardRequestMode(SD_MODE_ECU);
+		return;
+	case TS_SD_UNMOUNT:
+		sdCardRequestMode(SD_MODE_UNMOUNT);
+		return;
+	case TS_SD_FORMAT:
+		sdCardRequestMode(SD_MODE_FORMAT);
+		return;
+#endif // EFI_FILE_LOGGING
+
 	default:
 		criticalError("Unexpected bench x14 %d", index);
 	}
@@ -518,13 +539,11 @@ static void handleCommandX14(uint16_t index) {
 
 extern bool rebootForPresetPending;
 
-void fatalErrorForPresetApply() {
-	rebootForPresetPending = true;
-	firmwareError(ObdCode::OBD_PCM_Processor_Fault,
-		"\n\nTo complete preset apply:\n"
-		"   1. Close TunerStudio\n"
-		"   2. Power cycle ECU\n"
-		"   3. Open TunerStudio and reconnect\n\n");
+static void applyPreset(int index) {
+#if EFI_TUNER_STUDIO
+	onApplyPreset();
+#endif // EFI_TUNER_STUDIO
+  setEngineType(index);
 }
 
 PUBLIC_API_WEAK void boardTsAction(uint16_t index) { }
@@ -584,8 +603,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		break;
 
 	case TS_SET_ENGINE_TYPE:
-		fatalErrorForPresetApply();
-		setEngineType(index);
+		applyPreset(index);
 		break;
 
   case TS_BOARD_ACTION:
@@ -593,8 +611,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		break;
 
 	case TS_SET_DEFAULT_ENGINE:
-		fatalErrorForPresetApply();
-		setEngineType((int)DEFAULT_ENGINE_TYPE);
+		applyPreset((int)DEFAULT_ENGINE_TYPE);
 		break;
 
 	case 0x79:

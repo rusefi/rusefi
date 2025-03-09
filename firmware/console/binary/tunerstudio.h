@@ -52,7 +52,9 @@ int getSecondsSinceChannelsRequest();
 
 void updateTunerStudioState();
 
-void startTunerStudioConnectivity(void);
+void startTunerStudioConnectivity();
+bool wasPresetJustApplied();
+void onApplyPreset();
 
 typedef struct {
 	uint16_t offset;

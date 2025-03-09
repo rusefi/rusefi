@@ -32,8 +32,6 @@ void stopHardware();
 //  328.125 KHz 164.06 KHz
 #define SPI_BaudRatePrescaler_256       ((uint16_t)0x0038)
 
-int getSpiPrescaler(spi_speed_e speed, spi_device_e device);
-
 SPIDriver * getSpiDevice(spi_device_e spiDevice);
 void turnOnSpi(spi_device_e device);
 void lockSpi(spi_device_e device);
@@ -53,8 +51,6 @@ void initHardwareNoConfig();
 
 // Initialize hardware with configuration loaded
 void initHardware();
-
-void checkLastResetCause();
 
 // todo: can we do simpler here? move conditional compilation into debounce.h?
 #if EFI_PROD_CODE

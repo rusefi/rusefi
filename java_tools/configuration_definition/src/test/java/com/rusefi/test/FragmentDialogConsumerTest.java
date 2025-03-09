@@ -34,7 +34,7 @@ public class FragmentDialogConsumerTest {
                 "\tint8_t autoscale internalMcuTemperature;mcu;\"deg C\",1, 0, 0, 0, 0\n" +
                 "end_struct\n";
 
-        FragmentDialogConsumer fragmentDialogConsumer = new FragmentDialogConsumer("ac_state", "");
+        FragmentDialogConsumer fragmentDialogConsumer = new FragmentDialogConsumer("ac_state", "", "");
 
         state.readBufferedReader(outputChannels, fragmentDialogConsumer);
 

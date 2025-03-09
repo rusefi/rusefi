@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "hellen_meta.h"
 #include "adc_subscription.h"
+#include "mmc_card.h"
 
 void hellenWbo() {
 	engineConfiguration->enableAemXSeries = true;
@@ -22,17 +23,20 @@ static bool is5vpInit = false;
 #endif // DIAG_5VP_PIN
 }
 
-void setHellenVbatt() {
+void setHellenAnalogDividers() {
 	// 4.7k high side/4.7k low side = 2.0 ratio divider
 	engineConfiguration->analogInputDividerCoefficient = 2.0f;
 
 	// set vbatt_divider 5.835
 	// 33k / 6.8k
 	engineConfiguration->vbattDividerCoeff = (33 + 6.8) / 6.8; // 5.835
+	engineConfiguration->adcVcc = 3.29f;
+}
+
+void setHellenVbatt() {
+  setHellenAnalogDividers();
 
 	engineConfiguration->vbattAdcChannel = H144_IN_VBATT;
-
-	engineConfiguration->adcVcc = 3.29f;
 
   init5vpDiag(); // piggy back on popular 'setHellenVbatt' method
 }
@@ -79,7 +83,19 @@ void hellenEnableEn(const char *msg) {
 }
 
 void hellenDisableEn(const char *msg) {
+#if EFI_FILE_LOGGING && EFI_PROD_CODE
+	// un-mount before turning power off SD card
+	sdCardRequestMode(SD_MODE_UNMOUNT);
+  // trying worst case just to test things
+	chThdSleepMilliseconds(1000);
+#endif
   efiPrintf("Turning board off [%s]", msg);
+  hellenDisableEnSilently();
+}
+
+void hellenDisableEnSilently() {
+	// this function is called from criticalShutdown() that may be called from hardFault handler
+	// please no call to OS functions!
 	setHellenEnValue(0);
 }
 

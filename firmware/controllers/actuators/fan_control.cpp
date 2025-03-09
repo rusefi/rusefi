@@ -93,6 +93,7 @@ void FanController::onSlowCallback() {
 
 	bool result = getState(acActive, pin.getLogicValue());
 
+	m_state = result;
 
 	pin.setValue(result);
 }

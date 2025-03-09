@@ -81,9 +81,6 @@ EngineState::EngineState() {
 	timeSinceLastTChargeK.reset(getTimeNowNt());
 }
 
-void EngineState::updateSlowSensors() {
-}
-
 void EngineState::updateSparkSkip() {
 #if EFI_LAUNCH_CONTROL
 		engine->softSparkLimiter.updateTargetSkipRatio(luaSoftSparkSkip, tractionControlSparkSkip);
@@ -108,9 +105,12 @@ void EngineState::periodicFastCallback() {
 	if (!engine->slowCallBackWasInvoked) {
 		warning(ObdCode::CUSTOM_SLOW_NOT_INVOKED, "Slow not invoked yet");
 	}
-	efitick_t nowNt = getTimeNowNt();
 
-	if (engine->rpmCalculator.isCranking()) {
+	efitick_t nowNt = getTimeNowNt();
+	bool isCranking = engine->rpmCalculator.isCranking();
+	float rpm = Sensor::getOrZero(SensorType::Rpm);
+
+	if (isCranking) {
 		crankingTimer.reset(nowNt);
 	}
 
@@ -120,9 +120,7 @@ void EngineState::periodicFastCallback() {
 	recalculateAuxValveTiming();
 #endif //EFI_AUX_VALVES
 
-	float rpm = Sensor::getOrZero(SensorType::Rpm);
-	engine->ignitionState.sparkDwell = engine->ignitionState.getSparkDwell(rpm);
-	engine->ignitionState.dwellDurationAngle = std::isnan(rpm) ? NAN :  engine->ignitionState.sparkDwell / getOneDegreeTimeMs(rpm);
+	engine->ignitionState.updateDwell(rpm, isCranking);
 
 	// todo: move this into slow callback, no reason for IAT corr to be here
 	engine->fuelComputer.running.intakeTemperatureCoefficient = getIatFuelCorrection();
@@ -146,7 +144,7 @@ void EngineState::periodicFastCallback() {
 	}
 	engine->fuelComputer.running.postCrankingFuelCorrection = m_postCrankingFactor;
 
-	engine->ignitionState.cltTimingCorrection = getCltTimingCorrection();
+	engine->ignitionState.updateAdvanceCorrections();
 
 	baroCorrection = getBaroCorrection();
 
@@ -178,7 +176,7 @@ void EngineState::periodicFastCallback() {
 #endif //EFI_LAUNCH_CONTROL
 
 	float l_ignitionLoad = getIgnitionLoad();
-	float baseAdvance = getWrappedAdvance(rpm, l_ignitionLoad);
+	float baseAdvance = engine->ignitionState.getWrappedAdvance(rpm, l_ignitionLoad);
 	float corrections = engineConfiguration->timingMode == TM_DYNAMIC ?
 			// Pull any extra timing for knock retard
 			- engine->module<KnockController>()->getKnockRetard()

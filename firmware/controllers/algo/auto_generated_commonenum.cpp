@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Wed Dec 18 06:38:19 UTC 2024
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Mon Jan 13 14:25:49 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -801,19 +801,6 @@ case SPI_DEVICE_6:
   return "SPI_DEVICE_6";
 case SPI_NONE:
   return "SPI_NONE";
-  }
- return NULL;
-}
-const char *getSpi_speed_e(spi_speed_e value){
-switch(value) {
-case _150KHz:
-  return "_150KHz";
-case _1_25MHz:
-  return "_1_25MHz";
-case _2_5MHz:
-  return "_2_5MHz";
-case _5MHz:
-  return "_5MHz";
   }
  return NULL;
 }

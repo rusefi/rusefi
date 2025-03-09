@@ -2,10 +2,11 @@
  * @file binary_logging.h
  */
 
-#include <cstddef>
+#pragma once
 
-struct Writer;
+#include "buffered_writer.h"
+
 int getSdCardFieldsCount();
-void writeFileHeader(Writer& buffer);
-void writeSdLogLine(Writer& buffer);
-void writeSdBlock(Writer& outBuffer);
+
+size_t writeSdLogLine(Writer& buffer);
+void resetFileLogging();

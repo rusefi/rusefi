@@ -5,7 +5,7 @@ BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
 include $(PROJECT_DIR)/hw_layer/ports/stm32/2mb_flash.mk
 
-DDEFS += -DEFI_MAIN_RELAY_CONTROL=TRUE
+
 DDEFS += -DEFI_MC33816=TRUE
 DDEFS += -DBOARD_TLE9104_COUNT=4
 DDEFS += -DLUA_USER_HEAP=92000

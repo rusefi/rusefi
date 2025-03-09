@@ -33,9 +33,6 @@ float getIgnitionLoad();
 
 ignition_mode_e getCurrentIgnitionMode();
 
-size_t getFiringOrderCylinderId(size_t index);
-size_t getNextFiringCylinderId(size_t prevCylinderId);
-
 void setTimingRpmBin(float from, float to);
 
 void setSingleCoilDwell();

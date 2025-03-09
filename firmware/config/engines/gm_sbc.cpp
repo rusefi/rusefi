@@ -140,8 +140,9 @@ void setGmSbc() {
 }
 
 static void setGmEcotec3() {
+  engineConfiguration->globalTriggerAngleOffset = 360 + 90;
+  engineConfiguration->hpfpCamLobes = 4;
   engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
-  engineConfiguration->vvtMode[1] = VVT_BOSCH_QUICK_START;
   engineConfiguration->lowPressureFuel.hwChannel = EFI_ADC_NONE;
   gmRailSensor();
   engineConfiguration->EtbSentInput = SentInput::INPUT1;
@@ -155,7 +156,7 @@ static void setGmEcotec3() {
   engineConfiguration->sentInputPins[0] = Gpio::H144_IN_AUX2_DIGITAL;
 
   // engineConfiguration->starterControlPin = high side :()
-#endif
+#endif // HW_HELLEN_4K_GDI
 
 #ifdef HW_HELLEN_8CHAN
   engineConfiguration->sentInputPins[0] = Gpio::MM176_IN_D3;
@@ -164,25 +165,52 @@ static void setGmEcotec3() {
 	engineConfiguration->camInputs[2] = Gpio::Unassigned;
 	engineConfiguration->camInputs[3] = Gpio::Unassigned;
 	config->boardUseCrankPullUp = true;
-#endif
+#endif // HW_HELLEN_8CHAN
 
   engineConfiguration->sentEtbType = SentEtbType::GM_TYPE_1;
   setTPS1Inputs(EFI_ADC_NONE, EFI_ADC_NONE);
   setPPSCalibration(1, 4.25, 0.5, 2.14);
 
-	setInline4();
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_GM);
 	setGDIFueling();
 }
 
-void setGmLcv() {
+static void set4CylGmEcotec3() {
   setGmEcotec3();
+  engineConfiguration->vvtMode[1] = VVT_BOSCH_QUICK_START;
+	setInline4();
+}
+
+void setGmLcv() {
+  set4CylGmEcotec3();
   engineConfiguration->displacement = 2.5;
   strcpy(engineConfiguration->engineCode, "LCV");
 }
 
 void setGmLtg() {
-  setGmEcotec3();
+  set4CylGmEcotec3();
   engineConfiguration->displacement = 2.0;
   strcpy(engineConfiguration->engineCode, "LTG");
+}
+
+void setGmSbcGen5() {
+  setGmEcotec3();
+  engineConfiguration->displacement = 5.3;
+	engineConfiguration->cylindersCount = 8;
+	engineConfiguration->firingOrder = FO_1_8_7_2_6_5_4_3;
+
+#ifdef HW_HELLEN_8CHAN
+	engineConfiguration->injectionPins[4] = Gpio::MM176_INJ5;
+	engineConfiguration->injectionPins[5] = Gpio::MM176_INJ6;
+	engineConfiguration->injectionPins[6] = Gpio::MM176_INJ7;
+	engineConfiguration->injectionPins[7] = Gpio::MM176_INJ8;
+
+	engineConfiguration->ignitionPins[4] = Gpio::MM176_IGN5;
+	engineConfiguration->ignitionPins[5] = Gpio::MM176_IGN6;
+	engineConfiguration->ignitionPins[6] = Gpio::MM176_IGN7;
+	engineConfiguration->ignitionPins[7] = Gpio::MM176_IGN8;
+
+  engineConfiguration->vvtMode[1] = VVT_INACTIVE;
+  engineConfiguration->camInputs[1] = Gpio::Unassigned;
+#endif // HW_HELLEN_8CHAN
 }

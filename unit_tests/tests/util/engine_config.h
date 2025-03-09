@@ -88,6 +88,8 @@ public:
 
     std::optional<float> getFuelLevelAveragingAlpha() const { return m_fuelLevelAveragingAlpha; }
     std::optional<float> getFuelLevelUpdatePeriodSec() const { return m_fuelLevelUpdatePeriodSec; }
+    std::optional<float> getFuelLevelLowThresholdVoltage() const { return m_fuelLevelLowThresholdVoltage; }
+    std::optional<float> getFuelLevelHighThresholdVoltage() const { return  m_fuelLevelHighThresholdVoltage; }
 
     // We do not core about performance in tests, but we want to use builder-like style, so setters return new instance
     // of configuration:
@@ -165,6 +167,8 @@ public:
 
     EngineConfig setFuelLevelAveragingAlpha(std::optional<float> value);
     EngineConfig setFuelLevelUpdatePeriodSec(std::optional<float> value);
+    EngineConfig setFuelLevelLowThresholdVoltage(std::optional<float> value);
+    EngineConfig setFuelLevelHighThresholdVoltage(std::optional<float> value);
 private:
     // Other Sensor Inputs
     std::optional<switch_input_pin_e> m_clutchDownPin;
@@ -239,4 +243,6 @@ private:
 
     std::optional<float> m_fuelLevelAveragingAlpha;
     std::optional<float> m_fuelLevelUpdatePeriodSec;
+    std::optional<float> m_fuelLevelLowThresholdVoltage;
+    std::optional<float> m_fuelLevelHighThresholdVoltage;
 };

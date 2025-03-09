@@ -2,6 +2,34 @@
 #include "board_lookup.h"
 static const LogField fields[] = {
 {packedTime, GAUGE_NAME_TIME, "sec", 0},
+	{engine->outputChannels, 0, 0, "SD: Present", ""},
+	{engine->outputChannels, 0, 1, "SD: Logging", ""},
+	{engine->outputChannels, 0, 2, "triggerScopeReady", ""},
+	{engine->outputChannels, 0, 3, "antilagTriggered", ""},
+	{engine->outputChannels, 0, 4, "isO2HeaterOn", ""},
+	{engine->outputChannels, 0, 5, "checkEngine", ""},
+	{engine->outputChannels, 0, 6, "needBurn", ""},
+	{engine->outputChannels, 0, 7, "SD: MSD", ""},
+	{engine->outputChannels, 0, 8, "Tooth Logger Ready", ""},
+	{engine->outputChannels, 0, 9, "Error: TPS", ""},
+	{engine->outputChannels, 0, 10, "Error: CLT", ""},
+	{engine->outputChannels, 0, 11, "Error: MAP", ""},
+	{engine->outputChannels, 0, 12, "Error: IAT", ""},
+	{engine->outputChannels, 0, 13, "Error: Trigger", ""},
+	{engine->outputChannels, 0, 14, "Error: Active", ""},
+	{engine->outputChannels, 0, 15, "Warning: Active", ""},
+	{engine->outputChannels, 0, 16, "Error: Pedal", ""},
+	{engine->outputChannels, 0, 17, "isKnockChipOk", ""},
+	{engine->outputChannels, 0, 18, "Launch Control Triggered", ""},
+	{engine->outputChannels, 0, 19, "Error: TPS2", ""},
+	{engine->outputChannels, 0, 20, "Injector Fault", ""},
+	{engine->outputChannels, 0, 21, "Ignition Fault", ""},
+	{engine->outputChannels, 0, 22, "isUsbConnected", ""},
+	{engine->outputChannels, 0, 23, "dfcoActive", ""},
+	{engine->outputChannels, 0, 24, "SD card writing", ""},
+	{engine->outputChannels, 0, 25, "SD card reading", ""},
+	{engine->outputChannels, 0, 26, "MAP from sensor seems valid", ""},
+	{engine->outputChannels, 0, 27, "triggerPageRefreshFlag", ""},
 	{engine->outputChannels.RPMValue, "RPM", "RPM", 0},
 	{engine->outputChannels.rpmAcceleration, "dRPM", "RPM acceleration/Rate of Change/ROC", 2},
 	{engine->outputChannels.speedToRpmRatio, "Gearbox Ratio", "value", 2},
@@ -264,6 +292,36 @@ static const LogField fields[] = {
 	{engine->outputChannels.targetAfrBlendBias[1], "targetAfrBlendBias 2", "%", 1},
 	{engine->outputChannels.targetAfrBlendOutput[0], "targetAfrBlendOutput 1", "%", 1},
 	{engine->outputChannels.targetAfrBlendOutput[1], "targetAfrBlendOutput 2", "%", 1},
+	{engine->outputChannels, 660, 0, "coilState1", ""},
+	{engine->outputChannels, 660, 1, "coilState2", ""},
+	{engine->outputChannels, 660, 2, "coilState3", ""},
+	{engine->outputChannels, 660, 3, "coilState4", ""},
+	{engine->outputChannels, 660, 4, "coilState5", ""},
+	{engine->outputChannels, 660, 5, "coilState6", ""},
+	{engine->outputChannels, 660, 6, "coilState7", ""},
+	{engine->outputChannels, 660, 7, "coilState8", ""},
+	{engine->outputChannels, 660, 8, "coilState9", ""},
+	{engine->outputChannels, 660, 9, "coilState10", ""},
+	{engine->outputChannels, 660, 10, "coilState11", ""},
+	{engine->outputChannels, 660, 11, "coilState12", ""},
+	{engine->outputChannels, 660, 12, "injectorState1", ""},
+	{engine->outputChannels, 660, 13, "injectorState2", ""},
+	{engine->outputChannels, 660, 14, "injectorState3", ""},
+	{engine->outputChannels, 660, 15, "injectorState4", ""},
+	{engine->outputChannels, 660, 16, "injectorState5", ""},
+	{engine->outputChannels, 660, 17, "injectorState6", ""},
+	{engine->outputChannels, 660, 18, "injectorState7", ""},
+	{engine->outputChannels, 660, 19, "injectorState8", ""},
+	{engine->outputChannels, 660, 20, "injectorState9", ""},
+	{engine->outputChannels, 660, 21, "injectorState10", ""},
+	{engine->outputChannels, 660, 22, "injectorState11", ""},
+	{engine->outputChannels, 660, 23, "injectorState12", ""},
+	{engine->outputChannels, 660, 24, "triggerChannel1", ""},
+	{engine->outputChannels, 660, 25, "triggerChannel2", ""},
+	{engine->outputChannels, 660, 26, "bank 1 intake cam input", ""},
+	{engine->outputChannels, 660, 27, "bank 1 exhaust cam input", ""},
+	{engine->outputChannels, 660, 28, "bank 2 intake cam input", ""},
+	{engine->outputChannels, 660, 29, "bank 2 exhaust cam input", ""},
 	{engine->outputChannels.outputRequestPeriod, "outputRequestPeriod", "", 0},
 	{engine->outputChannels.mapFast, "mapFast", "", 0},
 	{engine->outputChannels.luaGauges[0], "Lua: Gauge 1", "value", 3},
@@ -387,6 +445,9 @@ static const LogField fields[] = {
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.idealEngineTorque, "idealEngineTorque", "", 0},
 #endif
+#if EFI_ENGINE_CONTROL
+	{engine->fuelComputer, 48, 0, "injectorHwIssue", ""},
+#endif
 	{engine->ignitionState.baseDwell, "Ignition: base dwell", "ms", 1, "Timing"},
 	{engine->ignitionState.sparkDwell, "Ignition: coil charge time", "ms", 1, "Timing"},
 	{engine->ignitionState.dwellDurationAngle, "Ignition: dwell duration", "deg", 1, "Timing"},
@@ -400,82 +461,236 @@ static const LogField fields[] = {
 	{engine->ignitionState.dwellVoltageCorrection, "Ign: Dwell voltage correction", "", 0},
 	{engine->ignitionState.luaTimingAdd, "Ign: Lua timing add", "deg", 2, "Timing"},
 	{engine->ignitionState.luaTimingMult, "Ign: Lua timing mult", "deg", 2, "Timing"},
-	{engine->ignitionState.accelDeltaLOADPersist, "accelDeltaLOADPersist", "", 0},
-	{engine->ignitionState.accelDeltaCycleThriger, "accelDeltaCycleThriger", "", 0},
-	{engine->ignitionState.oldLoadValue, "oldLoadValue", "", 0},
-	{___engine.module<KnockController>()->m_knockLevel, "Knock: Current level", "Volts", 2},
-	{___engine.module<KnockController>()->m_knockCyl[0], "Knock: Cyl 1", "dBv", 0},
-	{___engine.module<KnockController>()->m_knockCyl[1], "Knock: Cyl 2", "dBv", 0},
-	{___engine.module<KnockController>()->m_knockCyl[2], "Knock: Cyl 3", "dBv", 0},
-	{___engine.module<KnockController>()->m_knockCyl[3], "Knock: Cyl 4", "dBv", 0},
-	{___engine.module<KnockController>()->m_knockCyl[4], "Knock: Cyl 5", "dBv", 0},
-	{___engine.module<KnockController>()->m_knockCyl[5], "Knock: Cyl 6", "dBv", 0},
-	{___engine.module<KnockController>()->m_knockCyl[6], "Knock: Cyl 7", "dBv", 0},
-	{___engine.module<KnockController>()->m_knockCyl[7], "Knock: Cyl 8", "dBv", 0},
-	{___engine.module<KnockController>()->m_knockCyl[8], "Knock: Cyl 9", "dBv", 0},
-	{___engine.module<KnockController>()->m_knockCyl[9], "Knock: Cyl 10", "dBv", 0},
-	{___engine.module<KnockController>()->m_knockCyl[10], "Knock: Cyl 11", "dBv", 0},
-	{___engine.module<KnockController>()->m_knockCyl[11], "Knock: Cyl 12", "dBv", 0},
-	{___engine.module<KnockController>()->m_knockRetard, "Knock: Retard", "deg", 1},
-	{___engine.module<KnockController>()->m_knockThreshold, "Knock: Threshold", "", 0},
-	{___engine.module<KnockController>()->m_knockCount, "Knock: Count", "", 0},
-	{___engine.module<KnockController>()->m_maximumRetard, "Knock: Max retard", "", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[0], "Knock: SpectrumData 1", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[1], "Knock: SpectrumData 2", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[2], "Knock: SpectrumData 3", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[3], "Knock: SpectrumData 4", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[4], "Knock: SpectrumData 5", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[5], "Knock: SpectrumData 6", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[6], "Knock: SpectrumData 7", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[7], "Knock: SpectrumData 8", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[8], "Knock: SpectrumData 9", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[9], "Knock: SpectrumData 10", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[10], "Knock: SpectrumData 11", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[11], "Knock: SpectrumData 12", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[12], "Knock: SpectrumData 13", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[13], "Knock: SpectrumData 14", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[14], "Knock: SpectrumData 15", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrum[15], "Knock: SpectrumData 16", "compressed data", 0},
-	{___engine.module<KnockController>()->m_knockSpectrumChannelCyl, "Knock: ChannelAndCylNumber", "compressed N + N", 0},
-	{___engine.module<KnockController>()->m_knockFrequencyStart, "Knock: Start Freq", "Hz", 0},
-	{___engine.module<KnockController>()->m_knockFrequencyStep, "Knock: Step Freq", "Hz", 0},
-	{___engine.module<KnockController>()->m_knockFuelTrimMultiplier, "Knock: Fuel trim when knock", "multiplier", 0},
+	{engine->ignitionState, 40, 0, "Ign: Lua Spark Skip", ""},
+	{engine->module<KnockController>()->m_knockLevel, "Knock: Current level", "Volts", 2},
+	{engine->module<KnockController>()->m_knockCyl[0], "Knock: Cyl 1", "dBv", 0},
+	{engine->module<KnockController>()->m_knockCyl[1], "Knock: Cyl 2", "dBv", 0},
+	{engine->module<KnockController>()->m_knockCyl[2], "Knock: Cyl 3", "dBv", 0},
+	{engine->module<KnockController>()->m_knockCyl[3], "Knock: Cyl 4", "dBv", 0},
+	{engine->module<KnockController>()->m_knockCyl[4], "Knock: Cyl 5", "dBv", 0},
+	{engine->module<KnockController>()->m_knockCyl[5], "Knock: Cyl 6", "dBv", 0},
+	{engine->module<KnockController>()->m_knockCyl[6], "Knock: Cyl 7", "dBv", 0},
+	{engine->module<KnockController>()->m_knockCyl[7], "Knock: Cyl 8", "dBv", 0},
+	{engine->module<KnockController>()->m_knockCyl[8], "Knock: Cyl 9", "dBv", 0},
+	{engine->module<KnockController>()->m_knockCyl[9], "Knock: Cyl 10", "dBv", 0},
+	{engine->module<KnockController>()->m_knockCyl[10], "Knock: Cyl 11", "dBv", 0},
+	{engine->module<KnockController>()->m_knockCyl[11], "Knock: Cyl 12", "dBv", 0},
+	{engine->module<KnockController>()->m_knockRetard, "Knock: Retard", "deg", 1},
+	{engine->module<KnockController>()->m_knockThreshold, "Knock: Threshold", "", 0},
+	{engine->module<KnockController>()->m_knockCount, "Knock: Count", "", 0},
+	{engine->module<KnockController>()->m_maximumRetard, "Knock: Max retard", "", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[0], "Knock: SpectrumData 1", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[1], "Knock: SpectrumData 2", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[2], "Knock: SpectrumData 3", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[3], "Knock: SpectrumData 4", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[4], "Knock: SpectrumData 5", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[5], "Knock: SpectrumData 6", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[6], "Knock: SpectrumData 7", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[7], "Knock: SpectrumData 8", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[8], "Knock: SpectrumData 9", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[9], "Knock: SpectrumData 10", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[10], "Knock: SpectrumData 11", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[11], "Knock: SpectrumData 12", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[12], "Knock: SpectrumData 13", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[13], "Knock: SpectrumData 14", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[14], "Knock: SpectrumData 15", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrum[15], "Knock: SpectrumData 16", "compressed data", 0},
+	{engine->module<KnockController>()->m_knockSpectrumChannelCyl, "Knock: ChannelAndCylNumber", "compressed N + N", 0},
+	{engine->module<KnockController>()->m_knockFrequencyStart, "Knock: Start Freq", "Hz", 0},
+	{engine->module<KnockController>()->m_knockFrequencyStep, "Knock: Step Freq", "Hz", 0},
+	{engine->module<KnockController>()->m_knockFuelTrimMultiplier, "Knock: Fuel trim when knock", "multiplier", 0},
+	{*engine->module<PrimeController>(), 0, 0, "IsFuelPriming", ""},
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<InjectorModelPrimary>()->m_deadtime, "Fuel: injector lag", "ms", 3},
+	{engine->module<InjectorModelPrimary>()->m_deadtime, "Fuel: injector lag", "ms", 3},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<InjectorModelPrimary>()->pressureDelta, "Fuel: Injector pressure delta", "kPa", 1},
+	{engine->module<InjectorModelPrimary>()->pressureDelta, "Fuel: Injector pressure delta", "kPa", 1},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<InjectorModelPrimary>()->pressureRatio, "Fuel: Injector pressure ratio", "", 3},
+	{engine->module<InjectorModelPrimary>()->pressureRatio, "Fuel: Injector pressure ratio", "", 3},
 #endif
 #if EFI_LAUNCH_CONTROL
-	{engine->launchController.retardThresholdRpm, "retardThresholdRpm", "", 0},
+	{engine->launchController.retardThresholdRpm, "Launch: Retard threshold RPM", "", 0},
+#endif
+#if EFI_LAUNCH_CONTROL
+	{engine->launchController, 4, 0, "launchActivatePinState", ""},
+#endif
+#if EFI_LAUNCH_CONTROL
+	{engine->launchController, 4, 1, "isPreLaunchCondition", ""},
+#endif
+#if EFI_LAUNCH_CONTROL
+	{engine->launchController, 4, 2, "Launch: isLaunchCondition", ""},
+#endif
+#if EFI_LAUNCH_CONTROL
+	{engine->launchController, 4, 3, "Launch: isSwitchActivated", ""},
+#endif
+#if EFI_LAUNCH_CONTROL
+	{engine->launchController, 4, 4, "Launch: isClutchActivated", ""},
+#endif
+#if EFI_LAUNCH_CONTROL
+	{engine->launchController, 4, 5, "isBrakePedalActivated", ""},
+#endif
+#if EFI_LAUNCH_CONTROL
+	{engine->launchController, 4, 6, "Launch: isValidInputPin", ""},
+#endif
+#if EFI_LAUNCH_CONTROL
+	{engine->launchController, 4, 7, "Launch: activateSwitchCondition", ""},
+#endif
+#if EFI_LAUNCH_CONTROL
+	{engine->launchController, 4, 8, "rpmLaunchCondition", ""},
+#endif
+#if EFI_LAUNCH_CONTROL
+	{engine->launchController, 4, 9, "rpmPreLaunchCondition", ""},
+#endif
+#if EFI_LAUNCH_CONTROL
+	{engine->launchController, 4, 10, "Launch: speedCondition", ""},
+#endif
+#if EFI_LAUNCH_CONTROL
+	{engine->launchController, 4, 11, "Launch: tpsCondition", ""},
+#endif
+#if EFI_LAUNCH_CONTROL
+	{engine->shiftTorqueReductionController, 0, 0, "isTorqueReductionTriggerPinValid", ""},
+#endif
+#if EFI_LAUNCH_CONTROL
+	{engine->shiftTorqueReductionController, 0, 1, "torqueReductionTriggerPinState", ""},
+#endif
+#if EFI_LAUNCH_CONTROL
+	{engine->shiftTorqueReductionController, 0, 2, "isTimeConditionSatisfied", ""},
+#endif
+#if EFI_LAUNCH_CONTROL
+	{engine->shiftTorqueReductionController, 0, 3, "isRpmConditionSatisfied", ""},
+#endif
+#if EFI_LAUNCH_CONTROL
+	{engine->shiftTorqueReductionController, 0, 4, "isAppConditionSatisfied", ""},
+#endif
+#if EFI_LAUNCH_CONTROL
+	{engine->shiftTorqueReductionController, 0, 5, "isFlatShiftConditionSatisfied", ""},
 #endif
 #if EFI_BOOST_CONTROL
-	{___engine.module<BoostController>()->luaTargetAdd, "Boost: Lua target add", "v", 1, "Boost Control"},
+	{*engine->module<BoostController>(), 0, 0, "isTpsInvalid", ""},
 #endif
 #if EFI_BOOST_CONTROL
-	{___engine.module<BoostController>()->boostOutput, "Boost: Output", "percent", 2, "Boost Control"},
+	{*engine->module<BoostController>(), 0, 1, "m_shouldResetPid", ""},
 #endif
 #if EFI_BOOST_CONTROL
-	{___engine.module<BoostController>()->luaTargetMult, "Boost: Lua target mult", "v", 1, "Boost Control"},
+	{*engine->module<BoostController>(), 0, 2, "isBelowClosedLoopThreshold", ""},
 #endif
 #if EFI_BOOST_CONTROL
-	{___engine.module<BoostController>()->openLoopPart, "Boost: Open loop", "v", 1, "Boost Control"},
+	{*engine->module<BoostController>(), 0, 3, "isNotClosedLoop", ""},
 #endif
 #if EFI_BOOST_CONTROL
-	{___engine.module<BoostController>()->luaOpenLoopAdd, "Boost: Lua open loop add", "v", 1, "Boost Control"},
+	{*engine->module<BoostController>(), 0, 4, "isZeroRpm", ""},
 #endif
 #if EFI_BOOST_CONTROL
-	{___engine.module<BoostController>()->boostControllerClosedLoopPart, "Boost: Closed loop", "%", 1, "Boost Control"},
+	{*engine->module<BoostController>(), 0, 5, "hasInitBoost", ""},
 #endif
 #if EFI_BOOST_CONTROL
-	{___engine.module<BoostController>()->boostControlTarget, "Boost: Target", "kPa", 1, "Boost Control"},
+	{*engine->module<BoostController>(), 0, 6, "rpmTooLow", ""},
 #endif
-	{___engine.module<FanControl1>()->radiatorFanStatus, "radiatorFanStatus", "", 0},
+#if EFI_BOOST_CONTROL
+	{*engine->module<BoostController>(), 0, 7, "tpsTooLow", ""},
+#endif
+#if EFI_BOOST_CONTROL
+	{*engine->module<BoostController>(), 0, 8, "mapTooLow", ""},
+#endif
+#if EFI_BOOST_CONTROL
+	{*engine->module<BoostController>(), 0, 9, "isPlantValid", ""},
+#endif
+#if EFI_BOOST_CONTROL
+	{*engine->module<BoostController>(), 0, 10, "isBoostControlled", ""},
+#endif
+#if EFI_BOOST_CONTROL
+	{engine->module<BoostController>()->luaTargetAdd, "Boost: Lua target add", "v", 1, "Boost Control"},
+#endif
+#if EFI_BOOST_CONTROL
+	{engine->module<BoostController>()->boostOutput, "Boost: Output", "percent", 2, "Boost Control"},
+#endif
+#if EFI_BOOST_CONTROL
+	{engine->module<BoostController>()->luaTargetMult, "Boost: Lua target mult", "v", 1, "Boost Control"},
+#endif
+#if EFI_BOOST_CONTROL
+	{engine->module<BoostController>()->openLoopPart, "Boost: Open loop", "v", 1, "Boost Control"},
+#endif
+#if EFI_BOOST_CONTROL
+	{engine->module<BoostController>()->luaOpenLoopAdd, "Boost: Lua open loop add", "v", 1, "Boost Control"},
+#endif
+#if EFI_BOOST_CONTROL
+	{engine->module<BoostController>()->boostControllerClosedLoopPart, "Boost: Closed loop", "%", 1, "Boost Control"},
+#endif
+#if EFI_BOOST_CONTROL
+	{engine->module<BoostController>()->boostControlTarget, "Boost: Target", "kPa", 1, "Boost Control"},
+#endif
+#if FULL_SD_LOGS
+	{*engine->module<FanControl1>(), 0, 0, "fan1cranking", ""},
+#endif
+#if FULL_SD_LOGS
+	{*engine->module<FanControl1>(), 0, 1, "fan1notRunning", ""},
+#endif
+#if FULL_SD_LOGS
+	{*engine->module<FanControl1>(), 0, 2, "fan1Engine stopped", ""},
+#endif
+#if FULL_SD_LOGS
+	{*engine->module<FanControl1>(), 0, 3, "fan1Broken CLT", ""},
+#endif
+#if FULL_SD_LOGS
+	{*engine->module<FanControl1>(), 0, 4, "fan1Enable for AC", ""},
+#endif
+#if FULL_SD_LOGS
+	{*engine->module<FanControl1>(), 0, 5, "fan1Above hot threshold", ""},
+#endif
+#if FULL_SD_LOGS
+	{*engine->module<FanControl1>(), 0, 6, "fan1Below cold threshold", ""},
+#endif
+#if FULL_SD_LOGS
+	{*engine->module<FanControl1>(), 0, 7, "fan1disabledBySpeed", ""},
+#endif
+#if FULL_SD_LOGS
+	{*engine->module<FanControl1>(), 0, 8, "fan1On", ""},
+#endif
+#if FULL_SD_LOGS
+	{engine->module<FanControl1>()->radiatorFanStatus, "fan1radiatorFanStatus", "", 0},
+#endif
+#if FULL_SD_LOGS
+	{*engine->module<FanControl2>(), 0, 0, "fan2cranking", ""},
+#endif
+#if FULL_SD_LOGS
+	{*engine->module<FanControl2>(), 0, 1, "fan2notRunning", ""},
+#endif
+#if FULL_SD_LOGS
+	{*engine->module<FanControl2>(), 0, 2, "fan2Engine stopped", ""},
+#endif
+#if FULL_SD_LOGS
+	{*engine->module<FanControl2>(), 0, 3, "fan2Broken CLT", ""},
+#endif
+#if FULL_SD_LOGS
+	{*engine->module<FanControl2>(), 0, 4, "fan2Enable for AC", ""},
+#endif
+#if FULL_SD_LOGS
+	{*engine->module<FanControl2>(), 0, 5, "fan2Above hot threshold", ""},
+#endif
+#if FULL_SD_LOGS
+	{*engine->module<FanControl2>(), 0, 6, "fan2Below cold threshold", ""},
+#endif
+#if FULL_SD_LOGS
+	{*engine->module<FanControl2>(), 0, 7, "fan2disabledBySpeed", ""},
+#endif
+#if FULL_SD_LOGS
+	{*engine->module<FanControl2>(), 0, 8, "fan2On", ""},
+#endif
+#if FULL_SD_LOGS
+	{engine->module<FanControl2>()->radiatorFanStatus, "fan2radiatorFanStatus", "", 0},
+#endif
 	{engine->engineState.lua.fuelAdd, "Lua: Fuel add", "g", 3},
 	{engine->engineState.lua.fuelMult, "Lua: Fuel mult", "", 0},
+	{engine->engineState, 8, 0, "lua.clutchUpState", ""},
+	{engine->engineState, 8, 1, "lua.brakePedalState", ""},
+	{engine->engineState, 8, 2, "lua.acRequestState", ""},
+	{engine->engineState, 8, 3, "lua.luaDisableEtb", ""},
+	{engine->engineState, 8, 4, "lua.luaIgnCut", ""},
+	{engine->engineState, 8, 5, "lua.luaFuelCut", ""},
+	{engine->engineState, 8, 6, "lua.clutchDownState", ""},
+	{engine->engineState, 8, 7, "lua.disableDecelerationFuelCutOff", ""},
+	{engine->engineState, 8, 8, "lua.torqueReductionState", ""},
 	{engine->engineState.sd.tCharge, "Air: Charge temperature estimate", "deg C", 1},
 	{engine->engineState.sd.tChargeK, "Air: Charge temperature estimate K", "", 0},
 	{engine->engineState.crankingFuel.coolantTemperatureCoefficient, "Fuel: cranking CLT mult", "", 0},
@@ -485,17 +700,24 @@ static const LogField fields[] = {
 	{engine->engineState.baroCorrection, "Fuel: Barometric pressure mult", "", 0},
 	{engine->engineState.hellenBoardId, "Detected Board ID", "id", 0},
 	{engine->engineState.clutchUpState, "Clutch: up", "", 0},
-	{engine->engineState.clutchDownState, "Clutch: down", "", 0},
 	{engine->engineState.brakePedalState, "Brake switch", "", 0},
 	{engine->engineState.startStopState, "startStopState", "", 0},
 	{engine->engineState.smartChipState, "smartChipState", "", 0},
 	{engine->engineState.smartChipRestartCounter, "smartChipRestartCounter", "", 0},
 	{engine->engineState.smartChipAliveCounter, "smartChipAliveCounter", "", 0},
+	{engine->engineState, 48, 0, "startStopPhysicalState", ""},
+	{engine->engineState, 48, 1, "Harley ACR Active", ""},
+	{engine->engineState, 48, 2, "acrEngineMovedRecently", ""},
+	{engine->engineState, 48, 3, "heaterControlEnabled", ""},
+	{engine->engineState, 48, 4, "luaDigitalState0", ""},
+	{engine->engineState, 48, 5, "luaDigitalState1", ""},
+	{engine->engineState, 48, 6, "luaDigitalState2", ""},
+	{engine->engineState, 48, 7, "luaDigitalState3", ""},
+	{engine->engineState, 48, 8, "Clutch: down", ""},
 	{engine->engineState.startStopStateToggleCounter, "startStopStateToggleCounter", "", 0},
 	{engine->engineState.luaSoftSparkSkip, "luaSoftSparkSkip", "", 0},
 	{engine->engineState.luaHardSparkSkip, "luaHardSparkSkip", "", 0},
 	{engine->engineState.tractionControlSparkSkip, "tractionControlSparkSkip", "", 0},
-	{engine->engineState.desiredRpmLimit, "User-defined RPM hard limit", "rpm", 0},
 	{engine->engineState.fuelInjectionCounter, "Fuel: Injection counter", "", 0},
 	{engine->engineState.globalSparkCounter, "Ign: Spark counter", "", 0},
 	{engine->engineState.fuelingLoad, "Fuel: Load", "", 0},
@@ -544,44 +766,354 @@ static const LogField fields[] = {
 	{engine->triggerCentral.mapCamPrevToothAngle, "Sync: MAP: prev angle", "deg", 2},
 #endif
 #if EFI_SHAFT_POSITION_INPUT
+	{engine->triggerCentral, 40, 0, "isDecodingMapCam", ""},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.triggerElapsedUs, "triggerElapsedUs", "", 0},
 #endif
-#if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<IdleController>().unmock().currentIdlePosition, "Idle: Position", "%", 1},
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.triggerState.synchronizationCounter, "trgsync: wheel sync counter", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.triggerState.vvtToothDurations0, "trgvvtToothDurations0", "us", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.triggerState.vvtCurrentPosition, "trgsync: Primary Position", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.triggerState.vvtToothPosition[0], "trgsync: Cam Position 1", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.triggerState.vvtToothPosition[1], "trgsync: Cam Position 2", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.triggerState.vvtToothPosition[2], "trgsync: Cam Position 3", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.triggerState.vvtToothPosition[3], "trgsync: Cam Position 4", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.triggerState.triggerSyncGapRatio, "trgSync: Trigger Latest Ratio", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.triggerState.triggerStateIndex, "trgtriggerStateIndex", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][0].synchronizationCounter, "vvt1isync: wheel sync counter", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][0].vvtToothDurations0, "vvt1ivvtToothDurations0", "us", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][0].vvtCurrentPosition, "vvt1isync: Primary Position", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][0].vvtToothPosition[0], "vvt1isync: Cam Position 1", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][0].vvtToothPosition[1], "vvt1isync: Cam Position 2", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][0].vvtToothPosition[2], "vvt1isync: Cam Position 3", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][0].vvtToothPosition[3], "vvt1isync: Cam Position 4", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][0].triggerSyncGapRatio, "vvt1iSync: Trigger Latest Ratio", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][0].triggerStateIndex, "vvt1itriggerStateIndex", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][1].synchronizationCounter, "vvt1esync: wheel sync counter", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][1].vvtToothDurations0, "vvt1evvtToothDurations0", "us", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][1].vvtCurrentPosition, "vvt1esync: Primary Position", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][1].vvtToothPosition[0], "vvt1esync: Cam Position 1", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][1].vvtToothPosition[1], "vvt1esync: Cam Position 2", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][1].vvtToothPosition[2], "vvt1esync: Cam Position 3", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][1].vvtToothPosition[3], "vvt1esync: Cam Position 4", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][1].triggerSyncGapRatio, "vvt1eSync: Trigger Latest Ratio", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][1].triggerStateIndex, "vvt1etriggerStateIndex", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][0].synchronizationCounter, "vvt2isync: wheel sync counter", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][0].vvtToothDurations0, "vvt2ivvtToothDurations0", "us", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][0].vvtCurrentPosition, "vvt2isync: Primary Position", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][0].vvtToothPosition[0], "vvt2isync: Cam Position 1", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][0].vvtToothPosition[1], "vvt2isync: Cam Position 2", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][0].vvtToothPosition[2], "vvt2isync: Cam Position 3", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][0].vvtToothPosition[3], "vvt2isync: Cam Position 4", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][0].triggerSyncGapRatio, "vvt2iSync: Trigger Latest Ratio", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][0].triggerStateIndex, "vvt2itriggerStateIndex", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][1].synchronizationCounter, "vvt2esync: wheel sync counter", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][1].vvtToothDurations0, "vvt2evvtToothDurations0", "us", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][1].vvtCurrentPosition, "vvt2esync: Primary Position", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][1].vvtToothPosition[0], "vvt2esync: Cam Position 1", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][1].vvtToothPosition[1], "vvt2esync: Cam Position 2", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][1].vvtToothPosition[2], "vvt2esync: Cam Position 3", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][1].vvtToothPosition[3], "vvt2esync: Cam Position 4", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][1].triggerSyncGapRatio, "vvt2eSync: Trigger Latest Ratio", "", 3},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][1].triggerStateIndex, "vvt2etriggerStateIndex", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<IdleController>().unmock().baseIdlePosition, "idle: base value", "", 0},
+	{engine->module<IdleController>().unmock().currentIdlePosition, "Idle: Position", "%", 1},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<IdleController>().unmock().idleClosedLoop, "Idle: Closed loop", "", 0},
+	{engine->module<IdleController>().unmock().baseIdlePosition, "idle: base value", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<IdleController>().unmock().iacByTpsTaper, "idle: iacByTpsTaper portion", "", 0},
+	{engine->module<IdleController>().unmock().idleClosedLoop, "Idle: Closed loop", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<IdleController>().unmock().idleTarget, "Idle: Target RPM", "", 0},
+	{engine->module<IdleController>().unmock().iacByTpsTaper, "idle: iacByTpsTaper portion", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<IdleController>().unmock().targetRpmByClt, "Idle: Target RPM base", "", 0},
+	{engine->module<IdleController>().unmock(), 20, 0, "idle: mightResetPid", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<IdleController>().unmock().targetRpmAc, "Idle: Target A/C RPM", "", 0},
+	{engine->module<IdleController>().unmock(), 20, 1, "Idle: shouldResetPid", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<IdleController>().unmock().iacByRpmTaper, "idle: iacByRpmTaper portion", "", 0},
+	{engine->module<IdleController>().unmock(), 20, 2, "Idle: wasResetPid", ""},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
-	{___engine.module<IdleController>().unmock().luaAdd, "idle: Lua Adder", "", 0},
+	{engine->module<IdleController>().unmock(), 20, 3, "Idle: mustResetPid", ""},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock(), 20, 4, "Idle: cranking", ""},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock(), 20, 5, "isIacTableForCoasting", ""},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock(), 20, 6, "notIdling", ""},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock(), 20, 7, "Idle: reset", ""},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock(), 20, 8, "Idle: dead zone", ""},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock(), 20, 9, "isBlipping", ""},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock(), 20, 10, "useClosedLoop", ""},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock(), 20, 11, "badTps", ""},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock(), 20, 12, "looksLikeRunning", ""},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock(), 20, 13, "looksLikeCoasting", ""},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock(), 20, 14, "looksLikeCrankToIdle", ""},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock(), 20, 15, "Idle: coasting", ""},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock(), 20, 16, "Idle: Closed loop active", ""},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock().idleTarget, "Idle: Target RPM", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock().targetRpmByClt, "Idle: Target RPM base", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock().targetRpmAc, "Idle: Target A/C RPM", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock().iacByRpmTaper, "idle: iacByRpmTaper portion", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_IDLE_CONTROL
+	{engine->module<IdleController>().unmock().luaAdd, "idle: Lua Adder", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(0)->targetWithIdlePosition, "etb1ETB: target with idle", "%", 2, "ETB more"},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(0)->trim, "etb1ETB: trim", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(0)->luaAdjustment, "etb1ETB: luaAdjustment", "%", 2, "ETB more"},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(0)->m_wastegatePosition, "etb1DC: wastegatePosition", "%", 2, "ETB more"},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(0)->etbFeedForward, "etb1etbFeedForward", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(0)->etbIntegralError, "etb1etbIntegralError", "", 3},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(0)->etbCurrentTarget, "etb1ETB: target for current pedal", "%", 3},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(0)->m_adjustedTarget, "etb1Adjusted target", "%", 2},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{*getLiveData<electronic_throttle_s>(0), 32, 0, "etb1etbRevLimitActive", ""},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{*getLiveData<electronic_throttle_s>(0), 32, 1, "etb1jamDetected", ""},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{*getLiveData<electronic_throttle_s>(0), 32, 2, "etb1validPlantPosition", ""},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(0)->etbTpsErrorCounter, "etb1ETB TPS error counter", "count", 0, "ETB more"},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(0)->etbPpsErrorCounter, "etb1ETB pedal error counter", "count", 0, "ETB more"},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(0)->etbErrorCode, "etb1etbErrorCode", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(0)->etbErrorCodeBlinker, "etb1etbErrorCodeBlinker", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(0)->tcEtbDrop, "etb1ETB traction control", "%", 0},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(0)->jamTimer, "etb1ETB jam timer", "sec", 2},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(0)->adjustedEtbTarget, "etb1ETB with adjustments", "%", 0},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(0)->state, "etb1state", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->targetWithIdlePosition, "etb2ETB: target with idle", "%", 2, "ETB more"},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->trim, "etb2ETB: trim", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->luaAdjustment, "etb2ETB: luaAdjustment", "%", 2, "ETB more"},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->m_wastegatePosition, "etb2DC: wastegatePosition", "%", 2, "ETB more"},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->etbFeedForward, "etb2etbFeedForward", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->etbIntegralError, "etb2etbIntegralError", "", 3},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->etbCurrentTarget, "etb2ETB: target for current pedal", "%", 3},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->m_adjustedTarget, "etb2Adjusted target", "%", 2},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{*getLiveData<electronic_throttle_s>(1), 32, 0, "etb2etbRevLimitActive", ""},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{*getLiveData<electronic_throttle_s>(1), 32, 1, "etb2jamDetected", ""},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{*getLiveData<electronic_throttle_s>(1), 32, 2, "etb2validPlantPosition", ""},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->etbTpsErrorCounter, "etb2ETB TPS error counter", "count", 0, "ETB more"},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->etbPpsErrorCounter, "etb2ETB pedal error counter", "count", 0, "ETB more"},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->etbErrorCode, "etb2etbErrorCode", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->etbErrorCodeBlinker, "etb2etbErrorCodeBlinker", "", 0},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->tcEtbDrop, "etb2ETB traction control", "%", 0},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->jamTimer, "etb2ETB jam timer", "sec", 2},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->adjustedEtbTarget, "etb2ETB with adjustments", "%", 0},
+#endif
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+	{getLiveData<electronic_throttle_s>(1)->state, "etb2state", "", 0},
 #endif
 	{engine->dc_motors.dcOutput0, "DC: output0", "%", 2, "ETB more"},
 	{engine->dc_motors.isEnabled0_int, "DC: en0", "%", 2, "ETB more"},
+	{engine->dc_motors, 8, 0, "isEnabled0", ""},
 #if EFI_VVT_PID
-	{___engine.module<VvtController1>()->vvtTarget, "vvtTarget", "deg", 1},
+	{engine->module<VvtController1>()->vvtTarget, "vvtTarget", "deg", 1},
 #endif
 #if EFI_VVT_PID
-	{___engine.module<VvtController1>()->vvtOutput, "vvtOutput", "%", 0},
+	{engine->module<VvtController1>()->vvtOutput, "vvtOutput", "%", 0},
 #endif
 #if EFI_SHAFT_POSITION_INPUT
-	{___engine.lambdaMonitor.lambdaTimeSinceGood, "lambdaTimeSinceGood", "sec", 2},
+	{engine->lambdaMonitor, 0, 0, "lambdaCurrentlyGood", ""},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
+	{engine->lambdaMonitor, 0, 1, "lambdaMonitorCut", ""},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
+	{engine->lambdaMonitor.lambdaTimeSinceGood, "lambdaTimeSinceGood", "sec", 2},
 #endif
 };

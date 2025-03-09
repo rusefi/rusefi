@@ -7,6 +7,7 @@
 
 #include "pch.h"
 #include "logicdata_csv_reader.h"
+#include "unit_test_logger.h"
 
 static char* trim(char *str) {
 	while (str != nullptr && str[0] == ' ') {
@@ -43,42 +44,48 @@ bool CsvReader::haveMore() {
 	return result;
 }
 
+static const char COMMA_SEPARATOR[2] = ",";
+
+#define readFirstTokenAndRememberInputString(input) trim(strtok(input, COMMA_SEPARATOR))
+#define readNextToken() trim(strtok(nullptr, COMMA_SEPARATOR))
+
 /**
  * @param values reference of values array to modify
  * @return timestamp of current line
  */
 double CsvReader::readTimestampAndValues(double *values) {
-	const char s[2] = ",";
-	char *line = buffer;
-
-	char *timeStampstr = trim(strtok(line, s));
+	char *timeStampstr = readFirstTokenAndRememberInputString(buffer);
 	double timeStamp = std::stod(timeStampstr);
 
 	for (size_t i = 0; i < m_triggerCount; i++) {
-		char *triggerToken = trim(strtok(nullptr, s));
+		char *triggerToken = readNextToken();
 		values[i] = std::stod(triggerToken);
 	}
 
 	return timeStamp;
 }
 
-// todo: separate trigger handling from csv file processing
+// todo: separate trigger handling from csv file processing, maybe reuse 'readTimestampAndValues'?
 void CsvReader::processLine(EngineTestHelper *eth) {
 	Engine *engine = &eth->engine;
 
 	const char s[2] = ",";
-	char *timeStampstr = trim(strtok(buffer, s));
+	char *timeStampstr = readFirstTokenAndRememberInputString(buffer);
+
+  for (int i = 0;i<readingOffset;i++) {
+    readNextToken();
+  }
 
 	bool newTriggerState[TRIGGER_INPUT_PIN_COUNT];
 	bool newVvtState[CAM_INPUTS_COUNT];
 
 	for (size_t i = 0;i<m_triggerCount;i++) {
-		char * triggerToken = trim(strtok(nullptr, s));
+		char * triggerToken = readNextToken();
 		newTriggerState[triggerColumnIndeces[i]] = triggerToken[0] == '1';
 	}
 
 	for (size_t i = 0;i<m_vvtCount;i++) {
-		char *vvtToken = trim(strtok(nullptr, s));
+		char *vvtToken = readNextToken();
 		if (vvtToken == nullptr) {
 			criticalError("Null token in [%s]", buffer);
 		}
@@ -136,10 +143,12 @@ void CsvReader::processLine(EngineTestHelper *eth) {
 		currentVvtState[vvtIndex] = newVvtState[vvtIndex];
 
 	}
+	writeUnitTestLogLine();
 }
 
 void CsvReader::readLine(EngineTestHelper *eth) {
 	if (!haveMore())
 		return;
 	processLine(eth);
+	engine->periodicSlowCallback();
 }

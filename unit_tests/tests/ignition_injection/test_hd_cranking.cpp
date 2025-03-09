@@ -1,43 +1,72 @@
 // file test_hd_cranking.cpp
 
 #include "pch.h"
-#include "logicdata_csv_reader.h"
+#include "engine_csv_reader.h"
 
-TEST(harley, cranking) {
-	CsvReader reader(1, /* vvtCount */ 1);
-	reader.open("tests/ignition_injection/resources/hd-req-sync_3.csv");
+class HdCranking {
+public:
+	HdCranking(const char *fileName) :
+			reader(1, /* vvtCount */1), eth(engine_type_e::HARLEY) {
+		engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
+		eth.applyTriggerWaveform();
+		reader.open(fileName);
+	}
 
-	EngineTestHelper eth(engine_type_e::HARLEY);
+	EngineCsvReader reader;
+	EngineTestHelper eth;
+};
 
-  bool gotRpm = false;
-  bool gotSync = false;
-  bool prevSync = false;
+static void runTest(const char *fileName) {
+	HdCranking test(fileName);
+
+	EngineCsvReader &reader = test.reader;
 
 	while (reader.haveMore()) {
-		reader.processLine(&eth);
+		reader.processLine(&test.eth);
+	}
+}
 
-		engine->rpmCalculator.onSlowCallback();
+TEST(harley, hdCrankingWithCam1) {
+	runTest("tests/ignition_injection/resources/hd-req-sync_1.csv");
+}
 
-    // whole pattern is a copy-paste from test_real_4b11.cpp, is better API possible?
-    auto rpm = Sensor::getOrZero(SensorType::Rpm);
-		if (!gotRpm && rpm) {
-			gotRpm = true;
+TEST(harley, hdCrankingWithCam3) {
+	HdCranking test("tests/ignition_injection/resources/hd-req-sync_3.csv");
 
-			// We should get first RPM on exactly the first sync point - this means the instant RPM pre-sync event copy all worked OK
-			EXPECT_EQ(reader.lineIndex(), 56);
-			EXPECT_NEAR(rpm, 87, 1);
+	EngineCsvReader &reader = test.reader;
+
+	while (reader.haveMore()) {
+		reader.processLine(&test.eth);
+
+		reader.assertFirstRpm(184, 60);
+		auto rpm = Sensor::getOrZero(SensorType::Rpm);
+
+		if (!reader.gotSync && engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
+			EXPECT_EQ(reader.lineIndex(), 269);
+			reader.gotSync = true;
 		}
 
-		if (!gotSync && engine->triggerCentral.triggerState.hasSynchronizedPhase()) {
-		  EXPECT_EQ(reader.lineIndex(), 83);
-		  gotSync = true;
-		}
-
-		if (gotSync) {
-		// we have loss of sync, interesting!
+		if (reader.gotSync) {
+			// we have loss of sync, interesting!
 //		  EXPECT_TRUE(engine->triggerCentral.triggerState.hasSynchronizedPhase()) << "Loss " << reader.lineIndex();
 		}
 	}
 
-	ASSERT_EQ(6, engine->triggerCentral.triggerState.camResyncCounter); // interesting!
+	ASSERT_EQ(2, engine->triggerCentral.triggerState.camResyncCounter); // interesting!
+}
+
+TEST(harley, hdCrankingWithCam4) {
+	runTest("tests/ignition_injection/resources/hd-req-sync_4.csv");
+}
+
+TEST(harley, hdCrankingWithCamAnother) {
+	runTest("tests/ignition_injection/resources/hd-req-sync-another-one_1.csv");
+}
+
+TEST(harley, hdCrankingWithCamAnother2) {
+	runTest("tests/ignition_injection/resources/hd-req-sync-another-one_2.csv");
+}
+
+TEST(harley, hdCrankingWithCamAnother3) {
+	runTest("tests/ignition_injection/resources/hd-req-sync-another-one_3.csv");
 }

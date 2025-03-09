@@ -14,7 +14,11 @@
 #include "advance_map.h"
 #include "tooth_logger.h"
 #include "logicdata.h"
+#include "unit_test_logger.h"
 #include "hardware.h"
+// https://stackoverflow.com/questions/23427804/cant-find-mkdir-function-in-dirent-h-for-windows
+#include <sys/types.h>
+#include <sys/stat.h>
 
 bool unitTestBusyWaitHack;
 
@@ -23,7 +27,6 @@ bool unitTestBusyWaitHack;
 extern WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
-extern WarningCodeState unitTestWarningCodeState;
 extern engine_configuration_s & activeConfiguration;
 extern PinRepository pinRepository;
 extern bool printTriggerDebug;
@@ -66,12 +69,14 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, const std::unordere
 }
 
 warningBuffer_t *EngineTestHelper::recentWarnings() {
-	return &unitTestWarningCodeState.recentWarnings;
+	return getRecentWarnings();
 }
 
 int EngineTestHelper::getWarningCounter() {
-	return unitTestWarningCodeState.warningCounter;
+	return engine.engineState.warnings.warningCounter;
 }
+
+FILE *jsonTrace = nullptr;
 
 EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callback_t configurationCallback, const std::unordered_map<SensorType, float>& sensorValues) :
 	EngineTestHelperBase(&engine, &persistentConfig.engineConfiguration, &persistentConfig)
@@ -80,14 +85,39 @@ EngineTestHelper::EngineTestHelper(engine_type_e engineType, configuration_callb
 	memset(&pinRepository, 0, sizeof(pinRepository));
 
 
+	auto testInfo = ::testing::UnitTest::GetInstance()->current_test_info();
+extern bool hasInitGtest;
+	if (hasInitGtest) {
+	#if IS_WINDOWS_COMPILER
+     mkdir(TEST_RESULTS_DIR);
+  #else
+     mkdir(TEST_RESULTS_DIR, 0777);
+  #endif
+  createUnitTestLog();
+
+    	std::stringstream filePath;
+    	filePath << TEST_RESULTS_DIR << "/unittest_" << testInfo->test_case_name() << "_" << testInfo->name() << "_trace.json";
+    	// fun fact: ASAN says not to extract 'fileName' into a variable, we must be doing something a bit not right?
+    	jsonTrace = fopen(filePath.str().c_str(), "wb");
+    	if (jsonTrace == nullptr) {
+//    		criticalError("Error creating file [%s]", filePath.str().c_str());
+    		// TOOD handle config tests
+    		printf("Error creating file [%s]\n", filePath.str().c_str());
+    	} else {
+    		fprintf(jsonTrace, "{\"traceEvents\": [\n");
+    		fprintf(jsonTrace, "{\"name\":\"process_name\",\"ph\":\"M\",\"pid\":-16,\"tid\":0,\"args\":{\"name\":\"Main\"}}\n");
+    	}
+    } else {
+	  // todo: document why this branch even exists
+		jsonTrace = nullptr;
+	}
+
 	Sensor::setMockValue(SensorType::Clt, 70);
 	Sensor::setMockValue(SensorType::Iat, 30);
 
 	for (const auto& [s, v] : sensorValues) {
 		Sensor::setMockValue(s, v);
 	}
-
-	unitTestWarningCodeState.clear();
 
 	memset(&activeConfiguration, 0, sizeof(activeConfiguration));
 
@@ -172,14 +202,21 @@ EngineTestHelper::~EngineTestHelper() {
 	auto testInfo = ::testing::UnitTest::GetInstance()->current_test_info();
 	if (hasInitGtest) {
     	std::stringstream filePath;
-    	filePath << "unittest_" << testInfo->test_case_name() << "_" << testInfo->name() << ".logicdata";
+    	filePath << TEST_RESULTS_DIR << "/unittest_" << testInfo->test_case_name() << "_" << testInfo->name() << ".logicdata";
 	    writeEventsLogicData(filePath.str().c_str());
 	}
 	if (hasInitGtest) {
     	std::stringstream filePath;
-    	filePath << "unittest_" << testInfo->test_case_name() << "_" << testInfo->name() << ".events.txt";
+    	filePath << TEST_RESULTS_DIR << "/unittest_" << testInfo->test_case_name() << "_" << testInfo->name() << ".events.txt";
 	    writeEvents2(filePath.str().c_str());
 	}
+
+  if (jsonTrace != nullptr) {
+   	fprintf(jsonTrace, "]}\n");
+    fclose(jsonTrace);
+    jsonTrace = nullptr;
+  }
+  closeUnitTestLog();
 
 	// Cleanup
 	enginePins.reset();
@@ -347,9 +384,9 @@ scheduling_s * EngineTestHelper::assertEvent5(const char *msg, int index, void *
 	TestExecutor *executor = &engine.scheduler;
 	EXPECT_TRUE(executor->size() > index) << msg << " valid index";
 	scheduling_s *event = executor->getForUnitTest(index);
-	assertEqualsM4(msg, " callback up/down", (void*)event->action.getCallback() == (void*) callback, 1);
+	EXPECT_NEAR_M4((void*)event->action.getCallback() == (void*) callback, 1) << msg << " callback up/down";
 	efitimeus_t start = getTimeNowUs();
-	assertEqualsM2(msg, expectedTimestamp, event->getMomentUs() - start, /*3us precision to address rounding etc*/3);
+	EXPECT_NEAR(expectedTimestamp, event->getMomentUs() - start,/*3us precision to address rounding etc*/3) << msg;
 	return event;
 }
 
@@ -364,10 +401,10 @@ const AngleBasedEvent * EngineTestHelper::assertTriggerEvent(const char *msg,
 	auto event = engine.module<TriggerScheduler>()->getElementAtIndexForUnitTest(index);
 
 	if (callback) {
-		assertEqualsM4(msg, " callback up/down", (void*)event->action.getCallback() == (void*) callback, 1);
+		EXPECT_EQ(reinterpret_cast<void*>(event->action.getCallback()), reinterpret_cast<void*>(callback)) << " callback up/down";
 	}
 
-	assertEqualsM4(msg, " angle", enginePhase, event->getAngle());
+	EXPECT_NEAR(enginePhase, event->getAngle(), EPS4D) << " angle";
 	return event;
 }
 
@@ -381,13 +418,13 @@ void EngineTestHelper::assertEvent(const char *msg, int index, void *callback, e
 
 	InjectionEvent *actualEvent = (InjectionEvent *)event->action.getArgument();
 
-	assertEqualsLM(msg, (uintptr_t)expectedEvent->outputs[0], (uintptr_t)actualEvent->outputs[0]);
+	ASSERT_EQ(expectedEvent->outputs[0], actualEvent->outputs[0]) << msg;
 // but this would not work	assertEqualsLM(msg, expectedPair, (long)eventPair);
 }
 
 
 void EngineTestHelper::applyTriggerWaveform() {
-	engine.updateTriggerWaveform();
+	engine.updateTriggerConfiguration();
 
 	incrementGlobalConfigurationVersion("helper");
 }
@@ -430,4 +467,8 @@ void setupSimpleTestEngineWithMafAndTT_ONE_trigger(EngineTestHelper *eth, inject
 void setVerboseTrigger(bool isEnabled) {
 	printTriggerDebug = isEnabled;
 	printTriggerTrace = isEnabled;
+}
+
+warningBuffer_t * getRecentWarnings() {
+  return &engine->engineState.warnings.recentWarnings;
 }

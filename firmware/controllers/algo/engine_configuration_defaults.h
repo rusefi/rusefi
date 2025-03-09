@@ -78,4 +78,6 @@ namespace engine_configuration_defaults {
 
     constexpr float FUEL_LEVEL_AVERAGING_ALPHA = 0.001f;
     constexpr float FUEL_LEVEL_UPDATE_PERIOD_SEC = 0.1f;
+    constexpr float FUEL_LEVEL_LOW_THRESHOLD_VOLTAGE = 0.25f;
+    constexpr float FUEL_LEVEL_HIGH_THRESHOLD_VOLTAGE = 4.5f;
 }

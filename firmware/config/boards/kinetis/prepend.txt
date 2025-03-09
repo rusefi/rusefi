@@ -28,6 +28,8 @@
 #define TABLE_2_RPM_SIZE 2
 #define TABLE_2_LOAD_SIZE 2
 
+#define VE_RPM_COUNT 2
+#define VE_LOAD_COUNT 2
 #define FUEL_RPM_COUNT 2
 #define FUEL_LOAD_COUNT 2
 

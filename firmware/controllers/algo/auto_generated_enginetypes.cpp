@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Wed Oct 09 23:14:35 UTC 2024
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sun Jan 12 13:29:17 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -108,6 +108,8 @@ case DBG_29:
   return "DBG_29";
 case DBG_32:
   return "DBG_32";
+case DBG_33:
+  return "DBG_33";
 case DBG_34:
   return "DBG_34";
 case DBG_35:
@@ -134,8 +136,6 @@ case DBG_9:
   return "DBG_9";
 case DBG_COMPOSITE_LOG:
   return "DBG_COMPOSITE_LOG";
-case DBG_DWELL_METRIC:
-  return "DBG_DWELL_METRIC";
 case DBG_DYNO_VIEW:
   return "DBG_DYNO_VIEW";
 case DBG_ELECTRONIC_THROTTLE_PID:
@@ -394,6 +394,14 @@ case TS_RESET_MC33810:
   return "TS_RESET_MC33810";
 case TS_RESET_TLE8888:
   return "TS_RESET_TLE8888";
+case TS_SD_FORMAT:
+  return "TS_SD_FORMAT";
+case TS_SD_MOUNT_ECU:
+  return "TS_SD_MOUNT_ECU";
+case TS_SD_MOUNT_PC:
+  return "TS_SD_MOUNT_PC";
+case TS_SD_UNMOUNT:
+  return "TS_SD_UNMOUNT";
 case TS_TRIGGER_STIMULATOR_DISABLE:
   return "TS_TRIGGER_STIMULATOR_DISABLE";
 case TS_TRIGGER_STIMULATOR_ENABLE:

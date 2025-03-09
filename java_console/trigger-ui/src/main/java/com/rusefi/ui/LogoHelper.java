@@ -10,7 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class LogoHelper {
-    public static final String LINK_TEXT = "rusEFI (c) 2012-2024";
+    public static final String LINK_TEXT = "rusEFI (c) 2012-2025";
     public static final String URI = "http://rusefi.com/?java_console";
 
     public static JLabel createLogoLabel() {
@@ -26,7 +26,7 @@ public class LogoHelper {
 
     @Nullable
     public static ImageIcon getBundleSpecificIcon() {
-        String bundle = BundleUtil.readBundleFullNameNotNull();
+        String bundle = BundleUtil.readBundleFullNameNotNull().getTarget();
         String logoName;
         // these should be about 213px wide
         if (bundle.contains("proteus")) {

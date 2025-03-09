@@ -24,3 +24,5 @@ void setNeedToWriteConfiguration();
  */
 bool getNeedToWriteConfiguration();
 void writeToFlashIfPending();
+
+void settingsLtftRequestWriteToFlash();

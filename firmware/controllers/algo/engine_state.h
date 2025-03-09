@@ -16,7 +16,6 @@ class EngineState : public engine_state_s {
 public:
 	EngineState();
 	void periodicFastCallback();
-	void updateSlowSensors();
 	void updateTChargeK(float rpm, float tps);
 
 	void updateSparkSkip();

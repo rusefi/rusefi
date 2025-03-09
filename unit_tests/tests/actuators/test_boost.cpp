@@ -39,6 +39,10 @@ TEST(BoostControl, Setpoint) {
 	// Configure TPS, should get passthru of tps value
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 35.0f);
 	EXPECT_FLOAT_EQ(bc.getSetpoint().value_or(-1), 35.0f);
+
+	// Back in open loop mode, setpoint should be 0
+	engineConfiguration->boostType = OPEN_LOOP;
+	EXPECT_FLOAT_EQ(bc.getSetpoint().value_or(-1), 0);
 }
 
 TEST(BoostControl, ObservePlant) {
@@ -292,7 +296,7 @@ TEST(BoostControl, TestClosedLoop) {
 	Sensor::setMockValue(SensorType::Rpm, 0);
 	EXPECT_EQ(0, bc.getClosedLoop(150, 100).value_or(-1000));
 
-	// too low MAP, disable closed loop
+	// Stopped engine, disable closed loop
 	Sensor::setMockValue(SensorType::Rpm, 0);
 	EXPECT_EQ(0, bc.getClosedLoop(150, 50).value_or(-1000));
 
@@ -300,6 +304,8 @@ TEST(BoostControl, TestClosedLoop) {
 	Sensor::setMockValue(SensorType::Rpm, 1000);
 	// Actual is below target -> positive output
 	EXPECT_FLOAT_EQ(50, bc.getClosedLoop(150, 100).value_or(-1000));
+	// MAP below target -> returns 0, closed loop disabled
+	EXPECT_FLOAT_EQ(0, bc.getClosedLoop(150, 50).value_or(-1000));
 	// Actual is above target -> negative output
 	EXPECT_FLOAT_EQ(-25.0f, bc.getClosedLoop(150, 175).value_or(-1000));
 

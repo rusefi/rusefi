@@ -26,7 +26,7 @@ public class StateDictionaryGeneratorTest {
                 "  - name: fuel_computer\n" +
                 "    java: FuelComputer.java\n" +
                 "    folder: controllers/algo/fuel\n" +
-                "    constexpr: \"engine->fuelComputer\"\n" +
+                "    constexpr: [\"engine->fuelComputer\", \"x\"]\n" +
             "    output_name: [ \"wb1\", \"wb2\" ]\n" +
                 "    conditional_compilation: \"EFI_ENGINE_CONTROL\"\n";
 

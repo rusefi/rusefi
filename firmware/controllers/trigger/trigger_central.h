@@ -59,7 +59,7 @@ public:
 	int getHwEventCounter(int index) const;
 	void resetCounters();
 	void validateCamVvtCounters();
-	void updateWaveform();
+	void applyShapesConfiguration();
 
   angle_t findNextTriggerToothAngle(int nextToothIndex);
 

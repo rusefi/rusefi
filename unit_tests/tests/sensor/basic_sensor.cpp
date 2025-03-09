@@ -56,6 +56,19 @@ TEST_F(SensorBasic, DoubleRegister) {
 	EXPECT_NE(shouldBeDut, &dut2);
 }
 
+TEST_F(SensorBasic, DoubleRegisterSameSensor) {
+	// Create a sensor, register it
+	MockSensor dut(SensorType::Tps1);
+	ASSERT_TRUE(dut.Register());
+
+	// And then do it again!
+	EXPECT_NO_FATAL_ERROR(dut.Register());
+
+	// Make sure that we get the first DUT back - not the second
+	auto shouldBeDut = Sensor::getSensorOfType(SensorType::Tps1);
+	EXPECT_EQ(shouldBeDut, &dut);
+}
+
 TEST_F(SensorBasic, SensorNotInitialized) {
 	auto result = Sensor::get(SensorType::Clt);
 

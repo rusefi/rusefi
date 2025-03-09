@@ -7,9 +7,9 @@
  * @author Andrey Belomutskiy, (c) 2012-2020
  */
 
-#include "rusefi_enums.h"
-
 #pragma once
+
+#include "rusefi_enums.h"
 
 /**
  * thank you https://www.ingenieriaymecanicaautomotriz.com/firing-order-its-purpose-and-order-in-different-numbers-of-cylinders/
@@ -49,7 +49,7 @@ typedef enum __attribute__ ((__packed__)) {
 
 	// 8 cylinder
 	FO_1_8_4_3_6_5_7_2 = 5, // SBC, Dodge
-	FO_1_8_7_2_6_5_4_3 = 11,
+	FO_1_8_7_2_6_5_4_3 = 11, // GM Gen. 5 LT1
 	FO_1_5_4_2_6_3_7_8 = 12, // Ford Mustang
 	FO_1_2_7_8_4_5_6_3 = 19,
 	FO_1_3_7_2_6_5_4_8 = 20, // Ford 5.0 HO and 351W
@@ -83,3 +83,14 @@ typedef enum __attribute__ ((__packed__)) {
 	// next value to use: 35
 
 } firing_order_e;
+
+#if EFI_HIP_9011_LOGIC
+size_t getNextFiringCylinderId(size_t prevCylinderId);
+#endif // EFI_HIP_9011_LOGIC
+
+/**
+ * @param cylinderIndex Queried position in the firing order. 0 means the first cylinder to fire, 1 means second, etc. Maximum cylinderCount - 1.
+ * @return The cylinder number in the requested position, from 0 to cylindersCount - 1.
+ *         For example, getCylinderNumberAtIndex(2) means the 3rd cylinder to fire, and on a 1342 4-cyl will return 3, indicating cylinder 4.
+ */
+size_t getCylinderNumberAtIndex(size_t cylinderIndex);

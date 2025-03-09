@@ -33,6 +33,8 @@ TEST(OddFireRunningMode, hd) {
 		.WillRepeatedly(Return(AirmassResult{0.1008f, 50.0f}));
 
 	engineConfiguration->camInputs[0] = Gpio::Unassigned;
+	engineConfiguration->overrideTriggerGaps = false;
+
 	eth.setTriggerType(trigger_type_e::TT_HALF_MOON);
 	// end of configuration
 
@@ -44,22 +46,27 @@ TEST(OddFireRunningMode, hd) {
 	ASSERT_EQ(IM_SIMULTANEOUS, getCurrentInjectionMode()); // still spinning up
 	ASSERT_NEAR(0.027, getInjectionMass(200), EPS3D);
 
+//	ASSERT_NEAR(-528, eth.timeToAngle(-176), EPS3D);
+//	ASSERT_NEAR(-250.778, eth.timeToAngle(-83.593), EPS3D);
 //	ASSERT_NEAR(-220.0, eth.timeToAngle(-73.333333), EPS3D);
-//	ASSERT_NEAR(140, eth.timeToAngle(46.66666), EPS3D);
+//	ASSERT_NEAR(?0.0, eth.timeToAngle(-70.66666), EPS3D);
 //	ASSERT_NEAR(-200.0, eth.timeToAngle(-66.66666), EPS3D);
-//	ASSERT_NEAR(160.0, eth.timeToAngle(53.333333), EPS3D);
 //	ASSERT_NEAR(-168.0, eth.timeToAngle(-56.0), EPS3D);
 //	ASSERT_NEAR(32, eth.timeToAngle(10.66666666), EPS3D);
+	//ASSERT_NEAR(?, eth.timeToAngle(40.3333), EPS3D);
+//	ASSERT_NEAR(140, eth.timeToAngle(46.66666), EPS3D);
+//	ASSERT_NEAR(141.222, eth.timeToAngle(47.074), EPS3D);
+//	ASSERT_NEAR(160.0, eth.timeToAngle(53.333333), EPS3D);
 
-	angle_t expectedAngle3 = -180 + cylinderTwo - timing;
+	angle_t expectedAngle3 = -180 + cylinderOne - timing;
 
 	ASSERT_EQ( 8,  engine->scheduler.size());
 	eth.assertEvent5("spark down#3", 3, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(expectedAngle3));
 
-	angle_t expectedAngle7 = 180 + cylinderOne - timing;
-	eth.assertEvent5("spark down#7", 7, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(expectedAngle7));
+	angle_t expectedAngle5 = -180 + cylinderTwo - timing;
+	eth.assertEvent5("spark down#5", 5, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(expectedAngle5));
 
-	eth.assertRpm( 500, "spinning-RPM#1");
+	ASSERT_EQ(500, Sensor::getOrZero(SensorType::Rpm));
 
 	engine->scheduler.executeAll(getTimeNowUs() + MS2US(1000000));
 
@@ -68,10 +75,10 @@ TEST(OddFireRunningMode, hd) {
 	ASSERT_NEAR(0.0069257142022, getInjectionMass(200), EPS3D);
 
 	ASSERT_EQ( 8,  engine->scheduler.size());
-	eth.assertEvent5("fuel down2#1", 1, (void*)turnInjectionPinLow, eth.angleToTimeUs(180 + PORT_INJECTION_OFFSET + cylinderOne));
-	eth.assertEvent5("spark down2#3", 3, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(-180 + cylinderTwo - timing));
-	eth.assertEvent5("fuel down2#6", 6, (void*)turnInjectionPinLow, eth.angleToTimeUs(540 + PORT_INJECTION_OFFSET + cylinderTwo));
-	eth.assertEvent5("spark down2#7", 7, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(180 + cylinderOne - timing));
+	eth.assertEvent5("fuel down2#2", 2, (void*)turnInjectionPinLow, eth.angleToTimeUs(180 + PORT_INJECTION_OFFSET + cylinderOne));
+	eth.assertEvent5("spark down2#4", 4, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(-180 + cylinderOne - timing));
+	eth.assertEvent5("fuel down2#7", 7, (void*)turnInjectionPinLow, eth.angleToTimeUs(540 + PORT_INJECTION_OFFSET + cylinderTwo));
+	eth.assertEvent5("spark down2#0", 0, (void*)fireSparkAndPrepareNextSchedule, eth.angleToTimeUs(-540 + cylinderTwo - timing));
 
 	ASSERT_EQ(2, engine->getBailedOnDwellCount()) << "Please check if our dwell algorithm have really got better.";
 }

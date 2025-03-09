@@ -33,12 +33,15 @@ Release template (copy/paste this for new release):
  - GM SENT fuel pressure sensor #6997
  - ETB calibration automatically enables ETB if needed #7197
  - Fuel Level Sensor should have a RAW option #6979
+ - SD card bit data points #7227
+ - stm32 build-in watchdog for F7/H7 #1339
 
 ### Fixed
  - Critical error when using big values on Boost Control Open Loop with Y axis as MAP #7093
  - "Baro Correction" axis label
  - unused "Throttle Up switch" is removed
  - Lua: fix heap used accumulator calculation: Do not increase if allocation failed #6924
+ - Check Engine output hidden since the whole feature pretty much does not exist
 
 ### Breaking Changes
  - Lua: onCanRx parameter value to be use Lua-indexing #7110

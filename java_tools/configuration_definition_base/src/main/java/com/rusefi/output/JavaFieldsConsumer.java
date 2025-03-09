@@ -1,6 +1,5 @@
 package com.rusefi.output;
 
-import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelImpl;
 import com.rusefi.*;
 import com.rusefi.parse.TypesHelper;
@@ -17,11 +16,11 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
     private final StringBuilder content = new StringBuilder();
     protected final StringBuffer allFields = new StringBuffer();
     protected final ReaderState state;
-    private final int baseOffset;
+    private final int structureStartingTsPosition;
 
-    public JavaFieldsConsumer(ReaderState state, int baseOffset) {
+    public JavaFieldsConsumer(ReaderState state, int structureStartingTsPosition) {
         this.state = state;
-        this.baseOffset = baseOffset;
+        this.structureStartingTsPosition = structureStartingTsPosition;
     }
 
     public String getContent() {
@@ -80,8 +79,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                         writeJavaFieldName(nameWithPrefix, tsPosition);
                         content.append("FieldType.BIT, " + bitIndex + ")" + terminateField());
                     }
-                    tsPosition += configField.getSize(next);
-                    return tsPosition;
+                    return iterator.adjustSize(tsPosition);
                 }
 
                 if (TypesHelper.isFloat(configField.getTypeName())) {
@@ -116,9 +114,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
                     }
                 }
 
-                tsPosition += configField.getSize(next);
-
-                return tsPosition;
+                return iterator.adjustSize(tsPosition);
             }
         };
         fieldsStrategy.run(state, structure, 0);
@@ -129,7 +125,7 @@ public abstract class JavaFieldsConsumer implements ConfigurationConsumer {
     }
 
     private String terminateField() {
-        return ".setBaseOffset(" + baseOffset + ")" +
+        return ".setBaseOffset(" + structureStartingTsPosition + ")" +
                 ";" + EOL;
     }
 }

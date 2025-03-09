@@ -53,7 +53,7 @@ public class ConfigFieldParserTest {
                 "end_struct\n";
         ReaderStateImpl state = new ReaderStateImpl();
 
-        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
         state.readBufferedReader(test, tsProjectConsumer);
         assertEquals("afr_type = scalar, F32, 0, \"ms\", 1, 0, 0, 3000, 0, noMsqSave\n" +
                 "afr_typet = scalar, F32, 4, \"ms\", 1, 0, 0, 3000, 0\n" +
@@ -67,7 +67,7 @@ public class ConfigFieldParserTest {
                 "end_struct\n";
         ReaderStateImpl state = new ReaderStateImpl();
 
-        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
         state.readBufferedReader(test, tsProjectConsumer);
         assertEquals("afr_type = array, S32, 0, [1x3], \"ms\", 1, 0, 0, 3000, 0, noMsqSave\n" +
                 "; total TS size = 12\n", tsProjectConsumer.getContent());
@@ -84,7 +84,7 @@ public class ConfigFieldParserTest {
                 "end_struct\n";
             ReaderStateImpl state = new ReaderStateImpl();
 
-            TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
+            TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
             state.readBufferedReader(test, tsProjectConsumer);
         });
     }
@@ -96,7 +96,7 @@ public class ConfigFieldParserTest {
             "end_struct\n";
         ReaderStateImpl state = new ReaderStateImpl();
 
-        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
         state.readBufferedReader(test, tsProjectConsumer);
         assertEquals("afr_type = array, S32, 0, [1x3], {bitStringValue(fuelUnits, fuelAlgorithm) }, 1, 0, 0, 3000, 0, noMsqSave\n" +
             "; total TS size = 12\n", tsProjectConsumer.getContent());
@@ -129,7 +129,7 @@ public class ConfigFieldParserTest {
                 "end_struct\n";
         ReaderStateImpl state = new ReaderStateImpl();
 
-        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
         state.readBufferedReader(test, tsProjectConsumer);
         assertEquals("afr_type1 = bits, S08, 0, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
                 "afr_type2 = bits, S08, 1, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
@@ -147,7 +147,7 @@ public class ConfigFieldParserTest {
             "end_struct\n";
         ReaderStateImpl state = new ReaderStateImpl();
 
-        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
         state.readBufferedReader(test, tsProjectConsumer);
         assertEquals("afr_type1 = bits, S08, 0, [0:1], $ego_sensor_e_list\n" +
             "int = scalar, S16, 2, \"\", 1, 0, 0, 32000, 0\n" +
@@ -165,7 +165,7 @@ public class ConfigFieldParserTest {
                 "end_struct\n";
         ReaderStateImpl state = new ReaderStateImpl();
 
-        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
         state.readBufferedReader(test, tsProjectConsumer);
         assertEquals("afr_type1 = bits, S08, 0, [0:1], \"BPSX\"\n" +
                 "afr_type2 = bits, S08, 1, [0:1], \"BPSX\"\n" +
@@ -184,7 +184,7 @@ public class ConfigFieldParserTest {
                 "end_struct\n";
         ReaderStateImpl state = new ReaderStateImpl();
 
-        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
         state.readBufferedReader(test, tsProjectConsumer);
         assertEquals("int = scalar, S08, 0, \"\", 1, 0, 0, 100, 0\n" +
                 "afr_type1 = bits, S16, 2, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
@@ -202,7 +202,7 @@ public class ConfigFieldParserTest {
                 "end_struct\n";
         ReaderStateImpl state = new ReaderStateImpl();
 
-        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
         state.readBufferedReader(test, tsProjectConsumer);
         assertEquals("int2 = scalar, S08, 0, \"\", 1, 0, 0, 100, 0\n" +
                 "afr_type3 = bits, S32, 4, [0:1], \"BPSX\", \"Innovate\", \"14Point7\", \"INVALID\"\n" +
@@ -298,7 +298,7 @@ public class ConfigFieldParserTest {
                 "";
 
         ReaderStateImpl state = new ReaderStateImpl();
-        TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
+        TSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
 
         state.readBufferedReader(test, tsProjectConsumer);
 
@@ -368,7 +368,7 @@ public class ConfigFieldParserTest {
                 "\t * units: units\n" +
                 "\t * offset 3\n" +
                 "\t */\n" +
-                "\tuint8_t alignmentFill_at_3[1];\n" +
+                "\tuint8_t alignmentFill_at_3[1] = {};\n" +
                 "\t/**\n" +
                 "\t * PID dTime\n" +
                 "\t * units: ms\n" +
@@ -497,7 +497,7 @@ public class ConfigFieldParserTest {
             "\t * units: units\n" +
             "\t * offset 1\n" +
             "\t */\n" +
-            "\tuint8_t alignmentFill_at_1[1];\n" +
+            "\tuint8_t alignmentFill_at_1[1] = {};\n" +
             "\t/**\n" +
             "\t * offset 2\n" +
             "\t */\n" +
@@ -515,7 +515,7 @@ public class ConfigFieldParserTest {
             "\t * units: units\n" +
             "\t * offset 9\n" +
             "\t */\n" +
-            "\tuint8_t alignmentFill_at_9[3];\n" +
+            "\tuint8_t alignmentFill_at_9[3] = {};\n" +
             "\t/**\n" +
             "\toffset 12 bit 0 */\n" +
             "\tbool periodMs : 1 {};\n" +
@@ -636,7 +636,7 @@ public class ConfigFieldParserTest {
             "\t * units: ratio\n" +
             "\t * offset 0\n" +
             "\t */\n" +
-            "\tscaled_channel<int, 100, 1> field[ERROR_BUFFER_SIZE];\n" +
+            "\tscaled_channel<int, 100, 1> field[ERROR_BUFFER_SIZE] = {};\n" +
             "};\n" +
             "static_assert(sizeof(pid_s) == 4);\n" +
             "\n", consumer.getContent());
@@ -676,7 +676,7 @@ public class ConfigFieldParserTest {
                 "\t * units: units\n" +
                 "\t * offset 1\n" +
                 "\t */\n" +
-                "\tuint8_t alignmentFill_at_1[3];\n" +
+                "\tuint8_t alignmentFill_at_1[3] = {};\n" +
                 "\t/**\n" +
                 "\t * offset 4\n" +
                 "\t */\n" +
@@ -713,7 +713,7 @@ public class ConfigFieldParserTest {
                 "\t * units: units\n" +
                 "\t * offset 2\n" +
                 "\t */\n" +
-                "\tuint8_t alignmentFill_at_2[2];\n" +
+                "\tuint8_t alignmentFill_at_2[2] = {};\n" +
                 "};\n" +
                 "static_assert(sizeof(pid_s) == 4);\n" +
                 "\n",
@@ -795,7 +795,7 @@ public class ConfigFieldParserTest {
         "end_struct\n";
         ReaderStateImpl state = new ReaderStateImpl();
 
-        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer("", state);
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
         state.readBufferedReader(test, tsProjectConsumer);
         assertEquals("pid_afr_type = scalar, F32, 0, \"ms\", 1, 0, 0, 3000, 0\n" +
                 "pid_afr_typet = scalar, F32, 4, \"\", 1, 0, 0, 100, 0\n" +

@@ -273,6 +273,7 @@
 #ifndef EFI_HIP_9011
 // disabling for now - DMA conflict with SPI1
 #define EFI_HIP_9011 FALSE
+#define EFI_HIP_9011_LOGIC				FALSE
 #endif
 
 #if !defined(EFI_ONBOARD_MEMS)
@@ -312,7 +313,7 @@
  * Control the main power relay based on measured ignition voltage (Vbatt)
  */
 #ifndef EFI_MAIN_RELAY_CONTROL
-#define EFI_MAIN_RELAY_CONTROL FALSE
+#define EFI_MAIN_RELAY_CONTROL TRUE
 #endif
 
 #ifndef EFI_VEHICLE_SPEED
@@ -384,6 +385,11 @@
 #define EFI_LUA TRUE
 #endif
 
+#ifndef FULL_SD_LOGS
+// reduce RAM usage? todo: optimize RAM consumption so that all builds have full logs?
+#define FULL_SD_LOGS FALSE
+#endif
+
 #ifndef EFI_LUA_LOOKUP
 #define EFI_LUA_LOOKUP TRUE
 #endif
@@ -421,7 +427,7 @@
  * Do we need Malfunction Indicator blinking logic?
  */
 #ifndef EFI_MALFUNCTION_INDICATOR
-#define EFI_MALFUNCTION_INDICATOR TRUE
+#define EFI_MALFUNCTION_INDICATOR FALSE
 #endif
 
 #ifndef CONSOLE_MAX_ACTIONS

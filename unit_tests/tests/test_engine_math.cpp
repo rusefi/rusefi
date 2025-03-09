@@ -9,14 +9,13 @@
 
 #include "speed_density.h"
 #include "maf.h"
-#include "advance_map.h"
 
 TEST(misc, testIgnitionPlanning) {
 	printf("*************************************************** testIgnitionPlanning\r\n");
 	EngineTestHelper eth(engine_type_e::FORD_ESCORT_GT);
 
 	engine->periodicFastCallback();
-	assertEqualsM("testIgnitionPlanning_AFR", 13.5, engine->fuelComputer.targetAFR);
+	ASSERT_NEAR(13.5, engine->fuelComputer.targetAFR, EPS4D) << "testIgnitionPlanning_AFR";
 
 	ASSERT_EQ(IM_BATCH, engineConfiguration->injectionMode);
 }
@@ -26,6 +25,7 @@ TEST(misc, testEngineMath) {
 
 	// todo: let's see if we can make 'engine' unneeded in this test?
 	EngineTestHelper eth(engine_type_e::FORD_ESCORT_GT);
+	setTable(config->veTable, 80);
 
     setCamOperationMode();
 	engineConfiguration->fuelAlgorithm = LM_SPEED_DENSITY;
@@ -64,7 +64,7 @@ TEST(misc, testEngineMath) {
 	// calc. airFlow using airMass, and find tCharge
 	engine->periodicFastCallback();
 	ASSERT_NEAR(59.12f, engine->engineState.sd.tCharge, EPS4D);
-	ASSERT_NEAR(56.9758f/*kg/h*/, engine->engineState.airflowEstimate, EPS4D);
+	ASSERT_NEAR(46.2747f/*kg/h*/, engine->engineState.airflowEstimate, EPS4D);
 }
 
 typedef enum {
@@ -134,10 +134,10 @@ TEST(misc, testIgnitionMapGenerator) {
 	ASSERT_FLOAT_EQ(22.0, getTopAdvanceForBore(CS_SWIRL_TUMBLE, 89, 9, 101.6));
     ASSERT_FLOAT_EQ(32.2, getTopAdvanceForBore(CS_SWIRL_TUMBLE, 89, 9, 145));
 
-    assertEqualsM2("100@6000", 36.0, getInitialAdvance(6000, 100, 36), 0.1);
-    assertEqualsM2("100@600", 9.9, getInitialAdvance(600, 100, 36), 0.2);
+	ASSERT_NEAR(36.0, getInitialAdvance(6000, 100, 36), 0.1);
+	ASSERT_NEAR(9.9, getInitialAdvance(600, 100, 36), 0.2);
 
-    assertEqualsM2("2400", 34.2, getInitialAdvance(2400, 40, 36), 0.1);
-    assertEqualsM2("4400", 41.9, getInitialAdvance(4400, 40, 36), 0.1);
-    assertEqualsM2("20@800", 14.2, getInitialAdvance(800, 20, 36), 0.2);
+	ASSERT_NEAR(34.2, getInitialAdvance(2400, 40, 36), 0.1);
+	ASSERT_NEAR(41.9, getInitialAdvance(4400, 40, 36), 0.2);
+	ASSERT_NEAR(14.2, getInitialAdvance(800, 20, 36), 0.2);
 }

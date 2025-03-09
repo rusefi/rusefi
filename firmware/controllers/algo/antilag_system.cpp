@@ -9,9 +9,7 @@
 
 #if EFI_ANTILAG_SYSTEM
 #include "antilag_system.h"
-#include "advance_map.h"
 #include "engine_state.h"
-#include "advance_map.h"
 #include "fuel_math.h"
 
 bool AntilagSystemBase::isInsideALSSwitchCondition() {
