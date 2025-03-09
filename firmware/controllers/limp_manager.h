@@ -152,8 +152,9 @@ private:
 	// Tracks how long injector duty has been over the sustained limit
 	Timer m_injectorDutySustainedTimer;
 
-	// Tracks how long oil pressure has been below threshold
+	// Tracks how long oil pressure has been out of thresholds
 	Timer m_lowOilPressureTimer;
+	Timer m_highOilPressureTimer;
 };
 
 #if EFI_ENGINE_CONTROL

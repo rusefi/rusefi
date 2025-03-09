@@ -156,6 +156,18 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 				allowFuel.clear(ClearReason::OilPressure);
 			}
 		}
+
+		// check the maximum oil pressure
+		float maxOilPressure = engineConfiguration->maxOilPressure;
+		if (maxOilPressure > 0 && hasOilpSensor) {
+			if (oilp.Value < maxOilPressure) {
+				m_highOilPressureTimer.reset(nowNt);
+			}
+			if (m_highOilPressureTimer.hasElapsedSec(engineConfiguration->maxOilPressureTimeout)) {
+				allowFuel.clear(ClearReason::OilPressure);
+			}
+		}
+
 	} else {
 		// reset state in case of stalled engine
 		m_hadOilPressureAfterStart = false;

@@ -353,3 +353,39 @@ TEST(limp, oilPressureRunning) {
 	dut.updateState(1000, getTimeNowNt());
 	ASSERT_TRUE(dut.allowInjection());
 }
+
+TEST(limp, oilPressureMaxLimit) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->maxOilPressure = 800; // kPa
+	engineConfiguration->maxOilPressureTimeout = 1.0f; // sec
+
+	LimpManager dut;
+
+	// Oil pressure starts OK
+	Sensor::setMockValue(SensorType::OilPressure, 110);
+
+	// Start the engine
+	engine->rpmCalculator.setRpmValue(1000);
+
+	// update & check: injection should be allowed
+	dut.updateState(1000, getTimeNowNt());
+	EXPECT_TRUE(dut.allowInjection());
+
+	// Now oil pressure goes above threshold
+	Sensor::setMockValue(SensorType::OilPressure, 850);
+
+	// 0.9 second later, injection should continue as timeout isn't hit yet
+	advanceTimeUs(0.9e6);
+	dut.updateState(1000, getTimeNowNt());
+	ASSERT_TRUE(dut.allowInjection());
+
+	// 0.2 second later (1.1s since non-valid pressure), injection should cut
+	advanceTimeUs(1.0e6);
+	dut.updateState(1000, getTimeNowNt());
+	ASSERT_FALSE(dut.allowInjection());
+
+	// Oil pressure is restored, and fuel should be restored too
+	Sensor::setMockValue(SensorType::OilPressure, 110);
+	dut.updateState(1000, getTimeNowNt());
+	ASSERT_TRUE(dut.allowInjection());
+}
