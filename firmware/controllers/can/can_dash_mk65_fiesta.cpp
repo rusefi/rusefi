@@ -29,7 +29,7 @@ void canDashboardFiestaRocam(CanCycle cycle) {
 
 	if (cycle.isInterval(CI::_50ms)) {
 		{
-			static uint32_t odo_var = 0;
+			static uint32_t odoVar = 0;
 
 			CanTxMessage msg(CanCategory::NBC, FIESTA_ODO_ECT, 8);
 
