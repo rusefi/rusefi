@@ -13,6 +13,7 @@
 #include "can_dash.h"
 #include "can_dash_ms.h"
 #include "can_dash_nissan.h"
+#include "can_dash_mk65_fiesta.h"
 #include "can_msg_tx.h"
 #include "can_bmw.h"
 #include "can_vag.h"
@@ -1207,6 +1208,9 @@ void updateDash(CanCycle cycle) {
 		break;
 	case CAN_BUS_MS_SIMPLE_BROADCAST:
 		canDashboardTS(cycle);
+		break;
+	case CAN_BUS_FIESTA_MK65:
+		canDashboardFiestaRocam(cycle);
 		break;
 	default:
 		criticalError("Nothing for canNbcType %s", getCan_nbc_e(engineConfiguration->canNbcType));

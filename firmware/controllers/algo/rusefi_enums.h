@@ -565,6 +565,7 @@ typedef enum __attribute__ ((__packed__)) {
 	CAN_BUS_HONDA_K = 11,
 	CAN_AIM_DASH = 12,
 	CAN_BUS_MS_SIMPLE_BROADCAST = 13,
+	CAN_BUS_FIESTA_MK65 = 14,
 
 } can_nbc_e;
 

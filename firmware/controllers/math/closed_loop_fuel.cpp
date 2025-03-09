@@ -87,11 +87,6 @@ void LongTermFuelTrim::updateLtft(float load, float rpm) {
 
 }
 
-static SensorType getSensorForBankIndex(size_t index) {
-	switch (index) {
-		case 0: return SensorType::Lambda1;
-		case 1: return SensorType::Lambda2;
-		default: return SensorType::Invalid;
 namespace {
 	SensorType getSensorForBankIndex(size_t index) {
 		switch (index) {
