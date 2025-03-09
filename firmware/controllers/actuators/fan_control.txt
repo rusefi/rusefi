@@ -4,7 +4,7 @@ struct_no_prefix fan_control_s
 	bit disabledWhileEngineStopped;Engine stopped
 	bit brokenClt;Broken CLT
 	bit enabledForAc;Enable for AC
-	bit m_enabledForAc;Enable for AC
+	bit m_enabledForAc;Enable for AC Memory
 	bit hot;Above hot threshold
 	bit cold;Below cold threshold
 	bit disabledBySpeed
