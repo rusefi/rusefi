@@ -636,9 +636,6 @@ bool validateConfigOnStartUpOrBurn() {
 	ensureArrayIsAscending("Cranking TPS", config->crankingTpsBins);
 
 	// Idle tables
-	ensureArrayIsAscending("Idle target RPM", config->cltIdleRpmBins);
-	ensureArrayIsAscending("Idle warmup mult", config->cltIdleCorrBins);
-	ensureArrayIsAscendingOrDefault("Idle coasting RPM", config->iacCoastingRpmBins);
 	ensureArrayIsAscendingOrDefault("Idle VE RPM", config->idleVeRpmBins);
 	ensureArrayIsAscendingOrDefault("Idle VE Load", config->idleVeLoadBins);
 	ensureArrayIsAscendingOrDefault("Idle timing", config->idleAdvanceBins);

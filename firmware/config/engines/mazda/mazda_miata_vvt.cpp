@@ -333,9 +333,7 @@ static void setCommonMazdaNB() {
 
 	engineConfiguration->wwaeTau = 0.1;
 
-	miataNA_setCltIdleCorrBins();
 	miataNA_setCltIdleRpmBins();
-	miataNA_setIacCoastingBins();
 
 	// All factory miata setups end up with 1.12 speed sensor turns
 	// per wheel turn, by matching the speedo sensor gear to the

@@ -119,21 +119,6 @@ static void nb2cannedcltRevLimitRpmBins() {
 	copyArray(config->cltRevLimitRpmBins, hardCodedcltRevLimitRpmBins);
 }
 
-static void nb2cannedcltIdleCorrBins() {
-	static const float hardCodedcltIdleCorrBins[16] = {-40.0, -30.0, -20.0, -10.0, 0.0, 9.439941, 19.120117, 30.810059, 42.509766, 54.529785, 64.21973, 71.90039, 80.0, 90.0, 100.0, 110.0};
-	copyArray(config->cltIdleCorrBins, hardCodedcltIdleCorrBins);
-}
-
-static void nb2cannedcltIdleCorr() {
-	static const float hardCodedcltIdleCorr[16] = {1.300003, 1.25, 1.2200012, 1.1900024, 1.1399994, 1.1, 1.08, 1.08, 1.08, 1.08, 1.08, 1.08, 1.08, 1.08, 1.08, 1.08};
-	copyArray(config->cltIdleCorr, hardCodedcltIdleCorr);
-}
-
-static void nb2cannediacCoasting() {
-	static const float hardCodediacCoasting[16] = {40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0, 40.0};
-	copyArray(config->iacCoasting, hardCodediacCoasting);
-}
-
 static void nb2cannedcltCrankingCorr() {
 	static const float hardCodedcltCrankingCorr[8] = {1.4000015, 1.35, 1.28, 1.25, 1.2, 1.15, 1.1, 1.1};
 	copyArray(config->cltCrankingCorr, hardCodedcltCrankingCorr);

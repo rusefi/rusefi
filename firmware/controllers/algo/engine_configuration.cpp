@@ -253,22 +253,7 @@ void setDefaultSdCardParameters() {
 
 #if EFI_ENGINE_CONTROL
 static void setDefaultWarmupIdleCorrection() {
-	initTemperatureCurve(CLT_MANUAL_IDLE_CORRECTION, 1.0);
 
-	float baseIdle = 30;
-
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION, -40, 1.5);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION, -30, 1.5);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION, -20, 40.0 / baseIdle);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION, -10, 40.0 / baseIdle);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,   0, 40.0 / baseIdle);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  10, 40.0 / baseIdle);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  20, 40.0 / baseIdle);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  30, 40.0 / baseIdle);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  40, 40.0 / baseIdle);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  50, 37.0 / baseIdle);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  60, 35.0 / baseIdle);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  70, 33.0 / baseIdle);
 }
 
 /**
@@ -522,13 +507,10 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->idle.solenoidFrequency = DEFAULT_SOLENOID_FREQUENCY;
 	// set idle_position 50
-	setLinearCurve(config->cltIdleCorr, 75.0, 50, 5);
 //	engineConfiguration->idleMode = IM_AUTO;
 	engineConfiguration->idleMode = IM_MANUAL;
 
 	engineConfiguration->useStepperIdle = false;
-
-	setLinearCurve(config->iacCoastingRpmBins, 0, 8000, 1);
 
 #if !EFI_UNIT_TEST
 	engineConfiguration->analogInputDividerCoefficient = 2;

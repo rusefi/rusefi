@@ -119,10 +119,7 @@ void miataNAcommonEngineSettings() {
 #endif
 
 
-
-	miataNA_setCltIdleCorrBins();
 	miataNA_setCltIdleRpmBins();
-	miataNA_setIacCoastingBins();
 	setMafDecodingBins();
 	miataNA_setIgnitionTable();
 

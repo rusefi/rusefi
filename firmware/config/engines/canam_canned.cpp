@@ -67,13 +67,6 @@ static void cannedpedalToTpsRpmBins() {
 	copyArray(config->pedalToTpsRpmBins, hardCodedpedalToTpsRpmBins);
 }
 
-static void cannedcltIdleCorr() {
-#if CLT_CURVE_SIZE == 16
-	static const float hardCodedcltIdleCorr[16] = {1.1, 1.1, 0.9333, 0.9333, 0.9333, 0.8333, 0.6333, 0.6333, 0.5, 0.5, 0.4667, 0.3, 0.3, 0.3, 0.3, 0.3};
-	copyArray(config->cltIdleCorr, hardCodedcltIdleCorr);
-#endif // CLT_CURVE_SIZE
-}
-
 static void cannedcltCrankingCorr() {
 	static const float hardCodedcltCrankingCorr[8] = {1.0, 1.0, 1.0, 0.8, 0.8, 0.8, 0.8, 0.8};
 	copyArray(config->cltCrankingCorr, hardCodedcltCrankingCorr);

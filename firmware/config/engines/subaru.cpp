@@ -88,9 +88,6 @@ void setSubaruEG33Defaults() {
 
 	engineConfiguration->mapMinBufferLength = 4;
 
-	/* idle configuration */
-	setArrayValues(config->cltIdleCorr, 30.0);
-
 	engineConfiguration->maxAcRpm = 3000;
 
 	/* Check this */

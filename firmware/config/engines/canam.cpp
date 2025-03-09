@@ -72,7 +72,6 @@ void setMaverickX3() {
 	cannedboostRpmBins();
 	cannedpedalToTpsRpmBins();
 	  cannedcltIdleRpm();
-		cannedcltIdleCorr();
   	cannedcltCrankingCorr();
 
 

@@ -330,13 +330,6 @@ TEST(idle_v2, openLoopCoastingTable) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	IdleController dut;
 
-	// enable & configure feature
-	engineConfiguration->useIacTableForCoasting = true;
-	for (size_t i = 0; i < CLT_CURVE_SIZE; i++) {
-		config->iacCoastingRpmBins[i] = 100 * i;
-		config->iacCoasting[i] = 5 * i;
-	}
-
 	EXPECT_FLOAT_EQ(40, dut.getOpenLoop(ICP::Coasting, 800, 0, 0, 2));
 	EXPECT_FLOAT_EQ(75, dut.getOpenLoop(ICP::Coasting, 1500, 0, 0, 2));
 }

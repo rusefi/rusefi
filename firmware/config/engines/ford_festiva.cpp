@@ -120,7 +120,6 @@ void setFordEscortGt() {
 	engineConfiguration->afr.hwChannel = EFI_ADC_2; // Frankenso analog #5 // PA2
 
 	// set_idle_position 10
-	setArrayValues(config->cltIdleCorr, 10.0);
 	engineConfiguration->crankingIACposition = 65;
 
 	setWholeIatCorrTimingTable(0);

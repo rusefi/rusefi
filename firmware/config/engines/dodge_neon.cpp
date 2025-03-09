@@ -166,7 +166,6 @@ void setDodgeNeonNGCEngineConfiguration() {
 	engineConfiguration->wwaeBeta = 0;
 
 	engineConfiguration->isSdCardEnabled = false;
-	setArrayValues(config->cltIdleCorr, 36.0);
 
 	// end of setDodgeNeonNGCEngineConfiguration
 }

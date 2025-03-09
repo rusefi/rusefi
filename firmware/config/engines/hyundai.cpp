@@ -255,8 +255,6 @@ static void commonGenesisCoupe() {
 #if HW_HELLEN_HYUNDAI
 	cannedprimeBins();
 	cannedprimeValues();
-	cannedcltIdleCorrBins();
-	cannedcltIdleCorr();
 	couplecannedignitionTable();
 	couplecannedveTable();
 #endif // HW_HELLEN_HYUNDAI
