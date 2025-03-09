@@ -96,7 +96,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 250306
+#define FLASH_DATA_VERSION 250310
 
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
@@ -536,6 +536,8 @@ uint8_t Fan1AcThresholdOn;Theshold to enable fan 1 after ac turned on; "sec", 1,
 uint8_t Fan1AcThresholdOff;Theshold to disable fan 1 after ac tuned off; "sec", 1, 0, 0, 100, 0
 uint8_t Fan2AcThresholdOn;Theshold to enable fan 2 after ac turned on; "sec", 1, 0, 0, 100, 0
 uint8_t Fan2AcThresholdOff;Theshold to disable fan 2 after ac tuned off; "sec", 1, 0, 0, 100, 0
+
+bit useIdleAdvanceWhileCoasting;Use idle ignition table while coasting;
 
 int16_t tpsMin;Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel\nset tps_min X;"ADC", 1, 0, 0, 1023, 0
 int16_t tpsMax;Full throttle.\nSee also tps1_1AdcChannel\nset tps_max X;"ADC", 1, 0, 0, 1023, 0
@@ -1930,9 +1932,9 @@ float[IAT_CURVE_SIZE] iatFuelCorr;;"ratio", 1, 0, 0, 5, 2
   int16_t[CRANKING_CYCLE_CLT_SIZE] crankingCycleFuelCltBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
 	float[CRANKING_CYCLE_CLT_SIZE x CRANKING_CURVE_SIZE] crankingCycleFuelCoef;;"mult", 1, 0, 0, 5, 2
 
-float[CLT_CURVE_SIZE] rpmIdleCorrBins;RPM-based idle position;"rpm", 50, 0, 0, 9000, 0
-float[CLT_CURVE_SIZE] cltIdleCorrBins;CLT-based idle position for simple manual idle controller;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
-float[CLT_CURVE_SIZE][CLT_CURVE_SIZE] cltIdleCorrTable;    CLT-based idle position for simple manual idle controller;"%", 1, 0, 0, 100, 2
+uint8_t[CLT_CURVE_SIZE] autoscale rpmIdleCorrBins;RPM-based idle position;"RPM", 50, 0, 0, 9000, 0
+uint16_t[CLT_CURVE_SIZE] cltIdleCorrBins;CLT-based idle position for simple manual idle controller;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
+uint16_t[CLT_CURVE_SIZE x CLT_CURVE_SIZE] autoscale cltIdleCorrTable;    CLT-based idle position for simple manual idle controller;"%", 0.1, 0, 0, 100, 1
 
 float[MAF_DECODING_COUNT] mafDecoding;Also known as MAF transfer function.\nkg/hour value.\nBy the way 2.081989116 kg/h = 1 ft3/m;"kg/hour", 1, 0, -500, 4000, 2
 float[MAF_DECODING_COUNT] mafDecodingBins;;"V", 1, 0, -5, 150, 2
