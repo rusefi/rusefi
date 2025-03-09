@@ -62,30 +62,6 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 
   advanceAngle += engine->ignitionState.tractionAdvanceDrop;
 
-  if(engineConfiguration->enableAdvanceSmoothing && engine->ignitionState.accelThresholdThrigger) {
-	if(engine->rpmCalculator.getRevolutionCounterSinceStart() - engine->ignitionState.accelDeltaCycleThriger > engineConfiguration->timeoutAdvanceSmoothing){
-		engine->ignitionState.accelThresholdThrigger = 0;
-	} else {
-		float maxDeltaIGN = 0;
-		if(engine->ignitionState.accelDeltaLOADPersist > 0) {
-			maxDeltaIGN = - (engineConfiguration->increaseAdvanceSmoothing * engine->ignitionState.accelDeltaLOADPersist / 100);
-		} else {
-			maxDeltaIGN = (engineConfiguration->decreaseAdvanceSmoothing * engine->ignitionState.accelDeltaLOADPersist / 100);
-		}
-
-		uint32_t cyclesToEndCorrection = (engineConfiguration->timeoutAdvanceSmoothing + engine->ignitionState.accelDeltaCycleThriger - engine->rpmCalculator.getRevolutionCounterSinceStart());
-		float ignitionCorrection = interpolateClamped(engineConfiguration->timeoutAdvanceSmoothing, maxDeltaIGN, 0, 0, cyclesToEndCorrection) * engineConfiguration->strenghtAdvanceSmoothing * 0.01f;
-
-		if(advanceAngle + ignitionCorrection > engineConfiguration->maxAdvanceSmoothing) {
-			advanceAngle = engineConfiguration->maxAdvanceSmoothing;
-		} else if (advanceAngle + ignitionCorrection < engineConfiguration->minAdvanceSmoothing) {
-			advanceAngle = engineConfiguration->minAdvanceSmoothing;
-		} else {
-			advanceAngle += ignitionCorrection;
-		}
-	}
-  }
-
 #if EFI_ANTILAG_SYSTEM
 	if (engine->antilagController.isAntilagCondition) {
 		float throttleIntent = Sensor::getOrZero(SensorType::DriverThrottleIntent);
@@ -317,18 +293,7 @@ void initIgnitionAdvanceControl() {
 	tcSparkSkipTable.initTable(engineConfiguration->tractionControlIgnitionSkip, engineConfiguration->tractionControlSlipBins, engineConfiguration->tractionControlSpeedBins);
 }
 
-void IgnitionState::onNewValue(float currentValue) {
-
-	if(abs(currentValue - oldLoadValue) > engineConfiguration->deltaLoadSmoothingThreshold) {
-		accelThresholdThrigger = 1;
-		accelDeltaLOADPersist = int(currentValue - oldLoadValue);
-		accelDeltaCycleThriger = engine->rpmCalculator.getRevolutionCounterSinceStart();
-	}
-	oldLoadValue = currentValue;
-
-}
-
-  angle_t IgnitionState::getTrailingSparkAngle(const float rpm, const float engineLoad){
+angle_t IgnitionState::getTrailingSparkAngle(const float rpm, const float engineLoad){
 	if (std::isnan(engineLoad)) {
 		// default value from: https://github.com/rusefi/rusefi/commit/86683afca22ed1a8af8fd5ac9231442e2124646e#diff-6e80cdd8c55add68105618ad9e8954170a47f59814201dadd2b888509d6b2e39R176
 		return 10;

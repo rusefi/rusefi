@@ -29,11 +29,17 @@ void canDashboardFiestaRocam(CanCycle cycle) {
 
 	if (cycle.isInterval(CI::_50ms)) {
 		{
+			msg[1] = ectVar + 40;
 
-
+			uint32_t odoVar = odoVar + 0.05 * speedVar / 3.6;
+			msg[2] = (odoVar * 5) % 255;
+			
+			msg[4] = 0x20;
+			msg[5] = 0x80;
+			msg[6] = 0x40;
+			msg[7] = 0x80;
 		}
 	}
-
 
 }
 
