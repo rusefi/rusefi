@@ -238,7 +238,7 @@ float LongTermFuelTrim::getLtft(float load, float rpm) {
 	}
 
 	if(!ltftTableHelperInit){
-		copyTable(ltftTableHelper, config->ltftTable);
+		copyTable(ltftTableHelper, config->ltftTable, 1);
 		ltftTableHelperInit = 1;
 	}
 
