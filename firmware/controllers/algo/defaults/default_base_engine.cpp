@@ -19,6 +19,19 @@ static void setDefaultAlternatorParameters() {
 }
 #endif // EFI_ALTERNATOR_CONTROL
 
+static const float hardCodedHpfpLobeProfileAnglesForThreeLobes[HpfpLobeProfile_SIZE] = {0.0, 7.5, 16.5, 24.0,
+32.0 , 40.0, 48.0, 56.0,
+64.0 , 72.0, 80.0, 88.0,
+96.0 , 103.5, 112.5, 120.0
+};
+
+void setHpfpLobeProfileAngle(int lobes) {
+  float multiplier = 3.0 / lobes;
+	for (size_t i = 0; i < HpfpLobeProfile_SIZE; i++) {
+    config->hpfpLobeProfileAngle[i] = multiplier * hardCodedHpfpLobeProfileAnglesForThreeLobes[i];
+	}
+}
+
 void setGDIFueling() {
 #ifdef HW_HELLEN_8CHAN
   engineConfiguration->externalRusEfiGdiModule = true;

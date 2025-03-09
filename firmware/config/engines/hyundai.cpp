@@ -79,6 +79,7 @@ void setHyundaiPb() {
 	engineConfiguration->vvtMode[1] = VVT_SINGLE_TOOTH;
 
     engineConfiguration->hpfpCamLobes = 4;
+    setHpfpLobeProfileAngle(engineConfiguration->hpfpCamLobes);
     engineConfiguration->rethrowHardFault = true;
 
    	engineConfiguration->highPressureFuel.v1 = 0.5; /* volts */;

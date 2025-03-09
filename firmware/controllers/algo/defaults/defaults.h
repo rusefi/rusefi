@@ -10,6 +10,7 @@ void setDefaultFuel();
 void setDefaultIgnition();
 void setDefaultCranking();
 void setGDIFueling();
+void setHpfpLobeProfileAngle(int lobes);
 void setGdiWallWetting();
 void setInline4();
 void setDynoDefaults();
@@ -18,6 +19,7 @@ void setupTLE9201IncludingStepper(Gpio controlPin, Gpio direction, Gpio disable,
 
 #define DEFAULT_CRANKING_DWELL_MS 6
 #define DEFAULT_CRANKING_ANGLE 6
+#define HpfpLobeProfile_SIZE 16
 
 	// most of rusEFI installations are still port injected, for GDI see 'setGDIFueling'
 	// -400 will close the injector just before TDC at the end of the exhaust stroke,

@@ -182,6 +182,7 @@ static void setGmEcotec3() {
 static void set4CylGmEcotec3() {
   setGmEcotec3();
   engineConfiguration->hpfpCamLobes = 4;
+  setHpfpLobeProfileAngle(engineConfiguration->hpfpCamLobes);
   engineConfiguration->vvtMode[1] = VVT_BOSCH_QUICK_START;
 	setInline4();
 }
