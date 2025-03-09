@@ -2807,6 +2807,8 @@ end</constant>
          0.0 0.0 0.0 0.0 0.0 0.0
          0.0 0.0 0.0 0.0 0.0 0.0
 </constant>
+        <constant digits="0" name="maxOilPressure" units="kPa">0.0</constant>
+        <constant digits="1" name="maxOilPressureTimeout" units="sec">0.0</constant>
         <constant name="mc33810_cs1">"NONE"</constant>
         <constant name="mc33810_csPinMode">"default"</constant>
         <constant name="mc33810DisableRecoveryMode">"false"</constant>
@@ -4345,9 +4347,7 @@ end</constant>
         <constant name="unusedFancy9">"false"</constant>
         <constant digits="0" name="unusedHip0" units="">0.0</constant>
         <constant digits="0" name="unusedHip1" units="">0.0</constant>
-        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="53">
-         0.0
-         0.0
+        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="51">
          0.0
          0.0
          0.0
@@ -4888,7 +4888,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250221" nPages="1" signature="rusEFI master.2025.03.09.f407-discovery.1930190621" version="5.0"/>
+    <versionInfo firmwareInfo="20250221" nPages="1" signature="rusEFI master.2025.03.09.f407-discovery.816408182" version="5.0"/>
     <bibliography author="rusEFI 20250221" writeDate="date"/>
     <settings/>
     <userComments/>
