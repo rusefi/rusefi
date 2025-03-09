@@ -90,7 +90,7 @@ void CanWrite::PeriodicTask(efitick_t) {
 	}
 
 	// Need to check if sandero pump is enabled
-	if (cycle.isInterval(CI::_100ms)) {
+	if (cycle.isInterval(CI::_100ms) && engineConfiguration->enableSanderoPump == true) {
 		sendEletroPumpInfo();
 	}
 
