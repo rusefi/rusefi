@@ -17,6 +17,7 @@
 #include "can_sensor.h"
 #include "can_bench_test.h"
 #include "rusefi_wideband.h"
+#include "sandero_eletro_pump.h"
 
 extern CanListener* canListeners_head;
 
@@ -86,6 +87,11 @@ void CanWrite::PeriodicTask(efitick_t) {
 		  sendQcBenchButtonCounters();
 		  sendQcBenchAuxDigitalCounters();
 	  }
+	}
+
+	// Need to check if sandero pump is enabled
+	if (cycle.isInterval(CI::_100ms)) {
+		sendEletroPumpInfo()
 	}
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE

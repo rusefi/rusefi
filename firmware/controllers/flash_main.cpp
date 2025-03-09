@@ -60,8 +60,6 @@ static void flashWriteThread(void*) {
 		// Do the actual flash write operation for given ID
 		if (msg == EFI_SETTINGS_RECORD_ID) {
 			writeToFlashNow();
-		} else if (msg == EFI_LTFT_RECORD_ID) {
-			engine->module<LongTermFuelTrim>()->store();
 		} else {
 			efiPrintf("Requested to write unknown record id %ld", msg);
 		}
