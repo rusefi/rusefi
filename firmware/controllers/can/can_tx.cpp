@@ -91,7 +91,7 @@ void CanWrite::PeriodicTask(efitick_t) {
 
 	// Need to check if sandero pump is enabled
 	if (cycle.isInterval(CI::_100ms)) {
-		sendEletroPumpInfo()
+		sendEletroPumpInfo();
 	}
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
