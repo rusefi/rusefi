@@ -1457,21 +1457,21 @@
 </constant>
         <constant cols="1" digits="1" name="hpfpLobeProfileAngle" rows="16">
          0.0
-         7.5
-         16.5
+         5.5
+         12.5
+         18.0
          24.0
-         32.0
-         40.0
+         30.0
+         36.0
+         42.0
          48.0
-         56.0
-         64.0
+         54.0
+         60.0
+         66.0
          72.0
-         80.0
-         88.0
-         96.0
-         103.5
-         112.5
-         120.0
+         77.5
+         84.5
+         90.0
 </constant>
         <constant cols="1" digits="1" name="hpfpLobeProfileQuantityBins" rows="16">
          0.0
