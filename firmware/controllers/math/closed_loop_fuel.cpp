@@ -5,6 +5,7 @@
 #include "deadband.h"
 #include "flash_main.h"
 #include "tunerstudio.h"
+#include "table_helper.h"
 
 #if EFI_ENGINE_CONTROL
 
