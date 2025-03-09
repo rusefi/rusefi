@@ -13,6 +13,8 @@ TEST(HPFP, Lobe) {
 	engineConfiguration->hpfpPeakPos = 123;
 	engineConfiguration->hpfpCamLobes = 3;
 
+  validateConfigOnStartUpOrBurn();
+
 	engine->triggerCentral.vvtPosition[0][0] = 40; // Bank 0
 	engine->triggerCentral.vvtPosition[0][1] = 80;
 	engine->triggerCentral.vvtPosition[1][0] =120; // Bank 1

@@ -520,9 +520,27 @@ PUBLIC_API_WEAK bool validateBoardConfig() {
   return true;
 }
 
+static bool validateGdi() {
+	auto lobes = engineConfiguration->hpfpCamLobes;
+	if (!lobes) {
+		return true;
+	}
+	int expectedLastLobeProfileAngle = 360 / lobes;
+  float actualLastAngle = config->hpfpLobeProfileAngle[HpfpLobeProfile_SIZE - 1];
+	if (expectedLastLobeProfileAngle != actualLastAngle) {
+		criticalError("Last HPFP angle expected %d got %f", expectedLastLobeProfileAngle, actualLastAngle);
+		return false;
+	}
+
+	return true;
+}
+
 // Returns false if there's an obvious problem with the loaded configuration
 bool validateConfigOnStartUpOrBurn() {
   if (!validateBoardConfig()) {
+    return false;
+  }
+  if (!validateGdi()) {
     return false;
   }
   if (config->dynoCarCarMassKg == 0) {
