@@ -4984,8 +4984,20 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 1, 1> sparkHardwareLatencyCorrection;
 	/**
-	 * units: units
+	 * Delay before cutting fuel due to extra high oil pressure. Use this to ignore short pressure blips and sensor noise.
+	 * units: sec
 	 * offset 3957
+	 */
+	scaled_channel<uint8_t, 10, 1> maxOilPressureTimeout;
+	/**
+	 * Maximum allowed oil pressure. If oil pressure exceed this level within <timeout> seconds, fuel will be cut. Set to 0 to disable.
+	 * units: kPa
+	 * offset 3958
+	 */
+	scaled_channel<uint8_t, 1, 10> maxOilPressure;
+	/**
+	 * units: units
+	 * offset 3959
 	 */
 	uint8_t unusedOftenChangesDuringFirmwareUpdate[END_OF_CALIBRATION_PADDING] = {};
 	/**

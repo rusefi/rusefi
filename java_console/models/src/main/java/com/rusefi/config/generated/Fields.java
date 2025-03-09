@@ -1443,6 +1443,8 @@ public class Fields {
 	public static final Field FUELLEVELHIGHTHRESHOLDVOLTAGE = Field.create("FUELLEVELHIGHTHRESHOLDVOLTAGE", 3948, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field MAPEXPAVERAGEAFR = Field.create("MAPEXPAVERAGEAFR", 3952, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field SPARKHARDWARELATENCYCORRECTION = Field.create("SPARKHARDWARELATENCYCORRECTION", 3956, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field MAXOILPRESSURETIMEOUT = Field.create("MAXOILPRESSURETIMEOUT", 3957, FieldType.INT8).setScale(0.1).setBaseOffset(0);
+	public static final Field MAXOILPRESSURE = Field.create("MAXOILPRESSURE", 3958, FieldType.INT8).setScale(10.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_4010 = Field.create("ALIGNMENTFILL_AT_4010", 4010, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field POSTCRANKINGFACTOR = Field.create("POSTCRANKINGFACTOR", 4012, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field POSTCRANKINGDURATIONBINS = Field.create("POSTCRANKINGDURATIONBINS", 4156, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -3212,6 +3214,8 @@ public class Fields {
 	FUELLEVELHIGHTHRESHOLDVOLTAGE,
 	MAPEXPAVERAGEAFR,
 	SPARKHARDWARELATENCYCORRECTION,
+	MAXOILPRESSURETIMEOUT,
+	MAXOILPRESSURE,
 	ALIGNMENTFILL_AT_4010,
 	POSTCRANKINGFACTOR,
 	POSTCRANKINGDURATIONBINS,
