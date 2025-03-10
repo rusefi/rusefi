@@ -6,6 +6,9 @@
 
 Gpio GENERATED_OUTPUTS = {
 	Gpio::H144_OUT_IO2, // X2 AuxLS3
+	Gpio::H144_OUT_PWM4, // wg_pwm
+	Gpio::H144_OUT_PWM5, // wg_dir
+	Gpio::H144_OUT_IO13, // wg_dis
 	Gpio::D14, // X3 AuxLS2
 	Gpio::H144_OUT_IO1, // X8 AuxLS1
 	Gpio::MC33810_0_OUT_0, // INJ_1 k25
@@ -28,6 +31,9 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::MC33810_0_GD_0, // Coil 1
 	Gpio::MC33810_0_GD_2, // Coil 3
 // "X2 AuxLS3",
+// "wg_pwm",
+// "wg_dir",
+// "wg_dis",
 // "X3 AuxLS2",
 // "X8 AuxLS1",
 // "INJ_1 k25",
