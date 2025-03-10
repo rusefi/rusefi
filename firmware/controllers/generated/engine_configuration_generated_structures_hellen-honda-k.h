@@ -4990,14 +4990,8 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 10, 1> maxOilPressureTimeout;
 	/**
-	 * Maximum allowed oil pressure. If oil pressure exceed this level within <timeout> seconds, fuel will be cut. Set to 0 to disable.
-	 * units: kPa
-	 * offset 3958
-	 */
-	scaled_channel<uint8_t, 1, 10> maxOilPressure;
-	/**
 	 * units: units
-	 * offset 3959
+	 * offset 3958
 	 */
 	uint8_t unusedOftenChangesDuringFirmwareUpdate[END_OF_CALIBRATION_PADDING] = {};
 	/**
@@ -6270,21 +6264,31 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint8_t, 1, 5> trailingSparkLoadBins[TRAILING_SPARK_SIZE] = {};
 	/**
+	 * units: RPM
 	 * offset 23800
+	 */
+	scaled_channel<uint8_t, 1, 100> maximumOilPressureBins[4] = {};
+	/**
+	 * units: kPa
+	 * offset 23804
+	 */
+	scaled_channel<uint8_t, 1, 10> maximumOilPressureValues[4] = {};
+	/**
+	 * offset 23808
 	 */
 	uint8_t hondaKcltGaugeAdder;
 	/**
-	 * offset 23801
+	 * offset 23809
 	 */
 	uint8_t unusedConfigPadding[BOTTOM_PADDING] = {};
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 23837
+	 * offset 23845
 	 */
-	uint8_t alignmentFill_at_23837[3] = {};
+	uint8_t alignmentFill_at_23845[3] = {};
 };
-static_assert(sizeof(persistent_config_s) == 23840);
+static_assert(sizeof(persistent_config_s) == 23848);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt

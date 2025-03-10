@@ -1930,9 +1930,6 @@ Compensates for trigger delay due to belt stretch, or other electromechanical is
 ### maxOilPressureTimeout
 Delay before cutting fuel due to extra high oil pressure. Use this to ignore short pressure blips and sensor noise.
 
-### maxOilPressure
-Maximum allowed oil pressure. If oil pressure exceed this level within <timeout> seconds, fuel will be cut. Set to 0 to disable.
-
 ### tcu_shiftTime
 
 

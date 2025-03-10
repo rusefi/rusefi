@@ -4990,14 +4990,8 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 10, 1> maxOilPressureTimeout;
 	/**
-	 * Maximum allowed oil pressure. If oil pressure exceed this level within <timeout> seconds, fuel will be cut. Set to 0 to disable.
-	 * units: kPa
-	 * offset 3958
-	 */
-	scaled_channel<uint8_t, 1, 10> maxOilPressure;
-	/**
 	 * units: units
-	 * offset 3959
+	 * offset 3958
 	 */
 	uint8_t unusedOftenChangesDuringFirmwareUpdate[END_OF_CALIBRATION_PADDING] = {};
 	/**
@@ -6270,103 +6264,113 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint8_t, 1, 5> trailingSparkLoadBins[TRAILING_SPARK_SIZE] = {};
 	/**
-	offset 41352 bit 0 */
+	 * units: RPM
+	 * offset 41352
+	 */
+	scaled_channel<uint8_t, 1, 100> maximumOilPressureBins[4] = {};
+	/**
+	 * units: kPa
+	 * offset 41356
+	 */
+	scaled_channel<uint8_t, 1, 10> maximumOilPressureValues[4] = {};
+	/**
+	offset 41360 bit 0 */
 	bool boardUseTempPullUp : 1 {};
 	/**
-	offset 41352 bit 1 */
-	bool unusedBit_238_1 : 1 {};
+	offset 41360 bit 1 */
+	bool unusedBit_240_1 : 1 {};
 	/**
-	offset 41352 bit 2 */
-	bool unusedBit_238_2 : 1 {};
+	offset 41360 bit 2 */
+	bool unusedBit_240_2 : 1 {};
 	/**
-	offset 41352 bit 3 */
-	bool unusedBit_238_3 : 1 {};
+	offset 41360 bit 3 */
+	bool unusedBit_240_3 : 1 {};
 	/**
-	offset 41352 bit 4 */
-	bool unusedBit_238_4 : 1 {};
+	offset 41360 bit 4 */
+	bool unusedBit_240_4 : 1 {};
 	/**
-	offset 41352 bit 5 */
-	bool unusedBit_238_5 : 1 {};
+	offset 41360 bit 5 */
+	bool unusedBit_240_5 : 1 {};
 	/**
-	offset 41352 bit 6 */
-	bool unusedBit_238_6 : 1 {};
+	offset 41360 bit 6 */
+	bool unusedBit_240_6 : 1 {};
 	/**
-	offset 41352 bit 7 */
-	bool unusedBit_238_7 : 1 {};
+	offset 41360 bit 7 */
+	bool unusedBit_240_7 : 1 {};
 	/**
-	offset 41352 bit 8 */
-	bool unusedBit_238_8 : 1 {};
+	offset 41360 bit 8 */
+	bool unusedBit_240_8 : 1 {};
 	/**
-	offset 41352 bit 9 */
-	bool unusedBit_238_9 : 1 {};
+	offset 41360 bit 9 */
+	bool unusedBit_240_9 : 1 {};
 	/**
-	offset 41352 bit 10 */
-	bool unusedBit_238_10 : 1 {};
+	offset 41360 bit 10 */
+	bool unusedBit_240_10 : 1 {};
 	/**
-	offset 41352 bit 11 */
-	bool unusedBit_238_11 : 1 {};
+	offset 41360 bit 11 */
+	bool unusedBit_240_11 : 1 {};
 	/**
-	offset 41352 bit 12 */
-	bool unusedBit_238_12 : 1 {};
+	offset 41360 bit 12 */
+	bool unusedBit_240_12 : 1 {};
 	/**
-	offset 41352 bit 13 */
-	bool unusedBit_238_13 : 1 {};
+	offset 41360 bit 13 */
+	bool unusedBit_240_13 : 1 {};
 	/**
-	offset 41352 bit 14 */
-	bool unusedBit_238_14 : 1 {};
+	offset 41360 bit 14 */
+	bool unusedBit_240_14 : 1 {};
 	/**
-	offset 41352 bit 15 */
-	bool unusedBit_238_15 : 1 {};
+	offset 41360 bit 15 */
+	bool unusedBit_240_15 : 1 {};
 	/**
-	offset 41352 bit 16 */
-	bool unusedBit_238_16 : 1 {};
+	offset 41360 bit 16 */
+	bool unusedBit_240_16 : 1 {};
 	/**
-	offset 41352 bit 17 */
-	bool unusedBit_238_17 : 1 {};
+	offset 41360 bit 17 */
+	bool unusedBit_240_17 : 1 {};
 	/**
-	offset 41352 bit 18 */
-	bool unusedBit_238_18 : 1 {};
+	offset 41360 bit 18 */
+	bool unusedBit_240_18 : 1 {};
 	/**
-	offset 41352 bit 19 */
-	bool unusedBit_238_19 : 1 {};
+	offset 41360 bit 19 */
+	bool unusedBit_240_19 : 1 {};
 	/**
-	offset 41352 bit 20 */
-	bool unusedBit_238_20 : 1 {};
+	offset 41360 bit 20 */
+	bool unusedBit_240_20 : 1 {};
 	/**
-	offset 41352 bit 21 */
-	bool unusedBit_238_21 : 1 {};
+	offset 41360 bit 21 */
+	bool unusedBit_240_21 : 1 {};
 	/**
-	offset 41352 bit 22 */
-	bool unusedBit_238_22 : 1 {};
+	offset 41360 bit 22 */
+	bool unusedBit_240_22 : 1 {};
 	/**
-	offset 41352 bit 23 */
-	bool unusedBit_238_23 : 1 {};
+	offset 41360 bit 23 */
+	bool unusedBit_240_23 : 1 {};
 	/**
-	offset 41352 bit 24 */
-	bool unusedBit_238_24 : 1 {};
+	offset 41360 bit 24 */
+	bool unusedBit_240_24 : 1 {};
 	/**
-	offset 41352 bit 25 */
-	bool unusedBit_238_25 : 1 {};
+	offset 41360 bit 25 */
+	bool unusedBit_240_25 : 1 {};
 	/**
-	offset 41352 bit 26 */
-	bool unusedBit_238_26 : 1 {};
+	offset 41360 bit 26 */
+	bool unusedBit_240_26 : 1 {};
 	/**
-	offset 41352 bit 27 */
-	bool unusedBit_238_27 : 1 {};
+	offset 41360 bit 27 */
+	bool unusedBit_240_27 : 1 {};
 	/**
-	offset 41352 bit 28 */
-	bool unusedBit_238_28 : 1 {};
+	offset 41360 bit 28 */
+	bool unusedBit_240_28 : 1 {};
 	/**
-	offset 41352 bit 29 */
-	bool unusedBit_238_29 : 1 {};
+	offset 41360 bit 29 */
+	bool unusedBit_240_29 : 1 {};
 	/**
-	offset 41352 bit 30 */
-	bool unusedBit_238_30 : 1 {};
+	offset 41360 bit 30 */
+	bool unusedBit_240_30 : 1 {};
 	/**
-	offset 41352 bit 31 */
-	bool unusedBit_238_31 : 1 {};
+	offset 41360 bit 31 */
+	bool unusedBit_240_31 : 1 {};
 };
-static_assert(sizeof(persistent_config_s) == 41356);
+static_assert(sizeof(persistent_config_s) == 41364);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt

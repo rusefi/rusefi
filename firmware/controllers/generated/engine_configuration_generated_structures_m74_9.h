@@ -4990,14 +4990,8 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 10, 1> maxOilPressureTimeout;
 	/**
-	 * Maximum allowed oil pressure. If oil pressure exceed this level within <timeout> seconds, fuel will be cut. Set to 0 to disable.
-	 * units: kPa
-	 * offset 3958
-	 */
-	scaled_channel<uint8_t, 1, 10> maxOilPressure;
-	/**
 	 * units: units
-	 * offset 3959
+	 * offset 3958
 	 */
 	uint8_t unusedOftenChangesDuringFirmwareUpdate[END_OF_CALIBRATION_PADDING] = {};
 	/**
@@ -6275,8 +6269,18 @@ struct persistent_config_s {
 	 * offset 22804
 	 */
 	scaled_channel<uint8_t, 1, 5> trailingSparkLoadBins[TRAILING_SPARK_SIZE] = {};
+	/**
+	 * units: RPM
+	 * offset 22808
+	 */
+	scaled_channel<uint8_t, 1, 100> maximumOilPressureBins[4] = {};
+	/**
+	 * units: kPa
+	 * offset 22812
+	 */
+	scaled_channel<uint8_t, 1, 10> maximumOilPressureValues[4] = {};
 };
-static_assert(sizeof(persistent_config_s) == 22808);
+static_assert(sizeof(persistent_config_s) == 22816);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt

@@ -4990,14 +4990,8 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint8_t, 10, 1> maxOilPressureTimeout;
 	/**
-	 * Maximum allowed oil pressure. If oil pressure exceed this level within <timeout> seconds, fuel will be cut. Set to 0 to disable.
-	 * units: kPa
-	 * offset 3974
-	 */
-	scaled_channel<uint8_t, 1, 10> maxOilPressure;
-	/**
 	 * units: units
-	 * offset 3975
+	 * offset 3974
 	 */
 	uint8_t unusedOftenChangesDuringFirmwareUpdate[END_OF_CALIBRATION_PADDING] = {};
 	/**
@@ -6270,103 +6264,113 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint8_t, 1, 5> trailingSparkLoadBins[TRAILING_SPARK_SIZE] = {};
 	/**
-	offset 25368 bit 0 */
+	 * units: RPM
+	 * offset 25368
+	 */
+	scaled_channel<uint8_t, 1, 100> maximumOilPressureBins[4] = {};
+	/**
+	 * units: kPa
+	 * offset 25372
+	 */
+	scaled_channel<uint8_t, 1, 10> maximumOilPressureValues[4] = {};
+	/**
+	offset 25376 bit 0 */
 	bool boardUseTempPullUp : 1 {};
 	/**
-	offset 25368 bit 1 */
+	offset 25376 bit 1 */
 	bool boardUse2stepPullDown : 1 {};
 	/**
-	offset 25368 bit 2 */
+	offset 25376 bit 2 */
 	bool boardUseD2PullDown : 1 {};
 	/**
-	offset 25368 bit 3 */
+	offset 25376 bit 3 */
 	bool boardUseD3PullDown : 1 {};
 	/**
-	offset 25368 bit 4 */
+	offset 25376 bit 4 */
 	bool boardUseCrankPullUp : 1 {};
 	/**
-	offset 25368 bit 5 */
+	offset 25376 bit 5 */
 	bool boardUseH1PullDown : 1 {};
 	/**
-	offset 25368 bit 6 */
+	offset 25376 bit 6 */
 	bool boardUseH2PullDown : 1 {};
 	/**
-	offset 25368 bit 7 */
+	offset 25376 bit 7 */
 	bool boardUseH3PullDown : 1 {};
 	/**
-	offset 25368 bit 8 */
+	offset 25376 bit 8 */
 	bool boardUseH4PullDown : 1 {};
 	/**
-	offset 25368 bit 9 */
+	offset 25376 bit 9 */
 	bool boardUseH5PullDown : 1 {};
 	/**
-	offset 25368 bit 10 */
+	offset 25376 bit 10 */
 	bool boardUseFlexPullDown : 1 {};
 	/**
-	offset 25368 bit 11 */
-	bool unusedBit_248_11 : 1 {};
+	offset 25376 bit 11 */
+	bool unusedBit_250_11 : 1 {};
 	/**
-	offset 25368 bit 12 */
-	bool unusedBit_248_12 : 1 {};
+	offset 25376 bit 12 */
+	bool unusedBit_250_12 : 1 {};
 	/**
-	offset 25368 bit 13 */
-	bool unusedBit_248_13 : 1 {};
+	offset 25376 bit 13 */
+	bool unusedBit_250_13 : 1 {};
 	/**
-	offset 25368 bit 14 */
-	bool unusedBit_248_14 : 1 {};
+	offset 25376 bit 14 */
+	bool unusedBit_250_14 : 1 {};
 	/**
-	offset 25368 bit 15 */
-	bool unusedBit_248_15 : 1 {};
+	offset 25376 bit 15 */
+	bool unusedBit_250_15 : 1 {};
 	/**
-	offset 25368 bit 16 */
-	bool unusedBit_248_16 : 1 {};
+	offset 25376 bit 16 */
+	bool unusedBit_250_16 : 1 {};
 	/**
-	offset 25368 bit 17 */
-	bool unusedBit_248_17 : 1 {};
+	offset 25376 bit 17 */
+	bool unusedBit_250_17 : 1 {};
 	/**
-	offset 25368 bit 18 */
-	bool unusedBit_248_18 : 1 {};
+	offset 25376 bit 18 */
+	bool unusedBit_250_18 : 1 {};
 	/**
-	offset 25368 bit 19 */
-	bool unusedBit_248_19 : 1 {};
+	offset 25376 bit 19 */
+	bool unusedBit_250_19 : 1 {};
 	/**
-	offset 25368 bit 20 */
-	bool unusedBit_248_20 : 1 {};
+	offset 25376 bit 20 */
+	bool unusedBit_250_20 : 1 {};
 	/**
-	offset 25368 bit 21 */
-	bool unusedBit_248_21 : 1 {};
+	offset 25376 bit 21 */
+	bool unusedBit_250_21 : 1 {};
 	/**
-	offset 25368 bit 22 */
-	bool unusedBit_248_22 : 1 {};
+	offset 25376 bit 22 */
+	bool unusedBit_250_22 : 1 {};
 	/**
-	offset 25368 bit 23 */
-	bool unusedBit_248_23 : 1 {};
+	offset 25376 bit 23 */
+	bool unusedBit_250_23 : 1 {};
 	/**
-	offset 25368 bit 24 */
-	bool unusedBit_248_24 : 1 {};
+	offset 25376 bit 24 */
+	bool unusedBit_250_24 : 1 {};
 	/**
-	offset 25368 bit 25 */
-	bool unusedBit_248_25 : 1 {};
+	offset 25376 bit 25 */
+	bool unusedBit_250_25 : 1 {};
 	/**
-	offset 25368 bit 26 */
-	bool unusedBit_248_26 : 1 {};
+	offset 25376 bit 26 */
+	bool unusedBit_250_26 : 1 {};
 	/**
-	offset 25368 bit 27 */
-	bool unusedBit_248_27 : 1 {};
+	offset 25376 bit 27 */
+	bool unusedBit_250_27 : 1 {};
 	/**
-	offset 25368 bit 28 */
-	bool unusedBit_248_28 : 1 {};
+	offset 25376 bit 28 */
+	bool unusedBit_250_28 : 1 {};
 	/**
-	offset 25368 bit 29 */
-	bool unusedBit_248_29 : 1 {};
+	offset 25376 bit 29 */
+	bool unusedBit_250_29 : 1 {};
 	/**
-	offset 25368 bit 30 */
-	bool unusedBit_248_30 : 1 {};
+	offset 25376 bit 30 */
+	bool unusedBit_250_30 : 1 {};
 	/**
-	offset 25368 bit 31 */
-	bool unusedBit_248_31 : 1 {};
+	offset 25376 bit 31 */
+	bool unusedBit_250_31 : 1 {};
 };
-static_assert(sizeof(persistent_config_s) == 25372);
+static_assert(sizeof(persistent_config_s) == 25380);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt

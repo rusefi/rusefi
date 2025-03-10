@@ -1444,7 +1444,6 @@ public class Fields {
 	public static final Field MAPEXPAVERAGEAFR = Field.create("MAPEXPAVERAGEAFR", 3952, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field SPARKHARDWARELATENCYCORRECTION = Field.create("SPARKHARDWARELATENCYCORRECTION", 3956, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field MAXOILPRESSURETIMEOUT = Field.create("MAXOILPRESSURETIMEOUT", 3957, FieldType.INT8).setScale(0.1).setBaseOffset(0);
-	public static final Field MAXOILPRESSURE = Field.create("MAXOILPRESSURE", 3958, FieldType.INT8).setScale(10.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_4010 = Field.create("ALIGNMENTFILL_AT_4010", 4010, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field POSTCRANKINGFACTOR = Field.create("POSTCRANKINGFACTOR", 4012, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field POSTCRANKINGDURATIONBINS = Field.create("POSTCRANKINGDURATIONBINS", 4156, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -1811,8 +1810,10 @@ public class Fields {
 	public static final Field TRAILINGSPARKTABLE = Field.create("TRAILINGSPARKTABLE", 23328, FieldType.INT8).setScale(0.1).setBaseOffset(0);
 	public static final Field TRAILINGSPARKRPMBINS = Field.create("TRAILINGSPARKRPMBINS", 23344, FieldType.INT8).setScale(50.0).setBaseOffset(0);
 	public static final Field TRAILINGSPARKLOADBINS = Field.create("TRAILINGSPARKLOADBINS", 23348, FieldType.INT8).setScale(5.0).setBaseOffset(0);
-	public static final Field COMMUNITYCOMMSLEDPIN = Field.create("COMMUNITYCOMMSLEDPIN", 23352, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_23354 = Field.create("ALIGNMENTFILL_AT_23354", 23354, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field MAXIMUMOILPRESSUREBINS = Field.create("MAXIMUMOILPRESSUREBINS", 23352, FieldType.INT8).setScale(100.0).setBaseOffset(0);
+	public static final Field MAXIMUMOILPRESSUREVALUES = Field.create("MAXIMUMOILPRESSUREVALUES", 23356, FieldType.INT8).setScale(10.0).setBaseOffset(0);
+	public static final Field COMMUNITYCOMMSLEDPIN = Field.create("COMMUNITYCOMMSLEDPIN", 23360, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_23362 = Field.create("ALIGNMENTFILL_AT_23362", 23362, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field[] VALUES = {
 	ENGINETYPE,
 	STARTBUTTONSUPPRESSONSTARTUPMS,
@@ -3215,7 +3216,6 @@ public class Fields {
 	MAPEXPAVERAGEAFR,
 	SPARKHARDWARELATENCYCORRECTION,
 	MAXOILPRESSURETIMEOUT,
-	MAXOILPRESSURE,
 	ALIGNMENTFILL_AT_4010,
 	POSTCRANKINGFACTOR,
 	POSTCRANKINGDURATIONBINS,
@@ -3582,7 +3582,9 @@ public class Fields {
 	TRAILINGSPARKTABLE,
 	TRAILINGSPARKRPMBINS,
 	TRAILINGSPARKLOADBINS,
+	MAXIMUMOILPRESSUREBINS,
+	MAXIMUMOILPRESSUREVALUES,
 	COMMUNITYCOMMSLEDPIN,
-	ALIGNMENTFILL_AT_23354,
+	ALIGNMENTFILL_AT_23362,
 	};
 }
