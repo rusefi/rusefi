@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="23356">
+    <page number="0" size="23364">
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
         <constant name="accelerometerSpiDevice">"Off"</constant>
@@ -2783,6 +2783,18 @@ end</constant>
         <constant digits="0" name="maxCamPhaseResolveRpm" units="rpm">0.0</constant>
         <constant digits="0" name="maxIdleVss" units="kph">0.0</constant>
         <constant digits="0" name="maximumIgnitionTiming" units="deg BTDC">60.0</constant>
+        <constant cols="1" digits="0" name="maximumOilPressureBins" rows="4">
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant cols="1" digits="0" name="maximumOilPressureValues" rows="4">
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
         <constant digits="0" name="maxInjectorDutyInstant" units="%">110.0</constant>
         <constant digits="0" name="maxInjectorDutySustained" units="%">96.0</constant>
         <constant digits="1" name="maxInjectorDutySustainedTimeout" units="sec">0.5</constant>
@@ -2810,7 +2822,6 @@ end</constant>
          0.0 0.0 0.0 0.0 0.0 0.0
          0.0 0.0 0.0 0.0 0.0 0.0
 </constant>
-        <constant digits="0" name="maxOilPressure" units="kPa">0.0</constant>
         <constant digits="1" name="maxOilPressureTimeout" units="sec">0.0</constant>
         <constant name="mc33810_cs1">"NONE"</constant>
         <constant name="mc33810_csPinMode">"default"</constant>
@@ -4350,7 +4361,8 @@ end</constant>
         <constant name="unusedFancy9">"false"</constant>
         <constant digits="0" name="unusedHip0" units="">0.0</constant>
         <constant digits="0" name="unusedHip1" units="">0.0</constant>
-        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="51">
+        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="52">
+         0.0
          0.0
          0.0
          0.0
@@ -4892,7 +4904,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250221" nPages="1" signature="rusEFI master.2025.03.10.f407-discovery.4157260724" version="5.0"/>
+    <versionInfo firmwareInfo="20250221" nPages="1" signature="rusEFI master.2025.03.10.f407-discovery.1925905422" version="5.0"/>
     <bibliography author="rusEFI 20250221" writeDate="date"/>
     <settings/>
     <userComments/>
