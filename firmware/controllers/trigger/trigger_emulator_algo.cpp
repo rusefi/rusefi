@@ -138,6 +138,10 @@ static bool hasStimPins = false;
 
 static bool hasInitTriggerEmulator = false;
 
+#if EFI_PROD_CODE
+PUBLIC_API_WEAK void onTriggerEmulatorPinState(int, int) { }
+#endif /* EFI_PROD_CODE */
+
 # if !EFI_UNIT_TEST
 
 static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_callback */ {
@@ -159,6 +163,13 @@ static void emulatorApplyPinState(int stateIndex, PwmConfig *state) /* pwm_gen_c
 	// Only set pins if they're configured - no need to waste the cycles otherwise
 	else if (hasStimPins) {
 		applyPinState(stateIndex, state);
+
+		// this allows any arbitrary code to synchronize with the trigger emulator
+		for (int channel = 0; channel < NUM_EMULATOR_CHANNELS; channel++) {
+			if (state != &triggerEmulatorSignals[channel])
+				continue;
+			onTriggerEmulatorPinState(stateIndex, channel);
+		}
 	}
 #endif /* EFI_PROD_CODE */
 }
