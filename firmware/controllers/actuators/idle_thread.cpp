@@ -22,21 +22,24 @@
 #include "stepper.h"
 #endif
 
-int IdleController::getTargetRpm(float clt) {
+IIdleController::TargetInfo IdleController::getTargetRpm(float clt) {
 	targetRpmByClt = interpolate2d(clt, config->cltIdleRpmBins, config->cltIdleRpm);
 
+  // FIXME: this is running as "RPM target" not "RPM bump" [ie adding to the CLT rpm target]
 	// idle air Bump for AC
 	// Why do we bump based on button not based on actual A/C relay state?
 	// Because AC output has a delay to allow idle bump to happen first, so that the airflow increase gets a head start on the load increase
 	// alternator duty cycle has a similar logic
 	targetRpmAc = engine->module<AcController>().unmock().acButtonState ? engineConfiguration->acIdleRpmTarget : 0;
 
-	auto target = (targetRpmByClt < targetRpmAc) ? targetRpmAc : targetRpmByClt;
-	idleTarget = target;
-	return target;
+	float target = (targetRpmByClt < targetRpmAc) ? targetRpmAc : targetRpmByClt;
+ 	float entryRpm = target + engineConfiguration->idlePidRpmUpperLimit;
+ 
+ 	idleTarget = target;
+ 	return { target, entryRpm };
 }
 
-IIdleController::Phase IdleController::determinePhase(float rpm, float targetRpm, SensorResult tps, float vss, float crankingTaperFraction) {
+IIdleController::Phase IdleController::determinePhase(float rpm, IIdleController::TargetInfo targetRpm, SensorResult tps, float vss, float crankingTaperFraction) {
 #if EFI_SHAFT_POSITION_INPUT
 	if (!engine->rpmCalculator.isRunning()) {
 		return Phase::Cranking;
@@ -55,8 +58,7 @@ IIdleController::Phase IdleController::determinePhase(float rpm, float targetRpm
 
 	// If rpm too high (but throttle not pressed), we're coasting
 	// ALSO, if still in the cranking taper, disable coasting
-	float maximumIdleRpm = targetRpm + engineConfiguration->idlePidRpmUpperLimit;
-	looksLikeCoasting = rpm > maximumIdleRpm;
+	looksLikeCoasting = rpm > targetRpm.IdleEntryRpm;
 	looksLikeCrankToIdle = crankingTaperFraction < 1;
 	if (looksLikeCoasting && !looksLikeCrankToIdle) {
 		return Phase::Coasting;
@@ -324,7 +326,7 @@ float IdleController::getIdlePosition(float rpm) {
 
 		// Compute the target we're shooting for
 		auto targetRpm = getTargetRpm(clt);
-		m_lastTargetRpm = targetRpm;
+		m_lastTargetRpm = targetRpm.ClosedLoopTarget;
 
 		// Determine cranking taper
 		float crankingTaper = getCrankingTaperFraction();
@@ -343,7 +345,7 @@ float IdleController::getIdlePosition(float rpm) {
 			useClosedLoop = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
 			// If TPS is working and automatic mode enabled, add any closed loop correction
 			if (useClosedLoop) {
-				auto closedLoop = getClosedLoop(phase, tps.Value, rpm, targetRpm);
+				auto closedLoop = getClosedLoop(phase, tps.Value, rpm, targetRpm.ClosedLoopTarget);
 				idleClosedLoop = closedLoop;
 				iacPosition += closedLoop;
 			}

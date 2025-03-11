@@ -127,8 +127,8 @@ public:
 	MockIdleController();
 	virtual ~MockIdleController();
 
-	MOCK_METHOD(IIdleController::Phase, determinePhase, (float rpm, float targetRpm, SensorResult tps, float vss, float crankingTaperFraction), (override));
-	MOCK_METHOD(int, getTargetRpm, (float clt), (override));
+  MOCK_METHOD(IIdleController::Phase, determinePhase, (float rpm, IIdleController::TargetInfo targetRpm, SensorResult tps, float vss, float crankingTaperFraction), (override));
+ 	MOCK_METHOD(IIdleController::TargetInfo, getTargetRpm, (float clt), (override));
 	MOCK_METHOD(float, getCrankingOpenLoop, (float clt), (const, override));
 	MOCK_METHOD(float, getRunningOpenLoop, (IIdleController::Phase phase, float rpm, float clt, SensorResult tps), (override));
 	MOCK_METHOD(float, getOpenLoop, (IIdleController::Phase phase, float rpm, float clt, SensorResult tps, float crankingTaperFraction), (override));
