@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22404">
+    <page number="0" size="22516">
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
         <constant name="accelerometerSpiDevice">"Off"</constant>
@@ -1454,6 +1454,36 @@
          13.0
          15.0
          16.0
+</constant>
+        <constant cols="8" digits="0" name="hpfpFuelMassCompensation" rows="8">
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+         1.0 1.0 1.0 1.0 1.0 1.0 1.0 1.0
+</constant>
+        <constant cols="1" digits="3" name="hpfpFuelMassCompensationFuelMass" rows="8">
+         0.0
+         0.2
+         0.6
+         0.8
+         1.2
+         1.4
+         1.8
+         2.0
+</constant>
+        <constant cols="1" digits="0" name="hpfpFuelMassCompensationFuelPressure" rows="8">
+         0.0
+         2000.0
+         4500.0
+         6500.0
+         8500.0
+         10500.0
+         13000.0
+         15000.0
 </constant>
         <constant cols="1" digits="1" name="hpfpLobeProfileAngle" rows="16">
          0.0
@@ -4844,7 +4874,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250221" nPages="1" signature="rusEFI master.2025.03.11.f407-discovery.1698248056" version="5.0"/>
+    <versionInfo firmwareInfo="20250221" nPages="1" signature="rusEFI master.2025.03.11.f407-discovery.3457301446" version="5.0"/>
     <bibliography author="rusEFI 20250221" writeDate="date"/>
     <settings/>
     <userComments/>
