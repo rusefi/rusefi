@@ -605,6 +605,10 @@ void setBoschHDEV_5_injectors() {
 	engineConfiguration->mc33_hpfp_i_hold = 3;
 	engineConfiguration->mc33_hpfp_i_hold_off = 10; // us
 	engineConfiguration->mc33_hpfp_max_hold = 10; // this value in ms not us
+
+	setLinearCurve(config->hpfpFuelMassCompensationFuelMass, 0.0, 2, 0.2);
+	setLinearCurve(config->hpfpFuelMassCompensationFuelPressure, 0, 15000, 500);
+	setTable(config->hpfpFuelMassCompensation, 1);
 }
 
 /**

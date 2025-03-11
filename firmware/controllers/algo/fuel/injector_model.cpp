@@ -136,7 +136,8 @@ expected<float> InjectorModelWithConfig::getFuelDifferentialPressure() const {
 
 float InjectorModelWithConfig::getInjectorFlowRatio() {
 	// Compensation disabled, use reference flow.
-	if (getInjectorCompensationMode() == ICM_None) {
+	auto compensationMode = getInjectorCompensationMode();
+	if (compensationMode == ICM_None || compensationMode == ICM_HPFP_Manual_Compensation) {
 		return 1.0f;
 	}
 
@@ -179,6 +180,7 @@ float InjectorModelWithConfig::getDeadtime() const {
 	);
 }
 
+//TODO: only used in the tests, refactor pending to InjectorModelWithConfig
 float InjectorModelBase::getInjectionDuration(float fuelMassGram) const {
 	if (fuelMassGram <= 0) {
 		// If 0 mass, don't do any math, just skip the injection.
@@ -188,7 +190,36 @@ float InjectorModelBase::getInjectionDuration(float fuelMassGram) const {
 	// Get the no-offset duration
 	float baseDuration = getBaseDurationImpl(fuelMassGram);
 
-	// Add deadtime offset
+	return baseDuration + m_deadtime;
+}
+
+float InjectorModelWithConfig::getInjectionDuration(float fuelMassGram) const {
+	if (fuelMassGram <= 0) {
+		// If 0 mass, don't do any math, just skip the injection.
+		return 0.0f;
+	}
+
+	// Get the no-offset duration
+	float baseDuration = getBaseDurationImpl(fuelMassGram);
+
+	// default non GDI case
+	if(getInjectorCompensationMode() != ICM_HPFP_Manual_Compensation) {
+		// Add deadtime offset
+		return baseDuration + m_deadtime;
+
+	}
+
+	if (!Sensor::hasSensor(SensorType::FuelPressureInjector)) {
+		return baseDuration + m_deadtime;
+	}
+
+	auto fps = Sensor::get(SensorType::FuelPressureInjector);
+	float fuelMassCompensation = interpolate3d(config->hpfpFuelMassCompensation,
+			config->hpfpFuelMassCompensationFuelPressure, fps.Value,
+			config->hpfpFuelMassCompensationFuelMass, fuelMassGram);
+
+	// recalculate base duration with fuell mass compensation
+	baseDuration =  getBaseDurationImpl(fuelMassGram * fuelMassCompensation);
 	return baseDuration + m_deadtime;
 }
 

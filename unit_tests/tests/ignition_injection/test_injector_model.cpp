@@ -64,6 +64,20 @@ TEST(InjectorModel, getInjectionDurationWithFlowRatio) {
 	EXPECT_NEAR(dut.getInjectionDuration(0.02f), 20 / (4.8f * 1.1f) + 2.0f, EPS4D);
 }
 
+TEST(InjectorModel, getInjectionDurationWithHPFPManualCompensation) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	InjectorModelPrimary dut;
+	static const auto HPFPMockedMassCompensation = 2;
+
+	setTable(config->hpfpFuelMassCompensation, HPFPMockedMassCompensation);
+	engineConfiguration->injectorCompensationMode = ICM_HPFP_Manual_Compensation;
+
+	dut.prepare();
+
+	EXPECT_NEAR(dut.getInjectionDuration(0.01f), (10 * HPFPMockedMassCompensation) / (4.8f * 1.1 ) + 2.0f, EPS0D);
+	EXPECT_NEAR(dut.getInjectionDuration(0.02f), (20 * HPFPMockedMassCompensation) / (4.8f * 1.1 ) + 2.0f, EPS0D);
+}
+
 TEST(InjectorModel, nonLinearFordMode) {
 	StrictMock<MockInjectorModel> dut;
 
@@ -221,6 +235,21 @@ TEST(InjectorModel, VariableInjectorFlowModeNone) {
 	EXPECT_FLOAT_EQ(1, dut.getInjectorFlowRatio());
 }
 
+TEST(InjectorModel, HPFPManualCompensation) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	InjectorModelPrimary dut;
+
+	// Use injector compensation
+	engineConfiguration->injectorCompensationMode = ICM_HPFP_Manual_Compensation;
+
+	// Reference pressure is 400kPa
+	engineConfiguration->fuelReferencePressure = 400.0f;
+
+	// Flow ratio defaults to 1.0 in this case
+	EXPECT_FLOAT_EQ(1.0f, dut.getInjectorFlowRatio());
+}
+
 TEST(InjectorModel, RailPressureFixed) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
@@ -337,3 +366,4 @@ TEST(InjectorModel, MissingPressureSensor) {
 	// Missing sensor should trigger a fatal as it's a misconfiguration
 	//EXPECT_FATAL_ERROR(dut.getInjectorFlowRatio());
 }
+

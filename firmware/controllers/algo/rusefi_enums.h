@@ -727,6 +727,7 @@ typedef enum __attribute__ ((__packed__)) {
 	ICM_None = 0,
 	ICM_FixedRailPressure = 1,
 	ICM_SensedRailPressure = 2,
+  	ICM_HPFP_Manual_Compensation = 3,
 } injector_compensation_mode_e;
 
 typedef enum __attribute__ ((__packed__)) {
