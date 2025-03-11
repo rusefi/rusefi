@@ -5449,17 +5449,17 @@ struct persistent_config_s {
 	 * units: kPa
 	 * offset 17212
 	 */
-	scaled_channel<uint16_t, 100, 1> mapEstimateTable[FUEL_LOAD_COUNT][FUEL_RPM_COUNT] = {};
+	scaled_channel<uint16_t, 100, 1> mapEstimateTable[MAP_EST_LOAD_COUNT][MAP_EST_RPM_COUNT] = {};
 	/**
 	 * units: % TPS
 	 * offset 17724
 	 */
-	scaled_channel<uint16_t, 100, 1> mapEstimateTpsBins[FUEL_LOAD_COUNT] = {};
+	scaled_channel<uint16_t, 100, 1> mapEstimateTpsBins[MAP_EST_LOAD_COUNT] = {};
 	/**
 	 * units: RPM
 	 * offset 17756
 	 */
-	uint16_t mapEstimateRpmBins[FUEL_RPM_COUNT] = {};
+	uint16_t mapEstimateRpmBins[MAP_EST_RPM_COUNT] = {};
 	/**
 	 * units: value
 	 * offset 17788
