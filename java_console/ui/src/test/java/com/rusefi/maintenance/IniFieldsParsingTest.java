@@ -1,6 +1,7 @@
 package com.rusefi.maintenance;
 
 import com.opensr5.ini.field.ArrayIniField;
+import com.opensr5.ini.field.StringIniField;
 import com.rusefi.config.FieldType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,6 +16,12 @@ public class IniFieldsParsingTest {
     @BeforeEach
     void setUp() throws JAXBException {
         testData = CalibrationsTestData.load();
+    }
+
+    @Test
+    void testVehicleNameIniField() {
+        final StringIniField veTableIniField = (StringIniField) testData.getPrevIni().getIniField("vehicleName");
+        assertEquals(1116, veTableIniField.getOffset());
     }
 
     @Test
