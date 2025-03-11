@@ -15,6 +15,7 @@ using ::testing::StrictMock;
 using ::testing::_;
 
 using ICP = IIdleController::Phase;
+using TgtInfo = IIdleController::TargetInfo;
 
 TEST(idle_v2, timingPid) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
@@ -58,8 +59,13 @@ TEST(idle_v2, testTargetRpm) {
 		config->cltIdleRpm[i] = i * 100;
 	}
 
-	EXPECT_FLOAT_EQ(100, dut.getTargetRpm(10));
-	EXPECT_FLOAT_EQ(500, dut.getTargetRpm(50));
+	engineConfiguration->idlePidRpmUpperLimit = 50;
+ 	EXPECT_EQ((TgtInfo{100, 150}), dut.getTargetRpm(10));
+ 	EXPECT_EQ((TgtInfo{500, 550}), dut.getTargetRpm(50));
+ 
+ 	engineConfiguration->idlePidRpmUpperLimit = 73;
+ 	EXPECT_EQ((TgtInfo{100, 173}), dut.getTargetRpm(10));
+ 	EXPECT_EQ((TgtInfo{500, 573}), dut.getTargetRpm(50));
 }
 
 TEST(idle_v2, testDeterminePhase) {
@@ -68,43 +74,49 @@ TEST(idle_v2, testDeterminePhase) {
 
 	// TPS threshold 5% for easy test
 	engineConfiguration->idlePidDeactivationTpsThreshold = 5;
-	// RPM window is 100 RPM above target
-	engineConfiguration->idlePidRpmUpperLimit = 100;
+
 	// Max VSS for idle is 10kph
 	engineConfiguration->maxIdleVss = 10;
 
+  TgtInfo targetInfo;
+ 	// Phase determination should ignore this!
+ 	targetInfo.ClosedLoopTarget = 9999;
+ 
+ 	// Idling threshold is 1000 + 100 rpm
+ 	targetInfo.IdleEntryRpm = 1000 + 100;
+
 	// First test stopped engine
 	engine->rpmCalculator.setRpmValue(0);
-	EXPECT_EQ(ICP::Cranking, dut.determinePhase(0, 1000, unexpected, 0, 10));
+	EXPECT_EQ(ICP::Cranking, dut.determinePhase(0, targetInfo, unexpected, 0, 10));
 
 	// Now engine is running!
 	// Controller doesn't need this other than for isCranking()
 	engine->rpmCalculator.setRpmValue(1000);
 
 	// Test invalid TPS, but inside the idle window
-	EXPECT_EQ(ICP::Running, dut.determinePhase(1000, 1000, unexpected, 0, 10));
+	EXPECT_EQ(ICP::Running, dut.determinePhase(1000, targetInfo, unexpected, 0, 10));
 
 	// Valid TPS should now be inside the zone
-	EXPECT_EQ(ICP::Idling, dut.determinePhase(1000, 1000, 0, 0, 10));
+	EXPECT_EQ(ICP::Idling, dut.determinePhase(1000, targetInfo, 0, 0, 10));
 
 	// Inside the zone, but vehicle speed too fast
-	EXPECT_EQ(ICP::Running, dut.determinePhase(1000, 1000, 0, 25, 10));
+	EXPECT_EQ(ICP::Running, dut.determinePhase(1000, targetInfo, 0, 25, 10));
 
 	// Check that shortly after cranking, the cranking taper inhibits closed loop idle
-	EXPECT_EQ(ICP::CrankToIdleTaper, dut.determinePhase(1000, 1000, 0, 0, 0.5f));
+	EXPECT_EQ(ICP::CrankToIdleTaper, dut.determinePhase(1000, targetInfo, 0, 0, 0.5f));
 
 	// Above TPS threshold should be outside the zone
-	EXPECT_EQ(ICP::Running, dut.determinePhase(1000, 1000, 10, 0, 10));
+	EXPECT_EQ(ICP::Running, dut.determinePhase(1000, targetInfo, 10, 0, 10));
 
 	// Above target, below (target + upperLimit) should be in idle zone
-	EXPECT_EQ(ICP::Idling, dut.determinePhase(1099, 1000, 0, 0, 10));
+	EXPECT_EQ(ICP::Idling, dut.determinePhase(1099, targetInfo, 0, 0, 10));
 
 	// above upper limit and on throttle should be out of idle zone
-	EXPECT_EQ(ICP::Running, dut.determinePhase(1101, 1000, 10, 0, 10));
+	EXPECT_EQ(ICP::Running, dut.determinePhase(1101, targetInfo, 10, 0, 10));
 
 	// Below TPS but above RPM should be outside the zone
-	EXPECT_EQ(ICP::Coasting, dut.determinePhase(1101, 1000, 0, 0, 10));
-	EXPECT_EQ(ICP::Coasting, dut.determinePhase(5000, 1000, 0, 0, 10));
+	EXPECT_EQ(ICP::Coasting, dut.determinePhase(1101, targetInfo, 0, 0, 10));
+	EXPECT_EQ(ICP::Coasting, dut.determinePhase(5000, targetInfo, 0, 0, 10));
 }
 
 TEST(idle_v2, crankingOpenLoop) {
@@ -397,8 +409,8 @@ TEST(idle_v2, closedLoopDeadzone) {
 }
 
 struct IntegrationIdleMock : public IdleController {
-	MOCK_METHOD(int, getTargetRpm, (float clt), (override));
-	MOCK_METHOD(ICP, determinePhase, (float rpm, float targetRpm, SensorResult tps, float vss, float crankingTaperFraction), (override));
+	MOCK_METHOD(TargetInfo, getTargetRpm, (float clt), (override));
+ 	MOCK_METHOD(ICP, determinePhase, (float rpm, TargetInfo targetRpm, SensorResult tps, float vss, float crankingTaperFraction), (override));
 	MOCK_METHOD(float, getOpenLoop, (ICP phase, float rpm, float clt, SensorResult tps, float crankingTaperFraction), (override));
 	MOCK_METHOD(float, getClosedLoop, (ICP phase, float tps, float rpm, float target), (override));
 	MOCK_METHOD(float, getCrankingTaperFraction, (), (const, override));
@@ -414,16 +426,18 @@ TEST(idle_v2, IntegrationManual) {
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
 	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
 
+  TgtInfo target{1000, 1100};
+
 	// Target of 1000 rpm
 	EXPECT_CALL(dut, getTargetRpm(expectedClt))
-		.WillOnce(Return(1000));
+		.WillOnce(Return(target));
 
 	// 30% of the way through cranking taper
 	EXPECT_CALL(dut, getCrankingTaperFraction())
 		.WillOnce(Return(0.3f));
 
 	// Determine phase will claim we're idling
-	EXPECT_CALL(dut, determinePhase(950, 1000, expectedTps, 15, 0.3f))
+	EXPECT_CALL(dut, determinePhase(950, target, expectedTps, 15, 0.3f))
 		.WillOnce(Return(ICP::Idling));
 
 	// Open loop should be asked for an open loop position
@@ -446,17 +460,19 @@ TEST(idle_v2, IntegrationAutomatic) {
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
 	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
+  
+  TgtInfo target{1000, 1100};
 
 	// Target of 1000 rpm
 	EXPECT_CALL(dut, getTargetRpm(expectedClt))
-		.WillOnce(Return(1000));
+		.WillOnce(Return(target));
 
 	// 40% of the way through cranking taper
 	EXPECT_CALL(dut, getCrankingTaperFraction())
 		.WillOnce(Return(0.4f));
 
 	// Determine phase will claim we're idling
-	EXPECT_CALL(dut, determinePhase(950, 1000, expectedTps, 15, 0.4f))
+	EXPECT_CALL(dut, determinePhase(950, target, expectedTps, 15, 0.4f))
 		.WillOnce(Return(ICP::Idling));
 
 	// Open loop should be asked for an open loop position
@@ -482,17 +498,18 @@ TEST(idle_v2, IntegrationClamping) {
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
 	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
+  TgtInfo target{1000, 1100};
 
 	// Target of 1000 rpm
 	EXPECT_CALL(dut, getTargetRpm(expectedClt))
-		.WillOnce(Return(1000));
+		.WillOnce(Return(target));
 
 	// 50% of the way through cranking taper
 	EXPECT_CALL(dut, getCrankingTaperFraction())
 		.WillOnce(Return(0.5f));
 
 	// Determine phase will claim we're idling
-	EXPECT_CALL(dut, determinePhase(950, 1000, expectedTps, 15, 0.5f))
+	EXPECT_CALL(dut, determinePhase(950, target, expectedTps, 15, 0.5f))
 		.WillOnce(Return(ICP::Idling));
 
 	// Open loop should be asked for an open loop position
