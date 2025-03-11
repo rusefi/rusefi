@@ -40,12 +40,15 @@ IIdleController::TargetInfo IdleController::getTargetRpm(float clt) {
  	float exitRpm = target + 1.5 * rpmUpperLimit;
  
  	// Ramp the target down from the transition RPM to normal over a few seconds
- 	float timeSinceIdleEntry = m_timeInIdlePhase.getElapsedSeconds();
- 	target += interpolateClampedWithValidation(
- 		0, rpmUpperLimit,
- 		3, 0,
- 		timeSinceIdleEntry
- 	);
+  if (engineConfiguration->idleReturnTargetRamp) {
+ 		// Ramp the target down from the transition RPM to normal over a few seconds
+ 		float timeSinceIdleEntry = m_timeInIdlePhase.getElapsedSeconds();
+ 		target += interpolateClamped(
+ 			0, rpmUpperLimit,
+ 			3, 0,
+ 			timeSinceIdleEntry
+ 		);
+ 	}
 
  	idleTarget = target;
  	return { target, entryRpm, exitRpm };
