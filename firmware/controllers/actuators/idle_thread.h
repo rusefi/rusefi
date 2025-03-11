@@ -109,6 +109,8 @@ private:
 	// used by "soft" idle entry
 	float m_crankTaperEndTime = 0.0f;
 	float m_idleTimingSoftEntryEndTime = 0.0f;
+  
+  Timer m_timeInIdlePhase;
 
 	// This is stored by getClosedLoop and used in case we want to "do nothing"
 	float m_lastAutomaticPosition = 0;
