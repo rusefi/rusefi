@@ -35,6 +35,9 @@ IIdleController::TargetInfo IdleController::getTargetRpm(float clt) {
 	float target = (targetRpmByClt < targetRpmAc) ? targetRpmAc : targetRpmByClt;
 	float rpmUpperLimit = engineConfiguration->idlePidRpmUpperLimit;
  	float entryRpm = target + rpmUpperLimit;
+  
+  // Higher exit than entry to add some hysteresis to avoid bouncing around upper threshold
+ 	float exitRpm = target + 1.5 * rpmUpperLimit;
  
  	// Ramp the target down from the transition RPM to normal over a few seconds
  	float timeSinceIdleEntry = m_timeInIdlePhase.getElapsedSeconds();
@@ -45,7 +48,7 @@ IIdleController::TargetInfo IdleController::getTargetRpm(float clt) {
  	);
 
  	idleTarget = target;
- 	return { target, entryRpm };
+ 	return { target, entryRpm, exitRpm };
 }
 
 IIdleController::Phase IdleController::determinePhase(float rpm, IIdleController::TargetInfo targetRpm, SensorResult tps, float vss, float crankingTaperFraction) {
@@ -67,8 +70,13 @@ IIdleController::Phase IdleController::determinePhase(float rpm, IIdleController
 
 	// If rpm too high (but throttle not pressed), we're coasting
 	// ALSO, if still in the cranking taper, disable coasting
-	looksLikeCoasting = rpm > targetRpm.IdleEntryRpm;
-	looksLikeCrankToIdle = crankingTaperFraction < 1;
+  if (rpm > targetRpm.IdleExitRpm) {
+ 		looksLikeCoasting = true;
+ 	} else if (rpm < targetRpm.IdleEntryRpm) {
+ 		looksLikeCoasting = false;
+ 	}
+ 
+ 	looksLikeCrankToIdle = crankingTaperFraction < 1;
 	if (looksLikeCoasting && !looksLikeCrankToIdle) {
 		return Phase::Coasting;
 	}

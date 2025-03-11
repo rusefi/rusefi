@@ -60,12 +60,12 @@ TEST(idle_v2, testTargetRpm) {
 	}
 
 	engineConfiguration->idlePidRpmUpperLimit = 50;
- 	EXPECT_EQ((TgtInfo{100, 150}), dut.getTargetRpm(10));
- 	EXPECT_EQ((TgtInfo{500, 550}), dut.getTargetRpm(50));
+	EXPECT_EQ((TgtInfo{100, 150, 175}), dut.getTargetRpm(10));
+ 	EXPECT_EQ((TgtInfo{500, 550, 575}), dut.getTargetRpm(50));
  
  	engineConfiguration->idlePidRpmUpperLimit = 73;
- 	EXPECT_EQ((TgtInfo{100, 173}), dut.getTargetRpm(10));
- 	EXPECT_EQ((TgtInfo{500, 573}), dut.getTargetRpm(50));
+	EXPECT_EQ((TgtInfo{100, 173, 209.5}), dut.getTargetRpm(10));
+ 	EXPECT_EQ((TgtInfo{500, 573, 609.5}), dut.getTargetRpm(50));
 }
 
 TEST(idle_v2, testDeterminePhase) {
@@ -84,6 +84,7 @@ TEST(idle_v2, testDeterminePhase) {
  
  	// Idling threshold is 1000 + 100 rpm
  	targetInfo.IdleEntryRpm = 1000 + 100;
+  targetInfo.IdleExitRpm = 1000 + 100;
 
 	// First test stopped engine
 	engine->rpmCalculator.setRpmValue(0);
@@ -426,7 +427,7 @@ TEST(idle_v2, IntegrationManual) {
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
 	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
 
-  TgtInfo target{1000, 1100};
+  TgtInfo target{1000, 1100, 1100};
 
 	// Target of 1000 rpm
 	EXPECT_CALL(dut, getTargetRpm(expectedClt))
@@ -461,7 +462,7 @@ TEST(idle_v2, IntegrationAutomatic) {
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
 	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
   
-  TgtInfo target{1000, 1100};
+  TgtInfo target{1000, 1100, 1100};
 
 	// Target of 1000 rpm
 	EXPECT_CALL(dut, getTargetRpm(expectedClt))
@@ -498,7 +499,7 @@ TEST(idle_v2, IntegrationClamping) {
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, expectedTps.Value);
 	Sensor::setMockValue(SensorType::Clt, expectedClt);
 	Sensor::setMockValue(SensorType::VehicleSpeed, 15.0);
-  TgtInfo target{1000, 1100};
+  TgtInfo target{1000, 1100, 1100};
 
 	// Target of 1000 rpm
 	EXPECT_CALL(dut, getTargetRpm(expectedClt))
