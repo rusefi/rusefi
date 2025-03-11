@@ -134,7 +134,7 @@ private:
 
 typedef Map3D<VE_RPM_COUNT, VE_LOAD_COUNT, uint16_t, uint16_t, uint16_t> ve_Map3D_t;
 typedef Map3D<PEDAL_TO_TPS_SIZE, PEDAL_TO_TPS_SIZE, uint8_t, uint8_t, uint8_t> pedal2tps_t;
-typedef Map3D<FUEL_RPM_COUNT, FUEL_LOAD_COUNT, uint16_t, uint16_t, uint16_t> mapEstimate_Map3D_t;
+typedef Map3D<INJ_PHASE_RPM_COUNT, INJ_PHASE_LOAD_COUNT, uint16_t, uint16_t, uint16_t> mapEstimate_Map3D_t;
 
 /**
  * @param precision for example '0.1' for one digit fractional part. Default to 0.01, two digits.

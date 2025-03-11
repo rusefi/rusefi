@@ -1937,9 +1937,12 @@ uint16_t[INJ_PHASE_RPM_COUNT] injPhaseRpmBins;;"RPM",	   1, 0, 0, 18000, 0
 
 uint8_t[TCU_SOLENOID_COUNT x TCU_GEAR_COUNT] tcuSolenoidTable;;"onoff", 1, 0, 0, 1, 0
 
-uint16_t[FUEL_LOAD_COUNT x FUEL_RPM_COUNT] autoscale mapEstimateTable;;"kPa", 0.01, 0, 0, @@MAP_UPPER_LIMIT@@, 2
-uint16_t[FUEL_LOAD_COUNT] autoscale mapEstimateTpsBins;;"% TPS", {1/@@TPS_2_BYTE_PACKING_MULT@@}, 0, 0, 100, 1
-uint16_t[FUEL_RPM_COUNT] mapEstimateRpmBins;;"RPM", 1, 0, 0, 18000, 0
+#define MAP_EST_RPM_COUNT 16
+#define MAP_EST_LOAD_COUNT 16
+
+uint16_t[MAP_EST_LOAD_COUNT x MAP_EST_RPM_COUNT] autoscale mapEstimateTable;;"kPa", 0.01, 0, 0, @@MAP_UPPER_LIMIT@@, 2
+uint16_t[MAP_EST_LOAD_COUNT] autoscale mapEstimateTpsBins;;"% TPS", {1/@@TPS_2_BYTE_PACKING_MULT@@}, 0, 0, 100, 1
+uint16_t[MAP_EST_RPM_COUNT] mapEstimateRpmBins;;"RPM", 1, 0, 0, 18000, 0
 
 #define VVT_TABLE_SIZE 8
 
