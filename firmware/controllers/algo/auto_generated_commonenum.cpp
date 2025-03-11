@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Wed Mar 05 00:15:53 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Tue Mar 11 17:37:52 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -618,6 +618,8 @@ const char *getInjector_compensation_mode_e(injector_compensation_mode_e value){
 switch(value) {
 case ICM_FixedRailPressure:
   return "ICM_FixedRailPressure";
+case ICM_HPFP_Manual_Compensation:
+  return "ICM_HPFP_Manual_Compensation";
 case ICM_None:
   return "ICM_None";
 case ICM_SensedRailPressure:

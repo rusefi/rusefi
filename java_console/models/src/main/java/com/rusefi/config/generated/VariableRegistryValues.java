@@ -485,7 +485,7 @@ public class VariableRegistryValues {
 	public static final int ETB_BIAS_CURVE_LENGTH = 8;
 	public static final int ETB_COUNT = 2;
 	public static final int ETB_HW_MAX_FREQUENCY = 3000;
-	public static final int FLASH_DATA_VERSION = 250309;
+	public static final int FLASH_DATA_VERSION = 250311;
 	public static final String FRONTEND_TITLE_BAR_NAME = "rusEFI";
 	public static final int fuel_cyl_trim_s_size = 16;
 	public static final int FUEL_LEVEL_TABLE_COUNT = 8;
@@ -1070,6 +1070,7 @@ public class VariableRegistryValues {
 	public static final int hpfp_cam_e_HPFP_CAM_NONE = 0;
 	public static final int HPFP_COMPENSATION_SIZE = 10;
 	public static final int HPFP_DEADTIME_SIZE = 8;
+	public static final int HPFP_FUEL_MASS_COMPENSATION_SIZE = 8;
 	public static final int HPFP_LOBE_PROFILE_SIZE = 16;
 	public static final int HPFP_TARGET_SIZE = 10;
 	public static final int HW_EVENT_TYPES = 4;
@@ -1122,6 +1123,7 @@ public class VariableRegistryValues {
 	public static final String INJECTOR_1_NAME = "Injector #1";
 	public static final String INJECTOR_2_NAME = "Injector #2";
 	public static final int injector_compensation_mode_e_ICM_FixedRailPressure = 1;
+	public static final int injector_compensation_mode_e_ICM_HPFP_Manual_Compensation = 3;
 	public static final int injector_compensation_mode_e_ICM_None = 0;
 	public static final int injector_compensation_mode_e_ICM_SensedRailPressure = 2;
 	public static final int injector_pressure_type_e_IPT_High = 1;
@@ -1225,7 +1227,7 @@ public class VariableRegistryValues {
 	public static final int PEDAL_TO_TPS_SIZE = 8;
 	public static final String pedalSensor_NAME = "Accelerator pedal";
 	public static final String pedalToTpsTbl_NAME = "ETB pedal target";
-	public static final int persistent_config_s_size = 22404;
+	public static final int persistent_config_s_size = 22516;
 	public static final int pid_s_size = 20;
 	public static final int pin_input_mode_e_PI_DEFAULT = 0;
 	public static final int pin_input_mode_e_PI_INVERTED_DEFAULT = 4;
@@ -1294,7 +1296,6 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 1698248056;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1347,7 +1348,7 @@ public class VariableRegistryValues {
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_BUTTON = 0;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_DOWN_SWITCH = 2;
 	public static final int torqueReductionActivationMode_e_TORQUE_REDUCTION_CLUTCH_UP_SWITCH = 3;
-	public static final int TOTAL_CONFIG_SIZE = 22404;
+	public static final int TOTAL_CONFIG_SIZE = 22516;
 	public static final int TPS_2_BYTE_PACKING_MULT = 100;
 	public static final int TPS_PPS_TOO_HIGH_THRESHOLD = 110;
 	public static final int TPS_PPS_TOO_LOW_THRESHOLD = -10;
@@ -1566,7 +1567,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.03.11.f407-discovery.1698248056";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.03.11.f407-discovery.3457301446";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
