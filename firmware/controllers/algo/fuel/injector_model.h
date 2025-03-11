@@ -56,6 +56,7 @@ public:
 	void updateState() override;
 	expected<float> getFuelDifferentialPressure() const override;
 	expected<float> getFuelPressure() const override;
+	floatms_t getInjectionDuration(float fuelMassGram) const override;
 
 	using interface_t = IInjectorModel; // Mock interface
 private:

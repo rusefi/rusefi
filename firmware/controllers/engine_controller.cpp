@@ -701,6 +701,10 @@ bool validateConfigOnStartUpOrBurn() {
 		ensureArrayIsAscending("HPFP lobe profile", config->hpfpLobeProfileQuantityBins);
 		ensureArrayIsAscending("HPFP target rpm", config->hpfpTargetRpmBins);
 		ensureArrayIsAscending("HPFP target load", config->hpfpTargetLoadBins);
+
+		ensureArrayIsAscending("HPFP fuel mass compensation fuel pressure", config->hpfpFuelMassCompensationFuelPressure);
+		ensureArrayIsAscending("HPFP fuel mass compensation fuel mass", config->hpfpFuelMassCompensationFuelMass);
+
 	}
 
 	// VVT
