@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Supplier;
 
@@ -32,9 +33,11 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 public class CalibrationsHelper {
     private static final Logging log = getLogging(CalibrationsHelper.class);
 
-    private static final String PREVIOUS_CALIBRATIONS_FILE_NAME = BinaryProtocolLocalCache.STATE_FOLDER + "prev_calibrations";
-    private static final String UPDATED_CALIBRATIONS_FILE_NAME = BinaryProtocolLocalCache.STATE_FOLDER + "updated_calibrations";
-    private static final String MERGED_CALIBRATIONS_FILE_NAME = BinaryProtocolLocalCache.STATE_FOLDER + "merged_calibrations";
+    private static final String PREVIOUS_CALIBRATIONS_FILE_NAME_COMPONENT = "prev_calibrations";
+    private static final String UPDATED_CALIBRATIONS_FILE_NAME_COMPONENT = "updated_calibrations";
+    private static final String MERGED_CALIBRATIONS_FILE_NAME_COMPONENT = "merged_calibrations";
+
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-mm-dd-hh.mm.ss");
 
     public static boolean updateFirmwareAndRestorePreviousCalibrations(
         final JComponent parent,
@@ -44,10 +47,12 @@ public class CalibrationsHelper {
     ) {
         AutoupdateUtil.assertNotAwtThread();
 
+        final String timestampFoleNameComponent = DATE_FORMAT.format(new Date());
+
         final Optional<CalibrationsInfo> prevCalibrations = readAndBackupCurrentCalibrations(
             ecuPort,
             callbacks,
-            PREVIOUS_CALIBRATIONS_FILE_NAME
+            getFileNameWithoutExtension(timestampFoleNameComponent, PREVIOUS_CALIBRATIONS_FILE_NAME_COMPONENT)
         );
         if (!prevCalibrations.isPresent()) {
             callbacks.logLine("Failed to back up current calibrations...");
@@ -61,7 +66,7 @@ public class CalibrationsHelper {
         final Optional<CalibrationsInfo> updatedCalibrations = readAndBackupCurrentCalibrations(
             ecuPort,
             callbacks,
-            UPDATED_CALIBRATIONS_FILE_NAME
+            getFileNameWithoutExtension(timestampFoleNameComponent, UPDATED_CALIBRATIONS_FILE_NAME_COMPONENT)
         );
         if (!updatedCalibrations.isPresent()) {
             callbacks.logLine("Failed to back up updated calibrations...");
@@ -79,7 +84,11 @@ public class CalibrationsHelper {
             "Restore previous calibrations",
             JOptionPane.YES_NO_OPTION
         ) == JOptionPane.YES_OPTION)) {
-            if (!backUpCalibrationsInfo(mergedCalibrations.get(), MERGED_CALIBRATIONS_FILE_NAME, callbacks)) {
+            if (!backUpCalibrationsInfo(
+                mergedCalibrations.get(),
+                getFileNameWithoutExtension(timestampFoleNameComponent, MERGED_CALIBRATIONS_FILE_NAME_COMPONENT),
+                callbacks
+            )) {
                 callbacks.logLine("Failed to back up merged calibrations...");
                 return false;
             }
@@ -92,6 +101,17 @@ public class CalibrationsHelper {
         } else {
             return true;
         }
+    }
+
+    private static String getFileNameWithoutExtension(
+        final String timestampNameComponent,
+        final String fileNameComponent
+    ) {
+        return String.format("%s%s_%s",
+            BinaryProtocolLocalCache.STATE_FOLDER,
+            timestampNameComponent,
+            fileNameComponent
+        );
     }
 
     private static Optional<CalibrationsInfo> readCalibrationsInfo(
