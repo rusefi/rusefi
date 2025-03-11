@@ -10,8 +10,7 @@ import javax.xml.bind.JAXBException;
 import java.util.List;
 
 import static com.rusefi.maintenance.CalibrationsTestData.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class IniFieldsAnalyzerTest {
     private CalibrationsTestData testData;
@@ -30,6 +29,11 @@ public class IniFieldsAnalyzerTest {
             testData.getUpdatedMsq(),
             testCallbacks
         );
+    }
+
+    @Test
+    public void testVehicleName() {
+        checkValueToUpdateExist(VEHICLE_NAME_FIELD_NAME, PREV_VEHICLE_NAME_VALUE, null);
     }
 
     @Test
@@ -133,11 +137,16 @@ public class IniFieldsAnalyzerTest {
             prevValue.getValue(),
             String.format("Unexpected prev value for `%s` field.", fieldName)
         );
-        assertEquals(
-            expectedUpdatedFieldValue,
-            testData.getUpdatedValue(fieldName).getValue(),
-            String.format("Unexpected updated value for `%s` field.", fieldName)
-        );
+        final Constant updatedValue = testData.getUpdatedValue(fieldName);
+        if (expectedUpdatedFieldValue != null) {
+            assertEquals(
+                expectedUpdatedFieldValue,
+                updatedValue.getValue(),
+                String.format("Unexpected updated value for `%s` field.", fieldName)
+            );
+        } else {
+            assertNull(updatedValue);
+        }
         final IniField expectedField = testData.getUpdatedIni().getIniField(fieldName);
         for (final Pair<IniField, Constant> item: valuesToUpdate) {
             if (item.first.equals(expectedField) && item.second.equals(prevValue)) {

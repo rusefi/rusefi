@@ -11,10 +11,14 @@ import com.rusefi.tune.xml.Msq;
 import javax.xml.bind.JAXBException;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CalibrationsTestData {
+    static final String VEHICLE_NAME_FIELD_NAME = "vehicleName";
     static final String IGNITION_TABLE_FIELD_NAME = "ignitionTable";
+
+    static final String PREV_VEHICLE_NAME_VALUE = "Test Vehicle";
 
     static final String PREV_IGNITION_TABLE_VALUE = "\n" +
         "         12.1 14.2 18.1 22.0 25.9 29.9 33.8 37.7 41.6 42.9 42.9 42.9 42.9 42.9 42.9 43.0\n" +
@@ -65,6 +69,11 @@ class CalibrationsTestData {
             Msq.readTune("src/test/java/com/rusefi/maintenance/test_data/updated_calibrations.msq"),
             IniFileModelImpl.readIniFile("src/test/java/com/rusefi/maintenance/test_data/updated_calibrations.ini")
         );
+        assertEquals(
+            PREV_VEHICLE_NAME_VALUE,
+            result.getPrevValue(VEHICLE_NAME_FIELD_NAME).getValue()
+        );
+        assertNull(result.getUpdatedValue(VEHICLE_NAME_FIELD_NAME));
         assertEquals(
             PREV_IGNITION_TABLE_VALUE,
             result.getPrevValue(IGNITION_TABLE_FIELD_NAME).getValue()
