@@ -1,6 +1,8 @@
 #!/bin/bash
 # file gen_config_default.sh
 
+# TODO: there is a chance that we can simply remove this file completely? let's try once we fix https://github.com/rusefi/rusefi/issues/7604
+
 cd ../java_tools
 ./gradlew :config_definition:shadowJar
 cd ../firmware
