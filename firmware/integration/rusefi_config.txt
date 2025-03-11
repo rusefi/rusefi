@@ -105,7 +105,7 @@ struct_no_prefix persistent_config_s
 
 struct_no_prefix engine_configuration_s
 
-! see 'blockingFactor' in rusefi.ini
+! see 'blockingFactor' in tunerstudio.template.ini
 ! please keep it bigger than (TS_TOTAL_OUTPUT_SIZE / 2) so whole livedata can be
 ! transfered using two chunks, this will give us 500 Hz refresh rate.
 #define BLOCKING_FACTOR 1024

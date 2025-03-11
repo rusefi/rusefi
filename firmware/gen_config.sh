@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "This script reads rusefi_config.txt and produces firmware persistent configuration headers"
-echo "The storage section of rusefi.ini is updated as well"
+echo "The storage section of rusefi_xxx.ini is updated as well"
 
 rm -f gen_config.log
 rm -f gen_config_board.log
