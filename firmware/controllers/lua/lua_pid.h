@@ -17,6 +17,10 @@ struct LuaPid final {
 		m_params.minValue = min;
 		m_params.maxValue = max;
 
+		if (m_params.minValue >= m_params.maxValue) {
+		  criticalError("Lua: minValue %d/maxValue %d", m_params.minValue, m_params.maxValue);
+		}
+
 		m_lastUpdate.reset();
 	}
 
@@ -61,6 +65,10 @@ struct LuaIndustrialPid final {
 		m_params.periodMs = 0;
 		m_params.minValue = min;
 		m_params.maxValue = max;
+
+		if (m_params.minValue >= m_params.maxValue) {
+		  criticalError("Lua: minValue %d/maxValue %d", m_params.minValue, m_params.maxValue);
+		}
 
 		m_lastUpdate.reset();
 	}
