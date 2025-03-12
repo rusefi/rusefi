@@ -2144,9 +2144,9 @@ int8_t[HPFP_COMPENSATION_SIZE x HPFP_COMPENSATION_SIZE] hpfpCompensation;;"%", 1
 uint16_t[HPFP_COMPENSATION_SIZE] autoscale hpfpCompensationLoadBins;;"cc/lobe", 0.001, 0, 0, 65, 3
 uint8_t[HPFP_COMPENSATION_SIZE] autoscale hpfpCompensationRpmBins;;"RPM", 50, 0, 0, 12500, 0
 
-uint8_t[HPFP_FUEL_MASS_COMPENSATION_SIZE x HPFP_FUEL_MASS_COMPENSATION_SIZE] autoscale hpfpFuelMassCompensation;;"%", 0.1, 0, 1, 10, 0
-uint16_t[HPFP_FUEL_MASS_COMPENSATION_SIZE] autoscale hpfpFuelMassCompensationFuelMass;;"fuel mass/g", 0.001, 0, 0, 30, 3
-uint32_t[HPFP_FUEL_MASS_COMPENSATION_SIZE] autoscale hpfpFuelMassCompensationFuelPressure;;"kPa", 0.1, 0, 0, 30000, 0
+uint16_t[HPFP_FUEL_MASS_COMPENSATION_SIZE x HPFP_FUEL_MASS_COMPENSATION_SIZE] autoscale hpfpFuelMassCompensation;;"%", 0.01, 0, 1, 10, 2
+uint16_t[HPFP_FUEL_MASS_COMPENSATION_SIZE] autoscale hpfpFuelMassCompensationFuelMass;;"fuel mass/mg", 0.01, 0, 0, 1000, 2
+uint32_t[HPFP_FUEL_MASS_COMPENSATION_SIZE] autoscale hpfpFuelMassCompensationFuelPressure;;"bar", 0.1, 0, 0, 300, 1
 
 uint16_t[ENGINE_NOISE_CURVE_SIZE] knockNoiseRpmBins;;"RPM", 1, 0, 0, 30000, 0
 int8_t[ENGINE_NOISE_CURVE_SIZE] autoscale knockBaseNoise;Knock sensor output knock detection threshold depending on current RPM.;"dB", 0.5, 0, -99, 10, 1
