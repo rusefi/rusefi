@@ -2033,6 +2033,7 @@ struct engine_configuration_s {
 	 */
 	uint8_t alignmentFill_at_899[1] = {};
 	/**
+	 * Ramp the idle target down from the entry threshold over 3 seconds when returning to idle. Helps prevent overshooting (below) the idle target while returning to idle from coasting.
 	offset 900 bit 0 */
 	bool idleReturnTargetRamp : 1 {};
 	/**

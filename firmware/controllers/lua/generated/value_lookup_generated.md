@@ -578,7 +578,7 @@ Maximum time to crank starter when start/stop button is pressed
 Only respond once lambda is out of range for this period of time. Use to avoid transients triggering lambda protection when not needed
 
 ### idleReturnTargetRamp
-
+Ramp the idle target down from the entry threshold over 3 seconds when returning to idle. Helps prevent overshooting (below) the idle target while returning to idle from coasting.
 
 ### useHbridgesToDriveIdleStepper
 If enabled we use two H-bridges to drive stepper idle air valve
