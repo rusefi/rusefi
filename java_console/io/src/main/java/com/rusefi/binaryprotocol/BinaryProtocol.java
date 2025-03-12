@@ -352,7 +352,7 @@ public class BinaryProtocol {
                     (ConnectionAndMeta.saveSettingsToFile() ? BinaryProtocolLocalCache.CONFIGURATION_RUSEFI_BINARY : null),
                     BinaryProtocolLocalCache.CONFIGURATION_RUSEFI_XML
                 );
-            } catch (Exception e) {
+            } catch (IOException | JAXBException e) {
                 log.error("Ignoring " + e);
             }
         }
