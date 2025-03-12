@@ -178,7 +178,7 @@ percent_t IdleController::getOpenLoop(Phase phase, float rpm, float clt, SensorR
 	percent_t crankingValvePosition = getCrankingOpenLoop(clt);
 
 	isCranking = phase == Phase::Cranking;
-	isIdleCoasting = phase == Phase::Coasting;
+	isIdleCoasting = phase == Phase::Coasting || (phase == Phase::Running && engineConfiguration->modeledFlowIdle);
 
 	// if we're cranking, nothing more to do.
 	if (isCranking) {
@@ -296,7 +296,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	// If errorAmpCoef > 1.0, then PID thinks that RPM is lower than it is, and controls IAC more aggressively
 	idlePid->setErrorAmplification(errorAmpCoef);
 
-	percent_t newValue = idlePid->getOutput(targetRpm, rpm, SLOW_CALLBACK_PERIOD_MS / 1000.0f);
+	percent_t newValue = idlePid->getOutput(targetRpm, rpm, FAST_CALLBACK_PERIOD_MS / 1000.0f);
 	idleState = PID_VALUE;
 
 	// the state of PID has been changed, so we might reset it now, but only when needed (see idlePidDeactivationTpsThreshold)
@@ -398,7 +398,7 @@ float IdleController::getIdlePosition(float rpm) {
 
 }
 
-void IdleController::onSlowCallback() {
+void IdleController::onFastCallback() {
 #if EFI_SHAFT_POSITION_INPUT
 	float position = getIdlePosition(engine->triggerCentral.instantRpm.getInstantRpm());
 	applyIACposition(position);

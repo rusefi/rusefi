@@ -77,7 +77,7 @@ public:
 	float getClosedLoop(IIdleController::Phase phase, float tpsPos, float rpm, float targetRpm) override;
 
 	void onConfigurationChange(engine_configuration_s const * previousConfig) final;
-	void onSlowCallback() final;
+	void onFastCallback() final;
 
 	// Allow querying state from outside
 	bool isIdlingOrTaper() const override {
