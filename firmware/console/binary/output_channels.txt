@@ -174,8 +174,8 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	uint32_t debugIntField1;;"val", 1, 0, 0, 0, 0
 	uint32_t debugIntField2;;"val", 1, 0, 0, 0, 0
 	uint32_t debugIntField3;;"val", 1, 0, 0, 0, 0
-	int16_t debugIntField4;;"val", 1, 0, 0, 0, 0
-	int16_t debugIntField5;;"val", 1, 0, 0, 0, 0
+	uint32_t debugIntField4;;"val", 1, 0, 0, 0, 0
+	uint32_t debugIntField5;;"val", 1, 0, 0, 0, 0
 
 	int16_t[EGT_CHANNEL_COUNT iterate] autoscale egt;EGT;"deg C",{1/@@PACK_MULT_EGTEMPERATURE@@}, 0, 0, 0, 2
 
