@@ -90,6 +90,7 @@ public class ConsoleTools {
     on the one hand we can do low level DFU programming but c'mon we are not planning to maintain it any day soon!
         registerTool("dfu", DfuTool::run, "Program specified file into ECU via DFU");
 */
+        // java -jar rusefi_console.jar local_proxy
         registerTool("local_proxy", ConsoleTools::localProxy, "Detect rusEFI ECU and proxy serial <> TCP");
 
         registerTool("detect", ConsoleTools::detect, "Find attached rusEFI");

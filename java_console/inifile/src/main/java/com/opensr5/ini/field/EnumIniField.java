@@ -61,6 +61,7 @@ public class EnumIniField extends IniField {
 
     @NotNull
     private ByteBuffer getByteBuffer(ConfigurationImage image) {
+        Objects.requireNonNull(image, "image enum getter");
         return image.getByteBuffer(getOffset(), 4);
     }
 

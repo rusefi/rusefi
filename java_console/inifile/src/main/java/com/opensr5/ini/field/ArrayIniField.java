@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.nio.ByteBuffer;
 import java.util.LinkedList;
+import java.util.Objects;
 
 public class ArrayIniField extends IniField {
     private final FieldType type;
@@ -121,6 +122,7 @@ public class ArrayIniField extends IniField {
 
     @Override
     public void setValue(ConfigurationImage image, Constant constant) {
+        Objects.requireNonNull(image, "image array setter");
         final String[][] values = getValues(constant.getValue());
         for (int rowIndex = 0; rowIndex < values.length; rowIndex++) {
             final String[] row = values[rowIndex];
