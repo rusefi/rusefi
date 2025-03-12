@@ -2,5 +2,5 @@
 // was generated automatically by rusEFI tool config_definition-all.jar based on gen_config.sh by SignatureConsumer
 //
 
-#define SIGNATURE_HASH 4111538206
-#define TS_SIGNATURE "rusEFI master.2025.03.12.alphax-4chan.4111538206"
+#define SIGNATURE_HASH 441729987
+#define TS_SIGNATURE "rusEFI master.2025.03.12.alphax-4chan.441729987"
