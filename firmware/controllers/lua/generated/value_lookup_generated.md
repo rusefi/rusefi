@@ -577,6 +577,9 @@ Maximum time to crank starter when start/stop button is pressed
 ### lambdaProtectionTimeout
 Only respond once lambda is out of range for this period of time. Use to avoid transients triggering lambda protection when not needed
 
+### idleReturnTargetRamp
+
+
 ### useHbridgesToDriveIdleStepper
 If enabled we use two H-bridges to drive stepper idle air valve
 

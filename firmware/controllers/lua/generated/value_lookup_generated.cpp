@@ -584,6 +584,9 @@ float getConfigValueByName(const char *name) {
 // lambdaProtectionTimeout
 		case -1645106444:
 			return engineConfiguration->lambdaProtectionTimeout;
+// idleReturnTargetRamp
+		case 118504154:
+			return engineConfiguration->idleReturnTargetRamp;
 // useHbridgesToDriveIdleStepper
 		case 13806936:
 			return engineConfiguration->useHbridgesToDriveIdleStepper;
@@ -2951,6 +2954,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1645106444:
 	{
 		engineConfiguration->lambdaProtectionTimeout = (int)value;
+		return 1;
+	}
+		case 118504154:
+	{
+		engineConfiguration->idleReturnTargetRamp = (int)value;
 		return 1;
 	}
 		case 13806936:

@@ -417,6 +417,7 @@ public class Fields {
 	public static final String[] maf_sensor_type_e = {"v0", "v1", "v2", "v3"};
 	public static final Field MAFSENSORTYPE = Field.create("MAFSENSORTYPE", 898, FieldType.INT8, maf_sensor_type_e).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_899 = Field.create("ALIGNMENTFILL_AT_899", 899, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field IDLERETURNTARGETRAMP = Field.create("IDLERETURNTARGETRAMP", 900, FieldType.BIT, 0).setBaseOffset(0);
 	public static final Field USEHBRIDGESTODRIVEIDLESTEPPER = Field.create("USEHBRIDGESTODRIVEIDLESTEPPER", 900, FieldType.BIT, 2).setBaseOffset(0);
 	public static final Field MULTISPARKENABLE = Field.create("MULTISPARKENABLE", 900, FieldType.BIT, 3).setBaseOffset(0);
 	public static final Field ENABLELAUNCHRETARD = Field.create("ENABLELAUNCHRETARD", 900, FieldType.BIT, 4).setBaseOffset(0);
@@ -2215,6 +2216,7 @@ public class Fields {
 	SENSORCHARTMODE,
 	MAFSENSORTYPE,
 	ALIGNMENTFILL_AT_899,
+	IDLERETURNTARGETRAMP,
 	USEHBRIDGESTODRIVEIDLESTEPPER,
 	MULTISPARKENABLE,
 	ENABLELAUNCHRETARD,

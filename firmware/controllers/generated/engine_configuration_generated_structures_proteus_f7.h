@@ -2034,7 +2034,7 @@ struct engine_configuration_s {
 	uint8_t alignmentFill_at_899[1] = {};
 	/**
 	offset 900 bit 0 */
-	bool unused920_0 : 1 {};
+	bool idleReturnTargetRamp : 1 {};
 	/**
 	offset 900 bit 1 */
 	bool unused920_1 : 1 {};
