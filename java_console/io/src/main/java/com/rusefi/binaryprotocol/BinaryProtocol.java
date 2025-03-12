@@ -298,13 +298,13 @@ public class BinaryProtocol {
 
     @NotNull
     public ConfigurationImageWithMeta readFullImageFromController(final ConfigurationImageMeta meta) {
+        log.info("Reading from controller " + meta.getEcuSignature());
         final ConfigurationImageWithMeta imageWithMeta = new ConfigurationImageWithMeta(meta);
         final ConfigurationImage image = imageWithMeta.getConfigurationImage();
 
         int offset = 0;
 
         long start = System.currentTimeMillis();
-        log.info("Reading from controller...");
 
         while (offset < image.getSize() && (System.currentTimeMillis() - start < Timeouts.READ_IMAGE_TIMEOUT)) {
             if (stream.isClosed())

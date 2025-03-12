@@ -7,6 +7,8 @@ public abstract class ConfigurationImageMeta {
 
     public abstract int getImageSize();
 
+    public abstract String getEcuSignature();
+
     public static <MetaType extends ConfigurationImageMeta> String getZipEntryName(final Class<MetaType> clazz) {
         return String.format("%s.yaml", clazz.getSimpleName());
     }
