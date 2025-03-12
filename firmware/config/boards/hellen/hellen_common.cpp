@@ -78,8 +78,22 @@ PUBLIC_API_WEAK bool onHellenSdChange(int value) {
 	return false;
 }
 
+#ifndef EFI_BOOTLOADER
+Timer hellenEnPinStateChange;
+#endif
+
 static void setHellenEnValue(int value) {
+  // todo: can we use 'megaEn.getLogicValue()' instead?
+  static int currentHellenEnValue = -1;
+
 	megaEn.setValue(value, /*isForce*/ true);
+	if (currentHellenEnValue != value) {
+	  currentHellenEnValue = value;
+#ifndef EFI_BOOTLOADER
+	  hellenEnPinStateChange.reset();
+#endif
+	}
+	// todo: shall we move below callbacks into 'only-if-changed' conditional block?
 	onHellenEnChange(value);
   AdcSubscription::ResetFilters();
 }

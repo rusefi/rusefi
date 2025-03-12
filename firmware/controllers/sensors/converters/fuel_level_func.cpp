@@ -6,11 +6,22 @@
 
 #include "fuel_level_func.h"
 
+#if EFI_PROD_CODE && HW_HELLEN
+#include "hellen_meta.h"
+extern Timer hellenEnPinStateChange;
+#endif // HW_HELLEN
+
 SensorResult FuelLevelFunc::convert(const float inputVoltage) {
 	if (std::isnan(inputVoltage)) {
 		criticalError("temp error FuelLevelFunc NaN input");
 		m_filteredValue.reset();
 		return UnexpectedCode::Unknown;
+#if EFI_PROD_CODE && HW_HELLEN
+  } else if (isBoardWithPowerManagement() && !hellenEnPinStateChange.hasElapsedMs(200)) {
+    // todo: can we accomplish same reset by AdcSubscription::ResetFilters?
+		m_filteredValue.reset();
+		return UnexpectedCode::Unknown;
+#endif // HW_HELLEN
 	} else if (inputVoltage < engineConfiguration->fuelLevelLowThresholdVoltage) {
 		m_filteredValue.reset();
 		return UnexpectedCode::Low;
