@@ -56,6 +56,11 @@ float FuelLevelFunc::filterFuelValue(const float inputVoltage) {
 	  efiPrintf("[temp] initial %f", inputVoltage);
 		updateFilteredValue(inputVoltage);
 	}
+static bool isFirst = true;
+  if (isFirst) {
+    isFirst = false;
+	  efiPrintf("[temp] first %f", m_filteredValue.value());
+  }
 	return m_filteredValue.value();
 }
 

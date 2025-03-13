@@ -8,6 +8,8 @@
 
 class FuelLevelFunc {
 public:
+    FuelLevelFunc() : m_filteredValue() {
+    }
 	SensorResult convert(float inputValue);
 private:
 	float getFuelLevelAlpha() const;
