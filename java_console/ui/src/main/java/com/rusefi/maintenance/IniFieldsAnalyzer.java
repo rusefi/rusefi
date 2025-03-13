@@ -6,16 +6,34 @@ import com.opensr5.ini.field.*;
 import com.rusefi.core.Pair;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.migration.ComposedIniFieldMigrator;
+import com.rusefi.maintenance.migration.TuneMigrationContext;
+import com.rusefi.maintenance.migration.TuneMigrator;
 import com.rusefi.tune.xml.Constant;
 
 import java.util.*;
 
 import static com.devexperts.logging.Logging.getLogging;
 
-public class IniFieldsAnalyzer {
+public enum IniFieldsAnalyzer implements TuneMigrator {
+    INSTANCE;
+
     private static final Logging log = getLogging(IniFieldsAnalyzer.class);
 
-    public static List<Pair<IniField, Constant>> findValuesToUpdate(
+    @Override
+    public void migrateTune(final TuneMigrationContext context) {
+        final List<Pair<IniField, Constant>> valuesToUpdate = findValuesToUpdate(
+            context.getPrevIniFile(),
+            context.getPrevTune().getConstantsAsMap(),
+            context.getUpdatedIniFile(),
+            context.getUpdatedTune().getConstantsAsMap(),
+            context.getCallbacks()
+        );
+        for (final Pair<IniField, Constant> valueToUpdate: valuesToUpdate) {
+            context.getMigratedConstants().put(valueToUpdate.first.getName(), valueToUpdate.second);
+        }
+    }
+
+    private static List<Pair<IniField, Constant>> findValuesToUpdate(
         final IniFileModel prevIni,
         final Map<String, Constant> prevValues,
         final IniFileModel newIni,

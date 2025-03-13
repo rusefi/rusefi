@@ -9,9 +9,9 @@ import com.opensr5.ini.field.*;
 import com.rusefi.SerialPortScanner.PortResult;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolLocalCache;
-import com.rusefi.core.Pair;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.maintenance.migration.TuneMigrationContext;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 
@@ -27,7 +27,6 @@ import java.util.function.Supplier;
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.binaryprotocol.BinaryProtocol.iniFileProvider;
 import static com.rusefi.binaryprotocol.BinaryProtocol.saveConfigurationImageToFiles;
-import static com.rusefi.maintenance.IniFieldsAnalyzer.findValuesToUpdate;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class CalibrationsHelper {
@@ -220,18 +219,20 @@ public class CalibrationsHelper {
         final IniFileModel newIniFile = newCalibrations.getIniFile();
         final Msq newMsq = newCalibrations.generateMsq();
 
-        final List<Pair<IniField, Constant>> valuesToUpdate = findValuesToUpdate(
+        final TuneMigrationContext context = new TuneMigrationContext(
             prevIniFile,
-            prevMsq.getConstantsAsMap(),
+            prevMsq,
             newIniFile,
-            newMsq.getConstantsAsMap(),
+            newMsq,
             callbacks
         );
+        IniFieldsAnalyzer.INSTANCE.migrateTune(context);
+        final Set<Map.Entry<String, Constant>> valuesToUpdate = context.getMigratedConstants().entrySet();
         if (!valuesToUpdate.isEmpty()) {
             final ConfigurationImage mergedImage = newCalibrations.getImage().getConfigurationImage().clone();
-            for (final Pair<IniField, Constant> valueToUpdate : valuesToUpdate) {
-                final IniField fieldToUpdate = valueToUpdate.first;
-                final Constant value = valueToUpdate.second;
+            for (final Map.Entry<String, Constant> valueToUpdate : valuesToUpdate) {
+                final IniField fieldToUpdate = newIniFile.getIniField(valueToUpdate.getKey());
+                final Constant value = valueToUpdate.getValue();
                 fieldToUpdate.setValue(mergedImage, value);
                 callbacks.logLine(String.format(
                     "To restore previous calibrations we are going to update the field `%s` with a value `%s`",
