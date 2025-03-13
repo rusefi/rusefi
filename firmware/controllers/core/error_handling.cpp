@@ -215,7 +215,10 @@ do {																\
 do {																\
 	PRINT("SP 0x%08lx", err->sp);									\
 	for (size_t i = 0; i < ERROR_STACK_DEPTH; i++) {				\
-		PRINT(" 0x%08lx: 0x%08lx", err->sp - i * 4, err->stack[i]);	\
+	  uint32_t cur = err->stack[i]; \
+	  if (cur != 0) { \
+		  PRINT(" 0x%08lx: 0x%08lx", err->sp - i * 4, cur);	\
+		} \
 	}																\
 } while(0)
 

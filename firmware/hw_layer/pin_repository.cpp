@@ -52,7 +52,7 @@ int brainPin_to_index(Gpio brainPin) {
 
 bool brain_pin_markUsed(Gpio brainPin, const char *msg) {
 #ifndef EFI_BOOTLOADER
-	efiPrintf("pin_markUsed: %s on %s", msg, hwPortname(brainPin));
+//	efiPrintf("pin_markUsed: %s on %s", msg, hwPortname(brainPin));
 #endif
 
 	int index = brainPin_to_index(brainPin);
@@ -82,7 +82,7 @@ bool brain_pin_markUsed(Gpio brainPin, const char *msg) {
 
 void brain_pin_markUnused(brain_pin_e brainPin) {
 #ifndef EFI_BOOTLOADER
-	efiPrintf("pin_markUnused: %s", hwPortname(brainPin));
+//	efiPrintf("pin_markUnused: %s", hwPortname(brainPin));
 #endif
 	int index = brainPin_to_index(brainPin);
 	if (index < 0)
@@ -283,7 +283,7 @@ bool brain_pin_is_ext(brain_pin_e brainPin)
 bool gpio_pin_markUsed(ioportid_t port, ioportmask_t pin, const char *msg) {
 	int index = getPortPinIndex(port, pin);
 #ifndef EFI_BOOTLOADER
-	efiPrintf("pin_markUsed: %s on %s", msg, hwOnChipPhysicalPinName(port, pin));
+//	efiPrintf("pin_markUsed: %s on %s", msg, hwOnChipPhysicalPinName(port, pin));
 #endif
 
 	if (getBrainUsedPin(index) != NULL) {
