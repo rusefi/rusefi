@@ -9,7 +9,6 @@ import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 
 import javax.xml.bind.JAXBException;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -94,16 +93,16 @@ class CalibrationsTestData {
         return result;
     }
 
-    Map<String, Constant> getPrevMsq() {
-        return prevMsq.getConstantsAsMap();
+    Msq getPrevMsq() {
+        return prevMsq;
     }
 
     IniFileModel getPrevIni() {
         return prevIni;
     }
 
-    Map<String, Constant> getUpdatedMsq() {
-        return updatedMsq.getConstantsAsMap();
+    Msq getUpdatedMsq() {
+        return updatedMsq;
     }
 
     IniFileModel getUpdatedIni() {

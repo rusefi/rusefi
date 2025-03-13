@@ -1,13 +1,13 @@
 package com.rusefi.maintenance;
 
-import com.opensr5.ini.field.IniField;
-import com.rusefi.core.Pair;
+import com.rusefi.maintenance.migration.TuneMigrationContext;
 import com.rusefi.tune.xml.Constant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.xml.bind.JAXBException;
-import java.util.List;
+
+import java.util.Map;
 
 import static com.rusefi.maintenance.CalibrationsTestData.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,19 +16,22 @@ public class IniFieldsAnalyzerTest {
     private CalibrationsTestData testData;
 
     private TestCallbacks testCallbacks;
-    private List<Pair<IniField, Constant>> valuesToUpdate;
+
+    private Map<String, Constant> valuesToUpdate;
 
     @BeforeEach
     public void setUp() throws JAXBException {
         testData = CalibrationsTestData.load();
         testCallbacks = new TestCallbacks();
-        valuesToUpdate = IniFieldsAnalyzer.findValuesToUpdate(
+        final TuneMigrationContext context = new TuneMigrationContext(
             testData.getPrevIni(),
             testData.getPrevMsq(),
             testData.getUpdatedIni(),
             testData.getUpdatedMsq(),
             testCallbacks
         );
+        IniFieldsAnalyzer.INSTANCE.migrateTune(context);
+        valuesToUpdate = context.getMigratedConstants();
     }
 
     @Test
@@ -130,7 +133,6 @@ public class IniFieldsAnalyzerTest {
         final String expectedPrevFieldValue,
         final String expectedUpdatedFieldValue
     ) {
-        boolean result = false;
         final Constant prevValue = testData.getPrevValue(fieldName);
         assertEquals(
             expectedPrevFieldValue,
@@ -147,13 +149,9 @@ public class IniFieldsAnalyzerTest {
         } else {
             assertNull(updatedValue);
         }
-        final IniField expectedField = testData.getUpdatedIni().getIniField(fieldName);
-        for (final Pair<IniField, Constant> item: valuesToUpdate) {
-            if (item.first.equals(expectedField) && item.second.equals(prevValue)) {
-                result = true;
-                break;
-            }
-        }
-        assertTrue(result, String.format("Values to update must contain %s -> %s", expectedField, prevValue));
+
+        final Constant valueToUpdate = valuesToUpdate.get(fieldName);
+        assertNotNull(valueToUpdate);
+        assertEquals(prevValue, valueToUpdate);
     }
 }
