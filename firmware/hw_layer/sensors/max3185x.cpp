@@ -27,7 +27,7 @@
 
 #if EFI_MAX_31855
 
-#include "thread_controller.h"
+#include "periodic_task.h"
 #include "stored_value_sensor.h"
 
 #ifndef MAX3185X_REFRESH_TIME
@@ -35,13 +35,8 @@
 #endif
 
 /* TODO: move all stuff to Max3185xRead class */
-class Max3185xRead final : public ThreadController<UTILITY_THREAD_STACK_SIZE> {
+class Max3185xRead final : public PeriodicTimerController {
 public:
-	Max3185xRead()
-		: ThreadController("MAX3185X", MAX31855_PRIO)
-	{
-	}
-
 	typedef enum {
 		UNKNOWN_TYPE = 0,
 		MAX31855_TYPE = 1,
@@ -82,7 +77,7 @@ public:
 					sensor.Register();
 				}
 			}
-			ThreadController::start();
+			PeriodicTimerController::start();
 			return 0;
 		}
 
@@ -91,7 +86,7 @@ public:
 	}
 
 	void stop(void) {
-		ThreadController::stop();
+		PeriodicTimerController::stop();
 
 		for (size_t i = 0; i < EGT_CHANNEL_COUNT; i++) {
 			if (!isBrainPinValid(m_cs[i])) {
@@ -105,25 +100,23 @@ public:
 		}
 	}
 
-	void ThreadTask() override {
-		while (!chThdShouldTerminateX()) {
-			for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
-				float value;
+	void PeriodicTask() override {
+		for (int i = 0; i < EGT_CHANNEL_COUNT; i++) {
+			float value;
 
-				Max3185xState ret = getMax3185xEgtValues(i, &value, NULL);
-				if (ret == MAX3185X_OK) {
-					auto& sensor = egtSensors[i];
+			Max3185xState ret = getMax3185xEgtValues(i, &value, NULL);
+			if (ret == MAX3185X_OK) {
+				auto& sensor = egtSensors[i];
 
-					sensor.setValidValue(value, getTimeNowNt());
-				} else {
-					/* TODO: report error code? */
-				}
+				sensor.setValidValue(value, getTimeNowNt());
+			} else {
+				/* TODO: report error code? */
 			}
-
-			chThdSleepMilliseconds(MAX3185X_REFRESH_TIME);
 		}
+	}
 
-		chThdExit((msg_t)0x0);
+	int getPeriodMs() override {
+		return 500;
 	}
 
 	/* Debug stuff */
