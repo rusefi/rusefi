@@ -2038,7 +2038,7 @@ struct engine_configuration_s {
 	bool idleReturnTargetRamp : 1 {};
 	/**
 	offset 900 bit 1 */
-	bool unused920_1 : 1 {};
+	bool unused920_1testChange : 1 {};
 	/**
 	 * If enabled we use two H-bridges to drive stepper idle air valve
 	offset 900 bit 2 */
