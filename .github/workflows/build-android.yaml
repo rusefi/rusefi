@@ -24,10 +24,6 @@ jobs:
           sudo bash misc/actions/add-ubuntu-latest-apt-mirrors.sh
           sudo apt-get install mtools
 
-      - name: Generate Configs, Enums & Live Documentation
-        working-directory: ./firmware/
-        run: ./gen_default_everything.sh
-
       - name: Test Java Compiler
         run: javac -version
 

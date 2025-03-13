@@ -64,10 +64,6 @@ jobs:
       working-directory: ./java_tools
       run: ./gradlew :config_definition:shadowJar
 
-    - name: Generate Configs, Enums & Live Documentation
-      working-directory: ./firmware/
-      run: ./gen_default_everything.sh
-
     - name: Install Arm GNU Toolchain (arm-none-eabi-gcc)
       uses: carlosperate/arm-none-eabi-gcc-action@v1
       with:
