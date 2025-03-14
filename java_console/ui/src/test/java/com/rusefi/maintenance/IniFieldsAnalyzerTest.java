@@ -1,6 +1,5 @@
 package com.rusefi.maintenance;
 
-import com.rusefi.maintenance.migration.TuneMigrationContext;
 import com.rusefi.tune.xml.Constant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,25 +12,15 @@ import static com.rusefi.maintenance.CalibrationsTestData.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class IniFieldsAnalyzerTest {
-    private CalibrationsTestData testData;
-
-    private TestCallbacks testCallbacks;
+    private CalibrationsTestData testTuneMigrationContext;
 
     private Map<String, Constant> valuesToUpdate;
 
     @BeforeEach
     public void setUp() throws JAXBException {
-        testData = CalibrationsTestData.load();
-        testCallbacks = new TestCallbacks();
-        final TuneMigrationContext context = new TuneMigrationContext(
-            testData.getPrevIni(),
-            testData.getPrevMsq(),
-            testData.getUpdatedIni(),
-            testData.getUpdatedMsq(),
-            testCallbacks
-        );
-        IniFieldsAnalyzer.INSTANCE.migrateTune(context);
-        valuesToUpdate = context.getMigratedConstants();
+        testTuneMigrationContext = CalibrationsTestData.load();
+        IniFieldsAnalyzer.INSTANCE.migrateTune(testTuneMigrationContext);
+        valuesToUpdate = testTuneMigrationContext.getMigratedConstants();
     }
 
     @Test
@@ -124,7 +113,7 @@ public class IniFieldsAnalyzerTest {
         assertEquals(
             "We aren't going to restore field `enableKnockSpectrogram`: it looks like its value is just renamed: `\"false\"` -> `\"no\"`\r\n" +
             "WARNING! Field `unusedOftenChangesDuringFirmwareUpdate` cannot be updated because its row count is updated: `198` -> `58`\r\n",
-            testCallbacks.getContent()
+            testTuneMigrationContext.getTestCallbacks().getContent()
         );
     }
 
@@ -133,13 +122,13 @@ public class IniFieldsAnalyzerTest {
         final String expectedPrevFieldValue,
         final String expectedUpdatedFieldValue
     ) {
-        final Constant prevValue = testData.getPrevValue(fieldName);
+        final Constant prevValue = testTuneMigrationContext.getPrevValue(fieldName);
         assertEquals(
             expectedPrevFieldValue,
             prevValue.getValue(),
             String.format("Unexpected prev value for `%s` field.", fieldName)
         );
-        final Constant updatedValue = testData.getUpdatedValue(fieldName);
+        final Constant updatedValue = testTuneMigrationContext.getUpdatedValue(fieldName);
         if (expectedUpdatedFieldValue != null) {
             assertEquals(
                 expectedUpdatedFieldValue,
