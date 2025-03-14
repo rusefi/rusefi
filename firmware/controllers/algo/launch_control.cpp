@@ -21,7 +21,7 @@
 bool LaunchControlBase::isInsideSwitchCondition() {
 	isSwitchActivated = engineConfiguration->launchActivationMode == SWITCH_INPUT_LAUNCH;
 	isClutchActivated = engineConfiguration->launchActivationMode == CLUTCH_INPUT_LAUNCH;
-    isBrakePedalActivated = engineConfiguration->launchActivationMode == STOP_INPUT_LAUNCH;
+	isBrakePedalActivated = engineConfiguration->launchActivationMode == STOP_INPUT_LAUNCH;
 
 	if (isSwitchActivated) {
 #if !EFI_SIMULATOR
@@ -31,10 +31,10 @@ bool LaunchControlBase::isInsideSwitchCondition() {
 #endif // EFI_PROD_CODE
 		return launchActivatePinState;
 	} else if (isClutchActivated) {
-		  return getClutchDownState();
+		return getClutchDownState();
 	} else if (isBrakePedalActivated) {
-      return getBrakePedalState();
-    } else {
+		return getBrakePedalState();
+	} else {
 		// ALWAYS_ACTIVE_LAUNCH
 		return true;
 	}
@@ -113,7 +113,7 @@ LaunchControlBase::LaunchControlBase() {
 }
 
 float LaunchControlBase::getFuelCoefficient() const {
-    return 1 + (isLaunchCondition && engineConfiguration->launchControlEnabled ? engineConfiguration->launchFuelAdderPercent / 100.0 : 0);
+    return 1 + (isLaunchCondition && engineConfiguration->launchControlEnabled ? engineConfiguration->launchFuelAdderPercent / 100.0f : 0);
 }
 
 void LaunchControlBase::update() {
