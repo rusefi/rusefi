@@ -12,7 +12,7 @@ void initFuelLevel() {
 		return;
 	}
 
-	// Filtering with such a small bandwidth helps prevent noisy data from fuel tank slosh
-	AdcSubscription::SubscribeSensor(fuelSensor, channel, /*lowpassCutoff =*/ 0.05f);
+	// noisy data from fuel tank slosh is handled on an higher level
+	AdcSubscription::SubscribeSensor(fuelSensor, channel, /*lowpassCutoff =*/ 100);
 	fuelSensor.Register();
 }
