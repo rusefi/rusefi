@@ -3275,8 +3275,6 @@ end</constant>
         <constant name="secondaryInjectorCompensationMode">"None"</constant>
         <constant digits="0" name="secondaryInjectorFuelReferencePressure" units="kPa">0.0</constant>
         <constant name="secondSolenoidPin">"NONE"</constant>
-        <constant name="sensorChartMode">"none"</constant>
-        <constant digits="0" name="sensorSnifferRpmThreshold" units="RPM">2500.0</constant>
         <constant name="sentEtbType">"None"</constant>
         <constant name="sentInputPins1">"NONE"</constant>
         <constant name="silentTriggerError">"true"</constant>
@@ -4331,7 +4329,9 @@ end</constant>
         <constant name="unusedFancy9">"false"</constant>
         <constant digits="0" name="unusedHip0" units="">0.0</constant>
         <constant digits="0" name="unusedHip1" units="">0.0</constant>
-        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="52">
+        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="54">
+         0.0
+         0.0
          0.0
          0.0
          0.0
@@ -4874,7 +4874,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250312" nPages="1" signature="rusEFI master.2025.03.14.f407-discovery.3974406102" version="5.0"/>
+    <versionInfo firmwareInfo="20250312" nPages="1" signature="rusEFI master.2025.03.14.f407-discovery.716281757" version="5.0"/>
     <bibliography author="rusEFI 20250312" writeDate="date"/>
     <settings/>
     <userComments/>
