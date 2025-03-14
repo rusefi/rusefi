@@ -6,21 +6,16 @@ import org.junit.jupiter.api.Test;
 
 import javax.xml.bind.JAXBException;
 
-import java.util.Map;
-
 import static com.rusefi.maintenance.TestTuneMigrationContext.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class IniFieldsAnalyzerTest {
     private TestTuneMigrationContext testContext;
 
-    private Map<String, Constant> valuesToUpdate;
-
     @BeforeEach
     public void setUp() throws JAXBException {
         testContext = TestTuneMigrationContext.load();
         IniFieldsAnalyzer.INSTANCE.migrateTune(testContext);
-        valuesToUpdate = testContext.getMigratedConstants();
     }
 
     @Test
@@ -139,7 +134,7 @@ public class IniFieldsAnalyzerTest {
             assertNull(updatedValue);
         }
 
-        final Constant valueToUpdate = valuesToUpdate.get(fieldName);
+        final Constant valueToUpdate = testContext.getMigratedConstants().get(fieldName);
         assertNotNull(valueToUpdate);
         assertEquals(prevValue, valueToUpdate);
     }
