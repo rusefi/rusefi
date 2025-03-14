@@ -451,7 +451,6 @@ engine_type_e engineType;http://rusefi.com/wiki/index.php?title=Manual:Engine_Ty
 
 uint16_t startButtonSuppressOnStartUpMs
 
-uint16_t sensorSnifferRpmThreshold;Disable sensor sniffer above this rpm;"RPM", 1, 0, 0, 10000, 0
 uint16_t launchRpm;A secondary Rev limit engaged by the driver to help launch the vehicle faster;"rpm", 1, 0, 0, 20000, 0
 uint16_t rpmHardLimit;set rpm_hard_limit X;"rpm", 1, 0, 0, 20000, 0
 uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this rpm\nset engineSnifferRpmThreshold X;"RPM", 1, 0, 0, 30000, 0
@@ -938,10 +937,6 @@ custom script_setting_t 4 scalar, F32, @OFFSET@, 		"",	   1,	   0, 0, 18000,	  2
 	Gpio cdmInputPin;Saab Combustion Detection Module knock signal input pin\nalso known as Saab Ion Sensing Module;
 	uart_device_e consoleUartDevice;
 
-
-#define sensor_chart_e_enum "none", "trigger", "INVALID", "RPM ACCEL", "DETAILED RPM", "Fast Aux1"
-custom sensor_chart_e 1 bits, S08, @OFFSET@, [0:2], @@sensor_chart_e_enum@@
-sensor_chart_e sensorChartMode;rusEFI console Sensor Sniffer mode;
 
 
 #define maf_sensor_type_e_enum "v0", "v1", "v2", "v3"
@@ -1822,7 +1817,7 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 	uint8_t autoscale maxOilPressureTimeout;Delay before cutting fuel due to extra high oil pressure. Use this to ignore short pressure blips and sensor noise.;"sec", 0.1, 0, 0, 5, 1
 
 
-#define END_OF_CALIBRATION_PADDING 52
+#define END_OF_CALIBRATION_PADDING 54
 uint8_t[END_OF_CALIBRATION_PADDING] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s

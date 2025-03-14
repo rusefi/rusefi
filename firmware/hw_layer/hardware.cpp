@@ -21,7 +21,6 @@
 #include "accelerometer.h"
 #include "eficonsole.h"
 #include "console_io.h"
-#include "sensor_chart.h"
 #include "idle_thread.h"
 #include "odometer.h"
 #include "kline.h"
@@ -280,14 +279,6 @@ void onFastAdcComplete(adcsample_t*) {
 	 * this callback is executed 10 000 times a second, it needs to be as fast as possible
 	 */
 	efiAssertVoid(ObdCode::CUSTOM_STACK_ADC, hasLotsOfRemainingStack(), "lowstck#9b");
-
-#if EFI_SENSOR_CHART && EFI_SHAFT_POSITION_INPUT
-	if (getEngineState()->sensorChartMode == SC_AUX_FAST1) {
-		/* Why we use raw value here? */
-		float voltage = adcGetRawValue("fAux1", engineConfiguration->auxFastSensor1_adcChannel);
-		scAddData(engine->triggerCentral.getCurrentEnginePhase(getTimeNowNt()).value_or(0), voltage);
-	}
-#endif /* EFI_SENSOR_CHART */
 
 #if EFI_MAP_AVERAGING
 	mapAveragingAdcCallback(adcRawValueToScaledVoltage(getFastAdc(fastMapSampleIndex), engineConfiguration->map.sensor.hwChannel));

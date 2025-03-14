@@ -39,10 +39,6 @@
 #include "trigger_universal.h"
 #include "trigger_mercedes.h"
 
-#if EFI_SENSOR_CHART
-#include "sensor_chart.h"
-#endif /* EFI_SENSOR_CHART */
-
 TriggerWaveform::TriggerWaveform() {
 	initialize(OM_NONE, SyncEdge::Rise);
 }

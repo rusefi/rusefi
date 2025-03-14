@@ -24,7 +24,6 @@
 #include "pch.h"
 
 #if !EFI_UNIT_TEST
-#include "sensor_chart.h"
 #include "trigger_central.h"
 
 #ifndef PERSISTENT_LOCATION

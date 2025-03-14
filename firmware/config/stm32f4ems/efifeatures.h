@@ -105,9 +105,6 @@
 #define EFI_HD_ACR FALSE
 #endif
 
-#ifndef SC_BUFFER_SIZE
-#define SC_BUFFER_SIZE 4000
-#endif
 
 /**
  * if you have a 60-2 trigger, or if you just want better performance, you
@@ -402,9 +399,6 @@
 
 #define EFI_HISTOGRAMS FALSE
 
-#ifndef EFI_SENSOR_CHART
-#define EFI_SENSOR_CHART TRUE
-#endif
 
 #ifndef EFI_PERF_METRICS
 #define EFI_PERF_METRICS FALSE

@@ -16,8 +16,6 @@ import static com.rusefi.config.generated.VariableRegistryValues.PROTOCOL_ES_UP;
  *
  * Date: 6/23/13
  * Andrey Belomutskiy, (c) 2013-2020
- *
- * @see SensorSnifferPane
  */
 public class EngineReport {
     public static final EngineReport MOCK = new EngineReport(Collections.singletonList(new UpDown(0, -1, 1, -1, Double.NaN, Double.NaN)));

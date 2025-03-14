@@ -102,5 +102,4 @@ void setFordAspireEngineConfiguration() {
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 
 	engineConfiguration->engineSnifferRpmThreshold = 13000;
-	engineConfiguration->sensorSnifferRpmThreshold = 13000;
 }

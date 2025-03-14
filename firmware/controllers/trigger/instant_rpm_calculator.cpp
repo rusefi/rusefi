@@ -2,10 +2,6 @@
 #include "pch.h"
 #include "instant_rpm_calculator.h"
 
-#if EFI_SENSOR_CHART
-#include "sensor_chart.h"
-#endif
-
 /**
  * sensorChartMode
  */
@@ -137,16 +133,6 @@ void InstantRpmCalculator::updateInstantRpm(
 	}
 #endif
 
-#if EFI_SENSOR_CHART
-	if (getEngineState()->sensorChartMode == SC_RPM_ACCEL || getEngineState()->sensorChartMode == SC_DETAILED_RPM) {
-		angle_t currentAngle = triggerFormDetails->eventAngles[current_index];
-		if (engineConfiguration->sensorChartMode == SC_DETAILED_RPM) {
-			scAddData(currentAngle, m_instantRpm);
-		} else {
-			scAddData(currentAngle, m_instantRpmRatio);
-		}
-	}
-#endif /* EFI_SENSOR_CHART */
 }
 
 #endif // EFI_SHAFT_POSITION_INPUT

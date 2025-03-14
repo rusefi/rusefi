@@ -169,7 +169,6 @@ public class IoUtil {
 
     public static void realHardwareConnect(LinkManager linkManager, String port) {
         linkManager.getEngineState().registerStringValueAction(Integration.PROTOCOL_OUTPIN, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
-        linkManager.getEngineState().registerStringValueAction(AverageAnglesUtil.KEY, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
 
         try {
             linkManager.connect(port).await(60, TimeUnit.SECONDS);

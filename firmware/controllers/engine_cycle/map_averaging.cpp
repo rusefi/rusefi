@@ -33,9 +33,6 @@
 #include "map_averaging.h"
 #include "trigger_central.h"
 
-#if EFI_SENSOR_CHART
-#include "sensor_chart.h"
-#endif /* EFI_SENSOR_CHART */
 
 /**
  * this instance does not have a real physical pin - it's only used for engine sniffer

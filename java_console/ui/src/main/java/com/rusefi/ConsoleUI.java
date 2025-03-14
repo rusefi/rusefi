@@ -144,10 +144,7 @@ public class ConsoleUI {
             tabbedPane.addTab("Logs Manager", tabbedPane.logsManager.getContent());
 
 
-        if (!linkManager.isLogViewer()) {
-            if (tabbedPane.paneSettings.showTriggerShapePane)
-                tabbedPane.addTab("Trigger Shape", new AverageAnglePanel(uiContext).getPanel());
-        }
+
 
         MessagesCentral.getInstance().postMessage(ConsoleUI.class, "COMPOSITE_OFF_RPM=" + BinaryProtocolLogger.COMPOSITE_OFF_RPM);
 

@@ -1,6 +1,5 @@
 package com.rusefi.ui;
 
-import com.rusefi.SensorSnifferCentral;
 import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import com.rusefi.sensor_logs.SensorLogger;
@@ -12,7 +11,6 @@ public class UIContext {
     public SensorLogger sensorLogger = new SensorLogger(this);
     public GaugesPanel.DetachedRepository DetachedRepositoryINSTANCE = new GaugesPanel.DetachedRepository(this);
 
-    public final SensorSnifferCentral sensorSnifferCentral = new SensorSnifferCentral(linkManager);
 
     @NotNull
     public LinkManager getLinkManager() {
