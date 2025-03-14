@@ -8,17 +8,17 @@ import javax.xml.bind.JAXBException;
 
 import java.util.Map;
 
-import static com.rusefi.maintenance.CalibrationsTestData.*;
+import static com.rusefi.maintenance.TestTuneMigrationContext.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class IniFieldsAnalyzerTest {
-    private CalibrationsTestData testTuneMigrationContext;
+    private TestTuneMigrationContext testTuneMigrationContext;
 
     private Map<String, Constant> valuesToUpdate;
 
     @BeforeEach
     public void setUp() throws JAXBException {
-        testTuneMigrationContext = CalibrationsTestData.load();
+        testTuneMigrationContext = TestTuneMigrationContext.load();
         IniFieldsAnalyzer.INSTANCE.migrateTune(testTuneMigrationContext);
         valuesToUpdate = testTuneMigrationContext.getMigratedConstants();
     }
