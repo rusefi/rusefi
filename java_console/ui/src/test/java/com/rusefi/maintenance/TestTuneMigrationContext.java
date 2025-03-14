@@ -15,7 +15,7 @@ import javax.xml.bind.JAXBException;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class CalibrationsTestData extends TuneMigrationContext {
+class TestTuneMigrationContext extends TuneMigrationContext {
     static final String VEHICLE_NAME_FIELD_NAME = "vehicleName";
     static final String IGNITION_TABLE_FIELD_NAME = "ignitionTable";
 
@@ -63,8 +63,8 @@ class CalibrationsTestData extends TuneMigrationContext {
 
     static final String UPDATED_ENABLE_KNOCK_SPECTROGRAM_VALUE = "\"no\"";
 
-    static CalibrationsTestData load() throws JAXBException {
-        final CalibrationsTestData result = new CalibrationsTestData(
+    static TestTuneMigrationContext load() throws JAXBException {
+        final TestTuneMigrationContext result = new TestTuneMigrationContext(
             Msq.readTune("src/test/java/com/rusefi/maintenance/test_data/prev_calibrations.msq"),
             IniFileModelImpl.readIniFile("src/test/java/com/rusefi/maintenance/test_data/prev_calibrations.ini"),
             Msq.readTune("src/test/java/com/rusefi/maintenance/test_data/updated_calibrations.msq"),
@@ -130,7 +130,7 @@ class CalibrationsTestData extends TuneMigrationContext {
         return msq.getConstantsAsMap().get(fieldName);
     }
 
-    private CalibrationsTestData(
+    private TestTuneMigrationContext(
         final Msq prevMsq,
         final IniFileModel prevIni,
         final Msq updatedMsq,
