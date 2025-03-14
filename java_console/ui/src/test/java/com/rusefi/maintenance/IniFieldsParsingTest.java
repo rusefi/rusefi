@@ -20,13 +20,13 @@ public class IniFieldsParsingTest {
 
     @Test
     void testVehicleNameIniField() {
-        final StringIniField veTableIniField = (StringIniField) testData.getPrevIni().getIniField("vehicleName");
+        final StringIniField veTableIniField = (StringIniField) testData.getPrevIniFile().getIniField("vehicleName");
         assertEquals(1116, veTableIniField.getOffset());
     }
 
     @Test
     void testVeTableIniField() {
-        final ArrayIniField veTableIniField = (ArrayIniField) testData.getPrevIni().getIniField("veTable");
+        final ArrayIniField veTableIniField = (ArrayIniField) testData.getPrevIniFile().getIniField("veTable");
         assertEquals(FieldType.UINT16, veTableIniField.getType());
         assertEquals(16544, veTableIniField.getOffset());
         assertEquals(16, veTableIniField.getCols());
@@ -39,7 +39,7 @@ public class IniFieldsParsingTest {
 
     @Test
     void testVeRpmBinsIniField() {
-        final ArrayIniField veTableIniField = (ArrayIniField) testData.getPrevIni().getIniField("veRpmBins");
+        final ArrayIniField veTableIniField = (ArrayIniField) testData.getPrevIniFile().getIniField("veRpmBins");
         assertEquals(FieldType.UINT16, veTableIniField.getType());
         assertEquals(17088, veTableIniField.getOffset());
         assertEquals(1, veTableIniField.getCols());
@@ -52,7 +52,7 @@ public class IniFieldsParsingTest {
 
     @Test
     void testVeLoadBinsIniField() {
-        final ArrayIniField veTableIniField = (ArrayIniField) testData.getPrevIni().getIniField("veLoadBins");
+        final ArrayIniField veTableIniField = (ArrayIniField) testData.getPrevIniFile().getIniField("veLoadBins");
         assertEquals(FieldType.UINT16, veTableIniField.getType());
         assertEquals(17056, veTableIniField.getOffset());
         assertEquals(1, veTableIniField.getCols());

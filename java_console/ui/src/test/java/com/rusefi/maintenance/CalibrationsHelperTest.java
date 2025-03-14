@@ -17,18 +17,15 @@ import static org.junit.jupiter.api.Assertions.*;
 public class CalibrationsHelperTest {
     CalibrationsTestData testData;
 
-    TestCallbacks testCallbacks;
-
     CalibrationsInfo mergedCalibrations;
 
     @BeforeEach
     public void setUp() throws JAXBException {
         testData = CalibrationsTestData.load();
-        testCallbacks = new TestCallbacks();
         final Optional<CalibrationsInfo> result = CalibrationsHelper.mergeCalibrations(
             testData.getPrevCalibrationsInfo(),
             testData.getUpdatedCalibrationsInfo(),
-            testCallbacks
+            testData.getCallbacks()
         );
         assertTrue(result.isPresent());
         mergedCalibrations = result.get();
@@ -126,10 +123,10 @@ public class CalibrationsHelperTest {
 
     @Test
     public void testEnableKnockSpectrogram() {
-        final EnumIniField prevIniField = (EnumIniField) testData.getPrevIni().getIniField(ENABLE_KNOCK_SPECTROGRAM_FIELD_NAME);
+        final EnumIniField prevIniField = (EnumIniField) testData.getPrevIniFile().getIniField(ENABLE_KNOCK_SPECTROGRAM_FIELD_NAME);
         assertEquals(FieldType.INT, prevIniField.getType());
 
-        final EnumIniField updatedIniField = (EnumIniField) testData.getUpdatedIni().getIniField(ENABLE_KNOCK_SPECTROGRAM_FIELD_NAME);
+        final EnumIniField updatedIniField = (EnumIniField) testData.getUpdatedIniFile().getIniField(ENABLE_KNOCK_SPECTROGRAM_FIELD_NAME);
         assertEquals(FieldType.INT, updatedIniField.getType());
 
         // bit position is updated!
