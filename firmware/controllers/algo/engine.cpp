@@ -212,7 +212,6 @@ void Engine::updateSlowSensors() {
 #if EFI_SHAFT_POSITION_INPUT
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	triggerCentral.isEngineSnifferEnabled = rpm < engineConfiguration->engineSnifferRpmThreshold;
-	getEngineState()->sensorChartMode = rpm < engineConfiguration->sensorSnifferRpmThreshold ? engineConfiguration->sensorChartMode : SC_OFF;
 #endif // EFI_SHAFT_POSITION_INPUT
 }
 

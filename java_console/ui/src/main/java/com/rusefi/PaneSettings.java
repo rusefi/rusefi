@@ -5,7 +5,6 @@ import com.rusefi.core.preferences.storage.Node;
 public class PaneSettings {
     private static final String SHOW_ETB = "show_etb_pane";
     public boolean showEtbPane;
-    public boolean showTriggerShapePane;
     public boolean showStimulatorPane;
 
     public PaneSettings(Node config) {

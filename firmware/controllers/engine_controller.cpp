@@ -64,9 +64,6 @@
 #include "gc_generic.h"
 #include "tuner_detector_utils.h"
 
-#if EFI_SENSOR_CHART
-#include "sensor_chart.h"
-#endif /* EFI_SENSOR_CHART */
 
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
@@ -428,9 +425,6 @@ void commonInitEngineController() {
 	engine->injectionEvents.addFuelEvents();
 #endif // EFI_ENGINE_CONTROL
 
-#if EFI_SENSOR_CHART
-	initSensorChart();
-#endif /* EFI_SENSOR_CHART */
 
 #if EFI_PROD_CODE || EFI_SIMULATOR
 	initSettings();
