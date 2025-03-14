@@ -4,7 +4,7 @@ import com.devexperts.logging.Logging;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.*;
 import com.rusefi.io.UpdateOperationCallbacks;
-import com.rusefi.maintenance.migration.ComposedIniFieldMigrator;
+import com.rusefi.maintenance.migration.DefaultIniFieldMigrator;
 import com.rusefi.maintenance.migration.TuneMigrationContext;
 import com.rusefi.maintenance.migration.TuneMigrator;
 import com.rusefi.tune.xml.Constant;
@@ -82,7 +82,7 @@ public enum IniFieldsAnalyzer implements TuneMigrator {
                                     newValue.getRows()
                                 ));
                             } else {
-                                final Optional<String> migratedValue = ComposedIniFieldMigrator.INSTANCE.tryMigrateValue(
+                                final Optional<String> migratedValue = DefaultIniFieldMigrator.INSTANCE.tryMigrateValue(
                                     prevFieldEntry.getValue(),
                                     newField,
                                     prevValue.getValue(),

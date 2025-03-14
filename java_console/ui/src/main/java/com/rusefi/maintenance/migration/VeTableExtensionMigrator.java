@@ -4,14 +4,15 @@ import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.config.FieldType;
 import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.tune.xml.Constant;
 
 import java.util.Optional;
 
-public enum VeTableExtensionMigrator implements IniFieldMigrator {
+public enum VeTableExtensionMigrator implements TuneMigrator {
     INSTANCE;
 
-    private static String VE_TABLE_FIELD_NAME = "veTable";
-    private static String VE_RPM_BINS_FIELD_NAME = "veRpmBins";
+    static final String VE_TABLE_FIELD_NAME = "veTable";
+    static final String VE_RPM_BINS_FIELD_NAME = "veRpmBins";
 
     private static final FieldType VE_TABLE_TYPE = FieldType.UINT16;
 
@@ -20,21 +21,108 @@ public enum VeTableExtensionMigrator implements IniFieldMigrator {
     static final int NEW_VE_TABLE_COLS = 24;
 
     @Override
-    public Optional<String> tryMigrateValue(
-        final IniField prevField,
-        final IniField newField,
-        final String prevValue,
-        final UpdateOperationCallbacks callbacks
-    ) {
-        Optional<String> result = Optional.empty();
-        final String prevFieldName = prevField.getName();
-        final String newFieldName = newField.getName();
-        if (VE_TABLE_FIELD_NAME.equals(prevFieldName) && VE_TABLE_FIELD_NAME.equals(newFieldName)) {
-            result = tryMigrateVeTable(prevField, newField, prevValue, callbacks);
-        } else if (VE_RPM_BINS_FIELD_NAME.equals(prevFieldName) && VE_RPM_BINS_FIELD_NAME.equals(newFieldName)) {
-            result = VeRpmBinsIniFieldMigrator.INSTANCE.tryMigrateVeRpmBins(prevField, newField, prevValue, callbacks);
+    public void migrateTune(final TuneMigrationContext context) {
+        migrateVeTable(context);
+        migrateVeRpmBinsTable(context);
+    }
+
+    private void migrateVeTable(final TuneMigrationContext context) {
+        final Constant prevValue = context.getPrevTune().getConstantsAsMap().get(VE_TABLE_FIELD_NAME);
+        if (prevValue != null) {
+            final Optional<IniField> prevField = context.getPrevIniFile().findIniField(VE_TABLE_FIELD_NAME);
+            if (!prevField.isPresent()) {
+                context.getCallbacks().logLine(String.format(
+                    "WARNING!!! Missed `%s` ini field in previous .ini file.",
+                    VE_TABLE_FIELD_NAME
+                ));
+                return;
+            }
+            final Optional<IniField> updatedField = context.getUpdatedIniFile().findIniField(VE_TABLE_FIELD_NAME);
+            if (!updatedField.isPresent()) {
+                context.getCallbacks().logLine(String.format(
+                    "WARNING!!! Missed `%s` ini field in updated .ini file.",
+                    VE_TABLE_FIELD_NAME
+                ));
+                return;
+            }
+            final Optional<ArrayIniField> prevArrayIniField = getValidatedVeTableArrayIniField(
+                prevField.get(),
+                context.getCallbacks()
+            );
+            final Optional<ArrayIniField> updatedArrayIniField = getValidatedVeTableArrayIniField(
+                updatedField.get(),
+                context.getCallbacks()
+            );
+            if (prevArrayIniField.isPresent() && updatedArrayIniField.isPresent()) {
+                final ArrayIniField prevVeTableField = prevArrayIniField.get();
+                final ArrayIniField updatedVeTableField = updatedArrayIniField.get();
+                if ((prevVeTableField.getCols() == OLD_VE_TABLE_COLS)
+                    && (updatedVeTableField.getCols() == NEW_VE_TABLE_COLS)
+                ) {
+                    final Optional<String> migratedValue = tryMigrateVeTable(
+                        prevVeTableField,
+                        updatedVeTableField,
+                        prevValue.getValue(),
+                        context.getCallbacks()
+                    );
+                    if (migratedValue.isPresent()) {
+                        context.getMigratedConstants().put(
+                            VE_TABLE_FIELD_NAME,
+                            new Constant(
+                                VE_TABLE_FIELD_NAME,
+                                updatedVeTableField.getUnits(),
+                                migratedValue.get(),
+                                updatedVeTableField.getDigits(),
+                                Integer.toString(updatedVeTableField.getRows()),
+                                Integer.toString(updatedVeTableField.getCols())
+                            )
+                        );
+                    }
+                }
+            }
         }
-        return result;
+    }
+
+    private void migrateVeRpmBinsTable(final TuneMigrationContext context) {
+        final Constant prevValue = context.getPrevTune().getConstantsAsMap().get(VE_RPM_BINS_FIELD_NAME);
+        if (prevValue != null) {
+            final Optional<IniField> prevField = context.getPrevIniFile().findIniField(VE_RPM_BINS_FIELD_NAME);
+            if (!prevField.isPresent()) {
+                context.getCallbacks().logLine(String.format(
+                    "WARNING!!! Missed `%s` ini field in previous .ini file.",
+                    VE_RPM_BINS_FIELD_NAME
+                ));
+                return;
+            }
+            final Optional<IniField> updatedField = context.getUpdatedIniFile().findIniField(VE_RPM_BINS_FIELD_NAME);
+            if (!updatedField.isPresent()) {
+                context.getCallbacks().logLine(String.format(
+                    "WARNING!!! Missed `%s` ini field in updated .ini file.",
+                    VE_RPM_BINS_FIELD_NAME
+                ));
+                return;
+            }
+            final ArrayIniField updatedVeRpmBinsField = (ArrayIniField) updatedField.get();
+            final Optional<String> migratedValue = VeRpmBinsIniFieldMigrator.INSTANCE.tryMigrateVeRpmBins(
+                prevField.get(),
+                updatedVeRpmBinsField,
+                prevValue.getValue(),
+                context.getCallbacks()
+            );
+            if (migratedValue.isPresent()) {
+                context.getMigratedConstants().put(
+                    VE_RPM_BINS_FIELD_NAME,
+                    new Constant(
+                        VE_RPM_BINS_FIELD_NAME,
+                        updatedVeRpmBinsField.getUnits(),
+                        migratedValue.get(),
+                        updatedVeRpmBinsField.getDigits(),
+                        Integer.toString(updatedVeRpmBinsField.getRows()),
+                        Integer.toString(updatedVeRpmBinsField.getCols())
+                    )
+                );
+            }
+        }
     }
 
     private Optional<String> tryMigrateVeTable(
