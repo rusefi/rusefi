@@ -21,26 +21,13 @@ public enum IniFieldsAnalyzer implements TuneMigrator {
 
     @Override
     public void migrateTune(final TuneMigrationContext context) {
-        final List<Pair<IniField, Constant>> valuesToUpdate = findValuesToUpdate(
-            context.getPrevIniFile(),
-            context.getPrevTune().getConstantsAsMap(),
-            context.getUpdatedIniFile(),
-            context.getUpdatedTune().getConstantsAsMap(),
-            context.getCallbacks()
-        );
-        for (final Pair<IniField, Constant> valueToUpdate: valuesToUpdate) {
-            context.getMigratedConstants().put(valueToUpdate.first.getName(), valueToUpdate.second);
-        }
-    }
+        final IniFileModel prevIni = context.getPrevIniFile();
+        final Map<String, Constant> prevValues = context.getPrevTune().getConstantsAsMap();
+        final IniFileModel newIni = context.getUpdatedIniFile();
+        final Map<String, Constant> newValues = context.getUpdatedTune().getConstantsAsMap();
+        final UpdateOperationCallbacks callbacks = context.getCallbacks();
 
-    private static List<Pair<IniField, Constant>> findValuesToUpdate(
-        final IniFileModel prevIni,
-        final Map<String, Constant> prevValues,
-        final IniFileModel newIni,
-        final Map<String, Constant> newValues,
-        final UpdateOperationCallbacks callbacks
-    ) {
-        final List<Pair<IniField, Constant>> result = new ArrayList<>();
+        final List<Pair<IniField, Constant>> valuesToUpdate = new ArrayList<>();
         final Map<String, IniField> prevIniFields = prevIni.getAllIniFields();
         final Map<String, IniField> newIniFields = newIni.getAllIniFields();
         for (final Map.Entry<String, IniField> prevFieldEntry: prevIniFields.entrySet()) {
@@ -57,7 +44,7 @@ public enum IniFieldsAnalyzer implements TuneMigrator {
                             prevValue.getValue()
                         ));
 
-                        result.add(new Pair<>(newField, prevValue));
+                        valuesToUpdate.add(new Pair<>(newField, prevValue));
                     } else {
                         if (!Objects.equals(prevValue.getValue(), newValue.getValue())) {
                             if (!Objects.equals(prevValue.getName(), newValue.getName())) {
@@ -112,7 +99,7 @@ public enum IniFieldsAnalyzer implements TuneMigrator {
                                             prevValue.getValue()
                                         ));
 
-                                        result.add(new Pair<>(newField, newValue.cloneWithValue(valueToRestore)));
+                                        valuesToUpdate.add(new Pair<>(newField, newValue.cloneWithValue(valueToRestore)));
                                     } else {
                                         callbacks.logLine(String.format(
                                             "We aren't going to restore field `%s`: it looks like its value is just renamed: `%s` -> `%s`",
@@ -137,6 +124,9 @@ public enum IniFieldsAnalyzer implements TuneMigrator {
                 }
             }
         }
-        return result;
+
+        for (final Pair<IniField, Constant> valueToUpdate: valuesToUpdate) {
+            context.getMigratedConstants().put(valueToUpdate.first.getName(), valueToUpdate.second);
+        }
     }
 }
