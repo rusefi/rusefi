@@ -1,7 +1,6 @@
 package com.rusefi.ui;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.AverageAnglesUtil;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.core.MessagesCentral;
@@ -262,24 +261,5 @@ public class RecentCommands {
     }
 
 
-    public static JButton createButton(UIContext uiContext) {
-        JButton button = new JButton("Read trigger log");
-        button.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent event) {
-                JFileChooser fc = UiUtils.getFileChooser(new FileNameExtensionFilter("CSV files", "csv"));
-                if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                    String fileName = fc.getSelectedFile().getAbsolutePath();
-                    String report;
-                    try {
-                        report = AverageAnglesUtil.runUtil(fileName);
-                    } catch (IOException e) {
-                        throw new IllegalStateException(e);
-                    }
-                    MessagesCentral.getInstance().postMessage(AverageAnglesUtil.class, report);
-                }
-            }
-        });
-        return button;
-    }
+
 }

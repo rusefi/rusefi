@@ -17,7 +17,6 @@
 #include "status_loop.h"
 #include "trigger_emulator_algo.h"
 #include "main_trigger_callback.h"
-#include "sensor_chart.h"
 #include "bench_test.h"
 #include "tunerstudio.h"
 #include "map_averaging.h"
