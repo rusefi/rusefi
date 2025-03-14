@@ -12,11 +12,8 @@ import com.rusefi.tune.xml.Msq;
 
 import javax.xml.bind.JAXBException;
 
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-class TestTuneMigrationContext extends TuneMigrationContext {
-    static TestTuneMigrationContext load(final String testDataFolderName) throws JAXBException {
+public class TestTuneMigrationContext extends TuneMigrationContext {
+    public static TestTuneMigrationContext load(final String testDataFolderName) throws JAXBException {
         final TestTuneMigrationContext result = new TestTuneMigrationContext(
             Msq.readTune(String.format(
                 "src/test/java/com/rusefi/maintenance/%s/prev_calibrations.msq",

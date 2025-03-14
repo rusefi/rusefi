@@ -22,7 +22,7 @@ public class Constant {
         this.digits = digits;
     }
 
-    private Constant(
+    public Constant(
         final String name,
         final String units,
         final String value,

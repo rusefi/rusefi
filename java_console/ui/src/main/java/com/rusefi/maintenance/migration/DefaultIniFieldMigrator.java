@@ -12,7 +12,7 @@ import java.util.Set;
 
 import static com.devexperts.logging.Logging.getLogging;
 
-public enum DefaultIniFieldMigrator implements IniFieldMigrator {
+public enum DefaultIniFieldMigrator {
     INSTANCE;
     private static final Logging log = getLogging(DefaultIniFieldMigrator.class);
 
@@ -21,7 +21,6 @@ public enum DefaultIniFieldMigrator implements IniFieldMigrator {
 
     private static final Set<String> boardSpecificIniFieldsToIgnore = ConnectionAndMeta.getNonMigratableIniFields();
 
-    @Override
     public Optional<String> tryMigrateValue(
         final IniField prevField,
         final IniField newField,
