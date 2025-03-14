@@ -32,8 +32,8 @@ public class ALSTimingRetardTableTest {
 
     @BeforeEach
     void setUp() throws JAXBException {
-        final CalibrationsTestData testData = CalibrationsTestData.load();
-        final CalibrationsInfo prevCalibrations = testData.getPrevCalibrationsInfo();
+        final TestTuneMigrationContext testContext = TestTuneMigrationContext.load();
+        final CalibrationsInfo prevCalibrations = testContext.getPrevCalibrationsInfo();
         final IniFileModel prevIni = prevCalibrations.getIniFile();
         alsTimingRetardTableField = prevIni.getIniField(ALS_TIMING_RETARD_TABLE_FIELD_NAME);
         prevImage = prevCalibrations.getImage().getConfigurationImage();
@@ -41,7 +41,7 @@ public class ALSTimingRetardTableTest {
             PREV_ALS_TIMING_RETARD_TABLE,
             alsTimingRetardTableField.getValue(prevImage)
         );
-        prevValue = testData.getPrevValue(ALS_TIMING_RETARD_TABLE_FIELD_NAME);
+        prevValue = testContext.getPrevValue(ALS_TIMING_RETARD_TABLE_FIELD_NAME);
         assertEquals(PREV_ALS_TIMING_RETARD_TABLE,
             prevValue.getValue()
         );

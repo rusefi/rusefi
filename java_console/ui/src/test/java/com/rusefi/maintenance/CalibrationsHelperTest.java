@@ -11,21 +11,21 @@ import javax.xml.bind.JAXBException;
 import java.util.Map;
 import java.util.Optional;
 
-import static com.rusefi.maintenance.CalibrationsTestData.*;
+import static com.rusefi.maintenance.TestTuneMigrationContext.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CalibrationsHelperTest {
-    CalibrationsTestData testData;
+    TestTuneMigrationContext testContext;
 
     CalibrationsInfo mergedCalibrations;
 
     @BeforeEach
     public void setUp() throws JAXBException {
-        testData = CalibrationsTestData.load();
+        testContext = TestTuneMigrationContext.load();
         final Optional<CalibrationsInfo> result = CalibrationsHelper.mergeCalibrations(
-            testData.getPrevCalibrationsInfo(),
-            testData.getUpdatedCalibrationsInfo(),
-            testData.getCallbacks()
+            testContext.getPrevCalibrationsInfo(),
+            testContext.getUpdatedCalibrationsInfo(),
+            testContext.getCallbacks()
         );
         assertTrue(result.isPresent());
         mergedCalibrations = result.get();
@@ -123,10 +123,10 @@ public class CalibrationsHelperTest {
 
     @Test
     public void testEnableKnockSpectrogram() {
-        final EnumIniField prevIniField = (EnumIniField) testData.getPrevIniFile().getIniField(ENABLE_KNOCK_SPECTROGRAM_FIELD_NAME);
+        final EnumIniField prevIniField = (EnumIniField) testContext.getPrevIniFile().getIniField(ENABLE_KNOCK_SPECTROGRAM_FIELD_NAME);
         assertEquals(FieldType.INT, prevIniField.getType());
 
-        final EnumIniField updatedIniField = (EnumIniField) testData.getUpdatedIniFile().getIniField(ENABLE_KNOCK_SPECTROGRAM_FIELD_NAME);
+        final EnumIniField updatedIniField = (EnumIniField) testContext.getUpdatedIniFile().getIniField(ENABLE_KNOCK_SPECTROGRAM_FIELD_NAME);
         assertEquals(FieldType.INT, updatedIniField.getType());
 
         // bit position is updated!
@@ -148,12 +148,12 @@ public class CalibrationsHelperTest {
     ) {
         assertEquals(
             expectedPrevValue,
-            testData.getPrevValue(fieldName).getValue(),
+            testContext.getPrevValue(fieldName).getValue(),
             String.format("Unexpected prev `%s` field value", fieldName)
         );
         assertEquals(
             expectedUpdatedValue,
-            testData.getUpdatedValue(fieldName).getValue(),
+            testContext.getUpdatedValue(fieldName).getValue(),
             String.format("Unexpected updated `%s` field value", fieldName)
         );
         final Map<String, Constant> mergedConstants = mergedCalibrations.generateMsq().getConstantsAsMap();
