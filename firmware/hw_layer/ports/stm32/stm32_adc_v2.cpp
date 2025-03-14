@@ -233,7 +233,7 @@ adcsample_t getFastAdc(AdcToken token) {
 	return fastAdc.getAdcValueByToken(token);
 }
 
-#endif
+#endif // EFI_USE_FAST_ADC
 
 #ifdef EFI_SOFTWARE_KNOCK
 

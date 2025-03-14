@@ -260,4 +260,4 @@ AdcToken AdcDevice::getAdcChannelToken(adc_channel_e hwChannel) {
 
 #endif // EFI_USE_FAST_ADC
 
-#endif
+#endif // HAL_USE_ADC
