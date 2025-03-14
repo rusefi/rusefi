@@ -67,7 +67,6 @@ public class Integration {
 	public static final String LOG_DELIMITER = "`";
 	public static final int MLQ_FIELD_HEADER_SIZE = 89;
 	public static final int MLQ_HEADER_SIZE = 24;
-	public static final String PROTOCOL_ANALOG_CHART = "analog_chart";
 	public static final String PROTOCOL_COIL_SHORT_PREFIX = "c";
 	public static final String PROTOCOL_CRANK1 = "t1";
 	public static final String PROTOCOL_CRANK2 = "t2";

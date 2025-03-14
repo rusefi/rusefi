@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Tue Mar 11 17:37:52 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Fri Mar 14 19:51:35 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -781,21 +781,6 @@ case OM_OPENDRAIN:
   return "OM_OPENDRAIN";
 case OM_OPENDRAIN_INVERTED:
   return "OM_OPENDRAIN_INVERTED";
-  }
- return NULL;
-}
-const char *getSensor_chart_e(sensor_chart_e value){
-switch(value) {
-case SC_AUX_FAST1:
-  return "SC_AUX_FAST1";
-case SC_DETAILED_RPM:
-  return "SC_DETAILED_RPM";
-case SC_OFF:
-  return "SC_OFF";
-case SC_RPM_ACCEL:
-  return "SC_RPM_ACCEL";
-case SC_TRIGGER:
-  return "SC_TRIGGER";
   }
  return NULL;
 }

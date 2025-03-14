@@ -8,14 +8,14 @@ import com.rusefi.config.*;
 public class Fields {
 	public static final Field ENGINETYPE = Field.create("ENGINETYPE", 0, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field STARTBUTTONSUPPRESSONSTARTUPMS = Field.create("STARTBUTTONSUPPRESSONSTARTUPMS", 2, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field SENSORSNIFFERRPMTHRESHOLD = Field.create("SENSORSNIFFERRPMTHRESHOLD", 4, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field LAUNCHRPM = Field.create("LAUNCHRPM", 6, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field RPMHARDLIMIT = Field.create("RPMHARDLIMIT", 8, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field ENGINESNIFFERRPMTHRESHOLD = Field.create("ENGINESNIFFERRPMTHRESHOLD", 10, FieldType.INT16).setScale(1.0).setBaseOffset(0);
-	public static final Field MULTISPARKMAXRPM = Field.create("MULTISPARKMAXRPM", 12, FieldType.INT8).setScale(50.0).setBaseOffset(0);
-	public static final Field MAXACRPM = Field.create("MAXACRPM", 13, FieldType.INT8).setScale(50.0).setBaseOffset(0);
-	public static final Field MAXACTPS = Field.create("MAXACTPS", 14, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field MAXACCLT = Field.create("MAXACCLT", 15, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field LAUNCHRPM = Field.create("LAUNCHRPM", 4, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field RPMHARDLIMIT = Field.create("RPMHARDLIMIT", 6, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field ENGINESNIFFERRPMTHRESHOLD = Field.create("ENGINESNIFFERRPMTHRESHOLD", 8, FieldType.INT16).setScale(1.0).setBaseOffset(0);
+	public static final Field MULTISPARKMAXRPM = Field.create("MULTISPARKMAXRPM", 10, FieldType.INT8).setScale(50.0).setBaseOffset(0);
+	public static final Field MAXACRPM = Field.create("MAXACRPM", 11, FieldType.INT8).setScale(50.0).setBaseOffset(0);
+	public static final Field MAXACTPS = Field.create("MAXACTPS", 12, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field MAXACCLT = Field.create("MAXACCLT", 13, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_14 = Field.create("ALIGNMENTFILL_AT_14", 14, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field COMPRESSIONRATIO = Field.create("COMPRESSIONRATIO", 16, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field WASTEGATEPOSITIONMIN = Field.create("WASTEGATEPOSITIONMIN", 20, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field WASTEGATEPOSITIONMAX = Field.create("WASTEGATEPOSITIONMAX", 22, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -412,11 +412,9 @@ public class Fields {
 	public static final Field SPI3SCKPIN = Field.create("SPI3SCKPIN", 892, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field CDMINPUTPIN = Field.create("CDMINPUTPIN", 894, FieldType.INT16, Gpio).setScale(1.0).setBaseOffset(0);
 	public static final Field CONSOLEUARTDEVICE = Field.create("CONSOLEUARTDEVICE", 896, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final String[] sensor_chart_e = {"none", "trigger", "INVALID", "RPM ACCEL", "DETAILED RPM", "Fast Aux1"};
-	public static final Field SENSORCHARTMODE = Field.create("SENSORCHARTMODE", 897, FieldType.INT8, sensor_chart_e).setScale(1.0).setBaseOffset(0);
 	public static final String[] maf_sensor_type_e = {"v0", "v1", "v2", "v3"};
-	public static final Field MAFSENSORTYPE = Field.create("MAFSENSORTYPE", 898, FieldType.INT8, maf_sensor_type_e).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_899 = Field.create("ALIGNMENTFILL_AT_899", 899, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field MAFSENSORTYPE = Field.create("MAFSENSORTYPE", 897, FieldType.INT8, maf_sensor_type_e).setScale(1.0).setBaseOffset(0);
+	public static final Field ALIGNMENTFILL_AT_898 = Field.create("ALIGNMENTFILL_AT_898", 898, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field IDLERETURNTARGETRAMP = Field.create("IDLERETURNTARGETRAMP", 900, FieldType.BIT, 0).setBaseOffset(0);
 	public static final Field USEHBRIDGESTODRIVEIDLESTEPPER = Field.create("USEHBRIDGESTODRIVEIDLESTEPPER", 900, FieldType.BIT, 2).setBaseOffset(0);
 	public static final Field MULTISPARKENABLE = Field.create("MULTISPARKENABLE", 900, FieldType.BIT, 3).setBaseOffset(0);
@@ -1445,7 +1443,6 @@ public class Fields {
 	public static final Field MAPEXPAVERAGEAFR = Field.create("MAPEXPAVERAGEAFR", 3952, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field SPARKHARDWARELATENCYCORRECTION = Field.create("SPARKHARDWARELATENCYCORRECTION", 3956, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field MAXOILPRESSURETIMEOUT = Field.create("MAXOILPRESSURETIMEOUT", 3957, FieldType.INT8).setScale(0.1).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_4010 = Field.create("ALIGNMENTFILL_AT_4010", 4010, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field POSTCRANKINGFACTOR = Field.create("POSTCRANKINGFACTOR", 4012, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field POSTCRANKINGDURATIONBINS = Field.create("POSTCRANKINGDURATIONBINS", 4156, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field POSTCRANKINGCLTBINS = Field.create("POSTCRANKINGCLTBINS", 4168, FieldType.INT16).setScale(1.0).setBaseOffset(0);
@@ -1819,7 +1816,6 @@ public class Fields {
 	public static final Field[] VALUES = {
 	ENGINETYPE,
 	STARTBUTTONSUPPRESSONSTARTUPMS,
-	SENSORSNIFFERRPMTHRESHOLD,
 	LAUNCHRPM,
 	RPMHARDLIMIT,
 	ENGINESNIFFERRPMTHRESHOLD,
@@ -1827,6 +1823,7 @@ public class Fields {
 	MAXACRPM,
 	MAXACTPS,
 	MAXACCLT,
+	ALIGNMENTFILL_AT_14,
 	COMPRESSIONRATIO,
 	WASTEGATEPOSITIONMIN,
 	WASTEGATEPOSITIONMAX,
@@ -2211,9 +2208,8 @@ public class Fields {
 	SPI3SCKPIN,
 	CDMINPUTPIN,
 	CONSOLEUARTDEVICE,
-	SENSORCHARTMODE,
 	MAFSENSORTYPE,
-	ALIGNMENTFILL_AT_899,
+	ALIGNMENTFILL_AT_898,
 	IDLERETURNTARGETRAMP,
 	USEHBRIDGESTODRIVEIDLESTEPPER,
 	MULTISPARKENABLE,
@@ -3219,7 +3215,6 @@ public class Fields {
 	MAPEXPAVERAGEAFR,
 	SPARKHARDWARELATENCYCORRECTION,
 	MAXOILPRESSURETIMEOUT,
-	ALIGNMENTFILL_AT_4010,
 	POSTCRANKINGFACTOR,
 	POSTCRANKINGDURATIONBINS,
 	POSTCRANKINGCLTBINS,

@@ -1,9 +1,6 @@
 ### startButtonSuppressOnStartUpMs
 null
 
-### sensorSnifferRpmThreshold
-Disable sensor sniffer above this rpm
-
 ### launchRpm
 A secondary Rev limit engaged by the driver to help launch the vehicle faster
 

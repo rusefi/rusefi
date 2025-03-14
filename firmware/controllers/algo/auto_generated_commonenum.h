@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Mon Jan 13 14:25:49 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Fri Mar 14 19:51:35 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -78,7 +78,6 @@ const char *getNitrous_arming_method_e(nitrous_arming_method_e value);
 const char *getOperation_mode_e(operation_mode_e value);
 const char *getPin_input_mode_e(pin_input_mode_e value);
 const char *getPin_output_mode_e(pin_output_mode_e value);
-const char *getSensor_chart_e(sensor_chart_e value);
 const char *getSpi_device_e(spi_device_e value);
 const char *getStepper_num_micro_steps_e(stepper_num_micro_steps_e value);
 const char *getTChargeMode_e(tChargeMode_e value);

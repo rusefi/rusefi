@@ -8,9 +8,6 @@ float getConfigValueByName(const char *name) {
 // startButtonSuppressOnStartUpMs
 		case 1856486116:
 			return engineConfiguration->startButtonSuppressOnStartUpMs;
-// sensorSnifferRpmThreshold
-		case -920133784:
-			return engineConfiguration->sensorSnifferRpmThreshold;
 // launchRpm
 		case -776106289:
 			return engineConfiguration->launchRpm;
@@ -1994,11 +1991,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1856486116:
 	{
 		engineConfiguration->startButtonSuppressOnStartUpMs = (int)value;
-		return 1;
-	}
-		case -920133784:
-	{
-		engineConfiguration->sensorSnifferRpmThreshold = (int)value;
 		return 1;
 	}
 		case -776106289:

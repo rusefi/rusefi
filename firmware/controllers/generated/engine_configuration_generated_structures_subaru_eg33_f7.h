@@ -590,54 +590,54 @@ struct engine_configuration_s {
 	 */
 	uint16_t startButtonSuppressOnStartUpMs;
 	/**
-	 * Disable sensor sniffer above this rpm
-	 * units: RPM
-	 * offset 4
-	 */
-	uint16_t sensorSnifferRpmThreshold;
-	/**
 	 * A secondary Rev limit engaged by the driver to help launch the vehicle faster
 	 * units: rpm
-	 * offset 6
+	 * offset 4
 	 */
 	uint16_t launchRpm;
 	/**
 	 * set rpm_hard_limit X
 	 * units: rpm
-	 * offset 8
+	 * offset 6
 	 */
 	uint16_t rpmHardLimit;
 	/**
 	 * Engine sniffer would be disabled above this rpm
 	 * set engineSnifferRpmThreshold X
 	 * units: RPM
-	 * offset 10
+	 * offset 8
 	 */
 	uint16_t engineSnifferRpmThreshold;
 	/**
 	 * Disable multispark above this engine speed.
 	 * units: rpm
-	 * offset 12
+	 * offset 10
 	 */
 	scaled_channel<uint8_t, 1, 50> multisparkMaxRpm;
 	/**
 	 * Above this RPM, disable AC. Set to 0 to disable check.
 	 * units: rpm
-	 * offset 13
+	 * offset 11
 	 */
 	scaled_channel<uint8_t, 1, 50> maxAcRpm;
 	/**
 	 * Above this TPS, disable AC. Set to 0 to disable check.
 	 * units: %
-	 * offset 14
+	 * offset 12
 	 */
 	uint8_t maxAcTps;
 	/**
 	 * Above this CLT, disable AC to prevent overheating the engine. Set to 0 to disable check.
 	 * units: deg C
-	 * offset 15
+	 * offset 13
 	 */
 	uint8_t maxAcClt;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 14
+	 */
+	uint8_t alignmentFill_at_14[2] = {};
 	/**
 	 * Just for reference really, not taken into account by any logic at this point
 	 * units: CR
@@ -2018,20 +2018,15 @@ struct engine_configuration_s {
 	 */
 	uart_device_e consoleUartDevice;
 	/**
-	 * rusEFI console Sensor Sniffer mode
 	 * offset 897
-	 */
-	sensor_chart_e sensorChartMode;
-	/**
-	 * offset 898
 	 */
 	maf_sensor_type_e mafSensorType;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 899
+	 * offset 898
 	 */
-	uint8_t alignmentFill_at_899[1] = {};
+	uint8_t alignmentFill_at_898[2] = {};
 	/**
 	 * Ramp the idle target down from the entry threshold over 3 seconds when returning to idle. Helps prevent overshooting (below) the idle target while returning to idle from coasting.
 	offset 900 bit 0 */
@@ -2137,7 +2132,7 @@ struct engine_configuration_s {
 	bool verboseCan2 : 1 {};
 	/**
 	offset 900 bit 31 */
-	bool unusedBit_333_31 : 1 {};
+	bool unusedBit_332_31 : 1 {};
 	/**
 	 * offset 904
 	 */
@@ -2440,19 +2435,19 @@ struct engine_configuration_s {
 	bool skippedWheelOnCam : 1 {};
 	/**
 	offset 1288 bit 27 */
-	bool unusedBit_404_27 : 1 {};
+	bool unusedBit_403_27 : 1 {};
 	/**
 	offset 1288 bit 28 */
-	bool unusedBit_404_28 : 1 {};
+	bool unusedBit_403_28 : 1 {};
 	/**
 	offset 1288 bit 29 */
-	bool unusedBit_404_29 : 1 {};
+	bool unusedBit_403_29 : 1 {};
 	/**
 	offset 1288 bit 30 */
-	bool unusedBit_404_30 : 1 {};
+	bool unusedBit_403_30 : 1 {};
 	/**
 	offset 1288 bit 31 */
-	bool unusedBit_404_31 : 1 {};
+	bool unusedBit_403_31 : 1 {};
 	/**
 	 * offset 1292
 	 */
@@ -2609,7 +2604,7 @@ struct engine_configuration_s {
 	bool watchOutForLinearTime : 1 {};
 	/**
 	offset 1300 bit 31 */
-	bool unusedBit_447_31 : 1 {};
+	bool unusedBit_446_31 : 1 {};
 	/**
 	 * units: count
 	 * offset 1304
@@ -2916,16 +2911,16 @@ struct engine_configuration_s {
 	bool enableKnockSpectrogramFilter : 1 {};
 	/**
 	offset 1476 bit 28 */
-	bool unusedBit_517_28 : 1 {};
+	bool unusedBit_516_28 : 1 {};
 	/**
 	offset 1476 bit 29 */
-	bool unusedBit_517_29 : 1 {};
+	bool unusedBit_516_29 : 1 {};
 	/**
 	offset 1476 bit 30 */
-	bool unusedBit_517_30 : 1 {};
+	bool unusedBit_516_30 : 1 {};
 	/**
 	offset 1476 bit 31 */
-	bool unusedBit_517_31 : 1 {};
+	bool unusedBit_516_31 : 1 {};
 	/**
 	 * This is the duration in cycles that the IAC will take to reach its normal idle position, it can be used to hold the idle higher for a few seconds after cranking to improve startup.
 	 * Should be 100 once tune is better
@@ -3093,76 +3088,76 @@ struct engine_configuration_s {
 	bool can2ListenMode : 1 {};
 	/**
 	offset 1532 bit 8 */
-	bool unusedBit_554_8 : 1 {};
+	bool unusedBit_553_8 : 1 {};
 	/**
 	offset 1532 bit 9 */
-	bool unusedBit_554_9 : 1 {};
+	bool unusedBit_553_9 : 1 {};
 	/**
 	offset 1532 bit 10 */
-	bool unusedBit_554_10 : 1 {};
+	bool unusedBit_553_10 : 1 {};
 	/**
 	offset 1532 bit 11 */
-	bool unusedBit_554_11 : 1 {};
+	bool unusedBit_553_11 : 1 {};
 	/**
 	offset 1532 bit 12 */
-	bool unusedBit_554_12 : 1 {};
+	bool unusedBit_553_12 : 1 {};
 	/**
 	offset 1532 bit 13 */
-	bool unusedBit_554_13 : 1 {};
+	bool unusedBit_553_13 : 1 {};
 	/**
 	offset 1532 bit 14 */
-	bool unusedBit_554_14 : 1 {};
+	bool unusedBit_553_14 : 1 {};
 	/**
 	offset 1532 bit 15 */
-	bool unusedBit_554_15 : 1 {};
+	bool unusedBit_553_15 : 1 {};
 	/**
 	offset 1532 bit 16 */
-	bool unusedBit_554_16 : 1 {};
+	bool unusedBit_553_16 : 1 {};
 	/**
 	offset 1532 bit 17 */
-	bool unusedBit_554_17 : 1 {};
+	bool unusedBit_553_17 : 1 {};
 	/**
 	offset 1532 bit 18 */
-	bool unusedBit_554_18 : 1 {};
+	bool unusedBit_553_18 : 1 {};
 	/**
 	offset 1532 bit 19 */
-	bool unusedBit_554_19 : 1 {};
+	bool unusedBit_553_19 : 1 {};
 	/**
 	offset 1532 bit 20 */
-	bool unusedBit_554_20 : 1 {};
+	bool unusedBit_553_20 : 1 {};
 	/**
 	offset 1532 bit 21 */
-	bool unusedBit_554_21 : 1 {};
+	bool unusedBit_553_21 : 1 {};
 	/**
 	offset 1532 bit 22 */
-	bool unusedBit_554_22 : 1 {};
+	bool unusedBit_553_22 : 1 {};
 	/**
 	offset 1532 bit 23 */
-	bool unusedBit_554_23 : 1 {};
+	bool unusedBit_553_23 : 1 {};
 	/**
 	offset 1532 bit 24 */
-	bool unusedBit_554_24 : 1 {};
+	bool unusedBit_553_24 : 1 {};
 	/**
 	offset 1532 bit 25 */
-	bool unusedBit_554_25 : 1 {};
+	bool unusedBit_553_25 : 1 {};
 	/**
 	offset 1532 bit 26 */
-	bool unusedBit_554_26 : 1 {};
+	bool unusedBit_553_26 : 1 {};
 	/**
 	offset 1532 bit 27 */
-	bool unusedBit_554_27 : 1 {};
+	bool unusedBit_553_27 : 1 {};
 	/**
 	offset 1532 bit 28 */
-	bool unusedBit_554_28 : 1 {};
+	bool unusedBit_553_28 : 1 {};
 	/**
 	offset 1532 bit 29 */
-	bool unusedBit_554_29 : 1 {};
+	bool unusedBit_553_29 : 1 {};
 	/**
 	offset 1532 bit 30 */
-	bool unusedBit_554_30 : 1 {};
+	bool unusedBit_553_30 : 1 {};
 	/**
 	offset 1532 bit 31 */
-	bool unusedBit_554_31 : 1 {};
+	bool unusedBit_553_31 : 1 {};
 	/**
 	 * offset 1536
 	 */
@@ -4996,12 +4991,6 @@ struct engine_configuration_s {
 	 * offset 3958
 	 */
 	uint8_t unusedOftenChangesDuringFirmwareUpdate[END_OF_CALIBRATION_PADDING] = {};
-	/**
-	 * need 4 byte alignment
-	 * units: units
-	 * offset 4010
-	 */
-	uint8_t alignmentFill_at_4010[2] = {};
 };
 static_assert(sizeof(engine_configuration_s) == 4012);
 

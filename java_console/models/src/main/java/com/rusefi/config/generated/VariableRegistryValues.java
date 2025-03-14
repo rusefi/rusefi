@@ -354,7 +354,7 @@ public class VariableRegistryValues {
 	public static final int ego_sensor_e_ES_Innovate_MTX_L = 1;
 	public static final int ego_sensor_e_ES_PLX = 4;
 	public static final int EGT_CHANNEL_COUNT = 8;
-	public static final int END_OF_CALIBRATION_PADDING = 52;
+	public static final int END_OF_CALIBRATION_PADDING = 54;
 	public static final int engine_configuration_s_size = 4012;
 	public static final int engine_load_mode_e_LM_ALPHA_N = 2;
 	public static final int engine_load_mode_e_LM_LUA = 3;
@@ -1240,7 +1240,6 @@ public class VariableRegistryValues {
 	public static final int pin_output_mode_e_OM_OPENDRAIN = 2;
 	public static final int pin_output_mode_e_OM_OPENDRAIN_INVERTED = 3;
 	public static final int PRIME_CURVE_COUNT = 8;
-	public static final String PROTOCOL_ANALOG_CHART = "analog_chart";
 	public static final String PROTOCOL_COIL_SHORT_PREFIX = "c";
 	public static final String PROTOCOL_CRANK1 = "t1";
 	public static final String PROTOCOL_CRANK2 = "t2";
@@ -1276,11 +1275,6 @@ public class VariableRegistryValues {
 	public static final int SelectedGear_Neutral = 5;
 	public static final int SelectedGear_Park = 3;
 	public static final int SelectedGear_Reverse = 4;
-	public static final int sensor_chart_e_SC_AUX_FAST1 = 5;
-	public static final int sensor_chart_e_SC_DETAILED_RPM = 4;
-	public static final int sensor_chart_e_SC_OFF = 0;
-	public static final int sensor_chart_e_SC_RPM_ACCEL = 3;
-	public static final int sensor_chart_e_SC_TRIGGER = 1;
 	public static final int SENT_INPUT_COUNT = 1;
 	public static final int SentEtbType_CUSTOM = 3;
 	public static final int SentEtbType_FORD_TYPE_1 = 2;
@@ -1296,7 +1290,6 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 1269950492;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1568,7 +1561,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.03.14.stm32h743_nucleo.1269950492";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.03.14.stm32h743_nucleo.2380587095";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
