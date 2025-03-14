@@ -12,15 +12,15 @@ import static com.rusefi.maintenance.TestTuneMigrationContext.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class IniFieldsAnalyzerTest {
-    private TestTuneMigrationContext testTuneMigrationContext;
+    private TestTuneMigrationContext testContext;
 
     private Map<String, Constant> valuesToUpdate;
 
     @BeforeEach
     public void setUp() throws JAXBException {
-        testTuneMigrationContext = TestTuneMigrationContext.load();
-        IniFieldsAnalyzer.INSTANCE.migrateTune(testTuneMigrationContext);
-        valuesToUpdate = testTuneMigrationContext.getMigratedConstants();
+        testContext = TestTuneMigrationContext.load();
+        IniFieldsAnalyzer.INSTANCE.migrateTune(testContext);
+        valuesToUpdate = testContext.getMigratedConstants();
     }
 
     @Test
@@ -113,7 +113,7 @@ public class IniFieldsAnalyzerTest {
         assertEquals(
             "We aren't going to restore field `enableKnockSpectrogram`: it looks like its value is just renamed: `\"false\"` -> `\"no\"`\r\n" +
             "WARNING! Field `unusedOftenChangesDuringFirmwareUpdate` cannot be updated because its row count is updated: `198` -> `58`\r\n",
-            testTuneMigrationContext.getTestCallbacks().getContent()
+            testContext.getTestCallbacks().getContent()
         );
     }
 
@@ -122,13 +122,13 @@ public class IniFieldsAnalyzerTest {
         final String expectedPrevFieldValue,
         final String expectedUpdatedFieldValue
     ) {
-        final Constant prevValue = testTuneMigrationContext.getPrevValue(fieldName);
+        final Constant prevValue = testContext.getPrevValue(fieldName);
         assertEquals(
             expectedPrevFieldValue,
             prevValue.getValue(),
             String.format("Unexpected prev value for `%s` field.", fieldName)
         );
-        final Constant updatedValue = testTuneMigrationContext.getUpdatedValue(fieldName);
+        final Constant updatedValue = testContext.getUpdatedValue(fieldName);
         if (expectedUpdatedFieldValue != null) {
             assertEquals(
                 expectedUpdatedFieldValue,
