@@ -5,6 +5,7 @@ import com.rusefi.config.Field;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 public interface IniFileModel {
@@ -15,6 +16,8 @@ public interface IniFileModel {
     Map<String, List<String>> getDefines();
 
     Map<String, IniField> getAllIniFields();
+
+    Optional<IniField> findIniField(String key);
 
     IniField getIniField(Field field);
 

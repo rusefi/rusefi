@@ -85,6 +85,11 @@ public class IniFileModelImpl implements IniFileModel {
     }
 
     @Override
+    public Optional<IniField> findIniField(final String key) {
+        return Optional.ofNullable(allIniFields.get(key));
+    }
+
+    @Override
     public IniField getIniField(Field field) {
         return getIniField(field.getName());
     }

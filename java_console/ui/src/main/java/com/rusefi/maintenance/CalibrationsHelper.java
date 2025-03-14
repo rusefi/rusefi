@@ -11,6 +11,7 @@ import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolLocalCache;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.maintenance.migration.ComposedTuneMigrator;
 import com.rusefi.maintenance.migration.TuneMigrationContext;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
@@ -226,7 +227,7 @@ public class CalibrationsHelper {
             newMsq,
             callbacks
         );
-        IniFieldsAnalyzer.INSTANCE.migrateTune(context);
+        ComposedTuneMigrator.INSTANCE.migrateTune(context);
         final Set<Map.Entry<String, Constant>> valuesToUpdate = context.getMigratedConstants().entrySet();
         if (!valuesToUpdate.isEmpty()) {
             final ConfigurationImage mergedImage = newCalibrations.getImage().getConfigurationImage().clone();
