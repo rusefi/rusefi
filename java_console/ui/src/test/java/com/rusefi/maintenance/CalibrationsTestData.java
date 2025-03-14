@@ -5,6 +5,8 @@ import com.opensr5.ConfigurationImageMetaVersion0_0;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelImpl;
+import com.rusefi.io.UpdateOperationCallbacks;
+import com.rusefi.maintenance.migration.TuneMigrationContext;
 import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 
@@ -13,7 +15,7 @@ import javax.xml.bind.JAXBException;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class CalibrationsTestData {
+class CalibrationsTestData extends TuneMigrationContext {
     static final String VEHICLE_NAME_FIELD_NAME = "vehicleName";
     static final String IGNITION_TABLE_FIELD_NAME = "ignitionTable";
 
@@ -66,7 +68,8 @@ class CalibrationsTestData {
             Msq.readTune("src/test/java/com/rusefi/maintenance/test_data/prev_calibrations.msq"),
             IniFileModelImpl.readIniFile("src/test/java/com/rusefi/maintenance/test_data/prev_calibrations.ini"),
             Msq.readTune("src/test/java/com/rusefi/maintenance/test_data/updated_calibrations.msq"),
-            IniFileModelImpl.readIniFile("src/test/java/com/rusefi/maintenance/test_data/updated_calibrations.ini")
+            IniFileModelImpl.readIniFile("src/test/java/com/rusefi/maintenance/test_data/updated_calibrations.ini"),
+            new TestCallbacks()
         );
         assertEquals(
             PREV_VEHICLE_NAME_VALUE,
@@ -93,36 +96,24 @@ class CalibrationsTestData {
         return result;
     }
 
-    Msq getPrevMsq() {
-        return prevMsq;
-    }
-
-    IniFileModel getPrevIni() {
-        return prevIni;
-    }
-
-    Msq getUpdatedMsq() {
-        return updatedMsq;
-    }
-
-    IniFileModel getUpdatedIni() {
-        return updatedIni;
+    TestCallbacks getTestCallbacks() {
+        return (TestCallbacks) getCallbacks();
     }
 
     CalibrationsInfo getPrevCalibrationsInfo() {
-        return getCalibrationsInfo(prevMsq, prevIni);
+        return getCalibrationsInfo(getPrevTune(), getPrevIniFile());
     }
 
     CalibrationsInfo getUpdatedCalibrationsInfo() {
-        return getCalibrationsInfo(updatedMsq, updatedIni);
+        return getCalibrationsInfo(getUpdatedTune(), getUpdatedIniFile());
     }
 
     Constant getPrevValue(final String fieldName) {
-        return getValue(prevMsq, fieldName);
+        return getValue(getPrevTune(), fieldName);
     }
 
     Constant getUpdatedValue(final String fieldName) {
-        return getValue(updatedMsq, fieldName);
+        return getValue(getUpdatedTune(), fieldName);
     }
 
     private static CalibrationsInfo getCalibrationsInfo(final Msq msq, final IniFileModel ini) {
@@ -143,16 +134,9 @@ class CalibrationsTestData {
         final Msq prevMsq,
         final IniFileModel prevIni,
         final Msq updatedMsq,
-        final IniFileModel updatedIni
+        final IniFileModel updatedIni,
+        final UpdateOperationCallbacks callbacks
     ) {
-        this.prevMsq = prevMsq;
-        this.prevIni = prevIni;
-        this.updatedMsq = updatedMsq;
-        this.updatedIni = updatedIni;
+        super(prevIni, prevMsq, updatedIni, updatedMsq, callbacks);
     }
-
-    private final Msq prevMsq;
-    private final IniFileModel prevIni;
-    private final Msq updatedMsq;
-    private final IniFileModel updatedIni;
 }
