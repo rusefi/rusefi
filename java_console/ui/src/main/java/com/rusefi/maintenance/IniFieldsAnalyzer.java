@@ -3,7 +3,6 @@ package com.rusefi.maintenance;
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.*;
-import com.rusefi.core.Pair;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.migration.ComposedIniFieldMigrator;
 import com.rusefi.maintenance.migration.TuneMigrationContext;
@@ -26,8 +25,8 @@ public enum IniFieldsAnalyzer implements TuneMigrator {
         final IniFileModel newIni = context.getUpdatedIniFile();
         final Map<String, Constant> newValues = context.getUpdatedTune().getConstantsAsMap();
         final UpdateOperationCallbacks callbacks = context.getCallbacks();
+        final Map<String, Constant> migratedConstants = context.getMigratedConstants();
 
-        final List<Pair<IniField, Constant>> valuesToUpdate = new ArrayList<>();
         final Map<String, IniField> prevIniFields = prevIni.getAllIniFields();
         final Map<String, IniField> newIniFields = newIni.getAllIniFields();
         for (final Map.Entry<String, IniField> prevFieldEntry: prevIniFields.entrySet()) {
@@ -44,7 +43,7 @@ public enum IniFieldsAnalyzer implements TuneMigrator {
                             prevValue.getValue()
                         ));
 
-                        valuesToUpdate.add(new Pair<>(newField, prevValue));
+                        migratedConstants.put(prevFieldName, prevValue);
                     } else {
                         if (!Objects.equals(prevValue.getValue(), newValue.getValue())) {
                             if (!Objects.equals(prevValue.getName(), newValue.getName())) {
@@ -99,7 +98,7 @@ public enum IniFieldsAnalyzer implements TuneMigrator {
                                             prevValue.getValue()
                                         ));
 
-                                        valuesToUpdate.add(new Pair<>(newField, newValue.cloneWithValue(valueToRestore)));
+                                        migratedConstants.put(prevFieldName, newValue.cloneWithValue(valueToRestore));
                                     } else {
                                         callbacks.logLine(String.format(
                                             "We aren't going to restore field `%s`: it looks like its value is just renamed: `%s` -> `%s`",
@@ -123,10 +122,6 @@ public enum IniFieldsAnalyzer implements TuneMigrator {
                     log.info(String.format("Field `%s` is missed in new .ini file", prevFieldName));
                 }
             }
-        }
-
-        for (final Pair<IniField, Constant> valueToUpdate: valuesToUpdate) {
-            context.getMigratedConstants().put(valueToUpdate.first.getName(), valueToUpdate.second);
         }
     }
 }
