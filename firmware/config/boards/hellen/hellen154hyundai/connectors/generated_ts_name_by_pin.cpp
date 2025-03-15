@@ -14,6 +14,8 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::B3: return "X8 AuxLS1";
 		case Gpio::B7: return "X2 AuxLS3";
 		case Gpio::C13: return "Coil 1";
+		case Gpio::C8: return "wg_pwm";
+		case Gpio::C9: return "wg_dir";
 		case Gpio::D10: return "INJ_4 k28";
 		case Gpio::D11: return "INJ_3 k27";
 		case Gpio::D12: return "MIL";
@@ -41,6 +43,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::G3: return "Fan Relay Low";
 		case Gpio::G4: return "Fan Relay HI";
 		case Gpio::G5: return "Aux P68";
+		case Gpio::G6: return "wg_dis";
 		case Gpio::G7: return "INJ_1 k25";
 		case Gpio::G8: return "INJ_2 k26";
 		default: return nullptr;

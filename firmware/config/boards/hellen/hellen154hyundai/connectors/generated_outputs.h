@@ -5,6 +5,9 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
+	Gpio::H144_OUT_PWM4, // wg_pwm
+	Gpio::H144_OUT_PWM5, // wg_dir
+	Gpio::H144_OUT_IO13, // wg_dis
 	Gpio::H_SPI1_CS2, // X2 AuxLS3
 	Gpio::D14, // X3 AuxLS2
 	Gpio::H_SPI1_SCK, // X8 AuxLS1
@@ -29,6 +32,9 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::H144_IGN_2, // Coil 2
 	Gpio::H144_IGN_1, // Coil 1
 	Gpio::H144_IGN_3, // Coil 3
+// "wg_pwm",
+// "wg_dir",
+// "wg_dis",
 // "X2 AuxLS3",
 // "X3 AuxLS2",
 // "X8 AuxLS1",
