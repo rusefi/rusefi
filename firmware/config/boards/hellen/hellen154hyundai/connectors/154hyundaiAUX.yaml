@@ -1,6 +1,27 @@
 meta: config/boards/hellen_meta.h
 
 pins:
+  - pin: wg_pwm
+    meta: H144_OUT_PWM4
+    class: outputs
+    type: ls
+    ts_name: wg_pwm
+    function: wg_pwm
+
+  - pin: wg_dir
+    meta: H144_OUT_PWM5
+    class: outputs
+    type: ls
+    ts_name: wg_dir
+    function: wg_dir
+
+  - pin: wg_dis
+    meta: H144_OUT_IO13
+    class: outputs
+    type: ls
+    ts_name: wg_dis
+    function: wg_dis
+
   - pin: X1
     function: GND
     type: gnd
