@@ -286,15 +286,16 @@ float LongTermFuelTrim::getLtft(float load, float rpm) {
 				config->ltftSimpleCorrection = config->ltftSimpleCorrection + correction;
 				updatedLtft = 1;
 			}
-
-			if(config->ltftSimpleCorrection > (100.0f + config->ltftMaxCorrection)) {
-				config->ltftSimpleCorrection = (100.0f + config->ltftMaxCorrection);
-			} else if (config->ltftSimpleCorrection < (100.0f - config->ltftMinCorrection)) {
-				config->ltftSimpleCorrection = (100.0f - config->ltftMinCorrection);
-			}
 			
-			ltft = config->ltftSimpleCorrection;
 		}
+
+		if(config->ltftSimpleCorrection > float(100.0f + float(config->ltftMaxCorrection))) {
+			config->ltftSimpleCorrection = float(100.0f + float(config->ltftMaxCorrection));
+		} else if (config->ltftSimpleCorrection < float(100.0f - float()config->ltftMinCorrection)) {
+			config->ltftSimpleCorrection = float(100.0f - float(config->ltftMinCorrection));
+		}
+
+		ltft = config->ltftSimpleCorrection;
 		
 	}
 
