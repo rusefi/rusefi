@@ -230,47 +230,49 @@ ClosedLoopFuelResult fuelStftClosedLoopCorrection() {
 
 float LongTermFuelTrim::getLtft(float load, float rpm) {
 
-	if(config->ltftCRC != 132) {
-		setTable(config->ltftTable, 100);
-		config->ltftCRC = 132;
-		ltftTableHelperInit = 0;
-		setNeedToWriteConfiguration();
-	}
+	float ltft = 1.00f;
 
-	if(!ltftTableHelperInit){
-		copyTable(ltftTableHelper, config->ltftTable, 1);
-		ltftTableHelperInit = 1;
-	}
-
-	if(shouldUpdateCorrection(getSensorForBankIndex(0)) && shouldCorrect()) {
-		updateLtft(load, rpm);
-	} else {
-		resetLtftTimer();
-	}
-
-	if(rpm == 0 && updatedLtft) {
-		copyTable(config->ltftTable, ltftTableHelper);
-		setNeedToWriteConfiguration();
-		updatedLtft = 0;
-	}
-
-	if(config->ltftEnabled && config->ltftCRC == 132 && (Sensor::get(SensorType::Clt)).value_or(0) > float(config->ltftMinTemp)) {
-		float ltft = interpolate3d(ltftTableHelper,
-			  config->veLoadBins, load,
-			  config->veRpmBins, rpm
-		) * 0.01f;
-
-    /*
-		if(100.0f * ltft > config->ltftMaxCorrection || 100.0f * ltft < config->ltftMinCorrection) {
-			config->ltftEnabled = 0;
-			return 1.00f;
+	if(!config->simpleLtftMode) {
+		if(config->ltftCRC != 132) {
+			setTable(config->ltftTable, 100);
+			config->ltftCRC = 132;
+			ltftTableHelperInit = 0;
+			setNeedToWriteConfiguration();
 		}
-    */
-
-		return ltft;
+	
+		if(!ltftTableHelperInit){
+			copyTable(ltftTableHelper, config->ltftTable, 1);
+			ltftTableHelperInit = 1;
+		}
+	
+		if(shouldUpdateCorrection(getSensorForBankIndex(0)) && shouldCorrect()) {
+			updateLtft(load, rpm);
+		} else {
+			resetLtftTimer();
+		}
+	
+		if(rpm == 0 && updatedLtft) {
+			copyTable(config->ltftTable, ltftTableHelper);
+			setNeedToWriteConfiguration();
+			updatedLtft = 0;
+		}
+	
+		if(config->ltftEnabled && config->ltftCRC == 132 && (Sensor::get(SensorType::Clt)).value_or(0) > float(config->ltftMinTemp)) {
+			ltft = interpolate3d(ltftTableHelper,
+				  config->veLoadBins, load,
+				  config->veRpmBins, rpm
+			) * 0.01f;
+		}
 	} else {
-		return 1.00f;
+		float stftCorrection = engine->engineState.stftCorrection[0] - 1.00f;
+		auto lambda = Sensor::get(SensorType::Lambda1);
+		float lambdaError = lambda.Value - engine->fuelComputer.targetLambda;
+
+		config->ltftSimpleCorrection = config->ltftSimpleCorrection + config->simpleLtftCorrectionRate * 0.005f * (stftCorrection / (abs(stftCorrection))) * (1 - pow(10, - 20 * (100 / config->ltftPermissivity) * abs(stftCorrection)));
+		ltft = config->ltftSimpleCorrection;
 	}
+	
+	return ltft;
 }
 
 #endif // EFI_ENGINE_CONTROL
