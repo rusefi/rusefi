@@ -1979,6 +1979,9 @@ float getConfigValueByName(const char *name) {
 // ltftEnabled
 		case -518141238:
 			return config->ltftEnabled;
+// simpleLtftMode
+		case -1786843954:
+			return config->simpleLtftMode;
 // ltftCRC
 		case -1822508201:
 			return config->ltftCRC;
@@ -1997,6 +2000,12 @@ float getConfigValueByName(const char *name) {
 // ltftMinCorrection
 		case -1987127141:
 			return config->ltftMinCorrection;
+// ltftSimpleCorrection
+		case 2127816545:
+			return config->ltftSimpleCorrection;
+// ltftSimpleCorrectionRatio
+		case 2095497632:
+			return config->ltftSimpleCorrectionRatio;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -5296,6 +5305,11 @@ bool setConfigValueByName(const char *name, float value) {
 		config->ltftEnabled = (int)value;
 		return 1;
 	}
+		case -1786843954:
+	{
+		config->simpleLtftMode = (int)value;
+		return 1;
+	}
 		case -1822508201:
 	{
 		config->ltftCRC = (int)value;
@@ -5324,6 +5338,16 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1987127141:
 	{
 		config->ltftMinCorrection = (int)value;
+		return 1;
+	}
+		case 2127816545:
+	{
+		config->ltftSimpleCorrection = value;
+		return 1;
+	}
+		case 2095497632:
+	{
+		config->ltftSimpleCorrectionRatio = (int)value;
 		return 1;
 	}
 		case -1658957891:
