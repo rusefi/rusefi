@@ -24,7 +24,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 
 import java.io.Closeable;
@@ -68,7 +68,7 @@ public class LocalApplicationProxy implements Closeable {
 
         httpPost.setEntity(entity);
 
-        HttpClient httpclient = new DefaultHttpClient();
+        HttpClient httpclient = HttpClientBuilder.create().build();;
         return httpclient.execute(httpPost);
     }
 

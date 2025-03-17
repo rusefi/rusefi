@@ -5,7 +5,7 @@ import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
@@ -45,7 +45,7 @@ public class HttpUtil {
     }
 
     public static String executeGet(String url) throws IOException {
-        HttpClient httpclient = new DefaultHttpClient();
+        HttpClient httpclient = HttpClientBuilder.create().build();
         HttpParams httpParameters = httpclient.getParams();
 //        HttpConnectionParams.setConnectionTimeout(httpParameters, CONNECTION_TIMEOUT);
 //        HttpConnectionParams.setSoTimeout(httpParameters, WAIT_RESPONSE_TIMEOUT);
