@@ -15,7 +15,9 @@ public class VeTableExtensionTestTuneMigrationContext {
     public static final String VE_RPM_BINS_FIELD_NAME = "veRpmBins";
 
     public static TestTuneMigrationContext load() throws JAXBException {
-        final TestTuneMigrationContext result = TestTuneMigrationContext.load("test_data/ve_table_extension");
+        final TestTuneMigrationContext result = TestTuneMigrationContext.load(
+            "src/test/java/com/rusefi/maintenance/test_data/ve_table_extension"
+        );
 
         final ArrayIniField prevVeTableIniField = (ArrayIniField) result.getPrevIniFile().getIniField(
             VE_TABLE_FIELD_NAME

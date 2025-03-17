@@ -13,24 +13,12 @@ import com.rusefi.tune.xml.Msq;
 import javax.xml.bind.JAXBException;
 
 public class TestTuneMigrationContext extends TuneMigrationContext {
-    public static TestTuneMigrationContext load(final String testDataFolderName) throws JAXBException {
+    public static TestTuneMigrationContext load(final String testDataFolder) throws JAXBException {
         final TestTuneMigrationContext result = new TestTuneMigrationContext(
-            Msq.readTune(String.format(
-                "src/test/java/com/rusefi/maintenance/%s/prev_calibrations.msq",
-                testDataFolderName
-            )),
-            IniFileModelImpl.readIniFile(String.format(
-                "src/test/java/com/rusefi/maintenance/%s/prev_calibrations.ini",
-                testDataFolderName
-            )),
-            Msq.readTune(String.format(
-                "src/test/java/com/rusefi/maintenance/%s/updated_calibrations.msq",
-                testDataFolderName
-            )),
-            IniFileModelImpl.readIniFile(String.format(
-                "src/test/java/com/rusefi/maintenance/%s/updated_calibrations.ini",
-                testDataFolderName
-            )),
+            Msq.readTune(String.format("%s/prev_calibrations.msq", testDataFolder)),
+            IniFileModelImpl.readIniFile(String.format("%s/prev_calibrations.ini", testDataFolder)),
+            Msq.readTune(String.format("%s/updated_calibrations.msq", testDataFolder)),
+            IniFileModelImpl.readIniFile(String.format("%s/updated_calibrations.ini", testDataFolder)),
             new TestCallbacks()
         );
         return result;
