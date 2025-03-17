@@ -13,10 +13,10 @@ import java.util.*;
 
 import static com.devexperts.logging.Logging.getLogging;
 
-public enum IniFieldsAnalyzer implements TuneMigrator {
+public enum DefaultTuneMigrator implements TuneMigrator {
     INSTANCE;
 
-    private static final Logging log = getLogging(IniFieldsAnalyzer.class);
+    private static final Logging log = getLogging(DefaultTuneMigrator.class);
 
     @Override
     public void migrateTune(final TuneMigrationContext context) {
