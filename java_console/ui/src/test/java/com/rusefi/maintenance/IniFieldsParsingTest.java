@@ -15,7 +15,7 @@ public class IniFieldsParsingTest {
 
     @BeforeEach
     void setUp() throws JAXBException {
-        testContext = TestTuneMigrationContext.load();
+        testContext = TestTuneMigrationContext.load("test_data");
     }
 
     @Test

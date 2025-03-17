@@ -11,7 +11,6 @@ public enum ComposedIniFieldMigrator implements IniFieldMigrator {
     INSTANCE;
 
     private final List<IniFieldMigrator> iniFieldMigrators = Arrays.asList(
-        VeTableExtensionMigrator.INSTANCE,
         DefaultIniFieldMigrator.INSTANCE
     );
 
