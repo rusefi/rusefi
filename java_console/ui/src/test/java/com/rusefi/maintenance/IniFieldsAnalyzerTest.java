@@ -14,7 +14,7 @@ public class IniFieldsAnalyzerTest {
 
     @BeforeEach
     public void setUp() throws JAXBException {
-        testContext = TestTuneMigrationContext.load();
+        testContext = TestTuneMigrationContext.load("test_data");
         IniFieldsAnalyzer.INSTANCE.migrateTune(testContext);
     }
 

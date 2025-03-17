@@ -63,12 +63,24 @@ class TestTuneMigrationContext extends TuneMigrationContext {
 
     static final String UPDATED_ENABLE_KNOCK_SPECTROGRAM_VALUE = "\"no\"";
 
-    static TestTuneMigrationContext load() throws JAXBException {
+    static TestTuneMigrationContext load(final String testDataFolderName) throws JAXBException {
         final TestTuneMigrationContext result = new TestTuneMigrationContext(
-            Msq.readTune("src/test/java/com/rusefi/maintenance/test_data/prev_calibrations.msq"),
-            IniFileModelImpl.readIniFile("src/test/java/com/rusefi/maintenance/test_data/prev_calibrations.ini"),
-            Msq.readTune("src/test/java/com/rusefi/maintenance/test_data/updated_calibrations.msq"),
-            IniFileModelImpl.readIniFile("src/test/java/com/rusefi/maintenance/test_data/updated_calibrations.ini"),
+            Msq.readTune(String.format(
+                "src/test/java/com/rusefi/maintenance/%s/prev_calibrations.msq",
+                testDataFolderName
+            )),
+            IniFileModelImpl.readIniFile(String.format(
+                "src/test/java/com/rusefi/maintenance/%s/prev_calibrations.ini",
+                testDataFolderName
+            )),
+            Msq.readTune(String.format(
+                "src/test/java/com/rusefi/maintenance/%s/updated_calibrations.msq",
+                testDataFolderName
+            )),
+            IniFileModelImpl.readIniFile(String.format(
+                "src/test/java/com/rusefi/maintenance/%s/updated_calibrations.ini",
+                testDataFolderName
+            )),
             new TestCallbacks()
         );
         assertEquals(
