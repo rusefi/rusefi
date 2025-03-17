@@ -34,6 +34,10 @@ board_id_t getBoardId() {
         // a way to test harness patch cord
         return STATIC_BOARD_ID_PROTEUS_SBC;
     }
+    if (engineConfiguration->engineType == engine_type_e::SUBARU_2011) {
+        // a way to test harness patch cord
+        return STATIC_BOARD_ID_PROTEUS_SUBARU_2011;
+    }
 #endif
 
 #if HW_HELLEN_8CHAN
