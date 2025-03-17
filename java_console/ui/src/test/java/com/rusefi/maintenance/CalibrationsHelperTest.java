@@ -21,7 +21,7 @@ public class CalibrationsHelperTest {
 
     @BeforeEach
     public void setUp() throws JAXBException {
-        testContext = TestTuneMigrationContext.load();
+        testContext = TestTuneMigrationContext.load("test_data");
         final Optional<CalibrationsInfo> result = CalibrationsHelper.mergeCalibrations(
             testContext.getPrevCalibrationsInfo(),
             testContext.getUpdatedCalibrationsInfo(),
