@@ -54,7 +54,9 @@ public class DefaultTestTuneMigrationContext {
     static final String UPDATED_ENABLE_KNOCK_SPECTROGRAM_VALUE = "\"no\"";
 
     public static TestTuneMigrationContext load() throws JAXBException {
-        final TestTuneMigrationContext result = TestTuneMigrationContext.load("test_data");
+        final TestTuneMigrationContext result = TestTuneMigrationContext.load(
+            "src/test/java/com/rusefi/maintenance/test_data/default"
+        );
         assertEquals(
             PREV_VEHICLE_NAME_VALUE,
             result.getPrevValue(VEHICLE_NAME_FIELD_NAME).getValue()
