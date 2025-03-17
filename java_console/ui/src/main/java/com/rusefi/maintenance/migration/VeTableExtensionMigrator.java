@@ -66,7 +66,7 @@ public enum VeTableExtensionMigrator implements TuneMigrator {
                         context.getCallbacks()
                     );
                     if (migratedValue.isPresent()) {
-                        context.getMigratedConstants().put(
+                        context.addMigration(
                             VE_TABLE_FIELD_NAME,
                             new Constant(
                                 VE_TABLE_FIELD_NAME,
@@ -110,7 +110,7 @@ public enum VeTableExtensionMigrator implements TuneMigrator {
                 context.getCallbacks()
             );
             if (migratedValue.isPresent()) {
-                context.getMigratedConstants().put(
+                context.addMigration(
                     VE_RPM_BINS_FIELD_NAME,
                     new Constant(
                         VE_RPM_BINS_FIELD_NAME,
