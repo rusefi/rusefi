@@ -1,6 +1,6 @@
 package com.rusefi.maintenance.migration;
 
-import com.rusefi.maintenance.IniFieldsAnalyzer;
+import com.rusefi.maintenance.DefaultTuneMigrator;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,7 +10,7 @@ public enum ComposedTuneMigrator implements TuneMigrator {
 
     private final List<TuneMigrator> tuneMigrators = Arrays.asList(
         VeTableExtensionMigrator.INSTANCE,
-        IniFieldsAnalyzer.INSTANCE
+        DefaultTuneMigrator.INSTANCE
     );
 
     @Override

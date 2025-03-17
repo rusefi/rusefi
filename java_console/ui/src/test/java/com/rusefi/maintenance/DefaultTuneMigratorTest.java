@@ -7,16 +7,15 @@ import org.junit.jupiter.api.Test;
 import javax.xml.bind.JAXBException;
 
 import static com.rusefi.maintenance.DefaultTestTuneMigrationContext.*;
-import static com.rusefi.maintenance.TestTuneMigrationContext.*;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class IniFieldsAnalyzerTest {
+public class DefaultTuneMigratorTest {
     private TestTuneMigrationContext testContext;
 
     @BeforeEach
     public void setUp() throws JAXBException {
         testContext = DefaultTestTuneMigrationContext.load();
-        IniFieldsAnalyzer.INSTANCE.migrateTune(testContext);
+        DefaultTuneMigrator.INSTANCE.migrateTune(testContext);
     }
 
     @Test
