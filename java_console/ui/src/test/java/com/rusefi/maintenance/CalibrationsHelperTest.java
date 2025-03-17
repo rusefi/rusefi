@@ -11,6 +11,7 @@ import javax.xml.bind.JAXBException;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.rusefi.maintenance.DefaultTestTuneMigrationContext.*;
 import static com.rusefi.maintenance.TestTuneMigrationContext.*;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,7 +22,7 @@ public class CalibrationsHelperTest {
 
     @BeforeEach
     public void setUp() throws JAXBException {
-        testContext = TestTuneMigrationContext.load("test_data");
+        testContext = DefaultTestTuneMigrationContext.load();
         final Optional<CalibrationsInfo> result = CalibrationsHelper.mergeCalibrations(
             testContext.getPrevCalibrationsInfo(),
             testContext.getUpdatedCalibrationsInfo(),

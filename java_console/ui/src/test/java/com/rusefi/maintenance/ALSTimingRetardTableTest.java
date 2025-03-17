@@ -32,7 +32,7 @@ public class ALSTimingRetardTableTest {
 
     @BeforeEach
     void setUp() throws JAXBException {
-        final TestTuneMigrationContext testContext = TestTuneMigrationContext.load("test_data");
+        final TestTuneMigrationContext testContext = DefaultTestTuneMigrationContext.load();
         final CalibrationsInfo prevCalibrations = testContext.getPrevCalibrationsInfo();
         final IniFileModel prevIni = prevCalibrations.getIniFile();
         alsTimingRetardTableField = prevIni.getIniField(ALS_TIMING_RETARD_TABLE_FIELD_NAME);
