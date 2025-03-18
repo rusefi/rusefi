@@ -54,8 +54,8 @@
 #define adc_channel_e_EFI_ADC_ERROR 50
 #define adc_channel_e_EFI_ADC_NONE 0
 #define adc_channel_e_EFI_ADC_TOTAL_CHANNELS 49
-#define adc_channel_e_enum 0="NONE",11="16A - Digital/analog input 2",16="16B AUX 2",5="18A - TPS",13="19A - CLT",4="19B PPS1",14="20A - IAT",20="20B PPS2",2="21A MAP",21="22A TPS2",15="23B - Digital/analog Input 4",3="24B - Digital/analog Input 3",8="25A - Digital/analog Input 5",9="28A AUX1",6="9B Voltage From Key",12="On-board MAP Sensor"
-#define adc_channel_e_fullenum "NONE","INVALID","21A MAP","24B - Digital/analog Input 3","19B PPS1","18A - TPS","9B Voltage From Key","INVALID","25A - Digital/analog Input 5","28A AUX1","INVALID","16A - Digital/analog input 2","On-board MAP Sensor","19A - CLT","20A - IAT","23B - Digital/analog Input 4","16B AUX 2","INVALID","INVALID","INVALID","20B PPS2","22A TPS2"
+#define adc_channel_e_enum 0="NONE",11="16A - Digital/analog input 2",16="16B AUX 2",5="18A - TPS1",13="19A - CLT",4="19B PPS1",14="20A - IAT",20="20B PPS2",2="21A MAP",21="22A TPS2",15="23B - Digital/analog Input 4",3="24B - Digital/analog Input 3",8="25A - Digital/analog Input 5",9="28A AUX1",6="9B Voltage From Key",12="On-board MAP Sensor"
+#define adc_channel_e_fullenum "NONE","INVALID","21A MAP","24B - Digital/analog Input 3","19B PPS1","18A - TPS1","9B Voltage From Key","INVALID","25A - Digital/analog Input 5","28A AUX1","INVALID","16A - Digital/analog input 2","On-board MAP Sensor","19A - CLT","20A - IAT","23B - Digital/analog Input 4","16B AUX 2","INVALID","INVALID","INVALID","20B PPS2","22A TPS2"
 #define ADC_CHANNEL_NONE 0
 #define afr_sensor_s_size 20
 #define air_pressure_sensor_config_s_size 12
@@ -1378,7 +1378,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2338841838
+#define SIGNATURE_HASH 2662501918
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1873,7 +1873,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.03.17.alphax-gold.2338841838"
+#define TS_SIGNATURE "rusEFI master.2025.03.18.alphax-gold.2662501918"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
