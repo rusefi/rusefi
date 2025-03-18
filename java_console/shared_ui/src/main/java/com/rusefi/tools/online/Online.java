@@ -12,7 +12,7 @@ import org.apache.http.concurrent.FutureCallback;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.jetbrains.annotations.Nullable;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -33,7 +33,7 @@ public class Online {
      * blocking call for http file upload
      */
     public static UploadResult upload(File fileName, String authTokenValue) {
-        HttpClient httpclient = new DefaultHttpClient();
+        HttpClient httpclient = HttpClientBuilder.create().build();
         HttpPost httpPost = new HttpPost(url);
 
         String responseString;
