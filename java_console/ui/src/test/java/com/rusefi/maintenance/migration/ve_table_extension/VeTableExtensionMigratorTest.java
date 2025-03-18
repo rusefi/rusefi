@@ -1,6 +1,7 @@
-package com.rusefi.maintenance.migration;
+package com.rusefi.maintenance.migration.ve_table_extension;
 
 import com.rusefi.maintenance.TestTuneMigrationContext;
+import com.rusefi.maintenance.migration.ComposedTuneMigrator;
 import com.rusefi.tune.xml.Constant;
 import org.junit.jupiter.api.Test;
 
@@ -8,8 +9,8 @@ import javax.xml.bind.JAXBException;
 
 import java.util.Map;
 
-import static com.rusefi.maintenance.migration.VeTableExtensionTestTuneMigrationContext.VE_RPM_BINS_FIELD_NAME;
-import static com.rusefi.maintenance.migration.VeTableExtensionTestTuneMigrationContext.VE_TABLE_FIELD_NAME;
+import static com.rusefi.maintenance.migration.ve_table_extension.VeTableExtensionTestTuneMigrationContext.VE_RPM_BINS_FIELD_NAME;
+import static com.rusefi.maintenance.migration.ve_table_extension.VeTableExtensionTestTuneMigrationContext.VE_TABLE_FIELD_NAME;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class VeTableExtensionMigratorTest {
