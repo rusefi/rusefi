@@ -209,14 +209,14 @@ float InjectorModelWithConfig::getInjectionDuration(float fuelMassGram) const {
 
 	}
 
-	if (!Sensor::hasSensor(SensorType::FuelPressureInjector)) {
+	if (!Sensor::hasSensor(SensorType::FuelPressureHigh)) {
 		return baseDuration + m_deadtime;
 	}
 
-	auto fps = Sensor::get(SensorType::FuelPressureInjector);
+	auto fps = Sensor::get(SensorType::FuelPressureHigh);
 	float fuelMassCompensation = interpolate3d(config->hpfpFuelMassCompensation,
-			config->hpfpFuelMassCompensationFuelPressure, KPA2BAR(fps.Value),
-			config->hpfpFuelMassCompensationFuelMass, fuelMassGram * 1000);
+			config->hpfpFuelMassCompensationFuelPressure, KPA2BAR(fps.Value),// array values are on bar
+			config->hpfpFuelMassCompensationFuelMass, fuelMassGram * 1000);  // array values are on mg
 
 	// recalculate base duration with fuell mass compensation
 	baseDuration =  getBaseDurationImpl(fuelMassGram * fuelMassCompensation);
