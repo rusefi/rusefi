@@ -310,9 +310,10 @@ void boardInitHardware() {
 	alphaHall6PullUp.initPin("Hall 6 PullUp", Gpio::H144_GP_IO1);
 
 	board_init_ext_gpios();
+	boardOnConfigurationChange(nullptr); // TODO? invoke this from main firmware code not from board file?
 }
 
-void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
+/*PUBLIC_API_WEAK*/ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
 	alphaTempPullUp.setValue(engineConfiguration->boardEnTempPullUp);
 	alphaKnock1PullUp.setValue(engineConfiguration->boardEnKnock1PullUp);
 	alphaKnock2PullUp.setValue(engineConfiguration->boardEnKnock2PullUp);

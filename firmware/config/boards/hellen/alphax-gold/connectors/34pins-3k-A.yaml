@@ -133,11 +133,10 @@ pins:
   - pin: 18A
     meta: H144_IN_TPS
     class: analog_inputs
-    function: TPS Sensor Input
-    ts_name: ___ - TPS
+    function: TPS1 Sensor Input
+    ts_name: ___ - TPS1
     type: av
     color: orange
-
 
   - pin: 19A
     meta: H144_IN_CLT
@@ -151,6 +150,7 @@ pins:
   - pin: 20A
     meta: H144_IN_IAT
     class: analog_inputs
+    type: av
     function: IAT Sensor Input
     ts_name: ___ - IAT
     color: blue
@@ -167,7 +167,7 @@ pins:
     meta: H144_IN_TPS2
     class: analog_inputs
     ts_name: ___ TPS2
-    function: TPS input 2
+    function: TPS2 sensor input
     type: av
     color: blue
 
