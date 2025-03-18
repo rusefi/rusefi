@@ -173,17 +173,9 @@ void setEngineBMW_M73_Proteus() {
 
 	strcpy(engineConfiguration->vehicleName, "Using Proteus");
 
-	// set_trigger_input_pin 0 PE7
 	engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;
 
-	// Gpio::E11: "Digital 2"
 	engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_2;
-
-	// set vbatt_divider 8.16
-	// engineConfiguration->vbattDividerCoeff = (49.0f / 10.0f) * 16.8f / 10.0f;
-	// todo: figure out exact values from TLE8888 breakout board used by Manhattan
-	// engineConfiguration->vbattDividerCoeff = 7.6; // is that Proteus 0.2 value?
-
 
 	// no idea why https://github.com/rusefi/rusefi/wiki/HOWTO-M73-v12-on-Proteus uses non default CLT pin
 //	engineConfiguration->clt.adcChannel = PROTEUS_IN_ANALOG_TEMP_4;

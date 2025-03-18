@@ -12,6 +12,7 @@
 
 #include "subaru.h"
 #include "custom_engine.h"
+#include "proteus_meta.h"
 #include "defaults.h"
 #include "mre_meta.h"
 
@@ -103,6 +104,23 @@ void setSubaru2011() {
   engineConfiguration->throttlePedalSecondaryUpVoltage = 1;
   engineConfiguration->throttlePedalWOTVoltage = 3.3;
   engineConfiguration->throttlePedalSecondaryWOTVoltage = 3.3;
+
+	engineConfiguration->displacement = 2.5;
+	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_SUBARU);
+	engineConfiguration->trigger.type = trigger_type_e::TT_36_2_2_2;
+
+#if HW_PROTEUS && EFI_PROD_CODE
+	setProteusEtbIO();
+  engineConfiguration->triggerInputPins[0] = PROTEUS_VR_1;
+  engineConfiguration->camInputs[0] = PROTEUS_DIGITAL_1;
+  engineConfiguration->camInputs[1] = PROTEUS_DIGITAL_2;
+  engineConfiguration->camInputs[2] = PROTEUS_DIGITAL_3;
+  engineConfiguration->camInputs[3] = PROTEUS_DIGITAL_4;
+
+
+	engineConfiguration->starterControlPin = Gpio::PROTEUS_LS_14;
+	engineConfiguration->startStopButtonPin = PROTEUS_IN_AV_6_DIGITAL;
+#endif // HW_PROTEUS
 
 	engineConfiguration->tpsMin = convertVoltageTo10bitADC(0.68);
 	engineConfiguration->tpsMax = convertVoltageTo10bitADC(3.96);
