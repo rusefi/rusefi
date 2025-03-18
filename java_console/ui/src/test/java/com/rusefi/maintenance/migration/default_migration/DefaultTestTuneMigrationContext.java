@@ -1,4 +1,6 @@
-package com.rusefi.maintenance;
+package com.rusefi.maintenance.migration.default_migration;
+
+import com.rusefi.maintenance.TestTuneMigrationContext;
 
 import javax.xml.bind.JAXBException;
 
@@ -11,7 +13,7 @@ public class DefaultTestTuneMigrationContext {
 
     static final String PREV_VEHICLE_NAME_VALUE = "Test Vehicle";
 
-    static final String PREV_IGNITION_TABLE_VALUE = "\n" +
+    public static final String PREV_IGNITION_TABLE_VALUE = "\n" +
         "         12.1 14.2 18.1 22.0 25.9 29.9 33.8 37.7 41.6 42.9 42.9 42.9 42.9 42.9 42.9 43.0\n" +
         "         12.0 14.0 17.9 21.7 25.6 29.5 33.3 37.2 41.0 42.3 42.3 42.3 42.3 42.3 42.3 42.4\n" +
         "         11.9 13.9 17.7 21.5 25.3 29.1 32.8 36.6 40.4 41.7 41.7 41.7 41.7 41.7 41.7 41.8\n" +
@@ -29,7 +31,7 @@ public class DefaultTestTuneMigrationContext {
         "         10.4 12.1 15.2 18.3 21.5 24.6 27.7 30.8 34.0 35.0 35.0 35.0 35.0 35.0 35.0 35.1\n" +
         "         10.4 12.1 15.2 18.3 21.5 24.6 27.7 30.8 34.0 35.0 35.0 35.0 35.0 35.0 35.0 35.1\n";
 
-    static final String UPDATED_IGNITION_TABLE_VALUE = "\n" +
+    public static final String UPDATED_IGNITION_TABLE_VALUE = "\n" +
         "         12.2 14.2 18.1 22.0 25.9 29.9 33.8 37.7 41.6 42.9 42.9 42.9 42.9 42.9 42.9 42.9\n" +
         "         12.1 14.0 17.9 21.7 25.6 29.5 33.3 37.2 41.0 42.3 42.3 42.3 42.3 42.3 42.3 42.3\n" +
         "         12.0 13.9 17.7 21.5 25.3 29.1 32.8 36.6 40.4 41.7 41.7 41.7 41.7 41.7 41.7 41.7\n" +
@@ -47,15 +49,15 @@ public class DefaultTestTuneMigrationContext {
         "         10.5 12.1 15.2 18.3 21.5 24.6 27.7 30.8 34.0 35.0 35.0 35.0 35.0 35.0 35.0 35.0\n" +
         "         10.5 12.1 15.2 18.3 21.5 24.6 27.7 30.8 34.0 35.0 35.0 35.0 35.0 35.0 35.0 35.0\n";
 
-    static final String ENABLE_KNOCK_SPECTROGRAM_FIELD_NAME = "enableKnockSpectrogram";
+    public static final String ENABLE_KNOCK_SPECTROGRAM_FIELD_NAME = "enableKnockSpectrogram";
 
-    static final String PREV_ENABLE_KNOCK_SPECTROGRAM_VALUE = "\"false\"";
+    public static final String PREV_ENABLE_KNOCK_SPECTROGRAM_VALUE = "\"false\"";
 
-    static final String UPDATED_ENABLE_KNOCK_SPECTROGRAM_VALUE = "\"no\"";
+    public static final String UPDATED_ENABLE_KNOCK_SPECTROGRAM_VALUE = "\"no\"";
 
     public static TestTuneMigrationContext load() throws JAXBException {
         final TestTuneMigrationContext result = TestTuneMigrationContext.load(
-            "src/test/java/com/rusefi/maintenance/test_data/default"
+            "src/test/java/com/rusefi/maintenance/migration/default_migration/test_data"
         );
         assertEquals(
             PREV_VEHICLE_NAME_VALUE,

@@ -28,19 +28,19 @@ public class TestTuneMigrationContext extends TuneMigrationContext {
         return (TestCallbacks) getCallbacks();
     }
 
-    CalibrationsInfo getPrevCalibrationsInfo() {
+    public CalibrationsInfo getPrevCalibrationsInfo() {
         return getCalibrationsInfo(getPrevTune(), getPrevIniFile());
     }
 
-    CalibrationsInfo getUpdatedCalibrationsInfo() {
+    public CalibrationsInfo getUpdatedCalibrationsInfo() {
         return getCalibrationsInfo(getUpdatedTune(), getUpdatedIniFile());
     }
 
-    Constant getPrevValue(final String fieldName) {
+    public Constant getPrevValue(final String fieldName) {
         return getValue(getPrevTune(), fieldName);
     }
 
-    Constant getUpdatedValue(final String fieldName) {
+    public Constant getUpdatedValue(final String fieldName) {
         return getValue(getUpdatedTune(), fieldName);
     }
 

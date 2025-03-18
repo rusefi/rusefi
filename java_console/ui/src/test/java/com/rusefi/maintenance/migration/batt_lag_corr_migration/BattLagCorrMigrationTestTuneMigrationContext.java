@@ -1,4 +1,4 @@
-package com.rusefi.maintenance.test_data.batt_lag_corr_migration;
+package com.rusefi.maintenance.migration.batt_lag_corr_migration;
 
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.ArrayIniField;
@@ -27,7 +27,7 @@ public class BattLagCorrMigrationTestTuneMigrationContext {
 
     public static TestTuneMigrationContext load() throws JAXBException {
         final TestTuneMigrationContext result = TestTuneMigrationContext.load(
-            "src/test/java/com/rusefi/maintenance/test_data/batt_lag_corr_migration"
+            "src/test/java/com/rusefi/maintenance/migration/batt_lag_corr_migration/test_data"
         );
         {
             final IniFileModel prevIniFile = result.getPrevIniFile();
