@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<msq xmlns="http://www.msefi.com/:msq">
+    <page/>
+    <page number="0" size="23344">
+<constant cols="1" digits="2" name="injector_battLagCorrBins" rows="8" units="volts">
+         6.0
+         8.0
+         10.0
+         11.0
+         12.0
+         13.0
+         14.0
+         15.0
+      </constant>
+<constant cols="1" digits="2" name="injector_battLagCorr" rows="8" units="ms">
+         3.371
+         1.974
+         1.383
+         1.194
+         1.04
+         0.914
+         0.797
+         0.726
+      </constant>
+    </page>
+</msq>

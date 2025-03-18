@@ -24,7 +24,7 @@ public class TestTuneMigrationContext extends TuneMigrationContext {
         return result;
     }
 
-    TestCallbacks getTestCallbacks() {
+    public TestCallbacks getTestCallbacks() {
         return (TestCallbacks) getCallbacks();
     }
 

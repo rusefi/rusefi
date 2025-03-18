@@ -83,4 +83,8 @@ public class TuneMigrationContext {
         }
         migratedConstants.put(migratedFieldName, migratedValue);
     }
+
+    public void logWarn(final String warning) {
+        callbacks.logLine(String.format("WARNING! %s", warning));
+    }
 }
