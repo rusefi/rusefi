@@ -1,8 +1,9 @@
-package com.rusefi.maintenance;
+package com.rusefi.maintenance.migration.default_migration;
 
 import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.StringIniField;
 import com.rusefi.config.FieldType;
+import com.rusefi.maintenance.TestTuneMigrationContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

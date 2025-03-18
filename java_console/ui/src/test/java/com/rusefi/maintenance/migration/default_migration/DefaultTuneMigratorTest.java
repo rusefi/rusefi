@@ -1,12 +1,14 @@
-package com.rusefi.maintenance;
+package com.rusefi.maintenance.migration.default_migration;
 
+import com.rusefi.maintenance.DefaultTuneMigrator;
+import com.rusefi.maintenance.TestTuneMigrationContext;
 import com.rusefi.tune.xml.Constant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import javax.xml.bind.JAXBException;
 
-import static com.rusefi.maintenance.DefaultTestTuneMigrationContext.*;
+import static com.rusefi.maintenance.migration.default_migration.DefaultTestTuneMigrationContext.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DefaultTuneMigratorTest {

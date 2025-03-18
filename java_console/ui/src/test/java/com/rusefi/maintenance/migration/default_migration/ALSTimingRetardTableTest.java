@@ -1,8 +1,10 @@
-package com.rusefi.maintenance;
+package com.rusefi.maintenance.migration.default_migration;
 
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.IniField;
+import com.rusefi.maintenance.CalibrationsInfo;
+import com.rusefi.maintenance.TestTuneMigrationContext;
 import com.rusefi.tune.xml.Constant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
