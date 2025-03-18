@@ -10,6 +10,7 @@ public enum ComposedTuneMigrator implements TuneMigrator {
 
     private final List<TuneMigrator> tuneMigrators = Arrays.asList(
         VeTableExtensionMigrator.INSTANCE,
+        BattLagCorrExtensionMigrator.INSTANCE,
         DefaultTuneMigrator.INSTANCE
     );
 
