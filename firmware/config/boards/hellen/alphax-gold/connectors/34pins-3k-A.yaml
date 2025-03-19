@@ -9,234 +9,223 @@ pins:
     color: orange
 
   - pin: 1A
-    function: Injector 4 Output
+    function: Injector 8 Output
     class: outputs
     type: ls
-    id: TLE9104_0_OUT_3
-    ts_name: ___ - Injector 4
-    color: orange
+    id: TLE9104_1_OUT_3
+    ts_name: ___ - Injector 8
+    color: green
 
   - pin: 2A
-    function: Injector 3 Output
+    function: Injector 7 Output
     class: outputs
     type: ls
-    id: TLE9104_0_OUT_2
-    ts_name: ___ - Injector 3
-    color: blue
+    id: TLE9104_1_OUT_2
+    ts_name: ___ - Injector 7
+    color: white
 
   - pin: 3A
-    function: Injector 2 Output
+    function: Injector 6 Output
     class: outputs
     type: ls
-    id: TLE9104_0_OUT_1
-    ts_name: ___ - Injector 2
-    color: white
+    id: TLE9104_1_OUT_1
+    ts_name: ___ - Injector 6
+    color: yellow
 
   - pin: 4A
-    function: Injector 1 Output
+    function: Injector 5 Output
     class: outputs
     type: ls
-    id: TLE9104_0_OUT_0
-    ts_name: ___ - Injector 1
-    color: green
+    id: TLE9104_1_OUT_0
+    ts_name: ___ - Injector 5
+    color: brown
 
   - pin: 5A
-    function: Fuel Pump Relay
     color: grey
+    function: Fuel Pump Relay
     class: outputs
     type: ls
-    id: TLE9104_2_OUT_0
-    ts_name: ___ Fuel Pump Relay
-    color: white
+    id: TLE9104_3_OUT_3
+    ts_name: ___ Main Relay
 
   - pin: 6A
-    color: orange
-    function: Idle Output
+    function: Low-Side 3 output
     class: outputs
     type: ls
-    id: TLE9104_2_OUT_1
-    ts_name: ___ Idle Output
-    color: yellow
+    id: TLE9104_3_OUT_1
+    ts_name: ___ LS3
 
   - pin: 7A
-    function: CAN High
-    color: green
-    type: can
+    function: Low-Side 4 output
+    class: outputs
+    type: ls
+    id: TLE9104_3_OUT_2
+    ts_name: ___ LS4
 
   - pin: 8A
-    function: CAN Low
-    color: blue
-    type: can
+    function: Low-Side 5 output
+    class: outputs
+    type: ls
+    id: TLE9104_3_OUT_0
+    ts_name: ___ LS5
 
   - pin: 9A
-    function: +12v Bat+
+    meta: H144_IN_VBATT
+    class: analog_inputs
     color: red
-    type: 12V
+    function: Ignition Switch / Battery Voltage Analog Input
+    ts_name: ___ Voltage From Key
 
   - pin: 10A
-    meta: H144_IGN_4
+    meta: H144_IGN_8
     class: outputs
-    ts_name: ___ Coil 4
-    color: orange
+    ts_name: ___ Coil 8
 
   - pin: 11A
-    meta: H144_IGN_3
+    meta: H144_IGN_7
     class: outputs
-    ts_name: ___ Coil 3
-    color: blue
+    ts_name: ___ Coil 7
 
   - pin: 12A
-    meta: H144_IGN_2
+    meta: H144_IGN_6
     class: outputs
-    ts_name: ___ Coil 2
-    color: white
+    ts_name: ___ Coil 6
 
   - pin: 13A
-    meta: H144_IGN_1
+    meta: H144_IGN_5
     class: outputs
-    ts_name: ___ Coil 1
-    color: green
+    ts_name: ___ Coil 5
 
   - pin: 14A
-    function: Tachometer Output
-    class: outputs
-    color: yellow
-    type: ls
-    id: TLE9104_2_OUT_3
-    ts_name: ___ - Tachometer Output
-    color:
+    meta: H144_IN_D_1
+    class: event_inputs
+    function: Hall Input 1
+    ts_name: ___ Hall Input 1
+    type: hall
 
   - pin: 15A
-    meta: H144_IN_SENS1
-    class: switch_inputs
-    function: Digital Input 1
-    ts_name: ___ - Digital In 1
-    color: green
+    meta: H144_IN_D_2
+    class: event_inputs
+    function: Hall Input 2
+    ts_name: ___ Hall Input 2
+    type: hall
 
   - pin: 16A
-    id: [H144_IN_MAP1_DIGITAL, H144_IN_MAP1_DIGITAL, H144_IN_MAP1]
+    id: [H144_IN_AUX4_DIGITAL, H144_IN_AUX4_DIGITAL, H144_IN_AUX4]
     class: [event_inputs, switch_inputs, analog_inputs]
-    type: hall
-    ts_name: ___ - Digital/analog input 2
-    function: Digital/event/analog input (cannot be used simultaneously with VR1)
+    ts_name: ___ AUX 2
+    function: AUX input 2
+    type: av
+    function:
 
   - pin: 17A
-    id: [H144_IN_SENS4, H144_IN_SENS4]
-    class: [event_inputs, switch_inputs]
-    type: hall
-    ts_name: ___ - Digital input 1
-    function: Digital/event input (cannot be used simultaneously with VR1)
-
-  - pin: 17A16A
-    meta: H144_IN_CRANK
-    function: VR1 (cannot be used simultaneously with Hall1 and Hall2)
-    type: vr
-    ts_name: 17A/17B VR Input 1 (Discrete)
+    class: outputs
+    ts_name: ETB+
+    function: ETB+ output
+    color: blue
+    type: etb
 
   - pin: 18A
-    meta: H144_IN_TPS
-    class: analog_inputs
-    function: TPS1 Sensor Input
-    ts_name: ___ - TPS1
-    type: av
-    color: orange
+    class: outputs
+    ts_name: DC+
+    function: DC+ output
+    color: blue
+    type: etb
 
   - pin: 19A
-    meta: H144_IN_CLT
     class: analog_inputs
-    function: CLT Sensor Input
-    ts_name: ___ - CLT
+    meta: H144_IN_PPS
+    ts_name: ___ PPS1
+    function: PPS input 1
     type: av
-    color: grey
-
+    color: white
 
   - pin: 20A
-    meta: H144_IN_IAT
     class: analog_inputs
+    meta: H144_IN_PPS2
+    ts_name: ___ PPS2
+    function: PPS input 2
     type: av
-    function: IAT Sensor Input
-    ts_name: ___ - IAT
-    color: blue
+    color: white
 
   - pin: 21A
-    meta: H144_IN_O2S2
-    class: analog_inputs
-    ts_name: ___ MAP
-    function: MAP input
-    type: av
-    color: yellow
+    id: [H144_IN_SENS2, H144_IN_SENS2]
+    class: [event_inputs, switch_inputs]
+    ts_name: ___ Knock 1 / Digital input 7
+    function: Knock sensor 1 / AUX digital (TODO analog) input 7
 
   - pin: 22A
-    meta: H144_IN_TPS2
-    class: analog_inputs
-    ts_name: ___ TPS2
-    function: TPS2 sensor input
-    type: av
-    color: blue
+    id: [H144_IN_SENS3, H144_IN_SENS3]
+    class: [event_inputs, switch_inputs]
+    ts_name: ___ Knock 2 / Digital input 8
+    function: Knock sensor 2 / AUX digital (TODO analog) input 8
 
   - pin: 23A
-    function: Sensor +5v Power Feed
-    type: 5v
-    color: orange
-
-  - pin: 24A
-    id: [H144_IN_D_4, H144_IN_D_4]
-    class: [event_inputs, switch_inputs]
-    type: hall
-    ts_name: ___ - Digital Input 6
-    function: Digital Input 6 (cannot be used simultaneously with VR3)
-
-  - pin: 25A
-    id: [H144_IN_AUX3_DIGITAL, H144_IN_AUX3_DIGITAL, H144_IN_AUX3]
+    id: [H144_IN_AUX2_DIGITAL, H144_IN_AUX2_DIGITAL, H144_IN_AUX2]
     class: [event_inputs, switch_inputs, analog_inputs]
     type: hall
-    ts_name: ___ - Digital/analog Input 5
-    function: Digital/analog Input 5 (cannot be used simultaneously with VR3)
+    ts_name: ___ - Digital/analog Input 4
+    function: Digital/analog Input 4 (cannot be used simultaneously with VR2)
 
-  - pin: 24A25A
-    meta: H144_IN_VSS
-    function: VR3 (cannot be used simultaneously with Hall5 and Hall6)
+  - pin: 24A
+    id: [H144_IN_MAP3_DIGITAL, H144_IN_MAP3_DIGITAL, H144_IN_MAP3]
+    class: [event_inputs, switch_inputs, analog_inputs]
+    type: hall
+    ts_name: ___ - Digital/analog Input 3
+    function: Digital/analog Input 3 (cannot be used simultaneously with VR2)
+
+  - pin: 23A24A
+    meta: H144_IN_CAM
+    function: VR2 (cannot be used simultaneously with Hall3 and Hall4)
     type: vr
-    ts_name: 24A/25A VR Input 3 (MAX9924)
+    ts_name: 23A/24A VR Input 2 (Discrete)
+
+  - pin: 25A
+    class: outputs
+    ts_name: ___ ETB-
+    function: ETB- output
+    color: white
+    type: etb
 
   - pin: 26A
+    class: outputs
+    ts_name: ___ DC-
+    function: DC- output
+    type: etb
+    color: white
+
+  - pin: 27A
+    class: event_inputs
+    meta: H144_IN_D_3
+    ts_name: ___ Flex Fuel
+    function: Flex Fuel Input
+
+  - pin: 28A
     function: GND
     type: GND
 
-  - pin: 27A
-    function: GNDA
-    type: gnd
-    color: black
-
-  - pin: 28A
-    meta: H144_IN_AUX1
-    class: analog_inputs
-    ts_name: ___ AUX1
-    function: AUX input 1
-    type: av
-
   - pin: 29A
-    function: WBO1 Heater Control sensor pin 3
+    function: WBO2 Heater Control sensor pin 3
     color: white
 
   - pin: 30A
-    function: WBO1 VM sensor pin 2
+    function: WBO2 VM sensor pin 2
     color: yellow
 
   - pin: 31A
-    function: WBO1 IP sensor pin 1
+    function: WBO2 IP sensor pin 1
     color: red
 
   - pin: 32A
-    function: WBO1 cal R sensor pin 5
+    function: WBO2 cal R sensor pin 5
     color: green
 
   - pin: 33A
-    function: WBO1 VS sensor pin 6
+    function: WBO2 VS sensor pin 6
     color: black
 
   - pin: 34A
-    function: WBO1 Heater Power pin 4
+    function: WBO2 Heater Power pin 4
     color: grey
 
 
