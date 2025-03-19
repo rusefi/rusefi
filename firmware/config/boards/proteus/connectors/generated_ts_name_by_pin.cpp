@@ -46,7 +46,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::D7: return "Lowside 1";
 		case Gpio::D8: return "STM32 PD8";
 		case Gpio::D9: return "STM32 PD9";
-		case Gpio::E0: return "Lowside 14";
+		case Gpio::E0: return "Lowside 14 or starter";
 		case Gpio::E1: return "Lowside 15";
 		case Gpio::E11: return "Digital 2";
 		case Gpio::E12: return "Digital 3";

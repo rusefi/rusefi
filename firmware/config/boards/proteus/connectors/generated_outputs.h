@@ -14,7 +14,7 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::B5, // Lowside 9
 	Gpio::B7, // Lowside 11
 	Gpio::B9, // Lowside 13
-	Gpio::E0, // Lowside 14
+	Gpio::E0, // Lowside 14 or starter
 	Gpio::E1, // Lowside 15
 	Gpio::G9, // Lowside 2
 	Gpio::G11, // Lowside 4
@@ -52,7 +52,7 @@ Gpio GENERATED_OUTPUTS = {
 // "Lowside 9",
 // "Lowside 11",
 // "Lowside 13",
-// "Lowside 14",
+// "Lowside 14 or starter",
 // "Lowside 15",
 // "Lowside 2",
 // "Lowside 4",
