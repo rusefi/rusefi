@@ -74,7 +74,8 @@ pins:
     id: E0
     function: Lowside output
     class: outputs
-    ts_name: Lowside 14
+    ts_name: Lowside 14 or starter
+    color: yellow
     type: ls
 
   - pin: 12

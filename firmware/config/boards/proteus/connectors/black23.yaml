@@ -20,6 +20,7 @@ pins:
     class: [event_inputs, switch_inputs]
     function: Digital trigger/switch input for instance Start Button
     ts_name: Digital 4
+    color: grey
     type: din
 
   - pin: 4
@@ -60,7 +61,7 @@ pins:
     class: [event_inputs, switch_inputs]
     function: Digital trigger/switch input
     ts_name: Digital 5
-    type: din    
+    type: din
 
   - pin: 10
     id: [C6, C6]
