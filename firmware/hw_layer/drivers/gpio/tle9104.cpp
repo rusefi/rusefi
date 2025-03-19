@@ -18,7 +18,7 @@
 
 #define DRIVER_NAME					"tle9104"
 
-/* TODO: aling with WD settings */
+/* TODO: align with WD settings */
 #define TLE9104_POLL_INTERVAL_MS	100
 
 static bool drv_task_ready = false;
@@ -125,8 +125,7 @@ static bool parityBit(uint16_t val) {
 #endif
 }
 
-int Tle9104::spi_validate(uint16_t rx)
-{
+int Tle9104::spi_validate(uint16_t rx) {
 	/* with parity bit included */
 	bool parityOk = !parityBit(rx);
 	if (!parityOk) {
