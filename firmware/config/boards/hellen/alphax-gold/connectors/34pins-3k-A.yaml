@@ -179,6 +179,7 @@ pins:
 
   - pin: 23A24A
     meta: H144_IN_CAM
+    class: event_inputs
     function: VR2 (cannot be used simultaneously with Hall3 and Hall4)
     type: vr
     ts_name: 23A/24A VR Input 2 (Discrete)

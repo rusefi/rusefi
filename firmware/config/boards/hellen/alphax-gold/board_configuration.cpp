@@ -58,6 +58,10 @@ static void setDefaultSensorInputs() {
 	engineConfiguration->boardEnHall5PullUp = false;
 	engineConfiguration->boardEnHall6PullUp = false;
 
+	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
+	engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_VSS;
+	engineConfiguration->camInputs[0] = Gpio::Unassigned;
+
 	// A18 + A22
 	setTPS1Inputs(H144_IN_TPS, H144_IN_TPS2);
 	// B19 + B20

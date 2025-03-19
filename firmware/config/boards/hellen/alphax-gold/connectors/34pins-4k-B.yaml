@@ -122,6 +122,7 @@ pins:
 
   - pin: 17B16B
     meta: H144_IN_CRANK
+    class: event_inputs
     function: VR1 (cannot be used simultaneously with Hall1 and Hall2)
     type: vr
     ts_name: 17A/17B VR Input 1 (Discrete)
