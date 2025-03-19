@@ -106,9 +106,16 @@ pins:
     type: agnd
 
   - pin: 16A
-    function: VR Discrete Negative
+    meta: MM100_IN_D4
+    class: event_inputs
+    function: 16 Hall4 (not while descrete VR)
 
   - pin: 17A
+    meta: MM100_IN_D3
+    class: event_inputs
+    function: 17 Hall3 (not while descrete VR)
+
+  - pin: 16A17A
     meta: MM100_IN_CAM
     class: event_inputs
     function: VR Discrete Positive
@@ -162,9 +169,16 @@ pins:
     color: orange
 
   - pin: 24A
-    function: VR max9924 Negative
+    meta: MM100_IN_D2
+    class: event_inputs
+    function: 24 Hall2 (not while VR max9924)
 
   - pin: 25A
+    meta: MM100_IN_D1
+    class: event_inputs
+    function: 25 Hall1 (not while VR max9924)
+
+  - pin: 24A25A
     meta: MM100_IN_CRANK
     class: event_inputs
     function: VR max9924 Positive
