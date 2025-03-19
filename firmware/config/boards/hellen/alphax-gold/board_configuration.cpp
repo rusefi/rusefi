@@ -4,7 +4,7 @@
 #include "smart_gpio.h"
 #include "drivers/gpio/tle9104.h"
 
-// Configurable 4.7K pull-ups to 5V
+// Configurable 2.7K pull-ups to 5V
 static OutputPin alphaTempPullUp;
 static OutputPin alphaKnock1PullUp;
 static OutputPin alphaKnock2PullUp;
@@ -73,9 +73,12 @@ static void setDefaultSensorInputs() {
 }
 
 void setBoardConfigOverrides() {
-	hellenMegaModule();
-	setHellenCan();
 	setHellenMegaEnPin();
+
+	setHellenVbatt();
+	setHellenCan();
+	hellenMegaSdWithAccelerometer();
+	setDefaultHellenAtPullUps(2700); // wow this board is unusual?!
 
 	/* Four TLE9104 */
 	enableHellenSpi2();

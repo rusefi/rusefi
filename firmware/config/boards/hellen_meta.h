@@ -326,11 +326,11 @@ inline void setHellenSdCardSpi3() {
 // *pullups* files CLT R211 IAT R213
 #define HELLEN_DEFAULT_AT_PULLUP 4700
 
-inline void setDefaultHellenAtPullUps(){
-	engineConfiguration->clt.config.bias_resistor = HELLEN_DEFAULT_AT_PULLUP;
-	engineConfiguration->iat.config.bias_resistor = HELLEN_DEFAULT_AT_PULLUP;
-	engineConfiguration->auxTempSensor1.config.bias_resistor = HELLEN_DEFAULT_AT_PULLUP;
-	engineConfiguration->auxTempSensor2.config.bias_resistor = HELLEN_DEFAULT_AT_PULLUP;
+inline void setDefaultHellenAtPullUps(float pullup = HELLEN_DEFAULT_AT_PULLUP) {
+	engineConfiguration->clt.config.bias_resistor = pullup;
+	engineConfiguration->iat.config.bias_resistor = pullup;
+	engineConfiguration->auxTempSensor1.config.bias_resistor = pullup;
+	engineConfiguration->auxTempSensor2.config.bias_resistor = pullup;
 }
 
 inline void setHellenMMbaro() {
