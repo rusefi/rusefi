@@ -9,6 +9,10 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::A6: return "VR Discrete Positive";
 		case Gpio::B1: return "VR max9924 Positive";
 		case Gpio::C13: return "13A Coil 1";
+		case Gpio::E12: return "25 Hall1 (not while VR max9924)";
+		case Gpio::E13: return "24 Hall2 (not while VR max9924)";
+		case Gpio::E14: return "17 Hall3 (not while descrete VR)";
+		case Gpio::E15: return "16 Hall4 (not while descrete VR)";
 		case Gpio::E3: return "10A Coil 4";
 		case Gpio::E4: return "11A Coil 3";
 		case Gpio::E5: return "12A Coil 2";
