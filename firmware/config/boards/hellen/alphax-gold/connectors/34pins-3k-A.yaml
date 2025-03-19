@@ -42,6 +42,7 @@ pins:
 
   - pin: 5A
     function: Fuel Pump Relay
+    color: grey
     class: outputs
     type: ls
     id: TLE9104_2_OUT_0
@@ -49,6 +50,7 @@ pins:
     color: white
 
   - pin: 6A
+    color: orange
     function: Idle Output
     class: outputs
     type: ls
@@ -98,6 +100,7 @@ pins:
   - pin: 14A
     function: Tachometer Output
     class: outputs
+    color: yellow
     type: ls
     id: TLE9104_2_OUT_3
     ts_name: ___ - Tachometer Output

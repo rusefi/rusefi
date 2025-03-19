@@ -34,6 +34,7 @@ pins:
     color: brown
 
   - pin: 5B
+    color: grey
     function: Fuel Pump Relay
     class: outputs
     type: ls
