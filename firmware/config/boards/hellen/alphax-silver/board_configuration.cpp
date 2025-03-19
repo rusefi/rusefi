@@ -7,6 +7,7 @@
 #include "pca_board_id.h" // bb i2c board id, works via __weak__ magic
 
 static OutputPin alphaTempPullUp;
+static OutputPin alphaTachSelPullUp;
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = Gpio::TLE9104_0_OUT_0;
@@ -148,12 +149,14 @@ static void board_init_ext_gpios() {
  */
 void boardInitHardware() {
 	alphaTempPullUp.initPin("a-temp", Gpio::MM100_IGN8); //  E6
+	alphaTachSelPullUp.initPin("Tach PullUp", Gpio::MM100_OUT_PWM1);
 	board_init_ext_gpios();
 	boardOnConfigurationChange(nullptr); // TODO? invoke this from main firmware code not from board file?
 }
 
 void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
 	alphaTempPullUp.setValue(engineConfiguration->boardUseTempPullUp);
+	alphaTachSelPullUp.setValue(engineConfiguration->boardSelTachPullUp);
 }
 
 static Gpio OUTPUTS[] = {

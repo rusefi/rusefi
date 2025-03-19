@@ -1,1 +1,3 @@
 bit boardUseTempPullUp,"With Pull Ups","Piggyback Mode"
+bit boardSelTachPullUp,"+12V","+5V"
+
