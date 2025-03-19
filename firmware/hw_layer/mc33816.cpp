@@ -22,7 +22,7 @@
 
 #include "hardware.h"
 #include "mpu_util.h"
-#include "ignition_controller.h"
+#include "ign_voltage_gatekeeper.h"
 
 static SPIConfig spiCfg = {
     .circular = false,
@@ -249,21 +249,20 @@ bool Pt2001::init() {
 	return true;
 }
 
-static bool isInitialized = false;
+static IgnVoltageGatekeeper gatekeeper;
 
 void Pt2001::initIfNeeded() {
-	if (!isIgnVoltage()) {
-		isInitialized = false;
-	  efiPrintf("unhappy mc33 due to battery voltage");
-	} else {
-		if (!isInitialized) {
-			isInitialized = restart();
-			if (isInitialized) {
+	if (!gatekeeper.haveVoltage()) {
+	  return;
+	}
+
+  if (!gatekeeper.isInitialized) {
+			gatekeeper.isInitialized = restart();
+			if (gatekeeper.isInitialized) {
 			  efiPrintf("happy mc33/PT2001!");
 			} else {
 			  efiPrintf("unhappy mc33 fault=%d %s", (int)fault, mcFaultToString(fault));
 			}
-		}
 	}
 }
 
@@ -273,14 +272,6 @@ static THD_FUNCTION(mc33_driver_thread, p) {
   (void)p;
 
   while (true) {
-    if (!isIgnVoltage()) {
-      if (isInitialized) {
-        efiPrintf("Power loss? Would have to re-init mc33/PT2001?");
-        isInitialized = false;
-      }
-      chThdSleepMilliseconds(100);
-      continue;
-    }
     pt.initIfNeeded();
     chThdSleepMilliseconds(100);
   }
