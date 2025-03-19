@@ -3,11 +3,10 @@ package com.rusefi.tools.online;
 import com.devexperts.logging.Logging;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
+import org.apache.http.config.SocketConfig;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -45,12 +44,15 @@ public class HttpUtil {
     }
 
     public static String executeGet(String url) throws IOException {
-        HttpClient httpclient = HttpClientBuilder.create().build();
-        HttpParams httpParameters = httpclient.getParams();
-//        HttpConnectionParams.setConnectionTimeout(httpParameters, CONNECTION_TIMEOUT);
-//        HttpConnectionParams.setSoTimeout(httpParameters, WAIT_RESPONSE_TIMEOUT);
         // without this magic http response is pretty slow
-        HttpConnectionParams.setTcpNoDelay(httpParameters, true);
+        SocketConfig socketConfig = SocketConfig.custom()
+                .setSoKeepAlive(true)
+                .setTcpNoDelay(true)
+                .build();
+        CloseableHttpClient httpclient = HttpClients.custom()
+                .setDefaultSocketConfig(socketConfig)
+                .build();
+
         log.info("GET " + url);
         HttpGet httpget = new HttpGet(url);
 
