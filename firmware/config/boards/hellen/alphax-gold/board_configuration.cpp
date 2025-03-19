@@ -52,7 +52,7 @@ static void setDefaultSensorInputs() {
 	// default is 5V pull-up
 	engineConfiguration->boardSelTachPullUp = false;
 	engineConfiguration->boardEnHall1PullUp = false;
-	engineConfiguration->boardEnHall2PullUp = false;
+	engineConfiguration->boardEnHall2PullUp = true;
 	engineConfiguration->boardEnHall3PullUp = false;
 	engineConfiguration->boardEnHall4PullUp = false;
 	engineConfiguration->boardEnHall5PullUp = false;
@@ -90,8 +90,8 @@ void setBoardConfigOverrides() {
 
 static void setDefaultETBPins() {
 	// users would want to override those if using H-bridges for stepper idle control
-	setupTLE9201IncludingStepper(/*PWM controlPin*/Gpio::H144_OUT_PWM1, Gpio::H144_OUT_PWM6, Gpio::H144_OUT_PWM5, 0);
-	setupTLE9201IncludingStepper(/*PWM controlPin*/Gpio::H144_OUT_PWM2, Gpio::H144_OUT_PWM4, Gpio::H144_OUT_PWM3, 1);
+	setupTLE9201IncludingStepper(/*PWM controlPin*/Gpio::H144_OUT_PWM1, /*direction*/Gpio::H144_OUT_PWM6, /*disable*/Gpio::H144_OUT_PWM5, /*dcIndex*/0);
+	setupTLE9201IncludingStepper(/*PWM controlPin*/Gpio::H144_OUT_PWM2, /*direction*/Gpio::H144_OUT_PWM4, /*disable*/Gpio::H144_OUT_PWM3, /*dcIndex*/1);
 }
 
 /**
