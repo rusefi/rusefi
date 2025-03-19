@@ -54,9 +54,11 @@ pins:
     type: ls
     id: TLE9104_3_OUT_1
     ts_name: ___ LS3
+    color: violet
 
   - pin: 7A
     function: Low-Side 4 output
+    color: yellow
     class: outputs
     type: ls
     id: TLE9104_3_OUT_2
@@ -64,6 +66,7 @@ pins:
 
   - pin: 8A
     function: Low-Side 5 output
+    color: grey
     class: outputs
     type: ls
     id: TLE9104_3_OUT_0
