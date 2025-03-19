@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "gpio/gpio_ext.h"
 #include "gpio/tle9104.h"
+#include "ign_voltage_gatekeeper.h"
 
 #if defined(BOARD_TLE9104_COUNT) && BOARD_TLE9104_COUNT > 0
 
@@ -295,8 +296,9 @@ int Tle9104::chip_init() {
 SEMAPHORE_DECL(tle9104_wake, 10 /* or BOARD_TLE9104_COUNT ? */);
 static THD_WORKING_AREA(tle9104_thread_1_wa, 256);
 
-static THD_FUNCTION(tle9104_driver_thread, p)
-{
+static IgnVoltageGatekeeper gatekeeper;
+
+static THD_FUNCTION(tle9104_driver_thread, p) {
 	int i;
 	msg_t msg;
 
@@ -305,6 +307,11 @@ static THD_FUNCTION(tle9104_driver_thread, p)
 	chRegSetThreadName(DRIVER_NAME);
 
 	while(1) {
+  	if (!gatekeeper.haveVoltage()) {
+  	  chThdSleepMilliseconds(300);
+      return;
+    }
+
 		msg = chSemWaitTimeout(&tle9104_wake, TIME_MS2I(TLE9104_POLL_INTERVAL_MS));
 
 		/* should we care about msg == MSG_TIMEOUT? */
