@@ -150,8 +150,8 @@
 #define boostType_e_auto_enum 0="OPEN_LOOP",1="CLOSED_LOOP"
 #define boostType_e_CLOSED_LOOP 1
 #define boostType_e_OPEN_LOOP 0
-#define brain_input_pin_e_enum 0="NONE",78="14A Hall Input 1",79="15A Hall Input 2",39="16A AUX 2",34="16B - Digital/analog input 2",19="17A/17B VR Input 1 (Discrete)",88="17B - Digital input 1",86="21A Knock 1 / Digital input 7",87="22A Knock 2 / Digital input 8",75="23A - Digital/analog Input 4",8="23A/24A VR Input 2 (Discrete)",4="24A - Digital/analog Input 3",81="24B - Digital Input 6",9="25B - Digital/analog Input 5",80="27A Flex Fuel"
-#define brain_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","24A - Digital/analog Input 3","INVALID","INVALID","INVALID","23A/24A VR Input 2 (Discrete)","25B - Digital/analog Input 5","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","17A/17B VR Input 1 (Discrete)","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","16B - Digital/analog input 2","INVALID","INVALID","INVALID","INVALID","16A AUX 2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","23A - Digital/analog Input 4","INVALID","INVALID","14A Hall Input 1","15A Hall Input 2","27A Flex Fuel","24B - Digital Input 6","INVALID","INVALID","INVALID","INVALID","21A Knock 1 / Digital input 7","22A Knock 2 / Digital input 8","17B - Digital input 1"
+#define brain_input_pin_e_enum 0="NONE",78="14A Hall Input 1",79="15A Hall Input 2",39="16A AUX 2",34="16B - Digital/analog input 2",19="17A/17B VR Input 1 (Discrete)",88="17B - Digital input 1",86="21A Knock 1 / Digital input 7",87="22A Knock 2 / Digital input 8",75="23A - Digital/analog Input 4",8="23A/24A VR Input 2 (Discrete)",4="24A - Digital/analog Input 3",93="24A/25A VR Input 3 (MAX9924)",81="24B - Digital Input 6",9="25B - Digital/analog Input 5",80="27A Flex Fuel"
+#define brain_input_pin_e_fullenum "NONE","INVALID","INVALID","INVALID","24A - Digital/analog Input 3","INVALID","INVALID","INVALID","23A/24A VR Input 2 (Discrete)","25B - Digital/analog Input 5","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","17A/17B VR Input 1 (Discrete)","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","16B - Digital/analog input 2","INVALID","INVALID","INVALID","INVALID","16A AUX 2","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","INVALID","23A - Digital/analog Input 4","INVALID","INVALID","14A Hall Input 1","15A Hall Input 2","27A Flex Fuel","24B - Digital Input 6","INVALID","INVALID","INVALID","INVALID","21A Knock 1 / Digital input 7","22A Knock 2 / Digital input 8","17B - Digital input 1","INVALID","INVALID","INVALID","INVALID","24A/25A VR Input 3 (MAX9924)"
 #define brain_pin_diag_e_PIN_DRIVER_OFF 0x20
 #define brain_pin_diag_e_PIN_DRIVER_OVERTEMP 0x10
 #define brain_pin_diag_e_PIN_OK 0
@@ -1378,7 +1378,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 3155799052
+#define SIGNATURE_HASH 1381175683
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1873,7 +1873,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.03.19.alphax-gold.3155799052"
+#define TS_SIGNATURE "rusEFI master.2025.03.19.alphax-gold.1381175683"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

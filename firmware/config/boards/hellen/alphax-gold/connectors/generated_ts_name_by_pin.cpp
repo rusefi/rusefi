@@ -26,6 +26,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::E5: return "12B Coil 2";
 		case Gpio::E6: return "10A Coil 8";
 		case Gpio::E9: return "23A - Digital/analog Input 4";
+		case Gpio::F11: return "24A/25A VR Input 3 (MAX9924)";
 		case Gpio::F3: return "15B - Digital In 1";
 		case Gpio::F4: return "21A Knock 1 / Digital input 7";
 		case Gpio::F5: return "22A Knock 2 / Digital input 8";
