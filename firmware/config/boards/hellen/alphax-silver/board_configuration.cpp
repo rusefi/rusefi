@@ -40,10 +40,8 @@ void setBoardConfigOverrides() {
 	/* Force PWR_EN as TLE9104s are powered from +5VA */
 	setHellenMegaEnPin();
 
-	setHellenVbatt();
+	hellenMegaModule();
 	setHellenCan();
-	hellenMegaSdWithAccelerometer();
-	setDefaultHellenAtPullUps();
 
 	/* Two TLE9104 */
 	enableHellenSpi3();

@@ -170,6 +170,12 @@ void hellenMegaSdWithAccelerometer() {
 		hellenMegaAccelerometerPreInitCS2Pin();
 }
 
+void hellenMegaModule() {
+	setHellenVbatt();
+	hellenMegaSdWithAccelerometer();
+	setDefaultHellenAtPullUps();
+}
+
 void hellenMegaAccelerometerPreInitCS2Pin() {
 #if EFI_ONBOARD_MEMS
     if (!accelerometerChipSelect.isInitialized()) {

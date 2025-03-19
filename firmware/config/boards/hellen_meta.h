@@ -24,6 +24,7 @@ void hellenDisableEnSilently(); // this version is called by fatal error handler
 
 void hellenBoardStandBy();
 void hellenMegaSdWithAccelerometer();
+void hellenMegaModule();
 void hellenMegaAccelerometerPreInitCS2Pin();
 void configureHellenCanTerminator();
 

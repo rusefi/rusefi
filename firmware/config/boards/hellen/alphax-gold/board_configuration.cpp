@@ -73,12 +73,9 @@ static void setDefaultSensorInputs() {
 }
 
 void setBoardConfigOverrides() {
-	setHellenMegaEnPin();
-
-	setHellenVbatt();
+	hellenMegaModule();
 	setHellenCan();
-	hellenMegaSdWithAccelerometer();
-	setDefaultHellenAtPullUps();
+	setHellenMegaEnPin();
 
 	/* Four TLE9104 */
 	enableHellenSpi2();

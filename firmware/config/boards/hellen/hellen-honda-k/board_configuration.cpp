@@ -47,12 +47,10 @@ void onBoardStandBy() {
 
 void setBoardConfigOverrides() {
 	setHellenMegaEnPin();
-	setHellenVbatt();
 
-	hellenMegaSdWithAccelerometer();
+	hellenMegaModule();
 	configureHellenCanTerminator();
 
-	setDefaultHellenAtPullUps();
 
 	engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_RES1;
 	engineConfiguration->camInputs[0] = Gpio::H144_IN_RES3;

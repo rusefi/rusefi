@@ -62,14 +62,11 @@ static struct tle9201_config tle9201 = {
 void setBoardConfigOverrides() {
 	/* Force 3.3V PWR_EN as MC33810 is powered from this power line */
 	setHellenMegaEnPin();
-	setHellenVbatt();
 
-	hellenMegaSdWithAccelerometer();
+	hellenMegaModule();
 
 	/* MC33810, ETB1 and WASTGATE1 */
 	enableHellenSpi3();
-
-    setDefaultHellenAtPullUps();
 
 	// trigger inputs
 	engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_D_1;
