@@ -59,8 +59,8 @@ static void setDefaultSensorInputs() {
 	engineConfiguration->boardEnHall6PullUp = false;
 
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
-	engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_VSS;
-	engineConfiguration->camInputs[0] = Gpio::Unassigned;
+	engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_VSS; // VR Input 3 (MAX9924)
+	engineConfiguration->camInputs[0] = Gpio::H144_IN_MAP1_DIGITAL; // cannot be used simultaneously with VR1
 
 	// A18 + A22
 	setTPS1Inputs(H144_IN_TPS, H144_IN_TPS2);

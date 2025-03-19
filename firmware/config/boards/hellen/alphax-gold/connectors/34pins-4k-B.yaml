@@ -97,7 +97,6 @@ pins:
     type: ls
     id: TLE9104_2_OUT_3
     ts_name: ___ - Tachometer Output
-    color:
 
   - pin: 15B
     meta: H144_IN_SENS1
@@ -189,6 +188,7 @@ pins:
 
   - pin: 24B25B
     meta: H144_IN_VSS
+    class: event_inputs
     function: VR3 (cannot be used simultaneously with Hall5 and Hall6)
     type: vr
     ts_name: 24A/25A VR Input 3 (MAX9924)
