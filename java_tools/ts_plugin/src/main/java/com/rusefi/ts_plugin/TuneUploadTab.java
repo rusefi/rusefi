@@ -16,7 +16,7 @@ import com.rusefi.ts_plugin.util.ManifestHelper;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.ui.AuthTokenPanel;
 import com.rusefi.ui.util.URLLabel;
-import org.apache.http.concurrent.FutureCallback;
+import org.apache.hc.httpclient5.concurrent.FutureCallback;
 import org.putgemin.VerticalFlowLayout;
 
 import javax.swing.*;
