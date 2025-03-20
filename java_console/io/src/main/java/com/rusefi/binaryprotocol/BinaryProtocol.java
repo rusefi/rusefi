@@ -311,7 +311,7 @@ public class BinaryProtocol {
                 return ConfigurationImageWithMeta.VOID;
 
             int remainingSize = image.getSize() - offset;
-            int requestSize = Math.min(remainingSize, BLOCKING_FACTOR);
+            int requestSize = Math.min(remainingSize, iniFile.getBlockingFactor());
 
             byte[] packet = new byte[4];
             ByteRange.packOffsetAndSize(offset, requestSize, packet);
