@@ -274,6 +274,7 @@
 #define cranking_parameters_s_size 8
 #define CRITICAL_BUFFER_SIZE 120
 #define CRITICAL_PREFIX "CRITICAL"
+#define CUSTOM_TS_BUFFER_SIZE 32000
 #define CYLINDER_BORE_MULTIPLIER 1
 #define CYLINDER_BORE_TOOLTIP "Cylinder diameter in mm"
 #define CYLINDER_BORE_UNITS "mm"
@@ -1379,7 +1380,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 4105373050
+#define SIGNATURE_HASH 350935923
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1874,7 +1875,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.03.20.proteus_f7.4105373050"
+#define TS_SIGNATURE "rusEFI master.2025.03.20.proteus_f7.350935923"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
