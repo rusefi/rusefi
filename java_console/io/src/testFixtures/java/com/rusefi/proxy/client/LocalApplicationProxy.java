@@ -18,14 +18,14 @@ import com.rusefi.server.rusEFISSLContext;
 import com.rusefi.tools.online.HttpUtil;
 import com.rusefi.tools.online.ProxyClient;
 import com.rusefi.ui.StatusConsumer;
-import org.apache.hc.httpclient5.Consts;
-import org.apache.hc.httpclient5.HttpResponse;
-import org.apache.hc.httpclient5.NameValuePair;
-import org.apache.hc.httpclient5.client.HttpClient;
-import org.apache.hc.httpclient5.client.entity.UrlEncodedFormEntity;
-import org.apache.hc.httpclient5.client.methods.HttpPost;
-import org.apache.hc.httpclient5.impl.client.HttpClientBuilder;
-import org.apache.hc.httpclient5.message.BasicNameValuePair;
+
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
+import org.apache.hc.core5.http.HttpResponse;
+import org.apache.hc.core5.http.message.BasicNameValuePair;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicLong;
+import java.nio.charset.StandardCharsets;
 
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.Timeouts.BINARY_IO_TIMEOUT;
@@ -58,18 +59,20 @@ public class LocalApplicationProxy implements Closeable {
         this.authenticatorToProxyStream = authenticatorToProxyStream;
     }
 
-    public static HttpResponse requestSoftwareUpdate(int httpPort, ApplicationRequest applicationRequest, UpdateType type) throws IOException {
+    public static CloseableHttpResponse requestSoftwareUpdate(int httpPort, ApplicationRequest applicationRequest, UpdateType type) throws IOException {
         HttpPost httpPost = new HttpPost(ProxyClient.getHttpAddress(httpPort) + ProxyClient.UPDATE_CONNECTOR_SOFTWARE);
 
-        List<NameValuePair> form = new ArrayList<>();
+        List<BasicNameValuePair> form = new ArrayList<>();
         form.add(new BasicNameValuePair(ProxyClient.JSON, applicationRequest.toJson()));
         form.add(new BasicNameValuePair(ProxyClient.UPDATE_TYPE, type.name()));
-        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(form, Consts.UTF_8);
+        UrlEncodedFormEntity entity = new UrlEncodedFormEntity(form, StandardCharsets.UTF_8);
 
         httpPost.setEntity(entity);
 
-        HttpClient httpclient = HttpClientBuilder.create().build();;
-        return httpclient.execute(httpPost);
+        CloseableHttpClient httpclient = HttpClientBuilder.create().build();
+        CloseableHttpResponse response = httpclient.execute(httpPost);
+        httpclient.close();
+        return response;
     }
 
     public ApplicationRequest getApplicationRequest() {
