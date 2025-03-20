@@ -51,10 +51,16 @@ public:
 	void writeCrcPacket(uint8_t responseCode, const uint8_t* buf, size_t size, bool allowLongPackets = false);
 	void sendResponse(ts_response_format_e mode, const uint8_t * buffer, int size, bool allowLongPackets = false);
 
+#ifdef CUSTOM_TS_BUFFER_SIZE
+  #define scratchBuffer_SIZE CUSTOM_TS_BUFFER_SIZE
+#else
+  #define scratchBuffer_SIZE BLOCKING_FACTOR
+#endif // CUSTOM_TS_BUFFER
+
 	/**
 	 * See 'blockingFactor' in rusefi.ini
 	 */
-	char scratchBuffer[BLOCKING_FACTOR + 30];
+	char scratchBuffer[scratchBuffer_SIZE + 30];
 	const char *name;
 
 	void assertPacketSize(size_t size, bool allowLongPackets);
