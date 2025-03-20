@@ -4,6 +4,7 @@ import com.rusefi.maintenance.TestTuneMigrationContext;
 
 import javax.xml.bind.JAXBException;
 
+import static com.rusefi.maintenance.migration.CltIdleCorrMigrator.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
@@ -55,6 +56,83 @@ public class DefaultTestTuneMigrationContext {
 
     public static final String UPDATED_ENABLE_KNOCK_SPECTROGRAM_VALUE = "\"no\"";
 
+    public static final String PREV_MAN_IDLE_POSITION_VALUE = "30.0";
+
+    public static final String UPDATED_MAN_IDLE_POSITION_VALUE = "50.0";
+
+    public static final String PREV_CLT_IDLE_CORR_BINS_VALUE = "\n" +
+        "         -41.0\n" +
+        "         -31.0\n" +
+        "         -21.0\n" +
+        "         -11.0\n" +
+        "         1.0\n" +
+        "         11.0\n" +
+        "         21.0\n" +
+        "         31.0\n" +
+        "         41.0\n" +
+        "         51.0\n" +
+        "         61.0\n" +
+        "         71.0\n" +
+        "         81.0\n" +
+        "         91.0\n" +
+        "         101.0\n" +
+        "         111.0\n";
+
+    public static final String UPDATED_CLT_IDLE_CORR_BINS_VALUE = "\n" +
+        "         -40.0\n" +
+        "         -30.0\n" +
+        "         -20.0\n" +
+        "         -10.0\n" +
+        "         0.0\n" +
+        "         10.0\n" +
+        "         20.0\n" +
+        "         30.0\n" +
+        "         40.0\n" +
+        "         50.0\n" +
+        "         60.0\n" +
+        "         70.0\n" +
+        "         80.0\n" +
+        "         90.0\n" +
+        "         100.0\n" +
+        "         110.0\n";
+
+
+    public static final String PREV_CLT_IDLE_CORR_VALUE = "\n" +
+        "         1.6\n" +
+        "         1.6\n" +
+        "         1.433333\n" +
+        "         1.433333\n" +
+        "         1.433333\n" +
+        "         1.433333\n" +
+        "         1.433333\n" +
+        "         1.433333\n" +
+        "         1.433333\n" +
+        "         1.333333\n" +
+        "         1.266667\n" +
+        "         1.2\n" +
+        "         1.1\n" +
+        "         1.1\n" +
+        "         1.1\n" +
+        "         1.1\n";
+
+    public static final String UPDATED_CLT_IDLE_CORR_VALUE = "\n" +
+        "         1.5\n" +
+        "         1.5\n" +
+        "         1.333333\n" +
+        "         1.333333\n" +
+        "         1.333333\n" +
+        "         1.333333\n" +
+        "         1.333333\n" +
+        "         1.333333\n" +
+        "         1.333333\n" +
+        "         1.233333\n" +
+        "         1.166667\n" +
+        "         1.1\n" +
+        "         1.0\n" +
+        "         1.0\n" +
+        "         1.0\n" +
+        "         1.0\n";
+
     public static TestTuneMigrationContext load() throws JAXBException {
         final TestTuneMigrationContext result = TestTuneMigrationContext.load(
             "src/test/java/com/rusefi/maintenance/migration/default_migration/test_data"
@@ -79,6 +157,30 @@ public class DefaultTestTuneMigrationContext {
         assertEquals(
             UPDATED_ENABLE_KNOCK_SPECTROGRAM_VALUE,
             result.getUpdatedValue(ENABLE_KNOCK_SPECTROGRAM_FIELD_NAME).getValue()
+        );
+        assertEquals(
+            PREV_MAN_IDLE_POSITION_VALUE,
+            result.getPrevValue(MAN_IDLE_POSITION_FIELD_NAME).getValue()
+        );
+        assertEquals(
+            UPDATED_MAN_IDLE_POSITION_VALUE,
+            result.getUpdatedValue(MAN_IDLE_POSITION_FIELD_NAME).getValue()
+        );
+        assertEquals(
+            PREV_CLT_IDLE_CORR_BINS_VALUE,
+            result.getPrevValue(CLT_IDLE_CORR_BINS_FIELD_NAME).getValue()
+        );
+        assertEquals(
+            UPDATED_CLT_IDLE_CORR_BINS_VALUE,
+            result.getUpdatedValue(CLT_IDLE_CORR_BINS_FIELD_NAME).getValue()
+        );
+        assertEquals(
+            PREV_CLT_IDLE_CORR_VALUE,
+            result.getPrevValue(CLT_IDLE_CORR_FIELD_NAME).getValue()
+        );
+        assertEquals(
+            UPDATED_CLT_IDLE_CORR_VALUE,
+            result.getUpdatedValue(CLT_IDLE_CORR_FIELD_NAME).getValue()
         );
         return result;
     }

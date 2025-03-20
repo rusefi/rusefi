@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<msq xmlns="http://www.msefi.com/:msq">
+    <page/>
+    <page number="0" size="23344">
+<constant digits="0" name="manIdlePosition" units="%">50.0</constant>
+<constant cols="1" digits="2" name="cltIdleCorrBins" rows="16" units="C">
+         -40.0
+         -30.0
+         -20.0
+         -10.0
+         0.0
+         10.0
+         20.0
+         30.0
+         40.0
+         50.0
+         60.0
+         70.0
+         80.0
+         90.0
+         100.0
+         110.0
+      </constant>
+<constant cols="1" digits="2" name="cltIdleCorr" rows="16" units="ratio">
+         1.5
+         1.5
+         1.3333334
+         1.3333334
+         1.3333334
+         1.3333334
+         1.3333334
+         1.3333334
+         1.3333334
+         1.2333333
+         1.1666666
+         1.1
+         1.0
+         1.0
+         1.0
+         1.0
+      </constant>
+    </page>
+</msq>
