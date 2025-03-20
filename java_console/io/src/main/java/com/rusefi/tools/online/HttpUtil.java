@@ -1,12 +1,12 @@
 package com.rusefi.tools.online;
 
 import com.devexperts.logging.Logging;
-import org.apache.hc.client5.http.classic.methods.HttpGet;
-import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
-import org.apache.hc.client5.http.impl.classic.HttpClients;
-import org.apache.hc.core5.http.HttpEntity;
-import org.apache.hc.core5.http.io.SocketConfig;
-import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.httpclient5.classic.methods.HttpGet;
+import org.apache.hc.httpclient5.impl.classic.CloseableHttpClient;
+import org.apache.hc.httpclient5.impl.classic.HttpClients;
+import org.apache.hc.httpclient5.HttpEntity;
+import org.apache.hc.httpclient5.io.SocketConfig;
+import org.apache.hc.httpclient5.io.entity.EntityUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;

@@ -1,16 +1,16 @@
 package com.rusefi.panama;
 
 import com.devexperts.logging.Logging;
-import org.apache.http.HttpEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.ContentType;
-import org.apache.http.entity.mime.MultipartEntityBuilder;
-import org.apache.http.entity.mime.content.FileBody;
-import org.apache.http.entity.mime.content.StringBody;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
+import org.apache.hc.httpclient5.HttpEntity;
+import org.apache.hc.httpclient5.client.methods.CloseableHttpResponse;
+import org.apache.hc.httpclient5.client.methods.HttpPost;
+import org.apache.hc.httpclient5.entity.ContentType;
+import org.apache.hc.httpclient5.entity.mime.MultipartEntityBuilder;
+import org.apache.hc.httpclient5.entity.mime.content.FileBody;
+import org.apache.hc.httpclient5.entity.mime.content.StringBody;
+import org.apache.hc.httpclient5.impl.client.CloseableHttpClient;
+import org.apache.hc.httpclient5.impl.client.HttpClients;
+import org.apache.hc.httpclient5.util.EntityUtils;
 
 import java.io.File;
 
