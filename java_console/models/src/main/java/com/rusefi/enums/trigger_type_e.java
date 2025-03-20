@@ -93,5 +93,7 @@ public enum trigger_type_e {
 	TT_ARCTIC_CAT,
 	TT_NISSAN_HR_CAM_IN,
 	TT_HONDA_J30A2_24_1_1,
+	TT_CUSTOM_1,
+	TT_CUSTOM_2,
 	TT_UNUSED,
 }
