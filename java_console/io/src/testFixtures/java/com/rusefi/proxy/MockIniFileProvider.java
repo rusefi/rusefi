@@ -6,7 +6,6 @@ import com.opensr5.ini.field.StringIniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IniFileProvider;
 
-import static com.rusefi.config.generated.VariableRegistryValues.BLOCKING_FACTOR;
 import static org.mockito.Mockito.*;
 
 public class MockIniFileProvider {
@@ -17,7 +16,7 @@ public class MockIniFileProvider {
         when(mockMeta.getTotalSize()).thenReturn(15000);
 
         IniFileModel mockModel = mock(IniFileModel.class);
-        when(mockModel.getBlockingFactor()).thenReturn(BLOCKING_FACTOR);
+        when(mockModel.getBlockingFactor()).thenReturn(6666);
         when(mockModel.getMetaInfo()).thenReturn(mockMeta);
         when(mockModel.getIniField(anyString())).then(invocationOnMock -> new StringIniField("mockStringIniField", 0, 12));
 
