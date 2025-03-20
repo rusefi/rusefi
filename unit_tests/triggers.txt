@@ -5979,3 +5979,31 @@ event 84 0 1 675.00 nan
 event 85 0 0 675.00 nan
 event 86 0 1 690.00 nan
 event 87 0 0 690.00 nan
+TRIGGERTYPE 88 2 TT_CUSTOM_1 0.00
+knownOperationMode=false
+crankBased=false
+hasSecondChannel=false
+isSecondWheelCam=false
+cycleDuration=720
+gapsCount=1
+syncEdge=Rise
+isSynchronizationNeeded=0
+gapFrom.0=0.750000
+gapTo.0=1.250000
+# end of meta section
+event 0 0 1 0.00 2.000000
+event 1 0 0 360.00 nan
+TRIGGERTYPE 89 2 TT_CUSTOM_2 0.00
+knownOperationMode=false
+crankBased=false
+hasSecondChannel=false
+isSecondWheelCam=false
+cycleDuration=720
+gapsCount=1
+syncEdge=Rise
+isSynchronizationNeeded=0
+gapFrom.0=0.750000
+gapTo.0=1.250000
+# end of meta section
+event 0 0 1 0.00 2.000000
+event 1 0 0 360.00 nan
