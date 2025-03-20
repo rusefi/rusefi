@@ -18,7 +18,7 @@ import com.rusefi.proxy.client.LocalApplicationProxyContext;
 import com.rusefi.proxy.client.UpdateType;
 import com.rusefi.server.*;
 import com.rusefi.tools.online.HttpUtil;
-import org.apache.http.HttpResponse;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -122,7 +122,7 @@ public class FullServerTest {
             SessionDetails authenticatorSessionDetails = new SessionDetails(NetworkConnector.Implementation.Unknown, controllerInfo, TEST_TOKEN_3, networkConnectorResult.getOneTimeToken(), rusEFIVersion.CONSOLE_VERSION);
             ApplicationRequest applicationRequest = new ApplicationRequest(authenticatorSessionDetails, userDetailsResolver.apply(TestHelper.TEST_TOKEN_1));
 
-            HttpResponse response = LocalApplicationProxy.requestSoftwareUpdate(httpPort, applicationRequest, UpdateType.CONTROLLER);
+            CloseableHttpResponse response = LocalApplicationProxy.requestSoftwareUpdate(httpPort, applicationRequest, UpdateType.CONTROLLER);
             log.info("requestSoftwareUpdate response: " + response.toString());
             assertLatch("update requested", softwareUpdateRequest);
 
