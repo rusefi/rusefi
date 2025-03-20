@@ -158,6 +158,10 @@ static void turnOffAllDebugFields(void *arg) {
 #endif /* EFI_PROD_CODE */
 }
 
+PUBLIC_API_WEAK angle_t customAdjustCustom(TriggerCentral *tc, vvt_mode_e vvtMode) {
+  return 0;
+}
+
 static angle_t adjustCrankPhase(int camIndex) {
 	float maxSyncThreshold = engineConfiguration->maxCamPhaseResolveRpm;
 	if (maxSyncThreshold != 0 && Sensor::getOrZero(SensorType::Rpm) > maxSyncThreshold) {
@@ -204,6 +208,10 @@ static angle_t adjustCrankPhase(int camIndex) {
 	case VVT_HONDA_K_EXHAUST:
 	case VVT_HONDA_CBR_600:
 		return tc->syncEnginePhaseAndReport(crankDivider, 0);
+	case VVT_CUSTOM_25:
+	case VVT_CUSTOM_26:
+	  return customAdjustCustom(tc, vvtMode);
+
 	case VVT_HONDA_K_INTAKE:
 	    // with 4 evenly spaced tooth we cannot use this wheel for engine sync
         criticalError("Honda K Intake is not suitable for engine sync");

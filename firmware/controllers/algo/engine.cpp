@@ -64,6 +64,11 @@ void Engine::resetEngineSnifferIfInTestMode() {
 #endif /* EFI_ENGINE_SNIFFER */
 }
 
+PUBLIC_API_WEAK trigger_type_e getCustomVvtTriggerType(vvt_mode_e vvtMode) {
+		criticalError("Broken VVT mode maybe corrupted calibration %d: %s", vvtMode, getVvt_mode_e(vvtMode));
+		return trigger_type_e::TT_HALF_MOON; // we have to return something for the sake of -Werror=return-type
+}
+
 /**
  * VVT decoding delegates to universal trigger decoder. Here we map vvt_mode_e into corresponding trigger_type_e
  */
@@ -117,8 +122,7 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	case VVT_HR12DDR_IN:
 	    return trigger_type_e::TT_NISSAN_HR_CAM_IN;
 	default:
-		criticalError("Broken VVT mode maybe corrupted calibration %d: %s", vvtMode, getVvt_mode_e(vvtMode));
-		return trigger_type_e::TT_HALF_MOON; // we have to return something for the sake of -Werror=return-type
+	  return getCustomVvtTriggerType(vvtMode);
 	}
 }
 

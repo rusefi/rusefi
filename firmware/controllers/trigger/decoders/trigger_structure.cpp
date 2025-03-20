@@ -417,6 +417,15 @@ void TriggerWaveform::setThirdTriggerSynchronizationGap(float syncRatio) {
 	setTriggerSynchronizationGap3(/*gapIndex*/2, syncRatio * TRIGGER_GAP_DEVIATION_LOW, syncRatio * TRIGGER_GAP_DEVIATION_HIGH);
 }
 
+PUBLIC_API_WEAK void customTrigger(operation_mode_e triggerOperationMode, TriggerWaveform *s, trigger_type_e type) {
+  if (type == trigger_type_e::TT_CUSTOM_1 || type == trigger_type_e::TT_CUSTOM_2) {
+    initializeSkippedToothTrigger(s, 1, 0, triggerOperationMode, SyncEdge::Rise);
+    return;
+  }
+		s->setShapeDefinitionError(true);
+		warning(ObdCode::CUSTOM_ERR_NO_SHAPE, "initializeTriggerWaveform() not implemented: %d", type);
+}
+
 /**
  * External logger is needed because at this point our logger is not yet initialized
  */
@@ -792,8 +801,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	default:
-		setShapeDefinitionError(true);
-		warning(ObdCode::CUSTOM_ERR_NO_SHAPE, "initializeTriggerWaveform() not implemented: %d", triggerType.type);
+	  customTrigger(triggerOperationMode, this, triggerType.type);
 	}
 
 	if (isCrankWheel && !needSecondTriggerInput &&
