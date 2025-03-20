@@ -14,7 +14,8 @@ public interface Timeouts {
     int BINARY_IO_TIMEOUT = 5 * SECOND;
     int READ_IMAGE_TIMEOUT = 60 * SECOND;
 
-    int CONNECTION_RESTART_DELAY = 1 * SECOND;
+    // local connection is happy with 1 second, but remote TCP is asking for 5 seconds
+    int CONNECTION_RESTART_DELAY = 5 * SECOND;
 
     int CMD_TIMEOUT = 20 * SECOND;
     int SET_ENGINE_TIMEOUT = 60 * SECOND;
