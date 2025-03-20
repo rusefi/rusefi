@@ -100,14 +100,13 @@ void setSubaruEG33Defaults() {
 
 void setSubaru2011() {
   engineConfiguration->allowIdenticalPps = true;
-  engineConfiguration->throttlePedalUpVoltage = 1;
-  engineConfiguration->throttlePedalSecondaryUpVoltage = 1;
-  engineConfiguration->throttlePedalWOTVoltage = 3.3;
-  engineConfiguration->throttlePedalSecondaryWOTVoltage = 3.3;
+  setPPSCalibration(0.69, 3.38, 0.69, 3.38);
 
 	engineConfiguration->displacement = 2.5;
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_SUBARU);
 	engineConfiguration->trigger.type = trigger_type_e::TT_36_2_2_2;
+  engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
+  engineConfiguration->vvtMode[1] = VVT_BOSCH_QUICK_START;
 
 #if HW_PROTEUS && EFI_PROD_CODE
 	setProteusEtbIO();
@@ -126,4 +125,5 @@ void setSubaru2011() {
 	engineConfiguration->tpsMax = convertVoltageTo10bitADC(3.96);
   engineConfiguration->tps1SecondaryMin = convertVoltageTo10bitADC(1.55);
   engineConfiguration->tps1SecondaryMax = convertVoltageTo10bitADC(4.17);
+
 }
