@@ -245,6 +245,9 @@ float getConfigValueByName(const char *name) {
 // hip9011Prescaler
 		case 1548430930:
 			return engineConfiguration->hip9011Prescaler;
+// idleMaximumAirmass
+		case -1671871759:
+			return engineConfiguration->idleMaximumAirmass;
 // tuningDetector
 		case 1082602292:
 			return engineConfiguration->tuningDetector;
@@ -1049,9 +1052,6 @@ float getConfigValueByName(const char *name) {
 // idlePidRpmDeadZone
 		case -528043591:
 			return engineConfiguration->idlePidRpmDeadZone;
-// idleMaximumAirmass
-		case -1671871759:
-			return engineConfiguration->idleMaximumAirmass;
 // torqueReductionTime
 		case -1417275359:
 			return engineConfiguration->torqueReductionTime;
@@ -2386,6 +2386,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1548430930:
 	{
 		engineConfiguration->hip9011Prescaler = (int)value;
+		return 1;
+	}
+		case -1671871759:
+	{
+		engineConfiguration->idleMaximumAirmass = (int)value;
 		return 1;
 	}
 		case 1082602292:
@@ -3726,11 +3731,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -528043591:
 	{
 		engineConfiguration->idlePidRpmDeadZone = (int)value;
-		return 1;
-	}
-		case -1671871759:
-	{
-		engineConfiguration->idleMaximumAirmass = (int)value;
 		return 1;
 	}
 		case -1417275359:

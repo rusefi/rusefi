@@ -238,6 +238,9 @@ Pull-up resistor value on your board
 ### hip9011Prescaler
 value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into two bit fields
 
+### idleMaximumAirmass
+Maximum commanded airmass for the idle controller.
+
 ### tuningDetector
 Zero value means do not detect tuning
 
@@ -1041,9 +1044,6 @@ on IGN voltage detection turn fuel pump on to build fuel pressure
 
 ### idlePidRpmDeadZone
 If the RPM closer to target than this value, disable closed loop idle correction to prevent oscillation
-
-### idleMaximumAirmass
-Maximum commanded airmass for the idle controller.
 
 ### torqueReductionTime
 For how long after the pin has been triggered will the cut/reduction stay active. After that, even if the pin is still triggered, torque is re-introduced
