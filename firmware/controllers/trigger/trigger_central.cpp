@@ -122,11 +122,16 @@ int getCrankDivider(operation_mode_e operationMode) {
 	return 1;
 }
 
+PUBLIC_API_WEAK bool boardIsSpecialVvtDecoder(vvt_mode_e vvtMode) {
+  return false;
+}
+
 static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 	return vvtMode != VVT_INACTIVE
 			&& vvtMode != VVT_TOYOTA_3_TOOTH /* VVT_2JZ is an unusual 3/0 missed tooth symmetrical wheel */
 			&& vvtMode != VVT_HONDA_K_INTAKE
 			&& vvtMode != VVT_MAP_V_TWIN
+			&& !boardIsSpecialVvtDecoder(vvtMode)
 			&& vvtMode != VVT_SINGLE_TOOTH;
 }
 
@@ -294,6 +299,31 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 	handleVvtCamSignal(front, nowNt, index);
 }
 
+/**
+ * @returns true if tooth should be ignored
+ */
+PUBLIC_API_WEAK bool skipToothSpecialShape(vvt_mode_e vvtMode, angle_t currentPosition) {
+	switch(vvtMode) {
+	case VVT_TOYOTA_3_TOOTH:
+	{
+	    int from = engineConfiguration->camDecoder2jzPosition - engineConfiguration->camDecoder2jzPrecision;
+	    int to   = engineConfiguration->camDecoder2jzPosition + engineConfiguration->camDecoder2jzPrecision;
+		// we do not know if we are in sync or out of sync, so we have to be looking for both possibilities
+		if ((currentPosition < from       || currentPosition > to) &&
+		    (currentPosition < from + 360 || currentPosition > to + 360)) {
+			// outside of the expected range
+			return true;
+		}
+	}
+		break;
+	default:
+
+		// else, do nothing
+		break;
+	}
+	return false;
+}
+
 void handleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 	TriggerCentral *tc = getTriggerCentral();
 	if (index == 0) {
@@ -378,23 +408,10 @@ void handleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 	auto vvtPosition = engineConfiguration->vvtOffsets[bankIndex * CAMS_PER_BANK + camIndex] - currentPosition;
 	tc->triggerState.vvtToothPosition[index] = vvtPosition;
 
-	switch(engineConfiguration->vvtMode[camIndex]) {
-	case VVT_TOYOTA_3_TOOTH:
-	{
-	    int from = engineConfiguration->camDecoder2jzPosition - engineConfiguration->camDecoder2jzPrecision;
-	    int to   = engineConfiguration->camDecoder2jzPosition + engineConfiguration->camDecoder2jzPrecision;
-		// we do not know if we are in sync or out of sync, so we have to be looking for both possibilities
-		if ((currentPosition < from       || currentPosition > to) &&
-		    (currentPosition < from + 360 || currentPosition > to + 360)) {
-			// outside of the expected range
+  bool skipTooth = skipToothSpecialShape(engineConfiguration->vvtMode[camIndex], currentPosition);
+  if (skipTooth) {
 			return;
-		}
-	}
-		break;
-	default:
-		// else, do nothing
-		break;
-	}
+  }
 
 	// this could be just an 'if' but let's have it expandable for future use :)
 	switch(engineConfiguration->vvtMode[camIndex]) {
