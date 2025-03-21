@@ -1,7 +1,7 @@
 VERSION ""
 
 
-NS_ : 
+NS_ :
 	NS_DESC_
 	CM_
 	BA_DEF_
@@ -98,8 +98,8 @@ BO_ 517 BASE5: 8 Vector__XXX
 BO_ 518 BASE6: 8 Vector__XXX
  SG_ FuelUsed : 0|16@1+ (1,0) [0|0] "g" Vector__XXX
  SG_ FuelFlow : 16|16@1+ (0.005,0) [0|327] "g/s" Vector__XXX
- SG_ FuelTrim1 : 32|16@1+ (0.01,0) [-50|50] "%" Vector__XXX
- SG_ FuelTrim2 : 48|16@1+ (0.01,0) [-50|50] "%" Vector__XXX
+ SG_ FuelTrim1 : 32|16@1- (0.01,0) [-50|50] "%" Vector__XXX
+ SG_ FuelTrim2 : 48|16@1- (0.01,0) [-50|50] "%" Vector__XXX
 
 BO_ 519 BASE7: 8 Vector__XXX
  SG_ Lam1 : 0|16@1+ (0.0001,0) [0|2] "lambda" Vector__XXX
