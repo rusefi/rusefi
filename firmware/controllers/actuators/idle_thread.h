@@ -13,6 +13,8 @@
 #include "efi_pid.h"
 #include "sensor.h"
 #include "idle_state_generated.h"
+#include "biquad.h"
+
 
 struct IIdleController {
 	enum class Phase : uint8_t {
@@ -119,6 +121,8 @@ private:
 	float m_lastAutomaticPosition = 0;
 
 	Pid m_timingPid;
+	float m_modeledFlowIdleTiming = 0;
+	Biquad m_timingHpf;
 };
 
 percent_t getIdlePosition();
