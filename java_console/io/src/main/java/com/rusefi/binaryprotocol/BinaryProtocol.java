@@ -354,6 +354,9 @@ public class BinaryProtocol {
                 );
             } catch (IOException | JAXBException e) {
                 log.error("Ignoring " + e);
+            } catch (final Exception e) {
+                log.warn("Unexpected exception:" + e);
+                throw e;
             }
         }
         return imageWithMeta;
