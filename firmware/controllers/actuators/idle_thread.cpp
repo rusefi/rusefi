@@ -219,8 +219,12 @@ float IdleController::getIdleTimingAdjustment(float rpm, float targetRpm, Phase 
 		m_timingPid.setErrorAmplification(interpolateClamped(m_crankTaperEndTime, 0.0f, m_idleTimingSoftEntryEndTime, 1.0f, engine->fuelComputer.running.timeSinceCrankingInSecs));
 	}
 
-	// We're now in the idle mode, and RPM is inside the Timing-PID regulator work zone!
-	return m_timingPid.getOutput(targetRpm, rpm, FAST_CALLBACK_PERIOD_MS / 1000.0f);
+	if (engineConfiguration->modeledFlowIdle) {
+		return m_modeledFlowIdleTiming;
+	} else {
+		// We're now in the idle mode, and RPM is inside the Timing-PID regulator work zone!
+		return m_timingPid.getOutput(targetRpm, rpm, FAST_CALLBACK_PERIOD_MS / 1000.0f);
+	}
 }
 
 static void finishIdleTestIfNeeded() {
@@ -333,6 +337,8 @@ float IdleController::getIdlePosition(float rpm) {
 			return config->cltIdleCorr[0];
 		#endif
 
+		bool useModeledFlow = engineConfiguration->modeledFlowIdle;
+
 	/*
 	 * Here we have idle logic thread - actual stepper movement is implemented in a separate
 	 * working thread see stepper.cpp
@@ -348,8 +354,8 @@ float IdleController::getIdlePosition(float rpm) {
 		auto targetRpm = getTargetRpm(clt);
 		m_lastTargetRpm = targetRpm.ClosedLoopTarget;
 
-		// Determine cranking taper
-		float crankingTaper = getCrankingTaperFraction();
+		// Determine cranking taper (modeled flow does no taper of open loop)
+		float crankingTaper = useModeledFlow ? 1 : getCrankingTaperFraction();
 
 		// Determine what operation phase we're in - idling or not
 		float vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);
@@ -367,10 +373,15 @@ float IdleController::getIdlePosition(float rpm) {
 			// Always apply open loop correction
 		percent_t iacPosition = getOpenLoop(phase, rpm, clt, tps, crankingTaper);
 			baseIdlePosition = iacPosition;
+			// Force closed loop operation for modeled flow
+			auto idleMode = useModeledFlow ? IM_AUTO : engineConfiguration->idleMode;
 
-			useClosedLoop = tps.Valid && engineConfiguration->idleMode == IM_AUTO;
+			useClosedLoop = tps.Valid && idleMode == IM_AUTO;
 			// If TPS is working and automatic mode enabled, add any closed loop correction
 			if (useClosedLoop) {
+				if (useModeledFlow && phase != Phase::Idling) {
+					m_pid.reset();
+				}
 				auto closedLoop = getClosedLoop(phase, tps.Value, rpm, targetRpm.ClosedLoopTarget);
 				idleClosedLoop = closedLoop;
 				iacPosition += closedLoop;
@@ -381,7 +392,7 @@ float IdleController::getIdlePosition(float rpm) {
 #if EFI_TUNER_STUDIO && (EFI_PROD_CODE || EFI_SIMULATOR)
 		isIdleClosedLoop = phase == Phase::Idling;
 
-		if (engineConfiguration->idleMode == IM_AUTO) {
+		if (useModeledFlow || idleMode == IM_AUTO) {
 			// see also tsOutputChannels->idlePosition
 			getIdlePid()->postState(engine->outputChannels.idleStatus);
 		}
@@ -389,6 +400,32 @@ float IdleController::getIdlePosition(float rpm) {
 		extern StepperMotor iacMotor;
 		engine->outputChannels.idleStepperTargetPosition = iacMotor.getTargetPosition();
 #endif /* EFI_TUNER_STUDIO */
+		if (useModeledFlow && phase != Phase::Cranking) {
+			float totalAirmass = 0.01 * iacPosition * engineConfiguration->idleMaximumAirmass;
+			idleTargetAirmass = totalAirmass;
+
+			bool shouldAdjustTiming = engineConfiguration->useIdleTimingPidControl && phase == Phase::Idling;
+
+			// extract hiqh frequency content to be handled by timing
+			float timingAirmass = shouldAdjustTiming ? m_timingHpf.filter(totalAirmass) : 0;
+
+			// Convert from airmass delta -> timing
+			m_modeledFlowIdleTiming = interpolate2d(timingAirmass, config->airmassToTimingBins, config->airmassToTimingValues);
+
+			// Handle the residual low frequency content with airflow
+			float idleAirmass = totalAirmass - timingAirmass;
+			float airflowKgPerH = 3.6 * 0.001 * idleAirmass * rpm / 60 * engineConfiguration->cylindersCount / 2;
+			idleTargetFlow = airflowKgPerH;
+
+			// Convert from desired flow -> idle valve position
+			float idlePos = interpolate2d(
+				airflowKgPerH,
+				config->idleFlowEstimateFlow,
+				config->idleFlowEstimatePosition
+			);
+
+			iacPosition = idlePos;
+		}
 
 		currentIdlePosition = iacPosition;
 		return iacPosition;
@@ -417,6 +454,7 @@ void IdleController::init() {
 	mightResetPid = false;
 	wasResetPid = false;
 	m_timingPid.initPidClass(&engineConfiguration->idleTimingPid);
+	m_timingHpf.configureHighpass(20, 1);
 	getIdlePid()->initPidClass(&engineConfiguration->idleRpmPid);
 }
 
