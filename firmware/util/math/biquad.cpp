@@ -58,6 +58,19 @@ void Biquad::configureLowpass(float samplingFrequency, float cutoffFrequency, fl
 	b2 = (1 - K / Q + K * K) * norm;
 }
 
+void Biquad::configureHighpass(float samplingFrequency, float cutoffFrequency, float Q) {
+	criticalAssertVoid(samplingFrequency >= 2.5f * cutoffFrequency, "Invalid biquad parameters");
+
+	float K = getK(samplingFrequency, cutoffFrequency);
+	float norm = getNorm(K, Q);
+
+	a0 = 1 * norm;
+	a1 = -2 * a0;
+	a2 = a0;
+	b1 = 2 * (K * K - 1) * norm;
+	b2 = (1 - K / Q + K * K) * norm;
+}
+
 float Biquad::filter(float input) {
 	float result = input * a0 + z1;
 	if (engineConfiguration->verboseQuad) {

@@ -380,7 +380,8 @@ float IdleController::getIdlePosition(float rpm) {
 			// If TPS is working and automatic mode enabled, add any closed loop correction
 			if (useClosedLoop) {
 				if (useModeledFlow && phase != Phase::Idling) {
-					m_pid.reset();
+					auto idlePid = getIdlePid();
+					idlePid->reset();
 				}
 				auto closedLoop = getClosedLoop(phase, tps.Value, rpm, targetRpm.ClosedLoopTarget);
 				idleClosedLoop = closedLoop;
@@ -410,7 +411,7 @@ float IdleController::getIdlePosition(float rpm) {
 			float timingAirmass = shouldAdjustTiming ? m_timingHpf.filter(totalAirmass) : 0;
 
 			// Convert from airmass delta -> timing
-			m_modeledFlowIdleTiming = interpolate2d(timingAirmass, config->airmassToTimingBins, config->airmassToTimingValues);
+			m_modeledFlowIdleTiming = interpolate2d(timingAirmass, engineConfiguration->airmassToTimingBins, engineConfiguration->airmassToTimingValues);
 
 			// Handle the residual low frequency content with airflow
 			float idleAirmass = totalAirmass - timingAirmass;
@@ -420,8 +421,8 @@ float IdleController::getIdlePosition(float rpm) {
 			// Convert from desired flow -> idle valve position
 			float idlePos = interpolate2d(
 				airflowKgPerH,
-				config->idleFlowEstimateFlow,
-				config->idleFlowEstimatePosition
+				engineConfiguration->idleFlowEstimateFlow,
+				engineConfiguration->idleFlowEstimatePosition
 			);
 
 			iacPosition = idlePos;
