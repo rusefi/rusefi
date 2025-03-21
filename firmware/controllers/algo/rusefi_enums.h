@@ -100,7 +100,7 @@ typedef enum  __attribute__ ((__packed__)) {
 
 	VVT_MAP_V_TWIN = 13,
 
-	VVT_MITSUBISHI_6G75 = 14,
+	VVT_UNUSED14 = 14,
 
 	VVT_MAZDA_SKYACTIV = 15,
 
