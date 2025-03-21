@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22580">
+    <page number="0" size="22616">
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
         <constant name="accelerometerSpiDevice">"Off"</constant>
@@ -35,6 +35,26 @@
         <constant name="afrOverrideMode">"None"</constant>
         <constant digits="0" name="afterCrankingIACtaperDuration" units="cycles">200.0</constant>
         <constant digits="1" name="airByRpmTaper" units="%">0.0</constant>
+        <constant cols="1" digits="0" name="airmassToTimingBins" rows="8">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant cols="1" digits="0" name="airmassToTimingValues" rows="8">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
         <constant digits="0" name="airTaperRpmRange" units="RPM">0.0</constant>
         <constant name="allowIdenticalPps">"false"</constant>
         <constant name="alphaNUseIat">"false"</constant>
@@ -1724,6 +1744,26 @@
          0.0
 </constant>
         <constant cols="1" digits="0" name="idleAdvanceBins" rows="8">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant cols="1" digits="2" name="idleFlowEstimateFlow" rows="8">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant cols="1" digits="1" name="idleFlowEstimatePosition" rows="8">
          0.0
          0.0
          0.0
@@ -4326,7 +4366,6 @@ end</constant>
         <constant name="unusedFancy7">"false"</constant>
         <constant name="unusedFancy8">"false"</constant>
         <constant name="unusedFancy9">"false"</constant>
-        <constant digits="0" name="unusedHip0" units="">0.0</constant>
         <constant digits="0" name="unusedHip1" units="">0.0</constant>
         <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="54">
          0.0
@@ -4872,7 +4911,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250312" nPages="1" signature="rusEFI master.2025.03.21.f407-discovery.2319544340" version="5.0"/>
+    <versionInfo firmwareInfo="20250312" nPages="1" signature="rusEFI master.2025.03.21.f407-discovery.1980057700" version="5.0"/>
     <bibliography author="rusEFI 20250312" writeDate="date"/>
     <settings/>
     <userComments/>
