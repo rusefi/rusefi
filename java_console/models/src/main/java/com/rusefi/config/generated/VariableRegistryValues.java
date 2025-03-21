@@ -1290,7 +1290,6 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 1083705435;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1564,7 +1563,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.03.20.stm32h743_nucleo.1083705435";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.03.21.stm32h743_nucleo.3058331894";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1637,12 +1636,12 @@ public class VariableRegistryValues {
 	public static final int vvt_mode_e_VVT_MITSUBISHI_4G69 = 4;
 	public static final int vvt_mode_e_VVT_MITSUBISHI_4G9x = 17;
 	public static final int vvt_mode_e_VVT_MITSUBISHI_6G72 = 20;
-	public static final int vvt_mode_e_VVT_MITSUBISHI_6G75 = 14;
 	public static final int vvt_mode_e_VVT_NISSAN_MR = 11;
 	public static final int vvt_mode_e_VVT_NISSAN_VQ = 9;
 	public static final int vvt_mode_e_VVT_SINGLE_TOOTH = 1;
 	public static final int vvt_mode_e_VVT_TOYOTA_3_TOOTH = 2;
 	public static final int vvt_mode_e_VVT_TOYOTA_4_1 = 6;
+	public static final int vvt_mode_e_VVT_UNUSED14 = 14;
 	public static final int VVT_TABLE_SIZE = 8;
 	public static final int VVT_TRACKING_LENGTH = 4;
 	public static final int WARNING_BUFFER_SIZE = 120;
