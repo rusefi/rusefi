@@ -191,6 +191,8 @@ struct_no_prefix engine_configuration_s
 #define LOGIC_ANALYZER_CHANNEL_COUNT 4
 #define SCRIPT_SETTING_COUNT 8
 
+#define CAM_INPUT_1_1_NAME "Cam sensor bank 1 intake"
+#define VVT_OFFSET_1_1_NAME "VVT offset bank 1 intake"
 #define GEAR_DETECTION_DIALOG_NAME "Gear Detection"
 #define ts_show_final_ratio true
 #define ts_show_crankingTpsCurve true
