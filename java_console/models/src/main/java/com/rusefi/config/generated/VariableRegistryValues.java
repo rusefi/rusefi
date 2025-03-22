@@ -145,6 +145,7 @@ public class VariableRegistryValues {
 	public static final int C_MC33810_COUNT = 1;
 	public static final String CAM_1_MODE_NAME = "Cam mode (intake)";
 	public static final String CAM_2_MODE_NAME = "Cam mode (exhaust)";
+	public static final String CAM_INPUT_1_1_NAME = "Cam sensor bank 1 intake";
 	public static final int CAM_INPUTS_COUNT = 4;
 	public static final int CAMS_PER_BANK = 2;
 	public static final int can_baudrate_e_B100KBPS = 2;
@@ -1290,6 +1291,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
+	public static final int SIGNATURE_HASH = 90257944;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1563,7 +1565,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.03.22.stm32h743_nucleo.3101314116";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.03.22.stm32h743_nucleo.90257944";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1644,6 +1646,7 @@ public class VariableRegistryValues {
 	public static final int vvt_mode_e_VVT_TOYOTA_3_TOOTH = 2;
 	public static final int vvt_mode_e_VVT_TOYOTA_4_1 = 6;
 	public static final int vvt_mode_e_VVT_UNUSED14 = 14;
+	public static final String VVT_OFFSET_1_1_NAME = "VVT offset bank 1 intake";
 	public static final int VVT_TABLE_SIZE = 8;
 	public static final int VVT_TRACKING_LENGTH = 4;
 	public static final int WARNING_BUFFER_SIZE = 120;
