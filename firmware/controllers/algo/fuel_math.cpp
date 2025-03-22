@@ -433,7 +433,7 @@ float getStandardAirCharge() {
 
 	// Calculation of 100% VE air mass in g/cyl - 1 cylinder filling at 1.204/L
 	// 101.325kpa, 20C
-	return idealGasLaw(cylDisplacement, STD_ATMOSPHERE, 273.15f + 20.0f);
+	return idealGasLaw(cylDisplacement, STD_ATMOSPHERE, C_K_OFFSET + STD_IAT);
 }
 
 PUBLIC_API_WEAK_SOMETHING_WEIRD

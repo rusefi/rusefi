@@ -30,7 +30,7 @@ static float flowCorrections(float pressureRatio, float p_up, float iat) {
 	float prCorrectionFactor = pressureRatioFlowCorrection(pressureRatio);
 
 	// Inlet density correction
-	float tempCorrection = sqrt(273 / (iat + 273));
+	float tempCorrection = sqrt(C_K_OFFSET / (iat + C_K_OFFSET));
 	float pressureCorrection = p_up / STD_ATMOSPHERE;
 	float densityCorrection = tempCorrection * pressureCorrection;
 
