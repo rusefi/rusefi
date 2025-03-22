@@ -23,6 +23,8 @@ enum class SensorType : unsigned char {
 	/**
 	 * This value is result of averaging within user-defined window
 	 * See also MapFast, MapSlow
+	 * this one Post-TB MAP Sensor
+	 * for ThrottleInletPressure see ThrottleInletPressure
 	 */
 	Map,
 	Maf,
@@ -60,7 +62,7 @@ enum class SensorType : unsigned char {
 	// This maps to the pedal if we have one, and Tps1 if not.
 	DriverThrottleIntent,
 
-	AuxTemp1, // 20
+	AuxTemp1,
 	AuxTemp2,
 
   // this becomes AFR once we multiply by STOICH_RATIO
