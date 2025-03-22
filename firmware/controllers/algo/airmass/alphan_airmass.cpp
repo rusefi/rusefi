@@ -1,6 +1,7 @@
 #include "pch.h"
 
 #include "alphan_airmass.h"
+#include "fuel_math.h"
 
 AirmassResult AlphaNAirmass::getAirmass(float rpm, bool postState) {
 	auto tps = Sensor::get(SensorType::Tps1);
@@ -14,12 +15,12 @@ AirmassResult AlphaNAirmass::getAirmass(float rpm, bool postState) {
 	float ve = getVe(rpm, tps.Value, postState);
 
 	// optionally use real IAT instead of fixed air temperature
-	constexpr float standardIat = 20.0f;	// std atmosphere temperature
+	constexpr float standardIat = STD_IAT;	// std atmosphere temperature
 	float iat = engineConfiguration->alphaNUseIat
 		? Sensor::get(SensorType::Iat).value_or(standardIat)
 		: standardIat;
 
-	float iatK = iat + 273;
+	float iatK = iat + 273/* todo reuse C_K_OFFSET which would require adjusting unit tests*/;
 
 	// TODO: should this be barometric pressure and/or temperature compensated?
 	mass_t airmass = getAirmassImpl(

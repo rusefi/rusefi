@@ -10,6 +10,8 @@
 #include "rusefi_types.h"
 
 void initFuelMap();
+#define C_K_OFFSET 273.15f
+#define STD_IAT 20.0f
 
 /**
  * @return baseFuel with CLT and IAT corrections

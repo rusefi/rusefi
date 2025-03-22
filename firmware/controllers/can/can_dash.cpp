@@ -916,11 +916,11 @@ void canDashboardHaltech(CanCycle cycle) {
 		{
 			CanTxMessage msg(CanCategory::NBC, 0x3E0, 8);
 			/* Coolant temperature in K y = x/10 */
-			msg.setShortValueMsb((Sensor::getOrZero(SensorType::Clt) + 273.15) * 10, 0);
+			msg.setShortValueMsb((Sensor::getOrZero(SensorType::Clt) + C_K_OFFSET) * 10, 0);
 			/* Air Temperature */
-			msg.setShortValueMsb((Sensor::getOrZero(SensorType::Iat) + 273.15) * 10, 2);
+			msg.setShortValueMsb((Sensor::getOrZero(SensorType::Iat) + C_K_OFFSET) * 10, 2);
 			/* Fuel Temperature */
-			msg.setShortValueMsb((Sensor::getOrZero(SensorType::FuelTemperature) + 273.15) * 10, 4);
+			msg.setShortValueMsb((Sensor::getOrZero(SensorType::FuelTemperature) + C_K_OFFSET) * 10, 4);
 			/* Oil Temperature */
 			msg[6] = 0x00;
 			msg[7] = 0x00;
