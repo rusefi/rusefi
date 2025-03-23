@@ -818,6 +818,9 @@ float getConfigValueByName(const char *name) {
 // torqueReductionEnabled
 		case -618104323:
 			return engineConfiguration->torqueReductionEnabled;
+// camSyncOnSecondCrankRevolution
+		case 996346642:
+			return engineConfiguration->camSyncOnSecondCrankRevolution;
 // limitTorqueReductionTime
 		case -819413824:
 			return engineConfiguration->limitTorqueReductionTime;
@@ -3341,6 +3344,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -618104323:
 	{
 		engineConfiguration->torqueReductionEnabled = (int)value;
+		return 1;
+	}
+		case 996346642:
+	{
+		engineConfiguration->camSyncOnSecondCrankRevolution = (int)value;
 		return 1;
 	}
 		case -819413824:

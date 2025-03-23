@@ -811,6 +811,9 @@ This is the Cut Mode normally used
 ### torqueReductionEnabled
 
 
+### camSyncOnSecondCrankRevolution
+
+
 ### limitTorqueReductionTime
 
 
