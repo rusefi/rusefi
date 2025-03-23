@@ -1,3 +1,5 @@
+// file throttle_model.h
+
 #pragma once
 
 #include "throttle_model_generated.h"
@@ -29,3 +31,5 @@ class ThrottleModel : public ThrottleModelBase {
 	float effectiveArea(float tps) const override;
 	float maxEngineFlow(float map) const override;
 };
+
+expected<float> getThrottleInletPressure();

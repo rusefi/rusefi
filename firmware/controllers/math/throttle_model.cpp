@@ -117,17 +117,21 @@ float ThrottleModelBase::estimateThrottleFlow(float tip, float tps, float map, f
 	}
 }
 
+// todo: migrate to proxy sensor?
+expected<float> getThrottleInletPressure() {
+	// Use TIP sensor
+	// or use Baro sensor if no TIP
+	// or use 101.325kPa (std atmosphere) if no Baro
+	return Sensor::hasSensor(SensorType::ThrottleInletPressure) ? Sensor::get(SensorType::ThrottleInletPressure) :
+				Sensor::hasSensor(SensorType::BarometricPressure) ? Sensor::get(SensorType::BarometricPressure) :
+				SensorResult(STD_ATMOSPHERE);
+}
+
 expected<float> ThrottleModelBase::estimateThrottleFlow(float map, float tps) {
 	// Inputs
 	auto iat = Sensor::get(SensorType::Iat);
 
-	// Use TIP sensor
-	// or use Baro sensor if no TIP
-	// or use 101.325kPa (std atmosphere) if no Baro
-	// TODO: have a real TIP sensor
-	auto tip = 	Sensor::hasSensor(SensorType::ThrottleInletPressure) ? Sensor::get(SensorType::ThrottleInletPressure) :
-				Sensor::hasSensor(SensorType::BarometricPressure) ? Sensor::get(SensorType::BarometricPressure) :
-				SensorResult(STD_ATMOSPHERE);
+  auto tip = getThrottleInletPressure();
 
 	if (!tip || !iat) {
 		return unexpected;

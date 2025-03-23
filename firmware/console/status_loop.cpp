@@ -518,9 +518,14 @@ extern int flexCallbackCounter;
 }
 static void updatePressures() {
 	engine->outputChannels.baroPressure = Sensor::getOrZero(SensorType::BarometricPressure);
-	engine->outputChannels.MAPValue = Sensor::getOrZero(SensorType::Map);
+  float mapValue = Sensor::getOrZero(SensorType::Map);
+	engine->outputChannels.MAPValue = mapValue;
 	engine->outputChannels.oilPressure = Sensor::getOrZero(SensorType::OilPressure);
-    engine->outputChannels.acPressure = Sensor::getOrZero(SensorType::AcPressure);
+  engine->outputChannels.acPressure = Sensor::getOrZero(SensorType::AcPressure);
+
+ 	engine->outputChannels.compressorDischargePressure = Sensor::getOrZero(SensorType::CompressorDischargePressure);
+ 	engine->outputChannels.throttleInletPressure = Sensor::getOrZero(SensorType::ThrottleInletPressure);
+ 	engine->outputChannels.throttlePressureRatio = mapValue / getThrottleInletPressure().Value;
 
 	engine->outputChannels.auxLinear1 = Sensor::getOrZero(SensorType::AuxLinear1);
 	engine->outputChannels.auxLinear2 = Sensor::getOrZero(SensorType::AuxLinear2);
