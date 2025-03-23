@@ -1545,6 +1545,11 @@ tChargeMode_e tChargeMode;
 
 uint16_t vvtActivationDelayMs;We need to give engine time to build oil pressure without diverting it to VVT;"ms", 1, 0, 0, 65000, 0
 
+#define TMF_SIZE 2
+
+float[TMF_SIZE x TMF_SIZE] tmfTable;;"", 1, 0, 0, 255, 2
+        float[TMF_SIZE] tmfRatioBins;;"", 1, 0, 0, 65000, 1
+        float[TMF_SIZE] tmfOpeningBins;;"", 1, 0, 0, 65000, 1
 
 uint8_t[TORQUE_CURVE_SIZE x TORQUE_CURVE_SIZE] autoscale torqueTable;;"Nm", 10, 0, 0, 255, 0
         uint16_t[TORQUE_CURVE_SIZE] torqueRpmBins;;"RPM", 1, 0, 0, 65000, 0
