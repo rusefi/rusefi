@@ -376,3 +376,4 @@ Gpio* getBoardMetaOutputs() {
     return PROTEUS_OUTPUTS;
 }
 #endif // HW_PROTEUS
+
