@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Fri Mar 21 05:32:18 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sun Mar 23 03:36:50 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -502,6 +502,8 @@ case GPPWM_OilTemp:
   return "GPPWM_OilTemp";
 case GPPWM_Rpm:
   return "GPPWM_Rpm";
+case GPPWM_ThrottleRatio:
+  return "GPPWM_ThrottleRatio";
 case GPPWM_Tps:
   return "GPPWM_Tps";
 case GPPWM_VVT_1E:
