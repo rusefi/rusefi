@@ -140,7 +140,8 @@ void setGmSbc() {
 }
 
 static void setGmEcotec3() {
-  engineConfiguration->globalTriggerAngleOffset = 360 + 90;
+  engineConfiguration->camSyncOnSecondCrankRevolution = true;
+  engineConfiguration->globalTriggerAngleOffset = 360 + 90; // todo: remove '360' once 'camSyncOnSecondCrankRevolution' actually works
   engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
   engineConfiguration->lowPressureFuel.hwChannel = EFI_ADC_NONE;
   gmRailSensor();

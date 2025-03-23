@@ -1086,7 +1086,7 @@ bit cutSparkOnHardLimit,"yes","no";Be careful enabling this: some engines are kn
 bit launchFuelCutEnable
 bit launchSparkCutEnable;This is the Cut Mode normally used
 	bit torqueReductionEnabled
-	bit unused1308_20
+	bit camSyncOnSecondCrankRevolution,"second","first"
 	bit limitTorqueReductionTime
 bit verboseIsoTp;Are you a developer troubleshooting TS over CAN ISO/TP?
 bit engineSnifferFocusOnInputs
