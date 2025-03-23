@@ -408,6 +408,8 @@ static const LogField fields[] = {
 	{engine->outputChannels.fuelCutReasonBlinker, "fuelCutReasonBlinker", "", 0},
 	{engine->outputChannels.hp, "hp", "", 0},
 	{engine->outputChannels.torque, "torque", "", 0},
+	{engine->outputChannels.throttlePressureRatio, "throttlePressureRatio", "", 0},
+	{engine->outputChannels.throttleEffectiveAreaOpening, "throttleEffectiveAreaOpening", "", 0},
 	{engine->outputChannels.mcuSerial, "mcuSerial", "", 0},
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},

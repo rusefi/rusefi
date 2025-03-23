@@ -444,7 +444,9 @@ public class TsOutputs {
 	public static final Field HP = Field.create("HP", 810, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field TORQUE = Field.create("TORQUE", 812, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field ALIGNMENTFILL_AT_814 = Field.create("ALIGNMENTFILL_AT_814", 814, FieldType.INT8).setScale(1.0).setBaseOffset(0);
-	public static final Field MCUSERIAL = Field.create("MCUSERIAL", 816, FieldType.INT).setScale(1.0).setBaseOffset(0);
+	public static final Field THROTTLEPRESSURERATIO = Field.create("THROTTLEPRESSURERATIO", 816, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field THROTTLEEFFECTIVEAREAOPENING = Field.create("THROTTLEEFFECTIVEAREAOPENING", 820, FieldType.FLOAT).setBaseOffset(0);
+	public static final Field MCUSERIAL = Field.create("MCUSERIAL", 824, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field[] VALUES = {
 	SD_PRESENT,
 	SD_LOGGING_INTERNAL,
@@ -884,6 +886,8 @@ public class TsOutputs {
 	HP,
 	TORQUE,
 	ALIGNMENTFILL_AT_814,
+	THROTTLEPRESSURERATIO,
+	THROTTLEEFFECTIVEAREAOPENING,
 	MCUSERIAL,
 	};
 }

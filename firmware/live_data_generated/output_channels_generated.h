@@ -1430,13 +1430,21 @@ struct output_channels_s {
 	/**
 	 * offset 816
 	 */
-	uint32_t mcuSerial = (uint32_t)0;
+	float throttlePressureRatio = (float)0;
 	/**
 	 * offset 820
 	 */
+	float throttleEffectiveAreaOpening = (float)0;
+	/**
+	 * offset 824
+	 */
+	uint32_t mcuSerial = (uint32_t)0;
+	/**
+	 * offset 828
+	 */
 	uint8_t unusedAtTheEnd[48] = {};
 };
-static_assert(sizeof(output_channels_s) == 868);
+static_assert(sizeof(output_channels_s) == 876);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt

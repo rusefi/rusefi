@@ -840,6 +840,12 @@ float getOutputValueByName(const char *name) {
 // torque
 		case 512655621:
 			return engine->outputChannels.torque;
+// throttlePressureRatio
+		case -654466797:
+			return engine->outputChannels.throttlePressureRatio;
+// throttleEffectiveAreaOpening
+		case -184764139:
+			return engine->outputChannels.throttleEffectiveAreaOpening;
 // mcuSerial
 		case 714144074:
 			return engine->outputChannels.mcuSerial;
