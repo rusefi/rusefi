@@ -107,6 +107,24 @@ public class ConfigFieldImpl implements ConfigField {
                 }
             }
         }
+        validateRange();
+    }
+
+    private void validateRange() {
+        if (!TypesHelper.withRange(type))
+            return;
+        String[] tokens = getTokens();
+        if (tokens.length < 4)
+            return;
+        double scale = autoscaleSpecNumber();
+        double min = getMin();
+        double minValue = scale * TypesHelper.getMinValue(type);
+        if (min < minValue)
+            throw new FieldOutOfRangeException(name + ": min value outside of range " + min + " for " + type + " should be " + minValue);
+        double max = getMax();
+        double maxValue = scale * TypesHelper.getMaxValue(type);
+        if (max > maxValue)
+            throw new FieldOutOfRangeException(name + ": max value " + max + " outside of range. Type " + type + " maxValue " + maxValue);
     }
 
     @Override
@@ -469,6 +487,12 @@ public class ConfigFieldImpl implements ConfigField {
     @Override
     public String getCommentTemplated() {
         return state.getVariableRegistry().applyVariables(getComment());
+    }
+
+    public static class FieldOutOfRangeException extends RuntimeException {
+        public FieldOutOfRangeException(String s) {
+            super(s);
+        }
     }
 }
 
