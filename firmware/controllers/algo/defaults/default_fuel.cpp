@@ -98,6 +98,8 @@ static void setDefaultVETable() {
 	setRpmTableBin(config->baroCorrRpmBins);
 	setLinearCurve(config->baroCorrPressureBins, 75, 105, 1);
 
+	setLinearCurve(config->tmfRatioBins, 0.5, 1.5, 0.1);
+
 	// Default baro table is all 1.0, we can't recommend a reasonable default here
 	setTable(config->baroCorrTable, 1);
 
