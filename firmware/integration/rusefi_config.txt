@@ -1387,7 +1387,7 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 	pid_s[CAMS_PER_BANK iterate] auxPid;VVT output PID\nTODO: rename to vvtPid
 	float[8 iterate] injectorCorrectionPolynomial;;"", 1, 0, -1000, 1000, 4
 #define PRIME_CURVE_COUNT 8
-	int8_t[PRIME_CURVE_COUNT] primeBins;;"C", 1, 0, -40, @@CLT_UPPER_LIMIT@@, 0
+	int8_t[PRIME_CURVE_COUNT] primeBins;;"C", 1, 0, -40, 127, 0
 
 	linear_sensor_s oilPressure;
 
@@ -1470,7 +1470,7 @@ float tChargeAirDecrLimit;Maximum allowed rate of decrease allowed for the estim
 	uint8_t autoscale triggerCompHystMax;Trigger comparator hysteresis voltage (Max);"V", @@VOLTAGE_1_BYTE_PACKING_DIV@@, 0, 0, 5.1, 2
 	uint8_t autoscale triggerCompSensorSatRpm;VR-sensor saturation RPM;"RPM", 50, 0, 0, 12000, 0
 
-uint16_t[TRACTION_CONTROL_ETB_DROP_SIZE] autoscale tractionControlSlipBins;;"ratio", 0.01, 0, 0, 999, 2
+uint16_t[TRACTION_CONTROL_ETB_DROP_SIZE] autoscale tractionControlSlipBins;;"ratio", 0.01, 0, 0, 599, 2
 uint8_t[TRACTION_CONTROL_ETB_DROP_SIZE] tractionControlSpeedBins;;"RPM", 1, 0, 0, 250, 0
 	int8_t disableFan1AtSpeed
 	int8_t disableFan2AtSpeed
@@ -1592,8 +1592,8 @@ switch_input_pin_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPins;
 int16_t ALSMaxDuration;;"sec", 1, 0, 0, 10, 0
 	int8_t ALSMinCLT;;"C", 1, 0, 0, 90, 0
 	int8_t ALSMaxCLT;;"C", 1, 0, 0, 105, 0
-uint8_t alsMinTimeBetween;;"", 1, 0, 0, 20000, 0
-uint8_t alsEtbPosition;;"", 1, 0, 0, 20000, 0
+uint8_t alsMinTimeBetween;;"", 1, 0, 0, 200, 0
+uint8_t alsEtbPosition;;"", 1, 0, 0, 200, 0
     uint8_t acRelayAlternatorDutyAdder;;"%", 1, 0, 0, 100, 0
 	SentEtbType sentEtbType;If you have SENT TPS sensor please select type. For analog TPS leave None
 	uint16_t customSentTpsMin
