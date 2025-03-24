@@ -3487,7 +3487,7 @@ struct engine_configuration_s {
 	 * units: C
 	 * offset 1904
 	 */
-	int8_t primeBins[PRIME_CURVE_COUNT] = {};
+	scaled_channel<int8_t, 1, 5> primeBins[PRIME_CURVE_COUNT] = {};
 	/**
 	 * offset 1912
 	 */
@@ -5254,7 +5254,7 @@ struct persistent_config_s {
 	 * units: C
 	 * offset 4510
 	 */
-	int8_t ignitionCltCorrTempBins[CLT_TIMING_CURVE_SIZE] = {};
+	scaled_channel<int8_t, 1, 5> ignitionCltCorrTempBins[CLT_TIMING_CURVE_SIZE] = {};
 	/**
 	 * units: Load
 	 * offset 4515
@@ -6041,7 +6041,7 @@ struct persistent_config_s {
 	 * units: kPa
 	 * offset 22132
 	 */
-	int8_t wwMapBins[WWAE_TABLE_SIZE] = {};
+	uint8_t wwMapBins[WWAE_TABLE_SIZE] = {};
 	/**
 	 * offset 22140
 	 */

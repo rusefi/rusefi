@@ -893,7 +893,7 @@ public class Fields {
 	public static final Field INJECTORCORRECTIONPOLYNOMIAL6 = Field.create("INJECTORCORRECTIONPOLYNOMIAL6", 1892, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field INJECTORCORRECTIONPOLYNOMIAL7 = Field.create("INJECTORCORRECTIONPOLYNOMIAL7", 1896, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field INJECTORCORRECTIONPOLYNOMIAL8 = Field.create("INJECTORCORRECTIONPOLYNOMIAL8", 1900, FieldType.FLOAT).setBaseOffset(0);
-	public static final Field PRIMEBINS = Field.create("PRIMEBINS", 1904, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field PRIMEBINS = Field.create("PRIMEBINS", 1904, FieldType.INT8).setScale(5.0).setBaseOffset(0);
 	public static final Field OILPRESSURE_HWCHANNEL = Field.create("OILPRESSURE_HWCHANNEL", 1912, FieldType.INT8, adc_channel_e).setScale(1.0).setBaseOffset(0);
 	public static final Field OILPRESSURE_ALIGNMENTFILL_AT_1 = Field.create("OILPRESSURE_ALIGNMENTFILL_AT_1", 1913, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field OILPRESSURE_V1 = Field.create("OILPRESSURE_V1", 1916, FieldType.FLOAT).setBaseOffset(0);
@@ -1463,7 +1463,7 @@ public class Fields {
 	public static final Field CLTIDLERPMBINS = Field.create("CLTIDLERPMBINS", 4424, FieldType.INT8).setScale(2.0).setBaseOffset(0);
 	public static final Field CLTIDLERPM = Field.create("CLTIDLERPM", 4440, FieldType.INT8).setScale(20.0).setBaseOffset(0);
 	public static final Field IGNITIONCLTCORRTABLE = Field.create("IGNITIONCLTCORRTABLE", 4456, FieldType.INT16).setScale(0.1).setBaseOffset(0);
-	public static final Field IGNITIONCLTCORRTEMPBINS = Field.create("IGNITIONCLTCORRTEMPBINS", 4506, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field IGNITIONCLTCORRTEMPBINS = Field.create("IGNITIONCLTCORRTEMPBINS", 4506, FieldType.INT8).setScale(5.0).setBaseOffset(0);
 	public static final Field IGNITIONCLTCORRLOADBINS = Field.create("IGNITIONCLTCORRLOADBINS", 4511, FieldType.INT8).setScale(5.0).setBaseOffset(0);
 	public static final Field SCRIPTCURVE1BINS = Field.create("SCRIPTCURVE1BINS", 4516, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field SCRIPTCURVE1 = Field.create("SCRIPTCURVE1", 4580, FieldType.FLOAT).setBaseOffset(0);

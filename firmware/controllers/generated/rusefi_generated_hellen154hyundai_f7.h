@@ -522,7 +522,7 @@
 #define ETB_BIAS_CURVE_LENGTH 8
 #define ETB_COUNT 2
 #define ETB_HW_MAX_FREQUENCY 3000
-#define FLASH_DATA_VERSION 250321
+#define FLASH_DATA_VERSION 250324
 #define FRONTEND_TITLE_BAR_NAME "rusEFI"
 #define fuel_cyl_trim_s_size 16
 #define FUEL_LEVEL_TABLE_COUNT 8
@@ -1239,7 +1239,7 @@
 #define MAP_EST_LOAD_COUNT 16
 #define MAP_EST_RPM_COUNT 16
 #define MAP_sensor_config_s_size 140
-#define MAP_UPPER_LIMIT 1000
+#define MAP_UPPER_LIMIT 650
 #define MAP_WINDOW_SIZE 8
 #define MAX_CYLINDER_COUNT 12
 #define MAX_TPS_PPS_DISCREPANCY 5
@@ -1381,7 +1381,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 2090822023
+#define SIGNATURE_HASH 2075530985
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1880,7 +1880,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.03.24.hellen154hyundai_f7.2090822023"
+#define TS_SIGNATURE "rusEFI master.2025.03.24.hellen154hyundai_f7.2075530985"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
