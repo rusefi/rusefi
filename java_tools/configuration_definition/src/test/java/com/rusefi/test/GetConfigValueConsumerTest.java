@@ -1,6 +1,7 @@
 package com.rusefi.test;
 
 import com.rusefi.MaybeSemicolonWasMissedException;
+import com.rusefi.ParsingException;
 import com.rusefi.ReaderStateImpl;
 import com.rusefi.output.GetConfigValueConsumer;
 import org.junit.jupiter.api.Test;
@@ -151,7 +152,7 @@ public class GetConfigValueConsumerTest {
       "\tuint16_t autoscale baseFuel;@@GAUGE_NAME_FUEL_BASE@@\\nThis is the raw value we take from the fuel map or base fuel algorithm, before the corrections;\"mg\",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0\n" +
       "float afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
       "uint16_t autoscale speedToRpmRatio;s2rpm;\"value\",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0\n" +
-      "uint8_t afr_typet;;\"ms\",      1,      0,       0, 3000,      0\n" +
+      "uint8_t afr_typet;;\"ms\",      1,      0,       0, 30,      0\n" +
       "uint8_t autoscale vehicleSpeedKph;;\"kph\",1, 0, 0, 0, 0\n" +
       "bit isForcedInduction;Does the vehicle have a turbo or supercharger?\n" +
       "\tuint8_t unused37;;\"\",1, 0, 0, 0, 0\n" +
@@ -265,7 +266,7 @@ public class GetConfigValueConsumerTest {
 
   @Test
   public void generateSuspiciousTsInfo() {
-    assertThrows(MaybeSemicolonWasMissedException.class, () -> {
+    assertThrows(ParsingException.class, () -> {
       String test = "struct total\n" +
         "uint8_t hello;\"unit\", 1, 0, 0, 100, 0\n" +
         "end_struct\n";

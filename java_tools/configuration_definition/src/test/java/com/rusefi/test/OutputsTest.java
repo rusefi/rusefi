@@ -19,7 +19,7 @@ public class OutputsTest {
         state.getVariableRegistry().register("GAUGE_NAME_FUEL_WALL_CORRECTION", "wall");
         String test = "struct total\n" +
                 "float afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
-                "uint8_t afr_typet;@@GAUGE_NAME_FUEL_WALL_CORRECTION@@;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "uint8_t afr_typet;@@GAUGE_NAME_FUEL_WALL_CORRECTION@@;\"ms\",      1,      0,       0, 30,      0\n" +
                 "bit isForcedInduction;isForcedInduction\\nDoes the vehicle have a turbo or supercharger?\n" +
                 "bit enableFan1WithAc;+Turn on this fan when AC is on.\n" +
                 "angle_t m_requested_pump;Computed requested pump \n" +
@@ -97,7 +97,7 @@ public class OutputsTest {
                 "\tuint16_t autoscale baseFuel;@@GAUGE_NAME_FUEL_BASE@@\\nThis is the raw value we take from the fuel map or base fuel algorithm, before the corrections;\"mg\",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0\n" +
                 "float afr_type;PID dTime;\"ms\"\n" +
                 "uint16_t autoscale speedToRpmRatio;s2rpm;\"value\",{1/@@PACK_MULT_PERCENT@@}, 0, 0, 0, 0\n" +
-                "uint8_t afr_typet;;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "uint8_t afr_typet;;\"ms\",      1,      0,       0, 30,      0\n" +
                 "uint8_t autoscale vehicleSpeedKph;;\"kph\",1, 0, 0, 0, 0\n" +
                 "bit isBrakePedalDown;is pedal down?\n" +
                 "\tuint8_t unused37;;\"\",1, 0, 0, 0, 0\n" +
@@ -200,7 +200,7 @@ public class OutputsTest {
         System.out.println("run");
         String test = "struct total\n" +
           "float afr_type;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
-          "uint8_t afr_type;123;\"ms\",      1,      0,       0, 3000,      0\n" +
+          "uint8_t afr_type;123;\"ms\",      1,      0,       0, 30,      0\n" +
           "end_struct\n";
 
 
