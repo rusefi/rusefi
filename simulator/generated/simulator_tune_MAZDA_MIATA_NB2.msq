@@ -545,7 +545,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0250323E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0250324E7</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="">95.0</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -2796,10 +2796,10 @@ end</constant>
         <constant digits="0" name="maxIdleVss" units="kph">0.0</constant>
         <constant digits="0" name="maximumIgnitionTiming" units="deg BTDC">60.0</constant>
         <constant cols="1" digits="0" name="maximumOilPressureBins" rows="4">
-         0.0
-         0.0
-         0.0
-         0.0
+         700.0
+         800.0
+         3800.0
+         7000.0
 </constant>
         <constant cols="1" digits="0" name="maximumOilPressureValues" rows="4">
          0.0
@@ -2873,13 +2873,13 @@ end</constant>
         <constant digits="0" name="minimumBoostClosedLoopMap" units="kPa">0.0</constant>
         <constant digits="0" name="minimumIgnitionTiming" units="deg BTDC">-10.0</constant>
         <constant cols="1" digits="0" name="minimumOilPressureBins" rows="8">
-         0.0
-         1000.0
-         2000.0
-         3000.0
-         4000.0
-         5000.0
-         6000.0
+         700.0
+         800.0
+         1700.0
+         2600.0
+         3500.0
+         4400.0
+         5300.0
          7000.0
 </constant>
         <constant digits="1" name="minimumOilPressureTimeout" units="sec">0.5</constant>
@@ -4925,7 +4925,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250312" nPages="1" signature="rusEFI master.2025.03.23.f407-discovery.3824622110" version="5.0"/>
+    <versionInfo firmwareInfo="20250312" nPages="1" signature="rusEFI master.2025.03.24.f407-discovery.3824622110" version="5.0"/>
     <bibliography author="rusEFI 20250312" writeDate="date"/>
     <settings/>
     <userComments/>
