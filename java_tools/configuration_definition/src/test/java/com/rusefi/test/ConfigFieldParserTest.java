@@ -74,18 +74,47 @@ public class ConfigFieldParserTest {
     }
 
     @Test
+    public void testMinValue() {
+        assertThrows(ParsingException.class, () -> {
+            handle("struct pid_s\n" +
+                "uint8_t[3 x 1] afr_type;PID dTime;\"ms\",      1.0,      0,       -10, 3000,      0, noMsqSave\n" +
+                "end_struct\n");
+        });
+    }
+
+    private static ReaderStateImpl handle(String meta) {
+        ReaderStateImpl state = new ReaderStateImpl();
+
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
+        state.readBufferedReader(meta, tsProjectConsumer);
+        return state;
+    }
+
+    @Test
+    public void testMaxValue() {
+        handle("struct pid_s\n" +
+            "uint8_t[6] autoscale values;;\"volts\", {1/100}, 0, 0, 2.5, 2\n" +
+            "end_struct\n");
+        handle("struct pid_s\n" +
+            "uint8_t autoscale maxIdleRegionRpm;Below this RPM, the idle region is active, idle+300 would be a good value;\"RPM\", 50, 0, 0, 12000, 0\n" +
+            "end_struct\n");
+
+        assertThrows(ParsingException.class, () -> {
+            handle("struct pid_s\n" +
+                "int8_t[8] ignitionCltCorrTempBins;CLT-based timing correction;\"C\", 1, 0, -40, 250, 0\n" +
+                "end_struct\n");
+        });
+    }
+
+    @Test
     public void testEmbeddedStructs() {
         assertThrows(IllegalStateException.class, () -> {
-            String test = "struct pid_s\n" +
+            handle("struct pid_s\n" +
                 "int afr_type;PID dTime;\"ms\",      1.0,      0,       0, 3000,      0, noMsqSave\n" +
                 "struct pid_s\n" +
                 "int afr_type;PID dTime;\"ms\",      1.0,      0,       0, 3000,      0, noMsqSave\n" +
                 "end_struct\n" +
-                "end_struct\n";
-            ReaderStateImpl state = new ReaderStateImpl();
-
-            TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
-            state.readBufferedReader(test, tsProjectConsumer);
+                "end_struct\n");
         });
     }
 
@@ -236,7 +265,7 @@ public class ConfigFieldParserTest {
         String test = "struct vr_threshold_s\n" +
                 "\tuint8_t pin;\n" +
                 "\tuint8_t[3] pad;;\"\",1,0,0,0,0\n" +
-                "\tuint8_t[6] autoscale rpmBins;;\"rpm\", 1, 0, 0, 12000, 0\n" +
+                "\tuint8_t[6] autoscale rpmBins;;\"rpm\", 1, 0, 0, 12, 0\n" +
                 "\tuint8_t[6] autoscale values;;\"volts\", 1, 0, 0, 2.5, 2\n" +
                 "end_struct\n\n";
         ReaderStateImpl state = new ReaderStateImpl();
@@ -333,7 +362,7 @@ public class ConfigFieldParserTest {
         ReaderStateImpl state = new ReaderStateImpl();
         String test = "struct pid_s\n" +
                 "\tint16_t periodMs;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
-                "\tint8_t periodByte;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
+                "\tint8_t periodByte;PID dTime;\"ms\",      1,      0,       0, 30,      0\n" +
                 "\tfloat periodFloat;PID dTime;\"ms\",      1,      0,       0, 3000,      0\n" +
                 "end_struct\n" +
                 "";
