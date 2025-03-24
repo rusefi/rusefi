@@ -744,7 +744,7 @@ engineSyncCam_e engineSyncCam;Select which cam is used for engine sync. Other ca
 	pin_output_mode_e sdCardCsPinMode;
 
 	uint16_t autoscale vssGearRatio;Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.;"ratio", 0.001, 0, 0, 60, 3
-	uint8_t vssFilterReciprocal;Set this so your vehicle speed signal is responsive, but not noisy. Larger value give smoother but slower response.;"", 1, 0, @@VSS_FILTER_MIN@@, @@VSS_FILTER_MAX@@ 0
+	uint8_t vssFilterReciprocal;Set this so your vehicle speed signal is responsive, but not noisy. Larger value give smoother but slower response.;"", 1, 0, @@VSS_FILTER_MIN@@, @@VSS_FILTER_MAX@@, 0
 	uint8_t vssToothCount;Number of pulses output per revolution of the shaft where your VSS is mounted. For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.;"count", 1, 0, 1, 100, 0
 
 	#define ve_override_e_enum "None", "MAP", "TPS"
@@ -753,7 +753,6 @@ engineSyncCam_e engineSyncCam;Select which cam is used for engine sync. Other ca
 	ve_override_e idleVeOverrideMode;Override the Y axis (load) value used for only the Idle VE table.\nAdvanced users only: If you aren't sure you need this, you probably don't need this.
 
 	Gpio l9779_cs;
-
 
 	output_pin_e[MAX_CYLINDER_COUNT iterate] injectionPins;
 	output_pin_e[MAX_CYLINDER_COUNT iterate] ignitionPins;
