@@ -333,8 +333,12 @@ public class ReaderStateImpl implements ReaderState {
     }
 
     private static void processField(ReaderStateImpl state, String line) {
-
-        ConfigFieldImpl cf = ConfigFieldImpl.parse(state, line);
+        ConfigFieldImpl cf;
+        try {
+            cf = ConfigFieldImpl.parse(state, line);
+        } catch (Throwable e) {
+            throw new ParsingException("While parsing " + line, e);
+        }
 
         if (cf == null) {
             if (ConfigFieldImpl.isPreprocessorDirective(line)) {
