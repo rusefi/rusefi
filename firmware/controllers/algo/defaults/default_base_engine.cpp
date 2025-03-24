@@ -358,7 +358,8 @@ void setDefaultBaseEngine() {
 
 	// Oil pressure protection
 	engineConfiguration->minimumOilPressureTimeout = 0.5f;
-	setLinearCurve(config->minimumOilPressureBins, 0, 7000);
+	setRpmTableBin(config->minimumOilPressureBins);
+	setRpmTableBin(config->maximumOilPressureBins);
 }
 
 void setPPSInputs(adc_channel_e pps1, adc_channel_e pps2) {
