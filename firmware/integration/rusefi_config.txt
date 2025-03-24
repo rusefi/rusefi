@@ -96,7 +96,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 250321
+#define FLASH_DATA_VERSION 250324
 
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
@@ -118,7 +118,7 @@ struct_no_prefix engine_configuration_s
 ! PnP boards for liquid cooled engines should override with '120'
 #define CLT_UPPER_LIMIT 250
 
-#define MAP_UPPER_LIMIT 1000
+#define MAP_UPPER_LIMIT 650
 
 #define LUA_PWM_COUNT 8
 #define LUA_DIGITAL_INPUT_COUNT 8
@@ -1391,7 +1391,7 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 	pid_s[CAMS_PER_BANK iterate] auxPid;VVT output PID\nTODO: rename to vvtPid
 	float[8 iterate] injectorCorrectionPolynomial;;"", 1, 0, -1000, 1000, 4
 #define PRIME_CURVE_COUNT 8
-	int8_t[PRIME_CURVE_COUNT] primeBins;;"C", 1, 0, -40, @@CLT_UPPER_LIMIT@@, 0
+	int8_t[PRIME_CURVE_COUNT] autoscale primeBins;;"C", 5, 0, -40, @@CLT_UPPER_LIMIT@@, 0
 
 	linear_sensor_s oilPressure;
 
@@ -1474,7 +1474,7 @@ float tChargeAirDecrLimit;Maximum allowed rate of decrease allowed for the estim
 	uint8_t autoscale triggerCompHystMax;Trigger comparator hysteresis voltage (Max);"V", @@VOLTAGE_1_BYTE_PACKING_DIV@@, 0, 0, 5.1, 2
 	uint8_t autoscale triggerCompSensorSatRpm;VR-sensor saturation RPM;"RPM", 50, 0, 0, 12000, 0
 
-uint16_t[TRACTION_CONTROL_ETB_DROP_SIZE] autoscale tractionControlSlipBins;;"ratio", 0.01, 0, 0, 999, 2
+uint16_t[TRACTION_CONTROL_ETB_DROP_SIZE] autoscale tractionControlSlipBins;;"ratio", 0.01, 0, 0, 650, 2
 uint8_t[TRACTION_CONTROL_ETB_DROP_SIZE] tractionControlSpeedBins;;"RPM", 1, 0, 0, 250, 0
 	int8_t disableFan1AtSpeed
 	int8_t disableFan2AtSpeed
@@ -1601,8 +1601,8 @@ switch_input_pin_e[LUA_DIGITAL_INPUT_COUNT iterate] luaDigitalInputPins;
 int16_t ALSMaxDuration;;"sec", 1, 0, 0, 10, 0
 	int8_t ALSMinCLT;;"C", 1, 0, 0, 90, 0
 	int8_t ALSMaxCLT;;"C", 1, 0, 0, 105, 0
-uint8_t alsMinTimeBetween;;"", 1, 0, 0, 20000, 0
-uint8_t alsEtbPosition;;"", 1, 0, 0, 20000, 0
+uint8_t alsMinTimeBetween;;"", 1, 0, 0, 250, 0
+uint8_t alsEtbPosition;;"", 1, 0, 0, 250, 0
     uint8_t acRelayAlternatorDutyAdder;;"%", 1, 0, 0, 100, 0
 	SentEtbType sentEtbType;If you have SENT TPS sensor please select type. For analog TPS leave None
 	uint16_t customSentTpsMin
@@ -1848,7 +1848,7 @@ engine_configuration_s engineConfiguration;
 		float[ETB_BIAS_CURVE_LENGTH] etbBiasValues;PWM bias, open loop component of PID closed loop control;"ETB duty cycle bias", 1, 0, -100, 100, 2
 
 	uint8_t[IAC_PID_MULT_SIZE x IAC_PID_MULT_SIZE] autoscale iacPidMultTable;;"%", 0.05, 0, 0, 10, 2
-	uint8_t[IAC_PID_MULT_SIZE] iacPidMultLoadBins;;"Load", 1, 0, 0, 500, 2
+	uint8_t[IAC_PID_MULT_SIZE] iacPidMultLoadBins;;"Load", 1, 0, 0, 250, 2
 	uint8_t[IAC_PID_MULT_SIZE] autoscale iacPidMultRpmBins;;"RPM", 10, 0, 0, 2500, 0
 
 	uint16_t[DWELL_CURVE_SIZE] sparkDwellRpmBins;On Single Coil or Wasted Spark setups you have to lower dwell at high RPM;"RPM", 1, 0, 0, 25000, 0
@@ -1858,7 +1858,7 @@ engine_configuration_s engineConfiguration;
 	uint8_t[CLT_CURVE_SIZE] autoscale cltIdleRpm;See idleRpmPid;"RPM", 20, 0, 0, 5000, 0
 
 	int16_t[CLT_TIMING_CURVE_SIZE x CLT_TIMING_CURVE_SIZE] autoscale ignitionCltCorrTable;;"deg", 0.1, 0, -50, 50, 1
-    int8_t[CLT_TIMING_CURVE_SIZE] ignitionCltCorrTempBins;CLT-based timing correction;"C", 1, 0, -40, @@CLT_UPPER_LIMIT@@, 0
+    int8_t[CLT_TIMING_CURVE_SIZE] autoscale ignitionCltCorrTempBins;CLT-based timing correction;"C", 5, 0, -40, @@CLT_UPPER_LIMIT@@, 0
     uint8_t[CLT_TIMING_CURVE_SIZE] autoscale ignitionCltCorrLoadBins;;"Load", 5, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
 
 
@@ -1892,7 +1892,7 @@ uint8_t[BOOST_LOAD_COUNT x BOOST_RPM_COUNT] autoscale boostTableOpenLoop;;"", {1
 uint8_t[BOOST_RPM_COUNT] autoscale boostRpmBins;;"RPM", 100, 0, 0, 25000, 0
 uint16_t[BOOST_LOAD_COUNT] boostOpenLoopLoadBins;;"", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
 
-uint8_t[BOOST_LOAD_COUNT x BOOST_RPM_COUNT] autoscale boostTableClosedLoop;;"", 2, 0, 0, 3000, 0
+uint8_t[BOOST_LOAD_COUNT x BOOST_RPM_COUNT] autoscale boostTableClosedLoop;;"", 2, 0, 0, 510, 0
 uint16_t[BOOST_LOAD_COUNT] boostClosedLoopLoadBins;;"", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
 
 uint8_t[PEDAL_TO_TPS_SIZE x PEDAL_TO_TPS_SIZE] pedalToTpsTable;;"%", 1, 0, 0, 100, 0
@@ -2137,7 +2137,7 @@ int8_t[WWAE_TABLE_SIZE] wwCltBins;;"deg C", 1, 0, -40, 120, 0
 uint8_t[WWAE_TABLE_SIZE] autoscale wwTauCltValues;;"", 0.01, 0, 0, 2.5, 2
 uint8_t[WWAE_TABLE_SIZE] autoscale wwBetaCltValues;;"", 0.01, 0, 0, 1, 2
 
-int8_t[WWAE_TABLE_SIZE] wwMapBins;;"kPa", 1, 0, 0, 250, 0
+uint8_t[WWAE_TABLE_SIZE] wwMapBins;;"kPa", 1, 0, 0, 250, 0
 uint8_t[WWAE_TABLE_SIZE] autoscale wwTauMapValues;;"", 0.01, 0, 0, 2.5, 2
 uint8_t[WWAE_TABLE_SIZE] autoscale wwBetaMapValues;;"", 0.01, 0, 0, 2.5, 2
 
@@ -2153,13 +2153,13 @@ uint16_t[HPFP_COMPENSATION_SIZE] autoscale hpfpCompensationLoadBins;;"cc/lobe", 
 uint8_t[HPFP_COMPENSATION_SIZE] autoscale hpfpCompensationRpmBins;;"RPM", 50, 0, 0, 12500, 0
 
 uint16_t[HPFP_FUEL_MASS_COMPENSATION_SIZE x HPFP_FUEL_MASS_COMPENSATION_SIZE] autoscale hpfpFuelMassCompensation;;"%", 0.01, 0, 1, 10, 2
-uint16_t[HPFP_FUEL_MASS_COMPENSATION_SIZE] autoscale hpfpFuelMassCompensationFuelMass;;"fuel mass/mg", 0.01, 0, 0, 1000, 2
+uint16_t[HPFP_FUEL_MASS_COMPENSATION_SIZE] autoscale hpfpFuelMassCompensationFuelMass;;"fuel mass/mg", 0.01, 0, 0, 650, 2
 uint32_t[HPFP_FUEL_MASS_COMPENSATION_SIZE] autoscale hpfpFuelMassCompensationFuelPressure;;"bar", 0.1, 0, 0, 300, 1
 
 uint16_t[ENGINE_NOISE_CURVE_SIZE] knockNoiseRpmBins;;"RPM", 1, 0, 0, 30000, 0
-int8_t[ENGINE_NOISE_CURVE_SIZE] autoscale knockBaseNoise;Knock sensor output knock detection threshold depending on current RPM.;"dB", 0.5, 0, -99, 10, 1
+int8_t[ENGINE_NOISE_CURVE_SIZE] autoscale knockBaseNoise;Knock sensor output knock detection threshold depending on current RPM.;"dB", 0.5, 0, -64, 10, 1
 
-uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValuesBins;;"RPM", 50, 0, 0, 17500, 0
+uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValuesBins;;"RPM", 50, 0, 0, 12500, 0
 uint8_t[TPS_TPS_ACCEL_CLT_CORR_TABLE] autoscale tpsTspCorrValues;;"multiplier", 0.02, 0, 0, 5, 2
 
 int8_t[CLT_LIMITER_CURVE_SIZE] cltRevLimitRpmBins;;"C", 1, 0, -40, 120, 0
@@ -2210,7 +2210,7 @@ uint16_t[FUEL_TRIM_LOAD_COUNT] trimLoadBins;;"", 1, 0, 0, @@MAP_UPPER_LIMIT@@, 0
 
 #define DYNO_RPM_STEP_UNITS "Rpm"
 #define DYNO_RPM_STEP_TOOLTIP "RPM Trim Window, Leave on 100 if you dont know what this does"
-uint8_t autoscale dynoRpmStep;@@DYNO_RPM_STEP_TOOLTIP@@;@@DYNO_RPM_STEP_UNITS@@, 1, 0, 1, 500, 0
+uint8_t autoscale dynoRpmStep;@@DYNO_RPM_STEP_TOOLTIP@@;@@DYNO_RPM_STEP_UNITS@@, 1, 0, 1, 250, 0
 
 #define DYNO_SAE_TEMPERATURE_C_UNITS "C"
 #define DYNO_SAE_TEMPERATURE_C_TOOLTIP "Air temperature"
@@ -2264,7 +2264,7 @@ float   autoscale dynoCarCoeffOfDrag;@@DYNO_CAR_COEFF_OF_DRAG_TOOLTIP@@;@@DYNO_C
 #define DYNO_CAR_FRONTAL_AREA_TOOLTIP "The frontal area A represents the frontal projection of the car's area"
 float   autoscale dynoCarFrontalAreaM2;@@DYNO_CAR_FRONTAL_AREA_TOOLTIP@@;@@DYNO_CAR_FRONTAL_AREA_UNITS@@, 1, 0, 0, 100, 2
 
-int8_t[TRAILING_SPARK_SIZE x TRAILING_SPARK_SIZE] autoscale trailingSparkTable;;"deg", 0.1, 0, 0, 20, 1
+int8_t[TRAILING_SPARK_SIZE x TRAILING_SPARK_SIZE] autoscale trailingSparkTable;;"deg", 0.1, 0, 0, 12, 1
 uint8_t[TRAILING_SPARK_SIZE] autoscale trailingSparkRpmBins;;"rpm", 50, 0, 0, 12000, 0
 uint8_t[TRAILING_SPARK_SIZE] autoscale trailingSparkLoadBins;;"Load", 5, 0, 0,  @@MAP_UPPER_LIMIT@@, 0
 
