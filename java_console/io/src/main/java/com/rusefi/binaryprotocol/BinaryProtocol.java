@@ -353,9 +353,9 @@ public class BinaryProtocol {
                     BinaryProtocolLocalCache.CONFIGURATION_RUSEFI_XML
                 );
             } catch (IOException | JAXBException e) {
-                log.error("Ignoring " + e);
+                log.info("Ignoring " + e);
             } catch (final Exception e) {
-                log.warn("Unexpected exception:" + e);
+                log.error("Unexpected exception:" + e);
                 throw e;
             }
         }
