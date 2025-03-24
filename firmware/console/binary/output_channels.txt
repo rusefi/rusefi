@@ -275,19 +275,19 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 	uint16_t canWriteOk;@@GAUGE_NAME_CAN_WRITE_OK@@;"", 1, 0, 0, 64000, 0
 	uint16_t canWriteNotOk;@@GAUGE_NAME_CAN_WRITE_ERR@@;"", 1, 0, 0, 64000, 0
 
-    uint32_t triggerPrimaryFall;;"", 1, 0, -10000, 10000, 3
-    uint32_t triggerPrimaryRise;;"", 1, 0, -10000, 10000, 3
-    uint32_t triggerSecondaryFall;;"", 1, 0, -10000, 10000, 3
-    uint32_t triggerSecondaryRise;;"", 1, 0, -10000, 10000, 3
+    uint32_t triggerPrimaryFall;;"", 1, 0, 0, 10000, 3
+    uint32_t triggerPrimaryRise;;"", 1, 0, 0, 10000, 3
+    uint32_t triggerSecondaryFall;;"", 1, 0, 0, 10000, 3
+    uint32_t triggerSecondaryRise;;"", 1, 0, 0, 10000, 3
     uint16_t triggerVvtFall;;"",  1, 0, 0, 3000, 0
     uint16_t triggerVvtRise;;"",  1, 0, 0, 3000, 0
     uint16_t triggerVvt2Fall;;"", 1, 0, 0, 3000, 0, @@GAUGE_CATEGORY_SYNC@@
     uint16_t triggerVvt2Rise;;"", 1, 0, 0, 3000, 0, @@GAUGE_CATEGORY_SYNC@@
 
 
-	uint8_t starterState;;"", 1, 0, -10000, 10000, 3
-	uint8_t starterRelayDisable;;"", 1, 0, -10000, 10000, 3
-	uint8_t multiSparkCounter;Ign: Multispark count;"", 1, 0, -10000, 10000, 3
+	uint8_t starterState;;"", 1, 0, 0, 100, 3
+	uint8_t starterRelayDisable;;"", 1, 0, 0, 100, 3
+	uint8_t multiSparkCounter;Ign: Multispark count;"", 1, 0, 0, 100, 3
 
 	uint8_t extiOverflowCount;;"", 1, 0, 0, 255, 0
 
