@@ -960,7 +960,7 @@ custom maf_sensor_type_e 1 bits, S08, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	custom vehicle_info_t @@VEHICLE_INFO_SIZE@@ string, ASCII, @OFFSET@, @@VEHICLE_INFO_SIZE@@
 	custom gppwm_note_t @@GPPWM_NOTE_SIZE@@ string, ASCII, @OFFSET@, @@GPPWM_NOTE_SIZE@@
 
-	bit idleReturnTargetRamp,"yes","no";Ramp the idle target down from the entry threshold over 3 seconds when returning to idle. Helps prevent overshooting (below) the idle target while returning to idle from coasting.
+	bit idleReturnTargetRamp,"yes","no";Ramp the idle target down from the entry threshold over N seconds when returning to idle. Helps prevent overshooting (below) the idle target while returning to idle from coasting.
 	bit unused920_1testChange
 	bit useHbridgesToDriveIdleStepper;If enabled we use two H-bridges to drive stepper idle air valve
 	bit multisparkEnable
@@ -1820,8 +1820,9 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 
 	int8_t[8] airmassToTimingBins;;"mg", 1, 0, -100, 100, 0
 	int8_t[8] airmassToTimingValues;;"deg", 1, 0, -30, 30, 0
+	uint8_t autoscale idleReturnTargetRampDuration;idle return target ramp duration;"seconds", 0.1, 0, 0, 15, 1
 
-#define END_OF_CALIBRATION_PADDING 54
+#define END_OF_CALIBRATION_PADDING 53
 uint8_t[END_OF_CALIBRATION_PADDING] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0
 
 ! end of engine_configuration_s
