@@ -3,6 +3,8 @@ package com.rusefi.maintenance;
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.*;
+import com.rusefi.CompatibilitySet;
+import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.migration.DefaultIniFieldMigrator;
 import com.rusefi.maintenance.migration.TuneMigrationContext;
@@ -19,6 +21,12 @@ public enum DefaultTuneMigrator implements TuneMigrator {
 
     private static final Logging log = getLogging(DefaultTuneMigrator.class);
 
+    // ini fields to ignore on all boards
+    private static final Set<String> INI_FIELDS_TO_IGNORE = CompatibilitySet.of("byFirmwareVersion");
+
+    private static final Set<String> boardSpecificIniFieldsToIgnore = ConnectionAndMeta.getNonMigratableIniFields();
+
+
     @Override
     public void migrateTune(final TuneMigrationContext context) {
         final IniFileModel prevIni = context.getPrevIniFile();
@@ -30,7 +38,9 @@ public enum DefaultTuneMigrator implements TuneMigrator {
         final Map<String, IniField> newIniFields = newIni.getAllIniFields();
         for (final Map.Entry<String, IniField> prevFieldEntry: prevIniFields.entrySet()) {
             final String prevFieldName = prevFieldEntry.getKey();
-            if (!isUnusedField(prevFieldName)) {
+            if (!INI_FIELDS_TO_IGNORE.contains(prevFieldName) && !boardSpecificIniFieldsToIgnore.contains(prevFieldName)
+                && !isUnusedField(prevFieldName)
+            ) {
                 // We do not want to migrate already migrated ini-fields:
                 if (!context.isFieldAlreadyMigrated(prevFieldName) && !context.getMigratedConstants().containsKey(
                     prevFieldEntry
