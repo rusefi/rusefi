@@ -41,6 +41,7 @@ void setMercedesM111EngineConfiguration() {
 	strcpy(engineConfiguration->engineCode, "M111");
 
     engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
+	engineConfiguration->camSyncOnSecondCrankRevolution = true;
 	engineConfiguration->globalTriggerAngleOffset = 109 + 360; // please use a timing light?
 
     // todo: i wonder if we have less custom curve for same sensor?
