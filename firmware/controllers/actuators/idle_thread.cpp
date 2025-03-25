@@ -45,7 +45,7 @@ IIdleController::TargetInfo IdleController::getTargetRpm(float clt) {
  		float timeSinceIdleEntry = m_timeInIdlePhase.getElapsedSeconds();
  		target += interpolateClamped(
  			0, rpmUpperLimit,
- 			3, 0,
+ 			engineConfiguration->idleReturnTargetRampDuration, 0,
  			timeSinceIdleEntry
  		);
  	}
