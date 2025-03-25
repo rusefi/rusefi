@@ -127,10 +127,10 @@ BO_ 521 BASE9: 8 Vector__XXX
  SG_ Egt7 : 48|8@1+ (5,0) [0|1250] "deg C" Vector__XXX
  SG_ Egt8 : 56|8@1+ (5,0) [0|1250] "deg C" Vector__XXX
 
-BO_ 521 BASE10: 8 Vector__XXX
- SG_ knock0 : 0|8@1- (1,0) [-100|100] "db" Vector__XXX
- SG_ knock1 : 8|8@1- (1,0) [-100|100] "db" Vector__XXX
- SG_ knock2 : 16|8@1- (1,0) [-100|100] "db" Vector__XXX
+BO_ 522 BASE10: 8 Vector__XXX
+ SG_ knock0 : 0|8@1- (1,0) [-60|10] "db" Vector__XXX
+ SG_ knock1 : 8|8@1- (1,0) [-60|10] "db" Vector__XXX
+ SG_ knock2 : 16|8@1- (1,0) [-60|10] "db" Vector__XXX
 
 
 CM_ SG_ 3221225472 AFR "Current AFR Reading
