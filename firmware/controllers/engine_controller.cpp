@@ -718,6 +718,10 @@ bool validateConfigOnStartUpOrBurn() {
 		ensureArrayIsAscending("Oil pressure protection", config->minimumOilPressureBins);
 	}
 
+	if (engineConfiguration->idleReturnTargetRampDuration <= 0.1){
+		engineConfiguration->idleReturnTargetRampDuration = 3;
+	}
+
 	return true;
 }
 
