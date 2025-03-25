@@ -478,7 +478,7 @@ uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this r
 	Gpio canRxPin
 
 	switch_input_pin_e torqueReductionTriggerPin;Pin that activates the reduction/cut for shifting. Sometimes shared with the Launch Control pin
-	int8_t launchFuelAdderPercent;;"%", 1, 0, 0, 100, 0
+	int8_t launchFuelAdderPercent;;"%", 1, 0, -100, 100, 0
 	uint8_t autoscale etbJamTimeout;Time after which the throttle is considered jammed.;"sec", 0.02, 0, 0, 5, 2
 
 	output_pin_e tachOutputPin;
