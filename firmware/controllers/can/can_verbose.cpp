@@ -187,6 +187,16 @@ static void populateFrame(Fueling3& msg) {
 	msg.FuelPressureHigh = KPA2BAR(Sensor::getOrZero(SensorType::FuelPressureHigh));
 }
 
+struct PerCylinderKnock {
+  uint8_t knock[8];
+};
+
+static void populateFrame(PerCylinderKnock& msg) {
+  for (size_t index = 0;index<std::min(8, MAX_CYLINDER_COUNT);index++) {
+	  msg.knock[index] = engine->module<KnockController>()->m_knockCyl[index];
+  }
+}
+
 struct Cams {
 	int8_t Bank1IntakeActual;
 	int8_t Bank1IntakeTarget;
@@ -238,6 +248,7 @@ void sendCanVerbose() {
 	transmitStruct<Cams>		(CanCategory::VERBOSE, base + 8, isExt, canChannel);
 
 	transmitStruct<Egts>	(CanCategory::VERBOSE, base + 9, isExt, canChannel);
+	transmitStruct<PerCylinderKnock>	(CanCategory::VERBOSE, base + 10, isExt, canChannel);
 }
 
 #endif // EFI_CAN_SUPPORT
