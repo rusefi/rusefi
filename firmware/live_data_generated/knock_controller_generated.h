@@ -16,7 +16,7 @@ struct knock_controller_s {
 	 * units: dBv
 	 * offset 4
 	 */
-	int8_t m_knockCyl[12] = {};
+	int8_t m_knockCyl[MAX_CYLINDER_COUNT] = {};
 	/**
 	 * @@GAUGE_NAME_KNOCK_RETARD@@
 	 * units: deg
