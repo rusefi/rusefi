@@ -108,8 +108,7 @@ public class DefaultTuneMigratorTest {
     @Test
     public void testContent() {
         assertEquals(
-            "We aren't going to restore field `enableKnockSpectrogram`: it looks like its value is just renamed: `\"false\"` -> `\"no\"`\r\n" +
-            "WARNING! Field `unusedOftenChangesDuringFirmwareUpdate` cannot be updated because its row count is updated: `198` -> `58`\r\n",
+            "We aren't going to restore field `enableKnockSpectrogram`: it looks like its value is just renamed: `\"false\"` -> `\"no\"`\r\n",
             testContext.getTestCallbacks().getContent()
         );
     }
