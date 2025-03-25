@@ -117,6 +117,16 @@ BO_ 520 BASE8: 8 Vector__XXX
  SG_ Cam2E : 48|8@1- (1,0) [-100|100] "deg" Vector__XXX
  SG_ Cam2Etar : 56|8@1- (1,0) [-100|100] "deg" Vector__XXX
 
+BO_ 521 BASE9: 8 Vector__XXX
+ SG_ Egt1 : 0|8@1+ (5,0) [0|1250] "deg C" Vector__XXX
+ SG_ Egt2 : 8|8@1+ (5,0) [0|1250] "deg C" Vector__XXX
+ SG_ Egt3 : 16|8@1+ (5,0) [0|1250] "deg C" Vector__XXX
+ SG_ Egt4 : 24|8@1+ (5,0) [0|1250] "deg C" Vector__XXX
+ SG_ Egt5 : 32|8@1+ (5,0) [0|1250] "deg C" Vector__XXX
+ SG_ Egt6 : 40|8@1+ (5,0) [0|1250] "deg C" Vector__XXX
+ SG_ Egt7 : 48|8@1+ (5,0) [0|1250] "deg C" Vector__XXX
+ SG_ Egt8 : 56|8@1+ (5,0) [0|1250] "deg C" Vector__XXX
+
 
 
 CM_ SG_ 3221225472 AFR "Current AFR Reading
