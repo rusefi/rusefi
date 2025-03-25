@@ -1786,6 +1786,7 @@
         <constant digits="0" name="idlePositionMax" units="mv">5000.0</constant>
         <constant digits="0" name="idlePositionMin" units="mv">0.0</constant>
         <constant name="idleReturnTargetRamp">"no"</constant>
+        <constant digits="1" name="idleReturnTargetRampDuration" units="seconds">3.0</constant>
         <constant digits="4" name="idleRpmPid_dFactor" units="">0.002</constant>
         <constant digits="4" name="idleRpmPid_iFactor" units="">0.3</constant>
         <constant digits="0" name="idlerpmpid_iTermMax" units="">30.0</constant>
@@ -4380,8 +4381,7 @@ end</constant>
         <constant name="unusedFancy8">"false"</constant>
         <constant name="unusedFancy9">"false"</constant>
         <constant digits="0" name="unusedHip1" units="">0.0</constant>
-        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="54">
-         0.0
+        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="53">
          0.0
          0.0
          0.0
@@ -4924,7 +4924,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250312" nPages="1" signature="rusEFI master.2025.03.25.f407-discovery.738889426" version="5.0"/>
+    <versionInfo firmwareInfo="20250312" nPages="1" signature="rusEFI master.2025.03.25.f407-discovery.1984688800" version="5.0"/>
     <bibliography author="rusEFI 20250312" writeDate="date"/>
     <settings/>
     <userComments/>
