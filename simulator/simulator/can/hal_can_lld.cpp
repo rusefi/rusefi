@@ -149,7 +149,7 @@ void can_lld_stop(CANDriver *canp) {
 
 #if !EFI_SIM_IS_WINDOWS
 	// Remove from the "interrupt handler" list
-	std::remove(instances.begin(), instances.end(), canp);
+	(void)std::remove(instances.begin(), instances.end(), canp);
 
 	// Close the socket.
 	close(canp->sock);
