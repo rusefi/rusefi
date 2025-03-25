@@ -360,6 +360,10 @@ void setDefaultBaseEngine() {
 	engineConfiguration->minimumOilPressureTimeout = 0.5f;
 	setRpmTableBin(config->minimumOilPressureBins);
 	setRpmTableBin(config->maximumOilPressureBins);
+
+	engineConfiguration->mapExpAverageAlpha = 1;
+	engineConfiguration->alternator_iTermMax = 1000;
+	engineConfiguration->alternator_iTermMin = -1000;
 }
 
 void setPPSInputs(adc_channel_e pps1, adc_channel_e pps2) {
