@@ -2030,7 +2030,7 @@ struct engine_configuration_s {
 	 */
 	uint8_t alignmentFill_at_898[2] = {};
 	/**
-	 * Ramp the idle target down from the entry threshold over 3 seconds when returning to idle. Helps prevent overshooting (below) the idle target while returning to idle from coasting.
+	 * Ramp the idle target down from the entry threshold over N seconds when returning to idle. Helps prevent overshooting (below) the idle target while returning to idle from coasting.
 	offset 900 bit 0 */
 	bool idleReturnTargetRamp : 1 {};
 	/**
@@ -4982,8 +4982,14 @@ struct engine_configuration_s {
 	 */
 	int8_t airmassToTimingValues[8] = {};
 	/**
-	 * units: units
+	 * idle return target ramp duration
+	 * units: seconds
 	 * offset 3934
+	 */
+	scaled_channel<uint8_t, 10, 1> idleReturnTargetRampDuration;
+	/**
+	 * units: units
+	 * offset 3935
 	 */
 	uint8_t unusedOftenChangesDuringFirmwareUpdate[END_OF_CALIBRATION_PADDING] = {};
 };

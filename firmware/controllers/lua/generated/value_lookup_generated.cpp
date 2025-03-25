@@ -1940,6 +1940,9 @@ float getConfigValueByName(const char *name) {
 // maxOilPressureTimeout
 		case -1788499857:
 			return engineConfiguration->maxOilPressureTimeout;
+// idleReturnTargetRampDuration
+		case 62925536:
+			return engineConfiguration->idleReturnTargetRampDuration;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -5214,6 +5217,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1788499857:
 	{
 		engineConfiguration->maxOilPressureTimeout = (int)value;
+		return 1;
+	}
+		case 62925536:
+	{
+		engineConfiguration->idleReturnTargetRampDuration = (int)value;
 		return 1;
 	}
 		case -1658957891:

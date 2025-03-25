@@ -1444,6 +1444,7 @@ public class Fields {
 	public static final Field IDLEFLOWESTIMATEPOSITION = Field.create("IDLEFLOWESTIMATEPOSITION", 3910, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field AIRMASSTOTIMINGBINS = Field.create("AIRMASSTOTIMINGBINS", 3918, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field AIRMASSTOTIMINGVALUES = Field.create("AIRMASSTOTIMINGVALUES", 3926, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field IDLERETURNTARGETRAMPDURATION = Field.create("IDLERETURNTARGETRAMPDURATION", 3934, FieldType.INT8).setScale(0.1).setBaseOffset(0);
 	public static final Field TMFTABLE = Field.create("TMFTABLE", 3988, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field TMFRATIOBINS = Field.create("TMFRATIOBINS", 4004, FieldType.FLOAT).setBaseOffset(0);
 	public static final Field TMFOPENINGBINS = Field.create("TMFOPENINGBINS", 4012, FieldType.FLOAT).setBaseOffset(0);
@@ -3223,6 +3224,7 @@ public class Fields {
 	IDLEFLOWESTIMATEPOSITION,
 	AIRMASSTOTIMINGBINS,
 	AIRMASSTOTIMINGVALUES,
+	IDLERETURNTARGETRAMPDURATION,
 	TMFTABLE,
 	TMFRATIOBINS,
 	TMFOPENINGBINS,
