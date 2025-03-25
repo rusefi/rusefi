@@ -558,7 +558,7 @@
         <constant name="camInputsDebug4">"NONE"</constant>
         <constant name="camSimulatorPin">"NONE"</constant>
         <constant name="camSimulatorPinMode">"default"</constant>
-        <constant name="camSyncOnSecondCrankRevolution">"first"</constant>
+        <constant name="camSyncOnSecondCrankRevolution">"second"</constant>
         <constant name="can1ListenMode">"false"</constant>
         <constant name="can2BaudRate">"500kbps"</constant>
         <constant name="can2ListenMode">"false"</constant>
