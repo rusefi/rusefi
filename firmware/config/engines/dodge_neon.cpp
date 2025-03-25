@@ -33,8 +33,9 @@ void setDodgeNeon1995EngineConfiguration() {
 	engineConfiguration->ignitionMode = IM_WASTED_SPARK;
 	engineConfiguration->firingOrder = FO_1_3_4_2;
 
-	// set global_trigger_offset_angle 497
-	engineConfiguration->globalTriggerAngleOffset = 497;
+	// set global_trigger_offset_angle 137
+	engineConfiguration->camSyncOnSecondCrankRevolution = true;
+	engineConfiguration->globalTriggerAngleOffset = 360 + 137;
 
 	// set cranking_timing_angle 0
 	engineConfiguration->crankingTimingAngle = 0;

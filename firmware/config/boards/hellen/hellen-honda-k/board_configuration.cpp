@@ -87,7 +87,8 @@ void setBoardDefaultConfiguration() {
 
 	engineConfiguration->displayLogicLevelsInEngineSniffer = true;
 
-	engineConfiguration->globalTriggerAngleOffset = 663;
+	engineConfiguration->camSyncOnSecondCrankRevolution = true;
+	engineConfiguration->globalTriggerAngleOffset = 360 + 303;
 
 	engineConfiguration->enableSoftwareKnock = true;
 
