@@ -180,7 +180,8 @@ void setDefaultBaseEngine() {
   engineConfiguration->boostControlMinMap = 110;
 
 	engineConfiguration->primingDelay = 0.5;
-	engineConfiguration->vvtControlMinRpm = 500.0;
+	// this should not be below default rpm! maybe even make them equal?
+	engineConfiguration->vvtControlMinRpm = 600;
 
     engineConfiguration->camDecoder2jzPosition = 95;
     engineConfiguration->camDecoder2jzPrecision = 40;
