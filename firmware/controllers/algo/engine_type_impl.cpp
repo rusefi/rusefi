@@ -67,7 +67,6 @@ void applyEngineType(engine_type_e engineType) {
 	case engine_type_e::FORD_COYOTE:
 	case engine_type_e::MAZDA_MIATA_NC:
 	case engine_type_e::DISCOVERY_PDM:
-	case engine_type_e::UNUSED_65:
 	case engine_type_e::UNUSED67:
 	case engine_type_e::UNUSED94:
 	case engine_type_e::UNUSED_97:
@@ -204,6 +203,9 @@ void applyEngineType(engine_type_e engineType) {
 
 	case engine_type_e::GM_LCV:
 	  setGmLcv();
+		break;
+	case engine_type_e::GM_LNF:
+	  setGmLnf();
 		break;
 	case engine_type_e::GM_LTG:
 	  setGmLtg();

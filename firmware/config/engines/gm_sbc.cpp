@@ -139,13 +139,12 @@ void setGmSbc() {
 	engineConfiguration->map.sensor.type = MT_GM_1_BAR;
 }
 
-static void setGmEcotec3() {
+static void setGmGdi() {
   engineConfiguration->camSyncOnSecondCrankRevolution = true;
   engineConfiguration->globalTriggerAngleOffset = 90;
   engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
   engineConfiguration->lowPressureFuel.hwChannel = EFI_ADC_NONE;
   gmRailSensor();
-  engineConfiguration->EtbSentInput = SentInput::INPUT1;
 
 #ifdef HW_HELLEN_4K_GDI
   engineConfiguration->invertCamVVTSignal = true;
@@ -180,6 +179,11 @@ static void setGmEcotec3() {
 	setGDIFueling();
 }
 
+static void setGmEcotec3() {
+  setGmGdi();
+  engineConfiguration->EtbSentInput = SentInput::INPUT1;
+}
+
 static void set4CylGmEcotec3() {
   setGmEcotec3();
   engineConfiguration->hpfpCamLobes = 4;
@@ -193,6 +197,12 @@ void setGmLcv() {
   engineConfiguration->displacement = 2.5;
 	engineConfiguration->map.sensor.type = MT_GM_1_BAR;
   strcpy(engineConfiguration->engineCode, "LCV");
+}
+
+void setGmLnf() {
+  setGmGdi();
+  engineConfiguration->displacement = 2.0;
+  strcpy(engineConfiguration->engineCode, "LNF");
 }
 
 void setGmLtg() {
