@@ -4782,7 +4782,7 @@ end</constant>
         <constant digits="0" name="vssToothCount" units="count">21.0</constant>
         <constant digits="0" name="vvtActivationDelayMs" units="ms">6000.0</constant>
         <constant name="vvtBooleanForVerySpecialCases">"false"</constant>
-        <constant digits="0" name="vvtControlMinRpm" units="RPM">500.0</constant>
+        <constant digits="0" name="vvtControlMinRpm" units="RPM">600.0</constant>
         <constant name="vvtMode1">"Single Tooth"</constant>
         <constant name="vvtMode2">"Inactive"</constant>
         <constant digits="1" name="vvtOffsets1" units="value">450.0</constant>
