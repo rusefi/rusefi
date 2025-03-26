@@ -545,7 +545,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0250325E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0250326E7</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="">95.0</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -1216,7 +1216,7 @@
         <constant digits="2" name="gearRatio7" units="ratio">0.0</constant>
         <constant digits="2" name="gearRatio8" units="ratio">0.0</constant>
         <constant digits="2" name="gearRatio9" units="ratio">0.0</constant>
-        <constant digits="0" name="globalTriggerAngleOffset" units="deg btdc">663.0</constant>
+        <constant digits="0" name="globalTriggerAngleOffset" units="deg btdc">303.0</constant>
         <constant digits="0" name="gppwm1_dutyIfError" units="%">0.0</constant>
         <constant name="gppwm1_loadAxis">"Zero"</constant>
         <constant cols="1" digits="1" name="gppwm1_loadBins" rows="8">
@@ -4924,7 +4924,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250312" nPages="1" signature="rusEFI master.2025.03.25.f407-discovery.2680417502" version="5.0"/>
+    <versionInfo firmwareInfo="20250312" nPages="1" signature="rusEFI master.2025.03.26.f407-discovery.2680417502" version="5.0"/>
     <bibliography author="rusEFI 20250312" writeDate="date"/>
     <settings/>
     <userComments/>
