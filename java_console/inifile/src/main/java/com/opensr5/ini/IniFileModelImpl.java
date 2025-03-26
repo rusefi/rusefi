@@ -51,6 +51,8 @@ public class IniFileModelImpl implements IniFileModel {
     private boolean isInsidePageDefinition;
     private String signature;
     private int blockingFactor;
+    // useful when connecting remotely via TCP/IP, if CUSTOM_TS_BUFFER_SIZE is available
+    private final Integer blockingFactorOverride = Integer.getInteger("blockingFactorOverride");
 
     public static IniFileModelImpl findAndReadIniFile(String iniFilePath) {
         final String fileName = findMetaInfoFile(iniFilePath);
@@ -69,6 +71,8 @@ public class IniFileModelImpl implements IniFileModel {
 
     @Override
     public int getBlockingFactor() {
+        if (blockingFactorOverride != null)
+            return blockingFactorOverride;
         if (blockingFactor == 0)
             throw new IllegalStateException("blockingFactor not found in " + iniFilePath);
         return blockingFactor;
