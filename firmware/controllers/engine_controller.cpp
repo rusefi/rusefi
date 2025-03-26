@@ -562,6 +562,9 @@ bool validateConfigOnStartUpOrBurn() {
         }
 
 #endif // EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)
+	if (engineConfiguration->vvtControlMinRpm < engineConfiguration->cranking.rpm) {
+		engineConfiguration->vvtControlMinRpm = engineConfiguration->cranking.rpm;
+	}
 	if (engineConfiguration->adcVcc > 5.0f || engineConfiguration->adcVcc < 1.0f) {
     criticalError("Invalid adcVcc: %f", engineConfiguration->adcVcc);
 		return false;
