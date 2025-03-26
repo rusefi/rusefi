@@ -42,7 +42,7 @@ void setMercedesM111EngineConfiguration() {
 
     engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH;
 	engineConfiguration->camSyncOnSecondCrankRevolution = true;
-	engineConfiguration->globalTriggerAngleOffset = 109 + 360; // please use a timing light?
+	engineConfiguration->globalTriggerAngleOffset = 109; // please use a timing light?
 
     // todo: i wonder if we have less custom curve for same sensor?
     setAtSensor(&engineConfiguration->iat, /*temp low*/0, 7400, /*temp mid*/22, 2180, /*temp high*/ 100, 180);
