@@ -52,7 +52,12 @@ public class IniFileModelImpl implements IniFileModel {
     private String signature;
     private int blockingFactor;
     // useful when connecting remotely via TCP/IP, if CUSTOM_TS_BUFFER_SIZE is available
-    private final Integer blockingFactorOverride = Integer.getInteger("blockingFactorOverride");
+    private static final Integer blockingFactorOverride = Integer.getInteger("blockingFactorOverride");
+
+    static {
+        if (blockingFactorOverride != null)
+            log.info("blockingFactorOverride=" + blockingFactorOverride);
+    }
 
     public static IniFileModelImpl findAndReadIniFile(String iniFilePath) {
         final String fileName = findMetaInfoFile(iniFilePath);
