@@ -35,7 +35,7 @@ void setDodgeNeon1995EngineConfiguration() {
 
 	// set global_trigger_offset_angle 137
 	engineConfiguration->camSyncOnSecondCrankRevolution = true;
-	engineConfiguration->globalTriggerAngleOffset = 360 + 137;
+	engineConfiguration->globalTriggerAngleOffset = 137;
 
 	// set cranking_timing_angle 0
 	engineConfiguration->crankingTimingAngle = 0;
