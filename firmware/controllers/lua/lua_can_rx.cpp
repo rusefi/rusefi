@@ -87,9 +87,11 @@ static void handleCanFrame(LuaHandle& ls, CanFrameData* data) {
 		lua_rawgeti(ls, LUA_REGISTRYINDEX, data->Callback);
 	}
 
+  auto frameCanId = CAN_ID(data->Frame);
+
 	if (lua_isnil(ls, -1)) {
 		// no rx function, ignore
-		efiPrintf("LUA CAN rx missing function onCanRx");
+		efiPrintf("LUA CAN rx missing function onCanRx ID=%ld", frameCanId);
 		lua_settop(ls, 0);
 		return;
 	}
@@ -98,7 +100,7 @@ static void handleCanFrame(LuaHandle& ls, CanFrameData* data) {
 
 	// Push bus, ID and DLC
 	lua_pushinteger(ls, HUMAN_OFFSET + data->BusIndex);
-	lua_pushinteger(ls, CAN_ID(data->Frame));
+	lua_pushinteger(ls, frameCanId);
 	lua_pushinteger(ls, dlc);
 
   if (engineConfiguration->luaCanRxWorkaround) {
