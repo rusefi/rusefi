@@ -26,6 +26,8 @@
  * These two commands are enough to get working gauges. In order to start configuring the ECU using
  * tuner studio, three more commands should be implemented:
  *
+ * See also https://www.efianalytics.com/TunerStudio/docs/EFI%20Analytics%20ECU%20Definition%20files.pdf
+ *
  *
  * @date Oct 22, 2013
  * @author Andrey Belomutskiy, (c) 2012-2020
