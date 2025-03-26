@@ -397,6 +397,7 @@ public class VariableRegistryValues {
 	public static final int engine_type_e_FRANKENSO_TEST_33810 = 59;
 	public static final int engine_type_e_FUEL_BENCH = 15;
 	public static final int engine_type_e_GM_LCV = 47;
+	public static final int engine_type_e_GM_LNF = 65;
 	public static final int engine_type_e_GM_LTG = 55;
 	public static final int engine_type_e_GM_SBC = 98;
 	public static final int engine_type_e_GM_SBC_GEN5 = 49;
@@ -476,7 +477,6 @@ public class VariableRegistryValues {
 	public static final int engine_type_e_UNUSED102 = 102;
 	public static final int engine_type_e_UNUSED67 = 67;
 	public static final int engine_type_e_UNUSED94 = 94;
-	public static final int engine_type_e_UNUSED_65 = 65;
 	public static final int engine_type_e_UNUSED_97 = 97;
 	public static final int engine_type_e_VAG_5_CYL = 77;
 	public static final int engine_type_e_VW_ABA = 32;

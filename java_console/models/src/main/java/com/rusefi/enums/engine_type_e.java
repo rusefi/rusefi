@@ -70,7 +70,7 @@ public enum engine_type_e {
 	MRE_VW_B6,
 	PROTEUS_BMW_M73,
 	DODGE_RAM,
-	UNUSED_65,
+	GM_LNF,
 	HONDA_OBD1,
 	UNUSED67,
 	MERCEDES_M111,
