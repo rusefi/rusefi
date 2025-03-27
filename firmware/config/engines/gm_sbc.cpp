@@ -168,10 +168,10 @@ static void setGmGdi() {
 	engineConfiguration->camInputs[2] = Gpio::Unassigned;
 	engineConfiguration->camInputs[3] = Gpio::Unassigned;
 	config->boardUseCrankPullUp = true;
+
+	engineConfiguration->starterControlPin = Gpio::MM176_SPI3_SCK; // 29C - Ignition 9
 #endif // HW_HELLEN_8CHAN
 
-  engineConfiguration->sentEtbType = SentEtbType::GM_TYPE_1;
-  setTPS1Inputs(EFI_ADC_NONE, EFI_ADC_NONE);
   setPPSCalibration(1, 4.25, 0.5, 2.14);
 
 	strcpy(engineConfiguration->engineMake, ENGINE_MAKE_GM);
@@ -181,6 +181,8 @@ static void setGmGdi() {
 
 static void setGmEcotec3() {
   setGmGdi();
+  engineConfiguration->sentEtbType = SentEtbType::GM_TYPE_1;
+  setTPS1Inputs(EFI_ADC_NONE, EFI_ADC_NONE);
   engineConfiguration->EtbSentInput = SentInput::INPUT1;
 }
 
@@ -203,6 +205,12 @@ void setGmLnf() {
   setGmGdi();
   engineConfiguration->displacement = 2.0;
   strcpy(engineConfiguration->engineCode, "LNF");
+#ifdef HW_HELLEN_8CHAN
+  engineConfiguration->vvtMode[1] = VVT_BOSCH_QUICK_START;
+  engineConfiguration->invertCamVVTSignal = true;
+	engineConfiguration->invertPrimaryTriggerSignal = true;
+  engineConfiguration->highPressureFuel.hwChannel = MM176_IN_MAP1_ANALOG; // 2A Aux Analog 4
+#endif // HW_HELLEN_8CHAN
 }
 
 void setGmLtg() {
