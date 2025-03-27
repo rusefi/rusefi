@@ -955,7 +955,7 @@ custom maf_sensor_type_e 1 bits, S08, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 #define CRITICAL_BUFFER_SIZE 120
 
 #define VIN_NUMBER_SIZE 17
-	custom vin_number_t @@VIN_NUMBER_SIZE@@ string, ASCII, @OFFSET@, @@VIN_NUMBER_SIZE@@
+	custom vin_number_t @@VIN_NUMBER_SIZE@@ string, ASCII, @OFFSET@, @@VIN_NUMBER_SIZE@@, @@VIN_NUMBER_SIZE@@
 
 	custom vehicle_info_t @@VEHICLE_INFO_SIZE@@ string, ASCII, @OFFSET@, @@VEHICLE_INFO_SIZE@@
 	custom gppwm_note_t @@GPPWM_NOTE_SIZE@@ string, ASCII, @OFFSET@, @@GPPWM_NOTE_SIZE@@
