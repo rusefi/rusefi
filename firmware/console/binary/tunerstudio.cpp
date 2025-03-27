@@ -704,7 +704,7 @@ int TunerStudio::handleCrcCommand(TsChannelBase* tsChannel, char *data, int inco
 
 	const uint16_t* data16 = reinterpret_cast<uint16_t*>(data);
 
-	// only few commnad have page argument, default page is 0
+	// only few command have page argument, default page is 0
 	uint16_t page = 0;
 	uint16_t offset = 0;
 	uint16_t count = 0;
