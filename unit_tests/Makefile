@@ -8,6 +8,13 @@ UNIT_TESTS_DIR=$(PROJECT_DIR)/../unit_tests
 
 US_TO_NT_MULTIPLIER = 100
 
+# todo: reduce copy/paste between all three Makefiles!
+ifneq ($(BOARD_DIR),)
+ifneq ("$(wildcard ../firmware/$(BOARD_DIR)/default_tune.cpp)","")
+  BOARDCPPSRC += ../firmware/$(BOARD_DIR)/default_tune.cpp
+endif
+endif
+
 BOARDS_DIR = $(PROJECT_DIR)/config/boards
 
 # Imported source files and paths
@@ -35,6 +42,7 @@ CSRC += $(ALLCSRC) \
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
 CPPSRC += $(ALLCPPSRC) \
+  $(BOARDCPPSRC) \
 	$(HW_LAYER_DRIVERS_CORE_CPP) \
 	$(FRAMEWORK_SRC_CPP) \
 	$(TESTS_SRC_CPP) \
