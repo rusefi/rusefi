@@ -20,6 +20,7 @@ US_TO_NT_MULTIPLIER = 100
 
 PROJECT_CPU=simulator
 
+# todo: reduce copy/paste between all three Makefiles!
 ifneq ($(BOARD_DIR),)
 ifneq ("$(wildcard ../firmware/$(BOARD_DIR)/default_tune.cpp)","")
   BOARDCPPSRC += ../firmware/$(BOARD_DIR)/default_tune.cpp
