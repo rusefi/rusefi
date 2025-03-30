@@ -96,7 +96,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 250324
+#define FLASH_DATA_VERSION 250330
 
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
@@ -145,6 +145,8 @@ struct_no_prefix engine_configuration_s
 
 #define TORQUE_CURVE_SIZE 6
 #define CLT_CURVE_SIZE 16
+#define CLT_IDLE_TABLE_CLT_SIZE 8
+#define CLT_IDLE_TABLE_RPM_SIZE 2
 #define CLT_LIMITER_CURVE_SIZE 4
 #define CRANKING_CLT_IDLE_CURVE_SIZE 8
 #define CLT_CRANKING_CURVE_SIZE 8
@@ -1930,8 +1932,9 @@ float[IAT_CURVE_SIZE] iatFuelCorr;;"ratio", 1, 0, 0, 5, 2
 	float[CRANKING_CYCLE_CLT_SIZE x CRANKING_CURVE_SIZE] crankingCycleFuelCoef;;"mult", 1, 0, 0, 5, 2
 
 
-float[CLT_CURVE_SIZE] cltIdleCorrBins;CLT-based idle position for simple manual idle controller;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
-float[CLT_CURVE_SIZE] cltIdleCorr;    CLT-based idle position for simple manual idle controller;"%", 1, 0, 0, 100, 2
+float[CLT_IDLE_TABLE_CLT_SIZE] cltIdleCorrBins;CLT-based idle position for simple manual idle controller;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
+float[CLT_IDLE_TABLE_RPM_SIZE x CLT_IDLE_TABLE_CLT_SIZE] cltIdleCorrTable;    CLT-based idle position for simple manual idle controller;"%", 1, 0, 0, 100, 2
+uint8_t[CLT_IDLE_TABLE_RPM_SIZE] autoscale rpmIdleCorrBins;;"RPM", 100, 0, 0, 25000, 0
 
 float[MAF_DECODING_COUNT] mafDecoding;Also known as MAF transfer function.\nkg/hour value.\nBy the way 2.081989116 kg/h = 1 ft3/m;"kg/hour", 1, 0, -500, 4000, 2
 float[MAF_DECODING_COUNT] mafDecodingBins;;"V", 1, 0, -5, 150, 2
