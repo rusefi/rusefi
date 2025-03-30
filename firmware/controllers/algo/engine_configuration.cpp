@@ -252,24 +252,6 @@ void setDefaultSdCardParameters() {
 }
 
 #if EFI_ENGINE_CONTROL
-static void setDefaultWarmupIdleCorrection() {
-	initTemperatureCurve(CLT_MANUAL_IDLE_CORRECTION, 1.0);
-
-	float baseIdle = 30;
-
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION, -40, 1.5);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION, -30, 1.5);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION, -20, 40.0 / baseIdle);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION, -10, 40.0 / baseIdle);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,   0, 40.0 / baseIdle);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  10, 40.0 / baseIdle);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  20, 40.0 / baseIdle);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  30, 40.0 / baseIdle);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  40, 40.0 / baseIdle);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  50, 37.0 / baseIdle);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  60, 35.0 / baseIdle);
-	setCurveValue(CLT_MANUAL_IDLE_CORRECTION,  70, 33.0 / baseIdle);
-}
 
 /**
  * see also setTargetRpmCurve()
@@ -361,6 +343,14 @@ static void setDefaultScriptParameters() {
 	setRpmTableBin(config->scriptTable3RpmBins);
 	setLinearCurve(config->scriptTable4LoadBins, 20, 120, 10);
 	setRpmTableBin(config->scriptTable4RpmBins);
+}
+
+static void setDefaultIdleOpenLoopParameters() {
+	setRpmTableBin(config->rpmIdleCorrBins);
+	setLinearCurve(config->cltIdleCorrBins, CLT_CURVE_RANGE_FROM, 140, 10);
+	for (size_t i = 0; i < CLT_IDLE_TABLE_RPM_SIZE; i++) {
+		setLinearCurve(config->cltIdleCorrTable[i], 75.0, 50, 5);
+	}
 }
 
 /**
@@ -470,7 +460,6 @@ static void setDefaultEngineConfiguration() {
 	setRpmTableBin(config->alsFuelAdjustmentrpmBins);
 	setLinearCurve(config->fuelLevelBins, 0, 5);
 
-	setDefaultWarmupIdleCorrection();
 
 	setRpmTableBin(engineConfiguration->map.samplingAngleBins);
 	setLinearCurve(engineConfiguration->map.samplingAngle, 100, 130, 1);
@@ -521,7 +510,7 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->idle.solenoidFrequency = DEFAULT_SOLENOID_FREQUENCY;
 	// set idle_position 50
-	setLinearCurve(config->cltIdleCorr, 75.0, 50, 5);
+	setDefaultIdleOpenLoopParameters();
 //	engineConfiguration->idleMode = IM_AUTO;
 	engineConfiguration->idleMode = IM_MANUAL;
 
