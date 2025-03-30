@@ -756,7 +756,7 @@ void configureRusefiLuaHooks(lua_State* lState) {
 		return 1;
 	});
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || EFI_SIMULATOR
 extern int luaCommandCounters[LUA_BUTTON_COUNT];
 
 	lua_register(lState, "getTsButtonCount",
@@ -769,7 +769,7 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 			lua_pushnumber(l, luaCommandCounters[humanIndex - 1]);
 			return 1;
 	});
-#endif // EFI_PROD_CODE
+#endif // EFI_PROD_CODE || EFI_SIMULATOR
 
 #if EFI_PROD_CODE && EFI_SENT_SUPPORT
 	lua_register(lState, "getSentValue",
