@@ -69,8 +69,8 @@ static void cannedpedalToTpsRpmBins() {
 
 static void cannedcltIdleCorr() {
 #if CLT_IDLE_TABLE_CLT_SIZE == 16
-	static const float hardCodedcltIdleCorr[16] = {1.1, 1.1, 0.9333, 0.9333, 0.9333, 0.8333, 0.6333, 0.6333, 0.5, 0.5, 0.4667, 0.3, 0.3, 0.3, 0.3, 0.3};
-	copyArray(config->cltIdleCorr, hardCodedcltIdleCorr);
+//todo hardCodedcltIdleCorr	static const float hardCodedcltIdleCorr[16] = {1.1, 1.1, 0.9333, 0.9333, 0.9333, 0.8333, 0.6333, 0.6333, 0.5, 0.5, 0.4667, 0.3, 0.3, 0.3, 0.3, 0.3};
+//todo	copyArray(config->cltIdleCorr, hardCodedcltIdleCorr);
 #endif // CLT_IDLE_TABLE_CLT_SIZE
 }
 

@@ -18,8 +18,8 @@ static void cannedcltIdleCorrBins() {
 
 static void cannedcltIdleCorr() {
 #if CLT_IDLE_TABLE_CLT_SIZE == 16
-	static const float hardCodedcltIdleCorr[16] = {1.5, 1.5, 1.333333, 1.333333, 1.333333, 1.333333, 1.333333, 1.333333, 1.333333, 1.233333, 1.166667, 1.1, 1.0, 1.0, 1.0, 1.0};
-	copyArray(config->cltIdleCorr, hardCodedcltIdleCorr);
+//todo	static const float hardCodedcltIdleCorr[16] = {1.5, 1.5, 1.333333, 1.333333, 1.333333, 1.333333, 1.333333, 1.333333, 1.333333, 1.233333, 1.166667, 1.1, 1.0, 1.0, 1.0, 1.0};
+//todo	copyArray(config->cltIdleCorr, hardCodedcltIdleCorr);
 #endif // CLT_IDLE_TABLE_CLT_SIZE
 }
 
