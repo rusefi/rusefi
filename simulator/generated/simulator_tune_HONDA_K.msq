@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22648">
+    <page number="0" size="22620">
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
         <constant name="accelerometerSpiDevice">"Off"</constant>
@@ -671,41 +671,19 @@
          100.0
          110.0
 </constant>
-        <constant cols="1" digits="2" name="cltIdleCorr" rows="16">
-         75.0
-         75.0
-         70.0
-         70.0
-         70.0
-         65.0
-         65.0
-         65.0
-         60.0
-         60.0
-         60.0
-         55.0
-         55.0
-         55.0
-         50.0
-         50.0
-</constant>
-        <constant cols="1" digits="2" name="cltIdleCorrBins" rows="16">
+        <constant cols="1" digits="2" name="cltIdleCorrBins" rows="8">
          -40.0
-         -30.0
-         -20.0
          -10.0
-         0.0
          10.0
-         20.0
-         30.0
          40.0
-         50.0
          60.0
-         70.0
-         80.0
          90.0
-         100.0
          110.0
+         140.0
+</constant>
+        <constant cols="8" digits="2" name="cltIdleCorrTable" rows="2">
+         75.0 70.0 70.0 65.0 60.0 55.0 55.0 50.0
+         75.0 70.0 70.0 65.0 60.0 55.0 55.0 50.0
 </constant>
         <constant cols="1" digits="0" name="cltIdleRpm" rows="16">
          1360.0
@@ -3023,6 +3001,10 @@ end</constant>
         <constant name="rethrowHardFault">"false"</constant>
         <constant digits="0" name="rpmHardLimit" units="rpm">7000.0</constant>
         <constant digits="0" name="rpmHardLimitHyst" units="RPM">50.0</constant>
+        <constant cols="1" digits="0" name="rpmIdleCorrBins" rows="2">
+         700.0
+         7000.0
+</constant>
         <constant digits="1" name="rpmSoftLimitFuelAdded" units="%">0.0</constant>
         <constant digits="1" name="rpmSoftLimitTimingRetard" units="deg">4.0</constant>
         <constant digits="0" name="rpmSoftLimitWindowSize" units="RPM">200.0</constant>
@@ -4924,7 +4906,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250327" nPages="1" signature="rusEFI master.2025.03.30.f407-discovery.1565033740" version="5.0"/>
+    <versionInfo firmwareInfo="20250327" nPages="1" signature="rusEFI master.2025.03.30.f407-discovery.952886318" version="5.0"/>
     <bibliography author="rusEFI 20250327" writeDate="date"/>
     <settings/>
     <userComments/>
