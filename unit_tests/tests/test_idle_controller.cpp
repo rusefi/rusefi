@@ -132,7 +132,8 @@ TEST(idle_v2, crankingOpenLoop) {
 
 		// different values in running so we can tell which one is used
 		config->cltIdleCorrBins[i] = i * 10;
-		config->cltIdleCorr[i] = i * 0.2f;
+		config->cltIdleCorrTable[0][i] = i * 0.2f;
+		config->cltIdleCorrTable[1][i] = i * 0.2f;
 	}
 
 	EXPECT_FLOAT_EQ(5, dut.getCrankingOpenLoop(10));
@@ -146,7 +147,8 @@ TEST(idle_v2, runningOpenLoopBasic) {
 
 	for (size_t i = 0; i < efi::size(config->cltIdleCorrBins); i++) {
 		config->cltIdleCorrBins[i] = i * 10;
-		config->cltIdleCorr[i] = 50 * (i * 0.1f);
+		config->cltIdleCorrTable[0][i] = 50 * (i * 0.1f);
+		config->cltIdleCorrTable[1][i] = 50 * (i * 0.1f);
 	}
 
 	EXPECT_FLOAT_EQ(5, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 0, 10, 0));
@@ -161,7 +163,7 @@ TEST(idle_v2, runningFanAcBump) {
 	engineConfiguration->fan1ExtraIdle = 7;
 	engineConfiguration->fan2ExtraIdle = 3;
 
-	setArrayValues(config->cltIdleCorr, 50.0f);
+	setTable(config->cltIdleCorrTable, 50.0f);
 
 	// Start with fan off
 	enginePins.fanRelay.setValue(0);
@@ -198,7 +200,7 @@ TEST(idle_v2, idleAdderShouldNotAffectNonIdleAreas) {
 
 	engineConfiguration->acIdleExtraOffset = 9;
 
-	setArrayValues(config->cltIdleCorr, 50.0f);
+	setTable(config->cltIdleCorrTable, 50.0f);
 
 	// Should be base position
 	EXPECT_FLOAT_EQ(50, dut.getRunningOpenLoop(IIdleController::Phase::Cranking, 0, 10, 0));
@@ -216,7 +218,7 @@ TEST(idle_v2, runningOpenLoopTpsTaper) {
 	IdleController dut;
 
 	// Zero out base tempco table
-	setArrayValues(config->cltIdleCorr, 0.0f);
+	setTable(config->cltIdleCorrTable, 0.0f);
 
 	// Add 50% idle position
 	engineConfiguration->iacByTpsTaper = 50;
@@ -238,7 +240,7 @@ TEST(idle_v2, runningOpenLoopTpsTaperWithDashpot) {
 	IdleController dut;
 
 	// Zero out base tempco table
-	setArrayValues(config->cltIdleCorr, 0.0f);
+	setTable(config->cltIdleCorrTable, 0.0f);
 
 	// Add 50% idle position
 	engineConfiguration->iacByTpsTaper = 50;
