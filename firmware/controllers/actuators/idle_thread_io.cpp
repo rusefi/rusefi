@@ -37,7 +37,7 @@ void setManualIdleValvePosition(int positionPercent) {
 		return;
 	efiPrintf("setting idle valve position %d", positionPercent);
 	// todo: this is not great that we have to write into configuration here
-	setArrayValues(config->cltIdleCorr, positionPercent);
+	setTable(config->cltIdleCorrTable, positionPercent);
 }
 
 #endif /* EFI_UNIT_TEST */
