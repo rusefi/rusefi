@@ -46,6 +46,14 @@
 #define BOARD_PHY_RMII
 
 /*
+ * Default to input mode, with internal pulldown resistor enabled.
+ */
+#define EFI_PIN_MODE_DEFAULT PIN_MODE_INPUT
+#ifndef EFI_DR_DEFAULT
+#define EFI_DR_DEFAULT PIN_PUPDR_PULLDOWN
+#endif
+
+/*
  * Board oscillators-related settings.
  */
 #if !defined(STM32_LSECLK)
@@ -558,6 +566,42 @@
 #define PIN_PUPDR_PULLDOWN(n)       (2U << ((n) * 2U))
 #define PIN_AFIO_AF(n, v)           ((v) << (((n) % 8U) * 4U))
 
+#define VAL_GPIO_MODER_ALL_DEFAULT  (EFI_PIN_MODE_DEFAULT(0) |           \
+                                     EFI_PIN_MODE_DEFAULT(1) |           \
+                                     EFI_PIN_MODE_DEFAULT(2) |           \
+                                     EFI_PIN_MODE_DEFAULT(3) |           \
+                                     EFI_PIN_MODE_DEFAULT(4) |         \
+                                     EFI_PIN_MODE_DEFAULT(5) |   \
+                                     EFI_PIN_MODE_DEFAULT(6) |           \
+                                     EFI_PIN_MODE_DEFAULT(7) |           \
+                                     EFI_PIN_MODE_DEFAULT(8) |           \
+                                     EFI_PIN_MODE_DEFAULT(9) |           \
+                                     EFI_PIN_MODE_DEFAULT(10) |          \
+                                     EFI_PIN_MODE_DEFAULT(11) |          \
+                                     EFI_PIN_MODE_DEFAULT(12) |          \
+                                     EFI_PIN_MODE_DEFAULT(13) |          \
+                                     EFI_PIN_MODE_DEFAULT(14) |          \
+                                     EFI_PIN_MODE_DEFAULT(15))
+
+#define VAL_GPIO_OTYPER_ALL_DEFAULT (PIN_OTYPE_PUSHPULL(0) |   \
+                                     PIN_OTYPE_PUSHPULL(1) |   \
+                                     PIN_OTYPE_PUSHPULL(2) |   \
+                                     PIN_OTYPE_PUSHPULL(3) |   \
+                                     PIN_OTYPE_PUSHPULL(4) |   \
+                                     PIN_OTYPE_PUSHPULL(5) |   \
+                                     PIN_OTYPE_PUSHPULL(6) |   \
+                                     PIN_OTYPE_PUSHPULL(7) |   \
+                                     PIN_OTYPE_PUSHPULL(8) |   \
+                                     PIN_OTYPE_PUSHPULL(9) |   \
+                                     PIN_OTYPE_PUSHPULL(10) |  \
+                                     PIN_OTYPE_PUSHPULL(11) |  \
+                                     PIN_OTYPE_PUSHPULL(12) |  \
+                                     PIN_OTYPE_PUSHPULL(13) |  \
+                                     PIN_OTYPE_PUSHPULL(14) |  \
+                                     PIN_OTYPE_PUSHPULL(15))
+
+#define DEFAULT_GPIO_SPEED PIN_OSPEED_HIGH
+
 /*
  * GPIOA setup:
  *
@@ -578,13 +622,13 @@
  * PA14 - SWCLK                     (alternate 0).
  * PA15 - ZIO_D20 I2S3_WS           (input pullup).
  */
-#define VAL_GPIOA_MODER             (PIN_MODE_INPUT(GPIOA_ZIO_D32) |        \
+#define VAL_GPIOA_MODER             (EFI_PIN_MODE_DEFAULT(GPIOA_ZIO_D32) |        \
                                      PIN_MODE_ALTERNATE(GPIOA_RMII_REF_CLK) |\
                                      PIN_MODE_ALTERNATE(GPIOA_RMII_MDIO) |  \
-                                     PIN_MODE_INPUT(GPIOA_ARD_A0) |         \
-                                     PIN_MODE_INPUT(GPIOA_ZIO_D24) |        \
-                                     PIN_MODE_INPUT(GPIOA_ARD_D13) |        \
-                                     PIN_MODE_INPUT(GPIOA_ARD_D12) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOA_ARD_A0) |         \
+                                     EFI_PIN_MODE_DEFAULT(GPIOA_ZIO_D24) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOA_ARD_D13) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOA_ARD_D12) |        \
                                      PIN_MODE_ALTERNATE(GPIOA_ARD_D11) |    \
                                      PIN_MODE_ALTERNATE(GPIOA_USB_SOF) |    \
                                      PIN_MODE_ANALOG(GPIOA_USB_VBUS) |      \
@@ -593,7 +637,7 @@
                                      PIN_MODE_ALTERNATE(GPIOA_PIN12) |     \
                                      PIN_MODE_ALTERNATE(GPIOA_SWDIO) |      \
                                      PIN_MODE_ALTERNATE(GPIOA_SWCLK) |      \
-                                     PIN_MODE_INPUT(GPIOA_ZIO_D20))
+                                     EFI_PIN_MODE_DEFAULT(GPIOA_ZIO_D20))
 #define VAL_GPIOA_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOA_ZIO_D32) |    \
                                      PIN_OTYPE_PUSHPULL(GPIOA_RMII_REF_CLK) |\
                                      PIN_OTYPE_PUSHPULL(GPIOA_RMII_MDIO) |  \
@@ -696,21 +740,21 @@
  * PB15 - ZIO_D17 I2S2_SD           (input pullup).
  */
 #define VAL_GPIOB_MODER             (PIN_MODE_OUTPUT(GPIOB_ZIO_D33) |       \
-                                     PIN_MODE_INPUT(GPIOB_ZIO_A6) |         \
-                                     PIN_MODE_INPUT(GPIOB_ZIO_D27) |        \
-                                     PIN_MODE_INPUT(GPIOB_ZIO_D23) |        \
-                                     PIN_MODE_INPUT(GPIOB_ZIO_D25) |        \
-                                     PIN_MODE_INPUT(GPIOB_ZIO_D22) |        \
-                                     PIN_MODE_INPUT(GPIOB_ZIO_D26) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOB_ZIO_A6) |         \
+                                     EFI_PIN_MODE_DEFAULT(GPIOB_ZIO_D27) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOB_ZIO_D23) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOB_ZIO_D25) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOB_ZIO_D22) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOB_ZIO_D26) |        \
                                      PIN_MODE_OUTPUT(GPIOB_LED2) |          \
-                                     PIN_MODE_INPUT(GPIOB_ARD_D15) |        \
-                                     PIN_MODE_INPUT(GPIOB_ARD_D14) |        \
-                                     PIN_MODE_INPUT(GPIOB_ZIO_D36) |        \
-                                     PIN_MODE_INPUT(GPIOB_ZIO_D35) |        \
-                                     PIN_MODE_INPUT(GPIOB_ZIO_D19) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOB_ARD_D15) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOB_ARD_D14) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOB_ZIO_D36) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOB_ZIO_D35) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOB_ZIO_D19) |        \
                                      PIN_MODE_ALTERNATE(GPIOB_ZIO_D18) |    \
                                      PIN_MODE_OUTPUT(GPIOB_LED3) |          \
-                                     PIN_MODE_INPUT(GPIOB_ZIO_D17))
+                                     EFI_PIN_MODE_DEFAULT(GPIOB_ZIO_D17))
 #define VAL_GPIOB_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOB_ZIO_D33) |    \
                                      PIN_OTYPE_PUSHPULL(GPIOB_ZIO_A6) |     \
                                      PIN_OTYPE_PUSHPULL(GPIOB_ZIO_D27) |    \
@@ -812,22 +856,22 @@
  * PC14 - OSC32_IN                  (input floating).
  * PC15 - OSC32_OUT                 (input floating).
  */
-#define VAL_GPIOC_MODER             (PIN_MODE_INPUT(GPIOC_ARD_A1) |         \
+#define VAL_GPIOC_MODER             (EFI_PIN_MODE_DEFAULT(GPIOC_ARD_A1) |         \
                                      PIN_MODE_ALTERNATE(GPIOC_RMII_MDC) |   \
-                                     PIN_MODE_INPUT(GPIOC_ZIO_A7) |         \
-                                     PIN_MODE_INPUT(GPIOC_ARD_A2) |         \
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_ZIO_A7) |         \
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_ARD_A2) |         \
                                      PIN_MODE_ALTERNATE(GPIOC_RMII_RXD0) |  \
                                      PIN_MODE_ALTERNATE(GPIOC_RMII_RXD1) |  \
-                                     PIN_MODE_INPUT(GPIOC_ZIO_D16) |        \
-                                     PIN_MODE_INPUT(GPIOC_ZIO_D21) |        \
-                                     PIN_MODE_INPUT(GPIOC_ZIO_D43) |        \
-                                     PIN_MODE_INPUT(GPIOC_ZIO_D44) |        \
-                                     PIN_MODE_INPUT(GPIOC_ZIO_D45) |        \
-                                     PIN_MODE_INPUT(GPIOC_ZIO_D46) |        \
-                                     PIN_MODE_INPUT(GPIOC_ZIO_D47) |        \
-                                     PIN_MODE_INPUT(GPIOC_BUTTON) |         \
-                                     PIN_MODE_INPUT(GPIOC_OSC32_IN) |       \
-                                     PIN_MODE_INPUT(GPIOC_OSC32_OUT))
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_ZIO_D16) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_ZIO_D21) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_ZIO_D43) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_ZIO_D44) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_ZIO_D45) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_ZIO_D46) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_ZIO_D47) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_BUTTON) |         \
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_OSC32_IN) |       \
+                                     EFI_PIN_MODE_DEFAULT(GPIOC_OSC32_OUT))
 #define VAL_GPIOC_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOC_ARD_A1) |     \
                                      PIN_OTYPE_PUSHPULL(GPIOC_RMII_MDC) |   \
                                      PIN_OTYPE_PUSHPULL(GPIOC_ZIO_A7) |     \
@@ -911,56 +955,11 @@
 
 /*
  * GPIOD setup:
- *
- * PD0  - ZIO_D67 CAN1_RX           (input pullup).
- * PD1  - ZIO_D66 CAN1_TX           (input pullup).
- * PD2  - ZIO_D48 SDMMC_CMD         (input pullup).
- * PD3  - ZIO_D55 USART2_CTS        (input pullup).
- * PD4  - ZIO_D54 USART2_RTS        (input pullup).
- * PD5  - ZIO_D53 USART2_TX         (input pullup).
- * PD6  - ZIO_D52 USART2_RX         (input pullup).
- * PD7  - ZIO_D51 USART2_SCLK       (input pullup).
- * PD8  - USART3_RX STLK_RX         (alternate 7).
- * PD9  - USART3_TX STLK_TX         (alternate 7).
- * PD10 - PIN10                     (input pullup).
- * PD11 - ZIO_D30 QSPI_BK1_IO0      (input pullup).
- * PD12 - ZIO_D29 QSPI_BK1_IO1      (input pullup).
- * PD13 - ZIO_D28 QSPI_BK1_IO3      (input pullup).
- * PD14 - ARD_D10 SPI1_NSS          (input pullup).
- * PD15 - ARD_D9 TIM4_CH4           (input pullup).
  */
-#define VAL_GPIOD_MODER             (PIN_MODE_INPUT(GPIOD_ZIO_D67) |        \
-                                     PIN_MODE_INPUT(GPIOD_ZIO_D66) |        \
-                                     PIN_MODE_INPUT(GPIOD_ZIO_D48) |        \
-                                     PIN_MODE_INPUT(GPIOD_ZIO_D55) |        \
-                                     PIN_MODE_INPUT(GPIOD_ZIO_D54) |        \
-                                     PIN_MODE_INPUT(GPIOD_ZIO_D53) |        \
-                                     PIN_MODE_INPUT(GPIOD_ZIO_D52) |        \
-                                     PIN_MODE_INPUT(GPIOD_ZIO_D51) |        \
-                                     PIN_MODE_ALTERNATE(GPIOD_USART3_RX) |  \
-                                     PIN_MODE_ALTERNATE(GPIOD_USART3_TX) |  \
-                                     PIN_MODE_INPUT(GPIOD_PIN10) |          \
-                                     PIN_MODE_INPUT(GPIOD_ZIO_D30) |        \
-                                     PIN_MODE_INPUT(GPIOD_ZIO_D29) |        \
-                                     PIN_MODE_INPUT(GPIOD_ZIO_D28) |        \
-                                     PIN_MODE_INPUT(GPIOD_ARD_D10) |        \
-                                     PIN_MODE_INPUT(GPIOD_ARD_D9))
-#define VAL_GPIOD_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOD_ZIO_D67) |    \
-                                     PIN_OTYPE_PUSHPULL(GPIOD_ZIO_D66) |    \
-                                     PIN_OTYPE_PUSHPULL(GPIOD_ZIO_D48) |    \
-                                     PIN_OTYPE_PUSHPULL(GPIOD_ZIO_D55) |    \
-                                     PIN_OTYPE_PUSHPULL(GPIOD_ZIO_D54) |    \
-                                     PIN_OTYPE_PUSHPULL(GPIOD_ZIO_D53) |    \
-                                     PIN_OTYPE_PUSHPULL(GPIOD_ZIO_D52) |    \
-                                     PIN_OTYPE_PUSHPULL(GPIOD_ZIO_D51) |    \
-                                     PIN_OTYPE_PUSHPULL(GPIOD_USART3_RX) |  \
-                                     PIN_OTYPE_PUSHPULL(GPIOD_USART3_TX) |  \
-                                     PIN_OTYPE_PUSHPULL(GPIOD_PIN10) |      \
-                                     PIN_OTYPE_PUSHPULL(GPIOD_ZIO_D30) |    \
-                                     PIN_OTYPE_PUSHPULL(GPIOD_ZIO_D29) |    \
-                                     PIN_OTYPE_PUSHPULL(GPIOD_ZIO_D28) |    \
-                                     PIN_OTYPE_PUSHPULL(GPIOD_ARD_D10) |    \
-                                     PIN_OTYPE_PUSHPULL(GPIOD_ARD_D9))
+#define VAL_GPIOD_MODER             VAL_GPIO_MODER_ALL_DEFAULT
+
+#define VAL_GPIOD_OTYPER            VAL_GPIO_OTYPER_ALL_DEFAULT
+
 #define VAL_GPIOD_OSPEEDR           (PIN_OSPEED_HIGH(GPIOD_ZIO_D67) |       \
                                      PIN_OSPEED_HIGH(GPIOD_ZIO_D66) |       \
                                      PIN_OSPEED_HIGH(GPIOD_ZIO_D48) |       \
@@ -1046,22 +1045,22 @@
  * PE14 - ZIO_D38                   (input pullup).
  * PE15 - ZIO_D37 TIM1_BKIN1        (input pullup).
  */
-#define VAL_GPIOE_MODER             (PIN_MODE_INPUT(GPIOE_ZIO_D34) |        \
-                                     PIN_MODE_INPUT(GPIOE_PIN1) |           \
-                                     PIN_MODE_INPUT(GPIOE_ZIO_D31) |        \
-                                     PIN_MODE_INPUT(GPIOE_ZIO_D60) |        \
-                                     PIN_MODE_INPUT(GPIOE_ZIO_D57) |        \
-                                     PIN_MODE_INPUT(GPIOE_ZIO_D58) |        \
-                                     PIN_MODE_INPUT(GPIOE_ZIO_D59) |        \
-                                     PIN_MODE_INPUT(GPIOE_ZIO_D41) |        \
-                                     PIN_MODE_INPUT(GPIOE_ZIO_D42) |        \
-                                     PIN_MODE_INPUT(GPIOE_ARD_D6) |         \
-                                     PIN_MODE_INPUT(GPIOE_ZIO_D40) |        \
-                                     PIN_MODE_INPUT(GPIOE_ARD_D5) |         \
-                                     PIN_MODE_INPUT(GPIOE_ZIO_D39) |        \
-                                     PIN_MODE_INPUT(GPIOE_ARD_D3) |         \
-                                     PIN_MODE_INPUT(GPIOE_ZIO_D38) |        \
-                                     PIN_MODE_INPUT(GPIOE_ZIO_D37))
+#define VAL_GPIOE_MODER             (EFI_PIN_MODE_DEFAULT(GPIOE_ZIO_D34) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_PIN1) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_ZIO_D31) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_ZIO_D60) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_ZIO_D57) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_ZIO_D58) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_ZIO_D59) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_ZIO_D41) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_ZIO_D42) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_ARD_D6) |         \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_ZIO_D40) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_ARD_D5) |         \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_ZIO_D39) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_ARD_D3) |         \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_ZIO_D38) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOE_ZIO_D37))
 #define VAL_GPIOE_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOE_ZIO_D34) |    \
                                      PIN_OTYPE_PUSHPULL(GPIOE_PIN1) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOE_ZIO_D31) |    \
@@ -1163,22 +1162,22 @@
  * PF14 - ARD_D4                    (input pullup).
  * PF15 - ARD_D2                    (input pullup).
  */
-#define VAL_GPIOF_MODER             (PIN_MODE_INPUT(GPIOF_ZIO_D68) |        \
-                                     PIN_MODE_INPUT(GPIOF_ZIO_D69) |        \
-                                     PIN_MODE_INPUT(GPIOF_ZIO_D70) |        \
-                                     PIN_MODE_INPUT(GPIOF_ARD_A3) |         \
-                                     PIN_MODE_INPUT(GPIOF_ZIO_A8) |         \
-                                     PIN_MODE_INPUT(GPIOF_ARD_A4) |         \
-                                     PIN_MODE_INPUT(GPIOF_PIN6) |           \
-                                     PIN_MODE_INPUT(GPIOF_ZIO_D62) |        \
-                                     PIN_MODE_INPUT(GPIOF_ZIO_D61) |        \
-                                     PIN_MODE_INPUT(GPIOF_ZIO_D63) |        \
-                                     PIN_MODE_INPUT(GPIOF_ARD_A5) |         \
-                                     PIN_MODE_INPUT(GPIOF_PIN11) |          \
-                                     PIN_MODE_INPUT(GPIOF_ARD_D8) |         \
-                                     PIN_MODE_INPUT(GPIOF_ARD_D7) |         \
-                                     PIN_MODE_INPUT(GPIOF_ARD_D4) |         \
-                                     PIN_MODE_INPUT(GPIOF_ARD_D2))
+#define VAL_GPIOF_MODER             (EFI_PIN_MODE_DEFAULT(GPIOF_ZIO_D68) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_ZIO_D69) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_ZIO_D70) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_ARD_A3) |         \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_ZIO_A8) |         \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_ARD_A4) |         \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_PIN6) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_ZIO_D62) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_ZIO_D61) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_ZIO_D63) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_ARD_A5) |         \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_PIN11) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_ARD_D8) |         \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_ARD_D7) |         \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_ARD_D4) |         \
+                                     EFI_PIN_MODE_DEFAULT(GPIOF_ARD_D2))
 #define VAL_GPIOF_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOF_ZIO_D68) |    \
                                      PIN_OTYPE_PUSHPULL(GPIOF_ZIO_D69) |    \
                                      PIN_OTYPE_PUSHPULL(GPIOF_ZIO_D70) |    \
@@ -1280,22 +1279,22 @@
  * PG14 - ARD_D1 USART6_TX          (input pullup).
  * PG15 - PIN15                     (input pullup).
  */
-#define VAL_GPIOG_MODER             (PIN_MODE_INPUT(GPIOG_ZIO_D65) |        \
-                                     PIN_MODE_INPUT(GPIOG_ZIO_D64) |        \
-                                     PIN_MODE_INPUT(GPIOG_ZIO_D49) |        \
-                                     PIN_MODE_INPUT(GPIOG_ZIO_D50) |        \
-                                     PIN_MODE_INPUT(GPIOG_PIN4) |           \
-                                     PIN_MODE_INPUT(GPIOG_PIN5) |           \
-                                     PIN_MODE_INPUT(GPIOG_USB_GPIO_OUT) |   \
-                                     PIN_MODE_INPUT(GPIOG_USB_GPIO_IN) |    \
-                                     PIN_MODE_INPUT(GPIOG_PIN8) |           \
-                                     PIN_MODE_INPUT(GPIOG_ARD_D0) |         \
-                                     PIN_MODE_INPUT(GPIOG_PIN10) |          \
+#define VAL_GPIOG_MODER             (EFI_PIN_MODE_DEFAULT(GPIOG_ZIO_D65) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_ZIO_D64) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_ZIO_D49) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_ZIO_D50) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_PIN4) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_PIN5) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_USB_GPIO_OUT) |   \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_USB_GPIO_IN) |    \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_PIN8) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_ARD_D0) |         \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_PIN10) |          \
                                      PIN_MODE_ALTERNATE(GPIOG_RMII_TX_EN) | \
-                                     PIN_MODE_INPUT(GPIOG_PIN12) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_PIN12) |          \
                                      PIN_MODE_ALTERNATE(GPIOG_RMII_TXD0) |  \
-                                     PIN_MODE_INPUT(GPIOG_ARD_D1) |         \
-                                     PIN_MODE_INPUT(GPIOG_PIN15))
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_ARD_D1) |         \
+                                     EFI_PIN_MODE_DEFAULT(GPIOG_PIN15))
 #define VAL_GPIOG_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOG_ZIO_D65) |    \
                                      PIN_OTYPE_PUSHPULL(GPIOG_ZIO_D64) |    \
                                      PIN_OTYPE_PUSHPULL(GPIOG_ZIO_D49) |    \
@@ -1397,22 +1396,22 @@
  * PH14 - PIN14                     (input pullup).
  * PH15 - PIN15                     (input pullup).
  */
-#define VAL_GPIOH_MODER             (PIN_MODE_INPUT(GPIOH_OSC_IN) |         \
-                                     PIN_MODE_INPUT(GPIOH_OSC_OUT) |        \
-                                     PIN_MODE_INPUT(GPIOH_PIN2) |           \
-                                     PIN_MODE_INPUT(GPIOH_PIN3) |           \
-                                     PIN_MODE_INPUT(GPIOH_PIN4) |           \
-                                     PIN_MODE_INPUT(GPIOH_PIN5) |           \
-                                     PIN_MODE_INPUT(GPIOH_PIN6) |           \
-                                     PIN_MODE_INPUT(GPIOH_PIN7) |           \
-                                     PIN_MODE_INPUT(GPIOH_PIN8) |           \
-                                     PIN_MODE_INPUT(GPIOH_PIN9) |           \
-                                     PIN_MODE_INPUT(GPIOH_PIN10) |          \
-                                     PIN_MODE_INPUT(GPIOH_PIN11) |          \
-                                     PIN_MODE_INPUT(GPIOH_PIN12) |          \
-                                     PIN_MODE_INPUT(GPIOH_PIN13) |          \
-                                     PIN_MODE_INPUT(GPIOH_PIN14) |          \
-                                     PIN_MODE_INPUT(GPIOH_PIN15))
+#define VAL_GPIOH_MODER             (EFI_PIN_MODE_DEFAULT(GPIOH_OSC_IN) |         \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_OSC_OUT) |        \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN2) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN3) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN4) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN5) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN6) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN7) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN8) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN9) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN10) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN11) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN12) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN13) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN14) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOH_PIN15))
 #define VAL_GPIOH_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOH_OSC_IN) |     \
                                      PIN_OTYPE_PUSHPULL(GPIOH_OSC_OUT) |    \
                                      PIN_OTYPE_PUSHPULL(GPIOH_PIN2) |       \
@@ -1514,22 +1513,22 @@
  * PI14 - PIN14                     (input pullup).
  * PI15 - PIN15                     (input pullup).
  */
-#define VAL_GPIOI_MODER             (PIN_MODE_INPUT(GPIOI_PIN0) |           \
-                                     PIN_MODE_INPUT(GPIOI_PIN1) |           \
-                                     PIN_MODE_INPUT(GPIOI_PIN2) |           \
-                                     PIN_MODE_INPUT(GPIOI_PIN3) |           \
-                                     PIN_MODE_INPUT(GPIOI_PIN4) |           \
-                                     PIN_MODE_INPUT(GPIOI_PIN5) |           \
-                                     PIN_MODE_INPUT(GPIOI_PIN6) |           \
-                                     PIN_MODE_INPUT(GPIOI_PIN7) |           \
-                                     PIN_MODE_INPUT(GPIOI_PIN8) |           \
-                                     PIN_MODE_INPUT(GPIOI_PIN9) |           \
-                                     PIN_MODE_INPUT(GPIOI_PIN10) |          \
-                                     PIN_MODE_INPUT(GPIOI_PIN11) |          \
-                                     PIN_MODE_INPUT(GPIOI_PIN12) |          \
-                                     PIN_MODE_INPUT(GPIOI_PIN13) |          \
-                                     PIN_MODE_INPUT(GPIOI_PIN14) |          \
-                                     PIN_MODE_INPUT(GPIOI_PIN15))
+#define VAL_GPIOI_MODER             (EFI_PIN_MODE_DEFAULT(GPIOI_PIN0) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN1) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN2) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN3) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN4) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN5) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN6) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN7) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN8) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN9) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN10) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN11) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN12) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN13) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN14) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOI_PIN15))
 #define VAL_GPIOI_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOI_PIN0) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOI_PIN1) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOI_PIN2) |       \
@@ -1631,22 +1630,22 @@
  * PJ14 - PIN14                     (input pullup).
  * PJ15 - PIN15                     (input pullup).
  */
-#define VAL_GPIOJ_MODER             (PIN_MODE_INPUT(GPIOJ_PIN0) |           \
-                                     PIN_MODE_INPUT(GPIOJ_PIN1) |           \
-                                     PIN_MODE_INPUT(GPIOJ_PIN2) |           \
-                                     PIN_MODE_INPUT(GPIOJ_PIN3) |           \
-                                     PIN_MODE_INPUT(GPIOJ_PIN4) |           \
-                                     PIN_MODE_INPUT(GPIOJ_PIN5) |           \
-                                     PIN_MODE_INPUT(GPIOJ_PIN6) |           \
-                                     PIN_MODE_INPUT(GPIOJ_PIN7) |           \
-                                     PIN_MODE_INPUT(GPIOJ_PIN8) |           \
-                                     PIN_MODE_INPUT(GPIOJ_PIN9) |           \
-                                     PIN_MODE_INPUT(GPIOJ_PIN10) |          \
-                                     PIN_MODE_INPUT(GPIOJ_PIN11) |          \
-                                     PIN_MODE_INPUT(GPIOJ_PIN12) |          \
-                                     PIN_MODE_INPUT(GPIOJ_PIN13) |          \
-                                     PIN_MODE_INPUT(GPIOJ_PIN14) |          \
-                                     PIN_MODE_INPUT(GPIOJ_PIN15))
+#define VAL_GPIOJ_MODER             (EFI_PIN_MODE_DEFAULT(GPIOJ_PIN0) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOJ_PIN1) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOJ_PIN2) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOJ_PIN3) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOJ_PIN4) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOJ_PIN5) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOJ_PIN6) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOJ_PIN7) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOJ_PIN8) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOJ_PIN9) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOJ_PIN10) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOJ_PIN11) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOJ_PIN12) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOJ_PIN13) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOJ_PIN14) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOJ_PIN15))
 #define VAL_GPIOJ_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOJ_PIN0) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOJ_PIN1) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOJ_PIN2) |       \
@@ -1748,22 +1747,22 @@
  * PK14 - PIN14                     (input pullup).
  * PK15 - PIN15                     (input pullup).
  */
-#define VAL_GPIOK_MODER             (PIN_MODE_INPUT(GPIOK_PIN0) |           \
-                                     PIN_MODE_INPUT(GPIOK_PIN1) |           \
-                                     PIN_MODE_INPUT(GPIOK_PIN2) |           \
-                                     PIN_MODE_INPUT(GPIOK_PIN3) |           \
-                                     PIN_MODE_INPUT(GPIOK_PIN4) |           \
-                                     PIN_MODE_INPUT(GPIOK_PIN5) |           \
-                                     PIN_MODE_INPUT(GPIOK_PIN6) |           \
-                                     PIN_MODE_INPUT(GPIOK_PIN7) |           \
-                                     PIN_MODE_INPUT(GPIOK_PIN8) |           \
-                                     PIN_MODE_INPUT(GPIOK_PIN9) |           \
-                                     PIN_MODE_INPUT(GPIOK_PIN10) |          \
-                                     PIN_MODE_INPUT(GPIOK_PIN11) |          \
-                                     PIN_MODE_INPUT(GPIOK_PIN12) |          \
-                                     PIN_MODE_INPUT(GPIOK_PIN13) |          \
-                                     PIN_MODE_INPUT(GPIOK_PIN14) |          \
-                                     PIN_MODE_INPUT(GPIOK_PIN15))
+#define VAL_GPIOK_MODER             (EFI_PIN_MODE_DEFAULT(GPIOK_PIN0) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOK_PIN1) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOK_PIN2) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOK_PIN3) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOK_PIN4) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOK_PIN5) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOK_PIN6) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOK_PIN7) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOK_PIN8) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOK_PIN9) |           \
+                                     EFI_PIN_MODE_DEFAULT(GPIOK_PIN10) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOK_PIN11) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOK_PIN12) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOK_PIN13) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOK_PIN14) |          \
+                                     EFI_PIN_MODE_DEFAULT(GPIOK_PIN15))
 #define VAL_GPIOK_OTYPER            (PIN_OTYPE_PUSHPULL(GPIOK_PIN0) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOK_PIN1) |       \
                                      PIN_OTYPE_PUSHPULL(GPIOK_PIN2) |       \
