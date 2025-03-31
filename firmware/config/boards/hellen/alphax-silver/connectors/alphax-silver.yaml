@@ -192,12 +192,20 @@ pins:
     type: gnd
     color: black
 
-  - pin: 28A
+  - pin: 28A_a
     id: TLE9104_1_OUT_3
-    function: Fan Relay
+    function: Fan Relay rev A
     class: outputs
     type: ls
     ts_name: ___ Fan Relay
+    color: blue
+
+  - pin: 28A
+#    id: TLE9104_1_OUT_3
+    function: Analog Input TBD
+#    class: outputs
+#    type: ls
+#    ts_name: ___ Fan Relay
     color: blue
 
   - pin: 29A
