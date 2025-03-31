@@ -733,6 +733,7 @@ static const LogField fields[] = {
 	{engine->engineState, 48, 7, "luaDigitalState3", ""},
 	{engine->engineState, 48, 8, "Clutch: down", ""},
 	{engine->engineState.startStopStateToggleCounter, "startStopStateToggleCounter", "", 0},
+	{engine->engineState.currentVe, "currentVe", "", 0},
 	{engine->engineState.luaSoftSparkSkip, "luaSoftSparkSkip", "", 0},
 	{engine->engineState.luaHardSparkSkip, "luaHardSparkSkip", "", 0},
 	{engine->engineState.tractionControlSparkSkip, "tractionControlSparkSkip", "", 0},

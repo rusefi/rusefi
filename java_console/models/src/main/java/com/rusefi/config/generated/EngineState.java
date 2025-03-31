@@ -43,18 +43,19 @@ public class EngineState {
 	public static final Field LUADIGITALSTATE3 = Field.create("LUADIGITALSTATE3", 48, FieldType.BIT, 7).setBaseOffset(1252);
 	public static final Field CLUTCHDOWNSTATE = Field.create("CLUTCHDOWNSTATE", 48, FieldType.BIT, 8).setBaseOffset(1252);
 	public static final Field STARTSTOPSTATETOGGLECOUNTER = Field.create("STARTSTOPSTATETOGGLECOUNTER", 52, FieldType.INT).setScale(1.0).setBaseOffset(1252);
-	public static final Field LUASOFTSPARKSKIP = Field.create("LUASOFTSPARKSKIP", 56, FieldType.FLOAT).setBaseOffset(1252);
-	public static final Field LUAHARDSPARKSKIP = Field.create("LUAHARDSPARKSKIP", 60, FieldType.FLOAT).setBaseOffset(1252);
-	public static final Field TRACTIONCONTROLSPARKSKIP = Field.create("TRACTIONCONTROLSPARKSKIP", 64, FieldType.FLOAT).setBaseOffset(1252);
-	public static final Field FUELINJECTIONCOUNTER = Field.create("FUELINJECTIONCOUNTER", 68, FieldType.INT).setScale(1.0).setBaseOffset(1252);
-	public static final Field GLOBALSPARKCOUNTER = Field.create("GLOBALSPARKCOUNTER", 72, FieldType.INT).setScale(1.0).setBaseOffset(1252);
-	public static final Field FUELINGLOAD = Field.create("FUELINGLOAD", 76, FieldType.FLOAT).setBaseOffset(1252);
-	public static final Field IGNITIONLOAD = Field.create("IGNITIONLOAD", 80, FieldType.FLOAT).setBaseOffset(1252);
-	public static final Field VETABLEYAXIS = Field.create("VETABLEYAXIS", 84, FieldType.INT16).setScale(0.01).setBaseOffset(1252);
-	public static final Field OVERDWELLCOUNTER = Field.create("OVERDWELLCOUNTER", 86, FieldType.INT8).setScale(1.0).setBaseOffset(1252);
-	public static final Field OVERDWELLNOTSCHEDULEDCOUNTER = Field.create("OVERDWELLNOTSCHEDULEDCOUNTER", 87, FieldType.INT8).setScale(1.0).setBaseOffset(1252);
-	public static final Field SPARKOUTOFORDERCOUNTER = Field.create("SPARKOUTOFORDERCOUNTER", 88, FieldType.INT8).setScale(1.0).setBaseOffset(1252);
-	public static final Field ALIGNMENTFILL_AT_89 = Field.create("ALIGNMENTFILL_AT_89", 89, FieldType.INT8).setScale(1.0).setBaseOffset(1252);
+	public static final Field CURRENTVE = Field.create("CURRENTVE", 56, FieldType.FLOAT).setBaseOffset(1252);
+	public static final Field LUASOFTSPARKSKIP = Field.create("LUASOFTSPARKSKIP", 60, FieldType.FLOAT).setBaseOffset(1252);
+	public static final Field LUAHARDSPARKSKIP = Field.create("LUAHARDSPARKSKIP", 64, FieldType.FLOAT).setBaseOffset(1252);
+	public static final Field TRACTIONCONTROLSPARKSKIP = Field.create("TRACTIONCONTROLSPARKSKIP", 68, FieldType.FLOAT).setBaseOffset(1252);
+	public static final Field FUELINJECTIONCOUNTER = Field.create("FUELINJECTIONCOUNTER", 72, FieldType.INT).setScale(1.0).setBaseOffset(1252);
+	public static final Field GLOBALSPARKCOUNTER = Field.create("GLOBALSPARKCOUNTER", 76, FieldType.INT).setScale(1.0).setBaseOffset(1252);
+	public static final Field FUELINGLOAD = Field.create("FUELINGLOAD", 80, FieldType.FLOAT).setBaseOffset(1252);
+	public static final Field IGNITIONLOAD = Field.create("IGNITIONLOAD", 84, FieldType.FLOAT).setBaseOffset(1252);
+	public static final Field VETABLEYAXIS = Field.create("VETABLEYAXIS", 88, FieldType.INT16).setScale(0.01).setBaseOffset(1252);
+	public static final Field OVERDWELLCOUNTER = Field.create("OVERDWELLCOUNTER", 90, FieldType.INT8).setScale(1.0).setBaseOffset(1252);
+	public static final Field OVERDWELLNOTSCHEDULEDCOUNTER = Field.create("OVERDWELLNOTSCHEDULEDCOUNTER", 91, FieldType.INT8).setScale(1.0).setBaseOffset(1252);
+	public static final Field SPARKOUTOFORDERCOUNTER = Field.create("SPARKOUTOFORDERCOUNTER", 92, FieldType.INT8).setScale(1.0).setBaseOffset(1252);
+	public static final Field ALIGNMENTFILL_AT_93 = Field.create("ALIGNMENTFILL_AT_93", 93, FieldType.INT8).setScale(1.0).setBaseOffset(1252);
 	public static final Field[] VALUES = {
 	LUA_FUELADD,
 	LUA_FUELMULT,
@@ -93,6 +94,7 @@ public class EngineState {
 	LUADIGITALSTATE3,
 	CLUTCHDOWNSTATE,
 	STARTSTOPSTATETOGGLECOUNTER,
+	CURRENTVE,
 	LUASOFTSPARKSKIP,
 	LUAHARDSPARKSKIP,
 	TRACTIONCONTROLSPARKSKIP,
@@ -104,6 +106,6 @@ public class EngineState {
 	OVERDWELLCOUNTER,
 	OVERDWELLNOTSCHEDULEDCOUNTER,
 	SPARKOUTOFORDERCOUNTER,
-	ALIGNMENTFILL_AT_89,
+	ALIGNMENTFILL_AT_93,
 	};
 }

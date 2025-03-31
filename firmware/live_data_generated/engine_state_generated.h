@@ -325,60 +325,64 @@ struct engine_state_s {
 	/**
 	 * offset 56
 	 */
-	float luaSoftSparkSkip = (float)0;
+	float currentVe = (float)0;
 	/**
 	 * offset 60
 	 */
-	float luaHardSparkSkip = (float)0;
+	float luaSoftSparkSkip = (float)0;
 	/**
 	 * offset 64
+	 */
+	float luaHardSparkSkip = (float)0;
+	/**
+	 * offset 68
 	 */
 	float tractionControlSparkSkip = (float)0;
 	/**
 	 * Fuel: Injection counter
-	 * offset 68
+	 * offset 72
 	 */
 	uint32_t fuelInjectionCounter = (uint32_t)0;
 	/**
 	 * Ign: Spark counter
-	 * offset 72
+	 * offset 76
 	 */
 	uint32_t globalSparkCounter = (uint32_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_LOAD@@
-	 * offset 76
+	 * offset 80
 	 */
 	float fuelingLoad = (float)0;
 	/**
 	 * @@GAUGE_NAME_IGNITION_LOAD@@
-	 * offset 80
+	 * offset 84
 	 */
 	float ignitionLoad = (float)0;
 	/**
 	 * units: %
-	 * offset 84
+	 * offset 88
 	 */
 	scaled_channel<uint16_t, 100, 1> veTableYAxis = (uint16_t)0;
 	/**
-	 * offset 86
+	 * offset 90
 	 */
 	uint8_t overDwellCounter = (uint8_t)0;
 	/**
-	 * offset 87
+	 * offset 91
 	 */
 	uint8_t overDwellNotScheduledCounter = (uint8_t)0;
 	/**
-	 * offset 88
+	 * offset 92
 	 */
 	uint8_t sparkOutOfOrderCounter = (uint8_t)0;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 89
+	 * offset 93
 	 */
-	uint8_t alignmentFill_at_89[3] = {};
+	uint8_t alignmentFill_at_93[3] = {};
 };
-static_assert(sizeof(engine_state_s) == 92);
+static_assert(sizeof(engine_state_s) == 96);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt

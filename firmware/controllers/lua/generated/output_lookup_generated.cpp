@@ -1516,6 +1516,9 @@ float getOutputValueByName(const char *name) {
 // startStopStateToggleCounter
 		case -960645892:
 			return engine->engineState.startStopStateToggleCounter;
+// currentVe
+		case 1359980579:
+			return engine->engineState.currentVe;
 // luaSoftSparkSkip
 		case -1117430949:
 			return engine->engineState.luaSoftSparkSkip;
