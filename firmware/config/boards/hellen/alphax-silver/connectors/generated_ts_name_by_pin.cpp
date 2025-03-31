@@ -23,7 +23,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::TLE9104_1_OUT_0: return "14A Tach Output";
 		case Gpio::TLE9104_1_OUT_1: return "5A Fuel Pump Relay";
 		case Gpio::TLE9104_1_OUT_2: return "6A Idle Output";
-		case Gpio::TLE9104_1_OUT_3: return "28A Fan Relay";
+		case Gpio::TLE9104_1_OUT_3: return "28A_a Fan Relay";
 		default: return nullptr;
 	}
 	return nullptr;

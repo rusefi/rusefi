@@ -11,7 +11,7 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::TLE9104_1_OUT_1, // 5A Fuel Pump Relay
 	Gpio::TLE9104_1_OUT_2, // 6A Idle Output
 	Gpio::TLE9104_1_OUT_0, // 14A Tach Output
-	Gpio::TLE9104_1_OUT_3, // 28A Fan Relay
+	Gpio::TLE9104_1_OUT_3, // 28A_a Fan Relay
 	Gpio::MM100_IGN4, // 10A Coil 4
 	Gpio::MM100_IGN3, // 11A Coil 3
 	Gpio::MM100_IGN2, // 12A Coil 2
@@ -23,7 +23,7 @@ Gpio GENERATED_OUTPUTS = {
 // "5A Fuel Pump Relay",
 // "6A Idle Output",
 // "14A Tach Output",
-// "28A Fan Relay",
+// "28A_a Fan Relay",
 // "10A Coil 4",
 // "11A Coil 3",
 // "12A Coil 2",
