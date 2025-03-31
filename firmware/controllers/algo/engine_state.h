@@ -60,8 +60,6 @@ public:
 
 	Timer timeSinceLastTChargeK;
 
-	float currentVe = 0;
-
 	/**
 	 * Raw fuel injection duration produced by current fuel algorithm, without any correction
 	 */

@@ -56,6 +56,7 @@ struct_no_prefix engine_state_s
 	bit clutchDownState;@@INDICATOR_NAME_CLUTCH_DOWN@@
 	uint32_t startStopStateToggleCounter
 
+	float currentVe
 	float luaSoftSparkSkip
 	float luaHardSparkSkip
 	float tractionControlSparkSkip
