@@ -125,8 +125,8 @@
          0.0 0.0 0.0 0.0
          0.0 0.0 0.0 0.0
 </constant>
-        <constant digits="0" name="alternator_iTermMax" units="">0.0</constant>
-        <constant digits="0" name="alternator_iTermMin" units="">0.0</constant>
+        <constant digits="0" name="alternator_iTermMax" units="">1000.0</constant>
+        <constant digits="0" name="alternator_iTermMin" units="">-1000.0</constant>
         <constant digits="4" name="alternatorControl_dFactor" units="">0.0</constant>
         <constant digits="4" name="alternatorControl_iFactor" units="">0.0</constant>
         <constant digits="0" name="alternatorControl_maxValue" units="">90.0</constant>
@@ -2753,7 +2753,7 @@ end</constant>
          100.0
 </constant>
         <constant digits="3" name="mapExpAverageAfr" units="">0.0</constant>
-        <constant digits="3" name="mapExpAverageAlpha" units="">0.0</constant>
+        <constant digits="3" name="mapExpAverageAlpha" units="">1.0</constant>
         <constant digits="2" name="mapHighValueVoltage" units="v">4.65</constant>
         <constant digits="2" name="mapLowValueVoltage" units="v">0.3</constant>
         <constant digits="0" name="mapMinBufferLength" units="count">1.0</constant>
@@ -4319,7 +4319,7 @@ end</constant>
 </constant>
         <constant digits="0" name="tuneHidingKey" units="">0.0</constant>
         <constant digits="0" name="tunerStudioSerialSpeed" units="BPs">38400.0</constant>
-        <constant digits="0" name="tuningDetector" units="seconds">0.0</constant>
+        <constant digits="0" name="tuningDetector" units="seconds">11.0</constant>
         <constant digits="0" name="turbochargerFilter" units="">0.01</constant>
         <constant name="turboSpeedSensorInputPin">"NONE"</constant>
         <constant digits="3" name="turboSpeedSensorMultiplier" units="mult">1.0</constant>
