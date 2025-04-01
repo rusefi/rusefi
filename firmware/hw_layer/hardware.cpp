@@ -553,6 +553,10 @@ void initHardware() {
 #endif // STM32_I2C_USE_I2C3
 
 	boardInitHardware();
+#if EFI_PROD_CODE
+	// this applies some board configurations
+	boardOnConfigurationChange(nullptr);
+#endif // EFI_PROD_CODE
 	boardInitHardwareExtra();
 
 #if HAL_USE_ADC

@@ -62,7 +62,6 @@ void boardInitHardware() {
 	alphaCrankNPullUp.initPin("a-crank-n", Gpio::H144_OUT_IO5);
 	alpha2stepPullDown.initPin("a-2step", Gpio::H144_OUT_IO7);
 	alphaCamPullDown.initPin("a-cam", Gpio::H144_OUT_IO8);
-	boardOnConfigurationChange(nullptr);
 }
 
 void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
