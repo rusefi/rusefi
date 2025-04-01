@@ -553,6 +553,8 @@ void initHardware() {
 #endif // STM32_I2C_USE_I2C3
 
 	boardInitHardware();
+	// this applies some board configurations
+	boardOnConfigurationChange(nullptr);
 	boardInitHardwareExtra();
 
 #if HAL_USE_ADC

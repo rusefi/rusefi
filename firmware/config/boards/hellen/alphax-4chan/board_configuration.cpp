@@ -95,7 +95,6 @@ void boardInitHardware() {
 
 	alphaD4PullDown.initPin("a-d4", Gpio::H144_LS_7);
 	alphaD5PullDown.initPin("a-d5", Gpio::H144_LS_8);
-	boardOnConfigurationChange(nullptr);
 }
 
 void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {

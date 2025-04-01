@@ -159,7 +159,6 @@ void boardInitHardware() {
 	alphaHall3PullUp.initPin("hall3 PullUp", Gpio::MM100_OUT_PWM5);
 	alphaHall4PullUp.initPin("hall4 PullUp", Gpio::MM100_OUT_PWM6);
 	board_init_ext_gpios();
-	boardOnConfigurationChange(nullptr); // TODO? invoke this from main firmware code not from board file?
 }
 
 void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {

@@ -84,7 +84,6 @@ void boardInitHardware() {
 	alphaHall5PullDown.initPin("PullDown-Hall5", Gpio::MM176_GP24);
 	alphaFlexPullDown.initPin("PullDown-Flex",   Gpio::MM176_GP25);
 	tempPullUp.initPin("Temp PullUp", Gpio::MM176_OUT_IO12);
-	boardOnConfigurationChange(nullptr);
 }
 
 void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration*/) {
