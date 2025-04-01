@@ -34,3 +34,5 @@ CONTROLLERS_ALGO_SRC_CPP = $(PROJECT_DIR)/controllers/algo/ignition/ignition_sta
 	$(PROJECT_DIR)/controllers/algo/defaults/default_cranking.cpp \
 	$(PROJECT_DIR)/controllers/algo/defaults/default_fuel.cpp \
 	$(PROJECT_DIR)/controllers/algo/defaults/default_ignition.cpp \
+	$(PROJECT_DIR)/controllers/algo/plugins/plugins.cpp \
+	$(PROJECT_DIR)/controllers/algo/plugins/etb_target_adjuster.cpp \

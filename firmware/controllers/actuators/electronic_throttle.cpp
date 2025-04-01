@@ -60,6 +60,8 @@
 #define ETB_MAX_COUNT 2
 #endif /* ETB_MAX_COUNT */
 
+#include "plugins/plugins.h"
+
 static pedal2tps_t pedal2tpsMap{"p2t"};
 static Map3D<ETB2_TRIM_SIZE, ETB2_TRIM_SIZE, int8_t, uint8_t, uint8_t> throttle2TrimTable{"t2t"};
 static Map3D<TRACTION_CONTROL_ETB_DROP_SIZE, TRACTION_CONTROL_ETB_DROP_SIZE, int8_t, uint16_t, uint8_t> tcEtbDropTable{"tce"};
@@ -286,7 +288,15 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	// 100% target from table -> 100% target position
 	targetWithIdlePosition = interpolateClamped(0, etbIdleAddition, 100, 100, etbCurrentTarget);
 
-	percent_t targetPosition = boardAdjustEtbTarget(targetWithIdlePosition + getLuaAdjustment());
+	percent_t targetPosition = targetWithIdlePosition + getLuaAdjustment();
+	EtbTargetAdjuster* const etbTargetAdjuster = Plugins::getInstance().get<EtbTargetAdjuster>();
+	if (etbTargetAdjuster != nullptr) {
+		targetPosition = etbTargetAdjuster->adjustEtbTarget(targetPosition);
+	} else {
+		//TODO: get rid of `boardAdjustEtbTarget` after we have completely migrated to a new `Plugins` framework
+		//and do not need this function for backward compatibility anymore
+		targetPosition = boardAdjustEtbTarget(targetPosition);
+	}
 	// just an additional logging data point
 	adjustedEtbTarget = targetPosition;
 
