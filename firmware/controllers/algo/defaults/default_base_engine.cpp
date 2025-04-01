@@ -4,6 +4,7 @@
 #include "vr_pwm.h"
 #include "kline.h"
 #include "engine_configuration_defaults.h"
+#include "tuner_detector_utils.h"
 #include <rusefi/manifest.h>
 #if HW_PROTEUS
 #include "proteus_meta.h"
@@ -109,15 +110,39 @@ void setDynoDefaults() {
     config->dynoCarFrontalAreaM2 = 1.85;
  }
 
+void defaultsOrFixOnBurn() {
+  if (config->dynoCarCarMassKg == 0) {
+    setDynoDefaults();
+  }
+
+  if (TunerDetectorUtils::isTuningDetectorUndefined()) {
+  	TunerDetectorUtils::setUserEnteredTuningDetector(10);
+  }
+
+	if (engineConfiguration->mapExpAverageAlpha <= 0 || engineConfiguration->mapExpAverageAlpha > 1) {
+	  engineConfiguration->mapExpAverageAlpha = 1;
+	}
+
+	if (engineConfiguration->alternator_iTermMin == 0) {
+  	engineConfiguration->alternator_iTermMin = -1000;
+	}
+	if (engineConfiguration->alternator_iTermMax == 0) {
+  	engineConfiguration->alternator_iTermMax = 1000;
+	}
+	if (engineConfiguration->idleReturnTargetRampDuration <= 0.1){
+		engineConfiguration->idleReturnTargetRampDuration = 3;
+	}
+
+	if (engineConfiguration->vvtControlMinRpm < engineConfiguration->cranking.rpm) {
+		engineConfiguration->vvtControlMinRpm = engineConfiguration->cranking.rpm;
+	}
+}
+
 void setDefaultBaseEngine() {
 	// Base Engine Settings
 	engineConfiguration->displacement = 2;
 	engineConfiguration->knockDetectionUseDoubleFrequency = true;
 	setInline4();
-
-  setDynoDefaults();
-
-
 
   for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
     // one knock sensor by default. See also 'setLeftRightBanksNeedBetterName()'
@@ -361,6 +386,9 @@ void setDefaultBaseEngine() {
 	engineConfiguration->minimumOilPressureTimeout = 0.5f;
 	setRpmTableBin(config->minimumOilPressureBins);
 	setRpmTableBin(config->maximumOilPressureBins);
+
+  // we invoke this last so that we can validate even defaults
+  defaultsOrFixOnBurn();
 }
 
 void setPPSInputs(adc_channel_e pps1, adc_channel_e pps2) {

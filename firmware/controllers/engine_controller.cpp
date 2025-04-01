@@ -537,12 +537,7 @@ bool validateConfigOnStartUpOrBurn() {
   if (!validateGdi()) {
     return false;
   }
-  if (config->dynoCarCarMassKg == 0) {
-    setDynoDefaults();
-  }
-  if (TunerDetectorUtils::isTuningDetectorUndefined()) {
-  	TunerDetectorUtils::setUserEnteredTuningDetector(10);
-  }
+  defaultsOrFixOnBurn();
 	if (engineConfiguration->cylindersCount > MAX_CYLINDER_COUNT) {
 		criticalError("Invalid cylinder count: %d", engineConfiguration->cylindersCount);
 		return false;
@@ -562,22 +557,9 @@ bool validateConfigOnStartUpOrBurn() {
         }
 
 #endif // EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)
-	if (engineConfiguration->vvtControlMinRpm < engineConfiguration->cranking.rpm) {
-		engineConfiguration->vvtControlMinRpm = engineConfiguration->cranking.rpm;
-	}
 	if (engineConfiguration->adcVcc > 5.0f || engineConfiguration->adcVcc < 1.0f) {
     criticalError("Invalid adcVcc: %f", engineConfiguration->adcVcc);
 		return false;
-	}
-	if (engineConfiguration->mapExpAverageAlpha <= 0 || engineConfiguration->mapExpAverageAlpha > 1) {
-	  engineConfiguration->mapExpAverageAlpha = 1;
-	}
-
-	if (engineConfiguration->alternator_iTermMin == 0) {
-  	engineConfiguration->alternator_iTermMin = -1000;
-	}
-	if (engineConfiguration->alternator_iTermMax == 0) {
-  	engineConfiguration->alternator_iTermMax = 1000;
 	}
 
 	ensureArrayIsAscending("Injector deadtime vBATT", engineConfiguration->injector.battLagCorrBattBins);
@@ -720,10 +702,6 @@ bool validateConfigOnStartUpOrBurn() {
 
 	if (engineConfiguration->enableOilPressureProtect) {
 		ensureArrayIsAscending("Oil pressure protection", config->minimumOilPressureBins);
-	}
-
-	if (engineConfiguration->idleReturnTargetRampDuration <= 0.1){
-		engineConfiguration->idleReturnTargetRampDuration = 3;
 	}
 
 	return true;
