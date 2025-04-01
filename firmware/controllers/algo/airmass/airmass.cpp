@@ -5,7 +5,7 @@
 
 AirmassVeModelBase::AirmassVeModelBase(const ValueProvider3D& veTable) : m_veTable(&veTable) {}
 
-static float getVeLoadAxis(ve_override_e mode, float passedLoad) {
+float getVeLoadAxis(ve_override_e mode, float passedLoad) {
 	switch(mode) {
 		case VE_None: return passedLoad;
 		case VE_MAP: return Sensor::getOrZero(SensorType::Map);
