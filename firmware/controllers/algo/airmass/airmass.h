@@ -22,3 +22,5 @@ public:
 private:
 	const ValueProvider3D* const m_veTable;
 };
+
+float getVeLoadAxis(ve_override_e mode, float passedLoad);
