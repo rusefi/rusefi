@@ -106,13 +106,13 @@ pins:
     type: agnd
 
   - pin: 16A
-    meta: MM100_IN_D4
-    class: event_inputs
+    id: [MM100_IN_D4, MM100_IN_D4]
+    class: [event_inputs, switch_inputs]
     function: 16 Hall4 (not while descrete VR)
 
   - pin: 17A
-    meta: MM100_IN_D3
-    class: event_inputs
+    id: [MM100_IN_D3, MM100_IN_D3]
+    class: [event_inputs, switch_inputs]
     function: 17 Hall3 (not while descrete VR)
 
   - pin: 16A17A
@@ -169,13 +169,13 @@ pins:
     color: orange
 
   - pin: 24A
-    meta: MM100_IN_D2
-    class: event_inputs
+    id: [MM100_IN_D2, MM100_IN_D2]
+    class: [event_inputs, switch_inputs]
     function: 24 Hall2 (not while VR max9924)
 
   - pin: 25A
-    meta: MM100_IN_D1
-    class: event_inputs
+    id: [MM100_IN_D1, MM100_IN_D1]
+    class: [event_inputs, switch_inputs]
     function: 25 Hall1 (not while VR max9924)
 
   - pin: 24A25A
