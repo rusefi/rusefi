@@ -217,6 +217,7 @@ public class TuneCanTool {
             // todo: what about stuff outside of engine_configuration_s?
             StringBuffer context = new StringBuffer();
 
+            // nasty: context is a return parameter
             ConfigField cf = MetaHelper.findField(state, fieldName, context);
             if (cf == null) {
                 log.info("Not found " + fieldName);
@@ -231,6 +232,10 @@ public class TuneCanTool {
                 }
             }
             String cName = context + cf.getOriginalArrayName();
+            if (TuneCanToolHelper.IGNORE_LIST.contains(cName)) {
+                log.info("Ignoring " + cName);
+                continue;
+            }
 
             if (isHardwareProperty(cf.getName())) {
                 continue;

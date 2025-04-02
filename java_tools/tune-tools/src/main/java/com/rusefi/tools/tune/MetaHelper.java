@@ -50,6 +50,7 @@ public class MetaHelper {
         return state;
     }
 
+    // nasty: context is a return parameter
     @Nullable
     static ConfigField lookForFieldWithinSpecificStruct(ReaderState state, String name, StringBuffer context, String parentStructName) {
         ConfigStructure s = state.getStructures().get(parentStructName);
