@@ -1237,9 +1237,6 @@ MAP voltage for low point
 ### egoValueShift
 EGO value correction
 
-### crankingIACposition
-This is the IAC position during cranking, some engines start better if given more air during cranking to improve cylinder filling.
-
 ### tChargeMinRpmMinTps
 
 

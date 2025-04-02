@@ -1244,9 +1244,6 @@ float getConfigValueByName(const char *name) {
 // egoValueShift
 		case 280323355:
 			return engineConfiguration->egoValueShift;
-// crankingIACposition
-		case -224532684:
-			return engineConfiguration->crankingIACposition;
 // tChargeMinRpmMinTps
 		case -557658095:
 			return engineConfiguration->tChargeMinRpmMinTps;
@@ -4057,11 +4054,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case 280323355:
 	{
 		engineConfiguration->egoValueShift = value;
-		return 1;
-	}
-		case -224532684:
-	{
-		engineConfiguration->crankingIACposition = (int)value;
 		return 1;
 	}
 		case -557658095:

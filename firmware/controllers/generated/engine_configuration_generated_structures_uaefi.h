@@ -3270,11 +3270,9 @@ struct engine_configuration_s {
 	 */
 	output_pin_e vvtPins[CAM_INPUTS_COUNT] = {};
 	/**
-	 * This is the IAC position during cranking, some engines start better if given more air during cranking to improve cylinder filling.
-	 * units: percent
 	 * offset 1612
 	 */
-	int crankingIACposition;
+	int unusedcrankingIACposition;
 	/**
 	 * offset 1616
 	 */
@@ -5317,14 +5315,14 @@ struct persistent_config_s {
 	 */
 	scaled_channel<uint8_t, 1, 100> pedalToTpsRpmBins[PEDAL_TO_TPS_SIZE] = {};
 	/**
-	 * CLT-based cranking position multiplier for simple manual idle controller
+	 * CLT-based cranking position % for simple manual idle controller
 	 * units: C
 	 * offset 5484
 	 */
 	float cltCrankingCorrBins[CLT_CRANKING_CURVE_SIZE] = {};
 	/**
-	 * CLT-based cranking position multiplier for simple manual idle controller
-	 * units: %
+	 * CLT-based cranking position % for simple manual idle controller
+	 * units: percent
 	 * offset 5516
 	 */
 	float cltCrankingCorr[CLT_CRANKING_CURVE_SIZE] = {};

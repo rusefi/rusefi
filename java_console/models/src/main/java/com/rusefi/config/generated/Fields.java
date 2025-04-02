@@ -773,7 +773,6 @@ public class Fields {
 	public static final Field VVTPINS2 = Field.create("VVTPINS2", 1606, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field VVTPINS3 = Field.create("VVTPINS3", 1608, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
 	public static final Field VVTPINS4 = Field.create("VVTPINS4", 1610, FieldType.INT16, output_pin_e).setScale(1.0).setBaseOffset(0);
-	public static final Field CRANKINGIACPOSITION = Field.create("CRANKINGIACPOSITION", 1612, FieldType.INT).setScale(1.0).setBaseOffset(0);
 	public static final Field TCHARGEMINRPMMINTPS = Field.create("TCHARGEMINRPMMINTPS", 1616, FieldType.INT8).setScale(0.005).setBaseOffset(0);
 	public static final Field TCHARGEMINRPMMAXTPS = Field.create("TCHARGEMINRPMMAXTPS", 1617, FieldType.INT8).setScale(0.005).setBaseOffset(0);
 	public static final Field TCHARGEMAXRPMMINTPS = Field.create("TCHARGEMAXRPMMINTPS", 1618, FieldType.INT8).setScale(0.005).setBaseOffset(0);
@@ -2573,7 +2572,6 @@ public class Fields {
 	VVTPINS2,
 	VVTPINS3,
 	VVTPINS4,
-	CRANKINGIACPOSITION,
 	TCHARGEMINRPMMINTPS,
 	TCHARGEMINRPMMAXTPS,
 	TCHARGEMAXRPMMINTPS,
