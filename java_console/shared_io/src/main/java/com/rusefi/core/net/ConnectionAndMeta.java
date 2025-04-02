@@ -21,6 +21,7 @@ public class ConnectionAndMeta {
     public static final String AUTOUPDATE = "/autoupdate/";
 
     private static final int BUFFER_SIZE = 32 * 1024;
+    public static final String FLEXIBLE_AUTOSCALE = "flexible_autoscale";
     private volatile static Properties properties; // sad: we do not completely understand #6777 but caching should not hurt
     public static final int CENTUM = 100;
     public static final String IO_PROPERTIES = "/shared_io.properties";
@@ -65,7 +66,7 @@ public class ConnectionAndMeta {
 
     // TS multiplier is technically different from autoscale, open question when we shall allow multiplier without autoscale
     public static boolean flexibleAutoscale() {
-        return getBoolean("flexible_autoscale");
+        return getBoolean(FLEXIBLE_AUTOSCALE);
     }
 
     public static boolean showUpdateCalibrations() {

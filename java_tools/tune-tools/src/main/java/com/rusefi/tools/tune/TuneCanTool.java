@@ -66,7 +66,7 @@ public class TuneCanTool {
         //writeDiffBetweenLocalTuneFileAndDefaultTune("../1.msq");
 
 //        TuneCanToolRunner.initialize("C:\\stuff\\fw\\generated\\tunerstudio\\generated\\rusefi_.ini");
-        TuneCanToolHelper.initialize(INI_FILE_FOR_SIMULATOR);
+        TuneCanToolHelper.initialize(TuneContext.iniFileName);
 
 //        writeDiffBetweenLocalTuneFileAndDefaultTune("harley", "C:\\stuff\\fw\\fw-\\generated\\simulator_tune_HARLEY.msq",
 //            "c:\\stuff\\hd-\\tunes\\pnp-april-8-inverted-offsets.msq","comment", "");

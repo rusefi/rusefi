@@ -43,6 +43,9 @@ public class MetaHelper {
         String[] totalArgs = options.toArray(new String[0]);
 
         ReaderStateImpl state = new ReaderStateImpl();
+        if (TuneContext.boardPrepend != null)
+            state.getVariableRegistry().readPrependValues(TuneContext.boardPrepend, false);
+
         ConfigDefinition.doJob(totalArgs, state);
         return state;
     }
