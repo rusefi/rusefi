@@ -12,6 +12,7 @@ import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.xml.XmlUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.xml.bind.JAXBException;
 import java.io.File;
@@ -30,7 +31,6 @@ import java.util.TreeSet;
 import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.ConfigFieldImpl.unquote;
 import static com.rusefi.config.Field.niceToString;
-import static com.rusefi.LocalIniFileProvider.INI_FILE_FOR_SIMULATOR;
 
 /**
  * this command line utility compares two TS calibration files and produces .md files with C++ source code of the difference between those two files.
@@ -254,52 +254,20 @@ public class TuneCanTool {
                 }
 
                 if (cf.getArraySizes().length == 2) {
-                    TableData tableData = TableData.readTable(customTuneFileName, fieldName, ini);
-                    if (tableData == null) {
-                        log.info(" " + fieldName);
+                    TableResult result = getHandleTable(ini, customTuneFileName, defaultTuneFileName, methodNamePrefix, fieldName, cf, parentReference);
+                    if (result == null)
                         continue;
-                    }
-                    log.info("Handling table " + fieldName + " with " + cf.autoscaleSpecPair());
-
-                    String customContent = tableData.getCsourceMethod(parentReference, methodNamePrefix, tableData.getName());
-                    if (defaultTuneFileName != null) {
-                        TableData defaultTableData = TableData.readTable(defaultTuneFileName, fieldName, ini);
-                        String defaultContent = defaultTableData.getCsourceMethod(parentReference, methodNamePrefix, defaultTableData.getName());
-                        if (defaultContent.equals(customContent)) {
-                            log.info("Table " + fieldName + " matches default content");
-                            continue;
-                        }
-                        log.info("Custom content in table " + fieldName);
-                    } else {
-                        log.info("New table " + fieldName);
-                    }
 
 
-                    methods.append(customContent);
-                    invokeMethods.append(tableData.getCinvokeMethod(methodNamePrefix));
+                    methods.append(result.customContent);
+                    invokeMethods.append(result.tableData.getCinvokeMethod(methodNamePrefix));
                     continue;
                 }
 
                 CurveData data = CurveData.valueOf(customTuneFileName, fieldName, ini);
-                if (data == null)
+                String customContent = handleCurve(ini, defaultTuneFileName, methodNamePrefix, data, parentReference, cName, fieldName);
+                if (customContent == null)
                     continue;
-
-                String customContent = data.getCsourceMethod(parentReference, methodNamePrefix, cName);
-                if (defaultTuneFileName != null) {
-                    CurveData defaultCurveData = CurveData.valueOf(defaultTuneFileName, fieldName, ini);
-                    String defaultContent = defaultCurveData.getCsourceMethod(parentReference, methodNamePrefix, cName);
-                    if (defaultContent.equals(customContent)) {
-                        log.info("Curve " + fieldName + " matches default content");
-                        continue;
-                    }
-                    if (isSameValue(data, defaultCurveData)) {
-                        log.info("Curve " + fieldName + " values are pretty close");
-                        continue;
-                    }
-                    log.info("Custom content in curve " + fieldName);
-                } else {
-                    log.info("New curve " + fieldName);
-                }
 
                 methods.append(customContent);
                 invokeMethods.append(data.getCinvokeMethod(methodNamePrefix));
@@ -349,6 +317,62 @@ public class TuneCanTool {
         sb.append("\n\n").append(invokeMethods);
 
         return sb;
+    }
+
+    private static @Nullable TuneCanTool.TableResult getHandleTable(IniFileModel ini, String customTuneFileName, String defaultTuneFileName, String methodNamePrefix, String fieldName, ConfigField cf, String parentReference) throws IOException {
+        TableData tableData = TableData.readTable(customTuneFileName, fieldName, ini);
+        if (tableData == null) {
+            log.info(" " + fieldName);
+            return null;
+        }
+        log.info("Handling table " + fieldName + " with " + cf.autoscaleSpecPair());
+
+        String customContent = tableData.getCsourceMethod(parentReference, methodNamePrefix, tableData.getName());
+        if (defaultTuneFileName != null) {
+            TableData defaultTableData = TableData.readTable(defaultTuneFileName, fieldName, ini);
+            String defaultContent = defaultTableData.getCsourceMethod(parentReference, methodNamePrefix, defaultTableData.getName());
+            if (defaultContent.equals(customContent)) {
+                log.info("Table " + fieldName + " matches default content");
+                return null;
+            }
+            log.info("Custom content in table " + fieldName);
+        } else {
+            log.info("New table " + fieldName);
+        }
+        return new TableResult(tableData, customContent);
+    }
+
+    private static class TableResult {
+        public final TableData tableData;
+        public final String customContent;
+
+        public TableResult(TableData tableData, String customContent) {
+            this.tableData = tableData;
+            this.customContent = customContent;
+        }
+    }
+
+    private static @Nullable String handleCurve(IniFileModel ini, String defaultTuneFileName, String methodNamePrefix, CurveData data, String parentReference, String cName, String fieldName) throws IOException {
+        if (data == null)
+            return null;
+
+        String customContent = data.getCsourceMethod(parentReference, methodNamePrefix, cName);
+        if (defaultTuneFileName != null) {
+            CurveData defaultCurveData = CurveData.valueOf(defaultTuneFileName, fieldName, ini);
+            String defaultContent = defaultCurveData.getCsourceMethod(parentReference, methodNamePrefix, cName);
+            if (defaultContent.equals(customContent)) {
+                log.info("Curve " + fieldName + " matches default content");
+                return null;
+            }
+            if (isSameValue(data, defaultCurveData)) {
+                log.info("Curve " + fieldName + " values are pretty close");
+                return null;
+            }
+            log.info("Custom content in curve " + fieldName);
+        } else {
+            log.info("New curve " + fieldName);
+        }
+        return customContent;
     }
 
     private static boolean isSameValue(CurveData data, CurveData defaultContent) {
