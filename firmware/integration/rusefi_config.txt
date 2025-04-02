@@ -1321,7 +1321,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	output_pin_e[CAM_INPUTS_COUNT iterate] vvtPins;VVT output solenoid pin for this cam
 
 
-	int crankingIACposition;This is the IAC position during cranking, some engines start better if given more air during cranking to improve cylinder filling.;"percent", 1, 0, -100, 100, 0
+	int unusedcrankingIACposition;;"", 1, 0, -100, 100, 0
 	uint8_t autoscale tChargeMinRpmMinTps;;"", 0.005, 0, 0, 1, 3
 	uint8_t autoscale tChargeMinRpmMaxTps;;"", 0.005, 0, 0, 1, 3
 	uint8_t autoscale tChargeMaxRpmMinTps;;"", 0.005, 0, 0, 1, 3
@@ -1903,8 +1903,8 @@ uint8_t[PEDAL_TO_TPS_SIZE x PEDAL_TO_TPS_SIZE] pedalToTpsTable;;"%", 1, 0, 0, 10
 uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsPedalBins;;"%", 1, 0, 0, 120, 0
 uint8_t[PEDAL_TO_TPS_SIZE] autoscale pedalToTpsRpmBins;;"RPM", 100, 0, 0, 25000, 0
 
-float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorrBins;CLT-based cranking position multiplier for simple manual idle controller;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
-float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorr    ;CLT-based cranking position multiplier for simple manual idle controller;"%", 1, 0, 0, 500, 2
+float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorrBins;CLT-based cranking position % for simple manual idle controller;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
+float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorr    ;CLT-based cranking position % for simple manual idle controller;"percent", 1, 0, 0, 100, 2
 
 uint8_t[IDLE_ADVANCE_CURVE_SIZE] autoscale idleAdvanceBins;Optional timing advance table for Idle (see useSeparateAdvanceForIdle);"RPM", 50, 0, 0, 12000, 0
 float[IDLE_ADVANCE_CURVE_SIZE] idleAdvance    ;Optional timing advance table for Idle (see useSeparateAdvanceForIdle);"deg", 1, 0, -20, 90, 1
