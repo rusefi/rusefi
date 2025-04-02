@@ -43,7 +43,7 @@ void setHondaK() {
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
-	engineConfiguration->crankingIACposition = 70;
+	setArrayValues(config->cltCrankingCorr, 70);
 	static const uint16_t defaultPostCrankinDurationBins[] = {
 		0, 65, 100, 125, 150, 250
 	};

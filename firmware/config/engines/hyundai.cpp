@@ -297,7 +297,7 @@ static void commonGenesisCoupe() {
     // default "false"
     engineConfiguration->disableFan2WhenStopped = true;
     // default 50.0
-    engineConfiguration->crankingIACposition = 70;
+	setArrayValues(config->cltCrankingCorr, 70);
     // default 200.0
     engineConfiguration->afterCrankingIACtaperDuration = 100;
     // default 0.0

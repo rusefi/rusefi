@@ -121,7 +121,7 @@ void setFordEscortGt() {
 
 	// set_idle_position 10
 	setTable(config->cltIdleCorrTable, 10.0);
-	engineConfiguration->crankingIACposition = 65;
+	setArrayValues(config->cltCrankingCorr, 65);
 
 	setWholeIatCorrTimingTable(0);
 
