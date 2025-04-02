@@ -41,7 +41,7 @@ void setMazdaMiata96() {
 
 	engineConfiguration->wwaeTau = 0.1;
 	setTable(config->alternatorVoltageTargetTable, 14.2);
-	engineConfiguration->crankingIACposition = 36;
+	setArrayValues(config->cltCrankingCorr, 36);
 	engineConfiguration->afterCrankingIACtaperDuration = 189;
 
 	engineConfiguration->crankingTimingAngle = 6;

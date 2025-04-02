@@ -15,7 +15,7 @@ void setDefaultCranking() {
 	engineConfiguration->crankingTimingAngle = DEFAULT_CRANKING_ANGLE;
 
 	// IAC
-	engineConfiguration->crankingIACposition = 50;
+	setArrayValues(config->cltCrankingCorr, 50);
 	// should be 100 once tune is better
 	engineConfiguration->afterCrankingIACtaperDuration = 200;
 
@@ -39,7 +39,7 @@ void setDefaultCranking() {
 	setLinearCurve(config->crankingTpsBins, 0, 100, 1);
 
 	setLinearCurve(config->cltCrankingCorrBins, CLT_CURVE_RANGE_FROM, 100, 1);
-	setLinearCurve(config->cltCrankingCorr, 1.0, 1.0, 1);
+	setLinearCurve(config->cltCrankingCorr, 50, 50, 1); // now as % of idle valve/etb
 
 	// Cranking temperature compensation
 	static const float crankingCoef[] = {
