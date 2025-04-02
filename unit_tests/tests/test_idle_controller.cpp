@@ -124,11 +124,11 @@ TEST(idle_v2, crankingOpenLoop) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	IdleController dut;
 
-	engineConfiguration->crankingIACposition = 50;
 
 	for (size_t i = 0; i < efi::size(config->cltCrankingCorrBins); i++) {
 		config->cltCrankingCorrBins[i] = i * 10;
-		config->cltCrankingCorr[i] = i * 0.1f;
+		// 50 as base idle value
+		config->cltCrankingCorr[i] = 50 * i * 0.1f;
 
 		// different values in running so we can tell which one is used
 		config->cltIdleCorrBins[i] = i * 10;
