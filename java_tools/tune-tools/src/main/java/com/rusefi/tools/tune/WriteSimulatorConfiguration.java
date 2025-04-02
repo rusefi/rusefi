@@ -46,7 +46,7 @@ public class WriteSimulatorConfiguration {
             for (engine_type_e type : WriteSimulatorEngines.ENGINE_TYPE_ES) {
                 writeSpecificEngineType(iniFileName, type, ini);
             }
-            TuneCanToolRunner.runPopular();
+            //TuneCanToolRunner.runPopular();
         } catch (Throwable e) {
             log.error("Unfortunately", e);
             System.exit(-1);

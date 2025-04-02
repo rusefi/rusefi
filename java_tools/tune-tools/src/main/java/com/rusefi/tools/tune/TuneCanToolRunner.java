@@ -1,9 +1,5 @@
 package com.rusefi.tools.tune;
 
-import com.opensr5.ini.IniFileModelImpl;
-import com.rusefi.RootHolder;
-import com.rusefi.enums.engine_type_e;
-
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 
@@ -11,26 +7,12 @@ import static com.rusefi.LocalIniFileProvider.INI_FILE_FOR_SIMULATOR;
 
 public class TuneCanToolRunner extends TuneCanTool {
     static {
-        initialize(INI_FILE_FOR_SIMULATOR);
+        TuneCanToolHelper.initialize(INI_FILE_FOR_SIMULATOR);
     }
 
-    protected static void initialize(String iniFileForSimulator) {
-        ini = IniFileModelImpl.readIniFile(iniFileForSimulator);
-        if (ini == null)
-            throw new IllegalStateException("Not found " + iniFileForSimulator);
-/*
-        Set<String> allFields = new TreeSet<>();
-        allFields.addAll(ini.allIniFields.keySet());
-        allFields.removeAll(ini.fieldsInUiOrder.keySet());
-        if (!allFields.isEmpty())
-            throw new IllegalStateException("What about all these fields not mentioned on the UI: " + allFields);
-*/
-        RootHolder.ROOT = "../firmware/";
-    }
-
-    public static void main(String[] args) throws JAXBException, IOException {
-        runPopular();
-    }
+    //    public static void main(String[] args) throws JAXBException, IOException {
+//        runPopular();
+//    }
 
     public static void runPopular() throws JAXBException, IOException {
         // while adding a line here make sure corresponding line is at rusEfiFunctionalTest.cpp
