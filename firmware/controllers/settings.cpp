@@ -98,7 +98,9 @@ static void setRpmHardLimit(int value) {
 }
 
 static void setCrankingIACExtra(float percent) {
-	engineConfiguration->crankingIACposition = percent;
+	for (uint8_t i = 0; i < CLT_CRANKING_CURVE_SIZE; i++) {
+		config->cltCrankingCorr[i] = percent;
+	}
 	efiPrintf("cranking_iac %.2f", percent);
 }
 

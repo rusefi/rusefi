@@ -112,10 +112,7 @@ float IdleController::getCrankingTaperFraction() const {
 }
 
 float IdleController::getCrankingOpenLoop(float clt) const {
-	float mult =
-		interpolate2d(clt, config->cltCrankingCorrBins, config->cltCrankingCorr);
-
-	return engineConfiguration->crankingIACposition * mult;
+	return interpolate2d(clt, config->cltCrankingCorrBins, config->cltCrankingCorr);
 }
 
 percent_t IdleController::getRunningOpenLoop(IIdleController::Phase phase, float rpm, float clt, SensorResult tps) {
