@@ -10,6 +10,7 @@ import com.rusefi.io.CommandQueue;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BaudRateHolder;
 import com.rusefi.maintenance.StLinkFlasher;
+import com.rusefi.tools.TunerStudioHelper;
 import com.rusefi.ui.*;
 import com.rusefi.ui.console.MainFrame;
 import com.rusefi.ui.console.TabbedPanel;
@@ -49,6 +50,7 @@ public class ConsoleUI {
     public static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
     protected static final String SPEED_KEY = "speed";
+    private static final String TITLE = "rusEFI";
     public static EngineSnifferPanel engineSnifferPanel;
 
     static Frame staticFrame;
@@ -141,8 +143,6 @@ public class ConsoleUI {
             tabbedPane.addTab("Logs Manager", tabbedPane.logsManager.getContent());
 
 
-
-
         MessagesCentral.getInstance().postMessage(ConsoleUI.class, "COMPOSITE_OFF_RPM=" + BinaryProtocolLogger.COMPOSITE_OFF_RPM);
 
         /*
@@ -222,11 +222,19 @@ public class ConsoleUI {
     private static void awtCode(String[] args) {
         if (JustOneInstance.isAlreadyRunning()) {
             int result = JOptionPane.showConfirmDialog(createOnTopParent(), "Looks like another instance is already running. Do you really want to start another instance?",
-                    "rusEfi", JOptionPane.YES_NO_OPTION);
+                TITLE, JOptionPane.YES_NO_OPTION);
             if (result == JOptionPane.NO_OPTION)
                 System.exit(-1);
         }
         JustOneInstance.onStart();
+        boolean isTsRunning = TunerStudioHelper.isTsRunning();
+        if (isTsRunning) {
+            int result = JOptionPane.showConfirmDialog(createOnTopParent(), "Looks like TunerStudio is running, shall we close it?",
+                TITLE, JOptionPane.YES_NO_OPTION);
+            if (result == JOptionPane.YES_OPTION)
+                TunerStudioHelper.attemptClosingTunerStudio();
+        }
+
         try {
             boolean isPortDefined = args.length > 0;
             boolean isBaudRateDefined = args.length > 1;
