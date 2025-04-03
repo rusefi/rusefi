@@ -17,7 +17,8 @@ void setDefaultCranking() {
 	// IAC
 	setArrayValues(config->cltCrankingCorr, 50);
 	// should be 100 once tune is better
-	engineConfiguration->afterCrankingIACtaperDuration = 200;
+	setArrayValues(config->afterCrankingIACtaperDuration, 200);
+	setLinearCurve(config->afterCrankingIACtaperDurationBins, CLT_CURVE_RANGE_FROM, 100, 1);
 
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 

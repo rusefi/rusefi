@@ -299,7 +299,7 @@ static void commonGenesisCoupe() {
     // default 50.0
 	setArrayValues(config->cltCrankingCorr, 70);
     // default 200.0
-    engineConfiguration->afterCrankingIACtaperDuration = 100;
+    setArrayValues(config->afterCrankingIACtaperDuration, 100);
     // default 0.0
     engineConfiguration->tpsAccelLookback = 0.3;
     // default 40.0
