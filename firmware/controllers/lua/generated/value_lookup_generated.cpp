@@ -1142,9 +1142,6 @@ float getConfigValueByName(const char *name) {
 // enableKnockSpectrogramFilter
 		case -1923222129:
 			return engineConfiguration->enableKnockSpectrogramFilter;
-// afterCrankingIACtaperDuration
-		case 671504531:
-			return engineConfiguration->afterCrankingIACtaperDuration;
 // iacByTpsTaper
 		case -2065814304:
 			return engineConfiguration->iacByTpsTaper;
@@ -3884,11 +3881,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1923222129:
 	{
 		engineConfiguration->enableKnockSpectrogramFilter = (int)value;
-		return 1;
-	}
-		case 671504531:
-	{
-		engineConfiguration->afterCrankingIACtaperDuration = (int)value;
 		return 1;
 	}
 		case -2065814304:
