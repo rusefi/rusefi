@@ -631,7 +631,7 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 		break;
 
 	case 0x79:
-		scheduleStopEngine();
+		doScheduleStopEngine(StopRequestedReason::TsCommand);
 		break;
 
 	case 0xba:

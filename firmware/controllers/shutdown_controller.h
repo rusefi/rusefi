@@ -7,18 +7,24 @@
 
 #include <rusefi/timer.h>
 
-void doScheduleStopEngine();
+enum class StopRequestedReason : uint8_t {
+    None, // 0
+    StartButton, // 1
+    Lua, // 2
+    Console, // 3
+  	TsCommand, // 4
+
+    Board1,
+    Board2,
+    Board3,
+
+};
+
+void doScheduleStopEngine(StopRequestedReason reason);
 
 class ShutdownController {
 public:
-	void stopEngine() {
-		m_engineStopTimer.reset();
-//		ignitionOnTimeNt = 0;
-	}
-
-//	float getTimeSinceEngineStop(efitick_t nowNt) const {
-//		return m_engineStopTimer.getElapsedSeconds(nowNt);
-//	}
+	void stopEngine(StopRequestedReason reason);
 
 	bool isEngineStop(efitick_t nowNt) const {
 		float timeSinceStopRequested = m_engineStopTimer.getElapsedSeconds(nowNt);
@@ -29,10 +35,4 @@ public:
 
 private:
 	Timer m_engineStopTimer;
-
-	/**
-	 * this is needed by and checkShutdown()
-	 */
-	// is this an unused boolean value?
-//	efitick_t ignitionOnTimeNt = 0;
 };

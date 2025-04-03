@@ -1051,7 +1051,7 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 	});
 #if EFI_SHAFT_POSITION_INPUT
 	lua_register(lState, "stopEngine", [](lua_State*) {
-		doScheduleStopEngine();
+		doScheduleStopEngine(StopRequestedReason::Lua);
 		return 0;
 	});
 	lua_register(lState, "isEngineStopRequested", [](lua_State* l) {

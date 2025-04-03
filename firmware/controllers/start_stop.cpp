@@ -32,7 +32,7 @@ static void onStartStopButtonToggle() {
 	if (engine->rpmCalculator.isStopped()) {
 	  doStartCranking();
 	} else if (engine->rpmCalculator.isRunning()) {
-		doScheduleStopEngine();
+		doScheduleStopEngine(StopRequestedReason::StartButton);
 	}
 }
 
