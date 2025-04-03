@@ -512,7 +512,7 @@ bool Engine::isInShutdownMode() const {
 		const float vBattThresholdOff = 5.0f;
 		// start the shutdown process if the ignition voltage dropped low
 		if (Sensor::get(SensorType::BatteryVoltage).value_or(VBAT_FALLBACK_VALUE) <= vBattThresholdOff) {
-			scheduleStopEngine();
+			doScheduleStopEngine();
 		}
 	}
 

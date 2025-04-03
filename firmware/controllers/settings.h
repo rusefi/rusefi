@@ -11,7 +11,6 @@
 void initSettings();
 void printSpiState();
 void printConfiguration();
-void scheduleStopEngine();
 
 bool isHwQcMode();
 void setHwQcMode();

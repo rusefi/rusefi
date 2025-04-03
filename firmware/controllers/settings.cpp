@@ -457,8 +457,8 @@ static void disableSpi(int index) {
 /**
  * See 'LimpManager::isEngineStop' for code which actually stops engine
  */
-void scheduleStopEngine() {
-	doScheduleStopEngine();
+static void scheduleStopEngine() {
+	doScheduleStopEngine(StopRequestedReason::Console);
 }
 
 static void getValue(const char *paramStr) {
