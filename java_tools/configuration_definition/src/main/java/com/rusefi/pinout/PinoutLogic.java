@@ -51,7 +51,7 @@ public class PinoutLogic {
         return null;
     }
 
-    private static void registerPins(String boardName, ArrayList<PinState> listPins, VariableRegistry registry, DefinitionsState parseState, EnumsReader enumsReader) {
+    private static void registerPins(String boardName, ArrayList<PinState> listPins, VariableRegistry registry, DefinitionsState parseState, EnumsReader enumsReader, StringBuffer pinNames) {
         if (listPins == null || listPins.isEmpty()) {
             return;
         }
@@ -65,6 +65,10 @@ public class PinoutLogic {
             if (classList == null) {
                 throw new IllegalStateException(boardName + ": Class not found:  " + className + " for " + id);
             }
+            if (classList.isEmpty()) {
+                pinNames.append("#define PIN_" + listPin.name + " " + listPin.id + "\n");
+            }
+
             PinType pinType = PinType.find(className);
             addToPinType(boardName, enumsReader, listPin, pinType.getPinType(), id, className, classList);
             if (pinType == PinType.EVENT_INPUTS)
@@ -210,7 +214,7 @@ public class PinoutLogic {
                     // we are a bit inconsistent between single-function and array syntax:
                     // for array syntax we just apply mapping on the fly while for single we use 'meta' keyword instead of 'pin' keyword
                     id = applyMetaMapping(metaMapping, id);
-                    addPinToList(id, originalValue, null, (String) pinTsName, pinClassArray.get(i));
+                    addPinToList(id, originalValue, null, (String) pinTsName, pinClassArray.get(i), pinName.toString());
                 }
             } else if (pinId instanceof String) {
                 String pinIdString = (String) pinId;
@@ -223,7 +227,7 @@ public class PinoutLogic {
                     throw new IllegalStateException("Wrong TsName: " + pinTsName + " while " + pinIdString);
                 if (!(pinClass instanceof String))
                     throw new IllegalStateException("Wrong class: " + pinClass + " while " + pinIdString);
-                addPinToList(pinIdString, headerValue, stringPinType, (String) pinTsName, (String) pinClass);
+                addPinToList(pinIdString, headerValue, stringPinType, (String) pinTsName, (String) pinClass, pinName.toString());
             } else {
                 throw new IllegalStateException("Unexpected type of ID field: " + pinId.getClass().getSimpleName());
             }
@@ -275,7 +279,7 @@ public class PinoutLogic {
 
     private void addPinToList(String id, String headerValue,
                               String pinType,
-                              String pinTsName, String pinClass) {
+                              String pinTsName, String pinClass, String pinName) {
         String existingTsName = tsNameById.get(id);
         if (existingTsName != null && !existingTsName.equals(pinTsName))
             throw new IllegalStateException("ID [" + id + "] used multiple times with different ts_name " + existingTsName + "/" + pinTsName);
@@ -288,7 +292,7 @@ public class PinoutLogic {
                 highSideOutputs.add(headerValue);
             }
         }
-        PinState thisPin = new PinState(id, pinTsName, pinClass);
+        PinState thisPin = new PinState(id, pinTsName, pinClass, pinName);
         globalList.add(thisPin);
     }
 
@@ -303,7 +307,8 @@ public class PinoutLogic {
             return;
         }
         readFiles();
-        registerPins(boardInputs.getName(), globalList, registry, parseState, enumsReader);
+        StringBuffer pinNames = new StringBuffer();
+        registerPins(boardInputs.getName(), globalList, registry, parseState, enumsReader, pinNames);
 
         try (Writer getTsNameByIdFile = boardInputs.getBoardNamesWriter()) {
             getTsNameByIdFile.append(header);
@@ -328,6 +333,7 @@ public class PinoutLogic {
         try (Writer outputs = boardInputs.getBoardPinNamesWriter()) {
             outputs.append(header);
             outputs.write("#pragma once\n\n");
+            outputs.write(pinNames.toString());
         }
 
         StringBuilder pinNamesForHwQC = new StringBuilder();
@@ -381,11 +387,13 @@ public class PinoutLogic {
         private final String id;
         private final String pinTsName;
         private final String pinClass;
+        private final String name;
 
-        public PinState(String id, String pinName, String pinClass) {
+        public PinState(String id, String pinName, String pinClass, String name) {
             this.id = id;
             this.pinTsName = pinName;
             this.pinClass = pinClass;
+            this.name = name;
         }
 
         public String getId() {

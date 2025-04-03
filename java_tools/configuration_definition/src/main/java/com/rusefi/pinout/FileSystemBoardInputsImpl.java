@@ -21,6 +21,6 @@ public class FileSystemBoardInputsImpl extends FileSystemBoardInputsReaderImpl {
 
     @Override
     public Writer getBoardPinNamesWriter() throws IOException {
-        return new FileWriter(boardName + PinoutLogicConstants.CONNECTORS + File.separator + "board_pin_names.h");
+        return new FileWriter(boardName + PinoutLogicConstants.CONNECTORS + File.separator + "generated_board_pin_names.h");
     }
 }
