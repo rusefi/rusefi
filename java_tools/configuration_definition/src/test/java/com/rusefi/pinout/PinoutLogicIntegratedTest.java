@@ -121,6 +121,8 @@ public class PinoutLogicIntegratedTest {
 
         StringWriter outputsTestWriter = new StringWriter();
 
+        StringWriter boardPinNamesTestWriter = new StringWriter();
+
         Reader input = new StringReader(inputYaml);
 
         BoardInputs testBoard = new BoardInputs() {
@@ -152,6 +154,11 @@ public class PinoutLogicIntegratedTest {
             @Override
             public Writer getOutputsWriter() throws IOException {
                 return outputsTestWriter;
+            }
+
+            @Override
+            public Writer getBoardPinNamesWriter() throws IOException {
+                return boardPinNamesTestWriter;
             }
 
             @Override
