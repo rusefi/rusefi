@@ -159,6 +159,9 @@ float getOutputValueByName(const char *name) {
 // actualLastInjection
 		case 681043126:
 			return engine->outputChannels.actualLastInjection;
+// stopEngineCode
+		case -2112117188:
+			return engine->outputChannels.stopEngineCode;
 // injectorDutyCycle
 		case -354325031:
 			return engine->outputChannels.injectorDutyCycle;
