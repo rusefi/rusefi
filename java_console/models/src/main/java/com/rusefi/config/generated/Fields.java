@@ -1758,7 +1758,7 @@ public class Fields {
 	public static final Field KNOCKBASENOISE = Field.create("KNOCKBASENOISE", 22784, FieldType.INT8).setScale(0.5).setBaseOffset(0);
 	public static final Field TPSTSPCORRVALUESBINS = Field.create("TPSTSPCORRVALUESBINS", 22800, FieldType.INT8).setScale(50.0).setBaseOffset(0);
 	public static final Field TPSTSPCORRVALUES = Field.create("TPSTSPCORRVALUES", 22804, FieldType.INT8).setScale(0.02).setBaseOffset(0);
-	public static final Field CLTREVLIMITRPMBINS = Field.create("CLTREVLIMITRPMBINS", 22808, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field CLTREVLIMITRPMBINS = Field.create("CLTREVLIMITRPMBINS", 22808, FieldType.INT8).setScale(5.0).setBaseOffset(0);
 	public static final Field CLTREVLIMITRPM = Field.create("CLTREVLIMITRPM", 22812, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field FUELLEVELBINS = Field.create("FUELLEVELBINS", 22820, FieldType.INT16).setScale(0.001).setBaseOffset(0);
 	public static final Field FUELLEVELVALUES = Field.create("FUELLEVELVALUES", 22836, FieldType.INT8).setScale(1.0).setBaseOffset(0);

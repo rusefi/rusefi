@@ -6165,7 +6165,7 @@ struct persistent_config_s {
 	 * units: C
 	 * offset 22812
 	 */
-	int8_t cltRevLimitRpmBins[CLT_LIMITER_CURVE_SIZE] = {};
+	scaled_channel<int8_t, 1, 5> cltRevLimitRpmBins[CLT_LIMITER_CURVE_SIZE] = {};
 	/**
 	 * units: RPM
 	 * offset 22816
