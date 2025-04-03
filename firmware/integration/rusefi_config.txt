@@ -1350,7 +1350,7 @@ tle8888_mode_e tle8888mode;
 	injector_compensation_mode_e injectorCompensationMode;None = I have a MAP-referenced fuel pressure regulator\nFixed rail pressure = I have an atmosphere-referenced fuel pressure regulator (returnless, typically)\nSensed rail pressure = I have a fuel pressure sensor\n HPFP fuel mass compensation = manual mode for GDI engines;
 
 	pin_output_mode_e fan2PinMode;
-	float fuelReferencePressure;This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.;"kPa", 1, 0, 50, 700000, 0
+	float fuelReferencePressure;This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.\nThis is gauge pressure/in reference to atmospheric.;"kPa", 1, 0, 50, 700000, 0
 
 	ThermistorConf auxTempSensor1
 	ThermistorConf auxTempSensor2
