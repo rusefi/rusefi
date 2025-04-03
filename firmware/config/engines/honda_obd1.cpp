@@ -41,7 +41,9 @@ void setHondaObd1() {
   engineConfiguration->mainRelayPin = Gpio::Unassigned;
 
 #ifdef HW_HELLEN_UAEFI
+#if (IGN_LOAD_COUNT == 16) && (IGN_RPM_COUNT == 16) && (FUEL_LOAD_COUNT == 16) && (FUEL_RPM_COUNT == 16)
   cannedignitionTable();
+#endif
 #endif // HW_HELLEN_UAEFI
 
 	strcpy(engineConfiguration->gpPwmNote[0], "VTC");
