@@ -316,29 +316,30 @@ TEST(idle_v2, openLoopRunningTaper) {
 TEST(idle_v2, getCrankingTaperFraction) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	StrictMock<MockOpenLoopIdler> dut;
+	const float mockedTemperature = 50;
 
-	engineConfiguration->afterCrankingIACtaperDuration = 500;
+	setArrayValues(config->afterCrankingIACtaperDuration, 500);
 
 	// 0 cycles - no taper yet, pure cranking value
-	EXPECT_FLOAT_EQ(0, dut.getCrankingTaperFraction());
+	EXPECT_FLOAT_EQ(0, dut.getCrankingTaperFraction(mockedTemperature));
 
 	// 250 cycles - half way, 50% each value -> outputs 50
 	for (size_t i = 0; i < 250; i++) {
 		engine->rpmCalculator.onNewEngineCycle();
 	}
-	EXPECT_FLOAT_EQ(0.5f, dut.getCrankingTaperFraction());
+	EXPECT_FLOAT_EQ(0.5f, dut.getCrankingTaperFraction(mockedTemperature));
 
 	// 500 cycles - fully tapered, should be running value
 	for (size_t i = 0; i < 250; i++) {
 		engine->rpmCalculator.onNewEngineCycle();
 	}
-	EXPECT_FLOAT_EQ(1, dut.getCrankingTaperFraction());
+	EXPECT_FLOAT_EQ(1, dut.getCrankingTaperFraction(mockedTemperature));
 
 	// 1000 cycles - still fully tapered, should be running value
 	for (size_t i = 0; i < 500; i++) {
 		engine->rpmCalculator.onNewEngineCycle();
 	}
-	EXPECT_FLOAT_EQ(2, dut.getCrankingTaperFraction());
+	EXPECT_FLOAT_EQ(2, dut.getCrankingTaperFraction(mockedTemperature));
 }
 
 TEST(idle_v2, openLoopCoastingTable) {
@@ -416,7 +417,7 @@ struct IntegrationIdleMock : public IdleController {
  	MOCK_METHOD(ICP, determinePhase, (float rpm, TargetInfo targetRpm, SensorResult tps, float vss, float crankingTaperFraction), (override));
 	MOCK_METHOD(float, getOpenLoop, (ICP phase, float rpm, float clt, SensorResult tps, float crankingTaperFraction), (override));
 	MOCK_METHOD(float, getClosedLoop, (ICP phase, float tps, float rpm, float target), (override));
-	MOCK_METHOD(float, getCrankingTaperFraction, (), (const, override));
+	MOCK_METHOD(float, getCrankingTaperFraction, (float clt), (const, override));
 };
 
 TEST(idle_v2, IntegrationManual) {
@@ -436,7 +437,7 @@ TEST(idle_v2, IntegrationManual) {
 		.WillOnce(Return(target));
 
 	// 30% of the way through cranking taper
-	EXPECT_CALL(dut, getCrankingTaperFraction())
+	EXPECT_CALL(dut, getCrankingTaperFraction(expectedClt))
 		.WillOnce(Return(0.3f));
 
 	// Determine phase will claim we're idling
@@ -471,7 +472,7 @@ TEST(idle_v2, IntegrationAutomatic) {
 		.WillOnce(Return(target));
 
 	// 40% of the way through cranking taper
-	EXPECT_CALL(dut, getCrankingTaperFraction())
+	EXPECT_CALL(dut, getCrankingTaperFraction(expectedClt))
 		.WillOnce(Return(0.4f));
 
 	// Determine phase will claim we're idling
@@ -508,7 +509,7 @@ TEST(idle_v2, IntegrationClamping) {
 		.WillOnce(Return(target));
 
 	// 50% of the way through cranking taper
-	EXPECT_CALL(dut, getCrankingTaperFraction())
+	EXPECT_CALL(dut, getCrankingTaperFraction(expectedClt))
 		.WillOnce(Return(0.5f));
 
 	// Determine phase will claim we're idling
