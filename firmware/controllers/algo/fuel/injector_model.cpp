@@ -76,7 +76,7 @@ InjectorNonlinearMode InjectorModelSecondary::getNonlinearMode() const {
 }
 
 void InjectorModelWithConfig::updateState() {
-  pressureCorrectionReference = getFuelPressure().Value;
+  pressureCorrectionReference = getFuelDifferentialPressure().Value;
 }
 
 expected<float> InjectorModelWithConfig::getFuelPressure() const {
