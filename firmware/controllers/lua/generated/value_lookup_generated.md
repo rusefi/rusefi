@@ -1262,7 +1262,7 @@ Additional idle % when fan #2 is active
 Delay to allow fuel pressure to build before firing the priming pulse.
 
 ### fuelReferencePressure
-This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.
+This is the pressure at which your injector flow is known.\nFor example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.\nThis is gauge pressure/in reference to atmospheric.
 
 ### auxTempSensor1.config.tempC_1
 these values are in Celcius

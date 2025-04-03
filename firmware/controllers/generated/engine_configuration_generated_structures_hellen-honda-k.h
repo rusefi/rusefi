@@ -3355,6 +3355,7 @@ struct engine_configuration_s {
 	/**
 	 * This is the pressure at which your injector flow is known.
 	 * For example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.
+	 * This is gauge pressure/in reference to atmospheric.
 	 * units: kPa
 	 * offset 1668
 	 */
