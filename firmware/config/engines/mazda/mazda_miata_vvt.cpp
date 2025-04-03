@@ -267,7 +267,7 @@ static void setCommonMazdaNB() {
 	engineConfiguration->cranking.baseFuel = 27.5; // this value for return-less NB miata fuel system, higher pressure
 	engineConfiguration->cranking.rpm = 400;
 	setArrayValues(config->cltCrankingCorr, 60);
-	engineConfiguration->afterCrankingIACtaperDuration = 250;
+	setArrayValues(config->afterCrankingIACtaperDuration, 250);
 
 	// Idle
 	engineConfiguration->idleMode = IM_AUTO;
