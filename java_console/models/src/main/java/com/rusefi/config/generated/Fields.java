@@ -1171,7 +1171,7 @@ public class Fields {
 	public static final Field ALIGNMENTFILL_AT_3141 = Field.create("ALIGNMENTFILL_AT_3141", 3141, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field TUNEHIDINGKEY = Field.create("TUNEHIDINGKEY", 3142, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final Field VINNUMBER = Field.create("VINNUMBER", 3144, 17, FieldType.STRING).setScale(1.0).setBaseOffset(0);
-	public static final Field ALIGNMENTFILL_AT_3161 = Field.create("ALIGNMENTFILL_AT_3161", 3161, FieldType.INT8).setScale(1.0).setBaseOffset(0);
+	public static final Field TORQUEREDUCTIONACTIVATIONTEMPERATURE = Field.create("TORQUEREDUCTIONACTIVATIONTEMPERATURE", 3161, FieldType.INT8).setScale(1.0).setBaseOffset(0);
 	public static final Field HIGHSPEEDOFFSETS = Field.create("HIGHSPEEDOFFSETS", 3162, FieldType.INT16).setScale(1.0).setBaseOffset(0);
 	public static final String[] fuel_pressure_sensor_mode_e = {"Absolute", "Gauge", "Differential", "INVALID"};
 	public static final Field FUELPRESSURESENSORMODE = Field.create("FUELPRESSURESENSORMODE", 3226, FieldType.INT8, fuel_pressure_sensor_mode_e).setScale(1.0).setBaseOffset(0);
@@ -2963,7 +2963,7 @@ public class Fields {
 	ALIGNMENTFILL_AT_3141,
 	TUNEHIDINGKEY,
 	VINNUMBER,
-	ALIGNMENTFILL_AT_3161,
+	TORQUEREDUCTIONACTIVATIONTEMPERATURE,
 	HIGHSPEEDOFFSETS,
 	FUELPRESSURESENSORMODE,
 	ALIGNMENTFILL_AT_3227,

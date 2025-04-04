@@ -1598,6 +1598,9 @@ float getConfigValueByName(const char *name) {
 // tuneHidingKey
 		case -243078627:
 			return engineConfiguration->tuneHidingKey;
+// torqueReductionActivationTemperature
+		case -427105966:
+			return engineConfiguration->torqueReductionActivationTemperature;
 // ALSMinRPM
 		case 1532957848:
 			return engineConfiguration->ALSMinRPM;
@@ -4638,6 +4641,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -243078627:
 	{
 		engineConfiguration->tuneHidingKey = (int)value;
+		return 1;
+	}
+		case -427105966:
+	{
+		engineConfiguration->torqueReductionActivationTemperature = (int)value;
 		return 1;
 	}
 		case 1532957848:

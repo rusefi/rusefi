@@ -1591,6 +1591,9 @@ Set a minimum allowed target position to avoid slamming/driving against the hard
 ### tuneHidingKey
 
 
+### torqueReductionActivationTemperature
+
+
 ### ALSMinRPM
 
 

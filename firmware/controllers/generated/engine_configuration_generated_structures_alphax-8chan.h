@@ -4094,16 +4094,15 @@ struct engine_configuration_s {
 	 */
 	uint16_t tuneHidingKey;
 	/**
-	 * Individual charaters are accessible using vin(index) Lua function
+	 * Individual characters are accessible using vin(index) Lua function
 	 * offset 3160
 	 */
 	vin_number_t vinNumber;
 	/**
-	 * need 4 byte alignment
-	 * units: units
+	 * units: C
 	 * offset 3177
 	 */
-	uint8_t alignmentFill_at_3177[1] = {};
+	int8_t torqueReductionActivationTemperature;
 	/**
 	 * offset 3178
 	 */
