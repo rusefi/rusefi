@@ -114,7 +114,6 @@ jobs:
           exit 1
         fi
 
-# todo: GHA git pull seems to pull all branches #7679, see same in other actions!
     - name: Git Pull 1/2
       if: ${{env.COMMIT == 'true'}}
       run: |
@@ -123,6 +122,7 @@ jobs:
     - name: Git Pull 2/2
       if: ${{env.COMMIT == 'true'}}
       run: |
+        echo Fetching only current branch to make things quicker
         git fetch $(git rev-parse --symbolic-full-name --abbrev-ref @{upstream} | sed 's!/! !')
         git rebase
 

@@ -85,7 +85,9 @@ jobs:
           exit 1
         fi
         git stash
-        git pull --rebase
+        echo Fetching only current branch to make things quicker
+        git fetch $(git rev-parse --symbolic-full-name --abbrev-ref @{upstream} | sed 's!/! !')
+        git rebase
 
     - name: Push fresh default tune
       if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' && env.COMMIT == 'true'}}
