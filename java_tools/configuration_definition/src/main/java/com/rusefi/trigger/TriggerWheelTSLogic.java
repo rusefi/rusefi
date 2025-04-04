@@ -21,7 +21,8 @@ public class TriggerWheelTSLogic {
             System.out.println(getClass() + ": Folder not specified");
             return;
         }
-        StringBuilder triggerTypesWithoutKnownLocation = new StringBuilder();
+        // initial value has special provision for TT_CUSTOM_WHEEL
+        StringBuilder triggerTypesWithoutKnownLocation = new StringBuilder("trigger_type == 0");
         StringBuilder triggerTypesWithSecondWheel = new StringBuilder();
         StringBuilder triggerTypesCrankBased = new StringBuilder();
 
