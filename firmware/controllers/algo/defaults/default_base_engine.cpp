@@ -235,6 +235,8 @@ void setDefaultBaseEngine() {
 	engineConfiguration->alsEtbPosition = 30;
 	engineConfiguration->ALSMaxTPS = 5;
 
+	engineConfiguration->torqueReductionActivationTemperature = 60;
+
     engineConfiguration->knockRetardAggression = 20;
     engineConfiguration->knockRetardReapplyRate = 3;
     engineConfiguration->knockFuelTrim = 0;

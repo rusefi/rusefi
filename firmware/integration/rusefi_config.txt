@@ -1580,7 +1580,8 @@ uint8_t autoscale etbMinimumPosition;Set a minimum allowed target position to av
 uint16_t tuneHidingKey;;"", 1, 0, 0, 20000, 0
 
 
-	vin_number_t vinNumber;Individual charaters are accessible using vin(index) Lua function
+	vin_number_t vinNumber;Individual characters are accessible using vin(index) Lua function
+	int8_t torqueReductionActivationTemperature;;"C", 1, 0, 0, 90, 0
 
 #define HIGH_SPEED_COUNT 32
 uint16_t[HIGH_SPEED_COUNT] highSpeedOffsets;;"", 1.0000, 0.00000,0.00,65535, 0, noMsqSave

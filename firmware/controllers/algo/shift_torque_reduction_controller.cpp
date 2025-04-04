@@ -78,6 +78,10 @@ void ShiftTorqueReductionController::updateTriggerPinState(
     const pin_input_mode_e mode,
     const bool invalidPinState
 ) {
+  if (engineConfiguration->torqueReductionActivationTemperature != 0) {
+
+  }
+
 #if !EFI_SIMULATOR
     isTorqueReductionTriggerPinValid = isBrainPinValid(pin);
     const bool previousTorqueReductionTriggerPinState = torqueReductionTriggerPinState;
