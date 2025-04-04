@@ -721,7 +721,7 @@ bool TriggerCentral::isToothExpectedNow(efitick_t timestamp) {
 		if (Sensor::getOrZero(SensorType::Rpm) > 1000) {
 			// Now compute how close we are to the last tooth decoded
 			float angleSinceLastTooth = estimatedCurrentPhase.Value - lastToothPhase;
-			if (angleSinceLastTooth < 0.5f) {
+			if (angleSinceLastTooth < 0.5f && !engineConfiguration->doNotFilterTriggerEdgeNoise) {
 				// This tooth came impossibly early, ignore it
 				// This rejects things like doubled edges, for example:
 				//             |-| |----------------
