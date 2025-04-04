@@ -4134,6 +4134,7 @@ end</constant>
          0.0
 </constant>
         <constant name="torqueReductionActivationMode">"Torque Reduction Button"</constant>
+        <constant digits="0" name="torqueReductionActivationTemperature" units="C">60.0</constant>
         <constant digits="0" name="torqueReductionArmingApp" units="">0.0</constant>
         <constant digits="0" name="torqueReductionArmingRpm" units="rpm">0.0</constant>
         <constant name="torqueReductionEnabled">"false"</constant>
@@ -4969,7 +4970,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250403" nPages="1" signature="rusEFI master.2025.04.04.f407-discovery.1641608768" version="5.0"/>
+    <versionInfo firmwareInfo="20250403" nPages="1" signature="rusEFI master.2025.04.04.f407-discovery.1432251030" version="5.0"/>
     <bibliography author="rusEFI 20250403" writeDate="date"/>
     <settings/>
     <userComments/>
