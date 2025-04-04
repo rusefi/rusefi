@@ -286,7 +286,7 @@ public class PinoutLogic {
             throw new IllegalStateException("ID [" + id + "] used multiple times with different ts_name " + existingTsName + "/" + pinTsName);
         tsNameById.put(id, pinTsName);
         tsNameByMeta.put(headerValue, pinTsName);
-        pinNames.append("#define PIN_" + pinName + (isMultiPin ? "_" + pinClass : "") + " " + id + "\n");
+        pinNames.append("#define PIN_" + pinName + (isMultiPin ? "_" + pinClass : "") + " " + headerValue + "\n");
 
         if ("outputs".equalsIgnoreCase(pinClass)) {
             if ("ls".equalsIgnoreCase(pinType) || "inj".equalsIgnoreCase(pinType)) {
