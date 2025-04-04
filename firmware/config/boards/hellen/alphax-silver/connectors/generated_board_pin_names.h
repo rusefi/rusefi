@@ -4,6 +4,30 @@
 #pragma once
 
 #define PIN_1A TLE9104_0_OUT_3
+#define PIN_2A TLE9104_0_OUT_2
+#define PIN_3A TLE9104_0_OUT_1
+#define PIN_4A TLE9104_0_OUT_0
+#define PIN_5A TLE9104_1_OUT_1
+#define PIN_6A TLE9104_1_OUT_2
 #define PIN_9A EFI_ADC_5
-#define PIN_16A E15
-#define PIN_16A E15
+#define PIN_10A E3
+#define PIN_11A E4
+#define PIN_12A E5
+#define PIN_13A C13
+#define PIN_14A TLE9104_1_OUT_0
+#define PIN_16A_event_inputs E15
+#define PIN_16A_switch_inputs E15
+#define PIN_17A_event_inputs E14
+#define PIN_17A_switch_inputs E14
+#define PIN_16A17A A6
+#define PIN_18A EFI_ADC_4
+#define PIN_19A EFI_ADC_12
+#define PIN_20A EFI_ADC_13
+#define PIN_On-board MAP EFI_ADC_11
+#define PIN_21A EFI_ADC_10
+#define PIN_24A_event_inputs E13
+#define PIN_24A_switch_inputs E13
+#define PIN_25A_event_inputs E12
+#define PIN_25A_switch_inputs E12
+#define PIN_24A25A B1
+#define PIN_28A_a TLE9104_1_OUT_3

@@ -9,6 +9,45 @@
 #pragma once
 
 #define PIN_B1 A8
+#define PIN_B2 D2
+#define PIN_B3 D10
+#define PIN_B4 D11
+#define PIN_B5 A9
+#define PIN_B6 D3
+#define PIN_B7 D15
+#define PIN_B8 E6
+#define PIN_B9 B9
+#define PIN_B10 B8
+#define PIN_B11 E3
+#define PIN_B12 E4
+#define PIN_B13 E2
+#define PIN_B14 E5
+#define PIN_B15 C13
+#define PIN_B16 C6
+#define PIN_B17 D13
+#define PIN_B18 D12
 #define PIN_C3 EFI_ADC_1
+#define PIN_C4 EFI_ADC_14
 #define PIN_C5 E12
+#define PIN_C6 E13
+#define PIN_C7 E14
 #define PIN_C9 E15
+#define PIN_C14 EFI_ADC_8
+#define PIN_C15 EFI_ADC_7
+#define PIN_C17 E1
+#define PIN_C18 E0
+#define PIN_D1 EFI_ADC_0
+#define PIN_D2 B1
+#define PIN_D5 E11
+#define PIN_D6 EFI_ADC_3
+#define PIN_D9 EFI_ADC_10
+#define PIN_D10 A6
+#define PIN_D13 EFI_ADC_4
+#define PIN_D15 EFI_ADC_13
+#define PIN_D16 EFI_ADC_12
+#define PIN_9 MSIOBOX_0_OUT_1
+#define PIN_10 MSIOBOX_0_OUT_2
+#define PIN_7 MSIOBOX_0_OUT_3
+#define PIN_8 MSIOBOX_0_OUT_4
+#define PIN_On-board MAP EFI_ADC_11
+#define PIN_A7 EFI_ADC_5

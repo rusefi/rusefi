@@ -4,4 +4,34 @@
 #pragma once
 
 #define PIN_6 C9
+#define PIN_7 E14
+#define PIN_8 C7
+#define PIN_9 E10
+#define PIN_12 E8
+#define PIN_13 E12
+#define PIN_15 D8
+#define PIN_16 D9
+#define PIN_35 C13
+#define PIN_36 D7
+#define PIN_37 E5
+#define PIN_38 E6
 #define PIN_43 EFI_ADC_15
+#define PIN_45 EFI_ADC_7
+#define PIN_46 EFI_ADC_6
+#define PIN_47 EFI_ADC_4
+#define PIN_48 EFI_ADC_3
+#define PIN_50 EFI_ADC_1
+#define PIN_51 EFI_ADC_2
+#define PIN_52 EFI_ADC_13
+#define PIN_53 EFI_ADC_0
+#define PIN_54 EFI_ADC_11
+#define PIN_55 EFI_ADC_12
+#define PIN_57 E3
+#define PIN_58 E4
+#define PIN_59 D3
+#define PIN_60 E2
+#define PIN_61 B9
+#define PIN_62 D5
+#define PIN_63 B8
+#define PIN_64 B7
+#define PIN_onboard EFI_ADC_14
