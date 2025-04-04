@@ -10,6 +10,7 @@
 #include "defaults.h"
 #include "hellen_meta.h"
 #include "hellen_leds_100.cpp"
+#include "connectors/generated_board_pin_names.h"
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = Gpio::MM100_INJ1;
@@ -32,7 +33,7 @@ static void setIgnitionPins() {
 static void setupDefaultSensorInputs() {
 	engineConfiguration->tps1_1AdcChannel = MM100_IN_TPS_ANALOG;
 	engineConfiguration->tps1_2AdcChannel = MM100_IN_AUX1_ANALOG;
-	engineConfiguration->map.sensor.hwChannel = MM100_IN_MAP1_ANALOG;
+	engineConfiguration->map.sensor.hwChannel = PIN_D9;
 
 	setPPSInputs(MM100_IN_PPS_ANALOG, MM100_IN_AUX2_ANALOG);
 
