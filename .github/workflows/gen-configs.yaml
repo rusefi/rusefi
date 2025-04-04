@@ -123,7 +123,8 @@ jobs:
     - name: Git Pull 2/2
       if: ${{env.COMMIT == 'true'}}
       run: |
-        git pull --rebase
+        git fetch $(git rev-parse --symbolic-full-name --abbrev-ref @{upstream} | sed 's!/! !')
+        git rebase
 
     - name: Push fresh triggers.txt
       if: ${{env.COMMIT == 'true'}}
