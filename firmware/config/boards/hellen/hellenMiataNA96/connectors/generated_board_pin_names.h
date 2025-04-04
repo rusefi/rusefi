@@ -49,5 +49,5 @@
 #define PIN_int_tps2_switch_inputs A1
 #define PIN_int_tps2_analog_inputs EFI_ADC_1
 #define PIN_int_etb+ C7
-#define PIN_int_etb- C8
+#define PIN_int_etb_ C8
 #define PIN_int_etb_EN C6

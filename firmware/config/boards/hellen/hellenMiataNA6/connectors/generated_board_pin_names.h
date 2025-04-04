@@ -46,5 +46,5 @@
 #define PIN_4I_switch_inputs A3
 #define PIN_4I_analog_inputs EFI_ADC_3
 #define PIN_int_etb+ C7
-#define PIN_int_etb- C8
+#define PIN_int_etb_ C8
 #define PIN_int_etb_EN C6
