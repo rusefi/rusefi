@@ -912,7 +912,6 @@
         <constant name="disableFan2WhenStopped">"false"</constant>
         <constant digits="3" name="displacement" units="L">1.8</constant>
         <constant name="displayLogicLevelsInEngineSniffer">"false"</constant>
-        <constant name="doNotFilterTriggerEdgeNoise">"with filter"</constant>
         <constant digits="1" name="driveWheelRevPerKm" units="revs/km">551.0</constant>
         <constant name="drv8860_cs">"NONE"</constant>
         <constant name="drv8860_csPinMode">"default"</constant>
@@ -4345,6 +4344,7 @@ end</constant>
         <constant name="unused1320_28">"false"</constant>
         <constant name="unused920_1testChange">"false"</constant>
         <constant digits="0" name="unusedafterCrankingIACtaperDuration" units="">0.0</constant>
+        <constant name="unusedBitHere">"false"</constant>
         <constant digits="0" name="unusedcrankingIACposition" units="">0.0</constant>
         <constant name="unusedCutFuelInAcr">"false"</constant>
         <constant name="unusedFancy10">"false"</constant>
@@ -4922,7 +4922,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250403" nPages="1" signature="rusEFI master.2025.04.04.f407-discovery.2179020854" version="5.0"/>
+    <versionInfo firmwareInfo="20250403" nPages="1" signature="rusEFI master.2025.04.04.f407-discovery.2529930302" version="5.0"/>
     <bibliography author="rusEFI 20250403" writeDate="date"/>
     <settings/>
     <userComments/>
