@@ -119,9 +119,6 @@ float getConfigValueByName(const char *name) {
 // launchControlEnabled
 		case -338157684:
 			return engineConfiguration->launchControlEnabled;
-// doNotFilterTriggerEdgeNoise
-		case 240251894:
-			return engineConfiguration->doNotFilterTriggerEdgeNoise;
 // antiLagEnabled
 		case -933524784:
 			return engineConfiguration->antiLagEnabled;
@@ -2176,11 +2173,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -338157684:
 	{
 		engineConfiguration->launchControlEnabled = (int)value;
-		return 1;
-	}
-		case 240251894:
-	{
-		engineConfiguration->doNotFilterTriggerEdgeNoise = (int)value;
 		return 1;
 	}
 		case -933524784:

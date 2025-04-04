@@ -808,9 +808,8 @@ struct engine_configuration_s {
 	offset 168 bit 16 */
 	bool launchControlEnabled : 1 {};
 	/**
-	 * "Detect double trigger edges"
 	offset 168 bit 17 */
-	bool doNotFilterTriggerEdgeNoise : 1 {};
+	bool unusedBitHere : 1 {};
 	/**
 	offset 168 bit 18 */
 	bool antiLagEnabled : 1 {};
