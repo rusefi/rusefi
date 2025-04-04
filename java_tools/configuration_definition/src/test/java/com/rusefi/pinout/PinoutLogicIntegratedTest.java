@@ -122,8 +122,9 @@ public class PinoutLogicIntegratedTest {
                 "#pragma once\n" +
                 "\n" +
                 "#define PIN_3 A9\n" +
-                "#define PIN_1 E11\n" +
-                "#define PIN_1 E11\n");
+                "#define PIN_2 G8\n" +
+                "#define PIN_1_event_inputs E11\n" +
+                "#define PIN_1_switch_inputs E11\n");
 
     }
 
