@@ -585,6 +585,9 @@ static const LogField fields[] = {
 #if EFI_LAUNCH_CONTROL
 	{engine->shiftTorqueReductionController, 0, 5, "isFlatShiftConditionSatisfied", ""},
 #endif
+#if EFI_LAUNCH_CONTROL
+	{engine->shiftTorqueReductionController, 0, 6, "isBelowTemperatureThreshold", ""},
+#endif
 #if EFI_BOOST_CONTROL
 	{*engine->module<BoostController>(), 0, 0, "isTpsInvalid", ""},
 #endif

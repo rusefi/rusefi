@@ -12,6 +12,7 @@ public class ShiftTorqueReductionController {
 	public static final Field ISRPMCONDITIONSATISFIED = Field.create("ISRPMCONDITIONSATISFIED", 0, FieldType.BIT, 3).setBaseOffset(1176);
 	public static final Field ISAPPCONDITIONSATISFIED = Field.create("ISAPPCONDITIONSATISFIED", 0, FieldType.BIT, 4).setBaseOffset(1176);
 	public static final Field ISFLATSHIFTCONDITIONSATISFIED = Field.create("ISFLATSHIFTCONDITIONSATISFIED", 0, FieldType.BIT, 5).setBaseOffset(1176);
+	public static final Field ISBELOWTEMPERATURETHRESHOLD = Field.create("ISBELOWTEMPERATURETHRESHOLD", 0, FieldType.BIT, 6).setBaseOffset(1176);
 	public static final Field[] VALUES = {
 	ISTORQUEREDUCTIONTRIGGERPINVALID,
 	TORQUEREDUCTIONTRIGGERPINSTATE,
@@ -19,5 +20,6 @@ public class ShiftTorqueReductionController {
 	ISRPMCONDITIONSATISFIED,
 	ISAPPCONDITIONSATISFIED,
 	ISFLATSHIFTCONDITIONSATISFIED,
+	ISBELOWTEMPERATURETHRESHOLD,
 	};
 }

@@ -1127,6 +1127,11 @@ float getOutputValueByName(const char *name) {
 		case 1378388905:
 			return engine->shiftTorqueReductionController.isFlatShiftConditionSatisfied;
 #endif
+// isBelowTemperatureThreshold
+#if EFI_LAUNCH_CONTROL
+		case 319978869:
+			return engine->shiftTorqueReductionController.isBelowTemperatureThreshold;
+#endif
 // isTpsInvalid
 #if EFI_BOOST_CONTROL
 		case -575666209:
