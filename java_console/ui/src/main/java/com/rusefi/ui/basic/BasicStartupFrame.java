@@ -4,6 +4,7 @@ import com.rusefi.*;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.ui.FrameHelper;
 import com.rusefi.maintenance.StatusAnimation;
+import com.rusefi.tools.TunerStudioHelper;
 import com.rusefi.ui.BasicLogoHelper;
 import com.rusefi.ui.util.DefaultExceptionHandler;
 import com.rusefi.ui.util.UiUtils;
@@ -51,6 +52,7 @@ public class BasicStartupFrame {
         if (doNotUseStatusWindow) {
             panel.add(statusPanel);
         }
+        TunerStudioHelper.maybeCloseTs();
 
         SerialPortScanner.INSTANCE.addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
             onHardwareUpdated(currentHardware);
