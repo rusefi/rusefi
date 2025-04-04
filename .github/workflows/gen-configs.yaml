@@ -114,10 +114,15 @@ jobs:
           exit 1
         fi
 
-    - name: Git Pull
+# todo: GHA git pull seems to pull all branches #7679, see same in other actions!
+    - name: Git Pull 1/2
       if: ${{env.COMMIT == 'true'}}
       run: |
         git stash
+
+    - name: Git Pull 2/2
+      if: ${{env.COMMIT == 'true'}}
+      run: |
         git pull --rebase
 
     - name: Push fresh triggers.txt
