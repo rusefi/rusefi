@@ -50,7 +50,7 @@ public class ConsoleUI {
     public static final String TAB_INDEX = "main_tab";
     protected static final String PORT_KEY = "port";
     protected static final String SPEED_KEY = "speed";
-    private static final String TITLE = "rusEFI";
+    public static final String TITLE = "rusEFI";
     public static EngineSnifferPanel engineSnifferPanel;
 
     static Frame staticFrame;
@@ -227,13 +227,7 @@ public class ConsoleUI {
                 System.exit(-1);
         }
         JustOneInstance.onStart();
-        boolean isTsRunning = TunerStudioHelper.isTsRunning();
-        if (isTsRunning) {
-            int result = JOptionPane.showConfirmDialog(createOnTopParent(), "Looks like TunerStudio is running, shall we close it?",
-                TITLE, JOptionPane.YES_NO_OPTION);
-            if (result == JOptionPane.YES_OPTION)
-                TunerStudioHelper.attemptClosingTunerStudio();
-        }
+        TunerStudioHelper.maybeCloseTs();
 
         try {
             boolean isPortDefined = args.length > 0;
