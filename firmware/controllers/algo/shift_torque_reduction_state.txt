@@ -6,5 +6,6 @@ bit isTimeConditionSatisfied
 bit isRpmConditionSatisfied
 bit isAppConditionSatisfied
 bit isFlatShiftConditionSatisfied
+bit isBelowTemperatureThreshold
 
 end_struct

@@ -73,13 +73,25 @@ void ShiftTorqueReductionController::updateTriggerPinState() {
     }
 }
 
+static bool isShiftTorqueBelowTemperatureThreshold() {
+  if (engineConfiguration->torqueReductionActivationTemperature == 0) {
+    return false;
+  }
+  return Sensor::getOrZero(SensorType::Clt) < engineConfiguration->torqueReductionActivationTemperature;
+}
+
+// todo: rename method since we now check temperature not just pin state
 void ShiftTorqueReductionController::updateTriggerPinState(
     const switch_input_pin_e pin,
     const pin_input_mode_e mode,
     const bool invalidPinState
 ) {
-  if (engineConfiguration->torqueReductionActivationTemperature != 0) {
-
+  if (!torqueReductionTriggerPinState) {
+    isBelowTemperatureThreshold = isShiftTorqueBelowTemperatureThreshold();
+    if (isBelowTemperatureThreshold) {
+        // disable by not even reading control pin below threshold temperature, unless already active
+      return;
+    }
   }
 
 #if !EFI_SIMULATOR
