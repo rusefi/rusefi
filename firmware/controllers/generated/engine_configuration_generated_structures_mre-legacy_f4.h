@@ -808,9 +808,8 @@ struct engine_configuration_s {
 	offset 168 bit 16 */
 	bool launchControlEnabled : 1 {};
 	/**
-	 * "Detect double trigger edges"
 	offset 168 bit 17 */
-	bool doNotFilterTriggerEdgeNoise : 1 {};
+	bool unusedBitHere : 1 {};
 	/**
 	offset 168 bit 18 */
 	bool antiLagEnabled : 1 {};
@@ -3355,6 +3354,7 @@ struct engine_configuration_s {
 	/**
 	 * This is the pressure at which your injector flow is known.
 	 * For example if your injectors flow 400cc/min at 3.5 bar, enter 350kpa here.
+	 * This is gauge pressure/in reference to atmospheric.
 	 * units: kPa
 	 * offset 1668
 	 */
@@ -4094,16 +4094,15 @@ struct engine_configuration_s {
 	 */
 	uint16_t tuneHidingKey;
 	/**
-	 * Individual charaters are accessible using vin(index) Lua function
+	 * Individual characters are accessible using vin(index) Lua function
 	 * offset 3144
 	 */
 	vin_number_t vinNumber;
 	/**
-	 * need 4 byte alignment
-	 * units: units
+	 * units: C
 	 * offset 3161
 	 */
-	uint8_t alignmentFill_at_3161[1] = {};
+	int8_t torqueReductionActivationTemperature;
 	/**
 	 * offset 3162
 	 */
@@ -6068,7 +6067,7 @@ struct persistent_config_s {
 	 * units: C
 	 * offset 24808
 	 */
-	int8_t cltRevLimitRpmBins[CLT_LIMITER_CURVE_SIZE] = {};
+	scaled_channel<int8_t, 1, 5> cltRevLimitRpmBins[CLT_LIMITER_CURVE_SIZE] = {};
 	/**
 	 * units: RPM
 	 * offset 24812
