@@ -189,6 +189,7 @@ public class PinoutLogic {
             Object pinName = pin.get(PIN);
             Object pinTsName = pin.get(TS_NAME);
             Object pinFunction = pin.get(FUNCTION);
+            String pinNameString = pinName == null ? null : pinName.toString();
             if (pinTsName == null && pinFunction != null)
                 pinTsName = pinFunction;
             Object pinType = pin.get(TYPE);
@@ -212,7 +213,7 @@ public class PinoutLogic {
                     // we are a bit inconsistent between single-function and array syntax:
                     // for array syntax we just apply mapping on the fly while for single we use 'meta' keyword instead of 'pin' keyword
                     id = applyMetaMapping(metaMapping, id);
-                    addPinToList(id, originalValue, null, (String) pinTsName, pinClassArray.get(i), pinName.toString(), true);
+                    addPinToList(id, originalValue, null, (String) pinTsName, pinClassArray.get(i), pinNameString, true);
                 }
             } else if (pinId instanceof String) {
                 String pinIdString = (String) pinId;
@@ -225,7 +226,7 @@ public class PinoutLogic {
                     throw new IllegalStateException("Wrong TsName: " + pinTsName + " while " + pinIdString);
                 if (!(pinClass instanceof String))
                     throw new IllegalStateException("Wrong class: " + pinClass + " while " + pinIdString);
-                addPinToList(pinIdString, headerValue, stringPinType, (String) pinTsName, (String) pinClass, pinName.toString(), false);
+                addPinToList(pinIdString, headerValue, stringPinType, (String) pinTsName, (String) pinClass, pinNameString, false);
             } else {
                 throw new IllegalStateException("Unexpected type of ID field: " + pinId.getClass().getSimpleName());
             }
@@ -286,8 +287,10 @@ public class PinoutLogic {
             throw new IllegalStateException("ID [" + id + "] used multiple times with different ts_name " + existingTsName + "/" + pinTsName);
         tsNameById.put(id, pinTsName);
         tsNameByMeta.put(headerValue, pinTsName);
-        String pinNameForDefine = pinName.replace('-', '_');
-        pinNames.append("#define PIN_" + pinNameForDefine + (isMultiPin ? "_" + pinClass : "") + " " + headerValue + "\n");
+        if (pinName != null) {
+            String pinNameForDefine = pinName.replace('-', '_');
+            pinNames.append("#define PIN_" + pinNameForDefine + (isMultiPin ? "_" + pinClass : "") + " " + headerValue + "\n");
+        }
 
         if ("outputs".equalsIgnoreCase(pinClass)) {
             if ("ls".equalsIgnoreCase(pinType) || "inj".equalsIgnoreCase(pinType)) {
