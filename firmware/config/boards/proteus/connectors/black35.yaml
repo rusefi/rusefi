@@ -82,6 +82,7 @@ pins:
     id: E1
     class: outputs
     ts_name: Lowside 15
+    color: white
     type: ls
 
   - pin: 13
@@ -159,6 +160,7 @@ pins:
     class: outputs
     ts_name: Lowside 16
     type: ls
+    color: yellow
 
   - pin: 24
     function: Power GND
