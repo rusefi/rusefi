@@ -107,6 +107,8 @@ void setSubaru2011() {
 	engineConfiguration->trigger.type = trigger_type_e::TT_36_2_2_2;
   engineConfiguration->vvtMode[0] = VVT_BOSCH_QUICK_START;
   engineConfiguration->vvtMode[1] = VVT_BOSCH_QUICK_START;
+	engineConfiguration->firingOrder = FO_1_3_2_4;
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 
 #if HW_PROTEUS && EFI_PROD_CODE
 	setProteusEtbIO();

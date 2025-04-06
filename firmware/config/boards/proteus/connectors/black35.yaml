@@ -62,6 +62,7 @@ pins:
     function: "Injector #11 or radiator fan relay"
     class: outputs
     ts_name: Lowside 11
+    color: white
     type: ls
 
   - pin: 10
