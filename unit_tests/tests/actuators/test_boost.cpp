@@ -363,7 +363,7 @@ TEST(BoostControl, TestClosedLoopUint8Overflow) {
 }
 
 
-TEST(BoostControl, SetOutput) {
+TEST(BoostControl, SetOutputPWM) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->isBoostControlEnabled = true;
@@ -373,9 +373,32 @@ TEST(BoostControl, SetOutput) {
 	StrictMock<MockEtb> etb;
 	BoostController bc;
 
-	// ETB only PWM should be set
-	//EXPECT_CALL(etb, setWastegatePosition(25.0f));
+	// only PWM should be set
+	EXPECT_CALL(etb, setWastegatePosition(25.0f)).Times(0);
 	EXPECT_CALL(pwm, setSimplePwmDutyCycle(0.25f));
+
+	// Don't crash if not init'd (don't deref null ptr m_pwm)
+	EXPECT_NO_THROW(bc.setOutput(25.0f));
+
+	// Init with mock PWM device and ETB
+	bc.init(&pwm, nullptr, nullptr, testBoostCltCorr, testBoostIatCorr, testBoostCltAdder, testBoostIatAdder, nullptr);
+	engine->etbControllers[0] = &etb;
+
+	bc.setOutput(25.0f);
+}
+
+TEST(BoostControl, SetOutputETB) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	engineConfiguration->isBoostControlEnabled = true;
+
+	StrictMock<MockPwm> pwm;
+	StrictMock<MockEtb> etb;
+	BoostController bc;
+
+	// only ETB should be set
+	EXPECT_CALL(etb, setWastegatePosition(25.0f));
+	EXPECT_CALL(pwm, setSimplePwmDutyCycle(0.25f)).Times(0);
 
 	// Don't crash if not init'd (don't deref null ptr m_pwm)
 	EXPECT_NO_THROW(bc.setOutput(25.0f));
