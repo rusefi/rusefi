@@ -997,6 +997,8 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
 
 	dc_io[ETB_COUNT iterate] etbIo
 
+    #define boost_control_mode_e_enum "Disabled", "Enabled (PWM Solenoid)", "Enabled (E-Waste gate)"
+    custom boost_control_mode_e 1 bits, U08, @OFFSET@, [0:1], @@boost_control_mode_e_enum@@
 
     output_pin_e boostControlPin;Wastegate control Solenoid;
 	pin_output_mode_e boostControlPinMode;
@@ -1824,7 +1826,7 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 	int8_t[8] airmassToTimingValues;;"deg", 1, 0, -30, 30, 0
 	uint8_t autoscale idleReturnTargetRampDuration;idle return target ramp duration;"seconds", 0.1, 0, 0.1, 15, 1
 
-#define END_OF_CALIBRATION_PADDING 53
+#define END_OF_CALIBRATION_PADDING 52
 uint8_t[END_OF_CALIBRATION_PADDING] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0, noMsqSave
 
 ! end of engine_configuration_s
