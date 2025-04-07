@@ -367,13 +367,14 @@ TEST(BoostControl, SetOutput) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	engineConfiguration->isBoostControlEnabled = true;
+	engineConfiguration->boostControlPin = Gpio::A0;
 
 	StrictMock<MockPwm> pwm;
 	StrictMock<MockEtb> etb;
 	BoostController bc;
 
-	// ETB wastegate position & PWM should both be set
-	EXPECT_CALL(etb, setWastegatePosition(25.0f));
+	// ETB only PWM should be set
+	//EXPECT_CALL(etb, setWastegatePosition(25.0f));
 	EXPECT_CALL(pwm, setSimplePwmDutyCycle(0.25f));
 
 	// Don't crash if not init'd (don't deref null ptr m_pwm)
