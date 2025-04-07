@@ -246,6 +246,10 @@ expected<percent_t> BoostController::getClosedLoop(float target, float manifoldP
 	return (float)boostControllerClosedLoopPart;
 }
 
+bool isBoostControlSolenoidMode() {
+	return isBrainPinValid(engineConfiguration->boostControlPin);
+}
+
 void BoostController::setOutput(expected<float> output) {
 	// this clamping is just for happier gauge #6339
 	boostOutput = clampPercentValue(output.value_or(engineConfiguration->boostControlSafeDutyCycle));
@@ -257,15 +261,15 @@ void BoostController::setOutput(expected<float> output) {
 
 	float duty = PERCENT_TO_DUTY(boostOutput);
 
-	if (m_pwm) {
+	if (m_pwm && isBoostControlSolenoidMode()) {
 		m_pwm->setSimplePwmDutyCycle(duty);
-	}
-
+	} else {
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	// inject wastegate position into DC controllers, pretty weird workflow to be honest
 	// todo: should it be DC controller pulling?
 	setEtbWastegatePosition(boostOutput);
 #endif // EFI_ELECTRONIC_THROTTLE_BODY
+	}
 }
 
 void BoostController::onFastCallback() {
