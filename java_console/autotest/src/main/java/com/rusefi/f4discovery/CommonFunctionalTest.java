@@ -1,6 +1,5 @@
 package com.rusefi.f4discovery;
 
-import com.rusefi.config.generated.Fields;
 import com.rusefi.RusefiTestBase;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.Sensor;
