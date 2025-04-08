@@ -187,6 +187,16 @@ static bool isValidCan2TxPin(brain_pin_e pin) {
 	return pin == Gpio::B6 || pin == Gpio::B13;
 }
 
+#if STM32_CAN_USE_CAN3 || STM32_CAN_USE_FDCAN3
+static bool isValidCan3RxPin(brain_pin_e pin) {
+   return pin == Gpio::A8 || pin == Gpio::B3;
+}
+
+static bool isValidCan3TxPin(brain_pin_e pin) {
+   return pin == Gpio::A15 || pin == Gpio::B4;
+}
+#endif
+
 bool isValidCanTxPin(brain_pin_e pin) {
    return isValidCan1TxPin(pin) || isValidCan2TxPin(pin);
 }
@@ -206,6 +216,10 @@ CANDriver* detectCanDevice(brain_pin_e pinRx, brain_pin_e pinTx) {
 #if STM32_CAN_USE_CAN2 || STM32_CAN_USE_FDCAN2
    if (isValidCan2RxPin(pinRx) && isValidCan2TxPin(pinTx))
       return &CAND2;
+#endif
+#if STM32_CAN_USE_CAN3 || STM32_CAN_USE_FDCAN3
+   if (isValidCan3RxPin(pinRx) && isValidCan3TxPin(pinTx))
+      return &CAND3;
 #endif
    criticalError("invalid CAN pins tx %s and rx %s", hwPortname(pinTx), hwPortname(pinRx));
    return nullptr;
