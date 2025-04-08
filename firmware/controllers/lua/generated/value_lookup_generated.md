@@ -1972,9 +1972,6 @@ Error above specified value
 ### ltftEnabled
 
 
-### simpleLtftMode
-
-
 ### ltftCRC
 
 
@@ -1991,12 +1988,6 @@ How much long term fuel trim should act to reduce short term fuel trim, 100 shou
 
 
 ### ltftMinCorrection
-
-
-### ltftSimpleCorrection
-
-
-### ltftSimpleCorrectionRatio
 
 
 ### tcu_shiftTime
