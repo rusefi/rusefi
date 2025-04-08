@@ -268,24 +268,10 @@ float LongTermFuelTrim::getLtft(float load, float rpm) {
 		auto lambda = Sensor::get(SensorType::Lambda1);
 		float lambdaError = lambda.Value - engine->fuelComputer.targetLambda;
 
-		// Only correct if stft on correct path
-		if((stftCorrection > 0.0f && lambdaError < 0.0f) || (stftCorrection < 0.0f && lambdaError > 0.0f)) {
-			ltft = config->ltftSimpleCorrection;
-		} else {
-			float correction = config->ltftSimpleCorrectionRatio * 0.005f * (stftCorrection / (abs(stftCorrection))) * (1 - pow(10, - 20 * (100 / config->ltftPermissivity) * abs(stftCorrection)));				
-			if(abs(correction) > abs(stftCorrection)) {
-				correction = stftCorrection * stftCorrection / (abs(stftCorrection));
-			}
-
-			if(abs(correction) <= 0.2) {
-				config->ltftSimpleCorrection = config->ltftSimpleCorrection + correction;
-			}
-			
-			ltft = config->ltftSimpleCorrection;
-		}
-		
+		config->ltftSimpleCorrection = config->ltftSimpleCorrection + config->simpleLtftCorrectionRate * 0.005f * (stftCorrection / (abs(stftCorrection))) * (1 - pow(10, - 20 * (100 / config->ltftPermissivity) * abs(stftCorrection)));
+		ltft = config->ltftSimpleCorrection;
 	}
-
+	
 	return ltft;
 }
 
