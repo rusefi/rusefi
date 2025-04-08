@@ -291,7 +291,7 @@ float LongTermFuelTrim::getLtft(float load, float rpm) {
 
 		if(config->ltftSimpleCorrection > float(100.0f + float(config->ltftMaxCorrection))) {
 			config->ltftSimpleCorrection = float(100.0f + float(config->ltftMaxCorrection));
-		} else if (config->ltftSimpleCorrection < float(100.0f - float(config->ltftMinCorrection))) {
+		} else if (config->ltftSimpleCorrection < float(100.0f - float()config->ltftMinCorrection)) {
 			config->ltftSimpleCorrection = float(100.0f - float(config->ltftMinCorrection));
 		}
 
