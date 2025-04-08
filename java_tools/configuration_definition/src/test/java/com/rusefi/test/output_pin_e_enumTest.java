@@ -15,6 +15,6 @@ public class output_pin_e_enumTest {
         VariableRegistry r = ConfigDefinitionTest.readRealConfig();
         String packed = r.get("output_pin_e_enum");
         String[] array = packed.split("\\s+");
-        assertEquals(unquote(array[287]), "MC33810_0_GD_3");
+        assertEquals(unquote(array[287+32]), "MC33810_0_GD_3");
     }
 }
