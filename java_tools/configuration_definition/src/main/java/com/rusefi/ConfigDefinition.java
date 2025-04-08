@@ -99,7 +99,6 @@ public class ConfigDefinition {
                     break;
                 case KEY_JAVA_DESTINATION:
                     String folderName = args[i + 1];
-                    state.addJavaDestination(folderName + "Fields.java");
                     state.addDestination(new FileJavaVariableRegistryConsumer(state, folderName, LazyFile.REAL, "VariableRegistryValues"));
                     break;
                 case "-field_lookup_file": {

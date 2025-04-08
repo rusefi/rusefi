@@ -129,13 +129,13 @@ public class EngineSnifferPanel {
 
         if (!uiContext.getLinkManager().isLogViewer()) {
             JPanel lowerButtons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
-            lowerButtons.add(new ConfigUiField(uiContext, Fields.GLOBALTRIGGERANGLEOFFSET, "Trigger Offset").getContent());
-            lowerButtons.add(new BitConfigField(uiContext, Fields.VERBOSETRIGGERSYNCHDETAILS, "Verbose trigger Sync").getContent());
-            lowerButtons.add(new BitConfigField(uiContext, Fields.VERBOSEVVTDECODING, "Verbose VVT Sync").getContent());
-            lowerButtons.add(new BitConfigField(uiContext, Fields.ENGINESNIFFERFOCUSONINPUTS, "Focus On Inputs").getContent());
-            lowerButtons.add(new ConfigUiField(uiContext, Fields.ENGINECHARTSIZE, "Engine Sniffer size").getContent());
-            lowerButtons.add(new ConfigUiField(uiContext, Fields.ENGINESNIFFERRPMTHRESHOLD, "RPM threshold").getContent());
-            lowerButtons.add(new BitConfigField(uiContext, Fields.INVERTPRIMARYTRIGGERSIGNAL, "Invert Primary Input").getContent());
+//            lowerButtons.add(new ConfigUiField(uiContext, Fields.GLOBALTRIGGERANGLEOFFSET, "Trigger Offset").getContent());
+//            lowerButtons.add(new BitConfigField(uiContext, Fields.VERBOSETRIGGERSYNCHDETAILS, "Verbose trigger Sync").getContent());
+//            lowerButtons.add(new BitConfigField(uiContext, Fields.VERBOSEVVTDECODING, "Verbose VVT Sync").getContent());
+//            lowerButtons.add(new BitConfigField(uiContext, Fields.ENGINESNIFFERFOCUSONINPUTS, "Focus On Inputs").getContent());
+//            lowerButtons.add(new ConfigUiField(uiContext, Fields.ENGINECHARTSIZE, "Engine Sniffer size").getContent());
+//            lowerButtons.add(new ConfigUiField(uiContext, Fields.ENGINESNIFFERRPMTHRESHOLD, "RPM threshold").getContent());
+//            lowerButtons.add(new BitConfigField(uiContext, Fields.INVERTPRIMARYTRIGGERSIGNAL, "Invert Primary Input").getContent());
             bottomPanel.add(lowerButtons, BorderLayout.NORTH);
         }
 

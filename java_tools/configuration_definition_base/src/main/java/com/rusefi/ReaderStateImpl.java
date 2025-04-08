@@ -410,7 +410,6 @@ public class ReaderStateImpl implements ReaderState {
     }
 
     public void addJavaDestination(String fileName) {
-        destinations.add(new FileJavaFieldsConsumer(this, fileName, 0, fileFactory));
     }
 
     @Override

@@ -63,7 +63,7 @@ public class LiveDataProcessorTest {
             }
         }, captor, destinationFolder);
         liveDataProcessor.handleYaml(data);
-        assertEquals(14, captor.fileCapture.size());
+        assertEquals(13, captor.fileCapture.size());
 
         captor.assertOutput("wb1tempC = scalar, U16, 0, \"C\", 1, 0\n" +
             "wb1bitName1 = bits, U32, 4, [0:0]\n" +

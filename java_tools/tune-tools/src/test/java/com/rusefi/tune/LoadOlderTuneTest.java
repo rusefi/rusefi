@@ -153,7 +153,7 @@ public class LoadOlderTuneTest {
     @Test
     public void findFieldByName() throws IniMemberNotFound {
         IniFileModel ini = IniFileModelImpl.readIniFile(TuneReadWriteTest.TEST_INI);
-        StringIniField make = (StringIniField) ini.getIniField(Fields.ENGINEMAKE);
+        StringIniField make = (StringIniField) ini.getIniField("ENGINEMAKE");
         assertNotNull(make);
         ScalarIniField tps = (ScalarIniField) ini.getOutputChannel(TsOutputs.RPMVALUE.getName());
         assertNotNull(tps);

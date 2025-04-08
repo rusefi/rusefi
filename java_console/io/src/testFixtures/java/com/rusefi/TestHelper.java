@@ -6,7 +6,6 @@ import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.config.Field;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.io.IoStream;
@@ -18,7 +17,6 @@ import com.rusefi.proxy.NetworkConnector;
 import com.rusefi.server.ControllerInfo;
 import com.rusefi.server.SessionDetails;
 import com.rusefi.server.rusEFISSLContext;
-import com.rusefi.tune.xml.Constant;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
 
@@ -45,7 +43,7 @@ public class TestHelper extends MockitoTestHelper {
     }
 
     @NotNull
-    public static ConfigurationImage prepareImage(int input, ScalarIniField scalarIniField) {
+    public static ConfigurationImage prepareImage(int input) {
         ConfigurationImage ci = new ConfigurationImage(BinaryProtocol.iniFileProvider.provide(null).getMetaInfo().getTotalSize());
 
   //      scalarIniField.setValue(ci, new Constant(scalarIniField.getName(), "", Integer.toString(input), scalarIniField.getDigits()));

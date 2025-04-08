@@ -273,7 +273,7 @@ public class LuaScriptPanel {
         // todo: do we have "luaScript" as code-generated constant anywhere?
         IniFileModel iniFile = bp.getIniFile();
         Objects.requireNonNull(iniFile, "iniFile");
-        return (StringIniField) iniFile.getIniField(Fields.LUASCRIPT);
+        return (StringIniField) iniFile.getIniField("LUASCRIPT");
     }
 
     @SuppressWarnings("StatementWithEmptyBody")

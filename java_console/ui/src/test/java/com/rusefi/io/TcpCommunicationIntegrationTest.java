@@ -14,7 +14,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.Objects;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -55,9 +54,8 @@ public class TcpCommunicationIntegrationTest {
 
     @Test
     public void testConnectAndTransmitImageOverTcpIp() throws InterruptedException {
-        ScalarIniField iniField = TestHelper.createIniField(Fields.CYLINDERSCOUNT);
         int value = 239;
-        ConfigurationImage serverImage = TestHelper.prepareImage(value, iniField);
+        ConfigurationImage serverImage = TestHelper.prepareImage(value);
         int port = 6100;
 
         BinaryProtocolServer server = TestHelper.createVirtualController(port, serverImage, new BinaryProtocolServer.Context());
@@ -85,7 +83,7 @@ public class TcpCommunicationIntegrationTest {
         BinaryProtocol clientStreamState = clientManager.getCurrentStreamState();
         Objects.requireNonNull(clientStreamState, "clientStreamState");
         ConfigurationImage clientImage = clientStreamState.getControllerConfiguration();
-        String clientValue = iniField.getValue(clientImage);
+//        String clientValue = iniField.getValue(clientImage);
 // dead?        assertEquals(Double.toString(value), clientValue);
 
         clientManager.close();
@@ -93,7 +91,7 @@ public class TcpCommunicationIntegrationTest {
 
     @Test
     public void testProxy() throws InterruptedException, IOException {
-        ConfigurationImage serverImage = TestHelper.prepareImage(239, TestHelper.createIniField(Fields.CYLINDERSCOUNT));
+        ConfigurationImage serverImage = TestHelper.prepareImage(239);
         int controllerPort = 6102;
 
         // create virtual controller
