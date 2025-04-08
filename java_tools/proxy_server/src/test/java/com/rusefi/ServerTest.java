@@ -1,6 +1,5 @@
 package com.rusefi;
 
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.io.IoStream;

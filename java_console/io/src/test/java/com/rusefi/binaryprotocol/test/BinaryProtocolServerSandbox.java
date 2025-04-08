@@ -3,15 +3,11 @@ package com.rusefi.binaryprotocol.test;
 import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.IniFileModeSingleton;
 import com.opensr5.ini.IniFileModel;
-import com.opensr5.ini.field.ScalarIniField;
-import com.rusefi.TestHelper;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.io.LinkConnector;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.tcp.BinaryProtocolServer;
-import com.rusefi.tune.xml.Constant;
 
 /**
  * Starts a fake device with TCP connector at {@link BinaryProtocolServer#DEFAULT_PROXY_PORT} port

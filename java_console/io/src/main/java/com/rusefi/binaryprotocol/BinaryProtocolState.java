@@ -1,7 +1,6 @@
 package com.rusefi.binaryprotocol;
 
 import com.opensr5.ConfigurationImage;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import org.jetbrains.annotations.Nullable;
 

@@ -6,7 +6,6 @@ import com.opensr5.ini.IniMemberNotFound;
 import com.opensr5.ini.field.ScalarIniField;
 import com.opensr5.ini.field.StringIniField;
 import com.rusefi.*;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.TsOutputs;
 import com.rusefi.tools.tune.TuneCanTool;
 import com.rusefi.tools.tune.TuneTools;

@@ -2,15 +2,12 @@ package com.rusefi.ui.engine;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.FileLog;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.EngineState;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ui.*;
-import com.rusefi.ui.config.BitConfigField;
-import com.rusefi.ui.config.ConfigUiField;
 import com.rusefi.core.preferences.storage.Node;
 import com.rusefi.ui.util.URLLabel;
 import com.rusefi.ui.util.UiUtils;

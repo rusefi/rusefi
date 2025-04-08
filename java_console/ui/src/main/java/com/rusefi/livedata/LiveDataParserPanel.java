@@ -6,7 +6,6 @@ import com.rusefi.CodeWalkthrough;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolState;
 import com.rusefi.config.Field;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.enums.live_data_e;
 import com.rusefi.livedata.generated.CPP14Lexer;
 import com.rusefi.livedata.generated.CPP14Parser;

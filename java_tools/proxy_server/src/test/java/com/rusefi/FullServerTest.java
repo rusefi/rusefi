@@ -2,10 +2,7 @@ package com.rusefi;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImage;
-import com.opensr5.ini.field.IniField;
-import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.io.ConnectionStateListener;
 import com.rusefi.io.LinkManager;

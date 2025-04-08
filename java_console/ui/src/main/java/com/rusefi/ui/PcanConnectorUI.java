@@ -2,7 +2,6 @@ package com.rusefi.ui;
 
 import com.devexperts.logging.Logging;
 import com.rusefi.NamedThreadFactory;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.can.PCanIoStream;

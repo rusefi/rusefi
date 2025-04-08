@@ -33,7 +33,7 @@ import static com.rusefi.VariableRegistry.quote;
         content.append("        stateDictionary.register(live_data_e.LDS_");
         content.append(name).append(suffix).append(", ");
 
-        content.append(FileJavaFieldsConsumer.remoteExtension(javaName)).append(".VALUES, ");
+ //       content.append(FileJavaFieldsConsumer.remoteExtension(javaName)).append(".VALUES, ");
         content.append(quote(cppFileName));
         content.append(");\n");
     }

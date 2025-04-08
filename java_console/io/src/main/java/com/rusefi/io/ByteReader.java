@@ -2,7 +2,6 @@ package com.rusefi.io;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.io.DataListener;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.io.serial.AbstractIoStream;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 

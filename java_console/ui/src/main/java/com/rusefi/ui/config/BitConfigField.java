@@ -3,7 +3,6 @@ package com.rusefi.ui.config;
 import com.opensr5.ConfigurationImage;
 import com.rusefi.config.Field;
 import com.rusefi.config.FieldCommandResponse;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.MessagesCentral;
 import com.rusefi.ui.UIContext;

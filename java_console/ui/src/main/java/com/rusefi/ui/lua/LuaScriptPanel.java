@@ -6,7 +6,6 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.StringIniField;
 import com.rusefi.ConnectionTab;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.ConnectionStatusLogic;
 import com.rusefi.io.LinkManager;

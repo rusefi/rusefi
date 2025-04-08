@@ -1,6 +1,5 @@
 package com.rusefi.io.commands;
 
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.io.IoStream;
 import com.rusefi.io.tcp.BinaryProtocolServer;

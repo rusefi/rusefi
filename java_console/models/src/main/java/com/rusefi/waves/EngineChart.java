@@ -1,6 +1,5 @@
 package com.rusefi.waves;
 
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 
 import java.util.Map;

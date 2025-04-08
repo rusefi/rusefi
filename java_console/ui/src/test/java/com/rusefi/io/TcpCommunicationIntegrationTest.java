@@ -1,11 +1,9 @@
 package com.rusefi.io;
 
 import com.opensr5.ConfigurationImage;
-import com.opensr5.ini.field.ScalarIniField;
 import com.rusefi.TestHelper;
 import com.rusefi.proxy.*;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.io.tcp.BinaryProtocolProxy;
 import com.rusefi.io.tcp.BinaryProtocolServer;
 import com.rusefi.io.tcp.TcpConnector;

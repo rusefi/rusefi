@@ -6,7 +6,6 @@ import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.core.SignatureHelper;
 import com.rusefi.auth.AuthTokenUtil;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Pair;
 import com.rusefi.core.SensorsHolder;
 import com.rusefi.io.IoStream;

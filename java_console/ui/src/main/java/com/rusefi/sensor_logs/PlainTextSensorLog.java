@@ -1,15 +1,12 @@
 package com.rusefi.sensor_logs;
 
 import com.devexperts.logging.FileLogger;
-import com.opensr5.ConfigurationImage;
 import com.rusefi.FileLog;
 import com.rusefi.Launcher;
 import com.rusefi.binaryprotocol.BinaryProtocol;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.core.Sensor;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.ui.UIContext;
-import com.rusefi.ui.config.ConfigUiField;
 
 import java.io.FileWriter;
 import java.io.IOException;

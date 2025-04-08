@@ -11,7 +11,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 
-import static com.rusefi.config.generated.Fields.*;
 import static com.rusefi.IoUtil.*;
 import static com.rusefi.config.generated.Integration.CMD_SELF_STIMULATION;
 import static org.junit.Assert.*;

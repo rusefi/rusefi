@@ -6,7 +6,6 @@ import com.rusefi.CompatibleFunction;
 import com.rusefi.Listener;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.config.generated.TsOutputs;
 import com.rusefi.config.generated.VariableRegistryValues;
@@ -22,8 +21,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-import static com.rusefi.config.generated.Fields.*;
-import static com.rusefi.config.generated.VariableRegistryValues.HIGH_SPEED_COUNT;
 import static com.rusefi.config.generated.VariableRegistryValues.TS_PROTOCOL;
 import static com.rusefi.io.tcp.BinaryProtocolServer.TS_OK;
 import static com.rusefi.io.tcp.BinaryProtocolServer.getOutputCommandResponse;
@@ -126,26 +123,26 @@ public class TcpServerSandbox {
         } else if (command == Integration.TS_OUTPUT_COMMAND) {
             byte[] response = getOutputCommandResponse(payload, ecuState.outputs);
             stream.sendPacket(response);
-        } else if (command == Integration.TS_GET_SCATTERED_GET_COMMAND) {
-//            System.out.println("Cool TS_GET_SCATTERED_GET_COMMAND");
-            int startOffset = HIGHSPEEDOFFSETS.getOffset();
-            int totalResponseSize = 0;
-            for (int i = 0; i < HIGH_SPEED_COUNT; i++) {
-                int higherByte = getByte(startOffset + 1);
-                int type = higherByte >> 5;
-                int size = getSize(type);
-
-                totalResponseSize += size;
-
-                int twoBytes = getByte(startOffset) + (higherByte & 0x1F) * 256;
-//                System.out.println("TS_GET_SCATTERED_GET_COMMAND index=" + i + " type=" + type + " offset=" + twoBytes);
-                startOffset += 2;
-            }
-
-            byte[] response = new byte[1 + totalResponseSize];
-            response[0] = (byte) TS_OK.charAt(0);
-            stream.sendPacket(response);
-
+//        } else if (command == Integration.TS_GET_SCATTERED_GET_COMMAND) {
+////            System.out.println("Cool TS_GET_SCATTERED_GET_COMMAND");
+//            int startOffset = HIGHSPEEDOFFSETS.getOffset();
+//            int totalResponseSize = 0;
+//            for (int i = 0; i < HIGH_SPEED_COUNT; i++) {
+//                int higherByte = getByte(startOffset + 1);
+//                int type = higherByte >> 5;
+//                int size = getSize(type);
+//
+//                totalResponseSize += size;
+//
+//                int twoBytes = getByte(startOffset) + (higherByte & 0x1F) * 256;
+////                System.out.println("TS_GET_SCATTERED_GET_COMMAND index=" + i + " type=" + type + " offset=" + twoBytes);
+//                startOffset += 2;
+//            }
+//
+//            byte[] response = new byte[1 + totalResponseSize];
+//            response[0] = (byte) TS_OK.charAt(0);
+//            stream.sendPacket(response);
+//
         } else if (command == Integration.TS_CHUNK_WRITE_COMMAND) {
             ByteRange byteRange = ByteRange.valueOf(payload);
             System.out.println("TS_CHUNK_WRITE_COMMAND " + byteRange + " payload " + payload.length);

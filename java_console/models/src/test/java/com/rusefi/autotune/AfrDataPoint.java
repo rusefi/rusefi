@@ -1,7 +1,5 @@
 package com.rusefi.autotune;
 
-import com.rusefi.config.generated.Fields;
-
 import static com.rusefi.config.generated.VariableRegistryValues.FUEL_LOAD_COUNT;
 import static com.rusefi.config.generated.VariableRegistryValues.FUEL_RPM_COUNT;
 

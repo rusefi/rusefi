@@ -5,7 +5,6 @@ import com.opensr5.ConfigurationImage;
 import com.opensr5.ini.*;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.MsqFactory;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.config.generated.VariableRegistryValues;
 import com.rusefi.enums.engine_type_e;

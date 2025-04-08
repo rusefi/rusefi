@@ -3,7 +3,6 @@ package com.rusefi.io.can;
 import com.devexperts.logging.Logging;
 import com.opensr5.io.DataListener;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.uds.CanConnector;
 import com.rusefi.util.HexBinary;
 import com.rusefi.io.IoStream;

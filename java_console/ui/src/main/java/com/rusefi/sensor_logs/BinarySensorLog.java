@@ -2,7 +2,6 @@ package com.rusefi.sensor_logs;
 
 import com.devexperts.logging.FileLogger;
 import com.rusefi.FileLog;
-import com.rusefi.config.generated.Fields;
 import com.rusefi.config.generated.Integration;
 import com.rusefi.core.rusEFIVersion;
 

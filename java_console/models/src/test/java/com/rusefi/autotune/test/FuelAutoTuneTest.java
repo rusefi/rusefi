@@ -1,7 +1,6 @@
 package com.rusefi.autotune.test;
 
 import com.rusefi.autotune.*;
-import com.rusefi.config.generated.Fields;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
