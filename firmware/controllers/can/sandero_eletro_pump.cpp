@@ -38,7 +38,7 @@ void sendEletroPumpInfo() {
 		CanTxMessage msg(CanCategory::NBC, PUMP_STEER_SPEED, 8);
 		msg[0] = 0x7f;
 		msg[1] = 0x94;
-		msg[2] = 0xa0;
+		msg[2] = engineConfiguration->sanderoPumpSpeed;
 		msg[3] = 0xff;
 		msg[4] = 0x7f;
 		msg[5] = 0xf4;
