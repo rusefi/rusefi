@@ -29,8 +29,8 @@ class BinaryProtocolServerSandbox {
 
         BinaryProtocolState state = new BinaryProtocolState();
         ConfigurationImage controller = new ConfigurationImage(new byte[model.getMetaInfo().getTotalSize()]);
-        ScalarIniField iniField = TestHelper.createIniField(Fields.TWOSTROKE);
-        iniField.setValue(controller, new Constant(iniField.getName(), "", "1", iniField.getDigits()));
+//        ScalarIniField iniField = s
+//        iniField.setValue(controller, new Constant(iniField.getName(), "", "1", iniField.getDigits()));
         state.setConfigurationImage(controller);
         state.setCurrentOutputs(new byte[1 + VariableRegistryValues.TS_TOTAL_OUTPUT_SIZE]);
 

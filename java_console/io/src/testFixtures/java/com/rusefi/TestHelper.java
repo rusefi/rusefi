@@ -48,7 +48,7 @@ public class TestHelper extends MockitoTestHelper {
     public static ConfigurationImage prepareImage(int input, ScalarIniField scalarIniField) {
         ConfigurationImage ci = new ConfigurationImage(BinaryProtocol.iniFileProvider.provide(null).getMetaInfo().getTotalSize());
 
-        scalarIniField.setValue(ci, new Constant(scalarIniField.getName(), "", Integer.toString(input), scalarIniField.getDigits()));
+  //      scalarIniField.setValue(ci, new Constant(scalarIniField.getName(), "", Integer.toString(input), scalarIniField.getDigits()));
         return ci;
     }
 

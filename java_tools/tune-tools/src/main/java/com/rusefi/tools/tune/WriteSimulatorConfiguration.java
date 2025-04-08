@@ -79,7 +79,7 @@ public class WriteSimulatorConfiguration {
         ConfigurationImage configuration = new ConfigurationImage(fileContent);
         log.info("Got " + Objects.requireNonNull(configuration, "configuration"));
         Msq m = MsqFactory.valueOf(configuration, ini);
-        String name = Fields.KNOCKNOISERPMBINS.getName();
+        String name = "KNOCKNOISERPMBINS";
         Constant noiseRpmBins = m.page.get(1).getConstantsAsMap().get(name);
         if (!noiseRpmBins.getValue().contains(VariableRegistryValues.DEFAULT_RPM_AXIS_HIGH_VALUE + ".0"))
             throw new IllegalStateException(name + " canary wonders if everything is fine?");

@@ -50,19 +50,11 @@ public class PlainTextSensorLog implements SensorLog {
             logFile.write("\"rusEFI console" + Launcher.CONSOLE_VERSION + " firmware " + Launcher.firmwareVersion.get() + "\"\r\n");
             logFile.write("Captured " + FileLog.getDate() + "\r\n");
 
-            int debugMode = -1;
             BinaryProtocol bp = uiContext.getLinkManager().getCurrentStreamState();
-            if (bp != null) {
-                ConfigurationImage ci = bp.getControllerConfiguration();
-                if (ci != null) {
-                    debugMode = ConfigUiField.getIntValue(ci, Fields.DEBUGMODE);
-                }
-            }
-            // todo: kill debug mode!
-            System.out.println("debug mode " + debugMode);
+
             logFile.write("Time\t");
             for (Sensor sensor : SensorLogger.SENSORS) {
-                logFile.write(SensorLogger.getSensorName(sensor, debugMode) + "\t");
+                logFile.write(SensorLogger.getSensorName(sensor, -1) + "\t");
             }
             logFile.write("\r\n");
 
