@@ -357,12 +357,24 @@ percent_t EtbController2::getThrottleTrim(float rpm, percent_t targetPosition) c
 }
 
 expected<percent_t> EtbController::getOpenLoop(percent_t target) {
-	// Don't apply open loop for wastegate/idle valve, only real ETB
-	if (m_function != DC_Wastegate
-		&& m_function != DC_IdleValve) {
-		etbFeedForward = interpolate2d(target, config->etbBiasBins, config->etbBiasValues);
-	} else {
-		etbFeedForward = 0;
+	// Don't apply open loop for idle valve, only real ETB or wastegate
+	switch(m_function){
+		case DC_Throttle1:
+		case DC_Throttle2: {
+			etbFeedForward = interpolate2d(target, config->etbBiasBins, config->etbBiasValues);
+			break;
+		}
+		case DC_Wastegate: {
+			etbFeedForward = interpolate2d(target, config->dcWastegateBiasBins, config->dcWastegateBiasValues);
+			break;
+		}
+		case DC_IdleValve: {
+			etbFeedForward = 0;
+			break;
+		}
+		default: { // or DC_None
+			etbFeedForward = 0;
+		}
 	}
 
 	return etbFeedForward;
@@ -921,6 +933,8 @@ static const float defaultBiasValues[] = {
 void setDefaultEtbBiasCurve() {
 	copyArray(config->etbBiasBins, defaultBiasBins);
 	copyArray(config->etbBiasValues, defaultBiasValues);
+	copyArray(config->dcWastegateBiasBins, defaultBiasBins);
+	copyArray(config->dcWastegateBiasValues, defaultBiasValues);
 }
 
 void unregisterEtbPins() {

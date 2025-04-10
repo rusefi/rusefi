@@ -827,7 +827,7 @@ TEST(etb, openLoopThrottle) {
 	EXPECT_NEAR(50, etb.getOpenLoop(100).value_or(-1), EPS4D);
 }
 
-TEST(etb, openLoopNonThrottle) {
+TEST(etb, openLoopDCWastegate) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	// Redundant TPS & accelerator pedal required for init
@@ -837,6 +837,28 @@ TEST(etb, openLoopNonThrottle) {
 
 	EtbController etb;
 	etb.init(DC_Wastegate, nullptr, nullptr, nullptr);
+
+	// Map [0, 100] -> [-50, 50]
+	setLinearCurve(config->dcWastegateBiasBins, 0, 100);
+	setLinearCurve(config->dcWastegateBiasValues, -50, 50);
+
+	EXPECT_NEAR(-50, etb.getOpenLoop(0).value_or(-1), EPS2D);
+	EXPECT_NEAR(-24.48, etb.getOpenLoop(25).value_or(-1), EPS2D);
+	EXPECT_NEAR(0.47, etb.getOpenLoop(50).value_or(-1), EPS2D);
+	EXPECT_NEAR(25.51, etb.getOpenLoop(75).value_or(-1), EPS2D);
+	EXPECT_NEAR(50, etb.getOpenLoop(100).value_or(-1), EPS2D);
+}
+
+TEST(etb, openLoopNonThrottle) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	// Redundant TPS & accelerator pedal required for init
+	Sensor::setMockValue(SensorType::Tps1Primary, 0);
+	Sensor::setMockValue(SensorType::Tps1, 0, true);
+	Sensor::setMockValue(SensorType::AcceleratorPedal, 0, true);
+
+	EtbController etb;
+	etb.init(DC_IdleValve, nullptr, nullptr, nullptr);
 
 	// Map [0, 100] -> [-50, 50]
 	setLinearCurve(config->etbBiasBins, 0, 100);
