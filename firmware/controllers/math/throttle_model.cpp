@@ -127,6 +127,10 @@ expected<float> getThrottleInletPressure() {
 				SensorResult(STD_ATMOSPHERE);
 }
 
+float getThrottlePressureRatio(float map){
+	return  map / getThrottleInletPressure().Value;
+}
+
 expected<float> ThrottleModelBase::estimateThrottleFlow(float map, float tps) {
 	// Inputs
 	auto iat = Sensor::get(SensorType::Iat);
