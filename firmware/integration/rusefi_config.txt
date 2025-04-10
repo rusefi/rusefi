@@ -96,7 +96,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 250404
+#define FLASH_DATA_VERSION 250410
 
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
@@ -999,7 +999,7 @@ bit verboseCan2,"Print all","Do not print";Print incoming and outgoing second bu
 	dc_io[ETB_COUNT iterate] etbIo
 
 
-    output_pin_e boostControlPin;Wastegate control Solenoid;
+    output_pin_e boostControlPin;Wastegate control Solenoid, set to 'NONE' if you are using DC wastegate;
 	pin_output_mode_e boostControlPinMode;
     switch_input_pin_e ALSActivatePin;
     switch_input_pin_e launchActivatePin;
@@ -1852,6 +1852,9 @@ uint8_t[TORQUE_CURVE_SIZE x TORQUE_CURVE_SIZE] autoscale torqueTable;;"Nm", 10, 
 
 		float[ETB_BIAS_CURVE_LENGTH] etbBiasBins;target TPS value, 0 to 100%\nTODO: use int8 data date once we template interpolation method;"target TPS position", 1, 0, 0, 100, 0
 		float[ETB_BIAS_CURVE_LENGTH] etbBiasValues;PWM bias, open loop component of PID closed loop control;"ETB duty cycle bias", 1, 0, -100, 100, 2
+
+        int8_t[ETB_BIAS_CURVE_LENGTH] dcWastegateBiasBins;target Wastegate value, 0 to 100%;"target DC position", 1, 0, 0, 100, 0
+        int16_t[ETB_BIAS_CURVE_LENGTH] autoscale dcWastegateBiasValues;PWM bias, open loop component of PID closed loop control;"DC wastegate duty cycle bias", 0.01, 0, -100, 100, 2
 
 	uint8_t[IAC_PID_MULT_SIZE x IAC_PID_MULT_SIZE] autoscale iacPidMultTable;;"%", 0.05, 0, 0, 10, 2
 	uint8_t[IAC_PID_MULT_SIZE] iacPidMultLoadBins;;"Load", 1, 0, 0, 250, 2
