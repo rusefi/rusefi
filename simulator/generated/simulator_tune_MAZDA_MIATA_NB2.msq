@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22656">
+    <page number="0" size="22680">
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
         <constant name="accelerometerSpiDevice">"Off"</constant>
@@ -883,6 +883,26 @@
         <constant digits="0" name="cylindersCount" units="">4.0</constant>
         <constant name="dacOutputPins1">"NONE"</constant>
         <constant name="dacOutputPins2">"NONE"</constant>
+        <constant cols="1" digits="0" name="dcWastegateBiasBins" rows="8">
+         0.0
+         1.0
+         2.0
+         4.0
+         7.0
+         98.0
+         99.0
+         100.0
+</constant>
+        <constant cols="1" digits="2" name="dcWastegateBiasValues" rows="8">
+         -20.0
+         -18.0
+         -17.0
+         0.0
+         20.0
+         21.0
+         22.0
+         25.0
+</constant>
         <constant name="debugMode">"Executor"</constant>
         <constant name="debugTriggerSync">"NONE"</constant>
         <constant name="devBit0">"false"</constant>
@@ -4924,7 +4944,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250403" nPages="1" signature="rusEFI master.2025.04.10.f407-discovery.2868491036" version="5.0"/>
+    <versionInfo firmwareInfo="20250403" nPages="1" signature="rusEFI master.2025.04.10.f407-discovery.2936479088" version="5.0"/>
     <bibliography author="rusEFI 20250403" writeDate="date"/>
     <settings/>
     <userComments/>
