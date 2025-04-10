@@ -3,7 +3,7 @@
 //
 
 #include "pch.h"
-
+#include "throttle_model.h"
 #include "gppwm_channel_reader.h"
 
 expected<float> readGppwmChannel(gppwm_channel_e channel) {
@@ -91,8 +91,7 @@ expected<float> readGppwmChannel(gppwm_channel_e channel) {
 	case GPPWM_FuelPressure:
 		return Sensor::get(SensorType::FuelPressureInjector);
 	case GPPWM_ThrottleRatio:
-	  // todo: extract and reuse engine->outputChannels.throttlePressureRatio logic
-		return 0;
+		return getThrottlePressureRatio(Sensor::getOrZero(SensorType::Map));
 	}
 	return unexpected;
 }

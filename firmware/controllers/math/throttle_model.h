@@ -33,3 +33,5 @@ class ThrottleModel : public ThrottleModelBase {
 };
 
 expected<float> getThrottleInletPressure();
+
+float getThrottlePressureRatio(float map);

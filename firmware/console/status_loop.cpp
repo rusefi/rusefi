@@ -525,7 +525,7 @@ static void updatePressures() {
 
  	engine->outputChannels.compressorDischargePressure = Sensor::getOrZero(SensorType::CompressorDischargePressure);
  	engine->outputChannels.throttleInletPressure = Sensor::getOrZero(SensorType::ThrottleInletPressure);
- 	engine->outputChannels.throttlePressureRatio = mapValue / getThrottleInletPressure().Value;
+ 	engine->outputChannels.throttlePressureRatio = getThrottlePressureRatio(mapValue);
 
 	engine->outputChannels.auxLinear1 = Sensor::getOrZero(SensorType::AuxLinear1);
 	engine->outputChannels.auxLinear2 = Sensor::getOrZero(SensorType::AuxLinear2);
