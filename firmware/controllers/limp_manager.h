@@ -28,6 +28,7 @@ enum class ClearReason : uint8_t {
 	GdiComms, // 18
 	PleaseBrake, // 19
 	FatalErrorRevLimit, // 20
+	GdiLimits, // 21
 
 	// Keep this list in sync with fuelIgnCutCodeList in tunerstudio.template.ini!
 	// todo: add a code generator between ClearReason and fuelIgnCutCodeList in tunerstudio.template.ini
