@@ -187,3 +187,4 @@ TESTS_SRC_CPP = \
 	tests/controllers/can/test_can_serial.cpp \
 	tests/controllers/can/test_can_wideband.cpp \
 	tests/controllers/can/test_obd2.cpp \
+	tests/ignition_injection/test_ignition_state.cpp \
