@@ -74,6 +74,10 @@ TEST(ignition_state, getRunningAdvanceIdleTable) {
 
   // 50% of idle threshold -> idle table
   Sensor::setMockValue(SensorType::DriverThrottleIntent, 1);
+  EXPECT_NEAR(5, getRunningAdvance(rpm, load), EPS2D);
+
+  // 75% of idle threshold -> idle table
+  Sensor::setMockValue(SensorType::DriverThrottleIntent, 1.5);
   EXPECT_NEAR(7.5, getRunningAdvance(rpm, load), EPS2D);
 
   // idle threshold -> normal table
