@@ -1,5 +1,6 @@
 package com.rusefi.maintenance;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.FileLog;
 import com.rusefi.Launcher;
 import com.rusefi.SerialPortScanner;
@@ -25,12 +26,15 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.core.FindFileHelper.INPUT_FILES_PATH;
 
 /**
  * @see StLinkFlasher
  */
 public class DfuFlasher {
+    private static final Logging log = getLogging(DfuFlasher.class);
+
     public static final String BOOTLOADER_BIN_FILE = INPUT_FILES_PATH + "/" + "openblt.bin";
     private static final String DFU_CMD_TOOL_LOCATION = Launcher.TOOLS_PATH + File.separator + "STM32_Programmer_CLI/bin";
     private static final String DFU_CMD_TOOL = "STM32_Programmer_CLI.exe";
