@@ -642,66 +642,26 @@ static const LogField fields[] = {
 #if EFI_BOOST_CONTROL
 	{engine->module<BoostController>()->boostControlTarget, "Boost: Target", "kPa", 1, "Boost Control"},
 #endif
-#if FULL_SD_LOGS
 	{*engine->module<FanControl1>(), 0, 0, "fan1cranking", ""},
-#endif
-#if FULL_SD_LOGS
 	{*engine->module<FanControl1>(), 0, 1, "fan1notRunning", ""},
-#endif
-#if FULL_SD_LOGS
 	{*engine->module<FanControl1>(), 0, 2, "fan1Engine stopped", ""},
-#endif
-#if FULL_SD_LOGS
 	{*engine->module<FanControl1>(), 0, 3, "fan1Broken CLT", ""},
-#endif
-#if FULL_SD_LOGS
 	{*engine->module<FanControl1>(), 0, 4, "fan1Enable for AC", ""},
-#endif
-#if FULL_SD_LOGS
 	{*engine->module<FanControl1>(), 0, 5, "fan1Above hot threshold", ""},
-#endif
-#if FULL_SD_LOGS
 	{*engine->module<FanControl1>(), 0, 6, "fan1Below cold threshold", ""},
-#endif
-#if FULL_SD_LOGS
 	{*engine->module<FanControl1>(), 0, 7, "fan1disabledBySpeed", ""},
-#endif
-#if FULL_SD_LOGS
 	{*engine->module<FanControl1>(), 0, 8, "fan1On", ""},
-#endif
-#if FULL_SD_LOGS
 	{engine->module<FanControl1>()->radiatorFanStatus, "fan1radiatorFanStatus", "", 0},
-#endif
-#if FULL_SD_LOGS
 	{*engine->module<FanControl2>(), 0, 0, "fan2cranking", ""},
-#endif
-#if FULL_SD_LOGS
 	{*engine->module<FanControl2>(), 0, 1, "fan2notRunning", ""},
-#endif
-#if FULL_SD_LOGS
 	{*engine->module<FanControl2>(), 0, 2, "fan2Engine stopped", ""},
-#endif
-#if FULL_SD_LOGS
 	{*engine->module<FanControl2>(), 0, 3, "fan2Broken CLT", ""},
-#endif
-#if FULL_SD_LOGS
 	{*engine->module<FanControl2>(), 0, 4, "fan2Enable for AC", ""},
-#endif
-#if FULL_SD_LOGS
 	{*engine->module<FanControl2>(), 0, 5, "fan2Above hot threshold", ""},
-#endif
-#if FULL_SD_LOGS
 	{*engine->module<FanControl2>(), 0, 6, "fan2Below cold threshold", ""},
-#endif
-#if FULL_SD_LOGS
 	{*engine->module<FanControl2>(), 0, 7, "fan2disabledBySpeed", ""},
-#endif
-#if FULL_SD_LOGS
 	{*engine->module<FanControl2>(), 0, 8, "fan2On", ""},
-#endif
-#if FULL_SD_LOGS
 	{engine->module<FanControl2>()->radiatorFanStatus, "fan2radiatorFanStatus", "", 0},
-#endif
 	{engine->engineState.lua.fuelAdd, "Lua: Fuel add", "g", 3},
 	{engine->engineState.lua.fuelMult, "Lua: Fuel mult", "", 0},
 	{engine->engineState, 8, 0, "lua.clutchUpState", ""},
