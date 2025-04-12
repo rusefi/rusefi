@@ -1375,6 +1375,7 @@ custom stepper_num_micro_steps_e 1 bits, U08,	@OFFSET@,	[0:3], @@stepper_num_mic
 
 	float idlePidActivationTime;;"seconds", 1, 0, 0, 60, 1
 
+	int8_t vvtControlMinClt;Minimum coolant temperature to activate VVT;"deg C", 1, 0, -40, 120, 0
 
 	pin_mode_e spi1SckMode;
 	pin_mode_e spi1MosiMode;Modes count be used for 3v<>5v integration using pull-ups/pull-downs etc.;

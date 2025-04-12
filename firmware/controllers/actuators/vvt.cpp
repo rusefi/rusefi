@@ -41,6 +41,7 @@ void VvtController::onFastCallback() {
 	}
 
 	m_isRpmHighEnough = Sensor::getOrZero(SensorType::Rpm) > engineConfiguration->vvtControlMinRpm;
+	m_isCltWarmEnough = Sensor::getOrZero(SensorType::Clt) > engineConfiguration->vvtControlMinClt;
 
 	auto nowNt = getTimeNowNt();
 	m_engineRunningLongEnough = engine->rpmCalculator.getSecondsSinceEngineStart(nowNt) > engineConfiguration->vvtActivationDelayMs / MS_PER_SECOND;
@@ -65,6 +66,7 @@ expected<angle_t> VvtController::observePlant() {
 expected<angle_t> VvtController::getSetpoint() {
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	bool enabled = m_engineRunningLongEnough &&
+                 		m_isCltWarmEnough &&
                  		m_isRpmHighEnough;
 	if (!enabled) {
 		return unexpected;
