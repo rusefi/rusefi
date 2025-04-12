@@ -15,24 +15,28 @@ TEST(Alternator, observePlant) {
 }
 
 TEST(Alternator, openLoop) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	AlternatorController dut;
+	engineConfiguration->acRelayAlternatorDutyAdder = 15;
 
-	// No open loop for now
-	EXPECT_EQ(dut.getOpenLoop(10), 0);
+	EXPECT_EQ(dut.getOpenLoop(10).value_or(-1), 0);
+
+	// turn on AC!
+	engine->module<AcController>()->acButtonState = true;
+	EXPECT_EQ(dut.getOpenLoop(10).value_or(-1), 15);
 }
 
 TEST(Alternator, ClosedLoop) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
 	AlternatorController dut;
-	dut.init();
 
 	engineConfiguration->alternatorControl.pFactor = 1.5f;
 	engineConfiguration->alternatorControl.iFactor = 0;
 	engineConfiguration->alternatorControl.dFactor = 0;
 	engineConfiguration->alternatorControl.offset = 0;	
 	// apply PID settings
-	dut.pidReset();
+	dut.update();
 
 	// Target of 30 with position 20 should yield positive duty, P=1.5 means 15% duty for 10% error
 	EXPECT_EQ(dut.getClosedLoop(30, 20).value_or(0), 15);
