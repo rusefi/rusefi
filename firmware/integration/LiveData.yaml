@@ -95,6 +95,7 @@ Usages:
     folder: controllers/algo
     prepend: integration/rusefi_config_shared.txt
     output_name: als
+    conditional_compilation: "FULL_SD_LOGS"
 
   - name: boost_control
     java: BoostControl.java
@@ -111,6 +112,7 @@ Usages:
     prepend: integration/rusefi_config_shared.txt
     output_name: ac
     engineModule: AcController
+    conditional_compilation: "FULL_SD_LOGS"
 
   - name: nitrous_control_state
     java: NitrousControl.java
@@ -126,7 +128,6 @@ Usages:
     output_name: [ "fan1", "fan2" ]
     constexpr: ["engine->module<FanControl1>()", "engine->module<FanControl2>()"]
     isPtr: true
-    conditional_compilation: "FULL_SD_LOGS"
 
   - name: fuel_pump_control
     cppFileName: fuel_pump
