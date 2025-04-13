@@ -6,6 +6,10 @@
 #include "hellen_meta.h"
 #endif // HW_HELLEN
 
+#ifdef HW_HELLEN_8CHAN
+#include "connectors/generated_board_pin_names.h"
+#endif // HW_HELLEN_8CHAN
+
 #include "proteus_meta.h"
 
 void setStepperHw() {
@@ -169,7 +173,7 @@ static void setGmGdi() {
 	engineConfiguration->camInputs[3] = Gpio::Unassigned;
 	config->boardUseCrankPullUp = true;
 
-	engineConfiguration->starterControlPin = Gpio::MM176_SPI3_SCK; // 29C - Ignition 9
+	engineConfiguration->starterControlPin = Gpio::PIN_5C; // 5C - High Side 1, ignition output is not enough at least on HHR
 #endif // HW_HELLEN_8CHAN
 
   setPPSCalibration(1, 4.25, 0.5, 2.14);
