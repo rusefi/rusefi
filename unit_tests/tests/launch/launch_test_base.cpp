@@ -8,12 +8,12 @@
 
 void LaunchTestBase::setUpTestConfig(const LaunchTestConfig& config) {
     setUpEngineConfiguration(config);
-    if (config.getSatisfyActivationSwithSpeedAndTpsConditions()) {
-        configureSatisfiedActivationSwithSpeedAndTpsConditions();
+    if (config.getSatisfyActivationSwitchSpeedAndTpsConditions()) {
+        configureSatisfiedActivationSwitchSpeedAndTpsConditions();
     }
 }
 
-void LaunchTestBase::configureSatisfiedActivationSwithSpeedAndTpsConditions() {
+void LaunchTestBase::configureSatisfiedActivationSwitchSpeedAndTpsConditions() {
     getTestEngineConfiguration()
         .configureLaunchActivationMode(ALWAYS_ACTIVE_LAUNCH);  // to satisfy activateSwitchCondition
 	getTestEngineConfiguration().configureLaunchSpeedThreshold(0); // to satisfy speedCondition

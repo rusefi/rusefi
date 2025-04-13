@@ -63,7 +63,7 @@ namespace {
 
         setEnableIgnitionCut(true);
 
-        setSatisfyActivationSwithSpeedAndTpsConditions(satisfySwitchSpeedThresholdAndTpsConditions);
+        setSatisfyActivationSwitchSpeedAndTpsConditions(satisfySwitchSpeedThresholdAndTpsConditions);
     }
 
     struct IgnitionAngleAdvanceTestData {

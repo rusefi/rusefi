@@ -8,15 +8,15 @@
 
 class LaunchTestConfig : public EngineConfig {
 public:
-    bool getSatisfyActivationSwithSpeedAndTpsConditions() const {
-        return m_satisfyActivationSwithSpeedAndTpsConditions;
+    bool getSatisfyActivationSwitchSpeedAndTpsConditions() const {
+        return m_satisfyActivationSwitchSpeedAndTpsConditions;
     }
 protected:
-    void setSatisfyActivationSwithSpeedAndTpsConditions(const bool value) {
-        m_satisfyActivationSwithSpeedAndTpsConditions = value;
+    void setSatisfyActivationSwitchSpeedAndTpsConditions(const bool value) {
+        m_satisfyActivationSwitchSpeedAndTpsConditions = value;
     }
 private:
-    bool m_satisfyActivationSwithSpeedAndTpsConditions { false };
+    bool m_satisfyActivationSwitchSpeedAndTpsConditions { false };
 };
 
 class LaunchTestBase : public TestBase<> {
@@ -24,5 +24,5 @@ protected:
     void setUpTestConfig(const LaunchTestConfig& config);
 
 private:
-    void configureSatisfiedActivationSwithSpeedAndTpsConditions();
+    void configureSatisfiedActivationSwitchSpeedAndTpsConditions();
 };

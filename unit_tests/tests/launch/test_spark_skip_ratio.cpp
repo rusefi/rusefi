@@ -24,14 +24,14 @@ namespace {
         SparkSkipRatioTestConfig(
                 const std::optional<bool> launchControlEnabled,
                 const std::optional<bool> enableIgnitionCut,
-                const bool satifySwitchSpeedThresholdAndTpsConditions
+                const bool satisfySwitchSpeedThresholdAndTpsConditions
         );
     };
 
     SparkSkipRatioTestConfig::SparkSkipRatioTestConfig(
             const std::optional<bool> launchControlEnabled,
             const std::optional<bool> enableIgnitionCut,
-            const bool satifySwitchSpeedThresholdAndTpsConditions
+            const bool satisfySwitchSpeedThresholdAndTpsConditions
     ) {
         setLaunchControlEnabled(launchControlEnabled);
 
@@ -43,7 +43,7 @@ namespace {
         setInitialIgnitionCut({ TEST_INITIAL_IGNITION_CUT_PERCENT });
         setFinalIgnitionCutBeforeLaunch({ TEST_FINAL_IGNITION_CUT_PERCENT });
 
-        setSatisfyActivationSwithSpeedAndTpsConditions(satifySwitchSpeedThresholdAndTpsConditions);
+        setSatisfyActivationSwitchSpeedAndTpsConditions(satisfySwitchSpeedThresholdAndTpsConditions);
     }
 
     struct SparkSkipRatioTestData {
@@ -153,7 +153,7 @@ namespace {
                 /* config = */ {
                                        /* launchControlEnabled = */ {true},
                                        /* enableIgnitionCut = */ {true},
-                                       /* satifySwitchSpeedThresholdAndTpsConditions = */ true
+                                       /* satisfySwitchSpeedThresholdAndTpsConditions = */ true
                                },
                 /* testData = */ {
                                        {
@@ -211,7 +211,7 @@ namespace {
                 /* config = */ {
                                        /* launchControlEnabled = */ {true},
                                        /* enableIgnitionCut = */ {true},
-                                       /* satifySwitchSpeedThresholdAndTpsConditions = */ false
+                                       /* satisfySwitchSpeedThresholdAndTpsConditions = */ false
                                },
                 /* testData = */ DEFAULT_NO_LAUNCH_SPARK_SKIP_TEST_DATA
         );
@@ -222,7 +222,7 @@ namespace {
                 /* config = */ {
                                        /* launchControlEnabled = */ {true},
                                        /* enableIgnitionCut = */ {false},
-                                       /* satifySwitchSpeedThresholdAndTpsConditions = */ true
+                                       /* satisfySwitchSpeedThresholdAndTpsConditions = */ true
                                },
                 /* testData = */ {
                                        {
@@ -280,7 +280,7 @@ namespace {
                 /* config = */ {
                                        /* launchControlEnabled = */ {false},
                                        /* enableIgnitionCut = */ {true},
-                                       /* satifySwitchSpeedThresholdAndTpsConditions = */ true
+                                       /* satisfySwitchSpeedThresholdAndTpsConditions = */ true
                                },
                 /* testData = */ DEFAULT_NO_LAUNCH_SPARK_SKIP_TEST_DATA
         );
@@ -291,7 +291,7 @@ namespace {
                 /* config = */ {
                                        /* launchControlEnabled = */ {false},
                                        /* enableIgnitionCut = */ {true},
-                                       /* satifySwitchSpeedThresholdAndTpsConditions = */ false
+                                       /* satisfySwitchSpeedThresholdAndTpsConditions = */ false
                                },
                 /* testData = */ DEFAULT_NO_LAUNCH_SPARK_SKIP_TEST_DATA
         );
@@ -302,7 +302,7 @@ namespace {
                 /* config = */ {
                                        /* launchControlEnabled = */ {false},
                                        /* enableIgnitionCut = */ {false},
-                                       /* satifySwitchSpeedThresholdAndTpsConditions = */ true
+                                       /* satisfySwitchSpeedThresholdAndTpsConditions = */ true
                                },
                 /* testData = */ DEFAULT_NO_LAUNCH_SPARK_SKIP_TEST_DATA
         );
@@ -313,7 +313,7 @@ namespace {
                 /* config = */ {
                                        /* launchControlEnabled = */ {false},
                                        /* enableIgnitionCut = */ {false},
-                                       /* satifySwitchSpeedThresholdAndTpsConditions = */ false
+                                       /* satisfySwitchSpeedThresholdAndTpsConditions = */ false
                                },
                 /* testData = */ DEFAULT_NO_LAUNCH_SPARK_SKIP_TEST_DATA
         );
@@ -324,7 +324,7 @@ namespace {
                 /* config = */ {
                                        /* launchControlEnabled = */ {true},
                                        /* enableIgnitionCut = */ {false},
-                                       /* satifySwitchSpeedThresholdAndTpsConditions = */ false
+                                       /* satisfySwitchSpeedThresholdAndTpsConditions = */ false
                                },
                 /* testData = */ DEFAULT_NO_LAUNCH_SPARK_SKIP_TEST_DATA
         );
