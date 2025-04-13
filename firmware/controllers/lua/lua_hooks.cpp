@@ -338,11 +338,6 @@ static int lua_setPwmFreq(lua_State* l) {
 	return 0;
 }
 
-static int lua_fan(lua_State* l) {
-	lua_pushboolean(l, enginePins.fanRelay.getLogicValue());
-	return 1;
-}
-
 static int lua_getDigital(lua_State* l) {
 	auto idx = luaL_checkinteger(l, 1);
 
@@ -1030,7 +1025,10 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 	lua_register(lState, "setPwmDuty", lua_setPwmDuty);
 	lua_register(lState, "setPwmFreq", lua_setPwmFreq);
 
-	lua_register(lState, "getFan", lua_fan);
+	lua_register(lState, "getFan", [](lua_State* l) {
+                                 		lua_pushboolean(l, enginePins.fanRelay.getLogicValue());
+                                 		return 1;
+                                 	});
 	lua_register(lState, "getDigital", lua_getDigital);
 	lua_register(lState, "getAuxDigital", lua_getAuxDigital);
 	lua_register(lState, "setDebug", lua_setDebug);
