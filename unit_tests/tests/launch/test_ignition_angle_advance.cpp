@@ -41,7 +41,7 @@ namespace {
             const std::optional<bool> launchControlEnabled,
             const std::optional<bool> ignitionRetardEnable,
             const std::optional<bool> smoothRetardMode,
-            const bool satifySwitchSpeedThresholdAndTpsConditions
+            const bool satisfySwitchSpeedThresholdAndTpsConditions
         );
     };
 
@@ -49,7 +49,7 @@ namespace {
         const std::optional<bool> launchControlEnabled,
         const std::optional<bool> ignitionRetardEnable,
         const std::optional<bool> smoothRetardMode,
-        const bool satifySwitchSpeedThresholdAndTpsConditions
+        const bool satisfySwitchSpeedThresholdAndTpsConditions
     ) {
         setLaunchControlEnabled(launchControlEnabled);
 
@@ -63,7 +63,7 @@ namespace {
 
         setEnableIgnitionCut(true);
 
-        setSatisfyActivationSwithSpeedAndTpsConditions(satifySwitchSpeedThresholdAndTpsConditions);
+        setSatisfyActivationSwithSpeedAndTpsConditions(satisfySwitchSpeedThresholdAndTpsConditions);
     }
 
     struct IgnitionAngleAdvanceTestData {
@@ -155,7 +155,7 @@ namespace {
                 /* launchControlEnabled = */ {},
                 /* ignitionRetardEnable = */ {},
                 /* smoothRetardMode = */ {},
-                /* satifySwitchSpeedThresholdAndTpsConditions = */ true
+                /* satisfySwitchSpeedThresholdAndTpsConditions = */ true
             },
             /* testData = */ TEST_DATA_WITHOUT_LAUNCH_ANGLE_ADVANCE
         );
@@ -170,7 +170,7 @@ namespace {
                 /* launchControlEnabled = */ { true },
                 /* ignitionRetardEnable = */ { true },
                 /* smoothRetardMode = */ { false },
-                /* satifySwitchSpeedThresholdAndTpsConditions = */ true
+                /* satisfySwitchSpeedThresholdAndTpsConditions = */ true
             },
             /* testData = */ {
                 { "TEST_IGNITION_650",  650,  TEST_IGNITION_650 },
@@ -207,7 +207,7 @@ namespace {
                /* launchControlEnabled = */ { true },
                /* ignitionRetardEnable = */ { true },
                /* smoothRetardMode = */ { true },
-               /* satifySwitchSpeedThresholdAndTpsConditions = */ true
+               /* satisfySwitchSpeedThresholdAndTpsConditions = */ true
             },
             /* testData = */ {
                 { "TEST_IGNITION_650",  650,  TEST_IGNITION_650 },
@@ -260,7 +260,7 @@ namespace {
                 /* launchControlEnabled = */ { false },
                 /* ignitionRetardEnable = */ { true },
                 /* smoothRetardMode = */ { false },
-                /* satifySwitchSpeedThresholdAndTpsConditions = */ true
+                /* satisfySwitchSpeedThresholdAndTpsConditions = */ true
             },
             /* testData = */ TEST_DATA_WITHOUT_LAUNCH_ANGLE_ADVANCE
         );
@@ -272,7 +272,7 @@ namespace {
                 /* launchControlEnabled = */ { false },
                 /* ignitionRetardEnable = */ { true },
                 /* smoothRetardMode = */ { true },
-                /* satifySwitchSpeedThresholdAndTpsConditions = */ true
+                /* satisfySwitchSpeedThresholdAndTpsConditions = */ true
             },
             /* testData = */ TEST_DATA_WITHOUT_LAUNCH_ANGLE_ADVANCE
         );
@@ -289,7 +289,7 @@ namespace {
                 /* launchControlEnabled = */ { false },
                 /* ignitionRetardEnable = */ { false },
                 /* smoothRetardMode = */ { false },
-                /* satifySwitchSpeedThresholdAndTpsConditions = */ false
+                /* satisfySwitchSpeedThresholdAndTpsConditions = */ false
             },
             /* testData = */ TEST_DATA_WITHOUT_LAUNCH_ANGLE_ADVANCE
         );
@@ -304,7 +304,7 @@ namespace {
                 /* launchControlEnabled = */ { true },
                 /* ignitionRetardEnable = */ { true },
                 /* smoothRetardMode = */ { false },
-                /* satifySwitchSpeedThresholdAndTpsConditions = */ false
+                /* satisfySwitchSpeedThresholdAndTpsConditions = */ false
             },
             /* testData = */ TEST_DATA_WITHOUT_LAUNCH_ANGLE_ADVANCE
         );
@@ -319,7 +319,7 @@ namespace {
                 /* launchControlEnabled = */ { true },
                 /* ignitionRetardEnable = */ { true },
                 /* smoothRetardMode = */ { true },
-                /* satifySwitchSpeedThresholdAndTpsConditions = */ false
+                /* satisfySwitchSpeedThresholdAndTpsConditions = */ false
             },
             /* testData = */ TEST_DATA_WITHOUT_LAUNCH_ANGLE_ADVANCE
         );
@@ -334,7 +334,7 @@ namespace {
                                        /* launchControlEnabled = */ { false },
                                        /* ignitionRetardEnable = */ { true },
                                        /* smoothRetardMode = */ { false },
-                                       /* satifySwitchSpeedThresholdAndTpsConditions = */ false
+                                       /* satisfySwitchSpeedThresholdAndTpsConditions = */ false
                                },
                 /* testData = */ TEST_DATA_WITHOUT_LAUNCH_ANGLE_ADVANCE
         );
@@ -349,7 +349,7 @@ namespace {
                                        /* launchControlEnabled = */ { false },
                                        /* ignitionRetardEnable = */ { true },
                                        /* smoothRetardMode = */ { true },
-                                       /* satifySwitchSpeedThresholdAndTpsConditions = */ false
+                                       /* satisfySwitchSpeedThresholdAndTpsConditions = */ false
                                },
                 /* testData = */ TEST_DATA_WITHOUT_LAUNCH_ANGLE_ADVANCE
         );
