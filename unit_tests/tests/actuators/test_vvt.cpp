@@ -8,18 +8,32 @@ using ::testing::Return;
 TEST(Vvt, TestSetPoint) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
-	// Set up a mock target map
+	// Set up a mock target map & pwm output
 	StrictMock<MockVp3d> targetMap;
-	EXPECT_CALL(targetMap, getValue(4321, 55))
-		.WillOnce(Return(20));
+	StrictMock<MockPwm> pwm;
+
+	EXPECT_CALL(targetMap, getValue(1500, 55))
+		.WillRepeatedly(Return(20)); // one from onFastCallback() then getSetpoint()
+	EXPECT_CALL(pwm, setSimplePwmDutyCycle(0.730005));
+
+	// set up VVT config
+	engineConfiguration->vvtActivationDelayMs = 5;
+	engineConfiguration->vvtControlMinRpm = 500;
+
+	// mock RPM
+	engine->rpmCalculator.setRpmValue(1500);
+	ASSERT_EQ(1500, Sensor::getOrZero(SensorType::Rpm));
+	ASSERT_TRUE(engine->rpmCalculator.isRunning());
+	advanceTimeUs(0.5e6);
+
+	VvtController dut(0);
+	dut.init(&targetMap, &pwm);
 
 	// Mock necessary inputs
 	engine->engineState.fuelingLoad = 55;
-	Sensor::setMockValue(SensorType::Rpm,  4321);
 
-	VvtController dut(0);
-	dut.init(&targetMap, nullptr);
-
+	// update m_engineRunningLongEnough / m_isRpmHighEnough flags
+	dut.onFastCallback();
 	// Test dut
 	EXPECT_EQ(20, dut.getSetpoint().value_or(0));
 }
