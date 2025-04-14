@@ -193,11 +193,11 @@ pins:
     color: black
 
   - pin: 28A
-    #    id: TLE9104_1_OUT_3
-    function: Analog Input TBD
-    #    class: outputs
-    #    type: ls
-    #    ts_name: ___ Fan Relay
+    id: TLE9104_1_OUT_3
+    function: Fan Relay
+    class: outputs
+    type: ls
+    ts_name: ___ Fan Relay
     color: blue
 
   - pin: 29A

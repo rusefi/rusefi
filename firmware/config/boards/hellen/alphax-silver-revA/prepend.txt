@@ -1,0 +1,31 @@
+#define MAIN_HELP_URL "https://rusefi.com/s/silver"
+
+
+#define ts_show_tps2 false
+
+
+#define ts_show_etb false
+#define ts_show_etb_pins false
+#define ts_show_vbatt false
+#define ts_show_clt_iat_pullup false
+#define ts_show_egt false
+#define ts_show_etb_pins false
+#define ts_show_analog_divider false
+#define ts_show_spi false
+#define ts_show_can_pins false
+#define ts_show_tunerstudio_port true
+#define ts_show_can2 false
+#define ts_show_software_knock true
+#define ts_show_output_diag true
+
+
+#define ts_show_cylinder_7 false
+#define ts_show_cylinder_8 false
+#define ts_show_cylinder_9 false
+#define ts_show_cylinder_10 false
+#define ts_show_cylinder_11 false
+#define ts_show_cylinder_12 false
+
+#define ts_show_vr_threshold_all true
+#define ts_show_vr_threshold_pins false
+#define ts_show_vr_threshold_2 false
