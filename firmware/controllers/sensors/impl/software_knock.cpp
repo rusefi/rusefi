@@ -54,7 +54,6 @@ void onStartKnockSampling(uint8_t cylinderNumber, float samplingSeconds, uint8_t
 
 	// Cancel if ADC isn't ready
 	if (!((KNOCK_ADC.state == ADC_READY) ||
-			(KNOCK_ADC.state == ADC_COMPLETE) ||
 			(KNOCK_ADC.state == ADC_ERROR))) {
 		return;
 	}
