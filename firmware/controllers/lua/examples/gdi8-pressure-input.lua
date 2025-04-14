@@ -3,7 +3,7 @@
 sensor = Sensor.new("FuelPressureHigh")
 sensor : setTimeout(1000)
 
--- include print-array.lua
+-- include utils-print-array.lua
 -- endinclude
 
 function getTwoBytesLSB(data, offset, factor)

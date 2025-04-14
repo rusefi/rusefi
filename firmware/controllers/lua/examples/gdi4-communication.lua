@@ -9,7 +9,7 @@ busIndex = 1
 GDI4_BASE_ADDRESS = 0xBB20
 GDI_CHANGE_ADDRESS = GDI4_BASE_ADDRESS + 0x10
 
--- include print-array.lua
+-- include utils-print-array.lua
 -- endinclude
 
 function printPacket(bus, id, dlc, data)
