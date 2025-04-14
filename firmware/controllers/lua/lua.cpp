@@ -158,6 +158,10 @@ static int lua_setTickRate(lua_State* l) {
 	// Limit to 1..200 hz
 	freq = clampF(1, freq, 200);
 
+	if (freq > 150 && !engineConfiguration->luaCanRxWorkaround) {
+	  efiPrintf(TAG "luaCanRxWorkaround recommended at high tick rate!");
+	}
+
 	luaTickPeriodUs = 1000000.0f / freq;
 	return 0;
 }
