@@ -43,7 +43,7 @@ bit triggerPageRefreshFlag
 bit hasFaultReportFile
 bit isAnalogFailure;Analog sensors supply failure
 bit isTuningNow
-! 1 unused bit left here
+bit sd_formating; SD: formating is in progress
 
 
 uint16_t RPMValue;@@GAUGE_NAME_RPM@@;"RPM",1, 0, 0, 8000, 0
@@ -434,5 +434,7 @@ float mapFast
 
   uint32_t mcuSerial;;"", 1, 0, 0, 4294967295, 0
 
-	uint8_t[48 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+  uint8_t sd_error;
+
+	uint8_t[47 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct
