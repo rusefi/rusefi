@@ -14,6 +14,12 @@ function toHexString(num)
 	return result
 end
 
+function byteToHex(byte)
+    local hi = math.floor(byte / 16)
+    local lo = byte % 16
+    return hexstr[hi + 1] .. hexstr[lo + 1]
+end
+
 function arrayToString(arr)
 	local str = ""
 	local index = 1
