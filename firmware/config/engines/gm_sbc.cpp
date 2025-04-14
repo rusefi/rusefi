@@ -217,6 +217,7 @@ void setGmLnf() {
 #endif // HW_HELLEN_8CHAN
 }
 
+// 2.0T
 void setGmLtg() {
   set4CylGmEcotec3();
   engineConfiguration->displacement = 2.0;

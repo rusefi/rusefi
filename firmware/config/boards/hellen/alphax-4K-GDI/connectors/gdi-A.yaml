@@ -78,7 +78,7 @@ pins:
 
   - pin: 11A
     function: Crank / VR 9924 Positive
-    
+
   - pin: 12A
     meta: H144_IN_CAM
     class: event_inputs
@@ -87,7 +87,7 @@ pins:
 
   - pin: 13A
     function: CAM / VR Discrete 1 Positive
-    
+
   - pin: 14A
     meta: H144_IN_VSS
     class: event_inputs
@@ -99,7 +99,7 @@ pins:
 
   - pin: 16A
     function: Knock Input
-    
+
   - pin: 17A
     function: DC negative
     type: etb
@@ -159,7 +159,7 @@ pins:
     function: DC positive
     type: etb
     color: blue
-    
+
   - pin: 26A
     function: Power GND
     type: gnd
@@ -167,14 +167,14 @@ pins:
   - pin: 27A
     id: [H144_IN_SENS2, H144_IN_SENS2]
     class: [event_inputs, switch_inputs]
-    function: Digital Input 3
+    function: Digital/Hall Input 3
     ts_name: ___ Digital Input 3
     color: yellow
 
   - pin: 28A
     id: [H144_IN_SENS3, H144_IN_SENS3]
     class: [event_inputs, switch_inputs]
-    function: Digital Input 4
+    function: Digital/Hall Input 4
     ts_name: ___ Digital Input 4
 
   - pin: 29A
@@ -208,7 +208,7 @@ pins:
     function: VVT4
     type: ls
     color: green
-    
+
   - pin: 33A
     function: Wastegate Low Side
     ts_name: ___ Wastegate Solenoid
