@@ -238,7 +238,7 @@ adcsample_t getFastAdc(AdcToken token) {
 #ifdef EFI_SOFTWARE_KNOCK
 
 static void knockCompletionCallback(ADCDriver* adcp) {
-	if (adcp->state == ADC_COMPLETE) {
+	if (adcIsBufferComplete(adcp)) {
 		onKnockSamplingComplete();
 	}
 }
