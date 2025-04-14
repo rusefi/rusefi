@@ -154,8 +154,9 @@ static void setGmGdi() {
   engineConfiguration->invertCamVVTSignal = true;
   engineConfiguration->invertExhaustCamVVTSignal = true;
 
-  engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_SENS1; // Digital Input 1
+  engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_SENS2; // Digital Input 3
   engineConfiguration->camInputs[0] = Gpio::H144_IN_SENS3; // Digital Input 4
+  engineConfiguration->camInputs[1] = Gpio::Unassigned;
   engineConfiguration->sentInputPins[0] = Gpio::H144_IN_AUX2_DIGITAL;
 
   // engineConfiguration->starterControlPin = high side :()
