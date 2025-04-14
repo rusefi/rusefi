@@ -183,6 +183,7 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 	}
 
 	{
+		// todo: we need to add some tests of this?
 		// If duty cycle is high, impose a fuel cut rev limiter.
 		// This is safer than attempting to limp along with injectors or a pump that are out of flow.
 		// Two conditions will trigger a cut:
@@ -208,6 +209,16 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 		if (m_injectorDutyCutHysteresis.test(someLimitTripped, isUnderLowDuty)) {
 			allowFuel.clear(ClearReason::InjectorDutyCycle);
 			warning(ObdCode::CUSTOM_TOO_LONG_FUEL_INJECTION, "Injector duty cycle cut %.1f", injDutyCycle);
+		}
+	}
+
+	{
+		// GDI Fuel cut
+		bool isGDIDriverInjectorTimeTooLong = engine->engineState.injectionDuration > engineConfiguration->mc33_t_hold_tot;
+
+		if (isGdiEngine() && isGDIDriverInjectorTimeTooLong) {
+			allowFuel.clear(ClearReason::GdiLimits);
+			warning(ObdCode::CUSTOM_TOO_LONG_FUEL_INJECTION, "Injection duration excess PT2001 limits time: %.4f", engine->engineState.injectionDuration);
 		}
 	}
 
