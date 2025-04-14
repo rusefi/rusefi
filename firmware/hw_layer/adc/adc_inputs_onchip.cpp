@@ -208,7 +208,6 @@ void AdcDevice::startConversionI()
 {
 	chSysLockFromISR();
 	if ((ADC_FAST_DEVICE.state != ADC_READY) &&
-		(ADC_FAST_DEVICE.state != ADC_COMPLETE) &&
 		(ADC_FAST_DEVICE.state != ADC_ERROR)) {
 		engine->outputChannels.fastAdcErrorsCount++;
 		// todo: when? why? criticalError("ADC fast not ready?");
