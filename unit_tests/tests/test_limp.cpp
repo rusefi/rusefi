@@ -402,3 +402,28 @@ TEST(limp, oilPressureMaxLimit) {
 	dut.updateState(rpm, getTimeNowNt());
 	ASSERT_TRUE(dut.allowInjection());
 }
+
+
+TEST(limp, gdiFuelCut) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+
+	// configure GDI engine for tests:
+	engineConfiguration->hpfpCam = HPFP_CAM_NONE;
+	engineConfiguration->hpfpCamLobes = 4;
+	engineConfiguration->mc33_t_hold_tot = 3.0f;
+	engine->rpmCalculator.setRpmValue(1000);
+
+	// below limits:
+	engine->engineState.injectionDuration = 1.8;
+
+	LimpManager dut;
+
+	// update & check: injection should be allowed
+	dut.updateState(1000, getTimeNowNt());
+	EXPECT_TRUE(dut.allowInjection());
+
+	engine->engineState.injectionDuration = 3.1f;
+	// update & check: injection should cut
+	dut.updateState(1000, getTimeNowNt());
+	ASSERT_EQ(ClearReason::GdiLimits, dut.allowInjection().reason);
+}
