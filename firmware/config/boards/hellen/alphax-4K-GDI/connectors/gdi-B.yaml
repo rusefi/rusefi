@@ -2,7 +2,7 @@ meta: config/boards/hellen_meta.h
 
 pins:
   - pin: 1B
-    function: HPFP Positive
+    function: HPFP pump Positive
     meta: H144_LS_6
     color: green
     class: outputs
@@ -56,8 +56,8 @@ pins:
     color: green
 
   - pin: 10B
-    function: HPFP Negative
-    color:
+    function: HPFP pump Negative
+    color: green
 
   - pin: 11B
     meta: H144_IGN_4
@@ -181,23 +181,23 @@ pins:
   - pin: 29B
     function: WBO Heater Positive
     type: wbo
-    
+
   - pin: 30B
     function: WBO Heater Negative
     type: wbo
-    
+
   - pin: 31B
     function: WBO Vm
     type: wbo
-    
+
   - pin: 32B
     function: WBO Ip
     type: wbo
-    
+
   - pin: 33B
     function: WBO Rtrim
     type: wbo
-    
+
   - pin: 34B
     function: WBO Un
     type: wbo
