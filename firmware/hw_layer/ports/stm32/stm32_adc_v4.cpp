@@ -63,7 +63,7 @@ adcsample_t* fastSampleBuffer;
 
 static void adc_callback(ADCDriver *adcp) {
 	// State may not be complete if we get a callback for "half done"
-	if (adcp->state == ADC_COMPLETE) {
+	if (adcIsBufferComplete(adcp)) {
 	  // here we invoke 'fast' from slow ADC due to https://github.com/rusefi/rusefi/issues/3301
 		onFastAdcComplete(adcp->samples);
 	}
@@ -200,7 +200,7 @@ static_assert((H7_KNOCK_OVERSAMPLE & (H7_KNOCK_OVERSAMPLE - 1)) == 0, "H7_ADC_OV
 static constexpr int H7_KNOCK_ADC_SHIFT_BITS = log2_int(H7_KNOCK_OVERSAMPLE);
 
 static void knockCompletionCallback(ADCDriver* adcp) {
-	if (adcp->state == ADC_COMPLETE) {
+	if (adcIsBufferComplete(adcp)) {
 		onKnockSamplingComplete();
 	}
 }
