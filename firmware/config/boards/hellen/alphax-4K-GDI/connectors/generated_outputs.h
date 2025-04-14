@@ -24,7 +24,7 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::H144_LS_3, // 5B GDI Injector 3
 	Gpio::H144_LS_2, // 7B GDI Injector 2
 	Gpio::H144_LS_1, // 9B GDI Injector 1
-	Gpio::H144_LS_6, // HPFP Positive
+	Gpio::H144_LS_6, // HPFP pump Positive
 	Gpio::H144_IGN_4, // 11B Ignition 4
 	Gpio::H144_IGN_3, // 12B Ignition 3
 	Gpio::H144_IGN_2, // 13B Ignition 2
@@ -51,7 +51,7 @@ Gpio GENERATED_OUTPUTS = {
 // "5B GDI Injector 3",
 // "7B GDI Injector 2",
 // "9B GDI Injector 1",
-// "HPFP Positive",
+// "HPFP pump Positive",
 // "11B Ignition 4",
 // "12B Ignition 3",
 // "13B Ignition 2",

@@ -19,7 +19,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::E5: return "13B Ignition 2";
 		case Gpio::E9: return "22A Input 2";
 		case Gpio::F11: return "14A VR Negative";
-		case Gpio::F12: return "HPFP Positive";
+		case Gpio::F12: return "HPFP pump Positive";
 		case Gpio::F3: return "21A Digital Input 1";
 		case Gpio::F4: return "27A Digital Input 3";
 		case Gpio::F5: return "28A Digital Input 4";
