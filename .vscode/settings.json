@@ -35,4 +35,7 @@
 		"*.input": "ini"
 	},
 	"C_Cpp.formatting": "vcFormat",
+	"Lua.diagnostics.disable": [
+		"lowercase-global"
+	],
 }
