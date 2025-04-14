@@ -64,8 +64,8 @@ static size_t writeFileHeader(Writer& outBuffer) {
 	size_t headerSize = MLQ_HEADER_SIZE + efi::size(fields) * MLQ_FIELD_HEADER_SIZE;
 
 	// Data begin index: begins immediately after the header
-	buffer[16] = 0;
-	buffer[17] = 0;
+	buffer[16] = (headerSize >> 24) & 0xFF;
+	buffer[17] = (headerSize >> 16) & 0xFF;
 	buffer[18] = (headerSize >> 8) & 0xFF;
 	buffer[19] = headerSize & 0xFF;
 
