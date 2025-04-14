@@ -98,6 +98,9 @@ float getOutputValueByName(const char *name) {
 // isTuningNow
 		case 1109228234:
 			return engine->outputChannels.isTuningNow;
+// sd_formating
+		case 352763970:
+			return engine->outputChannels.sd_formating;
 // RPMValue
 		case 1699696209:
 			return engine->outputChannels.RPMValue;
@@ -851,6 +854,9 @@ float getOutputValueByName(const char *name) {
 // mcuSerial
 		case 714144074:
 			return engine->outputChannels.mcuSerial;
+// sd_error
+		case -1811686395:
+			return engine->outputChannels.sd_error;
 // totalFuelCorrection
 #if EFI_ENGINE_CONTROL
 		case -1779658835:

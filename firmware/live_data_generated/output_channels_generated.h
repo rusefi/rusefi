@@ -150,8 +150,9 @@ struct output_channels_s {
 	offset 0 bit 30 */
 	bool isTuningNow : 1 {};
 	/**
+	 * SD: formating is in progress
 	offset 0 bit 31 */
-	bool unusedBit_31_31 : 1 {};
+	bool sd_formating : 1 {};
 	/**
 	 * @@GAUGE_NAME_RPM@@
 	 * units: RPM
@@ -1446,7 +1447,11 @@ struct output_channels_s {
 	/**
 	 * offset 828
 	 */
-	uint8_t unusedAtTheEnd[48] = {};
+	uint8_t sd_error = (uint8_t)0;
+	/**
+	 * offset 829
+	 */
+	uint8_t unusedAtTheEnd[47] = {};
 };
 static_assert(sizeof(output_channels_s) == 876);
 

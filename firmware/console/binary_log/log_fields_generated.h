@@ -33,6 +33,7 @@ static const LogField fields[] = {
 	{engine->outputChannels, 0, 28, "hasFaultReportFile", ""},
 	{engine->outputChannels, 0, 29, "Analog sensors supply failure", ""},
 	{engine->outputChannels, 0, 30, "isTuningNow", ""},
+	{engine->outputChannels, 0, 31, "SD: formating is in progress", ""},
 	{engine->outputChannels.RPMValue, "RPM", "RPM", 0},
 	{engine->outputChannels.rpmAcceleration, "dRPM", "RPM acceleration/Rate of Change/ROC", 2},
 	{engine->outputChannels.speedToRpmRatio, "Gearbox Ratio", "value", 2},
@@ -412,6 +413,7 @@ static const LogField fields[] = {
 	{engine->outputChannels.throttlePressureRatio, "throttlePressureRatio", "", 0},
 	{engine->outputChannels.throttleEffectiveAreaOpening, "throttleEffectiveAreaOpening", "", 0},
 	{engine->outputChannels.mcuSerial, "mcuSerial", "", 0},
+	{engine->outputChannels.sd_error, "sd_error", "", 0},
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},
 #endif
