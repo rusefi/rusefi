@@ -1,6 +1,8 @@
 /**
  * See also BinarySensorLog.java
  * See also mlq_file_format.txt
+ *
+ * https://www.efianalytics.com/TunerStudio/docs/MLG_Binary_LogFormat_1.0.pdf
  */
 
 #include "pch.h"
