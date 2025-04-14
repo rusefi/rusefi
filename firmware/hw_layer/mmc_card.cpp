@@ -685,21 +685,32 @@ static void sdLoggerStop(void)
 
 static bool sdFormat()
 {
+#if EFI_TUNER_STUDIO
+	engine->outputChannels.sd_formating = true;
+	engine->outputChannels.sd_error = 0;
+#endif
 	//FRESULT ret = f_mkfs("", nullptr, resources.formatBuff, sizeof(resources.formatBuff));
 	FRESULT ret = f_mkfs("", nullptr, resources.formatBuff, sizeof(resources.formatBuff));
 
 	if (ret) {
 		printError("format failed", ret);
 		warning(ObdCode::CUSTOM_ERR_SD_MOUNT_FAILED, "SD: format failed");
-		return false;
+		goto exit;
 	}
 	ret = f_setlabel(SD_CARD_LABEL);
 	if (ret) {
 		printError("setlabel failed", ret);
 		// this is not critical
+		ret = FR_OK;
 	}
 
-	return true;
+exit:
+#if EFI_TUNER_STUDIO
+	engine->outputChannels.sd_formating = false;
+	engine->outputChannels.sd_error = (uint8_t) ret;
+#endif
+
+	return (ret ? false : true);
 }
 
 static int sdModeSwitchToIdle(SD_MODE from)
