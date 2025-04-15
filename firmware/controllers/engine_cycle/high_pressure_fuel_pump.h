@@ -81,6 +81,9 @@ public:
 
 class HpfpController : public EngineModule, public high_pressure_fuel_pump_s {
 public:
+	// Mockable<> interface
+	using interface_t = HpfpController;
+
 	void onFastCallback() final;
 
 #if !EFI_UNIT_TEST

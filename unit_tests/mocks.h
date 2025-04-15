@@ -145,3 +145,12 @@ public:
 
 	MOCK_METHOD(bool, getIgnState, (), (const, override));
 };
+
+class MockHpfpController : public HpfpController {
+public:
+	MockHpfpController();
+	virtual ~MockHpfpController();
+
+	bool isHpfpActive;
+	angle_t m_deadangle;
+};
