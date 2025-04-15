@@ -1813,7 +1813,7 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 	float fuelLevelLowThresholdVoltage;Error below specified value;"v", 1, 0, 0, 10, 2
 	float fuelLevelHighThresholdVoltage;Error above specified value;"v", 1, 0, 0, 10, 2
 
-    float mapExpAverageAfr;;"", 1, 0, 0, 1, 3
+    float afrExpAverageAlpha;;"", 1, 0, 0, 1, 3
 
 	uint8_t autoscale sparkHardwareLatencyCorrection;Compensates for trigger delay due to belt stretch, or other electromechanical issues. beware that raising this value advances ignition timing!;"uS", 1, 0, 0, 250, 0
 

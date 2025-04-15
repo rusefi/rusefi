@@ -123,6 +123,10 @@ void defaultsOrFixOnBurn() {
 	  engineConfiguration->mapExpAverageAlpha = 1;
 	}
 
+	if (engineConfiguration->afrExpAverageAlpha <= 0 || engineConfiguration->afrExpAverageAlpha > 1) {
+	  engineConfiguration->afrExpAverageAlpha = 1;
+	}
+
 	if (engineConfiguration->alternator_iTermMin == 0) {
   	engineConfiguration->alternator_iTermMin = -1000;
 	}
