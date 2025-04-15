@@ -70,6 +70,7 @@ public:
 	virtual void update() = 0;
 	virtual void autoCalibrateTps(bool reportToTs = true) { (void)reportToTs; }
 	virtual bool isEtbMode() const = 0;
+	virtual bool isEwgMode() const = 0;
 
 	virtual const pid_state_s& getPidState() const = 0;
   virtual float getCurrentTarget() const = 0;
