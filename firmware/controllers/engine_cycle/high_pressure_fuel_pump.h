@@ -85,6 +85,7 @@ public:
 	using interface_t = HpfpController;
 
 	void onFastCallback() final;
+	angle_t m_deadangle = 0; ///< Computed solenoid deadtime in degrees
 
 #if !EFI_UNIT_TEST
 private:
@@ -95,7 +96,6 @@ private:
 	HpfpLobe     m_lobe;
 
 	volatile bool m_running = false; ///< Whether events are being scheduled or not
-	volatile angle_t m_deadangle = 0; ///< Computed solenoid deadtime in degrees
 
 	void scheduleNextCycle();
 
