@@ -32,6 +32,7 @@
         <constant digits="2" name="afr_v2" units="volts">5.0</constant>
         <constant digits="2" name="afr_value1" units="AFR">9.996</constant>
         <constant digits="2" name="afr_value2" units="AFR">19.992</constant>
+        <constant digits="3" name="afrExpAverageAlpha" units="">1.0</constant>
         <constant name="afrOverrideMode">"None"</constant>
         <constant cols="1" digits="1" name="afterCrankingIACtaperDuration" rows="6">
          200.0
@@ -2785,7 +2786,6 @@ end</constant>
          80.0
          100.0
 </constant>
-        <constant digits="3" name="mapExpAverageAfr" units="">0.0</constant>
         <constant digits="3" name="mapExpAverageAlpha" units="">1.0</constant>
         <constant digits="2" name="mapHighValueVoltage" units="v">4.65</constant>
         <constant digits="2" name="mapLowValueVoltage" units="v">0.3</constant>
@@ -4943,7 +4943,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250403" nPages="1" signature="rusEFI master.2025.04.15.f407-discovery.3470245825" version="5.0"/>
+    <versionInfo firmwareInfo="20250403" nPages="1" signature="rusEFI master.2025.04.15.f407-discovery.242053044" version="5.0"/>
     <bibliography author="rusEFI 20250403" writeDate="date"/>
     <settings/>
     <userComments/>
