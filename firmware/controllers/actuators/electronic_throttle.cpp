@@ -750,15 +750,18 @@ struct EtbImpl final : public TBase {
 				engineConfiguration->tpsMax = convertVoltageTo10bitADC(primaryMax);
 				engineConfiguration->tps1SecondaryMin = convertVoltageTo10bitADC(secondaryMin);
 				engineConfiguration->tps1SecondaryMax = convertVoltageTo10bitADC(secondaryMax);
-			} else {
+			} else if (myFunction == DC_Throttle2) {
 				engineConfiguration->tps2Min = convertVoltageTo10bitADC(primaryMin);
 				engineConfiguration->tps2Max = convertVoltageTo10bitADC(primaryMax);
 				engineConfiguration->tps2SecondaryMin = convertVoltageTo10bitADC(secondaryMin);
 				engineConfiguration->tps2SecondaryMax = convertVoltageTo10bitADC(secondaryMax);
+			} else {
+				/* TODO */
 			}
 		}
 #if EFI_TUNER_STUDIO
-		if (TBase::m_isAutocalTs) {
+		if ((TBase::m_isAutocalTs) &&
+			((myFunction == DC_Throttle1) || (myFunction == DC_Throttle2))) {
 			// Write out the learned values to TS, waiting briefly after setting each to let TS grab it
 			engine->outputChannels.calibrationMode = (uint8_t)functionToCalModePriMax(myFunction);
 			engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(primaryMax);
