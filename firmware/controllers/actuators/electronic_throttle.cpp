@@ -639,7 +639,7 @@ void EtbController::update() {
 	ClosedLoopController::update();
 
 	if (isEtbMode() && !validPlantPosition) {
-	  etbErrorCode = (int8_t)TpsState::TpsError;
+		etbErrorCode = (int8_t)TpsState::TpsError;
 	}
 }
 
@@ -699,14 +699,14 @@ struct EtbImpl final : public TBase {
 	if (TBase::m_isAutocal) {
 		// Don't allow if engine is running!
 		if (Sensor::getOrZero(SensorType::Rpm) > 0) {
-		  efiPrintf(" ****************** ERROR: Not while RPM ********************");
+			efiPrintf(" ****************** ERROR: Not while RPM ********************");
 			TBase::m_isAutocal = false;
 			return;
 		}
 
 		auto motor = TBase::getMotor();
 		if (!motor) {
-		  efiPrintf(" ****************** ERROR: No DC motor ********************");
+			efiPrintf(" ****************** ERROR: No DC motor ********************");
 			TBase::m_isAutocal = false;
 			return;
 		}
@@ -716,13 +716,13 @@ struct EtbImpl final : public TBase {
 		auto myFunction = TBase::getFunction();
 
 		// First grab open
-	  efiPrintf("Opening!");
+		efiPrintf("Opening!");
 		motor->set(0.5f);
 		motor->enable();
 		chThdSleepMilliseconds(1000);
 		float primaryMax = Sensor::getRaw(functionToTpsSensorPrimary(myFunction));
 		float secondaryMax = Sensor::getRaw(functionToTpsSensorSecondary(myFunction));
-	  efiPrintf("Opened %f %f", primaryMax, secondaryMax);
+		efiPrintf("Opened %f %f", primaryMax, secondaryMax);
 
 		// Let it return
 		motor->set(0);
@@ -746,16 +746,16 @@ struct EtbImpl final : public TBase {
 
 		if (!TBase::m_isAutocalTs) {
 			if (myFunction == DC_Throttle1) {
-		    engineConfiguration->tpsMin = convertVoltageTo10bitADC(primaryMin);
-		    engineConfiguration->tpsMax = convertVoltageTo10bitADC(primaryMax);
-		    engineConfiguration->tps1SecondaryMin = convertVoltageTo10bitADC(secondaryMin);
-		    engineConfiguration->tps1SecondaryMax = convertVoltageTo10bitADC(secondaryMax);
-		  } else {
-		    engineConfiguration->tps2Min = convertVoltageTo10bitADC(primaryMin);
-		    engineConfiguration->tps2Max = convertVoltageTo10bitADC(primaryMax);
-		    engineConfiguration->tps2SecondaryMin = convertVoltageTo10bitADC(secondaryMin);
-		    engineConfiguration->tps2SecondaryMax = convertVoltageTo10bitADC(secondaryMax);
-		  }
+				engineConfiguration->tpsMin = convertVoltageTo10bitADC(primaryMin);
+				engineConfiguration->tpsMax = convertVoltageTo10bitADC(primaryMax);
+				engineConfiguration->tps1SecondaryMin = convertVoltageTo10bitADC(secondaryMin);
+				engineConfiguration->tps1SecondaryMax = convertVoltageTo10bitADC(secondaryMax);
+			} else {
+				engineConfiguration->tps2Min = convertVoltageTo10bitADC(primaryMin);
+				engineConfiguration->tps2Max = convertVoltageTo10bitADC(primaryMax);
+				engineConfiguration->tps2SecondaryMin = convertVoltageTo10bitADC(secondaryMin);
+				engineConfiguration->tps2SecondaryMax = convertVoltageTo10bitADC(secondaryMax);
+			}
 		}
 #if EFI_TUNER_STUDIO
 		if (TBase::m_isAutocalTs) {
@@ -794,13 +794,13 @@ static_assert(ETB_COUNT == 2);
 static EtbController* etbControllers[] = { &etb1, &etb2 };
 
 void blinkEtbErrorCodes(bool blinkPhase) {
-  for (int i = 0;i<ETB_COUNT;i++) {
-    int8_t etbErrorCode = etbControllers[i]->etbErrorCode;
-    if (etbErrorCode && engine->etbAutoTune) {
-      etbErrorCode = (int8_t)TpsState::AutoTune;
-    }
-    etbControllers[i]->etbErrorCodeBlinker = blinkPhase ? 0 : etbErrorCode;
-  }
+	for (int i = 0;i<ETB_COUNT;i++) {
+		int8_t etbErrorCode = etbControllers[i]->etbErrorCode;
+		if (etbErrorCode && engine->etbAutoTune) {
+			etbErrorCode = (int8_t)TpsState::AutoTune;
+		}
+		etbControllers[i]->etbErrorCodeBlinker = blinkPhase ? 0 : etbErrorCode;
+	}
 }
 
 #if !EFI_UNIT_TEST
@@ -811,8 +811,8 @@ struct DcThread final : public PeriodicController<512> {
 	void PeriodicTask(efitick_t) override {
 		// Simply update all controllers
 		for (int i = 0 ; i < ETB_COUNT; i++) {
-		  auto controller = engine->etbControllers[i];
-		  assertNotNullVoid(controller);
+			auto controller = engine->etbControllers[i];
+			assertNotNullVoid(controller);
 			etbControllers[i]->update();
 		}
 	}
@@ -825,7 +825,7 @@ static DcThread dcThread CCM_OPTIONAL;
 void etbPidReset() {
 	for (int i = 0 ; i < ETB_COUNT; i++) {
 		if (auto controller = engine->etbControllers[i]) {
-		  assertNotNullVoid(controller);
+			assertNotNullVoid(controller);
 			controller->reset();
 		}
 	}
@@ -837,7 +837,7 @@ void etbAutocal(size_t throttleIndex, bool reportToTs) {
 	}
 
 	if (auto etb = engine->etbControllers[throttleIndex]) {
-	  assertNotNullVoid(etb);
+		assertNotNullVoid(etb);
 		etb->autoCalibrateTps(reportToTs);
 		// todo fix root cause! work-around: make sure not to write bad tune since that would brick requestBurn();
 	}
@@ -971,7 +971,7 @@ void doInitElectronicThrottle() {
 				engineConfiguration->etbIo[i], i, engineConfiguration->etb_use_two_wires);
 
 		auto controller = engine->etbControllers[i];
-    criticalAssertVoid(controller != nullptr, "null ETB");
+		criticalAssertVoid(controller != nullptr, "null ETB");
 
 		auto pid = getPidForDcFunction(func);
 
@@ -1019,29 +1019,29 @@ void initElectronicThrottle() {
 	}
 
 #if EFI_PROD_CODE
-  addConsoleAction("etbautocal", [](){
-    efiPrintf("etbAutocal invoked");
-    etbAutocal(0);
+	addConsoleAction("etbautocal", [](){
+		efiPrintf("etbAutocal invoked");
+		etbAutocal(0);
 	});
 
 	addConsoleAction("etbinfo", [](){
-	  efiPrintf("etbAutoTune=%d", engine->etbAutoTune);
-	  efiPrintf("TPS=%.2f", Sensor::getOrZero(SensorType::Tps1));
+		efiPrintf("etbAutoTune=%d", engine->etbAutoTune);
+		efiPrintf("TPS=%.2f", Sensor::getOrZero(SensorType::Tps1));
 
-	  efiPrintf("ETB1 duty=%.2f",
+		efiPrintf("ETB1 duty=%.2f",
 			(float)engine->outputChannels.etb1DutyCycle);
 
-	  efiPrintf("ETB freq=%d",
+		efiPrintf("ETB freq=%d",
 			engineConfiguration->etbFreq);
 
-	  for (int i = 0; i < ETB_COUNT; i++) {
-		  efiPrintf("ETB%d", i);
-		  efiPrintf(" dir1=%s", hwPortname(engineConfiguration->etbIo[i].directionPin1));
-		  efiPrintf(" dir2=%s", hwPortname(engineConfiguration->etbIo[i].directionPin2));
-		  efiPrintf(" control=%s", hwPortname(engineConfiguration->etbIo[i].controlPin));
-		  efiPrintf(" disable=%s", hwPortname(engineConfiguration->etbIo[i].disablePin));
-		  showDcMotorInfo(i);
-	  }
+		for (int i = 0; i < ETB_COUNT; i++) {
+			efiPrintf("ETB%d", i);
+			efiPrintf(" dir1=%s", hwPortname(engineConfiguration->etbIo[i].directionPin1));
+			efiPrintf(" dir2=%s", hwPortname(engineConfiguration->etbIo[i].directionPin2));
+			efiPrintf(" control=%s", hwPortname(engineConfiguration->etbIo[i].controlPin));
+			efiPrintf(" disable=%s", hwPortname(engineConfiguration->etbIo[i].disablePin));
+			showDcMotorInfo(i);
+		}
 	});
 
 #endif /* EFI_PROD_CODE */
@@ -1056,7 +1056,7 @@ void initElectronicThrottle() {
 void setEtbIdlePosition(percent_t pos) {
 	for (int i = 0; i < ETB_COUNT; i++) {
 		if (auto etb = engine->etbControllers[i]) {
-		  assertNotNullVoid(etb);
+			assertNotNullVoid(etb);
 			etb->setIdlePosition(pos);
 		}
 	}
@@ -1065,7 +1065,7 @@ void setEtbIdlePosition(percent_t pos) {
 void setEtbWastegatePosition(percent_t pos) {
 	for (int i = 0; i < ETB_COUNT; i++) {
 		if (auto etb = engine->etbControllers[i]) {
-		  assertNotNullVoid(etb);
+			assertNotNullVoid(etb);
 			etb->setWastegatePosition(pos);
 		}
 	}
@@ -1074,7 +1074,7 @@ void setEtbWastegatePosition(percent_t pos) {
 void setEtbLuaAdjustment(percent_t pos) {
 	for (int i = 0; i < ETB_COUNT; i++) {
 		if (auto etb = engine->etbControllers[i]) {
-		  assertNotNullVoid(etb);
+			assertNotNullVoid(etb);
 			etb->setLuaAdjustment(pos);
 		}
 	}
