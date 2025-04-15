@@ -953,9 +953,6 @@ PUBLIC_API_WEAK ValueProvider3D* pedal2TpsProvider() {
 }
 
 void doInitElectronicThrottle() {
-	bool hasPedal = Sensor::hasSensor(SensorType::AcceleratorPedalPrimary);
-
-
 	bool anyEtbConfigured = false;
 
 	// todo: technical debt: we still have DC motor code initialization in ETB-specific file while DC motors are used not just as ETB
@@ -976,15 +973,12 @@ void doInitElectronicThrottle() {
 		auto pid = getPidForDcFunction(func);
 
 		bool dcConfigured = controller->init(func, motor, pid, pedal2TpsProvider());
-		bool etbConfigured = dcConfigured && controller->isEtbMode();
-		anyEtbConfigured |= etbConfigured;
+		anyEtbConfigured |= dcConfigured && controller->isEtbMode();
 	}
 
-	if (!anyEtbConfigured) {
-		// It's not valid to have a PPS without any ETBs - check that at least one ETB was enabled along with the pedal
-		if (hasPedal) {
-			criticalError("A pedal position sensor was configured, but no electronic throttles are configured.");
-		}
+	// It's not valid to have a PPS without any ETBs - check that at least one ETB was enabled along with the pedal
+	if (!anyEtbConfigured && Sensor::hasSensor(SensorType::AcceleratorPedalPrimary)) {
+		criticalError("A pedal position sensor was configured, but no electronic throttles are configured.");
 	}
 
 #if 0 && ! EFI_UNIT_TEST
