@@ -12,6 +12,7 @@
 
 #include "sensor.h"
 #include "efi_pid.h"
+#include "error_accumulator.h"
 #include "electronic_throttle_generated.h"
 
 /**
@@ -96,6 +97,8 @@ private:
 	DcMotor *m_motor = nullptr;
 	Pid m_pid;
 	bool m_shouldResetPid = false;
+
+	ErrorAccumulator m_targetErrorAccumulator;
 
 	/**
 	 * @return true if OK, false if should be disabled

@@ -12,6 +12,7 @@ struct_no_prefix electronic_throttle_s
 	custom percent_t 4 scalar, F32, @OFFSET@, "", 1, 0, 0, 100, 2
 
 	percent_t etbFeedForward
+	float integralError;Integral error; "", 1, 0, 0, 100, 3,@@GAUGE_CATEGORY_ETB@@
 	float etbCurrentTarget;ETB: target for current pedal;"%", 1, 0, -10000, 10000, 3
 	int16_t autoscale m_adjustedTarget;Adjusted target;"%", 0.01, 0, -100, 100, 2
 

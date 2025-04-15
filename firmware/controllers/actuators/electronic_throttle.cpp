@@ -177,6 +177,9 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 	m_pid.initPidClass(pidParameters);
 	m_pedalProvider = pedalProvider;
 
+	// Ignore 3% position error before complaining
+	m_targetErrorAccumulator.init(3.0f, etbPeriodSeconds);
+
 	reset();
 
 	state = (uint8_t)EtbState::SuccessfulInit;
@@ -484,9 +487,14 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 
 	if (m_isAutotune) {
 		state = (uint8_t)EtbState::Autotune;
+
+		m_targetErrorAccumulator.reset();
+
 		return getClosedLoopAutotune(target, observation);
 	} else {
 		checkJam(target, observation);
+
+		integralError = m_targetErrorAccumulator.accumulate(target - observation);
 
 		float dt = m_cycleTimer.getElapsedSecondsAndReset(getTimeNowNt());
 		m_lastPidDtMs = dt * 1000.0;
