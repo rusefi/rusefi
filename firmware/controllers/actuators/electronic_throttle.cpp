@@ -834,15 +834,18 @@ void etbPidReset() {
 	}
 }
 
-void etbAutocal(size_t throttleIndex, bool reportToTs) {
-	if (throttleIndex >= ETB_COUNT) {
-		return;
-	}
-
-	if (auto etb = engine->etbControllers[throttleIndex]) {
-		assertNotNullVoid(etb);
-		etb->autoCalibrateTps(reportToTs);
-		// todo fix root cause! work-around: make sure not to write bad tune since that would brick requestBurn();
+void etbAutocal(dc_function_e function, bool reportToTs) {
+	for (size_t i = 0 ; i < ETB_COUNT; i++) {
+		/* TODO: use from engine, add getFunction() to base class */
+		//if (auto controller = engine->etbControllers[i]) {
+		if (auto controller = etbControllers[i]) {
+			assertNotNullVoid(controller);
+			if (controller->getFunction() == function) {
+				/* TODO: is it possible that we have several controllers with same function? */
+				controller->autoCalibrateTps(reportToTs);
+				// todo fix root cause! work-around: make sure not to write bad tune since that would brick requestBurn();
+			}
+		}
 	}
 }
 
@@ -1018,7 +1021,7 @@ void initElectronicThrottle() {
 #if EFI_PROD_CODE
 	addConsoleAction("etbautocal", [](){
 		efiPrintf("etbAutocal invoked");
-		etbAutocal(0);
+		etbAutocal(DC_Throttle1);
 	});
 
 	addConsoleAction("etbinfo", [](){

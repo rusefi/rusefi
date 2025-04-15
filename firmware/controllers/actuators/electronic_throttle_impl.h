@@ -52,6 +52,8 @@ public:
 	expected<percent_t> getClosedLoop(percent_t setpoint, percent_t observation) override;
 	expected<percent_t> getClosedLoopAutotune(percent_t setpoint, percent_t actualThrottlePosition);
 
+	dc_function_e getFunction() const { return m_function; }
+
 	void checkJam(percent_t setpoint, percent_t observation);
 
 	void setOutput(expected<percent_t> outputValue) override;
@@ -86,7 +88,6 @@ protected:
 	bool hadTpsError = false;
 	bool hadPpsError = false;
 
-	dc_function_e getFunction() const { return m_function; }
 	DcMotor* getMotor() { return m_motor; }
 
 private:
