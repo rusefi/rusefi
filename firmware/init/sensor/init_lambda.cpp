@@ -58,6 +58,11 @@ void initLambda() {
 			return;
 		}
 
+		if(isAdcChannelValid(engineConfiguration->afr.hwChannel)){
+			criticalError("Please pick either analog AFR or CAN AFR input not both.");
+			return;
+		}
+
 		registerCanSensor(aem1);
 		registerCanSensor(aem2);
 
