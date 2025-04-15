@@ -34,7 +34,7 @@ void onConfigurationChangeElectronicThrottleCallback(engine_configuration_s *pre
 void unregisterEtbPins();
 void setProteusHitachiEtbDefaults();
 
-void etbAutocal(size_t throttleIndex, bool reportToTs = true);
+void etbAutocal(dc_function_e function, bool reportToTs = true);
 TpsState etbGetState(size_t throttleIndex);
 
 float getSanitizedPedal();

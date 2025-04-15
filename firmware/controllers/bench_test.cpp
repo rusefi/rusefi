@@ -495,16 +495,16 @@ static void handleCommandX14(uint16_t index) {
 */
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	case TS_ETB_AUTOCAL_0:
-			etbAutocal(0);
+			etbAutocal(DC_Throttle1);
 		return;
 	case TS_ETB_AUTOCAL_1:
-			etbAutocal(1);
+			etbAutocal(DC_Throttle2);
 		return;
 	case TS_ETB_AUTOCAL_0_FAST:
-			etbAutocal(0, false);
+			etbAutocal(DC_Throttle1, false);
 		return;
 	case TS_ETB_AUTOCAL_1_FAST:
-			etbAutocal(1, false);
+			etbAutocal(DC_Throttle2, false);
 		return;
 	case TS_ETB_START_AUTOTUNE:
 			engine->etbAutoTune = true;
