@@ -5038,7 +5038,7 @@ struct engine_configuration_s {
 	/**
 	 * offset 3892
 	 */
-	float mapExpAverageAfr;
+	float afrExpAverageAlpha;
 	/**
 	 * Compensates for trigger delay due to belt stretch, or other electromechanical issues. beware that raising this value advances ignition timing!
 	 * units: uS

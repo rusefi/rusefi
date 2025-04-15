@@ -1925,9 +1925,9 @@ float getConfigValueByName(const char *name) {
 // fuelLevelHighThresholdVoltage
 		case 2012123720:
 			return engineConfiguration->fuelLevelHighThresholdVoltage;
-// mapExpAverageAfr
-		case -163403196:
-			return engineConfiguration->mapExpAverageAfr;
+// afrExpAverageAlpha
+		case 1597749004:
+			return engineConfiguration->afrExpAverageAlpha;
 // sparkHardwareLatencyCorrection
 		case 756523164:
 			return engineConfiguration->sparkHardwareLatencyCorrection;
@@ -5188,9 +5188,9 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->fuelLevelHighThresholdVoltage = value;
 		return 1;
 	}
-		case -163403196:
+		case 1597749004:
 	{
-		engineConfiguration->mapExpAverageAfr = value;
+		engineConfiguration->afrExpAverageAlpha = value;
 		return 1;
 	}
 		case 756523164:

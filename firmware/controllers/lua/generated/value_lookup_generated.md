@@ -1918,7 +1918,7 @@ Error below specified value
 ### fuelLevelHighThresholdVoltage
 Error above specified value
 
-### mapExpAverageAfr
+### afrExpAverageAlpha
 
 
 ### sparkHardwareLatencyCorrection
