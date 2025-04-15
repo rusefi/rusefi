@@ -100,6 +100,10 @@ private:
 		return m_function == DC_Throttle1 || m_function == DC_Throttle2;
 	}
 
+	bool isEwgMode() const override {
+		return m_function == DC_Wastegate;
+	}
+
 	Timer m_jamDetectTimer;
 
 	// Pedal -> target map
