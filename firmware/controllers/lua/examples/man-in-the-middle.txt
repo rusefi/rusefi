@@ -2,6 +2,10 @@
 
 -- sometimes we want to cut a CAN bus and install rusEFI into that cut
 -- https://en.wikipedia.org/wiki/Man-in-the-middle_attack
+--
+-- ECU side JAE MX1900 2 Pos Socket Housing  MX19002S51
+-- VEHICLE side JAE MX1900 2 Pos Pin Housing MX19002P51
+--
 
 -- this controls onCanRx rate as well!
 setTickRate(300)
