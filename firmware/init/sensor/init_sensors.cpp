@@ -42,15 +42,10 @@ void deInitIfValid(const char* msg, adc_channel_e channel) {
 }
 
 static void initOldAnalogInputs() {
-    if (isAdcChannelValid(engineConfiguration->afr.hwChannel) && engineConfiguration->enableAemXSeries) {
-        criticalError("Please pick either analog AFR or CAN AFR input not both.");
-    }
-	initIfValid("AFR", engineConfiguration->afr.hwChannel);
 	initIfValid("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel);
 }
 
 static void deInitOldAnalogInputs() {
-	deInitIfValid("AFR", activeConfiguration.afr.hwChannel);
 	deInitIfValid("AUXF#1", activeConfiguration.auxFastSensor1_adcChannel);
 }
 
