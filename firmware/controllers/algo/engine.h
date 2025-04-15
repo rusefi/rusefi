@@ -137,7 +137,7 @@ public:
 #endif // EFI_IDLE_CONTROL
 		TriggerScheduler,
 #if EFI_HPFP && EFI_ENGINE_CONTROL
-		HpfpController,
+		Mockable<HpfpController>,
 #endif // EFI_HPFP && EFI_ENGINE_CONTROL
 #if EFI_ENGINE_CONTROL
 		Mockable<ThrottleModel>,

@@ -41,3 +41,6 @@ MockIdleController::~MockIdleController() { }
 
 MockIgnitionController::MockIgnitionController() { }
 MockIgnitionController::~MockIgnitionController() { }
+
+MockHpfpController::MockHpfpController() { }
+MockHpfpController::~MockHpfpController() { }
