@@ -1,1 +1,6 @@
 #define LUA_SCRIPT_SIZE 13500
+
+#define VE_RPM_COUNT 24
+#define IGN_RPM_COUNT 24
+#define FUEL_RPM_COUNT 24
+#define INJ_PHASE_RPM_COUNT 24
