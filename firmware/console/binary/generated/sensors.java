@@ -658,7 +658,7 @@ tempC("WBO: Temperature", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1780, 1
 nernstVoltage("WBO: Nernst Voltage", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1782, 0.001, 0.0, 1.0, "V"),
 esr("WBO: ESR", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1784, 1.0, 0.0, 10000.0, "ohm"),
 alignmentFill_at_10("need 4 byte alignment", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1786, 1.0, 0.0, 100.0, "units"),
-dcOutput0("DC: output0", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1800, 1.0, 0.0, 10.0, "%"),
+dcOutput0("DC: output0", SensorCategory.SENSOR_INPUTS, FieldType.INT, 1800, 1.0, -1.0, 1.0, "%"),
 isEnabled0_int("DC: en0", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1804, 1.0, 0.0, 10.0, "%"),
 alignmentFill_at_5("need 4 byte alignment", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 1805, 1.0, 0.0, 100.0, "units"),
 value0("SENT ch0 value0", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 1812, 1.0, 0.0, 4095.0, "RAW"),
