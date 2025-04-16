@@ -30,3 +30,4 @@ java -DSystemOut.name=logs/gen_java_enum -cp ../java_tools/enum_to_string/build/
 # live_data_ids.h is generated above so order of operations is important here!
 
 ./gen_enum_to_string.sh
+./gen_perf_trace_enum.sh

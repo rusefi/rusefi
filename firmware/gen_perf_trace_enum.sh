@@ -1,5 +1,16 @@
 #!/bin/bash
 
+#
+# file gen_perf_trace_enum.sh
+#
+
+# fail fast
+set -e
+
+SCRIPT_NAME=$(basename "$0")
+
+echo "${SCRIPT_NAME} hello"
+
 cd ../java_tools
 ./gradlew :models:shadowJar
 cd ../firmware
