@@ -45,7 +45,7 @@ public class PerfTraceEnumGenerator {
         LazyFile writer = LazyFileImpl.REAL.create(outputFileName);
 
         writer.write("package com.rusefi.tracing;\n");
-        writer.write("// " + new Date() + LazyFile.LAZY_FILE_TAG + PerfTraceEnumGenerator.class + "\n");
+        writer.write("// " + new Date() + " " + LazyFile.LAZY_FILE_TAG + PerfTraceEnumGenerator.class + "\n");
         writer.write("public class EnumNames {\n");
         writer.write("\t" +
             "public static final String" +
