@@ -1,7 +1,7 @@
 ! units,scale,offset,min,max,digits
 
 struct_no_prefix dc_motors_s
-	float dcOutput0;"DC: output0";"%", 1,0, 0,10, 2,@@GAUGE_CATEGORY_ETB@@
+	float dcOutput0;"DC: output0";"%", 1,0, -1,1, 2,@@GAUGE_CATEGORY_ETB@@
 	uint8_t isEnabled0_int;"DC: en0";"%", 1,0, 0,10, 2,@@GAUGE_CATEGORY_ETB@@
 	bit isEnabled0
 
