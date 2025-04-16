@@ -81,6 +81,8 @@ CanTxMessage::~CanTxMessage() {
 #endif // EFI_SIMULATOR
 
 #if EFI_CAN_SUPPORT
+	ScopePerf pc(PE::CanDriverTx);
+
 	auto device = s_devices[busIndex];
 
 	if (!device) {

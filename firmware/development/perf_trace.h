@@ -76,6 +76,7 @@ enum class PE : uint8_t {
 	LuaOneCanTxFunction,
 	CanThreadTx,
 	CanThreadRx,
+	CanDriverTx,
 	Temporary5,
 	Temporary6,
 	Temporary7,
