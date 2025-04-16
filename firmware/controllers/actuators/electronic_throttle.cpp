@@ -480,6 +480,12 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 	} else {
 		checkJam(target, observation);
 
+		efitimeus_t nowUs = getTimeNowUs();
+		efitimeus_t diff = nowUs - lastTickUs;
+		lastTickUs = nowUs;
+
+		m_lastPidDtMs = (float)diff / 1000.0;
+
 		// Normal case - use PID to compute closed loop part
 		return m_pid.getOutput(target, observation, etbPeriodSeconds);
 	}

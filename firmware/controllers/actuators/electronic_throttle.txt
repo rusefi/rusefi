@@ -7,6 +7,7 @@ struct_no_prefix electronic_throttle_s
 
 	float m_wastegatePosition;"DC: wastegatePosition";"%", 1,0, 0,3, 2,@@GAUGE_CATEGORY_ETB@@
 
+	float m_lastPidDtMs;"EBT: last PID dT";"mS", 1, 0, 0, 4, 3,@@GAUGE_CATEGORY_ETB@@
 
 	custom percent_t 4 scalar, F32, @OFFSET@, "", 1, 0, 0, 100, 2
 
