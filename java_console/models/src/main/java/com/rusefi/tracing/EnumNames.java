@@ -1,5 +1,5 @@
 package com.rusefi.tracing;
-// generated Thu Feb 15 09:45:57 EST 2024 by class com.rusefi.PerfTraceEnumGenerator
+// Wed Apr 16 14:23:22 UTC 2025was generated automatically by rusEFI tool class com.rusefi.PerfTraceEnumGenerator
 public class EnumNames {
 	public static final String[] TypeNames = {
 	"INVALID",
@@ -51,11 +51,26 @@ public class EnumNames {
 	"GlobalLock",
 	"GlobalUnlock",
 	"SoftwareKnockProcess",
+	"KnockAnalyzer",
 	"LogTriggerTooth",
 	"LuaTickFunction",
 	"LuaOneCanRxFunction",
 	"LuaAllCanRxFunction",
 	"LuaOneCanRxCallback",
 	"LuaOneCanTxFunction",
+	"CanThreadTx",
+	"CanThreadRx",
+	"Temporary5",
+	"Temporary6",
+	"Temporary7",
+	"Temporary8",
+	"Temporary9",
+	"Temporary10",
+	"Temporary11",
+	"Temporary12",
+	"Temporary13",
+	"Temporary14",
+	"Temporary15",
+	"Temporary16",
 	};
 }
