@@ -710,6 +710,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		configureHondaCbr600(this);
 		break;
 
+	case trigger_type_e::TT_CHRYSLER_PHASER:
 	case trigger_type_e::TT_CHRYSLER_NGC_36_2_2:
 		configureChryslerNGC_36_2_2(this);
 		break;
