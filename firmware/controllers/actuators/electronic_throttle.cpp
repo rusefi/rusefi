@@ -377,10 +377,8 @@ expected<percent_t> EtbController::getClosedLoopAutotune(percent_t target, perce
 
 	// End of cycle - record & reset
 	if (!isPositive && m_lastIsPositive) {
-		efitick_t now = getTimeNowNt();
-
 		// Determine period
-		float tu = m_autotuneCycleStart.getElapsedSecondsAndReset(now);
+		float tu = m_cycleTimer.getElapsedSecondsAndReset(getTimeNowNt());
 
 		// Determine amplitude
 		float a = m_maxCycleTps - m_minCycleTps;
@@ -480,14 +478,12 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 	} else {
 		checkJam(target, observation);
 
-		efitimeus_t nowUs = getTimeNowUs();
-		efitimeus_t diff = nowUs - lastTickUs;
-		lastTickUs = nowUs;
+		float dt = m_cycleTimer.getElapsedSecondsAndReset(getTimeNowNt());
 
-		m_lastPidDtMs = (float)diff / 1000.0;
+		m_lastPidDtMs = dt * 1000.0;
 
 		// Normal case - use PID to compute closed loop part
-		return m_pid.getOutput(target, observation, etbPeriodSeconds);
+		return m_pid.getOutput(target, observation, dt);
 	}
 }
 
