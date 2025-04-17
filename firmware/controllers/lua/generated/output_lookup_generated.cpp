@@ -1892,6 +1892,11 @@ float getOutputValueByName(const char *name) {
 		case 561614935:
 			return getLiveData<electronic_throttle_s>(0)->m_wastegatePosition;
 #endif
+// etb1m_lastPidDtMs
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+		case -1808022618:
+			return getLiveData<electronic_throttle_s>(0)->m_lastPidDtMs;
+#endif
 // etb1etbFeedForward
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 		case -1970249707:
@@ -1981,6 +1986,11 @@ float getOutputValueByName(const char *name) {
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 		case -308232520:
 			return getLiveData<electronic_throttle_s>(1)->m_wastegatePosition;
+#endif
+// etb2m_lastPidDtMs
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+		case -813957817:
+			return getLiveData<electronic_throttle_s>(1)->m_lastPidDtMs;
 #endif
 // etb2etbFeedForward
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS

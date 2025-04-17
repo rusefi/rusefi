@@ -859,6 +859,9 @@ This activates a separate fuel table for Idle, this allows fine tuning of the id
 ### verboseTriggerSynchDetails
 Verbose info in console below engineSnifferRpmThreshold\nenable trigger_details
 
+### etbUsePreciseTiming
+Measure actual dt for PID instead of pre-defined
+
 ### hondaK
 
 
