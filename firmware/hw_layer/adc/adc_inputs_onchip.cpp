@@ -207,14 +207,14 @@ int AdcDevice::enableChannel(adc_channel_e hwChannel) {
 void AdcDevice::startConversionI()
 {
 	chSysLockFromISR();
-	if ((ADC_FAST_DEVICE.state != ADC_READY) &&
-		(ADC_FAST_DEVICE.state != ADC_ERROR)) {
+	if ((ADC_FAST_DEVICE.state == ADC_READY) ||
+		(ADC_FAST_DEVICE.state == ADC_ERROR)) {
+		/* drop volatile type qualifier - this is safe */
+		adcStartConversionI(adcp, hwConfig, (adcsample_t *)samples, depth);
+	} else {
 		engine->outputChannels.fastAdcErrorsCount++;
 		// todo: when? why? criticalError("ADC fast not ready?");
 		// see notes at https://github.com/rusefi/rusefi/issues/6399
-	} else {
-		/* drop volatile type qualifier - this is safe */
-		adcStartConversionI(adcp, hwConfig, (adcsample_t *)samples, depth);
 	}
 	chSysUnlockFromISR();
 }
