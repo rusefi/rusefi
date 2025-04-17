@@ -94,22 +94,30 @@ static SensorType functionToPositionSensor(dc_function_e func) {
 
 static SensorType functionToTpsSensor(dc_function_e func) {
 	switch(func) {
-		case DC_Throttle1:  return SensorType::Tps1;
-		default: return SensorType::Tps2;
+		case DC_Throttle1: return SensorType::Tps1;
+		case DC_Throttle2: return SensorType::Tps2;
+		case DC_IdleValve: return SensorType::IdlePosition;
+		case DC_Wastegate: return SensorType::WastegatePosition;
+		default: return SensorType::Invalid;
 	}
 }
 
 static SensorType functionToTpsSensorPrimary(dc_function_e func) {
 	switch(func) {
-		case DC_Throttle1:  return SensorType::Tps1Primary;
-		default: return SensorType::Tps2Primary;
+		case DC_Throttle1: return SensorType::Tps1Primary;
+		case DC_Throttle2: return SensorType::Tps2Primary;
+		case DC_IdleValve: return SensorType::IdlePosition;
+		case DC_Wastegate: return SensorType::WastegatePosition;
+		default: return SensorType::Invalid;
 	}
 }
 
 static SensorType functionToTpsSensorSecondary(dc_function_e func) {
 	switch(func) {
-		case DC_Throttle1:  return SensorType::Tps1Secondary;
-		default: return SensorType::Tps2Secondary;
+		case DC_Throttle1: return SensorType::Tps1Secondary;
+		case DC_Throttle2: return SensorType::Tps2Secondary;
+		/* No secondary sensors for Idle and EWG */
+		default: return SensorType::Invalid;
 	}
 }
 
@@ -117,28 +125,32 @@ static SensorType functionToTpsSensorSecondary(dc_function_e func) {
 static TsCalMode functionToCalModePriMin(dc_function_e func) {
 	switch (func) {
 		case DC_Throttle1: return TsCalMode::Tps1Min;
-		default: return TsCalMode::Tps2Min;
+		case DC_Throttle2: return TsCalMode::Tps2Min;
+		default: return TsCalMode::None;
 	}
 }
 
 static TsCalMode functionToCalModePriMax(dc_function_e func) {
 	switch (func) {
 		case DC_Throttle1: return TsCalMode::Tps1Max;
-		default: return TsCalMode::Tps2Max;
+		case DC_Throttle2: return TsCalMode::Tps2Max;
+		default: return TsCalMode::None;
 	}
 }
 
 static TsCalMode functionToCalModeSecMin(dc_function_e func) {
 	switch (func) {
 		case DC_Throttle1: return TsCalMode::Tps1SecondaryMin;
-		default: return TsCalMode::Tps2SecondaryMin;
+		case DC_Throttle2: return TsCalMode::Tps2SecondaryMin;
+		default: return TsCalMode::None;
 	}
 }
 
 static TsCalMode functionToCalModeSecMax(dc_function_e func) {
 	switch (func) {
 		case DC_Throttle1: return TsCalMode::Tps1SecondaryMax;
-		default: return TsCalMode::Tps2SecondaryMax;
+		case DC_Throttle2: return TsCalMode::Tps2SecondaryMax;
+		default: return TsCalMode::None;
 	}
 }
 #endif // EFI_TUNER_STUDIO
