@@ -473,14 +473,17 @@ expected<percent_t> EtbController::getClosedLoop(percent_t target, percent_t obs
 	}
 
 	if (m_isAutotune) {
-	  state = (uint8_t)EtbState::Autotune;
+		state = (uint8_t)EtbState::Autotune;
 		return getClosedLoopAutotune(target, observation);
 	} else {
 		checkJam(target, observation);
 
 		float dt = m_cycleTimer.getElapsedSecondsAndReset(getTimeNowNt());
-
 		m_lastPidDtMs = dt * 1000.0;
+
+		if (!engineConfiguration->etbUsePreciseTiming) {
+			dt = etbPeriodSeconds;
+		}
 
 		// Normal case - use PID to compute closed loop part
 		return m_pid.getOutput(target, observation, dt);
