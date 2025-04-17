@@ -1,5 +1,5 @@
 package com.rusefi.tracing;
-// Wed Apr 16 14:23:22 UTC 2025was generated automatically by rusEFI tool class com.rusefi.PerfTraceEnumGenerator
+// Thu Apr 17 12:50:20 UTC 2025 was generated automatically by rusEFI tool class com.rusefi.PerfTraceEnumGenerator
 public class EnumNames {
 	public static final String[] TypeNames = {
 	"INVALID",
@@ -60,6 +60,7 @@ public class EnumNames {
 	"LuaOneCanTxFunction",
 	"CanThreadTx",
 	"CanThreadRx",
+	"CanDriverTx",
 	"Temporary5",
 	"Temporary6",
 	"Temporary7",
