@@ -4,7 +4,7 @@
 
 #pragma once
 
-using IgnitionTable = std::array<std::array<float, IGN_LOAD_COUNT>, IGN_RPM_COUNT>;
+using IgnitionTable = std::array<std::array<float, IGN_RPM_COUNT>, IGN_LOAD_COUNT>;
 using InjectorStagingTable = std::array<std::array<uint8_t, INJ_STAGING_COUNT>, INJ_STAGING_COUNT>;
 using CltFuelCorrCurve = std::array<float, CLT_CURVE_SIZE>;
 using FuelLevelBinsCurve = std::array<float, FUEL_LEVEL_TABLE_COUNT>;
