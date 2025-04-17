@@ -137,10 +137,18 @@ static volatile NO_CACHE adcsample_t fastAdcSampleBuf[ADC_BUF_DEPTH_FAST * ADC_M
 
 AdcDevice fastAdc(&ADC_FAST_DEVICE, &adcgrpcfgFast, fastAdcSampleBuf, ADC_BUF_DEPTH_FAST);
 
+static efitick_t lastTick = 0;
+
 static void fastAdcDoneCB(ADCDriver *adcp) {
 	// State may not be complete if we get a callback for "half done"
 	if (adcIsBufferComplete(adcp)) {
+		efitick_t nowTick = getTimeNowNt();
+		efitick_t diff = nowTick - lastTick;
+		lastTick = nowTick;
+
+		engine->outputChannels.fastAdcPeriod = (uint32_t)diff;
 		fastAdc.conversionCount++;
+
 		onFastAdcComplete(adcp->samples);
 	}
 }
