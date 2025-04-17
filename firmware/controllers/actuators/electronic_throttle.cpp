@@ -226,8 +226,8 @@ void EtbController::showStatus() {
 }
 
 expected<percent_t> EtbController::observePlant() {
-  expected<percent_t> plant = Sensor::get(m_positionSensor);
-  validPlantPosition = plant.Valid;
+	expected<percent_t> plant = Sensor::get(m_positionSensor);
+	validPlantPosition = plant.Valid;
 	return plant;
 }
 
@@ -295,7 +295,7 @@ expected<percent_t> EtbController::getSetpointEtb() {
 		return unexpected;
 	}
 
-  float sanitizedPedal = getSanitizedPedal();
+	float sanitizedPedal = getSanitizedPedal();
 
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	etbCurrentTarget = m_pedalProvider->getValue(rpm, sanitizedPedal);
@@ -539,27 +539,27 @@ void EtbController::setOutput(expected<percent_t> outputValue) {
 #endif
 
 	if (!m_motor) {
-	  state = (uint8_t)EtbState::NoMotor;
+		state = (uint8_t)EtbState::NoMotor;
 		return;
 	}
 
 	bool isEnabled;
 	if (!isEtbMode()) {
 	  // technical debt: non-ETB usages of DC motor are still mixed into ETB controller?
-    state = (uint8_t)EtbState::NotEbt;
-    isEnabled = true;
+		state = (uint8_t)EtbState::NotEbt;
+		isEnabled = true;
 	} else if (!getLimpManager()->allowElectronicThrottle()) {
-	  state = (uint8_t)EtbState::LimpProhibited;
-	  isEnabled = false;
+		state = (uint8_t)EtbState::LimpProhibited;
+		isEnabled = false;
 	} else if (engineConfiguration->pauseEtbControl) {
-	  state = (uint8_t)EtbState::Paused;
-	  isEnabled = false;
+		state = (uint8_t)EtbState::Paused;
+		isEnabled = false;
 	} else if (!outputValue) {
-	  state = (uint8_t)EtbState::NoOutput;
-	  isEnabled = false;
+		state = (uint8_t)EtbState::NoOutput;
+		isEnabled = false;
 	} else {
-	  state = (uint8_t)EtbState::Active;
-	  isEnabled = true;
+		state = (uint8_t)EtbState::Active;
+		isEnabled = true;
 	}
 
 	// If not ETB, or ETB is allowed, output is valid, and we aren't paused, output to motor.
@@ -648,7 +648,7 @@ void EtbController::update() {
 #if !EFI_UNIT_TEST
 	// If we didn't get initialized, fail fast
 	if (!m_motor) {
-	  state = (uint8_t)EtbState::FailFast;
+		state = (uint8_t)EtbState::FailFast;
 		return;
 	}
 #endif // EFI_UNIT_TEST
