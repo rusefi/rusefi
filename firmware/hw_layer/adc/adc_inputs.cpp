@@ -118,7 +118,7 @@ static void printAdcChannedReport(const char *prefix, int internalIndex, adc_cha
 
 void printFullAdcReport(void) {
 #if EFI_USE_FAST_ADC
-	efiPrintf("fast %lu samples", fastAdc.conversionCount);
+	efiPrintf("fast %lu samples", engine->outputChannels.fastAdcConversionCount);
 
 	for (int internalIndex = 0; internalIndex < fastAdc.size(); internalIndex++) {
 		adc_channel_e hwChannel = fastAdc.getAdcChannelByInternalIndex(internalIndex);

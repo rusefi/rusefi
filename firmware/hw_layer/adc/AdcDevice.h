@@ -39,7 +39,6 @@ public:
 	AdcToken getAdcChannelToken(adc_channel_e hwChannel);
 	int size() const;
 	void init(void);
-	uint32_t conversionCount = 0;
 
 private:
 	ADCDriver *adcp;

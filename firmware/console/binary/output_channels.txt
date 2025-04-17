@@ -439,6 +439,7 @@ float mapFast
   uint8_t sd_error;
 
 	uint32_t fastAdcPeriod;
+	uint32_t fastAdcConversionCount;
 
-	uint8_t[40 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t[36 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct
