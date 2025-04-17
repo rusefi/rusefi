@@ -139,6 +139,8 @@ static expected<stm32_pwm_config> getConfigForPin(brain_pin_e pin) {
 #endif
 #if STM32_PWM_USE_TIM8
 
+	/* TIM8 is used for ADC trigger */
+#if 0
 #if !STM32_PWM_USE_TIM3
 	// If TIM3 is not used, put these pins on TIM8 instead..
 	// See https://github.com/rusefi/rusefi/issues/639
@@ -150,6 +152,8 @@ static expected<stm32_pwm_config> getConfigForPin(brain_pin_e pin) {
 	case Gpio::C8:  return stm32_pwm_config{&PWMD8, 2, 3};
 	case Gpio::C9:  return stm32_pwm_config{&PWMD8, 3, 3};
 #endif
+#endif
+
 #if STM32_PWM_USE_TIM9
 	case Gpio::E5:  return stm32_pwm_config{&PWMD9, 0, 3};
 	case Gpio::E6:  return stm32_pwm_config{&PWMD9, 1, 3};
