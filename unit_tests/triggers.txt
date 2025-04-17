@@ -6007,3 +6007,109 @@ gapTo.0=1.250000
 # end of meta section
 event 0 0 1 0.00 2.000000
 event 1 0 0 360.00 nan
+TRIGGERTYPE 90 64 TT_CHRYSLER_PHASER 0.00
+knownOperationMode=true
+crankBased=false
+hasSecondChannel=false
+isSecondWheelCam=false
+cycleDuration=720
+gapsCount=16
+syncEdge=RiseOnly
+isSynchronizationNeeded=1
+gapFrom.0=2.625000
+gapTo.0=4.375000
+gapFrom.1=0.750000
+gapTo.1=1.250000
+gapFrom.2=0.750000
+gapTo.2=1.250000
+gapFrom.3=0.750000
+gapTo.3=1.250000
+gapFrom.4=0.750000
+gapTo.4=1.250000
+gapFrom.5=0.750000
+gapTo.5=1.250000
+gapFrom.6=0.750000
+gapTo.6=1.250000
+gapFrom.7=0.750000
+gapTo.7=1.250000
+gapFrom.8=0.750000
+gapTo.8=1.250000
+gapFrom.9=0.750000
+gapTo.9=1.250000
+gapFrom.10=0.750000
+gapTo.10=1.250000
+gapFrom.11=0.750000
+gapTo.11=1.250000
+gapFrom.12=0.750000
+gapTo.12=1.250000
+gapFrom.13=0.750000
+gapTo.13=1.250000
+gapFrom.14=0.750000
+gapTo.14=1.250000
+gapFrom.15=0.300000
+gapTo.15=0.500000
+# end of meta section
+event 0 0 1 0.00 3.500000
+event 1 0 0 0.00 nan
+event 2 0 1 20.00 0.285714
+event 3 0 0 20.00 nan
+event 4 0 1 40.00 1.000000
+event 5 0 0 40.00 nan
+event 6 0 1 60.00 1.000000
+event 7 0 0 60.00 nan
+event 8 0 1 80.00 1.000000
+event 9 0 0 80.00 nan
+event 10 0 1 100.00 1.000000
+event 11 0 0 100.00 nan
+event 12 0 1 120.00 1.000000
+event 13 0 0 120.00 nan
+event 14 0 1 140.00 1.000000
+event 15 0 0 140.00 nan
+event 16 0 1 160.00 1.000000
+event 17 0 0 160.00 nan
+event 18 0 1 180.00 1.000000
+event 19 0 0 180.00 nan
+event 20 0 1 200.00 1.000000
+event 21 0 0 200.00 nan
+event 22 0 1 220.00 1.000000
+event 23 0 0 220.00 nan
+event 24 0 1 240.00 1.000000
+event 25 0 0 240.00 nan
+event 26 0 1 260.00 1.000000
+event 27 0 0 260.00 nan
+event 28 0 1 280.00 1.000000
+event 29 0 0 280.00 nan
+event 30 0 1 300.00 1.000000
+event 31 0 0 300.00 nan
+event 32 0 1 350.00 2.500000
+event 33 0 0 350.00 nan
+event 34 0 1 370.00 0.400000
+event 35 0 0 370.00 nan
+event 36 0 1 390.00 1.000000
+event 37 0 0 390.00 nan
+event 38 0 1 410.00 1.000000
+event 39 0 0 410.00 nan
+event 40 0 1 430.00 1.000000
+event 41 0 0 430.00 nan
+event 42 0 1 450.00 1.000000
+event 43 0 0 450.00 nan
+event 44 0 1 470.00 1.000000
+event 45 0 0 470.00 nan
+event 46 0 1 490.00 1.000000
+event 47 0 0 490.00 nan
+event 48 0 1 510.00 1.000000
+event 49 0 0 510.00 nan
+event 50 0 1 530.00 1.000000
+event 51 0 0 530.00 nan
+event 52 0 1 550.00 1.000000
+event 53 0 0 550.00 nan
+event 54 0 1 570.00 1.000000
+event 55 0 0 570.00 nan
+event 56 0 1 590.00 1.000000
+event 57 0 0 590.00 nan
+event 58 0 1 610.00 1.000000
+event 59 0 0 610.00 nan
+event 60 0 1 630.00 1.000000
+event 61 0 0 630.00 nan
+event 62 0 1 650.00 1.000000
+event 63 0 0 650.00 nan
