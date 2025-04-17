@@ -73,6 +73,7 @@ namespace {
         const float epsilon = EPS5D;
     };
 
+#if (IGN_RPM_COUNT == 16) // the following test uses hardcoded test ignition table with 16 columns
     class IgnitionAngleAdvanceTest : public LaunchTestBase {
     protected:
         void doTest(
@@ -145,6 +146,7 @@ namespace {
             testIgnitionTable[loadIdx][13] = TEST_IGNITION_4400;
             testIgnitionTable[loadIdx][14] = TEST_IGNITION_4700;
             testIgnitionTable[loadIdx][15] = TEST_IGNITION_7000;
+            static_assert(IGN_RPM_COUNT == 16);
         };
         getTestPersistentConfiguration().setIgnitionTable(testIgnitionTable);
     }
@@ -354,4 +356,5 @@ namespace {
                 /* testData = */ TEST_DATA_WITHOUT_LAUNCH_ANGLE_ADVANCE
         );
     }
+#endif //(IGN_RPM_COUNT == 16)
 }
