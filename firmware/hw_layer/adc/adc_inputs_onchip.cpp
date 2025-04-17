@@ -151,7 +151,7 @@ static void fastAdcTrigger(GPTDriver*) {
 #endif /* EFI_INTERNAL_ADC */
 }
 
-static GPTConfig fast_adc_config = {
+static const GPTConfig fast_adc_config = {
 	.frequency = GPT_FREQ_FAST,
 	.callback = fastAdcTrigger,
 	.cr2 = 0,
