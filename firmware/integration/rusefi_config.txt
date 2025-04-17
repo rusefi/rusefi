@@ -2321,6 +2321,7 @@ end_struct
 #define SD_CARD_LABEL "rusEFI logs"
 
 #define ts_show_etb_extra_monitoring
+#define ts_show_dc_hardware true
 #define ts_show_can_wbo true
 #define ts_show_vvt_output_pin true
 #define ts_show_hbridge_function true
