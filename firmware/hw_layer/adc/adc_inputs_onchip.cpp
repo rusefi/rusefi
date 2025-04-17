@@ -147,7 +147,7 @@ static void fastAdcDoneCB(ADCDriver *adcp) {
 		lastTick = nowTick;
 
 		engine->outputChannels.fastAdcPeriod = (uint32_t)diff;
-		fastAdc.conversionCount++;
+		engine->outputChannels.fastAdcConversionCount++;
 
 		onFastAdcComplete(adcp->samples);
 	}
