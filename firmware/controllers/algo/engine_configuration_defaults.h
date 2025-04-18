@@ -3,8 +3,12 @@
 //
 
 #pragma once
-
+#include <array>
 #include "batt_lag_corr_curve.h"
+
+using torqueReductionCutTable = std::array<std::array<int8_t, TORQUE_TABLE_Y_SIZE>, TORQUE_TABLE_X_SIZE>;
+using torqueReductionTable = std::array<std::array<float, TORQUE_TABLE_Y_SIZE>, TORQUE_TABLE_X_SIZE>;
+using torqueReductionTimeTable = torqueReductionTable;
 
 namespace engine_configuration_defaults {
     /* A/C Settings: */
@@ -18,12 +22,12 @@ namespace engine_configuration_defaults {
     constexpr torqueReductionActivationMode_e TORQUE_REDUCTION_ACTIVATION_MODE = TORQUE_REDUCTION_BUTTON;
     constexpr switch_input_pin_e TORQUE_REDUCTION_TRIGGER_PIN = Gpio::Unassigned;
     constexpr pin_input_mode_e TORQUE_REDUCTION_TRIGGER_PIN_MODE = PI_DEFAULT;
-    constexpr float TORQUE_REDUCTION_TIME = 0.0f;
+    constexpr torqueReductionTimeTable TORQUE_REDUCTION_TIME = { { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f } };
     constexpr bool LIMIT_TORQUE_REDUCTION_TIME = false;
     constexpr float TORQUE_REDUCTION_ARMING_RPM = 0.0f;
     constexpr float TORQUE_REDUCTION_ARMING_APP = 0.0f;
-    constexpr int8_t TORQUE_REDUCTION_IGNITION_CUT = 0;
-    constexpr float TORQUE_REDUCTION_IGNITION_RETARD = 0.0f;
+    constexpr torqueReductionCutTable TORQUE_REDUCTION_IGNITION_CUT = { { 0, 0 } };
+    constexpr torqueReductionTable TORQUE_REDUCTION_IGNITION_RETARD = { { 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f } };
 
     /* Other Sensor Inputs: */
     constexpr switch_input_pin_e CLUTCH_DOWN_PIN = Gpio::Unassigned;
