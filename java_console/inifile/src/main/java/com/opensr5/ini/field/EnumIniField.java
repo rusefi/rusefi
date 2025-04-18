@@ -62,6 +62,8 @@ public class EnumIniField extends IniField {
     @NotNull
     private ByteBuffer getByteBuffer(ConfigurationImage image) {
         Objects.requireNonNull(image, "image enum getter");
+        if (image.getSize() < getOffset() + 4)
+            throw new IllegalArgumentException("OutOfBounds while " + getName() + " " + getOffset());
         return image.getByteBuffer(getOffset(), 4);
     }
 
