@@ -243,11 +243,12 @@ void TestEngineConfiguration::configureLimitTorqueReductionTime(std::optional<bo
 
 void TestEngineConfiguration::configureTorqueReductionTime(std::optional<float> timeout) {
     if (timeout.has_value()) {
-        engineConfiguration->torqueReductionTime = timeout.value();
+        setTable(config->torqueReductionTimeTable, timeout.value());
     } else {
-        ASSERT_EQ(
-            engineConfiguration->torqueReductionTime,
-            engine_configuration_defaults::TORQUE_REDUCTION_TIME
+        const int expected_TORQUE_REDUCTION_TIME[] = { 0, 0, 0, 0, 0, 0 };
+        EXPECT_THAT(
+            config->torqueReductionTimeTable[0],
+            testing::ElementsAreArray(expected_TORQUE_REDUCTION_TIME)
         ); // check default value
     }
 }
@@ -276,22 +277,24 @@ void TestEngineConfiguration::configureTorqueReductionArmingApp(const std::optio
 
 void TestEngineConfiguration::configureTorqueReductionIgnitionCut(const std::optional<int8_t> ignitionCut) {
     if (ignitionCut.has_value()) {
-        engineConfiguration->torqueReductionIgnitionCut = ignitionCut.value();
+        setTable(config->torqueReductionIgnitionCutTable, ignitionCut.value());
     } else {
-        ASSERT_EQ(
-            engineConfiguration->torqueReductionIgnitionCut,
-            engine_configuration_defaults::TORQUE_REDUCTION_IGNITION_CUT
+        const int expected_TORQUE_REDUCTION_IGNITION_CUT[] = { 0, 0, 0, 0, 0, 0 };
+        EXPECT_THAT(
+            config->torqueReductionIgnitionCutTable[0],
+            testing::ElementsAreArray(expected_TORQUE_REDUCTION_IGNITION_CUT)
         ); // check default value
     }
 }
 
 void TestEngineConfiguration::configureTorqueReductionIgnitionRetard(const std::optional<int8_t> ignitionRetard) {
     if (ignitionRetard.has_value()) {
-        engineConfiguration->torqueReductionIgnitionRetard = ignitionRetard.value();
+        setTable(config->torqueReductionIgnitionRetardTable, ignitionRetard.value());
     } else {
-        ASSERT_EQ(
-            engineConfiguration->torqueReductionIgnitionRetard,
-            engine_configuration_defaults::TORQUE_REDUCTION_IGNITION_RETARD
+        const int expected_TORQUE_REDUCTION_IGNITION_RETARD[] = { 0, 0, 0, 0, 0, 0 };
+        EXPECT_THAT(
+            config->torqueReductionIgnitionRetardTable[0],
+            testing::ElementsAreArray(expected_TORQUE_REDUCTION_IGNITION_RETARD)
         ); // check default value
     }
 }
