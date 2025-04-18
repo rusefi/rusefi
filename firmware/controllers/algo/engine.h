@@ -64,6 +64,10 @@
 
 #include <functional>
 
+#ifndef EFI_BOOTLOADER
+#include "engine_modules_generated.h"
+#endif
+
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
 #endif
@@ -182,6 +186,8 @@ public:
 #if EFI_LTFT_CONTROL
 		LongTermFuelTrim,
 #endif
+
+#include "modules_list_generated.h"
 
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;

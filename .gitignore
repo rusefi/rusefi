@@ -33,3 +33,5 @@ rusefi_simulator_log.mlg
 
 # bundle
 artifacts
+
+engine_modules_generated.h*

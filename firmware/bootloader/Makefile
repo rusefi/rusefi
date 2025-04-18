@@ -355,6 +355,7 @@ ifneq (yes,$(SUBMAKE))
 endif
 
 include $(PROJECT_DIR)/rusefi_pch.mk
+include $(PROJECT_DIR)/controllers/modules/modules_header_gen.mk
 
 .PHONY: CLEAN_RULE_HOOK CLEAN_PCH_HOOK
 

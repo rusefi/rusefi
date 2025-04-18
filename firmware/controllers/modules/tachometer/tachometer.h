@@ -8,4 +8,8 @@
 #pragma once
 
 void initTachometer();
-void tachUpdate();
+
+class TachometerModule : public EngineModule {
+public:
+    void onFastCallback() override;
+};

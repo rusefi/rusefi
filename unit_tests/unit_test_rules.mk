@@ -248,3 +248,4 @@ include $(UNIT_TESTS_DIR)/rules.mk
 include $(PROJECT_DIR)/rusefi_config.mk
 include $(PROJECT_DIR)/docs_enums.mk
 include $(PROJECT_DIR)/rusefi_pch.mk
+include $(PROJECT_DIR)/controllers/modules/modules_header_gen.mk

@@ -28,7 +28,7 @@ float getTachDuty() {
 
 static bool tachHasInit = false;
 
-void tachUpdate() {
+void TachometerModule::onFastCallback() {
 	// Only do anything if tach enabled
 	if (!tachHasInit) {
 		return;
@@ -39,6 +39,7 @@ void tachUpdate() {
 
 	if (periods == 0 || periods > 10) {
 		firmwareError(ObdCode::CUSTOM_ERR_6709, "Invalid tachometer pulse per rev: %.2f", periods);
+		tachHasInit = false; // disable until nex fw init
 		return;
 	}
 
