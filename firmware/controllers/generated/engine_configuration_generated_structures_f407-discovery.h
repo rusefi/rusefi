@@ -6407,8 +6407,12 @@ struct persistent_config_s {
 	 * offset 22826
 	 */
 	Gpio communityCommsLedPin;
+	/**
+	 * offset 22828
+	 */
+	int technicalDebt7738;
 };
-static_assert(sizeof(persistent_config_s) == 22828);
+static_assert(sizeof(persistent_config_s) == 22832);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition-all.jar based on (unknown script) integration/rusefi_config.txt
