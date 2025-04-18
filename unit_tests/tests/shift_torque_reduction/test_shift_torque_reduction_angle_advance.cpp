@@ -28,6 +28,7 @@ namespace {
     void ShiftTorqueReductionAngleAdvanceTest::SetUp() {
         FlatShiftConditionTestBase::SetUp();
         configureTestIgnitionTable();
+        setTable(config->torqueReductionIgnitionRetardTable, TEST_TORQUE_REDUCTION_IGNITION_RETARD);
     }
 
     void ShiftTorqueReductionAngleAdvanceTest::checkBaseIgnitionAdvance(
