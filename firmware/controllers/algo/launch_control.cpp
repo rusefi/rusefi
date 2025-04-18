@@ -13,6 +13,7 @@
 #include "launch_control.h"
 #include "engine_state.h"
 #include "tinymt32.h" // TL,DR: basic implementation of 'random'
+#include "gppwm_channel_reader.h"
 
 /**
  * We can have active condition from switch or from clutch.

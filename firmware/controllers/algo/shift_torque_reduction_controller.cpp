@@ -12,6 +12,7 @@
 #include "engine_state.h"
 #include "advance_map.h"
 #include "tinymt32.h"
+#include "gppwm_channel_reader.h"
 
 void ShiftTorqueReductionController::update() {
     if (engineConfiguration->torqueReductionEnabled) {
@@ -27,8 +28,15 @@ void ShiftTorqueReductionController::update() {
 
 float ShiftTorqueReductionController::getSparkSkipRatio() const {
     float result = 0.0f;
+    auto torqueReductionXAxis = readGppwmChannel(config->torqueReductionCutXaxis);
+    int8_t currentGear = Sensor::getOrZero(SensorType::DetectedGear);
+
     if (engineConfiguration->torqueReductionEnabled && isFlatShiftConditionSatisfied) {
-        result = engineConfiguration->torqueReductionIgnitionCut / 100.0f;
+        result =  interpolate3d(
+                config->torqueReductionIgnitionCutTable,
+                config->torqueReductionCutGearBins, currentGear,
+                config->torqueReductionCutXBins, torqueReductionXAxis.Value
+            ) / 100.0f;
     }
     return result;
 }
@@ -109,10 +117,19 @@ void ShiftTorqueReductionController::updateTriggerPinState(
 }
 
 void ShiftTorqueReductionController::updateTimeConditionSatisfied() {
+    auto torqueReductionTimeXaxis = readGppwmChannel(config->torqueReductionTimeXaxis);
+    int8_t currentGear = Sensor::getOrZero(SensorType::DetectedGear);
+
+    auto torqueReductionTime = interpolate3d(
+        config->torqueReductionTimeTable,
+        config->torqueReductionTimeGearBins, currentGear,
+        config->torqueReductionTimeXBins, torqueReductionTimeXaxis.Value
+    );
+
     isTimeConditionSatisfied = torqueReductionTriggerPinState
         ? !engineConfiguration->limitTorqueReductionTime ||
-            ((0.0f < engineConfiguration->torqueReductionTime)
-                && !m_pinTriggeredTimer.hasElapsedMs(engineConfiguration->torqueReductionTime)
+            ((0.0f < torqueReductionTime)
+                && !m_pinTriggeredTimer.hasElapsedMs(torqueReductionTime)
             )
         : false;
 }
@@ -130,6 +147,17 @@ void ShiftTorqueReductionController::updateAppConditionSatisfied() {
     } else {
         isAppConditionSatisfied = false;
     }
+}
+
+float ShiftTorqueReductionController::getTorqueReductionIgnitionRetard() const {
+    auto torqueReductionXAxis = readGppwmChannel(config->torqueReductionIgnitionRetardXaxis);
+    int8_t currentGear = Sensor::getOrZero(SensorType::DetectedGear);
+
+    return interpolate3d(
+        config->torqueReductionIgnitionRetardTable,
+        config->torqueReductionIgnitionRetardGearBins, currentGear,
+        config->torqueReductionIgnitionRetardXBins, torqueReductionXAxis.Value
+    );
 }
 
 #endif // EFI_LAUNCH_CONTROL
