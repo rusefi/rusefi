@@ -262,9 +262,6 @@ null
 ### mapSyncThreshold
 Delta kPa for MAP sync
 
-### torqueReductionIgnitionCut
-How many % of ignition events will be cut
-
 ### cylinderBore
 @@CYLINDER_BORE_TOOLTIP@@
 
@@ -1048,9 +1045,6 @@ on IGN voltage detection turn fuel pump on to build fuel pressure
 ### idlePidRpmDeadZone
 If the RPM closer to target than this value, disable closed loop idle correction to prevent oscillation
 
-### torqueReductionTime
-For how long after the pin has been triggered will the cut/reduction stay active. After that, even if the pin is still triggered, torque is re-introduced
-
 ### mc33810DisableRecoveryMode
 See Over/Undervoltage Shutdown/Retry bit in documentation
 
@@ -1161,9 +1155,6 @@ For decel we simply multiply delta of TPS and tFor decel we do not use table?!
 
 ### tpsDecelEnleanmentMultiplier
 Magic multiplier, we multiply delta of TPS and get fuel squirt duration
-
-### torqueReductionIgnitionRetard
-How many degrees of timing advance will be reduced during the Torque Reduction Time
 
 ### throttlePedalSecondaryUpVoltage
 

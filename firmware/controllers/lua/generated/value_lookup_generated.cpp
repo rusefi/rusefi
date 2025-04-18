@@ -269,9 +269,6 @@ float getConfigValueByName(const char *name) {
 // mapSyncThreshold
 		case 1640008461:
 			return engineConfiguration->mapSyncThreshold;
-// torqueReductionIgnitionCut
-		case -1710081729:
-			return engineConfiguration->torqueReductionIgnitionCut;
 // cylinderBore
 		case 1425664391:
 			return engineConfiguration->cylinderBore;
@@ -1055,9 +1052,6 @@ float getConfigValueByName(const char *name) {
 // idlePidRpmDeadZone
 		case -528043591:
 			return engineConfiguration->idlePidRpmDeadZone;
-// torqueReductionTime
-		case -1417275359:
-			return engineConfiguration->torqueReductionTime;
 // mc33810DisableRecoveryMode
 		case -464979268:
 			return engineConfiguration->mc33810DisableRecoveryMode;
@@ -1169,9 +1163,6 @@ float getConfigValueByName(const char *name) {
 // tpsDecelEnleanmentMultiplier
 		case 1164012327:
 			return engineConfiguration->tpsDecelEnleanmentMultiplier;
-// torqueReductionIgnitionRetard
-		case 2048109045:
-			return engineConfiguration->torqueReductionIgnitionRetard;
 // throttlePedalSecondaryUpVoltage
 		case -1564912640:
 			return engineConfiguration->throttlePedalSecondaryUpVoltage;
@@ -2429,11 +2420,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1640008461:
 	{
 		engineConfiguration->mapSyncThreshold = (int)value;
-		return 1;
-	}
-		case -1710081729:
-	{
-		engineConfiguration->torqueReductionIgnitionCut = (int)value;
 		return 1;
 	}
 		case 1425664391:
@@ -3741,11 +3727,6 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->idlePidRpmDeadZone = (int)value;
 		return 1;
 	}
-		case -1417275359:
-	{
-		engineConfiguration->torqueReductionTime = value;
-		return 1;
-	}
 		case -464979268:
 	{
 		engineConfiguration->mc33810DisableRecoveryMode = (int)value;
@@ -3929,11 +3910,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case 1164012327:
 	{
 		engineConfiguration->tpsDecelEnleanmentMultiplier = value;
-		return 1;
-	}
-		case 2048109045:
-	{
-		engineConfiguration->torqueReductionIgnitionRetard = value;
 		return 1;
 	}
 		case -1564912640:
