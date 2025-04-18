@@ -61,6 +61,7 @@
 #include "trip_odometer.h"
 #include "long_term_fuel_trim.h"
 #include "electronic_throttle_generated.h"
+#include "tachometer.h"
 
 #include <functional>
 
@@ -182,7 +183,7 @@ public:
 #if EFI_LTFT_CONTROL
 		LongTermFuelTrim,
 #endif
-
+		TachometerModule,
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 

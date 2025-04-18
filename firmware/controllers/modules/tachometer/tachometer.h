@@ -7,5 +7,11 @@
 
 #pragma once
 
-void initTachometer();
-void tachUpdate();
+
+class TachometerModule : public EngineModule {
+public:
+    void init();
+    void onFastCallback() override;
+private:
+    bool tachHasInit;
+};
