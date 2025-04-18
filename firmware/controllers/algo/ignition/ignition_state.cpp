@@ -124,7 +124,7 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 	if (engineConfiguration->torqueReductionEnabled
 		&& engine->shiftTorqueReductionController.isFlatShiftConditionSatisfied
 	) {
-		return engineConfiguration->torqueReductionIgnitionRetard;
+		return engine->shiftTorqueReductionController.getTorqueReductionIgnitionRetard();
 	}
     if (engineConfiguration->nitrousControlEnabled && engine->module<NitrousController>()->isNitrousCondition) {
         advanceAngle -= engineConfiguration->nitrousIgnitionRetard;

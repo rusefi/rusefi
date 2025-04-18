@@ -11,6 +11,9 @@ public:
 	void update();
 
 	float getSparkSkipRatio() const;
+
+	float getTorqueReductionIgnitionRetard() const;
+
 private:
 	void updateTriggerPinState();
 	void updateTriggerPinState(switch_input_pin_e pin, pin_input_mode_e mode, bool invalidPinState);
