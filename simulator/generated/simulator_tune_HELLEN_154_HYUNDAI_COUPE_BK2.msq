@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22680">
+    <page number="0" size="22832">
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
         <constant name="accelerometerSpiDevice">"Off"</constant>
@@ -561,7 +561,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0250417E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0250418E7</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="">95.0</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -4055,6 +4055,7 @@ end</constant>
 </constant>
         <constant name="tcuUpshiftButtonPin">"NONE"</constant>
         <constant name="tcuUpshiftButtonPinMode">"DEFAULT"</constant>
+        <constant digits="0" name="technicalDebt7738" units="">0.0</constant>
         <constant cols="1" digits="0" name="throttle2TrimRpmBins" rows="6">
          0.0
          0.0
@@ -4158,10 +4159,58 @@ end</constant>
         <constant digits="0" name="torqueReductionActivationTemperature" units="C">60.0</constant>
         <constant digits="0" name="torqueReductionArmingApp" units="">0.0</constant>
         <constant digits="0" name="torqueReductionArmingRpm" units="rpm">0.0</constant>
+        <constant cols="1" digits="0" name="torqueReductionCutGearBins" rows="2">
+         0.0
+         0.0
+</constant>
+        <constant name="torqueReductionCutXaxis">"Zero"</constant>
+        <constant cols="1" digits="0" name="torqueReductionCutXBins" rows="6">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
         <constant name="torqueReductionEnabled">"false"</constant>
-        <constant digits="0" name="torqueReductionIgnitionCut" units="%">0.0</constant>
-        <constant digits="2" name="torqueReductionIgnitionRetard" units="deg">0.0</constant>
-        <constant digits="0" name="torqueReductionTime" units="ms">0.0</constant>
+        <constant cols="6" digits="0" name="torqueReductionIgnitionCutTable" rows="2">
+         0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0
+</constant>
+        <constant cols="1" digits="0" name="torqueReductionIgnitionRetardGearBins" rows="2">
+         0.0
+         0.0
+</constant>
+        <constant cols="6" digits="2" name="torqueReductionIgnitionRetardTable" rows="2">
+         0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0
+</constant>
+        <constant name="torqueReductionIgnitionRetardXaxis">"Zero"</constant>
+        <constant cols="1" digits="0" name="torqueReductionIgnitionRetardXBins" rows="6">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
+        <constant cols="1" digits="0" name="torqueReductionTimeGearBins" rows="2">
+         0.0
+         0.0
+</constant>
+        <constant cols="6" digits="0" name="torqueReductionTimeTable" rows="2">
+         0.0 0.0 0.0 0.0 0.0 0.0
+         0.0 0.0 0.0 0.0 0.0 0.0
+</constant>
+        <constant name="torqueReductionTimeXaxis">"Zero"</constant>
+        <constant cols="1" digits="0" name="torqueReductionTimeXBins" rows="6">
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+         0.0
+</constant>
         <constant name="torqueReductionTriggerPin">"NONE"</constant>
         <constant name="torqueReductionTriggerPinMode">"DEFAULT"</constant>
         <constant cols="1" digits="0" name="torqueRpmBins" rows="6">
@@ -4990,7 +5039,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250403" nPages="1" signature="rusEFI master.2025.04.17.f407-discovery.2085309408" version="5.0"/>
+    <versionInfo firmwareInfo="20250403" nPages="1" signature="rusEFI master.2025.04.18.f407-discovery.3607363338" version="5.0"/>
     <bibliography author="rusEFI 20250403" writeDate="date"/>
     <settings/>
     <userComments/>
