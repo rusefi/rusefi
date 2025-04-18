@@ -567,7 +567,6 @@ void Engine::periodicFastCallback() {
 
 	engineState.periodicFastCallback();
 
-	tachUpdate();
 	speedoUpdate();
 
 	engineModules.apply_all([](auto & m) { m.onFastCallback(); });

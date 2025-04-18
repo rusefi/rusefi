@@ -502,7 +502,7 @@ void commonInitEngineController() {
 	initAuxValves();
 #endif /* EFI_AUX_VALVES */
 
-	initTachometer();
+	engine->module<TachometerModule>()->init();
 	initSpeedometer();
 
 #if EFI_LTFT_CONTROL
