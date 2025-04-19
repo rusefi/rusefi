@@ -257,6 +257,7 @@ endif
 
 include $(PROJECT_DIR)/hw_layer/mass_storage/mass_storage.mk
 include $(PROJECT_DIR)/common.mk
+include $(PROJECT_DIR)/controllers/modules/modules.mk
 
 ifeq ($(USE_OPENBLT),yes)
   # Reserve start of flash for OpenBLT
@@ -308,6 +309,7 @@ CPPSRC = \
   $(HW_LAYER_DRIVERS_CPP) \
   $(CONSOLE_SRC_CPP) \
   $(RUSEFI_LIB_CPP) \
+  $(MODULES_CPPSRC) \
   rusefi.cpp \
   main.cpp
 
@@ -343,6 +345,7 @@ INCDIR += \
   $(PCH_DIR) \
   $(BOARDINC) \
   $(ALLINC) \
+  $(MODULES_INC) \
   $(TESTINC) \
   $(CHIBIOS)/os/various \
   $(RUSEFI_LIB_INC) \

@@ -174,7 +174,7 @@ endif
 include $(PROJECT_DIR)/console/binary/tunerstudio.mk
 include $(PROJECT_DIR)/console/console.mk
 include $(PROJECT_DIR)/common.mk
-
+include $(PROJECT_DIR)/controllers/modules/modules.mk
 
 # C sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.
@@ -197,6 +197,7 @@ CPPSRC = $(ALLCPPSRC) \
   simulator/system/signal_executor_sleep.cpp \
   simulator/boards.cpp \
   $(TEST_SRC_CPP) \
+  $(MODULES_CPPSRC) \
   $(RUSEFI_LIB_CPP) \
   main.cpp
 
@@ -216,6 +217,7 @@ endif
 INCDIR += . \
   $(PCH_DIR) \
   $(ALLINC) \
+  $(MODULES_INC) \
   $(CHIBIOS)/os/various/cpp_wrappers \
   $(PROJECT_DIR)/hw_layer/drivers/can \
   ${CHIBIOS}/os/various \

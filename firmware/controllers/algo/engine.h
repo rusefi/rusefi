@@ -61,9 +61,12 @@
 #include "trip_odometer.h"
 #include "long_term_fuel_trim.h"
 #include "electronic_throttle_generated.h"
-#include "tachometer.h"
 
 #include <functional>
+
+#ifndef EFI_BOOTLOADER
+#include "engine_modules_generated.h"
+#endif
 
 #ifndef EFI_UNIT_TEST
 #error EFI_UNIT_TEST must be defined!
@@ -183,7 +186,9 @@ public:
 #if EFI_LTFT_CONTROL
 		LongTermFuelTrim,
 #endif
-		TachometerModule,
+
+#include "modules_list_generated.h"
+
 		EngineModule // dummy placeholder so the previous entries can all have commas
 		> engineModules;
 

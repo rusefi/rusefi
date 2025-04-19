@@ -51,7 +51,6 @@
 #include "vvt.h"
 #include "boost_control.h"
 #include "launch_control.h"
-#include "tachometer.h"
 #include "speedometer.h"
 #include "gppwm.h"
 #include "date_stamp.h"
@@ -502,7 +501,10 @@ void commonInitEngineController() {
 	initAuxValves();
 #endif /* EFI_AUX_VALVES */
 
+#ifdef MODULE_TACHOMETER
 	engine->module<TachometerModule>()->init();
+#endif
+
 	initSpeedometer();
 
 #if EFI_LTFT_CONTROL
