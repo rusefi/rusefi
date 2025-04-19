@@ -114,7 +114,7 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 	case VVT_CHRYSLER_PHASER:
 		return trigger_type_e::TT_CHRYSLER_PHASER;
 	case VVT_TOYOTA_3TOOTH_UZ:
-		return trigger_type_e::TT_TOYOTA_3TOOTH_UZ;
+		return trigger_type_e::TT_TOYOTA_3_TOOTH_UZ;
 	case VVT_NISSAN_MR:
 		return trigger_type_e::TT_NISSAN_MR18_CAM_VVT;
 	case VVT_MITSUBISHI_4G9x:
