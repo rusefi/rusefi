@@ -142,7 +142,9 @@ void Engine::updateTriggerConfiguration() {
 }
 
 PUBLIC_API_WEAK void boardPeriodicSlowCallback() {
+}
 
+PUBLIC_API_WEAK void boardPeriodicFastCallback() {
 }
 
 void Engine::periodicSlowCallback() {
@@ -559,6 +561,8 @@ injection_mode_e getCurrentInjectionMode() {
  */
 void Engine::periodicFastCallback() {
 	ScopePerf pc(PE::EnginePeriodicFastCallback);
+
+	boardPeriodicFastCallback();
 
 #if EFI_MAP_AVERAGING
 	refreshMapAveragingPreCalc();
