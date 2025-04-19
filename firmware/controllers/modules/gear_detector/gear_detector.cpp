@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "gear_detector.h"
 
 static constexpr float geometricMean(float x, float y) {
 	return sqrtf(x * y);
