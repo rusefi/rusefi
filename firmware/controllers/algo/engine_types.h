@@ -232,13 +232,15 @@ enum class trigger_type_e : uint32_t {
   // 53022243AF 6.2 2009-22 Dodge Chrysler Jeep RAM 5.7L 6.2L 6.4L OHV V8
   TT_CHRYSLER_PHASER = 90,
 
+  TT_TOYOTA_3_TOOTH_UZ = 91,
+
 	// do not forget to edit "#define trigger_type_e_enum" line in integration/rusefi_config.txt file to propogate new value to rusefi.ini TS project
 	// do not forget to invoke "gen_config.bat" once you make changes to integration/rusefi_config.txt
 	// todo: one day a hero would integrate some of these things into Makefile in order to reduce manual magic
 	//
 	// Another point: once you add a new trigger, run get_trigger_images.bat which would run rusefi_test.exe from unit_tests
 	//
-	TT_UNUSED = 91, // this is used if we want to iterate over all trigger types
+	TT_UNUSED = 92, // this is used if we want to iterate over all trigger types
 };
 
 typedef enum {
