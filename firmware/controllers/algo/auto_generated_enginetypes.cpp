@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_types.h"
-// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Thu Apr 17 04:01:58 UTC 2025
+// was generated automatically by rusEFI tool  from engine_types.h // by enum_to_string.jar tool on Sat Apr 19 21:26:36 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -339,6 +339,8 @@ case trigger_type_e::TT_TOOTHED_WHEEL_36_2:
   return "TT_TOOTHED_WHEEL_36_2";
 case trigger_type_e::TT_TOOTHED_WHEEL_60_2:
   return "TT_TOOTHED_WHEEL_60_2";
+case trigger_type_e::TT_TOYOTA_3_TOOTH_UZ:
+  return "TT_TOYOTA_3_TOOTH_UZ";
 case trigger_type_e::TT_TRI_TACH:
   return "TT_TRI_TACH";
 case trigger_type_e::TT_UNUSED:
