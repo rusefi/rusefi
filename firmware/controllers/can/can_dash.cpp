@@ -1080,7 +1080,12 @@ static void populateFrame(Aim5f4& msg) {
 		- Sensor::get(SensorType::BarometricPressure).value_or(STD_ATMOSPHERE);
 	float boostBar = deltaKpa / 100;
 
+#ifdef MODULE_ODOMETER
 	float gPerSecond = engine->module<TripOdometer>()->getConsumptionGramPerSecond();
+#else
+	float gPerSecond = 0;
+#endif // MODULE_ODOMETER
+
 	float gPerHour = gPerSecond * 3600.0f;
 	float literPerHour = gPerHour * 0.00139f;
 

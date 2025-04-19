@@ -107,7 +107,10 @@ void InjectionEvent::onTriggerTooth(efitick_t nowNt, float currentPhase, float n
 
 		float actualInjectedMass = numberOfInjections * (injectionMassStage1 + injectionMassStage2);
 
+#ifdef MODULE_ODOMETER
 		engine->module<TripOdometer>()->consumeFuel(actualInjectedMass, nowNt);
+#endif // MODULE_ODOMETER
+
 	}
 #endif // EFI_VEHICLE_SPEED
 
