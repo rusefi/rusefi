@@ -26,7 +26,6 @@
 #include "idle_thread.h"
 #include "idle_hardware.h"
 #include "gppwm.h"
-#include "tachometer.h"
 #include "speedometer.h"
 #include "dynoview.h"
 #include "boost_control.h"

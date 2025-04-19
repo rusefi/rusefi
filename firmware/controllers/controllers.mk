@@ -25,7 +25,6 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/actuators/gppwm_channel_reader.cpp \
 	$(CONTROLLERS_DIR)/actuators/gppwm/gppwm_channel.cpp \
 	$(CONTROLLERS_DIR)/actuators/gppwm/gppwm.cpp \
-	$(CONTROLLERS_DIR)/modules/tachometer/tachometer.cpp \
 	$(CONTROLLERS_DIR)/gauges/speedometer.cpp \
 	$(CONTROLLERS_DIR)/gauges/malfunction_indicator.cpp \
 	$(CONTROLLERS_DIR)/system/timer/single_timer_executor.cpp \
@@ -89,7 +88,6 @@ CONTROLLERS_INC=\
 	$(CONTROLLERS_DIR)/trigger \
 	$(CONTROLLERS_DIR)/can \
 	$(CONTROLLERS_DIR)/core \
-	$(CONTROLLERS_DIR)/modules/tachometer \
 	$(CONTROLLERS_DIR)/gauges \
 	$(CONTROLLERS_DIR)/math \
 	$(CONTROLLERS_DIR)/generated \

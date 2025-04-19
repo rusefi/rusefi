@@ -198,6 +198,7 @@ CPPSRC = $(ALLCPPSRC) \
 	$(PROJECT_DIR)/util/efilib.cpp \
 	$(PROJECT_DIR)/hw_layer/pin_repository.cpp \
 	$(RUSEFI_LIB_CPP) \
+	$(MODULES_CPPSRC) \
 	$(PROJECT_DIR)/bootloader/openblt_chibios/openblt_chibios.cpp \
 	$(PROJECT_DIR)/bootloader/openblt_chibios/openblt_flash.cpp \
 	$(PROJECT_DIR)/bootloader/openblt_chibios/openblt_usb.cpp \
@@ -234,6 +235,7 @@ ASMXSRC = $(STARTUPASM) $(PORTASM) $(OSALASM) \
 INCDIR += $(ALLINC) \
 	$(PCH_DIR) \
 	.. \
+	$(MODULES_INC) \
 	$(BOARDINC) \
 	$(CHIBIOS)/os/various \
 	$(CHIBIOS)/os/ex/ST \

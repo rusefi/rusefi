@@ -24,6 +24,7 @@ include $(UNIT_TESTS_DIR)/test.mk
 include $(UNIT_TESTS_DIR)/tests/tests.mk
 include $(PROJECT_DIR)/../unit_tests/tests/util/test_util.mk
 include $(PROJECT_DIR)/common.mk
+include $(PROJECT_DIR)/controllers/modules/modules.mk
 
 ifneq ("$(wildcard $(BOARD_DIR)/board_unit_tests.mk)","")
   # could depend on BOARDS_DIR
@@ -57,6 +58,7 @@ CPPSRC += $(ALLCPPSRC) \
 	$(PROJECT_DIR)/../unit_tests/mocks.cpp \
 	$(RUSEFI_LIB)/mock/lib-time-mocks.cpp \
 	$(RUSEFI_LIB_CPP) \
+	$(MODULES_CPPSRC) \
 	$(RUSEFI_LIB_CPP_TEST) \
 
 INCDIR += \
@@ -64,6 +66,7 @@ INCDIR += \
 	$(BOARDINC) \
 	$(UNIT_TESTS_DIR) \
 	$(ALLINC) \
+	$(MODULES_INC) \
 	$(PROJECT_DIR)/config/boards/hellen \
 	$(FRAMEWORK_INC) \
 	$(UNIT_TESTS_DIR)/test_data_structures \
