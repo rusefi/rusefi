@@ -132,7 +132,7 @@ Usages:
   - name: fuel_pump_control
     cppFileName: fuel_pump
     java: FuelPump.java
-    folder: controllers/actuators
+    folder: controllers/modules/fuel_pump
     output_name: fuelPump
     engineModule: FuelPumpController
 

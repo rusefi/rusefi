@@ -105,10 +105,12 @@ const fan_control_s* getLiveData(size_t idx) {
 	}
 }
 
+#ifdef MODULE_FUEL_PUMP
 template<>
 const fuel_pump_control_s* getLiveData(size_t) {
 	return &engine->module<FuelPumpController>().unmock();
 }
+#endif
 
 template<>
 const main_relay_s* getLiveData(size_t) {
