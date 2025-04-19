@@ -2,3 +2,4 @@
 TachometerModule,
 FuelPumpController,
 GearDetector,
+TripOdometer,

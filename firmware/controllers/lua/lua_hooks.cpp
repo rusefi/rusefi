@@ -705,7 +705,7 @@ void configureRusefiLuaHooks(lua_State* lState) {
 #define WITH_LUA_CONSUMPTION TRUE
 #endif
 
-#if EFI_VEHICLE_SPEED && WITH_LUA_CONSUMPTION
+#if EFI_VEHICLE_SPEED && WITH_LUA_CONSUMPTION && defined (MODULE_ODOMETER)
 	lua_register(lState, "getConsumedGrams", [](lua_State* l) {
 		lua_pushnumber(l, engine->module<TripOdometer>()->getConsumedGrams());
 		return 1;
@@ -722,7 +722,7 @@ void configureRusefiLuaHooks(lua_State* lState) {
 		engine->module<TripOdometer>()->reset();
 		return 0;
 	});
-#endif // EFI_VEHICLE_SPEED
+#endif // EFI_VEHICLE_SPEED WITH_LUA_CONSUMPTION MODULE_ODOMETER
 	lua_register(lState, "table3d", [](lua_State* l) {
 		auto humanTableIdx = luaL_checkinteger(l, 1);
 		auto x = luaL_checknumber(l, 2);

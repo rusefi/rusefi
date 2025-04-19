@@ -57,7 +57,6 @@
 #include "lambda_monitor.h"
 #include "efi_output.h"
 #include "vvt.h"
-#include "trip_odometer.h"
 #include "long_term_fuel_trim.h"
 #include "electronic_throttle_generated.h"
 
@@ -159,9 +158,6 @@ public:
 		HarleyAcr,
 #endif // EFI_HD_ACR
 		Mockable<WallFuelController>,
-#if EFI_VEHICLE_SPEED
-		TripOdometer,
-#endif // EFI_VEHICLE_SPEED
 		KnockController,
 		SensorChecker,
 #if EFI_ENGINE_CONTROL
