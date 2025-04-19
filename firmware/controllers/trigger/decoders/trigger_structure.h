@@ -212,6 +212,9 @@ public:
 	void initialize(operation_mode_e operationMode, SyncEdge syncEdge);
 	void setTriggerSynchronizationGap(float syncRatio);
 	void setTriggerSynchronizationGap3(int index, float syncRatioFrom, float syncRatioTo);
+	void setTriggerSynchronizationGap4(int index, float syncRatio) {
+	  setTriggerSynchronizationGap3(index, syncRatio * TRIGGER_GAP_DEVIATION_LOW, syncRatio * TRIGGER_GAP_DEVIATION_HIGH);
+	}
 	void setTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo);
 	void setSecondTriggerSynchronizationGap(float syncRatio);
 	void setSecondTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo);

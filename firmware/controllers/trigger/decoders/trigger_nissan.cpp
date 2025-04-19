@@ -147,9 +147,9 @@ void initializeNissanVQ30cam(TriggerWaveform *s) {
 	addvq30tooth(s, x - (52 + 9 * 1));
 	addvq30tooth(s, x - (52 + 9 * 0));
 
-	s->setTriggerSynchronizationGap3(/*gapIndex*/0, 5.78 * TRIGGER_GAP_DEVIATION_LOW, 5.78 * TRIGGER_GAP_DEVIATION_HIGH);
-	s->setTriggerSynchronizationGap3(/*gapIndex*/1, 0.38 * TRIGGER_GAP_DEVIATION_LOW, 0.38 * TRIGGER_GAP_DEVIATION_HIGH);
-	s->setTriggerSynchronizationGap3(/*gapIndex*/2, 2.67 * TRIGGER_GAP_DEVIATION_LOW, 2.67 * TRIGGER_GAP_DEVIATION_HIGH);
+	s->setTriggerSynchronizationGap4(/*gapIndex*/0, 5.78);
+	s->setTriggerSynchronizationGap4(/*gapIndex*/1, 0.38);
+	s->setTriggerSynchronizationGap4(/*gapIndex*/2, 2.67);
 }
 
 void initializeNissanMRvvt(TriggerWaveform *s) {
@@ -231,7 +231,7 @@ void initializeNissanHRcrank(TriggerWaveform *s) {
 void initializeNissanHRvvtIn(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
 
-	
+
 	s->addToothRiseFall(120);
 	s->addToothRiseFall(120 + 22);
 	s->addToothRiseFall(240);
