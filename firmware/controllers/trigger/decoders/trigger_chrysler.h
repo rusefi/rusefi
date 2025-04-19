@@ -25,3 +25,5 @@ void initJeep_XJ_4cyl_2500(TriggerWaveform *s);
 
 void configureChryslerNGC_36_2_2(TriggerWaveform *s);
 
+void configureChryslerVtt15(TriggerWaveform *s);
+

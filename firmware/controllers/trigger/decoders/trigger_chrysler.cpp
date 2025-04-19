@@ -531,9 +531,9 @@ void configureChryslerNGC_36_2_2(TriggerWaveform *s) {
 
 	s->setTriggerSynchronizationGap(3.5);
 	for (int i = 1; i < 15; i++) {
-		s->setTriggerSynchronizationGap3(/*gapIndex*/i, TRIGGER_GAP_DEVIATION_LOW, TRIGGER_GAP_DEVIATION_HIGH);
+		s->setTriggerSynchronizationGap4(/*gapIndex*/i, 1);
 	}
-	s->setTriggerSynchronizationGap3(/*gapIndex*/15, 0.4 * TRIGGER_GAP_DEVIATION_LOW, 0.4 * TRIGGER_GAP_DEVIATION_HIGH);
+	s->setTriggerSynchronizationGap4(/*gapIndex*/15, 0.4);
 
 	float base = 0;
 
@@ -557,4 +557,36 @@ void configureChryslerNGC_36_2_2(TriggerWaveform *s) {
 	// one small tooth at the end of the engine cycle
 	s->addEventAngle(s->getCycleDuration() - narrow / 2, TriggerValue::RISE, TriggerWheel::T_PRIMARY);
 	s->addEventAngle(s->getCycleDuration(), TriggerValue::FALL, TriggerWheel::T_PRIMARY);
+}
+
+void configureChryslerVtt15(TriggerWaveform *s) {
+	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::RiseOnly);
+	int width = 5;
+
+	s->addToothRiseFall(37 + width, width);
+	s->addToothRiseFall(47 + width, width);
+
+	s->addToothRiseFall(81 + width, width);
+	s->addToothRiseFall(93 + width, width);
+	s->addToothRiseFall(105 + width, width);
+
+	s->addToothRiseFall(129 + width, width);
+	s->addToothRiseFall(139 + width, width);
+
+	s->addToothRiseFall(174 + width, width);
+	s->addToothRiseFall(186 + width, width);
+
+	s->addToothRiseFall(211 + width, width);
+
+	s->addToothRiseFall(265 + width, width);
+	s->addToothRiseFall(276 + width, width);
+	s->addToothRiseFall(286 + width, width);
+
+	s->addToothRiseFall(309 + width, width);
+
+	s->addToothRiseFall(360, width);
+
+	s->setTriggerSynchronizationGap4(/*gapIndex*/0, 2.16);
+	s->setTriggerSynchronizationGap4(/*gapIndex*/1, 2.08);
+	s->setTriggerSynchronizationGap4(/*gapIndex*/2, 0.34);
 }

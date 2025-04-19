@@ -402,11 +402,11 @@ void TriggerWaveform::setShapeDefinitionError(bool value) {
 }
 
 void TriggerWaveform::setTriggerSynchronizationGap(float syncRatio) {
-	setTriggerSynchronizationGap3(/*gapIndex*/0, syncRatio * TRIGGER_GAP_DEVIATION_LOW, syncRatio * TRIGGER_GAP_DEVIATION_HIGH);
+	setTriggerSynchronizationGap4(/*gapIndex*/0, syncRatio);
 }
 
 void TriggerWaveform::setSecondTriggerSynchronizationGap(float syncRatio) {
-	setTriggerSynchronizationGap3(/*gapIndex*/1, syncRatio * TRIGGER_GAP_DEVIATION_LOW, syncRatio * TRIGGER_GAP_DEVIATION_HIGH);
+	setTriggerSynchronizationGap4(/*gapIndex*/1, syncRatio);
 }
 
 void TriggerWaveform::setSecondTriggerSynchronizationGap2(float syncRatioFrom, float syncRatioTo) {
@@ -414,7 +414,7 @@ void TriggerWaveform::setSecondTriggerSynchronizationGap2(float syncRatioFrom, f
 }
 
 void TriggerWaveform::setThirdTriggerSynchronizationGap(float syncRatio) {
-	setTriggerSynchronizationGap3(/*gapIndex*/2, syncRatio * TRIGGER_GAP_DEVIATION_LOW, syncRatio * TRIGGER_GAP_DEVIATION_HIGH);
+	setTriggerSynchronizationGap4(/*gapIndex*/2, syncRatio);
 }
 
 PUBLIC_API_WEAK void customTrigger(operation_mode_e triggerOperationMode, TriggerWaveform *s, trigger_type_e type) {
@@ -711,6 +711,8 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
 	case trigger_type_e::TT_CHRYSLER_PHASER:
+	  configureChryslerVtt15(this);
+    break;
 	case trigger_type_e::TT_CHRYSLER_NGC_36_2_2:
 		configureChryslerNGC_36_2_2(this);
 		break;
