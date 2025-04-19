@@ -1,4 +1,5 @@
 #pragma once
+#include "sensor.h"
 
 class GearDetector : public EngineModule, public Sensor {
 public:
