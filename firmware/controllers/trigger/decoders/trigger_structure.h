@@ -211,6 +211,10 @@ public:
 
 	void initialize(operation_mode_e operationMode, SyncEdge syncEdge);
 	void setTriggerSynchronizationGap(float syncRatio);
+	/**
+	 * note that index is in reverse order comparing with chronological order on the documentation images
+	 * https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers
+	 */
 	void setTriggerSynchronizationGap3(int index, float syncRatioFrom, float syncRatioTo);
 	void setTriggerSynchronizationGap4(int index, float syncRatio) {
 	  setTriggerSynchronizationGap3(index, syncRatio * TRIGGER_GAP_DEVIATION_LOW, syncRatio * TRIGGER_GAP_DEVIATION_HIGH);
