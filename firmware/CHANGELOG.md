@@ -35,6 +35,8 @@ Release template (copy/paste this for new release):
  - Allow fractional tachometer pulse ratio for fine tachometer calibration #7547
  - separate boost control open loop axis from closed loop axis #7580
  - verbose CAN PerCylinderKnock
+ - modern Chrysler VVT cam decoder https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers#vvt
+ - SD card formatting indicator
 
 ## February 2025 "Day 1075"
 
