@@ -149,7 +149,6 @@ public:
 #if EFI_ALTERNATOR_CONTROL
 		AlternatorController,
 #endif /* EFI_ALTERNATOR_CONTROL */
-		FuelPumpController,
 		MainRelayController,
 		Mockable<IgnitionController>,
 		Mockable<AcController>,
