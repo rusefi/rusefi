@@ -139,8 +139,8 @@ static expected<stm32_pwm_config> getConfigForPin(brain_pin_e pin) {
 #endif
 #if STM32_PWM_USE_TIM8
 
-	/* TIM8 is used for ADC trigger */
-#if 0
+	/* TIM8 may be used for ADC trigger */
+#ifndef EFI_INTERNAL_FAST_ADC_PWM
 #if !STM32_PWM_USE_TIM3
 	// If TIM3 is not used, put these pins on TIM8 instead..
 	// See https://github.com/rusefi/rusefi/issues/639
