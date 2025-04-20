@@ -152,7 +152,7 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 	if (function == DC_None) {
 		// if not configured, don't init.
 		state = (uint8_t)EtbState::NotEbt;
-		etbErrorCode = (int8_t)TpsState::NotConfigured;
+		etbErrorCode = (int8_t)EtbStatus::NotConfigured;
 		return false;
 	}
 
@@ -163,12 +163,12 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 	if (isEtbMode()) {
 		// If no sensor is configured for this throttle, skip initialization.
 		if (!Sensor::hasSensor(functionToTpsSensor(function))) {
-			etbErrorCode = (int8_t)TpsState::TpsError;
+			etbErrorCode = (int8_t)EtbStatus::TpsError;
 			return false;
 		}
 
 		if (!isBoardAllowingLackOfPps() && !Sensor::isRedundant(m_positionSensor)) {
-			etbErrorCode = (int8_t)TpsState::Redundancy;
+			etbErrorCode = (int8_t)EtbStatus::Redundancy;
 			return false;
 		}
 	}
@@ -608,28 +608,28 @@ bool EtbController::checkStatus() {
 #define ETB_INTERMITTENT_LIMIT 50
 #endif
 
-	TpsState localReason = TpsState::None;
+	EtbStatus localReason = EtbStatus::None;
 	if (etbTpsErrorCounter > ETB_INTERMITTENT_LIMIT) {
-		localReason = TpsState::IntermittentTps;
+		localReason = EtbStatus::IntermittentTps;
 #if EFI_SHAFT_POSITION_INPUT
 	} else if (engineConfiguration->disableEtbWhenEngineStopped
 	  && !engine->triggerCentral.engineMovedRecently()
 	  && !engine->etbAutoTune) {
-		localReason = TpsState::EngineStopped;
+		localReason = EtbStatus::EngineStopped;
 #endif // EFI_SHAFT_POSITION_INPUT
 	} else if (etbPpsErrorCounter > ETB_INTERMITTENT_LIMIT) {
-		localReason = TpsState::IntermittentPps;
+		localReason = EtbStatus::IntermittentPps;
 	} else if (engine->engineState.lua.luaDisableEtb) {
-		localReason = TpsState::Lua;
+		localReason = EtbStatus::Lua;
 	} else if (!getLimpManager()->allowElectronicThrottle()) {
-	  localReason = TpsState::JamDetected;
+		localReason = EtbStatus::JamDetected;
 	} else if(!isBoardAllowingLackOfPps() && !Sensor::isRedundant(SensorType::AcceleratorPedal)) {
-		localReason = TpsState::Redundancy;
+		localReason = EtbStatus::Redundancy;
 	}
 
 	etbErrorCode = (int8_t)localReason;
 
-	return localReason == TpsState::None;
+	return localReason == EtbStatus::None;
 }
 
 void EtbController::update() {
@@ -653,7 +653,7 @@ void EtbController::update() {
 	ClosedLoopController::update();
 
 	if (isEtbMode() && !validPlantPosition) {
-		etbErrorCode = (int8_t)TpsState::TpsError;
+		etbErrorCode = (int8_t)EtbStatus::TpsError;
 	}
 }
 
@@ -725,7 +725,7 @@ struct EtbImpl final : public TBase {
 			return;
 		}
 
-		TBase::etbErrorCode = (uint8_t)TpsState::AutoCalibrate;
+		TBase::etbErrorCode = (uint8_t)EtbStatus::AutoCalibrate;
 
 		auto myFunction = TBase::getFunction();
 
@@ -814,7 +814,7 @@ void blinkEtbErrorCodes(bool blinkPhase) {
 	for (int i = 0;i<ETB_COUNT;i++) {
 		int8_t etbErrorCode = etbControllers[i]->etbErrorCode;
 		if (etbErrorCode && engine->etbAutoTune) {
-			etbErrorCode = (int8_t)TpsState::AutoTune;
+			etbErrorCode = (int8_t)EtbStatus::AutoTune;
 		}
 		etbControllers[i]->etbErrorCodeBlinker = blinkPhase ? 0 : etbErrorCode;
 	}
@@ -863,13 +863,13 @@ void etbAutocal(dc_function_e function, bool reportToTs) {
 	}
 }
 
-TpsState etbGetState(size_t throttleIndex)
+EtbStatus etbGetState(size_t throttleIndex)
 {
 	if (throttleIndex >= ETB_COUNT) {
-		return TpsState::NotConfigured;
+		return EtbStatus::NotConfigured;
 	}
 
-	return (TpsState)etbControllers[throttleIndex]->etbErrorCode;
+	return (EtbStatus)etbControllers[throttleIndex]->etbErrorCode;
 }
 
 /**
