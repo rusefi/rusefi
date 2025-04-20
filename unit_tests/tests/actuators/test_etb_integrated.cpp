@@ -73,7 +73,7 @@ TEST(etb, intermittentTps) {
 
 		badCount++;
 		EXPECT_EQ(badCount, etb->etbTpsErrorCounter);
-		EXPECT_EQ((int)etbStatus::TpsError, etb->etbErrorCode);
+		EXPECT_EQ((int)EtbStatus::TpsError, etb->etbErrorCode);
 
 		Sensor::setMockValue(SensorType::Tps1, 20);
 		ASSERT_TRUE(Sensor::get(SensorType::Tps1).Valid);
