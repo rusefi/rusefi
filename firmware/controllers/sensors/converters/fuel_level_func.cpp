@@ -21,7 +21,6 @@ SensorResult FuelLevelFunc::convert(const float inputVoltage) {
   } else if (isBoardWithPowerManagement() && !hellenEnPinStateChange.hasElapsedMs(200)) {
     // todo: can we accomplish same reset by AdcSubscription::ResetFilters?
 		m_filteredValue.reset();
-    efiPrintf("[temp] ignoring %f", inputVoltage);
 		return UnexpectedCode::Unknown;
 #endif // HW_HELLEN
 	} else if (inputVoltage < engineConfiguration->fuelLevelLowThresholdVoltage) {
@@ -53,7 +52,6 @@ float FuelLevelFunc::filterFuelValue(const float inputVoltage) {
 			updateFilteredValue(prevFilteredValue + getFuelLevelAlpha() * diff);
 		}
 	} else {
-	  efiPrintf("[temp] initial %f", inputVoltage);
 		updateFilteredValue(inputVoltage);
 	}
 static bool isFirst = true;
