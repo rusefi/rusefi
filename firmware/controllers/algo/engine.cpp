@@ -20,7 +20,6 @@
 
 #include "rusefi_wideband.h"
 #include "aux_valves.h"
-#include "map_averaging.h"
 #include "perf_trace.h"
 #include "backup_ram.h"
 #include "idle_thread.h"
@@ -566,9 +565,6 @@ void Engine::periodicFastCallback() {
 
 	boardPeriodicFastCallback();
 
-#if EFI_MAP_AVERAGING
-	refreshMapAveragingPreCalc();
-#endif
 
 	engineState.periodicFastCallback();
 

@@ -4,3 +4,4 @@
 #include "gear_detector.h"
 #include "trip_odometer.h"
 #include "fan_control.h"
+#include "map_averaging.h"
