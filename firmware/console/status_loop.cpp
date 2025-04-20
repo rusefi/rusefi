@@ -69,7 +69,7 @@
 #include "flash_main.h"
 #endif
 
-#if EFI_MAP_AVERAGING
+#if EFI_MAP_AVERAGING && defined (MODULE_MAP_AVERAGING)
 #include "map_averaging.h"
 #endif
 

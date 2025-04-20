@@ -25,7 +25,7 @@
 #include "exp_average.h"
 
 
-#if EFI_MAP_AVERAGING
+#if EFI_MAP_AVERAGING && defined (MODULE_MAP_AVERAGING)
 #if !EFI_SHAFT_POSITION_INPUT
 	fail("EFI_SHAFT_POSITION_INPUT required to have EFI_EMULATE_POSITION_SENSORS")
 #endif // EFI_SHAFT_POSITION_INPUT
@@ -267,4 +267,8 @@ void initMapAveraging() {
 	applyMapMinBufferLength();
 }
 
+#else
+void MapAveragingModule::onFastCallback(){}
+void MapAveragingModule::onConfigurationChange(engine_configuration_s const *){}
+void MapAveragingModule::onEnginePhase(float, efitick_t, float, float) {}
 #endif /* EFI_MAP_AVERAGING */
