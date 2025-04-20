@@ -35,8 +35,7 @@ enum class ClearReason : uint8_t {
 	// todo: add a code generator between ClearReason and fuelIgnCutCodeList in tunerstudio.template.ini
 };
 
-//TODO: Why 'Tps'???
-enum class TpsState : uint8_t {
+enum class EtbStatus : uint8_t {
 	None, // 0
 	EngineStopped, // 1
 	TpsError, // 2
