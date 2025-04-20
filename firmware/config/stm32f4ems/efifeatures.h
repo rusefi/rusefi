@@ -438,9 +438,9 @@
 
 // TODO: switch to continuous ADC conversion for fast ADC?
 // NOTE: GPT mode triggers ADC convertion through IRQ
-//#define EFI_INTERNAL_FAST_ADC_GPT	&GPTD6
+#define EFI_INTERNAL_FAST_ADC_GPT	&GPTD6
 // NOTE: PWM mode triggers ADC convertion through hardware ADC trigger
-#define EFI_INTERNAL_FAST_ADC_PWM	&PWMD8
+//#define EFI_INTERNAL_FAST_ADC_PWM	&PWMD8
 
 #define EFI_SPI1_AF 5
 #define EFI_SPI2_AF 5
