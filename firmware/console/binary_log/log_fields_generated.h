@@ -414,6 +414,8 @@ static const LogField fields[] = {
 	{engine->outputChannels.throttleEffectiveAreaOpening, "throttleEffectiveAreaOpening", "", 0},
 	{engine->outputChannels.mcuSerial, "mcuSerial", "", 0},
 	{engine->outputChannels.sd_error, "sd_error", "", 0},
+	{engine->outputChannels.fastAdcPeriod, "fastAdcPeriod", "", 0},
+	{engine->outputChannels.fastAdcConversionCount, "fastAdcConversionCount", "", 0},
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},
 #endif

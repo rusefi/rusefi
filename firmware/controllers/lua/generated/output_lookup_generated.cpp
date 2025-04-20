@@ -857,6 +857,12 @@ float getOutputValueByName(const char *name) {
 // sd_error
 		case -1811686395:
 			return engine->outputChannels.sd_error;
+// fastAdcPeriod
+		case -1798837954:
+			return engine->outputChannels.fastAdcPeriod;
+// fastAdcConversionCount
+		case 1749059722:
+			return engine->outputChannels.fastAdcConversionCount;
 // totalFuelCorrection
 #if EFI_ENGINE_CONTROL
 		case -1779658835:

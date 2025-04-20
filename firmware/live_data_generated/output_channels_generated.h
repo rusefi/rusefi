@@ -1449,9 +1449,23 @@ struct output_channels_s {
 	 */
 	uint8_t sd_error = (uint8_t)0;
 	/**
+	 * need 4 byte alignment
+	 * units: units
 	 * offset 829
 	 */
-	uint8_t unusedAtTheEnd[47] = {};
+	uint8_t alignmentFill_at_829[3] = {};
+	/**
+	 * offset 832
+	 */
+	uint32_t fastAdcPeriod = (uint32_t)0;
+	/**
+	 * offset 836
+	 */
+	uint32_t fastAdcConversionCount = (uint32_t)0;
+	/**
+	 * offset 840
+	 */
+	uint8_t unusedAtTheEnd[36] = {};
 };
 static_assert(sizeof(output_channels_s) == 876);
 
