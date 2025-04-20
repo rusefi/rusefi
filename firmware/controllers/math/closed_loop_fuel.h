@@ -1,5 +1,6 @@
 #pragma once
 
+#include "flash_main.h"
 #include "table_helper.h"
 
 struct stft_s;
@@ -29,4 +30,11 @@ class LongTermFuelTrim : public EngineModule{
 		float getLtft(float load, float rpm);
 		void resetLtftTimer();
 		void updateLtft(float load, float rpm);
+		void onIgnitionStateChanged(bool ignitionState) override {
+			if(!ignitionState && updatedLtft) {
+				copyTable(config->ltftTable, ltftTableHelper);
+				setNeedToWriteConfiguration();
+				updatedLtft = 0;
+			}
+		}
 };

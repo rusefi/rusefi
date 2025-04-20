@@ -33,11 +33,13 @@ void canDashboardFiestaRocam(CanCycle cycle) {
 
 			CanTxMessage msg(CanCategory::NBC, FIESTA_ODO_ECT, 8);
 
-			msg[1] = ectVar + 40;
+			msg[0] = ectVar + 40;
 
 			odoVar = odoVar + 0.05 * speedVar / 3.6;
-			msg[2] = (odoVar * 5) % 255;
-			
+			msg[1] = (odoVar * 5) % 255;
+
+			msg[2] = 0x00;
+			msg[3] = 0x00;
 			msg[4] = 0x20;
 			msg[5] = 0x80;
 			msg[6] = 0x40;

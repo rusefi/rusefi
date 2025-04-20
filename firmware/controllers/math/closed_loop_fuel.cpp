@@ -3,9 +3,7 @@
 #include "closed_loop_fuel.h"
 #include "closed_loop_fuel_cell.h"
 #include "deadband.h"
-#include "flash_main.h"
 #include "tunerstudio.h"
-#include "table_helper.h"
 
 #if EFI_ENGINE_CONTROL
 
@@ -246,12 +244,6 @@ float LongTermFuelTrim::getLtft(float load, float rpm) {
 		updateLtft(load, rpm);
 	} else {
 		resetLtftTimer();
-	}
-
-	if(rpm == 0 && updatedLtft) {
-		copyTable(config->ltftTable, ltftTableHelper);
-		setNeedToWriteConfiguration();
-		updatedLtft = 0;
 	}
 
 	if(config->ltftEnabled && config->ltftCRC == 132 && (Sensor::get(SensorType::Clt)).value_or(0) > float(config->ltftMinTemp)) {
