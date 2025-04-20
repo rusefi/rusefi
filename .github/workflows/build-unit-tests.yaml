@@ -53,7 +53,15 @@ jobs:
 
     - name: Build Tests
       working-directory: ./unit_tests/
-      run: make -j4 COVERAGE=yes
+      run: |
+        TIMEFORMAT=%R
+        time make -j4 COVERAGE=yes
+
+    - name: Build Tests again to assert incremental
+      working-directory: ./unit_tests/
+      run: |
+        TIMEFORMAT=%R
+        time make -j4 COVERAGE=yes
 
     - name: Run Tests
       working-directory: ./unit_tests/
