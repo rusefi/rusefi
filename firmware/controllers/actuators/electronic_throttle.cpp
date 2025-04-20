@@ -58,6 +58,10 @@
 #define ETB_MAX_COUNT 2
 #endif /* ETB_MAX_COUNT */
 
+#ifndef ETB_INTERMITTENT_LIMIT
+#define ETB_INTERMITTENT_LIMIT 50
+#endif
+
 static pedal2tps_t pedal2tpsMap{"p2t"};
 static Map3D<ETB2_TRIM_SIZE, ETB2_TRIM_SIZE, int8_t, uint8_t, uint8_t> throttle2TrimTable{"t2t"};
 static Map3D<TRACTION_CONTROL_ETB_DROP_SIZE, TRACTION_CONTROL_ETB_DROP_SIZE, int8_t, uint16_t, uint8_t> tcEtbDropTable{"tce"};
@@ -603,10 +607,6 @@ bool EtbController::checkStatus() {
 		etbTpsErrorCounter = 0;
 		etbPpsErrorCounter = 0;
 	}
-
-#ifndef ETB_INTERMITTENT_LIMIT
-#define ETB_INTERMITTENT_LIMIT 50
-#endif
 
 	EtbStatus localReason = EtbStatus::None;
 	if (etbTpsErrorCounter > ETB_INTERMITTENT_LIMIT) {
