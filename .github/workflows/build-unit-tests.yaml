@@ -61,7 +61,7 @@ jobs:
       working-directory: ./unit_tests/
       run: |
         TIMEFORMAT=%R
-        time make -j4 COVERAGE=yes
+        timeout 30s make -j4 COVERAGE=yes
 
     - name: Run Tests
       working-directory: ./unit_tests/
