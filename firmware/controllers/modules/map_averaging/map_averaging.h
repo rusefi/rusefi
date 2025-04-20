@@ -6,7 +6,8 @@
  */
 
 #pragma once
-
+#include "engine_module.h"
+#include "stored_value_sensor.h"
 #include "sensor_converter_func.h"
 
 #if EFI_MAP_AVERAGING
@@ -16,10 +17,6 @@ void mapAveragingAdcCallback(float instantVoltage);
 #endif
 
 void initMapAveraging();
-void refreshMapAveragingPreCalc();
-
-void mapAveragingTriggerCallback(
-		uint32_t index, efitick_t edgeTimestamp);
 
 // allow smoothing up to number of cylinders
 #define MAX_MAP_BUFFER_LENGTH (MAX_CYLINDER_COUNT)
@@ -55,3 +52,16 @@ private:
 
 MapAverager& getMapAvg(size_t idx);
 float filterMapValue(float value);
+
+class MapAveragingModule : public EngineModule {
+public:
+	void onConfigurationChange(engine_configuration_s const * previousConfig) override;
+
+	void onFastCallback() override;
+	void onEnginePhase(float rpm,
+						efitick_t edgeTimestamp,
+						float currentPhase,
+						float nextPhase);
+
+	void submitSample(float voltsMap1, float voltsMap2);
+};
