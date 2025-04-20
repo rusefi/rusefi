@@ -56,7 +56,7 @@
 #include "WS2812.h"
 #endif /* EFI_WS2812 */
 
-#if EFI_MAP_AVERAGING
+#if EFI_MAP_AVERAGING && defined (MODULE_MAP_AVERAGING)
 #include "map_averaging.h"
 #endif
 
@@ -280,7 +280,7 @@ void onFastAdcComplete(adcsample_t*) {
 	 */
 	efiAssertVoid(ObdCode::CUSTOM_STACK_ADC, hasLotsOfRemainingStack(), "lowstck#9b");
 
-#if EFI_MAP_AVERAGING
+#if EFI_MAP_AVERAGING && defined (MODULE_MAP_AVERAGING)
 	mapAveragingAdcCallback(adcRawValueToScaledVoltage(getFastAdc(fastMapSampleIndex), engineConfiguration->map.sensor.hwChannel));
 #endif /* EFI_MAP_AVERAGING */
 #if EFI_HIP_9011

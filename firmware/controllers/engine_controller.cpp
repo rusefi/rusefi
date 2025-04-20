@@ -33,7 +33,6 @@
 #include "mmc_card.h"
 #include "electronic_throttle.h"
 #include "trigger_emulator_algo.h"
-#include "map_averaging.h"
 #include "high_pressure_fuel_pump.h"
 #include "malfunction_central.h"
 #include "malfunction_indicator.h"
@@ -78,6 +77,9 @@
 
 #include "periodic_task.h"
 
+#ifdef MODULE_MAP_AVERAGING
+#include "map_averaging.h"
+#endif
 
 #if ! EFI_UNIT_TEST
 #include "init.h"
@@ -477,7 +479,7 @@ void commonInitEngineController() {
 	initElectronicThrottle();
 #endif /* EFI_ELECTRONIC_THROTTLE_BODY */
 
-#if EFI_MAP_AVERAGING
+#if EFI_MAP_AVERAGING && defined (MODULE_MAP_AVERAGING)
 	if (engineConfiguration->isMapAveragingEnabled) {
 		initMapAveraging();
 	}

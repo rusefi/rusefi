@@ -29,7 +29,7 @@ static void printMAPInfo() {
 #if EFI_ANALOG_SENSORS
 	efiPrintf("instant value=%.2fkPa", Sensor::getOrZero(SensorType::Map));
 
-#if EFI_MAP_AVERAGING
+#if EFI_MAP_AVERAGING && defined (MODULE_MAP_AVERAGING)
 	efiPrintf("map type=%d/%s MAP=%.2fkPa", engineConfiguration->map.sensor.type,
 			getAir_pressure_sensor_type_e(engineConfiguration->map.sensor.type),
 			Sensor::getOrZero(SensorType::Map));
