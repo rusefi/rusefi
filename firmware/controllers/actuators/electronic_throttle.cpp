@@ -196,6 +196,12 @@ void EtbController::onConfigurationChange(pid_s* previousConfiguration) {
 	if (m_motor && !m_pid.isSame(previousConfiguration)) {
 		m_shouldResetPid = true;
 	}
+
+	if ((m_function == DC_Throttle1) || (m_function == DC_Throttle2)) {
+		m_pid.iTermMin = engineConfiguration->etb_iTermMin;
+		m_pid.iTermMax = engineConfiguration->etb_iTermMax;
+	}
+
 	doInitElectronicThrottle();
 }
 
@@ -565,9 +571,6 @@ bool EtbController::checkStatus() {
 		return true;
 	}
 	// ETB-specific code belo. The whole mix-up between DC and ETB is shameful :(
-
-	m_pid.iTermMin = engineConfiguration->etb_iTermMin;
-	m_pid.iTermMax = engineConfiguration->etb_iTermMax;
 
 	// Only allow autotune with stopped engine, and on the first throttle
 	// Update local state about autotune
