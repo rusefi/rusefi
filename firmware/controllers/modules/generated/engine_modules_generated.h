@@ -3,3 +3,4 @@
 #include "fuel_pump.h"
 #include "gear_detector.h"
 #include "trip_odometer.h"
+#include "fan_control.h"

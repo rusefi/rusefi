@@ -96,6 +96,7 @@ const fuel_computer_s* getLiveData(size_t) {
 #endif
 }
 
+#ifdef MODULE_FAN_CONTROL
 template<>
 const fan_control_s* getLiveData(size_t idx) {
 	switch (idx) {
@@ -104,6 +105,7 @@ const fan_control_s* getLiveData(size_t idx) {
 		default: return nullptr;
 	}
 }
+#endif
 
 #ifdef MODULE_FUEL_PUMP
 template<>

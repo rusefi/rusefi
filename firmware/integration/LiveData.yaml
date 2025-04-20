@@ -124,7 +124,7 @@ Usages:
 
   - name: fan_control
     java: FanControl.java
-    folder: controllers/actuators
+    folder: controllers/modules/fan_control
     output_name: [ "fan1", "fan2" ]
     constexpr: ["engine->module<FanControl1>()", "engine->module<FanControl2>()"]
     isPtr: true
