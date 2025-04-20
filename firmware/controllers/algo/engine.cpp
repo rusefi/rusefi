@@ -127,14 +127,11 @@ trigger_type_e getVvtTriggerType(vvt_mode_e vvtMode) {
 }
 
 void Engine::updateTriggerConfiguration() {
-
-
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 	// we have a confusing threading model so some synchronization would not hurt
 	chibios_rt::CriticalSectionLocker csl;
 
 	engine->triggerCentral.applyShapesConfiguration();
-
 
 	if (!engine->triggerCentral.triggerShape.shapeDefinitionError) {
 		prepareOutputSignals();
@@ -142,11 +139,9 @@ void Engine::updateTriggerConfiguration() {
 #endif /* EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT */
 }
 
-PUBLIC_API_WEAK void boardPeriodicSlowCallback() {
-}
+PUBLIC_API_WEAK void boardPeriodicSlowCallback() { }
 
-PUBLIC_API_WEAK void boardPeriodicFastCallback() {
-}
+PUBLIC_API_WEAK void boardPeriodicFastCallback() { }
 
 void Engine::periodicSlowCallback() {
 	ScopePerf perf(PE::EnginePeriodicSlowCallback);
