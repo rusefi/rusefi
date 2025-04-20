@@ -48,7 +48,6 @@
 #include "fuel_computer.h"
 #include "advance_map.h"
 #include "ignition_state.h"
-#include "fan_control.h"
 #include "sensor_checker.h"
 #include "fuel_schedule.h"
 #include "prime_injection.h"
@@ -150,8 +149,6 @@ public:
 		MainRelayController,
 		Mockable<IgnitionController>,
 		Mockable<AcController>,
-		FanControl1,
-		FanControl2,
 		PrimeController,
 		DfcoController,
 #if EFI_HD_ACR
