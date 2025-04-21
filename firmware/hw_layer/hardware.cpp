@@ -302,16 +302,10 @@ static void calcFastAdcIndexes() {
 #endif/* HAL_USE_ADC */
 }
 
-static void adcConfigListener() {
-	// todo: something is not right here - looks like should be a callback for each configuration change?
-	calcFastAdcIndexes();
-}
-
 /**
  * this method is NOT currently invoked on ECU start
  * todo: reduce code duplication by moving more logic into startHardware method
  */
-
 void applyNewHardwareSettings() {
     /**
      * All 'stop' methods need to go before we begin starting pins.
@@ -418,7 +412,7 @@ void applyNewHardwareSettings() {
 	startSent();
 #endif
 
-	adcConfigListener();
+	calcFastAdcIndexes();
 }
 
 #if EFI_PROD_CODE && EFI_BOR_LEVEL
