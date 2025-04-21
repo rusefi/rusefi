@@ -181,26 +181,32 @@ pins:
   - pin: 29B
     function: WBO Heater Positive
     type: wbo
+    color: grey
 
   - pin: 30B
     function: WBO Heater Negative
+    color: white
     type: wbo
 
   - pin: 31B
     function: WBO Vm
     type: wbo
+    color: yellow
 
   - pin: 32B
     function: WBO Ip
     type: wbo
+    color: red
 
   - pin: 33B
     function: WBO Rtrim
     type: wbo
+    color: green
 
   - pin: 34B
     function: WBO Un
     type: wbo
+    color: black
 
 
 info:
