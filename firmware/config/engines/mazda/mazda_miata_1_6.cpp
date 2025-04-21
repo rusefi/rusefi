@@ -118,7 +118,8 @@ void miataNAcommonEngineSettings() {
 	copyTable(config->ignitionTable, mapBased16IgnitionTable);
 #endif
 
-
+#ifdef HW_HELLEN_UAEFI
+#endif // HW_HELLEN_UAEFI
 
 	miataNA_setCltIdleCorrBins();
 	miataNA_setCltIdleRpmBins();
