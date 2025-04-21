@@ -80,7 +80,7 @@ struct EthernetThread : public TunerstudioThread {
 
 static EthernetThread ethernetConsole;
 
-void startEthernetConsole() {
+void EthernetConsoleModule::initNoConfiguration() {
 	ethernetConsole.start();
 }
 

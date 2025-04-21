@@ -213,9 +213,6 @@ void runRusEfi() {
   // at the moment that's always hellen board ID
 	detectBoardType();
 
-#if EFI_ETHERNET
-	startEthernetConsole();
-#endif
 
 #if EFI_USB_SERIAL
 	startUsbConsole();

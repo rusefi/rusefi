@@ -5,3 +5,7 @@ GearDetector,
 TripOdometer,
 FanControl1,FanControl2,
 MapAveragingModule,
+
+#if EFI_ETHERNET
+EthernetConsoleModule,
+#endif

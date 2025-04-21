@@ -7,11 +7,17 @@
  */
 
 #pragma once
+#include "engine_module.h"
 
 void initializeConsole();
 
 void startUsbConsole();
 void printUsbConnectorStats();
 
-void startEthernetConsole();
 void startWifiConsole();
+
+#if EFI_ETHERNET
+struct EthernetConsoleModule final : public EngineModule {
+    void initNoConfiguration();
+};
+#endif
