@@ -70,6 +70,7 @@ angle_t HpfpLobe::findNextLobe() {
 			CAM_BY_INDEX(camIndex)) / mult;
 	}
 
+  // heh, looks like we assume 4 stroke here?
 	return engineConfiguration->hpfpPeakPos + vvt + next_index * 720 / lobes;
 }
 
