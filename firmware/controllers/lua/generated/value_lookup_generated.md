@@ -119,7 +119,7 @@ This uses separate ignition timing and VE tables not only for idle conditions, a
 For cranking either use the specified fixed base fuel mass, or use the normal running math (VE table).
 
 ### displayLogicLevelsInEngineSniffer
-Shall we display real life signal or just the part consumed by trigger decoder.\nApplies to both trigger and cam/vvt input.\n\nenable logic_level_trigger
+Shall we display real life signal or just the part consumed by trigger decoder.\nApplies to both trigger and cam/vvt input.
 
 ### useTLE8888_stepper
 
@@ -452,7 +452,7 @@ This setting should only be used if you have a stepper motor idle valve and a st
 
 
 ### enableVerboseCanTx
-CAN broadcast using custom rusEFI protocol\nenable can_broadcast/disable can_broadcast
+CAN broadcast using custom rusEFI protocol
 
 ### externalRusEfiGdiModule
 
@@ -605,7 +605,7 @@ If enabled, adjust at a constant rate instead of a rate proportional to the curr
 
 
 ### verboseVVTDecoding
-Verbose info in console below engineSnifferRpmThreshold\nenable vvt_details
+Verbose info in console below engineSnifferRpmThreshold
 
 ### invertCamVVTSignal
 
@@ -815,7 +815,7 @@ This is the Cut Mode normally used
 Are you a developer troubleshooting TS over CAN ISO/TP?
 
 ### engineSnifferFocusOnInputs
-
+In this mode only trigger events go into engine sniffer and not coils/injectors etc
 
 ### twoStroke
 
@@ -854,7 +854,7 @@ This activates a separate ignition timing table for idle conditions, this can he
 This activates a separate fuel table for Idle, this allows fine tuning of the idle fuelling.
 
 ### verboseTriggerSynchDetails
-Verbose info in console below engineSnifferRpmThreshold\nenable trigger_details
+Verbose info in console below engineSnifferRpmThreshold
 
 ### etbUsePreciseTiming
 Measure actual dt for PID instead of pre-defined

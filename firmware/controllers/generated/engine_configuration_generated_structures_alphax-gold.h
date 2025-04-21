@@ -820,8 +820,6 @@ struct engine_configuration_s {
 	/**
 	 * Shall we display real life signal or just the part consumed by trigger decoder.
 	 * Applies to both trigger and cam/vvt input.
-	 * 
-	 * enable logic_level_trigger
 	offset 168 bit 20 */
 	bool displayLogicLevelsInEngineSniffer : 1 {};
 	/**
@@ -1629,7 +1627,6 @@ struct engine_configuration_s {
 	bool verboseTLE8888 : 1 {};
 	/**
 	 * CAN broadcast using custom rusEFI protocol
-	 * enable can_broadcast/disable can_broadcast
 	offset 732 bit 14 */
 	bool enableVerboseCanTx : 1 {};
 	/**
@@ -2071,7 +2068,6 @@ struct engine_configuration_s {
 	bool enableSoftwareKnock : 1 {};
 	/**
 	 * Verbose info in console below engineSnifferRpmThreshold
-	 * enable vvt_details
 	offset 900 bit 12 */
 	bool verboseVVTDecoding : 1 {};
 	/**
@@ -2422,6 +2418,7 @@ struct engine_configuration_s {
 	offset 1288 bit 22 */
 	bool verboseIsoTp : 1 {};
 	/**
+	 * In this mode only trigger events go into engine sniffer and not coils/injectors etc
 	offset 1288 bit 23 */
 	bool engineSnifferFocusOnInputs : 1 {};
 	/**
@@ -2524,7 +2521,6 @@ struct engine_configuration_s {
 	bool useSeparateVeForIdle : 1 {};
 	/**
 	 * Verbose info in console below engineSnifferRpmThreshold
-	 * enable trigger_details
 	offset 1300 bit 10 */
 	bool verboseTriggerSynchDetails : 1 {};
 	/**
