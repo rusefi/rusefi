@@ -42,11 +42,15 @@ void deInitIfValid(const char* msg, adc_channel_e channel) {
 }
 
 static void initOldAnalogInputs() {
+	initIfValid("AFR#1", engineConfiguration->afr.hwChannel);
+	initIfValid("AFR#2", engineConfiguration->afr.hwChannel2);
 	initIfValid("AUXF#1", engineConfiguration->auxFastSensor1_adcChannel);
 }
 
 static void deInitOldAnalogInputs() {
 	deInitIfValid("AUXF#1", activeConfiguration.auxFastSensor1_adcChannel);
+	deInitIfValid("AFR#1", engineConfiguration->afr.hwChannel);
+	deInitIfValid("AFR#2", engineConfiguration->afr.hwChannel2);
 }
 
 static void initAuxDigital() {
