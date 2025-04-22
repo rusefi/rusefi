@@ -32,7 +32,6 @@ static void setupDefaultSensorInputs() {
 
     engineConfiguration->boardUseTempPullUp = true;
 
-
 //	engineConfiguration->map.sensor.hwChannel = H144_IN_MAP1; // external MAP
   engineConfiguration->map.sensor.hwChannel = H144_IN_MAP2; // On-board MAP
   engineConfiguration->map.sensor.type = MT_MPXH6400;
