@@ -7,7 +7,8 @@ enum class LoopPeriod : uint8_t {
 	Period1000hz = 1 << 0,
 	Period500hz = 1 << 1,
 	Period250hz = 1 << 2,
-	Period20hz = 1 << 3,
+	Period200hz = 1 << 3,
+	Period20hz = 1 << 4,
 };
 
 inline constexpr LoopPeriod& operator|=(LoopPeriod& a, const LoopPeriod& b) {
@@ -25,6 +26,7 @@ constexpr int hzForPeriod(LoopPeriod p) {
 		case LoopPeriod::Period1000hz: return 1000;
 		case LoopPeriod::Period500hz: return 500;
 		case LoopPeriod::Period250hz: return 250;
+		case LoopPeriod::Period200hz: return 200;
 		case LoopPeriod::Period20hz: return 20;
 	}
 
@@ -40,7 +42,7 @@ constexpr float loopPeriodMs(LoopPeriod p) {
 #endif
 
 #define ETB_UPDATE_RATE LoopPeriod::Period500hz
-#define FAST_CALLBACK_RATE LoopPeriod::Period250hz
+#define FAST_CALLBACK_RATE LoopPeriod::Period200hz
 #define SLOW_CALLBACK_RATE LoopPeriod::Period20hz
 
 #define FAST_CALLBACK_PERIOD_MS loopPeriodMs(FAST_CALLBACK_RATE)
