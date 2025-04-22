@@ -218,11 +218,7 @@ pins:
     function: WBO
 
   - pin: 34A
-    # meta: MM100_IN_VBATT
-    # class: analog_inputs
-    function: ECU power supply
-    # ts_name: ___ Battery Sense
-    color: red
+    function: WBO heater positive
     type: 12v
 
 info:

@@ -211,9 +211,9 @@ static Gpio OUTPUTS[] = {
 	Gpio::TLE9104_1_OUT_0, // 14A - Tach Output
 	Gpio::TLE9104_1_OUT_1, // 5A - Fuel Pump Relay
 	Gpio::TLE9104_1_OUT_2, // 6A - Idle Output
-	Gpio::TLE9104_2_OUT_0, // J10.4 - OUT_VVT1
-	Gpio::TLE9104_2_OUT_1, // J10.5 - OUT_VVT2
-	Gpio::TLE9104_2_OUT_3, // J10.2 - OUT_BOOST
+//	Gpio::TLE9104_2_OUT_0, // J10.4 - OUT_VVT1
+//	Gpio::TLE9104_2_OUT_1, // J10.5 - OUT_VVT2
+//	Gpio::TLE9104_2_OUT_3, // J10.2 - OUT_BOOST
 	Gpio::MM100_IGN1,
 	Gpio::MM100_IGN2,
 	Gpio::MM100_IGN3,
