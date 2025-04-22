@@ -9,8 +9,6 @@
 
 //TODO: remove me after pr #7763
 int m_cycleCounter = 0;
-void initMainLoop() {
-};
 
 //TODO: move me to main_loop.cpp after pr #7763
 template <LoopPeriod flag>

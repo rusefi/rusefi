@@ -17,6 +17,8 @@
 #include <rusefi/pt2001.h>
 #include <rusefi/efistringutil.h>
 
+#include "main_loop.h"
+
 #include "global.h"
 #include "generated_lookup_meta.h"
 #include "loggingcentral.h"
