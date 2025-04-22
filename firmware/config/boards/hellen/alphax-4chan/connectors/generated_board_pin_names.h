@@ -25,7 +25,7 @@
 #define PIN_A6 H144_IGN_1
 #define PIN_A7 H144_IGN_2
 #define PIN_A8 H144_LS_1
-#define PIN_On_board MAP H144_IN_MAP3
+#define PIN_On_board_MAP H144_IN_MAP3
 #define PIN_B2 H144_IN_MAP2
 #define PIN_B3 H144_IN_IAT
 #define PIN_B4 H144_IN_O2S2

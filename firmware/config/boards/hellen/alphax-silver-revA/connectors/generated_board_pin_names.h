@@ -23,7 +23,7 @@
 #define PIN_18A MM100_IN_TPS_ANALOG
 #define PIN_19A MM100_IN_CLT_ANALOG
 #define PIN_20A MM100_IN_IAT_ANALOG
-#define PIN_On_board MAP MM100_IN_MAP2_ANALOG
+#define PIN_On_board_MAP MM100_IN_MAP2_ANALOG
 #define PIN_21A MM100_IN_MAP1_ANALOG
 #define PIN_24A_event_inputs MM100_IN_D2
 #define PIN_24A_switch_inputs MM100_IN_D2
