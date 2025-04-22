@@ -83,4 +83,12 @@ namespace engine_configuration_defaults {
     constexpr float FUEL_LEVEL_UPDATE_PERIOD_SEC = 0.1f;
     constexpr float FUEL_LEVEL_LOW_THRESHOLD_VOLTAGE = 0.25f;
     constexpr float FUEL_LEVEL_HIGH_THRESHOLD_VOLTAGE = 4.5f;
+
+    constexpr float DEFAULT_LAMBDA_LOAD_BINS[] = { 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 150, 175, 200, 225, 250 };
+    constexpr float DEFAULT_LAMBDA_TABLE_ROW[] = {
+        1,		1,		1,		1,		// 30, 40, 50, 60 kpa
+        1,		0.95,	0.92,	0.90,	// 70, 80, 90, 100 kpa
+        0.89,	0.88,	0.86,	0.84,	// 110, 120, 130, 150 kpa
+        0.8,	0.77,	0.75,	0.73,	// 175, 200, 225, 250 kpa
+    };
 }

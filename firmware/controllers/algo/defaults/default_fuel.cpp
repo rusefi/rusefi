@@ -3,6 +3,7 @@
 #include "defaults.h"
 #include "table_helper.h"
 #include "mazda_miata_vvt.h"
+#include "engine_configuration_defaults.h"
 
 static void setBosch02880155868(injector_s& cfg) {
 	// http://www.boschdealer.com/specsheets/0280155868cs.jpg (use web.archive.org)
@@ -200,22 +201,12 @@ static void setDefaultLambdaTable() {
 	setRpmTableBin(config->lambdaRpmBins);
 
 #if (FUEL_LOAD_COUNT == 16) && (FUEL_RPM_COUNT == 16)
-	static constexpr float mapBins[] = {
-		30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 150, 175, 200, 225, 250
-	};
-	copyArray(config->lambdaLoadBins, mapBins);
-
-	static constexpr float rowValues[] = {
-		1,		1,		1,		1,		// 30, 40, 50, 60 kpa
-		1,		0.95,	0.92,	0.90,	// 70, 80, 90, 100 kpa
-		0.89,	0.88,	0.86,	0.84,	// 110, 120, 130, 150 kpa
-		0.8,	0.77,	0.75,	0.73,	// 175, 200, 225, 250 kpa
-	};
+	copyArray(config->lambdaLoadBins, engine_configuration_defaults::DEFAULT_LAMBDA_LOAD_BINS);
 
 	// Set each row to the corresponding value from rowValues
 	for (size_t i = 0; i < efi::size(config->lambdaTable); i++) {
 		for (size_t j = 0; j < efi::size(config->lambdaTable[i]); j++) {
-			config->lambdaTable[i][j] = rowValues[i];
+			config->lambdaTable[i][j] = engine_configuration_defaults::DEFAULT_LAMBDA_TABLE_ROW[i];
 		}
 	}
 #endif
