@@ -18,6 +18,7 @@
 #include "fuel_math.h"
 #include "spark_logic.h"
 #include "trigger_universal.h"
+#include "engine_configuration_defaults.h"
 
 using ::testing::_;
 
@@ -166,10 +167,25 @@ static void assertREqualsM(const char *msg, void *expected, void *actual) {
 
 extern bool debugSignalExecutor;
 
+void configureTestDefaultLambdas() {
+	constexpr size_t TEST_LAMBDA_TABLE_COLUMN_COUNT = efi::size(engine_configuration_defaults::DEFAULT_LAMBDA_TABLE_ROW);
+    static_assert(TEST_LAMBDA_TABLE_COLUMN_COUNT == efi::size(engine_configuration_defaults::DEFAULT_LAMBDA_LOAD_BINS));
+	static_assert(TEST_LAMBDA_TABLE_COLUMN_COUNT <= FUEL_LOAD_COUNT);
+	copyArray(config->lambdaLoadBins, engine_configuration_defaults::DEFAULT_LAMBDA_LOAD_BINS);
+
+	// Set each row to the corresponding value from rowValues
+	for (size_t i = 0; i < efi::size(config->lambdaTable); i++) {
+		for (size_t j = 0; j < efi::size(config->lambdaTable[i]); j++) {
+			config->lambdaTable[i][j] = engine_configuration_defaults::DEFAULT_LAMBDA_TABLE_ROW[i];
+		}
+	}
+}
+
 TEST(misc, testRpmCalculator) {
 	EngineTestHelper eth(engine_type_e::FORD_INLINE_6_1995);
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6670, engineConfiguration!=NULL, "null config in engine");
 
+	configureTestDefaultLambdas();
 	setTable(config->injectionPhase, -180.0f);
 
 	engine->tdcMarkEnabled = false;
