@@ -288,7 +288,7 @@ public class PinoutLogic {
         tsNameById.put(id, pinTsName);
         tsNameByMeta.put(headerValue, pinTsName);
         if (pinName != null) {
-            String pinNameForDefine = pinName.replace('-', '_');
+            String pinNameForDefine = pinName.replaceAll("-", "_").replaceAll("\\s", "_");
             pinNames.append("#define PIN_" + pinNameForDefine + (isMultiPin ? "_" + pinClass : "") + " " + headerValue + "\n");
         }
 
