@@ -29,14 +29,14 @@ void canDashboardFiestaRocam(CanCycle cycle) {
 
 	if (cycle.isInterval(CI::_50ms)) {
 		{
-			static uint32_t odoVar = 0;
+			static float odoVar = 0;
 
 			CanTxMessage msg(CanCategory::NBC, FIESTA_ODO_ECT, 8);
 
 			msg[0] = ectVar + 40;
 
-			odoVar = odoVar + 0.05 * speedVar / 3.6;
-			msg[1] = (odoVar * 5) % 255;
+			odoVar = odoVar + 0.05 * (float)speedVar / 3.6;
+			msg[1] = (uint8_t)((int)(odoVar * 5) % 255);
 
 			msg[2] = 0x00;
 			msg[3] = 0x00;
