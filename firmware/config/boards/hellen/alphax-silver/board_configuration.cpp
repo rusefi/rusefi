@@ -49,6 +49,8 @@ void setBoardConfigOverrides() {
 
 	/* Two TLE9104 */
 	enableHellenSpi3();
+	// todo
+ 	// engineConfiguration->vrThreshold[0].pin
 }
 
 void setBoardDefaultConfiguration() {
