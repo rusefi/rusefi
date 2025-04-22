@@ -101,9 +101,7 @@ pins:
     color: blue
 
   - pin: 15A
-    function: Analog Ground
-    color: black
-    type: agnd
+    function: knock
 
   - pin: 16A
     id: [MM100_IN_D4, MM100_IN_D4]
@@ -161,7 +159,11 @@ pins:
     color: yellow
 
   - pin: 22A
-    function: analog TODO
+    meta: MM100_IN_AUX1_ANALOG
+    class: analog_inputs
+    function: AUX analog input 1
+    ts_name: ___ - AIN1
+    type: av
 
   - pin: 23A
     function: Sensor +5v Power Feed
@@ -187,18 +189,18 @@ pins:
     function: Power Ground
     type: gnd
     color: black
+
   - pin: 27A
-    function: Power Ground
+    function: Analog Ground
     type: gnd
     color: black
 
   - pin: 28A
-    #    id: TLE9104_1_OUT_3
-    function: Analog Input TBD
-    #    class: outputs
-    #    type: ls
-    #    ts_name: ___ Fan Relay
-    color: blue
+    meta: MM100_IN_AUX3_ANALOG
+    class: analog_inputs
+    function: AUX analog input 2
+    ts_name: ___ - AIN2
+    type: av
 
   - pin: 29A
     function: heater WBO
@@ -216,7 +218,12 @@ pins:
     function: WBO
 
   - pin: 34A
-    function: knock
+    # meta: MM100_IN_VBATT
+    # class: analog_inputs
+    function: ECU power supply
+    # ts_name: ___ Battery Sense
+    color: red
+    type: 12v
 
 info:
   cid: main
