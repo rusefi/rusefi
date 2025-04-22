@@ -158,6 +158,7 @@ static void setGmGdi() {
   engineConfiguration->camInputs[0] = Gpio::H144_IN_SENS3; // Digital Input 4
   engineConfiguration->camInputs[1] = Gpio::Unassigned;
   engineConfiguration->sentInputPins[0] = Gpio::H144_IN_AUX2_DIGITAL;
+  setGmCltSensor(&engineConfiguration->clt, HELLEN_DEFAULT_AT_PULLUP);
 
   // engineConfiguration->starterControlPin = high side :()
 #endif // HW_HELLEN_4K_GDI
@@ -175,6 +176,7 @@ static void setGmGdi() {
 	config->boardUseCrankPullUp = true;
 
 	engineConfiguration->starterControlPin = Gpio::PIN_5C; // 5C - High Side 1, ignition output is not enough at least on HHR
+	setGmCltSensor(&engineConfiguration->clt, HELLEN_DEFAULT_AT_PULLUP);
 #endif // HW_HELLEN_8CHAN
 
   setPPSCalibration(1, 4.25, 0.5, 2.14);
