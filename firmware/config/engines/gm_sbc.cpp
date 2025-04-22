@@ -218,6 +218,9 @@ void setGmLnf() {
   engineConfiguration->invertCamVVTSignal = true;
 	engineConfiguration->invertPrimaryTriggerSignal = true;
   engineConfiguration->highPressureFuel.hwChannel = MM176_IN_MAP1_ANALOG; // 2A Aux Analog 4
+
+	engineConfiguration->vvtPins[0] = Gpio::MM176_OUT_PWM1;
+	engineConfiguration->vvtPins[1] = Gpio::MM176_OUT_PWM2;
 #endif // HW_HELLEN_8CHAN
 }
 

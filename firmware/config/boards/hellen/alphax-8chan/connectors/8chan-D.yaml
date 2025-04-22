@@ -61,6 +61,7 @@ pins:
     function: VVT 1
     meta: MM176_OUT_PWM1
     class: outputs
+    type: ls
     ts_name: ___ - VVT 1
     color: purple
 
@@ -105,6 +106,7 @@ pins:
     function: VVT 2
     meta: MM176_OUT_PWM2
     class: outputs
+    type: ls
     ts_name: 14D - VVT 2
     color: orange
 
@@ -144,6 +146,7 @@ pins:
   - pin: 20D
     function: VVT 3
     meta: MM176_OUT_PWM3
+    type: ls
     class: outputs
     ts_name: ___ - VVT 3
     color: purple
@@ -151,6 +154,7 @@ pins:
   - pin: 21D
     function: VVT 4
     meta: MM176_OUT_PWM4
+    type: ls
     class: outputs
     ts_name: ___ - VVT 4
     color: purple
