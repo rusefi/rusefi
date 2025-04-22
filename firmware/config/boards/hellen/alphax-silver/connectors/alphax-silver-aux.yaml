@@ -1,0 +1,110 @@
+meta: config/boards/hellen_mm100_meta.h
+
+pins:
+  - pin: X1
+    class: outputs
+    function: ETB- output
+    color: white
+    type: etb
+
+  - pin: X2
+    id: TLE9104_2_OUT_3
+    function: Boost output (low)
+    class: outputs
+    type: ls
+    ts_name: ___ - Boost control
+
+  - pin: X3
+    id: TLE9104_2_OUT_1
+    function: VVT2 output (low)
+    class: outputs
+    type: ls
+    ts_name: ___ - VVT 2
+
+  - pin: X4
+    id: TLE9104_2_OUT_0
+    function: VVT1 output (low)
+    class: outputs
+    type: ls
+    ts_name: ___ - VVT 1
+
+  - pin: X5
+    function: Analog Ground
+    type: gnd
+    color: black
+
+  - pin: X6
+    class: outputs
+    function: ETB+ output
+    color: blue
+    type: etb
+
+  - pin: X7
+    meta: MM100_IN_AUX2_ANALOG
+    class: analog_inputs
+    ts_name: ___ PPS2
+    function: PPS input 2
+    type: av
+    color: orange/brown
+
+  - pin: X8
+    meta: MM100_IN_AUX4_ANALOG
+    class: analog_inputs
+    ts_name: ___ TPS2
+    function: TPS input 2
+    type: av
+    color: blue
+
+  - pin: X9
+    meta: MM100_IN_PPS_ANALOG
+    class: analog_inputs
+    ts_name: ___ PPS1
+    function: PPS input 1
+    type: av
+    color: white
+
+  - pin: X10
+    function: Sensor +5v Power Feed
+    type: 5v
+    color: orange
+
+info:
+  cid: aux
+  title: AlphaX Silver
+  name: AlphaX Silver
+  board_url: https://rusefi.com/s/silver
+  directory: hellen/alphax-silver
+  image:
+    file: alphax-silver-aux.jpg
+  pins:
+    - pin: X1
+      x: 547
+      y: 230
+    - pin: X2
+      x: 452
+      y: 230
+    - pin: X3
+      x: 356
+      y: 230
+    - pin: X4
+      x: 262
+      y: 230
+    - pin: X5
+      x: 167
+      y: 230
+
+    - pin: X6
+      x: 547
+      y: 142
+    - pin: X7
+      x: 452
+      y: 142
+    - pin: X8
+      x: 356
+      y: 142
+    - pin: X9
+      x: 262
+      y: 142
+    - pin: X10
+      x: 167
+      y: 142
