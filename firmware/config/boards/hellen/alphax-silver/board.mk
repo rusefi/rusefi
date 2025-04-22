@@ -4,8 +4,8 @@
 BOARDCPPSRC = $(BOARD_DIR)/board_configuration.cpp
 
 
-# This board has two tle9104
-DDEFS += -DBOARD_TLE9104_COUNT=2
+# This board has three tle9104
+DDEFS += -DBOARD_TLE9104_COUNT=3
 
 
 
