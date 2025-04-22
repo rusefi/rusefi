@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include "main_loop.h"
 #include "engine_controller.h"
 
 // 100 ms is our empiric choice based on 2 * SLOW_CALLBACK_PERIOD_MS
