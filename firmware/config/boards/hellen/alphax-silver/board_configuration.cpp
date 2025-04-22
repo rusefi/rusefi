@@ -49,8 +49,7 @@ void setBoardConfigOverrides() {
 
 	/* Two TLE9104 */
 	enableHellenSpi3();
-	// todo
- 	// engineConfiguration->vrThreshold[0].pin
+ 	engineConfiguration->vrThreshold[0].pin = Gpio::MM100_OUT_PWM2;
 }
 
 void setBoardDefaultConfiguration() {
