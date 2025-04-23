@@ -210,27 +210,33 @@ pins:
     type: av
 
   - pin: 29B
-    function: WBO1 Heater Control sensor pin 3
+    function: WBO1 Heater Negative (pin 3)
     color: white
+    type: wbo
 
   - pin: 30B
-    function: WBO1 VM sensor pin 2
+    function: WBO1 Vm (pin 2)
+    type: wbo
     color: yellow
 
   - pin: 31B
-    function: WBO1 IP sensor pin 1
+    function: WBO1 Ip (pin 1)
+    type: wbo
     color: red
 
   - pin: 32B
-    function: WBO1 cal R sensor pin 5
+    function: WBO1 Rtrim (pin 5)
+    type: wbo
     color: green
 
   - pin: 33B
-    function: WBO1 VS sensor pin 6
+    function: WBO1 Un (pin 6)
+    type: wbo
     color: black
 
   - pin: 34B
-    function: WBO1 Heater Power pin 4
+    function: WBO1 Heater Positive (pin 4)
+    type: wbo
     color: grey
 
 info:

@@ -209,27 +209,33 @@ pins:
     type: GND
 
   - pin: 29A
-    function: WBO2 Heater Control sensor pin 3
+    function: WBO2 Heater Negative (pin 3)
     color: white
+    type: wbo
 
   - pin: 30A
-    function: WBO2 VM sensor pin 2
+    function: WBO2 Vm (pin 2)
+    type: wbo
     color: yellow
 
   - pin: 31A
-    function: WBO2 IP sensor pin 1
+    function: WBO2 Ip (pin 1)
+    type: wbo
     color: red
 
   - pin: 32A
-    function: WBO2 cal R sensor pin 5
+    function: WBO2 Rtrim (pin 5)
+    type: wbo
     color: green
 
   - pin: 33A
-    function: WBO2 VS sensor pin 6
+    function: WBO2 Un (pin 6)
+    type: wbo
     color: black
 
   - pin: 34A
-    function: WBO2 Heater Power pin 4
+    function: WBO2 Heater Positive (pin 4)
+    type: wbo
     color: grey
 
 
