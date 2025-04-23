@@ -295,19 +295,29 @@ pins:
 
 
   - pin: 8B
-    function: WBO2 heater white 3
+    function: WBO2 Heater Negative (pin 3)
+    color: white
+    type: wbo
 
   - pin: 9B
-    function: WBO2 VM yellow 2
+    function: WBO2 VM Vm (pin 2)
+    type: wbo
+    color: yellow
 
   - pin: 10B
-    function: WBO2 IP red 1
+    function: WBO2 IP Ip (pin 1)
+    type: wbo
+    color: red
 
   - pin: 11B
-    function: WBO2 cal R green 5
+    function: WBO2 cal R Rtrim (pin 5)
+    type: wbo
+    color: green
 
   - pin: 12B
-    function: WBO2 VS black 6
+    function: WBO2 VS Un (pin 6)
+    type: wbo
+    color: black
 
   - pin: 13B
     function: VR4+
@@ -320,19 +330,29 @@ pins:
     ts_name: 7B/13B - VR4
 
   - pin: 14B
-    function: WBO1 heater white 3
+    function: WBO1 Heater Negative (pin 3)
+    color: white
+    type: wbo
 
   - pin: 15B
-    function: WBO1 VM yellow 2
+    function: WBO1 Vm (pin 2)
+    type: wbo
+    color: yellow
 
   - pin: 16B
-    function: WBO1 IP red 1
+    function: WBO1 Ip (pin 1)
+    type: wbo
+    color: red
 
   - pin: 17B
-    function: WBO1 cal R green 5
+    function: WBO1 Rtrim (pin 5)
+    type: wbo
+    color: green
 
   - pin: 18B
-    function: WBO2 VS black 6
+    function: WBO2 Un (pin 6)
+    type: wbo
+    color: black
 
   - pin: 19B
     function: regulated +12V output (12V from main relay for consumers)
