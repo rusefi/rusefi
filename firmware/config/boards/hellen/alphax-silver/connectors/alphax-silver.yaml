@@ -203,23 +203,34 @@ pins:
     type: av
 
   - pin: 29A
-    function: heater WBO
+    function: WBO Heater Negative (pin 3)
+    color: white
+    type: wbo
 
   - pin: 30A
-    function: WBO
+    function: WBO Vm (pin 2)
+    type: wbo
+    color: yellow
 
   - pin: 31A
-    function: WBO
+    function: WBO Ip (pin 1)
+    type: wbo
+    color: red
 
   - pin: 32A
-    function: WBO
+    function: WBO Rtrim (pin 5)
+    type: wbo
+    color: green
 
   - pin: 33A
-    function: WBO
+    function: WBO Un (pin 6)
+    type: wbo
+    color: black
 
   - pin: 34A
-    function: WBO heater positive
-    type: 12v
+    function: WBO Heater Positive (pin 4)
+    type: wbo
+    color: grey
 
 info:
   cid: main
