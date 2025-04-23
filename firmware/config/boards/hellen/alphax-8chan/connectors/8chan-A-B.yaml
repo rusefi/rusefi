@@ -315,7 +315,7 @@ pins:
     color: green
 
   - pin: 12B
-    function: WBO2 VS Un (pin 6)
+    function: WBO2 Vs (Un) (pin 6)
     type: wbo
     color: black
 
@@ -350,7 +350,7 @@ pins:
     color: green
 
   - pin: 18B
-    function: WBO2 Un (pin 6)
+    function: WBO2 Vs (Un) (pin 6)
     type: wbo
     color: black
 
