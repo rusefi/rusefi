@@ -250,7 +250,7 @@ pins:
     type: 12v
 
   - pin: 3B
-    function: WBO1 Rtrim (pin 5)
+    function: WBO1 CalR (pin 5)
     type: wbo
     color: green
 
@@ -284,7 +284,7 @@ pins:
     color: purple
 
   - pin: 9B
-    function: WBO2 Rtrim (pin 5)
+    function: WBO2 CalR (pin 5)
     type: wbo
     color: green
 

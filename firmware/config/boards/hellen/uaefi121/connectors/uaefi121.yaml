@@ -566,7 +566,7 @@ pins:
     function: WBO2 SWC
 
   - pin: 94a
-    function: WBO2 Rtrim
+    function: WBO2 CalR
     color: green
 
   - pin: 95a
@@ -596,7 +596,7 @@ pins:
     function: WBO1 SWC
 
   - pin: 102a
-    function: WBO1 Rtrim
+    function: WBO1 CalR
     color: green
 
   - pin: 103a

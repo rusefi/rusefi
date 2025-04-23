@@ -216,7 +216,7 @@ pins:
     color: red
 
   - pin: 32A
-    function: WBO Rtrim (pin 5)
+    function: WBO CalR (pin 5)
     type: wbo
     color: green
 
