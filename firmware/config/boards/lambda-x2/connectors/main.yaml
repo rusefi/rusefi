@@ -36,7 +36,7 @@ pins:
     class: outputs
 
   - pin: B7
-    function: R (second) LSU Vm (yellow)
+    function: R (second) LSU Vs/Ip (Vm) (yellow)
     color: yellow
 
   - pin: B6
@@ -52,7 +52,7 @@ pins:
     color: yellow
 
   - pin: B3
-    function: L (first) LSU Vm (yellow)
+    function: L (first) LSU Vs/Ip (Vm) (yellow)
     color: yellow
 
   - pin: B2

@@ -300,7 +300,7 @@ pins:
     type: wbo
 
   - pin: 9B
-    function: WBO2 VM Vm (pin 2)
+    function: WBO2 VM Vs/Ip (Vm) (pin 2)
     type: wbo
     color: yellow
 
@@ -335,7 +335,7 @@ pins:
     type: wbo
 
   - pin: 15B
-    function: WBO1 Vm (pin 2)
+    function: WBO1 Vs/Ip (Vm) (pin 2)
     type: wbo
     color: yellow
 

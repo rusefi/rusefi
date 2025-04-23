@@ -260,7 +260,7 @@ pins:
     color: red
 
   - pin: 5B
-    function: WBO1 Vm (pin 2)
+    function: WBO1 Vs/Ip (Vm) (pin 2)
     type: wbo
     color: yellow
 
@@ -294,7 +294,7 @@ pins:
     color: red
 
   - pin: 11B
-    function: WBO2 Vm (pin 2)
+    function: WBO2 Vs/Ip (Vm) (pin 2)
     type: wbo
     color: yellow
 
