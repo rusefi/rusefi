@@ -75,7 +75,7 @@ static void gmRailSensor() {
 	engineConfiguration->highPressureFuel.value1 = 0;
 	engineConfiguration->highPressureFuel.v2 = 4.5; /* volts */;
 	// fun fact: twice the range of VAG B6?
-	engineConfiguration->highPressureFuel.value2 = PSI2KPA(400);
+	engineConfiguration->highPressureFuel.value2 = 25300;
 }
 
 void setGmSbc() {
