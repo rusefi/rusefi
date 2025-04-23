@@ -10,7 +10,7 @@ SUBFOLDER_TO_UPLOAD=$5
 SCRIPT_NAME=$(basename "$0")
 
 if [ -n "${USER}" -a -n "$PASS" -a -n "${HOST}" ]; then
- echo "$SCRIPT_NAME: Uploading both bundles"
+ echo "$SCRIPT_NAME: Uploading both bundle.zip and autoupdate.zip"
 
  if [ -n "${BUNDLE_NAME}" ]; then
    echo "$SCRIPT_NAME: BUNDLE_NAME is ${BUNDLE_NAME}"

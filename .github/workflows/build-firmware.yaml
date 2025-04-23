@@ -258,7 +258,7 @@ jobs:
     - name: Build Firmware
       working-directory: ./firmware/
       run: |
-        bash bin/compile.sh ${{env.BOARD_META_PATH}} bundles --output-sync=recurse
+        bash bin/compile.sh ${{env.BOARD_META_PATH}} build_both_bundles --output-sync=recurse
 
     - name: Check for illegal time conversions
       working-directory: ./firmware/

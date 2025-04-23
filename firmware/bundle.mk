@@ -252,12 +252,12 @@ $(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_autoupdate.zip: $(UPDATE_BUNDLE_FILES) |
 $(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_obfuscated_public_autoupdate.zip:  $(OBFUSCATED_OUT) $(BUNDLE_FILES) | $(ARTIFACTS)
 	cd $(FOLDER) &&	zip -r ../$@ $(subst $(FOLDER)/,,$(MOST_COMMON_BUNDLE_FILES)) $(subst $(FOLDER)/,,$(OBFUSCATED_SREC))
 
-.PHONY: bundle bundles autoupdate obfuscated bin hex dfu map elf list srec bootloader
+.PHONY: bundle build_both_bundles autoupdate obfuscated bin hex dfu map elf list srec bootloader
 
 bundle: $(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME).zip
 autoupdate: $(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_autoupdate.zip
 obfuscated: $(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_obfuscated_public.zip $(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_obfuscated_public_autoupdate.zip
-bundles: bundle autoupdate
+build_both_bundles: bundle autoupdate
 
 bootloader: $(BOOTLOADER_BIN)
 
