@@ -44,7 +44,7 @@ inputs:
     default: bin hex dfu map elf list srec bootloader bundle autoupdate
   uploads:
     required: false
-    default: ini bundles
+    default: ini ftp_upload_bundles
   bundle_upload_folder:
     required: false
     default: 'build_server'
@@ -326,8 +326,8 @@ runs:
         fi
         bash bin/compile.sh $BOARD_META_PATH --output-sync=recurse ${{inputs.artifacts}} ${{inputs.uploads}} ${TARGETS[@]}
 
-    - name: Upload Bundle
-      if: ${{ contains(inputs.uploads, 'bundles') }}
+    - name: Ftp Upload Both Bundles
+      if: ${{ contains(inputs.uploads, 'ftp_upload_bundles') }}
       working-directory: ${{inputs.rusefi_dir}}/artifacts
       shell: bash
       run: |
@@ -518,7 +518,7 @@ runs:
         tag_prefix: ''
 
     - name: Upload Tagged Daily Release Bundle
-      if: ${{ contains(inputs.uploads, 'bundles') && steps.tag.outputs.new_tag != ''}}
+      if: ${{ contains(inputs.uploads, 'ftp_upload_bundles') && steps.tag.outputs.new_tag != ''}}
       working-directory: ${{inputs.rusefi_dir}}/artifacts
       shell: bash
       run: |
