@@ -8,6 +8,11 @@
 
 #pragma once
 
+// Main loop gets highest priority - it does all the critical
+// non-interrupt work to actually run the engine
+#define PRIO_MAIN_LOOP (NORMALPRIO - 10) //TODO: main_loop should be NORMALPRIO + 10
+
+// TODO: main_loop remove this 2 after migrating to main_loop
 // ADC and ETB get highest priority - not much else actually runs the engine
 #define PRIO_ADC (NORMALPRIO + 10)
 #define PRIO_ETB (NORMALPRIO + 9)

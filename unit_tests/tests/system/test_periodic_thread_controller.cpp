@@ -64,6 +64,10 @@ thread_t *chThdCreateStatic(void *wsp, size_t size,
 
 }
 
+/* this test was comented on 2021 for this error:
+* ../firmware/controllers/system/thread_controller.h:53:29: error: no match for ‘operator=’ (operand types are ‘chibios_rt::ThreadReference’ and ‘void’)
+* ref = chibios_rt::BaseStaticThread<TStackSize>::start(m_prio);
+*/
 TEST(system, periodic) {
 //	instance.Start();
 }

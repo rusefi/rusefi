@@ -32,7 +32,7 @@ enum class PE : uint8_t {
 	SingleTimerExecutorDoExecute,
 	SingleTimerExecutorScheduleTimerCallback,
 	PeriodicControllerPeriodicTask,
-	PeriodicTimerControllerPeriodicTask,
+	PeriodicTimerControllerPeriodicTask, //TODO: main_loop remove this after migrating to main_loop
 	AdcCallbackFast,
 	AdcProcessSlow,
 	AdcConversionSlow,
@@ -49,7 +49,7 @@ enum class PE : uint8_t {
 	GetSpeedDensityFuel,
 	WallFuelAdjust,
 	MapAveragingTriggerCallback,
-	Unused1,
+	MainLoop,
 	SingleTimerExecutorScheduleByTimestamp,
 	GetTimeNowUs,
 	EventQueueExecuteCallback,

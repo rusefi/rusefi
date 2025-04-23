@@ -1,5 +1,7 @@
 #pragma once
 
+#define MAIN_LOOP_RATE 1000
+
 void initMainLoop();
 
 enum class LoopPeriod : uint8_t {
