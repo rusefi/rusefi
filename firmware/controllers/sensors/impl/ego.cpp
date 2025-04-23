@@ -10,13 +10,6 @@
  *
  */
 #include "pch.h"
-#include "exp_average.h"
-
-StoredValueSensor smoothedLambda1Sensor(SensorType::SmoothedLambda1, MS2NT(500));
-StoredValueSensor smoothedLambda2Sensor(SensorType::SmoothedLambda2, MS2NT(500));
-
-static ExpAverage expAverageLambda1;
-static ExpAverage expAverageLambda2;
 
 
 bool hasAfrSensor() {
@@ -44,8 +37,7 @@ float getAfr(SensorType type) {
     	if (isAdcChannelValid(engineConfiguration->afr.hwChannel)) {
       		lambdaSensorVolts = adcGetScaledVoltage("ego", engineConfiguration->afr.hwChannel);
       		interpolatedAfr = getAfrInterpolation(lambdaSensorVolts, sensor);
-    		expAverageLambda1.setSmoothingFactor(engineConfiguration->afrExpAverageAlpha);
-    		smoothedLambda1Sensor.setValidValue(expAverageLambda1.initOrAverage(interpolatedAfr), getTimeNowNt());
+    		// todo set SmoothedLambda1
       		return interpolatedAfr;
     	}
     	return 0; // invalid adc channel
@@ -54,8 +46,7 @@ float getAfr(SensorType type) {
 		if (isAdcChannelValid(engineConfiguration->afr.hwChannel2)) {
 			lambdaSensorVolts = adcGetScaledVoltage("ego", engineConfiguration->afr.hwChannel2);
 			interpolatedAfr = getAfrInterpolation(lambdaSensorVolts, sensor);
-			expAverageLambda2.setSmoothingFactor(engineConfiguration->afrExpAverageAlpha);
-			smoothedLambda2Sensor.setValidValue(expAverageLambda2.initOrAverage(interpolatedAfr), getTimeNowNt());
+			// todo set SmoothedLambda2
 			return interpolatedAfr;
 		}
 		return 0; // invalid adc channel
