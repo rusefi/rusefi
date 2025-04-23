@@ -11,6 +11,7 @@
  */
 #include "pch.h"
 
+#include "cyclic_buffer.h"
 
 bool hasAfrSensor() {
 	if (engineConfiguration->enableAemXSeries) {
@@ -22,39 +23,17 @@ bool hasAfrSensor() {
 
 extern float InnovateLC2AFR;
 
-float getAfrInterpolation(float lambdaSensorVolts, afr_sensor_s * sensor){
-	return interpolateMsg("AFR", sensor->v1, sensor->value1, sensor->v2, sensor->value2, lambdaSensorVolts)
-			+ engineConfiguration->egoValueShift;
-}
-
 float getAfr(SensorType type) {
 	afr_sensor_s * sensor = &engineConfiguration->afr;
-	float lambdaSensorVolts = 0;
-	float interpolatedAfr = 0;
 
-	switch (type) {
-  	case SensorType::Lambda1: {
-    	if (isAdcChannelValid(engineConfiguration->afr.hwChannel)) {
-      		lambdaSensorVolts = adcGetScaledVoltage("ego", engineConfiguration->afr.hwChannel);
-      		interpolatedAfr = getAfrInterpolation(lambdaSensorVolts, sensor);
-    		// todo set SmoothedLambda1
-      		return interpolatedAfr;
-    	}
-    	return 0; // invalid adc channel
-  	}
-	case SensorType::Lambda2: {
-		if (isAdcChannelValid(engineConfiguration->afr.hwChannel2)) {
-			lambdaSensorVolts = adcGetScaledVoltage("ego", engineConfiguration->afr.hwChannel2);
-			interpolatedAfr = getAfrInterpolation(lambdaSensorVolts, sensor);
-			// todo set SmoothedLambda2
-			return interpolatedAfr;
-		}
-		return 0; // invalid adc channel
+	if (!isAdcChannelValid(type == SensorType::Lambda1 ? engineConfiguration->afr.hwChannel : engineConfiguration->afr.hwChannel2)) {
+		return 0;
 	}
-  	default:
-    	return 0; // invalid sensor type
-  	}
-	return 0;
+
+	float volts = adcGetScaledVoltage("ego", type == SensorType::Lambda1 ? sensor->hwChannel : sensor->hwChannel2);
+
+	return interpolateMsg("AFR", sensor->v1, sensor->value1, sensor->v2, sensor->value2, volts)
+			+ engineConfiguration->egoValueShift;
 }
 
 // this method is only used for canned tunes now! User-facing selection is defined in tunerstudio.template.ini using settingSelector
