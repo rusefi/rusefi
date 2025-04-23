@@ -90,6 +90,7 @@ TODO: this code is similar to initIfValid, what is the plan? shall we extract he
 	// Populate the entry
 	entry->VoltsPerAdcVolt = voltsPerAdcVolt;
 	entry->Channel = channel;
+	// TODO: main_loop use hzForPeriod(ADC_UPDATE_RATE) here
 	entry->Filter.configureLowpass(SLOW_ADC_RATE, lowpassCutoff);
 	entry->HasUpdated = false;
 
