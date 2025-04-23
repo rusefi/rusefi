@@ -40,7 +40,7 @@ pins:
     color: yellow
 
   - pin: B6
-    function: R (second) LSU Rtrim (green)
+    function: R (second) LSU CalR (green)
     color: green
 
   - pin: B5
@@ -56,7 +56,7 @@ pins:
     color: yellow
 
   - pin: B2
-    function: L (first) LSU Rtrim (green)
+    function: L (first) LSU CalR (green)
     color: green
 
   - pin: B1

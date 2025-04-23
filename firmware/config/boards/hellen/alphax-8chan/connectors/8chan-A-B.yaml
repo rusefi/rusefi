@@ -310,7 +310,7 @@ pins:
     color: red
 
   - pin: 11B
-    function: WBO2 cal R Rtrim (pin 5)
+    function: WBO2 cal R CalR (pin 5)
     type: wbo
     color: green
 
@@ -345,7 +345,7 @@ pins:
     color: red
 
   - pin: 17B
-    function: WBO1 Rtrim (pin 5)
+    function: WBO1 CalR (pin 5)
     type: wbo
     color: green
 

@@ -22,7 +22,7 @@ pins:
     color: red
 
   - pin: E2
-    function: WBO Rtrim (pin 5)
+    function: WBO CalR (pin 5)
     type: wbo
     color: green
 

@@ -246,7 +246,7 @@ pins:
     function: BLACK LSU4.9 Un
 
   - pin: C4
-    function: GREEN LSU4.9 Rtrim
+    function: GREEN LSU4.9 CalR
 
   - pin: C5
     function: RED LSU4.9 Ip
