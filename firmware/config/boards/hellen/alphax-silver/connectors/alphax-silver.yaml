@@ -208,7 +208,7 @@ pins:
     type: wbo
 
   - pin: 30A
-    function: WBO Vm (pin 2)
+    function: WBO Vs/Ip (Vm) (pin 2)
     type: wbo
     color: yellow
 
