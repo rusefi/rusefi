@@ -2,27 +2,33 @@ meta: config/boards/hellen_mm100_meta.h
 
 pins:
   - pin: E1
-    function: WBO Heater Power
+    function: WBO Heater Positive (pin 4)
+    type: wbo
     color: grey
 
   - pin: E3
-    function: WBO Heater Control sensor pin 3
+    function: WBO Heater Negative (pin 3)
     color: white
+    type: wbo
 
   - pin: E6
-    function: WBO VM sensor pin 2
+    function: WBO Vm (pin 2)
+    type: wbo
     color: yellow
 
   - pin: E5
-    function: WBO IP sensor pin 1
+    function: WBO Ip (pin 1)
+    type: wbo
     color: red
 
   - pin: E2
-    function: WBO cal R sensor pin 5
+    function: WBO Rtrim (pin 5)
+    type: wbo
     color: green
 
   - pin: E4
-    function: WBO VS sensor pin 6
+    function: WBO Un (pin 6)
+    type: wbo
     color: black
 
 info:
