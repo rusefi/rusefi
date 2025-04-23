@@ -953,6 +953,7 @@ void setBoschVAGETB() {
 	engineConfiguration->etb.iFactor = 47;
 	engineConfiguration->etb.dFactor = 0.088;
 	engineConfiguration->etb.offset = 0;
+	engineConfiguration->etbUsePreciseTiming = true;
 }
 
 void setBoschVNH2SP30Curve() {
