@@ -1,5 +1,5 @@
 package com.rusefi.tracing;
-// Thu Apr 17 12:50:20 UTC 2025 was generated automatically by rusEFI tool class com.rusefi.PerfTraceEnumGenerator
+// Wed Apr 23 04:25:14 UTC 2025 was generated automatically by rusEFI tool class com.rusefi.PerfTraceEnumGenerator
 public class EnumNames {
 	public static final String[] TypeNames = {
 	"INVALID",
@@ -16,7 +16,6 @@ public class EnumNames {
 	"SingleTimerExecutorDoExecute",
 	"SingleTimerExecutorScheduleTimerCallback",
 	"PeriodicControllerPeriodicTask",
-	"PeriodicTimerControllerPeriodicTask",
 	"AdcCallbackFast",
 	"AdcProcessSlow",
 	"AdcConversionSlow",
@@ -33,7 +32,7 @@ public class EnumNames {
 	"GetSpeedDensityFuel",
 	"WallFuelAdjust",
 	"MapAveragingTriggerCallback",
-	"Unused1",
+	"MainLoop",
 	"SingleTimerExecutorScheduleByTimestamp",
 	"GetTimeNowUs",
 	"EventQueueExecuteCallback",
