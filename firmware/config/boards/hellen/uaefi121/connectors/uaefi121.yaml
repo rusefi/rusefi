@@ -566,19 +566,23 @@ pins:
     function: WBO2 SWC
 
   - pin: 94a
-    function: WBO2 CalR
+    function: WBO2 CalR (pin 5)
+    type: wbo
     color: green
 
   - pin: 95a
-    function: WBO2 Ip
+    function: WBO2 Ip (pin 1)
+    type: wbo
     color: red
 
   - pin: 96a
-    function: WBO2 Vm
+    function: WBO2 Vs/Ip (Vm) (pin 2)
+    type: wbo
     color: yellow
 
   - pin: 97a
-    function: WBO2 Vs
+    function: WBO2 Vs (Un) (pin 6)
+    type: wbo
     color: black
 
   - pin: 98a
@@ -596,19 +600,23 @@ pins:
     function: WBO1 SWC
 
   - pin: 102a
-    function: WBO1 CalR
+    function: WBO1 CalR (pin 5)
+    type: wbo
     color: green
 
   - pin: 103a
-    function: WBO1 Ip
+    function: WBO1 Ip (pin 1)
+    type: wbo
     color: red
 
   - pin: 104a
-    function: WBO1 Vm
+    function: WBO1 Vs/Ip (Vm) (pin 2)
+    type: wbo
     color: yellow
 
   - pin: 105a
-    function: WBO1 Vs
+    function: WBO1 Vs (Un) (pin 6)
+    type: wbo
     color: black
 
   - pin: 106a
@@ -661,14 +669,19 @@ pins:
     type: 12V
 
   - pin: 117a
-    function: WBO1 HTR +12
+    function: WBO1 Heater Positive (pin 4)
+    type: wbo
+    color: grey
 
   - pin: 118a
-    function: WBO2 HTR +12
+    function: WBO2 Heater Positive (pin 4)
+    type: wbo
+    color: grey
 
   - pin: 119a
-    function: WBO1 HTR-
+    function: WBO1 Heater Negative (pin 3)
     color: white
+    type: wbo
 
   - pin: 120a
     function: +12v from main relay INPUT
@@ -676,8 +689,9 @@ pins:
     color: red
 
   - pin: 121a
-    function: WBO2 HTR-
+    function: WBO2 Heater Negative (pin 3)
     color: white
+    type: wbo
 
 info:
   title: uaEFI 121
