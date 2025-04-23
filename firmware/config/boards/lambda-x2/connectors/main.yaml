@@ -8,7 +8,7 @@ pins:
     color: red
 
   - pin: A6
-    function: R (second) LSU Un (black)
+    function: R (second) LSU Vs (Un) (black)
     color: black
 
   - pin: A5
@@ -24,7 +24,7 @@ pins:
     color: red
 
   - pin: A2
-    function: L (first) LSU Un (black)
+    function: L (first) LSU Vs (Un) (black)
     color: black
 
   - pin: A1

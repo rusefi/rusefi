@@ -27,7 +27,7 @@ pins:
     color: green
 
   - pin: E4
-    function: WBO Un (pin 6)
+    function: WBO Vs (Un) (pin 6)
     type: wbo
     color: black
 

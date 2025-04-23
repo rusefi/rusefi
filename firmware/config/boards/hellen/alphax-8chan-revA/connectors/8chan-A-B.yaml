@@ -265,7 +265,7 @@ pins:
     color: yellow
 
   - pin: 6B
-    function: WBO1 Un (pin 6)
+    function: WBO1 Vs (Un) (pin 6)
     type: wbo
     color: black
 
@@ -299,7 +299,7 @@ pins:
     color: yellow
 
   - pin: 12B
-    function: WBO2 Un (pin 6)
+    function: WBO2 Vs (Un) (pin 6)
     type: wbo
     color: black
 

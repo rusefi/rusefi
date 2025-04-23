@@ -223,7 +223,7 @@ pins:
     color: green
 
   - pin: 33A
-    function: WBO Un (pin 6)
+    function: WBO Vs (Un) (pin 6)
     type: wbo
     color: black
 
