@@ -194,7 +194,13 @@ void HpfpController::pinTurnOn(HpfpController *self) {
 
 	// By scheduling the close after we already open, we don't have to worry if the engine
 	// stops, the valve will be turned off in a certain amount of time regardless.
-	// todo: we are somewhat confused about the logic? https://github.com/rusefi/rusefi/issues/7778
+	//
+	// We do not need precise control of valve _duration_ since
+	// For the solenoid type pump, the pump has a certain volume. You can activate the solenoid to request that the pump start pressurizing.
+	// Once it reaches a certain pressure, it is effectively self running and won't unlatch until the pump reaches the top.
+  // Since the solenoid latches itself, you don't have to keep it activated for the whole lobe. You just need to activate it until it latches and then let it do the rest of the work.
+  // see also https://rusefi.com/forum/viewtopic.php?f=5&t=2192
+
 	scheduleByAngle(&self->m_event.eventScheduling,
 			self->m_event.eventScheduling.getMomentNt(),
 			self->m_deadangle + engineConfiguration->hpfpActivationAngle,
@@ -242,8 +248,7 @@ void HpfpController::scheduleNextCycle() {
 	    wrapAngle(lobeAngle, "lobe", ObdCode::CUSTOM_ERR_6557);
 		// Schedule this, even if we aren't opening the valve this time, since this
 		// will schedule the next lobe.
-		// todo: would it have been cleaner to schedule 'scheduleNextCycle' directly?
-		// todo: we are somewhat confused about the logic? https://github.com/rusefi/rusefi/issues/7778
+		// todo: schedule only 'scheduleNextCycle' directly since we do not need output control part of the logic here!
 		engine->module<TriggerScheduler>()->schedule(
 			HPFP_CONTROLLER,
 			&m_event, lobeAngle,

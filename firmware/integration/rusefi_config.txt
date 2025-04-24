@@ -1535,7 +1535,7 @@ tChargeMode_e tChargeMode;
         int8_t autoscale acLowRpmLimit;Low engine speed for A/C. Larger engines can survive lower values;"RPM", 10, 0, 0, 1200, 0
         uint8_t hpfpMinAngle;If the requested activation time is below this angle, don't bother running the pump;"deg", 1, 0, 0, 255, 0
         uint16_t autoscale hpfpPumpVolume;Size of the pump chamber in cc. Typical Bosch HDP5 has a 9.0mm diameter, typical BMW N* stroke is 4.4mm.;"cc", 0.001, 0, 0, 65, 3
-        uint8_t hpfpActivationAngle;Maximum angular duration;"deg", 1, 0, 0, 255, 0
+        uint8_t hpfpActivationAngle;How long to keep the valve activated (in order to allow the pump to build pressure and keep the valve open on its own)\nhttps://rusefi.com/forum/viewtopic.php?t=2192;"deg", 1, 0, 0, 255, 0
 		uint8_t issFilterReciprocal;;"", 1, 0, 0, 255, 0
         uint16_t autoscale hpfpPidP;;"%/kPa", 0.001, 0, 0, 65, 3
         uint16_t autoscale hpfpPidI;;"%/kPa/lobe", 0.00001, 0, 0, 0.65, 5
