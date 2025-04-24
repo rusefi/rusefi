@@ -1538,7 +1538,7 @@ If the requested activation time is below this angle, don't bother running the p
 Size of the pump chamber in cc. Typical Bosch HDP5 has a 9.0mm diameter, typical BMW N* stroke is 4.4mm.
 
 ### hpfpActivationAngle
-How long to keep the valve activated (in order to allow the pump to build pressure and keep the valve open on its own)
+Maximum angular duration
 
 ### issFilterReciprocal
 

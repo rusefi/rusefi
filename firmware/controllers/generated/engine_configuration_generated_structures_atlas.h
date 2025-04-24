@@ -3928,7 +3928,7 @@ struct engine_configuration_s {
 	 */
 	scaled_channel<uint16_t, 1000, 1> hpfpPumpVolume;
 	/**
-	 * How long to keep the valve activated (in order to allow the pump to build pressure and keep the valve open on its own)
+	 * Maximum angular duration
 	 * units: deg
 	 * offset 2866
 	 */
