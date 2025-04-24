@@ -1079,8 +1079,13 @@ void onConfigurationChangeTriggerCallback() {
 	getTriggerCentral()->triggerConfigChangedOnLastConfigurationChange = getTriggerCentral()->triggerConfigChangedOnLastConfigurationChange || changed;
 }
 
-static void initVvtShape(TriggerWaveform& shape, const TriggerConfiguration& p_config, TriggerDecoderBase &initState) {
+static void initVvtShape(int camIndex, TriggerWaveform& shape, const TriggerConfiguration& p_config, TriggerDecoderBase &initState) {
 	shape.initializeTriggerWaveform(FOUR_STROKE_CAM_SENSOR, p_config.TriggerType, /*isCrank*/ false);
+	if (camIndex == 0) {
+	  // at the moment we only support override of first cam
+	  // nasty code: this implicitly adjusts 'shape' parameter
+	  getTriggerCentral()->applyCamGapOverride();
+	}
 	shape.initializeSyncPoint(initState, p_config);
 }
 
@@ -1202,6 +1207,7 @@ void TriggerCentral::applyShapesConfiguration() {
 		// todo: should 'vvtWithRealDecoder' be used here?
 		if (engineConfiguration->vvtMode[camIndex] != VVT_INACTIVE) {
 			initVvtShape(
+			  camIndex,
 				vvtShape[camIndex],
 				vvtTriggerConfiguration[camIndex],
 				initState

@@ -207,10 +207,10 @@ public:
 	 */
 	bool isEngineSnifferEnabled = false;
 
+	void applyCamGapOverride();
 private:
 	void decodeMapCam(efitick_t nowNt, float currentPhase);
 	void applyTriggerGapOverride();
-	void applyCamGapOverride();
 
 	bool isToothExpectedNow(efitick_t timestamp);
 
