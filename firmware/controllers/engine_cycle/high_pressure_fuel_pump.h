@@ -37,10 +37,6 @@ class HpfpController;
 
 class HpfpQuantity {
 public:
-// todo: shall we move into high_pressure_fuel_pump.txt and reduce OOP elegance or create a separate live data just for these ones?
-	float m_I_sum_percent = 0;
-	float m_pressureTarget_kPa = 0;
-
 	/**
 	 * Calculate where the pump should become active, in degrees before pump lobe TDC
 	 */
@@ -68,21 +64,22 @@ public:
 	 * Return value is nominally 0-100, but may be outside that range (including negative) if
 	 * model parameters are not accurate.  The sum of this and calc_fuel_percent will be 0-100.
 	 */
-	float calcPI(float rpm, float calc_fuel_percent);
+	float calcPI(float rpm, float calc_fuel_percent, HpfpController *model);
 
-	/**
-	 * Reset internal state due to a stopped engine.
-	 */
-	void reset() {
-		m_I_sum_percent = 0;
-		m_pressureTarget_kPa = 0;
-	}
 };
 
 class HpfpController : public EngineModule, public high_pressure_fuel_pump_s {
 public:
 	// Mockable<> interface
 	using interface_t = HpfpController;
+
+	/**
+	 * Reset internal state due to a stopped engine.
+	 */
+	void resetQuantity() {
+		hpfp_i_control_percent = 0;
+		m_pressureTarget_kPa = 0;
+	}
 
 	void onFastCallback() final;
 	angle_t m_deadangle = 0; ///< Computed solenoid deadtime in degrees

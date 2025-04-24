@@ -8,6 +8,8 @@ bit angleAboveMin;GDI: HPFP angle above min
 bit isHpfpActive;GDI: HPFP Active
 bit HpfpValveState;GDI: HPFP Valve state
 float m_pressureTarget_kPa;"GDI: target pressure"
+float hpfp_p_control_percent
+float hpfp_i_control_percent
 angle_t nextLobe;"GDI: next lobe N"
 float di_nextStart;GDI: valve activation angle;"v", 1, 0, 0, 100, 0
 float HpfdActivationPhase;"GDI: HPFP activation angle"

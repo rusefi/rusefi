@@ -119,6 +119,7 @@ TEST(HPFP, PI) {
 	engineConfiguration->hpfpPumpVolume = 0.2; // cc/lobe
 
 	HpfpQuantity math;
+	HpfpController model;
 
 	for (int i = 0; i < HPFP_TARGET_SIZE; i++) {
 		// one bin every 1000 RPM
@@ -136,35 +137,35 @@ TEST(HPFP, PI) {
 
 	Sensor::setMockValue(SensorType::Map, 40);
 	Sensor::setMockValue(SensorType::FuelPressureHigh, 1000);
-	EXPECT_FLOAT_EQ(math.calcPI(1000, 120), -20); // Test integral clamp
-	EXPECT_FLOAT_EQ(math.m_I_sum_percent, -20); // and again
-	EXPECT_FLOAT_EQ(math.m_pressureTarget_kPa, 2010);
-	EXPECT_FLOAT_EQ(math.calcPI(1000, -40), 40); // Test integral clamp
-	EXPECT_FLOAT_EQ(math.m_I_sum_percent, 40); // and again
-	EXPECT_FLOAT_EQ(math.m_pressureTarget_kPa, 2010);
+	EXPECT_FLOAT_EQ(math.calcPI(1000, 120, &model), -20); // Test integral clamp
+	EXPECT_FLOAT_EQ(model.hpfp_i_control_percent, -20); // and again
+	EXPECT_FLOAT_EQ(model.m_pressureTarget_kPa, 2010);
+	EXPECT_FLOAT_EQ(math.calcPI(1000, -40, &model), 40); // Test integral clamp
+	EXPECT_FLOAT_EQ(model.hpfp_i_control_percent, 40); // and again
+	EXPECT_FLOAT_EQ(model.m_pressureTarget_kPa, 2010);
 
 	// Test pressure decay
-	math.calcPI(4000, 0);
-	EXPECT_FLOAT_EQ(math.m_pressureTarget_kPa, 2040);
-	math.calcPI(1000, 0);
-	EXPECT_FLOAT_EQ(math.m_pressureTarget_kPa, 2040);
+	math.calcPI(4000, 0, &model);
+	EXPECT_FLOAT_EQ(model.m_pressureTarget_kPa, 2040);
+	math.calcPI(1000, 0, &model);
+	EXPECT_FLOAT_EQ(model.m_pressureTarget_kPa, 2040);
 	engineConfiguration->hpfpTargetDecay = 1000;
-	math.calcPI(1000, 0);
-	EXPECT_FLOAT_EQ(math.m_pressureTarget_kPa, 2035); // 5ms of decay
+	math.calcPI(1000, 0, &model);
+	EXPECT_FLOAT_EQ(model.m_pressureTarget_kPa, 2035); // 5ms of decay
 
 	// Proportional gain
-	math.reset(); // Reset for ease of testing
-	EXPECT_FLOAT_EQ(math.calcPI(1000, 0), 0); // Validate reset
-	EXPECT_FLOAT_EQ(math.m_pressureTarget_kPa, 2010);
+	model.resetQuantity(); // Reset for ease of testing
+	EXPECT_FLOAT_EQ(math.calcPI(1000, 0, &model), 0); // Validate reset
+	EXPECT_FLOAT_EQ(model.m_pressureTarget_kPa, 2010);
 	engineConfiguration->hpfpPidP = 0.01;
-	EXPECT_FLOAT_EQ(math.calcPI(1000, 0), 10.10);
+	EXPECT_FLOAT_EQ(math.calcPI(1000, 0, &model), 10.10);
 	engineConfiguration->hpfpPidP = 0.02;
-	EXPECT_FLOAT_EQ(math.calcPI(1000, 0), 20.20);
+	EXPECT_FLOAT_EQ(math.calcPI(1000, 0, &model), 20.20);
 
 	// Integral gain
 	engineConfiguration->hpfpPidI = 0.001;
-	EXPECT_FLOAT_EQ(math.calcPI(1000, 0), 20.368334);
-	EXPECT_FLOAT_EQ(math.m_I_sum_percent, 0.168333333);
+	EXPECT_FLOAT_EQ(math.calcPI(1000, 0, &model), 20.368334);
+	EXPECT_FLOAT_EQ(model.hpfp_i_control_percent, 0.168333333);
 }
 
 TEST(HPFP, Angle) {
@@ -203,18 +204,18 @@ TEST(HPFP, Angle) {
 	HpfpController model;
 
 	EXPECT_FLOAT_EQ(math.calcFuelPercent(1000), 25); // Double check baseline
-	EXPECT_FLOAT_EQ(math.calcPI(1000, 10), 0); // Validate no PI
+	EXPECT_FLOAT_EQ(math.calcPI(1000, 10, &model), 0); // Validate no PI
 	EXPECT_NEAR(math.pumpAngleFuel(1000, &model), 37.5, 0.4); // Given the profile, should be 50% higher
 
 	engine->engineState.injectionMass[0] = 0.08 /* cc/cyl */ * fuelDensity;
 	EXPECT_FLOAT_EQ(math.calcFuelPercent(1000), 40); // Double check baseline
-	EXPECT_FLOAT_EQ(math.calcPI(1000, 10), 0); // Validate no PI
+	EXPECT_FLOAT_EQ(math.calcPI(1000, 10, &model), 0); // Validate no PI
 	EXPECT_NEAR(math.pumpAngleFuel(1000, &model), 60, 0.4); // Given the profile, should be 50% higher
 
 	engineConfiguration->hpfpPidP = 0.01;
 	Sensor::setMockValue(SensorType::Map, 40);
 	Sensor::setMockValue(SensorType::FuelPressureHigh, 1000);
-	EXPECT_FLOAT_EQ(math.calcPI(1000, 10), 10.1);
+	EXPECT_FLOAT_EQ(math.calcPI(1000, 10, &model), 10.1);
 	EXPECT_NEAR(math.pumpAngleFuel(1000, &model), 50.1 * 1.5, 0.4); // Given the profile, should be 50% higher
 }
 
