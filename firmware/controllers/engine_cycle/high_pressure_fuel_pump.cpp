@@ -194,6 +194,7 @@ void HpfpController::pinTurnOn(HpfpController *self) {
 
 	// By scheduling the close after we already open, we don't have to worry if the engine
 	// stops, the valve will be turned off in a certain amount of time regardless.
+	// todo: we are somewhat confused about the logic? https://github.com/rusefi/rusefi/issues/7778
 	scheduleByAngle(&self->m_event.eventScheduling,
 			self->m_event.eventScheduling.getMomentNt(),
 			self->m_deadangle + engineConfiguration->hpfpActivationAngle,
@@ -242,6 +243,7 @@ void HpfpController::scheduleNextCycle() {
 		// Schedule this, even if we aren't opening the valve this time, since this
 		// will schedule the next lobe.
 		// todo: would it have been cleaner to schedule 'scheduleNextCycle' directly?
+		// todo: we are somewhat confused about the logic? https://github.com/rusefi/rusefi/issues/7778
 		engine->module<TriggerScheduler>()->schedule(
 			HPFP_CONTROLLER,
 			&m_event, lobeAngle,
