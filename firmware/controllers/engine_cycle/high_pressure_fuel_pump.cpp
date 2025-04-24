@@ -144,7 +144,6 @@ angle_t HpfpQuantity::pumpAngleFuel(float rpm, HpfpController *model) {
 	// Apply PI control
 	float fuel_requested_percentTotal = model->fuel_requested_percent + model->fuel_requested_percent_pi;
 
-
 	// Convert to degrees
 	return interpolate2d(fuel_requested_percentTotal,
 			config->hpfpLobeProfileQuantityBins,
