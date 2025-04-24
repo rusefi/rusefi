@@ -154,3 +154,9 @@ public:
 	bool isHpfpActive;
 	angle_t m_deadangle;
 };
+
+class MockLimpManager : public LimpManager {
+public:
+	MockLimpManager();
+	virtual ~MockLimpManager();
+};

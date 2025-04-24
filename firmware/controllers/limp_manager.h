@@ -90,6 +90,8 @@ struct LimpState {
 class LimpManager : public EngineModule {
 public:
 	ShutdownController shutdownController;
+	// Mockable<> interface
+	using interface_t = LimpManager;
 
 	// This is called from periodicFastCallback to update internal state
 	void updateState(float rpm, efitick_t nowNt);

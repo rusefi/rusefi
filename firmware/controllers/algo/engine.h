@@ -158,7 +158,7 @@ public:
 		KnockController,
 		SensorChecker,
 #if EFI_ENGINE_CONTROL
-		LimpManager,
+		Mockable<LimpManager>,
 #endif // EFI_ENGINE_CONTROL
 #if EFI_VVT_PID
 		VvtController1,
