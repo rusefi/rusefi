@@ -9,31 +9,32 @@ import java.io.File;
 import static com.devexperts.logging.Logging.getLogging;
 
 public class MaintenanceUtil {
-    private static final Logging log = getLogging(DfuFlasher.class);
+    private static final Logging log = getLogging(MaintenanceUtil.class);
 
     private static final String WMIC_PCAN_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%PCAN-USB%'\" get Caption,ConfigManagerErrorCode /format:list";
 
-    static boolean detectDevice(UpdateOperationCallbacks callbacks, String queryCommand, String pattern) {
+    static boolean detectDevice(UpdateOperationCallbacks callbacks, String queryCommand, String pattern, boolean valueInCaseOfError) {
         long now = System.currentTimeMillis();
         StringBuffer output = new StringBuffer();
         StringBuffer error = new StringBuffer();
         try {
             ExecHelper.executeCommand(queryCommand, callbacks, output, error, null);
         } catch (ErrorExecutingCommand e) {
+            log.error("Error: " + e);
             callbacks.logLine("IOError: " + e);
             // let's assume DFU is present just to give user more options
-            return true;
+            return valueInCaseOfError;
         }
         callbacks.logLine(output.toString());
         callbacks.logLine(error.toString());
         long cost = System.currentTimeMillis() - now;
-        log.info("DFU lookup cost " + cost + "ms");
+        log.info("detectDevice lookup cost " + cost + "ms");
         log.info(queryCommand + " says " + output);
         return output.toString().contains(pattern);
     }
 
     public static boolean detectPcan(UpdateOperationCallbacks wnd) {
-        return detectDevice(wnd, WMIC_PCAN_QUERY_COMMAND, "PCAN");
+        return detectDevice(wnd, WMIC_PCAN_QUERY_COMMAND, "PCAN", false);
     }
 
     public static long getBinaryModificationTimestamp() {

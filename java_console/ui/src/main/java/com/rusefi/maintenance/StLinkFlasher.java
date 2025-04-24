@@ -74,7 +74,7 @@ public class StLinkFlasher {
     }
 
     public static boolean detectStLink(UpdateOperationCallbacks wnd) {
-        return MaintenanceUtil.detectDevice(wnd, WMIC_STLINK_QUERY_COMMAND, "STLink");
+        return MaintenanceUtil.detectDevice(wnd, WMIC_STLINK_QUERY_COMMAND, "STLink", false);
     }
 
     @NotNull
