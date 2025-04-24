@@ -1,5 +1,6 @@
 package com.rusefi.maintenance;
 
+import com.devexperts.logging.Logging;
 import com.devexperts.util.TimeUtil;
 import com.rusefi.io.UpdateOperationCallbacks;
 import org.jetbrains.annotations.NotNull;
@@ -8,10 +9,14 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.TimeUnit;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 /**
  * @see SimulatorExecHelper
  */
 public class ExecHelper {
+    private static final Logging log = getLogging(ExecHelper.class);
+
     private static boolean isRunning(Process p) {
         try {
             p.exitValue();
@@ -92,6 +97,7 @@ public class ExecHelper {
             startStreamThread(p, p.getErrorStream(), error, callbacks);
             p.waitFor(3, TimeUnit.MINUTES);
         } catch (IOException e) {
+            log.info("executeCommand " + e);
             throw new ErrorExecutingCommand(e);
         } catch (InterruptedException e) {
             callbacks.logLine("WaitError: " + e);

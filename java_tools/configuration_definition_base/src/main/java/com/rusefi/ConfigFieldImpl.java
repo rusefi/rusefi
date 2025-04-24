@@ -133,10 +133,17 @@ public class ConfigFieldImpl implements ConfigField {
     }
 
     private static int getSize(VariableRegistry variableRegistry, String s) {
+        int retval;
         if (variableRegistry.intValues.containsKey(s)) {
             return variableRegistry.intValues.get(s);
         }
-        return Integer.parseInt(s);
+        try {
+            retval = Integer.parseInt(s);
+        } catch (NumberFormatException e) {
+            System.out.println("ERROR: ConfigFieldImpl getSize tried to parse '" + s + " as integer, probably for iterate line from output_channels.txt but it wasn't able to do so because variable was not found");
+            throw e;
+        }
+        return retval;
     }
 
     @Override

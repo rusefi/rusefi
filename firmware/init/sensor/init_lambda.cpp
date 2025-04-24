@@ -58,11 +58,6 @@ void initLambda() {
 			return;
 		}
 
-		if(isAdcChannelValid(engineConfiguration->afr.hwChannel)){
-			criticalError("Please pick either analog AFR or CAN AFR input not both.");
-			return;
-		}
-
 		registerCanSensor(aem1);
 		registerCanSensor(aem2);
 
@@ -83,6 +78,4 @@ void initLambda() {
 	if (isAdcChannelValid(engineConfiguration->afr.hwChannel2) || isUnitTest) {
 	  lambdaSensor2.Register();
   }
-	smoothedLambda1Sensor.Register();
-	smoothedLambda2Sensor.Register();
 }

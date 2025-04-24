@@ -4,7 +4,9 @@
 #include "dfco.h"
 
 bool DfcoController::getState() const {
-	if (!engineConfiguration->coastingFuelCutEnabled) {
+    // if not enabled and NOT overridden by toggle - say it's ot enabled
+    // if user has toggled toggle2- fall through
+	if ((!engineConfiguration->coastingFuelCutEnabled) && (engine->outputChannels.canButtonToggle2 == 0)) {
 		return false;
 	}
 
@@ -26,6 +28,11 @@ bool DfcoController::getState() const {
 	  // Lua might have reasons to disable
 		return false;
 	}
+
+    // canButtonToggle2 - DFCO means don't engage
+    if (engine->outputChannels.canButtonToggle2 == 1) {
+        return false;
+    }
 
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	float vss = Sensor::getOrZero(SensorType::VehicleSpeed);

@@ -45,6 +45,11 @@ public class LiveDataProcessor {
 
     private final String extraPrepend = System.getProperty("LiveDataProcessor.extra_prepend");
 
+    private final String generatedExtraPrepend = System.getProperty("LiveDataProcessor.generated_extra_prepend");
+
+    private final String globalExtraPrepend = System.getProperty("LiveDataProcessor.global_extra_prepend");
+
+
     public LiveDataProcessor(String yamlFileName, ReaderProvider readerProvider, LazyFile.LazyFileFactory fileFactory, String destinationFolder) {
         this.readerProvider = readerProvider;
         this.fileFactory = fileFactory;
@@ -197,6 +202,15 @@ public class LiveDataProcessor {
                     state.addDestination(fragmentDialogConsumer);
                 }
 
+                if (generatedExtraPrepend != null) {
+                    if (new File(generatedExtraPrepend).exists()) {
+                        log.info("generatedExtraPrepend=" + generatedExtraPrepend);
+                        state.addPrepend(generatedExtraPrepend);
+                    } else {
+                        log.info("generatedExtraPrepend=" + generatedExtraPrepend + " does not exist, skipping");
+                    }
+                }
+
                 if (extraPrepend != null) {
                     if (new File(extraPrepend).exists()) {
                         log.info("extraPrepend=" + extraPrepend);
@@ -205,6 +219,16 @@ public class LiveDataProcessor {
                         log.info("extraPrepend=" + extraPrepend + " does not exist, skipping");
                     }
                 }
+
+                if (globalExtraPrepend != null) {
+                    if (new File(globalExtraPrepend).exists()) {
+                        log.info("globalExtraPrepend=" + globalExtraPrepend);
+                        state.addPrepend(globalExtraPrepend);
+                    } else {
+                        log.info("globalExtraPrepend=" + globalExtraPrepend + " does not exist, skipping");
+                    }
+                }
+
                 state.addPrepend(prepend);
                 state.addCHeaderDestination(outFolder + File.separator + name + "_generated.h");
 

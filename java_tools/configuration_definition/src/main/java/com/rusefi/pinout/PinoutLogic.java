@@ -364,8 +364,33 @@ public class PinoutLogic {
             outputs.write(pinNamesForHwQC.toString());
             outputs.write("}\n");
 
+            try (Writer generated_prepend = boardInputs.getBoardGeneratedPrependWriter()) {
+                        generated_prepend.write("#define PROGPORTS " + getOutputsListInDefinedOrderCount() + "\n" );
+
+           }
+
         }
 
+    }
+
+    public String getOutputsListInDefinedOrder() {
+        StringBuilder sb = new StringBuilder();
+
+        for (String output : lowSideOutputs) {
+            String tsName = tsNameByMeta.get(output);
+            appendCommaIfNeeded(sb);
+            sb.append(quote(tsName));
+        }
+        for (String output : highSideOutputs) {
+            String tsName = tsNameByMeta.get(output);
+            appendCommaIfNeeded(sb);
+            sb.append(quote(tsName));
+        }
+        return sb.toString();
+    }
+
+    public int getOutputsListInDefinedOrderCount() {
+        return  (lowSideOutputs.size() + highSideOutputs.size() ) ;
     }
 
     private void readFiles() throws IOException {

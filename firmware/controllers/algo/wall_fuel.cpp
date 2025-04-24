@@ -91,11 +91,12 @@ float WallFuelController::computeTau() const {
 	// If you have a MAP sensor, apply MAP correction
 	if (Sensor::hasSensor(SensorType::Map)) {
 		auto map = Sensor::get(SensorType::Map).value_or(60);
+		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 
-		tau *= interpolate2d(
-			map,
-			config->wwMapBins,
-			config->wwTauMapValues
+		tau *= interpolate3d(
+			config->wwTauMapTable,
+			config->wwMapBins, map,
+			config->wwRpmBins, rpm
 		);
 	}
 
@@ -120,11 +121,12 @@ float WallFuelController::computeBeta() const {
 	// If you have a MAP sensor, apply MAP correction
 	if (Sensor::hasSensor(SensorType::Map)) {
 		auto map = Sensor::get(SensorType::Map).value_or(60);
+		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 
-		beta *= interpolate2d(
-			map,
-			config->wwMapBins,
-			config->wwBetaMapValues
+		beta *= interpolate3d(
+			config->wwBetaMapTable,
+			config->wwMapBins, map,
+			config->wwRpmBins, rpm
 		);
 	}
 
@@ -133,6 +135,12 @@ float WallFuelController::computeBeta() const {
 }
 
 void WallFuelController::onFastCallback() {
+	// disable if we are turned off explicitly.
+	if (engineConfiguration->wallWettingAeEnabled == 0) {
+		m_enable = false;
+		return;
+	}
+
 	// disable wall wetting cranking
 	// TODO: is this correct? Why not correct for cranking?
 	if (engine->rpmCalculator.isCranking()) {

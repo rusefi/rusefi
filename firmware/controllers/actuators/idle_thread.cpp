@@ -50,6 +50,11 @@ IIdleController::TargetInfo IdleController::getTargetRpm(float clt) {
  		);
  	}
 
+    // canBox commands extra idle RPM
+ 	if (engine->outputChannels.canButtonToggle3) {
+ 		target += config->canBoxIdleUpRpm;
+ 	}
+
  	idleTarget = target;
  	return { target, entryRpm, exitRpm };
 }
@@ -127,6 +132,12 @@ percent_t IdleController::getRunningOpenLoop(IIdleController::Phase phase, float
     if(engine->module<AcController>().unmock().acButtonState && phase == Phase::Idling) {
     	running += engineConfiguration->acIdleExtraOffset;
     }
+
+    // canBox commands extra idle %
+ 	if (engine->outputChannels.canButtonToggle3) {
+ 		running += config->canBoxIdleUpPercentage;
+ 	}
+
 
 	running += enginePins.fanRelay.getLogicValue() ? engineConfiguration->fan1ExtraIdle : 0;
 	running += enginePins.fanRelay2.getLogicValue() ? engineConfiguration->fan2ExtraIdle : 0;

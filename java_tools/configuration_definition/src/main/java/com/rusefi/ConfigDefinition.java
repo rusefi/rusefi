@@ -181,6 +181,12 @@ public class ConfigDefinition {
 
         if (pinoutLogic != null) {
             pinoutLogic.registerBoardSpecificPinNames(state.getVariableRegistry(), parseState, state.getEnumsReader());
+            // overwrite the cleanlist_enum with board_speciffic and outputs[] ordered list and array size
+            if (pinoutLogic.getInputFiles().size() > 0 ) {
+                state.getVariableRegistry().put("output_pin_e_cleanlist_enum", pinoutLogic.getOutputsListInDefinedOrder());
+                state.getVariableRegistry().register("PROGPORTS", pinoutLogic.getOutputsListInDefinedOrderCount());
+            }
+
         }
 
         if (tsInputFileFolder != null) {

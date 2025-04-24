@@ -123,7 +123,10 @@ public:
 			}
 		}
 
-		bool hasSecond = m_sec.init(secondary);
+		bool hasSecond = false;
+		if (!allowIdenticalSensors) {
+			hasSecond = m_sec.init(secondary);
+		}
 
         if (engineConfiguration->etbSplit <= 0 || engineConfiguration->etbSplit > MAX_TPS_PPS_DISCREPANCY) {
             engineConfiguration->etbSplit = MAX_TPS_PPS_DISCREPANCY;
@@ -223,10 +226,17 @@ void initTps() {
         } else
 #endif
         {
-		    analogTps1.init(isFordTps, &fordTps1, tpsSecondaryMaximum,
-    			{ engineConfiguration->tps1_1AdcChannel, (float)engineConfiguration->tpsMin, (float)engineConfiguration->tpsMax, minTpsPps, maxTpsPps },
-	    		{ engineConfiguration->tps1_2AdcChannel, (float)engineConfiguration->tps1SecondaryMin, (float)engineConfiguration->tps1SecondaryMax, minTpsPps, maxTpsPps }
-		    );
+        	if (!engineConfiguration->allowIdenticalPps) {
+        		analogTps1.init(isFordTps, &fordTps1, tpsSecondaryMaximum,
+				{ engineConfiguration->tps1_1AdcChannel, (float)engineConfiguration->tpsMin, (float)engineConfiguration->tpsMax, minTpsPps, maxTpsPps },
+				{ engineConfiguration->tps1_2AdcChannel, (float)engineConfiguration->tps1SecondaryMin, (float)engineConfiguration->tps1SecondaryMax, minTpsPps, maxTpsPps }
+				);
+        	} else {
+        		analogTps1.init(isFordTps, &fordTps1, tpsSecondaryMaximum,
+				{ engineConfiguration->tps1_1AdcChannel, (float)engineConfiguration->tpsMin, (float)engineConfiguration->tpsMax, minTpsPps, maxTpsPps },
+				{ engineConfiguration->tps1_1AdcChannel, (float)engineConfiguration->tpsMin, (float)engineConfiguration->tpsMax, minTpsPps, maxTpsPps }, true
+				);
+        	}
 		}
 
 		tps2.init(isFordTps, &fordTps2, tpsSecondaryMaximum,
@@ -241,11 +251,20 @@ void initTps() {
 		}
 
 	// Pedal sensors
-	pedal.init(isFordPps, &fordPps, ppsSecondaryMaximum,
-		{ engineConfiguration->throttlePedalPositionAdcChannel, engineConfiguration->throttlePedalUpVoltage, engineConfiguration->throttlePedalWOTVoltage, minTpsPps, maxTpsPps },
-		{ engineConfiguration->throttlePedalPositionSecondAdcChannel, engineConfiguration->throttlePedalSecondaryUpVoltage, engineConfiguration->throttlePedalSecondaryWOTVoltage, minTpsPps, maxTpsPps },
-		engineConfiguration->allowIdenticalPps
-	);
+		if (!engineConfiguration->allowIdenticalPps)
+		{
+			pedal.init(isFordPps, &fordPps, ppsSecondaryMaximum,
+			{ engineConfiguration->throttlePedalPositionAdcChannel, engineConfiguration->throttlePedalUpVoltage, engineConfiguration->throttlePedalWOTVoltage, minTpsPps, maxTpsPps },
+			{ engineConfiguration->throttlePedalPositionSecondAdcChannel, engineConfiguration->throttlePedalSecondaryUpVoltage, engineConfiguration->throttlePedalSecondaryWOTVoltage, minTpsPps, maxTpsPps },
+			engineConfiguration->allowIdenticalPps	   );
+		} else
+		{
+			pedal.init(isFordPps, &fordPps, ppsSecondaryMaximum,
+				{ engineConfiguration->throttlePedalPositionAdcChannel, engineConfiguration->throttlePedalUpVoltage, engineConfiguration->throttlePedalWOTVoltage, minTpsPps, maxTpsPps },
+				{ engineConfiguration->throttlePedalPositionAdcChannel, engineConfiguration->throttlePedalUpVoltage, engineConfiguration->throttlePedalWOTVoltage, minTpsPps, maxTpsPps },
+			true);
+
+		}
 
 		// TPS-like stuff that isn't actually a TPS
 		wastegate.init({ engineConfiguration->wastegatePositionSensor, (float)engineConfiguration->wastegatePositionMin, (float)engineConfiguration->wastegatePositionMax, minTpsPps, maxTpsPps });

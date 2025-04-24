@@ -112,6 +112,9 @@ This uses separate ignition timing and VE tables not only for idle conditions, a
 ### launchControlEnabled
 
 
+### tempPumpLimitCheck
+
+
 ### antiLagEnabled
 
 
@@ -1861,6 +1864,24 @@ This is the pressure at which your injector flow is known.\nFor example if your 
 ### nitrousControlEnabled
 
 
+### tpsAccelAeEnabled
+TPS acceleration enrichment enabled
+
+### wallWettingAeEnabled
+Wall wetting accelerating enrichment enabled
+
+### useMapEstimateDuringTransient
+During the TPS AE period, use the MAP estimate table value instead of true MAP (if greater than real MAP). This basically briefly runs in alpha-n during a transient, then returns to normal speed-density mode.
+
+### allowDFUwithIgn
+danger zone - allow entry into DFU with 12v active - if injection/ignition is connected to usart1/usart3, their state is unpredictable in DFU
+
+### STFTResetRegionChange
+reset STFT on region change
+
+### fixSyncMisfire
+don't reset instantRPM to 0 at cam sync
+
 ### nitrousLuaGaugeArmingValue
 
 
@@ -1924,6 +1945,15 @@ Delay before cutting fuel due to extra high oil pressure. Use this to ignore sho
 ### idleReturnTargetRampDuration
 idle return target ramp duration
 
+### pedalToTpsIndex
+which PPS to TPS table to use
+
+### afrTrimRangeMax
+"maximum afr trim"
+
+### afrTrimRangeMin
+"minimum afr trim"
+
 ### tcu_shiftTime
 
 
@@ -1968,4 +1998,40 @@ idle return target ramp duration
 
 ### dynoCarFrontalAreaM2
 @@DYNO_CAR_FRONTAL_AREA_TOOLTIP@@
+
+### resetCanToggleInhibit1
+can_reset command resets canToggle1 - launch control
+
+### resetCanToggleInhibit2
+can_reset command resets canToggle2 - DFCO invert
+
+### resetCanToggleInhibit3
+can_reset command resets canToggle3 - can box idle up
+
+### resetCanToggleInhibit4
+can_reset command resets canToggle4 - air conditioning
+
+### resetCanToggleInhibit5
+can_reset command resets canToggle5
+
+### resetCanToggleInhibit6
+can_reset command resets canToggle6
+
+### resetCanToggleInhibit7
+can_reset command resets canToggle7
+
+### resetCanToggleInhibit8
+can_reset command resets canToggle8
+
+### canBoxIdleUpRpm
+"can box idle up demand"
+
+### canBoxIdleUpPercentage
+"can box idle up demand %"
+
+### userlevel
+null
+
+### technicalDebt7738
+null
 

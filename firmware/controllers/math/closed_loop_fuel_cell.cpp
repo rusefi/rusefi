@@ -2,6 +2,9 @@
 
 #include "closed_loop_fuel_cell.h"
 
+#include "airmass.h"
+#include "fuel_math.h"
+
 #if EFI_ENGINE_CONTROL
 
 constexpr float integrator_dt = FAST_CALLBACK_PERIOD_MS * 0.001f;
@@ -59,37 +62,77 @@ float ClosedLoopFuelCellImpl::getLambdaError() const {
 }
 
 #define MAX_ADJ (0.25f)
+void ClosedLoopFuelCellBase::setAdjustment(float setval) {
+  m_adjustment = setval;
+}
 
 float ClosedLoopFuelCellImpl::getMaxAdjustment() const {
-	if (!m_config) {
-		// If no config, disallow adjustment.
-		return 0;
+	if (!m_config || !engineConfiguration->fuelClosedLoopCorrectionEnabled) {
+		return 0.0f;
 	}
 
-	float raw = m_config->maxAdd * 0.01f;
+	auto rpm = Sensor::getOrZero(SensorType::Rpm);
+
+	auto model = getAirmassModel(engineConfiguration->fuelAlgorithm);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, model != nullptr, "Invalid airmass mode", 0.0f);
+
+	auto airmass = model->getAirmass(rpm, true);
+
+	float raw  = interpolate3d(
+		config->stftAuthorityAddFuelTable,
+		config->stftTimeConstLoadBins, airmass.EngineLoadPercent,
+		config->stftTimeConstRpmBins, rpm
+	) * 0.01f;
+
+
+
+	// float raw = m_config->maxAdd * 0.01f;
 	// Don't allow maximum less than 0, or more than maximum adjustment
 	return clampF(0, raw, MAX_ADJ);
 }
 
 float ClosedLoopFuelCellImpl::getMinAdjustment() const {
-	if (!m_config) {
-		// If no config, disallow adjustment.
-		return 0;
+	if (!m_config || !engineConfiguration->fuelClosedLoopCorrectionEnabled) {
+		return 0.0f;
 	}
 
-	float raw = m_config->maxRemove * 0.01f;
+	auto rpm = Sensor::getOrZero(SensorType::Rpm);
+
+	auto model = getAirmassModel(engineConfiguration->fuelAlgorithm);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, model != nullptr, "Invalid airmass mode", 0.0f);
+
+	auto airmass = model->getAirmass(rpm, true);
+
+    float raw  = -interpolate3d(
+		config->stftAuthorityRemoveFuelTable,
+		config->stftTimeConstLoadBins, airmass.EngineLoadPercent,
+		config->stftTimeConstRpmBins, rpm
+	) * 0.01f;
+
 	// Don't allow minimum more than 0, or more than maximum adjustment
 	return clampF(-MAX_ADJ, raw, 0);
 }
 
 float ClosedLoopFuelCellImpl::getIntegratorGain() const {
-	if (!m_config) {
-		// If no config, disallow adjustment.
+	if (!m_config || !engineConfiguration->fuelClosedLoopCorrectionEnabled) {
 		return 0.0f;
 	}
 
-	// Clamp to reasonable limits - 100ms to 100s
-	float timeConstant = clampF(0.1f, m_config->timeConstant, 100);
+	auto rpm = Sensor::getOrZero(SensorType::Rpm);
+
+	auto model = getAirmassModel(engineConfiguration->fuelAlgorithm);
+	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, model != nullptr, "Invalid airmass mode", 0.0f);
+
+	auto airmass = model->getAirmass(rpm, true);
+
+	float timeConst = interpolate3d(
+		config->stftTimeConstTable,
+		config->stftTimeConstLoadBins, airmass.EngineLoadPercent,
+		config->stftTimeConstRpmBins, rpm
+	);
+
+	// Clamp to  10ms to 100s
+	float timeConstant = clampF(0.01f, timeConst, 100);
 
 	return 1 / timeConstant;
 }

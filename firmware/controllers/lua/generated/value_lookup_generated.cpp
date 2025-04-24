@@ -119,6 +119,9 @@ float getConfigValueByName(const char *name) {
 // launchControlEnabled
 		case -338157684:
 			return engineConfiguration->launchControlEnabled;
+// tempPumpLimitCheck
+		case -248021158:
+			return engineConfiguration->tempPumpLimitCheck;
 // antiLagEnabled
 		case -933524784:
 			return engineConfiguration->antiLagEnabled;
@@ -1868,6 +1871,24 @@ float getConfigValueByName(const char *name) {
 // nitrousControlEnabled
 		case -582951931:
 			return engineConfiguration->nitrousControlEnabled;
+// tpsAccelAeEnabled
+		case -687006075:
+			return engineConfiguration->tpsAccelAeEnabled;
+// wallWettingAeEnabled
+		case -1652586744:
+			return engineConfiguration->wallWettingAeEnabled;
+// useMapEstimateDuringTransient
+		case -725051987:
+			return engineConfiguration->useMapEstimateDuringTransient;
+// allowDFUwithIgn
+		case -411193027:
+			return engineConfiguration->allowDFUwithIgn;
+// STFTResetRegionChange
+		case -848735021:
+			return engineConfiguration->STFTResetRegionChange;
+// fixSyncMisfire
+		case 678545432:
+			return engineConfiguration->fixSyncMisfire;
 // nitrousLuaGaugeArmingValue
 		case -1760115393:
 			return engineConfiguration->nitrousLuaGaugeArmingValue;
@@ -1931,6 +1952,15 @@ float getConfigValueByName(const char *name) {
 // idleReturnTargetRampDuration
 		case 62925536:
 			return engineConfiguration->idleReturnTargetRampDuration;
+// pedalToTpsIndex
+		case 1596433789:
+			return engineConfiguration->pedalToTpsIndex;
+// afrTrimRangeMax
+		case -1506146739:
+			return engineConfiguration->afrTrimRangeMax;
+// afrTrimRangeMin
+		case -1506146485:
+			return engineConfiguration->afrTrimRangeMin;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -1976,6 +2006,42 @@ float getConfigValueByName(const char *name) {
 // dynoCarFrontalAreaM2
 		case -1661556925:
 			return config->dynoCarFrontalAreaM2;
+// resetCanToggleInhibit1
+		case -2036098060:
+			return config->resetCanToggleInhibit1;
+// resetCanToggleInhibit2
+		case -2036098059:
+			return config->resetCanToggleInhibit2;
+// resetCanToggleInhibit3
+		case -2036098058:
+			return config->resetCanToggleInhibit3;
+// resetCanToggleInhibit4
+		case -2036098057:
+			return config->resetCanToggleInhibit4;
+// resetCanToggleInhibit5
+		case -2036098056:
+			return config->resetCanToggleInhibit5;
+// resetCanToggleInhibit6
+		case -2036098055:
+			return config->resetCanToggleInhibit6;
+// resetCanToggleInhibit7
+		case -2036098054:
+			return config->resetCanToggleInhibit7;
+// resetCanToggleInhibit8
+		case -2036098053:
+			return config->resetCanToggleInhibit8;
+// canBoxIdleUpRpm
+		case 1068607666:
+			return config->canBoxIdleUpRpm;
+// canBoxIdleUpPercentage
+		case 1414277985:
+			return config->canBoxIdleUpPercentage;
+// userlevel
+		case -1055875812:
+			return config->userlevel;
+// technicalDebt7738
+		case 218340072:
+			return config->technicalDebt7738;
 	}
 	return EFI_ERROR_CODE;
 }
@@ -2170,6 +2236,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -338157684:
 	{
 		engineConfiguration->launchControlEnabled = (int)value;
+		return 1;
+	}
+		case -248021158:
+	{
+		engineConfiguration->tempPumpLimitCheck = (int)value;
 		return 1;
 	}
 		case -933524784:
@@ -5087,6 +5158,36 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->nitrousControlEnabled = (int)value;
 		return 1;
 	}
+		case -687006075:
+	{
+		engineConfiguration->tpsAccelAeEnabled = (int)value;
+		return 1;
+	}
+		case -1652586744:
+	{
+		engineConfiguration->wallWettingAeEnabled = (int)value;
+		return 1;
+	}
+		case -725051987:
+	{
+		engineConfiguration->useMapEstimateDuringTransient = (int)value;
+		return 1;
+	}
+		case -411193027:
+	{
+		engineConfiguration->allowDFUwithIgn = (int)value;
+		return 1;
+	}
+		case -848735021:
+	{
+		engineConfiguration->STFTResetRegionChange = (int)value;
+		return 1;
+	}
+		case 678545432:
+	{
+		engineConfiguration->fixSyncMisfire = (int)value;
+		return 1;
+	}
 		case -1760115393:
 	{
 		engineConfiguration->nitrousLuaGaugeArmingValue = value;
@@ -5192,6 +5293,21 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->idleReturnTargetRampDuration = (int)value;
 		return 1;
 	}
+		case 1596433789:
+	{
+		engineConfiguration->pedalToTpsIndex = (int)value;
+		return 1;
+	}
+		case -1506146739:
+	{
+		engineConfiguration->afrTrimRangeMax = value;
+		return 1;
+	}
+		case -1506146485:
+	{
+		engineConfiguration->afrTrimRangeMin = value;
+		return 1;
+	}
 		case -1658957891:
 	{
 		config->tcu_shiftTime = value;
@@ -5265,6 +5381,66 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1661556925:
 	{
 		config->dynoCarFrontalAreaM2 = value;
+		return 1;
+	}
+		case -2036098060:
+	{
+		config->resetCanToggleInhibit1 = (int)value;
+		return 1;
+	}
+		case -2036098059:
+	{
+		config->resetCanToggleInhibit2 = (int)value;
+		return 1;
+	}
+		case -2036098058:
+	{
+		config->resetCanToggleInhibit3 = (int)value;
+		return 1;
+	}
+		case -2036098057:
+	{
+		config->resetCanToggleInhibit4 = (int)value;
+		return 1;
+	}
+		case -2036098056:
+	{
+		config->resetCanToggleInhibit5 = (int)value;
+		return 1;
+	}
+		case -2036098055:
+	{
+		config->resetCanToggleInhibit6 = (int)value;
+		return 1;
+	}
+		case -2036098054:
+	{
+		config->resetCanToggleInhibit7 = (int)value;
+		return 1;
+	}
+		case -2036098053:
+	{
+		config->resetCanToggleInhibit8 = (int)value;
+		return 1;
+	}
+		case 1068607666:
+	{
+		config->canBoxIdleUpRpm = (int)value;
+		return 1;
+	}
+		case 1414277985:
+	{
+		config->canBoxIdleUpPercentage = value;
+		return 1;
+	}
+		case -1055875812:
+	{
+		config->userlevel = (int)value;
+		return 1;
+	}
+		case 218340072:
+	{
+		config->technicalDebt7738 = (int)value;
 		return 1;
 	}
 	}

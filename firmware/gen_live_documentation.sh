@@ -11,6 +11,8 @@ java -DSystemOut.name=logs/gen_live_documentation \
 java -DSystemOut.name=logs/gen_live_documentation \
  -cp ../java_tools/configuration_definition_base/build/libs/config_definition_base-all.jar \
  -DLiveDataProcessor.extra_prepend=${BOARD_DIR}/prepend.txt \
+ -DLiveDataProcessor.generated_extra_prepend=${BOARD_DIR}/generated_prepend.txt \
+ -DLiveDataProcessor.global_extra_prepend=integration/global_prepend.txt \
  com.rusefi.ldmp.LiveDataProcessor \
   integration/LiveData.yaml${EXTRA_LIVE_DATA_FILE} \
   integration/rusefi_config_trigger.txt \

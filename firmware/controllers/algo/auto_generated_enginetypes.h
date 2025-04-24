@@ -11,4 +11,5 @@ const char *getDebug_mode_e(debug_mode_e value);
 const char *getTrigger_type_e(trigger_type_e value);
 #endif //__cplusplus
 const char *getTs_14_command(ts_14_command value);
+const char *getTs_buttonbox_e(ts_buttonbox_e value);
 const char *getTs_command_e(ts_command_e value);

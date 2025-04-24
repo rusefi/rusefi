@@ -51,7 +51,14 @@ float SpeedDensityAirmass::getAirflow(float rpm, float map, bool postState) {
 }
 
 float SpeedDensityAirmass::getMap(float rpm, bool postState) const {
-	float fallbackMap = m_mapEstimationTable->getValue(rpm, Sensor::getOrZero(SensorType::Tps1));
+	auto wotTps = interpolate2d(Sensor::getOrZero(SensorType::Rpm), config->wotTpsRpmBins, config->wotTpsValues);
+	auto tps =  Sensor::getOrZero(SensorType::Tps1);
+	// if wotTps is out of range, it's 100.
+	if (wotTps <= 0 || wotTps > 100 || tps > wotTps) {
+		wotTps = 100;
+	}
+
+	float fallbackMap = m_mapEstimationTable->getValue(rpm, tps);
 
 #if EFI_TUNER_STUDIO
 	if (postState) {
@@ -59,5 +66,19 @@ float SpeedDensityAirmass::getMap(float rpm, bool postState) const {
 	}
 #endif // EFI_TUNER_STUDIO
 
-	return Sensor::get(SensorType::Map).value_or(fallbackMap);
+	auto map = Sensor::get(SensorType::Map);
+	if (!map) {
+		// MAP sensor is dead, nothing we can do
+		return fallbackMap;
+	} else if (engineConfiguration->useMapEstimateDuringTransient && engine->module<TpsAccelEnrichment>()->isAboveAccelThreshold) {
+	// TODO: add taper here
+		// Take the greater of real or estimated map based on scaled up TPS from wotTps so we don't under-fuel on a transient
+		fallbackMap = m_mapEstimationTable->getValue(rpm, (100/wotTps) * tps);
+		engine->outputChannels.fallbackMap = fallbackMap;
+		return std::max(map.Value,  fallbackMap);
+
+	} else {
+		// Normal operation,
+		return map.Value;
+	}
 }

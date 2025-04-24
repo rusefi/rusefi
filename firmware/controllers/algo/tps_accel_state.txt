@@ -27,5 +27,8 @@ float fractionalInjFuel
 	floatms_t maxInjectedPerPeriod
 	int cycleCnt
 
+percent_t wotTps;Fuel: WOT TPS
+percent_t tpsFromScaled;Fuel: TPS AE fromScaled
+percent_t tpsToScaled;Fuel: TPS AE toScaled
 
 end_struct

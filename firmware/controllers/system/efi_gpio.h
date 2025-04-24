@@ -133,6 +133,7 @@ public:
 	OutputPin tcuTccPwmSolenoid;
 	OutputPin tcuPcSolenoid;
 	OutputPin tcu32Solenoid;
+	OutputPin progPorts[PROGPORTS];
 
 private:
 	void startInjectionPins();

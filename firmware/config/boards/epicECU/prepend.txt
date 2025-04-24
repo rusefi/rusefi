@@ -1,0 +1,23 @@
+#define ts_show_etb_pins true
+#define ts_show_tcu false
+#define ts_show_software_knock true
+#define ts_show_injectionPinMode true
+#define ts_show_output_diag flase
+#define ts_show_gdi false
+#define ts_show_k_line false
+#define ts_show_hip9011 false
+#define show_tcu_gauges false
+#define MAX_TPS_PPS_DISCREPANCY 15
+
+! board has zero LEDs
+#define ts_show_status_leds false
+
+#define VE_RPM_COUNT 32
+#define VE_LOAD_COUNT 32
+#define FUEL_RPM_COUNT 32
+#define FUEL_LOAD_COUNT 32
+#define IGN_LOAD_COUNT 32
+#define IGN_RPM_COUNT 32
+#define ETB_HW_MAX_FREQUENCY 25000
+! huge buffer for happier remote TCP/IP connector
+#define CUSTOM_TS_BUFFER_SIZE 32000

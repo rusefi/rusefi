@@ -435,6 +435,7 @@ struct Mockhpfp : public MockHpfpController {
 
 TEST(limp, hpfpFuelCut) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->tempPumpLimitCheck = true;
 
 	// configure GDI engine for tests:
 	engineConfiguration->hpfpCam = HPFP_CAM_NONE;

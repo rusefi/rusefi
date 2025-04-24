@@ -1447,7 +1447,7 @@ struct output_channels_s {
 	/**
 	 * offset 828
 	 */
-	uint8_t sd_error = (uint8_t)0;
+	int8_t pedalToTpsIndex = (int8_t)0;
 	/**
 	 * need 4 byte alignment
 	 * units: units
@@ -1455,19 +1455,160 @@ struct output_channels_s {
 	 */
 	uint8_t alignmentFill_at_829[3] = {};
 	/**
+	 * Global target AFR trim
+	 * units: %
 	 * offset 832
 	 */
-	uint32_t fastAdcPeriod = (uint32_t)0;
+	float globalAFRTrim = (float)0;
 	/**
 	 * offset 836
 	 */
-	uint32_t fastAdcConversionCount = (uint32_t)0;
+	uint16_t lastCanButtonSeen = (uint16_t)0;
+	/**
+	 * offset 838
+	 */
+	uint16_t lastCanButtonFoundIdx = (uint16_t)0;
 	/**
 	 * offset 840
 	 */
+	uint8_t sd_error = (uint8_t)0;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 841
+	 */
+	uint8_t alignmentFill_at_841[3] = {};
+	/**
+	 * offset 844
+	 */
+	uint32_t fastAdcPeriod = (uint32_t)0;
+	/**
+	 * offset 848
+	 */
+	uint32_t fastAdcConversionCount = (uint32_t)0;
+	/**
+	 * canButtons18
+	 * offset 852
+	 */
+	uint8_t canButtons18 = (uint8_t)0;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 853
+	 */
+	uint8_t alignmentFill_at_853[3] = {};
+	/**
+	offset 856 bit 0 */
+	bool canButtonToggle1 : 1 {};
+	/**
+	offset 856 bit 1 */
+	bool canButtonToggle2 : 1 {};
+	/**
+	offset 856 bit 2 */
+	bool canButtonToggle3 : 1 {};
+	/**
+	offset 856 bit 3 */
+	bool canButtonToggle4 : 1 {};
+	/**
+	offset 856 bit 4 */
+	bool canButtonToggle5 : 1 {};
+	/**
+	offset 856 bit 5 */
+	bool canButtonToggle6 : 1 {};
+	/**
+	offset 856 bit 6 */
+	bool canButtonToggle7 : 1 {};
+	/**
+	offset 856 bit 7 */
+	bool canButtonToggle8 : 1 {};
+	/**
+	offset 856 bit 8 */
+	bool unusedBit_316_8 : 1 {};
+	/**
+	offset 856 bit 9 */
+	bool unusedBit_316_9 : 1 {};
+	/**
+	offset 856 bit 10 */
+	bool unusedBit_316_10 : 1 {};
+	/**
+	offset 856 bit 11 */
+	bool unusedBit_316_11 : 1 {};
+	/**
+	offset 856 bit 12 */
+	bool unusedBit_316_12 : 1 {};
+	/**
+	offset 856 bit 13 */
+	bool unusedBit_316_13 : 1 {};
+	/**
+	offset 856 bit 14 */
+	bool unusedBit_316_14 : 1 {};
+	/**
+	offset 856 bit 15 */
+	bool unusedBit_316_15 : 1 {};
+	/**
+	offset 856 bit 16 */
+	bool unusedBit_316_16 : 1 {};
+	/**
+	offset 856 bit 17 */
+	bool unusedBit_316_17 : 1 {};
+	/**
+	offset 856 bit 18 */
+	bool unusedBit_316_18 : 1 {};
+	/**
+	offset 856 bit 19 */
+	bool unusedBit_316_19 : 1 {};
+	/**
+	offset 856 bit 20 */
+	bool unusedBit_316_20 : 1 {};
+	/**
+	offset 856 bit 21 */
+	bool unusedBit_316_21 : 1 {};
+	/**
+	offset 856 bit 22 */
+	bool unusedBit_316_22 : 1 {};
+	/**
+	offset 856 bit 23 */
+	bool unusedBit_316_23 : 1 {};
+	/**
+	offset 856 bit 24 */
+	bool unusedBit_316_24 : 1 {};
+	/**
+	offset 856 bit 25 */
+	bool unusedBit_316_25 : 1 {};
+	/**
+	offset 856 bit 26 */
+	bool unusedBit_316_26 : 1 {};
+	/**
+	offset 856 bit 27 */
+	bool unusedBit_316_27 : 1 {};
+	/**
+	offset 856 bit 28 */
+	bool unusedBit_316_28 : 1 {};
+	/**
+	offset 856 bit 29 */
+	bool unusedBit_316_29 : 1 {};
+	/**
+	offset 856 bit 30 */
+	bool unusedBit_316_30 : 1 {};
+	/**
+	offset 856 bit 31 */
+	bool unusedBit_316_31 : 1 {};
+	/**
+	 * offset 860
+	 */
+	uint8_t progPortOutput[PROGPORTS] = {};
+	/**
+	 * offset 974
+	 */
 	uint8_t unusedAtTheEnd[36] = {};
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 1010
+	 */
+	uint8_t alignmentFill_at_1010[2] = {};
 };
-static_assert(sizeof(output_channels_s) == 876);
+static_assert(sizeof(output_channels_s) == 1012);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt
