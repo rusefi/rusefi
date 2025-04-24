@@ -212,6 +212,7 @@ void setGmLnf() {
   setGmGdi();
   engineConfiguration->displacement = 2.0;
   strcpy(engineConfiguration->engineCode, "LNF");
+  setTPS1Calibration(880, 129, 118, 870);
   // todo: engineConfiguration->hpfpCam = HPFP_CAM_IN1;
 #ifdef HW_HELLEN_8CHAN
   engineConfiguration->vvtMode[1] = VVT_BOSCH_QUICK_START;
