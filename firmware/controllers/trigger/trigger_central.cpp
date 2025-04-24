@@ -1122,15 +1122,7 @@ static void calculateTriggerSynchPoint(
 
 TriggerDecoderBase initState("init");
 
-void TriggerCentral::applyShapesConfiguration() {
-	// Re-read config in case it's changed
-	primaryTriggerConfiguration.update();
-	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
-		vvtTriggerConfiguration[camIndex].update();
-	}
-
-	triggerShape.initializeTriggerWaveform(lookupOperationMode(), primaryTriggerConfiguration.TriggerType);
-
+void TriggerCentral::applyTriggerGapOverride() {
 	/**
 	 * this is only useful while troubleshooting a new trigger shape in the field
 	 * in very VERY rare circumstances
@@ -1153,24 +1145,9 @@ void TriggerCentral::applyShapesConfiguration() {
 			triggerShape.synchronizationRatioTo[gapIndex] = NAN;
 		}
 	}
+}
 
-	if (!triggerShape.shapeDefinitionError) {
-		int length = triggerShape.getLength();
-		engineCycleEventCount = length;
-
-		efiAssertVoid(ObdCode::CUSTOM_SHAPE_LEN_ZERO, length > 0, "shapeLength=0");
-
-		triggerErrorDetection.clear();
-
-		/**
-	 	 * 'initState' instance of TriggerDecoderBase is used only to initialize 'this' TriggerWaveform instance
-	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
-	 	 */
-		calculateTriggerSynchPoint(primaryTriggerConfiguration,
-				triggerShape,
-				initState);
-	}
-
+void TriggerCentral::applyCamGapOverride() {
     if (engineConfiguration->overrideVvtTriggerGaps) {
         int gapIndex = 0;
 
@@ -1189,6 +1166,37 @@ void TriggerCentral::applyShapesConfiguration() {
 			shape->synchronizationRatioTo[gapIndex] = NAN;
 		}
     }
+}
+
+void TriggerCentral::applyShapesConfiguration() {
+	// Re-read config in case it's changed
+	primaryTriggerConfiguration.update();
+	for (int camIndex = 0;camIndex < CAMS_PER_BANK;camIndex++) {
+		vvtTriggerConfiguration[camIndex].update();
+	}
+
+	triggerShape.initializeTriggerWaveform(lookupOperationMode(), primaryTriggerConfiguration.TriggerType);
+
+  applyTriggerGapOverride();
+
+	if (!triggerShape.shapeDefinitionError) {
+		int length = triggerShape.getLength();
+		engineCycleEventCount = length;
+
+		efiAssertVoid(ObdCode::CUSTOM_SHAPE_LEN_ZERO, length > 0, "shapeLength=0");
+
+		triggerErrorDetection.clear();
+
+		/**
+	 	 * 'initState' instance of TriggerDecoderBase is used only to initialize 'this' TriggerWaveform instance
+	 	 * #192 BUG real hardware trigger events could be coming even while we are initializing trigger
+	 	 */
+		calculateTriggerSynchPoint(primaryTriggerConfiguration,
+				triggerShape,
+				initState);
+	}
+
+  applyCamGapOverride();
 
 	for (int camIndex = 0; camIndex < CAMS_PER_BANK; camIndex++) {
 		// todo: should 'vvtWithRealDecoder' be used here?
