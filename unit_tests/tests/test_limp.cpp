@@ -440,6 +440,7 @@ TEST(limp, hpfpFuelCut) {
 	engineConfiguration->hpfpCam = HPFP_CAM_NONE;
 	engineConfiguration->hpfpCamLobes = 4;
 	engine->rpmCalculator.setRpmValue(1000);
+	engineConfiguration->tempPumpLimitCheck = true;
 
 	// mock & configure HPFP controller
 	Mockhpfp hpfp;
