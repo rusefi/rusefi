@@ -45,7 +45,7 @@ void MainLoop::PeriodicTask(efitick_t nowNt) {
 
 #if HAL_USE_ADC
 	if (currentLoopPeriod & ADC_UPDATE_RATE) {
-		// TODO: main_loop adc callback
+		updateSlowAdc(nowNt);
 	}
 #endif // HAL_USE_ADC
 
