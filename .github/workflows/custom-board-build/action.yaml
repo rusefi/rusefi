@@ -324,7 +324,7 @@ runs:
         if [ "$RUN_SIMULATOR" == "true" ]; then
           TARGETS=("../simulator/build/rusefi_simulator.linux")
         fi
-        bash bin/compile.sh $BOARD_META_PATH --output-sync=recurse ${{inputs.artifacts}} ${{inputs.uploads}} ${TARGETS[@]}
+        bash bin/compile.sh $BOARD_META_PATH --output-sync=recurse ${{inputs.artifacts}} ${{inputs.extra_makefile_targets}} ${TARGETS[@]}
 
     - name: Ftp Upload Both Bundles
       if: ${{ contains(inputs.uploads, 'ftp_upload_bundles') }}
