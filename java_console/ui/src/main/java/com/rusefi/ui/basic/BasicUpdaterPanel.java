@@ -122,6 +122,7 @@ public class BasicUpdaterPanel {
     }
 
     private void updateUpdateFirmwareJob(final AvailableHardware currentHardware) {
+        log.info("updateUpdateFirmwareJob " + currentHardware);
         if (currentHardware.isDfuFound()) {
             setUpdateFirmwareJob(new DfuManualJob());
         } else {
