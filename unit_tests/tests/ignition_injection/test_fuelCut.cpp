@@ -15,6 +15,7 @@ using ::testing::_;
 #define EXPECT_NORMAL() EXPECT_FLOAT_EQ(normalInjDuration, engine->engineState.injectionDuration)
 #define EXPECT_CUT() EXPECT_FLOAT_EQ(0, engine->engineState.injectionDuration)
 
+#if FUEL_RPM_COUNT == 16
 TEST(fuelCut, coasting) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
@@ -129,7 +130,9 @@ TEST(fuelCut, coasting) {
 	eth.engine.periodicFastCallback();
 	EXPECT_CUT();
 }
+#endif //FUEL_RPM_COUNT == 16
 
+#if FUEL_RPM_COUNT == 16
 TEST(fuelCut, delay) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	EXPECT_CALL(*eth.mockAirmass, getAirmass(_, _))
@@ -199,3 +202,4 @@ TEST(fuelCut, delay) {
 	eth.engine.periodicFastCallback();
 	EXPECT_NORMAL();
 }
+#endif //FUEL_RPM_COUNT == 16

@@ -200,6 +200,7 @@ TEST(AirmassModes, FallbackMap) {
 
 void setInjectionMode(int value);
 
+#if FUEL_RPM_COUNT == 16
 TEST(FuelMath, testDifferentInjectionModes) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
@@ -224,7 +225,9 @@ TEST(FuelMath, testDifferentInjectionModes) {
 	EXPECT_FLOAT_EQ( 40,  engine->engineState.injectionDuration) << "injection while IM_SINGLE_POINT";
 	EXPECT_EQ( 0, eth.recentWarnings()->getCount()) << "warningCounter#testDifferentInjectionModes";
 }
+#endif //FUEL_RPM_COUNT == 16
 
+#if FUEL_RPM_COUNT == 16
 TEST(FuelMath, deadtime) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
@@ -244,8 +247,10 @@ TEST(FuelMath, deadtime) {
 	engine->periodicFastCallback();
 	EXPECT_FLOAT_EQ( 20 + 2,  engine->engineState.injectionDuration);
 }
+#endif //FUEL_RPM_COUNT == 16
 
 #ifndef SUPPRESS_FUEL_MATH_FUEL_TRIM_TEST
+#if FUEL_RPM_COUNT == 16
 TEST(FuelMath, CylinderFuelTrim) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 
@@ -267,6 +272,7 @@ TEST(FuelMath, CylinderFuelTrim) {
 	EXPECT_NEAR(engine->engineState.injectionMass[2], unadjusted * 1.02, EPS4D);
 	EXPECT_NEAR(engine->engineState.injectionMass[3], unadjusted * 1.04, EPS4D);
 }
+#endif //FUEL_RPM_COUNT == 16
 #endif
 
 struct MockIdle : public MockIdleController {
