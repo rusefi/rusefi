@@ -26,7 +26,7 @@
 
 ! 0x42 burnCommand
 #define TS_BURN_COMMAND 'B'
-! 0x77
+! 0x5A custom rusEFI command
 #define TS_IO_TEST_COMMAND 'Z'
 
 #define TS_RESPONSE_OK 0
