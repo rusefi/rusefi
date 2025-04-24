@@ -16,6 +16,7 @@ static void assertToggleCounterExtra(EngineTestHelper *eth, size_t extra, const 
 	hpfpTotalToggle += extra;
 }
 
+#if FUEL_RPM_COUNT == 16
 TEST(HPFP, IntegratedSchedule) {
 	extern bool unitTestTaskPrecisionHack;
 	unitTestTaskPrecisionHack = true;
@@ -59,5 +60,5 @@ TEST(HPFP, IntegratedSchedule) {
 
 	assertToggleCounterExtra(&eth, 6, "#5");
 }
-
+#endif //FUEL_RPM_COUNT == 16
 

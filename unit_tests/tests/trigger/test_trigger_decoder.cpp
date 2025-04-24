@@ -778,11 +778,14 @@ void setInjectionMode(int value) {
 	incrementGlobalConfigurationVersion();
 }
 
+#if FUEL_RPM_COUNT == 16
 TEST(big, testFuelSchedulerBug299smallAndMedium) {
 	doTestFuelSchedulerBug299smallAndMedium(0);
 	doTestFuelSchedulerBug299smallAndMedium(1000);
 }
+#endif //FUEL_RPM_COUNT == 16
 
+#if FUEL_RPM_COUNT == 16
 TEST(big, testTwoWireBatch) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setTable(config->injectionPhase, -180.0f);
@@ -809,7 +812,9 @@ TEST(big, testTwoWireBatch) {
 	assertInjectionEventBatch("#2@", &t->elements[2],		3, 0, 0, 153);	// Cyl 4 and 1
 	assertInjectionEventBatch("inj#3@", &t->elements[3],	1, 2, 0, 153 + 180);	// Cyl 2 and 3
 }
+#endif //FUEL_RPM_COUNT == 16
 
+#if FUEL_RPM_COUNT == 16
 TEST(big, testSequential) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setTable(config->injectionPhase, -180.0f);
@@ -837,7 +842,9 @@ TEST(big, testSequential) {
 	assertInjectionEvent("#2@", &t->elements[2],	3, 0, 126);	// Cyl 4
 	assertInjectionEvent("inj#3@", &t->elements[3],	1, 0, 126 + 180);	// Cyl 2
 }
+#endif //FUEL_RPM_COUNT == 16
 
+#if FUEL_RPM_COUNT == 16
 TEST(big, testBatch) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setTable(config->injectionPhase, -180.0f);
@@ -865,7 +872,9 @@ TEST(big, testBatch) {
 	assertInjectionEventBatch("#2@",	&t->elements[2], 3, 0, 0, 153);			// Cyl 4 + 1
 	assertInjectionEventBatch("inj#3@",	&t->elements[3], 1, 2, 0, 153 + 180);	// Cyl 2 + 3
 }
+#endif //FUEL_RPM_COUNT == 16
 
+#if FUEL_RPM_COUNT == 16
 TEST(big, testSinglePoint) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	engineConfiguration->hpfpCamLobes = 0;
@@ -894,7 +903,9 @@ TEST(big, testSinglePoint) {
 	assertInjectionEvent("#2@",		&t->elements[2], 0, 0, 126);		// Cyl 4
 	assertInjectionEvent("inj#3@",	&t->elements[3], 0, 0, 126 + 180);	// Cyl 2
 }
+#endif //FUEL_RPM_COUNT == 16
 
+#if FUEL_RPM_COUNT == 16
 TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	extern bool unitTestBusyWaitHack;
@@ -1011,6 +1022,7 @@ TEST(big, testFuelSchedulerBug299smallAndLarge) {
 	eth.executeActions();
 	ASSERT_EQ( 0,  getRecentWarnings()->getCount()) << "warningCounter#testFuelSchedulerBug299smallAndLarge";
 }
+#endif //FUEL_RPM_COUNT == 16
 
 TEST(big, testSparkReverseOrderBug319) {
 	printf("*************************************************** testSparkReverseOrderBug319 small to medium\r\n");

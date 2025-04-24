@@ -20,6 +20,7 @@ static void configureOddFiringEngine(EngineTestHelper &eth) {
 	engine->tdcMarkEnabled = false; // reduce event queue noise TODO extract helper method
 }
 
+#if FUEL_RPM_COUNT == 16
 TEST(OddFireRunningMode, hd) {
   // basic engine setup
 	EngineTestHelper eth(engine_type_e::HARLEY);
@@ -82,3 +83,4 @@ TEST(OddFireRunningMode, hd) {
 
 	ASSERT_EQ(2, engine->getBailedOnDwellCount()) << "Please check if our dwell algorithm have really got better.";
 }
+#endif //FUEL_RPM_COUNT == 16
