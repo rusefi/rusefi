@@ -13,6 +13,8 @@ struct FuelingBank {
 
 static FuelingBank banks[STFT_BANK_COUNT];
 
+static size_t prev_binIdx;
+
 static Deadband<25> idleDeadband;
 static Deadband<2> overrunDeadband;
 static Deadband<2> loadDeadband;
@@ -146,8 +148,15 @@ ClosedLoopFuelResult fuelClosedLoopCorrection() {
 			cell.update(engineConfiguration->stft.deadband * 0.01f, engineConfiguration->stftIgnoreErrorMagnitude);
 		}
 
-		result.banks[i] = cell.getAdjustment();
+        // if we switched bins, clear the adjustment if tune says to
+		if (binIdx != prev_binIdx && engineConfiguration->STFTResetRegionChange) {
+                  banks[i].cells[binIdx].setAdjustment(0.0f);
+        }
+
+        result.banks[i] = cell.getAdjustment();
 	}
+
+    prev_binIdx = binIdx;
 
 	return result;
 }

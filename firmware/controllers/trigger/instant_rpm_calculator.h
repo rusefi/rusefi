@@ -30,8 +30,10 @@ public:
 		setArrayValues(timeOfLastEvent, 0);
 		setArrayValues(spinningEvents, 0);
 		spinningEventIndex = 0;
-		prevInstantRpmValue = 0;
-		m_instantRpm = 0;
+		if (!engineConfiguration->fixSyncMisfire) {
+        	prevInstantRpmValue = 0;
+			m_instantRpm = 0;
+		}
 	}
 
 	/**

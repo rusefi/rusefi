@@ -18,5 +18,7 @@ public interface BoardInputs {
 
     Writer getBoardPinNamesWriter() throws IOException;
 
+    Writer getBoardGeneratedPrependWriter() throws IOException;
+
     List<String> getBoardMeta(String boardMetaFileName);
 }

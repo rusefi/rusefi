@@ -1,0 +1,773 @@
+meta: config/boards/epicECU/epicECU_meta.h
+
+pins:
+  - pin: 120
+    meta: EPICECU_12v
+    type: 12v
+    ts_name: 12V input
+    function: 12V power input switched from ignition
+    
+  - pin: 119
+    meta: EPICECU_BRV
+    class: analog_inputs
+    type: av
+    ts_name: 12V input
+    function: 12V power input switched from ignition
+    
+  - pin: 121
+    meta: EPICECU_14v
+    type: 14v
+    ts_name: 14V output
+    function: 14v stable buck/boost output
+    
+  - pin: 122
+    meta: EPICECU_14v
+    type: 14v
+    ts_name: 14V output
+    function: 14v stable buck/boost output
+    
+  - pin: 117
+    meta: EPICECU_5v
+    type: 5v
+    ts_name: 5V sensor
+    function: regulated 5V output
+    
+  - pin: 26
+    meta: EPICECU_PPS1
+    class: analog_inputs
+    type: av
+    ts_name: Accelerator Pedal Position 1
+    function: Analog input
+    
+  - pin: 27
+    meta: EPICECU_PPS2
+    class: analog_inputs
+    type: av
+    ts_name: Accelerator Pedal Position 2
+    function: Analog input
+    
+  - pin: 31
+    meta: EPICECU_AINP1
+    class: analog_inputs
+    type: av
+    ts_name: Analog Input 1
+    function: Analog input
+    
+  - pin: 32
+    meta: EPICECU_AINP2
+    class: analog_inputs
+    type: av
+    ts_name: Analog Input 2
+    function: Analog input
+    
+  - pin: 33
+    meta: EPICECU_AINP3
+    class: analog_inputs
+    type: av
+    ts_name: Analog Input 3
+    function: Analog input
+    
+  - pin: 22
+    meta: EPICECU_AUXTemp1
+    class: analog_inputs
+    type: at
+    ts_name: Aux Temperature 1
+    function: Analog input
+    
+  - pin: 23
+    meta: EPICECU_AUXTemp2
+    class: analog_inputs
+    type: at
+    ts_name: Aux Temperature 2
+    function: Analog input
+    
+  - pin: 58
+    type: can
+    ts_name: CAN1H
+    function: CAN 1 high
+    
+  - pin: 59
+    type: can
+    ts_name: CAN1L
+    function: CAN 1 Low
+    
+  - pin: 60
+    type: can
+    ts_name: CAN2H
+    function: CAN 2 High
+    
+  - pin: 61
+    type: can
+    ts_name: CAN2L
+    function: CAN 2 Low
+    
+  - pin: 85
+    meta: EPICECU_DINP1
+    class: switch_inputs
+    ts_name: Digital Input 1
+    function: dipswitch 10k pullup default, 10k pulldown
+    
+  - pin: 86
+    meta: EPICECU_DINP2
+    class: switch_inputs
+    ts_name: Digital Input 2
+    function: dipswitch 10k pullup default, 10k pulldown
+    
+  - pin: 87
+    meta: EPICECU_DINP3
+    class: switch_inputs
+    ts_name: Digital Input 3
+    function: dipswitch 10k pullup default, 10k pulldown
+    
+  - pin: 88
+    meta: EPICECU_DINP4
+    class: switch_inputs
+    ts_name: Digital Input 4
+    function: dipswitch 10k pullup default, 10k pulldown
+    
+  - pin: 89
+    meta: EPICECU_DINP5
+    class: switch_inputs
+    ts_name: Digital Input 5
+    function: dipswitch 10k pullup default, 10k pulldown
+    
+  - pin: 90
+    meta: EPICECU_DINP6
+    class: switch_inputs
+    ts_name: Digital Input 6
+    function: dipswitch 10k pullup default, 10k pulldown
+    
+  - pin: 91
+    meta: EPICECU_DINP7
+    class: switch_inputs
+    ts_name: Digital Input 7
+    function: dipswitch 10k pullup default, 10k pulldown
+    
+  - pin: 92
+    meta: EPICECU_DINP8
+    class: switch_inputs
+    ts_name: Digital Input 8
+    function: dipswitch 10k pullup default, 10k pulldown
+    
+  - pin: 20
+    meta: EPICECU_CLT
+    class: analog_inputs
+    type: at
+    ts_name: Engine Temperature
+    function: Analog input
+    
+  - pin: 127
+    meta: EPICECU_FLEX
+    class: event_inputs
+    ts_name: FLEX sensor
+    function: FLEX sensor input
+    
+  - pin: 124
+    class: GND
+    type: GND
+    ts_name: Ground
+    function: GND
+    
+  - pin: 126
+    class: GND
+    type: GND
+    ts_name: Ground
+    function: GND
+    
+  - pin: 125
+    class: GND
+    type: GND
+    ts_name: Ground
+    function: GND
+    
+  - pin: 123
+    class: GND
+    type: GND
+    ts_name: Ground
+    function: GND
+    
+  - pin: 75
+    meta: EPICECU_RPM1
+    class: event_inputs
+    type: hall
+    ts_name: Hall Input 1
+    function: Hall crank input
+    
+  - pin: 76
+    meta: EPICECU_RPM2
+    class: event_inputs
+    type: hall
+    ts_name: Hall Input 2
+    function: Hall cam 1 intake input
+    
+  - pin: 77
+    meta: EPICECU_RPM3
+    class: event_inputs
+    type: hall
+    ts_name: Hall Input 3
+    function: Hall cam 2 exhaust input
+    
+  - pin: 78
+    meta: EPICECU_RPM4
+    class: event_inputs
+    type: hall
+    ts_name: Hall Input 4
+    function: Hall cam 3 intake input
+    
+  - pin: 79
+    meta: EPICECU_RPM5
+    class: event_inputs
+    type: hall
+    ts_name: Hall Input 5
+    function: Hall cam 4 exhaust input
+    
+  - pin: 80
+    meta: EPICECU_RPM6
+    class: event_inputs
+    type: hall
+    ts_name: Hall Input 6
+    function: Hall 6 input
+    
+  - pin: 81
+    meta: EPICECU_RPM7
+    class: event_inputs
+    type: hall
+    ts_name: Hall Input 7
+    function: Hall 7 input
+    
+  - pin: 82
+    meta: EPICECU_RPM8
+    class: event_inputs
+    type: hall
+    ts_name: Hall Input 8
+    function: Hall 8 input
+    
+  - pin: 147
+    meta: EPICECU_HS1
+    class: outputs
+    type: hs
+    ts_name: High Side Output 1
+    function: High Side output 1
+    
+  - pin: 148
+    meta: EPICECU_HS2
+    class: outputs
+    type: hs
+    ts_name: High Side Output 2
+    function: High Side output 2
+    
+  - pin: 149
+    meta: EPICECU_HS3
+    class: outputs
+    type: hs
+    ts_name: High Side Output 3
+    function: High Side output 3
+    
+  - pin: 150
+    meta: EPICECU_HS4
+    class: outputs
+    type: hs
+    ts_name: High Side Output 4
+    function: High Side output 4
+    
+  - pin: 5
+    meta: EPICECU_IGN1
+    class: outputs
+    type: ign
+    ts_name: Ignition Output  1
+    function: 0-5V for smart coil
+    
+  - pin: 6
+    meta: EPICECU_IGN2
+    class: outputs
+    type: ign
+    ts_name: Ignition Output  2
+    function: 0-5V for smart coil
+    
+  - pin: 7
+    meta: EPICECU_IGN3
+    class: outputs
+    type: ign
+    ts_name: Ignition Output  3
+    function: 0-5V for smart coil
+    
+  - pin: 8
+    meta: EPICECU_IGN4
+    class: outputs
+    type: ign
+    ts_name: Ignition Output  4
+    function: 0-5V for smart coil
+    
+  - pin: 9
+    meta: EPICECU_IGN5
+    class: outputs
+    type: ign
+    ts_name: Ignition Output  5
+    function: 0-5V for smart coil
+    
+  - pin: 10
+    meta: EPICECU_IGN6
+    class: outputs
+    type: ign
+    ts_name: Ignition Output  6
+    function: 0-5V for smart coil
+    
+  - pin: 11
+    meta: EPICECU_IGN7
+    class: outputs
+    type: ign
+    ts_name: Ignition Output  7
+    function: 0-5V for smart coil
+    
+  - pin: 12
+    meta: EPICECU_IGN8
+    class: outputs
+    type: ign
+    ts_name: Ignition Output  8
+    function: 0-5V for smart coil
+    
+  - pin: 13
+    meta: EPICECU_IGN9
+    class: outputs
+    type: ign
+    ts_name: Ignition Output  9
+    function: 0-5V for smart coil
+    
+  - pin: 14
+    meta: EPICECU_IGN10
+    class: outputs
+    type: ign
+    ts_name: Ignition Output 10
+    function: 0-5V for smart coil
+    
+  - pin: 15
+    meta: EPICECU_IGN11
+    class: outputs
+    type: ign
+    ts_name: Ignition Output 11
+    function: 0-5V for smart coil
+    
+  - pin: 16
+    meta: EPICECU_IGN12
+    class: outputs
+    type: ign
+    ts_name: Ignition Output 12
+    function: 0-5V for smart coil
+    
+  - pin: 132
+    meta: EPICECU_INJ1
+    class: outputs
+    type: inj
+    ts_name: Injector  1
+    function: Injector 1
+    
+  - pin: 133
+    meta: EPICECU_INJ2
+    class: outputs
+    type: inj
+    ts_name: Injector  2
+    function: Injector 2
+    
+  - pin: 134
+    meta: EPICECU_INJ3
+    class: outputs
+    type: inj
+    ts_name: Injector  3
+    function: Injector 3
+    
+  - pin: 135
+    meta: EPICECU_INJ4
+    class: outputs
+    type: inj
+    ts_name: Injector  4
+    function: Injector 4
+    
+  - pin: 136
+    meta: EPICECU_INJ5
+    class: outputs
+    type: inj
+    ts_name: Injector  5
+    function: Injector 5,
+    
+  - pin: 137
+    meta: EPICECU_INJ6
+    class: outputs
+    type: inj
+    ts_name: Injector  6
+    function: Injector 6
+    
+  - pin: 138
+    meta: EPICECU_INJ7
+    class: outputs
+    type: inj
+    ts_name: Injector  7
+    function: Injector 7
+    
+  - pin: 139
+    meta: EPICECU_INJ8
+    class: outputs
+    type: inj
+    ts_name: Injector  8
+    function: Injector 8
+    
+  - pin: 140
+    meta: EPICECU_INJ9
+    class: outputs
+    type: inj
+    ts_name: Injector  9
+    function: Injector 9
+    
+  - pin: 141
+    meta: EPICECU_INJ10
+    class: outputs
+    type: inj
+    ts_name: Injector 10
+    function: Injector 10
+    
+  - pin: 142
+    meta: EPICECU_INJ11
+    class: outputs
+    type: inj
+    ts_name: Injector 11
+    function: Injector 11
+    
+  - pin: 143
+    meta: EPICECU_INJ12
+    class: outputs
+    type: inj
+    ts_name: Injector 12
+    function: Injector 12
+    
+  - pin: 19
+    meta: EPICECU_IAT
+    class: analog_inputs
+    type: at
+    ts_name: Intake Air Temperature
+    function: Analog input
+    
+  - pin: 17
+    class: analog_inputs
+    type: knock_inputs
+    ts_name: Knock 1
+    function: Knock sensor 1 input
+    
+  - pin: 18
+    class: analog_inputs
+    type: knock_inputs
+    ts_name: Knock 2
+    function: Knock sensor 2 input
+    
+  - pin: 43
+    meta: EPICECU_LS1
+    class: outputs
+    type: ls
+    ts_name: Low Side Output  1
+    function: Low Side output 1
+    
+  - pin: 44
+    meta: EPICECU_LS2
+    class: outputs
+    type: ls
+    ts_name: Low Side Output  2
+    function: Low Side output 2
+    
+  - pin: 45
+    meta: EPICECU_LS3
+    class: outputs
+    type: ls
+    ts_name: Low Side Output  3
+    function: Low Side output 3
+    
+  - pin: 46
+    meta: EPICECU_LS4
+    class: outputs
+    type: ls
+    ts_name: Low Side Output  4
+    function: Low Side output 4
+    
+  - pin: 62
+    meta: EPICECU_LS5
+    class: outputs
+    type: ls
+    ts_name: Low Side Output  5
+    function: Low Side output 5
+    
+  - pin: 63
+    meta: EPICECU_LS6
+    class: outputs
+    type: ls
+    ts_name: Low Side Output  6
+    function: Low Side output 6
+    
+  - pin: 64
+    meta: EPICECU_LS7
+    class: outputs
+    type: ls
+    ts_name: Low Side Output  7
+    function: Low Side output 7
+    
+  - pin: 65
+    meta: EPICECU_LS8
+    class: outputs
+    type: ls
+    ts_name: Low Side Output  8
+    function: Low Side output 8
+    
+  - pin: 66
+    meta: EPICECU_LS9
+    class: outputs
+    type: ls
+    ts_name: Low Side Output  9
+    function: Low Side output 9
+    
+  - pin: 67
+    meta: EPICECU_LS10
+    class: outputs
+    type: ls
+    ts_name: Low Side Output 10
+    function: Low Side output 10
+    
+  - pin: 68
+    meta: EPICECU_LS11
+    class: outputs
+    type: ls
+    ts_name: Low Side Output 11
+    function: Low Side output 11
+    
+  - pin: 69
+    meta: EPICECU_LS12
+    class: outputs
+    type: ls
+    ts_name: Low Side Output 12
+    function: Low Side output 12
+    
+  - pin: 70
+    meta: EPICECU_LS13
+    class: outputs
+    type: ls
+    ts_name: Low Side Output 13
+    function: Low Side output 13
+    
+  - pin: 71
+    meta: EPICECU_LS14
+    class: outputs
+    type: ls
+    ts_name: Low Side Output 14
+    function: Low Side output 14
+    
+  - pin: 72
+    meta: EPICECU_LS15
+    class: outputs
+    type: ls
+    ts_name: Low Side Output 15
+    function: Low Side output 15
+    
+  - pin: 73
+    meta: EPICECU_LS16
+    class: outputs
+    type: ls
+    ts_name: Low Side Output 16
+    function: Low Side output 16
+    
+  - pin: 74
+    meta: EPICECU_LS17
+    class: outputs
+    type: ls
+    ts_name: Low Side Output 17
+    function: Low Side output 17
+    
+  - pin: 146
+    meta: EPICECU_LS18
+    class: outputs
+    type: ls
+    ts_name: Low Side Output 18
+    function: Low Side output 18
+    
+  - pin: 145
+    meta: EPICECU_LS19
+    class: outputs
+    type: ls
+    ts_name: Low Side Output 19
+    function: Low Side output 19
+    
+  - pin: 30
+    meta: EPICECU_MAP
+    class: analog_inputs
+    type: av
+    ts_name: Manifold Pressure Sensor
+    function: Analog input
+    
+  - pin: 21
+    meta: EPICECU_OT
+    class: analog_inputs
+    type: at
+    ts_name: Oil Temperature
+    function: Analog input
+    
+  - pin: 28
+    meta: EPICECU_O2
+    class: analog_inputs
+    type: av
+    ts_name: Oxygen Sensor 1
+    function: Analog input
+    
+  - pin: 29
+    meta: EPICECU_O2_2
+    class: analog_inputs
+    type: av
+    ts_name: Oxygen Sensor 2
+    function: Analog input
+    
+  - pin: 118
+    class: GND
+    type: GND
+    ts_name: Sensor ground
+    function: dedicated sensor ground
+    
+  - pin: 94
+    meta: EPICECU_EGT1_CS
+    type: egt
+    ts_name: TC1 +
+    function: egt+
+    
+  - pin: 93
+    meta: EPICECU_EGT1_CS
+    type: egt
+    ts_name: TC1 -
+    function: egt-
+    
+  - pin: 96
+    meta: EPICECU_EGT2_CS
+    type: egt
+    ts_name: TC2 +
+    function: egt+
+    
+  - pin: 95
+    meta: EPICECU_EGT2_CS
+    type: egt
+    ts_name: TC2 -
+    function: egt-
+    
+  - pin: 98
+    meta: EPICECU_EGT3_CS
+    type: egt
+    ts_name: TC3 +
+    function: egt+
+    
+  - pin: 97
+    meta: EPICECU_EGT3_CS
+    type: egt
+    ts_name: TC3 -
+    function: egt-
+    
+  - pin: 100
+    meta: EPICECU_EGT4_CS
+    type: egt
+    ts_name: TC4 +
+    function: egt+
+    
+  - pin: 99
+    meta: EPICECU_EGT4_CS
+    type: egt
+    ts_name: TC4 -
+    function: egt-
+    
+  - pin: 102
+    meta: EPICECU_EGT5_CS
+    type: egt
+    ts_name: TC5 +
+    function: egt+
+    
+  - pin: 101
+    meta: EPICECU_EGT5_CS
+    type: egt
+    ts_name: TC5 -
+    function: egt-
+    
+  - pin: 104
+    meta: EPICECU_EGT6_CS
+    type: egt
+    ts_name: TC6 +
+    function: egt+
+    
+  - pin: 103
+    meta: EPICECU_EGT6_CS
+    type: egt
+    ts_name: TC6 -
+    function: egt-
+    
+  - pin: 106
+    meta: EPICECU_EGT7_CS
+    type: egt
+    ts_name: TC7 +
+    function: egt+
+    
+  - pin: 105
+    meta: EPICECU_EGT7_CS
+    type: egt
+    ts_name: TC7 -
+    function: egt-
+    
+  - pin: 108
+    meta: EPICECU_EGT8_CS
+    type: egt
+    ts_name: TC8 +
+    function: egt+
+    
+  - pin: 107
+    meta: EPICECU_EGT8_CS
+    type: egt
+    ts_name: TC8 -
+    function: egt-
+    
+  - pin: 144
+    meta: EPICECU_LS20
+    class: outputs
+    type: ls
+    ts_name: Tachometer Output
+    function: Low Side output 20,Tacho, pullup dipswitch to 12v (def) or 5v
+    
+  - pin: 24
+    meta: EPICECU_TPS1
+    class: analog_inputs
+    type: av
+    ts_name: Throttle Position 1
+    function: Analog input
+    
+  - pin: 25
+    meta: EPICECU_TPS2
+    class: analog_inputs
+    type: av
+    ts_name: Throttle Position 2
+    function: Analog input
+    
+  - pin: 1
+    ts_name: USB 5V
+    function: USB 5v input
+    
+  - pin: 4
+    ts_name: USB D+
+    function: USB D+
+    
+  - pin: 2
+    ts_name: USB D-
+    function: USB D-
+    
+  - pin: 3
+    ts_name: USB GND
+    function: GND for usb port
+    
+  - pin: 84
+    meta: EPICECU_RPM9
+    class: event_inputs
+    type: vr
+    ts_name: Variable Reluctor Input 1
+    function: VR1+
+    
+  - pin: 83
+    meta: EPICECU_RPM10
+    class: event_inputs
+    type: vr
+    ts_name: Variable Reluctor Input 2
+    function: VR2+
+    

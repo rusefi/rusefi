@@ -444,6 +444,154 @@ int getSavedBenchTestPinStates(uint32_t durationsInStateMs[2]) {
 #endif // EFI_SIMULATOR
 }
 
+static uint16_t hwButtonBox1Lookup(uint16_t index) {
+    uint16_t firstKey = 0;
+    firstKey = index ;
+    uint16_t foundIdx = 255;
+    engine->outputChannels.lastCanButtonSeen = firstKey;
+    int i;
+    for (i=0;i<BUTTON_BOX_CMDS;i++) {
+        if (firstKey == config->buttonBoxCmds[i]) {
+            foundIdx = config->buttonBoxBins[i];
+            break;
+        }
+    }
+    engine->outputChannels.lastCanButtonFoundIdx = foundIdx;
+    return foundIdx;
+}
+
+static void handleButtonBox(uint16_t index) {
+	switch(index) {
+		case ETB_MAP_UP:
+			// TODO: number of ETB maps should not be hardcoded
+			if (engine->engineState.pedalToTpsIndexCur < 4) {
+				engine->engineState.pedalToTpsIndexCur++;
+			}
+		break;
+
+		case ETB_MAP_DOWN:
+			if (engine->engineState.pedalToTpsIndexCur > 0) {
+				engine->engineState.pedalToTpsIndexCur--;
+			}
+		break;
+
+		case ETB_MAP_RESET:
+			engine->engineState.pedalToTpsIndexCur = engineConfiguration->pedalToTpsIndex;
+		break;
+		case ETB_MAP_1:
+			engine->engineState.pedalToTpsIndexCur = 1;
+		break;
+
+		case ETB_MAP_2:
+			engine->engineState.pedalToTpsIndexCur = 2;
+		break;
+
+		case ETB_MAP_3:
+			engine->engineState.pedalToTpsIndexCur = 3;
+		break;
+
+		case ETB_MAP_4:
+			engine->engineState.pedalToTpsIndexCur = 4;
+		break;
+
+		case AFR_TRIM_UP:
+			if (engine->outputChannels.globalAFRTrim < engineConfiguration->afrTrimRangeMax) {
+				engine->outputChannels.globalAFRTrim+= 0.01;
+			}
+		break;
+
+		case AFR_TRIM_DOWN:
+			if (engine->outputChannels.globalAFRTrim > engineConfiguration->afrTrimRangeMin) {
+				engine->outputChannels.globalAFRTrim-= 0.01;
+			}
+		break;
+
+		case AFR_TRIM_RESET:
+			engine->outputChannels.globalAFRTrim = 0;
+		break;
+
+		case AFR_TRIM_MAX:
+			engine->outputChannels.globalAFRTrim = engineConfiguration->afrTrimRangeMax;
+		break;
+
+		case AFR_TRIM_MIN:
+			engine->outputChannels.globalAFRTrim = engineConfiguration->afrTrimRangeMin;
+		break;
+
+		case ALL_TRIM_RESET:
+			handleButtonBox(AFR_TRIM_RESET);
+			handleButtonBox(ETB_MAP_RESET);
+			if (!config->resetCanToggleInhibit1) { engine->outputChannels.canButtonToggle1 = 0;  bitclear(engine->outputChannels.canButtons18, 0 ); }
+			if (!config->resetCanToggleInhibit2) { engine->outputChannels.canButtonToggle2 = 0;  bitclear(engine->outputChannels.canButtons18, 1 ); }
+			if (!config->resetCanToggleInhibit3) { engine->outputChannels.canButtonToggle3 = 0;  bitclear(engine->outputChannels.canButtons18, 2 ); }
+			if (!config->resetCanToggleInhibit4) { engine->outputChannels.canButtonToggle4 = 0;  bitclear(engine->outputChannels.canButtons18, 3 ); }
+			if (!config->resetCanToggleInhibit5) { engine->outputChannels.canButtonToggle5 = 0;  bitclear(engine->outputChannels.canButtons18, 4 ); }
+			if (!config->resetCanToggleInhibit6) { engine->outputChannels.canButtonToggle6 = 0;  bitclear(engine->outputChannels.canButtons18, 5 ); }
+			if (!config->resetCanToggleInhibit7) { engine->outputChannels.canButtonToggle7 = 0;  bitclear(engine->outputChannels.canButtons18, 6 ); }
+			if (!config->resetCanToggleInhibit8) { engine->outputChannels.canButtonToggle8 = 0;  bitclear(engine->outputChannels.canButtons18, 7 ); }
+
+		break;
+
+        case CAN_BUTTON_TOGGLE1:
+            engine->outputChannels.canButtonToggle1 = !engine->outputChannels.canButtonToggle1;
+			if (engine->outputChannels.canButtonToggle1) bitset(engine->outputChannels.canButtons18, 0); else bitclear(engine->outputChannels.canButtons18, 0);
+        break;
+
+        case CAN_BUTTON_TOGGLE2:
+            engine->outputChannels.canButtonToggle2 = !engine->outputChannels.canButtonToggle2;
+			if (engine->outputChannels.canButtonToggle2) bitset(engine->outputChannels.canButtons18, 1); else bitclear(engine->outputChannels.canButtons18, 1);
+		break;
+
+        case CAN_BUTTON_TOGGLE3:
+            engine->outputChannels.canButtonToggle3 = !engine->outputChannels.canButtonToggle3;
+			if (engine->outputChannels.canButtonToggle3) bitset(engine->outputChannels.canButtons18, 2); else bitclear(engine->outputChannels.canButtons18, 2);
+        break;
+
+        case CAN_BUTTON_TOGGLE4:
+            engine->outputChannels.canButtonToggle4 = !engine->outputChannels.canButtonToggle4;
+			if (engine->outputChannels.canButtonToggle4) bitset(engine->outputChannels.canButtons18, 3); else bitclear(engine->outputChannels.canButtons18, 3);
+        break;
+
+        case CAN_BUTTON_TOGGLE5:
+            engine->outputChannels.canButtonToggle5 = !engine->outputChannels.canButtonToggle5;
+			if (engine->outputChannels.canButtonToggle5) bitset(engine->outputChannels.canButtons18, 4); else bitclear(engine->outputChannels.canButtons18, 4);
+        break;
+
+        case CAN_BUTTON_TOGGLE6:
+            engine->outputChannels.canButtonToggle6 = !engine->outputChannels.canButtonToggle6;
+			if (engine->outputChannels.canButtonToggle6) bitset(engine->outputChannels.canButtons18, 5); else bitclear(engine->outputChannels.canButtons18, 5);
+        break;
+
+        case CAN_BUTTON_TOGGLE7:
+            engine->outputChannels.canButtonToggle7 = !engine->outputChannels.canButtonToggle7;
+			if (engine->outputChannels.canButtonToggle7) bitset(engine->outputChannels.canButtons18, 6); else bitclear(engine->outputChannels.canButtons18, 6);
+        break;
+
+        case CAN_BUTTON_TOGGLE8:
+            engine->outputChannels.canButtonToggle8 = !engine->outputChannels.canButtonToggle8;
+			if (engine->outputChannels.canButtonToggle8) bitset(engine->outputChannels.canButtons18, 7); else bitclear(engine->outputChannels.canButtons18, 7);
+        break;
+
+		case CAN_LUA_COMMAND_1:
+		    handleBenchCategory(LUA_COMMAND_1);
+		break;
+
+		case CAN_LUA_COMMAND_2:
+		    handleBenchCategory(LUA_COMMAND_2);
+		break;
+
+		case CAN_LUA_COMMAND_3:
+		    handleBenchCategory(LUA_COMMAND_3);
+		break;
+
+		case CAN_LUA_COMMAND_4:
+		    handleBenchCategory(LUA_COMMAND_4);
+		break;
+	}
+
+    return;
+}
+
 static void handleCommandX14(uint16_t index) {
 // todo: define ts_14_command magic constants and use those in tunerstudio.template.ini file!
 	switch (index) {
@@ -598,6 +746,14 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 				1000.0, engineConfiguration->benchTestCount);
 		}
 		break;
+
+	case TS_BUTTONBOX1_CATEGORY:
+		handleButtonBox(index);
+		break;
+
+    case TS_HW_BUTTONBOX1_CATEGORY:
+        handleButtonBox(hwButtonBox1Lookup(index));
+    	break;
 
 	case TS_LUA_OUTPUT_CATEGORY:
 		if (!running) {

@@ -368,18 +368,19 @@ custom brain_input_pin_e 2 bits, U16, @OFFSET@, [0:8], $brain_input_pin_e_list
 ! by the way [tag:coding_by_convention]
 
 ! this value is used unless it's overloaded (preloaded?) in prepend file! todo document this a bit more!
-#define sent_input_pin_e_enum "NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15", "PF0", "PF1", "PF2", "PF3", "PF4", "PF5", "PF6", "PF7", "PF8", "PF9", "PF10", "PF11", "PF12", "PF13", "PF14", "PF15", "PG0", "PG1", "PG2", "PG3", "PG4", "PG5", "PG6", "PG7", "PG8", "PG9", "PG10", "PG11", "PG12", "PG13", "PG14", "PG15", "PH0", "PH1", "PH2", "PH3", "PH4", "PH5", "PH6", "PH7", "PH8", "PH9", "PH10", "PH11", "PH12", "PH13", "PH14", "PH15", "PI0", "PI1", "PI2", "PI3", "PI4", "PI5", "PI6", "PI7", "PI8", "PI9", "PI10", "PI11", "PI12", "PI13", "PI14", "PI15"
+#define sent_input_pin_e_enum "NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15", "PF0", "PF1", "PF2", "PF3", "PF4", "PF5", "PF6", "PF7", "PF8", "PF9", "PF10", "PF11", "PF12", "PF13", "PF14", "PF15", "PG0", "PG1", "PG2", "PG3", "PG4", "PG5", "PG6", "PG7", "PG8", "PG9", "PG10", "PG11", "PG12", "PG13", "PG14", "PG15", "PH0", "PH1", "PH2", "PH3", "PH4", "PH5", "PH6", "PH7", "PH8", "PH9", "PH10", "PH11", "PH12", "PH13", "PH14", "PH15", "PI0", "PI1", "PI2", "PI3", "PI4", "PI5", "PI6", "PI7", "PI8", "PI9", "PI10", "PI11", "PI12", "PI13", "PI14", "PI15", "PJ0", "PJ1", "PJ2", "PJ3", "PJ4", "PJ5", "PJ6", "PJ7", "PJ8", "PJ9", "PJ10", "PJ11", "PJ12", "PJ13", "PJ14", "PJ15", "PK0", "PK1", "PK2", "PK3", "PK4", "PK5", "PK6", "PK7", "PK8", "PK9", "PK10", "PK11", "PK12", "PK13", "PK14", "PK15"
 custom sent_input_pin_e 2 bits, U16, @OFFSET@, [0:8], @@sent_input_pin_e_enum@@
 
-#define Gpio_enum "NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15", "PF0", "PF1", "PF2", "PF3", "PF4", "PF5", "PF6", "PF7", "PF8", "PF9", "PF10", "PF11", "PF12", "PF13", "PF14", "PF15", "PG0", "PG1", "PG2", "PG3", "PG4", "PG5", "PG6", "PG7", "PG8", "PG9", "PG10", "PG11", "PG12", "PG13", "PG14", "PG15", "PH0", "PH1", "PH2", "PH3", "PH4", "PH5", "PH6", "PH7", "PH8", "PH9", "PH10", "PH11", "PH12", "PH13", "PH14", "PH15", "PI0", "PI1", "PI2", "PI3", "PI4", "PI5", "PI6", "PI7", "PI8", "PI9", "PI10", "PI11", "PI12", "PI13", "PI14", "PI15"
-#define switch_input_pin_e_enum "NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15", "PF0", "PF1", "PF2", "PF3", "PF4", "PF5", "PF6", "PF7", "PF8", "PF9", "PF10", "PF11", "PF12", "PF13", "PF14", "PF15", "PG0", "PG1", "PG2", "PG3", "PG4", "PG5", "PG6", "PG7", "PG8", "PG9", "PG10", "PG11", "PG12", "PG13", "PG14", "PG15", "PH0", "PH1", "PH2", "PH3", "PH4", "PH5", "PH6", "PH7", "PH8", "PH9", "PH10", "PH11", "PH12", "PH13", "PH14", "PH15", "PI0", "PI1", "PI2", "PI3", "PI4", "PI5", "PI6", "PI7", "PI8", "PI9", "PI10", "PI11", "PI12", "PI13", "PI14", "PI15"
+#define Gpio_enum "NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15", "PF0", "PF1", "PF2", "PF3", "PF4", "PF5", "PF6", "PF7", "PF8", "PF9", "PF10", "PF11", "PF12", "PF13", "PF14", "PF15", "PG0", "PG1", "PG2", "PG3", "PG4", "PG5", "PG6", "PG7", "PG8", "PG9", "PG10", "PG11", "PG12", "PG13", "PG14", "PG15", "PH0", "PH1", "PH2", "PH3", "PH4", "PH5", "PH6", "PH7", "PH8", "PH9", "PH10", "PH11", "PH12", "PH13", "PH14", "PH15", "PI0", "PI1", "PI2", "PI3", "PI4", "PI5", "PI6", "PI7", "PI8", "PI9", "PI10", "PI11", "PI12", "PI13", "PI14", "PI15", "PJ0", "PJ1", "PJ2", "PJ3", "PJ4", "PJ5", "PJ6", "PJ7", "PJ8", "PJ9", "PJ10", "PJ11", "PJ12", "PJ13", "PJ14", "PJ15", "PK0", "PK1", "PK2", "PK3", "PK4", "PK5", "PK6", "PK7", "PK8", "PK9", "PK10", "PK11", "PK12", "PK13", "PK14", "PK15"
+#define switch_input_pin_e_enum "NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15", "PF0", "PF1", "PF2", "PF3", "PF4", "PF5", "PF6", "PF7", "PF8", "PF9", "PF10", "PF11", "PF12", "PF13", "PF14", "PF15", "PG0", "PG1", "PG2", "PG3", "PG4", "PG5", "PG6", "PG7", "PG8", "PG9", "PG10", "PG11", "PG12", "PG13", "PG14", "PG15", "PH0", "PH1", "PH2", "PH3", "PH4", "PH5", "PH6", "PH7", "PH8", "PH9", "PH10", "PH11", "PH12", "PH13", "PH14", "PH15", "PI0", "PI1", "PI2", "PI3", "PI4", "PI5", "PI6", "PI7", "PI8", "PI9", "PI10", "PI11", "PI12", "PI13", "PI14", "PI15", "PJ0", "PJ1", "PJ2", "PJ3", "PJ4", "PJ5", "PJ6", "PJ7", "PJ8", "PJ9", "PJ10", "PJ11", "PJ12", "PJ13", "PJ14", "PJ15", "PK0", "PK1", "PK2", "PK3", "PK4", "PK5", "PK6", "PK7", "PK8", "PK9", "PK10", "PK11", "PK12", "PK13", "PK14", "PK15"
 #define switch_input_pin_e_fullenum @@switch_input_pin_e_enum@@
 
 custom Gpio 2 bits, U16, @OFFSET@, [0:8], $gpio_list
 custom switch_input_pin_e 2 bits, U16, @OFFSET@, [0:8], $switch_input_pin_e_list
 
 ! see output_pin_e_enumTest.java
-#define output_pin_e_enum "NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15", "PF0", "PF1", "PF2", "PF3", "PF4", "PF5", "PF6", "PF7", "PF8", "PF9", "PF10", "PF11", "PF12", "PF13", "PF14", "PF15", "PG0", "PG1", "PG2", "PG3", "PG4", "PG5", "PG6", "PG7", "PG8", "PG9", "PG10", "PG11", "PG12", "PG13", "PG14", "PG15", "PH0", "PH1", "PH2", "PH3", "PH4", "PH5", "PH6", "PH7", "PH8", "PH9", "PH10", "PH11", "PH12", "PH13", "PH14", "PH15", "PI0", "PI1", "PI2", "PI3", "PI4", "PI5", "PI6", "PI7", "PI8", "PI9", "PI10", "PI11", "PI12", "PI13", "PI14", "PI15", "MC33972_1", "MC33972_2", "MC33972_3", "MC33972_4", "MC33972_5", "MC33972_6", "MC33972_7", "MC33972_8", "MC33972_9", "MC33972_10", "MC33972_11", "MC33972_12", "MC33972_13", "MC33972_14", "MC33972_15", "MC33972_16", "MC33972_17", "MC33972_18", "MC33972_19", "MC33972_20", "MC33972_21", "MC33972_22", "TLE8888_1", "TLE8888_2", "TLE8888_3", "TLE8888_4", "TLE8888_5", "TLE8888_6", "TLE8888_7", "TLE8888_8", "TLE8888_9", "TLE8888_10", "TLE8888_11", "TLE8888_12", "TLE8888_13", "TLE8888_14", "TLE8888_15", "TLE8888_16", "TLE8888_17", "TLE8888_18", "TLE8888_19", "TLE8888_20", "TLE8888_21", "TLE8888_22", "TLE8888_23", "TLE8888_24", "TLE8888_25", "TLE8888_26", "TLE8888_27", "TLE8888_28", "INVALID", "INVALID", "INVALID", "TLE6240_1", "TLE6240_2", "TLE6240_3", "TLE6240_4", "TLE6240_5", "TLE6240_6", "TLE6240_7", "TLE6240_8", "TLE6240_9", "TLE6240_10", "TLE6240_11", "TLE6240_12", "TLE6240_13", "TLE6240_14", "TLE6240_15", "TLE6240_16", "L215", "L216", "L217", "L218", "L219", "L220", "L221", "L222", "L223", "L224", "L225", "L226", "L227", "L228", "L229", "L230", "L231", "L232", "L233", "L234", "L235", "L236", "L237", "L238", "L239", "L240", "L241", "L242", "L243", "L244", "L245", "L246", "L247", "L248", "can0", "can1", "can2", "can3", "can4", "can5", "can6", "can7", "protected_0", "protected_1", "protected_2", "protected_3", "protected_4", "protected_5", "protected_6", "protected_7", "protected_8", "protected_9", "protected_10", "protected_11", "protected_12", "protected_13", "protected_14", "protected_15", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "MC33810_0_OUT_0", "MC33810_0_OUT_1", "MC33810_0_OUT_2", "MC33810_0_OUT_3", "MC33810_0_GD_0", "MC33810_0_GD_1", "MC33810_0_GD_2", "MC33810_0_GD_3"
+#define output_pin_e_enum "NONE", "INVALID", "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15", "PF0", "PF1", "PF2", "PF3", "PF4", "PF5", "PF6", "PF7", "PF8", "PF9", "PF10", "PF11", "PF12", "PF13", "PF14", "PF15", "PG0", "PG1", "PG2", "PG3", "PG4", "PG5", "PG6", "PG7", "PG8", "PG9", "PG10", "PG11", "PG12", "PG13", "PG14", "PG15", "PH0", "PH1", "PH2", "PH3", "PH4", "PH5", "PH6", "PH7", "PH8", "PH9", "PH10", "PH11", "PH12", "PH13", "PH14", "PH15", "PI0", "PI1", "PI2", "PI3", "PI4", "PI5", "PI6", "PI7", "PI8", "PI9", "PI10", "PI11", "PI12", "PI13", "PI14", "PI15", "PJ0", "PJ1", "PJ2", "PJ3", "PJ4", "PJ5", "PJ6", "PJ7", "PJ8", "PJ9", "PJ10", "PJ11", "PJ12", "PJ13", "PJ14", "PJ15", "PK0", "PK1", "PK2", "PK3", "PK4", "PK5", "PK6", "PK7", "PK8", "PK9", "PK10", "PK11", "PK12", "PK13", "PK14", "PK15", "MC33972_1", "MC33972_2", "MC33972_3", "MC33972_4", "MC33972_5", "MC33972_6", "MC33972_7", "MC33972_8", "MC33972_9", "MC33972_10", "MC33972_11", "MC33972_12", "MC33972_13", "MC33972_14", "MC33972_15", "MC33972_16", "MC33972_17", "MC33972_18", "MC33972_19", "MC33972_20", "MC33972_21", "MC33972_22", "TLE8888_1", "TLE8888_2", "TLE8888_3", "TLE8888_4", "TLE8888_5", "TLE8888_6", "TLE8888_7", "TLE8888_8", "TLE8888_9", "TLE8888_10", "TLE8888_11", "TLE8888_12", "TLE8888_13", "TLE8888_14", "TLE8888_15", "TLE8888_16", "TLE8888_17", "TLE8888_18", "TLE8888_19", "TLE8888_20", "TLE8888_21", "TLE8888_22", "TLE8888_23", "TLE8888_24", "TLE8888_25", "TLE8888_26", "TLE8888_27", "TLE8888_28", "INVALID", "INVALID", "INVALID", "TLE6240_1", "TLE6240_2", "TLE6240_3", "TLE6240_4", "TLE6240_5", "TLE6240_6", "TLE6240_7", "TLE6240_8", "TLE6240_9", "TLE6240_10", "TLE6240_11", "TLE6240_12", "TLE6240_13", "TLE6240_14", "TLE6240_15", "TLE6240_16", "L215", "L216", "L217", "L218", "L219", "L220", "L221", "L222", "L223", "L224", "L225", "L226", "L227", "L228", "L229", "L230", "L231", "L232", "L233", "L234", "L235", "L236", "L237", "L238", "L239", "L240", "L241", "L242", "L243", "L244", "L245", "L246", "L247", "L248", "can0", "can1", "can2", "can3", "can4", "can5", "can6", "can7", "protected_0", "protected_1", "protected_2", "protected_3", "protected_4", "protected_5", "protected_6", "protected_7", "protected_8", "protected_9", "protected_10", "protected_11", "protected_12", "protected_13", "protected_14", "protected_15", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "INVALID", "MC33810_0_OUT_0", "MC33810_0_OUT_1", "MC33810_0_OUT_2", "MC33810_0_OUT_3", "MC33810_0_GD_0", "MC33810_0_GD_1", "MC33810_0_GD_2", "MC33810_0_GD_3"
+#define output_pin_e_cleanlist_enum "PA0", "PA1", "PA2", "PA3", "PA4", "PA5", "PA6", "PA7", "PA8", "PA9", "PA10", "PA11", "PA12", "PA13", "PA14", "PA15", "PB0", "PB1", "PB2", "PB3", "PB4", "PB5", "PB6", "PB7", "PB8", "PB9", "PB10", "PB11", "PB12", "PB13", "PB14", "PB15", "PC0", "PC1", "PC2", "PC3", "PC4", "PC5", "PC6", "PC7", "PC8", "PC9", "PC10", "PC11", "PC12", "PC13", "PC14", "PC15", "PD0", "PD1", "PD2", "PD3", "PD4", "PD5", "PD6", "PD7", "PD8", "PD9", "PD10", "PD11", "PD12", "PD13", "PD14", "PD15", "PE0", "PE1", "PE2", "PE3", "PE4", "PE5", "PE6", "PE7", "PE8", "PE9", "PE10", "PE11", "PE12", "PE13", "PE14", "PE15", "PF0", "PF1", "PF2", "PF3", "PF4", "PF5", "PF6", "PF7", "PF8", "PF9", "PF10", "PF11", "PF12", "PF13", "PF14", "PF15", "PG0", "PG1", "PG2", "PG3", "PG4", "PG5", "PG6", "PG7", "PG8", "PG9", "PG10", "PG11", "PG12", "PG13", "PG14", "PG15", "PH0", "PH1", "PH2", "PH3", "PH4", "PH5", "PH6", "PH7", "PH8", "PH9", "PH10", "PH11", "PH12", "PH13", "PH14", "PH15", "PI0", "PI1", "PI2", "PI3", "PI4", "PI5", "PI6", "PI7", "PI8", "PI9", "PI10", "PI11", "PI12", "PI13", "PI14", "PI15", "PJ0", "PJ1", "PJ2", "PJ3", "PJ4", "PJ5", "PJ6", "PJ7", "PJ8", "PJ9", "PJ10", "PJ11", "PJ12", "PJ13", "PJ14", "PJ15", "PK0", "PK1", "PK2", "PK3", "PK4", "PK5", "PK6", "PK7", "PK8", "PK9", "PK10", "PK11", "PK12", "PK13", "PK14", "PK15"
 custom output_pin_e 2 bits, U16, @OFFSET@, [0:8], $output_pin_e_list
 #define output_pin_e_fullenum @@output_pin_e_enum@@
 
@@ -1168,7 +1169,7 @@ custom pin_mode_e 1 bits, U08, @OFFSET@, [0:6], @@pin_mode_e_enum@@
 	float tachPulseDuractionMs;Duration in ms or duty cycle depending on selected mode;"", 1, 0, 0, 100, 2
 
 
-	float wwaeTau;Length of time the deposited wall fuel takes to dissipate after the start of acceleration. ;"Seconds", 1, 0, 0, 3, 2
+	float wwaeTau;Length of time the deposited wall fuel takes to dissipate after the start of acceleration. ;"Seconds", 1, 0, 0, 3, 4
 	pid_s alternatorControl;
 	pid_s etb;
 	Gpio[TRIGGER_INPUT_PIN_COUNT iterate] triggerInputDebugPins;
@@ -1180,7 +1181,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	pin_input_mode_e startStopButtonMode;
 	Gpio mc33816_flag0;
 
-  uint16_t autoscale tachPulsePerRev;;"", 0.001, 0, 1, 15, 3
+  uint16_t autoscale tachPulsePerRev;;"", 0.001, 0, 0.1, 15, 3
 
 ! todo: mapErrorDetectionIdleTooLow? 30kPa is usually lowest on idle
 	float mapErrorDetectionTooLow;kPa value which is too low to be true;"kPa", 1, 0, -100, 100, 2
@@ -1188,7 +1189,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	uint16_t autoscale multisparkSparkDuration;How long to wait for the spark to fire before recharging the coil for another spark.;"ms", 0.001, 0, 0, 3, 2
 	uint16_t autoscale multisparkDwell;This sets the dwell time for subsequent sparks. The main spark's dwell is set by the dwell table.;"ms", 0.001, 0, 0, 3, 2
 	pid_s idleRpmPid;See cltIdleRpmBins
-	float wwaeBeta;0 = No fuel settling on port walls 1 = All the fuel settling on port walls setting this to 0 disables the wall wetting enrichment. ;"Fraction", 1, 0, 0, 1, 2
+	float wwaeBeta;0 = No fuel settling on port walls 1 = All the fuel settling on port walls setting this to 0 disables the wall wetting enrichment. ;"Fraction", 1, 0, 0, 1, 4
 
 	Gpio binarySerialTxPin;See also EFI_CONSOLE_RX_BRAIN_PIN
 	Gpio binarySerialRxPin;
@@ -1242,7 +1243,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	uint8_t coastingFuelCutVssLow;Below this speed, disable DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.;"kph", 1, 0, 0, 255, 0
 	uint8_t coastingFuelCutVssHigh;Above this speed, allow DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.;"kph", 1, 0, 0, 255, 0
 
-	float tpsAccelEnrichmentThreshold;Maximum change delta of TPS percentage over the 'length'. Actual TPS change has to be above this value in order for TPS/TPS acceleration to kick in.;"roc", 1, 0, 0, 200, 1
+	float tpsAccelEnrichmentThreshold;Maximum change delta of TPS percentage over the 'length'. Actual TPS change has to be above this value in order for TPS/TPS acceleration to kick in.;"roc", 1, 0, 0, 200, 3
 
 #define AUX_SPEED_SENSOR_COUNT 2
     brain_input_pin_e[AUX_SPEED_SENSOR_COUNT iterate] auxSpeedSensorInputPin;
@@ -1737,12 +1738,12 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
     SentFuelHighPressureType FuelHighPressureSentType;If you have SENT High Pressure Fuel Sensor please select type. For analog TPS leave None
 
 	bit nitrousControlEnabled
-	bit unusedFancy2
-	bit unusedFancy3
-	bit unusedFancy4
-	bit unusedFancy5
-	bit unusedFancy6
-	bit unusedFancy7
+	bit tpsAccelAeEnabled;TPS acceleration enrichment enabled
+	bit wallWettingAeEnabled;Wall wetting accelerating enrichment enabled
+    bit useMapEstimateDuringTransient;During the TPS AE period, use the MAP estimate table value instead of true MAP (if greater than real MAP). This basically briefly runs in alpha-n during a transient, then returns to normal speed-density mode.
+    bit allowDFUwithIgn;danger zone - allow entry into DFU with 12v active - if injection/ignition is connected to usart1/usart3, their state is unpredictable in DFU
+    bit STFTResetRegionChange; reset STFT on region change
+    bit fixSyncMisfire; don't reset instantRPM to 0 at cam sync
 	bit unusedFancy8
 	bit unusedFancy9
 	bit unusedFancy10
@@ -1826,6 +1827,33 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 	int8_t[8] airmassToTimingValues;;"deg", 1, 0, -30, 30, 0
 	uint8_t autoscale idleReturnTargetRampDuration;idle return target ramp duration;"seconds", 0.1, 0, 0.1, 15, 1
 
+	uint8_t autoscale pedalToTpsIndex;which PPS to TPS table to use;"#", 1, 0, 0, 4, 0
+    float afrTrimRangeMax;"maximum afr trim"; "(lambda)", 1, 0, 0, 0.5, 3
+    float afrTrimRangeMin;"minimum afr trim"; "(lambda)", 1, 0, -0.5, 0, 3
+
+
+! programmable ports stuff
+!  programmable ports
+
+#define PROGPORTS 114
+
+#define PROGPORTS_CONDITIONS 3
+#define PROGPORTS_CONDITIONS_MINUS_ONE 2
+
+uint8_t[PROGPORTS] portsEnabled
+uint8_t[PROGPORTS] portsPowerOnValue
+uint8_t[PROGPORTS] portsTriggerValue
+uint8_t[PROGPORTS_CONDITIONS_MINUS_ONE x PROGPORTS] portsConnector
+uint8_t[PROGPORTS_CONDITIONS x PROGPORTS] portsCondition
+uint8_t[PROGPORTS_CONDITIONS x PROGPORTS] portsSize
+uint16_t[PROGPORTS_CONDITIONS x PROGPORTS] portsReadOffset
+int16_t[PROGPORTS_CONDITIONS x PROGPORTS] portsThreshold
+int16_t[PROGPORTS_CONDITIONS x PROGPORTS] portsHysteresis
+uint16_t[PROGPORTS] portsActiveDelay
+uint16_t[PROGPORTS] portsInactiveDelay
+uint16_t[PROGPORTS_CONDITIONS x PROGPORTS] portsOutputName
+
+
 #define END_OF_CALIBRATION_PADDING 53
 uint8_t[END_OF_CALIBRATION_PADDING] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0, noMsqSave
 
@@ -1850,7 +1878,7 @@ uint8_t[TORQUE_CURVE_SIZE x TORQUE_CURVE_SIZE] autoscale torqueTable;;"Nm", 10, 
 	int16_t[CRANKING_ENRICH_COUNT] postCrankingCLTBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 0
 
 
-		float[ETB_BIAS_CURVE_LENGTH] etbBiasBins;target TPS value, 0 to 100%\nTODO: use int8 data date once we template interpolation method;"target TPS position", 1, 0, 0, 100, 0
+		float[ETB_BIAS_CURVE_LENGTH] etbBiasBins;target TPS value, 0 to 100%\nTODO: use int8 data date once we template interpolation method;"target TPS position", 1, 0, 0, 100, 2
 		float[ETB_BIAS_CURVE_LENGTH] etbBiasValues;PWM bias, open loop component of PID closed loop control;"ETB duty cycle bias", 1, 0, -100, 100, 2
 
         int8_t[ETB_BIAS_CURVE_LENGTH] dcWastegateBiasBins;target Wastegate value, 0 to 100%;"target DC position", 1, 0, 0, 100, 0
@@ -1908,6 +1936,11 @@ uint8_t[PEDAL_TO_TPS_SIZE x PEDAL_TO_TPS_SIZE] pedalToTpsTable;;"%", 1, 0, 0, 10
 uint8_t[PEDAL_TO_TPS_SIZE] pedalToTpsPedalBins;;"%", 1, 0, 0, 120, 0
 uint8_t[PEDAL_TO_TPS_SIZE] autoscale pedalToTpsRpmBins;;"RPM", 100, 0, 0, 25000, 0
 
+uint8_t[PEDAL_TO_TPS_SIZE x PEDAL_TO_TPS_SIZE] pedalToTpsTable2;;"%", 1, 0, 0, 100, 0
+uint8_t[PEDAL_TO_TPS_SIZE x PEDAL_TO_TPS_SIZE] pedalToTpsTable3;;"%", 1, 0, 0, 100, 0
+uint8_t[PEDAL_TO_TPS_SIZE x PEDAL_TO_TPS_SIZE] pedalToTpsTable4;;"%", 1, 0, 0, 100, 0
+
+
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorrBins;CLT-based cranking position % for simple manual idle controller;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
 float[CLT_CRANKING_CURVE_SIZE] cltCrankingCorr    ;CLT-based cranking position % for simple manual idle controller;"percent", 1, 0, 0, 100, 2
 
@@ -1932,6 +1965,10 @@ float[CLT_FUEL_CURVE_SIZE] cltFuelCorr;;"ratio", 1, 0, 0, 5, 2
 float[IAT_CURVE_SIZE] iatFuelCorrBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
 float[IAT_CURVE_SIZE] iatFuelCorr;;"ratio", 1, 0, 0, 5, 2
 
+#define CLT_AFR_CURVE_SIZE 8
+float[CLT_AFR_CURVE_SIZE] cltAFRTargetCorrBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
+float[CLT_AFR_CURVE_SIZE] cltAFRTargetCorr;;"ratio", 1, 0, 0.5, 1.5, 2
+
 	float[CRANKING_CURVE_SIZE] crankingFuelCoef;;"ratio", 1, 0, 0, 50, 2
 	float[CRANKING_CURVE_SIZE] crankingFuelBins;;"C", 1, 0, -80, @@CLT_UPPER_LIMIT@@, 2
 
@@ -1940,8 +1977,8 @@ float[IAT_CURVE_SIZE] iatFuelCorr;;"ratio", 1, 0, 0, 5, 2
 	float[CRANKING_CYCLE_CLT_SIZE x CRANKING_CURVE_SIZE] crankingCycleFuelCoef;;"mult", 1, 0, 0, 5, 2
 
 
-float[CLT_IDLE_TABLE_CLT_SIZE] cltIdleCorrBins;CLT-based idle position for simple manual idle controller;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
-float[CLT_IDLE_TABLE_RPM_SIZE x CLT_IDLE_TABLE_CLT_SIZE] cltIdleCorrTable;    CLT-based idle position for simple manual idle controller;"%", 1, 0, 0, 100, 2
+float[CLT_IDLE_TABLE_CLT_SIZE] cltIdleCorrBins;CLT-based idle position for simple manual idle controller;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 0
+float[CLT_IDLE_TABLE_RPM_SIZE x CLT_IDLE_TABLE_CLT_SIZE] cltIdleCorrTable;    CLT-based idle position for simple manual idle controller;"%", 1, 0, 0, 100, 1
 uint8_t[CLT_IDLE_TABLE_RPM_SIZE] autoscale rpmIdleCorrBins;;"RPM", 100, 0, 0, 25000, 0
 
 float[MAF_DECODING_COUNT] mafDecoding;Also known as MAF transfer function.\nkg/hour value.\nBy the way 2.081989116 kg/h = 1 ft3/m;"kg/hour", 1, 0, -500, 4000, 2
@@ -1994,6 +2031,15 @@ uint8_t[FUEL_LOAD_COUNT x FUEL_RPM_COUNT] autoscale lambdaTable;;"afr", {1/@@PAC
 !	lambda_table_t lambdaTable
 !	afr_table_t afrTable
 ! end_union
+
+#define STFT_TIMECONST_SIZE 8
+
+float[STFT_TIMECONST_SIZE] stftTimeConstLoadBins;;"load", 1, 0, 0, 400, 2
+float[STFT_TIMECONST_SIZE] stftTimeConstRpmBins;;"RPM", 1, 0, 0, 18000, 0
+float[STFT_TIMECONST_SIZE x STFT_TIMECONST_SIZE] stftTimeConstTable;;"time(s)", 1, 0, 0, 90, 2
+
+float[STFT_TIMECONST_SIZE x STFT_TIMECONST_SIZE] stftAuthorityAddFuelTable;;"%", 1, 0, 0, 50, 2
+float[STFT_TIMECONST_SIZE x STFT_TIMECONST_SIZE] stftAuthorityRemoveFuelTable;;"%", 1, 0, 0, 50, 2
 
 uint16_t[FUEL_LOAD_COUNT] lambdaLoadBins;;"",	1, 0, 0, 1000, 0
 uint16_t[FUEL_RPM_COUNT] lambdaRpmBins;;"RPM",	  1, 0, 0, 18000, 0
@@ -2147,12 +2193,13 @@ uint16_t[INJ_STAGING_COUNT] injectorStagingRpmBins;;"RPM",  1, 0, 0, 18000, 0
 #define WWAE_TABLE_SIZE 8
 
 int8_t[WWAE_TABLE_SIZE] wwCltBins;;"deg C", 1, 0, -40, 120, 0
-uint8_t[WWAE_TABLE_SIZE] autoscale wwTauCltValues;;"", 0.01, 0, 0, 2.5, 2
-uint8_t[WWAE_TABLE_SIZE] autoscale wwBetaCltValues;;"", 0.01, 0, 0, 1, 2
+float[WWAE_TABLE_SIZE]  wwTauCltValues;;"", 1 , 0, 0, 2.5, 4
+float[WWAE_TABLE_SIZE]  wwBetaCltValues;;"", 1 , 0, 0, 1, 4
 
-uint8_t[WWAE_TABLE_SIZE] wwMapBins;;"kPa", 1, 0, 0, 250, 0
-uint8_t[WWAE_TABLE_SIZE] autoscale wwTauMapValues;;"", 0.01, 0, 0, 2.5, 2
-uint8_t[WWAE_TABLE_SIZE] autoscale wwBetaMapValues;;"", 0.01, 0, 0, 2.5, 2
+uint16_t[WWAE_TABLE_SIZE] wwMapBins;;"kPa", 1, 0, 0, 250, 0
+uint16_t[WWAE_TABLE_SIZE] wwRpmBins;;"RPM", 1, 0, 0, 25000, 0
+float[WWAE_TABLE_SIZE x WWAE_TABLE_SIZE]  wwTauMapTable;;"", 1, 0, 0, 2.5, 4
+float[WWAE_TABLE_SIZE x WWAE_TABLE_SIZE]  wwBetaMapTable;;"", 1, 0, 0, 2.5, 4
 
 uint8_t[HPFP_LOBE_PROFILE_SIZE] autoscale hpfpLobeProfileQuantityBins;;"%", 0.5, 0, 0, 100, 1
 uint8_t[HPFP_LOBE_PROFILE_SIZE] autoscale hpfpLobeProfileAngle;;"deg", 0.5, 0, 0, 125, 1
@@ -2299,6 +2346,26 @@ gppwm_channel_e torqueReductionIgnitionRetardXaxis;Selects the X axis to use for
 float[TORQUE_TABLE_Y_SIZE x TORQUE_TABLE_X_SIZE] torqueReductionIgnitionRetardTable;How many degrees of timing advance will be reduced during the Torque Reduction Time;"deg", 1, 0, -180, 180, 2
 int16_t[TORQUE_TABLE_X_SIZE] torqueReductionIgnitionRetardXBins;;"", 1, 0, -30000, 30000, 0
 int8_t[TORQUE_TABLE_Y_SIZE] torqueReductionIgnitionRetardGearBins ;;"gear N°", 1, 0, 0, 20, 0
+
+#define WOT_TPS_SIZE 10
+float[WOT_TPS_SIZE] wotTpsRpmBins;TPS WOT Curve - specify TPS opening to be considered wide open throttle at RPM ;"RPM", 1, 0, 0, 25000, 0
+float[WOT_TPS_SIZE] wotTpsValues;TPS WOT Curve - specify TPS opening to be considered wide open throttle at RPM;"%", 1, 0, 0, 100, 2
+
+#define BUTTON_BOX_CMDS 64
+uint16_t[BUTTON_BOX_CMDS] buttonBoxBins;buttonboxbins;;"keycode", 1,0,0,65535,0
+uint16_t[BUTTON_BOX_CMDS] buttonBoxCmds;button commands;;"id" , 1,0,0,65535,0
+
+bit resetCanToggleInhibit1; can_reset command resets canToggle1 - launch control
+bit resetCanToggleInhibit2; can_reset command resets canToggle2 - DFCO invert
+bit resetCanToggleInhibit3; can_reset command resets canToggle3 - can box idle up
+bit resetCanToggleInhibit4; can_reset command resets canToggle4 - air conditioning
+bit resetCanToggleInhibit5; can_reset command resets canToggle5
+bit resetCanToggleInhibit6; can_reset command resets canToggle6
+bit resetCanToggleInhibit7; can_reset command resets canToggle7
+bit resetCanToggleInhibit8; can_reset command resets canToggle8
+
+uint8_t autoscale canBoxIdleUpRpm;"can box idle up demand";"RPM",50, 0, 0, 1000, 0
+float canBoxIdleUpPercentage;"can box idle up demand %";"%", 1, 0, 0, 100, 1
 
 include_file@@BOARD_CONFIG_FROM_FILE@@
 

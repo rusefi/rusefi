@@ -74,7 +74,9 @@ float FuelComputer::getTargetLambda(float rpm, float load) const {
 
 		target += result.Value;
 	}
-
+	// correct for according to CLT afr multiplier .
+	target = (target + (target - (target * getCltAFRTargetCorrection())))
+		+ clampF(engineConfiguration->afrTrimRangeMin, engine->outputChannels.globalAFRTrim, engineConfiguration->afrTrimRangeMax); // user target trim
     return target;
 }
 

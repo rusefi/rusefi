@@ -24,6 +24,11 @@ bool LaunchControlBase::isInsideSwitchCondition() {
 	isClutchActivated = engineConfiguration->launchActivationMode == CLUTCH_INPUT_LAUNCH;
 	isBrakePedalActivated = engineConfiguration->launchActivationMode == STOP_INPUT_LAUNCH;
 
+    // canbus toggle1 override launch control
+    if ( engine->outputChannels.canButtonToggle1 > 0) {
+        return (engine->outputChannels.canButtonToggle1);
+    }
+
 	if (isSwitchActivated) {
 #if !EFI_SIMULATOR
 		if (isBrainPinValid(engineConfiguration->launchActivatePin)) {

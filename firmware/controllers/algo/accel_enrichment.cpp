@@ -30,17 +30,29 @@ static tps_tps_Map3D_t tpsTpsMap{"tps"};
 float TpsAccelEnrichment::getTpsEnrichment() {
 	ScopePerf perf(PE::GetTpsEnrichment);
 
-	if (engineConfiguration->tpsAccelLookback == 0) {
+	// tpsAccelLookback used for Map Prediction
+/*	if (engineConfiguration->tpsAccelLookback == 0) {
 		// If disabled, return 0.
 		return 0;
 	}
+	*/
+	// explicit toggle of tps AE - tpsAccelLookback is used for mapPrediction
+	if (engineConfiguration->tpsAccelAeEnabled == 0) {
+		return 0;
+	}
+
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	if (rpm == 0) {
 		return 0;
 	}
 
+	wotTps = clampF( 0, interpolate2d(rpm, config->wotTpsRpmBins, config->wotTpsValues), 100);
+	if (wotTps <= 0) { // 0 disables scaling
+		wotTps = 100;
+	}
+
 	if (isAboveAccelThreshold) {
-		valueFromTable = tpsTpsMap.getValue(tpsFrom, tpsTo);
+		valueFromTable = tpsTpsMap.getValue(tpsFrom, tpsToScaled);
 		extraFuel = valueFromTable;
 	} else if (isBelowDecelThreshold) {
 		extraFuel = deltaTps * engineConfiguration->tpsDecelEnleanmentMultiplier;
@@ -163,11 +175,19 @@ void TpsAccelEnrichment::onNewValue(float currentValue) {
 	// Push new value in to the history buffer
 	cb.add(currentValue);
 
+    wotTps = clampF( 0, interpolate2d(Sensor::getOrZero(SensorType::Rpm), config->wotTpsRpmBins, config->wotTpsValues), 100);
+	if (wotTps <= 0) { // 0 disables scaling
+		wotTps = 100;
+	}
 	// Update deltas
 	int maxDeltaIndex = getMaxDeltaIndex();
+	// scale tpsTo according to wotTps lookup
 	tpsFrom = cb.get(maxDeltaIndex - 1);
 	tpsTo = cb.get(maxDeltaIndex);
-	deltaTps = tpsTo - tpsFrom;
+	tpsFromScaled = clampF(0, (100.0/wotTps) * tpsFrom ,  100);
+	tpsToScaled =   clampF(0, (100.0/wotTps) * tpsTo    , 100);
+
+	deltaTps = tpsToScaled - tpsFromScaled;
 
 	// Update threshold detection
 	isAboveAccelThreshold = deltaTps > engineConfiguration->tpsAccelEnrichmentThreshold;

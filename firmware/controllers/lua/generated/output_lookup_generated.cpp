@@ -854,6 +854,18 @@ float getOutputValueByName(const char *name) {
 // mcuSerial
 		case 714144074:
 			return engine->outputChannels.mcuSerial;
+// pedalToTpsIndex
+		case 1596433789:
+			return engine->outputChannels.pedalToTpsIndex;
+// globalAFRTrim
+		case 1377697963:
+			return engine->outputChannels.globalAFRTrim;
+// lastCanButtonSeen
+		case -1939960078:
+			return engine->outputChannels.lastCanButtonSeen;
+// lastCanButtonFoundIdx
+		case -838175736:
+			return engine->outputChannels.lastCanButtonFoundIdx;
 // sd_error
 		case -1811686395:
 			return engine->outputChannels.sd_error;
@@ -863,6 +875,33 @@ float getOutputValueByName(const char *name) {
 // fastAdcConversionCount
 		case 1749059722:
 			return engine->outputChannels.fastAdcConversionCount;
+// canButtons18
+		case 355813839:
+			return engine->outputChannels.canButtons18;
+// canButtonToggle1
+		case -1065713562:
+			return engine->outputChannels.canButtonToggle1;
+// canButtonToggle2
+		case -1065713561:
+			return engine->outputChannels.canButtonToggle2;
+// canButtonToggle3
+		case -1065713560:
+			return engine->outputChannels.canButtonToggle3;
+// canButtonToggle4
+		case -1065713559:
+			return engine->outputChannels.canButtonToggle4;
+// canButtonToggle5
+		case -1065713558:
+			return engine->outputChannels.canButtonToggle5;
+// canButtonToggle6
+		case -1065713557:
+			return engine->outputChannels.canButtonToggle6;
+// canButtonToggle7
+		case -1065713556:
+			return engine->outputChannels.canButtonToggle7;
+// canButtonToggle8
+		case -1065713555:
+			return engine->outputChannels.canButtonToggle8;
 // totalFuelCorrection
 #if EFI_ENGINE_CONTROL
 		case -1779658835:

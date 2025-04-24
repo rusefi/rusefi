@@ -47,5 +47,10 @@
 
 #define hasLotsOfRemainingStack() (getCurrentRemainingStack() > EXPECTED_REMAINING_STACK)
 
+#define bitset(byte,nbit)   ((byte) |=  (1<<(nbit)))
+#define bitclear(byte,nbit) ((byte) &= ~(1<<(nbit)))
+#define bitflip(byte,nbit)  ((byte) ^=  (1<<(nbit)))
+#define bitcheck(byte,nbit) ((byte) &   (1<<(nbit)))
+
 // this macro helps locate all board Public API methods
 #define PUBLIC_API_WEAK __attribute__((weak))

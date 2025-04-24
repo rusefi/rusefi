@@ -1,0 +1,2 @@
+struct_no_prefix extra_s
+end_struct

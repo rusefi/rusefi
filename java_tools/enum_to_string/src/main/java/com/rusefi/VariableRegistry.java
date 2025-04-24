@@ -180,6 +180,32 @@ public class VariableRegistry {
         return sb.toString();
     }
 
+    /** find me the 5th QUOTE_COMMA in the string, using this to grab just the right number of channels from the full clean channel list "
+
+     @return length to that character se
+
+     */
+
+    public static int findNthSubstring(String text, String target, int n) {
+        int index = -1;
+        for (int i = 0; i < n; i++) {
+            index = text.indexOf(target, index + 1);
+            if (index == -1) {
+                return(text.length()-1);
+            }
+        }
+        return index;
+    }
+
+
+    /** this is used to truncate output_pin_e_cleanlist_enum - which is the full list of stm32 ports
+     * to the length that PROGPORTS specifies, such that PortEditor works
+     * @return list of ports truncated to how many should be there
+     */
+    public String handleCleanListForProgPorts(String val) {
+        int progports = Integer.parseInt(data.get("PROGPORTS"));
+        return val.substring(0, findNthSubstring(val, "\",", progports)+1) ;
+    }
     /**
      * This method replaces variables references like @@var@@ with actual values
      * An exception is thrown if we do not have such variable
@@ -190,9 +216,12 @@ public class VariableRegistry {
         if (line == null)
             return null;
         line = process(line, VAR, key -> {
-            if (!data.containsKey(key))
-                throw new IllegalStateException("No such variable: [" + key + "]");
-            return data.get(key);
+            if (!data.containsKey(key)) throw new IllegalStateException("No such variable: [" + key + "]");
+            if (key.equals("output_pin_e_cleanlist_enum") && data.get(key) != null ) {
+                return handleCleanListForProgPorts(data.get(key));
+            } else {
+                return data.get(key);
+            }
         });
         line = process(line, VAR_REMOVE_QUOTE, key -> {
             if (!data.containsKey(key))

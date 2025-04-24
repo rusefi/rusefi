@@ -519,6 +519,9 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 		break;
 
     case trigger_type_e::TT_TOYOTA_3_TOOTH_UZ:
+      initializeUzCam(this);
+    break;
+
     case trigger_type_e::TT_VVT_TOYOTA_4_1:
 		initializeSkippedToothTrigger(this, 4, 1, triggerOperationMode, SyncEdge::RiseOnly);
 		setTriggerSynchronizationGap3(/*gapIndex*/0, /*from*/1.60, 2.40);

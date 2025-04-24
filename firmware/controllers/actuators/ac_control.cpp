@@ -74,6 +74,12 @@ bool AcController::getAcState() {
 	}
 
 	// All conditions allow AC, simply pass thru switch
+
+	// if ac button state is overridden by canbus, return that
+	if (engine->outputChannels.canButtonToggle4 == 1) {
+		return true;
+		acButtonState = engine->outputChannels.canButtonToggle4;
+	}
 	return acButtonState;
 }
 

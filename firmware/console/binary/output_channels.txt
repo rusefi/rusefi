@@ -435,11 +435,36 @@ float mapFast
   float throttleEffectiveAreaOpening
 
   uint32_t mcuSerial;;"", 1, 0, 0, 4294967295, 0
+  int8_t pedalToTpsIndex
+  float globalAFRTrim;Global target AFR trim;"%", 1,0,-0.2,0.2,3
+  uint16_t lastCanButtonSeen
+  uint16_t lastCanButtonFoundIdx
 
   uint8_t sd_error;
 
 	uint32_t fastAdcPeriod;
 	uint32_t fastAdcConversionCount;
+! this is a copy of canButton bits to allow programmable outputs to read this as a bitfield
+uint8_t canButtons18;canButtons18
+! launch overridee
+bit canButtonToggle1
+! dfco invert
+bit canButtonToggle2
+! extra idleup
+bit canButtonToggle3
+! air conditioning
+bit canButtonToggle4
+bit canButtonToggle5
+bit canButtonToggle6
+bit canButtonToggle7
+bit canButtonToggle8
+
+! this is a bitfield
+! 8th bit is port registered
+! 1st bit is WHOLE port active
+! 2nd 3rd 4th are conditions active for hysteresis
+! hax
+uint8_t[PROGPORTS iterate] progPortOutput
 
 	uint8_t[36 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct

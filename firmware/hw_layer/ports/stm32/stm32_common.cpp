@@ -37,12 +37,7 @@ extern "C" {
 #endif
 
 static void reset_and_jump(void) {
-#if !ALLOW_JUMP_WITH_IGNITION_VOLTAGE
-  if (isIgnVoltage()) {
-    criticalError("Not allowed with ignition power");
-    return;
-  }
-#endif
+
 
 	#ifdef STM32H7XX
 		// H7 needs a forcible reset of the USB peripheral(s) in order for the bootloader to work properly.
@@ -57,6 +52,13 @@ static void reset_and_jump(void) {
 
 #if EFI_DFU_JUMP
 void jump_to_bootloader() {
+
+#if !EFI_BOOTLOADER
+	if (isIgnVoltage() && !engineConfiguration->allowDFUwithIgn) {
+		criticalError("Not allowed with ignition power");
+		return;
+	}
+#endif
 	// leave DFU breadcrumb which assembly startup code would check, see [rusefi][DFU] section in assembly code
 
 	*((unsigned long *)0x2001FFF0) = 0xDEADBEEF; // End of RAM

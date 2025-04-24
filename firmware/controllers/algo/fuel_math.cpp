@@ -366,6 +366,17 @@ float getCltFuelCorrection() {
 	return interpolate2d(clt.Value, config->cltFuelCorrBins, config->cltFuelCorr);
 }
 
+/** engine target clt vs target afr correction */
+
+float getCltAFRTargetCorrection() {
+	const auto clt = Sensor::get(SensorType::Clt);
+
+	if (!clt)
+		return 1; // this error should be already reported somewhere else, let's just handle it
+
+	return interpolate2d(clt.Value, config->cltAFRTargetCorrBins, config->cltAFRTargetCorr);
+}
+
 float getIatFuelCorrection() {
 	const auto iat = Sensor::get(SensorType::Iat);
 

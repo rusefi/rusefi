@@ -63,6 +63,10 @@
 #endif
 
 static pedal2tps_t pedal2tpsMap{"p2t"};
+static pedal2tps_t pedal2tpsMap2{"p2t2"};
+static pedal2tps_t pedal2tpsMap3{"p2t3"};
+static pedal2tps_t pedal2tpsMap4{"p2t4"};
+
 static Map3D<ETB2_TRIM_SIZE, ETB2_TRIM_SIZE, int8_t, uint8_t, uint8_t> throttle2TrimTable{"t2t"};
 static Map3D<TRACTION_CONTROL_ETB_DROP_SIZE, TRACTION_CONTROL_ETB_DROP_SIZE, int8_t, uint16_t, uint8_t> tcEtbDropTable{"tce"};
 
@@ -108,7 +112,12 @@ static SensorType functionToTpsSensorPrimary(dc_function_e func) {
 
 static SensorType functionToTpsSensorSecondary(dc_function_e func) {
 	switch(func) {
-		case DC_Throttle1:  return SensorType::Tps1Secondary;
+		case DC_Throttle1:
+			if (!engineConfiguration->allowIdenticalPps) {
+				return SensorType::Tps1Secondary;
+			} else {
+				return SensorType::Tps1Primary;
+			}
 		default: return SensorType::Tps2Secondary;
 	}
 }
@@ -130,14 +139,24 @@ static TsCalMode functionToCalModePriMax(dc_function_e func) {
 
 static TsCalMode functionToCalModeSecMin(dc_function_e func) {
 	switch (func) {
-		case DC_Throttle1: return TsCalMode::Tps1SecondaryMin;
+		case DC_Throttle1:
+			if (!engineConfiguration->allowIdenticalPps) {
+				return TsCalMode::Tps1SecondaryMin;
+			} else {
+				return TsCalMode::Tps1Min;
+			}
 		default: return TsCalMode::Tps2SecondaryMin;
 	}
 }
 
 static TsCalMode functionToCalModeSecMax(dc_function_e func) {
 	switch (func) {
-		case DC_Throttle1: return TsCalMode::Tps1SecondaryMax;
+		case DC_Throttle1:
+			if (!engineConfiguration->allowIdenticalPps) {
+				return TsCalMode::Tps1SecondaryMax;
+			} else {
+				return TsCalMode::Tps1Max;
+			}
 		default: return TsCalMode::Tps2SecondaryMax;
 	}
 }
@@ -652,6 +671,22 @@ void EtbController::update() {
 
 	ClosedLoopController::update();
 
+#if !EFI_UNIT_TEST
+	engine->outputChannels.pedalToTpsIndex = engine->engineState.pedalToTpsIndexCur;
+
+	if (engine->engineState.pedalToTpsIndexCur == 1) {
+		m_pedalProvider =  &pedal2tpsMap;
+	} else if (engine->engineState.pedalToTpsIndexCur == 2) {
+		m_pedalProvider =  &pedal2tpsMap2;
+	} else if (engine->engineState.pedalToTpsIndexCur == 3) {
+		m_pedalProvider =  &pedal2tpsMap3;
+	} else if (engine->engineState.pedalToTpsIndexCur == 4) {
+		m_pedalProvider =  &pedal2tpsMap4;
+	} else {
+		m_pedalProvider =  &pedal2tpsMap;
+	}
+#endif // EFI_UNIT_TEST
+
 	if (isEtbMode() && !validPlantPosition) {
 		etbErrorCode = (int8_t)EtbStatus::TpsError;
 	}
@@ -797,8 +832,10 @@ public:
 					if (myFunction == DC_Throttle1) {
 						engineConfiguration->tpsMin = convertVoltageTo10bitADC(m_primaryMin);
 						engineConfiguration->tpsMax = convertVoltageTo10bitADC(m_primaryMax);
-						engineConfiguration->tps1SecondaryMin = convertVoltageTo10bitADC(m_secondaryMin);
-						engineConfiguration->tps1SecondaryMax = convertVoltageTo10bitADC(m_secondaryMax);
+						if (!engineConfiguration->allowIdenticalPps) {
+							engineConfiguration->tps1SecondaryMin = convertVoltageTo10bitADC(m_secondaryMin);
+							engineConfiguration->tps1SecondaryMax = convertVoltageTo10bitADC(m_secondaryMax);
+						}
 					} else if (myFunction == DC_Throttle2) {
 						engineConfiguration->tps2Min = convertVoltageTo10bitADC(m_primaryMin);
 						engineConfiguration->tps2Max = convertVoltageTo10bitADC(m_primaryMax);
@@ -824,6 +861,10 @@ public:
 			}
 			break;
 		case ACPhase::TransmitPrimaryMin:
+			if (engineConfiguration->allowIdenticalPps) {
+				engine->outputChannels.calibrationMode = (uint8_t)TsCalMode::None;
+				return ACPhase::Stopped;
+			}
 			if (m_autocalTimer.hasElapsedMs(500)) {
 				engine->outputChannels.calibrationMode = (uint8_t)functionToCalModeSecMax(myFunction);
 				engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(m_secondaryMax);
@@ -970,8 +1011,13 @@ void setDefaultEtbParameters() {
 	for (int pedalIndex = 0;pedalIndex<PEDAL_TO_TPS_SIZE;pedalIndex++) {
 		for (int rpmIndex = 0;rpmIndex<PEDAL_TO_TPS_SIZE;rpmIndex++) {
 			config->pedalToTpsTable[pedalIndex][rpmIndex] = config->pedalToTpsPedalBins[pedalIndex];
+			config->pedalToTpsTable2[pedalIndex][rpmIndex] = config->pedalToTpsPedalBins[pedalIndex];
+			config->pedalToTpsTable3[pedalIndex][rpmIndex] = config->pedalToTpsPedalBins[pedalIndex];
+			config->pedalToTpsTable4[pedalIndex][rpmIndex] = config->pedalToTpsPedalBins[pedalIndex];
 		}
 	}
+	// set default map 1
+    engineConfiguration->pedalToTpsIndex = 1;
 
 	// Default is to run each throttle off its respective hbridge
 	engineConfiguration->etbFunctions[0] = DC_Throttle1;
@@ -1120,8 +1166,14 @@ void initElectronicThrottle() {
 	});
 
 #endif /* EFI_PROD_CODE */
+	// copy table index to runtime state and outpc
+	engine->engineState.pedalToTpsIndexCur = engineConfiguration->pedalToTpsIndex;
+	engine->outputChannels.pedalToTpsIndex = engine->engineState.pedalToTpsIndexCur;
 
 	pedal2tpsMap.initTable(config->pedalToTpsTable, config->pedalToTpsRpmBins, config->pedalToTpsPedalBins);
+	pedal2tpsMap2.initTable(config->pedalToTpsTable2, config->pedalToTpsRpmBins, config->pedalToTpsPedalBins);
+	pedal2tpsMap3.initTable(config->pedalToTpsTable3, config->pedalToTpsRpmBins, config->pedalToTpsPedalBins);
+	pedal2tpsMap4.initTable(config->pedalToTpsTable4, config->pedalToTpsRpmBins, config->pedalToTpsPedalBins);
 	throttle2TrimTable.initTable(config->throttle2TrimTable, config->throttle2TrimRpmBins, config->throttle2TrimTpsBins);
 	tcEtbDropTable.initTable(engineConfiguration->tractionControlEtbDrop, engineConfiguration->tractionControlSlipBins, engineConfiguration->tractionControlSpeedBins);
 

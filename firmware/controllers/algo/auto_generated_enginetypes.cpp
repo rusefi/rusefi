@@ -437,12 +437,69 @@ case TS_WRITE_FLASH:
   }
  return NULL;
 }
+const char *getTs_buttonbox_e(ts_buttonbox_e value){
+switch(value) {
+case AFR_TRIM_DOWN:
+  return "AFR_TRIM_DOWN";
+case AFR_TRIM_MAX:
+  return "AFR_TRIM_MAX";
+case AFR_TRIM_MIN:
+  return "AFR_TRIM_MIN";
+case AFR_TRIM_RESET:
+  return "AFR_TRIM_RESET";
+case AFR_TRIM_UP:
+  return "AFR_TRIM_UP";
+case ALL_TRIM_RESET:
+  return "ALL_TRIM_RESET";
+case CAN_BUTTON_TOGGLE1:
+  return "CAN_BUTTON_TOGGLE1";
+case CAN_BUTTON_TOGGLE2:
+  return "CAN_BUTTON_TOGGLE2";
+case CAN_BUTTON_TOGGLE3:
+  return "CAN_BUTTON_TOGGLE3";
+case CAN_BUTTON_TOGGLE4:
+  return "CAN_BUTTON_TOGGLE4";
+case CAN_BUTTON_TOGGLE5:
+  return "CAN_BUTTON_TOGGLE5";
+case CAN_BUTTON_TOGGLE6:
+  return "CAN_BUTTON_TOGGLE6";
+case CAN_BUTTON_TOGGLE7:
+  return "CAN_BUTTON_TOGGLE7";
+case CAN_BUTTON_TOGGLE8:
+  return "CAN_BUTTON_TOGGLE8";
+case CAN_LUA_COMMAND_1:
+  return "CAN_LUA_COMMAND_1";
+case CAN_LUA_COMMAND_2:
+  return "CAN_LUA_COMMAND_2";
+case CAN_LUA_COMMAND_3:
+  return "CAN_LUA_COMMAND_3";
+case CAN_LUA_COMMAND_4:
+  return "CAN_LUA_COMMAND_4";
+case ETB_MAP_1:
+  return "ETB_MAP_1";
+case ETB_MAP_2:
+  return "ETB_MAP_2";
+case ETB_MAP_3:
+  return "ETB_MAP_3";
+case ETB_MAP_4:
+  return "ETB_MAP_4";
+case ETB_MAP_DOWN:
+  return "ETB_MAP_DOWN";
+case ETB_MAP_RESET:
+  return "ETB_MAP_RESET";
+case ETB_MAP_UP:
+  return "ETB_MAP_UP";
+  }
+ return NULL;
+}
 const char *getTs_command_e(ts_command_e value){
 switch(value) {
 case TS_BENCH_CATEGORY:
   return "TS_BENCH_CATEGORY";
 case TS_BOARD_ACTION:
   return "TS_BOARD_ACTION";
+case TS_BUTTONBOX1_CATEGORY:
+  return "TS_BUTTONBOX1_CATEGORY";
 case TS_CLEAR_WARNINGS:
   return "TS_CLEAR_WARNINGS";
 case TS_COMMAND_1:
@@ -479,6 +536,8 @@ case TS_COMMAND_9:
   return "TS_COMMAND_9";
 case TS_DEBUG_MODE:
   return "TS_DEBUG_MODE";
+case TS_HW_BUTTONBOX1_CATEGORY:
+  return "TS_HW_BUTTONBOX1_CATEGORY";
 case TS_IGNITION_CATEGORY:
   return "TS_IGNITION_CATEGORY";
 case TS_INJECTOR_CATEGORY:
@@ -495,10 +554,6 @@ case TS_UNUSED_23:
   return "TS_UNUSED_23";
 case TS_UNUSED_24:
   return "TS_UNUSED_24";
-case TS_UNUSED_26:
-  return "TS_UNUSED_26";
-case TS_UNUSED_27:
-  return "TS_UNUSED_27";
 case TS_UNUSED_28:
   return "TS_UNUSED_28";
 case TS_WIDEBAND:

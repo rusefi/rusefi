@@ -1,4 +1,4 @@
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/tps_accel_state.txt Thu Dec 21 21:47:23 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/tps_accel_state.txt
 // by class com.rusefi.output.CHeaderConsumer
 // begin
 #pragma once
@@ -152,8 +152,23 @@ struct tps_accel_state_s {
 	 * offset 44
 	 */
 	int cycleCnt = (int)0;
+	/**
+	 * Fuel: WOT TPS
+	 * offset 48
+	 */
+	percent_t wotTps = (percent_t)0;
+	/**
+	 * Fuel: TPS AE fromScaled
+	 * offset 52
+	 */
+	percent_t tpsFromScaled = (percent_t)0;
+	/**
+	 * Fuel: TPS AE toScaled
+	 * offset 56
+	 */
+	percent_t tpsToScaled = (percent_t)0;
 };
-static_assert(sizeof(tps_accel_state_s) == 48);
+static_assert(sizeof(tps_accel_state_s) == 60);
 
 // end
-// this section was generated automatically by rusEFI tool config_definition_base.jar based on (unknown script) controllers/algo/tps_accel_state.txt Thu Dec 21 21:47:23 UTC 2023
+// this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/tps_accel_state.txt
