@@ -67,4 +67,15 @@ cd "$FDIR"
 MI=$(realpath --relative-to="$FDIR" "$MI")
 
 source config/boards/common_script_read_meta_env.inc "$MI"
+#rm -f controllers/generated/*.h
+#rm -f live_data_generated/output_channels_generated.h
+#rm -f tunerstudio/generated/*.ini
+#rm -f tunerstudio/generated/*.txt
+
+#./gen_live_documentation.sh
+#./gen_signature.sh
+#./gen_config_board.sh
+
+# exit
+
 make $B -j$(nproc) -r $MAKE_ARGS

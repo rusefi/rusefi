@@ -1826,7 +1826,11 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 	int8_t[8] airmassToTimingValues;;"deg", 1, 0, -30, 30, 0
 	uint8_t autoscale idleReturnTargetRampDuration;idle return target ramp duration;"seconds", 0.1, 0, 0.1, 15, 1
 
-#define END_OF_CALIBRATION_PADDING 53
+	uint8_t autoscale pedalToTpsIndex;which PPS to TPS table to use;"#", 1, 0, 0, 4, 0
+    float afrTrimRangeMax;"maximum afr trim"; "(lambda)", 1, 0, 0, 0.5, 3
+    float afrTrimRangeMin;"minimum afr trim"; "(lambda)", 1, 0, -0.5, 0, 3
+
+#define END_OF_CALIBRATION_PADDING 48
 uint8_t[END_OF_CALIBRATION_PADDING] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0, noMsqSave
 
 ! end of engine_configuration_s
@@ -2300,6 +2304,21 @@ float[TORQUE_TABLE_Y_SIZE x TORQUE_TABLE_X_SIZE] torqueReductionIgnitionRetardTa
 int16_t[TORQUE_TABLE_X_SIZE] torqueReductionIgnitionRetardXBins;;"", 1, 0, -30000, 30000, 0
 int8_t[TORQUE_TABLE_Y_SIZE] torqueReductionIgnitionRetardGearBins ;;"gear N°", 1, 0, 0, 20, 0
 
+#define BUTTON_BOX_CMDS 64
+uint16_t[BUTTON_BOX_CMDS] buttonBoxBins;buttonboxbins;;"keycode", 1,0,0,65535,0
+uint16_t[BUTTON_BOX_CMDS] buttonBoxCmds;button commands;;"id" , 1,0,0,65535,0
+
+bit resetCanToggleInhibit1; can_reset command resets canToggle1 - launch control
+bit resetCanToggleInhibit2; can_reset command resets canToggle2 - DFCO invert
+bit resetCanToggleInhibit3; can_reset command resets canToggle3 - can box idle up
+bit resetCanToggleInhibit4; can_reset command resets canToggle4 - air conditioning
+bit resetCanToggleInhibit5; can_reset command resets canToggle5
+bit resetCanToggleInhibit6; can_reset command resets canToggle6
+bit resetCanToggleInhibit7; can_reset command resets canToggle7
+bit resetCanToggleInhibit8; can_reset command resets canToggle8
+
+uint8_t autoscale canBoxIdleUpRpm;"can box idle up demand";"RPM",50, 0, 0, 1000, 0
+float canBoxIdleUpPercentage;"can box idle up demand %";"%", 1, 0, 0, 100, 1
 include_file@@BOARD_CONFIG_FROM_FILE@@
 
 end_struct

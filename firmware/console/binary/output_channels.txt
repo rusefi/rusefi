@@ -441,5 +441,25 @@ float mapFast
 	uint32_t fastAdcPeriod;
 	uint32_t fastAdcConversionCount;
 
-	uint8_t[36 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+  int8_t pedalToTpsIndex
+  float globalAFRTrim;Global target AFR trim;"%", 1,0,-0.2,0.2,3
+  uint16_t lastCanButtonSeen
+  uint16_t lastCanButtonFoundIdx
+
+! this is a copy of canButton bits to allow programmable outputs to read this as a bitfield
+uint8_t canButtons18;canButtons18
+! launch overridee
+bit canButtonToggle1
+! dfco invert
+bit canButtonToggle2
+! extra idleup
+bit canButtonToggle3
+! air conditioning
+bit canButtonToggle4
+bit canButtonToggle5
+bit canButtonToggle6
+bit canButtonToggle7
+bit canButtonToggle8
+
+	uint8_t[25 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct

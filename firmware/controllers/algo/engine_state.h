@@ -83,6 +83,9 @@ public:
 	multispark_state multispark;
 
 	bool shouldUpdateInjectionTiming = true;
+
+	// index of current ETB map
+	int pedalToTpsIndexCur = 1;
 };
 
 EngineState * getEngineState();
