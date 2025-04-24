@@ -12,7 +12,7 @@ float PUBLIC_API_WEAK getAnalogInputDividerCoefficient(adc_channel_e) {
     return engineConfiguration->analogInputDividerCoefficient;
 }
 
-float PUBLIC_API_WEAK boardAdjustVoltage(float voltage, adc_channel_e hwChannel) {
+float PUBLIC_API_WEAK boardAdjustVoltage(float voltage, adc_channel_e /* hwChannel */) {
 	// a hack useful when we do not trust voltage just after board EN was turned on. is this just hiding electrical design flaws?
 	return voltage;
 }
@@ -49,7 +49,6 @@ int analogGetDiagnostic()
 #include "adc_subscription.h"
 #include "AdcDevice.h"
 #include "mpu_util.h"
-#include "periodic_thread_controller.h"
 #include "protected_gpio.h"
 
 extern AdcDevice fastAdc;
@@ -142,44 +141,36 @@ static void setAdcDebugReporting(int value) {
 	efiPrintf("adcDebug=%d", adcDebugReporting);
 }
 
-class SlowAdcController : public PeriodicController<UTILITY_THREAD_STACK_SIZE> {
-public:
-	SlowAdcController()
-		: PeriodicController("ADC", PRIO_ADC, SLOW_ADC_RATE)
+void updateSlowAdc(efitick_t nowNt) {
 	{
-	}
+		ScopePerf perf(PE::AdcConversionSlow);
 
-	void PeriodicTask(efitick_t nowNt) override {
-		{
-			ScopePerf perf(PE::AdcConversionSlow);
-
-			/* drop volatile type qualifier - this is safe */
-			if (!readSlowAnalogInputs((adcsample_t *)slowAdcSamples)) {
-				engine->outputChannels.slowAdcErrorCount++;
-				return;
-			}
-
-			// Ask the port to sample the MCU temperature
-			mcuTemperature = getMcuTemperature();
-			if (mcuTemperature > 150.0f || mcuTemperature < -50.0f) {
-				/*
-				 * we have a sporadic issue with this check todo https://github.com/rusefi/rusefi/issues/2552
-				 */
-				//criticalError("Invalid CPU temperature measured %f", degrees);
-			}
+		/* drop volatile type qualifier - this is safe */
+		if (!readSlowAnalogInputs((adcsample_t *)slowAdcSamples)) {
+			engine->outputChannels.slowAdcErrorCount++;
+			return;
 		}
 
-		{
-			ScopePerf perf(PE::AdcProcessSlow);
-
-			AdcSubscription::UpdateSubscribers(nowNt);
-
-			slowAdcConversionCount++;
-
-			protectedGpio_check(nowNt);
+		// Ask the port to sample the MCU temperature
+		mcuTemperature = getMcuTemperature();
+		if (mcuTemperature > 150.0f || mcuTemperature < -50.0f) {
+			/*
+			 * we have a sporadic issue with this check todo https://github.com/rusefi/rusefi/issues/2552
+			 */
+			//criticalError("Invalid CPU temperature measured %f", degrees);
 		}
 	}
-};
+
+	{
+		ScopePerf perf(PE::AdcProcessSlow);
+
+		slowAdcConversionCount++;
+
+		AdcSubscription::UpdateSubscribers(nowNt);
+
+		protectedGpio_check(nowNt);
+	}
+}
 
 void addFastAdcChannel(const char*, adc_channel_e hwChannel) {
 	if (!isAdcChannelValid(hwChannel)) {
@@ -237,8 +228,6 @@ void waitForSlowAdc(uint32_t lastAdcCounter) {
 	}
 }
 
-static SlowAdcController slowAdcController;
-
 void initAdcInputs() {
 	efiPrintf("initAdcInputs()");
 
@@ -249,9 +238,6 @@ void initAdcInputs() {
 
 #if EFI_INTERNAL_ADC
 	portInitAdc();
-
-	// Start the slow ADC thread
-	slowAdcController.start();
 
 #if EFI_USE_FAST_ADC
 	// After this point fastAdc is not allowed to add channels
