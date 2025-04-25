@@ -67,7 +67,7 @@ void MainLoop::PeriodicTask(efitick_t nowNt) {
 	}
 
 	if (currentLoopPeriod & FAST_CALLBACK_RATE) {
-	   //TODO: main_loop fast callback
+		engine->periodicFastCallback();
 	}
 }
 

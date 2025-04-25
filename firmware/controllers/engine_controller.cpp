@@ -116,18 +116,6 @@ void initDataStructures() {
 
 #if !EFI_UNIT_TEST
 
-class PeriodicFastController : public PeriodicTimerController {
-	void PeriodicTask() override {
-		engine->periodicFastCallback();
-	}
-
-	int getPeriodMs() override {
-		return FAST_CALLBACK_PERIOD_MS;
-	}
-};
-
-static PeriodicFastController fastController;
-
 class EngineStateBlinkingTask : public PeriodicTimerController {
 	int getPeriodMs() override {
 		return 50;
@@ -207,10 +195,6 @@ void doPeriodicSlowCallback() {
 #endif // EFI_TCU
 
 	tryResetWatchdog();
-}
-
-void initPeriodicEvents() {
-	fastController.start();
 }
 
 char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer, size_t bufferSize) {

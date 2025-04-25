@@ -220,7 +220,6 @@ void rusEfiFunctionalTest() {
 
 	engineConfiguration->enableVerboseCanTx = true;
 
-	initPeriodicEvents(); //TODO: replace to initMainLoop();
 	initMainLoop();
 	rememberCurrentConfiguration();
 
