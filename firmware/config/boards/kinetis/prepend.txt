@@ -21,6 +21,16 @@
 #define SCRIPT_CURVE_16 2
 #define SCRIPT_TABLE_8 2
 
+#define GPPWM_RPM_COUNT 2
+#define GPPWM_LOAD_COUNT 2
+
+#define IAC_PID_MULT_SIZE 2
+
+#define BOOST_LOAD_COUNT 2
+#define BOOST_RPM_COUNT 2
+
+#define PEDAL_TO_TPS_SIZE 2
+
 #define INJ_STAGING_COUNT 2
 
 #define TABLE_2_RPM_SIZE 2
