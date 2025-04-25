@@ -24,6 +24,7 @@ void TripOdometer::consumeFuel(float grams, efitick_t nowNt) {
 		m_consumedGrams++;
 	}
 
+  // TODO: it looks like we've already added `grams` to `m_consumedGrams` above and the next line doubles registered value of consumed fuel. Do we need to get rid of it?
 	m_consumedGrams += grams;
 
 	float elapsedSecond = m_timer.getElapsedSecondsAndReset(nowNt);
