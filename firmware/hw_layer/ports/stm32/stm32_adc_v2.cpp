@@ -17,51 +17,17 @@
 /* Depth of the conversion buffer, channels are sampled X times each.*/
 #define SLOW_ADC_OVERSAMPLE      8
 
+#ifndef EFI_INTERNAL_SLOW_ADC_BACKGROUND
+#define EFI_INTERNAL_SLOW_ADC_BACKGROUND FALSE
+#endif
+
 #ifdef ADC_MUX_PIN
 static OutputPin muxControl;
 #endif // ADC_MUX_PIN
 
-void portInitAdc() {
-	// Init slow ADC
-	adcStart(&ADCD1, NULL);
-
-#ifdef ADC_MUX_PIN
-	muxControl.initPin("ADC Mux", ADC_MUX_PIN);
-#endif //ADC_MUX_PIN
-
-#if EFI_USE_FAST_ADC
-	// Init fast ADC (MAP sensor)
-	adcStart(&ADCD2, NULL);
+#if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == TRUE)
+static void slowAdcEndCB(ADCDriver *adcp);
 #endif
-
-	// Enable internal temperature reference
-	adcSTM32EnableTSVREFE(); // Internal temperature sensor
-
-#if defined(STM32F7XX)
-	/* the temperature sensor is internally
-	 * connected to the same input channel as VBAT. Only one conversion,
-	 * temperature sensor or VBAT, must be selected at a time. */
-	adcSTM32DisableVBATE();
-#endif
-
-	/* Enable this code only when you absolutly sure
-	 * that there is no possible errors from ADC */
-#if 0
-	/* All ADC use DMA and DMA calls end_cb from its IRQ
-	 * If none of ADC users need error callback - we can disable
-	 * shared ADC IRQ and save some CPU ticks */
-	if ((adcgrpcfgSlow.error_cb == NULL) &&
-		(adcgrpcfgFast.error_cb == NULL)
-		/* TODO: Add ADC3? */) {
-		nvicDisableVector(STM32_ADC_NUMBER);
-	}
-#endif
-
-#ifdef EFI_SOFTWARE_KNOCK
-	adcStart(&KNOCK_ADC, nullptr);
-#endif // EFI_SOFTWARE_KNOCK
-}
-
 static void slowAdcErrorCB(ADCDriver *, adcerror_t);
 
 /*
@@ -70,7 +36,11 @@ static void slowAdcErrorCB(ADCDriver *, adcerror_t);
 static const ADCConversionGroup tempSensorConvGroup = {
 	.circular			= FALSE,
 	.num_channels		= 1,
+#if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == TRUE)
+	.end_cb				= slowAdcEndCB,
+#else
 	.end_cb				= nullptr,
+#endif
 	.error_cb			= slowAdcErrorCB,
 	/* HW dependent part below */
 	.cr1				= 0,
@@ -93,11 +63,13 @@ static const ADCConversionGroup tempSensorConvGroup = {
 
 // 4x oversample is plenty
 static constexpr int tempSensorOversample = 4;
-static NO_CACHE adcsample_t tempSensorSamples[tempSensorOversample];
+static volatile NO_CACHE adcsample_t tempSensorSamples[tempSensorOversample];
 
 float getMcuTemperature() {
+#if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == FALSE)
 	// Temperature sensor is only physically wired to ADC1
-	adcConvert(&ADCD1, &tempSensorConvGroup, tempSensorSamples, tempSensorOversample);
+	adcConvert(&ADCD1, &tempSensorConvGroup, (adcsample_t *)tempSensorSamples, tempSensorOversample);
+#endif
 
 	uint32_t sum = 0;
 	for (size_t i = 0; i < tempSensorOversample; i++) {
@@ -130,7 +102,17 @@ float getMcuTemperature() {
 // This ^ does not include additional MCU temperatur conversions
 
 // Slow ADC has 16 channels we can sample, or 32 if ADC mux mode is enabled.
-constexpr size_t adcChannelCount = 16;
+#if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == TRUE)
+	#ifdef ADC_MUX_PIN
+		constexpr size_t adcChannelCount = 16 * 2;
+	#else
+		constexpr size_t adcChannelCount = 16;
+	#endif
+#else
+	constexpr size_t adcChannelCount = 16;
+#endif
+
+static volatile NO_CACHE adcsample_t slowSampleBuffer[SLOW_ADC_OVERSAMPLE * adcChannelCount];
 
 static void slowAdcErrorCB(ADCDriver *, adcerror_t err) {
 	engine->outputChannels.slowAdcErrorCount++;
@@ -144,8 +126,12 @@ static void slowAdcErrorCB(ADCDriver *, adcerror_t err) {
 // This simply samples every channel in sequence
 static constexpr ADCConversionGroup convGroupSlow = {
 	.circular			= FALSE,
-	.num_channels		= adcChannelCount,
+	.num_channels		= 16,
+#if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == TRUE)
+	.end_cb				= slowAdcEndCB,
+#else
 	.end_cb				= nullptr,
+#endif
 	.error_cb			= slowAdcErrorCB,
 	/* HW dependent part.*/
 	.cr1				= 0,
@@ -177,23 +163,63 @@ static constexpr ADCConversionGroup convGroupSlow = {
 	.sqr3	=   ADC_SQR3_SQ1_N(0) |   ADC_SQR3_SQ2_N(1) |   ADC_SQR3_SQ3_N(2) |  ADC_SQR3_SQ4_N(3) |   ADC_SQR3_SQ5_N(4) |   ADC_SQR3_SQ6_N(5), // Conversion group sequence 1...6
 };
 
-static NO_CACHE adcsample_t slowSampleBuffer[SLOW_ADC_OVERSAMPLE * adcChannelCount];
+#if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == TRUE)
+// TODO: enum
+static int slowAdcState = 0;
 
-static bool readBatch(adcsample_t* convertedSamples, size_t start) {
-	msg_t result = adcConvert(&ADCD1, &convGroupSlow, slowSampleBuffer, SLOW_ADC_OVERSAMPLE);
+static void slowAdcEndCB(ADCDriver *adcp) {
+	if (adcIsBufferComplete(adcp)) {
+		chSysLockFromISR();
+		// Stop ADC to reset DMA and internal state machine to avoid spurious DMA request
+		//adcStopConversionI(adcp);
+		// Switch state to ready to allow starting new conversion from here
+		adcp->state = ADC_READY;
+		if (slowAdcState == 0) {
+			#ifdef ADC_MUX_PIN
+				slowAdcState = 1;
+				muxControl.setValue(1, /*force*/true);
+				// convert second half
+				adcStartConversionI(adcp, &convGroupSlow, (adcsample_t *)&slowSampleBuffer[SLOW_ADC_OVERSAMPLE * adcChannelCount / 2], SLOW_ADC_OVERSAMPLE);
+			#else
+				slowAdcState = 2;
+				adcStartConversionI(adcp, &tempSensorConvGroup, (adcsample_t *)tempSensorSamples, tempSensorOversample);
+			#endif
+			}
+		#ifdef ADC_MUX_PIN
+		else if (slowAdcState == 1) {
+				slowAdcState = 2;
+				adcStartConversionI(adcp, &tempSensorConvGroup, (adcsample_t *)tempSensorSamples, tempSensorOversample);
+		}
+		#endif
+		else if (slowAdcState == 2) {
+			slowAdcState = 0;
+			#ifdef ADC_MUX_PIN
+				muxControl.setValue(0, /*force*/true);
+			#endif
+			adcStartConversionI(adcp, &convGroupSlow, (adcsample_t *)slowSampleBuffer, SLOW_ADC_OVERSAMPLE);
+		}
+		chSysUnlockFromISR();
+	}
+}
+#endif
+
+static bool readBatch(adcsample_t* convertedSamples, adcsample_t* b, size_t start) {
+#if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == FALSE)
+	msg_t result = adcConvert(&ADCD1, &convGroupSlow, b, SLOW_ADC_OVERSAMPLE);
 
 	// If something went wrong - try again later
 	if (result != MSG_OK) {
 		return false;
 	}
+#endif
 
 	// Average samples to get some noise filtering and oversampling
-	for (size_t i = 0; i < adcChannelCount; i++) {
+	for (size_t i = 0; i < 16; i++) {
 		uint32_t sum = 0;
 		size_t index = i;
 		for (size_t j = 0; j < SLOW_ADC_OVERSAMPLE; j++) {
-			sum += slowSampleBuffer[index];
-			index += adcChannelCount;
+			sum += b[index];
+			index += 16;
 		}
 
 		adcsample_t value = static_cast<adcsample_t>(sum / SLOW_ADC_OVERSAMPLE);
@@ -206,13 +232,17 @@ static bool readBatch(adcsample_t* convertedSamples, size_t start) {
 bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 	bool result = true;
 
-	result &= readBatch(convertedSamples, 0);
+	result &= readBatch(convertedSamples, (adcsample_t *)slowSampleBuffer, 0);
 
 #ifdef ADC_MUX_PIN
-	muxControl.setValue(1, /*force*/true);
-	// read the second batch, starting where we left off
-	result &= readBatch(convertedSamples, adcChannelCount);
-	muxControl.setValue(0, /*force*/true);
+	#if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == FALSE)
+		muxControl.setValue(1, /*force*/true);
+	#endif
+		// read the second batch, starting where we left off
+		result &= readBatch(convertedSamples, (adcsample_t *)&slowSampleBuffer[SLOW_ADC_OVERSAMPLE * adcChannelCount / 2], 16);
+	#if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == FALSE)
+		muxControl.setValue(0, /*force*/true);
+	#endif
 #endif
 
 	return result;
@@ -329,5 +359,50 @@ const ADCConversionGroup* getKnockConversionGroup(uint8_t channelIdx) {
 }
 
 #endif // EFI_SOFTWARE_KNOCK
+
+void portInitAdc() {
+#ifdef ADC_MUX_PIN
+	muxControl.initPin("ADC Mux", ADC_MUX_PIN);
+#endif //ADC_MUX_PIN
+
+	// Init slow ADC
+	adcStart(&ADCD1, NULL);
+
+	// Enable internal temperature reference
+	adcSTM32EnableTSVREFE(); // Internal temperature sensor
+
+#if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == TRUE)
+	adcStartConversion(&ADCD1, &convGroupSlow, (adcsample_t *)slowSampleBuffer, SLOW_ADC_OVERSAMPLE);
+#endif
+
+#if EFI_USE_FAST_ADC
+	// Init fast ADC (MAP sensor)
+	adcStart(&ADCD2, NULL);
+#endif
+
+#if defined(STM32F7XX)
+	/* the temperature sensor is internally
+	 * connected to the same input channel as VBAT. Only one conversion,
+	 * temperature sensor or VBAT, must be selected at a time. */
+	adcSTM32DisableVBATE();
+#endif
+
+	/* Enable this code only when you absolutly sure
+	 * that there is no possible errors from ADC */
+#if 0
+	/* All ADC use DMA and DMA calls end_cb from its IRQ
+	 * If none of ADC users need error callback - we can disable
+	 * shared ADC IRQ and save some CPU ticks */
+	if ((adcgrpcfgSlow.error_cb == NULL) &&
+		(adcgrpcfgFast.error_cb == NULL)
+		/* TODO: Add ADC3? */) {
+		nvicDisableVector(STM32_ADC_NUMBER);
+	}
+#endif
+
+#ifdef EFI_SOFTWARE_KNOCK
+	adcStart(&KNOCK_ADC, nullptr);
+#endif // EFI_SOFTWARE_KNOCK
+}
 
 #endif // HAL_USE_ADC

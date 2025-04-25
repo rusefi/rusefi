@@ -436,6 +436,10 @@
 // NOTE: PWM mode triggers ADC convertion through hardware ADC trigger
 //#define EFI_INTERNAL_FAST_ADC_PWM	&PWMD8
 
+// Continuously run internal ADC in background for all channels
+// Do averaging in thread with no sync with convertion end
+#define EFI_INTERNAL_SLOW_ADC_BACKGROUND	TRUE
+
 #define EFI_SPI1_AF 5
 #define EFI_SPI2_AF 5
 #define EFI_SPI3_AF 6
