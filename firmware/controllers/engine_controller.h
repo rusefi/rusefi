@@ -22,3 +22,5 @@ void initWarningRunningPins();
 void initDataStructures();
 
 void slowStartStopButtonCallback();
+
+void doPeriodicSlowCallback();
