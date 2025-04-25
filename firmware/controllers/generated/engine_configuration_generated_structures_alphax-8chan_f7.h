@@ -1087,6 +1087,7 @@ struct engine_configuration_s {
 	 */
 	uint8_t maxIdleVss;
 	/**
+	 * Allowed range around detection position
 	 * offset 447
 	 */
 	uint8_t camDecoder2jzPrecision;
@@ -3130,6 +3131,7 @@ struct engine_configuration_s {
 	offset 1536 bit 31 */
 	bool unusedBit_549_31 : 1 {};
 	/**
+	 * Angle of tooth detection within engine phase cycle
 	 * offset 1540
 	 */
 	uint8_t camDecoder2jzPosition;

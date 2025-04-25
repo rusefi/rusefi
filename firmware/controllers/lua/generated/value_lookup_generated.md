@@ -290,7 +290,7 @@ How many consecutive gap rations have to match expected ranges for sync to happe
 Above this speed, disable closed loop idle control. Set to 0 to disable (allow closed loop idle at any speed).
 
 ### camDecoder2jzPrecision
-null
+Allowed range around detection position
 
 ### minOilPressureAfterStart
 Expected oil pressure after starting the engine. If oil pressure does not reach this level within 5 seconds of engine start, fuel will be cut. Set to 0 to disable and always allow starting.
@@ -1202,7 +1202,7 @@ ListenMode is about acknowledging CAN traffic on the protocol level. Different f
 
 
 ### camDecoder2jzPosition
-null
+Angle of tooth detection within engine phase cycle
 
 ### benchTestOnTime
 Duration of each test pulse
