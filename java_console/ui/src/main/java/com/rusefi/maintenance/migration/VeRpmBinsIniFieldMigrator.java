@@ -74,9 +74,6 @@ enum VeRpmBinsIniFieldMigrator {
                     final String[][] newValues = expandValues(prevValues, lastValue, recommendedStep);
                     result = Optional.of(newVeRpmBinsField.formatValue(newValues));
                 }
-            } else {
-                // does not look like table was resized, no reason to print scary message
-                //callbacks.logLine("WARNING! We failed to extend `veRpmBins` ini-field");
             }
         }
         return result;
