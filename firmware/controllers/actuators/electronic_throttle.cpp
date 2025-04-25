@@ -194,13 +194,16 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 
 	m_pid.initPidClass(pidParameters);
 
+#if !EFI_UNIT_TEST
 	if (isEtbMode()) {
 		m_pid.iTermMin = engineConfiguration->etb_iTermMin;
 		m_pid.iTermMax = engineConfiguration->etb_iTermMax;
 	} else {
+		// Some defaults from setDefaultEtbParameters(), find better values for EWG and Idle or add config options
 		m_pid.iTermMin = -30;
 		m_pid.iTermMax = 30;
 	}
+#endif
 
 	// Ignore 3% position error before complaining
 	m_targetErrorAccumulator.init(3.0f, etbPeriodSeconds);
