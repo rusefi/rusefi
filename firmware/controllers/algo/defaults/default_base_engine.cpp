@@ -212,6 +212,12 @@ void setDefaultBaseEngine() {
 	// this should not be below default rpm! maybe even make them equal?
 	engineConfiguration->vvtControlMinRpm = 600;
 
+  // todo: this "2JZ" trigger is very powerful for many low tooth quantity applications
+  // todo: we might be getting closer to a re-name
+  // by the way 2GRFE intake likes position 160 / precision 20
+  // see also https://github.com/rusefi/rusefi/issues/7345
+  //
+  // 2JZ values
     engineConfiguration->camDecoder2jzPosition = 95;
     engineConfiguration->camDecoder2jzPrecision = 40;
 
