@@ -1,5 +1,8 @@
 
 #include "pch.h"
+
+#if HW_PROTEUS || HW_HELLEN
+
 #include "defaults.h"
 #include "proteus_meta.h"
 #include "canam.h"
@@ -111,3 +114,5 @@ void setMaverickX3() {
 #endif // HW_PROTEUS
 
 }
+
+#endif // HW_PROTEUS || HW_HELLEN
