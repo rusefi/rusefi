@@ -17,6 +17,7 @@ public enum VeTableExtensionMigrator implements TuneMigrator {
     private static final FieldType VE_TABLE_TYPE = FieldType.UINT16;
 
     static final int VE_TABLE_ROWS = 16;
+    // todo: can this be more dynamic?
     static final int OLD_VE_TABLE_COLS = 16;
     static final int NEW_VE_TABLE_COLS = 24;
 

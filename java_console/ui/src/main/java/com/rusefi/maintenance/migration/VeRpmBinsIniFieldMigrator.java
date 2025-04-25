@@ -4,6 +4,7 @@ import com.opensr5.ini.field.ArrayIniField;
 import com.opensr5.ini.field.IniField;
 import com.rusefi.config.FieldType;
 import com.rusefi.io.UpdateOperationCallbacks;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.List;
@@ -51,7 +52,7 @@ enum VeRpmBinsIniFieldMigrator {
                 final long lastValue = prevLongValues.get(prevLongValues.size() - 1);
                 final String max = newVeRpmBinsField.getMax();
 
-                Optional<Long> recommendedStep = Optional.empty();
+                Optional<Long> recommendedStep;
                 if (max != null) {
                     final long maxPossibleStep = (long)(
                         (Double.parseDouble(max) - lastValue) / (NEW_VE_TABLE_COLS - OLD_VE_TABLE_COLS)
@@ -70,24 +71,30 @@ enum VeRpmBinsIniFieldMigrator {
                     recommendedStep = Optional.of(lastValue - valueBeforeLast);
                 }
                 if (recommendedStep.isPresent()) {
-                    final String[][] newValues = new String[NEW_VE_TABLE_COLS][1];
-                    // copy prev values:
-                    for (int i = 0; i < OLD_VE_TABLE_COLS; i++) {
-                        newValues[i] = new String[] { prevValues.get(i) };
-                    }
-                    long lastBin = lastValue;
-                    // add missed bins with recommended step:
-                    for (int i = OLD_VE_TABLE_COLS; i < NEW_VE_TABLE_COLS; i++) {
-                        lastBin += recommendedStep.get();
-                        newValues[i] = new String[] { String.format("%.1f", (double)lastBin) };
-                    }
+                    final String[][] newValues = expandValues(prevValues, lastValue, recommendedStep);
                     result = Optional.of(newVeRpmBinsField.formatValue(newValues));
                 }
             } else {
-                callbacks.logLine("WARNING! We failed to extend `veRpmBins` ini-field");
+                // does not look like table was resized, no reason to print scary message
+                //callbacks.logLine("WARNING! We failed to extend `veRpmBins` ini-field");
             }
         }
         return result;
+    }
+
+    private static String[] @NotNull [] expandValues(List<String> prevValues, long lastValue, Optional<Long> recommendedStep) {
+        final String[][] newValues = new String[NEW_VE_TABLE_COLS][1];
+        // copy prev values:
+        for (int i = 0; i < OLD_VE_TABLE_COLS; i++) {
+            newValues[i] = new String[] { prevValues.get(i) };
+        }
+        long lastBin = lastValue;
+        // add missed bins with recommended step:
+        for (int i = OLD_VE_TABLE_COLS; i < NEW_VE_TABLE_COLS; i++) {
+            lastBin += recommendedStep.get();
+            newValues[i] = new String[] { String.format("%.1f", (double)lastBin) };
+        }
+        return newValues;
     }
 
 
