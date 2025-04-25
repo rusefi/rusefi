@@ -682,15 +682,6 @@ void EtbController::checkJam(percent_t setpoint, percent_t observation) {
 	}
 }
 
-#if !EFI_UNIT_TEST
-/**
- * Things running on a timer (instead of a thread) don't participate it the RTOS's thread priority system,
- * and operate essentially "first come first serve", which risks starvation.
- * Since ETB is a safety critical device, we need the hard RTOS guarantee that it will be scheduled over other less important tasks.
- */
-#include "periodic_thread_controller.h"
-#endif // EFI_UNIT_TEST
-
 #include <utility>
 
 template <typename TBase>
@@ -880,25 +871,6 @@ void blinkEtbErrorCodes(bool blinkPhase) {
 	}
 }
 
-#if !EFI_UNIT_TEST
-
-struct DcThread final : public PeriodicController<512> {
-	DcThread() : PeriodicController("DC", PRIO_ETB, ETB_LOOP_FREQUENCY) {}
-
-	void PeriodicTask(efitick_t) override {
-		// Simply update all controllers
-		for (int i = 0 ; i < ETB_COUNT; i++) {
-			auto controller = engine->etbControllers[i];
-			assertNotNullVoid(controller);
-			etbControllers[i]->update();
-		}
-	}
-};
-
-static DcThread dcThread CCM_OPTIONAL;
-
-#endif // !EFI_UNIT_TEST
-
 void etbPidReset() {
 	for (int i = 0 ; i < ETB_COUNT; i++) {
 		if (auto controller = engine->etbControllers[i]) {
@@ -1074,14 +1046,6 @@ void doInitElectronicThrottle() {
 		startupPositionError = true;
 	}
 #endif /* EFI_UNIT_TEST */
-
-#if !EFI_UNIT_TEST
-	static bool started = false;
-	if (started == false) {
-		dcThread.start();
-		started = true;
-	}
-#endif
 }
 
 void initElectronicThrottle() {
