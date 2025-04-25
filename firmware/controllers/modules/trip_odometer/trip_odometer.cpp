@@ -13,6 +13,8 @@ void TripOdometer::reset() {
 }
 
 void TripOdometer::consumeFuel(float grams, efitick_t nowNt) {
+// we have some drama with simulator busy loop in reality :(
+#if EFI_PROD_CODE || EFI_UNIT_TEST
 	m_consumedRemainder += grams;
 
   // 1000grams of fuel between invocations of TripOdometer logic means something very wrong, we do not control cruise ship engines yet!
@@ -32,6 +34,7 @@ void TripOdometer::consumeFuel(float grams, efitick_t nowNt) {
 	} else {
 		m_rate = grams / elapsedSecond;
 	}
+#endif // EFI_PROD_CODE || EFI_UNIT_TEST
 }
 
 uint32_t TripOdometer::getConsumedGrams() const {
