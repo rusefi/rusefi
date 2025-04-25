@@ -178,8 +178,17 @@ bool EtbController::init(dc_function_e function, DcMotor *motor, pid_s *pidParam
 	}
 
 	m_motor = motor;
-	m_pid.initPidClass(pidParameters);
 	m_pedalProvider = pedalProvider;
+
+	m_pid.initPidClass(pidParameters);
+
+	if (isEtbMode()) {
+		m_pid.iTermMin = engineConfiguration->etb_iTermMin;
+		m_pid.iTermMax = engineConfiguration->etb_iTermMax;
+	} else {
+		m_pid.iTermMin = -30;
+		m_pid.iTermMax = 30;
+	}
 
 	// Ignore 3% position error before complaining
 	m_targetErrorAccumulator.init(3.0f, etbPeriodSeconds);
@@ -199,11 +208,6 @@ void EtbController::reset() {
 void EtbController::onConfigurationChange(pid_s* previousConfiguration) {
 	if (m_motor && !m_pid.isSame(previousConfiguration)) {
 		m_shouldResetPid = true;
-	}
-
-	if ((m_function == DC_Throttle1) || (m_function == DC_Throttle2)) {
-		m_pid.iTermMin = engineConfiguration->etb_iTermMin;
-		m_pid.iTermMax = engineConfiguration->etb_iTermMax;
 	}
 
 	doInitElectronicThrottle();
