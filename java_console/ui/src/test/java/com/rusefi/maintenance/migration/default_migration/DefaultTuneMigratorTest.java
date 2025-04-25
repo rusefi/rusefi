@@ -1,7 +1,7 @@
 package com.rusefi.maintenance.migration.default_migration;
 
-import com.rusefi.maintenance.DefaultTuneMigrator;
 import com.rusefi.maintenance.TestTuneMigrationContext;
+import com.rusefi.maintenance.migration.ComposedTuneMigrator;
 import com.rusefi.tune.xml.Constant;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 import javax.xml.bind.JAXBException;
 
 import static com.rusefi.maintenance.migration.default_migration.DefaultTestTuneMigrationContext.*;
+import static com.rusefi.maintenance.migration.ve_table_extension.VeTableExtensionTestTuneMigrationContext.VE_RPM_BINS_FIELD_NAME;
+import static com.rusefi.maintenance.migration.ve_table_extension.VeTableExtensionTestTuneMigrationContext.VE_TABLE_FIELD_NAME;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DefaultTuneMigratorTest {
@@ -17,7 +19,7 @@ public class DefaultTuneMigratorTest {
     @BeforeEach
     public void setUp() throws JAXBException {
         testContext = DefaultTestTuneMigrationContext.load();
-        DefaultTuneMigrator.INSTANCE.migrateTune(testContext);
+        ComposedTuneMigrator.INSTANCE.migrateTune(testContext);
     }
 
     @Test
@@ -103,6 +105,16 @@ public class DefaultTuneMigratorTest {
     @Test
     public void testIgnitionTable() {
         checkValueToUpdateExist(IGNITION_TABLE_FIELD_NAME, PREV_IGNITION_TABLE_VALUE, UPDATED_IGNITION_TABLE_VALUE);
+    }
+
+    @Test
+    public void testVeRpmBins() {
+        checkValueToUpdateExist(VE_RPM_BINS_FIELD_NAME, PREV_VE_RPM_BINS_VALUE, UPDATED_VE_RPM_BINS_VALUE);
+    }
+
+    @Test
+    public void testVeTable() {
+        checkValueToUpdateExist(VE_TABLE_FIELD_NAME, PREV_VE_TABLE_VALUE, UPDATED_VE_TABLE_VALUE);
     }
 
     @Test
