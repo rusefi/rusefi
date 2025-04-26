@@ -2326,11 +2326,11 @@
 </constant>
         <constant cols="1" digits="2" name="injectorFlowLinearizationFuelMassBins" rows="2">
          0.0
-         0.0
+         500.0
 </constant>
         <constant cols="1" digits="1" name="injectorFlowLinearizationPressureBins" rows="2">
          0.0
-         0.0
+         300.0
 </constant>
         <constant name="injectorNonlinearMode">"None"</constant>
         <constant name="injectorPressureType">"High"</constant>
@@ -5094,7 +5094,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250424" nPages="1" signature="rusEFI master.2025.04.26.f407-discovery.3284523270" version="5.0"/>
+    <versionInfo firmwareInfo="20250424" nPages="1" signature="rusEFI master.2025.04.26.f407-discovery.364105734" version="5.0"/>
     <bibliography author="rusEFI 20250424" writeDate="date"/>
     <settings/>
     <userComments/>
