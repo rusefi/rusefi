@@ -33,14 +33,26 @@ void setHpfpLobeProfileAngle(int lobes) {
 	}
 }
 
-void setGDIFueling() {
-#ifdef HW_HELLEN_8CHAN
-  engineConfiguration->externalRusEfiGdiModule = true;
+static void setDefaultHPFP() {
+#if ! EFI_UNIT_TEST
+    // unit tests rely on 'hpfpCamLobes' for isGdiEngine() and we need not-GDI by default for unit tests
+	engineConfiguration->hpfpCamLobes = 3;
 #endif
 
-	engineConfiguration->injectionMode = IM_SEQUENTIAL;
-	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
-	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
+// todo: would be nice for unit tests to be happy about these defaults
+#if EFI_PROD_CODE || EFI_SIMULATOR
+	engineConfiguration->hpfpPumpVolume = 0.290;
+#endif
+	engineConfiguration->hpfpMinAngle = 10;
+	engineConfiguration->hpfpActivationAngle = 30;
+	engineConfiguration->hpfpTargetDecay = 2000;
+	engineConfiguration->hpfpPidP = 0.01;
+	engineConfiguration->hpfpPidI = 0.0003;
+	engineConfiguration->hpfpPeakPos = 10;
+}
+
+static void setGdiDefaults() {
+  setDefaultHPFP();
 
 	setRpmTableBin(config->hpfpTargetRpmBins);
 	setLinearCurve(config->hpfpTargetLoadBins, 0, 180, 1);
@@ -52,6 +64,16 @@ void setGDIFueling() {
 
 	setLinearCurve(config->injectorFlowLinearizationFuelMassBins, 0.0, 500, 10);
 	setLinearCurve(config->injectorFlowLinearizationPressureBins, 0, 300, 25);
+}
+
+void setGDIFueling() {
+#ifdef HW_HELLEN_8CHAN
+  engineConfiguration->externalRusEfiGdiModule = true;
+#endif
+
+	engineConfiguration->injectionMode = IM_SEQUENTIAL;
+	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
+	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
   setGdiWallWetting();
 	// Use high pressure sensor
@@ -74,24 +96,6 @@ void setLeftRightBanksNeedBetterName() {
       // zero-based index
 	    engineConfiguration->cylinderBankSelect[i] = i % 2;
     }
-}
-
-static void setDefaultHPFP() {
-#if ! EFI_UNIT_TEST
-    // unit tests rely on 'hpfpCamLobes' for isGdiEngine() and we need not-GDI by default for unit tests
-	engineConfiguration->hpfpCamLobes = 3;
-#endif
-
-// todo: would be nice for unit tests to be happy about these defaults
-#if EFI_PROD_CODE || EFI_SIMULATOR
-	engineConfiguration->hpfpPumpVolume = 0.290;
-#endif
-	engineConfiguration->hpfpMinAngle = 10;
-	engineConfiguration->hpfpActivationAngle = 30;
-	engineConfiguration->hpfpTargetDecay = 2000;
-	engineConfiguration->hpfpPidP = 0.01;
-	engineConfiguration->hpfpPidI = 0.0003;
-	engineConfiguration->hpfpPeakPos = 10;
 }
 
 static void mc33810defaults() {
@@ -175,7 +179,7 @@ void setDefaultBaseEngine() {
   engineConfiguration->kLineDoHondaSend = true;
 #endif
 
-  setDefaultHPFP();
+  setGdiDefaults();
 
   // it's useful to know what starting point is given tune based on
   engineConfiguration->calibrationBirthday = compilationYear() * 10000 + compilationMonth() * 100 + compilationDay();
