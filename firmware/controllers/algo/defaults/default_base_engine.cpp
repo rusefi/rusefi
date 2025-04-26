@@ -50,6 +50,9 @@ void setGDIFueling() {
 	setLinearCurve(config->hpfpFuelMassCompensationFuelPressure, 0, 300, 25);
 	setTable(config->hpfpFuelMassCompensation, 1.0);
 
+	setLinearCurve(config->injectorFlowLinearizationFuelMassBins, 0.0, 500, 10);
+	setLinearCurve(config->injectorFlowLinearizationPressureBins, 0, 300, 25);
+
   setGdiWallWetting();
 	// Use high pressure sensor
 	engineConfiguration->injectorPressureType = IPT_High;
