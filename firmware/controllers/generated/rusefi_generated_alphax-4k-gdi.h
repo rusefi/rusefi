@@ -1383,7 +1383,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1171741889
+#define SIGNATURE_HASH 3430108143
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1736,17 +1736,17 @@
 #define ts_show_compressor_sensor true
 #define ts_show_console_settings true
 #define ts_show_crankingTpsCurve true
-#define ts_show_cylinder_10 true
-#define ts_show_cylinder_11 true
-#define ts_show_cylinder_12 true
+#define ts_show_cylinder_10 false
+#define ts_show_cylinder_11 false
+#define ts_show_cylinder_12 false
 #define ts_show_cylinder_2 true
 #define ts_show_cylinder_3 true
 #define ts_show_cylinder_4 true
-#define ts_show_cylinder_5 true
-#define ts_show_cylinder_6 true
-#define ts_show_cylinder_7 true
-#define ts_show_cylinder_8 true
-#define ts_show_cylinder_9 true
+#define ts_show_cylinder_5 false
+#define ts_show_cylinder_6 false
+#define ts_show_cylinder_7 false
+#define ts_show_cylinder_8 false
+#define ts_show_cylinder_9 false
 #define ts_show_cylinder_bank true
 #define ts_show_dc_hardware true
 #define ts_show_debug_mode false
@@ -1862,7 +1862,7 @@
 #define ts_show_throttle_switch true
 #define ts_show_tle8888 false
 #define ts_show_top_level_can_menu true
-#define ts_show_tps2 true
+#define ts_show_tps2 false
 #define ts_show_tps_sent true
 #define ts_show_trigger_advanced true
 #define ts_show_trigger_gap_override_flag true
@@ -1886,7 +1886,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.04.26.alphax-4k-gdi.1171741889"
+#define TS_SIGNATURE "rusEFI master.2025.04.26.alphax-4k-gdi.3430108143"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
