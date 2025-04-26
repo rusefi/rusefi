@@ -23,6 +23,7 @@ constexpr float convertToGramsPerSecond(float ccPerMinute) {
 	return ccPerMinute * (fuelDensity / 60.f);
 }
 
+// returns: grams per second flow
 float InjectorModelWithConfig::getBaseFlowRate() const {
 	if (engineConfiguration->injectorFlowAsMassFlow) {
 		return m_cfg->flow;
@@ -181,32 +182,31 @@ float InjectorModelWithConfig::getDeadtime() const {
 }
 
 //TODO: only used in the tests, refactor pending to InjectorModelWithConfig
-float InjectorModelBase::getInjectionDuration(float fuelMassGram) const {
+floatms_t InjectorModelBase::getInjectionDuration(float fuelMassGram) const {
 	if (fuelMassGram <= 0) {
 		// If 0 mass, don't do any math, just skip the injection.
 		return 0.0f;
 	}
 
 	// Get the no-offset duration
-	float baseDuration = getBaseDurationImpl(fuelMassGram);
+	floatms_t baseDuration = getBaseDurationImpl(fuelMassGram);
 
 	return baseDuration + m_deadtime;
 }
 
-float InjectorModelWithConfig::getInjectionDuration(float fuelMassGram) const {
+floatms_t InjectorModelWithConfig::getInjectionDuration(float fuelMassGram) const {
 	if (fuelMassGram <= 0) {
 		// If 0 mass, don't do any math, just skip the injection.
 		return 0.0f;
 	}
 
 	// Get the no-offset duration
-	float baseDuration = getBaseDurationImpl(fuelMassGram);
+	floatms_t baseDuration = getBaseDurationImpl(fuelMassGram);
 
 	// default non GDI case
-	if(getInjectorCompensationMode() != ICM_HPFP_Manual_Compensation) {
+	if (getInjectorCompensationMode() != ICM_HPFP_Manual_Compensation) {
 		// Add deadtime offset
 		return baseDuration + m_deadtime;
-
 	}
 
 	if (!Sensor::hasSensor(SensorType::FuelPressureHigh)) {
@@ -214,6 +214,7 @@ float InjectorModelWithConfig::getInjectionDuration(float fuelMassGram) const {
 	}
 
 	auto fps = Sensor::get(SensorType::FuelPressureHigh);
+	// todo: KPA vs BAR mess in code and UI?!
 	float fuelMassCompensation = interpolate3d(config->hpfpFuelMassCompensation,
 			config->hpfpFuelMassCompensationFuelPressure, KPA2BAR(fps.Value),// array values are on bar
 			config->hpfpFuelMassCompensationFuelMass, fuelMassGram * 1000);  // array values are on mg
