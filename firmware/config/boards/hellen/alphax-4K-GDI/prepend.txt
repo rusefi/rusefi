@@ -18,3 +18,5 @@
 #define ts_show_tps_sent true
 
 #define LUA_SCRIPT_SIZE 26000
+#define FLOW_LINEARIZATION_MASS_SIZE 8
+#define FLOW_LINEARIZATION_PRESSURE_SIZE 8

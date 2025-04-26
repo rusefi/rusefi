@@ -966,7 +966,7 @@ custom maf_sensor_type_e 1 bits, S08, @OFFSET@, [0:1], @@maf_sensor_type_e_enum@
 	custom gppwm_note_t @@GPPWM_NOTE_SIZE@@ string, ASCII, @OFFSET@, @@GPPWM_NOTE_SIZE@@
 
 	bit idleReturnTargetRamp,"yes","no";Ramp the idle target down from the entry threshold over N seconds when returning to idle. Helps prevent overshooting (below) the idle target while returning to idle from coasting.
-	bit unused920_1testChange
+	bit useInjectorFlowLinearizationTable
 	bit useHbridgesToDriveIdleStepper;If enabled we use two H-bridges to drive stepper idle air valve
 	bit multisparkEnable
 	bit enableLaunchRetard
@@ -2167,7 +2167,14 @@ uint8_t[HPFP_COMPENSATION_SIZE] autoscale hpfpCompensationRpmBins;;"RPM", 50, 0,
 
 uint16_t[HPFP_FUEL_MASS_COMPENSATION_SIZE x HPFP_FUEL_MASS_COMPENSATION_SIZE] autoscale hpfpFuelMassCompensation;;"%", 0.01, 0, 1, 10, 2
 uint16_t[HPFP_FUEL_MASS_COMPENSATION_SIZE] autoscale hpfpFuelMassCompensationFuelMass;;"fuel mass/mg", 0.01, 0, 0, 650, 2
-uint32_t[HPFP_FUEL_MASS_COMPENSATION_SIZE] autoscale hpfpFuelMassCompensationFuelPressure;;"bar", 0.1, 0, 0, 300, 1
+uint16_t[HPFP_FUEL_MASS_COMPENSATION_SIZE] autoscale hpfpFuelMassCompensationFuelPressure;;"bar", 0.1, 0, 0, 300, 1
+
+#define FLOW_LINEARIZATION_MASS_SIZE 2
+#define FLOW_LINEARIZATION_PRESSURE_SIZE 2
+
+uint16_t[FLOW_LINEARIZATION_PRESSURE_SIZE x FLOW_LINEARIZATION_MASS_SIZE] autoscale injectorFlowLinearization;;"ms", 0.01, 0, 1, 10, 2
+uint16_t[FLOW_LINEARIZATION_MASS_SIZE] autoscale injectorFlowLinearizationFuelMassBins;;"fuel mass/mg", 0.01, 0, 0, 650, 2
+uint16_t[FLOW_LINEARIZATION_PRESSURE_SIZE] autoscale injectorFlowLinearizationPressureBins;;"bar", 0.1, 0, 0, 300, 1
 
 uint16_t[ENGINE_NOISE_CURVE_SIZE] knockNoiseRpmBins;;"RPM", 1, 0, 0, 30000, 0
 int8_t[ENGINE_NOISE_CURVE_SIZE] autoscale knockBaseNoise;Knock sensor output knock detection threshold depending on current RPM.;"dB", 0.5, 0, -64, 10, 1
