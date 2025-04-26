@@ -42,6 +42,14 @@ void setGDIFueling() {
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
+	setRpmTableBin(config->hpfpTargetRpmBins);
+	setLinearCurve(config->hpfpTargetLoadBins, 0, 180, 1);
+	setTable(config->hpfpTarget, 5000);
+
+	setLinearCurve(config->hpfpFuelMassCompensationFuelMass, 0.0, 500, 10);
+	setLinearCurve(config->hpfpFuelMassCompensationFuelPressure, 0, 300, 25);
+	setTable(config->hpfpFuelMassCompensation, 1.0);
+
   setGdiWallWetting();
 	// Use high pressure sensor
 	engineConfiguration->injectorPressureType = IPT_High;

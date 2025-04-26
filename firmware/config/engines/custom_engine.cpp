@@ -580,10 +580,6 @@ void setBoschHDEV_5_injectors() {
 	setHpfpLobeProfileAngle(3);
 	setLinearCurve(config->hpfpDeadtimeVoltsBins, 8, 16, 0.5);
 
-	setRpmTableBin(config->hpfpTargetRpmBins);
-	setLinearCurve(config->hpfpTargetLoadBins, 0, 180, 1);
-	setTable(config->hpfpTarget, 5000);
-
 	setRpmTableBin(config->hpfpCompensationRpmBins);
 	setLinearCurve(config->hpfpCompensationLoadBins, 0.005, 0.120, 0.001);
 
@@ -606,9 +602,6 @@ void setBoschHDEV_5_injectors() {
 	engineConfiguration->mc33_hpfp_i_hold_off = 10; // us
 	engineConfiguration->mc33_hpfp_max_hold = 10; // this value in ms not us
 
-	setLinearCurve(config->hpfpFuelMassCompensationFuelMass, 0.0, 500, 10);
-	setLinearCurve(config->hpfpFuelMassCompensationFuelPressure, 0, 300, 25);
-	setTable(config->hpfpFuelMassCompensation, 1.0);
 }
 
 /**
