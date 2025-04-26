@@ -201,6 +201,16 @@ floatms_t InjectorModelWithConfig::getInjectionDuration(float fuelMassGram) cons
 		return 0.0f;
 	}
 
+  // hopefully one day we pick between useInjectorFlowLinearizationTable and ICM_HPFP_Manual_Compensation approaches
+  // and not more than one of these would stay
+	if (engineConfiguration->useInjectorFlowLinearizationTable) {
+	  auto fps = Sensor::get(SensorType::FuelPressureInjector);
+	// todo: KPA vs BAR mess?!
+    return interpolate3d(config->injectorFlowLinearization,
+			config->injectorFlowLinearizationPressureBins, KPA2BAR(fps.Value),// array values are on bar
+			config->injectorFlowLinearizationFuelMassBins, fuelMassGram * 1000);  // array values are on mg
+	}
+
 	// Get the no-offset duration
 	floatms_t baseDuration = getBaseDurationImpl(fuelMassGram);
 
