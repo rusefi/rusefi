@@ -35,6 +35,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->injectionPins[3] = Gpio::H144_LS_4;
 
   config->boardUseTempPullUp = true;
+  engineConfiguration->isSdCardEnabled = true;
 
 	hellenWbo();
 	setGDIFueling();
