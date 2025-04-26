@@ -32,6 +32,8 @@ void setBoardDefaultConfiguration() {
   engineConfiguration->mainRelayPin = Gpio::MM100_IGN7;
   engineConfiguration->fuelPumpPin = Gpio::MM100_IGN8;
 
+  engineConfiguration->enableSoftwareKnock = true;
+
 	// SPI3 for on-board EGT
 	engineConfiguration->is_enabled_spi_3 = true;
 	// MOSI not needed, we have one-way communication here
