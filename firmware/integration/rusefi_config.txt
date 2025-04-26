@@ -2172,7 +2172,7 @@ uint16_t[HPFP_FUEL_MASS_COMPENSATION_SIZE] autoscale hpfpFuelMassCompensationFue
 #define FLOW_LINEARIZATION_MASS_SIZE 2
 #define FLOW_LINEARIZATION_PRESSURE_SIZE 2
 
-uint16_t[FLOW_LINEARIZATION_PRESSURE_SIZE x FLOW_LINEARIZATION_MASS_SIZE] autoscale injectorFlowLinearization;;"ms", 0.01, 0, 1, 10, 2
+uint16_t[FLOW_LINEARIZATION_PRESSURE_SIZE x FLOW_LINEARIZATION_MASS_SIZE] autoscale injectorFlowLinearization;;"ms", 0.01, 0, 0, 600, 2
 uint16_t[FLOW_LINEARIZATION_MASS_SIZE] autoscale injectorFlowLinearizationFuelMassBins;;"fuel mass/mg", 0.01, 0, 0, 650, 2
 uint16_t[FLOW_LINEARIZATION_PRESSURE_SIZE] autoscale injectorFlowLinearizationPressureBins;;"bar", 0.1, 0, 0, 300, 1
 
