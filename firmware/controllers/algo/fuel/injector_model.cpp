@@ -38,6 +38,7 @@ float InjectorModelPrimary::getSmallPulseFlowRate() const {
 
 float InjectorModelPrimary::getSmallPulseBreakPoint() const {
 	// convert milligrams -> grams
+	// todo: make UI deal with scaling?!
 	return 0.001f * engineConfiguration->fordInjectorSmallPulseBreakPoint;
 }
 
@@ -229,6 +230,7 @@ float InjectorModelBase::getFuelMassForDuration(floatms_t duration) const {
 	return duration * m_massFlowRate * 0.001f;
 }
 
+// todo: all that *1000 and *0.001f is pretty annoying, we need a cleaner approach for units!
 floatms_t InjectorModelBase::getBaseDurationImpl(float fuelMassGram) const {
 	floatms_t baseDuration = fuelMassGram / m_massFlowRate * 1000;
 
