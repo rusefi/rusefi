@@ -28,7 +28,7 @@ import static com.rusefi.core.FindFileHelper.findSrecFile;
 
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
-    private static final int AUTOUPDATE_VERSION = 20250213; // separate from rusEFIVersion#CONSOLE_VERSION
+    private static final int AUTOUPDATE_VERSION = 20250426; // separate from rusEFIVersion#CONSOLE_VERSION
 
     private static final String TITLE = getTitle();
 
@@ -37,7 +37,7 @@ public class Autoupdate {
             return ConnectionAndMeta.getWhiteLabel(ConnectionAndMeta.getProperties()) + " Bundle Updater " + AUTOUPDATE_VERSION;
         } catch (Throwable e) {
             log.error("Error", e);
-            return "Error while getting title";
+            return "Title error: " + e;
         }
     }
 
@@ -48,6 +48,12 @@ public class Autoupdate {
             FileLogger.init();
             log.info("Version " + AUTOUPDATE_VERSION);
             log.info("Compiled " + new Date(rusEFIVersion.classBuildTimeMillis(Autoupdate.class)));
+            log.info("Current folder " + new File(".").getCanonicalPath());
+            log.info("Source " + new File(Autoupdate.class.getProtectionDomain()
+                .getCodeSource()
+                .getLocation()
+                .getPath())
+                .getCanonicalPath());
             autoupdate(args);
         } catch (Throwable e) {
             log.error("Autoupdate Error", e);

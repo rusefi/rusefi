@@ -93,7 +93,7 @@ public class ConnectionAndMeta {
         Properties props = new Properties();
         try {
             InputStream stream = ConnectionAndMeta.class.getResourceAsStream(IO_PROPERTIES);
-            Objects.requireNonNull(stream, "Error reading " + IO_PROPERTIES);
+            Objects.requireNonNull(stream, "Error opening resource stream " + IO_PROPERTIES);
             props.load(stream);
             return props;
         } catch (IOException e) {
