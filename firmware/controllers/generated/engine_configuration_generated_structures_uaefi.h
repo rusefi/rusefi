@@ -2032,7 +2032,7 @@ struct engine_configuration_s {
 	bool idleReturnTargetRamp : 1 {};
 	/**
 	offset 900 bit 1 */
-	bool unused920_1testChange : 1 {};
+	bool useInjectorFlowLinearizationTable : 1 {};
 	/**
 	 * If enabled we use two H-bridges to drive stepper idle air valve
 	offset 900 bit 2 */
@@ -6042,7 +6042,22 @@ struct persistent_config_s {
 	 * units: bar
 	 * offset 22736
 	 */
-	scaled_channel<uint32_t, 10, 1> hpfpFuelMassCompensationFuelPressure[HPFP_FUEL_MASS_COMPENSATION_SIZE] = {};
+	scaled_channel<uint16_t, 10, 1> hpfpFuelMassCompensationFuelPressure[HPFP_FUEL_MASS_COMPENSATION_SIZE] = {};
+	/**
+	 * units: ms
+	 * offset 22752
+	 */
+	scaled_channel<uint16_t, 100, 1> injectorFlowLinearization[FLOW_LINEARIZATION_PRESSURE_SIZE][FLOW_LINEARIZATION_MASS_SIZE] = {};
+	/**
+	 * units: fuel mass/mg
+	 * offset 22760
+	 */
+	scaled_channel<uint16_t, 100, 1> injectorFlowLinearizationFuelMassBins[FLOW_LINEARIZATION_MASS_SIZE] = {};
+	/**
+	 * units: bar
+	 * offset 22764
+	 */
+	scaled_channel<uint16_t, 10, 1> injectorFlowLinearizationPressureBins[FLOW_LINEARIZATION_PRESSURE_SIZE] = {};
 	/**
 	 * units: RPM
 	 * offset 22768

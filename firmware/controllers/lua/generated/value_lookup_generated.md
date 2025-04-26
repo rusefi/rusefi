@@ -577,6 +577,9 @@ Only respond once lambda is out of range for this period of time. Use to avoid t
 ### idleReturnTargetRamp
 Ramp the idle target down from the entry threshold over N seconds when returning to idle. Helps prevent overshooting (below) the idle target while returning to idle from coasting.
 
+### useInjectorFlowLinearizationTable
+
+
 ### useHbridgesToDriveIdleStepper
 If enabled we use two H-bridges to drive stepper idle air valve
 

@@ -584,6 +584,9 @@ float getConfigValueByName(const char *name) {
 // idleReturnTargetRamp
 		case 118504154:
 			return engineConfiguration->idleReturnTargetRamp;
+// useInjectorFlowLinearizationTable
+		case 435614729:
+			return engineConfiguration->useInjectorFlowLinearizationTable;
 // useHbridgesToDriveIdleStepper
 		case 13806936:
 			return engineConfiguration->useHbridgesToDriveIdleStepper;
@@ -2948,6 +2951,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case 118504154:
 	{
 		engineConfiguration->idleReturnTargetRamp = (int)value;
+		return 1;
+	}
+		case 435614729:
+	{
+		engineConfiguration->useInjectorFlowLinearizationTable = (int)value;
 		return 1;
 	}
 		case 13806936:

@@ -528,6 +528,8 @@
 #define ETB_COUNT 2
 #define ETB_HW_MAX_FREQUENCY 3000
 #define FLASH_DATA_VERSION 250418
+#define FLOW_LINEARIZATION_MASS_SIZE 2
+#define FLOW_LINEARIZATION_PRESSURE_SIZE 2
 #define FRONTEND_TITLE_BAR_NAME "rusEFI"
 #define fuel_cyl_trim_s_size 16
 #define FUEL_LEVEL_TABLE_COUNT 8
@@ -1387,7 +1389,7 @@
 #define show_HellenNA6_presets true
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 436357236
+#define SIGNATURE_HASH 67967243
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1890,7 +1892,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.04.26.hellenNA6.436357236"
+#define TS_SIGNATURE "rusEFI master.2025.04.26.hellenNA6.67967243"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

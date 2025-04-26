@@ -2032,7 +2032,7 @@ struct engine_configuration_s {
 	bool idleReturnTargetRamp : 1 {};
 	/**
 	offset 900 bit 1 */
-	bool unused920_1testChange : 1 {};
+	bool useInjectorFlowLinearizationTable : 1 {};
 	/**
 	 * If enabled we use two H-bridges to drive stepper idle air valve
 	offset 900 bit 2 */
@@ -6042,7 +6042,22 @@ struct persistent_config_s {
 	 * units: bar
 	 * offset 22736
 	 */
-	scaled_channel<uint32_t, 10, 1> hpfpFuelMassCompensationFuelPressure[HPFP_FUEL_MASS_COMPENSATION_SIZE] = {};
+	scaled_channel<uint16_t, 10, 1> hpfpFuelMassCompensationFuelPressure[HPFP_FUEL_MASS_COMPENSATION_SIZE] = {};
+	/**
+	 * units: ms
+	 * offset 22752
+	 */
+	scaled_channel<uint16_t, 100, 1> injectorFlowLinearization[FLOW_LINEARIZATION_PRESSURE_SIZE][FLOW_LINEARIZATION_MASS_SIZE] = {};
+	/**
+	 * units: fuel mass/mg
+	 * offset 22760
+	 */
+	scaled_channel<uint16_t, 100, 1> injectorFlowLinearizationFuelMassBins[FLOW_LINEARIZATION_MASS_SIZE] = {};
+	/**
+	 * units: bar
+	 * offset 22764
+	 */
+	scaled_channel<uint16_t, 10, 1> injectorFlowLinearizationPressureBins[FLOW_LINEARIZATION_PRESSURE_SIZE] = {};
 	/**
 	 * units: RPM
 	 * offset 22768
@@ -6441,70 +6456,70 @@ struct persistent_config_s {
 	bool boardUseD3PullDown : 1 {};
 	/**
 	offset 23788 bit 10 */
-	bool unusedBit_280_10 : 1 {};
+	bool unusedBit_283_10 : 1 {};
 	/**
 	offset 23788 bit 11 */
-	bool unusedBit_280_11 : 1 {};
+	bool unusedBit_283_11 : 1 {};
 	/**
 	offset 23788 bit 12 */
-	bool unusedBit_280_12 : 1 {};
+	bool unusedBit_283_12 : 1 {};
 	/**
 	offset 23788 bit 13 */
-	bool unusedBit_280_13 : 1 {};
+	bool unusedBit_283_13 : 1 {};
 	/**
 	offset 23788 bit 14 */
-	bool unusedBit_280_14 : 1 {};
+	bool unusedBit_283_14 : 1 {};
 	/**
 	offset 23788 bit 15 */
-	bool unusedBit_280_15 : 1 {};
+	bool unusedBit_283_15 : 1 {};
 	/**
 	offset 23788 bit 16 */
-	bool unusedBit_280_16 : 1 {};
+	bool unusedBit_283_16 : 1 {};
 	/**
 	offset 23788 bit 17 */
-	bool unusedBit_280_17 : 1 {};
+	bool unusedBit_283_17 : 1 {};
 	/**
 	offset 23788 bit 18 */
-	bool unusedBit_280_18 : 1 {};
+	bool unusedBit_283_18 : 1 {};
 	/**
 	offset 23788 bit 19 */
-	bool unusedBit_280_19 : 1 {};
+	bool unusedBit_283_19 : 1 {};
 	/**
 	offset 23788 bit 20 */
-	bool unusedBit_280_20 : 1 {};
+	bool unusedBit_283_20 : 1 {};
 	/**
 	offset 23788 bit 21 */
-	bool unusedBit_280_21 : 1 {};
+	bool unusedBit_283_21 : 1 {};
 	/**
 	offset 23788 bit 22 */
-	bool unusedBit_280_22 : 1 {};
+	bool unusedBit_283_22 : 1 {};
 	/**
 	offset 23788 bit 23 */
-	bool unusedBit_280_23 : 1 {};
+	bool unusedBit_283_23 : 1 {};
 	/**
 	offset 23788 bit 24 */
-	bool unusedBit_280_24 : 1 {};
+	bool unusedBit_283_24 : 1 {};
 	/**
 	offset 23788 bit 25 */
-	bool unusedBit_280_25 : 1 {};
+	bool unusedBit_283_25 : 1 {};
 	/**
 	offset 23788 bit 26 */
-	bool unusedBit_280_26 : 1 {};
+	bool unusedBit_283_26 : 1 {};
 	/**
 	offset 23788 bit 27 */
-	bool unusedBit_280_27 : 1 {};
+	bool unusedBit_283_27 : 1 {};
 	/**
 	offset 23788 bit 28 */
-	bool unusedBit_280_28 : 1 {};
+	bool unusedBit_283_28 : 1 {};
 	/**
 	offset 23788 bit 29 */
-	bool unusedBit_280_29 : 1 {};
+	bool unusedBit_283_29 : 1 {};
 	/**
 	offset 23788 bit 30 */
-	bool unusedBit_280_30 : 1 {};
+	bool unusedBit_283_30 : 1 {};
 	/**
 	offset 23788 bit 31 */
-	bool unusedBit_280_31 : 1 {};
+	bool unusedBit_283_31 : 1 {};
 };
 static_assert(sizeof(persistent_config_s) == 23792);
 
