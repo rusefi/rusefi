@@ -25,8 +25,8 @@ public:
 	virtual float getBaseFlowRate() const = 0;
 
 	virtual InjectorNonlinearMode getNonlinearMode() const = 0;
-	float getBaseDurationImpl(float baseDuration) const;
-	virtual float correctInjectionPolynomial(float baseDuration) const;
+	floatms_t getBaseDurationImpl(float fuelMassGram) const;
+	virtual floatms_t correctInjectionPolynomial(float floatms_t) const;
 
 	// Ford small pulse model
 	virtual float getSmallPulseFlowRate() const = 0;

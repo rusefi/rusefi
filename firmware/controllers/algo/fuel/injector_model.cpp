@@ -218,7 +218,7 @@ float InjectorModelWithConfig::getInjectionDuration(float fuelMassGram) const {
 			config->hpfpFuelMassCompensationFuelPressure, KPA2BAR(fps.Value),// array values are on bar
 			config->hpfpFuelMassCompensationFuelMass, fuelMassGram * 1000);  // array values are on mg
 
-	// recalculate base duration with fuell mass compensation
+	// recalculate base duration with fuel mass compensation
 	baseDuration =  getBaseDurationImpl(fuelMassGram * fuelMassCompensation);
 	return baseDuration + m_deadtime;
 }
@@ -228,7 +228,7 @@ float InjectorModelBase::getFuelMassForDuration(floatms_t duration) const {
 	return duration * m_massFlowRate * 0.001f;
 }
 
-float InjectorModelBase::getBaseDurationImpl(float fuelMassGram) const {
+floatms_t InjectorModelBase::getBaseDurationImpl(float fuelMassGram) const {
 	floatms_t baseDuration = fuelMassGram / m_massFlowRate * 1000;
 
 	switch (getNonlinearMode()) {
@@ -248,7 +248,7 @@ float InjectorModelBase::getBaseDurationImpl(float fuelMassGram) const {
 	}
 }
 
-float InjectorModelBase::correctInjectionPolynomial(float baseDuration) const {
+floatms_t InjectorModelBase::correctInjectionPolynomial(floatms_t baseDuration) const {
 	if (baseDuration > engineConfiguration->applyNonlinearBelowPulse) {
 		// Large pulse, skip correction.
 		return baseDuration;
