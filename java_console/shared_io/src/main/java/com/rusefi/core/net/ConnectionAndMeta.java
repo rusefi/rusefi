@@ -93,7 +93,11 @@ public class ConnectionAndMeta {
         Properties props = new Properties();
         try {
             InputStream stream = ConnectionAndMeta.class.getResourceAsStream(IO_PROPERTIES);
-            Objects.requireNonNull(stream, "Error opening resource stream " + IO_PROPERTIES);
+            if (stream == null) {
+                if (new File(".").getCanonicalPath().contains("!\\"))
+                    throw new IllegalArgumentException("Use folder names without exclamation marks at the end");
+                throw new NullPointerException("Error opening resource stream " + IO_PROPERTIES);
+            }
             props.load(stream);
             return props;
         } catch (IOException e) {
