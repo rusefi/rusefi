@@ -881,6 +881,11 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 		engine->module<IdleController>().unmock().luaAdd = luaL_checknumber(l, 1);
 		return 0;
 	});
+	lua_register(lState, "setIdleRpm", [](lua_State* l) {
+	  auto rpm = luaL_checknumber(l, 1);
+    setLinearCurve(config->cltIdleRpm, rpm, rpm, 1);
+		return 0;
+	});
 #endif
 	lua_register(lState, "setTimingAdd", [](lua_State* l) {
 		engine->ignitionState.luaTimingAdd = luaL_checknumber(l, 1);
