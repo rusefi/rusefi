@@ -116,32 +116,6 @@ void initDataStructures() {
 
 #if !EFI_UNIT_TEST
 
-static void doPeriodicSlowCallback();
-
-class PeriodicFastController : public PeriodicTimerController {
-	void PeriodicTask() override {
-		engine->periodicFastCallback();
-	}
-
-	int getPeriodMs() override {
-		return FAST_CALLBACK_PERIOD_MS;
-	}
-};
-
-class PeriodicSlowController : public PeriodicTimerController {
-	void PeriodicTask() override {
-		doPeriodicSlowCallback();
-	}
-
-	int getPeriodMs() override {
-		// no reason to have this configurable, looks like everyone is happy with 20Hz
-		return SLOW_CALLBACK_PERIOD_MS;
-	}
-};
-
-static PeriodicFastController fastController;
-static PeriodicSlowController slowController;
-
 class EngineStateBlinkingTask : public PeriodicTimerController {
 	int getPeriodMs() override {
 		return 50;
@@ -177,7 +151,7 @@ static void resetAccel() {
 #endif // EFI_ENGINE_CONTROL
 }
 
-static void doPeriodicSlowCallback() {
+void doPeriodicSlowCallback() {
 #if EFI_SHAFT_POSITION_INPUT
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6661, getCurrentRemainingStack() > 64, "lowStckOnEv");
 
@@ -221,11 +195,6 @@ static void doPeriodicSlowCallback() {
 #endif // EFI_TCU
 
 	tryResetWatchdog();
-}
-
-void initPeriodicEvents() {
-	slowController.start();
-	fastController.start();
 }
 
 char * getPinNameByAdcChannel(const char *msg, adc_channel_e hwChannel, char *buffer, size_t bufferSize) {

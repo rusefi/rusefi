@@ -6,6 +6,7 @@
 #include "thread_priority.h"
 #include "main_loop.h"
 #include "main_loop_controller.h"
+#include "electronic_throttle.h"
 
 MainLoop::MainLoop()
 	: PeriodicController("MainLoop", PRIO_MAIN_LOOP, MAIN_LOOP_RATE)
@@ -45,22 +46,28 @@ void MainLoop::PeriodicTask(efitick_t nowNt) {
 
 #if HAL_USE_ADC
 	if (currentLoopPeriod & ADC_UPDATE_RATE) {
-		// TODO: main_loop adc callback
+		updateSlowAdc(nowNt);
 	}
 #endif // HAL_USE_ADC
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
 	if (currentLoopPeriod & ETB_UPDATE_RATE) {
-		// TODO: main_loop etb callback
+		for (int i = 0 ; i < ETB_COUNT; i++) {
+			auto etb = engine->etbControllers[i];
+
+			if (etb) {
+				etb->update();
+			}
+		}
 	}
 #endif // EFI_ELECTRONIC_THROTTLE_BODY
 
 	if (currentLoopPeriod & SLOW_CALLBACK_RATE) {
-		//TODO: main_loop slow callback
+		doPeriodicSlowCallback();
 	}
 
 	if (currentLoopPeriod & FAST_CALLBACK_RATE) {
-	   //TODO: main_loop fast callback
+		engine->periodicFastCallback();
 	}
 }
 
