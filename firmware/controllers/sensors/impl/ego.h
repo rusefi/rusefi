@@ -10,8 +10,12 @@
 #pragma once
 
 #include "global.h"
+#include "stored_value_sensor.h"
 #include "engine_configuration.h"
 
 float getAfr(SensorType type);
 bool hasAfrSensor();
 void setEgoSensor(ego_sensor_e type);
+
+extern StoredValueSensor smoothedLambda1Sensor;
+extern StoredValueSensor smoothedLambda2Sensor;

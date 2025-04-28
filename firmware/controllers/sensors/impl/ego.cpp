@@ -10,6 +10,13 @@
  *
  */
 #include "pch.h"
+#include "exp_average.h"
+
+StoredValueSensor smoothedLambda1Sensor(SensorType::SmoothedLambda1, MS2NT(500));
+StoredValueSensor smoothedLambda2Sensor(SensorType::SmoothedLambda2, MS2NT(500));
+
+static ExpAverage expAverageLambda1;
+static ExpAverage expAverageLambda2;
 
 #include "cyclic_buffer.h"
 
@@ -31,6 +38,23 @@ float getAfr(SensorType type) {
 	}
 
 	float volts = adcGetScaledVoltage("ego", type == SensorType::Lambda1 ? sensor->hwChannel : sensor->hwChannel2);
+
+	float interpolatedAfr = interpolateMsg("AFR", sensor->v1, sensor->value1, sensor->v2, sensor->value2, volts);
+
+	switch (type) {
+		case SensorType::Lambda1: {
+			expAverageLambda1.setSmoothingFactor(engineConfiguration->afrExpAverageAlpha);
+			smoothedLambda1Sensor.setValidValue(expAverageLambda1.initOrAverage(interpolatedAfr), getTimeNowNt());
+			break;
+		}
+		case SensorType::Lambda2: {
+			expAverageLambda2.setSmoothingFactor(engineConfiguration->afrExpAverageAlpha);
+			smoothedLambda2Sensor.setValidValue(expAverageLambda2.initOrAverage(interpolatedAfr), getTimeNowNt());
+			break;
+		}
+		default:
+			break;
+	}
 
 	return interpolateMsg("AFR", sensor->v1, sensor->value1, sensor->v2, sensor->value2, volts)
 			+ engineConfiguration->egoValueShift;
