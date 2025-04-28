@@ -78,4 +78,6 @@ void initLambda() {
 	if (isAdcChannelValid(engineConfiguration->afr.hwChannel2) || isUnitTest) {
 	  lambdaSensor2.Register();
   }
+	smoothedLambda1Sensor.Register();
+	smoothedLambda2Sensor.Register();
 }
