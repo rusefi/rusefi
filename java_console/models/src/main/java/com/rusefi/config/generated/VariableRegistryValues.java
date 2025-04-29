@@ -557,7 +557,7 @@ public class VariableRegistryValues {
 	public static final String GAUGE_NAME_CAN_WRITE_ERR = "CAN: Tx err";
 	public static final String GAUGE_NAME_CAN_WRITE_OK = "CAN: Tx OK";
 	public static final String GAUGE_NAME_CLT = "CLT";
-	public static final String GAUGE_NAME_CPU_TEMP = "CPU Temperature";
+	public static final String GAUGE_NAME_CPU_TEMP = "ECU: CPU Temperature";
 	public static final String GAUGE_NAME_CURRENT_GEAR = "TCU: Current Gear";
 	public static final String GAUGE_NAME_DEBUG_F1 = "debug f1";
 	public static final String GAUGE_NAME_DEBUG_F2 = "debug f2: iTerm";
@@ -609,7 +609,7 @@ public class VariableRegistryValues {
 	public static final String GAUGE_NAME_FUEL_VE = "Fuel: VE";
 	public static final String GAUGE_NAME_FUEL_WALL_AMOUNT = "Fuel: wall amount";
 	public static final String GAUGE_NAME_FUEL_WALL_CORRECTION = "Fuel: wall correction";
-	public static final String GAUGE_NAME_FW_VERSION = "ECU Software Version";
+	public static final String GAUGE_NAME_FW_VERSION = "ECU: Software Version";
 	public static final String GAUGE_NAME_GEAR_RATIO = "Gearbox Ratio";
 	public static final String GAUGE_NAME_GYRO_YAW = "Gyro: Yaw rate";
 	public static final String GAUGE_NAME_IAC = "Idle: Position";
@@ -1297,7 +1297,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 550780762;
+	public static final int SIGNATURE_HASH = 866462071;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1576,7 +1576,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.04.28.at_start_f435.550780762";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.04.29.at_start_f435.866462071";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';

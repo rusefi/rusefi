@@ -37,7 +37,7 @@ static const LogField fields[] = {
 	{engine->outputChannels.RPMValue, "RPM", "RPM", 0},
 	{engine->outputChannels.rpmAcceleration, "dRPM", "RPM acceleration/Rate of Change/ROC", 2},
 	{engine->outputChannels.speedToRpmRatio, "Gearbox Ratio", "value", 2},
-	{engine->outputChannels.internalMcuTemperature, "CPU Temperature", "deg C", 0},
+	{engine->outputChannels.internalMcuTemperature, "ECU: CPU Temperature", "deg C", 0},
 	{engine->outputChannels.coolant, "CLT", "deg C", 1},
 	{engine->outputChannels.intake, "IAT", "deg C", 1},
 	{engine->outputChannels.auxTemp1, "auxTemp1", "deg C", 1},

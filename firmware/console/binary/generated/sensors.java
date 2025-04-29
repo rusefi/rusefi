@@ -2,7 +2,7 @@ RPMValue("RPM", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 4, 1.0, 0.0, 8000
 rpmAcceleration("dRPM", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 6, 1.0, 0.0, 5.0, "RPM acceleration/Rate of Change/ROC"),
 speedToRpmRatio("Gearbox Ratio", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 8, 0.01, 0.0, 0.0, "value"),
 unusedVehicleSpeedKph("Vehicle Speed", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 10, 1.0, 0.0, 0.0, "kph"),
-internalMcuTemperature("CPU Temperature", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 11, 1.0, 0.0, 0.0, "deg C"),
+internalMcuTemperature("ECU: CPU Temperature", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 11, 1.0, 0.0, 0.0, "deg C"),
 coolant("CLT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 12, 0.01, 0.0, 0.0, "deg C"),
 intake("IAT", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 14, 0.01, 0.0, 0.0, "deg C"),
 auxTemp1("auxTemp1", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 16, 0.01, 0.0, 0.0, "deg C"),
