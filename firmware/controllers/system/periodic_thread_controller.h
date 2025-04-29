@@ -56,8 +56,8 @@ private:
     {
         OnStarted();
 
+        systime_t prev = chVTGetSystemTime();
         while(!chThdShouldTerminateX()) {
-            systime_t before = chVTGetSystemTime();
             efitick_t nowNt = getTimeNowNt();
 
 			{
@@ -72,7 +72,7 @@ private:
             // If the work takes 1ms, and we wait 2ms (1 / 500hz), we actually
             // get a loop at 333 hz.  We need to wait until 2ms after we START
             // doing work, so the loop runs at a predictable 500hz.
-            chThdSleepUntilWindowed(before, before + m_period);
+            prev = chThdSleepUntilWindowed(prev, chTimeAddX(prev, m_period));
         }
 
 		criticalError("Thread died: %s", this->m_name);
