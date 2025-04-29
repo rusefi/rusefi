@@ -92,19 +92,19 @@ static const ADCConversionGroup tempSensorConvGroup = {
 };
 
 // 4x oversample is plenty
-static constexpr int oversample = 4;
-static adcsample_t samples[oversample];
+static constexpr int tempSensorOversample = 4;
+static adcsample_t tempSensorSamples[tempSensorOversample];
 
 float getMcuTemperature() {
 	// Temperature sensor is only physically wired to ADC1
-	adcConvert(&ADCD1, &tempSensorConvGroup, samples, oversample);
+	adcConvert(&ADCD1, &tempSensorConvGroup, tempSensorSamples, tempSensorOversample);
 
 	uint32_t sum = 0;
-	for (size_t i = 0; i < oversample; i++) {
-		sum += samples[i];
+	for (size_t i = 0; i < tempSensorOversample; i++) {
+		sum += tempSensorSamples[i];
 	}
 
-	float volts = (float)sum / (4096 * oversample);
+	float volts = (float)sum / (4096 * tempSensorOversample);
 	volts *= engineConfiguration->adcVcc;
 
 	volts -= 0.760f; // Subtract the reference voltage at 25 deg C
