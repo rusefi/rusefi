@@ -12,7 +12,6 @@
 #include "trigger_decoder.h"
 #include "main_trigger_callback.h"
 #include "listener_array.h"
-#include "hip9011.h"
 #include "logic_analyzer.h"
 
 #include "local_version_holder.h"

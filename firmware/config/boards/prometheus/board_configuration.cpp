@@ -180,14 +180,6 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->spi3sckPin = Gpio::C10;
 	engineConfiguration->spi3SckMode = PO_OPENDRAIN; // 4
 
-	engineConfiguration->hip9011SpiDevice = SPI_DEVICE_3;
-	engineConfiguration->hip9011CsPin = is469 ? Gpio::D1 : Gpio::D2;
-	engineConfiguration->hip9011CsPinMode = OM_OPENDRAIN;
-	engineConfiguration->hip9011IntHoldPin = Gpio::C14;
-	engineConfiguration->hip9011IntHoldPinMode = OM_OPENDRAIN;
-    engineConfiguration->hipOutputChannel = EFI_ADC_10; // PC0
-    engineConfiguration->isHip9011Enabled = true;
-
 	engineConfiguration->canTxPin = Gpio::B9;
 	engineConfiguration->canRxPin = Gpio::B8;
 

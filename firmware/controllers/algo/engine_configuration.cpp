@@ -49,10 +49,6 @@
 #include "electronic_throttle.h"
 #endif
 
-#if EFI_HIP_9011
-#include "hip9011.h"
-#endif
-
 #include "hardware.h"
 
 #if EFI_PROD_CODE

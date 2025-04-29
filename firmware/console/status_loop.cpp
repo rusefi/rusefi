@@ -26,7 +26,6 @@
 
 #include "pch.h"
 #include "status_loop.h"
-#include "hip9011_logic.h"
 #include "electronic_throttle.h"
 
 #if EFI_LOGIC_ANALYZER
@@ -327,10 +326,6 @@ private:
 static CommunicationBlinkingTask communicationsBlinkingTask;
 
 #endif /* EFI_PROD_CODE */
-
-#if EFI_HIP_9011
-extern HIP9011 instance;
-#endif /* EFI_HIP_9011 */
 
 
 #if EFI_TUNER_STUDIO

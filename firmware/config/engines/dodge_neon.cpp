@@ -132,8 +132,6 @@ void setDodgeNeonNGCEngineConfiguration() {
 
 	engineConfiguration->map.sensor.type = MT_DODGE_NEON_2003;
 
-	engineConfiguration->hip9011Gain = 0.3;
-
 	engineConfiguration->cylinderBore = 87.5;
 
 	engineConfiguration->clutchDownPin = Gpio::C12;

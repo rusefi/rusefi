@@ -8,8 +8,6 @@
 #include "pch.h"
 #include "knock_logic.h"
 
-#include "hip9011.h"
-
 int getCylinderKnockBank(uint8_t cylinderNumber) {
 	// C/C++ can't index in to bit fields, we have to provide lookup ourselves
 	switch (cylinderNumber) {
@@ -197,9 +195,5 @@ void Engine::onSparkFireKnockSense(uint8_t cylinderNumber, efitick_t nowNt) {
 #else
 	UNUSED(cylinderNumber);
 	UNUSED(nowNt);
-#endif
-
-#if EFI_HIP_9011
-	hip9011_onFireEvent(cylinderNumber, nowNt);
 #endif
 }
