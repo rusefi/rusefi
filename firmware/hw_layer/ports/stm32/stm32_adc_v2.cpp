@@ -116,10 +116,18 @@ float getMcuTemperature() {
 }
 
 // See https://github.com/rusefi/rusefi/issues/976 for discussion on these values
+// ...  there is no reason to use a longer sampling time than 56 cycles with the current clock ...
 #ifndef ADC_SAMPLING_SLOW
 #define ADC_SAMPLING_SLOW ADC_SAMPLE_56
 #endif
 // see also ADC_SAMPLING_FAST in adc_inputs.cpp
+// ADC clock is 21MHz on F4 and 27MHz on F7
+// We want 500 Hz refresh rate for 16 (32) channels + MCU temperature
+// 21 MHz / 500 = 42000 clocks for all channels including oversampling
+// We want SLOW_ADC_OVERSAMPLE
+// 42000 / 8 / 16 = 328.125 clocks / channel
+// 42000 / 8 / 32 = 164 clocks / channel
+// This ^ does not include additional MCU temperatur conversions
 
 // Slow ADC has 16 channels we can sample, or 32 if ADC mux mode is enabled.
 constexpr size_t adcChannelCount = 16;
