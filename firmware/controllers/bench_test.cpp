@@ -518,6 +518,12 @@ static void handleCommandX14(uint16_t index) {
 	case TS_ETB_DISABLE_JAM_DETECT:
 		engine->etbIgnoreJamProtection = true;
 		return;
+	case TS_EWG_AUTOCAL_0:
+			etbAutocal(DC_Wastegate);
+		return;
+	case TS_EWG_AUTOCAL_0_FAST:
+			etbAutocal(DC_Wastegate, false);
+		return;
 #endif // EFI_ELECTRONIC_THROTTLE_BODY
 	case TS_WIDEBAND_UPDATE:
 		widebandUpdatePending = true;
