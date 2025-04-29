@@ -782,9 +782,6 @@ float getOutputValueByName(const char *name) {
 // rawFlexFreq
 		case -1935221780:
 			return engine->outputChannels.rawFlexFreq;
-// fastAdcErrorsCount
-		case -805019103:
-			return engine->outputChannels.fastAdcErrorsCount;
 // deviceUid
 		case 540029591:
 			return engine->outputChannels.deviceUid;
@@ -815,12 +812,12 @@ float getOutputValueByName(const char *name) {
 // rawAuxAnalog4
 		case 98140611:
 			return engine->outputChannels.rawAuxAnalog4;
-// fastAdcErrorCallbackCount
-		case -2045395013:
-			return engine->outputChannels.fastAdcErrorCallbackCount;
-// slowAdcErrorsCount
-		case -276658792:
-			return engine->outputChannels.slowAdcErrorsCount;
+// fastAdcErrorCount
+		case -1344436946:
+			return engine->outputChannels.fastAdcErrorCount;
+// slowAdcErrorCount
+		case -807823931:
+			return engine->outputChannels.slowAdcErrorCount;
 // rawAuxTemp1
 		case -801974332:
 			return engine->outputChannels.rawAuxTemp1;
@@ -857,6 +854,15 @@ float getOutputValueByName(const char *name) {
 // sd_error
 		case -1811686395:
 			return engine->outputChannels.sd_error;
+// fastAdcOverrunCount
+		case -1422787851:
+			return engine->outputChannels.fastAdcOverrunCount;
+// slowAdcOverrunCount
+		case -1166766772:
+			return engine->outputChannels.slowAdcOverrunCount;
+// fastAdcLastError
+		case -1773414247:
+			return engine->outputChannels.fastAdcLastError;
 // fastAdcPeriod
 		case -1798837954:
 			return engine->outputChannels.fastAdcPeriod;

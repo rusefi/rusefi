@@ -1330,7 +1330,7 @@ struct output_channels_s {
 	/**
 	 * offset 776
 	 */
-	uint8_t fastAdcErrorsCount = (uint8_t)0;
+	uint8_t unusedWasAdc = (uint8_t)0;
 	/**
 	 * offset 777
 	 */
@@ -1384,13 +1384,15 @@ struct output_channels_s {
 	 */
 	scaled_channel<int16_t, 1000, 1> rawAuxAnalog4 = (int16_t)0;
 	/**
+	 * ECU: Fast ADC errors
 	 * offset 796
 	 */
-	uint8_t fastAdcErrorCallbackCount = (uint8_t)0;
+	uint8_t fastAdcErrorCount = (uint8_t)0;
 	/**
+	 * ECU: Slow ADC errors
 	 * offset 797
 	 */
-	uint8_t slowAdcErrorsCount = (uint8_t)0;
+	uint8_t slowAdcErrorCount = (uint8_t)0;
 	/**
 	 * units: V
 	 * offset 798
@@ -1449,23 +1451,36 @@ struct output_channels_s {
 	 */
 	uint8_t sd_error = (uint8_t)0;
 	/**
-	 * need 4 byte alignment
-	 * units: units
+	 * ECU: Fast ADC overruns
 	 * offset 829
 	 */
-	uint8_t alignmentFill_at_829[3] = {};
+	uint8_t fastAdcOverrunCount = (uint8_t)0;
 	/**
+	 * ECU: Slow ADC overruns
+	 * offset 830
+	 */
+	uint8_t slowAdcOverrunCount = (uint8_t)0;
+	/**
+	 * ECU: Fast ADC error type
+	 * offset 831
+	 */
+	uint8_t fastAdcLastError = (uint8_t)0;
+	/**
+	 * ECU: Fast ADC period
+	 * units: ticks
 	 * offset 832
 	 */
-	uint32_t fastAdcPeriod = (uint32_t)0;
+	uint16_t fastAdcPeriod = (uint16_t)0;
+	/**
+	 * ECU: Fast ADC conversions
+	 * units: N
+	 * offset 834
+	 */
+	uint16_t fastAdcConversionCount = (uint16_t)0;
 	/**
 	 * offset 836
 	 */
-	uint32_t fastAdcConversionCount = (uint32_t)0;
-	/**
-	 * offset 840
-	 */
-	uint8_t unusedAtTheEnd[36] = {};
+	uint8_t unusedAtTheEnd[40] = {};
 };
 static_assert(sizeof(output_channels_s) == 876);
 
