@@ -61,11 +61,11 @@ int analogGetDiagnostic();
 
 /*
  * We have 1 / (GPT_FREQ_FAST / GPT_PERIOD_FAST) to finish conversion = 100 uS
- * With ADC_SAMPLING_FAST = 28 ADC clock @ 21 MHz (F4) -> one channel conversion takes 1.33(3) uS
+ * With ADC_SAMPLING_FAST = 28 ADC clock @ 21 MHz (F4)
+ * One channel conversion takes 28 + 12 = 40 clocks
+ * One channel conversion takes 1 / 21`000`000 * 40 = 1.904 uS
  * Oversampling is ADC_BUF_DEPTH_FAST = 4
- * We can do up-to 100 / (1.33(3) * 4) = 18.75 channels conversions
- * So we can enable ALL channels for fast ADC.
- * This will increase bus load with more DMA transfers, but who cares?
+ * We can do up-to 100 / (1.904 * 4) = 13.125 channels conversions
  */
 
 #endif /* GPT_FREQ_FAST GPT_PERIOD_FAST */
