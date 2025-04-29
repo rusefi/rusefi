@@ -5,6 +5,7 @@
 typedef void (*tfunc_t)(void *p);
 typedef int tprio_t;
 typedef uint32_t systime_t;
+typedef uint32_t sysinterval_t;
 
 class thread_t {
 public:
@@ -21,6 +22,10 @@ systime_t chThdSleepUntilWindowed(systime_t prev, systime_t next);
 
 thread_t *chThdCreateStatic(void *wsp, size_t size,
                             tprio_t prio, tfunc_t pf, void *arg);
+static inline systime_t chTimeAddX(systime_t systime,
+                                   sysinterval_t interval) {
+  return systime + (systime_t)interval;
+}
 
 #define PAL_MODE_OUTPUT_PUSHPULL 0
 
