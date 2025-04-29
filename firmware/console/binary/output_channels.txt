@@ -402,7 +402,7 @@ float mapFast
 	uint8_t autoscale injectorDutyCycleStage2;@@GAUGE_NAME_FUEL_INJ_DUTY_STAGE_2@@;"%",{1/2}, 0, 0, 0, 0
 	uint8_t rawFlexFreq
 
-	uint8_t fastAdcErrorsCount
+	uint8_t unusedWasAdc
 	uint8_t deviceUid
 	uint16_t mc33810spiErrorCounter
 
@@ -417,8 +417,8 @@ float mapFast
  	int16_t autoscale rawAuxAnalog3;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
  	int16_t autoscale rawAuxAnalog4;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 
-  uint8_t fastAdcErrorCallbackCount
-  uint8_t slowAdcErrorsCount
+	uint8_t fastAdcErrorCount;ECU: Fast ADC errors;"", 1, 0, 0, 255, 0
+	uint8_t slowAdcErrorCount;ECU: Slow ADC errors;"", 1, 0, 0, 255, 0
 
 	int16_t autoscale rawAuxTemp1;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
 	int16_t autoscale rawAuxTemp2;;"V",{1/@@PACK_MULT_VOLTAGE@@}, 0, 0, 5, 3
@@ -438,8 +438,11 @@ float mapFast
 
   uint8_t sd_error;
 
-	uint32_t fastAdcPeriod;
-	uint32_t fastAdcConversionCount;
+	uint8_t fastAdcOverrunCount;ECU: Fast ADC overruns;"", 1, 0, 0, 255, 0
+	uint8_t slowAdcOverrunCount;ECU: Slow ADC overruns;"", 1, 0, 0, 255, 0
+	uint8_t fastAdcLastError;ECU: Fast ADC error type;"", 1, 0, 0, 255, 0
+	uint16_t fastAdcPeriod;ECU: Fast ADC period;"ticks", 1, 0, 0, 1000, 0
+	uint16_t fastAdcConversionCount;ECU: Fast ADC conversions;"N", 1, 0, 0, 65535, 0
 
-	uint8_t[36 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t[40 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct

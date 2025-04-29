@@ -130,7 +130,11 @@ float getMcuTemperature() {
 constexpr size_t adcChannelCount = 16;
 
 static void slowAdcErrorCB(ADCDriver *, adcerror_t err) {
-	engine->outputChannels.slowAdcErrorsCount++;
+	engine->outputChannels.slowAdcErrorCount++;
+	if (err == ADC_ERR_OVERFLOW) {
+		engine->outputChannels.slowAdcOverrunCount++;
+	}
+	// TODO: restart?
 }
 
 // Conversion group for slow channels

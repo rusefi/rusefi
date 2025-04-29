@@ -153,11 +153,13 @@ static void fastAdcDoneCB(ADCDriver *adcp) {
 	}
 }
 
-static volatile adcerror_t fastAdcLastError;
-
 static void fastAdcErrorCB(ADCDriver *, adcerror_t err) {
-	fastAdcLastError = err;
-	engine->outputChannels.fastAdcErrorCallbackCount++;
+	engine->outputChannels.fastAdcLastError = (uint8_t)err;
+	engine->outputChannels.fastAdcErrorCount++;
+	if (err == ADC_ERR_OVERFLOW) {
+		engine->outputChannels.fastAdcOverrunCount++;
+	}
+	// TODO: restart?
 }
 
 #if defined(EFI_INTERNAL_FAST_ADC_PWM)
@@ -267,7 +269,7 @@ void AdcDevice::startConversionI()
 		/* drop volatile type qualifier - this is safe */
 		adcStartConversionI(adcp, hwConfig, (adcsample_t *)samples, depth);
 	} else {
-		engine->outputChannels.fastAdcErrorsCount++;
+		engine->outputChannels.fastAdcErrorCount++;
 		// todo: when? why? criticalError("ADC fast not ready?");
 		// see notes at https://github.com/rusefi/rusefi/issues/6399
 	}
