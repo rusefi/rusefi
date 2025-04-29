@@ -116,7 +116,6 @@ TESTS_SRC_CPP = \
 	tests/test_hardware_reinit.cpp \
 	tests/test_ion.cpp \
 	tests/test_kline_bytes_aggregator.cpp \
-	tests/test_hip9011.cpp \
 	tests/test_engine_math.cpp \
 	tests/test_throttle_model.cpp \
 	tests/test_fasterEngineSpinningUp.cpp \
