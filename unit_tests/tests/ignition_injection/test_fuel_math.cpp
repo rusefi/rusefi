@@ -330,3 +330,46 @@ TEST(FuelMath, IdleVeTable) {
 	Sensor::setMockValue(SensorType::Tps1, 10);
 	EXPECT_FLOAT_EQ(dut.getVe(1000, 50, false), 0.5f);
 }
+
+TEST(FuelMath, getCycleFuelMassTest) {
+	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+	engineConfiguration->cranking.baseFuel = 4000;
+	setLinearCurve(config->crankingTpsCoef, /*from*/1, /*to*/8, 1);
+	setTable(config->crankingCycleFuelCoef, 1.5f);
+
+	Sensor::setMockValue(SensorType::DriverThrottleIntent, 35.0f);
+
+	// test running fuel as crank fuel case
+	engineConfiguration->useRunningMathForCranking = true;
+	EXPECT_NEAR(getCycleFuelMass(true, 0.05f), 0.257f, EPS3D);
+
+	engineConfiguration->useRunningMathForCranking = false;
+
+	// simulate cranking
+	for (size_t i = 0; i < 5; i++) {
+		engine->rpmCalculator.onNewEngineCycle();
+	}
+
+	EXPECT_NEAR(getCycleFuelMass(true, 0.05f), 20.571f, EPS3D);
+	EXPECT_NEAR(engine->engineState.crankingFuel.durationCoefficient, 1.5, EPS3D);
+	EXPECT_NEAR(engine->engineState.crankingFuel.coolantTemperatureCoefficient, 1, EPS3D);
+	EXPECT_NEAR(engine->engineState.crankingFuel.tpsCoefficient, 3.428f, EPS3D);
+
+	for (size_t i = 0; i < 10; i++) {
+		engine->rpmCalculator.onNewEngineCycle();
+	}
+
+	EXPECT_NEAR(getCycleFuelMass(true, 0.05f), 20.571f, EPS3D);
+	EXPECT_NEAR(engine->engineState.crankingFuel.durationCoefficient, 1.5, EPS3D);
+	EXPECT_NEAR(engine->engineState.crankingFuel.coolantTemperatureCoefficient, 1, EPS3D);
+	EXPECT_NEAR(engine->engineState.crankingFuel.tpsCoefficient, 3.428f, EPS3D);
+
+	// simulate TPS error:
+	Sensor::setInvalidMockValue(SensorType::DriverThrottleIntent);
+	for (size_t i = 0; i < 10; i++) {
+		engine->rpmCalculator.onNewEngineCycle();
+	}
+
+	EXPECT_NEAR(getCycleFuelMass(true, 0.05f), 6.0f, EPS3D);
+	EXPECT_NEAR(engine->engineState.crankingFuel.tpsCoefficient, 1, EPS3D);
+}

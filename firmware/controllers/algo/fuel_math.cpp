@@ -292,7 +292,7 @@ percent_t getInjectorDutyCycleStage2(float rpm) {
 	return 100 * totalInjectiorAmountPerCycle / engineCycleDuration;
 }
 
-static float getCycleFuelMass(bool isCranking, float baseFuelMass) {
+float getCycleFuelMass(bool isCranking, float baseFuelMass) {
 	if (isCranking) {
 		return getCrankingFuel(baseFuelMass);
 	} else {
