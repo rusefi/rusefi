@@ -62,6 +62,8 @@ void portInitAdc() {
 #endif // EFI_SOFTWARE_KNOCK
 }
 
+static void slowAdcErrorCB(ADCDriver *, adcerror_t);
+
 /*
  * ADC conversion group.
  */
@@ -69,7 +71,7 @@ static const ADCConversionGroup tempSensorConvGroup = {
 	.circular			= FALSE,
 	.num_channels		= 1,
 	.end_cb				= nullptr,
-	.error_cb			= nullptr,
+	.error_cb			= slowAdcErrorCB,
 	/* HW dependent part below */
 	.cr1				= 0,
 	.cr2				= ADC_CR2_SWSTART,
