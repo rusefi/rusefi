@@ -242,9 +242,6 @@ float getConfigValueByName(const char *name) {
 // launchTimingRetard
 		case 1226423210:
 			return engineConfiguration->launchTimingRetard;
-// hip9011Prescaler
-		case 1548430930:
-			return engineConfiguration->hip9011Prescaler;
 // idleMaximumAirmass
 		case -1671871759:
 			return engineConfiguration->idleMaximumAirmass;
@@ -437,9 +434,6 @@ float getConfigValueByName(const char *name) {
 // rethrowHardFault
 		case 1081456939:
 			return engineConfiguration->rethrowHardFault;
-// isHip9011Enabled
-		case -2119647784:
-			return engineConfiguration->isHip9011Enabled;
 // requireFootOnBrakeToCrank
 		case -703903346:
 			return engineConfiguration->requireFootOnBrakeToCrank;
@@ -452,9 +446,6 @@ float getConfigValueByName(const char *name) {
 // enabledStep1Limiter
 		case -2068213709:
 			return engineConfiguration->enabledStep1Limiter;
-// useTpicAdvancedMode
-		case -1037977635:
-			return engineConfiguration->useTpicAdvancedMode;
 // lambdaProtectionEnable
 		case 1451020756:
 			return engineConfiguration->lambdaProtectionEnable;
@@ -1424,9 +1415,6 @@ float getConfigValueByName(const char *name) {
 // tChargeAirDecrLimit
 		case 670644444:
 			return engineConfiguration->tChargeAirDecrLimit;
-// hip9011Gain
-		case 929810608:
-			return engineConfiguration->hip9011Gain;
 // etb_iTermMin
 		case -1725192476:
 			return engineConfiguration->etb_iTermMin;
@@ -2383,11 +2371,6 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->launchTimingRetard = value;
 		return 1;
 	}
-		case 1548430930:
-	{
-		engineConfiguration->hip9011Prescaler = (int)value;
-		return 1;
-	}
 		case -1671871759:
 	{
 		engineConfiguration->idleMaximumAirmass = (int)value;
@@ -2708,11 +2691,6 @@ bool setConfigValueByName(const char *name, float value) {
 		engineConfiguration->rethrowHardFault = (int)value;
 		return 1;
 	}
-		case -2119647784:
-	{
-		engineConfiguration->isHip9011Enabled = (int)value;
-		return 1;
-	}
 		case -703903346:
 	{
 		engineConfiguration->requireFootOnBrakeToCrank = (int)value;
@@ -2731,11 +2709,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -2068213709:
 	{
 		engineConfiguration->enabledStep1Limiter = (int)value;
-		return 1;
-	}
-		case -1037977635:
-	{
-		engineConfiguration->useTpicAdvancedMode = (int)value;
 		return 1;
 	}
 		case 1451020756:
@@ -4351,11 +4324,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case 670644444:
 	{
 		engineConfiguration->tChargeAirDecrLimit = value;
-		return 1;
-	}
-		case 929810608:
-	{
-		engineConfiguration->hip9011Gain = value;
 		return 1;
 	}
 		case -1725192476:

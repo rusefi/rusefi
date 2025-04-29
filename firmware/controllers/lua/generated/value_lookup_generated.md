@@ -235,9 +235,6 @@ Pull-up resistor value on your board
 ### launchTimingRetard
 
 
-### hip9011Prescaler
-value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into two bit fields
-
 ### idleMaximumAirmass
 Maximum commanded airmass for the idle controller.
 
@@ -430,9 +427,6 @@ Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
 ### rethrowHardFault
 
 
-### isHip9011Enabled
-
-
 ### requireFootOnBrakeToCrank
 
 
@@ -443,9 +437,6 @@ Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
 This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
 
 ### enabledStep1Limiter
-
-
-### useTpicAdvancedMode
 
 
 ### lambdaProtectionEnable
@@ -1416,9 +1407,6 @@ Maximum allowed rate of increase allowed for the estimated charge temperature
 
 ### tChargeAirDecrLimit
 Maximum allowed rate of decrease allowed for the estimated charge temperature
-
-### hip9011Gain
-
 
 ### etb_iTermMin
 iTerm min value
