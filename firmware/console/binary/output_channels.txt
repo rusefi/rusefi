@@ -27,7 +27,6 @@ bit isTriggerError;Error: Trigger
 bit hasCriticalError;Error: Active
 bit isWarnNow;Warning: Active
 bit isPedalError;Error: Pedal
-bit isKnockChipOk;
 bit launchTriggered;Launch Control Triggered
 bit isTps2Error;Error: TPS2
 bit injectorFault;Injector Fault

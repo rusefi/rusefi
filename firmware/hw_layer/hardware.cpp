@@ -35,7 +35,7 @@
 #include "AdcDevice.h"
 #include "idle_hardware.h"
 #include "mcp3208.h"
-#include "hip9011.h"
+
 #include "histogram.h"
 #include "gps_uart.h"
 #include "sent.h"
@@ -258,7 +258,6 @@ void printSpiConfig(const char *msg, spi_device_e device) {
 #if HAL_USE_ADC
 
 static AdcToken fastMapSampleIndex;
-static AdcToken hipSampleIndex;
 
 #if HAL_TRIGGER_USE_ADC
 static AdcToken triggerSampleIndex;
@@ -283,18 +282,13 @@ void onFastAdcComplete(adcsample_t*) {
 #if EFI_MAP_AVERAGING && defined (MODULE_MAP_AVERAGING)
 	mapAveragingAdcCallback(adcRawValueToScaledVoltage(getFastAdc(fastMapSampleIndex), engineConfiguration->map.sensor.hwChannel));
 #endif /* EFI_MAP_AVERAGING */
-#if EFI_HIP_9011
-	if (engineConfiguration->isHip9011Enabled) {
-		hipAdcCallback(adcRawValueToScaledVoltage(getFastAdc(hipSampleIndex), engineConfiguration->hipOutputChannel));
-	}
-#endif /* EFI_HIP_9011 */
 }
 #endif /* HAL_USE_ADC */
 
 static void calcFastAdcIndexes() {
 #if HAL_USE_ADC
 	fastMapSampleIndex = enableFastAdcChannel("Fast MAP", engineConfiguration->map.sensor.hwChannel);
-	hipSampleIndex = enableFastAdcChannel("HIP9011", engineConfiguration->hipOutputChannel);
+
 #if HAL_TRIGGER_USE_ADC
 	triggerSampleIndex = enableFastAdcChannel("Trigger ADC", getAdcChannelForTrigger());
 #endif /* HAL_TRIGGER_USE_ADC */
@@ -335,9 +329,6 @@ void applyNewHardwareSettings() {
 
 	stopKLine();
 
-#if EFI_HIP_9011
-	stopHip9011_pins();
-#endif /* EFI_HIP_9011 */
 
 	stopHardware();
 
@@ -383,11 +374,6 @@ void applyNewHardwareSettings() {
 #endif /* (BOARD_EXT_GPIOCHIPS > 0) */
 
     startKLine();
-
-#if EFI_HIP_9011
-	startHip9011_pins();
-#endif /* EFI_HIP_9011 */
-
 
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	if (isIdleHardwareRestartNeeded()) {
@@ -598,10 +584,6 @@ void initHardware() {
 	onEcuStartTriggerImplementation();
 #endif /* EFI_SHAFT_POSITION_INPUT */
 	onEcuStartDoSomethingTriggerInputPins();
-
-#if EFI_HIP_9011
-	initHip9011();
-#endif /* EFI_HIP_9011 */
 
 #if EFI_WS2812
 	initWS2812();

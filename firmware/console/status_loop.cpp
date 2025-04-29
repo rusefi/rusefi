@@ -737,9 +737,6 @@ void updateTunerStudioState() {
 	tsOutputChannels->triggerPageRefreshFlag = needToTriggerTsRefresh();
 
 	tsOutputChannels->isWarnNow = engine->engineState.warnings.isWarningNow();
-#if EFI_HIP_9011_DEBUG
-	tsOutputChannels->isKnockChipOk = (instance.invalidResponsesCount == 0);
-#endif /* EFI_HIP_9011 */
 
 	tsOutputChannels->tpsAccelFuel = engine->engineState.tpsAccelEnrich;
 

@@ -221,7 +221,7 @@ void setBoardConfigOverrides() {
 	engineConfiguration->spi2mosiPin = Gpio::I3;
 	/* User can disable this bus and change pin mode, but not pins itself */
 
-	/* Smart chip and TPIC9011 */
+	/* Smart chip */
 	engineConfiguration->spi4sckPin = Gpio::E12;
 	engineConfiguration->spi4misoPin = Gpio::E13;
 	engineConfiguration->spi4mosiPin = Gpio::E14;
