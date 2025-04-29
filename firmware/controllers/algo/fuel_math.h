@@ -40,3 +40,4 @@ struct AirmassModelBase;
 AirmassModelBase* getAirmassModel(engine_load_mode_e mode);
 
 float getMaxAirflowAtMap(float map);
+float getCycleFuelMass(bool isCranking, float baseFuelMass);
