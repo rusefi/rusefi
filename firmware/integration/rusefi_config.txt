@@ -562,9 +562,7 @@ ThermistorConf clt;todo: merge with channel settings, use full-scale Thermistor 
 ThermistorConf iat;
 
 	float launchTimingRetard;;"deg", 1, 0, -180, 180, 2
-	uint8_t hip9011Prescaler;value '6' for 8MHz hw osc\nread hip9011 datasheet for details\ntodo split into two bit fields;"integer", 1, 0, 0, 32, 0
 	uint8_t autoscale idleMaximumAirmass;Maximum commanded airmass for the idle controller.;"mg", 2, 0, 0, 500, 1
-	uint8_t unusedHip1
 ! we use this offset to increase changes of default value during configuration migration
 #define TUNING_DETECTOR_PERSISTENCE_OFFSET -1
 	uint8_t tuningDetector;Zero value means do not detect tuning;"seconds", 1, @@TUNING_DETECTOR_PERSISTENCE_OFFSET@@, 0, 250, 0
@@ -687,7 +685,6 @@ trigger_config_s trigger;
     float airByRpmTaper;Extra air taper amount;"%", 1, 0, 0, 50, 1
 
 custom spi_device_e 1 bits, U08, @OFFSET@, [0:2], "Off", "SPI1", "SPI2", "SPI3", "SPI4", "SPI5", "SPI6"
-	spi_device_e hip9011SpiDevice;
 	uint8_t boostControlSafeDutyCycle;Duty cycle to use in case of a sensor failure. This duty cycle should produce the minimum possible amount of boost. This duty is also used in case any of the minimum RPM/TPS/MAP conditions are not met.;"%", 1, 0, 0, 100, 0
 	adc_channel_e mafAdcChannel
 
@@ -802,7 +799,6 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 
 	brain_input_pin_e[TRIGGER_INPUT_PIN_COUNT iterate] triggerInputPins;
 	uint16_t mc33_t_min_boost;Minimum allowed time for the boost phase. If the boost target current is reached before this time elapses, it is assumed that the injector has failed short circuit.;"us", 1, 0, 0, 10000, 0
-	pin_output_mode_e hip9011CsPinMode;
 
   uint16_t autoscale finalGearRatio;Ratio between the wheels and your transmission output. ;"ratio", 0.01, 0, 0, 10, 2
 
@@ -828,13 +824,11 @@ bit is_enabled_spi_2
 	bit isSdCardEnabled;enable sd/disable sd
 	bit rusefiVerbose29b,"29 bit","11 bit";Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
 	bit rethrowHardFault
-	bit isHip9011Enabled
 	bit requireFootOnBrakeToCrank
 	bit verboseQuad
 	bit useStepperIdle;This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
 
 	bit enabledStep1Limiter
-	bit useTpicAdvancedMode
 	bit lambdaProtectionEnable
 	bit verboseTLE8888
 	bit enableVerboseCanTx;CAN broadcast using custom rusEFI protocol
@@ -859,9 +853,6 @@ bit is_enabled_spi_2
 
 	brain_input_pin_e[LOGIC_ANALYZER_CHANNEL_COUNT iterate] logicAnalyzerPins;
 	pin_output_mode_e mainRelayPinMode;
-	Gpio hip9011CsPin;
-	Gpio hip9011IntHoldPin;
-pin_output_mode_e hip9011IntHoldPinMode;
 
 	! 536870911 = 2^29-1, the maximum valid extended ID
 	uint32_t verboseCanBaseAddress;;"", 1, 0, 0, 536870911, 0
@@ -1098,7 +1089,6 @@ bit unused1308_24
 bit twoStroke,"Two Stroke","Four Stroke"
 bit skippedWheelOnCam,"On camshaft","On crankshaft";Where is your primary skipped wheel located?
 
-	adc_channel_e hipOutputChannel;
 	switch_input_pin_e acSwitch;A/C button input;
 	adc_channel_e vRefAdcChannel;
 	uint8_t etbNeutralPosition;Expected neutral position;"%", 1, 0, 0, 100, 0
@@ -1440,7 +1430,6 @@ float tChargeAirIncrLimit;Maximum allowed rate of increase allowed for the estim
 float tChargeAirDecrLimit;Maximum allowed rate of decrease allowed for the estimated charge temperature;"deg/sec", 1, 0, 0, 100, 1
 
 
-	float hip9011Gain;;"", 1, 0, 0, 100, 2
 	int16_t etb_iTermMin;iTerm min value;"", 1, 0, -30000, 30000, 0
 	int16_t etb_iTermMax;iTerm max value;"", 1, 0, -30000, 30000, 0
 
@@ -2552,7 +2541,6 @@ end_struct
 #define ts_show_l9779 false
 #define ts_show_mc33810 false
 #define ts_show_mc33810_cs false
-#define ts_show_hip9011 false
 #define ts_show_tps_sent false
 #define ts_show_fan2_settings true
 #define ts_show_inj_diag false
