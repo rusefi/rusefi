@@ -56,9 +56,6 @@ float getOutputValueByName(const char *name) {
 // isPedalError
 		case -2035612655:
 			return engine->outputChannels.isPedalError;
-// isKnockChipOk
-		case 1830366389:
-			return engine->outputChannels.isKnockChipOk;
 // launchTriggered
 		case -52473827:
 			return engine->outputChannels.launchTriggered;
