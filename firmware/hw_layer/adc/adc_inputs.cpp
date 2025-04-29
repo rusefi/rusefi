@@ -54,6 +54,8 @@ int analogGetDiagnostic()
 
 extern AdcDevice fastAdc;
 
+/* TODO: Drop NO_CACHE for F4 and F7 couse with ADCv2 driver CPU does averaging and CPU stores result to this array */
+/* TODO: store summ of samples is this array and divide on oversample factor only when converting to float - this will increase accuracity */
 static volatile NO_CACHE adcsample_t slowAdcSamples[SLOW_ADC_CHANNEL_COUNT];
 
 static uint32_t slowAdcConversionCount = 0;
