@@ -57,7 +57,6 @@ extern AdcDevice fastAdc;
 static volatile NO_CACHE adcsample_t slowAdcSamples[SLOW_ADC_CHANNEL_COUNT];
 
 static uint32_t slowAdcConversionCount = 0;
-static uint32_t slowAdcErrorsCount = 0;
 
 static float mcuTemperature;
 
@@ -154,7 +153,7 @@ public:
 
 			/* drop volatile type qualifier - this is safe */
 			if (!readSlowAnalogInputs((adcsample_t *)slowAdcSamples)) {
-				slowAdcErrorsCount++;
+				engine->outputChannels.slowAdcErrorCount++;
 				return;
 			}
 
