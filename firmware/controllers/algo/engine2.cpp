@@ -204,12 +204,14 @@ void EngineState::periodicFastCallback() {
 		// Apply both per-bank and per-cylinder trims
 		engine->engineState.injectionMass[i] = untrimmedInjectionMass * bankTrim * cylinderTrim * knockTrim;
 
-		// todo: is it OK to apply cylinder trim with FIXED timing?
-		timingAdvance[i] = correctedIgnitionAdvance
+		angle_t cylinderIgnitionAdvance = correctedIgnitionAdvance
 									+ getCylinderIgnitionTrim(i, rpm, l_ignitionLoad)
 									// spark hardware latency correction, for implementation details see:
 									// https://github.com/rusefi/rusefi/issues/6832:
 									+ engine->ignitionState.getSparkHardwareLatencyCorrection();
+		wrapAngle(cylinderIgnitionAdvance, "EngineState::periodicFastCallback", ObdCode::CUSTOM_ERR_ADCANCE_CALC_ANGLE);
+		// todo: is it OK to apply cylinder trim with FIXED timing?
+		timingAdvance[i] = cylinderIgnitionAdvance;
 	}
 
 	shouldUpdateInjectionTiming = getInjectorDutyCycle(rpm) < 90;
