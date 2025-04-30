@@ -18,6 +18,7 @@
 #define ts_show_vr_threshold_all true
 #define ts_show_vr_threshold_pins false
 #define ts_show_vr_threshold_2 true
+#define ts_show_check_engine true
 
 
 #define show_2chan_presets true
