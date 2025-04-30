@@ -293,8 +293,8 @@ void proteusDcWastegateTest() {
 	setTPS1Calibration(98, 926, 891, 69);
 
 	engineConfiguration->wastegatePositionSensor = EFI_ADC_6;
-	engineConfiguration->wastegatePositionMin = 700;
-	engineConfiguration->wastegatePositionMax = 4000;
+	engineConfiguration->wastegatePositionClosedVoltage = 0.7;
+	engineConfiguration->wastegatePositionOpenedVoltage = 4.0;
 
 	strncpy(config->luaScript, R"(
 

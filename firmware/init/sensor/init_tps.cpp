@@ -198,7 +198,7 @@ void updateUnfilteredRawPedal() {
 static ProxySensor driverIntent(SensorType::DriverThrottleIntent);
 
 // These sensors are TPS-like, so handle them in here too
-static FuncSensPair wastegate(PACK_MULT_VOLTAGE, SensorType::WastegatePosition);
+static FuncSensPair wastegate(1, SensorType::WastegatePosition);
 static FuncSensPair idlePos(PACK_MULT_VOLTAGE, SensorType::IdlePosition);
 
 void initTps() {
@@ -248,7 +248,7 @@ void initTps() {
 	);
 
 		// TPS-like stuff that isn't actually a TPS
-		wastegate.init({ engineConfiguration->wastegatePositionSensor, (float)engineConfiguration->wastegatePositionMin, (float)engineConfiguration->wastegatePositionMax, minTpsPps, maxTpsPps });
+		wastegate.init({ engineConfiguration->wastegatePositionSensor, engineConfiguration->wastegatePositionClosedVoltage, engineConfiguration->wastegatePositionOpenedVoltage, minTpsPps, maxTpsPps });
 		idlePos.init({ engineConfiguration->idlePositionChannel, (float)engineConfiguration->idlePositionMin, (float)engineConfiguration->idlePositionMax, minTpsPps, maxTpsPps });
 	}
 

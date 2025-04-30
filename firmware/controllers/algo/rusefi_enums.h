@@ -761,6 +761,8 @@ enum class TsCalMode : uint8_t {
 	Tps2SecondaryMin = 11,
 	PedalMin = 12,
 	PedalMax = 13,
+	EwgPosMax = 14,
+	EwgPosMin = 15,
 };
 
 enum class GearControllerMode : uint8_t {
