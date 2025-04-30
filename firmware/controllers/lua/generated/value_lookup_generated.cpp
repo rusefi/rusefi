@@ -1931,6 +1931,12 @@ float getConfigValueByName(const char *name) {
 // idleReturnTargetRampDuration
 		case 62925536:
 			return engineConfiguration->idleReturnTargetRampDuration;
+// wastegatePositionOpenedVoltage
+		case 866072300:
+			return engineConfiguration->wastegatePositionOpenedVoltage;
+// wastegatePositionClosedVoltage
+		case 20003211:
+			return engineConfiguration->wastegatePositionClosedVoltage;
 // tcu_shiftTime
 		case -1658957891:
 			return config->tcu_shiftTime;
@@ -5190,6 +5196,16 @@ bool setConfigValueByName(const char *name, float value) {
 		case 62925536:
 	{
 		engineConfiguration->idleReturnTargetRampDuration = (int)value;
+		return 1;
+	}
+		case 866072300:
+	{
+		engineConfiguration->wastegatePositionOpenedVoltage = value;
+		return 1;
+	}
+		case 20003211:
+	{
+		engineConfiguration->wastegatePositionClosedVoltage = value;
 		return 1;
 	}
 		case -1658957891:

@@ -1924,6 +1924,12 @@ Delay before cutting fuel due to extra high oil pressure. Use this to ignore sho
 ### idleReturnTargetRampDuration
 idle return target ramp duration
 
+### wastegatePositionOpenedVoltage
+Voltage when the wastegate is fully open
+
+### wastegatePositionClosedVoltage
+Voltage when the wastegate is closed
+
 ### tcu_shiftTime
 
 
