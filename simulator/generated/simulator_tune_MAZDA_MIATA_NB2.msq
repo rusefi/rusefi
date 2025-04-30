@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22824">
+    <page number="0" size="22836">
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
         <constant name="accelerometerSpiDevice">"Off"</constant>
@@ -4927,8 +4927,10 @@ end</constant>
          7000.0
 </constant>
         <constant digits="0" name="warningPeriod" units="seconds">0.0</constant>
+        <constant digits="2" name="wastegatePositionClosedVoltage" units="v">0.0</constant>
         <constant digits="0" name="wastegatePositionMax" units="mv">5000.0</constant>
         <constant digits="0" name="wastegatePositionMin" units="mv">0.0</constant>
+        <constant digits="2" name="wastegatePositionOpenedVoltage" units="v">0.0</constant>
         <constant name="wastegatePositionSensor">"Disabled"</constant>
         <constant name="watchOutForLinearTime">"true"</constant>
         <constant name="widebandOnSecondBus">"1"</constant>
@@ -4996,7 +4998,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250424" nPages="1" signature="rusEFI master.2025.04.30.f407-discovery.916993261" version="5.0"/>
+    <versionInfo firmwareInfo="20250424" nPages="1" signature="rusEFI master.2025.04.30.f407-discovery.4044813847" version="5.0"/>
     <bibliography author="rusEFI 20250424" writeDate="date"/>
     <settings/>
     <userComments/>
