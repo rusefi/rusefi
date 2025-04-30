@@ -1547,6 +1547,12 @@ float getConfigValueByName(const char *name) {
 // hpfpPidI
 		case 436500697:
 			return engineConfiguration->hpfpPidI;
+// hpfpPid_iTermMin
+		case 535118708:
+			return engineConfiguration->hpfpPid_iTermMin;
+// hpfpPid_iTermMax
+		case 535118454:
+			return engineConfiguration->hpfpPid_iTermMax;
 // hpfpTargetDecay
 		case 1025426144:
 			return engineConfiguration->hpfpTargetDecay;
@@ -4544,6 +4550,16 @@ bool setConfigValueByName(const char *name, float value) {
 		case 436500697:
 	{
 		engineConfiguration->hpfpPidI = (int)value;
+		return 1;
+	}
+		case 535118708:
+	{
+		engineConfiguration->hpfpPid_iTermMin = (int)value;
+		return 1;
+	}
+		case 535118454:
+	{
+		engineConfiguration->hpfpPid_iTermMax = (int)value;
 		return 1;
 	}
 		case 1025426144:

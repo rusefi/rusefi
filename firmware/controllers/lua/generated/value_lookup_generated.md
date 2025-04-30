@@ -1540,6 +1540,12 @@ How long to keep the valve activated (in order to allow the pump to build pressu
 ### hpfpPidI
 
 
+### hpfpPid_iTermMin
+iTerm min value
+
+### hpfpPid_iTermMax
+iTerm max value
+
 ### hpfpTargetDecay
 The fastest rate the target pressure can be reduced by. This is because HPFP have no way to bleed off pressure other than injecting fuel.
 
