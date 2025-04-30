@@ -1528,6 +1528,8 @@ tChargeMode_e tChargeMode;
 		uint8_t issFilterReciprocal;;"", 1, 0, 0, 255, 0
         uint16_t autoscale hpfpPidP;;"%/kPa", 0.001, 0, 0, 65, 3
         uint16_t autoscale hpfpPidI;;"%/kPa/lobe", 0.00001, 0, 0, 0.65, 5
+	int16_t hpfpPid_iTermMin;iTerm min value;"", 1, 0, -30000, 30000, 0
+	int16_t hpfpPid_iTermMax;iTerm max value;"", 1, 0, -30000, 30000, 0
         uint16_t hpfpTargetDecay;The fastest rate the target pressure can be reduced by. This is because HPFP have no way to bleed off pressure other than injecting fuel.;"kPa/s", 1, 0, 0, 65000, 0
 
 	output_pin_e[4 iterate] stepper_raw_output;
