@@ -71,6 +71,10 @@ public:
     return etbCurrentTarget;
   }
 
+	bool isEtbMode() const override {
+		return m_function == DC_Throttle1 || m_function == DC_Throttle2;
+	}
+
 	// Lua throttle adjustment
 	void setLuaAdjustment(percent_t adjustment) override;
 	float getLuaAdjustment() const;
@@ -96,9 +100,6 @@ private:
 	 * @return true if OK, false if should be disabled
 	 */
 	bool checkStatus();
-	bool isEtbMode() const override {
-		return m_function == DC_Throttle1 || m_function == DC_Throttle2;
-	}
 
 	Timer m_jamDetectTimer;
 

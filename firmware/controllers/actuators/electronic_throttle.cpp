@@ -126,6 +126,7 @@ static TsCalMode functionToCalModePriMin(dc_function_e func) {
 	switch (func) {
 		case DC_Throttle1: return TsCalMode::Tps1Min;
 		case DC_Throttle2: return TsCalMode::Tps2Min;
+		case DC_Wastegate: return TsCalMode::EwgPosMin;
 		default: return TsCalMode::None;
 	}
 }
@@ -134,6 +135,7 @@ static TsCalMode functionToCalModePriMax(dc_function_e func) {
 	switch (func) {
 		case DC_Throttle1: return TsCalMode::Tps1Max;
 		case DC_Throttle2: return TsCalMode::Tps2Max;
+		case DC_Wastegate: return TsCalMode::EwgPosMax;
 		default: return TsCalMode::None;
 	}
 }
@@ -757,7 +759,7 @@ public:
 
 	void autoCalibrateTps(bool reportToTs) override {
 		// Only auto calibrate throttles
-		if (TBase::getFunction() == DC_Throttle1 || TBase::getFunction() == DC_Throttle2) {
+		if (TBase::getFunction() == DC_Throttle1 || TBase::getFunction() == DC_Throttle2 || TBase::getFunction() == DC_Wastegate) {
 			m_isAutocalTs = reportToTs;
 			m_autocalPhase = ACPhase::Start;
 		}
@@ -823,6 +825,9 @@ public:
 						engineConfiguration->tps2Max = convertVoltageTo10bitADC(m_primaryMax);
 						engineConfiguration->tps2SecondaryMin = convertVoltageTo10bitADC(m_secondaryMin);
 						engineConfiguration->tps2SecondaryMax = convertVoltageTo10bitADC(m_secondaryMax);
+					} else if (myFunction == DC_Wastegate) {
+						engineConfiguration->wastegatePositionClosedVoltage = m_primaryMin;
+						engineConfiguration->wastegatePositionOpenedVoltage = m_primaryMax;
 					} else {
 						/* TODO */
 					}
@@ -831,20 +836,29 @@ public:
 
 				// Next: start transmitting results
 				engine->outputChannels.calibrationMode = (uint8_t)functionToCalModePriMax(myFunction);
-				engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(m_primaryMax);
+				if (TBase::isEtbMode())
+					engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(m_primaryMax);
+				else
+					engine->outputChannels.calibrationValue = m_primaryMax;
 				return ACPhase::TransmitPrimaryMax;
 			}
 			break;
 		case ACPhase::TransmitPrimaryMax:
 			if (m_autocalTimer.hasElapsedMs(500)) {
 				engine->outputChannels.calibrationMode = (uint8_t)functionToCalModePriMin(myFunction);
-				engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(m_primaryMin);
+				if (TBase::isEtbMode())
+					engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(m_primaryMin);
+				else
+					engine->outputChannels.calibrationValue = m_primaryMin;
 				return ACPhase::TransmitPrimaryMin;
 			}
 			break;
 		case ACPhase::TransmitPrimaryMin:
 			if (m_autocalTimer.hasElapsedMs(500)) {
 				engine->outputChannels.calibrationMode = (uint8_t)functionToCalModeSecMax(myFunction);
+				// No secondary sensor?
+				if (engine->outputChannels.calibrationMode == (uint8_t)TsCalMode::None)
+					return ACPhase::Stopped;
 				engine->outputChannels.calibrationValue = convertVoltageTo10bitADC(m_secondaryMax);
 				return ACPhase::TransmitSecondaryMax;
 			}

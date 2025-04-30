@@ -531,8 +531,8 @@ static void setDefaultEngineConfiguration() {
 
 	engineConfiguration->idlePositionMin = PACK_MULT_VOLTAGE * 0;
 	engineConfiguration->idlePositionMax = PACK_MULT_VOLTAGE * 5;
-	engineConfiguration->wastegatePositionMin = PACK_MULT_VOLTAGE * 0;
-	engineConfiguration->wastegatePositionMax = PACK_MULT_VOLTAGE * 5;
+	engineConfiguration->wastegatePositionClosedVoltage = 0.0;
+	engineConfiguration->wastegatePositionOpenedVoltage = 5.0;
 	engineConfiguration->tpsErrorDetectionTooLow = -10; // -10% open
 	engineConfiguration->tpsErrorDetectionTooHigh = 110; // 110% open
 
