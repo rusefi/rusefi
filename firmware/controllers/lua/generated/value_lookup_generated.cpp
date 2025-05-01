@@ -32,12 +32,6 @@ float getConfigValueByName(const char *name) {
 // compressionRatio
 		case 355839382:
 			return engineConfiguration->compressionRatio;
-// wastegatePositionMin
-		case 2097342691:
-			return engineConfiguration->wastegatePositionMin;
-// wastegatePositionMax
-		case 2097342437:
-			return engineConfiguration->wastegatePositionMax;
 // idlePositionMin
 		case -1256791716:
 			return engineConfiguration->idlePositionMin;
@@ -2031,16 +2025,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case 355839382:
 	{
 		engineConfiguration->compressionRatio = value;
-		return 1;
-	}
-		case 2097342691:
-	{
-		engineConfiguration->wastegatePositionMin = (int)value;
-		return 1;
-	}
-		case 2097342437:
-	{
-		engineConfiguration->wastegatePositionMax = (int)value;
 		return 1;
 	}
 		case -1256791716:

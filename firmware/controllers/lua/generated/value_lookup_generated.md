@@ -25,12 +25,6 @@ Above this CLT, disable AC to prevent overheating the engine. Set to 0 to disabl
 ### compressionRatio
 Just for reference really, not taken into account by any logic at this point
 
-### wastegatePositionMin
-Voltage when the wastegate is closed.\nYou probably don't have one of these!
-
-### wastegatePositionMax
-Voltage when the wastegate is fully open.\nYou probably don't have one of these!\n1 volt = 1000 units
-
 ### idlePositionMin
 Voltage when the idle valve is closed.\nYou probably don't have one of these!
 

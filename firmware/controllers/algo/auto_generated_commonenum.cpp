@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Sat Apr 19 21:26:35 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Thu May 01 15:24:56 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -179,6 +179,10 @@ case TsCalMode::EtbKi:
   return "EtbKi";
 case TsCalMode::EtbKp:
   return "EtbKp";
+case TsCalMode::EwgPosMax:
+  return "EwgPosMax";
+case TsCalMode::EwgPosMin:
+  return "EwgPosMin";
 case TsCalMode::None:
   return "None";
 case TsCalMode::PedalMax:
