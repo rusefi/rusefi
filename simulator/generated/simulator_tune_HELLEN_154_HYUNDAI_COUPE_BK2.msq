@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22836">
+    <page number="0" size="22824">
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
         <constant name="accelerometerSpiDevice">"Off"</constant>
@@ -4499,16 +4499,7 @@ end</constant>
         <constant name="unusedFancy7">"false"</constant>
         <constant name="unusedFancy8">"false"</constant>
         <constant name="unusedFancy9">"false"</constant>
-        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="53">
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
+        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="44">
          0.0
          0.0
          0.0
@@ -4555,6 +4546,8 @@ end</constant>
          0.0
 </constant>
         <constant name="unusedOverrideCrankingIacSetting">"false"</constant>
+        <constant digits="0" name="unusedWastgate0" units="">0.0</constant>
+        <constant digits="0" name="unusedWastgate1" units="">0.0</constant>
         <constant name="useAdvanceCorrectionsForCranking">"false"</constant>
         <constant name="useAuxSpeedForSlipRatio">"false"</constant>
         <constant name="useBiQuadOnAuxSpeedSensors">"false"</constant>
@@ -4974,9 +4967,7 @@ end</constant>
 </constant>
         <constant digits="0" name="warningPeriod" units="seconds">0.0</constant>
         <constant digits="2" name="wastegatePositionClosedVoltage" units="v">0.0</constant>
-        <constant digits="0" name="wastegatePositionMax" units="mv">5000.0</constant>
-        <constant digits="0" name="wastegatePositionMin" units="mv">0.0</constant>
-        <constant digits="2" name="wastegatePositionOpenedVoltage" units="v">0.0</constant>
+        <constant digits="2" name="wastegatePositionOpenedVoltage" units="v">5.0</constant>
         <constant name="wastegatePositionSensor">"Disabled"</constant>
         <constant name="watchOutForLinearTime">"true"</constant>
         <constant name="widebandOnSecondBus">"1"</constant>
@@ -5044,7 +5035,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250424" nPages="1" signature="rusEFI master.2025.05.01.f407-discovery.311851732" version="5.0"/>
+    <versionInfo firmwareInfo="20250424" nPages="1" signature="rusEFI master.2025.05.01.f407-discovery.249720676" version="5.0"/>
     <bibliography author="rusEFI 20250424" writeDate="date"/>
     <settings/>
     <userComments/>
