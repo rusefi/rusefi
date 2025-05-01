@@ -891,14 +891,18 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 		engine->ignitionState.luaTimingAdd = luaL_checknumber(l, 1);
 		return 0;
 	});
+#ifndef DISABLE_LUA_SET_TIMING_MULT
 	lua_register(lState, "setTimingMult", [](lua_State* l) {
 		engine->ignitionState.luaTimingMult = luaL_checknumber(l, 1);
 		return 0;
 	});
+#endif // !defined(DISABLE_LUA_SET_TIMING_MULT)
+#ifndef DISABLE_LUA_SET_FUEL_ADD
 	lua_register(lState, "setFuelAdd", [](lua_State* l) {
 		engine->engineState.lua.fuelAdd = luaL_checknumber(l, 1);
 		return 0;
 	});
+#endif // !defined(DISABLE_LUA_SET_FUEL_ADD)
 	lua_register(lState, "setFuelMult", [](lua_State* l) {
 		engine->engineState.lua.fuelMult = luaL_checknumber(l, 1);
 		return 0;
