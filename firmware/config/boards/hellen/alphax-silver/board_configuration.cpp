@@ -10,8 +10,7 @@ static OutputPin alphaTempPullUp;
 static OutputPin alphaTachSelPullUp;
 static OutputPin alphaHall1PullUp;
 static OutputPin alphaHall2PullUp;
-static OutputPin alphaHall3PullUp;
-static OutputPin alphaHall4PullUp;
+static OutputPin alphaHall34PullUp;
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = Gpio::TLE9104_0_OUT_0;
@@ -188,10 +187,9 @@ static void board_init_ext_gpios() {
 void boardInitHardware() {
 	alphaTempPullUp.initPin("a-temp", Gpio::MM100_IGN8); //  E6
 	alphaTachSelPullUp.initPin("Tach PullUp", Gpio::MM100_OUT_PWM1);
-	alphaHall1PullUp.initPin("hall1 PullUp", Gpio::MM100_OUT_PWM3);
-	alphaHall2PullUp.initPin("hall2 PullUp", Gpio::MM100_OUT_PWM4);
-	alphaHall3PullUp.initPin("hall3 PullUp", Gpio::MM100_OUT_PWM5);
-	alphaHall4PullUp.initPin("hall4 PullUp", Gpio::MM100_OUT_PWM6);
+	alphaHall1PullUp.initPin("hall1 PullUp", Gpio::MM100_IGN5);
+	alphaHall2PullUp.initPin("hall2 PullUp", Gpio::MM100_IGN6);
+	alphaHall34PullUp.initPin("hall3 PullUp", Gpio::MM100_IGN7);
 	board_init_ext_gpios();
 }
 
@@ -200,8 +198,7 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 	alphaTachSelPullUp.setValue(engineConfiguration->boardSelTachPullUp);
 	alphaHall1PullUp.setValue(engineConfiguration->boardEnHall1PullUp);
 	alphaHall2PullUp.setValue(engineConfiguration->boardEnHall2PullUp);
-	alphaHall3PullUp.setValue(engineConfiguration->boardEnHall3PullUp);
-	alphaHall4PullUp.setValue(engineConfiguration->boardEnHall4PullUp);
+	alphaHall34PullUp.setValue(engineConfiguration->boardEnHall34PullUp);
 }
 
 static Gpio OUTPUTS[] = {
