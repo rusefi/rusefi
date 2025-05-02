@@ -267,12 +267,6 @@
 
 #define EFI_MCP_3208 FALSE
 
-#ifndef EFI_HIP_9011
-// disabling for now - DMA conflict with SPI1
-#define EFI_HIP_9011 FALSE
-#define EFI_HIP_9011_LOGIC				FALSE
-#endif
-
 #if !defined(EFI_ONBOARD_MEMS)
  #define EFI_ONBOARD_MEMS FALSE
 #endif

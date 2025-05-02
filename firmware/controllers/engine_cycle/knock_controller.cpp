@@ -164,7 +164,7 @@ __attribute__((weak)) void onStartKnockSampling(uint8_t cylinderNumber, float sa
 	UNUSED(channelIdx);
 }
 
-#if EFI_HIP_9011 || EFI_SOFTWARE_KNOCK
+#if EFI_SOFTWARE_KNOCK
 static uint8_t cylinderNumberCopy;
 
 // Called when its time to start listening for knock
@@ -185,10 +185,10 @@ static void startKnockSampling(Engine* p_engine) {
 	onStartKnockSampling(cylinderNumberCopy, samplingSeconds, channel);
 }
 
-#endif // EFI_HIP_9011 || EFI_SOFTWARE_KNOCK
+#endif // EFI_SOFTWARE_KNOCK
 
 void Engine::onSparkFireKnockSense(uint8_t cylinderNumber, efitick_t nowNt) {
-#if EFI_HIP_9011 || EFI_SOFTWARE_KNOCK
+#if EFI_SOFTWARE_KNOCK
 	cylinderNumberCopy = cylinderNumber;
 	scheduleByAngle(nullptr, nowNt,
 			/*angle*/engineConfiguration->knockDetectionWindowStart, { startKnockSampling, engine });

@@ -84,10 +84,6 @@ typedef enum __attribute__ ((__packed__)) {
 
 } firing_order_e;
 
-#if EFI_HIP_9011_LOGIC
-size_t getNextFiringCylinderId(size_t prevCylinderId);
-#endif // EFI_HIP_9011_LOGIC
-
 /**
  * @param cylinderIndex Queried position in the firing order. 0 means the first cylinder to fire, 1 means second, etc. Maximum cylinderCount - 1.
  * @return The cylinder number in the requested position, from 0 to cylindersCount - 1.
