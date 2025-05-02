@@ -111,7 +111,7 @@ void applyEngineType(engine_type_e engineType) {
 		break;
 #endif //EFI_TCU
 
-#if defined(HW_HELLEN_8CHAN) || HW_PROTEUS
+#if defined(HW_SUBARU_2011) || defined(HW_HELLEN_8CHAN) || HW_PROTEUS
 	case engine_type_e::SUBARU_2011:
 	  setSubaru2011();
 		break;
