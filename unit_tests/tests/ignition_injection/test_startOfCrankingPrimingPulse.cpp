@@ -6,13 +6,14 @@
  */
 
 #include "pch.h"
+#include "util/injection_crank_helper.h"
 
 TEST(engine, testPlainCrankingWithoutAdvancedFeatures) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	setTable(config->injectionPhase, -180.0f);
 	engineConfiguration->isFasterEngineSpinUpEnabled = false;
 	engine->tdcMarkEnabled = false;
-	engineConfiguration->cranking.baseFuel = 12;
+	setTestFuelCrankingTable(12);
 
 	setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
 	ASSERT_EQ( 0,  Sensor::getOrZero(SensorType::Rpm)) << "RPM=0";
