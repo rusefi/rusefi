@@ -3,6 +3,7 @@
 #include "alphan_airmass.h"
 #include "maf_airmass.h"
 #include "speed_density_airmass.h"
+#include "util/injection_crank_helper.h"
 
 using ::testing::StrictMock;
 using ::testing::FloatNear;
@@ -333,15 +334,14 @@ TEST(FuelMath, IdleVeTable) {
 
 TEST(FuelMath, getCycleFuelMassTest) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->cranking.baseFuel = 4000;
 	setLinearCurve(config->crankingTpsCoef, /*from*/1, /*to*/8, 1);
-	setTable(config->crankingCycleFuelCoef, 1.5f);
+	setTestFuelCrankingTable(4000 * 1.5f);
 
 	Sensor::setMockValue(SensorType::DriverThrottleIntent, 35.0f);
 
 	// test running fuel as crank fuel case
 	engineConfiguration->useRunningMathForCranking = true;
-	EXPECT_NEAR(getCycleFuelMass(true, 0.05f), 0.257f, EPS3D);
+	EXPECT_NEAR(getCycleFuelMass(true, 0.05f), 0.171f, EPS3D);
 
 	engineConfiguration->useRunningMathForCranking = false;
 
@@ -351,7 +351,6 @@ TEST(FuelMath, getCycleFuelMassTest) {
 	}
 
 	EXPECT_NEAR(getCycleFuelMass(true, 0.05f), 20.571f, EPS3D);
-	EXPECT_NEAR(engine->engineState.crankingFuel.durationCoefficient, 1.5, EPS3D);
 	EXPECT_NEAR(engine->engineState.crankingFuel.coolantTemperatureCoefficient, 1, EPS3D);
 	EXPECT_NEAR(engine->engineState.crankingFuel.tpsCoefficient, 3.428f, EPS3D);
 
@@ -360,7 +359,6 @@ TEST(FuelMath, getCycleFuelMassTest) {
 	}
 
 	EXPECT_NEAR(getCycleFuelMass(true, 0.05f), 20.571f, EPS3D);
-	EXPECT_NEAR(engine->engineState.crankingFuel.durationCoefficient, 1.5, EPS3D);
 	EXPECT_NEAR(engine->engineState.crankingFuel.coolantTemperatureCoefficient, 1, EPS3D);
 	EXPECT_NEAR(engine->engineState.crankingFuel.tpsCoefficient, 3.428f, EPS3D);
 

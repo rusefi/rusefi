@@ -48,13 +48,12 @@ TEST(fuelControl, transitionIssue1592) {
 
 	setTable(config->injectionPhase, 0.0f);
 	setArrayValues(config->crankingFuelCoef, 1.0f);
-	setTable(config->crankingCycleFuelCoef, 1.0f);
 
 
 	engineConfiguration->globalTriggerAngleOffset = 20;
 
 	// Yes, this is a ton of fuel but it makes the repro easier
-	engineConfiguration->cranking.baseFuel = 213.6;
+	setTable(config->crankingCycleFuelCoef, 213.6);
 	engineConfiguration->cranking.rpm = 501;
 
 	// Test the transition from batch cranking to sequential running

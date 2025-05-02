@@ -10,6 +10,7 @@
 #include "fuel_math.h"
 #include "trigger_structure.h"
 #include "trigger_decoder.h"
+#include "util/injection_crank_helper.h"
 
 using ::testing::FloatNear;
 
@@ -63,7 +64,7 @@ TEST(misc, testFuelMap) {
 	EXPECT_EQ( 42,  getRunningFuel(1)) << "v1";
 	EXPECT_EQ( 84,  getRunningFuel(2)) << "v1";
 
-	engineConfiguration->cranking.baseFuel = 4000;
+	setTestFuelCrankingTable(4000);
 
 	// Should use 20 degree correction in case of failed sensor
 	Sensor::resetMockValue(SensorType::Clt);

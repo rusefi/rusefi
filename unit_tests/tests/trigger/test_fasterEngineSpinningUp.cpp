@@ -6,6 +6,7 @@
 
 #include "pch.h"
 #include "fuel_math.h"
+#include "util/injection_crank_helper.h"
 
 TEST(cranking, testFasterEngineSpinningUp) {
 	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
@@ -16,7 +17,7 @@ TEST(cranking, testFasterEngineSpinningUp) {
 	engine->tdcMarkEnabled = false;
 	// turn on FasterEngineSpinUp mode
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
-	engineConfiguration->cranking.baseFuel = 12;
+	setTestFuelCrankingTable(12);
 
 	// set ignition mode
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
