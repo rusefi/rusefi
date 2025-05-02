@@ -4573,88 +4573,88 @@ struct engine_configuration_s {
 	bool boardEnHall2PullUp : 1 {};
 	/**
 	offset 3784 bit 4 */
-	bool boardEnHall3PullUp : 1 {};
+	bool boardEnHall34PullUp : 1 {};
 	/**
 	offset 3784 bit 5 */
-	bool boardEnHall4PullUp : 1 {};
+	bool unusedBit_868_5 : 1 {};
 	/**
 	offset 3784 bit 6 */
-	bool unusedBit_869_6 : 1 {};
+	bool unusedBit_868_6 : 1 {};
 	/**
 	offset 3784 bit 7 */
-	bool unusedBit_869_7 : 1 {};
+	bool unusedBit_868_7 : 1 {};
 	/**
 	offset 3784 bit 8 */
-	bool unusedBit_869_8 : 1 {};
+	bool unusedBit_868_8 : 1 {};
 	/**
 	offset 3784 bit 9 */
-	bool unusedBit_869_9 : 1 {};
+	bool unusedBit_868_9 : 1 {};
 	/**
 	offset 3784 bit 10 */
-	bool unusedBit_869_10 : 1 {};
+	bool unusedBit_868_10 : 1 {};
 	/**
 	offset 3784 bit 11 */
-	bool unusedBit_869_11 : 1 {};
+	bool unusedBit_868_11 : 1 {};
 	/**
 	offset 3784 bit 12 */
-	bool unusedBit_869_12 : 1 {};
+	bool unusedBit_868_12 : 1 {};
 	/**
 	offset 3784 bit 13 */
-	bool unusedBit_869_13 : 1 {};
+	bool unusedBit_868_13 : 1 {};
 	/**
 	offset 3784 bit 14 */
-	bool unusedBit_869_14 : 1 {};
+	bool unusedBit_868_14 : 1 {};
 	/**
 	offset 3784 bit 15 */
-	bool unusedBit_869_15 : 1 {};
+	bool unusedBit_868_15 : 1 {};
 	/**
 	offset 3784 bit 16 */
-	bool unusedBit_869_16 : 1 {};
+	bool unusedBit_868_16 : 1 {};
 	/**
 	offset 3784 bit 17 */
-	bool unusedBit_869_17 : 1 {};
+	bool unusedBit_868_17 : 1 {};
 	/**
 	offset 3784 bit 18 */
-	bool unusedBit_869_18 : 1 {};
+	bool unusedBit_868_18 : 1 {};
 	/**
 	offset 3784 bit 19 */
-	bool unusedBit_869_19 : 1 {};
+	bool unusedBit_868_19 : 1 {};
 	/**
 	offset 3784 bit 20 */
-	bool unusedBit_869_20 : 1 {};
+	bool unusedBit_868_20 : 1 {};
 	/**
 	offset 3784 bit 21 */
-	bool unusedBit_869_21 : 1 {};
+	bool unusedBit_868_21 : 1 {};
 	/**
 	offset 3784 bit 22 */
-	bool unusedBit_869_22 : 1 {};
+	bool unusedBit_868_22 : 1 {};
 	/**
 	offset 3784 bit 23 */
-	bool unusedBit_869_23 : 1 {};
+	bool unusedBit_868_23 : 1 {};
 	/**
 	offset 3784 bit 24 */
-	bool unusedBit_869_24 : 1 {};
+	bool unusedBit_868_24 : 1 {};
 	/**
 	offset 3784 bit 25 */
-	bool unusedBit_869_25 : 1 {};
+	bool unusedBit_868_25 : 1 {};
 	/**
 	offset 3784 bit 26 */
-	bool unusedBit_869_26 : 1 {};
+	bool unusedBit_868_26 : 1 {};
 	/**
 	offset 3784 bit 27 */
-	bool unusedBit_869_27 : 1 {};
+	bool unusedBit_868_27 : 1 {};
 	/**
 	offset 3784 bit 28 */
-	bool unusedBit_869_28 : 1 {};
+	bool unusedBit_868_28 : 1 {};
 	/**
 	offset 3784 bit 29 */
-	bool unusedBit_869_29 : 1 {};
+	bool unusedBit_868_29 : 1 {};
 	/**
 	offset 3784 bit 30 */
-	bool unusedBit_869_30 : 1 {};
+	bool unusedBit_868_30 : 1 {};
 	/**
 	offset 3784 bit 31 */
-	bool unusedBit_869_31 : 1 {};
+	bool unusedBit_868_31 : 1 {};
 	/**
 	 * Below TPS value all knock suppression will be disabled.
 	 * units: %
