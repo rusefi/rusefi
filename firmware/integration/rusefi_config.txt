@@ -334,7 +334,6 @@ end_struct
 custom UiMode 1 bits, S08, @OFFSET@, [0:1], @@UiMode_enum@@
 
 struct cranking_parameters_s
-float baseFuel;Base mass of the per-cylinder fuel injected during cranking. This is then modified by the multipliers for CLT, IAT, TPS ect, to give the final cranking pulse width.\nA reasonable starting point is 60mg per liter per cylinder.\nex: 2 liter 4 cyl = 500cc/cyl, so 30mg cranking fuel.;"mg", 1, 0, 0, 500, 1
 int16_t rpm;This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X;"RPM", 1, 0, 0, 12000, 0
 end_struct
 
@@ -1931,7 +1930,7 @@ float[IAT_CURVE_SIZE] iatFuelCorr;;"ratio", 1, 0, 0, 5, 2
 
 	float[CRANKING_CURVE_SIZE] crankingCycleBins;;"counter", 1, 0, -80, 170, 0
   int16_t[CRANKING_CYCLE_CLT_SIZE] crankingCycleFuelCltBins;;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
-	float[CRANKING_CYCLE_CLT_SIZE x CRANKING_CURVE_SIZE] crankingCycleFuelCoef;;"mult", 1, 0, 0, 5, 2
+	float[CRANKING_CYCLE_CLT_SIZE x CRANKING_CURVE_SIZE] crankingCycleFuelCoef;Base mass of the per-cylinder fuel injected during cranking. This is then modified by the multipliers for CLT, IAT, TPS ect, to give the final cranking pulse width.\nA reasonable starting point is 60mg per liter per cylinder.\nex: 2 liter 4 cyl = 500cc/cyl, so 30mg cranking fuel.;"mg", 1, 0, 0, 500, 1
 
 
 float[CLT_IDLE_TABLE_CLT_SIZE] cltIdleCorrBins;CLT-based idle position for simple manual idle controller;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
