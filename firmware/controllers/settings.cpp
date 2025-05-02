@@ -104,9 +104,9 @@ static void setCrankingIACExtra(float percent) {
 	efiPrintf("cranking_iac %.2f", percent);
 }
 
-static void setCrankingFuel(float timeMs) {
-	engineConfiguration->cranking.baseFuel = timeMs;
-	efiPrintf("cranking_fuel %.2f", timeMs);
+static void setCrankingFuel(float fuelMilligram) {
+	setTable(config->crankingCycleFuelCoef, fuelMilligram);
+	efiPrintf("cranking_fuel %.2f", fuelMilligram);
 }
 
 static void setGlobalTriggerAngleOffset(float value) {
