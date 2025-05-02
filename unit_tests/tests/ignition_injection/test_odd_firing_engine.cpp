@@ -3,6 +3,7 @@
 #include "harley.h"
 #include "fuel_math.h"
 #include "defaults.h"
+#include "util/injection_crank_helper.h"
 
 	// let's pretend to have a 32 degree V odd fire engine.
 static const float cylinderOne = -19;
@@ -28,6 +29,7 @@ TEST(OddFireRunningMode, hd) {
 	extern bool unitTestBusyWaitHack;
 	unitTestBusyWaitHack = true;
 	engineConfiguration->vvtMode[0] = VVT_SINGLE_TOOTH; // need to avoid engine phase sync requirement
+	setTestFuelCrankingTable(27);
 
   // we need some fuel duration so let's mock airmass just to have legit fuel, we do not care for amount here at all
 	EXPECT_CALL(*eth.mockAirmass, getAirmass(/*any rpm*/_, _))
