@@ -469,7 +469,7 @@ void mreBoardNewTest() {
 	// set cranking_dwell 200
 	engineConfiguration->ignitionDwellForCrankingMs = 200;
 	// set cranking_fuel 300
-	engineConfiguration->cranking.baseFuel = 190;
+	setTable(config->crankingCycleFuelCoef, 190);
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 
