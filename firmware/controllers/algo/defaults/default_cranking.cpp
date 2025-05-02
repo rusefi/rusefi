@@ -8,7 +8,6 @@ void setDefaultCranking() {
 
 	// Fuel
 	engineConfiguration->crankingInjectionMode = IM_SIMULTANEOUS;
-	engineConfiguration->cranking.baseFuel = 27;
 
 	// Ignition
 	engineConfiguration->ignitionDwellForCrankingMs = DEFAULT_CRANKING_DWELL_MS;
@@ -71,13 +70,7 @@ void setDefaultCranking() {
 
 	// Cranking cycle compensation
 
-	// Whole table is 1.0, except first two columns which are steeper
-	setTable(config->crankingCycleFuelCoef, 1.0f);
-	for (int cltIndex = 0;cltIndex<CRANKING_CYCLE_CLT_SIZE;cltIndex++) {
-	  // kludge: we have a few unit tests which depend on these magic numbers
-	  config->crankingCycleFuelCoef[cltIndex][0] = 2;
-	  config->crankingCycleFuelCoef[cltIndex][/*x - cycles*/1] = 1.3f;
-	}
+	setTable(config->crankingCycleFuelCoef, 27.0f);
 	setLinearCurve(config->crankingCycleFuelCltBins, 0, 60, 1);
 
 	// X values are simply counting up cycle number starting at 1

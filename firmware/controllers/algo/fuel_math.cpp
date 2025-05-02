@@ -45,16 +45,15 @@ float getCrankingFuel3(float baseFuel, uint32_t revolutionCounterSinceStart) {
 	if (engineConfiguration->useRunningMathForCranking) {
 		baseCrankingFuel = baseFuel;
 	} else {
-		// parameter is in milligrams, convert to grams
-		baseCrankingFuel = engineConfiguration->cranking.baseFuel * 0.001f;
+		// Cranking fuel changes over time
+		baseCrankingFuel = interpolate3d(
+			  config->crankingCycleFuelCoef,
+			  config->crankingCycleFuelCltBins, Sensor::getOrZero(SensorType::Clt),
+			  config->crankingCycleBins, revolutionCounterSinceStart
+		  ) * 0.001f; // parameter is in milligrams, convert to grams
 	}
 
-	// Cranking fuel changes over time
-	engine->engineState.crankingFuel.durationCoefficient = interpolate3d(
-      		config->crankingCycleFuelCoef,
-      		config->crankingCycleFuelCltBins, Sensor::getOrZero(SensorType::Clt),
-      		config->crankingCycleBins, revolutionCounterSinceStart
-      	);
+	engine->engineState.crankingFuel.baseFuel = baseCrankingFuel * 1000; // convert to mg
 
 	/**
 	 * Cranking fuel is different depending on engine coolant temperature
@@ -97,7 +96,6 @@ float getCrankingFuel3(float baseFuel, uint32_t revolutionCounterSinceStart) {
 		: 1; // in case of failed TPS, don't correct.
 
 	floatms_t crankingFuel = baseCrankingFuel
-			* engine->engineState.crankingFuel.durationCoefficient
 			* engine->engineState.crankingFuel.coolantTemperatureCoefficient
 			* engine->engineState.crankingFuel.tpsCoefficient;
 
