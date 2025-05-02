@@ -14,8 +14,8 @@ static OutputPin alphaHall34PullUp;
 
 static void setInjectorPins() {
 	engineConfiguration->injectionPins[0] = Gpio::TLE9104_0_OUT_0;
-	engineConfiguration->injectionPins[1] = Gpio::TLE9104_0_OUT_1;
-	engineConfiguration->injectionPins[2] = Gpio::TLE9104_0_OUT_2;
+	engineConfiguration->injectionPins[1] = Gpio::TLE9104_0_OUT_2;
+	engineConfiguration->injectionPins[2] = Gpio::TLE9104_0_OUT_1;
 	engineConfiguration->injectionPins[3] = Gpio::TLE9104_0_OUT_3;
 }
 
@@ -87,8 +87,8 @@ static const tle9104_config tle9104_cfg[BOARD_TLE9104_COUNT] = {
 		},
 		.direct_io = {
 			{ .port = GPIOD, .pad = 3 }, // INJ1
-			{ .port = GPIOA, .pad = 9 }, // INJ2
 			{ .port = GPIOD, .pad = 11 }, // INJ3
+			{ .port = GPIOA, .pad = 9 }, // INJ2
 			{ .port = GPIOD, .pad = 10 } // INJ4
 		},
 		.resn = Gpio::Unassigned, //Gpio::B14,
@@ -203,8 +203,8 @@ void boardOnConfigurationChange(engine_configuration_s * /*previousConfiguration
 
 static Gpio OUTPUTS[] = {
 	Gpio::TLE9104_0_OUT_3, // 1A - Injector 4
-	Gpio::TLE9104_0_OUT_2, // 2A - Injector 3
-	Gpio::TLE9104_0_OUT_1, // 3A - Injector 2
+	Gpio::TLE9104_0_OUT_1, // 2A - Injector 3
+	Gpio::TLE9104_0_OUT_2, // 3A - Injector 2
 	Gpio::TLE9104_0_OUT_0, // 4A - Injector 1
 	Gpio::TLE9104_1_OUT_0, // 14A - Tach Output
 	Gpio::TLE9104_1_OUT_1, // 5A - Fuel Pump Relay
