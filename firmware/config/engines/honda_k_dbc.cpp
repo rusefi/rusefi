@@ -30,7 +30,7 @@ void setHondaK() {
 	engineConfiguration->vvtOffsets[1] = 183 + magic;
 
 	// set cranking_fuel 15
-	engineConfiguration->cranking.baseFuel = 75;
+	setTable(config->crankingCycleFuelCoef, 75);
 
 	engineConfiguration->map.sensor.type = MT_DENSO183;
 // todo: quote some source?

@@ -69,7 +69,7 @@ void setSubaruEG33Defaults() {
 	engineConfiguration->displacement = 3.30;
 	engineConfiguration->injector.flow = 250;
 
-	engineConfiguration->cranking.baseFuel = 5;		// ???
+	setTable(config->crankingCycleFuelCoef, 5);		// ???
 	engineConfiguration->cranking.rpm = 400;
 
 	engineConfiguration->rpmHardLimit = 6500;
