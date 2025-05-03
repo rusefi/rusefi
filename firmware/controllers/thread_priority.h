@@ -59,3 +59,6 @@
 
 // MAX31855 driver
 #define MAX31855_PRIO NORMALPRIO
+
+// Work Queue dispatcher priority
+#define PRIO_WQDISPATCHER	(NORMALPRIO + 8)
