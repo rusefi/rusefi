@@ -1,0 +1,51 @@
+name: Update libfirmware Reference
+
+on:
+  workflow_dispatch:
+
+jobs:
+  update-git:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Git Checkout Submodules
+        run: |
+          git submodule update --init --depth=1 firmware/libfirmware
+
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
+      - name: Git Update Submodules
+        run: |
+          git submodule update --remote
+
+      - name: Commit fresh 'firmware/libfirmware' submodule
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub libfirmware update Action"
+          git add firmware/libfirmware
+          OUT=$(git commit -am "GHA says update firmware/libfirmware submodule" 2>&1) || echo "commit failed, finding out why"
+          if echo "$OUT" | grep 'nothing to commit'; then
+            echo "submodule: looks like nothing to commit"
+            echo "NOCOMMIT=true" >> $GITHUB_ENV
+            exit 0
+          elif echo "$OUT" | grep 'changed'; then
+            echo "submodule: looks like something has changed"
+          else
+            echo "submodule: looks like something unexpected"
+            exit 1
+          fi
+          git status
+
+      - name: Push
+        if: ${{ env.NOCOMMIT != 'true'}}
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ github.token }}
+          branch: ${{ github.ref }}
