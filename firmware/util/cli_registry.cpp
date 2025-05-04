@@ -48,7 +48,7 @@ void resetConsoleActions(void) {
 
 static void doAddAction(const char *token, action_type_e type, Void callback, void *param) {
 #if !defined(EFI_DISABLE_CONSOLE_ACTIONS)
-	for (uint32_t i = 0; i < strlen(token);i++) {
+	for (uint32_t i = 0; i < std::strlen(token); i++) {
 		char ch = token[i];
 		if (isupper(ch)) {
 		    onCliCaseError(token);
@@ -239,7 +239,7 @@ int tokenLength(const char *msgp) {
 
 char *unquote(char *line) {
 	if (line[0] == '"') {
-		int len = strlen(line);
+		int len = std::strlen(line);
 		if (line[len - 1] == '"') {
 			line[len - 1] = 0;
 			return line + 1;
@@ -509,7 +509,7 @@ void handleConsoleLine(char *line) {
 	if (line == NULL)
 		return; // error detected
 
-	int lineLength = strlen(line);
+	int lineLength = std::strlen(line);
 	if (lineLength > MAX_CMD_LINE_LENGTH) {
 		// todo: better reaction to excessive line
 		efiPrintf("Long line?");

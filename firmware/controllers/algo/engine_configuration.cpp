@@ -94,7 +94,7 @@ void rememberCurrentConfiguration() {
 
 static void wipeString(char *string, int size) {
 	// we have to reset bytes after \0 symbol in order to calculate correct tune CRC from MSQ file
-	for (int i = strlen(string) + 1; i < size; i++) {
+	for (int i = std::strlen(string) + 1; i < size; i++) {
 		string[i] = 0;
 	}
 }
