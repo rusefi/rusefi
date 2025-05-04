@@ -52,6 +52,7 @@ float AirmassVeModelBase::getVe(float rpm, float load, bool postState) const {
 			engine->outputChannels.veBlendParameter[i] = result.BlendParameter;
 			engine->outputChannels.veBlendBias[i] = result.Bias;
 			engine->outputChannels.veBlendOutput[i] = result.Value;
+			engine->outputChannels.veBlendYAxis[i] = result.TableYAxis;
 		}
 
 		// Skip extra floating point math if we can...
