@@ -49,8 +49,6 @@ const char * boolToString(bool value);
 char * efiTrim(char *param);
 int mytolower(const char c);
 int efiPow10(int param);
-bool startsWith(const char *line, const char *prefix);
-
 
 /**
  * Rounds value to specified precision.

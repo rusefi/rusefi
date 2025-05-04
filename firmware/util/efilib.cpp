@@ -48,19 +48,6 @@ char * efiTrim(char *param) {
 	return param;
 }
 
-bool startsWith(const char *line, const char *prefix) {
-	uint32_t len = efiStrlen(prefix);
-	if (efiStrlen(line) < len) {
-		return false;
-	}
-	for (uint32_t i = 0; i < len; i++) {
-		if (line[i] != prefix[i]) {
-			return false;
-		}
-	}
-	return true;
-}
-
 static char *ltoa_internal(char *p, uint32_t num, unsigned radix) {
 	constexpr int bufferLength = 10;
 
