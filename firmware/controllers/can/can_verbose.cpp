@@ -18,6 +18,10 @@
 #include "fuel_math.h"
 #include "spark_logic.h"
 
+#ifdef HW_HELLEN
+#include "hellen_meta.h"
+#endif // HW_HELLEN
+
 #define CAN_PEDAL_TPS_OFFSET 2
 #define CAN_SENSOR_1_OFFSET 3
 
@@ -237,6 +241,11 @@ static void populateFrame(Egts& msg) {
 }
 
 void sendCanVerbose() {
+#if HW_HELLEN && EFI_PROD_CODE
+        if (!getHellenBoardEnabled()) {
+            return;
+        }
+#endif // HW_HELLEN
 	auto base = engineConfiguration->verboseCanBaseAddress;
 	auto isExt = engineConfiguration->rusefiVerbose29b;
 	auto canChannel = engineConfiguration->canBroadcastUseChannelTwo;
