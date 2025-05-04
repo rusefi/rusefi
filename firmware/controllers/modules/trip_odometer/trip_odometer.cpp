@@ -18,7 +18,10 @@ void TripOdometer::consumeFuel(float grams, efitick_t nowNt) {
 	m_consumedRemainder += grams;
 
   // 1000grams of fuel between invocations of TripOdometer logic means something very wrong, we do not control cruise ship engines yet!
-  criticalAssertVoid(m_consumedRemainder < 1000, "m_consumedRemainder busy loop");
+  if (m_consumedRemainder > 1000) {
+    firmwareError(ObdCode::OBD_PCM_Processor_Fault, "m_consumedRemainder busy loop %f %f", m_consumedRemainder, grams);
+    return;
+  }
 	// A racecar with a very large fuel tank might consume 60kg of fuel on a single run of the ECU
 	// we use integers to gain dynamic range of about 10^9 which is more than float would give us
 	// optimized for lots of small pulses
