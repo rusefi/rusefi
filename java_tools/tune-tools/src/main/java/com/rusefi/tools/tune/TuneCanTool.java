@@ -270,7 +270,8 @@ public class TuneCanTool {
                 }
 
                 CurveData data = CurveData.valueOf(customTuneFileName, fieldName, ini);
-                String customContent = handleCurve(ini, defaultTuneFileName, methodNamePrefix, data, parentReference, cName, fieldName);
+                // see #7832 for reason of use cf.getName() instated of getOriginalArrayName()
+                String customContent = handleCurve(ini, defaultTuneFileName, methodNamePrefix, data, parentReference, cf.getName(), fieldName);
                 if (customContent == null)
                     continue;
 
