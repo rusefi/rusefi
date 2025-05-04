@@ -17,9 +17,11 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::C9: return "18 - VVT2 B1";
 		case Gpio::D10: return "88 - INJ_4";
 		case Gpio::D11: return "97 - INJ_3";
+		case Gpio::D12: return "auxP6 output";
 		case Gpio::D13: return "37 - TACH";
 		case Gpio::D14: return "105 - IDLE rev A,B";
 		case Gpio::D15: return "OUT_FUEL_CONSUMPTION";
+		case Gpio::D2: return "auxP7 output";
 		case Gpio::D9: return "113 INJ 5";
 		case Gpio::E12: return "In D1";
 		case Gpio::E13: return "In D2";
@@ -36,6 +38,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::F14: return "24 - INJ 8";
 		case Gpio::F8: return "auxP3 switch";
 		case Gpio::F9: return "48 - IN RES1";
+		case Gpio::G11: return "auxP8 output";
 		case Gpio::G3: return "115 - VVT1_2";
 		case Gpio::G4: return "47 - CEL";
 		case Gpio::G5: return "105 - IDLE rev C+";

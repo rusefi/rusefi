@@ -7,11 +7,14 @@
 #define PIN_auxP3 MM176_IN_RES3
 #define PIN_auxP4 MM176_IN_MAP3_ANALOG
 #define PIN_auxP5 MM176_IN_AUX3_ANALOG
+#define PIN_auxP6 MM176_OUT_PWM8
+#define PIN_auxP7 MM176_OUT_IO5
+#define PIN_auxP8 MM176_OUT_IO6
 #define PIN_MR MM176_OUT_PWM17
 #define PIN_7a E5
 #define PIN_8a I6
 #define PIN_14a EFI_ADC_0
-#define PIN_18a C9
+#define PIN_18a MM176_OUT_PWM5
 #define PIN_19a F13
 #define PIN_22a I0
 #define PIN_24a F14
@@ -28,7 +31,7 @@
 #define PIN_65a MM176_GP13
 #define PIN_75a E14
 #define PIN_76a E15
-#define PIN_81a D15
+#define PIN_81a MM176_OUT_PWM7
 #define PIN_82a_event_inputs B1
 #define PIN_84a EFI_ADC_8
 #define PIN_85a EFI_ADC_13
@@ -56,7 +59,7 @@
 #define PIN_111a E4
 #define PIN_112a F12
 #define PIN_113a D9
-#define PIN_115a G3
+#define PIN_115a MM176_OUT_IO7
 #define PIN_117a C6
 #define PIN_118a C7
 #define PIN_120a C8

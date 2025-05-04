@@ -4,6 +4,9 @@
 #pragma once
 
 Gpio GENERATED_OUTPUTS = {
+	Gpio::MM176_OUT_PWM8, // auxP6 output
+	Gpio::MM176_OUT_IO5, // auxP7 output
+	Gpio::MM176_OUT_IO6, // auxP8 output
 	Gpio::MM176_OUT_PWM17, // Main Relay
 	Gpio::F13, // 19 - INJ 7
 	Gpio::F14, // 24 - INJ 8
@@ -20,9 +23,9 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::D9, // 113 INJ 5
 	Gpio::E5, // 7 - IGN_2
 	Gpio::I6, // 8 - IGN_7
-	Gpio::C9, // 18 - VVT2 B1
+	Gpio::MM176_OUT_PWM5, // 18 - VVT2 B1
 	Gpio::I0, // 22 - VVT1 1
-	Gpio::D15, // OUT_FUEL_CONSUMPTION
+	Gpio::MM176_OUT_PWM7, // OUT_FUEL_CONSUMPTION
 	Gpio::E3, // 94 - IGN_4
 	Gpio::I7, // 95 - IGN_8
 	Gpio::C1, // 101 - MAP2
@@ -31,10 +34,13 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::A9, // 104 Wastegate
 	Gpio::I5, // 110 - IGN_6
 	Gpio::E4, // 111 - IGN_3
-	Gpio::G3, // 115 - VVT1_2
+	Gpio::MM176_OUT_IO7, // 115 - VVT1_2
 	Gpio::C6, // 117 ETB_OUT+
 	Gpio::C7, // 118 ETB_OUT-
 	Gpio::C8, // 120 - VVT2 B2
+// "auxP6 output",
+// "auxP7 output",
+// "auxP8 output",
 // "Main Relay",
 // "19 - INJ 7",
 // "24 - INJ 8",
