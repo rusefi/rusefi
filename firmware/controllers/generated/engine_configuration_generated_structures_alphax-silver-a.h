@@ -957,7 +957,7 @@ struct engine_configuration_s {
 	 * units: L
 	 * offset 412
 	 */
-	scaled_channel<float, 1000, 1> displacement;
+	float displacement;
 	/**
 	 * units: RPM
 	 * offset 416

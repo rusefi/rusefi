@@ -348,7 +348,8 @@
 #define DEFAULT_SELT_STIM_VVT0 23
 #define DEFAULT_SOLENOID_FREQUENCY 300
 #define DIGIPOT_COUNT 4
-#define DISPLACEMENT_MULTIPLIER 0.001
+#define DISPLACEMENT_DIGITS 3
+#define DISPLACEMENT_MULTIPLIER 1
 #define DISPLACEMENT_TOOLTIP "Engine displacement in litres"
 #define DISPLACEMENT_UNITS "L"
 #define display_mode_e_DM_HD44780 1
@@ -1423,7 +1424,7 @@
 #define show_HellenNB1_presets true
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 502187971
+#define SIGNATURE_HASH 655900289
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1927,7 +1928,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.05.04.hellen-nb1.502187971"
+#define TS_SIGNATURE "rusEFI master.2025.05.04.hellen-nb1.655900289"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
