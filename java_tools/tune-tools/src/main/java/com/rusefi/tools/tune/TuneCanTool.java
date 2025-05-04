@@ -76,8 +76,8 @@ public class TuneCanTool {
 //        writeDiffBetweenLocalTuneFileAndDefaultTune("vehicleName", getDefaultTuneName(engine_type_e.HONDA_OBD1),
 //            "C:\\stuff\\\\2024-03-09-CurrentTune.msq", "comment", "");
 
-        writeDiffBetweenLocalTuneFileAndDefaultTune("canam", "C:\\stuff\\fw\\fw-\\generated\\simulator_tune_MAVERICK_X3.msq",
-            "C:\\stuff\\i\\!snapshots\\2024-07-16_14.28.35_default_cal_001.msq", "comment", "");
+        writeDiffBetweenLocalTuneFileAndDefaultTune("uaefi", "../simulator/generated/simulator_tune.msq",
+            "../uaefi-gppwm.msq", "comment", "");
 
 
 //        handle("Mitsubicha", 1258);
