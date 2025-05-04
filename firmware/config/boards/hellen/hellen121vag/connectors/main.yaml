@@ -25,6 +25,27 @@ pins:
     ts_name: ___ analog
     function: Aux P5 analog input
 
+  - pin: auxP6
+    meta: MM176_OUT_PWM8
+    class: outputs
+    type: ls
+    ts_name: ___ output
+    function: Aux P6 output
+
+  - pin: auxP7
+    meta: MM176_OUT_IO5
+    class: outputs
+    type: ls
+    ts_name: ___ output
+    function: Aux P7 output
+
+  - pin: auxP8
+    meta: MM176_OUT_IO6
+    class: outputs
+    type: ls
+    ts_name: ___ output
+    function: Aux P8 output
+
   - pin: MR
     meta: MM176_OUT_PWM17
     class: outputs
@@ -66,7 +87,7 @@ pins:
     function: O2 sensor signal
 
   - pin: 18a
-    id: C9
+    meta: MM176_OUT_PWM5
     class: outputs
     ts_name: 18 - VVT2 B1
     function: OUT_VVT2_B1
@@ -237,7 +258,7 @@ pins:
     function: IN_D4
 
   - pin: 81a
-    id: D15
+    meta: MM176_OUT_PWM7
     class: outputs
     function: OUT_FUEL_CONSUMPTION
 
@@ -421,7 +442,7 @@ pins:
     type: inj
 
   - pin: 115a
-    id: G3
+    meta: MM176_OUT_IO7
     class: outputs
     ts_name: 115 - VVT1_2
     function: OUT_VVT1_2
