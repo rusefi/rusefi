@@ -40,7 +40,7 @@ char * efiTrim(char *param) {
 	while (param[0] == ' ') {
 		param++; // that would skip leading spaces
 	}
-	int len = efiStrlen(param);
+	int len = std::strlen(param);
 	while (len > 0 && param[len - 1] == ' ') {
 		param[len - 1] = 0;
 		len--;
