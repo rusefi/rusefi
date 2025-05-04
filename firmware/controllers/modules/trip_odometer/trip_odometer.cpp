@@ -19,13 +19,13 @@ void TripOdometer::consumeFuel(float grams, efitick_t nowNt) {
 
   // 1000grams of fuel between invocations of TripOdometer logic means something very wrong, we do not control cruise ship engines yet!
   criticalAssertVoid(m_consumedRemainder < 1000, "m_consumedRemainder busy loop");
-	while (m_consumedRemainder > 1) {
+	// A racecar with a very large fuel tank might consume 60kg of fuel on a single run of the ECU
+	// we use integers to gain dynamic range of about 10^9 which is more than float would give us
+	// optimized for lots of small pulses
+	while (m_consumedRemainder >= 1) {
 		m_consumedRemainder--;
 		m_consumedGrams++;
 	}
-
-  // TODO: it looks like we've already added `grams` to `m_consumedGrams` above and the next line doubles registered value of consumed fuel. Do we need to get rid of it?
-	m_consumedGrams += grams;
 
 	float elapsedSecond = m_timer.getElapsedSecondsAndReset(nowNt);
 
