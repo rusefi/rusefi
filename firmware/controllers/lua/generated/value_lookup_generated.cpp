@@ -2389,7 +2389,7 @@ bool setConfigValueByName(const char *name, float value) {
 	}
 		case -1227821282:
 	{
-		engineConfiguration->displacement = (int)value;
+		engineConfiguration->displacement = value;
 		return 1;
 	}
 		case 2122875976:
