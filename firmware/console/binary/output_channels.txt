@@ -325,11 +325,13 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 
 	int16_t[BOOST_BLEND_COUNT iterate] autoscale boostOpenLoopBlendParameter;;"", 0.1, 0, -1000, 1000, 1
 	uint8_t[BOOST_BLEND_COUNT iterate] autoscale boostOpenLoopBlendBias;;"%", 0.5, 0, 0, 100, 1
-	int8_t[BOOST_BLEND_COUNT iterate] autoscale boostOpenLoopBlendOutput;;"%", 1, 0, -100, 100, 0
+	int8_t[BOOST_BLEND_COUNT iterate] boostOpenLoopBlendOutput;;"%", 1, 0, -100, 100, 0
+	int16_t[BOOST_BLEND_COUNT iterate] autoscale boostOpenLoopBlendYAxis;;"", 0.1, 0, -1000, 1000, 1
 
 	int16_t[BOOST_BLEND_COUNT iterate] autoscale boostClosedLoopBlendParameter;;"", 0.1, 0, -1000, 1000, 1
 	uint8_t[BOOST_BLEND_COUNT iterate] autoscale boostClosedLoopBlendBias;;"%", 0.5, 0, 0, 100, 1
 	int16_t[BOOST_BLEND_COUNT iterate] autoscale boostClosedLoopBlendOutput;;"%", 0.1, 0, -1000, 1000, 1
+	int16_t[BOOST_BLEND_COUNT iterate] autoscale boostClosedLoopBlendYAxis;;"", 0.1, 0, -1000, 1000, 1
 
 	int16_t[TARGET_AFR_BLEND_COUNT iterate] autoscale targetAfrBlendParameter;;"", 0.1, 0, -1000, 1000, 1
 	uint8_t[TARGET_AFR_BLEND_COUNT iterate] autoscale targetAfrBlendBias;;"%", 0.5, 0, 0, 100, 1
