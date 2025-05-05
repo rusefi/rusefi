@@ -30,8 +30,12 @@
 // todo: reset this between cranking attempts?! #2735
 float minCrankingRpm = 0;
 
-static Map3D<TRACTION_CONTROL_ETB_DROP_SIZE, TRACTION_CONTROL_ETB_DROP_SIZE, int8_t, uint16_t, uint8_t> tcTimingDropTable{"tct"};
-static Map3D<TRACTION_CONTROL_ETB_DROP_SIZE, TRACTION_CONTROL_ETB_DROP_SIZE, int8_t, uint16_t, uint8_t> tcSparkSkipTable{"tcs"};
+
+static Map3D<TRACTION_CONTROL_ETB_DROP_SIZE, TRACTION_CONTROL_ETB_DROP_SIZE, float, uint8_t, float> tcTimingLeftRightDropTable{"tctlr"};
+static Map3D<TRACTION_CONTROL_ETB_DROP_SIZE, TRACTION_CONTROL_ETB_DROP_SIZE, float, uint8_t, float> tcSparkLeftRightSkipTable{"tcslr"};
+
+static Map3D<TRACTION_CONTROL_ETB_DROP_SIZE, TRACTION_CONTROL_ETB_DROP_SIZE, float, uint8_t, float> tcTimingFrontRearDropTable{"tctfr"};
+static Map3D<TRACTION_CONTROL_ETB_DROP_SIZE, TRACTION_CONTROL_ETB_DROP_SIZE, float, uint8_t, float> tcSparkFrontRearSkipTable{"tcsfr"};
 
 #if EFI_ENGINE_CONTROL && EFI_SHAFT_POSITION_INPUT
 
@@ -39,6 +43,10 @@ static Map3D<TRACTION_CONTROL_ETB_DROP_SIZE, TRACTION_CONTROL_ETB_DROP_SIZE, int
  * @return ignition timing angle advance before TDC
  */
 angle_t getRunningAdvance(float rpm, float engineLoad) {
+	float vehicleSpeedLeftRight = 0;
+	float vehicleSpeedFrontRear = 0;
+	float wheelSlipLeftRight = 1;
+
 	if (std::isnan(engineLoad)) {
 		warning(ObdCode::CUSTOM_NAN_ENGINE_LOAD, "NaN engine load");
 		return NAN;
@@ -54,10 +62,45 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 	);
 
   float vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);
-  float wheelSlip = Sensor::getOrZero(SensorType::WheelSlipRatio);
-  engine->ignitionState.tractionAdvanceDrop = tcTimingDropTable.getValue(wheelSlip, vehicleSpeed);
-  engine->engineState.tractionControlSparkSkip = tcSparkSkipTable.getValue(wheelSlip, vehicleSpeed);
-  engine->engineState.updateSparkSkip();
+
+  // based on drivetrain layout, we get left/right vehicle speed from wheels that wouldn't be spinning
+  if (engineConfiguration->drive_train_layout == DRIVETRAIN_RWD || engineConfiguration->drive_train_layout == DRIVETRAIN_AWD) {
+  	 vehicleSpeedLeftRight = Sensor::getOrZero(SensorType::WheelSpeedFrontAvg);
+  	 vehicleSpeedFrontRear = Sensor::getOrZero(SensorType::WheelSpeedFrontAvg);
+	 wheelSlipLeftRight = Sensor::getOrZero(SensorType::WheelSlipRatioLeftRightREAR); // in RWD / AWD, we're getting rear slip ratio, those would be different
+    if (vehicleSpeedLeftRight == 0) { // FrontAvg not available for rear wheels drive, lets try rear wheel average
+       vehicleSpeedLeftRight = Sensor::getOrZero(SensorType::WheelSpeedRearAvg);
+       vehicleSpeedFrontRear = vehicleSpeed;
+    }
+  } else { // FWD layout
+  	 vehicleSpeedLeftRight = Sensor::getOrZero(SensorType::WheelSpeedRearAvg);
+     vehicleSpeedFrontRear = Sensor::getOrZero(SensorType::WheelSpeedRearAvg);
+     wheelSlipLeftRight = Sensor::getOrZero(SensorType::WheelSlipRatioLeftRightFRONT); // in RWD / AWD, we're getting rear slip ratio, those would be different
+
+  	if (vehicleSpeedLeftRight == 0) { // rear average not available in FWD, lets try front
+  		vehicleSpeedLeftRight = Sensor::getOrZero(SensorType::WheelSpeedFrontAvg);
+        vehicleSpeedFrontRear = vehicleSpeed;
+    }
+  }
+
+  if (vehicleSpeedLeftRight == 0) { // still no speed fall back onto vehicle speed
+  	vehicleSpeedLeftRight = vehicleSpeed;
+  }
+
+
+	engine->outputChannels.tracSpeedLeftRightREF = vehicleSpeedLeftRight;
+	engine->outputChannels.tracSpeedFrontRearREF = vehicleSpeedFrontRear;
+	engine->outputChannels.wheelSlipRatioLeftRightREF = wheelSlipLeftRight;
+
+  float wheelSlipFrontRear = Sensor::getOrZero(SensorType::WheelSlipRatioFrontRear);
+
+	engine->ignitionState.tractionAdvanceDrop = tcTimingLeftRightDropTable.getValue(vehicleSpeedLeftRight, wheelSlipLeftRight ) +  // left right component
+                                                tcTimingFrontRearDropTable.getValue(vehicleSpeedFrontRear, wheelSlipFrontRear );  // front rear component
+	engine->engineState.tractionControlSparkSkip = tcSparkLeftRightSkipTable.getValue(vehicleSpeedLeftRight, wheelSlipLeftRight ) + // left right
+												   tcSparkFrontRearSkipTable.getValue(vehicleSpeedFrontRear, wheelSlipFrontRear );  // front rear
+
+
+	engine->engineState.updateSparkSkip();
 
   advanceAngle += engine->ignitionState.tractionAdvanceDrop;
 
@@ -292,8 +335,12 @@ size_t getMultiSparkCount(float rpm) {
 }
 
 void initIgnitionAdvanceControl() {
-	tcTimingDropTable.initTable(engineConfiguration->tractionControlTimingDrop, engineConfiguration->tractionControlSlipBins, engineConfiguration->tractionControlSpeedBins);
-	tcSparkSkipTable.initTable(engineConfiguration->tractionControlIgnitionSkip, engineConfiguration->tractionControlSlipBins, engineConfiguration->tractionControlSpeedBins);
+
+	tcTimingLeftRightDropTable.initTable(engineConfiguration->tractionControlTimingDropLeftRight,   engineConfiguration->tractionControlSpeedBins, engineConfiguration->tractionControlSlipBins);
+	tcTimingFrontRearDropTable.initTable(engineConfiguration->tractionControlTimingDropFrontRear,   engineConfiguration->tractionControlSpeedBins, engineConfiguration->tractionControlSlipBins);
+ 	tcSparkLeftRightSkipTable.initTable(engineConfiguration->tractionControlIgnitionSkipLeftRight,  engineConfiguration->tractionControlSpeedBins, engineConfiguration->tractionControlSlipBins);
+	tcSparkFrontRearSkipTable.initTable(engineConfiguration->tractionControlIgnitionSkipFrontRear,  engineConfiguration->tractionControlSpeedBins, engineConfiguration->tractionControlSlipBins);
+
 }
 
 /**
