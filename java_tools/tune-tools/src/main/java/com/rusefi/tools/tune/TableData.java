@@ -114,7 +114,7 @@ public class TableData implements CannableEntity {
 
         return "static void " + getCannedMethod(methodNamePrefix) + " {\n"
             + "\t" + getCsourceCode() +
-            "\tcopyTable(" + reference + tableName + ", " + getCannedName() + scale + ");\n" +
+            "\tcopyTable(" + reference + name + ", " + getCannedName() + scale + ");\n" +
             "}\n\n";
     }
 
