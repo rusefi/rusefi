@@ -16,6 +16,7 @@
 #include "can_msg_tx.h"
 #include "can_bmw.h"
 #include "can_vag.h"
+#include "can_dash_honda.h"
 
 #include "rusefi_types.h"
 #include "rtc_helper.h"
