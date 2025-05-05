@@ -125,6 +125,8 @@ PUBLIC_API_WEAK bool boardIsSpecialVvtDecoder(vvt_mode_e vvtMode) {
   return false;
 }
 
+PUBLIC_API_WEAK void boardTriggerCallback(efitick_t timestamp, float currentPhase) {}
+
 static bool vvtWithRealDecoder(vvt_mode_e vvtMode) {
 	return vvtMode != VVT_INACTIVE
 			&& vvtMode != VVT_TOYOTA_3_TOOTH /* VVT_2JZ is an unusual 3/0 missed tooth symmetrical wheel */
@@ -907,6 +909,8 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 
 		// Decode the MAP based "cam" sensor
 		decodeMapCam(timestamp, currentEngineDecodedPhase);
+
+		boardTriggerCallback(timestamp, currentEngineDecodedPhase);
 	} else {
 		// We don't have sync, but report to the wave chart anyway as index 0.
 		reportEventToWaveChart(signal, 0, triggerShape.useOnlyRisingEdges);
