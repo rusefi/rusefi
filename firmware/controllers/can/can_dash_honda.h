@@ -3,6 +3,6 @@
 #include "can.h"
 #include "can_msg_tx.h"
 
-uint8_t calculateHondaChecksum(uint16_t canId, uint8_t length, CanTxMessage* data);
+uint8_t calculateHondaChecksum(uint16_t canId, uint8_t length, const CanTxMessage& msg);
 void canDashboardHondaK(CanCycle cycle);
 
