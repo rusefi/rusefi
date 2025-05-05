@@ -680,15 +680,6 @@ bool TriggerCentral::isMapCamSync(efitick_t timestamp, float currentPhase) {
 				mapVvt_MAP_AT_CYCLE_COUNT = revolutionCounter - prevChangeAtCycle;
 				prevChangeAtCycle = revolutionCounter;
 				result = true;
-
-				hwHandleVvtCamSignal(TriggerValue::RISE, timestamp, /*index*/0);
-				hwHandleVvtCamSignal(TriggerValue::FALL, timestamp, /*index*/0);
-#if EFI_UNIT_TEST
-				// hack? feature? existing unit test relies on VVT phase available right away
-				// but current implementation which is based on periodicFastCallback would only make result available on NEXT tooth
-				getLimpManager()->onFastCallback();
-#endif // EFI_UNIT_TEST
-
 			} else {
 				result = false;
 			}
@@ -708,6 +699,13 @@ void TriggerCentral::decodeMapCam(efitick_t timestamp, float currentPhase) {
                        			Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm;
 	if (isDecodingMapCam) {
 	  if (isMapCamSync(timestamp, currentPhase)) {
+				hwHandleVvtCamSignal(TriggerValue::RISE, timestamp, /*index*/0);
+				hwHandleVvtCamSignal(TriggerValue::FALL, timestamp, /*index*/0);
+#if EFI_UNIT_TEST
+				// hack? feature? existing unit test relies on VVT phase available right away
+				// but current implementation which is based on periodicFastCallback would only make result available on NEXT tooth
+				getLimpManager()->onFastCallback();
+#endif // EFI_UNIT_TEST
 	  }
 	}
 }
