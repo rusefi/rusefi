@@ -263,7 +263,9 @@ public class TuneCanTool {
             }
 
             if (cf.getTypeName().equals("boolean")) {
-                sb.append(TuneTools.getAssignmentCode(defaultValue, cName, unquote(customValue.getValue())));
+            	Boolean configFieldState = unquote(cf.getTrueName()).equals(unquote(customValue.getValue()));
+            	
+                sb.append(TuneTools.getAssignmentCode(defaultValue, cName, configFieldState.toString()));
                 continue;
             }
 
