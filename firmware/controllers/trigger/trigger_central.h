@@ -210,6 +210,7 @@ public:
 	void applyCamGapOverride();
 private:
 	void decodeMapCam(efitick_t nowNt, float currentPhase);
+	bool isMapCamSync(efitick_t nowNt, float currentPhase);
 	void applyTriggerGapOverride();
 
 	bool isToothExpectedNow(efitick_t timestamp);

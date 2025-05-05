@@ -656,16 +656,14 @@ bool TriggerNoiseFilter::noiseFilter(efitick_t nowNt,
 	return false;
 }
 
-void TriggerCentral::decodeMapCam(efitick_t timestamp, float currentPhase) {
-    isDecodingMapCam = engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN &&
-                       			Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm;
-	if (isDecodingMapCam) {
+bool TriggerCentral::isMapCamSync(efitick_t timestamp, float currentPhase) {
 		// we are trying to figure out which 360 half of the total 720 degree cycle is which, so we compare those in 360 degree sense.
 		auto toothAngle360 = currentPhase;
 		while (toothAngle360 >= 360) {
 			toothAngle360 -= 360;
 		}
 
+    bool result;
 		if (mapCamPrevToothAngle < engineConfiguration->mapCamDetectionAnglePosition && toothAngle360 > engineConfiguration->mapCamDetectionAnglePosition) {
 			// we are somewhere close to 'mapCamDetectionAnglePosition'
 
@@ -681,6 +679,7 @@ void TriggerCentral::decodeMapCam(efitick_t timestamp, float currentPhase) {
 				int revolutionCounter = getTriggerCentral()->triggerState.getSynchronizationCounter();
 				mapVvt_MAP_AT_CYCLE_COUNT = revolutionCounter - prevChangeAtCycle;
 				prevChangeAtCycle = revolutionCounter;
+				result = true;
 
 				hwHandleVvtCamSignal(TriggerValue::RISE, timestamp, /*index*/0);
 				hwHandleVvtCamSignal(TriggerValue::FALL, timestamp, /*index*/0);
@@ -689,13 +688,27 @@ void TriggerCentral::decodeMapCam(efitick_t timestamp, float currentPhase) {
 				// but current implementation which is based on periodicFastCallback would only make result available on NEXT tooth
 				getLimpManager()->onFastCallback();
 #endif // EFI_UNIT_TEST
+
+			} else {
+				result = false;
 			}
 
 			mapVvt_MAP_AT_SPECIAL_POINT = map;
 			mapVvt_MAP_AT_DIFF = instantMapDiffBetweenReadoutAngles;
+		} else {
+			result = false;
 		}
 
 		mapCamPrevToothAngle = toothAngle360;
+		return result;
+}
+
+void TriggerCentral::decodeMapCam(efitick_t timestamp, float currentPhase) {
+    isDecodingMapCam = engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN &&
+                       			Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm;
+	if (isDecodingMapCam) {
+	  if (isMapCamSync(timestamp, currentPhase)) {
+	  }
 	}
 }
 
