@@ -182,6 +182,20 @@ public class TuneCanTool {
             return value;
         return value.replaceAll("\\s+", " ").trim();
     }
+    
+    private static String getParentReference(ConfigField cf, StringBuffer cName) {
+    	  String parentReference;
+          if (cf.getParentStructureType().getName().equals(MetaHelper.ENGINE_CONFIGURATION_S)) {
+              parentReference = "engineConfiguration->";
+          } else if (cf.getParentStructureType().getName().equals(MetaHelper.PERSISTENT_CONFIG_S)) {
+              parentReference = "config->";
+          } else {
+              // todo: unit test?
+              String path = getPath(cf.getParentStructureType());
+              parentReference = path + cName;
+          }
+          return parentReference;
+    }
 
     @NotNull
     public static StringBuilder getTunePatch(Msq defaultTune, Msq customTune, IniFileModel ini, String customTuneFileName, StringBuilder methods, String defaultTuneFileName, String methodNamePrefix) throws IOException {
@@ -247,16 +261,7 @@ public class TuneCanTool {
             }
 
             if (cf.isArray()) {
-                String parentReference;
-                if (cf.getParentStructureType().getName().equals(MetaHelper.ENGINE_CONFIGURATION_S)) {
-                    parentReference = "engineConfiguration->";
-                } else if (cf.getParentStructureType().getName().equals(MetaHelper.PERSISTENT_CONFIG_S)) {
-                    parentReference = "config->";
-                } else {
-                    // todo: unit test?
-                    String path = getPath(cf.getParentStructureType());
-                    parentReference = path + ".";
-                }
+                String parentReference = getParentReference(cf, context);
 
                 if (cf.getArraySizes().length == 2) {
                     TableResult result = getHandleTable(ini, customTuneFileName, defaultTuneFileName, methodNamePrefix, fieldName, cf, parentReference);
@@ -331,12 +336,13 @@ public class TuneCanTool {
             log.info(" " + fieldName);
             return null;
         }
-        log.info("Handling table " + fieldName + " with " + cf.autoscaleSpecPair());
+        log.info("Handling table " + fieldName + ", C table name:" + parentReference + cf.getName() + " with " + cf.autoscaleSpecPair());
 
-        String customContent = tableData.getCsourceMethod(parentReference, methodNamePrefix, tableData.getName());
+        // usage of cf.getName() instead of tableData.getName() since TS tables and C tables differ on naming (ie gppwm1_table vs gppwm[0].table)
+        String customContent = tableData.getCsourceMethod(parentReference, methodNamePrefix, cf.getName());
         if (defaultTuneFileName != null) {
             TableData defaultTableData = TableData.readTable(defaultTuneFileName, fieldName, ini);
-            String defaultContent = defaultTableData.getCsourceMethod(parentReference, methodNamePrefix, defaultTableData.getName());
+            String defaultContent = defaultTableData.getCsourceMethod(parentReference, methodNamePrefix, cf.getName());
             if (defaultContent.equals(customContent)) {
                 log.info("Table " + fieldName + " matches default content");
                 return null;
@@ -411,7 +417,7 @@ public class TuneCanTool {
         } else {
             throw new IllegalStateException("Unexpected grandParentName " + grandFather);
         }
-        return grandParentName + configField.getOriginalArrayName();
+        return grandParentName;
     }
 
     private final static Set<String> HARDWARE_PROPERTIES = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
