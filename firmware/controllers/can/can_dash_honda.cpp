@@ -7,12 +7,12 @@
 #define HONDA_SPEED_158 0x158
 #define HONDA_TACH_1DC 0x1DC
 
-uint8_t calculateHondaChecksum(uint16_t canId, uint8_t length, const CanTxMessage& msg) {
+uint8_t calculateHondaChecksum(uint16_t canId, uint8_t length, uint8_t* data) {
 	int sum = 0;
 	// Sum all bytes except the checksum nibble
 	for (int i = 0; i < length; i++) {
 		// we only include the upper nibble in calculation
-		uint8_t value = (i == length - 1) ? (msg[i] & 0xF0) : msg[i];
+		uint8_t value = (i == length - 1) ? (data[i] & 0xF0) : data[i];
 
 		sum += (value >> 4) & 0xF;
 		if (i < length - 1) {
@@ -36,15 +36,20 @@ void canDashboardHondaK(CanCycle cycle) {
 	static int rollingId = 0;
 
 	if (cycle.isInterval(CI::_50ms)) {
-		{
+
             CanTxMessage msg(CanCategory::NBC, HONDA_TACH_1DC, 4);
 			msg[0] = 0x02; //This is constant i think
 			msg.setShortValueMsb(Sensor::getOrZero(SensorType::Rpm), /*offset*/ 1);
 			rollingId = (rollingId + 1) & 0x3;
 			msg[3] = (rollingId << 4);
-			uint8_t checksum = calculateHondaChecksum(0x1DC, 4, msg);
+
+            uint8_t tempBuffer[4];
+			for (int i = 0; i < 4; i++) {
+				tempBuffer[i] = msg[i];
+			}
+
+			uint8_t checksum = calculateHondaChecksum(0x1DC, 4, tempBuffer);
 			msg[3] |= checksum & 0xF;
-		}
 	}
 }
 
