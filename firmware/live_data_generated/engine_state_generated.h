@@ -150,24 +150,19 @@ struct cranking_fuel_s {
 	 */
 	float tpsCoefficient = (float)0;
 	/**
-	 * Fuel: cranking duration mult
+	 * Fuel: Cranking cycle base mass
+	 * units: mg
 	 * offset 8
 	 */
-	float durationCoefficient = (float)0;
+	scaled_channel<uint16_t, 100, 1> baseFuel = (uint16_t)0;
 	/**
 	 * Fuel: Cranking cycle mass
 	 * units: mg
-	 * offset 12
+	 * offset 10
 	 */
 	scaled_channel<uint16_t, 100, 1> fuel = (uint16_t)0;
-	/**
-	 * need 4 byte alignment
-	 * units: units
-	 * offset 14
-	 */
-	uint8_t alignmentFill_at_14[2] = {};
 };
-static_assert(sizeof(cranking_fuel_s) == 16);
+static_assert(sizeof(cranking_fuel_s) == 12);
 
 // start of engine_state_s
 struct engine_state_s {
@@ -185,204 +180,204 @@ struct engine_state_s {
 	cranking_fuel_s crankingFuel;
 	/**
 	 * @@GAUGE_NAME_FUEL_BARO_CORR@@
-	 * offset 36
+	 * offset 32
 	 */
 	float baroCorrection = (float)0;
 	/**
 	 * Detected Board ID
 	 * units: id
-	 * offset 40
+	 * offset 36
 	 */
 	int16_t hellenBoardId = (int16_t)0;
 	/**
 	 * @@INDICATOR_NAME_CLUTCH_UP@@
-	 * offset 42
+	 * offset 38
 	 */
 	int8_t clutchUpState = (int8_t)0;
 	/**
 	 * @@INDICATOR_NAME_BRAKE_DOWN@@
-	 * offset 43
+	 * offset 39
 	 */
 	int8_t brakePedalState = (int8_t)0;
 	/**
-	 * offset 44
+	 * offset 40
 	 */
 	int8_t startStopState = (int8_t)0;
 	/**
-	 * offset 45
+	 * offset 41
 	 */
 	int8_t smartChipState = (int8_t)0;
 	/**
-	 * offset 46
+	 * offset 42
 	 */
 	int8_t smartChipRestartCounter = (int8_t)0;
 	/**
-	 * offset 47
+	 * offset 43
 	 */
 	int8_t smartChipAliveCounter = (int8_t)0;
 	/**
-	offset 48 bit 0 */
+	offset 44 bit 0 */
 	bool startStopPhysicalState : 1 {};
 	/**
 	 * Harley ACR Active
-	offset 48 bit 1 */
+	offset 44 bit 1 */
 	bool acrActive : 1 {};
 	/**
-	offset 48 bit 2 */
+	offset 44 bit 2 */
 	bool acrEngineMovedRecently : 1 {};
 	/**
-	offset 48 bit 3 */
+	offset 44 bit 3 */
 	bool heaterControlEnabled : 1 {};
 	/**
-	offset 48 bit 4 */
+	offset 44 bit 4 */
 	bool luaDigitalState0 : 1 {};
 	/**
-	offset 48 bit 5 */
+	offset 44 bit 5 */
 	bool luaDigitalState1 : 1 {};
 	/**
-	offset 48 bit 6 */
+	offset 44 bit 6 */
 	bool luaDigitalState2 : 1 {};
 	/**
-	offset 48 bit 7 */
+	offset 44 bit 7 */
 	bool luaDigitalState3 : 1 {};
 	/**
 	 * @@INDICATOR_NAME_CLUTCH_DOWN@@
-	offset 48 bit 8 */
+	offset 44 bit 8 */
 	bool clutchDownState : 1 {};
 	/**
-	offset 48 bit 9 */
+	offset 44 bit 9 */
 	bool unusedBit_20_9 : 1 {};
 	/**
-	offset 48 bit 10 */
+	offset 44 bit 10 */
 	bool unusedBit_20_10 : 1 {};
 	/**
-	offset 48 bit 11 */
+	offset 44 bit 11 */
 	bool unusedBit_20_11 : 1 {};
 	/**
-	offset 48 bit 12 */
+	offset 44 bit 12 */
 	bool unusedBit_20_12 : 1 {};
 	/**
-	offset 48 bit 13 */
+	offset 44 bit 13 */
 	bool unusedBit_20_13 : 1 {};
 	/**
-	offset 48 bit 14 */
+	offset 44 bit 14 */
 	bool unusedBit_20_14 : 1 {};
 	/**
-	offset 48 bit 15 */
+	offset 44 bit 15 */
 	bool unusedBit_20_15 : 1 {};
 	/**
-	offset 48 bit 16 */
+	offset 44 bit 16 */
 	bool unusedBit_20_16 : 1 {};
 	/**
-	offset 48 bit 17 */
+	offset 44 bit 17 */
 	bool unusedBit_20_17 : 1 {};
 	/**
-	offset 48 bit 18 */
+	offset 44 bit 18 */
 	bool unusedBit_20_18 : 1 {};
 	/**
-	offset 48 bit 19 */
+	offset 44 bit 19 */
 	bool unusedBit_20_19 : 1 {};
 	/**
-	offset 48 bit 20 */
+	offset 44 bit 20 */
 	bool unusedBit_20_20 : 1 {};
 	/**
-	offset 48 bit 21 */
+	offset 44 bit 21 */
 	bool unusedBit_20_21 : 1 {};
 	/**
-	offset 48 bit 22 */
+	offset 44 bit 22 */
 	bool unusedBit_20_22 : 1 {};
 	/**
-	offset 48 bit 23 */
+	offset 44 bit 23 */
 	bool unusedBit_20_23 : 1 {};
 	/**
-	offset 48 bit 24 */
+	offset 44 bit 24 */
 	bool unusedBit_20_24 : 1 {};
 	/**
-	offset 48 bit 25 */
+	offset 44 bit 25 */
 	bool unusedBit_20_25 : 1 {};
 	/**
-	offset 48 bit 26 */
+	offset 44 bit 26 */
 	bool unusedBit_20_26 : 1 {};
 	/**
-	offset 48 bit 27 */
+	offset 44 bit 27 */
 	bool unusedBit_20_27 : 1 {};
 	/**
-	offset 48 bit 28 */
+	offset 44 bit 28 */
 	bool unusedBit_20_28 : 1 {};
 	/**
-	offset 48 bit 29 */
+	offset 44 bit 29 */
 	bool unusedBit_20_29 : 1 {};
 	/**
-	offset 48 bit 30 */
+	offset 44 bit 30 */
 	bool unusedBit_20_30 : 1 {};
 	/**
-	offset 48 bit 31 */
+	offset 44 bit 31 */
 	bool unusedBit_20_31 : 1 {};
 	/**
-	 * offset 52
+	 * offset 48
 	 */
 	uint32_t startStopStateToggleCounter = (uint32_t)0;
 	/**
-	 * offset 56
+	 * offset 52
 	 */
 	float currentVe = (float)0;
 	/**
-	 * offset 60
+	 * offset 56
 	 */
 	float luaSoftSparkSkip = (float)0;
 	/**
-	 * offset 64
+	 * offset 60
 	 */
 	float luaHardSparkSkip = (float)0;
 	/**
-	 * offset 68
+	 * offset 64
 	 */
 	float tractionControlSparkSkip = (float)0;
 	/**
 	 * Fuel: Injection counter
-	 * offset 72
+	 * offset 68
 	 */
 	uint32_t fuelInjectionCounter = (uint32_t)0;
 	/**
 	 * Ign: Spark counter
-	 * offset 76
+	 * offset 72
 	 */
 	uint32_t globalSparkCounter = (uint32_t)0;
 	/**
 	 * @@GAUGE_NAME_FUEL_LOAD@@
-	 * offset 80
+	 * offset 76
 	 */
 	float fuelingLoad = (float)0;
 	/**
 	 * @@GAUGE_NAME_IGNITION_LOAD@@
-	 * offset 84
+	 * offset 80
 	 */
 	float ignitionLoad = (float)0;
 	/**
 	 * units: %
-	 * offset 88
+	 * offset 84
 	 */
 	scaled_channel<uint16_t, 100, 1> veTableYAxis = (uint16_t)0;
 	/**
-	 * offset 90
+	 * offset 86
 	 */
 	uint8_t overDwellCounter = (uint8_t)0;
 	/**
-	 * offset 91
+	 * offset 87
 	 */
 	uint8_t overDwellNotScheduledCounter = (uint8_t)0;
 	/**
-	 * offset 92
+	 * offset 88
 	 */
 	uint8_t sparkOutOfOrderCounter = (uint8_t)0;
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 93
+	 * offset 89
 	 */
-	uint8_t alignmentFill_at_93[3] = {};
+	uint8_t alignmentFill_at_89[3] = {};
 };
-static_assert(sizeof(engine_state_s) == 96);
+static_assert(sizeof(engine_state_s) == 92);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) controllers/algo/engine_state.txt

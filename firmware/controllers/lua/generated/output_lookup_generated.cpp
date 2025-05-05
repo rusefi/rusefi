@@ -1460,9 +1460,9 @@ float getOutputValueByName(const char *name) {
 // crankingFuel.tpsCoefficient
 		case 20251202:
 			return engine->engineState.crankingFuel.tpsCoefficient;
-// crankingFuel.durationCoefficient
-		case 1541006353:
-			return engine->engineState.crankingFuel.durationCoefficient;
+// crankingFuel.baseFuel
+		case 1119735859:
+			return engine->engineState.crankingFuel.baseFuel;
 // crankingFuel.fuel
 		case -180401224:
 			return engine->engineState.crankingFuel.fuel;

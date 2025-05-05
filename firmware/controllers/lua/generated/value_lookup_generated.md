@@ -163,9 +163,6 @@ TPS error detection: what throttle % is unrealistically low?\nAlso used for acce
 ### tpsErrorDetectionTooHigh
 TPS error detection: what throttle % is unrealistically high?\nAlso used for accelerator pedal error detection if so equipped.
 
-### cranking.baseFuel
-Base mass of the per-cylinder fuel injected during cranking. This is then modified by the multipliers for CLT, IAT, TPS ect, to give the final cranking pulse width.\nA reasonable starting point is 60mg per liter per cylinder.\nex: 2 liter 4 cyl = 500cc/cyl, so 30mg cranking fuel.
-
 ### cranking.rpm
 This sets the RPM limit below which the ECU will use cranking fuel and ignition logic, typically this is around 350-450rpm. \nset cranking_rpm X
 

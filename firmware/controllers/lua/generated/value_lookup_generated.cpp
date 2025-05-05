@@ -170,9 +170,6 @@ float getConfigValueByName(const char *name) {
 // tpsErrorDetectionTooHigh
 		case -838808073:
 			return engineConfiguration->tpsErrorDetectionTooHigh;
-// cranking.baseFuel
-		case -781044761:
-			return engineConfiguration->cranking.baseFuel;
 // cranking.rpm
 		case -1717336209:
 			return engineConfiguration->cranking.rpm;
@@ -2255,11 +2252,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -838808073:
 	{
 		engineConfiguration->tpsErrorDetectionTooHigh = (int)value;
-		return 1;
-	}
-		case -781044761:
-	{
-		engineConfiguration->cranking.baseFuel = value;
 		return 1;
 	}
 		case -1717336209:
