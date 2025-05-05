@@ -7,14 +7,12 @@
 #define HONDA_SPEED_158 0x158
 #define HONDA_TACH_1DC 0x1DC
 
-uint8_t calculateHondaChecksum(uint16_t canId, uint8_t length, CanTxMessage* data) {
+uint8_t calculateHondaChecksum(uint16_t canId, uint8_t length, const CanTxMessage& msg) {
 	int sum = 0;
-	//copy the array to a local array this is bad codesmell but what i am doing for testing.
-    uint8_t* dataCopy = data->getFrame()->data8;
 	// Sum all bytes except the checksum nibble
 	for (int i = 0; i < length; i++) {
 		// we only include the upper nibble in calculation
-		uint8_t value = (i == length - 1) ? (dataCopy[i] & 0xF0) : dataCopy[i];
+		uint8_t value = (i == length - 1) ? (msg[i] & 0xF0) : msg[i];
 
 		sum += (value >> 4) & 0xF;
 		if (i < length - 1) {
