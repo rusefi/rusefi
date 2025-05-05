@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22828">
+    <page number="0" size="22824">
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
         <constant name="accelerometerSpiDevice">"Off"</constant>
@@ -776,7 +776,6 @@
         <constant digits="1" name="compressorDischargeTemperature_tempC_3" units="*C">0.0</constant>
         <constant name="consoleUartDevice">"Off"</constant>
         <constant name="consumeObdSensors">"false"</constant>
-        <constant digits="1" name="cranking_baseFuel" units="mg">27.5</constant>
         <constant digits="0" name="cranking_rpm" units="RPM">400.0</constant>
         <constant cols="1" digits="2" name="crankingAdvance" rows="4">
          0.0
@@ -806,11 +805,11 @@
          40.0
          60.0
 </constant>
-        <constant cols="8" digits="2" name="crankingCycleFuelCoef" rows="4">
-         2.0 1.3 1.0 1.0 1.0 1.0 1.0 1.0
-         2.0 1.3 1.0 1.0 1.0 1.0 1.0 1.0
-         2.0 1.3 1.0 1.0 1.0 1.0 1.0 1.0
-         2.0 1.3 1.0 1.0 1.0 1.0 1.0 1.0
+        <constant cols="8" digits="1" name="crankingCycleFuelCoef" rows="4">
+         27.5 27.5 27.5 27.5 27.5 27.5 27.5 27.5
+         27.5 27.5 27.5 27.5 27.5 27.5 27.5 27.5
+         27.5 27.5 27.5 27.5 27.5 27.5 27.5 27.5
+         27.5 27.5 27.5 27.5 27.5 27.5 27.5 27.5
 </constant>
         <constant cols="1" digits="2" name="crankingFuelBins" rows="8">
          -20.0
@@ -4989,7 +4988,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250424" nPages="1" signature="rusEFI master.2025.05.05.f407-discovery.4068723944" version="5.0"/>
+    <versionInfo firmwareInfo="20250424" nPages="1" signature="rusEFI master.2025.05.05.f407-discovery.3337854261" version="5.0"/>
     <bibliography author="rusEFI 20250424" writeDate="date"/>
     <settings/>
     <userComments/>
