@@ -4,10 +4,12 @@ import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.IniFileModelImpl;
 import com.rusefi.*;
 import com.rusefi.tools.tune.TuneCanTool;
+import com.rusefi.tune.xml.Constant;
 import com.rusefi.tune.xml.Msq;
 import com.rusefi.tune.xml.Page;
 import org.junit.jupiter.api.Test;
 
+import static com.rusefi.ConfigFieldImpl.unquote;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class TuneCanToolTest {
@@ -51,4 +53,17 @@ public class TuneCanToolTest {
     	 assertEquals("engineConfiguration->", rpmSoftLimitTimingRetardParentReference);
     }
     
+    @Test
+    public void TuneCanToolBooleanTest() throws Exception {
+    	RootHolder.ROOT = "../../firmware/";
+    	Msq customOldTune = Msq.readTune(TuneReadWriteTest.TUNE_NAME);
+    	String fieldName = "enableAemXSeries";// config->enableAemXSeries
+    	ConfigField cf = TuneCanTool.getReaderState(fieldName); 
+    	Constant customValue = customOldTune.getConstantsAsMap().get(fieldName);
+    	
+    	// this logic is used on getTunePatch, maybe extract to function?
+    	Boolean configFieldState = unquote(cf.getTrueName()).equals(unquote(customValue.getValue()));
+    	 
+    	assertFalse(configFieldState); // as config->enableAemXSeries default is false
+    }
 }
