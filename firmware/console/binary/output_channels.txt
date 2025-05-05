@@ -468,5 +468,5 @@ float mapFast
 	uint16_t fastAdcPeriod;ECU: Fast ADC period;"ticks", 1, 0, 0, 1000, 0
 	uint16_t fastAdcConversionCount;ECU: Fast ADC conversions;"N", 1, 0, 0, 65535, 0
 
-	uint8_t[40 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t[38 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct
