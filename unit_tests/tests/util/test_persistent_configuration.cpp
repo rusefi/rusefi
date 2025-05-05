@@ -10,6 +10,14 @@ TestPersistentConfiguration& TestPersistentConfiguration::getInstance() {
     return instance;
 }
 
+void TestPersistentConfiguration::setIgnitionLoadBins(const IgnitionLoadBins& bins) {
+	copyArray(config->ignitionLoadBins, bins);
+}
+
+void TestPersistentConfiguration::setIgnitionRpmBins(const IgnitionRpmBins& bins) {
+    copyArray(config->ignitionRpmBins, bins);
+}
+
 void TestPersistentConfiguration::setIgnitionTable(const IgnitionTable& ignitions) {
     for (int i = 0; i < IGN_LOAD_COUNT; i++) {
         for (int j = 0; j < IGN_RPM_COUNT; j++) {
@@ -38,6 +46,14 @@ void TestPersistentConfiguration::setFuelLevelBinsCurve(const FuelLevelBinsCurve
 
 void TestPersistentConfiguration::setFuelLevelValuesCurve(const FuelLevelValuesCurve& fuelLevelValues) {
 	std::copy(std::begin(fuelLevelValues), std::end(fuelLevelValues), std::begin(config->fuelLevelValues));
+}
+
+void TestPersistentConfiguration::setIgnTrimLoadBins(const IgnTrimLoadBins& bins) {
+	copyArray(config->ignTrimLoadBins, bins);
+}
+
+void TestPersistentConfiguration::setIgnTrimRpmBins(const IgnTrimRpmBins& bins) {
+    copyArray(config->ignTrimRpmBins, bins);
 }
 
 TestPersistentConfiguration TestPersistentConfiguration::instance;
