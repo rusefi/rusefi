@@ -7,7 +7,7 @@
 #define HONDA_SPEED_158 0x158
 #define HONDA_TACH_1DC 0x1DC
 
-uint8_t calculateHondaChecksum(uint16_t canId, uint8_t length, uint8_t *data) {
+uint8_t calculateHondaChecksum(uint16_t canId, uint8_t length, CanTxMessage* data) {
 	int sum = 0;
 
 	// Sum all bytes except the checksum nibble
