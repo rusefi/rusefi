@@ -14,7 +14,7 @@ struct_no_prefix ignition_state_s
 	int16_t autoscale baseIgnitionAdvance;@@GAUGE_NAME_TIMING_ADVANCE@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 1
 	int16_t autoscale correctedIgnitionAdvance;@@GAUGE_NAME_ADJUSTED_TIMING@@;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 1
 
-	int16_t autoscale tractionAdvanceDrop;Traction: timing correction;"deg",{1/@@PACK_MULT_ANGLE@@}, 0, 0, 0, 1
+	float tractionAdvanceDrop;Traction: timing correction;"deg",1, 0, 0, 0, 1
 
 float dwellVoltageCorrection;Ign: Dwell voltage correction
 

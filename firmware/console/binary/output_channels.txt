@@ -299,8 +299,17 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
 
 	pid_status_s[CAM_INPUTS_COUNT iterate] vvtStatus
 
+	uint16_t wheelSpeedFL;Wheel speed 1 (FL);"s",1, 0, 0, 0, 0
+	uint16_t wheelSpeedFR;Wheel speed 2 (FR);"s",1, 0, 0, 0, 0
+	uint16_t wheelSpeedRL;Wheel speed 3 (RL);"s",1, 0, 0, 0, 0
+	uint16_t wheelSpeedRR;Wheel speed 4 (RR);"s",1, 0, 0, 0, 0
+
+
+
 	uint16_t auxSpeed1;Aux speed 1;"s",1, 0, 0, 0, 0
 	uint16_t auxSpeed2;Aux speed 2;"s",1, 0, 0, 0, 0
+	uint16_t auxSpeed3;Aux speed 3;"s",1, 0, 0, 0, 0
+	uint16_t auxSpeed4;Aux speed 4;"s",1, 0, 0, 0, 0
 
 	uint16_t ISSValue;@@GAUGE_NAME_ISS@@;"RPM",1, 0, 0, 8000, 0
 
@@ -372,6 +381,18 @@ float mapFast
 	uint16_t schedulingUsedCount;;"",1,0,0,0,0
 	uint16_t autoscale vehicleSpeedKph;@@GAUGE_NAME_VVS@@;"kph",{1/@@PACK_MULT_VSS@@}, 0, 0, 0, 2
 
+	uint16_t autoscale vehicleSpeedKph1;Wheel Speed FL;"kph",{1/@@PACK_MULT_VSS@@}, 0, 0, 0, 2
+	uint16_t autoscale vehicleSpeedKph2;Wheel Speed FR;"kph",{1/@@PACK_MULT_VSS@@}, 0, 0, 0, 2
+	uint16_t autoscale vehicleSpeedKph3;Wheel Speed RL;"kph",{1/@@PACK_MULT_VSS@@}, 0, 0, 0, 2
+	uint16_t autoscale vehicleSpeedKph4;Wheel Speed RR;"kph",{1/@@PACK_MULT_VSS@@}, 0, 0, 0, 2
+
+	uint16_t autoscale vehicleSpeedKphFrontAvg;Wheel Speed Front AVG;"kph",{1/@@PACK_MULT_VSS@@}, 0, 0, 0, 2
+	uint16_t autoscale vehicleSpeedKphRearAvg;Wheel Speed Rear AVG;"kph",{1/@@PACK_MULT_VSS@@}, 0, 0, 0, 2
+
+	uint16_t autoscale tracSpeedLeftRightREF;LeftRightSpeedRef;"kph",{1/@@PACK_MULT_VSS@@}, 0, 0, 0, 2
+	uint16_t autoscale tracSpeedFrontRearREF;FrontRearSpeedRef;"kph",{1/@@PACK_MULT_VSS@@}, 0, 0, 0, 2
+
+
 	uint16_t autoscale Gego;;"%",0.01,0,50,150,2
 
 	uint16_t testBenchIter;;"count",1, 0, 0, 0, 0
@@ -392,6 +413,10 @@ float mapFast
 	uint16_t autoscale afr2GasolineScale;@@GAUGE_NAME_AFR2_GAS_SCALE@@;"AFR",{1/@@PACK_MULT_AFR@@}, 0, 0, 0, 2
 
 	float wheelSlipRatio
+	float wheelSlipRatioLeftRightFRONT
+	float wheelSlipRatioLeftRightREAR
+	float wheelSlipRatioLeftRightREF
+	float wheelSlipRatioFrontRear
 
 	uint8_t[MAX_CYLINDER_COUNT iterate] ignitorDiagnostic
 	uint8_t[MAX_CYLINDER_COUNT iterate] injectorDiagnostic
