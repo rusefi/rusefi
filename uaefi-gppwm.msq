@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <msq xmlns="http://www.msefi.com/:msq">
-<bibliography author="TunerStudio MS 3.2.05 - EFI Analytics, Inc." tuneComment="" writeDate="Sat May 03 20:12:25 EDT 2025"/>
+<bibliography author="TunerStudio MS 3.2.05 - EFI Analytics, Inc." tuneComment="" writeDate="Mon May 05 15:07:34 EDT 2025"/>
 <versionInfo fileFormat="5.0" firmwareInfo="rusEFI+v20250503%402101653562" nPages="1" signature="rusEFI master.2025.05.03.uaefi.2101653562"/>
 <page>
 <pcVariable name="tsCanId">"0"</pcVariable>
-<pcVariable digits="0" name="tuneCrcPcVariable">2848.0</pcVariable>
+<pcVariable digits="0" name="tuneCrcPcVariable">1897.0</pcVariable>
 <pcVariable cols="1" digits="1" name="wueAfrTargetOffset" rows="16" units=":1">
          -1.5 
          -1.4 
@@ -109,7 +109,7 @@
 <constant digits="0" name="multisparkMaxSparkingAngle" units="deg">30.0</constant>
 <constant digits="0" name="multisparkMaxExtraSparkCount" units="count">2.0</constant>
 <constant digits="0" name="vvtControlMinRpm" units="RPM">600.0</constant>
-<constant digits="2" name="injector_flow">200.0</constant>
+<constant digits="2" name="injector_flow">10.0</constant>
 <constant cols="1" digits="2" name="injector_battLagCorrBattBins" rows="8" units="volts">
          6.0 
          8.0 
@@ -849,7 +849,7 @@
 <constant name="stepperDcInvertedPins">"false"</constant>
 <constant name="canOpenBLT">"false"</constant>
 <constant name="can2OpenBLT">"false"</constant>
-<constant name="injectorFlowAsMassFlow">"cc/min"</constant>
+<constant name="injectorFlowAsMassFlow">"grams per second"</constant>
 <constant name="boardUseCanTerminator">"true"</constant>
 <constant name="kLineDoHondaSend">"false"</constant>
 <constant name="can1ListenMode">"false"</constant>
