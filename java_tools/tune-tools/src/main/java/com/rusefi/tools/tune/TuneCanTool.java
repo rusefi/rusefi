@@ -183,18 +183,25 @@ public class TuneCanTool {
         return value.replaceAll("\\s+", " ").trim();
     }
     
-    private static String getParentReference(ConfigField cf, StringBuffer cName) {
+    public static String getParentReference(ConfigField cf, StringBuffer cName) {
     	  String parentReference;
           if (cf.getParentStructureType().getName().equals(MetaHelper.ENGINE_CONFIGURATION_S)) {
               parentReference = "engineConfiguration->";
           } else if (cf.getParentStructureType().getName().equals(MetaHelper.PERSISTENT_CONFIG_S)) {
               parentReference = "config->";
           } else {
-              // todo: unit test?
               String path = getPath(cf.getParentStructureType());
               parentReference = path + cName;
           }
           return parentReference;
+    }
+    
+    // same logic as getTunePatch, used for testing getParentReference
+    public static ConfigField getReaderState(String fieldName) throws IOException {
+    	ReaderStateImpl state = MetaHelper.getReaderState();
+    	StringBuffer context = new StringBuffer();
+    	ConfigField cf = MetaHelper.findField(state, fieldName, context);
+		return cf;
     }
 
     @NotNull
