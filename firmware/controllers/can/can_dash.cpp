@@ -1205,14 +1205,14 @@ void updateDash(CanCycle cycle) {
 	case CAN_BUS_GENESIS_COUPE:
 		canDashboardGenesisCoupe(cycle);
 		break;
+    case CAN_BUS_HONDA_K:
+		canDashboardHondaK(cycle);
+		break;
 	case CAN_AIM_DASH:
 		canDashboardAim(cycle);
 		break;
 	case CAN_BUS_MS_SIMPLE_BROADCAST:
 		canDashboardTS(cycle);
-		break;
-    case CAN_BUS_HONDA_K:
-		canDashboardHondaK(cycle);
 		break;
 	default:
 		criticalError("Nothing for canNbcType %s", getCan_nbc_e(engineConfiguration->canNbcType));
