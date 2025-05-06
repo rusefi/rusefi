@@ -54,6 +54,7 @@ public class TuneCanTool {
     // IDE and GHA run from different working folders :(
     // see write_tune.sh for env variable to property mapping
     static final String ENGINE_TUNE_OUTPUT_FOLDER = System.getProperty("ENGINE_TUNE_OUTPUT_FOLDER", "../simulator/generated/");
+    private static String boardConfig;
 
     protected static IniFileModel ini;
 
@@ -66,6 +67,7 @@ public class TuneCanTool {
         //writeDiffBetweenLocalTuneFileAndDefaultTune("../1.msq");
 
 //        TuneCanToolRunner.initialize("C:\\stuff\\fw\\generated\\tunerstudio\\generated\\rusefi_.ini");
+        boardConfig = "tunerstudio/empty_board_options.ini";
         TuneCanToolHelper.initialize(TuneContext.iniFileName);
 
 //        writeDiffBetweenLocalTuneFileAndDefaultTune("harley", "C:\\stuff\\fw\\fw-\\generated\\simulator_tune_HARLEY.msq",
@@ -198,7 +200,7 @@ public class TuneCanTool {
 
     // same logic as getTunePatch, used for testing getParentReference
     public static ConfigField getReaderState(String fieldName) throws IOException {
-    	ReaderStateImpl state = MetaHelper.getReaderState();
+    	ReaderStateImpl state = MetaHelper.getReaderState(boardConfig);
     	StringBuffer context = new StringBuffer();
     	ConfigField cf = MetaHelper.findField(state, fieldName, context);
 		return cf;
@@ -207,7 +209,7 @@ public class TuneCanTool {
     @NotNull
     public static StringBuilder getTunePatch(Msq defaultTune, Msq customTune, IniFileModel ini, String customTuneFileName, StringBuilder methods, String defaultTuneFileName, String methodNamePrefix) throws IOException {
         Objects.requireNonNull(ini, "ini");
-        ReaderStateImpl state = MetaHelper.getReaderState();
+        ReaderStateImpl state = MetaHelper.getReaderState(boardConfig);
 
         StringBuilder invokeMethods = new StringBuilder();
 
