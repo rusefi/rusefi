@@ -17,12 +17,20 @@ protected:
 	void decodeFrame(const CANRxFrame& frame, efitick_t nowNt) override;
 
 	// Decode an actual AEM controller, or a rusEFI controller sending AEM format
-	bool decodeAemXSeries(const CANRxFrame& frame, efitick_t nowNt);
+	void decodeAemXSeries(const CANRxFrame& frame, efitick_t nowNt);
 
 	// Decode rusEFI custom format
 	void decodeRusefiStandard(const CANRxFrame& frame, efitick_t nowNt);
 	void decodeRusefiDiag(const CANRxFrame& frame);
 
 private:
+	bool isHeaterAllowed();
+
 	const uint8_t m_sensorIndex;
+	// raw fault code from sensor
+	uint8_t m_faultCode;
+	bool m_isAem;
+	bool m_isValid;
+	// Used for AEM sensor only
+	bool m_isFault;
 };
