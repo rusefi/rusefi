@@ -19,6 +19,7 @@ set_board_file BOARD_CONFIG_FILE "${BOARD_DIR}/board_config.txt"
 set_board_file BOARD_OPTIONS_FILE "${BOARD_DIR}/board_options.ini"
 set_board_file BOARD_MENU_FILE "${BOARD_DIR}/board_menu.ini"
 set_board_file BOARD_VE_MENU_FILE "${BOARD_DIR}/board_ve_menu.ini"
+set_board_file BOARD_IGNITION_ADVANCE_MENU_FILE "${BOARD_DIR}/board_ignition_advance_menu.ini"
 set_board_file BOARD_TABLES_FILE "${BOARD_DIR}/board_tables.ini"
 set_board_file BOARD_CURVES_FILE "${BOARD_DIR}/board_curves.ini"
 set_board_file BOARD_PANELS_FILE "${BOARD_DIR}/board_panels.ini"
@@ -44,6 +45,7 @@ COMMON_GEN_CONFIG="
  -readfile BOARD_OPTIONS_FROM_FILE ${BOARD_OPTIONS_FILE} \
  -readfile BOARD_MENU_FROM_FILE ${BOARD_MENU_FILE} \
  -readfile BOARD_VE_MENU_FROM_FILE ${BOARD_VE_MENU_FILE} \
+ -readfile BOARD_IGNITION_ADVANCE_MENU_FROM_FILE ${BOARD_IGNITION_ADVANCE_MENU_FILE} \
  -readfile BOARD_TABLES_FROM_FILE ${BOARD_TABLES_FILE} \
  -readfile BOARD_CURVES_FROM_FILE ${BOARD_CURVES_FILE} \
  -readfile BOARD_CONSTANTS_EXTENSIONS_FROM_FILE ${BOARD_CONSTANTS_EXTENSIONS_FILE} \
