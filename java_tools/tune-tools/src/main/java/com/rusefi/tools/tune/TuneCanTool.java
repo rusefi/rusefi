@@ -182,7 +182,7 @@ public class TuneCanTool {
             return value;
         return value.replaceAll("\\s+", " ").trim();
     }
-    
+
     public static String getParentReference(ConfigField cf, StringBuffer cName) {
     	  String parentReference;
           if (cf.getParentStructureType().getName().equals(MetaHelper.ENGINE_CONFIGURATION_S)) {
@@ -195,7 +195,7 @@ public class TuneCanTool {
           }
           return parentReference;
     }
-    
+
     // same logic as getTunePatch, used for testing getParentReference
     public static ConfigField getReaderState(String fieldName) throws IOException {
     	ReaderStateImpl state = MetaHelper.getReaderState();
@@ -241,7 +241,7 @@ public class TuneCanTool {
             // nasty: context is a return parameter
             ConfigField cf = MetaHelper.findField(state, fieldName, context);
             if (cf == null) {
-                log.info("Not found " + fieldName);
+                log.info("ConfigField Not found " + fieldName);
                 continue;
             }
             if (TypesHelper.isFloat(cf.getTypeName()) && !cf.isArray()) {
@@ -264,7 +264,7 @@ public class TuneCanTool {
 
             if (cf.getTypeName().equals("boolean")) {
             	Boolean configFieldState = unquote(cf.getTrueName()).equals(unquote(customValue.getValue()));
-            	
+
                 sb.append(TuneTools.getAssignmentCode(defaultValue, cName, configFieldState.toString()));
                 continue;
             }
