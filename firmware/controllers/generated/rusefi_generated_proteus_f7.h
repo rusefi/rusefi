@@ -137,6 +137,7 @@
 #define BOARD_DIAG_PANEL2_FROM_FILE 
 #define BOARD_ENGINE_CONFIGURATION_FROM_FILE 
 #define BOARD_GAUGES_FROM_FILE 
+#define BOARD_IGNITION_ADVANCE_MENU_FROM_FILE 
 #define BOARD_INDICATORS_FROM_FILE 
 #define BOARD_MENU_FROM_FILE 
 #define BOARD_OPTIONS_FROM_FILE 
@@ -1185,6 +1186,8 @@
 #define IGN_TRIM_1_NAME "Ignition trim cyl 1"
 #define IGN_TRIM_2_NAME "Ignition trim cyl 2"
 #define IGN_TRIM_SIZE 4
+#define IGNITION_ADVANCE_MENU_NAME "Ignition advance"
+#define IGNITION_ADVANCE_TABLE_NAME "Ignition Table"
 #define ignition_mode_e_auto_enum 0="IM_ONE_COIL",1="IM_INDIVIDUAL_COILS",3="IM_TWO_COILS",2="IM_WASTED_SPARK"
 #define ignition_mode_e_IM_INDIVIDUAL_COILS 1
 #define ignition_mode_e_IM_ONE_COIL 0
@@ -1422,7 +1425,7 @@
 #define SentInput_NONE 0
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 1253140996
+#define SIGNATURE_HASH 311214629
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1926,7 +1929,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.05.06.proteus_f7.1253140996"
+#define TS_SIGNATURE "rusEFI master.2025.05.06.proteus_f7.311214629"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'

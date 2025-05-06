@@ -1138,6 +1138,8 @@ public class VariableRegistryValues {
 	public static final String IGN_TRIM_1_NAME = "Ignition trim cyl 1";
 	public static final String IGN_TRIM_2_NAME = "Ignition trim cyl 2";
 	public static final int IGN_TRIM_SIZE = 4;
+	public static final String IGNITION_ADVANCE_MENU_NAME = "Ignition advance";
+	public static final String IGNITION_ADVANCE_TABLE_NAME = "Ignition Table";
 	public static final int ignition_mode_e_IM_INDIVIDUAL_COILS = 1;
 	public static final int ignition_mode_e_IM_ONE_COIL = 0;
 	public static final int ignition_mode_e_IM_TWO_COILS = 3;
@@ -1333,7 +1335,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 255351230;
+	public static final int SIGNATURE_HASH = 1460007327;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1614,7 +1616,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.05.06.at_start_f435.255351230";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.05.06.at_start_f435.1460007327";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
