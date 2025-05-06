@@ -142,7 +142,7 @@ public:
 
 	virtual void resetState();
 	void setShaftSynchronized(bool value);
-	bool getShaftSynchronized();
+	bool getShaftSynchronized() const;
 
 	/**
 	 * this is start of real trigger cycle
