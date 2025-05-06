@@ -89,6 +89,13 @@ public:
 	// Returns the number of bytes written.
 	size_t writeData(char* buffer, void *offset) const;
 
+#if EFI_UNIT_TEST
+  bool needsEngineOffsetHack() const {
+    // low addresses are offsets without engine reference
+    return (intptr_t)m_addr < 1'000'000'000;
+  }
+#endif
+
 private:
 	template<typename T>
 	static constexpr Type resolveType();
