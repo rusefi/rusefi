@@ -47,7 +47,7 @@ float getCrankingFuel3(float baseFuel, uint32_t revolutionCounterSinceStart) {
 	} else {
 		// Cranking fuel changes over time
 		baseCrankingFuel = interpolate3d(
-			  config->crankingCycleFuelCoef,
+			  config->crankingCycleBaseFuel,
 			  config->crankingCycleFuelCltBins, Sensor::getOrZero(SensorType::Clt),
 			  config->crankingCycleBins, revolutionCounterSinceStart
 		  ) * 0.001f; // parameter is in milligrams, convert to grams

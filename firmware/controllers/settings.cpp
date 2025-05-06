@@ -105,7 +105,7 @@ static void setCrankingIACExtra(float percent) {
 }
 
 static void setCrankingFuel(float fuelMilligram) {
-	setTable(config->crankingCycleFuelCoef, fuelMilligram);
+	setTable(config->crankingCycleBaseFuel, fuelMilligram);
 	efiPrintf("cranking_fuel %.2f", fuelMilligram);
 }
 

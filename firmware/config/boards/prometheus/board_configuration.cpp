@@ -40,7 +40,7 @@ static void setPrometheusDefaults() {
 	engineConfiguration->displacement = 1.645;
 	engineConfiguration->injector.flow = 200;
 
-	setTable(config->crankingCycleFuelCoef, 25);
+	setTable(config->crankingCycleBaseFuel, 25);
 	engineConfiguration->cranking.rpm = 600;
 
 	engineConfiguration->map.sensor.type = MT_MPX4250;
