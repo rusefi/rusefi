@@ -54,7 +54,7 @@ public class TuneCanTool {
     // IDE and GHA run from different working folders :(
     // see write_tune.sh for env variable to property mapping
     static final String ENGINE_TUNE_OUTPUT_FOLDER = System.getProperty("ENGINE_TUNE_OUTPUT_FOLDER", "../simulator/generated/");
-    private static String boardConfig;
+    private static String boardConfig = "tunerstudio/empty_board_options.ini";
 
     protected static IniFileModel ini;
 
@@ -67,7 +67,6 @@ public class TuneCanTool {
         //writeDiffBetweenLocalTuneFileAndDefaultTune("../1.msq");
 
 //        TuneCanToolRunner.initialize("C:\\stuff\\fw\\generated\\tunerstudio\\generated\\rusefi_.ini");
-        boardConfig = "tunerstudio/empty_board_options.ini";
         TuneCanToolHelper.initialize(TuneContext.iniFileName);
 
 //        writeDiffBetweenLocalTuneFileAndDefaultTune("harley", "C:\\stuff\\fw\\fw-\\generated\\simulator_tune_HARLEY.msq",
