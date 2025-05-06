@@ -469,7 +469,7 @@ void mreBoardNewTest() {
 	// set cranking_dwell 200
 	engineConfiguration->ignitionDwellForCrankingMs = 200;
 	// set cranking_fuel 300
-	setTable(config->crankingCycleFuelCoef, 190);
+	setTable(config->crankingCycleBaseFuel, 190);
 	engineConfiguration->injectionMode = IM_SEQUENTIAL;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
 
@@ -809,7 +809,7 @@ void fuelBenchMode() {
 #endif // EFI_ENGINE_CONTROL
 	setTable(config->postCrankingFactor, 1.0f);
 	setArrayValues(config->crankingFuelCoef, 1.0f);
-	setTable(config->crankingCycleFuelCoef, 1.0f);
+	setTable(config->crankingCycleBaseFuel, 1.0f);
 	setBasicNotECUmode();
 }
 

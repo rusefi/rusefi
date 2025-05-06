@@ -70,7 +70,7 @@ void setDefaultCranking() {
 
 	// Cranking cycle compensation
 
-	setTable(config->crankingCycleFuelCoef, 27.0f);
+	setTable(config->crankingCycleBaseFuel, 27.0f);
 	setLinearCurve(config->crankingCycleFuelCltBins, 0, 60, 1);
 
 	// X values are simply counting up cycle number starting at 1

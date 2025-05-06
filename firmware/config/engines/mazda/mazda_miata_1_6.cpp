@@ -163,7 +163,7 @@ void miataNAcommonEngineSettings() {
 	// chartsize 200
 	engineConfiguration->engineChartSize = 200;
 
-	setTable(config->crankingCycleFuelCoef, 27.5);
+	setTable(config->crankingCycleBaseFuel, 27.5);
 	config->crankingFuelCoef[0] = 2.8; // base cranking fuel adjustment coefficient
 	config->crankingFuelBins[0] = -20; // temperature in C
 	config->crankingFuelCoef[1] = 2.2;
