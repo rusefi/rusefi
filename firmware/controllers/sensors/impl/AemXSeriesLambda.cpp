@@ -117,7 +117,7 @@ void AemXSeriesWideband::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
 /**
  * @return true if valid, false if invalid
  */
-void AemXSeriesWideband::decodeAemXSeries(const CANRxFrame& frame, efitick_t nowNt) {
+bool AemXSeriesWideband::decodeAemXSeries(const CANRxFrame& frame, efitick_t nowNt) {
 	// reports in 0.0001 lambda per LSB
 	uint16_t lambdaInt = SWAP_UINT16(frame.data16[0]);
 	float lambdaFloat = 0.0001f * lambdaInt;
@@ -129,10 +129,11 @@ void AemXSeriesWideband::decodeAemXSeries(const CANRxFrame& frame, efitick_t now
 
 	if ((m_isFault) || (!m_isValid)) {
 		invalidate();
-		return;
+		return false;
 	}
 
 	setValidValue(lambdaFloat, nowNt);
+	return true;
 }
 
 void AemXSeriesWideband::decodeRusefiStandard(const CANRxFrame& frame, efitick_t nowNt) {
