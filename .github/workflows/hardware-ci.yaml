@@ -83,14 +83,13 @@ jobs:
     - name: Test/Identify Compiler
       run: arm-none-eabi-gcc -v
 
-    - name: Configuration Definition and Enum to String CI, without pushing new .jar
-      working-directory: ./java_tools
-      run: |
-        ./gradlew :config_definition:shadowJar :enum_to_string:shadowJar
-
-    - name: Generate All Configs
+    - name: Clean all before creating configs
       working-directory: ./firmware/
-      run: bash gen_config.sh
+      run: make clean
+
+    - name: Prebuid with default target # this should be re-build all the configs/livedata/etc
+      working-directory: ./firmware/
+      run: make
 
     - name: Build Firmware
 #      run: .github/workflows/hw-ci/build_for_hw_ci.sh config/boards/f407-discovery f407-discovery

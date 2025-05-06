@@ -18,8 +18,8 @@ cd firmware
 export BOARD_META_PATH=$(bash bin/find_meta_info.sh ${HW_FOLDER} ${HW_TARGET})
 source config/boards/common_script_read_meta_env.inc "${BOARD_META_PATH}"
 
-echo "[build_for_hw_ci.sh] We aren't guaranteed a clean machine every time, so manually clean the output."
-make clean
+#echo "[build_for_hw_ci.sh] We aren't guaranteed a clean machine every time, so manually clean the output."
+#make clean
 
 export EXTRA_2_PARAMS=-DHARDWARE_CI
 
