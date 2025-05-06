@@ -96,9 +96,9 @@ jobs:
       working-directory: ./unit_tests/
       run: |
         make clean
-        make -j4 SANITIZE=no
+        ./make_for_valgrind.sh
 
     - name: Run Tests (Valgrind)
       if: ${{ matrix.os != 'macos-latest' }}
       working-directory: ./unit_tests/
-      run: valgrind --error-exitcode=1 --exit-on-first-error=yes --leak-check=no --show-error-list=yes build/rusefi_test
+      run: ./run_with_valgrind.sh
