@@ -2322,6 +2322,8 @@ end_struct
 #define VE_MENU_NAME "VE"
 #define VE_TABLE_NAME "VE Table"
 #define VE_MENU_MAP_NAME "VE 3D view"
+#define IGNITION_ADVANCE_MENU_NAME "Ignition advance"
+#define IGNITION_ADVANCE_TABLE_NAME "Ignition Table"
 #define CAM_1_MODE_NAME "Cam mode (intake)"
 #define CAM_2_MODE_NAME "Cam mode (exhaust)"
 #define ts_show_cam2 true
