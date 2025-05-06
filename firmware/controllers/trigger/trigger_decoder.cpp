@@ -42,7 +42,7 @@ TriggerDecoderBase::TriggerDecoderBase(const char* p_name)
 	TriggerDecoderBase::resetState();
 }
 
-bool TriggerDecoderBase::getShaftSynchronized() {
+bool TriggerDecoderBase::getShaftSynchronized() const {
 	return shaft_is_synchronized;
 }
 

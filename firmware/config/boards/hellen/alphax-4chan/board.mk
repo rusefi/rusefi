@@ -21,8 +21,6 @@ DDEFS += -DBOOT_BACKDOOR_ENTRY_TIMEOUT_MS=0
 DDEFS += -DEFI_LOGIC_ANALYZER=FALSE
 DDEFS += -DEFI_MALFUNCTION_INDICATOR=FALSE
 
-ONBOARD_MEMS_TYPE=LIS2DH12
-
 include $(BOARDS_DIR)/hellen/hellen-common-mega144.mk
 
 # This board has trigger scope hardware!

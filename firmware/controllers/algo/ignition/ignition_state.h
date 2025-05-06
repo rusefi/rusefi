@@ -11,6 +11,10 @@ public:
   angle_t getWrappedAdvance(const float rpm, const float engineLoad);
   angle_t getTrailingSparkAngle(const float rpm, const float engineLoad);
 	angle_t getSparkHardwareLatencyCorrection();
+
+	static angle_t getInterpolatedIgnitionAngle(float rpm, float ignitionLoad);
+	static angle_t getInterpolatedIgnitionTrim(size_t cylinderNumber, float rpm, float ignitionLoad);
+
 private:
   angle_t getAdvance(float rpm, float engineLoad);
 	floatms_t getSparkDwell(float rpm, bool isCranking);

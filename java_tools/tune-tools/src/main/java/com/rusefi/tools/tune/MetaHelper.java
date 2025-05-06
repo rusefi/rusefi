@@ -22,11 +22,6 @@ public class MetaHelper {
     public static final String ENGINE_CONFIGURATION_S = "engine_configuration_s";
 
     @NotNull
-    static ReaderStateImpl getReaderState() throws IOException {
-        return getReaderState("tunerstudio/empty_board_options.ini");
-    }
-
-    @NotNull
     static ReaderStateImpl getReaderState(String boardConfig) throws IOException {
         List<String> options = Files.readAllLines(Paths.get(RootHolder.ROOT + "../" + ConfigDefinition.CONFIG_PATH));
         options.add(ConfigDefinition.KEY_PREPEND);

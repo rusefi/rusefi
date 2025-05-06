@@ -1,41 +1,41 @@
-template<class GtestBase>
+template<class GtestBase, engine_type_e EngineType>
 template<typename ModuleType>
-ModuleType& TestBase<GtestBase>::getModule() {
+ModuleType& TestBase<GtestBase, EngineType>::getModule() {
 	return engine->module<ModuleType>().unmock();
 }
 
-template<class GtestBase>
-void TestBase<GtestBase>::SetUp() {
-	eth = std::make_unique<EngineTestHelper>(engine_type_e::TEST_ENGINE);
+template<class GtestBase, engine_type_e EngineType>
+void TestBase<GtestBase, EngineType>::SetUp() {
+	eth = std::make_unique<EngineTestHelper>(EngineType);
 }
 
-template<class GtestBase>
-void TestBase<GtestBase>::TearDown() {
+template<class GtestBase, engine_type_e EngineType>
+void TestBase<GtestBase, EngineType>::TearDown() {
 	eth.reset();
 }
 
-template<class GtestBase>
-TestEngineConfiguration& TestBase<GtestBase>::getTestEngineConfiguration() {
+template<class GtestBase, engine_type_e EngineType>
+TestEngineConfiguration& TestBase<GtestBase, EngineType>::getTestEngineConfiguration() {
 	return TestEngineConfiguration::getInstance();
 }
 
-template<class GtestBase>
-TestPersistentConfiguration& TestBase<GtestBase>::getTestPersistentConfiguration() {
+template<class GtestBase, engine_type_e EngineType>
+TestPersistentConfiguration& TestBase<GtestBase, EngineType>::getTestPersistentConfiguration() {
 	return TestPersistentConfiguration::getInstance();
 }
 
-template<class GtestBase>
-TestLuaScriptExecutor& TestBase<GtestBase>::getTestLuaScriptExecutor() {
+template<class GtestBase, engine_type_e EngineType>
+TestLuaScriptExecutor& TestBase<GtestBase, EngineType>::getTestLuaScriptExecutor() {
 	return TestLuaScriptExecutor::getInstance();
 }
 
-template<class GtestBase>
-TestEngineState& TestBase<GtestBase>::getTestEngineState() {
+template<class GtestBase, engine_type_e EngineType>
+TestEngineState& TestBase<GtestBase, EngineType>::getTestEngineState() {
 	return TestEngineState::getInstance();
 }
 
-template<class GtestBase>
-void TestBase<GtestBase>::setUpEngineConfiguration(const EngineConfig& config) {
+template<class GtestBase, engine_type_e EngineType>
+void TestBase<GtestBase, EngineType>::setUpEngineConfiguration(const EngineConfig& config) {
 	// Other Sensor Inputs
 	getTestEngineConfiguration().configureClutchDownPin(config.getClutchDownPin());
 	getTestEngineConfiguration().configureClutchDownPinMode(config.getClutchDownPinMode());
@@ -121,49 +121,49 @@ void TestBase<GtestBase>::setUpEngineConfiguration(const EngineConfig& config) {
 	getTestEngineConfiguration().configureFuelLevelHighThresholdVoltage(config.getFuelLevelHighThresholdVoltage());
 }
 
-template<class GtestBase>
-void TestBase<GtestBase>::periodicFastCallback() {
+template<class GtestBase, engine_type_e EngineType>
+void TestBase<GtestBase, EngineType>::periodicFastCallback() {
 	// run the ignition math
 	engine->periodicFastCallback();
 }
 
-template<class GtestBase> void
-TestBase<GtestBase>::periodicSlowCallback() {
+template<class GtestBase, engine_type_e EngineType> void
+TestBase<GtestBase, EngineType>::periodicSlowCallback() {
 	engine->periodicSlowCallback();
 }
 
-template<class GtestBase>
-void TestBase<GtestBase>::updateVehicleSpeed(const std::optional<float> speed, void (TestBase::* const postAction)()) {
+template<class GtestBase, engine_type_e EngineType>
+void TestBase<GtestBase, EngineType>::updateVehicleSpeed(const std::optional<float> speed, void (TestBase::* const postAction)()) {
 	updateSensor(SensorType::VehicleSpeed, speed, postAction);
 }
 
-template<class GtestBase>
-void TestBase<GtestBase>::updateRpm(const std::optional<float> rpm, void (TestBase::* const postAction)()) {
+template<class GtestBase, engine_type_e EngineType>
+void TestBase<GtestBase, EngineType>::updateRpm(const std::optional<float> rpm, void (TestBase::* const postAction)()) {
 	updateSensor(SensorType::Rpm, rpm, postAction);
 }
 
-template<class GtestBase>
-void TestBase<GtestBase>::updateApp(const std::optional<float> app, void (TestBase::* const postAction)()) {
+template<class GtestBase, engine_type_e EngineType>
+void TestBase<GtestBase, EngineType>::updateApp(const std::optional<float> app, void (TestBase::* const postAction)()) {
 	updateSensor(SensorType::DriverThrottleIntent, app, postAction);
 }
 
-template<class GtestBase>
-void TestBase<GtestBase>::updateClt(const std::optional<float> clt, void (TestBase::* const postAction)()) {
+template<class GtestBase, engine_type_e EngineType>
+void TestBase<GtestBase, EngineType>::updateClt(const std::optional<float> clt, void (TestBase::* const postAction)()) {
 	updateSensor(SensorType::Clt, clt, postAction);
 }
 
-template<class GtestBase>
-void TestBase<GtestBase>::updateMap(const std::optional<float> map, void (TestBase::* const postAction)()) {
+template<class GtestBase, engine_type_e EngineType>
+void TestBase<GtestBase, EngineType>::updateMap(const std::optional<float> map, void (TestBase::* const postAction)()) {
 	updateSensor(SensorType::Map, map, postAction);
 }
 
-template<class GtestBase>
-void TestBase<GtestBase>::updateLambda1(std::optional<float> lambda1, void (TestBase::* const postAction)()) {
+template<class GtestBase, engine_type_e EngineType>
+void TestBase<GtestBase, EngineType>::updateLambda1(std::optional<float> lambda1, void (TestBase::* const postAction)()) {
 	updateSensor(SensorType::Lambda1, lambda1, postAction);
 }
 
-template<class GtestBase>
-void TestBase<GtestBase>::updateSensor(
+template<class GtestBase, engine_type_e EngineType>
+void TestBase<GtestBase, EngineType>::updateSensor(
 		const SensorType sensor,
 		const std::optional<float> sensorReading,
 		void (TestBase::* const postAction)()

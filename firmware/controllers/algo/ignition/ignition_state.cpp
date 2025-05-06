@@ -47,11 +47,7 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 	efiAssert(ObdCode::CUSTOM_ERR_ASSERT, !std::isnan(engineLoad), "invalid el", NAN);
 
 	// compute base ignition angle from main table
-	float advanceAngle = interpolate3d(
-		config->ignitionTable,
-		config->ignitionLoadBins, engineLoad,
-		config->ignitionRpmBins, rpm
-	);
+	float advanceAngle = IgnitionState::getInterpolatedIgnitionAngle(rpm, engineLoad);
 
   float vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);
   float wheelSlip = Sensor::getOrZero(SensorType::WheelSlipRatio);
@@ -245,12 +241,9 @@ angle_t IgnitionState::getWrappedAdvance(const float rpm, const float engineLoad
     return angle;
 }
 
+PUBLIC_API_WEAK_SOMETHING_WEIRD
 angle_t getCylinderIgnitionTrim(size_t cylinderNumber, float rpm, float ignitionLoad) {
-	return interpolate3d(
-		config->ignTrims[cylinderNumber].table,
-		config->ignTrimLoadBins, ignitionLoad,
-		config->ignTrimRpmBins, rpm
-	);
+	return IgnitionState::getInterpolatedIgnitionTrim(cylinderNumber, rpm, ignitionLoad);
 }
 
 size_t getMultiSparkCount(float rpm) {
@@ -358,6 +351,26 @@ angle_t IgnitionState::getSparkHardwareLatencyCorrection(){
 		return correction;
 	}
 	return 0;
+}
+
+angle_t IgnitionState::getInterpolatedIgnitionAngle(const float rpm, const float ignitionLoad) {
+	return interpolate3d(
+		config->ignitionTable,
+		config->ignitionLoadBins, ignitionLoad,
+		config->ignitionRpmBins, rpm
+	);
+}
+
+angle_t IgnitionState::getInterpolatedIgnitionTrim(
+	const size_t cylinderNumber,
+	const float rpm,
+	const float ignitionLoad
+) {
+	return interpolate3d(
+		config->ignTrims[cylinderNumber].table,
+		config->ignTrimLoadBins, ignitionLoad,
+		config->ignTrimRpmBins, rpm
+	);
 }
 
 #endif // EFI_ENGINE_CONTROL

@@ -561,7 +561,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.0250505E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0250506E7</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95.0</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -789,6 +789,12 @@
          400.0
          1000.0
 </constant>
+        <constant cols="8" digits="1" name="crankingCycleBaseFuel" rows="4">
+         27.0 27.0 27.0 27.0 27.0 27.0 27.0 27.0
+         27.0 27.0 27.0 27.0 27.0 27.0 27.0 27.0
+         27.0 27.0 27.0 27.0 27.0 27.0 27.0 27.0
+         27.0 27.0 27.0 27.0 27.0 27.0 27.0 27.0
+</constant>
         <constant cols="1" digits="0" name="crankingCycleBins" rows="8">
          1.0
          2.0
@@ -804,12 +810,6 @@
          20.0
          40.0
          60.0
-</constant>
-        <constant cols="8" digits="1" name="crankingCycleFuelCoef" rows="4">
-         27.0 27.0 27.0 27.0 27.0 27.0 27.0 27.0
-         27.0 27.0 27.0 27.0 27.0 27.0 27.0 27.0
-         27.0 27.0 27.0 27.0 27.0 27.0 27.0 27.0
-         27.0 27.0 27.0 27.0 27.0 27.0 27.0 27.0
 </constant>
         <constant cols="1" digits="2" name="crankingFuelBins" rows="8">
          -20.0
@@ -5077,7 +5077,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250424" nPages="1" signature="rusEFI master.2025.05.05.f407-discovery.3337854261" version="5.0"/>
+    <versionInfo firmwareInfo="20250424" nPages="1" signature="rusEFI master.2025.05.06.f407-discovery.3232890182" version="5.0"/>
     <bibliography author="rusEFI 20250424" writeDate="date"/>
     <settings/>
     <userComments/>

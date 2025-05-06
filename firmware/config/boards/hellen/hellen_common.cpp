@@ -182,6 +182,8 @@ void hellenMegaAccelerometerPreInitCS2Pin() {
 	    accelerometerChipSelect.initPin("mm-CS2", Gpio::H_SPI1_CS2);
 	    accelerometerChipSelect.setValue(1);
 	}
+#else
+  criticalError("probably broken MEMS configuration?");
 #endif // EFI_ONBOARD_MEMS
 }
 

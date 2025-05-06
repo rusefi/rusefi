@@ -53,7 +53,7 @@ static void setNissanVqEngineConfig() {
 //	engineConfiguration->auxPid[0].minValue = 20;
 //	engineConfiguration->auxPid[0].maxValue = 90;
 
-	setTable(config->crankingCycleFuelCoef, 35);
+	setTable(config->crankingCycleBaseFuel, 35);
 }
 
 void setHellen121nissanVQ() {

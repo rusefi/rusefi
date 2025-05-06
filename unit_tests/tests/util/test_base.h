@@ -10,7 +10,7 @@
 #include "test_lua_script_executor.h"
 #include "engine_config.h"
 
-template <class GtestBase = testing::Test>
+template <class GtestBase = testing::Test, engine_type_e EngineType = engine_type_e::TEST_ENGINE>
 class TestBase : public GtestBase {
 protected:
     void SetUp() override;
