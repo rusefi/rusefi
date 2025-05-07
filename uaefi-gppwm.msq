@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <msq xmlns="http://www.msefi.com/:msq">
-<bibliography author="TunerStudio MS 3.2.05 - EFI Analytics, Inc." tuneComment="" writeDate="Mon May 05 15:07:34 EDT 2025"/>
-<versionInfo fileFormat="5.0" firmwareInfo="rusEFI+v20250503%402101653562" nPages="1" signature="rusEFI master.2025.05.03.uaefi.2101653562"/>
+<bibliography author="TunerStudio MS 3.2.05 - EFI Analytics, Inc." tuneComment="" writeDate="Tue May 06 20:12:01 EDT 2025"/>
+<versionInfo fileFormat="5.0" firmwareInfo="rusEFI+v20250506%40659049029" nPages="1" signature="rusEFI master.2025.05.07.uaefi.659049029"/>
 <page>
 <pcVariable name="tsCanId">"0"</pcVariable>
-<pcVariable digits="0" name="tuneCrcPcVariable">1897.0</pcVariable>
+<pcVariable digits="0" name="tuneCrcPcVariable">5885.0</pcVariable>
 <pcVariable cols="1" digits="1" name="wueAfrTargetOffset" rows="16" units=":1">
          -1.5 
          -1.4 
@@ -81,7 +81,7 @@
          8.0 
       </pcVariable>
 </page>
-<page number="0" size="23820">
+<page number="0" size="23824">
 <constant name="engineType">"MINIMAL_PINS"</constant>
 <constant digits="0" name="startButtonSuppressOnStartUpMs">0.0</constant>
 <constant digits="0" name="launchRpm" units="rpm">3000.0</constant>
@@ -183,7 +183,6 @@
 <constant digits="0" name="tpsMax" units="ADC">650.0</constant>
 <constant digits="0" name="tpsErrorDetectionTooLow" units="%">-10.0</constant>
 <constant digits="0" name="tpsErrorDetectionTooHigh" units="%">110.0</constant>
-<constant digits="1" name="cranking_baseFuel" units="mg">27.0</constant>
 <constant digits="0" name="cranking_rpm" units="RPM">550.0</constant>
 <constant digits="1" name="ignitionDwellForCrankingMs" units="ms">6.0</constant>
 <constant digits="0" name="etbRevLimitStart" units="rpm">0.0</constant>
@@ -284,7 +283,7 @@
 <constant name="acrPin">"NONE"</constant>
 <constant digits="1" name="driveWheelRevPerKm" units="revs/km">1000.0</constant>
 <constant digits="2" name="canSleepPeriodMs" units="ms">50.0</constant>
-<constant digits="0" name="byFirmwareVersion" units="index">2.0250503E7</constant>
+<constant digits="0" name="byFirmwareVersion" units="index">2.0250506E7</constant>
 <constant name="tps1_1AdcChannel">"D13 TPS1"</constant>
 <constant name="vbattAdcChannel">"A7 Voltage From Key"</constant>
 <constant name="fuelLevelSensor">"NONE"</constant>
@@ -2581,11 +2580,11 @@ end
          40.0 
          60.0 
       </constant>
-<constant cols="8" digits="2" name="crankingCycleFuelCoef" rows="4" units="mult">
-         2.0 1.3 1.0 1.0 1.0 1.0 1.0 1.0 
-         2.0 1.3 1.0 1.0 1.0 1.0 1.0 1.0 
-         2.0 1.3 1.0 1.0 1.0 1.0 1.0 1.0 
-         2.0 1.3 1.0 1.0 1.0 1.0 1.0 1.0 
+<constant cols="8" digits="1" name="crankingCycleBaseFuel" rows="4" units="mg">
+         27.0 27.0 27.0 27.0 27.0 27.0 27.0 27.0 
+         27.0 27.0 27.0 27.0 27.0 27.0 27.0 27.0 
+         27.0 27.0 27.0 27.0 27.0 27.0 27.0 27.0 
+         27.0 27.0 27.0 27.0 27.0 27.0 27.0 27.0 
       </constant>
 <constant cols="1" digits="2" name="cltIdleCorrBins" rows="8" units="C">
          -40.0 
@@ -5149,6 +5148,7 @@ end
          0.0 
          0.0 
       </constant>
+<constant name="testPerBoardBit">"true"</constant>
 <constant cols="4" digits="2" name="rainTimingAdjustment" rows="4">
          0.0 0.0 0.0 0.0 
          0.0 0.0 0.0 0.0 
@@ -5193,25 +5193,25 @@ end
          0.0 
          0.0 
       </constant>
-<constant digits="0" name="UNALLOCATED_SPACE_0_6" units="RAW">
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_6" rows="2" units="RAW">
+         0.0 
          0.0 
       </constant>
 <constant digits="0" name="UNALLOCATED_SPACE_0_7" units="RAW">
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_8" rows="2" units="RAW">
-         0.0 
+<constant digits="0" name="UNALLOCATED_SPACE_0_8" units="RAW">
          0.0 
       </constant>
 <constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_9" rows="2" units="RAW">
          0.0 
          0.0 
       </constant>
-<constant digits="0" name="UNALLOCATED_SPACE_0_10" units="RAW">
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_10" rows="2" units="RAW">
+         0.0 
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_11" rows="2" units="RAW">
-         0.0 
+<constant digits="0" name="UNALLOCATED_SPACE_0_11" units="RAW">
          0.0 
       </constant>
 <constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_12" rows="2" units="RAW">
@@ -5222,17 +5222,18 @@ end
          0.0 
          0.0 
       </constant>
-<constant digits="0" name="UNALLOCATED_SPACE_0_14" units="RAW">
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_14" rows="2" units="RAW">
+         0.0 
          0.0 
       </constant>
 <constant digits="0" name="UNALLOCATED_SPACE_0_15" units="RAW">
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_16" rows="2" units="RAW">
-         0.0 
+<constant digits="0" name="UNALLOCATED_SPACE_0_16" units="RAW">
          0.0 
       </constant>
-<constant digits="0" name="UNALLOCATED_SPACE_0_17" units="RAW">
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_17" rows="2" units="RAW">
+         0.0 
          0.0 
       </constant>
 <constant digits="0" name="UNALLOCATED_SPACE_0_18" units="RAW">
@@ -5241,12 +5242,12 @@ end
 <constant digits="0" name="UNALLOCATED_SPACE_0_19" units="RAW">
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_20" rows="3" units="RAW">
-         0.0 
-         0.0 
+<constant digits="0" name="UNALLOCATED_SPACE_0_20" units="RAW">
          0.0 
       </constant>
-<constant digits="0" name="UNALLOCATED_SPACE_0_21" units="RAW">
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_21" rows="3" units="RAW">
+         0.0 
+         0.0 
          0.0 
       </constant>
 <constant digits="0" name="UNALLOCATED_SPACE_0_22" units="RAW">
@@ -5261,11 +5262,11 @@ end
 <constant digits="0" name="UNALLOCATED_SPACE_0_25" units="RAW">
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_26" rows="2" units="RAW">
-         0.0 
+<constant digits="0" name="UNALLOCATED_SPACE_0_26" units="RAW">
          0.0 
       </constant>
-<constant digits="0" name="UNALLOCATED_SPACE_0_27" units="RAW">
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_27" rows="2" units="RAW">
+         0.0 
          0.0 
       </constant>
 <constant digits="0" name="UNALLOCATED_SPACE_0_28" units="RAW">
@@ -5280,8 +5281,7 @@ end
 <constant digits="0" name="UNALLOCATED_SPACE_0_31" units="RAW">
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_32" rows="2" units="RAW">
-         0.0 
+<constant digits="0" name="UNALLOCATED_SPACE_0_32" units="RAW">
          0.0 
       </constant>
 <constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_33" rows="2" units="RAW">
@@ -5292,12 +5292,13 @@ end
          0.0 
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_35" rows="3" units="RAW">
-         0.0 
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_35" rows="2" units="RAW">
          0.0 
          0.0 
       </constant>
-<constant digits="0" name="UNALLOCATED_SPACE_0_36" units="RAW">
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_36" rows="3" units="RAW">
+         0.0 
+         0.0 
          0.0 
       </constant>
 <constant digits="0" name="UNALLOCATED_SPACE_0_37" units="RAW">
@@ -5306,9 +5307,7 @@ end
 <constant digits="0" name="UNALLOCATED_SPACE_0_38" units="RAW">
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_39" rows="3" units="RAW">
-         0.0 
-         0.0 
+<constant digits="0" name="UNALLOCATED_SPACE_0_39" units="RAW">
          0.0 
       </constant>
 <constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_40" rows="3" units="RAW">
@@ -5321,22 +5320,22 @@ end
          0.0 
          0.0 
       </constant>
-<constant digits="0" name="UNALLOCATED_SPACE_0_42" units="RAW">
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_42" rows="3" units="RAW">
+         0.0 
+         0.0 
          0.0 
       </constant>
 <constant digits="0" name="UNALLOCATED_SPACE_0_43" units="RAW">
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_44" rows="2" units="RAW">
-         0.0 
+<constant digits="0" name="UNALLOCATED_SPACE_0_44" units="RAW">
          0.0 
       </constant>
 <constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_45" rows="2" units="RAW">
          0.0 
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_46" rows="3" units="RAW">
-         0.0 
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_46" rows="2" units="RAW">
          0.0 
          0.0 
       </constant>
@@ -5350,43 +5349,43 @@ end
          0.0 
          0.0 
       </constant>
-<constant digits="0" name="UNALLOCATED_SPACE_0_49" units="RAW">
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_49" rows="3" units="RAW">
          0.0 
-      </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_50" rows="2" units="RAW">
-         0.0 
-         0.0 
-      </constant>
-<constant digits="0" name="UNALLOCATED_SPACE_0_51" units="RAW">
-         0.0 
-      </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_52" rows="2" units="RAW">
          0.0 
          0.0 
       </constant>
-<constant digits="0" name="UNALLOCATED_SPACE_0_53" units="RAW">
+<constant digits="0" name="UNALLOCATED_SPACE_0_50" units="RAW">
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_54" rows="2" units="RAW">
-         0.0 
-         0.0 
-      </constant>
-<constant digits="0" name="UNALLOCATED_SPACE_0_55" units="RAW">
-         0.0 
-      </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_56" rows="2" units="RAW">
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_51" rows="2" units="RAW">
          0.0 
          0.0 
       </constant>
-<constant digits="0" name="UNALLOCATED_SPACE_0_57" units="RAW">
+<constant digits="0" name="UNALLOCATED_SPACE_0_52" units="RAW">
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_53" rows="2" units="RAW">
+         0.0 
+         0.0 
+      </constant>
+<constant digits="0" name="UNALLOCATED_SPACE_0_54" units="RAW">
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_55" rows="2" units="RAW">
+         0.0 
+         0.0 
+      </constant>
+<constant digits="0" name="UNALLOCATED_SPACE_0_56" units="RAW">
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_57" rows="2" units="RAW">
+         0.0 
          0.0 
       </constant>
 <constant digits="0" name="UNALLOCATED_SPACE_0_58" units="RAW">
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_59" rows="3" units="RAW">
-         0.0 
-         0.0 
+<constant digits="0" name="UNALLOCATED_SPACE_0_59" units="RAW">
          0.0 
       </constant>
 <constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_60" rows="3" units="RAW">
@@ -5394,7 +5393,9 @@ end
          0.0 
          0.0 
       </constant>
-<constant digits="0" name="UNALLOCATED_SPACE_0_61" units="RAW">
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_61" rows="3" units="RAW">
+         0.0 
+         0.0 
          0.0 
       </constant>
 <constant digits="0" name="UNALLOCATED_SPACE_0_62" units="RAW">
@@ -5412,19 +5413,17 @@ end
 <constant digits="0" name="UNALLOCATED_SPACE_0_66" units="RAW">
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_67" rows="2" units="RAW">
+<constant digits="0" name="UNALLOCATED_SPACE_0_67" units="RAW">
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_68" rows="2" units="RAW">
          0.0 
          0.0 
       </constant>
-<constant digits="0" name="UNALLOCATED_SPACE_0_68" units="RAW">
+<constant digits="0" name="UNALLOCATED_SPACE_0_69" units="RAW">
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_69" rows="2" units="RAW">
-         0.0 
-         0.0 
-      </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_70" rows="3" units="RAW">
-         0.0 
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_70" rows="2" units="RAW">
          0.0 
          0.0 
       </constant>
@@ -5443,18 +5442,19 @@ end
          0.0 
          0.0 
       </constant>
-<constant digits="0" name="UNALLOCATED_SPACE_0_74" units="RAW">
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_74" rows="3" units="RAW">
+         0.0 
+         0.0 
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_75" rows="2" units="RAW">
+<constant digits="0" name="UNALLOCATED_SPACE_0_75" units="RAW">
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_76" rows="2" units="RAW">
          0.0 
          0.0 
       </constant>
-<constant digits="0" name="UNALLOCATED_SPACE_0_76" units="RAW">
-         0.0 
-      </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_77" rows="2" units="RAW">
-         0.0 
+<constant digits="0" name="UNALLOCATED_SPACE_0_77" units="RAW">
          0.0 
       </constant>
 <constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_78" rows="2" units="RAW">
@@ -5465,8 +5465,7 @@ end
          0.0 
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_80" rows="3" units="RAW">
-         0.0 
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_80" rows="2" units="RAW">
          0.0 
          0.0 
       </constant>
@@ -5490,7 +5489,9 @@ end
          0.0 
          0.0 
       </constant>
-<constant digits="0" name="UNALLOCATED_SPACE_0_85" units="RAW">
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_85" rows="3" units="RAW">
+         0.0 
+         0.0 
          0.0 
       </constant>
 <constant digits="0" name="UNALLOCATED_SPACE_0_86" units="RAW">
@@ -5505,19 +5506,18 @@ end
 <constant digits="0" name="UNALLOCATED_SPACE_0_89" units="RAW">
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_90" rows="2" units="RAW">
-         0.0 
+<constant digits="0" name="UNALLOCATED_SPACE_0_90" units="RAW">
          0.0 
       </constant>
 <constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_91" rows="2" units="RAW">
          0.0 
          0.0 
       </constant>
-<constant digits="0" name="UNALLOCATED_SPACE_0_92" units="RAW">
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_92" rows="2" units="RAW">
+         0.0 
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_93" rows="2" units="RAW">
-         0.0 
+<constant digits="0" name="UNALLOCATED_SPACE_0_93" units="RAW">
          0.0 
       </constant>
 <constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_94" rows="2" units="RAW">
@@ -5576,21 +5576,25 @@ end
          0.0 
          0.0 
       </constant>
-<constant digits="0" name="UNALLOCATED_SPACE_0_108" units="RAW">
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_108" rows="2" units="RAW">
+         0.0 
          0.0 
       </constant>
 <constant digits="0" name="UNALLOCATED_SPACE_0_109" units="RAW">
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_110" rows="3" units="RAW">
+<constant digits="0" name="UNALLOCATED_SPACE_0_110" units="RAW">
+         0.0 
+      </constant>
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_111" rows="3" units="RAW">
          0.0 
          0.0 
          0.0 
       </constant>
-<constant digits="0" name="UNALLOCATED_SPACE_0_111" units="RAW">
+<constant digits="0" name="UNALLOCATED_SPACE_0_112" units="RAW">
          0.0 
       </constant>
-<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_112" rows="2" units="RAW">
+<constant cols="1" digits="0" name="UNALLOCATED_SPACE_0_113" rows="2" units="RAW">
          0.0 
          0.0 
       </constant>

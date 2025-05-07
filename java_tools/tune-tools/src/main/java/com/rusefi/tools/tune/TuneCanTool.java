@@ -64,6 +64,7 @@ public class TuneCanTool {
 
 
     public static void main(String[] args) throws Exception {
+        TuneContext.iniFileName = "../firmware/tunerstudio/generated/rusefi_uaefi.ini";
         //writeDiffBetweenLocalTuneFileAndDefaultTune("../1.msq");
 
 //        TuneCanToolRunner.initialize("C:\\stuff\\fw\\generated\\tunerstudio\\generated\\rusefi_.ini");

@@ -4137,6 +4137,7 @@ end</constant>
          0.0
          0.0
 </constant>
+<constant name="testPerBoardBit">"false"</constant>
         <constant cols="6" digits="2" name="torqueReductionIgnitionRetardTable" rows="2">
          0.0 0.0 0.0 0.0 0.0 0.0
          0.0 0.0 0.0 0.0 0.0 0.0
