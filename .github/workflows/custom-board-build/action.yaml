@@ -331,7 +331,7 @@ runs:
       working-directory: ${{inputs.rusefi_dir}}/artifacts
       shell: bash
       run: |
-        : Upload Bundle
+        : Ftp Upload Both Bundles
         if [ "${{github.ref}}" = "refs/heads/master" ] || [ "${{github.ref}}" = "refs/heads/main" ]; then
           echo "On master branch"
         elif [[ ${{github.ref_name}} == "lts"* ]]; then
@@ -340,7 +340,7 @@ runs:
           echo "Not uploading [${{github.ref}}]"
           exit 0
         fi
-        bash ../firmware/bin/upload_bundle.sh ${{ env.RUSEFI_SSH_USER }} ${{ env.RUSEFI_SSH_PASS }} ${{ env.RUSEFI_SSH_SERVER }} ${{ env.BUNDLE_NAME }}
+        bash ../firmware/bin/upload_bundle.sh "${{ env.RUSEFI_SSH_USER }}" "${{ env.RUSEFI_SSH_PASS }}" "${{ env.RUSEFI_SSH_SERVER }}" "${{ env.BUNDLE_NAME }}"
 
     - name: Run Simulator
       if: ${{ inputs.run_simulator == 'true' }}
@@ -523,7 +523,7 @@ runs:
       shell: bash
       run: |
         : Upload Tagged Daily Release Bundle
-        bash ../firmware/bin/upload_bundle.sh ${{ env.RUSEFI_SSH_USER }} ${{ env.RUSEFI_SSH_PASS }} ${{ env.RUSEFI_SSH_SERVER }} ${{ env.BUNDLE_NAME }} ${{ inputs.new_tag }}
+        bash ../firmware/bin/upload_bundle.sh "${{ env.RUSEFI_SSH_USER }}" "${{ env.RUSEFI_SSH_PASS }}" "${{ env.RUSEFI_SSH_SERVER }}" "${{ env.BUNDLE_NAME }}" "${{ inputs.new_tag }}"
 
     - name: Create .properties file for action outputs
       if: ${{ inputs.gha_outputs_file != ''}}
