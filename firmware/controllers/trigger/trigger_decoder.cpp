@@ -189,7 +189,7 @@ bool TriggerDecoderBase::isValidIndex(const TriggerWaveform& triggerShape) const
 	return currentCycle.current_index < triggerShape.getSize();
 }
 
-static TriggerWheel eventIndex[4] = { TriggerWheel::T_PRIMARY, TriggerWheel::T_PRIMARY, TriggerWheel::T_SECONDARY, TriggerWheel:: T_SECONDARY };
+static TriggerWheel eventIndex[4] = { TriggerWheel::T_PRIMARY, TriggerWheel::T_PRIMARY, TriggerWheel::T_SECONDARY, TriggerWheel::T_SECONDARY };
 static TriggerValue eventType[4] = { TriggerValue::FALL, TriggerValue::RISE, TriggerValue::FALL, TriggerValue::RISE };
 
 #if EFI_UNIT_TEST
