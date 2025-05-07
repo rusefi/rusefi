@@ -56,7 +56,8 @@ void AemXSeriesWideband::refreshState() {
 			faultCode = m_faultCode;
 		} else {
 			// No fault code reported from WBO
-			if (get() == UnexpectedCode::Timeout) {
+			auto value = get();
+			if ((!value) && (value.Code == UnexpectedCode::Timeout)) {
 				faultCode = HACK_SILENT_VALUE;
 			} else if (!m_isValid) {
 				// But no valid AFR too
