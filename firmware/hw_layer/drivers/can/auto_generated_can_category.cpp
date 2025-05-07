@@ -13,8 +13,8 @@ case CanCategory::DOWNSTREAM_FLASHING:
   return "DOWNSTREAM_FLASHING";
 case CanCategory::LUA:
   return "LUA";
-case CanCategory::MEGASQUIRT:
-  return "MEGASQUIRT";
+case CanCategory::CAN_IOBOX:
+  return "CAN_IOBOX";
 case CanCategory::NBC:
   return "NBC";
 case CanCategory::OBD:

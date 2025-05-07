@@ -294,14 +294,14 @@ bool MsIoBox::acceptFrame(const CANRxFrame& frame) const {
 
 /* Ping iobox */
 int MsIoBox::ping() {
-	CanTxTyped<iobox_ping> frame(CanCategory::MEGASQUIRT, m_base + CAN_IOBOX_PING, false, 0);
+	CanTxTyped<iobox_ping> frame(CanCategory::CAN_IOBOX, m_base + CAN_IOBOX_PING, false, 0);
 
 	return 0;
 }
 
 /* Send init settings */
 int MsIoBox::setup() {
-	CanTxTyped<iobox_cfg> cfg(CanCategory::MEGASQUIRT, m_base + CAN_IOBOX_CONFIG, false, 0);
+	CanTxTyped<iobox_cfg> cfg(CanCategory::CAN_IOBOX, m_base + CAN_IOBOX_CONFIG, false, 0);
 
 	cfg->pwm_mask = OutMode;
 	cfg->tachin_mask = InMode;
@@ -334,7 +334,7 @@ int MsIoBox::update() {
 		if ((OutMode & (BIT(i) | BIT(i + 1))) == 0)
 			continue;
 
-		CanTxTyped<iobox_pwm> pwm(CanCategory::MEGASQUIRT, m_base + CAN_IOBOX_SET_PWM(i), false, 0);
+		CanTxTyped<iobox_pwm> pwm(CanCategory::CAN_IOBOX, m_base + CAN_IOBOX_SET_PWM(i), false, 0);
 		for (size_t j = 0; j < 2; j++) {
 			CalcOnOffPeriod(i + j, pwm->ch[j]);
 		}
@@ -342,7 +342,7 @@ int MsIoBox::update() {
 
 	/* PWM7 periods and on/off outputs bitfield - sent always */
 	{
-		CanTxTyped<iobox_pwm_last> pwm(CanCategory::MEGASQUIRT, m_base + CAN_IOBOX_SET_PWM(3), false, 0);
+		CanTxTyped<iobox_pwm_last> pwm(CanCategory::CAN_IOBOX, m_base + CAN_IOBOX_SET_PWM(3), false, 0);
 
 		CalcOnOffPeriod(MSIOBOX_OUT_COUNT - 1, pwm->ch[0]);
 
