@@ -205,11 +205,32 @@ TEST(CanWideband, DecodeRusefiStandard)
 	// data = 1234 deg C
 	*reinterpret_cast<uint16_t*>(&frame.data8[4]) = 1234;
 
+	CANRxFrame diagFrame;
+	diagFrame.SID = 0x191;
+	diagFrame.IDE = false;
+	diagFrame.DLC = 8;
+
+	// ESR
+	*reinterpret_cast<uint16_t*>(&diagFrame.data8[0]) = 720;
+
+	// nernst DC
+	*reinterpret_cast<uint16_t*>(&diagFrame.data8[2]) = 450;
+
+	// PumpDuty
+	diagFrame.data8[4] = 127;
+
+	// Status
+	diagFrame.data8[5] = 0;
+
+	// HeaterDuty
+	diagFrame.data8[6] = 127;
+
 	// check not set
 	EXPECT_FLOAT_EQ(-1, Sensor::get(SensorType::Lambda1).value_or(-1));
 
 	// check that lambda updates
 	dut.processFrame(frame, getTimeNowNt());
+	dut.processFrame(diagFrame, getTimeNowNt());
 	EXPECT_FLOAT_EQ(0.7f, Sensor::get(SensorType::Lambda1).value_or(-1));
 
 	// Check that temperature updates
@@ -218,7 +239,26 @@ TEST(CanWideband, DecodeRusefiStandard)
 	// Check that valid bit is respected (should be invalid now)
 	frame.data8[1] = 0;
 	dut.processFrame(frame, getTimeNowNt());
+	dut.processFrame(diagFrame, getTimeNowNt());
 	EXPECT_FLOAT_EQ(-1, Sensor::get(SensorType::Lambda1).value_or(-1));
+
+	// ...but no error until egine is runnig
+	EXPECT_EQ(HACK_CRANKING_VALUE, dut.faultCode);
+
+	// Now driver should handle valid bit and error states from wbo
+	engine->engineState.heaterControlEnabled = true;
+	dut.processFrame(frame, getTimeNowNt());
+	dut.processFrame(diagFrame, getTimeNowNt());
+	EXPECT_EQ(HACK_INVALID_RE, dut.faultCode);
+	EXPECT_FLOAT_EQ(-1, Sensor::get(SensorType::Lambda1).value_or(-1));
+
+	// make valid again, but report WBO error in diagnostic frame
+	frame.data8[1] = 1;
+	diagFrame.data8[5] = (uint8_t)wbo::Fault::SensorNoHeatSupply;
+	dut.processFrame(frame, getTimeNowNt());
+	dut.processFrame(diagFrame, getTimeNowNt());
+	EXPECT_EQ((uint8_t)wbo::Fault::SensorNoHeatSupply, dut.faultCode);
+	EXPECT_FLOAT_EQ(0.7f, Sensor::get(SensorType::Lambda1).value_or(-1));
 }
 
 TEST(CanWideband, DecodeRusefiStandardWrongVersion)
