@@ -7,15 +7,6 @@
 static constexpr uint32_t aem_base    = 0x180;
 static constexpr uint32_t rusefi_base = WB_DATA_BASE_ADDR;
 
-// "silent" of wboFaultCodeList
-#define HACK_SILENT_VALUE 1
-// todo: suggest values 1 and 2 into the official WB source fault enum?
-#define HACK_CRANKING_VALUE 2
-// todo: static_cast<uint8_t>(Fault::LegacyProtocol);
-#define HACK_VALID_AEM 7
-#define HACK_INVALID_AEM 8
-#define HACK_INVALID_RE	9
-
 AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
 	: CanSensorBase(
 		0,	// ID passed here doesn't matter since we override acceptFrame
