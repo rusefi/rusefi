@@ -1,4 +1,6 @@
 /**
+ * binary_logging.cpp
+ *
  * See also BinarySensorLog.java
  * See also mlq_file_format.txt
  *
