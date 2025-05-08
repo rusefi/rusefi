@@ -225,7 +225,7 @@ static void slowAdcEndCB(ADCDriver *adcp) {
 }
 #endif
 
-static bool readBatch(adcsample_t* convertedSamples, adcsample_t* b, size_t start) {
+static bool readBatch(adcsample_t* convertedSamples, adcsample_t* b) {
 #if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == FALSE)
 	msg_t result = adcConvert(&ADCD1, &convGroupSlow, b, SLOW_ADC_OVERSAMPLE);
 
@@ -245,7 +245,7 @@ static bool readBatch(adcsample_t* convertedSamples, adcsample_t* b, size_t star
 		}
 
 		adcsample_t value = static_cast<adcsample_t>(sum / SLOW_ADC_OVERSAMPLE);
-		convertedSamples[start + i] = value;
+		convertedSamples[i] = value;
 	}
 
 	return true;
@@ -254,14 +254,14 @@ static bool readBatch(adcsample_t* convertedSamples, adcsample_t* b, size_t star
 bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 	bool result = true;
 
-	result &= readBatch(convertedSamples, (adcsample_t *)slowSampleBuffer, 0);
+	result &= readBatch(convertedSamples, (adcsample_t *)slowSampleBuffer);
 
 #ifdef ADC_MUX_PIN
 	#if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == FALSE)
 		muxControl.setValue(1, /*force*/true);
 	#endif
 		// read the second batch, starting where we left off
-		result &= readBatch(convertedSamples, (adcsample_t *)slowSampleBufferMuxed, adcChannelCount);
+		result &= readBatch(&convertedSamples[adcChannelCount], (adcsample_t *)slowSampleBufferMuxed);
 	#if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == FALSE)
 		muxControl.setValue(0, /*force*/true);
 	#endif
