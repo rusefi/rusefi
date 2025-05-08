@@ -14,6 +14,9 @@
 
 #if HAL_USE_ADC
 
+/* HW channels count per ADC */
+constexpr size_t adcChannelCount = 16;
+
 /* Depth of the conversion buffer, channels are sampled X times each.*/
 #define SLOW_ADC_OVERSAMPLE      8
 
@@ -102,17 +105,10 @@ float getMcuTemperature() {
 // This ^ does not include additional MCU temperatur conversions
 
 // Slow ADC has 16 channels we can sample, or 32 if ADC mux mode is enabled.
-#if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == TRUE)
-	#ifdef ADC_MUX_PIN
-		constexpr size_t adcChannelCount = 16 * 2;
-	#else
-		constexpr size_t adcChannelCount = 16;
-	#endif
-#else
-	constexpr size_t adcChannelCount = 16;
-#endif
-
 static volatile NO_CACHE adcsample_t slowSampleBuffer[SLOW_ADC_OVERSAMPLE * adcChannelCount];
+#ifdef ADC_MUX_PIN
+static volatile NO_CACHE adcsample_t slowSampleBufferMuxed[SLOW_ADC_OVERSAMPLE * adcChannelCount];
+#endif
 
 static void slowAdcErrorCB(ADCDriver *, adcerror_t err) {
 	engine->outputChannels.slowAdcErrorCount++;
@@ -126,7 +122,7 @@ static void slowAdcErrorCB(ADCDriver *, adcerror_t err) {
 // This simply samples every channel in sequence
 static constexpr ADCConversionGroup convGroupSlow = {
 	.circular			= FALSE,
-	.num_channels		= 16,
+	.num_channels		= adcChannelCount,
 #if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == TRUE)
 	.end_cb				= slowAdcEndCB,
 #else
@@ -179,7 +175,7 @@ static void slowAdcEndCB(ADCDriver *adcp) {
 				slowAdcState = 1;
 				muxControl.setValue(1, /*force*/true);
 				// convert second half
-				adcStartConversionI(adcp, &convGroupSlow, (adcsample_t *)&slowSampleBuffer[SLOW_ADC_OVERSAMPLE * adcChannelCount / 2], SLOW_ADC_OVERSAMPLE);
+				adcStartConversionI(adcp, &convGroupSlow, (adcsample_t *)slowSampleBufferMuxed, SLOW_ADC_OVERSAMPLE);
 			#else
 				slowAdcState = 2;
 				adcStartConversionI(adcp, &tempSensorConvGroup, (adcsample_t *)tempSensorSamples, tempSensorOversample);
@@ -214,7 +210,7 @@ static bool readBatch(adcsample_t* convertedSamples, adcsample_t* b, size_t star
 #endif
 
 	// Average samples to get some noise filtering and oversampling
-	for (size_t i = 0; i < 16; i++) {
+	for (size_t i = 0; i < adcChannelCount; i++) {
 		uint32_t sum = 0;
 		size_t index = i;
 		for (size_t j = 0; j < SLOW_ADC_OVERSAMPLE; j++) {
@@ -239,7 +235,7 @@ bool readSlowAnalogInputs(adcsample_t* convertedSamples) {
 		muxControl.setValue(1, /*force*/true);
 	#endif
 		// read the second batch, starting where we left off
-		result &= readBatch(convertedSamples, (adcsample_t *)&slowSampleBuffer[SLOW_ADC_OVERSAMPLE * adcChannelCount / 2], 16);
+		result &= readBatch(convertedSamples, (adcsample_t *)slowSampleBufferMuxed, adcChannelCount);
 	#if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == FALSE)
 		muxControl.setValue(0, /*force*/true);
 	#endif
