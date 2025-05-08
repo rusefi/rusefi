@@ -160,8 +160,38 @@ static constexpr ADCConversionGroup convGroupSlow = {
 };
 
 #if (EFI_INTERNAL_SLOW_ADC_BACKGROUND == TRUE)
-// TODO: enum
-static int slowAdcState = 0;
+
+typedef enum {
+	convertPrimary,
+#ifdef ADC_MUX_PIN
+	convertMuxed,
+#endif
+	convertTemperature
+} slowAdcState_t;
+
+static slowAdcState_t slowAdcGetNextState(slowAdcState_t state)
+{
+	switch (state) {
+	case convertPrimary:
+		#ifdef ADC_MUX_PIN
+		return convertMuxed;
+		#else
+		return convertTemperature;
+		#endif
+	break;
+#ifdef ADC_MUX_PIN
+	case convertMuxed:
+		return convertTemperature;
+	break;
+#endif
+	case convertTemperature:
+		return convertPrimary;
+	break;
+	}
+	return convertPrimary;
+}
+
+static slowAdcState_t slowAdcState = convertPrimary;
 
 static void slowAdcEndCB(ADCDriver *adcp) {
 	if (adcIsBufferComplete(adcp)) {
@@ -170,29 +200,25 @@ static void slowAdcEndCB(ADCDriver *adcp) {
 		//adcStopConversionI(adcp);
 		// Switch state to ready to allow starting new conversion from here
 		adcp->state = ADC_READY;
-		if (slowAdcState == 0) {
+		// get next state
+		slowAdcState = slowAdcGetNextState(slowAdcState);
+		switch (slowAdcState) {
+		case convertPrimary:
 			#ifdef ADC_MUX_PIN
-				slowAdcState = 1;
-				muxControl.setValue(1, /*force*/true);
-				// convert second half
-				adcStartConversionI(adcp, &convGroupSlow, (adcsample_t *)slowSampleBufferMuxed, SLOW_ADC_OVERSAMPLE);
-			#else
-				slowAdcState = 2;
-				adcStartConversionI(adcp, &tempSensorConvGroup, (adcsample_t *)tempSensorSamples, tempSensorOversample);
-			#endif
-			}
-		#ifdef ADC_MUX_PIN
-		else if (slowAdcState == 1) {
-				slowAdcState = 2;
-				adcStartConversionI(adcp, &tempSensorConvGroup, (adcsample_t *)tempSensorSamples, tempSensorOversample);
-		}
-		#endif
-		else if (slowAdcState == 2) {
-			slowAdcState = 0;
-			#ifdef ADC_MUX_PIN
-				muxControl.setValue(0, /*force*/true);
+			muxControl.setValue(0, /*force*/true);
 			#endif
 			adcStartConversionI(adcp, &convGroupSlow, (adcsample_t *)slowSampleBuffer, SLOW_ADC_OVERSAMPLE);
+			break;
+		#ifdef ADC_MUX_PIN
+		case convertMuxed:
+			muxControl.setValue(1, /*force*/true);
+			// convert second half
+			adcStartConversionI(adcp, &convGroupSlow, (adcsample_t *)slowSampleBufferMuxed, SLOW_ADC_OVERSAMPLE);
+			break;
+		#endif
+		case convertTemperature:
+			adcStartConversionI(adcp, &tempSensorConvGroup, (adcsample_t *)tempSensorSamples, tempSensorOversample);
+			break;
 		}
 		chSysUnlockFromISR();
 	}
