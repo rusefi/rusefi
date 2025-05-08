@@ -22,15 +22,24 @@ public class MetaHelper {
     public static final String ENGINE_CONFIGURATION_S = "engine_configuration_s";
 
     @NotNull
-    static ReaderStateImpl getReaderState(String boardConfig) throws IOException {
+    static ReaderStateImpl getReaderState(String boardPath) throws IOException {
         List<String> options = Files.readAllLines(Paths.get(RootHolder.ROOT + "../" + ConfigDefinition.CONFIG_PATH));
+        List<String> boardOptions = Files.readAllLines(Paths.get(RootHolder.ROOT + boardPath + "board_config.txt"));
+       
         options.add(ConfigDefinition.KEY_PREPEND);
         options.add("integration/rusefi_config_shared.txt");
-        // add default (empty) board config
+
+        // add board prepend
+        options.add(ConfigDefinition.KEY_PREPEND);
+        options.add(boardPath + "prepend.txt");
+
+        // add board config
+        // TODO: this is not correctly registered, see hack below on "state.getVariableRegistry().register"
         options.add(ConfigDefinition.READFILE_OPTION);
         options.add(BoardConfigStrategy.BOARD_CONFIG_FROM_FILE);
-        options.add(boardConfig);
+        options.add(boardPath + "board_config.txt");
 
+        // add default (empty) board config
         options.add(ConfigDefinition.READFILE_OPTION);
         options.add("BOARD_ENGINE_CONFIGURATION_FROM_FILE");
         options.add("tunerstudio/empty_board_options.ini");
@@ -41,6 +50,8 @@ public class MetaHelper {
         if (TuneContext.boardPrepend != null)
             state.getVariableRegistry().readPrependValues(TuneContext.boardPrepend, false);
 
+        state.getVariableRegistry().register(BoardConfigStrategy.BOARD_CONFIG_FROM_FILE, String.join("\n", boardOptions));
+        
         ConfigDefinition.doJob(totalArgs, state);
         return state;
     }

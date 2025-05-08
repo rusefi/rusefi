@@ -21,8 +21,8 @@ public class TuneTools {
     }
 
     @NotNull
-    public static String getAssignmentCode(Constant defaultValue, String name, String value) {
+    public static String getAssignmentCode(Constant defaultValue, String parent ,String name, String value) {
         return "    // default " + defaultValue.getValue() + "\n" +
-                "    engineConfiguration->" + name + " = " + value + ";\n";
+                "    " + parent + name + " = " + value + ";\n";
     }
 }
