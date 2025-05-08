@@ -123,7 +123,7 @@ static size_t writeSdBlock(Writer& outBuffer) {
 	for (size_t fieldIndex = 0; fieldIndex < efi::size(fields); fieldIndex++) {
 		#if EFI_UNIT_TEST
 			// dark magic: most elements of log_fields_generated.h were const-evaluated against 'nullptr' engine, let's add it!
-			void *offset = fields[fieldIndex].needsEngineOffsetHack() ? engine : nullptr;
+			void *offset = fields[fieldIndex].needsEngineOffsetHack(sizeof(*engine)) ? engine : nullptr;
 		#else
 			void *offset = nullptr;
 		#endif
