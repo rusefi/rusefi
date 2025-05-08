@@ -90,9 +90,9 @@ public:
 	size_t writeData(char* buffer, void *offset) const;
 
 #if EFI_UNIT_TEST
-  bool needsEngineOffsetHack() const {
+  bool needsEngineOffsetHack(size_t size) const {
     // low addresses are offsets without engine reference
-    return (intptr_t)m_addr < 1'000'000'000;
+    return (intptr_t)m_addr < size;
   }
 #endif
 
