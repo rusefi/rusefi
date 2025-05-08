@@ -196,8 +196,6 @@ static slowAdcState_t slowAdcState = convertPrimary;
 static void slowAdcEndCB(ADCDriver *adcp) {
 	if (adcIsBufferComplete(adcp)) {
 		chSysLockFromISR();
-		// Stop ADC to reset DMA and internal state machine to avoid spurious DMA request
-		//adcStopConversionI(adcp);
 		// Switch state to ready to allow starting new conversion from here
 		adcp->state = ADC_READY;
 		// get next state
