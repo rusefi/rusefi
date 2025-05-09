@@ -1429,7 +1429,7 @@
 #define show_HellenNB2_presets true
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 65141290
+#define SIGNATURE_HASH 3811408648
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1840,6 +1840,12 @@
 #define ts_show_gdi false
 #define ts_show_gdi_low_level true
 #define ts_show_globalTriggerAngleOffset true
+#define ts_show_gppwm1_pin true
+#define ts_show_gppwm2_pin true
+#define ts_show_gppwm3_error_value true
+#define ts_show_gppwm3_frequency true
+#define ts_show_gppwm3_pin true
+#define ts_show_gppwm4_pin true
 #define ts_show_hardware_simulator false
 #define ts_show_hbridge_function true
 #define ts_show_hd true
@@ -1933,7 +1939,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.05.08.hellen72.65141290"
+#define TS_SIGNATURE "rusEFI master.2025.05.09.hellen72.3811408648"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
