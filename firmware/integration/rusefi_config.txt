@@ -592,6 +592,16 @@ uint32_t cylindersCount;Number of cylinder the engine has.;"", 1, 0, 1, @@MAX_CY
 #define ts_show_wbo_canbus_set_index true
 #define ts_show_analog_ego true
 #define ts_show_ego2 true
+
+#define ts_show_gppwm1_pin true
+#define ts_show_gppwm2_pin true
+
+#define ts_show_gppwm3_pin true
+#define ts_show_gppwm3_frequency true
+#define ts_show_gppwm3_error_value true
+
+#define ts_show_gppwm4_pin true
+
 #define ts_show_exhaust_vvt true
 #define ts_show_second_bank true
 #define ts_show_trigger_advanced true
