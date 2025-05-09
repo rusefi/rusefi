@@ -25,8 +25,8 @@
 #define PIN_21A_switch_inputs H144_IN_SENS1
 #define PIN_22A_event_inputs H144_IN_AUX2_DIGITAL
 #define PIN_22A_switch_inputs H144_IN_AUX2_DIGITAL
-#define PIN_22A_analog_inputs H144_IN_AUX2
-#define PIN_23A H144_IN_AUX4
+#define PIN_22A_analog_inputs H144_IN_AUX2_ANALOG
+#define PIN_23A H144_IN_AUX4_ANALOG
 #define PIN_24A H144_IN_MAP3
 #define PIN_27A_event_inputs H144_IN_SENS2
 #define PIN_27A_switch_inputs H144_IN_SENS2
