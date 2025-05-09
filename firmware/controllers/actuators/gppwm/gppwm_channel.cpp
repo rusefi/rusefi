@@ -46,11 +46,20 @@ void GppwmChannel::init(bool usePwm, IPwm* pwm, OutputPin* outputPin, const Valu
 	m_config = p_config;
 }
 
-GppwmResult GppwmChannel::getOutput() const {
+/*PUBLIC_API_WEAK*/ expected<float> boardOverrideGppwm(size_t index) {
+  return unexpected;
+}
+
+GppwmResult GppwmChannel::getOutput(size_t index) const {
 	expected<float> xAxisValue = readGppwmChannel(m_config->rpmAxis);
 	expected<float> yAxisValue = readGppwmChannel(m_config->loadAxis);
 
 	GppwmResult result	{ (float)m_config->dutyIfError, xAxisValue.value_or(0), yAxisValue.value_or(0) };
+  expected<float> override = boardOverrideGppwm(index);
+  if (override) {
+	  result.Result = override.Value;
+	  return result;
+  }
 
 	// If we couldn't get load axis value, fall back on error value
 	if (!xAxisValue || !yAxisValue) {
@@ -67,13 +76,13 @@ GppwmResult GppwmChannel::getOutput() const {
 	return result;
 }
 
-GppwmResult GppwmChannel::update() {
+GppwmResult GppwmChannel::update(size_t index) {
 	// Without a config, nothing to do.
 	if (!m_config) {
 		return {};
 	}
 
-	auto output = getOutput();
+	auto output = getOutput(index);
 	output.Result = setOutput(output.Result);
 
 	return output;

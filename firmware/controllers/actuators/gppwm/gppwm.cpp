@@ -57,7 +57,7 @@ void initGpPwm() {
 
 void updateGppwm() {
 	for (size_t i = 0; i < efi::size(channels); i++) {
-		auto result = channels[i].update();
+		auto result = channels[i].update(i);
 
 		engine->outputChannels.gppwmOutput[i] = result.Result;
 		engine->outputChannels.gppwmXAxis[i] = result.X;

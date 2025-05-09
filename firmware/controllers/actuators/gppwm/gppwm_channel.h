@@ -18,8 +18,8 @@ struct GppwmResult {
 class GppwmChannel {
 public:
 	void init(bool usePwm, IPwm* pwm, OutputPin* outputPin, const ValueProvider3D* table, const gppwm_channel* config);
-	GppwmResult update();
-	GppwmResult getOutput() const;
+	GppwmResult update(size_t index);
+	GppwmResult getOutput(size_t index) const;
 
 	// Returns actual output duty, with hysteresis applied
 	float setOutput(float result);
