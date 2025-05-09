@@ -215,7 +215,8 @@ int boardGetAnalogDiagnostic();
 
 // A22
 #define H144_IN_D_AUX3 C5
-// it's a MESS see also H144_IN_D_AUX4_DIGITAL
+#define H144_IN_D_AUX3_ANALOG EFI_ADC_15
+// it's a MESS see also H144_IN_AUX4_DIGITAL
 // A20 AIN20
 #define H144_IN_D_AUX4 A7
 

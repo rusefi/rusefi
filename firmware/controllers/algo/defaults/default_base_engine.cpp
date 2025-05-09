@@ -199,6 +199,8 @@ void setDefaultBaseEngine() {
 	engineConfiguration->lowPressureFuel.v2 = 5;
 	engineConfiguration->lowPressureFuel.value2 = 100;
 
+	engineConfiguration->wastegatePositionOpenedVoltage = 4.0;
+
   engineConfiguration->fuelLevelAveragingAlpha = engine_configuration_defaults::FUEL_LEVEL_AVERAGING_ALPHA;
   engineConfiguration->fuelLevelUpdatePeriodSec = engine_configuration_defaults::FUEL_LEVEL_UPDATE_PERIOD_SEC;
   engineConfiguration->fuelLevelLowThresholdVoltage = engine_configuration_defaults::FUEL_LEVEL_LOW_THRESHOLD_VOLTAGE;
