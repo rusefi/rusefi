@@ -135,7 +135,7 @@ pins:
     color: white
 
   - pin: 22A
-    id: [H144_IN_AUX2_DIGITAL, H144_IN_AUX2_DIGITAL, H144_IN_AUX2]
+    id: [H144_IN_AUX2_DIGITAL, H144_IN_AUX2_DIGITAL, H144_IN_AUX2_ANALOG]
     class: [event_inputs, switch_inputs, analog_inputs]
     function: Input 2 Digital / Analog / SENT
     ts_name: ___ Input 2
@@ -144,7 +144,7 @@ pins:
   - pin: 23A
     function: Fuel Low Pressure
     type: av
-    meta: H144_IN_AUX4
+    meta: H144_IN_AUX4_ANALOG
     class: analog_inputs
     ts_name: ___ Fuel Low Pressure
 

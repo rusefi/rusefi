@@ -97,7 +97,7 @@ pins:
     color: orange
 
   - pin: 15D
-    # H144_IN_AUX4
+    # H144_IN_AUX4_ANALOG
     id: EFI_ADC_7
     class: analog_inputs
     function: Analog 5

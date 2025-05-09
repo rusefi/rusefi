@@ -164,7 +164,7 @@ pins:
     function: Knock sensor 2 / AUX digital (TODO analog) input 8
 
   - pin: 23A
-    id: [H144_IN_AUX2_DIGITAL, H144_IN_AUX2_DIGITAL, H144_IN_AUX2]
+    id: [H144_IN_AUX2_DIGITAL, H144_IN_AUX2_DIGITAL, H144_IN_AUX2_ANALOG]
     class: [event_inputs, switch_inputs, analog_inputs]
     type: hall
     ts_name: ___ - Digital/analog Input 4

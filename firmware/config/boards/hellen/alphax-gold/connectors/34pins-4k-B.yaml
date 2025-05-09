@@ -180,7 +180,7 @@ pins:
     function: Digital Input 6 (cannot be used simultaneously with VR3)
 
   - pin: 25B
-    id: [H144_IN_AUX3_DIGITAL, H144_IN_AUX3_DIGITAL, H144_IN_AUX3]
+    id: [H144_IN_AUX3_DIGITAL, H144_IN_AUX3_DIGITAL, H144_IN_AUX3_ANALOG]
     class: [event_inputs, switch_inputs, analog_inputs]
     type: hall
     ts_name: ___ - Digital/analog Input 5
@@ -203,7 +203,7 @@ pins:
     color: black
 
   - pin: 28B
-    meta: H144_IN_AUX1
+    meta: H144_IN_AUX1_ANALOG
     class: analog_inputs
     ts_name: ___ AUX1
     function: AUX input 1

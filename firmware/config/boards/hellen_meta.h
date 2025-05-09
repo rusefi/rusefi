@@ -172,19 +172,20 @@ int boardGetAnalogDiagnostic();
 #define H144_ADC_IN_RES3 ADC_CHANNEL_IN6
 
 
-#define H144_IN_AUX1 EFI_ADC_8
+#define H144_IN_AUX1_ANALOG EFI_ADC_8
 #define H144_IN_AUX1_DIGITAL B0
-#define H144_IN_AUX2 EFI_ADC_14
+#define H144_IN_AUX2_ANALOG EFI_ADC_14
 // fun fact: same input goes to TWO stm32 pins so that we can use it both as analog and ICU capture
 //#define H144_IN_AUX2_DIGITAL C4
 // TIM1_CH1
 #define H144_IN_AUX2_DIGITAL E9
 
 // AIN20 PA7
-#define H144_IN_AUX3 EFI_ADC_7
+#define H144_IN_AUX3_ANALOG EFI_ADC_7
 #define H144_IN_AUX3_DIGITAL A7
+// it's a mess see also H144_IN_D_AUX4
 // AIN22 PC5
-#define H144_IN_AUX4 EFI_ADC_15
+#define H144_IN_AUX4_ANALOG EFI_ADC_15
 #define H144_IN_AUX4_DIGITAL C5
 
 // A1 AIN1 no code to use ADC3 as analog, ADC3_IN9 for knock
@@ -214,6 +215,7 @@ int boardGetAnalogDiagnostic();
 
 // A22
 #define H144_IN_D_AUX3 C5
+// it's a MESS see also H144_IN_D_AUX4_DIGITAL
 // A20 AIN20
 #define H144_IN_D_AUX4 A7
 

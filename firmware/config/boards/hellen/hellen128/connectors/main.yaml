@@ -28,7 +28,7 @@ pins:
     ts_name: P40_IN_MAP3
 
   - pin: P41
-    # H144_IN_AUX3 AIN22 PC5
+    # H144_IN_AUX3_ANALOG AIN22 PC5
     id: [C5, EFI_ADC_15]
     class: [switch_inputs, analog_inputs]
     ts_name: P41_IN_AUX3
@@ -73,7 +73,7 @@ pins:
     function: NC
     type:
 
-  - pin: A2    
+  - pin: A2
     function: ECU power supply from ignition key
     class: analog_inputs
     id: EFI_ADC_5
@@ -86,10 +86,10 @@ pins:
 
   - pin: A4
     function: NC
-    
+
   - pin: A5
     function: NC
-    
+
   - pin: A6
     id: D12
     class: outputs
@@ -165,10 +165,10 @@ pins:
 
   - pin: C16
     function: NC
-    
+
   - pin: C17
     function: NC
-    
+
   - pin: C18
     function: NC
 
@@ -177,7 +177,7 @@ pins:
 
   - pin: C20
     function: NC
-    
+
   - pin: C21
     id: H14
     class: outputs
@@ -185,7 +185,7 @@ pins:
     function: low side solenoid control
     type: ls
 
-  - pin: C22    
+  - pin: C22
     function: sensor +5v feed
     type: 5v
 
@@ -198,18 +198,18 @@ pins:
     class: [event_inputs, analog_inputs]
     ts_name: C24 - PPS1
     function: PPS1 analog input
-    
+
   - pin: C25
     id: [C4, EFI_ADC_14]
     class: [event_inputs, analog_inputs]
     ts_name: C25 - PPS2
     function: PPS2 analog input
-    
+
   - pin: C26
     function: analog GND
     type: gnd
 
-  - pin: C27    
+  - pin: C27
     function: sensor +5v feed
     type: 5v
 
@@ -252,7 +252,7 @@ pins:
 
   - pin: C39
     function: K-line/Lin
- 
+
   - pin: C40
     id: [F10]
     class: [switch_inputs]
@@ -286,12 +286,12 @@ pins:
 
   - pin: D10
     function: NC
-    
-  - pin: D11    
+
+  - pin: D11
     function: CAN_H
     type: can
 
-  - pin: D12    
+  - pin: D12
     function: CAN_L
     type: can
 
@@ -330,7 +330,7 @@ pins:
 
   - pin: D24
     function: Test Point P14
-    
+
   - pin: E1
     id: G7
     class: outputs
@@ -411,14 +411,14 @@ pins:
 
   - pin: E19
     function: NC
-    
+
   - pin: E20
     function: NC
 
   - pin: E21
     function: NC
 
-  - pin: E22    
+  - pin: E22
     function: sensor +5v feed
     type: 5v
 
@@ -477,7 +477,7 @@ pins:
     function: analog GND
     type: gnd
 
-  - pin: E33    
+  - pin: E33
     function: sensor +5v feed
     type: 5v
 
@@ -501,7 +501,7 @@ pins:
     function: VR-
     type: vr
 
-  - pin: E38    
+  - pin: E38
     function: VR+
     type: vr
 
@@ -519,8 +519,8 @@ pins:
   - pin: E41
     function: knock1 sensor GND
     type: gnd
-    
-  - pin: E42    
+
+  - pin: E42
     ts_name: E42 - KNOCK1
     function: knock1 sensor signal
 
@@ -538,7 +538,7 @@ pins:
     function: analog input IAT
     type: av
 
-  - pin: E46   
+  - pin: E46
     function: sensor +5v feed
     type: 5v
 
@@ -557,7 +557,7 @@ pins:
     ts_name: F1 - ETB (-)
     function: DC Motor -
 
-  - pin: F2    
+  - pin: F2
     ts_name: F2 ETB (+)
     function: DC Motor +
 
@@ -566,13 +566,13 @@ pins:
 
   - pin: F4
     id: E2
-    class: outputs 
+    class: outputs
     ts_name: F4 - IGN 5
-    function: igniter 
+    function: igniter
     type: ign
 
   - pin: F5
-    function: igniter 
+    function: igniter
     type: ign
 
   - pin: F6
@@ -653,7 +653,7 @@ pins:
   - pin: F19
     function: igniter
     type: ign
-    
+
   - pin: F20
 # OUT_IGN1 Q1
 # CLK230

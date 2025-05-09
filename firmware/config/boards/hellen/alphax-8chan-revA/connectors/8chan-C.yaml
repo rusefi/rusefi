@@ -13,7 +13,7 @@ pins:
     ts_name: 5C - Hall Input 4
 
   - pin: 6C
-    # H144_IN_AUX2
+    # H144_IN_AUX2_ANALOG
     id: EFI_ADC_14
     class: analog_inputs
     function: PPS2 Sensor Input
@@ -52,7 +52,7 @@ pins:
     color: orange
 
   - pin: 16C
-    # H144_IN_AUX1
+    # H144_IN_AUX1_ANALOG
     id: EFI_ADC_8
     class: analog_inputs
     function: TPS2 Sensor Input
@@ -99,7 +99,7 @@ pins:
     type: ign
     ts_name: 21C - Ignition 5
     color: yellow
-  
+
 
   - pin: 25C
     function: Analog Ground
