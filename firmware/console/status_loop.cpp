@@ -449,7 +449,22 @@ static void updateVvtSensors() {
 static void updateVehicleSpeed() {
 #if EFI_VEHICLE_SPEED
 	engine->outputChannels.vehicleSpeedKph = Sensor::getOrZero(SensorType::VehicleSpeed);
+
+	engine->outputChannels.vehicleSpeedKph1 = Sensor::getOrZero(SensorType::WheelSpeedFL);
+	engine->outputChannels.vehicleSpeedKph2 = Sensor::getOrZero(SensorType::WheelSpeedFR);
+	engine->outputChannels.vehicleSpeedKph3 = Sensor::getOrZero(SensorType::WheelSpeedRL);
+	engine->outputChannels.vehicleSpeedKph4 = Sensor::getOrZero(SensorType::WheelSpeedRR);
+
+	engine->outputChannels.vehicleSpeedKphFrontAvg = Sensor::getOrZero(SensorType::WheelSpeedFrontAvg);
+	engine->outputChannels.vehicleSpeedKphRearAvg = Sensor::getOrZero(SensorType::WheelSpeedRearAvg);
+
 	engine->outputChannels.wheelSlipRatio = Sensor::getOrZero(SensorType::WheelSlipRatio);
+	engine->outputChannels.wheelSlipRatioFrontRear = Sensor::getOrZero(SensorType::WheelSlipRatioFrontRear);
+	engine->outputChannels.wheelSlipRatioLeftRightFRONT = Sensor::getOrZero(SensorType::WheelSlipRatioLeftRightFRONT);
+	engine->outputChannels.wheelSlipRatioLeftRightREAR  = Sensor::getOrZero(SensorType::WheelSlipRatioLeftRightREAR);
+
+
+
 #ifdef MODULE_GEAR_DETECTOR
 	engine->outputChannels.speedToRpmRatio = engine->module<GearDetector>()->getGearboxRatio();
 	engine->outputChannels.detectedGear = Sensor::getOrZero(SensorType::DetectedGear);
@@ -542,6 +557,9 @@ static void updateMiscSensors() {
 	engine->outputChannels.ISSValue = Sensor::getOrZero(SensorType::InputShaftSpeed);
 	engine->outputChannels.auxSpeed1 = Sensor::getOrZero(SensorType::AuxSpeed1);
 	engine->outputChannels.auxSpeed2 = Sensor::getOrZero(SensorType::AuxSpeed2);
+	engine->outputChannels.auxSpeed3 = Sensor::getOrZero(SensorType::AuxSpeed3);
+	engine->outputChannels.auxSpeed4 = Sensor::getOrZero(SensorType::AuxSpeed4);
+
 
 #if	HAL_USE_ADC
 	engine->outputChannels.internalMcuTemperature = getMCUInternalTemperature();

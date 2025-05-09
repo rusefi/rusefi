@@ -84,6 +84,12 @@ enum class SensorType : unsigned char {
 
 	VehicleSpeed,
 	WheelSlipRatio,
+	WheelSlipRatioFrontRear,
+	WheelSlipRatioLeftRightREAR,
+	WheelSlipRatioLeftRightFRONT,
+    WheelSpeedFrontAvg,
+  	WheelSpeedRearAvg,
+	WheelSpeedFrontRearAvg,
 
 	TurbochargerSpeed,
 
@@ -159,9 +165,17 @@ enum class SensorType : unsigned char {
 	AuxLinear3,
 	AuxLinear4,
 
+	// wheel speed sensors
+	WheelSpeedFL,
+	WheelSpeedFR,
+	WheelSpeedRL,
+	WheelSpeedRR,
+
 	// frequency sensors
 	AuxSpeed1,
-	AuxSpeed2,
+    AuxSpeed2,
+    AuxSpeed3,
+    AuxSpeed4,
 
 	// Let's always have all auxiliary sensors at the end - please add specific sensors above auxiliary
 

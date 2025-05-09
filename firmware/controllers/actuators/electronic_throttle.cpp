@@ -64,7 +64,9 @@
 
 static pedal2tps_t pedal2tpsMap{"p2t"};
 static Map3D<ETB2_TRIM_SIZE, ETB2_TRIM_SIZE, int8_t, uint8_t, uint8_t> throttle2TrimTable{"t2t"};
-static Map3D<TRACTION_CONTROL_ETB_DROP_SIZE, TRACTION_CONTROL_ETB_DROP_SIZE, int8_t, uint16_t, uint8_t> tcEtbDropTable{"tce"};
+
+static Map3D<TRACTION_CONTROL_ETB_DROP_SIZE, TRACTION_CONTROL_ETB_DROP_SIZE, float, uint8_t, float> tcEtbLeftRightDropTable{"tcelr"};
+static Map3D<TRACTION_CONTROL_ETB_DROP_SIZE, TRACTION_CONTROL_ETB_DROP_SIZE, float, uint8_t, float> tcEtbFrontRearDropTable{"tcefr"};
 
 constexpr float etbPeriodSeconds = 1.0f / ETB_LOOP_FREQUENCY;
 
@@ -288,6 +290,9 @@ PUBLIC_API_WEAK float boardAdjustEtbTarget(float currentEtbTarget) {
 }
 
 expected<percent_t> EtbController::getSetpointEtb() {
+	float vehicleSpeedLeftRight = 0;
+	float vehicleSpeedFrontRear = 0;
+	float wheelSlipLeftRight = 1;
 	// Autotune runs with 50% target position
 	if (m_isAutotune) {
 		return 50.0f;
@@ -328,9 +333,42 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	}
 #endif /* EFI_ANTILAG_SYSTEM */
 
-  float vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);
-  float wheelSlip = Sensor::getOrZero(SensorType::WheelSlipRatio);
-  tcEtbDrop = tcEtbDropTable.getValue(wheelSlip, vehicleSpeed);
+	float vehicleSpeed = Sensor::getOrZero(SensorType::VehicleSpeed);
+
+  // based on drivetrain layout, we get left/right vehicle speed from wheels that wouldn't be spinning
+  if (engineConfiguration->drive_train_layout == DRIVETRAIN_RWD || engineConfiguration->drive_train_layout == DRIVETRAIN_AWD) {
+  	 vehicleSpeedLeftRight = Sensor::getOrZero(SensorType::WheelSpeedFrontAvg);
+  	 vehicleSpeedFrontRear = Sensor::getOrZero(SensorType::WheelSpeedFrontAvg);
+	 wheelSlipLeftRight = Sensor::getOrZero(SensorType::WheelSlipRatioLeftRightREAR); // in RWD / AWD, we're getting rear slip ratio, those would be different
+    if (vehicleSpeedLeftRight == 0) { // FrontAvg not available for rear wheels drive, lets try rear wheel average
+       vehicleSpeedLeftRight = Sensor::getOrZero(SensorType::WheelSpeedRearAvg);
+       vehicleSpeedFrontRear = vehicleSpeed;
+    }
+  } else { // FWD layout
+  	 vehicleSpeedLeftRight = Sensor::getOrZero(SensorType::WheelSpeedRearAvg);
+     vehicleSpeedFrontRear = Sensor::getOrZero(SensorType::WheelSpeedRearAvg);
+     wheelSlipLeftRight = Sensor::getOrZero(SensorType::WheelSlipRatioLeftRightFRONT); // in RWD / AWD, we're getting rear slip ratio, those would be different
+
+  	if (vehicleSpeedLeftRight == 0) { // rear average not available in FWD, lets try front
+  		vehicleSpeedLeftRight = Sensor::getOrZero(SensorType::WheelSpeedFrontAvg);
+        vehicleSpeedFrontRear = vehicleSpeed;
+    }
+  }
+
+  if (vehicleSpeedLeftRight == 0) { // still no speed fall back onto vehicle speed
+  	vehicleSpeedLeftRight = vehicleSpeed;
+  }
+
+
+	engine->outputChannels.tracSpeedLeftRightREF = vehicleSpeedLeftRight;
+	engine->outputChannels.tracSpeedFrontRearREF = vehicleSpeedFrontRear;
+	engine->outputChannels.wheelSlipRatioLeftRightREF = wheelSlipLeftRight;
+
+  float wheelSlipFrontRear = Sensor::getOrZero(SensorType::WheelSlipRatioFrontRear);
+
+	tcEtbDrop =  tcEtbLeftRightDropTable.getValue(vehicleSpeedLeftRight, wheelSlipLeftRight ) +  // left right component
+				 tcEtbFrontRearDropTable.getValue(vehicleSpeedFrontRear, wheelSlipFrontRear );  // front rear component
+
 
 	// Apply any adjustment that this throttle alone needs
 	// Clamped to +-10 to prevent anything too wild
@@ -1156,7 +1194,9 @@ void initElectronicThrottle() {
 
 	pedal2tpsMap.initTable(config->pedalToTpsTable, config->pedalToTpsRpmBins, config->pedalToTpsPedalBins);
 	throttle2TrimTable.initTable(config->throttle2TrimTable, config->throttle2TrimRpmBins, config->throttle2TrimTpsBins);
-	tcEtbDropTable.initTable(engineConfiguration->tractionControlEtbDrop, engineConfiguration->tractionControlSlipBins, engineConfiguration->tractionControlSpeedBins);
+
+	tcEtbLeftRightDropTable.initTable(engineConfiguration->tractionControlEtbDropLeftRight, engineConfiguration->tractionControlSpeedBins,  engineConfiguration->tractionControlSlipBins);
+	tcEtbFrontRearDropTable.initTable(engineConfiguration->tractionControlEtbDropFrontRear, engineConfiguration->tractionControlSpeedBins,  engineConfiguration->tractionControlSlipBins );
 
 	doInitElectronicThrottle();
 }

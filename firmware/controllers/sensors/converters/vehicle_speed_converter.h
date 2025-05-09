@@ -4,7 +4,31 @@
 class VehicleSpeedConverter : public SensorConverter {
 public:
 	SensorResult convert(float frequency) const override {
-		auto vssRevPerKm = engineConfiguration->driveWheelRevPerKm * engineConfiguration->vssGearRatio;
+          // check where the main VSS reference should be coming from
+		if (engineConfiguration->trac_vss_source == VSS_SOURCE_FRONT) { // FRONT, we must be rear wheel drive, but not necessarily
+			float ret = Sensor::getOrZero(SensorType::WheelSpeedFrontAvg);
+			if (ret > 0) {
+				return ret;
+			}
+		}
+
+		if (engineConfiguration->trac_vss_source == VSS_SOURCE_REAR) { // rear, maybe we're front wheel drive ?
+			float ret = Sensor::getOrZero(SensorType::WheelSpeedRearAvg);
+			if (ret > 0) {
+				return ret;
+			}
+		}
+
+		if (engineConfiguration->trac_vss_source == VSS_SOURCE_FRONT_REAR_AVG) { // average the front and rear speeds
+			float ret = (Sensor::getOrZero(SensorType::WheelSpeedRearAvg) + Sensor::getOrZero(SensorType::WheelSpeedFrontAvg)) / 2;
+			if (ret > 0) {
+				return ret;
+			}
+		}
+        // do what we did before
+
+
+        auto vssRevPerKm = engineConfiguration->driveWheelRevPerKm * engineConfiguration->vssGearRatio;
 
 		auto pulsePerKm = (vssRevPerKm * engineConfiguration->vssToothCount);
 

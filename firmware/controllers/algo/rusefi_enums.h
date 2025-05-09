@@ -800,6 +800,20 @@ enum class SelectedGear : uint8_t {
 	Low = 11,
 };
 
+typedef enum __attribute__ ((__packed__)) {
+	None = 0,
+	DRIVETRAIN_RWD = 1,
+	DRIVETRAIN_FWD = 2,
+	DRIVETRAIN_AWD = 3,
+} drivetrain_layout_e;
+
+
+typedef enum __attribute__ ((__packed__)) {
+    VSS_SOURCE_VSS_SENSOR = 0,
+	VSS_SOURCE_FRONT = 1,
+	VSS_SOURCE_REAR = 2,
+	VSS_SOURCE_FRONT_REAR_AVG = 3,
+} trac_vss_source_e;
 #define SC_Exhaust_First 1
 
 #endif // __cplusplus
