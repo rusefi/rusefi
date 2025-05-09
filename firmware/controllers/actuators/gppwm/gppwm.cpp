@@ -56,9 +56,6 @@ void initGpPwm() {
 }
 
 void updateGppwm() {
-	// There are only 8 debug float fields, this will overflow if more channels
-	static_assert(efi::size(channels) <= 8);
-
 	for (size_t i = 0; i < efi::size(channels); i++) {
 		auto result = channels[i].update();
 
