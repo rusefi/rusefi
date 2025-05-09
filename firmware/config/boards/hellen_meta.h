@@ -26,7 +26,6 @@
 
 #define H144_USB1ID Gpio::A10
 
-#define H176_MCU_NOT_MEGA_LED1_RED Gpio::H8
 #define H176_MCU_MEGA_LED1_RED Gpio::G0
 
 #define H144_LS_1 G7
