@@ -49,9 +49,9 @@ static void setupDefaultSensorInputs() {
 //	engineConfiguration->triggerInputPins[1] = Gpio::H144_IN_CAM;
 	engineConfiguration->camInputs[0] = Gpio::Unassigned;
 
-	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1);
+	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1_ANALOG);
 
-	setPPSInputs(H144_IN_PPS, H144_IN_AUX2);
+	setPPSInputs(H144_IN_PPS, H144_IN_AUX2_ANALOG);
 
 	// random values to have valid config
 	engineConfiguration->tps1SecondaryMin = 1000;

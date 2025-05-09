@@ -8,7 +8,7 @@
 #include "pch.h"
 #include "m111.h"
 #if HW_HELLEN
-#include "hellen_meta.h"
+#include "hellen_all_meta.h"
 #endif // HW_HELLEN
 
 void setHellenMercedes128_4_cyl() {

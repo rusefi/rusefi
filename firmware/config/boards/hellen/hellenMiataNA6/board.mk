@@ -19,4 +19,6 @@ DDEFS += -DSTATIC_BOARD_ID=STATIC_BOARD_ID_HELLEN_NA6
 
 DDEFS += -DHW_HELLEN_MIATA_NA6=1
 
+# this board uses original MCU module before mega-module generation
+LED_CRITICAL_ERROR_BRAIN_PIN = -DLED_CRITICAL_ERROR_BRAIN_PIN=H176_ORIGINAL_MCU_LED1_RED
 include $(BOARDS_DIR)/hellen/hellen-common176.mk

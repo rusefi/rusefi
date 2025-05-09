@@ -43,7 +43,7 @@ static void setupDefaultSensorInputs() {
 	// todo: this requires unit test change
 	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = Gpio::H144_IN_D_AUX4;
 
-	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1);
+	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1_ANALOG);
 
 	setPPSInputs(H144_IN_PPS, EFI_ADC_14);
 	engineConfiguration->mafAdcChannel = H144_IN_O2S;

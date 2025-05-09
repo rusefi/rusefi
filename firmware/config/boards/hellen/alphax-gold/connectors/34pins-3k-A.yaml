@@ -114,7 +114,7 @@ pins:
     type: hall
 
   - pin: 16A
-    id: [H144_IN_AUX4_DIGITAL, H144_IN_AUX4_DIGITAL, H144_IN_AUX4]
+    id: [H144_IN_AUX4_DIGITAL, H144_IN_AUX4_DIGITAL, H144_IN_AUX4_ANALOG]
     class: [event_inputs, switch_inputs, analog_inputs]
     ts_name: ___ AUX 2
     function: AUX input 2

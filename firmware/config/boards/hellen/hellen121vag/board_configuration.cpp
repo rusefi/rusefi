@@ -11,7 +11,7 @@
  */
 
 #include "pch.h"
-#include "hellen_meta.h"
+#include "hellen_all_meta.h"
 #include "defaults.h"
 
 #ifndef EFI_BOOTLOADER
@@ -40,11 +40,11 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->camInputs[0] = Gpio::A6; // 86 - CAM1
 
     // 92 - TPS 1
-	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1);
+	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1_ANALOG);
 
     // 34 In PPS1
     // 35 In PPS2
-    setPPSInputs(H144_IN_PPS, H144_IN_AUX2);
+    setPPSInputs(H144_IN_PPS, H144_IN_AUX2_ANALOG);
 
 	setPPSCalibration(0.4, 2, 0.7, 4.1);
 

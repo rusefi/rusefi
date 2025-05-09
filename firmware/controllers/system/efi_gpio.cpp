@@ -13,7 +13,7 @@
 #include "drivers/gpio/gpio_ext.h"
 
 #if HW_HELLEN
-#include "hellen_meta.h"
+#include "hellen_all_meta.h"
 #endif // HW_HELLEN
 
 #if EFI_ELECTRONIC_THROTTLE_BODY

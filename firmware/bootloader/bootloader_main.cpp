@@ -4,7 +4,7 @@
 #include "hardware.h"
 
 #ifdef HW_HELLEN
-#include "hellen_meta.h"
+#include "hellen_all_meta.h"
 #endif // HW_HELLEN
 
 extern "C" {
