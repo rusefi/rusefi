@@ -3244,7 +3244,6 @@ struct engine_configuration_s {
 	 */
 	int alternatorPwmFrequency;
 	/**
-	 * set vvt_mode X
 	 * offset 1612
 	 */
 	vvt_mode_e vvtMode[CAMS_PER_BANK] = {};
