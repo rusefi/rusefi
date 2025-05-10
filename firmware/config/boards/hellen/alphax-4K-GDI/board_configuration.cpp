@@ -57,7 +57,7 @@ void setBoardDefaultConfiguration() {
 	engineConfiguration->camInputs[0] = Gpio::H144_IN_SENS1; // Digital Input 1
 	engineConfiguration->camInputs[1] = Gpio::H144_IN_SENS2; // Digital Input 3
 
-	engineConfiguration->lowPressureFuel.hwChannel = H144_IN_AUX4;
+	engineConfiguration->lowPressureFuel.hwChannel = H144_IN_AUX4_ANALOG;
 	engineConfiguration->highPressureFuel.hwChannel = H144_IN_MAP3;
 	engineConfiguration->vvtPins[0] = Gpio::TLE9104_2_OUT_0; // intake
 	engineConfiguration->vvtPins[1] = Gpio::TLE9104_2_OUT_1; // exhaust
