@@ -22,7 +22,7 @@
 #define PIN_15A H144_IN_D_2
 #define PIN_16A_event_inputs H144_IN_AUX4_DIGITAL
 #define PIN_16A_switch_inputs H144_IN_AUX4_DIGITAL
-#define PIN_16A_analog_inputs H144_IN_AUX4
+#define PIN_16A_analog_inputs H144_IN_AUX4_ANALOG
 #define PIN_19A H144_IN_PPS
 #define PIN_20A H144_IN_PPS2
 #define PIN_21A_event_inputs H144_IN_SENS2
@@ -31,7 +31,7 @@
 #define PIN_22A_switch_inputs H144_IN_SENS3
 #define PIN_23A_event_inputs H144_IN_AUX2_DIGITAL
 #define PIN_23A_switch_inputs H144_IN_AUX2_DIGITAL
-#define PIN_23A_analog_inputs H144_IN_AUX2
+#define PIN_23A_analog_inputs H144_IN_AUX2_ANALOG
 #define PIN_24A_event_inputs H144_IN_MAP3_DIGITAL
 #define PIN_24A_switch_inputs H144_IN_MAP3_DIGITAL
 #define PIN_24A_analog_inputs H144_IN_MAP3
@@ -64,6 +64,6 @@
 #define PIN_24B_switch_inputs H144_IN_D_4
 #define PIN_25B_event_inputs H144_IN_AUX3_DIGITAL
 #define PIN_25B_switch_inputs H144_IN_AUX3_DIGITAL
-#define PIN_25B_analog_inputs H144_IN_AUX3
+#define PIN_25B_analog_inputs H144_IN_AUX3_ANALOG
 #define PIN_24B25B H144_IN_VSS
-#define PIN_28B H144_IN_AUX1
+#define PIN_28B H144_IN_AUX1_ANALOG
