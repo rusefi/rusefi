@@ -259,6 +259,10 @@ public class TuneCanTool {
             String cName = context + cf.getOriginalArrayName();
             String parentReference = getParentReference(cf, new StringBuffer());
 
+            if (cf.getIterateOriginalName() != null && TuneCanToolHelper.IGNORE_LIST.contains(cf.getIterateOriginalName())) {
+                log.info("Ignoring " + cName);
+                continue;
+            }
             if (TuneCanToolHelper.IGNORE_LIST.contains(cName)) {
                 log.info("Ignoring " + cName);
                 continue;
