@@ -54,7 +54,7 @@ public class TuneCanTool {
     // IDE and GHA run from different working folders :(
     // see write_tune.sh for env variable to property mapping
     static final String ENGINE_TUNE_OUTPUT_FOLDER = System.getProperty("ENGINE_TUNE_OUTPUT_FOLDER", "../simulator/generated/");
-    private static String boardPath = "config/boards/hellen/uaefi/";
+    public static String boardPath = "config/boards/hellen/uaefi/";
 
     protected static IniFileModel ini;
 

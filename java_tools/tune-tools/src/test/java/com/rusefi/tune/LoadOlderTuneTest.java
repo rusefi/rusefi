@@ -14,6 +14,8 @@ import com.rusefi.tune.xml.Page;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class LoadOlderTuneTest {
@@ -30,6 +32,9 @@ public class LoadOlderTuneTest {
         assertFalse(ini.getFieldsInUiOrder().isEmpty());
 
         RootHolder.ROOT = "../../firmware/";
+
+        // somewhere deep we have append prefix is not absolute path, so let's make path absolute
+        TuneCanTool.boardPath = new File("../../firmware/" + "config/boards/hellen/uaefi/").getAbsolutePath() + File.separator;
 
         StringBuilder sb = TuneCanTool.getTunePatch(lessOldDefaultTune, customOldTune, ini, TuneReadWriteTest.TUNE_NAME, new StringBuilder(), null, "");
 
