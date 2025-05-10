@@ -31,7 +31,7 @@ static float getNorm(float K, float Q) {
 
 void Biquad::configureBandpass(float samplingFrequency, float centerFrequency, float Q) {
   if (samplingFrequency < 2.5f * centerFrequency) {
-    criticalError("Invalid biquad parameters %f %f", samplingFrequency, centerFrequency);
+    criticalError("Invalid biquad parameters samplingFrequency=%f centerFrequency=%f", samplingFrequency, centerFrequency);
     return;
   }
 
