@@ -109,9 +109,10 @@ public class TableData implements CannableEntity {
     @Override
     public String getCsourceMethod(String reference, String methodNamePrefix, String name) {
         String scale = "";
+/*
         if (tableName.equals("lambdaTable"))
             scale = ", 1.0 / 14.7";
-
+*/
         return "static void " + getCannedMethod(methodNamePrefix) + " {\n"
             + "\t" + getCsourceCode() +
             "\tcopyTable(" + reference + name + ", " + getCannedName() + scale + ");\n" +
