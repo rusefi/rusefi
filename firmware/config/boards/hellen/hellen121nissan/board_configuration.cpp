@@ -41,7 +41,7 @@ static void setupDefaultSensorInputs() {
 	engineConfiguration->camInputs[0] = Gpio::H144_IN_CAM;
 	// todo: remove from default since 4 cylinder does not use it
 	// todo: this requires unit test change
-	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = Gpio::H144_IN_D_AUX4;
+	engineConfiguration->camInputs[1 * CAMS_PER_BANK] = Gpio::H144_ORIGINAL_MCU_IN_D_AUX4;
 
 	setTPS1Inputs(H144_IN_TPS, H144_IN_AUX1_ANALOG);
 

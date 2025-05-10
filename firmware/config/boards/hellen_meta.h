@@ -153,7 +153,7 @@
 // AIN20 PA7
 #define H144_IN_AUX3_ANALOG EFI_ADC_7
 #define H144_IN_AUX3_DIGITAL A7
-// it's a mess see also H144_IN_D_AUX4
+// mega-mcu aux3/4 is flipped comparing to H144_ORIGINAL_MCU_IN_D_AUX4
 // AIN22 PC5
 #define H144_IN_AUX4_ANALOG EFI_ADC_15
 #define H144_IN_AUX4_DIGITAL C5
@@ -188,7 +188,7 @@
 #define H144_ORIGINAL_MCU_IN_D_AUX3_ANALOG EFI_ADC_15
 // it's a MESS see also H144_IN_AUX4_DIGITAL
 // A20 AIN20
-#define H144_IN_D_AUX4 A7
+#define H144_ORIGINAL_MCU_IN_D_AUX4 A7
 
 // CAN
 #define H144_CAN_RX Gpio::D0

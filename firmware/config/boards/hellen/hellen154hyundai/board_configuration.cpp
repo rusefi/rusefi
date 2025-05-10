@@ -70,7 +70,7 @@ void setBoardConfigOverrides() {
 	engineConfiguration->triggerInputPins[1] = Gpio::Unassigned;
 	// Direct hall-only cam input
 	// exhaust input same on both revisions
-	engineConfiguration->camInputs[1] = Gpio::H144_IN_D_AUX4;
+	engineConfiguration->camInputs[1] = Gpio::H144_ORIGINAL_MCU_IN_D_AUX4;
 
     int16_t hellenBoardId = engine->engineState.hellenBoardId;
 

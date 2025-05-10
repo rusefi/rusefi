@@ -60,7 +60,7 @@ pins:
     function: Analog Ground
 
   - pin: K15
-    meta: H144_IN_D_AUX4
+    meta: H144_ORIGINAL_MCU_IN_D_AUX4
     function: 'Cam Sensor (2014: yellow)'
     class: event_inputs
     ts_name: Cam - K15

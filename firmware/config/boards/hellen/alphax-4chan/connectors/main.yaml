@@ -305,7 +305,7 @@ pins:
     color: gray
 
   - pin: E7
-    meta: H144_IN_D_AUX4
+    meta: H144_ORIGINAL_MCU_IN_D_AUX4
     class: event_inputs
     ts_name: E7 - Flex
     function: Digital Input / Flex fuel sensor
