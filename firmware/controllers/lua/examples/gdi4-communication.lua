@@ -1,4 +1,13 @@
 -- scriptname gdi4-communication.lua
+--
+-- '-- scriptname FILENAME' is a preprocessor directive allowing console to reload script from disk
+--
+-- use console, Lua tab, 'More...' to point at folder with Lua files
+-- use 'Reload' for includes to be processed
+-- this is all about code reuse and console instability
+--
+-- '-- include XXX' and '-- endinclude' are the directive for code reuse
+--
 
 -- communication with https://github.com/rusefi/rusefi-hardware/tree/main/GDI-4ch/firmware
 -- hpfpbench
