@@ -517,8 +517,11 @@ extern int flexCallbackCounter;
 }
 static void updatePressures() {
 	engine->outputChannels.baroPressure = Sensor::getOrZero(SensorType::BarometricPressure);
+  // instantMAPValue is injected in a very different way
   float mapValue = Sensor::getOrZero(SensorType::Map);
 	engine->outputChannels.MAPValue = mapValue;
+
+	engine->outputChannels.mapFast = Sensor::getOrZero(SensorType::MapFast);
 	engine->outputChannels.oilPressure = Sensor::getOrZero(SensorType::OilPressure);
   engine->outputChannels.acPressure = Sensor::getOrZero(SensorType::AcPressure);
 
@@ -746,8 +749,6 @@ void updateTunerStudioState() {
 
 	tsOutputChannels->starterState = enginePins.starterControl.getLogicValue();
 	tsOutputChannels->starterRelayDisable = enginePins.starterRelayDisable.getLogicValue();
-
-	tsOutputChannels->mapFast = Sensor::getOrZero(SensorType::MapFast);
 
 
 	tsOutputChannels->revolutionCounterSinceStart = engine->rpmCalculator.getRevolutionCounterSinceStart();

@@ -482,7 +482,11 @@ void commonInitEngineController() {
 #if EFI_MAP_AVERAGING && defined (MODULE_MAP_AVERAGING)
 	if (engineConfiguration->isMapAveragingEnabled) {
 		initMapAveraging();
+	} else {
+	  efiPrintf("Running without MapAveraging...");
 	}
+#else
+	efiPrintf("No MapAveraging support!");
 #endif /* EFI_MAP_AVERAGING */
 
 #if EFI_BOOST_CONTROL

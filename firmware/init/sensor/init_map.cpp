@@ -13,18 +13,21 @@ static FunctionalSensor baroSensor(SensorType::BarometricPressure, MS2NT(50));
 // how the *voltage* is determined, not how its converted to a pressure.
 static LinearFunc mapConverter;
 static FunctionalSensor slowMapSensor(SensorType::MapSlow, MS2NT(50));
-static FunctionalSensor slowMapSensor2(SensorType::MapSlow2, MS2NT(50));
+// unfinished/dead? static FunctionalSensor slowMapSensor2(SensorType::MapSlow2, MS2NT(50));
 static FunctionalSensor compressorDischargePress(SensorType::CompressorDischargePressure, MS2NT(50));
 static FunctionalSensor throttleInletPress(SensorType::ThrottleInletPressure, MS2NT(50));
 
 // lowest reasonable idle is maybe 600 rpm
 // one sample per cycle (1 cylinder, or "sample one cyl" mode) gives a period of 100ms
 // add some margin -> 200ms timeout for fast MAP sampling
-MapAverager fastMapSensor(SensorType::MapFast, MS2NT(200));
-MapAverager fastMapSensor2(SensorType::MapFast2, MS2NT(200));
+// 'fast' means averaged? why is that fast again?!
+static MapAverager fastMapSensor(SensorType::MapFast, MS2NT(200));
+static MapAverager fastMapSensor2(SensorType::MapFast2, MS2NT(200));
 
-MapAverager& getMapAvg(size_t idx) {
-	return idx == 0 ? fastMapSensor : fastMapSensor2;
+// instant map values are injected here
+MapAverager& getMapAvg(size_t cylinderBankIndex) {
+  // May 2025: cylinderBankIndex is always zero, second MAP sensor feature is not finished
+	return cylinderBankIndex == 0 ? fastMapSensor : fastMapSensor2;
 }
 
 // Combine MAP sensors: prefer fast sensor, but use slow if fast is unavailable.
@@ -104,7 +107,7 @@ void initMap() {
 	configureMapFunction(mapConverter, engineConfiguration->map.sensor.type);
 
 	slowMapSensor.setFunction(mapConverter);
-	slowMapSensor2.setFunction(mapConverter);
+// unfinished/dead?	slowMapSensor2.setFunction(mapConverter);
 	fastMapSensor.setFunction(mapConverter);
 	fastMapSensor2.setFunction(mapConverter);
 	compressorDischargePress.setFunction(mapConverter);
@@ -113,7 +116,7 @@ void initMap() {
 	auto mapChannel = engineConfiguration->map.sensor.hwChannel;
 	if (isAdcChannelValid(mapChannel)) {
 		slowMapSensor.Register();
-		slowMapSensor2.Register();
+// unfinished/dead?		slowMapSensor2.Register();
 		fastMapSensor.Register();
 		fastMapSensor2.Register();
 		mapCombiner.Register();

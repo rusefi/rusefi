@@ -266,6 +266,7 @@ void MapAveragingModule::onConfigurationChange(engine_configuration_s const * pr
 }
 
 void initMapAveraging() {
+  efiPrintf("initMapAveraging...");
 	applyMapMinBufferLength();
 }
 
