@@ -61,7 +61,7 @@
 #define PIN_E6_event_inputs H144_IN_D_4
 #define PIN_E6_switch_inputs H144_IN_D_4
 #define PIN_E5E6 H144_IN_RES1
-#define PIN_E7 H144_IN_D_AUX4
+#define PIN_E7 H144_ORIGINAL_MCU_IN_D_AUX4
 #define PIN_F1 H144_OUT_PWM5
 #define PIN_F2g H144_IGN_7
 #define PIN_F3 H144_IN_SENS4
