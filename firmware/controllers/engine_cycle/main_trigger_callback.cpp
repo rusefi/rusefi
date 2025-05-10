@@ -283,6 +283,10 @@ void mainTriggerCallback(uint32_t trgEventIndex, efitick_t edgeTimestamp, angle_
 		}
 	}
 
+	engine->engineModules.apply_all([=](auto & m) {
+		m.onEnginePhase(rpm, edgeTimestamp, currentPhase, nextPhase);
+	});
+
 	/**
 	 * For fuel we schedule start of injection based on trigger angle, and then inject for
 	 * specified duration of time

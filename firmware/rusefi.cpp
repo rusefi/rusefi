@@ -213,6 +213,9 @@ void runRusEfi() {
   // at the moment that's always hellen board ID
 	detectBoardType();
 
+	engine->engineModules.apply_all([](auto & m) {
+		m.initNoConfiguration();
+	});
 
 #if EFI_USB_SERIAL
 	startUsbConsole();
