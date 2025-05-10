@@ -417,6 +417,7 @@ static const LogField fields[] = {
 	{engine->outputChannels.fastAdcLastError, "ECU: Fast ADC error type", "", 0},
 	{engine->outputChannels.fastAdcPeriod, "ECU: Fast ADC period", "ticks", 0},
 	{engine->outputChannels.fastAdcConversionCount, "ECU: Fast ADC conversions", "N", 0},
+	{engine->outputChannels, 836, 0, "isMapAveraging", ""},
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},
 #endif

@@ -1478,9 +1478,105 @@ struct output_channels_s {
 	 */
 	uint16_t fastAdcConversionCount = (uint16_t)0;
 	/**
-	 * offset 836
+	offset 836 bit 0 */
+	bool isMapAveraging : 1 {};
+	/**
+	offset 836 bit 1 */
+	bool unusedBit_304_1 : 1 {};
+	/**
+	offset 836 bit 2 */
+	bool unusedBit_304_2 : 1 {};
+	/**
+	offset 836 bit 3 */
+	bool unusedBit_304_3 : 1 {};
+	/**
+	offset 836 bit 4 */
+	bool unusedBit_304_4 : 1 {};
+	/**
+	offset 836 bit 5 */
+	bool unusedBit_304_5 : 1 {};
+	/**
+	offset 836 bit 6 */
+	bool unusedBit_304_6 : 1 {};
+	/**
+	offset 836 bit 7 */
+	bool unusedBit_304_7 : 1 {};
+	/**
+	offset 836 bit 8 */
+	bool unusedBit_304_8 : 1 {};
+	/**
+	offset 836 bit 9 */
+	bool unusedBit_304_9 : 1 {};
+	/**
+	offset 836 bit 10 */
+	bool unusedBit_304_10 : 1 {};
+	/**
+	offset 836 bit 11 */
+	bool unusedBit_304_11 : 1 {};
+	/**
+	offset 836 bit 12 */
+	bool unusedBit_304_12 : 1 {};
+	/**
+	offset 836 bit 13 */
+	bool unusedBit_304_13 : 1 {};
+	/**
+	offset 836 bit 14 */
+	bool unusedBit_304_14 : 1 {};
+	/**
+	offset 836 bit 15 */
+	bool unusedBit_304_15 : 1 {};
+	/**
+	offset 836 bit 16 */
+	bool unusedBit_304_16 : 1 {};
+	/**
+	offset 836 bit 17 */
+	bool unusedBit_304_17 : 1 {};
+	/**
+	offset 836 bit 18 */
+	bool unusedBit_304_18 : 1 {};
+	/**
+	offset 836 bit 19 */
+	bool unusedBit_304_19 : 1 {};
+	/**
+	offset 836 bit 20 */
+	bool unusedBit_304_20 : 1 {};
+	/**
+	offset 836 bit 21 */
+	bool unusedBit_304_21 : 1 {};
+	/**
+	offset 836 bit 22 */
+	bool unusedBit_304_22 : 1 {};
+	/**
+	offset 836 bit 23 */
+	bool unusedBit_304_23 : 1 {};
+	/**
+	offset 836 bit 24 */
+	bool unusedBit_304_24 : 1 {};
+	/**
+	offset 836 bit 25 */
+	bool unusedBit_304_25 : 1 {};
+	/**
+	offset 836 bit 26 */
+	bool unusedBit_304_26 : 1 {};
+	/**
+	offset 836 bit 27 */
+	bool unusedBit_304_27 : 1 {};
+	/**
+	offset 836 bit 28 */
+	bool unusedBit_304_28 : 1 {};
+	/**
+	offset 836 bit 29 */
+	bool unusedBit_304_29 : 1 {};
+	/**
+	offset 836 bit 30 */
+	bool unusedBit_304_30 : 1 {};
+	/**
+	offset 836 bit 31 */
+	bool unusedBit_304_31 : 1 {};
+	/**
+	 * offset 840
 	 */
-	uint8_t unusedAtTheEnd[40] = {};
+	uint8_t unusedAtTheEnd[36] = {};
 };
 static_assert(sizeof(output_channels_s) == 876);
 

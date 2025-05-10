@@ -866,6 +866,9 @@ float getOutputValueByName(const char *name) {
 // fastAdcConversionCount
 		case 1749059722:
 			return engine->outputChannels.fastAdcConversionCount;
+// isMapAveraging
+		case -1626840525:
+			return engine->outputChannels.isMapAveraging;
 // totalFuelCorrection
 #if EFI_ENGINE_CONTROL
 		case -1779658835:
