@@ -24,8 +24,8 @@ public class MetaHelper {
     @NotNull
     static ReaderStateImpl getReaderState(String boardPath) throws IOException {
         List<String> options = Files.readAllLines(Paths.get(RootHolder.ROOT + "../" + ConfigDefinition.CONFIG_PATH));
-        List<String> boardOptions = Files.readAllLines(Paths.get(RootHolder.ROOT + boardPath + "board_config.txt"));
-       
+        List<String> boardOptions = Files.readAllLines(Paths.get(boardPath + "board_config.txt"));
+
         options.add(ConfigDefinition.KEY_PREPEND);
         options.add("integration/rusefi_config_shared.txt");
 
@@ -51,7 +51,7 @@ public class MetaHelper {
             state.getVariableRegistry().readPrependValues(TuneContext.boardPrepend, false);
 
         state.getVariableRegistry().register(BoardConfigStrategy.BOARD_CONFIG_FROM_FILE, String.join("\n", boardOptions));
-        
+
         ConfigDefinition.doJob(totalArgs, state);
         return state;
     }
