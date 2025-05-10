@@ -147,11 +147,13 @@ public class TuneCanTool {
         log.info("Writing to " + outputFile.getAbsolutePath());
 
         try (FileWriter w = new FileWriter(outputFile)) {
-            w.append("# " + vehicleName + "\n\n");
+            w.append("static void defaults" + methodNamePrefix + "() {\n");
             w.append("// canned tune " + cannedComment + "\n\n");
+            w.append("// canned tune " + vehicleName + "\n\n");
 
             w.append(MD_FIXED_FORMATTING);
             w.append(sb);
+            w.append("}\n");
             w.append(MD_FIXED_FORMATTING);
         }
         log.info("Done writing to " + outputFile.getAbsolutePath() + "!");
