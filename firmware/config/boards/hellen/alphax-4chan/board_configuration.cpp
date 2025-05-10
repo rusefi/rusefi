@@ -43,6 +43,7 @@ static void setIgnitionPins() {
 	engineConfiguration->ignitionPins[3] = Gpio::H144_IGN_4;
 }
 
+
 static void setupDefaultSensorInputs() {
 	// trigger inputs, hall
 	engineConfiguration->triggerInputPins[0] = Gpio::H144_IN_CRANK;
