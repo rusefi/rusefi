@@ -174,13 +174,13 @@
 #define H144_IN_O2S2 EFI_ADC_1
 #define H144_IN_O2S2_DIGITAL A1
 
-// IN_D1(old) or IN_DIG8(new/mega-module)
+// same pin was used by IN_DIG8 before mega-mcu
 #define H144_IN_D_1 E12
-// IN_D2(old) or IN_DIG9(new/mm)
+// same pin was used by IN_DIG9 before mega-mcu
 #define H144_IN_D_2 E13
-// IN_D3(old) or IN_DIG10(new)
+// same pin was used by IN_DIG10 before mega-mcu
 #define H144_IN_D_3 E14
-// IN_D4(old) or IN_DIG11(new)
+// same pin was used by IN_DIG11 before mega-mcu
 #define H144_IN_D_4 E15
 
 // A22
