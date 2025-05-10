@@ -166,6 +166,8 @@ static void writeEngineTypeDefaultConfig(engine_type_e type) {
 }
 
 void rusEfiFunctionalTest() {
+  printf("Running rusEFI simulator version: [%d]", (int)getRusEfiVersion());
+  // todo: do we still need 'printToConsole' for any reason?!
 	printToConsole("Running rusEFI simulator version:");
 	static char versionBuffer[20];
 	itoa10(versionBuffer, (int)getRusEfiVersion());
@@ -182,6 +184,7 @@ void rusEfiFunctionalTest() {
 
 	initFlash();
 
+  printf("[CannedTunes]: %d", (int)getLastEngineType());
   // [CannedTunes] let's export all just for simplicity. See also WriteSimulatorConfiguration.java
 	for (size_t typeIndex = 0;typeIndex<(size_t)getLastEngineType();typeIndex++) {
     engine_type_e type = (engine_type_e)typeIndex;
