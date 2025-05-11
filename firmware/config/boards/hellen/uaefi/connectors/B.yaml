@@ -48,21 +48,21 @@ pins:
     class: outputs
     color: orange
     type: ls
-    ts_name: ___ VVT1 or Low Side output 1
+    ts_name: ___ VVT1 or Low Side output 1 (has flyback D2)
 
   - pin: B8
     meta: MM100_IGN8
     class: outputs
     type: ls
     color: red
-    ts_name: ___ Fan Relay Weak Low Side output 2
+    ts_name: ___ Fan Relay Weak Low Side output 2 (no flyback here)
 
   - pin: B9
     meta: MM100_IGN7
     class: outputs
     type: ls
     color: grey
-    ts_name: ___ Main Relay Weak Low Side output 1
+    ts_name: ___ Main Relay Weak Low Side output 1 (no flyback here)
 
   - pin: B10
     meta: MM100_IGN6
@@ -111,21 +111,21 @@ pins:
     class: outputs
     type: ls
     color: white
-    ts_name: ___ Low Side output 4 / Fuel Pump Relay
+    ts_name: ___ Low Side output 4 / Fuel Pump Relay (has flyback D5)
 
   - pin: B17
     meta: MM100_OUT_PWM1
     class: outputs
     color: yellow
     type: ls
-    ts_name: ___ Low Side output 3
+    ts_name: ___ Low Side output 3 (has flyback D4)
 
   - pin: B18
     meta: MM100_INJ8
     class: outputs
     color: grey
     type: ls
-    ts_name: ___ VVT2 or Idle or Low Side output 2
+    ts_name: ___ VVT2 or Idle or Low Side output 2 (has flyback D3)
 
 info:
   cid: b
