@@ -23,7 +23,8 @@ enum class SensorType : unsigned char {
 	/**
 	 * This value is result of averaging within user-defined window
 	 * See also MapFast, MapSlow
-	 * this one Post-TB MAP Sensor
+	 * oh, and there is instantMap which is third thing not part of sensor framework
+	 * this sensor is Post-TB MAP Sensor
 	 * for ThrottleInletPressure see ThrottleInletPressure
 	 */
 	Map,
@@ -106,6 +107,7 @@ enum class SensorType : unsigned char {
 
 	Maf2,	// Second bank MAF sensor
 
+	// todo: finish implementation?
 	Map2,
 	MapSlow2,
 	MapFast2,

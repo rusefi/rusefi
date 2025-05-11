@@ -123,6 +123,7 @@ void initMap() {
 		mapCombiner2.Register();
 
 		// Configure slow MAP as a normal analog sensor
+		// it's possible/probably that slow and fast both read from same physical pin, apparently that's fine?!
 		AdcSubscription::SubscribeSensor(slowMapSensor, mapChannel, 100);
 	}
 
