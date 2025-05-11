@@ -248,6 +248,10 @@ void initAdcInputs() {
 #else // ! EFI_INTERNAL_ADC
 	efiPrintf("ADC disabled");
 #endif // EFI_INTERNAL_ADC
+
+	// Workaround to pre-feed all sensors with some data...
+	chThdSleepMilliseconds(1);
+	updateSlowAdc(getTimeNowNt());
 }
 
 void printFullAdcReportIfNeeded(void) {
