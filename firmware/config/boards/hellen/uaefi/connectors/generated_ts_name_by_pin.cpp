@@ -16,14 +16,14 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::A9: return "B5 injector output 2";
 		case Gpio::B1: return "D2 BUTTON1";
 		case Gpio::B8: return "B10 Coil 6";
-		case Gpio::B9: return "B9 Main Relay Weak Low Side output 1";
+		case Gpio::B9: return "B9 Main Relay Weak Low Side output 1 (no flyback here)";
 		case Gpio::C13: return "B15 Coil 1";
-		case Gpio::C6: return "B16 Low Side output 4 / Fuel Pump Relay";
+		case Gpio::C6: return "B16 Low Side output 4 / Fuel Pump Relay (has flyback D5)";
 		case Gpio::D10: return "B3 injector output 4";
 		case Gpio::D11: return "B4 injector output 3";
-		case Gpio::D12: return "B18 VVT2 or Idle or Low Side output 2";
-		case Gpio::D13: return "B17 Low Side output 3";
-		case Gpio::D15: return "B7 VVT1 or Low Side output 1";
+		case Gpio::D12: return "B18 VVT2 or Idle or Low Side output 2 (has flyback D3)";
+		case Gpio::D13: return "B17 Low Side output 3 (has flyback D4)";
+		case Gpio::D15: return "B7 VVT1 or Low Side output 1 (has flyback D2)";
 		case Gpio::D2: return "B2 injector output 5";
 		case Gpio::D3: return "B6 injector output 1";
 		case Gpio::E0: return "C18 VR1+ Discrete";
@@ -37,7 +37,7 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::E3: return "B11 Coil 4";
 		case Gpio::E4: return "B12 Coil 3";
 		case Gpio::E5: return "B14 Coil 2";
-		case Gpio::E6: return "B8 Fan Relay Weak Low Side output 2";
+		case Gpio::E6: return "B8 Fan Relay Weak Low Side output 2 (no flyback here)";
 		case Gpio::MSIOBOX_0_OUT_1: return "MS IO-Box 0 OUT 1";
 		case Gpio::MSIOBOX_0_OUT_2: return "MS IO-Box 0 OUT 2";
 		case Gpio::MSIOBOX_0_OUT_3: return "MS IO-Box 0 OUT 3";
