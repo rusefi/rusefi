@@ -49,7 +49,8 @@ static int mapMinBufferLength = 0;
 static int averagedMapBufIdx = 0;
 
 
-#if EFI_ENGINE_CONTROL && EFI_PROD_CODE || EFI_UNIT_TEST
+// if we have 'EFI_PROD_CODE || EFI_UNIT_TEST' shall we enable it for simulator as well and keep things simpler?
+#if EFI_ENGINE_CONTROL && (EFI_PROD_CODE || EFI_UNIT_TEST)
 static void endAveraging(MapAverager* arg);
 
 static size_t currentMapAverager = 0;
@@ -153,7 +154,7 @@ void mapAveragingAdcCallback(float instantVoltage) {
 }
 #endif
 
-#if EFI_ENGINE_CONTROL && EFI_PROD_CODE || EFI_UNIT_TEST
+#if EFI_ENGINE_CONTROL && (EFI_PROD_CODE || EFI_UNIT_TEST)
 static void endAveraging(MapAverager* arg) {
 	arg->stop();
 
@@ -206,7 +207,7 @@ void MapAveragingModule::onEnginePhase(float /*rpm*/,
 						efitick_t edgeTimestamp,
 						float currentPhase,
 						float nextPhase) {
-#if EFI_ENGINE_CONTROL && EFI_PROD_CODE || EFI_UNIT_TEST
+#if EFI_ENGINE_CONTROL && (EFI_PROD_CODE || EFI_UNIT_TEST)
 	if (!engineConfiguration->isMapAveragingEnabled) {
 		return;
 	}
