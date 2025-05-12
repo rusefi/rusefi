@@ -4,3 +4,4 @@ MODULES_INCLUDE += \#include "map_averaging.h"\n
 MODULES_LIST += MapAveragingModule,
 
 DDEFS += -DMODULE_MAP_AVERAGING
+# DDEFS += -DMAP_MODULE_LOGGING
