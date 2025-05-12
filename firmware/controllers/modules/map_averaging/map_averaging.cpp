@@ -49,8 +49,6 @@ static int mapMinBufferLength = 0;
 static int averagedMapBufIdx = 0;
 
 
-// if we have 'EFI_PROD_CODE || EFI_UNIT_TEST' shall we enable it for simulator as well and keep things simpler?
-#if EFI_ENGINE_CONTROL && (EFI_PROD_CODE || EFI_UNIT_TEST)
 static void endAveraging(MapAverager* arg);
 
 static size_t currentMapAverager = 0;
@@ -68,7 +66,6 @@ void startMapAveraging(mapSampler* s) {
 	scheduleByAngle(&s->endTimer, getTimeNowNt(), engine->engineState.mapAveragingDuration,
 		{ endAveraging, &averager });
 }
-#endif // EFI_ENGINE_CONTROL && EFI_PROD_CODE
 
 void MapAverager::start() {
 	chibios_rt::CriticalSectionLocker csl;
@@ -154,14 +151,12 @@ void mapAveragingAdcCallback(float instantVoltage) {
 }
 #endif
 
-#if EFI_ENGINE_CONTROL && (EFI_PROD_CODE || EFI_UNIT_TEST)
 static void endAveraging(MapAverager* arg) {
 	arg->stop();
 
 	engine->outputChannels.isMapAveraging = false;
 	mapAveragingPin.setLow();
 }
-#endif
 
 static void applyMapMinBufferLength() {
 	// check range
@@ -207,7 +202,6 @@ void MapAveragingModule::onEnginePhase(float /*rpm*/,
 						efitick_t edgeTimestamp,
 						float currentPhase,
 						float nextPhase) {
-#if EFI_ENGINE_CONTROL && (EFI_PROD_CODE || EFI_UNIT_TEST)
 	if (!engineConfiguration->isMapAveragingEnabled) {
 		return;
 	}
@@ -243,7 +237,6 @@ void MapAveragingModule::onEnginePhase(float /*rpm*/,
 		scheduleByAngle(&s->startTimer, edgeTimestamp, samplingStart,
 				{ startMapAveraging, s });
 	}
-#endif // EFI_ENGINE_CONTROL && EFI_PROD_CODE
 }
 
 void MapAveragingModule::onConfigurationChange(engine_configuration_s const * previousConfig) {
