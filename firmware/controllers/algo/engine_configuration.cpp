@@ -566,7 +566,7 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->engineChartSize = 400;
 #endif
 
-#if EFI_PROD_CODE
+#if EFI_PROD_CODE || EFI_SIMULATOR
 	// some tests broke with map averaging, see https://github.com/rusefi/rusefi/issues/7868
 	engineConfiguration->isMapAveragingEnabled = true;
 #endif
