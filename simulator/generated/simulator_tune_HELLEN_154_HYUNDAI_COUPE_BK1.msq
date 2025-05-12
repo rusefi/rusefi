@@ -2406,7 +2406,7 @@
         <constant name="isForcedInduction">"true"</constant>
         <constant name="isIgnitionEnabled">"true"</constant>
         <constant name="isInjectionEnabled">"true"</constant>
-        <constant name="isMapAveragingEnabled">"false"</constant>
+        <constant name="isMapAveragingEnabled">"true"</constant>
         <constant name="isPhaseSyncRequiredForIgnition">"false"</constant>
         <constant name="isSdCardEnabled">"false"</constant>
         <constant digits="0" name="issFilterReciprocal" units="">2.0</constant>
