@@ -263,13 +263,18 @@ void MapAveragingModule::onConfigurationChange(engine_configuration_s const * pr
 	}
 }
 
-void initMapAveraging() {
-  efiPrintf("initMapAveraging...");
-	applyMapMinBufferLength();
+void MapAveragingModule::init() {
+	if (engineConfiguration->isMapAveragingEnabled) {
+		efiPrintf("initMapAveraging...");
+		applyMapMinBufferLength();
+	} else {
+		efiPrintf("Running without MapAveraging...");
+	}
 }
 
 #else
 void MapAveragingModule::onFastCallback(){}
 void MapAveragingModule::onConfigurationChange(engine_configuration_s const *){}
 void MapAveragingModule::onEnginePhase(float, efitick_t, float, float) {}
+void MapAveragingModule::init() {}
 #endif /* EFI_MAP_AVERAGING */
