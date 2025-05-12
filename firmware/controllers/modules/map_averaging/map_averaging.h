@@ -9,6 +9,7 @@
 #include "engine_module.h"
 #include "stored_value_sensor.h"
 #include "sensor_converter_func.h"
+#include "scheduler.h"
 
 #if EFI_MAP_AVERAGING
 
@@ -20,7 +21,16 @@ void mapAveragingAdcCallback(float instantVoltage);
 
 // allow smoothing up to number of cylinders
 #define MAX_MAP_BUFFER_LENGTH (MAX_CYLINDER_COUNT)
+/**
+* here we have averaging start and averaging end points for each cylinder
+* TODO: migrate to AngleBasedEvent, see also #7869
+*/
+struct sampler {
+	scheduling_s startTimer;
+	scheduling_s endTimer;
+};
 
+void startMapAveraging(sampler* s);
 #endif /* EFI_MAP_AVERAGING */
 
 class MapAverager : public StoredValueSensor {
@@ -64,4 +74,5 @@ public:
 						float nextPhase) override;
 	void init();
 	void submitSample(float voltsMap1, float voltsMap2);
+	sampler samplers[MAX_CYLINDER_COUNT][2];
 };

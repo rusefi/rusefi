@@ -48,22 +48,13 @@ static float averagedMapRunningBuffer[MAX_MAP_BUFFER_LENGTH];
 static int mapMinBufferLength = 0;
 static int averagedMapBufIdx = 0;
 
-/**
- * here we have averaging start and averaging end points for each cylinder
- */
-struct sampler {
-	scheduling_s startTimer;
-	scheduling_s endTimer;
-};
 
-static sampler samplers[MAX_CYLINDER_COUNT][2];
-
-#if EFI_ENGINE_CONTROL && EFI_PROD_CODE
+#if EFI_ENGINE_CONTROL && EFI_PROD_CODE || EFI_UNIT_TEST
 static void endAveraging(MapAverager* arg);
 
 static size_t currentMapAverager = 0;
 
-static void startAveraging(sampler* s) {
+void startMapAveraging(sampler* s) {
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6649, hasLotsOfRemainingStack(), "lowstck#9");
 
 	// TODO: set currentMapAverager based on cylinder bank
@@ -162,7 +153,7 @@ void mapAveragingAdcCallback(float instantVoltage) {
 }
 #endif
 
-#if EFI_ENGINE_CONTROL && EFI_PROD_CODE
+#if EFI_ENGINE_CONTROL && EFI_PROD_CODE || EFI_UNIT_TEST
 static void endAveraging(MapAverager* arg) {
 	arg->stop();
 
@@ -201,6 +192,9 @@ void MapAveragingModule::onFastCallback() {
 			float cylinderStart = start + cylinderOffset - offsetAngle + tdcPosition();
 			wrapAngle(cylinderStart, "cylinderStart", ObdCode::CUSTOM_ERR_6562);
 			engine->engineState.mapAveragingStart[i] = cylinderStart;
+#ifdef MAP_MODULE_LOGGING
+			printf("mapAveragingStart[%d]  %.2f \r\n",i,cylinderStart);
+#endif
 		}
 		engine->engineState.mapAveragingDuration = interpolate2d(rpm, c->samplingWindowBins, c->samplingWindow);
 
@@ -219,7 +213,7 @@ void MapAveragingModule::onEnginePhase(float /*rpm*/,
 						efitick_t edgeTimestamp,
 						float currentPhase,
 						float nextPhase) {
-#if EFI_ENGINE_CONTROL && EFI_PROD_CODE
+#if EFI_ENGINE_CONTROL && EFI_PROD_CODE || EFI_UNIT_TEST
 	if (!engineConfiguration->isMapAveragingEnabled) {
 		return;
 	}
@@ -246,13 +240,14 @@ void MapAveragingModule::onEnginePhase(float /*rpm*/,
 		// only if value is already prepared
 		int structIndex = getRevolutionCounter() % 2;
 
-		sampler* s = &samplers[i][structIndex];
+		auto & mapAveraging = *engine->module<MapAveragingModule>();
+		sampler* s = &mapAveraging.samplers[i][structIndex];
 
 		// at the moment we schedule based on time prediction based on current RPM and angle
 		// we are loosing precision in case of changing RPM - the further away is the event the worse is precision
 		// todo: schedule this based on closest trigger event, same as ignition works
 		scheduleByAngle(&s->startTimer, edgeTimestamp, samplingStart,
-				{ startAveraging, s });
+				{ startMapAveraging, s });
 	}
 #endif // EFI_ENGINE_CONTROL && EFI_PROD_CODE
 }
