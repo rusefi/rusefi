@@ -1,5 +1,11 @@
 #include "pch.h"
 
+/*
+ * - we have many board with one or two on-board F0 WBO module
+ * - we have a requirement to use external AEM controller instead of onboard module ('Genesis use-case')
+ * - we also have requirement for CANbus ID conflict resolution in case of vehicle integration ('Camaro use-case')
+ */
+
 // do we use some sort of a custom bootloader protocol in rusEFI WBO?
 // todo: should we move to any widely used protocol like OpenBLT or else?
 
