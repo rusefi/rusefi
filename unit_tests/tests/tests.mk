@@ -189,3 +189,4 @@ TESTS_SRC_CPP = \
 	tests/ignition_injection/test_ignition_state.cpp \
 	tests/core/test_main_loop.cpp \
 	tests/test_trip_odometer.cpp \
+	tests/controllers/modules/map_averaging/test_map_averaging.cpp \
