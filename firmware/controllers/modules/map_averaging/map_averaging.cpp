@@ -54,7 +54,7 @@ static void endAveraging(MapAverager* arg);
 
 static size_t currentMapAverager = 0;
 
-void startMapAveraging(sampler* s) {
+void startMapAveraging(mapSampler* s) {
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6649, hasLotsOfRemainingStack(), "lowstck#9");
 
 	// TODO: set currentMapAverager based on cylinder bank
@@ -183,13 +183,7 @@ void MapAveragingModule::onFastCallback() {
 		efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_AVG_OFFSET, !std::isnan(offsetAngle), "offsetAngle");
 
 		for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
-		  // todo: potential micro-optimization to reuse getEngineState()->engineCycle?
-			angle_t cylinderOffset = getEngineCycle(getEngineRotationState()->getOperationMode()) * i / engineConfiguration->cylindersCount;
-			efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_CYL_OFFSET, !std::isnan(cylinderOffset), "cylinderOffset");
-			// part of this formula related to specific cylinder offset is never changing - we can
-			// move the loop into start-up calculation and not have this loop as part of periodic calculation
-			// todo: change the logic as described above in order to reduce periodic CPU usage?
-			float cylinderStart = start + cylinderOffset - offsetAngle + tdcPosition();
+			float cylinderStart = start + getPerCylinderFiringOrderOffset(i, getCylinderNumberAtIndex(i));
 			wrapAngle(cylinderStart, "cylinderStart", ObdCode::CUSTOM_ERR_6562);
 			engine->engineState.mapAveragingStart[i] = cylinderStart;
 #ifdef MAP_MODULE_LOGGING
@@ -240,7 +234,7 @@ void MapAveragingModule::onEnginePhase(float /*rpm*/,
 		int structIndex = getRevolutionCounter() % 2;
 
 		auto & mapAveraging = *engine->module<MapAveragingModule>();
-		sampler* s = &mapAveraging.samplers[i][structIndex];
+		mapSampler* s = &mapAveraging.samplers[i][structIndex];
 
 		// at the moment we schedule based on time prediction based on current RPM and angle
 		// we are loosing precision in case of changing RPM - the further away is the event the worse is precision
