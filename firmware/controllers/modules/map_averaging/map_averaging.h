@@ -16,7 +16,7 @@
 void mapAveragingAdcCallback(float instantVoltage);
 #endif
 
-void initMapAveraging();
+
 
 // allow smoothing up to number of cylinders
 #define MAX_MAP_BUFFER_LENGTH (MAX_CYLINDER_COUNT)
@@ -61,7 +61,7 @@ public:
 	void onEnginePhase(float rpm,
 						efitick_t edgeTimestamp,
 						float currentPhase,
-						float nextPhase);
-
+						float nextPhase) override;
+	void init();
 	void submitSample(float voltsMap1, float voltsMap2);
 };
