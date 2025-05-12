@@ -196,7 +196,6 @@ void MapAveragingModule::onFastCallback() {
 			printf("mapAveragingStart[%d]  %.2f \r\n",i,cylinderStart);
 #endif
 		}
-		engine->engineState.mapAveragingDuration = interpolate2d(rpm, c->samplingWindowBins, c->samplingWindow);
 
 	angle_t duration = interpolate2d(rpm, c->samplingWindowBins, c->samplingWindow);
 	assertAngleRange(duration, "samplingDuration", ObdCode::CUSTOM_ERR_6563);
