@@ -670,6 +670,11 @@ output_pin_e acrPin;
 
 float driveWheelRevPerKm;Number of revolutions per kilometer for the wheels your vehicle speed sensor is connected to. Use an online calculator to determine this based on your tire size.;"revs/km", 1, 0, 100, 1000, 1
 
+float driveWheelRevPerKm1;Number of revolutions per kilometer for the wheels your vehicle speed sensor is connected to. Use an online calculator to determine this based on your tire size.;"revs/km", 1, 0, 100, 1000, 1
+float driveWheelRevPerKm2;Number of revolutions per kilometer for the wheels your vehicle speed sensor is connected to. Use an online calculator to determine this based on your tire size.;"revs/km", 1, 0, 100, 1000, 1
+float driveWheelRevPerKm3;Number of revolutions per kilometer for the wheels your vehicle speed sensor is connected to. Use an online calculator to determine this based on your tire size.;"revs/km", 1, 0, 100, 1000, 1
+float driveWheelRevPerKm4;Number of revolutions per kilometer for the wheels your vehicle speed sensor is connected to. Use an online calculator to determine this based on your tire size.;"revs/km", 1, 0, 100, 1000, 1
+
 int canSleepPeriodMs;CANbus thread period in ms;"ms", 1, 0, 0, 1000, 2
 	int byFirmwareVersion;;"index", 1, 0, 0, 300, 0
 
@@ -760,6 +765,22 @@ engineSyncCam_e engineSyncCam;Select which cam is used for engine sync. Other ca
 	uint16_t autoscale vssGearRatio;Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.;"ratio", 0.001, 0, 0, 60, 3
 	uint8_t vssFilterReciprocal;Set this so your vehicle speed signal is responsive, but not noisy. Larger value give smoother but slower response.;"", 1, 0, @@VSS_FILTER_MIN@@, @@VSS_FILTER_MAX@@, 0
 	uint8_t vssToothCount;Number of pulses output per revolution of the shaft where your VSS is mounted. For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.;"count", 1, 0, 1, 100, 0
+
+	uint16_t autoscale vssGearRatio1;Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.;"ratio", 0.001, 0, 0, 60, 3
+	uint8_t vssFilterReciprocal1;Set this so your vehicle speed signal is responsive, but not noisy. Larger value give smoother but slower response.;"", 1, 0, @@VSS_FILTER_MIN@@, @@VSS_FILTER_MAX@@, 0
+	uint8_t vssToothCount1;Number of pulses output per revolution of the shaft where your VSS is mounted. For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.;"count", 1, 0, 1, 100, 0
+
+	uint16_t autoscale vssGearRatio2;Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.;"ratio", 0.001, 0, 0, 60, 3
+	uint8_t vssFilterReciprocal2;Set this so your vehicle speed signal is responsive, but not noisy. Larger value give smoother but slower response.;"", 1, 0, @@VSS_FILTER_MIN@@, @@VSS_FILTER_MAX@@, 0
+	uint8_t vssToothCount2;Number of pulses output per revolution of the shaft where your VSS is mounted. For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.;"count", 1, 0, 1, 100, 0
+
+	uint16_t autoscale vssGearRatio3;Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.;"ratio", 0.001, 0, 0, 60, 3
+	uint8_t vssFilterReciprocal3;Set this so your vehicle speed signal is responsive, but not noisy. Larger value give smoother but slower response.;"", 1, 0, @@VSS_FILTER_MIN@@, @@VSS_FILTER_MAX@@, 0
+	uint8_t vssToothCount3;Number of pulses output per revolution of the shaft where your VSS is mounted. For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.;"count", 1, 0, 1, 100, 0
+
+	uint16_t autoscale vssGearRatio4;Number of turns of your vehicle speed sensor per turn of the wheels. For example if your sensor is on the transmission output, enter your axle/differential ratio. If you are using a hub-mounted sensor, enter a value of 1.0.;"ratio", 0.001, 0, 0, 60, 3
+	uint8_t vssFilterReciprocal4;Set this so your vehicle speed signal is responsive, but not noisy. Larger value give smoother but slower response.;"", 1, 0, @@VSS_FILTER_MIN@@, @@VSS_FILTER_MAX@@, 0
+	uint8_t vssToothCount4;Number of pulses output per revolution of the shaft where your VSS is mounted. For example, GM applications of the T56 output 17 pulses per revolution of the transmission output shaft.;"count", 1, 0, 1, 100, 0
 
 	#define ve_override_e_enum "None", "MAP", "TPS"
 	custom ve_override_e 1 bits, U08, @OFFSET@, [0:1], @@ve_override_e_enum@@
@@ -1245,6 +1266,9 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	uint8_t coastingFuelCutVssHigh;Above this speed, allow DFCO. Use this to prevent jerkiness from fuel enable/disable in low gears.;"kph", 1, 0, 0, 255, 0
 
 	float tpsAccelEnrichmentThreshold;Maximum change delta of TPS percentage over the 'length'. Actual TPS change has to be above this value in order for TPS/TPS acceleration to kick in.;"roc", 1, 0, 0, 200, 1
+
+#define WHEEL_SPEED_SENSOR_COUNT 4
+    brain_input_pin_e[WHEEL_SPEED_SENSOR_COUNT iterate] wheelSpeedSensorInputPin;
 
 #define AUX_SPEED_SENSOR_COUNT 2
     brain_input_pin_e[AUX_SPEED_SENSOR_COUNT iterate] auxSpeedSensorInputPin;
