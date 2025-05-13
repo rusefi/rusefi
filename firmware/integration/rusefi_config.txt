@@ -96,7 +96,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 250408
+#define FLASH_DATA_VERSION 250515
 
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
@@ -2145,14 +2145,16 @@ uint16_t[INJ_STAGING_COUNT] injectorStagingLoadBins;;"", 1, 0, 0, 1000, 0
 uint16_t[INJ_STAGING_COUNT] injectorStagingRpmBins;;"RPM",  1, 0, 0, 18000, 0
 
 #define WWAE_TABLE_SIZE 8
+#define WWAE_RPM_SIZE 8
 
 int8_t[WWAE_TABLE_SIZE] wwCltBins;;"deg C", 1, 0, -40, 120, 0
 uint8_t[WWAE_TABLE_SIZE] autoscale wwTauCltValues;;"", 0.01, 0, 0, 2.5, 2
 uint8_t[WWAE_TABLE_SIZE] autoscale wwBetaCltValues;;"", 0.01, 0, 0, 1, 2
 
 int8_t[WWAE_TABLE_SIZE] wwMapBins;;"kPa", 1, 0, 0, 250, 0
-uint8_t[WWAE_TABLE_SIZE] autoscale wwTauMapValues;;"", 0.01, 0, 0, 2.5, 2
-uint8_t[WWAE_TABLE_SIZE] autoscale wwBetaMapValues;;"", 0.01, 0, 0, 2.5, 2
+uint8_t[WWAE_RPM_SIZE] autoscale wwRpmBins;;"RPM", 50, 0, 0, 12500, 0
+uint8_t[WWAE_RPM_SIZE x WWAE_TABLE_SIZE] autoscale wwTauMapRpmValues;;"", 0.01, 0, 0, 2.5, 2
+uint8_t[WWAE_RPM_SIZE x WWAE_TABLE_SIZE] autoscale wwBetaMapRpmValues;;"", 0.01, 0, 0, 2.5, 2
 
 uint8_t[HPFP_LOBE_PROFILE_SIZE] autoscale hpfpLobeProfileQuantityBins;;"%", 0.5, 0, 0, 100, 1
 uint8_t[HPFP_LOBE_PROFILE_SIZE] autoscale hpfpLobeProfileAngle;;"deg", 0.5, 0, 0, 125, 1
@@ -2160,10 +2162,10 @@ uint8_t[HPFP_DEADTIME_SIZE] hpfpDeadtimeVoltsBins;;"volts", 1, 0, 0, 255, 0
 uint16_t[HPFP_DEADTIME_SIZE] autoscale hpfpDeadtimeMS;;"ms", 0.001, 0, 0, 65, 3
 uint16_t[HPFP_TARGET_SIZE x HPFP_TARGET_SIZE] hpfpTarget;;"kPa", 1, 0, 0, 65000, 0
 uint16_t[HPFP_TARGET_SIZE] autoscale hpfpTargetLoadBins;;"load", 0.1, 0, 0, 6500, 1
-uint8_t[HPFP_TARGET_SIZE] autoscale hpfpTargetRpmBins;;"RPM", 50, 0, 0, 12500, 0
+uint16_t[HPFP_TARGET_SIZE] autoscale hpfpTargetRpmBins;;"RPM", 50, 0, 0, 12500, 0
 int8_t[HPFP_COMPENSATION_SIZE x HPFP_COMPENSATION_SIZE] hpfpCompensation;;"%", 1, 0, -100, 100, 0
 uint16_t[HPFP_COMPENSATION_SIZE] autoscale hpfpCompensationLoadBins;;"cc/lobe", 0.001, 0, 0, 65, 3
-uint8_t[HPFP_COMPENSATION_SIZE] autoscale hpfpCompensationRpmBins;;"RPM", 50, 0, 0, 12500, 0
+uint16_t[HPFP_COMPENSATION_SIZE] autoscale hpfpCompensationRpmBins;;"RPM", 50, 0, 0, 12500, 0
 
 uint16_t[ENGINE_NOISE_CURVE_SIZE] knockNoiseRpmBins;;"RPM", 1, 0, 0, 30000, 0
 int8_t[ENGINE_NOISE_CURVE_SIZE] autoscale knockBaseNoise;Knock sensor output knock detection threshold depending on current RPM.;"dB", 0.5, 0, -99, 10, 1

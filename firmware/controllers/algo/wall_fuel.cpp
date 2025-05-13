@@ -91,11 +91,13 @@ float WallFuelController::computeTau() const {
 	// If you have a MAP sensor, apply MAP correction
 	if (Sensor::hasSensor(SensorType::Map)) {
 		auto map = Sensor::get(SensorType::Map).value_or(60);
+		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 
-		tau *= interpolate2d(
-			map,
-			config->wwMapBins,
-			config->wwTauMapValues
+		// Use 3D interpolation for MAP x RPM
+		tau *= interpolate3d(
+			config->wwTauMapRpmValues,
+			config->wwRpmBins, rpm,
+			config->wwMapBins, map
 		);
 	}
 
@@ -120,11 +122,13 @@ float WallFuelController::computeBeta() const {
 	// If you have a MAP sensor, apply MAP correction
 	if (Sensor::hasSensor(SensorType::Map)) {
 		auto map = Sensor::get(SensorType::Map).value_or(60);
+		auto rpm = Sensor::getOrZero(SensorType::Rpm);
 
-		beta *= interpolate2d(
-			map,
-			config->wwMapBins,
-			config->wwBetaMapValues
+		// Use 3D interpolation for MAP x RPM
+		beta *= interpolate3d(
+			config->wwBetaMapRpmValues,
+			config->wwRpmBins, rpm,
+			config->wwMapBins, map
 		);
 	}
 

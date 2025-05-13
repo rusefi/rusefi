@@ -1,0 +1,127 @@
+// RusEFI Engine Control System Guidelines
+// These rules help understand and modify the system correctly
+
+{
+  "understand_callbacks": {
+    "description": "Always understand callback mechanisms before modification",
+    "details": [
+      "Engine control uses multiple callback types for timing: fastCallback (frequent execution) and slowCallback (less frequent)",
+      "EngineModule base class contains onSlowCallback and onFastCallback overridable methods",
+      "Engine.cpp orchestrates module callbacks via engine->engineModules.apply_all()",
+      "slowCallback is called approximately every 20ms for non-critical tasks",
+      "fastCallback is called approximately every 5-10ms for critical engine operations"
+    ]
+  },
+
+  "memory_management": {
+    "description": "Follow memory management rules for persistent storage",
+    "details": [
+      "To implement features needing persistent memory, follow LTFT implementation patterns",
+      "Update tables in engineConfiguration or config objects",
+      "Call setNeedToWriteConfiguration() to schedule writing to flash",
+      "Flash writing is postponed until engine is stopped to prevent issues during operation",
+      "Writing configuration changes happens in the flash_main.cpp writeToFlashNow() function",
+      "Data is saved to two copies in flash with CRC validation for redundancy"
+    ]
+  },
+
+  "configuration_fields": {
+    "description": "Properly add new configuration fields",
+    "details": [
+      "For new configuration fields, first understand rusefi_config.txt in integration folder",
+      "Define new fields in the engine_configuration_s structure or another appropriate structure",
+      "Use available padding/unused fields by renaming them rather than adding at the end",
+      "Update FLASH_DATA_VERSION when making incompatible configuration changes",
+      "Follow the format defined in rusefi_config.txt for data types, units, and scaling"
+    ]
+  },
+
+  "tunerstudio_integration": {
+    "description": "Properly update TunerStudio interface",
+    "details": [
+      "For any new user-configurable parameter, update tunerstudio.template.ini",
+      "Add appropriate menu entries, gauges, tables as needed",
+      "Understand the template variable substitution using @@VARIABLE@@ syntax",
+      "Update the FLASH_DATA_VERSION date in rusefi_config.txt when making interface changes",
+      "Test TunerStudio interface thoroughly after changes to ensure proper functionality"
+    ]
+  },
+
+  "code_modification": {
+    "description": "Follow proper modification practices",
+    "details": [
+      "Understand complete execution flow before modifying any function",
+      "Check if your changes affect engine timing, fuel calculations, or safety features",
+      "Add appropriate logging for debugging and diagnostics",
+      "Follow existing coding style and patterns",
+      "Test changes thoroughly in safe conditions before real-world use"
+    ]
+  },
+
+  "table_modification": {
+    "description": "Process for adding new tables and configurations",
+    "details": [
+      "Define table size constants in rusefi_config.txt (e.g., #define NEW_TABLE_SIZE 8)",
+      "Add table arrays to the configuration structure in rusefi_config.txt",
+      "Create UI elements in tunerstudio.template.ini for user interaction",
+      "Implement code to use the table data in appropriate engine modules",
+      "Add proper bounds checking and validation for all table lookups",
+      "Use 'autoscale' keyword for uint8_t arrays that need scaling to improve memory efficiency"
+    ]
+  },
+  
+  "critical_areas": {
+    "description": "Be extremely careful when modifying these areas",
+    "details": [
+      "Fuel calculation and injection timing",
+      "Ignition timing and control",
+      "RPM calculation and engine speed sensing",
+      "Engine protection features and limit controls",
+      "Configuration storage and retrieval",
+      "Real-time scheduler and event timing"
+    ]
+  },
+  
+  "build_system": {
+    "description": "Understand build system before modification",
+    "details": [
+      "Configuration files generate header files and TunerStudio configurations",
+      "Use gen_config.sh to regenerate configuration files after changes",
+      "Check build outputs for integration issues with your changes",
+      "Use proper include hierarchy to prevent circular dependencies"
+    ]
+  },
+  
+  "testing": {
+    "description": "Test changes thoroughly before deployment",
+    "details": [
+      "Test configuration interface in TunerStudio",
+      "Verify persistence of settings after power cycle",
+      "Test functionality in both cold and warmed-up engine states",
+      "Validate under different regimes of operation including transients"
+    ]
+  },
+  
+  "interpolation_usage": {
+    "description": "Understand interpolation functions for table lookups",
+    "details": [
+      "Use interpolate2d for basic 1D lookup tables (e.g., simple curves)",
+      "Use interpolate3d for 2D tables (e.g., VE tables, ignition tables)",
+      "The interpolate3d function already exists in interpolation.h with proper implementation",
+      "interpolate3d signature: (table[rows][columns], rowBins[rows], rowValue, colBins[columns], colValue)",
+      "Table structure follows Y,X order (rows first, then columns) matching TunerStudio convention",
+      "When implementing new 3D tables, follow existing patterns for optimal performance"
+    ]
+  },
+  
+  "table_scaling": {
+    "description": "Use appropriate scaling for memory-efficient tables",
+    "details": [
+      "Use 'autoscale' keyword for uint8_t arrays that need scaling (e.g., uint8_t[SIZE] autoscale myTable)",
+      "Define scaling factor in the format: \"units\", scale, offset, min, max, precision",
+      "For uint8_t tables with autoscale, use proper scaling to fit the range into 0-255",
+      "For tables that need higher precision, use scaled_channel<> template or direct float arrays",
+      "scaled_channel template is used for runtime scaling, while autoscale affects configuration storage"
+    ]
+  }
+} 
