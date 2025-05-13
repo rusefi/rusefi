@@ -63,6 +63,9 @@ struct BlendResult {
 
 	// Result value (bias * table value)
 	float Value;
+
+	// Y axis value used for lookup (to show the dot correctly in TunerStudio)
+	float TableYAxis;
 };
 
 BlendResult calculateBlend(blend_table_s& cfg, float rpm, float load);

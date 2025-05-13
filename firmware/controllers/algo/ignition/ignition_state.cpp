@@ -76,6 +76,7 @@ angle_t getRunningAdvance(float rpm, float engineLoad) {
 		engine->outputChannels.ignBlendParameter[i] = result.BlendParameter;
 		engine->outputChannels.ignBlendBias[i] = result.Bias;
 		engine->outputChannels.ignBlendOutput[i] = result.Value;
+		engine->outputChannels.ignBlendYAxis[i] = result.TableYAxis;
 
 		advanceAngle += result.Value;
 	}
