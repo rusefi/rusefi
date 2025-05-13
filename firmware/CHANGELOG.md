@@ -28,7 +28,7 @@ Release template (copy/paste this for new release):
 
 ## Unreleased
 
-## April 2025 "Day 1159"
+## May 2025 "Day 1174"
 
 ### Added
  - SD card mode selection: do not wait for USB if vbatt voltage #7424
@@ -39,6 +39,11 @@ Release template (copy/paste this for new release):
  - verbose CAN PerCylinderKnock
  - modern Chrysler VVT cam decoder https://github.com/rusefi/rusefi/wiki/All-Supported-Triggers#vvt
  - SD card formatting indicator
+ - additional status on WBO dialog
+
+### Fixed
+ - map window averaging is broken since April 20th #7867
+ - map window averaging does not use crank angle #7869
 
 ## February 2025 "Day 1075"
 
