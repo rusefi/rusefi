@@ -123,5 +123,117 @@
       "For tables that need higher precision, use scaled_channel<> template or direct float arrays",
       "scaled_channel template is used for runtime scaling, while autoscale affects configuration storage"
     ]
+  },
+
+  "wall_wetting_implementation": {
+    "description": "Guidelines for modifying or extending wall wetting functionality",
+    "details": [
+      "Wall wetting model is defined in firmware/controllers/algo/wall_fuel.cpp and wall_fuel.h",
+      "Model uses two key parameters: tau (evaporation time constant) and beta (wall impact fraction)",
+      "The adjust() method in WallFuel class is the main entry point for fuel correction calculation",
+      "WallFuelController::computeTau() and computeBeta() provide parameter calculations based on engine conditions",
+      "Alpha parameter represents fuel retention on walls (calculated from tau and RPM)",
+      "Any new influencing factors should be added to the controller's computation methods",
+      "When testing, focus on transient behavior (throttle changes) where wall wetting effects are most significant",
+      "Consider influences of temperature, pressure, engine speed, and fuel properties on the model parameters",
+      "Remember to initialize new table values in default_engine_configuration.cpp",
+      "For 3D tables using RPM x MAP, follow the implementation pattern for better transient response"
+    ]
+  },
+
+  "fuel_injection_extensions": {
+    "description": "Best practices for adding new fuel injection features",
+    "details": [
+      "Main fuel calculation happens in FuelCalculator class (fuel_calculator.cpp)",
+      "The injection timing is managed in InjectionController (injection_controller.cpp)",
+      "Fuel quantity is computed in getInjectionMass() with various corrections applied",
+      "When adding new corrections, follow pattern of existing ones (multiply or add in appropriate order)",
+      "Respect order of operations: base fuel, temperature corrections, transient corrections, fine-tuning",
+      "All fuel quantity values internal to system are in grams, conversion to pulse width happens at the end",
+      "New injection patterns must update both fuel quantity and timing calculations",
+      "When implementing multi-stage injection, extend both InjectionEvent classes and injection mode handling",
+      "Injector flow rate and dead-time corrections are applied in convertFuelToInjectorPulseWidth()",
+      "Test all injection modes (sequential, batch, simultaneous) when adding new features"
+    ]
+  },
+
+  "multi_dimensional_tables": {
+    "description": "Working with complex lookup tables for engine parameters",
+    "details": [
+      "For complex engine behaviors, use 3D or even 4D lookup tables (implemented as multiple 3D tables)",
+      "Fuel and ignition tables are prime examples of using 3D interpolation effectively",
+      "When adding new 3D tables, follow pattern of VE tables (define X/Y bins and Z values)",
+      "For very high dimensional lookups, consider using multiple 3D tables with an additional selector",
+      "Define appropriate bin spacing based on parameter sensitivity across its range",
+      "Consider table resolution requirements: critical areas may need finer granularity",
+      "Add default initialization for all new tables in default_engine_configuration.cpp",
+      "Use scaled_channel for high-precision tables to preserve memory efficiency",
+      "When showing tables in TunerStudio, set appropriate grid orientation for best visualization",
+      "Tables that represent similar physical concepts should use consistent units and scaling"
+    ]
+  },
+
+  "runtime_diagnostics": {
+    "description": "Adding diagnostic capabilities for new features",
+    "details": [
+      "Use the logging system for runtime diagnostics of your new functionality",
+      "Add relevant parameters to LiveData structures for real-time monitoring",
+      "Create status gauges in TunerStudio for critical parameters",
+      "Consider adding fields to the debugFieldF1List through F7List for detailed debugging",
+      "Use appropriate efiPrintf severity levels for different types of diagnostic messages",
+      "Consider adding self-tests or validation logic for complex features",
+      "For calibration tools, implement specialized diagnostic modes",
+      "Document common failure modes and their symptoms in code comments",
+      "Add appropriate bounds checking and validation with clear error messages",
+      "Consider adding real-time parameter adjustment capabilities for fine-tuning"
+    ]
+  },
+
+  "transient_acceleration": {
+    "description": "Best practices for implementing transient acceleration enrichment",
+    "details": [
+      "Wall wetting is one component of transient response, but additional enrichment is often required",
+      "Consider rate of change of TPS or MAP as primary triggers for enrichment calculations",
+      "Implement debounce logic to prevent false triggers from sensor noise",
+      "Add RPM dependency to transient enrichment for more precise control",
+      "Consider engine temperature effects on transient response needs",
+      "Use taper functions to smoothly blend enrichment in and out, avoiding abrupt fuel changes",
+      "Implement separate calibration for acceleration and deceleration events",
+      "Ensure proper synchronization with engine cycle for consistent application",
+      "Add diagnostics to visualize enrichment activation and magnitude in real-time",
+      "Test thoroughly in various temperature conditions as cold engines need more enrichment"
+    ]
+  },
+
+  "adaptive_learning": {
+    "description": "Implementing adaptive fuel learning features",
+    "details": [
+      "Study the Long Term Fuel Trim (LTFT) implementation as a model for adaptive systems",
+      "Consider both short-term and long-term adaptation mechanisms",
+      "Define proper cell boundaries for lookup tables based on engine operating regions",
+      "Set appropriate learning rates based on confidence in sensor readings",
+      "Implement proper validation of learning requirements (engine warmed up, closed loop, stable conditions)",
+      "Add proper reset mechanisms and learning limits to prevent runaway adaptation",
+      "Consider adding automatic learning curve smoothing between adjacent cells",
+      "Provide clear user interface for monitoring and adjusting adaptive parameters",
+      "Ensure learning data is properly saved to flash memory when engine stops",
+      "Add validation for learned values to detect and handle sensor issues"
+    ]
+  },
+
+  "sensor_processing": {
+    "description": "Best practices for implementing sensor processing",
+    "details": [
+      "Implement appropriate filtering based on sensor characteristics and signal noise",
+      "Consider using different filter time constants for rising vs falling signals when appropriate",
+      "Add proper bounds checking and failure detection mechanisms",
+      "Implement fallback values or alternative calculation methods for failed sensors",
+      "Consider sensor response time when using values for critical timing calculations",
+      "When implementing new sensors, follow the SensorType pattern in sensor_types.h",
+      "Use appropriate data types and scaling to maintain precision while optimizing memory usage",
+      "For ADC-based sensors, calibrate properly with real-world values across the operating range",
+      "Consider temperature effects on sensor readings when applicable",
+      "Document sensor specifications, wiring, and calibration procedures for end users"
+    ]
   }
 } 

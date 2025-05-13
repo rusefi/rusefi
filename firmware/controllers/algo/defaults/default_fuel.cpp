@@ -234,6 +234,7 @@ void setDefaultWallWetting() {
 	// linear reasonable bins
 	setLinearCurve(config->wwCltBins, -40, 100, 1);
 	setLinearCurve(config->wwMapBins, 10, 80, 1);
+	setLinearCurve(config->wwRpmBins, 500, 7000, 1);
 
 	// These values are derived from the GM factory tune for a gen3 LS engine
 	// Who knows if they're good for anything else, but at least they look nice?
@@ -242,20 +243,36 @@ void setDefaultWallWetting() {
 	};
 	copyArray(config->wwTauCltValues, tauClt);
 
-	static constexpr float tauMap[] = {
-		0.38, 0.55, 0.69, 0.86, 0.90, 0.95, 0.97, 1.00
+	// Create 2D arrays for MAP x RPM tables
+	static constexpr float tauMapRpm[8][8] = {
+		{0.38, 0.55, 0.69, 0.86, 0.90, 0.95, 0.97, 1.00},
+		{0.38, 0.55, 0.69, 0.86, 0.90, 0.95, 0.97, 1.00},
+		{0.38, 0.55, 0.69, 0.86, 0.90, 0.95, 0.97, 1.00},
+		{0.38, 0.55, 0.69, 0.86, 0.90, 0.95, 0.97, 1.00},
+		{0.38, 0.55, 0.69, 0.86, 0.90, 0.95, 0.97, 1.00},
+		{0.38, 0.55, 0.69, 0.86, 0.90, 0.95, 0.97, 1.00},
+		{0.38, 0.55, 0.69, 0.86, 0.90, 0.95, 0.97, 1.00},
+		{0.38, 0.55, 0.69, 0.86, 0.90, 0.95, 0.97, 1.00}
 	};
-	copyArray(config->wwTauMapValues, tauMap);
+	copyTable(config->wwTauMapRpmValues, tauMapRpm);
 
 	static constexpr float betaClt[] = {
 		0.73, 0.66, 0.57, 0.46, 0.38, 0.31, 0.24, 0.19
 	};
 	copyArray(config->wwBetaCltValues, betaClt);
 
-	static constexpr float betaMap[] = {
-		0.21, 0.40, 0.60, 0.79, 0.85, 0.90, 0.95, 1.00
+	// Create 2D arrays for MAP x RPM tables
+	static constexpr float betaMapRpm[8][8] = {
+		{0.21, 0.40, 0.60, 0.79, 0.85, 0.90, 0.95, 1.00},
+		{0.21, 0.40, 0.60, 0.79, 0.85, 0.90, 0.95, 1.00},
+		{0.21, 0.40, 0.60, 0.79, 0.85, 0.90, 0.95, 1.00},
+		{0.21, 0.40, 0.60, 0.79, 0.85, 0.90, 0.95, 1.00},
+		{0.21, 0.40, 0.60, 0.79, 0.85, 0.90, 0.95, 1.00},
+		{0.21, 0.40, 0.60, 0.79, 0.85, 0.90, 0.95, 1.00},
+		{0.21, 0.40, 0.60, 0.79, 0.85, 0.90, 0.95, 1.00},
+		{0.21, 0.40, 0.60, 0.79, 0.85, 0.90, 0.95, 1.00}
 	};
-	copyArray(config->wwBetaMapValues, betaMap);
+	copyTable(config->wwBetaMapRpmValues, betaMapRpm);
 }
 
 static void setDefaultLambdaProtection() {
