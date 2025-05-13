@@ -27,8 +27,12 @@ public class FindFileHelper {
         for (String file : Objects.requireNonNull(dir.list())) {
             if (file.contains(" "))
                 continue; // spaces not acceptable
-            if (file.startsWith(prefix) && file.endsWith(suffix))
+            if (file.startsWith(prefix) && file.endsWith(suffix)) {
+                // todo: instead of returning first matching file we have to make sure that
+                // not more than one file match pattern
+                // todo: find file to throw an exception if more than one file match pattern #7883
                 return fileDirectory + File.separator + file;
+            }
         }
         return null;
     }
