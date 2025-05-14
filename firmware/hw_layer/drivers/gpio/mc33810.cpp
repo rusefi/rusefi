@@ -25,6 +25,9 @@
 
 #if EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)
 
+// For exti irq
+#include "digital_input_exti.h"
+
 /*
  * TODO list:
  *
@@ -42,6 +45,12 @@ typedef enum {
 	MC33810_READY,
 	MC33810_FAILED
 } mc33810_drv_state;
+
+typedef enum {
+	COIL_IDLE = 0,
+	COIL_WAIT_SPARK_START,
+	COIL_WAIT_SPARK_END
+} mc33810_coil_state;
 
 #define MC_CMD_READ_REG(reg)			(0x0a00 | (((reg) & 0x0f) << 4))
 #define MC_CMD_SPI_CHECK				(0x0f00)
@@ -116,12 +125,16 @@ static thread_t *mc33810_thread = NULL;
 SEMAPHORE_DECL(mc33810_wake, 10 /* or BOARD_MC33810_COUNT ? */);
 static THD_WORKING_AREA(mc33810_thread_wa, 256);
 
+#define INJ_MASK		0x0f
+#define IGN_MASK		0xf0
+
 /* Driver */
 struct Mc33810 : public GpioChip {
 	int init() override;
 
 	int writePad(size_t pin, int value) override;
 	brain_pin_diag_e getDiag(size_t pin) override;
+	void debug() override;
 
 	// internal functions
 	int spi_unselect();
@@ -131,6 +144,9 @@ struct Mc33810 : public GpioChip {
 
 	int chip_init();
 	void wake_driver();
+
+	void ign_event(size_t pin, int value);
+	void on_spkdur(efitick_t now);
 
 	int chip_init_data();
 
@@ -159,6 +175,21 @@ struct Mc33810 : public GpioChip {
 
 	uint16_t				recentTx;
 
+	/* SPKDUR handling */
+	struct {
+		ioportid_t		port;
+		uint_fast8_t	pad;
+	} spkdur;
+	mc33810_coil_state 		coil_state;
+	uint8_t					active_coil_idx;	/* zero based, used as index of spark[] array */
+	uint8_t					spark_fault_mask;	/* 4 LSB bits are not used */
+	struct {
+		efitick_t			start;
+		efitick_t			end;
+		efitick_t			duration;
+	} spark[MC33810_IGN_OUTPUTS];
+	int						spark_sync_err;
+
 	/* statistic */
 	int						rst_cnt;
 	int						cor_cnt;
@@ -185,6 +216,8 @@ static const char* mc33810_pin_names[MC33810_OUTPUTS] = {
 inline bool isCor(uint16_t rx) {
 	return rx & REP_FLAG_COR;
 }
+
+static void mc33810_spkdur_cb(void *ptr, efitick_t now);
 
 /**
  * @brief MC33810 spi CS release helper with workaround
@@ -423,6 +456,22 @@ int Mc33810::chip_init_data()
 		goto err_gpios;
 	}
 
+	/* check if we support SPKDUR */
+	if (isBrainPinValid(cfg->spkdur) && brain_pin_is_onchip(cfg->spkdur)) {
+		ret = efiExtiEnablePin(DRIVER_NAME "SPKDUR", cfg->spkdur, PAL_EVENT_MODE_BOTH_EDGES, mc33810_spkdur_cb,
+			reinterpret_cast<void*>(this));
+		if (ret) {
+			efiPrintf(DRIVER_NAME " error requesting SPKDUR input IRQ: %d", ret);
+			// This is not critical
+			ret = 0;
+			goto exit;
+		}
+		spkdur.port = getHwPort(DRIVER_NAME, cfg->spkdur);
+		spkdur.pad = getHwPin(DRIVER_NAME, cfg->spkdur);
+	} else {
+		spkdur.port = nullptr;
+	}
+
 	return 0;
 
 err_gpios:
@@ -443,6 +492,7 @@ err_gpios:
 	}
 #endif
 
+exit:
 	return ret;
 }
 
@@ -610,6 +660,84 @@ void Mc33810::wake_driver()
 	}
 }
 
+/**
+ * @brief MC33810 SPKDUR event hook.
+ * @details Called on falling and rising edges of SPKDUR input.
+ */
+
+void Mc33810::on_spkdur(efitick_t now)
+{
+	if (coil_state == COIL_IDLE) {
+		/* ignore spurious events */
+		return;
+	}
+
+	bool edge = palReadPad(spkdur.port, spkdur.pad);
+
+	/* signal is active low */
+	if ((!edge) && (coil_state == COIL_WAIT_SPARK_START)) {
+		/* expected falling edge */
+		spark[active_coil_idx].start = now;
+		coil_state = COIL_WAIT_SPARK_END;
+	} else if ((edge) && (coil_state == COIL_WAIT_SPARK_END)) {
+		/* expected rise edge */
+		spark[active_coil_idx].end = now;
+		spark[active_coil_idx].duration = now - spark[active_coil_idx].start;
+		/* clear fault flag */
+		spark_fault_mask &= ~BIT(MC33810_INJ_OUTPUTS + active_coil_idx);
+		coil_state = COIL_IDLE;
+	} else {
+		/* unexpected event */
+		spark_sync_err++;
+		spark[active_coil_idx].duration = 0;
+		spark_fault_mask |= BIT(MC33810_INJ_OUTPUTS + active_coil_idx);
+		coil_state = COIL_IDLE;
+	}
+}
+
+/**
+ * @brief MC33810 ignition inputs event handler.
+ * @details Called right before ignition input (GIN0..GIN3) changes its state.
+ */
+
+void Mc33810::ign_event(size_t pin, int value)
+{
+	/* SPKDUR not routed to MCU */
+	if (spkdur.port == nullptr) {
+		return;
+	}
+
+	uint8_t pin_mask = BIT(pin);
+	uint8_t new_o_state = o_state;
+
+	if (value) {
+		new_o_state |=  pin_mask;
+	} else {
+		new_o_state &= ~pin_mask;
+	}
+
+	/* nothing's going change */
+	if (o_state == new_o_state)
+		return;
+
+	if (value) {
+		/* coil charge starting */
+		/* nothing to do here, we can still wait SPKDUR event from another coil */
+	} else {
+		size_t idx = pin - MC33810_INJ_OUTPUTS;
+		/* coil firing */
+		/* if we did not get some event for previously fired coil... */
+		if (coil_state != COIL_IDLE) {
+			/* ...mark this coil as failed */
+			spark_fault_mask |= BIT(MC33810_INJ_OUTPUTS + active_coil_idx);
+			spark[active_coil_idx].duration = 0;
+		}
+
+		active_coil_idx = idx;
+		coil_state = COIL_WAIT_SPARK_START;
+	}
+}
+
 /*==========================================================================*/
 /* Driver thread.															*/
 /*==========================================================================*/
@@ -664,13 +792,20 @@ static THD_FUNCTION(mc33810_driver_thread, p) {
 /* Driver interrupt handlers.												*/
 /*==========================================================================*/
 
-/* TODO: add IRQ support */
+static void mc33810_spkdur_cb(void *ptr, efitick_t now)
+{
+	Mc33810 *chip = (Mc33810 *)ptr;
+
+	chip->on_spkdur(now);
+}
 
 /*==========================================================================*/
 /* Driver exported functions.												*/
 /*==========================================================================*/
 
 int Mc33810::writePad(size_t pin, int value) {
+	uint8_t pin_mask = BIT(pin);
+
 	if (pin >= MC33810_OUTPUTS) {
 		return -12;
 	}
@@ -679,15 +814,19 @@ int Mc33810::writePad(size_t pin, int value) {
 		// mutate driver state under lock
 		chibios_rt::CriticalSectionLocker csl;
 
+		if (pin_mask & IGN_MASK) {
+			ign_event(pin, value);
+		}
+
 		if (value) {
-			o_state |=  BIT(pin);
+			o_state |=  pin_mask;
 		} else {
-			o_state &= ~BIT(pin);
+			o_state &= ~pin_mask;
 		}
 	}
 
 	/* direct driven? */
-	if (o_direct_mask & BIT(pin)) {
+	if (o_direct_mask & pin_mask) {
 		/* TODO: ensure that output driver enabled */
 #if MC33810_VERBOSE
 		int pad = PAL_PORT_BIT(cfg->direct_io[pin].pad);
@@ -715,7 +854,7 @@ brain_pin_diag_e Mc33810::getDiag(size_t pin)
 	if (pin >= MC33810_DIRECT_OUTPUTS)
 		return PIN_UNKNOWN;
 
-	if (pin < 4) {
+	if (pin < MC33810_INJ_OUTPUTS) {
 		/* OUT drivers */
 		val = out_fault[(pin < 2) ? 0 : 1] >> (4 * (pin & 0x01));
 
@@ -751,10 +890,25 @@ brain_pin_diag_e Mc33810::getDiag(size_t pin)
 			/* MAXI fault - too high coil current */
 			if (val & BIT(2))
 				diag |= PIN_OVERLOAD;
+
+			/* no SPKDUR detected */
+			if (spark_fault_mask & BIT(pin))
+				diag |= PIN_OPEN;
 		}
 	}
 	/* convert to some common enum? */
 	return static_cast<brain_pin_diag_e>(diag);
+}
+
+void Mc33810::debug() {
+	efiPrintf("rst_cnt %d cor_cnt %d sor_cnt %d ov_cnt %d lv_cnt %d\n",
+		rst_cnt, cor_cnt, sor_cnt, ov_cnt, lv_cnt);
+
+	for (size_t i = 0; i < MC33810_IGN_OUTPUTS; i++) {
+		efiPrintf("Ign %d spark fault %d last duration %d uS\n",
+			i, !!(spark_fault_mask & BIT(MC33810_INJ_OUTPUTS + i)),
+			(int)NT2US(spark[i].duration));
+	}
 }
 
 int Mc33810::init() {
