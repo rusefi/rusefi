@@ -1894,6 +1894,11 @@ float getOutputValueByName(const char *name) {
 		case 2069994349:
 			return getLiveData<electronic_throttle_s>(0)->trim;
 #endif
+// etb1boardEtbAdjustment
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+		case 1055284435:
+			return getLiveData<electronic_throttle_s>(0)->boardEtbAdjustment;
+#endif
 // etb1luaAdjustment
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 		case 1246430386:
@@ -1993,6 +1998,11 @@ float getOutputValueByName(const char *name) {
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
 		case 2071180270:
 			return getLiveData<electronic_throttle_s>(1)->trim;
+#endif
+// etb2boardEtbAdjustment
+#if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
+		case -272579820:
+			return getLiveData<electronic_throttle_s>(1)->boardEtbAdjustment;
 #endif
 // etb2luaAdjustment
 #if EFI_PROD_CODE && EFI_ELECTRONIC_THROTTLE_BODY && FULL_SD_LOGS
