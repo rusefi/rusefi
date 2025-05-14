@@ -29,6 +29,7 @@ set_board_file BOARD_GAUGES_FILE "${BOARD_DIR}/board_gauges.ini"
 set_board_file BOARD_CONSTANTS_EXTENSIONS_FILE "${BOARD_DIR}/board_constants_extensions.ini"
 set_board_file BOARD_COMMANDS_FILE "${BOARD_DIR}/board_commands.ini"
 set_board_file BOARD_POPULAR_VEHICLES_FILE "${BOARD_DIR}/board_popular_vehicles.ini"
+set_board_file BOARD_ENGINE_METADATA_FILE "${BOARD_DIR}/board_engine_metadata.ini"
 set_board_file BOARD_CAM_SETTINGS_FILE "${BOARD_DIR}/board_cam_settings.ini"
 set_board_file BOARD_DIAG_PANEL1_FILE "${BOARD_DIR}/board_diag_panel1.ini"
 set_board_file BOARD_DIAG_PANEL2_FILE "${BOARD_DIR}/board_diag_panel2.ini"
@@ -64,6 +65,7 @@ COMMON_GEN_CONFIG="
  -readfile BOARD_IGNITION_SETTINGS_FROM_FILE ${BOARD_IGNITION_SETTINGS_FILE} \
  -readfile COMMANDS_FROM_FILE ${BOARD_COMMANDS_FILE} \
  -readfile BOARD_POPULAR_VEHICLES_FILE ${BOARD_POPULAR_VEHICLES_FILE} \
+ -readfile BOARD_ENGINE_METADATA_FILE ${BOARD_ENGINE_METADATA_FILE} \
  -readfile BOARD_CAM_SETTINGS_FILE ${BOARD_CAM_SETTINGS_FILE} \
    -ts_destination tunerstudio \
  -triggerInputFolder ../unit_tests \
