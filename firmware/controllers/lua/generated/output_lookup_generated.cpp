@@ -1639,6 +1639,11 @@ float getOutputValueByName(const char *name) {
 		case 310661471:
 			return engine->triggerCentral.triggerState.triggerStateIndex;
 #endif
+// trgtriggerCountersError
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+		case 1108896195:
+			return engine->triggerCentral.triggerState.triggerCountersError;
+#endif
 // vvt1isynchronizationCounter
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 		case -608535663:
@@ -1663,6 +1668,11 @@ float getOutputValueByName(const char *name) {
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 		case -404295156:
 			return engine->triggerCentral.vvtState[0][0].triggerStateIndex;
+#endif
+// vvt1itriggerCountersError
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+		case 206956368:
+			return engine->triggerCentral.vvtState[0][0].triggerCountersError;
 #endif
 // vvt1esynchronizationCounter
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
@@ -1689,6 +1699,11 @@ float getOutputValueByName(const char *name) {
 		case 797862280:
 			return engine->triggerCentral.vvtState[0][1].triggerStateIndex;
 #endif
+// vvt1etriggerCountersError
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+		case -937296564:
+			return engine->triggerCentral.vvtState[0][1].triggerCountersError;
+#endif
 // vvt2isynchronizationCounter
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 		case -1432096142:
@@ -1714,6 +1729,11 @@ float getOutputValueByName(const char *name) {
 		case -1732159411:
 			return engine->triggerCentral.vvtState[1][0].triggerStateIndex;
 #endif
+// vvt2itriggerCountersError
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+		case 2130850289:
+			return engine->triggerCentral.vvtState[1][0].triggerCountersError;
+#endif
 // vvt2esynchronizationCounter
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 		case -1983023250:
@@ -1738,6 +1758,11 @@ float getOutputValueByName(const char *name) {
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 		case -530001975:
 			return engine->triggerCentral.vvtState[1][1].triggerStateIndex;
+#endif
+// vvt2etriggerCountersError
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+		case 986597357:
+			return engine->triggerCentral.vvtState[1][1].triggerCountersError;
 #endif
 // idleState
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL

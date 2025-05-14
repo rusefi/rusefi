@@ -788,6 +788,9 @@ static const LogField fields[] = {
 	{engine->triggerCentral.triggerState.triggerStateIndex, "trgtriggerStateIndex", "", 0},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.triggerState.triggerCountersError, "trgtriggerCountersError", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 	{engine->triggerCentral.vvtState[0][0].synchronizationCounter, "vvt1isync: wheel sync counter", "", 0},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
@@ -813,6 +816,9 @@ static const LogField fields[] = {
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 	{engine->triggerCentral.vvtState[0][0].triggerStateIndex, "vvt1itriggerStateIndex", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][0].triggerCountersError, "vvt1itriggerCountersError", "", 0},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 	{engine->triggerCentral.vvtState[0][1].synchronizationCounter, "vvt1esync: wheel sync counter", "", 0},
@@ -842,6 +848,9 @@ static const LogField fields[] = {
 	{engine->triggerCentral.vvtState[0][1].triggerStateIndex, "vvt1etriggerStateIndex", "", 0},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[0][1].triggerCountersError, "vvt1etriggerCountersError", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 	{engine->triggerCentral.vvtState[1][0].synchronizationCounter, "vvt2isync: wheel sync counter", "", 0},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
@@ -869,6 +878,9 @@ static const LogField fields[] = {
 	{engine->triggerCentral.vvtState[1][0].triggerStateIndex, "vvt2itriggerStateIndex", "", 0},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][0].triggerCountersError, "vvt2itriggerCountersError", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 	{engine->triggerCentral.vvtState[1][1].synchronizationCounter, "vvt2esync: wheel sync counter", "", 0},
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
@@ -894,6 +906,9 @@ static const LogField fields[] = {
 #endif
 #if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
 	{engine->triggerCentral.vvtState[1][1].triggerStateIndex, "vvt2etriggerStateIndex", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS
+	{engine->triggerCentral.vvtState[1][1].triggerCountersError, "vvt2etriggerCountersError", "", 0},
 #endif
 #if EFI_PROD_CODE && EFI_IDLE_CONTROL
 	{engine->module<IdleController>().unmock().baseIdlePosition, "idle: base value", "", 0},
