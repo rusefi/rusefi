@@ -3,6 +3,7 @@
 struct_no_prefix electronic_throttle_s
 	float targetWithIdlePosition;"ETB: target with idle";"%", 1,0, 0,10, 2,@@GAUGE_CATEGORY_ETB@@
 	float trim;"ETB: trim"
+	float boardEtbAdjustment
 	float luaAdjustment;"ETB: luaAdjustment";"%", 1,0, 0,3, 2,@@GAUGE_CATEGORY_ETB@@
 
 	float m_wastegatePosition;"DC: wastegatePosition";"%", 1,0, 0,3, 2,@@GAUGE_CATEGORY_ETB@@

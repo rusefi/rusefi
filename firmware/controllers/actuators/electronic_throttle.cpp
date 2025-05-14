@@ -318,7 +318,9 @@ expected<percent_t> EtbController::getSetpointEtb() {
 	// 100% target from table -> 100% target position
 	targetWithIdlePosition = interpolateClamped(0, etbIdleAddition, 100, 100, etbCurrentTarget);
 
-	percent_t targetPosition = boardAdjustEtbTarget(targetWithIdlePosition + getLuaAdjustment());
+  percent_t preBoard = targetWithIdlePosition + getLuaAdjustment();
+	percent_t targetPosition = boardAdjustEtbTarget(preBoard);
+	boardEtbAdjustment = preBoard - targetPosition;
 	// just an additional logging data point
 	adjustedEtbTarget = targetPosition;
 
