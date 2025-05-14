@@ -434,7 +434,7 @@ float getStandardAirCharge() {
 	return idealGasLaw(cylDisplacement, STD_ATMOSPHERE, C_K_OFFSET + STD_IAT);
 }
 
-PUBLIC_API_WEAK_SOMETHING_WEIRD
+PUBLIC_API_WEAK
 float getCylinderFuelTrim(size_t cylinderNumber, float rpm, float fuelLoad) {
 	auto trimPercent = interpolate3d(
 		config->fuelTrims[cylinderNumber].table,

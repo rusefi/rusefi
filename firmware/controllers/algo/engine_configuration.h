@@ -19,14 +19,6 @@
 
 #define MOCK_UNDEFINED -1
 
-// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90826 Weak symbol does not work reliably on windows
-// https://sourceware.org/bugzilla/show_bug.cgi?id=9687 Weak symbols not working on mingw32
-#if !defined(IS_WINDOWS_COMPILER) || !IS_WINDOWS_COMPILER
-#define PUBLIC_API_WEAK_SOMETHING_WEIRD __attribute__((weak))
-#else
-#define PUBLIC_API_WEAK_SOMETHING_WEIRD
-#endif
-
 void setCrankOperationMode();
 void setCamOperationMode();
 
