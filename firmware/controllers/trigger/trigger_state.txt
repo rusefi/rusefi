@@ -8,4 +8,5 @@ struct_no_prefix trigger_state_s
     float triggerSyncGapRatio;@@GAUGE_NAME_TRG_GAP@@;"", 1, 0, -10000, 10000, 3
 
     uint8_t triggerStateIndex
+    uint8_t triggerCountersError
 end_struct

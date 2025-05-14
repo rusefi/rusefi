@@ -174,7 +174,7 @@ private:
 	void resetCurrentCycleState();
 	bool isSyncPoint(const TriggerWaveform& triggerShape, trigger_type_e triggerType) const;
 
-	bool validateEventCounters(const TriggerWaveform& triggerShape) const;
+	int getEventCountersError(const TriggerWaveform& triggerShape) const;
 
 	trigger_event_e prevSignal;
 	int64_t totalEventCountBase;

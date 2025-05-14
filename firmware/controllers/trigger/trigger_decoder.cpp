@@ -301,23 +301,26 @@ void VvtTriggerDecoder::onTooManyTeeth(int actual, int expected) {
 	warning(ObdCode::CUSTOM_CAM_TOO_MANY_TEETH, "cam %s trigger error: too many teeth between sync points: %d > %d", name, actual, expected);
 }
 
-bool TriggerDecoderBase::validateEventCounters(const TriggerWaveform& triggerShape) const {
+int TriggerDecoderBase::getEventCountersError(const TriggerWaveform& triggerShape) const {
 	// We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
-	bool isDecodingError = false;
+	int countersError = 0;
 	for (int i = 0;i < PWM_PHASE_MAX_WAVE_PER_PWM;i++) {
-		isDecodingError |= (currentCycle.eventCount[i] != triggerShape.getExpectedEventCount((TriggerWheel)i));
+	  countersError = currentCycle.eventCount[i] - triggerShape.getExpectedEventCount((TriggerWheel)i);
+	  if (countersError != 0) {
+	    break;
+	  }
 	}
 
 #if EFI_DEFAILED_LOGGING
-	printf("validateEventCounters: isDecodingError=%d\n", isDecodingError);
-	if (isDecodingError) {
+	printf("getEventCountersError: isDecodingError=%d\n", (countersError != 0));
+	if (countersError != 0) {
 		for (int i = 0;i < PWM_PHASE_MAX_WAVE_PER_PWM;i++) {
 			printf("  count: cur=%d exp=%d\n", currentCycle.eventCount[i],  triggerShape.getExpectedEventCount((TriggerWheel)i));
 		}
 	}
 #endif /* EFI_UNIT_TEST */
 
-	return isDecodingError;
+	return countersError;
 }
 
 void TriggerDecoderBase::onShaftSynchronization(
@@ -555,7 +558,8 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 #endif /* EFI_UNIT_TEST */
 
 		if (isSynchronizationPoint) {
-			bool isDecodingError = validateEventCounters(triggerShape);
+		  triggerCountersError = getEventCountersError(triggerShape);
+			bool isDecodingError = triggerCountersError != 0;
 
 			if (triggerStateListener) {
 				triggerStateListener->OnTriggerSynchronization(wasSynchronized, isDecodingError);
