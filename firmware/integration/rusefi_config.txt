@@ -2326,6 +2326,7 @@ end_struct
 #define ts_show_charge_estimation true
 #define ts_show_ve_blend true
 #define ts_show_engine_make true
+#define ts_show_engine_code true
 #define ts_show_veBlends2 true
 #define ts_show_veBlends3 true
 #define ts_show_veBlends4 true
