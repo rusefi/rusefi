@@ -16,8 +16,11 @@
 #include <hal.h>
 #include "rusefi_types.h"
 
-#define MC33810_OUTPUTS				8
-#define MC33810_DIRECT_OUTPUTS		8
+#define MC33810_INJ_OUTPUTS			4
+#define MC33810_IGN_OUTPUTS			4
+
+#define MC33810_OUTPUTS				(MC33810_INJ_OUTPUTS + MC33810_IGN_OUTPUTS)
+#define MC33810_DIRECT_OUTPUTS		MC33810_OUTPUTS
 
 /* TODO: add irq support */
 #define MC33810_POLL_INTERVAL_MS	100
@@ -46,6 +49,14 @@ struct mc33810_config {
 		ioportid_t		port;
 		uint_fast8_t	pad;
 	} sck;
+
+	/* TODO: fix mix of port+pad vs brain_pin_e */
+	/* Spark duration signal input, active low */
+	brain_pin_e			spkdur;
+	/* Nominal ignition coil current flag signal input */
+	brain_pin_e			nomi;
+	/* Maximum ignition coil current flag signal input */
+	brain_pin_e			maxi;
 };
 
 int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg);
