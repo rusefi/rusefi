@@ -743,6 +743,12 @@ static const LogField fields[] = {
 	{engine->triggerCentral.mapVvt_sync_counter, "Instant MAP sync counter", "counter", 0},
 #endif
 #if EFI_SHAFT_POSITION_INPUT
+	{engine->triggerCentral.temp_mapVvt_index, "temp_mapVvt_index", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
+	{engine->triggerCentral.mapVvt_CycleDelta, "mapVvt_CycleDelta", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.currentEngineDecodedPhase, "Sync: Engine Phase", "deg", 0, "Sync"},
 #endif
 #if EFI_SHAFT_POSITION_INPUT
@@ -755,7 +761,7 @@ static const LogField fields[] = {
 	{engine->triggerCentral.mapCamPrevToothAngle, "Sync: MAP: prev angle", "deg", 2},
 #endif
 #if EFI_SHAFT_POSITION_INPUT
-	{engine->triggerCentral, 40, 0, "isDecodingMapCam", ""},
+	{engine->triggerCentral, 48, 0, "isDecodingMapCam", ""},
 #endif
 #if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.triggerElapsedUs, "triggerElapsedUs", "", 0},
