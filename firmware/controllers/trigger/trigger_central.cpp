@@ -907,6 +907,8 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		// Handle ignition and injection
 		mainTriggerCallback(triggerIndexForListeners, timestamp, currentEngineDecodedPhase, nextPhase);
 
+    temp_mapVvt_index = triggerIndexForListeners;
+
 		// Decode the MAP based "cam" sensor
 		decodeMapCam(timestamp, currentEngineDecodedPhase);
 
