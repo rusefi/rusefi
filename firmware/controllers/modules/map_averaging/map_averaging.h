@@ -13,9 +13,10 @@
 
 /**
 * here we have averaging start and averaging end points for each cylinder
+* TODO: migrate to AngleBasedEvent, see also #7869
 */
 struct mapSampler {
-	AngleBasedEvent startTimer;
+	scheduling_s startTimer;
 	scheduling_s endTimer;
 };
 
