@@ -214,18 +214,16 @@ void MapAveragingModule::onEnginePhase(float /*rpm*/,
 			continue;
 		}
 
-		float angleOffset = samplingStart - currentPhase;
-		if (angleOffset < 0) {
-			angleOffset += getEngineState()->engineCycle;
-		}
-
 		// only if value is already prepared
 		int structIndex = getRevolutionCounter() % 2;
 
 		auto & mapAveraging = *engine->module<MapAveragingModule>();
 		mapSampler* s = &mapAveraging.samplers[i][structIndex];
 
-		scheduleByAngle(&s->startTimer, edgeTimestamp, angleOffset,
+		// at the moment we schedule based on time prediction based on current RPM and angle
+		// we are loosing precision in case of changing RPM - the further away is the event the worse is precision
+		// todo: schedule this based on closest trigger event, same as ignition works
+		scheduleByAngle(&s->startTimer, edgeTimestamp, samplingStart,
 				{ startMapAveraging, s });
 	}
 }
