@@ -894,6 +894,11 @@ brain_pin_diag_e Mc33810::getDiag(size_t pin)
 			/* no SPKDUR detected */
 			if (spark_fault_mask & BIT(pin))
 				diag |= PIN_OPEN;
+
+			/* too short spark time means there is oscilation on coil,
+			 * that usualy because of open secondary (disconnected spark plug) */
+			if (spark[pin - MC33810_IGN_OUTPUTS].duration < USF2NT(150))
+				diag |= PIN_OPEN;
 		}
 	}
 	/* convert to some common enum? */
