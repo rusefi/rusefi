@@ -37,7 +37,7 @@ struct trigger_state_s {
 	/**
 	 * offset 33
 	 */
-	uint8_t triggerCountersError = (uint8_t)0;
+	int8_t triggerCountersError = (int8_t)0;
 	/**
 	 * need 4 byte alignment
 	 * units: units
