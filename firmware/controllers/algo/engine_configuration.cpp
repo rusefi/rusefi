@@ -711,6 +711,15 @@ void commonFrankensoAnalogInputs() {
 	engineConfiguration->vbattAdcChannel = EFI_ADC_14;
 }
 
+constexpr bool strings_equal(char const * a, char const * b) {
+	return std::string_view(a)==b;
+}
+#define XSTR(x) STR(x)
+#define STR(x) #x
+#pragma message "PUBLIC_API_WEAK is `" XSTR(PUBLIC_API_WEAK) "`"
+#pragma message "PUBLIC_API_WEAK_SOMETHING_WEIRD is `" XSTR(PUBLIC_API_WEAK_SOMETHING_WEIRD) "`"
+static_assert(strings_equal(XSTR(PUBLIC_API_WEAK), XSTR(PUBLIC_API_WEAK_SOMETHING_WEIRD)));
+
 // These symbols are weak so that a board_configuration.cpp file can override them
 PUBLIC_API_WEAK void setBoardDefaultConfiguration() { }
 // specific firmware builds are meant for specific hardware. In order to provide best user experience on well-known boards sometimes we reduce user flexibility.

@@ -241,6 +241,15 @@ angle_t IgnitionState::getWrappedAdvance(const float rpm, const float engineLoad
     return angle;
 }
 
+constexpr bool strings_equal(char const * a, char const * b) {
+	return std::string_view(a)==b;
+}
+#define XSTR(x) STR(x)
+#define STR(x) #x
+#pragma message "PUBLIC_API_WEAK is `" XSTR(PUBLIC_API_WEAK) "`"
+#pragma message "PUBLIC_API_WEAK_SOMETHING_WEIRD is `" XSTR(PUBLIC_API_WEAK_SOMETHING_WEIRD) "`"
+static_assert(strings_equal(XSTR(PUBLIC_API_WEAK), XSTR(PUBLIC_API_WEAK_SOMETHING_WEIRD)));
+
 PUBLIC_API_WEAK_SOMETHING_WEIRD
 angle_t getCylinderIgnitionTrim(size_t cylinderNumber, float rpm, float ignitionLoad) {
 	return IgnitionState::getInterpolatedIgnitionTrim(cylinderNumber, rpm, ignitionLoad);

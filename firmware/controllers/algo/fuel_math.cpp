@@ -434,6 +434,15 @@ float getStandardAirCharge() {
 	return idealGasLaw(cylDisplacement, STD_ATMOSPHERE, C_K_OFFSET + STD_IAT);
 }
 
+constexpr bool strings_equal(char const * a, char const * b) {
+	return std::string_view(a)==b;
+}
+#define XSTR(x) STR(x)
+#define STR(x) #x
+#pragma message "PUBLIC_API_WEAK is `" XSTR(PUBLIC_API_WEAK) "`"
+#pragma message "PUBLIC_API_WEAK_SOMETHING_WEIRD is `" XSTR(PUBLIC_API_WEAK_SOMETHING_WEIRD) "`"
+static_assert(strings_equal(XSTR(PUBLIC_API_WEAK), XSTR(PUBLIC_API_WEAK_SOMETHING_WEIRD)));
+
 PUBLIC_API_WEAK_SOMETHING_WEIRD
 float getCylinderFuelTrim(size_t cylinderNumber, float rpm, float fuelLoad) {
 	auto trimPercent = interpolate3d(

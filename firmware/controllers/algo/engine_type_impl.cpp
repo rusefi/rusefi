@@ -53,6 +53,15 @@ static_assert(libPROTEUS_STIM_QC == (int)engine_type_e::PROTEUS_STIM_QC);
 static_assert(libHELLEN_2CHAN_STIM_QC == (int)engine_type_e::HELLEN_2CHAN_STIM_QC);
 static_assert(libHELLEN_4CHAN_STIM_QC == (int)engine_type_e::HELLEN_4CHAN_STIM_QC);
 
+constexpr bool strings_equal(char const * a, char const * b) {
+	return std::string_view(a)==b;
+}
+#define XSTR(x) STR(x)
+#define STR(x) #x
+#pragma message "PUBLIC_API_WEAK is `" XSTR(PUBLIC_API_WEAK) "`"
+#pragma message "PUBLIC_API_WEAK_SOMETHING_WEIRD is `" XSTR(PUBLIC_API_WEAK_SOMETHING_WEIRD) "`"
+static_assert(strings_equal(XSTR(PUBLIC_API_WEAK), XSTR(PUBLIC_API_WEAK_SOMETHING_WEIRD)));
+
 PUBLIC_API_WEAK_SOMETHING_WEIRD void applyUnknownEngineType(engine_type_e engineType) {
 		firmwareError(ObdCode::CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", (int)engineType);
 }
