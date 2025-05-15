@@ -1584,6 +1584,11 @@ float getOutputValueByName(const char *name) {
 		case 1921134430:
 			return engine->triggerCentral.mapVvt_sync_counter;
 #endif
+// mapVvt_min_point_counter
+#if EFI_SHAFT_POSITION_INPUT
+		case -983339026:
+			return engine->triggerCentral.mapVvt_min_point_counter;
+#endif
 // temp_mapVvt_index
 #if EFI_SHAFT_POSITION_INPUT
 		case 997197711:

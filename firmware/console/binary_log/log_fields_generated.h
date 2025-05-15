@@ -743,6 +743,9 @@ static const LogField fields[] = {
 	{engine->triggerCentral.mapVvt_sync_counter, "Instant MAP sync counter", "counter", 0},
 #endif
 #if EFI_SHAFT_POSITION_INPUT
+	{engine->triggerCentral.mapVvt_min_point_counter, "mapVvt_min_point_counter", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.temp_mapVvt_index, "temp_mapVvt_index", "", 0},
 #endif
 #if EFI_SHAFT_POSITION_INPUT
