@@ -69,6 +69,7 @@ public enum UnitLabelPrinter {
     private static class UnitIdentifiers {
         private static final String UID_SUM_FIELD_NAME = "uidSum";
         private static final String SHORT_UID_FIELD_NAME = "shortUid";
+        private static final String HW_REVISION_FIELD_NAME = "hwRevision";
 
         private final LinkedHashMap<String, String> identifiers = new LinkedHashMap<>();
 
@@ -87,6 +88,8 @@ public enum UnitLabelPrinter {
                 final double doubleValue = Double.parseDouble(value);
                 identifiers.put("Short UID", String.format("%.0f", doubleValue));
             });
+            final Optional<String> hwRevision = readFieldValue(HW_REVISION_FIELD_NAME, calibrationsInfo, callbacks);
+            hwRevision.ifPresent(value -> identifiers.put("Hardware", value));
         }
 
         boolean isEmpty() {
