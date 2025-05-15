@@ -9,6 +9,7 @@ DOCS_ENUMS_INPUTS = \
   $(PROJECT_DIR)/controllers/algo/ignition/ignition_state.txt \
   $(PROJECT_DIR)/controllers/actuators/idle_state.txt \
   $(PROJECT_DIR)/controllers/actuators/electronic_throttle.txt \
+  $(PROJECT_DIR)/hw_layer/drivers/gpio/mc33810_state.txt \
   $(PROJECT_DIR)/integration/LiveData.yaml \
   $(PROJECT_DIR)/console/binary/generated/live_data_ids.h \
   $(PROJECT_DIR)/controllers/sensors/sensor_type.h \

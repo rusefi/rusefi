@@ -129,7 +129,7 @@ static THD_WORKING_AREA(mc33810_thread_wa, 256);
 #define IGN_MASK		0xf0
 
 /* Driver */
-struct Mc33810 : public GpioChip {
+struct Mc33810 : public GpioChip, public mc33810_state_s {
 	int init() override;
 
 	int writePad(size_t pin, int value) override;
@@ -1021,6 +1021,11 @@ case DWELL_8MS:
  return 0;
 }
 
+const mc33810_state_s* mc33810getLiveData(size_t idx) {
+	if (idx >= BOARD_MC33810_COUNT)
+		return nullptr;
+	return &chips[idx];
+}
 
 #else /* BOARD_MC33810_COUNT > 0 */
 
@@ -1029,6 +1034,10 @@ int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg)
 	(void)base; (void)index; (void)cfg;
 
 	return -5;
+}
+
+const mc33810_state_s* mc33810getLiveData(size_t) {
+	return nullptr;
 }
 
 #endif /* BOARD_MC33810_COUNT */

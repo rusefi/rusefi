@@ -234,3 +234,11 @@ Usages:
     folder: controllers/math
     constexpr: "engine->lambdaMonitor"
     conditional_compilation: "EFI_SHAFT_POSITION_INPUT"
+
+  - name: mc33810_state
+    cppFileName: mc33810
+    java: Mc33810State.java
+    folder: hw_layer/drivers/gpio/
+    prepend: integration/rusefi_config_shared.txt
+    isPtr: true
+    conditional_compilation: "EFI_PROD_CODE"
