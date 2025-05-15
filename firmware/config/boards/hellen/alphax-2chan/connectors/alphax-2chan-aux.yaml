@@ -47,6 +47,17 @@ pins:
     type: ls
     ts_name: Aux8 - Ign 3
 
+  - pin: X9
+    meta: H144_LS_5
+    class: outputs
+    type: hs
+    ts_name: Aux9 - HS1
+
+  - pin: X10
+    meta: H144_LS_6
+    class: outputs
+    type: hs
+    ts_name: Aux10 - HS2
 
 info:
   cid: aux
