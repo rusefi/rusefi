@@ -150,8 +150,7 @@ static ObdCode getCodeForIgnition(int idx, brain_pin_diag_e diag) {
 	return (ObdCode)((int)ObdCode::OBD_Ignition_Circuit_1 + idx);
 }
 
-static uint8_t getTSErrorCode(brain_pin_diag_e diag)
-{
+static uint8_t getTSErrorCode(brain_pin_diag_e diag) {
 	/* Error codes reported to TS:
 	 *  0 - output is not used
 	 *  1 - ok status/no diagnostic available (TODO: separate codes)
@@ -159,9 +158,9 @@ static uint8_t getTSErrorCode(brain_pin_diag_e diag)
 	 * Keep in sync with outputDiagErrorList in tunerstudio.template.ini
 	 * Note:
 	 * diag can be combination of few errors,
-	 * while we report only one error to simplify hadling on TS side
+	 * while we report only one error to simplify handling on TS side
 	 * find position of least significant 1-bit */
-	return __builtin_ffs(diag) + 1;
+	return __builtin_ffs(diag) + TS_ENUM_OFFSET;
 }
 #endif // BOARD_EXT_GPIOCHIPS > 0 && EFI_PROD_CODE
 
