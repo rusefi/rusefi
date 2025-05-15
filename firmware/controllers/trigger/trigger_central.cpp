@@ -32,9 +32,6 @@
 WaveChart waveChart;
 #endif /* EFI_ENGINE_SNIFFER */
 
-static scheduling_s debugToggleScheduling;
-#define DEBUG_PIN_DELAY US2NT(60)
-
 #define TRIGGER_WAVEFORM(x) getTriggerCentral()->triggerShape.x
 
 #if EFI_SHAFT_POSITION_INPUT
@@ -146,21 +143,6 @@ angle_t TriggerCentral::syncEnginePhaseAndReport(int divider, int remainder) {
 	return totalShift;
 }
 
-static void turnOffAllDebugFields() {
-#if EFI_PROD_CODE
-	for (int index = 0;index<TRIGGER_INPUT_PIN_COUNT;index++) {
-		if (isBrainPinValid(engineConfiguration->triggerInputDebugPins[index])) {
-			writePad("trigger debug", engineConfiguration->triggerInputDebugPins[index], 0);
-		}
-	}
-	for (int index = 0;index<CAM_INPUTS_COUNT;index++) {
-		if (isBrainPinValid(engineConfiguration->camInputsDebug[index])) {
-			writePad("cam debug", engineConfiguration->camInputsDebug[index], 0);
-		}
-	}
-#endif /* EFI_PROD_CODE */
-}
-
 PUBLIC_API_WEAK angle_t customAdjustCustom(TriggerCentral *tc, vvt_mode_e vvtMode) {
   return 0;
 }
@@ -242,13 +224,6 @@ static angle_t wrapVvt(angle_t vvtPosition, int period) {
 }
 
 static void logVvtFront(bool useOnlyRise, bool isImportantFront, TriggerValue front, efitick_t nowNt, int index) {
-	if (isImportantFront && isBrainPinValid(engineConfiguration->camInputsDebug[index])) {
-#if EFI_PROD_CODE
-		writePad("cam debug", engineConfiguration->camInputsDebug[index], 1);
-#endif /* EFI_PROD_CODE */
-		getScheduler()->schedule("dbg_on", &debugToggleScheduling, nowNt + DEBUG_PIN_DELAY, action_s::make<turnOffAllDebugFields>());
-	}
-
 	if (!useOnlyRise || engineConfiguration->displayLogicLevelsInEngineSniffer) {
 		// If we care about both edges OR displayLogicLevel is set, log every front exactly as it is
 		addEngineSnifferVvtEvent(index, front == TriggerValue::RISE ? FrontDirection::UP : FrontDirection::DOWN);
@@ -536,13 +511,6 @@ void handleShaftSignal(int signalIndex, bool isRising, efitick_t timestamp) {
 			 */
 			return;
 		}
-	}
-
-	if (engineConfiguration->triggerInputDebugPins[signalIndex] != Gpio::Unassigned) {
-#if EFI_PROD_CODE
-		writePad("trigger debug", engineConfiguration->triggerInputDebugPins[signalIndex], 1);
-#endif /* EFI_PROD_CODE */
-		getScheduler()->schedule("dbg_off", &debugToggleScheduling, timestamp + DEBUG_PIN_DELAY, action_s::make<turnOffAllDebugFields>());
 	}
 
 #if EFI_TOOTH_LOGGER
