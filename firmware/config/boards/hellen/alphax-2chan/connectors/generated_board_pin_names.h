@@ -12,6 +12,8 @@
 #define PIN_X6 H144_IGN_4
 #define PIN_X7 H144_IN_AUX4_ANALOG
 #define PIN_X8 H144_IGN_3
+#define PIN_X9 H144_LS_5
+#define PIN_X10 H144_LS_6
 #define PIN_9 MSIOBOX_0_OUT_1
 #define PIN_10 MSIOBOX_0_OUT_2
 #define PIN_7 MSIOBOX_0_OUT_3

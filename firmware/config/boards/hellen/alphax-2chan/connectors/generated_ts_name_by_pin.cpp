@@ -17,12 +17,14 @@ const char * getBoardSpecificPinName(brain_pin_e brainPin) {
 		case Gpio::D10: return "Aux4 - Inj 4";
 		case Gpio::D11: return "Aux2 - Inj 3";
 		case Gpio::D13: return "C8 - Idle";
+		case Gpio::D9: return "Aux9 - HS1";
 		case Gpio::E12: return "C3 - Crank+ (hall)";
 		case Gpio::E14: return "C2 - Crank- (hall)";
 		case Gpio::E3: return "Aux6 - Ign 4";
 		case Gpio::E4: return "Aux8 - Ign 3";
 		case Gpio::E5: return "A7 - Ignition B";
 		case Gpio::F11: return "C4 - 2Step/Digital";
+		case Gpio::F12: return "Aux10 - HS2";
 		case Gpio::G7: return "A8 - Injector A";
 		case Gpio::G8: return "B8 - Injector B";
 		case Gpio::MSIOBOX_0_OUT_1: return "MS IO-Box 0 OUT 1";

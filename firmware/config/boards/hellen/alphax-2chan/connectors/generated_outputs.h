@@ -15,6 +15,8 @@ Gpio GENERATED_OUTPUTS = {
 	Gpio::H144_LS_2, // B8 - Injector B
 	Gpio::H144_OUT_PWM4, // C1 - Fan Relay
 	Gpio::H144_OUT_PWM1, // C8 - Idle
+	Gpio::H144_LS_5, // Aux9 - HS1
+	Gpio::H144_LS_6, // Aux10 - HS2
 	Gpio::MSIOBOX_0_OUT_1, // MS IO-Box 0 OUT 1
 	Gpio::MSIOBOX_0_OUT_2, // MS IO-Box 0 OUT 2
 	Gpio::MSIOBOX_0_OUT_3, // MS IO-Box 0 OUT 3
@@ -31,6 +33,8 @@ Gpio GENERATED_OUTPUTS = {
 // "B8 - Injector B",
 // "C1 - Fan Relay",
 // "C8 - Idle",
+// "Aux9 - HS1",
+// "Aux10 - HS2",
 // "MS IO-Box 0 OUT 1",
 // "MS IO-Box 0 OUT 2",
 // "MS IO-Box 0 OUT 3",
