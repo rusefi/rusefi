@@ -23,6 +23,7 @@
 #include "idle_thread.h"
 #include "launch_control.h"
 #include "gppwm_channel.h"
+#include <string_view>
 
 #if EFI_ENGINE_CONTROL
 

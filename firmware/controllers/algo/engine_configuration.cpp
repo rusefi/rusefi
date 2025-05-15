@@ -62,6 +62,7 @@
 #if EFI_TUNER_STUDIO
 #include "tunerstudio.h"
 #endif
+#include <string_view>
 
 #define TS_DEFAULT_SPEED 38400
 

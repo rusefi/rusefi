@@ -48,6 +48,7 @@
 #include "mitsubishi_3A92.h"
 #include "mitsubishi_4G93.h"
 #include "ford_festiva.h"
+#include <string_view>
 
 static_assert(libPROTEUS_STIM_QC == (int)engine_type_e::PROTEUS_STIM_QC);
 static_assert(libHELLEN_2CHAN_STIM_QC == (int)engine_type_e::HELLEN_2CHAN_STIM_QC);
