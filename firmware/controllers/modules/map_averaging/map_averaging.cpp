@@ -175,9 +175,6 @@ void MapAveragingModule::onFastCallback() {
 		angle_t start = interpolate2d(rpm, c->samplingAngleBins, c->samplingAngle);
 		efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_START_ASSERT, !std::isnan(start), "start");
 
-		angle_t offsetAngle = engine->triggerCentral.triggerFormDetails.eventAngles[0];
-		efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_AVG_OFFSET, !std::isnan(offsetAngle), "offsetAngle");
-
 		for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
 			float cylinderStart = start + getPerCylinderFiringOrderOffset(i, getCylinderNumberAtIndex(i));
 			wrapAngle(cylinderStart, "cylinderStart", ObdCode::CUSTOM_ERR_6562);
@@ -217,25 +214,22 @@ void MapAveragingModule::onEnginePhase(float /*rpm*/,
 			continue;
 		}
 
-		angle_t samplingEnd = samplingStart + engine->engineState.mapAveragingDuration;
-
-		if (std::isnan(samplingEnd)) {
-			// todo: when would this happen?
-			warning(ObdCode::CUSTOM_ERR_6549, "no map angles");
-			return;
+		float angleOffset = samplingStart - currentPhase;
+		if (angleOffset < 0) {
+			angleOffset += getEngineState()->engineCycle;
 		}
 
 		// only if value is already prepared
 		int structIndex = getRevolutionCounter() % 2;
 
 		auto & mapAveraging = *engine->module<MapAveragingModule>();
-		mapSampler* s = &mapAveraging.samplers[i][structIndex];
+		mapSampler* m_event = &mapAveraging.samplers[i][structIndex];
 
-		// at the moment we schedule based on time prediction based on current RPM and angle
-		// we are loosing precision in case of changing RPM - the further away is the event the worse is precision
-		// todo: schedule this based on closest trigger event, same as ignition works
-		scheduleByAngle(&s->startTimer, edgeTimestamp, samplingStart,
-				{ startMapAveraging, s });
+		engine->module<TriggerScheduler>()->schedule(
+		    "mapAveragingStart",
+			&m_event->startTimer,
+			angleOffset,
+			{ startMapAveraging, m_event });
 	}
 }
 
