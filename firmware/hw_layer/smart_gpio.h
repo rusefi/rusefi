@@ -8,6 +8,7 @@
 #pragma once
 
 #if EFI_PROD_CODE
+#ifndef EFI_BOOTLOADER
 #include "drivers/gpio/mc33810.h"
 #include "drivers/gpio/tle6240.h"
 #include "drivers/gpio/mc33972.h"
@@ -16,6 +17,7 @@
 #include "drivers/gpio/drv8860.h"
 #include "drivers/gpio/can_gpio_msiobox.h"
 // we seem OK without L9779 here do we need those includes at all?
+#endif /* EFI_BOOTLOADER */
 #endif /* EFI_PROD_CODE */
 
 #if EFI_SIMULATOR
