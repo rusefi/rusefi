@@ -151,7 +151,10 @@ static const struct mc33810_config mc33810 = {
 	},
 	.en = {.port = GPIOA, .pad = 6}, // copy-paste with setMode code!
 	// TODO: pick from engineConfiguration->spi3sckPin or whatever SPI is used
-	.sck = {.port = GPIOB, .pad = 3}
+	.sck = {.port = GPIOB, .pad = 3},
+	.spkdur = Gpio::Unassigned,
+	.nomi = Gpio::Unassigned,
+	.maxi = Gpio::Unassigned
 };
 
     if (engineConfiguration->engineType == engine_type_e::FRANKENSO_TEST_33810) {
