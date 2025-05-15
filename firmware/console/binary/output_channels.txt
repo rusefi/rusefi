@@ -372,6 +372,11 @@ float mapFast
 	uint16_t schedulingUsedCount;;"",1,0,0,0,0
 	uint16_t autoscale vehicleSpeedKph;@@GAUGE_NAME_VVS@@;"kph",{1/@@PACK_MULT_VSS@@}, 0, 0, 0, 2
 
+	uint16_t autoscale vehicleSpeedKph1;Wheel Speed FL;"kph",{1/@@PACK_MULT_VSS@@}, 0, 0, 0, 2
+	uint16_t autoscale vehicleSpeedKph2;Wheel Speed FR;"kph",{1/@@PACK_MULT_VSS@@}, 0, 0, 0, 2
+	uint16_t autoscale vehicleSpeedKph3;Wheel Speed RL;"kph",{1/@@PACK_MULT_VSS@@}, 0, 0, 0, 2
+	uint16_t autoscale vehicleSpeedKph4;Wheel Speed RR;"kph",{1/@@PACK_MULT_VSS@@}, 0, 0, 0, 2
+
 	uint16_t autoscale Gego;;"%",0.01,0,50,150,2
 
 	uint16_t testBenchIter;;"count",1, 0, 0, 0, 0

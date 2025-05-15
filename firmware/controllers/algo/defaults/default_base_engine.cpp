@@ -171,6 +171,10 @@ void setDefaultBaseEngine() {
 
 	engineConfiguration->compressionRatio = 9;
 	engineConfiguration->vssFilterReciprocal = VSS_FILTER_MIN;
+	engineConfiguration->vssFilterReciprocal1 = VSS_FILTER_MIN;
+	engineConfiguration->vssFilterReciprocal2 = VSS_FILTER_MIN;
+	engineConfiguration->vssFilterReciprocal3 = VSS_FILTER_MIN;
+	engineConfiguration->vssFilterReciprocal4 = VSS_FILTER_MIN;
 	engineConfiguration->boardUseCanTerminator = true;
 	engineConfiguration->acLowRpmLimit = 500;
 

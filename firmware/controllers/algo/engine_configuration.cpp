@@ -598,6 +598,22 @@ static void setDefaultEngineConfiguration() {
 	engineConfiguration->vssGearRatio = 3.73;
 	engineConfiguration->vssToothCount = 21;
 
+
+	engineConfiguration->driveWheelRevPerKm1 = 1000;
+	engineConfiguration->driveWheelRevPerKm2 = 1000;
+	engineConfiguration->driveWheelRevPerKm3 = 1000;
+	engineConfiguration->driveWheelRevPerKm4 = 1000;
+	engineConfiguration->vssGearRatio1 = 1;
+	engineConfiguration->vssGearRatio2 = 1;
+	engineConfiguration->vssGearRatio3 = 1;
+	engineConfiguration->vssGearRatio4 = 1;
+	engineConfiguration->vssToothCount1 = 30;
+	engineConfiguration->vssToothCount2 = 30;
+	engineConfiguration->vssToothCount3 = 30;
+	engineConfiguration->vssToothCount4 = 30;
+
+
+
 	engineConfiguration->mapErrorDetectionTooLow = 5;
 	// todo: default limits should be hard-coded for each sensor type
 	// https://github.com/rusefi/rusefi/issues/4030

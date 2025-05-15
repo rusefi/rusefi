@@ -161,6 +161,12 @@ enum class SensorType : unsigned char {
 	AuxLinear3,
 	AuxLinear4,
 
+	// wheel speed sensors
+	WheelSpeedFL,
+	WheelSpeedFR,
+	WheelSpeedRL,
+	WheelSpeedRR,
+
 	// frequency sensors
 	AuxSpeed1,
 	AuxSpeed2,
