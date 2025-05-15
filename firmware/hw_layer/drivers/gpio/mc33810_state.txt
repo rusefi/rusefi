@@ -1,0 +1,5 @@
+! units,scale,offset,min,max,digits
+
+struct_no_prefix mc33810_state_s
+        uint16_t autoscale m_sparktime;Spark duration;"uS", 0.1, 0, 0, 5000, 1
+end_struct
