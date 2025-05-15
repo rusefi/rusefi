@@ -903,6 +903,9 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
 		// Schedule the TDC mark
 		tdcMarkCallback(triggerIndexForListeners, timestamp);
 
+#if EFI_MAP_AVERAGING
+		engine->module<MapAveragingModule>()->triggerCallback(triggerIndexForListeners, timestamp);
+#endif /* EFI_MAP_AVERAGING */
 
 #if EFI_LOGIC_ANALYZER
 		waTriggerEventListener(signal, triggerIndexForListeners, timestamp);
