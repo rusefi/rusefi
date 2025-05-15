@@ -68,10 +68,7 @@ public:
 	void onConfigurationChange(engine_configuration_s const * previousConfig) override;
 
 	void onFastCallback() override;
-	void onEnginePhase(float rpm,
-						efitick_t edgeTimestamp,
-						float currentPhase,
-						float nextPhase) override;
+	void triggerCallback(uint32_t index, efitick_t edgeTimestamp);
 	void init();
 	void submitSample(float voltsMap1, float voltsMap2);
 	mapSampler samplers[MAX_CYLINDER_COUNT][2];
