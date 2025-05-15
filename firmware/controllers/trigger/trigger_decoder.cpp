@@ -301,6 +301,10 @@ void VvtTriggerDecoder::onTooManyTeeth(int actual, int expected) {
 	warning(ObdCode::CUSTOM_CAM_TOO_MANY_TEETH, "cam %s trigger error: too many teeth between sync points: %d > %d", name, actual, expected);
 }
 
+PUBLIC_API_WEAK bool isTriggerCounterError(int8_t triggerCountersError) {
+  return triggerCountersError != 0;
+}
+
 int TriggerDecoderBase::getEventCountersError(const TriggerWaveform& triggerShape) const {
 	// We can check if things are fine by comparing the number of events in a cycle with the expected number of event.
 	int countersError = 0;
@@ -559,7 +563,7 @@ expected<TriggerDecodeResult> TriggerDecoderBase::decodeTriggerEvent(
 
 		if (isSynchronizationPoint) {
 		  triggerCountersError = getEventCountersError(triggerShape);
-			bool isDecodingError = triggerCountersError != 0;
+			bool isDecodingError = isTriggerCounterError(triggerCountersError);
 
 			if (triggerStateListener) {
 				triggerStateListener->OnTriggerSynchronization(wasSynchronized, isDecodingError);
