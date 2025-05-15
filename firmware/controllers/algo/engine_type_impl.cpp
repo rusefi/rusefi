@@ -53,7 +53,7 @@ static_assert(libPROTEUS_STIM_QC == (int)engine_type_e::PROTEUS_STIM_QC);
 static_assert(libHELLEN_2CHAN_STIM_QC == (int)engine_type_e::HELLEN_2CHAN_STIM_QC);
 static_assert(libHELLEN_4CHAN_STIM_QC == (int)engine_type_e::HELLEN_4CHAN_STIM_QC);
 
-PUBLIC_API_WEAK_SOMETHING_WEIRD void applyUnknownEngineType(engine_type_e engineType) {
+PUBLIC_API_WEAK void applyUnknownEngineType(engine_type_e engineType) {
 		firmwareError(ObdCode::CUSTOM_UNEXPECTED_ENGINE_TYPE, "Unexpected engine type: %d", (int)engineType);
 }
 
@@ -435,6 +435,6 @@ void applyEngineType(engine_type_e engineType) {
 	boardAfterTuneDefaults(engineType);
 }
 
-PUBLIC_API_WEAK_SOMETHING_WEIRD engine_type_e getLastEngineType() {
+PUBLIC_API_WEAK engine_type_e getLastEngineType() {
   return engine_type_e::FERRARI_F136;
 }

@@ -47,5 +47,11 @@
 
 #define hasLotsOfRemainingStack() (getCurrentRemainingStack() > EXPECTED_REMAINING_STACK)
 
+// https://gcc.gnu.org/bugzilla/show_bug.cgi?id=90826 Weak symbol does not work reliably on windows
+// https://sourceware.org/bugzilla/show_bug.cgi?id=9687 Weak symbols not working on mingw32
 // this macro helps locate all board Public API methods
+#if !defined(IS_WINDOWS_COMPILER) || !IS_WINDOWS_COMPILER
 #define PUBLIC_API_WEAK __attribute__((weak))
+#else
+#define PUBLIC_API_WEAK
+#endif

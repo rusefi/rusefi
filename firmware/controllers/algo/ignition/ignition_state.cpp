@@ -241,7 +241,7 @@ angle_t IgnitionState::getWrappedAdvance(const float rpm, const float engineLoad
     return angle;
 }
 
-PUBLIC_API_WEAK_SOMETHING_WEIRD
+PUBLIC_API_WEAK
 angle_t getCylinderIgnitionTrim(size_t cylinderNumber, float rpm, float ignitionLoad) {
 	return IgnitionState::getInterpolatedIgnitionTrim(cylinderNumber, rpm, ignitionLoad);
 }

@@ -714,13 +714,13 @@ void commonFrankensoAnalogInputs() {
 // These symbols are weak so that a board_configuration.cpp file can override them
 PUBLIC_API_WEAK void setBoardDefaultConfiguration() { }
 // specific firmware builds are meant for specific hardware. In order to provide best user experience on well-known boards sometimes we reduce user flexibility.
-PUBLIC_API_WEAK_SOMETHING_WEIRD void setBoardConfigOverrides() { }
+PUBLIC_API_WEAK void setBoardConfigOverrides() { }
 
 PUBLIC_API_WEAK int hackHellenBoardId(int detectedId) { return detectedId; }
 
 PUBLIC_API_WEAK void onBoardStandBy() { }
 
-PUBLIC_API_WEAK_SOMETHING_WEIRD int getBoardMetaOutputsCount() { return 0; }
+PUBLIC_API_WEAK int getBoardMetaOutputsCount() { return 0; }
 // default implementation: treat all outputs as low side
 PUBLIC_API_WEAK int getBoardMetaLowSideOutputsCount() { return getBoardMetaOutputsCount(); }
 PUBLIC_API_WEAK Gpio* getBoardMetaOutputs() { return nullptr; }
