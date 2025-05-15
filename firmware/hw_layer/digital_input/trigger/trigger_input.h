@@ -17,9 +17,6 @@ void onEcuStartDoSomethingTriggerInputPins();
 void startTriggerInputPins();
 void stopTriggerInputPins();
 
-void stopTriggerDebugPins();
-void startTriggerDebugPins();
-
 #if HAL_USE_ADC
 typedef adcsample_t triggerAdcSample_t;
 #else
