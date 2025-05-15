@@ -302,7 +302,11 @@ static const struct mc33810_config mc33810_odd = {
 	/* en shared between two chips */
 	.en = {.port = GPIOI, .pad = 7},
 	// TODO: pick from engineConfiguration->spi5sckPin or whatever SPI is used
-	.sck = {.port = GPIOF, .pad = 7}
+	.sck = {.port = GPIOF, .pad = 7},
+	/* TODO: */
+	.spkdur = Gpio::Unassigned,
+	.nomi = Gpio::Unassigned,
+	.maxi = Gpio::Unassigned
 };
 
 /* Schematic RefDef DA22 */
@@ -348,7 +352,11 @@ static const struct mc33810_config mc33810_even = {
 	/* en shared between two chips */
 	.en = {.port = nullptr, .pad = 0},
 	// TODO: pick from engineConfiguration->spi5sckPin or whatever SPI is used
-	.sck = {.port = GPIOF, .pad = 7}
+	.sck = {.port = GPIOF, .pad = 7},
+	/* TODO: */
+	.spkdur = Gpio::Unassigned,
+	.nomi = Gpio::Unassigned,
+	.maxi = Gpio::Unassigned
 };
 
 static void board_init_ext_gpios()

@@ -180,7 +180,10 @@ static const struct mc33810_config mc33810 = {
 	},
 	.en = {.port = GPIOG, .pad = 9}, // H144_GP_IO4 hopefully
 	// TODO: pick from engineConfiguration->spi3sckPin or whatever SPI is used
-	.sck = {.port = GPIOC, .pad = 10}
+	.sck = {.port = GPIOC, .pad = 10},
+	.spkdur = Gpio::Unassigned,
+	.nomi = Gpio::Unassigned,
+	.maxi = Gpio::Unassigned
 };
 
 /*PUBLIC_API_WEAK*/ void boardInitHardware() {
