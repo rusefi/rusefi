@@ -223,13 +223,10 @@ void MapAveragingModule::onEnginePhase(float /*rpm*/,
 		int structIndex = getRevolutionCounter() % 2;
 
 		auto & mapAveraging = *engine->module<MapAveragingModule>();
-		mapSampler* m_event = &mapAveraging.samplers[i][structIndex];
+		mapSampler* s = &mapAveraging.samplers[i][structIndex];
 
-		engine->module<TriggerScheduler>()->schedule(
-		    "mapAveragingStart",
-			&m_event->startTimer,
-			angleOffset,
-			{ startMapAveraging, m_event });
+		scheduleByAngle(&s->startTimer, edgeTimestamp, angleOffset,
+				{ startMapAveraging, s });
 	}
 }
 
