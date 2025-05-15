@@ -851,9 +851,6 @@ float getConfigValueByName(const char *name) {
 // verboseTriggerSynchDetails
 		case -325018342:
 			return engineConfiguration->verboseTriggerSynchDetails;
-// etbUsePreciseTiming
-		case 1914168576:
-			return engineConfiguration->etbUsePreciseTiming;
 // hondaK
 		case 42872346:
 			return engineConfiguration->hondaK;
@@ -3387,11 +3384,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -325018342:
 	{
 		engineConfiguration->verboseTriggerSynchDetails = (int)value;
-		return 1;
-	}
-		case 1914168576:
-	{
-		engineConfiguration->etbUsePreciseTiming = (int)value;
 		return 1;
 	}
 		case 42872346:
