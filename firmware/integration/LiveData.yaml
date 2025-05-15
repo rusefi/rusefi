@@ -10,7 +10,7 @@
 # key: [NameOfJavaToGenerate.java, folder_where_key.txt_is located, (optional advanced options)]
 # Naming convention: top level struct in .txt file should be called key_s
 #
-# see docs_enums.mk where all the .txt files should be mentioned!
+# technical debt: see docs_enums.mk where all the .txt files should be mentioned as well :(
 #
 Usages:
 #  output_channels always goes first at least because it has protocol version at well-known offset
