@@ -1,5 +1,7 @@
 #pragma once
 
+#define TS_ENUM_OFFSET 1
+
 // TODO: this name is now probably wrong, since it checks injectors/ignition too
 struct SensorChecker : public EngineModule {
 public:
