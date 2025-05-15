@@ -1047,7 +1047,6 @@
         <constant digits="0" name="etbRevLimitStart" units="rpm">0.0</constant>
         <constant name="EtbSentInput">"None"</constant>
         <constant digits="1" name="etbSplit" units="%">5.0</constant>
-        <constant name="etbUsePreciseTiming">"false"</constant>
         <constant digits="4" name="etbWastegatePid_dFactor" units="">0.0</constant>
         <constant digits="4" name="etbWastegatePid_iFactor" units="">0.0</constant>
         <constant digits="0" name="etbWastegatePid_maxValue" units="">60.0</constant>
@@ -4416,6 +4415,7 @@ end</constant>
         <constant name="unused1308_24">"false"</constant>
         <constant name="unused1320_28">"false"</constant>
         <constant digits="0" name="unusedafterCrankingIACtaperDuration" units="">0.0</constant>
+        <constant name="unusedBitsd23413421">"false"</constant>
         <constant digits="0" name="unusedcrankingIACposition" units="">0.0</constant>
         <constant name="unusedFancy10">"false"</constant>
         <constant name="unusedFancy11">"false"</constant>
@@ -4984,7 +4984,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250424" nPages="1" signature="rusEFI master.2025.05.15.f407-discovery.725989739" version="5.0"/>
+    <versionInfo firmwareInfo="20250424" nPages="1" signature="rusEFI master.2025.05.15.f407-discovery.2436784103" version="5.0"/>
     <bibliography author="rusEFI 20250424" writeDate="date"/>
     <settings/>
     <userComments/>
