@@ -175,6 +175,9 @@ void MapAveragingModule::onFastCallback() {
 		angle_t start = interpolate2d(rpm, c->samplingAngleBins, c->samplingAngle);
 		efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_START_ASSERT, !std::isnan(start), "start");
 
+		angle_t offsetAngle = engine->triggerCentral.triggerFormDetails.eventAngles[0];
+		efiAssertVoid(ObdCode::CUSTOM_ERR_MAP_AVG_OFFSET, !std::isnan(offsetAngle), "offsetAngle");
+
 		for (size_t i = 0; i < engineConfiguration->cylindersCount; i++) {
 			float cylinderStart = start + getPerCylinderFiringOrderOffset(i, getCylinderNumberAtIndex(i));
 			wrapAngle(cylinderStart, "cylinderStart", ObdCode::CUSTOM_ERR_6562);
