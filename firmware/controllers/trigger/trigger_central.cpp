@@ -696,10 +696,31 @@ bool TriggerCentral::isMapCamSync(efitick_t timestamp, float currentPhase) {
 		return result;
 }
 
-void TriggerCentral::decodeMapCam(efitick_t timestamp, float currentPhase) {
+#ifdef TEMP_V_TWIN
+
+float mapAtAngle[200];
+
+#endif
+
+void TriggerCentral::decodeMapCam(int triggerIndexForListeners, efitick_t timestamp, float currentPhase) {
     isDecodingMapCam = engineConfiguration->vvtMode[0] == VVT_MAP_V_TWIN &&
                        			Sensor::getOrZero(SensorType::Rpm) < engineConfiguration->cranking.rpm;
 	if (isDecodingMapCam) {
+
+
+#ifdef TEMP_V_TWIN
+  mapAtAngle[triggerIndexForListeners] = engine->outputChannels.instantMAPValue;
+
+  if (triggerIndexForListeners > 4) {
+    if (mapAtAngle[triggerIndexForListeners - 4] > mapAtAngle[triggerIndexForListeners - 2] &&
+      mapAtAngle[triggerIndexForListeners - 2] < mapAtAngle[triggerIndexForListeners - 0]) {
+        mapVvt_min_point_counter++;
+      }
+
+  }
+#endif
+
+
 	  if (isMapCamSync(timestamp, currentPhase)) {
 				hwHandleVvtCamSignal(TriggerValue::RISE, timestamp, /*index*/0);
 				hwHandleVvtCamSignal(TriggerValue::FALL, timestamp, /*index*/0);
@@ -910,7 +931,7 @@ void TriggerCentral::handleShaftSignal(trigger_event_e signal, efitick_t timesta
     temp_mapVvt_index = triggerIndexForListeners;
 
 		// Decode the MAP based "cam" sensor
-		decodeMapCam(timestamp, currentEngineDecodedPhase);
+		decodeMapCam(triggerIndexForListeners, timestamp, currentEngineDecodedPhase);
 
 		boardTriggerCallback(timestamp, currentEngineDecodedPhase);
 	} else {

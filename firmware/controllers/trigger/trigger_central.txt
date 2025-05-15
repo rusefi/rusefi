@@ -10,6 +10,7 @@ struct_no_prefix trigger_central_s
     float mapVvt_MAP_AT_DIFF;InstantMAP delta @ readout angles;"kPa", 1, 0, -300, 300, 1
     int8_t mapVvt_MAP_AT_CYCLE_COUNT;;"distance", 1, 0, -10, 100, 0
     uint8_t mapVvt_sync_counter;Instant MAP sync counter;"counter", 1, 0, 0, 100, 0
+    uint8_t mapVvt_min_point_counter
     uint32_t temp_mapVvt_index
     float mapVvt_CycleDelta
 
