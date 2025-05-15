@@ -217,6 +217,14 @@ void MapAveragingModule::onEnginePhase(float /*rpm*/,
 			continue;
 		}
 
+		angle_t samplingEnd = samplingStart + engine->engineState.mapAveragingDuration;
+
+		if (std::isnan(samplingEnd)) {
+			// todo: when would this happen?
+			warning(ObdCode::CUSTOM_ERR_6549, "no map angles");
+			return;
+		}
+
 		// only if value is already prepared
 		int structIndex = getRevolutionCounter() % 2;
 
