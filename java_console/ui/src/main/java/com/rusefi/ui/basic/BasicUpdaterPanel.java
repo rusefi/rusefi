@@ -8,7 +8,6 @@ import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.ProgramSelector;
 import com.rusefi.maintenance.jobs.*;
-import com.rusefi.panama.PanamaClient;
 import com.rusefi.ui.LogoHelper;
 import com.rusefi.ui.util.HorizontalLine;
 import com.rusefi.ui.widgets.ToolButtons;
@@ -20,8 +19,6 @@ import java.awt.event.*;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -89,10 +86,8 @@ public class BasicUpdaterPanel {
         content.add(new HorizontalLine());
         JLabel logoLabel = LogoHelper.createLogoLabel();
         if (logoLabel != null) {
-            if (panamaUrl != null) {
-                logoLabelPopupMenu = new LogoLabelPopupMenu(this::uploadTune);
-                logoLabel.setComponentPopupMenu(logoLabelPopupMenu);
-            }
+            logoLabelPopupMenu = new LogoLabelPopupMenu(this::uploadTune, this::printUnitLabel, panamaUrl != null);
+            logoLabel.setComponentPopupMenu(logoLabelPopupMenu);
             content.add(logoLabel);
         }
         if (showUrlLabel)
@@ -245,7 +240,7 @@ public class BasicUpdaterPanel {
         ecuPortToUse = Optional.empty();
         updateCalibrationsButton.setEnabled(false);
         if (logoLabelPopupMenu != null) {
-            logoLabelPopupMenu.refreshUploadTuneMenuItem(false);
+            logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(false);
         }
     }
 
@@ -282,7 +277,7 @@ public class BasicUpdaterPanel {
         final boolean isEcuPortJobPossible = ecuPortToUse.isPresent() && singleAsyncJobExecutor.isNotInProgress();
         updateCalibrationsButton.setEnabled(isEcuPortJobPossible);
         if (logoLabelPopupMenu != null) {
-            logoLabelPopupMenu.refreshUploadTuneMenuItem(isEcuPortJobPossible);
+            logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(isEcuPortJobPossible);
         }
     }
 
@@ -290,7 +285,7 @@ public class BasicUpdaterPanel {
         updateFirmwareButton.setEnabled(false);
         updateCalibrationsButton.setEnabled(false);
         if (logoLabelPopupMenu != null) {
-            logoLabelPopupMenu.refreshUploadTuneMenuItem(false);
+            logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(false);
         }
     }
 
@@ -299,6 +294,23 @@ public class BasicUpdaterPanel {
         CompatibilityOptional.ifPresentOrElse(ecuPortToUse,
             port -> {
                 singleAsyncJobExecutor.startJob(new UploadTuneJob(port, panamaUrl), logoLabelPopupMenu);
+            }, () -> {
+                JOptionPane.showMessageDialog(
+                    updateCalibrationsButton,
+                    "Device is not connected",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+                );
+            }
+        );
+        refreshButtons();
+    }
+
+    private void printUnitLabel() {
+        disableButtons();
+        CompatibilityOptional.ifPresentOrElse(ecuPortToUse,
+            port -> {
+                singleAsyncJobExecutor.startJob(new PrintUnitLabelJob(port, logoLabelPopupMenu), logoLabelPopupMenu);
             }, () -> {
                 JOptionPane.showMessageDialog(
                     updateCalibrationsButton,
