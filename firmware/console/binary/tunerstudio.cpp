@@ -92,6 +92,9 @@
 
 #if EFI_TUNER_STUDIO
 
+// We have TS protocol limitation: offset within one settings page is uin16_t type.
+static_assert(sizeof(*config) <= 65536);
+
 static void printErrorCounters() {
 	efiPrintf("TunerStudio size=%d / total=%d / errors=%d / H=%d / O=%d / P=%d / B=%d",
 			sizeof(engine->outputChannels), tsState.totalCounter, tsState.errorCounter, tsState.queryCommandCounter,
@@ -154,6 +157,8 @@ void tunerStudioDebug(TsChannelBase* tsChannel, const char *msg) {
 }
 
 uint8_t* getWorkingPageAddr() {
+	// TODO: why engineConfiguration, not config
+	// TS has access to whole persistent_config_s
 	return (uint8_t*)engineConfiguration;
 }
 
