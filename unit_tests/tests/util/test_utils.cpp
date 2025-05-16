@@ -1,0 +1,34 @@
+/*
+ * @file test_utils.cpp
+ *
+ * @date: may 15, 2025
+ * @author FDSoftware
+ */
+
+#include "pch.h"
+#include "util/injection_crank_helper.h"
+#include "prime_injection.h"
+#include "engine_test_helper.h"
+
+TEST(test_utils, assertEventExistsAtEnginePhase){
+    EngineTestHelper eth(engine_type_e::TEST_ENGINE);
+    setTable(config->injectionPhase, -180.0f);
+    engineConfiguration->isFasterEngineSpinUpEnabled = false;
+    engine->tdcMarkEnabled = false;
+    setTestFuelCrankingTable(12);
+
+    setupSimpleTestEngineWithMafAndTT_ONE_trigger(&eth);
+    ASSERT_EQ( 0,  Sensor::getOrZero(SensorType::Rpm)) << "RPM=0";
+
+    eth.fireTriggerEventsWithDuration(/* durationMs */ 200);
+    eth.fireRise(/* delayMs */ 200);
+    ASSERT_EQ(300, Sensor::getOrZero(SensorType::Rpm));
+    // two simultaneous injections
+    ASSERT_EQ( 4,  engine->scheduler.size()) << "plain#2";
+
+    // old event assert:
+    eth.assertEvent5("sim start", 0, (void*)startSimultaneousInjection, 100000 - 1625);
+    // new event assert:
+    bool injectionDone = eth.assertEventExistsAtEnginePhase("sim start", (void*)startSimultaneousInjection, static_cast<angle_t>(177.08));
+    EXPECT_TRUE(injectionDone);
+};
