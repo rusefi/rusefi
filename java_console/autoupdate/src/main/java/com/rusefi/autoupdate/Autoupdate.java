@@ -75,7 +75,7 @@ public class Autoupdate {
     private static void autoupdate(String[] args) {
         BundleUtil.BundleInfo bundleInfo = BundleUtil.readBundleFullNameNotNull();
         if (BundleUtil.BundleInfo.isUndefined(bundleInfo)) {
-            log.error("ERROR: Autoupdate: unable to perform without bundleFullName (check parent folder name)");
+            log.error("ERROR: Autoupdate: unable to perform without bundleFullName");
             System.exit(-1);
         }
 
