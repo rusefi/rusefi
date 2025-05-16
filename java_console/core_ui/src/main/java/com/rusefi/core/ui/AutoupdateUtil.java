@@ -1,5 +1,6 @@
 package com.rusefi.core.ui;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.autoupdate.ReportedIOException;
 import com.rusefi.core.net.ConnectionAndMeta;
 import org.jetbrains.annotations.NotNull;
@@ -15,7 +16,10 @@ import java.net.URLClassLoader;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 public class AutoupdateUtil {
+    private static final Logging log = getLogging(AutoupdateUtil.class);
     public static final boolean runHeadless = Boolean.getBoolean("run_headless") || GraphicsEnvironment.isHeadless();
 
     // todo: figure out a better way to work with absolute path
@@ -179,10 +183,12 @@ public class AutoupdateUtil {
         if (imgURL != null) {
             return new ImageIcon(imgURL);
         } else {
+            log.info("Using secondary resource path for " + strPath);
             imgURL = dynamicResourcesLoader.getResource("/com/rusefi/" + strPath);
             if (imgURL != null) {
                 return new ImageIcon(imgURL);
             }
+            log.warn("icon resource not found " + strPath);
             return null;
         }
     }

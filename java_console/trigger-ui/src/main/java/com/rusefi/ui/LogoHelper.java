@@ -1,5 +1,6 @@
 package com.rusefi.ui;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.ui.AutoupdateUtil;
 import com.rusefi.ui.util.URLLabel;
@@ -9,7 +10,10 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 
+import static com.devexperts.logging.Logging.getLogging;
+
 public class LogoHelper {
+    private static final Logging log = getLogging(LogoHelper.class);
     public static final String LINK_TEXT = "rusEFI (c) 2012-2025";
     public static final String URI = "http://rusefi.com/?java_console";
 
@@ -40,7 +44,9 @@ public class LogoHelper {
         } else {
             logoName = BasicLogoHelper.GENERIC_LOGO;
         }
-        return AutoupdateUtil.loadIcon(logoName);
+        ImageIcon imageIcon = AutoupdateUtil.loadIcon(logoName);
+        log.info(imageIcon + " for " + logoName);
+        return imageIcon;
     }
 
     @NotNull
