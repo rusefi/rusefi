@@ -16,8 +16,6 @@
 #include <hal.h>
 #include "rusefi_types.h"
 
-#include "mc33810_state_generated.h"
-
 #define MC33810_INJ_OUTPUTS			4
 #define MC33810_IGN_OUTPUTS			4
 
@@ -63,6 +61,7 @@ struct mc33810_config {
 
 int mc33810_add(brain_pin_e base, unsigned int index, const mc33810_config *cfg);
 
+struct mc33810_state_s;
 const mc33810_state_s* mc33810getLiveData(size_t idx);
 
 /* debug */
