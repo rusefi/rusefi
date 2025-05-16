@@ -101,6 +101,9 @@ public:
 	// todo: open question if this is worth a helper method or should be inlined?
 	void assertRpm(int expectedRpm, const char *msg = "RPM");
 
+	// read all scheluder queue and search for the requested callback, then asserts the expected angle, return true if we found the callback
+	bool assertEventExistsAtEnginePhase(const char *msg, void *callback, angle_t expectedEventEnginePhase);
+
 	int executeActions();
 	void moveTimeForwardMs(float deltaTimeMs);
 	void moveTimeForwardSec(float deltaTimeSec);

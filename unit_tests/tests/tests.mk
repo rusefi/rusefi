@@ -190,3 +190,4 @@ TESTS_SRC_CPP = \
 	tests/core/test_main_loop.cpp \
 	tests/test_trip_odometer.cpp \
 	tests/controllers/modules/map_averaging/test_map_averaging.cpp \
+	tests/util/test_utils.cpp \
