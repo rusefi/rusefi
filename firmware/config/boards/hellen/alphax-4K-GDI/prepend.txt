@@ -18,6 +18,7 @@
 #define ts_show_gdi_low_level false
 #define ts_show_tps_sent true
 #define ts_show_check_engine true
+#define ts_show_InjectorFlowLinearizationTable true
 
 #define LUA_SCRIPT_SIZE 26000
 #define FLOW_LINEARIZATION_MASS_SIZE 16
