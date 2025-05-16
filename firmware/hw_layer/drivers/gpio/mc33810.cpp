@@ -185,11 +185,7 @@ struct Mc33810 : public GpioChip, public mc33810_state_s {
 	mc33810_coil_state 		coil_state;
 	uint8_t					active_coil_idx;	/* zero based, used as index of spark[] array */
 	uint8_t					spark_fault_mask;	/* 4 LSB bits are not used */
-	struct {
-		efitick_t			start;
-		efitick_t			end;
-		efitick_t			duration;
-	} spark[MC33810_IGN_OUTPUTS];
+	efitick_t				spartStart[MC33810_IGN_OUTPUTS];
 	int						spark_sync_err;
 
 	/* statistic */
@@ -679,19 +675,18 @@ void Mc33810::on_spkdur(efitick_t now)
 	/* signal is active low */
 	if ((!edge) && (coil_state == COIL_WAIT_SPARK_START)) {
 		/* expected falling edge */
-		spark[active_coil_idx].start = now;
+		spartStart[active_coil_idx] = now;
 		coil_state = COIL_WAIT_SPARK_END;
 	} else if ((edge) && (coil_state == COIL_WAIT_SPARK_END)) {
 		/* expected rise edge */
-		spark[active_coil_idx].end = now;
-		spark[active_coil_idx].duration = now - spark[active_coil_idx].start;
+		sparkDuration[active_coil_idx] = USF2MS(NT2USF(now - spartStart[active_coil_idx]));
 		/* clear fault flag */
 		spark_fault_mask &= ~BIT(MC33810_INJ_OUTPUTS + active_coil_idx);
 		coil_state = COIL_IDLE;
 	} else {
 		/* unexpected event */
 		spark_sync_err++;
-		spark[active_coil_idx].duration = 0;
+		sparkDuration[active_coil_idx] = 0;
 		spark_fault_mask |= BIT(MC33810_INJ_OUTPUTS + active_coil_idx);
 		coil_state = COIL_IDLE;
 	}
@@ -732,7 +727,7 @@ void Mc33810::ign_event(size_t pin, int value)
 		if (coil_state != COIL_IDLE) {
 			/* ...mark this coil as failed */
 			spark_fault_mask |= BIT(MC33810_INJ_OUTPUTS + active_coil_idx);
-			spark[active_coil_idx].duration = 0;
+			sparkDuration[active_coil_idx] = 0;
 		}
 
 		active_coil_idx = idx;
@@ -899,7 +894,7 @@ brain_pin_diag_e Mc33810::getDiag(size_t pin)
 
 			/* too short spark time means there is oscilation on coil,
 			 * that usualy because of open secondary (disconnected spark plug) */
-			if (spark[pin - MC33810_IGN_OUTPUTS].duration < USF2NT(150))
+			if (sparkDuration[pin - MC33810_IGN_OUTPUTS] < 0.150)
 				diag |= PIN_OPEN;
 		}
 	}
@@ -912,9 +907,9 @@ void Mc33810::debug() {
 		rst_cnt, cor_cnt, sor_cnt, ov_cnt, lv_cnt);
 
 	for (size_t i = 0; i < MC33810_IGN_OUTPUTS; i++) {
-		efiPrintf("Ign %d spark fault %d last duration %d uS\n",
+		efiPrintf("Ign %d spark fault %d last duration %f mS\n",
 			i, !!(spark_fault_mask & BIT(MC33810_INJ_OUTPUTS + i)),
-			(int)NT2US(spark[i].duration));
+			sparkDuration[i]);
 	}
 }
 
