@@ -43,4 +43,5 @@ public enum live_data_e {
 	LDS_sent_state,
 	LDS_vvt,
 	LDS_lambda_monitor,
+	LDS_mc33810_state,
 }

@@ -41,6 +41,7 @@ LDS_dc_motors,
 LDS_sent_state,
 LDS_vvt,
 LDS_lambda_monitor,
+LDS_mc33810_state,
 } live_data_e;
 #define OUTPUT_CHANNELS_BASE_ADDRESS 0
 #define FUEL_COMPUTER_BASE_ADDRESS 876
@@ -73,3 +74,4 @@ LDS_lambda_monitor,
 #define SENT_STATE_BASE_ADDRESS 1848
 #define VVT_BASE_ADDRESS 1856
 #define LAMBDA_MONITOR_BASE_ADDRESS 1860
+#define MC33810_STATE_BASE_ADDRESS 1868
