@@ -23,6 +23,8 @@
 #include "gpio/gpio_ext.h"
 #include "gpio/mc33810.h"
 
+#include "mc33810_state_generated.h"
+
 #if EFI_PROD_CODE && (BOARD_MC33810_COUNT > 0)
 
 // For exti irq
