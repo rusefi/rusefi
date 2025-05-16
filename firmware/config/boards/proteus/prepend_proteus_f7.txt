@@ -1,4 +1,4 @@
-#define LUA_SCRIPT_SIZE 64000
+#define LUA_SCRIPT_SIZE 48000
 
 ! huge buffer for happier remote TCP/IP connector - see also 'blockingFactorOverride' in console source code
 #define CUSTOM_TS_BUFFER_SIZE 32000
