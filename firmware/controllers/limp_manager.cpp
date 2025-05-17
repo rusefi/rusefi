@@ -222,21 +222,6 @@ void LimpManager::updateState(float rpm, efitick_t nowNt) {
 		}
 	}
 
-#if EFI_HPFP
-	{
-		// HPFP Fuel cut
-		angle_t m_deadangle = engine->module<HpfpController>().unmock().m_deadangle;
-		angle_t finalHpfpPumpAngle = m_deadangle + static_cast<angle_t>(engineConfiguration->hpfpActivationAngle);
-		float finalHpfpPumpTimeMs = US2MS(static_cast<float>(finalHpfpPumpAngle) * engine->rpmCalculator.oneDegreeUs);
-
-		if (engineConfiguration->tempPumpLimitCheck && isGdiEngine() && finalHpfpPumpTimeMs > engineConfiguration->mc33_hpfp_max_hold) {
-			allowFuel.clear(ClearReason::GdiPumpLimit);
-			warning(ObdCode::CUSTOM_TOO_LONG_FUEL_INJECTION, "Injection HPFP pump time excess PT2001 limits time: %.4fms", finalHpfpPumpTimeMs);
-			efiPrintf("%f %f %f", m_deadangle, (float)engineConfiguration->hpfpActivationAngle, engine->rpmCalculator.oneDegreeUs);
-		}
-	}
-#endif
-
 	// If the pedal is pushed while not running, cut fuel to clear a flood condition.
 	if (!engine->rpmCalculator.isRunning() &&
 		engineConfiguration->isCylinderCleanupEnabled &&

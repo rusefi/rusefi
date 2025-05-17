@@ -432,35 +432,3 @@ struct Mockhpfp : public MockHpfpController {
 	bool isHpfpActive;
 	angle_t m_deadangle;
 };
-
-TEST(limp, hpfpFuelCut) {
-	EngineTestHelper eth(engine_type_e::TEST_ENGINE);
-	engineConfiguration->tempPumpLimitCheck = true;
-
-	// configure GDI engine for tests:
-	engineConfiguration->hpfpCam = HPFP_CAM_NONE;
-	engineConfiguration->hpfpCamLobes = 4;
-	engine->rpmCalculator.setRpmValue(1000);
-
-	// mock & configure HPFP controller
-	Mockhpfp hpfp;
-	engine->engineModules.get<HpfpController>().set(&hpfp);
-
-	hpfp.isHpfpActive = true;
-	hpfp.m_deadangle = 5;
-	engineConfiguration->hpfpActivationAngle = 30;
-	engineConfiguration->mc33_hpfp_max_hold = 500;
-	engine->engineState.injectionMass[0] = 0.05 /* cc/cyl */ * fuelDensity;
-	engineConfiguration->hpfpValvePin = Gpio::A2; // arbitrary
-	hpfp.onFastCallback();
-
-	LimpManager dut;
-
-	dut.updateState(1000, getTimeNowNt());
-	EXPECT_TRUE(dut.allowInjection());
-
-	// update & check: injection should cut
-	engineConfiguration->mc33_hpfp_max_hold = 1;
-	dut.updateState(1000, getTimeNowNt());
-	ASSERT_EQ(ClearReason::GdiPumpLimit, dut.allowInjection().reason);
-}
