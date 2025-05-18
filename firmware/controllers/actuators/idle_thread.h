@@ -35,8 +35,6 @@ struct IIdleController {
 	virtual float getIdleTimingAdjustment(float rpm) = 0;
 };
 
-class LongTermIdleTrim;
-
 class IdleController : public IIdleController, public EngineModule, public idle_state_s {
 public:
 	// Mockable<> interface
@@ -118,7 +116,7 @@ private:
 	float m_lastAutomaticPosition = 0;
 
 	Pid m_timingPid;
-	LongTermIdleTrim* m_ltit = nullptr;
+	LongTermIdleTrim m_ltit;
 };
 
 percent_t getIdlePosition();

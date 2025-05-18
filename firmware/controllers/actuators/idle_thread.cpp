@@ -105,16 +105,16 @@ percent_t IdleController::getRunningOpenLoop(IIdleController::Phase phase, float
 	);
 
 	// LTIT multiplicativo
-	if (m_ltit && engineConfiguration->ltitEnabled) {
-		running *= m_ltit->getLtitFactor(rpm, clt);
+	if (engineConfiguration->ltitEnabled) {
+		running *= m_ltit.getLtitFactor(rpm, clt);
 	}
 
 	// Offsets aprendidos
 	if (engine->module<AcController>().unmock().acButtonState) {
-		running += (m_ltit ? m_ltit->getLtitAcTrim() : engineConfiguration->acIdleExtraOffset);
+		running += (engineConfiguration->ltitEnabled ? m_ltit.getLtitAcTrim() : engineConfiguration->acIdleExtraOffset);
 	}
-	running += enginePins.fanRelay.getLogicValue() ? (m_ltit ? m_ltit->getLtitFan1Trim() : engineConfiguration->fan1ExtraIdle) : 0;
-	running += enginePins.fanRelay2.getLogicValue() ? (m_ltit ? m_ltit->getLtitFan2Trim() : engineConfiguration->fan2ExtraIdle) : 0;
+	running += enginePins.fanRelay.getLogicValue() ? (engineConfiguration->ltitEnabled ? m_ltit.getLtitFan1Trim() : engineConfiguration->fan1ExtraIdle) : 0;
+	running += enginePins.fanRelay2.getLogicValue() ? (engineConfiguration->ltitEnabled ? m_ltit.getLtitFan2Trim() : engineConfiguration->fan2ExtraIdle) : 0;
 
 	running += luaAdd;
 
@@ -394,28 +394,21 @@ void IdleController::init() {
 	wasResetPid = false;
 	m_timingPid.initPidClass(&engineConfiguration->idleTimingPid);
 	getIdlePid()->initPidClass(&engineConfiguration->idleRpmPid);
-	m_ltit = new LongTermIdleTrim();
 }
 
 void IdleController::updateLtit(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active) {
-	if (m_ltit && engineConfiguration->ltitEnabled) {
-		m_ltit->update(rpm, clt, acActive, fan1Active, fan2Active);
+	if (engineConfiguration->ltitEnabled) {
+		m_ltit.update(rpm, clt, acActive, fan1Active, fan2Active);
 	}
 }
 
 void IdleController::setDefaultIdleParameters() {
-	if (m_ltit) {
-		for (int i = 0; i < 16; i++)
-			for (int j = 0; j < 16; j++)
-				m_ltit->ltitTableHelper[i][j] = 100.0f;
-		m_ltit->acTrim = 0;
-		m_ltit->fan1Trim = 0;
-		m_ltit->fan2Trim = 0;
-	}
-}
-
-IdleController::~IdleController() {
-	if (m_ltit) delete m_ltit;
+	for (int i = 0; i < 16; i++)
+		for (int j = 0; j < 16; j++)
+			m_ltit.ltitTableHelper[i][j] = 100.0f;
+	m_ltit.acTrim = 0;
+	m_ltit.fan1Trim = 0;
+	m_ltit.fan2Trim = 0;
 }
 
 #endif /* EFI_IDLE_CONTROL */
