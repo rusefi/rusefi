@@ -116,13 +116,13 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 			float deltaTau  = learnRate * (wTauImediato  * erroImediato + wTauProlongado  * erroProlongado);
 			deltaBeta = clampF(-maxStep, deltaBeta, maxStep);
 			deltaTau  = clampF(-maxStep, deltaTau,  maxStep);
-			config->betaCorrection[i][j] *= (1.0f + deltaBeta);
-			config->tauCorrection[i][j]  *= (1.0f + deltaTau);
+			config->betaCorrection[i][j] = config->betaCorrection[i][j] * (1.0f + deltaBeta);
+			config->tauCorrection[i][j]  = config->tauCorrection[i][j]  * (1.0f + deltaTau);
 			config->betaCorrection[i][j] = clampF(0.05f, config->betaCorrection[i][j], 2.0f);
 			config->tauCorrection[i][j]  = clampF(0.1f,  config->tauCorrection[i][j],  2.0f);
 			// Suavização
-			smoothCorrectionTable(config->betaCorrection, engineConfiguration->wwSmoothIntensity);
-			smoothCorrectionTable(config->tauCorrection,  engineConfiguration->wwSmoothIntensity);
+			// smoothCorrectionTable(config->betaCorrection, engineConfiguration->wwSmoothIntensity);
+			// smoothCorrectionTable(config->tauCorrection,  engineConfiguration->wwSmoothIntensity);
 			monitoring = false;
 		}
 	}
@@ -233,7 +233,7 @@ void WallFuelController::onFastCallback() {
 	// --- INTEGRAÇÃO DO APRENDIZADO ---
 	// Detectar transiente e chamar adaptiveLearning
 	static float lastTps = 0, lastMap = 0;
-	float tps = Sensor::getOrZero(SensorType::Tps);
+	float tps = Sensor::getOrZero(SensorType::Tps1);
 	float map = Sensor::getOrZero(SensorType::Map);
 	float dTps = tps - lastTps;
 	float dMap = map - lastMap;
