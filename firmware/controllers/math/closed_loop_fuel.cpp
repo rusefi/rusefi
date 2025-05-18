@@ -7,6 +7,7 @@
 #include "efi_gpio.h"
 #include "event_queue.h"
 #include "efitime.h"
+#include "ignition_controller.h"
 
 #if EFI_ENGINE_CONTROL
 
@@ -104,8 +105,14 @@ void LongTermFuelTrim::smoothHoles() {
 	}
 }
 
+// Função utilitária para checar se a ignição está ligada
+static bool isIgnitionOn() {
+	auto ign = engine->module<IgnitionController>();
+	return ign && ign->secondsSinceIgnVoltage() > 1.0f;
+}
+
 void LongTermFuelTrim::updateLtft(float load, float rpm) {
-	updateTimers(engine->isIgnitionOn());
+	updateTimers(isIgnitionOn());
 	if (!canLearn()) return;
 	auto binLoad = priv::getBin(load, config->veLoadBins);
 	auto binRpm = priv::getBin(rpm, config->veRpmBins);
