@@ -81,7 +81,6 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 	static bool monitoring = false;
 	static float lambdaBuffer[200]; // 2s @ 100Hz
 	static int bufferIdx = 0;
-	static uint32_t transStartTime = 0;
 	auto rpmBin = priv::getBin(rpm, config->wwRpmBins);
 	auto mapBin = priv::getBin(map, config->wwMapBins);
 	int i = rpmBin.Idx;
@@ -89,7 +88,6 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 	if (isTransient) {
 		monitoring = true;
 		bufferIdx = 0;
-		transStartTime = getTimeNowS();
 	}
 	if (monitoring) {
 		if (bufferIdx < 200) {
