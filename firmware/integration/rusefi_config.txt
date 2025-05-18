@@ -1983,6 +1983,14 @@ uint8_t ltftMinTemp;Minimum temperature to start using ltft tables;"deg C", 1, 0
 uint8_t ltftPermissivity;How much long term fuel trim should act to reduce short term fuel trim, 100 should keep stft in about 3%, 255 in 8% and 33 in 1%, and ;"%", 1, 0, 0, 255, 0
 uint8_t ltftMaxCorrection;;"%", 1, 0, 0, 50, 0
 uint8_t ltftMinCorrection;;"%", 1, 0, 0, 50, 0
+uint8_t ltftEmaAlpha;Constante de tempo do filtro EMA para STFT usado no LTFT;"0-255",1,0,1,255,0
+uint8_t ltftStftRejectThreshold;Limiar de rejeição para STFT (em %);"%",1,0,1,50,0
+uint8_t ltftRegionalWindow;Tamanho da janela para detecção de tendência regional;"células",1,0,1,16,0
+uint8_t ltftRegionalIntensity;Intensidade da correção regional;"%",1,0,1,100,0
+uint8_t ltftHoleThreshold;Limiar de diferença para detecção de buraco no mapa;"%",1,0,1,50,0
+uint8_t ltftSmoothingIntensity;Intensidade da suavização automática;"%",1,0,1,100,0
+uint8_t ltftIgnitionOnDelay;Delay pós-ignição ON para aprendizado/aplicação do LTFT;"s",1,0,1,60,0
+uint8_t ltftIgnitionOffSaveDelay;Delay após ignição OFF para salvamento do LTFT;"s",1,0,1,60,0
 
 #if LAMBDA
 uint8_t[FUEL_LOAD_COUNT x FUEL_RPM_COUNT] autoscale lambdaTable;;"lambda", {1/@@PACK_MULT_LAMBDA_CFG@@}, 0, 0.6, 1.5, 2
@@ -2656,13 +2664,4 @@ end_struct
 
 #define CAN_ECU_SERIAL_RX_ID 0x710
 #define CAN_ECU_SERIAL_TX_ID 0x720
-
-uint8_t ltftEmaAlpha;Constante de tempo do filtro EMA para STFT usado no LTFT;"0-255",1,0,1,255,0
-uint8_t ltftStftRejectThreshold;Limiar de rejeição para STFT (em %);"%",1,0,1,50,0
-uint8_t ltftRegionalWindow;Tamanho da janela para detecção de tendência regional;"células",1,0,1,16,0
-uint8_t ltftRegionalIntensity;Intensidade da correção regional;"%",1,0,1,100,0
-uint8_t ltftHoleThreshold;Limiar de diferença para detecção de buraco no mapa;"%",1,0,1,50,0
-uint8_t ltftSmoothingIntensity;Intensidade da suavização automática;"%",1,0,1,100,0
-uint8_t ltftIgnitionOnDelay;Delay pós-ignição ON para aprendizado/aplicação do LTFT;"s",1,0,1,60,0
-uint8_t ltftIgnitionOffSaveDelay;Delay após ignição OFF para salvamento do LTFT;"s",1,0,1,60,0
 

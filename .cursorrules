@@ -151,7 +151,6 @@
       "Respect order of operations: base fuel, temperature corrections, transient corrections, fine-tuning",
       "All fuel quantity values internal to system are in grams, conversion to pulse width happens at the end",
       "New injection patterns must update both fuel quantity and timing calculations",
-      "When implementing multi-stage injection, extend both InjectionEvent classes and injection mode handling",
       "Injector flow rate and dead-time corrections are applied in convertFuelToInjectorPulseWidth()",
       "Test all injection modes (sequential, batch, simultaneous) when adding new features"
     ]
@@ -235,5 +234,7 @@
       "Consider temperature effects on sensor readings when applicable",
       "Document sensor specifications, wiring, and calibration procedures for end users"
     ]
-  }
+  },
+
+  "integration_guidelines": "=== rusefi_config e TunerStudio: Boas Práticas de Integração ===\n\n1. Adição de Novos Campos em rusefi_config.txt:\n- Sempre procure por campos 'unused' e utilize-os antes de adicionar ao final.\n- Siga o padrão: tipo, nome, descrição, unidade, escala, offset, min, max, precisão.\n- Atualize FLASH_DATA_VERSION em caso de mudanças incompatíveis.\n- Para tabelas, defina constantes de tamanho e use 'autoscale' para arrays uint8_t.\n- Inicialize valores padrão em default_engine_configuration.cpp.\n\n2. Integração com tunerstudio.template.ini:\n- Adicione novos campos na mesma seção/menu dos parâmetros relacionados.\n- Use a sintaxe 'field = \"Descrição\", nomeCampo, {condição}' para visibilidade condicional.\n- Atualize o FLASH_DATA_VERSION e teste a interface após mudanças.\n\n3. Uso de Bibliotecas e Includes:\n- Para funções de tempo, use apenas '#include \"efitime.h\"' e 'getTimeNowS()'.\n- Evite includes desnecessários como 'os_access.h', 'event_queue.h', 'efi_gpio.h' a menos que realmente precise.\n- Siga o padrão dos arquivos existentes para integração de bibliotecas.\n\n4. LTFT (Long Term Fuel Trim):\n- Use buffers auxiliares para cálculos intermediários e suavização.\n- Implemente delays pós-ignição ON/OFF para aprendizado e salvamento.\n- Aplique filtros (ex: EMA) para rejeitar dados ruins.\n- Use lógica regional para correção de faixas e suavização automática para evitar buracos.\n- Garanta persistência apenas após condições seguras (ex: delay pós-ignição OFF).\n- Integre todos os parâmetros de configuração ao TunerStudio e inicialize valores padrão.\n- Teste a robustez do sistema em diferentes cenários antes de liberar."
 } 
