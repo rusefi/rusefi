@@ -34,6 +34,7 @@ struct IIdleController {
 	virtual bool isIdlingOrTaper() const = 0;
 	virtual bool isCoastingAdvance() const = 0;
 	virtual float getIdleTimingAdjustment(float rpm) = 0;
+	virtual void onIgnitionStateChanged(bool ignitionOn) = 0;
 };
 
 class IdleController : public IIdleController, public EngineModule, public idle_state_s {
@@ -98,6 +99,8 @@ public:
 	float getLtitFan2Trim() const;
 
 	void setDefaultIdleParameters();
+
+	void onIgnitionStateChanged(bool ignitionOn) override;
 
 private:
 

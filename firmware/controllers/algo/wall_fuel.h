@@ -60,6 +60,8 @@ public:
 		return m_beta;
 	}
 
+	void onIgnitionStateChanged(bool ignitionOn) override;
+
 protected:
 	float computeTau() const;
 	float computeBeta() const;
@@ -74,5 +76,6 @@ private:
 	bool betaAdjusted[WW_RPM_BINS][WW_MAP_BINS] = {{false}};
 	bool tauAdjusted[WW_RPM_BINS][WW_MAP_BINS] = {{false}};
 	uint32_t lastSaveTime = 0;
+	bool pendingWwSave = false;
 	void smoothCorrectionTable(float table[WW_RPM_BINS][WW_MAP_BINS], float intensity);
 };

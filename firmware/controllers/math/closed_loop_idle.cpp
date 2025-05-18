@@ -34,6 +34,7 @@ float LongTermIdleTrim::getLtitFan1Trim() const { return fan1Trim; }
 float LongTermIdleTrim::getLtitFan2Trim() const { return fan2Trim; }
 
 void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active, float idleIntegral) {
+    (void)acActive; (void)fan1Active; (void)fan2Active;
     // Critério de idle estável removido
     //float targetRpm = interpolate2d(clt, config->cltIdleCorrBins, config->rpmIdleCorrBins);
     //if (fabsf(rpm - targetRpm) > engineConfiguration->ltitStableRpmThreshold)
@@ -75,8 +76,8 @@ void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Acti
     //setNeedToWriteConfiguration();
 }
 
-void LongTermIdleTrim::onIgnitionStateChanged(bool ignitionState) {
-    if (!ignitionState && updatedLtit) {
+void LongTermIdleTrim::onIgnitionStateChanged(bool ignitionOn) {
+    if (!ignitionOn && updatedLtit) {
         for (int x = 0; x < 16; x++)
             for (int y = 0; y < 16; y++)
                 config->ltitTable[x][y] = (uint16_t)ltitTableHelper[x][y];

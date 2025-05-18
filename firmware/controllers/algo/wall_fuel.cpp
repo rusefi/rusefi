@@ -129,9 +129,8 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 	// Removido salvamento imediato e lógica de timer
 }
 
-void WallFuelController::onIgnitionStateChanged(bool ignitionState) {
-	if (!ignitionState && pendingWwSave) {
-		// Aqui, salve as correções relevantes
+void WallFuelController::onIgnitionStateChanged(bool ignitionOn) {
+	if (!ignitionOn && pendingWwSave) {
 		setNeedToWriteConfiguration();
 		pendingWwSave = false;
 	}

@@ -438,4 +438,8 @@ float IdleController::getLtitFan2Trim() const {
     return m_ltit.getLtitFan2Trim();
 }
 
+void IdleController::onIgnitionStateChanged(bool ignitionOn) {
+    m_ltit.onIgnitionStateChanged(ignitionOn);
+}
+
 #endif /* EFI_IDLE_CONTROL */
