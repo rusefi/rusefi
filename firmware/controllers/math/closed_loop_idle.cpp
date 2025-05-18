@@ -18,9 +18,9 @@ LongTermIdleTrim::LongTermIdleTrim() {
             }
         }
     }
-    acTrim = config ? (float)config->ltitAcTrim / 10.0f : 0.0f;
-    fan1Trim = config ? (float)config->ltitFan1Trim / 10.0f : 0.0f;
-    fan2Trim = config ? (float)config->ltitFan2Trim / 10.0f : 0.0f;
+    acTrim = (float)config->ltitAcTrim / 10.0f;
+    fan1Trim = (float)config->ltitFan1Trim / 10.0f;
+    fan2Trim = (float)config->ltitFan2Trim / 10.0f;
     emaError = 0;
     lastUpdateTime = 0;
 }
