@@ -118,9 +118,9 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 			config->tauCorrection[i][j]  = config->tauCorrection[i][j]  * (1.0f + deltaTau);
 			config->betaCorrection[i][j] = clampF(0.05f, config->betaCorrection[i][j], 2.0f);
 			config->tauCorrection[i][j]  = clampF(0.1f,  config->tauCorrection[i][j],  2.0f);
-			// Suavização
-			// smoothCorrectionTable(config->betaCorrection, engineConfiguration->wwSmoothIntensity);
-			// smoothCorrectionTable(config->tauCorrection,  engineConfiguration->wwSmoothIntensity);
+			// Suavização após aprendizado
+			smoothCorrectionTable(config->betaCorrection, engineConfiguration->wwSmoothIntensity);
+			smoothCorrectionTable(config->tauCorrection,  engineConfiguration->wwSmoothIntensity);
 			monitoring = false;
 		}
 	}

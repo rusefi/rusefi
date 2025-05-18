@@ -109,12 +109,12 @@ percent_t IdleController::getRunningOpenLoop(IIdleController::Phase phase, float
 		running *= m_ltit.getLtitFactor(rpm, clt);
 	}
 
-	// Offsets aprendidos
+	// Offsets aprendidos: open loop + correção
 	if (engine->module<AcController>().unmock().acButtonState) {
-		running += (engineConfiguration->ltitEnabled ? m_ltit.getLtitAcTrim() : engineConfiguration->acIdleExtraOffset);
+		running += engineConfiguration->acIdleExtraOffset + (engineConfiguration->ltitEnabled ? m_ltit.getLtitAcTrim() : 0);
 	}
-	running += enginePins.fanRelay.getLogicValue() ? (engineConfiguration->ltitEnabled ? m_ltit.getLtitFan1Trim() : engineConfiguration->fan1ExtraIdle) : 0;
-	running += enginePins.fanRelay2.getLogicValue() ? (engineConfiguration->ltitEnabled ? m_ltit.getLtitFan2Trim() : engineConfiguration->fan2ExtraIdle) : 0;
+	running += enginePins.fanRelay.getLogicValue() ? (engineConfiguration->fan1ExtraIdle + (engineConfiguration->ltitEnabled ? m_ltit.getLtitFan1Trim() : 0)) : 0;
+	running += enginePins.fanRelay2.getLogicValue() ? (engineConfiguration->fan2ExtraIdle + (engineConfiguration->ltitEnabled ? m_ltit.getLtitFan2Trim() : 0)) : 0;
 
 	running += luaAdd;
 
