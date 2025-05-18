@@ -17,8 +17,8 @@ LongTermIdleTrim::LongTermIdleTrim(engine_configuration_s* cfg) : config(cfg) {
 }
 
 float LongTermIdleTrim::getLtitFactor(float rpm, float clt) const {
-    // Interpolação 3D igual à idle
-    return interpolate3d(ltitTableHelper, config->cltIdleCorrBins, clt, config->rpmIdleCorrBins, rpm) * 0.01f;
+    // Interpolação 3D:
+    return interpolate3d(ltitTableHelper, engineConfiguration->cltIdleCorrBins, clt, engineConfiguration->rpmIdleCorrBins, rpm) * 0.01f;
 }
 float LongTermIdleTrim::getLtitAcTrim() const { return acTrim; }
 float LongTermIdleTrim::getLtitFan1Trim() const { return fan1Trim; }
@@ -26,7 +26,7 @@ float LongTermIdleTrim::getLtitFan2Trim() const { return fan2Trim; }
 
 void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active) {
     // Critério de idle estável
-    float targetRpm = interpolate2d(clt, config->cltIdleCorrBins, config->cltIdleRpm);
+    float targetRpm = interpolate2d(clt, engineConfiguration->cltIdleCorrBins, engineConfiguration->rpmIdleCorrBins);
     if (fabsf(rpm - targetRpm) > config->ltitStableRpmThreshold)
         return;
     static uint32_t stableStart = 0;
@@ -42,10 +42,10 @@ void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Acti
     // Encontrar índices dos bins
     int i = 0, j = 0;
     for (int idx = 0; idx < 16; idx++) {
-        if (clt < config->cltIdleCorrBins[idx]) { i = idx > 0 ? idx - 1 : 0; break; }
+        if (clt < engineConfiguration->cltIdleCorrBins[idx]) { i = idx > 0 ? idx - 1 : 0; break; }
     }
     for (int idx = 0; idx < 16; idx++) {
-        if (rpm < config->rpmIdleCorrBins[idx]) { j = idx > 0 ? idx - 1 : 0; break; }
+        if (rpm < engineConfiguration->rpmIdleCorrBins[idx]) { j = idx > 0 ? idx - 1 : 0; break; }
     }
     // Correção multiplicativa
     float correction = -emaError * (float)config->ltitCorrectionRate * 0.01f;
