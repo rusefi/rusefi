@@ -54,6 +54,7 @@
 #include "frequency_sensor.h"
 #include "digital_input_exti.h"
 #include "dc_motors.h"
+#include "wall_fuel.h"
 
 #if EFI_PROD_CODE
 // todo: move this logic to algo folder!
@@ -591,6 +592,21 @@ static void updateFuelInfo() {
 	engine->outputChannels.wallFuelCorrectionValue = wallFuel.wallFuelCorrection * 1000;	// Convert grams to mg
 
 	engine->outputChannels.veValue = engine->engineState.currentVe;
+
+	// === LTIT Monitoring ===
+	const auto& idle = engine->module<IdleController>().unmock();
+	engine->outputChannels.ltitFactor   = idle.getLtitFactor(
+		Sensor::getOrZero(SensorType::Rpm),
+		Sensor::getOrZero(SensorType::Clt));
+	engine->outputChannels.ltitAcTrim   = idle.getLtitAcTrim();
+	engine->outputChannels.ltitFan1Trim = idle.getLtitFan1Trim();
+	engine->outputChannels.ltitFan2Trim = idle.getLtitFan2Trim();
+
+	// === Wall Wetting Adaptativo ===
+	const auto* wallFuelCtrl = engine->module<WallFuelController>();
+	engine->outputChannels.wwTau = wallFuelCtrl->computeTau();
+	engine->outputChannels.wwBeta = wallFuelCtrl->computeBeta();
+	engine->outputChannels.wwAlpha = wallFuelCtrl->getAlpha();
 #endif // EFI_ENGINE_CONTROL
 }
 

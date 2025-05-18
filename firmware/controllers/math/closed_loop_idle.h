@@ -12,7 +12,7 @@ public:
     float getLtitAcTrim() const;
     float getLtitFan1Trim() const;
     float getLtitFan2Trim() const;
-    void update(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active);
+    void update(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active, float idleIntegral);
     float ltitTableHelper[16][16];
     float acTrim, fan1Trim, fan2Trim;
     void smoothLtitTable(float intensity);

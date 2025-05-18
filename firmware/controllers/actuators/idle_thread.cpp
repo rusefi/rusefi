@@ -303,6 +303,18 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	newValue = interpolateClamped(0, newValue, engineConfiguration->idlePidDeactivationTpsThreshold, 0, tpsPos);
 
 	m_lastAutomaticPosition = newValue;
+
+	// Exemplo de integração do LTIT com termo integral do PID:
+	// Após calcular o PID de lenta, chame:
+	// updateLtit(rpm, clt, acActive, fan1Active, fan2Active, getIdlePid()->getIntegration());
+
+	// Chamada real para aprendizado LTIT
+	// Determinar status dos consumidores (AC, Fan1, Fan2)
+	bool acActive = engine->module<AcController>().unmock().acButtonState;
+	bool fan1Active = enginePins.fanRelay.getLogicValue();
+	bool fan2Active = enginePins.fanRelay2.getLogicValue();
+	updateLtit(rpm, clt, acActive, fan1Active, fan2Active, getIdlePid()->getIntegration());
+
 	return newValue;
 }
 
@@ -396,9 +408,9 @@ void IdleController::init() {
 	getIdlePid()->initPidClass(&engineConfiguration->idleRpmPid);
 }
 
-void IdleController::updateLtit(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active) {
+void IdleController::updateLtit(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active, float idleIntegral) {
 	if (engineConfiguration->ltitEnabled) {
-		m_ltit.update(rpm, clt, acActive, fan1Active, fan2Active);
+		m_ltit.update(rpm, clt, acActive, fan1Active, fan2Active, idleIntegral);
 	}
 }
 

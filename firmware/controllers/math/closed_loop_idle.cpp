@@ -33,7 +33,7 @@ float LongTermIdleTrim::getLtitAcTrim() const { return acTrim; }
 float LongTermIdleTrim::getLtitFan1Trim() const { return fan1Trim; }
 float LongTermIdleTrim::getLtitFan2Trim() const { return fan2Trim; }
 
-void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active) {
+void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active, float idleIntegral) {
     // Critério de idle estável
     float targetRpm = interpolate2d(clt, config->cltIdleCorrBins, config->rpmIdleCorrBins);
     if (fabsf(rpm - targetRpm) > engineConfiguration->ltitStableRpmThreshold)
@@ -44,10 +44,6 @@ void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Acti
         stableStart = now;
     if ((now - stableStart) < engineConfiguration->ltitStableTime)
         return;
-    // Filtro EMA do erro (exemplo: erro = rpm - target)
-    float error = rpm - targetRpm;
-    float alpha = (float)engineConfiguration->ltitEmaAlpha / 255.0f;
-    emaError = alpha * error + (1.0f - alpha) * emaError;
     // Encontrar índices dos bins
     int i = 0, j = 0;
     for (int idx = 0; idx < 16; idx++) {
@@ -56,8 +52,8 @@ void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Acti
     for (int idx = 0; idx < 16; idx++) {
         if (rpm < config->rpmIdleCorrBins[idx]) { j = idx > 0 ? idx - 1 : 0; break; }
     }
-    // Correção multiplicativa
-    float correction = -emaError * (float)engineConfiguration->ltitCorrectionRate * 0.01f;
+    // Correção multiplicativa baseada no termo integral do PID
+    float correction = idleIntegral * (float)engineConfiguration->ltitCorrectionRate * 0.01f;
     ltitTableHelper[i][j] *= (1.0f + correction);
     // Clamping configurável
     float clampMin = engineConfiguration->ltitClampMin > 0 ? engineConfiguration->ltitClampMin : 50.0f;
