@@ -304,7 +304,7 @@ void hwHandleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 /**
  * @returns true if tooth should be ignored
  */
-PUBLIC_API_WEAK bool skipToothSpecialShape(vvt_mode_e vvtMode, angle_t currentPosition) {
+PUBLIC_API_WEAK bool skipToothSpecialShape(size_t index, vvt_mode_e vvtMode, angle_t currentPosition) {
 	switch(vvtMode) {
 	case VVT_TOYOTA_3_TOOTH:
 	{
@@ -410,7 +410,7 @@ void handleVvtCamSignal(TriggerValue front, efitick_t nowNt, int index) {
 	auto vvtPosition = engineConfiguration->vvtOffsets[bankIndex * CAMS_PER_BANK + camIndex] - currentPosition;
 	tc->triggerState.vvtToothPosition[index] = vvtPosition;
 
-  bool skipTooth = skipToothSpecialShape(engineConfiguration->vvtMode[camIndex], currentPosition);
+  bool skipTooth = skipToothSpecialShape(index, engineConfiguration->vvtMode[camIndex], currentPosition);
   if (skipTooth) {
 			return;
   }
