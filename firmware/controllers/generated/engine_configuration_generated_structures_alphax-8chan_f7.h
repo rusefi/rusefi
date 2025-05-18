@@ -794,7 +794,7 @@ struct engine_configuration_s {
 	bool launchControlEnabled : 1 {};
 	/**
 	offset 168 bit 17 */
-	bool tempPumpLimitCheck : 1 {};
+	bool unusedBit42423 : 1 {};
 	/**
 	offset 168 bit 18 */
 	bool antiLagEnabled : 1 {};

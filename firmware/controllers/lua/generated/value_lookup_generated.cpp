@@ -113,9 +113,6 @@ float getConfigValueByName(const char *name) {
 // launchControlEnabled
 		case -338157684:
 			return engineConfiguration->launchControlEnabled;
-// tempPumpLimitCheck
-		case -248021158:
-			return engineConfiguration->tempPumpLimitCheck;
 // antiLagEnabled
 		case -933524784:
 			return engineConfiguration->antiLagEnabled;
@@ -2154,11 +2151,6 @@ bool setConfigValueByName(const char *name, float value) {
 		case -338157684:
 	{
 		engineConfiguration->launchControlEnabled = (int)value;
-		return 1;
-	}
-		case -248021158:
-	{
-		engineConfiguration->tempPumpLimitCheck = (int)value;
 		return 1;
 	}
 		case -933524784:

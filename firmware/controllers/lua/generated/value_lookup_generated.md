@@ -106,9 +106,6 @@ This uses separate ignition timing and VE tables not only for idle conditions, a
 ### launchControlEnabled
 
 
-### tempPumpLimitCheck
-
-
 ### antiLagEnabled
 
 
