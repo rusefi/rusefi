@@ -436,15 +436,13 @@ float mapFast
 
 	uint8_t[48 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 
-# === LTIT (Long Term Idle Trim) ===
-float ltitFactor;LTIT multiplicativo;"mult",1, 0, 0, 0, 3
-float ltitAcTrim;LTIT AC Trim;"%",1, 0, 0, 0, 2
-float ltitFan1Trim;LTIT Fan1 Trim;"%",1, 0, 0, 0, 2
-float ltitFan2Trim;LTIT Fan2 Trim;"%",1, 0, 0, 0, 2
+	float ltitFactor;LTIT multiplicativo;"mult",1, 0, 0, 0, 3
+	float ltitAcTrim;LTIT AC Trim;"%",1, 0, 0, 0, 2
+	float ltitFan1Trim;LTIT Fan1 Trim;"%",1, 0, 0, 0, 2
+	float ltitFan2Trim;LTIT Fan2 Trim;"%",1, 0, 0, 0, 2
 
-# === Wall Wetting Adaptativo ===
-float wwTau;Wall Wetting Tau;"s",1, 0, 0, 0, 3
-float wwBeta;Wall Wetting Beta;"",1, 0, 0, 0, 3
-float wwAlpha;Wall Wetting Alpha;"",1, 0, 0, 0, 3
+	float wwTau;Wall Wetting Tau;"s",1, 0, 0, 0, 3
+	float wwBeta;Wall Wetting Beta;"",1, 0, 0, 0, 3
+	float wwAlpha;Wall Wetting Alpha;"",1, 0, 0, 0, 3
 
 end_struct
