@@ -3,4 +3,4 @@
 //
 
 #define SIGNATURE_HASH 1178194133
-#define TS_SIGNATURE "rusEFI master.2025.05.18.subaru_eg33_f7.1178194133"
+#define TS_SIGNATURE "rusEFI master.2025.05.19.subaru_eg33_f7.1178194133"
