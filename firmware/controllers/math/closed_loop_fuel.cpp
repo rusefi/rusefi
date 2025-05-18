@@ -115,7 +115,6 @@ static bool isIgnitionOn() {
 */
 
 void LongTermFuelTrim::updateLtft(float load, float rpm) {
-	// Permitir aprendizado imediato
 	if (!config->ltftEnabled) return;
 	if ((Sensor::get(SensorType::Clt)).value_or(0) < float(config->ltftMinModTemp)) return;
 	auto binLoad = priv::getBin(load, config->veLoadBins);
@@ -160,16 +159,18 @@ void LongTermFuelTrim::updateLtft(float load, float rpm) {
 				}
 			}
 		}
-		// Após atualização da tabela, salvar imediatamente
+		// Após atualização da tabela, marcar aprendizado pendente
 		updatedLtft = 1;
 		smoothHoles();
-		copyTable(config->ltftTable, ltftTableHelper);
-		setNeedToWriteConfiguration();
 	}
 }
 
 void LongTermFuelTrim::onIgnitionStateChanged(bool ignitionState) {
-	updateTimers(ignitionState);
+	if (!ignitionState && updatedLtft) {
+		copyTable(config->ltftTable, ltftTableHelper);
+		setNeedToWriteConfiguration();
+		updatedLtft = 0;
+	}
 }
 
 namespace {
