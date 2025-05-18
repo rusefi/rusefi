@@ -602,11 +602,6 @@ static void updateFuelInfo() {
 	engine->outputChannels.ltitFan1Trim = idle.getLtitFan1Trim();
 	engine->outputChannels.ltitFan2Trim = idle.getLtitFan2Trim();
 
-	// === Wall Wetting Adaptativo ===
-	const auto* wallFuelCtrl = engine->module<WallFuelController>();
-	engine->outputChannels.wwTau = wallFuelCtrl->computeTau();
-	engine->outputChannels.wwBeta = wallFuelCtrl->computeBeta();
-	engine->outputChannels.wwAlpha = wallFuelCtrl->getAlpha();
 #endif // EFI_ENGINE_CONTROL
 }
 
