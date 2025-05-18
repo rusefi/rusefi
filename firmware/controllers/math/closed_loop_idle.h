@@ -16,7 +16,6 @@ public:
     float ltitTableHelper[16][16];
     float acTrim, fan1Trim, fan2Trim;
 private:
-    engine_configuration_s* config;
     float emaError = 0;
     uint32_t lastUpdateTime = 0;
     // ... outros campos internos ...
