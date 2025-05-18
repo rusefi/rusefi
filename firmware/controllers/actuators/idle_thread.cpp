@@ -105,16 +105,16 @@ percent_t IdleController::getRunningOpenLoop(IIdleController::Phase phase, float
 	);
 
 	// LTIT multiplicativo
-	if (m_ltit && config->ltitEnabled) {
+	if (m_ltit && engineConfiguration->ltitEnabled) {
 		running *= m_ltit->getLtitFactor(rpm, clt);
 	}
 
 	// Offsets aprendidos
 	if (engine->module<AcController>().unmock().acButtonState) {
-		running += (m_ltit ? m_ltit->getLtitAcTrim() : config->acIdleExtraOffset);
+		running += (m_ltit ? m_ltit->getLtitAcTrim() : engineConfiguration->acIdleExtraOffset);
 	}
-	running += enginePins.fanRelay.getLogicValue() ? (m_ltit ? m_ltit->getLtitFan1Trim() : config->fan1ExtraIdle) : 0;
-	running += enginePins.fanRelay2.getLogicValue() ? (m_ltit ? m_ltit->getLtitFan2Trim() : config->fan2ExtraIdle) : 0;
+	running += enginePins.fanRelay.getLogicValue() ? (m_ltit ? m_ltit->getLtitFan1Trim() : engineConfiguration->fan1ExtraIdle) : 0;
+	running += enginePins.fanRelay2.getLogicValue() ? (m_ltit ? m_ltit->getLtitFan2Trim() : engineConfiguration->fan2ExtraIdle) : 0;
 
 	running += luaAdd;
 
@@ -398,7 +398,7 @@ void IdleController::init() {
 }
 
 void IdleController::updateLtit(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active) {
-	if (m_ltit && config->ltitEnabled) {
+	if (m_ltit && engineConfiguration->ltitEnabled) {
 		m_ltit->update(rpm, clt, acActive, fan1Active, fan2Active);
 	}
 }
