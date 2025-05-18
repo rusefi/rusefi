@@ -77,6 +77,7 @@ bool LongTermFuelTrim::canLearn() {
 
 void LongTermFuelTrim::applyRegionalCorrection(float load, float rpm, float correction) {
 	// Exemplo: aplicar correção em toda a faixa de RPM se padrão consistente detectado
+	if(load < 10.0f) return;
 	int binRpm = priv::getBin(rpm, config->veRpmBins).Idx;
 	int window = config->ltftRegionalWindow;
 	float intensity = (float)config->ltftRegionalIntensity / 100.0f;
@@ -107,8 +108,8 @@ void LongTermFuelTrim::smoothHoles() {
 
 // Função utilitária para checar se a ignição está ligada
 static bool isIgnitionOn() {
-	auto ign = engine->module<IgnitionController>();
-	return ign && ign->secondsSinceIgnVoltage() > 1.0f;
+	auto ign = engine->module<IgnitionController>()->secondsSinceIgnVoltage() > 1.0f;
+	return ign;
 }
 
 void LongTermFuelTrim::updateLtft(float load, float rpm) {
