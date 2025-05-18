@@ -31,8 +31,8 @@ struct IWallFuelController {
 };
 
 // Adaptação automática de tau/beta
-#define WW_RPM_BINS 16
-#define WW_MAP_BINS 16
+#define WW_RPM_BINS 8
+#define WW_MAP_BINS 8
 
 class WallFuelController : public IWallFuelController, public EngineModule {
 public:
