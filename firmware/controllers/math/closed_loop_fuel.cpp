@@ -107,10 +107,12 @@ void LongTermFuelTrim::smoothHoles() {
 }
 
 // Função utilitária para checar se a ignição está ligada
+/*
 static bool isIgnitionOn() {
 	auto ign = engine->module<IgnitionController>()->secondsSinceIgnVoltage() > 1.0f;
 	return ign;
 }
+*/
 
 void LongTermFuelTrim::updateLtft(float load, float rpm) {
 	// Permitir aprendizado imediato
