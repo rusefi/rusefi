@@ -96,37 +96,45 @@ void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Acti
     }
 
     // --- NOVA LÓGICA DE SALVAMENTO PADRÃO ---
-    static bool ignitionOffSaveDelayActive = false;
-    static uint32_t ignitionOffTimestamp = 0;
-    static bool pendingSave = false;
-    // Estado de ignição: true = ON, false = OFF
-    bool ignitionState = engine->module<IgnitionController>()->secondsSinceIgnVoltage() > 1.0f;
-    if (!ignitionState) {
-        if (!ignitionOffSaveDelayActive) {
-            ignitionOffTimestamp = now;
-            ignitionOffSaveDelayActive = true;
-            pendingSave = true;
-        }
-        if (ignitionOffSaveDelayActive && (now - ignitionOffTimestamp) >= engineConfiguration->ltitIgnitionOffSaveDelay) {
-            if (pendingSave) {
-                // Copiar para config e marcar para salvar
-                for (int x = 0; x < 16; x++)
-                    for (int y = 0; y < 16; y++)
-                        config->ltitTable[x][y] = (uint16_t)ltitTableHelper[x][y];
-                config->ltitAcTrim = (int16_t)(acTrim * 10.0f);
-                config->ltitFan1Trim = (int16_t)(fan1Trim * 10.0f);
-                config->ltitFan2Trim = (int16_t)(fan2Trim * 10.0f);
-                // Suavização regional após salvamento
-                smoothLtitTable(engineConfiguration->ltitSmoothingIntensity);
-                setNeedToWriteConfiguration();
-                pendingSave = false;
-            }
-            ignitionOffSaveDelayActive = false;
-        }
-    } else {
-        ignitionOffSaveDelayActive = false;
-        pendingSave = false;
-    }
+    // static bool ignitionOffSaveDelayActive = false;
+    // static uint32_t ignitionOffTimestamp = 0;
+    // static bool pendingSave = false;
+    // bool ignitionState = engine->module<IgnitionController>()->secondsSinceIgnVoltage() > 1.0f;
+    // if (!ignitionState) {
+    // 	if (!ignitionOffSaveDelayActive) {
+    // 		ignitionOffTimestamp = now;
+    // 		ignitionOffSaveDelayActive = true;
+    // 		pendingSave = true;
+    // 	}
+    // 	if (ignitionOffSaveDelayActive && (now - ignitionOffTimestamp) >= engineConfiguration->ltitIgnitionOffSaveDelay) {
+    // 		if (pendingSave) {
+    // 			// Copiar para config e marcar para salvar
+    // 			for (int x = 0; x < 16; x++)
+    // 				for (int y = 0; y < 16; y++)
+    // 					config->ltitTable[x][y] = (uint16_t)ltitTableHelper[x][y];
+    // 			config->ltitAcTrim = (int16_t)(acTrim * 10.0f);
+    // 			config->ltitFan1Trim = (int16_t)(fan1Trim * 10.0f);
+    // 			config->ltitFan2Trim = (int16_t)(fan2Trim * 10.0f);
+    // 			// Suavização regional após salvamento
+    // 			smoothLtitTable(engineConfiguration->ltitSmoothingIntensity);
+    // 			setNeedToWriteConfiguration();
+    // 			pendingSave = false;
+    // 		}
+    // 		ignitionOffSaveDelayActive = false;
+    // 	}
+    // } else {
+    // 	ignitionOffSaveDelayActive = false;
+    // 	pendingSave = false;
+    // }
+    // Salvamento imediato após ajuste/adaptação
+    for (int x = 0; x < 16; x++)
+        for (int y = 0; y < 16; y++)
+            config->ltitTable[x][y] = (uint16_t)ltitTableHelper[x][y];
+    config->ltitAcTrim = (int16_t)(acTrim * 10.0f);
+    config->ltitFan1Trim = (int16_t)(fan1Trim * 10.0f);
+    config->ltitFan2Trim = (int16_t)(fan2Trim * 10.0f);
+    smoothLtitTable(engineConfiguration->ltitSmoothingIntensity);
+    setNeedToWriteConfiguration();
 }
 
 // Suavização regional da tabela LTIT

@@ -122,31 +122,33 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 			smoothCorrectionTable(config->betaCorrection, engineConfiguration->wwSmoothIntensity);
 			smoothCorrectionTable(config->tauCorrection,  engineConfiguration->wwSmoothIntensity);
 			monitoring = false;
+			// Salvamento imediato após aprendizado
+			setNeedToWriteConfiguration();
 		}
 	}
-	// Lógica de salvamento: só salva após ignição OFF + delay
-	static bool ignitionOffSaveDelayActive = false;
-	static uint32_t ignitionOffTimestamp = 0;
-	static bool pendingSave = false;
-	bool ignitionState = engine->module<IgnitionController>()->secondsSinceIgnVoltage() > 1.0f;
-	uint32_t now = getTimeNowS();
-	if (!ignitionState) {
-		if (!ignitionOffSaveDelayActive) {
-			ignitionOffTimestamp = now;
-			ignitionOffSaveDelayActive = true;
-			pendingSave = true;
-		}
-		if (ignitionOffSaveDelayActive && (now - ignitionOffTimestamp) >= engineConfiguration->wwIgnitionOffSaveDelay) {
-			if (pendingSave) {
-				setNeedToWriteConfiguration();
-				pendingSave = false;
-			}
-			ignitionOffSaveDelayActive = false;
-		}
-	} else {
-		ignitionOffSaveDelayActive = false;
-		pendingSave = false;
-	}
+	// Lógica de salvamento removida para salvamento imediato
+	// static bool ignitionOffSaveDelayActive = false;
+	// static uint32_t ignitionOffTimestamp = 0;
+	// static bool pendingSave = false;
+	// bool ignitionState = engine->module<IgnitionController>()->secondsSinceIgnVoltage() > 1.0f;
+	// uint32_t now = getTimeNowS();
+	// if (!ignitionState) {
+	// 	if (!ignitionOffSaveDelayActive) {
+	// 		ignitionOffTimestamp = now;
+	// 		ignitionOffSaveDelayActive = true;
+	// 		pendingSave = true;
+	// 	}
+	// 	if (ignitionOffSaveDelayActive && (now - ignitionOffTimestamp) >= engineConfiguration->wwIgnitionOffSaveDelay) {
+	// 		if (pendingSave) {
+	// 			setNeedToWriteConfiguration();
+	// 			pendingSave = false;
+	// 		}
+	// 		ignitionOffSaveDelayActive = false;
+	// 	}
+	// } else {
+	// 	ignitionOffSaveDelayActive = false;
+	// 	pendingSave = false;
+	// }
 }
 
 void WallFuelController::smoothCorrectionTable(float table[WW_RPM_BINS][WW_MAP_BINS], float intensity) {

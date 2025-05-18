@@ -113,8 +113,9 @@ static bool isIgnitionOn() {
 }
 
 void LongTermFuelTrim::updateLtft(float load, float rpm) {
-	updateTimers(isIgnitionOn());
-	if (!canLearn()) return;
+	// Permitir aprendizado imediato
+	if (!config->ltftEnabled) return;
+	if ((Sensor::get(SensorType::Clt)).value_or(0) < float(config->ltftMinModTemp)) return;
 	auto binLoad = priv::getBin(load, config->veLoadBins);
 	auto binRpm = priv::getBin(rpm, config->veRpmBins);
 	int lowLoad = binLoad.Idx;
@@ -157,9 +158,11 @@ void LongTermFuelTrim::updateLtft(float load, float rpm) {
 				}
 			}
 		}
+		// Após atualização da tabela, salvar imediatamente
 		updatedLtft = 1;
-		// Suavização automática
 		smoothHoles();
+		copyTable(config->ltftTable, ltftTableHelper);
+		setNeedToWriteConfiguration();
 	}
 }
 
