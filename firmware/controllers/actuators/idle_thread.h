@@ -97,8 +97,6 @@ public:
 	float getLtitFan1Trim() const;
 	float getLtitFan2Trim() const;
 
-	~IdleController();
-
 	void setDefaultIdleParameters();
 
 private:
