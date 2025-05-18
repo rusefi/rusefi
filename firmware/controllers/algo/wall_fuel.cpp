@@ -96,8 +96,8 @@ float WallFuelController::computeTau() const {
 		// Use 3D interpolation for MAP x RPM
 		tau *= interpolate3d(
 			config->wwTauMapRpmValues,
-			config->wwRpmBins, rpm,
-			config->wwMapBins, map
+			config->wwMapBins, map,
+			config->wwRpmBins, rpm
 		);
 	}
 
@@ -127,8 +127,8 @@ float WallFuelController::computeBeta() const {
 		// Use 3D interpolation for MAP x RPM
 		beta *= interpolate3d(
 			config->wwBetaMapRpmValues,
-			config->wwRpmBins, rpm,
-			config->wwMapBins, map
+			config->wwMapBins, map,
+			config->wwRpmBins, rpm
 		);
 	}
 
