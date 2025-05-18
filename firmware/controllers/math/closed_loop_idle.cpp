@@ -27,17 +27,17 @@ float LongTermIdleTrim::getLtitFan2Trim() const { return fan2Trim; }
 void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active) {
     // Critério de idle estável
     float targetRpm = interpolate2d(clt, config->cltIdleCorrBins, config->rpmIdleCorrBins);
-    if (fabsf(rpm - targetRpm) > config->ltitStableRpmThreshold)
+    if (fabsf(rpm - targetRpm) > engineConfiguration->ltitStableRpmThreshold)
         return;
     static uint32_t stableStart = 0;
     uint32_t now = getTimeNowS();
     if (stableStart == 0)
         stableStart = now;
-    if ((now - stableStart) < config->ltitStableTime)
+    if ((now - stableStart) < engineConfiguration->ltitStableTime)
         return;
     // Filtro EMA do erro (exemplo: erro = rpm - target)
     float error = rpm - targetRpm;
-    float alpha = (float)config->ltitEmaAlpha / 255.0f;
+    float alpha = (float)engineConfiguration->ltitEmaAlpha / 255.0f;
     emaError = alpha * error + (1.0f - alpha) * emaError;
     // Encontrar índices dos bins
     int i = 0, j = 0;
@@ -48,7 +48,7 @@ void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Acti
         if (rpm < config->rpmIdleCorrBins[idx]) { j = idx > 0 ? idx - 1 : 0; break; }
     }
     // Correção multiplicativa
-    float correction = -emaError * (float)config->ltitCorrectionRate * 0.01f;
+    float correction = -emaError * (float)engineConfiguration->ltitCorrectionRate * 0.01f;
     ltitTableHelper[i][j] *= (1.0f + correction);
     // Clamping
     if (ltitTableHelper[i][j] > 150.0f) ltitTableHelper[i][j] = 150.0f;
@@ -59,7 +59,7 @@ void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Acti
     if (fan2Active) fan2Trim += correction;
     // Persistência: exemplo simples (pode ser expandido)
     static uint32_t lastSave = 0;
-    if (now - lastSave > config->ltitIgnitionOffSaveDelay) {
+    if (now - lastSave > engineConfiguration->ltitIgnitionOffSaveDelay) {
         // Copiar para config e marcar para salvar
         for (int x = 0; x < 16; x++)
             for (int y = 0; y < 16; y++)

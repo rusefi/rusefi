@@ -468,15 +468,11 @@ uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this r
 	uint16_t idlePositionMin;Voltage when the idle valve is closed.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
 	uint16_t idlePositionMax;Voltage when the idle valve is open.\nYou probably don't have one of these!\n1 volt = 1000 units;"mv", 1, 0, 0, 5000, 0
 
-	uint16_t[CLT_CURVE_SIZE x CLT_CURVE_SIZE] autoscale ltitTable;Long Term Idle Trim (LTIT) multiplicativo para idle open loop;"%", 0.1, 0, 50, 150, 1
 	bit ltitEnabled;Habilita aprendizado LTIT
 	uint8_t ltitEmaAlpha;Constante de tempo do filtro EMA para LTIT;"0-255",1,0,1,255,0
 	uint8_t ltitStableRpmThreshold;Faixa de RPM para considerar idle estável;"rpm",1,0,1,100,0
 	uint8_t ltitStableTime;Tempo mínimo de idle estável para aprender;"s",1,0,1,30,0
 	uint8_t ltitCorrectionRate;Taxa de aprendizado LTIT;"%/s",1,0,1,100,0
-	int16_t autoscale ltitAcTrim;Offset aprendido para AC;"%",0.1,0,-50,50,1
-	int16_t autoscale ltitFan1Trim;Offset aprendido para Fan1;"%",0.1,0,-50,50,1
-	int16_t autoscale ltitFan2Trim;Offset aprendido para Fan2;"%",0.1,0,-50,50,1
 	uint8_t ltitIgnitionOnDelay;Delay pós-ignição ON para aprendizado/aplicação do LTIT;"s",1,0,1,60,0
 	uint8_t ltitIgnitionOffSaveDelay;Delay após ignição OFF para salvamento do LTIT;"s",1,0,1,60,0
 
@@ -1948,6 +1944,11 @@ float[IAT_CURVE_SIZE] iatFuelCorr;;"ratio", 1, 0, 0, 5, 2
 uint8_t[CLT_CURVE_SIZE] autoscale rpmIdleCorrBins;RPM-based idle position;"RPM", 50, 0, 0, 9000, 0
 uint16_t[CLT_CURVE_SIZE] cltIdleCorrBins;CLT-based idle position for simple manual idle controller;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
 uint16_t[CLT_CURVE_SIZE x CLT_CURVE_SIZE] autoscale cltIdleCorrTable;    CLT-based idle position for simple manual idle controller;"%", 0.1, 0, 0, 100, 1
+
+uint16_t[CLT_CURVE_SIZE x CLT_CURVE_SIZE] autoscale ltitTable;Long Term Idle Trim (LTIT) multiplicativo para idle open loop;"%", 0.1, 0, 50, 150, 1
+int16_t autoscale ltitAcTrim;Offset aprendido para AC;"%",0.1,0,-50,50,1
+int16_t autoscale ltitFan1Trim;Offset aprendido para Fan1;"%",0.1,0,-50,50,1
+int16_t autoscale ltitFan2Trim;Offset aprendido para Fan2;"%",0.1,0,-50,50,1
 
 float[MAF_DECODING_COUNT] mafDecoding;Also known as MAF transfer function.\nkg/hour value.\nBy the way 2.081989116 kg/h = 1 ft3/m;"kg/hour", 1, 0, -500, 4000, 2
 float[MAF_DECODING_COUNT] mafDecodingBins;;"V", 1, 0, -5, 150, 2
