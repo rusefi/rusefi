@@ -313,6 +313,7 @@ float IdleController::getClosedLoop(IIdleController::Phase phase, float tpsPos, 
 	bool acActive = engine->module<AcController>().unmock().acButtonState;
 	bool fan1Active = enginePins.fanRelay.getLogicValue();
 	bool fan2Active = enginePins.fanRelay2.getLogicValue();
+	float clt = Sensor::getOrZero(SensorType::Clt);
 	updateLtit(rpm, clt, acActive, fan1Active, fan2Active, getIdlePid()->getIntegration());
 
 	return newValue;
