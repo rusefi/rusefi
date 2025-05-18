@@ -13,6 +13,7 @@
 #include "efi_pid.h"
 #include "sensor.h"
 #include "idle_state_generated.h"
+#include "closed_loop_idle.h"
 
 struct IIdleController {
 	enum class Phase : uint8_t {
