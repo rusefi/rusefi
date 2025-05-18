@@ -229,19 +229,34 @@ void WallFuelController::onFastCallback() {
 	m_beta = beta;
 	m_enable = true;
 	// --- INTEGRAÇÃO DO APRENDIZADO ---
-	// Detectar transiente e chamar adaptiveLearning
-	static float lastTps = 0, lastMap = 0;
+	// Detectar transiente usando derivada média de TPS/MAP
+	constexpr int N = 50; // janela de 50 amostras (~250ms)
+	constexpr float callbackPeriod = FAST_CALLBACK_PERIOD_MS / 1000.0f; // em segundos
+	constexpr float tpsThreshold = 8.0f; // %/s (ajustável)
+	constexpr float mapThreshold = 40.0f; // kPa/s (ajustável)
+	static float tpsBuffer[N] = {0};
+	static float mapBuffer[N] = {0};
+	static int bufIdx = 0;
+	static bool bufferFilled = false;
 	float tps = Sensor::getOrZero(SensorType::Tps1);
 	float map = Sensor::getOrZero(SensorType::Map);
-	float dTps = tps - lastTps;
-	float dMap = map - lastMap;
-	bool isTransient = fabsf(dTps) > 5.0f || fabsf(dMap) > 10.0f;
+	tpsBuffer[bufIdx] = tps;
+	mapBuffer[bufIdx] = map;
+	int oldestIdx = (bufIdx + 1) % N;
+	float tpsDelta = tps - tpsBuffer[oldestIdx];
+	float mapDelta = map - mapBuffer[oldestIdx];
+	float tpsDeriv = tpsDelta / (N * callbackPeriod); // %/s
+	float mapDeriv = mapDelta / (N * callbackPeriod); // kPa/s
+	bool isTransient = false;
+	if (bufferFilled) {
+		isTransient = fabsf(tpsDeriv) > tpsThreshold || fabsf(mapDeriv) > mapThreshold;
+	}
+	bufIdx = (bufIdx + 1) % N;
+	if (bufIdx == 0) bufferFilled = true;
 	float lambda = Sensor::getOrZero(SensorType::Lambda1);
 	float targetLambda = engine->fuelComputer.targetLambda;
 	float clt = Sensor::getOrZero(SensorType::Clt);
 	adaptiveLearning(rpm, map, lambda, targetLambda, isTransient, clt);
-	lastTps = tps;
-	lastMap = map;
 }
 
 WallFuelController::WallFuelController() {

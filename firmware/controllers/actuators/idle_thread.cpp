@@ -424,4 +424,18 @@ void IdleController::setDefaultIdleParameters() {
 	m_ltit.fan2Trim = 0;
 }
 
+// Implementação dos métodos getLtit* declarados em IdleController
+float IdleController::getLtitFactor(float rpm, float clt) const {
+    return m_ltit.getLtitFactor(rpm, clt);
+}
+float IdleController::getLtitAcTrim() const {
+    return m_ltit.getLtitAcTrim();
+}
+float IdleController::getLtitFan1Trim() const {
+    return m_ltit.getLtitFan1Trim();
+}
+float IdleController::getLtitFan2Trim() const {
+    return m_ltit.getLtitFan2Trim();
+}
+
 #endif /* EFI_IDLE_CONTROL */
