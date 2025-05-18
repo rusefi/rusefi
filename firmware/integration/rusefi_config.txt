@@ -2657,3 +2657,12 @@ end_struct
 #define CAN_ECU_SERIAL_RX_ID 0x710
 #define CAN_ECU_SERIAL_TX_ID 0x720
 
+uint8_t ltftEmaAlpha;Constante de tempo do filtro EMA para STFT usado no LTFT;"0-255",1,0,1,255,0
+uint8_t ltftStftRejectThreshold;Limiar de rejeição para STFT (em %);"%",1,0,1,50,0
+uint8_t ltftRegionalWindow;Tamanho da janela para detecção de tendência regional;"células",1,0,1,16,0
+uint8_t ltftRegionalIntensity;Intensidade da correção regional;"%",1,0,1,100,0
+uint8_t ltftHoleThreshold;Limiar de diferença para detecção de buraco no mapa;"%",1,0,1,50,0
+uint8_t ltftSmoothingIntensity;Intensidade da suavização automática;"%",1,0,1,100,0
+uint8_t ltftIgnitionOnDelay;Delay pós-ignição ON para aprendizado/aplicação do LTFT;"s",1,0,1,60,0
+uint8_t ltftIgnitionOffSaveDelay;Delay após ignição OFF para salvamento do LTFT;"s",1,0,1,60,0
+

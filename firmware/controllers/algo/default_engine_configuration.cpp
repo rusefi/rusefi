@@ -20,4 +20,14 @@
 	// the H4 calibration
 	config->wwaeTau = 0.25;
 	config->wwaeBeta = 0.30;
+
+	// LTFT (Long Term Fuel Trim) - parâmetros aprimorados
+	config->ltftEmaAlpha = 32; // Valor padrão para suavização EMA
+	config->ltftStftRejectThreshold = 10; // 10% de rejeição
+	config->ltftRegionalWindow = 4; // 4 células de janela
+	config->ltftRegionalIntensity = 50; // 50% de intensidade
+	config->ltftHoleThreshold = 10; // 10% de diferença para suavização
+	config->ltftSmoothingIntensity = 50; // 50% de suavização
+	config->ltftIgnitionOnDelay = 10; // 10 segundos pós-ignição ON
+	config->ltftIgnitionOffSaveDelay = 10; // 10 segundos pós-ignição OFF
 // ... existing code ... 

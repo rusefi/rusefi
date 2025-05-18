@@ -1,9 +1,12 @@
 #include "pch.h"
-
 #include "closed_loop_fuel.h"
 #include "closed_loop_fuel_cell.h"
 #include "deadband.h"
 #include "tunerstudio.h"
+#include "engine_math.h"
+#include "efi_gpio.h"
+#include "event_queue.h"
+#include "efitime.h"
 
 #if EFI_ENGINE_CONTROL
 
@@ -18,72 +21,142 @@ static Deadband<2> overrunDeadband;
 static Deadband<2> loadDeadband;
 
 void LongTermFuelTrim::resetLtftTimer() {
-	lastLtftUpdateTime = uint32_t(getTimeNowMs);
+	lastLtftUpdateTime = uint32_t(getTimeNowS);
 	// updatedLtft = 0;
 }
 
+float LongTermFuelTrim::filterStft(float stftRaw) {
+	// Filtro EMA: stftEma = alpha * stftRaw + (1 - alpha) * stftEma
+	float alpha = (float)config->ltftEmaAlpha / 255.0f;
+	stftEma = alpha * stftRaw + (1.0f - alpha) * stftEma;
+	return stftEma;
+}
+
+void LongTermFuelTrim::updateTimers(bool ignitionState) {
+	uint32_t now = getTimeNowS();
+	if (ignitionState) {
+		if (!ignitionOnDelayActive) {
+			ignitionOnTimestamp = now;
+			ignitionOnDelayActive = true;
+		}
+		// Se já passou o delay, desativa o bloqueio
+		if (ignitionOnDelayActive && (now - ignitionOnTimestamp) >= config->ltftIgnitionOnDelay) {
+			ignitionOnDelayActive = false;
+		}
+		// Cancelar delay de salvamento se ligou de novo
+		ignitionOffSaveDelayActive = false;
+		pendingSave = false;
+	} else {
+		if (!ignitionOffSaveDelayActive) {
+			ignitionOffTimestamp = now;
+			ignitionOffSaveDelayActive = true;
+			pendingSave = updatedLtft;
+		}
+		// Se já passou o delay, salva se necessário
+		if (ignitionOffSaveDelayActive && (now - ignitionOffTimestamp) >= config->ltftIgnitionOffSaveDelay) {
+			if (pendingSave) {
+				copyTable(config->ltftTable, ltftTableHelper);
+				setNeedToWriteConfiguration();
+				updatedLtft = 0;
+				pendingSave = false;
+			}
+			ignitionOffSaveDelayActive = false;
+		}
+	}
+}
+
+bool LongTermFuelTrim::canLearn() {
+	// Só aprende se não estiver no delay pós-ignição ON
+	if (ignitionOnDelayActive) return false;
+	// Outras condições já existentes (temperatura, etc)
+	if (!config->ltftEnabled) return false;
+	if ((Sensor::get(SensorType::Clt)).value_or(0) < float(config->ltftMinModTemp)) return false;
+	return true;
+}
+
+void LongTermFuelTrim::applyRegionalCorrection(float load, float rpm, float correction) {
+	// Exemplo: aplicar correção em toda a faixa de RPM se padrão consistente detectado
+	int binRpm = priv::getBin(rpm, config->veRpmBins).Idx;
+	int window = config->ltftRegionalWindow;
+	float intensity = (float)config->ltftRegionalIntensity / 100.0f;
+	for (int i = 0; i < 16; i++) {
+		if (abs(i - binRpm) <= window/2) {
+			for (int j = 0; j < 16; j++) {
+				float weight = 1.0f - (float)abs(i - binRpm) / (window/2 + 1);
+				ltftTableHelper[j][i] *= (1.0f + correction * weight * intensity);
+			}
+		}
+	}
+}
+
+void LongTermFuelTrim::smoothHoles() {
+	// Detectar buracos e suavizar
+	float threshold = (float)config->ltftHoleThreshold;
+	float intensity = (float)config->ltftSmoothingIntensity / 100.0f;
+	for (int i = 1; i < 15; i++) {
+		for (int j = 1; j < 15; j++) {
+			float v = ltftTableHelper[i][j];
+			float avg = (ltftTableHelper[i-1][j] + ltftTableHelper[i+1][j] + ltftTableHelper[i][j-1] + ltftTableHelper[i][j+1]) / 4.0f;
+			if (fabsf(v - avg) > threshold) {
+				ltftTableHelper[i][j] = v * (1.0f - intensity) + avg * intensity;
+			}
+		}
+	}
+}
+
 void LongTermFuelTrim::updateLtft(float load, float rpm) {
+	updateTimers(engine->isIgnitionOn());
+	if (!canLearn()) return;
 	auto binLoad = priv::getBin(load, config->veLoadBins);
 	auto binRpm = priv::getBin(rpm, config->veRpmBins);
-
-	if(config->ltftEnabled) {
-
-		if((Sensor::get(SensorType::Clt)).value_or(0) > float(config->ltftMinModTemp)) {
-
-			auto lowLoad = binLoad.Idx;
-			float fracLoad = binLoad.Frac;
-
-			auto lowRpm = binRpm.Idx;
-			float fracRpm = binRpm.Frac;
-
-			if(lowLoad <= 14 && lowRpm <= 14 && fracLoad > 0.00f && fracLoad < 1.00f && fracRpm > 0.00f && fracRpm < 1.00f) {
-
-				float stftCorrection = engine->engineState.stftCorrection[0] - 1.00f;
-
-				auto lambda = Sensor::get(SensorType::Lambda1);
-				float lambdaError = lambda.Value - engine->fuelComputer.targetLambda;
-
-				// Only correct if stft on correct path
-				if((stftCorrection > 0.0f && lambdaError < 0.0f) || (stftCorrection < 0.0f && lambdaError > 0.0f)) {
-					return;
-				}
-
-				float correctionRate = interpolate3d(
-										config->ltftCorrectionRate,
-										config->veLoadBins, load,
-										config->veRpmBins, rpm
-									) * 0.01f;
-
-				float correction = correctionRate * 0.005f * (stftCorrection / (abs(stftCorrection))) * (1 - pow(10, - 20 * (100 / config->ltftPermissivity) * abs(stftCorrection)));	// fast callback occours at 200Hz frequency
-				
-				if(abs(correction) > abs(stftCorrection)) {
-					correction = stftCorrection * stftCorrection / (abs(stftCorrection));
-				}
-
-				if(abs(correction) <= 0.2) {
-					ltftTableHelper[lowLoad][lowRpm]     = float(ltftTableHelper[lowLoad][lowRpm]) *     (1 + correction * (1-fracLoad) * (1-fracRpm)); 
-					ltftTableHelper[lowLoad+1][lowRpm]   = float(ltftTableHelper[lowLoad+1][lowRpm]) *   (1 + correction * (fracLoad) * (1-fracRpm)); 
-					ltftTableHelper[lowLoad][lowRpm+1]   = float(ltftTableHelper[lowLoad][lowRpm+1]) *   (1 + correction * (1-fracLoad) * (fracRpm)); 
-					ltftTableHelper[lowLoad+1][lowRpm+1] = float(ltftTableHelper[lowLoad+1][lowRpm+1]) * (1 + correction * (fracLoad) * (fracRpm)); 
-
-					for(int i = 0; i < 2; i++){
-						for (int j = 0; j < 2; j++) {
-							if(ltftTableHelper[lowLoad+i][lowRpm+j] > float(100.0f + float(config->ltftMaxCorrection))) {
-								ltftTableHelper[lowLoad+i][lowRpm+j] = float(100.0f + float(config->ltftMaxCorrection));
-							} else if (ltftTableHelper[lowLoad+i][lowRpm+j] < float(100.0f - float(config->ltftMinCorrection))) {
-								ltftTableHelper[lowLoad+i][lowRpm+j] = float(100.0f - float(config->ltftMinCorrection));
-							}
-						}
-					}
-
-					updatedLtft = 1;
+	int lowLoad = binLoad.Idx;
+	float fracLoad = binLoad.Frac;
+	int lowRpm = binRpm.Idx;
+	float fracRpm = binRpm.Frac;
+	if (lowLoad > 14 || lowRpm > 14 || fracLoad <= 0.0f || fracLoad >= 1.0f || fracRpm <= 0.0f || fracRpm >= 1.0f) return;
+	float stftRaw = engine->engineState.stftCorrection[0] - 1.0f;
+	float stftFiltered = filterStft(stftRaw);
+	if (fabsf(stftFiltered) > (float)config->ltftStftRejectThreshold / 100.0f) return;
+	auto lambda = Sensor::get(SensorType::Lambda1);
+	float lambdaError = lambda.Value - engine->fuelComputer.targetLambda;
+	if ((stftFiltered > 0.0f && lambdaError < 0.0f) || (stftFiltered < 0.0f && lambdaError > 0.0f)) return;
+	float correctionRate = interpolate3d(
+		config->ltftCorrectionRate,
+		config->veLoadBins, load,
+		config->veRpmBins, rpm
+	) * 0.01f;
+	float correction = correctionRate * 0.005f * (stftFiltered / (fabsf(stftFiltered))) * (1 - powf(10, -20 * (100.0f / config->ltftPermissivity) * fabsf(stftFiltered)));
+	if (fabsf(correction) > fabsf(stftFiltered)) {
+		correction = stftFiltered * stftFiltered / fabsf(stftFiltered);
+	}
+	if (fabsf(correction) <= 0.2f) {
+		// Correção regional se padrão consistente
+		if (fabsf(stftFiltered) > 0.05f) {
+			applyRegionalCorrection(load, rpm, correction);
+		}
+		// Correção bilinear padrão
+		ltftTableHelper[lowLoad][lowRpm]     *= (1 + correction * (1-fracLoad) * (1-fracRpm));
+		ltftTableHelper[lowLoad+1][lowRpm]   *= (1 + correction * (fracLoad) * (1-fracRpm));
+		ltftTableHelper[lowLoad][lowRpm+1]   *= (1 + correction * (1-fracLoad) * (fracRpm));
+		ltftTableHelper[lowLoad+1][lowRpm+1] *= (1 + correction * (fracLoad) * (fracRpm));
+		// Clamping
+		for(int i = 0; i < 2; i++){
+			for (int j = 0; j < 2; j++) {
+				if(ltftTableHelper[lowLoad+i][lowRpm+j] > float(100.0f + float(config->ltftMaxCorrection))) {
+					ltftTableHelper[lowLoad+i][lowRpm+j] = float(100.0f + float(config->ltftMaxCorrection));
+				} else if (ltftTableHelper[lowLoad+i][lowRpm+j] < float(100.0f - float(config->ltftMinCorrection))) {
+					ltftTableHelper[lowLoad+i][lowRpm+j] = float(100.0f - float(config->ltftMinCorrection));
 				}
 			}
-
 		}
-
+		updatedLtft = 1;
+		// Suavização automática
+		smoothHoles();
 	}
+}
 
+void LongTermFuelTrim::onIgnitionStateChanged(bool ignitionState) {
+	updateTimers(ignitionState);
 }
 
 namespace {
@@ -263,6 +336,23 @@ float LongTermFuelTrim::getLtft(float load, float rpm) {
 	} else {
 		return 1.00f;
 	}
+}
+
+LongTermFuelTrim::LongTermFuelTrim() {
+	stftEma = 1.0f;
+	ignitionOnTimestamp = 0;
+	ignitionOffTimestamp = 0;
+	ignitionOnDelayActive = false;
+	ignitionOffSaveDelayActive = false;
+	pendingSave = false;
+	for (int i = 0; i < 16; i++) {
+		regionalErrorBuffer[i] = 0.0f;
+		regionalErrorCount[i] = 0;
+		for (int j = 0; j < 16; j++) {
+			ltftTableHelper[i][j] = 100.0f;
+		}
+	}
+	ltftTableHelperInit = 1;
 }
 
 #endif // EFI_ENGINE_CONTROL
