@@ -15,6 +15,7 @@
 #if EFI_IDLE_CONTROL
 #include "idle_thread.h"
 #include "idle_hardware.h"
+#include "closed_loop_idle.h"
 
 #include "dc_motors.h"
 
@@ -103,13 +104,17 @@ percent_t IdleController::getRunningOpenLoop(IIdleController::Phase phase, float
 		config->rpmIdleCorrBins, rpm
 	);
 
-	// Now we bump it by the AC/fan amount if necessary
-    if(engine->module<AcController>().unmock().acButtonState) {
-    	running += engineConfiguration->acIdleExtraOffset;
-    }
+	// LTIT multiplicativo
+	if (m_ltit && config->ltitEnabled) {
+		running *= m_ltit->getLtitFactor(rpm, clt);
+	}
 
-	running += enginePins.fanRelay.getLogicValue() ? engineConfiguration->fan1ExtraIdle : 0;
-	running += enginePins.fanRelay2.getLogicValue() ? engineConfiguration->fan2ExtraIdle : 0;
+	// Offsets aprendidos
+	if (engine->module<AcController>().unmock().acButtonState) {
+		running += (m_ltit ? m_ltit->getLtitAcTrim() : config->acIdleExtraOffset);
+	}
+	running += enginePins.fanRelay.getLogicValue() ? (m_ltit ? m_ltit->getLtitFan1Trim() : config->fan1ExtraIdle) : 0;
+	running += enginePins.fanRelay2.getLogicValue() ? (m_ltit ? m_ltit->getLtitFan2Trim() : config->fan2ExtraIdle) : 0;
 
 	running += luaAdd;
 
@@ -389,6 +394,28 @@ void IdleController::init() {
 	wasResetPid = false;
 	m_timingPid.initPidClass(&engineConfiguration->idleTimingPid);
 	getIdlePid()->initPidClass(&engineConfiguration->idleRpmPid);
+	m_ltit = new LongTermIdleTrim(config);
+}
+
+void IdleController::updateLtit(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active) {
+	if (m_ltit && config->ltitEnabled) {
+		m_ltit->update(rpm, clt, acActive, fan1Active, fan2Active);
+	}
+}
+
+void IdleController::setDefaultIdleParameters() {
+	if (m_ltit) {
+		for (int i = 0; i < 16; i++)
+			for (int j = 0; j < 16; j++)
+				m_ltit->ltitTableHelper[i][j] = 100.0f;
+		m_ltit->acTrim = 0;
+		m_ltit->fan1Trim = 0;
+		m_ltit->fan2Trim = 0;
+	}
+}
+
+IdleController::~IdleController() {
+	if (m_ltit) delete m_ltit;
 }
 
 #endif /* EFI_IDLE_CONTROL */

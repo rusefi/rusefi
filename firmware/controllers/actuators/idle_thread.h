@@ -35,6 +35,8 @@ struct IIdleController {
 	virtual float getIdleTimingAdjustment(float rpm) = 0;
 };
 
+class LongTermIdleTrim;
+
 class IdleController : public IIdleController, public EngineModule, public idle_state_s {
 public:
 	// Mockable<> interface
@@ -90,6 +92,15 @@ public:
 		return &industrialWithOverrideIdlePid;
 	}
 
+	void updateLtit(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active);
+	float getLtitFactor(float rpm, float clt) const;
+	float getLtitAcTrim() const;
+	float getLtitFan1Trim() const;
+	float getLtitFan2Trim() const;
+
+	~IdleController();
+
+	void setDefaultIdleParameters();
 
 private:
 
@@ -107,6 +118,7 @@ private:
 	float m_lastAutomaticPosition = 0;
 
 	Pid m_timingPid;
+	LongTermIdleTrim* m_ltit = nullptr;
 };
 
 percent_t getIdlePosition();
@@ -115,7 +127,6 @@ void applyIACposition(percent_t position);
 void setManualIdleValvePosition(int positionPercent);
 
 void startIdleThread();
-void setDefaultIdleParameters();
 void startIdleBench(void);
 void setIdleMode(idle_mode_e value);
 void setTargetIdleRpm(int value);

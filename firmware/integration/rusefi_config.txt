@@ -468,6 +468,18 @@ uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this r
 	uint16_t idlePositionMin;Voltage when the idle valve is closed.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
 	uint16_t idlePositionMax;Voltage when the idle valve is open.\nYou probably don't have one of these!\n1 volt = 1000 units;"mv", 1, 0, 0, 5000, 0
 
+	uint16_t[CLT_CURVE_SIZE x CLT_CURVE_SIZE] autoscale ltitTable;Long Term Idle Trim (LTIT) multiplicativo para idle open loop;"%", 0.1, 0, 50, 150, 1
+	bit ltitEnabled;Habilita aprendizado LTIT
+	uint8_t ltitEmaAlpha;Constante de tempo do filtro EMA para LTIT;"0-255",1,0,1,255,0
+	uint8_t ltitStableRpmThreshold;Faixa de RPM para considerar idle estável;"rpm",1,0,1,100,0
+	uint8_t ltitStableTime;Tempo mínimo de idle estável para aprender;"s",1,0,1,30,0
+	uint8_t ltitCorrectionRate;Taxa de aprendizado LTIT;"%/s",1,0,1,100,0
+	int16_t autoscale ltitAcTrim;Offset aprendido para AC;"%",0.1,0,-50,50,1
+	int16_t autoscale ltitFan1Trim;Offset aprendido para Fan1;"%",0.1,0,-50,50,1
+	int16_t autoscale ltitFan2Trim;Offset aprendido para Fan2;"%",0.1,0,-50,50,1
+	uint8_t ltitIgnitionOnDelay;Delay pós-ignição ON para aprendizado/aplicação do LTIT;"s",1,0,1,60,0
+	uint8_t ltitIgnitionOffSaveDelay;Delay após ignição OFF para salvamento do LTIT;"s",1,0,1,60,0
+
 	! [tag:coding_by_convention]
 	output_pin_e mainRelayPin;
 	Gpio sdCardCsPin;
