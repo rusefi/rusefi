@@ -475,8 +475,8 @@ uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this r
 	uint8_t ltitCorrectionRate;Taxa de aprendizado LTIT;"%/s",1,0,1,100,0
 	uint8_t ltitIgnitionOnDelay;Delay pós-ignição ON para aprendizado/aplicação do LTIT;"s",1,0,1,60,0
 	uint8_t ltitIgnitionOffSaveDelay;Delay após ignição OFF para salvamento do LTIT;"s",1,0,1,60,0
-	uint8_t autoscale ltitClampMin;Valor mínimo de correção multiplicativa LTIT;"%", 2, 0, 0, 100, 1
-	uint8_t autoscale ltitClampMax;Valor máximo de correção multiplicativa LTIT;"%", 2, 0, 100, 300, 1
+	float ltitClampMin;Valor mínimo de correção multiplicativa LTIT;"%", 1, 0, 0, 100, 1
+	float ltitClampMax;Valor máximo de correção multiplicativa LTIT;"%", 1, 0, 100, 300, 1
 	uint8_t autoscale ltitSmoothingIntensity;Intensidade de suavização regional da tabela LTIT (0=sem suavização, 1=total);"ratio", 0.01, 0, 0, 1, 2
 
 	! [tag:coding_by_convention]
