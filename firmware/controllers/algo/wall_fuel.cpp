@@ -6,6 +6,9 @@
 
 #include "pch.h"
 #include "wall_fuel.h"
+#include "engine_math.h"
+#include "efitime.h"
+#include <rusefi/interpolation.h>
 
 void WallFuel::resetWF() {
 	wallFuel = 0;
@@ -73,34 +76,116 @@ float WallFuel::getWallFuel() const {
 	return wallFuel;
 }
 
+void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, float targetLambda, bool isTransient, float clt) {
+	if (clt < engineConfiguration->wwMinClt) return;
+	static bool monitoring = false;
+	static float lambdaBuffer[200]; // 2s @ 100Hz
+	static int bufferIdx = 0;
+	static uint32_t transStartTime = 0;
+	auto rpmBin = priv::getBin(rpm, config->wwRpmBins);
+	auto mapBin = priv::getBin(map, config->wwMapBins);
+	int i = rpmBin.Idx;
+	int j = mapBin.Idx;
+	if (isTransient) {
+		monitoring = true;
+		bufferIdx = 0;
+		transStartTime = getTimeNowS();
+	}
+	if (monitoring) {
+		if (bufferIdx < 200) {
+			lambdaBuffer[bufferIdx++] = lambda;
+		} else {
+			// Calcular erro imediato e prolongado
+			float erroImediato = 0, erroProlongado = 0;
+			int nImediato = 50, nProlongado = 150;
+			for (int k = 0; k < nImediato; k++) erroImediato += lambdaBuffer[k];
+			for (int k = nImediato; k < nImediato + nProlongado; k++) erroProlongado += lambdaBuffer[k];
+			erroImediato = erroImediato / nImediato - targetLambda;
+			erroProlongado = erroProlongado / nProlongado - targetLambda;
+			lastImmediateError = erroImediato;
+			lastProlongedError = erroProlongado;
+			float learnRate = engineConfiguration->wwLearningRate;
+			float maxStep = 0.05f;
+			// Pesos configuráveis
+			float wBetaImediato = engineConfiguration->wBetaImediato;
+			float wBetaProlongado = engineConfiguration->wBetaProlongado;
+			float wTauImediato = engineConfiguration->wTauImediato;
+			float wTauProlongado = engineConfiguration->wTauProlongado;
+			// Ajuste simultâneo
+			float deltaBeta = learnRate * (wBetaImediato * erroImediato + wBetaProlongado * erroProlongado);
+			float deltaTau  = learnRate * (wTauImediato  * erroImediato + wTauProlongado  * erroProlongado);
+			deltaBeta = clampF(-maxStep, deltaBeta, maxStep);
+			deltaTau  = clampF(-maxStep, deltaTau,  maxStep);
+			config->betaCorrection[i][j] *= (1.0f + deltaBeta);
+			config->tauCorrection[i][j]  *= (1.0f + deltaTau);
+			config->betaCorrection[i][j] = clampF(0.05f, config->betaCorrection[i][j], 2.0f);
+			config->tauCorrection[i][j]  = clampF(0.1f,  config->tauCorrection[i][j],  2.0f);
+			// Suavização
+			smoothCorrectionTable(config->betaCorrection, engineConfiguration->wwSmoothIntensity);
+			smoothCorrectionTable(config->tauCorrection,  engineConfiguration->wwSmoothIntensity);
+			monitoring = false;
+		}
+	}
+	// Lógica de salvamento: só salva após ignição OFF + delay
+	static bool ignitionOffSaveDelayActive = false;
+	static uint32_t ignitionOffTimestamp = 0;
+	static bool pendingSave = false;
+	bool ignitionState = engine->module<IgnitionController>()->secondsSinceIgnVoltage() > 1.0f;
+	uint32_t now = getTimeNowS();
+	if (!ignitionState) {
+		if (!ignitionOffSaveDelayActive) {
+			ignitionOffTimestamp = now;
+			ignitionOffSaveDelayActive = true;
+			pendingSave = true;
+		}
+		if (ignitionOffSaveDelayActive && (now - ignitionOffTimestamp) >= engineConfiguration->wwIgnitionOffSaveDelay) {
+			if (pendingSave) {
+				setNeedToWriteConfiguration();
+				pendingSave = false;
+			}
+			ignitionOffSaveDelayActive = false;
+		}
+	} else {
+		ignitionOffSaveDelayActive = false;
+		pendingSave = false;
+	}
+}
+
+void WallFuelController::smoothCorrectionTable(float table[WW_RPM_BINS][WW_MAP_BINS], float intensity) {
+	float temp[WW_RPM_BINS][WW_MAP_BINS];
+	for (int i = 0; i < WW_RPM_BINS; i++) {
+		for (int j = 0; j < WW_MAP_BINS; j++) {
+			float sum = table[i][j];
+			int count = 1;
+			// Vizinhos imediatos
+			if (i > 0)   { sum += table[i-1][j]; count++; }
+			if (i < WW_RPM_BINS-1) { sum += table[i+1][j]; count++; }
+			if (j > 0)   { sum += table[i][j-1]; count++; }
+			if (j < WW_MAP_BINS-1) { sum += table[i][j+1]; count++; }
+			float avg = sum / count;
+			temp[i][j] = table[i][j] * (1.0f - intensity) + avg * intensity;
+		}
+	}
+	for (int i = 0; i < WW_RPM_BINS; i++)
+		for (int j = 0; j < WW_MAP_BINS; j++)
+			table[i][j] = temp[i][j];
+}
+
 float WallFuelController::computeTau() const {
 	if (!engineConfiguration->complexWallModel) {
 		return engineConfiguration->wwaeTau;
 	}
-
-	// Default to normal operating temperature in case of
-	// CLT failure, this is not critical to get perfect
 	float clt = Sensor::get(SensorType::Clt).value_or(90);
-
-	float tau = interpolate2d(
-		clt,
-		config->wwCltBins,
-		config->wwTauCltValues
-	);
-
-	// If you have a MAP sensor, apply MAP correction
+	float tauClt = interpolate2d(clt, config->wwCltBins, config->wwTauCltValues);
+	float tauBase = tauClt;
+	float tauCorr = 1.0f;
+	float map = Sensor::get(SensorType::Map).value_or(60);
+	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	if (Sensor::hasSensor(SensorType::Map)) {
-		auto map = Sensor::get(SensorType::Map).value_or(60);
-		auto rpm = Sensor::getOrZero(SensorType::Rpm);
-
-		// Use 3D interpolation for MAP x RPM
-		tau *= interpolate3d(
-			config->wwTauMapRpmValues,
-			config->wwMapBins, map,
-			config->wwRpmBins, rpm
-		);
+		tauBase *= interpolate3d(config->wwTauMapRpmValues, config->wwMapBins, map, config->wwRpmBins, rpm);
+		tauCorr = interpolate3d(config->tauCorrection, config->wwMapBins, map, config->wwRpmBins, rpm);
 	}
-
+	float tau = tauBase * tauCorr;
 	return tau;
 }
 
@@ -108,72 +193,59 @@ float WallFuelController::computeBeta() const {
 	if (!engineConfiguration->complexWallModel) {
 		return engineConfiguration->wwaeBeta;
 	}
-
-	// Default to normal operating temperature in case of
-	// CLT failure, this is not critical to get perfect
 	float clt = Sensor::get(SensorType::Clt).value_or(90);
-
-	float beta = interpolate2d(
-		clt,
-		config->wwCltBins,
-		config->wwBetaCltValues
-	);
-
-	// If you have a MAP sensor, apply MAP correction
+	float betaClt = interpolate2d(clt, config->wwCltBins, config->wwBetaCltValues);
+	float betaBase = betaClt;
+	float betaCorr = 1.0f;
+	float map = Sensor::get(SensorType::Map).value_or(60);
+	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	if (Sensor::hasSensor(SensorType::Map)) {
-		auto map = Sensor::get(SensorType::Map).value_or(60);
-		auto rpm = Sensor::getOrZero(SensorType::Rpm);
-
-		// Use 3D interpolation for MAP x RPM
-		beta *= interpolate3d(
-			config->wwBetaMapRpmValues,
-			config->wwMapBins, map,
-			config->wwRpmBins, rpm
-		);
+		betaBase *= interpolate3d(config->wwBetaMapRpmValues, config->wwMapBins, map, config->wwRpmBins, rpm);
+		betaCorr = interpolate3d(config->betaCorrection, config->wwMapBins, map, config->wwRpmBins, rpm);
 	}
-
-	// Clamp to 0..1 (you can't have more than 100% of the fuel hit the wall!)
+	float beta = betaBase * betaCorr;
 	return clampF(0, beta, 1);
 }
 
 void WallFuelController::onFastCallback() {
-	// disable wall wetting cranking
-	// TODO: is this correct? Why not correct for cranking?
 	if (engine->rpmCalculator.isCranking()) {
 		m_enable = false;
 		return;
 	}
-
 	float tau = computeTau();
 	float beta = computeBeta();
-
-	// if tau or beta is really small, we get div/0.
-	// you probably meant to disable wwae.
 	if (tau < 0.01f || beta < 0.01f) {
 		m_enable = false;
 		return;
 	}
-
 	auto rpm = Sensor::getOrZero(SensorType::Rpm);
-
-	// Ignore low RPM
 	if (rpm < 100) {
 		m_enable = false;
 		return;
 	}
-
 	float alpha = expf_taylor(-120 / (rpm * tau));
-
-	// If beta is larger than alpha, the system is underdamped.
-	// For reasonable values {tau, beta}, this should only be possible
-	// at extremely low engine speeds (<300rpm ish)
-	// Clamp beta to less than alpha.
 	if (beta > alpha) {
 		beta = alpha;
 	}
-
-	// Store parameters so the model can read them
 	m_alpha = alpha;
 	m_beta = beta;
 	m_enable = true;
+	// --- INTEGRAÇÃO DO APRENDIZADO ---
+	// Detectar transiente e chamar adaptiveLearning
+	static float lastTps = 0, lastMap = 0;
+	float tps = Sensor::getOrZero(SensorType::Tps);
+	float map = Sensor::getOrZero(SensorType::Map);
+	float dTps = tps - lastTps;
+	float dMap = map - lastMap;
+	bool isTransient = fabsf(dTps) > 5.0f || fabsf(dMap) > 10.0f;
+	float lambda = Sensor::getOrZero(SensorType::Lambda1);
+	float targetLambda = engine->fuelComputer.targetLambda;
+	float clt = Sensor::getOrZero(SensorType::Clt);
+	adaptiveLearning(rpm, map, lambda, targetLambda, isTransient, clt);
+	lastTps = tps;
+	lastMap = map;
+}
+
+WallFuelController::WallFuelController() {
+	// Não é mais necessário inicializar tauCorrection/betaCorrection aqui, pois estão em config
 }

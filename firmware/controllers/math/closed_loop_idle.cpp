@@ -8,11 +8,20 @@
 #include "engine.h"
 
 LongTermIdleTrim::LongTermIdleTrim() {
-    for (int i = 0; i < 16; i++)
-        for (int j = 0; j < 16; j++)
-            ltitTableHelper[i][j] = 100.0f;
+    // Inicializa a partir dos valores persistidos, se disponíveis
+    for (int i = 0; i < 16; i++) {
+        for (int j = 0; j < 16; j++) {
+            if (config->ltitTable[i][j] > 0) {
+                ltitTableHelper[i][j] = (float)config->ltitTable[i][j];
+            } else {
+                ltitTableHelper[i][j] = 100.0f;
+            }
+        }
+    }
+    acTrim = config ? (float)config->ltitAcTrim / 10.0f : 0.0f;
+    fan1Trim = config ? (float)config->ltitFan1Trim / 10.0f : 0.0f;
+    fan2Trim = config ? (float)config->ltitFan2Trim / 10.0f : 0.0f;
     emaError = 0;
-    acTrim = fan1Trim = fan2Trim = 0;
     lastUpdateTime = 0;
 }
 

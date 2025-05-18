@@ -30,11 +30,23 @@ struct IWallFuelController {
 	virtual float getBeta() const = 0;
 };
 
+// Adaptação automática de tau/beta
+#define WW_RPM_BINS 16
+#define WW_MAP_BINS 16
+
 class WallFuelController : public IWallFuelController, public EngineModule {
 public:
 	using interface_t = IWallFuelController;
 
+	WallFuelController();
+
 	void onFastCallback() override;
+	void adaptiveLearning(float rpm, float map, float lambda, float targetLambda, bool isTransient, float clt);
+	// Diagnóstico
+	float getLastImmediateError() const { return lastImmediateError; }
+	float getLastProlongedError() const { return lastProlongedError; }
+	bool getBetaAdjusted(int i, int j) const { return betaAdjusted[i][j]; }
+	bool getTauAdjusted(int i, int j) const { return tauAdjusted[i][j]; }
 
 	bool getEnable() const override {
 		return m_enable;
@@ -56,4 +68,11 @@ private:
 	bool m_enable = false;
 	float m_alpha = 0;
 	float m_beta = 0;
+	// Buffers e flags para aprendizado
+	float lastImmediateError = 0;
+	float lastProlongedError = 0;
+	bool betaAdjusted[WW_RPM_BINS][WW_MAP_BINS] = {{false}};
+	bool tauAdjusted[WW_RPM_BINS][WW_MAP_BINS] = {{false}};
+	uint32_t lastSaveTime = 0;
+	void smoothCorrectionTable(float table[WW_RPM_BINS][WW_MAP_BINS], float intensity);
 };

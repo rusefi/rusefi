@@ -30,4 +30,23 @@
 	config->ltftSmoothingIntensity = 50; // 50% de suavização
 	config->ltftIgnitionOnDelay = 10; // 10 segundos pós-ignição ON
 	config->ltftIgnitionOffSaveDelay = 10; // 10 segundos pós-ignição OFF
+
+	// Wall Wetting Adaptativo
+	for (int rpm = 0; rpm < WW_RPM_BINS; rpm++) {
+		for (int map = 0; map < WW_MAP_BINS; map++) {
+			config->tauCorrection[rpm][map] = 1.0f;
+			config->betaCorrection[rpm][map] = 1.0f;
+		}
+	}
+	config->wwLearningRate = 0.01f;
+	config->wwImmediateErrorThreshold = 0.05f;
+	config->wwProlongedErrorThreshold = 0.03f;
+	config->wwMinClt = 70.0f;
+	config->wwSaveDelay = 10; // segundos
+	config->wBetaImediato = 0.8f;
+	config->wBetaProlongado = 0.2f;
+	config->wTauImediato = 0.2f;
+	config->wTauProlongado = 0.8f;
+	config->wwSmoothIntensity = 0.3f;
+	config->wwIgnitionOffSaveDelay = 10; // segundos
 // ... existing code ... 
