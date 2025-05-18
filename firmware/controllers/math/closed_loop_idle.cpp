@@ -7,7 +7,7 @@
 #include "efi_gpio.h"
 #include "engine.h"
 
-LongTermIdleTrim::LongTermIdleTrim(engine_configuration_s* cfg) : config(cfg) {
+LongTermIdleTrim::LongTermIdleTrim() {
     for (int i = 0; i < 16; i++)
         for (int j = 0; j < 16; j++)
             ltitTableHelper[i][j] = 100.0f;

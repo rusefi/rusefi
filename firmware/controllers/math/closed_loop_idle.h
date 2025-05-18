@@ -7,7 +7,7 @@
 #include "table_helper.h"
 class LongTermIdleTrim {
 public:
-    LongTermIdleTrim(engine_configuration_s* config);
+    LongTermIdleTrim();
     float getLtitFactor(float rpm, float clt) const;
     float getLtitAcTrim() const;
     float getLtitFan1Trim() const;

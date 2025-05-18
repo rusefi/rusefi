@@ -394,7 +394,7 @@ void IdleController::init() {
 	wasResetPid = false;
 	m_timingPid.initPidClass(&engineConfiguration->idleTimingPid);
 	getIdlePid()->initPidClass(&engineConfiguration->idleRpmPid);
-	m_ltit = new LongTermIdleTrim(config);
+	m_ltit = new LongTermIdleTrim();
 }
 
 void IdleController::updateLtit(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active) {
