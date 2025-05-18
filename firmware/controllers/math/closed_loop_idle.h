@@ -1,4 +1,8 @@
 #pragma once
+#include "engine_module.h"
+#include "rusefi_types.h"
+#include "efi_pid.h"
+#include "sensor.h"
 #include "flash_main.h"
 #include "table_helper.h"
 class LongTermIdleTrim {
