@@ -6,6 +6,7 @@ import com.rusefi.core.FindFileHelper;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.FileUtil;
+import com.rusefi.core.net.JarFileUtil;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.core.ui.AutoupdateUtil;
 import org.jetbrains.annotations.NotNull;
@@ -79,7 +80,13 @@ public class Autoupdate {
         URLClassLoader jarClassLoader = safeUnzipMakingSureClassloaderIsHappy(downloadedAutoupdateFile);
         log.info("extremely dark magic: XML binding seems to depend on this");
         Thread.currentThread().setContextClassLoader(jarClassLoader);
-        startConsole(args, jarClassLoader);
+        if (ConnectionAndMeta.startConsoleInAutoupdateProcess()) {
+            //TODO: Afterwards we need to decide if we really want to support this option.
+            //  I would prefer to forget about it as about a nightmare :)
+            startConsole(args, jarClassLoader);
+        } else {
+            startConsoleAsANewProcess(args);
+        }
     }
 
     private static Optional<DownloadedAutoupdateFileInfo> downloadFreshZipFile(String[] args, String firstArgument, BundleUtil.BundleInfo bundleInfo) {
@@ -224,6 +231,18 @@ public class Autoupdate {
                  NoSuchMethodException e) {
             log.error("Failed to start", e);
             throw new IllegalStateException("Invoking console: " + e, e);
+        }
+    }
+
+    private static void startConsoleAsANewProcess(final String[] args) {
+        final String[] processBuilderArgs = new String[args.length + 1];
+        processBuilderArgs[0] = JarFileUtil.getJarFileNamePrefix() + "_console.exe";
+        System.arraycopy(args, 0, processBuilderArgs, 1, args.length);
+        try {
+            new ProcessBuilder(processBuilderArgs).start();
+        } catch (final IOException e) {
+            log.error("Failed to start", e);
+            throw new UncheckedIOException(e);
         }
     }
 

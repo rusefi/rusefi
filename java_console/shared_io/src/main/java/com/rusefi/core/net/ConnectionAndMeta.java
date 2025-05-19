@@ -148,6 +148,14 @@ public class ConnectionAndMeta {
         return Boolean.TRUE.toString().equalsIgnoreCase(getStringProperty(getProperties(), "write_readme_html", "false"));
     }
 
+    public static boolean startConsoleInAutoupdateProcess() {
+        return Boolean.TRUE.toString().equalsIgnoreCase(getStringProperty(
+            getProperties(),
+            "start_console_in_autoupdate_process",
+            "false"
+        ));
+    }
+
     public static Set<String> getNonMigratableIniFields() {
         final String nonMergeableIniFields = getStringProperty(getProperties(), "non_migratable_ini_fields", "");
         return Arrays.stream(nonMergeableIniFields.split(","))
