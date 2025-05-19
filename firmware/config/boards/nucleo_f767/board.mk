@@ -8,8 +8,6 @@ DDEFS += -DEFI_FILE_LOGGING=FALSE -DEFI_ALTERNATOR_CONTROL=FALSE -DEFI_LOGIC_ANA
 
 DDEFS += -DLED_CRITICAL_ERROR_BRAIN_PIN=Gpio::B14
 
-include $(PROJECT_DIR)/hw_layer/ports/stm32/2mb_flash.mk
-
 # Enable ethernet
 LWIP = yes
 ALLOW_SHADOW = yes
