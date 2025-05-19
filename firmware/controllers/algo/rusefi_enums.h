@@ -676,6 +676,13 @@ typedef enum __attribute__ ((__packed__)) {
 } can_baudrate_e;
 
 typedef enum __attribute__ ((__packed__)) {
+	AUTODETECT = 0,
+	RUSEFI = 1,
+	AEM = 2,
+	DISABLED = 3
+} can_wbo_type_e;
+
+typedef enum __attribute__ ((__packed__)) {
 	GPPWM_GreaterThan = 0,
 	GPPWM_LessThan = 1,
 } gppwm_compare_mode_e;
