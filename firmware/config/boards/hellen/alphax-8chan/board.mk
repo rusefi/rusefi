@@ -19,8 +19,6 @@ ifeq ($(PROJECT_CPU),ARCH_STM32F7)
 	DDEFS += -DCH_DBG_ENABLE_ASSERTS=FALSE
 	DDEFS += -DLUA_USER_HEAP=92000
 	DDEFS += -DENABLE_PERF_TRACE=FALSE
-
-	include $(PROJECT_DIR)/hw_layer/ports/stm32/2mb_flash.mk
 else ifeq ($(PROJECT_CPU),ARCH_STM32F4)
     # This board has trigger scope hardware!
     DDEFS += -DTRIGGER_SCOPE
