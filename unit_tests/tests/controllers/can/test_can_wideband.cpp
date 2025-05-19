@@ -11,9 +11,14 @@ TEST(CanWideband, AcceptFrameId0) {
 	frame.IDE = false;
 	frame.DLC = 8;
 
+	engineConfiguration->wboType1 = AEM;
+
 	// Check that the AEM format frame is accepted
 	frame.SID = 0x180;
 	EXPECT_TRUE(dut.acceptFrame(frame));
+
+	// Now switch to RusEFI
+	engineConfiguration->wboType1 = RUSEFI;
 
 	// Check that the rusEFI standard data is accepted
 	frame.SID = 0x190;
@@ -33,9 +38,14 @@ TEST(CanWideband, AcceptFrameId1) {
 	frame.IDE = false;
 	frame.DLC = 8;
 
+	engineConfiguration->wboType2 = AEM;
+
 	// Check that the AEM format frame is accepted
 	frame.SID = 0x181;
 	EXPECT_TRUE(dut.acceptFrame(frame));
+
+	// Now switch to RusEFI
+	engineConfiguration->wboType2 = RUSEFI;
 
 	// Check that the rusEFI standard data is accepted
 	frame.SID = 0x192;
@@ -131,6 +141,8 @@ TEST(CanWideband, DecodeValidAemFormat) {
   EngineTestHelper eth(engine_type_e::TEST_ENGINE);
 	AemXSeriesWideband dut(0, SensorType::Lambda1);
 	dut.Register();
+
+	engineConfiguration->wboType1 = AEM;
 
 	// check not set
 	EXPECT_FLOAT_EQ(-1, Sensor::get(SensorType::Lambda1).value_or(-1));
