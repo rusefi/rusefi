@@ -831,16 +831,18 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	uint8_t autoscale lambdaProtectionMinRpm;;"RPM", 100, 0, 0, 25000, 0
 	uint8_t autoscale lambdaProtectionMinLoad;;"%", 10, 0, 0, @@MAP_UPPER_LIMIT@@, 0
 
-bit is_enabled_spi_1
-bit is_enabled_spi_2
+	! bit 0
+	bit is_enabled_spi_1
+	bit is_enabled_spi_2
 	bit is_enabled_spi_3
 	bit isSdCardEnabled;enable sd/disable sd
 	bit rusefiVerbose29b,"29 bit","11 bit";Use 11 bit (standard) or 29 bit (extended) IDs for rusEFI verbose CAN format.
 	bit rethrowHardFault
 	bit requireFootOnBrakeToCrank
 	bit verboseQuad
-	bit useStepperIdle;This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
 
+	! bit 8
+	bit useStepperIdle;This setting should only be used if you have a stepper motor idle valve and a stepper motor driver installed.
 	bit enabledStep1Limiter
 	bit lambdaProtectionEnable
 	bit verboseTLE8888
@@ -848,6 +850,8 @@ bit is_enabled_spi_2
 	bit externalRusEfiGdiModule
 	bit flipWboChannels
 	bit measureMapOnlyInOneCylinder;Useful for individual intakes
+
+	! bit 16
 	bit stepperForceParkingEveryRestart
 	bit isFasterEngineSpinUpEnabled;If enabled, try to fire the engine before a full engine cycle has been completed using RPM estimated from the last 90 degrees of engine rotation. As soon as the trigger syncs plus 90 degrees rotation, fuel and ignition events will occur. If disabled, worst case may require up to 4 full crank rotations before any events are scheduled.
 	bit coastingFuelCutEnabled;This setting disables fuel injection while the engine is in overrun, this is useful as a fuel saving measure and to prevent back firing.
@@ -856,13 +860,16 @@ bit is_enabled_spi_2
 	bit useIdleTimingPidControl
 	bit disableEtbWhenEngineStopped;Allows disabling the ETB when the engine is stopped. You may not like the power draw or PWM noise from the motor, so this lets you turn it off until it's necessary.
 	bit is_enabled_spi_4
+
+	! bit 24
 	bit pauseEtbControl;Disable the electronic throttle motor and DC idle motor for testing.\nThis mode is for testing ETB/DC idle position sensors, etc without actually driving the throttle.
 	bit tpsTpsPercentMode,"percent adder","ms adder"
 	bit verboseKLine
 	bit idleIncrementalPidCic
 	bit enableAemXSeries;AEM X-Series or rusEFI Wideband
 	bit modeledFlowIdle
-! 'unused32nd' is the 32nd bit here, you would need another bit region if more bits are desired
+	! bits 30, 31 are free to use
+	! 'unused32nd' is the 32nd bit here, you would need another bit region if more bits are desired
 
 	brain_input_pin_e[LOGIC_ANALYZER_CHANNEL_COUNT iterate] logicAnalyzerPins;
 	pin_output_mode_e mainRelayPinMode;
