@@ -27,6 +27,9 @@ struct_no_prefix engine_state_s
 		uint16_t autoscale fuel;Fuel: Cranking cycle mass;"mg",{1/@@PACK_MULT_FUEL_MASS@@}, 0, 0, 0, 2
 	end_struct
 
+	! Per-injection fuel mass, including TPS accel enrich
+	float[MAX_CYLINDER_COUNT iterate] injectionMass
+
 	LuaAdjustments lua
 	speed_density_s sd;
 	cranking_fuel_s crankingFuel
