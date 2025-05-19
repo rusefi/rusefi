@@ -15,6 +15,8 @@ public class SingleAsyncJobExecutor {
     // TODO: get rid of this feature flag after #7199 is completed
     private final boolean doNotUseStatusWindow;
 
+    private final Runnable onJobInProgressFinished;
+
     private volatile Optional<AsyncJob> jobInProgress = Optional.empty();
 
     SingleAsyncJobExecutor(
@@ -24,6 +26,7 @@ public class SingleAsyncJobExecutor {
     ) {
         this.updateOperationCallbacks = updateOperationCallbacks;
         this.doNotUseStatusWindow = doNotUseStatusWindow;
+        this.onJobInProgressFinished = onJobInProgressFinished;
     }
 
     void startJob(final AsyncJob job, final Component parent) {
@@ -67,5 +70,6 @@ public class SingleAsyncJobExecutor {
 
     private void handleJobInProgressFinished() {
         resetJobInProgress();
+        onJobInProgressFinished.run();
     }
 }
