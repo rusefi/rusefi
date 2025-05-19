@@ -22,6 +22,7 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -240,14 +241,25 @@ public class Autoupdate {
     }
 
     private static void startConsoleAsANewProcess(final String[] args) {
+        final String consoleExeFileName = JarFileUtil.getJarFileNamePrefix() + "_console.exe";
         final String[] processBuilderArgs = new String[args.length + 1];
-        processBuilderArgs[0] = JarFileUtil.getJarFileNamePrefix() + "_console.exe";
+        processBuilderArgs[0] = consoleExeFileName;
         System.arraycopy(args, 0, processBuilderArgs, 1, args.length);
         try {
             new ProcessBuilder(processBuilderArgs).start();
         } catch (final IOException e) {
-            log.error("Failed to start", e);
-            throw new UncheckedIOException(e);
+            log.error("Failed to start console", e);
+            if (!AutoupdateUtil.runHeadless) {
+                JOptionPane.showMessageDialog(
+                    null,
+                    String.format(
+                        "Error running `%s` command.\nPlease try to run it manually again.",
+                            String.join(" ", processBuilderArgs)
+                    ),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+                );
+            }
         }
     }
 
