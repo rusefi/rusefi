@@ -51,12 +51,10 @@ public class BasicUpdaterPanel {
 
     BasicUpdaterPanel(
         final boolean showUrlLabel,
-        final UpdateOperationCallbacks updateOperationCallbacks,
-        final boolean doNotUseStatusWindow
+        final UpdateOperationCallbacks updateOperationCallbacks
     ) {
         singleAsyncJobExecutor = new SingleAsyncJobExecutor(
             updateOperationCallbacks,
-            doNotUseStatusWindow,
             () -> SwingUtilities.invokeLater(this::refreshButtons)
         );
         updateCalibrations = new UpdateCalibrations(singleAsyncJobExecutor);
