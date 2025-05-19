@@ -9,7 +9,8 @@
 
 LongTermIdleTrim::LongTermIdleTrim() {
     // Inicializa a partir dos valores persistidos, se disponíveis
-    for (int i = 0; i < 16; i++) {
+	/*
+	for (int i = 0; i < 16; i++) {
         for (int j = 0; j < 16; j++) {
             if (config->ltitTable[i][j] > 0) {
                 ltitTableHelper[i][j] = (float)config->ltitTable[i][j];
@@ -18,6 +19,8 @@ LongTermIdleTrim::LongTermIdleTrim() {
             }
         }
     }
+	*/
+    ltitTableHelper[i][j] = (float)config->ltitTable[i][j];
     acTrim = (float)config->ltitAcTrim / 10.0f;
     fan1Trim = (float)config->ltitFan1Trim / 10.0f;
     fan2Trim = (float)config->ltitFan2Trim / 10.0f;

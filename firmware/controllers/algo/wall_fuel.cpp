@@ -93,15 +93,56 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 		if (bufferIdx < 200) {
 			lambdaBuffer[bufferIdx++] = lambda;
 		} else {
-			// Calcular erro imediato e prolongado
-			float erroImediato = 0, erroProlongado = 0;
-			int nImediato = 50, nProlongado = 150;
-			for (int k = 0; k < nImediato; k++) erroImediato += lambdaBuffer[k];
-			for (int k = nImediato; k < nImediato + nProlongado; k++) erroProlongado += lambdaBuffer[k];
-			erroImediato = erroImediato / nImediato - targetLambda;
-			erroProlongado = erroProlongado / nProlongado - targetLambda;
+			// Calcular média dos 200 valores
+			float media = 0;
+			for (int k = 0; k < 200; k++) media += lambdaBuffer[k];
+			media /= 200;
+
+			// Encontrar os 20 valores mais extremos (maior desvio absoluto da média)
+			float extremos[20];
+			int extremosCount = 0;
+			for (int k = 0; k < 200; k++) {
+				float valor = lambdaBuffer[k];
+				float desvio = fabsf(valor - media);
+				if (extremosCount < 20) {
+					extremos[extremosCount++] = valor;
+				} else {
+					// Encontrar o extremo menos extremo
+					int minIdx = 0;
+					float minDesvio = fabsf(extremos[0] - media);
+					for (int m = 1; m < 20; m++) {
+						float d = fabsf(extremos[m] - media);
+						if (d < minDesvio) {
+							minDesvio = d;
+							minIdx = m;
+						}
+					}
+					// Se o desvio atual é maior que o menor dos extremos, substitui
+					if (desvio > minDesvio) {
+						extremos[minIdx] = valor;
+					}
+				}
+			}
+			// Calcula a média dos extremos
+			float soma_extremos = 0;
+			for (int k = 0; k < 20; k++) soma_extremos += extremos[k];
+			float media_extremos = soma_extremos / 20;
+
+			// Calcula os erros
+			float erroImediato = targetLambda - media_extremos;
+			float erroProlongado = targetLambda - media;
 			lastImmediateError = erroImediato;
 			lastProlongedError = erroProlongado;
+
+			// Calcular min/max do buffer para diagnóstico
+			float minLambda = lambdaBuffer[0];
+			float maxLambda = lambdaBuffer[0];
+			for (int k = 1; k < 200; k++) {
+				if (lambdaBuffer[k] < minLambda) minLambda = lambdaBuffer[k];
+				if (lambdaBuffer[k] > maxLambda) maxLambda = lambdaBuffer[k];
+			}
+			// (Opcional) Adicionar logs ou uso de minLambda/maxLambda para rejeição de dados ruins
+
 			float learnRate = engineConfiguration->wwLearningRate;
 			float maxStep = 0.05f;
 			// Pesos configuráveis
@@ -109,9 +150,8 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 			float wBetaProlongado = engineConfiguration->wBetaProlongado;
 			float wTauImediato = engineConfiguration->wTauImediato;
 			float wTauProlongado = engineConfiguration->wTauProlongado;
-			// Ajuste simultâneo
 			float deltaBeta = learnRate * (wBetaImediato * erroImediato + wBetaProlongado * erroProlongado);
-			float deltaTau  = learnRate * (wTauImediato  * erroImediato + wTauProlongado  * erroProlongado);
+			float deltaTau  = -learnRate * (wTauImediato  * erroImediato + wTauProlongado  * erroProlongado);
 			deltaBeta = clampF(-maxStep, deltaBeta, maxStep);
 			deltaTau  = clampF(-maxStep, deltaTau,  maxStep);
 			config->betaCorrection[i][j] = config->betaCorrection[i][j] * (1.0f + deltaBeta);

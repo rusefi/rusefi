@@ -1201,10 +1201,10 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 
 	uint8_t autoscale wwMinClt;;"C", 1, 0, 0, 255, 0
 	uint8_t autoscale wwLearningRate;;"%", 0.01, 0, 0, 1.0, 2
-	uint8_t autoscale wBetaImediato;;"%", 0.01, 0, 0, 1, 2
-	uint8_t autoscale wBetaProlongado;;"%", 0.01, 0, 0, 1, 2
-	uint8_t autoscale wTauImediato;;"%", 0.01, 0, 0, 1, 2
-	uint8_t autoscale wTauProlongado;;"%", 0.01, 0, 0, 1, 2
+	uint8_t autoscale wBetaImediato;;"%", 0.01, 0, -1, 1, 2
+	uint8_t autoscale wBetaProlongado;;"%", 0.01, 0, -1, 1, 2
+	uint8_t autoscale wTauImediato;;"%", 0.01, 0, -1, 1, 2
+	uint8_t autoscale wTauProlongado;;"%", 0.01, 0, -1, 1, 2
 	uint8_t autoscale wwSmoothIntensity;;"%", 0.01, 0, 0, 1, 2
 	uint8_t autoscale wwIgnitionOffSaveDelay;;"s", 5, 0, 0, 100, 0
 
