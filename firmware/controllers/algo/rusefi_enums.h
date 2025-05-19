@@ -676,10 +676,9 @@ typedef enum __attribute__ ((__packed__)) {
 } can_baudrate_e;
 
 typedef enum __attribute__ ((__packed__)) {
-	AUTODETECT = 0,
-	RUSEFI = 1,
-	AEM = 2,
-	DISABLED = 3
+	RUSEFI = 0,
+	AEM = 1,
+	DISABLED = 2
 } can_wbo_type_e;
 
 typedef enum __attribute__ ((__packed__)) {

@@ -34,12 +34,12 @@ protected:
 	void decodeRusefiDiag(const CANRxFrame& frame);
 
 private:
+	can_wbo_type_e sensorType() const;
 	bool isHeaterAllowed();
 
 	const uint8_t m_sensorIndex;
 	// raw fault code from sensor
 	uint8_t m_faultCode;
-	bool m_isAem;
 	bool m_isValid;
 	// Used for AEM sensor only
 	bool m_isFault;
