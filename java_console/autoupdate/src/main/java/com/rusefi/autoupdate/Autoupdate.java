@@ -17,6 +17,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.Optional;
@@ -242,19 +244,35 @@ public class Autoupdate {
 
     private static void startConsoleAsANewProcess(final String[] args) {
         final String consoleExeFileName = JarFileUtil.getJarFileNamePrefix() + "_console.exe";
+        if (!Files.exists(Paths.get(consoleExeFileName))) {
+            log.error(String.format("File `%s` to launch isn't found", consoleExeFileName));
+            if (!AutoupdateUtil.runHeadless) {
+                JOptionPane.showMessageDialog(
+                    null,
+                    String.format("File `%s` to launch isn't found.", consoleExeFileName),
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE
+                );
+            }
+            return;
+        }
+        log.info(String.format("File `%s` to launch is found", consoleExeFileName));
         final String[] processBuilderArgs = new String[args.length + 1];
         processBuilderArgs[0] = consoleExeFileName;
         System.arraycopy(args, 0, processBuilderArgs, 1, args.length);
         try {
+            log.info(String.format("We're starting `%s` process", consoleExeFileName));
             new ProcessBuilder(processBuilderArgs).start();
+            log.info(String.format("Process `%s` is started", consoleExeFileName));
         } catch (final IOException e) {
-            log.error("Failed to start console", e);
+            final String command = String.join(" ", processBuilderArgs);
+            log.error(String.format("Failed to run `$s` command", command), e);
             if (!AutoupdateUtil.runHeadless) {
                 JOptionPane.showMessageDialog(
                     null,
                     String.format(
                         "Error running `%s` command.\nPlease try to run it manually again.",
-                            String.join(" ", processBuilderArgs)
+                        command
                     ),
                     "Error",
                     JOptionPane.ERROR_MESSAGE
