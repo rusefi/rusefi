@@ -1080,7 +1080,7 @@ end_struct
 	uint16_t tps2SecondaryMin;;"ADC", 1, 0, 0, 1000, 0
 	uint16_t tps2SecondaryMax;;"ADC", 1, 0, 0, 1000, 0
 
-	bit widebandOnSecondBus,"2","1";Select which bus the wideband controller is attached to.
+	bit widebandOnSecondBus,"CAN2","CAN1";Select which bus the wideband controller is attached to.
 	bit fuelClosedLoopCorrectionEnabled;Enables lambda sensor closed loop feedback for fuelling.
 	bit alwaysWriteSdCard;Write SD card log even when powered by USB
 	bit knockDetectionUseDoubleFrequency,"second harmonic","first harmonic";Second harmonic (aka double) is usually quieter background noise
