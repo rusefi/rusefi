@@ -8,15 +8,14 @@
 #include "engine.h"
 
 LongTermIdleTrim::LongTermIdleTrim() {
-    // Inicializa a partir dos valores persistidos, se disponíveis
-	for (int i = 0; i < 16; i++) {
-        for (int j = 0; j < 16; j++) {
-            ltitTableHelper[i][j] = (float)config->ltitTable[i][j];
-        }
+    // Verificar CRC ou inicializar a tabela apenas uma vez
+    if (!ltitTableInitialized) {
+        copyTable(ltitTableHelper, config->ltitTable, 1);
+        acTrim = (float)config->ltitAcTrim / 10.0f;
+        fan1Trim = (float)config->ltitFan1Trim / 10.0f;
+        fan2Trim = (float)config->ltitFan2Trim / 10.0f;
+        ltitTableInitialized = true;
     }
-    acTrim = (float)config->ltitAcTrim / 10.0f;
-    fan1Trim = (float)config->ltitFan1Trim / 10.0f;
-    fan2Trim = (float)config->ltitFan2Trim / 10.0f;
     emaError = 0;
     lastUpdateTime = 0;
 }
@@ -30,17 +29,15 @@ float LongTermIdleTrim::getLtitFan1Trim() const { return fan1Trim; }
 float LongTermIdleTrim::getLtitFan2Trim() const { return fan2Trim; }
 
 void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active, float idleIntegral) {
+    if (!engineConfiguration->ltitEnabled)
+        return;
+        
     (void)acActive; (void)fan1Active; (void)fan2Active;
-    // Critério de idle estável removido
-    //float targetRpm = interpolate2d(clt, config->cltIdleCorrBins, config->rpmIdleCorrBins);
-    //if (fabsf(rpm - targetRpm) > engineConfiguration->ltitStableRpmThreshold)
-    //    return;
-    //static uint32_t stableStart = 0;
-    //uint32_t now = getTimeNowS();
-    //if (stableStart == 0)
-    //    stableStart = now;
-    //if ((now - stableStart) < engineConfiguration->ltitStableTime)
-    //    return;
+
+	if(!ltitTableInitialized){
+		return;
+	}
+
     // Encontrar índices dos bins
     int i = 0, j = 0;
     for (int idx = 0; idx < 16; idx++) {
@@ -62,26 +59,17 @@ void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Acti
     // Após atualização da tabela, marcar aprendizado pendente
     updatedLtit = true;
     smoothLtitTable(engineConfiguration->ltitSmoothingIntensity);
-    // Removido salvamento imediato
-    //for (int x = 0; x < 16; x++)
-    //    for (int y = 0; y < 16; y++)
-    //        config->ltitTable[x][y] = (uint16_t)ltitTableHelper[x][y];
-    //config->ltitAcTrim = (int16_t)(acTrim * 10.0f);
-    //config->ltitFan1Trim = (int16_t)(fan1Trim * 10.0f);
-    //config->ltitFan2Trim = (int16_t)(fan2Trim * 10.0f);
-    //setNeedToWriteConfiguration();
 }
 
 void LongTermIdleTrim::onIgnitionStateChanged(bool ignitionOn) {
     if (!ignitionOn && updatedLtit) {
-        for (int x = 0; x < 16; x++)
-            for (int y = 0; y < 16; y++)
-                config->ltitTable[x][y] = (uint16_t)ltitTableHelper[x][y];
+        // Salvar na memória persistente imediatamente quando desligar a ignição
+        copyTable(config->ltitTable, ltitTableHelper);
         config->ltitAcTrim = (int16_t)(acTrim * 10.0f);
         config->ltitFan1Trim = (int16_t)(fan1Trim * 10.0f);
         config->ltitFan2Trim = (int16_t)(fan2Trim * 10.0f);
-        smoothLtitTable(engineConfiguration->ltitSmoothingIntensity);
         setNeedToWriteConfiguration();
+        
         updatedLtit = false;
     }
 }

@@ -19,7 +19,7 @@ public:
     void onIgnitionStateChanged(bool ignitionOn);
     bool updatedLtit = false;
 private:
+    bool ltitTableInitialized = false;
     float emaError = 0;
     uint32_t lastUpdateTime = 0;
-    // ... outros campos internos ...
 }; 

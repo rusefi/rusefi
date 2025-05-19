@@ -83,8 +83,8 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 	static int bufferIdx = 0;
 	auto rpmBin = priv::getBin(rpm, config->wwRpmBins);
 	auto mapBin = priv::getBin(map, config->wwMapBins);
-	int i = rpmBin.Idx;
-	int j = mapBin.Idx;
+	int j = rpmBin.Idx;
+	int i = mapBin.Idx;
 	if (isTransient) {
 		monitoring = true;
 		bufferIdx = 0;
