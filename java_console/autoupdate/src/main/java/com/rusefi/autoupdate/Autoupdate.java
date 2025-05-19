@@ -91,9 +91,7 @@ public class Autoupdate {
 
     private static Optional<DownloadedAutoupdateFileInfo> downloadFreshZipFile(String firstArgument, BundleUtil.BundleInfo bundleInfo) {
         Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile;
-        if (firstArgument.equalsIgnoreCase("basic-ui")) {
-            downloadedAutoupdateFile = doDownload(bundleInfo);
-        } else if (firstArgument.equalsIgnoreCase("release")) {
+        if (firstArgument.equalsIgnoreCase("release")) {
             // this branch needs progress for custom boards!
             log.info("Release update requested");
             downloadedAutoupdateFile = downloadAutoupdateZipFile(
