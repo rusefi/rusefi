@@ -4942,8 +4942,16 @@ struct engine_configuration_s {
 	 */
 	float wastegatePositionClosedVoltage;
 	/**
-	 * units: units
 	 * offset 3928
+	 */
+	can_wbo_type_e wboType1;
+	/**
+	 * offset 3930
+	 */
+	can_wbo_type_e wboType2;
+	/**
+	 * units: units
+	 * offset 3932
 	 */
 	uint8_t unusedOftenChangesDuringFirmwareUpdate[END_OF_CALIBRATION_PADDING] = {};
 };

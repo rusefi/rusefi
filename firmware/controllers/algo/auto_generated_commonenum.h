@@ -1,4 +1,4 @@
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Fri Mar 14 19:51:35 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Mon May 19 13:30:20 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -52,6 +52,7 @@ const char *getBrain_pin_diag_e(brain_pin_diag_e value);
 const char *getCan_baudrate_e(can_baudrate_e value);
 const char *getCan_nbc_e(can_nbc_e value);
 const char *getCan_vss_nbc_e(can_vss_nbc_e value);
+const char *getCan_wbo_type_e(can_wbo_type_e value);
 const char *getDc_function_e(dc_function_e value);
 const char *getDisplay_mode_e(display_mode_e value);
 const char *getEgo_sensor_e(ego_sensor_e value);

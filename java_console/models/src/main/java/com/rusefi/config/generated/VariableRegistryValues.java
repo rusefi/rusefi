@@ -180,6 +180,9 @@ public class VariableRegistryValues {
 	public static final int can_vss_nbc_e_HYUNDAI_PB = 4;
 	public static final int can_vss_nbc_e_NISSAN_350 = 3;
 	public static final int can_vss_nbc_e_W202 = 1;
+	public static final int can_wbo_type_e_AEM = 1;
+	public static final int can_wbo_type_e_DISABLED = 2;
+	public static final int can_wbo_type_e_RUSEFI = 0;
 	public static final int CanGpioType_DRT = 1;
 	public static final int CanGpioType_MS = 2;
 	public static final int CanGpioType_NONE = 0;
@@ -361,7 +364,7 @@ public class VariableRegistryValues {
 	public static final int ego_sensor_e_ES_Innovate_MTX_L = 1;
 	public static final int ego_sensor_e_ES_PLX = 4;
 	public static final int EGT_CHANNEL_COUNT = 8;
-	public static final int END_OF_CALIBRATION_PADDING = 44;
+	public static final int END_OF_CALIBRATION_PADDING = 40;
 	public static final int engine_configuration_s_size = 3972;
 	public static final int engine_load_mode_e_LM_ALPHA_N = 2;
 	public static final int engine_load_mode_e_LM_LUA = 3;
@@ -1336,7 +1339,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 1255686053;
+	public static final int SIGNATURE_HASH = 1629130866;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1617,7 +1620,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.05.19.frankenso_na6.1255686053";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.05.19.frankenso_na6.1629130866";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
