@@ -5,6 +5,8 @@
 #include "sensor.h"
 #include "flash_main.h"
 #include "table_helper.h"
+#include <rusefi/timer.h>
+
 class LongTermIdleTrim {
 public:
     LongTermIdleTrim();
@@ -18,8 +20,19 @@ public:
     void smoothLtitTable(float intensity);
     void onIgnitionStateChanged(bool ignitionOn);
     bool updatedLtit = false;
+    
+    // Nova função para carregar os dados da flash para a tabela helper
+    void loadLtitFromConfig();
+    // Verifica se a tabela tem dados válidos (não-zeros)
+    bool hasValidData() const;
+    
 private:
     bool ltitTableInitialized = false;
     float emaError = 0;
-    uint32_t lastUpdateTime = 0;
+    // Timers para controle de tempo
+    Timer m_updateTimer;
+    Timer m_stableIdleTimer;
+    Timer m_ignitionOffTimer;
+    bool isStableIdle = false;
+    bool m_ignitionState = false;
 }; 

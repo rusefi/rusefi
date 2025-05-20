@@ -7,6 +7,7 @@
 
 #include "wall_fuel_state_generated.h"
 #include "engine_module.h"
+#include <rusefi/timer.h>
 
 /**
  * Wall wetting, also known as fuel film
@@ -75,13 +76,19 @@ private:
 	float lastProlongedError = 0;
 	bool betaAdjusted[WW_RPM_BINS][WW_MAP_BINS] = {{false}};
 	bool tauAdjusted[WW_RPM_BINS][WW_MAP_BINS] = {{false}};
-	efitimeus_t lastTransientTime = 0;
+	// Timers para transientes e gerenciamento de salvamento
+	Timer m_transientTimer;
+	Timer m_ignitionOffTimer;
 	bool pendingWwSave = false;
-	static float lambdaBuffer[400];  // Buffer máximo aumentado para 400 (4s @ 100Hz)
-	static float rpmBuffer[400];     // Armazenar RPM junto com lambda
-	static float mapBuffer[400];     // Armazenar MAP junto com lambda
-	static int bufferIdx;
-	static int bufferMaxSize;        // Tamanho dinâmico calculado
-	static bool monitoring;
+	bool m_ignitionState = false;
+	
 	void smoothCorrectionTable(float table[WW_RPM_BINS][WW_MAP_BINS], float intensity);
+	
+	// Variáveis estáticas para buffer circular
+	static float lambdaBuffer[400];
+	static float rpmBuffer[400];
+	static float mapBuffer[400];
+	static int bufferIdx;
+	static int bufferMaxSize;
+	static bool monitoring;
 };

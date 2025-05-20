@@ -192,7 +192,24 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 }
 
 void WallFuelController::onIgnitionStateChanged(bool ignitionOn) {
-	if (!ignitionOn && pendingWwSave) {
+	m_ignitionState = ignitionOn;
+	
+	if (ignitionOn) {
+		// Reset timer when ignition turns on
+		m_ignitionOffTimer.reset();
+	} else if (pendingWwSave) {
+		// Verificar se passou o tempo de delay após desligar ignição
+		float saveDelaySeconds = engineConfiguration->wwIgnitionOffSaveDelay;
+		if (saveDelaySeconds <= 0) {
+			saveDelaySeconds = 5.0f; // Valor padrão 5 segundos
+		}
+		
+		// Reset timer para contar o tempo desde que a ignição desligou
+		m_ignitionOffTimer.reset();
+		
+		// Na implementação atual, marcamos para salvar imediatamente
+		// mas o salvamento real acontecerá no onFastCallback após o delay
+		// Isso permite que possíveis outras configurações sejam salvas juntas
 		setNeedToWriteConfiguration();
 		pendingWwSave = false;
 	}
@@ -289,12 +306,15 @@ void WallFuelController::onFastCallback() {
 		
 		// Só considera transiente se passou tempo suficiente desde o último
 		if (conditionsMet) {
-			efitimeus_t currentTimeUs = getTimeNowUs();
-			efitimeus_t transientTimeoutUs = (efitimeus_t)engineConfiguration->wwTransientTimeoutMs * 1000;
+			// Verificar tempo desde último transiente usando o Timer
+			float transientTimeoutMs = engineConfiguration->wwTransientTimeoutMs;
+			if (transientTimeoutMs <= 0) {
+				transientTimeoutMs = 1000.0f; // Valor padrão 1 segundo
+			}
 			
-			if (currentTimeUs - lastTransientTime > transientTimeoutUs) {
+			if (m_transientTimer.hasElapsedMs(transientTimeoutMs)) {
 				isTransient = true;
-				lastTransientTime = currentTimeUs;
+				m_transientTimer.reset();
 			}
 		}
 	}

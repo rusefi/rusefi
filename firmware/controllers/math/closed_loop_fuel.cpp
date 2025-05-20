@@ -22,8 +22,7 @@ static Deadband<2> overrunDeadband;
 static Deadband<2> loadDeadband;
 
 void LongTermFuelTrim::resetLtftTimer() {
-	lastLtftUpdateTime = uint32_t(getTimeNowS);
-	// updatedLtft = 0;
+	m_updateTimer.reset();
 }
 
 float LongTermFuelTrim::filterStft(float stftRaw) {
@@ -33,42 +32,12 @@ float LongTermFuelTrim::filterStft(float stftRaw) {
 	return stftEma;
 }
 
-void LongTermFuelTrim::updateTimers(bool ignitionState) {
-	uint32_t now = getTimeNowS();
-	if (ignitionState) {
-		if (!ignitionOnDelayActive) {
-			ignitionOnTimestamp = now;
-			ignitionOnDelayActive = true;
-		}
-		// Se já passou o delay, desativa o bloqueio
-		if (ignitionOnDelayActive && (now - ignitionOnTimestamp) >= config->ltftIgnitionOnDelay) {
-			ignitionOnDelayActive = false;
-		}
-		// Cancelar delay de salvamento se ligou de novo
-		ignitionOffSaveDelayActive = false;
-		pendingSave = false;
-	} else {
-		if (!ignitionOffSaveDelayActive) {
-			ignitionOffTimestamp = now;
-			ignitionOffSaveDelayActive = true;
-			pendingSave = updatedLtft;
-		}
-		// Se já passou o delay, salva se necessário
-		if (ignitionOffSaveDelayActive && (now - ignitionOffTimestamp) >= config->ltftIgnitionOffSaveDelay) {
-			if (pendingSave) {
-				copyTable(config->ltftTable, ltftTableHelper);
-				setNeedToWriteConfiguration();
-				updatedLtft = 0;
-				pendingSave = false;
-			}
-			ignitionOffSaveDelayActive = false;
-		}
-	}
-}
-
 bool LongTermFuelTrim::canLearn() {
-	// Só aprende se não estiver no delay pós-ignição ON
-	if (ignitionOnDelayActive) return false;
+	// Só aprende se passou tempo suficiente desde ignição ON
+	if (!m_ignitionOnTimer.hasElapsedSec(config->ltftIgnitionOnDelay)) {
+        return false;
+    }
+    
 	// Outras condições já existentes (temperatura, etc)
 	if (!config->ltftEnabled) return false;
 	if ((Sensor::get(SensorType::Clt)).value_or(0) < float(config->ltftMinModTemp)) return false;
@@ -107,8 +76,15 @@ static bool isIgnitionOn() {
 */
 
 void LongTermFuelTrim::updateLtft(float load, float rpm) {
-	if (!config->ltftEnabled) return;
-	if ((Sensor::get(SensorType::Clt)).value_or(0) < float(config->ltftMinModTemp)) return;
+	if (!canLearn()) return;
+	
+	// Verificar tempo mínimo entre atualizações (1 segundo)
+	float updateIntervalSec = 1.0f;
+	if (!m_updateTimer.hasElapsedSec(updateIntervalSec)) {
+		return;
+	}
+	m_updateTimer.reset();
+	
 	auto binLoad = priv::getBin(load, config->veLoadBins);
 	auto binRpm = priv::getBin(rpm, config->veRpmBins);
 	int lowLoad = binLoad.Idx;
@@ -152,16 +128,33 @@ void LongTermFuelTrim::updateLtft(float load, float rpm) {
 			}
 		}
 		// Após atualização da tabela, marcar aprendizado pendente
-		updatedLtft = 1;
+		updatedLtft = true;
 		smoothHoles();
 	}
 }
 
 void LongTermFuelTrim::onIgnitionStateChanged(bool ignitionState) {
-	if (!ignitionState && updatedLtft) {
+	m_ignitionState = ignitionState;
+	
+	if (ignitionState) {
+		// Reset timers quando ignição liga
+		m_ignitionOnTimer.reset();
+		isLearnConditionsMet = false;
+	} else if (updatedLtft) {
+		// Reset timer para contagem do delay de salvamento
+		m_ignitionOffTimer.reset();
+		
+		// Verificar se passou o tempo de delay após desligar a ignição
+		float saveDelaySeconds = config->ltftIgnitionOffSaveDelay;
+		if (saveDelaySeconds <= 0) {
+			saveDelaySeconds = 5.0f; // Valor padrão de 5 segundos
+		}
+		
+		// Na implementação atual, salvamos imediatamente
+		// O ideal seria verificar o timer em um callback periódico
 		copyTable(config->ltftTable, ltftTableHelper);
 		setNeedToWriteConfiguration();
-		updatedLtft = 0;
+		updatedLtft = false;
 	}
 }
 
@@ -310,13 +303,13 @@ float LongTermFuelTrim::getLtft(float load, float rpm) {
 	if(config->ltftCRC != 132) {
 		setTable(config->ltftTable, 100);
 		config->ltftCRC = 132;
-		ltftTableHelperInit = 0;
+		ltftTableHelperInit = false;
 		setNeedToWriteConfiguration();
 	}
 
 	if(!ltftTableHelperInit){
 		copyTable(ltftTableHelper, config->ltftTable, 1);
-		ltftTableHelperInit = 1;
+		ltftTableHelperInit = true;
 	}
 
 	if(shouldUpdateCorrection(getSensorForBankIndex(0)) && shouldCorrect()) {
@@ -346,11 +339,12 @@ float LongTermFuelTrim::getLtft(float load, float rpm) {
 
 LongTermFuelTrim::LongTermFuelTrim() {
 	stftEma = 1.0f;
-	ignitionOnTimestamp = 0;
-	ignitionOffTimestamp = 0;
-	ignitionOnDelayActive = false;
-	ignitionOffSaveDelayActive = false;
-	pendingSave = false;
+	m_ignitionOnTimer.reset();
+	m_ignitionOffTimer.reset();
+	m_updateTimer.reset();
+	m_ignitionState = false;
+	isLearnConditionsMet = false;
+	
 	for (int i = 0; i < 16; i++) {
 		regionalErrorBuffer[i] = 0.0f;
 		regionalErrorCount[i] = 0;
@@ -358,7 +352,7 @@ LongTermFuelTrim::LongTermFuelTrim() {
 			ltftTableHelper[i][j] = 100.0f;
 		}
 	}
-	ltftTableHelperInit = 1;
+	ltftTableHelperInit = true;
 }
 
 #endif // EFI_ENGINE_CONTROL

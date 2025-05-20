@@ -98,6 +98,7 @@ public:
 	float getLtitFan1Trim() const;
 	float getLtitFan2Trim() const;
 
+	// Esta função está vazia e apenas retorna
 	void setDefaultIdleParameters();
 
 	void onIgnitionStateChanged(bool ignitionOn) override;

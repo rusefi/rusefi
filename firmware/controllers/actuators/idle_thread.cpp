@@ -407,6 +407,10 @@ void IdleController::init() {
 	wasResetPid = false;
 	m_timingPid.initPidClass(&engineConfiguration->idleTimingPid);
 	getIdlePid()->initPidClass(&engineConfiguration->idleRpmPid);
+	
+	// Tentar fazer o carregamento inicial dos dados do LTIT
+	// Esta tentativa será feita novamente durante as chamadas de update se não funcionar agora
+	m_ltit.loadLtitFromConfig();
 }
 
 void IdleController::updateLtit(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active, float idleIntegral) {
@@ -416,12 +420,8 @@ void IdleController::updateLtit(float rpm, float clt, bool acActive, bool fan1Ac
 }
 
 void IdleController::setDefaultIdleParameters() {
-	for (int i = 0; i < 16; i++)
-		for (int j = 0; j < 16; j++)
-			m_ltit.ltitTableHelper[i][j] = 100.0f;
-	m_ltit.acTrim = 0;
-	m_ltit.fan1Trim = 0;
-	m_ltit.fan2Trim = 0;
+	// Esta função agora apenas retorna, não modifica a tabela LTIT
+	return;
 }
 
 // Implementação dos métodos getLtit* declarados em IdleController
