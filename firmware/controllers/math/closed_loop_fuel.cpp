@@ -344,15 +344,7 @@ LongTermFuelTrim::LongTermFuelTrim() {
 	m_updateTimer.reset();
 	m_ignitionState = false;
 	isLearnConditionsMet = false;
-	
-	for (int i = 0; i < 16; i++) {
-		regionalErrorBuffer[i] = 0.0f;
-		regionalErrorCount[i] = 0;
-		for (int j = 0; j < 16; j++) {
-			ltftTableHelper[i][j] = 100.0f;
-		}
-	}
-	ltftTableHelperInit = true;
+	ltftTableHelperInit = false;
 }
 
 #endif // EFI_ENGINE_CONTROL
