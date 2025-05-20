@@ -199,10 +199,6 @@ static const LogField fields[] = {
 	{engine->outputChannels.triggerPrimaryRise, "triggerPrimaryRise", "", 3},
 	{engine->outputChannels.triggerSecondaryFall, "triggerSecondaryFall", "", 3},
 	{engine->outputChannels.triggerSecondaryRise, "triggerSecondaryRise", "", 3},
-	{engine->outputChannels.triggerVvtFall, "triggerVvtFall", "", 0},
-	{engine->outputChannels.triggerVvtRise, "triggerVvtRise", "", 0},
-	{engine->outputChannels.triggerVvt2Fall, "triggerVvt2Fall", "", 0, "Sync"},
-	{engine->outputChannels.triggerVvt2Rise, "triggerVvt2Rise", "", 0, "Sync"},
 	{engine->outputChannels.starterState, "starterState", "", 3},
 	{engine->outputChannels.starterRelayDisable, "starterRelayDisable", "", 3},
 	{engine->outputChannels.multiSparkCounter, "Ign: Multispark count", "", 3},
@@ -303,36 +299,36 @@ static const LogField fields[] = {
 	{engine->outputChannels.targetAfrBlendBias[1], "targetAfrBlendBias 2", "%", 1},
 	{engine->outputChannels.targetAfrBlendOutput[0], "targetAfrBlendOutput 1", "%", 1},
 	{engine->outputChannels.targetAfrBlendOutput[1], "targetAfrBlendOutput 2", "%", 1},
-	{engine->outputChannels, 664, 0, "coilState1", ""},
-	{engine->outputChannels, 664, 1, "coilState2", ""},
-	{engine->outputChannels, 664, 2, "coilState3", ""},
-	{engine->outputChannels, 664, 3, "coilState4", ""},
-	{engine->outputChannels, 664, 4, "coilState5", ""},
-	{engine->outputChannels, 664, 5, "coilState6", ""},
-	{engine->outputChannels, 664, 6, "coilState7", ""},
-	{engine->outputChannels, 664, 7, "coilState8", ""},
-	{engine->outputChannels, 664, 8, "coilState9", ""},
-	{engine->outputChannels, 664, 9, "coilState10", ""},
-	{engine->outputChannels, 664, 10, "coilState11", ""},
-	{engine->outputChannels, 664, 11, "coilState12", ""},
-	{engine->outputChannels, 664, 12, "injectorState1", ""},
-	{engine->outputChannels, 664, 13, "injectorState2", ""},
-	{engine->outputChannels, 664, 14, "injectorState3", ""},
-	{engine->outputChannels, 664, 15, "injectorState4", ""},
-	{engine->outputChannels, 664, 16, "injectorState5", ""},
-	{engine->outputChannels, 664, 17, "injectorState6", ""},
-	{engine->outputChannels, 664, 18, "injectorState7", ""},
-	{engine->outputChannels, 664, 19, "injectorState8", ""},
-	{engine->outputChannels, 664, 20, "injectorState9", ""},
-	{engine->outputChannels, 664, 21, "injectorState10", ""},
-	{engine->outputChannels, 664, 22, "injectorState11", ""},
-	{engine->outputChannels, 664, 23, "injectorState12", ""},
-	{engine->outputChannels, 664, 24, "triggerChannel1", ""},
-	{engine->outputChannels, 664, 25, "triggerChannel2", ""},
-	{engine->outputChannels, 664, 26, "bank 1 intake cam input", ""},
-	{engine->outputChannels, 664, 27, "bank 1 exhaust cam input", ""},
-	{engine->outputChannels, 664, 28, "bank 2 intake cam input", ""},
-	{engine->outputChannels, 664, 29, "bank 2 exhaust cam input", ""},
+	{engine->outputChannels, 656, 0, "coilState1", ""},
+	{engine->outputChannels, 656, 1, "coilState2", ""},
+	{engine->outputChannels, 656, 2, "coilState3", ""},
+	{engine->outputChannels, 656, 3, "coilState4", ""},
+	{engine->outputChannels, 656, 4, "coilState5", ""},
+	{engine->outputChannels, 656, 5, "coilState6", ""},
+	{engine->outputChannels, 656, 6, "coilState7", ""},
+	{engine->outputChannels, 656, 7, "coilState8", ""},
+	{engine->outputChannels, 656, 8, "coilState9", ""},
+	{engine->outputChannels, 656, 9, "coilState10", ""},
+	{engine->outputChannels, 656, 10, "coilState11", ""},
+	{engine->outputChannels, 656, 11, "coilState12", ""},
+	{engine->outputChannels, 656, 12, "injectorState1", ""},
+	{engine->outputChannels, 656, 13, "injectorState2", ""},
+	{engine->outputChannels, 656, 14, "injectorState3", ""},
+	{engine->outputChannels, 656, 15, "injectorState4", ""},
+	{engine->outputChannels, 656, 16, "injectorState5", ""},
+	{engine->outputChannels, 656, 17, "injectorState6", ""},
+	{engine->outputChannels, 656, 18, "injectorState7", ""},
+	{engine->outputChannels, 656, 19, "injectorState8", ""},
+	{engine->outputChannels, 656, 20, "injectorState9", ""},
+	{engine->outputChannels, 656, 21, "injectorState10", ""},
+	{engine->outputChannels, 656, 22, "injectorState11", ""},
+	{engine->outputChannels, 656, 23, "injectorState12", ""},
+	{engine->outputChannels, 656, 24, "triggerChannel1", ""},
+	{engine->outputChannels, 656, 25, "triggerChannel2", ""},
+	{engine->outputChannels, 656, 26, "bank 1 intake cam input", ""},
+	{engine->outputChannels, 656, 27, "bank 1 exhaust cam input", ""},
+	{engine->outputChannels, 656, 28, "bank 2 intake cam input", ""},
+	{engine->outputChannels, 656, 29, "bank 2 exhaust cam input", ""},
 	{engine->outputChannels.outputRequestPeriod, "outputRequestPeriod", "", 0},
 	{engine->outputChannels.mapFast, "mapFast", "", 0},
 	{engine->outputChannels.luaGauges[0], "Lua: Gauge 1", "value", 3},
@@ -417,7 +413,7 @@ static const LogField fields[] = {
 	{engine->outputChannels.fastAdcLastError, "ECU: Fast ADC error type", "", 0},
 	{engine->outputChannels.fastAdcPeriod, "ECU: Fast ADC period", "ticks", 0},
 	{engine->outputChannels.fastAdcConversionCount, "ECU: Fast ADC conversions", "N", 0},
-	{engine->outputChannels, 836, 0, "isMapAveraging", ""},
+	{engine->outputChannels, 828, 0, "isMapAveraging", ""},
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},
 #endif
@@ -740,6 +736,30 @@ static const LogField fields[] = {
 	{engine->triggerCentral.hwEventCounters[3], "Hardware events since boot 4", "", 0},
 #endif
 #if EFI_SHAFT_POSITION_INPUT
+	{engine->triggerCentral.vvtEventRiseCounter[0], "vvtEventRiseCounter 1", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
+	{engine->triggerCentral.vvtEventRiseCounter[1], "vvtEventRiseCounter 2", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
+	{engine->triggerCentral.vvtEventRiseCounter[2], "vvtEventRiseCounter 3", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
+	{engine->triggerCentral.vvtEventRiseCounter[3], "vvtEventRiseCounter 4", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
+	{engine->triggerCentral.vvtEventFallCounter[0], "vvtEventFallCounter 1", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
+	{engine->triggerCentral.vvtEventFallCounter[1], "vvtEventFallCounter 2", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
+	{engine->triggerCentral.vvtEventFallCounter[2], "vvtEventFallCounter 3", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
+	{engine->triggerCentral.vvtEventFallCounter[3], "vvtEventFallCounter 4", "", 0},
+#endif
+#if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.vvtCamCounter, "Sync: total cams front counter", "", 0},
 #endif
 #if EFI_SHAFT_POSITION_INPUT
@@ -776,7 +796,7 @@ static const LogField fields[] = {
 	{engine->triggerCentral.mapCamPrevToothAngle, "Sync: MAP: prev angle", "deg", 2},
 #endif
 #if EFI_SHAFT_POSITION_INPUT
-	{engine->triggerCentral, 48, 0, "isDecodingMapCam", ""},
+	{engine->triggerCentral, 64, 0, "isDecodingMapCam", ""},
 #endif
 #if EFI_SHAFT_POSITION_INPUT
 	{engine->triggerCentral.triggerElapsedUs, "triggerElapsedUs", "", 0},
