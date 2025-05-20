@@ -82,7 +82,7 @@ private:
 	bool pendingWwSave = false;
 	bool m_ignitionState = false;
 	
-	void smoothCorrectionTable(float table[WW_RPM_BINS][WW_MAP_BINS], float intensity);
+	void smoothCorrectionTable(float table[WW_RPM_BINS][WW_MAP_BINS], int centerI, int centerJ, float intensity);
 	
 	// Variáveis estáticas para buffer circular
 	static float lambdaBuffer[400];

@@ -96,7 +96,7 @@
 ! This is the version of the data stored in flash configuration
 ! Any time an incompatible change is made to the configuration format stored in flash,
 ! update this string to the current date!
-#define FLASH_DATA_VERSION 250515
+#define FLASH_DATA_VERSION 250520
 
 ! all the sub-structures are going to be nested within the primary structure, that's
 ! needed to get a proper TunerStudio file
@@ -1203,14 +1203,14 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	uint8_t autoscale wwLearningRate;;"%", 0.01, 0, 0, 1.0, 2
 	uint16_t autoscale wwTransientTimeoutMs;;"ms", 1, 0, 10, 10000, 0
 	uint8_t autoscale wwMinSampleSize;;"count", 1, 0, 50, 300, 0
-	uint8_t autoscale wwMaxSampleSize;;"count", 1, 0, 100, 500, 0
+	uint16_t autoscale wwMaxSampleSize;;"count", 1, 0, 100, 500, 0
 	float wwSampleMultiplier;;"mult", 1, 0, 0.1, 10.0, 1
-	float wwBetaInitWeight;0.2;"mult", 1, 0, 0, 1.0, 2
-	float wwBetaTransWeight;0.3;"mult", 1, 0, 0, 1.0, 2
-	float wwBetaFinalWeight;0.5;"mult", 1, 0, 0, 1.0, 2
-	float wwTauInitWeight;;"mult", 1, 0, 0, 1.0, 2
-	float wwTauTransWeight;;"mult", 1, 0, 0, 1.0, 2
-	float wwTauFinalWeight;;"mult", 1, 0, 0, 1.0, 2
+	float wwBetaInitWeight;0.2;"mult", 1, 0, -1.0, 1.0, 2
+	float wwBetaTransWeight;0.3;"mult", 1, 0, -1.0, 1.0, 2
+	float wwBetaFinalWeight;0.5;"mult", 1, 0, -1.0, 1.0, 2
+	float wwTauInitWeight;;"mult", 1, 0, -1.0, 1.0, 2
+	float wwTauTransWeight;;"mult", 1, 0, -1.0, 1.0, 2
+	float wwTauFinalWeight;;"mult", 1, 0, -1.0, 1.0, 2
 	uint8_t autoscale wwSmoothIntensity;;"%", 0.01, 0, 0, 1, 2
 	uint8_t autoscale wwIgnitionOffSaveDelay;;"s", 5, 0, 0, 100, 0
 

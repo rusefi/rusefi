@@ -113,20 +113,39 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 			int faseInicial = bufferMaxSize / 5;            // Primeiros 20% das amostras
 			int faseFinal = bufferMaxSize - faseInicial;    // Últimos 20% das amostras
 
-			// 2. Calcular médias ponderadas para cada fase
-			float mediaInicial = 0, mediaTransiente = 0, mediaFinal = 0;
-			float somaPesos = 0;
-
-			// Fase inicial (resposta imediata)
-			for (int k = 0; k < faseInicial; k++) {
-				float peso = 1.0f;
-				mediaInicial += lambdaBuffer[k] * peso;
-				somaPesos += peso;
+			// 2. Encontrar as 10 amostras mais extremas (mais ricas/pobres) para fase inicial
+			float extremeInitialSamples[10];
+			int numExtremeSamples = minI(10, faseInicial); // Garantir que não ultrapassamos o tamanho da fase
+			
+			// Copiar as primeiras amostras para o array de extremos
+			for (int k = 0; k < numExtremeSamples; k++) {
+				extremeInitialSamples[k] = lambdaBuffer[k];
 			}
-			mediaInicial /= somaPesos;
-
-			// Fase transiente (meio do evento)
-			somaPesos = 0;
+			
+			// Ordenar o array (pelo desvio do target, não pelo valor absoluto)
+			for (int k = 0; k < numExtremeSamples; k++) {
+				for (int l = k + 1; l < numExtremeSamples; l++) {
+					float dev1 = fabsf(extremeInitialSamples[k] - targetLambda);
+					float dev2 = fabsf(extremeInitialSamples[l] - targetLambda);
+					if (dev2 > dev1) {
+						// Trocar os valores
+						float temp = extremeInitialSamples[k];
+						extremeInitialSamples[k] = extremeInitialSamples[l];
+						extremeInitialSamples[l] = temp;
+					}
+				}
+			}
+			
+			// Calcular a média das amostras extremas para fase inicial
+			float mediaInicial = 0;
+			for (int k = 0; k < numExtremeSamples; k++) {
+				mediaInicial += extremeInitialSamples[k];
+			}
+			mediaInicial /= numExtremeSamples;
+			
+			// Fase transiente (meio do evento) - cálculo ponderado
+			float mediaTransiente = 0;
+			float somaPesos = 0;
 			for (int k = faseInicial; k < faseFinal; k++) {
 				// Peso crescente durante a fase transiente
 				float progresso = (float)(k - faseInicial) / (faseFinal - faseInicial);
@@ -134,16 +153,27 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 				mediaTransiente += lambdaBuffer[k] * peso;
 				somaPesos += peso;
 			}
-			mediaTransiente /= somaPesos;
+			// Verificar se temos amostras suficientes nesta fase
+			if (somaPesos > 0) {
+				mediaTransiente /= somaPesos;
+			} else {
+				mediaTransiente = targetLambda; // Valor padrão se não houver amostras
+			}
 
-			// Fase de estabilização (final)
+			// Fase de estabilização (final) - cálculo ponderado
+			float mediaFinal = 0;
 			somaPesos = 0;
 			for (int k = faseFinal; k < bufferMaxSize; k++) {
 				float peso = 2.0f; // Maior peso para amostras estabilizadas
 				mediaFinal += lambdaBuffer[k] * peso;
 				somaPesos += peso;
 			}
-			mediaFinal /= somaPesos;
+			// Verificar se temos amostras suficientes nesta fase
+			if (somaPesos > 0) {
+				mediaFinal /= somaPesos;
+			} else {
+				mediaFinal = targetLambda; // Valor padrão se não houver amostras
+			}
 
 			// 3. Calcular erros por fase
 			float erroInicial = targetLambda - mediaInicial;
@@ -181,8 +211,8 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 			config->tauCorrection[i][j] = clampF(0.1f, config->tauCorrection[i][j], 2.0f);
 			
 			// Suavização após aprendizado
-			smoothCorrectionTable(config->betaCorrection, engineConfiguration->wwSmoothIntensity);
-			smoothCorrectionTable(config->tauCorrection, engineConfiguration->wwSmoothIntensity);
+			smoothCorrectionTable(config->betaCorrection, i, j, engineConfiguration->wwSmoothIntensity);
+			smoothCorrectionTable(config->tauCorrection, i, j, engineConfiguration->wwSmoothIntensity);
 			
 			monitoring = false;
 			// Marcar aprendizado pendente
@@ -215,8 +245,53 @@ void WallFuelController::onIgnitionStateChanged(bool ignitionOn) {
 	}
 }
 
-void WallFuelController::smoothCorrectionTable(float table[WW_RPM_BINS][WW_MAP_BINS], float intensity) {
-	//smoothTable<float, WW_RPM_BINS, WW_MAP_BINS>(table, intensity);
+void WallFuelController::smoothCorrectionTable(float table[WW_RPM_BINS][WW_MAP_BINS], int centerI, int centerJ, float intensity) {
+	// Retorno antecipado se intensidade for baixa demais
+	if (intensity <= 0.01f) {
+		return;
+	}
+	
+	// Valor da célula central que foi ajustada
+	float centerValue = table[centerI][centerJ];
+	
+	// Fator para determinar o quão forte cada célula vizinha será influenciada
+	// 0.0 = sem influência, 1.0 = influência completa (igual ao valor central)
+	float maxInfluence = clampF(0.0f, intensity, 0.5f);
+	
+	// Para cada célula na vizinhança 3x3 (células adjacentes)
+	for (int di = -1; di <= 1; di++) {
+		for (int dj = -1; dj <= 1; dj++) {
+			// Pular a célula central
+			if (di == 0 && dj == 0) {
+				continue;
+			}
+			
+			// Calcular índices da célula vizinha
+			int ni = centerI + di;
+			int nj = centerJ + dj;
+			
+			// Verificar limites da tabela
+			if (ni < 0 || ni >= WW_MAP_BINS || nj < 0 || nj >= WW_RPM_BINS) {
+				continue;
+			}
+			
+			// Calcular distância (0.0-1.0 normalizada)
+			float distance = sqrtf(di*di + dj*dj);
+			if (distance > 1.41f) distance = 1.41f; // Normalizar distância diagonal
+			distance /= 1.41f; // Normalizar para 0.0-1.0
+			
+			// Quanto mais próximo, maior a influência
+			float influence = maxInfluence * (1.0f - distance);
+			
+			// Calcular novo valor como uma média ponderada
+			float currentValue = table[ni][nj];
+			float newValue = currentValue * (1.0f - influence) + centerValue * influence;
+			
+			// Atualizar o valor com limites
+			table[ni][nj] = clampF(0.05f, newValue, 2.0f);
+		}
+	}
+	
 	return;
 }
 
