@@ -25,11 +25,11 @@ shadowJar {
     archiveClassifier = ''
   }
 
-    manifest {
-        attributes(
-                'Main-Class': 'com.rusefi.autoupdate.Autoupdate',
-                'Build-Jdk'      : "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
-                'Built-Date': new Date().toString()
-        )
-    }
+//    manifest {
+//        attributes(
+//                'Main-Class': 'com.rusefi.autoupdate.Autoupdate',
+//                'Build-Jdk'      : "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
+//                'Built-Date': new Date().toString()
+//        )
+//    }
 }
