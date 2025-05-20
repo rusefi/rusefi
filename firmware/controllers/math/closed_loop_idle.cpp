@@ -76,5 +76,5 @@ void LongTermIdleTrim::onIgnitionStateChanged(bool ignitionOn) {
 
 // Suavização regional da tabela LTIT
 void LongTermIdleTrim::smoothLtitTable(float intensity) {
-    smoothTable(ltitTableHelper, intensity / 100.0f);
+    smoothTable<float, 16, 16>(ltitTableHelper, intensity / 100.0f);
 } 

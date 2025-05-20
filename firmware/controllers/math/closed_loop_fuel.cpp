@@ -94,7 +94,7 @@ void LongTermFuelTrim::applyRegionalCorrection(float load, float rpm, float corr
 void LongTermFuelTrim::smoothHoles() {
 	// Use the generic smoothTable function with configured intensity
 	float intensity = (float)config->ltftSmoothingIntensity / 100.0f;
-	smoothTable(ltftTableHelper, intensity);
+	smoothTable<float, 16, 16>(ltftTableHelper, intensity);
 }
 
 // Função utilitária para checar se a ignição está ligada

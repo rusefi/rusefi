@@ -199,7 +199,7 @@ void WallFuelController::onIgnitionStateChanged(bool ignitionOn) {
 }
 
 void WallFuelController::smoothCorrectionTable(float table[WW_RPM_BINS][WW_MAP_BINS], float intensity) {
-	smoothTable(table, intensity);
+	smoothTable<float, WW_RPM_BINS, WW_MAP_BINS>(table, intensity);
 }
 
 float WallFuelController::computeTau() const {
