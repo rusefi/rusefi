@@ -10,6 +10,14 @@
 #include "efitime.h"
 #include <rusefi/interpolation.h>
 
+// Inicialização das variáveis estáticas
+float WallFuelController::lambdaBuffer[400] = {0};
+float WallFuelController::rpmBuffer[400] = {0};
+float WallFuelController::mapBuffer[400] = {0};
+int WallFuelController::bufferIdx = 0;
+int WallFuelController::bufferMaxSize = 200;
+bool WallFuelController::monitoring = false;
+
 void WallFuel::resetWF() {
 	wallFuel = 0;
 }
@@ -78,95 +86,109 @@ float WallFuel::getWallFuel() const {
 
 void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, float targetLambda, bool isTransient, float clt) {
 	if (clt < engineConfiguration->wwMinClt) return;
-	static bool monitoring = false;
-	static float lambdaBuffer[200]; // 2s @ 100Hz
-	static int bufferIdx = 0;
+
 	auto rpmBin = priv::getBin(rpm, config->wwRpmBins);
 	auto mapBin = priv::getBin(map, config->wwMapBins);
 	int j = rpmBin.Idx;
 	int i = mapBin.Idx;
+	
 	if (isTransient) {
 		monitoring = true;
 		bufferIdx = 0;
+		
+		// Calcular número de amostras baseado no tau atual
+		float tau = computeTau();
+		int calculatedSamples = (int)(engineConfiguration->wwSampleMultiplier * tau * rpm / 60.0f);
+		bufferMaxSize = minI(engineConfiguration->wwMaxSampleSize, maxI(engineConfiguration->wwMinSampleSize, calculatedSamples));
 	}
+	
 	if (monitoring) {
-		if (bufferIdx < 200) {
-			lambdaBuffer[bufferIdx++] = lambda;
+		if (bufferIdx < bufferMaxSize) {
+			lambdaBuffer[bufferIdx] = lambda;
+			rpmBuffer[bufferIdx] = rpm;
+			mapBuffer[bufferIdx] = map;
+			bufferIdx++;
 		} else {
-			// Calcular média dos 200 valores
-			float media = 0;
-			for (int k = 0; k < 200; k++) media += lambdaBuffer[k];
-			media /= 200;
+			// 1. Dividir as amostras em três fases
+			int faseInicial = bufferMaxSize / 5;            // Primeiros 20% das amostras
+			int faseFinal = bufferMaxSize - faseInicial;    // Últimos 20% das amostras
 
-			// Encontrar os 20 valores mais extremos (maior desvio absoluto da média)
-			float extremos[20];
-			int extremosCount = 0;
-			for (int k = 0; k < 200; k++) {
-				float valor = lambdaBuffer[k];
-				float desvio = fabsf(valor - media);
-				if (extremosCount < 20) {
-					extremos[extremosCount++] = valor;
-				} else {
-					// Encontrar o extremo menos extremo
-					int minIdx = 0;
-					float minDesvio = fabsf(extremos[0] - media);
-					for (int m = 1; m < 20; m++) {
-						float d = fabsf(extremos[m] - media);
-						if (d < minDesvio) {
-							minDesvio = d;
-							minIdx = m;
-						}
-					}
-					// Se o desvio atual é maior que o menor dos extremos, substitui
-					if (desvio > minDesvio) {
-						extremos[minIdx] = valor;
-					}
-				}
+			// 2. Calcular médias ponderadas para cada fase
+			float mediaInicial = 0, mediaTransiente = 0, mediaFinal = 0;
+			float somaPesos = 0;
+
+			// Fase inicial (resposta imediata)
+			for (int k = 0; k < faseInicial; k++) {
+				float peso = 1.0f;
+				mediaInicial += lambdaBuffer[k] * peso;
+				somaPesos += peso;
 			}
-			// Calcula a média dos extremos
-			float soma_extremos = 0;
-			for (int k = 0; k < 20; k++) soma_extremos += extremos[k];
-			float media_extremos = soma_extremos / 20;
+			mediaInicial /= somaPesos;
 
-			// Calcula os erros
-			float erroImediato = targetLambda - media_extremos;
-			float erroProlongado = targetLambda - media;
-			lastImmediateError = erroImediato;
-			lastProlongedError = erroProlongado;
-
-			// Calcular min/max do buffer para diagnóstico
-			float minLambda = lambdaBuffer[0];
-			float maxLambda = lambdaBuffer[0];
-			for (int k = 1; k < 200; k++) {
-				if (lambdaBuffer[k] < minLambda) minLambda = lambdaBuffer[k];
-				if (lambdaBuffer[k] > maxLambda) maxLambda = lambdaBuffer[k];
+			// Fase transiente (meio do evento)
+			somaPesos = 0;
+			for (int k = faseInicial; k < faseFinal; k++) {
+				// Peso crescente durante a fase transiente
+				float progresso = (float)(k - faseInicial) / (faseFinal - faseInicial);
+				float peso = 0.5f + 0.5f * progresso; // Peso aumenta de 0.5 a 1.0
+				mediaTransiente += lambdaBuffer[k] * peso;
+				somaPesos += peso;
 			}
-			// (Opcional) Adicionar logs ou uso de minLambda/maxLambda para rejeição de dados ruins
+			mediaTransiente /= somaPesos;
 
+			// Fase de estabilização (final)
+			somaPesos = 0;
+			for (int k = faseFinal; k < bufferMaxSize; k++) {
+				float peso = 2.0f; // Maior peso para amostras estabilizadas
+				mediaFinal += lambdaBuffer[k] * peso;
+				somaPesos += peso;
+			}
+			mediaFinal /= somaPesos;
+
+			// 3. Calcular erros por fase
+			float erroInicial = targetLambda - mediaInicial;
+			float erroTransiente = targetLambda - mediaTransiente;
+			float erroFinal = targetLambda - mediaFinal;
+
+			// Salvar para diagnóstico
+			lastImmediateError = erroInicial;
+			lastProlongedError = erroFinal;
+
+			// 4. Aplicar correções com pesos específicos para cada fase
 			float learnRate = engineConfiguration->wwLearningRate;
 			float maxStep = 0.05f;
-			// Pesos configuráveis
-			float wBetaImediato = engineConfiguration->wBetaImediato;
-			float wBetaProlongado = engineConfiguration->wBetaProlongado;
-			float wTauImediato = engineConfiguration->wTauImediato;
-			float wTauProlongado = engineConfiguration->wTauProlongado;
-			float deltaBeta = learnRate * (wBetaImediato * erroImediato + wBetaProlongado * erroProlongado);
-			float deltaTau  = -learnRate * (wTauImediato  * erroImediato + wTauProlongado  * erroProlongado);
+			
+			float deltaBeta = learnRate * (
+				engineConfiguration->wwBetaInitWeight * erroInicial +     
+				engineConfiguration->wwBetaTransWeight * erroTransiente +  
+				engineConfiguration->wwBetaFinalWeight * erroFinal         
+			);
+
+			float deltaTau = -learnRate * (
+				engineConfiguration->wwTauInitWeight * erroInicial +     
+				engineConfiguration->wwTauTransWeight * erroTransiente +  
+				engineConfiguration->wwTauFinalWeight * erroFinal         
+			);
+
+			// Aplicar limites e atualizar tabelas de correção
 			deltaBeta = clampF(-maxStep, deltaBeta, maxStep);
-			deltaTau  = clampF(-maxStep, deltaTau,  maxStep);
+			deltaTau = clampF(-maxStep, deltaTau, maxStep);
+			
 			config->betaCorrection[i][j] = config->betaCorrection[i][j] * (1.0f + deltaBeta);
-			config->tauCorrection[i][j]  = config->tauCorrection[i][j]  * (1.0f + deltaTau);
+			config->tauCorrection[i][j] = config->tauCorrection[i][j] * (1.0f + deltaTau);
+			
 			config->betaCorrection[i][j] = clampF(0.05f, config->betaCorrection[i][j], 2.0f);
-			config->tauCorrection[i][j]  = clampF(0.1f,  config->tauCorrection[i][j],  2.0f);
+			config->tauCorrection[i][j] = clampF(0.1f, config->tauCorrection[i][j], 2.0f);
+			
 			// Suavização após aprendizado
 			smoothCorrectionTable(config->betaCorrection, engineConfiguration->wwSmoothIntensity);
-			smoothCorrectionTable(config->tauCorrection,  engineConfiguration->wwSmoothIntensity);
+			smoothCorrectionTable(config->tauCorrection, engineConfiguration->wwSmoothIntensity);
+			
 			monitoring = false;
 			// Marcar aprendizado pendente
 			pendingWwSave = true;
 		}
 	}
-	// Removido salvamento imediato e lógica de timer
 }
 
 void WallFuelController::onIgnitionStateChanged(bool ignitionOn) {
@@ -177,23 +199,7 @@ void WallFuelController::onIgnitionStateChanged(bool ignitionOn) {
 }
 
 void WallFuelController::smoothCorrectionTable(float table[WW_RPM_BINS][WW_MAP_BINS], float intensity) {
-	float temp[WW_RPM_BINS][WW_MAP_BINS];
-	for (int i = 0; i < WW_RPM_BINS; i++) {
-		for (int j = 0; j < WW_MAP_BINS; j++) {
-			float sum = table[i][j];
-			int count = 1;
-			// Vizinhos imediatos
-			if (i > 0)   { sum += table[i-1][j]; count++; }
-			if (i < WW_RPM_BINS-1) { sum += table[i+1][j]; count++; }
-			if (j > 0)   { sum += table[i][j-1]; count++; }
-			if (j < WW_MAP_BINS-1) { sum += table[i][j+1]; count++; }
-			float avg = sum / count;
-			temp[i][j] = table[i][j] * (1.0f - intensity) + avg * intensity;
-		}
-	}
-	for (int i = 0; i < WW_RPM_BINS; i++)
-		for (int j = 0; j < WW_MAP_BINS; j++)
-			table[i][j] = temp[i][j];
+	smoothTable(table, intensity);
 }
 
 float WallFuelController::computeTau() const {
@@ -255,6 +261,7 @@ void WallFuelController::onFastCallback() {
 	m_alpha = alpha;
 	m_beta = beta;
 	m_enable = true;
+	
 	// --- INTEGRAÇÃO DO APRENDIZADO ---
 	// Detectar transiente usando derivada média de TPS/MAP
 	constexpr int N = 50; // janela de 50 amostras (~250ms)
@@ -274,10 +281,23 @@ void WallFuelController::onFastCallback() {
 	float mapDelta = map - mapBuffer[oldestIdx];
 	float tpsDeriv = tpsDelta / (N * callbackPeriod); // %/s
 	float mapDeriv = mapDelta / (N * callbackPeriod); // kPa/s
+	
 	bool isTransient = false;
 	if (bufferFilled) {
-		isTransient = fabsf(tpsDeriv) > tpsThreshold || fabsf(mapDeriv) > mapThreshold;
+		bool conditionsMet = fabsf(tpsDeriv) > tpsThreshold || fabsf(mapDeriv) > mapThreshold;
+		
+		// Só considera transiente se passou tempo suficiente desde o último
+		if (conditionsMet) {
+			efitimeus_t currentTimeUs = getTimeNowUs();
+			efitimeus_t transientTimeoutUs = (efitimeus_t)engineConfiguration->wwTransientTimeoutMs * 1000;
+			
+			if (currentTimeUs - lastTransientTime > transientTimeoutUs) {
+				isTransient = true;
+				lastTransientTime = currentTimeUs;
+			}
+		}
 	}
+	
 	bufIdx = (bufIdx + 1) % N;
 	if (bufIdx == 0) bufferFilled = true;
 	float lambda = Sensor::getOrZero(SensorType::Lambda1);

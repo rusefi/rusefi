@@ -92,18 +92,9 @@ void LongTermFuelTrim::applyRegionalCorrection(float load, float rpm, float corr
 }
 
 void LongTermFuelTrim::smoothHoles() {
-	// Detectar buracos e suavizar
-	float threshold = (float)config->ltftHoleThreshold;
+	// Use the generic smoothTable function with configured intensity
 	float intensity = (float)config->ltftSmoothingIntensity / 100.0f;
-	for (int i = 1; i < 15; i++) {
-		for (int j = 1; j < 15; j++) {
-			float v = ltftTableHelper[i][j];
-			float avg = (ltftTableHelper[i-1][j] + ltftTableHelper[i+1][j] + ltftTableHelper[i][j-1] + ltftTableHelper[i][j+1]) / 4.0f;
-			if (fabsf(v - avg) > threshold) {
-				ltftTableHelper[i][j] = v * (1.0f - intensity) + avg * intensity;
-			}
-		}
-	}
+	smoothTable(ltftTableHelper, intensity);
 }
 
 // Função utilitária para checar se a ignição está ligada

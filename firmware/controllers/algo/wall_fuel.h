@@ -75,7 +75,13 @@ private:
 	float lastProlongedError = 0;
 	bool betaAdjusted[WW_RPM_BINS][WW_MAP_BINS] = {{false}};
 	bool tauAdjusted[WW_RPM_BINS][WW_MAP_BINS] = {{false}};
-	uint32_t lastSaveTime = 0;
+	efitimeus_t lastTransientTime = 0;
 	bool pendingWwSave = false;
+	static float lambdaBuffer[400];  // Buffer máximo aumentado para 400 (4s @ 100Hz)
+	static float rpmBuffer[400];     // Armazenar RPM junto com lambda
+	static float mapBuffer[400];     // Armazenar MAP junto com lambda
+	static int bufferIdx;
+	static int bufferMaxSize;        // Tamanho dinâmico calculado
+	static bool monitoring;
 	void smoothCorrectionTable(float table[WW_RPM_BINS][WW_MAP_BINS], float intensity);
 };

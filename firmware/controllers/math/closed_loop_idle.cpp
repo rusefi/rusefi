@@ -76,20 +76,5 @@ void LongTermIdleTrim::onIgnitionStateChanged(bool ignitionOn) {
 
 // Suavização regional da tabela LTIT
 void LongTermIdleTrim::smoothLtitTable(float intensity) {
-    float temp[16][16];
-    for (int i = 0; i < 16; i++) {
-        for (int j = 0; j < 16; j++) {
-            float sum = ltitTableHelper[i][j];
-            int count = 1;
-            if (i > 0)   { sum += ltitTableHelper[i-1][j]; count++; }
-            if (i < 15)  { sum += ltitTableHelper[i+1][j]; count++; }
-            if (j > 0)   { sum += ltitTableHelper[i][j-1]; count++; }
-            if (j < 15)  { sum += ltitTableHelper[i][j+1]; count++; }
-            float avg = sum / count;
-            temp[i][j] = ltitTableHelper[i][j] * (1.0f - intensity) + avg * intensity;
-        }
-    }
-    for (int i = 0; i < 16; i++)
-        for (int j = 0; j < 16; j++)
-            ltitTableHelper[i][j] = temp[i][j];
+    smoothTable(ltitTableHelper, intensity / 100.0f);
 } 

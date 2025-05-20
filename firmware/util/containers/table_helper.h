@@ -204,3 +204,46 @@ template<typename TValue, int TSize>
 void setRpmTableBin(TValue (&array)[TSize]) {
 	setRpmBin(array, TSize, 800, DEFAULT_RPM_AXIS_HIGH_VALUE);
 }
+
+/**
+ * Smooth a table using a regional averaging approach with configurable intensity
+ * 
+ * @param table The table to be smoothed
+ * @param rows Number of rows in the table
+ * @param cols Number of columns in the table
+ * @param intensity Smoothing intensity (0.0 - 1.0) - higher values produce more smoothing
+ */
+template <typename T, int ROWS, int COLS>
+void smoothTable(T (&table)[ROWS][COLS], float intensity) {
+    if (intensity <= 0.0f || intensity > 1.0f) {
+        return; // Invalid intensity, no smoothing
+    }
+
+    T temp[ROWS][COLS];
+    
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            float sum = table[i][j];
+            int count = 1;
+            
+            // Add values from adjacent cells if they exist
+            if (i > 0)      { sum += table[i-1][j]; count++; }
+            if (i < ROWS-1) { sum += table[i+1][j]; count++; }
+            if (j > 0)      { sum += table[i][j-1]; count++; }
+            if (j < COLS-1) { sum += table[i][j+1]; count++; }
+            
+            // Calculate the average of the cell and its neighbors
+            float avg = sum / count;
+            
+            // Apply weighted average based on intensity
+            temp[i][j] = table[i][j] * (1.0f - intensity) + avg * intensity;
+        }
+    }
+    
+    // Copy back the smoothed values
+    for (int i = 0; i < ROWS; i++) {
+        for (int j = 0; j < COLS; j++) {
+            table[i][j] = temp[i][j];
+        }
+    }
+}
