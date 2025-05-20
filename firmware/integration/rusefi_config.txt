@@ -2335,6 +2335,7 @@ end_struct
 #define smLaunchControl_NAME "Launch Control"
 #define pedalToTpsTbl_NAME "ETB pedal target"
 #define pedalSensor_NAME "Accelerator pedal"
+#define egoSettings_NAME "CAN O2 sensors"
 #define ts_show_charge_estimation true
 #define ts_show_ve_blend true
 #define ts_show_InjectorFlowLinearizationTable false
@@ -2347,6 +2348,7 @@ end_struct
 #define ts_show_fuel_threshold true
 #define ts_show_jam_detection true
 #define ts_show_acr_pins true
+#define ts_show_can_wbo_type true
 #define VE_MENU_NAME "VE"
 #define VE_TABLE_NAME "VE Table"
 #define VE_MENU_MAP_NAME "VE 3D view"
