@@ -199,7 +199,8 @@ void WallFuelController::onIgnitionStateChanged(bool ignitionOn) {
 }
 
 void WallFuelController::smoothCorrectionTable(float table[WW_RPM_BINS][WW_MAP_BINS], float intensity) {
-	smoothTable<float, WW_RPM_BINS, WW_MAP_BINS>(table, intensity);
+	//smoothTable<float, WW_RPM_BINS, WW_MAP_BINS>(table, intensity);
+	return;
 }
 
 float WallFuelController::computeTau() const {
@@ -269,16 +270,16 @@ void WallFuelController::onFastCallback() {
 	constexpr float tpsThreshold = 8.0f; // %/s (ajustável)
 	constexpr float mapThreshold = 40.0f; // kPa/s (ajustável)
 	static float tpsBuffer[N] = {0};
-	static float mapBuffer[N] = {0};
+	static float localMapBuffer[N] = {0};
 	static int bufIdx = 0;
 	static bool bufferFilled = false;
 	float tps = Sensor::getOrZero(SensorType::Tps1);
 	float map = Sensor::getOrZero(SensorType::Map);
 	tpsBuffer[bufIdx] = tps;
-	mapBuffer[bufIdx] = map;
+	localMapBuffer[bufIdx] = map;
 	int oldestIdx = (bufIdx + 1) % N;
 	float tpsDelta = tps - tpsBuffer[oldestIdx];
-	float mapDelta = map - mapBuffer[oldestIdx];
+	float mapDelta = map - localMapBuffer[oldestIdx];
 	float tpsDeriv = tpsDelta / (N * callbackPeriod); // %/s
 	float mapDeriv = mapDelta / (N * callbackPeriod); // kPa/s
 	
