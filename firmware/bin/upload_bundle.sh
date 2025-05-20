@@ -40,7 +40,7 @@ if [ -n "${USER}" -a -n "$PASS" -a -n "${HOST}" ]; then
  UPDATE_BUNDLE_FILE="${WHITE_LABEL}_bundle_${BUNDLE_NAME}_autoupdate.zip"
 
  # Sometimes generated bundles have scanty manifests in .jar files.
- # We don't know why it happens, but we definitely do not want to upload bundles with broken manifests.
+ # We don't know why it happens, but we definitely do not want to upload bundles with broken manifests. See #7925
  CHECK_MANIFESTS_IN_BUNDLE_SCRIPT=$(realpath $(dirname "$0"))/check_manifests_in_bundle.sh
  $CHECK_MANIFESTS_IN_BUNDLE_SCRIPT $FULL_BUNDLE_FILE
  $CHECK_MANIFESTS_IN_BUNDLE_SCRIPT $UPDATE_BUNDLE_FILE
