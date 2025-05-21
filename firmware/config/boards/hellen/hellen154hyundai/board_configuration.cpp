@@ -72,6 +72,7 @@ void setBoardConfigOverrides() {
 	// exhaust input same on both revisions
 	engineConfiguration->camInputs[1] = Gpio::H144_ORIGINAL_MCU_IN_D_AUX4;
 
+#ifndef EFI_BOOTLOADER
     int16_t hellenBoardId = engine->engineState.hellenBoardId;
 
     if (hellenBoardId == -1) {
@@ -124,6 +125,7 @@ void setBoardConfigOverrides() {
 	   	// Disable pin
 	   	engineConfiguration->etbIo[1].disablePin = Gpio::H144_OUT_IO13;
     }
+#endif // EFI_BOOTLOADER
 }
 
 /**
