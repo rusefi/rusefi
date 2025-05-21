@@ -19,6 +19,7 @@
 [submodule "firmware/controllers/can/wideband_firmware"]
 	path = firmware/controllers/can/wideband_firmware
 	url = https://github.com/rusefi/wideband
+	branch = prod-2025-05
 [submodule "firmware/ext/uzlib"]
 	path = firmware/ext/uzlib
 	url = https://github.com/pfalcon/uzlib
