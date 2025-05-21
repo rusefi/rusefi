@@ -561,7 +561,7 @@
         <constant name="brakePedalPin">"NONE"</constant>
         <constant name="brakePedalPinMode">"PULLUP"</constant>
         <constant digits="0" name="byFirmwareVersion" units="index">0.0</constant>
-        <constant digits="0" name="calibrationBirthday" units="">2.025052E7</constant>
+        <constant digits="0" name="calibrationBirthday" units="">2.0250521E7</constant>
         <constant digits="0" name="camDecoder2jzPosition" units="angle">95.0</constant>
         <constant digits="0" name="camDecoder2jzPrecision" units="">40.0</constant>
         <constant name="camInputs1">"NONE"</constant>
@@ -3455,7 +3455,6 @@ end</constant>
         <constant name="stftIgnoreErrorMagnitude">"false"</constant>
         <constant digits="1" name="stoichRatioPrimary" units=":1">14.7</constant>
         <constant digits="1" name="stoichRatioSecondary" units=":1">9.0</constant>
-        <constant name="suppressWboWorkaround7048">"false"</constant>
         <constant name="tachOutputPin">"NONE"</constant>
         <constant name="tachOutputPinMode">"default"</constant>
         <constant digits="2" name="tachPulseDuractionMs" units="">0.5</constant>
@@ -4491,6 +4490,7 @@ end</constant>
          0.0
 </constant>
         <constant name="unusedOverrideCrankingIacSetting">"false"</constant>
+        <constant name="unusedSuppressWboWorkaround7048">"false"</constant>
         <constant digits="0" name="unusedWastgate0" units="">0.0</constant>
         <constant digits="0" name="unusedWastgate1" units="">0.0</constant>
         <constant name="useAdvanceCorrectionsForCranking">"false"</constant>
@@ -4982,7 +4982,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250519" nPages="1" signature="rusEFI master.2025.05.20.f407-discovery.3563786668" version="5.0"/>
+    <versionInfo firmwareInfo="20250519" nPages="1" signature="rusEFI master.2025.05.21.f407-discovery.3280552598" version="5.0"/>
     <bibliography author="rusEFI 20250519" writeDate="date"/>
     <settings/>
     <userComments/>
