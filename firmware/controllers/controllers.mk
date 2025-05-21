@@ -51,6 +51,7 @@ CONTROLLERS_SRC_CPP = \
 	$(CONTROLLERS_DIR)/can/can_dash.cpp \
 	$(CONTROLLERS_DIR)/can/can_dash_ms.cpp \
 	$(CONTROLLERS_DIR)/can/can_dash_nissan.cpp \
+	$(CONTROLLERS_DIR)/can/can_dash_haltech.cpp \
 	$(CONTROLLERS_DIR)/can/can_dash_honda.cpp \
 	$(CONTROLLERS_DIR)/can/can_vss.cpp \
  	$(CONTROLLERS_DIR)/engine_controller.cpp \
