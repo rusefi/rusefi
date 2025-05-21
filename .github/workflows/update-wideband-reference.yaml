@@ -1,6 +1,6 @@
-# todo: reduce copy-paste with update-wideband-reference.yaml
+# todo: reduce copy-paste with update-libfirmware-reference.yaml
 
-name: Update libfirmware Reference
+name: Update wideband Reference
 
 on:
   workflow_dispatch:
@@ -14,7 +14,7 @@ jobs:
 
       - name: Git Checkout Submodules
         run: |
-          git submodule update --init --depth=1 firmware/libfirmware
+          git submodule update --init --depth=1 firmware/controllers/can/wideband_firmware
 
       - name: Dump GitHub context
         env:
@@ -25,14 +25,14 @@ jobs:
         run: |
           git submodule update --remote
 
-      - name: Commit fresh 'firmware/libfirmware' submodule
+      - name: Commit fresh 'firmware/controllers/can/wideband_firmware' submodule
         env:
           ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         run: |
           git config --local user.email "action@github.com"
-          git config --local user.name "GitHub libfirmware update Action"
-          git add firmware/libfirmware
-          OUT=$(git commit -am "GHA says update firmware/libfirmware submodule" 2>&1) || echo "commit failed, finding out why"
+          git config --local user.name "GitHub wideband_firmware update Action"
+          git add firmware/controllers/can/wideband_firmware
+          OUT=$(git commit -am "GHA says update wideband_firmware submodule" 2>&1) || echo "commit failed, finding out why"
           if echo "$OUT" | grep 'nothing to commit'; then
             echo "submodule: looks like nothing to commit"
             echo "NOCOMMIT=true" >> $GITHUB_ENV
