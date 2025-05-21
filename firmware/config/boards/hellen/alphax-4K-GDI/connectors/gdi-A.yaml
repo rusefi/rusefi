@@ -231,107 +231,107 @@ info:
   order: 0
   board_url: https://rusefi.com/s/4K-GDI
   image:
-    file: 34pins-4k-A.jpg
+    file: 34pins-3k-A.jpg
   pins:
     - pin: 1A
-      x: 75
-      y: 90
-    - pin: 2A
       x: 95
       y: 90
-    - pin: 3A
+    - pin: 2A
       x: 120
       y: 90
+    - pin: 3A
+      x: 155
+      y: 90
     - pin: 4A
-      x: 145
+      x: 180
       y: 90
     - pin: 5A
-      x: 165
+      x: 205
       y: 90
     - pin: 6A
-      x: 190
+      x: 230
       y: 90
     - pin: 7A
-      x: 215
+      x: 255
       y: 90
     - pin: 8A
-      x: 240
+      x: 280
       y: 90
     - pin: 9A
-      x: 265
+      x: 305
       y: 90
     - pin: 10A
-      x: 85
+      x: 110
       y: 120
     - pin: 11A
-      x: 105
+      x: 135
       y: 120
     - pin: 12A
-      x: 130
+      x: 160
       y: 120
     - pin: 13A
-      x: 155
+      x: 185
       y: 120
     - pin: 14A
-      x: 180
+      x: 210
       y: 120
     - pin: 15A
-      x: 205
+      x: 235
       y: 120
     - pin: 16A
-      x: 225
+      x: 260
       y: 120
     - pin: 17A
-      x: 245
+      x: 285
       y: 120
     - pin: 18A
-      x: 85
-      y: 150
-    - pin: 19A
       x: 110
       y: 150
+    - pin: 19A
+      x: 135
+      y: 150
     - pin: 20A
-      x: 130
+      x: 160
       y: 150
     - pin: 21A
-      x: 155
+      x: 185
       y: 150
     - pin: 22A
-      x: 180
+      x: 210
       y: 150
     - pin: 23A
-      x: 205
+      x: 235
       y: 150
     - pin: 24A
-      x: 225
+      x: 260
       y: 150
     - pin: 25A
-      x: 245
+      x: 285
       y: 150
     - pin: 26A
-      x: 74
+      x: 95
       y: 180
     - pin: 27A
-      x: 98
+      x: 120
       y: 180
     - pin: 28A
-      x: 122
+      x: 155
       y: 180
     - pin: 29A
-      x: 146
+      x: 180
       y: 180
     - pin: 30A
-      x: 170
+      x: 205
       y: 180
     - pin: 31A
-      x: 195
+      x: 230
       y: 180
     - pin: 32A
-      x: 220
+      x: 255
       y: 180
     - pin: 33A
-      x: 245
+      x: 280
       y: 180
     - pin: 34A
-      x: 265
+      x: 305
       y: 180
