@@ -374,7 +374,12 @@ public class BinaryProtocol {
             ConfigurationImageFile.saveToFile(imageWithMeta, binaryFileName);
         }
         if (xmlFileName != null) {
-            final Msq tune = MsqFactory.valueOf(imageWithMeta.getConfigurationImage(), ini);
+            ConfigurationImage image = imageWithMeta.getConfigurationImage();
+            if (image == null) {
+                log.warn("No image for saveConfigurationImageToFiles");
+                return;
+            }
+            final Msq tune = MsqFactory.valueOf(image, ini);
             tune.writeXmlFile(xmlFileName);
         }
     }

@@ -38,6 +38,7 @@ public class Msq {
 
     @NotNull
     public static Msq valueOf(ConfigurationImage image, int totalConfigSize, String tsSignature, IniFileModel ini) {
+        Objects.requireNonNull(image, "image valueOf");
         Msq tune = create(totalConfigSize, tsSignature);
         for (String key : ini.getAllIniFields().keySet())
             tune.loadConstant(ini, key, image);
