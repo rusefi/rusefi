@@ -2015,7 +2015,7 @@ struct engine_configuration_s {
 	bool enableCanVss : 1 {};
 	/**
 	offset 892 bit 8 */
-	bool suppressWboWorkaround7048 : 1 {};
+	bool unusedSuppressWboWorkaround7048 : 1 {};
 	/**
 	 * If enabled, adjust at a constant rate instead of a rate proportional to the current lambda error. This mode may be easier to tune, and more tolerant of sensor noise.
 	offset 892 bit 9 */
