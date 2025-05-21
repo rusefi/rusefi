@@ -27,10 +27,25 @@
 
 static thread_t* waitingBootloaderThread = nullptr;
 
-void handleWidebandBootloaderAck() {
-	auto t = waitingBootloaderThread;
-	if (t) {
-		chEvtSignal(t, EVT_BOOTLOADER_ACK);
+void handleWidebandCan(const CANRxFrame& frame) {
+	// Bootloader acks with address 0x727573 aka ascii "rus"
+	if (CAN_EID(frame) != WB_ACK) {
+		return;
+	}
+
+	// Ack reply
+	if (frame.DLC == 0)
+	{
+		auto t = waitingBootloaderThread;
+		if (t) {
+			chEvtSignal(t, EVT_BOOTLOADER_ACK);
+		}
+	}
+
+	// Ping reply
+	if (frame.DLC == 8)
+	{
+		// TODO:
 	}
 }
 

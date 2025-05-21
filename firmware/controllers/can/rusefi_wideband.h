@@ -1,9 +1,10 @@
 // file rusefi_wideband.h
 
 #pragma once
+#include "can.h"
 
 // Indicate that an ack response was received from the wideband bootloader
-void handleWidebandBootloaderAck();
+void handleWidebandCan(const CANRxFrame &frame);
 // Send info to the wideband controller like battery voltage, heater enable bit, etc.
 void sendWidebandInfo();
 

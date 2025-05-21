@@ -21,8 +21,6 @@
 #include "can_sensor.h"
 #include "can_vss.h"
 #include "rusefi_wideband.h"
-#include "wideband_firmware/for_rusefi/wideband_can.h"
-
 
 /**
  * this build-in CAN sniffer is very basic but that's our CAN sniffer
@@ -226,10 +224,7 @@ void processCanRxMessage(const size_t busIndex, const CANRxFrame &frame, efitick
 #endif // EFI_ENGINE_CONTROL
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
-	// Bootloader acks with address 0x727573 aka ascii "rus"
-	if (CAN_EID(frame) == WB_ACK) {
-		handleWidebandBootloaderAck();
-	}
+	handleWidebandCan(frame);
 #endif
 #if EFI_USE_OPENBLT
 #include "openblt/efi_blt_ids.h"
