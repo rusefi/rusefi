@@ -1,4 +1,8 @@
 // file can_dash_haltech.cpp
+//
+// Haltech CAN bus operates at 1 MBit/s and uses 11-bit IDs
+// https://support.haltech.com/portal/en/kb/articles/haltech-can-ecu-broadcast-protocol
+// https://support.haltech.com/portal/en/kb/articles/haltech-can-protocol-specification
 
 #include "pch.h"
 
@@ -7,8 +11,9 @@
 #include "can_msg_tx.h"
 #include "fuel_math.h"
 
-// https://support.haltech.com/portal/en/kb/articles/haltech-can-ecu-broadcast-protocol
 void canDashboardHaltech(CanCycle cycle) {
+  criticalAssertVoid(engineConfiguration->canBaudRate == B1MBPS, "Haltech requires 1Mbps baud rate");
+
 	if (cycle.isInterval(CI::_20ms)) {
 		/* 0x360 - 50Hz rate */
 		{
