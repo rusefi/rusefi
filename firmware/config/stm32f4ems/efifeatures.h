@@ -343,7 +343,7 @@
 
 #if defined(EFI_HAS_EXT_SDRAM)
 	#ifndef ENABLE_PERF_TRACE
-	#define ENABLE_PERF_TRACE TRUE
+	  #define ENABLE_PERF_TRACE TRUE
 	#endif // ENABLE_PERF_TRACE
 	#define LUA_USER_HEAP (1 * 1024 * 1024)
 #elif defined(EFI_IS_F42x)
@@ -358,15 +358,17 @@
 	#endif
 	#define ENABLE_PERF_TRACE TRUE
 
-	#define LUA_USER_HEAP 25000
+	#ifndef LUA_USER_HEAP
+	  #define LUA_USER_HEAP 25000
+	#endif
 #else
 	#ifndef ENABLE_PERF_TRACE
-	// small memory F40x can't fit perf trace
-	#define ENABLE_PERF_TRACE FALSE
+	  // small memory F40x can't fit perf trace
+	  #define ENABLE_PERF_TRACE FALSE
 	#endif // ENABLE_PERF_TRACE
 
 	#ifndef LUA_USER_HEAP
-	#define LUA_USER_HEAP 18000
+	  #define LUA_USER_HEAP 18000
 	#endif
 #endif
 
