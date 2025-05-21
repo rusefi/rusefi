@@ -18,7 +18,6 @@
 #include "advance_map.h"
 #include "init.h"
 
-#include "rusefi_wideband.h"
 #include "aux_valves.h"
 #include "perf_trace.h"
 #include "backup_ram.h"
@@ -145,16 +144,6 @@ PUBLIC_API_WEAK void boardPeriodicFastCallback() { }
 
 void Engine::periodicSlowCallback() {
 	ScopePerf perf(PE::EnginePeriodicSlowCallback);
-
-#if EFI_CAN_SUPPORT
-  if (engineConfiguration->suppressWboWorkaround7048) {
-    static Timer canBusWboSetIndex;
-    if (canBusWboSetIndex.getElapsedSeconds() > 1) {
-      canBusWboSetIndex.reset();
-      setWidebandOffset(3);
-    }
-  }
-#endif // EFI_CAN_SUPPORT
 
 #if EFI_SHAFT_POSITION_INPUT
 	// Re-read config in case it's changed
