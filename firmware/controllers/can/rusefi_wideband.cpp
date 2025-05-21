@@ -78,6 +78,8 @@ void updateWidebandFirmware() {
 
 	{
 		// Erase flash - opcode 1, magic value 0x5A5A
+		// TODO: replace magic numer with WB_BL_ERASE when define is fixed in wideband_can.h, currently mess with shift and addition precedence
+		//CanTxMessage m(CanCategory::WBO_SERVICE, WB_BL_ERASE, 0, bus, true);
 		CanTxMessage m(CanCategory::WBO_SERVICE, 0xEF1'5A5A, 0, bus, true);
 	}
 
@@ -93,7 +95,7 @@ void updateWidebandFirmware() {
 	// Send flash data 8 bytes at a time
 	for (size_t i = 0; i < totalSize; i += 8) {
 		{
-			CanTxMessage m(CanCategory::WBO_SERVICE, 0xEF2'0000 + i, 8, bus, true);
+			CanTxMessage m(CanCategory::WBO_SERVICE, WB_BL_DATA_BASE | i, 8, bus, true);
 			memcpy(&m[0], build_wideband_image_bin + i, 8);
 		}
 
@@ -107,7 +109,7 @@ void updateWidebandFirmware() {
 
 	{
 		// Reboot to firmware!
-		CanTxMessage m(CanCategory::WBO_SERVICE, 0xEF3'0000, 0, bus, true);
+		CanTxMessage m(CanCategory::WBO_SERVICE, WB_BL_REBOOT, 0, bus, true);
 	}
 
 	waitAck();
