@@ -49,8 +49,8 @@ void handleWidebandCan(const CANRxFrame& frame) {
 	}
 }
 
-bool waitAck() {
-	return chEvtWaitAnyTimeout(EVT_BOOTLOADER_ACK, TIME_MS2I(1000)) != 0;
+bool waitAck(int timeout = 1000) {
+	return chEvtWaitAnyTimeout(EVT_BOOTLOADER_ACK, TIME_MS2I(timeout)) != 0;
 }
 
 static size_t getWidebandBus() {
