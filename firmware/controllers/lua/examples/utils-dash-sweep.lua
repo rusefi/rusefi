@@ -2,9 +2,8 @@ dashSweepCounter = 1
 
 timeout = 3000
 
---rpmSensor = Sensor.new("rpm")
---rpmSensor : setTimeout(timeout)
-
+rpmSensor = Sensor.new("rpm")
+rpmSensor : setTimeout(timeout)
 
 ppsSensor = Sensor.new("AcceleratorPedal")
 ppsSensor : setTimeout(timeout)
@@ -38,7 +37,7 @@ function onTickDashSweep()
   --print()
 
   gearSensor: set( dashSweepCounter / 20)
---  rpmSensor:set(counter * 40)
+  rpmSensor:set(dashSweepCounter * 80)
 
   if dashSweepCounter > 99 then
       dashSweepCounter = 0
