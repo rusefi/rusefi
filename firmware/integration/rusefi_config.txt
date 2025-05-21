@@ -2196,6 +2196,13 @@ uint8_t[WWAE_RPM_SIZE x WWAE_TABLE_SIZE] autoscale wwTauMapRpmValues;;"", 0.01, 
 uint8_t[WWAE_RPM_SIZE x WWAE_TABLE_SIZE] autoscale wwBetaMapRpmValues;;"", 0.01, 0, 0, 2.5, 2
 float[WWAE_RPM_SIZE x WWAE_TABLE_SIZE] betaCorrection;;"", 1, 0, 0, 2.5, 2
 float[WWAE_RPM_SIZE x WWAE_TABLE_SIZE] tauCorrection;;"", 1, 0, 0, 2.5, 2
+uint8_t autoscale wwBetaAccel[WWAE_TABLE_SIZE][WWAE_RPM_SIZE];"Wall Wetting Beta - Acceleration Correction", 0.01, 0, 0.00, 2.0, 2
+uint8_t autoscale wwBetaDecel[WWAE_TABLE_SIZE][WWAE_RPM_SIZE];"Wall Wetting Beta - Deceleration Correction", 0.01, 0, 0.00, 2.0, 2
+uint8_t autoscale wwTauAccel[WWAE_TABLE_SIZE][WWAE_RPM_SIZE];"Wall Wetting Tau - Acceleration Correction", 0.01, 0, 0.00, 2.0, 2
+uint8_t autoscale wwTauDecel[WWAE_TABLE_SIZE][WWAE_RPM_SIZE];"Wall Wetting Tau - Deceleration Correction", 0.01, 0, 0.00, 2.0, 2
+
+uint16_t wwBufferSize;;"Wall Wetting Buffer Size", 1, 0, 100, 1000, 0
+bit wwDirectionalCorrections;"Use directional corrections for wall wetting"
 
 uint8_t[HPFP_LOBE_PROFILE_SIZE] autoscale hpfpLobeProfileQuantityBins;;"%", 0.5, 0, 0, 100, 1
 uint8_t[HPFP_LOBE_PROFILE_SIZE] autoscale hpfpLobeProfileAngle;;"deg", 0.5, 0, 0, 125, 1
@@ -2697,4 +2704,3 @@ end_struct
 
 #define CAN_ECU_SERIAL_RX_ID 0x710
 #define CAN_ECU_SERIAL_TX_ID 0x720
-

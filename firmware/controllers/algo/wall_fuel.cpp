@@ -11,12 +11,14 @@
 #include <rusefi/interpolation.h>
 
 // Inicialização das variáveis estáticas
-float WallFuelController::lambdaBuffer[400] = {0};
-float WallFuelController::rpmBuffer[400] = {0};
-float WallFuelController::mapBuffer[400] = {0};
+const int WallFuelController::WW_BUFFER_MAX;
+float WallFuelController::lambdaBuffer[WW_BUFFER_MAX] = {0};
+float WallFuelController::rpmBuffer[WW_BUFFER_MAX] = {0};
+float WallFuelController::mapBuffer[WW_BUFFER_MAX] = {0};
 int WallFuelController::bufferIdx = 0;
 int WallFuelController::bufferMaxSize = 200;
 bool WallFuelController::monitoring = false;
+TransientDirection WallFuelController::currentTransientDirection = TransientDirection::NONE;
 
 void WallFuel::resetWF() {
 	wallFuel = 0;
@@ -84,22 +86,53 @@ float WallFuel::getWallFuel() const {
 	return wallFuel;
 }
 
-void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, float targetLambda, bool isTransient, float clt) {
-	if (clt < engineConfiguration->wwMinClt) return;
+// Implementação da função auxiliar para calcular média ponderada
+float WallFuelController::calculateWeightedAverage(int startIdx, int endIdx, float targetLambda) {
+    float soma = 0;
+    float somaPesos = 0;
+    
+    for (int k = startIdx; k < endIdx; k++) {
+        // Algoritmo de peso - pode ser ajustado conforme necessário
+        float desvio = fabsf(lambdaBuffer[k] - targetLambda);
+        float peso = 1.0f / (1.0f + desvio); // Valores mais próximos do target têm peso maior
+        
+        soma += lambdaBuffer[k] * peso;
+        somaPesos += peso;
+    }
+    
+    // Verifica se temos amostras suficientes
+    if (somaPesos > 0) {
+        return soma / somaPesos;
+    } else {
+        return targetLambda; // Valor padrão se não houver amostras
+    }
+}
+
+void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, float targetLambda, 
+                                        bool isTransient, TransientDirection direction, float clt) {
+	if (clt < engineConfiguration->wwMinClt || !engineConfiguration->wwDirectionalCorrections) return;
 
 	auto rpmBin = priv::getBin(rpm, config->wwRpmBins);
 	auto mapBin = priv::getBin(map, config->wwMapBins);
 	int j = rpmBin.Idx;
 	int i = mapBin.Idx;
 	
+	lastTransientDirection = direction;
+	
 	if (isTransient) {
 		monitoring = true;
 		bufferIdx = 0;
 		
-		// Calcular número de amostras baseado no tau atual
-		float tau = computeTau();
+		// Calcular número de amostras baseado no tau atual e RPM
+		float tau = computeTauWithDirection(direction);
 		int calculatedSamples = (int)(engineConfiguration->wwSampleMultiplier * tau * rpm / 60.0f);
-		bufferMaxSize = minI(engineConfiguration->wwMaxSampleSize, maxI(engineConfiguration->wwMinSampleSize, calculatedSamples));
+		
+		// Garantir tamanho mínimo e máximo do buffer
+		int configuredMaxSize = engineConfiguration->wwBufferSize;
+		if (configuredMaxSize <= 0) configuredMaxSize = 400; // Valor padrão
+		
+		bufferMaxSize = minI(configuredMaxSize, 
+		                     maxI(engineConfiguration->wwMinSampleSize, calculatedSamples));
 	}
 	
 	if (monitoring) {
@@ -110,109 +143,108 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 			bufferIdx++;
 		} else {
 			// 1. Dividir as amostras em três fases
-			int faseInicial = bufferMaxSize / 5;            // Primeiros 20% das amostras
-			int faseFinal = bufferMaxSize - faseInicial;    // Últimos 20% das amostras
-
-			// 2. Encontrar as 10 amostras mais extremas (mais ricas/pobres) para fase inicial
-			float extremeInitialSamples[10];
-			int numExtremeSamples = minI(10, faseInicial); // Garantir que não ultrapassamos o tamanho da fase
+			int faseInicial = bufferMaxSize / 5;      // Primeiros 20% das amostras
+			int faseFinal = bufferMaxSize - faseInicial; // Últimos 20% das amostras
 			
-			// Copiar as primeiras amostras para o array de extremos
-			for (int k = 0; k < numExtremeSamples; k++) {
-				extremeInitialSamples[k] = lambdaBuffer[k];
-			}
-			
-			// Ordenar o array (pelo desvio do target, não pelo valor absoluto)
-			for (int k = 0; k < numExtremeSamples; k++) {
-				for (int l = k + 1; l < numExtremeSamples; l++) {
-					float dev1 = fabsf(extremeInitialSamples[k] - targetLambda);
-					float dev2 = fabsf(extremeInitialSamples[l] - targetLambda);
-					if (dev2 > dev1) {
-						// Trocar os valores
-						float temp = extremeInitialSamples[k];
-						extremeInitialSamples[k] = extremeInitialSamples[l];
-						extremeInitialSamples[l] = temp;
-					}
-				}
-			}
-			
-			// Calcular a média das amostras extremas para fase inicial
-			float mediaInicial = 0;
-			for (int k = 0; k < numExtremeSamples; k++) {
-				mediaInicial += extremeInitialSamples[k];
-			}
-			mediaInicial /= numExtremeSamples;
+			// 2. Calcular médias ponderadas para cada fase
+			// Fase inicial - ponderada para valores mais extremos
+			float mediaInicial = calculateWeightedAverage(0, faseInicial, targetLambda);
 			
 			// Fase transiente (meio do evento) - cálculo ponderado
-			float mediaTransiente = 0;
-			float somaPesos = 0;
-			for (int k = faseInicial; k < faseFinal; k++) {
-				// Peso crescente durante a fase transiente
-				float progresso = (float)(k - faseInicial) / (faseFinal - faseInicial);
-				float peso = 0.5f + 0.5f * progresso; // Peso aumenta de 0.5 a 1.0
-				mediaTransiente += lambdaBuffer[k] * peso;
-				somaPesos += peso;
-			}
-			// Verificar se temos amostras suficientes nesta fase
-			if (somaPesos > 0) {
-				mediaTransiente /= somaPesos;
-			} else {
-				mediaTransiente = targetLambda; // Valor padrão se não houver amostras
-			}
-
+			float mediaTransiente = calculateWeightedAverage(faseInicial, faseFinal, targetLambda);
+			
 			// Fase de estabilização (final) - cálculo ponderado
-			float mediaFinal = 0;
-			somaPesos = 0;
-			for (int k = faseFinal; k < bufferMaxSize; k++) {
-				float peso = 2.0f; // Maior peso para amostras estabilizadas
-				mediaFinal += lambdaBuffer[k] * peso;
-				somaPesos += peso;
-			}
-			// Verificar se temos amostras suficientes nesta fase
-			if (somaPesos > 0) {
-				mediaFinal /= somaPesos;
-			} else {
-				mediaFinal = targetLambda; // Valor padrão se não houver amostras
-			}
-
+			float mediaFinal = calculateWeightedAverage(faseFinal, bufferMaxSize, targetLambda);
+			
 			// 3. Calcular erros por fase
 			float erroInicial = targetLambda - mediaInicial;
 			float erroTransiente = targetLambda - mediaTransiente;
 			float erroFinal = targetLambda - mediaFinal;
-
+			
 			// Salvar para diagnóstico
 			lastImmediateError = erroInicial;
 			lastProlongedError = erroFinal;
-
+			
 			// 4. Aplicar correções com pesos específicos para cada fase
 			float learnRate = engineConfiguration->wwLearningRate;
 			float maxStep = 0.05f;
 			
-			float deltaBeta = learnRate * (
-				engineConfiguration->wwBetaInitWeight * erroInicial +     
-				engineConfiguration->wwBetaTransWeight * erroTransiente +  
-				engineConfiguration->wwBetaFinalWeight * erroFinal         
-			);
-
-			float deltaTau = -learnRate * (
-				engineConfiguration->wwTauInitWeight * erroInicial +     
-				engineConfiguration->wwTauTransWeight * erroTransiente +  
-				engineConfiguration->wwTauFinalWeight * erroFinal         
-			);
-
-			// Aplicar limites e atualizar tabelas de correção
-			deltaBeta = clampF(-maxStep, deltaBeta, maxStep);
-			deltaTau = clampF(-maxStep, deltaTau, maxStep);
+			// Cálculo da correção beta baseado na direção do transiente
+			float deltaBeta;
+			float deltaTau;
 			
-			config->betaCorrection[i][j] = config->betaCorrection[i][j] * (1.0f + deltaBeta);
-			config->tauCorrection[i][j] = config->tauCorrection[i][j] * (1.0f + deltaTau);
-			
-			config->betaCorrection[i][j] = clampF(0.05f, config->betaCorrection[i][j], 2.0f);
-			config->tauCorrection[i][j] = clampF(0.1f, config->tauCorrection[i][j], 2.0f);
-			
-			// Suavização após aprendizado
-			smoothCorrectionTable(config->betaCorrection, i, j, engineConfiguration->wwSmoothIntensity);
-			smoothCorrectionTable(config->tauCorrection, i, j, engineConfiguration->wwSmoothIntensity);
+			if (direction == TransientDirection::POSITIVE) {
+				// Para aceleração
+				deltaBeta = learnRate * (
+					engineConfiguration->wwBetaInitWeight * erroInicial +
+					engineConfiguration->wwBetaTransWeight * erroTransiente +
+					engineConfiguration->wwBetaFinalWeight * erroFinal
+				);
+				
+				deltaTau = -learnRate * (
+					engineConfiguration->wwTauInitWeight * erroInicial +
+					engineConfiguration->wwTauTransWeight * erroTransiente +
+					engineConfiguration->wwTauFinalWeight * erroFinal
+				);
+				
+				// Aplicar limites e atualizar tabelas de correção para aceleração
+				deltaBeta = clampF(-maxStep, deltaBeta, maxStep);
+				deltaTau = clampF(-maxStep, deltaTau, maxStep);
+				
+				// Converter para a escala autoscale (0-255)
+				float currentBetaValue = config->wwBetaAccel[i][j] * 0.01f;
+				float currentTauValue = config->wwTauAccel[i][j] * 0.01f;
+				
+				float newBetaValue = currentBetaValue * (1.0f + deltaBeta);
+				float newTauValue = currentTauValue * (1.0f + deltaTau);
+				
+				newBetaValue = clampF(0.05f, newBetaValue, 2.0f);
+				newTauValue = clampF(0.1f, newTauValue, 2.0f);
+				
+				// Converter de volta para valor inteiro para armazenamento
+				config->wwBetaAccel[i][j] = (uint8_t)(newBetaValue * 100.0f);
+				config->wwTauAccel[i][j] = (uint8_t)(newTauValue * 100.0f);
+				
+				// Suavização após aprendizado
+				smoothCorrectionTable(config->wwBetaAccel, i, j, engineConfiguration->wwSmoothIntensity);
+				smoothCorrectionTable(config->wwTauAccel, i, j, engineConfiguration->wwSmoothIntensity);
+			} 
+			else if (direction == TransientDirection::NEGATIVE) {
+				// Para desaceleração - lógica invertida
+				deltaBeta = -learnRate * (  // Nota: sinal invertido para desaceleração
+					engineConfiguration->wwBetaInitWeight * erroInicial +
+					engineConfiguration->wwBetaTransWeight * erroTransiente +
+					engineConfiguration->wwBetaFinalWeight * erroFinal
+				);
+				
+				deltaTau = learnRate * (  // Nota: sinal invertido para desaceleração
+					engineConfiguration->wwTauInitWeight * erroInicial +
+					engineConfiguration->wwTauTransWeight * erroTransiente +
+					engineConfiguration->wwTauFinalWeight * erroFinal
+				);
+				
+				// Aplicar limites e atualizar tabelas de correção para desaceleração
+				deltaBeta = clampF(-maxStep, deltaBeta, maxStep);
+				deltaTau = clampF(-maxStep, deltaTau, maxStep);
+				
+				// Converter para a escala autoscale (0-255)
+				float currentBetaValue = config->wwBetaDecel[i][j] * 0.01f;
+				float currentTauValue = config->wwTauDecel[i][j] * 0.01f;
+				
+				float newBetaValue = currentBetaValue * (1.0f + deltaBeta);
+				float newTauValue = currentTauValue * (1.0f + deltaTau);
+				
+				newBetaValue = clampF(0.05f, newBetaValue, 2.0f);
+				newTauValue = clampF(0.1f, newTauValue, 2.0f);
+				
+				// Converter de volta para valor inteiro para armazenamento
+				config->wwBetaDecel[i][j] = (uint8_t)(newBetaValue * 100.0f);
+				config->wwTauDecel[i][j] = (uint8_t)(newTauValue * 100.0f);
+				
+				// Suavização após aprendizado
+				smoothCorrectionTable(config->wwBetaDecel, i, j, engineConfiguration->wwSmoothIntensity);
+				smoothCorrectionTable(config->wwTauDecel, i, j, engineConfiguration->wwSmoothIntensity);
+			}
 			
 			monitoring = false;
 			// Marcar aprendizado pendente
@@ -245,17 +277,16 @@ void WallFuelController::onIgnitionStateChanged(bool ignitionOn) {
 	}
 }
 
-void WallFuelController::smoothCorrectionTable(float table[WW_RPM_BINS][WW_MAP_BINS], int centerI, int centerJ, float intensity) {
+void WallFuelController::smoothCorrectionTable(uint8_t table[WW_RPM_BINS][WW_MAP_BINS], int centerI, int centerJ, float intensity) {
 	// Retorno antecipado se intensidade for baixa demais
 	if (intensity <= 0.01f) {
 		return;
 	}
 	
-	// Valor da célula central que foi ajustada
-	float centerValue = table[centerI][centerJ];
+	// Valor da célula central que foi ajustada (em formato float, não autoscale)
+	float centerValue = table[centerI][centerJ] * 0.01f;
 	
 	// Fator para determinar o quão forte cada célula vizinha será influenciada
-	// 0.0 = sem influência, 1.0 = influência completa (igual ao valor central)
 	float maxInfluence = clampF(0.0f, intensity, 0.5f);
 	
 	// Para cada célula na vizinhança 3x3 (células adjacentes)
@@ -283,16 +314,17 @@ void WallFuelController::smoothCorrectionTable(float table[WW_RPM_BINS][WW_MAP_B
 			// Quanto mais próximo, maior a influência
 			float influence = maxInfluence * (1.0f - distance);
 			
-			// Calcular novo valor como uma média ponderada
-			float currentValue = table[ni][nj];
+			// Calcular novo valor como uma média ponderada (considerando formato autoscale)
+			float currentValue = table[ni][nj] * 0.01f;
 			float newValue = currentValue * (1.0f - influence) + centerValue * influence;
 			
 			// Atualizar o valor com limites
-			table[ni][nj] = clampF(0.05f, newValue, 2.0f);
+			newValue = clampF(0.05f, newValue, 2.0f);
+			
+			// Converter de volta para formato autoscale
+			table[ni][nj] = (uint8_t)(newValue * 100.0f);
 		}
 	}
-	
-	return;
 }
 
 float WallFuelController::computeTau() const {
@@ -307,8 +339,44 @@ float WallFuelController::computeTau() const {
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	if (Sensor::hasSensor(SensorType::Map)) {
 		tauBase *= interpolate3d(config->wwTauMapRpmValues, config->wwMapBins, map, config->wwRpmBins, rpm);
-		tauCorr = interpolate3d(config->tauCorrection, config->wwMapBins, map, config->wwRpmBins, rpm);
+		
+		// Usamos a média das tabelas de aceleração e desaceleração
+		float tauCorrAccel = interpolate3d(config->wwTauAccel, config->wwMapBins, map, config->wwRpmBins, rpm) * 0.01f;
+		float tauCorrDecel = interpolate3d(config->wwTauDecel, config->wwMapBins, map, config->wwRpmBins, rpm) * 0.01f;
+		tauCorr = (tauCorrAccel + tauCorrDecel) / 2.0f;
 	}
+	float tau = tauBase * tauCorr;
+	return tau;
+}
+
+float WallFuelController::computeTauWithDirection(TransientDirection direction) const {
+	if (!engineConfiguration->complexWallModel) {
+		return engineConfiguration->wwaeTau;
+	}
+	
+	float clt = Sensor::get(SensorType::Clt).value_or(90);
+	float tauClt = interpolate2d(clt, config->wwCltBins, config->wwTauCltValues);
+	float tauBase = tauClt;
+	float tauCorr = 1.0f;
+	float map = Sensor::get(SensorType::Map).value_or(60);
+	float rpm = Sensor::getOrZero(SensorType::Rpm);
+	
+	if (Sensor::hasSensor(SensorType::Map)) {
+		tauBase *= interpolate3d(config->wwTauMapRpmValues, config->wwMapBins, map, config->wwRpmBins, rpm);
+		
+		// Usar a tabela de correção apropriada com base na direção
+		if (direction == TransientDirection::POSITIVE) {
+			tauCorr = interpolate3d(config->wwTauAccel, config->wwMapBins, map, config->wwRpmBins, rpm) * 0.01f;
+		} else if (direction == TransientDirection::NEGATIVE) {
+			tauCorr = interpolate3d(config->wwTauDecel, config->wwMapBins, map, config->wwRpmBins, rpm) * 0.01f;
+		} else {
+			// Se não há transiente claro, usar média das duas tabelas
+			float tauCorrAccel = interpolate3d(config->wwTauAccel, config->wwMapBins, map, config->wwRpmBins, rpm) * 0.01f;
+			float tauCorrDecel = interpolate3d(config->wwTauDecel, config->wwMapBins, map, config->wwRpmBins, rpm) * 0.01f;
+			tauCorr = (tauCorrAccel + tauCorrDecel) / 2.0f;
+		}
+	}
+	
 	float tau = tauBase * tauCorr;
 	return tau;
 }
@@ -325,8 +393,44 @@ float WallFuelController::computeBeta() const {
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	if (Sensor::hasSensor(SensorType::Map)) {
 		betaBase *= interpolate3d(config->wwBetaMapRpmValues, config->wwMapBins, map, config->wwRpmBins, rpm);
-		betaCorr = interpolate3d(config->betaCorrection, config->wwMapBins, map, config->wwRpmBins, rpm);
+		
+		// Usamos a média das tabelas de aceleração e desaceleração
+		float betaCorrAccel = interpolate3d(config->wwBetaAccel, config->wwMapBins, map, config->wwRpmBins, rpm) * 0.01f;
+		float betaCorrDecel = interpolate3d(config->wwBetaDecel, config->wwMapBins, map, config->wwRpmBins, rpm) * 0.01f;
+		betaCorr = (betaCorrAccel + betaCorrDecel) / 2.0f;
 	}
+	float beta = betaBase * betaCorr;
+	return clampF(0, beta, 1);
+}
+
+float WallFuelController::computeBetaWithDirection(TransientDirection direction) const {
+	if (!engineConfiguration->complexWallModel) {
+		return engineConfiguration->wwaeBeta;
+	}
+	
+	float clt = Sensor::get(SensorType::Clt).value_or(90);
+	float betaClt = interpolate2d(clt, config->wwCltBins, config->wwBetaCltValues);
+	float betaBase = betaClt;
+	float betaCorr = 1.0f;
+	float map = Sensor::get(SensorType::Map).value_or(60);
+	float rpm = Sensor::getOrZero(SensorType::Rpm);
+	
+	if (Sensor::hasSensor(SensorType::Map)) {
+		betaBase *= interpolate3d(config->wwBetaMapRpmValues, config->wwMapBins, map, config->wwRpmBins, rpm);
+		
+		// Usar a tabela de correção apropriada com base na direção
+		if (direction == TransientDirection::POSITIVE) {
+			betaCorr = interpolate3d(config->wwBetaAccel, config->wwMapBins, map, config->wwRpmBins, rpm) * 0.01f;
+		} else if (direction == TransientDirection::NEGATIVE) {
+			betaCorr = interpolate3d(config->wwBetaDecel, config->wwMapBins, map, config->wwRpmBins, rpm) * 0.01f;
+		} else {
+			// Se não há transiente claro, usar média das duas tabelas
+			float betaCorrAccel = interpolate3d(config->wwBetaAccel, config->wwMapBins, map, config->wwRpmBins, rpm) * 0.01f;
+			float betaCorrDecel = interpolate3d(config->wwBetaDecel, config->wwMapBins, map, config->wwRpmBins, rpm) * 0.01f;
+			betaCorr = (betaCorrAccel + betaCorrDecel) / 2.0f;
+		}
+	}
+	
 	float beta = betaBase * betaCorr;
 	return clampF(0, beta, 1);
 }
@@ -336,26 +440,16 @@ void WallFuelController::onFastCallback() {
 		m_enable = false;
 		return;
 	}
-	float tau = computeTau();
-	float beta = computeBeta();
-	if (tau < 0.01f || beta < 0.01f) {
-		m_enable = false;
-		return;
-	}
-	auto rpm = Sensor::getOrZero(SensorType::Rpm);
+	
+	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	if (rpm < 100) {
 		m_enable = false;
 		return;
 	}
-	float alpha = expf_taylor(-120 / (rpm * tau));
-	if (beta > alpha) {
-		beta = alpha;
-	}
-	m_alpha = alpha;
-	m_beta = beta;
-	m_enable = true;
 	
-	// --- INTEGRAÇÃO DO APRENDIZADO ---
+	// Calcular tau e beta considerando a direção do transiente apenas se habilitado
+	TransientDirection direction = TransientDirection::NONE;
+	
 	// Detectar transiente usando derivada média de TPS/MAP
 	constexpr int N = 50; // janela de 50 amostras (~250ms)
 	constexpr float callbackPeriod = FAST_CALLBACK_PERIOD_MS / 1000.0f; // em segundos
@@ -365,6 +459,7 @@ void WallFuelController::onFastCallback() {
 	static float localMapBuffer[N] = {0};
 	static int bufIdx = 0;
 	static bool bufferFilled = false;
+	
 	float tps = Sensor::getOrZero(SensorType::Tps1);
 	float map = Sensor::getOrZero(SensorType::Map);
 	tpsBuffer[bufIdx] = tps;
@@ -377,7 +472,17 @@ void WallFuelController::onFastCallback() {
 	
 	bool isTransient = false;
 	if (bufferFilled) {
-		bool conditionsMet = fabsf(tpsDeriv) > tpsThreshold || fabsf(mapDeriv) > mapThreshold;
+		// Determinar a direção do transiente baseado nas derivadas
+		bool isPositiveTransient = tpsDeriv > tpsThreshold || mapDeriv > mapThreshold;
+		bool isNegativeTransient = tpsDeriv < -tpsThreshold || mapDeriv < -mapThreshold;
+		
+		if (isPositiveTransient) {
+			direction = TransientDirection::POSITIVE;
+		} else if (isNegativeTransient) {
+			direction = TransientDirection::NEGATIVE;
+		}
+		
+		bool conditionsMet = isPositiveTransient || isNegativeTransient;
 		
 		// Só considera transiente se passou tempo suficiente desde o último
 		if (conditionsMet) {
@@ -390,16 +495,46 @@ void WallFuelController::onFastCallback() {
 			if (m_transientTimer.hasElapsedMs(transientTimeoutMs)) {
 				isTransient = true;
 				m_transientTimer.reset();
+				currentTransientDirection = direction;
 			}
 		}
 	}
 	
 	bufIdx = (bufIdx + 1) % N;
 	if (bufIdx == 0) bufferFilled = true;
+	
+	// Calcular tau e beta - usando direção se configurado
+	float tau, beta;
+	if (engineConfiguration->wwDirectionalCorrections) {
+		tau = computeTauWithDirection(direction);
+		beta = computeBetaWithDirection(direction);
+	} else {
+		tau = computeTau();
+		beta = computeBeta();
+	}
+	
+	if (tau < 0.01f || beta < 0.01f) {
+		m_enable = false;
+		return;
+	}
+	
+	float alpha = expf_taylor(-120 / (rpm * tau));
+	if (beta > alpha) {
+		beta = alpha;
+	}
+	
+	m_alpha = alpha;
+	m_beta = beta;
+	m_enable = true;
+	
+	// Processar o aprendizado se tivermos um transiente e uso de correções direcionais
 	float lambda = Sensor::getOrZero(SensorType::Lambda1);
 	float targetLambda = engine->fuelComputer.targetLambda;
 	float clt = Sensor::getOrZero(SensorType::Clt);
-	adaptiveLearning(rpm, map, lambda, targetLambda, isTransient, clt);
+	
+	if (isTransient && engineConfiguration->wwDirectionalCorrections) {
+		adaptiveLearning(rpm, map, lambda, targetLambda, isTransient, direction, clt);
+	}
 }
 
 WallFuelController::WallFuelController() {

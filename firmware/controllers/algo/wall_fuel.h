@@ -31,6 +31,13 @@ struct IWallFuelController {
 	virtual float getBeta() const = 0;
 };
 
+// Adicionando enumeração para direção do transiente
+enum class TransientDirection {
+	NONE,
+	POSITIVE,  // Aceleração
+	NEGATIVE   // Desaceleração
+};
+
 // Adaptação automática de tau/beta
 #define WW_RPM_BINS 8
 #define WW_MAP_BINS 8
@@ -42,10 +49,12 @@ public:
 	WallFuelController();
 
 	void onFastCallback() override;
-	void adaptiveLearning(float rpm, float map, float lambda, float targetLambda, bool isTransient, float clt);
+	void adaptiveLearning(float rpm, float map, float lambda, float targetLambda, 
+						 bool isTransient, TransientDirection direction, float clt);
 	// Diagnóstico
 	float getLastImmediateError() const { return lastImmediateError; }
 	float getLastProlongedError() const { return lastProlongedError; }
+	TransientDirection getLastTransientDirection() const { return lastTransientDirection; }
 	bool getBetaAdjusted(int i, int j) const { return betaAdjusted[i][j]; }
 	bool getTauAdjusted(int i, int j) const { return tauAdjusted[i][j]; }
 
@@ -66,6 +75,12 @@ public:
 protected:
 	float computeTau() const;
 	float computeBeta() const;
+	// Novos métodos para aceleração/desaceleração
+	float computeTauWithDirection(TransientDirection direction) const;
+	float computeBetaWithDirection(TransientDirection direction) const;
+	
+	// Auxiliar para média ponderada
+	float calculateWeightedAverage(int startIdx, int endIdx, float targetLambda);
 
 private:
 	bool m_enable = false;
@@ -74,6 +89,7 @@ private:
 	// Buffers e flags para aprendizado
 	float lastImmediateError = 0;
 	float lastProlongedError = 0;
+	TransientDirection lastTransientDirection = TransientDirection::NONE;
 	bool betaAdjusted[WW_RPM_BINS][WW_MAP_BINS] = {{false}};
 	bool tauAdjusted[WW_RPM_BINS][WW_MAP_BINS] = {{false}};
 	// Timers para transientes e gerenciamento de salvamento
@@ -82,13 +98,19 @@ private:
 	bool pendingWwSave = false;
 	bool m_ignitionState = false;
 	
-	void smoothCorrectionTable(float table[WW_RPM_BINS][WW_MAP_BINS], int centerI, int centerJ, float intensity);
+	void smoothCorrectionTable(uint8_t table[WW_RPM_BINS][WW_MAP_BINS], int centerI, int centerJ, float intensity);
 	
-	// Variáveis estáticas para buffer circular
-	static float lambdaBuffer[400];
-	static float rpmBuffer[400];
-	static float mapBuffer[400];
+	// Tamanho fixo do buffer, hard-coded na classe
+	static const int WW_BUFFER_MAX = 600;
+	
+	// Variáveis estáticas para buffer circular - aumentadas para suportar eventos mais longos
+	static float lambdaBuffer[WW_BUFFER_MAX];
+	static float rpmBuffer[WW_BUFFER_MAX];
+	static float mapBuffer[WW_BUFFER_MAX];
 	static int bufferIdx;
 	static int bufferMaxSize;
 	static bool monitoring;
+	
+	// Direção atual do transiente para análise
+	static TransientDirection currentTransientDirection;
 };

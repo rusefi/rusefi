@@ -13,9 +13,20 @@
 		for (int load = 0; load < CONFIG(wwMapBins); load++) {
 			config->wwTauMapRpmValues[rpm][load] = 100;
 			config->wwBetaMapRpmValues[rpm][load] = 60;
+			
+			// Inicializar novas tabelas direcionais com valor padrão 100 (1.0 após escalonamento)
+			config->wwBetaAccel[rpm][load] = 100;
+			config->wwBetaDecel[rpm][load] = 100;
+			config->wwTauAccel[rpm][load] = 100;
+			config->wwTauDecel[rpm][load] = 100;
 		}
 	}
-
+	
+	// Inicializar configurações para correções direcionais
+	config->wwBufferSize = 400;
+	config->wwTransientTimeoutMs = 1000;
+	config->wwDirectionalCorrections = false; // Desabilitado por padrão
+	
 	// Set up default wall wetting parameters based on
 	// the H4 calibration
 	config->wwaeTau = 0.25;
@@ -32,12 +43,6 @@
 	config->ltftIgnitionOffSaveDelay = 10; // 10 segundos pós-ignição OFF
 
 	// Wall Wetting Adaptativo
-	for (int rpm = 0; rpm < WW_RPM_BINS; rpm++) {
-		for (int map = 0; map < WW_MAP_BINS; map++) {
-			config->tauCorrection[rpm][map] = 1.0f;
-			config->betaCorrection[rpm][map] = 1.0f;
-		}
-	}
 	config->wwLearningRate = 0.01f;
 	config->wwImmediateErrorThreshold = 0.05f;
 	config->wwProlongedErrorThreshold = 0.03f;
