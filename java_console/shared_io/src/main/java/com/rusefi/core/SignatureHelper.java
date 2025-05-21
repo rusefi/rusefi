@@ -67,11 +67,11 @@ public class SignatureHelper {
         }
     }
 
-    public static RusEfiSignature parse(String signature) {
+    public static RusEfiSignature parse(final String signature) {
         if (signature == null || !signature.startsWith(PREFIX))
             return null;
-        signature = signature.substring(PREFIX.length()).trim();
-        String[] elements = signature.split("\\.");
+        final String signatureWithoutPrefix = signature.substring(PREFIX.length()).trim();
+        final String[] elements = signatureWithoutPrefix.split("\\.");
         if (elements.length != 6)
             return null;
 
@@ -82,6 +82,6 @@ public class SignatureHelper {
         String bundleTarget = elements[4];
         String hash = elements[5];
 
-        return new RusEfiSignature(branch, year, month, day, bundleTarget, hash);
+        return new RusEfiSignature(signature, branch, year, month, day, bundleTarget, hash);
     }
 }
