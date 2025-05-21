@@ -27,11 +27,7 @@ public class SingleAsyncJobExecutor {
         final Optional<AsyncJob> prevJobInProgress = setJobInProgressIfEmpty(job);
         if (!prevJobInProgress.isPresent()) {
             updateOperationCallbacks.clear();
-            AsyncJobExecutor.INSTANCE.executeJobWithStatusWindow(
-                job,
-                updateOperationCallbacks,
-                this::handleJobInProgressFinished
-            );
+            AsyncJobExecutor.INSTANCE.executeJob(job, updateOperationCallbacks, this::handleJobInProgressFinished);
         } else {
             JOptionPane.showMessageDialog(
                 parent,
