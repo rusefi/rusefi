@@ -2194,12 +2194,10 @@ int8_t[WWAE_TABLE_SIZE] wwMapBins;;"kPa", 1, 0, 0, 250, 0
 uint8_t[WWAE_RPM_SIZE] autoscale wwRpmBins;;"RPM", 50, 0, 0, 12500, 0
 uint8_t[WWAE_RPM_SIZE x WWAE_TABLE_SIZE] autoscale wwTauMapRpmValues;;"", 0.01, 0, 0, 2.5, 2
 uint8_t[WWAE_RPM_SIZE x WWAE_TABLE_SIZE] autoscale wwBetaMapRpmValues;;"", 0.01, 0, 0, 2.5, 2
-float[WWAE_RPM_SIZE x WWAE_TABLE_SIZE] betaCorrection;;"", 1, 0, 0, 2.5, 2
-float[WWAE_RPM_SIZE x WWAE_TABLE_SIZE] tauCorrection;;"", 1, 0, 0, 2.5, 2
-uint8_t autoscale wwBetaAccel[WWAE_TABLE_SIZE][WWAE_RPM_SIZE];"Wall Wetting Beta - Acceleration Correction", 0.01, 0, 0.00, 2.0, 2
-uint8_t autoscale wwBetaDecel[WWAE_TABLE_SIZE][WWAE_RPM_SIZE];"Wall Wetting Beta - Deceleration Correction", 0.01, 0, 0.00, 2.0, 2
-uint8_t autoscale wwTauAccel[WWAE_TABLE_SIZE][WWAE_RPM_SIZE];"Wall Wetting Tau - Acceleration Correction", 0.01, 0, 0.00, 2.0, 2
-uint8_t autoscale wwTauDecel[WWAE_TABLE_SIZE][WWAE_RPM_SIZE];"Wall Wetting Tau - Deceleration Correction", 0.01, 0, 0.00, 2.0, 2
+uint8_t[WWAE_RPM_SIZE x WWAE_TABLE_SIZE] autoscale wwBetaAccel;;"", 0.01, 0, 0, 2.5, 2
+uint8_t[WWAE_RPM_SIZE x WWAE_TABLE_SIZE] autoscale wwBetaDecel;;"", 0.01, 0, 0, 2.5, 2
+uint8_t[WWAE_RPM_SIZE x WWAE_TABLE_SIZE] autoscale wwTauAccel;;"", 0.01, 0, 0, 2.5, 2
+uint8_t[WWAE_RPM_SIZE x WWAE_TABLE_SIZE] autoscale wwTauDecel;;"", 0.01, 0, 0, 2.5, 2
 
 uint16_t wwBufferSize;;"Wall Wetting Buffer Size", 1, 0, 100, 1000, 0
 bit wwDirectionalCorrections;"Use directional corrections for wall wetting"
