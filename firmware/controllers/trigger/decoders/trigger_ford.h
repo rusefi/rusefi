@@ -9,4 +9,3 @@
 class TriggerWaveform;
 
 void configureFordCoyote(TriggerWaveform *s);
-void configureFordCoyote2(TriggerWaveform *s);
