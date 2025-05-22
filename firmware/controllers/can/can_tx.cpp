@@ -89,11 +89,9 @@ void CanWrite::PeriodicTask(efitick_t) {
 	  }
 	}
 
-#if EFI_WIDEBAND_FIRMWARE_UPDATE
 	if (engineConfiguration->enableAemXSeries && cycle.isInterval(CI::_50ms) && boardEnableSendWidebandInfo()) {
 		sendWidebandInfo();
 	}
-#endif
 
 	m_cycleCount++;
 }
