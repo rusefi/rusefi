@@ -15,8 +15,9 @@ void handleWidebandCan(const CANRxFrame &frame);
 // Usually called from bench test task
 // Also do not call from ISR context
 
-// Set the CAN index offset of any attached wideband controller
-void setWidebandOffset(uint8_t index);
+// Set the CAN index offset of any (hwIndex = 0xff) or specific (hwIndex != 0xff) wideband controller
+// Addressing by hwIndex is supported by 2025 WBO FW
+void setWidebandOffset(uint8_t hwIndex, uint8_t index);
 
 #if EFI_WIDEBAND_FIRMWARE_UPDATE
 // Update the firmware on any connected wideband controller
