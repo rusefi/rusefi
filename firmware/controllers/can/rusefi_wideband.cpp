@@ -9,7 +9,7 @@
 // do we use some sort of a custom bootloader protocol in rusEFI WBO?
 // todo: should we move to any widely used protocol like OpenBLT or else?
 
-#if EFI_WIDEBAND_FIRMWARE_UPDATE && EFI_CAN_SUPPORT
+#if EFI_CAN_SUPPORT
 
 #include "ch.h"
 #include "can_msg_tx.h"
@@ -19,9 +19,9 @@
 #include "wideband_firmware/for_rusefi/wideband_can.h"
 #pragma GCC diagnostic pop
 
-// This file contains an array called build_wideband_noboot_bin
-// This array contains the firmware image for the wideband contoller
-#include "wideband_firmware/for_rusefi/wideband_image.h"
+static size_t getWidebandBus() {
+	return engineConfiguration->widebandOnSecondBus ? 1 : 0;
+}
 
 #define EVT_BOOTLOADER_ACK EVENT_MASK(0)
 
@@ -53,9 +53,46 @@ bool waitAck(int timeout = 1000) {
 	return chEvtWaitAnyTimeout(EVT_BOOTLOADER_ACK, TIME_MS2I(timeout)) != 0;
 }
 
-static size_t getWidebandBus() {
-	return engineConfiguration->widebandOnSecondBus ? 1 : 0;
+void setWidebandOffset(uint8_t index) {
+	// Clear any pending acks for this thread
+	chEvtGetAndClearEvents(EVT_BOOTLOADER_ACK);
+
+	// Send messages to the current thread when acks come in
+	waitingBootloaderThread = chThdGetSelfX();
+
+	efiPrintf("***************************************");
+	efiPrintf("          WIDEBAND INDEX SET");
+	efiPrintf("***************************************");
+	efiPrintf("Setting all connected widebands to index %d...", index);
+
+	{
+		CanTxMessage m(CanCategory::WBO_SERVICE, WB_MSG_SET_INDEX, 1, getWidebandBus(), true);
+		m[0] = index;
+	}
+
+	if (!waitAck()) {
+		criticalError("Wideband index set failed: no controller detected!");
+	}
+
+	waitingBootloaderThread = nullptr;
 }
+
+void sendWidebandInfo() {
+	CanTxMessage m(CanCategory::WBO_SERVICE, WB_MGS_ECU_STATUS, 2, getWidebandBus(), true);
+
+	float vbatt = Sensor::getOrZero(SensorType::BatteryVoltage) * 10;
+
+	m[0] = vbatt;
+
+	// Offset 1 bit 0 = heater enable
+	m[1] = engine->engineState.heaterControlEnabled ? 0x01 : 0x00;
+}
+
+#if EFI_WIDEBAND_FIRMWARE_UPDATE
+
+// This file contains an array called build_wideband_noboot_bin
+// This array contains the firmware image for the wideband contoller
+#include "wideband_firmware/for_rusefi/wideband_image.h"
 
 void updateWidebandFirmware() {
 	size_t bus = getWidebandBus();
@@ -132,40 +169,5 @@ void updateWidebandFirmware() {
 	waitingBootloaderThread = nullptr;
 }
 
-void setWidebandOffset(uint8_t index) {
-	// Clear any pending acks for this thread
-	chEvtGetAndClearEvents(EVT_BOOTLOADER_ACK);
-
-	// Send messages to the current thread when acks come in
-	waitingBootloaderThread = chThdGetSelfX();
-
-	efiPrintf("***************************************");
-	efiPrintf("          WIDEBAND INDEX SET");
-	efiPrintf("***************************************");
-	efiPrintf("Setting all connected widebands to index %d...", index);
-
-	{
-		CanTxMessage m(CanCategory::WBO_SERVICE, WB_MSG_SET_INDEX, 1, getWidebandBus(), true);
-		m[0] = index;
-	}
-
-	if (!waitAck()) {
-		criticalError("Wideband index set failed: no controller detected!");
-	}
-
-	waitingBootloaderThread = nullptr;
-}
-
-// huh? this code here should not be hidden under 'EFI_WIDEBAND_FIRMWARE_UPDATE' condition?!
-void sendWidebandInfo() {
-	CanTxMessage m(CanCategory::WBO_SERVICE, WB_MGS_ECU_STATUS, 2, getWidebandBus(), true);
-
-	float vbatt = Sensor::getOrZero(SensorType::BatteryVoltage) * 10;
-
-	m[0] = vbatt;
-
-	// Offset 1 bit 0 = heater enable
-	m[1] = engine->engineState.heaterControlEnabled ? 0x01 : 0x00;
-}
-
-#endif // EFI_WIDEBAND_FIRMWARE_UPDATE && HAL_USE_CAN
+#endif // EFI_WIDEBAND_FIRMWARE_UPDATE
+#endif // HAL_USE_CAN

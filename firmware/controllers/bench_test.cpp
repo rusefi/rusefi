@@ -46,10 +46,7 @@ const OutputPin *getOutputOnTheBenchTest() {
 #include "trigger_emulator_algo.h"
 #include "vvt.h"
 #include "microsecond_timer.h"
-
-#if EFI_WIDEBAND_FIRMWARE_UPDATE
 #include "rusefi_wideband.h"
-#endif // EFI_WIDEBAND_FIRMWARE_UPDATE
 
 #if EFI_PROD_CODE
 #include "rusefi.h"
