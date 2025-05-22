@@ -683,6 +683,13 @@ typedef enum __attribute__ ((__packed__)) {
 } can_wbo_type_e;
 
 typedef enum __attribute__ ((__packed__)) {
+	WBO_RE_IDLE	= 0,
+	WBO_RE_DONE = 1,
+	WBO_RE_BUSY = 2,
+	WBO_RE_FAILED = 3
+} can_wbo_re_status_e;
+
+typedef enum __attribute__ ((__packed__)) {
 	GPPWM_GreaterThan = 0,
 	GPPWM_LessThan = 1,
 } gppwm_compare_mode_e;
