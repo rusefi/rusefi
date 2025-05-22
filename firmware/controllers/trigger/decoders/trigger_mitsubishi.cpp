@@ -57,7 +57,7 @@ void initializeVvt6G72(TriggerWaveform *s) {
   s->addEvent360(360.000000, TriggerValue::FALL);
 }
 
-void initializeMitsubishi4g9xCam(TriggerWaveform *s) {
+void initializeMitsubishi4g63Cam(TriggerWaveform *s) {
 	s->initialize(FOUR_STROKE_CAM_SENSOR, SyncEdge::Both);
 
 	// nominal gap 0.5
@@ -73,11 +73,6 @@ void initializeMitsubishi4g9xCam(TriggerWaveform *s) {
 	// 131 deg before #4 TDC
 	// 41 deg before #4 TDC
 	s->addToothRiseFall(360, /*width*/45);
-}
-
-void initializeMitsubishi4g63Cam(TriggerWaveform *s) {
-	// TODO: is this actually the same as 4G9x or not?
-	initializeMitsubishi4g9xCam(s);
 }
 
 void initialize36_2_1_1(TriggerWaveform *s) {

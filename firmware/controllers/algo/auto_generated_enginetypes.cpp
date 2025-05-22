@@ -283,8 +283,6 @@ case trigger_type_e::TT_MITSU_4G63_CAM:
   return "TT_MITSU_4G63_CAM";
 case trigger_type_e::TT_MITSU_4G63_CRANK:
   return "TT_MITSU_4G63_CRANK";
-case trigger_type_e::TT_MITSU_4G9x_CAM:
-  return "TT_MITSU_4G9x_CAM";
 case trigger_type_e::TT_NARROW_SINGLE_TOOTH:
   return "TT_NARROW_SINGLE_TOOTH";
 case trigger_type_e::TT_NISSAN_HR:

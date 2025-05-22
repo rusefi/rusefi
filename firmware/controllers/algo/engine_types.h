@@ -129,7 +129,7 @@ enum class trigger_type_e : uint32_t {
 	// GM 24x with 5/10 degree gaps
 	TT_GM_24x_5 = 27,
 	TT_HONDA_CBR_600 = 28,
-	TT_MITSU_4G9x_CAM = 29,
+	TT_UNUSED29 = 29,
 	TT_CHRYSLER_NGC_36_2_2 = 30,
 	// skipped 3/1 with cam sensor for testing
 	TT_3_1_CAM = 31,

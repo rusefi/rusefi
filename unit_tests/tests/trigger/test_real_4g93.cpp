@@ -89,7 +89,7 @@ TEST(real4g93, crankingCamOnly) {
 	engineConfiguration->isFasterEngineSpinUpEnabled = true;
 	engineConfiguration->alwaysInstantRpm = true;
 
-	eth.setTriggerType(trigger_type_e::TT_MITSU_4G9x_CAM);
+	eth.setTriggerType(trigger_type_e::TT_MITSU_4G63_CAM);
 
 	while (reader.haveMore()) {
 		reader.processLine(&eth);

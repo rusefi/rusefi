@@ -704,10 +704,7 @@ void TriggerWaveform::initializeTriggerWaveform(operation_mode_e triggerOperatio
 	    initializeMitsubishi4g63Cam(this);
 		break;
 
-	case trigger_type_e::TT_MITSU_4G9x_CAM:
-	    initializeMitsubishi4g9xCam(this);
-        break;
-
+	case trigger_type_e::TT_UNUSED29:
 	case trigger_type_e::TT_HONDA_CBR_600:
 		configureHondaCbr600(this);
 		break;
