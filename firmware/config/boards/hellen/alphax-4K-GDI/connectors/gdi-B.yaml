@@ -210,8 +210,8 @@ pins:
 
 
 info:
-  title: AlphaX 4K-GDI
-  name: AlphaX 4K-GDI
+  title: Power4GDI
+  name: Power4GDI
   cid: b
   order: 1
   board_url: https://rusefi.com/s/4K-GDI

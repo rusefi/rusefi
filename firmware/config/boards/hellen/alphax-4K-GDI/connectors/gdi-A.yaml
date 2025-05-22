@@ -224,10 +224,10 @@ pins:
     type: ls
 
 info:
-  title: AlphaX 4K-GDI
-  name: AlphaX 4K-GDI
+  title: Power4GDI
+  name: Power4GDI
   cid: a
-  directory: hellen/alphax-4K-GDI
+  directory: hellen/Power4GDI
   order: 0
   board_url: https://rusefi.com/s/4K-GDI
   image:
