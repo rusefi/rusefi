@@ -115,6 +115,7 @@ void sendWidebandInfo() {
 
 void updateWidebandFirmware() {
 	size_t bus = getWidebandBus();
+	size_t totalSize = sizeof(build_wideband_image_bin);
 
 	setStatus(WBO_RE_BUSY);
 
@@ -141,7 +142,7 @@ void updateWidebandFirmware() {
 		if (!waitAck()) {
 			efiPrintf("Wideband Update ERROR: Expected ACK from entry to bootloader, didn't get one.");
 			setStatus(WBO_RE_FAILED);
-			return;
+			goto exit;
 		}
 
 		// Let the controller reboot (and show blinky lights for a second before the update begins)
@@ -160,10 +161,8 @@ void updateWidebandFirmware() {
 	if (!waitAck()) {
 		efiPrintf("Wideband Update ERROR: Expected ACK from flash erase command, didn't get one.");
 		setStatus(WBO_RE_FAILED);
-		return;
+		goto exit;
 	}
-
-	size_t totalSize = sizeof(build_wideband_image_bin);
 
 	efiPrintf("Wideband Update: Flash erased! Sending %d bytes...", totalSize);
 
@@ -177,7 +176,7 @@ void updateWidebandFirmware() {
 		if (!waitAck()) {
 			efiPrintf("Wideband Update ERROR: Expected ACK from data write, didn't get one.");
 			setStatus(WBO_RE_FAILED);
-			return;
+			goto exit;
 		}
 	}
 
@@ -193,6 +192,7 @@ void updateWidebandFirmware() {
 
 	setStatus(WBO_RE_DONE);
 
+exit:
 	waitingBootloaderThread = nullptr;
 }
 
