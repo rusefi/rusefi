@@ -53,7 +53,9 @@ bool waitAck(int timeout = 1000) {
 	return chEvtWaitAnyTimeout(EVT_BOOTLOADER_ACK, TIME_MS2I(timeout)) != 0;
 }
 
-void setWidebandOffset(uint8_t index) {
+void setWidebandOffset(uint8_t hwIndex, uint8_t index) {
+	size_t bus = getWidebandBus();
+
 	// Clear any pending acks for this thread
 	chEvtGetAndClearEvents(EVT_BOOTLOADER_ACK);
 
@@ -63,11 +65,16 @@ void setWidebandOffset(uint8_t index) {
 	efiPrintf("***************************************");
 	efiPrintf("          WIDEBAND INDEX SET");
 	efiPrintf("***************************************");
-	efiPrintf("Setting all connected widebands to index %d...", index);
 
-	{
-		CanTxMessage m(CanCategory::WBO_SERVICE, WB_MSG_SET_INDEX, 1, getWidebandBus(), true);
+	if (hwIndex == 0xff) {
+		efiPrintf("Setting all connected widebands to index %d...", index);
+		CanTxMessage m(CanCategory::WBO_SERVICE, WB_MSG_SET_INDEX, 1, bus, true);
 		m[0] = index;
+	} else {
+		efiPrintf("Setting wideband with hwIndex %d to CAN index %d...", hwIndex, index);
+		CanTxMessage m(CanCategory::WBO_SERVICE, WB_MSG_SET_INDEX, 2, bus, true);
+		m[0] = index;
+		m[1] = hwIndex;
 	}
 
 	if (!waitAck()) {
