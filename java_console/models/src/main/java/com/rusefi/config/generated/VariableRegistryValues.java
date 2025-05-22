@@ -1340,7 +1340,6 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 882628700;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1471,7 +1470,6 @@ public class VariableRegistryValues {
 	public static final int trigger_type_e_TT_MIATA_VVT = 33;
 	public static final int trigger_type_e_TT_MITSU_4G63_CAM = 34;
 	public static final int trigger_type_e_TT_MITSU_4G63_CRANK = 76;
-	public static final int trigger_type_e_TT_MITSU_4G9x_CAM = 29;
 	public static final int trigger_type_e_TT_NARROW_SINGLE_TOOTH = 11;
 	public static final int trigger_type_e_TT_NISSAN_HR = 84;
 	public static final int trigger_type_e_TT_NISSAN_HR_CAM_IN = 86;
@@ -1502,6 +1500,7 @@ public class VariableRegistryValues {
 	public static final int trigger_type_e_TT_TOYOTA_3_TOOTH_UZ = 91;
 	public static final int trigger_type_e_TT_TRI_TACH = 53;
 	public static final int trigger_type_e_TT_UNUSED = 92;
+	public static final int trigger_type_e_TT_UNUSED29 = 29;
 	public static final int trigger_type_e_TT_VVT_BARRA_3_PLUS_1 = 56;
 	public static final int trigger_type_e_TT_VVT_BOSCH_QUICK_START = 47;
 	public static final int trigger_type_e_TT_VVT_FORD_COYOTE = 4;
@@ -1621,7 +1620,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.05.22.frankenso_na6.882628700";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.05.22.frankenso_na6.4194899227";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
@@ -1697,7 +1696,6 @@ public class VariableRegistryValues {
 	public static final int vvt_mode_e_VVT_MITSUBISHI_3A92 = 12;
 	public static final int vvt_mode_e_VVT_MITSUBISHI_4G63 = 18;
 	public static final int vvt_mode_e_VVT_MITSUBISHI_4G69 = 4;
-	public static final int vvt_mode_e_VVT_MITSUBISHI_4G9x = 17;
 	public static final int vvt_mode_e_VVT_MITSUBISHI_6G72 = 20;
 	public static final int vvt_mode_e_VVT_NISSAN_MR = 11;
 	public static final int vvt_mode_e_VVT_NISSAN_VQ = 9;
@@ -1705,6 +1703,7 @@ public class VariableRegistryValues {
 	public static final int vvt_mode_e_VVT_TOYOTA_3_TOOTH = 2;
 	public static final int vvt_mode_e_VVT_TOYOTA_3TOOTH_UZ = 27;
 	public static final int vvt_mode_e_VVT_TOYOTA_4_1 = 6;
+	public static final int vvt_mode_e_VVT_UNUSED_17 = 17;
 	public static final String VVT_OFFSET_1_1_NAME = "VVT offset bank 1 intake";
 	public static final int VVT_TABLE_SIZE = 8;
 	public static final int VVT_TRACKING_LENGTH = 4;
