@@ -7,6 +7,9 @@
 -- VEHICLE side JAE MX1900 2 Pos Pin Housing MX19002P51
 --
 
+-- RX performance, requires 'luaCanRxWorkaround' calibration flag
+global_can_data = {}
+enableCanRxWorkaround()
 
 -- this controls onCanRx rate as well!
 setTickRate(300)

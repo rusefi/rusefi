@@ -836,6 +836,7 @@ extern int luaCommandCounters[LUA_BUTTON_COUNT];
 	});
 
 	lua_register(lState, "enableCanRxWorkaround", [](lua_State* l) {
+		// that's about global_can_data
 		engineConfiguration->luaCanRxWorkaround = true;
 		return 0;
 	});
