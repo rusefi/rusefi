@@ -401,7 +401,7 @@ float mapFast
 	uint8_t autoscale injectorDutyCycleStage2;@@GAUGE_NAME_FUEL_INJ_DUTY_STAGE_2@@;"%",{1/2}, 0, 0, 0, 0
 	uint8_t rawFlexFreq
 
-	uint8_t unusedWasAdc
+	uint8_t canReWidebandCmdStatus
 	uint8_t deviceUid
 	uint16_t mc33810spiErrorCounter
 

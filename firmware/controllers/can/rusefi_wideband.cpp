@@ -53,8 +53,17 @@ bool waitAck(int timeout = 1000) {
 	return chEvtWaitAnyTimeout(EVT_BOOTLOADER_ACK, TIME_MS2I(timeout)) != 0;
 }
 
+static void setStatus(can_wbo_re_status_e status)
+{
+#if EFI_TUNER_STUDIO
+	engine->outputChannels.canReWidebandCmdStatus = static_cast<uint8_t>(status);
+#endif
+}
+
 void setWidebandOffset(uint8_t hwIndex, uint8_t index) {
 	size_t bus = getWidebandBus();
+
+	setStatus(WBO_RE_BUSY);
 
 	// Clear any pending acks for this thread
 	chEvtGetAndClearEvents(EVT_BOOTLOADER_ACK);
@@ -79,6 +88,9 @@ void setWidebandOffset(uint8_t hwIndex, uint8_t index) {
 
 	if (!waitAck()) {
 		criticalError("Wideband index set failed: no controller detected!");
+		setStatus(WBO_RE_FAILED);
+	} else {
+		setStatus(WBO_RE_DONE);
 	}
 
 	waitingBootloaderThread = nullptr;
@@ -104,6 +116,8 @@ void sendWidebandInfo() {
 void updateWidebandFirmware() {
 	size_t bus = getWidebandBus();
 
+	setStatus(WBO_RE_BUSY);
+
 	// Clear any pending acks for this thread
 	chEvtGetAndClearEvents(EVT_BOOTLOADER_ACK);
 
@@ -126,6 +140,7 @@ void updateWidebandFirmware() {
 
 		if (!waitAck()) {
 			efiPrintf("Wideband Update ERROR: Expected ACK from entry to bootloader, didn't get one.");
+			setStatus(WBO_RE_FAILED);
 			return;
 		}
 
@@ -144,6 +159,7 @@ void updateWidebandFirmware() {
 
 	if (!waitAck()) {
 		efiPrintf("Wideband Update ERROR: Expected ACK from flash erase command, didn't get one.");
+		setStatus(WBO_RE_FAILED);
 		return;
 	}
 
@@ -160,6 +176,7 @@ void updateWidebandFirmware() {
 
 		if (!waitAck()) {
 			efiPrintf("Wideband Update ERROR: Expected ACK from data write, didn't get one.");
+			setStatus(WBO_RE_FAILED);
 			return;
 		}
 	}
@@ -171,7 +188,10 @@ void updateWidebandFirmware() {
 		CanTxMessage m(CanCategory::WBO_SERVICE, WB_BL_REBOOT, 0, bus, true);
 	}
 
+	// TODO:
 	waitAck();
+
+	setStatus(WBO_RE_DONE);
 
 	waitingBootloaderThread = nullptr;
 }
