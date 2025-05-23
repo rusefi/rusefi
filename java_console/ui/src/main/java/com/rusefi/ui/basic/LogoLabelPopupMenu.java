@@ -31,9 +31,12 @@ public class LogoLabelPopupMenu extends JPopupMenu {
         add(printUnitLabelMenuItem);
     }
 
-    public void refreshUploadTuneAndPrintUnitLabelsMenuItems(final boolean canBeEnabled) {
-        final boolean enableUploadTuneMenuItem = (canBeEnabled ? InstanceNameEditor.loadInstanceName() != null : false);
+    public void refreshUploadTuneAndPrintUnitLabelsMenuItems(
+        final boolean isEcuPortDefined,
+        final boolean existUnitIdentifierFields
+    ) {
+        final boolean enableUploadTuneMenuItem = (isEcuPortDefined && InstanceNameEditor.loadInstanceName() != null);
         uploadTuneMenuItem.setEnabled(enableUploadTuneMenuItem);
-        printUnitLabelMenuItem.setEnabled(canBeEnabled);
+        printUnitLabelMenuItem.setEnabled(existUnitIdentifierFields);
     }
 }
