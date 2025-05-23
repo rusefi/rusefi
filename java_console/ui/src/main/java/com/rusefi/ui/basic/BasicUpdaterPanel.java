@@ -35,6 +35,7 @@ public class BasicUpdaterPanel {
 
     private final String panamaUrl = getProperties().getProperty("panama_url");
 
+    private final JLabel firmwareHash = new JLabel();
     private final JLabel statusMessage = new JLabel();
     private final JButton updateFirmwareButton = ProgramSelector.createUpdateFirmwareButton();
     private final JButton updateCalibrationsButton = new JButton(
@@ -71,6 +72,8 @@ public class BasicUpdaterPanel {
                 content.add(newReleaseNotification.get());
             }
             content.add(ToolButtons.createShowDeviceManagerButton());
+            resetFirmwareHash();
+            content.add(firmwareHash);
             content.add(StartupFrame.binaryModificationControl());
 
             updateFirmwareButton.addActionListener(this::onUpdateFirmwareButtonClicked);
@@ -233,15 +236,26 @@ public class BasicUpdaterPanel {
 
     private void setEcuPortToUse(final PortResult port) {
         ecuPortToUse = Optional.of(port);
-        refreshButtons();
+
+        SwingUtilities.invokeLater(() -> {
+            refreshButtons();
+            firmwareHash.setText(port.getFirmwareHash().orElse(" "));
+        });
     }
 
     private void resetEcuPortToUse() {
         ecuPortToUse = Optional.empty();
-        updateCalibrationsButton.setEnabled(false);
-        if (logoLabelPopupMenu != null) {
-            logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(false, false);
-        }
+        SwingUtilities.invokeLater(() -> {
+            resetFirmwareHash();
+            updateCalibrationsButton.setEnabled(false);
+            if (logoLabelPopupMenu != null) {
+                logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(false, false);
+            }
+        });
+    }
+
+    private void resetFirmwareHash() {
+        firmwareHash.setText("                                        ");
     }
 
     private void onUpdateFirmwareButtonClicked(final ActionEvent actionEvent) {
