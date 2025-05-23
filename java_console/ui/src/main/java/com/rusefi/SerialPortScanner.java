@@ -19,6 +19,8 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
+import static java.lang.Thread.currentThread;
+
 /**
  * We have too many programming / ECU possible states
  * 1) the oldest one: discovery board has on-board St-link debug interface (discovery board second microcontrollers on board which is used to debug the primary one), same if we have a modern ECU with external st-link hooked up. Open question if it's time to remove support of st-link programming since all nicer ECUs do not on-board debug interface. Orthogonal to USB port.
@@ -102,51 +104,28 @@ public enum SerialPortScanner {
         final Object resultsLock = new Object();
         final Map<String, PortResult> results = new HashMap<>();
 
-        // When the last port is found, we need to cancel the timeout
-        final Thread callingThread = Thread.currentThread();
-
         // One thread per port to check
-        final List<Thread> threads = ports.stream().map(p -> {
-            Thread t = new Thread(() -> {
+        final ExecutorService es = Executors.newCachedThreadPool(
+            new NamedThreadFactory("SerialPortScanner inspectPort", true)
+        );
+        for (final String p: ports) {
+            es.execute(() -> {
+                log.info(String.format("Thread `%s` is inspecting port `%s`...", currentThread().getName(), p));
                 PortResult r = inspectPort(p);
 
                 // Record the result under lock
                 synchronized (resultsLock) {
-                    if (Thread.currentThread().isInterrupted()) {
-                        // If interrupted, don't try to write our result
-                        return;
-                    }
-
                     results.put(p, r);
-
-                    if (results.size() == ports.size()) {
-                        // We now have all the results - interrupt the calling thread
-                        callingThread.interrupt();
-                    }
                 }
             });
-
-            t.setName("SerialPortScanner inspectPort " + p);
-            t.setDaemon(true);
-            t.start();
-
-            return t;
-        }).collect(Collectors.toList());
+        }
+        es.shutdown();
 
         // Give everyone a chance to finish
         try {
-            // todo: see if everyone has already finished - make this sleep conditional!
-            // todo: lowe this timeout?
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            // We got interrupted because the last port got found, nothing to do
-        }
-
-        // Interrupt all threads under lock to ensure no more objects are added to results
-        synchronized (resultsLock) {
-            for (Thread t : threads) {
-                t.interrupt();
-            }
+            es.awaitTermination(5, TimeUnit.SECONDS);
+        } catch (final InterruptedException e) {
+            log.error("`ExecutorService.awaitTermination` method was interrupted", e);
         }
 
         // Now check that we got everything - if any timed out, register them as unknown
