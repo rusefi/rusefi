@@ -15,9 +15,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
 
@@ -25,6 +24,12 @@ public enum UnitLabelPrinter {
     INSTANCE;
 
     private static final Logging log = getLogging(UnitLabelPrinter.class);
+
+    public static final Set<String> UNIT_IDENTIFIER_FIELD_NAMES = Arrays.stream(new String[] {
+        UnitIdentifiers.UID_SUM_FIELD_NAME,
+        UnitIdentifiers.SHORT_UID_FIELD_NAME,
+        UnitIdentifiers.HW_REVISION_FIELD_NAME
+    }).collect(Collectors.toSet());
 
     public boolean printUnitLabel(
         final JComponent parent,
