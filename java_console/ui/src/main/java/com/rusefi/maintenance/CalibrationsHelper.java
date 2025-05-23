@@ -197,6 +197,27 @@ public class CalibrationsHelper {
         );
     }
 
+    public static Optional<CalibrationsInfo> readCurrentCalibrationsWithoutSuspendingPortScanner(
+        final String port,
+        final UpdateOperationCallbacks callbacks
+    ) {
+        return BinaryProtocolExecutor.execute(
+            port,
+            callbacks,
+            (binaryProtocol) -> {
+                try {
+                    return readCalibrationsInfo(binaryProtocol, callbacks);
+                } catch (final Exception e) {
+                    log.error("Failed to read current calibrations:", e);
+                    callbacks.logLine("Failed to read current calibrations");
+                    return Optional.empty();
+                }
+            },
+            Optional.empty(),
+            false
+        );
+    }
+
     public static Optional<CalibrationsInfo> readAndBackupCurrentCalibrations(
         final PortResult ecuPort,
         final UpdateOperationCallbacks callbacks,
