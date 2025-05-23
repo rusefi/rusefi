@@ -36,6 +36,7 @@ public class BasicUpdaterPanel {
     private final String panamaUrl = getProperties().getProperty("panama_url");
 
     private final JLabel statusMessage = new JLabel();
+    private final JLabel firmwareHashLabel = new JLabel();
     private final JButton updateFirmwareButton = ProgramSelector.createUpdateFirmwareButton();
     private final JButton updateCalibrationsButton = new JButton(
         "Update Calibrations",
@@ -70,6 +71,9 @@ public class BasicUpdaterPanel {
             }
             content.add(ToolButtons.createShowDeviceManagerButton());
             content.add(StartupFrame.binaryModificationControl());
+
+            firmwareHashLabel.setText("                                        ");
+            content.add(firmwareHashLabel);
 
             updateFirmwareButton.addActionListener(this::onUpdateFirmwareButtonClicked);
             updateFirmwareButton.setEnabled(false);
@@ -231,7 +235,26 @@ public class BasicUpdaterPanel {
     }
 
     private void setEcuPortToUse(final SerialPortScanner.PortResult port) {
-        ecuPortToUse = Optional.of(new EcuPortInfo(port, () -> SwingUtilities.invokeLater(this::refreshButtons)));
+        ecuPortToUse = Optional.of(new EcuPortInfo(port, this::onCurrentEcuIniFileLoaded, this::refreshFirmwareHash));
+        refreshButtons();
+    }
+
+    private void onCurrentEcuIniFileLoaded() {
+        ecuPortToUse.ifPresent(port -> {
+            if (port.shouldLoadCalibrationsInfo()) {
+                SerialPortScanner.INSTANCE.suspend();
+                disableButtons();
+                singleAsyncJobExecutor.startBackgroundJob(new LoadCurrentEcuCalibrationsJob(port), this.content);
+                refreshButtons();
+            }
+        });
+        SwingUtilities.invokeLater(this::refreshButtons);
+    }
+
+    private void refreshFirmwareHash() {
+        ecuPortToUse.flatMap(EcuPortInfo::getFirmwareHash).ifPresent(firmwareHash -> SwingUtilities.invokeLater(() -> {
+            firmwareHashLabel.setText(firmwareHash);
+        }));
         refreshButtons();
     }
 

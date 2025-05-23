@@ -15,6 +15,27 @@ public class SingleAsyncJobExecutor {
 
     private volatile Optional<AsyncJob> jobInProgress = Optional.empty();
 
+    private static final UpdateOperationCallbacks BACKGROUND_CALLBACKS = new UpdateOperationCallbacks() {
+        @Override
+        public void log(final String message, final boolean breakLineOnTextArea, final boolean sendToLogger) {
+            log.info(message);
+        }
+
+        @Override
+        public void done() {
+            log.info("Background job is done");
+        }
+
+        @Override
+        public void error() {
+            log.info("Background job failed");
+        }
+
+        @Override
+        public void clear() {
+        }
+    };
+
     SingleAsyncJobExecutor(
         final UpdateOperationCallbacks updateOperationCallbacks,
         final Runnable onJobInProgressFinished
@@ -24,10 +45,18 @@ public class SingleAsyncJobExecutor {
     }
 
     void startJob(final AsyncJob job, final Component parent) {
+        startJob(job, parent, updateOperationCallbacks);
+    }
+
+    void startBackgroundJob(final AsyncJob job, final Component parent) {
+        startJob(job, parent, BACKGROUND_CALLBACKS);
+    }
+
+    void startJob(final AsyncJob job, final Component parent, final UpdateOperationCallbacks callbacksToUse) {
         final Optional<AsyncJob> prevJobInProgress = setJobInProgressIfEmpty(job);
         if (!prevJobInProgress.isPresent()) {
             updateOperationCallbacks.clear();
-            AsyncJobExecutor.INSTANCE.executeJob(job, updateOperationCallbacks, this::handleJobInProgressFinished);
+            AsyncJobExecutor.INSTANCE.executeJob(job, callbacksToUse, this::handleJobInProgressFinished);
         } else {
             JOptionPane.showMessageDialog(
                 parent,
