@@ -9,6 +9,9 @@ void sendWidebandInfo();
 // Handles ack and pong responses from the wideband bootloader
 void handleWidebandCan(const CANRxFrame &frame);
 
+// Pings wideband controller, reply includes protocol version and FW build date
+void pingWideband(uint8_t hwIndex);
+
 // WARNING:
 // Two following functions can block thread execution while waiting for ACK from WBO
 // Do not call from critical tasks!
