@@ -1,7 +1,6 @@
 package com.rusefi;
 
 import com.devexperts.logging.Logging;
-import com.rusefi.autodetect.SerialAutoChecker;
 import com.rusefi.binaryprotocol.IncomingDataBuffer;
 import com.rusefi.binaryprotocol.IoHelper;
 import com.rusefi.config.generated.Integration;
@@ -11,16 +10,13 @@ import com.rusefi.io.IoStream;
 import com.rusefi.io.LinkManager;
 import com.rusefi.io.serial.BufferedSerialIoStream;
 import com.rusefi.io.tcp.TcpConnector;
-import com.rusefi.maintenance.DfuFlasher;
+import com.rusefi.maintenance.*;
 import com.rusefi.io.UpdateOperationCallbacks;
-import com.rusefi.maintenance.MaintenanceUtil;
-import com.rusefi.maintenance.StLinkFlasher;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.stream.Collectors;
 
 import static java.lang.Thread.currentThread;
 
@@ -63,14 +59,18 @@ public enum SerialPortScanner {
     public static class PortResult {
         public final String port;
         public final SerialPortType type;
+        public final CalibrationsInfo calibrations;
         public final RusEfiSignature signature;
 
-        public PortResult(String port, SerialPortType type, String signature) {
+        public PortResult(final String port, final SerialPortType type, final CalibrationsInfo calibrations) {
             this.port = port;
             this.type = type;
-            this.signature = SignatureHelper.parse(signature);
+            this.calibrations = calibrations;
+            this.signature = (calibrations != null ?
+                SignatureHelper.parse(calibrations.getImage().getMeta().getEcuSignature()) :
+                null
+            );
         }
-
         public PortResult(String port, SerialPortType type) {
             this(port, type, null);
         }
@@ -78,6 +78,7 @@ public enum SerialPortScanner {
         protected PortResult(final PortResult origin) {
             this.port = origin.port;
             this.type = origin.type;
+            this.calibrations = origin.calibrations;
             this.signature = origin.signature;
         }
 
@@ -154,13 +155,17 @@ public enum SerialPortScanner {
             return new PortResult(serialPort, SerialPortType.OpenBlt);
         } else {
             // See if this looks like an ECU
-            String signature = getEcuSignature(serialPort);
-            boolean isEcu = signature != null;
+            final Optional<CalibrationsInfo> ecuCalibrations = getEcuCalibrations(serialPort);
+            final boolean isEcu = ecuCalibrations.isPresent();
             log.info("Port " + serialPort + (isEcu ? " looks like" : " does not look like") + " an ECU");
             if (isEcu) {
-                boolean ecuHasOpenblt = ecuHasOpenblt(serialPort);
+                final boolean ecuHasOpenblt = ecuHasOpenblt(serialPort);
                 log.info("ECU at " + serialPort + (ecuHasOpenblt ? " has" : " does not have") + " an OpenBLT bootloader");
-                return new PortResult(serialPort, ecuHasOpenblt ? SerialPortType.EcuWithOpenblt : SerialPortType.Ecu, signature);
+                return new PortResult(
+                    serialPort,
+                    ecuHasOpenblt ? SerialPortType.EcuWithOpenblt : SerialPortType.Ecu,
+                    ecuCalibrations.get()
+                );
             } else {
                 // Dunno what this is, leave it in the list anyway
                 return new PortResult(serialPort, SerialPortType.Unknown);
@@ -285,12 +290,11 @@ public enum SerialPortScanner {
         void onChange(AvailableHardware currentHardware);
     }
 
-    private static String getEcuSignature(String port) {
-        try (IoStream stream = BufferedSerialIoStream.openPort(port)) {
-            return SerialAutoChecker.checkResponse(stream, callbackContext -> null);
-        } catch (Exception e) {
-            return null;
-        }
+    private static Optional<CalibrationsInfo> getEcuCalibrations(final String port) {
+        return CalibrationsHelper.readCurrentCalibrationsWithoutSuspendingPortScanner(
+            port,
+            UpdateOperationCallbacks.DUMMY
+        );
     }
 
     private static boolean ecuHasOpenblt(String port) {
