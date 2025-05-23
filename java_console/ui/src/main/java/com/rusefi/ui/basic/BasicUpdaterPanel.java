@@ -120,14 +120,14 @@ public class BasicUpdaterPanel {
         if (currentHardware.isDfuFound()) {
             setUpdateFirmwareJob(new DfuManualJob());
         } else {
-            final Set<SerialPortScanner.SerialPortType> portTypesToUpdateFirmware = (isObfuscated ?
+            final Set<SerialPortType> portTypesToUpdateFirmware = (isObfuscated ?
                 CompatibilitySet.of(
-                    SerialPortScanner.SerialPortType.EcuWithOpenblt,
-                    SerialPortScanner.SerialPortType.OpenBlt
+                    SerialPortType.EcuWithOpenblt,
+                    SerialPortType.OpenBlt
                 ) :
                 CompatibilitySet.of(
-                    SerialPortScanner.SerialPortType.Ecu,
-                    SerialPortScanner.SerialPortType.EcuWithOpenblt
+                    SerialPortType.Ecu,
+                    SerialPortType.EcuWithOpenblt
                 )
             );
             final List<SerialPortScanner.PortResult> portsToUpdateFirmware = currentHardware.getKnownPorts(
@@ -142,7 +142,7 @@ public class BasicUpdaterPanel {
                 case 1: {
                     final SerialPortScanner.PortResult portToUpdateFirmware = portsToUpdateFirmware.get(0);
                     AsyncJob job = null;
-                    final SerialPortScanner.SerialPortType portType = portToUpdateFirmware.type;
+                    final SerialPortType portType = portToUpdateFirmware.type;
                     switch (portType) {
                         case Ecu: {
                             job = new DfuAutoJob(portToUpdateFirmware, updateFirmwareButton);
@@ -204,8 +204,8 @@ public class BasicUpdaterPanel {
 
     private void updateEcuPortToUse(final AvailableHardware currentHardware) {
         final List<SerialPortScanner.PortResult> ecuPortsToUse = currentHardware.getKnownPorts(CompatibilitySet.of(
-            SerialPortScanner.SerialPortType.Ecu,
-            SerialPortScanner.SerialPortType.EcuWithOpenblt
+            SerialPortType.Ecu,
+            SerialPortType.EcuWithOpenblt
         ));
 
         switch (ecuPortsToUse.size()) {

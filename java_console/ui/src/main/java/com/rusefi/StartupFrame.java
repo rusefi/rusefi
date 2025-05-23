@@ -387,9 +387,9 @@ public class StartupFrame {
         boolean hasEcuOrBootloader = false;
         for (final SerialPortScanner.PortResult port : ports) {
             comboPorts.addItem(port);
-            if (port.type == SerialPortScanner.SerialPortType.Ecu ||
-                port.type == SerialPortScanner.SerialPortType.EcuWithOpenblt ||
-                port.type == SerialPortScanner.SerialPortType.OpenBlt) {
+            if (port.type == SerialPortType.Ecu ||
+                port.type == SerialPortType.EcuWithOpenblt ||
+                port.type == SerialPortType.OpenBlt) {
                 hasEcuOrBootloader = true;
             }
         }
