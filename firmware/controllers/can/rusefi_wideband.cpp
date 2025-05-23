@@ -87,7 +87,7 @@ void setWidebandOffset(uint8_t hwIndex, uint8_t index) {
 	}
 
 	if (!waitAck()) {
-		criticalError("Wideband index set failed: no controller detected!");
+		efiPrintf("Wideband index set failed: no controller detected!");
 		setStatus(WBO_RE_FAILED);
 	} else {
 		setStatus(WBO_RE_DONE);
