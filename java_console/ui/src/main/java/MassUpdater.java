@@ -16,7 +16,7 @@ import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
-import static com.rusefi.SerialPortScanner.SerialPortType.OpenBlt;
+import static com.rusefi.SerialPortType.OpenBlt;
 
 public class MassUpdater {
     private final StatusWindow mainStatus = new StatusWindow();

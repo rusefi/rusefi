@@ -25,12 +25,12 @@ public class AvailableHardware {
     public List<SerialPortScanner.PortResult> getKnownPorts() {return new ArrayList<>(ports);}
 
     @NotNull
-    public List<SerialPortScanner.PortResult> getKnownPorts(final SerialPortScanner.SerialPortType type) {
+    public List<SerialPortScanner.PortResult> getKnownPorts(final SerialPortType type) {
         return ports.stream().filter(port -> port.type == type).collect(Collectors.toList());
     }
 
     @NotNull
-    public List<SerialPortScanner.PortResult> getKnownPorts(final Set<SerialPortScanner.SerialPortType> typesToReturn) {
+    public List<SerialPortScanner.PortResult> getKnownPorts(final Set<SerialPortType> typesToReturn) {
         return ports.stream().filter(port -> typesToReturn.contains(port.type)).collect(Collectors.toList());
     }
 
