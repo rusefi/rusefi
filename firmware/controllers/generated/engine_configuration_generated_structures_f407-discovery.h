@@ -848,7 +848,6 @@ struct engine_configuration_s {
 	/**
 	 * Closed throttle, 1 volt = 200 units.
 	 * See also tps1_1AdcChannel
-	 * set tps_min X
 	 * units: ADC
 	 * offset 172
 	 */
@@ -856,7 +855,6 @@ struct engine_configuration_s {
 	/**
 	 * Full throttle.
 	 * See also tps1_1AdcChannel
-	 * set tps_max X
 	 * units: ADC
 	 * offset 174
 	 */
@@ -1164,6 +1162,7 @@ struct engine_configuration_s {
 	int byFirmwareVersion;
 	/**
 	 * First throttle body, first sensor. See also pedalPositionAdcChannel
+	 * Analog TPS inputs have 200Hz low-pass cutoff.
 	 * offset 492
 	 */
 	adc_channel_e tps1_1AdcChannel;

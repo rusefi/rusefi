@@ -149,10 +149,10 @@ If enabled - use onboard SPI Accelerometer, otherwise listen for CAN messages
 
 
 ### tpsMin
-Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel\nset tps_min X
+Closed throttle, 1 volt = 200 units.\nSee also tps1_1AdcChannel
 
 ### tpsMax
-Full throttle.\nSee also tps1_1AdcChannel\nset tps_max X
+Full throttle.\nSee also tps1_1AdcChannel
 
 ### tpsErrorDetectionTooLow
 TPS error detection: what throttle % is unrealistically low?\nAlso used for accelerator pedal error detection if so equipped.
