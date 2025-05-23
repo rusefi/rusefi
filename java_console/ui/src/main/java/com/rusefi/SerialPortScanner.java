@@ -74,6 +74,12 @@ public enum SerialPortScanner {
             this(port, type, null);
         }
 
+        protected PortResult(final PortResult origin) {
+            this.port = origin.port;
+            this.type = origin.type;
+            this.signature = origin.signature;
+        }
+
         @Override
         public String toString() {
             if (type.friendlyString == null) {
