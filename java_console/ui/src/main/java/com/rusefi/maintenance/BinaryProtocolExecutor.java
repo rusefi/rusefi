@@ -14,7 +14,7 @@ public class BinaryProtocolExecutor {
     public interface BinaryProtocolAction<T> {
         T doWithBinaryProtocol(BinaryProtocol binaryProtocol);
     }
-    private static <T> T execute(
+    public static <T> T execute(
         final String port,
         final UpdateOperationCallbacks callbacks,
         final BinaryProtocolAction<T> bpAction,
