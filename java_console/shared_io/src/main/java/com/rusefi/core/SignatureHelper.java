@@ -82,6 +82,6 @@ public class SignatureHelper {
         String bundleTarget = elements[4];
         String hash = elements[5];
 
-        return new RusEfiSignature(signature, branch, year, month, day, bundleTarget, hash);
+        return new RusEfiSignature(branch, year, month, day, bundleTarget, hash);
     }
 }
