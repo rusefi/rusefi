@@ -1330,7 +1330,7 @@ struct output_channels_s {
 	/**
 	 * offset 776
 	 */
-	uint8_t unusedWasAdc = (uint8_t)0;
+	uint8_t canReWidebandCmdStatus = (uint8_t)0;
 	/**
 	 * offset 777
 	 */

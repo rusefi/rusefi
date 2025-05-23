@@ -779,6 +779,9 @@ float getOutputValueByName(const char *name) {
 // rawFlexFreq
 		case -1935221780:
 			return engine->outputChannels.rawFlexFreq;
+// canReWidebandCmdStatus
+		case -823915964:
+			return engine->outputChannels.canReWidebandCmdStatus;
 // deviceUid
 		case 540029591:
 			return engine->outputChannels.deviceUid;

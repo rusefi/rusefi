@@ -309,7 +309,7 @@ injectorDiagnostic12("injectorDiagnostic 12", SensorCategory.SENSOR_INPUTS, Fiel
 actualLastInjectionStage2("Fuel: Last inj pulse width stg 2", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 772, 0.0033333333333333335, 0.0, 0.0, "ms"),
 injectorDutyCycleStage2("Fuel: injector duty cycle stage 2", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 774, 0.5, 0.0, 0.0, "%"),
 rawFlexFreq("rawFlexFreq", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 775, 1.0, -1.0, -1.0, ""),
-unusedWasAdc("unusedWasAdc", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 776, 1.0, -1.0, -1.0, ""),
+canReWidebandCmdStatus("canReWidebandCmdStatus", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 776, 1.0, -1.0, -1.0, ""),
 deviceUid("deviceUid", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 777, 1.0, -1.0, -1.0, ""),
 mc33810spiErrorCounter("mc33810spiErrorCounter", SensorCategory.SENSOR_INPUTS, FieldType.INT16, 778, 1.0, -1.0, -1.0, ""),
 sadDwellRatioCounter("sadDwellRatioCounter", SensorCategory.SENSOR_INPUTS, FieldType.INT8, 780, 1.0, -1.0, -1.0, ""),

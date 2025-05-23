@@ -1,6 +1,6 @@
 #include "global.h"
 #include "rusefi_enums.h"
-// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Thu May 22 16:42:39 UTC 2025
+// was generated automatically by rusEFI tool  from rusefi_enums.h // by enum_to_string.jar tool on Fri May 23 14:07:01 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -361,6 +361,19 @@ case NISSAN_350:
   return "NISSAN_350";
 case W202:
   return "W202";
+  }
+ return NULL;
+}
+const char *getCan_wbo_re_status_e(can_wbo_re_status_e value){
+switch(value) {
+case WBO_RE_BUSY:
+  return "WBO_RE_BUSY";
+case WBO_RE_DONE:
+  return "WBO_RE_DONE";
+case WBO_RE_FAILED:
+  return "WBO_RE_FAILED";
+case WBO_RE_IDLE:
+  return "WBO_RE_IDLE";
   }
  return NULL;
 }
