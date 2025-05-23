@@ -1478,105 +1478,121 @@ struct output_channels_s {
 	 */
 	uint16_t fastAdcConversionCount = (uint16_t)0;
 	/**
-	offset 836 bit 0 */
+	 * offset 836
+	 */
+	uint8_t canReWidebandVersion = (uint8_t)0;
+	/**
+	 * offset 837
+	 */
+	uint8_t canReWidebandFwDay = (uint8_t)0;
+	/**
+	 * offset 838
+	 */
+	uint8_t canReWidebandFwMon = (uint8_t)0;
+	/**
+	 * offset 839
+	 */
+	uint8_t canReWidebandFwYear = (uint8_t)0;
+	/**
+	offset 840 bit 0 */
 	bool isMapAveraging : 1 {};
 	/**
-	offset 836 bit 1 */
-	bool unusedBit_304_1 : 1 {};
+	offset 840 bit 1 */
+	bool unusedBit_308_1 : 1 {};
 	/**
-	offset 836 bit 2 */
-	bool unusedBit_304_2 : 1 {};
+	offset 840 bit 2 */
+	bool unusedBit_308_2 : 1 {};
 	/**
-	offset 836 bit 3 */
-	bool unusedBit_304_3 : 1 {};
+	offset 840 bit 3 */
+	bool unusedBit_308_3 : 1 {};
 	/**
-	offset 836 bit 4 */
-	bool unusedBit_304_4 : 1 {};
+	offset 840 bit 4 */
+	bool unusedBit_308_4 : 1 {};
 	/**
-	offset 836 bit 5 */
-	bool unusedBit_304_5 : 1 {};
+	offset 840 bit 5 */
+	bool unusedBit_308_5 : 1 {};
 	/**
-	offset 836 bit 6 */
-	bool unusedBit_304_6 : 1 {};
+	offset 840 bit 6 */
+	bool unusedBit_308_6 : 1 {};
 	/**
-	offset 836 bit 7 */
-	bool unusedBit_304_7 : 1 {};
+	offset 840 bit 7 */
+	bool unusedBit_308_7 : 1 {};
 	/**
-	offset 836 bit 8 */
-	bool unusedBit_304_8 : 1 {};
+	offset 840 bit 8 */
+	bool unusedBit_308_8 : 1 {};
 	/**
-	offset 836 bit 9 */
-	bool unusedBit_304_9 : 1 {};
+	offset 840 bit 9 */
+	bool unusedBit_308_9 : 1 {};
 	/**
-	offset 836 bit 10 */
-	bool unusedBit_304_10 : 1 {};
+	offset 840 bit 10 */
+	bool unusedBit_308_10 : 1 {};
 	/**
-	offset 836 bit 11 */
-	bool unusedBit_304_11 : 1 {};
+	offset 840 bit 11 */
+	bool unusedBit_308_11 : 1 {};
 	/**
-	offset 836 bit 12 */
-	bool unusedBit_304_12 : 1 {};
+	offset 840 bit 12 */
+	bool unusedBit_308_12 : 1 {};
 	/**
-	offset 836 bit 13 */
-	bool unusedBit_304_13 : 1 {};
+	offset 840 bit 13 */
+	bool unusedBit_308_13 : 1 {};
 	/**
-	offset 836 bit 14 */
-	bool unusedBit_304_14 : 1 {};
+	offset 840 bit 14 */
+	bool unusedBit_308_14 : 1 {};
 	/**
-	offset 836 bit 15 */
-	bool unusedBit_304_15 : 1 {};
+	offset 840 bit 15 */
+	bool unusedBit_308_15 : 1 {};
 	/**
-	offset 836 bit 16 */
-	bool unusedBit_304_16 : 1 {};
+	offset 840 bit 16 */
+	bool unusedBit_308_16 : 1 {};
 	/**
-	offset 836 bit 17 */
-	bool unusedBit_304_17 : 1 {};
+	offset 840 bit 17 */
+	bool unusedBit_308_17 : 1 {};
 	/**
-	offset 836 bit 18 */
-	bool unusedBit_304_18 : 1 {};
+	offset 840 bit 18 */
+	bool unusedBit_308_18 : 1 {};
 	/**
-	offset 836 bit 19 */
-	bool unusedBit_304_19 : 1 {};
+	offset 840 bit 19 */
+	bool unusedBit_308_19 : 1 {};
 	/**
-	offset 836 bit 20 */
-	bool unusedBit_304_20 : 1 {};
+	offset 840 bit 20 */
+	bool unusedBit_308_20 : 1 {};
 	/**
-	offset 836 bit 21 */
-	bool unusedBit_304_21 : 1 {};
+	offset 840 bit 21 */
+	bool unusedBit_308_21 : 1 {};
 	/**
-	offset 836 bit 22 */
-	bool unusedBit_304_22 : 1 {};
+	offset 840 bit 22 */
+	bool unusedBit_308_22 : 1 {};
 	/**
-	offset 836 bit 23 */
-	bool unusedBit_304_23 : 1 {};
+	offset 840 bit 23 */
+	bool unusedBit_308_23 : 1 {};
 	/**
-	offset 836 bit 24 */
-	bool unusedBit_304_24 : 1 {};
+	offset 840 bit 24 */
+	bool unusedBit_308_24 : 1 {};
 	/**
-	offset 836 bit 25 */
-	bool unusedBit_304_25 : 1 {};
+	offset 840 bit 25 */
+	bool unusedBit_308_25 : 1 {};
 	/**
-	offset 836 bit 26 */
-	bool unusedBit_304_26 : 1 {};
+	offset 840 bit 26 */
+	bool unusedBit_308_26 : 1 {};
 	/**
-	offset 836 bit 27 */
-	bool unusedBit_304_27 : 1 {};
+	offset 840 bit 27 */
+	bool unusedBit_308_27 : 1 {};
 	/**
-	offset 836 bit 28 */
-	bool unusedBit_304_28 : 1 {};
+	offset 840 bit 28 */
+	bool unusedBit_308_28 : 1 {};
 	/**
-	offset 836 bit 29 */
-	bool unusedBit_304_29 : 1 {};
+	offset 840 bit 29 */
+	bool unusedBit_308_29 : 1 {};
 	/**
-	offset 836 bit 30 */
-	bool unusedBit_304_30 : 1 {};
+	offset 840 bit 30 */
+	bool unusedBit_308_30 : 1 {};
 	/**
-	offset 836 bit 31 */
-	bool unusedBit_304_31 : 1 {};
+	offset 840 bit 31 */
+	bool unusedBit_308_31 : 1 {};
 	/**
-	 * offset 840
+	 * offset 844
 	 */
-	uint8_t unusedAtTheEnd[36] = {};
+	uint8_t unusedAtTheEnd[32] = {};
 };
 static_assert(sizeof(output_channels_s) == 876);
 

@@ -869,6 +869,18 @@ float getOutputValueByName(const char *name) {
 // fastAdcConversionCount
 		case 1749059722:
 			return engine->outputChannels.fastAdcConversionCount;
+// canReWidebandVersion
+		case -2850030:
+			return engine->outputChannels.canReWidebandVersion;
+// canReWidebandFwDay
+		case 888763399:
+			return engine->outputChannels.canReWidebandFwDay;
+// canReWidebandFwMon
+		case 888773651:
+			return engine->outputChannels.canReWidebandFwMon;
+// canReWidebandFwYear
+		case -734820550:
+			return engine->outputChannels.canReWidebandFwYear;
 // isMapAveraging
 		case -1626840525:
 			return engine->outputChannels.isMapAveraging;

@@ -1344,7 +1344,7 @@ public class VariableRegistryValues {
 	public static final int SentInput_INPUT6 = 6;
 	public static final int SentInput_INPUT7 = 7;
 	public static final int SentInput_NONE = 0;
-	public static final int SIGNATURE_HASH = 1019009771;
+	public static final int SIGNATURE_HASH = 593166664;
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME = "generated/simulator_tune_image.bin";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX = "generated/simulator_tune_image";
 	public static final String SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX = ".bin";
@@ -1589,6 +1589,7 @@ public class VariableRegistryValues {
 	public static final int ts_command_e_TS_UNUSED_27 = 27;
 	public static final int ts_command_e_TS_UNUSED_28 = 28;
 	public static final int ts_command_e_TS_WIDEBAND = 21;
+	public static final int ts_command_e_TS_WIDEBAND_PING_BY_ID = 34;
 	public static final int ts_command_e_TS_WIDEBAND_SET_IDX_BY_ID = 33;
 	public static final int ts_command_e_TS_X14 = 20;
 	public static final char TS_COMMAND_F = 'F';
@@ -1626,7 +1627,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.05.23.frankenso_na6.1019009771";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.05.23.frankenso_na6.593166664";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';

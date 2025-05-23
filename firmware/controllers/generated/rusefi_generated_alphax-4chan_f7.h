@@ -1440,7 +1440,7 @@
 #define show_4chan_presets true
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 695178615
+#define SIGNATURE_HASH 914902740
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1706,6 +1706,7 @@
 #define ts_command_e_TS_UNUSED_27 27
 #define ts_command_e_TS_UNUSED_28 28
 #define ts_command_e_TS_WIDEBAND 21
+#define ts_command_e_TS_WIDEBAND_PING_BY_ID 34
 #define ts_command_e_TS_WIDEBAND_SET_IDX_BY_ID 33
 #define ts_command_e_TS_X14 20
 #define TS_COMMAND_F 'F'
@@ -1958,7 +1959,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.05.23.alphax-4chan_f7.695178615"
+#define TS_SIGNATURE "rusEFI master.2025.05.23.alphax-4chan_f7.914902740"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
