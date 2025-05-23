@@ -47,7 +47,7 @@ public class BasicUpdaterPanel {
     private final SingleAsyncJobExecutor singleAsyncJobExecutor;
     private final UpdateCalibrations updateCalibrations;
     private volatile Optional<AsyncJob> updateFirmwareJob = Optional.empty();
-    private volatile Optional<SerialPortScanner.PortResult> ecuPortToUse = Optional.empty();
+    private volatile Optional<EcuPortInfo> ecuPortToUse = Optional.empty();
 
     BasicUpdaterPanel(
         final boolean showUrlLabel,
@@ -231,7 +231,7 @@ public class BasicUpdaterPanel {
     }
 
     private void setEcuPortToUse(final SerialPortScanner.PortResult port) {
-        ecuPortToUse = Optional.of(port);
+        ecuPortToUse = Optional.of(new EcuPortInfo(port, () -> SwingUtilities.invokeLater(this::refreshButtons)));
         refreshButtons();
     }
 
@@ -239,7 +239,7 @@ public class BasicUpdaterPanel {
         ecuPortToUse = Optional.empty();
         updateCalibrationsButton.setEnabled(false);
         if (logoLabelPopupMenu != null) {
-            logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(false);
+            logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(false, false);
         }
     }
 
@@ -273,10 +273,16 @@ public class BasicUpdaterPanel {
 
     private void refreshButtons() {
         updateFirmwareButton.setEnabled(updateFirmwareJob.isPresent() && singleAsyncJobExecutor.isNotInProgress());
-        final boolean isEcuPortJobPossible = ecuPortToUse.isPresent() && singleAsyncJobExecutor.isNotInProgress();
+        final Optional<EcuPortInfo> ecuPort = ecuPortToUse;
+        final boolean isEcuPortJobPossible = ecuPort.isPresent() && singleAsyncJobExecutor.isNotInProgress();
         updateCalibrationsButton.setEnabled(isEcuPortJobPossible);
         if (logoLabelPopupMenu != null) {
-            logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(isEcuPortJobPossible);
+            logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(
+                isEcuPortJobPossible,
+                ecuPort.map(port ->
+                    port.existsAnyOfIniFields(UnitLabelPrinter.UNIT_IDENTIFIER_FIELD_NAMES)
+                ).orElse(false)
+            );
         }
     }
 
@@ -284,7 +290,7 @@ public class BasicUpdaterPanel {
         updateFirmwareButton.setEnabled(false);
         updateCalibrationsButton.setEnabled(false);
         if (logoLabelPopupMenu != null) {
-            logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(false);
+            logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(false, false);
         }
     }
 
