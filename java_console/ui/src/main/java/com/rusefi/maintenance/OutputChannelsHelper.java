@@ -3,7 +3,7 @@ package com.rusefi.maintenance;
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.IniMemberNotFound;
 import com.opensr5.ini.field.IniField;
-import com.rusefi.SerialPortScanner;
+import com.rusefi.PortResult;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.core.SensorCentral;
 import com.rusefi.io.UpdateOperationCallbacks;
@@ -19,7 +19,7 @@ public class OutputChannelsHelper {
     private static final String MCUSERIAL = PanamaHelper.MCUSERIAL;
 
     public static Optional<Integer> readMcuSerial(
-        final SerialPortScanner.PortResult ecuPort,
+        final PortResult ecuPort,
         final UpdateOperationCallbacks callbacks
     ) {
         return BinaryProtocolExecutor.executeWithSuspendedPortScanner(

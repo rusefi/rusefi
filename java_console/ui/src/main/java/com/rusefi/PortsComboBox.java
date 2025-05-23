@@ -5,7 +5,7 @@ import javax.swing.*;
 import static com.rusefi.ui.util.UiUtils.setToolTip;
 
 public class PortsComboBox {
-    private final JComboBox<SerialPortScanner.PortResult> comboPorts = new JComboBox<>();
+    private final JComboBox<PortResult> comboPorts = new JComboBox<>();
 
     public PortsComboBox() {
         if (FileLog.isWindows()) {
@@ -16,7 +16,7 @@ public class PortsComboBox {
         }
     }
 
-    public JComboBox<SerialPortScanner.PortResult> getComboPorts() {
+    public JComboBox<PortResult> getComboPorts() {
         return comboPorts;
     }
 }

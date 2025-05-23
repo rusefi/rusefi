@@ -1,13 +1,13 @@
 package com.rusefi.maintenance.jobs;
 
-import com.rusefi.SerialPortScanner;
+import com.rusefi.PortResult;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.ui.basic.UnitLabelPrinter;
 
 import javax.swing.*;
 
 public class PrintUnitLabelJob extends  AsyncJobWithContext<SerialPortWithParentComponentJobContext> {
-    public PrintUnitLabelJob(final SerialPortScanner.PortResult port, final JComponent parent) {
+    public PrintUnitLabelJob(final PortResult port, final JComponent parent) {
         super("Print unit label", new SerialPortWithParentComponentJobContext(port, parent));
     }
 

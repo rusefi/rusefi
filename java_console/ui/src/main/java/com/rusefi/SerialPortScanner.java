@@ -36,58 +36,6 @@ public enum SerialPortScanner {
 
     private final static Logging log = Logging.getLogging(SerialPortScanner.class);
 
-    public static class PortResult {
-        public final String port;
-        public final SerialPortType type;
-        public final CalibrationsInfo calibrations;
-        public final RusEfiSignature signature;
-
-        public PortResult(final String port, final SerialPortType type, final CalibrationsInfo calibrations) {
-            this.port = port;
-            this.type = type;
-            this.calibrations = calibrations;
-            this.signature = (calibrations != null ?
-                SignatureHelper.parse(calibrations.getImage().getMeta().getEcuSignature()) :
-                null
-            );
-        }
-        public PortResult(String port, SerialPortType type) {
-            this(port, type, null);
-        }
-
-        @Override
-        public String toString() {
-            if (type.friendlyString == null) {
-                return this.port;
-            } else {
-                return this.port + " (" + type.friendlyString + ")";
-            }
-        }
-
-        @Override
-        public boolean equals(Object o) {
-            if (o == this) {
-                return true;
-            }
-
-            if (o == null) {
-                return false;
-            }
-
-            if (getClass() != o.getClass()) {
-                return false;
-            }
-
-            PortResult other = (PortResult) o;
-
-            return this.port.equals(other.port) && this.type.equals(other.type);
-        }
-
-        public boolean isEcu() {
-            return type == SerialPortType.Ecu || type == SerialPortType.EcuWithOpenblt;
-        }
-    }
-
     private static final boolean SHOW_SOCKETCAN = FileLog.isLinux();
 
     private final RecurringStep portsScanner;
