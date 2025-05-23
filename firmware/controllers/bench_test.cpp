@@ -616,6 +616,17 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 	case TS_WIDEBAND:
 		setWidebandOffset(0xff, index);
 		break;
+	case TS_WIDEBAND_SET_IDX_BY_ID:
+		{
+			uint8_t hwIndex = index >> 8;
+			uint8_t canIndex = index & 0xff;
+
+			// Hack until we fix canReWidebandHwIndex and set "Broadcast" to 0xff
+			// TODO:
+			hwIndex = hwIndex < 8 ? hwIndex : 0xff;
+			setWidebandOffset(hwIndex, canIndex);
+		}
+		break;
 #endif // EFI_CAN_SUPPORT
 	case TS_BENCH_CATEGORY:
 		handleBenchCategory(index);
