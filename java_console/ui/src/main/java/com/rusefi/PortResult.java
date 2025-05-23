@@ -1,10 +1,15 @@
 package com.rusefi;
 
+import com.opensr5.ini.field.IniField;
 import com.rusefi.core.RusEfiSignature;
 import com.rusefi.core.SignatureHelper;
 import com.rusefi.maintenance.CalibrationsInfo;
 
+import java.util.Optional;
+
 public class PortResult {
+    private static final String HASH3_FIELD_NAME = "hash3";
+
     public final String port;
     public final SerialPortType type;
     public final CalibrationsInfo calibrations;
@@ -60,5 +65,10 @@ public class PortResult {
 
     public boolean isEcu() {
         return type == SerialPortType.Ecu || type == SerialPortType.EcuWithOpenblt;
+    }
+
+    public Optional<String> getFirmwareHash() {
+        final Optional<IniField> hash3IniField = calibrations.getIniFile().findIniField(HASH3_FIELD_NAME);
+        return hash3IniField.map(field -> field.getValue(calibrations.getImage().getConfigurationImage()));
     }
 }
