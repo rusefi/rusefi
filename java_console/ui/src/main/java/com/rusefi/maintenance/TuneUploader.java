@@ -1,6 +1,6 @@
 package com.rusefi.maintenance;
 
-import com.rusefi.SerialPortScanner;
+import com.rusefi.PortResult;
 import com.rusefi.binaryprotocol.BinaryProtocolLocalCache;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.panama.PanamaClient;
@@ -21,7 +21,7 @@ public enum TuneUploader {
      * @return true in case of success, false otherwise
      */
     public synchronized boolean uploadTune(
-        final SerialPortScanner.PortResult ecuPort,
+        final PortResult ecuPort,
         final String panamaUrl,
         final UpdateOperationCallbacks callbacks
     ) {

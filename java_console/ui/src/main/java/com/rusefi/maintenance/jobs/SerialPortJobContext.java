@@ -1,15 +1,15 @@
 package com.rusefi.maintenance.jobs;
 
-import com.rusefi.SerialPortScanner;
+import com.rusefi.PortResult;
 
 class SerialPortJobContext {
-    private final SerialPortScanner.PortResult port;
+    private final PortResult port;
 
-    SerialPortJobContext(final SerialPortScanner.PortResult port) {
+    SerialPortJobContext(final PortResult port) {
         this.port = port;
     }
 
-    SerialPortScanner.PortResult getPort() {
+    PortResult getPort() {
         return port;
     }
 }

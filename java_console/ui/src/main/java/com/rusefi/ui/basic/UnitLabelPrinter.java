@@ -2,7 +2,7 @@ package com.rusefi.ui.basic;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.field.IniField;
-import com.rusefi.SerialPortScanner;
+import com.rusefi.PortResult;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.CalibrationsHelper;
 import com.rusefi.maintenance.CalibrationsInfo;
@@ -33,7 +33,7 @@ public enum UnitLabelPrinter {
 
     public boolean printUnitLabel(
         final JComponent parent,
-        final SerialPortScanner.PortResult ecuPort,
+        final PortResult ecuPort,
         final UpdateOperationCallbacks callbacks
     ) {
         boolean result = false;
