@@ -38,7 +38,7 @@ public enum UnitLabelPrinter {
     ) {
         boolean result = false;
         final Optional<CalibrationsInfo> currentCalibrations = CalibrationsHelper.readCurrentCalibrations(
-            ecuPort,
+            ecuPort.port,
             callbacks
         );
 

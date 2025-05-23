@@ -177,11 +177,11 @@ public class CalibrationsHelper {
     }
 
     public static Optional<CalibrationsInfo> readCurrentCalibrations(
-        final PortResult ecuPort,
+        final String port,
         final UpdateOperationCallbacks callbacks
     ) {
         return BinaryProtocolExecutor.executeWithSuspendedPortScanner(
-            ecuPort.port,
+            port,
             callbacks,
             (binaryProtocol) -> {
                 try {
