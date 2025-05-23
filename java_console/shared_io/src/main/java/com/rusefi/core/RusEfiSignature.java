@@ -1,7 +1,6 @@
 package com.rusefi.core;
 
 public class RusEfiSignature {
-    private final String stringRepresentation;
     private final String branch;
     private final String year;
     private final String month;
@@ -10,7 +9,6 @@ public class RusEfiSignature {
     private final String hash;
 
     public RusEfiSignature(
-        final String stringRepresentation,
         final String branch,
         final String year,
         final String month,
@@ -18,7 +16,6 @@ public class RusEfiSignature {
         final String bundleTarget,
         final String hash
     ) {
-        this.stringRepresentation = stringRepresentation;
         this.branch = branch;
         this.year = year;
         this.month = month;
@@ -49,10 +46,5 @@ public class RusEfiSignature {
 
     public String getHash() {
         return hash;
-    }
-
-    @Override
-    public String toString() {
-        return stringRepresentation;
     }
 }
