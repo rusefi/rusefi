@@ -443,6 +443,11 @@ float mapFast
 	uint16_t fastAdcPeriod;ECU: Fast ADC period;"ticks", 1, 0, 0, 1000, 0
 	uint16_t fastAdcConversionCount;ECU: Fast ADC conversions;"N", 1, 0, 0, 65535, 0
 
+	uint8_t canReWidebandVersion;
+	uint8_t canReWidebandFwDay
+	uint8_t canReWidebandFwMon
+	uint8_t canReWidebandFwYear
+
 bit isMapAveraging
-	uint8_t[36 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
+	uint8_t[32 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct

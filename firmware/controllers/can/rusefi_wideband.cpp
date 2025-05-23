@@ -27,25 +27,57 @@ static size_t getWidebandBus() {
 
 static thread_t* waitingBootloaderThread = nullptr;
 
+#if (RUSEFI_WIDEBAND_VERSION <= 0xA0)
+namespace wbo
+{
+
+// TODO: move to rusefi_wideband.h
+struct PongData
+{
+    uint8_t hwId;
+    uint8_t Version;
+
+    // FW build date
+    uint8_t year; // starting from 2000
+    uint8_t month;
+    uint8_t day;
+
+    uint8_t reserved[3];
+};
+
+} // namespace wbo
+#endif
+
 void handleWidebandCan(const CANRxFrame& frame) {
 	// Bootloader acks with address 0x727573 aka ascii "rus"
 	if (CAN_EID(frame) != WB_ACK) {
 		return;
 	}
 
-	// Ack reply
 	if (frame.DLC == 0)
 	{
-		auto t = waitingBootloaderThread;
-		if (t) {
-			chEvtSignal(t, EVT_BOOTLOADER_ACK);
-		}
+		// Ack reply
+		// Nop
+	} else if (frame.DLC == 8)
+	{
+		// Ping reply
+		#if EFI_TUNER_STUDIO
+			auto data = reinterpret_cast<const wbo::PongData*>(&frame.data8[0]);
+
+			engine->outputChannels.canReWidebandVersion = data->Version;
+			engine->outputChannels.canReWidebandFwDay = data->day;
+			engine->outputChannels.canReWidebandFwMon = data->month;
+			engine->outputChannels.canReWidebandFwYear = data->year;
+		#endif
+	} else {
+		// Unknown
+		return;
 	}
 
-	// Ping reply
-	if (frame.DLC == 8)
-	{
-		// TODO:
+	// Wake thread in any case
+	auto t = waitingBootloaderThread;
+	if (t) {
+		chEvtSignal(t, EVT_BOOTLOADER_ACK);
 	}
 }
 
@@ -88,6 +120,40 @@ void setWidebandOffset(uint8_t hwIndex, uint8_t index) {
 
 	if (!waitAck()) {
 		efiPrintf("Wideband index set failed: no controller detected!");
+		setStatus(WBO_RE_FAILED);
+	} else {
+		setStatus(WBO_RE_DONE);
+	}
+
+	waitingBootloaderThread = nullptr;
+}
+
+void pingWideband(uint8_t hwIndex) {
+	size_t bus = getWidebandBus();
+
+	setStatus(WBO_RE_BUSY);
+
+#if EFI_TUNER_STUDIO
+	engine->outputChannels.canReWidebandVersion = 0;
+	engine->outputChannels.canReWidebandFwDay = 0;
+	engine->outputChannels.canReWidebandFwMon = 0;
+	engine->outputChannels.canReWidebandFwYear = 0;
+#endif
+
+	// Clear any pending acks for this thread
+	chEvtGetAndClearEvents(EVT_BOOTLOADER_ACK);
+
+	// Send messages to the current thread when acks come in
+	waitingBootloaderThread = chThdGetSelfX();
+
+	{
+		// TODO: replace magic number with WB_MSG_PING after updating Wideband submodule
+		CanTxMessage m(CanCategory::WBO_SERVICE, 0xEF6'0000, 1, bus, true);
+		m[0] = hwIndex;
+	}
+
+	if (!waitAck()) {
+		efiPrintf("Wideband ping failed: no controller detected!");
 		setStatus(WBO_RE_FAILED);
 	} else {
 		setStatus(WBO_RE_DONE);

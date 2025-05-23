@@ -627,6 +627,9 @@ void executeTSCommand(uint16_t subsystem, uint16_t index) {
 			setWidebandOffset(hwIndex, canIndex);
 		}
 		break;
+	case TS_WIDEBAND_PING_BY_ID:
+		pingWideband(index >> 8);
+		break;
 #endif // EFI_CAN_SUPPORT
 	case TS_BENCH_CATEGORY:
 		handleBenchCategory(index);

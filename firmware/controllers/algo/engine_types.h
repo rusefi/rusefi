@@ -314,6 +314,7 @@ typedef enum {
 	TS_SET_DEFAULT_ENGINE = 31,
 	TS_LUA_OUTPUT_CATEGORY = 32,
 	TS_WIDEBAND_SET_IDX_BY_ID = 33,
+	TS_WIDEBAND_PING_BY_ID = 34,
 } ts_command_e;
 
 typedef enum {
