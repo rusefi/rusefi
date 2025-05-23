@@ -3,7 +3,7 @@ package com.rusefi.ui.basic;
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.io.ConfigurationImageFile;
-import com.rusefi.SerialPortScanner;
+import com.rusefi.PortResult;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.maintenance.jobs.UpdateCalibrationsJob;
 
@@ -25,7 +25,7 @@ public class UpdateCalibrations {
         this.singleAsyncJobExecutor = singleAsyncJobExecutor;
     }
 
-    void updateCalibrationsAction(SerialPortScanner.PortResult port, JComponent parent) {
+    void updateCalibrationsAction(PortResult port, JComponent parent) {
         final int selectedOption = calibrationsFileChooser.showOpenDialog(parent);
         if (selectedOption == JFileChooser.APPROVE_OPTION) {
             final File selectedFile = calibrationsFileChooser.getSelectedFile();

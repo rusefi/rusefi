@@ -9,12 +9,12 @@ import java.util.stream.Collectors;
 
 public class AvailableHardware {
 
-    private final List<SerialPortScanner.PortResult> ports;
+    private final List<PortResult> ports;
     private final boolean dfuFound;
     private final boolean stLinkConnected;
     private final boolean PCANConnected;
 
-    public AvailableHardware(List<SerialPortScanner.PortResult> ports, boolean dfuFound, boolean stLinkConnected, boolean PCANConnected) {
+    public AvailableHardware(List<PortResult> ports, boolean dfuFound, boolean stLinkConnected, boolean PCANConnected) {
         this.ports = ports;
         this.dfuFound = dfuFound;
         this.stLinkConnected = stLinkConnected;
@@ -22,15 +22,15 @@ public class AvailableHardware {
     }
 
     @NotNull
-    public List<SerialPortScanner.PortResult> getKnownPorts() {return new ArrayList<>(ports);}
+    public List<PortResult> getKnownPorts() {return new ArrayList<>(ports);}
 
     @NotNull
-    public List<SerialPortScanner.PortResult> getKnownPorts(final SerialPortType type) {
+    public List<PortResult> getKnownPorts(final SerialPortType type) {
         return ports.stream().filter(port -> port.type == type).collect(Collectors.toList());
     }
 
     @NotNull
-    public List<SerialPortScanner.PortResult> getKnownPorts(final Set<SerialPortType> typesToReturn) {
+    public List<PortResult> getKnownPorts(final Set<SerialPortType> typesToReturn) {
         return ports.stream().filter(port -> typesToReturn.contains(port.type)).collect(Collectors.toList());
     }
 
@@ -41,7 +41,7 @@ public class AvailableHardware {
     public boolean isStLinkConnected() {return stLinkConnected;}
     public boolean isPCANConnected(){return PCANConnected;}
 
-    public boolean isPortAvailable(final SerialPortScanner.PortResult port) {
+    public boolean isPortAvailable(final PortResult port) {
         return ports.contains(port);
     }
 

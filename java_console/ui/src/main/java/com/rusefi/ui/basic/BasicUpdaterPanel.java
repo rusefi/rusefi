@@ -49,7 +49,7 @@ public class BasicUpdaterPanel {
     private final SingleAsyncJobExecutor singleAsyncJobExecutor;
     private final UpdateCalibrations updateCalibrations;
     private volatile Optional<AsyncJob> updateFirmwareJob = Optional.empty();
-    private volatile Optional<SerialPortScanner.PortResult> ecuPortToUse = Optional.empty();
+    private volatile Optional<PortResult> ecuPortToUse = Optional.empty();
 
     BasicUpdaterPanel(
         final boolean showUrlLabel,
@@ -131,7 +131,7 @@ public class BasicUpdaterPanel {
                     SerialPortType.EcuWithOpenblt
                 )
             );
-            final List<SerialPortScanner.PortResult> portsToUpdateFirmware = currentHardware.getKnownPorts(
+            final List<PortResult> portsToUpdateFirmware = currentHardware.getKnownPorts(
                 portTypesToUpdateFirmware
             );
 
@@ -141,7 +141,7 @@ public class BasicUpdaterPanel {
                     break;
                 }
                 case 1: {
-                    final SerialPortScanner.PortResult portToUpdateFirmware = portsToUpdateFirmware.get(0);
+                    final PortResult portToUpdateFirmware = portsToUpdateFirmware.get(0);
                     AsyncJob job = null;
                     final SerialPortType portType = portToUpdateFirmware.type;
                     switch (portType) {
@@ -204,7 +204,7 @@ public class BasicUpdaterPanel {
     }
 
     private void updateEcuPortToUse(final AvailableHardware currentHardware) {
-        final List<SerialPortScanner.PortResult> ecuPortsToUse = currentHardware.getKnownPorts(CompatibilitySet.of(
+        final List<PortResult> ecuPortsToUse = currentHardware.getKnownPorts(CompatibilitySet.of(
             SerialPortType.Ecu,
             SerialPortType.EcuWithOpenblt
         ));
@@ -232,7 +232,7 @@ public class BasicUpdaterPanel {
         }
     }
 
-    private void setEcuPortToUse(final SerialPortScanner.PortResult port) {
+    private void setEcuPortToUse(final PortResult port) {
         ecuPortToUse = Optional.of(port);
         refreshButtons();
     }
@@ -275,7 +275,7 @@ public class BasicUpdaterPanel {
 
     private void refreshButtons() {
         updateFirmwareButton.setEnabled(updateFirmwareJob.isPresent() && singleAsyncJobExecutor.isNotInProgress());
-        final Optional<SerialPortScanner.PortResult> ecuPort = ecuPortToUse;
+        final Optional<PortResult> ecuPort = ecuPortToUse;
         final boolean isEcuPortJobPossible = ecuPort.isPresent() && singleAsyncJobExecutor.isNotInProgress();
         updateCalibrationsButton.setEnabled(isEcuPortJobPossible);
         if (logoLabelPopupMenu != null) {

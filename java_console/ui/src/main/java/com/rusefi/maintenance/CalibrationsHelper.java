@@ -6,7 +6,7 @@ import com.opensr5.ConfigurationImageMetaVersion0_0;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.ini.IniFileModel;
 import com.opensr5.ini.field.*;
-import com.rusefi.SerialPortScanner.PortResult;
+import com.rusefi.PortResult;
 import com.rusefi.binaryprotocol.BinaryProtocol;
 import com.rusefi.binaryprotocol.BinaryProtocolLocalCache;
 import com.rusefi.core.ui.AutoupdateUtil;
