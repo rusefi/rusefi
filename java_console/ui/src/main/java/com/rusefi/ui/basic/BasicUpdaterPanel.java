@@ -240,7 +240,7 @@ public class BasicUpdaterPanel {
         ecuPortToUse = Optional.empty();
         updateCalibrationsButton.setEnabled(false);
         if (logoLabelPopupMenu != null) {
-            logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(false);
+            logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(false, false);
         }
     }
 
@@ -278,7 +278,10 @@ public class BasicUpdaterPanel {
         final boolean isEcuPortJobPossible = ecuPort.isPresent() && singleAsyncJobExecutor.isNotInProgress();
         updateCalibrationsButton.setEnabled(isEcuPortJobPossible);
         if (logoLabelPopupMenu != null) {
-            logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(isEcuPortJobPossible);
+            logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(
+                isEcuPortJobPossible,
+                true
+            );
         }
     }
 
@@ -286,7 +289,7 @@ public class BasicUpdaterPanel {
         updateFirmwareButton.setEnabled(false);
         updateCalibrationsButton.setEnabled(false);
         if (logoLabelPopupMenu != null) {
-            logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(false);
+            logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(false, false);
         }
     }
 
