@@ -40,8 +40,6 @@ static scheduling_s debugToggleScheduling;
 #if EFI_SHAFT_POSITION_INPUT
 
 TriggerCentral::TriggerCentral() :
-		vvtEventRiseCounter(),
-		vvtEventFallCounter(),
 		vvtPosition(),
 		triggerState("TRG")
 {

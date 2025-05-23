@@ -279,10 +279,6 @@ int16_t rpmAcceleration;dRPM;"RPM acceleration/Rate of Change/ROC",1, 0, 0, 5, 2
     uint32_t triggerPrimaryRise;;"", 1, 0, 0, 10000, 3
     uint32_t triggerSecondaryFall;;"", 1, 0, 0, 10000, 3
     uint32_t triggerSecondaryRise;;"", 1, 0, 0, 10000, 3
-    uint16_t triggerVvtFall;;"",  1, 0, 0, 3000, 0
-    uint16_t triggerVvtRise;;"",  1, 0, 0, 3000, 0
-    uint16_t triggerVvt2Fall;;"", 1, 0, 0, 3000, 0, @@GAUGE_CATEGORY_SYNC@@
-    uint16_t triggerVvt2Rise;;"", 1, 0, 0, 3000, 0, @@GAUGE_CATEGORY_SYNC@@
 
 
 	uint8_t starterState;;"", 1, 0, 0, 100, 3
