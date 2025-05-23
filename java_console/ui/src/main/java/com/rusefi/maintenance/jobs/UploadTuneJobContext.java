@@ -2,7 +2,7 @@ package com.rusefi.maintenance.jobs;
 
 import com.rusefi.SerialPortScanner;
 
-public class UploadTuneJobContext extends SerialPortJobContext {
+public class UploadTuneJobContext extends SerialPortJobContext<SerialPortScanner.PortResult> {
     private final String panamaUrl;
 
     UploadTuneJobContext(final SerialPortScanner.PortResult port, final String panamaUrl) {

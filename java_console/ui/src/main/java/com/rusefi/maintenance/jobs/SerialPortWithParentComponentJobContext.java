@@ -4,7 +4,7 @@ import com.rusefi.SerialPortScanner;
 
 import javax.swing.*;
 
-class SerialPortWithParentComponentJobContext extends SerialPortJobContext {
+class SerialPortWithParentComponentJobContext extends SerialPortJobContext<SerialPortScanner.PortResult> {
     private final JComponent parent;
 
     SerialPortWithParentComponentJobContext(final SerialPortScanner.PortResult port, final JComponent parent) {
