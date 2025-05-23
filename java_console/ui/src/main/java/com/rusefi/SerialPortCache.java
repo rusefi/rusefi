@@ -15,7 +15,7 @@ public class SerialPortCache {
 
     private final Map<String, CachedPort> cachedPorts = new HashMap<>();
 
-    Optional<SerialPortScanner.PortResult> get(final String serialPort) {
+    Optional<PortResult> get(final String serialPort) {
         final CachedPort cachedPort = cachedPorts.get(serialPort);
         if (cachedPort != null) {
             if (cachedPort.isExpired()) {
@@ -28,7 +28,7 @@ public class SerialPortCache {
         return Optional.empty();
     }
 
-    void put(final SerialPortScanner.PortResult port) {
+    void put(final PortResult port) {
         cachedPorts.put(port.port, new CachedPort(port));
     }
 
@@ -40,10 +40,10 @@ public class SerialPortCache {
     }
 
     private static class CachedPort {
-        private final SerialPortScanner.PortResult port;
+        private final PortResult port;
         private final Instant expirationTimestamp;
 
-        CachedPort(final SerialPortScanner.PortResult portToCache) {
+        CachedPort(final PortResult portToCache) {
             this.port = portToCache;
             this.expirationTimestamp = Instant.now().plus(lifeTime);
         }

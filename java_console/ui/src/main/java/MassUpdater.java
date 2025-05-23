@@ -1,3 +1,4 @@
+import com.rusefi.PortResult;
 import com.rusefi.SerialPortScanner;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.io.UpdateOperationCallbacks;
@@ -62,7 +63,7 @@ public class MassUpdater {
                 previousDfuState.set(currentHardware.isDfuFound());
             }
 
-            List<SerialPortScanner.PortResult> currentBltList = currentHardware.getKnownPorts().stream().filter(portResult -> portResult.type == OpenBlt).collect(Collectors.toList());
+            List<PortResult> currentBltList = currentHardware.getKnownPorts().stream().filter(portResult -> portResult.type == OpenBlt).collect(Collectors.toList());
             Set<String> currentSet = currentBltList.stream().map(portResult -> portResult.port).collect(Collectors.toSet());
             for (Iterator<String> it = knownBlts.iterator(); it.hasNext(); ) {
                 String port = it.next();
@@ -71,7 +72,7 @@ public class MassUpdater {
                     it.remove();
                 }
             }
-            for (SerialPortScanner.PortResult openBltPort : currentBltList) {
+            for (PortResult openBltPort : currentBltList) {
                 if (!knownBlts.contains(openBltPort.port)) {
                     knownBlts.add(openBltPort.port);
                     mainStatus.getContent().logLine("New OpenBlt " + openBltPort);
