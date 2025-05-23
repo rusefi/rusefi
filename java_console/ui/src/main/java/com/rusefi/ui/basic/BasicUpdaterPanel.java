@@ -1,6 +1,7 @@
 package com.rusefi.ui.basic;
 
 import com.devexperts.logging.Logging;
+import com.opensr5.ini.IniFileModel;
 import com.rusefi.*;
 import com.rusefi.core.FindFileHelper;
 import com.rusefi.core.net.ConnectionAndMeta;
@@ -25,6 +26,7 @@ import static com.devexperts.logging.Logging.getLogging;
 import static com.rusefi.FileLog.isWindows;
 import static com.rusefi.StartupFrame.newReleaseAnnounce;
 import static com.rusefi.core.net.ConnectionAndMeta.getProperties;
+import static com.rusefi.ui.basic.UnitLabelPrinter.UNIT_IDENTIFIER_FIELD_NAMES;
 
 public class BasicUpdaterPanel {
     private static final Logging log = getLogging(BasicUpdaterPanel.class);
@@ -47,7 +49,7 @@ public class BasicUpdaterPanel {
     private final SingleAsyncJobExecutor singleAsyncJobExecutor;
     private final UpdateCalibrations updateCalibrations;
     private volatile Optional<AsyncJob> updateFirmwareJob = Optional.empty();
-    private volatile Optional<EcuPortInfo> ecuPortToUse = Optional.empty();
+    private volatile Optional<SerialPortScanner.PortResult> ecuPortToUse = Optional.empty();
 
     BasicUpdaterPanel(
         final boolean showUrlLabel,
@@ -231,7 +233,7 @@ public class BasicUpdaterPanel {
     }
 
     private void setEcuPortToUse(final SerialPortScanner.PortResult port) {
-        ecuPortToUse = Optional.of(new EcuPortInfo(port, () -> SwingUtilities.invokeLater(this::refreshButtons)));
+        ecuPortToUse = Optional.of(port);
         refreshButtons();
     }
 
@@ -273,17 +275,24 @@ public class BasicUpdaterPanel {
 
     private void refreshButtons() {
         updateFirmwareButton.setEnabled(updateFirmwareJob.isPresent() && singleAsyncJobExecutor.isNotInProgress());
-        final Optional<EcuPortInfo> ecuPort = ecuPortToUse;
+        final Optional<SerialPortScanner.PortResult> ecuPort = ecuPortToUse;
         final boolean isEcuPortJobPossible = ecuPort.isPresent() && singleAsyncJobExecutor.isNotInProgress();
         updateCalibrationsButton.setEnabled(isEcuPortJobPossible);
         if (logoLabelPopupMenu != null) {
             logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(
                 isEcuPortJobPossible,
-                ecuPort.map(port ->
-                    port.existsAnyOfIniFields(UnitLabelPrinter.UNIT_IDENTIFIER_FIELD_NAMES)
-                ).orElse(false)
+                ecuPort.map(port -> existsAnyOfUnitIdentifierFields(port.calibrations.getIniFile())).orElse(false)
             );
         }
+    }
+
+    private boolean existsAnyOfUnitIdentifierFields(final IniFileModel iniFile) {
+        for (final String fieldName: UNIT_IDENTIFIER_FIELD_NAMES) {
+            if (iniFile.findIniField(fieldName).isPresent()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void disableButtons() {
