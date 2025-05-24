@@ -50,8 +50,6 @@ void setFordInline6() {
 
 	engineConfiguration->map.sensor.type = MT_MPX4250;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_15;
-	engineConfiguration->baroSensor.type = MT_MPX4250;
-	engineConfiguration->baroSensor.hwChannel = EFI_ADC_7;
 
 	// 6 channel output board
 	// output 1 is PB9
