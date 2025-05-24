@@ -404,6 +404,7 @@ public class VariableRegistryValues {
 	public static final int engine_type_e_FERRARI_F136 = 105;
 	public static final int engine_type_e_FORD_ASPIRE_1996 = 3;
 	public static final int engine_type_e_FORD_COYOTE = 11;
+	public static final int engine_type_e_FORD_ECOBOOST = 67;
 	public static final int engine_type_e_FORD_ESCORT_GT = 14;
 	public static final int engine_type_e_FORD_INLINE_6_1995 = 7;
 	public static final int engine_type_e_FRANKENSO_BMW_M73_F = 40;
@@ -489,7 +490,6 @@ public class VariableRegistryValues {
 	public static final int engine_type_e_TOYOTA_1NZ_FE = 13;
 	public static final int engine_type_e_TOYOTA_2JZ_GTE_VVTi = 44;
 	public static final int engine_type_e_UNUSED102 = 102;
-	public static final int engine_type_e_UNUSED67 = 67;
 	public static final int engine_type_e_UNUSED94 = 94;
 	public static final int engine_type_e_UNUSED_97 = 97;
 	public static final int engine_type_e_VAG_5_CYL = 77;
