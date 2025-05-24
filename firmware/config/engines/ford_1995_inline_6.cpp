@@ -2,7 +2,7 @@
  * @file ford_1995_inline_6.cpp
  * @brief Default engine configuration for a 1995 Ford inline 6 engine
  *
- * http://rusefi.com/forum/viewtopic.php?f=3&t=469
+ * todo: adjust/remove/modernize "unit" tests which still depend on this config?
  *
  * FORD_INLINE_6_1995 = 7
  * set engine_type 7
@@ -46,20 +46,7 @@ void setFordInline6() {
 	engineConfiguration->clt.config = {-10, 60, 120, 160310, 7700, 1180, 2700};
 	engineConfiguration->iat.config = {-10, 60, 120, 160310, 7700, 1180, 2700};
 
-	// 12ch analog board pinout:
-	// input channel 3 is PA7, that's ADC7
-	// input channel 5 is PA4, that's ADC4
-	// input channel 6 is PA3, that's ADC3
-	// input channel 7 is PA2, that's ADC2
-	// input channel 8 is PA1, that's ADC1
-	// input channel 9 is PA0, that's ADC0
-	// input channel 10 is PC3, that's ADC13
-	// input channel 12 is PC1, that's ADC11
-
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
-	engineConfiguration->iat.adcChannel = EFI_ADC_2;
-	engineConfiguration->clt.adcChannel = EFI_ADC_1;
-	engineConfiguration->afr.hwChannel = EFI_ADC_11;
 
 	engineConfiguration->map.sensor.type = MT_MPX4250;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_15;
