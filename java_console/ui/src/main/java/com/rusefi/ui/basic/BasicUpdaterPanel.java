@@ -37,7 +37,6 @@ public class BasicUpdaterPanel {
 
     private final String panamaUrl = getProperties().getProperty("panama_url");
 
-    private final JLabel firmwareHash = new JLabel();
     private final JLabel statusMessage = new JLabel();
     private final JButton updateFirmwareButton = ProgramSelector.createUpdateFirmwareButton();
     private final JButton updateCalibrationsButton = new JButton(
@@ -48,6 +47,7 @@ public class BasicUpdaterPanel {
     private LogoLabelPopupMenu logoLabelPopupMenu = null;
 
     private final SingleAsyncJobExecutor singleAsyncJobExecutor;
+    private final UpdateOperationCallbacks updateOperationCallbacks;
     private final UpdateCalibrations updateCalibrations;
     private volatile Optional<AsyncJob> updateFirmwareJob = Optional.empty();
     private volatile Optional<PortResult> ecuPortToUse = Optional.empty();
@@ -60,6 +60,7 @@ public class BasicUpdaterPanel {
             updateOperationCallbacks,
             () -> SwingUtilities.invokeLater(this::refreshButtons)
         );
+        this.updateOperationCallbacks = updateOperationCallbacks;
         updateCalibrations = new UpdateCalibrations(singleAsyncJobExecutor);
 
         if (isWindows()) {
@@ -72,8 +73,7 @@ public class BasicUpdaterPanel {
                 content.add(newReleaseNotification.get());
             }
             content.add(ToolButtons.createShowDeviceManagerButton());
-            resetFirmwareHash();
-            content.add(firmwareHash);
+
             content.add(StartupFrame.binaryModificationControl());
 
             updateFirmwareButton.addActionListener(this::onUpdateFirmwareButtonClicked);
@@ -240,23 +240,20 @@ public class BasicUpdaterPanel {
 
         SwingUtilities.invokeLater(() -> {
             refreshButtons();
-            firmwareHash.setText(port.getFirmwareHash().orElse(" "));
+            if (port.getFirmwareHash().isPresent()) {
+                updateOperationCallbacks.logLine("Detected " + port.getFirmwareHash().get());
+            }
         });
     }
 
     private void resetEcuPortToUse() {
         ecuPortToUse = Optional.empty();
         SwingUtilities.invokeLater(() -> {
-            resetFirmwareHash();
             updateCalibrationsButton.setEnabled(false);
             if (logoLabelPopupMenu != null) {
                 logoLabelPopupMenu.refreshUploadTuneAndPrintUnitLabelsMenuItems(false, false);
             }
         });
-    }
-
-    private void resetFirmwareHash() {
-        firmwareHash.setText("                                        ");
     }
 
     private void onUpdateFirmwareButtonClicked(final ActionEvent actionEvent) {
