@@ -138,7 +138,7 @@ enum class engine_type_e : uint16_t {
 	DODGE_RAM = 64,
 	GM_LNF = 65,
 	HONDA_OBD1 = 66,
-	UNUSED67 = 67,
+	FORD_ECOBOOST = 67,
 	MERCEDES_M111 = 68,
 
 	MAZDA_MIATA_NB2 = 69,

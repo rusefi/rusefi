@@ -207,8 +207,6 @@ case engine_type_e::TOYOTA_2JZ_GTE_VVTi:
   return "TOYOTA_2JZ_GTE_VVTi";
 case engine_type_e::UNUSED102:
   return "UNUSED102";
-case engine_type_e::UNUSED67:
-  return "UNUSED67";
 case engine_type_e::UNUSED94:
   return "UNUSED94";
 case engine_type_e::UNUSED_97:
