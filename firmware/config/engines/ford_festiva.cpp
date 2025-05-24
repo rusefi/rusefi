@@ -1,7 +1,7 @@
 /*
  * @file ford_festiva.cpp
  *
- * set engine_type 14
+ * todo: revisit "unit" tests and remove this configuration?
  *
  * http://rusefi.com/wiki/index.php?title=Vehicle:Mazda_Protege_1993
  * http://rusefi.com/forum/viewtopic.php?f=3&t=537
@@ -153,22 +153,6 @@ void setFordEscortGt() {
 
 	engineConfiguration->ignitionMode = IM_INDIVIDUAL_COILS;
 
-	/**
-	 * Outputs
-	 */
-	// Frankenso low out #1: PE6
-	// Frankenso low out #2: PE5 MIL
-	// Frankenso low out #3:
-	// Frankenso low out #4:
-	// Frankenso low out #5: PE3 VICS solenoid
-	// Frankenso low out #6: PE4
-	// Frankenso low out #7: PE0<>PD5
-	// Frankenso low out #8: PE2 INJ
-	// Frankenso low out #9: PB9 IDLE
-	// Frankenso low out #10: PE1<>PD3 INJ 1&3
-	// Frankenso low out #11: PB8
-	// Frankenso low out #12: PB7
-
 	engineConfiguration->injectionPins[0] = Gpio::D3;
 	engineConfiguration->injectionPins[1] = Gpio::E2;
 
@@ -176,11 +160,7 @@ void setFordEscortGt() {
 	// 40% idle is good default
 	engineConfiguration->idle.solenoidPin = Gpio::B9;
 
-	engineConfiguration->malfunctionIndicatorPin = Gpio::E5;
-
 	commonFrankensoAnalogInputs();
-	setCommonNTCSensor(&engineConfiguration->clt, 2700);
-	setCommonNTCSensor(&engineConfiguration->iat, 2700);
 
 	// we have a 1999 Auto Miata TB mounted on this car
 	engineConfiguration->tpsMin = 630; // convert 12to10 bit (ADC/4)
@@ -189,8 +169,6 @@ void setFordEscortGt() {
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_3;
 //	engineConfiguration->map.sensor.hwChannel = EFI_ADC_4;
 	engineConfiguration->mafAdcChannel = EFI_ADC_0;
-	engineConfiguration->clt.adcChannel = EFI_ADC_12;
-	engineConfiguration->iat.adcChannel = EFI_ADC_11;
 
 	// todo: 8.2 or 10k?
 	engineConfiguration->vbattDividerCoeff = ((float) (10 + 33)) / 10 * 2;
@@ -221,9 +199,5 @@ void setFordEscortGt() {
 
 	copyTable(config->ignitionTable, racingFestivaIgnitionTable);
 #endif
-
-	engineConfiguration->tpsAccelEnrichmentThreshold = 40;
-
-	engineConfiguration->isSdCardEnabled = true;
 }
 

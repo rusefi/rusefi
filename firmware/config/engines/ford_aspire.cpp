@@ -2,8 +2,8 @@
  * @file    ford_aspire.cpp
  * @brief	1996 Ford Aspire default engine configuration
  *
- * FORD_ASPIRE_1996 = 3
- * set engine_type 3
+ * FORD_ASPIRE_1996
+ * todo: revisit "unit" tests and remove this configuration?
  *
  * @date Sep 9, 2013
  * @author Andrey Belomutskiy, (c) 2012-2020
