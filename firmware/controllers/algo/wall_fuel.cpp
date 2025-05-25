@@ -110,12 +110,29 @@ float WallFuelController::calculateWeightedAverage(int startIdx, int endIdx, flo
 
 void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, float targetLambda, 
                                         bool isTransient, TransientDirection direction, float clt) {
-	if (clt < engineConfiguration->wwMinClt || !engineConfiguration->wwDirectionalCorrections) return;
+	// Validação robusta de dados antes de qualquer processamento
+	LearningDataQuality quality = validateLearningData(lambda, targetLambda, clt, map, rpm);
+	
+	if (!isLearningDataValid(quality)) {
+		// Dados não são adequados para aprendizado
+		monitoring = false;
+		return;
+	}
+	
+	// Verificar se correções direcionais estão habilitadas
+	if (!engineConfiguration->wwDirectionalCorrections) {
+		return;
+	}
 
 	auto rpmBin = priv::getBin(rpm, config->wwRpmBins);
 	auto mapBin = priv::getBin(map, config->wwMapBins);
 	int j = rpmBin.Idx;
 	int i = mapBin.Idx;
+	
+	// Validar índices
+	if (i >= WW_MAP_BINS || j >= WW_RPM_BINS) {
+		return;
+	}
 	
 	lastTransientDirection = direction;
 	
@@ -123,37 +140,31 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 		monitoring = true;
 		bufferIdx = 0;
 		
-		// Calcular número de amostras baseado no tau atual e RPM
+		// Calcular tamanho ótimo do buffer baseado em tau e RPM
 		float tau = computeTauWithDirection(direction);
-		int calculatedSamples = (int)(engineConfiguration->wwSampleMultiplier * tau * rpm / 60.0f);
-		
-		// Garantir tamanho mínimo e máximo do buffer
-		int configuredMaxSize = engineConfiguration->wwBufferSize;
-		if (configuredMaxSize <= 0) configuredMaxSize = 400; // Valor padrão
-		
-		bufferMaxSize = minI(configuredMaxSize, 
-		                     maxI(engineConfiguration->wwMinSampleSize, calculatedSamples));
+		bufferMaxSize = calculateOptimalBufferSize(tau, rpm);
 	}
 	
 	if (monitoring) {
 		if (bufferIdx < bufferMaxSize) {
-			lambdaBuffer[bufferIdx] = lambda;
-			rpmBuffer[bufferIdx] = rpm;
-			mapBuffer[bufferIdx] = map;
-			bufferIdx++;
+			// Validar novamente cada amostra antes de armazenar
+			LearningDataQuality sampleQuality = validateLearningData(lambda, targetLambda, clt, map, rpm);
+			if (isLearningDataValid(sampleQuality)) {
+				lambdaBuffer[bufferIdx] = lambda;
+				rpmBuffer[bufferIdx] = rpm;
+				mapBuffer[bufferIdx] = map;
+				bufferIdx++;
+			}
 		} else {
+			// Buffer cheio - processar aprendizado
+			
 			// 1. Dividir as amostras em três fases
 			int faseInicial = bufferMaxSize / 5;      // Primeiros 20% das amostras
 			int faseFinal = bufferMaxSize - faseInicial; // Últimos 20% das amostras
 			
 			// 2. Calcular médias ponderadas para cada fase
-			// Fase inicial - ponderada para valores mais extremos
 			float mediaInicial = calculateWeightedAverage(0, faseInicial, targetLambda);
-			
-			// Fase transiente (meio do evento) - cálculo ponderado
 			float mediaTransiente = calculateWeightedAverage(faseInicial, faseFinal, targetLambda);
-			
-			// Fase de estabilização (final) - cálculo ponderado
 			float mediaFinal = calculateWeightedAverage(faseFinal, bufferMaxSize, targetLambda);
 			
 			// 3. Calcular erros por fase
@@ -167,21 +178,31 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 			
 			// 4. Aplicar correções com pesos específicos para cada fase
 			float learnRate = engineConfiguration->wwLearningRate;
-			float maxStep = 0.05f;
+			if (learnRate <= 0.0f) learnRate = 0.01f; // Valor padrão 1%
 			
-			// Cálculo da correção beta baseado na direção do transiente
-			float deltaBeta;
-			float deltaTau;
+			float maxStep = 0.05f; // Máximo 5% de ajuste por vez
+			
+			// Verificar confiança da célula antes de aplicar correção
+			float betaConfidence = betaLearningStatus[i][j].confidence;
+			float tauConfidence = tauLearningStatus[i][j].confidence;
+			
+			// Reduzir taxa de aprendizado para células com baixa confiança
+			float betaLearnRate = learnRate * (0.5f + 0.5f * betaConfidence);
+			float tauLearnRate = learnRate * (0.5f + 0.5f * tauConfidence);
+			
+			// Cálculo da correção baseado na direção do transiente
+			float deltaBeta = 0.0f;
+			float deltaTau = 0.0f;
 			
 			if (direction == TransientDirection::POSITIVE) {
 				// Para aceleração
-				deltaBeta = learnRate * (
+				deltaBeta = betaLearnRate * (
 					engineConfiguration->wwBetaInitWeight * erroInicial +
 					engineConfiguration->wwBetaTransWeight * erroTransiente +
 					engineConfiguration->wwBetaFinalWeight * erroFinal
 				);
 				
-				deltaTau = -learnRate * (
+				deltaTau = -tauLearnRate * (
 					engineConfiguration->wwTauInitWeight * erroInicial +
 					engineConfiguration->wwTauTransWeight * erroTransiente +
 					engineConfiguration->wwTauFinalWeight * erroFinal
@@ -198,26 +219,33 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 				float newBetaValue = currentBetaValue * (1.0f + deltaBeta);
 				float newTauValue = currentTauValue * (1.0f + deltaTau);
 				
-				newBetaValue = clampF(0.05f, newBetaValue, 2.0f);
-				newTauValue = clampF(0.1f, newTauValue, 2.0f);
+				newBetaValue = clampF(0.05f, newBetaValue, 2.5f);
+				newTauValue = clampF(0.05f, newTauValue, 2.5f);
 				
 				// Converter de volta para valor inteiro para armazenamento
 				config->wwBetaAccel[i][j] = (uint8_t)(newBetaValue * 100.0f);
 				config->wwTauAccel[i][j] = (uint8_t)(newTauValue * 100.0f);
 				
+				// Atualizar confiança das células
+				updateCellConfidence(i, j, true, deltaBeta, quality);
+				updateCellConfidence(i, j, false, deltaTau, quality);
+				
 				// Suavização após aprendizado
-				smoothCorrectionTable(config->wwBetaAccel, i, j, engineConfiguration->wwSmoothIntensity);
-				smoothCorrectionTable(config->wwTauAccel, i, j, engineConfiguration->wwSmoothIntensity);
+				float smoothIntensity = engineConfiguration->wwSmoothIntensity;
+				if (smoothIntensity > 0.0f) {
+					smoothCorrectionTable(config->wwBetaAccel, i, j, smoothIntensity);
+					smoothCorrectionTable(config->wwTauAccel, i, j, smoothIntensity);
+				}
 			} 
 			else if (direction == TransientDirection::NEGATIVE) {
 				// Para desaceleração - lógica invertida
-				deltaBeta = -learnRate * (  // Nota: sinal invertido para desaceleração
+				deltaBeta = -betaLearnRate * (  // Nota: sinal invertido para desaceleração
 					engineConfiguration->wwBetaInitWeight * erroInicial +
 					engineConfiguration->wwBetaTransWeight * erroTransiente +
 					engineConfiguration->wwBetaFinalWeight * erroFinal
 				);
 				
-				deltaTau = learnRate * (  // Nota: sinal invertido para desaceleração
+				deltaTau = tauLearnRate * (  // Nota: sinal invertido para desaceleração
 					engineConfiguration->wwTauInitWeight * erroInicial +
 					engineConfiguration->wwTauTransWeight * erroTransiente +
 					engineConfiguration->wwTauFinalWeight * erroFinal
@@ -234,21 +262,33 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 				float newBetaValue = currentBetaValue * (1.0f + deltaBeta);
 				float newTauValue = currentTauValue * (1.0f + deltaTau);
 				
-				newBetaValue = clampF(0.05f, newBetaValue, 2.0f);
-				newTauValue = clampF(0.1f, newTauValue, 2.0f);
+				newBetaValue = clampF(0.05f, newBetaValue, 2.5f);
+				newTauValue = clampF(0.05f, newTauValue, 2.5f);
 				
 				// Converter de volta para valor inteiro para armazenamento
 				config->wwBetaDecel[i][j] = (uint8_t)(newBetaValue * 100.0f);
 				config->wwTauDecel[i][j] = (uint8_t)(newTauValue * 100.0f);
 				
+				// Atualizar confiança das células
+				updateCellConfidence(i, j, true, deltaBeta, quality);
+				updateCellConfidence(i, j, false, deltaTau, quality);
+				
 				// Suavização após aprendizado
-				smoothCorrectionTable(config->wwBetaDecel, i, j, engineConfiguration->wwSmoothIntensity);
-				smoothCorrectionTable(config->wwTauDecel, i, j, engineConfiguration->wwSmoothIntensity);
+				float smoothIntensity = engineConfiguration->wwSmoothIntensity;
+				if (smoothIntensity > 0.0f) {
+					smoothCorrectionTable(config->wwBetaDecel, i, j, smoothIntensity);
+					smoothCorrectionTable(config->wwTauDecel, i, j, smoothIntensity);
+				}
 			}
 			
+			// Incrementar contador de ciclos de ajuste
+			totalAdjustmentCycles++;
+			
 			monitoring = false;
-			// Marcar aprendizado pendente
 			pendingWwSave = true;
+			
+			// Verificar se é necessário reset de drift
+			checkAndResetDrift();
 		}
 	}
 }
@@ -274,56 +314,6 @@ void WallFuelController::onIgnitionStateChanged(bool ignitionOn) {
 		// Isso permite que possíveis outras configurações sejam salvas juntas
 		setNeedToWriteConfiguration();
 		pendingWwSave = false;
-	}
-}
-
-void WallFuelController::smoothCorrectionTable(uint8_t table[WW_RPM_BINS][WW_MAP_BINS], int centerI, int centerJ, float intensity) {
-	// Retorno antecipado se intensidade for baixa demais
-	if (intensity <= 0.01f) {
-		return;
-	}
-	
-	// Valor da célula central que foi ajustada (em formato float, não autoscale)
-	float centerValue = table[centerI][centerJ] * 0.01f;
-	
-	// Fator para determinar o quão forte cada célula vizinha será influenciada
-	float maxInfluence = clampF(0.0f, intensity, 0.5f);
-	
-	// Para cada célula na vizinhança 3x3 (células adjacentes)
-	for (int di = -1; di <= 1; di++) {
-		for (int dj = -1; dj <= 1; dj++) {
-			// Pular a célula central
-			if (di == 0 && dj == 0) {
-				continue;
-			}
-			
-			// Calcular índices da célula vizinha
-			int ni = centerI + di;
-			int nj = centerJ + dj;
-			
-			// Verificar limites da tabela
-			if (ni < 0 || ni >= WW_MAP_BINS || nj < 0 || nj >= WW_RPM_BINS) {
-				continue;
-			}
-			
-			// Calcular distância (0.0-1.0 normalizada)
-			float distance = sqrtf(di*di + dj*dj);
-			if (distance > 1.41f) distance = 1.41f; // Normalizar distância diagonal
-			distance /= 1.41f; // Normalizar para 0.0-1.0
-			
-			// Quanto mais próximo, maior a influência
-			float influence = maxInfluence * (1.0f - distance);
-			
-			// Calcular novo valor como uma média ponderada (considerando formato autoscale)
-			float currentValue = table[ni][nj] * 0.01f;
-			float newValue = currentValue * (1.0f - influence) + centerValue * influence;
-			
-			// Atualizar o valor com limites
-			newValue = clampF(0.05f, newValue, 2.0f);
-			
-			// Converter de volta para formato autoscale
-			table[ni][nj] = (uint8_t)(newValue * 100.0f);
-		}
 	}
 }
 
@@ -528,15 +518,276 @@ void WallFuelController::onFastCallback() {
 	m_enable = true;
 	
 	// Processar o aprendizado se tivermos um transiente e uso de correções direcionais
-	float lambda = Sensor::getOrZero(SensorType::Lambda1);
+	// Usar validação robusta de sensores
+	auto lambdaSensor = Sensor::get(SensorType::Lambda1);
 	float targetLambda = engine->fuelComputer.targetLambda;
 	float clt = Sensor::getOrZero(SensorType::Clt);
 	
-	if (isTransient && engineConfiguration->wwDirectionalCorrections) {
-		adaptiveLearning(rpm, map, lambda, targetLambda, isTransient, direction, clt);
+	if (isTransient && engineConfiguration->wwDirectionalCorrections && lambdaSensor.Valid) {
+		adaptiveLearning(rpm, map, lambdaSensor.Value, targetLambda, isTransient, direction, clt);
 	}
 }
 
-WallFuelController::WallFuelController() {
-	// Não é mais necessário inicializar tauCorrection/betaCorrection aqui, pois estão em config
+WallFuelController::WallFuelController() : 
+	bufferIdx(0), bufferMaxSize(200), monitoring(false), pendingWwSave(false),
+	currentTransientDirection(TransientDirection::NONE), lastTransientDirection(TransientDirection::NONE),
+	lastImmediateError(0.0f), lastProlongedError(0.0f), totalAdjustmentCycles(0) {
+	
+	// Inicializar buffers
+	for (int i = 0; i < WW_BUFFER_MAX; i++) {
+		lambdaBuffer[i] = 1.0f;  // Valor neutro em vez de zero
+		rpmBuffer[i] = 0.0f;
+		mapBuffer[i] = 0.0f;
+	}
+	
+	// Inicializar status de aprendizado de todas as células
+	for (int i = 0; i < WW_MAP_BINS; i++) {
+		for (int j = 0; j < WW_RPM_BINS; j++) {
+			betaLearningStatus[i][j] = CellLearningStatus();
+			tauLearningStatus[i][j] = CellLearningStatus();
+		}
+	}
+	
+	lastResetTimer.reset();
+}
+
+// Nova função para validação robusta de dados de aprendizado
+LearningDataQuality WallFuelController::validateLearningData(float lambda, float targetLambda, float clt, float map, float rpm) {
+    LearningDataQuality quality;
+    
+    // Validação de lambda
+    quality.lambdaValid = (lambda >= MIN_LAMBDA && lambda <= MAX_LAMBDA && !std::isnan(lambda));
+    
+         // Validação de estabilidade de lambda (usando parâmetro configurável)
+     float lambdaDeviation = fabsf(lambda - targetLambda) / targetLambda;
+     float minStability = engineConfiguration->wwMinLambdaStability;
+     if (minStability <= 0.0f) minStability = 0.15f; // Default 15%
+     quality.conditionsStable = (lambdaDeviation <= minStability);
+     
+     // Validação de temperatura (usando parâmetros configuráveis)
+     float minClt = engineConfiguration->wwMinClt;
+     float maxClt = engineConfiguration->wwMaxCltForLearning;
+     if (minClt <= 0.0f) minClt = 70.0f; // Default
+     if (maxClt <= 0.0f) maxClt = 110.0f; // Default
+     quality.tempAppropriate = (clt >= minClt && clt <= maxClt);
+     
+     // Validação de carga (MAP) (usando parâmetro configurável)
+     float minMap = engineConfiguration->wwMinMapForLearning;
+     if (minMap <= 0.0f) minMap = 30.0f; // Default
+     quality.loadAppropriate = (map >= minMap);
+    
+    // Cálculo de score de qualidade
+    int validConditions = 0;
+    if (quality.lambdaValid) validConditions++;
+    if (quality.conditionsStable) validConditions++;
+    if (quality.tempAppropriate) validConditions++;
+    if (quality.loadAppropriate) validConditions++;
+    
+    quality.qualityScore = (float)validConditions / 4.0f;
+    
+    // Bonus para condições muito estáveis
+    if (quality.conditionsStable && lambdaDeviation < 0.05f) {
+        quality.qualityScore = minF(1.0f, quality.qualityScore + 0.1f);
+    }
+    
+    return quality;
+}
+
+// Nova função para verificar se dados são válidos para aprendizado
+bool WallFuelController::isLearningDataValid(const LearningDataQuality& quality) {
+    return quality.lambdaValid && quality.conditionsStable && 
+           quality.tempAppropriate && quality.loadAppropriate &&
+           quality.qualityScore >= 0.8f;
+}
+
+// Nova função para atualizar confiança da célula
+void WallFuelController::updateCellConfidence(int i, int j, bool isBeta, float adjustment, const LearningDataQuality& quality) {
+    CellLearningStatus& status = isBeta ? betaLearningStatus[i][j] : tauLearningStatus[i][j];
+    
+    // Incrementar contador de amostras
+    status.sampleCount++;
+    
+         // Atualizar variância (média móvel simples das últimas diferenças)
+     float adjustmentMagnitude = fabsf(adjustment);
+     if (status.sampleCount == 1) {
+         status.variance = adjustmentMagnitude;
+     } else {
+         // Média móvel exponencial da variância
+         status.variance = status.variance * 0.8f + adjustmentMagnitude * 0.2f;
+     }
+     
+     // Usar parâmetros configuráveis
+     float maxVarianceThreshold = engineConfiguration->wwMaxVarianceThreshold;
+     if (maxVarianceThreshold <= 0.0f) maxVarianceThreshold = 0.1f; // Default 10%
+     
+     int minSamplesForConfidence = engineConfiguration->wwMinSamplesForConfidence;
+     if (minSamplesForConfidence <= 0) minSamplesForConfidence = 5; // Default
+     
+     // Atualizar confiança baseada na qualidade dos dados e consistência
+     float qualityFactor = quality.qualityScore;
+     float consistencyFactor = 1.0f - minF(1.0f, status.variance / maxVarianceThreshold);
+     
+     float newConfidence = (qualityFactor + consistencyFactor) / 2.0f;
+     
+     if (status.sampleCount >= minSamplesForConfidence) {
+         status.confidence = status.confidence * 0.9f + newConfidence * 0.1f;
+     } else {
+         status.confidence = newConfidence * ((float)status.sampleCount / minSamplesForConfidence);
+     }
+     
+     // Determinar se célula convergiu
+     status.isConverged = (status.confidence > 0.8f && status.variance < maxVarianceThreshold/2.0f && 
+                          status.sampleCount >= minSamplesForConfidence);
+    
+    // Tracking de ajustes consecutivos
+    if (adjustmentMagnitude > 0.01f) {
+        status.consecutiveAdjustments++;
+    } else {
+        status.consecutiveAdjustments = 0;
+    }
+    
+    status.lastAdjustment = adjustment;
+}
+
+// Nova função para calcular tamanho ótimo do buffer
+int WallFuelController::calculateOptimalBufferSize(float tau, float rpm) {
+    if (rpm < 100.0f || tau <= 0.0f) {
+        return engineConfiguration->wwMinSampleSize;
+    }
+    
+    // Tempo de ciclo em segundos
+    float cycleTimeSeconds = 60.0f / rpm;
+    
+    // Número de ciclos para cobrir 2x tau (tempo para 86% de estabilização)
+    float timeConstantCycles = (tau * 2.0f) / cycleTimeSeconds;
+    
+    // Aplicar multiplicador configurável
+    float multiplier = engineConfiguration->wwSampleMultiplier;
+    if (multiplier <= 0.0f) multiplier = 1.5f; // Valor padrão
+    
+    int optimalSamples = (int)(timeConstantCycles * multiplier);
+    
+    // Aplicar limites configuráveis
+    int minSamples = engineConfiguration->wwMinSampleSize;
+    int maxSamples = engineConfiguration->wwBufferSize;
+    
+    if (minSamples <= 0) minSamples = 100;
+    if (maxSamples <= 0) maxSamples = 400;
+    
+    return clampI(minSamples, optimalSamples, maxSamples);
+}
+
+ // Nova função para reset de drift
+ void WallFuelController::checkAndResetDrift() {
+     // Verificar se o reset de drift está habilitado
+     if (!engineConfiguration->wwEnableDriftReset) {
+         return;
+     }
+     
+     // Usar intervalo configurável
+     int driftResetInterval = engineConfiguration->wwDriftResetIntervalMin;
+     if (driftResetInterval <= 0) driftResetInterval = 30; // Default 30 minutes
+     
+     // Verificar se é hora de fazer reset de drift
+     if (!lastResetTimer.hasElapsedMin(driftResetInterval)) {
+         return;
+     }
+    
+    int cellsWithHighVariance = 0;
+    int cellsWithExcessiveAdjustments = 0;
+    
+         // Usar parâmetros configuráveis
+     float maxVarianceThreshold = engineConfiguration->wwMaxVarianceThreshold;
+     if (maxVarianceThreshold <= 0.0f) maxVarianceThreshold = 0.1f; // Default 10%
+     
+     int maxConsecutiveAdjustments = engineConfiguration->wwMaxConsecutiveAdjustments;
+     if (maxConsecutiveAdjustments <= 0) maxConsecutiveAdjustments = 10; // Default
+     
+     // Contar células problemáticas
+     for (int i = 0; i < WW_MAP_BINS; i++) {
+         for (int j = 0; j < WW_RPM_BINS; j++) {
+             if (betaLearningStatus[i][j].variance > maxVarianceThreshold) {
+                 cellsWithHighVariance++;
+             }
+             if (betaLearningStatus[i][j].consecutiveAdjustments > maxConsecutiveAdjustments) {
+                 cellsWithExcessiveAdjustments++;
+             }
+             if (tauLearningStatus[i][j].variance > maxVarianceThreshold) {
+                 cellsWithHighVariance++;
+             }
+             if (tauLearningStatus[i][j].consecutiveAdjustments > maxConsecutiveAdjustments) {
+                 cellsWithExcessiveAdjustments++;
+             }
+         }
+     }
+    
+    // Se mais de 25% das células têm problemas, fazer reset seletivo
+    int totalCells = WW_MAP_BINS * WW_RPM_BINS * 2; // beta + tau
+    if ((cellsWithHighVariance + cellsWithExcessiveAdjustments) > (totalCells / 4)) {
+        resetCellsWithHighVariance();
+    }
+    
+    lastResetTimer.reset();
+}
+
+ // Nova função para reset seletivo de células problemáticas
+ void WallFuelController::resetCellsWithHighVariance() {
+     // Usar parâmetros configuráveis
+     float maxVarianceThreshold = engineConfiguration->wwMaxVarianceThreshold;
+     if (maxVarianceThreshold <= 0.0f) maxVarianceThreshold = 0.1f; // Default 10%
+     
+     int maxConsecutiveAdjustments = engineConfiguration->wwMaxConsecutiveAdjustments;
+     if (maxConsecutiveAdjustments <= 0) maxConsecutiveAdjustments = 10; // Default
+     
+     for (int i = 0; i < WW_MAP_BINS; i++) {
+         for (int j = 0; j < WW_RPM_BINS; j++) {
+             // Reset beta cells
+             if (betaLearningStatus[i][j].variance > maxVarianceThreshold ||
+                 betaLearningStatus[i][j].consecutiveAdjustments > maxConsecutiveAdjustments) {
+                
+                // Reset para valor padrão (100 = 1.0x)
+                config->wwBetaAccel[i][j] = 100;
+                config->wwBetaDecel[i][j] = 100;
+                
+                // Reset status
+                betaLearningStatus[i][j] = CellLearningStatus();
+            }
+            
+            // Reset tau cells
+            if (tauLearningStatus[i][j].variance > maxVarianceThreshold ||
+                tauLearningStatus[i][j].consecutiveAdjustments > maxConsecutiveAdjustments) {
+                
+                // Reset para valor padrão (100 = 1.0x)
+                config->wwTauAccel[i][j] = 100;
+                config->wwTauDecel[i][j] = 100;
+                
+                // Reset status
+                tauLearningStatus[i][j] = CellLearningStatus();
+            }
+        }
+    }
+    
+    // Marcar para salvar configuração
+    pendingWwSave = true;
+}
+
+// Implementação da suavização de tabela
+void WallFuelController::smoothCorrectionTable(uint8_t table[WW_RPM_BINS][WW_MAP_BINS], int centerI, int centerJ, float intensity) {
+    smoothCorrectionTableTemplate(table, centerI, centerJ, intensity);
+}
+
+// Funções de diagnóstico
+float WallFuelController::getCellConfidence(int i, int j, bool isBeta) const {
+    if (i >= WW_MAP_BINS || j >= WW_RPM_BINS) return 0.0f;
+    return isBeta ? betaLearningStatus[i][j].confidence : tauLearningStatus[i][j].confidence;
+}
+
+int WallFuelController::getCellSampleCount(int i, int j, bool isBeta) const {
+    if (i >= WW_MAP_BINS || j >= WW_RPM_BINS) return 0;
+    return isBeta ? betaLearningStatus[i][j].sampleCount : tauLearningStatus[i][j].sampleCount;
+}
+
+float WallFuelController::getCellVariance(int i, int j, bool isBeta) const {
+    if (i >= WW_MAP_BINS || j >= WW_RPM_BINS) return 0.0f;
+    return isBeta ? betaLearningStatus[i][j].variance : tauLearningStatus[i][j].variance;
 }

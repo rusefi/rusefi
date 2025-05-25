@@ -1202,17 +1202,29 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	uint8_t autoscale wwMinClt;;"C", 1, 0, 0, 255, 0
 	uint8_t autoscale wwLearningRate;;"%", 0.01, 0, 0, 1.0, 2
 	uint16_t autoscale wwTransientTimeoutMs;;"ms", 1, 0, 10, 10000, 0
-	uint8_t autoscale wwMinSampleSize;;"count", 1, 0, 50, 300, 0
-	uint16_t autoscale wwMaxSampleSize;;"count", 1, 0, 100, 500, 0
+	uint8_t wwMinSampleSize;;"count", 1, 0, 50, 300, 0
+	uint16_t wwMaxSampleSize;;"count", 1, 0, 100, 1000, 0
 	float wwSampleMultiplier;;"mult", 1, 0, 0.1, 10.0, 1
 	float wwBetaInitWeight;0.2;"mult", 1, 0, -1.0, 1.0, 2
 	float wwBetaTransWeight;0.3;"mult", 1, 0, -1.0, 1.0, 2
 	float wwBetaFinalWeight;0.5;"mult", 1, 0, -1.0, 1.0, 2
-	float wwTauInitWeight;;"mult", 1, 0, -1.0, 1.0, 2
-	float wwTauTransWeight;;"mult", 1, 0, -1.0, 1.0, 2
-	float wwTauFinalWeight;;"mult", 1, 0, -1.0, 1.0, 2
+	float wwTauInitWeight;0.2;"mult", 1, 0, -1.0, 1.0, 2
+	float wwTauTransWeight;0.3;"mult", 1, 0, -1.0, 1.0, 2
+	float wwTauFinalWeight;0.5;"mult", 1, 0, -1.0, 1.0, 2
 	uint8_t autoscale wwSmoothIntensity;;"%", 0.01, 0, 0, 1, 2
 	uint8_t autoscale wwIgnitionOffSaveDelay;;"s", 5, 0, 0, 100, 0
+	
+	// New parameters for Phase 1 and 2 improvements
+	uint8_t autoscale wwDriftResetIntervalMin;30;"min", 1, 0, 10, 240, 0
+	uint8_t autoscale wwMaxVarianceThreshold;10;"%", 0.01, 0, 1, 50, 2
+	uint8_t wwMaxConsecutiveAdjustments;10;"count", 1, 0, 5, 50, 0
+	uint8_t wwMinSamplesForConfidence;5;"count", 1, 0, 3, 20, 0
+	uint8_t autoscale wwConfidenceDecayRate;95;"%", 0.01, 0, 50, 100, 2
+	uint8_t autoscale wwMinLambdaStability;15;"%", 0.01, 0, 5, 50, 2
+	float wwMaxCltForLearning;110.0;"C", 1, 0, 80, 150, 1
+	uint8_t autoscale wwMinMapForLearning;30;"kPa", 1, 0, 20, 100, 0
+	bit wwEnableRobustValidation;"Enable robust sensor validation for wall wetting learning"
+	bit wwEnableDriftReset;"Enable automatic drift reset for wall wetting tables"
 
   uint16_t autoscale tachPulsePerRev;;"", 0.001, 0, 1, 15, 3
 
