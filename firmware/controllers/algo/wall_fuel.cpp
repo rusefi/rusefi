@@ -102,8 +102,8 @@ float WallFuelController::calculateWeightedAverage(int startIdx, int endIdx, flo
 
 void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, float targetLambda, 
                                         bool isTransient, TransientDirection direction, float clt) {
-	// Skip learning if feature not enabled
-	if (!engineConfiguration->wwEnableAdaptiveLearning || !engineConfiguration->wwDirectionalCorrections) {
+	// Skip learning if directional corrections not enabled
+	if (!engineConfiguration->wwDirectionalCorrections) {
 		return;
 	}
 
@@ -152,9 +152,16 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 	
 	if (monitoring) {
 		if (bufferIdx < bufferMaxSize) {
-			// Validar novamente cada amostra antes de armazenar
+			// Simplified validation
+			bool sampleValid = true;
+			#if WW_ENABLE_ROBUST_VALIDATION
 			LearningDataQuality sampleQuality = validateLearningData(lambda, targetLambda, clt, map, rpm);
-			if (isLearningDataValid(sampleQuality)) {
+			sampleValid = isLearningDataValid(sampleQuality);
+			#else
+			sampleValid = (lambda >= MIN_LAMBDA && lambda <= MAX_LAMBDA && !std::isnan(lambda));
+			#endif
+			
+			if (sampleValid) {
 				lambdaBuffer[bufferIdx] = lambda;
 				rpmBuffer[bufferIdx] = rpm;
 				mapBuffer[bufferIdx] = map;
@@ -181,37 +188,29 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 			lastImmediateError = erroInicial;
 			lastProlongedError = erroFinal;
 			
-			// 4. Aplicar correções com pesos específicos para cada fase
-			float learnRate = engineConfiguration->wwLearningRate;
-			if (learnRate <= 0.0f) learnRate = 0.01f; // Valor padrão 1%
-			
+			// 4. Aplicar correções com valores padrão simples
+			float learnRate = 0.01f; // Default 1% learning rate
 			float maxStep = 0.05f; // Máximo 5% de ajuste por vez
 			
 			// Verificar confiança da célula antes de aplicar correção
-			float betaConfidence = betaLearningStatus[i][j].confidence;
-			float tauConfidence = tauLearningStatus[i][j].confidence;
+			float betaConfidence = getCellConfidence(i, j, true);
+			float tauConfidence = getCellConfidence(i, j, false);
 			
 			// Reduzir taxa de aprendizado para células com baixa confiança
-			float betaLearnRate = learnRate * (0.5f + 0.5f * betaConfidence);
-			float tauLearnRate = learnRate * (0.5f + 0.5f * tauConfidence);
+			float betaLearnRate = learnRate * (0.5f + 0.5f * betaConfidence / 255.0f);
+			float tauLearnRate = learnRate * (0.5f + 0.5f * tauConfidence / 255.0f);
 			
-			// Cálculo da correção baseado na direção do transiente
+			// Cálculo da correção baseado na direção do transiente (simplificado)
 			float deltaBeta = 0.0f;
 			float deltaTau = 0.0f;
 			
+			// Use simplified weights (equal weighting)
+			float avgError = (erroInicial + erroTransiente + erroFinal) / 3.0f;
+			
 			if (direction == TransientDirection::POSITIVE) {
 				// Para aceleração
-				deltaBeta = betaLearnRate * (
-					engineConfiguration->wwBetaInitWeight * erroInicial +
-					engineConfiguration->wwBetaTransWeight * erroTransiente +
-					engineConfiguration->wwBetaFinalWeight * erroFinal
-				);
-				
-				deltaTau = -tauLearnRate * (
-					engineConfiguration->wwTauInitWeight * erroInicial +
-					engineConfiguration->wwTauTransWeight * erroTransiente +
-					engineConfiguration->wwTauFinalWeight * erroFinal
-				);
+				deltaBeta = betaLearnRate * avgError;
+				deltaTau = -tauLearnRate * avgError;
 				
 				// Aplicar limites e atualizar tabelas de correção para aceleração
 				deltaBeta = clampF(-maxStep, deltaBeta, maxStep);
@@ -231,30 +230,27 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 				config->wwBetaAccel[i][j] = (uint8_t)(newBetaValue * 100.0f);
 				config->wwTauAccel[i][j] = (uint8_t)(newTauValue * 100.0f);
 				
-				// Atualizar confiança das células
+				#if WW_ENABLE_ROBUST_VALIDATION
+				// Atualizar confiança das células (só se habilitado)
 				updateCellConfidence(i, j, true, deltaBeta, quality);
 				updateCellConfidence(i, j, false, deltaTau, quality);
+				#else
+				// Simple confidence update
+				betaLearningStatus[i][j].confidence = minI(255, betaLearningStatus[i][j].confidence + 10);
+				tauLearningStatus[i][j].confidence = minI(255, tauLearningStatus[i][j].confidence + 10);
+				betaLearningStatus[i][j].sampleCount = minI(255, betaLearningStatus[i][j].sampleCount + 1);
+				tauLearningStatus[i][j].sampleCount = minI(255, tauLearningStatus[i][j].sampleCount + 1);
+				#endif
 				
-				// Suavização após aprendizado
-				float smoothIntensity = engineConfiguration->wwSmoothIntensity;
-				if (smoothIntensity > 0.0f) {
-					smoothCorrectionTable(config->wwBetaAccel, i, j, smoothIntensity);
-					smoothCorrectionTable(config->wwTauAccel, i, j, smoothIntensity);
-				}
+				// Optional smoothing (simplified)
+				float smoothIntensity = 0.1f; // Default 10% smoothing
+				smoothCorrectionTable(config->wwBetaAccel, i, j, smoothIntensity);
+				smoothCorrectionTable(config->wwTauAccel, i, j, smoothIntensity);
 			} 
 			else if (direction == TransientDirection::NEGATIVE) {
 				// Para desaceleração - lógica invertida
-				deltaBeta = -betaLearnRate * (  // Nota: sinal invertido para desaceleração
-					engineConfiguration->wwBetaInitWeight * erroInicial +
-					engineConfiguration->wwBetaTransWeight * erroTransiente +
-					engineConfiguration->wwBetaFinalWeight * erroFinal
-				);
-				
-				deltaTau = tauLearnRate * (  // Nota: sinal invertido para desaceleração
-					engineConfiguration->wwTauInitWeight * erroInicial +
-					engineConfiguration->wwTauTransWeight * erroTransiente +
-					engineConfiguration->wwTauFinalWeight * erroFinal
-				);
+				deltaBeta = -betaLearnRate * avgError;
+				deltaTau = tauLearnRate * avgError;
 				
 				// Aplicar limites e atualizar tabelas de correção para desaceleração
 				deltaBeta = clampF(-maxStep, deltaBeta, maxStep);
@@ -274,26 +270,36 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 				config->wwBetaDecel[i][j] = (uint8_t)(newBetaValue * 100.0f);
 				config->wwTauDecel[i][j] = (uint8_t)(newTauValue * 100.0f);
 				
-				// Atualizar confiança das células
+				#if WW_ENABLE_ROBUST_VALIDATION
+				// Atualizar confiança das células (só se habilitado)
 				updateCellConfidence(i, j, true, deltaBeta, quality);
 				updateCellConfidence(i, j, false, deltaTau, quality);
+				#else
+				// Simple confidence update
+				betaLearningStatus[i][j].confidence = minI(255, betaLearningStatus[i][j].confidence + 10);
+				tauLearningStatus[i][j].confidence = minI(255, tauLearningStatus[i][j].confidence + 10);
+				betaLearningStatus[i][j].sampleCount = minI(255, betaLearningStatus[i][j].sampleCount + 1);
+				tauLearningStatus[i][j].sampleCount = minI(255, tauLearningStatus[i][j].sampleCount + 1);
+				#endif
 				
-				// Suavização após aprendizado
-				float smoothIntensity = engineConfiguration->wwSmoothIntensity;
-				if (smoothIntensity > 0.0f) {
-					smoothCorrectionTable(config->wwBetaDecel, i, j, smoothIntensity);
-					smoothCorrectionTable(config->wwTauDecel, i, j, smoothIntensity);
-				}
+				// Optional smoothing (simplified)
+				float smoothIntensity = 0.1f; // Default 10% smoothing
+				smoothCorrectionTable(config->wwBetaDecel, i, j, smoothIntensity);
+				smoothCorrectionTable(config->wwTauDecel, i, j, smoothIntensity);
 			}
 			
+			#if WW_ENABLE_DRIFT_RESET
 			// Incrementar contador de ciclos de ajuste
 			totalAdjustmentCycles++;
+			#endif
 			
 			monitoring = false;
 			pendingWwSave = true;
 			
-			// Verificar se é necessário reset de drift
+			#if WW_ENABLE_ROBUST_VALIDATION
+			// Verificar se é necessário reset de drift (só se habilitado)
 			checkAndResetDrift();
+			#endif
 		}
 	}
 }
@@ -305,11 +311,8 @@ void WallFuelController::onIgnitionStateChanged(bool ignitionOn) {
 		// Reset timer when ignition turns on
 		m_ignitionOffTimer.reset();
 	} else if (pendingWwSave) {
-		// Verificar se passou o tempo de delay após desligar ignição
-		float saveDelaySeconds = engineConfiguration->wwIgnitionOffSaveDelay;
-		if (saveDelaySeconds <= 0) {
-			saveDelaySeconds = 5.0f; // Valor padrão 5 segundos
-		}
+		// Use default delay of 5 seconds after ignition off
+		float saveDelaySeconds = 5.0f; // Default 5 seconds
 		
 		// Reset timer para contar o tempo desde que a ignição desligou
 		m_ignitionOffTimer.reset();
@@ -481,11 +484,8 @@ void WallFuelController::onFastCallback() {
 		
 		// Só considera transiente se passou tempo suficiente desde o último
 		if (conditionsMet) {
-			// Verificar tempo desde último transiente usando o Timer
-			float transientTimeoutMs = engineConfiguration->wwTransientTimeoutMs;
-			if (transientTimeoutMs <= 0) {
-				transientTimeoutMs = 1000.0f; // Valor padrão 1 segundo
-			}
+			// Use default timeout of 1 second
+			float transientTimeoutMs = 1000.0f; // Default 1 second
 			
 			if (m_transientTimer.hasElapsedMs(transientTimeoutMs)) {
 				isTransient = true;
