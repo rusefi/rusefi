@@ -10,15 +10,7 @@
 #include "efitime.h"
 #include <rusefi/interpolation.h>
 
-// Inicialização das variáveis estáticas
-const int WallFuelController::WW_BUFFER_MAX;
-float WallFuelController::lambdaBuffer[WW_BUFFER_MAX] = {0};
-float WallFuelController::rpmBuffer[WW_BUFFER_MAX] = {0};
-float WallFuelController::mapBuffer[WW_BUFFER_MAX] = {0};
-int WallFuelController::bufferIdx = 0;
-int WallFuelController::bufferMaxSize = 200;
-bool WallFuelController::monitoring = false;
-TransientDirection WallFuelController::currentTransientDirection = TransientDirection::NONE;
+// Note: Buffers são agora membros de instância, não estáticos
 
 void WallFuel::resetWF() {
 	wallFuel = 0;
@@ -528,6 +520,8 @@ void WallFuelController::onFastCallback() {
 	}
 }
 
+// Template instantiation will be done implicitly
+
 WallFuelController::WallFuelController() : 
 	bufferIdx(0), bufferMaxSize(200), monitoring(false), pendingWwSave(false),
 	currentTransientDirection(TransientDirection::NONE), lastTransientDirection(TransientDirection::NONE),
@@ -552,7 +546,7 @@ WallFuelController::WallFuelController() :
 }
 
 // Nova função para validação robusta de dados de aprendizado
-LearningDataQuality WallFuelController::validateLearningData(float lambda, float targetLambda, float clt, float map, float rpm) {
+LearningDataQuality WallFuelController::validateLearningData(float lambda, float targetLambda, float clt, float map, float /* rpm */) {
     LearningDataQuality quality;
     
     // Validação de lambda
@@ -674,7 +668,7 @@ int WallFuelController::calculateOptimalBufferSize(float tau, float rpm) {
     if (minSamples <= 0) minSamples = 100;
     if (maxSamples <= 0) maxSamples = 400;
     
-    return clampI(minSamples, optimalSamples, maxSamples);
+    return clampF(minSamples, optimalSamples, maxSamples);
 }
 
  // Nova função para reset de drift
@@ -689,7 +683,7 @@ int WallFuelController::calculateOptimalBufferSize(float tau, float rpm) {
      if (driftResetInterval <= 0) driftResetInterval = 30; // Default 30 minutes
      
      // Verificar se é hora de fazer reset de drift
-     if (!lastResetTimer.hasElapsedMin(driftResetInterval)) {
+     if (!lastResetTimer.hasElapsedMs(driftResetInterval * 60 * 1000)) {
          return;
      }
     
@@ -771,9 +765,55 @@ int WallFuelController::calculateOptimalBufferSize(float tau, float rpm) {
     pendingWwSave = true;
 }
 
-// Implementação da suavização de tabela
-void WallFuelController::smoothCorrectionTable(uint8_t table[WW_RPM_BINS][WW_MAP_BINS], int centerI, int centerJ, float intensity) {
-    smoothCorrectionTableTemplate(table, centerI, centerJ, intensity);
+// Implementação da suavização de tabela para scaled_channel
+void WallFuelController::smoothCorrectionTable(scaled_channel<uint8_t, 100, 1> table[WW_RPM_BINS][WW_MAP_BINS], int centerI, int centerJ, float intensity) {
+    // Retorno antecipado se intensidade for baixa demais
+    if (intensity <= 0.01f) {
+        return;
+    }
+    
+    // Valor da célula central que foi ajustada (em formato float)
+    float centerValue = static_cast<float>(table[centerI][centerJ]);
+    
+    // Fator para determinar o quão forte cada célula vizinha será influenciada
+    float maxInfluence = clampF(0.0f, intensity, 0.5f);
+    
+    // Para cada célula na vizinhança 3x3 (células adjacentes)
+    for (int di = -1; di <= 1; di++) {
+        for (int dj = -1; dj <= 1; dj++) {
+            // Pular a célula central
+            if (di == 0 && dj == 0) {
+                continue;
+            }
+            
+            // Calcular índices da célula vizinha
+            int ni = centerI + di;
+            int nj = centerJ + dj;
+            
+            // Verificar limites da tabela 
+            if (ni < 0 || ni >= WW_MAP_BINS || nj < 0 || nj >= WW_RPM_BINS) {
+                continue;
+            }
+            
+            // Calcular distância (0.0-1.0 normalizada)
+            float distance = sqrtf(di*di + dj*dj);
+            if (distance > 1.41f) distance = 1.41f; // Normalizar distância diagonal
+            distance /= 1.41f; // Normalizar para 0.0-1.0
+            
+            // Quanto mais próximo, maior a influência
+            float influence = maxInfluence * (1.0f - distance);
+            
+            // Calcular novo valor como uma média ponderada
+            float currentValue = static_cast<float>(table[ni][nj]);
+            float newValue = currentValue * (1.0f - influence) + centerValue * influence;
+            
+            // Atualizar o valor com limites (mantendo os limites em formato scaled)
+            newValue = clampF(5.0f, newValue, 250.0f); // 0.05-2.5 in scaled form (0.01 scale factor)
+            
+            // Converter de volta para o tipo da tabela
+            table[ni][nj] = static_cast<uint8_t>(newValue);
+        }
+    }
 }
 
 // Funções de diagnóstico

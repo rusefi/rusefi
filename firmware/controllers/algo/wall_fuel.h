@@ -8,6 +8,7 @@
 #include "wall_fuel_state_generated.h"
 #include "engine_module.h"
 #include <rusefi/timer.h>
+#include "rusefi_types.h"
 
 /**
  * Wall wetting, also known as fuel film
@@ -41,6 +42,14 @@ enum class TransientDirection {
 // Adaptação automática de tau/beta
 #define WW_RPM_BINS 8
 #define WW_MAP_BINS 8
+
+#ifndef WWAE_RPM_SIZE
+#define WWAE_RPM_SIZE 8
+#endif
+
+#ifndef WWAE_TABLE_SIZE
+#define WWAE_TABLE_SIZE 8
+#endif
 
 // Estrutura para tracking de confiança e qualidade por célula
 struct CellLearningStatus {
@@ -117,7 +126,7 @@ protected:
 	void resetCellsWithHighVariance();
 	int calculateOptimalBufferSize(float tau, float rpm);
 	float calculateWeightedAverage(int startIdx, int endIdx, float targetLambda);
-	void smoothCorrectionTable(uint8_t table[WW_RPM_BINS][WW_MAP_BINS], int centerI, int centerJ, float intensity);
+	void smoothCorrectionTable(scaled_channel<uint8_t, 100, 1> table[WW_RPM_BINS][WW_MAP_BINS], int centerI, int centerJ, float intensity);
 
 private:
 	bool m_enable = false;
@@ -159,54 +168,4 @@ private:
 	static constexpr float MAX_LAMBDA = 1.5f;
 };
 
-// Função auxiliar para suavização de tabelas
-template<typename T>
-void smoothCorrectionTableTemplate(T table[WW_RPM_BINS][WW_MAP_BINS], int centerI, int centerJ, float intensity) {
-	// Retorno antecipado se intensidade for baixa demais
-	if (intensity <= 0.01f) {
-		return;
-	}
-	
-	// Valor da célula central que foi ajustada (em formato float)
-	float centerValue = static_cast<float>(table[centerI][centerJ]);
-	
-	// Fator para determinar o quão forte cada célula vizinha será influenciada
-	float maxInfluence = clampF(0.0f, intensity, 0.5f);
-	
-	// Para cada célula na vizinhança 3x3 (células adjacentes)
-	for (int di = -1; di <= 1; di++) {
-		for (int dj = -1; dj <= 1; dj++) {
-			// Pular a célula central
-			if (di == 0 && dj == 0) {
-				continue;
-			}
-			
-			// Calcular índices da célula vizinha
-			int ni = centerI + di;
-			int nj = centerJ + dj;
-			
-			// Verificar limites da tabela
-			if (ni < 0 || ni >= WW_MAP_BINS || nj < 0 || nj >= WW_RPM_BINS) {
-				continue;
-			}
-			
-			// Calcular distância (0.0-1.0 normalizada)
-			float distance = sqrtf(di*di + dj*dj);
-			if (distance > 1.41f) distance = 1.41f; // Normalizar distância diagonal
-			distance /= 1.41f; // Normalizar para 0.0-1.0
-			
-			// Quanto mais próximo, maior a influência
-			float influence = maxInfluence * (1.0f - distance);
-			
-			// Calcular novo valor como uma média ponderada
-			float currentValue = static_cast<float>(table[ni][nj]);
-			float newValue = currentValue * (1.0f - influence) + centerValue * influence;
-			
-			// Atualizar o valor com limites (mantendo os limites em formato scaled)
-			newValue = clampF(5.0f, newValue, 250.0f); // 0.05-2.5 in scaled form (0.01 scale factor)
-			
-			// Converter de volta para o tipo da tabela
-			table[ni][nj] = static_cast<decltype(table[ni][nj])>(newValue);
-		}
-	}
-}
+// Template method implementation moved to .cpp file

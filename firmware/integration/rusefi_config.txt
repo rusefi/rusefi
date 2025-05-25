@@ -1204,6 +1204,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	uint16_t autoscale wwTransientTimeoutMs;;"ms", 1, 0, 10, 10000, 0
 	uint8_t wwMinSampleSize;;"count", 1, 0, 50, 300, 0
 	uint16_t wwMaxSampleSize;;"count", 1, 0, 100, 1000, 0
+	uint16_t wwBufferSize;;"count", 1, 0, 100, 1000, 0
 	float wwSampleMultiplier;;"mult", 1, 0, 0.1, 10.0, 1
 	float wwBetaInitWeight;0.2;"mult", 1, 0, -1.0, 1.0, 2
 	float wwBetaTransWeight;0.3;"mult", 1, 0, -1.0, 1.0, 2
@@ -1225,6 +1226,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	uint8_t autoscale wwMinMapForLearning;30;"kPa", 1, 0, 20, 100, 0
 	bit wwEnableRobustValidation;"Enable robust sensor validation for wall wetting learning"
 	bit wwEnableDriftReset;"Enable automatic drift reset for wall wetting tables"
+	bit wwDirectionalCorrections;"Enable directional wall wetting corrections"
 
   uint16_t autoscale tachPulsePerRev;;"", 0.001, 0, 1, 15, 3
 

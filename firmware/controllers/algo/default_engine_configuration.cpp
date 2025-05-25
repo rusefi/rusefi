@@ -26,6 +26,7 @@
 	config->wwBufferSize = 400;
 	config->wwMinSampleSize = 100;
 	config->wwMaxSampleSize = 400;
+	config->wwBufferSize = 400;
 	config->wwTransientTimeoutMs = 1000;
 	config->wwDirectionalCorrections = false; // Desabilitado por padrão
 	config->wwSampleMultiplier = 1.5f;
@@ -55,6 +56,7 @@
 	config->wwMinMapForLearning = 30; // 30 kPa
 	config->wwEnableRobustValidation = true; // Habilitado por padrão
 	config->wwEnableDriftReset = true; // Habilitado por padrão
+	config->wwDirectionalCorrections = false; // Desabilitado por padrão para compatibilidade
 
 	// Set up default wall wetting parameters based on
 	// the H4 calibration
