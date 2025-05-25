@@ -377,6 +377,7 @@ public class VariableRegistryValues {
 	public static final int engine_load_mode_e_LM_REAL_MAF = 1;
 	public static final int engine_load_mode_e_LM_SPEED_DENSITY = 0;
 	public static final String ENGINE_MAKE_BMW = "BMW";
+	public static final String ENGINE_MAKE_FORD = "Ford";
 	public static final String ENGINE_MAKE_GM = "GM";
 	public static final String ENGINE_MAKE_HONDA = "Honda";
 	public static final String ENGINE_MAKE_Hyundai = "Hyundai";
@@ -1626,7 +1627,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.05.25.frankenso_na6.3466541009";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.05.25.frankenso_na6.3318848476";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
