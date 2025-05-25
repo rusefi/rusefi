@@ -102,10 +102,6 @@ float WallFuelController::calculateWeightedAverage(int startIdx, int endIdx, flo
 
 void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, float targetLambda, 
                                         bool isTransient, TransientDirection direction, float clt) {
-	// Skip learning if directional corrections not enabled
-	if (!engineConfiguration->wwDirectionalCorrections) {
-		return;
-	}
 
 	#if WW_ENABLE_ROBUST_VALIDATION
 	// Validação robusta de dados antes de qualquer processamento (opcional)
@@ -311,9 +307,6 @@ void WallFuelController::onIgnitionStateChanged(bool ignitionOn) {
 		// Reset timer when ignition turns on
 		m_ignitionOffTimer.reset();
 	} else if (pendingWwSave) {
-		// Use default delay of 5 seconds after ignition off
-		float saveDelaySeconds = 5.0f; // Default 5 seconds
-		
 		// Reset timer para contar o tempo desde que a ignição desligou
 		m_ignitionOffTimer.reset();
 		
@@ -500,13 +493,8 @@ void WallFuelController::onFastCallback() {
 	
 	// Calcular tau e beta - usando direção se configurado
 	float tau, beta;
-	if (engineConfiguration->wwDirectionalCorrections) {
-		tau = computeTauWithDirection(direction);
-		beta = computeBetaWithDirection(direction);
-	} else {
-		tau = computeTau();
-		beta = computeBeta();
-	}
+	tau = computeTauWithDirection(direction);
+	beta = computeBetaWithDirection(direction);
 	
 	if (tau < 0.01f || beta < 0.01f) {
 		m_enable = false;
@@ -528,7 +516,7 @@ void WallFuelController::onFastCallback() {
 	float targetLambda = engine->fuelComputer.targetLambda;
 	float clt = Sensor::getOrZero(SensorType::Clt);
 	
-	if (isTransient && engineConfiguration->wwDirectionalCorrections && lambdaSensor.Valid) {
+	if (isTransient && lambdaSensor.Valid) {
 		adaptiveLearning(rpm, map, lambdaSensor.Value, targetLambda, isTransient, direction, clt);
 	}
 }
