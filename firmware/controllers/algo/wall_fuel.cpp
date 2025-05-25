@@ -102,19 +102,32 @@ float WallFuelController::calculateWeightedAverage(int startIdx, int endIdx, flo
 
 void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, float targetLambda, 
                                         bool isTransient, TransientDirection direction, float clt) {
-	// Validação robusta de dados antes de qualquer processamento
+	// Skip learning if feature not enabled
+	if (!engineConfiguration->wwEnableAdaptiveLearning || !engineConfiguration->wwDirectionalCorrections) {
+		return;
+	}
+
+	#if WW_ENABLE_ROBUST_VALIDATION
+	// Validação robusta de dados antes de qualquer processamento (opcional)
 	LearningDataQuality quality = validateLearningData(lambda, targetLambda, clt, map, rpm);
 	
 	if (!isLearningDataValid(quality)) {
-		// Dados não são adequados para aprendizado
+		monitoring = false;
+		return;
+	}
+	#else
+	// Validação básica simplificada
+	if (lambda < MIN_LAMBDA || lambda > MAX_LAMBDA || std::isnan(lambda)) {
 		monitoring = false;
 		return;
 	}
 	
-	// Verificar se correções direcionais estão habilitadas
-	if (!engineConfiguration->wwDirectionalCorrections) {
+	// Check basic conditions
+	if (clt < 70.0f || fabsf(lambda - targetLambda) / targetLambda > 0.15f) {
+		monitoring = false;
 		return;
 	}
+	#endif
 
 	auto rpmBin = priv::getBin(rpm, config->wwRpmBins);
 	auto mapBin = priv::getBin(map, config->wwMapBins);
@@ -132,7 +145,7 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 		monitoring = true;
 		bufferIdx = 0;
 		
-		// Calcular tamanho ótimo do buffer baseado em tau e RPM
+		// Calcular tamanho ótimo do buffer (simplificado)
 		float tau = computeTauWithDirection(direction);
 		bufferMaxSize = calculateOptimalBufferSize(tau, rpm);
 	}
@@ -525,7 +538,7 @@ void WallFuelController::onFastCallback() {
 WallFuelController::WallFuelController() : 
 	bufferIdx(0), bufferMaxSize(200), monitoring(false), pendingWwSave(false),
 	currentTransientDirection(TransientDirection::NONE), lastTransientDirection(TransientDirection::NONE),
-	lastImmediateError(0.0f), lastProlongedError(0.0f), totalAdjustmentCycles(0) {
+	lastImmediateError(0.0f), lastProlongedError(0.0f) {
 	
 	// Inicializar buffers
 	for (int i = 0; i < WW_BUFFER_MAX; i++) {
@@ -534,41 +547,37 @@ WallFuelController::WallFuelController() :
 		mapBuffer[i] = 0.0f;
 	}
 	
-	// Inicializar status de aprendizado de todas as células
+	// Inicializar status simplificado de aprendizado de todas as células
 	for (int i = 0; i < WW_MAP_BINS; i++) {
 		for (int j = 0; j < WW_RPM_BINS; j++) {
-			betaLearningStatus[i][j] = CellLearningStatus();
-			tauLearningStatus[i][j] = CellLearningStatus();
+			betaLearningStatus[i][j] = SimpleLearningStatus();
+			tauLearningStatus[i][j] = SimpleLearningStatus();
 		}
 	}
 	
+	#if WW_ENABLE_DRIFT_RESET
+	totalAdjustmentCycles = 0;
 	lastResetTimer.reset();
+	#endif
 }
 
-// Nova função para validação robusta de dados de aprendizado
+#if WW_ENABLE_ROBUST_VALIDATION
+// Função para validação robusta de dados de aprendizado (opcional)
 LearningDataQuality WallFuelController::validateLearningData(float lambda, float targetLambda, float clt, float map, float /* rpm */) {
     LearningDataQuality quality;
     
     // Validação de lambda
     quality.lambdaValid = (lambda >= MIN_LAMBDA && lambda <= MAX_LAMBDA && !std::isnan(lambda));
     
-         // Validação de estabilidade de lambda (usando parâmetro configurável)
-     float lambdaDeviation = fabsf(lambda - targetLambda) / targetLambda;
-     float minStability = engineConfiguration->wwMinLambdaStability;
-     if (minStability <= 0.0f) minStability = 0.15f; // Default 15%
-     quality.conditionsStable = (lambdaDeviation <= minStability);
-     
-     // Validação de temperatura (usando parâmetros configuráveis)
-     float minClt = engineConfiguration->wwMinClt;
-     float maxClt = engineConfiguration->wwMaxCltForLearning;
-     if (minClt <= 0.0f) minClt = 70.0f; // Default
-     if (maxClt <= 0.0f) maxClt = 110.0f; // Default
-     quality.tempAppropriate = (clt >= minClt && clt <= maxClt);
-     
-     // Validação de carga (MAP) (usando parâmetro configurável)
-     float minMap = engineConfiguration->wwMinMapForLearning;
-     if (minMap <= 0.0f) minMap = 30.0f; // Default
-     quality.loadAppropriate = (map >= minMap);
+    // Validação de estabilidade de lambda (15% padrão fixo)
+    float lambdaDeviation = fabsf(lambda - targetLambda) / targetLambda;
+    quality.conditionsStable = (lambdaDeviation <= 0.15f);
+    
+    // Validação de temperatura (70-110°C fixo)
+    quality.tempAppropriate = (clt >= 70.0f && clt <= 110.0f);
+    
+    // Validação de carga (MAP >= 30 kPa fixo)
+    quality.loadAppropriate = (map >= 30.0f);
     
     // Cálculo de score de qualidade
     int validConditions = 0;
@@ -579,255 +588,100 @@ LearningDataQuality WallFuelController::validateLearningData(float lambda, float
     
     quality.qualityScore = (float)validConditions / 4.0f;
     
-    // Bonus para condições muito estáveis
-    if (quality.conditionsStable && lambdaDeviation < 0.05f) {
-        quality.qualityScore = minF(1.0f, quality.qualityScore + 0.1f);
-    }
-    
     return quality;
 }
 
-// Nova função para verificar se dados são válidos para aprendizado
 bool WallFuelController::isLearningDataValid(const LearningDataQuality& quality) {
     return quality.lambdaValid && quality.conditionsStable && 
            quality.tempAppropriate && quality.loadAppropriate &&
            quality.qualityScore >= 0.8f;
 }
 
-// Nova função para atualizar confiança da célula
 void WallFuelController::updateCellConfidence(int i, int j, bool isBeta, float adjustment, const LearningDataQuality& quality) {
-    CellLearningStatus& status = isBeta ? betaLearningStatus[i][j] : tauLearningStatus[i][j];
+    SimpleLearningStatus& status = isBeta ? betaLearningStatus[i][j] : tauLearningStatus[i][j];
     
-    // Incrementar contador de amostras
-    status.sampleCount++;
+    // Incrementar contador de amostras (limitado a 255)
+    if (status.sampleCount < 255) {
+        status.sampleCount++;
+    }
     
-         // Atualizar variância (média móvel simples das últimas diferenças)
-     float adjustmentMagnitude = fabsf(adjustment);
-     if (status.sampleCount == 1) {
-         status.variance = adjustmentMagnitude;
-     } else {
-         // Média móvel exponencial da variância
-         status.variance = status.variance * 0.8f + adjustmentMagnitude * 0.2f;
-     }
-     
-     // Usar parâmetros configuráveis
-     float maxVarianceThreshold = engineConfiguration->wwMaxVarianceThreshold;
-     if (maxVarianceThreshold <= 0.0f) maxVarianceThreshold = 0.1f; // Default 10%
-     
-     int minSamplesForConfidence = engineConfiguration->wwMinSamplesForConfidence;
-     if (minSamplesForConfidence <= 0) minSamplesForConfidence = 5; // Default
-     
-     // Atualizar confiança baseada na qualidade dos dados e consistência
-     float qualityFactor = quality.qualityScore;
-     float consistencyFactor = 1.0f - minF(1.0f, status.variance / maxVarianceThreshold);
-     
-     float newConfidence = (qualityFactor + consistencyFactor) / 2.0f;
-     
-     if (status.sampleCount >= minSamplesForConfidence) {
-         status.confidence = status.confidence * 0.9f + newConfidence * 0.1f;
-     } else {
-         status.confidence = newConfidence * ((float)status.sampleCount / minSamplesForConfidence);
-     }
-     
-     // Determinar se célula convergiu
-     status.isConverged = (status.confidence > 0.8f && status.variance < maxVarianceThreshold/2.0f && 
-                          status.sampleCount >= minSamplesForConfidence);
+    // Atualizar confiança baseada na qualidade dos dados (0-255 scale)
+    float qualityFactor = quality.qualityScore;
+    uint8_t newConfidence = (uint8_t)(qualityFactor * 255);
     
-    // Tracking de ajustes consecutivos
-    if (adjustmentMagnitude > 0.01f) {
-        status.consecutiveAdjustments++;
+    if (status.sampleCount >= 5) {
+        // Média móvel simples para confiança
+        status.confidence = (status.confidence * 3 + newConfidence) / 4;
     } else {
-        status.consecutiveAdjustments = 0;
+        status.confidence = newConfidence * status.sampleCount / 5;
     }
     
-    status.lastAdjustment = adjustment;
+    // Determinar se célula convergiu (confiança > 80% e suficientes amostras)
+    status.isConverged = (status.confidence > 204 && status.sampleCount >= 5); // 204 = 80% of 255
 }
 
-// Nova função para calcular tamanho ótimo do buffer
-int WallFuelController::calculateOptimalBufferSize(float tau, float rpm) {
-    if (rpm < 100.0f || tau <= 0.0f) {
-        return engineConfiguration->wwMinSampleSize;
-    }
-    
-    // Tempo de ciclo em segundos
-    float cycleTimeSeconds = 60.0f / rpm;
-    
-    // Número de ciclos para cobrir 2x tau (tempo para 86% de estabilização)
-    float timeConstantCycles = (tau * 2.0f) / cycleTimeSeconds;
-    
-    // Aplicar multiplicador configurável
-    float multiplier = engineConfiguration->wwSampleMultiplier;
-    if (multiplier <= 0.0f) multiplier = 1.5f; // Valor padrão
-    
-    int optimalSamples = (int)(timeConstantCycles * multiplier);
-    
-    // Aplicar limites configuráveis
-    int minSamples = engineConfiguration->wwMinSampleSize;
-    int maxSamples = engineConfiguration->wwBufferSize;
-    
-    if (minSamples <= 0) minSamples = 100;
-    if (maxSamples <= 0) maxSamples = 400;
-    
-    return clampF(minSamples, optimalSamples, maxSamples);
-}
-
- // Nova função para reset de drift
- void WallFuelController::checkAndResetDrift() {
-     // Verificar se o reset de drift está habilitado
-     if (!engineConfiguration->wwEnableDriftReset) {
-         return;
-     }
-     
-     // Usar intervalo configurável
-     int driftResetInterval = engineConfiguration->wwDriftResetIntervalMin;
-     if (driftResetInterval <= 0) driftResetInterval = 30; // Default 30 minutes
-     
-     // Verificar se é hora de fazer reset de drift
-     if (!lastResetTimer.hasElapsedMs(driftResetInterval * 60 * 1000)) {
-         return;
-     }
-    
-    int cellsWithHighVariance = 0;
-    int cellsWithExcessiveAdjustments = 0;
-    
-         // Usar parâmetros configuráveis
-     float maxVarianceThreshold = engineConfiguration->wwMaxVarianceThreshold;
-     if (maxVarianceThreshold <= 0.0f) maxVarianceThreshold = 0.1f; // Default 10%
-     
-     int maxConsecutiveAdjustments = engineConfiguration->wwMaxConsecutiveAdjustments;
-     if (maxConsecutiveAdjustments <= 0) maxConsecutiveAdjustments = 10; // Default
-     
-     // Contar células problemáticas
-     for (int i = 0; i < WW_MAP_BINS; i++) {
-         for (int j = 0; j < WW_RPM_BINS; j++) {
-             if (betaLearningStatus[i][j].variance > maxVarianceThreshold) {
-                 cellsWithHighVariance++;
-             }
-             if (betaLearningStatus[i][j].consecutiveAdjustments > maxConsecutiveAdjustments) {
-                 cellsWithExcessiveAdjustments++;
-             }
-             if (tauLearningStatus[i][j].variance > maxVarianceThreshold) {
-                 cellsWithHighVariance++;
-             }
-             if (tauLearningStatus[i][j].consecutiveAdjustments > maxConsecutiveAdjustments) {
-                 cellsWithExcessiveAdjustments++;
-             }
-         }
-     }
-    
-    // Se mais de 25% das células têm problemas, fazer reset seletivo
-    int totalCells = WW_MAP_BINS * WW_RPM_BINS * 2; // beta + tau
-    if ((cellsWithHighVariance + cellsWithExcessiveAdjustments) > (totalCells / 4)) {
-        resetCellsWithHighVariance();
-    }
-    
-    lastResetTimer.reset();
-}
-
- // Nova função para reset seletivo de células problemáticas
- void WallFuelController::resetCellsWithHighVariance() {
-     // Usar parâmetros configuráveis
-     float maxVarianceThreshold = engineConfiguration->wwMaxVarianceThreshold;
-     if (maxVarianceThreshold <= 0.0f) maxVarianceThreshold = 0.1f; // Default 10%
-     
-     int maxConsecutiveAdjustments = engineConfiguration->wwMaxConsecutiveAdjustments;
-     if (maxConsecutiveAdjustments <= 0) maxConsecutiveAdjustments = 10; // Default
-     
-     for (int i = 0; i < WW_MAP_BINS; i++) {
-         for (int j = 0; j < WW_RPM_BINS; j++) {
-             // Reset beta cells
-             if (betaLearningStatus[i][j].variance > maxVarianceThreshold ||
-                 betaLearningStatus[i][j].consecutiveAdjustments > maxConsecutiveAdjustments) {
-                
-                // Reset para valor padrão (100 = 1.0x)
-                config->wwBetaAccel[i][j] = 100;
-                config->wwBetaDecel[i][j] = 100;
-                
-                // Reset status
-                betaLearningStatus[i][j] = CellLearningStatus();
-            }
-            
-            // Reset tau cells
-            if (tauLearningStatus[i][j].variance > maxVarianceThreshold ||
-                tauLearningStatus[i][j].consecutiveAdjustments > maxConsecutiveAdjustments) {
-                
-                // Reset para valor padrão (100 = 1.0x)
-                config->wwTauAccel[i][j] = 100;
-                config->wwTauDecel[i][j] = 100;
-                
-                // Reset status
-                tauLearningStatus[i][j] = CellLearningStatus();
-            }
-        }
-    }
-    
-    // Marcar para salvar configuração
-    pendingWwSave = true;
-}
-
-// Implementação da suavização de tabela para scaled_channel
-void WallFuelController::smoothCorrectionTable(scaled_channel<uint8_t, 100, 1> table[WW_RPM_BINS][WW_MAP_BINS], int centerI, int centerJ, float intensity) {
-    // Retorno antecipado se intensidade for baixa demais
-    if (intensity <= 0.01f) {
+void WallFuelController::checkAndResetDrift() {
+    #if WW_ENABLE_DRIFT_RESET
+    // Reset simplificado a cada 30 minutos
+    if (!lastResetTimer.hasElapsedMs(30 * 60 * 1000)) {
         return;
     }
     
-    // Valor da célula central que foi ajustada (em formato float)
-    float centerValue = static_cast<float>(table[centerI][centerJ]);
-    
-    // Fator para determinar o quão forte cada célula vizinha será influenciada
-    float maxInfluence = clampF(0.0f, intensity, 0.5f);
-    
-    // Para cada célula na vizinhança 3x3 (células adjacentes)
-    for (int di = -1; di <= 1; di++) {
-        for (int dj = -1; dj <= 1; dj++) {
-            // Pular a célula central
-            if (di == 0 && dj == 0) {
-                continue;
+    // Reset simples de células com baixa confiança
+    for (int i = 0; i < WW_MAP_BINS; i++) {
+        for (int j = 0; j < WW_RPM_BINS; j++) {
+            if (betaLearningStatus[i][j].confidence < 128) { // < 50%
+                betaLearningStatus[i][j] = SimpleLearningStatus();
             }
-            
-            // Calcular índices da célula vizinha
-            int ni = centerI + di;
-            int nj = centerJ + dj;
-            
-            // Verificar limites da tabela 
-            if (ni < 0 || ni >= WW_MAP_BINS || nj < 0 || nj >= WW_RPM_BINS) {
-                continue;
+            if (tauLearningStatus[i][j].confidence < 128) { // < 50%
+                tauLearningStatus[i][j] = SimpleLearningStatus();
             }
-            
-            // Calcular distância (0.0-1.0 normalizada)
-            float distance = sqrtf(di*di + dj*dj);
-            if (distance > 1.41f) distance = 1.41f; // Normalizar distância diagonal
-            distance /= 1.41f; // Normalizar para 0.0-1.0
-            
-            // Quanto mais próximo, maior a influência
-            float influence = maxInfluence * (1.0f - distance);
-            
-            // Calcular novo valor como uma média ponderada
-            float currentValue = static_cast<float>(table[ni][nj]);
-            float newValue = currentValue * (1.0f - influence) + centerValue * influence;
-            
-            // Atualizar o valor com limites (mantendo os limites em formato scaled)
-            newValue = clampF(5.0f, newValue, 250.0f); // 0.05-2.5 in scaled form (0.01 scale factor)
-            
-            // Converter de volta para o tipo da tabela
-            table[ni][nj] = static_cast<uint8_t>(newValue);
         }
     }
+    
+    lastResetTimer.reset();
+    #endif
+}
+
+void WallFuelController::resetCellsWithHighVariance() {
+    // Versão simplificada - apenas reset de células não convergidas
+    for (int i = 0; i < WW_MAP_BINS; i++) {
+        for (int j = 0; j < WW_RPM_BINS; j++) {
+            if (!betaLearningStatus[i][j].isConverged) {
+                betaLearningStatus[i][j] = SimpleLearningStatus();
+            }
+            if (!tauLearningStatus[i][j].isConverged) {
+                tauLearningStatus[i][j] = SimpleLearningStatus();
+            }
+        }
+    }
+}
+#endif // WW_ENABLE_ROBUST_VALIDATION
+
+// Nova função para calcular tamanho ótimo do buffer (simplificada)
+int WallFuelController::calculateOptimalBufferSize(float tau, float rpm) {
+    if (rpm < 100.0f || tau <= 0.0f) {
+        return 50; // Valor mínimo fixo
+    }
+    
+    // Cálculo simplificado baseado em tau e RPM
+    float cycleTimeSeconds = 60.0f / rpm;
+    float timeConstantCycles = (tau * 2.0f) / cycleTimeSeconds;
+    int optimalSamples = (int)(timeConstantCycles * 1.5f);
+    
+    // Limites fixos para simplicidade
+    return clampF(50, optimalSamples, WW_BUFFER_MAX);
 }
 
 // Funções de diagnóstico
 float WallFuelController::getCellConfidence(int i, int j, bool isBeta) const {
-    if (i >= WW_MAP_BINS || j >= WW_RPM_BINS) return 0.0f;
-    return isBeta ? betaLearningStatus[i][j].confidence : tauLearningStatus[i][j].confidence;
+	if (i >= WW_MAP_BINS || j >= WW_RPM_BINS) return 0.0f;
+	// Convert uint8_t confidence (0-255) back to float (0.0-1.0)
+	uint8_t conf = isBeta ? betaLearningStatus[i][j].confidence : tauLearningStatus[i][j].confidence;
+	return (float)conf / 255.0f;
 }
 
 int WallFuelController::getCellSampleCount(int i, int j, bool isBeta) const {
-    if (i >= WW_MAP_BINS || j >= WW_RPM_BINS) return 0;
-    return isBeta ? betaLearningStatus[i][j].sampleCount : tauLearningStatus[i][j].sampleCount;
-}
-
-float WallFuelController::getCellVariance(int i, int j, bool isBeta) const {
-    if (i >= WW_MAP_BINS || j >= WW_RPM_BINS) return 0.0f;
-    return isBeta ? betaLearningStatus[i][j].variance : tauLearningStatus[i][j].variance;
+	if (i >= WW_MAP_BINS || j >= WW_RPM_BINS) return 0;
+	return isBeta ? betaLearningStatus[i][j].sampleCount : tauLearningStatus[i][j].sampleCount;
 }

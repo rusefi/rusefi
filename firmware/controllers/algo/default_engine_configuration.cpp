@@ -8,9 +8,9 @@
 	setLinearCurve(config->wwMapBins, 20, 20, CONFIG(wwMapBins));
 	setLinearCurve(config->wwRpmBins, 600, 600, CONFIG(wwRpmBins));
 	
-	// Initialize wall wetting 3D tables with default values
-	for (int rpm = 0; rpm < CONFIG(wwRpmBins); rpm++) {
-		for (int load = 0; load < CONFIG(wwMapBins); load++) {
+	// Initialize wall wetting 3D tables with default values (reduced size: 6x6)
+	for (int rpm = 0; rpm < WWAE_RPM_SIZE; rpm++) {
+		for (int load = 0; load < WWAE_TABLE_SIZE; load++) {
 			config->wwTauMapRpmValues[rpm][load] = 100;
 			config->wwBetaMapRpmValues[rpm][load] = 60;
 			
@@ -22,41 +22,13 @@
 		}
 	}
 	
-	// Inicializar configurações para correções direcionais
-	config->wwBufferSize = 400;
-	config->wwMinSampleSize = 100;
-	config->wwMaxSampleSize = 400;
-	config->wwBufferSize = 400;
+	// Simplified wall wetting configuration for memory optimization
+	config->wwBufferSize = 200; // Reduced from 400
 	config->wwTransientTimeoutMs = 1000;
-	config->wwDirectionalCorrections = false; // Desabilitado por padrão
-	config->wwSampleMultiplier = 1.5f;
-	
-	// Wall Wetting Learning Parameters
-	config->wwMinClt = 70;
+	config->wwDirectionalCorrections = false; // Disabled by default
 	config->wwLearningRate = 0.01f; // 1%
 	config->wwSmoothIntensity = 0.1f; // 10%
-	config->wwIgnitionOffSaveDelay = 10; // 10 segundos
-	
-	// Phase weight parameters (default values)
-	config->wwBetaInitWeight = 0.2f;
-	config->wwBetaTransWeight = 0.3f; 
-	config->wwBetaFinalWeight = 0.5f;
-	config->wwTauInitWeight = 0.2f;
-	config->wwTauTransWeight = 0.3f;
-	config->wwTauFinalWeight = 0.5f;
-	
-	// New Phase 1 and 2 parameters
-	config->wwDriftResetIntervalMin = 30; // 30 minutes
-	config->wwMaxVarianceThreshold = 0.1f; // 10%
-	config->wwMaxConsecutiveAdjustments = 10;
-	config->wwMinSamplesForConfidence = 5;
-	config->wwConfidenceDecayRate = 0.95f; // 95%
-	config->wwMinLambdaStability = 0.15f; // 15%
-	config->wwMaxCltForLearning = 110.0f;
-	config->wwMinMapForLearning = 30; // 30 kPa
-	config->wwEnableRobustValidation = true; // Habilitado por padrão
-	config->wwEnableDriftReset = true; // Habilitado por padrão
-	config->wwDirectionalCorrections = false; // Desabilitado por padrão para compatibilidade
+	config->wwEnableAdaptiveLearning = false; // Disabled by default to save memory
 
 	// Set up default wall wetting parameters based on
 	// the H4 calibration

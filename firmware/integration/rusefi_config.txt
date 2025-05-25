@@ -1202,31 +1202,10 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	uint8_t autoscale wwMinClt;;"C", 1, 0, 0, 255, 0
 	uint8_t autoscale wwLearningRate;;"%", 0.01, 0, 0, 1.0, 2
 	uint16_t autoscale wwTransientTimeoutMs;;"ms", 1, 0, 10, 10000, 0
-	uint8_t wwMinSampleSize;;"count", 1, 0, 50, 300, 0
-	uint16_t wwMaxSampleSize;;"count", 1, 0, 100, 1000, 0
-	float wwSampleMultiplier;;"mult", 1, 0, 0.1, 10.0, 1
-	float wwBetaInitWeight;0.2;"mult", 1, 0, -1.0, 1.0, 2
-	float wwBetaTransWeight;0.3;"mult", 1, 0, -1.0, 1.0, 2
-	float wwBetaFinalWeight;0.5;"mult", 1, 0, -1.0, 1.0, 2
-	float wwTauInitWeight;0.2;"mult", 1, 0, -1.0, 1.0, 2
-	float wwTauTransWeight;0.3;"mult", 1, 0, -1.0, 1.0, 2
-	float wwTauFinalWeight;0.5;"mult", 1, 0, -1.0, 1.0, 2
+	// Simplified WW configuration - only essential parameters for memory optimization
+	uint8_t autoscale wwLearningRate;;"%", 0.01, 0, 0, 1.0, 2
 	uint8_t autoscale wwSmoothIntensity;;"%", 0.01, 0, 0, 1, 2
-	uint8_t autoscale wwIgnitionOffSaveDelay;;"s", 5, 0, 0, 100, 0
-	
-	// New parameters for Phase 1 and 2 improvements
-	uint8_t autoscale wwDriftResetIntervalMin;30;"min", 1, 0, 10, 240, 0
-	uint8_t autoscale wwMaxVarianceThreshold;10;"%", 0.01, 0, 1, 50, 2
-	uint8_t wwMaxConsecutiveAdjustments;10;"count", 1, 0, 5, 50, 0
-	uint8_t wwMinSamplesForConfidence;5;"count", 1, 0, 3, 20, 0
-	uint8_t autoscale wwConfidenceDecayRate;95;"%", 0.01, 0, 50, 100, 2
-	uint8_t autoscale wwMinLambdaStability;15;"%", 0.01, 0, 5, 50, 2
-	float wwMaxCltForLearning;110.0;"C", 1, 0, 80, 150, 1
-	uint8_t autoscale wwMinMapForLearning;30;"kPa", 1, 0, 20, 100, 0
-	bit wwEnableRobustValidation;"Enable robust sensor validation for wall wetting learning"
-	bit wwEnableDriftReset;"Enable automatic drift reset for wall wetting tables"
-	uint16_t wwBufferSize;400;"Wall Wetting Buffer Size", 1, 0, 100, 1000, 0
-	bit wwDirectionalCorrections;"Enable directional wall wetting corrections"
+	bit wwEnableAdaptiveLearning;"Enable adaptive wall wetting learning"
 
   uint16_t autoscale tachPulsePerRev;;"", 0.001, 0, 1, 15, 3
 
@@ -2197,8 +2176,8 @@ uint8_t[INJ_STAGING_COUNT x INJ_STAGING_COUNT] injectorStagingTable;;"%", 1, 0, 
 uint16_t[INJ_STAGING_COUNT] injectorStagingLoadBins;;"", 1, 0, 0, 1000, 0
 uint16_t[INJ_STAGING_COUNT] injectorStagingRpmBins;;"RPM",  1, 0, 0, 18000, 0
 
-#define WWAE_TABLE_SIZE 8
-#define WWAE_RPM_SIZE 8
+#define WWAE_TABLE_SIZE 6
+#define WWAE_RPM_SIZE 6
 
 int8_t[WWAE_TABLE_SIZE] wwCltBins;;"deg C", 1, 0, -40, 120, 0
 uint8_t[WWAE_TABLE_SIZE] autoscale wwTauCltValues;;"", 0.01, 0, 0, 2.5, 2
@@ -2212,6 +2191,9 @@ uint8_t[WWAE_RPM_SIZE x WWAE_TABLE_SIZE] autoscale wwBetaAccel;;"", 0.01, 0, 0, 
 uint8_t[WWAE_RPM_SIZE x WWAE_TABLE_SIZE] autoscale wwBetaDecel;;"", 0.01, 0, 0, 2.5, 2
 uint8_t[WWAE_RPM_SIZE x WWAE_TABLE_SIZE] autoscale wwTauAccel;;"", 0.01, 0, 0, 2.5, 2
 uint8_t[WWAE_RPM_SIZE x WWAE_TABLE_SIZE] autoscale wwTauDecel;;"", 0.01, 0, 0, 2.5, 2
+
+uint16_t wwBufferSize;200;"Wall Wetting Buffer Size", 1, 0, 50, 200, 0
+bit wwDirectionalCorrections;"Enable directional wall wetting corrections"
 
 uint8_t[HPFP_LOBE_PROFILE_SIZE] autoscale hpfpLobeProfileQuantityBins;;"%", 0.5, 0, 0, 100, 1
 uint8_t[HPFP_LOBE_PROFILE_SIZE] autoscale hpfpLobeProfileAngle;;"deg", 0.5, 0, 0, 125, 1

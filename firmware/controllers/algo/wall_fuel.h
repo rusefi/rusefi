@@ -39,32 +39,28 @@ enum class TransientDirection {
 	NEGATIVE   // Desaceleração
 };
 
-// Adaptação automática de tau/beta
-#define WW_RPM_BINS 8
-#define WW_MAP_BINS 8
+// Adaptação automática de tau/beta - reduced table sizes for memory optimization
+#define WW_RPM_BINS 6        // Reduced from 8 to 6 
+#define WW_MAP_BINS 6        // Reduced from 8 to 6
 
 #ifndef WWAE_RPM_SIZE
-#define WWAE_RPM_SIZE 8
+#define WWAE_RPM_SIZE 6      // Reduced from 8 to 6
 #endif
 
 #ifndef WWAE_TABLE_SIZE
-#define WWAE_TABLE_SIZE 8
+#define WWAE_TABLE_SIZE 6    // Reduced from 8 to 6
 #endif
 
-// Estrutura para tracking de confiança e qualidade por célula
-struct CellLearningStatus {
-	float confidence;        // 0.0 a 1.0 - confiança na calibração
-	int sampleCount;        // número de aprendizados realizados
-	float variance;         // variância dos últimos ajustes
-	float lastAdjustment;   // último ajuste aplicado
-	bool isConverged;       // se a célula convergiu
-	int consecutiveAdjustments; // ajustes consecutivos sem estabilização
+// Simplified lightweight learning status for memory optimization
+struct SimpleLearningStatus {
+	uint8_t confidence;      // 0-255 scaled confidence (saves 3 bytes vs float)
+	uint8_t sampleCount;     // max 255 samples (saves 3 bytes vs int)
+	bool isConverged;        // convergence flag
 	
-	CellLearningStatus() : confidence(0.0f), sampleCount(0), variance(0.0f), 
-						  lastAdjustment(0.0f), isConverged(false), consecutiveAdjustments(0) {}
+	SimpleLearningStatus() : confidence(0), sampleCount(0), isConverged(false) {}
 };
 
-// Estrutura para validação de qualidade de dados
+// Conditional data quality structure - only used when robust validation is enabled
 struct LearningDataQuality {
 	bool lambdaValid;
 	bool conditionsStable;
@@ -93,10 +89,9 @@ public:
 	bool getBetaAdjusted(int i, int j) const { return i < WW_MAP_BINS && j < WW_RPM_BINS ? betaLearningStatus[i][j].isConverged : false; }
 	bool getTauAdjusted(int i, int j) const { return i < WW_MAP_BINS && j < WW_RPM_BINS ? tauLearningStatus[i][j].isConverged : false; }
 	
-	// Novos métodos para diagnóstico avançado
+	// Simplified diagnostic methods for memory optimization
 	float getCellConfidence(int i, int j, bool isBeta) const;
 	int getCellSampleCount(int i, int j, bool isBeta) const;
-	float getCellVariance(int i, int j, bool isBeta) const;
 
 	bool getEnable() const override {
 		return m_enable;
@@ -118,12 +113,15 @@ protected:
 	float computeTauWithDirection(TransientDirection direction) const;
 	float computeBetaWithDirection(TransientDirection direction) const;
 	
-	// Novos métodos para melhorias
+	// Conditional methods - only compiled if robust validation is enabled
+	#if WW_ENABLE_ROBUST_VALIDATION
 	LearningDataQuality validateLearningData(float lambda, float targetLambda, float clt, float map, float rpm);
 	bool isLearningDataValid(const LearningDataQuality& quality);
 	void updateCellConfidence(int i, int j, bool isBeta, float adjustment, const LearningDataQuality& quality);
 	void checkAndResetDrift();
 	void resetCellsWithHighVariance();
+	#endif
+	
 	int calculateOptimalBufferSize(float tau, float rpm);
 	float calculateWeightedAverage(int startIdx, int endIdx, float targetLambda);
 	void smoothCorrectionTable(scaled_channel<uint8_t, 100, 1> table[WW_RPM_BINS][WW_MAP_BINS], int centerI, int centerJ, float intensity);
@@ -137,8 +135,8 @@ private:
 	Timer m_transientTimer;
 	Timer m_ignitionOffTimer;
 	
-	// Buffers movidos para membros da classe (thread safety)
-	static constexpr int WW_BUFFER_MAX = 1000;
+	// Dramatically reduced buffer sizes for memory optimization
+	static constexpr int WW_BUFFER_MAX = 200;  // Reduced from 1000 to 200 (-9.6KB)
 	float lambdaBuffer[WW_BUFFER_MAX];
 	float rpmBuffer[WW_BUFFER_MAX];
 	float mapBuffer[WW_BUFFER_MAX];
@@ -147,25 +145,36 @@ private:
 	bool monitoring;
 	bool pendingWwSave;
 	
-	// Tracking de confiança por célula
-	CellLearningStatus betaLearningStatus[WW_MAP_BINS][WW_RPM_BINS];
-	CellLearningStatus tauLearningStatus[WW_MAP_BINS][WW_RPM_BINS];
+	// Simplified tracking using smaller structures (saves ~1KB)
+	SimpleLearningStatus betaLearningStatus[WW_MAP_BINS][WW_RPM_BINS];
+	SimpleLearningStatus tauLearningStatus[WW_MAP_BINS][WW_RPM_BINS];
 	
 	// Estado do transiente atual
 	TransientDirection currentTransientDirection;
 	TransientDirection lastTransientDirection;
 	
-	// Diagnósticos
+	// Simplified diagnostics
 	float lastImmediateError;
 	float lastProlongedError;
 	
-	// Contadores para reset de drift
+	// Optional advanced features - only included if needed
+	#if WW_ENABLE_DRIFT_RESET
 	int totalAdjustmentCycles;
 	Timer lastResetTimer;
+	#endif
 	
 	// Constantes básicas para validação (outras vêm da configuração)
 	static constexpr float MIN_LAMBDA = 0.5f;
 	static constexpr float MAX_LAMBDA = 1.5f;
 };
+
+// Compile-time feature toggles for conditional functionality
+#ifndef WW_ENABLE_ROBUST_VALIDATION
+#define WW_ENABLE_ROBUST_VALIDATION 0  // Disabled by default to save memory
+#endif
+
+#ifndef WW_ENABLE_DRIFT_RESET
+#define WW_ENABLE_DRIFT_RESET 0       // Disabled by default to save memory
+#endif
 
 // Template method implementation moved to .cpp file
