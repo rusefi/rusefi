@@ -10,6 +10,8 @@
 
 // todo: static_cast<uint8_t>(Fault::LegacyProtocol);
 
+#define RUSEFI_WIDEBAND_VERSION_MIN	0xA0
+
 class AemXSeriesWideband : public CanSensorBase, public wideband_state_s {
 public:
 	AemXSeriesWideband(uint8_t sensorIndex, SensorType type);

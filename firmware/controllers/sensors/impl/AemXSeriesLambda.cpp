@@ -158,9 +158,9 @@ bool AemXSeriesWideband::decodeAemXSeries(const CANRxFrame& frame, efitick_t now
 void AemXSeriesWideband::decodeRusefiStandard(const CANRxFrame& frame, efitick_t nowNt) {
 	auto data = reinterpret_cast<const wbo::StandardData*>(&frame.data8[0]);
 
-	if (data->Version != RUSEFI_WIDEBAND_VERSION) {
-		firmwareError(ObdCode::OBD_WB_FW_Mismatch, "Wideband controller index %d has wrong protocol version (0x%02x while 0x%02x expected), please update!",
-			m_sensorIndex, data->Version, RUSEFI_WIDEBAND_VERSION);
+	if (data->Version < RUSEFI_WIDEBAND_VERSION_MIN) {
+		firmwareError(ObdCode::OBD_WB_FW_Mismatch, "Wideband controller index %d has outdated protocol version (0x%02x while minimum 0x%02x expected), please update!",
+			m_sensorIndex, data->Version, RUSEFI_WIDEBAND_VERSION_MIN);
 		return;
 	}
 
