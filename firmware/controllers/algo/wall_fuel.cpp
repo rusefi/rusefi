@@ -661,6 +661,49 @@ int WallFuelController::calculateOptimalBufferSize(float tau, float rpm) {
     return clampF(50, optimalSamples, WW_BUFFER_MAX);
 }
 
+// Implementação da função de suavização de tabelas de correção
+void WallFuelController::smoothCorrectionTable(scaled_channel<uint8_t, 100, 1> table[WW_RPM_BINS][WW_MAP_BINS], int centerI, int centerJ, float intensity) {
+    // Aplicar suavização simples nas células adjacentes
+    // intensity: 0.0 = sem suavização, 1.0 = suavização máxima
+    
+    if (centerI < 0 || centerI >= WW_MAP_BINS || centerJ < 0 || centerJ >= WW_RPM_BINS) {
+        return; // Índices inválidos
+    }
+    
+    if (intensity <= 0.0f) {
+        return; // Sem suavização
+    }
+    
+    intensity = clampF(0.0f, intensity, 1.0f);
+    
+    uint8_t centerValue = table[centerJ][centerI]; // Note: [j][i] order
+    
+    // Aplicar suavização para células adjacentes
+    for (int di = -1; di <= 1; di++) {
+        for (int dj = -1; dj <= 1; dj++) {
+            if (di == 0 && dj == 0) continue; // Skip center cell
+            
+            int ni = centerI + di;
+            int nj = centerJ + dj;
+            
+            // Verificar limites
+            if (ni >= 0 && ni < WW_MAP_BINS && nj >= 0 && nj < WW_RPM_BINS) {
+                uint8_t neighborValue = table[nj][ni];
+                
+                // Aplicar suavização ponderada baseada na distância
+                float weight = intensity;
+                if (di != 0 && dj != 0) {
+                    weight *= 0.7f; // Diagonal neighbors have less weight
+                }
+                
+                // Interpolação linear entre valor atual e valor central
+                uint8_t newValue = (uint8_t)(neighborValue * (1.0f - weight) + centerValue * weight);
+                table[nj][ni] = newValue;
+            }
+        }
+    }
+}
+
 // Funções de diagnóstico
 float WallFuelController::getCellConfidence(int i, int j, bool isBeta) const {
 	if (i >= WW_MAP_BINS || j >= WW_RPM_BINS) return 0.0f;

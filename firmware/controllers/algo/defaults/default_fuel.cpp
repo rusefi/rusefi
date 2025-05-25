@@ -238,41 +238,67 @@ void setDefaultWallWetting() {
 
 	// These values are derived from the GM factory tune for a gen3 LS engine
 	// Who knows if they're good for anything else, but at least they look nice?
-	static constexpr float tauClt[] = {
-		1.45, 1.30, 1.17, 1.05, 0.90, 0.82, 0.75, 0.70
+	// Updated to use correct size (WWAE_TABLE_SIZE = 6)
+	static constexpr float tauClt[WWAE_TABLE_SIZE] = {
+		1.45, 1.30, 1.17, 1.05, 0.90, 0.82
 	};
-	copyArray(config->wwTauCltValues, tauClt);
+	// Use proper scaling for autoscale fields
+	for (int i = 0; i < WWAE_TABLE_SIZE; i++) {
+		config->wwTauCltValues[i] = (uint8_t)(tauClt[i] * 100.0f);
+	}
 
-	// Create 2D arrays for MAP x RPM tables
-	static constexpr float tauMapRpm[8][8] = {
-		{0.38, 0.55, 0.69, 0.86, 0.90, 0.95, 0.97, 1.00},
-		{0.38, 0.55, 0.69, 0.86, 0.90, 0.95, 0.97, 1.00},
-		{0.38, 0.55, 0.69, 0.86, 0.90, 0.95, 0.97, 1.00},
-		{0.38, 0.55, 0.69, 0.86, 0.90, 0.95, 0.97, 1.00},
-		{0.38, 0.55, 0.69, 0.86, 0.90, 0.95, 0.97, 1.00},
-		{0.38, 0.55, 0.69, 0.86, 0.90, 0.95, 0.97, 1.00},
-		{0.38, 0.55, 0.69, 0.86, 0.90, 0.95, 0.97, 1.00},
-		{0.38, 0.55, 0.69, 0.86, 0.90, 0.95, 0.97, 1.00}
+	// Create 2D arrays for MAP x RPM tables (WWAE_RPM_SIZE x WWAE_TABLE_SIZE = 6x6)
+	static constexpr float tauMapRpm[WWAE_RPM_SIZE][WWAE_TABLE_SIZE] = {
+		{0.38, 0.55, 0.69, 0.86, 0.90, 0.95},
+		{0.38, 0.55, 0.69, 0.86, 0.90, 0.95},
+		{0.38, 0.55, 0.69, 0.86, 0.90, 0.95},
+		{0.38, 0.55, 0.69, 0.86, 0.90, 0.95},
+		{0.38, 0.55, 0.69, 0.86, 0.90, 0.95},
+		{0.38, 0.55, 0.69, 0.86, 0.90, 0.95}
 	};
-	copyTable(config->wwTauMapRpmValues, tauMapRpm);
+	// Use proper scaling for autoscale fields
+	for (int i = 0; i < WWAE_RPM_SIZE; i++) {
+		for (int j = 0; j < WWAE_TABLE_SIZE; j++) {
+			config->wwTauMapRpmValues[i][j] = (uint8_t)(tauMapRpm[i][j] * 100.0f);
+		}
+	}
 
-	static constexpr float betaClt[] = {
-		0.73, 0.66, 0.57, 0.46, 0.38, 0.31, 0.24, 0.19
+	static constexpr float betaClt[WWAE_TABLE_SIZE] = {
+		0.73, 0.66, 0.57, 0.46, 0.38, 0.31
 	};
-	copyArray(config->wwBetaCltValues, betaClt);
+	// Use proper scaling for autoscale fields
+	for (int i = 0; i < WWAE_TABLE_SIZE; i++) {
+		config->wwBetaCltValues[i] = (uint8_t)(betaClt[i] * 100.0f);
+	}
 
-	// Create 2D arrays for MAP x RPM tables
-	static constexpr float betaMapRpm[8][8] = {
-		{0.21, 0.40, 0.60, 0.79, 0.85, 0.90, 0.95, 1.00},
-		{0.21, 0.40, 0.60, 0.79, 0.85, 0.90, 0.95, 1.00},
-		{0.21, 0.40, 0.60, 0.79, 0.85, 0.90, 0.95, 1.00},
-		{0.21, 0.40, 0.60, 0.79, 0.85, 0.90, 0.95, 1.00},
-		{0.21, 0.40, 0.60, 0.79, 0.85, 0.90, 0.95, 1.00},
-		{0.21, 0.40, 0.60, 0.79, 0.85, 0.90, 0.95, 1.00},
-		{0.21, 0.40, 0.60, 0.79, 0.85, 0.90, 0.95, 1.00},
-		{0.21, 0.40, 0.60, 0.79, 0.85, 0.90, 0.95, 1.00}
+	// Create 2D arrays for MAP x RPM tables (WWAE_RPM_SIZE x WWAE_TABLE_SIZE = 6x6)
+	static constexpr float betaMapRpm[WWAE_RPM_SIZE][WWAE_TABLE_SIZE] = {
+		{0.21, 0.40, 0.60, 0.79, 0.85, 0.90},
+		{0.21, 0.40, 0.60, 0.79, 0.85, 0.90},
+		{0.21, 0.40, 0.60, 0.79, 0.85, 0.90},
+		{0.21, 0.40, 0.60, 0.79, 0.85, 0.90},
+		{0.21, 0.40, 0.60, 0.79, 0.85, 0.90},
+		{0.21, 0.40, 0.60, 0.79, 0.85, 0.90}
 	};
-	copyTable(config->wwBetaMapRpmValues, betaMapRpm);
+	// Use proper scaling for autoscale fields
+	for (int i = 0; i < WWAE_RPM_SIZE; i++) {
+		for (int j = 0; j < WWAE_TABLE_SIZE; j++) {
+			config->wwBetaMapRpmValues[i][j] = (uint8_t)(betaMapRpm[i][j] * 100.0f);
+		}
+	}
+
+	// Initialize adaptive learning correction tables with neutral values (1.0)
+	for (int i = 0; i < WWAE_RPM_SIZE; i++) {
+		for (int j = 0; j < WWAE_TABLE_SIZE; j++) {
+			config->wwBetaAccel[i][j] = 100; // 1.0 * 100 (neutral)
+			config->wwBetaDecel[i][j] = 100; // 1.0 * 100 (neutral)
+			config->wwTauAccel[i][j] = 100;  // 1.0 * 100 (neutral)
+			config->wwTauDecel[i][j] = 100;  // 1.0 * 100 (neutral)
+		}
+	}
+
+	// Set default buffer size for wall wetting learning
+	engineConfiguration->wwBufferSize = 100; // Default buffer size
 }
 
 static void setDefaultLambdaProtection() {
