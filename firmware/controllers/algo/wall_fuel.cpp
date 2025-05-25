@@ -185,7 +185,7 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 			lastProlongedError = erroFinal;
 			
 			// 4. Aplicar correções com valores padrão simples
-			float learnRate = 0.01f; // Default 1% learning rate
+			float learnRate = 0.33f; // Default 33% learning rate
 			float maxStep = 0.05f; // Máximo 5% de ajuste por vez
 			
 			// Verificar confiança da célula antes de aplicar correção
@@ -559,7 +559,7 @@ LearningDataQuality WallFuelController::validateLearningData(float lambda, float
     
     // Validação de estabilidade de lambda (15% padrão fixo)
     float lambdaDeviation = fabsf(lambda - targetLambda) / targetLambda;
-    quality.conditionsStable = (lambdaDeviation <= 0.15f);
+    quality.conditionsStable = (lambdaDeviation <= 0.50f);
     
     // Validação de temperatura (70-110°C fixo)
     quality.tempAppropriate = (clt >= 70.0f && clt <= 110.0f);
@@ -582,7 +582,7 @@ LearningDataQuality WallFuelController::validateLearningData(float lambda, float
 bool WallFuelController::isLearningDataValid(const LearningDataQuality& quality) {
     return quality.lambdaValid && quality.conditionsStable && 
            quality.tempAppropriate && quality.loadAppropriate &&
-           quality.qualityScore >= 0.8f;
+           quality.qualityScore >= 0.6f;
 }
 
 void WallFuelController::updateCellConfidence(int i, int j, bool isBeta, float adjustment, const LearningDataQuality& quality) {
