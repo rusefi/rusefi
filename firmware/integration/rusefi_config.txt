@@ -1204,7 +1204,6 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	uint16_t autoscale wwTransientTimeoutMs;;"ms", 1, 0, 10, 10000, 0
 	uint8_t wwMinSampleSize;;"count", 1, 0, 50, 300, 0
 	uint16_t wwMaxSampleSize;;"count", 1, 0, 100, 1000, 0
-	uint16_t wwBufferSize;;"count", 1, 0, 100, 1000, 0
 	float wwSampleMultiplier;;"mult", 1, 0, 0.1, 10.0, 1
 	float wwBetaInitWeight;0.2;"mult", 1, 0, -1.0, 1.0, 2
 	float wwBetaTransWeight;0.3;"mult", 1, 0, -1.0, 1.0, 2
@@ -1226,6 +1225,7 @@ int16_t tps2Max;Full throttle#2. tpsMax value as 10 bit ADC value. Not Voltage!\
 	uint8_t autoscale wwMinMapForLearning;30;"kPa", 1, 0, 20, 100, 0
 	bit wwEnableRobustValidation;"Enable robust sensor validation for wall wetting learning"
 	bit wwEnableDriftReset;"Enable automatic drift reset for wall wetting tables"
+	uint16_t wwBufferSize;400;"Wall Wetting Buffer Size", 1, 0, 100, 1000, 0
 	bit wwDirectionalCorrections;"Enable directional wall wetting corrections"
 
   uint16_t autoscale tachPulsePerRev;;"", 0.001, 0, 1, 15, 3
@@ -2212,9 +2212,6 @@ uint8_t[WWAE_RPM_SIZE x WWAE_TABLE_SIZE] autoscale wwBetaAccel;;"", 0.01, 0, 0, 
 uint8_t[WWAE_RPM_SIZE x WWAE_TABLE_SIZE] autoscale wwBetaDecel;;"", 0.01, 0, 0, 2.5, 2
 uint8_t[WWAE_RPM_SIZE x WWAE_TABLE_SIZE] autoscale wwTauAccel;;"", 0.01, 0, 0, 2.5, 2
 uint8_t[WWAE_RPM_SIZE x WWAE_TABLE_SIZE] autoscale wwTauDecel;;"", 0.01, 0, 0, 2.5, 2
-
-uint16_t wwBufferSize;;"Wall Wetting Buffer Size", 1, 0, 100, 1000, 0
-bit wwDirectionalCorrections;"Use directional corrections for wall wetting"
 
 uint8_t[HPFP_LOBE_PROFILE_SIZE] autoscale hpfpLobeProfileQuantityBins;;"%", 0.5, 0, 0, 100, 1
 uint8_t[HPFP_LOBE_PROFILE_SIZE] autoscale hpfpLobeProfileAngle;;"deg", 0.5, 0, 0, 125, 1
