@@ -297,8 +297,6 @@ void setDefaultWallWetting() {
 		}
 	}
 
-	// Set default buffer size for wall wetting learning
-	engineConfiguration->wwBufferSize = 100; // Default buffer size
 }
 
 static void setDefaultLambdaProtection() {
