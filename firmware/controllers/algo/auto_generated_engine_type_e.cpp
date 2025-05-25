@@ -1,6 +1,6 @@
 #include "global.h"
 #include "engine_type_e.h"
-// was generated automatically by rusEFI tool  from engine_type_e.h // by enum_to_string.jar tool on Sat May 24 19:12:23 UTC 2025
+// was generated automatically by rusEFI tool  from engine_type_e.h // by enum_to_string.jar tool on Sun May 25 00:57:29 UTC 2025
 // see also gen_config_and_enums.bat
 
 
@@ -209,6 +209,8 @@ case engine_type_e::UNUSED102:
   return "UNUSED102";
 case engine_type_e::UNUSED94:
   return "UNUSED94";
+case engine_type_e::UNUSED_105:
+  return "UNUSED_105";
 case engine_type_e::UNUSED_97:
   return "UNUSED_97";
 case engine_type_e::VAG_5_CYL:

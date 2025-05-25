@@ -401,7 +401,6 @@ public class VariableRegistryValues {
 	public static final int engine_type_e_ET_BOSCH_QUICK_START = 21;
 	public static final int engine_type_e_ET_TEST_WITH_BOSCH_QUICK_START = 24;
 	public static final int engine_type_e_ETB_BENCH_ENGINE = 58;
-	public static final int engine_type_e_FERRARI_F136 = 105;
 	public static final int engine_type_e_FORD_ASPIRE_1996 = 3;
 	public static final int engine_type_e_FORD_COYOTE = 11;
 	public static final int engine_type_e_FORD_ECOBOOST = 67;
@@ -491,6 +490,7 @@ public class VariableRegistryValues {
 	public static final int engine_type_e_TOYOTA_2JZ_GTE_VVTi = 44;
 	public static final int engine_type_e_UNUSED102 = 102;
 	public static final int engine_type_e_UNUSED94 = 94;
+	public static final int engine_type_e_UNUSED_105 = 105;
 	public static final int engine_type_e_UNUSED_97 = 97;
 	public static final int engine_type_e_VAG_5_CYL = 77;
 	public static final int engine_type_e_VW_ABA = 32;
@@ -1626,7 +1626,7 @@ public class VariableRegistryValues {
 	public static final int TS_RESPONSE_UNDERRUN = 0x80;
 	public static final int TS_RESPONSE_UNRECOGNIZED_COMMAND = 0x83;
 	public static final char TS_SET_LOGGER_SWITCH = 'l';
-	public static final String TS_SIGNATURE = "rusEFI master.2025.05.24.frankenso_na6.3466541009";
+	public static final String TS_SIGNATURE = "rusEFI master.2025.05.25.frankenso_na6.3466541009";
 	public static final char TS_SIMULATE_CAN = '>';
 	public static final char TS_SINGLE_WRITE_COMMAND = 'W';
 	public static final char TS_TEST_COMMAND = 't';
