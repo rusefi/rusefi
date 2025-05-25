@@ -31,8 +31,6 @@ case engine_type_e::ET_BOSCH_QUICK_START:
   return "ET_BOSCH_QUICK_START";
 case engine_type_e::ET_TEST_WITH_BOSCH_QUICK_START:
   return "ET_TEST_WITH_BOSCH_QUICK_START";
-case engine_type_e::FERRARI_F136:
-  return "FERRARI_F136";
 case engine_type_e::FORD_ASPIRE_1996:
   return "FORD_ASPIRE_1996";
 case engine_type_e::FORD_COYOTE:

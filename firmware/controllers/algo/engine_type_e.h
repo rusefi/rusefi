@@ -205,7 +205,7 @@ enum class engine_type_e : uint16_t {
 
     // both Proteus and 4chan/8chan
 	HYUNDAI_PB = 104,
-  FERRARI_F136 = 105,
+  UNUSED_105 = 105,
 
 // board_engine_types_tag
 

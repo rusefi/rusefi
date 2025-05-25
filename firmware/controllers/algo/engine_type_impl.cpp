@@ -12,7 +12,7 @@
 
 #include "ford_aspire.h"
 #include "ford_1995_inline_6.h"
-#include "f136.h"
+#include "ford_ecoboost.h"
 
 #include "honda_k_dbc.h"
 #include "honda_600.h"
@@ -67,12 +67,12 @@ void applyEngineType(engine_type_e engineType) {
 	case engine_type_e::FORD_COYOTE:
 	case engine_type_e::MAZDA_MIATA_NC:
 	case engine_type_e::DISCOVERY_PDM:
-	case engine_type_e::FORD_ECOBOOST:
 	case engine_type_e::UNUSED94:
 	case engine_type_e::UNUSED_97:
 	case engine_type_e::TEST_100:
 	case engine_type_e::TEST_101:
 	case engine_type_e::UNUSED102:
+	case engine_type_e::UNUSED_105:
 	case engine_type_e::HELLEN_4CHAN_STIM_QC:
 	case engine_type_e::HELLEN_2CHAN_STIM_QC:
 	case engine_type_e::HELLEN_154_VAG:
@@ -152,9 +152,12 @@ void applyEngineType(engine_type_e engineType) {
 		break;
 
 #if HW_PROTEUS || HW_HELLEN_4CHAN || HW_HELLEN_8CHAN || HW_HELLEN_4K_GDI
-    case engine_type_e::HYUNDAI_PB:
-        setHyundaiPb();
+	case engine_type_e::FORD_ECOBOOST:
+	  setFordEcoboost();
 		break;
+  case engine_type_e::HYUNDAI_PB:
+    setHyundaiPb();
+	  break;
 #endif
 
 #if HW_PROTEUS || HW_HELLEN_HONDA
@@ -311,10 +314,6 @@ void applyEngineType(engine_type_e engineType) {
         break;
 #endif
 
-	case engine_type_e::FERRARI_F136:
-	      setF136();
-        break;
-
 #ifdef HW_HELLEN
 	case engine_type_e::TOYOTA_1NZ_FE:
 	    setToyota1NZFE();
@@ -436,5 +435,5 @@ void applyEngineType(engine_type_e engineType) {
 }
 
 PUBLIC_API_WEAK_SOMETHING_WEIRD engine_type_e getLastEngineType() {
-  return engine_type_e::FERRARI_F136;
+  return engine_type_e::UNUSED_105;
 }
