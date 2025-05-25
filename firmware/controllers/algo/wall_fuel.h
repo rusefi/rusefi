@@ -10,6 +10,15 @@
 #include <rusefi/timer.h>
 #include "rusefi_types.h"
 
+// Compile-time feature toggles for conditional functionality
+#ifndef WW_ENABLE_ROBUST_VALIDATION
+#define WW_ENABLE_ROBUST_VALIDATION 0  // Disabled by default to save memory
+#endif
+
+#ifndef WW_ENABLE_DRIFT_RESET
+#define WW_ENABLE_DRIFT_RESET 0       // Disabled by default to save memory
+#endif
+
 /**
  * Wall wetting, also known as fuel film
  * See https://github.com/rusefi/rusefi/issues/151 for the theory
@@ -167,14 +176,5 @@ private:
 	static constexpr float MIN_LAMBDA = 0.5f;
 	static constexpr float MAX_LAMBDA = 1.5f;
 };
-
-// Compile-time feature toggles for conditional functionality
-#ifndef WW_ENABLE_ROBUST_VALIDATION
-#define WW_ENABLE_ROBUST_VALIDATION 0  // Disabled by default to save memory
-#endif
-
-#ifndef WW_ENABLE_DRIFT_RESET
-#define WW_ENABLE_DRIFT_RESET 0       // Disabled by default to save memory
-#endif
 
 // Template method implementation moved to .cpp file
