@@ -2547,6 +2547,7 @@ end_struct
 
 #define ENGINE_MAKE_HONDA "Honda"
 #define ENGINE_MAKE_MAZDA "Mazda"
+#define ENGINE_MAKE_FORD "Ford"
 #define ENGINE_MAKE_LADA "Lada"
 #define ENGINE_MAKE_NISSAN "Nissan"
 #define ENGINE_MAKE_GM "GM"
@@ -2556,8 +2557,6 @@ end_struct
 #define ENGINE_MAKE_MERCEDES "Mercedes"
 #define ENGINE_MAKE_VAG "VAG"
 #define ENGINE_MAKE_Hyundai "Hyundai"
-
-
 
 
 ! we need 3 seconds on single-bank to survive write-to-flash reconnect
