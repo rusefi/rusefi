@@ -290,8 +290,6 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 			(void)debugTauSamples;
 			
 			// Parâmetros de aprendizado
-			float learnRateAdj = engineConfiguration->wwLearningRate;
-			float learnRate = 0.25f; // Reduzido para 25% para maior estabilidade
 			float maxStep = 0.03f;   // Reduzido para 3% para evitar oscilações
 			
 			// Verificar confiança da célula antes de aplicar correção
@@ -299,8 +297,8 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 			float tauConfidence = getCellConfidence(i, j, false);
 			
 			// Reduzir taxa de aprendizado para células com baixa confiança
-			float betaLearnRate = learnRate * (0.3f + 0.7f * betaConfidence / 255.0f);
-			float tauLearnRate = learnRate * (0.3f + 0.7f * tauConfidence / 255.0f);
+			float betaLearnRate = engineConfiguration->wwBetaLearningRate * (0.3f + 0.7f * betaConfidence / 255.0f);
+			float tauLearnRate = engineConfiguration->wwTauLearningRate * (0.3f + 0.7f * tauConfidence / 255.0f);
 			
 			// *** NOVA LÓGICA: Ajustes baseados nos erros específicos de Beta e Tau ***
 			float deltaBeta = 0.0f;
@@ -751,7 +749,7 @@ float WallFuelController::getCellConfidence(int i, int j, bool isBeta) const {
 	if (i >= WW_CORRECTION_MAP_BINS || j >= WW_CORRECTION_RPM_BINS) return 0.0f;
 	// Convert uint8_t confidence (0-255) back to float (0.0-1.0)
 	uint8_t conf = isBeta ? betaLearningStatus[i][j].confidence : tauLearningStatus[i][j].confidence;
-	return (float)conf / 255.0f;
+	return clampF(0.3f, (float)conf / 255.0f, 1.0f);
 }
 
 int WallFuelController::getCellSampleCount(int i, int j, bool isBeta) const {
