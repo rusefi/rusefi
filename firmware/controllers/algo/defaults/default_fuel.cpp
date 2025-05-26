@@ -255,7 +255,6 @@ void setDefaultWallWetting() {
 	// Learning parameters
 	engineConfiguration->wwBetaLearningRate = 0.05f;       // 5% learning rate
 	engineConfiguration->wwTauLearningRate = 0.05f;       // 5% learning rate
-	engineConfiguration->wwSmoothIntensity = 0.3f;     // 30% smoothing
 	
 	// Learning validation parameters
 	engineConfiguration->wwMinCoolantTemp = 70.0f;     // °C - Engine must be warmed up
