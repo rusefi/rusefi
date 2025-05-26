@@ -48,25 +48,14 @@ void setFordInline6() {
 
 	engineConfiguration->tps1_1AdcChannel = EFI_ADC_4;
 
-	engineConfiguration->map.sensor.type = MT_MPX4250;
 	engineConfiguration->map.sensor.hwChannel = EFI_ADC_15;
 
-	// 6 channel output board
-	// output 1 is PB9
-	// output 3 is PE3
-	// output 5 is PC13
-	// output 6 is PC15
-
-	engineConfiguration->fuelPumpPin = Gpio::C13;
 	engineConfiguration->injectionPins[0] = Gpio::B9;
 	engineConfiguration->injectionPins[1] = Gpio::E3;
 	engineConfiguration->ignitionPins[0] = Gpio::C15;
 
 	engineConfiguration->injectionPins[2] = Gpio::Unassigned;
 	engineConfiguration->fanPin = Gpio::Unassigned;
-
-	engineConfiguration->tpsMin = convertVoltageTo10bitADC(1.250);
-	engineConfiguration->tpsMax = convertVoltageTo10bitADC(4.538);
 
 	//	engineConfiguration->vbattAdcChannel = 0; //
 	engineConfiguration->mafAdcChannel = EFI_ADC_1;
