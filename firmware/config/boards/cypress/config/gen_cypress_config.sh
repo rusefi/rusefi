@@ -1,5 +1,5 @@
 #!/bin/bash
-# This script files reads rusefi_config.txt and produces firmware persistent configuration headers
+# This script files reads evotech_config.txt and produces firmware persistent configuration headers
 # the storage section of rusefi.ini is updated as well
 
 BOARDNAME=cypress

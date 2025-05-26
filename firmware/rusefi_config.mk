@@ -1,14 +1,14 @@
 include $(PROJECT_DIR)/../java_tools/java_tools.mk
 
 # We're assuming that META_OUTPUT_ROOT_FOLDER is a path relative to PROJECT_DIR
-INI_FILE = $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)tunerstudio/generated/rusefi_$(SHORT_BOARD_NAME).ini
+INI_FILE = $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)tunerstudio/generated/evotech_$(SHORT_BOARD_NAME).ini
 SIG_FILE = $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)tunerstudio/generated/signature_$(SHORT_BOARD_NAME).txt
 
 CONFIG_INPUTS = \
   $(SIG_FILE) \
   $(PROJECT_DIR)/controllers/algo/rusefi_hw_stm32_enums.h \
   $(PROJECT_DIR)/controllers/algo/rusefi_hw_adc_enums.h \
-  $(PROJECT_DIR)/integration/rusefi_config.txt \
+  $(PROJECT_DIR)/integration/evotech_config.txt \
   $(PROJECT_DIR)/tunerstudio/tunerstudio.template.ini \
   $(PROJECT_DIR)/${META_OUTPUT_ROOT_FOLDER}console/binary/generated/live_data_fragments.ini \
   $(PROJECT_DIR)/${META_OUTPUT_ROOT_FOLDER}console/binary/generated/data_logs.ini \
@@ -44,7 +44,7 @@ RAMDISK = \
 
 CONFIG_FILES = \
   $(INI_FILE) \
-  $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/rusefi_generated_$(SHORT_BOARD_NAME).h \
+  $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/evotech_generated_$(SHORT_BOARD_NAME).h \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/signature_$(SHORT_BOARD_NAME).h \
   $(PROJECT_DIR)/$(META_OUTPUT_ROOT_FOLDER)controllers/generated/engine_configuration_generated_structures_$(SHORT_BOARD_NAME).h \
   $(FIELDS) \
