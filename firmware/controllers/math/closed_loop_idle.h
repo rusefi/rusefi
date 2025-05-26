@@ -5,7 +5,10 @@
 #include "sensor.h"
 #include "flash_main.h"
 #include "table_helper.h"
+#include <rusefi/interpolation.h>
 #include <rusefi/timer.h>
+
+constexpr int LTIT_TABLE_SIZE = 16;
 
 class LongTermIdleTrim {
 public:
@@ -15,24 +18,42 @@ public:
     float getLtitFan1Trim() const;
     float getLtitFan2Trim() const;
     void update(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active, float idleIntegral);
-    float ltitTableHelper[16][16];
-    float acTrim, fan1Trim, fan2Trim;
     void smoothLtitTable(float intensity);
     void onIgnitionStateChanged(bool ignitionOn);
+    void onSlowCallback();
     bool updatedLtit = false;
     
-    // Nova função para carregar os dados da flash para a tabela helper
+    // Load data from flash to helper table
     void loadLtitFromConfig();
-    // Verifica se a tabela tem dados válidos (não-zeros)
+    // Check if table has valid data
     bool hasValidData() const;
     
 private:
+    float ltitTableHelper[LTIT_TABLE_SIZE][LTIT_TABLE_SIZE];
+    float acTrim = 0.0f, fan1Trim = 0.0f, fan2Trim = 0.0f;
+    float emaError = 0.0f;
     bool ltitTableInitialized = false;
-    float emaError = 0;
-    // Timers para controle de tempo
+    
+    // Timers for control
     Timer m_updateTimer;
     Timer m_stableIdleTimer;
     Timer m_ignitionOffTimer;
+    Timer m_acStateTimer;
+    Timer m_fan1StateTimer;
+    Timer m_fan2StateTimer;
+    
+    // State tracking
     bool isStableIdle = false;
     bool m_ignitionState = false;
+    bool m_lastAcState = false;
+    bool m_lastFan1State = false;
+    bool m_lastFan2State = false;
+    
+    // Learning state management
+    bool m_pendingSave = false;
+    
+    // Validation helpers
+    bool isValidConditionsForLearning(float idleIntegral) const;
+    void updateTrimLearning(bool acActive, bool fan1Active, bool fan2Active, float idleIntegral);
+    void initializeTableWithDefaults();
 }; 

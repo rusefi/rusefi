@@ -468,16 +468,16 @@ uint16_t engineSnifferRpmThreshold;Engine sniffer would be disabled above this r
 	uint16_t idlePositionMin;Voltage when the idle valve is closed.\nYou probably don't have one of these!;"mv", 1, 0, 0, 5000, 0
 	uint16_t idlePositionMax;Voltage when the idle valve is open.\nYou probably don't have one of these!\n1 volt = 1000 units;"mv", 1, 0, 0, 5000, 0
 
-	bit ltitEnabled;Habilita aprendizado LTIT
-	uint8_t ltitEmaAlpha;Constante de tempo do filtro EMA para LTIT;"0-255",1,0,1,255,0
-	uint8_t ltitStableRpmThreshold;Faixa de RPM para considerar idle estável;"rpm",1,0,1,100,0
-	uint8_t ltitStableTime;Tempo mínimo de idle estável para aprender;"s",1,0,1,30,0
-	uint8_t ltitCorrectionRate;Taxa de aprendizado LTIT;"%/s",1,0,1,100,0
-	uint8_t ltitIgnitionOnDelay;Delay pós-ignição ON para aprendizado/aplicação do LTIT;"s",1,0,1,60,0
-	uint8_t ltitIgnitionOffSaveDelay;Delay após ignição OFF para salvamento do LTIT;"s",1,0,1,60,0
-	float ltitClampMin;Valor mínimo de correção multiplicativa LTIT;"%", 1, 0, 0, 100, 1
-	float ltitClampMax;Valor máximo de correção multiplicativa LTIT;"%", 1, 0, 100, 300, 1
-	uint8_t autoscale ltitSmoothingIntensity;Intensidade de suavização regional da tabela LTIT (0=sem suavização, 1=total);"ratio", 0.01, 0, 0, 1, 2
+	bit ltitEnabled;Enable LTIT (Long Term Idle Trim) learning
+	uint8_t ltitEmaAlpha;EMA filter constant for LTIT (0-255);"0-255",1,0,1,255,0
+	uint8_t ltitStableRpmThreshold;RPM range to consider stable idle;"rpm",1,0,1,100,0
+	uint8_t ltitStableTime;Minimum time of stable idle before learning;"s",1,0,1,30,0
+	uint8_t ltitCorrectionRate;LTIT learning rate;"%/s",1,0,1,100,0
+	uint8_t ltitIgnitionOnDelay;Delay after ignition ON before LTIT learning/application;"s",1,0,1,60,0
+	uint8_t ltitIgnitionOffSaveDelay;Delay after ignition OFF before LTIT save;"s",1,0,1,60,0
+	float ltitClampMin;Minimum LTIT multiplicative correction value;"%", 1, 0, 0, 100, 1
+	float ltitClampMax;Maximum LTIT multiplicative correction value;"%", 1, 0, 100, 300, 1
+	uint8_t autoscale ltitSmoothingIntensity;LTIT table regional smoothing intensity (0=no smoothing);"ratio", 0.01, 0, 0, 100, 2
 
 	! [tag:coding_by_convention]
 	output_pin_e mainRelayPin;

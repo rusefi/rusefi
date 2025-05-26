@@ -2,169 +2,333 @@
 #include "closed_loop_idle.h"
 #include "engine_math.h"
 #include "efitime.h"
-#include "tunerstudio.h"
-#include "event_queue.h"
-#include "efi_gpio.h"
 #include "engine.h"
+#include <cmath>
+#include <rusefi/math.h>
+
+// LTIT_TABLE_SIZE is defined in the header file
 
 LongTermIdleTrim::LongTermIdleTrim() {
-    // Inicializar com valores padrão, não carrega da flash no construtor
-    for (int i = 0; i < 16; i++) {
-        for (int j = 0; j < 16; j++) {
-            ltitTableHelper[i][j] = 100.0f; // Valor padrão, será substituído quando loadLtitFromConfig for chamado
+    initializeTableWithDefaults();
+    acTrim = 0.0f;
+    fan1Trim = 0.0f;
+    fan2Trim = 0.0f;
+    emaError = 0.0f;
+    ltitTableInitialized = false;
+    m_pendingSave = false;
+    
+    // Initialize state tracking
+    m_lastAcState = false;
+    m_lastFan1State = false;
+    m_lastFan2State = false;
+}
+
+void LongTermIdleTrim::initializeTableWithDefaults() {
+    // Initialize with 100% (1.0 multiplier) as default
+    for (int i = 0; i < LTIT_TABLE_SIZE; i++) {
+        for (int j = 0; j < LTIT_TABLE_SIZE; j++) {
+            ltitTableHelper[i][j] = 100.0f;
         }
     }
-    acTrim = 0;
-    fan1Trim = 0;
-    fan2Trim = 0;
-    emaError = 0;
-    ltitTableInitialized = false;
 }
 
 bool LongTermIdleTrim::hasValidData() const {
-    // Verifica se a tabela tem pelo menos alguns valores significativos
-    // Consideramos válida se ao menos algumas células não forem zeros
-    int nonZeroCount = 0;
+    // More robust validation - check for reasonable range and distribution
+    int validCount = 0;
+    float totalValue = 0.0f;
     
-    for (int i = 0; i < 16 && nonZeroCount < 3; i++) {
-        for (int j = 0; j < 16 && nonZeroCount < 3; j++) {
-            if (config->ltitTable[i][j] > 1.0f) { // Consideramos qualquer valor acima de 1 como não-zero significativo
-                nonZeroCount++;
+    for (int i = 0; i < LTIT_TABLE_SIZE; i++) {
+        for (int j = 0; j < LTIT_TABLE_SIZE; j++) {
+            float value = static_cast<float>(config->ltitTable[i][j]) * 0.1f; // Convert from autoscale
+            
+            // Check if value is in reasonable range (50% to 150%)
+            if (value >= 50.0f && value <= 150.0f) {
+                validCount++;
+                totalValue += value;
             }
         }
     }
     
-    // Consideramos válido se há pelo menos 3 células com valores não-zero
-    return nonZeroCount >= 3;
+    // Require at least half the table to be valid and reasonable average
+    if (validCount < (LTIT_TABLE_SIZE * LTIT_TABLE_SIZE / 2)) {
+        return false;
+    }
+    
+    float avgValue = totalValue / validCount;
+    return (avgValue >= 80.0f && avgValue <= 120.0f); // Reasonable average range
 }
 
 void LongTermIdleTrim::loadLtitFromConfig() {
     if (hasValidData()) {
-        // Se a tabela de configuração tem dados válidos, copia para a tabela helper
-        copyTable(ltitTableHelper, config->ltitTable, 1);
-        acTrim = (float)config->ltitAcTrim / 10.0f;
-        fan1Trim = (float)config->ltitFan1Trim / 10.0f;
-        fan2Trim = (float)config->ltitFan2Trim / 10.0f;
+        // Convert autoscaled uint16_t to float (autoscale factor 0.1)
+        for (int i = 0; i < LTIT_TABLE_SIZE; i++) {
+            for (int j = 0; j < LTIT_TABLE_SIZE; j++) {
+                ltitTableHelper[i][j] = static_cast<float>(config->ltitTable[i][j]) * 0.1f;
+            }
+        }
+        
+        // Load trim values (autoscale factor 0.1)
+        acTrim = static_cast<float>(config->ltitAcTrim) * 0.1f;
+        fan1Trim = static_cast<float>(config->ltitFan1Trim) * 0.1f;
+        fan2Trim = static_cast<float>(config->ltitFan2Trim) * 0.1f;
+        
         ltitTableInitialized = true;
-    } 
+    } else {
+        // Initialize with defaults if no valid data
+        initializeTableWithDefaults();
+        acTrim = 0.0f;
+        fan1Trim = 0.0f;
+        fan2Trim = 0.0f;
+        ltitTableInitialized = true;
+    }
 }
 
 float LongTermIdleTrim::getLtitFactor(float rpm, float clt) const {
-    // Interpolação 3D:
-    return interpolate3d(ltitTableHelper, config->cltIdleCorrBins, clt, config->rpmIdleCorrBins, rpm) * 0.01f;
+    if (!ltitTableInitialized) {
+        return 1.0f; // No correction if not initialized
+    }
+    
+    // Use proper bin finding with interpolation
+    return interpolate3d(ltitTableHelper, 
+                        config->cltIdleCorrBins, clt,
+                        config->rpmIdleCorrBins, rpm) * 0.01f;
 }
+
 float LongTermIdleTrim::getLtitAcTrim() const { return acTrim; }
 float LongTermIdleTrim::getLtitFan1Trim() const { return fan1Trim; }
 float LongTermIdleTrim::getLtitFan2Trim() const { return fan2Trim; }
 
-void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active, float idleIntegral) {
-    if (!engineConfiguration->ltitEnabled)
-        return;
+bool LongTermIdleTrim::isValidConditionsForLearning(float idleIntegral) const {
+    // Validate integral is within reasonable range
+    if (fabsf(idleIntegral) < 0.1f || fabsf(idleIntegral) > 25.0f) {
+        return false;
+    }
     
-    // Tenta carregar dados da flash periodicamente até conseguir
+    // Check if enough time has passed since ignition on
+    if (!m_updateTimer.hasElapsedSec(engineConfiguration->ltitIgnitionOnDelay)) {
+        return false;
+    }
+    
+    // Must be in stable idle
+    if (!isStableIdle) {
+        return false;
+    }
+    
+    return true;
+}
+
+void LongTermIdleTrim::updateTrimLearning(bool acActive, bool fan1Active, bool fan2Active, float idleIntegral) {
+    // AC trim learning
+    if (acActive != m_lastAcState) {
+        m_acStateTimer.reset();
+        m_lastAcState = acActive;
+    }
+    
+    // Learn AC trim when conditions are stable
+    if (acActive && m_acStateTimer.hasElapsedSec(2.0f)) { // 2 seconds after AC state change
+        float acCorrection = idleIntegral * engineConfiguration->ltitCorrectionRate * 0.01f;
+        float alpha = engineConfiguration->ltitEmaAlpha / 255.0f;
+        
+        // Apply EMA filter to AC trim
+        float newAcTrim = acTrim + acCorrection;
+        acTrim = alpha * newAcTrim + (1.0f - alpha) * acTrim;
+        
+        // Clamp AC trim
+        acTrim = clampF(-15.0f, acTrim, 15.0f);
+        updatedLtit = true;
+    }
+    
+    // Fan1 trim learning
+    if (fan1Active != m_lastFan1State) {
+        m_fan1StateTimer.reset();
+        m_lastFan1State = fan1Active;
+    }
+    
+    if (fan1Active && m_fan1StateTimer.hasElapsedSec(2.0f)) {
+        float fan1Correction = idleIntegral * engineConfiguration->ltitCorrectionRate * 0.01f;
+        float alpha = engineConfiguration->ltitEmaAlpha / 255.0f;
+        
+        float newFan1Trim = fan1Trim + fan1Correction;
+        fan1Trim = alpha * newFan1Trim + (1.0f - alpha) * fan1Trim;
+        
+        fan1Trim = clampF(-15.0f, fan1Trim, 15.0f);
+        updatedLtit = true;
+    }
+    
+    // Fan2 trim learning
+    if (fan2Active != m_lastFan2State) {
+        m_fan2StateTimer.reset();
+        m_lastFan2State = fan2Active;
+    }
+    
+    if (fan2Active && m_fan2StateTimer.hasElapsedSec(2.0f)) {
+        float fan2Correction = idleIntegral * engineConfiguration->ltitCorrectionRate * 0.01f;
+        float alpha = engineConfiguration->ltitEmaAlpha / 255.0f;
+        
+        float newFan2Trim = fan2Trim + fan2Correction;
+        fan2Trim = alpha * newFan2Trim + (1.0f - alpha) * fan2Trim;
+        
+        fan2Trim = clampF(-15.0f, fan2Trim, 15.0f);
+        updatedLtit = true;
+    }
+}
+
+void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active, float idleIntegral) {
+    if (!engineConfiguration->ltitEnabled) {
+        return;
+    }
+    
+    // Try to load data periodically until successful
     if (!ltitTableInitialized) {
         loadLtitFromConfig();
-    }
-        
-    (void)acActive; (void)fan1Active; (void)fan2Active;
-
-    if(!ltitTableInitialized){
         return;
     }
-
-    // Verificar se ignição está ligada há tempo suficiente
+    
+    // Check ignition delay
     if (!m_updateTimer.hasElapsedSec(engineConfiguration->ltitIgnitionOnDelay)) {
-        // Reseta o timer de estabilidade se não passamos do delay de ignição
         m_stableIdleTimer.reset();
         isStableIdle = false;
         return;
     }
-
-    // Verificar se estamos dentro da faixa de RPM considerada lenta e estável
-    float rpmDelta = fabsf(rpm - engine->module<IdleController>().unmock().getTargetRpm(clt));
+    
+    // Check if we're in idle RPM range
+    float targetRpm = engine->module<IdleController>().unmock().getTargetRpm(clt);
+    float rpmDelta = fabsf(rpm - targetRpm);
     bool isIdleRpm = rpmDelta < engineConfiguration->ltitStableRpmThreshold;
-
-    // Verificar estabilidade da lenta
+    
+    // Check stability
     if (!isIdleRpm) {
-        // Resetar timer de estabilidade se estiver fora da faixa de RPM
         m_stableIdleTimer.reset();
         isStableIdle = false;
         return;
     }
-
-    // Se estamos na faixa de RPM, verificar se já está estável pelo tempo mínimo
+    
+    // Check if stable for minimum time
     if (!isStableIdle && m_stableIdleTimer.hasElapsedSec(engineConfiguration->ltitStableTime)) {
         isStableIdle = true;
     }
-
-    // Somente aplicar correções após estabilidade da lenta
+    
     if (!isStableIdle) {
         return;
     }
-
-    // Verificar se passou o tempo mínimo entre atualizações (padrão 1 segundo)
-    float updateIntervalSeconds = 1.0f;
-    if (!m_updateTimer.hasElapsedSec(updateIntervalSeconds)) {
-        return;
+    
+    // Main table learning (only when no AC/Fan active)
+    if (!acActive && !fan1Active && !fan2Active) {
+        // Validate conditions
+        if (!isValidConditionsForLearning(idleIntegral)) {
+            return;
+        }
+        
+        // Check minimum update interval
+        if (!m_updateTimer.hasElapsedSec(1.0f)) {
+            return;
+        }
+        m_updateTimer.reset();
+        
+        // Use proper bin finding with getBin function
+        auto cltBin = priv::getBin(clt, config->cltIdleCorrBins);
+        auto rpmBin = priv::getBin(rpm, config->rpmIdleCorrBins);
+        
+        // Apply correction with multiple cells for better interpolation
+        float correction = idleIntegral * engineConfiguration->ltitCorrectionRate * 0.01f;
+        float alpha = engineConfiguration->ltitEmaAlpha / 255.0f;
+        
+        // Primary cell (largest weight)
+        float newValue = ltitTableHelper[cltBin.Idx][rpmBin.Idx] * (1.0f + correction);
+        newValue = alpha * newValue + (1.0f - alpha) * ltitTableHelper[cltBin.Idx][rpmBin.Idx];
+        
+        // Apply clamping
+        float clampMin = engineConfiguration->ltitClampMin > 0 ? engineConfiguration->ltitClampMin : 50.0f;
+        float clampMax = engineConfiguration->ltitClampMax > 0 ? engineConfiguration->ltitClampMax : 150.0f;
+        ltitTableHelper[cltBin.Idx][rpmBin.Idx] = clampF(clampMin, newValue, clampMax);
+        
+        // Apply to adjacent cells with reduced weight (for better interpolation)
+        float adjWeight = 0.3f; // 30% weight for adjacent cells
+        for (int di = -1; di <= 1; di++) {
+            for (int dj = -1; dj <= 1; dj++) {
+                if (di == 0 && dj == 0) continue; // Skip primary cell
+                
+                int adjI = cltBin.Idx + di;
+                int adjJ = rpmBin.Idx + dj;
+                
+                if (adjI >= 0 && adjI < LTIT_TABLE_SIZE && adjJ >= 0 && adjJ < LTIT_TABLE_SIZE) {
+                    float adjCorrection = correction * adjWeight;
+                    float adjNewValue = ltitTableHelper[adjI][adjJ] * (1.0f + adjCorrection);
+                    adjNewValue = alpha * adjNewValue + (1.0f - alpha) * ltitTableHelper[adjI][adjJ];
+                    ltitTableHelper[adjI][adjJ] = clampF(clampMin, adjNewValue, clampMax);
+                }
+            }
+        }
+        
+        updatedLtit = true;
+        
+        // Apply smoothing if configured
+        smoothLtitTable(engineConfiguration->ltitSmoothingIntensity);
     }
-    m_updateTimer.reset();
-
-    // Encontrar índices dos bins
-    int i = 0, j = 0;
-    for (int idx = 0; idx < 16; idx++) {
-        if (clt < config->cltIdleCorrBins[idx]) { i = idx > 0 ? idx - 1 : 0; break; }
-    }
-    for (int idx = 0; idx < 16; idx++) {
-        if (rpm < config->rpmIdleCorrBins[idx]) { j = idx > 0 ? idx - 1 : 0; break; }
-    }
-    // Correção multiplicativa baseada no termo integral do PID
-    float correction = idleIntegral * (float)engineConfiguration->ltitCorrectionRate * 0.01f;
-    ltitTableHelper[i][j] *= (1.0f + correction);
-    // Clamping configurável
-    float clampMin = engineConfiguration->ltitClampMin > 0 ? engineConfiguration->ltitClampMin : 50.0f;
-    float clampMax = engineConfiguration->ltitClampMax > 0 ? engineConfiguration->ltitClampMax : 150.0f;
-    if (ltitTableHelper[i][j] > clampMax) ltitTableHelper[i][j] = clampMax;
-    if (ltitTableHelper[i][j] < clampMin) ltitTableHelper[i][j] = clampMin;
-    // Remover trims AC/Fan com timers
-    //acTrim, fan1Trim, fan2Trim podem ser ajustados diretamente se necessário
-    // Após atualização da tabela, marcar aprendizado pendente
-    updatedLtit = true;
-    smoothLtitTable(engineConfiguration->ltitSmoothingIntensity);
+    
+    // Handle AC/Fan trim learning
+    updateTrimLearning(acActive, fan1Active, fan2Active, idleIntegral);
 }
 
 void LongTermIdleTrim::onIgnitionStateChanged(bool ignitionOn) {
     m_ignitionState = ignitionOn;
     
     if (ignitionOn) {
-        // Reset timers quando ignição liga
+        // Reset timers when ignition turns on
         m_updateTimer.reset();
         m_stableIdleTimer.reset();
+        m_acStateTimer.reset();
+        m_fan1StateTimer.reset();
+        m_fan2StateTimer.reset();
         isStableIdle = false;
+        m_pendingSave = false;
     } else if (updatedLtit) {
-        // Salvar na memória persistente após delay de ignição OFF
-        float saveDelaySeconds = engineConfiguration->ltitIgnitionOffSaveDelay;
-        if (saveDelaySeconds <= 0) {
-            // Se não configurado, usar valor padrão de 5 segundos
-            saveDelaySeconds = 5.0f;
-        }
-        
-        // Reset do timer de ignição OFF para controlar o delay de salvamento
+        // Schedule save after ignition off
+        m_pendingSave = true;
         m_ignitionOffTimer.reset();
-        
-        // Na implementação atual salvamos imediatamente
-        // O ideal seria verificar o timer no callback periódico, mas não temos acesso
-        copyTable(config->ltitTable, ltitTableHelper);
-        config->ltitAcTrim = (int16_t)(acTrim * 10.0f);
-        config->ltitFan1Trim = (int16_t)(fan1Trim * 10.0f);
-        config->ltitFan2Trim = (int16_t)(fan2Trim * 10.0f);
-        setNeedToWriteConfiguration();
-        
         updatedLtit = false;
     }
 }
 
-// Suavização regional da tabela LTIT
+void LongTermIdleTrim::onSlowCallback() {
+    // Handle delayed save after ignition off
+    if (m_pendingSave && !m_ignitionState) {
+        float saveDelaySeconds = engineConfiguration->ltitIgnitionOffSaveDelay;
+        if (saveDelaySeconds <= 0) {
+            saveDelaySeconds = 5.0f; // Default 5 seconds
+        }
+        
+        if (m_ignitionOffTimer.hasElapsedSec(saveDelaySeconds)) {
+            // Save to flash memory
+            for (int i = 0; i < LTIT_TABLE_SIZE; i++) {
+                for (int j = 0; j < LTIT_TABLE_SIZE; j++) {
+                    // Convert float to autoscaled uint16_t (factor 0.1)
+                    config->ltitTable[i][j] = static_cast<uint16_t>(ltitTableHelper[i][j] * 10.0f);
+                }
+            }
+            
+            // Save trim values (autoscale factor 0.1)
+            config->ltitAcTrim = static_cast<int16_t>(acTrim * 10.0f);
+            config->ltitFan1Trim = static_cast<int16_t>(fan1Trim * 10.0f);
+            config->ltitFan2Trim = static_cast<int16_t>(fan2Trim * 10.0f);
+            
+            setNeedToWriteConfiguration();
+            m_pendingSave = false;
+        }
+    }
+}
+
 void LongTermIdleTrim::smoothLtitTable(float intensity) {
-    //smoothTable<float, 16, 16>(ltitTableHelper, intensity / 100.0f);
-    return;
+    if (!engineConfiguration->ltitEnabled || intensity <= 0.0f || intensity > 100.0f) {
+        return; // Invalid intensity or LTIT disabled
+    }
+    
+    // Normalize intensity to 0.0-1.0 range
+    float normalizedIntensity = intensity / 100.0f;
+    
+    // Apply smoothing using the template function from table_helper.h
+    smoothTable<float, LTIT_TABLE_SIZE, LTIT_TABLE_SIZE>(ltitTableHelper, normalizedIntensity);
+    
+    // Mark for saving
+    m_pendingSave = true;
 } 

@@ -45,6 +45,30 @@
 	config->ltftIgnitionOnDelay = 10; // 10 segundos pós-ignição ON
 	config->ltftIgnitionOffSaveDelay = 10; // 10 segundos pós-ignição OFF
 
+	// LTIT (Long Term Idle Trim) - default parameters
+	config->ltitEnabled = false; // Disabled by default
+	config->ltitEmaAlpha = 64; // EMA filter constant (0-255)
+	config->ltitStableRpmThreshold = 50; // RPM range for stable idle
+	config->ltitStableTime = 5; // Minimum stable time in seconds
+	config->ltitCorrectionRate = 10; // Learning rate %/s
+	config->ltitIgnitionOnDelay = 10; // Delay after ignition ON
+	config->ltitIgnitionOffSaveDelay = 5; // Delay after ignition OFF
+	config->ltitClampMin = 75.0f; // Minimum correction value %
+	config->ltitClampMax = 125.0f; // Maximum correction value %
+	config->ltitSmoothingIntensity = 20; // Regional smoothing intensity
+	
+	// Initialize LTIT table with 100% (1000 after autoscale factor 0.1)
+	for (int i = 0; i < 16; i++) {
+		for (int j = 0; j < 16; j++) {
+			config->ltitTable[i][j] = 1000; // 100% after 0.1 scaling
+		}
+	}
+	
+	// Initialize LTIT trim values (0 after autoscale factor 0.1)
+	config->ltitAcTrim = 0;
+	config->ltitFan1Trim = 0;
+	config->ltitFan2Trim = 0;
+
 	// Wall Wetting Adaptativo
 	config->wwImmediateErrorThreshold = 0.05f;
 	config->wwProlongedErrorThreshold = 0.03f;

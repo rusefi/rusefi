@@ -391,6 +391,9 @@ void IdleController::onSlowCallback() {
 #if EFI_SHAFT_POSITION_INPUT
 	float position = getIdlePosition(engine->triggerCentral.instantRpm.getInstantRpm());
 	applyIACposition(position);
+	
+	// Handle LTIT delayed save operations
+	m_ltit.onSlowCallback();
 #endif // EFI_SHAFT_POSITION_INPUT
 }
 
