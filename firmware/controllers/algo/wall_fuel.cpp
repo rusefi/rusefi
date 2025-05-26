@@ -290,6 +290,7 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 			(void)debugTauSamples;
 			
 			// Parâmetros de aprendizado
+			float learnRateAdj = engineConfiguration->wwLearningRate;
 			float learnRate = 0.25f; // Reduzido para 25% para maior estabilidade
 			float maxStep = 0.03f;   // Reduzido para 3% para evitar oscilações
 			
@@ -586,9 +587,6 @@ LearningDataQuality WallFuelController::validateLearningData(float lambda, float
     LearningDataQuality quality;
     
     // Get configurable validation parameters with fallback defaults
-    float minLambda = engineConfiguration->wwMinLambda > 0 ? engineConfiguration->wwMinLambda : 0.7f;
-    float maxLambda = engineConfiguration->wwMaxLambda > 0 ? engineConfiguration->wwMaxLambda : 1.5f;
-    float maxDeviation = engineConfiguration->wwMaxLambdaDeviation > 0 ? engineConfiguration->wwMaxLambdaDeviation : 0.15f;
     float minClt = engineConfiguration->wwMinCoolantTemp > 0 ? engineConfiguration->wwMinCoolantTemp : 70.0f;
     float maxClt = engineConfiguration->wwMaxCoolantTemp > 0 ? engineConfiguration->wwMaxCoolantTemp : 110.0f;
     float minMap = engineConfiguration->wwMinMapForLearning > 0 ? engineConfiguration->wwMinMapForLearning : 30.0f;
@@ -620,40 +618,14 @@ LearningDataQuality WallFuelController::validateLearningData(float lambda, float
 }
 
 bool WallFuelController::isLearningDataValid(const LearningDataQuality& quality) {
-    // Get configurable minimum quality score with fallback default
-    float minQuality = engineConfiguration->wwMinQualityScore > 0 ? engineConfiguration->wwMinQualityScore : 0.6f;
+
+	return 1;
     
-    return quality.lambdaValid && quality.conditionsStable && 
-           quality.tempAppropriate && quality.loadAppropriate &&
-           quality.qualityScore >= minQuality;
 }
 
-void WallFuelController::updateCellConfidence(int i, int j, bool isBeta, float adjustment, const LearningDataQuality& quality) {
-    SimpleLearningStatus& status = isBeta ? betaLearningStatus[i][j] : tauLearningStatus[i][j];
-    
-    // Get configurable convergence parameters with fallback defaults
-    uint8_t minSamples = engineConfiguration->wwMinSamplesForConvergence > 0 ? engineConfiguration->wwMinSamplesForConvergence : 5;
-    uint8_t minConfidencePercent = engineConfiguration->wwMinConfidenceForConvergence > 0 ? engineConfiguration->wwMinConfidenceForConvergence : 80;
-    uint8_t minConfidence255 = (uint8_t)((minConfidencePercent * 255) / 100); // Convert % to 0-255 scale
-    
-    // Incrementar contador de amostras (limitado a 255)
-    if (status.sampleCount < 255) {
-        status.sampleCount++;
-    }
-    
-    // Atualizar confiança baseada na qualidade dos dados (0-255 scale)
-    float qualityFactor = quality.qualityScore;
-    uint8_t newConfidence = (uint8_t)(qualityFactor * 255);
-    
-    if (status.sampleCount >= minSamples) {
-        // Média móvel simples para confiança
-        status.confidence = (status.confidence * 3 + newConfidence) / 4;
-    } else {
-        status.confidence = newConfidence * status.sampleCount / minSamples;
-    }
-    
+void WallFuelController::updateCellConfidence(int i, int j, bool isBeta, float adjustment, const LearningDataQuality& quality) { 
     // Determinar se célula convergiu (configurável)
-    status.isConverged = (status.confidence > minConfidence255 && status.sampleCount >= minSamples);
+    status.isConverged = 1;
 }
 
 void WallFuelController::checkAndResetDrift() {
