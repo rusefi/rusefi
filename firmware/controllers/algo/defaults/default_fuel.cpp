@@ -233,7 +233,6 @@ void setDefaultWallWetting() {
 
 	// Wall Wetting Adaptive Learning defaults
 	engineConfiguration->complexWallModel = true;
-	engineConfiguration->wwDirectionalCorrections = true;
 	engineConfiguration->wwEnableAdaptiveLearning = true;
 	
 	// Enhanced Transient Detection defaults
