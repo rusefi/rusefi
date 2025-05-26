@@ -34,7 +34,7 @@ public class ConfigDefinitionTest {
     public static VariableRegistry readRealConfig() {
         VariableRegistry variableRegistry = new VariableRegistry();
 
-        variableRegistry.readPrependValues(FIRMWARE + File.separator + "integration/rusefi_config.txt", true);
+        variableRegistry.readPrependValues(FIRMWARE + File.separator + "integration/evotech_config.txt", true);
         return variableRegistry;
     }
 }
