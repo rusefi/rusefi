@@ -51,7 +51,7 @@ MEMORY
     flash6  : org = 0x00000000, len = 0
     flash7  : org = 0x00000000, len = 0
     shared  : org = 0x20000000, len = _OpenBLT_Shared_Params_Size
-    ram0    : org = 0x20000000 + _OpenBLT_Shared_Params_Size, len = 128k + RAM3_SIZE - _OpenBLT_Shared_Params_Size /* SRAM1 + SRAM2 + SRAM3 (optionally) */
+    ram0    : org = 0x20000000 + _OpenBLT_Shared_Params_Size, len = 128k - _OpenBLT_Shared_Params_Size /* SRAM1 + SRAM2 */
     ram1    : org = 0x20000000 + _OpenBLT_Shared_Params_Size, len = 112k - _OpenBLT_Shared_Params_Size      /* SRAM1 */
     ram2    : org = 0x2001C000, len = 16k       /* SRAM2 */
     ram3    : org = 0x20020000, len = RAM3_SIZE /* SRAM3 note: this will be 0 size on F40x devices */

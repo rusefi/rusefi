@@ -399,13 +399,14 @@ static LuaThread luaThread;
 
 void startLua() {
 #if defined(STM32F4) && !defined(EFI_IS_F42x)
+extern char __ram3_base__[];
+extern char __ram3_end__[];
 	// we need this on microRusEFI for sure
 	// definitely should NOT have this on Proteus
 	// on Hellen a bit of open question what's the best track
 	// cute hack: let's check at runtime if you are a lucky owner of microRusEFI with extra RAM and use that extra RAM for extra Lua
 	if (isStm32F42x()) {
-		char *buffer = (char *)0x20020000;
-		userHeap.reinit(buffer, 60000);
+		userHeap.reinit(__ram3_base__, __ram3_base__ - __ram3_end__);
 	}
 #endif // STM32F4
 
