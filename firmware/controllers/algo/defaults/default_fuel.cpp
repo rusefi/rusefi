@@ -253,19 +253,14 @@ void setDefaultWallWetting() {
 	engineConfiguration->wwMinTransientDuration = 50.0f; // ms
 	
 	// Learning parameters
-	engineConfiguration->wwLearningRate = 0.05f;       // 5% learning rate
+	engineConfiguration->wwBetaLearningRate = 0.05f;       // 5% learning rate
+	engineConfiguration->wwTauLearningRate = 0.05f;       // 5% learning rate
 	engineConfiguration->wwSmoothIntensity = 0.3f;     // 30% smoothing
 	
 	// Learning validation parameters
 	engineConfiguration->wwMinCoolantTemp = 70.0f;     // °C - Engine must be warmed up
 	engineConfiguration->wwMaxCoolantTemp = 110.0f;    // °C - Not overheating
 	engineConfiguration->wwMinMapForLearning = 30.0f;  // kPa - Minimum load for learning
-	engineConfiguration->wwMaxLambdaDeviation = 0.15f; // 15% max deviation from target
-	engineConfiguration->wwMinLambda = 0.7f;           // Minimum valid lambda
-	engineConfiguration->wwMaxLambda = 1.5f;           // Maximum valid lambda
-	engineConfiguration->wwMinQualityScore = 0.6f;     // 60% minimum quality score
-	engineConfiguration->wwMinSamplesForConvergence = 5;    // Minimum samples for convergence
-	engineConfiguration->wwMinConfidenceForConvergence = 80; // 80% confidence for convergence
 
 	// linear reasonable bins
 	setLinearCurve(config->wwCltBins, -40, 100, 1);
