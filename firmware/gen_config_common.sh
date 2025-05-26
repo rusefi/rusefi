@@ -61,7 +61,7 @@ COMMON_GEN_CONFIG="
  -triggerInputFolder ../unit_tests \
  -with_c_defines false \
  -field_lookup_file controllers/lua/generated/value_lookup_generated.cpp controllers/lua/generated/value_lookup_generated.md \
- -java_destination ../java_console/models/src/main/java/com/evotech/config/generated/ \
+ -java_destination ../java_console/models/src/main/java/com/rusefi/config/generated/ \
  -initialize_to_zero false \
  -signature ${META_OUTPUT_ROOT_FOLDER}tunerstudio/generated/signature_${SHORT_BOARD_NAME}.txt \
  -signature_destination controllers/generated/signature_${SHORT_BOARD_NAME}.h \

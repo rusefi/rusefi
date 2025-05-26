@@ -6,23 +6,23 @@ rm gen_enum_to_string.log
 
 ENUM_JAR=../java_tools/enum_to_string/build/libs/enum_to_string-all.jar
 
-java -DSystemOut.name=logs/gen_java_enum -cp ${ENUM_JAR} com.evotech.ToJavaEnum -enumInputFile controllers/sensors/sensor_type.h -outputPath ../java_console/io/src/main/java/com/evotech/enums
+java -DSystemOut.name=logs/gen_java_enum -cp ${ENUM_JAR} com.rusefi.ToJavaEnum -enumInputFile controllers/sensors/sensor_type.h -outputPath ../java_console/io/src/main/java/com/rusefi/enums
 [ $? -eq 0 ] || { echo "ERROR generating sensors"; exit 1; }
 
-java -DSystemOut.name=logs/gen_java_enum -cp ${ENUM_JAR} com.evotech.ToJavaEnum -enumInputFile controllers/trigger/decoders/sync_edge.h -outputPath ../java_console/io/src/main/java/com/evotech/enums
+java -DSystemOut.name=logs/gen_java_enum -cp ${ENUM_JAR} com.rusefi.ToJavaEnum -enumInputFile controllers/trigger/decoders/sync_edge.h -outputPath ../java_console/io/src/main/java/com/rusefi/enums
 [ $? -eq 0 ] || { echo "ERROR generating sensors"; exit 1; }
 
-java -DSystemOut.name=logs/gen_java_enum -cp ${ENUM_JAR} com.evotech.ToJavaEnum -enumInputFile controllers/algo/engine_types.h   -outputPath ../java_console/models/src/main/java/com/evotech/enums -definition integration/evotech_config.txt
+java -DSystemOut.name=logs/gen_java_enum -cp ${ENUM_JAR} com.rusefi.ToJavaEnum -enumInputFile controllers/algo/engine_types.h   -outputPath ../java_console/models/src/main/java/com/rusefi/enums -definition integration/evotech_config.txt
 [ $? -eq 0 ] || { echo "ERROR generating types"; exit 1; }
 
-java -DSystemOut.name=logs/gen_java_enum -cp ${ENUM_JAR} com.evotech.ToJavaEnum -enumInputFile controllers/algo/engine_type_e.h   -outputPath ../java_console/models/src/main/java/com/evotech/enums -definition integration/evotech_config.txt
+java -DSystemOut.name=logs/gen_java_enum -cp ${ENUM_JAR} com.rusefi.ToJavaEnum -enumInputFile controllers/algo/engine_type_e.h   -outputPath ../java_console/models/src/main/java/com/rusefi/enums -definition integration/evotech_config.txt
 [ $? -eq 0 ] || { echo "ERROR generating engine_type_e"; exit 1; }
 
 java -DSystemOut.name=logs/gen_java_enum \
 	-Denum_with_values=true \
-	-cp ${ENUM_JAR} com.evotech.ToJavaEnum \
+	-cp ${ENUM_JAR} com.rusefi.ToJavaEnum \
 	-enumInputFile libfirmware/can/can_common.h \
-	-outputPath ../java_console/models/src/main/java/com/evotech/enums \
+	-outputPath ../java_console/models/src/main/java/com/rusefi/enums \
 	-definition libfirmware/can/can_common.h
 [ $? -eq 0 ] || { echo "ERROR generating types"; exit 1; }
 
