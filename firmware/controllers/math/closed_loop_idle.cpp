@@ -39,7 +39,7 @@ bool LongTermIdleTrim::hasValidData() const {
     
     for (int i = 0; i < LTIT_TABLE_SIZE; i++) {
         for (int j = 0; j < LTIT_TABLE_SIZE; j++) {
-            float value = static_cast<float>(config->ltitTable[i][j]) * 0.1f; // Convert from autoscale
+            float value = static_cast<float>(config->ltitTable[i][j]);
             
             // Check if value is in reasonable range (50% to 150%)
             if (value >= 50.0f && value <= 150.0f) {
@@ -60,17 +60,17 @@ bool LongTermIdleTrim::hasValidData() const {
 
 void LongTermIdleTrim::loadLtitFromConfig() {
     if (hasValidData()) {
-        // Convert autoscaled uint16_t to float (autoscale factor 0.1)
+        // Convert autoscaled uint16_t to float
         for (int i = 0; i < LTIT_TABLE_SIZE; i++) {
             for (int j = 0; j < LTIT_TABLE_SIZE; j++) {
-                ltitTableHelper[i][j] = static_cast<float>(config->ltitTable[i][j]) * 0.1f;
+                ltitTableHelper[i][j] = static_cast<float>(config->ltitTable[i][j]);
             }
         }
         
-        // Load trim values (autoscale factor 0.1)
-        acTrim = static_cast<float>(config->ltitAcTrim) * 0.1f;
-        fan1Trim = static_cast<float>(config->ltitFan1Trim) * 0.1f;
-        fan2Trim = static_cast<float>(config->ltitFan2Trim) * 0.1f;
+        // Load trim values
+        acTrim = static_cast<float>(config->ltitAcTrim);
+        fan1Trim = static_cast<float>(config->ltitFan1Trim);
+        fan2Trim = static_cast<float>(config->ltitFan2Trim);
         
         ltitTableInitialized = true;
     } else {
@@ -263,7 +263,7 @@ void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Acti
         updatedLtit = true;
         
         // Apply smoothing if configured
-        smoothLtitTable(engineConfiguration->ltitSmoothingIntensity);
+        // smoothLtitTable(engineConfiguration->ltitSmoothingIntensity);
     }
     
     // Handle AC/Fan trim learning
@@ -302,15 +302,15 @@ void LongTermIdleTrim::onSlowCallback() {
             // Save to flash memory
             for (int i = 0; i < LTIT_TABLE_SIZE; i++) {
                 for (int j = 0; j < LTIT_TABLE_SIZE; j++) {
-                    // Convert float to autoscaled uint16_t (factor 0.1)
-                    config->ltitTable[i][j] = static_cast<uint16_t>(ltitTableHelper[i][j] * 10.0f);
+                    // Convert float to autoscaled uint16_t
+                    config->ltitTable[i][j] = static_cast<uint16_t>(ltitTableHelper[i][j]);
                 }
             }
             
-            // Save trim values (autoscale factor 0.1)
-            config->ltitAcTrim = static_cast<int16_t>(acTrim * 10.0f);
-            config->ltitFan1Trim = static_cast<int16_t>(fan1Trim * 10.0f);
-            config->ltitFan2Trim = static_cast<int16_t>(fan2Trim * 10.0f);
+            // Save trim values
+            config->ltitAcTrim = static_cast<int16_t>(acTrim);
+            config->ltitFan1Trim = static_cast<int16_t>(fan1Trim);
+            config->ltitFan2Trim = static_cast<int16_t>(fan2Trim);
             
             setNeedToWriteConfiguration();
             m_pendingSave = false;

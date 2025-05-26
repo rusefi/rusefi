@@ -48,16 +48,40 @@ enum class TransientDirection {
 	NEGATIVE   // Desaceleração
 };
 
-// Adaptação automática de tau/beta - reduced table sizes for memory optimization
-#define WW_RPM_BINS 6        // Reduced from 8 to 6 
-#define WW_MAP_BINS 6        // Reduced from 8 to 6
+// Enhanced transient detection types
+enum class TransientIntensity {
+	NONE,
+	LIGHT,     // Gentle transients
+	NORMAL,    // Standard transients  
+	HEAVY      // Aggressive transients
+};
+
+struct TransientInfo {
+	TransientDirection direction;
+	TransientIntensity intensity;
+	float tpsRate;      // %/s
+	float mapRate;      // kPa/s
+	float duration;     // ms
+	bool isValid;
+	
+	TransientInfo() : direction(TransientDirection::NONE), intensity(TransientIntensity::NONE), 
+					  tpsRate(0), mapRate(0), duration(0), isValid(false) {}
+};
+
+// Wall wetting adaptive correction tables
+#define WW_CORRECTION_RPM_BINS 8
+#define WW_CORRECTION_MAP_BINS 8
 
 #ifndef WWAE_RPM_SIZE
-#define WWAE_RPM_SIZE 6      // Reduced from 8 to 6
+#define WWAE_RPM_SIZE 8
 #endif
 
 #ifndef WWAE_TABLE_SIZE
-#define WWAE_TABLE_SIZE 6    // Reduced from 8 to 6
+#define WWAE_TABLE_SIZE 6
+#endif
+
+#ifndef WWAE_CORRECTION_SIZE
+#define WWAE_CORRECTION_SIZE 8
 #endif
 
 // Simplified lightweight learning status for memory optimization
@@ -95,8 +119,8 @@ public:
 	float getLastImmediateError() const { return lastImmediateError; }
 	float getLastProlongedError() const { return lastProlongedError; }
 	TransientDirection getLastTransientDirection() const { return lastTransientDirection; }
-	bool getBetaAdjusted(int i, int j) const { return i < WW_MAP_BINS && j < WW_RPM_BINS ? betaLearningStatus[i][j].isConverged : false; }
-	bool getTauAdjusted(int i, int j) const { return i < WW_MAP_BINS && j < WW_RPM_BINS ? tauLearningStatus[i][j].isConverged : false; }
+	bool getBetaAdjusted(int i, int j) const { return i < WW_CORRECTION_MAP_BINS && j < WW_CORRECTION_RPM_BINS ? betaLearningStatus[i][j].isConverged : false; }
+	bool getTauAdjusted(int i, int j) const { return i < WW_CORRECTION_MAP_BINS && j < WW_CORRECTION_RPM_BINS ? tauLearningStatus[i][j].isConverged : false; }
 	
 	// Simplified diagnostic methods for memory optimization
 	float getCellConfidence(int i, int j, bool isBeta) const;
@@ -133,7 +157,14 @@ protected:
 	
 	int calculateOptimalBufferSize(float tau, float rpm);
 	float calculateWeightedAverage(int startIdx, int endIdx, float targetLambda);
-	void smoothCorrectionTable(scaled_channel<uint8_t, 100, 1> table[WW_RPM_BINS][WW_MAP_BINS], int centerI, int centerJ, float intensity);
+	void smoothCorrectionTable(scaled_channel<uint8_t, 100, 1> table[WW_CORRECTION_MAP_BINS][WW_CORRECTION_RPM_BINS], int centerI, int centerJ, float intensity);
+	
+	// Enhanced transient detection methods
+	TransientInfo detectTransientEnhanced(float tps, float map, float rpm);
+	bool isTransientValid(const TransientInfo& transient);
+	TransientIntensity classifyTransientIntensity(float tpsRate, float mapRate);
+	bool applyTransientFiltering(float rate);
+	void updateTransientDuration();
 
 private:
 	bool m_enable = false;
@@ -143,6 +174,13 @@ private:
 	
 	Timer m_transientTimer;
 	Timer m_ignitionOffTimer;
+	
+	// Enhanced transient detection
+	TransientInfo m_currentTransient;
+	Timer m_transientDurationTimer;
+	float m_transientFilterBuffer[10];  // For filtering false detections
+	int m_filterBufferIdx = 0;
+	bool m_filterBufferFilled = false;
 	
 	// Dramatically reduced buffer sizes for memory optimization
 	static constexpr int WW_BUFFER_MAX = 200;  // Reduced from 1000 to 200 (-9.6KB)
@@ -154,9 +192,9 @@ private:
 	bool monitoring;
 	bool pendingWwSave;
 	
-	// Simplified tracking using smaller structures (saves ~1KB)
-	SimpleLearningStatus betaLearningStatus[WW_MAP_BINS][WW_RPM_BINS];
-	SimpleLearningStatus tauLearningStatus[WW_MAP_BINS][WW_RPM_BINS];
+	// Learning status for correction tables
+	SimpleLearningStatus betaLearningStatus[WW_CORRECTION_MAP_BINS][WW_CORRECTION_RPM_BINS];
+	SimpleLearningStatus tauLearningStatus[WW_CORRECTION_MAP_BINS][WW_CORRECTION_RPM_BINS];
 	
 	// Estado do transiente atual
 	TransientDirection currentTransientDirection;

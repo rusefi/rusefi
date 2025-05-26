@@ -231,6 +231,43 @@ void setDefaultWallWetting() {
 	engineConfiguration->wwaeBeta = 0.3;
 #endif // EFI_UNIT_TEST
 
+	// Wall Wetting Adaptive Learning defaults
+	engineConfiguration->complexWallModel = true;
+	engineConfiguration->wwDirectionalCorrections = true;
+	engineConfiguration->wwEnableAdaptiveLearning = true;
+	
+	// Enhanced Transient Detection defaults
+	engineConfiguration->wwTpsThreshold = 3.0f;        // %/s - More sensitive than old 8.0
+	engineConfiguration->wwMapThreshold = 15.0f;       // kPa/s - More sensitive than old 40.0
+	engineConfiguration->wwTransientDetectionWindowMs = 200;  // ms - Shorter than old 250ms
+	engineConfiguration->wwTransientTimeoutMs = 500;   // ms - Shorter than old 1000ms
+	
+	// Advanced thresholds for different intensities
+	engineConfiguration->wwTpsThresholdLight = 1.5f;   // %/s - For gentle transients
+	engineConfiguration->wwMapThresholdLight = 8.0f;   // kPa/s - For gentle transients
+	engineConfiguration->wwTpsThresholdHeavy = 12.0f;  // %/s - For aggressive transients
+	engineConfiguration->wwMapThresholdHeavy = 50.0f;  // kPa/s - For aggressive transients
+	
+	// Filtering defaults
+	engineConfiguration->wwEnableTransientFiltering = true;
+	engineConfiguration->wwTransientFilterSamples = 3;
+	engineConfiguration->wwMinTransientDuration = 50.0f; // ms
+	
+	// Learning parameters
+	engineConfiguration->wwLearningRate = 0.05f;       // 5% learning rate
+	engineConfiguration->wwSmoothIntensity = 0.3f;     // 30% smoothing
+	
+	// Learning validation parameters
+	engineConfiguration->wwMinCoolantTemp = 70.0f;     // °C - Engine must be warmed up
+	engineConfiguration->wwMaxCoolantTemp = 110.0f;    // °C - Not overheating
+	engineConfiguration->wwMinMapForLearning = 30.0f;  // kPa - Minimum load for learning
+	engineConfiguration->wwMaxLambdaDeviation = 0.15f; // 15% max deviation from target
+	engineConfiguration->wwMinLambda = 0.7f;           // Minimum valid lambda
+	engineConfiguration->wwMaxLambda = 1.5f;           // Maximum valid lambda
+	engineConfiguration->wwMinQualityScore = 0.6f;     // 60% minimum quality score
+	engineConfiguration->wwMinSamplesForConvergence = 5;    // Minimum samples for convergence
+	engineConfiguration->wwMinConfidenceForConvergence = 80; // 80% confidence for convergence
+
 	// linear reasonable bins
 	setLinearCurve(config->wwCltBins, -40, 100, 1);
 	setLinearCurve(config->wwMapBins, 10, 80, 1);
@@ -287,13 +324,15 @@ void setDefaultWallWetting() {
 		}
 	}
 
+	// Initialize correction table bins (8x8)
+	setLinearCurve(config->wwCorrectionMapBins, 10, 80, 1);
+	setLinearCurve(config->wwCorrectionRpmBins, 500, 7000, 1);
+	
 	// Initialize adaptive learning correction tables with neutral values (1.0)
-	for (int i = 0; i < WWAE_RPM_SIZE; i++) {
-		for (int j = 0; j < WWAE_TABLE_SIZE; j++) {
-			config->wwBetaAccel[i][j] = 100; // 1.0 * 100 (neutral)
-			config->wwBetaDecel[i][j] = 100; // 1.0 * 100 (neutral)
-			config->wwTauAccel[i][j] = 100;  // 1.0 * 100 (neutral)
-			config->wwTauDecel[i][j] = 100;  // 1.0 * 100 (neutral)
+	for (int i = 0; i < WWAE_CORRECTION_SIZE; i++) {
+		for (int j = 0; j < WWAE_CORRECTION_SIZE; j++) {
+			config->wwTauCorrection[i][j] = 100;  // 1.0 * 100 (neutral)
+			config->wwBetaCorrection[i][j] = 100; // 1.0 * 100 (neutral)
 		}
 	}
 
