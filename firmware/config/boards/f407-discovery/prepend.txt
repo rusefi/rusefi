@@ -1,4 +1,4 @@
-#define ts_show_tps_sent true
+#define ts_show_tps_sent false
 
 #define ts_show_software_knock true
 
