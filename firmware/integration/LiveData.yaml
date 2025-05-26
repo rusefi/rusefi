@@ -18,26 +18,26 @@ Usages:
     cppFileName: status_loop
     java: TsOutputs.java
     folder: console/binary
-    prepend: integration/rusefi_config_shared.txt
+    prepend: integration/evotech_config_shared.txt
     constexpr: "engine->outputChannels"
 
   - name: fuel_computer
     java: FuelComputer.java
     folder: controllers/algo/fuel
-    prepend: integration/rusefi_config_shared.txt
+    prepend: integration/evotech_config_shared.txt
     constexpr: "engine->fuelComputer"
     conditional_compilation: "EFI_ENGINE_CONTROL"
 
   - name: ignition_state
     folder: controllers/algo/ignition
     java: IgnitionState.java
-    prepend: integration/rusefi_config_shared.txt
+    prepend: integration/evotech_config_shared.txt
     constexpr: "engine->ignitionState"
 
   - name: knock_controller
     java: KnockController.java
     folder: controllers/engine_cycle
-    prepend: integration/rusefi_config_shared.txt
+    prepend: integration/evotech_config_shared.txt
     output_name: knock
     constexpr: "engine->module<KnockController>()"
     isPtr: true
@@ -46,14 +46,14 @@ Usages:
     cppFileName: prime_injection
     java: PrimeController.java
     folder: controllers/engine_cycle
-    prepend: integration/rusefi_config_shared.txt
+    prepend: integration/evotech_config_shared.txt
     constexpr: "engine->module<PrimeController>()"
     isPtr: true
 
   - name: tcu_controller
     java: TcuController.java
     folder: controllers/tcu
-    prepend: integration/rusefi_config_shared.txt
+    prepend: integration/evotech_config_shared.txt
     conditional_compilation: "EFI_TCU"
 
   - name: throttle_model
@@ -69,7 +69,7 @@ Usages:
   - name: injector_model
     java: InjectorModel.java
     folder: controllers/algo/fuel
-    prepend: integration/rusefi_config_shared.txt
+    prepend: integration/evotech_config_shared.txt
     constexpr: "engine->module<InjectorModelPrimary>()"
     isPtr: true
     # working around unmock() in simulator
@@ -93,13 +93,13 @@ Usages:
     cppFileName: antilag_system
     java: AntilagSystem.java
     folder: controllers/algo
-    prepend: integration/rusefi_config_shared.txt
+    prepend: integration/evotech_config_shared.txt
     output_name: als
 
   - name: boost_control
     java: BoostControl.java
     folder: controllers/actuators
-    prepend: integration/rusefi_config_shared.txt
+    prepend: integration/evotech_config_shared.txt
     output_name: boost
     constexpr: "engine->module<BoostController>()"
     isPtr: true
@@ -108,14 +108,14 @@ Usages:
   - name: ac_control
     java: AcControl.java
     folder: controllers/actuators
-    prepend: integration/rusefi_config_shared.txt
+    prepend: integration/evotech_config_shared.txt
     output_name: ac
     engineModule: AcController
 
   - name: nitrous_control_state
     java: NitrousControl.java
     folder: controllers/algo
-    prepend: integration/rusefi_config_shared.txt
+    prepend: integration/evotech_config_shared.txt
     output_name: nitrous
     engineModule: NitrousController
     conditional_compilation: "EFI_LAUNCH_CONTROL"
@@ -149,19 +149,19 @@ Usages:
     cppFileName: engine
     java: EngineState.java
     folder: controllers/algo
-    prepend: integration/rusefi_config_shared.txt
+    prepend: integration/evotech_config_shared.txt
     constexpr: "engine->engineState"
 
   - name: tps_accel_state
     cppFileName: accel_enrichment
     java: TpsAccelState.java
     folder: controllers/algo
-    prepend: integration/rusefi_config_shared.txt
+    prepend: integration/evotech_config_shared.txt
 
   - name: trigger_central
     java: TriggerCentral.java
     folder: controllers/trigger
-    prepend: integration/rusefi_config_shared.txt
+    prepend: integration/evotech_config_shared.txt
     constexpr: "engine->triggerCentral"
     conditional_compilation: "EFI_SHAFT_POSITION_INPUT"
 
@@ -169,7 +169,7 @@ Usages:
     cppFileName: trigger_decoder
     java: TriggerState.java
     folder: controllers/trigger
-    prepend: integration/rusefi_config_shared.txt
+    prepend: integration/evotech_config_shared.txt
     conditional_compilation: "EFI_SHAFT_POSITION_INPUT && FULL_SD_LOGS"
     output_name: [ "trg", "vvt1i", "vvt1e", "vvt2i", "vvt2e" ]
     constexpr: [ "engine->triggerCentral.triggerState", "engine->triggerCentral.vvtState[0][0]","engine->triggerCentral.vvtState[0][1]","engine->triggerCentral.vvtState[1][0]","engine->triggerCentral.vvtState[1][1]"]
@@ -178,7 +178,7 @@ Usages:
     cppFileName: trigger_decoder
     java: TriggerStatePrimary.java
     folder: controllers/trigger
-    prepend: integration/rusefi_config_shared.txt
+    prepend: integration/evotech_config_shared.txt
 
   - name: wall_fuel_state
     cppFileName: wall_fuel
@@ -189,7 +189,7 @@ Usages:
     cppFileName: idle_thread
     java: IdleState.java
     folder: controllers/actuators
-    prepend: integration/rusefi_config_shared.txt
+    prepend: integration/evotech_config_shared.txt
     constexpr: "engine->module<IdleController>().unmock()"
     output_name: idle
 # working around unmock() in simulator
@@ -198,7 +198,7 @@ Usages:
   - name: electronic_throttle
     java: ElectronicThrottle.java
     folder: controllers/actuators
-    prepend: integration/rusefi_config_shared.txt
+    prepend: integration/evotech_config_shared.txt
     output_name: [ "etb1", "etb2" ]
     constexpr: ["getLiveData<electronic_throttle_s>(0)", "getLiveData<electronic_throttle_s>(1)"]
     isPtr: true
@@ -213,14 +213,14 @@ Usages:
   - name: dc_motors
     java: DcMotors.java
     folder: controllers/actuators
-    prepend: integration/rusefi_config_shared.txt
+    prepend: integration/evotech_config_shared.txt
     constexpr: "engine->dc_motors"
 
   - name: sent_state
     cppFileName: sent
     java: SentState.java
     folder: controllers/sensors
-    prepend: integration/rusefi_config_shared.txt
+    prepend: integration/evotech_config_shared.txt
 
   - name: vvt
     java: VvtState.java

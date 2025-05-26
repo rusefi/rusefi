@@ -30,7 +30,7 @@ public class MetaHelper {
     static ReaderStateImpl getReaderState(String boardConfig) throws IOException {
         List<String> options = Files.readAllLines(Paths.get(RootHolder.ROOT + "../" + ConfigDefinition.CONFIG_PATH));
         options.add(ConfigDefinition.KEY_PREPEND);
-        options.add("integration/rusefi_config_shared.txt");
+        options.add("integration/evotech_config_shared.txt");
         // add default (empty) board config
         options.add(ConfigDefinition.READFILE_OPTION);
         options.add(BoardConfigStrategy.BOARD_CONFIG_FROM_FILE);
