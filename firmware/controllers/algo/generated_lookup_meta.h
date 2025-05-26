@@ -2,7 +2,7 @@
 
 #pragma once
 
-#define META_GENERATED_NAME rusefi_generated_
+#define META_GENERATED_NAME evotech_generated_
 #define META_GENERATED_EXT .h
 
 // todo: sad technical debt: failing to define SHORT_BOARD_NAME for unit_tests and concatenate specifically for mac os?!
@@ -13,6 +13,6 @@
 
 #else
 
-#include "rusefi_generated_f407-discovery.h"
+#include "evotech_generated_f407-discovery.h"
 
 #endif

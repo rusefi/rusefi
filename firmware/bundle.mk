@@ -44,8 +44,8 @@ else
 endif
 
 # todo: replace all usages of $(FOLDER) with $(STAGING_FOLDER) just to make code search simpler
-FOLDER         = rusefi.$(BRANCH_PART_OF_FOLDER).$(BUNDLE_NAME)
-STAGING_FOLDER = rusefi.$(BRANCH_PART_OF_FOLDER).$(BUNDLE_NAME)
+FOLDER         = evotech.$(BRANCH_PART_OF_FOLDER).$(BUNDLE_NAME)
+STAGING_FOLDER = evotech.$(BRANCH_PART_OF_FOLDER).$(BUNDLE_NAME)
 
 BRANCH_REF_FILE = $(STAGING_FOLDER)/release.txt
 
@@ -199,7 +199,7 @@ $(BUILDDIR)/rusefi.srec: $(BUILDDIR)/$(PROJECT).hex
 	$(CP) -I binary -O srec --change-addresses=$(HEX_BASE_ADDRESS) $(DBIN_CRC) $@
 
 # The DFU is currently not included in the bundle, so these prerequisites are listed as order-only to avoid building it.
-# If you want it, you can build it with `make rusefi.snapshot.$BUNDLE_NAME/rusefi.dfu`
+# If you want it, you can build it with `make evotech.snapshot.$BUNDLE_NAME/rusefi.dfu`
 $(DFU) $(DBIN): .h2d-sentinel ;
 
 .h2d-sentinel: $(BUILDDIR)/$(PROJECT).hex $(BOOTLOADER_HEX_OUT) $(BINSRC) | $(DELIVER)
@@ -238,11 +238,11 @@ $(BRANCH_REF_FILE):
 	echo "platform=$(BUNDLE_NAME)" >> $(BRANCH_REF_FILE) ; echo "release=$(BRANCH_REF_FOR_BUNDLE)" >> $(BRANCH_REF_FILE)
 
 $(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME).zip: $(BUNDLE_FILES) | $(ARTIFACTS)
-	zip -r $@ $(BUNDLE_FILES)
+	cd $(FOLDER) && zip -r ../$@ .
 	[ -z "$(POST_ZIP_SCRIPT)" ] || bash $(POST_ZIP_SCRIPT)
 
 $(ARTIFACTS)/$(WHITE_LABEL_BUNDLE_NAME)_obfuscated_public.zip:  $(OBFUSCATED_OUT) $(BUNDLE_FILES) | $(ARTIFACTS)
-	zip -r $@ $(FULL_BUNDLE_CONTENT) $(MOST_COMMON_BUNDLE_FILES) $(OBFUSCATED_SREC)
+	cd $(FOLDER) && zip -r ../$@ $(subst $(FOLDER)/,,$(FULL_BUNDLE_CONTENT)) $(subst $(FOLDER)/,,$(MOST_COMMON_BUNDLE_FILES)) $(subst $(FOLDER)/,,$(OBFUSCATED_SREC))
 	[ -z "$(POST_O_ZIP_SCRIPT)" ] || bash $(POST_O_ZIP_SCRIPT)
 
 # The autopdate zip doesn't have a folder with the bundle contents

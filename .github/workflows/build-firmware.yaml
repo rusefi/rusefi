@@ -95,7 +95,7 @@ jobs:
       with:
         tag: ${{ env.date }}
         name: "Nightly ${{ env.date }}"
-        artifacts: "artifacts/rusefi_bundle_*.zip"
+        artifacts: "artifacts/evotech_bundle_*.zip"
         replacesArtifacts: false
         token: ${{ secrets.NIGHTLY_RELEASE_ACCESS_TOKEN }}
         allowUpdates: true
@@ -192,7 +192,7 @@ jobs:
         echo AUTOMATION_LTS=${{toJSON(inputs.lts)}} >> $GITHUB_ENV
         echo AUTOMATION_REF=${{github.ref_name}} >> $GITHUB_ENV
         echo BOARD_META_PATH=${{matrix.meta-info}} >> $GITHUB_ENV
-        echo "WHITE_LABEL=rusefi" >> $GITHUB_ENV
+        echo "WHITE_LABEL=evotech" >> $GITHUB_ENV
 
     - name: Git Status
       run: |
@@ -270,7 +270,7 @@ jobs:
       with:
         tag: ${{ env.date }}
         name: "Nightly ${{ env.date }}"
-        artifacts: "artifacts/rusefi_bundle_*.zip"
+        artifacts: "artifacts/evotech_bundle_*.zip"
         replacesArtifacts: false
         token: ${{ secrets.NIGHTLY_RELEASE_ACCESS_TOKEN }}
         allowUpdates: true
@@ -296,35 +296,35 @@ jobs:
       if: ${{ env.upload == 'gha_artifact' }}
       uses: actions/upload-artifact@v4
       with:
-        name: rusefi_${{matrix.build-target}}.txt
+        name: evotech_${{matrix.build-target}}.txt
         path: ./firmware/build/rusefi.txt
 
     - name: Upload github action elf artifact
       if: ${{ env.upload == 'gha_artifact' }}
       uses: actions/upload-artifact@v4
       with:
-        name: rusefi_${{matrix.build-target}}.elf
+        name: evotech_${{matrix.build-target}}.elf
         path: ./firmware/build/rusefi.elf
 
     - name: Upload github action map artifact
       if: ${{ env.upload == 'gha_artifact' }}
       uses: actions/upload-artifact@v4
       with:
-        name: rusefi_${{matrix.build-target}}.map
+        name: evotech_${{matrix.build-target}}.map
         path: ./firmware/build/rusefi.map
 
     - name: Upload github action bin artifact
       if: ${{ env.upload == 'gha_artifact' }}
       uses: actions/upload-artifact@v4
       with:
-        name: rusefi_${{matrix.build-target}}.bin
+        name: evotech_${{matrix.build-target}}.bin
         path: ./firmware/deliver/rusefi*.bin
 
     - name: Upload github action hex artifact
       if: ${{ env.upload == 'gha_artifact' }}
       uses: actions/upload-artifact@v4
       with:
-        name: rusefi_${{matrix.build-target}}.hex
+        name: evotech_${{matrix.build-target}}.hex
 # we have a bit of a mess - this file from 'build' folder is only legit for not-BLT builds
 # todo: we should produce .hex in both OpenBLT and non-OpenBLT case same as we do for .bin and .elf
         path: ./firmware/build/rusefi*.hex
@@ -333,17 +333,17 @@ jobs:
       if: ${{ env.upload == 'gha_artifact' }}
       uses: actions/upload-artifact@v4
       with:
-        name: rusefi_${{matrix.build-target}}.dfu
+        name: evotech_${{matrix.build-target}}.dfu
         path: ./firmware/deliver/rusefi*.dfu
 
     - name: Upload bundle artifact
       uses: actions/upload-artifact@v4
       with:
-        name: rusefi_bundle_${{matrix.build-target}}.zip
-        path: ./artifacts/rusefi_bundle_${{matrix.build-target}}.zip
+        name: evotech_bundle_${{matrix.build-target}}.zip
+        path: ./artifacts/evotech_bundle_${{matrix.build-target}}.zip
 
     - name: Upload github action autoupdate artifact
       uses: actions/upload-artifact@v4
       with:
-        name: rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
-        path: ./artifacts/rusefi_bundle_${{matrix.build-target}}_autoupdate.zip
+        name: evotech_bundle_${{matrix.build-target}}_autoupdate.zip
+        path: ./artifacts/evotech_bundle_${{matrix.build-target}}_autoupdate.zip
