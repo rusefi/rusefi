@@ -837,17 +837,16 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	uint8_t wwTransientFilterSamples;Number of samples for transient filtering;"samples", 1, 0, 0, 10, 0
 	float wwMinTransientDuration;Minimum duration for valid transient;"ms", 1, 0, 0, 500, 1
 	
-	float wwLearningRate;Learning rate for adaptive corrections;"", 0.01, 0, 0.01, 1.0, 2
-	float wwSmoothIntensity;Intensity of table smoothing (0=none, 1=max);"", 0.1, 0, 0.0, 1.0, 1
+	float wwLearningRate;Learning rate for adaptive corrections;"", 1, 0, 0.01, 1.0, 2
+	float wwSmoothIntensity;Intensity of table smoothing (0=none, 1=max);"", 1, 0, 0.0, 1.0, 1
 	
-	! Wall Wetting Learning Validation Parameters
 	float wwMinCoolantTemp;Minimum coolant temperature for learning;"°C", 1, 0, 40, 120, 0
 	float wwMaxCoolantTemp;Maximum coolant temperature for learning;"°C", 1, 0, 60, 130, 0
 	float wwMinMapForLearning;Minimum MAP pressure for learning;"kPa", 1, 0, 20, 80, 0
-	float wwMaxLambdaDeviation;Maximum lambda deviation from target for learning;"", 0.01, 0, 0.05, 1.0, 2
-	float wwMinLambda;Minimum lambda value considered valid;"", 0.01, 0, 0.5, 1.5, 2
-	float wwMaxLambda;Maximum lambda value considered valid;"", 0.01, 0, 1.0, 2.0, 2
-	float wwMinQualityScore;Minimum quality score for learning (0.0-1.0);"", 0.01, 0, 0.3, 1.0, 2
+	float wwMaxLambdaDeviation;Maximum lambda deviation from target for learning;"", 1, 0, 0.05, 1.0, 2
+	float wwMinLambda;Minimum lambda value considered valid;"", 1, 0, 0.5, 1.5, 2
+	float wwMaxLambda;Maximum lambda value considered valid;"", 1, 0, 1.0, 2.0, 2
+	float wwMinQualityScore;Minimum quality score for learning (0.0-1.0);"", 1, 0, 0.3, 1.0, 2
 	uint8_t wwMinSamplesForConvergence;Minimum samples required for cell convergence;"samples", 1, 0, 0, 50, 0
 	uint8_t wwMinConfidenceForConvergence;Minimum confidence % for cell convergence;"%%", 1, 0, 0, 100, 0
 
