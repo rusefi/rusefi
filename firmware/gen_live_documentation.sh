@@ -13,7 +13,7 @@ java -DSystemOut.name=logs/gen_live_documentation \
  -DLiveDataProcessor.extra_prepend=${BOARD_DIR}/prepend.txt \
  com.rusefi.ldmp.LiveDataProcessor \
   integration/LiveData.yaml${EXTRA_LIVE_DATA_FILE} \
-  integration/rusefi_config_trigger.txt \
+  integration/evotech_config_trigger.txt \
   ../unit_tests/test-framework/trigger_meta_generated.h \
  ../java_tools/trigger-image/src/main/java/com/rusefi/config/generated/ \
  TriggerMeta.java \

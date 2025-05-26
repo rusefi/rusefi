@@ -34,7 +34,7 @@ else
 fi
 
 if [ -z "${signature_white_label}"  ]; then
-signature_white_label=rusEFI
+signature_white_label=evoTech
 fi
 
 echo "#define TS_SIGNATURE \"${signature_white_label} $branchname.$date.${SHORT_BOARD_NAME}.@@SIGNATURE_HASH@@\"" >> ${TEMP_FILE}

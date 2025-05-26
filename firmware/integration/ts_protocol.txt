@@ -1,5 +1,5 @@
 #define TS_PROTOCOL "001"
-! These commands are used by TunerStudio and the rusEFI console
+! These commands are used by TunerStudio and the evoTech console
 ! 0x4F ochGetCommand
 #define TS_OUTPUT_COMMAND 'O'
 ! getCommand
@@ -84,7 +84,7 @@
 ! 0x43 pageChunkWrite
 #define TS_CHUNK_WRITE_COMMAND 'C'
 
-! These commands are used exclusively by the rusEFI console
+! These commands are used exclusively by the evoTech console
 ! 0x74
 #define TS_TEST_COMMAND 't'
 
@@ -148,10 +148,10 @@
 #define PROTOCOL_OUTPIN "outpin"
 #define PROTOCOL_ANALOG_CHART "analog_chart"
 #define PROTOCOL_ENGINE_SNIFFER "wave_chart"
-#define PROTOCOL_VERSION_TAG "rusEfiVersion"
+#define PROTOCOL_VERSION_TAG "evoTechVersion"
 #define PROTOCOL_TEST_RESPONSE_TAG "ts_p_alive"
-#define PROTOCOL_SIGNATURE_PREFIX "rusEFI "
-#define FRONTEND_TITLE_BAR_NAME "rusEFI"
+#define PROTOCOL_SIGNATURE_PREFIX "evoTech "
+#define FRONTEND_TITLE_BAR_NAME "evoTech"
 
 ! Engine Sniffer Protocol
 #define PROTOCOL_ES_DOWN "d"

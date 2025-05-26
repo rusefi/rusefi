@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "This batch files reads rusefi_enums.h and produces auto_generated_enums.* files"
+echo "This batch files reads evotech_enums.h and produces auto_generated_enums.* files"
 
 rm gen_enum_to_string.log
 
@@ -12,7 +12,7 @@ java -DSystemOut.name=logs/gen_java_enum -cp ${ENUM_JAR} com.rusefi.ToJavaEnum -
 java -DSystemOut.name=logs/gen_java_enum -cp ${ENUM_JAR} com.rusefi.ToJavaEnum -enumInputFile controllers/trigger/decoders/sync_edge.h -outputPath ../java_console/io/src/main/java/com/rusefi/enums
 [ $? -eq 0 ] || { echo "ERROR generating sensors"; exit 1; }
 
-java -DSystemOut.name=logs/gen_java_enum -cp ${ENUM_JAR} com.rusefi.ToJavaEnum -enumInputFile controllers/algo/engine_types.h   -outputPath ../java_console/models/src/main/java/com/rusefi/enums -definition integration/rusefi_config.txt
+java -DSystemOut.name=logs/gen_java_enum -cp ${ENUM_JAR} com.evotech.ToJavaEnum -enumInputFile controllers/algo/engine_types.h   -outputPath ../java_console/models/src/main/java/com/evotech/enums -definition integration/evotech_config.txt
 [ $? -eq 0 ] || { echo "ERROR generating types"; exit 1; }
 
 java -DSystemOut.name=logs/gen_java_enum -cp ${ENUM_JAR} com.rusefi.ToJavaEnum -enumInputFile controllers/algo/engine_type_e.h   -outputPath ../java_console/models/src/main/java/com/rusefi/enums -definition integration/rusefi_config.txt

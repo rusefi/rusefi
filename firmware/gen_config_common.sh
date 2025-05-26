@@ -33,6 +33,7 @@ set_board_file BOARD_DIAG_PANEL2_FILE "${BOARD_DIR}/board_diag_panel2.ini"
 set_board_file BOARD_VE_FILE "${BOARD_DIR}/board_ve.ini"
 
 COMMON_GEN_CONFIG="
+ -definition integration/evotech_config.txt \
  -prepend integration/ts_protocol.txt \
  -readfile OUTPUTS_SECTION_FROM_FILE ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/live_data_fragments.ini \
  -readfile DATALOG_SECTION_FROM_FILE ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/data_logs.ini \
@@ -60,14 +61,14 @@ COMMON_GEN_CONFIG="
  -triggerInputFolder ../unit_tests \
  -with_c_defines false \
  -field_lookup_file controllers/lua/generated/value_lookup_generated.cpp controllers/lua/generated/value_lookup_generated.md \
- -java_destination ../java_console/models/src/main/java/com/rusefi/config/generated/ \
+ -java_destination ../java_console/models/src/main/java/com/evotech/config/generated/ \
  -initialize_to_zero false \
  -signature ${META_OUTPUT_ROOT_FOLDER}tunerstudio/generated/signature_${SHORT_BOARD_NAME}.txt \
  -signature_destination controllers/generated/signature_${SHORT_BOARD_NAME}.h \
  -ts_output_name generated/${INI} \
- -prepend integration/rusefi_config_trigger.txt \
+ -prepend integration/evotech_config_trigger.txt \
  -prepend ${META_OUTPUT_ROOT_FOLDER}console/binary/generated/total_live_data_generated.h \
  -soft_prepend ${BOARD_DIR}/prepend.txt \
  -soft_prepend ${BOARD_DIR}/prepend_${SHORT_BOARD_NAME}.txt \
- -prepend integration/rusefi_config_shared.txt \
+ -prepend integration/evotech_config_shared.txt \
  -board ${BOARD_DIR}"
