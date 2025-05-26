@@ -19,7 +19,6 @@ endif
 
 # STM32F42x has extra memory, so change some flags so we can use it.
 ifeq ($(IS_STM32F429),yes)
-	USE_OPT += -Wl,--defsym=STM32F4_HAS_SRAM3=1
 	DDEFS += -DSTM32F429xx -DSTM32F429_MCUCONF
 	DDEFS += -DEFI_IS_F42x
 else ifeq ($(IS_AT32F435),yes)

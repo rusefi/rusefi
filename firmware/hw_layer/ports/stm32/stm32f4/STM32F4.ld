@@ -20,11 +20,6 @@
  * bl section is where we link the rusefi bootloader
  */
 
-/* On devices with 256K RAM, use additional memory SRAM3. */
-/* STM32F40x do not have SRAM3 */
-/* STM32F42x and F46x have SRAM3 */
-RAM3_SIZE = DEFINED(STM32F4_HAS_SRAM3) ? 64k : 0;
-
 /* SDRAM */
 /* Only STM32F429I-Discovery has external SDRAM */
 SDRAM_SIZE = DEFINED(STM32_HAS_SDRAM) ? 8M : 0;
@@ -54,7 +49,10 @@ MEMORY
     ram0    : org = 0x20000000 + _OpenBLT_Shared_Params_Size, len = 128k - _OpenBLT_Shared_Params_Size /* SRAM1 + SRAM2 */
     ram1    : org = 0x20000000 + _OpenBLT_Shared_Params_Size, len = 112k - _OpenBLT_Shared_Params_Size      /* SRAM1 */
     ram2    : org = 0x2001C000, len = 16k       /* SRAM2 */
-    ram3    : org = 0x20020000, len = RAM3_SIZE /* SRAM3 note: this will be 0 size on F40x devices */
+    /* STM32F40x do not have SRAM3 */
+    /* STM32F42x and F46x have SRAM3 */
+    /* This region is hiden from linker, it is safe to have it 64k for all STM32F4xx */
+    ram3    : org = 0x20020000, len = 64k       /* SRAM3 note: this will be 0 size on F40x devices */
     ram4    : org = 0x10000000, len = 64k       /* CCM SRAM */
     ram5    : org = 0x40024000, len = 4k        /* BCKP SRAM */
     ram6    : org = 0x00000000, len = 0
