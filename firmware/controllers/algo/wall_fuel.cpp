@@ -415,6 +415,9 @@ float WallFuelController::computeTau() const {
 }
 
 float WallFuelController::computeTauWithDirection(TransientDirection direction) const {
+	// Note: direction parameter reserved for future directional tau adjustments
+	(void)direction; // Suppress unused parameter warning
+	
 	if (!engineConfiguration->complexWallModel) {
 		return engineConfiguration->wwaeTau;
 	}
@@ -458,6 +461,9 @@ float WallFuelController::computeBeta() const {
 }
 
 float WallFuelController::computeBetaWithDirection(TransientDirection direction) const {
+	// Note: direction parameter reserved for future directional beta adjustments
+	(void)direction; // Suppress unused parameter warning
+	
 	if (!engineConfiguration->complexWallModel) {
 		return engineConfiguration->wwaeBeta;
 	}
@@ -543,9 +549,10 @@ void WallFuelController::onFastCallback() {
 // Template instantiation will be done implicitly
 
 WallFuelController::WallFuelController() : 
+	m_filterBufferIdx(0), m_filterBufferFilled(false),
 	bufferIdx(0), bufferMaxSize(200), monitoring(false), pendingWwSave(false),
 	currentTransientDirection(TransientDirection::NONE), lastTransientDirection(TransientDirection::NONE),
-	lastImmediateError(0.0f), lastProlongedError(0.0f), m_filterBufferIdx(0), m_filterBufferFilled(false) {
+	lastImmediateError(0.0f), lastProlongedError(0.0f) {
 	
 	// Inicializar buffers
 	for (int i = 0; i < WW_BUFFER_MAX; i++) {
@@ -782,6 +789,9 @@ int WallFuelController::getCellSampleCount(int i, int j, bool isBeta) const {
 
 // Enhanced Transient Detection Implementation
 TransientInfo WallFuelController::detectTransientEnhanced(float tps, float map, float rpm) {
+	// Note: rpm parameter reserved for future RPM-dependent transient detection
+	(void)rpm; // Suppress unused parameter warning
+	
 	TransientInfo result;
 	
 	// Get configurable parameters with fallback defaults
@@ -795,20 +805,20 @@ TransientInfo WallFuelController::detectTransientEnhanced(float tps, float map, 
 	windowSamples = clampF(10, windowSamples, 100); // Reasonable limits
 	
 	// Static buffers for rate calculation
-	static float tpsBuffer[100] = {0};
-	static float mapBuffer[100] = {0};
-	static int bufIdx = 0;
-	static bool bufferFilled = false;
+	static float tpsDetectionBuffer[100] = {0};
+	static float mapDetectionBuffer[100] = {0};
+	static int detectionBufIdx = 0;
+	static bool detectionBufferFilled = false;
 	
 	// Store current values
-	tpsBuffer[bufIdx] = tps;
-	mapBuffer[bufIdx] = map;
+	tpsDetectionBuffer[detectionBufIdx] = tps;
+	mapDetectionBuffer[detectionBufIdx] = map;
 	
 	// Calculate rates if buffer has enough data
-	if (bufferFilled || bufIdx >= windowSamples) {
-		int oldestIdx = (bufIdx - windowSamples + 100) % 100;
-		float tpsDelta = tps - tpsBuffer[oldestIdx];
-		float mapDelta = map - mapBuffer[oldestIdx];
+	if (detectionBufferFilled || detectionBufIdx >= windowSamples) {
+		int oldestIdx = (detectionBufIdx - windowSamples + 100) % 100;
+		float tpsDelta = tps - tpsDetectionBuffer[oldestIdx];
+		float mapDelta = map - mapDetectionBuffer[oldestIdx];
 		float timeWindow = windowSamples * callbackPeriod / 1000.0f; // Convert to seconds
 		
 		result.tpsRate = tpsDelta / timeWindow; // %/s
@@ -836,8 +846,8 @@ TransientInfo WallFuelController::detectTransientEnhanced(float tps, float map, 
 	}
 	
 	// Update buffer index
-	bufIdx = (bufIdx + 1) % 100;
-	if (bufIdx == 0) bufferFilled = true;
+	detectionBufIdx = (detectionBufIdx + 1) % 100;
+	if (detectionBufIdx == 0) detectionBufferFilled = true;
 	
 	return result;
 }
@@ -934,8 +944,8 @@ void WallFuelController::updateTransientDuration() {
 			m_transientDurationTimer.reset();
 			m_currentTransient.duration = 0;
 		} else {
-			// Update duration
-			m_currentTransient.duration = m_transientDurationTimer.getElapsedMs();
+			// Update duration (convert from microseconds to milliseconds)
+			m_currentTransient.duration = m_transientDurationTimer.getElapsedUs() / 1000.0f;
 		}
 	} else {
 		// No active transient, reset timer
