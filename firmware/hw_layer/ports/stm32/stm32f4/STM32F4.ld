@@ -54,7 +54,10 @@ MEMORY
     ram0    : org = 0x20000000 + _OpenBLT_Shared_Params_Size, len = 128k + RAM3_SIZE - _OpenBLT_Shared_Params_Size /* SRAM1 + SRAM2 + SRAM3 (optionally) */
     ram1    : org = 0x20000000 + _OpenBLT_Shared_Params_Size, len = 112k - _OpenBLT_Shared_Params_Size      /* SRAM1 */
     ram2    : org = 0x2001C000, len = 16k       /* SRAM2 */
-    ram3    : org = 0x20020000, len = RAM3_SIZE /* SRAM3 note: this will be 0 size on F40x devices */
+    /* Define ram3, but do not allow linker to put anything in it.
+     * ram0 will include this region if STM32F4_HAS_SRAM3
+     * See startLua() at lua.cpp */
+    ram3    : org = 0x20020000, len = 64k       /* SRAM3 note: this exists on F42x devices */
     ram4    : org = 0x10000000, len = 64k       /* CCM SRAM */
     ram5    : org = 0x40024000, len = 4k        /* BCKP SRAM */
     ram6    : org = 0x00000000, len = 0
