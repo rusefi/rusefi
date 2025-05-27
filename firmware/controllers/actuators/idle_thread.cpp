@@ -111,10 +111,10 @@ percent_t IdleController::getRunningOpenLoop(IIdleController::Phase phase, float
 
 	// Offsets aprendidos: open loop + correção
 	if (engine->module<AcController>().unmock().acButtonState) {
-		running += engineConfiguration->acIdleExtraOffset + (engineConfiguration->ltitEnabled ? m_ltit.getLtitAcTrim() : 0);
+		running += engineConfiguration->acIdleExtraOffset;
 	}
-	running += enginePins.fanRelay.getLogicValue() ? (engineConfiguration->fan1ExtraIdle + (engineConfiguration->ltitEnabled ? m_ltit.getLtitFan1Trim() : 0)) : 0;
-	running += enginePins.fanRelay2.getLogicValue() ? (engineConfiguration->fan2ExtraIdle + (engineConfiguration->ltitEnabled ? m_ltit.getLtitFan2Trim() : 0)) : 0;
+	running += enginePins.fanRelay.getLogicValue() ? engineConfiguration->fan1ExtraIdle : 0;
+	running += enginePins.fanRelay2.getLogicValue() ? engineConfiguration->fan2ExtraIdle : 0;
 
 	running += luaAdd;
 
@@ -430,15 +430,6 @@ void IdleController::setDefaultIdleParameters() {
 // Implementação dos métodos getLtit* declarados em IdleController
 float IdleController::getLtitFactor(float rpm, float clt) const {
     return m_ltit.getLtitFactor(rpm, clt);
-}
-float IdleController::getLtitAcTrim() const {
-    return m_ltit.getLtitAcTrim();
-}
-float IdleController::getLtitFan1Trim() const {
-    return m_ltit.getLtitFan1Trim();
-}
-float IdleController::getLtitFan2Trim() const {
-    return m_ltit.getLtitFan2Trim();
 }
 
 void IdleController::onIgnitionStateChanged(bool ignitionOn) {

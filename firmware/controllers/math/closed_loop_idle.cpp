@@ -10,17 +10,9 @@
 
 LongTermIdleTrim::LongTermIdleTrim() {
     initializeTableWithDefaults();
-    acTrim = 0.0f;
-    fan1Trim = 0.0f;
-    fan2Trim = 0.0f;
     emaError = 0.0f;
     ltitTableInitialized = false;
     m_pendingSave = false;
-    
-    // Initialize state tracking
-    m_lastAcState = false;
-    m_lastFan1State = false;
-    m_lastFan2State = false;
 }
 
 void LongTermIdleTrim::initializeTableWithDefaults() {
@@ -67,18 +59,10 @@ void LongTermIdleTrim::loadLtitFromConfig() {
             }
         }
         
-        // Load trim values
-        acTrim = static_cast<float>(config->ltitAcTrim);
-        fan1Trim = static_cast<float>(config->ltitFan1Trim);
-        fan2Trim = static_cast<float>(config->ltitFan2Trim);
-        
         ltitTableInitialized = true;
     } else {
         // Initialize with defaults if no valid data
         initializeTableWithDefaults();
-        acTrim = 0.0f;
-        fan1Trim = 0.0f;
-        fan2Trim = 0.0f;
         ltitTableInitialized = true;
     }
 }
@@ -93,10 +77,6 @@ float LongTermIdleTrim::getLtitFactor(float rpm, float clt) const {
                         config->cltIdleCorrBins, clt,
                         config->rpmIdleCorrBins, rpm) * 0.01f;
 }
-
-float LongTermIdleTrim::getLtitAcTrim() const { return acTrim; }
-float LongTermIdleTrim::getLtitFan1Trim() const { return fan1Trim; }
-float LongTermIdleTrim::getLtitFan2Trim() const { return fan2Trim; }
 
 bool LongTermIdleTrim::isValidConditionsForLearning(float idleIntegral) const {
     // Validate integral is within reasonable range
@@ -115,62 +95,6 @@ bool LongTermIdleTrim::isValidConditionsForLearning(float idleIntegral) const {
     }
     
     return true;
-}
-
-void LongTermIdleTrim::updateTrimLearning(bool acActive, bool fan1Active, bool fan2Active, float idleIntegral) {
-    // AC trim learning
-    if (acActive != m_lastAcState) {
-        m_acStateTimer.reset();
-        m_lastAcState = acActive;
-    }
-    
-    // Learn AC trim when conditions are stable
-    if (acActive && m_acStateTimer.hasElapsedSec(2.0f)) { // 2 seconds after AC state change
-        float acCorrection = idleIntegral * engineConfiguration->ltitCorrectionRate * 0.01f;
-        float alpha = engineConfiguration->ltitEmaAlpha / 255.0f;
-        
-        // Apply EMA filter to AC trim
-        float newAcTrim = acTrim + acCorrection;
-        acTrim = alpha * newAcTrim + (1.0f - alpha) * acTrim;
-        
-        // Clamp AC trim
-        acTrim = clampF(-15.0f, acTrim, 15.0f);
-        updatedLtit = true;
-    }
-    
-    // Fan1 trim learning
-    if (fan1Active != m_lastFan1State) {
-        m_fan1StateTimer.reset();
-        m_lastFan1State = fan1Active;
-    }
-    
-    if (fan1Active && m_fan1StateTimer.hasElapsedSec(2.0f)) {
-        float fan1Correction = idleIntegral * engineConfiguration->ltitCorrectionRate * 0.01f;
-        float alpha = engineConfiguration->ltitEmaAlpha / 255.0f;
-        
-        float newFan1Trim = fan1Trim + fan1Correction;
-        fan1Trim = alpha * newFan1Trim + (1.0f - alpha) * fan1Trim;
-        
-        fan1Trim = clampF(-15.0f, fan1Trim, 15.0f);
-        updatedLtit = true;
-    }
-    
-    // Fan2 trim learning
-    if (fan2Active != m_lastFan2State) {
-        m_fan2StateTimer.reset();
-        m_lastFan2State = fan2Active;
-    }
-    
-    if (fan2Active && m_fan2StateTimer.hasElapsedSec(2.0f)) {
-        float fan2Correction = idleIntegral * engineConfiguration->ltitCorrectionRate * 0.01f;
-        float alpha = engineConfiguration->ltitEmaAlpha / 255.0f;
-        
-        float newFan2Trim = fan2Trim + fan2Correction;
-        fan2Trim = alpha * newFan2Trim + (1.0f - alpha) * fan2Trim;
-        
-        fan2Trim = clampF(-15.0f, fan2Trim, 15.0f);
-        updatedLtit = true;
-    }
 }
 
 void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active, float idleIntegral) {
@@ -212,62 +136,57 @@ void LongTermIdleTrim::update(float rpm, float clt, bool acActive, bool fan1Acti
         return;
     }
     
-    // Main table learning (only when no AC/Fan active)
-    if (!acActive && !fan1Active && !fan2Active) {
-        // Validate conditions
-        if (!isValidConditionsForLearning(idleIntegral)) {
-            return;
-        }
-        
-        // Check minimum update interval
-        if (!m_updateTimer.hasElapsedSec(1.0f)) {
-            return;
-        }
-        m_updateTimer.reset();
-        
-        // Use proper bin finding with getBin function
-        auto cltBin = priv::getBin(clt, config->cltIdleCorrBins);
-        auto rpmBin = priv::getBin(rpm, config->rpmIdleCorrBins);
-        
-        // Apply correction with multiple cells for better interpolation
-        float correction = idleIntegral * engineConfiguration->ltitCorrectionRate * 0.01f;
-        float alpha = engineConfiguration->ltitEmaAlpha / 255.0f;
-        
-        // Primary cell (largest weight)
-        float newValue = ltitTableHelper[cltBin.Idx][rpmBin.Idx] * (1.0f + correction);
-        newValue = alpha * newValue + (1.0f - alpha) * ltitTableHelper[cltBin.Idx][rpmBin.Idx];
-        
-        // Apply clamping
-        float clampMin = engineConfiguration->ltitClampMin > 0 ? engineConfiguration->ltitClampMin : 50.0f;
-        float clampMax = engineConfiguration->ltitClampMax > 0 ? engineConfiguration->ltitClampMax : 150.0f;
-        ltitTableHelper[cltBin.Idx][rpmBin.Idx] = clampF(clampMin, newValue, clampMax);
-        
-        // Apply to adjacent cells with reduced weight (for better interpolation)
-        float adjWeight = 0.3f; // 30% weight for adjacent cells
-        for (int di = -1; di <= 1; di++) {
-            for (int dj = -1; dj <= 1; dj++) {
-                if (di == 0 && dj == 0) continue; // Skip primary cell
-                
-                int adjI = cltBin.Idx + di;
-                int adjJ = rpmBin.Idx + dj;
-                
-                if (adjI >= 0 && adjI < LTIT_TABLE_SIZE && adjJ >= 0 && adjJ < LTIT_TABLE_SIZE) {
-                    float adjCorrection = correction * adjWeight;
-                    float adjNewValue = ltitTableHelper[adjI][adjJ] * (1.0f + adjCorrection);
-                    adjNewValue = alpha * adjNewValue + (1.0f - alpha) * ltitTableHelper[adjI][adjJ];
-                    ltitTableHelper[adjI][adjJ] = clampF(clampMin, adjNewValue, clampMax);
-                }
-            }
-        }
-        
-        updatedLtit = true;
-        
-        // Apply smoothing if configured
-        // smoothLtitTable(engineConfiguration->ltitSmoothingIntensity);
+    // Main table learning (now allowed even with AC/Fan active)
+    // Validate conditions
+    if (!isValidConditionsForLearning(idleIntegral)) {
+        return;
     }
     
-    // Handle AC/Fan trim learning
-    updateTrimLearning(acActive, fan1Active, fan2Active, idleIntegral);
+    // Check minimum update interval
+    if (!m_updateTimer.hasElapsedSec(1.0f)) {
+        return;
+    }
+    m_updateTimer.reset();
+    
+    // Use proper bin finding with getBin function
+    auto cltBin = priv::getBin(clt, config->cltIdleCorrBins);
+    auto rpmBin = priv::getBin(rpm, config->rpmIdleCorrBins);
+    
+    // Apply correction with multiple cells for better interpolation
+    float correction = idleIntegral * engineConfiguration->ltitCorrectionRate * 0.01f;
+    float alpha = engineConfiguration->ltitEmaAlpha / 255.0f;
+    
+    // Primary cell (largest weight)
+    float newValue = ltitTableHelper[cltBin.Idx][rpmBin.Idx] * (1.0f + correction);
+    newValue = alpha * newValue + (1.0f - alpha) * ltitTableHelper[cltBin.Idx][rpmBin.Idx];
+    
+    // Apply clamping
+    float clampMin = engineConfiguration->ltitClampMin > 0 ? engineConfiguration->ltitClampMin : 50.0f;
+    float clampMax = engineConfiguration->ltitClampMax > 0 ? engineConfiguration->ltitClampMax : 150.0f;
+    ltitTableHelper[cltBin.Idx][rpmBin.Idx] = clampF(clampMin, newValue, clampMax);
+    
+    // Apply to adjacent cells with reduced weight (for better interpolation)
+    float adjWeight = 0.3f; // 30% weight for adjacent cells
+    for (int di = -1; di <= 1; di++) {
+        for (int dj = -1; dj <= 1; dj++) {
+            if (di == 0 && dj == 0) continue; // Skip primary cell
+            
+            int adjI = cltBin.Idx + di;
+            int adjJ = rpmBin.Idx + dj;
+            
+            if (adjI >= 0 && adjI < LTIT_TABLE_SIZE && adjJ >= 0 && adjJ < LTIT_TABLE_SIZE) {
+                float adjCorrection = correction * adjWeight;
+                float adjNewValue = ltitTableHelper[adjI][adjJ] * (1.0f + adjCorrection);
+                adjNewValue = alpha * adjNewValue + (1.0f - alpha) * ltitTableHelper[adjI][adjJ];
+                ltitTableHelper[adjI][adjJ] = clampF(clampMin, adjNewValue, clampMax);
+            }
+        }
+    }
+    
+    updatedLtit = true;
+    
+    // Apply smoothing if configured
+    // smoothLtitTable(engineConfiguration->ltitSmoothingIntensity);
 }
 
 void LongTermIdleTrim::onIgnitionStateChanged(bool ignitionOn) {
@@ -277,9 +196,6 @@ void LongTermIdleTrim::onIgnitionStateChanged(bool ignitionOn) {
         // Reset timers when ignition turns on
         m_updateTimer.reset();
         m_stableIdleTimer.reset();
-        m_acStateTimer.reset();
-        m_fan1StateTimer.reset();
-        m_fan2StateTimer.reset();
         isStableIdle = false;
         m_pendingSave = false;
     } else if (updatedLtit) {
@@ -306,11 +222,6 @@ void LongTermIdleTrim::onSlowCallback() {
                     config->ltitTable[i][j] = static_cast<uint16_t>(ltitTableHelper[i][j]);
                 }
             }
-            
-            // Save trim values
-            config->ltitAcTrim = static_cast<int16_t>(acTrim);
-            config->ltitFan1Trim = static_cast<int16_t>(fan1Trim);
-            config->ltitFan2Trim = static_cast<int16_t>(fan2Trim);
             
             setNeedToWriteConfiguration();
             m_pendingSave = false;

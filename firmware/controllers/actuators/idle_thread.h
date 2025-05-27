@@ -94,9 +94,6 @@ public:
 
 	void updateLtit(float rpm, float clt, bool acActive, bool fan1Active, bool fan2Active, float idleIntegral);
 	float getLtitFactor(float rpm, float clt) const;
-	float getLtitAcTrim() const;
-	float getLtitFan1Trim() const;
-	float getLtitFan2Trim() const;
 
 	// Esta função está vazia e apenas retorna
 	void setDefaultIdleParameters();

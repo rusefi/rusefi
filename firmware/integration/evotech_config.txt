@@ -1969,9 +1969,6 @@ uint16_t[CLT_CURVE_SIZE] cltIdleCorrBins;CLT-based idle position for simple manu
 uint16_t[CLT_CURVE_SIZE x CLT_CURVE_SIZE] autoscale cltIdleCorrTable;    CLT-based idle position for simple manual idle controller;"%", 0.1, 0, 0, 100, 1
 
 uint16_t[CLT_CURVE_SIZE x CLT_CURVE_SIZE] autoscale ltitTable;Long Term Idle Trim (LTIT) multiplicativo para idle open loop;"%", 0.1, 0, 50, 150, 1
-int16_t autoscale ltitAcTrim;Offset aprendido para AC;"%",0.1,0,-50,50,1
-int16_t autoscale ltitFan1Trim;Offset aprendido para Fan1;"%",0.1,0,-50,50,1
-int16_t autoscale ltitFan2Trim;Offset aprendido para Fan2;"%",0.1,0,-50,50,1
 
 float[MAF_DECODING_COUNT] mafDecoding;Also known as MAF transfer function.\nkg/hour value.\nBy the way 2.081989116 kg/h = 1 ft3/m;"kg/hour", 1, 0, -500, 4000, 2
 float[MAF_DECODING_COUNT] mafDecodingBins;;"V", 1, 0, -5, 150, 2
