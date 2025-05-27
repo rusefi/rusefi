@@ -58,6 +58,7 @@
 #include "vvt.h"
 #include "long_term_fuel_trim.h"
 #include "electronic_throttle_generated.h"
+#include "engine_cylinder.hpp"
 
 #include <functional>
 
@@ -271,6 +272,7 @@ public:
 	FuelSchedule injectionEvents;
 	IgnitionEventList ignitionEvents;
 	scheduling_s tdcScheduler[2];
+	OneCylinder cylinders[MAX_CYLINDER_COUNT];
 #endif /* EFI_ENGINE_CONTROL */
 
 #if EFI_ELECTRONIC_THROTTLE_BODY
