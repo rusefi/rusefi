@@ -148,9 +148,9 @@
 #define PROTOCOL_OUTPIN "outpin"
 #define PROTOCOL_ANALOG_CHART "analog_chart"
 #define PROTOCOL_ENGINE_SNIFFER "wave_chart"
-#define PROTOCOL_VERSION_TAG "evoTechVersion"
+#define PROTOCOL_VERSION_TAG "rusEfiVersion"
 #define PROTOCOL_TEST_RESPONSE_TAG "ts_p_alive"
-#define PROTOCOL_SIGNATURE_PREFIX "evoTech "
+#define PROTOCOL_SIGNATURE_PREFIX "rusEFI "
 #define FRONTEND_TITLE_BAR_NAME "evoTech"
 
 ! Engine Sniffer Protocol
