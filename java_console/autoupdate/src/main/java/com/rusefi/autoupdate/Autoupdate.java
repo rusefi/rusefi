@@ -6,7 +6,6 @@ import com.rusefi.core.FindFileHelper;
 import com.rusefi.core.io.BundleUtil;
 import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.FileUtil;
-import com.rusefi.core.net.JarFileUtil;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.core.ui.AutoupdateUtil;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +23,6 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -238,7 +236,7 @@ public class Autoupdate {
     }
 
     private static void startConsoleAsANewProcess(final String[] args) {
-        final String consoleExeFileName = JarFileUtil.getJarFileNamePrefix() + "_console.exe";
+        final String consoleExeFileName = new ConsoleExeFileLocator().getConsoleExeFileName();
         if (!Files.exists(Paths.get(consoleExeFileName))) {
             log.error(String.format("File `%s` to launch isn't found", consoleExeFileName));
             if (!AutoupdateUtil.runHeadless) {
