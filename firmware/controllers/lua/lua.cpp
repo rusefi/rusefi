@@ -407,10 +407,10 @@ void startLua() {
 	// definitely should NOT have this on Proteus
 	// on Hellen a bit of open question what's the best track
 	if (isStm32F42x()) {
-		// This is safe to use base and end as we define ram3 for all F4 chips
+		// This is safe to use section base and end as we define ram3 for all F4 chips
 		extern char __ram3_base__[];
 		extern char __ram3_end__[];
-		userHeap.reinit(__ram3_base__, __ram3_base__ - __ram3_end__);
+		userHeap.reinit(__ram3_base__, __ram3_end__ - __ram3_base__);
 	}
 #endif // !EFI_IS_F42x
 #endif // STM32F4
