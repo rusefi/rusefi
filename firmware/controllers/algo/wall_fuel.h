@@ -75,6 +75,77 @@ struct TransientInfo {
 #define WWAE_CORRECTION_SIZE 8
 #endif
 
+// *** BUFFER CIRCULAR PARA ANÁLISE DE DERIVADAS ***
+// 150ms @ 5ms callback = 30 amostras
+#define TRANSIENT_DETECTION_BUFFER_SIZE 30
+
+struct TransientDetectionBuffer {
+	float tpsValues[TRANSIENT_DETECTION_BUFFER_SIZE];
+	float mapValues[TRANSIENT_DETECTION_BUFFER_SIZE];
+	int currentIndex;
+	bool bufferFilled;
+	
+	TransientDetectionBuffer() : currentIndex(0), bufferFilled(false) {
+		for (int i = 0; i < TRANSIENT_DETECTION_BUFFER_SIZE; i++) {
+			tpsValues[i] = 0.0f;
+			mapValues[i] = 0.0f;
+		}
+	}
+	
+	void addSample(float tps, float map) {
+		tpsValues[currentIndex] = tps;
+		mapValues[currentIndex] = map;
+		currentIndex = (currentIndex + 1) % TRANSIENT_DETECTION_BUFFER_SIZE;
+		if (currentIndex == 0) {
+			bufferFilled = true;
+		}
+	}
+	
+	bool hasEnoughSamples() const {
+		return bufferFilled || currentIndex >= 10; // Mínimo 10 amostras (50ms)
+	}
+	
+	// Calcula a derivada média nos últimos N samples
+	float calculateTpsDerivative(int samples = 10) const {
+		if (!hasEnoughSamples() || samples < 2) return 0.0f;
+		
+		samples = minI(samples, bufferFilled ? TRANSIENT_DETECTION_BUFFER_SIZE : currentIndex);
+		
+		int startIdx = (currentIndex - samples + TRANSIENT_DETECTION_BUFFER_SIZE) % TRANSIENT_DETECTION_BUFFER_SIZE;
+		int endIdx = (currentIndex - 1 + TRANSIENT_DETECTION_BUFFER_SIZE) % TRANSIENT_DETECTION_BUFFER_SIZE;
+		
+		float startValue = tpsValues[startIdx];
+		float endValue = tpsValues[endIdx];
+		
+		return (endValue - startValue) / samples; // Delta por amostra
+	}
+	
+	float calculateMapDerivative(int samples = 10) const {
+		if (!hasEnoughSamples() || samples < 2) return 0.0f;
+		
+		samples = minI(samples, bufferFilled ? TRANSIENT_DETECTION_BUFFER_SIZE : currentIndex);
+		
+		int startIdx = (currentIndex - samples + TRANSIENT_DETECTION_BUFFER_SIZE) % TRANSIENT_DETECTION_BUFFER_SIZE;
+		int endIdx = (currentIndex - 1 + TRANSIENT_DETECTION_BUFFER_SIZE) % TRANSIENT_DETECTION_BUFFER_SIZE;
+		
+		float startValue = mapValues[startIdx];
+		float endValue = mapValues[endIdx];
+		
+		return (endValue - startValue) / samples; // Delta por amostra
+	}
+	
+	// *** NOVO: Método para obter amostra MAP de N posições atrás ***
+	float getMapSample(int samplesBack) const {
+		if (!hasEnoughSamples() || samplesBack < 0) return 0.0f;
+		
+		int maxSamples = bufferFilled ? TRANSIENT_DETECTION_BUFFER_SIZE : currentIndex;
+		if (samplesBack >= maxSamples) samplesBack = maxSamples - 1;
+		
+		int targetIdx = (currentIndex - samplesBack - 1 + TRANSIENT_DETECTION_BUFFER_SIZE) % TRANSIENT_DETECTION_BUFFER_SIZE;
+		return mapValues[targetIdx];
+	}
+};
+
 // Simplified lightweight learning status for memory optimization
 struct SimpleLearningStatus {
 	uint8_t confidence;      // 0-255 scaled confidence (saves 3 bytes vs float)
@@ -118,19 +189,12 @@ public:
 protected:
 	float computeTau() const;
 	float computeBeta() const;
-	float computeTauWithDirection(TransientDirection direction) const;
-	float computeBetaWithDirection(TransientDirection direction) const;
 	
 	int calculateOptimalBufferSize(float tau, float rpm);
-	float calculateWeightedAverage(int startIdx, int endIdx, float targetLambda);
 	void smoothCorrectionTable(scaled_channel<uint8_t, 100, 1> table[WW_CORRECTION_MAP_BINS][WW_CORRECTION_RPM_BINS], int centerI, int centerJ, float intensity);
 	
-	// Enhanced transient detection methods
-	TransientInfo detectTransientEnhanced(float tps, float map, float rpm);
-	bool isTransientValid(const TransientInfo& transient);
-	TransientIntensity classifyTransientIntensity(float tpsRate, float mapRate);
-	bool applyTransientFiltering(float rate);
-	void updateTransientDuration();
+	// *** DETECÇÃO DE TRANSIENTE COM BUFFER CIRCULAR ***
+	TransientInfo detectTransientWithBuffer(float tps, float map);
 
 private:
 	bool m_enable = false;
@@ -138,15 +202,15 @@ private:
 	float m_beta = 0;
 	bool m_ignitionState = false;
 	
-	Timer m_transientTimer;
 	Timer m_ignitionOffTimer;
+	
+	// *** BUFFER CIRCULAR PARA DETECÇÃO DE TRANSIENTES ***
+	TransientDetectionBuffer m_transientBuffer;
+	Timer m_transientCooldownTimer; // Para evitar detecções muito frequentes
+	Timer m_monitoringTimeoutTimer; // Para timeout do monitoring
 	
 	// Enhanced transient detection
 	TransientInfo m_currentTransient;
-	Timer m_transientDurationTimer;
-	float m_transientFilterBuffer[10];  // For filtering false detections
-	int m_filterBufferIdx = 0;
-	bool m_filterBufferFilled = false;
 	
 	// Dramatically reduced buffer sizes for memory optimization
 	static constexpr int WW_BUFFER_MAX = 200;  // Reduced from 1000 to 200 (-9.6KB)
@@ -166,9 +230,17 @@ private:
 	TransientDirection currentTransientDirection;
 	TransientDirection lastTransientDirection;
 	
+	// *** ESTADO GLOBAL DE MONITORAMENTO ***
+	bool globalMonitoring;           // Estado global de monitoramento ativo
+	TransientDirection monitoringDirection; // Direção do transiente sendo monitorado
+	
 	// Simplified diagnostics
 	float lastImmediateError;
 	float lastProlongedError;
+	
+	// *** CORREÇÃO FUNDAMENTAL: Armazenar condições iniciais do transiente ***
+	int transientInitialMapIdx;     // Índice MAP das condições iniciais (para correção de Beta)
+	int transientInitialRpmIdx;     // Índice RPM das condições iniciais (para correção de Beta)
 	
 	// Constantes básicas para validação (outras vêm da configuração)
 	static constexpr float MIN_LAMBDA = 0.5f;

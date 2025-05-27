@@ -100,56 +100,10 @@ float WallFuel::getWallFuel() const {
 	return wallFuel;
 }
 
-// Implementação da função auxiliar para calcular média ponderada
-float WallFuelController::calculateWeightedAverage(int startIdx, int endIdx, float targetLambda) {
-    float soma = 0;
-    float somaPesos = 0;
-    int numSamples = endIdx - startIdx;
-    
-    if (numSamples <= 0) {
-        return targetLambda; // Valor padrão se não houver amostras
-    }
-    
-    for (int k = startIdx; k < endIdx; k++) {
-        // *** MELHORIA: Peso temporal + peso por qualidade ***
-        // Peso temporal: amostras mais recentes têm peso maior
-        float pesoTemporal = (float)(k - startIdx + 1) / numSamples;
-        
-        // Peso por qualidade: valores mais próximos do target têm peso maior
-        float desvio = fabsf(lambdaBuffer[k] - targetLambda);
-        float pesoQualidade = 1.0f / (1.0f + desvio * 2.0f); // Penaliza mais desvios grandes
-        
-        // Peso combinado com ênfase na qualidade
-        float peso = pesoTemporal * 0.3f + pesoQualidade * 0.7f;
-        
-        soma += lambdaBuffer[k] * peso;
-        somaPesos += peso;
-    }
-    
-    // Verifica se temos amostras suficientes
-    if (somaPesos > 0) {
-        return soma / somaPesos;
-    } else {
-        return targetLambda; // Valor padrão se não houver amostras válidas
-    }
-}
+
 
 void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, float targetLambda, 
                                         bool isTransient, TransientDirection direction, float clt) {
-
-	// *** NOVA ABORDAGEM: Separação de erros Beta e Tau com janelas específicas ***
-	// 
-	// Beta (efeito imediato): 
-	//   - Janela curta (0-20% do buffer, mín. 10 amostras)
-	//   - Captura efeitos imediatos de combustível batendo na parede
-	//   - Erro calculado como média simples das primeiras amostras
-	//
-	// Tau (efeito de evaporação):
-	//   - Janela longa (50-100% do buffer)  
-	//   - Captura efeitos prolongados de evaporação
-	//   - Erro calculado como média ponderada (low-pass) das amostras tardias
-	//
-	// Esta separação permite ajustes mais precisos e independentes dos parâmetros.
 
 	// *** VERIFICAR CONDIÇÕES DE HABILITAÇÃO ***
 	if (!engineConfiguration->complexWallModel) {
@@ -172,31 +126,69 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 		return;
 	}
 
+	// *** CORREÇÃO FUNDAMENTAL: CÉLULAS SEPARADAS PARA BETA E TAU ***
+	// Célula atual (condições finais - para TAU)
 	auto rpmBin = priv::getBin(rpm, config->wwCorrectionRpmBins);
 	auto mapBin = priv::getBin(map, config->wwCorrectionMapBins);
-	int j = rpmBin.Idx;
-	int i = mapBin.Idx;
+	int j_final = rpmBin.Idx;
+	int i_final = mapBin.Idx;
 	
-	// Validar índices
-	if (i >= WW_CORRECTION_MAP_BINS || j >= WW_CORRECTION_RPM_BINS) {
+	// Validar índices finais
+	if (i_final >= WW_CORRECTION_MAP_BINS || j_final >= WW_CORRECTION_RPM_BINS) {
 		return;
 	}
 	
 	lastTransientDirection = direction;
 	
-	if (isTransient) {
+	if (isTransient) {		
+		// *** ARMAZENAR CONDIÇÕES INICIAIS DO TRANSIENTE ***
+		// Usar valores do buffer para estimar condições antes do transiente
+		if (m_transientBuffer.hasEnoughSamples()) {
+			// Pegar valores de algumas amostras atrás (antes do transiente)
+			float initialMap = m_transientBuffer.getMapSample(5);  // 5 amostras atrás (~25ms)
+			float initialRpm = rpm; // RPM muda mais lentamente, usar atual
+			
+			// Calcular índices das condições iniciais (para BETA)
+			auto initialRpmBin = priv::getBin(initialRpm, config->wwCorrectionRpmBins);
+			auto initialMapBin = priv::getBin(initialMap, config->wwCorrectionMapBins);
+			
+			// Armazenar para uso posterior
+			transientInitialMapIdx = initialMapBin.Idx;
+			transientInitialRpmIdx = initialRpmBin.Idx;
+			
+			// Validar índices iniciais
+			if (transientInitialMapIdx >= WW_CORRECTION_MAP_BINS || transientInitialRpmIdx >= WW_CORRECTION_RPM_BINS) {
+				// Se índices inválidos, usar os finais como fallback
+				transientInitialMapIdx = i_final;
+				transientInitialRpmIdx = j_final;
+			}
+		} else {
+			// Fallback: usar condições atuais se não temos histórico
+			transientInitialMapIdx = i_final;
+			transientInitialRpmIdx = j_final;
+		}
+		
+		// Calcular tamanho ótimo do buffer
+		float tau = computeTau();
+		bufferMaxSize = calculateOptimalBufferSize(tau, rpm);
+		
+		// Sempre reiniciar o monitoramento para novos transientes
 		monitoring = true;
 		bufferIdx = 0;
-		
-		// Calcular tamanho ótimo do buffer (simplificado)
-		float tau = computeTauWithDirection(direction);
-		bufferMaxSize = calculateOptimalBufferSize(tau, rpm);
+		m_monitoringTimeoutTimer.reset(); // Reset timeout timer
+	}
+	
+	// *** TIMEOUT DO MONITORING PARA EVITAR TRAVAMENTO ***
+	if (monitoring && m_monitoringTimeoutTimer.hasElapsedMs(2000)) { // 2 segundos timeout
+		monitoring = false; // Forçar saída do monitoring se demorar muito
+		globalMonitoring = false; // Também desligar monitoramento global
+		bufferIdx = 0;
 	}
 	
 	if (monitoring) {
 		if (bufferIdx < bufferMaxSize) {
-			// Simplified validation
-			bool sampleValid = true;
+			// Validação simplificada
+			bool sampleValid = (lambda >= 0.5f && lambda <= 1.5f);
 			
 			if (sampleValid) {
 				lambdaBuffer[bufferIdx] = lambda;
@@ -207,18 +199,31 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 		} else {
 			// Buffer cheio - processar aprendizado
 			
-			// *** NOVA IMPLEMENTAÇÃO: Separação adequada de janelas Beta vs Tau ***
-			// Beta: Janela curta (0-20% do buffer) para capturar efeitos imediatos
-			int betaWindow = bufferMaxSize * 0.2f;        // 20% para efeito beta (imediato)
-			if (betaWindow < 10) betaWindow = 10;         // Mínimo 10 amostras conforme solicitado
+			// *** CORREÇÃO: JANELAS BASEADAS NA FÍSICA EM VEZ DE PERCENTUAIS ARBITRÁRIOS ***
+			float cycleTimeSeconds = 60.0f / rpm;  // Tempo por ciclo (4-stroke)
+			float callbackPeriodSeconds = 0.005f;  // ~5ms por callback
+			int samplesPerCycle = (int)(cycleTimeSeconds / callbackPeriodSeconds);
 			
-			// Tau: Janela longa (50-100% do buffer) para capturar evaporação
-			int tauWindowStart = bufferMaxSize * 0.5f;    // 50% início da janela tau
-			int tauWindowEnd = bufferMaxSize;             // 100% fim da janela tau
+			// Beta window: 2 ciclos para efeitos imediatos de impacto na parede
+			int betaWindow = samplesPerCycle * 2;
+			if (betaWindow < 10) betaWindow = 10;         // Mínimo absoluto
+			if (betaWindow > bufferIdx) betaWindow = bufferIdx; // Não exceder buffer
+			
+			// Tau window: baseado na constante de tempo tau
+			float tau = computeTau();
+			int tauCycles = (int)(3.0f * tau / cycleTimeSeconds);  // 3x tau para capturar evaporação
+			int tauWindowStart = samplesPerCycle * 2;  // Começar após efeitos beta
+			int tauWindowEnd = tauWindowStart + (tauCycles * samplesPerCycle);
+			if (tauWindowEnd > bufferIdx) tauWindowEnd = bufferIdx;
+			if (tauWindowStart >= tauWindowEnd) {
+				// Fallback se janela tau inválida
+				tauWindowStart = bufferIdx / 2;
+				tauWindowEnd = bufferIdx;
+			}
 			
 			// *** CÁLCULO DE ERROS ESPECÍFICOS PARA BETA E TAU ***
 			
-			// Beta: Erro imediato (atraso fixo) - média simples das primeiras amostras
+			// Beta: Erro imediato - média simples das primeiras amostras
 			float lambdaImmediate = 0.0f;
 			int validBetaSamples = 0;
 			for (int k = 0; k < betaWindow && k < bufferIdx; k++) {
@@ -231,7 +236,7 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 				lambdaImmediate = targetLambda; // Fallback
 			}
 			
-			// Tau: Erro filtrado (low-pass) - média ponderada das amostras tardias
+			// Tau: Erro filtrado - média ponderada das amostras tardias
 			float lambdaFiltered = 0.0f;
 			float totalWeight = 0.0f;
 			int validTauSamples = 0;
@@ -252,78 +257,146 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 			float betaError = lambdaImmediate - targetLambda;     // Erro imediato (beta)
 			float tauError = lambdaFiltered - targetLambda;       // Erro prolongado (tau)
 			
-			// Salvar para diagnóstico (incluindo valores intermediários)
+			// Salvar para diagnóstico
 			lastImmediateError = betaError;
 			lastProlongedError = tauError;
 			
-			// Diagnóstico adicional: salvar valores de lambda calculados
-			// (podem ser acessados via debugger ou logging se necessário)
-			float debugLambdaImmediate = lambdaImmediate;
-			float debugLambdaFiltered = lambdaFiltered;
-			int debugBetaSamples = validBetaSamples;
-			int debugTauSamples = validTauSamples;
-			
-			// Evitar warnings de variáveis não utilizadas
-			(void)debugLambdaImmediate;
-			(void)debugLambdaFiltered;
-			(void)debugBetaSamples;
-			(void)debugTauSamples;
-			
-			// Parâmetros de aprendizado - SIMPLIFICADO sem sistema de confiança
-			float maxStep = 0.06f;   // Reduzido controlado para evitar oscilações
+			// *** CORREÇÃO CONCEITUAL CRÍTICA: LÓGICA DE AJUSTE INVERTIDA ***
+			float maxStep = 0.03f;   // Reduzido para evitar oscilações
 			
 			// Usar taxas de aprendizado diretas da configuração
 			float betaLearnRate = engineConfiguration->wwBetaLearningRate;
 			float tauLearnRate = engineConfiguration->wwTauLearningRate;
 			
-			// *** NOVA LÓGICA: Ajustes baseados nos erros específicos de Beta e Tau ***
+			// *** CORREÇÃO FÍSICA: Ajustes baseados na física correta do wall wetting ***
 			float deltaBeta = 0.0f;
 			float deltaTau = 0.0f;
 			
+			// *** LÓGICA CORRIGIDA - FÍSICA CORRETA ***
+			// Princípio: Se lambda está alto (pobre), precisamos REDUZIR o combustível que vai para a parede
+			//           Se lambda está baixo (rico), precisamos AUMENTAR o combustível que vai para a parede
+			//
+			// IMPORTANTE: A correção deve ser OPOSTA ao erro para compensá-lo
+			
 			if (direction == TransientDirection::POSITIVE) {
 				// ACELERAÇÃO: Esperamos lambda diminuir (ficar rico)
-				// Se betaError > 0: lambda imediato está acima do target (pobre) → AUMENTAR beta
-				// Se tauError > 0: lambda prolongado está acima do target (pobre) → DIMINUIR tau
-				deltaBeta = betaLearnRate * betaError * 1.5f;      // Ajuste agressivo para beta
-				deltaTau = -tauLearnRate * tauError * 0.8f;        // Ajuste moderado para tau (sinal negativo)
+				// Se betaError > 0: lambda imediato está alto (pobre) → DIMINUIR beta (menos combustível na parede)
+				// Se tauError > 0: lambda prolongado está alto (pobre) → DIMINUIR tau (evaporação mais rápida)
+				deltaBeta = -betaLearnRate * betaError;     // *** SINAL NEGATIVO - CORREÇÃO CRÍTICA ***
+				deltaTau = -tauLearnRate * tauError;        // *** SINAL NEGATIVO - CORREÇÃO CRÍTICA ***
 				
 			} else if (direction == TransientDirection::NEGATIVE) {
 				// DESACELERAÇÃO: Esperamos lambda aumentar (ficar pobre)
-				// Se betaError < 0: lambda imediato está abaixo do target (rico) → DIMINUIR beta
-				// Se tauError < 0: lambda prolongado está abaixo do target (rico) → AUMENTAR tau
-				deltaBeta = betaLearnRate * betaError * 0.8f;      // Ajuste moderado para beta
-				deltaTau = -tauLearnRate * tauError * 1.3f;        // Ajuste agressivo para tau
+				// Se betaError < 0: lambda imediato está baixo (rico) → AUMENTAR beta (mais combustível na parede)
+				// Se tauError < 0: lambda prolongado está baixo (rico) → AUMENTAR tau (evaporação mais lenta)
+				deltaBeta = -betaLearnRate * betaError;     // *** SINAL NEGATIVO - CORREÇÃO CRÍTICA ***
+				deltaTau = -tauLearnRate * tauError;        // *** SINAL NEGATIVO - CORREÇÃO CRÍTICA ***
 				
 			} else {
-				// TRANSIENTE NEUTRO: Ajuste balanceado baseado nos erros específicos
-				deltaBeta = betaLearnRate * betaError;
-				deltaTau = -tauLearnRate * tauError;  // Manter sinal negativo para tau
+				// TRANSIENTE NEUTRO: Ajuste balanceado
+				deltaBeta = -betaLearnRate * betaError * 0.5f;  // *** SINAL NEGATIVO ***
+				deltaTau = -tauLearnRate * tauError * 0.5f;     // *** SINAL NEGATIVO ***
 			}
 			
 			// Aplicar limites
 			deltaBeta = clampF(-maxStep, deltaBeta, maxStep);
 			deltaTau = clampF(-maxStep, deltaTau, maxStep);
 			
-			// Atualizar tabelas de correção
-			float currentBetaValue = config->wwBetaCorrection[i][j];
-			float currentTauValue = config->wwTauCorrection[i][j];
+			// *** CORREÇÃO FUNDAMENTAL: APLICAR CORREÇÕES NAS CÉLULAS CORRETAS ***
 			
-			float newBetaValue = currentBetaValue * (1.0f + deltaBeta);
-			float newTauValue = currentTauValue * (1.0f + deltaTau);
+			// BETA: Aplicar na célula das condições INICIAIS (onde o combustível foi injetado)
+			int i_beta = transientInitialMapIdx;
+			int j_beta = transientInitialRpmIdx;
 			
-			newBetaValue = clampF(0.0f, newBetaValue, 2.55f);
-			newTauValue = clampF(0.0f, newTauValue, 2.55f);
+			// TAU: Aplicar na célula das condições FINAIS (onde a evaporação acontece)
+			int i_tau = i_final;
+			int j_tau = j_final;
 			
-			// Converter de volta para valor inteiro para armazenamento
-			config->wwBetaCorrection[i][j] = (newBetaValue);
-			config->wwTauCorrection[i][j] = (newTauValue);
+			// Ler valores atuais das células corretas
+			float currentBetaValue = config->wwBetaCorrection[i_beta][j_beta];
+			float currentTauValue = config->wwTauCorrection[i_tau][j_tau];
 			
-			// Optional smoothing (simplified)
-			float smoothIntensity = 0.1f; // Default 10% smoothing
-			smoothCorrectionTable(config->wwBetaCorrection, i, j, smoothIntensity);
-			smoothCorrectionTable(config->wwTauCorrection, i, j, smoothIntensity);
+			// *** VALIDAÇÃO DE CONVERGÊNCIA CORRIGIDA PARA EVITAR OSCILAÇÕES ***
+			SimpleLearningStatus& betaStatus = betaLearningStatus[i_beta][j_beta];
+			SimpleLearningStatus& tauStatus = tauLearningStatus[i_tau][j_tau];
+			
+			// *** CORREÇÃO: Detecção de oscilação baseada em histórico real ***
+			bool betaOscillating = false;
+			bool tauOscillating = false;
+			
+			// Detectar oscilação real: apenas se o erro ainda é grande após várias tentativas
+			// Removida a condição de parada após 10 iterações para permitir aprendizado contínuo
+			if (betaStatus.sampleCount > 5) {
+				// Oscilação = erro persistentemente grande (sem melhoria)
+				bool largeError = fabsf(betaError) > 0.05f;  // Erro significativo
+				// Remover a condição "manyAttempts" para permitir aprendizado contínuo
+				betaOscillating = largeError && (betaStatus.confidence < 50); // Baixa confiança indica oscilação
+			}
+			
+			if (tauStatus.sampleCount > 5) {
+				bool largeError = fabsf(tauError) > 0.05f;
+				// Remover a condição "manyAttempts" para permitir aprendizado contínuo
+				tauOscillating = largeError && (tauStatus.confidence < 50); // Baixa confiança indica oscilação
+			}
+			
+			// Reduzir taxa de aprendizado se detectar oscilação real
+			if (betaOscillating) {
+				deltaBeta *= 0.3f;  // Redução mais agressiva para oscilações reais
+			}
+			if (tauOscillating) {
+				deltaTau *= 0.3f;   // Redução mais agressiva para oscilações reais
+			}
+			
+			// *** CORREÇÃO: Ajuste direto em vez de multiplicação exponencial ***
+			// Agora os deltas são aplicados diretamente aos multiplicadores
+			float newBetaValue = currentBetaValue + deltaBeta;
+			float newTauValue = currentTauValue + deltaTau;
+			
+			// Aplicar limites físicos para multiplicadores
+			newBetaValue = clampF(0.5f, newBetaValue, 2.0f);  // Faixa razoável para multiplicador
+			newTauValue = clampF(0.5f, newTauValue, 2.0f);    // Faixa razoável para multiplicador
+			
+			// *** VALIDAÇÃO: Só aplicar se a mudança for significativa ***
+			bool significantBetaChange = fabsf(deltaBeta) > 0.001f;
+			bool significantTauChange = fabsf(deltaTau) > 0.001f;
+			
+			if (significantBetaChange) {
+				config->wwBetaCorrection[i_beta][j_beta] = newBetaValue;
+				betaStatus.sampleCount++;
+				
+				// *** CORREÇÃO: Confiança baseada na qualidade do erro ***
+				float errorQuality = 1.0f / (1.0f + fabsf(betaError) * 10.0f);  // 0-1, melhor com erro menor
+				float confidenceChange = errorQuality * 20.0f - 5.0f;  // +15 se perfeito, -5 se erro grande
+				betaStatus.confidence = (uint8_t)clampF(0, betaStatus.confidence + confidenceChange, 255);
+			}
+			
+			if (significantTauChange) {
+				config->wwTauCorrection[i_tau][j_tau] = newTauValue;
+				tauStatus.sampleCount++;
+				
+				// *** CORREÇÃO: Confiança baseada na qualidade do erro ***
+				float errorQuality = 1.0f / (1.0f + fabsf(tauError) * 10.0f);
+				float confidenceChange = errorQuality * 20.0f - 5.0f;
+				tauStatus.confidence = (uint8_t)clampF(0, tauStatus.confidence + confidenceChange, 255);
+			}
+			
+			// *** CORREÇÃO: Critério de convergência mais realista ***
+			// Convergido = erro pequeno + confiança razoável + estabilidade
+			bool betaSmallError = fabsf(betaError) < 0.08f;  // Mais realista (8% lambda)
+			bool betaStable = betaStatus.sampleCount >= 3 && betaStatus.confidence > 100;
+			betaStatus.isConverged = betaSmallError && betaStable && !betaOscillating;
+			
+			bool tauSmallError = fabsf(tauError) < 0.08f;
+			bool tauStable = tauStatus.sampleCount >= 3 && tauStatus.confidence > 100;
+			tauStatus.isConverged = tauSmallError && tauStable && !tauOscillating;
+			
+			// Suavização opcional (simplificada) - aplicar nas células corretas
+			float smoothIntensity = 0.05f; // Reduzido para ser mais conservador
+			smoothCorrectionTable(config->wwBetaCorrection, i_beta, j_beta, smoothIntensity);
+			smoothCorrectionTable(config->wwTauCorrection, i_tau, j_tau, smoothIntensity);
 			
 			monitoring = false;
+			globalMonitoring = false; // *** DESLIGAR MONITORAMENTO GLOBAL ***
 			pendingWwSave = true;
 		}
 	}
@@ -361,34 +434,8 @@ float WallFuelController::computeTau() const {
 		tauBase *= interpolate3d(config->wwTauMapRpmValues, config->wwMapBins, map, config->wwRpmBins, rpm);
 		
 		// *** CORREÇÃO: Usar apenas a tabela de correção geral (tabelas antigas removidas) ***
-		tauCorr = interpolate3d(config->wwTauCorrection, config->wwCorrectionMapBins, map, config->wwCorrectionRpmBins, rpm) * 0.01f;
+		tauCorr = interpolate3d(config->wwTauCorrection, config->wwCorrectionMapBins, map, config->wwCorrectionRpmBins, rpm);
 	}
-	float tau = tauBase * tauCorr;
-	return tau;
-}
-
-float WallFuelController::computeTauWithDirection(TransientDirection direction) const {
-	// Note: direction parameter reserved for future directional tau adjustments
-	(void)direction; // Suppress unused parameter warning
-	
-	if (!engineConfiguration->complexWallModel) {
-		return engineConfiguration->wwaeTau;
-	}
-	
-	float clt = Sensor::get(SensorType::Clt).value_or(90);
-	float tauClt = interpolate2d(clt, config->wwCltBins, config->wwTauCltValues);
-	float tauBase = tauClt;
-	float tauCorr = 1.0f;
-	float map = Sensor::get(SensorType::Map).value_or(60);
-	float rpm = Sensor::getOrZero(SensorType::Rpm);
-	
-	if (Sensor::hasSensor(SensorType::Map)) {
-		tauBase *= interpolate3d(config->wwTauMapRpmValues, config->wwMapBins, map, config->wwRpmBins, rpm);
-		
-		// Usar a tabela de correção geral
-		tauCorr = interpolate3d(config->wwTauCorrection, config->wwCorrectionMapBins, map, config->wwCorrectionRpmBins, rpm) * 0.01f;
-	}
-	
 	float tau = tauBase * tauCorr;
 	return tau;
 }
@@ -407,34 +454,8 @@ float WallFuelController::computeBeta() const {
 		betaBase *= interpolate3d(config->wwBetaMapRpmValues, config->wwMapBins, map, config->wwRpmBins, rpm);
 		
 		// Usar a tabela de correção geral
-		betaCorr = interpolate3d(config->wwBetaCorrection, config->wwCorrectionMapBins, map, config->wwCorrectionRpmBins, rpm) * 0.01f;
+		betaCorr = interpolate3d(config->wwBetaCorrection, config->wwCorrectionMapBins, map, config->wwCorrectionRpmBins, rpm);
 	}
-	float beta = betaBase * betaCorr;
-	return clampF(0, beta, 1);
-}
-
-float WallFuelController::computeBetaWithDirection(TransientDirection direction) const {
-	// Note: direction parameter reserved for future directional beta adjustments
-	(void)direction; // Suppress unused parameter warning
-	
-	if (!engineConfiguration->complexWallModel) {
-		return engineConfiguration->wwaeBeta;
-	}
-	
-	float clt = Sensor::get(SensorType::Clt).value_or(90);
-	float betaClt = interpolate2d(clt, config->wwCltBins, config->wwBetaCltValues);
-	float betaBase = betaClt;
-	float betaCorr = 1.0f;
-	float map = Sensor::get(SensorType::Map).value_or(60);
-	float rpm = Sensor::getOrZero(SensorType::Rpm);
-	
-	if (Sensor::hasSensor(SensorType::Map)) {
-		betaBase *= interpolate3d(config->wwBetaMapRpmValues, config->wwMapBins, map, config->wwRpmBins, rpm);
-		
-		// Usar a tabela de correção geral
-		betaCorr = interpolate3d(config->wwBetaCorrection, config->wwCorrectionMapBins, map, config->wwCorrectionRpmBins, rpm) * 0.01f;
-	}
-	
 	float beta = betaBase * betaCorr;
 	return clampF(0, beta, 1);
 }
@@ -454,9 +475,9 @@ void WallFuelController::onFastCallback() {
 	float tps = Sensor::getOrZero(SensorType::Tps1);
 	float map = Sensor::getOrZero(SensorType::Map);
 	
-	// Enhanced transient detection
-	TransientInfo transient = detectTransientEnhanced(tps, map, rpm);
-	bool isTransient = transient.isValid && isTransientValid(transient);
+	// *** DETECÇÃO DE TRANSIENTE COM BUFFER CIRCULAR ***
+	TransientInfo transient = detectTransientWithBuffer(tps, map);
+	bool isTransient = transient.isValid;
 	
 	// Update current transient info
 	if (isTransient) {
@@ -469,17 +490,27 @@ void WallFuelController::onFastCallback() {
 		}
 	}
 	
-	// Calcular tau e beta - usando direção se configurado
+	// Calcular tau e beta
 	float tau, beta;
-	tau = computeTauWithDirection(m_currentTransient.direction);
-	beta = computeBetaWithDirection(m_currentTransient.direction);
+	tau = computeTau();
+	beta = computeBeta();
 	
 	if (tau < 0.01f || beta < 0.01f) {
 		m_enable = false;
 		return;
 	}
 	
-	float alpha = expf_taylor(-120 / (rpm * tau));
+	// *** CORREÇÃO CRÍTICA: FÓRMULA CORRETA DO ALPHA ***
+	// Alpha = exp(-dt/tau) onde dt é o tempo entre ciclos de combustão
+	// Para motor 4-tempos: dt = 120/rpm segundos por ciclo de combustão
+	float cycleTimeSeconds = 120.0f / rpm;  // Tempo entre ciclos de combustão (4-stroke)
+	float alpha = expf_taylor(-cycleTimeSeconds / tau);
+	
+	// Validação física: alpha deve estar entre 0 e 1
+	alpha = clampF(0.0f, alpha, 1.0f);
+	
+	// Constraint física: beta não pode ser maior que alpha
+	// (não pode depositar mais combustível do que permanece na parede)
 	if (beta > alpha) {
 		beta = alpha;
 	}
@@ -488,33 +519,50 @@ void WallFuelController::onFastCallback() {
 	m_beta = beta;
 	m_enable = true;
 	
-	// Processar o aprendizado se tivermos um transiente e uso de correções direcionais
-	// Usar validação robusta de sensores
+	// *** CORREÇÃO: Processar aprendizado durante TODO o período de monitoramento ***
 	float lambdaValue = Sensor::getOrZero(SensorType::Lambda1);
 	float targetLambda = engine->fuelComputer.targetLambda;
 	float clt = Sensor::getOrZero(SensorType::Clt);
 	
+	// *** GERENCIAMENTO DO ESTADO GLOBAL DE MONITORAMENTO ***
 	if (isTransient) {
-		adaptiveLearning(rpm, map, lambdaValue, targetLambda, isTransient, m_currentTransient.direction, clt);
+		// *** CORREÇÃO: Só iniciar novo monitoramento se não estivermos invalidando ***
+		// A invalidação já foi tratada dentro de adaptiveLearning()
+		// Aqui só iniciamos se globalMonitoring estiver false (não há invalidação)
+		if (!globalMonitoring) {
+			// Novo transiente detectado - iniciar monitoramento global
+			globalMonitoring = true;
+			monitoringDirection = m_currentTransient.direction;
+			lastTransientDirection = m_currentTransient.direction;
+		} else {
+			monitoring = false;
+			globalMonitoring = false;
+			bufferIdx = 0;  // Reset buffer
+		}
+	}
+	
+	// Chamar adaptiveLearning sempre que estivermos em monitoramento global
+	if (globalMonitoring) {
+		adaptiveLearning(rpm, map, lambdaValue, targetLambda, isTransient, monitoringDirection, clt);
 	}
 }
 
 WallFuelController::WallFuelController() : 
-	m_filterBufferIdx(0), m_filterBufferFilled(false),
 	bufferIdx(0), bufferMaxSize(200), monitoring(false), pendingWwSave(false),
 	currentTransientDirection(TransientDirection::NONE), lastTransientDirection(TransientDirection::NONE),
-	lastImmediateError(0.0f), lastProlongedError(0.0f) {
+	globalMonitoring(false), monitoringDirection(TransientDirection::NONE),
+	lastImmediateError(0.0f), lastProlongedError(0.0f),
+	transientInitialMapIdx(0), transientInitialRpmIdx(0) {
+	
+	// Inicializar timers
+	m_transientCooldownTimer.reset();
+	m_monitoringTimeoutTimer.reset();
 	
 	// Inicializar buffers
 	for (int i = 0; i < WW_BUFFER_MAX; i++) {
 		lambdaBuffer[i] = 1.0f;  // Valor neutro em vez de zero
 		rpmBuffer[i] = 0.0f;
 		mapBuffer[i] = 0.0f;
-	}
-	
-	// Initialize transient filter buffer
-	for (int i = 0; i < 10; i++) {
-		m_transientFilterBuffer[i] = 0.0f;
 	}
 	
 	// Inicializar status simplificado de aprendizado de todas as células
@@ -524,6 +572,88 @@ WallFuelController::WallFuelController() :
 			tauLearningStatus[i][j] = SimpleLearningStatus();
 		}
 	}
+}
+
+// *** NOVA IMPLEMENTAÇÃO: DETECÇÃO DE TRANSIENTE COM BUFFER CIRCULAR ***
+TransientInfo WallFuelController::detectTransientWithBuffer(float tps, float map) {
+	TransientInfo result;
+	
+	// Adicionar amostra atual ao buffer circular
+	m_transientBuffer.addSample(tps, map);
+	
+	// Verificar se temos amostras suficientes
+	if (!m_transientBuffer.hasEnoughSamples()) {
+		return result; // Retorna transiente inválido se não temos dados suficientes
+	}
+	
+	// Verificar cooldown para evitar detecções muito frequentes
+	if (!m_transientCooldownTimer.hasElapsedMs(50)) { // 50ms cooldown mínimo
+		return result;
+	}
+	
+	// *** CORREÇÃO: Calcular derivadas com conversão correta para unidades por segundo ***
+	// Callback é chamado a cada ~5ms, então 1 amostra = 5ms
+	const float CALLBACK_PERIOD_MS = 5.0f;
+	const float MS_TO_SECONDS = 1000.0f;
+	
+	// Calcular derivadas em unidades corretas (%/s e kPa/s)
+	float tpsDerivativeShort = m_transientBuffer.calculateTpsDerivative(5) * (MS_TO_SECONDS / (5 * CALLBACK_PERIOD_MS));   // %/s
+	float mapDerivativeShort = m_transientBuffer.calculateMapDerivative(5) * (MS_TO_SECONDS / (5 * CALLBACK_PERIOD_MS));   // kPa/s
+	float tpsDerivativeMedium = m_transientBuffer.calculateTpsDerivative(10) * (MS_TO_SECONDS / (10 * CALLBACK_PERIOD_MS)); // %/s
+	float mapDerivativeMedium = m_transientBuffer.calculateMapDerivative(10) * (MS_TO_SECONDS / (10 * CALLBACK_PERIOD_MS)); // kPa/s
+	float tpsDerivativeLong = m_transientBuffer.calculateTpsDerivative(20) * (MS_TO_SECONDS / (20 * CALLBACK_PERIOD_MS));   // %/s
+	float mapDerivativeLong = m_transientBuffer.calculateMapDerivative(20) * (MS_TO_SECONDS / (20 * CALLBACK_PERIOD_MS));   // kPa/s
+	
+	// Thresholds da configuração (já em unidades corretas)
+	float tpsThreshold = engineConfiguration->wwTpsThreshold;  // %/s
+	float mapThreshold = engineConfiguration->wwMapThreshold;  // kPa/s
+	
+	// *** LÓGICA DE DETECÇÃO MELHORADA ***
+	// Usar múltiplas janelas para detectar transientes de diferentes velocidades
+	
+	// Transiente rápido (janela curta)
+	bool fastPositive = (tpsDerivativeShort > tpsThreshold * 2.0f) || (mapDerivativeShort > mapThreshold * 2.0f);
+	bool fastNegative = (tpsDerivativeShort < -tpsThreshold * 2.0f) || (mapDerivativeShort < -mapThreshold * 2.0f);
+	
+	// Transiente médio (janela média)
+	bool mediumPositive = (tpsDerivativeMedium > tpsThreshold) || (mapDerivativeMedium > mapThreshold);
+	bool mediumNegative = (tpsDerivativeMedium < -tpsThreshold) || (mapDerivativeMedium < -mapThreshold);
+	
+	// Transiente lento (janela longa) - mais sensível
+	bool slowPositive = (tpsDerivativeLong > tpsThreshold * 0.5f) || (mapDerivativeLong > mapThreshold * 0.5f);
+	bool slowNegative = (tpsDerivativeLong < -tpsThreshold * 0.5f) || (mapDerivativeLong < -mapThreshold * 0.5f);
+	
+	// Combinar detecções - qualquer janela pode detectar um transiente
+	bool isPositive = fastPositive || mediumPositive || slowPositive;
+	bool isNegative = fastNegative || mediumNegative || slowNegative;
+	
+	// Evitar detecção simultânea de positivo e negativo
+	if (isPositive && isNegative) {
+		// Se ambos são detectados, usar a janela média como desempate
+		if (fabsf(tpsDerivativeMedium) > fabsf(mapDerivativeMedium)) {
+			isPositive = tpsDerivativeMedium > 0;
+			isNegative = tpsDerivativeMedium < 0;
+		} else {
+			isPositive = mapDerivativeMedium > 0;
+			isNegative = mapDerivativeMedium < 0;
+		}
+	}
+	
+	if (isPositive) {
+		result.direction = TransientDirection::POSITIVE;
+		result.isValid = true;
+		result.tpsRate = tpsDerivativeMedium; // Usar janela média para reportar
+		result.mapRate = mapDerivativeMedium;
+		m_transientCooldownTimer.reset(); // Reset cooldown
+	} else if (isNegative) {
+		result.direction = TransientDirection::NEGATIVE;
+		result.isValid = true;
+		result.tpsRate = tpsDerivativeMedium; // Usar janela média para reportar
+		result.mapRate = mapDerivativeMedium;
+		m_transientCooldownTimer.reset(); // Reset cooldown
+	}
+	
+	return result;
 }
 
 // Função para calcular tamanho ótimo do buffer baseado na nova estratégia de janelas
@@ -562,7 +692,7 @@ int WallFuelController::calculateOptimalBufferSize(float tau, float rpm) {
     return optimalSamples;
 }
 
-// Implementação da função de suavização de tabelas de correção
+// *** CORREÇÃO: Implementação correta da função de suavização para scaled_channel ***
 void WallFuelController::smoothCorrectionTable(scaled_channel<uint8_t, 100, 1> table[WW_CORRECTION_MAP_BINS][WW_CORRECTION_RPM_BINS], int centerI, int centerJ, float intensity) {
     // Aplicar suavização simples nas células adjacentes
     // intensity: 0.0 = sem suavização, 1.0 = suavização máxima
@@ -578,7 +708,8 @@ void WallFuelController::smoothCorrectionTable(scaled_channel<uint8_t, 100, 1> t
     
     intensity = clampF(0.0f, intensity, 1.0f);
     
-    uint8_t centerValue = table[centerI][centerJ]; // Corrected: [i][j] = [MAP][RPM]
+    // *** CORREÇÃO: Trabalhar com valores float para scaled_channel ***
+    float centerValue = table[centerI][centerJ]; // scaled_channel converte automaticamente
     
     // Aplicar suavização para células adjacentes
     for (int di = -1; di <= 1; di++) {
@@ -590,7 +721,7 @@ void WallFuelController::smoothCorrectionTable(scaled_channel<uint8_t, 100, 1> t
             
             // Verificar limites
             if (ni >= 0 && ni < WW_CORRECTION_MAP_BINS && nj >= 0 && nj < WW_CORRECTION_RPM_BINS) {
-                uint8_t neighborValue = table[ni][nj]; // Corrected: [MAP][RPM]
+                float neighborValue = table[ni][nj]; // scaled_channel converte automaticamente
                 
                 // Aplicar suavização ponderada baseada na distância
                 float weight = intensity;
@@ -599,173 +730,13 @@ void WallFuelController::smoothCorrectionTable(scaled_channel<uint8_t, 100, 1> t
                 }
                 
                 // Interpolação linear entre valor atual e valor central
-                uint8_t newValue = (uint8_t)(neighborValue * (1.0f - weight) + centerValue * weight);
-                table[ni][nj] = newValue; // Corrected: [MAP][RPM]
+                float newValue = neighborValue * (1.0f - weight) + centerValue * weight;
+                
+                // *** CORREÇÃO: Aplicar limites físicos antes de atribuir ***
+                newValue = clampF(0.5f, newValue, 2.0f);
+                
+                table[ni][nj] = newValue; // scaled_channel converte automaticamente para uint8_t
             }
         }
     }
-}
-
-// Enhanced Transient Detection Implementation
-TransientInfo WallFuelController::detectTransientEnhanced(float tps, float map, float rpm) {
-	// Note: rpm parameter reserved for future RPM-dependent transient detection
-	(void)rpm; // Suppress unused parameter warning
-	
-	TransientInfo result;
-	
-	// Get configurable parameters with fallback defaults
-	float tpsThreshold = engineConfiguration->wwTpsThreshold > 0 ? engineConfiguration->wwTpsThreshold : 3.0f;
-	float mapThreshold = engineConfiguration->wwMapThreshold > 0 ? engineConfiguration->wwMapThreshold : 15.0f;
-	uint16_t windowMs = engineConfiguration->wwTransientDetectionWindowMs > 0 ? engineConfiguration->wwTransientDetectionWindowMs : 200;
-	
-	// Calculate window size in samples
-	constexpr float callbackPeriod = FAST_CALLBACK_PERIOD_MS; // in ms
-	int windowSamples = (int)(windowMs / callbackPeriod);
-	windowSamples = clampF(10, windowSamples, 100); // Reasonable limits
-	
-	// Static buffers for rate calculation
-	static float tpsDetectionBuffer[100] = {0};
-	static float mapDetectionBuffer[100] = {0};
-	static int detectionBufIdx = 0;
-	static bool detectionBufferFilled = false;
-	
-	// Store current values
-	tpsDetectionBuffer[detectionBufIdx] = tps;
-	mapDetectionBuffer[detectionBufIdx] = map;
-	
-	// Calculate rates if buffer has enough data
-	if (detectionBufferFilled || detectionBufIdx >= windowSamples) {
-		int oldestIdx = (detectionBufIdx - windowSamples + 100) % 100;
-		float tpsDelta = tps - tpsDetectionBuffer[oldestIdx];
-		float mapDelta = map - mapDetectionBuffer[oldestIdx];
-		float timeWindow = windowSamples * callbackPeriod / 1000.0f; // Convert to seconds
-		
-		result.tpsRate = tpsDelta / timeWindow; // %/s
-		result.mapRate = mapDelta / timeWindow; // kPa/s
-		
-		// Determine direction and intensity
-		bool isPositive = result.tpsRate > tpsThreshold || result.mapRate > mapThreshold;
-		bool isNegative = result.tpsRate < -tpsThreshold || result.mapRate < -mapThreshold;
-		
-		if (isPositive) {
-			result.direction = TransientDirection::POSITIVE;
-			result.intensity = classifyTransientIntensity(result.tpsRate, result.mapRate);
-			result.isValid = true;
-		} else if (isNegative) {
-			result.direction = TransientDirection::NEGATIVE;
-			result.intensity = classifyTransientIntensity(-result.tpsRate, -result.mapRate);
-			result.isValid = true;
-		}
-		
-		// Apply filtering if enabled
-		if (engineConfiguration->wwEnableTransientFiltering && result.isValid) {
-			float combinedRate = sqrtf(result.tpsRate * result.tpsRate + result.mapRate * result.mapRate);
-			result.isValid = applyTransientFiltering(combinedRate);
-		}
-	}
-	
-	// Update buffer index
-	detectionBufIdx = (detectionBufIdx + 1) % 100;
-	if (detectionBufIdx == 0) detectionBufferFilled = true;
-	
-	return result;
-}
-
-bool WallFuelController::isTransientValid(const TransientInfo& transient) {
-	if (!transient.isValid) return false;
-	
-	// CORREÇÃO: Verificação de timeout simplificada e mais robusta
-	// Usar timeout apenas se configurado, caso contrário aceitar todos os transientes válidos
-	uint16_t timeoutMs = engineConfiguration->wwTransientTimeoutMs;
-	if (timeoutMs > 0) {
-		if (!m_transientTimer.hasElapsedMs(timeoutMs)) {
-			return false; // Ainda dentro do período de timeout
-		}
-	}
-	
-	// CORREÇÃO: Remover verificação de duração mínima que estava causando problemas
-	// A duração é calculada durante o transiente, não antes dele começar
-	// Esta verificação estava rejeitando transientes válidos prematuramente
-	
-	// Reset timer for next transient
-	m_transientTimer.reset();
-	return true;
-}
-
-TransientIntensity WallFuelController::classifyTransientIntensity(float tpsRate, float mapRate) {
-	// Get configurable thresholds with fallback defaults
-	float lightTps = engineConfiguration->wwTpsThresholdLight > 0 ? engineConfiguration->wwTpsThresholdLight : 2.0f;
-	float lightMap = engineConfiguration->wwMapThresholdLight > 0 ? engineConfiguration->wwMapThresholdLight : 8.0f;
-	float heavyTps = engineConfiguration->wwTpsThresholdHeavy > 0 ? engineConfiguration->wwTpsThresholdHeavy : 15.0f;
-	float heavyMap = engineConfiguration->wwMapThresholdHeavy > 0 ? engineConfiguration->wwMapThresholdHeavy : 60.0f;
-	
-	// Use absolute values for classification
-	float absTpsRate = fabsf(tpsRate);
-	float absMapRate = fabsf(mapRate);
-	
-	// Heavy transient: either TPS or MAP exceeds heavy threshold
-	if (absTpsRate > heavyTps || absMapRate > heavyMap) {
-		return TransientIntensity::HEAVY;
-	}
-	
-	// Light transient: both TPS and MAP are below normal but above light threshold
-	if (absTpsRate <= lightTps && absMapRate <= lightMap) {
-		return TransientIntensity::LIGHT;
-	}
-	
-	// Normal transient: everything else
-	return TransientIntensity::NORMAL;
-}
-
-bool WallFuelController::applyTransientFiltering(float rate) {
-	if (!engineConfiguration->wwEnableTransientFiltering) {
-		return true; // No filtering
-	}
-	
-	uint8_t filterSamples = engineConfiguration->wwTransientFilterSamples > 0 ? 
-							engineConfiguration->wwTransientFilterSamples : 3;
-	filterSamples = clampF(1, filterSamples, 10);
-	
-	// Store rate in filter buffer
-	m_transientFilterBuffer[m_filterBufferIdx] = rate;
-	m_filterBufferIdx = (m_filterBufferIdx + 1) % 10;
-	
-	if (m_filterBufferIdx == 0) {
-		m_filterBufferFilled = true;
-	}
-	
-	// Need enough samples for filtering
-	if (!m_filterBufferFilled && m_filterBufferIdx < filterSamples) {
-		return false;
-	}
-	
-	// Check if enough recent samples exceed threshold
-	int validSamples = 0;
-	int samplesToCheck = m_filterBufferFilled ? filterSamples : m_filterBufferIdx;
-	
-	for (int i = 0; i < samplesToCheck; i++) {
-		int idx = (m_filterBufferIdx - 1 - i + 10) % 10;
-		if (m_transientFilterBuffer[idx] > 0) { // Any positive rate
-			validSamples++;
-		}
-	}
-	
-	// Require at least 60% of samples to be valid
-	return (float)validSamples / samplesToCheck >= 0.6f;
-}
-
-void WallFuelController::updateTransientDuration() {
-	if (m_currentTransient.direction != TransientDirection::NONE) {
-		if (!m_transientDurationTimer.hasElapsedMs(0)) {
-			// Timer was just started
-			m_transientDurationTimer.reset();
-			m_currentTransient.duration = 0;
-		} else {
-			// Update duration (convert from microseconds to milliseconds)
-			m_currentTransient.duration = m_transientDurationTimer.getElapsedUs() / 1000.0f;
-		}
-	} else {
-		// No active transient, reset timer
-		m_transientDurationTimer.reset();
-	}
 }
