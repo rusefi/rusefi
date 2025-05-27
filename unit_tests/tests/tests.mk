@@ -191,3 +191,4 @@ TESTS_SRC_CPP = \
 	tests/test_trip_odometer.cpp \
 	tests/controllers/modules/map_averaging/test_map_averaging.cpp \
 	tests/util/test_utils.cpp \
+	tests/controllers/algo/test_engine_cylinder.cpp
