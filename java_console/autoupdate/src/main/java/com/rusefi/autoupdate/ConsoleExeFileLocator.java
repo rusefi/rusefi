@@ -1,9 +1,50 @@
 package com.rusefi.autoupdate;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.core.net.JarFileUtil;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Optional;
+import java.util.Properties;
+
+import static com.devexperts.logging.Logging.getLogging;
+
 public class ConsoleExeFileLocator {
+    private static final Logging log = getLogging(ConsoleExeFileLocator.class);
+
+    private static final String INSTALLATION_PROPERTIES_FILE_NAME = "installation.properties";
+
+    private static final String CONSOLE_EXE_FILE_NAME_PROPERTY_NAME = "console-exe-file";
+
     String getConsoleExeFileName() {
-        return JarFileUtil.getJarFileNamePrefix() + "_console.exe";
+        final Optional<Properties> installationProperties = loadInstallationProperties();
+        if (installationProperties.isPresent()) {
+            final String consoleExeFileName = installationProperties.get().getProperty(
+                CONSOLE_EXE_FILE_NAME_PROPERTY_NAME
+            );
+            if (consoleExeFileName != null) {
+                return consoleExeFileName;
+            } else {
+                log.info(String.format("`%s` property is not found", CONSOLE_EXE_FILE_NAME_PROPERTY_NAME));
+            }
+        } else {
+            log.info(String.format("It looks like `%s` file is missed", INSTALLATION_PROPERTIES_FILE_NAME));
+        }
+        final String defaultConsoleExeFileName = JarFileUtil.getJarFileNamePrefix() + "_console.exe";
+        log.info(String.format("We are using default console exe file name: `%s`", defaultConsoleExeFileName));
+        return defaultConsoleExeFileName;
+    }
+
+    private static Optional<Properties> loadInstallationProperties() {
+        final Properties result = new Properties();
+        try {
+            result.load(Files.newInputStream(Paths.get(INSTALLATION_PROPERTIES_FILE_NAME)));
+            return Optional.of(result);
+        } catch (final IOException e) {
+            log.error(String.format("Failed to load properties from `%s` file.", INSTALLATION_PROPERTIES_FILE_NAME), e);
+        }
+        return Optional.empty();
     }
 }
