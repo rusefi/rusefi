@@ -184,10 +184,11 @@ void rusEfiFunctionalTest() {
 
 	initFlash();
 
-  printf("[CannedTunes]: %d", (int)getLastEngineType());
+  printf("[CannedTunes]: %d \n", (int)getLastEngineType());
   // [CannedTunes] let's export all just for simplicity. See also WriteSimulatorConfiguration.java
 	for (size_t typeIndex = 0;typeIndex<(size_t)getLastEngineType();typeIndex++) {
     engine_type_e type = (engine_type_e)typeIndex;
+		printf("[CannedTunes]: testing engineConfig: %d \n", (int)type);
 		writeEngineTypeDefaultConfig(type);
 	}
 
