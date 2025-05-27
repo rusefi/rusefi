@@ -398,15 +398,21 @@ static LuaThread luaThread;
 #endif
 
 void startLua() {
-#if defined(STM32F4) && !defined(EFI_IS_F42x)
+	// stm32f4xx can have optional ram3 region
+#if defined(STM32F4)
+	// Some boads can be equiped with STM32F42x only, in this case we allow linker to take care of ram3
+#if !defined(EFI_IS_F42x)
+	// cute hack: let's check at runtime if you are a lucky owner of board with extra RAM and use that extra RAM for extra Lua
 	// we need this on microRusEFI for sure
 	// definitely should NOT have this on Proteus
 	// on Hellen a bit of open question what's the best track
-	// cute hack: let's check at runtime if you are a lucky owner of microRusEFI with extra RAM and use that extra RAM for extra Lua
 	if (isStm32F42x()) {
-		char *buffer = (char *)0x20020000;
-		userHeap.reinit(buffer, 60000);
+		// This is safe to use base and end as we define ram3 for all F4 chips
+		extern char __ram3_base__[];
+		extern char __ram3_end__[];
+		userHeap.reinit(__ram3_base__, __ram3_base__ - __ram3_end__);
 	}
+#endif // !EFI_IS_F42x
 #endif // STM32F4
 
 #if LUA_USER_HEAP > 1
