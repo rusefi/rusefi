@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22824">
+    <page number="0" size="22784">
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
         <constant name="accelerometerSpiDevice">"Off"</constant>
@@ -4447,48 +4447,6 @@ end</constant>
         <constant name="unusedFancy7">"false"</constant>
         <constant name="unusedFancy8">"false"</constant>
         <constant name="unusedFancy9">"false"</constant>
-        <constant cols="1" digits="0" name="unusedOftenChangesDuringFirmwareUpdate" rows="40">
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-         0.0
-</constant>
         <constant name="unusedOverrideCrankingIacSetting">"false"</constant>
         <constant name="unusedSuppressWboWorkaround7048">"false"</constant>
         <constant digits="0" name="unusedWastgate0" units="">0.0</constant>
@@ -4982,7 +4940,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250523" nPages="1" signature="rusEFI master.2025.05.27.f407-discovery.614639337" version="5.0"/>
+    <versionInfo firmwareInfo="20250523" nPages="1" signature="rusEFI master.2025.05.27.f407-discovery.2862805064" version="5.0"/>
     <bibliography author="rusEFI 20250523" writeDate="date"/>
     <settings/>
     <userComments/>
