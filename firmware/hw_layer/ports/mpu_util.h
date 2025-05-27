@@ -18,7 +18,6 @@ void causeHardFault();
 // If mcu can erase/write part of its internal memory without stalling CPU
 bool mcuCanFlashWhileRunning();
 
-bool ramReadProbe(volatile const char *read_address);
 #if defined(STM32F4)
 bool isStm32F42x();
 #endif // STM32F4
