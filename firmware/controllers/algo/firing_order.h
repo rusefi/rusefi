@@ -49,7 +49,7 @@ typedef enum __attribute__ ((__packed__)) {
 
 	// 8 cylinder
 	FO_1_8_4_3_6_5_7_2 = 5, // SBC, Dodge
-	FO_1_8_7_2_6_5_4_3 = 11, // GM Gen. 5 LT1
+	FO_1_8_7_2_6_5_4_3 = 11, // GM Gen. 3, 4, 5 LT1
 	FO_1_5_4_2_6_3_7_8 = 12, // Ford Mustang
 	FO_1_2_7_8_4_5_6_3 = 19,
 	FO_1_3_7_2_6_5_4_8 = 20, // Ford 5.0 HO and 351W

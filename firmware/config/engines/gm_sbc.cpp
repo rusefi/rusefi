@@ -80,6 +80,7 @@ static void gmRailSensor() {
 
 void setGmSbc() {
 	engineConfiguration->cylindersCount = 8;
+  // that's original firing order before gen 3
 	engineConfiguration->firingOrder = FO_1_8_4_3_6_5_7_2;
 	engineConfiguration->displacement = 5.2;
 
