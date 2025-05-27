@@ -1847,8 +1847,7 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 	can_wbo_type_e wboType1;
 	can_wbo_type_e wboType2;
 
-#define END_OF_CALIBRATION_PADDING 40
-uint8_t[END_OF_CALIBRATION_PADDING] unusedOftenChangesDuringFirmwareUpdate;;"units", 1, 0, 0, 1, 0, noMsqSave
+! historically 'unusedOftenChangesDuringFirmwareUpdate' was here - now that's just an anchor reminding where to insert new fields
 
 ! end of engine_configuration_s
 end_struct
