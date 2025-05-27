@@ -10,11 +10,31 @@
 void OneCylinder::updateCylinderNumber(uint8_t index, uint8_t cylinderNumber) {
     m_cylinderIndex = index;
     m_cylinderNumber = cylinderNumber;
+
+    // base = position of this cylinder in the firing order.
+    // We get a cylinder every n-th of an engine cycle where N is the number of cylinders
+    m_baseAngleOffset = engine->engineState.engineCycle * index / engineConfiguration->cylindersCount;
+
     m_valid = true;
 }
 
 void OneCylinder::invalidCylinder() {
     m_valid = false;
+}
+
+angle_t OneCylinder::getAngleOffset() const {
+    if (!m_valid) {
+        return 0;
+    }
+
+    // Plus or minus any adjustment if this is an odd-fire engine
+    auto adjustment = engineConfiguration->timing_offset_cylinder[m_cylinderNumber];
+
+    auto result = m_baseAngleOffset + adjustment;
+
+    assertAngleRange(result, "getAngleOffset", ObdCode::CUSTOM_ERR_CYL_ANGLE);
+
+    return result;
 }
 
 void EngineCylinders::updateCylinders() {
