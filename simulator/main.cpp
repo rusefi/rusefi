@@ -260,14 +260,3 @@ int intFlashWrite(flashaddr_t address, const char* buffer, size_t size) {
 
 	return HAL_SUCCESS;
 }
-
-// Write from file in to memory
-// void simulatorWriteFlash(const persistent_config_container_s& cfg) {
-// 	std::ofstream flash;
-// 	flash.open(simFileName, std::ios::binary | std::ios::trunc);
-
-// 	const char* ptr = reinterpret_cast<const char*>(&cfg);
-// 	flash.write(ptr, sizeof(cfg));
-
-// 	flash.close();
-// }
