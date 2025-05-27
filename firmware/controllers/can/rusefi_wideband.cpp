@@ -27,27 +27,6 @@ static size_t getWidebandBus() {
 
 static thread_t* waitingBootloaderThread = nullptr;
 
-#if (RUSEFI_WIDEBAND_VERSION <= 0xA0)
-namespace wbo
-{
-
-// TODO: move to rusefi_wideband.h
-struct PongData
-{
-    uint8_t hwId;
-    uint8_t Version;
-
-    // FW build date
-    uint8_t year; // starting from 2000
-    uint8_t month;
-    uint8_t day;
-
-    uint8_t reserved[3];
-};
-
-} // namespace wbo
-#endif
-
 void handleWidebandCan(const CANRxFrame& frame) {
 	// Bootloader acks with address 0x727573 aka ascii "rus"
 	if (CAN_EID(frame) != WB_ACK) {
