@@ -235,7 +235,7 @@ size_t getCylinderNumberAtIndex(size_t index) {
 	}
 	if (engineConfiguration->cylindersCount != firingOrderLength) {
 		// May 2020 this somehow still happens with functional tests, maybe race condition?
-		firmwareError(ObdCode::CUSTOM_OBD_WRONG_FIRING_ORDER, "Wrong cyl count for firing order, expected %d cylinders", firingOrderLength);
+		firmwareError(ObdCode::CUSTOM_OBD_WRONG_FIRING_ORDER, "Wrong cyl count for firing order, expected %d cylinders, got %d", firingOrderLength, engineConfiguration->cylindersCount);
 		return 0;
 	}
 
