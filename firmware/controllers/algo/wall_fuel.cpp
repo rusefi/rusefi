@@ -10,7 +10,7 @@
 #include "efitime.h"
 #include <rusefi/interpolation.h>
 
-// *** WALL WETTING ADAPTIVE LEARNING - NOVA IMPLEMENTAÇÃO ***
+// *** WALL WETTING ADAPTIVE LEARNING - IMPLEMENTAÇÃO SIMPLIFICADA ***
 //
 // MUDANÇAS PRINCIPAIS:
 // 1. Separação clara de janelas temporais para Beta e Tau
@@ -33,8 +33,6 @@
 // - Redução de interferência entre parâmetros
 // - Melhor resposta a diferentes tipos de transientes
 // - Diagnóstico mais claro dos problemas
-
-// Note: Buffers são agora membros de instância, não estáticos
 
 void WallFuel::resetWF() {
 	wallFuel = 0;
@@ -164,27 +162,15 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 		return; // Aprendizado adaptativo desabilitado
 	}
 
-	#if WW_ENABLE_ROBUST_VALIDATION
-	// Validação robusta de dados antes de qualquer processamento (opcional)
-	LearningDataQuality quality = validateLearningData(lambda, targetLambda, clt, map, rpm);
-	
-	if (!isLearningDataValid(quality)) {
-		monitoring = false;
-		return;
-	}
-	#else
-	// Validação básica simplificada
-	if (lambda < MIN_LAMBDA || lambda > MAX_LAMBDA || std::isnan(lambda)) {
+	if (clt > engineConfiguration->wwMaxCoolantTemp || clt < engineConfiguration->wwMinCoolantTemp) {
 		monitoring = false;
 		return;
 	}
 	
-	// Check basic conditions
-	if (clt < 70.0f || fabsf(lambda - targetLambda) / targetLambda > 0.15f) {
+	if (map < engineConfiguration->wwMinMapForLearning) {
 		monitoring = false;
 		return;
 	}
-	#endif
 
 	auto rpmBin = priv::getBin(rpm, config->wwCorrectionRpmBins);
 	auto mapBin = priv::getBin(map, config->wwCorrectionMapBins);
@@ -211,12 +197,6 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 		if (bufferIdx < bufferMaxSize) {
 			// Simplified validation
 			bool sampleValid = true;
-			#if WW_ENABLE_ROBUST_VALIDATION
-			LearningDataQuality sampleQuality = validateLearningData(lambda, targetLambda, clt, map, rpm);
-			sampleValid = isLearningDataValid(sampleQuality);
-			#else
-			sampleValid = (lambda >= MIN_LAMBDA && lambda <= MAX_LAMBDA && !std::isnan(lambda));
-			#endif
 			
 			if (sampleValid) {
 				lambdaBuffer[bufferIdx] = lambda;
@@ -289,16 +269,12 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 			(void)debugBetaSamples;
 			(void)debugTauSamples;
 			
-			// Parâmetros de aprendizado
-			float maxStep = 0.03f;   // Reduzido para 3% para evitar oscilações
+			// Parâmetros de aprendizado - SIMPLIFICADO sem sistema de confiança
+			float maxStep = 0.06f;   // Reduzido controlado para evitar oscilações
 			
-			// Verificar confiança da célula antes de aplicar correção
-			float betaConfidence = getCellConfidence(i, j, true);
-			float tauConfidence = getCellConfidence(i, j, false);
-			
-			// Reduzir taxa de aprendizado para células com baixa confiança
-			float betaLearnRate = engineConfiguration->wwBetaLearningRate * (0.3f + 0.7f * betaConfidence / 255.0f);
-			float tauLearnRate = engineConfiguration->wwTauLearningRate * (0.3f + 0.7f * tauConfidence / 255.0f);
+			// Usar taxas de aprendizado diretas da configuração
+			float betaLearnRate = engineConfiguration->wwBetaLearningRate;
+			float tauLearnRate = engineConfiguration->wwTauLearningRate;
 			
 			// *** NOVA LÓGICA: Ajustes baseados nos erros específicos de Beta e Tau ***
 			float deltaBeta = 0.0f;
@@ -329,48 +305,26 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 			deltaTau = clampF(-maxStep, deltaTau, maxStep);
 			
 			// Atualizar tabelas de correção
-			float currentBetaValue = config->wwBetaCorrection[i][j] * 0.01f;
-			float currentTauValue = config->wwTauCorrection[i][j] * 0.01f;
+			float currentBetaValue = config->wwBetaCorrection[i][j];
+			float currentTauValue = config->wwTauCorrection[i][j];
 			
 			float newBetaValue = currentBetaValue * (1.0f + deltaBeta);
 			float newTauValue = currentTauValue * (1.0f + deltaTau);
 			
-			newBetaValue = clampF(0.5f, newBetaValue, 2.0f);
-			newTauValue = clampF(0.5f, newTauValue, 2.0f);
+			newBetaValue = clampF(0.0f, newBetaValue, 2.55f);
+			newTauValue = clampF(0.0f, newTauValue, 2.55f);
 			
 			// Converter de volta para valor inteiro para armazenamento
-			config->wwBetaCorrection[i][j] = (uint8_t)(newBetaValue * 100.0f);
-			config->wwTauCorrection[i][j] = (uint8_t)(newTauValue * 100.0f);
-			
-			#if WW_ENABLE_ROBUST_VALIDATION
-			// Atualizar confiança das células (só se habilitado)
-			updateCellConfidence(i, j, true, deltaBeta, quality);
-			updateCellConfidence(i, j, false, deltaTau, quality);
-			#else
-			// Simple confidence update
-			betaLearningStatus[i][j].confidence = minI(255, betaLearningStatus[i][j].confidence + 10);
-			tauLearningStatus[i][j].confidence = minI(255, tauLearningStatus[i][j].confidence + 10);
-			betaLearningStatus[i][j].sampleCount = minI(255, betaLearningStatus[i][j].sampleCount + 1);
-			tauLearningStatus[i][j].sampleCount = minI(255, tauLearningStatus[i][j].sampleCount + 1);
-			#endif
+			config->wwBetaCorrection[i][j] = (newBetaValue);
+			config->wwTauCorrection[i][j] = (newTauValue);
 			
 			// Optional smoothing (simplified)
 			float smoothIntensity = 0.1f; // Default 10% smoothing
 			smoothCorrectionTable(config->wwBetaCorrection, i, j, smoothIntensity);
 			smoothCorrectionTable(config->wwTauCorrection, i, j, smoothIntensity);
 			
-			#if WW_ENABLE_DRIFT_RESET
-			// Incrementar contador de ciclos de ajuste
-			totalAdjustmentCycles++;
-			#endif
-			
 			monitoring = false;
 			pendingWwSave = true;
-			
-			#if WW_ENABLE_ROBUST_VALIDATION
-			// Verificar se é necessário reset de drift (só se habilitado)
-			checkAndResetDrift();
-			#endif
 		}
 	}
 }
@@ -536,16 +490,14 @@ void WallFuelController::onFastCallback() {
 	
 	// Processar o aprendizado se tivermos um transiente e uso de correções direcionais
 	// Usar validação robusta de sensores
-	auto lambdaSensor = Sensor::get(SensorType::Lambda1);
+	float lambdaValue = Sensor::getOrZero(SensorType::Lambda1);
 	float targetLambda = engine->fuelComputer.targetLambda;
 	float clt = Sensor::getOrZero(SensorType::Clt);
 	
-	if (isTransient && lambdaSensor.Valid) {
-		adaptiveLearning(rpm, map, lambdaSensor.Value, targetLambda, isTransient, m_currentTransient.direction, clt);
+	if (isTransient) {
+		adaptiveLearning(rpm, map, lambdaValue, targetLambda, isTransient, m_currentTransient.direction, clt);
 	}
 }
-
-// Template instantiation will be done implicitly
 
 WallFuelController::WallFuelController() : 
 	m_filterBufferIdx(0), m_filterBufferFilled(false),
@@ -572,97 +524,7 @@ WallFuelController::WallFuelController() :
 			tauLearningStatus[i][j] = SimpleLearningStatus();
 		}
 	}
-	
-	#if WW_ENABLE_DRIFT_RESET
-	totalAdjustmentCycles = 0;
-	lastResetTimer.reset();
-	#endif
 }
-
-#if WW_ENABLE_ROBUST_VALIDATION
-// Função para validação robusta de dados de aprendizado (opcional)
-LearningDataQuality WallFuelController::validateLearningData(float lambda, float targetLambda, float clt, float map, float /* rpm */) {
-    LearningDataQuality quality;
-    
-    // Get configurable validation parameters with fallback defaults
-    float minClt = engineConfiguration->wwMinCoolantTemp > 0 ? engineConfiguration->wwMinCoolantTemp : 70.0f;
-    float maxClt = engineConfiguration->wwMaxCoolantTemp > 0 ? engineConfiguration->wwMaxCoolantTemp : 110.0f;
-    float minMap = engineConfiguration->wwMinMapForLearning > 0 ? engineConfiguration->wwMinMapForLearning : 30.0f;
-    float minQuality = engineConfiguration->wwMinQualityScore > 0 ? engineConfiguration->wwMinQualityScore : 0.6f;
-    
-    // Validação de lambda
-    quality.lambdaValid = (lambda >= minLambda && lambda <= maxLambda && !std::isnan(lambda));
-    
-    // Validação de estabilidade de lambda (configurável)
-    float lambdaDeviation = fabsf(lambda - targetLambda) / targetLambda;
-    quality.conditionsStable = (lambdaDeviation <= maxDeviation);
-    
-    // Validação de temperatura (configurável)
-    quality.tempAppropriate = (clt >= minClt && clt <= maxClt);
-    
-    // Validação de carga (configurável)
-    quality.loadAppropriate = (map >= minMap);
-    
-    // Cálculo de score de qualidade
-    int validConditions = 0;
-    if (quality.lambdaValid) validConditions++;
-    if (quality.conditionsStable) validConditions++;
-    if (quality.tempAppropriate) validConditions++;
-    if (quality.loadAppropriate) validConditions++;
-    
-    quality.qualityScore = (float)validConditions / 4.0f;
-    
-    return quality;
-}
-
-bool WallFuelController::isLearningDataValid(const LearningDataQuality& quality) {
-
-	return 1;
-    
-}
-
-void WallFuelController::updateCellConfidence(int i, int j, bool isBeta, float adjustment, const LearningDataQuality& quality) { 
-    // Determinar se célula convergiu (configurável)
-    status.isConverged = 1;
-}
-
-void WallFuelController::checkAndResetDrift() {
-    #if WW_ENABLE_DRIFT_RESET
-    // Reset simplificado a cada 30 minutos
-    if (!lastResetTimer.hasElapsedMs(30 * 60 * 1000)) {
-        return;
-    }
-    
-    // Reset simples de células com baixa confiança
-    for (int i = 0; i < WW_CORRECTION_MAP_BINS; i++) {
-        for (int j = 0; j < WW_CORRECTION_RPM_BINS; j++) {
-            if (betaLearningStatus[i][j].confidence < 128) { // < 50%
-                betaLearningStatus[i][j] = SimpleLearningStatus();
-            }
-            if (tauLearningStatus[i][j].confidence < 128) { // < 50%
-                tauLearningStatus[i][j] = SimpleLearningStatus();
-            }
-        }
-    }
-    
-    lastResetTimer.reset();
-    #endif
-}
-
-void WallFuelController::resetCellsWithHighVariance() {
-    // Versão simplificada - apenas reset de células não convergidas
-    for (int i = 0; i < WW_CORRECTION_MAP_BINS; i++) {
-        for (int j = 0; j < WW_CORRECTION_RPM_BINS; j++) {
-            if (!betaLearningStatus[i][j].isConverged) {
-                betaLearningStatus[i][j] = SimpleLearningStatus();
-            }
-            if (!tauLearningStatus[i][j].isConverged) {
-                tauLearningStatus[i][j] = SimpleLearningStatus();
-            }
-        }
-    }
-}
-#endif // WW_ENABLE_ROBUST_VALIDATION
 
 // Função para calcular tamanho ótimo do buffer baseado na nova estratégia de janelas
 int WallFuelController::calculateOptimalBufferSize(float tau, float rpm) {
@@ -744,19 +606,6 @@ void WallFuelController::smoothCorrectionTable(scaled_channel<uint8_t, 100, 1> t
     }
 }
 
-// Funções de diagnóstico
-float WallFuelController::getCellConfidence(int i, int j, bool isBeta) const {
-	if (i >= WW_CORRECTION_MAP_BINS || j >= WW_CORRECTION_RPM_BINS) return 0.0f;
-	// Convert uint8_t confidence (0-255) back to float (0.0-1.0)
-	uint8_t conf = isBeta ? betaLearningStatus[i][j].confidence : tauLearningStatus[i][j].confidence;
-	return clampF(0.3f, (float)conf / 255.0f, 1.0f);
-}
-
-int WallFuelController::getCellSampleCount(int i, int j, bool isBeta) const {
-	if (i >= WW_CORRECTION_MAP_BINS || j >= WW_CORRECTION_RPM_BINS) return 0;
-	return isBeta ? betaLearningStatus[i][j].sampleCount : tauLearningStatus[i][j].sampleCount;
-}
-
 // Enhanced Transient Detection Implementation
 TransientInfo WallFuelController::detectTransientEnhanced(float tps, float map, float rpm) {
 	// Note: rpm parameter reserved for future RPM-dependent transient detection
@@ -825,20 +674,18 @@ TransientInfo WallFuelController::detectTransientEnhanced(float tps, float map, 
 bool WallFuelController::isTransientValid(const TransientInfo& transient) {
 	if (!transient.isValid) return false;
 	
-	// Check timeout between transients
-	uint16_t timeoutMs = engineConfiguration->wwTransientTimeoutMs > 0 ? engineConfiguration->wwTransientTimeoutMs : 500;
-	if (!m_transientTimer.hasElapsedMs(timeoutMs)) {
-		return false;
-	}
-	
-	// Check minimum duration if configured
-	float minDuration = engineConfiguration->wwMinTransientDuration > 0 ? engineConfiguration->wwMinTransientDuration : 0;
-	if (minDuration > 0) {
-		updateTransientDuration();
-		if (m_currentTransient.duration < minDuration) {
-			return false;
+	// CORREÇÃO: Verificação de timeout simplificada e mais robusta
+	// Usar timeout apenas se configurado, caso contrário aceitar todos os transientes válidos
+	uint16_t timeoutMs = engineConfiguration->wwTransientTimeoutMs;
+	if (timeoutMs > 0) {
+		if (!m_transientTimer.hasElapsedMs(timeoutMs)) {
+			return false; // Ainda dentro do período de timeout
 		}
 	}
+	
+	// CORREÇÃO: Remover verificação de duração mínima que estava causando problemas
+	// A duração é calculada durante o transiente, não antes dele começar
+	// Esta verificação estava rejeitando transientes válidos prematuramente
 	
 	// Reset timer for next transient
 	m_transientTimer.reset();

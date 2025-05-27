@@ -10,15 +10,6 @@
 #include <rusefi/timer.h>
 #include "rusefi_types.h"
 
-// Compile-time feature toggles for conditional functionality
-#ifndef WW_ENABLE_ROBUST_VALIDATION
-#define WW_ENABLE_ROBUST_VALIDATION 0  // Disabled by default to save memory
-#endif
-
-#ifndef WW_ENABLE_DRIFT_RESET
-#define WW_ENABLE_DRIFT_RESET 0       // Disabled by default to save memory
-#endif
-
 /**
  * Wall wetting, also known as fuel film
  * See https://github.com/rusefi/rusefi/issues/151 for the theory
@@ -93,18 +84,6 @@ struct SimpleLearningStatus {
 	SimpleLearningStatus() : confidence(0), sampleCount(0), isConverged(false) {}
 };
 
-// Conditional data quality structure - only used when robust validation is enabled
-struct LearningDataQuality {
-	bool lambdaValid;
-	bool conditionsStable;
-	bool tempAppropriate;
-	bool loadAppropriate;
-	float qualityScore;  // 0.0-1.0
-	
-	LearningDataQuality() : lambdaValid(false), conditionsStable(false), 
-						   tempAppropriate(false), loadAppropriate(false), qualityScore(0.0f) {}
-};
-
 class WallFuelController : public IWallFuelController, public EngineModule {
 public:
 	using interface_t = IWallFuelController;
@@ -115,16 +94,12 @@ public:
 	void adaptiveLearning(float rpm, float map, float lambda, float targetLambda, 
 						 bool isTransient, TransientDirection direction, float clt);
 	
-	// Diagnóstico
+	// Diagnóstico simplificado
 	float getLastImmediateError() const { return lastImmediateError; }
 	float getLastProlongedError() const { return lastProlongedError; }
 	TransientDirection getLastTransientDirection() const { return lastTransientDirection; }
 	bool getBetaAdjusted(int i, int j) const { return i < WW_CORRECTION_MAP_BINS && j < WW_CORRECTION_RPM_BINS ? betaLearningStatus[i][j].isConverged : false; }
 	bool getTauAdjusted(int i, int j) const { return i < WW_CORRECTION_MAP_BINS && j < WW_CORRECTION_RPM_BINS ? tauLearningStatus[i][j].isConverged : false; }
-	
-	// Simplified diagnostic methods for memory optimization
-	float getCellConfidence(int i, int j, bool isBeta) const;
-	int getCellSampleCount(int i, int j, bool isBeta) const;
 
 	bool getEnable() const override {
 		return m_enable;
@@ -145,15 +120,6 @@ protected:
 	float computeBeta() const;
 	float computeTauWithDirection(TransientDirection direction) const;
 	float computeBetaWithDirection(TransientDirection direction) const;
-	
-	// Conditional methods - only compiled if robust validation is enabled
-	#if WW_ENABLE_ROBUST_VALIDATION
-	LearningDataQuality validateLearningData(float lambda, float targetLambda, float clt, float map, float rpm);
-	bool isLearningDataValid(const LearningDataQuality& quality);
-	void updateCellConfidence(int i, int j, bool isBeta, float adjustment, const LearningDataQuality& quality);
-	void checkAndResetDrift();
-	void resetCellsWithHighVariance();
-	#endif
 	
 	int calculateOptimalBufferSize(float tau, float rpm);
 	float calculateWeightedAverage(int startIdx, int endIdx, float targetLambda);
@@ -203,12 +169,6 @@ private:
 	// Simplified diagnostics
 	float lastImmediateError;
 	float lastProlongedError;
-	
-	// Optional advanced features - only included if needed
-	#if WW_ENABLE_DRIFT_RESET
-	int totalAdjustmentCycles;
-	Timer lastResetTimer;
-	#endif
 	
 	// Constantes básicas para validação (outras vêm da configuração)
 	static constexpr float MIN_LAMBDA = 0.5f;
