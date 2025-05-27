@@ -10,6 +10,7 @@ void setMitsubishi3A92() {
     engineConfiguration->globalTriggerAngleOffset = -360.0;
 	engineConfiguration->vvtMode[0] = VVT_MITSUBISHI_3A92;
     engineConfiguration->vvtOffsets[0] = 316.0;
+	engineConfiguration->firingOrder = FO_1_2_3;
 
 	engineConfiguration->maxCamPhaseResolveRpm = 1500.0;
 	engineConfiguration->crankingInjectionMode = IM_SEQUENTIAL;
