@@ -27,15 +27,10 @@ class LongTermFuelTrim : public EngineModule{
 	bool ltftTableHelperInit = false;
 	float ltftResult = 1;
 	bool updatedLtft = false;
-	// Novas variáveis para aprimoramentos
+	// Variáveis para filtro EMA
 	float stftEma = 1.0f;
 	bool m_ignitionState = false;
-	// Para detecção regional
-	float regionalErrorBuffer[16]; // Exemplo: buffer para erros por faixa de RPM
-	int regionalErrorCount[16];
-	// Para suavização automática
-	void smoothHoles();
-	void applyRegionalCorrection(float load, float rpm, float correction);
+	
 	bool canLearn();
 	float filterStft(float stftRaw);
 	

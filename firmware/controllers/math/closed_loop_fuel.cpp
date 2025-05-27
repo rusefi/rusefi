@@ -44,37 +44,6 @@ bool LongTermFuelTrim::canLearn() {
 	return true;
 }
 
-void LongTermFuelTrim::applyRegionalCorrection(float load, float rpm, float correction) {
-	// Exemplo: aplicar correção em toda a faixa de RPM se padrão consistente detectado
-	if(load < 10.0f) return;
-	int binRpm = priv::getBin(rpm, config->veRpmBins).Idx;
-	int window = config->ltftRegionalWindow;
-	float intensity = (float)config->ltftRegionalIntensity / 100.0f;
-	for (int i = 0; i < 16; i++) {
-		if (abs(i - binRpm) <= window/2) {
-			for (int j = 0; j < 16; j++) {
-				float weight = 1.0f - (float)abs(i - binRpm) / (window/2 + 1);
-				ltftTableHelper[j][i] *= (1.0f + correction * weight * intensity);
-			}
-		}
-	}
-}
-
-void LongTermFuelTrim::smoothHoles() {
-	// Use the generic smoothTable function with configured intensity
-	//float intensity = (float)config->ltftSmoothingIntensity / 100.0f;
-	//smoothTable<float, 16, 16>(ltftTableHelper, intensity);
-	return;
-}
-
-// Função utilitária para checar se a ignição está ligada
-/*
-static bool isIgnitionOn() {
-	auto ign = engine->module<IgnitionController>()->secondsSinceIgnVoltage() > 1.0f;
-	return ign;
-}
-*/
-
 void LongTermFuelTrim::updateLtft(float load, float rpm) {
 	if (!canLearn()) return;
 	
@@ -92,31 +61,34 @@ void LongTermFuelTrim::updateLtft(float load, float rpm) {
 	int lowRpm = binRpm.Idx;
 	float fracRpm = binRpm.Frac;
 	if (lowLoad > 14 || lowRpm > 14 || fracLoad <= 0.0f || fracLoad >= 1.0f || fracRpm <= 0.0f || fracRpm >= 1.0f) return;
+	
 	float stftRaw = engine->engineState.stftCorrection[0] - 1.0f;
 	float stftFiltered = filterStft(stftRaw);
 	if (fabsf(stftFiltered) > (float)config->ltftStftRejectThreshold / 100.0f) return;
+	
 	auto lambda = Sensor::get(SensorType::Lambda1);
 	float lambdaError = lambda.Value - engine->fuelComputer.targetLambda;
 	if ((stftFiltered > 0.0f && lambdaError < 0.0f) || (stftFiltered < 0.0f && lambdaError > 0.0f)) return;
+	
 	float correctionRate = interpolate3d(
 		config->ltftCorrectionRate,
 		config->veLoadBins, load,
 		config->veRpmBins, rpm
 	) * 0.01f;
+	
 	float correction = correctionRate * 0.005f * (stftFiltered / (fabsf(stftFiltered))) * (1 - powf(10, -20 * (100.0f / config->ltftPermissivity) * fabsf(stftFiltered)));
+	
 	if (fabsf(correction) > fabsf(stftFiltered)) {
 		correction = stftFiltered * stftFiltered / fabsf(stftFiltered);
 	}
+	
 	if (fabsf(correction) <= 0.2f) {
-		// Correção regional se padrão consistente
-		if (fabsf(stftFiltered) > 0.05f) {
-			applyRegionalCorrection(load, rpm, correction);
-		}
-		// Correção bilinear padrão
+		// Aplicar correção bilinear apenas nas 4 células adjacentes
 		ltftTableHelper[lowLoad][lowRpm]     *= (1 + correction * (1-fracLoad) * (1-fracRpm));
 		ltftTableHelper[lowLoad+1][lowRpm]   *= (1 + correction * (fracLoad) * (1-fracRpm));
 		ltftTableHelper[lowLoad][lowRpm+1]   *= (1 + correction * (1-fracLoad) * (fracRpm));
 		ltftTableHelper[lowLoad+1][lowRpm+1] *= (1 + correction * (fracLoad) * (fracRpm));
+		
 		// Clamping
 		for(int i = 0; i < 2; i++){
 			for (int j = 0; j < 2; j++) {
@@ -127,9 +99,9 @@ void LongTermFuelTrim::updateLtft(float load, float rpm) {
 				}
 			}
 		}
+		
 		// Após atualização da tabela, marcar aprendizado pendente
 		updatedLtft = true;
-		smoothHoles();
 	}
 }
 
