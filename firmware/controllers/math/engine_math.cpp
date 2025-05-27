@@ -108,6 +108,8 @@ void prepareOutputSignals() {
 		}
 	}
 
+	EngineCylinders::updateCylinders();
+
 	// Use odd fire wasted spark logic if not two stroke, and an odd fire or odd cylinder # engine
 	getEngineState()->useOddFireWastedSpark = operationMode != TWO_STROKE
 								&& (isOddFire | (engineConfiguration->cylindersCount % 2 == 1));
