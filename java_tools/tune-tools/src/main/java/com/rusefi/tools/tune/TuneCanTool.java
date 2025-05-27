@@ -67,6 +67,7 @@ public class TuneCanTool {
         //writeDiffBetweenLocalTuneFileAndDefaultTune("../1.msq");
 
 //        TuneCanToolRunner.initialize("C:\\stuff\\fw\\generated\\tunerstudio\\generated\\rusefi_.ini");
+        RootHolder.ROOT = "../firmware/";
         TuneCanToolHelper.initialize(TuneContext.iniFileName);
 
 //        writeDiffBetweenLocalTuneFileAndDefaultTune("harley", "C:\\stuff\\fw\\fw-\\generated\\simulator_tune_HARLEY.msq",

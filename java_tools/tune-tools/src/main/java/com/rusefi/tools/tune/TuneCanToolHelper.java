@@ -15,14 +15,6 @@ public class TuneCanToolHelper {
     public static final Set<String> IGNORE_LIST = new TreeSet<>(String.CASE_INSENSITIVE_ORDER);
     protected static void initialize(String iniFileName) {
         TuneCanTool.ini = IniFileModelImpl.readIniFile(iniFileName);
-/*
-        Set<String> allFields = new TreeSet<>();
-        allFields.addAll(ini.allIniFields.keySet());
-        allFields.removeAll(ini.fieldsInUiOrder.keySet());
-        if (!allFields.isEmpty())
-            throw new IllegalStateException("What about all these fields not mentioned on the UI: " + allFields);
-*/
-        RootHolder.ROOT = "../firmware/";
     }
 
     static void readIgnoreList(String ignoreListFileName) throws IOException {
