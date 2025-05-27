@@ -598,9 +598,6 @@ static void updateFuelInfo() {
 	engine->outputChannels.ltitFactor   = idle.getLtitFactor(
 		Sensor::getOrZero(SensorType::Rpm),
 		Sensor::getOrZero(SensorType::Clt));
-	engine->outputChannels.ltitAcTrim   = idle.getLtitAcTrim();
-	engine->outputChannels.ltitFan1Trim = idle.getLtitFan1Trim();
-	engine->outputChannels.ltitFan2Trim = idle.getLtitFan2Trim();
 
 #endif // EFI_ENGINE_CONTROL
 }
