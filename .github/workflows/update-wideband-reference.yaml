@@ -12,7 +12,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-# open question if '--depth=1' helps with performance
       - name: Git Checkout Submodules
         run: |
           git submodule update --init firmware/controllers/can/wideband_firmware
@@ -21,12 +20,6 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-
-      - name: Git I do not understand
-        run: |
-          cd firmware/controllers/can/wideband_firmware
-          git fetch
-          git status
 
       - name: Git Update Submodules
         run: |
