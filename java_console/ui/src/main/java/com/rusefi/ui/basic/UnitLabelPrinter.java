@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static com.devexperts.logging.Logging.getLogging;
@@ -84,17 +85,17 @@ public enum UnitLabelPrinter {
                 // `IniField.getValue` method returns value as string representation of a double.
                 // Let's parse it back into `Double` to display them to users as integers:
                 final double doubleValue = Double.parseDouble(value);
-                identifiers.put("Long UID", String.format("%.0f", doubleValue));
+                identifiers.put("", String.format("%.0f", doubleValue));
             });
             final Optional<String> shortUid = readFieldValue(SHORT_UID_FIELD_NAME, calibrationsInfo, callbacks);
             shortUid.ifPresent(value -> {
                 // `IniField.getValue` method returns value as string representation of a double.
                 // Let's parse it back into `Double` to display them to users as integers:
                 final double doubleValue = Double.parseDouble(value);
-                identifiers.put("Short UID", String.format("%.0f", doubleValue));
+                identifiers.put("Short", String.format("%.0f", doubleValue));
             });
             final Optional<String> hwRevision = readFieldValue(HW_REVISION_FIELD_NAME, calibrationsInfo, callbacks);
-            hwRevision.ifPresent(value -> identifiers.put("Hardware", value));
+            hwRevision.ifPresent(value -> identifiers.put("HW", value));
         }
 
         boolean isEmpty() {
@@ -106,10 +107,22 @@ public enum UnitLabelPrinter {
             try (final FileWriter fileWriter = new FileWriter(result.toString(), false);
                  final BufferedWriter bufferedWriter = new BufferedWriter(fileWriter)
             ) {
-                for (final Map.Entry<String, String> identifier : identifiers.entrySet()) {
-                    bufferedWriter.write(String.format("%s:\t%s", identifier.getKey(), identifier.getValue()));
-                    bufferedWriter.newLine();
-                }
+                write(
+                    entry -> {
+                        try {
+                            bufferedWriter.write(entry);
+                        } catch (final IOException e) {
+                            log.error(String.format("Failed to write `%s` entry to temp file.", entry), e);
+                        }
+                    },
+                    () -> {
+                        try {
+                            bufferedWriter.newLine();
+                        } catch (final IOException e) {
+                            log.error("Failed to write EOL to temp file.", e);
+                        }
+                    }
+                );
             }
             return result;
         }
@@ -117,10 +130,21 @@ public enum UnitLabelPrinter {
         @Override
         public String toString() {
             final StringBuilder result = new StringBuilder();
-            for (final Map.Entry<String, String> identifier : identifiers.entrySet()) {
-                result.append(String.format("%s: %s\n", identifier.getKey(), identifier.getValue()));
-            }
+            write(result::append, () -> result.append("\n"));
             return result.toString();
+        }
+
+        private void write(final Consumer<String> stringWriter, final Runnable endOfLineWriter) {
+            for (final Map.Entry<String, String> identifier : identifiers.entrySet()) {
+                final String idKey = identifier.getKey();
+                final String idValue = identifier.getValue();
+                if (idKey.isEmpty()) {
+                    stringWriter.accept(idValue);
+                } else {
+                    stringWriter.accept(String.format("%s: %s", idKey, idValue));
+                }
+                endOfLineWriter.run();
+            }
         }
 
         private static Optional<String> readFieldValue(
