@@ -54,6 +54,7 @@ public class TuneCanTool {
     // IDE and GHA run from different working folders :(
     // see write_tune.sh for env variable to property mapping
     static final String ENGINE_TUNE_OUTPUT_FOLDER = System.getProperty("ENGINE_TUNE_OUTPUT_FOLDER", "../simulator/generated/");
+    private static final String EXTENSION = ".cpp";
     public static String boardPath = "config/boards/hellen/uaefi/";
 
     protected static IniFileModel ini;
@@ -136,14 +137,14 @@ public class TuneCanTool {
 
         String folder = ENGINE_TUNE_OUTPUT_FOLDER + REPORTS_OUTPUT_FOLDER;
         new File(folder).mkdirs();
-        String fileNameMethods = folder + "/" + vehicleName + "_methods.md";
+        String fileNameMethods = folder + "/" + vehicleName + "_methods" + EXTENSION;
         try (FileWriter methodsWriter = new FileWriter(fileNameMethods)) {
             methodsWriter.append(MD_FIXED_FORMATTING);
             methodsWriter.append(methods);
             methodsWriter.append(MD_FIXED_FORMATTING);
         }
 
-        String fileName = ENGINE_TUNE_OUTPUT_FOLDER + REPORTS_OUTPUT_FOLDER + "/" + vehicleName + ".md";
+        String fileName = ENGINE_TUNE_OUTPUT_FOLDER + REPORTS_OUTPUT_FOLDER + "/" + vehicleName + EXTENSION;
         File outputFile = new File(fileName);
         log.info("Writing to " + outputFile.getAbsolutePath());
 
