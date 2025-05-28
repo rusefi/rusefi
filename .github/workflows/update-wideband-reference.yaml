@@ -12,9 +12,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+# open question if '--depth=1' helps with performance
       - name: Git Checkout Submodules
         run: |
-          git submodule update --init --depth=1 firmware/controllers/can/wideband_firmware
+          git submodule update --init firmware/controllers/can/wideband_firmware
 
       - name: Dump GitHub context
         env:
