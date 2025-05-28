@@ -289,7 +289,7 @@ jobs:
       run: |
         source config/boards/common_script_read_meta_env.inc ${{ env.BOARD_META_PATH }}
         cd ${META_OUTPUT_ROOT_FOLDER}tunerstudio/generated
-        ${OLDPWD}/tunerstudio/upload_ini.sh ${{ secrets.RUSEFI_ONLINE_FTP_USER }} "${{ secrets.RUSEFI_ONLINE_FTP_PASS }}" ${{ secrets.RUSEFI_FTP_SERVER }}
+        ${OLDPWD}/tunerstudio/upload_ini.sh "${{ secrets.RUSEFI_ONLINE_FTP_USER }}" "${{ secrets.RUSEFI_ONLINE_FTP_PASS }}" "${{ secrets.RUSEFI_FTP_SERVER }}"
 
 # sad: we have duplication with custom-board-build/action.yaml :(
       # todo: is this insanity? does not gcc produce similar file directly?
