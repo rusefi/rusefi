@@ -478,6 +478,7 @@ uint16_t engineSnifferRpmThreshold;Engine sniffer seria desabilitado acima desta
 	float ltitClampMin;Valor minimo de correcao multiplicativa LTIT;"%", 1, 0, 0, 100, 1
 	float ltitClampMax;Valor maximo de correcao multiplicativa LTIT;"%", 1, 0, 100, 300, 1
 	uint8_t autoscale ltitSmoothingIntensity;Intensidade de suavizacao regional da tabela LTIT (0=sem suavizacao);"ratio", 0.01, 0, 0, 100, 2
+	float ltitIntegratorThreshold;Threshold minimo do integrador PID para correcao LTIT;"%", 1, 0, 0, 25, 0
 
 	! [tag:coding_by_convention]
 	output_pin_e mainRelayPin;
@@ -822,12 +823,14 @@ spi_device_e digitalPotentiometerSpiDevice;Digital Potentiometer is used by stoc
 	uint8_t tcuInputSpeedSensorTeeth
 
 	bit wwEnableAdaptiveLearning;Enable adaptive learning for wall wetting parameters
+	float wwLambdaDelayFactor;Fator multiplicativo do atraso entre o gas saindo no escape e chegando a sonda lambda;"factor", 1, 0, 0, 3.0, 0
 	
 	float wwTpsThreshold;TPS change threshold for transient detection (per callback);"%%", 1, 0, 0.1, 5.0, 1
 	float wwMapThreshold;MAP change threshold for transient detection (per callback);"kPa", 1, 0, 0.5, 10.0, 1
 	
 	float wwBetaLearningRate;Learning rate for adaptive corrections;"", 1, 0, -100.00, 100.0, 2
 	float wwTauLearningRate;Learning rate for adaptive corrections;"", 1, 0, -100.00, 100.0, 2
+	uint8_t wwBetaBuffer;Initial learning size;"",1, 0, 0, 50, 0
 	
 	float wwMinCoolantTemp;Minimum coolant temperature for learning;"°C", 1, 0, 40, 120, 0
 	float wwMaxCoolantTemp;Maximum coolant temperature for learning;"°C", 1, 0, 60, 130, 0
@@ -2189,7 +2192,6 @@ uint8_t[WWAE_CORRECTION_SIZE x WWAE_CORRECTION_SIZE] autoscale wwTauCorrection;;
 uint8_t[WWAE_CORRECTION_SIZE x WWAE_CORRECTION_SIZE] autoscale wwBetaCorrection;;"Beta correction multiplier", 0.01, 0, 0.0, 2.5, 2
 
 uint16_t wwBufferSize;200;"Wall Wetting Buffer Size", 1, 0, 50, 400, 0
-bit wwDirectionalCorrections;"Enable directional wall wetting corrections"
 
 uint8_t[HPFP_LOBE_PROFILE_SIZE] autoscale hpfpLobeProfileQuantityBins;;"%", 0.5, 0, 0, 100, 1
 uint8_t[HPFP_LOBE_PROFILE_SIZE] autoscale hpfpLobeProfileAngle;;"deg", 0.5, 0, 0, 125, 1

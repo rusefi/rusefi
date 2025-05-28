@@ -71,8 +71,9 @@ float LongTermIdleTrim::getLtitFactor(float rpm, float clt) const {
 }
 
 bool LongTermIdleTrim::isValidConditionsForLearning(float idleIntegral) const {
-    // Validate integral is within reasonable range
-    if (fabsf(idleIntegral) < 0.1f || fabsf(idleIntegral) > 25.0f) {
+    // Validate integral is within reasonable range using configurable threshold
+    float minThreshold = engineConfiguration->ltitIntegratorThreshold;
+    if (fabsf(idleIntegral) < minThreshold || fabsf(idleIntegral) > 25.0f) {
         return false;
     }
     

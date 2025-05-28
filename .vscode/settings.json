@@ -32,4 +32,5 @@
 	"files.associations": {
 		"*.input": "ini"
 	},
+	"cmake.sourceDirectory": "C:/Users/libni/OneDrive/Documentos/GitHub/rusefi/firmware/controllers/can/wideband_firmware/firmware/libfirmware/ext/googletest",
 }
