@@ -21,6 +21,12 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
 
+      - name: Git I do not understand
+        run: |
+          cd firmware/controllers/can/wideband_firmware
+          git fetch
+          git status
+
       - name: Git Update Submodules
         run: |
           git submodule update --remote
