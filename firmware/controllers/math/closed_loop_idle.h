@@ -26,7 +26,7 @@ public:
     bool hasValidData() const;
     
 private:
-    float ltitTableHelper[LTIT_TABLE_SIZE][LTIT_TABLE_SIZE];
+    float ltitTableHelper[LTIT_TABLE_SIZE];
     float emaError = 0.0f;
     bool ltitTableInitialized = false;
     

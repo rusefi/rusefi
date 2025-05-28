@@ -1957,7 +1957,7 @@ uint8_t[CLT_CURVE_SIZE] autoscale rpmIdleCorrBins;RPM-based idle position;"RPM",
 uint16_t[CLT_CURVE_SIZE] cltIdleCorrBins;CLT-based idle position for simple manual idle controller;"C", 1, 0, -100, @@CLT_UPPER_LIMIT@@, 2
 uint16_t[CLT_CURVE_SIZE x CLT_CURVE_SIZE] autoscale cltIdleCorrTable;    CLT-based idle position for simple manual idle controller;"%", 0.1, 0, 0, 100, 1
 
-uint16_t[CLT_CURVE_SIZE x CLT_CURVE_SIZE] autoscale ltitTable;Long Term Idle Trim (LTIT) multiplicativo para idle open loop;"%", 0.1, 0, 50, 150, 1
+uint16_t[CLT_CURVE_SIZE] autoscale ltitTable;Long Term Idle Trim (LTIT) multiplicativo para idle open loop;"%", 0.1, 0, 50, 150, 1
 
 float[MAF_DECODING_COUNT] mafDecoding;Also known as MAF transfer function.\nkg/hour value.\nBy the way 2.081989116 kg/h = 1 ft3/m;"kg/hour", 1, 0, -500, 4000, 2
 float[MAF_DECODING_COUNT] mafDecodingBins;;"V", 1, 0, -5, 150, 2
@@ -2185,8 +2185,8 @@ uint8_t[WWAE_RPM_SIZE x WWAE_TABLE_SIZE] autoscale wwBetaMapRpmValues;;"", 0.01,
 
 uint8_t[WWAE_CORRECTION_SIZE] autoscale wwCorrectionMapBins;;"kPa", 1, 0, 0, 250, 0
 uint8_t[WWAE_CORRECTION_SIZE] autoscale wwCorrectionRpmBins;;"RPM", 50, 0, 0, 12500, 0
-uint8_t[WWAE_CORRECTION_SIZE x WWAE_CORRECTION_SIZE] autoscale wwTauCorrection;;"Tau correction multiplier", 0.01, 0, 0.5, 2.0, 2
-uint8_t[WWAE_CORRECTION_SIZE x WWAE_CORRECTION_SIZE] autoscale wwBetaCorrection;;"Beta correction multiplier", 0.01, 0, 0.5, 2.0, 2
+uint8_t[WWAE_CORRECTION_SIZE x WWAE_CORRECTION_SIZE] autoscale wwTauCorrection;;"Tau correction multiplier", 0.01, 0, 0.0, 2.5, 2
+uint8_t[WWAE_CORRECTION_SIZE x WWAE_CORRECTION_SIZE] autoscale wwBetaCorrection;;"Beta correction multiplier", 0.01, 0, 0.0, 2.5, 2
 
 uint16_t wwBufferSize;200;"Wall Wetting Buffer Size", 1, 0, 50, 400, 0
 bit wwDirectionalCorrections;"Enable directional wall wetting corrections"

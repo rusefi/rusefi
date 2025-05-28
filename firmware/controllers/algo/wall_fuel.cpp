@@ -262,7 +262,7 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 			lastProlongedError = tauError;
 			
 			// *** CORREÇÃO CONCEITUAL CRÍTICA: LÓGICA DE AJUSTE INVERTIDA ***
-			float maxStep = 0.03f;   // Reduzido para evitar oscilações
+			float maxStep = 0.08f;   // Reduzido para evitar oscilações
 			
 			// Usar taxas de aprendizado diretas da configuração
 			float betaLearnRate = engineConfiguration->wwBetaLearningRate;
@@ -341,10 +341,10 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 			
 			// Reduzir taxa de aprendizado se detectar oscilação real
 			if (betaOscillating) {
-				deltaBeta *= 0.3f;  // Redução mais agressiva para oscilações reais
+				deltaBeta *= 0.6f;  // Redução mais agressiva para oscilações reais
 			}
 			if (tauOscillating) {
-				deltaTau *= 0.3f;   // Redução mais agressiva para oscilações reais
+				deltaTau *= 0.6f;   // Redução mais agressiva para oscilações reais
 			}
 			
 			// *** CORREÇÃO: Ajuste direto em vez de multiplicação exponencial ***
@@ -353,8 +353,8 @@ void WallFuelController::adaptiveLearning(float rpm, float map, float lambda, fl
 			float newTauValue = currentTauValue + deltaTau;
 			
 			// Aplicar limites físicos para multiplicadores
-			newBetaValue = clampF(0.5f, newBetaValue, 2.0f);  // Faixa razoável para multiplicador
-			newTauValue = clampF(0.5f, newTauValue, 2.0f);    // Faixa razoável para multiplicador
+			newBetaValue = clampF(0.0f, newBetaValue, 2.5f);  // Faixa razoável para multiplicador
+			newTauValue = clampF(0.0f, newTauValue, 2.5f);    // Faixa razoável para multiplicador
 			
 			// *** VALIDAÇÃO: Só aplicar se a mudança for significativa ***
 			bool significantBetaChange = fabsf(deltaBeta) > 0.001f;
