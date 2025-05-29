@@ -53,12 +53,12 @@ static void endAveraging(MapAverager* arg);
 
 static size_t currentMapAverager = 0;
 
-void startMapAveraging(mapSampler* s) {
+static void startAveraging(mapSampler* s) {
 	efiAssertVoid(ObdCode::CUSTOM_ERR_6649, hasLotsOfRemainingStack(), "lowstck#9");
 
 	// TODO: set currentMapAverager based on cylinder bank
 	auto& averager = getMapAvg(currentMapAverager);
-	averager.start();
+	averager.start(s->cylinderNumber);
 
 	mapAveragingPin.setHigh();
 	engine->outputChannels.isMapAveraging = true;
@@ -67,12 +67,13 @@ void startMapAveraging(mapSampler* s) {
 		{ endAveraging, &averager });
 }
 
-void MapAverager::start() {
+void MapAverager::start(uint8_t cylinderNumber) {
 	chibios_rt::CriticalSectionLocker csl;
 
 	m_counter = 0;
 	m_sum = 0;
 	m_isAveraging = true;
+	m_cylinderNumber = cylinderNumber;
 }
 
 SensorResult MapAverager::submit(float volts) {
@@ -116,6 +117,7 @@ void MapAverager::stop() {
 				minPressure = averagedMapRunningBuffer[i];
 		}
 
+    engine->outputChannels.mapPerCylinder[m_cylinderNumber] = minPressure;
 		setValidValue(filterMapValue(minPressure), getTimeNowNt());
 	} else {
 #if EFI_PROD_CODE
@@ -206,6 +208,12 @@ void MapAveragingModule::onConfigurationChange(engine_configuration_s const * pr
 }
 
 void MapAveragingModule::init() {
+  for (size_t structIndex = 0;structIndex < SAMPLER_DIMENSION;structIndex++) {
+	  for (size_t cylinderIndex = 0; cylinderIndex < MAX_CYLINDER_COUNT; cylinderIndex++) {
+  		samplers[cylinderIndex][structIndex].cylinderNumber = cylinderIndex;
+	  }
+  }
+
 	if (engineConfiguration->isMapAveragingEnabled) {
 		efiPrintf("initMapAveraging...");
 		applyMapMinBufferLength();
@@ -262,7 +270,7 @@ void MapAveragingModule::triggerCallback(uint32_t index, efitick_t edgeTimestamp
 		// todo: pre-calculate samplingEnd for each cylinder
 		wrapAngle(samplingEnd, "samplingEnd", ObdCode::CUSTOM_ERR_6563);
 		// only if value is already prepared
-		int structIndex = getRevolutionCounter() % 2;
+		int structIndex = getRevolutionCounter() % SAMPLER_DIMENSION;
 
 		auto & mapAveraging = *engine->module<MapAveragingModule>();
 		mapSampler* s = &mapAveraging.samplers[i][structIndex];
@@ -271,7 +279,7 @@ void MapAveragingModule::triggerCallback(uint32_t index, efitick_t edgeTimestamp
 		// we are loosing precision in case of changing RPM - the further away is the event the worse is precision
 		// todo: schedule this based on closest trigger event, same as ignition works
 		scheduleByAngle(&s->startTimer, edgeTimestamp, samplingStart,
-				{ startMapAveraging, s });
+				{ startAveraging, s });
 	}
 }
 
