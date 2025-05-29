@@ -35,10 +35,10 @@ IIdleController::TargetInfo IdleController::getTargetRpm(float clt) {
 	float target = (targetRpmByClt < targetRpmAc) ? targetRpmAc : targetRpmByClt;
 	float rpmUpperLimit = engineConfiguration->idlePidRpmUpperLimit;
  	float entryRpm = target + rpmUpperLimit;
-  
+
   // Higher exit than entry to add some hysteresis to avoid bouncing around upper threshold
  	float exitRpm = target + 1.5 * rpmUpperLimit;
- 
+
  	// Ramp the target down from the transition RPM to normal over a few seconds
   if (engineConfiguration->idleReturnTargetRamp) {
  		// Ramp the target down from the transition RPM to normal over a few seconds
@@ -78,7 +78,7 @@ IIdleController::Phase IdleController::determinePhase(float rpm, IIdleController
  	} else if (rpm < targetRpm.IdleEntryRpm) {
  		looksLikeCoasting = false;
  	}
- 
+
  	looksLikeCrankToIdle = crankingTaperFraction < 1;
 	if (looksLikeCoasting && !looksLikeCrankToIdle) {
 		return Phase::Coasting;

@@ -28,18 +28,18 @@ struct IIdleController {
 		struct TargetInfo {
  		// Target speed for closed loop control
  		float ClosedLoopTarget;
- 
+
  		// If below this speed, enter idle
  		float IdleEntryRpm;
-    
+
     // If above this speed, exit idle
  		float IdleExitRpm;
- 
+
  		bool operator==(const TargetInfo& other) const {
         return ClosedLoopTarget == other.ClosedLoopTarget && IdleEntryRpm == other.IdleEntryRpm && IdleExitRpm == other.IdleExitRpm;
  		}
  	};
- 
+
  	virtual Phase determinePhase(float rpm, TargetInfo targetRpm, SensorResult tps, float vss, float crankingTaperFraction) = 0;
  	virtual TargetInfo getTargetRpm(float clt) = 0;
 	virtual float getCrankingOpenLoop(float clt) const = 0;
@@ -114,7 +114,7 @@ private:
 	// used by "soft" idle entry
 	float m_crankTaperEndTime = 0.0f;
 	float m_idleTimingSoftEntryEndTime = 0.0f;
-  
+
   Timer m_timeInIdlePhase;
 
 	// This is stored by getClosedLoop and used in case we want to "do nothing"
