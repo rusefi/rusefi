@@ -439,7 +439,7 @@ bool EngineTestHelper::assertEventExistsAtEnginePhase(const char *msg, void *cal
 			efitimeus_t expectedTimestamp = angleToTimeUs(expectedEventEnginePhase);
 			// after #7245 we can increase the resolution of this test for expect 0.5 or less
 			EXPECT_NEAR( expectedTimestamp, event->getMomentUs() - start, angleToTimeUs( 1 ) )
-                            << "Expected angle: " << expectedEventEnginePhase << " but got " << event->getMomentUs() / engine.rpmCalculator.oneDegreeUs << " -- "
+                            << "Expected angle: " << expectedEventEnginePhase << " but got " << (event->getMomentUs() - start) / engine.rpmCalculator.oneDegreeUs << " -- "
                             << msg;
 			return true;
 		}
