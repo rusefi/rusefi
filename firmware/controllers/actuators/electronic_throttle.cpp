@@ -222,6 +222,7 @@ void EtbController::reset() {
 	etbPpsErrorCounter = 0;
 }
 
+// todo: document why is EtbController not engine_module?
 void EtbController::onConfigurationChange(pid_s* previousConfiguration) {
 	if (m_motor && !m_pid.isSame(previousConfiguration)) {
 		m_shouldResetPid = true;
