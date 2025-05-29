@@ -423,6 +423,18 @@ static const LogField fields[] = {
 	{engine->outputChannels.canReWidebandFwDay, "canReWidebandFwDay", "", 0},
 	{engine->outputChannels.canReWidebandFwMon, "canReWidebandFwMon", "", 0},
 	{engine->outputChannels.canReWidebandFwYear, "canReWidebandFwYear", "", 0},
+	{engine->outputChannels.mapPerCylinder[0], "mapPerCylinder 1", "kPa", 0},
+	{engine->outputChannels.mapPerCylinder[1], "mapPerCylinder 2", "kPa", 0},
+	{engine->outputChannels.mapPerCylinder[2], "mapPerCylinder 3", "kPa", 0},
+	{engine->outputChannels.mapPerCylinder[3], "mapPerCylinder 4", "kPa", 0},
+	{engine->outputChannels.mapPerCylinder[4], "mapPerCylinder 5", "kPa", 0},
+	{engine->outputChannels.mapPerCylinder[5], "mapPerCylinder 6", "kPa", 0},
+	{engine->outputChannels.mapPerCylinder[6], "mapPerCylinder 7", "kPa", 0},
+	{engine->outputChannels.mapPerCylinder[7], "mapPerCylinder 8", "kPa", 0},
+	{engine->outputChannels.mapPerCylinder[8], "mapPerCylinder 9", "kPa", 0},
+	{engine->outputChannels.mapPerCylinder[9], "mapPerCylinder 10", "kPa", 0},
+	{engine->outputChannels.mapPerCylinder[10], "mapPerCylinder 11", "kPa", 0},
+	{engine->outputChannels.mapPerCylinder[11], "mapPerCylinder 12", "kPa", 0},
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},
 #endif

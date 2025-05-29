@@ -5622,7 +5622,7 @@ struct persistent_config_s {
 	/**
 	 * offset 20612
 	 */
-	ign_cyl_trim_s ignTrims[12] = {};
+	ign_cyl_trim_s ignTrims[MAX_CYLINDER_COUNT] = {};
 	/**
 	 * offset 20804
 	 */
@@ -5635,7 +5635,7 @@ struct persistent_config_s {
 	/**
 	 * offset 20820
 	 */
-	fuel_cyl_trim_s fuelTrims[12] = {};
+	fuel_cyl_trim_s fuelTrims[MAX_CYLINDER_COUNT] = {};
 	/**
 	 * units: ratio
 	 * offset 21012

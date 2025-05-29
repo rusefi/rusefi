@@ -1493,8 +1493,13 @@ struct output_channels_s {
 	 * offset 839
 	 */
 	uint8_t canReWidebandFwYear = (uint8_t)0;
+	/**
+	 * units: kPa
+	 * offset 840
+	 */
+	uint8_t mapPerCylinder[MAX_CYLINDER_COUNT] = {};
 };
-static_assert(sizeof(output_channels_s) == 840);
+static_assert(sizeof(output_channels_s) == 852);
 
 // end
 // this section was generated automatically by rusEFI tool config_definition_base-all.jar based on (unknown script) console/binary/output_channels.txt
