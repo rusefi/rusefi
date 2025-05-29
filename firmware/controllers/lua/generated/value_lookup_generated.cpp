@@ -1319,6 +1319,9 @@ float getConfigValueByName(const char *name) {
 // idlePidActivationTime
 		case -1562952959:
 			return engineConfiguration->idlePidActivationTime;
+// vvtControlMinClt
+		case 1470830477:
+			return engineConfiguration->vvtControlMinClt;
 // oilPressure.v1
 		case -613392361:
 			return engineConfiguration->oilPressure.v1;
@@ -4158,6 +4161,11 @@ bool setConfigValueByName(const char *name, float value) {
 		case -1562952959:
 	{
 		engineConfiguration->idlePidActivationTime = value;
+		return 1;
+	}
+		case 1470830477:
+	{
+		engineConfiguration->vvtControlMinClt = (int)value;
 		return 1;
 	}
 		case -613392361:

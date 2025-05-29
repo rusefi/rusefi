@@ -1312,6 +1312,9 @@ Use to limit the max.current through the stepper motor (100% = no limit)
 ### idlePidActivationTime
 
 
+### vvtControlMinClt
+Minimum coolant temperature to activate VVT
+
 ### oilPressure.v1
 
 
