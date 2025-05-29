@@ -44,6 +44,7 @@ bit isAnalogFailure;Analog sensors supply failure
 bit isTuningNow
 bit sd_formating; SD: formating is in progress
 
+  bit isMapAveraging
 
 uint16_t RPMValue;@@GAUGE_NAME_RPM@@;"RPM",1, 0, 0, 8000, 0
 
@@ -448,6 +449,4 @@ float mapFast
 	uint8_t canReWidebandFwMon
 	uint8_t canReWidebandFwYear
 
-bit isMapAveraging
-	uint8_t[32 iterate] unusedAtTheEnd;;"",1, 0, 0, 0, 0
 end_struct
