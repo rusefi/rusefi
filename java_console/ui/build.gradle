@@ -28,8 +28,9 @@ shadowJar {
 
     manifest {
         attributes(
-                'Build-Jdk'      : "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
-                'Main-Class': 'com.rusefi.Launcher'
+          'Main-Class': 'com.rusefi.Launcher',
+          'Build-Jdk'      : "${System.properties['java.version']} (${System.properties['java.vendor']} ${System.properties['java.vm.version']})",
+          'Built-Date': new Date().toString()
         )
     }
 }
