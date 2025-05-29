@@ -33,6 +33,7 @@ static const LogField fields[] = {
 	{engine->outputChannels, 0, 28, "Analog sensors supply failure", ""},
 	{engine->outputChannels, 0, 29, "isTuningNow", ""},
 	{engine->outputChannels, 0, 30, "SD: formating is in progress", ""},
+	{engine->outputChannels, 0, 31, "isMapAveraging", ""},
 	{engine->outputChannels.RPMValue, "RPM", "RPM", 0},
 	{engine->outputChannels.rpmAcceleration, "dRPM", "RPM acceleration/Rate of Change/ROC", 2},
 	{engine->outputChannels.speedToRpmRatio, "Gearbox Ratio", "value", 2},
@@ -422,7 +423,6 @@ static const LogField fields[] = {
 	{engine->outputChannels.canReWidebandFwDay, "canReWidebandFwDay", "", 0},
 	{engine->outputChannels.canReWidebandFwMon, "canReWidebandFwMon", "", 0},
 	{engine->outputChannels.canReWidebandFwYear, "canReWidebandFwYear", "", 0},
-	{engine->outputChannels, 840, 0, "isMapAveraging", ""},
 #if EFI_ENGINE_CONTROL
 	{engine->fuelComputer.totalFuelCorrection, "Fuel: Total correction", "mult", 2, "Fuel: math"},
 #endif

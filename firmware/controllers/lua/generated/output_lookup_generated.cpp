@@ -98,6 +98,9 @@ float getOutputValueByName(const char *name) {
 // sd_formating
 		case 352763970:
 			return engine->outputChannels.sd_formating;
+// isMapAveraging
+		case -1626840525:
+			return engine->outputChannels.isMapAveraging;
 // RPMValue
 		case 1699696209:
 			return engine->outputChannels.RPMValue;
@@ -881,9 +884,6 @@ float getOutputValueByName(const char *name) {
 // canReWidebandFwYear
 		case -734820550:
 			return engine->outputChannels.canReWidebandFwYear;
-// isMapAveraging
-		case -1626840525:
-			return engine->outputChannels.isMapAveraging;
 // totalFuelCorrection
 #if EFI_ENGINE_CONTROL
 		case -1779658835:
