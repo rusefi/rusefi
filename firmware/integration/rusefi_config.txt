@@ -2046,12 +2046,12 @@ end_struct
 ! All ign trim tables share axes
 uint16_t[IGN_TRIM_SIZE] ignTrimLoadBins;;"", 1, 0, 0, 1000, 0
 uint16_t[IGN_TRIM_SIZE] ignTrimRpmBins;;"rpm", 1, 0, 0, 20000, 0
-ign_cyl_trim_s[12 iterate] ignTrims
+ign_cyl_trim_s[MAX_CYLINDER_COUNT iterate] ignTrims
 
 ! All fuel trim tables share axes
 uint16_t[FUEL_TRIM_SIZE] fuelTrimLoadBins;;"", 1, 0, 0, 1000, 0
 uint16_t[FUEL_TRIM_SIZE] fuelTrimRpmBins;;"rpm", 1, 0, 0, 20000, 0
-fuel_cyl_trim_s[12 iterate] fuelTrims
+fuel_cyl_trim_s[MAX_CYLINDER_COUNT iterate] fuelTrims
 
 uint16_t[CRANKING_CURVE_SIZE] autoscale crankingFuelCoefE100;;"ratio", 0.01, 0, 0, 50, 2
 
