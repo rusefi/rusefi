@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <msq xmlns="http://www.msefi.com/:msq">
     <page/>
-    <page number="0" size="22784">
+    <page number="0" size="22776">
         <constant name="accelerometerCsPin">"NONE"</constant>
         <constant name="accelerometerCsPinMode">"default"</constant>
         <constant name="accelerometerSpiDevice">"Off"</constant>
@@ -4413,12 +4413,6 @@ end</constant>
         <constant name="twoWireBatchIgnition">"false"</constant>
         <constant digits="0" name="uartConsoleSerialSpeed" units="BPs">115200.0</constant>
         <constant name="uiMode">"Full"</constant>
-        <constant name="unused1308_24">"false"</constant>
-        <constant name="unused1320_28">"false"</constant>
-        <constant digits="0" name="unusedafterCrankingIACtaperDuration" units="">0.0</constant>
-        <constant name="unusedBit42423">"false"</constant>
-        <constant name="unusedBitsd23413421">"false"</constant>
-        <constant digits="0" name="unusedcrankingIACposition" units="">0.0</constant>
         <constant name="unusedFancy10">"false"</constant>
         <constant name="unusedFancy11">"false"</constant>
         <constant name="unusedFancy12">"false"</constant>
@@ -4450,10 +4444,6 @@ end</constant>
         <constant name="unusedFancy7">"false"</constant>
         <constant name="unusedFancy8">"false"</constant>
         <constant name="unusedFancy9">"false"</constant>
-        <constant name="unusedOverrideCrankingIacSetting">"false"</constant>
-        <constant name="unusedSuppressWboWorkaround7048">"false"</constant>
-        <constant digits="0" name="unusedWastgate0" units="">0.0</constant>
-        <constant digits="0" name="unusedWastgate1" units="">0.0</constant>
         <constant name="useAdvanceCorrectionsForCranking">"false"</constant>
         <constant name="useAuxSpeedForSlipRatio">"false"</constant>
         <constant name="useBiQuadOnAuxSpeedSensors">"false"</constant>
@@ -4944,7 +4934,7 @@ end</constant>
 </constant>
         <constant name="yesUnderstandLocking">"no"</constant>
     </page>
-    <versionInfo firmwareInfo="20250528" nPages="1" signature="rusEFI master.2025.05.29.f407-discovery.1518079656" version="5.0"/>
+    <versionInfo firmwareInfo="20250528" nPages="1" signature="rusEFI master.2025.05.29.f407-discovery.613069664" version="5.0"/>
     <bibliography author="rusEFI 20250528" writeDate="date"/>
     <settings/>
     <userComments/>
