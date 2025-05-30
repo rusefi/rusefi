@@ -15,8 +15,8 @@ AemXSeriesWideband::AemXSeriesWideband(uint8_t sensorIndex, SensorType type)
 	)
 	, m_sensorIndex(sensorIndex)
 {
-    faultCode = m_faultCode = HACK_SILENT_VALUE;// silent, initial state is "no one has spoken to us so far"
-    m_isValid = m_isFault = false;
+    faultCode = m_faultCode = static_cast<uint8_t>(wbo::Fault::CanSilent);// silent, initial state is "no one has spoken to us so far"
+    isValid = m_isFault = m_afrIsValid = false;
 }
 
 can_wbo_type_e AemXSeriesWideband::sensorType() const {
@@ -56,54 +56,59 @@ bool AemXSeriesWideband::isHeaterAllowed() {
 }
 
 void AemXSeriesWideband::refreshState() {
-	if (!isHeaterAllowed()) {
+	can_wbo_type_e type = sensorType();
+
+	if ((type == RUSEFI) && (!isHeaterAllowed())) {
+		faultCode = static_cast<uint8_t>(wbo::Fault::NotAllowed);
+		isValid = false;
 		// Do not check for any errors while heater is not allowed
-		faultCode = HACK_CRANKING_VALUE;
 		return;
 	}
 
-	can_wbo_type_e type = sensorType();
+	// Communication timeout is priority error code
+	auto value = get();
+	if ((!value) && (value.Code == UnexpectedCode::Timeout)) {
+		faultCode = static_cast<uint8_t>(wbo::Fault::CanSilent);
+		isValid = false;
+		return;
+	}
+
 	if (type == RUSEFI) {
 		// This is RE WBO
 		if (m_faultCode != static_cast<uint8_t>(wbo::Fault::None)) {
 			// Report error code from WBO
 			faultCode = m_faultCode;
-		} else {
-			// No fault code reported from WBO
-			auto value = get();
-			if ((!value) && (value.Code == UnexpectedCode::Timeout)) {
-				faultCode = HACK_SILENT_VALUE;
-			} else if (!m_isValid) {
-				// But no valid AFR too
-				faultCode = HACK_INVALID_RE;
-			} else {
-				faultCode = static_cast<uint8_t>(wbo::Fault::None);
-			}
+			isValid = false;
+			return;
+		} else if (!m_afrIsValid) {
+			faultCode = HACK_INVALID_RE;
+			isValid = false;
+			return;
 		}
 	} else if (type == AEM) {
-		// This is AEM with two flags only
-		if (m_isFault) {
-			// TODO:
-			faultCode = HACK_INVALID_AEM;
-		} else if (!m_isValid) {
-			faultCode = HACK_INVALID_AEM;
-		} else {
-			faultCode = HACK_VALID_AEM;
-		}
-
-		// .. and no debug fields
+		// This is AEM with two flags only and no debug fields
 		heaterDuty = 0;
 		pumpDuty = 0;
 		tempC = 0;
 		nernstVoltage = 0;
+
+		if (m_isFault || (!m_afrIsValid)) {
+			faultCode = HACK_INVALID_AEM;
+			isValid = false;
+			return;
+		}
 	} else {
-		// disabled
+		// disabled or analog
 		// clear all livedata
 		heaterDuty = 0;
 		pumpDuty = 0;
 		tempC = 0;
 		nernstVoltage = 0;
+		return;
 	}
+
+	faultCode = static_cast<uint8_t>(wbo::Fault::None);
+	isValid = true;
 }
 
 void AemXSeriesWideband::decodeFrame(const CANRxFrame& frame, efitick_t nowNt) {
@@ -139,9 +144,9 @@ bool AemXSeriesWideband::decodeAemXSeries(const CANRxFrame& frame, efitick_t now
 	// bit 6 indicates sensor fault
 	m_isFault = frame.data8[7] & 0x40;
 	// bit 7 indicates valid
-	m_isValid = frame.data8[6] & 0x80;
+	m_afrIsValid = frame.data8[6] & 0x80;
 
-	if ((m_isFault) || (!m_isValid)) {
+	if ((m_isFault) || (!m_afrIsValid)) {
 		invalidate();
 		return false;
 	}
@@ -161,9 +166,9 @@ void AemXSeriesWideband::decodeRusefiStandard(const CANRxFrame& frame, efitick_t
 
 	tempC = data->TemperatureC;
 	float lambda = 0.0001f * data->Lambda;
-	m_isValid = data->Valid != 0;
+	m_afrIsValid = data->Valid & 0x01;
 
-	if (!m_isValid) {
+	if (!m_afrIsValid) {
 		invalidate();
 		return;
 	}

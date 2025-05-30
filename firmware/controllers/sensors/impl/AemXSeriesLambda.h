@@ -5,14 +5,10 @@
 #include "wideband_state_generated.h"
 
 // Following codes "extend" wbo::Fault codes
-// "silent" of wboFaultCodeList
-#define HACK_SILENT_VALUE 1
-// todo: suggest values 1 and 2 into the official WB source fault enum?
-#define HACK_CRANKING_VALUE 2
+#define HACK_INVALID_AEM 7
+#define HACK_INVALID_RE 7
+
 // todo: static_cast<uint8_t>(Fault::LegacyProtocol);
-#define HACK_VALID_AEM 7
-#define HACK_INVALID_AEM 8
-#define HACK_INVALID_RE	9
 
 class AemXSeriesWideband : public CanSensorBase, public wideband_state_s {
 public:
@@ -40,7 +36,8 @@ private:
 	const uint8_t m_sensorIndex;
 	// raw fault code from sensor
 	uint8_t m_faultCode;
-	bool m_isValid;
+	// Used by both AEM and rusEFI WBO
+	bool m_afrIsValid;
 	// Used for AEM sensor only
 	bool m_isFault;
 };
