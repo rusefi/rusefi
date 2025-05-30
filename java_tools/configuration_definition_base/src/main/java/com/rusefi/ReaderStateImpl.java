@@ -3,6 +3,7 @@ package com.rusefi;
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.RawIniFile;
 import com.opensr5.ini.field.EnumIniField;
+import com.rusefi.config.FieldType;
 import com.rusefi.core.Pair;
 import com.rusefi.enum_reader.Value;
 import com.rusefi.output.*;
@@ -173,6 +174,10 @@ public class ReaderStateImpl implements ReaderState {
 
         RawIniFile.Line rawLine = new RawIniFile.Line(tunerStudioLine);
         if (rawLine.getTokens()[0].equals("bits")) {
+            String tsTypeString = rawLine.getTokens()[1];
+            FieldType typeInTsString = FieldType.parseTs(tsTypeString);
+            if (size != typeInTsString.getStorageSize())
+                throw new SizeMismatchException("Size mismatch " + customSize + " vs " + tsTypeString + " in " + customLineWithPrefix);
             EnumIniField.ParseBitRange bitRange = new EnumIniField.ParseBitRange().invoke(rawLine.getTokens()[3]);
             int totalCount = 1 << (bitRange.getBitSize0() + 1);
             List<String> enums = Arrays.asList(rawLine.getTokens()).subList(4, rawLine.getTokens().length);

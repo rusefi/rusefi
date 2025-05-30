@@ -1487,7 +1487,7 @@ uint8_t[TRACTION_CONTROL_ETB_DROP_SIZE] tractionControlSpeedBins;;"RPM", 1, 0, 0
 	int8_t disableFan2AtSpeed
 
 
-	custom can_vss_nbc_e 2 bits, U08, @OFFSET@, [0:2], "BMW_e46", "W202", "BMW E8x/E9x MK60e5", "Nissan 350", "Hyundai PB", "Honda Civic9"
+	custom can_vss_nbc_e 1 bits, U08, @OFFSET@, [0:2], "BMW_e46", "W202", "BMW E8x/E9x MK60e5", "Nissan 350", "Hyundai PB", "Honda Civic9"
 	can_vss_nbc_e canVssNbcType
 
 	gppwm_channel[GPPWM_CHANNELS iterate] gppwm;
@@ -1836,7 +1836,7 @@ uint8_t autoscale knockFuelTrim;Fuel trim when knock, max 30%;"%", 1, 0, 0, 30, 
 	float wastegatePositionClosedVoltage;Voltage when the wastegate is closed;"v", 1, 0, 0, 10, 2
 
 	#define can_wbo_type_e_enum "RusEFI", "AEM X-series", "Disabled/Analog"
-	custom can_wbo_type_e 2 bits, U08, @OFFSET@, [0:1], @@can_wbo_type_e_enum@@
+	custom can_wbo_type_e 1 bits, U08, @OFFSET@, [0:1], @@can_wbo_type_e_enum@@
 	can_wbo_type_e wboType1;
 	can_wbo_type_e wboType2;
 
