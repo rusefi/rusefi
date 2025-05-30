@@ -2703,3 +2703,6 @@ end_struct
 #define CAN_ECU_SERIAL_RX_ID 0x710
 #define CAN_ECU_SERIAL_TX_ID 0x720
 
+#define ts_show_etb_min_max true
+! who needs this feature when?!
+#define ts_show_disable_etb false
