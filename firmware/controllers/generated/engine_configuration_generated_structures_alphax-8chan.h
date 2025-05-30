@@ -3722,9 +3722,9 @@ struct engine_configuration_s {
 	/**
 	 * need 4 byte alignment
 	 * units: units
-	 * offset 2406
+	 * offset 2405
 	 */
-	uint8_t alignmentFill_at_2406[2] = {};
+	uint8_t alignmentFill_at_2405[3] = {};
 	/**
 	 * offset 2408
 	 */
@@ -4951,9 +4951,15 @@ struct engine_configuration_s {
 	 */
 	can_wbo_type_e wboType1;
 	/**
-	 * offset 3942
+	 * offset 3941
 	 */
 	can_wbo_type_e wboType2;
+	/**
+	 * need 4 byte alignment
+	 * units: units
+	 * offset 3942
+	 */
+	uint8_t alignmentFill_at_3942[2] = {};
 };
 static_assert(sizeof(engine_configuration_s) == 3944);
 
