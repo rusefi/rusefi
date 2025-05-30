@@ -30,7 +30,7 @@ import static com.rusefi.core.FindFileHelper.findSrecFile;
 
 public class Autoupdate {
     private static final Logging log = getLogging(Autoupdate.class);
-    private static final int AUTOUPDATE_VERSION = 20250527; // separate from rusEFIVersion#CONSOLE_VERSION
+    private static final int AUTOUPDATE_VERSION = 20250529; // separate from rusEFIVersion#CONSOLE_VERSION
 
     private static final String TITLE = getTitle();
 
@@ -45,6 +45,8 @@ public class Autoupdate {
 
     private static final String COM_RUSEFI_LAUNCHER = "com.rusefi.Launcher";
 
+
+
     public static void main(String[] args) {
         try {
             FileLogger.init();
@@ -54,9 +56,18 @@ public class Autoupdate {
         } catch (Throwable e) {
             log.error("Autoupdate Error", e);
             String stackTrace = extracted(e);
-            JOptionPane.showMessageDialog(null, stackTrace, "Autoupdate Error " + TITLE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(createOnTopParent(), stackTrace, "Autoupdate Error " + TITLE, JOptionPane.ERROR_MESSAGE);
             System.exit(-1);
         }
+    }
+
+    private static @NotNull JFrame createOnTopParent() {
+        JFrame frame = new JFrame();
+        // https://stackoverflow.com/questions/438463/joptionpane-wont-show-its-dialog-on-top-of-other-windows
+        frame.setVisible(true);
+// ?        frame.setLocation(100, 100);
+        frame.setAlwaysOnTop(true);
+        return frame;
     }
 
     private static String extracted(Throwable e) {
