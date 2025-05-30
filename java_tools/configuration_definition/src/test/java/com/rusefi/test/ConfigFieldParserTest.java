@@ -167,6 +167,23 @@ public class ConfigFieldParserTest {
     }
 
     @Test
+    public void testCustomEnumAlignment() {
+        String test = "struct pid_s\n" +
+            "#define can_wbo_type_e_enum \"RusEFI\", \"AEM X-series\", \"Disabled/Analog\"\n" +
+            "\tcustom can_wbo_type_e 2 bits, U08, @OFFSET@, [0:1], @@can_wbo_type_e_enum@@\n" +
+            "\tcan_wbo_type_e wboType1;\n" +
+            "\tcan_wbo_type_e wboType2;\n" +
+            "end_struct\n";
+        ReaderStateImpl state = new ReaderStateImpl();
+
+        TestTSProjectConsumer tsProjectConsumer = new TestTSProjectConsumer(state);
+        state.readBufferedReader(test, tsProjectConsumer);
+        assertEquals("wboType1 = bits, U08, 0, [0:1], \"RusEFI\", \"AEM X-series\", \"Disabled/Analog\", \"INVALID\"\n" +
+            "wboType2 = bits, U08, 2, [0:1], \"RusEFI\", \"AEM X-series\", \"Disabled/Analog\", \"INVALID\"\n" +
+            "; total TS size = 4\n", tsProjectConsumer.getContent());
+    }
+
+    @Test
     public void testCustomEnumWithTsVariable() {
         String test = "struct pid_s\n" +
             "#define ego_sensor_e_enum \"BPSX\", \"Innovate\", \"14Point7\"\n" +
