@@ -8,6 +8,7 @@ import com.rusefi.core.net.ConnectionAndMeta;
 import com.rusefi.core.FileUtil;
 import com.rusefi.core.rusEFIVersion;
 import com.rusefi.core.ui.AutoupdateUtil;
+import com.rusefi.core.ui.ErrorMessageHelper;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -62,18 +63,9 @@ public class Autoupdate {
         } catch (Throwable e) {
             log.error("Autoupdate Error", e);
             String stackTrace = extracted(e);
-            JOptionPane.showMessageDialog(createOnTopParent(), stackTrace, "Autoupdate Error " + TITLE, JOptionPane.ERROR_MESSAGE);
+            ErrorMessageHelper.showErrorDialog(stackTrace, "Autoupdate Error " + TITLE);
             System.exit(-1);
         }
-    }
-
-    private static @NotNull JFrame createOnTopParent() {
-        JFrame frame = new JFrame();
-        // https://stackoverflow.com/questions/438463/joptionpane-wont-show-its-dialog-on-top-of-other-windows
-        frame.setVisible(true);
-// ?        frame.setLocation(100, 100);
-        frame.setAlwaysOnTop(true);
-        return frame;
     }
 
     private static String extracted(Throwable e) {
@@ -149,12 +141,7 @@ public class Autoupdate {
             } catch (IOException e) {
                 log.error("Error unzipping autoupdate from bundle: " + e);
                 if (!AutoupdateUtil.runHeadless) {
-                    JOptionPane.showMessageDialog(
-                        null,
-                        "Error unzipping autoupdate from bundle: " + e,
-                        "Error",
-                        JOptionPane.ERROR_MESSAGE
-                    );
+                    ErrorMessageHelper.showErrorDialog("Error unzipping autoupdate from bundle: " + e, "Error");
                 }
             }
         });
@@ -171,12 +158,7 @@ public class Autoupdate {
         } catch (IOException e) {
             log.error("Error unzipping bundle without autoupdate: " + e);
             if (!AutoupdateUtil.runHeadless) {
-                JOptionPane.showMessageDialog(
-                    null,
-                    "Error unzipping bundle without autoupdate: " + e,
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-                );
+                ErrorMessageHelper.showErrorDialog("Error unzipping bundle without autoupdate: " + e, "Error");
             }
         }
     }
@@ -260,12 +242,7 @@ public class Autoupdate {
         if (!Files.exists(Paths.get(consoleExeFileName))) {
             log.error(String.format("File `%s` to launch isn't found", consoleExeFileName));
             if (!AutoupdateUtil.runHeadless) {
-                JOptionPane.showMessageDialog(
-                    null,
-                    String.format("File `%s` to launch isn't found.", consoleExeFileName),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-                );
+                ErrorMessageHelper.showErrorDialog(String.format("File `%s` to launch isn't found.", consoleExeFileName), "Error");
             }
             return;
         }
@@ -281,15 +258,10 @@ public class Autoupdate {
             final String command = String.join(" ", processBuilderArgs);
             log.error(String.format("Failed to run `$s` command", command), e);
             if (!AutoupdateUtil.runHeadless) {
-                JOptionPane.showMessageDialog(
-                    null,
-                    String.format(
-                        "Error running `%s` command.\nPlease try to run it manually again.",
-                        command
-                    ),
-                    "Error",
-                    JOptionPane.ERROR_MESSAGE
-                );
+                ErrorMessageHelper.showErrorDialog(String.format(
+                    "Error running `%s` command.\nPlease try to run it manually again.",
+                    command
+                ), "Error");
             }
         }
     }
@@ -350,8 +322,7 @@ public class Autoupdate {
             // todo: open frame prior to network connection and keep frame opened while uncompressing?
             log.error("Error downloading bundle: " + e);
             if (!AutoupdateUtil.runHeadless) {
-                JOptionPane.showMessageDialog(null, "Error downloading " + e, "Error",
-                    JOptionPane.ERROR_MESSAGE);
+                ErrorMessageHelper.showErrorDialog("Error downloading " + e, "Error");
             }
         }
         return Optional.empty();
