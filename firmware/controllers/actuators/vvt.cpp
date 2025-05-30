@@ -66,7 +66,10 @@ expected<angle_t> VvtController::observePlant() {
 expected<angle_t> VvtController::getSetpoint() {
 	float rpm = Sensor::getOrZero(SensorType::Rpm);
 	bool enabled = m_engineRunningLongEnough &&
+#if EFI_PROD_CODE || EFI_UNIT_TEST
+// simulator functional test does not have CLT or flag?
                  		m_isCltWarmEnough &&
+#endif
                  		m_isRpmHighEnough;
 	if (!enabled) {
 		return unexpected;
