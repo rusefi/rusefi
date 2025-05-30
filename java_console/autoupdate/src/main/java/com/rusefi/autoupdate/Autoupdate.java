@@ -80,7 +80,11 @@ public class Autoupdate {
 
         @NotNull String firstArgument = args.length > 0 ? args[0] : "";
 
-        Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile = downloadFreshZipFile(args, firstArgument, bundleInfo);
+        final Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile = downloadFreshZipFile(args, firstArgument, bundleInfo);
+
+        // Let's try to get console .exe-file name before we rewrite autoupdate .jar file:
+        final String consoleExeFileName = new ConsoleExeFileLocator().getConsoleExeFileName();
+
         URLClassLoader jarClassLoader = safeUnzipMakingSureClassloaderIsHappy(downloadedAutoupdateFile);
         if (ConnectionAndMeta.startConsoleInAutoupdateProcess()) {
             //TODO: Afterwards we need to decide if we really want to support this option.
@@ -93,7 +97,7 @@ public class Autoupdate {
 
             startConsole(args, jarClassLoader);
         } else {
-            startConsoleAsANewProcess(args);
+            startConsoleAsANewProcess(consoleExeFileName, args);
         }
     }
 
@@ -232,8 +236,7 @@ public class Autoupdate {
         }
     }
 
-    private static void startConsoleAsANewProcess(final String[] args) {
-        final String consoleExeFileName = new ConsoleExeFileLocator().getConsoleExeFileName();
+    private static void startConsoleAsANewProcess(final String consoleExeFileName, final String[] args) {
         if (!Files.exists(Paths.get(consoleExeFileName))) {
             log.error(String.format("File `%s` to launch isn't found", consoleExeFileName));
             if (!AutoupdateUtil.runHeadless) {
