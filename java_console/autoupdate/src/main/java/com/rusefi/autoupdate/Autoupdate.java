@@ -86,11 +86,15 @@ public class Autoupdate {
         final Optional<DownloadedAutoupdateFileInfo> downloadedAutoupdateFile = downloadFreshZipFile(firstArgument, bundleInfo);
         downloadedAutoupdateFile.ifPresent(downloadedFile -> ObsoleteFilesArchiver.INSTANCE.archiveObsoleteFiles());
         URLClassLoader jarClassLoader = safeUnzipMakingSureClassloaderIsHappy(downloadedAutoupdateFile);
-        log.info("extremely dark magic: XML binding seems to depend on this");
-        Thread.currentThread().setContextClassLoader(jarClassLoader);
         if (ConnectionAndMeta.startConsoleInAutoupdateProcess()) {
             //TODO: Afterwards we need to decide if we really want to support this option.
             //  I would prefer to forget about it as about a nightmare :)
+            log.info("extremely dark magic: XML binding seems to depend on this");
+
+            //TODO: It looks like we need to set this context class loader to all consile threads if we want to avoid
+            //  potential JAXB problems
+            Thread.currentThread().setContextClassLoader(jarClassLoader);
+
             startConsole(args, jarClassLoader);
         } else {
             startConsoleAsANewProcess(args);
