@@ -255,7 +255,7 @@ TEST(CanWideband, DecodeRusefiStandard)
 	EXPECT_FLOAT_EQ(-1, Sensor::get(SensorType::Lambda1).value_or(-1));
 
 	// ...but no error until egine is runnig
-	EXPECT_EQ(HACK_CRANKING_VALUE, dut.faultCode);
+	EXPECT_EQ((uint8_t)wbo::Fault::NotAllowed, dut.faultCode);
 
 	// Now driver should handle valid bit and error states from wbo
 	engine->engineState.heaterControlEnabled = true;
