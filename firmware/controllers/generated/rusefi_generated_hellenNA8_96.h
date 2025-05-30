@@ -1444,7 +1444,7 @@
 #define show_HellenNB1_presets false
 #define show_tcu_gauges false
 #define show_vvt_output_pin true
-#define SIGNATURE_HASH 281351010
+#define SIGNATURE_HASH 658499877
 #define SIMULATOR_TUNE_BIN_FILE_NAME "generated/simulator_tune_image.bin"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_PREFIX "generated/simulator_tune_image"
 #define SIMULATOR_TUNE_BIN_FILE_NAME_SUFFIX ".bin"
@@ -1818,6 +1818,7 @@
 #define ts_show_cylinder_bank true
 #define ts_show_dc_hardware true
 #define ts_show_debug_mode false
+#define ts_show_disable_etb false
 #define ts_show_ego2 true
 #define ts_show_egt false
 #define ts_show_engine_code true
@@ -1826,6 +1827,7 @@
 #define ts_show_etb_bias_curve true
 #define ts_show_etb_extra_monitoring 
 #define ts_show_etb_frequency true
+#define ts_show_etb_min_max true
 #define ts_show_etb_pins false
 #define ts_show_exhaust_vvt true
 #define ts_show_experimental true
@@ -1963,7 +1965,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.05.30.hellenNA8_96.281351010"
+#define TS_SIGNATURE "rusEFI master.2025.05.30.hellenNA8_96.658499877"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
