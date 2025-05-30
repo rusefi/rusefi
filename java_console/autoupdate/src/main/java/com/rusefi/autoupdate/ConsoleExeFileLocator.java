@@ -4,6 +4,7 @@ import com.devexperts.logging.Logging;
 import com.rusefi.core.net.JarFileUtil;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Optional;
@@ -39,10 +40,10 @@ public class ConsoleExeFileLocator {
 
     private static Optional<Properties> loadInstallationProperties() {
         final Properties result = new Properties();
-        try {
-            result.load(Files.newInputStream(Paths.get(INSTALLATION_PROPERTIES_FILE_NAME)));
+        try (final InputStream is = Files.newInputStream(Paths.get(INSTALLATION_PROPERTIES_FILE_NAME))) {
+            result.load(is);
             return Optional.of(result);
-        } catch (final IOException e) {
+        } catch (final Throwable e) {
             log.error(String.format("Failed to load properties from `%s` file.", INSTALLATION_PROPERTIES_FILE_NAME), e);
         }
         return Optional.empty();
