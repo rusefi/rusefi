@@ -95,7 +95,6 @@ RegisteredOutputPin::RegisteredOutputPin(const char *p_registrationName, size_t 
 }
 
 bool RegisteredOutputPin::isPinConfigurationChanged() {
-#if EFI_PROD_CODE
 	brain_pin_e        curPin = *(brain_pin_e       *) ((void *) (&((char*)&activeConfiguration)[m_pinOffset]));
 	brain_pin_e        newPin = *(brain_pin_e       *) ((void *) (&((char*) engineConfiguration)[m_pinOffset]));
 	bool pinChanged = curPin != newPin;
@@ -107,9 +106,6 @@ bool RegisteredOutputPin::isPinConfigurationChanged() {
 	pin_output_mode_e curMode = *(pin_output_mode_e *) ((void *) (&((char*)&activeConfiguration)[m_pinModeOffset]));
 	pin_output_mode_e newMode = *(pin_output_mode_e *) ((void *) (&((char*) engineConfiguration)[m_pinModeOffset]));
 	return pinChanged || curMode != newMode;
-#else
-    return true;
-#endif // EFI_PROD_CODE
 }
 
 void RegisteredOutputPin::init() {
