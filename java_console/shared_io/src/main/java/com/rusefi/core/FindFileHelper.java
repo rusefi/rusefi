@@ -32,8 +32,8 @@ public class FindFileHelper {
         return findOneFile(fileDirectory, prefix, suffix, dir.list());
     }
 
-    // todo: this method is pretty testable, but we do not have a test :(
-    private static @Nullable String findOneFile(String fileDirectory, String prefix, String suffix, String[] directoryListing) {
+    @Nullable
+	public static String findOneFile(String fileDirectory, String prefix, String suffix, String[] directoryListing) {
         Optional<String[]> fileList = Optional.ofNullable(directoryListing);
 
         Supplier<Stream<String>> search_file = () -> Arrays.stream(fileList.get())
