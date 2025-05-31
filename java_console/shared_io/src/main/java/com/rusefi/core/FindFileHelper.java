@@ -28,23 +28,28 @@ public class FindFileHelper {
         }
 
         log.info("Searching for " + prefix + "*" + suffix + " in " + dir.getAbsolutePath());
-        
-        Optional<String[]> fileList = Optional.ofNullable(dir.list());
+
+        return findOneFile(fileDirectory, prefix, suffix, dir.list());
+    }
+
+    // todo: this method is pretty testable, but we do not have a test :(
+    private static @Nullable String findOneFile(String fileDirectory, String prefix, String suffix, String[] directoryListing) {
+        Optional<String[]> fileList = Optional.ofNullable(directoryListing);
 
         Supplier<Stream<String>> search_file = () -> Arrays.stream(fileList.get())
-        		.filter(file -> !file.contains(" "))  // spaces not acceptable
-        		.filter(file -> file.startsWith(prefix) && file.endsWith(suffix));
-        
+            .filter(file -> !file.contains(" "))  // spaces not acceptable
+            .filter(file -> file.startsWith(prefix) && file.endsWith(suffix));
+
         long matchCount = search_file.get().count();
-        
-        if(matchCount > 1) {
-        	throw new IllegalStateException("More than one file match the search pattern: " + matchCount);
+
+        if (matchCount > 1) {
+            throw new IllegalStateException("More than one file match the search pattern: " + matchCount);
         }
-        
+
         Optional<String> file = search_file.get().findFirst();
 
-        if(file.isPresent()) {
-        	return fileDirectory + File.separator + file.get();
+        if (file.isPresent()) {
+            return fileDirectory + File.separator + file.get();
         }
 
         return null;
