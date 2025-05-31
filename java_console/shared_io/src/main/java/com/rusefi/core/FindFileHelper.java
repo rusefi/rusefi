@@ -4,7 +4,10 @@ import com.devexperts.logging.Logging;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
+import java.util.Arrays;
 
 public class FindFileHelper {
     private static final Logging log = Logging.getLogging(FindFileHelper.class);
@@ -23,17 +26,27 @@ public class FindFileHelper {
         if (!dir.isDirectory()) {
             throw new IllegalStateException("Not a directory: " + fileDirectory);
         }
+
         log.info("Searching for " + prefix + "*" + suffix + " in " + dir.getAbsolutePath());
-        for (String file : Objects.requireNonNull(dir.list())) {
-            if (file.contains(" "))
-                continue; // spaces not acceptable
-            if (file.startsWith(prefix) && file.endsWith(suffix)) {
-                // todo: instead of returning first matching file we have to make sure that
-                // not more than one file match pattern
-                // todo: find file to throw an exception if more than one file match pattern #7883
-                return fileDirectory + File.separator + file;
-            }
+        
+        Optional<String[]> fileList = Optional.ofNullable(dir.list());
+
+        Supplier<Stream<String>> search_file = () -> Arrays.stream(fileList.get())
+        		.filter(file -> !file.contains(" "))  // spaces not acceptable
+        		.filter(file -> file.startsWith(prefix) && file.endsWith(suffix));
+        
+        long matchCount = search_file.get().count();
+        
+        if(matchCount > 1) {
+        	throw new IllegalStateException("More than one file match the search pattern: " + matchCount);
         }
+        
+        Optional<String> file = search_file.get().findFirst();
+
+        if(file.isPresent()) {
+        	return fileDirectory + File.separator + file.get();
+        }
+
         return null;
     }
 
