@@ -19,8 +19,9 @@ TEST(EngineModules, MapAveragingModule_onEnginePhase) {
         eth.executeActions();
     }
 
-    // TODO: assert current angle? we need refactor "sampler" var for AngleBasedEvent
     EXPECT_TRUE(engine->outputChannels.isMapAveraging);
+    bool averageDone = eth.assertEventExistsAtEnginePhase("startMapAveraging callback", (void*)startAveraging, static_cast<angle_t>(50));
+    EXPECT_TRUE(averageDone);
 
     // move forward
     eth.fireRise(200);
@@ -44,9 +45,9 @@ TEST(EngineModules, MapAveragingModule_onFastCallback) {
     mapModule.onFastCallback();
 
     EXPECT_EQ(engine->engineState.mapAveragingStart[0], 100);
-    EXPECT_EQ(engine->engineState.mapAveragingStart[1], 280);
-    EXPECT_EQ(engine->engineState.mapAveragingStart[2], 460);
-    EXPECT_EQ(engine->engineState.mapAveragingStart[3], 640);
+    EXPECT_EQ(engine->engineState.mapAveragingStart[1], 640);
+    EXPECT_EQ(engine->engineState.mapAveragingStart[2], 280);
+    EXPECT_EQ(engine->engineState.mapAveragingStart[3], 460);
 
     EXPECT_EQ(engine->engineState.mapAveragingDuration, 50);
 }

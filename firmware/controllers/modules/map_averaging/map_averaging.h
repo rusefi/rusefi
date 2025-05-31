@@ -16,8 +16,7 @@
 * TODO: migrate to AngleBasedEvent, see also #7869
 */
 struct mapSampler {
-	scheduling_s startTimer;
-	scheduling_s endTimer;
+	scheduling_s timer;
 	uint8_t cylinderNumber;
 };
 
@@ -63,14 +62,17 @@ private:
 
 MapAverager& getMapAvg(size_t idx);
 float filterMapValue(float value);
+void startAveraging(struct mapSampler* s);
 
 class MapAveragingModule : public EngineModule {
 public:
 	void onConfigurationChange(engine_configuration_s const * previousConfig) override;
 
 	void onFastCallback() override;
+    void onEnginePhase(float /*rpm*/, efitick_t edgeTimestamp, float currentPhase, float nextPhase) override;
+
 	void triggerCallback(uint32_t index, efitick_t edgeTimestamp);
 	void init();
 	void submitSample(float voltsMap1, float voltsMap2);
-	mapSampler samplers[MAX_CYLINDER_COUNT][SAMPLER_DIMENSION];
+	mapSampler samplers[MAX_CYLINDER_COUNT];
 };
