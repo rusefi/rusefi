@@ -179,11 +179,13 @@ public class LinkManager implements Closeable {
     }
 
     public void disconnect() {
+        log.info("disconnect");
         isDisconnectedByUser = true;
         close();
     }
 
     public void reconnect() {
+        log.info("reconnect");
         isDisconnectedByUser = false;
         restart();
     }
