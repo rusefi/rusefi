@@ -142,7 +142,7 @@ void pingWideband(uint8_t hwIndex) {
 }
 
 void sendWidebandInfo() {
-	CanTxMessage m(CanCategory::WBO_SERVICE, WB_MGS_ECU_STATUS, 2, getWidebandBus(), true);
+	CanTxMessage m(CanCategory::WBO_SERVICE, WB_MGS_ECU_STATUS, /*dlc*/2, getWidebandBus(), /*isExtended*/true);
 
 	float vbatt = Sensor::getOrZero(SensorType::BatteryVoltage) * 10;
 
