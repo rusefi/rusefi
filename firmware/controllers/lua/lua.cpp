@@ -152,7 +152,7 @@ static void printLuaMemoryInfo() {
 	size_t chHeapFree = 0;
 	chHeapStatus(NULL, &chHeapFree, NULL);
 	efiPrintf("Common ChibiOS heap: %d bytes free", chHeapFree);
-	efiPrintf("ChibiOS memcore free size: %d", chCoreGetStatusX());
+	efiPrintf("ChibiOS memcore: %d bytes free", chCoreGetStatusX());
 }
 
 static void* myAlloc(void* /*ud*/, void* optr, size_t osize, size_t nsize) {
