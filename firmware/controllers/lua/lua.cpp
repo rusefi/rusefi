@@ -24,7 +24,7 @@ static bool withErrorLoading = false;
 //#define LUA_HEAD_RAM_SECTION CCM_OPTIONAL
 //#endif
 
-static char luaUserHeap[LUA_USER_HEAP]
+CH_HEAP_AREA(luaUserHeap, LUA_USER_HEAP)
 #ifdef EFI_HAS_EXT_SDRAM
 SDRAM_OPTIONAL
 #endif
@@ -44,7 +44,7 @@ public:
 
 	size_t m_memoryUsed = 0;
 	size_t m_size;
-	char* m_buffer;
+	uint8_t* m_buffer;
 
 	void* alloc(size_t n) {
 		return chHeapAlloc(&m_heap, n);
@@ -56,12 +56,12 @@ public:
 
 public:
 	template<size_t TSize>
-	Heap(char (&buffer)[TSize])
+	Heap(uint8_t (&buffer)[TSize])
 	{
 		reinit(buffer, TSize);
 	}
 
-	void reinit(char *buffer, size_t size) {
+	void reinit(uint8_t *buffer, size_t size) {
 		criticalAssertVoid(m_memoryUsed == 0, "Too late to reinit Lua heap");
 
 		m_size = size;
@@ -413,8 +413,8 @@ void startLua() {
 	// on Hellen a bit of open question what's the best track
 	if (isStm32F42x()) {
 		// This is safe to use section base and end as we define ram3 for all F4 chips
-		extern char __ram3_base__[];
-		extern char __ram3_end__[];
+		extern uint8_t __ram3_base__[];
+		extern uint8_t __ram3_end__[];
 		userHeap.reinit(__ram3_base__, __ram3_end__ - __ram3_base__);
 	}
 #endif // !EFI_IS_F42x
