@@ -219,7 +219,7 @@ public class BinaryProtocol {
                                 if (linkManager.isNeedPullLiveData()) {
                                     LiveDocsRegistry.LiveDataProvider liveDataProvider = LiveDocsRegistry.getLiveDataProvider();
                                     LiveDocsRegistry.INSTANCE.refresh(liveDataProvider);
-                                    log.info("Got livedata");
+                                    log.info(stream + ": Got livedata");
                                 }
                             }
                         });
@@ -288,7 +288,7 @@ public class BinaryProtocol {
                 return;
         }
         setConfigurationImage(image.getConfigurationImage());
-        log.info("Got configuration from controller " + meta.getImageSize() + " byte(s)");
+        log.info(stream + ": Got configuration from controller " + meta.getImageSize() + " byte(s)");
         ConnectionStatusLogic.INSTANCE.setValue(ConnectionStatusValue.CONNECTED);
     }
 
@@ -328,7 +328,7 @@ public class BinaryProtocol {
                 }
                 String code = (response == null || response.length == 0) ? "empty" : "ERROR_CODE=" + getCode(response);
                 String info = response == null ? "NO RESPONSE" : (code + " length=" + response.length);
-                log.info("readImage: ERROR UNEXPECTED Something is wrong, retrying... " + info);
+                log.info(stream + ": readImage: ERROR UNEXPECTED Something is wrong, retrying... " + info);
                 // todo: looks like forever retry? that's weird
                 continue;
             }
