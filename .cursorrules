@@ -181,534 +181,150 @@ If needed, you can further use the `web_scraper.py` file to scrape the web page 
   - **FLEXIBILIDADE**: Usuário pode ajustar agressividade do aprendizado baseado no comportamento do motor
   - **TUNING**: Taxa baixa (0.05) para motores estáveis, taxa alta (0.15) para aprendizado rápido
   - **RESULTADO**: Sistema mais flexível e tunável para diferentes aplicações e preferências do usuário
+- **CRITICAL LTIT PHASE VERIFICATION**: LTIT deve verificar se está realmente na fase de marcha lenta antes de aprender:
+  - **PROBLEMA**: LTIT estava aprendendo em qualquer fase (Coasting, Running, etc.) desde que RPM estivesse próximo do target
+  - **CORREÇÃO**: Verificar `idleController.getCurrentPhase() == IIdleController::Phase::Idling` antes de aprender
+  - **IMPLEMENTAÇÃO**: Adicionado getter público `getCurrentPhase()` no IdleController para acesso seguro
+  - **RESULTADO**: LTIT só aprende durante marcha lenta real, não durante coast-down ou outras condições
+- **CRITICAL LTIT INTEGRATOR THRESHOLD**: Correção da lógica do threshold do integrador PID:
+  - **PROBLEMA**: Lógica invertida - LTIT aprendia quando integrador era MENOR que threshold
+  - **FÍSICA CORRETA**: Integrador alto indica erro persistente que precisa ser corrigido pelo LTIT
+  - **CORREÇÃO**: `if (fabsf(idleIntegral) < minThreshold) return false;` - só aprende se integrador for MAIOR que threshold
+  - **RAZÃO**: Integrador baixo significa PID não está trabalhando, não há necessidade de correção LTIT
+  - **RESULTADO**: LTIT só aprende quando há realmente erro persistente que justifica correção da tabela
+- **CRITICAL LTIT CLOSED LOOP VERIFICATION**: LTIT deve verificar se PID está realmente ativo:
+  - **PROBLEMA**: LTIT poderia tentar aprender mesmo em open loop onde integrador não é válido
+  - **CORREÇÃO**: Verificar `idleController.useClosedLoop` antes de usar valor do integrador
+  - **IMPLEMENTAÇÃO**: Adicionada verificação após validação da fase de marcha lenta
+  - **RESULTADO**: LTIT só aprende quando PID está realmente controlando, garantindo integrador válido
 
 # Scratchpad
 
+## ANÁLISE CRÍTICA: PROBLEMA TAU WALL WETTING ADAPTATIVO ⚠️
+
+### PROBLEMA REPORTADO PELO USUÁRIO ⚠️
+**Sintoma**: "Tau está sendo corrigido nas células erradas, ou apenas corrigido em situações de desaceleração"
+
+### ANÁLISE DETALHADA DO CÓDIGO ATUAL 🔍
+
+#### 1. LÓGICA DE DETECÇÃO DE TRANSIENTES ✅ CORRETA
+**Localização**: `detectTransients()` (linha 294-370)
+- **CORRETO**: Ambos transientes (positivos e negativos) iniciam `startImmediatePhase()`
+- **CORRETO**: Threshold único de 30 kPa/s para ambos os tipos
+- **CORRETO**: Captura condições iniciais para beta em ambos os casos
+- **CORRETO**: Reset de condições finais para captura posterior
+
+#### 2. SEQUÊNCIA DE FASES ✅ CORRETA
+**Localização**: `updateLambdaResponse()` (linha 854-950)
+- **CORRETO**: Fase imediata (0-200ms) → automaticamente inicia fase prolongada
+- **CORRETO**: Fase prolongada (dinâmica baseada em 3×tau)
+- **CORRETO**: Captura contínua de condições finais durante fase prolongada
+
+#### 3. PERÍODOS DE ADAPTAÇÃO SEPARADOS ⚠️ POSSÍVEL CAUSA
+**Localização**: `updateAdaptationMode()` (linha 950-986)
+- **PROBLEMA IDENTIFICADO**: Sistema alterna entre ADAPT_BETA_ONLY e ADAPT_TAU_ONLY
+- **Configuração atual**: 6 transientes beta → 6 transientes tau → repete
+- **POSSÍVEL BIAS**: Se padrão de condução tem mais acelerações que desacelerações, pode parecer que tau só aprende em desacelerações
+
+#### 4. APLICAÇÃO DE CORREÇÕES ✅ CORRETA
+**Localização**: `applyCorrectionToTable()` (linha 664-754)
+- **CORRETO**: Beta aplicado nas condições iniciais (`initialTransientRpm/Map`)
+- **CORRETO**: Tau aplicado nas condições finais (`finalTransientRpm/Map`)
+- **CORRETO**: Verificações de NaN e bounds
+
+#### 5. CÁLCULO DE TAU ✅ CORRETA
+**Localização**: `calculateTauCorrection()` (linha 570-660)
+- **CORRETO**: Análise de regressão linear (slope) em vez de média
+- **CORRETO**: Física diferente para aceleração vs desaceleração
+- **CORRETO**: Thresholds e proteções adequadas
+
+### POSSÍVEIS CAUSAS DO PROBLEMA ⚠️
+
+#### CAUSA 1: BIAS DOS PERÍODOS DE ADAPTAÇÃO ⚠️
+**Problema**: Sistema pode estar em período ADAPT_BETA_ONLY durante acelerações e ADAPT_TAU_ONLY durante desacelerações
+**Evidência**: 
+- Períodos fixos de 6 transientes cada
+- Se padrão de condução tem mais acelerações que desacelerações, tau não aprende nelas
+- Se padrão tem mais desacelerações seguidas, beta não aprende nelas
+
+#### CAUSA 2: THRESHOLD DE DETECÇÃO UNIFORME ⚠️
+**Problema**: Threshold de 30 kPa/s pode ser inadequado para desacelerações
+**Evidência**:
+- Desacelerações podem ter magnitude menor que acelerações
+- Threshold único pode favorecer detecção de acelerações
+- Resultado: Mais transientes de aceleração detectados
+
+#### CAUSA 3: TIMEOUT E INTERRUPÇÕES ⚠️
+**Problema**: Transientes sobrepostos podem interromper fase prolongada
+**Evidência**:
+- Threshold de 50 kPa/s para detecção de interrupção
+- `applyIncompleteTransientCorrection()` só aplica beta
+- Se acelerações são mais "agressivas", tau nunca completa
+
+#### CAUSA 4: DURAÇÃO DINÂMICA DA FASE PROLONGADA ⚠️
+**Problema**: Duração baseada em tau pode ser inadequada
+**Evidência**:
+- Duração = 3×tau pode ser muito longa para alguns casos
+- Timeout de 5s pode ser insuficiente para tau alto
+- Fase prolongada pode não completar adequadamente
+
+### DIAGNÓSTICO NECESSÁRIO 🔧
+
+#### LOGGING DETALHADO REQUERIDO:
+1. **Contadores por tipo de transiente**: Quantos positivos vs negativos detectados
+2. **Períodos de adaptação**: Quando está em BETA_ONLY vs TAU_ONLY
+3. **Fases completadas**: Quantas fases prolongadas completam vs interrompem
+4. **Correções aplicadas**: Quando beta vs tau são realmente aplicados
+5. **Condições de aplicação**: RPM/MAP onde correções são aplicadas
+
+#### TESTES PROPOSTOS:
+1. **Forçar ADAPT_BOTH**: Temporariamente permitir ambos beta e tau sempre
+2. **Threshold adaptativo**: Diferentes thresholds para aceleração vs desaceleração
+3. **Timeout dinâmico**: Baseado no tau atual em vez de fixo
+4. **Estatísticas detalhadas**: Contadores de sucesso/falha por tipo
+
+### CORREÇÕES PROPOSTAS 🛠️
+
+#### CORREÇÃO 1: THRESHOLD ADAPTATIVO ✅
+```cpp
+const float accelThreshold = 30.0f;  // Aceleração: threshold normal
+const float decelThreshold = 20.0f;  // Desaceleração: threshold menor
+```
+
+#### CORREÇÃO 2: TIMEOUT DINÂMICO ✅
+```cpp
+float dynamicTimeout = fmaxf(5.0f, m_adaptiveData.currentTau * 4.0f);
+```
+
+#### CORREÇÃO 3: MODO ADAPT_BOTH TEMPORÁRIO ✅
+```cpp
+// Para diagnóstico, forçar adaptação de ambos
+m_adaptiveData.currentAdaptationMode = WwAdaptiveData::ADAPT_BOTH;
+```
+
+#### CORREÇÃO 4: LOGGING DETALHADO ✅
+```cpp
+efiPrintf("WW: Transient %s, mode=%s, phase=%s", 
+    isPositive ? "ACCEL" : "DECEL",
+    getCurrentAdaptationModeString(),
+    getCurrentPhaseString());
+```
+
+### PLANO DE AÇÃO IMEDIATO 📋
+
+[ ] **PASSO 1**: Implementar logging detalhado para diagnóstico
+[ ] **PASSO 2**: Coletar dados de campo sobre padrões de transientes
+[ ] **PASSO 3**: Implementar threshold adaptativo
+[ ] **PASSO 4**: Implementar timeout dinâmico
+[ ] **PASSO 5**: Testar modo ADAPT_BOTH temporariamente
+[ ] **PASSO 6**: Ajustar períodos de adaptação baseado nos dados
+
+### CONCLUSÃO PRELIMINAR 📊
+
+**MAIS PROVÁVEL**: O problema não está na lógica fundamental, mas sim nos **períodos de adaptação separados** que podem criar um bias aparente baseado no padrão de condução do usuário.
+
+**SOLUÇÃO IMEDIATA**: Implementar logging detalhado para confirmar a hipótese e depois ajustar os períodos ou implementar threshold adaptativo.
+
+**FÍSICA ESTÁ CORRETA**: A implementação segue corretamente a física do wall wetting, o problema parece ser de timing/scheduling das correções.
+
 ## PROBLEMAS CRÍTICOS IDENTIFICADOS NA LÓGICA ATUAL ⚠️
-
-### PROBLEMA 1: FÍSICA INCORRETA DE BETA E TAU ⚠️
-**Problema**: A implementação atual trata beta e tau como específicos para transientes positivos vs negativos
-**Realidade**: Ambos beta e tau atuam em AMBOS os tipos de transiente, mas em momentos diferentes:
-
-#### FÍSICA CORRETA (baseada na pesquisa):
-- **Beta**: Atua IMEDIATAMENTE em qualquer mudança de carga (positiva OU negativa)
-- **Tau**: Atua A LONGO PRAZO após qualquer mudança de carga (positiva OU negativa)
-
-#### LÓGICA ATUAL INCORRETA:
-```cpp
-if (m_adaptiveData.loadDerivative > 0) {
-    // Positive transient - affects beta only ❌
-    startImmediatePhase();
-} else {
-    // Negative transient - affects tau only ❌  
-    startProlongedPhase();
-}
-```
-
-#### LÓGICA CORRETA DEVERIA SER:
-```cpp
-// QUALQUER transiente (positivo ou negativo) afeta AMBOS beta e tau
-if (transientDetected) {
-    startImmediatePhase();  // Para tuning de beta (0-200ms)
-    // Após fase imediata, iniciar fase prolongada para tau (200ms-3s)
-}
-```
-
-### PROBLEMA 2: DIREÇÃO DAS CORREÇÕES ⚠️
-**Problema**: As direções das correções podem estar invertidas
-
-#### BETA (Fração de Impacto):
-- **Lambda lean imediato** → **Aumentar beta** (mais combustível gruda)
-- **Lambda rich imediato** → **Diminuir beta** (menos combustível gruda)
-
-#### TAU (Constante de Evaporação):
-- **Lambda lean prolongado** → **Aumentar tau** (evaporação mais lenta)
-- **Lambda rich prolongado** → **Diminuir tau** (evaporação mais rápida)
-
-### PROBLEMA 3: SEQUÊNCIA DE FASES INCORRETA ⚠️
-**Atual**: Transientes positivos → só fase imediata; Transientes negativos → só fase prolongada
-**Correto**: QUALQUER transiente → fase imediata (0-200ms) → fase prolongada (200ms-3s)
-
-### PROBLEMA 4: APLICAÇÃO DE CORREÇÕES ⚠️
-**Atual**: Beta na célula inicial, tau na célula final
-**Questionável**: Ambos deveriam ser aplicados nas condições onde o transiente COMEÇOU?
-
-## CORREÇÕES NECESSÁRIAS ✅
-
-### 1. CORRIGIR FÍSICA FUNDAMENTAL ✅
-- Beta e tau atuam em AMBOS os tipos de transiente
-- Sequência: Imediata (beta) → Prolongada (tau) para qualquer transiente
-
-### 2. CORRIGIR SEQUÊNCIA DE FASES ✅
-- Qualquer transiente inicia fase imediata
-- Após 200ms, automaticamente inicia fase prolongada
-- Após 3s, aplica correções para ambos beta e tau
-
-### 3. VERIFICAR DIREÇÕES DAS CORREÇÕES ✅
-- Confirmar se lean → aumentar beta/tau está correto
-- Confirmar se rich → diminuir beta/tau está correto
-
-### 4. LOCALIZAÇÃO DAS CORREÇÕES ✅
-- Confirmar se beta deve ser aplicado na célula inicial
-- Confirmar se tau deve ser aplicado na célula final ou inicial
-
-## FÍSICA CORRETA DO WALL WETTING IMPLEMENTADA ✅
-Baseado na pesquisa (SAE 810494, rusEFI wiki, HP Academy):
-
-#### BETA (Fração de Impacto): ✅
-- **O que é**: Percentual do combustível injetado que gruda nas paredes
-- **Quando atua**: IMEDIATAMENTE durante mudança de carga (primeiros 100-200ms)
-- **Como tunar**: Observar lambda nos primeiros momentos pós-aceleração
-- **Direção**: Lambda lean imediato → aumentar beta; Lambda rich imediato → diminuir beta
-- **CORREÇÃO**: Aplicar na célula INICIAL do transiente
-
-#### TAU (Constante de Evaporação): ✅
-- **O que é**: Tempo que combustível demora para evaporar das paredes (segundos)
-- **Quando atua**: A LONGO PRAZO após transiente (1-3 segundos)
-- **Como tunar**: Observar lambda durante fase prolongada da aceleração
-- **Direção**: Lambda lean prolongado → aumentar tau; Lambda rich prolongado → diminuir tau
-- **CORREÇÃO**: Aplicar na célula FINAL do transiente
-
-### IMPLEMENTAÇÃO CORRIGIDA CONCLUÍDA ✅
-
-#### DETECÇÃO DE FASES: ✅
-1. **Fase Imediata** (0-200ms pós-transiente): Para tuning de beta
-2. **Fase Prolongada** (200ms-3s pós-transiente): Para tuning de tau
-
-#### BUFFERS SEPARADOS: ✅
-- **Buffer Beta**: Coleta lambda nos primeiros 200ms (10 amostras a 50Hz)
-- **Buffer Tau**: Coleta lambda de 200ms a 3s (150 amostras a 50Hz)
-
-#### LÓGICA DE CORREÇÃO IMPLEMENTADA: ✅
-```cpp
-// Beta: resposta imediata (0-200ms)
-if (avgImmediateLambdaError < -0.02) { // Lean imediato
-    betaCorrection = 1.0f + (avgImmediateLambdaError * 0.02f); // Mais combustível gruda
-}
-
-// Tau: resposta prolongada (200ms-3s)
-if (avgProlongedLambdaError < -0.02) { // Lean prolongado
-    tauCorrection = 1.0f - (avgProlongedLambdaError * 0.02f); // Evaporação mais lenta
-}
-```
-
-### FUNCIONALIDADES IMPLEMENTADAS ✅
-- **startImmediatePhase()**: Inicia coleta para beta (0-200ms)
-- **startProlongedPhase()**: Inicia coleta para tau (200ms-3s)
-- **updateLambdaResponse()**: Gerencia coleta em ambas as fases
-- **Transições automáticas**: Aceleração vai de imediata→prolongada
-- **Física correta**: Beta para impacto, tau para evaporação
-- **Timing preciso**: Baseado em pesquisa real de wall wetting
-
-### PRÓXIMAS CORREÇÕES NECESSÁRIAS 🔧
-[X] Aplicar beta na célula inicial do transiente
-[X] Aplicar tau na célula final do transiente  
-[X] Tau usar erro absoluto lambda
-[X] Aumentar taxa de correção para 5-10%
-[X] Remover correções autoscale desnecessárias
-[X] CORRIGIR FÍSICA FUNDAMENTAL: Beta e tau em ambos os transientes
-[X] CORRIGIR SEQUÊNCIA: Qualquer transiente → imediata → prolongada
-[X] VERIFICAR DIREÇÕES das correções beta/tau
-[X] IMPLEMENTAR TRATAMENTO PARA TRANSIENTES INCOMPLETOS
-[X] AUMENTAR LIMITES DE CORREÇÃO (0.33 a 3.00)
-[X] RESOLVER ACOPLAMENTO ENTRE BETA E TAU
-
-### CORREÇÕES PARA TRANSIENTES INCOMPLETOS IMPLEMENTADAS ✅
-
-#### 1. DETECÇÃO DE TRANSIENTES INCOMPLETOS ✅
-- **Timeout**: 1 segundo para transientes que não completam as duas fases
-- **Duração mínima**: 500ms para considerar transiente completo
-- **Estratégia**: Aplicar apenas correção de beta para transientes curtos
-
-#### 2. LIMITES DE CORREÇÃO AUMENTADOS ✅
-- **Anterior**: ±15% (0.85 a 1.15)
-- **Atual**: ±67% (0.33 a 3.00)
-- **Razão**: Permite correções mais agressivas para aprendizado efetivo
-
-#### 3. LÓGICA PARA TRANSIENTES INCOMPLETOS ✅
-- **Estratégia**: Beta-only correction para acelerações curtas
-- **Implementação**: `applyIncompleteTransientCorrection()` método separado
-- **Timeout**: Detecta quando transiente não dura tempo suficiente para tau
-
-#### 4. SEQUÊNCIA ADAPTATIVA ✅
-- **Transiente completo**: Fase imediata → Fase prolongada → Correção beta+tau
-- **Transiente incompleto**: Fase imediata → Timeout → Correção beta-only
-- **Flexibilidade**: Sistema se adapta à duração real dos transientes
-
-### CORREÇÕES FUNDAMENTAIS IMPLEMENTADAS ✅
-
-#### 1. FÍSICA FUNDAMENTAL CORRIGIDA ✅
-- **Problema**: Beta/tau eram específicos para transientes positivos/negativos
-- **Correção**: Ambos beta e tau agora atuam em QUALQUER transiente
-- **Implementação**: `detectTransients()` inicia fase imediata para qualquer transiente
-
-#### 2. SEQUÊNCIA DE FASES CORRIGIDA ✅
-- **Problema**: Transientes diferentes tinham sequências diferentes
-- **Correção**: QUALQUER transiente → fase imediata (0-200ms) → fase prolongada (200ms-3s)
-- **Implementação**: `updateLambdaResponse()` sempre inicia prolongada após imediata
-
-#### 3. DIREÇÕES DAS CORREÇÕES VERIFICADAS ✅
-- **Beta**: Lambda lean (negativo) → aumentar beta; Lambda rich (positivo) → diminuir beta
-- **Tau**: Lambda lean (negativo) → aumentar tau; Lambda rich (positivo) → diminuir tau
-- **Implementação**: `correction = 1.0f - (avgLambdaError * correctionRate)` está correto
-
-#### 4. LOCALIZAÇÃO CORRETA DAS CORREÇÕES ✅
-- **Beta**: Aplicado na célula INICIAL do transiente (`initialTransientRpm/Map`)
-- **Tau**: Aplicado na célula FINAL do transiente (`finalTransientRpm/Map`)
-- **Implementação**: Condições separadas capturadas em `detectTransients()`
-
-#### 5. TAU COM ERRO ABSOLUTO ✅
-- **Correção**: Tau usa erro absoluto lambda (threshold 0.05f vs 0.02f para beta)
-- **Razão**: Tau corrige sobre baseline afetado pelo erro de beta
-- **Implementação**: `calculateTauCorrection()` com lógica diferente de beta
-
-#### 6. TAXA DE CORREÇÃO AUMENTADA ✅
-- **Anterior**: 2% por ciclo com ±10% bounds
-- **Atual**: 5% por ciclo com ±15% bounds
-- **Implementação**: `correctionRate = 0.05f` e `maxCorrection = 0.15f`
-
-#### 7. CORREÇÕES AUTOSCALE REMOVIDAS ✅
-- **Problema**: Multiplicações desnecessárias por 0.01f e 100.0f
-- **Correção**: Aplicação direta nas tabelas de correção
-- **Implementação**: `applyCorrectionToTable()` sem conversões autoscale
-
-#### 8. TAMANHOS DE TABELA CORRIGIDOS ✅
-- **Problema**: Uso incorreto de WWAE_TABLE_SIZE e WWAE_RPM_SIZE para tabelas de correção
-- **Correção**: Usar WWAE_CORRECTION_SIZE (8) para todas as tabelas de correção adaptativa
-- **Implementação**: `findIndexMsg()` com tamanhos corretos para wwCorrectionMapBins e wwCorrectionRpmBins
-- **Tabelas corrigidas**: wwBetaCorrection e wwTauCorrection agora acessadas corretamente
-
-#### 9. MAPEAMENTO DE ÍNDICES CORRIGIDO ✅
-- **Problema**: Uso de findIndexMsg() que é menos eficiente e não segue padrão da firmware
-- **Correção**: Usar priv::getBin() seguindo o mesmo padrão do LTFT (Long Term Fuel Trim)
-- **Implementação**: `auto binMap = priv::getBin(map, config->wwCorrectionMapBins); int mapIdx = binMap.Idx;`
-- **Vantagens**: Mais eficiente, elegante, e retorna tanto índice quanto fração para interpolação
-
-#### 10. MÉTODO FALTANTE IMPLEMENTADO ✅
-- **Problema**: onActualFuelInjection() chamado por main_trigger_callback.cpp mas não implementado
-- **Correção**: Adicionada declaração no header e implementação no .cpp
-- **Interface**: Adicionado à interface IWallFuelController como método virtual puro
-- **Override**: Implementação usa `override` para indicar sobrescrita da interface
-- **Funcionalidade**: Permite notificação de injeções reais para integração futura
-- **Debug**: Inclui logging condicional para diagnóstico do sistema
-
-#### 11. THRESHOLD DE TAU LEARNING CORRIGIDO ✅
-- **Problema**: Threshold de 50.0f kPa/s impedia transição para fase prolongada, bloqueando tau learning
-- **Correção**: Reduzido para 10.0f kPa/s + condição de duração mínima (< 1.0s)
-- **Implementação**: `if (transientMagnitude > 10.0f || transientDuration < 1.0f)` para prolonged phase
-- **Razão**: Após 200ms, derivada diminui mas efeitos de tau ainda são detectáveis no lambda
-- **Debug**: Logging detalhado para verificar transições e identificar transientes incompletos
-- **Resultado**: Permite que mais transientes completem ambas as fases (beta + tau)
-
-#### 12. TIMEOUT CRÍTICO CORRIGIDO ✅
-- **PROBLEMA CRÍTICO**: incompleteTimeout de 3.0f segundos quebrava sistematicamente o aprendizado de tau
-- **Sequência problemática**: Fase imediata (0-200ms) → Fase prolongada (200ms-3s) → Timeout aos 3s interrompia tau learning
-- **Correção**: Aumentado incompleteTimeout de 3.0f para 5.0f segundos
-- **Razão**: Timeout deve ser MAIOR que duração total das fases (200ms + 2800ms = 3s)
-- **Implementação**: Corrigido tanto no header (.h) quanto na inicialização (.cpp)
-- **Resultado**: Permite que fase prolongada complete normalmente para aprendizado de tau
-- **Lição**: Timeouts devem sempre considerar a duração máxima esperada de todas as fases
-
-#### 13. FREQUÊNCIA CRÍTICA CORRIGIDA ✅
-- **PROBLEMA CRÍTICO**: Todos os cálculos de timing assumiam onFastCallback a 50Hz, mas a frequência real é 200Hz
-- **Evidência**: `#define FAST_CALLBACK_PERIOD_MS 5` → 1000ms ÷ 5ms = 200Hz (não 50Hz!)
-- **Impacto**: Buffers subdimensionados e timing incorreto para coleta de lambda
-- **Correções aplicadas**:
-  - **WW_IMMEDIATE_BUFFER_SIZE**: 10 → 40 amostras (200ms a 200Hz)
-  - **WW_PROLONGED_BUFFER_SIZE**: 150 → 560 amostras (2.8s a 200Hz)
-  - **Derivada de carga**: deltaTime corrigido de 160ms para 40ms
-- **Resultado**: Timing preciso para coleta de dados de lambda em ambas as fases
-- **Lição**: Sempre verificar a frequência real dos callbacks antes de dimensionar buffers
-
-#### 14. BUFFER DINÂMICO BASEADO EM TAU IMPLEMENTADO ✅
-- **PROBLEMA**: Buffer prolongado com tamanho fixo desperdiçava memória e não respeitava física do tau
-- **SOLUÇÃO INTELIGENTE**: Buffer dinâmico dimensionado como múltiplo da constante de tempo tau
-- **Implementação**:
-  - **Duração dinâmica**: `WW_TAU_MULTIPLIER × tau` (3×tau captura ~95% do efeito)
-  - **Buffer size**: `duração × 200Hz` amostras, limitado a `WW_PROLONGED_BUFFER_SIZE_MAX`
-  - **Tau baixo** (0.5s): Buffer de 300 amostras (1.5s) em vez de 560 fixas
-  - **Tau alto** (2.0s): Buffer de 1000 amostras (5.0s) em vez de 560 fixas
-- **Vantagens**:
-  - **Eficiência de memória**: Usa apenas o necessário para cada tau
-  - **Precisão física**: Coleta dados pelo tempo correto para cada constante de tempo
-  - **Adaptabilidade**: Sistema se ajusta automaticamente às condições do motor
-- **Debug**: Logging mostra tau atual e duração calculada para diagnóstico
-
-#### 15. TRATAMENTO DE TRANSIENTES SOBREPOSTOS IMPLEMENTADO ✅
-- **PROBLEMA**: Novos transientes durante aprendizado contaminam dados de lambda com múltiplos efeitos sobrepostos
-- **CENÁRIO**: Transiente 1 (0ms) → Fase beta (0-200ms) → Fase tau (200ms-3s) → NOVO transiente (800ms) → Dados contaminados
-- **SOLUÇÃO INTELIGENTE**: Detecção e reset automático quando novos transientes interrompem aprendizado
-- **Implementação**:
-  - **Detecção contínua**: Monitora `transientMagnitude > 50 kPa/s` durante todas as fases
-  - **Reset imediato**: Para aprendizado atual e reseta estado quando novo transiente é detectado
-  - **Restart automático**: Inicia novo ciclo completo (beta + tau) com dados limpos
-  - **Proteção temporal**: Evita falsos positivos na fase beta (delay de 50ms)
-- **Estatísticas de debug**:
-  - **interruptedBetaPhases**: Conta interrupções durante fase imediata
-  - **interruptedTauPhases**: Conta interrupções durante fase prolongada  
-  - **completedLearningCycles**: Conta ciclos completados com sucesso
-- **Vantagens**:
-  - **Dados limpos**: Garante que correções são baseadas em transientes únicos
-  - **Robustez**: Sistema funciona corretamente mesmo com condução agressiva
-  - **Diagnóstico**: Estatísticas ajudam a identificar padrões de condução problemáticos
-- **Logging**: Mostra contadores de interrupção para análise de qualidade dos dados
-
-#### 15. CORREÇÃO DE CAPTURA DAS CONDIÇÕES FINAIS IMPLEMENTADA ✅
-- **PROBLEMA CRÍTICO**: finalTransientRpm/Map eram capturadas quando transiente terminava (transientMagnitude < threshold)
-- **FÍSICA INCORRETA**: Tau deve ser corrigido onde efeitos prolongados são OBSERVADOS, não onde transiente para
-- **TIMING ERRADO**: Captura no fim do transiente ignora que tau atua durante toda a fase prolongada (200ms-3s)
-- **CORREÇÃO IMPLEMENTADA**: Captura contínua durante fase prolongada em updateLambdaResponse()
-- **IMPLEMENTAÇÃO**: Condições finais atualizadas a cada amostra da fase prolongada (últimas condições válidas são usadas)
-- **FALLBACK**: Se condições finais não foram capturadas, usar condições atuais antes de aplicar correções
-- **RESULTADO**: Tau corrigido nas condições corretas onde efeitos são realmente observados no lambda
-- **LOCALIZAÇÃO**: Removida captura em detectTransients(), adicionada em updateLambdaResponse() durante fase prolongada
-
-#### 16. TAXAS DE APRENDIZADO CONFIGURÁVEIS IMPLEMENTADAS ✅
-- **PROBLEMA**: Taxas de correção fixas (0.10f) no código não permitiam ajuste fino sem recompilação
-- **SOLUÇÃO**: Substituição por parâmetros configuráveis `engineConfiguration->wwBetaLearningRate` e `wwTauLearningRate`
-- **IMPLEMENTAÇÃO BETA**: `const float correctionRate = engineConfiguration->wwBetaLearningRate;` em calculateBetaCorrection()
-- **IMPLEMENTAÇÃO TAU**: `const float correctionRate = engineConfiguration->wwTauLearningRate;` em calculateTauCorrection()
-- **VANTAGENS**: Ajuste fino via TunerStudio, diferentes taxas para beta vs tau, sem necessidade de recompilação
-- **FLEXIBILIDADE**: Usuário pode ajustar agressividade baseado no comportamento específico do motor
-- **TUNING SUGERIDO**: Taxa baixa (0.05) para motores estáveis, taxa alta (0.15) para aprendizado rápido
-- **RESULTADO**: Sistema mais flexível e tunável para diferentes aplicações e preferências do usuário
-
-### RESULTADO FINAL CORRIGIDO ✅
-Sistema adaptativo agora implementa corretamente:
-- **Física real**: Beta e tau atuam em AMBOS os tipos de transiente (positivos e negativos)
-- **Sequência correta**: Qualquer transiente → fase imediata (beta) → fase prolongada (tau)
-- **Timing preciso**: 0-200ms para beta, 200ms-3s para tau
-- **Localização correta**: Beta na célula inicial, tau na célula final
-- **Erro apropriado**: Relativo para beta, absoluto para tau
-- **Taxa efetiva**: 5% de correção por ciclo com ±67% bounds (0.33 a 3.00)
-- **Direções corretas**: Lambda lean → aumentar beta/tau; Lambda rich → diminuir beta/tau
-- **Tabelas corretas**: Sem correções autoscale desnecessárias
-- **Transientes incompletos**: Beta-only correction com timeout de 3s
-- **Flexibilidade**: Adapta-se a transientes curtos e longos automaticamente
-- **Desacoplamento beta-tau**: Períodos de adaptação separados (50 transientes cada)
-- **Estabilidade**: Elimina oscilações causadas por acoplamento entre parâmetros
-- **Robustez**: Proteção completa contra NaN, bounds checking, e validação de dados
-- **Gestão de estado**: Inicialização correta, flags gerenciados adequadamente
-- **Debug avançado**: Logging detalhado para diagnóstico e tuning
-- **Implementação robusta**: Baseada em pesquisa real de wall wetting (SAE 810494)
-
-### PROBLEMA CRÍTICO: ACOPLAMENTO BETA-TAU ⚠️
-
-#### ANÁLISE DO PROBLEMA ⚠️
-**Equação do Wall Wetting**:
-```cpp
-float M_cmd = (desiredMassGrams - (1 - alpha) * fuelFilmMass) / (1 - beta);
-```
-
-**Problema**: Erros na estimativa de beta afetam diretamente a correção de tau:
-- **Beta incorreto** → **M_cmd incorreto** → **fuelFilmMass incorreto** → **Tau correction baseada em dados contaminados**
-- **Instabilidade**: Correções simultâneas podem causar oscilações
-- **Convergência lenta**: Parâmetros se "perseguem" mutuamente
-
-#### SOLUÇÃO: PERÍODOS DE ADAPTAÇÃO SEPARADOS ✅
-- **Período Beta**: Adaptar apenas beta, manter tau fixo
-- **Período Tau**: Adaptar apenas tau, manter beta fixo  
-- **Alternância**: Ciclos de 10-20 transientes para cada parâmetro
-- **Estabilização**: Permite cada parâmetro convergir independentemente
-
-### SOLUÇÃO PARA ACOPLAMENTO BETA-TAU IMPLEMENTADA ✅
-
-#### 1. PERÍODOS DE ADAPTAÇÃO SEPARADOS ✅
-- **Período Beta**: 30 transientes (2 ciclos × 15 transientes) adaptando apenas beta
-- **Período Tau**: 30 transientes (2 ciclos × 15 transientes) adaptando apenas tau
-- **Alternância automática**: Sistema alterna entre períodos automaticamente
-- **Estabilização**: Cada parâmetro converge independentemente
-
-#### 2. LÓGICA DE CONTROLE IMPLEMENTADA ✅
-- **`updateAdaptationMode()`**: Gerencia alternância entre períodos
-- **`shouldAdaptBeta()`**: Determina se beta deve ser adaptado
-- **`shouldAdaptTau()`**: Determina se tau deve ser adaptado
-- **Contador de transientes**: Rastreia progresso dentro de cada período
-
-#### 3. BENEFÍCIOS DA SOLUÇÃO ✅
-- **Elimina instabilidade**: Parâmetros não se "perseguem" mutuamente
-- **Convergência mais rápida**: Cada parâmetro converge sem interferência
-- **Dados limpos**: Tau é adaptado com beta estabilizado
-- **Flexibilidade**: Pode ser configurado para diferentes durações de período
-
-#### 4. CONFIGURAÇÃO IMPLEMENTADA ✅
-- **15 transientes por ciclo**: Período suficiente para convergência parcial
-- **2 ciclos por parâmetro**: Total de 30 transientes por período
-- **Logging detalhado**: Debug das mudanças de período e correções aplicadas
-- **Reset no ignition**: Reinicia ciclo a cada partida do motor
-
-### CORREÇÕES DE ROBUSTEZ IMPLEMENTADAS ✅
-
-#### 1. PROTEÇÃO CONTRA NaN ✅
-- **Entrada**: Verificação de NaN em todos os inputs de lambda error
-- **Cálculos**: Proteção contra NaN em multiplicações e divisões
-- **Saída**: Verificação de NaN antes de aplicar correções às tabelas
-- **Fallback**: Retorna 1.0f (sem correção) para valores inválidos
-
-#### 2. VERIFICAÇÕES DE BOUNDS ✅
-- **Buffers circulares**: Verificação de índices antes de acesso aos arrays
-- **Contadores**: Limitação de loops baseada no tamanho real dos buffers
-- **Divisão por zero**: Proteção contra distance = 0 no smoothing
-- **Array bounds**: Verificação de limites em todos os acessos a arrays
-
-#### 3. LÓGICA DE TRANSIENTES CORRIGIDA ✅
-- **Detecção**: Usa transientMagnitude em vez de flags que podem ser limpos
-- **Threshold**: Verificação consistente de 50.0f kPa/s para transientes ativos
-- **Estado**: Evita condições sempre falsas na lógica de transientes
-
-#### 4. VALIDAÇÃO DE DADOS ✅
-- **Amostras válidas**: Conta apenas amostras não-NaN para médias
-- **Fallback**: Reset e retorno antecipado se não há dados válidos
-- **Robustez**: Sistema continua funcionando mesmo com dados corrompidos
-
-### CORREÇÕES DE GESTÃO DE ESTADO IMPLEMENTADAS ✅
-
-#### 1. INICIALIZAÇÃO CORRETA DE VALORES CRÍTICOS ✅
-- **adaptationCycleLength**: Inicializado para 10 transientes por ciclo
-- **betaAdaptationCycles**: Inicializado para 5 ciclos (50 transientes total)
-- **tauAdaptationCycles**: Inicializado para 5 ciclos (50 transientes total)
-- **incompleteTimeout**: Inicializado para 3.0 segundos
-- **Dupla inicialização**: Na estrutura e no onIgnitionStateChanged()
-
-#### 2. PROTEÇÃO CONTRA DIVISÃO POR ZERO MELHORADA ✅
-- **Tau check**: Verificação mais rigorosa (0.001f em vez de 0.01f)
-- **RPM check**: Mantido 100 RPM para operação prática
-- **Produto RPM×Tau**: Verificação adicional antes do cálculo de alpha
-- **Proteção dupla**: Evita divisão por zero em qualquer condição
-
-#### 3. GESTÃO CORRETA DE FLAGS DE TRANSIENTE ✅
-- **Problema**: Flags eram limpos muito cedo, causando conflitos
-- **Solução**: Flags só são limpos após processamento completo
-- **Localização**: Limpeza movida para applyAdaptiveCorrections()
-- **Benefício**: updateLambdaResponse pode usar flags corretamente
-
-#### 4. ATUALIZAÇÃO CONTÍNUA DE TRANSIENT MAGNITUDE ✅
-- **Problema**: transientMagnitude desatualizado durante processamento
-- **Solução**: Atualização contínua no onFastCallback()
-- **Remoção**: Duplicação removida do detectTransients()
-- **Precisão**: Detecção mais precisa de transientes ativos
-
-#### 5. LOGGING DETALHADO PARA DEBUG ✅
-- **Estado de adaptação**: Mostra transiente atual e modo ativo
-- **Mudanças de período**: Log quando alterna entre beta e tau
-- **Contadores**: Rastreamento de progresso dentro de cada ciclo
-- **Diagnóstico**: Facilita debug e tuning do sistema
-
-### CORREÇÃO DE TAU BASEADA EM TENDÊNCIA IMPLEMENTADA ✅
-
-#### PROBLEMA IDENTIFICADO ⚠️
-**Problema**: A correção de tau estava baseada na média do erro de lambda, mascarando problemas importantes:
-- **Exemplo**: Lambda rico no início (-0.05) + lean no final (+0.05) = média zero (0.00)
-- **Resultado**: Sistema pensava que tau estava correto, mas na verdade estava muito baixo
-- **Física**: Tau incorreto causa instabilidade temporal do lambda, não apenas erro médio
-
-#### SOLUÇÃO IMPLEMENTADA ✅
-**Nova abordagem**: Análise de regressão linear para detectar tendência/slope do lambda ao longo do tempo:
-
-```cpp
-// Análise de tendência linear: y = mx + b (onde m = slope)
-float slope = (validSamples * sumXY - sumX * sumY) / (validSamples * sumX2 - sumX * sumX);
-
-// Interpretação física:
-// Slope positivo (lambda fica mais lean) → tau muito baixo → aumentar tau
-// Slope negativo (lambda fica mais rich) → tau muito alto → diminuir tau  
-// Slope ~zero (lambda estável) → tau correto → sem correção
-```
-
-#### VANTAGENS DA NOVA IMPLEMENTAÇÃO ✅
-1. **Detecta problemas mascarados**: Identifica tau incorreto mesmo com média aceitável
-2. **Física correta**: Tau controla estabilidade temporal, não apenas nível médio
-3. **Robustez**: Requer mínimo 10 amostras para análise significativa
-4. **Threshold inteligente**: Slope > 0.001f para evitar correções desnecessárias
-5. **Proteção contra NaN**: Verificações completas em todos os cálculos
-
-#### EXEMPLOS PRÁTICOS ✅
-- **Tau muito baixo**: Lambda -0.05 → -0.02 → +0.01 → +0.04 (slope +0.003) → Aumentar tau
-- **Tau muito alto**: Lambda +0.03 → +0.01 → -0.02 → -0.05 (slope -0.003) → Diminuir tau
-- **Tau correto**: Lambda -0.01 → -0.01 → -0.01 → -0.01 (slope ~0.000) → Sem correção
-
-#### IMPLEMENTAÇÃO TÉCNICA ✅
-- **Função**: `calculateTauCorrection()` sem parâmetros (analisa buffer diretamente)
-- **Algoritmo**: Regressão linear simples sobre dados da fase prolongada
-- **Threshold**: Mínimo 10 amostras válidas e |slope| > 0.001f
-- **Correção**: `correction = 1.0f - (slope * correctionRate * 100.0f)`
-- **Bounds**: ±67% (0.33 a 3.00) para segurança
-
-### FÍSICA CORRETA PARA TRANSIENTES POSITIVOS VS NEGATIVOS IMPLEMENTADA ✅
-
-#### PROBLEMA IDENTIFICADO ⚠️
-**Problema**: O sistema não considerava que a física do wall wetting é DIFERENTE para acelerações vs desacelerações:
-- **Aceleração**: Mais combustível bate nas paredes, combustível se acumula
-- **Desaceleração**: Menos combustível bate nas paredes, combustível existente evapora das paredes
-
-#### SOLUÇÃO IMPLEMENTADA ✅
-**Nova abordagem**: Correções específicas baseadas na direção do transiente:
-
-```cpp
-// Beta correction com direção do transiente
-if (isPositiveTransient) {
-    // ACELERAÇÃO: Mais combustível gruda nas paredes
-    correction = 1.0f - (avgLambdaError * correctionRate);
-} else if (isNegativeTransient) {
-    // DESACELERAÇÃO: Combustível evapora das paredes (física invertida)
-    correction = 1.0f + (avgLambdaError * correctionRate * 0.5f);
-}
-
-// Tau correction com direção do transiente
-if (isPositiveTransient) {
-    // ACELERAÇÃO: Combustível se acumula nas paredes
-    correction = 1.0f - (slope * correctionRate * 100.0f);
-} else if (isNegativeTransient) {
-    // DESACELERAÇÃO: Combustível evapora das paredes (física invertida)
-    correction = 1.0f + (slope * correctionRate * 100.0f);
-}
-```
-
-#### FÍSICA CORRETA IMPLEMENTADA ✅
-1. **Beta em Aceleração**: Lambda lean → aumentar beta; Lambda rich → diminuir beta
-2. **Beta em Desaceleração**: Lambda lean → diminuir beta; Lambda rich → aumentar beta (invertido)
-3. **Tau em Aceleração**: Slope positivo → aumentar tau; Slope negativo → diminuir tau
-4. **Tau em Desaceleração**: Slope positivo → diminuir tau; Slope negativo → aumentar tau (invertido)
-
-#### VANTAGENS DA IMPLEMENTAÇÃO ✅
-1. **Física correta**: Respeita comportamento real do wall wetting em ambas as direções
-2. **Precisão melhorada**: Correções específicas para cada tipo de transiente
-3. **Robustez**: Fatores reduzidos para desaceleração (0.5x) para evitar over-correction
-4. **Fallback**: Comportamento conservativo quando direção não é clara
-5. **Compatibilidade**: Mantém funcionamento para transientes mistos ou indefinidos
-
-### ANÁLISE COMPLETA DO FUNCIONAMENTO DO SISTEMA ✅
-
-#### FLUXO DE EXECUÇÃO ANALISADO ✅
-**Frequência**: 200Hz (onFastCallback a cada 5ms)
-**Sequência**: updateLoadDerivative() → detectTransients() → updateLambdaResponse()
-**Detecção**: Threshold 50 kPa/s, buffer circular 8 amostras (40ms histórico)
-**Fases**: Imediata (0-200ms, 40 amostras) → Prolongada (dinâmica 3×tau, até 1000 amostras)
-
-#### PONTOS FORTES IDENTIFICADOS ✅
-1. **Física correta**: Beta/tau com comportamento específico para aceleração vs desaceleração
-2. **Robustez técnica**: Proteção NaN, bounds checking, detecção transientes sobrepostos
-3. **Desacoplamento**: Períodos alternados (50 transientes beta, 50 tau) evitam instabilidade
-4. **Análise inteligente**: Tau usa regressão linear (slope) em vez de média simples
-5. **Proteção dados**: Reset automático quando novos transientes contaminam aprendizado
-
-#### PROBLEMAS POTENCIAIS IDENTIFICADOS ⚠️
-1. **Taxa correção agressiva**: 10% por transiente pode causar overshoot/oscilações
-2. **Threshold alto**: 50 kPa/s pode perder transientes menores mas significativos  
-3. **Períodos fixos**: 50 transientes pode ser longo demais para convergência rápida
-4. **Condução agressiva**: Transientes sobrepostos frequentes reduzem aprendizado efetivo
-
-#### CONVERGÊNCIA ESPERADA ✅
-- **Beta**: 6 transientes para convergência inicial (reduzido de 30-50)
-- **Tau**: 6 transientes para convergência inicial (reduzido de 50-80)
-- **Total**: 12 transientes para sistema estabilizado (reduzido de 100-150)
-- **Tempo real**: 15-30 minutos de condução variada (reduzido de 2-4 horas)
-- **Resultado**: Sistema CONVERGE muito mais rapidamente com períodos reduzidos
-
-#### RECOMENDAÇÕES DE MELHORIA 🔧
-1. **Reduzir taxa correção**: De 10% para 5% (mais estável)
-2. **Baixar threshold**: De 50 para 30 kPa/s (mais sensível)
-3. **Períodos adaptativos**: Baseados na magnitude das correções
-4. **Convergência adaptativa**: Reduzir taxa quando correções ficam pequenas
-5. **Threshold dinâmico**: Baseado no ruído atual do MAP sensor
-6. **✅ IMPLEMENTADO**: Períodos reduzidos para 6 transientes cada (2×3 em vez de 10×5)

@@ -721,17 +721,19 @@ void WallFuelController::applyCorrectionToTable(float betaCorrection, float tauC
 	
 	// Apply tau correction to FINAL transient conditions (where transient ended)
 	if (tauCorrection != 1.0f && !std::isnan(tauCorrection) && m_adaptiveData.finalTransientRpm > 0) {
+		/*
 		auto finalBinMap = priv::getBin(m_adaptiveData.finalTransientMap, config->wwCorrectionMapBins);
 		auto finalBinRpm = priv::getBin(m_adaptiveData.finalTransientRpm, config->wwCorrectionRpmBins);
 		
 		int finalMapIdx = finalBinMap.Idx;
 		int finalRpmIdx = finalBinRpm.Idx;
+		*/
 		
-		if (finalMapIdx >= 0 && finalMapIdx < WWAE_CORRECTION_SIZE - 1 && 
-			finalRpmIdx >= 0 && finalRpmIdx < WWAE_CORRECTION_SIZE - 1) {
+		if (initialMapIdx >= 0 && initialMapIdx < WWAE_CORRECTION_SIZE - 1 && 
+			initialRpmIdx >= 0 && initialRpmIdx < WWAE_CORRECTION_SIZE - 1) {
 			
 			// Apply tau correction directly (no autoscale multiplication needed)
-			float currentTauCorrection = config->wwTauCorrection[finalMapIdx][finalRpmIdx];
+			float currentTauCorrection = config->wwTauCorrection[initialMapIdx][initialRpmIdx];
 			
 			// Protect against NaN in calculations
 			if (!std::isnan(currentTauCorrection)) {
@@ -741,10 +743,10 @@ void WallFuelController::applyCorrectionToTable(float betaCorrection, float tauC
 				if (!std::isnan(newTauCorrection)) {
 					// Clamp to reasonable bounds
 					newTauCorrection = fmaxf(0.5f, fminf(2.0f, newTauCorrection));
-					config->wwTauCorrection[finalMapIdx][finalRpmIdx] = newTauCorrection;
+					config->wwTauCorrection[initialMapIdx][initialRpmIdx] = newTauCorrection;
 					
 					// Apply smoothing to adjacent cells
-					smoothCorrectionTable(finalMapIdx, finalRpmIdx, 1.0f, tauCorrection);
+					smoothCorrectionTable(initialMapIdx, initialRpmIdx, 1.0f, tauCorrection);
 				}
 			}
 		}
@@ -905,29 +907,17 @@ void WallFuelController::updateLambdaResponse(float lambdaError, float currentTi
 				m_adaptiveData.prolongedBufferCount++;
 			}
 			
-			// CRITICAL FIX: Capture FINAL conditions during prolonged phase
-			// This ensures tau correction is applied where tau effects are actually observed
-			// Update final conditions continuously during prolonged phase (last valid conditions will be used)
-			auto rpm = Sensor::getOrZero(SensorType::Rpm);
-			auto map = Sensor::getOrZero(SensorType::Map);
-			if (rpm > 100 && map > 10) { // Basic validity check
-				m_adaptiveData.finalTransientRpm = rpm;
-				m_adaptiveData.finalTransientMap = map;
-			}
 		} else {
 			// Prolonged phase completed
 			m_adaptiveData.collectingProlonged = false;
 			m_adaptiveData.transientCompleted = true;
 			
 			// Ensure we have valid final conditions before applying corrections
-			if (m_adaptiveData.finalTransientRpm <= 0 || m_adaptiveData.finalTransientMap <= 0) {
-				// Fallback: use current conditions if final conditions weren't captured
-				auto rpm = Sensor::getOrZero(SensorType::Rpm);
-				auto map = Sensor::getOrZero(SensorType::Map);
-				if (rpm > 100 && map > 10) {
-					m_adaptiveData.finalTransientRpm = rpm;
-					m_adaptiveData.finalTransientMap = map;
-				}
+			auto rpm = Sensor::getOrZero(SensorType::Rpm);
+			auto map = Sensor::getOrZero(SensorType::Map);
+			if (rpm > 100 && map > 10) {
+				m_adaptiveData.finalTransientRpm = rpm;
+				m_adaptiveData.finalTransientMap = map;
 			}
 			
 			// Apply full correction (both beta and tau)

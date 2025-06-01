@@ -76,6 +76,11 @@ public:
 		return m_lastPhase == Phase::Coasting && engineConfiguration->useIdleAdvanceWhileCoasting;
 	}
 
+	// Getter para acessar a fase atual (necessário para LTIT)
+	Phase getCurrentPhase() const {
+		return m_lastPhase;
+	}
+
 	PidIndustrial industrialWithOverrideIdlePid;
 
 	#if EFI_IDLE_PID_CIC
