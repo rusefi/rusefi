@@ -153,12 +153,14 @@ static void printLuaMemoryInfo() {
 	efiPrintf("ChibiOS memcore free size: %d", chCoreGetStatusX());
 }
 
-static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
+static void* myAlloc(void* /*ud*/, void* optr, size_t osize, size_t nsize) {
+	void *nptr = userHeap.realloc(optr, osize, nsize);
+
 	if (engineConfiguration->debugMode == DBG_LUA) {
 		engine->outputChannels.debugIntField1 = userHeap.used();
 	}
 
-	return userHeap.realloc(ptr, osize, nsize);
+	return nptr;
 }
 #else // not EFI_PROD_CODE
 // Non-MCU code can use plain realloc function instead of custom implementation
