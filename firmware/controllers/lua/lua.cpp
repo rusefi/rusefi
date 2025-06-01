@@ -42,9 +42,8 @@ class Heap {
 public:
 	memory_heap_t m_heap;
 
-	size_t m_memoryUsed = 0;
-	size_t m_size;
-	uint8_t* m_buffer;
+	size_t m_size = 0;
+	uint8_t* m_buffer = nullptr;
 
 	void* alloc(size_t n) {
 		return chHeapAlloc(&m_heap, n);
@@ -62,7 +61,7 @@ public:
 	}
 
 	void reinit(uint8_t *buffer, size_t size) {
-		criticalAssertVoid(m_memoryUsed == 0, "Too late to reinit Lua heap");
+		criticalAssertVoid(used() == 0, "Too late to reinit Lua heap");
 
 		m_size = size;
 		m_buffer = buffer;
@@ -75,17 +74,21 @@ public:
 			// requested size is zero, free if necessary and return nullptr
 			if (ptr) {
 				free(ptr);
-				m_memoryUsed -= osize;
 			}
 
 			return nullptr;
 		}
 
-		void *new_mem = alloc(nsize);
+		void *new_mem = nullptr;
 
-		// Don't count the memory use if not allocated
-		if (new_mem) {
-			m_memoryUsed += nsize;
+		// try Lua heap first
+		if ((m_buffer) && (m_size)) {
+			new_mem = alloc(nsize);
+		}
+
+		// then try ChibiOS default heap
+		if (new_mem == nullptr) {
+			new_mem = chHeapAlloc(NULL, nsize);
 		}
 
 		if (!ptr) {
@@ -97,7 +100,6 @@ public:
 		if (new_mem != nullptr) {
 			memcpy(new_mem, ptr, chHeapGetSize(ptr) > nsize ? nsize : chHeapGetSize(ptr));
 			free(ptr);
-			m_memoryUsed -= osize;
 		}
 
 		return new_mem;
@@ -107,14 +109,28 @@ public:
 		return m_size;
 	}
 
-	size_t used() const {
-		return m_memoryUsed;
+	size_t used() {
+		if (size() == 0) {
+			return 0;
+		}
+
+		size_t heapFree = 0;
+		size_t lagestFree = 0;
+		chHeapStatus(&m_heap, &heapFree, &lagestFree);
+		// hack to return zero when heap is totaly free
+		// this is for leak detector
+		// if all free memory is in one chunk this means heap is totaly free
+		if (heapFree == lagestFree) {
+			return 0;
+		}
+		return m_size - heapFree;
 	}
 
 	// Use only in case of emergency - obliterates all heap objects and starts over
 	void reset() {
-		chHeapObjectInit(&m_heap, m_buffer, m_size);
-		m_memoryUsed = 0;
+		if (m_buffer && m_size) {
+			chHeapObjectInit(&m_heap, m_buffer, m_size);
+		}
 	}
 };
 
@@ -122,11 +138,17 @@ static Heap userHeap(luaUserHeap);
 
 static void printLuaMemoryInfo() {
 	auto heapSize = userHeap.size();
-	auto memoryUsed = userHeap.used();
-	float pct = 100.0f * memoryUsed / heapSize;
+
+	if (heapSize) {
+		auto memoryUsed = userHeap.used();
+		float pct = 100.0f * memoryUsed / heapSize;
+		efiPrintf("Dedicated Lua memory heap usage: %d / %d bytes = %.1f%%", memoryUsed, heapSize, pct);
+	} else {
+		efiPrintf("No dedicated Lua heap, using ChibiOS default heap");
+	}
+
 	size_t chHeapFree = 0;
 	chHeapStatus(NULL, &chHeapFree, NULL);
-	efiPrintf("Lua memory heap usage: %d / %d bytes = %.1f%%", memoryUsed, heapSize, pct);
 	efiPrintf("Common ChibiOS heap: %d bytes free", chHeapFree);
 	efiPrintf("ChibiOS memcore free size: %d", chCoreGetStatusX());
 }
