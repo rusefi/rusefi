@@ -235,24 +235,13 @@ void setDefaultWallWetting() {
 	engineConfiguration->complexWallModel = true;
 	engineConfiguration->wwEnableAdaptiveLearning = true;
 	
-	// *** CORREÇÃO: DETECÇÃO DE TRANSIENTE COM UNIDADES CORRETAS ***
-	// Thresholds em unidades por segundo (não por callback)
-	engineConfiguration->wwTpsThreshold = 10.0f;       // %/s - Threshold realista para TPS
-	engineConfiguration->wwMapThreshold = 40.0f;       // kPa/s - Threshold realista para MAP
-	
-	// Parâmetros simplificados - apenas os essenciais
-	
-	// Learning parameters
-	engineConfiguration->wwBetaLearningRate = 0.05f;       // 5% learning rate
-	engineConfiguration->wwTauLearningRate = 0.05f;       // 5% learning rate
-	
 	// Learning validation parameters
 	engineConfiguration->wwMinCoolantTemp = 70.0f;     // °C - Engine must be warmed up
-	engineConfiguration->wwMaxCoolantTemp = 110.0f;    // °C - Not overheating
-	engineConfiguration->wwMinMapForLearning = 30.0f;  // kPa - Minimum load for learning
 
 	// linear reasonable bins
 	setLinearCurve(config->wwCltBins, -40, 100, 1);
+
+	// linear reasonable bins
 	setLinearCurve(config->wwMapBins, 10, 80, 1);
 	setLinearCurve(config->wwRpmBins, 500, 7000, 1);
 
@@ -319,6 +308,38 @@ void setDefaultWallWetting() {
 		}
 	}
 
+	// === AQUINO MODEL PARAMETERS DEFAULTS ===
+	
+	// Transient Detection Thresholds
+	engineConfiguration->wwAquinoAccelThresh = 50.0f;        // %/s - TPS acceleration threshold
+	engineConfiguration->wwAquinoDecelThresh = -50.0f;       // %/s - TPS deceleration threshold  
+	engineConfiguration->wwAquinoMapAccelThresh = 25.0f;     // kPa/s - MAP acceleration threshold
+	engineConfiguration->wwAquinoMapDecelThresh = -25.0f;    // kPa/s - MAP deceleration threshold
+	
+	// Analysis Window Parameters
+	engineConfiguration->wwAquinoTransMinDuration = 0.3f;    // s - Minimum transient duration for analysis
+	engineConfiguration->wwAquinoAnalysisMaxDuration = 3.0f; // s - Maximum analysis window duration
+	engineConfiguration->wwAquinoMinLambdaErr = 0.02f;       // Minimum lambda error magnitude for adaptation
+	
+	// Beta Correction Parameters (Immediate Phase)
+	engineConfiguration->wwAquinoBetaAccelGain = 0.10f;      // Beta correction gain for acceleration
+	engineConfiguration->wwAquinoBetaDecelGain = 0.10f;      // Beta correction gain for deceleration
+	engineConfiguration->wwAquinoBetaLeanThresh = 0.03f;     // Beta lean threshold for correction
+	engineConfiguration->wwAquinoBetaRichThresh = -0.03f;    // Beta rich threshold for correction
+	
+	// Tau Correction Parameters (Settling Analysis)
+	engineConfiguration->wwAquinoTauIdealFactor = 1.5f;      // Ideal settle time factor (multiplied by tau)
+	engineConfiguration->wwAquinoTauToleranceFactor = 0.2f;  // Tolerance margin factor for settle time
+	engineConfiguration->wwAquinoTauSettleThresh = 0.01f;    // Lambda settle threshold for tau analysis
+	
+	// Tau Overshoot Detection
+	engineConfiguration->wwAquinoTauOvershootMinDur = 0.1f;  // s - Minimum overshoot duration
+	engineConfiguration->wwAquinoTauOvershootMinMag = 0.02f; // Minimum overshoot magnitude
+	engineConfiguration->wwAquinoTauOvershootGain = 0.15f;   // Tau correction gain for overshoot
+	
+	// Tau Scenario Gains
+	engineConfiguration->wwAquinoTauSlowGain = -0.10f;       // Tau correction gain for slow settling
+	engineConfiguration->wwAquinoTauFastGain = 0.10f;        // Tau correction gain for fast settling
 }
 
 static void setDefaultLambdaProtection() {

@@ -9,6 +9,7 @@ CONTROLLERS_ALGO_SRC_CPP = $(PROJECT_DIR)/controllers/algo/ignition/ignition_sta
 	$(PROJECT_DIR)/controllers/algo/accel_enrichment.cpp \
 	$(PROJECT_DIR)/controllers/algo/accel_enrichment_autotune.cpp \
 	$(PROJECT_DIR)/controllers/algo/wall_fuel.cpp \
+	$(PROJECT_DIR)/controllers/algo/adaptive_wall_wetting.cpp \
 	$(PROJECT_DIR)/controllers/algo/launch_control.cpp \
 	$(PROJECT_DIR)/controllers/algo/shift_torque_reduction_controller.cpp \
 	$(PROJECT_DIR)/controllers/algo/nitrous_controller.cpp \
