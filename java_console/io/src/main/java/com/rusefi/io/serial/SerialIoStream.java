@@ -34,7 +34,7 @@ public abstract class SerialIoStream extends AbstractIoStream {
 
     public SerialIoStream(@NotNull SerialPort sp, String port) {
         this.sp = sp;
-        this.port = port;
+        this.port = Objects.requireNonNull(port);
     }
 
     @Nullable
@@ -73,6 +73,11 @@ public abstract class SerialIoStream extends AbstractIoStream {
         if (written != bytes.length) {
             throw new IOException("write failed: wrote " + written + " but expected " + bytes.length);
         }
+    }
+
+    @Override
+    public String toString() {
+        return getClass().getName() + "@" + port;
     }
 
     @Override
