@@ -16,7 +16,8 @@ static bool withErrorLoading = false;
 #if EFI_PROD_CODE || EFI_SIMULATOR
 
 #ifndef LUA_USER_HEAP
-#define LUA_USER_HEAP 1
+// At least one heap_header_t should fit
+#define LUA_USER_HEAP 16
 #endif // LUA_USER_HEAP
 
 //#ifdef PERSISTENT_LOCATION_TODO
