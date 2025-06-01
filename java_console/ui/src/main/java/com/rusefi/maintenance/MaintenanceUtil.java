@@ -20,7 +20,7 @@ public class MaintenanceUtil {
         try {
             ExecHelper.executeCommand(queryCommand, callbacks, output, error, null);
         } catch (ErrorExecutingCommand e) {
-            log.error("Error: " + e);
+            log.error("Error: " + e, e);
             callbacks.logLine("IOError: " + e);
             // let's assume DFU is present just to give user more options
             return valueInCaseOfError;
