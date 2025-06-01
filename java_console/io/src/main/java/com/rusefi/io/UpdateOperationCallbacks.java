@@ -1,8 +1,11 @@
 package com.rusefi.io;
 
+import com.devexperts.logging.Logging;
 import com.rusefi.ui.StatusConsumer;
 
 public interface UpdateOperationCallbacks extends StatusConsumer {
+    Logging log = Logging.getLogging(UpdateOperationCallbacks.class);
+
     void log(String message, boolean breakLineOnTextArea, boolean sendToLogger);
 
     @Override
@@ -26,6 +29,27 @@ public interface UpdateOperationCallbacks extends StatusConsumer {
 
         @Override
         public void error() {
+        }
+
+        @Override
+        public void clear() {
+        }
+    };
+
+    UpdateOperationCallbacks LOGGER = new UpdateOperationCallbacks() {
+        @Override
+        public void log(final String message, final boolean breakLineOnTextArea, boolean sendToLogger) {
+            log.info(message);
+        }
+
+        @Override
+        public void done() {
+            log.info("[DONE]");
+        }
+
+        @Override
+        public void error() {
+            log.info("[error]");
         }
 
         @Override

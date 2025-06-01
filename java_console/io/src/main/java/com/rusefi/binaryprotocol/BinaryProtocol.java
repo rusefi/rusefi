@@ -157,6 +157,7 @@ public class BinaryProtocol {
         linkManager.getCommandQueue().handleConfirmationMessage(CommandQueue.CONFIRMATION_PREFIX + command);
     }
 
+    @Nullable
     public static String getSignature(IoStream stream) throws IOException {
         HelloCommand.send(stream);
         return HelloCommand.getHelloResponse(stream.getDataBuffer());
