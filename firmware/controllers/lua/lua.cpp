@@ -124,7 +124,11 @@ static void printLuaMemoryInfo() {
 	auto heapSize = userHeap.size();
 	auto memoryUsed = userHeap.used();
 	float pct = 100.0f * memoryUsed / heapSize;
+	size_t chHeapFree = 0;
+	chHeapStatus(NULL, &chHeapFree, NULL);
 	efiPrintf("Lua memory heap usage: %d / %d bytes = %.1f%%", memoryUsed, heapSize, pct);
+	efiPrintf("Common ChibiOS heap: %d bytes free", chHeapFree);
+	efiPrintf("ChibiOS memcore free size: %d", chCoreGetStatusX());
 }
 
 static void* myAlloc(void* /*ud*/, void* ptr, size_t osize, size_t nsize) {
