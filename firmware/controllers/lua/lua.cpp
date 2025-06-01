@@ -46,7 +46,11 @@ public:
 	uint8_t* m_buffer = nullptr;
 
 	void* alloc(size_t n) {
-		return chHeapAlloc(&m_heap, n);
+		if (m_buffer && m_size) {
+			return chHeapAlloc(&m_heap, n);
+		}
+
+		return nullptr;
 	}
 
 	void free(void* obj) {
@@ -81,10 +85,8 @@ public:
 
 		void *new_mem = nullptr;
 
-		// try Lua heap first
-		if ((m_buffer) && (m_size)) {
-			new_mem = alloc(nsize);
-		}
+		// try this heap first
+		new_mem = alloc(nsize);
 
 		// then try ChibiOS default heap
 		if (new_mem == nullptr) {
