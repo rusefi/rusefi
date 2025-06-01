@@ -116,10 +116,13 @@ public class CalibrationsHelper {
 
     private static Optional<CalibrationsInfo> readCalibrationsInfo(
         final BinaryProtocol binaryProtocol,
-        final UpdateOperationCallbacks callbacks
-    ) {
+        final UpdateOperationCallbacks callbacks) {
         try {
             final String signature = BinaryProtocol.getSignature(binaryProtocol.getStream());
+            if (signature == null) {
+                callbacks.logLine("No response from " + binaryProtocol.getStream());
+                return Optional.empty();
+            }
             callbacks.logLine(String.format("Received a signature %s", signature));
             final IniFileModel iniFile = iniFileProvider.provide(signature);
             final int pageSize = iniFile.getMetaInfo().getTotalSize();
@@ -214,7 +217,8 @@ public class CalibrationsHelper {
                 }
             },
             Optional.empty(),
-            false
+            false,
+            true
         );
     }
 

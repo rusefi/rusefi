@@ -37,7 +37,7 @@ public class SerialSandbox {
             .setNeedPullLiveData(true);
 
         try {
-            linkManager.connect(port).await(60, TimeUnit.SECONDS);
+            linkManager.connect(port, false).await(60, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             throw new IllegalStateException("Not connected in time");
         }

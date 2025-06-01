@@ -170,7 +170,7 @@ public class IoUtil {
         linkManager.getEngineState().registerStringValueAction(Integration.PROTOCOL_OUTPIN, (EngineState.ValueCallback<String>) EngineState.ValueCallback.VOID);
 
         try {
-            linkManager.connect(port).await(60, TimeUnit.SECONDS);
+            linkManager.connect(port, false).await(60, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
             throw new IllegalStateException("Not connected in time");
         }

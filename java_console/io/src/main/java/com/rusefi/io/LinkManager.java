@@ -93,13 +93,14 @@ public class LinkManager implements Closeable {
     }
 
     @NotNull
-    public CountDownLatch connect(String port) {
+    public CountDownLatch connect(String port, boolean isScanningForEcu) {
         final CountDownLatch connected = new CountDownLatch(1);
 
         startAndConnect(port, new ConnectionStateListener() {
             @Override
             public void onConnectionFailed(String s) {
-                IoUtils.exit("CONNECTION FAILED, did you specify the right port name?", -1);
+                if (!isScanningForEcu)
+                    IoUtils.exit("TERMINATING: CONNECTION FAILED, did you specify the right port name? " + s, -1);
             }
 
             @Override
@@ -325,7 +326,7 @@ public class LinkManager implements Closeable {
         final boolean isPortAvailableAgain = ports.contains(lastTriedPort);
         log.info("restart isPortAvailableAgain=" + isPortAvailableAgain);
         if (isPortAvailableAgain) {
-            connect(lastTriedPort);
+            connect(lastTriedPort, false);
         }
     }
 

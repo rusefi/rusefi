@@ -19,8 +19,8 @@ public class BinaryProtocolExecutor {
         final UpdateOperationCallbacks callbacks,
         final BinaryProtocolAction<T> bpAction,
         final T failureResult,
-        final boolean validateConfigVersionOnConnect
-    ) {
+        final boolean validateConfigVersionOnConnect,
+        boolean isScanningForEcu) {
         final AtomicReference<T> executionResult = new AtomicReference<>(failureResult);
         try (LinkManager linkManager = new LinkManager(validateConfigVersionOnConnect)
             .setNeedPullText(false)
@@ -28,7 +28,7 @@ public class BinaryProtocolExecutor {
         ) {
             callbacks.logLine(String.format("Connecting to port `%s`...", port));
             try {
-                if (linkManager.connect(port).await(1, TimeUnit.MINUTES)) {
+                if (linkManager.connect(port, isScanningForEcu).await(1, TimeUnit.MINUTES)) {
                     final CountDownLatch latch = new CountDownLatch(1);
                     callbacks.logLine(String.format("Performing action on port %s...", port));
                     linkManager.execute(() -> {
@@ -71,7 +71,7 @@ public class BinaryProtocolExecutor {
                 callbacks.logLine("Failed to  suspend port scanning in a minute.");
                 return failureResult;
             }
-            return execute(port, callbacks, bpAction, failureResult, validateConfigVersionOnConnect);
+            return execute(port, callbacks, bpAction, failureResult, validateConfigVersionOnConnect, false);
         } finally {
             callbacks.logLine("Resuming port scanning...");
             SerialPortScanner.INSTANCE.resume();

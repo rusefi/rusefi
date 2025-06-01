@@ -213,9 +213,10 @@ public enum SerialPortScanner {
     }
 
     private static Optional<CalibrationsInfo> getEcuCalibrations(final String port) {
+        log.info("getEcuCalibrations " + port);
         return CalibrationsHelper.readCurrentCalibrationsWithoutSuspendingPortScanner(
             port,
-            UpdateOperationCallbacks.DUMMY
+            UpdateOperationCallbacks.LOGGER
         );
     }
 
