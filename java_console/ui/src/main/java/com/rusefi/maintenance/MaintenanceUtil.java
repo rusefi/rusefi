@@ -1,6 +1,7 @@
 package com.rusefi.maintenance;
 
 import com.devexperts.logging.Logging;
+import com.rusefi.FileLog;
 import com.rusefi.core.FindFileHelper;
 import com.rusefi.io.UpdateOperationCallbacks;
 
@@ -14,6 +15,9 @@ public class MaintenanceUtil {
     private static final String WMIC_PCAN_QUERY_COMMAND = "wmic path win32_pnpentity where \"Caption like '%PCAN-USB%'\" get Caption,ConfigManagerErrorCode /format:list";
 
     static boolean detectDevice(UpdateOperationCallbacks callbacks, String queryCommand, String pattern, boolean valueInCaseOfError) {
+        if (!FileLog.isWindows()) {
+            return false;
+        }
         long now = System.currentTimeMillis();
         StringBuffer output = new StringBuffer();
         StringBuffer error = new StringBuffer();
