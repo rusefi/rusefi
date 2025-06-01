@@ -165,12 +165,17 @@ public class BinaryProtocol {
     /**
      * this method reads configuration snapshot from controller
      *
-     * @return true if everything fine
+     * @return null if everything fine, message instead
      */
     public String connectAndReadConfiguration(Arguments arguments, DataListener listener) {
         try {
             signature = getSignature(stream);
-            log.info("Got [" + signature + "] signature");
+            if (signature == null) {
+                String msg = "No signature returned by " + stream;
+                log.info(msg);
+                return msg;
+            }
+            log.info(stream + ": Got [" + signature + "] signature");
         } catch (IOException e) {
             return "Failed to read signature " + e;
         }
