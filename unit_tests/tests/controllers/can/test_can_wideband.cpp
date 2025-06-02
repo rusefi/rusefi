@@ -8,7 +8,8 @@ TEST(CanWideband, AcceptFrameId0) {
 
 	CANRxFrame frame;
 
-	frame.IDE = false;
+	// AEM uses extended CAN ID!
+	frame.IDE = true;
 	frame.DLC = 8;
 
 	engineConfiguration->wboType1 = AEM;
@@ -21,6 +22,7 @@ TEST(CanWideband, AcceptFrameId0) {
 	engineConfiguration->wboType1 = RUSEFI;
 
 	// Check that the rusEFI standard data is accepted
+	frame.IDE = false;
 	frame.SID = 0x190;
 	EXPECT_TRUE(dut.acceptFrame(frame));
 
@@ -35,7 +37,8 @@ TEST(CanWideband, AcceptFrameId1) {
 
 	CANRxFrame frame;
 
-	frame.IDE = false;
+	// AEM uses extended CAN ID!
+	frame.IDE = true;
 	frame.DLC = 8;
 
 	engineConfiguration->wboType2 = AEM;
@@ -48,6 +51,7 @@ TEST(CanWideband, AcceptFrameId1) {
 	engineConfiguration->wboType2 = RUSEFI;
 
 	// Check that the rusEFI standard data is accepted
+	frame.IDE = false;
 	frame.SID = 0x192;
 	EXPECT_TRUE(dut.acceptFrame(frame));
 
@@ -67,8 +71,9 @@ TEST(CanWideband,DecodeAemXSeriesInvalidLambda){
 	AemXSeriesWidebandWrapper wbo(0, SensorType::Lambda1);
 	CANRxFrame frame;
 
+	// AEM uses extended CAN ID!
+	frame.IDE = true;
 	frame.SID = 0x180;
-	frame.IDE = false;
 
 	frame.DLC = 8;
 
@@ -88,8 +93,9 @@ TEST(CanWideband,DecodeAemXSeriesSensorFault){
 	AemXSeriesWidebandWrapper wbo(0, SensorType::Lambda1);
 	CANRxFrame frame;
 
+	// AEM uses extended CAN ID!
+	frame.IDE = true;
 	frame.SID = 0x180;
-	frame.IDE = false;
 
 	frame.DLC = 8;
 
@@ -115,8 +121,9 @@ TEST(CanWideband,DecodeAemXSeriesValidLambda){
 
 	CANRxFrame frame;
 
+	// AEM uses extended CAN ID!
+	frame.IDE = true;
 	frame.SID = 0x180;
-	frame.IDE = false;
 
 	frame.DLC = 8;
 
@@ -149,8 +156,9 @@ TEST(CanWideband, DecodeValidAemFormat) {
 
 	CANRxFrame frame;
 
+	// AEM uses extended CAN ID!
+	frame.IDE = true;
 	frame.SID = 0x180;
-	frame.IDE = false;
 
 	frame.DLC = 8;
 
@@ -286,7 +294,7 @@ TEST(CanWideband, DecodeRusefiStandardWrongVersion)
 	frame.DLC = 8;
 
 	// version - WRONG VERSION ON PURPOSE!
-	frame.data8[0] = RUSEFI_WIDEBAND_VERSION + 1;
+	frame.data8[0] = 0xA0 - 1;
 
 	EXPECT_FATAL_ERROR(dut.processFrame(frame, getTimeNowNt()));
 }
