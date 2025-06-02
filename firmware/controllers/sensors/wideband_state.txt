@@ -6,6 +6,8 @@ struct_no_prefix wideband_state_s
 	uint8_t pumpDuty;WBO: Pump duty;"%", 1, 0, 0, 100, 0
 
 	bit isValid;
+	bit fwUnsupported;
+	bit fwOutdated;
 
 	uint16_t tempC;WBO: Temperature;"C", 1, 0, 500, 1000, 0
 	uint16_t autoscale nernstVoltage;WBO: Nernst Voltage;"V", 0.001, 0, 0, 1, 3
