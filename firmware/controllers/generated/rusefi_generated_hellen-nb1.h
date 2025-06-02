@@ -1970,7 +1970,7 @@
 #define ts_show_wastegate_sensor true
 #define ts_show_wbo_canbus_index true
 #define ts_show_wbo_canbus_set_index true
-#define TS_SIGNATURE "rusEFI master.2025.06.02.hellen-nb1.3168613810"
+#define TS_SIGNATURE "rusEFI master.2025.06.03.hellen-nb1.3168613810"
 #define TS_SIMULATE_CAN '>'
 #define TS_SIMULATE_CAN_char >
 #define TS_SINGLE_WRITE_COMMAND 'W'
