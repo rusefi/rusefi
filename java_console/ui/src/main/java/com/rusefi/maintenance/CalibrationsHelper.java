@@ -95,8 +95,7 @@ public class CalibrationsHelper {
             return CalibrationsUpdater.INSTANCE.updateCalibrations(
                 ecuPort.port,
                 mergedCalibrations.get().getImage().getConfigurationImage(),
-                callbacks,
-                false
+                callbacks
             );
         } else {
             return true;
@@ -195,8 +194,7 @@ public class CalibrationsHelper {
                     return Optional.empty();
                 }
             },
-            Optional.empty(),
-            false
+            Optional.empty()
         );
     }
 
@@ -217,8 +215,7 @@ public class CalibrationsHelper {
                 }
             },
             Optional.empty(),
-            false,
-            true
+            false
         );
     }
 
@@ -250,8 +247,7 @@ public class CalibrationsHelper {
                     return Optional.empty();
                 }
             },
-            Optional.empty(),
-            false
+            Optional.empty()
         );
     }
 

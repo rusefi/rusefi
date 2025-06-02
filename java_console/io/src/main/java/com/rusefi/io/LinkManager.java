@@ -62,15 +62,7 @@ public class LinkManager implements Closeable {
     private Thread communicationThread;
     private boolean isDisconnectedByUser;
 
-    private final boolean validateConfigVersionOnConnect;
-
     public LinkManager() {
-        this(true);
-    }
-
-    public LinkManager(final boolean validateConfigVersionInConnect) {
-        this.validateConfigVersionOnConnect = validateConfigVersionInConnect;
-
         Future<?> future = submit(() -> {
             communicationThread = Thread.currentThread();
             log.info("communicationThread lookup DONE");
