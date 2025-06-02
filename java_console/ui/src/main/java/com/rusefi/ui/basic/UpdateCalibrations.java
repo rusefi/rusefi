@@ -3,6 +3,7 @@ package com.rusefi.ui.basic;
 import com.devexperts.logging.Logging;
 import com.opensr5.ConfigurationImageWithMeta;
 import com.opensr5.io.ConfigurationImageFile;
+import com.rusefi.ConnectivityContext;
 import com.rusefi.PortResult;
 import com.rusefi.core.preferences.storage.PersistentConfiguration;
 import com.rusefi.maintenance.jobs.UpdateCalibrationsJob;
@@ -25,7 +26,7 @@ public class UpdateCalibrations {
         this.singleAsyncJobExecutor = singleAsyncJobExecutor;
     }
 
-    void updateCalibrationsAction(PortResult port, JComponent parent) {
+    void updateCalibrationsAction(PortResult port, JComponent parent, ConnectivityContext connectivityContext) {
         final int selectedOption = calibrationsFileChooser.showOpenDialog(parent);
         if (selectedOption == JFileChooser.APPROVE_OPTION) {
             final File selectedFile = calibrationsFileChooser.getSelectedFile();
@@ -34,7 +35,7 @@ public class UpdateCalibrations {
                 final ConfigurationImageWithMeta calibrationsImage = ConfigurationImageFile.readFromFile(
                     selectedFile.getAbsolutePath()
                 );
-                singleAsyncJobExecutor.startJob(new UpdateCalibrationsJob(port, calibrationsImage), parent);
+                singleAsyncJobExecutor.startJob(new UpdateCalibrationsJob(port, calibrationsImage, connectivityContext), parent);
             } catch (final IOException e) {
                 final String errorMsg = String.format(
                     "Failed to load calibrations from file %s",

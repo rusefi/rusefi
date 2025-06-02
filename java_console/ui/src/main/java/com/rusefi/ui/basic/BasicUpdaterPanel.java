@@ -44,6 +44,7 @@ public class BasicUpdaterPanel {
 
     private LogoLabelPopupMenu logoLabelPopupMenu = null;
 
+    private final ConnectivityContext connectivityContext;
     private final SingleAsyncJobExecutor singleAsyncJobExecutor;
     private final UpdateOperationCallbacks updateOperationCallbacks;
     private final UpdateCalibrations updateCalibrations;
@@ -51,10 +52,12 @@ public class BasicUpdaterPanel {
     private volatile Optional<PortResult> ecuPortToUse = Optional.empty();
 
     BasicUpdaterPanel(
+        ConnectivityContext connectivityContext,
         final boolean showUrlLabel,
         final UpdateOperationCallbacks updateOperationCallbacks,
         final boolean doNotUseStatusWindow
     ) {
+        this.connectivityContext = connectivityContext;
         singleAsyncJobExecutor = new SingleAsyncJobExecutor(
             updateOperationCallbacks,
             doNotUseStatusWindow,
@@ -148,11 +151,11 @@ public class BasicUpdaterPanel {
                     final SerialPortType portType = portToUpdateFirmware.type;
                     switch (portType) {
                         case Ecu: {
-                            job = new DfuAutoJob(portToUpdateFirmware, updateFirmwareButton);
+                            job = new DfuAutoJob(portToUpdateFirmware, updateFirmwareButton, connectivityContext);
                             break;
                         }
                         case EcuWithOpenblt: {
-                            job = new OpenBltAutoJob(portToUpdateFirmware, updateFirmwareButton);
+                            job = new OpenBltAutoJob(portToUpdateFirmware, updateFirmwareButton, connectivityContext);
                             break;
                         }
                         case OpenBlt: {
@@ -270,7 +273,7 @@ public class BasicUpdaterPanel {
         disableButtons();
         CompatibilityOptional.ifPresentOrElse(ecuPortToUse,
             port -> {
-                updateCalibrations.updateCalibrationsAction(port, updateCalibrationsButton);
+                updateCalibrations.updateCalibrationsAction(port, updateCalibrationsButton, connectivityContext);
             }, () -> {
                 JOptionPane.showMessageDialog(
                     updateCalibrationsButton,
@@ -308,7 +311,7 @@ public class BasicUpdaterPanel {
         disableButtons();
         CompatibilityOptional.ifPresentOrElse(ecuPortToUse,
             port -> {
-                singleAsyncJobExecutor.startJob(new UploadTuneJob(port, panamaUrl), logoLabelPopupMenu);
+                singleAsyncJobExecutor.startJob(new UploadTuneJob(connectivityContext, port, panamaUrl), logoLabelPopupMenu);
             }, () -> {
                 JOptionPane.showMessageDialog(
                     updateCalibrationsButton,
@@ -325,7 +328,7 @@ public class BasicUpdaterPanel {
         disableButtons();
         CompatibilityOptional.ifPresentOrElse(ecuPortToUse,
             port -> {
-                singleAsyncJobExecutor.startJob(new PrintUnitLabelJob(port, logoLabelPopupMenu), logoLabelPopupMenu);
+                singleAsyncJobExecutor.startJob(new PrintUnitLabelJob(connectivityContext, port, logoLabelPopupMenu), logoLabelPopupMenu);
             }, () -> {
                 JOptionPane.showMessageDialog(
                     updateCalibrationsButton,

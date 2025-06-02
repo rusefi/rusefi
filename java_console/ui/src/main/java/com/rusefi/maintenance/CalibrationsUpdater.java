@@ -1,6 +1,7 @@
 package com.rusefi.maintenance;
 
 import com.opensr5.ConfigurationImage;
+import com.rusefi.ConnectivityContext;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.jobs.JobHelper;
 
@@ -11,10 +12,10 @@ public enum CalibrationsUpdater {
         final String port,
         final ConfigurationImage calibrationsImage,
         final UpdateOperationCallbacks callbacks,
-        final Runnable onJobFinished
+        final Runnable onJobFinished, ConnectivityContext connectivityContext
     ) {
         JobHelper.doJob(() -> {
-            if (updateCalibrations(port, calibrationsImage, callbacks, true)) {
+            if (updateCalibrations(port, calibrationsImage, callbacks, connectivityContext, true)) {
                 callbacks.done();
             } else {
                 callbacks.error();
@@ -25,7 +26,7 @@ public enum CalibrationsUpdater {
     public synchronized boolean updateCalibrations(
         final String port,
         final ConfigurationImage calibrationsImage,
-        final UpdateOperationCallbacks callbacks,
+        final UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext,
         final boolean validateConfigVersionOnConnect
     ) {
         boolean result = false;
@@ -39,7 +40,8 @@ public enum CalibrationsUpdater {
             result = BinaryProtocolExecutor.executeWithSuspendedPortScanner(port, callbacks, binaryProtocol -> {
                 binaryProtocol.uploadChanges(calibrationsImage);
                 return true;
-            }, false, validateConfigVersionOnConnect);
+            }, false, connectivityContext,
+                validateConfigVersionOnConnect);
             if (result) {
                 callbacks.logLine(String.format(
                     "Configuration image (%d bytes) has been uploaded to port %s",

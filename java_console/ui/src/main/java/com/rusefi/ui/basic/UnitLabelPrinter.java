@@ -2,6 +2,7 @@ package com.rusefi.ui.basic;
 
 import com.devexperts.logging.Logging;
 import com.opensr5.ini.field.IniField;
+import com.rusefi.ConnectivityContext;
 import com.rusefi.PortResult;
 import com.rusefi.io.UpdateOperationCallbacks;
 import com.rusefi.maintenance.CalibrationsHelper;
@@ -35,12 +36,12 @@ public enum UnitLabelPrinter {
     public boolean printUnitLabel(
         final JComponent parent,
         final PortResult ecuPort,
-        final UpdateOperationCallbacks callbacks
+        final UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext
     ) {
         boolean result = false;
         final Optional<CalibrationsInfo> currentCalibrations = CalibrationsHelper.readCurrentCalibrations(
             ecuPort,
-            callbacks
+            callbacks, connectivityContext
         );
 
         if (currentCalibrations.isPresent()) {

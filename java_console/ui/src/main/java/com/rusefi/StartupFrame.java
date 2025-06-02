@@ -66,6 +66,7 @@ public class StartupFrame {
             return new Dimension(Math.max(size.width, realHardwarePanel.getPreferredSize().width), size.height);
         }
     };
+    private final ConnectivityContext connectivityContext;
     /**
      * this flag tells us if we are closing the startup frame in order to proceed with console start or if we are
      * closing the application.
@@ -74,7 +75,8 @@ public class StartupFrame {
     private final JLabel noPortsMessage = new JLabel();
     private final StatusAnimation status;
 
-    public StartupFrame() {
+    public StartupFrame(ConnectivityContext connectivityContext) {
+        this.connectivityContext = connectivityContext;
         String title = UiProperties.getWhiteLabel() + " console " + Launcher.CONSOLE_VERSION;
         log.info(title);
         noPortsMessage.setForeground(Color.red);
@@ -167,7 +169,7 @@ public class StartupFrame {
         realHardwarePanel.add(noPortsMessage, "right, wrap");
         noPortsMessage.setToolTipText("Check you cables. Check your drivers. Do you want to start simulator maybe?");
 
-        ProgramSelector selector = new ProgramSelector(portsComboBox.getComboPorts());
+        ProgramSelector selector = new ProgramSelector(connectivityContext, portsComboBox.getComboPorts());
 
         realHardwarePanel.add(new HorizontalLine(), "right, wrap");
         realHardwarePanel.add(selector.getControl(), "right, wrap");
@@ -186,7 +188,7 @@ public class StartupFrame {
             //realHardwarePanel.add(new EraseChip().getButton(), "right, wrap");
         }
 
-        SerialPortScanner.INSTANCE.addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
+        connectivityContext.getSerialPortScanner().addListener(currentHardware -> SwingUtilities.invokeLater(() -> {
             status.stop();
             selector.apply(currentHardware);
             applyKnownPorts(currentHardware);
@@ -379,7 +381,7 @@ public class StartupFrame {
         isProceeding = true;
         frame.dispose();
         status.stop();
-        SerialPortScanner.INSTANCE.stopTimer();
+        connectivityContext.getSerialPortScanner().stopTimer();
     }
 
     private static boolean applyPortSelectionToUIcontrol(JComboBox<PortResult> comboPorts, List<PortResult> ports) {

@@ -1,5 +1,6 @@
 package com.rusefi.maintenance;
 
+import com.rusefi.ConnectivityContext;
 import com.rusefi.PortResult;
 import com.rusefi.binaryprotocol.BinaryProtocolLocalCache;
 import com.rusefi.io.UpdateOperationCallbacks;
@@ -23,7 +24,7 @@ public enum TuneUploader {
     public synchronized boolean uploadTune(
         final PortResult ecuPort,
         final String panamaUrl,
-        final UpdateOperationCallbacks callbacks
+        final UpdateOperationCallbacks callbacks, ConnectivityContext connectivityContext
     ) {
         boolean result = false;
 
@@ -37,14 +38,14 @@ public enum TuneUploader {
         final Optional<CalibrationsInfo> calibrationsToUpload = readAndBackupCurrentCalibrations(
             ecuPort,
             callbacks,
-            CALIBRATIONS_TO_UPLOAD_FILE_NAME
+            CALIBRATIONS_TO_UPLOAD_FILE_NAME, connectivityContext
         );
         if (!calibrationsToUpload.isPresent()) {
             callbacks.logLine("Failed to back up current calibrations...");
             return false;
         }
 
-        final Optional<Integer> receivedMcuSerial = OutputChannelsHelper.readMcuSerial(ecuPort, callbacks);
+        final Optional<Integer> receivedMcuSerial = OutputChannelsHelper.readMcuSerial(ecuPort, callbacks, connectivityContext);
         if (!receivedMcuSerial.isPresent()) {
             callbacks.logLine("Failed to read " + PanamaHelper.MCUSERIAL + " output channel - please update firmware first!");
             return false;
